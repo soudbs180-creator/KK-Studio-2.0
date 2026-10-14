@@ -16,9 +16,11 @@
 | 强调状态 | --kk-accent、--kk-accent-soft、--kk-text-accent；默认绿色、显式其他颜色兼容 |
 | 弱键盘焦点 | --kk-focus-ring-subtle、--kk-focus-width-subtle、--kk-focus-offset-subtle；输入聚焦提示 |
 | 菜单与面板 | --kk-radius-menu、--kk-radius-panel；不复制局部圆角 |
-| 设置外壳 | --kk-settings-width、--kk-settings-nav-width；分组导航、列表与详情 |
+| 设置外壳与接入导航 | --kk-settings-width、--kk-settings-nav-width、--kk-settings-method-width；桌面分类/接入方式/详情，手机逐级展示与返回，复用控件高度和字阶 |
+| 手机画布屏幕编辑器 | --kk-canvas-screen-editor-width/bottom/max-height；CanvasComposerShell 与 canvas-composer-screen.css，固定屏幕容器受窗口和安全区限制，节点草稿与动作保持同源 |
+| 屏幕编辑器层级 | --kk-z-canvas-editor：高于 dropdown，低于浮动喜欢/标签面板；编辑器仍在画布 covered/inert 边界内 |
 | 喜欢/标签面板 | --kk-collection-panel-width/height：360 / 480；FloatingCollectionPanel，受可视窗口限制、不随画布缩放 |
-| 浮动面板层级 | --kk-z-floating-panel/active：高于画布工具栏的 dropdown，低于 overlay、modal、popover；活动面板在同类面板之上 |
+| 浮动面板层级 | --kk-z-floating-panel/active：高于画布工具栏的 dropdown 和 canvas-editor，低于 overlay、modal、popover；活动面板在同类面板之上 |
 | 任务弹层 | --kk-task-popover-width/height/min-height；任务浮层与 HUD |
 | 字体与间距 | --kk-font-*、--kk-line-*、--kk-space-*；文字层级与 4px 间距网格 |
 

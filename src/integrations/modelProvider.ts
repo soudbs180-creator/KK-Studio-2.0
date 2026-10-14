@@ -1,41 +1,29 @@
-import { getModelsEndpoint, modelListSchema } from "../domain/modelProvider";
+import { invoke, isTauri } from "@tauri-apps/api/core";
+import type { ProviderProtocolOptions } from "../domain/providerProtocol.ts";
 import {
   parseCatalogModels,
   type CatalogModel,
-} from "../features/models/modelCatalog";
+} from "../features/models/modelCatalog.ts";
+import { discoverProviderModels } from "./providerModelDiscovery.ts";
 
 export async function checkModelProvider(
   baseUrl: string,
   apiKey: string,
   signal: AbortSignal,
+  options: Omit<ProviderProtocolOptions, "baseUrl"> & {
+    credentialRef?: string;
+  } = {},
 ): Promise<CatalogModel[]> {
-  const response = await fetch(getModelsEndpoint(baseUrl), {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-      ...(apiKey.trim() ? { Authorization: `Bearer ${apiKey.trim()}` } : {}),
-    },
-    credentials: "omit",
-    redirect: "error",
-    signal,
+  signal.throwIfAborted();
+  if (!isTauri())
+    return discoverProviderModels({ baseUrl, ...options }, apiKey, signal);
+  const ids = await invoke<string[]>("provider_models_fetch", {
+    baseUrl,
+    protocol: options.protocol ?? null,
+    authMode: options.authMode ?? null,
+    credentialRef: options.credentialRef ?? null,
+    secret: apiKey.trim() || null,
   });
-  if (!response.ok) {
-    throw new Error(
-      `连接失败（HTTP ${response.status}）。请检查地址、密钥和服务权限。`,
-    );
-  }
-  let payload: unknown;
-  try {
-    payload = await response.json();
-  } catch {
-    throw new Error(
-      "服务未返回有效的模型列表，请检查 API Base URL 是否指向模型接口。",
-    );
-  }
-  if (!modelListSchema.safeParse(payload).success) {
-    throw new Error(
-      "响应不符合 OpenAI 兼容模型列表格式，请检查 API 地址和接口协议。",
-    );
-  }
-  return parseCatalogModels(payload);
+  signal.throwIfAborted();
+  return parseCatalogModels({ data: ids.map((id) => ({ id })) });
 }

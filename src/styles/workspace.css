@@ -1302,7 +1302,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  height: 35px;
+  height: var(--kk-control-h-lg);
   position: absolute;
   bottom: 19px;
   left: 11px;
@@ -1326,7 +1326,8 @@
   align-items: center;
   gap: 5px;
   background: var(--bg-card);
-  font-size: 11px;
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-caption);
 }
 .model-button {
   font-size: var(--kk-font-body);
@@ -2698,10 +2699,14 @@
 /* Card toolbar and controls use the same hit size and pill geometry. */
 .model-button,
 .param-button,
-.generate-button,
 .voice-button {
   min-height: var(--kk-control-h-md);
   height: var(--kk-control-h-md);
+  border-radius: var(--kk-radius-full);
+}
+.generate-button {
+  min-height: var(--kk-control-h-lg);
+  height: var(--kk-control-h-lg);
   border-radius: var(--kk-radius-full);
 }
 .parameter-capability-grid {

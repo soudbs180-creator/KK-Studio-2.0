@@ -37,15 +37,18 @@ test("unknown preset id resolves to undefined and every preset id is unique", ()
   }
 });
 
-test("unsupported protocols cannot be applied as Chat presets and gateway requires a user endpoint", () => {
+test("presets select an explicit supported protocol and Gemini uses its own connection", () => {
   for (const id of [
     "openai-responses",
     "anthropic",
-    "gemini",
     "azure-openai",
     "ollama",
-  ])
-    assert.ok(findProviderPreset(id)?.unavailableReason);
+  ]) {
+    assert.equal(findProviderPreset(id)?.wireProtocol, id);
+    assert.equal(findProviderPreset(id)?.unavailableReason, undefined);
+  }
+  assert.ok(findProviderPreset("gemini")?.unavailableReason);
+  assert.equal(findProviderPreset("ollama")?.authMode, "none");
   assert.equal(findProviderPreset("new-api")?.baseUrl, "");
   assert.equal(
     findProviderPreset("lm-studio")?.baseUrl,

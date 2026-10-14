@@ -1,9 +1,6 @@
 import { useRef, useState } from "react";
-import { checkModelProvider } from "../../integrations/modelProvider";
-import {
-  credentialId,
-  loadApiKey,
-} from "../../features/creation/providerCredentials";
+import { testProviderConnection } from "./testProviderConnection";
+import { credentialId } from "../../features/creation/providerCredentials";
 import {
   clearProviderConnectionKey,
   providerSaveErrorMessage,
@@ -14,9 +11,9 @@ import ProviderConnectionList from "./ProviderConnectionList";
 import ProviderProfileFields from "./ProviderProfileFields";
 import ProviderSettingsActions from "./ProviderSettingsActions";
 import ProviderModelCatalog from "./ProviderModelCatalog";
-import { saveModelCatalog } from "../../features/models/modelCatalog";
 import { readProviderConnections } from "../../features/creation/providerRegistry";
 import type { ProviderConnection } from "../../domain/providerConnections";
+import { providerNeedsKey } from "../../domain/providerProtocol.ts";
 import { useProviderCredentialState } from "./useProviderCredentialState";
 import ProviderCredentialStatus from "./ProviderCredentialStatus";
 import {
@@ -57,7 +54,12 @@ export default function ModelProviderSettings({
     credentialStatus,
     retryCredentialLoad,
     reflectCommittedCredential,
-  } = useProviderCredentialState(profile.baseUrl, credentialRef, requestRef);
+  } = useProviderCredentialState(
+    profile.baseUrl,
+    credentialRef,
+    requestRef,
+    providerNeedsKey(profile),
+  );
   const credentialBlocked =
     credentialStatus === "loading" || credentialStatus === "error";
   function cancelRequest(): void {
@@ -71,6 +73,7 @@ export default function ModelProviderSettings({
     credentialRef,
     active,
     saving,
+    testing: connection.kind === "loading",
     onBusyChange,
     cancelRequest,
     setProfile,
@@ -93,7 +96,11 @@ export default function ModelProviderSettings({
         connections,
       );
       valid.connectionId = savedConnection.id;
-      const next = await saveProviderConnection(savedConnection, apiKey, valid);
+      const next = await saveProviderConnection(
+        savedConnection,
+        providerNeedsKey(valid) ? apiKey : "",
+        valid,
+      );
       if (apiKey.trim()) setHasStoredKey(true);
       setApiKey("");
       setProfile(valid);
@@ -128,6 +135,8 @@ export default function ModelProviderSettings({
       name: connection.provider,
       baseUrl: connection.baseUrl,
       model: connection.model ?? "",
+      protocol: connection.protocol,
+      authMode: connection.authMode,
     });
     setCredentialRef(
       connection.credentialRef ??
@@ -168,65 +177,15 @@ export default function ModelProviderSettings({
   async function testConnection(): Promise<void> {
     if (!active || saving || credentialBlocked || requestRef.current) return;
     const valid = validate();
-    if (!valid) return;
-    if (!navigator.onLine) {
-      setConnection({
-        kind: "offline",
-        message: "设备处于离线状态，请联网后重试。",
+    if (valid)
+      await testProviderConnection({
+        valid,
+        apiKey,
+        credentialRef,
+        connections,
+        requestRef,
+        setConnection,
       });
-      return;
-    }
-    const controller = new AbortController();
-    requestRef.current = controller;
-    setConnection({ kind: "loading", message: "正在请求模型列表…" });
-    const timeout = window.setTimeout(
-      () => controller.abort("timeout"),
-      10_000,
-    );
-    try {
-      const key =
-        apiKey.trim() || (await loadApiKey(valid.baseUrl, credentialRef));
-      if (requestRef.current !== controller) return;
-      const models = await checkModelProvider(
-        valid.baseUrl,
-        key,
-        controller.signal,
-      );
-      if (requestRef.current !== controller) return;
-      saveModelCatalog(
-        resolveModelProviderConnection(valid, credentialRef, connections),
-        models,
-      );
-      setConnection({
-        kind: "success",
-        message: `已获取 ${models.length} 个模型；生成能力仍需实际验证。`,
-      });
-    } catch (error) {
-      if (requestRef.current !== controller) return;
-      if (controller.signal.aborted) {
-        setConnection({
-          kind: "cancelled",
-          message:
-            controller.signal.reason === "timeout"
-              ? "连接超时，已取消请求。"
-              : "已取消连接测试。",
-        });
-      } else {
-        setConnection({
-          kind: navigator.onLine ? "error" : "offline",
-          message: navigator.onLine
-            ? error instanceof TypeError
-              ? "无法连接，请检查地址、网络和服务的跨域访问设置。"
-              : error instanceof Error
-                ? error.message
-                : "连接失败，请重试。"
-            : "网络已断开，请恢复后重试。",
-        });
-      }
-    } finally {
-      window.clearTimeout(timeout);
-      if (requestRef.current === controller) requestRef.current = null;
-    }
   }
   return (
     <form
@@ -285,7 +244,7 @@ export default function ModelProviderSettings({
       </fieldset>
       <ProviderSettingsActions
         saving={saving || credentialBlocked}
-        hasKey={Boolean(hasStoredKey || apiKey)}
+        hasKey={providerNeedsKey(profile) && Boolean(hasStoredKey || apiKey)}
         testing={connection.kind === "loading"}
         onSave={() => void save()}
         onClear={() => void clearKey()}

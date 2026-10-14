@@ -1,9 +1,20 @@
-import { useEffect, useRef, useState } from "react";
+import {
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
+import { SettingsNavigationContext } from "./SettingsNavigationContext";
+import { agentConnection } from "../../features/agent/agentConnection";
+import { desktopAgentLifecycle } from "../../features/agent/desktopAgentLifecycle";
 import AgentConnectionSettings from "./AgentConnectionSettings";
 import ModelProviderSettings from "./ModelProviderSettings";
 import GoogleConnectionSettings from "./GoogleConnectionSettings";
 import CodeBuddyConnectionSettings from "./CodeBuddyConnectionSettings";
 import OAuthAccessPanel from "./OAuthAccessPanel";
+import NativeCliControls from "./NativeCliControls";
 
 const METHODS = [
   ["codex", "Codex 主 Agent"],
@@ -20,12 +31,47 @@ export default function ModelAccessSettings({
 }: {
   onFeedback: (message: string) => void;
 }) {
+  const { setBusy } = useContext(SettingsNavigationContext);
+  const [navigation, setNavigation] = useState<"methods" | "detail">("methods");
+  const agent = useSyncExternalStore(
+    agentConnection.subscribe,
+    agentConnection.getState,
+  );
+  const lifecycle = useSyncExternalStore(
+    desktopAgentLifecycle.subscribe,
+    desktopAgentLifecycle.getState,
+  );
   const [method, setMethod] = useState<Method>("codex");
   const [apiSaving, setApiSaving] = useState(false);
   const [googleBusy, setGoogleBusy] = useState(false);
   const [codeBuddyBusy, setCodeBuddyBusy] = useState(false);
+  const [codexCliBusy, setCodexCliBusy] = useState(false);
+  const [nativeCliBusy, setNativeCliBusy] = useState(false);
   const [cliTool, setCliTool] = useState<"gemini" | "codebuddy">("gemini");
   const [focusGoogle, setFocusGoogle] = useState(false);
+  const busy =
+    apiSaving ||
+    googleBusy ||
+    codeBuddyBusy ||
+    codexCliBusy ||
+    nativeCliBusy ||
+    agent.status === "connecting" ||
+    lifecycle.pending;
+  useLayoutEffect(() => setBusy(busy), [busy, setBusy]);
+  useEffect(() => () => setBusy(false), [setBusy]);
+  const accessRef = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    if (
+      navigation !== "methods" ||
+      !window.matchMedia("(max-width: 767px)").matches
+    )
+      return;
+    accessRef.current
+      ?.querySelector<HTMLButtonElement>(
+        '.model-access-methods [aria-pressed="true"]',
+      )
+      ?.focus({ preventScroll: true });
+  }, [navigation]);
   const googlePanel = useRef<HTMLElement>(null);
   useEffect(() => {
     if (!focusGoogle || method !== "official") return;
@@ -36,7 +82,25 @@ export default function ModelAccessSettings({
     setFocusGoogle(false);
   }, [focusGoogle, method]);
   return (
-    <div className="model-access-settings">
+    <div
+      ref={accessRef}
+      className="model-access-settings"
+      data-navigation={navigation}
+    >
+      <div className="model-access-back">
+        <button
+          type="button"
+          className="settings-action secondary"
+          disabled={busy}
+          title={busy ? "连接操作进行中，完成后可返回" : undefined}
+          onClick={() => {
+            if (!busy) setNavigation("methods");
+          }}
+        >
+          返回接入方式
+        </button>
+        <strong>{METHODS.find(([id]) => id === method)?.[1]}</strong>
+      </div>
       <div className="model-access-methods" role="group" aria-label="接入方式">
         {METHODS.map(([id, label]) => (
           <button
@@ -44,9 +108,13 @@ export default function ModelAccessSettings({
             type="button"
             className="settings-action secondary"
             aria-pressed={method === id}
-            disabled={apiSaving || googleBusy || codeBuddyBusy}
+            disabled={busy}
             aria-controls={`model-access-${id === "official" || id === "relay" ? "api" : id}`}
-            onClick={() => setMethod(id)}
+            onClick={() => {
+              if (busy) return;
+              setMethod(id);
+              setNavigation("detail");
+            }}
           >
             {label}
           </button>
@@ -58,6 +126,11 @@ export default function ModelAccessSettings({
         aria-label="Codex 主 Agent 接入"
       >
         <AgentConnectionSettings onFeedback={onFeedback} />
+        <NativeCliControls
+          tool="codex"
+          active={method === "codex"}
+          onBusyChange={setCodexCliBusy}
+        />
       </section>
       <section
         id="model-access-api"
@@ -71,6 +144,8 @@ export default function ModelAccessSettings({
           active={method === "official" || method === "relay"}
           onBusyChange={setApiSaving}
           onOpenGoogle={() => {
+            if (busy) return;
+            setNavigation("detail");
             setMethod("official");
             setFocusGoogle(true);
           }}
@@ -93,7 +168,7 @@ export default function ModelAccessSettings({
               className="settings-action secondary"
               key={tool}
               aria-pressed={cliTool === tool}
-              disabled={googleBusy || codeBuddyBusy}
+              disabled={busy}
               onClick={() => setCliTool(tool)}
             >
               {tool === "gemini" ? "Gemini CLI" : "CodeBuddy CLI"}
@@ -106,6 +181,11 @@ export default function ModelAccessSettings({
             onBusyChange={setCodeBuddyBusy}
           />
         )}
+        <NativeCliControls
+          tool={cliTool}
+          active={method === "cli"}
+          onBusyChange={setNativeCliBusy}
+        />
       </section>
       <section
         ref={googlePanel}

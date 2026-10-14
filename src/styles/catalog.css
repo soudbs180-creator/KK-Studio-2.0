@@ -221,17 +221,19 @@
 }
 .saved-copy > small {
   display: block;
-  font-size: 10px;
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-caption);
   color: var(--text-secondary);
   margin-bottom: 4px;
 }
 .saved-text {
   display: -webkit-box;
+  min-height: var(--kk-control-h-md);
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  font-size: 11px;
-  line-height: 1.5;
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-caption);
   text-align: left;
   width: 100%;
   color: var(--text-secondary);
@@ -247,7 +249,8 @@
 .saved-like-card > footer span,
 .saved-prompt-card > footer span {
   flex: 1;
-  font-size: 9px;
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-caption);
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -255,9 +258,14 @@
 .saved-like-card > footer button,
 .saved-prompt-card > footer button {
   border: 1px solid var(--border-default);
-  border-radius: 20px;
-  font-size: 10px;
-  padding: 3px 7px;
+  border-radius: var(--kk-radius-full);
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-caption);
+  min-height: var(--kk-control-h-md);
+  padding: 0 var(--kk-space-2);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   white-space: nowrap;
 }
 .saved-empty {

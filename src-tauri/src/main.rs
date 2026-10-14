@@ -5,6 +5,7 @@
 mod agent_process;
 mod agent_runtime;
 mod asset_storage;
+mod cli_runtime;
 mod creation_storage;
 mod project_package;
 mod provider_config;
@@ -351,6 +352,38 @@ async fn credential_get(provider_id: String) -> Result<Option<String>, String> {
     tauri::async_runtime::spawn_blocking(move || provider_transaction::get_credential(&provider_id))
         .await
         .map_err(|_| "系统凭据读取任务中断".to_string())?
+}
+
+#[tauri::command(rename_all = "camelCase")]
+async fn provider_models_fetch(
+    base_url: String,
+    protocol: Option<String>,
+    auth_mode: Option<String>,
+    credential_ref: Option<String>,
+    secret: Option<String>,
+) -> Result<Vec<String>, String> {
+    let needs_key =
+        task_host::validate_provider_options(&base_url, protocol.as_deref(), auth_mode.as_deref())?;
+    let secret = if needs_key {
+        match secret {
+            Some(value) if !value.trim().is_empty() && value.len() <= 4096 => {
+                Some(zeroize::Zeroizing::new(value))
+            }
+            Some(_) => return Err("credential: 密钥为空或超过长度限制".into()),
+            None => credential_get(credential_ref.ok_or("credential: 请先选择连接")?)
+                .await?
+                .map(zeroize::Zeroizing::new),
+        }
+    } else {
+        None
+    };
+    task_host::discover_models(
+        &base_url,
+        protocol.as_deref(),
+        auth_mode.as_deref(),
+        secret.as_deref().map(String::as_str),
+    )
+    .await
 }
 
 #[tauri::command(rename_all = "camelCase")]
@@ -1670,6 +1703,12 @@ fn main() {
     tauri::Builder::default()
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_dialog::init())
+        .setup(|app| {
+            app.manage(cli_runtime::CliRuntime::new(
+                app.path().resource_dir()?.join("agent-runtime"),
+            ));
+            Ok(())
+        })
         .manage(agent_runtime::AgentRuntime::new(
             paths
                 .tasks
@@ -1699,6 +1738,14 @@ fn main() {
             agent_runtime::agent_runtime_stop,
             credential_set,
             credential_get,
+            provider_models_fetch,
+            cli_runtime::cli_inspect,
+            cli_runtime::cli_begin,
+            cli_runtime::cli_operation_state,
+            cli_runtime::cli_cancel,
+            cli_runtime::cli_bridge_start,
+            cli_runtime::cli_bridge_state,
+            cli_runtime::cli_bridge_stop,
             credential_delete,
             get_config,
             set_config,
@@ -1739,6 +1786,7 @@ fn main() {
         .run(|app, event| {
             if matches!(event, tauri::RunEvent::Exit) {
                 app.state::<agent_runtime::AgentRuntime>().shutdown();
+                app.state::<cli_runtime::CliRuntime>().shutdown();
             }
         });
 }

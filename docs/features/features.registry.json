@@ -1017,7 +1017,8 @@
       "TASK-AGENT-001",
       "TASK-AGENT-RECOVERY-20261013",
       "TASK-UI-CONSOLIDATE-20261014",
-      "TASK-CCSWITCH-LEARN-20261014"
+      "TASK-CCSWITCH-LEARN-20261014",
+      "TASK-PROTOCOL-CLI-20261014"
     ],
     "updated": "2026-10-14",
     "platforms": ["web", "desktop"],
@@ -1201,7 +1202,12 @@
       "tests/unit/installerGuards.test.ts",
       "tests/desktop/installer.mjs"
     ],
-    "tasks": ["T7", "TASK-DESKTOP-INSTALLER-001", "TASK-LAUNCH-001"],
+    "tasks": [
+      "T7",
+      "TASK-DESKTOP-INSTALLER-001",
+      "TASK-LAUNCH-001",
+      "TASK-PROTOCOL-CLI-20261014"
+    ],
     "updated": "2026-10-08",
     "platforms": ["desktop"],
     "runtimeEvidence": [
@@ -1235,7 +1241,11 @@
     "entryPoints": ["无（未实现）"],
     "code": ["src/styles/responsive.css"],
     "tests": ["tests/browser/frame-accuracy.spec.ts"],
-    "tasks": ["T12", "TASK-UI-CONSOLIDATE-20261014"],
+    "tasks": [
+      "T12",
+      "TASK-UI-CONSOLIDATE-20261014",
+      "TASK-PROTOCOL-CLI-20261014"
+    ],
     "updated": "2026-10-14"
   },
   {
@@ -1359,7 +1369,8 @@
       "TASK-PROV-002",
       "TASK-PROV-003",
       "TASK-PROV-004",
-      "TASK-UI-CONSOLIDATE-20261014"
+      "TASK-UI-CONSOLIDATE-20261014",
+      "TASK-PROTOCOL-CLI-20261014"
     ],
     "updated": "2026-10-14"
   },
@@ -1502,7 +1513,7 @@
       "tests/browser/ui-motion.spec.ts",
       "tests/browser/desktop-data-stability.spec.ts"
     ],
-    "tasks": ["TASK-UI-CONSOLIDATE-20261014"],
+    "tasks": ["TASK-UI-CONSOLIDATE-20261014", "TASK-PROTOCOL-CLI-20261014"],
     "updated": "2026-10-14",
     "platforms": ["web", "desktop"]
   }

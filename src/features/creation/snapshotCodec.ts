@@ -1,5 +1,13 @@
 import { z } from "zod";
-import { normalizeCreationSnapshot, type CreationSnapshot } from "./model.ts";
+import {
+  normalizeCreationSnapshot,
+  isCreationProviderRoutingValid,
+  type CreationSnapshot,
+} from "./model.ts";
+import {
+  providerProtocolSchema,
+  providerAuthModeSchema,
+} from "../../domain/providerProtocol.ts";
 
 const id = z.string().min(1).max(160);
 const number = z.number().finite();
@@ -57,6 +65,8 @@ const item = z
 const project = z
   .object({
     id,
+    providerProtocol: providerProtocolSchema.optional(),
+    providerAuthMode: providerAuthModeSchema.optional(),
     items: z.array(item),
     name: z.string().optional(),
     kind: kind.optional(),
@@ -80,6 +90,8 @@ const project = z
             id,
             prompt: z.string(),
             model: z.string(),
+            providerProtocol: providerProtocolSchema.optional(),
+            providerAuthMode: providerAuthModeSchema.optional(),
             status: z.enum([
               "queued",
               "running",
@@ -92,7 +104,8 @@ const project = z
               "interrupted",
             ]),
           })
-          .passthrough(),
+          .passthrough()
+          .refine(isCreationProviderRoutingValid, "供应商协议或认证配置无效"),
       )
       .optional(),
     composerDraft: draft.optional(),
@@ -100,7 +113,8 @@ const project = z
     likedIds: z.array(id).optional(),
     customTags: z.array(z.string().max(40)).max(32).optional(),
   })
-  .passthrough();
+  .passthrough()
+  .refine(isCreationProviderRoutingValid, "供应商协议或认证配置无效");
 const schema = z.object({
   version: z.literal(2),
   revision: number.int().nonnegative().max(Number.MAX_SAFE_INTEGER),

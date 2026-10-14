@@ -1,0 +1,88 @@
+/* The same node-owned editor stays in the canvas inert boundary on phones. */
+.canvas-composer-screen.creation-composer {
+  position: fixed;
+  inset: auto auto
+    calc(
+      var(--kk-canvas-screen-editor-bottom) + env(safe-area-inset-bottom, 0px)
+    )
+    50%;
+  width: min(
+    var(--kk-canvas-screen-editor-width),
+    calc(100vw - 2 * var(--kk-space-4))
+  );
+  height: auto;
+  max-height: var(--kk-canvas-screen-editor-max-height);
+  transform: translateX(-50%);
+  padding: var(--kk-space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--kk-space-3);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  touch-action: auto;
+  z-index: var(--kk-z-canvas-editor);
+}
+.canvas-composer-screen .creation-composer-actions {
+  position: static;
+  align-self: flex-end;
+  flex: 0 0 auto;
+}
+.canvas-composer-screen textarea,
+.canvas-composer-screen.expanded:has(.reference-slots) textarea {
+  position: static;
+  width: 100%;
+  height: calc(4 * var(--kk-line-body));
+  min-height: calc(4 * var(--kk-line-body));
+  font-size: var(--kk-font-body);
+  line-height: var(--kk-line-body);
+  flex-shrink: 0;
+}
+.canvas-composer-screen.expanded textarea,
+.canvas-composer-screen.expanded:has(.reference-slots) textarea {
+  height: calc(8 * var(--kk-line-body));
+}
+.canvas-composer-screen .creation-controls {
+  position: static;
+  height: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--kk-space-2);
+}
+.canvas-composer-screen .creation-controls .control-spacer {
+  display: none;
+}
+.canvas-composer-screen .model-anchor {
+  max-width: 100%;
+}
+.canvas-composer-screen .composer-refs,
+.canvas-composer-screen .reference-slots,
+.canvas-composer-screen .prompt-composer-label,
+.canvas-composer-screen .prompt-tool-status,
+.canvas-composer-screen > .generate-button,
+.canvas-composer-screen .local-generation-status {
+  position: static;
+}
+.canvas-composer-screen .local-generation-status {
+  flex-wrap: wrap;
+}
+.canvas-composer-screen .prompt-composer-label,
+.canvas-composer-screen .prompt-tool-status,
+.canvas-composer-screen .reference-limit,
+.canvas-composer-screen .reference-slot-label,
+.canvas-composer-screen .node-popover > small {
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-caption);
+}
+/* Menus stay in this scrolling shell so their actions cannot be clipped. */
+.canvas-composer-screen
+  .control-anchor:has(.kk-model-menu, .node-popover, .generation-count-panel) {
+  flex-basis: 100%;
+}
+.canvas-composer-screen .kk-model-menu,
+.canvas-composer-screen .node-popover,
+.canvas-composer-screen .generation-count-panel {
+  position: static;
+  width: 100%;
+  transform: none;
+  pointer-events: auto;
+}

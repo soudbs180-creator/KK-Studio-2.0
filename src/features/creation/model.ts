@@ -1,3 +1,10 @@
+import {
+  providerProtocolSchema,
+  providerAuthModeSchema,
+  isProviderAuthAllowed,
+  type ProviderProtocol,
+  type ProviderAuthMode,
+} from "../../domain/providerProtocol.ts";
 import type {
   CanvasCollectionItem,
   CanvasItemKind,
@@ -119,6 +126,8 @@ export interface CreationTask {
   providerCredentialRef?: string;
   /** Provider routing is captured at submission time; it is not a secret. */
   providerBaseUrl?: string;
+  providerProtocol?: ProviderProtocol;
+  providerAuthMode?: ProviderAuthMode;
   providerName?: string;
   /** Resolved provider size label (e.g. "1024x1024") captured at submission. */
   imageSize?: string;
@@ -148,6 +157,8 @@ export interface CreationProject {
   model: string;
   attachments: CreationAttachment[];
   providerBaseUrl?: string;
+  providerProtocol?: ProviderProtocol;
+  providerAuthMode?: ProviderAuthMode;
   providerName?: string;
   providerCredentialRef?: string;
   items: CanvasCollectionItem[];
@@ -209,6 +220,8 @@ export interface CreateProjectInput {
   kind: CanvasItemKind;
   attachments: CreationAttachment[];
   providerBaseUrl?: string;
+  providerProtocol?: ProviderProtocol;
+  providerAuthMode?: ProviderAuthMode;
   providerName?: string;
   providerCredentialRef?: string;
   privacyMode?: "local_only" | "byok_local" | "platform_backed";
@@ -327,6 +340,7 @@ export function normalizeCreationSnapshot(
   };
   if (candidate.version !== 2 || !Array.isArray(candidate.projects))
     return null;
+  if (!candidate.projects.every(isSnapshotProjectRoutingValid)) return null;
   const projects = candidate.projects
     .filter((project): project is CreationProject =>
       Boolean(
@@ -458,6 +472,77 @@ function normalizeCompletedOutputIndices(value: unknown): number[] | undefined {
     .filter((index) => index >= 0 && index < 64)
     .sort((left, right) => left - right);
   return indices.length ? indices : undefined;
+}
+
+type RoutingCandidate = {
+  providerBaseUrl?: unknown;
+  providerProtocol?: unknown;
+  providerAuthMode?: unknown;
+};
+
+/** Missing routing metadata is legacy; supplied values must never disappear on read. */
+export function isCreationProviderRoutingValid(
+  value: RoutingCandidate,
+): boolean {
+  const protocol = providerProtocolSchema
+    .optional()
+    .safeParse(value.providerProtocol);
+  const authMode = providerAuthModeSchema
+    .optional()
+    .safeParse(value.providerAuthMode);
+  if (!protocol.success || !authMode.success) return false;
+  if (authMode.data !== "none") return true;
+  if (
+    typeof value.providerBaseUrl !== "string" ||
+    !isProviderAuthAllowed({
+      baseUrl: value.providerBaseUrl,
+      protocol: protocol.data,
+      authMode: authMode.data,
+    })
+  )
+    return false;
+  const host = new URL(value.providerBaseUrl).hostname.replace(/^\[|\]$/g, "");
+  return ["localhost", "127.0.0.1", "::1"].includes(host);
+}
+
+function isSnapshotProjectRoutingValid(value: unknown): boolean {
+  if (!value || typeof value !== "object") return true;
+  const project = value as Record<string, unknown>;
+  return (
+    isCreationProviderRoutingValid(project) &&
+    (!Array.isArray(project.tasks) ||
+      project.tasks.every(
+        (task) =>
+          !task ||
+          typeof task !== "object" ||
+          isCreationProviderRoutingValid(task),
+      ))
+  );
+}
+
+function creationProviderRouting(
+  value: RoutingCandidate,
+): Pick<CreationProject, "providerProtocol" | "providerAuthMode"> {
+  if (!isCreationProviderRoutingValid(value))
+    throw new Error(
+      "供应商协议或认证配置无效；免密仅支持本机 Chat/Ollama 服务。",
+    );
+  return {
+    ...(value.providerProtocol === undefined
+      ? {}
+      : {
+          providerProtocol: providerProtocolSchema.parse(
+            value.providerProtocol,
+          ),
+        }),
+    ...(value.providerAuthMode === undefined
+      ? {}
+      : {
+          providerAuthMode: providerAuthModeSchema.parse(
+            value.providerAuthMode,
+          ),
+        }),
+  };
 }
 
 function safeBaseUrl(value: unknown): string | undefined {
@@ -625,6 +710,7 @@ function normalizeProject(value: CreationProject): CreationProject {
     kind: normalizeKind(candidate.kind),
     attachments,
     providerBaseUrl: safeBaseUrl(candidate.providerBaseUrl),
+    ...creationProviderRouting(candidate),
     providerName: safeText(candidate.providerName, 80) || undefined,
     agentThreadId:
       typeof candidate.agentThreadId === "string" &&
@@ -763,6 +849,7 @@ function normalizeProject(value: CreationProject): CreationProject {
             ? task.providerConnectionId.slice(0, 160)
             : undefined,
         providerBaseUrl: safeBaseUrl(task.providerBaseUrl),
+        ...creationProviderRouting(task),
         providerName: safeText(task.providerName, 80) || undefined,
         imageEdit: readImageEditSnapshot(task.imageEdit),
         imageEditContext: readImageEditContext(task.imageEditContext),
@@ -983,6 +1070,7 @@ export function persistCreationSnapshot(snapshot: CreationSnapshot): void {
 }
 
 export function createProject(input: CreateProjectInput): CreationProject {
+  const routing = creationProviderRouting(input);
   const id = projectId();
   const now = Date.now();
   const item: CanvasCollectionItem = {
@@ -1017,6 +1105,7 @@ export function createProject(input: CreateProjectInput): CreationProject {
     likedIds: [],
     customTags: [],
     providerBaseUrl: input.providerBaseUrl,
+    ...routing,
     providerName: input.providerName,
     providerCredentialRef: input.providerCredentialRef,
     composerDraft: {
@@ -1056,6 +1145,7 @@ export function createTask(project: CreationProject): CreationTask {
     batchId: `${project.id}-batch-${now.toString(36)}`,
     privacyMode: project.composerDraft.privacyMode,
     providerBaseUrl: project.providerBaseUrl,
+    ...creationProviderRouting(project),
     providerName: project.providerName,
     providerCredentialRef: project.providerCredentialRef,
     outputs: Array.from(

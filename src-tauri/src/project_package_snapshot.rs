@@ -83,6 +83,30 @@ fn array<'a>(value: &'a Value, field: &str) -> Result<&'a [Value], String> {
 
 fn routing(value: &Value) -> Result<(), String> {
     text(value, "providerName", 1, 80)?;
+    enumeration(
+        value,
+        "providerProtocol",
+        &[
+            "openai-chat",
+            "openai-responses",
+            "anthropic",
+            "azure-openai",
+            "ollama",
+        ],
+    )?;
+    enumeration(value, "providerAuthMode", &["api-key", "none"])?;
+    if value.get("providerAuthMode").and_then(Value::as_str) == Some("none") {
+        let base = value
+            .get("providerBaseUrl")
+            .and_then(Value::as_str)
+            .ok_or_else(|| invalid("providerBaseUrl"))?;
+        crate::task_host::validate_provider_options(
+            base,
+            value.get("providerProtocol").and_then(Value::as_str),
+            Some("none"),
+        )
+        .map_err(|_| invalid("providerAuthMode"))?;
+    }
     if let Some(credential) = value.get("providerCredentialRef") {
         let credential = credential
             .as_str()
@@ -665,6 +689,8 @@ fn task(value: &Value) -> Result<(), String> {
             "providerConnectionId",
             "providerCredentialRef",
             "providerBaseUrl",
+            "providerProtocol",
+            "providerAuthMode",
             "providerName",
             "outputs",
             "estimatedCostUsd",
@@ -756,6 +782,7 @@ fn task(value: &Value) -> Result<(), String> {
                 "index",
                 "status",
                 "assetId",
+                "text",
                 "model",
                 "provider",
                 "promptHash",
@@ -782,6 +809,18 @@ fn task(value: &Value) -> Result<(), String> {
             ],
         )?;
         texts(output, &[("assetId", 160), ("model", 120)])?;
+        if let Some(raw) = output.get("text") {
+            let text = raw
+                .as_str()
+                .filter(|text| text.len() <= 32768)
+                .ok_or_else(|| invalid("outputs.text"))?;
+            if output.get("assetId").is_some()
+                || (output.get("status").and_then(Value::as_str) == Some("succeeded")
+                    && text.trim().is_empty())
+            {
+                return Err(invalid("outputs.text"));
+            }
+        }
         text(output, "provider", 1, 80)?;
         text(output, "promptHash", 1, 120)?;
         text(output, "error", 1, 500)?;
@@ -950,6 +989,8 @@ pub(super) fn validate(snapshot: &Value) -> Result<(), String> {
                 "model",
                 "attachments",
                 "providerBaseUrl",
+                "providerProtocol",
+                "providerAuthMode",
                 "providerName",
                 "providerCredentialRef",
                 "agentThreadId",

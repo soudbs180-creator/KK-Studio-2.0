@@ -10,14 +10,45 @@ import {
 import { hasApiKey } from "./providerCredentials.ts";
 import { catalogForConnection } from "../models/modelCatalog.ts";
 import { resolveImageModelCapabilities } from "../models/imageModelCapabilities.ts";
+import {
+  protocolBindingMatches,
+  providerNeedsKey,
+  supportsProviderImages,
+  type ProviderProtocol,
+  type ProviderAuthMode,
+} from "../../domain/providerProtocol.ts";
+
+import type { CreationTask } from "./model.ts";
 
 export class ProviderSubmissionError extends Error {}
+export function taskProviderOptions(task: CreationTask) {
+  return {
+    baseUrl: task.providerBaseUrl,
+    credentialRef: task.providerCredentialRef,
+    protocol: task.providerProtocol,
+    authMode: task.providerAuthMode,
+  };
+}
+export function taskSubmissionBinding(task: CreationTask): SubmissionBinding {
+  return {
+    ...taskProviderOptions(task),
+    id: task.providerConnectionId,
+    referenceCount: task.attachments.length,
+    kind: task.kind === "text" ? "text" : "image",
+    model: task.model,
+    outputCount: task.requestedOutputs,
+    operation: task.imageEdit?.nativeMask ? "inpaint" : undefined,
+    localEdit: Boolean(task.imageEdit),
+  };
+}
 export interface SubmissionBinding {
   operation?: "generate" | "edit" | "inpaint";
   localEdit?: boolean;
   id?: string;
   baseUrl?: string;
   credentialRef?: string;
+  protocol?: ProviderProtocol;
+  authMode?: ProviderAuthMode;
   referenceCount: number;
   kind?: "image" | "text";
   model?: string;
@@ -62,7 +93,28 @@ function locksOrThrow(): BrowserLocks {
   return navigator.locks as unknown as BrowserLocks;
 }
 
-/** Local BYOK image endpoint only; other adapters retain their own contracts. */
+function assertBindingIdentity(
+  connection: ProviderConnection,
+  binding: SubmissionBinding,
+  selectedModelKind?: string,
+): void {
+  if (
+    endpoint(connection.baseUrl) !== endpoint(binding.baseUrl) ||
+    connection.credentialRef !== binding.credentialRef ||
+    !protocolBindingMatches(
+      { ...connection, baseUrl: connection.baseUrl ?? "" },
+      { ...binding, baseUrl: binding.baseUrl ?? "" },
+    ) ||
+    (binding.kind === "text" &&
+      connection.model !== binding.model &&
+      selectedModelKind !== "text")
+  )
+    throw new ProviderSubmissionError(
+      "绑定连接的地址、协议、认证或凭据身份已变化，请重新确认连接后创建任务。",
+    );
+}
+
+/** Local BYOK endpoint only; other adapters retain their own contracts. */
 export function assertSubmissionConnection(
   binding: SubmissionBinding,
   options: SubmissionOptions = {},
@@ -88,16 +140,7 @@ export function assertSubmissionConnection(
     connection,
     binding.model ?? connection.model ?? "",
   );
-  if (
-    endpoint(connection.baseUrl) !== endpoint(binding.baseUrl) ||
-    connection.credentialRef !== binding.credentialRef ||
-    (binding.kind === "text" &&
-      connection.model !== binding.model &&
-      selectedModel?.kind !== "text")
-  )
-    throw new ProviderSubmissionError(
-      "绑定连接的地址或凭据身份已变化，请重新确认连接后创建任务。",
-    );
+  assertBindingIdentity(connection, binding, selectedModel?.kind);
   const health =
     options.explicitRetry && connection.state === "degraded"
       ? { ...connection, state: "active" as const }
@@ -122,6 +165,9 @@ export function assertSubmissionConnection(
       "连接并发已满，请等待当前任务结束后重试。",
     );
   if (
+    (isImage &&
+      (!supportsProviderImages(connection) ||
+        !providerNeedsKey({ ...connection, baseUrl: connection.baseUrl }))) ||
     !(selectedModel && selectedModel.kind !== "unknown"
       ? selectedModel.kind === (binding.kind ?? "image")
       : connection.capabilities.modalities.includes(binding.kind ?? "image")) ||
@@ -176,6 +222,8 @@ export async function selectSubmissionConnection(
       id: candidate.id,
       baseUrl: candidate.baseUrl,
       credentialRef: candidate.credentialRef,
+      protocol: candidate.protocol,
+      authMode: candidate.authMode,
       referenceCount,
       kind,
       model,
@@ -184,7 +232,10 @@ export async function selectSubmissionConnection(
     };
     try {
       assertSubmissionConnection(binding);
-      if (!(await hasApiKey(candidate.baseUrl!, candidate.credentialRef)))
+      if (
+        providerNeedsKey({ ...candidate, baseUrl: candidate.baseUrl! }) &&
+        !(await hasApiKey(candidate.baseUrl!, candidate.credentialRef))
+      )
         continue;
       return assertSubmissionConnection(binding);
     } catch (error) {

@@ -1,3 +1,4 @@
+import { isLocalProviderUrl } from "./domain/providerUrl";
 import React, {
   lazy,
   useEffect,
@@ -149,6 +150,8 @@ import {
   assertSubmissionConnection,
   type ProviderSubmissionReservation,
   ProviderSubmissionError,
+  taskProviderOptions,
+  taskSubmissionBinding,
 } from "./features/creation/providerSubmission";
 import { mapWithConcurrency } from "./features/creation/generationQueue";
 import { compileDesignPrompt } from "./features/creation/promptCompiler";
@@ -1019,7 +1022,11 @@ export default function App() {
     let reservation: ProviderSubmissionReservation | undefined;
     const nativeTaskHost = usesNativeTaskHost();
     const assertTextCurrent = () => {
-      if (task.kind === "text" && !navigator.onLine)
+      if (
+        task.kind === "text" &&
+        !navigator.onLine &&
+        !isLocalProviderUrl(task.providerBaseUrl ?? "")
+      )
         throw new Error("当前离线，未提交文本任务；草稿已保留。");
       if (task.kind === "text")
         assertLiveTextTask(
@@ -1048,17 +1055,7 @@ export default function App() {
       if (controller.signal.aborted) throw new Error("任务已停止。");
       if (!nativeTaskHost)
         reservation = await reserveProviderSubmissionAsync(
-          {
-            id: task.providerConnectionId,
-            baseUrl: task.providerBaseUrl,
-            credentialRef: task.providerCredentialRef,
-            referenceCount: task.attachments.length,
-            kind: task.kind === "text" ? "text" : "image",
-            model: task.model,
-            outputCount: task.requestedOutputs,
-            operation: task.imageEdit?.nativeMask ? "inpaint" : undefined,
-            localEdit: Boolean(task.imageEdit),
-          },
+          taskSubmissionBinding(task),
           { explicitRetry: explicitRetry || Boolean(task.retryOfTaskId) },
         );
       if (controller.signal.aborted) throw new Error("任务已停止。");
@@ -1078,17 +1075,7 @@ export default function App() {
         if (controller.signal.aborted) throw new Error("任务已停止。");
         assertTextCurrent();
         const nativeConnection = assertSubmissionConnection(
-          {
-            id: task.providerConnectionId,
-            baseUrl: task.providerBaseUrl,
-            credentialRef: task.providerCredentialRef,
-            referenceCount: task.attachments.length,
-            kind: task.kind === "text" ? "text" : "image",
-            model: task.model,
-            outputCount: task.requestedOutputs,
-            operation: task.imageEdit?.nativeMask ? "inpaint" : undefined,
-            localEdit: Boolean(task.imageEdit),
-          },
+          taskSubmissionBinding(task),
           {
             skipCapacity: true,
             explicitRetry: explicitRetry || Boolean(task.retryOfTaskId),
@@ -1113,6 +1100,8 @@ export default function App() {
           taskId: task.id,
           idempotencyKey: task.idempotencyKey,
           baseUrl: task.providerBaseUrl,
+          protocol: task.providerProtocol,
+          authMode: task.providerAuthMode,
           credentialRef: task.providerCredentialRef ?? "",
           model: task.model,
           prompt: compiledPrompt,
@@ -1476,6 +1465,8 @@ export default function App() {
           prompt: task.prompt,
           model: task.model,
           providerBaseUrl: task.providerBaseUrl,
+          protocol: task.providerProtocol,
+          authMode: task.providerAuthMode,
           credentialRef: task.providerCredentialRef,
           idempotencyKey: task.idempotencyKey,
           signal: controller.signal,
@@ -1730,20 +1721,17 @@ export default function App() {
                 | "network",
               retryAfterSeconds: failure.retryAfterSeconds,
             },
-            {
-              baseUrl: task.providerBaseUrl,
-              credentialRef: task.providerCredentialRef,
-            },
+            taskProviderOptions(task),
           );
         else if (
           !failure &&
           !archiveUncertain &&
           reservation?.healthUnchanged()
         )
-          markProviderConnectionHealthy(task.providerConnectionId, {
-            baseUrl: task.providerBaseUrl,
-            credentialRef: task.providerCredentialRef,
-          });
+          markProviderConnectionHealthy(
+            task.providerConnectionId,
+            taskProviderOptions(task),
+          );
       }
     } catch (error) {
       // A failed project save cannot undo a completed generation receipt.
@@ -1847,10 +1835,7 @@ export default function App() {
               | "network",
             retryAfterSeconds: error.retryAfterSeconds,
           },
-          {
-            baseUrl: task.providerBaseUrl,
-            credentialRef: task.providerCredentialRef,
-          },
+          taskProviderOptions(task),
         );
       }
     } finally {
@@ -3445,4 +3430,5 @@ import "./styles/page-templates.css";
 import "./styles/canvas-compare.css";
 import "./styles/image-edit.css";
 import "./styles/image-selection.css";
+import "./styles/canvas-composer-screen.css";
 import "./styles/desktop-titlebar.css";

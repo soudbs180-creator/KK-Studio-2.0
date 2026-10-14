@@ -70,6 +70,23 @@ fn validate_connections(value: &Value) -> Result<(), String> {
         let object = entry
             .as_object()
             .ok_or("corrupt: 供应商配置条目必须是对象".to_string())?;
+        if object.contains_key("protocol") || object.contains_key("authMode") {
+            let field = |key: &str| -> Result<Option<&str>, String> {
+                object
+                    .get(key)
+                    .map(|value| {
+                        value
+                            .as_str()
+                            .ok_or_else(|| format!("corrupt: {key} 必须是字符串"))
+                    })
+                    .transpose()
+            };
+            crate::task_host::validate_provider_options(
+                field("baseUrl")?.ok_or("corrupt: 缺少接口地址")?,
+                field("protocol")?,
+                field("authMode")?,
+            )?;
+        }
         for key in object.keys() {
             if is_secret_key(key) {
                 return Err("unsupported: 供应商配置不能包含秘密字段，请改用系统凭据库".to_string());

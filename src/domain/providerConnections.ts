@@ -1,5 +1,10 @@
 import { z } from "zod";
 import { isAllowedProviderUrl } from "./providerUrl.ts";
+import {
+  providerProtocolSchema,
+  providerAuthModeSchema,
+  isProviderAuthAllowed,
+} from "./providerProtocol.ts";
 
 /** Credentials are referenced by id only; secret material lives in a vault. */
 export const connectionKindSchema = z.enum([
@@ -58,52 +63,64 @@ export const capabilityManifestSchema = z.object({
 });
 export type CapabilityManifest = z.infer<typeof capabilityManifestSchema>;
 
-export const providerConnectionSchema = z.object({
-  id: z.string().min(1).max(120),
-  provider: z.string().min(1).max(80),
-  kind: connectionKindSchema,
-  displayName: z.string().min(1).max(120),
-  /** Non-secret endpoint metadata used to switch between saved connections. */
-  baseUrl: z
-    .string()
-    .url()
-    .refine((value) => {
-      try {
-        const url = new URL(value);
-        return (
-          isAllowedProviderUrl(value) &&
-          !url.username &&
-          !url.password &&
-          !url.search &&
-          !url.hash
-        );
-      } catch {
-        return false;
-      }
-    }, "连接地址不能包含账号、密钥参数或片段")
-    .optional(),
-  /** Opaque reference into the system credential vault; never the secret itself. */
-  credentialRef: z
-    .string()
-    .max(160)
-    .regex(/^[A-Za-z0-9_-]+$/, "凭据只能保存不透明引用")
-    .optional(),
-  model: z.string().max(120).optional(),
-  capabilities: capabilityManifestSchema,
-  state: connectionStateSchema,
-  concurrencyLimit: z.number().int().positive().max(256),
-  activeJobs: z.number().int().nonnegative().optional(),
-  cooldownUntil: z.number().int().nonnegative().optional(),
-  quotaPolicyId: z.string().max(120).optional(),
-  lastHealthCheckAt: z.string().datetime().optional(),
-  /** Monotonic observation identity; timestamps alone can collide. */
-  healthRevision: z.number().int().nonnegative().safe().optional(),
-  /** Set only after a real image generation has returned an image. */
-  verificationStatus: providerVerificationStatusSchema.optional(),
-  lastSuccessfulGenerationAt: z.string().datetime().optional(),
-  /** Opaque local lease identities prevent a stale task releasing a re-added connection. */
-  activeLeaseIds: z.array(z.string().min(1).max(96)).max(256).optional(),
-});
+export const providerConnectionSchema = z
+  .object({
+    id: z.string().min(1).max(120),
+    provider: z.string().min(1).max(80),
+    kind: connectionKindSchema,
+    displayName: z.string().min(1).max(120),
+    /** Non-secret endpoint metadata used to switch between saved connections. */
+    baseUrl: z
+      .string()
+      .url()
+      .refine((value) => {
+        try {
+          const url = new URL(value);
+          return (
+            isAllowedProviderUrl(value) &&
+            !url.username &&
+            !url.password &&
+            !url.search &&
+            !url.hash
+          );
+        } catch {
+          return false;
+        }
+      }, "连接地址不能包含账号、密钥参数或片段")
+      .optional(),
+    /** Opaque reference into the system credential vault; never the secret itself. */
+    credentialRef: z
+      .string()
+      .max(160)
+      .regex(/^[A-Za-z0-9_-]+$/, "凭据只能保存不透明引用")
+      .optional(),
+    model: z.string().max(120).optional(),
+    protocol: providerProtocolSchema.optional(),
+    authMode: providerAuthModeSchema.optional(),
+    capabilities: capabilityManifestSchema,
+    state: connectionStateSchema,
+    concurrencyLimit: z.number().int().positive().max(256),
+    activeJobs: z.number().int().nonnegative().optional(),
+    cooldownUntil: z.number().int().nonnegative().optional(),
+    quotaPolicyId: z.string().max(120).optional(),
+    lastHealthCheckAt: z.string().datetime().optional(),
+    /** Monotonic observation identity; timestamps alone can collide. */
+    healthRevision: z.number().int().nonnegative().safe().optional(),
+    /** Set only after a real image generation has returned an image. */
+    verificationStatus: providerVerificationStatusSchema.optional(),
+    lastSuccessfulGenerationAt: z.string().datetime().optional(),
+    /** Opaque local lease identities prevent a stale task releasing a re-added connection. */
+    activeLeaseIds: z.array(z.string().min(1).max(96)).max(256).optional(),
+  })
+  .refine(
+    (value) =>
+      value.authMode !== "none" ||
+      Boolean(
+        value.baseUrl &&
+        isProviderAuthAllowed({ ...value, baseUrl: value.baseUrl }),
+      ),
+    "免密仅支持本机 Chat/Ollama 服务。",
+  );
 export type ProviderConnection = z.infer<typeof providerConnectionSchema>;
 
 export const DEFAULT_LOCAL_CONNECTION: ProviderConnection = {

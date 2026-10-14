@@ -1,3 +1,4 @@
+import type { ProviderProtocol, ProviderAuthMode } from "./providerProtocol.ts";
 export interface ProviderPreset {
   readonly id: string;
   readonly label: string;
@@ -5,6 +6,8 @@ export interface ProviderPreset {
   readonly baseUrl: string;
   readonly category: "官方" | "网关" | "本地";
   readonly protocol: string;
+  readonly wireProtocol?: ProviderProtocol;
+  readonly authMode?: ProviderAuthMode;
   readonly website: string;
   readonly keyUrl: string;
   readonly docsUrl: string;
@@ -32,13 +35,12 @@ export const PROVIDER_PRESETS: readonly ProviderPreset[] = [
     name: "OpenAI Responses",
     category: "官方",
     protocol: "Responses",
+    wireProtocol: "openai-responses",
     baseUrl: "https://api.openai.com/v1",
     website: "https://openai.com",
     keyUrl: "https://platform.openai.com/api-keys",
     docsUrl:
       "https://developers.openai.com/api/docs/guides/streaming-responses",
-    unavailableReason:
-      "当前执行链尚未接入 Responses；请使用 Chat Completions，已有连接保留。",
   },
   {
     id: "gemini",
@@ -59,12 +61,11 @@ export const PROVIDER_PRESETS: readonly ProviderPreset[] = [
     name: "Anthropic",
     category: "官方",
     protocol: "Messages",
+    wireProtocol: "anthropic",
     baseUrl: "https://api.anthropic.com/v1",
     website: "https://www.anthropic.com",
     keyUrl: "https://platform.claude.com/settings/keys",
     docsUrl: "https://platform.claude.com/docs/en/api/messages",
-    unavailableReason:
-      "当前通用执行链尚未接入 Messages，不能按 OpenAI 协议保存使用。",
   },
   {
     id: "azure-openai",
@@ -72,11 +73,11 @@ export const PROVIDER_PRESETS: readonly ProviderPreset[] = [
     name: "Azure OpenAI",
     category: "官方",
     protocol: "Azure v1 · 部署名称",
+    wireProtocol: "azure-openai",
     baseUrl: "",
     website: "https://azure.microsoft.com/products/ai-services/openai-service",
     keyUrl: "https://portal.azure.com",
     docsUrl: "https://learn.microsoft.com/azure/ai-foundry/openai/reference",
-    unavailableReason: "需专用 Azure 认证和部署名称；当前通用执行链尚未接入。",
   },
   {
     id: "new-api",
@@ -96,6 +97,7 @@ export const PROVIDER_PRESETS: readonly ProviderPreset[] = [
     name: "LM Studio",
     category: "本地",
     protocol: "OpenAI 兼容",
+    authMode: "none",
     baseUrl: "http://127.0.0.1:1234/v1",
     website: "https://lmstudio.ai",
     keyUrl: "https://lmstudio.ai/docs/developer/core/authentication",
@@ -108,13 +110,13 @@ export const PROVIDER_PRESETS: readonly ProviderPreset[] = [
     name: "Ollama",
     category: "本地",
     protocol: "OpenAI 兼容",
+    wireProtocol: "ollama",
+    authMode: "none",
     baseUrl: "http://127.0.0.1:11434/v1",
     website: "https://ollama.com",
     keyUrl: "https://docs.ollama.com/api/authentication",
     docsUrl: "https://docs.ollama.com/api/openai-compatibility",
     keyLabel: "认证说明",
-    unavailableReason:
-      "本机免密生成尚未接入当前执行链；可以查看文档，暂不自动创建可用连接。",
   },
   {
     id: "doubao-ark",

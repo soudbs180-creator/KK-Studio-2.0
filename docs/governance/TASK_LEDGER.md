@@ -139,6 +139,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-CANVAS-SYNC-20261014 | 修复 Agent 与已挂载画布图同步 | PARTIAL | 进行中 | P1 | none | root | Desktop/Tauri2.1.19复验位置/连线/重载；独立宽图问题另属TASK-CANVAS-WIDE-PORT-20261014 |
 | TASK-CANVAS-WIDE-PORT-20261014 | 宽图结果编辑器遮挡下游按钮 | TODO | 未完成 | P2 | none | root | 单独复证production并修正宽图主体几何/端口锚点 |
 | TASK-AGENT-UX-20261014 | Agent 执行过程与生成保存状态提示 | DONE | 已完成 | P2 | none | root | 保留证据并完成日常APP人工验收，真实Provider和发布沿原独立任务推进 |
+| TASK-PROTOCOL-CLI-20261014 | 从2.1.21接通Provider协议和CLI实际执行，优化分端控件 | IN_PROGRESS | 进行中 | P1 | TASK-UI-CONSOLIDATE-20261014 | root | 实现协议/CLI/分端控件并完整本地与Native验证，独立审查后提交输出 |
 
 ## TASK-FIX-PUSH-GUARD-SPACES-001 — 修复 Windows Git pre-push 空格及长路径启动
 
@@ -2668,5 +2669,24 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Verification: PASS — 冻结source4e38351c独立SOURCE PASS/38单测；Node1100pass/14既有skip、Agent172pass/2既有skip；525浏览器零retry/flaky、development与official隔离Tauri17/17通过。compound因1423占用出口1保留，全部剩余阶段同source补跑PASS。真实Provider/日常数据/Hosted发布另验。 主目录源码同SHA、107相关单测与门禁/official2.1.20/隔离native17通过；原暂存内容和140个未拥有源码保持。
 - Evidence: [docs/changes/2026-10-14-agent-execution-delivery/intent.md](../../docs/changes/2026-10-14-agent-execution-delivery/intent.md), [docs/changes/2026-10-14-agent-execution-delivery/spec.md](../../docs/changes/2026-10-14-agent-execution-delivery/spec.md), [docs/changes/2026-10-14-agent-execution-delivery/plan.md](../../docs/changes/2026-10-14-agent-execution-delivery/plan.md), [docs/changes/2026-10-14-agent-execution-delivery/verification.md](../../docs/changes/2026-10-14-agent-execution-delivery/verification.md), [docs/changes/2026-10-14-agent-execution-delivery/review.md](../../docs/changes/2026-10-14-agent-execution-delivery/review.md)
 - Next action: 保留证据并完成日常APP人工验收，真实Provider和发布沿原独立任务推进
+- Last verified: 2026-10-14
+- Updated: 2026-10-14
+
+## TASK-PROTOCOL-CLI-20261014 — 从2.1.21接通Provider协议和CLI实际执行，优化分端控件
+
+- Goal: 接通显式协议/认证与CLI操作，保留数据并交付最新版本
+- Scope: 五协议文本执行、Native模型发现、CLI安装检测/登录操作/桥生命周期、生产Codex依赖、设置和画布分端控件
+- Display status: 进行中
+- Priority: P1 — 解决 UI 风格混杂、版本散落和功能入口冲突，同时保留资料与并行成果。
+- Requirement refs: ledger:TASK-PROTOCOL-CLI-20261014
+- Feature IDs: FEAT-022, FEAT-032, FEAT-026, FEAT-039, FEAT-028
+- Owner role: repository-maintainer
+- Acceptance: legacy资料和请求指纹保留，protocol/auth冻结并无损roundtrip; 协议检测/真实HTTP请求/文本回写重载正确，取消未知不重复; CLI实际操作与完整生产依赖，读失败不删除原配置; Desktop/phone控件可正常命中，完整检查和原生证据后提交输出
+- Branch: `codex/TASK-PROTOCOL-CLI-20261014`
+- Worktree: `D:/kk-studio/.worktrees/branch-consolidation-20261011`
+- Modules: src/styles, src/components, src/domain, src/features, src-tauri, docs, scripts
+- Verification: PARTIAL — 实施前，基线为d38cf957。独立read-only审查发现协议字段未贯通、CLI复制命令及生产平台依赖缺失、手机缩放控件偏小；本轮验证待实现。
+- Evidence: [docs/changes/2026-10-14-protocol-cli-completion/intent.md](../../docs/changes/2026-10-14-protocol-cli-completion/intent.md), [docs/changes/2026-10-14-protocol-cli-completion/spec.md](../../docs/changes/2026-10-14-protocol-cli-completion/spec.md), [docs/changes/2026-10-14-protocol-cli-completion/plan.md](../../docs/changes/2026-10-14-protocol-cli-completion/plan.md), [docs/changes/2026-10-14-protocol-cli-completion/verification.md](../../docs/changes/2026-10-14-protocol-cli-completion/verification.md), [docs/changes/2026-10-14-protocol-cli-completion/review.md](../../docs/changes/2026-10-14-protocol-cli-completion/review.md), [docs/architecture/adr/ADR-018-provider-protocol-and-cli-execution.md](../../docs/architecture/adr/ADR-018-provider-protocol-and-cli-execution.md)
+- Next action: 实现协议/CLI/分端控件并完整本地与Native验证，独立审查后提交输出
 - Last verified: 2026-10-14
 - Updated: 2026-10-14

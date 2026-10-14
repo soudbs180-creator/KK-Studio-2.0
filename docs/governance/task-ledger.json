@@ -5609,5 +5609,55 @@
     "nextAction": "保留证据并完成日常APP人工验收，真实Provider和发布沿原独立任务推进",
     "lastVerified": "2026-10-14",
     "ownerRole": "repository-maintainer"
+  },
+  {
+    "id": "TASK-PROTOCOL-CLI-20261014",
+    "title": "从2.1.21接通Provider协议和CLI实际执行，优化分端控件",
+    "goal": "接通显式协议/认证与CLI操作，保留数据并交付最新版本",
+    "scope": "五协议文本执行、Native模型发现、CLI安装检测/登录操作/桥生命周期、生产Codex依赖、设置和画布分端控件",
+    "acceptance": [
+      "legacy资料和请求指纹保留，protocol/auth冻结并无损roundtrip",
+      "协议检测/真实HTTP请求/文本回写重载正确，取消未知不重复",
+      "CLI实际操作与完整生产依赖，读失败不删除原配置",
+      "Desktop/phone控件可正常命中，完整检查和原生证据后提交输出"
+    ],
+    "dependencies": ["TASK-UI-CONSOLIDATE-20261014"],
+    "owner": "root",
+    "ownerRole": "repository-maintainer",
+    "branch": "codex/TASK-PROTOCOL-CLI-20261014",
+    "worktree": "D:/kk-studio/.worktrees/branch-consolidation-20261011",
+    "affectedModules": [
+      "src/styles",
+      "src/components",
+      "src/domain",
+      "src/features",
+      "src-tauri",
+      "docs",
+      "scripts"
+    ],
+    "status": "IN_PROGRESS",
+    "priority": "P1",
+    "risk": "high",
+    "reviewRequired": true,
+    "platforms": ["Desktop", "Web", "Mobile"],
+    "evidence": [
+      "docs/changes/2026-10-14-protocol-cli-completion/intent.md",
+      "docs/changes/2026-10-14-protocol-cli-completion/spec.md",
+      "docs/changes/2026-10-14-protocol-cli-completion/plan.md",
+      "docs/changes/2026-10-14-protocol-cli-completion/verification.md",
+      "docs/changes/2026-10-14-protocol-cli-completion/review.md",
+      "docs/architecture/adr/ADR-018-provider-protocol-and-cli-execution.md"
+    ],
+    "requirementRefs": ["ledger:TASK-PROTOCOL-CLI-20261014"],
+    "featureIds": ["FEAT-022", "FEAT-032", "FEAT-026", "FEAT-039", "FEAT-028"],
+    "notes": "用户授权从已验收2.1.21继续；原物理worktree唯一writer、新任务分支，原branch/输出保留。",
+    "openQuestions": "外部真实供应商与登录需账号条件；本轮先完成可独立复验的实现和本地HTTP/Native。",
+    "lastVerified": "2026-10-14",
+    "updated": "2026-10-14",
+    "priorityRationale": "解决 UI 风格混杂、版本散落和功能入口冲突，同时保留资料与并行成果。",
+    "verification": "实施前，基线为d38cf957。独立read-only审查发现协议字段未贯通、CLI复制命令及生产平台依赖缺失、手机缩放控件偏小；本轮验证待实现。",
+    "displayStatus": "进行中",
+    "nextAction": "实现协议/CLI/分端控件并完整本地与Native验证，独立审查后提交输出",
+    "verificationResult": "PARTIAL"
   }
 ]

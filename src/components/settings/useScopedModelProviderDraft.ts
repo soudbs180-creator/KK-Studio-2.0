@@ -41,6 +41,7 @@ export default function useScopedModelProviderDraft({
   credentialRef,
   active,
   saving,
+  testing = false,
   onBusyChange,
   cancelRequest,
   setProfile,
@@ -54,6 +55,7 @@ export default function useScopedModelProviderDraft({
   credentialRef: string;
   active: boolean;
   saving: boolean;
+  testing?: boolean;
   onBusyChange?: (busy: boolean) => void;
   cancelRequest: () => void;
   setProfile: (profile: ModelProviderProfile) => void;
@@ -67,8 +69,8 @@ export default function useScopedModelProviderDraft({
   >({});
 
   useEffect(() => {
-    onBusyChange?.(saving);
-  }, [saving, onBusyChange]);
+    onBusyChange?.(saving || testing);
+  }, [saving, testing, onBusyChange]);
   useEffect(() => {
     if (active) return;
     cancelRequest();

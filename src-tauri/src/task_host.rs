@@ -18,8 +18,13 @@ use tokio::sync::Notify;
 
 #[path = "asset_io.rs"]
 mod io;
+#[path = "task_host_protocol_stream.rs"]
+mod protocol_stream;
+#[path = "task_host_provider.rs"]
+mod provider;
 #[path = "task_host_text.rs"]
 mod text;
+pub(crate) use provider::{discover_models, validate_provider_options};
 
 const MAX_ID: usize = 160;
 const MAX_PROMPT: usize = 32_000;
@@ -49,6 +54,10 @@ pub struct TaskHostRequest {
     pub idempotency_key: String,
     pub base_url: String,
     pub credential_ref: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub protocol: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub auth_mode: Option<String>,
     pub model: String,
     pub prompt: String,
     pub output_indices: Vec<u32>,
@@ -120,7 +129,7 @@ struct JournalRecord {
 struct JobControl {
     cancelled: Arc<AtomicBool>,
     wake: Arc<Notify>,
-    credential_ref: String,
+    capacity_key: String,
 }
 
 pub struct TaskHost {
@@ -245,6 +254,7 @@ impl TaskHost {
         }
         validate_request(&request)?;
         let fingerprint = fingerprint(&request)?;
+        let capacity_key = connection_capacity_key(&request);
         let _journal_lock = self.lock()?;
         if let Some(existing) = self.read_one(&request.task_id)? {
             if existing.record.idempotency_key != request.idempotency_key
@@ -265,7 +275,7 @@ impl TaskHost {
                 .map_err(|_| "io: 原生任务状态锁不可用".to_string())?;
             if jobs
                 .values()
-                .filter(|job| job.credential_ref == request.credential_ref)
+                .filter(|job| job.capacity_key == capacity_key)
                 .count()
                 >= request.concurrency_limit.unwrap_or(1)
             {
@@ -301,7 +311,7 @@ impl TaskHost {
         let control = JobControl {
             cancelled: Arc::new(AtomicBool::new(false)),
             wake: Arc::new(Notify::new()),
-            credential_ref: request.credential_ref.clone(),
+            capacity_key,
         };
         self.jobs
             .lock()
@@ -448,9 +458,13 @@ impl TaskHost {
                 Err(_) => return Err(RunError::failed("invalid_request", "请求引用的素材不可用")),
             }
         }
-        let secret = match credential(&request.credential_ref) {
-            Ok(Some(value)) if !value.is_empty() => value,
-            _ => return Err(RunError::failed("unauthorized", "供应商凭据不可用")),
+        let secret = if request.auth_mode.as_deref() == Some("none") {
+            String::new()
+        } else {
+            match credential(&request.credential_ref) {
+                Ok(Some(value)) if !value.is_empty() => value,
+                _ => return Err(RunError::failed("unauthorized", "供应商凭据不可用")),
+            }
         };
         if control.cancelled.load(Ordering::Acquire) {
             return Err(RunError::failed("cancelled", "任务在发送前已取消"));
@@ -1033,30 +1047,20 @@ fn validate_request(value: &TaskHostRequest) -> Result<(), String> {
     if value.model.is_empty() || value.model.chars().count() > MAX_MODEL {
         return Err("invalid: model".into());
     }
-    let url = reqwest::Url::parse(&value.base_url).map_err(|_| "invalid: baseUrl".to_string())?;
-    if value.base_url.chars().count() > MAX_BASE_URL
-        || !matches!(url.scheme(), "https" | "http")
-        || url.query().is_some()
-        || url.fragment().is_some()
-        || url.username() != ""
-        || url.password().is_some()
-        || url.host_str().is_none()
+    let needs_key = validate_provider_options(
+        &value.base_url,
+        value.protocol.as_deref(),
+        value.auth_mode.as_deref(),
+    )?;
+    if value.kind.as_deref() != Some("text")
+        && (provider::Protocol::parse(value.protocol.as_deref())? != provider::Protocol::Chat
+            || !needs_key)
     {
-        return Err("invalid: baseUrl".into());
+        return Err("invalid: image request requires OpenAI image protocol and an API key".into());
     }
-    let host = url.host_str().unwrap_or_default();
-    if url.scheme() == "http" && !is_loopback_host(host) {
-        return Err("invalid: baseUrl".into());
-    }
-    if url.scheme() == "https"
-        && !is_loopback_host(host)
-        && normalized_host(host)
-            .parse::<IpAddr>()
-            .is_ok_and(|address| !is_public_ip(address))
+    if (needs_key && value.credential_ref.is_empty())
+        || value.credential_ref.chars().count() > MAX_ID
     {
-        return Err("invalid: baseUrl".into());
-    }
-    if value.credential_ref.is_empty() || value.credential_ref.chars().count() > MAX_ID {
         return Err("invalid: credentialRef".into());
     }
     if value.output_indices.is_empty() || value.output_indices.len() > MAX_OUTPUTS || {
@@ -1154,6 +1158,17 @@ fn validate_record(record: &JobRecord) -> Result<(), String> {
     }
     Ok(())
 }
+fn connection_capacity_key(value: &TaskHostRequest) -> String {
+    if value.auth_mode.as_deref() != Some("none") {
+        return value.credential_ref.clone();
+    }
+    // Different keyless daemons must not share the empty credential ID.
+    // Chat-compatible aliases of the same daemon still share its capacity.
+    let base =
+        reqwest::Url::parse(&value.base_url).expect("request validated before capacity lookup");
+    format!("local:{}", base.as_str().trim_end_matches('/'))
+}
+
 fn fingerprint(value: &TaskHostRequest) -> Result<String, String> {
     // Keep the exact serialization of legacy image identities; explicit image
     // is equivalent to an omitted kind, while text gets a distinct fingerprint.
@@ -1234,6 +1249,8 @@ mod tests {
             idempotency_key: "idem-1".into(),
             base_url: "http://127.0.0.1:1234/v1".into(),
             credential_ref: "test".into(),
+            protocol: None,
+            auth_mode: None,
             model: "demo".into(),
             prompt: "hello".into(),
             output_indices: vec![0],
@@ -1359,7 +1376,7 @@ mod tests {
             JobControl {
                 cancelled: Arc::new(AtomicBool::new(false)),
                 wake: Arc::new(Notify::new()),
-                credential_ref: pending.credential_ref.clone(),
+                capacity_key: connection_capacity_key(&pending),
             },
         );
         let result = tauri::async_runtime::block_on(Arc::clone(&host).submit(pending.clone()));
@@ -1383,7 +1400,7 @@ mod tests {
             JobControl {
                 cancelled: Arc::new(AtomicBool::new(false)),
                 wake: Arc::new(Notify::new()),
-                credential_ref: pending.credential_ref.clone(),
+                capacity_key: connection_capacity_key(&pending),
             },
         );
         let result = tauri::async_runtime::block_on(Arc::clone(&host).submit(pending.clone()));
@@ -1398,11 +1415,65 @@ mod tests {
         let original_json = serde_json::to_value(&original).unwrap();
         assert!(original_json.get("kind").is_none());
         assert!(original_json.get("concurrencyLimit").is_none());
+        assert!(original_json.get("protocol").is_none());
+        assert!(original_json.get("authMode").is_none());
         let mut explicit = original.clone();
         explicit.kind = Some("image".into());
         assert_eq!(
             fingerprint(&original).unwrap(),
             fingerprint(&explicit).unwrap()
+        );
+    }
+
+    #[test]
+    fn keyless_text_is_valid_but_images_and_remote_none_are_rejected() {
+        let mut value = request("local-protocol");
+        value.kind = Some("text".into());
+        value.protocol = Some("ollama".into());
+        value.auth_mode = Some("none".into());
+        value.credential_ref.clear();
+        assert!(validate_request(&value).is_ok());
+        let mut other = value.clone();
+        other.base_url = "http://127.0.0.1:2345/v1".into();
+        assert_ne!(
+            connection_capacity_key(&value),
+            connection_capacity_key(&other)
+        );
+        other.protocol = Some("openai-chat".into());
+        assert_eq!(
+            connection_capacity_key(&other),
+            connection_capacity_key(&{
+                let mut alias = other.clone();
+                alias.protocol = Some("ollama".into());
+                alias
+            })
+        );
+        value.kind = None;
+        assert!(validate_request(&value).is_err());
+        value.kind = Some("text".into());
+        value.base_url = "https://provider.test/v1".into();
+        assert!(validate_request(&value).is_err());
+    }
+
+    #[test]
+    fn protocol_and_auth_are_fingerprinted_and_legacy_defaults_are_omitted() {
+        let legacy = request("protocol-fingerprint");
+        let mut changed = legacy.clone();
+        changed.kind = Some("text".into());
+        let chat_fingerprint = fingerprint(&changed).unwrap();
+        changed.protocol = Some("openai-responses".into());
+        assert_ne!(chat_fingerprint, fingerprint(&changed).unwrap());
+        changed.auth_mode = Some("none".into());
+        let metadata = serde_json::to_value(&changed).unwrap();
+        assert_eq!(metadata["protocol"], "openai-responses");
+        assert_eq!(metadata["authMode"], "none");
+        let mut old_json = serde_json::to_value(&legacy).unwrap();
+        old_json.as_object_mut().unwrap().remove("protocol");
+        old_json.as_object_mut().unwrap().remove("authMode");
+        let restored: TaskHostRequest = serde_json::from_value(old_json).unwrap();
+        assert_eq!(
+            fingerprint(&legacy).unwrap(),
+            fingerprint(&restored).unwrap()
         );
     }
 

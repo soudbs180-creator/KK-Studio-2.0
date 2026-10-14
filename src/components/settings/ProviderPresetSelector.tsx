@@ -1,4 +1,5 @@
-import { useState, type MouseEvent } from "react";
+import { useContext, useRef, useState, type MouseEvent } from "react";
+import { SettingsNavigationContext } from "./SettingsNavigationContext";
 import { invoke, isTauri } from "@tauri-apps/api/core";
 import {
   PROVIDER_PRESETS,
@@ -13,6 +14,9 @@ export default function ProviderPresetSelector({
   onSelect: (preset: ProviderPreset) => void;
   onOpenGoogle: () => void;
 }) {
+  const { busy } = useContext(SettingsNavigationContext);
+  const disclosure = useRef<HTMLDetailsElement>(null);
+  const [view, setView] = useState<"list" | "detail">("list");
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("全部");
   const [selected, setSelected] = useState("openai");
@@ -37,36 +41,57 @@ export default function ProviderPresetSelector({
         .includes(needle),
   );
   return (
-    <details className="provider-presets">
-      <summary>服务商预设与接口文档</summary>
-      <label className="settings-field">
-        <span>搜索服务商</span>
-        <input
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
-          placeholder="名称、协议或网站"
-        />
-      </label>
-      <div
-        className="settings-action-group"
-        role="group"
-        aria-label="服务商分类"
+    <details
+      ref={disclosure}
+      className="provider-presets"
+      onToggle={(event) => {
+        if (!event.currentTarget.open) setView("list");
+      }}
+    >
+      <summary
+        aria-disabled={busy}
+        title={busy ? "连接操作进行中，完成后可展开预设" : undefined}
+        onClick={(event) => {
+          if (busy) event.preventDefault();
+        }}
       >
-        {["全部", "官方", "网关", "本地"].map((value) => (
-          <button
-            type="button"
-            className="settings-action secondary"
-            key={value}
-            aria-pressed={category === value}
-            onClick={() => setCategory(value)}
-          >
-            {value}
-          </button>
-        ))}
+        服务商预设与接口文档
+      </summary>
+      <div hidden={view !== "list"}>
+        <label className="settings-field">
+          <span>搜索服务商</span>
+          <input
+            disabled={busy}
+            title={busy ? "连接操作进行中，完成后可切换预设" : undefined}
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="名称、协议或网站"
+          />
+        </label>
+        <div
+          className="settings-action-group"
+          role="group"
+          aria-label="服务商分类"
+        >
+          {["全部", "官方", "网关", "本地"].map((value) => (
+            <button
+              type="button"
+              className="settings-action secondary"
+              key={value}
+              disabled={busy}
+              title={busy ? "连接操作进行中，完成后可切换预设" : undefined}
+              aria-pressed={category === value}
+              onClick={() => setCategory(value)}
+            >
+              {value}
+            </button>
+          ))}
+        </div>
       </div>
       <div className="provider-preset-layout">
         <div
           className="provider-preset-list"
+          hidden={view !== "list"}
           role="group"
           aria-label="服务商预设"
         >
@@ -75,9 +100,17 @@ export default function ProviderPresetSelector({
               type="button"
               className="provider-preset-item"
               key={item.id}
+              disabled={busy}
+              title={
+                busy
+                  ? "连接操作进行中，完成后可切换预设"
+                  : item.label + " · " + item.protocol
+              }
               aria-pressed={selected === item.id}
               onClick={() => {
+                if (busy) return;
                 setSelected(item.id);
+                setView("detail");
                 setFeedback("");
               }}
             >
@@ -89,8 +122,34 @@ export default function ProviderPresetSelector({
             <p role="status">没有匹配的服务商，清除搜索或更换分类。</p>
           )}
         </div>
-        <section className="provider-preset-detail" aria-label="预设详情">
-          <h3>{preset.label}</h3>
+        <section
+          className="provider-preset-detail"
+          hidden={view !== "detail"}
+          aria-label="预设详情"
+        >
+          <div className="settings-subpage-header">
+            <button
+              type="button"
+              className="settings-action secondary"
+              disabled={busy}
+              title={busy ? "连接操作进行中，完成后可切换预设" : undefined}
+              onClick={() => {
+                if (!busy) {
+                  setView("list");
+                  window.requestAnimationFrame(() =>
+                    disclosure.current
+                      ?.querySelector<HTMLButtonElement>(
+                        '.provider-preset-item[aria-pressed="true"]',
+                      )
+                      ?.focus({ preventScroll: true }),
+                  );
+                }
+              }}
+            >
+              返回服务商
+            </button>
+            <h3>{preset.label}</h3>
+          </div>
           <p>{preset.protocol}</p>
           <div className="provider-preset-links">
             <a
@@ -122,7 +181,7 @@ export default function ProviderPresetSelector({
           <p>
             {preset.unavailableReason ||
               (preset.category === "本地"
-                ? "请先启动本地服务；生成需要在服务端开启 API Token。"
+                ? "请先启动本机服务。预设使用本机免密；开启了 Token 认证时，改选 API Key 后填写密钥。"
                 : preset.category === "网关"
                   ? "接口地址和令牌由你的实例提供。选择后填写实例地址，不会自动请求服务。"
                   : "使用预设补全名称和接口地址，模型可检测或手动填写。")}
@@ -131,12 +190,20 @@ export default function ProviderPresetSelector({
             type="button"
             className="settings-action"
             disabled={
-              preset.id !== "gemini" && Boolean(preset.unavailableReason)
+              busy ||
+              (preset.id !== "gemini" && Boolean(preset.unavailableReason))
             }
-            title={preset.unavailableReason}
-            onClick={() =>
-              preset.id === "gemini" ? onOpenGoogle() : onSelect(preset)
+            title={
+              busy
+                ? "连接操作进行中，完成后可使用预设"
+                : preset.unavailableReason
             }
+            onClick={() => {
+              if (busy) return;
+              if (preset.id === "gemini") onOpenGoogle();
+              else onSelect(preset);
+              if (disclosure.current) disclosure.current.open = false;
+            }}
           >
             {preset.id === "gemini" ? "前往 Google 配置" : "使用此预设"}
           </button>

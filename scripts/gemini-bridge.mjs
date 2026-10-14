@@ -2,6 +2,7 @@
 /**
  * scripts/gemini-bridge.mjs — 极简本地桥,代理 Gemini CLI(Google 账号登录,免 API Key)。
  *
+ * - GET  /health            → 免费进程健康检查（不启动 CLI 或模型请求）。
  * - GET  /status            → { installed, version?, login, loginStatus? }
  * - POST /chat              → body { prompt, resumeSessionId?, model? } → { text, sessionId?, error? }
  * - 仅监听 127.0.0.1;请求体 ≤ 1 MiB;CORS 允许本机来源。
@@ -149,16 +150,55 @@ async function probeLogin(ctx, invocation, signal) {
     : "unknown";
 }
 
+function admitBridgeRequest(req, actualPort) {
+  const headers = {
+    "content-type": "application/json; charset=utf-8",
+    "access-control-allow-methods": "GET, POST, OPTIONS",
+    "access-control-allow-headers": "content-type",
+    "cache-control": "no-store",
+    vary: "Origin",
+  };
+  const origin = req.headers.origin;
+  const allowedOrigins = new Set([
+    "http://localhost:1421",
+    "http://127.0.0.1:1421",
+    "http://localhost:1423",
+    "http://127.0.0.1:1423",
+    "http://tauri.localhost",
+    "tauri://localhost",
+  ]);
+  if (origin && allowedOrigins.has(origin))
+    headers["access-control-allow-origin"] = origin;
+  const allowedHosts = new Set([
+    `127.0.0.1:${actualPort}`,
+    `localhost:${actualPort}`,
+  ]);
+  if (!allowedHosts.has(req.headers.host?.toLowerCase()))
+    return { headers, error: "Host 不受信任。" };
+  if (origin && !allowedOrigins.has(origin))
+    return { headers, error: "来源不受信任。" };
+  if (
+    !origin &&
+    (req.headers["sec-fetch-site"] || req.headers["sec-fetch-mode"])
+  )
+    return { headers, error: "浏览器请求缺少可信来源。" };
+  return { headers, error: null };
+}
+
 export function createGeminiBridge(options = {}) {
   const port = options.port ?? DEFAULT_PORT;
+  const ownerNonce = options.ownerNonce ?? "";
+  if (ownerNonce && !/^[a-f0-9]{64}$/.test(ownerNonce))
+    throw new Error("托管桥归属标识无效。");
+  const activeRequests = new Set();
+  let closing = false;
   const timeoutMs = options.timeoutMs ?? CHAT_TIMEOUT_MS;
   const ctx = {
     spawn: options.spawnImpl ?? spawn,
     readFile: options.readFileImpl ?? readFile,
   };
-  let invocationPromise;
-  const getInvocation = () =>
-    (invocationPromise ??= resolveGeminiInvocation(ctx));
+  // Installation can change while this bridge stays alive; never cache absence.
+  const getInvocation = () => resolveGeminiInvocation(ctx);
 
   async function handleStatus({ signal } = {}) {
     const invocation = await getInvocation();
@@ -262,49 +302,66 @@ export function createGeminiBridge(options = {}) {
     return { text, ...(sessionId ? { sessionId } : {}) };
   }
 
+  function runtimeResponse(req, pathname) {
+    const ownedRequest =
+      ownerNonce && req.headers["x-kk-bridge-owner"] === ownerNonce;
+    if (req.method === "GET" && pathname === "/health") {
+      if (ownerNonce && !ownedRequest)
+        return {
+          status: 403,
+          payload: {
+            error: { code: "forbidden", message: "桥归属检查失败。" },
+          },
+        };
+      return {
+        status: 200,
+        payload: {
+          ok: true,
+          service: "kk-gemini-bridge",
+          owned: Boolean(ownerNonce),
+          pid: process.pid,
+          ...(ownerNonce ? { nonce: ownerNonce } : {}),
+        },
+      };
+    }
+    if (req.method === "POST" && pathname === "/runtime/shutdown") {
+      if (!ownedRequest)
+        return {
+          status: 403,
+          payload: {
+            error: { code: "forbidden", message: "桥归属检查失败。" },
+          },
+        };
+      if (activeRequests.size)
+        return {
+          status: 409,
+          payload: {
+            error: {
+              code: "busy",
+              message: "桥仍有请求，请先取消检测或对话。",
+            },
+          },
+        };
+      // Atomically refuse new paid work before the Native owner closes its Job.
+      closing = true;
+      return { status: 200, payload: { ok: true } };
+    }
+    return null;
+  }
+
   const server = createServer((req, res) => {
-    const headers = {
-      "content-type": "application/json; charset=utf-8",
-      "access-control-allow-methods": "GET, POST, OPTIONS",
-      "access-control-allow-headers": "content-type",
-      "cache-control": "no-store",
-      vary: "Origin",
-    };
-    const origin = req.headers.origin;
-    const allowedOrigins = new Set([
-      "http://localhost:1421",
-      "http://127.0.0.1:1421",
-      "http://localhost:1423",
-      "http://127.0.0.1:1423",
-      "http://tauri.localhost",
-      "tauri://localhost",
-    ]);
-    if (origin && allowedOrigins.has(origin))
-      headers["access-control-allow-origin"] = origin;
-    const actualPort = server.address()?.port;
-    const allowedHosts = new Set([
-      `127.0.0.1:${actualPort}`,
-      `localhost:${actualPort}`,
-    ]);
+    const { headers, error: admissionError } = admitBridgeRequest(
+      req,
+      server.address()?.port,
+    );
     const send = (status, payload) => {
       if (res.destroyed) return;
       res.writeHead(status, headers);
       res.end(JSON.stringify(payload));
     };
-    if (!allowedHosts.has(req.headers.host?.toLowerCase()))
+    if (admissionError)
       return send(403, {
-        error: { code: "forbidden", message: "Host 不受信任。" },
-      });
-    if (origin && !allowedOrigins.has(origin))
-      return send(403, {
-        error: { code: "forbidden", message: "来源不受信任。" },
-      });
-    if (
-      !origin &&
-      (req.headers["sec-fetch-site"] || req.headers["sec-fetch-mode"])
-    )
-      return send(403, {
-        error: { code: "forbidden", message: "浏览器请求缺少可信来源。" },
+        error: { code: "forbidden", message: admissionError },
       });
     const operation = new AbortController();
     const cancel = () => {
@@ -314,7 +371,20 @@ export function createGeminiBridge(options = {}) {
     res.on("close", cancel);
     if (req.method === "OPTIONS") return send(204, {});
     const url = new URL(req.url ?? "/", "http://127.0.0.1");
-    if (req.method === "GET" && url.pathname === "/status")
+    const runtime = runtimeResponse(req, url.pathname);
+    if (runtime) return send(runtime.status, runtime.payload);
+    if (closing)
+      return send(503, {
+        error: { code: "stopping", message: "托管桥正在停止。" },
+      });
+    const track = () => {
+      activeRequests.add(res);
+      const complete = () => activeRequests.delete(res);
+      res.once("finish", complete);
+      res.once("close", complete);
+    };
+    if (req.method === "GET" && url.pathname === "/status") {
+      track();
       return handleStatus({ signal: operation.signal }).then(
         (payload) => send(200, payload),
         (error) =>
@@ -322,6 +392,7 @@ export function createGeminiBridge(options = {}) {
             error: { code: "failed", message: String(error?.message ?? error) },
           }),
       );
+    }
     if (req.method === "POST" && url.pathname === "/chat") {
       if (
         req.headers["content-type"]?.split(";", 1)[0].toLowerCase() !==
@@ -330,6 +401,7 @@ export function createGeminiBridge(options = {}) {
         return send(415, {
           error: { code: "invalid", message: "只接受 JSON 请求。" },
         });
+      track();
       let size = 0;
       const chunks = [];
       req.on("data", (chunk) => {
@@ -378,7 +450,7 @@ export function createGeminiBridge(options = {}) {
         server.once("error", reject);
         server.listen(port, "127.0.0.1", resolve);
       });
-      return port;
+      return server.address().port;
     },
     close() {
       return new Promise((resolve) => {
@@ -397,11 +469,23 @@ if (
 ) {
   const portArg = process.argv.indexOf("--port");
   const port = portArg >= 0 ? Number(process.argv[portArg + 1]) : DEFAULT_PORT;
-  createGeminiBridge({ port })
+  const ownerNonce = process.env.KK_GEMINI_BRIDGE_OWNER_NONCE ?? "";
+  delete process.env.KK_GEMINI_BRIDGE_OWNER_NONCE;
+  createGeminiBridge({ port, ownerNonce })
     .listen()
-    .then((actual) =>
-      console.log(`Gemini CLI 桥已启动: http://127.0.0.1:${actual} (仅本机)`),
-    )
+    .then((actual) => {
+      if (ownerNonce)
+        console.log(
+          "KK_GEMINI_BRIDGE_READY " +
+            JSON.stringify({
+              port: actual,
+              pid: process.pid,
+              nonce: ownerNonce,
+            }),
+        );
+      else
+        console.log(`Gemini CLI 桥已启动: http://127.0.0.1:${actual} (仅本机)`);
+    })
     .catch((error) => {
       console.error("Gemini CLI 桥启动失败:", error.message);
       process.exit(1);

@@ -1,6 +1,13 @@
 /** Non-secret, account-scoped discovery. A model list is not generation verification. */
 import type { ModelKind } from "../../domain/modelSelection.ts";
 import {
+  protocolBindingMatches,
+  providerProtocolSchema,
+  providerAuthModeSchema,
+  type ProviderProtocol,
+  type ProviderAuthMode,
+} from "../../domain/providerProtocol.ts";
+import {
   parseImageModelCapabilities,
   type ImageModelCapabilities,
 } from "../../domain/imageModelCapabilities.ts";
@@ -20,6 +27,8 @@ export interface ModelCatalog {
   id: string;
   baseUrl?: string;
   credentialRef?: string;
+  protocol?: ProviderProtocol;
+  authMode?: ProviderAuthMode;
   fetchedAt: number;
   models: CatalogModel[];
 }
@@ -27,6 +36,8 @@ type Connection = {
   id: string;
   baseUrl?: string;
   credentialRef?: string;
+  protocol?: ProviderProtocol;
+  authMode?: ProviderAuthMode;
   model?: string;
   capabilities?: { modalities: string[] };
 };
@@ -126,6 +137,11 @@ export function readModelCatalogs(): ModelCatalog[] {
     return raw.slice(0, 200).flatMap((value) => {
       const item = record(value);
       if (typeof item.id !== "string" || !Array.isArray(item.models)) return [];
+      const protocol = providerProtocolSchema
+          .optional()
+          .safeParse(item.protocol),
+        authMode = providerAuthModeSchema.optional().safeParse(item.authMode);
+      if (!protocol.success || !authMode.success) return [];
       const models = item.models.slice(0, 5000).flatMap((value) => {
         const model = storedModel(value);
         return model ? [model] : [];
@@ -133,6 +149,8 @@ export function readModelCatalogs(): ModelCatalog[] {
       return [
         {
           id: item.id,
+          protocol: protocol.data,
+          authMode: authMode.data,
           baseUrl: typeof item.baseUrl === "string" ? item.baseUrl : undefined,
           credentialRef:
             typeof item.credentialRef === "string"
@@ -151,7 +169,11 @@ function matches(connection: Connection, catalog: ModelCatalog) {
   return (
     connection.id === catalog.id &&
     connection.baseUrl === catalog.baseUrl &&
-    connection.credentialRef === catalog.credentialRef
+    connection.credentialRef === catalog.credentialRef &&
+    protocolBindingMatches(
+      { ...connection, baseUrl: connection.baseUrl ?? "" },
+      { ...catalog, baseUrl: catalog.baseUrl ?? "" },
+    )
   );
 }
 export function catalogForConnection(
@@ -196,6 +218,8 @@ export function saveModelCatalog(
         id: connection.id,
         baseUrl: connection.baseUrl,
         credentialRef: connection.credentialRef,
+        protocol: connection.protocol,
+        authMode: connection.authMode,
         fetchedAt: Date.now(),
         models: next.slice(0, 5000).flatMap((value) => {
           const model = storedModel(value);

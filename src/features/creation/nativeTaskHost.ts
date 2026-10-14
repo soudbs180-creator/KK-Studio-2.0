@@ -1,5 +1,9 @@
 import { invoke } from "@tauri-apps/api/core";
 import type {
+  ProviderProtocol,
+  ProviderAuthMode,
+} from "../../domain/providerProtocol.ts";
+import type {
   CreationSnapshot,
   CreationTask,
   CreationTaskOutput,
@@ -23,6 +27,8 @@ export interface NativeTaskHostRequest {
   idempotencyKey: string;
   baseUrl: string;
   credentialRef: string;
+  protocol?: ProviderProtocol;
+  authMode?: ProviderAuthMode;
   model: string;
   prompt: string;
   outputIndices: number[];

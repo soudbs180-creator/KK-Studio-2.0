@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { X } from "lucide-react";
 import {
   DEFAULT_SETTINGS,
@@ -10,7 +10,11 @@ import type { SettingsPreferences } from "../../domain/settings";
 import GeneralSettings from "./GeneralSettings";
 import SettingsSections from "./SettingsSections";
 import type { SettingsSection } from "./SettingsSectionData";
-import { SETTINGS_NAV_GROUPS } from "./SettingsSectionData";
+import { SETTINGS_NAV_GROUPS, SETTINGS_SECTIONS } from "./SettingsSectionData";
+import {
+  SettingsNavigationContext,
+  useSettingsNavigationLock,
+} from "./SettingsNavigationContext";
 import type { SettingsSectionItem } from "./SettingsSectionData";
 import type { ExtensionsTab } from "./ExtensionsSettings";
 import type { SaveState } from "../../features/creation/useCreationStorage";
@@ -84,6 +88,22 @@ export default function SettingsPanel({
   projects: readonly CreationProject[];
   registry: SkillRegistry;
 }) {
+  const panelRef = useRef<HTMLDivElement>(null);
+  const [navigation, setNavigation] = useState<"categories" | "detail">(
+    "detail",
+  );
+  const [busy, setBusy] = useState(false);
+  useSettingsNavigationLock(panelRef, busy);
+  useLayoutEffect(() => {
+    if (!window.matchMedia("(max-width: 767px)").matches) return;
+    const target =
+      navigation === "categories"
+        ? panelRef.current?.querySelector<HTMLElement>('[aria-current="page"]')
+        : panelRef.current?.querySelector<HTMLElement>(".settings-content");
+    if (navigation === "categories")
+      target?.scrollIntoView({ block: "nearest" });
+    target?.focus({ preventScroll: true });
+  }, [navigation]);
   const [initial] = useState(readInitialSettings);
   const [preferences, setPreferences] = useState(initial.preferences);
   const [resolved] = useState(() => resolveInitialSection(initialSection));
@@ -131,97 +151,131 @@ export default function SettingsPanel({
   }
 
   return (
-    <div className="settings-panel" data-figma-node="399:27506">
-      <aside className="settings-sidebar">
-        <h1 id="settings-dialog-title">设置</h1>
-        <nav className="settings-nav" aria-label="设置分类">
-          {SETTINGS_NAV_GROUPS.map((group) => (
-            <div key={group.label} className="settings-nav-group">
-              <div className="settings-nav-group-label">{group.label}</div>
-              {group.items.map((item: SettingsSectionItem) => (
-                <button
-                  key={item.id}
-                  type="button"
-                  className={`settings-nav-item${section === item.id ? " is-active" : ""}`}
-                  aria-current={section === item.id ? "page" : undefined}
-                  onClick={() => {
-                    setSection(item.id);
-                    if (item.id !== "extensions") setExtensionsTab(undefined);
-                    setFeedback({ message: "", error: false });
-                  }}
-                >
-                  <img
-                    className="settings-nav-icon"
-                    src={`/design/figma/settings-nav-${item.id === "usage" ? "account" : item.id === "skill" || item.id === "extensions" ? "mcp" : item.id}.svg`}
-                    alt=""
-                    width="20"
-                    height="20"
-                  />
-                  <span>{item.label}</span>
-                </button>
-              ))}
-            </div>
-          ))}
-        </nav>
-      </aside>
-      <main
-        className="settings-content"
-        aria-labelledby="settings-section-title"
-        tabIndex={0}
+    <SettingsNavigationContext.Provider value={{ busy, setBusy }}>
+      <div
+        ref={panelRef}
+        className="settings-panel"
+        data-navigation={navigation}
+        aria-busy={busy}
+        data-figma-node="399:27506"
       >
-        {section === "general" ? (
-          <GeneralSettings
-            preferences={preferences}
-            onChange={updatePreferences}
-          />
-        ) : (
-          <SettingsSections
-            key={section}
-            section={section}
-            saveState={saveState}
-            revision={revision}
-            projects={projects}
-            preferences={preferences}
-            registry={registry}
-            extensionsTab={extensionsTab}
-            onReset={() =>
-              updatePreferences(
-                { ...DEFAULT_SETTINGS },
-                "已恢复默认偏好。项目和资产未改动。",
-              )
-            }
-            onFeedback={(message) => setFeedback({ message, error: false })}
-          />
-        )}
-      </main>
-      <button
-        type="button"
-        className="settings-close"
-        aria-label="关闭设置"
-        onClick={onClose}
-      >
-        <img
-          src="/design/figma/settings-close.svg"
-          width="14"
-          height="14"
-          alt=""
-        />
-      </button>
-      {feedback.message && (
-        <div
-          className={`settings-feedback${feedback.error ? " is-error" : ""}`}
-          role={feedback.error ? "alert" : "status"}
-        >
-          <span>{feedback.message}</span>
+        <div className="settings-phone-navigation">
           <button
             type="button"
-            aria-label="收起设置提示"
-            onClick={() => setFeedback({ message: "", error: false })}
+            className="settings-action secondary"
+            disabled={busy}
+            title={busy ? "连接操作进行中，完成后可返回" : undefined}
+            onClick={() => {
+              if (!busy) setNavigation("categories");
+            }}
           >
-            <X size={15} />
+            返回设置分类
           </button>
+          <strong>
+            {SETTINGS_SECTIONS.find((item) => item.id === section)?.label}
+          </strong>
         </div>
-      )}
-    </div>
+        <aside className="settings-sidebar">
+          <h1 id="settings-dialog-title">设置</h1>
+          <nav className="settings-nav" aria-label="设置分类">
+            {SETTINGS_NAV_GROUPS.map((group) => (
+              <div key={group.label} className="settings-nav-group">
+                <div className="settings-nav-group-label">{group.label}</div>
+                {group.items.map((item: SettingsSectionItem) => (
+                  <button
+                    key={item.id}
+                    type="button"
+                    className={`settings-nav-item${section === item.id ? " is-active" : ""}`}
+                    aria-current={section === item.id ? "page" : undefined}
+                    disabled={busy}
+                    title={
+                      busy ? "连接操作进行中，完成后可切换设置" : undefined
+                    }
+                    onClick={() => {
+                      if (busy) return;
+                      setNavigation("detail");
+                      setSection(item.id);
+                      if (item.id !== "extensions") setExtensionsTab(undefined);
+                      setFeedback({ message: "", error: false });
+                    }}
+                  >
+                    <img
+                      className="settings-nav-icon"
+                      src={`/design/figma/settings-nav-${item.id === "usage" ? "account" : item.id === "skill" || item.id === "extensions" ? "mcp" : item.id}.svg`}
+                      alt=""
+                      width="20"
+                      height="20"
+                    />
+                    <span>{item.label}</span>
+                  </button>
+                ))}
+              </div>
+            ))}
+          </nav>
+        </aside>
+        <main
+          className="settings-content"
+          aria-labelledby="settings-section-title"
+          tabIndex={0}
+        >
+          {section === "general" ? (
+            <GeneralSettings
+              preferences={preferences}
+              onChange={updatePreferences}
+            />
+          ) : (
+            <SettingsSections
+              key={section}
+              section={section}
+              saveState={saveState}
+              revision={revision}
+              projects={projects}
+              preferences={preferences}
+              registry={registry}
+              extensionsTab={extensionsTab}
+              onReset={() =>
+                updatePreferences(
+                  { ...DEFAULT_SETTINGS },
+                  "已恢复默认偏好。项目和资产未改动。",
+                )
+              }
+              onFeedback={(message) => setFeedback({ message, error: false })}
+            />
+          )}
+        </main>
+        <button
+          type="button"
+          className="settings-close"
+          aria-label="关闭设置"
+          disabled={busy}
+          title={busy ? "连接操作进行中，完成后可关闭" : undefined}
+          onClick={() => {
+            if (!busy) onClose();
+          }}
+        >
+          <img
+            src="/design/figma/settings-close.svg"
+            width="14"
+            height="14"
+            alt=""
+          />
+        </button>
+        {feedback.message && (
+          <div
+            className={`settings-feedback${feedback.error ? " is-error" : ""}`}
+            role={feedback.error ? "alert" : "status"}
+          >
+            <span>{feedback.message}</span>
+            <button
+              type="button"
+              aria-label="收起设置提示"
+              onClick={() => setFeedback({ message: "", error: false })}
+            >
+              <X size={15} />
+            </button>
+          </div>
+        )}
+      </div>
+    </SettingsNavigationContext.Provider>
   );
 }

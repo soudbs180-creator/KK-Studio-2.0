@@ -136,7 +136,8 @@
   --kk-z-sticky: 10;
   --kk-z-sticky-header: 20;
   --kk-z-dropdown: 100;
-  --kk-z-floating-panel: calc(var(--kk-z-dropdown) + 1);
+  --kk-z-canvas-editor: calc(var(--kk-z-dropdown) + 1);
+  --kk-z-floating-panel: calc(var(--kk-z-canvas-editor) + 1);
   --kk-z-floating-panel-active: calc(var(--kk-z-floating-panel) + 1);
   --kk-z-overlay: 200;
   --kk-z-modal: 300;
@@ -264,6 +265,10 @@
   --kk-settings-height: 800px;
   --kk-settings-nav-width: 240px;
   --kk-settings-method-width: 192px;
+  /* Screen editor shell sits above the phone canvas toolbar, below panels. */
+  --kk-canvas-screen-editor-width: 590px;
+  --kk-canvas-screen-editor-bottom: 152px;
+  --kk-canvas-screen-editor-max-height: min(45dvh, calc(100dvh - 232px));
   --kk-collection-panel-width: 360px;
   --kk-collection-panel-height: 480px;
   --kk-model-capsule-max-width: 260px;

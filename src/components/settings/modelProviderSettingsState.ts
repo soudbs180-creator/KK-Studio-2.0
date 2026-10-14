@@ -1,4 +1,5 @@
 import type { ProviderConnection } from "../../domain/providerConnections";
+import { protocolBindingMatches } from "../../domain/providerProtocol.ts";
 import {
   findModelProfileConnection,
   newModelProfileConnection,
@@ -80,8 +81,26 @@ export function resolveModelProviderConnection(
     ? {
         ...existing,
         model: profile.model,
+        protocol: profile.protocol,
+        authMode: profile.authMode,
+        verificationStatus: protocolBindingMatches(
+          { ...existing, baseUrl: existing.baseUrl! },
+          profile,
+        )
+          ? existing.verificationStatus
+          : "unverified",
+        lastSuccessfulGenerationAt: protocolBindingMatches(
+          { ...existing, baseUrl: existing.baseUrl! },
+          profile,
+        )
+          ? existing.lastSuccessfulGenerationAt
+          : undefined,
         capabilities:
-          existing.model === profile.model
+          existing.model === profile.model &&
+          protocolBindingMatches(
+            { ...existing, baseUrl: existing.baseUrl! },
+            profile,
+          )
             ? existing.capabilities
             : newModelProfileConnection(profile).capabilities,
       }

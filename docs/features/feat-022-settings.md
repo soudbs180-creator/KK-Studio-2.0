@@ -3,11 +3,12 @@
 - 状态：PARTIAL
 - 领域：system
 - 最近更新：2026-10-14
-- 关联任务：TASK-UI-005、TASK-PROV-001、UI-004、TASK-DS-001、TASK-DS-002、TASK-UI-CONSOLIDATE-20261014
+- 关联任务：TASK-UI-005、TASK-PROV-001、UI-004、TASK-DS-001、TASK-DS-002、TASK-UI-CONSOLIDATE-20261014、TASK-PROTOCOL-CLI-20261014
 
 ## 用户可见入口
 
-- 侧栏设置（SettingsPanel）：通用、模型供应商、MCP、技能、ComfyUI、连接、存储、账号等分区。
+- 侧栏设置（SettingsPanel）：通用、账号管理、使用记录、模型接入、扩展、ComfyUI、存储、网络、记忆、高级与软件更新；旧分类 ID 和深链接保留兼容。
+- 模型接入按 Codex 主 Agent、官方 API、中转 API、CLI 账号、OAuth 分类；CLI 再选 Gemini / CodeBuddy。手机网页提供设置分类、接入方式、服务商详情的返回路径。
 
 ## 代码位置
 
@@ -16,12 +17,14 @@
 
 ## 测试与证据
 
-- 单测：`tests/unit/settings.test.ts`
-- 浏览器：`settings-scroll`、`settings-switch-audit`、`mcp-settings`、`runtime-ui`
+- 单测：`tests/unit/settings.test.ts`、`providerProtocol.test.ts`、`modelCatalogProtocol.test.ts`、`nativeCli.test.ts`、`codebuddyConnectionSettings.test.ts`
+- 浏览器：`settings-scroll`、`settings-switch-audit`、`settings-navigation`、`provider-cli-settings`、`mcp-settings`、`runtime-ui`；当前轮结果由任务 verification 记录。
 
 ## 当前能力
 
-- 供应商连接增删改、健康/隔离状态、API Key（系统凭据库）、MCP、技能、存储、主题等真实可用。
+- 既有连接增删改、健康/隔离状态、API Key 保存事务、MCP、技能、存储和主题保持。通用模型接入增加显式协议/认证与只读模型获取；新协议的文本链路和边界见 FEAT-032。
+- Windows Desktop 新增实际 CLI 管理：检测完整安装、主动安装/登录、取消自有操作和 Gemini 桥启停。版本/帮助、终端退出或桥健康均不代表账号与模型验证；CodeBuddy 配置读取失败先重试，保存路径与模型连通状态分开。
+- 手机网页按分类/方式/详情逐级展示并回焦，异步操作期间锁定切页和关闭。未实现的 OAuth 与平台能力仍显示边界，不借用网站身份。
 
 ## 差距与后端化
 
@@ -53,6 +56,6 @@ TASK-AGENT-RECOVERY-20261013：模型接入将普通桌面连接合为一个入�
 
 ## 2026-10-14 源码候选与验收边界
 
-设置分组与公共预设已接入源码；默认绿、中性动作和弱焦点按UI_INDEX消费。目录有官网/密钥/文档，协议未接入时禁用，不自动联网。UsageSettings派生本机项目/任务与有效provider实际USD回执；Token未报告，demo/估算/冲突/其他币种不计。StorageOverview读取原生get_storage_root、伴随服务地址或浏览器位置；storage.estimate仅浏览器估算，项目引用数不是全库大小，Desktop/伴随服务字节未报告且错误有重试。源码补充ProviderPresetSelector/providerPresets/UsageSettings/usageSummary/StorageOverview；当前完整Web验证、官方Desktop构建及实际窗口2.1.18版本通过，新原生功能链路与安装包继续分别验收。
+默认绿、中性动作、弱焦点和分组导航按 UI_INDEX 消费。公共预设提供官网、认证说明与接口文档；Gemini 前往独立 Google 配置，浏览目录不发请求。UsageSettings 派生本机已保存项目/任务与有效 provider 实际 USD 回执；Token 未报告，demo、估算、冲突与其他币种不计。StorageOverview 区分原生 get_storage_root、伴随服务地址和浏览器位置；storage.estimate 仅是浏览器估算，项目引用数不是全库大小，未报告的字节不猜测，读取错误有重试。
 
-新结果见[本轮验证](../changes/2026-10-14-ui-consolidation/verification.md)，未完成的平台/外部服务不由源码或fixture推导PASS。
+原 UI 收敛的历史结果见[收敛验证](../changes/2026-10-14-ui-consolidation/verification.md)。本轮新协议、CLI 与手机网页的最终源码门禁、实际构建和产物身份由[本轮验证](../changes/2026-10-14-protocol-cli-completion/verification.md)记录；真实账号安装/登录、付费供应商调用和 Native Mobile 未验收，状态保持 PARTIAL。

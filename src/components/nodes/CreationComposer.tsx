@@ -13,6 +13,7 @@ import { GenerationAction, GenerationStatus } from "./GenerationAction";
 import CreationModelPicker from "./CreationModelPicker";
 import ReferenceStrip from "./ReferenceStrip";
 import ComposerActions from "./ComposerActions";
+import CanvasComposerShell from "../canvas/CanvasComposerShell";
 import UiIcon from "../UiIcon";
 import { useCanvasImageGeneration } from "../../features/creation/CanvasImageCommand";
 import { composerReportedHeight } from "../canvas/composerLayout";
@@ -120,7 +121,7 @@ export default function CreationComposer({
   }, [menu]);
   if (!selected) return null;
   return (
-    <div
+    <CanvasComposerShell
       ref={ref}
       className={`creation-composer ${video ? "video-composer" : ""} ${expanded ? "expanded" : ""}`}
       data-testid={`${kind}-composer`}
@@ -278,6 +279,6 @@ export default function CreationComposer({
         </div>
       )}
       <GenerationStatus generation={generation} />
-    </div>
+    </CanvasComposerShell>
   );
 }

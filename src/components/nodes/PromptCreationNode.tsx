@@ -2,6 +2,7 @@ import { useLayoutEffect, useState } from "react";
 import CreationModelPicker from "./CreationModelPicker";
 import ModelVariantControl from "../ModelVariantControl";
 import UiIcon from "../UiIcon";
+import CanvasComposerShell from "../canvas/CanvasComposerShell";
 import type {
   CanvasCollectionItem,
   NodeEditingProps,
@@ -119,7 +120,7 @@ export default function PromptCreationNode({
         )}
       </article>
       {selected && (
-        <div
+        <CanvasComposerShell
           className="creation-composer prompt-composer"
           data-testid={`${item.kind}-composer`}
           onPointerDown={(e) => e.stopPropagation()}
@@ -189,7 +190,7 @@ export default function PromptCreationNode({
               {status}
             </p>
           )}
-        </div>
+        </CanvasComposerShell>
       )}
     </div>
   );

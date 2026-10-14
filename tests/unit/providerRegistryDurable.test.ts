@@ -1,7 +1,10 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import type { ProviderConnection } from "../../src/domain/providerConnections.ts";
-import { MODEL_PROVIDER_STORAGE_KEY } from "../../src/domain/modelProvider.ts";
+import {
+  MODEL_PROVIDER_STORAGE_KEY,
+  parseModelProvider,
+} from "../../src/domain/modelProvider.ts";
 import {
   loadProviderConnectionsDurable,
   persistProviderConnectionsDurable,
@@ -90,6 +93,45 @@ function withWebStorage(run: () => Promise<void>): Promise<void> {
     else Reflect.deleteProperty(globalThis, "window");
   });
 }
+
+for (const protocol of ["openai-responses", "anthropic", "ollama"] as const)
+  test(`Desktop hydration restores ${protocol} and its authentication without rewriting account identity`, async () => {
+    await withTauriStorage(async () => {
+      const connection = {
+        ...CONNECTION,
+        protocol,
+        authMode:
+          protocol === "ollama" ? ("none" as const) : ("api-key" as const),
+        baseUrl:
+          protocol === "ollama"
+            ? "http://127.0.0.1:11434/v1"
+            : CONNECTION.baseUrl,
+      };
+      window.localStorage.setItem(
+        MODEL_PROVIDER_STORAGE_KEY,
+        JSON.stringify({
+          version: 1,
+          connectionId: connection.id,
+          name: connection.provider,
+          baseUrl: connection.baseUrl,
+          model: connection.model,
+          protocol: connection.protocol,
+          authMode: connection.authMode,
+        }),
+      );
+      invokeImpl = async (command) => {
+        assert.equal(command, "read_provider_config");
+        return { status: "loaded", revision: 7, connections: [connection] };
+      };
+      await loadProviderConnectionsDurable();
+      const restored = parseModelProvider(
+        window.localStorage.getItem(MODEL_PROVIDER_STORAGE_KEY),
+      ).profile;
+      assert.equal(restored.protocol, protocol);
+      assert.equal(restored.authMode, connection.authMode);
+      assert.equal(restored.connectionId, connection.id);
+    });
+  });
 
 test("桌面 load：native loaded 返回连接并刷新浏览器缓存", async () => {
   await withTauriStorage(async () => {

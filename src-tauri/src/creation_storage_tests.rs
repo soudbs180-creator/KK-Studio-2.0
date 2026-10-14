@@ -3,6 +3,52 @@ use serde_json::{json, Value};
 use std::sync::atomic::{AtomicU64, Ordering};
 
 static NEXT: AtomicU64 = AtomicU64::new(0);
+
+#[test]
+fn protocol_routes_survive_native_storage_and_invalid_updates_preserve_original() {
+    let f = Fixture::new();
+    let mut value = snapshot(1);
+    value["projects"][0]["providerBaseUrl"] = json!("http://127.0.0.1:11434/v1");
+    value["projects"][0]["providerProtocol"] = json!("ollama");
+    value["projects"][0]["providerAuthMode"] = json!("none");
+    value["projects"][0]["tasks"] = json!([{"id":"t1","prompt":"fixture","model":"fixture-text","kind":"text","status":"succeeded","submissionState":"terminal","idempotencyKey":"original-idem","providerBaseUrl":"https://provider.example/v1","providerProtocol":"anthropic","providerAuthMode":"api-key","providerCredentialRef":"fixture_account","outputs":[{"index":0,"status":"succeeded","text":"正文🌍","model":"fixture-text","createdAt":1}]}]);
+    f.repo.write(value.clone(), None).unwrap();
+    let original = fs::read(&f.repo.path).unwrap();
+    let reopened = SnapshotRepository::new(f.repo.path.clone());
+    assert_eq!(reopened.read().unwrap().snapshot.unwrap(), value);
+    for scope in ["project", "task"] {
+        for (field, invalid) in [
+            ("providerProtocol", json!("unknown")),
+            ("providerAuthMode", json!("unknown")),
+            ("providerProtocol", Value::Null),
+            ("providerAuthMode", json!(42)),
+        ] {
+            let mut bad = value.clone();
+            bad["revision"] = json!(2);
+            let target = if scope == "project" {
+                &mut bad["projects"][0]
+            } else {
+                &mut bad["projects"][0]["tasks"][0]
+            };
+            target[field] = invalid;
+            assert!(f.repo.write(bad, Some(1)).is_err());
+            assert_eq!(fs::read(&f.repo.path).unwrap(), original);
+        }
+    }
+    for base in [
+        "https://provider.example/v1",
+        "http://127.0.0.2:11434/v1",
+        "http://192.168.1.2/v1",
+    ] {
+        let mut bad = value.clone();
+        bad["revision"] = json!(2);
+        bad["projects"][0]["tasks"][0]["providerAuthMode"] = json!("none");
+        bad["projects"][0]["tasks"][0]["providerProtocol"] = json!("ollama");
+        bad["projects"][0]["tasks"][0]["providerBaseUrl"] = json!(base);
+        assert!(f.repo.write(bad, Some(1)).is_err());
+        assert_eq!(fs::read(&f.repo.path).unwrap(), original);
+    }
+}
 thread_local! { static FAILURE: std::cell::RefCell<Option<&'static str>> = const { std::cell::RefCell::new(None) }; }
 pub(super) fn fail_at(stage: &str) -> Result<(), String> {
     if FAILURE.with(|failure| *failure.borrow() == Some(stage)) {

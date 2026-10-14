@@ -1,6 +1,17 @@
 import { modelProviderSchema } from "../../domain/modelProvider.ts";
+import { isLocalProviderUrl } from "../../domain/providerUrl.ts";
 import { loadApiKey } from "./providerCredentials.ts";
 import { GenerationProviderError } from "./imageGeneration.ts";
+import {
+  consumeTextEvent,
+  type TextProtocolState,
+} from "./textProtocolEvent.ts";
+import {
+  buildTextRequest,
+  providerNeedsKey,
+  type ProviderProtocolOptions,
+  type ProviderProtocol,
+} from "../../domain/providerProtocol.ts";
 
 const invalidStream = () =>
   new Error("文本响应不完整或格式无效，请先核对供应商；不会自动重复提交。");
@@ -10,6 +21,7 @@ export async function readTextStream(
   response: Response,
   signal: AbortSignal,
   onText?: (text: string) => void,
+  protocol: ProviderProtocol = "openai-chat",
 ): Promise<string> {
   signal.throwIfAborted();
   if (
@@ -22,9 +34,16 @@ export async function readTextStream(
   const reader = response.body.getReader();
   const decoder = new TextDecoder("utf-8", { fatal: true });
   const encoder = new TextEncoder();
+  const modern = protocol === "openai-responses" || protocol === "anthropic";
+  const state: TextProtocolState = {
+    text: "",
+    complete: false,
+    endTurn: false,
+  };
   let buffer = "",
     text = "",
-    data: string[] = [];
+    data: string[] = [],
+    eventType = "";
   let bytes = 0,
     finished = false,
     eventBytes = 0;
@@ -33,11 +52,17 @@ export async function readTextStream(
   };
   signal.addEventListener("abort", abort, { once: true });
   function dispatch() {
-    if (!data.length) return;
+    if (!data.length) {
+      eventType = "";
+      return;
+    }
+    if (modern && finished) throw invalidStream();
     const value = data.join("\n");
     data = [];
     eventBytes = 0;
     if (value === "[DONE]") {
+      if (protocol === "openai-responses" || protocol === "anthropic")
+        throw invalidStream();
       finished = true;
       return;
     }
@@ -47,29 +72,33 @@ export async function readTextStream(
     } catch {
       throw invalidStream();
     }
-    if (!payload || payload.error || !Array.isArray(payload.choices))
-      throw invalidStream();
-    // OpenAI optionally emits a final usage-only event with an empty choices array.
-    if (!payload.choices.length && payload.usage) return;
-    const choice = payload.choices[0];
-    if (!choice || !choice.delta || typeof choice.delta !== "object")
-      throw invalidStream();
     if (
-      choice.delta.tool_calls ||
-      choice.delta.function_call ||
-      choice.delta.refusal
+      eventType &&
+      ["openai-responses", "anthropic"].includes(protocol) &&
+      payload.type !== eventType
     )
       throw invalidStream();
-    const content = choice.delta.content;
-    if (content != null && typeof content !== "string") throw invalidStream();
-    if (content) {
-      text += content;
+    eventType = "";
+    const previous = state.text;
+    consumeTextEvent(payload, state, protocol);
+    text = state.text;
+    if (text !== previous) {
       if (encoder.encode(text).length > 32768) throw invalidStream();
       onText?.(text);
     }
-    if (choice.finish_reason != null) {
-      if (choice.finish_reason !== "stop") throw invalidStream();
-      finished = true;
+    finished = state.complete;
+  }
+  function consumeLine(line: string): void {
+    if (encoder.encode(line).length > 65536) throw invalidStream();
+    if (!line) dispatch();
+    else if (line.startsWith("data:")) {
+      const value = line.slice(5).replace(/^ /, "");
+      eventBytes += encoder.encode(value).length;
+      if (eventBytes > 65536) throw invalidStream();
+      data.push(value);
+    } else if (line.startsWith("event:")) {
+      eventType = line.slice(6).trim();
+      if (eventType === "error") throw invalidStream();
     }
   }
   try {
@@ -84,23 +113,16 @@ export async function readTextStream(
       if (bytes > 2 * 1024 * 1024) throw invalidStream();
       buffer += decoder.decode(chunk.value, { stream: true });
       let newline: number;
-      while (!finished && (newline = buffer.indexOf("\n")) >= 0) {
+      while ((!finished || modern) && (newline = buffer.indexOf("\n")) >= 0) {
         const line = buffer.slice(0, newline).replace(/\r$/, "");
         buffer = buffer.slice(newline + 1);
-        if (encoder.encode(line).length > 65536) throw invalidStream();
-        if (!line) dispatch();
-        else if (line.startsWith("data:")) {
-          const value = line.slice(5).replace(/^ /, "");
-          eventBytes += encoder.encode(value).length;
-          if (eventBytes > 65536) throw invalidStream();
-          data.push(value);
-        } else if (
-          line.startsWith("event:") &&
-          line.slice(6).trim() === "error"
-        )
-          throw invalidStream();
+        consumeLine(line);
       }
       if (encoder.encode(buffer).length > 65536) throw invalidStream();
+      if (modern && finished) {
+        buffer += decoder.decode();
+        if (buffer || data.length) throw invalidStream();
+      }
     }
     signal.throwIfAborted();
     if (!finished || !text.trim()) throw invalidStream();
@@ -117,6 +139,8 @@ export async function readTextStream(
 }
 
 export async function generateText(options: {
+  protocol?: ProviderProtocolOptions["protocol"];
+  authMode?: ProviderProtocolOptions["authMode"];
   prompt: string;
   model: string;
   providerBaseUrl: string;
@@ -136,39 +160,46 @@ export async function generateText(options: {
     name: "provider",
     baseUrl: options.providerBaseUrl,
     model: options.model,
+    protocol: options.protocol,
+    authMode: options.authMode,
   });
   signal.throwIfAborted();
-  if (typeof navigator !== "undefined" && !navigator.onLine)
+  if (
+    typeof navigator !== "undefined" &&
+    !navigator.onLine &&
+    !isLocalProviderUrl(options.providerBaseUrl)
+  )
     throw new Error("当前离线，未提交文本任务；草稿已保留。");
-  const apiKey = await loadApiKey(
-    options.providerBaseUrl,
-    options.credentialRef,
-  );
+  const route = {
+    baseUrl: options.providerBaseUrl,
+    protocol: options.protocol,
+    authMode: options.authMode,
+  };
+  const apiKey = providerNeedsKey(route)
+    ? await loadApiKey(options.providerBaseUrl, options.credentialRef)
+    : "";
   signal.throwIfAborted();
-  if (!apiKey) throw new Error("原绑定连接缺少密钥，请配置后重试。");
+  const request = buildTextRequest(
+    {
+      ...route,
+      prompt: options.prompt,
+      model: options.model,
+      idempotencyKey: options.idempotencyKey,
+    },
+    apiKey,
+  );
   options.beforeRequest();
   signal.throwIfAborted();
-  const url = new URL(options.providerBaseUrl);
-  url.pathname = `${url.pathname.replace(/\/$/, "")}/chat/completions`;
   options.onRequestStart();
   let response: Response;
   try {
-    response = await fetch(url, {
+    response = await fetch(request.url, {
       method: "POST",
       credentials: "omit",
       redirect: "error",
       signal,
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "text/event-stream",
-        Authorization: `Bearer ${apiKey}`,
-        "Idempotency-Key": options.idempotencyKey,
-      },
-      body: JSON.stringify({
-        model: options.model,
-        messages: [{ role: "user", content: options.prompt }],
-        stream: true,
-      }),
+      headers: request.headers,
+      body: JSON.stringify(request.body),
     });
   } catch {
     signal.throwIfAborted();
@@ -209,5 +240,5 @@ export async function generateText(options: {
       },
     );
   }
-  return readTextStream(response, signal, options.onText);
+  return readTextStream(response, signal, options.onText, options.protocol);
 }

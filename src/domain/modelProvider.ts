@@ -1,33 +1,52 @@
 import { z } from "zod";
 import { BROWSER_STORAGE_KEYS } from "../runtime/storage-contract.ts";
 import { isAllowedProviderUrl } from "./providerUrl.ts";
+import {
+  providerProtocolSchema,
+  providerAuthModeSchema,
+  isProviderAuthAllowed,
+} from "./providerProtocol.ts";
 
 export const MODEL_PROVIDER_STORAGE_KEY = BROWSER_STORAGE_KEYS.modelProvider;
 
-export const modelProviderSchema = z.object({
-  version: z.literal(1),
-  name: z.string().trim().min(1, "请输入供应商名称").max(60, "供应商名称过长"),
-  baseUrl: z
-    .string()
-    .trim()
-    .url("请输入有效的 API 地址")
-    .refine((value) => /^https?:\/\//i.test(value), "仅支持 HTTP 或 HTTPS 地址")
-    .refine(
-      isAllowedProviderUrl,
-      "远程供应商必须使用 HTTPS；HTTP 仅允许本机回环地址",
-    )
-    .refine((value) => {
-      try {
-        const url = new URL(value);
-        return !url.username && !url.password && !url.search && !url.hash;
-      } catch {
-        return false;
-      }
-    }, "请填写不含账号、密钥参数或片段的 Base URL；密钥请放入 API Key 字段"),
-  model: z.string().trim().max(120, "模型名称过长"),
-  /** Non-secret identity of the selected account in the provider registry. */
-  connectionId: z.string().min(1).max(120).optional(),
-});
+export const modelProviderSchema = z
+  .object({
+    version: z.literal(1),
+    name: z
+      .string()
+      .trim()
+      .min(1, "请输入供应商名称")
+      .max(60, "供应商名称过长"),
+    baseUrl: z
+      .string()
+      .trim()
+      .url("请输入有效的 API 地址")
+      .refine(
+        (value) => /^https?:\/\//i.test(value),
+        "仅支持 HTTP 或 HTTPS 地址",
+      )
+      .refine(
+        isAllowedProviderUrl,
+        "远程供应商必须使用 HTTPS；HTTP 仅允许本机回环地址",
+      )
+      .refine((value) => {
+        try {
+          const url = new URL(value);
+          return !url.username && !url.password && !url.search && !url.hash;
+        } catch {
+          return false;
+        }
+      }, "请填写不含账号、密钥参数或片段的 Base URL；密钥请放入 API Key 字段"),
+    model: z.string().trim().max(120, "模型名称过长"),
+    /** Non-secret identity of the selected account in the provider registry. */
+    connectionId: z.string().min(1).max(120).optional(),
+    protocol: providerProtocolSchema.optional(),
+    authMode: providerAuthModeSchema.optional(),
+  })
+  .refine(
+    isProviderAuthAllowed,
+    "请检查协议、地址和认证：Azure 使用 /openai/v1；免密仅用于本机 Chat/Ollama。",
+  );
 
 export type ModelProviderProfile = z.infer<typeof modelProviderSchema>;
 

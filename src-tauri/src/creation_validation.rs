@@ -71,6 +71,34 @@ fn optional_enum(value: &Value, field: &str, options: &[&str]) -> Result<(), Str
     }
     Ok(())
 }
+fn provider_routing(value: &Value) -> Result<(), String> {
+    optional_enum(
+        value,
+        "providerProtocol",
+        &[
+            "openai-chat",
+            "openai-responses",
+            "anthropic",
+            "azure-openai",
+            "ollama",
+        ],
+    )?;
+    optional_enum(value, "providerAuthMode", &["api-key", "none"])?;
+    if value.get("providerAuthMode").and_then(Value::as_str) == Some("none") {
+        let base = value
+            .get("providerBaseUrl")
+            .and_then(Value::as_str)
+            .ok_or_else(|| corrupt("providerBaseUrl"))?;
+        crate::task_host::validate_provider_options(
+            base,
+            value.get("providerProtocol").and_then(Value::as_str),
+            Some("none"),
+        )
+        .map_err(|_| corrupt("providerAuthMode"))?;
+    }
+    Ok(())
+}
+
 fn task_submission(value: &Value) -> Result<(), String> {
     optional_enum(
         value,
@@ -187,6 +215,7 @@ pub fn validate(value: &Value) -> Result<(), String> {
     }
     for project in projects {
         labels(project, "customTags")?;
+        provider_routing(project)?;
         optional_strings(project, &["name", "prompt", "model", "kind"])?;
         attachments(project)?;
         let items = array(&project["items"], "items")?;
@@ -204,6 +233,7 @@ pub fn validate(value: &Value) -> Result<(), String> {
             optional_strings(task, &["prompt", "model", "status", "kind"])?;
             optional_ids(task, &["sourceItemId"])?;
             task_submission(task)?;
+            provider_routing(task)?;
             attachments(task)?;
         }
         let messages = optional_arrays(project, "messages")?;

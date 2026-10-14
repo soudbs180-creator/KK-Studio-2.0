@@ -15,6 +15,13 @@ import { withProviderStoreLock } from "./providerCoordination.ts";
 import { credentialId } from "./providerCredentials.ts";
 import { BROWSER_STORAGE_KEYS } from "../../runtime/storage-contract.ts";
 import { modelSupportsKind } from "./model.ts";
+import {
+  protocolBindingMatches,
+  supportsProviderImages,
+  providerNeedsKey,
+  type ProviderProtocol,
+  type ProviderAuthMode,
+} from "../../domain/providerProtocol.ts";
 
 export const PROVIDER_CONNECTIONS_STORAGE_KEY =
   BROWSER_STORAGE_KEYS.providerConnections;
@@ -112,6 +119,8 @@ export async function loadProviderConnectionsDurable(
               baseUrl: selected.baseUrl,
               model: selected.model,
               connectionId: selected.id,
+              protocol: selected.protocol,
+              authMode: selected.authMode,
             }),
           );
       } catch {
@@ -226,7 +235,11 @@ export function mergeProviderConnection(
     (previous.baseUrl !== connection.baseUrl ||
       previous.credentialRef !== connection.credentialRef ||
       previous.model !== connection.model ||
-      previous.kind !== connection.kind);
+      previous.kind !== connection.kind ||
+      !protocolBindingMatches(
+        { ...previous, baseUrl: previous.baseUrl ?? "" },
+        { ...connection, baseUrl: connection.baseUrl ?? "" },
+      ));
   // Saving edited metadata must not reset a provider that the worker already
   // cooled down or quarantined. A changed generation identity is separately
   // invalidated below so an older in-flight request cannot verify the edit.
@@ -290,19 +303,38 @@ export function releaseProviderLease(
   });
 }
 
+function matchesHealthIdentity(
+  connection: ProviderConnection,
+  expected?: Pick<
+    ProviderConnection,
+    "baseUrl" | "credentialRef" | "protocol" | "authMode"
+  >,
+): boolean {
+  return (
+    !expected ||
+    ((expected.baseUrl === undefined ||
+      connection.baseUrl === expected.baseUrl) &&
+      (expected.credentialRef === undefined ||
+        connection.credentialRef === expected.credentialRef) &&
+      protocolBindingMatches(
+        { ...connection, baseUrl: connection.baseUrl ?? "" },
+        { ...expected, baseUrl: expected.baseUrl ?? "" },
+      ))
+  );
+}
+
 export function markProviderConnectionHealthy(
   id: string,
-  expected?: { baseUrl?: string; credentialRef?: string },
+  expected?: {
+    baseUrl?: string;
+    credentialRef?: string;
+    protocol?: ProviderProtocol;
+    authMode?: ProviderAuthMode;
+  },
 ): ProviderConnection[] {
   const validatedAt = new Date().toISOString();
   return updateProviderConnection(id, (connection) => {
-    if (
-      expected &&
-      ((expected.baseUrl !== undefined &&
-        connection.baseUrl !== expected.baseUrl) ||
-        (expected.credentialRef !== undefined &&
-          connection.credentialRef !== expected.credentialRef))
-    )
+    if (!matchesHealthIdentity(connection, expected))
       // A late receipt bound to an old identity must not reset the new config.
       return connection;
     return {
@@ -342,17 +374,16 @@ export function markProviderConnectionFailure(
       | "network";
     retryAfterSeconds?: number;
   },
-  expected?: { baseUrl?: string; credentialRef?: string },
+  expected?: {
+    baseUrl?: string;
+    credentialRef?: string;
+    protocol?: ProviderProtocol;
+    authMode?: ProviderAuthMode;
+  },
 ): ProviderConnection[] {
   const now = Date.now();
   return updateProviderConnection(id, (connection) => {
-    if (
-      expected &&
-      ((expected.baseUrl !== undefined &&
-        connection.baseUrl !== expected.baseUrl) ||
-        (expected.credentialRef !== undefined &&
-          connection.credentialRef !== expected.credentialRef))
-    )
+    if (!matchesHealthIdentity(connection, expected))
       // A late receipt bound to an old identity must not degrade the new config.
       return connection;
     if (connection.state === "disabled" || connection.state === "quarantined")
@@ -430,6 +461,7 @@ export function newModelProfileConnection(
   profile: ModelProviderProfile,
 ): ProviderConnection {
   const credentialRef = credentialId(profile.baseUrl, profile.name);
+  const images = supportsProviderImages(profile) && providerNeedsKey(profile);
   return {
     id: `byok-${credentialRef}`,
     provider: profile.name,
@@ -438,13 +470,19 @@ export function newModelProfileConnection(
     baseUrl: profile.baseUrl,
     credentialRef,
     model: profile.model,
+    protocol: profile.protocol,
+    authMode: profile.authMode,
     capabilities: {
-      modalities: [modelSupportsKind(profile.model, "text") ? "text" : "image"],
-      operations: ["generate", "edit", "inpaint", "outpaint", "batch"],
-      maxReferences: 4,
+      modalities: [
+        !images || modelSupportsKind(profile.model, "text") ? "text" : "image",
+      ],
+      operations: images
+        ? ["generate", "edit", "inpaint", "outpaint", "batch"]
+        : ["generate"],
+      maxReferences: images ? 4 : undefined,
       // OpenAI's official Images endpoint accepts at most n=10 (dall-e-3 is 1).
       // Larger UI batches are split into separate idempotent requests.
-      maxOutputs: 10,
+      maxOutputs: images ? 10 : 1,
       async: false,
       estimatedLatencyClass: "interactive",
     },
@@ -474,8 +512,14 @@ export function connectionFromModelProfile(
     ? {
         ...existing,
         model: profile.model,
+        protocol: profile.protocol,
+        authMode: profile.authMode,
         capabilities:
-          existing.model === profile.model
+          existing.model === profile.model &&
+          protocolBindingMatches(
+            { ...existing, baseUrl: existing.baseUrl! },
+            profile,
+          )
             ? existing.capabilities
             : connection.capabilities,
       }
