@@ -5857,17 +5857,17 @@
       "tests/browser",
       "docs/changes/2026-10-15-ui-details"
     ],
-    "status": "IN_PROGRESS",
+    "status": "DONE",
     "priority": "P1",
     "evidence": [
       "docs/changes/2026-10-15-ui-details/verification.md",
       "docs/changes/2026-10-15-ui-details/review.md"
     ],
-    "verification": "基线build/UI通过；29条focused生产浏览器首次通过；完整与Native待验。",
-    "verificationResult": "NOT_VERIFIED",
+    "verification": "ab878ffd完整verify退出0：Node1278/14skip、Agent199/2skip、browser635首试、UI239/0、development PASS；精确源码独立审查PASS。官方2.1.26重建与38项Native/资源字节一致性通过，owned实例正常关闭。",
+    "verificationResult": "PASS",
     "updated": "2026-10-15",
-    "displayStatus": "进行中",
-    "nextAction": "完成同状态浏览器、完整门禁和独立审查，重建并验证桌面。",
+    "displayStatus": "已完成",
+    "nextAction": "本次本地UI范围完成；用户视觉接受、真实Provider、Hosted/安装器及实体手机另验，不自动关闭原开放能力。",
     "ownerRole": "repository-maintainer",
     "requirementRefs": ["ledger:TASK-UI-DETAILS-20261015"],
     "featureIds": ["FEAT-001", "FEAT-009", "FEAT-011", "FEAT-022"],

@@ -143,7 +143,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-222-ACTIONS-20261014 | 2.1.22 CLI、设置与画布按钮真实行为和分端修复 | DONE | 已完成 | P1 | TASK-PROTOCOL-CLI-20261014 | root | 回读最终current-release与独立文档补审；从2.1.23继续真人CLI/供应商、签名安装器、日常资料与实体手机验收，沿用已确认手机布局。 |
 | TASK-223-ACTIONS-20261014 | 2.1.23 CLI、设置与画布按钮实际行为和分端修复 | DONE | 已完成 | P1 | TASK-222-ACTIONS-20261014 | root | 回读最终纯文档审查与current-release产物哈希；真人账号/付费Provider、Hosted、签名安装器、日常资料与Native Mobile由既有开放任务分别继续。 |
 | TASK-SETTINGS-LATEST-20261015 | 在最新 UI 修复设置溢出、提示遮挡与配置保存风险 | DONE | 已完成 | P1 | TASK-223-ACTIONS-20261014 | root | 保持当前桌面入口指向最新工作区；产品源码改变后按官方launcher重建并重新验证，用户视觉与外部能力另验。 |
-| TASK-UI-DETAILS-20261015 | 统一输入框、设置密度和卡片空态UI | IN_PROGRESS | 进行中 | P1 | TASK-SETTINGS-LATEST-20261015 | root | 完成同状态浏览器、完整门禁和独立审查，重建并验证桌面。 |
+| TASK-UI-DETAILS-20261015 | 统一输入框、设置密度和卡片空态UI | DONE | 已完成 | P1 | TASK-SETTINGS-LATEST-20261015 | root | 本次本地UI范围完成；用户视觉接受、真实Provider、Hosted/安装器及实体手机另验，不自动关闭原开放能力。 |
 
 ## TASK-FIX-PUSH-GUARD-SPACES-001 — 修复 Windows Git pre-push 空格及长路径启动
 
@@ -2756,7 +2756,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 - Goal: 保留当前风格，消除新版与旧控件混用，统一输入框职责、控件形状、卡片上传状态与目录轴线。
 - Scope: 最新2.1.25运行树的共享Desktop/Web UI细节；不改Provider/凭据/存储/首页提交语义。
-- Display status: 进行中
+- Display status: 已完成
 - Priority: P1 — 用户五处可见UI混乱和重复旧入口。
 - Requirement refs: ledger:TASK-UI-DETAILS-20261015
 - Feature IDs: FEAT-001, FEAT-009, FEAT-011, FEAT-022
@@ -2765,8 +2765,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `fix/TASK-UI-DETAILS-20261015`
 - Worktree: `D:/kk-studio/.worktrees/branch-consolidation-20261011`
 - Modules: src/components, src/styles, tests/browser, docs/changes/2026-10-15-ui-details
-- Verification: NOT_VERIFIED — 基线build/UI通过；29条focused生产浏览器首次通过；完整与Native待验。
+- Verification: PASS — ab878ffd完整verify退出0：Node1278/14skip、Agent199/2skip、browser635首试、UI239/0、development PASS；精确源码独立审查PASS。官方2.1.26重建与38项Native/资源字节一致性通过，owned实例正常关闭。
 - Evidence: [docs/changes/2026-10-15-ui-details/verification.md](../../docs/changes/2026-10-15-ui-details/verification.md), [docs/changes/2026-10-15-ui-details/review.md](../../docs/changes/2026-10-15-ui-details/review.md)
-- Next action: 完成同状态浏览器、完整门禁和独立审查，重建并验证桌面。
+- Next action: 本次本地UI范围完成；用户视觉接受、真实Provider、Hosted/安装器及实体手机另验，不自动关闭原开放能力。
 - Last verified: 2026-10-15
 - Updated: 2026-10-15
