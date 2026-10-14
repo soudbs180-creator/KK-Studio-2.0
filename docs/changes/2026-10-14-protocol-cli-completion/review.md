@@ -10,4 +10,4 @@
 
 ## 最终不可变源码审查
 
-da6141e6（tree162825b5a524e941feeb6def5806f1289818dde4）独立两轴PASS，F515-001/F-D4-002/F-D4-003/F-711-004/F-66-UI-005均闭合；自身101项Node与6项历史重放通过，源码无新增阻断。源码审查与root完整verify、Rust/真实Tauri及便携运行各自留证，不混作独立重跑。报告SHA256：48f65eb8c2959f6d9865e8e9cc8c7d68bee4509bbdfd775f54de1d97f214d9e9；receiptSHA256：1c0db74215f61f71a6d7e5750318c63eef0a9d9e59627bfdd68ff9f5144f81aa。最终文档增量和产物由对应工程外回执另行绑定；旧515/d4/711的CHANGES REQUIRED和66已知UI失败继续保留。
+da6141e6（tree162825b5a524e941feeb6def5806f1289818dde4）独立两轴PASS，F515-001/F-D4-002/F-D4-003/F-711-004/F-66-UI-005均闭合。审查者在clean66a144ee执行101项Node与6项历史重放；da的非CSS核心与Native代码不变，作为不变代码证据沿用，da增量源码检查通过。源码审查与root完整verify、Rust/真实Tauri及便携运行各自留证，不混作独立重跑。报告SHA256：48f65eb8c2959f6d9865e8e9cc8c7d68bee4509bbdfd775f54de1d97f214d9e9；receiptSHA256：1c0db74215f61f71a6d7e5750318c63eef0a9d9e59627bfdd68ff9f5144f81aa。最终文档增量和产物由对应工程外回执另行绑定；旧515/d4/711的CHANGES REQUIRED和66已知UI失败继续保留。
