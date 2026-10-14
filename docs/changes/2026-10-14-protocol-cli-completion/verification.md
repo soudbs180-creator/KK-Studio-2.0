@@ -16,3 +16,11 @@
 - typecheck和lint退出0；lint内健康门禁沿用主线advisory，旧代码仍有发现，不能将出口0说成全仓零问题。新增CLI组件复杂度正在按职责拆分。未改阈值/豁免。
 
 完整verify、实际Tauri/便携包、不可变源码SHA独立审查及产物哈希待最终回执；以上dirty定向结果不代替这些交付门禁。
+
+## 51557346完整复验与独立发现
+
+- `verify-222-third.exit=0`，Node1207pass/14既有skip，Agent172pass/2既有skip，production Edge549/549首试通过，UI241/0，development5步骤PASS；对应JSON和development源码回执保留。第一轮530pass/19fail与第二轮中断原件保留，不能把后续PASS回填旧记录。
+- 全量浏览器发现并修复了手机编辑器盖住对比面板，以及懒加载焦点落到隐藏返回按钮；分别由实际命中和既有聚焦断言验证。
+- 51557346独立审查CHANGES REQUIRED（F515-001/P2）：原生模型列表取消/超时仍可能保持忙碌。当前TS修复先RED再6/6 GREEN（含旧scope race），完整Rust163/163/fmt PASS；其中生产discover_models的真实TCP分别等待响应头/部分JSON，取消后2秒内服务端EOF/reset、注册表释放，原ID可重新准备。`discovery-cancel-rust-socket-full.log/.exit`退出0。
+- 真实取消按钮另有RED/GREEN：原handler提前清ref会屏蔽原生错误，现保持loading/取消中等回执；取消失败显示错误、禁用导航等到结束才恢复。`discovery-cancel-ui-green.log/.exit`10/10首试通过。此browser IPC fixture仅证按钮传播，不能代替真实Native。
+- 新完整verify/不可变SHA复审及新EXE仍待验证。

@@ -9,6 +9,7 @@ mod cli_runtime;
 mod creation_storage;
 mod project_package;
 mod provider_config;
+mod provider_model_requests;
 mod provider_transaction;
 mod secret_filter;
 mod storage_paths;
@@ -355,35 +356,73 @@ async fn credential_get(provider_id: String) -> Result<Option<String>, String> {
 }
 
 #[tauri::command(rename_all = "camelCase")]
+fn provider_models_prepare(
+    request_id: String,
+    window: tauri::Window,
+    state: State<'_, provider_model_requests::ModelRequests>,
+) -> Result<(), String> {
+    state.prepare(&request_id, window.label())
+}
+
+#[tauri::command(rename_all = "camelCase")]
+fn provider_models_cancel(
+    request_id: String,
+    window: tauri::Window,
+    state: State<'_, provider_model_requests::ModelRequests>,
+) -> Result<bool, String> {
+    state.cancel(&request_id, window.label())
+}
+
+#[tauri::command(rename_all = "camelCase")]
+fn provider_models_release(
+    request_id: String,
+    window: tauri::Window,
+    state: State<'_, provider_model_requests::ModelRequests>,
+) -> Result<bool, String> {
+    state.release(&request_id, window.label())
+}
+
+#[tauri::command(rename_all = "camelCase")]
 async fn provider_models_fetch(
+    request_id: String,
+    window: tauri::Window,
+    state: State<'_, provider_model_requests::ModelRequests>,
     base_url: String,
     protocol: Option<String>,
     auth_mode: Option<String>,
     credential_ref: Option<String>,
     secret: Option<String>,
 ) -> Result<Vec<String>, String> {
-    let needs_key =
-        task_host::validate_provider_options(&base_url, protocol.as_deref(), auth_mode.as_deref())?;
-    let secret = if needs_key {
-        match secret {
-            Some(value) if !value.trim().is_empty() && value.len() <= 4096 => {
-                Some(zeroize::Zeroizing::new(value))
-            }
-            Some(_) => return Err("credential: 密钥为空或超过长度限制".into()),
-            None => credential_get(credential_ref.ok_or("credential: 请先选择连接")?)
-                .await?
-                .map(zeroize::Zeroizing::new),
-        }
-    } else {
-        None
-    };
-    task_host::discover_models(
-        &base_url,
-        protocol.as_deref(),
-        auth_mode.as_deref(),
-        secret.as_deref().map(String::as_str),
-    )
-    .await
+    state
+        .claim(&request_id, window.label())?
+        .run(async {
+            let needs_key = task_host::validate_provider_options(
+                &base_url,
+                protocol.as_deref(),
+                auth_mode.as_deref(),
+            )?;
+            let secret = if needs_key {
+                match secret {
+                    Some(value) if !value.trim().is_empty() && value.len() <= 4096 => {
+                        Some(zeroize::Zeroizing::new(value))
+                    }
+                    Some(_) => return Err("credential: 密钥为空或超过长度限制".into()),
+                    None => credential_get(credential_ref.ok_or("credential: 请先选择连接")?)
+                        .await?
+                        .map(zeroize::Zeroizing::new),
+                }
+            } else {
+                None
+            };
+            task_host::discover_models(
+                &base_url,
+                protocol.as_deref(),
+                auth_mode.as_deref(),
+                secret.as_deref().map(String::as_str),
+            )
+            .await
+        })
+        .await
 }
 
 #[tauri::command(rename_all = "camelCase")]
@@ -1717,6 +1756,7 @@ fn main() {
                 .join("app")
                 .join("agent"),
         ))
+        .manage(provider_model_requests::ModelRequests::default())
         .manage(AppState {
             providers: Arc::new(provider_config::ProviderConfigRepository::new(
                 config_path.with_file_name("connections.json"),
@@ -1738,6 +1778,9 @@ fn main() {
             agent_runtime::agent_runtime_stop,
             credential_set,
             credential_get,
+            provider_models_prepare,
+            provider_models_cancel,
+            provider_models_release,
             provider_models_fetch,
             cli_runtime::cli_inspect,
             cli_runtime::cli_begin,

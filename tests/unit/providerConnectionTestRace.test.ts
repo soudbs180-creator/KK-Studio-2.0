@@ -48,6 +48,8 @@ test("an account edited during discovery cannot receive the prior model scope", 
       dispatchEvent: () => true,
       __TAURI_INTERNALS__: {
         invoke: async (command: string) => {
+          if (command === "provider_models_prepare") return;
+          if (command === "provider_models_release") return true;
           assert.equal(command, "provider_models_fetch");
           requestStarted();
           return models;

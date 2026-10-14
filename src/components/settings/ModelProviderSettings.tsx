@@ -250,8 +250,8 @@ export default function ModelProviderSettings({
         onClear={() => void clearKey()}
         onTest={() => void testConnection()}
         onCancel={() => {
-          cancelRequest();
-          setConnection({ kind: "cancelled", message: "已取消连接测试。" });
+          requestRef.current?.abort("user");
+          setConnection({ kind: "loading", message: "正在取消连接测试…" });
         }}
       />
     </form>

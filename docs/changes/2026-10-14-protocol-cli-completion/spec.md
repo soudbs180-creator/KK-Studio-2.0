@@ -10,6 +10,8 @@ Responses使用/responses+input、Bearer；Anthropic使用/messages、x-api-key�
 
 连接检测只读模型接口，Native复用pinned/no_proxy/no-redirect网络边界与vault引用，不使用会POST生成的旧test_connection。Web保留cookies omit/redirect error/取消和跨域错误，不新增不安全代理。
 
+Native模型发现先准备窗口归属UUID，取消/释放只作用于该请求；取消可先于fetch，整段凭据等待/DNS/HTTP及分页在10秒内结束。完成、失败、超时清理请求；取消未能确认时显示错误，不能只停界面忙碌。UI取消发生在prepare IPC尚未返回时不得启动HTTP，迟到prepare释放或30秒过期；活动请求数量上限16。当前最后一个窗口关闭即退出进程，不新增多窗口常驻生命周期。
+
 ## CLI与界面
 
 Desktop实际安装检测采用version/help，无模型额度；登录/安装在用户点击时打开相应真实操作，不谎称已登录。桥启动/停止管理本任务拥有进程；Web保留明确平台边界与可用手动命令。CodeBuddy读取失败不得变empty并删除原路径；重试后才允许保存。Gemini安装检测的失败不能永久负缓存。

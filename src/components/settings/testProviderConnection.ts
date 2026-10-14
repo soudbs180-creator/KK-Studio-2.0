@@ -90,7 +90,10 @@ export async function testProviderConnection({
     });
   } catch (error) {
     if (requestRef.current !== controller) return;
-    if (controller.signal.aborted) {
+    if (
+      controller.signal.aborted &&
+      !(error instanceof Error && error.message.startsWith("cancel:"))
+    ) {
       setConnection({
         kind: "cancelled",
         message:
