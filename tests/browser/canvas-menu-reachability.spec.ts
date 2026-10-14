@@ -1,7 +1,120 @@
 import { expect, test } from "@playwright/test";
-import { expandSidebar, openWorkspace, showCanvasNavigation } from "./helpers";
+import {
+  expandSidebar,
+  openWorkspace,
+  openSettingsSection,
+  showCanvasNavigation,
+} from "./helpers";
 
 test.use({ hasTouch: true });
+
+for (const theme of ["light", "dark"])
+  for (const viewport of [
+    { width: 390, height: 400 },
+    { width: 844, height: 390 },
+  ]) {
+    test(`短屏已上传视频编辑器不挡背景与缩放 ${viewport.width} ${theme}`, async ({
+      page,
+    }, info) => {
+      await page.setViewportSize(viewport);
+      await openWorkspace(page);
+      await openSettingsSection(page, "通用");
+      await page
+        .getByRole("combobox", { name: "主题", exact: true })
+        .selectOption(theme);
+      await page.getByRole("button", { name: "关闭设置", exact: true }).tap();
+      await page.getByRole("button", { name: "添加资源", exact: true }).tap();
+      await page.getByRole("menuitem", { name: "视频", exact: true }).tap();
+      const node = page.getByTestId(/^canvas-node-added-video-/).last();
+      await node
+        .locator('input[type="file"]')
+        .last()
+        .setInputFiles("public/fixtures/demo/blue-hour-motion.webm");
+      await expect(node.locator(".video-placeholder video")).toBeVisible();
+      await node.focus();
+      await node.press("Enter");
+      await expect(page.getByTestId("video-composer")).toBeVisible();
+      await showCanvasNavigation(page);
+      await page.screenshot({
+        path: info.outputPath("selected-short-editor.png"),
+        animations: "disabled",
+      });
+      await info.attach("stacking-and-hit", {
+        contentType: "application/json",
+        body: JSON.stringify(
+          await page.evaluate(() =>
+            [
+              ...document.querySelectorAll(
+                ".canvas-hud,.canvas-background,.canvas-composer-screen",
+              ),
+            ].map((element) => {
+              const rect = element.getBoundingClientRect();
+              const hit = document.elementFromPoint(
+                rect.x + rect.width / 2,
+                rect.y + rect.height / 2,
+              );
+              return {
+                className: element.className,
+                zIndex: getComputedStyle(element).zIndex,
+                rect: rect.toJSON(),
+                hit: hit?.className,
+              };
+            }),
+          ),
+        ),
+      });
+      for (const trigger of [
+        page.locator(".canvas-background"),
+        page.getByRole("button", { name: "画布缩放", exact: true }),
+      ]) {
+        await expect
+          .poll(() =>
+            trigger.evaluate((element) => {
+              const rect = element.getBoundingClientRect();
+              const hit = document.elementFromPoint(
+                rect.x + rect.width / 2,
+                rect.y + rect.height / 2,
+              );
+              return element === hit || Boolean(hit && element.contains(hit));
+            }),
+          )
+          .toBe(true);
+        await trigger.tap();
+        const panel = page.locator(".canvas-background-menu,.canvas-zoom-menu");
+        await expect(panel).toBeVisible();
+        await page.keyboard.press("Escape");
+      }
+      await expect(page.getByTestId("video-composer")).toBeVisible();
+      const editor = page.getByTestId("video-composer");
+      await editor.getByLabel("视频提示词").fill("短屏控件仍可使用");
+      for (const name of ["画布模型", "视频参数", "生成数量"]) {
+        const control = editor.getByRole("button", { name, exact: true });
+        await control.scrollIntoViewIfNeeded();
+        await expect
+          .poll(() =>
+            control.evaluate((element) => {
+              const rect = element.getBoundingClientRect();
+              const hit = document.elementFromPoint(
+                rect.x + rect.width / 2,
+                rect.y + rect.height / 2,
+              );
+              return element === hit || Boolean(hit && element.contains(hit));
+            }),
+          )
+          .toBe(true);
+        await control.tap();
+        await expect(
+          editor.locator(
+            ".kk-model-menu,.parameter-menu,.generation-count-panel",
+          ),
+        ).toBeVisible();
+        await page.keyboard.press("Escape");
+      }
+      await expect(editor.getByLabel("视频提示词")).toHaveValue(
+        "短屏控件仍可使用",
+      );
+    });
+  }
 
 for (const viewport of [
   { width: 390, height: 400 },

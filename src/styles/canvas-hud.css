@@ -8,14 +8,11 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 12px;
-  z-index: 20;
+  z-index: var(--kk-z-canvas-menu);
   pointer-events: none;
 }
 .canvas-hud > * {
   pointer-events: auto;
-}
-.canvas-hud:has(.canvas-zoom-menu, .canvas-background-menu) {
-  z-index: var(--kk-z-canvas-menu);
 }
 .canvas-hud-actions {
   pointer-events: none;
