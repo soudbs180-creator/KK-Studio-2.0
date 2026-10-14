@@ -186,7 +186,7 @@ try {
   vaultId = await claimFixtureCredential(nativeInvoke, fixtureId);
   await page.getByLabel("API Key").fill("fixture-image-edit-key");
   await page.getByLabel("模型名称").fill("image-test");
-  await page.getByRole("button", { name: "保存", exact: true }).click();
+  await page.getByRole("button", { name: "保存连接", exact: true }).click();
   await expect(
     page.getByText("连接信息已保存。API Key 不会写入浏览器存储或项目快照。", {
       exact: true,

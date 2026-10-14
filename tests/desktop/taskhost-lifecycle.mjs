@@ -570,7 +570,7 @@ try {
   await page.getByLabel("API Key").fill(secret);
   await page.getByLabel("模型名称").fill("image-test");
   ownedCredentials.add(uiRef);
-  await page.getByRole("button", { name: "保存", exact: true }).click();
+  await page.getByRole("button", { name: "保存连接", exact: true }).click();
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
   await page.getByRole("button", { name: "模型", exact: true }).click();
   await page.getByLabel("生成数量").selectOption("4");

@@ -651,7 +651,7 @@ try {
   await page.getByLabel("API Key", { exact: true }).fill(secret);
   await page.getByLabel("模型名称", { exact: true }).fill(initialModel);
   attemptedCredential = true;
-  await page.getByRole("button", { name: "保存", exact: true }).click();
+  await page.getByRole("button", { name: "保存连接", exact: true }).click();
   await expect(
     page
       .getByRole("region", { name: "官方 API Key 配置" })
@@ -698,7 +698,9 @@ try {
       }),
     });
   });
-  await page.getByRole("button", { name: "测试连接", exact: true }).click();
+  await page
+    .getByRole("button", { name: "测试连接并刷新模型", exact: true })
+    .click();
   const api = page.getByRole("region", { name: "官方 API Key 配置" });
   await expect(api.getByText("模型列表已获取", { exact: true })).toBeVisible();
   await expect(
@@ -758,7 +760,7 @@ try {
   );
   await page.evaluate((key) => localStorage.setItem(key, "armed"), phaseKey);
   await page.getByLabel("模型名称", { exact: true }).fill(interruptedModel);
-  await page.getByRole("button", { name: "保存", exact: true }).click();
+  await page.getByRole("button", { name: "保存连接", exact: true }).click();
   await expect
     .poll(() => page.evaluate((key) => localStorage.getItem(key), phaseKey))
     .toContain("native-committed-cache-pending");

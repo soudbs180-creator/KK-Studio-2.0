@@ -65,12 +65,11 @@ export default function SettingsSections({
 
   return (
     <div hidden={!isActive}>
-      <h2
-        className="settings-page-title"
-        id={isActive ? "settings-section-title" : undefined}
-      >
-        {active?.label}
-      </h2>
+      {isActive && (
+        <h2 className="settings-page-title" id="settings-section-title">
+          {active?.label}
+        </h2>
+      )}
       {active?.description && (
         <p className="settings-section-intro settings-page-description">
           {active.description}
