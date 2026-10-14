@@ -11,8 +11,7 @@ import type { ConnectionState } from "../../src/components/settings/modelProvide
 
 function nativeFixture(
   t: test.TestContext,
-  delayedPrepare = false,
-  failCancel = false,
+  { delayedPrepare = false, failCancel = false, delayedRelease = false } = {},
 ) {
   const saved = ["window", "localStorage", "isTauri"].map(
     (name) =>
@@ -30,6 +29,18 @@ function nativeFixture(
   });
   const fetching = new Promise<void>((resolve) => {
     started = resolve;
+  });
+  let finishModels!: (models: string[]) => void,
+    finishRelease!: () => void,
+    releaseStarted!: () => void;
+  const models = new Promise<string[]>((resolve) => {
+    finishModels = resolve;
+  });
+  const releasing = new Promise<void>((resolve) => {
+    releaseStarted = resolve;
+  });
+  const releaseReceipt = new Promise<void>((resolve) => {
+    finishRelease = resolve;
   });
   const commands: { command: string; requestId: string }[] = [];
   Object.defineProperty(globalThis, "isTauri", {
@@ -66,13 +77,16 @@ function nativeFixture(
             return delayedPrepare ? preparation : undefined;
           if (command === "provider_models_fetch") {
             started();
-            return new Promise(() => {});
+            return models;
           }
           if (command === "provider_models_cancel") {
             if (failCancel) throw new Error("host unavailable");
             return true;
           }
-          if (command === "provider_models_release") return true;
+          if (command === "provider_models_release") {
+            releaseStarted();
+            return delayedRelease ? releaseReceipt : true;
+          }
           assert.fail(`Unexpected command: ${command}`);
         },
       },
@@ -86,7 +100,15 @@ function nativeFixture(
     if (online) Object.defineProperty(navigator, "onLine", online);
     else Reflect.deleteProperty(navigator, "onLine");
   });
-  return { commands, fetching, finishPrepare, expire: () => expire() };
+  return {
+    commands,
+    fetching,
+    finishPrepare,
+    finishModels,
+    releasing,
+    finishRelease,
+    expire: () => expire(),
+  };
 }
 const options = { protocol: "ollama" as const, authMode: "none" as const };
 const url = "http://127.0.0.1:1234/v1";
@@ -161,8 +183,45 @@ test("an already aborted discovery never enters Native IPC", async (t) => {
   assert.deepEqual(f.commands, []);
 });
 
+test("a saved Native credential is read inside the cancellable fetch, rather than a preceding vault IPC", async (t) => {
+  const f = nativeFixture(t);
+  const valid = {
+    version: 1 as const,
+    name: "Saved fixture",
+    baseUrl: url,
+    protocol: "anthropic" as const,
+    authMode: "api-key" as const,
+    model: "fixture-model",
+  };
+  const connection = newModelProfileConnection(valid);
+  const states: ConnectionState[] = [],
+    requestRef = { current: null as AbortController | null };
+  const pending = testProviderConnection({
+    valid,
+    apiKey: "",
+    credentialRef: connection.credentialRef!,
+    connections: [connection],
+    requestRef,
+    setConnection: (state) => states.push(state),
+  });
+  assert.equal(
+    await Promise.race([
+      f.fetching.then(() => true),
+      pending.then(() => false),
+    ]),
+    true,
+  );
+  requestRef.current!.abort("user");
+  await soon(pending);
+  assert.equal(states.at(-1)?.kind, "cancelled");
+  assert.equal(
+    f.commands.some((item) => item.command === "credential_get"),
+    false,
+  );
+});
+
 test("cancelling a pending preparation settles promptly and releases its late receipt without fetching", async (t) => {
-  const f = nativeFixture(t, true);
+  const f = nativeFixture(t, { delayedPrepare: true });
   const controller = new AbortController();
   const pending = checkModelProvider(url, "", controller.signal, options);
   controller.abort("user");
@@ -176,7 +235,7 @@ test("cancelling a pending preparation settles promptly and releases its late re
 });
 
 test("a failed Native cancellation is reported as an error, rather than confirmed cancellation", async (t) => {
-  const f = nativeFixture(t, false, true);
+  const f = nativeFixture(t, { failCancel: true });
   const valid = {
     version: 1 as const,
     name: "Fixture",
@@ -201,4 +260,39 @@ test("a failed Native cancellation is reported as an error, rather than confirme
   assert.equal(states.at(-1)?.kind, "error");
   assert.match(states.at(-1)!.message, /未能确认原生请求已取消/);
   assert.equal(f.commands.at(-1)?.command, "provider_models_release");
+});
+
+test("cancellation while Native releases its receipt cannot save a late catalogue or publish success", async (t) => {
+  const f = nativeFixture(t, { delayedRelease: true });
+  const valid = {
+    version: 1 as const,
+    name: "Fixture",
+    baseUrl: url,
+    ...options,
+    model: "fixture-model",
+  };
+  const connection = newModelProfileConnection(valid);
+  writeProviderConnections([connection]);
+  const states: ConnectionState[] = [],
+    requestRef = { current: null as AbortController | null };
+  const pending = testProviderConnection({
+    valid,
+    apiKey: "",
+    credentialRef: connection.credentialRef!,
+    connections: [connection],
+    requestRef,
+    setConnection: (state) => states.push(state),
+  });
+  await f.fetching;
+  f.finishModels(["must-not-be-saved"]);
+  await f.releasing;
+  requestRef.current!.abort("user");
+  f.finishRelease();
+  await soon(pending);
+  assert.equal(states.at(-1)?.kind, "cancelled");
+  assert.equal(
+    states.some((state) => state.kind === "success"),
+    false,
+  );
+  assert.deepEqual(readModelCatalogs(), []);
 });

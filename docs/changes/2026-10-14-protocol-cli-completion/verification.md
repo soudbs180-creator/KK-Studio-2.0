@@ -24,3 +24,7 @@
 - 51557346独立审查CHANGES REQUIRED（F515-001/P2）：原生模型列表取消/超时仍可能保持忙碌。当前TS修复先RED再6/6 GREEN（含旧scope race），完整Rust163/163/fmt PASS；其中生产discover_models的真实TCP分别等待响应头/部分JSON，取消后2秒内服务端EOF/reset、注册表释放，原ID可重新准备。`discovery-cancel-rust-socket-full.log/.exit`退出0。
 - 真实取消按钮另有RED/GREEN：原handler提前清ref会屏蔽原生错误，现保持loading/取消中等回执；取消失败显示错误、禁用导航等到结束才恢复。`discovery-cancel-ui-green.log/.exit`10/10首试通过。此browser IPC fixture仅证按钮传播，不能代替真实Native。
 - 新完整verify/不可变SHA复审及新EXE仍待验证。
+
+## d4bd37e2复验后的凭据/释放边界补充
+
+`verify-222-final-code.exit=0`与550browser首试通过、development5步骤PASS原件保留。运行browser阶段只追加了未执行的RED unit fixture，未改产品源码；此回执不代表新增fixture或最终修复已全量验收。独立复审指出两条未覆盖路径：Native已保存密钥在可取消fetch前额外读取，release等待时取消仍能保存late catalog。`discovery-cancel-release-vault-red.log/.exit`两项实际失败；修复后`discovery-cancel-release-vault-green.log/.exit`8/8通过。最终clean提交完整复验、Native与独立审查另验，不能以此旧绿覆盖。

@@ -1,4 +1,5 @@
 import type { MutableRefObject } from "react";
+import { isTauri } from "@tauri-apps/api/core";
 import { isLocalProviderUrl } from "../../domain/providerUrl.ts";
 import { checkModelProvider } from "../../integrations/modelProvider.ts";
 import { loadApiKey } from "../../features/creation/providerCredentials.ts";
@@ -72,7 +73,8 @@ export async function testProviderConnection({
   const timeout = window.setTimeout(() => controller.abort("timeout"), 10_000);
   try {
     const key = providerNeedsKey(valid)
-      ? apiKey.trim() || (await loadApiKey(valid.baseUrl, credentialRef))
+      ? apiKey.trim() ||
+        (isTauri() ? "" : await loadApiKey(valid.baseUrl, credentialRef))
       : "";
     if (requestRef.current !== controller) return;
     const models = await checkModelProvider(
@@ -82,6 +84,7 @@ export async function testProviderConnection({
       { protocol: valid.protocol, authMode: valid.authMode, credentialRef },
     );
     if (requestRef.current !== controller) return;
+    controller.signal.throwIfAborted();
     assertCatalogTargetCurrent(tested, initial);
     saveModelCatalog(tested, models);
     setConnection({
@@ -112,7 +115,7 @@ export async function testProviderConnection({
             ? error instanceof TypeError
               ? "无法连接，请检查地址、网络和服务的跨域访问设置。"
               : error instanceof Error
-                ? error.message
+                ? error.message.replace(/^cancel:\s*/, "")
                 : "连接失败，请重试。"
             : "网络已断开，请恢复后重试。",
       });
