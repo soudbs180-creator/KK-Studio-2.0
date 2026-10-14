@@ -219,6 +219,10 @@ test("最新设置UI保持宽面板、绿色主题及手机分级导航", async 
   expect((await page.locator(".settings-sidebar").boundingBox())!.width).toBe(
     240,
   );
+  await openSection(page, "模型接入");
+  expect(
+    (await page.locator(".model-access-methods").boundingBox())!.width,
+  ).toBe(192);
   await page.setViewportSize({ width: 390, height: 844 });
   const back = page.getByRole("button", { name: "返回设置分类", exact: true });
   await expect(back).toBeVisible();

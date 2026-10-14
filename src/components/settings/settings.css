@@ -1316,10 +1316,10 @@
 }
 .provider-connection-editor {
   display: grid;
-  gap: var(--ui-space-3);
-  padding: var(--ui-space-5);
+  gap: var(--kk-space-3);
+  padding: var(--kk-space-5);
   border: 1px solid var(--settings-border);
-  border-radius: var(--ui-radius-card);
+  border-radius: var(--kk-radius-card);
   background: var(--bg-card);
 }
 .provider-connection-list button {
