@@ -1,5 +1,13 @@
 # 当前进度
 
+## 2026-10-15 2.1.29本地验收冻结（REVIEW / 整体NOT_VERIFIED）
+
+完整verify7通过：Node1304/14平台skip、Agent199/2skip、Edge756全部首试/0retry、UI242/0及development四步骤；fresh Native7 78项/12图和TaskHost current4无注入11项分别通过，input/EXE同字节current。三CLI卡片9有效RED→9GREEN已补漏，历史同式guard安全结论勘误与actual3 UNKNOWN边界集中于[最新验证](changes/2026-10-15-ui-full/verification.md#2129-当前本地验收)。
+
+当前94e基线加版本29/最小差量尚未形成最终head；独立精确审查、Hosted/Delivery、普通PR59合并及main/post-main待验，main694未合并。原138任务/功能状态、primary/index和历史原件保持，Mobile2.1.1仍规划。
+
+## 此前进度与原始收据（保留原范围）
+
 ## 2026-10-15 2.1.28最终本地验收（REVIEW / 本地PASS，整体NOT_VERIFIED）
 
 TASK-UI-FULL-20261015基于2d4be5fca4c2167d4bc0d500634645624f311505加最小字段同步修复、版本2.1.28与测试/docs，完整verify-6 exit0：Node1318=1304 PASS/14既有platform skip、Agent201=199 PASS/2skip，production Browser747/747首试PASS/0实际retry/flaky/skip，lint/typecheck/UI242/0/format/build/development四步骤PASS。文档owner独立遍历747 result records确认0实际retry；health42及footguns2为advisory，原警告保持。

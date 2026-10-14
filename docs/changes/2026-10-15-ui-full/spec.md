@@ -1,5 +1,13 @@
 # Spec：全页面新UI收敛与主线集成
 
+## 当前2.1.29验收补充（2026-10-15）
+
+三种CLI管理区共用独立卡片角色：card surface、16px内边距、20px容器圆角、14/20标题正文、可见文字>=12px且不横溢；保留其他键值卡片和原操作/busy/安全owner。TaskHost reload后等真实storage ready、无alert及UI/持久草稿一致，原n4/恢复/unknown/秘密断言不放宽。
+
+本地verify7/Native7/TaskHost current4已分别通过，详细范围和历史guard勘误只以[最新验证](verification.md#2129-当前本地验收)为准；视觉shim不等真实CLI登录。最终SHA独立审查、Hosted/Delivery、普通PR59合并与main/post-main未完成，继续REVIEW/整体NOT_VERIFIED。
+
+## 原需求与历史阶段记录（原文保留，最新状态以上方为准）
+
 - Task ID：TASK-UI-FULL-20261015；状态：REVIEW / NOT_VERIFIED（本地2.1.28验收PASS，最终SHA/Hosted/PR/main待验）。
 - 页面矩阵：实际App所有可达首页、项目、扩展Skill/MCP/伙伴、ComfyUI、设置所有分类、资源/搜索/任务、个人信息、帮助与快捷键及相关弹窗；不存在或禁用能力准确记录，不假造节点。
 - 卡片矩阵：图片空/上传/参考/生成、视频空/非空、文字/音频输入、HTML/Markdown/便利贴/SVG插件、历史collection归一化。各节点采用同一套角色规则，来源只改变数据与可用动作。

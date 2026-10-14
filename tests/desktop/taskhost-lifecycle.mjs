@@ -106,10 +106,37 @@ async function seedHomeBatch() {
     },
   });
   await page.reload();
+  await expect(page.locator(".app")).toHaveAttribute(
+    "data-runtime-mode",
+    "production",
+  );
+  await expect(
+    page.getByText("正在读取本地项目…", { exact: true }),
+  ).toHaveCount(0);
+  await expect(
+    page.locator('.creation-storage-notice[role="alert"]'),
+  ).toHaveCount(0);
   await page.getByRole("button", { name: "开始创作", exact: true }).click();
   await expect
     .poll(async () => (await snapshot()).homeDraft.outputCount)
     .toBe(4);
+}
+async function expectHomeDraft(prompt) {
+  await expect(page.getByLabel("创作提示词")).toHaveValue(prompt);
+  await expect(page.locator(".start-model-picker button")).toHaveAttribute(
+    "title",
+    "image-test",
+  );
+  await expect
+    .poll(async () => {
+      const draft = (await snapshot()).homeDraft;
+      return {
+        prompt: draft.prompt,
+        model: draft.model,
+        outputCount: draft.outputCount,
+      };
+    })
+    .toEqual({ prompt, model: "image-test", outputCount: 4 });
 }
 const server = createServer(async (request, response) => {
   try {
@@ -608,6 +635,7 @@ try {
   await expect(initialModelMenu.getByRole("menuitemradio")).toHaveCount(1);
   await initialModelMenu.getByRole("menuitemradio").click();
   await page.getByLabel("创作提示词").fill("ui-success");
+  await expectHomeDraft("ui-success");
   await page.getByRole("button", { name: "开始创建项目" }).click();
   const approval = page.getByRole("dialog", { name: "人工审批任务" });
   if (await approval.isVisible())
@@ -666,6 +694,7 @@ try {
     .poll(async () => (await snapshot()).homeDraft.outputCount)
     .toBe(4);
   await page.getByLabel("创作提示词").fill("ui-partial-restart");
+  await expectHomeDraft("ui-partial-restart");
   await page.getByRole("button", { name: "开始创建项目" }).click();
   await expect
     .poll(() => posts("ui-partial-restart"), { timeout: 10000 })
@@ -763,6 +792,24 @@ try {
     report.failureUi = (await page.locator("body").innerText())
       .replaceAll(secret, "<synthetic credential>")
       .slice(0, 12000);
+    report.failureUiState = await page.evaluate(() => ({
+      storageLoading: [
+        ...document.querySelectorAll(".creation-storage-notice"),
+      ].some((element) => element.textContent.includes("正在读取本地项目…")),
+      storageAlert: Boolean(
+        document.querySelector('.creation-storage-notice[role="alert"]'),
+      ),
+      textarea:
+        document.querySelector('textarea[aria-label="创作提示词"]')?.value ??
+        null,
+      modelTitle:
+        document
+          .querySelector(".start-model-picker button")
+          ?.getAttribute("title") ?? null,
+      submitDisabled:
+        document.querySelector('button[aria-label="开始创建项目"]')?.disabled ??
+        null,
+    }));
     report.failureMetadata = await page.evaluate((key) => {
       const provider = JSON.parse(localStorage.getItem(key) ?? "null");
       return {

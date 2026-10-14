@@ -809,6 +809,33 @@
   font-size: 12px;
   font-weight: 500;
 }
+.settings-cli-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kk-space-3);
+  width: 100%;
+  min-width: 0;
+  padding: var(--kk-space-4);
+  border: var(--kk-border-width) solid var(--settings-border);
+  border-radius: var(--kk-radius-card);
+  background: var(--kk-bg-card);
+  font-size: var(--kk-font-body);
+  line-height: var(--kk-line-body);
+  overflow-wrap: anywhere;
+}
+.settings-cli-card h3 {
+  margin: 0;
+  font-size: var(--kk-font-body-strong);
+  font-weight: var(--kk-weight-semibold);
+  line-height: var(--kk-line-body-strong);
+}
+.settings-cli-card p {
+  margin: 0;
+  color: var(--settings-muted);
+}
+.settings-cli-card .settings-summary-list {
+  margin: 0;
+}
 .settings-detail-card {
   display: grid;
   gap: 1px;

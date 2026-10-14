@@ -1,5 +1,17 @@
 # 本轮可达 UI 覆盖与验证边界
 
+## 当前2.1.29新增覆盖（2026-10-15）
+
+| 范围 | 当前证据 | 边界 |
+| --- | --- | --- |
+| 三种CLI卡片三宽 | 390/1099/1920共9有效RED→9GREEN；Native7三工具实际样式 | IPC视觉shim不证明真实CLI安装/登录；Native5原56项漏测该块 |
+| 全页面/卡片/旧项目组合 | verify7 Edge756首试/0retry；Native7共78/0error/12图 | 具体能力沿用原矩阵，不扩写每插件三宽或外部执行 |
+| TaskHost与隔离证据 | current4无注入11PASS；Native7前后4正向IPC自检 | 历史同式guard安全结论撤回；受控readiness不等actual3根因 |
+
+完整统计、哈希、失败和安全勘误集中于[最新验证](verification.md#2129-当前本地验收)。当前REVIEW/整体NOT_VERIFIED，最终head独立审查、Hosted/Delivery、普通PR59合并及main/post-main仍待验；Mobile2.1.1规划和原功能成熟度不变。
+
+## 原需求与历史阶段记录（原文保留，最新状态以上方为准）
+
 Task ID：TASK-UI-FULL-20261015；2026-10-15；状态 REVIEW / NOT_VERIFIED（本地2.1.28验收PASS，最终SHA/Hosted/PR/main待验）。当前提交基线为2d4be5fca4c2167d4bc0d500634645624f311505，其上最小设置竞态修复与版本2.1.28尚未形成最终SHA；历史已验收产品为241f3050124ad7773ced0b47a55629373177205e；固定main694已本地承接为1653966f。下列为入口映射及各次收据范围，241产品源码及test-only音频定位修正已通过完整verify-3与Native56；最终提交head及Hosted/PR/main仍待验。
 
 用户追加纠正后，本矩阵是覆盖入口清单，不是全卡片验收通过。旧79定向GREEN和green-checkpoint的50 GREEN保留原scope；其工具栏存在/几何断言不能证明空态仅upload与内容态toolbar互斥，部分旧断言须按新用户契约补充负向状态断言。

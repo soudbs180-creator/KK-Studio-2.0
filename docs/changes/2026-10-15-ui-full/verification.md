@@ -1,5 +1,49 @@
 # Verification：全页面新UI收敛与主线集成
 
+## 2.1.29 当前本地验收
+
+当前冻结基线为 94e129215ede7cdffe55b149e9b978e6638cc984，加本轮 CLI 卡片样式、Desktop/Web 2.1.29 与 TaskHost 测试夹具差量；最终产品/测试/版本/docs 提交尚未形成。任务 TASK-UI-FULL-20261015 保持 REVIEW / verificationResult=NOT_VERIFIED；origin/main 仍为 694a00607f6f63de1b8c43d0ebb117adf5d34f67，PR59 未合并。以下旧阶段的“当前”均指当时版本，不能覆盖本节。
+
+完整 verify-merged-7 实际 exit0：Node 1318=1304 PASS/14 既有平台 skip，Agent 201=199 PASS/2 skip，生产 Edge 浏览器 756/756 首试 PASS，0 failure/flaky/skip/实际 retry；lint/typecheck/UI 242/0/format/build 与 development 四步骤 PASS。文档 owner 独立递归核对 756 tests/756 results 均 passed 且 retry=0。JSON start=2026-10-14T23:24:04.611Z，duration=212362.53ms；health/footguns 原 advisory 和既有警告保留。
+
+### CLI视觉回归与漏测更正
+
+root 人工检查 Native5 的 settings-models 截图后，发现 CLI 标题/说明/事实列表误用键值表 settings-detail-card，露出边框色背景且没有内边距；原 Native5 的 56 项未覆盖该块，不能据其 PASS 宣称该细节已验收。最小修复在 NativeCliControls 与 settings.css 为 Codex/Gemini/CodeBuddy 共用独立卡片角色，保留其他键值卡片、真实操作、busy 和安全逻辑：注册 card surface、16px 内边距、20px 容器圆角、14/20 标题/正文与长路径换行。native-cli-ui 的三类型×390/1099/1920 为有效 RED 9/9 FAIL→GREEN 9/9 PASS，均实际 retry0；这是平台 IPC 视觉 shim，不是 CLI 检测、安装、登录或真实账号验收。
+
+### Native7实际运行与安全证据更正
+
+官方 launcher 的 fresh Native7 使用新空 data 与 WEBVIEW2_USER_DATA_FOLDER，真实 CIM 记录独立 profile；实际 Tauri release 2.1.29、http://tauri.localhost/、CDP 9427，78 PASS/0 errors/12 截图。原 74 项流程中的无效 guard 判据被替换，额外 4 项正向自检分别在 UI 前后证实无害未知命令被 IPC HTTP route 本地拒绝、synthetic credential_get 被计数并返回 null；suppressedCredentialReads=3（synthetic=2）、harmlessProbeRejections=2，真正 UI forbiddenCommands=[]、deniedNetworkHosts=[]。保留全部卡片/设置/输入框/资源字节断言与三 CLI 实际样式检查；root 目视 settings-models 和 image-reopened，灰块已消失，有内容卡片仅对应工具栏。exact dataRoot 正常关闭，自有 PID17552 退出，9427/9349 已释放。
+
+安全证据更正：Tauri 2.11.5 core.js 以不可写的 defineProperty 注册 invoke，历史 Native2–6 以及其他依赖同式直接赋值/audit 空数组的“凭据已抑制、forbidden 未发生、guard 有效”结论均不能作为安全证明；不改写旧收据，只保留实际视觉、资源与存储断言各自范围。Native7 改用 IPC HTTP route 的 JSON/Tauri-Response/CORS 协议，并先用不存在的无害命令证实本地拒绝，成功后才做 synthetic credential_get；前后四项正向自检才支撑当前受验动作阶段的拦截有效。该证明仅限安装 guard 到 unroute 之间的 Windows HTTP IPC 导航范围，不推广至其他 transport，不声称启动前或全进程绝无凭据访问，也不证明真实 CLI 连接、账号或产品安全验收。
+
+Native7、Native6 与 verify-7 后 local-final-verification-7.json 的 release 均 reason=current/needsBuild=false，input SHA256=50f227e1c91fa733125481c4c041976a397726bb9c1829585048537cdec602d4，EXE SHA256=17794505f75524533467d141dd59289190aadd4e045fa50b7b3e5986cd755d5e；这证明实际内容同字节，不只依赖 mtime。Native7 verify-native-v2.mjs SHA256=13ed40a2e1590a82b1d835497825b8b34c3ef8846ef84679d74be14c7f5e77b3；当前 taskhost-lifecycle.mjs SHA256=7d8946ff03a8acf9007f7bb0490ef1a90fc9348fafe31095f04cfafaf9643ebf。
+
+运行链：src/main.tsx → App.tsx → SettingsPanel → ModelAccessSettings → NativeCliControls/NativeCliFacts/NativeCliActions；页面级 settings.css 仍由 App 的统一样式链加载。Native7加载 /assets/index-BZUxysXr.js（SHA256 dcac1de82b97ed3411d8535d03cf6e5872b152c90657c85ae8fce9f2d4b4df6b）与 /assets/index-DTCmkkbx.css（SHA256 fff1e6834fa9b3ad954383ef42c2d550d3494cf84f5f64f82e67240f93403443），实际资源与当前dist同字节；Web生产固定1423、真实Edge、production/entry src/main.tsx，与Tauri分别留证。
+
+### TaskHost当前无注入收据与诊断边界
+
+当前 native-taskhost-current-4 在同一 2.1.29 EXE 上真实无注入运行：11/11 PASS、exit0、errors=[]、credentialCleanupComplete=true。测试夹具补齐 reload 后真实 storage ready、无 storage alert，以及提示词/选中模型/持久草稿四结果的一致性，原 n=4、结果/原件、重启恢复、unknown 不普通重试、幂等、秘密清理与超时断言全部保留。受控真实读取延迟 RED2=811ms 后 9 checks/partial POST0，GREEN2=815ms 后 11 PASS；actual-current-3 的失败指纹不同，根因仍 UNKNOWN，不能把受控复现等同该次根因。RED1 的只读 invoke 赋值注入无效，虽 11 PASS 也不是有效 RED。19 个自有 app PID 均退出，9349 无监听。
+
+### 工程外证据索引与剩余交付门禁
+
+证据根目录继续为 D:/kk-studio/.analysis/ui-full-20261015/，历史文件不覆盖。
+
+| 当前证据 | 结果与范围 |
+| --- | --- |
+| native-cli-red-1.log / -browser-results.json；native-cli-green-1.log / -browser-results.json | 9有效视觉FAIL→9PASS，均实际retry0；只平台视觉shim，不证明真实CLI账号 |
+| verify-merged-7.log / -browser-results.json；local-final-verification-7.json | 全量exit0、756 tests/756单次passed记录；Node1304/14skip、Agent199/2skip、UI242/0、development四步骤；release current且Native6/7同字节 |
+| native-7/native-ui-full.json；profile-observation.json；release-identity.json；close-owned-native.json | 78PASS/0errors/12图、前后4自检；fresh data/profile实际CIM、当前资源与EXE身份、正常关闭 |
+| native-6/native-ui-full.json及原图 | 74视觉/状态/资源记录保留；其中原guard判据无效，不能据其audit空数组证明凭据拦截 |
+| native-taskhost-current-3.log / receipt.json | 9checks后partial POST0失败；实际指纹与受控场景不同，根因UNKNOWN，不作PASS |
+| taskhost-seed-readiness-summary.json；taskhost-seed-probe-red-1/2、green-2 | RED1注入无效；真实811ms RED2=9checks/POST0，815ms GREEN2=11PASS，分别保留 |
+| native-taskhost-current-4.log / receipt.json | 同2.1.29 EXE、无注入11PASS/exit0/errors[]/credentialCleanupComplete=true；19owned app退出与9349释放另见summary |
+
+94e 的旧 push quality38652149137 已全绿（747 浏览器首试、Rust163、Native PASS），仅证明该旧 SHA 的运行结果，不能代替当前 2.1.29 的最终门禁。仍须形成最终提交，独立 base694→head 精确 source/integration 审查与当前 SHA Hosted/Delivery，通过后普通合并 PR59、fetch 核对 main 实际树及 post-main。不得把本地收据、mergeable 或旧 SHA 绿色当作最终合并完成。
+
+原138任务对象与 raw、功能 registry、primary dirty/index/用户资料与历史失败不变；Mobile2.1.1 仍为规划，390 仅响应式 Web。真实 CLI 账号/付费 Provider、签名安装器/发布、日常用户资料及用户最终视觉接受分别开放；sidebar 历史 flaky 原缺 trace，根因 UNKNOWN，不由本轮未复现改写。
+
+## 原需求与历史阶段记录（原文保留，最新状态以上方为准）
+
 - Task ID：TASK-UI-FULL-20261015；状态：REVIEW / NOT_VERIFIED（本地2.1.28验收PASS，最终SHA/Hosted/PR/main待验）；日期2026-10-15（Asia/Shanghai）。
 - 最新本地组合：2d4be5fca4c2167d4bc0d500634645624f311505加最小设置草稿竞态修复、版本2.1.28与测试/docs，完整verify-6 exit0（Node1304/14skip、Agent199/2skip、Browser747首试/0实际retry、UI242/0及development四步骤）；新版官方Native56/0/10图及TaskHost11/0/凭据清理通过，实际input/EXE与verify-6后同字节。最终提交SHA/独立精确review/新Hosted/PR/main待验，旧失败与夹具边界见文末。
 - 产品source HEAD（本地验收身份）：241f3050124ad7773ced0b47a55629373177205e；本地main承接提交1653966f652390d93d490f90c0b7e9a9423f4026，修复checkpoint为0f506ae10e59d90222b399bbd54298849a8ca55f。实际fetch与API确认origin/main仍为694a00607f6f63de1b8c43d0ebb117adf5d34f67，本地任务分支承接不表示远端main已落地。首次完整verify与正式review绑定165，241产品源码加本轮test-only音频定位修正已完成verify-3本地验收；最终提交HEAD及Hosted/PR/main仍待完成。

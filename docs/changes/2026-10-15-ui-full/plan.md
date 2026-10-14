@@ -1,5 +1,17 @@
 # 全页面新UI收敛实施计划
 
+## 当前执行位置：2.1.29本地冻结（2026-10-15）
+
+- [x] 三CLI卡片最小共享修复、三宽9有效RED→9GREEN，Desktop/Web递增2.1.29。
+- [x] 完整verify7的756浏览器首试/0retry、fresh Native7的78项/12图与TaskHost current4无注入11项本地通过，资源同字节current。
+- [x] 历史同式invoke赋值guard安全结论勘误、受控readiness与actual3 UNKNOWN边界及原138任务保全已集中记录于[最新验证](verification.md#2129-当前本地验收)。
+- [ ] 形成最终head，完成精确base694→head独立source/integration审查与当前SHA Hosted/Delivery。
+- [ ] 普通合并PR59，fetch核对main实际树及post-main；保留primary、历史分支和用户资料。
+
+任务仍REVIEW/整体NOT_VERIFIED；旧SHA通过不能代替最终2.1.29门禁，Mobile2.1.1规划不变。
+
+## 原需求与历史阶段记录（原文保留，最新状态以上方为准）
+
 **Goal:** 将现有可达页面与卡片统一到当前UI，验证历史恢复并通过PR合主线。
 **Architecture:** 复用tokens、共享输入框/模型菜单及卡片renderer，修既有owner；数据继续走原codec与存储身份。
 **Tech Stack:** React18/TypeScript、Vite、Tauri2、Node24、真实Edge Playwright。

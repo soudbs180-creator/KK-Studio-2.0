@@ -1,5 +1,13 @@
 # Intent：全页面新UI收敛与主线集成
 
+## 当前2.1.29冻结事实（2026-10-15）
+
+TASK-UI-FULL-20261015 保持 REVIEW / NOT_VERIFIED。当前94e基线加共享CLI卡片、Desktop/Web2.1.29与TaskHost夹具差量，已完成本地verify7（756浏览器首试/0retry）、Native7（78项）和TaskHost current4（11项）。本轮追加修复仍在用户既有授权内，不增加依赖、账号能力或用户数据迁移。
+
+[最新验证与勘误](verification.md#2129-当前本地验收)集中记录视觉9RED→9GREEN、历史同式guard安全结论撤回、正向IPC自检与actual3 UNKNOWN边界。最终head、精确独立审查、Hosted/Delivery、PR59普通合并及main/post-main仍待验；Mobile2.1.1规划和原任务/用户资料范围不变。
+
+## 原需求与历史阶段记录（原文保留，最新状态以上方为准）
+
 - Task ID：TASK-UI-FULL-20261015；日期：2026-10-15；状态：REVIEW / NOT_VERIFIED（本地2.1.28验收PASS，最终SHA/Hosted/PR/main待验）。
 - 用户授权：继续检查所有页面与所有已实现卡片，重点模型选择、Agent输入框、圆角、同排对齐、旧项目重开；发现问题直接修复，浏览器验证后提交并合入主线。
 - 用户追加纠正：卡片必须按真实载荷区分空态与内容态；空card只保留upload，不显示内容toolbar，有内容card才出现对应toolbar。所有类型还必须检查运行/失败/恢复状态与功能真实链、页面分类和动作互斥，尺寸GREEN不能代替该验收。

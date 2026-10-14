@@ -1,5 +1,13 @@
 # Review：全页面新UI收敛与主线集成
 
+## 当前2.1.29审查输入（2026-10-15）
+
+当前94e加CLI卡片/版本29/TaskHost夹具差量尚未形成最终head；verify7的756首试、Native7的78项及TaskHost current4无注入11项本地PASS，只作为动态审查输入。产品操作owner未变，三CLI共享卡片与reload readiness为最小差量。
+
+审查必须回读[最新验证与勘误](verification.md#2129-当前本地验收)，区分历史同式guard无效、当前正向IPC证据、受控RED与actual3 UNKNOWN；不得把本地测试或旧SHA批准当作最终独立approval。最终SHA source/integration、Hosted/Delivery、PR59/main/post-main均待完成，REVIEW/整体NOT_VERIFIED。
+
+## 原需求与历史阶段记录（原文保留，最新状态以上方为准）
+
 - Task ID：TASK-UI-FULL-20261015；当前状态 REVIEW / NOT_VERIFIED（本地2.1.28验收PASS，最终SHA/Hosted/PR/main待验）；2026-10-15。
 - 固定main base `694a00607f6f63de1b8c43d0ebb117adf5d34f67`；本地承接head `1653966f652390d93d490f90c0b7e9a9423f4026` 的正式source及integration审查均为CHANGES_REQUIRED，发现text纯prompt误算正文、audio坏src假可用、rightpan三项P2；不是批准回执。
 - 已验收的历史source `241f3050124ad7773ced0b47a55629373177205e` 已最小修复上述三项及首页16:9，修正screen按钮旧40px断言和L/G空image夹具；14条定向真实Browser GREEN见[verification](verification.md)。当前官方隔离Native56checks PASS；root已回读精确source241与integration241正式review均PASS、三P2 CLOSED，165的CHANGES_REQUIRED保留。完整verify-3（747/747 Browser、development及全部本地步骤）已PASS，最终文档/test-only补丁head复审仍待完成，不把静态review当独立动态/Native/Hosted审查。

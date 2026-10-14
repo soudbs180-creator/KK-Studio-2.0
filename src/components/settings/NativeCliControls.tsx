@@ -23,7 +23,7 @@ export default function NativeCliControls({
     );
   return (
     <section
-      className="settings-detail-card"
+      className="settings-cli-card"
       aria-label={`${state.label} CLI 管理`}
       aria-busy={state.busy}
     >

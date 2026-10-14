@@ -10,6 +10,10 @@
 
 ## 本轮恢复入口
 
+先读[最新2.1.29验证与勘误](../changes/2026-10-15-ui-full/verification.md#2129-当前本地验收)和[计划](../changes/2026-10-15-ui-full/plan.md)。当前94e基线加CLI卡片/版本29/TaskHost夹具差量，本地verify7 756首试/0retry、Native7 78项/12图与TaskHost current4无注入11项PASS，input/EXE同字节current。历史同式guard安全证明撤回、当前正向IPC证据与actual3 UNKNOWN见验证。最终head尚未形成，下一步独立base694→head审查、新Hosted/Delivery、普通PR59合并与main/post-main；main694未合并，REVIEW/整体NOT_VERIFIED。原138任务/primary/index/Mobile2.1.1规划不变。
+
+### 此前2.1.28恢复入口（历史，安全结论按上方勘误）
+
 先读[verification最新2.1.28本地收据](../changes/2026-10-15-ui-full/verification.md)和[计划](../changes/2026-10-15-ui-full/plan.md)。当前2d4be5fca4c2167d4bc0d500634645624f311505+最小设置字段同步修复/版本2.1.28/测试/docs尚未形成最终head，本地完整verify-6 PASS（Node1304/14skip、Agent199/2skip、Browser747首试/0实际retry、UI242/0与development四步），fresh官方Native5 56/0/10图及新版TaskHost11/0/secretcleanup true，verify后input/EXE同Native5完整哈希且current。Native2/3/4前置夹具失败、54/2d Hosted失败与mixed诊断边界全保留，sidebar原缺trace根因UNKNOWN。main fetch仍694 / PR59未合并；下一步最终head独立source/integration审查、新Hosted完整门禁、普通合并及main/post-main。任务REVIEW / 本地PASS / 整体NOT_VERIFIED，Mobile2.1.1规划与其他功能状态不变。
 
 ### 此前2.1.28完整验证前冻结入口（历史保留）

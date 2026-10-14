@@ -15,8 +15,8 @@
 - `canonicalRepository`: `D:/kk-studio/KK-Studio-2.0`
 - `canonicalRef`: `origin/main`
 - `canonicalHead`: `694a00607f6f63de1b8c43d0ebb117adf5d34f67`
-- `canonicalHeadVerifiedFrom`: 2026-10-15 root再次fetch确认main694，PR59未合并。当前2.1.28本地verify-6/Native5/TaskHost新版均PASS，最终提交SHA独立审查、新Hosted和main/post-main待验。2d PR quality38647660224仍FAIL（settings flaky与Native旧菜单）；原失败保留。
-- `primaryCheckoutState`: D:/kk-studio/KK-Studio-2.0保留codex/ui-redesign-20261011@51fccfc7879cf90f7caaf3ae8e10af4d97a2aa2c并发dirty与原index，本轮只读计数254条；不reset/clean/覆盖。任务工作树branch-consolidation-20261011 / fix/TASK-UI-FULL-20261015，提交基线2d4be5fca4c2167d4bc0d500634645624f311505上最小设置竞态/测试及Desktop/Web2.1.28本地验收PASS，尚未最终提交。verify-6全量747首试/0retry、fresh官方Native5 56/0/10图、TaskHost新版11/0/秘密清理true通过，verify后input/EXE与Native5同字节；最终SHA review/Hosted/main待验。
+- `canonicalHeadVerifiedFrom`: 2026-10-15 root实际fetch/API确认main694、PR59未合并；当前2.1.29本地verify7/Native7/TaskHost current4 PASS，最终head精确审查、Hosted/Delivery及main/post-main待验，旧SHA绿色不代填。
+- `primaryCheckoutState`: D:/kk-studio/KK-Studio-2.0保留codex/ui-redesign-20261011@51fccfc7879cf90f7caaf3ae8e10af4d97a2aa2c并发dirty与原index（本轮只读254条），不reset/clean/覆盖。任务工作树branch-consolidation-20261011 / fix/TASK-UI-FULL-20261015，当前94e基线加CLI卡片/版本2.1.29/TaskHost夹具差量尚未最终提交；当前本地验证见uiFullCandidate，最终SHA门禁待验。
 - `taskLedger`: 139 records; 82 DONE, 0 IN_PROGRESS, 34 PARTIAL, 12 TODO, 7 REVIEW, 4 BLOCKED; 57 open records.
 - `workspaceWorktrees`: 本轮末次只读worktree登记回读109项。此前恢复盘点107登记项、39 dirty来源、39一致快照；该盘点时原index变动0，872源路径与313排除路径可溯源。首轮104项/40一致与1volatile记录保留原时点；历史107项快照不覆盖后续登记来源。原分支/index/资料保留，本任务未删除、移动或覆盖其他来源。
 - `reclamationPolicy`: generated dependencies/build output may be reclaimed only from a recorded, non-primary worktree after immutable SHA inventory and explicit candidate approval; source changes and evidence paths are protected.
@@ -37,10 +37,19 @@
 
 - `uiDetailsCandidate`: TASK-UI-DETAILS-20261015 本地DONE/PASS；fix/TASK-UI-DETAILS-20261015复用branch-consolidation-20261011，base18e143f、产品ab878ffd，Desktop/Web2.1.26，Mobile2.1.1规划不变。完整verify退出0：Node1278/14skip、Agent199/2skip、browser635首试、UI239/0、development PASS；精确源码独立审查PASS。官方Agent重建、实际Tauri38项与dist字节一致性通过，EXE0f65d382/input864b0376；现有快捷方式同路径，owned实例正常关闭，未启动日常profile。primary dirty/index和所有失败保留；用户视觉接受、真实Provider、Hosted/签名/实体手机另验。[本次验证](../changes/2026-10-15-ui-details/verification.md)。
 
-- `uiFullCandidate`: TASK-UI-FULL-20261015 REVIEW / 本地PASS / 整体NOT_VERIFIED。Desktop/Web2.1.28完整verify-6 exit0：Node1304PASS/14既有skip、Agent199PASS/2skip、Browser747/747首试/0实际retry/flaky/skip，lint/typecheck/UI242/0/format/build/development四步PASS。文档owner独立确认747结果全passed、单次记录且retry0；health42/footguns2为advisory非0finding。官方fresh Native5 56PASS/0error/10图、实际独立WebView profile/root目视三图与exact dataRoot正常close；新版TaskHost11PASS/0error/secretcleanup true、五自有app退出。verify后input28c2f285与EXE638b5df5完整哈希同Native5、reason=current。Native2/3/4硬编码旧版本/CDP早连/default profile前提失败保留5/0/49 checks，只有Native5为干净完整收据；2d PR quality38647660224 settings首fail retryPASS且Native旧菜单8checks后FAIL，不是Hosted全绿。54 sidebar原缺trace根因UNKNOWN，本地五cold probe和747首试不等于已修复。原main694本地承接/104冲突/25差量/21blob/15包及原138任务与功能状态保持；最终head独立source/integration审查、新Hosted/PR59普通合并/main/post-main待验，origin/main仍694，Mobile2.1.1规划。[验证](../changes/2026-10-15-ui-full/verification.md) / [覆盖](../changes/2026-10-15-ui-full/coverage.md)。
+- `uiFullCandidate`: TASK-UI-FULL-20261015 REVIEW / 本地PASS / 整体NOT_VERIFIED。Desktop/Web2.1.29完整verify7：Node1304/14平台skip、Agent199/2skip、Edge756首试/0retry/flaky/skip、UI242/0与development四步骤；fresh Native7 78/0/12图、TaskHost current4无注入11/秘密清理PASS，input/EXE同字节current。三CLI卡片9RED→9GREEN；历史同式invoke赋值/audit空数组安全证明撤回，Native7正向IPC受验阶段与actual3 UNKNOWN边界详见[最新验证](../changes/2026-10-15-ui-full/verification.md#2129-当前本地验收)。原138任务/功能/primary/index/历史保全与Mobile2.1.1规划保持。最终head独立审查、Hosted/Delivery、普通PR59合并/main/post-main待验，origin/main仍694。
 
 <!-- CURRENT_FACTS_END -->
 <!-- HISTORICAL_SNAPSHOTS_BEGIN -->
+
+
+## 2026-10-15 2.1.28最终本地快照（历史保留；同式guard安全结论以上方勘误为准）
+
+- `canonicalHeadVerifiedFrom`: 2026-10-15 root再次fetch确认main694，PR59未合并。当前2.1.28本地verify-6/Native5/TaskHost新版均PASS，最终提交SHA独立审查、新Hosted和main/post-main待验。2d PR quality38647660224仍FAIL（settings flaky与Native旧菜单）；原失败保留。
+
+- `primaryCheckoutState`: D:/kk-studio/KK-Studio-2.0保留codex/ui-redesign-20261011@51fccfc7879cf90f7caaf3ae8e10af4d97a2aa2c并发dirty与原index，本轮只读计数254条；不reset/clean/覆盖。任务工作树branch-consolidation-20261011 / fix/TASK-UI-FULL-20261015，提交基线2d4be5fca4c2167d4bc0d500634645624f311505上最小设置竞态/测试及Desktop/Web2.1.28本地验收PASS，尚未最终提交。verify-6全量747首试/0retry、fresh官方Native5 56/0/10图、TaskHost新版11/0/秘密清理true通过，verify后input/EXE与Native5同字节；最终SHA review/Hosted/main待验。
+
+- `uiFullCandidate`: TASK-UI-FULL-20261015 REVIEW / 本地PASS / 整体NOT_VERIFIED。Desktop/Web2.1.28完整verify-6 exit0：Node1304PASS/14既有skip、Agent199PASS/2skip、Browser747/747首试/0实际retry/flaky/skip，lint/typecheck/UI242/0/format/build/development四步PASS。文档owner独立确认747结果全passed、单次记录且retry0；health42/footguns2为advisory非0finding。官方fresh Native5 56PASS/0error/10图、实际独立WebView profile/root目视三图与exact dataRoot正常close；新版TaskHost11PASS/0error/secretcleanup true、五自有app退出。verify后input28c2f285与EXE638b5df5完整哈希同Native5、reason=current。Native2/3/4硬编码旧版本/CDP早连/default profile前提失败保留5/0/49 checks，只有Native5为干净完整收据；2d PR quality38647660224 settings首fail retryPASS且Native旧菜单8checks后FAIL，不是Hosted全绿。54 sidebar原缺trace根因UNKNOWN，本地五cold probe和747首试不等于已修复。原main694本地承接/104冲突/25差量/21blob/15包及原138任务与功能状态保持；最终head独立source/integration审查、新Hosted/PR59普通合并/main/post-main待验，origin/main仍694，Mobile2.1.1规划。[验证](../changes/2026-10-15-ui-full/verification.md) / [覆盖](../changes/2026-10-15-ui-full/coverage.md)。
 
 ## 2026-10-15 2.1.28完整验证前冻结快照（历史保留）
 
