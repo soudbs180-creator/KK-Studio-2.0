@@ -105,6 +105,15 @@ for (const width of [390, 1920]) {
         ).toBeLessThanOrEqual(1);
         if (section === "模型接入") {
           const methods = content.locator(".model-access-methods");
+          if (
+            width === 390 &&
+            (await content
+              .locator(".model-access-settings")
+              .getAttribute("data-navigation")) === "detail"
+          )
+            await content
+              .getByRole("button", { name: "返回接入方式", exact: true })
+              .click();
           await expect(methods.getByRole("button")).toHaveCount(5);
           await methods
             .getByRole("button", { name: "API Key（官方）", exact: true })
