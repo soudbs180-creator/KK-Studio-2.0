@@ -38,7 +38,9 @@ async function nativeCancellationFixture(page: Page) {
       },
     });
   });
-  await form.getByRole("button", { name: "测试连接并刷新模型", exact: true }).click();
+  await form
+    .getByRole("button", { name: "测试连接并刷新模型", exact: true })
+    .click();
   const calls = () =>
     page.evaluate(
       () =>

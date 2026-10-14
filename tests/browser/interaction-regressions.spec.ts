@@ -114,16 +114,22 @@ test("模型测试拒绝 HTML 假成功并可从 HTTP 错误恢复", async ({ pa
     .click();
   await page.getByLabel("接口地址").fill("https://models.example.test/v1");
   await page.getByLabel("API Key", { exact: true }).fill("fixture-models-key");
-  await page.getByRole("button", { name: "测试连接并刷新模型", exact: true }).click();
+  await page
+    .getByRole("button", { name: "测试连接并刷新模型", exact: true })
+    .click();
   await expect(page.locator(".provider-status")).toHaveClass(/is-error/);
   await expect(page.locator(".provider-status")).toContainText(
     "模型列表不完整或格式无效",
   );
   mode = "error";
-  await page.getByRole("button", { name: "测试连接并刷新模型", exact: true }).click();
+  await page
+    .getByRole("button", { name: "测试连接并刷新模型", exact: true })
+    .click();
   await expect(page.locator(".provider-status")).toContainText("HTTP 401");
   mode = "success";
-  await page.getByRole("button", { name: "测试连接并刷新模型", exact: true }).click();
+  await page
+    .getByRole("button", { name: "测试连接并刷新模型", exact: true })
+    .click();
   await expect(page.locator(".provider-status")).toHaveClass(/is-success/);
   expect(requests).toEqual([
     { mode: "html", authorization: "Bearer fixture-models-key" },
@@ -160,7 +166,9 @@ test("取消、编辑配置与离线状态不会留下过期的连接成功提�
     .getByLabel("API Key", { exact: true })
     .fill("fixture-cancel-models-key");
   const request = page.waitForRequest("https://models.example.test/v1/models");
-  await page.getByRole("button", { name: "测试连接并刷新模型", exact: true }).click();
+  await page
+    .getByRole("button", { name: "测试连接并刷新模型", exact: true })
+    .click();
   await request;
   await page.getByRole("button", { name: "取消测试" }).click();
   await expect(page.locator(".provider-status")).toHaveClass(/is-cancelled/);
@@ -169,7 +177,9 @@ test("取消、编辑配置与离线状态不会留下过期的连接成功提�
   await done;
   await expect(page.locator(".provider-status")).toHaveClass(/is-idle/);
   await context.setOffline(true);
-  await page.getByRole("button", { name: "测试连接并刷新模型", exact: true }).click();
+  await page
+    .getByRole("button", { name: "测试连接并刷新模型", exact: true })
+    .click();
   await expect(page.locator(".provider-status")).toHaveClass(/is-offline/);
   await context.setOffline(false);
 });
