@@ -25,7 +25,7 @@ export function getImageSelectionPosition(
     Math.min(card.top, caption?.top ?? card.top) - toolbar.offsetHeight - gap;
   const obstacles = [
     ...canvas.querySelectorAll<HTMLElement>(
-      ".canvas-hud-actions,.canvas-top-right,.canvas-zoom-menu,.canvas-background-menu,.canvas-minimap",
+      ".canvas-hud-actions,.canvas-top-right,.canvas-zoom-menu,.canvas-background-menu,.canvas-minimap,.canvas-composer-screen,.canvas-toolbar",
     ),
   ]
     .filter((hud) => getComputedStyle(hud).visibility !== "hidden")
@@ -66,22 +66,22 @@ export function getImageSelectionPosition(
           Math.abs(Math.max(b[0], Math.min(center, b[1])) - center),
       )[0];
   };
-  // Find the nearest row that can hold the first action. Compact HUD rows can
-  // jointly occupy the full width even when each row leaves a horizontal gap.
-  let reachableTop = Math.max(top, bounds.top + gap);
-  for (
-    let index = 0;
-    !slotAt(reachableTop) && index <= obstacles.length;
-    index++
-  ) {
-    const blocking = obstacles.filter(
-      (box) =>
-        reachableTop < box.bottom + gap &&
-        reachableTop + toolbar.offsetHeight > box.top - gap,
-    );
-    if (!blocking.length) break;
-    reachableTop = Math.max(...blocking.map((box) => box.bottom + gap));
-  }
+  // Search both sides of overlays; moving only down can hide actions beneath
+  // the phone editor and bottom toolbar even when a clear row exists above.
+  const minimumTop = bounds.top + gap;
+  const maximumTop =
+    Math.min(bounds.bottom, window.innerHeight) - gap - toolbar.offsetHeight;
+  const reachableTop =
+    [
+      Math.max(top, minimumTop),
+      ...obstacles.flatMap((box) => [
+        box.top - gap - toolbar.offsetHeight,
+        box.bottom + gap,
+      ]),
+    ]
+      .filter((value) => value >= minimumTop && value <= maximumTop)
+      .sort((left, right) => Math.abs(left - top) - Math.abs(right - top))
+      .find((value) => slotAt(value)) ?? Math.max(top, minimumTop);
   const slot = slotAt(reachableTop);
   const maxWidth = slot ? slot[1] - slot[0] : 0;
   const width = Math.min(toolbar.scrollWidth, maxWidth);
