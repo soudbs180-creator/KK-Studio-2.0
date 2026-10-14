@@ -15,15 +15,15 @@
 - `canonicalRepository`: `D:/kk-studio/KK-Studio-2.0`
 - `canonicalRef`: `origin/main`
 - `canonicalHead`: `694a00607f6f63de1b8c43d0ebb117adf5d34f67`
-- `canonicalHeadVerifiedFrom`: 本轮git ls-remote origin refs/heads/main与本地origin/main回读一致；主线694a006，源2.1.13。
-- `primaryCheckoutState`: `D:/kk-studio/KK-Studio-2.0` is on `codex/ui-redesign-20261011` at `51fccfc7879cf90f7caaf3ae8e10af4d97a2aa2c`, dirty. 本轮实时读取源码版本Desktop/Web2.1.20，一致恢复输入f2b0466；原有UI、凭据恢复和Agent展示等并行改动保留。2.1.16/2.1.17回执是历史产品验收；此前2.1.21基线见uiConsolidationCandidate；2.1.22验收见protocolCliCandidate；此前2.1.23按钮修复基线见actionUsabilityCandidate；当前2.1.24候选见actionUsability224Candidate，不是已发布origin/main树。 当前只读状态248条：before原238条dirty状态逐条仍在，其他并行新增10条也保留；原HEAD与空index不变，本任务未改primary。
-- `taskLedger`: 137 records; 1 IN_PROGRESS, 6 REVIEW, 80 DONE, 12 TODO, 34 PARTIAL, 4 BLOCKED; 57 open records.
+- `canonicalHeadVerifiedFrom`: 沿用c1fae190基线的main694a006来源记录；本次未fetch或回读Hosted，不宣称当前远端新鲜度。
+- `primaryCheckoutState`: D:/kk-studio/KK-Studio-2.0 保留 codex/ui-redesign-20261011@51fccfc7879cf90f7caaf3ae8e10af4d97a2aa2c 的并发dirty与原index，当前旧UI源码Desktop/Web2.1.24；51fcc+旧修复428a属于错误UI基线。当前任务仅在primary追加最新版来源指针且保留SHA备份，不改原产品源码或index。实际Desktop默认入口已指向branch-consolidation-20261011的本次2.1.25；旧版本/盘点记录只保留历史范围。
+- `taskLedger`: 137 records; 6 REVIEW, 81 DONE, 12 TODO, 34 PARTIAL, 4 BLOCKED; 56 open records.
 - `workspaceWorktrees`: 本轮末次只读worktree登记回读109项。此前恢复盘点107登记项、39 dirty来源、39一致快照；该盘点时原index变动0，872源路径与313排除路径可溯源。首轮104项/40一致与1volatile记录保留原时点；历史107项快照不覆盖后续登记来源。原分支/index/资料保留，本任务未删除、移动或覆盖其他来源。
 - `reclamationPolicy`: generated dependencies/build output may be reclaimed only from a recorded, non-primary worktree after immutable SHA inventory and explicit candidate approval; source changes and evidence paths are protected.
 - `remoteAutoMerge`: `NOT_READ_BACK`; local workflow and runbooks are reviewable, but no remote setting is claimed as enabled.
 - `historicalRule`: paragraphs after `<!-- HISTORICAL_SNAPSHOTS_BEGIN -->` are dated evidence only and cannot overwrite these facts.
 
-- `settingsLatestUiCandidate`: TASK-SETTINGS-LATEST-20261015 在 `fix/TASK-SETTINGS-LATEST-20261015` / `D:/kk-studio/.worktrees/branch-consolidation-20261011` 承接最新 UI `c1fae190618be3bb5a4e00208b8f4776ec8c0be5` / Desktop/Web2.1.24，候选2.1.25；保留绿色、1280/240/192 与手机分级导航，修复设置溢出、提示遮挡、模型交互和保存风险。此前primary51fccfc7+修复428a3a2d属于错误UI基线，不能作最新版证据；旧2.1.24验收也不代填本次差异。当前development布局12/12、Browser CodeBuddy取消/确认2/2与HMR探针通过；完整verify、production/Native、配置恢复与独立SHA审查待新回执，任务仍IN_PROGRESS/NOT_VERIFIED。原失败、primary并发dirty/index与资料保留。[本次验证](../changes/2026-10-15-settings-latest-ui/verification.md)。
+- `settingsLatestUiCandidate`: TASK-SETTINGS-LATEST-20261015 本地DONE/PASS；c1fae190最新基线，branch-consolidation-20261011 / fix/TASK-SETTINGS-LATEST-20261015当前Desktop/Web2.1.25。产品源码2a4e66d1、完整verify784039e7、独立源/测试054cd53f；Node1278/Agent199（既有skip14/2）、Edge629首试0failure/flaky/skip、UI242/0、development5步。production Web/Tauri1280/240/192/#21a673/overflow0；官方EXEc9c3b4e/input2a09db54，Native20+11+1+5及owned凭据/fixture清理PASS。Desktop入口已指向新版并实际启动日常PID64772；primary/index和配置身份保留，所有失败原件保留。Mobile2.1.1规划、真人Provider/Hosted/签名/用户视觉接受另验。[当前验证](../changes/2026-10-15-settings-latest-ui/verification.md)。
 
 - `agentRecoveryEvidence`: [TASK-AGENT-RECOVERY-20261013 verification](../changes/2026-10-13-agent-recovery/verification.md)保留原版本范围；最新凭据状态恢复来源与旧profile/保存边界按[2026-10-14原作者证据](../changes/2026-10-14-ccswitch-status-recovery/verification.md)回读，不改旧SHA。本轮2.1.21组合Native使用独立资料，不代替日常profile、实钥或真实Provider验收。
 

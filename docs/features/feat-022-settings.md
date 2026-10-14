@@ -19,7 +19,7 @@ TASK-SETTINGS-LATEST-20261015本地DONE/PASS：在最新c1fae190 UI上完成2.1.
 
 ## 测试与证据
 
-- 2026-10-15最新UI设置修复（IN_PROGRESS/NOT_VERIFIED）：从c1fae190 / Desktop/Web2.1.24承接，候选2.1.25；当前development布局12/12首试、Browser CodeBuddy取消/确认2/2与HMR探针通过，完整verify、production/Native、配置恢复和独立SHA审查待新证据。primary51fccfc7+修复428a3a2d是错误UI基线，已有2.1.24验收仅保留原范围；原失败保持，状态继续PARTIAL，见[本次验证](../changes/2026-10-15-settings-latest-ui/verification.md)。
+- 2026-10-15最新UI设置修复（本地DONE/PASS）：从c1fae190最新基线承接Desktop/Web2.1.25，629浏览器全部首试、完整verify及当前Web/Tauri几何与Native20+11+1+5配置恢复通过，独立源/测试054cd53f审查PASS。Desktop已启动新EXEc9c3b4e，原配置身份、primary/index与全部失败保留；真实Provider/Hosted/签名/用户视觉接受另验，功能状态仍PARTIAL，见[当前验证](../changes/2026-10-15-settings-latest-ui/verification.md)。
 
 - 2.1.24本地验证（TASK-223，本任务DONE/PASS；功能主状态保持）：MCP/插件与伴随服务父子操作采用独立busy所有权；未受理动作禁用，迟到检查的成功/失败不覆盖新连接，关闭/返回在操作完成后恢复；最终产品58b5c07f与完整验证、官方/便携回执见[本轮验证](../changes/2026-10-14-action-usability-223/verification.md)。
 
