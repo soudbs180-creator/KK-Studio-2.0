@@ -25,7 +25,7 @@ export function getImageSelectionPosition(
     Math.min(card.top, caption?.top ?? card.top) - toolbar.offsetHeight - gap;
   const obstacles = [
     ...canvas.querySelectorAll<HTMLElement>(
-      ".canvas-hud-actions,.canvas-top-right,.canvas-zoom-menu,.canvas-background-menu,.canvas-minimap,.canvas-composer-screen,.canvas-toolbar",
+      ".canvas-hud-actions,.canvas-hud .chat-reopen,.canvas-top-right,.canvas-zoom-menu,.canvas-background-menu,.canvas-minimap,.canvas-composer-screen,.canvas-toolbar",
     ),
   ]
     .filter((hud) => getComputedStyle(hud).visibility !== "hidden")

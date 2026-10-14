@@ -15,3 +15,11 @@
 - 0e470bc2两项补审PASS、官方build收据current、official/portable CLI各20实际PASS；Native前35继承项实际通过后，390×400浅色新增背景检查被选中视频编辑器拦截，整轮FAIL并保留隔离profile/receipt/failure.png。浏览器新增390/844×light/dark四项中390两项RED、844两项PASS。根因为HUD常态z20低于screen editor101，只有展开菜单才升102；修复复用既有menu token常态升层，不移节点或改数据。重新全量/产品SHA/Native及最终输出仍待新回执，0e不能当最后已交付版本。
 - 4874f732全量FAIL保留：602首试/2意外/1flaky，独立UI审查CHANGES REQUIRED。添加资源菜单旧z60和上下文菜单旧z70低于editor101/HUD102，导致手机第二张图片无法加入和短屏连接菜单触摸滚动消失。两类body portal命令菜单改用既有popover token；连接/对比与短屏14等定向20项通过，另保存几何首次读取旧视口宽度1279>390失败，改为有界等待实际尺寸并保留原边界/命中断言。上下文/保存连续三轮18项首试通过，native保存重试的旧flaky仅在后续实际全量首试和运行证据通过后关闭，不靠增大超时或删除断言。
 - ab37a139完整九步exit0、606全部首试与两份独立补审PASS，official/portable CLI各20实际PASS；仍非最终Native交付。Native首轮38项后第四短屏采样遇resize后的自动视图变更，驱动在resize/关闭覆盖层后等待两帧布局再取不平移基线，原断言保留；次轮旧31项后上传按钮被screen editor遮挡，失败均保留。候选操作栏升层虽上传可达，反向遮住390短屏参数的2项失败亦保留；root最终沿用原层级，在共享定位函数纳入编辑器/底部工具的实际矩形、上下搜索最近可用行。21项真实浏览器首试PASS含320/390展开编辑器、32px/R8实际filechooser、草稿/世界坐标及编辑器控件、原顶部拖动/重选/缩放；健康51文件0新增问题，最终新源码全量与Native待回执。
+
+## 窄屏右侧 HUD 避让补充
+
+- `50271d34` 完整 `npm run verify` exit 1：604 通过、4 失败，均为 320px 的上传按钮中心命中失败；99 个输入哈希稳定。21 项定向通过不能覆盖完整回归。
+- 工程外复制原测试的实际 DOM 采样确认：工具栏位于 x256/y54，上传仍为 32×32/R8，但中心命中 `IMG > BUTTON.chat-reopen.only-narrow > DIV.canvas-hud-right`。共享定位遗漏 HUD 右操作区；补入该实际矩形，保持层级、世界坐标、数据身份及原命中断言。
+- 原失败日志与 DOM/截图保留于工程外 `geometry-diagnostics/`；后续实际完整验证和原生收据单独记录。
+- 手机 `.canvas-hud-right` 是 `display: contents`，容器无矩形；独立补审指出须测量其实际 `.chat-reopen` 按钮。仅加入容器的候选仍失败，保留 `palette-hudright-green.log`；最终使用实际按钮选择器。
+- 实际按钮避让后 `palette-chat-green.log/.exit` 32 项全部首试通过，含原 4 个 320px 回归和 320/390 展开编辑器的真实 filechooser、短屏菜单及桌面工具栏；typecheck exit 0。完整回归与新产物仍待独立收据。
