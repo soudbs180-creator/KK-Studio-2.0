@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { spawn, execFileSync } from "node:child_process";
 import { createHash, randomUUID } from "node:crypto";
 import fs from "node:fs/promises";
+import { createServer } from "node:http";
 import net from "node:net";
 import path from "node:path";
 import { chromium, expect } from "@playwright/test";
@@ -28,9 +29,9 @@ const executable = path.resolve(
     path.join(root, "src-tauri/target/release/kk-studio.exe"),
 );
 const port = 9417;
-const baseUrl = "https://synthetic.invalid/v1";
+let baseUrl;
 const providerName = `Credential-${runId.slice(0, 8)}`;
-const providerId = credentialId(baseUrl, providerName);
+let providerId;
 const secret = `synthetic-credential-${runId}`;
 const initialModel = "synthetic-image-model";
 const interruptedModel = "synthetic-image-after-native-commit";
@@ -66,11 +67,47 @@ const report = {
   errors: [],
   passed: false,
   credentialCleanupComplete: false,
+  modelFixture: {
+    baseUrl: null,
+    requests: 0,
+    bearerMatched: false,
+    closed: false,
+  },
 };
 let app;
 let browser;
 let page;
 let attemptedCredential = false;
+const modelFixture = createServer((request, response) => {
+  report.modelFixture.requests++;
+  try {
+    assert.equal(request.method, "GET", "Model discovery must use GET");
+    assert.equal(request.url === "/v1/models", true, "Unexpected fixture path");
+    assert.equal(
+      request.headers.authorization === `Bearer ${secret}`,
+      true,
+      "Model discovery must use the owned vault credential",
+    );
+    report.modelFixture.bearerMatched = true;
+    response.writeHead(200, { "Content-Type": "application/json" });
+    response.end(
+      JSON.stringify({
+        data: [{ id: initialModel, capabilities: { modalities: ["image"] } }],
+      }),
+    );
+  } catch (error) {
+    report.errors.push(
+      String(error instanceof Error ? error.message : error).replaceAll(
+        secret,
+        "<synthetic credential>",
+      ),
+    );
+    response.writeHead(400, { "Content-Type": "application/json" });
+    response.end(
+      JSON.stringify({ error: { message: "Fixture rejected request" } }),
+    );
+  }
+});
 
 // Refuse an occupied debugger rather than adopting or stopping another app.
 await new Promise((resolve, reject) => {
@@ -635,6 +672,13 @@ async function expectRecoveredIdentity(connectionId, model, tag) {
 }
 
 try {
+  await new Promise((resolve, reject) => {
+    modelFixture.once("error", reject);
+    modelFixture.listen(0, "127.0.0.1", resolve);
+  });
+  baseUrl = `http://127.0.0.1:${modelFixture.address().port}/v1`;
+  providerId = credentialId(baseUrl, providerName);
+  report.modelFixture.baseUrl = baseUrl;
   await launch();
   assert.equal(
     (await invoke("credential_get", { providerId })) === null,
@@ -676,28 +720,6 @@ try {
     }),
     BROWSER_STORAGE_KEYS,
   );
-  let modelRequests = 0;
-  await page.route(`${baseUrl}/models`, async (route) => {
-    const request = route.request();
-    if (request.method() === "GET") {
-      assert.equal(
-        request.headers().authorization === `Bearer ${secret}`,
-        true,
-      );
-      modelRequests++;
-    } else assert.equal(request.method(), "OPTIONS");
-    await route.fulfill({
-      contentType: "application/json",
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET, OPTIONS",
-        "Access-Control-Allow-Headers": "authorization, content-type",
-      },
-      body: JSON.stringify({
-        data: [{ id: initialModel, capabilities: { modalities: ["image"] } }],
-      }),
-    });
-  });
   await page
     .getByRole("button", { name: "测试连接并刷新模型", exact: true })
     .click();
@@ -707,10 +729,11 @@ try {
     api.getByText("已获取 1 个模型；生成能力仍需实际验证。", { exact: true }),
   ).toBeVisible();
   assert.equal(
-    modelRequests,
+    report.modelFixture.requests,
     1,
-    "Model discovery must use the owned fixture route",
+    "Model discovery must use the owned loopback fixture exactly once",
   );
+  assert.equal(report.modelFixture.bearerMatched, true);
   assert.equal(
     JSON.stringify(await invoke("read_provider_config")) ===
       JSON.stringify(before),
@@ -832,6 +855,17 @@ try {
   }
 } finally {
   try {
+    if (modelFixture.listening) {
+      modelFixture.closeAllConnections();
+      await new Promise((resolve, reject) =>
+        modelFixture.close((error) => (error ? reject(error) : resolve())),
+      );
+    }
+    report.modelFixture.closed = !modelFixture.listening;
+  } catch {
+    report.errors.push("Owned model directory fixture could not be closed");
+  }
+  try {
     if (attemptedCredential) {
       if (!page || app?.exitCode !== null) {
         await stopOwned();
@@ -870,7 +904,8 @@ try {
   report.passed =
     report.passed &&
     report.errors.length === 0 &&
-    report.credentialCleanupComplete;
+    report.credentialCleanupComplete &&
+    report.modelFixture.closed;
   await fs.writeFile(
     path.join(output, "provider-credential-recovery.json"),
     JSON.stringify(report, null, 2),
@@ -883,6 +918,7 @@ console.log(
       passed: report.passed,
       checks: report.checks,
       credentialCleanupComplete: report.credentialCleanupComplete,
+      modelFixture: report.modelFixture,
       evidence: output,
       errors: report.errors,
     },
