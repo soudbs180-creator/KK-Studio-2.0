@@ -168,9 +168,6 @@ export default function DemoResultNode({
             </p>
           </div>
         )}
-        {!hasResultContent && item.kind === "text" && item.prompt?.trim() && (
-          <p className="demo-description">{item.prompt}</p>
-        )}
         {open && result && (
           <DemoMediaPreview
             source={item}

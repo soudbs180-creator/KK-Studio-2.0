@@ -1048,7 +1048,8 @@
     grid-template-columns: 170px 1fr;
   }
   .start-inspiration-card img {
-    height: 100%;
+    height: auto;
+    align-self: start;
   }
   .project-library-hero {
     padding-right: 24px;

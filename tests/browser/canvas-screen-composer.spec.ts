@@ -49,7 +49,7 @@ for (const viewport of [
     await screenSize(expand, 32);
     await screenSize(
       editor.getByRole("button", { name: "生成图片", exact: true }),
-      40,
+      32,
     );
     const scale = () =>
       page

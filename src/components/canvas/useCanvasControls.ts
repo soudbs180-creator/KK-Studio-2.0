@@ -15,6 +15,7 @@ import { surfaceScale, toSurfacePoint } from "./canvasSurface";
 import { getImageSelectionPosition } from "./imageSelectionPosition";
 import { visibleComposerExtraHeight } from "./composerLayout";
 import { useCanvasPreferences } from "./useCanvasPreferences";
+import type { useCanvasContextMenu } from "./useCanvasContextMenu";
 import type {
   KeyboardEvent as ReactKeyboardEvent,
   WheelEvent as ReactWheelEvent,
@@ -38,6 +39,7 @@ import {
 } from "./canvasModel";
 
 interface CanvasControlsOptions {
+  rightGesture: ReturnType<typeof useCanvasContextMenu>["rightGesture"];
   initialCanvas?: ProjectCanvas;
   items: CanvasCollectionItem[];
   onItemsChange: Dispatch<SetStateAction<CanvasCollectionItem[]>>;
@@ -53,6 +55,7 @@ function hasDraftComposer(item: CanvasCollectionItem): boolean {
 }
 
 export function useCanvasControls({
+  rightGesture,
   items,
   onItemsChange,
   initialCanvas,
@@ -340,6 +343,7 @@ export function useCanvasControls({
   });
 
   return {
+    rightGesture,
     publishedCanvas,
     isCanvasEcho,
     ...view,

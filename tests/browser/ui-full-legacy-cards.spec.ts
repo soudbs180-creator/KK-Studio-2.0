@@ -402,7 +402,7 @@ test("缺失插件仍有可用的选中公共工具栏", async ({ page }) => {
 
 for (const [kind, prompt, content, hasContent] of [
   ["text", "", undefined, false],
-  ["text", "已保存的文案草稿", undefined, true],
+  ["text", "已保存的文案草稿", undefined, false],
   ["audio", "音频提示词不等于实际音频", undefined, false],
   ["plugin", "", "", false],
   ["plugin", "", "   ", false],
@@ -471,11 +471,13 @@ test("旧视频原件恢复失败后只提供重新上传且不显示内容工�
   });
 });
 
-for (const kind of ["image", "video"] as const) {
+for (const kind of ["image", "video", "audio"] as const) {
   test(`损坏${kind}结果显示恢复说明且有效封面不冒充媒体可用`, async ({
     page,
   }, info) => {
-    const missing = `/fixtures/demo/missing-result-${kind}.${kind === "image" ? "png" : "webm"}`;
+    const extension =
+      kind === "image" ? "png" : kind === "video" ? "webm" : "wav";
+    const missing = `/fixtures/demo/missing-result-${kind}.${extension}`;
     await page.route(`**${missing}`, (route) =>
       route.fulfill({ status: 404, body: "missing media" }),
     );
@@ -498,10 +500,11 @@ for (const kind of ["image", "video"] as const) {
         "poster",
         "/fixtures/demo/blue-hour.png",
       );
+    }
+    if (kind !== "image")
       await expect(
         node.getByRole("button", { name: `预览${item.title}`, exact: true }),
       ).toBeDisabled();
-    }
     expect((await activeProject(page)).items[0].result).toEqual(item.result);
     await page.screenshot({
       path: info.outputPath(`unavailable-${kind}.png`),

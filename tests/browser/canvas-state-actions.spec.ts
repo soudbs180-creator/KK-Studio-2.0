@@ -2,7 +2,7 @@ import { expect, test, type Locator, type Page } from "@playwright/test";
 import { createHash } from "node:crypto";
 import { readFileSync as readFixture } from "node:fs";
 import type { CreationSnapshot } from "../../src/features/creation/model";
-import { openWorkspace } from "./helpers";
+import { openWorkspace, uploadCanvasMedia } from "./helpers";
 
 const creationKey = "kk-studio-next:creation:v1";
 const videoPath = "public/fixtures/demo/blue-hour-motion.webm";
@@ -444,6 +444,7 @@ test("图片Provider本地fixture运行中锁输入和参数，保留取消", as
 
 test("L和G作用于画布，输入和IME不触发，快捷键帮助准确", async ({ page }) => {
   await openWorkspace(page);
+  await uploadCanvasMedia(page.getByTestId("canvas-node-image"), "image");
   const canvas = page.getByTestId("infinite-canvas");
   const snap = () =>
     page.evaluate(

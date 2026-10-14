@@ -74,11 +74,15 @@ export default function CanvasNodeItem({
   const command = useContext(CanvasImageCommandContext);
   const uploadInput = useRef<HTMLInputElement>(null);
   const mediaSource =
-    item.result?.poster ||
-    item.result?.src ||
-    item.preview ||
-    item.assetId ||
-    "";
+    item.kind === "audio"
+      ? item.result?.kind === "audio"
+        ? item.result.src || ""
+        : ""
+      : item.result?.poster ||
+        item.result?.src ||
+        item.preview ||
+        item.assetId ||
+        "";
   const [mediaContent, setMediaContent] = useState({
     source: "",
     ready: false,
@@ -98,14 +102,12 @@ export default function CanvasNodeItem({
         item.plugin.metadata.content.trim(),
       )
     : item.kind === "text"
-      ? Boolean(item.result?.text?.trim() || item.prompt?.trim())
-      : item.kind === "audio"
-        ? Boolean(item.result?.kind === "audio" && item.result.src?.trim())
-        : Boolean(
-            mediaSource &&
-            mediaContent.source === mediaSource &&
-            mediaContent.ready,
-          );
+      ? Boolean(item.result?.kind === "text" && item.result.text?.trim())
+      : Boolean(
+          mediaSource &&
+          mediaContent.source === mediaSource &&
+          mediaContent.ready,
+        );
   const editing: NodeEditingProps = {
     selected: controls.selectedNode === item.id,
     hasContent,

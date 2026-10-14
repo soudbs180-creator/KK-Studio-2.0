@@ -27,25 +27,30 @@ export default function ResultPreview({
 }) {
   const image = useRef<HTMLImageElement>(null);
   const video = useRef<HTMLVideoElement>(null);
+  const audio = useRef<HTMLAudioElement>(null);
+  const mediaRef =
+    result.kind === "audio" ? audio : result.kind === "video" ? video : image;
   const reportContentReady = useCanvasMediaContent<
-    HTMLImageElement | HTMLVideoElement
+    HTMLImageElement | HTMLMediaElement
   >(
-    result.kind === "video" ? video : image,
-    result.kind === "video" ? result.src : result.poster || result.src,
+    mediaRef,
+    result.kind === "video" || result.kind === "audio"
+      ? result.src
+      : result.poster || result.src,
     onContentReadyChange,
   );
   useLayoutEffect(() => {
-    const media = result.kind === "video" ? video.current : image.current;
+    const media = mediaRef.current;
     onPreviewError?.(
       Boolean(
         media &&
         media.currentSrc === media.src &&
-        (media instanceof HTMLVideoElement
+        (media instanceof HTMLMediaElement
           ? media.error
           : media.complete && media.naturalWidth === 0),
       ),
     );
-  }, [result.kind, result.src, result.poster, onPreviewError]);
+  }, [mediaRef, result.src, result.poster, onPreviewError]);
   const loaded = () => {
     if (reportContentReady()) onPreviewError?.(false);
   };
@@ -65,7 +70,8 @@ export default function ResultPreview({
           onLoadedMetadata={loaded}
           onError={failed}
         />
-      ) : result.poster || result.kind === "image" ? (
+      ) : result.kind !== "audio" &&
+        (result.poster || result.kind === "image") ? (
         <img
           ref={image}
           src={result.poster ?? result.src}
@@ -86,11 +92,21 @@ export default function ResultPreview({
           onError={failed}
         />
       ) : result.kind === "audio" ? (
-        <div className="demo-wave" aria-hidden="true">
-          {Array.from({ length: 27 }, (_, i) => (
-            <i key={i} style={{ height: `${18 + ((i * 19) % 51)}px` }} />
-          ))}
-        </div>
+        <>
+          <audio
+            ref={audio}
+            src={result.src}
+            hidden
+            preload="metadata"
+            onLoadedMetadata={loaded}
+            onError={failed}
+          />
+          <div className="demo-wave" aria-hidden="true">
+            {Array.from({ length: 27 }, (_, i) => (
+              <i key={i} style={{ height: `${18 + ((i * 19) % 51)}px` }} />
+            ))}
+          </div>
+        </>
       ) : (
         <p>{result.text}</p>
       )}

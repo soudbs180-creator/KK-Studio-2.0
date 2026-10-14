@@ -94,6 +94,9 @@ export default function CanvasNodeFrame({
           return;
         event.preventDefault();
         event.stopPropagation();
+        const moved = controls.rightGesture.current?.moved;
+        controls.rightGesture.current = null;
+        if (moved) return;
         controls.setSelectedNode(id);
         setCardMenu({ x: event.clientX, y: event.clientY });
       }}

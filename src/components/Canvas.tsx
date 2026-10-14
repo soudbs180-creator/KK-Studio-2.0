@@ -51,6 +51,7 @@ export default function Canvas({
   const { contextMenu, setContextMenu, rightGesture, handleContextMenu } =
     useCanvasContextMenu();
   const controls = useCanvasControls({
+    rightGesture,
     items,
     onItemsChange,
     initialCanvas,
@@ -128,7 +129,7 @@ export default function Canvas({
         aria-label="无限画布"
         tabIndex={0}
         onKeyDownCapture={handleKeyDown}
-        onPointerDown={(event) => {
+        onPointerDownCapture={(event) => {
           if (event.button === 2)
             rightGesture.current = {
               x: event.clientX,
@@ -136,6 +137,8 @@ export default function Canvas({
               moved: false,
             };
           else if (rightGesture.current) rightGesture.current = null;
+        }}
+        onPointerDown={(event) => {
           startCanvasPan(event);
         }}
         onDoubleClick={(event) => {

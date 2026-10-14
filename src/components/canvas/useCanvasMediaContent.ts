@@ -2,7 +2,7 @@ import { useCallback, useLayoutEffect, type RefObject } from "react";
 
 /** Recheck cached media when its owner changes, even without another load event. */
 export function useCanvasMediaContent<
-  T extends HTMLImageElement | HTMLVideoElement,
+  T extends HTMLImageElement | HTMLMediaElement,
 >(
   ref: RefObject<T>,
   source: string | undefined,
@@ -15,7 +15,7 @@ export function useCanvasMediaContent<
       media.currentSrc === media.src &&
       (media instanceof HTMLImageElement
         ? media.complete && media.naturalWidth > 0
-        : media.readyState >= 1),
+        : media.readyState >= 1 && !media.error),
     );
     onReady?.(ready);
     return ready;
