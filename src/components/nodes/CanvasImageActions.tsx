@@ -19,7 +19,6 @@ export default function CanvasImageActions({
   liked,
   onLike,
   onDelete,
-  onUpload,
   references,
 }: {
   item: CanvasCollectionItem;
@@ -29,7 +28,6 @@ export default function CanvasImageActions({
   liked?: boolean;
   onLike?: () => void;
   onDelete?: () => void;
-  onUpload?: () => void;
   references?: CanvasReference[];
 }) {
   const [redrawOpen, setRedrawOpen] = useState(false);
@@ -53,17 +51,6 @@ export default function CanvasImageActions({
         selected={selected}
         title={item.title}
       >
-        {onUpload && (
-          <button
-            type="button"
-            className="ui-icon-button"
-            aria-label="上传图片"
-            title="上传本地图片"
-            onClick={onUpload}
-          >
-            <UiIcon name="upload" />
-          </button>
-        )}
         <button
           type="button"
           className="kk-button kk-button--tertiary"

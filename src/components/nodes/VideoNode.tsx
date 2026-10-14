@@ -172,7 +172,7 @@ export default function VideoNode({
             alt=""
           />
         )}
-        {selected && (
+        {selected && !video && (
           <button
             className="video-upload"
             onClick={() => uploadInput.current?.click()}

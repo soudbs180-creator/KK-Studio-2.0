@@ -39,7 +39,7 @@ async function selectImageNode(page: Page) {
   await page.getByRole("button", { name: "添加资源", exact: true }).click();
   await page.getByRole("menuitem", { name: "图片", exact: true }).click();
   const node = page.locator(".canvas-node-image").first();
-  await node.click();
+  await expect(node).toHaveClass(/is-selected/);
   await expect(
     page.getByTestId("image-composer").getByLabel("图片提示词"),
   ).toBeVisible();

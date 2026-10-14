@@ -30,7 +30,8 @@
   position: absolute;
   bottom: var(--kk-space-3);
   left: 50%;
-  transform: translateX(-50%);
+  transform: scale(calc(1 / var(--canvas-scale, 1))) translateX(-50%);
+  transform-origin: 0 100%;
   height: var(--kk-control-h-md);
   padding: 0 var(--kk-space-3);
   display: inline-flex;

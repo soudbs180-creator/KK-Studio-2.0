@@ -243,6 +243,17 @@ test("分级菜单展示同名 API 图片模型、未知用途原因并保留账
   await expect(unknownOptions).toHaveCount(2);
   await unknownOptions.first().focus();
   await expect(unknownOptions.first()).toBeFocused();
+  const disabledStyle = await unknownOptions.first().evaluate((button) => ({
+    color: getComputedStyle(button).color,
+    background: getComputedStyle(button).backgroundColor,
+  }));
+  await unknownOptions.first().hover();
+  expect(
+    await unknownOptions.first().evaluate((button) => ({
+      color: getComputedStyle(button).color,
+      background: getComputedStyle(button).backgroundColor,
+    })),
+  ).toEqual(disabledStyle);
   await unknownOptions.first().press("Enter");
   await expect(menu).toBeVisible();
   await search.fill("");

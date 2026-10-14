@@ -7,11 +7,11 @@
 
 ## 用户可见入口
 
-- 账号弹窗积分/订阅区、生成选项“平台额度（Prototype）”、隐私说明、任务审批示例单价。
+- 账号弹窗积分/订阅区、隐私说明、任务审批示例单价。
 
 ## 代码位置
 
-- UI：`src/components/AccountPopup.tsx`、`GenerationOptions.tsx`、`GenerationPrivacyNotice.tsx`、`TaskExecutionApproval.tsx`、`TaskWorkbenchContent.tsx`
+- UI：`src/components/AccountPopup.tsx`、`GenerationPrivacyNotice.tsx`、`TaskExecutionApproval.tsx`、`TaskWorkbenchContent.tsx`
 - 前端拦截：`src/features/creation/imageTaskCommand.ts`（平台模式显式提示不上传/不扣费）
 - 服务端已建未上线：`src/features/generation-server/schema.sql`（credit_accounts/reservations/settlements、gateway_settings、provider_request_logs）、`repository.ts`、`http.ts`
 
@@ -32,3 +32,5 @@
 ## 变更记录
 
 - 2026-09-21：创建卡片，状态 PROTOTYPE。
+
+- 2026-10-15：按UI反馈移除首页画布生成参数与无调用旧入口；额度/隐私数据字段和平台拒绝规则保留，能力状态不升级。

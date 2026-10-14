@@ -46,7 +46,7 @@ test("approved composer and shell geometry stays stable at phone and desktop siz
   );
 });
 
-test("desktop settings keeps the approved frame and phone settings uses layered navigation", async ({
+test("desktop settings uses the compact frame and phone settings uses layered navigation", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 1920, height: 1080 });
@@ -55,11 +55,11 @@ test("desktop settings keeps the approved frame and phone settings uses layered 
   await page.getByRole("button", { name: "设置", exact: true }).click();
   const desktopSettings = await rect(page, ".settings-panel");
   expect(desktopSettings).not.toBeNull();
-  expect(Math.round(desktopSettings!.width)).toBe(1280);
-  expect(Math.round(desktopSettings!.height)).toBe(800);
+  expect(Math.round(desktopSettings!.width)).toBe(960);
+  expect(Math.round(desktopSettings!.height)).toBe(680);
   const desktopRail = await rect(page, ".settings-sidebar");
   expect(desktopRail).not.toBeNull();
-  expect(Math.round(desktopRail!.width)).toBe(240);
+  expect(Math.round(desktopRail!.width)).toBe(208);
   expect(desktopSettings!.x).toBeGreaterThanOrEqual(0);
   expect(desktopSettings!.x + desktopSettings!.width).toBeLessThanOrEqual(1920);
 

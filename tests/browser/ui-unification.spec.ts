@@ -67,15 +67,19 @@ for (const width of [390, 1099, 1920]) {
   });
 }
 
-test("首页生成数量和数据模式有独立可用入口并保存草稿", async ({ page }) => {
+test("首页不显示画布参数，普通输入草稿仍可恢复", async ({ page }) => {
   await page.goto("/");
-  await page.getByText("生成参数", { exact: true }).click();
-  await page.getByLabel("生成数量", { exact: true }).selectOption("4");
-  await page.getByLabel("隐私模式", { exact: true }).selectOption("local_only");
+  await expect(page.getByText("生成参数", { exact: true })).toHaveCount(0);
+  await page.getByLabel("创作提示词", { exact: true }).fill("保留当前草稿");
+  await expect
+    .poll(() =>
+      page.evaluate(() => localStorage.getItem("kk-studio-next:creation:v1")),
+    )
+    .toContain("保留当前草稿");
   await page.reload();
-  await page.getByText("生成参数", { exact: true }).click();
-  await expect(page.getByLabel("生成数量", { exact: true })).toHaveValue("4");
-  await expect(page.getByLabel("隐私模式", { exact: true })).toHaveValue(
-    "local_only",
+  await expect(page.getByLabel("创作提示词", { exact: true })).toHaveValue(
+    "保留当前草稿",
   );
+  await expect(page.getByLabel("生成数量", { exact: true })).toHaveCount(0);
+  await expect(page.getByLabel("隐私模式", { exact: true })).toHaveCount(0);
 });

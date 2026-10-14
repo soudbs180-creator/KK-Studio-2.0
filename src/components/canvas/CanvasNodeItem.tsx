@@ -134,7 +134,6 @@ export default function CanvasNodeItem({
         liked={liked}
         onLike={() => onToggleLike(item.id)}
         onDelete={() => onDelete(item.id)}
-        uploadInput={uploadInput}
       >
         <CanvasNodeContent
           item={item}

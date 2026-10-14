@@ -165,6 +165,7 @@ export default function SettingsPanel({
       <div
         ref={panelRef}
         className="settings-panel"
+        data-section={section}
         data-navigation={navigation}
         aria-busy={busy}
         data-figma-node="399:27506"

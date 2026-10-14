@@ -81,3 +81,7 @@ TASK-AGENT-RECOVERY-20261013：[验证](../changes/2026-10-13-agent-recovery/ver
 ## 日常 APP 实际验收补充（进行中）
 
 用户授权正常关闭/重开默认数据APP并直接修复。2.1.16实际83652→87180恢复同项目/thread，API metadata未变；主动断开后87180正常exit0→75784仍暂停。原当前API ref在关闭前就是missing，不将配置active冒充实钥保留。聊天横幅危险色/按钮未同步已RED，共享2.1.17修复和最终复验在执行中；原2.1.16证据保留。
+
+## 2026-10-15 UI细节任务
+
+当前修改位于branch-consolidation-20261011 / fix/TASK-UI-DETAILS-20261015，base18e143f，Desktop/Web2.1.26。设置/输入框/卡片空态与扩展轴线focused29通过；完整与Native验收待完成。primary旧基线及index保留。恢复见[验证](../changes/2026-10-15-ui-details/verification.md)。

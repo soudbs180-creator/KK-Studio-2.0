@@ -72,6 +72,15 @@
   min-width: 0;
   flex: 0 0 auto;
 }
+.composer-trailing-actions {
+  display: flex;
+  flex: 0 0 auto;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: var(--kk-space-1);
+  order: 10;
+  margin-left: auto;
+}
 .start-footer-left,
 .start-footer-right {
   display: contents;
@@ -130,12 +139,51 @@
   border-radius: var(--ui-radius-control);
   background: transparent;
 }
-.composer-toolbar button:hover:not(:disabled),
-.composer-toolbar button[aria-expanded="true"] {
+.composer-toolbar
+  :is(
+    .start-tool-button,
+    .chat-model-picker,
+    .chat-skill-trigger,
+    .chat-plugin-trigger,
+    .chat-mode-trigger,
+    .start-mode-button,
+    .start-add-button,
+    .chat-attachment-trigger,
+    [data-voice-state],
+    .start-submit-button,
+    .chat-send
+  ):hover:not(:disabled),
+.composer-toolbar
+  :is(
+    .start-tool-button,
+    .chat-model-picker,
+    .chat-skill-trigger,
+    .chat-plugin-trigger,
+    .chat-mode-trigger,
+    .start-mode-button,
+    .start-add-button,
+    .chat-attachment-trigger,
+    [data-voice-state],
+    .start-submit-button,
+    .chat-send
+  )[aria-expanded="true"] {
   color: var(--text-primary);
   background: var(--neutral-selected);
 }
-.composer-toolbar button:active:not(:disabled) {
+.composer-toolbar
+  :is(
+    .start-tool-button,
+    .chat-model-picker,
+    .chat-skill-trigger,
+    .chat-plugin-trigger,
+    .chat-mode-trigger,
+    .start-mode-button,
+    .start-add-button,
+    .chat-attachment-trigger,
+    [data-voice-state],
+    .start-submit-button,
+    .chat-send
+  ):active:not(:disabled) {
   background: var(--bg-soft);
 }
 .composer-toolbar :is(.start-model-picker, .chat-model-picker-wrap) {
@@ -497,9 +545,8 @@
 
 /*
  * Current Figma composer contracts (483:695 / 483:753 / 407:29265).
- * Keep the visible controls on the shared 32px hit target. Batch and data mode
- * live inside the model menu;
- * plugins and partners remain accessible through settings.
+ * Keep text actions as capsules and icon actions as 32px rounded squares.
+ * Generation parameters belong to canvas editors.
  */
 .start-composer {
   --composer-target: 32px;
@@ -580,7 +627,6 @@
   width: var(--kk-control-h-md);
   min-width: var(--kk-control-h-md);
   height: var(--kk-control-h-md);
-  border-radius: var(--kk-radius-full);
 }
 .start-composer .start-add-button > img,
 .start-composer .start-submit-button > img {
@@ -618,7 +664,6 @@
   min-height: var(--kk-control-h-md);
   padding: 0 5px;
   gap: 4px;
-  border-radius: var(--kk-radius-control);
   background: var(--ui-task-selected);
   font-size: var(--kk-font-caption);
   line-height: var(--kk-line-caption);
@@ -652,29 +697,6 @@
   content: none;
 }
 
-.start-model-options {
-  display: grid;
-  gap: var(--kk-space-2);
-  padding: var(--kk-space-3);
-  border-top: var(--kk-border-width) solid var(--border-default);
-}
-.start-model-options .start-count-picker {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--kk-space-3);
-}
-.start-model-options select {
-  min-width: 0;
-  height: var(--kk-control-h-md);
-  padding-inline: var(--kk-control-px-sm);
-  border: var(--kk-border-width) solid var(--border-control);
-  border-radius: var(--kk-radius-control);
-  background: var(--bg-input);
-  color: var(--text-primary);
-  font-size: var(--kk-font-caption);
-}
-
 .start-composer .start-composer-divider {
   display: block;
   flex: 0 0 1px;
@@ -692,7 +714,6 @@
   height: var(--kk-control-h-md);
   min-height: var(--kk-control-h-md);
   margin-left: 0;
-  border-radius: 50%;
 }
 
 .start-composer .start-footer-right .start-composer-divider {
@@ -719,7 +740,6 @@
   height: var(--kk-control-h-md);
   min-height: var(--kk-control-h-md);
   padding: 0 4px;
-  border-radius: var(--kk-radius-control);
   font-size: var(--kk-font-caption);
   line-height: var(--kk-line-caption);
 }
@@ -737,7 +757,6 @@
   height: var(--kk-control-h-md);
   min-height: var(--kk-control-h-md);
   margin-left: 9px;
-  border-radius: var(--kk-radius-full);
 }
 
 .start-composer .start-composer-divider + .start-footer-right {
@@ -816,7 +835,6 @@
   min-width: var(--kk-control-h-md);
   height: var(--kk-control-h-md);
   min-height: var(--kk-control-h-md);
-  border-radius: var(--kk-radius-full);
 }
 
 .conversation-panel .chat-composer .chat-attachment-trigger {
@@ -841,7 +859,6 @@
   min-height: var(--kk-control-h-md);
   padding: 0 var(--kk-space-3);
   gap: 4px;
-  border-radius: var(--kk-radius-control);
   background: var(--ui-task-selected);
   font-size: var(--kk-font-caption);
   line-height: var(--kk-line-caption);
@@ -906,7 +923,6 @@
   min-height: var(--kk-control-h-md);
   padding: 0 5px;
   gap: 4px;
-  border-radius: var(--kk-radius-control);
   background: var(--ui-task-selected);
   font-size: var(--kk-font-caption);
   line-height: var(--kk-line-caption);
@@ -925,7 +941,6 @@
   height: var(--kk-control-h-md);
   min-height: var(--kk-control-h-md);
   margin-left: auto;
-  border-radius: 50%;
 }
 
 .conversation-panel .chat-composer [data-voice-state] > img {
@@ -951,7 +966,6 @@
   height: var(--kk-control-h-md);
   min-height: var(--kk-control-h-md);
   padding: 0 4px;
-  border-radius: var(--kk-radius-control);
   font-size: var(--kk-font-caption);
   line-height: var(--kk-line-caption);
 }
@@ -1082,36 +1096,6 @@
     margin-left: 4px;
   }
 }
-/* Keep the three composer surfaces aligned at the same hit target. */
-.composer-toolbar
-  :is(
-    .start-tool-button,
-    .chat-model-picker,
-    .chat-skill-trigger,
-    .chat-plugin-trigger,
-    .chat-mode-trigger,
-    .start-mode-button
-  ) {
-  min-height: var(--kk-control-h-md);
-  height: var(--kk-control-h-md);
-  border-radius: var(--kk-radius-full);
-}
-.composer-toolbar
-  :is(
-    .start-add-button,
-    .chat-attachment-trigger,
-    .start-submit-button,
-    .chat-send,
-    [data-voice-state]
-  ) {
-  border-radius: var(--kk-icon-button-radius);
-}
-.composer-toolbar.start-composer .start-add-button,
-.conversation-panel .chat-composer .chat-attachment-trigger {
-  border-radius: var(--kk-icon-button-radius);
-  background: var(--kk-bg-soft);
-}
-
 /* Compact home controls keep the model affordance readable instead of
    truncating the three-character fallback inside the fixed tool slot. */
 @media (max-width: 1200px) {
@@ -1124,11 +1108,19 @@
 
 @media (max-width: 767px) {
   /* The compact phone row has no room for desktop separators. */
-  .start-composer .start-footer-left,
-  .start-composer .start-footer-right {
+  .start-composer .start-footer-left {
     display: contents;
     flex: 0 0 auto;
     width: auto;
+  }
+
+  .start-composer .start-footer-right {
+    display: flex;
+    flex: 0 0 auto;
+    flex-wrap: nowrap;
+    width: auto;
+    order: 10;
+    margin-left: auto;
   }
 
   .start-composer .start-model-picker {

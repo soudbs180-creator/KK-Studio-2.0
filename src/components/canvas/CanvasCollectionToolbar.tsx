@@ -12,7 +12,6 @@ export default function CanvasCollectionToolbar({
   selected,
   liked,
   onLike,
-  uploadInput,
   onDelete,
 }: {
   item: CanvasCollectionItem;
@@ -20,7 +19,6 @@ export default function CanvasCollectionToolbar({
   selected: boolean;
   liked: boolean;
   onLike: () => void;
-  uploadInput: RefObject<HTMLInputElement>;
   onDelete: () => void;
 }) {
   const command = useContext(CanvasImageCommandContext);
@@ -32,20 +30,6 @@ export default function CanvasCollectionToolbar({
       title={item.title}
       label={`卡片操作：${item.title}`}
     >
-      {!item.plugin &&
-        item.kind === "video" &&
-        !item.result &&
-        !item.generationStatus && (
-          <button
-            type="button"
-            className="ui-icon-button"
-            aria-label="上传视频"
-            title="上传视频后仅用于本地预览；演示生成不会上传或消费视频原件"
-            onClick={() => uploadInput.current?.click()}
-          >
-            <UiIcon name="upload" />
-          </button>
-        )}
       <button
         type="button"
         className="kk-button kk-button--tertiary"

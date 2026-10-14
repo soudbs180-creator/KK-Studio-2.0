@@ -1174,7 +1174,8 @@
   height: var(--kk-control-h-md);
   padding: 0 var(--kk-space-3);
   gap: var(--kk-space-2);
-  transform: translateX(-50%);
+  transform: scale(calc(1 / var(--canvas-scale, 1))) translateX(-50%);
+  transform-origin: 0 100%;
   border-radius: var(--kk-icon-button-radius);
   font-size: var(--kk-font-body);
   white-space: nowrap;
@@ -1651,7 +1652,7 @@
 .video-placeholder {
   height: 208px;
   border: 1px solid transparent;
-  border-radius: 28px;
+  border-radius: var(--kk-radius-card);
   background: var(--bg-card);
   display: grid;
   place-content: center;

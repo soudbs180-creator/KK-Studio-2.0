@@ -241,7 +241,7 @@ export default function ModelPickerMenu({
         >
           ←
         </button>
-        <strong>{title}</strong>
+        <strong title={title}>{title}</strong>
         <button
           type="button"
           aria-label={memory.all ? "切换分级模型" : "切换全部模型"}

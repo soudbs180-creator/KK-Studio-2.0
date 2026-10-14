@@ -163,7 +163,6 @@
   .settings-panel {
     --ui-input-height: 40px;
     --ui-button-height: 40px;
-    width: min(920px, calc(100vw - 24px));
     max-height: calc(100dvh - 24px);
   }
   .settings-close {

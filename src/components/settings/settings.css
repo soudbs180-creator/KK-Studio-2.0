@@ -7,7 +7,7 @@
   position: relative;
   display: grid;
   grid-template-columns: var(--kk-settings-nav-width) minmax(0, 1fr);
-  width: min(var(--kk-settings-width), calc(100vw - 32px));
+  width: min(var(--kk-settings-compact-width), calc(100vw - 32px));
   max-width: 100%;
   height: var(--kk-settings-height);
   max-height: calc(100dvh - 32px);
@@ -18,6 +18,12 @@
   font-family: "Inter", "Microsoft YaHei", sans-serif;
   text-align: left;
   overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  .settings-panel:is([data-section="providers"], [data-section="extensions"]) {
+    width: min(var(--kk-settings-width), calc(100vw - 32px));
+  }
 }
 
 .settings-sidebar {
@@ -47,7 +53,7 @@
   gap: 4px;
 }
 .settings-nav-group + .settings-nav-group {
-  margin-top: 18px;
+  margin-top: var(--kk-space-3);
 }
 .settings-nav-group-label {
   padding: 0 12px;
@@ -56,13 +62,13 @@
   color: var(--text-tertiary);
 }
 .settings-nav-item {
-  flex: 0 0 40px;
+  flex: 0 0 var(--kk-control-h-md);
   display: flex;
   align-items: center;
   align-self: stretch;
   gap: 8px;
   max-width: 100%;
-  height: 40px;
+  height: var(--kk-control-h-md);
   padding: 0 12px;
   border-radius: var(--kk-radius-full);
   color: var(--settings-muted);
@@ -117,16 +123,16 @@
   background: var(--settings-selected);
 }
 .settings-general-rows {
-  margin-top: 32px;
+  margin-top: var(--kk-space-6);
   display: flex;
   flex-direction: column;
-  gap: 36px;
+  gap: var(--kk-space-6);
 }
 .settings-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 35px;
+  gap: var(--kk-space-6);
   min-height: 0;
 }
 .settings-row-copy {

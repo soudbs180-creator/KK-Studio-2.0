@@ -6,7 +6,6 @@ import ComposerTextarea from "./ComposerTextarea";
 import useConversationAttachments from "./useConversationAttachments";
 import ComposerExtensionsMenu from "./ComposerExtensionsMenu";
 import StartModelPicker from "./StartModelPicker";
-import StartGenerationSettings from "./StartGenerationSettings";
 import { StartApproval, StartModePicker } from "./StartComposerModes";
 import VoiceInputButton from "./VoiceInputButton";
 import { useComposerMenus } from "./useComposerMenus";
@@ -47,7 +46,6 @@ export default function StartComposer({
   );
   const pickerRef = useRef<HTMLDivElement>(null);
   const {
-    addMenuOpen,
     modelMenuOpen,
     skillMenuOpen,
     modeMenuOpen,
@@ -178,12 +176,6 @@ export default function StartComposer({
                 closeMenus();
                 onOpenModel();
               }}
-            />
-            <StartGenerationSettings
-              draft={draft}
-              open={addMenuOpen}
-              onToggle={() => toggleMenu("add")}
-              onChange={commit}
             />
             <span
               className="start-composer-divider start-model-divider"

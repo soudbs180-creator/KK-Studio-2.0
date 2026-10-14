@@ -261,11 +261,12 @@
   --kk-task-popover-width: 360px;
   --kk-task-popover-height: 420px;
   --kk-task-popover-min-height: 300px;
-  /* Settings reference: roomy navigation and optional provider detail rail. */
-  --kk-settings-width: 1280px;
-  --kk-settings-height: 800px;
-  --kk-settings-nav-width: 240px;
-  --kk-settings-method-width: 192px;
+  /* 2026-10-15 density feedback: compact settings, wider connection forms. */
+  --kk-settings-width: 1120px;
+  --kk-settings-compact-width: 960px;
+  --kk-settings-height: 680px;
+  --kk-settings-nav-width: 208px;
+  --kk-settings-method-width: 160px;
   /* Screen editor shell sits above the phone canvas toolbar, below panels. */
   --kk-canvas-screen-editor-width: 590px;
   --kk-canvas-screen-editor-bottom: 152px;

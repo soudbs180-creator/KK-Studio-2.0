@@ -895,7 +895,6 @@
       "任务审批示例单价"
     ],
     "code": [
-      "src/components/GenerationOptions.tsx",
       "src/components/GenerationPrivacyNotice.tsx",
       "src/features/creation/imageTaskCommand.ts",
       "src/features/generation-server/schema.sql"

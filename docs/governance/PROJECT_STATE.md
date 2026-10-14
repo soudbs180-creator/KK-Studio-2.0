@@ -17,7 +17,7 @@
 - `canonicalHead`: `694a00607f6f63de1b8c43d0ebb117adf5d34f67`
 - `canonicalHeadVerifiedFrom`: 沿用c1fae190基线的main694a006来源记录；本次未fetch或回读Hosted，不宣称当前远端新鲜度。
 - `primaryCheckoutState`: D:/kk-studio/KK-Studio-2.0 保留 codex/ui-redesign-20261011@51fccfc7879cf90f7caaf3ae8e10af4d97a2aa2c 的并发dirty与原index，当前旧UI源码Desktop/Web2.1.24；51fcc+旧修复428a属于错误UI基线。当前任务仅在primary追加最新版来源指针且保留SHA备份，不改原产品源码或index。实际Desktop默认入口已指向branch-consolidation-20261011的本次2.1.25；旧版本/盘点记录只保留历史范围。
-- `taskLedger`: 137 records; 6 REVIEW, 81 DONE, 12 TODO, 34 PARTIAL, 4 BLOCKED; 56 open records.
+- `taskLedger`: 138 records; 6 REVIEW, 81 DONE, 12 TODO, 34 PARTIAL, 4 BLOCKED, 1 IN_PROGRESS; 57 open records.
 - `workspaceWorktrees`: 本轮末次只读worktree登记回读109项。此前恢复盘点107登记项、39 dirty来源、39一致快照；该盘点时原index变动0，872源路径与313排除路径可溯源。首轮104项/40一致与1volatile记录保留原时点；历史107项快照不覆盖后续登记来源。原分支/index/资料保留，本任务未删除、移动或覆盖其他来源。
 - `reclamationPolicy`: generated dependencies/build output may be reclaimed only from a recorded, non-primary worktree after immutable SHA inventory and explicit candidate approval; source changes and evidence paths are protected.
 - `remoteAutoMerge`: `NOT_READ_BACK`; local workflow and runbooks are reviewable, but no remote setting is claimed as enabled.
@@ -34,6 +34,8 @@
 - `actionUsabilityCandidate`: Desktop/Web2.1.23产品b4fa7b0e，本地授权范围DONE/PASS。九步verify：Node1251/14既有skip、Agent180/2既有skip、production Edge574首试/0flaky、UI241/0、development5步骤PASS；官方带Agent构建与实际Tauri/同字节便携各35项通过。沿用已确认手机布局，原数据身份及primary dirty/index保留；新依赖0、入口gzip增加1244B。最终文档提交、ZIP/源码/Web/恢复及独立补审分别按工程外收据回读；真实账号、付费Provider、Hosted、签名安装器、实体手机与人工验收继续开放，Mobile2.1.1仍规划。[本轮验证](../changes/2026-10-14-action-usability-222/verification.md)。
 
 - `actionUsability224Candidate`: Desktop/Web2.1.24产品源码58b5c07f34718769e10b76c89d510615bea2fefc，TASK-223本地授权范围DONE/PASS。完整九步verify退出0：Node1273pass/14既有skip，Agent199pass/2既有skip，Edge608全部首试/0flaky/0skip，UI242/0，development5步骤PASS；Rust163与fmt通过。最终源码核心/UI独立审查PASS，官方CLI20项、便携CLI20项，实际Tauri官方46项、同字节便携46项通过。新依赖0，入口gzip增加1221B<16384；生产运行时4280文件/519481278B。用户确认手机布局、主题/独立背景、存储identifier/路径、原件与primary dirty/index保留；旧135任务及37功能状态逐项不变。Native Mobile2.1.1仍PLANNED；Hosted、真人CLI账号/付费Provider、签名安装器、日常资料、实体手机与用户视觉验收分别开放。[本轮验证](../changes/2026-10-14-action-usability-223/verification.md)。
+
+- `uiDetailsCandidate`: TASK-UI-DETAILS-20261015 / fix/TASK-UI-DETAILS-20261015 复用branch-consolidation-20261011，base18e143f；Desktop/Web源码2.1.26，Mobile2.1.1不变。用户五处UI细节反馈修复进行中，29focused生产浏览器首次通过；完整/Native/独立审查待验，旧2.1.25证据保留历史范围。[本次验证](../changes/2026-10-15-ui-details/verification.md)。
 
 <!-- CURRENT_FACTS_END -->
 <!-- HISTORICAL_SNAPSHOTS_BEGIN -->

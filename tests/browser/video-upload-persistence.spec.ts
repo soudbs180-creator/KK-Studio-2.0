@@ -40,10 +40,7 @@ test("视频上传归档为 kk-asset 引用，刷新后恢复本地预览", asyn
   await expect(node.getByRole("status")).toContainText(
     "演示生成不会上传或消费视频原件",
   );
-  await expect(node.getByRole("button", { name: "上传视频" })).toHaveAttribute(
-    "title",
-    /本地预览/,
-  );
+  await expect(node.getByRole("button", { name: "上传视频" })).toHaveCount(0);
   await page.waitForFunction((id) => {
     const raw = localStorage.getItem("kk-studio-next:creation:v1");
     if (!raw) return false;

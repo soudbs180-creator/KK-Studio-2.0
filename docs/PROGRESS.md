@@ -1030,3 +1030,7 @@ TASK-PLUGIN-DEV-001修复开发public import及真实React静态JSX校验后，�
 ## 2026-10-13 模型接入与扩展分类
 
 Codex 主 Agent 移至模型接入；侧栏扩展统一 Skill、MCP、协作伙伴，七种角色职责可加入对应草稿；模型菜单恢复来源层次、320px 紧凑布局与稳定滚动。按用户补充移除模型弹层的批量/数据项，节点数量和旧批次归档的 40 项定向回归通过。独立复核关闭同地址多账号身份、Google 未保存配置保留及角色来源隔离问题后，最终 Web development 7 项、production preview 7 项、Desktop 2.1.14 14 项重新验收通过；Desktop 随包 Agent 启动、健康检查、停止通过。生产浏览器全量 495 项中 492 pass，本轮 20 项全部通过，3 个已记录的既有 UI 失败；任务保持 REVIEW/PARTIAL。[验证记录](changes/2026-10-13-capability-ui/verification.md)包含资源身份、原生持久保存和无关改动哈希。自动分派与 OAuth 授权继续保持未接入。
+
+## 2026-10-15 UI细节收敛（进行中）
+
+TASK-UI-DETAILS-20261015以最新18e143f/2.1.25运行树继续，Desktop/Web源码2.1.26：紧凑设置、共享composer控件、末尾动作组、空/非空上传与扩展内容轴。删除三项无调用旧参数组件；Provider/凭据/草稿与原件身份不变。29条focused生产浏览器首次通过，完整/Native/独立审查待验；[当前验证](changes/2026-10-15-ui-details/verification.md)。

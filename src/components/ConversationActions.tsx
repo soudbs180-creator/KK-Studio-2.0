@@ -131,75 +131,77 @@ export default function ConversationActions({
           />
         )}
       </div>
-      <div className="chat-mode-menu" ref={modeMenuRef}>
+      <div className="composer-trailing-actions">
+        <div className="chat-mode-menu" ref={modeMenuRef}>
+          <button
+            type="button"
+            className="chat-mode-trigger"
+            aria-label="AI权限模式"
+            aria-haspopup="menu"
+            aria-expanded={modeMenuOpen}
+            onClick={onToggleMode}
+          >
+            {approvalMode === "auto" ? "自动" : "询问"}
+            <img
+              className="chat-mode-chevron"
+              src="/design/figma/composer-chevron.svg"
+              width="10"
+              height="5"
+              alt=""
+            />
+          </button>
+          {modeMenuOpen && (
+            <div className="chat-mode-popover" role="menu">
+              {(
+                [
+                  ["auto", "自动"],
+                  ["ask", "询问"],
+                ] as const
+              ).map(([value, label]) => (
+                <button
+                  key={value}
+                  type="button"
+                  role="menuitemradio"
+                  aria-checked={approvalMode === value}
+                  title={
+                    value === "auto"
+                      ? "AI 可以连续执行，不在每一步询问"
+                      : "AI 在执行前询问你的确认"
+                  }
+                  onClick={() => onSelectMode(value)}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+        <VoiceInputButton
+          value={input}
+          onChange={onVoiceChange}
+          onStatus={onVoiceStatus}
+          enabled={voiceEnabled}
+          sessionKey={voiceSessionKey}
+          maxLength={7500}
+        />
+        <span
+          className="chat-footer-separator chat-footer-separator-right"
+          aria-hidden="true"
+        />
         <button
-          type="button"
-          className="chat-mode-trigger"
-          aria-label="AI权限模式"
-          aria-haspopup="menu"
-          aria-expanded={modeMenuOpen}
-          onClick={onToggleMode}
+          type="submit"
+          aria-label="发送消息"
+          disabled={!input.trim() || submitting}
+          className="chat-send"
         >
-          {approvalMode === "auto" ? "自动" : "询问"}
           <img
-            className="chat-mode-chevron"
-            src="/design/figma/composer-chevron.svg"
-            width="10"
-            height="5"
+            src="/design/figma/composer-send.svg"
+            width="24"
+            height="24"
             alt=""
           />
         </button>
-        {modeMenuOpen && (
-          <div className="chat-mode-popover" role="menu">
-            {(
-              [
-                ["auto", "自动"],
-                ["ask", "询问"],
-              ] as const
-            ).map(([value, label]) => (
-              <button
-                key={value}
-                type="button"
-                role="menuitemradio"
-                aria-checked={approvalMode === value}
-                title={
-                  value === "auto"
-                    ? "AI 可以连续执行，不在每一步询问"
-                    : "AI 在执行前询问你的确认"
-                }
-                onClick={() => onSelectMode(value)}
-              >
-                {label}
-              </button>
-            ))}
-          </div>
-        )}
       </div>
-      <VoiceInputButton
-        value={input}
-        onChange={onVoiceChange}
-        onStatus={onVoiceStatus}
-        enabled={voiceEnabled}
-        sessionKey={voiceSessionKey}
-        maxLength={7500}
-      />
-      <span
-        className="chat-footer-separator chat-footer-separator-right"
-        aria-hidden="true"
-      />
-      <button
-        type="submit"
-        aria-label="发送消息"
-        disabled={!input.trim() || submitting}
-        className="chat-send"
-      >
-        <img
-          src="/design/figma/composer-send.svg"
-          width="24"
-          height="24"
-          alt=""
-        />
-      </button>
     </div>
   );
 }

@@ -209,20 +209,20 @@ test("连接保存与模型能力保存范围明确，连接操作紧邻表单",
   ).toHaveCount(1);
 });
 
-test("最新设置UI保持宽面板、绿色主题及手机分级导航", async ({ page }) => {
+test("设置UI保持紧凑面板、绿色主题及手机分级导航", async ({ page }) => {
   await page.setViewportSize({ width: 1920, height: 1080 });
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   expect((await page.locator(".settings-panel").boundingBox())!.width).toBe(
-    1280,
+    960,
   );
   expect((await page.locator(".settings-sidebar").boundingBox())!.width).toBe(
-    240,
+    208,
   );
   await openSection(page, "模型接入");
   expect(
     (await page.locator(".model-access-methods").boundingBox())!.width,
-  ).toBe(192);
+  ).toBe(160);
   await page.setViewportSize({ width: 390, height: 844 });
   const back = page.getByRole("button", { name: "返回设置分类", exact: true });
   await expect(back).toBeVisible();

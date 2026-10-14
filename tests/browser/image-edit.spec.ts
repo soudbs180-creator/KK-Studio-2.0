@@ -3,7 +3,9 @@ import { writeFile } from "node:fs/promises";
 
 async function canvasImageAction(page: Page, name: string) {
   const node = page.locator(".canvas-node-image").first();
-  await node.locator(".uploaded-image").click();
+  if ((await node.getAttribute("data-selected")) !== "true")
+    await node.locator(".uploaded-image").click();
+  await expect(node).toHaveClass(/is-selected/);
   const toolbar = page.getByRole("toolbar", { name: /^图片操作：/ });
   await expect(toolbar).toBeVisible();
   await expect(node.getByRole("button", { name, exact: true })).toHaveCount(0);

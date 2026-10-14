@@ -98,7 +98,7 @@ test("未加载的插件卡片也有可点击的顶部删除", async ({ page }) 
 
 for (const width of [320, 390]) {
   for (const kind of ["image", "video"]) {
-    test(`手机${width}在50%缩放以32px方形按钮触屏上传${kind}`, async ({
+    test(`手机${width}在50%缩放以独立32px高按钮触屏上传${kind}`, async ({
       page,
     }) => {
       await page.setViewportSize({ width, height: 844 });
@@ -111,7 +111,13 @@ for (const width of [320, 390]) {
         name: `${kind === "image" ? "图片" : "卡片"}操作：新${label}卡片`,
         exact: true,
       });
-      const upload = toolbar.getByRole("button", {
+      await expect(
+        toolbar.getByRole("button", {
+          name: `上传${label}`,
+          exact: true,
+        }),
+      ).toHaveCount(0);
+      const upload = node.getByRole("button", {
         name: `上传${label}`,
         exact: true,
       });
@@ -126,13 +132,13 @@ for (const width of [320, 390]) {
               box.y + box.height / 2,
             );
             return {
-              width: box.width,
+              widthAtLeast32: box.width >= 32,
               height: box.height,
               hit: button === hit || button.contains(hit),
             };
           }),
         )
-        .toEqual({ width: 32, height: 32, hit: true });
+        .toEqual({ widthAtLeast32: true, height: 32, hit: true });
       await expect(
         node.getByRole("button", { name: `上传${label}`, exact: true }),
       ).toHaveCSS("border-radius", "8px");

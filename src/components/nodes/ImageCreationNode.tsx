@@ -232,9 +232,6 @@ export default function ImageCreationNode({
         liked={liked}
         onLike={onToggleLike}
         onDelete={onDelete}
-        onUpload={
-          !item.referenceOnly ? () => uploadInput.current?.click() : undefined
-        }
       />
       {!selected && error && (
         <p className="upload-feedback" role="status">

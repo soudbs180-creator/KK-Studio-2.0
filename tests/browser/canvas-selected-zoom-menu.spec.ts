@@ -94,13 +94,13 @@ for (const theme of ["light", "dark"])
       await expect(
         page.getByRole("menu", { name: "画布缩放比例", exact: true }),
       ).toBeHidden();
-      const upload = page
+      const preview = page
         .getByRole("toolbar", { name: /^图片操作：/ })
-        .getByRole("button", { name: "上传图片", exact: true });
-      await expect(upload).toBeVisible();
+        .getByRole("button", { name: "放大查看参考图片", exact: true });
+      await expect(preview).toBeVisible();
       await expect
         .poll(() =>
-          upload.evaluate((element) => {
+          preview.evaluate((element) => {
             const box = element.getBoundingClientRect();
             const hit = document.elementFromPoint(
               box.x + box.width / 2,

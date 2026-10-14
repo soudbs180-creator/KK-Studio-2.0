@@ -147,7 +147,7 @@ test("共享输入焦点样式覆盖高优先级旧规则，保留内部弱提�
     .evaluate((element) => element.remove());
 });
 
-test("390首页按钮全部位于输入容器内，生成参数和长模型入口不靠溢出容纳", async ({
+test("390首页按钮全部位于输入容器内，无画布生成参数或模型入口溢出", async ({
   page,
 }, testInfo) => {
   await page.setViewportSize({ width: 390, height: 844 });
@@ -188,7 +188,7 @@ test("390首页按钮全部位于输入容器内，生成参数和长模型入�
   }
   await expect(
     composer.getByRole("button", { name: "生成参数", exact: true }),
-  ).toBeVisible();
+  ).toHaveCount(0);
   await expect(
     composer.getByRole("button", { name: "开始创建项目", exact: true }),
   ).toBeVisible();

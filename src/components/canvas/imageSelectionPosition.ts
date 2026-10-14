@@ -11,6 +11,10 @@ export function getImageSelectionPosition(
     .closest("[data-canvas-node]")
     ?.querySelector(".image-caption")
     ?.getBoundingClientRect();
+  const upload = element
+    .closest("[data-canvas-node]")
+    ?.querySelector(".upload-image")
+    ?.getBoundingClientRect();
   const bounds = canvas.getBoundingClientRect();
   const scale = surfaceScale(canvas);
   const gap = parseFloat(
@@ -22,7 +26,13 @@ export function getImageSelectionPosition(
   const rightEdge =
     Math.min(window.innerWidth, bounds.right, bounds.left + usableWidth) - gap;
   const top =
-    Math.min(card.top, caption?.top ?? card.top) - toolbar.offsetHeight - gap;
+    Math.min(
+      card.top,
+      caption?.top ?? card.top,
+      upload?.height ? upload.top : card.top,
+    ) -
+    toolbar.offsetHeight -
+    gap;
   const obstacles = [
     ...canvas.querySelectorAll<HTMLElement>(
       ".canvas-hud-actions,.canvas-hud .chat-reopen,.canvas-top-right,.canvas-zoom-menu,.canvas-background-menu,.canvas-minimap,.canvas-composer-screen,.canvas-toolbar",

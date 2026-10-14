@@ -7,7 +7,7 @@ const toolbar = (page: Page) =>
   page.getByRole("toolbar", { name: /^图片操作：/ });
 
 for (const width of [390, 320]) {
-  test(`${width} 展开手机编辑器时卡片上传仍真实打开文件选择`, async ({
+  test(`${width} 已有图片展开手机编辑器时不重复上传且保留草稿`, async ({
     page,
   }) => {
     await page.setViewportSize({ width, height: 844 });
@@ -28,31 +28,12 @@ for (const width of [390, 320]) {
       left: (element as HTMLElement).style.left,
       top: (element as HTMLElement).style.top,
     }));
-    const upload = toolbar(page).getByRole("button", {
-      name: "上传图片",
-      exact: true,
-    });
-    await expect(upload).toHaveCSS("border-radius", "8px");
-    await expect
-      .poll(() =>
-        upload.evaluate((element) => {
-          const rect = element.getBoundingClientRect();
-          const hit = document.elementFromPoint(
-            rect.x + rect.width / 2,
-            rect.y + rect.height / 2,
-          );
-          return {
-            width: rect.width,
-            height: rect.height,
-            hit: element === hit || Boolean(hit && element.contains(hit)),
-          };
-        }),
-      )
-      .toEqual({ width: 32, height: 32, hit: true });
-    const chooserPending = page.waitForEvent("filechooser");
-    await upload.click();
-    const chooser = await chooserPending;
-    await chooser.setFiles("public/fixtures/demo/blue-hour.png");
+    await expect(
+      node.getByRole("button", { name: "上传图片", exact: true }),
+    ).toHaveCount(0);
+    await expect(
+      toolbar(page).getByRole("button", { name: "上传图片", exact: true }),
+    ).toHaveCount(0);
     await expect(node.locator(".uploaded-image")).toBeVisible();
     await expect(editor.getByLabel("图片提示词")).toHaveValue(
       "真实上传保留编辑器草稿",
