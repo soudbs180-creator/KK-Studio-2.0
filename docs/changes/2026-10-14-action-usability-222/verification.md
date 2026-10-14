@@ -47,3 +47,9 @@
 ## f3d2ab86完整检查与轨道测量纠正
 
 f3d2ab86的完整verify退出1：Node1248通过/14既有跳过、Agent180通过/2既有跳过、浏览器568通过/2失败，development因前步失败未执行。两个dark/light颜色规格仍测量按钮透明命中区；实际开关轨道已移到::before。保持对比度>=3及全部8种颜色，改测实际伪元素并新增轨道token配对断言。首次补测误用不存在的token而失败，改为已注册的--bg-accent/--ui-control-off；当前8/8首试通过。三次原件分别为verify-current、switch-track-measure-green和switch-track-measure-second-green日志/JSON，不能以最新结果回填旧失败。新clean提交完整verify、原生与产物仍须独立复验。
+
+## fe0ff7a2完整复验与桌面构建链发现
+
+fe0ff7a2完整verify退出0：Node1248通过/14既有跳过、Agent180通过/2既有跳过、production Edge570/570首试、UI241/0、development5步骤PASS；源码独立审查PASS。Rust163及fmt通过。该回执不含后续新增Agent构建门禁，也不代替新的桌面构建。
+
+官方带Agent构建首先因install-desktop-support旧token片段检查失败；三项隔离安装器回归先RED（2通过/1失败），增加明确的当前集成片段兼容后3/3 GREEN，旧片段和异常拒绝仍保留。随后agent:build真实编译发现ensureSiteWorkspace推断返回类型丢可选字段，补显式SiteWorkspaceConfig返回后构建退出0。verify新增agent:build，防止以后只跑可执行TS测试而漏掉当前Agent编译/集成检查。原构建失败与TS错误日志保留；新的完整verify、提交独立补审、官方构建与Native仍待取得。

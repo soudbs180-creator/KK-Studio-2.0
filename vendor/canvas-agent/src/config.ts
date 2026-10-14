@@ -66,7 +66,7 @@ export function writeConfigFile(dir: string, file: string, config: CanvasAgentCo
 }
 
 /** 确保站点级 Codex 工作空间存在并已初始化。 */
-export function ensureSiteWorkspace(config: CanvasAgentConfig) {
+export function ensureSiteWorkspace(config: CanvasAgentConfig): SiteWorkspaceConfig {
     const current = config.workspace;
     if (current?.workspacePath) {
         const workspacePath = resolveWorkspacePath(current.workspacePath);
