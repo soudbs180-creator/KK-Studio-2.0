@@ -3,7 +3,7 @@
 - 状态：PARTIAL
 - 领域：system
 - 最近更新：2026-10-14
-- 关联任务：T7、TASK-DESKTOP-INSTALLER-001、TASK-LAUNCH-001、TASK-PROTOCOL-CLI-20261014、TASK-222-ACTIONS-20261014
+- 关联任务：T7、TASK-DESKTOP-INSTALLER-001、TASK-LAUNCH-001、TASK-PROTOCOL-CLI-20261014、TASK-222-ACTIONS-20261014、TASK-223-ACTIONS-20261014
 
 ## 用户可见入口
 
@@ -21,7 +21,9 @@
 
 ## 测试与证据
 
-- 2.1.23本地按钮修复：`tests/unit/agentDesktopSupportInstaller.test.ts`；结果及Web/Desktop边界见[当前验证](../changes/2026-10-14-action-usability-222/verification.md)。
+- 2.1.24源码候选（TASK-223，PARTIAL）：2.1.24官方Agent/Native重建、同字节便携与分享包receipt/hash交付仍待本轮回执；完整verify、Native和独立审查未完成，结果见[本轮验证](../changes/2026-10-14-action-usability-223/verification.md)。
+
+- 2.1.23本地按钮修复：`tests/unit/agentDesktopSupportInstaller.test.ts`；结果及Web/Desktop边界见[2.1.23历史验证](../changes/2026-10-14-action-usability-222/verification.md)。
 
 - 单测：`tests/unit/desktopRelease.test.ts`、`tests/unit/desktopLauncher.test.ts`、`tests/deploy/release-scripts.test.mjs`；新启动与图标证据见[启动体验验证](../changes/2026-10-08-startup-experience/verification.md)。
 - 安装校验与实机脚本：`tests/unit/installerReceipt.test.ts`、`tests/unit/installerGuards.test.ts`、`tests/desktop/installer.mjs`；证据见[本轮验证](../changes/2026-09-30-desktop-installer/verification.md)。

@@ -341,3 +341,62 @@ test("ingestMessage does not save after disabling during a pending read", async 
   await ingestion;
   assert.deepEqual(storage.store.records, []);
 });
+
+for (const mutation of ["clearAll", "resetIdentity", "deleteRecord"] as const) {
+  test("late extraction cannot refill memory after " + mutation, async () => {
+    const { service, storage } = createService();
+    service.setEnabled(true);
+    await service.ingestMessage("以后请用日系插画风格", "user");
+    const id = storage.store.records[0].id;
+    if (mutation === "deleteRecord") await service.deleteRecord(id);
+    else await service[mutation]();
+    assert.equal(
+      await service.saveCodexExtraction(
+        "记忆：用户偏好日系插画风格",
+        "old-thread",
+        0,
+      ),
+      0,
+    );
+    assert.deepEqual(storage.store.records, []);
+    assert.equal(
+      await service.saveCodexExtraction("记忆：用户偏好暖色调", "new-thread"),
+      1,
+    );
+  });
+}
+
+test("failed clear preserves memory and does not invalidate a pending extraction", async () => {
+  const { service, storage } = createService();
+  service.setEnabled(true);
+  await service.ingestMessage("以后请用日系插画风格", "user");
+  storage.failures.push("write");
+  await assert.rejects(() => service.clearAll(), /write failed/);
+  storage.failures = [];
+  assert.equal(
+    await service.saveCodexExtraction(
+      "记忆：用户偏好暖色调",
+      "pending-thread",
+      0,
+    ),
+    1,
+  );
+  assert.equal(storage.store.records.length, 2);
+});
+
+test("queued extraction is discarded after clearing while the clear read waits", async () => {
+  const { service, storage } = createService();
+  service.setEnabled(true);
+  const read = pauseNextRead(storage);
+  const clear = service.clearAll();
+  await read.started;
+  const extraction = service.saveCodexExtraction(
+    "记忆：用户偏好日系插画风格",
+    "pending-thread",
+    0,
+  );
+  read.resume();
+  await clear;
+  assert.equal(await extraction, 0);
+  assert.deepEqual(storage.store.records, []);
+});

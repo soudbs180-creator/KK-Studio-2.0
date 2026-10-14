@@ -10,9 +10,9 @@
 
 | 目录 | 数量 | 运行器 | 证明什么 |
 | --- | --- | --- | --- |
-| `tests/unit/` | 163 文件 | `node --test` | 领域规则、纯函数、序列化、契约边界 |
+| `tests/unit/` | 165 文件 | `node --test` | 领域规则、纯函数、序列化、契约边界 |
 | `tests/deploy/` | 2 文件 | `node --test` | 发布脚本、回滚流程 |
-| `tests/browser/` | 98 文件 | Playwright（Edge） | 真实渲染、交互、布局、视觉回归 |
+| `tests/browser/` | 103 文件 | Playwright（Edge） | 真实渲染、交互、布局、视觉回归 |
 | `tests/desktop/` | 22 文件（`.mjs` / `.ps1`） | `node` / `powershell` | Tauri 宿主、安装器、窗口、原生能力 |
 | `tests/local-service/` | 2 文件 | `node` | 本地服务 HTTP 集成与生产冒烟 |
 | `tests/development/` | 1 文件 | `node` | 插件装载等开发态行为 |

@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { X } from "lucide-react";
 import {
   DEFAULT_SETTINGS,
@@ -14,6 +14,7 @@ import { SETTINGS_NAV_GROUPS, SETTINGS_SECTIONS } from "./SettingsSectionData";
 import {
   SettingsNavigationContext,
   useSettingsNavigationLock,
+  updateSettingsBusyOwners,
 } from "./SettingsNavigationContext";
 import type { SettingsSectionItem } from "./SettingsSectionData";
 import type { ExtensionsTab } from "./ExtensionsSettings";
@@ -92,7 +93,13 @@ export default function SettingsPanel({
   const [navigation, setNavigation] = useState<"categories" | "detail">(
     "detail",
   );
-  const [busy, setBusy] = useState(false);
+  const [busyOwners, setBusyOwners] = useState<ReadonlySet<symbol>>(
+    () => new Set(),
+  );
+  const busy = busyOwners.size > 0;
+  const setBusy = useCallback((next: boolean, owner: symbol) => {
+    setBusyOwners((current) => updateSettingsBusyOwners(current, next, owner));
+  }, []);
   useSettingsNavigationLock(panelRef, busy);
   useLayoutEffect(() => {
     if (!window.matchMedia("(max-width: 767px)").matches) return;

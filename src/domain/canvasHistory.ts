@@ -29,23 +29,33 @@ export function cloneCanvasHistorySnapshot(
 export function canvasHistoryFingerprint(
   snapshot: CanvasHistorySnapshot,
 ): string {
-  return JSON.stringify({
-    items: snapshot.items.map((item) => [item.id, item]),
-    positions: Object.keys(snapshot.positions)
-      .sort()
-      .map((id) => [id, snapshot.positions[id]]),
-    edges: snapshot.edges.map((edge) => [
-      edge.id,
-      edge.source,
-      edge.target,
-      edge.kind,
-    ]),
-    viewport: [
-      snapshot.viewport.x,
-      snapshot.viewport.y,
-      snapshot.viewport.scale,
-    ],
-  });
+  return JSON.stringify(
+    {
+      items: snapshot.items.map((item) => [item.id, item]),
+      positions: Object.keys(snapshot.positions)
+        .sort()
+        .map((id) => [id, snapshot.positions[id]]),
+      edges: snapshot.edges.map((edge) => [
+        edge.id,
+        edge.source,
+        edge.target,
+        edge.kind,
+      ]),
+      viewport: [
+        snapshot.viewport.x,
+        snapshot.viewport.y,
+        snapshot.viewport.scale,
+      ],
+    },
+    (_key, value: unknown) =>
+      value !== null && typeof value === "object" && !Array.isArray(value)
+        ? Object.fromEntries(
+            Object.entries(value).sort(([left], [right]) =>
+              left.localeCompare(right),
+            ),
+          )
+        : value,
+  );
 }
 
 export function createCanvasHistory(
@@ -64,6 +74,45 @@ export function commitCanvasHistory(
   state: CanvasHistoryState,
   next: CanvasHistorySnapshot,
 ): CanvasHistoryState {
+  const terminal = next.items.filter(
+    (item) =>
+      item.kind === "video" &&
+      item.generationIndex !== undefined &&
+      ((item.generationStatus === "error" && !item.result) ||
+        (item.generationStatus === "ready" && item.result?.source === "demo")),
+  );
+  if (terminal.length) {
+    // Undo cannot restart a finished local demo; retain its terminal result.
+    const settle = (
+      snapshot: CanvasHistorySnapshot,
+    ): CanvasHistorySnapshot => ({
+      ...snapshot,
+      items: snapshot.items.map((item) => {
+        const ended =
+          item.generationStatus === "pending"
+            ? terminal.find((entry) => entry.id === item.id)
+            : undefined;
+        return ended
+          ? {
+              ...item,
+              generationStatus: ended.generationStatus,
+              title: ended.title,
+              ...(ended.result && {
+                result: ended.result,
+                description: ended.description,
+                preview: ended.preview,
+              }),
+            }
+          : item;
+      }),
+    });
+    state = {
+      ...state,
+      past: state.past.map(settle),
+      present: settle(state.present),
+      future: state.future.map(settle),
+    };
+  }
   const current = canvasHistoryFingerprint(state.present);
   const incoming = canvasHistoryFingerprint(next);
   if (current === incoming) {

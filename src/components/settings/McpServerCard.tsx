@@ -1,5 +1,6 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { SettingsNavigationContext } from "./SettingsNavigationContext";
+import { useSettingsNavigationBusy } from "./useSettingsBusy";
 import type { McpServerConfig, McpTool } from "../../features/mcp/mcpClient";
 
 export default function McpServerCard({
@@ -133,7 +134,8 @@ function McpToolCall({
   const [input, setInput] = useState("{}");
   const [result, setResult] = useState("");
   const [calling, setCalling] = useState(false);
-  const { busy, setBusy } = useContext(SettingsNavigationContext);
+  const { busy } = useContext(SettingsNavigationContext);
+  const setBusy = useSettingsNavigationBusy();
   const request = useRef<AbortController | null>(null);
   useEffect(
     () => () => {

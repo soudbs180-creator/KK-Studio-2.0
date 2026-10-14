@@ -51,6 +51,7 @@ export default function PromptCreationNode({
   const demoGeneration = useLocalGeneration(item.kind, onDemoResults);
   const textGeneration = useCanvasImageGeneration();
   const generation = item.kind === "text" ? textGeneration : demoGeneration;
+  const busy = generation.phase === "loading";
   useLayoutEffect(() => {
     if (selected) onExtraHeightChange(60);
   }, [selected, onExtraHeightChange]);
@@ -87,6 +88,7 @@ export default function PromptCreationNode({
               <button
                 key={entry.value}
                 type="button"
+                disabled={busy}
                 className="ui-button"
                 aria-pressed={mode === entry.value}
                 onClick={() => {
@@ -127,6 +129,8 @@ export default function PromptCreationNode({
           onWheel={(e) => e.stopPropagation()}
         >
           <textarea
+            disabled={busy}
+            title={busy ? "生成中暂不能编辑，取消或结束后可继续" : undefined}
             aria-label={`${label}提示词`}
             placeholder="描述你想要生成的内容"
             maxLength={item.kind === "text" ? 4000 : 7500}
@@ -135,9 +139,10 @@ export default function PromptCreationNode({
           />
           {item.kind === "text" && (
             <CreationModelPicker
+              disabled={busy}
               kind="text"
               value={item.model ?? textGeneration.model}
-              open={modelOpen}
+              open={!busy && modelOpen}
               onToggle={() => setModelOpen(!modelOpen)}
               onChange={(model, selection) => {
                 onChange({
@@ -153,6 +158,7 @@ export default function PromptCreationNode({
           )}
           {item.kind === "text" && (
             <ModelVariantControl
+              disabled={busy}
               selection={{
                 source: item.generationSource === "codex" ? "codex" : "api",
                 model: item.model ?? textGeneration.model,

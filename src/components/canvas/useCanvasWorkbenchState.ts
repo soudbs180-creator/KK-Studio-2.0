@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { Dispatch, SetStateAction } from "react";
+import type { Dispatch, KeyboardEvent, SetStateAction } from "react";
 import type { CanvasConnection } from "../../domain/canvasGraph";
 import type { CanvasCollectionItem } from "../../domain/canvasItems";
 import { useCanvasHistory } from "./useCanvasHistory";
@@ -32,5 +32,30 @@ export function useCanvasWorkbenchState({
     gestureActive: controls.dragging === "node" || controls.dragging === "pan",
     automaticViewport: controls.automaticViewport,
   });
-  return { layersOpen, setLayersOpen, history };
+  function handleKeyDown(event: KeyboardEvent<HTMLDivElement>): void {
+    if (history.handleKeyDown(event)) return;
+    controls.handleViewKeyDown(event);
+    if (
+      event.defaultPrevented ||
+      event.nativeEvent.isComposing ||
+      event.ctrlKey ||
+      event.metaKey ||
+      event.altKey ||
+      event.shiftKey ||
+      event.currentTarget.closest("[inert]") ||
+      document.querySelector("dialog[open]") ||
+      (event.target instanceof Element &&
+        event.target.closest(
+          "input,textarea,select,[contenteditable='true'],[role='menu'],[role='dialog']",
+        ))
+    )
+      return;
+    const key = event.key.toLowerCase();
+    if (key !== "l" && key !== "g") return;
+    event.preventDefault();
+    event.stopPropagation();
+    if (key === "l") setLayersOpen((current) => !current);
+    else controls.setSnapEnabled(!controls.preferences.snapEnabled);
+  }
+  return { layersOpen, setLayersOpen, history, handleKeyDown };
 }

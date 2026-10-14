@@ -74,6 +74,15 @@ export default function CanvasNodeLayer({
   } | null>(null);
   const [connectionTarget, setConnectionTarget] = useState<string | null>(null);
   const pendingByParent = useRef<Record<string, string[]>>({});
+  const currentItems = useRef(items);
+  currentItems.current = items;
+  useEffect(() => {
+    for (const parentId of Object.keys(pendingByParent.current)) {
+      if (items.some((item) => item.id === parentId)) continue;
+      markPending(parentId, "cancelled");
+      delete pendingByParent.current[parentId];
+    }
+  }, [items]);
   useEffect(() => {
     if (!pendingResultIds.length || !pendingResultIds.every((id) => nodes[id]))
       return;
@@ -122,7 +131,8 @@ export default function CanvasNodeLayer({
     setPendingResultIds(ids);
   }
   function addGeneratedResults(parentId: string, results: DemoResult[]): void {
-    const source = items.find((item) => item.id === parentId);
+    const source = currentItems.current.find((item) => item.id === parentId);
+    if (!source) return;
     const pending = pendingByParent.current[parentId] ?? [];
     if (source && pending.length >= results.length) {
       onItemsChange((current) =>
@@ -174,8 +184,9 @@ export default function CanvasNodeLayer({
   }
   function markPending(
     parentId: string,
-    phase: "error" | "cancelled" | "offline",
+    phase: "loading" | "success" | "error" | "cancelled" | "offline",
   ): void {
+    if (phase === "loading" || phase === "success") return;
     const pending = pendingByParent.current[parentId] ?? [];
     if (!pending.length) return;
     onItemsChange((current) =>
@@ -259,7 +270,10 @@ export default function CanvasNodeLayer({
                 : null,
             )
           }
-          onDelete={controls.removeNode}
+          onDelete={(id) => {
+            markPending(id, "cancelled");
+            controls.removeNode(id);
+          }}
           onToggleLike={onToggleLike}
           onConfigure={onConfigure}
           onItemsChange={onItemsChange}
@@ -268,14 +282,7 @@ export default function CanvasNodeLayer({
           onGenerationStart={reserveGeneratedResults}
           onAddReferences={addReferences}
           onRemoveReference={onDeleteConnection}
-          onGenerationState={(id, phase) => {
-            if (
-              phase === "error" ||
-              phase === "cancelled" ||
-              phase === "offline"
-            )
-              markPending(id, phase);
-          }}
+          onGenerationState={markPending}
         />
       ))}
       <CanvasConnections

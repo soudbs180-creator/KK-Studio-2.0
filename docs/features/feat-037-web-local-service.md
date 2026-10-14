@@ -3,7 +3,7 @@
 - 状态：PARTIAL
 - 领域：platform
 - 最近更新：2026-10-14
-- 关联任务：TASK-LOCAL-SERVICE-001、TASK-222-ACTIONS-20261014
+- 关联任务：TASK-LOCAL-SERVICE-001、TASK-222-ACTIONS-20261014、TASK-223-ACTIONS-20261014
 
 ## 用户可见入口
 
@@ -19,7 +19,9 @@
 
 ## 测试与证据
 
-- 2.1.23本地按钮修复：`tests/browser/local-service-migration.spec.ts`；结果及Web/Desktop边界见[当前验证](../changes/2026-10-14-action-usability-222/verification.md)。
+- 2.1.24源码候选（TASK-223，PARTIAL）：本机服务检测按连接revision核对迟到结果，主动断开后不由旧检测恢复连接；完整verify、Native和独立审查未完成，结果见[本轮验证](../changes/2026-10-14-action-usability-223/verification.md)。
+
+- 2.1.23本地按钮修复：`tests/browser/local-service-migration.spec.ts`；结果及Web/Desktop边界见[2.1.23历史验证](../changes/2026-10-14-action-usability-222/verification.md)。
 
 - 规范：[数据存储约定](../architecture/DATA-STORAGE.md)及[ADR-008](../architecture/adr/ADR-008-platform-versions-and-local-first.md)。
 - 单元与协议/文件存储：`tests/unit/localService*.test.ts`、`tests/unit/assetStorage.test.ts`。

@@ -187,6 +187,7 @@ export function useMemory(onFeedback: (message: string) => void) {
       onFeedback("请先连接 Codex 主 Agent，再使用「让 Codex 提炼记忆」。");
       return;
     }
+    const expectedVersion = memoryService.getMutationVersion();
     setExtracting(true);
     try {
       const beforeState = agentConnection.getState();
@@ -215,7 +216,11 @@ export function useMemory(onFeedback: (message: string) => void) {
         onFeedback("Codex 未返回可提炼的内容，请稍后重试。");
         return;
       }
-      const added = await memoryService.saveCodexExtraction(reply, threadId);
+      const added = await memoryService.saveCodexExtraction(
+        reply,
+        threadId,
+        expectedVersion,
+      );
       await refresh();
       onFeedback(
         added > 0

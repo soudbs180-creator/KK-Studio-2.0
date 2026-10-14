@@ -11,7 +11,9 @@ export default function CreationModelPicker({
   onToggle,
   onChange,
   onConfigure,
+  disabled = false,
 }: {
+  disabled?: boolean;
   kind: "image" | "video" | "text";
   value: string;
   open: boolean;
@@ -27,7 +29,8 @@ export default function CreationModelPicker({
       <button
         type="button"
         className="model-button"
-        title={value}
+        disabled={disabled}
+        title={disabled ? "生成中暂不能修改模型，取消或结束后可继续" : value}
         aria-label="画布模型"
         aria-haspopup="menu"
         aria-expanded={open}
@@ -48,7 +51,7 @@ export default function CreationModelPicker({
           )}
         </span>
       </button>
-      {open && (
+      {open && !disabled && (
         <ModelPickerMenu
           scope={
             kind === "text"

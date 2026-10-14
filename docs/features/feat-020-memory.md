@@ -3,7 +3,7 @@
 - 状态：PARTIAL
 - 领域：platform
 - 最近更新：2026-10-14
-- 关联任务：TASK-MEMORY-001、TASK-MEMORY-002、BACKEND-PLATFORM、T10、FEAT-017、TASK-222-ACTIONS-20261014
+- 关联任务：TASK-MEMORY-001、TASK-MEMORY-002、BACKEND-PLATFORM、T10、FEAT-017、TASK-222-ACTIONS-20261014、TASK-223-ACTIONS-20261014
 
 ## 用户可见入口
 
@@ -19,7 +19,9 @@
 
 ## 测试与证据
 
-- 2.1.23本地按钮修复：`tests/unit/memoryService.test.ts`、`tests/browser/settings-persistence-failures.spec.ts`；结果及Web/Desktop边界见[当前验证](../changes/2026-10-14-action-usability-222/verification.md)。
+- 2.1.24源码候选（TASK-223，PARTIAL）：记忆提炼迟到响应与清除/删除/重置增加当前服务实例守卫；已发出的请求不冒称撤回；完整verify、Native和独立审查未完成，结果见[本轮验证](../changes/2026-10-14-action-usability-223/verification.md)。
+
+- 2.1.23本地按钮修复：`tests/unit/memoryService.test.ts`、`tests/browser/settings-persistence-failures.spec.ts`；结果及Web/Desktop边界见[2.1.23历史验证](../changes/2026-10-14-action-usability-222/verification.md)。
 
 - 单测：tests/unit/memoryExtractor.test.ts、memoryInjector.test.ts、memoryStorage.test.ts、memoryService.test.ts、memoryReply.test.ts。
 - 浏览器：tests/browser/memory-settings.spec.ts（开关、共享状态、空态、损坏数据、清空确认、390 px 可达性与存储库初始化）；提炼/注入由单测覆盖，真实会话仍待联调。

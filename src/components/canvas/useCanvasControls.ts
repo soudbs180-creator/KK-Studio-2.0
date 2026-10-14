@@ -275,7 +275,11 @@ export function useCanvasControls({
   );
 
   const moveNodeWithKeyboard = useCallback(
-    (event: ReactKeyboardEvent<HTMLDivElement>, nodeId: CanvasNodeId): void => {
+    (
+      event: ReactKeyboardEvent<HTMLDivElement>,
+      nodeId: CanvasNodeId,
+      onDelete: () => void,
+    ): void => {
       if (event.key === "Escape" && !event.nativeEvent.isComposing) {
         event.preventDefault();
         if (pointer.dragRef.current) pointer.cancelGesture();
@@ -294,7 +298,7 @@ export function useCanvasControls({
         nodeId.startsWith("added-")
       ) {
         event.preventDefault();
-        actions.removeNode(nodeId);
+        onDelete();
         setSelectedNode(null);
         return;
       }

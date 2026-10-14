@@ -105,15 +105,17 @@
   justify-self: center;
 }
 .canvas-color-input {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  border: 0;
-  opacity: 0;
-  pointer-events: none;
+  width: var(--kk-control-h-md);
+  height: var(--kk-control-h-md);
+  padding: var(--kk-space-1);
+  border: var(--kk-border-width) solid var(--kk-border-default);
+  border-radius: var(--kk-radius-control);
+  background: var(--kk-bg-input);
+  cursor: pointer;
 }
-.canvas-zoom-menu {
+.canvas-zoom-menu,
+.canvas-background-menu {
+  --canvas-menu-available-height: 100dvh;
   position: absolute;
   /* Figma 100:16335 / 312:2710: popup sits 35px below the 31.109px
      navigation capsule. Keep the measured source frame size instead of the
@@ -121,15 +123,33 @@
   top: 35px;
   left: 0;
   width: 196.227px;
-  height: 283.214px;
-  min-height: 283.214px;
   padding: 8px;
   border: 1.197px solid var(--border-default);
   border-radius: 26.298px;
   background: var(--bg-card);
   box-shadow: 0 8px 20px #0003;
+  max-height: var(--canvas-menu-available-height);
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
-.canvas-zoom-menu button {
+.canvas-zoom-menu {
+  height: min(283.214px, var(--canvas-menu-available-height));
+  min-height: min(283.214px, var(--canvas-menu-available-height));
+}
+.canvas-background-menu {
+  border-radius: var(--kk-radius-menu);
+}
+.canvas-background-color {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--kk-space-2);
+  padding: var(--kk-space-1) var(--kk-space-2);
+  font-size: var(--kk-font-body);
+  color: var(--kk-text-primary);
+}
+.canvas-zoom-menu button,
+.canvas-background-menu button {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -142,12 +162,19 @@
   border-radius: 6px;
 }
 .canvas-zoom-menu button:hover,
-.canvas-zoom-menu button:focus-visible {
+.canvas-zoom-menu button:focus-visible,
+.canvas-background-menu button:hover,
+.canvas-background-menu button:focus-visible {
   background: var(--border-default);
 }
-.canvas-zoom-menu button[aria-checked="true"] {
+.canvas-zoom-menu button[aria-checked="true"],
+.canvas-background-menu button[aria-pressed="true"] {
   color: var(--text-primary);
   background: var(--bg-input);
+}
+.canvas-background-menu button {
+  height: var(--kk-control-h-md);
+  border-radius: var(--kk-radius-control);
 }
 .canvas-zoom-menu kbd {
   font-size: var(--ui-font-caption);
@@ -207,11 +234,14 @@
   .canvas-navigation-divider {
     position: static;
   }
-  .canvas-zoom-menu {
+  .canvas-zoom-menu,
+  .canvas-background-menu {
     width: 150px;
-    height: auto;
-    min-height: 224px;
     padding: 6px;
+  }
+  .canvas-zoom-menu {
+    height: auto;
+    min-height: min(224px, var(--canvas-menu-available-height));
   }
   .canvas-zoom-menu button {
     font-size: var(--ui-font-body);

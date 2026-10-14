@@ -81,7 +81,8 @@
       "TASK-UI-011",
       "TASK-CANVAS-SYNC-20261014",
       "TASK-CANVAS-WIDE-PORT-20261014",
-      "TASK-222-ACTIONS-20261014"
+      "TASK-222-ACTIONS-20261014",
+      "TASK-223-ACTIONS-20261014"
     ],
     "updated": "2026-10-14",
     "platforms": ["web", "desktop"],
@@ -631,7 +632,8 @@
       "TASK-MCP-REGISTRY-001",
       "TASK-MCP-REGISTRY-002",
       "TASK-CANVAS-SYNC-20261014",
-      "TASK-222-ACTIONS-20261014"
+      "TASK-222-ACTIONS-20261014",
+      "TASK-223-ACTIONS-20261014"
     ],
     "updated": "2026-10-14",
     "platforms": ["web", "desktop"],
@@ -738,7 +740,8 @@
       "T3a",
       "TASK-PERF-ASSETS-001",
       "PERF-001",
-      "TASK-222-ACTIONS-20261014"
+      "TASK-222-ACTIONS-20261014",
+      "TASK-223-ACTIONS-20261014"
     ],
     "updated": "2026-10-14",
     "platforms": ["web", "desktop"],
@@ -955,7 +958,8 @@
       "TASK-MEMORY-002",
       "BACKEND-PLATFORM",
       "T10",
-      "TASK-222-ACTIONS-20261014"
+      "TASK-222-ACTIONS-20261014",
+      "TASK-223-ACTIONS-20261014"
     ],
     "updated": "2026-10-14",
     "platforms": ["web", "desktop"],
@@ -1063,7 +1067,8 @@
       "TASK-UI-CONSOLIDATE-20261014",
       "TASK-CCSWITCH-LEARN-20261014",
       "TASK-PROTOCOL-CLI-20261014",
-      "TASK-222-ACTIONS-20261014"
+      "TASK-222-ACTIONS-20261014",
+      "TASK-223-ACTIONS-20261014"
     ],
     "updated": "2026-10-14",
     "platforms": ["web", "desktop"],
@@ -1261,7 +1266,8 @@
       "TASK-DESKTOP-INSTALLER-001",
       "TASK-LAUNCH-001",
       "TASK-PROTOCOL-CLI-20261014",
-      "TASK-222-ACTIONS-20261014"
+      "TASK-222-ACTIONS-20261014",
+      "TASK-223-ACTIONS-20261014"
     ],
     "updated": "2026-10-14",
     "platforms": ["desktop"],
@@ -1308,7 +1314,8 @@
       "T12",
       "TASK-UI-CONSOLIDATE-20261014",
       "TASK-PROTOCOL-CLI-20261014",
-      "TASK-222-ACTIONS-20261014"
+      "TASK-222-ACTIONS-20261014",
+      "TASK-223-ACTIONS-20261014"
     ],
     "updated": "2026-10-14"
   },
@@ -1437,7 +1444,8 @@
       "TASK-PROV-004",
       "TASK-UI-CONSOLIDATE-20261014",
       "TASK-PROTOCOL-CLI-20261014",
-      "TASK-222-ACTIONS-20261014"
+      "TASK-222-ACTIONS-20261014",
+      "TASK-223-ACTIONS-20261014"
     ],
     "updated": "2026-10-14"
   },
@@ -1511,7 +1519,11 @@
       "tests/browser/local-service-connection.spec.ts",
       "tests/local-service/production-smoke.mjs"
     ],
-    "tasks": ["TASK-LOCAL-SERVICE-001", "TASK-222-ACTIONS-20261014"],
+    "tasks": [
+      "TASK-LOCAL-SERVICE-001",
+      "TASK-222-ACTIONS-20261014",
+      "TASK-223-ACTIONS-20261014"
+    ],
     "updated": "2026-10-14"
   },
   {
@@ -1585,7 +1597,8 @@
     "tasks": [
       "TASK-UI-CONSOLIDATE-20261014",
       "TASK-PROTOCOL-CLI-20261014",
-      "TASK-222-ACTIONS-20261014"
+      "TASK-222-ACTIONS-20261014",
+      "TASK-223-ACTIONS-20261014"
     ],
     "updated": "2026-10-14",
     "platforms": ["web", "desktop"]

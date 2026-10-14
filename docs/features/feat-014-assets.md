@@ -3,7 +3,7 @@
 - 状态：REAL
 - 领域：system
 - 最近更新：2026-10-14
-- 关联任务：T3a、TASK-PERF-ASSETS-001、PERF-001、TASK-222-ACTIONS-20261014
+- 关联任务：T3a、TASK-PERF-ASSETS-001、PERF-001、TASK-222-ACTIONS-20261014、TASK-223-ACTIONS-20261014
 
 ## 用户可见入口
 
@@ -17,7 +17,9 @@
 
 ## 测试与证据
 
-- 2.1.23本地按钮修复：`tests/browser/canvas-node-actions.spec.ts`；结果及Web/Desktop边界见[当前验证](../changes/2026-10-14-action-usability-222/verification.md)。
+- 2.1.24源码候选（TASK-223，PARTIAL）：取消/删除/撤销链需回归原件与素材来源保持，不新增素材后端；完整verify、Native和独立审查未完成，结果见[本轮验证](../changes/2026-10-14-action-usability-223/verification.md)。
+
+- 2.1.23本地按钮修复：`tests/browser/canvas-node-actions.spec.ts`；结果及Web/Desktop边界见[2.1.23历史验证](../changes/2026-10-14-action-usability-222/verification.md)。
 
 - 单测：`assets`、`assetStorage`、`assetPreview`、`snapshotAssets`
 - 浏览器：`asset-storage`、`asset-performance`

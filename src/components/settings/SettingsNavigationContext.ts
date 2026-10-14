@@ -1,8 +1,20 @@
 import { createContext, useEffect, type RefObject } from "react";
 
+export function updateSettingsBusyOwners(
+  current: ReadonlySet<symbol>,
+  busy: boolean,
+  owner: symbol,
+): ReadonlySet<symbol> {
+  if (current.has(owner) === busy) return current;
+  const next = new Set(current);
+  if (busy) next.add(owner);
+  else next.delete(owner);
+  return next;
+}
+
 export const SettingsNavigationContext = createContext({
   busy: false,
-  setBusy: (_busy: boolean) => {},
+  setBusy: (_busy: boolean, _owner: symbol) => {},
 });
 
 /** Navigation cannot unmount an in-flight credential/configuration write. */

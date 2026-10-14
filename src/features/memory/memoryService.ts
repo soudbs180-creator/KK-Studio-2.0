@@ -60,6 +60,7 @@ export class MemoryService {
   private readonly settingsStorage: SettingsStorage;
   private readonly now: () => Date;
   private mutationTail: Promise<void> = Promise.resolve();
+  private mutationVersion = 0;
 
   constructor(options: MemoryServiceOptions) {
     this.storage = options.storage;
@@ -74,6 +75,11 @@ export class MemoryService {
 
   setEnabled(enabled: boolean): void {
     this.settingsStorage.write({ enabled });
+    if (!enabled) this.mutationVersion += 1;
+  }
+
+  getMutationVersion(): number {
+    return this.mutationVersion;
   }
 
   private enqueueMutation<T>(operation: () => Promise<T>): Promise<T> {
@@ -112,11 +118,14 @@ export class MemoryService {
 
   /** 请求授权共享目录（Web 端 File System Access；Desktop 恒成功）。 */
   async authorizeSharedDirectory(): Promise<boolean> {
-    return this.storage.authorizeSharedDirectory();
+    const authorized = await this.storage.authorizeSharedDirectory();
+    if (authorized) this.mutationVersion += 1;
+    return authorized;
   }
 
   async leaveSharedDirectory(): Promise<void> {
     await this.storage.leaveSharedDirectory();
+    this.mutationVersion += 1;
   }
 
   /**
@@ -212,6 +221,7 @@ export class MemoryService {
   async saveCodexExtraction(
     reply: string,
     sourceThreadId?: string,
+    expectedVersion = this.mutationVersion,
   ): Promise<number> {
     if (!this.isEnabled() || !reply) {
       return 0;
@@ -232,7 +242,8 @@ export class MemoryService {
       return 0;
     }
     return this.enqueueMutation(async () => {
-      if (!this.isEnabled()) return 0;
+      if (!this.isEnabled() || expectedVersion !== this.mutationVersion)
+        return 0;
       const store = await this.storage.read();
       const timestamp = this.now().toISOString();
       const existing = new Set(
@@ -261,7 +272,11 @@ export class MemoryService {
         });
         existing.add(fingerprint);
       }
-      if (additions.length === 0 || !this.isEnabled()) {
+      if (
+        additions.length === 0 ||
+        !this.isEnabled() ||
+        expectedVersion !== this.mutationVersion
+      ) {
         return 0;
       }
       await this.storage.write(
@@ -284,6 +299,7 @@ export class MemoryService {
         records: store.records.filter((record) => record.id !== id),
       };
       await this.storage.write(next, store);
+      this.mutationVersion += 1;
       return next;
     });
   }
@@ -294,13 +310,18 @@ export class MemoryService {
       const store = await this.storage.read();
       const next = { ...store, records: [] };
       await this.storage.write(next, store);
+      this.mutationVersion += 1;
       return next;
     });
   }
 
   /** 重置共享记忆文件：重建空文件；旧文件由存储层保留（.previous-*.json）。 */
   async resetIdentity(): Promise<MemoryStoreFile> {
-    return this.enqueueMutation(() => this.storage.resetIdentity());
+    return this.enqueueMutation(async () => {
+      const store = await this.storage.resetIdentity();
+      this.mutationVersion += 1;
+      return store;
+    });
   }
 }
 

@@ -1,4 +1,12 @@
-import { useEffect, useState } from "react";
+import {
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
+import { SettingsNavigationContext } from "./SettingsNavigationContext";
+import { useSettingsNavigationBusy } from "./useSettingsBusy";
 import {
   CompanionClient,
   companionConnectionState,
@@ -33,36 +41,61 @@ export default function CompanionSettings({
   );
   const [detail, setDetail] = useState("");
   const [busy, setBusy] = useState(false);
+  const { busy: sharedBusy } = useContext(SettingsNavigationContext);
+  const reportBusy = useSettingsNavigationBusy();
+  const inFlight = useRef(false);
+  const mounted = useRef(true);
+  useLayoutEffect(() => reportBusy(busy), [busy, reportBusy]);
   const client = new CompanionClient();
 
   async function check(): Promise<void> {
+    if (inFlight.current || sharedBusy) return;
+    inFlight.current = true;
     setBusy(true);
     setState("checking");
-    const result = await client.checkCompanion();
-    setState(result.state);
-    setDetail(result.error?.message ?? "");
-    setBusy(false);
+    try {
+      const result = await client.checkCompanion();
+      if (!mounted.current) return;
+      setState(result.state);
+      setDetail(result.error?.message ?? "");
+    } catch (error) {
+      if (!mounted.current) return;
+      setState("error");
+      setDetail(
+        error instanceof Error ? error.message : "本机服务检查失败，请重试。",
+      );
+    } finally {
+      inFlight.current = false;
+      if (mounted.current) setBusy(false);
+    }
   }
 
   useEffect(() => {
+    mounted.current = true;
     void check();
-    // The initial state is checked once. Button actions call check explicitly.
+    return () => {
+      mounted.current = false;
+    };
   }, []);
 
   async function pair(): Promise<void> {
+    if (inFlight.current || sharedBusy) return;
     if (!pairingCode.trim()) {
       onFeedback("请输入本机服务显示的一次性配对码。");
       return;
     }
+    inFlight.current = true;
     setBusy(true);
     setState("checking");
     setDetail("");
     try {
       await client.pairCompanion(endpoint, pairingCode.trim());
+      if (!mounted.current) return;
       setPairingCode("");
       setState("connected");
       onFeedback("本机伴随服务已连接；网页项目将优先保存到本机服务。");
     } catch (error) {
+      if (!mounted.current) return;
       setState(
         error instanceof Error &&
           "code" in error &&
@@ -72,30 +105,41 @@ export default function CompanionSettings({
       );
       setDetail(error instanceof Error ? error.message : "配对失败。");
     } finally {
-      setBusy(false);
+      inFlight.current = false;
+      if (mounted.current) setBusy(false);
     }
   }
 
   async function disconnect(): Promise<void> {
+    if (inFlight.current || sharedBusy) return;
+    inFlight.current = true;
     setBusy(true);
     try {
       await client.disconnectCompanion();
+      if (!mounted.current) return;
       setState("unconfigured");
       setDetail("");
       onFeedback("本机伴随服务已断开；网页将恢复使用浏览器本地存储。");
     } catch (error) {
+      if (!mounted.current) return;
       setState("unconfigured");
       setDetail(error instanceof Error ? error.message : "断开失败。");
       onFeedback(
         "本机服务未响应，网页已在本机禁用连接；项目可恢复使用浏览器本地存储。",
       );
     } finally {
-      setBusy(false);
+      inFlight.current = false;
+      if (mounted.current) setBusy(false);
     }
   }
 
   return (
-    <div className="settings-companion-card" data-testid="companion-settings">
+    <div
+      className="settings-companion-card"
+      data-testid="companion-settings"
+      aria-busy={busy || sharedBusy}
+    >
+      {busy && <p role="status">本机服务操作中，请稍候…</p>}
       <div className="settings-companion-heading">
         <div>
           <h3>网页本机伴随服务</h3>
@@ -115,7 +159,7 @@ export default function CompanionSettings({
           value={endpoint}
           onChange={(event) => setEndpoint(event.target.value)}
           placeholder={DEFAULT_ENDPOINT}
-          disabled={busy}
+          disabled={busy || sharedBusy}
           inputMode="url"
           autoComplete="off"
         />
@@ -132,7 +176,7 @@ export default function CompanionSettings({
           onChange={(event) => setPairingCode(event.target.value)}
           placeholder="从本机服务终端复制配对码"
           autoComplete="off"
-          disabled={busy}
+          disabled={busy || sharedBusy}
         />
       </label>
       <div className="settings-action-group">
@@ -140,7 +184,7 @@ export default function CompanionSettings({
           type="button"
           className="settings-action"
           onClick={() => void pair()}
-          disabled={busy || !pairingCode.trim()}
+          disabled={busy || sharedBusy || !pairingCode.trim()}
         >
           {busy && state === "checking" ? "连接中…" : "连接并配对"}
         </button>
@@ -148,7 +192,7 @@ export default function CompanionSettings({
           type="button"
           className="settings-action secondary"
           onClick={() => void check()}
-          disabled={busy || state === "unconfigured"}
+          disabled={busy || sharedBusy || state === "unconfigured"}
         >
           检查连接
         </button>
@@ -156,7 +200,7 @@ export default function CompanionSettings({
           type="button"
           className="settings-action secondary"
           onClick={() => void disconnect()}
-          disabled={busy || state === "unconfigured"}
+          disabled={busy || sharedBusy || state === "unconfigured"}
         >
           断开
         </button>

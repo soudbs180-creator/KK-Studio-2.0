@@ -82,7 +82,7 @@ export default function CanvasNodeFrame({
       }}
       onDragStart={(event) => event.preventDefault()}
       onPointerDown={(event) => controls.startNodeDrag(event, id)}
-      onKeyDown={(event) => controls.moveNodeWithKeyboard(event, id)}
+      onKeyDown={(event) => controls.moveNodeWithKeyboard(event, id, onDelete)}
     >
       {children}
       <CanvasCollectionToolbar

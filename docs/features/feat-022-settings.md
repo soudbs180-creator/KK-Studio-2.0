@@ -3,7 +3,7 @@
 - 状态：PARTIAL
 - 领域：system
 - 最近更新：2026-10-14
-- 关联任务：TASK-UI-005、TASK-PROV-001、UI-004、TASK-DS-001、TASK-DS-002、TASK-UI-CONSOLIDATE-20261014、TASK-PROTOCOL-CLI-20261014、TASK-222-ACTIONS-20261014
+- 关联任务：TASK-UI-005、TASK-PROV-001、UI-004、TASK-DS-001、TASK-DS-002、TASK-UI-CONSOLIDATE-20261014、TASK-PROTOCOL-CLI-20261014、TASK-222-ACTIONS-20261014、TASK-223-ACTIONS-20261014
 
 ## 用户可见入口
 
@@ -17,7 +17,9 @@
 
 ## 测试与证据
 
-- 2.1.23本地按钮修复：`tests/browser/settings-control-usability.spec.ts`、`tests/browser/settings-persistence-failures.spec.ts`、`tests/unit/pluginStartupRace.test.ts`；结果及Web/Desktop边界见[当前验证](../changes/2026-10-14-action-usability-222/verification.md)。
+- 2.1.24源码候选（TASK-223，PARTIAL）：设置busy按操作所有者维持，插件/MCP操作互不解除导航与关闭保护；完整verify、Native和独立审查未完成，结果见[本轮验证](../changes/2026-10-14-action-usability-223/verification.md)。
+
+- 2.1.23本地按钮修复：`tests/browser/settings-control-usability.spec.ts`、`tests/browser/settings-persistence-failures.spec.ts`、`tests/unit/pluginStartupRace.test.ts`；结果及Web/Desktop边界见[2.1.23历史验证](../changes/2026-10-14-action-usability-222/verification.md)。
 
 - 单测：`tests/unit/settings.test.ts`、`providerProtocol.test.ts`、`modelCatalogProtocol.test.ts`、`nativeCli.test.ts`、`codebuddyConnectionSettings.test.ts`
 - 浏览器：`settings-scroll`、`settings-switch-audit`、`settings-navigation`、`provider-cli-settings`、`mcp-settings`、`runtime-ui`；当前轮结果由任务 verification 记录。

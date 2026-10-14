@@ -10,6 +10,10 @@
 
 ## 本轮恢复入口
 
+TASK-223-ACTIONS-20261014：基线6b5a2012b0cafeeb334db01f7c61df0df4124b3e，分支codex/TASK-223-ACTIONS-20261014，Desktop/Web源码2.1.24，状态PARTIAL。先读[规格](../changes/2026-10-14-action-usability-223/spec.md)和[验证](../changes/2026-10-14-action-usability-223/verification.md)，再核对当前diff、工程外审计/回归和实际运行身份。CLI原件/恢复副本、设置异步所有权、记忆与检测迟到结果、画布取消/删除/撤销及短屏入口为本轮范围；TOML仅声明词法/受管键保护。完整verify、产品SHA、官方Agent/Native、独立review和最终output尚未完成。手机沿用已确认的新布局，Native Mobile2.1.1仍规划；保留primary dirty/index、原资料与旧证据。
+
+### 此前2.1.23交付基线（保留历史）
+
 TASK-222-ACTIONS-20261014：Desktop/Web2.1.23本地授权修复已完成，产品HEAD为b4fa7b0e，最终纯文档提交与产物由工程外current-release收据绑定。恢复时先读[验证](../changes/2026-10-14-action-usability-222/verification.md)和最终独立补审，不复用旧2.1.22或中断回执。保留原资料与已确认手机布局；Native Mobile2.1.1、真人CLI/付费Provider、Hosted、签名安装与实体手机等验收仍分别开放。
 
 ### 此前2.1.22交付基线（保留历史）

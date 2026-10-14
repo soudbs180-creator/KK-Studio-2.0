@@ -1,12 +1,11 @@
 import {
-  useContext,
   useEffect,
   useLayoutEffect,
   useRef,
   useState,
   useSyncExternalStore,
 } from "react";
-import { SettingsNavigationContext } from "./SettingsNavigationContext";
+import { useSettingsNavigationBusy } from "./useSettingsBusy";
 import { agentConnection } from "../../features/agent/agentConnection";
 import { desktopAgentLifecycle } from "../../features/agent/desktopAgentLifecycle";
 import AgentConnectionSettings from "./AgentConnectionSettings";
@@ -31,7 +30,7 @@ export default function ModelAccessSettings({
 }: {
   onFeedback: (message: string) => void;
 }) {
-  const { setBusy } = useContext(SettingsNavigationContext);
+  const setBusy = useSettingsNavigationBusy();
   const [navigation, setNavigation] = useState<"methods" | "detail">("methods");
   const agent = useSyncExternalStore(
     agentConnection.subscribe,
@@ -58,7 +57,6 @@ export default function ModelAccessSettings({
     agent.status === "connecting" ||
     lifecycle.pending;
   useLayoutEffect(() => setBusy(busy), [busy, setBusy]);
-  useEffect(() => () => setBusy(false), [setBusy]);
   const accessRef = useRef<HTMLDivElement>(null);
   useLayoutEffect(() => {
     if (

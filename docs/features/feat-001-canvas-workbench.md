@@ -3,7 +3,7 @@
 - 状态：REAL
 - 领域：canvas
 - 最近更新：2026-10-14
-- 关联任务：T2、UI-004、TASK-UI-006、TASK-CANVAS-KAWORKAI-001、TASK-UI-011、TASK-222-ACTIONS-20261014
+- 关联任务：T2、UI-004、TASK-UI-006、TASK-CANVAS-KAWORKAI-001、TASK-UI-011、TASK-222-ACTIONS-20261014、TASK-223-ACTIONS-20261014
 
 ## 用户可见入口
 
@@ -20,7 +20,9 @@
 
 ## 测试与证据
 
-- 2.1.23本地按钮修复：`tests/browser/canvas-node-actions.spec.ts`、`tests/browser/canvas-selected-zoom-menu.spec.ts`；结果及Web/Desktop边界见[当前验证](../changes/2026-10-14-action-usability-222/verification.md)。
+- 2.1.24源码候选（TASK-223，PARTIAL）：背景样式/颜色、L/G快捷键、短屏菜单及取消/删除/撤销进入现有画布链的修复候选，手机沿用已确认布局；完整verify、Native和独立审查未完成，结果见[本轮验证](../changes/2026-10-14-action-usability-223/verification.md)。
+
+- 2.1.23本地按钮修复：`tests/browser/canvas-node-actions.spec.ts`、`tests/browser/canvas-selected-zoom-menu.spec.ts`；结果及Web/Desktop边界见[2.1.23历史验证](../changes/2026-10-14-action-usability-222/verification.md)。
 
 - 浏览器：`tests/browser/canvas-actions/layout/navigation/pointer.spec.ts`、`connection-drag`、`context-menu`、`canvas-history-layers.spec.ts`、`interaction-regressions`、`ui-motion`
 - 单测：`tests/unit/canvasGraph.test.ts`、`projectCanvas.test.ts`、`canvasHistory.test.ts`、`canvasPreferences.test.ts`

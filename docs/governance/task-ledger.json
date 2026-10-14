@@ -5722,5 +5722,67 @@
     "displayStatus": "已完成",
     "nextAction": "回读最终current-release与独立文档补审；从2.1.23继续真人CLI/供应商、签名安装器、日常资料与实体手机验收，沿用已确认手机布局。",
     "verificationResult": "PASS"
+  },
+  {
+    "id": "TASK-223-ACTIONS-20261014",
+    "title": "2.1.23 CLI、设置与画布按钮实际行为和分端修复",
+    "goal": "修复配置损坏、迟到状态覆盖与不可用按钮，保留数据并交付当前版本",
+    "scope": "CLI协议与配置合并/发布/连接检查、设置busy所有权/握手/迟到回执、记忆清除守卫、画布取消删除历史/运行参数/快捷键/背景入口与短屏菜单",
+    "acceptance": [
+      "CLI失败保留原件、显式协议不丢失且连接检查真实",
+      "异步设置和记忆迟到结果不覆盖用户新操作",
+      "生成取消删除和撤销状态一致，桌面/手机实际控件可达",
+      "完整验证、独立源码审查、提交与当前产物哈希交付"
+    ],
+    "dependencies": ["TASK-222-ACTIONS-20261014"],
+    "owner": "root",
+    "ownerRole": "repository-maintainer",
+    "branch": "codex/TASK-223-ACTIONS-20261014",
+    "worktree": "D:/kk-studio/.worktrees/branch-consolidation-20261011",
+    "affectedModules": [
+      "vendor/canvas-agent",
+      "src/features/local-service",
+      "src/features/memory",
+      "src/components/settings",
+      "src/components/canvas",
+      "src/components/nodes",
+      "src/styles",
+      "tests",
+      "docs"
+    ],
+    "status": "PARTIAL",
+    "priority": "P1",
+    "risk": "high",
+    "reviewRequired": true,
+    "platforms": ["Desktop", "Web"],
+    "evidence": [
+      "docs/changes/2026-10-14-action-usability-223/intent.md",
+      "docs/changes/2026-10-14-action-usability-223/spec.md",
+      "docs/changes/2026-10-14-action-usability-223/plan.md",
+      "docs/changes/2026-10-14-action-usability-223/verification.md",
+      "docs/changes/2026-10-14-action-usability-223/review.md"
+    ],
+    "requirementRefs": ["ledger:TASK-223-ACTIONS-20261014"],
+    "featureIds": [
+      "FEAT-001",
+      "FEAT-014",
+      "FEAT-020",
+      "FEAT-022",
+      "FEAT-026",
+      "FEAT-032",
+      "FEAT-039",
+      "FEAT-012",
+      "FEAT-028",
+      "FEAT-037"
+    ],
+    "notes": "继续2.1.23；保留用户确认的手机新布局、数据身份、primary dirty/index与旧证据。手机为响应式Web/WebView。",
+    "openQuestions": "真人账号/付费调用/签名与实体手机依独立条件验收。",
+    "lastVerified": "2026-10-14",
+    "updated": "2026-10-14",
+    "priorityRationale": "修复配置损坏、迟到覆盖和按钮状态不一致，维持现有交互与数据。",
+    "verification": "基线typecheck PASS；并行只读审计和工程外RED探针已记录，实际实现/全量验证/Native/独立审查待完成。",
+    "displayStatus": "进行中",
+    "nextAction": "先记录回归RED并修复，再完成双端运行证据、独立审查与当前包输出。",
+    "verificationResult": "NOT_VERIFIED"
   }
 ]

@@ -11,6 +11,7 @@ import {
 } from "./protocol.ts";
 import {
   clearCompanionConnection,
+  readCompanionConnectionRevision,
   normalizeCompanionEndpoint,
   readCompanionConnection,
   writeCompanionConnection,
@@ -255,9 +256,22 @@ export class CompanionClient {
   }
 
   async checkCompanion(): Promise<CompanionCheckResult> {
+    const revision = readCompanionConnectionRevision(this.storage);
     const connection = readCompanionConnection(this.storage);
     if (!connection || !connection.enabled)
       return { state: "unconfigured", connection: null };
+    const staleResult = (): CompanionCheckResult | null => {
+      const current = readCompanionConnection(this.storage);
+      if (
+        readCompanionConnectionRevision(this.storage) === revision &&
+        JSON.stringify(current) === JSON.stringify(connection)
+      )
+        return null;
+      return {
+        state: companionConnectionState(this.storage),
+        connection: current,
+      };
+    };
     try {
       const result = await this.request("/health");
       const health = healthResponseSchema.safeParse(result.body);
@@ -265,12 +279,11 @@ export class CompanionClient {
         !health.success ||
         health.data.protocolVersion !== COMPANION_PROTOCOL_VERSION
       ) {
-        const error = new CompanionClientError(
+        throw new CompanionClientError(
           "PROTOCOL_UNSUPPORTED",
           result.response.status,
           "本机服务协议版本不兼容。",
         );
-        return { state: stateForError(error), connection, error };
       }
       // Health is intentionally public. Probe an authenticated route so a
       // restarted service cannot be reported as connected with a stale cookie.
@@ -280,9 +293,13 @@ export class CompanionClient {
         deviceId: health.data.deviceId,
         protocolVersion: health.data.protocolVersion,
       };
+      const stale = staleResult();
+      if (stale) return stale;
       writeCompanionConnection(next, this.storage);
       return { state: "connected", connection: next };
     } catch (error) {
+      const stale = staleResult();
+      if (stale) return stale;
       const failure =
         error instanceof CompanionClientError
           ? error

@@ -3,7 +3,7 @@
 - 状态：PARTIAL
 - 领域：canvas
 - 最近更新：2026-10-14
-- 关联任务：TASK-UI-CONSOLIDATE-20261014、TASK-PROTOCOL-CLI-20261014、TASK-222-ACTIONS-20261014
+- 关联任务：TASK-UI-CONSOLIDATE-20261014、TASK-PROTOCOL-CLI-20261014、TASK-222-ACTIONS-20261014、TASK-223-ACTIONS-20261014
 
 ## 用户可见入口
 
@@ -15,7 +15,9 @@ CanvasCollectionsPanels、FloatingCollectionPanel、SavedPane、CatalogPanel、C
 
 ## 测试与证据
 
-- 2.1.23本地按钮修复：`tests/browser/canvas-node-actions.spec.ts`、`tests/browser/canvas-selected-zoom-menu.spec.ts`；结果及Web/Desktop边界见[当前验证](../changes/2026-10-14-action-usability-222/verification.md)。
+- 2.1.24源码候选（TASK-223，PARTIAL）：取消/删除/撤销后的喜欢/标签关联和重载保持仍需本轮回归；完整verify、Native和独立审查未完成，结果见[本轮验证](../changes/2026-10-14-action-usability-223/verification.md)。
+
+- 2.1.23本地按钮修复：`tests/browser/canvas-node-actions.spec.ts`、`tests/browser/canvas-selected-zoom-menu.spec.ts`；结果及Web/Desktop边界见[2.1.23历史验证](../changes/2026-10-14-action-usability-222/verification.md)。
 
 collectionTags / assets 单测；canvas-collection-panels、ui-unification 及迁移后的 frontend / ui-motion / redbox-ui / design-corrections / desktop-data-stability 浏览器规格；原生标签/项目包 fixture。历史结果见 [UI 收敛验证](../changes/2026-10-14-ui-consolidation/verification.md)：2.1.21产品提交7a463742完整browser545首试通过且0flaky；官方Desktop构建与实际Tauri9项检查通过，标签/收藏、独立面板、视频上传/重载及原件字节均核对。这些数字不覆盖本轮新增协议、CLI 和手机编辑器；此前2.1.22结果由[2.1.22协议/CLI验证](../changes/2026-10-14-protocol-cli-completion/verification.md)记录，安装器仍另行验收。
 

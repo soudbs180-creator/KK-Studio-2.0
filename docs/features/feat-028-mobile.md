@@ -3,7 +3,7 @@
 - 状态：PLANNED
 - 领域：future
 - 最近更新：2026-10-14
-- 关联任务：T12、TASK-UI-CONSOLIDATE-20261014、TASK-PROTOCOL-CLI-20261014、TASK-222-ACTIONS-20261014
+- 关联任务：T12、TASK-UI-CONSOLIDATE-20261014、TASK-PROTOCOL-CLI-20261014、TASK-222-ACTIONS-20261014、TASK-223-ACTIONS-20261014
 
 ## 用户可见入口
 
@@ -17,7 +17,9 @@
 
 ## 测试与证据
 
-- 2.1.23本地按钮修复：`tests/browser/canvas-selected-zoom-menu.spec.ts`、`tests/browser/settings-control-usability.spec.ts`；结果及Web/Desktop边界见[当前验证](../changes/2026-10-14-action-usability-222/verification.md)。
+- 2.1.24源码候选（TASK-223，PARTIAL）：手机沿用确认的新布局，短屏背景/缩放菜单检查仅覆盖响应式Web/WebView，Native Mobile2.1.1仍规划；完整verify、Native和独立审查未完成，结果见[本轮验证](../changes/2026-10-14-action-usability-223/verification.md)。
+
+- 2.1.23本地按钮修复：`tests/browser/canvas-selected-zoom-menu.spec.ts`、`tests/browser/settings-control-usability.spec.ts`；结果及Web/Desktop边界见[2.1.23历史验证](../changes/2026-10-14-action-usability-222/verification.md)。
 
 - 浏览器窄屏回归：`tests/browser/frame-accuracy.spec.ts`（只证明 Web 响应式，不证明原生 Mobile）
 - 当前画布缩放/屏幕编辑器与导航规格：`tests/browser/canvas-screen-composer.spec.ts`、`settings-navigation.spec.ts`；其触摸、命中和截图只覆盖手机尺寸浏览器，当前最终结果由任务 verification 记录。

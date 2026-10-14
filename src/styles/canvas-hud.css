@@ -14,7 +14,7 @@
 .canvas-hud > * {
   pointer-events: auto;
 }
-.canvas-hud:has(.canvas-zoom-menu) {
+.canvas-hud:has(.canvas-zoom-menu, .canvas-background-menu) {
   z-index: var(--kk-z-canvas-menu);
 }
 .canvas-hud-actions {

@@ -1,4 +1,12 @@
-import { useEffect, useRef, useState } from "react";
+import {
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
+import { SettingsNavigationContext } from "./SettingsNavigationContext";
+import { useSettingsNavigationBusy } from "./useSettingsBusy";
 import {
   McpHttpClient,
   McpServerRegistry,
@@ -33,6 +41,11 @@ export default function McpSettings({
   const [name, setName] = useState("");
   const [endpoint, setEndpoint] = useState("");
   const [formError, setFormError] = useState("");
+  const { busy } = useContext(SettingsNavigationContext);
+  const reportBusy = useSettingsNavigationBusy();
+  useLayoutEffect(() => {
+    reportBusy(Object.values(states).some((state) => state === "connecting"));
+  }, [states, reportBusy]);
 
   useEffect(() => {
     mounted.current = true;
@@ -52,6 +65,7 @@ export default function McpSettings({
   }
 
   async function addServer(): Promise<void> {
+    if (busy) return;
     try {
       if (!name.trim()) throw new Error("请填写服务器名称。");
       await registry.add({
@@ -119,6 +133,7 @@ export default function McpSettings({
   }
 
   async function connectServer(server: McpServerConfig): Promise<void> {
+    if (busy) return;
     connectionControllers.get(server.id)?.abort();
     const prior = clients.get(server.id);
     if (prior) void prior.disconnect();
@@ -239,7 +254,7 @@ export default function McpSettings({
         name={name}
         endpoint={endpoint}
         formError={formError}
-        readOnly={registry.isReadOnly}
+        readOnly={registry.isReadOnly || busy}
         onNameChange={setName}
         onEndpointChange={setEndpoint}
         onSubmit={() => void addServer()}

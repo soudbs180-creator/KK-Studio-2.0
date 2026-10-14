@@ -3,7 +3,7 @@
 - 状态：PARTIAL
 - 领域：intelligence
 - 最近更新：2026-10-14
-- 关联任务：TASK-CAP-001、BACKEND-MCP-AUTO、TASK-AGENT-001、TASK-AGENT-003、TASK-MINIMAX-001、TASK-MCP-PROTO-001、TASK-MCP-REGISTRY-001、TASK-MCP-REGISTRY-002、TASK-222-ACTIONS-20261014
+- 关联任务：TASK-CAP-001、BACKEND-MCP-AUTO、TASK-AGENT-001、TASK-AGENT-003、TASK-MINIMAX-001、TASK-MCP-PROTO-001、TASK-MCP-REGISTRY-001、TASK-MCP-REGISTRY-002、TASK-222-ACTIONS-20261014、TASK-223-ACTIONS-20261014
 
 ## 用户可见入口
 
@@ -16,7 +16,9 @@
 
 ## 测试与证据
 
-- 2.1.23本地按钮修复：`tests/browser/mcp-settings.spec.ts`；结果及Web/Desktop边界见[当前验证](../changes/2026-10-14-action-usability-222/verification.md)。
+- 2.1.24源码候选（TASK-223，PARTIAL）：MCP握手/工具请求的busy所有权与停止等待保护进入修复候选；停止等待不表示撤回远端执行；完整verify、Native和独立审查未完成，结果见[本轮验证](../changes/2026-10-14-action-usability-223/verification.md)。
+
+- 2.1.23本地按钮修复：`tests/browser/mcp-settings.spec.ts`；结果及Web/Desktop边界见[2.1.23历史验证](../changes/2026-10-14-action-usability-222/verification.md)。
 
 - 单测：`tests/unit/mcpClient.test.ts`
 - 浏览器：`tests/browser/mcp-settings.spec.ts`

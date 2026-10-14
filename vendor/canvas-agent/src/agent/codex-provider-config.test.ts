@@ -381,3 +381,156 @@ test("显式指定 active 连接才切换 Codex 默认模型", () => {
     }),
   );
 });
+
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
+function guardedFixture(t: test.TestContext) {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "kk-cli-guard-"));
+  const config = path.join(dir, "config.toml");
+  const catalog = path.join(dir, "model-catalogs/fixture.json");
+  fs.mkdirSync(path.dirname(catalog));
+  fs.writeFileSync(config, 'model = "original"\n');
+  fs.writeFileSync(catalog, '["original"]');
+  t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
+  return { dir, config, catalog, connections: [{ id: "fixture", provider: "Fixture", baseUrl: "https://fixture.example.test/v1", model: "new-model" }] };
+}
+test("CLI-223-02 preserves multiline strings, nested arrays and commented profile headers", () => {
+  for (const quote of ['"""', "'''"]) {
+    const fragment = [`instructions = ${quote}`, "[model_providers.kk_old]", 'model = "retain"', "# retained string content", quote].join("\n");
+    const existing = ['model = "old-root"', fragment, 'values = [', '  "[model_providers.kk_fake]",', '  { model = "retain-array" },', ']', '[profiles.work] # keep header comment', 'model = "work-model"', 'name = "backslash\\\\" # real comment', 'literal = \'# literal\' # actual comment'].join("\n");
+    const merged = mergeCodexConfigToml(existing, { providers: [], active: { providerKey: "kk_new", model: "new-root" } });
+    assert.ok(merged.includes(fragment));
+    assert.ok(merged.includes('[profiles.work] # keep header comment\nmodel = "work-model"'));
+    assert.ok(merged.includes('{ model = "retain-array" }'));
+    assert.match(merged, /^model = "new-root"/);
+  }
+  const escaped = 'notes = """\nescaped \\""" remains inside\n[model_providers.kk_fake]\n"""';
+  assert.ok(mergeCodexConfigToml(escaped, { providers: [] }).includes(escaped));
+  for (const tail of ['"""value""""', '"""value"""""']) {
+    const input = `notes = ${tail}\n[profiles.work] # actual table\nmodel = "work-model"`;
+    assert.ok(mergeCodexConfigToml(input, { providers: [] }).includes(input));
+  }
+});
+test("CLI-223-02 rejects unsafe malformed lexical structures before writing catalog", (t) => {
+  const f = guardedFixture(t);
+  for (const existing of ['notes = """\nnot closed', 'notes = "not closed', 'values = [ { ] }', 'model = """old\nroot"""']) {
+    fs.writeFileSync(f.config, existing);
+    assert.throws(() => applyCodexProviderConfig(f.connections, { configDir: f.dir, catalogProfileId: "fixture", activeConnectionId: "fixture" }));
+    assert.equal(fs.readFileSync(f.config, "utf8"), existing);
+    assert.equal(fs.readFileSync(f.catalog, "utf8"), '["original"]');
+  }
+});
+test("CLI-223-03 preflight failure preserves both original files", (t) => {
+  const f = guardedFixture(t), existing = 'api_key = "synthetic-original"\n';
+  fs.writeFileSync(f.config, existing);
+  assert.throws(() => applyCodexProviderConfig(f.connections, { configDir: f.dir, catalogProfileId: "fixture" }));
+  assert.equal(fs.readFileSync(f.config, "utf8"), existing);
+  assert.equal(fs.readFileSync(f.catalog, "utf8"), '["original"]');
+});
+test("CLI-223-03 second publish failure restores the first file and keeps recovery bytes", (t) => {
+  const f = guardedFixture(t), rename = fs.renameSync;
+  t.mock.method(fs, "renameSync", (from: fs.PathLike, to: fs.PathLike) => {
+    if (String(to) === f.config) throw new Error("synthetic second publish failure");
+    return rename(from, to);
+  });
+  assert.throws(() => applyCodexProviderConfig(f.connections, { configDir: f.dir, catalogProfileId: "fixture" }), /恢复|restore/);
+  assert.equal(fs.readFileSync(f.config, "utf8"), 'model = "original"\n');
+  assert.equal(fs.readFileSync(f.catalog, "utf8"), '["original"]');
+  assert.ok(fs.readdirSync(path.dirname(f.catalog)).some((name) => name.includes("kk-recovery")));
+});
+test("CLI-223-03 rollback refuses to overwrite another writer and keeps the original backup", (t) => {
+  const f = guardedFixture(t), rename = fs.renameSync;
+  t.mock.method(fs, "renameSync", (from: fs.PathLike, to: fs.PathLike) => {
+    if (String(to) === f.config) {
+      fs.writeFileSync(f.catalog, '["foreign-change"]');
+      throw new Error("synthetic publish failure");
+    }
+    return rename(from, to);
+  });
+  assert.throws(() => applyCodexProviderConfig(f.connections, { configDir: f.dir, catalogProfileId: "fixture" }), /未确认/);
+  assert.equal(fs.readFileSync(f.catalog, "utf8"), '["foreign-change"]');
+  const backup = fs.readdirSync(path.dirname(f.catalog)).find((name) => name.includes("kk-recovery"));
+  assert.ok(backup);
+  assert.equal(fs.readFileSync(path.join(path.dirname(f.catalog), backup!), "utf8"), '["original"]');
+});
+test("CLI-223-03 failed rollback reports unknown and the preserved recovery path", (t) => {
+  const f = guardedFixture(t), rename = fs.renameSync;
+  let catalogPublished = false;
+  t.mock.method(fs, "renameSync", (from: fs.PathLike, to: fs.PathLike) => {
+    if (String(to) === f.config || (String(to) === f.catalog && catalogPublished)) throw new Error("synthetic rollback failure");
+    if (String(to) === f.catalog) catalogPublished = true;
+    return rename(from, to);
+  });
+  assert.throws(() => applyCodexProviderConfig(f.connections, { configDir: f.dir, catalogProfileId: "fixture" }), /未确认.*kk-recovery/s);
+  const backup = fs.readdirSync(path.dirname(f.catalog)).find((name) => name.includes("kk-recovery"));
+  assert.ok(backup);
+  assert.equal(fs.readFileSync(path.join(path.dirname(f.catalog), backup!), "utf8"), '["original"]');
+});
+
+test("CLI-223-01 parser preserves non-secret unknown fields and rejects secrets before stripping", () => {
+  const input = { connections: [{ id: "fixture", provider: "Fixture", baseUrl: "https://fixture.example.test/v1", protocol: "openai-responses", authMode: "api-key", futureField: { retain: true } }], futureEnvelope: { retain: true } };
+  const parsed = parseProviderConfig(input);
+  assert.equal(parsed[0].protocol, "openai-responses");
+  assert.deepEqual(parsed[0].futureField, { retain: true });
+  assert.throws(() => parseProviderConfig({ ...input, futureEnvelope: { api_key: "synthetic-key" } }), /凭据/);
+  assert.throws(() => parseProviderConfig({ connections: [{ ...input.connections[0], protocol: "unsupported-protocol" }] }), /协议/);
+});
+test("CLI-223-02 quoted ordinary provider table names are treated as the same owned table", () => {
+  for (const header of ['[model_providers."kk_old"]', "['model_providers'.'kk_old']", '[ model_providers . kk_old ]']) {
+    assert.equal(mergeCodexConfigToml(`${header}\nname = "Old"\n`, { providers: [] }).includes("Old"), false);
+  }
+});
+test("CLI-223-03 new first file is removed on second publish failure", (t) => {
+  const f = guardedFixture(t), rename = fs.renameSync;
+  fs.unlinkSync(f.catalog);
+  t.mock.method(fs, "renameSync", (from: fs.PathLike, to: fs.PathLike) => {
+    if (String(to) === f.config) throw new Error("synthetic publish failure");
+    return rename(from, to);
+  });
+  assert.throws(() => applyCodexProviderConfig(f.connections, { configDir: f.dir, catalogProfileId: "fixture" }), /恢复/);
+  assert.equal(fs.existsSync(f.catalog), false);
+  assert.equal(fs.readFileSync(f.config, "utf8"), 'model = "original"\n');
+});
+
+test("CLI-223-02 rejects invalid or repeated managed roots and malformed table headers without writing", (t) => {
+  const f = guardedFixture(t);
+  for (const original of [
+    'model = "x" garbage', 'model = "x"\nmodel = "y"', 'model = true', 'model_catalog_json = 12', 'model_provider = "x" + "y"',
+    String.raw`model = "bad\/escape"`, '[profiles.work] trailing', '[profiles..work]', '[[agents]] trailing', '[profiles.work',
+  ]) {
+    fs.writeFileSync(f.config, original);
+    assert.throws(() => applyCodexProviderConfig(f.connections, { configDir: f.dir, catalogProfileId: "fixture", activeConnectionId: "fixture" }));
+    assert.equal(fs.readFileSync(f.config, "utf8"), original);
+    assert.equal(fs.readFileSync(f.catalog, "utf8"), '["original"]');
+    assert.deepEqual(fs.readdirSync(f.dir).sort(), ["config.toml", "model-catalogs"]);
+  }
+});
+test("CLI-223-02 validates preserved managed values even when no active root replacement was requested", (t) => {
+  const f = guardedFixture(t), original = 'model = "x" garbage';
+  fs.writeFileSync(f.config, original);
+  assert.throws(() => applyCodexProviderConfig(f.connections, { configDir: f.dir }));
+  assert.equal(fs.readFileSync(f.config, "utf8"), original);
+});
+test("CLI-223-02 accepts complete basic/literal root strings and preserves their trailing comments", () => {
+  for (const value of ['"a#b"', "'a#b'", String.raw`"escaped\\quote\"value"`, String.raw`"unicode\U0001F600"`]) {
+    const existing = `model = ${value} # preserved comment\n[profiles."user.space"] # preserved header\nmodel = "profile-model"`;
+    const merged = mergeCodexConfigToml(existing, { providers: [], active: { providerKey: "kk_new", model: "new-root" } });
+    assert.match(merged, /^model = "new-root" # preserved comment/);
+    assert.ok(merged.includes('[profiles."user.space"] # preserved header\nmodel = "profile-model"'));
+  }
+  const flat = '["model_providers.kk_old"]\nunknown = "retained"';
+  assert.ok(mergeCodexConfigToml(flat, { providers: [] }).includes(flat));
+});
+
+test("escaped quoted root keys cannot create duplicate managed keys or publish files", (t) => {
+  const f = guardedFixture(t);
+  for (const key of [String.raw`"\u006dodel"`, String.raw`"\u006dodel_provider"`, String.raw`"\u006dodel_catalog_json"`]) {
+    const original = key + ' = "original"\n';
+    fs.writeFileSync(f.config, original);
+    assert.throws(() => applyCodexProviderConfig(f.connections, { configDir: f.dir, catalogProfileId: "fixture", activeConnectionId: "fixture" }), /转义根键/);
+    assert.equal(fs.readFileSync(f.config, "utf8"), original);
+    assert.equal(fs.readFileSync(f.catalog, "utf8"), '["original"]');
+    assert.deepEqual(fs.readdirSync(f.dir).sort(), ["config.toml", "model-catalogs"]);
+  }
+});

@@ -92,6 +92,8 @@
 
 ## 其他目录
 
+本轮既有按钮续修入口：[TASK-223 intent](changes/2026-10-14-action-usability-223/intent.md)、[spec](changes/2026-10-14-action-usability-223/spec.md)、[plan](changes/2026-10-14-action-usability-223/plan.md)、[verification](changes/2026-10-14-action-usability-223/verification.md)、[review](changes/2026-10-14-action-usability-223/review.md)。任务状态仍回读账本，索引不新增验收结论。
+
 | 目录           | 职责                                                                                                                            |
 | -------------- | ------------------------------------------------------------------------------------------------------------------------------- |
 | `changes/`     | 一次可审计的交付包：`intent` / `spec` / `plan` / `verification` / `review`                                                      |

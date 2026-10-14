@@ -84,13 +84,14 @@ export default function Canvas({
     initialCanvas?.edges,
     controls.isCanvasEcho,
   );
-  const { history, layersOpen, setLayersOpen } = useCanvasWorkbenchState({
-    controls,
-    items,
-    onItemsChange,
-    edges,
-    setEdges,
-  });
+  const { history, layersOpen, setLayersOpen, handleKeyDown } =
+    useCanvasWorkbenchState({
+      controls,
+      items,
+      onItemsChange,
+      edges,
+      setEdges,
+    });
   useCanvasPersistence(
     initialCanvas,
     nodes,
@@ -126,10 +127,7 @@ export default function Canvas({
         role="region"
         aria-label="无限画布"
         tabIndex={0}
-        onKeyDownCapture={(event) => {
-          if (history.handleKeyDown(event)) return;
-          controls.handleViewKeyDown(event);
-        }}
+        onKeyDownCapture={handleKeyDown}
         onPointerDown={(event) => {
           if (event.button === 2)
             rightGesture.current = {

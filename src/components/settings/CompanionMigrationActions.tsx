@@ -1,4 +1,12 @@
-import { useState } from "react";
+import {
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
+import { SettingsNavigationContext } from "./SettingsNavigationContext";
+import { useSettingsNavigationBusy } from "./useSettingsBusy";
 import { confirmAction } from "../../runtime/confirmAction";
 import type { CompanionClient } from "../../features/local-service/client.ts";
 import {
@@ -17,65 +25,94 @@ export default function CompanionMigrationActions({
   onFeedback: (message: string) => void;
 }) {
   const [busy, setBusy] = useState(false);
+  const { busy: sharedBusy } = useContext(SettingsNavigationContext);
+  const reportBusy = useSettingsNavigationBusy();
+  const inFlight = useRef(false);
+  const mounted = useRef(true);
+  useLayoutEffect(() => reportBusy(busy), [busy, reportBusy]);
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
   const [detail, setDetail] = useState("");
   const [migrationReport, setMigrationReport] =
     useState<MigrationPreflightReport | null>(null);
   const [latestBackupId, setLatestBackupId] = useState<string | null>(null);
 
   async function preflightMigration(): Promise<void> {
+    if (inFlight.current || sharedBusy) return;
+    inFlight.current = true;
     setBusy(true);
     setDetail("");
     try {
       const report = await preflightIndexedData();
+      if (!mounted.current) return;
       setMigrationReport(report);
       onFeedback(
         `预检通过：${report.assets.length} 个素材、${report.totalBytes} 字节；旧浏览器数据不会被删除。`,
       );
     } catch (error) {
+      if (!mounted.current) return;
       setDetail(error instanceof Error ? error.message : "旧数据预检失败。");
     } finally {
-      setBusy(false);
+      inFlight.current = false;
+      if (mounted.current) setBusy(false);
     }
   }
 
   async function importMigration(): Promise<void> {
-    if (!migrationReport) return;
+    if (!migrationReport || inFlight.current || sharedBusy) return;
+    inFlight.current = true;
     setBusy(true);
     setDetail("");
     try {
       await importIndexedData(migrationReport, {
         client,
-        onProgress: (completed, total) =>
-          setDetail(`正在上传素材 ${completed}/${total}…`),
+        onProgress: (completed, total) => {
+          if (mounted.current) setDetail(`正在上传素材 ${completed}/${total}…`);
+        },
       });
+      if (!mounted.current) return;
       setMigrationReport(null);
       onFeedback("旧浏览器项目和素材已导入本机服务；原 IndexedDB 数据仍保留。");
     } catch (error) {
+      if (!mounted.current) return;
       setDetail(
         error instanceof Error ? error.message : "迁移未完成，旧数据仍保留。",
       );
     } finally {
-      setBusy(false);
+      inFlight.current = false;
+      if (mounted.current) setBusy(false);
     }
   }
 
   async function createBackup(): Promise<void> {
+    if (inFlight.current || sharedBusy) return;
+    inFlight.current = true;
     setBusy(true);
     try {
       const backup = await exportCompanionBackup(client);
+      if (!mounted.current) return;
       setLatestBackupId(backup.backupId);
       onFeedback(`本机备份已生成：${backup.backupId}`);
     } catch (error) {
+      if (!mounted.current) return;
       setDetail(error instanceof Error ? error.message : "备份失败。");
     } finally {
-      setBusy(false);
+      inFlight.current = false;
+      if (mounted.current) setBusy(false);
     }
   }
 
   async function restoreBackup(): Promise<void> {
+    if (inFlight.current || sharedBusy) return;
+    inFlight.current = true;
     setBusy(true);
     try {
       const backups = await client.listCompanionBackups();
+      if (!mounted.current) return;
       const backup = backups.at(-1);
       if (!backup) {
         setDetail("没有可恢复的本机备份。");
@@ -90,21 +127,25 @@ export default function CompanionMigrationActions({
         return;
       }
       await restoreCompanionBackup(backup.id, client);
+      if (!mounted.current) return;
       setLatestBackupId(backup.id);
       onFeedback(
         `已恢复本机备份：${backup.id}；请重新读取项目以应用恢复版本。`,
       );
     } catch (error) {
+      if (!mounted.current) return;
       setDetail(
         error instanceof Error ? error.message : "恢复失败，当前项目仍保留。",
       );
     } finally {
-      setBusy(false);
+      inFlight.current = false;
+      if (mounted.current) setBusy(false);
     }
   }
 
   return (
     <>
+      {busy && <p role="status">本机数据操作中，请稍候…</p>}
       <div className="settings-companion-migration">
         <h4>旧浏览器数据迁移</h4>
         <p>
@@ -116,7 +157,7 @@ export default function CompanionMigrationActions({
             type="button"
             className="settings-action secondary"
             onClick={() => void preflightMigration()}
-            disabled={busy}
+            disabled={busy || sharedBusy}
           >
             预检旧数据
           </button>
@@ -125,7 +166,7 @@ export default function CompanionMigrationActions({
               type="button"
               className="settings-action"
               onClick={() => void importMigration()}
-              disabled={busy}
+              disabled={busy || sharedBusy}
             >
               确认导入 {migrationReport.assets.length} 个素材
             </button>
@@ -149,7 +190,7 @@ export default function CompanionMigrationActions({
             type="button"
             className="settings-action secondary"
             onClick={() => void createBackup()}
-            disabled={busy}
+            disabled={busy || sharedBusy}
           >
             创建备份
           </button>
@@ -157,7 +198,7 @@ export default function CompanionMigrationActions({
             type="button"
             className="settings-action secondary"
             onClick={() => void restoreBackup()}
-            disabled={busy}
+            disabled={busy || sharedBusy}
           >
             恢复最近备份
           </button>

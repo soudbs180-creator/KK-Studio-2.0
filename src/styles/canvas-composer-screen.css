@@ -86,3 +86,8 @@
   transform: none;
   pointer-events: auto;
 }
+
+.canvas-composer-screen .generation-feedback {
+  position: static;
+  flex: 0 0 auto;
+}

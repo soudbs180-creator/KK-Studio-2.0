@@ -7,6 +7,7 @@ import {
   useSyncExternalStore,
 } from "react";
 import { SettingsNavigationContext } from "./SettingsNavigationContext";
+import { useSettingsNavigationBusy } from "./useSettingsBusy";
 import { pluginLoader } from "../../features/plugins/pluginLoader";
 import { pluginStore } from "../../features/plugins/pluginStore";
 import { confirmAction } from "../../runtime/confirmAction";
@@ -22,7 +23,8 @@ export default function PluginManagerSettings({
     pluginStore.subscribe,
     pluginStore.getState,
   );
-  const { setBusy } = useContext(SettingsNavigationContext);
+  const { busy } = useContext(SettingsNavigationContext);
+  const setBusy = useSettingsNavigationBusy();
   const request = useRef<AbortController | null>(null);
   useLayoutEffect(
     () => setBusy(state.busy.length > 0),
@@ -39,7 +41,7 @@ export default function PluginManagerSettings({
   const [error, setError] = useState<string | null>(null);
 
   async function install(): Promise<void> {
-    if (pluginStore.getState().busy.length > 0) return;
+    if (busy || pluginStore.getState().busy.length > 0) return;
     const target = url.trim();
     if (!target) {
       onFeedback("请输入插件 bundle 地址（ESM .js）。");
@@ -73,7 +75,7 @@ export default function PluginManagerSettings({
 
   async function toggle(pluginId: string, enabled: boolean): Promise<void> {
     const record = state.plugins.find((item) => item.id === pluginId);
-    if (!record || pluginStore.getState().busy.length > 0) return;
+    if (!record || busy || pluginStore.getState().busy.length > 0) return;
     const controller = new AbortController();
     request.current = controller;
     pluginStore.setBusy(pluginId, true);
@@ -91,7 +93,12 @@ export default function PluginManagerSettings({
 
   async function update(pluginId: string): Promise<void> {
     const record = state.plugins.find((item) => item.id === pluginId);
-    if (!record || record.local || pluginStore.getState().busy.length > 0)
+    if (
+      !record ||
+      record.local ||
+      busy ||
+      pluginStore.getState().busy.length > 0
+    )
       return;
     const controller = new AbortController();
     request.current = controller;
@@ -110,7 +117,7 @@ export default function PluginManagerSettings({
 
   async function uninstall(pluginId: string): Promise<void> {
     const record = state.plugins.find((item) => item.id === pluginId);
-    if (!record || pluginStore.getState().busy.length > 0) return;
+    if (!record || busy || pluginStore.getState().busy.length > 0) return;
     pluginStore.setBusy(pluginId, true);
     setError(null);
     try {
@@ -163,7 +170,7 @@ export default function PluginManagerSettings({
               type="button"
               role="switch"
               aria-checked={record.enabled}
-              disabled={state.busy.length > 0}
+              disabled={busy || state.busy.length > 0}
               className="settings-toggle"
               aria-label={`${record.enabled ? "停用" : "启用"} ${record.name}`}
               onClick={() => void toggle(record.id, record.enabled)}
@@ -174,7 +181,7 @@ export default function PluginManagerSettings({
               <button
                 type="button"
                 className="settings-action"
-                disabled={state.busy.length > 0}
+                disabled={busy || state.busy.length > 0}
                 onClick={() => void update(record.id)}
               >
                 更新
@@ -183,7 +190,7 @@ export default function PluginManagerSettings({
             <button
               type="button"
               className="settings-action settings-danger-button"
-              disabled={state.busy.length > 0}
+              disabled={busy || state.busy.length > 0}
               onClick={() => void uninstall(record.id)}
             >
               卸载
@@ -198,6 +205,7 @@ export default function PluginManagerSettings({
       <div className="plugin-manager-install">
         <input
           aria-label="插件地址"
+          disabled={busy || state.busy.length > 0}
           placeholder="https://example.com/plugin.js"
           value={url}
           onChange={(event) => setUrl(event.target.value)}
@@ -212,7 +220,7 @@ export default function PluginManagerSettings({
           type="button"
           className="settings-action"
           onClick={() => void install()}
-          disabled={!url.trim() || state.busy.length > 0}
+          disabled={busy || !url.trim() || state.busy.length > 0}
         >
           安装
         </button>
