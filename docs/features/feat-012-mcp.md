@@ -16,12 +16,14 @@
 
 ## 测试与证据
 
+- 2.1.23本地按钮修复：`tests/browser/mcp-settings.spec.ts`；结果及Web/Desktop边界见[当前验证](../changes/2026-10-14-action-usability-222/verification.md)。
+
 - 单测：`tests/unit/mcpClient.test.ts`
 - 浏览器：`tests/browser/mcp-settings.spec.ts`
 
 ## 当前能力
 
-- 本轮候选保留MCP工具折叠后的参数和回执；等待期间锁定相关设置动作并提供停止等待。停止等待不表示撤回远端工具执行，不自动重试。
+- 本轮2.1.23已验证保留MCP工具折叠后的参数和回执；等待期间锁定相关设置动作并提供停止等待。停止等待不表示撤回远端工具执行，不自动重试。
 
 - 手动配置并连接真实 MCP 服务器、列工具等客户端能力（代码真实）。
 

@@ -11,3 +11,7 @@
 6. 冻结最终源码SHA后独立复核并提交，更新账本、Project State、Handoff、Progress；实际便携目录/源码/Web/ZIP按运行时白名单和哈希收据输出最新版本。完整检查、fresh Native、独立审查和产物回读未齐前保持PARTIAL，不把窄屏Web计为Native Mobile。
 
 外部patch只存工程外，代理不同时修改此worktree；不借用另一工作树dist、不杀外部服务、不清理用户数据/分支。
+
+## 执行收尾
+
+六步已在本地授权范围完成，产品冻结b4fa7b0e；第一轮b4完整检查受中断影响，终态只采用完整-final回执。实际官方Tauri与同字节便携各35项通过，菜单4RED→11GREEN、双主题与原件/坐标验证均保留。最终纯文档提交单独补审并按工程外current-release收据输出，详细范围见[verification](verification.md)。原资料/分支和并行dirty源保留；外部账号、Hosted、签名、实体手机及人工验收继续独立。

@@ -22,6 +22,8 @@
 
 ## 测试与证据
 
+- 2.1.23本地按钮修复：`tests/unit/geminiBridge.test.ts`、`tests/unit/agentDesktopSupportInstaller.test.ts`；结果及Web/Desktop边界见[当前验证](../changes/2026-10-14-action-usability-222/verification.md)。
+
 - 单测：`tests/unit/providerTargetRenderers.test.ts`、`tests/unit/providerConfigIO.test.ts`、`tests/unit/modelCatalogWindow.test.ts`、`tests/unit/mcpConfig.test.ts`
 - 新协议单测：`tests/unit/providerProtocol.test.ts`、`providerProtocolHttp.test.ts`、`providerProtocolSnapshot.test.ts`、`modelCatalogProtocol.test.ts`；本地 HTTP/流夹具不代表真实云供应商验收。
 - 浏览器回归：`provider-cli-settings`、`settings-navigation`；配置生成旧批次没有 UI，本轮接入 UI 结果另记。
@@ -31,7 +33,7 @@
 
 ## 当前能力
 
-- Gemini CLI候选对非零退出部分JSON及超时返回错误与结果未确认提示，不生成假成功或自动重试。
+- Gemini CLI本轮2.1.23对非零退出部分JSON及超时返回错误与结果未确认提示，不生成假成功或自动重试。
 
 - 既有逻辑子能力（带单测，不代表外部 CLI 会话或多端全链路已验收）：
   - 同一 ProviderConnection 渲染 Codex `config.toml` provider 块、Claude `settings.json`、OpenAI 兼容 env 三份目标配置，输出经 zod 校验且不含密钥明文。
@@ -63,6 +65,6 @@
 
 “获取模型/测试连接”只执行有界 GET，Native 复用 pinned/no_proxy/no-redirect 客户端，Web 不携带网站 cookies、拒绝重定向；成功目录不是生成可用证明。文本流需有完整终态，截断、拒绝、工具输出、坏格式和取消不能归档成成功；中断保留草稿/未知受理语义且不自动重复请求。新协议尚未返回的消耗继续“未报告”。
 
-Windows Desktop CLI 管理已接实际检测、用户主动安装/登录、取消自有操作及 Gemini 桥启停；终端退出和进程健康不推导账号验证，模型连通测试另有明确入口与额度说明。原 apply/check 不因新页面而声称全面接线。最终源码门禁、实际构建和产物身份见[本轮验证](../changes/2026-10-14-protocol-cli-completion/verification.md)；真实安装/账号登录/付费供应商调用及 Native Mobile 仍未验收，状态保持 PARTIAL。
+Windows Desktop CLI 管理已接实际检测、用户主动安装/登录、取消自有操作及 Gemini 桥启停；终端退出和进程健康不推导账号验证，模型连通测试另有明确入口与额度说明。原 apply/check 不因新页面而声称全面接线。最终源码门禁、实际构建和产物身份见[2.1.22协议/CLI验证](../changes/2026-10-14-protocol-cli-completion/verification.md)；真实安装/账号登录/付费供应商调用及 Native Mobile 仍未验收，状态保持 PARTIAL。
 
 2.1.22本机交付完成：五协议真实Native与四取消/超时socket关闭、已保存凭据/迟到目录/旧检测错误隔离均有回执；真实供应商/真人CLI会话与其他配置/MCP接线保持PARTIAL，按本轮verification回读，不能将fixture当云端验收。

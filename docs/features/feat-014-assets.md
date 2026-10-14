@@ -17,13 +17,15 @@
 
 ## 测试与证据
 
+- 2.1.23本地按钮修复：`tests/browser/canvas-node-actions.spec.ts`；结果及Web/Desktop边界见[当前验证](../changes/2026-10-14-action-usability-222/verification.md)。
+
 - 单测：`assets`、`assetStorage`、`assetPreview`、`snapshotAssets`
 - 浏览器：`asset-storage`、`asset-performance`
 - Rust：`asset_storage_tests.rs`、`asset_storage_integrity_tests.rs`
 
 ## 当前能力
 
-- 本轮候选统一清除来源与搜索筛选；导入成功和切换分类后重置来源，资源空态可以恢复。原件不删除。
+- 本轮2.1.23已验证统一清除来源与搜索筛选；导入成功和切换分类后重置来源，资源空态可以恢复。原件不删除。
 
 - 导入、归档、校验、预览、集合、来源链路为真实能力；生成结果原件归档。
 

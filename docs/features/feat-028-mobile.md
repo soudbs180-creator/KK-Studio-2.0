@@ -17,10 +17,14 @@
 
 ## 测试与证据
 
+- 2.1.23本地按钮修复：`tests/browser/canvas-selected-zoom-menu.spec.ts`、`tests/browser/settings-control-usability.spec.ts`；结果及Web/Desktop边界见[当前验证](../changes/2026-10-14-action-usability-222/verification.md)。
+
 - 浏览器窄屏回归：`tests/browser/frame-accuracy.spec.ts`（只证明 Web 响应式，不证明原生 Mobile）
 - 当前画布缩放/屏幕编辑器与导航规格：`tests/browser/canvas-screen-composer.spec.ts`、`settings-navigation.spec.ts`；其触摸、命中和截图只覆盖手机尺寸浏览器，当前最终结果由任务 verification 记录。
 
 ## 当前能力
+
+- 沿用用户确认的手机新布局；主题与独立画布背景偏好保留，双主题全缩放选项包含在圆角菜单内并可触摸；只代表响应式Web/WebView，不是Native Mobile验收。
 
 - 本轮只优化共享响应式Web/WebView：320/390px上传顶部动作与设置开关命中区、完整选项和取消导航；原生Mobile与实体手机验收仍开放。
 
@@ -43,4 +47,4 @@
 
 本轮只涉及响应式 Web 的屏幕编辑器、分级设置导航和已有固定面板，仍共享按钮、颜色、圆角与间距语义。屏幕命中尺寸修复不证明供应商生成、保存恢复和多端全链路完成；Native Mobile 未实现，真机和安装包未验，状态保持 PLANNED。
 
-既有收敛结果见[历史验证](../changes/2026-10-14-ui-consolidation/verification.md)。当前源码门禁、实际构建和手机网页截图由[本轮验证](../changes/2026-10-14-protocol-cli-completion/verification.md)记录；fixture 和浏览器视口不推导 Native Mobile 或真机 PASS。
+既有收敛结果见[历史验证](../changes/2026-10-14-ui-consolidation/verification.md)。当前源码门禁、实际构建和手机网页截图由[2.1.22协议/CLI验证](../changes/2026-10-14-protocol-cli-completion/verification.md)记录；fixture 和浏览器视口不推导 Native Mobile 或真机 PASS。

@@ -21,13 +21,15 @@
 
 ## 测试与证据
 
+- 2.1.23本地按钮修复：`tests/unit/agentDesktopSupportInstaller.test.ts`；结果及Web/Desktop边界见[当前验证](../changes/2026-10-14-action-usability-222/verification.md)。
+
 - 单测：`tests/unit/desktopRelease.test.ts`、`tests/unit/desktopLauncher.test.ts`、`tests/deploy/release-scripts.test.mjs`；新启动与图标证据见[启动体验验证](../changes/2026-10-08-startup-experience/verification.md)。
 - 安装校验与实机脚本：`tests/unit/installerReceipt.test.ts`、`tests/unit/installerGuards.test.ts`、`tests/desktop/installer.mjs`；证据见[本轮验证](../changes/2026-09-30-desktop-installer/verification.md)。
 - 运行时打包与 Windows 发布故障：`tests/unit/agentPackage.test.ts`、`agentProductionInstall.test.ts`；临时目录/合成 CLI 夹具覆盖完整依赖、版本/帮助、重试、回滚和新目标拒绝，不等于真人 CLI 安装/登录或安装器验收。
 
 ## 当前能力
 
-- 本轮候选保留随包运行时和资料身份；最新EXE、便携目录与白名单产物按当前验证收据核验。Agent配置读写失败保留原字节与有效状态。
+- 本轮2.1.23已验证保留随包运行时和资料身份；最新EXE、便携目录与白名单产物按当前验证收据核验。Agent配置读写失败保留原字节与有效状态。
 
 - 启动/验证脚本与发布脚本可用并被测试覆盖。
 - GUI 入口后台执行版本检查，最新 release 免构建，耗时操作显示进度、支持取消与错误日志；快捷方式使用当前 EXE 内嵌 Logo。Windows 探针覆盖中文/空格/特殊字符路径、无控制台、失败日志和只回收自有子进程。

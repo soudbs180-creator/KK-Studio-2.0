@@ -19,6 +19,8 @@
 
 ## 测试与证据
 
+- 2.1.23本地按钮修复：`tests/browser/local-service-migration.spec.ts`；结果及Web/Desktop边界见[当前验证](../changes/2026-10-14-action-usability-222/verification.md)。
+
 - 规范：[数据存储约定](../architecture/DATA-STORAGE.md)及[ADR-008](../architecture/adr/ADR-008-platform-versions-and-local-first.md)。
 - 单元与协议/文件存储：`tests/unit/localService*.test.ts`、`tests/unit/assetStorage.test.ts`。
 - 真实 loopback 服务迁移验收：`tests/browser/local-service-migration.spec.ts`。
@@ -27,7 +29,7 @@
 
 ## 当前能力
 
-- 本轮候选恢复备份前展示准确备份ID及快照替换影响；取消不调用恢复，确认仅恢复该ID，旧浏览器原件不删除。
+- 本轮2.1.23已验证恢复备份前展示准确备份ID及快照替换影响；取消不调用恢复，确认仅恢复该ID，旧浏览器原件不删除。
 
 - 服务只监听 `127.0.0.1`，默认端口 `4319`；配对码只使用一次，会话写入 HttpOnly cookie。
 - 显式启用服务后，创作快照和素材服务优先；服务离线/认证失败/版本冲突会返回明确状态，不静默回退并声称已保存。

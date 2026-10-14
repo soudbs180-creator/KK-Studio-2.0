@@ -5688,7 +5688,7 @@
       "tests",
       "docs"
     ],
-    "status": "PARTIAL",
+    "status": "DONE",
     "priority": "P1",
     "risk": "high",
     "reviewRequired": true,
@@ -5718,9 +5718,9 @@
     "lastVerified": "2026-10-14",
     "updated": "2026-10-14",
     "priorityRationale": "修复配置覆盖和隐私开关假成功，恢复实际按钮和触屏行为。",
-    "verification": "实际checkout定向Node83/83通过；Agent配置9通过/2既有跳过；实际Edge窄屏几何、保存故障、MCP/备份与取消已复验。最终完整verify、提交独立审查及fresh Desktop产物待完成，不能以阶段结果冒称交付。",
-    "displayStatus": "进行中",
-    "nextAction": "先失败回归再最小修复，完整verify、独立提交审查与实际Desktop便携目录交付。",
-    "verificationResult": "NOT_VERIFIED"
+    "verification": "Desktop/Web2.1.23产品提交b4fa7b0e承接2.1.22基线1abbcd51，本任务本地授权范围DONE/PASS。CLI配置和失败回执、记忆/插件持久化与迟到结果、MCP停止等待及回执、备份确认、画布顶部上传删除/撤销和筛选已修复。沿用用户确认的手机新布局，主题及独立背景偏好保留；菜单避让、层级与内容边界在320/390×light/dark验证。完整九步verify退出0：Node1251pass/14既有skip、Agent180pass/2既有skip、production Edge574首试/0flaky、UI241/0、development5步骤PASS；Agent真实编译及官方构建通过，Rust163与fe0→b4原生源码一致。实际Tauri和同字节便携目录各35项通过，5协议一次POST/恢复、4取消或超时socket关闭、CLI桥启停、Google系统浏览器本机GET、4窄屏真实filechooser、原件/坐标/撤销偏好均核对。新依赖0，入口gzip增加1244B<16384；4278生产白名单519463832B。原资料身份、primary dirty/index及旧失败保留。产品ZIP/Web、源码及恢复由工程外current-release收据绑定；最终文档提交与已测产品提交分开记录。Hosted、真人CLI安装/登录、付费Provider、签名安装器、日常资料、实体手机及用户视觉验收各自开放，Mobile2.1.1仍规划。",
+    "displayStatus": "已完成",
+    "nextAction": "回读最终current-release与独立文档补审；从2.1.23继续真人CLI/供应商、签名安装器、日常资料与实体手机验收，沿用已确认手机布局。",
+    "verificationResult": "PASS"
   }
 ]

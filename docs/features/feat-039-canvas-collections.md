@@ -15,11 +15,13 @@ CanvasCollectionsPanels、FloatingCollectionPanel、SavedPane、CatalogPanel、C
 
 ## 测试与证据
 
-collectionTags / assets 单测；canvas-collection-panels、ui-unification 及迁移后的 frontend / ui-motion / redbox-ui / design-corrections / desktop-data-stability 浏览器规格；原生标签/项目包 fixture。历史结果见 [UI 收敛验证](../changes/2026-10-14-ui-consolidation/verification.md)：2.1.21产品提交7a463742完整browser545首试通过且0flaky；官方Desktop构建与实际Tauri9项检查通过，标签/收藏、独立面板、视频上传/重载及原件字节均核对。这些数字不覆盖本轮新增协议、CLI 和手机编辑器；当前最终结果由[本轮验证](../changes/2026-10-14-protocol-cli-completion/verification.md)记录，安装器仍另行验收。
+- 2.1.23本地按钮修复：`tests/browser/canvas-node-actions.spec.ts`、`tests/browser/canvas-selected-zoom-menu.spec.ts`；结果及Web/Desktop边界见[当前验证](../changes/2026-10-14-action-usability-222/verification.md)。
+
+collectionTags / assets 单测；canvas-collection-panels、ui-unification 及迁移后的 frontend / ui-motion / redbox-ui / design-corrections / desktop-data-stability 浏览器规格；原生标签/项目包 fixture。历史结果见 [UI 收敛验证](../changes/2026-10-14-ui-consolidation/verification.md)：2.1.21产品提交7a463742完整browser545首试通过且0flaky；官方Desktop构建与实际Tauri9项检查通过，标签/收藏、独立面板、视频上传/重载及原件字节均核对。这些数字不覆盖本轮新增协议、CLI 和手机编辑器；此前2.1.22结果由[2.1.22协议/CLI验证](../changes/2026-10-14-protocol-cli-completion/verification.md)记录，安装器仍另行验收。
 
 ## 当前能力
 
-- 本轮候选在删除卡片后保留喜欢与兼容收藏记录，撤销立即恢复显示，重载继续恢复；屏幕动作不随画布缩放降低物理命中区。
+- 本轮2.1.23已验证在删除卡片后保留喜欢与兼容收藏记录，撤销立即恢复显示，重载继续恢复；屏幕动作不随画布缩放降低物理命中区。
 
 已有实现使用 likedIds 喜欢、tags/customTags 分类与 favoriteIds 兼容“收藏”标签；顶部动作和两个固定屏幕尺寸、自由拖动的独立面板。面板支持名称/提示词查找、改名、移除和定位；全局搜索分类与偏好管理分开。普通标签上限与额外收藏投影不互相截断；取消收藏标签更新旧字段，保存/重载按统一快照契约，见 [ADR-017](../architecture/adr/ADR-017-unified-ui-and-collection-compatibility.md)。
 

@@ -69,7 +69,9 @@
       "tests/browser/ui-interactions.spec.ts",
       "tests/browser/ui-interaction-matrix.spec.ts",
       "tests/desktop/project-landing.mjs",
-      "tests/browser/agent.spec.ts"
+      "tests/browser/agent.spec.ts",
+      "tests/browser/canvas-node-actions.spec.ts",
+      "tests/browser/canvas-selected-zoom-menu.spec.ts"
     ],
     "tasks": [
       "T2",
@@ -115,6 +117,14 @@
       {
         "platform": "web",
         "path": "docs/changes/2026-10-14-agent-canvas-sync/verification.md"
+      },
+      {
+        "platform": "web",
+        "path": "docs/changes/2026-10-14-action-usability-222/verification.md"
+      },
+      {
+        "platform": "desktop",
+        "path": "docs/changes/2026-10-14-action-usability-222/verification.md"
       }
     ]
   },
@@ -641,6 +651,10 @@
       {
         "platform": "web",
         "path": "docs/changes/2026-10-14-agent-canvas-sync/verification.md"
+      },
+      {
+        "platform": "web",
+        "path": "docs/changes/2026-10-14-action-usability-222/verification.md"
       }
     ]
   },
@@ -717,7 +731,8 @@
       "tests/unit/assetPreview.test.ts",
       "tests/unit/snapshotAssets.test.ts",
       "tests/browser/asset-storage.spec.ts",
-      "tests/browser/asset-performance.spec.ts"
+      "tests/browser/asset-performance.spec.ts",
+      "tests/browser/canvas-node-actions.spec.ts"
     ],
     "tasks": [
       "T3a",
@@ -735,6 +750,14 @@
       {
         "platform": "desktop",
         "path": "docs/changes/2026-09-20-main-close-002/verification.md"
+      },
+      {
+        "platform": "web",
+        "path": "docs/changes/2026-10-14-action-usability-222/verification.md"
+      },
+      {
+        "platform": "desktop",
+        "path": "docs/changes/2026-10-14-action-usability-222/verification.md"
       }
     ]
   },
@@ -924,7 +947,8 @@
       "tests/unit/memoryService.test.ts",
       "tests/unit/memoryReply.test.ts",
       "tests/browser/memory-settings.spec.ts",
-      "tests/desktop/project-landing.mjs"
+      "tests/desktop/project-landing.mjs",
+      "tests/browser/settings-persistence-failures.spec.ts"
     ],
     "tasks": [
       "TASK-MEMORY-001",
@@ -951,6 +975,10 @@
       {
         "platform": "desktop",
         "path": "docs/changes/2026-09-29-project-landing/verification.md"
+      },
+      {
+        "platform": "web",
+        "path": "docs/changes/2026-10-14-action-usability-222/verification.md"
       }
     ]
   },
@@ -1019,7 +1047,10 @@
       "tests/desktop/provider-credential-recovery.mjs",
       "tests/unit/providerCredentialStatus.test.ts",
       "tests/unit/usageSummary.test.ts",
-      "tests/browser/ui-unification.spec.ts"
+      "tests/browser/ui-unification.spec.ts",
+      "tests/browser/settings-control-usability.spec.ts",
+      "tests/browser/settings-persistence-failures.spec.ts",
+      "tests/unit/pluginStartupRace.test.ts"
     ],
     "tasks": [
       "TASK-PROV-001",
@@ -1064,6 +1095,14 @@
       {
         "platform": "desktop",
         "path": "docs/changes/2026-10-13-agent-recovery/verification.md"
+      },
+      {
+        "platform": "web",
+        "path": "docs/changes/2026-10-14-action-usability-222/verification.md"
+      },
+      {
+        "platform": "desktop",
+        "path": "docs/changes/2026-10-14-action-usability-222/verification.md"
       }
     ]
   },
@@ -1214,7 +1253,8 @@
       "tests/deploy/release-scripts.test.mjs",
       "tests/unit/installerReceipt.test.ts",
       "tests/unit/installerGuards.test.ts",
-      "tests/desktop/installer.mjs"
+      "tests/desktop/installer.mjs",
+      "tests/unit/agentDesktopSupportInstaller.test.ts"
     ],
     "tasks": [
       "T7",
@@ -1229,6 +1269,10 @@
       {
         "platform": "desktop",
         "path": "docs/changes/2026-09-30-desktop-installer/verification.md"
+      },
+      {
+        "platform": "desktop",
+        "path": "docs/changes/2026-10-14-action-usability-222/verification.md"
       }
     ]
   },
@@ -1255,7 +1299,11 @@
     "summary": "当前仅响应式Web的窄窗口布局；Native Mobile独立工程、登录/本地数据、真机和安装包仍未实现，规划版本2.1.1。",
     "entryPoints": ["无（未实现）"],
     "code": ["src/styles/responsive.css"],
-    "tests": ["tests/browser/frame-accuracy.spec.ts"],
+    "tests": [
+      "tests/browser/frame-accuracy.spec.ts",
+      "tests/browser/canvas-selected-zoom-menu.spec.ts",
+      "tests/browser/settings-control-usability.spec.ts"
+    ],
     "tasks": [
       "T12",
       "TASK-UI-CONSOLIDATE-20261014",
@@ -1379,7 +1427,9 @@
       "tests/unit/modelCatalogWindow.test.ts",
       "tests/unit/mcpConfig.test.ts",
       "vendor/canvas-agent/src/agent/codex-provider-config.test.ts",
-      "vendor/canvas-agent/src/agent/provider-cli.test.ts"
+      "vendor/canvas-agent/src/agent/provider-cli.test.ts",
+      "tests/unit/geminiBridge.test.ts",
+      "tests/unit/agentDesktopSupportInstaller.test.ts"
     ],
     "tasks": [
       "TASK-PROV-002",
@@ -1528,7 +1578,9 @@
       "tests/browser/ui-unification.spec.ts",
       "tests/browser/frontend.spec.ts",
       "tests/browser/ui-motion.spec.ts",
-      "tests/browser/desktop-data-stability.spec.ts"
+      "tests/browser/desktop-data-stability.spec.ts",
+      "tests/browser/canvas-node-actions.spec.ts",
+      "tests/browser/canvas-selected-zoom-menu.spec.ts"
     ],
     "tasks": [
       "TASK-UI-CONSOLIDATE-20261014",

@@ -1,8 +1,8 @@
 # 当前进度
 
-## 2026-10-14 2.1.23按钮可用性候选（PARTIAL）
+## 2026-10-14 2.1.23按钮可用性本机交付
 
-Desktop/Web源码候选2.1.23承接2.1.22基线1abbcd51，任务分支codex/TASK-222-ACTIONS-20261014，当前PARTIAL。已补Agent配置/CLI失败、记忆关闭与保存、插件持久化/15秒加载/停止等待/资源清理、MCP回执保留/busy导航/停止等待、备份精确确认、320px画布HUD/顶部上传删除/撤销偏好及筛选清空。定向Node75通过、Agent配置9通过/2既有跳过，typecheck/UI241/0/build通过；浏览器23项曾18通过/5失败、MCP备份6项曾4通过/2失败，修正后待fresh复验。GoogleDesktop shell入口已补，真实壳回执仍待取得。完整verify、fresh Native、最终SHA独立审查、提交和最新产物回读尚未完成；Mobile2.1.1仍规划，原资料身份、primary dirty/index及旧失败保留。[本轮验证](changes/2026-10-14-action-usability-222/verification.md)。
+Desktop/Web2.1.23产品b4fa7b0e已补CLI配置/失败回执、记忆与插件保存/迟到防护、MCP停止等待及回执、备份确认、画布顶部上传删除/撤销和筛选。手机沿用已确认的新布局，补菜单层级、避让与内容边界；主题及背景偏好保留。九步verify通过（浏览器574首试），实际官方Tauri与同字节便携各35项通过，新依赖0、入口gzip增加1244B。原资料/primary dirty/index和历史失败保留；最终文档/产物身份及外部未验范围统一见[验证](changes/2026-10-14-action-usability-222/verification.md)。
 
 ## 2026-10-14 2.1.22协议/CLI本机交付
 

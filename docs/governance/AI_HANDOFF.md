@@ -10,7 +10,7 @@
 
 ## 本轮恢复入口
 
-TASK-222-ACTIONS-20261014：Desktop/Web源码候选2.1.23承接2.1.22基线1abbcd51，任务分支codex/TASK-222-ACTIONS-20261014，当前PARTIAL。已补Agent配置/CLI失败、记忆关闭与保存、插件持久化/15秒加载/停止等待/资源清理、MCP回执保留/busy导航/停止等待、备份精确确认、320px画布HUD/顶部上传删除/撤销偏好及筛选清空。定向Node75通过、Agent配置9通过/2既有跳过，typecheck/UI241/0/build通过；浏览器23项曾18通过/5失败、MCP备份6项曾4通过/2失败，修正后待fresh复验。GoogleDesktop shell入口已补，真实壳回执仍待取得。完整verify、fresh Native、最终SHA独立审查、提交和最新产物回读尚未完成；Mobile2.1.1仍规划，原资料身份、primary dirty/index及旧失败保留。先读[规格](../changes/2026-10-14-action-usability-222/spec.md)、[计划](../changes/2026-10-14-action-usability-222/plan.md)和[验证](../changes/2026-10-14-action-usability-222/verification.md)，以工程外actions-ui-20261014中的新回执逐项续验，不复用旧2.1.22收据。
+TASK-222-ACTIONS-20261014：Desktop/Web2.1.23本地授权修复已完成，产品HEAD为b4fa7b0e，最终纯文档提交与产物由工程外current-release收据绑定。恢复时先读[验证](../changes/2026-10-14-action-usability-222/verification.md)和最终独立补审，不复用旧2.1.22或中断回执。保留原资料与已确认手机布局；Native Mobile2.1.1、真人CLI/付费Provider、Hosted、签名安装与实体手机等验收仍分别开放。
 
 ### 此前2.1.22交付基线（保留历史）
 
