@@ -1,6 +1,6 @@
 .canvas-context-menu {
   position: fixed;
-  z-index: 70;
+  z-index: var(--kk-z-popover);
   width: 280px;
   min-height: 213px;
   max-width: calc(100vw - 32px);

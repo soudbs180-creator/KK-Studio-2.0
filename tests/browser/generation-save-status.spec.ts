@@ -60,6 +60,12 @@ test("Web returned image stays saving until archival, then survives reload", asy
     }
     await expect(page.locator(".canvas-hud")).toBeVisible();
     await expect(progress).toBeVisible();
+    await expect
+      .poll(async () => {
+        const box = await page.locator(".project-task-status").boundingBox();
+        return box ? box.x + box.width : Infinity;
+      })
+      .toBeLessThanOrEqual(width);
     const bounds = await page.locator(".project-task-status").boundingBox();
     expect(bounds).not.toBeNull();
     expect(bounds!.x).toBeGreaterThanOrEqual(0);
