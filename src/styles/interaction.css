@@ -28,12 +28,19 @@
 }
 .video-upload {
   position: absolute;
-  bottom: 14px;
-  padding: 6px 12px;
+  bottom: var(--kk-space-3);
+  left: 50%;
+  transform: translateX(-50%);
+  height: var(--kk-control-h-md);
+  padding: 0 var(--kk-space-3);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   background: var(--bg-input);
-  border: 1px solid var(--border-default);
-  border-radius: 20px;
-  font-size: 10px;
+  border: var(--kk-border-width) solid var(--border-default);
+  border-radius: var(--kk-icon-button-radius);
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-caption);
 }
 .video-params {
   width: 176px;

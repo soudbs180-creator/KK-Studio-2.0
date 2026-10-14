@@ -27,8 +27,6 @@ export interface CanvasProps {
   onRetryTask?: (taskId: string) => void;
   items: CanvasCollectionItem[];
   onItemsChange: Dispatch<SetStateAction<CanvasCollectionItem[]>>;
-  favoriteIds: Set<string>;
-  onToggleFavorite: (id: string) => void;
   likedIds: Set<string>;
   onToggleLike: (id: string) => void;
 }

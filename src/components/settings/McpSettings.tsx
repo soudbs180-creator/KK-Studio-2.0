@@ -199,6 +199,7 @@ export default function McpSettings({
     server: McpServerConfig,
     tool: McpTool,
     arguments_: Record<string, unknown>,
+    signal?: AbortSignal,
   ): Promise<unknown> {
     if (
       !(await confirmAction(
@@ -206,9 +207,11 @@ export default function McpSettings({
       ))
     )
       throw new Error("工具调用已取消。");
+    signal?.throwIfAborted();
     const client = clients.get(server.id);
     if (!client) throw new Error("MCP 服务器尚未连接。");
-    const result = await client.callTool(tool.name, arguments_, true);
+    const result = await client.callTool(tool.name, arguments_, true, signal);
+    signal?.throwIfAborted();
     onFeedback(`已调用 ${server.name} · ${tool.name}。`);
     return result;
   }

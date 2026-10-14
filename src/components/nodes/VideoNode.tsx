@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type RefObject } from "react";
 import CreationComposer from "./CreationComposer";
 import type {
   CanvasCollectionItem,
@@ -31,14 +31,17 @@ export default function VideoNode({
   referenceLimit,
   onAddReferences,
   onRemoveReference,
-}: NodeEditingProps & { item: CanvasCollectionItem }) {
+  uploadInput,
+}: NodeEditingProps & {
+  item: CanvasCollectionItem;
+  uploadInput: RefObject<HTMLInputElement>;
+}) {
   const [video, setVideo] = useState("");
   const [error, setError] = useState("");
   const uploadVersion = useRef(0);
   const reader = useRef<FileReader | null>(null);
   const referenceFile = useRef<HTMLInputElement>(null);
   const referenceSlot = useRef<CanvasReference["slot"]>();
-  const previewInput = useRef<HTMLInputElement>(null);
   useEffect(() => {
     const version = ++uploadVersion.current;
     setVideo("");
@@ -172,7 +175,7 @@ export default function VideoNode({
         {selected && (
           <button
             className="video-upload"
-            onClick={() => previewInput.current?.click()}
+            onClick={() => uploadInput.current?.click()}
             title="上传视频后仅用于本地预览；演示生成不会上传或消费视频原件"
           >
             上传视频
@@ -201,7 +204,7 @@ export default function VideoNode({
         }}
       />
       <input
-        ref={previewInput}
+        ref={uploadInput}
         hidden
         type="file"
         accept="video/mp4,video/webm"

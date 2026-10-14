@@ -1,3 +1,6 @@
+import { useState, type MouseEvent } from "react";
+import { invoke, isTauri } from "@tauri-apps/api/core";
+
 export default function GoogleConnectionActions({
   cli,
   disabled,
@@ -19,6 +22,17 @@ export default function GoogleConnectionActions({
   onCheck: () => void;
   onCancel: () => void;
 }) {
+  const [linkError, setLinkError] = useState("");
+  async function openKeyLink(event: MouseEvent<HTMLAnchorElement>) {
+    if (!isTauri()) return;
+    event.preventDefault();
+    setLinkError("");
+    try {
+      await invoke("plugin:shell|open", { path: event.currentTarget.href });
+    } catch {
+      setLinkError("外部浏览器未能打开，请重试或复制链接到浏览器。");
+    }
+  }
   return (
     <div className="settings-network-actions">
       {cli ? (
@@ -62,10 +76,12 @@ export default function GoogleConnectionActions({
           href="https://aistudio.google.com/apikey"
           target="_blank"
           rel="noreferrer"
+          onClick={openKeyLink}
         >
           获取 API Key
         </a>
       )}
+      {linkError && <p role="alert">{linkError}</p>}
     </div>
   );
 }

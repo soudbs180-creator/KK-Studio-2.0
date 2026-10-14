@@ -140,6 +140,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-CANVAS-WIDE-PORT-20261014 | 宽图结果编辑器遮挡下游按钮 | TODO | 未完成 | P2 | none | root | 单独复证production并修正宽图主体几何/端口锚点 |
 | TASK-AGENT-UX-20261014 | Agent 执行过程与生成保存状态提示 | DONE | 已完成 | P2 | none | root | 保留证据并完成日常APP人工验收，真实Provider和发布沿原独立任务推进 |
 | TASK-PROTOCOL-CLI-20261014 | 从2.1.21接通Provider协议和CLI实际执行，优化分端控件 | DONE | 已完成 | P1 | TASK-UI-CONSOLIDATE-20261014 | root | 从2.1.22继续真实供应商与真人CLI登录/安装、签名安装器、日常资料和人工视觉验收；最终产物回读工程外current-release哈希收据。 |
+| TASK-222-ACTIONS-20261014 | 2.1.22 CLI、设置与画布按钮真实行为和分端修复 | PARTIAL | 进行中 | P1 | TASK-PROTOCOL-CLI-20261014 | root | 先失败回归再最小修复，完整verify、独立提交审查与实际Desktop便携目录交付。 |
 
 ## TASK-FIX-PUSH-GUARD-SPACES-001 — 修复 Windows Git pre-push 空格及长路径启动
 
@@ -2688,5 +2689,24 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Verification: PASS — Desktop/Web2.1.22产品da6141e6完整verify通过：551浏览器首试、Node1214pass/14既有skip、Agent172pass/2既有skip、UI241/0、development5步骤PASS；Rust163与原生源一致性确认，独立源码审查PASS。官方Agent构建、真实Tauri22项和同字节便携目录23项通过，5协议文本均保存/重载/GET检测/NativeTaskHost一次POST/结果恢复，无重复；4取消/超时场景实际socket关闭且目录字节保持。手机为响应式WebView/Web，非Native Mobile。新依赖0，入口gzip增加3247B<16384；4278生产白名单519462029B，其中8个缺失的当前平台Codex必要文件407521436B已恢复，不把旧残包当同功能体积基线。原资料身份、primary dirty/index和历史失败保留。最终ZIP/源码/Web/恢复与哈希由工程外current-release收据绑定；Hosted、真人CLI安装/登录、付费Provider、签名安装器、日常资料和人工视觉验收继续各自开放。
 - Evidence: [docs/changes/2026-10-14-protocol-cli-completion/intent.md](../../docs/changes/2026-10-14-protocol-cli-completion/intent.md), [docs/changes/2026-10-14-protocol-cli-completion/spec.md](../../docs/changes/2026-10-14-protocol-cli-completion/spec.md), [docs/changes/2026-10-14-protocol-cli-completion/plan.md](../../docs/changes/2026-10-14-protocol-cli-completion/plan.md), [docs/changes/2026-10-14-protocol-cli-completion/verification.md](../../docs/changes/2026-10-14-protocol-cli-completion/verification.md), [docs/changes/2026-10-14-protocol-cli-completion/review.md](../../docs/changes/2026-10-14-protocol-cli-completion/review.md), [docs/architecture/adr/ADR-018-provider-protocol-and-cli-execution.md](../../docs/architecture/adr/ADR-018-provider-protocol-and-cli-execution.md)
 - Next action: 从2.1.22继续真实供应商与真人CLI登录/安装、签名安装器、日常资料和人工视觉验收；最终产物回读工程外current-release哈希收据。
+- Last verified: 2026-10-14
+- Updated: 2026-10-14
+
+## TASK-222-ACTIONS-20261014 — 2.1.22 CLI、设置与画布按钮真实行为和分端修复
+
+- Goal: 修复配置/持久化假成功及实际按钮可用性，保留数据并交付新版
+- Scope: Agent配置保护、Gemini失败判定、记忆关闭守卫、插件持久化/生命周期/迟到结果、MCP回执与停止等待、备份确认、画布删除/上传/撤销、来源筛选、设置命中区与Google桌面链接
+- Display status: 进行中
+- Priority: P1 — 修复配置覆盖和隐私开关假成功，恢复实际按钮和触屏行为。
+- Requirement refs: ledger:TASK-222-ACTIONS-20261014
+- Feature IDs: FEAT-001, FEAT-014, FEAT-020, FEAT-022, FEAT-026, FEAT-032, FEAT-039, FEAT-012, FEAT-028, FEAT-037
+- Owner role: repository-maintainer
+- Acceptance: 读写失败保留原配置和有效状态，不假报关闭或CLI成功; 草稿屏幕删除/上传可用，撤销与重载偏好、原件不丢; 桌面与手机布局及实际操作分别验收; 完整检查、干净提交独立审查、当前产物哈希交付
+- Branch: `codex/TASK-222-ACTIONS-20261014`
+- Worktree: `D:/kk-studio/.worktrees/branch-consolidation-20261011`
+- Modules: vendor/canvas-agent, scripts/gemini-bridge.mjs, src/features/memory, src/features/plugins, src/components/settings, src/components/canvas, src/components/nodes, src/components/assets, tests, docs
+- Verification: NOT_VERIFIED — 实际checkout定向Node83/83通过；Agent配置9通过/2既有跳过；实际Edge窄屏几何、保存故障、MCP/备份与取消已复验。最终完整verify、提交独立审查及fresh Desktop产物待完成，不能以阶段结果冒称交付。
+- Evidence: [docs/changes/2026-10-14-action-usability-222/intent.md](../../docs/changes/2026-10-14-action-usability-222/intent.md), [docs/changes/2026-10-14-action-usability-222/spec.md](../../docs/changes/2026-10-14-action-usability-222/spec.md), [docs/changes/2026-10-14-action-usability-222/plan.md](../../docs/changes/2026-10-14-action-usability-222/plan.md), [docs/changes/2026-10-14-action-usability-222/verification.md](../../docs/changes/2026-10-14-action-usability-222/verification.md), [docs/changes/2026-10-14-action-usability-222/review.md](../../docs/changes/2026-10-14-action-usability-222/review.md)
+- Next action: 先失败回归再最小修复，完整verify、独立提交审查与实际Desktop便携目录交付。
 - Last verified: 2026-10-14
 - Updated: 2026-10-14

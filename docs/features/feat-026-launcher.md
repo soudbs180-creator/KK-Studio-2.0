@@ -3,7 +3,7 @@
 - 状态：PARTIAL
 - 领域：system
 - 最近更新：2026-10-14
-- 关联任务：T7、TASK-DESKTOP-INSTALLER-001、TASK-LAUNCH-001、TASK-PROTOCOL-CLI-20261014
+- 关联任务：T7、TASK-DESKTOP-INSTALLER-001、TASK-LAUNCH-001、TASK-PROTOCOL-CLI-20261014、TASK-222-ACTIONS-20261014
 
 ## 用户可见入口
 
@@ -26,6 +26,8 @@
 - 运行时打包与 Windows 发布故障：`tests/unit/agentPackage.test.ts`、`agentProductionInstall.test.ts`；临时目录/合成 CLI 夹具覆盖完整依赖、版本/帮助、重试、回滚和新目标拒绝，不等于真人 CLI 安装/登录或安装器验收。
 
 ## 当前能力
+
+- 本轮候选保留随包运行时和资料身份；最新EXE、便携目录与白名单产物按当前验证收据核验。Agent配置读写失败保留原字节与有效状态。
 
 - 启动/验证脚本与发布脚本可用并被测试覆盖。
 - GUI 入口后台执行版本检查，最新 release 免构建，耗时操作显示进度、支持取消与错误日志；快捷方式使用当前 EXE 内嵌 Logo。Windows 探针覆盖中文/空格/特殊字符路径、无控制台、失败日志和只回收自有子进程。

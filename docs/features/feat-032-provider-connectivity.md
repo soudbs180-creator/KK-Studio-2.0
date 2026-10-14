@@ -3,7 +3,7 @@
 - 状态：PARTIAL
 - 领域：intelligence
 - 最近更新：2026-10-14
-- 关联任务：TASK-PROV-002（已合入）、TASK-PROV-003/004（PARTIAL）、TASK-UI-CONSOLIDATE-20261014、TASK-PROTOCOL-CLI-20261014
+- 关联任务：TASK-PROV-002（已合入）、TASK-PROV-003/004（PARTIAL）、TASK-UI-CONSOLIDATE-20261014、TASK-PROTOCOL-CLI-20261014、TASK-222-ACTIONS-20261014
 
 ## 用户可见入口
 
@@ -30,6 +30,8 @@
 - 变更与验证证据：`docs/changes/2026-09-24-provider-connectivity/{verification,remaining}.md`
 
 ## 当前能力
+
+- Gemini CLI候选对非零退出部分JSON及超时返回错误与结果未确认提示，不生成假成功或自动重试。
 
 - 既有逻辑子能力（带单测，不代表外部 CLI 会话或多端全链路已验收）：
   - 同一 ProviderConnection 渲染 Codex `config.toml` provider 块、Claude `settings.json`、OpenAI 兼容 env 三份目标配置，输出经 zod 校验且不含密钥明文。

@@ -2,8 +2,8 @@
 
 - 状态：REAL
 - 领域：system
-- 最近更新：2026-09-21
-- 关联任务：T3a、TASK-PERF-ASSETS-001、PERF-001
+- 最近更新：2026-10-14
+- 关联任务：T3a、TASK-PERF-ASSETS-001、PERF-001、TASK-222-ACTIONS-20261014
 
 ## 用户可见入口
 
@@ -22,6 +22,8 @@
 - Rust：`asset_storage_tests.rs`、`asset_storage_integrity_tests.rs`
 
 ## 当前能力
+
+- 本轮候选统一清除来源与搜索筛选；导入成功和切换分类后重置来源，资源空态可以恢复。原件不删除。
 
 - 导入、归档、校验、预览、集合、来源链路为真实能力；生成结果原件归档。
 

@@ -2,8 +2,8 @@
 
 - 状态：PARTIAL
 - 领域：intelligence
-- 最近更新：2026-09-26
-- 关联任务：TASK-CAP-001、BACKEND-MCP-AUTO、TASK-AGENT-001、TASK-AGENT-003、TASK-MINIMAX-001、TASK-MCP-PROTO-001、TASK-MCP-REGISTRY-001、TASK-MCP-REGISTRY-002
+- 最近更新：2026-10-14
+- 关联任务：TASK-CAP-001、BACKEND-MCP-AUTO、TASK-AGENT-001、TASK-AGENT-003、TASK-MINIMAX-001、TASK-MCP-PROTO-001、TASK-MCP-REGISTRY-001、TASK-MCP-REGISTRY-002、TASK-222-ACTIONS-20261014
 
 ## 用户可见入口
 
@@ -20,6 +20,8 @@
 - 浏览器：`tests/browser/mcp-settings.spec.ts`
 
 ## 当前能力
+
+- 本轮候选保留MCP工具折叠后的参数和回执；等待期间锁定相关设置动作并提供停止等待。停止等待不表示撤回远端工具执行，不自动重试。
 
 - 手动配置并连接真实 MCP 服务器、列工具等客户端能力（代码真实）。
 

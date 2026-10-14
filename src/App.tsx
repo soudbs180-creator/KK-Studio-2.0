@@ -446,15 +446,6 @@ export default function App() {
     );
   }
   useEffect(() => {
-    const ids = new Set(canvasItems.map((item) => item.id));
-    const removeMissing = (current: Set<string>): Set<string> => {
-      const next = new Set([...current].filter((id) => ids.has(id)));
-      return next.size === current.size ? current : next;
-    };
-    setFavoriteIds(removeMissing);
-    setLikedIds(removeMissing);
-  }, [canvasItems]);
-  useEffect(() => {
     replaceCanvasItems(activeProject?.items ?? BASE_CANVAS_ITEMS);
     setFavoriteIds(new Set(activeProject?.favoriteIds ?? []));
     setLikedIds(new Set(activeProject?.likedIds ?? []));
@@ -2522,26 +2513,6 @@ export default function App() {
       updatedAt: Date.now(),
     }));
   }
-  function toggleFavorite(id: string): void {
-    if (activeProject) {
-      const next = new Set(activeProject.favoriteIds);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      setFavoriteIds(next);
-      updateProject(activeProject.id, (project) => ({
-        ...project,
-        favoriteIds: [...next],
-        updatedAt: Date.now(),
-      }));
-      return;
-    }
-    setFavoriteIds((current) => {
-      const next = new Set(current);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-  }
   function toggleLike(id: string): void {
     if (activeProject) {
       const next = new Set(activeProject.likedIds);
@@ -2698,6 +2669,7 @@ export default function App() {
       ).preferences;
     } catch {
       // Browser storage can be denied; retain the default theme preferences.
+      preferences = DEFAULT_SETTINGS;
     }
     const apply = () => {
       document.documentElement.dataset.accent = preferences.accent;
@@ -3076,10 +3048,8 @@ export default function App() {
                   }}
                   items={activeProject?.items ?? canvasItems}
                   onItemsChange={updateCanvasItems}
-                  favoriteIds={favoriteIds}
                   likedIds={likedIds}
                   onToggleLike={toggleLike}
-                  onToggleFavorite={toggleFavorite}
                 />
                 {imagePreview && (
                   <ImageLightbox

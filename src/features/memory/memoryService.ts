@@ -45,11 +45,7 @@ const localStorageSettings: SettingsStorage = {
     }
   },
   write: (settings) => {
-    try {
-      window.localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
-    } catch {
-      // 设置开关写失败不影响记忆主体功能。
-    }
+    window.localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
   },
 };
 
@@ -143,6 +139,7 @@ export class MemoryService {
         // The browser may read the Desktop file, but cannot coordinate writes
         // with Desktop. Its private store remains writable after leaving this view.
         if ((await this.storage.mode()) === "shared-readonly") return;
+        if (!this.isEnabled()) return;
         const store = await this.storage.read();
         const timestamp = this.now().toISOString();
         const existing = new Set(
@@ -172,7 +169,7 @@ export class MemoryService {
           additions.push(record);
           existing.add(fingerprint);
         }
-        if (additions.length === 0) {
+        if (additions.length === 0 || !this.isEnabled()) {
           return;
         }
         await this.storage.write(
@@ -198,6 +195,7 @@ export class MemoryService {
     }
     try {
       const store = await this.load();
+      if (!this.isEnabled()) return "";
       const selected = selectMemoryRecords(query, store.records, {
         now: this.now(),
       });
@@ -234,6 +232,7 @@ export class MemoryService {
       return 0;
     }
     return this.enqueueMutation(async () => {
+      if (!this.isEnabled()) return 0;
       const store = await this.storage.read();
       const timestamp = this.now().toISOString();
       const existing = new Set(
@@ -262,7 +261,7 @@ export class MemoryService {
         });
         existing.add(fingerprint);
       }
-      if (additions.length === 0) {
+      if (additions.length === 0 || !this.isEnabled()) {
         return 0;
       }
       await this.storage.write(

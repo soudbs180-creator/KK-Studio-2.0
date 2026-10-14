@@ -3,7 +3,7 @@
 - 状态：PARTIAL
 - 领域：system
 - 最近更新：2026-10-14
-- 关联任务：TASK-UI-005、TASK-PROV-001、UI-004、TASK-DS-001、TASK-DS-002、TASK-UI-CONSOLIDATE-20261014、TASK-PROTOCOL-CLI-20261014
+- 关联任务：TASK-UI-005、TASK-PROV-001、UI-004、TASK-DS-001、TASK-DS-002、TASK-UI-CONSOLIDATE-20261014、TASK-PROTOCOL-CLI-20261014、TASK-222-ACTIONS-20261014
 
 ## 用户可见入口
 
@@ -21,6 +21,8 @@
 - 浏览器：`settings-scroll`、`settings-switch-audit`、`settings-navigation`、`provider-cli-settings`、`mcp-settings`、`runtime-ui`；当前轮结果由任务 verification 记录。
 
 ## 当前能力
+
+- 本轮候选补齐开关物理命中区、完整常规选项、插件/MCP取消及busy导航、备份具体ID恢复确认与Google密钥桌面外链。
 
 - 既有连接增删改、健康/隔离状态、API Key 保存事务、MCP、技能、存储和主题保持。通用模型接入增加显式协议/认证与只读模型获取；新协议的文本链路和边界见 FEAT-032。
 - Windows Desktop 新增实际 CLI 管理：检测完整安装、主动安装/登录、取消自有操作和 Gemini 桥启停。版本/帮助、终端退出或桥健康均不代表账号与模型验证；CodeBuddy 配置读取失败先重试，保存路径与模型连通状态分开。

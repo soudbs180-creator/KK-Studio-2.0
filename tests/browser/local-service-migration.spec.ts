@@ -190,6 +190,58 @@ test("Web 迁移预检/导入不删除旧 IndexedDB", async ({ page }) => {
       result.serviceSnapshot.snapshot.homeDraft.attachments[0].assetId,
     ).toBe("asset-039058c6f2c0cb492c533b0a");
     expect(result.legacySnapshot).toMatchObject({ revision: 0 });
+    await companion
+      .getByRole("button", { name: "创建备份", exact: true })
+      .click();
+    await expect(companion.getByText(/最近备份：/)).toBeVisible();
+    const backupId = await page.evaluate(async (endpoint) => {
+      const response = await fetch(`${endpoint}/v1/backups`, {
+        credentials: "include",
+      });
+      const body = await response.json();
+      return body.backups.at(-1).id as string;
+    }, service.endpoint);
+    let restorePosts = 0;
+    page.on("request", (request) => {
+      if (
+        request.method() === "POST" &&
+        request.url() === `${service.endpoint}/v1/backups/restore`
+      )
+        restorePosts += 1;
+    });
+    page.once("dialog", (confirmation) => {
+      expect(confirmation.message()).toContain(backupId);
+      expect(confirmation.message()).toContain("替换本机服务的当前项目快照");
+      void confirmation.dismiss();
+    });
+    const restore = companion.getByRole("button", {
+      name: "恢复最近备份",
+      exact: true,
+    });
+    await restore.click();
+    await expect(restore).toBeEnabled();
+    await expect(
+      companion.getByText("已取消恢复，当前项目未改动。", { exact: true }),
+    ).toBeVisible();
+    expect(restorePosts).toBe(0);
+    page.once("dialog", (confirmation) => {
+      expect(confirmation.message()).toContain(backupId);
+      void confirmation.accept();
+    });
+    await restore.click();
+    await expect(page.locator(".settings-feedback")).toContainText(
+      `已恢复本机备份：${backupId}`,
+    );
+    expect(restorePosts).toBe(1);
+    const restored = await page.evaluate(async (endpoint) => {
+      const response = await fetch(`${endpoint}/v1/snapshot`, {
+        credentials: "include",
+      });
+      return response.json();
+    }, service.endpoint);
+    expect(restored.snapshot.homeDraft.attachments[0].assetId).toBe(
+      "asset-039058c6f2c0cb492c533b0a",
+    );
   } finally {
     service.process.kill();
   }

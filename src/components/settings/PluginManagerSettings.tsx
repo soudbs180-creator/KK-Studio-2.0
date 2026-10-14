@@ -1,4 +1,12 @@
-import { useState, useSyncExternalStore } from "react";
+import {
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
+import { SettingsNavigationContext } from "./SettingsNavigationContext";
 import { pluginLoader } from "../../features/plugins/pluginLoader";
 import { pluginStore } from "../../features/plugins/pluginStore";
 import { confirmAction } from "../../runtime/confirmAction";
@@ -14,10 +22,24 @@ export default function PluginManagerSettings({
     pluginStore.subscribe,
     pluginStore.getState,
   );
+  const { setBusy } = useContext(SettingsNavigationContext);
+  const request = useRef<AbortController | null>(null);
+  useLayoutEffect(
+    () => setBusy(state.busy.length > 0),
+    [state.busy.length, setBusy],
+  );
+  useEffect(
+    () => () => {
+      request.current?.abort("unmounted");
+      setBusy(false);
+    },
+    [setBusy],
+  );
   const [url, setUrl] = useState("");
   const [error, setError] = useState<string | null>(null);
 
   async function install(): Promise<void> {
+    if (pluginStore.getState().busy.length > 0) return;
     const target = url.trim();
     if (!target) {
       onFeedback("请输入插件 bundle 地址（ESM .js）。");
@@ -28,10 +50,14 @@ export default function PluginManagerSettings({
       return;
     }
     const id = target.split("/").pop()?.split("?")[0] || "plugin";
+    const controller = new AbortController();
+    request.current = controller;
     pluginStore.setBusy(id, true);
     setError(null);
     try {
-      const plugin = await pluginLoader.installFromUrl(target);
+      const plugin = await pluginLoader.installFromUrl(target, {
+        signal: controller.signal,
+      });
       pluginStore.setError(null);
       setUrl("");
       onFeedback(`已安装并启用插件：${plugin.name} ${plugin.version}`);
@@ -40,46 +66,78 @@ export default function PluginManagerSettings({
       setError(message);
       pluginStore.setError(message);
     } finally {
+      if (request.current === controller) request.current = null;
       pluginStore.setBusy(id, false);
     }
   }
 
   async function toggle(pluginId: string, enabled: boolean): Promise<void> {
     const record = state.plugins.find((item) => item.id === pluginId);
-    if (!record) return;
+    if (!record || pluginStore.getState().busy.length > 0) return;
+    const controller = new AbortController();
+    request.current = controller;
+    pluginStore.setBusy(pluginId, true);
+    setError(null);
     try {
-      await pluginLoader.setPluginEnabled(record, !enabled);
+      await pluginLoader.setPluginEnabled(record, !enabled, controller.signal);
       onFeedback(enabled ? "插件已停用" : "插件已启用");
     } catch (cause) {
       pluginStore.setError(cause instanceof Error ? cause.message : "切换失败");
+    } finally {
+      if (request.current === controller) request.current = null;
+      pluginStore.setBusy(pluginId, false);
     }
   }
 
   async function update(pluginId: string): Promise<void> {
     const record = state.plugins.find((item) => item.id === pluginId);
-    if (!record || record.local) return;
+    if (!record || record.local || pluginStore.getState().busy.length > 0)
+      return;
+    const controller = new AbortController();
+    request.current = controller;
     pluginStore.setBusy(pluginId, true);
+    setError(null);
     try {
-      const plugin = await pluginLoader.updatePlugin(record);
+      const plugin = await pluginLoader.updatePlugin(record, controller.signal);
       onFeedback(`插件已更新：${plugin.name} ${plugin.version}`);
     } catch (cause) {
       pluginStore.setError(cause instanceof Error ? cause.message : "更新失败");
     } finally {
+      if (request.current === controller) request.current = null;
       pluginStore.setBusy(pluginId, false);
     }
   }
 
   async function uninstall(pluginId: string): Promise<void> {
     const record = state.plugins.find((item) => item.id === pluginId);
-    if (!record || !(await confirmAction(`确认卸载插件 ${record.name} 吗？`)))
-      return;
-    pluginLoader.uninstallPlugin(pluginId);
-    onFeedback("插件已卸载");
+    if (!record || pluginStore.getState().busy.length > 0) return;
+    pluginStore.setBusy(pluginId, true);
+    setError(null);
+    try {
+      if (!(await confirmAction(`确认卸载插件 ${record.name} 吗？`))) return;
+      pluginLoader.uninstallPlugin(pluginId);
+      onFeedback("插件已卸载");
+    } catch (cause) {
+      pluginStore.setError(cause instanceof Error ? cause.message : "卸载失败");
+    } finally {
+      pluginStore.setBusy(pluginId, false);
+    }
   }
 
   return (
     <div className="plugin-manager">
       <h3 className="settings-detail-label">已安装插件</h3>
+      {state.busy.length > 0 && <p role="status">插件操作中，请稍候…</p>}
+      {request.current && state.busy.length > 0 && (
+        <button
+          type="button"
+          className="settings-action secondary"
+          disabled={request.current.signal.aborted}
+          onClick={() => request.current?.abort("user")}
+        >
+          停止等待插件操作
+        </button>
+      )}
       {state.plugins.length === 0 && (
         <div className="settings-empty-state">
           <strong>暂无插件</strong>
@@ -105,6 +163,7 @@ export default function PluginManagerSettings({
               type="button"
               role="switch"
               aria-checked={record.enabled}
+              disabled={state.busy.length > 0}
               className="settings-toggle"
               aria-label={`${record.enabled ? "停用" : "启用"} ${record.name}`}
               onClick={() => void toggle(record.id, record.enabled)}
@@ -115,15 +174,16 @@ export default function PluginManagerSettings({
               <button
                 type="button"
                 className="settings-action"
-                disabled={state.busy.includes(record.id)}
+                disabled={state.busy.length > 0}
                 onClick={() => void update(record.id)}
               >
-                {state.busy.includes(record.id) ? "更新中…" : "更新"}
+                更新
               </button>
             )}
             <button
               type="button"
               className="settings-action settings-danger-button"
+              disabled={state.busy.length > 0}
               onClick={() => void uninstall(record.id)}
             >
               卸载

@@ -1,4 +1,4 @@
-import { useRef, type ReactNode } from "react";
+import { useRef, type ReactNode, type RefObject } from "react";
 import CanvasCollectionToolbar from "./CanvasCollectionToolbar";
 import type { CanvasCollectionItem } from "../../domain/canvasItems";
 import { cardLayout } from "../../domain/canvasGraph";
@@ -17,6 +17,8 @@ export default function CanvasNodeFrame({
   connectionTarget,
   liked,
   onLike,
+  onDelete,
+  uploadInput,
 }: {
   item: CanvasCollectionItem;
   controls: ReturnType<typeof useCanvasControls>;
@@ -31,6 +33,8 @@ export default function CanvasNodeFrame({
   connectionTarget?: boolean;
   liked: boolean;
   onLike: () => void;
+  onDelete: () => void;
+  uploadInput: RefObject<HTMLInputElement>;
 }) {
   const frame = useRef<HTMLDivElement>(null);
   const id = item.id;
@@ -87,6 +91,8 @@ export default function CanvasNodeFrame({
         selected={expanded}
         liked={liked}
         onLike={onLike}
+        uploadInput={uploadInput}
+        onDelete={onDelete}
       />
       <NodeActions
         item={item}

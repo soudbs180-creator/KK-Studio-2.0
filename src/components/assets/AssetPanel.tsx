@@ -57,7 +57,7 @@ export default function AssetPanel({
   const { message, setMessage, busy, input, importFiles } = useAssetImport(
     (additions) => {
       onAdd(additions, tab === "assets");
-      setFilter(EMPTY_FILTER);
+      clearFilters();
     },
   );
   const { collectionIds, toggleCollection } = useAssetCollections(setMessage);
@@ -87,9 +87,13 @@ export default function AssetPanel({
     if (searchingArchive && !archive?.loading && !archive?.error)
       archive?.loadMore();
   }, [searchingArchive, archive?.loading, archive?.error, archive?.loadMore]);
+  function clearFilters(): void {
+    setFilter(EMPTY_FILTER);
+    setSourceFilter("all");
+  }
   function switchTab(value: "canvas" | "assets"): void {
     setTab(value);
-    setFilter(EMPTY_FILTER);
+    clearFilters();
     closeDetail(false);
     setSelected(
       value === "canvas" ? (assets[0]?.id ?? "") : (subjects[0]?.id ?? ""),
@@ -229,10 +233,7 @@ export default function AssetPanel({
                 ? "正在读取其余素材信息。"
                 : "试试其他关键词，或清除筛选条件。"}
             </p>
-            <button
-              className="primary-button"
-              onClick={() => setFilter(EMPTY_FILTER)}
-            >
+            <button className="primary-button" onClick={clearFilters}>
               清除筛选
             </button>
           </div>

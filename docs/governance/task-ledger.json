@@ -5659,5 +5659,68 @@
     "displayStatus": "已完成",
     "nextAction": "从2.1.22继续真实供应商与真人CLI登录/安装、签名安装器、日常资料和人工视觉验收；最终产物回读工程外current-release哈希收据。",
     "verificationResult": "PASS"
+  },
+  {
+    "id": "TASK-222-ACTIONS-20261014",
+    "title": "2.1.22 CLI、设置与画布按钮真实行为和分端修复",
+    "goal": "修复配置/持久化假成功及实际按钮可用性，保留数据并交付新版",
+    "scope": "Agent配置保护、Gemini失败判定、记忆关闭守卫、插件持久化/生命周期/迟到结果、MCP回执与停止等待、备份确认、画布删除/上传/撤销、来源筛选、设置命中区与Google桌面链接",
+    "acceptance": [
+      "读写失败保留原配置和有效状态，不假报关闭或CLI成功",
+      "草稿屏幕删除/上传可用，撤销与重载偏好、原件不丢",
+      "桌面与手机布局及实际操作分别验收",
+      "完整检查、干净提交独立审查、当前产物哈希交付"
+    ],
+    "dependencies": ["TASK-PROTOCOL-CLI-20261014"],
+    "owner": "root",
+    "ownerRole": "repository-maintainer",
+    "branch": "codex/TASK-222-ACTIONS-20261014",
+    "worktree": "D:/kk-studio/.worktrees/branch-consolidation-20261011",
+    "affectedModules": [
+      "vendor/canvas-agent",
+      "scripts/gemini-bridge.mjs",
+      "src/features/memory",
+      "src/features/plugins",
+      "src/components/settings",
+      "src/components/canvas",
+      "src/components/nodes",
+      "src/components/assets",
+      "tests",
+      "docs"
+    ],
+    "status": "PARTIAL",
+    "priority": "P1",
+    "risk": "high",
+    "reviewRequired": true,
+    "platforms": ["Desktop", "Web"],
+    "evidence": [
+      "docs/changes/2026-10-14-action-usability-222/intent.md",
+      "docs/changes/2026-10-14-action-usability-222/spec.md",
+      "docs/changes/2026-10-14-action-usability-222/plan.md",
+      "docs/changes/2026-10-14-action-usability-222/verification.md",
+      "docs/changes/2026-10-14-action-usability-222/review.md"
+    ],
+    "requirementRefs": ["ledger:TASK-222-ACTIONS-20261014"],
+    "featureIds": [
+      "FEAT-001",
+      "FEAT-014",
+      "FEAT-020",
+      "FEAT-022",
+      "FEAT-026",
+      "FEAT-032",
+      "FEAT-039",
+      "FEAT-012",
+      "FEAT-028",
+      "FEAT-037"
+    ],
+    "notes": "用户明确授权从2.1.22继续修复；原资料身份及primary dirty/index保留，手机仅响应式Web/WebView。",
+    "openQuestions": "真人账号/付费调用/签名与实体手机依各自条件验收。",
+    "lastVerified": "2026-10-14",
+    "updated": "2026-10-14",
+    "priorityRationale": "修复配置覆盖和隐私开关假成功，恢复实际按钮和触屏行为。",
+    "verification": "实际checkout定向Node83/83通过；Agent配置9通过/2既有跳过；实际Edge窄屏几何、保存故障、MCP/备份与取消已复验。最终完整verify、提交独立审查及fresh Desktop产物待完成，不能以阶段结果冒称交付。",
+    "displayStatus": "进行中",
+    "nextAction": "先失败回归再最小修复，完整verify、独立提交审查与实际Desktop便携目录交付。",
+    "verificationResult": "NOT_VERIFIED"
   }
 ]

@@ -41,15 +41,20 @@ interface CanvasControlsOptions {
   initialCanvas?: ProjectCanvas;
   items: CanvasCollectionItem[];
   onItemsChange: Dispatch<SetStateAction<CanvasCollectionItem[]>>;
-  favoriteIds: Set<string>;
-  onToggleFavorite: (id: string) => void;
+}
+
+function hasDraftComposer(item: CanvasCollectionItem): boolean {
+  return (
+    !item.plugin &&
+    !item.result &&
+    !item.referenceOnly &&
+    !item.generationStatus
+  );
 }
 
 export function useCanvasControls({
   items,
   onItemsChange,
-  favoriteIds,
-  onToggleFavorite,
   initialCanvas,
 }: CanvasControlsOptions) {
   const canvasPreferences = useCanvasPreferences();
@@ -163,8 +168,7 @@ export function useCanvasControls({
       revealSelection.current = selectedNode;
       revealBaselineHeight.current = 0;
     }
-    const hasComposer =
-      !item.result && !item.referenceOnly && !item.generationStatus;
+    const hasComposer = hasDraftComposer(item);
     // 选中后等待编辑器基准高度（composer 挂载后一次报告），避免 0→基线 的双重位移
     if (isNewSelection && hasComposer && composerExtraHeight === 0) return;
     const viewportChanged =
@@ -291,7 +295,6 @@ export function useCanvasControls({
       ) {
         event.preventDefault();
         actions.removeNode(nodeId);
-        if (favoriteIds.has(nodeId)) onToggleFavorite(nodeId);
         setSelectedNode(null);
         return;
       }
@@ -313,7 +316,7 @@ export function useCanvasControls({
         },
       }));
     },
-    [favoriteIds, items, onItemsChange, onToggleFavorite],
+    [items, onItemsChange],
   );
 
   const resetCanvas = useCallback((): void => {

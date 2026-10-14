@@ -43,8 +43,6 @@ export default function Canvas({
   onRetryTask,
   items,
   onItemsChange,
-  favoriteIds,
-  onToggleFavorite,
   likedIds,
   onToggleLike,
   initialCanvas,
@@ -55,8 +53,6 @@ export default function Canvas({
   const controls = useCanvasControls({
     items,
     onItemsChange,
-    favoriteIds,
-    onToggleFavorite,
     initialCanvas,
   });
   useAgentCanvasView(controls, projectId, agentViewRef, onAgentViewChange);

@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import http from "node:http";
 import { EventEmitter } from "node:events";
+import { spawn } from "node:child_process";
 import { createGeminiBridge } from "../../scripts/gemini-bridge.mjs";
 
 function stubChild({
@@ -562,3 +563,61 @@ test("owned bridge nonce must be a fixed generated hex identifier", () => {
   ])
     assert.throws(() => createGeminiBridge({ ownerNonce }), /归属/);
 });
+
+for (const scenario of ["exit7", "timeout"] as const) {
+  test(
+    "real controlled CLI " + scenario + " cannot publish JSON as success",
+    { timeout: 10000 },
+    async (t) => {
+      const children: ReturnType<typeof spawn>[] = [];
+      let output = "";
+      const bridge = createGeminiBridge({
+        timeoutMs: 2000,
+        readFileImpl: fakeReadFile,
+        spawnImpl: (
+          _command: string,
+          args: string[],
+          options: Parameters<typeof spawn>[2],
+        ) => {
+          const npmRoot = args.some((arg) => arg.endsWith("npm-cli.js"));
+          const script = npmRoot
+            ? "console.log('C:/fixture/node_modules')"
+            : "console.log(JSON.stringify({response:'partial fixture text',session_id:'fixture-session'}));" +
+              (scenario === "exit7"
+                ? "process.exitCode=7;"
+                : "setInterval(()=>{},1000);");
+          const child = spawn(process.execPath, ["-e", script], {
+            ...options,
+            env: { ...process.env, NODE_OPTIONS: "", NODE_PATH: "" },
+          });
+          children.push(child);
+          if (!npmRoot)
+            child.stdout?.on("data", (chunk) => {
+              output += String(chunk);
+            });
+          return child;
+        },
+      });
+      t.after(() => {
+        for (const child of children)
+          if (child.exitCode === null && child.signalCode === null)
+            child.kill();
+      });
+      const result = await bridge.handleChat({ prompt: "synthetic request" });
+      assert.match(output, /partial fixture text/);
+      assert.equal(
+        result.error?.code,
+        scenario === "exit7" ? "failed" : "timeout",
+      );
+      assert.equal(result.text, undefined);
+      assert.equal(result.sessionId, undefined);
+      if (scenario === "exit7")
+        assert.match(result.error?.message ?? "", /结果未确认/);
+      assert.ok(
+        children.every(
+          (child) => child.exitCode !== null || child.signalCode !== null,
+        ),
+      );
+    },
+  );
+}

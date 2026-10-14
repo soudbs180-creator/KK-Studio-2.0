@@ -3,7 +3,7 @@
 - 状态：PLANNED
 - 领域：future
 - 最近更新：2026-10-14
-- 关联任务：T12、TASK-UI-CONSOLIDATE-20261014、TASK-PROTOCOL-CLI-20261014
+- 关联任务：T12、TASK-UI-CONSOLIDATE-20261014、TASK-PROTOCOL-CLI-20261014、TASK-222-ACTIONS-20261014
 
 ## 用户可见入口
 
@@ -21,6 +21,8 @@
 - 当前画布缩放/屏幕编辑器与导航规格：`tests/browser/canvas-screen-composer.spec.ts`、`settings-navigation.spec.ts`；其触摸、命中和截图只覆盖手机尺寸浏览器，当前最终结果由任务 verification 记录。
 
 ## 当前能力
+
+- 本轮只优化共享响应式Web/WebView：320/390px上传顶部动作与设置开关命中区、完整选项和取消导航；原生Mobile与实体手机验收仍开放。
 
 - Web 的窄屏布局沿用共享组件；选中图片/视频/提示词节点时，编辑器在手机窗口固定到屏幕，保持同一节点草稿与提交动作，模型/参数/展开控件不随世界缩放缩小，菜单可在容器内滚动。此实现不增加真实视频生成能力。
 - 设置按分类、接入方式、服务商详情逐级展示，提供明确返回和回焦；操作期间按同一 busy 状态锁定切页/关闭。以上均属于响应式 Web，不能替代原生 Mobile。

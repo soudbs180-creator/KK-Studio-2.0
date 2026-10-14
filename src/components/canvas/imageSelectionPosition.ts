@@ -32,8 +32,14 @@ export function getImageSelectionPosition(
     .map((hud) => hud.getBoundingClientRect())
     .filter((box) => box.width > 0 && box.height > 0);
   const center = card.left + card.width / 2;
+  const firstAction = toolbar.querySelector("button");
+  // A clamped button width feeds back into maxWidth; measure its full contents.
   const minimumWidth =
-    (toolbar.querySelector("button")?.getBoundingClientRect().width ?? 0) +
+    (firstAction
+      ? firstAction.scrollWidth +
+        firstAction.offsetWidth -
+        firstAction.clientWidth
+      : 0) +
     gap * 2;
   const slotAt = (actionTop: number): [number, number] | undefined => {
     let slots: Array<[number, number]> = [[leftEdge, rightEdge]];
@@ -60,12 +66,6 @@ export function getImageSelectionPosition(
           Math.abs(Math.max(b[0], Math.min(center, b[1])) - center),
       )[0];
   };
-  const slot = slotAt(top);
-  const maxWidth = slot ? slot[1] - slot[0] : 0;
-  const width = Math.min(toolbar.scrollWidth, maxWidth);
-  const left = slot
-    ? Math.max(slot[0], Math.min(center - width / 2, slot[1] - width))
-    : leftEdge;
   // Find the nearest row that can hold the first action. Compact HUD rows can
   // jointly occupy the full width even when each row leaves a horizontal gap.
   let reachableTop = Math.max(top, bounds.top + gap);
@@ -82,15 +82,22 @@ export function getImageSelectionPosition(
     if (!blocking.length) break;
     reachableTop = Math.max(...blocking.map((box) => box.bottom + gap));
   }
+  const slot = slotAt(reachableTop);
+  const maxWidth = slot ? slot[1] - slot[0] : 0;
+  const width = Math.min(toolbar.scrollWidth, maxWidth);
+  const left = slot
+    ? Math.max(slot[0], Math.min(center - width / 2, slot[1] - width))
+    : leftEdge;
   return {
     left,
-    top,
+    top: reachableTop,
     maxWidth,
     revealDelta: reachableTop > top ? reachableTop - top + 1 : 0,
     visible:
       !canvas.closest("[inert]") &&
       maxWidth > 0 &&
-      top >= bounds.top + gap &&
+      reachableTop + toolbar.offsetHeight <=
+        Math.min(bounds.bottom, window.innerHeight) - gap &&
       card.bottom > bounds.top &&
       card.top < bounds.bottom &&
       card.right > leftEdge &&

@@ -621,13 +621,13 @@ function setCors(req: Request, res: Response, url: URL, config: CanvasAgentConfi
     res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
     res.setHeader("Access-Control-Allow-Private-Network", "true");
     if (!origin || req.method === "OPTIONS" || url.pathname === "/health" || url.pathname === "/config") return true;
-    config.origins ||= [];
-    if (validToken(req, url, config.token) && !config.origins.includes(origin)) {
-        config.origins.push(origin);
-        saveConfig(config);
+    if (validToken(req, url, config.token) && !config.origins?.includes(origin)) {
+        const origins = [...(config.origins || []), origin];
+        saveConfig({ ...config, origins });
+        config.origins = origins;
     }
     res.setHeader("Vary", "Origin");
-    return config.origins.includes(origin);
+    return Boolean(config.origins?.includes(origin));
 }
 
 /** 校验请求查询参数或请求头中的连接 token。 */

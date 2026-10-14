@@ -1,4 +1,4 @@
-import { useContext, type Dispatch, type SetStateAction } from "react";
+import { useContext, useRef, type Dispatch, type SetStateAction } from "react";
 import type {
   CanvasCollectionItem,
   CanvasReference,
@@ -63,6 +63,7 @@ export default function CanvasNodeItem({
   onGenerationState: (id: string, phase: GenerationPhase) => void;
 }) {
   const command = useContext(CanvasImageCommandContext);
+  const uploadInput = useRef<HTMLInputElement>(null);
   const editing: NodeEditingProps = {
     selected: controls.selectedNode === item.id,
     liked,
@@ -132,11 +133,14 @@ export default function CanvasNodeItem({
         connectionTarget={connectionTarget}
         liked={liked}
         onLike={() => onToggleLike(item.id)}
+        onDelete={() => onDelete(item.id)}
+        uploadInput={uploadInput}
       >
         <CanvasNodeContent
           item={item}
           onDelete={() => onDelete(item.id)}
           editing={editing}
+          uploadInput={uploadInput}
           scale={controls.transform.scale}
         />
       </CanvasNodeFrame>

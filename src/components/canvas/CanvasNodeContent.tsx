@@ -1,3 +1,4 @@
+import type { RefObject } from "react";
 import type {
   CanvasCollectionItem,
   NodeEditingProps,
@@ -13,11 +14,13 @@ export default function CanvasNodeContent({
   item,
   onDelete,
   editing,
+  uploadInput,
   scale = 1,
 }: {
   item: CanvasCollectionItem;
   onDelete: () => void;
   editing: NodeEditingProps;
+  uploadInput: RefObject<HTMLInputElement>;
   scale?: number;
 }) {
   if (item.plugin)
@@ -46,8 +49,13 @@ export default function CanvasNodeContent({
   if (item.kind === "text" || item.kind === "audio")
     return <PromptCreationNode item={item} {...editing} />;
   return item.kind === "image" ? (
-    <ImageCreationNode item={item} {...editing} />
+    <ImageCreationNode
+      item={item}
+      {...editing}
+      uploadInput={uploadInput}
+      onDelete={onDelete}
+    />
   ) : (
-    <VideoNode item={item} {...editing} />
+    <VideoNode item={item} {...editing} uploadInput={uploadInput} />
   );
 }

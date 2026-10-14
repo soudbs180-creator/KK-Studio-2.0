@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { confirmAction } from "../../runtime/confirmAction";
 import type { CompanionClient } from "../../features/local-service/client.ts";
 import {
   exportCompanionBackup,
@@ -78,6 +79,14 @@ export default function CompanionMigrationActions({
       const backup = backups.at(-1);
       if (!backup) {
         setDetail("没有可恢复的本机备份。");
+        return;
+      }
+      if (
+        !(await confirmAction(
+          `确认恢复备份 ${backup.id}？这会替换本机服务的当前项目快照，原当前版本保留备份。恢复后需要重新读取项目。`,
+        ))
+      ) {
+        setDetail("已取消恢复，当前项目未改动。");
         return;
       }
       await restoreCompanionBackup(backup.id, client);

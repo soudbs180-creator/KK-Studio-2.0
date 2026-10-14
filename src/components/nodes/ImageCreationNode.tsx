@@ -4,6 +4,7 @@ import {
   useRef,
   useState,
   type CSSProperties,
+  type RefObject,
 } from "react";
 import { CanvasImageCommandContext } from "../../features/creation/CanvasImageCommand.tsx";
 import { Upload } from "lucide-react";
@@ -36,7 +37,13 @@ export default function ImageCreationNode({
   referenceLimit,
   onAddReferences,
   onRemoveReference,
-}: NodeEditingProps & { item: CanvasCollectionItem }) {
+  uploadInput,
+  onDelete,
+}: NodeEditingProps & {
+  item: CanvasCollectionItem;
+  uploadInput: RefObject<HTMLInputElement>;
+  onDelete: () => void;
+}) {
   const [image, setImage] = useState(item.preview ?? "");
   const [error, setError] = useState("");
   const [previewOpen, setPreviewOpen] = useState(false);
@@ -46,7 +53,6 @@ export default function ImageCreationNode({
       ? command.openPreview(item.id, "参考图片")
       : setPreviewOpen(true);
   const preview = useRef<HTMLDivElement>(null);
-  const file = useRef<HTMLInputElement>(null);
   const referenceFile = useRef<HTMLInputElement>(null);
   const referenceSlot = useRef<CanvasReference["slot"]>();
   const uploadVersion = useRef(0);
@@ -135,7 +141,7 @@ export default function ImageCreationNode({
               type="button"
               className="upload-image"
               aria-label="上传图片"
-              onClick={() => file.current?.click()}
+              onClick={() => uploadInput.current?.click()}
             >
               <Upload size={16} />
               上传图片
@@ -144,7 +150,7 @@ export default function ImageCreationNode({
         </div>
       </div>
       <input
-        ref={file}
+        ref={uploadInput}
         hidden
         type="file"
         accept="image/png,image/jpeg,image/webp,image/gif"
@@ -225,6 +231,10 @@ export default function ImageCreationNode({
         references={incomingReferences}
         liked={liked}
         onLike={onToggleLike}
+        onDelete={onDelete}
+        onUpload={
+          !item.referenceOnly ? () => uploadInput.current?.click() : undefined
+        }
       />
       {!selected && error && (
         <p className="upload-feedback" role="status">

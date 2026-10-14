@@ -51,6 +51,7 @@ export function useMemory(onFeedback: (message: string) => void) {
   >("isolated");
   const [storageStatus, setStorageStatus] = useState("");
   const [loadError, setLoadError] = useState<string | null>(null);
+  const [settingsError, setSettingsError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [extracting, setExtracting] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -85,9 +86,20 @@ export function useMemory(onFeedback: (message: string) => void) {
 
   const toggle = useCallback(
     async (next: boolean) => {
-      memoryService.setEnabled(next);
+      setSettingsError(null);
+      try {
+        memoryService.setEnabled(next);
+      } catch {
+        const current = memoryService.isEnabled();
+        setEnabled(current);
+        setSettingsError(
+          `记忆开关未保存，当前仍为${current ? "开启" : "关闭"}。请允许本地存储后重试。`,
+        );
+        return;
+      }
       setEnabled(next);
       await refresh();
+      if (memoryService.isEnabled() !== next) return;
       onFeedback(
         next
           ? (await memoryService.storageMode()) === "shared-readonly"
@@ -223,6 +235,7 @@ export function useMemory(onFeedback: (message: string) => void) {
     mode,
     storageStatus,
     loadError,
+    settingsError,
     loading,
     extracting,
     busy,

@@ -111,15 +111,21 @@ function runOnce(ctx, invocation, args, { timeoutMs = 30000, signal } = {}) {
     windowsHide: true,
     stdio: ["ignore", "pipe", "pipe"],
   });
+  let timedOut = false;
   const timer = setTimeout(() => {
+    timedOut = true;
     child.kill();
   }, timeoutMs);
   const onAbort = () => child.kill();
   signal?.addEventListener("abort", onAbort, { once: true });
-  return capture(child).finally(() => {
-    clearTimeout(timer);
-    signal?.removeEventListener("abort", onAbort);
-  });
+  return capture(child)
+    .then((result) =>
+      timedOut ? { ...result, ok: false, code: "timeout" } : result,
+    )
+    .finally(() => {
+      clearTimeout(timer);
+      signal?.removeEventListener("abort", onAbort);
+    });
 }
 
 function parseGeminiJson(text) {
@@ -129,6 +135,14 @@ function parseGeminiJson(text) {
   } catch {
     return null;
   }
+}
+
+function failedChatMessage(result, parsed) {
+  if (parsed)
+    return "Gemini CLI 异常退出并返回了部分内容，本次结果未确认；请核对结果后再调用。";
+  return LOGIN_HINTS.test(result.stderr + result.stdout)
+    ? "Gemini CLI 未登录,请先在终端运行 gemini 并选择 Login with Google。"
+    : "gemini 执行失败,请检查安装与登录状态。";
 }
 
 async function probeLogin(ctx, invocation, signal) {
@@ -253,21 +267,15 @@ export function createGeminiBridge(options = {}) {
     const result = await runOnce(ctx, invocation, args, { timeoutMs, signal });
     if (signal?.aborted)
       return { error: { code: "cancelled", message: "请求已停止。" } };
-    const parsed = parseGeminiJson(result.stdout.trim());
-    if (!result.ok && !parsed) {
-      const hint = LOGIN_HINTS.test(result.stderr + result.stdout)
-        ? "Gemini CLI 未登录,请先在终端运行 gemini 并选择 Login with Google。"
-        : "gemini 执行失败,请检查安装与登录状态。";
-      return { error: { code: "failed", message: hint } };
-    }
-    if (!parsed)
+    if (result.code === "timeout")
       return {
         error: {
-          code: "failed",
-          message: "gemini 输出无法解析,请检查 CLI 版本。",
+          code: "timeout",
+          message: "Gemini CLI 请求超时，子进程已停止；请核对本次请求结果。",
         },
       };
-    if (typeof parsed.error === "object" && parsed.error) {
+    const parsed = parseGeminiJson(result.stdout.trim());
+    if (typeof parsed?.error === "object" && parsed.error) {
       const raw = JSON.stringify(parsed.error);
       return {
         error: {
@@ -278,6 +286,18 @@ export function createGeminiBridge(options = {}) {
         },
       };
     }
+    if (!result.ok) {
+      return {
+        error: { code: "failed", message: failedChatMessage(result, parsed) },
+      };
+    }
+    if (!parsed)
+      return {
+        error: {
+          code: "failed",
+          message: "gemini 输出无法解析,请检查 CLI 版本。",
+        },
+      };
     const text =
       typeof parsed.response === "string"
         ? parsed.response

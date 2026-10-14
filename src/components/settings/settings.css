@@ -180,7 +180,7 @@
   min-height: 0;
 }
 .settings-select {
-  width: 80px;
+  width: auto;
   max-width: 100%;
   min-width: 0;
   height: var(--kk-control-h-md);
@@ -208,30 +208,41 @@
 }
 .settings-toggle {
   position: relative;
-  width: 40px;
-  height: 20px;
-  flex: 0 0 40px;
-  padding: 2px;
+  width: var(--kk-control-h-lg);
+  height: var(--ui-button-height);
+  flex: 0 0 var(--kk-control-h-lg);
+  padding: 0;
+  border: 0;
   border-radius: var(--ui-radius-pill);
+  background: transparent;
+}
+.settings-toggle::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 50%;
+  height: var(--kk-control-h-sm);
+  transform: translateY(-50%);
+  border-radius: inherit;
   box-shadow: inset 0 0 0 var(--ui-border-width) var(--border-control);
   background: var(--ui-control-off);
 }
 .settings-toggle span {
   position: absolute;
-  top: 2px;
-  left: 2px;
-  height: 16px;
-  width: 16px;
+  top: calc(50% - var(--kk-space-2));
+  left: var(--kk-space-1);
+  height: var(--kk-control-icon-sm);
+  width: var(--kk-control-icon-sm);
   border-radius: var(--ui-radius-pill);
   background: var(--ui-control-thumb-off);
   transition: transform var(--motion-fast) var(--motion-ease);
 }
-.settings-toggle[aria-checked="true"] {
+.settings-toggle[aria-checked="true"]::before {
   background: var(--bg-accent);
 }
 .settings-toggle[aria-checked="true"] span {
   background: var(--text-on-accent);
-  transform: translateX(16px);
+  transform: translateX(var(--kk-control-icon-sm));
 }
 .settings-toggle:disabled {
   cursor: not-allowed;

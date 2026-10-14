@@ -1100,7 +1100,7 @@
   z-index: 2;
 }
 .upload-image {
-  height: 40px;
+  height: var(--kk-control-h-md);
   padding: 0 17px;
   display: flex;
   align-items: center;
@@ -1109,9 +1109,9 @@
   right: 96px;
   top: 10px;
   border: 1px solid var(--border-default);
-  border-radius: var(--ui-radius-pill);
+  border-radius: var(--kk-icon-button-radius);
   background: var(--bg-card);
-  font-size: 16px;
+  font-size: var(--kk-font-body);
 }
 .canvas-node-image.is-reference-only .upload-image {
   display: none;
@@ -1171,12 +1171,12 @@
   top: -34px;
   left: 50%;
   right: auto;
-  height: 32px;
-  padding: 0 12px;
-  gap: 8px;
+  height: var(--kk-control-h-md);
+  padding: 0 var(--kk-space-3);
+  gap: var(--kk-space-2);
   transform: translateX(-50%);
-  border-radius: var(--ui-radius-pill);
-  font-size: 14px;
+  border-radius: var(--kk-icon-button-radius);
+  font-size: var(--kk-font-body);
   white-space: nowrap;
 }
 .canvas-node-image.is-reference-only .image-caption {

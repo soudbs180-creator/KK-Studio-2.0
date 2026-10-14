@@ -12,15 +12,19 @@ export default function CanvasCollectionToolbar({
   selected,
   liked,
   onLike,
+  uploadInput,
+  onDelete,
 }: {
   item: CanvasCollectionItem;
   anchor: RefObject<HTMLElement>;
   selected: boolean;
   liked: boolean;
   onLike: () => void;
+  uploadInput: RefObject<HTMLInputElement>;
+  onDelete: () => void;
 }) {
   const command = useContext(CanvasImageCommandContext);
-  if (item.kind === "image") return null;
+  if (item.kind === "image" && !item.plugin) return null;
   return (
     <ImageSelectionToolbar
       anchor={anchor}
@@ -28,6 +32,20 @@ export default function CanvasCollectionToolbar({
       title={item.title}
       label={`卡片操作：${item.title}`}
     >
+      {!item.plugin &&
+        item.kind === "video" &&
+        !item.result &&
+        !item.generationStatus && (
+          <button
+            type="button"
+            className="ui-icon-button"
+            aria-label="上传视频"
+            title="上传视频后仅用于本地预览；演示生成不会上传或消费视频原件"
+            onClick={() => uploadInput.current?.click()}
+          >
+            <UiIcon name="upload" />
+          </button>
+        )}
       <button
         type="button"
         className="kk-button kk-button--tertiary"
@@ -49,6 +67,18 @@ export default function CanvasCollectionToolbar({
           onCreateTag={command.createTag}
           onChange={(tags) => command.updateItemTags?.(item.id, tags)}
         />
+      )}
+      {(item.plugin || (!item.result && !item.generationStatus)) && (
+        <button
+          type="button"
+          className="kk-button kk-button--danger"
+          aria-label={`删除${item.title}`}
+          title="移除画布卡片，归档原件保留"
+          onClick={onDelete}
+        >
+          <UiIcon name="delete" />
+          删除
+        </button>
       )}
     </ImageSelectionToolbar>
   );
