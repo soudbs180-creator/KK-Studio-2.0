@@ -1,6 +1,6 @@
 # Spec：全页面新UI收敛与主线集成
 
-- Task ID：TASK-UI-FULL-20261015；状态：IN_PROGRESS。
+- Task ID：TASK-UI-FULL-20261015；状态：REVIEW（本地验收PASS，托管交付待验）。
 - 页面矩阵：实际App所有可达首页、项目、扩展Skill/MCP/伙伴、ComfyUI、设置所有分类、资源/搜索/任务、个人信息、帮助与快捷键及相关弹窗；不存在或禁用能力准确记录，不假造节点。
 - 卡片矩阵：图片空/上传/参考/生成、视频空/非空、文字/音频输入、HTML/Markdown/便利贴/SVG插件、历史collection归一化。各节点采用同一套角色规则，来源只改变数据与可用动作。
 - 模型与输入：首页/Agent/对话消费共享菜单与文字控件，画布保留生成专属参数；重绘和Google路径保留原能力并收敛可达模型UI。长模型、变体、窄屏、菜单/Escape和重载不遮挡或退回旧几何。
@@ -9,7 +9,7 @@
 - 验收：先真实浏览器RED并保存，再修共享根因和GREEN；390/1099/1920生产浏览器、完整verify、Desktop当前构建及同态证据、精确SHA独立审查。UI检查与真人Provider/发布/用户接受分别记录。
 - 主线：保留既有治理与功能记录，提交PR；当前head的托管门禁/Delivery及独立审查完成后普通合并，fetch后复核origin/main和post-merge检查。不得直推main、force或绕过规则。
 
-- 覆盖与非同义状态见[coverage](coverage.md)。主线102个预检冲突逐路径裁决，不能整份选ours/theirs；15份历史交付包作为当前整合来源引用，不把原任务开放能力改为DONE。候选Desktop/Web2.1.27已由版本脚本递增，Mobile2.1.1规划不变，产物与托管完成状态分别验收。
+- 覆盖与非同义状态见[coverage](coverage.md)。主线102个预检冲突与104个实际冲突逐路径裁决，不能整份选ours/theirs；15份历史交付包作为当前整合来源引用，不把原任务开放能力改为DONE。候选Desktop/Web2.1.27已由版本脚本递增，Mobile2.1.1规划不变，产物与托管完成状态分别验收。
 
 ## 用户追加的状态与功能验收（必须满足）
 
@@ -26,3 +26,12 @@
 各类型×上述状态必须有明确适用/不适用与证据，不能仅测按钮32px。扩展Skill是文本指令、MCP是协议工具、伙伴是职责、模型接入是执行连接；相同能力经多入口到达时只保留一致配置与状态，busy/取消/失败/重新打开不能产生双选中、假连接或可点但无动作。任务UI可用动作必须与实际提交/恢复谓词一致。
 
 此前79条定向GREEN及green-checkpoint的50条GREEN只证明其原测试范围；它们没有证明本段新互斥与完整功能验收。新增真实RED、修复和三宽GREEN及完整门禁仍为待完成，原记录不覆盖。
+
+
+当前241仅有审查修复14条定向GREEN；165完整Browser五失败与正式review三P2保留原回执。新互斥、分类和受理fence已有对应真实运行证据，但最终整体验收仍须新的完整verify、Native及精确SHA复审，不能以局部通过宣布本规格完成。
+
+
+阶段补充：241官方隔离Native56checks与精确source/integration review均已PASS；完整verify-2、最终文档head复审及Hosted/PR/main仍待实际回执，整体任务不提前完成。
+
+
+最终本地验收：verify-3完整PASS（Browser747/747、Node1295/14skip、Agent199/2skip、UI242/0及development），Native56与精确source/integration241复审PASS。旧失败及test-only音频selector修正保留；最终提交head/Hosted/PR/main仍待验，整体NOT_VERIFIED。

@@ -10,9 +10,9 @@
 
 ## 本轮恢复入口
 
-TASK-UI-FULL-20261015 IN_PROGRESS / NOT_VERIFIED。先读[验证](../changes/2026-10-15-ui-full/verification.md)、[覆盖矩阵](../changes/2026-10-15-ui-full/coverage.md)及[计划](../changes/2026-10-15-ui-full/plan.md)。当前工作树 D:/kk-studio/.worktrees/branch-consolidation-20261011，branch fix/TASK-UI-FULL-20261015，source HEAD6bc2e3da加dirty；Desktop/Web候选2.1.27已版本脚本递增，Mobile2.1.1仍规划。root实际fetch/API确认main694a006，102预检冲突裁决与15历史包承接映射在D:/kk-studio/.analysis/ui-full-20261015；main独有历史段落已补回，真实merge由root串行完成。
+TASK-UI-FULL-20261015 REVIEW / 整体NOT_VERIFIED（本地验收PASS），先读[验证](../changes/2026-10-15-ui-full/verification.md)、[覆盖矩阵](../changes/2026-10-15-ui-full/coverage.md)与[计划](../changes/2026-10-15-ui-full/plan.md)。工作树 D:/kk-studio/.worktrees/branch-consolidation-20261011，branch fix/TASK-UI-FULL-20261015，当前source `241f3050124ad7773ced0b47a55629373177205e`，Desktop/Web2.1.27、Mobile2.1.1规划。main694已本地承接为1653966f，104实际冲突/25自动差量逐项审计、21历史blob保全；远端origin/main仍694，尚未PR落地主线。15包/原任务branch/status与primary254条dirty/index、109登记worktree保持。
 
-79条production浏览器定向GREEN、全部设置三宽3条PASS；普通菜单中间失败及Google误设持久化、Enter RED JSON覆盖勘误保留。恢复时先核对新build与最新菜单日志，菜单最终2条GREEN已通过，再完成真实merge后的完整verify、当前Desktop、已提交SHA独立审查、实际Hosted/普通PR合并和post-main，不复用旧2.1.26批准。primary254条dirty/index及109登记worktree只读保留；不清理、不操作日常资料或秘密。
+165完整verify在Browser740PASS/5FAIL处退出，Node1295PASS/14skip、Agent199PASS/2skip、UI242/0与Rust163等通过不代填完整PASS；正式source/integration review三P2均CHANGES_REQUIRED。241修复text纯prompt、坏audio及rightpan，连同首页16:9/旧fixture修正后14条定向GREEN，source241/integration241精确复审PASS关闭三P2；官方隔离Native56checks/0errors与资源字节身份、owned正常关闭均PASS，完整verify-3已PASS：Node1295/14skip、Agent199/2skip、Browser747/747首试、UI242/0及development；等待最终doc/test-only head复审。原79/50、首次五失败、有效RED/误设夹具勘误均保留；收据在D:/kk-studio/.analysis/ui-full-20261015。verify-2音频selector双匹配夹具失败与修正后实际播放2PASS保留；当前没有最终提交head/Hosted/PR/main回执，不沿用旧2.1.26产物或165 review批准后续head。
 
 ### 此前2.1.26基线（保留历史）
 

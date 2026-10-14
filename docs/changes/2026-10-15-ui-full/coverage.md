@@ -1,6 +1,6 @@
 # 本轮可达 UI 覆盖与验证边界
 
-Task ID：TASK-UI-FULL-20261015；2026-10-15；状态 IN_PROGRESS / NOT_VERIFIED。源码 HEAD 为 6bc2e3da 加本轮未提交修复；下列为当前源码/测试映射，最终提交后仍须绑定新 SHA。
+Task ID：TASK-UI-FULL-20261015；2026-10-15；状态 REVIEW / NOT_VERIFIED（本地验收PASS，托管交付待验）。当前源码 HEAD 为 241f3050124ad7773ced0b47a55629373177205e；固定main694已本地承接为1653966f。下列为入口映射及各次收据范围，241产品源码及test-only音频定位修正已通过完整verify-3与Native56；最终提交head及Hosted/PR/main仍待验。
 
 用户追加纠正后，本矩阵是覆盖入口清单，不是全卡片验收通过。旧79定向GREEN和green-checkpoint的50 GREEN保留原scope；其工具栏存在/几何断言不能证明空态仅upload与内容态toolbar互斥，部分旧断言须按新用户契约补充负向状态断言。
 
@@ -53,3 +53,16 @@ Task ID：TASK-UI-FULL-20261015；2026-10-15；状态 IN_PROGRESS / NOT_VERIFIED
 同类入口专项确定任务工作台重试谓词冲突：status看似可重试但submissionState unknown/submitted或活动retry child已封锁slot，UI仍可点且App静默return。已新增task-workbench.spec.ts四条“重试动作遵循”真实Browser RED，等待root复证后修复；静态真实组件证据/分类结论在工程外functional-entry-audit.md与task-workbench-retry-static-proof.json。分类归一化已见源码及既有测试，没有把有意兼容入口标成重复bug。
 
 重试专项的原4条Browser RED已实证，现修复共享availability并扩展HUD/详情/矩阵Caller断言；待root统一新build GREEN。Skill/MCP/伙伴/模型接入分类没有确认额外重复bug，仍需状态矩阵验证。模型状态5失败仅3个有效产品RED，其余Codex连接fixture/API textarea前置假设保持不适用，不计成已复现的型号锁缺陷。媒体新互斥6/6是真实RED，卡片由原owner修复中。
+
+
+## 当前组合覆盖结果与剩余门禁（241）
+
+165首轮完整production Browser为740 PASS/5 FAIL/0flaky，覆盖矩阵尚未整体GREEN。实际新回归是rightpan与首页16:9；另外screen320/390两项旧40px预期及L/G空image内容toolbar夹具按当前32px/空仅upload规则纠正。正式review追加text纯prompt正文分类与audio坏src两条有效RED；原错误证据均保留。
+
+241的14条定向GREEN覆盖上述三P2、首页比例、窄宽32px生成与真实uploaded image快捷键、多宽audio READY、损坏image/video/audio可读失败。165完整轮已覆盖六条空态互斥含reload、五条model-state及工作台/HUD/detail受理unknown/submitted与live child fence；区域重试4条SSR补充通过。旧79/50只保留原范围，SSR仍不能补Native几何和真实点击。当前完整verify-2、新Desktop同态/资源身份、最终精确SHA review、Hosted/PR/main/post-main均待实际回执。
+
+
+241最新补充：当前官方隔离Native56checks/0errors、10截图通过，明确验证image-empty无toolbar、uploaded无主upload、重开archiveID与唯一toolbar及资源字节一致性；exact data root关闭通过。精确source241/integration241复审均PASS、三P2 CLOSED。完整verify-2与最终文档head/Hosted/PR/main尚待回执，整体继续NOT_VERIFIED。
+
+
+最终覆盖收据：verify-3生产Browser747/747 PASS、无flaky/skip/实际retry；完整Node/Agent/lint/typecheck/UI242/0/format/build/development PASS。verify-2唯一audio selector双匹配为夹具定位问题，改为可见预览dialog并断言hidden audio保持paused后，严格播放2条及完整套件通过；原746/1失败保留。Native56/资源身份与source241/integration241复审PASS继续有效；真实Provider、用户最终接受及Hosted/PR/main不由这些本地收据代填。

@@ -1,11 +1,11 @@
 # 当前进度
 
-## 2026-10-15 全页面新UI与主线保全（IN_PROGRESS / NOT_VERIFIED）
+## 2026-10-15 全页面新UI与主线保全（REVIEW / 本地PASS，整体NOT_VERIFIED）
 
-- TASK-UI-FULL-20261015在最新6bc2e3da基线上收敛可达页面、11设置分类、模型caller及当前/历史卡片；Desktop/Web候选已由版本脚本递增2.1.27，Mobile2.1.1规划不变。账号、资源主体/详情、共享模型、卡片动作和长草稿恢复修复已有定向证据。
-- 当前79条生产Edge定向GREEN（0retry/flaky/skip），全部设置三宽3条PASS；普通菜单RED及1099响应式串入的中间失败留存，应用菜单最终2条GREEN已通过。Google新增测试误设reload持久化已按原会话契约更正，模型Enter RED的JSON被并行--list覆盖已注明不适用，原log/error-context保留。
-- root本轮实际fetch及API确认main694a006；102历史squash预检冲突按逐路径证据保全，main独有历史两段/规范三行补回。当前整合任务承接15份历史五件套，不改原任务branch/status或Delivery检查；真实merge及新组合仍待验。
-- primary254条dirty/index、109登记worktree与原件保留。完整verify、当前Desktop、最终SHA独立审查、Hosted/PR/main/post-merge均未完成，任务保持进行中，不以旧2.1.26 PASS代填。[本轮验证](changes/2026-10-15-ui-full/verification.md) / [覆盖](changes/2026-10-15-ui-full/coverage.md)。
+- TASK-UI-FULL-20261015 当前source241f3050124ad7773ced0b47a55629373177205e，Desktop/Web2.1.27；Mobile2.1.1规划不变。用户新增空card仅upload/内容才toolbar、状态互斥与真实功能链按新矩阵验收，旧79/50 GREEN只保留原范围。
+- main694经真实checkpoint0f506ae1→任务分支merge1653966f承接，tree一致；104实际冲突、25自动差量逐项核验、21外移历史blob保全。main独有历史文档补回，当前任务承接15包，原任务branch/status保持；Delivery704 paths/0 violations。origin/main仍694，未远端落地。
+- 首轮完整verify：Node1295PASS/14skip、Agent199PASS/2skip、Browser740PASS/5FAIL/0flaky，lint/typecheck/UI242/0/format/build及单独Rust163/clientcheck通过；Browser失败使完整verify未通过，development未运行。正式source/integration review三P2均CHANGES_REQUIRED。
+- 241已修text纯prompt分类、坏audio媒体可用性和rightpan，并修首页16:9与旧screen/LG夹具；green-review-fixes-1真实14/14 PASS、0retry。首次五失败与text/audio等有效RED全部保留；当前官方隔离Native56checks/0errors与资源字节身份、owned正常关闭PASS，source241/integration241复审PASS关闭三P2；完整verify-3已exit0：Node1295/14skip、Agent199/2skip、Browser747/747首试、UI242/0及development PASS；verify-2音频selector夹具一失败与修正后严格播放2PASS保留。最终doc/test-only提交head复审及Hosted/PR/main/post-main仍待实际回执，任务转REVIEW、不提前DONE。primary254条dirty/index、109登记worktree与原件保留。[本轮验证](changes/2026-10-15-ui-full/verification.md) / [覆盖](changes/2026-10-15-ui-full/coverage.md)。
 
 ## 2026-10-15 最新 UI 设置修复（本地DONE/PASS）
 
