@@ -1,6 +1,6 @@
 .image-compare-selection {
   position: absolute;
-  z-index: 11;
+  z-index: var(--kk-z-floating-panel);
   bottom: 90px;
   left: calc(var(--canvas-usable-width, 100%) / 2);
   transform: translateX(-50%);

@@ -40,7 +40,9 @@ async function selectImageNode(page: Page) {
   await page.getByRole("menuitem", { name: "图片", exact: true }).click();
   const node = page.locator(".canvas-node-image").first();
   await node.click();
-  await expect(node.getByLabel("图片提示词")).toBeVisible();
+  await expect(
+    page.getByTestId("image-composer").getByLabel("图片提示词"),
+  ).toBeVisible();
   return node;
 }
 
@@ -829,7 +831,8 @@ test("actual long model identifiers remain readable without covering canvas cont
   await configure(page, model);
   await openWorkspace(page);
   await page.setViewportSize({ width: 390, height: 844 });
-  const source = await selectImageNode(page);
+  await selectImageNode(page);
+  const source = page.getByTestId("image-composer");
   const button = source.locator(".model-button");
   await expect(button).toHaveAttribute("title", model);
   await expect(button.locator(".model-name")).toHaveText(model);
@@ -840,7 +843,12 @@ test("actual long model identifiers remain readable without covering canvas cont
   ).toBe(true);
   const bounds = await button.boundingBox();
   const params = await source.locator(".image-params").boundingBox();
-  expect(bounds!.x + bounds!.width).toBeLessThanOrEqual(params!.x);
+  expect(
+    bounds!.x + bounds!.width <= params!.x ||
+      bounds!.y + bounds!.height <= params!.y ||
+      params!.x + params!.width <= bounds!.x ||
+      params!.y + params!.height <= bounds!.y,
+  ).toBe(true);
   await button.click();
   await source.getByRole("button", { name: "切换全部模型" }).click();
   await expect(

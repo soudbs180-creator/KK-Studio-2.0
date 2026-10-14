@@ -6,6 +6,8 @@ import {
   themeTokens,
 } from "../helpers/designSystem.ts";
 
+import { selectSettingsSection } from "./helpers";
+
 const pages = ["项目库", "扩展", "ComfyUI 工作流"];
 
 test("sidebar SVG marks remain distinguishable in both themes", async ({
@@ -94,16 +96,36 @@ for (const width of [390, 1920]) {
         "高级",
         "软件更新",
       ]) {
-        await dialog
-          .locator(".settings-nav")
-          .getByRole("button", { name: section, exact: true })
-          .click();
+        await selectSettingsSection(page, section);
         const content = dialog.locator(".settings-content");
         await expect(content.locator("h2")).toHaveText(section);
         expect(
           await content.evaluate((el) => el.scrollWidth - el.clientWidth),
           `${theme}/${section} horizontal overflow`,
         ).toBeLessThanOrEqual(1);
+        if (section === "模型接入") {
+          const methods = content.locator(".model-access-methods");
+          await expect(methods.getByRole("button")).toHaveCount(5);
+          await methods
+            .getByRole("button", { name: "API Key（官方）", exact: true })
+            .click();
+          await expect(
+            methods.locator('[aria-pressed="true"]'),
+          ).toHaveAttribute("aria-pressed", "true");
+          await expect(methods.locator('[aria-pressed="true"]')).toHaveText(
+            "API Key（官方）",
+          );
+          await expect(
+            content.getByRole("region", {
+              name: "官方 API Key 配置",
+              exact: true,
+            }),
+          ).toBeVisible();
+          if (width === 390) await expect(methods).toBeHidden();
+          await expect(
+            content.getByLabel("接口地址", { exact: true }),
+          ).toBeEditable();
+        }
         const fieldErrors = await content
           .locator(
             'input:not([type="file"]):not([type="checkbox"]):not([type="radio"]), select',
@@ -129,22 +151,6 @@ for (const width of [390, 1920]) {
               }),
           );
         expect(fieldErrors, `${theme}/${section} shared fields`).toEqual([]);
-        if (section === "模型接入") {
-          const methods = content.getByRole("group", { name: "接入方式" });
-          await expect(methods.getByRole("button")).toHaveCount(5);
-          await methods
-            .getByRole("button", { name: "API Key（官方）", exact: true })
-            .click();
-          await expect(
-            methods.getByRole("button", {
-              name: "API Key（官方）",
-              exact: true,
-            }),
-          ).toHaveAttribute("aria-pressed", "true");
-          await expect(
-            content.getByLabel("接口地址", { exact: true }),
-          ).toBeEditable();
-        }
         if (section === "扩展") {
           await dialog.getByRole("tab", { name: /MCP/ }).click();
           await expect(

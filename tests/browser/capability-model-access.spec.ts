@@ -162,12 +162,14 @@ test("获取模型目录不会验证生成能力或改写保存配置", async ({
     },
     { keys: BROWSER_STORAGE_KEYS, saved: account, profile: savedProfile },
   );
-  await page.route(`${account.baseUrl}/models`, (route) =>
-    route.fulfill({
+  let authorization = "";
+  await page.route(`${account.baseUrl}/models`, (route) => {
+    authorization = route.request().headers().authorization ?? "";
+    return route.fulfill({
       contentType: "application/json",
       body: JSON.stringify({ data: [{ id: "discovered-image-model" }] }),
-    }),
-  );
+    });
+  });
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   const dialog = page.getByRole("dialog", { name: "设置" });
@@ -176,6 +178,9 @@ test("获取模型目录不会验证生成能力或改写保存配置", async ({
     .getByRole("button", { name: "API Key（官方）", exact: true })
     .click();
   const profile = dialog.getByRole("region", { name: "官方 API Key 配置" });
+  await profile
+    .getByLabel("API Key", { exact: true })
+    .fill("fixture-discovery-key");
   await profile.getByRole("button", { name: "测试连接", exact: true }).click();
   await expect
     .poll(() =>
@@ -197,6 +202,10 @@ test("获取模型目录不会验证生成能力或改写保存配置", async ({
   const stored = await page.evaluate(
     (key) => JSON.parse(localStorage.getItem(key) ?? "[]"),
     BROWSER_STORAGE_KEYS.providerConnections,
+  );
+  expect(authorization).toBe("Bearer fixture-discovery-key");
+  expect(await page.evaluate(() => JSON.stringify(localStorage))).not.toContain(
+    "fixture-discovery-key",
   );
   expect(stored).toEqual([account]);
   expect(stored[0].lastSuccessfulGenerationAt).toBeUndefined();
@@ -236,7 +245,9 @@ test("官方与中转站切换保留已有连接的 opaque 引用、保存身份
     { keys: BROWSER_STORAGE_KEYS, saved: opaqueConnection },
   );
   let authorization = "";
+  let requests = 0;
   await page.route(`${opaqueConnection.baseUrl}/models`, async (route) => {
+    requests++;
     authorization = route.request().headers().authorization ?? "";
     await route.fulfill({
       contentType: "application/json",
@@ -296,8 +307,11 @@ test("官方与中转站切换保留已有连接的 opaque 引用、保存身份
   await expect(
     profile.getByText("已清除当前供应商的密钥。", { exact: true }),
   ).toBeVisible();
+  const requestsBeforeMissingKey = requests;
   await profile.getByRole("button", { name: "测试连接", exact: true }).click();
-  await expect.poll(() => authorization).toBe("");
+  await expect(profile).toContainText("原绑定连接缺少密钥，请配置后重试。");
+  expect(requests).toBe(requestsBeforeMissingKey);
+  expect(authorization).toBe("Bearer fixture-opaque-key");
   expect(await page.evaluate(() => JSON.stringify(localStorage))).not.toContain(
     "fixture-opaque-key",
   );
@@ -338,7 +352,9 @@ test("同地址同模型多账号重开设置保留所选身份，保存和清�
     { keys: BROWSER_STORAGE_KEYS, accounts: [opaqueConnection, accountB] },
   );
   let authorization = "";
+  let requests = 0;
   await page.route(`${opaqueConnection.baseUrl}/models`, async (route) => {
+    requests++;
     authorization = route.request().headers().authorization ?? "";
     await route.fulfill({
       contentType: "application/json",
@@ -409,7 +425,11 @@ test("同地址同模型多账号重开设置保留所选身份，保存和清�
   await expect(
     profile.getByText("已清除当前供应商的密钥。", { exact: true }),
   ).toBeVisible();
-  await testKey("");
+  const requestsBeforeMissingKey = requests;
+  await profile.getByRole("button", { name: "测试连接", exact: true }).click();
+  await expect(profile).toContainText("原绑定连接缺少密钥，请配置后重试。");
+  expect(requests).toBe(requestsBeforeMissingKey);
+  expect(authorization).toBe("Bearer fixture-account-b-updated");
   await profile
     .getByRole("listitem")
     .filter({ hasText: opaqueConnection.displayName })
@@ -553,9 +573,7 @@ test("旧配置同地址多账号没有明确身份时，保存测试清除均�
   );
 });
 
-test("离开 API 接入会取消连接测试，迟到目录不覆盖隐藏草稿", async ({
-  page,
-}) => {
+test("API 测试锁定切页，取消后离开且迟到目录不覆盖草稿", async ({ page }) => {
   let received = false;
   let aborted = false;
   let release: (() => void) | undefined;
@@ -592,15 +610,35 @@ test("离开 API 接入会取消连接测试，迟到目录不覆盖隐藏草稿
   await profile
     .getByLabel("接口地址", { exact: true })
     .fill("https://delayed.example.test/v1");
+  await profile
+    .getByLabel("API Key", { exact: true })
+    .fill("fixture-delayed-key");
   await profile.getByRole("button", { name: "测试连接", exact: true }).click();
   await expect.poll(() => received).toBe(true);
   try {
-    await dialog.getByRole("button", { name: "CLI 账号", exact: true }).click();
-    await expect.poll(() => aborted).toBe(true);
+    const cli = dialog.getByRole("button", { name: "CLI 账号", exact: true });
+    await expect(cli).toBeDisabled();
+    await expect(
+      dialog.getByRole("button", { name: "关闭设置", exact: true }),
+    ).toBeDisabled();
+    for (const category of await dialog
+      .getByRole("navigation", { name: "设置分类" })
+      .getByRole("button")
+      .all())
+      await expect(category).toBeDisabled();
+    await profile
+      .getByRole("button", { name: "取消测试", exact: true })
+      .click();
+    await expect(
+      profile.getByText("已取消连接测试。", { exact: true }),
+    ).toBeVisible();
+    await expect(cli).toBeEnabled();
+    await cli.click();
   } finally {
     release?.();
   }
   await completed;
+  await expect.poll(() => aborted).toBe(true);
   await dialog
     .getByRole("button", { name: "API Key（官方）", exact: true })
     .click();

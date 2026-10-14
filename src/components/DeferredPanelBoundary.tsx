@@ -1,13 +1,10 @@
+import { focusDialogControl } from "./dialogFocus";
 import { Component, Suspense, useEffect, useRef, type ReactNode } from "react";
 import UiIcon from "./UiIcon";
 
 function restoreDialogFocus(dialog: Element | null | undefined) {
   if (document.activeElement !== document.body) return;
-  dialog
-    ?.querySelector<HTMLElement>(
-      "[data-initial-focus], input:not([disabled]), textarea:not([disabled]), select:not([disabled]), button:not([disabled]), [href], [tabindex]:not([tabindex='-1'])",
-    )
-    ?.focus({ preventScroll: true });
+  focusDialogControl(dialog);
 }
 
 function PanelLoadState({

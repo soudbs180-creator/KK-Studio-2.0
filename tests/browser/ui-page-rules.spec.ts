@@ -137,6 +137,14 @@ for (const width of [390, 1920]) {
       "model-actions",
       info,
     );
+    if (
+      await page
+        .getByRole("group", { name: "接入方式", exact: true })
+        .isHidden()
+    )
+      await page
+        .getByRole("button", { name: "返回接入方式", exact: true })
+        .click();
     await page.getByRole("button", { name: "CLI 账号", exact: true }).click();
     await page.getByRole("button", { name: "Gemini CLI", exact: true }).click();
     await inspectPage(

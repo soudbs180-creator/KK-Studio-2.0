@@ -204,7 +204,25 @@ test("narrow canvas keeps the comparison controls reachable and slider draggable
       (await selection.getByRole("button", { name: "打开对比" }).boundingBox())!
         .height,
     ).toBeGreaterThanOrEqual(44);
-    await selection.getByRole("button", { name: "打开对比" }).click();
+    const openComparison = selection.getByRole("button", { name: "打开对比" });
+    // The screen editor remains open; pointer hit-testing must reach this action.
+    await expect(page.getByTestId("image-composer")).toHaveClass(
+      /canvas-composer-screen/,
+    );
+    await expect
+      .poll(() =>
+        openComparison.evaluate((button) => {
+          const box = button.getBoundingClientRect();
+          return button.contains(
+            document.elementFromPoint(
+              box.x + box.width / 2,
+              box.y + box.height / 2,
+            ),
+          );
+        }),
+      )
+      .toBe(true);
+    await openComparison.click();
     const dialog = page.getByRole("dialog", { name: "图片对比" });
     await expect(dialog).toBeVisible();
     for (const label of ["关闭图片对比", "并排", "滑块", "缩小", "放大"]) {

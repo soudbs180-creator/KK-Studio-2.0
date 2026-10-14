@@ -128,6 +128,13 @@ test("desktop home readies its service without creating a conversation and has o
     expect(agent.conversation().threadId).toBe("");
     for (const width of [1920, 1099, 390]) {
       await page.setViewportSize({ width, height: 1080 });
+      // Resizing to a phone exposes the methods level before its detail page.
+      const methods = page.getByRole("group", { name: "接入方式" });
+      if (width < 768 && (await methods.isVisible()))
+        await methods
+          .getByRole("button", { name: "Codex 主 Agent", exact: true })
+          .click();
+      await expect(card).toBeVisible();
       const reconnect = card.getByRole("button", {
         name: "重新连接",
         exact: true,

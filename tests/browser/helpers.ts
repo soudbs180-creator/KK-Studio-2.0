@@ -1,4 +1,4 @@
-import { expect, type Page } from "@playwright/test";
+import { expect, type Page, type Locator } from "@playwright/test";
 import {
   CREATION_STORAGE_KEY,
   createProject,
@@ -31,10 +31,28 @@ export async function openSettingsSection(
   name: string,
 ): Promise<void> {
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
-  await page
-    .getByRole("navigation", { name: "设置分类" })
-    .getByRole("button", { name, exact: true })
-    .click();
+  await selectSettingsSection(page, name);
+}
+export async function showSettingsCategories(page: Page): Promise<Locator> {
+  const dialog = page.getByRole("dialog", { name: "设置", exact: true });
+  const nav = dialog.getByRole("navigation", {
+    name: "设置分类",
+    includeHidden: true,
+  });
+  await nav.waitFor({ state: "attached" });
+  if (await nav.isHidden())
+    await dialog
+      .getByRole("button", { name: "返回设置分类", exact: true })
+      .click();
+  await expect(nav).toBeVisible();
+  return nav;
+}
+export async function selectSettingsSection(
+  page: Page,
+  name: string,
+): Promise<void> {
+  const nav = await showSettingsCategories(page);
+  await nav.getByRole("button", { name, exact: true }).click();
 }
 
 /** Give Agent tests a real project containing the canonical demo graph. */

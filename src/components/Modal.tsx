@@ -1,3 +1,4 @@
+import { focusDialogControl } from "./dialogFocus";
 import { useEffect, useRef, type ReactNode, type CSSProperties } from "react";
 
 export default function Modal({
@@ -23,10 +24,7 @@ export default function Modal({
         : null;
     if (!dialog) return;
     if (!dialog.open) dialog.showModal();
-    const initialFocus = dialog.querySelector<HTMLElement>(
-      "[data-initial-focus], input:not([disabled]), textarea:not([disabled]), select:not([disabled]), button:not([disabled]), [href], [tabindex]:not([tabindex='-1'])",
-    );
-    (initialFocus ?? dialog).focus({ preventScroll: true });
+    focusDialogControl(dialog);
     return () => {
       // A nested dialog can be opened as the parent unmounts. Closing the
       // parent must not steal focus from the still-open child dialog.

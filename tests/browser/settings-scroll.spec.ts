@@ -1,11 +1,15 @@
 import { expect, test } from "@playwright/test";
-import { openWorkspace } from "./helpers";
+import {
+  openWorkspace,
+  openSettingsSection,
+  showSettingsCategories,
+} from "./helpers";
 
-test("窄屏设置分类的同组入口保持在底部导航内", async ({ page }) => {
+test("窄屏设置分类逐行展示，并保留触屏命中区", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
-  const nav = page.getByRole("navigation", { name: "设置分类" });
+  const nav = await showSettingsCategories(page);
   await expect(nav).toBeVisible();
   await expect(
     nav.getByRole("button", { name: "通用", exact: true }),
@@ -28,7 +32,10 @@ test("窄屏设置分类的同组入口保持在底部导航内", async ({ page 
       bar: el.getBoundingClientRect().toJSON(),
     };
   });
-  expect(Math.abs(general.y - account.y)).toBeLessThanOrEqual(2);
+  expect(account.y).toBeGreaterThanOrEqual(general.y + general.height);
+  expect(Math.abs(general.x - account.x)).toBeLessThanOrEqual(2);
+  expect(general.height).toBe(40);
+  expect(account.height).toBe(40);
   expect(account.y).toBeGreaterThanOrEqual(bar.y);
   expect(account.y + account.height).toBeLessThanOrEqual(
     bar.y + bar.height + 1,
@@ -62,11 +69,7 @@ test("Skill、MCP、协作伙伴标签可用方向键切换并显示对应内容
 test("手机扩展标签保持单行和触屏命中区", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
-  await page.getByRole("button", { name: "打开设置", exact: true }).click();
-  await page
-    .getByRole("dialog", { name: "设置" })
-    .getByRole("button", { name: "扩展", exact: true })
-    .click();
+  await openSettingsSection(page, "扩展");
   const tabs = page.getByRole("tablist", { name: "Skill、MCP 与协作伙伴" });
   const bounds = (await tabs.boundingBox())!;
   for (const tab of await tabs.getByRole("tab").all()) {
@@ -168,6 +171,8 @@ for (const viewport of [
     await expect(
       dialog.getByRole("switch", { name: "防止系统休眠" }),
     ).toBeInViewport();
+    // Categories are a separate phone level; return before keyboard navigation.
+    await showSettingsCategories(page);
     const updates = dialog.getByRole("button", {
       name: "软件更新",
       exact: true,
@@ -184,32 +189,35 @@ for (const viewport of [
   });
 }
 
-test("手机设置分类固定在底部横向滑块", async ({ page }) => {
-  await page.setViewportSize({ width: 390, height: 844 });
+test("手机设置分类可纵向滚动，详情返回当前分类", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 480 });
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   const dialog = page.getByRole("dialog", { name: "设置" });
-  const nav = dialog.locator(".settings-nav");
+  const nav = await showSettingsCategories(page);
+  const sidebar = dialog.locator(".settings-sidebar");
   await expect(dialog.locator(".settings-panel")).toBeVisible();
-  await expect(dialog.locator(".settings-sidebar")).toBeVisible();
-  const { panelBox, sidebarBox } = await dialog.evaluate((el) => ({
-    panelBox: el
-      .querySelector(".settings-panel")!
-      .getBoundingClientRect()
-      .toJSON(),
-    sidebarBox: el
-      .querySelector(".settings-sidebar")!
-      .getBoundingClientRect()
-      .toJSON(),
-  }));
-  expect(
-    Math.abs(sidebarBox.y + sidebarBox.height - (panelBox.y + panelBox.height)),
-  ).toBeLessThanOrEqual(2);
-  expect(await nav.evaluate((el) => el.scrollWidth)).toBeGreaterThan(
-    await nav.evaluate((el) => el.clientWidth),
+  await expect(sidebar).toBeVisible();
+  await expect(dialog.locator(".settings-content")).toBeHidden();
+  expect(await sidebar.evaluate((el) => el.scrollHeight)).toBeGreaterThan(
+    await sidebar.evaluate((el) => el.clientHeight),
   );
-  await nav.getByRole("button", { name: "软件更新", exact: true }).click();
+  expect(
+    await sidebar.evaluate((el) => el.scrollWidth - el.clientWidth),
+  ).toBeLessThanOrEqual(1);
+  await sidebar.hover();
+  await page.mouse.wheel(0, 600);
+  await expect
+    .poll(() => sidebar.evaluate((el) => el.scrollTop))
+    .toBeGreaterThan(0);
+  const updates = nav.getByRole("button", { name: "软件更新", exact: true });
+  await updates.click();
   await expect(dialog.locator(".settings-content h2")).toHaveText("软件更新");
+  await expect(sidebar).toBeHidden();
+  await showSettingsCategories(page);
+  await expect(updates).toHaveAttribute("aria-current", "page");
+  await expect(updates).toBeFocused();
+  await expect(updates).toBeInViewport();
 });
 
 test("资产列表隐藏滚动条后仍可滚动，浮岛设置作用于整个工作区", async ({
