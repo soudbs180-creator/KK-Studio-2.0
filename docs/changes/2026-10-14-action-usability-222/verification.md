@@ -53,3 +53,11 @@ f3d2ab86的完整verify退出1：Node1248通过/14既有跳过、Agent180通过/
 fe0ff7a2完整verify退出0：Node1248通过/14既有跳过、Agent180通过/2既有跳过、production Edge570/570首试、UI241/0、development5步骤PASS；源码独立审查PASS。Rust163及fmt通过。该回执不含后续新增Agent构建门禁，也不代替新的桌面构建。
 
 官方带Agent构建首先因install-desktop-support旧token片段检查失败；三项隔离安装器回归先RED（2通过/1失败），增加明确的当前集成片段兼容后3/3 GREEN，旧片段和异常拒绝仍保留。随后agent:build真实编译发现ensureSiteWorkspace推断返回类型丢可选字段，补显式SiteWorkspaceConfig返回后构建退出0。verify新增agent:build，防止以后只跑可执行TS测试而漏掉当前Agent编译/集成检查。原构建失败与TS错误日志保留；新的完整verify、提交独立补审、官方构建与Native仍待取得。
+
+## 67ba0261与实际手机菜单遮挡
+
+67ba0261完整9步verify退出0：Node1251通过/14既有跳过、Agent180通过/2既有跳过、production Edge570/570首试、UI241/0、development5步骤PASS。官方带Agent构建退出0，EXE aab8b9160d5ae082afe89b126288e9b373e685ff7ecdf0943ddb28648b85c95b，source/input和运行时白名单核验；源码审查PASS WITH FOLLOW-UPS，TESTING文档九步同步待最终收尾。
+
+该EXE实际Native在窄屏上传阶段失败：图片操作工具栏截获缩放50%选项；完整31项已完成部分保留，但整体不得标PASS。5协议一次POST/结果恢复、CLI桥与Google系统浏览器的本机独立HTML GET等前序回执保留，cleanup/合成凭据清理成功。新增390/320×light/dark回归，首次是上传/参考两个input的locator错误，纠正后4项实际命中RED；工具栏避让缩放菜单后专项23项GREEN。进一步覆盖全部比例，屏幕编辑器遮挡下方选项4项RED；增加现行画布菜单层级token并保持喜欢/标签在其上，23项首试GREEN。原Native和browser失败不改写。
+
+用户澄清沿用之前确认的手机新布局；源码审计确认原响应式布局与浅色基础tokens保留，独立背景偏好不强制改白。最终新clean提交完整检查、重建EXE与Native/便携目录仍待回执。

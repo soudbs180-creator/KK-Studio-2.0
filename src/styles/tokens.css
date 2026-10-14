@@ -137,7 +137,8 @@
   --kk-z-sticky-header: 20;
   --kk-z-dropdown: 100;
   --kk-z-canvas-editor: calc(var(--kk-z-dropdown) + 1);
-  --kk-z-floating-panel: calc(var(--kk-z-canvas-editor) + 1);
+  --kk-z-canvas-menu: calc(var(--kk-z-canvas-editor) + 1);
+  --kk-z-floating-panel: calc(var(--kk-z-canvas-menu) + 1);
   --kk-z-floating-panel-active: calc(var(--kk-z-floating-panel) + 1);
   --kk-z-overlay: 200;
   --kk-z-modal: 300;

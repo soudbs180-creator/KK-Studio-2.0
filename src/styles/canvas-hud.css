@@ -14,6 +14,9 @@
 .canvas-hud > * {
   pointer-events: auto;
 }
+.canvas-hud:has(.canvas-zoom-menu) {
+  z-index: var(--kk-z-canvas-menu);
+}
 .canvas-hud-actions {
   pointer-events: none;
   display: flex;
