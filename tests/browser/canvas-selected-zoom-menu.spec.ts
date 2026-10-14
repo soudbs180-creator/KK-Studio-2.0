@@ -44,6 +44,21 @@ for (const theme of ["light", "dark"])
         await expect
           .poll(() =>
             option.evaluate((element) => {
+              const menu = element.closest('[role="menu"]')!;
+              const outer = menu.getBoundingClientRect();
+              const inner = element.getBoundingClientRect();
+              return (
+                inner.left >= outer.left &&
+                inner.right <= outer.right &&
+                inner.top >= outer.top &&
+                inner.bottom <= outer.bottom
+              );
+            }),
+          )
+          .toBe(true);
+        await expect
+          .poll(() =>
+            option.evaluate((element) => {
               const box = element.getBoundingClientRect();
               const hit = document.elementFromPoint(
                 box.x + box.width / 2,

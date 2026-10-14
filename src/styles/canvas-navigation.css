@@ -209,7 +209,7 @@
   }
   .canvas-zoom-menu {
     width: 150px;
-    height: 224px;
+    height: auto;
     min-height: 224px;
     padding: 6px;
   }

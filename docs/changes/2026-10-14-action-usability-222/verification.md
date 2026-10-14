@@ -61,3 +61,7 @@ fe0ff7a2完整verify退出0：Node1248通过/14既有跳过、Agent180通过/2�
 该EXE实际Native在窄屏上传阶段失败：图片操作工具栏截获缩放50%选项；完整31项已完成部分保留，但整体不得标PASS。5协议一次POST/结果恢复、CLI桥与Google系统浏览器的本机独立HTML GET等前序回执保留，cleanup/合成凭据清理成功。新增390/320×light/dark回归，首次是上传/参考两个input的locator错误，纠正后4项实际命中RED；工具栏避让缩放菜单后专项23项GREEN。进一步覆盖全部比例，屏幕编辑器遮挡下方选项4项RED；增加现行画布菜单层级token并保持喜欢/标签在其上，23项首试GREEN。原Native和browser失败不改写。
 
 用户澄清沿用之前确认的手机新布局；源码审计确认原响应式布局与浅色基础tokens保留，独立背景偏好不强制改白。最终新clean提交完整检查、重建EXE与Native/便携目录仍待回执。
+
+## f5b7c7bb完整检查与菜单内容边界
+
+f5b7c7bb完整9步verify退出0：Node1251通过/14既有跳过、Agent180通过/2既有跳过、production Edge574/574首试、UI241/0、development5步骤PASS。独立UI补审发现手机菜单固定224px高度使400%选项超出圆角背景；原命中检查没有覆盖包含关系。增加全部比例的菜单内包含断言后，320/390×light/dark四项RED；手机高度改为内容撑高后导航与选中菜单11项首试GREEN，四张截图保存在工程外selected-zoom-containment-green-evidence。桌面原帧和已确认手机布局保留，TESTING同步九步门禁。新源码完整复验、独立补审与桌面产物仍待回执。

@@ -38,9 +38,9 @@
 | `npm run local-service:test` / `local-service:smoke` | 本地服务集成 / 生产冒烟 |
 | `npm run test:development` | 插件装载 |
 | `npm run client:installer:test` / `client:taskhost:test` | 安装器 / 任务宿主生命周期 |
-| `npm run verify` | lint + typecheck + test + test:agent + ui:check + format:check + test:ui + test:development |
+| `npm run verify` | lint + typecheck + test + agent:build + test:agent + ui:check + format:check + test:ui + test:development |
 
-`npm run verify` 是合并前的**主闸门**，串联 lint、typecheck、test、test:agent、ui:check、format:check、test:ui、test:development 共 8 步。
+`npm run verify` 是合并前的**主闸门**，串联 lint、typecheck、test、agent:build、test:agent、ui:check、format:check、test:ui、test:development 共 9 步；Agent 必须真实编译通过，不能只用可执行 TS 测试代替构建。
 
 它**不包含**：Rust/cargo 检查、`tests/desktop/`（19 个 `.mjs`/`.ps1`）、`tests/local-service/`、`tests/proxy`、`test:gateway`。涉及 Desktop、Rust、本地服务或真实外部服务的改动必须按本文件「桌面与 Rust 测试」与 [DEVELOPMENT](DEVELOPMENT.md) 单独补跑相应检查。
 
