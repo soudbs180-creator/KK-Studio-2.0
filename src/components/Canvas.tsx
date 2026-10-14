@@ -178,6 +178,7 @@ export default function Canvas({
           controls={controls}
           items={items}
           onItemsChange={onItemsChange}
+          onLocalGenerationSettled={history.settleLocalGeneration}
           likedIds={likedIds}
           onToggleLike={onToggleLike}
           onConfigure={() => onOpen?.("settings/providers")}

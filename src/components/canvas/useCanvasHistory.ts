@@ -14,6 +14,8 @@ import {
   commitCanvasHistory,
   createCanvasHistory,
   redoCanvasHistory,
+  settleCanvasHistoryGeneration,
+  settleCanvasGenerationItems,
   undoCanvasHistory,
   type CanvasHistorySnapshot,
   type CanvasHistoryState,
@@ -145,6 +147,23 @@ export function useCanvasHistory({
     [onItemsChange, setEdges, setPositions, setSelectedNode, setViewport],
   );
 
+  const settleLocalGeneration = useCallback(
+    (terminal: CanvasCollectionItem[]): void => {
+      onItemsChange((current) =>
+        settleCanvasGenerationItems(current, terminal),
+      );
+      const history = historyRef.current;
+      if (!history) return;
+      const next = settleCanvasHistoryGeneration(history, terminal);
+      historyRef.current = next;
+      presentRef.current = cloneCanvasHistorySnapshot(next.present);
+      if (applyingFingerprint.current)
+        applyingFingerprint.current = canvasHistoryFingerprint(next.present);
+      setRevision((value) => value + 1);
+    },
+    [onItemsChange],
+  );
+
   const undo = useCallback((): void => {
     if (gestureActive) return;
     const history = historyRef.current;
@@ -192,5 +211,6 @@ export function useCanvasHistory({
     undo,
     redo,
     handleKeyDown,
+    settleLocalGeneration,
   };
 }

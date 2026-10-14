@@ -70,49 +70,61 @@ export function createCanvasHistory(
   };
 }
 
-export function commitCanvasHistory(
-  state: CanvasHistoryState,
-  next: CanvasHistorySnapshot,
-): CanvasHistoryState {
-  const terminal = next.items.filter(
+/** Only existing local video placeholders receive terminal fields. */
+export function settleCanvasGenerationItems(
+  items: CanvasCollectionItem[],
+  terminalItems: CanvasCollectionItem[],
+): CanvasCollectionItem[] {
+  const terminal = terminalItems.filter(
     (item) =>
       item.kind === "video" &&
       item.generationIndex !== undefined &&
       ((item.generationStatus === "error" && !item.result) ||
         (item.generationStatus === "ready" && item.result?.source === "demo")),
   );
-  if (terminal.length) {
-    // Undo cannot restart a finished local demo; retain its terminal result.
-    const settle = (
-      snapshot: CanvasHistorySnapshot,
-    ): CanvasHistorySnapshot => ({
-      ...snapshot,
-      items: snapshot.items.map((item) => {
-        const ended =
-          item.generationStatus === "pending"
-            ? terminal.find((entry) => entry.id === item.id)
-            : undefined;
-        return ended
-          ? {
-              ...item,
-              generationStatus: ended.generationStatus,
-              title: ended.title,
-              ...(ended.result && {
-                result: ended.result,
-                description: ended.description,
-                preview: ended.preview,
-              }),
-            }
-          : item;
-      }),
-    });
-    state = {
-      ...state,
-      past: state.past.map(settle),
-      present: settle(state.present),
-      future: state.future.map(settle),
-    };
-  }
+  if (!terminal.length) return items;
+  return items.map((item) => {
+    const ended =
+      item.kind === "video" && item.generationStatus === "pending"
+        ? terminal.find((entry) => entry.id === item.id)
+        : undefined;
+    return ended
+      ? {
+          ...item,
+          generationStatus: ended.generationStatus,
+          title: ended.title,
+          ...(ended.result && {
+            result: clone(ended.result),
+            description: ended.description,
+            preview: ended.preview,
+          }),
+        }
+      : item;
+  });
+}
+
+/** Async completion settles history without revealing hidden cards or consuming Redo. */
+export function settleCanvasHistoryGeneration(
+  state: CanvasHistoryState,
+  terminal: CanvasCollectionItem[],
+): CanvasHistoryState {
+  const settle = (snapshot: CanvasHistorySnapshot): CanvasHistorySnapshot => ({
+    ...snapshot,
+    items: settleCanvasGenerationItems(snapshot.items, terminal),
+  });
+  return {
+    ...state,
+    past: state.past.map(settle),
+    present: settle(state.present),
+    future: state.future.map(settle),
+  };
+}
+
+export function commitCanvasHistory(
+  state: CanvasHistoryState,
+  next: CanvasHistorySnapshot,
+): CanvasHistoryState {
+  state = settleCanvasHistoryGeneration(state, next.items);
   const current = canvasHistoryFingerprint(state.present);
   const incoming = canvasHistoryFingerprint(next);
   if (current === incoming) {

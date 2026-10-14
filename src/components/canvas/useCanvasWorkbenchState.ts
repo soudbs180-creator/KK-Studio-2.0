@@ -46,7 +46,7 @@ export function useCanvasWorkbenchState({
       document.querySelector("dialog[open]") ||
       (event.target instanceof Element &&
         event.target.closest(
-          "input,textarea,select,[contenteditable='true'],[role='menu'],[role='dialog']",
+          "input,textarea,select,[contenteditable='true'],[role='menu'],[role='dialog'],.node-popover,.generation-count-panel",
         ))
     )
       return;

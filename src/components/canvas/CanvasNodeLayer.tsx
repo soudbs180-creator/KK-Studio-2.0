@@ -27,6 +27,7 @@ interface CanvasNodeLayerProps {
   controls: ReturnType<typeof useCanvasControls>;
   items: CanvasCollectionItem[];
   onItemsChange: Dispatch<SetStateAction<CanvasCollectionItem[]>>;
+  onLocalGenerationSettled: (terminal: CanvasCollectionItem[]) => void;
   likedIds: Set<string>;
   onToggleLike: (id: string) => void;
   onConfigure: () => void;
@@ -47,6 +48,7 @@ export default function CanvasNodeLayer({
   controls,
   items,
   onItemsChange,
+  onLocalGenerationSettled,
   likedIds,
   onToggleLike,
   onConfigure,
@@ -135,30 +137,29 @@ export default function CanvasNodeLayer({
     if (!source) return;
     const pending = pendingByParent.current[parentId] ?? [];
     if (source && pending.length >= results.length) {
-      onItemsChange((current) =>
-        current.map((item) => {
-          const index = pending.indexOf(item.id);
-          const result = index >= 0 ? results[index] : undefined;
-          if (!result) return item;
-          const title =
-            results.length === 1
-              ? result.title
-              : result.title.includes("（演示")
-                ? result.title
-                : `${result.title}（演示 ${index + 1}/${results.length}）`;
-          return {
-            ...item,
-            result: { ...result, title },
-            title,
-            description: result.description,
-            preview:
-              result.poster ??
-              (result.kind === "image" ? result.src : undefined),
-            prompt: source.prompt,
-            generationStatus: "ready",
-          };
-        }),
-      );
+      const terminal: CanvasCollectionItem[] = results.map((result, index) => {
+        const title =
+          results.length === 1 || result.title.includes("（演示")
+            ? result.title
+            : result.title +
+              "（演示 " +
+              (index + 1) +
+              "/" +
+              results.length +
+              "）";
+        return {
+          id: pending[index],
+          kind: result.kind,
+          generationIndex: index,
+          result: { ...result, title },
+          title,
+          description: result.description,
+          preview:
+            result.poster ?? (result.kind === "image" ? result.src : undefined),
+          generationStatus: "ready",
+        };
+      });
+      onLocalGenerationSettled(terminal);
       pendingByParent.current[parentId] = [];
       return;
     }
@@ -189,16 +190,16 @@ export default function CanvasNodeLayer({
     if (phase === "loading" || phase === "success") return;
     const pending = pendingByParent.current[parentId] ?? [];
     if (!pending.length) return;
-    onItemsChange((current) =>
-      current.map((item) =>
-        pending.includes(item.id)
-          ? {
-              ...item,
-              generationStatus: "error",
-              title: phase === "cancelled" ? "已取消生成" : "生成失败，请重试",
-            }
-          : item,
-      ),
+
+    onLocalGenerationSettled(
+      pending.map((id, generationIndex) => ({
+        id,
+        kind: "video",
+        generationIndex,
+        description: "",
+        generationStatus: "error",
+        title: phase === "cancelled" ? "已取消生成" : "生成失败，请重试",
+      })),
     );
     pendingByParent.current[parentId] = [];
   }
