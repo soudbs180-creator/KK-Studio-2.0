@@ -18,7 +18,7 @@
 - `canonicalHeadVerifiedFrom`: 本轮git ls-remote origin refs/heads/main与本地origin/main回读一致；主线694a006，源2.1.13。
 - `primaryCheckoutState`: `D:/kk-studio/KK-Studio-2.0` is on `codex/ui-redesign-20261011` at `51fccfc7879cf90f7caaf3ae8e10af4d97a2aa2c`, dirty. 本轮实时读取源码版本Desktop/Web2.1.20，一致恢复输入f2b0466；原有UI、凭据恢复和Agent展示等并行改动保留。2.1.16/2.1.17回执是历史产品验收；此前2.1.21基线见uiConsolidationCandidate；2.1.22验收见protocolCliCandidate；当前2.1.23按钮修复候选见actionUsabilityCandidate，不是已发布origin/main树。
 - `taskLedger`: 135 records; 6 REVIEW, 79 DONE, 12 TODO, 34 PARTIAL, 4 BLOCKED; 56 open records.
-- `workspaceWorktrees`: 当前恢复盘点107登记项、39 dirty来源、39一致快照；原index变动0，872源路径与313排除路径可溯源。首轮104项/40一致与1volatile记录保留原时点。原分支/index/资料保留，未删除或移动。
+- `workspaceWorktrees`: 本轮末次只读git worktree list回读108登记项。此前恢复盘点107登记项、39 dirty来源、39一致快照；该盘点时原index变动0，872源路径与313排除路径可溯源。首轮104项/40一致与1volatile记录保留原时点；历史107项快照不覆盖后续登记来源。原分支/index/资料保留，本任务未删除、移动或覆盖其他来源。
 - `reclamationPolicy`: generated dependencies/build output may be reclaimed only from a recorded, non-primary worktree after immutable SHA inventory and explicit candidate approval; source changes and evidence paths are protected.
 - `remoteAutoMerge`: `NOT_READ_BACK`; local workflow and runbooks are reviewable, but no remote setting is claimed as enabled.
 - `historicalRule`: paragraphs after `<!-- HISTORICAL_SNAPSHOTS_BEGIN -->` are dated evidence only and cannot overwrite these facts.
