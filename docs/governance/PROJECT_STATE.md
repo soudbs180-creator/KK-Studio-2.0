@@ -16,7 +16,7 @@
 - `canonicalRef`: `origin/main`
 - `canonicalHead`: `694a00607f6f63de1b8c43d0ebb117adf5d34f67`
 - `canonicalHeadVerifiedFrom`: 本轮git ls-remote origin refs/heads/main与本地origin/main回读一致；主线694a006，源2.1.13。
-- `primaryCheckoutState`: `D:/kk-studio/KK-Studio-2.0` is on `codex/ui-redesign-20261011` at `51fccfc7879cf90f7caaf3ae8e10af4d97a2aa2c`, dirty. 本轮实时读取源码版本Desktop/Web2.1.20，一致恢复输入f2b0466；原有UI、凭据恢复和Agent展示等并行改动保留。2.1.16/2.1.17回执是历史产品验收；此前2.1.21基线见uiConsolidationCandidate；2.1.22验收见protocolCliCandidate；此前2.1.23按钮修复基线见actionUsabilityCandidate；当前2.1.24候选见actionUsability224Candidate，不是已发布origin/main树。 当前只读状态248条与before/原HEAD一致，本任务未改primary/index。
+- `primaryCheckoutState`: `D:/kk-studio/KK-Studio-2.0` is on `codex/ui-redesign-20261011` at `51fccfc7879cf90f7caaf3ae8e10af4d97a2aa2c`, dirty. 本轮实时读取源码版本Desktop/Web2.1.20，一致恢复输入f2b0466；原有UI、凭据恢复和Agent展示等并行改动保留。2.1.16/2.1.17回执是历史产品验收；此前2.1.21基线见uiConsolidationCandidate；2.1.22验收见protocolCliCandidate；此前2.1.23按钮修复基线见actionUsabilityCandidate；当前2.1.24候选见actionUsability224Candidate，不是已发布origin/main树。 当前只读状态248条：before原238条dirty状态逐条仍在，其他并行新增10条也保留；原HEAD与空index不变，本任务未改primary。
 - `taskLedger`: 136 records; 6 REVIEW, 80 DONE, 12 TODO, 34 PARTIAL, 4 BLOCKED; 56 open records.
 - `workspaceWorktrees`: 本轮末次只读worktree登记回读109项。此前恢复盘点107登记项、39 dirty来源、39一致快照；该盘点时原index变动0，872源路径与313排除路径可溯源。首轮104项/40一致与1volatile记录保留原时点；历史107项快照不覆盖后续登记来源。原分支/index/资料保留，本任务未删除、移动或覆盖其他来源。
 - `reclamationPolicy`: generated dependencies/build output may be reclaimed only from a recorded, non-primary worktree after immutable SHA inventory and explicit candidate approval; source changes and evidence paths are protected.
