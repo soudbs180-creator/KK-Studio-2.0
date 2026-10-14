@@ -62,3 +62,5 @@
 “获取模型/测试连接”只执行有界 GET，Native 复用 pinned/no_proxy/no-redirect 客户端，Web 不携带网站 cookies、拒绝重定向；成功目录不是生成可用证明。文本流需有完整终态，截断、拒绝、工具输出、坏格式和取消不能归档成成功；中断保留草稿/未知受理语义且不自动重复请求。新协议尚未返回的消耗继续“未报告”。
 
 Windows Desktop CLI 管理已接实际检测、用户主动安装/登录、取消自有操作及 Gemini 桥启停；终端退出和进程健康不推导账号验证，模型连通测试另有明确入口与额度说明。原 apply/check 不因新页面而声称全面接线。最终源码门禁、实际构建和产物身份见[本轮验证](../changes/2026-10-14-protocol-cli-completion/verification.md)；真实安装/账号登录/付费供应商调用及 Native Mobile 仍未验收，状态保持 PARTIAL。
+
+2.1.22本机交付完成：五协议真实Native与四取消/超时socket关闭、已保存凭据/迟到目录/旧检测错误隔离均有回执；真实供应商/真人CLI会话与其他配置/MCP接线保持PARTIAL，按本轮verification回读，不能将fixture当云端验收。

@@ -1,8 +1,8 @@
 # 当前进度
 
-## 2026-10-14 2.1.22协议/CLI与桌面手机交互（复验中）
+## 2026-10-14 2.1.22协议/CLI本机交付
 
-从2.1.21承接5种协议及认证字段、冻结请求/持久化和boundedSSE；Native CLI实际version/help、用户主动安装/登录和自有桥生命周期已接入，生产包修复当前平台Codex依赖。设置分层、手机画布固定大小编辑器、对比面板层级与隐藏返回焦点统一。51557346完整verify通过：549浏览器首试、Node1207pass/14既有skip、Agent172pass/2既有skip、UI241/0、development5步骤PASS；独立复审另发现原生模型列表取消P2，当前修复6项TS、10项浏览器与163项Rust通过，含生产HTTP真实TCP关闭。新最终提交完整复验和新Native/便携交付仍进行中。未改现有资料身份、未操作真实登录/全局安装/付费生成；Native Mobile、Hosted及签名安装器仍未验收。[本轮验证](changes/2026-10-14-protocol-cli-completion/verification.md)。
+Desktop/Web2.1.22产品da6141e6完整verify通过：551浏览器首试、Node1214pass/14既有skip、Agent172pass/2既有skip、UI241/0、development5步骤PASS；Rust163与原生源一致性确认，独立源码审查PASS。官方Agent构建、真实Tauri22项和同字节便携目录23项通过，5协议文本均保存/重载/GET检测/NativeTaskHost一次POST/结果恢复，无重复；4取消/超时场景实际socket关闭且目录字节保持。手机为响应式WebView/Web，非Native Mobile。新依赖0，入口gzip增加3247B<16384；4278生产白名单519462029B，其中8个缺失的当前平台Codex必要文件407521436B已恢复，不把旧残包当同功能体积基线。原资料身份、primary dirty/index和历史失败保留。最终ZIP/源码/Web/恢复与哈希由工程外current-release收据绑定；Hosted、真人CLI安装/登录、付费Provider、签名安装器、日常资料和人工视觉验收继续各自开放。[本轮验证](changes/2026-10-14-protocol-cli-completion/verification.md)。
 
 ## 2026-10-14 UI源码候选与当前验收（PARTIAL）
 

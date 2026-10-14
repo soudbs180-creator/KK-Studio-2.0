@@ -5635,11 +5635,11 @@
       "docs",
       "scripts"
     ],
-    "status": "IN_PROGRESS",
+    "status": "DONE",
     "priority": "P1",
     "risk": "high",
     "reviewRequired": true,
-    "platforms": ["Desktop", "Web", "Mobile"],
+    "platforms": ["Desktop", "Web"],
     "evidence": [
       "docs/changes/2026-10-14-protocol-cli-completion/intent.md",
       "docs/changes/2026-10-14-protocol-cli-completion/spec.md",
@@ -5650,14 +5650,14 @@
     ],
     "requirementRefs": ["ledger:TASK-PROTOCOL-CLI-20261014"],
     "featureIds": ["FEAT-022", "FEAT-032", "FEAT-026", "FEAT-039", "FEAT-028"],
-    "notes": "用户授权从已验收2.1.21继续；原物理worktree唯一writer、新任务分支，原branch/输出保留。",
+    "notes": "本机实现和验收范围DONE；phone为响应式Web，不将此状态外推到Native Mobile/真人账号/Hosted或全项目验收。数据身份、primary dirty/index与旧源恢复证据保留。",
     "openQuestions": "外部真实供应商与登录需账号条件；本轮先完成可独立复验的实现和本地HTTP/Native。",
     "lastVerified": "2026-10-14",
     "updated": "2026-10-14",
     "priorityRationale": "解决 UI 风格混杂、版本散落和功能入口冲突，同时保留资料与并行成果。",
-    "verification": "实施前，基线为d38cf957。独立read-only审查发现协议字段未贯通、CLI复制命令及生产平台依赖缺失、手机缩放控件偏小；本轮验证待实现。",
-    "displayStatus": "进行中",
-    "nextAction": "实现协议/CLI/分端控件并完整本地与Native验证，独立审查后提交输出",
-    "verificationResult": "PARTIAL"
+    "verification": "Desktop/Web2.1.22产品da6141e6完整verify通过：551浏览器首试、Node1214pass/14既有skip、Agent172pass/2既有skip、UI241/0、development5步骤PASS；Rust163与原生源一致性确认，独立源码审查PASS。官方Agent构建、真实Tauri22项和同字节便携目录23项通过，5协议文本均保存/重载/GET检测/NativeTaskHost一次POST/结果恢复，无重复；4取消/超时场景实际socket关闭且目录字节保持。手机为响应式WebView/Web，非Native Mobile。新依赖0，入口gzip增加3247B<16384；4278生产白名单519462029B，其中8个缺失的当前平台Codex必要文件407521436B已恢复，不把旧残包当同功能体积基线。原资料身份、primary dirty/index和历史失败保留。最终ZIP/源码/Web/恢复与哈希由工程外current-release收据绑定；Hosted、真人CLI安装/登录、付费Provider、签名安装器、日常资料和人工视觉验收继续各自开放。",
+    "displayStatus": "已完成",
+    "nextAction": "从2.1.22继续真实供应商与真人CLI登录/安装、签名安装器、日常资料和人工视觉验收；最终产物回读工程外current-release哈希收据。",
+    "verificationResult": "PASS"
   }
 ]

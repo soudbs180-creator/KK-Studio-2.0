@@ -1,6 +1,6 @@
 # Verification
 
-- Task ID：TASK-PROTOCOL-CLI-20261014；状态：实现与最终复验中。Desktop/Web源码2.1.22，Native Mobile2.1.1仍为规划。
+- Task ID：TASK-PROTOCOL-CLI-20261014；状态：本机实现与验收完成，最终分享产物由工程外哈希收据绑定。Desktop/Web源码2.1.22，Native Mobile2.1.1仍为规划。
 - 基线d38cf957 clean，产品与7a/545browser、Native与portable各9项的2.1.21已验收源码相同；历史证据在ui-consolidation输出，不代替本轮。
 - 本轮独立只读审查已实际确认：protocol未保存、CLI命令只复制、CodeBuddy读失败会误当empty、Gemini负缓存、当前平台Codex metadata残缺导致portable缺exe；手机缩放使32px控件实际18.55px、11px/22px旧控件。
 - 真实云端账号、付费调用、CLI登录/全局安装尚未执行；owned-process和本机HTTP仅证明适配实现。
@@ -36,3 +36,13 @@
 ## 66a144ee全量发现的展开间距
 
 66a144ee完整verify浏览器550pass/1fail（首次与重试均差1px），development因前步失败未执行，原目录与JSON保留。实际同帧DOM：工具栏40px、textarea bottom66px，空隙7px；旧CSS仍按35px预留导致不足，不是舍入或字体推断。改为共享`--kk-control-h-lg`，同一时点读取边界并保持原>=8px断言，再覆盖动画完成状态；28项控件/画布/响应式首试GREEN。新最终提交完整复验/构建/Native仍待回执。
+
+## 最终da6141e6本机验收
+
+Desktop/Web2.1.22产品da6141e6完整verify通过：551浏览器首试、Node1214pass/14既有skip、Agent172pass/2既有skip、UI241/0、development5步骤PASS；Rust163与原生源一致性确认，独立源码审查PASS。官方Agent构建、真实Tauri22项和同字节便携目录23项通过，5协议文本均保存/重载/GET检测/NativeTaskHost一次POST/结果恢复，无重复；4取消/超时场景实际socket关闭且目录字节保持。手机为响应式WebView/Web，非Native Mobile。新依赖0，入口gzip增加3247B<16384；4278生产白名单519462029B，其中8个缺失的当前平台Codex必要文件407521436B已恢复，不把旧残包当同功能体积基线。原资料身份、primary dirty/index和历史失败保留。最终ZIP/源码/Web/恢复与哈希由工程外current-release收据绑定；Hosted、真人CLI安装/登录、付费Provider、签名安装器、日常资料和人工视觉验收继续各自开放。
+
+工程外原件：`verify-222-da6141e6.log/.exit`、`browser-222-da6141e6-results.json`、`development-da6141e6-receipt.json`、`discovery-cancel-rust-socket-full.log/.exit`、`build-desktop-222-da6141e6.log/.exit`、`desktop-release-da6141e6.json`、`native-da6141e6-receipt.json`、`portable-native-da6141e6-receipt.json`、`independent-review-da6141e6.md/.receipt.json`、`final-footprint-2.1.22.json`。
+
+Native首次10项后脚本select标签exact定位失败：原生label包含选项文本，prefix定位后第二次22项通过；产品源码未改、第一次失败及cleanup保留。真实环境Gemini无完整安装时正确禁用桥；便携23项通过使用独立version/help-only CLI夹具验证真实桥启动/健康/停止，不冒称真人安装/登录。所有截图/DOM为1920、1099、390的真实Tauri WebView逻辑视口，非物理手机或窗口尺寸验收。EXE未签名。
+
+产品源码在da之后只能是文档增量；最终分享ZIP解压成员逐字节核对已实测EXE/manifest，并验证源码archive和恢复bundle。最终文档HEAD与ZIP哈希回读工程外`current-release-<HEAD8>.json`、`current-2.1.22-validation.json`，不嵌入自引用SHA或改写历史失败。
