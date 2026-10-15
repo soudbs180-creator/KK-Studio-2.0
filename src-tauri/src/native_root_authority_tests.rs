@@ -253,6 +253,111 @@ fn future_backup_and_strict_bounded_identity_fail_before_publication() {
     }
 }
 
+fn unused_corrupt_backup_retains_identity_until_existing_writer_archives(raw: &[u8]) {
+    let f = Fixture::new();
+    let seeded = f.owner();
+    let identity = seeded.identity.clone();
+    drop(seeded);
+    let paths = f.paths();
+    let main = serde_json::to_vec(&snapshot(1)).unwrap();
+    let backup = paths.creation.with_extension("json.bak");
+    fs::write(&paths.creation, &main).unwrap();
+    fs::write(&backup, raw).unwrap();
+    for _ in 0..2 {
+        let owner = NativeRootAuthority::elect(&paths)
+            .unwrap()
+            .expect("valid main remains usable");
+        assert_eq!(owner.identity, identity);
+        assert_eq!(owner.snapshots.read().unwrap().status, "loaded");
+        assert_eq!(fs::read(&paths.creation).unwrap(), main);
+        assert_eq!(fs::read(&backup).unwrap(), raw);
+        drop(owner);
+    }
+    let owner = f.owner();
+    owner.snapshots.write(snapshot(2), Some(1)).unwrap();
+    assert_eq!(owner.identity, identity);
+    assert_eq!(fs::read(&backup).unwrap(), main);
+    let archived: Vec<_> = fs::read_dir(paths.creation.parent().unwrap())
+        .unwrap()
+        .map(|entry| entry.unwrap().path())
+        .filter(|path| {
+            path.file_name()
+                .unwrap()
+                .to_string_lossy()
+                .contains(".corrupt-backup.")
+        })
+        .collect();
+    assert_eq!(archived.len(), 1);
+    assert_eq!(fs::read(&archived[0]).unwrap(), raw);
+    drop(owner);
+    let restarted = f.owner();
+    assert_eq!(restarted.identity, identity);
+    assert_eq!(
+        restarted.snapshots.read().unwrap().snapshot.unwrap()["revision"],
+        2
+    );
+}
+
+#[test]
+fn valid_main_with_invalid_json_backup_starts_restarts_and_archives_original_bytes() {
+    unused_corrupt_backup_retains_identity_until_existing_writer_archives(b"{not valid json");
+}
+
+#[test]
+fn valid_main_with_invalid_structure_backup_starts_restarts_and_archives_original_bytes() {
+    unused_corrupt_backup_retains_identity_until_existing_writer_archives(
+        br#"{"version":2,"revision":1,"projects":"broken"}"#,
+    );
+}
+
+#[test]
+fn corrupt_main_cannot_ignore_invalid_backup() {
+    for raw in [
+        b"{not json".as_slice(),
+        br#"{"version":2,"projects":"broken"}"#.as_slice(),
+    ] {
+        let f = Fixture::new();
+        let paths = f.paths();
+        let main = b"{broken main";
+        fs::write(&paths.creation, main).unwrap();
+        let backup = paths.creation.with_extension("json.bak");
+        fs::write(&backup, raw).unwrap();
+        assert!(NativeRootAuthority::elect(&paths)
+            .err()
+            .unwrap()
+            .starts_with("corrupt:"));
+        assert_eq!(fs::read(&paths.creation).unwrap(), main);
+        assert_eq!(fs::read(backup).unwrap(), raw);
+        assert!(!f.0.join("app/repository.json").exists());
+    }
+}
+
+#[cfg(windows)]
+#[test]
+fn valid_main_cannot_hide_backup_sharing_io_failure() {
+    use std::os::windows::fs::OpenOptionsExt;
+    let f = Fixture::new();
+    let paths = f.paths();
+    let raw = serde_json::to_vec(&snapshot(1)).unwrap();
+    fs::write(&paths.creation, &raw).unwrap();
+    let backup = paths.creation.with_extension("json.bak");
+    fs::write(&backup, &raw).unwrap();
+    let held = std::fs::OpenOptions::new()
+        .read(true)
+        .share_mode(0)
+        .open(&backup)
+        .unwrap();
+    assert!(NativeRootAuthority::elect(&paths)
+        .err()
+        .unwrap()
+        .starts_with("io:"));
+    assert!(!f.0.join("app/repository.json").exists());
+    drop(held);
+    assert_eq!(fs::read(&paths.creation).unwrap(), raw);
+    assert_eq!(fs::read(backup).unwrap(), raw);
+    assert!(f.owner().snapshots.read().is_ok());
+}
+
 #[cfg(windows)]
 #[test]
 fn marker_sharing_io_failure_never_becomes_missing() {

@@ -106,9 +106,14 @@ impl NativeRootAuthority {
             })
             .map_err(io::error)?
         {
-            let value: Value = serde_json::from_slice(&raw)
-                .map_err(|_| "corrupt: 项目备份 JSON 无效".to_string())?;
-            crate::creation_storage::validate_snapshot_value(&value)?;
+            // A usable primary leaves its corrupt unused backup for the existing writer to archive.
+            if let Ok(value) = serde_json::from_slice::<Value>(&raw) {
+                if let Err(error) = crate::creation_storage::validate_snapshot_value(&value) {
+                    if !error.starts_with("corrupt:") {
+                        return Err(error);
+                    }
+                }
+            }
         }
         admit_asset_records(&paths.assets)?;
         // No marker is published until both legacy locks and Native format admission succeed.
