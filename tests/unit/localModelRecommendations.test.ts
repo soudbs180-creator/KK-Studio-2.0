@@ -313,3 +313,22 @@ test("unknown free VRAM does not erase known H3 capacity or pretend runtime read
     ),
   );
 });
+
+test("partial CUDA capacity cannot prove the machine is below H3 guidance", () => {
+  const report = hardware();
+  report.gpus = [
+    { ...report.gpus[0], dedicatedBytes: 8 * GiB, freeBytes: 7 * GiB },
+    { ...report.gpus[0], dedicatedBytes: null, freeBytes: null },
+  ];
+  assert.ok(
+    recommendLocalModels(report, options).videoPackages.every(
+      (p) => p.capacityStatus === "unknown",
+    ),
+  );
+  report.gpus[0].dedicatedBytes = 16 * GiB;
+  assert.ok(
+    recommendLocalModels(report, options).videoPackages.every(
+      (p) => p.capacityStatus === "candidate",
+    ),
+  );
+});

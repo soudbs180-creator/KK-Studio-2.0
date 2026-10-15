@@ -270,18 +270,20 @@ function recommendVideoPackages(
     report.status !== "supported" ||
     resources.reasons.includes("stale-report") ||
     resources.reasons.includes("runtime-architecture-unverified") ||
-    report.memory === null ||
-    !gpus.some((item) => item.dedicatedBytes !== null);
+    report.memory === null;
   return localVideoModelPackages.map((entry) => {
     const capableGpus = gpus.filter(
       (item) => (item.dedicatedBytes ?? 0) >= entry.declaredMinVramBytes,
     );
     const capacityStatus = guidanceUnknown
       ? ("unknown" as const)
-      : capableGpus.length &&
-          report.memory!.usableBytes >= entry.declaredMinRamBytes
-        ? ("candidate" as const)
-        : ("below-guidance" as const);
+      : report.memory!.usableBytes < entry.declaredMinRamBytes
+        ? ("below-guidance" as const)
+        : capableGpus.length
+          ? ("candidate" as const)
+          : !gpus.length || gpus.some((item) => item.dedicatedBytes === null)
+            ? ("unknown" as const)
+            : ("below-guidance" as const);
     const downloadBytes = planLocalModelDownloads([entry.id]).downloadBytes;
     const requiredDiskBytes = 2 * downloadBytes + 2 * GiB;
     const diskUnknown =
