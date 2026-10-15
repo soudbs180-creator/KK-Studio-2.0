@@ -1150,12 +1150,21 @@ mod tests {
             runtime.state(&other.operation_id).await.unwrap().phase,
             "cancelled"
         );
-        let deadline = Instant::now() + Duration::from_secs(3);
+        let started = Instant::now();
+        // Cold hosted PowerShell startup is part of this fixture, not a CLI completion SLA.
+        let deadline = started + Duration::from_secs(15);
         loop {
-            if runtime.state(&failed.operation_id).await.unwrap().phase == "failed" {
+            let observed = runtime.state(&failed.operation_id).await.unwrap();
+            if observed.phase == "failed" {
                 break;
             }
-            assert!(Instant::now() < deadline);
+            assert!(
+                Instant::now() < deadline,
+                "owned exit-7 fixture did not report failed after {:?}: phase={}, pid={:?}",
+                started.elapsed(),
+                observed.phase,
+                observed.pid
+            );
             tokio::time::sleep(Duration::from_millis(10)).await;
         }
     }

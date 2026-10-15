@@ -350,7 +350,9 @@ export async function prepareImageTask(
     !project ||
     (!project.providerBaseUrl &&
       !project.providerCredentialRef &&
-      project.tasks.length === 0);
+      project.tasks.every(
+        (task) => taskSourceItemId(project, task) === undefined,
+      ));
   if (unbound) {
     if (!readProviderConnections().length)
       throw new ImageTaskCommandError(

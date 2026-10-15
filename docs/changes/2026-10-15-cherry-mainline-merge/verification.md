@@ -34,4 +34,13 @@ Task ID: TASK-CHERRY-RED-001。当前状态: IN_PROGRESS / NOT_VERIFIED。
 
 本文件记录源码冻结时已取得的证据。冻结后完整 verify、Rust、构建/Native、exact-head 独立补审、Hosted/Delivery、合并和 post-main 结果保存在上述外部目录及 PR58 当前 head 的 checks/最终说明；必须核对完整 SHA 和工件哈希，不以此处待验条目或旧 SHA 绿色代替。当前尚未合并。
 
+## 第二轮失败及验证入口保护
+
+- `c9dda70114406fff1fc7b334a1992193e09276bc` 两位独立源码补审 PASS、开放 P0/P1/P2 为 0；其真实新 Windows 2.1.32 Native 18 项 PASS，凭据清理读回为空，EXE SHA256 `aa660f980639a1f90c3fa96b8d80e0a91bea143a86154184138db7a1c48f6640`。该 head 的 Linux/macOS 编译与 Rust 已真实通过，但完整默认包/Native 尚在运行。
+- 新浏览器回归进一步暴露此前未覆盖的路径：空项目仅有对话任务时，被 tasks.length 非零误当作已绑定画布账号，首次图片提交被保护门禁拒绝。补单位测试实际 RED（同“原绑定缺失”错误），再将无绑定判定改为只检查画布来源任务，明确旧账号绑定和手动选择仍保留；19 项定向 GREEN。不是绕过身份校验或把 fixture 强制改成另一账号。
+- 本地 Node 一轮 1450 total / 1435 PASS / 14 SKIP / 1 FAIL，为 Agent 5 秒就绪等待（diagnostic 为空）。当时并发构建和浏览器负载，原因没有确定；原日志保留，须空闲复验，不修改该测试的截止时间来制造通过。
+- c9dda 托管 Windows Native 两轮在同一 exit-7 PowerShell fixture 的 3 秒 deadline 失败（202 PASS/1 FAIL）；本机同 Rust 203/203。生产 spawn/cancel/退出判断未改，fixture 给 cold PowerShell 15 秒上限并在失败时输出实际 phase/pid/elapsed；非零必须 failed、只取消自有进程、不干扰另一任务等断言全部保留。仍须实际 Hosted 重跑，不把时间放宽称为产品逻辑修复。
+- 另一并行故障排查已提供 Explorer GDI/TabProxy 泄漏的重复实验和 dump 证据；当前本地 Edge 批次在约 770 项时由精确自有 Playwright PID 树停止，未完成的整体记 INTERRUPTED，不推断全 PASS。此前原始短屏一次几何失败与首次图片回归失败均保留；未改短屏几何阈值。
+- 同字节引入已验证的 `headless-edge-options.mjs`（SHA256 `4cb6d47df86c796bd34ba7044a72fce9d29f6e05cbf5fb72e2e7601a573c4112`），仅接入当前 Playwright config、三个 audit、development plugins 和 TaskHost 自测的 headless Edge 启动点，不覆盖其他配置/账本。保留原 15 项 disable-features 后追加 msWindowTabManagerPublic，严格检查 Playwright1.63.0；升级必须重验。当前实际 browser 与 renderer 参数回归 PASS（16 项、2 renderer）。不重启 Explorer、不终止用户 Edge或其他工作区进程，Native CDP 继续独立运行。
+
 关联: [spec](spec.md)、[plan](plan.md)、[review](review.md)。旧 Cherry 证据保留在原日期包，仅证明其原 SHA。

@@ -6,6 +6,7 @@ import { createServer } from "node:http";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { chromium, expect } from "@playwright/test";
+import { headlessEdgeLaunchOptions } from "../../scripts/testing/headless-edge-options.mjs";
 import { credentialId } from "../../src/features/creation/providerCredentials.ts";
 import {
   DEFAULT_MODEL_PROVIDER,
@@ -51,6 +52,7 @@ async function projectListSelfTest() {
   const fixtureBrowser = await chromium.launch({
     channel: "msedge",
     headless: true,
+    ...headlessEdgeLaunchOptions,
   });
   try {
     const fixturePage = await fixtureBrowser.newPage();

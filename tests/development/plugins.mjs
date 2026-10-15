@@ -4,6 +4,7 @@ import { execFileSync } from "node:child_process";
 import { mkdir, readFile, realpath, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { chromium, expect } from "@playwright/test";
+import { headlessEdgeLaunchOptions } from "../../scripts/testing/headless-edge-options.mjs";
 import { createServer } from "vite";
 import {
   bundledPlugins as plugins,
@@ -65,7 +66,10 @@ try {
     );
     receipt.steps.push("linked-dependency-parent-remains-denied");
   }
-  browser = await chromium.launch({ channel: "msedge" });
+  browser = await chromium.launch({
+    channel: "msedge",
+    ...headlessEdgeLaunchOptions,
+  });
   page = await browser.newPage({ viewport: { width: 1920, height: 1080 } });
   page.setDefaultTimeout(15_000);
   page.on("pageerror", (error) => receipt.errors.push(String(error)));

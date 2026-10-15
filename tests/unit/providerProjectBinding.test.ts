@@ -11,6 +11,7 @@ import {
   connectionFromModelProfile,
   writeProviderConnections,
 } from "../../src/features/creation/providerRegistry.ts";
+import { setSessionApiKey } from "../../src/features/creation/providerCredentials.ts";
 
 function localConnection(id: string, baseUrl: string): ProviderConnection {
   return {
@@ -108,6 +109,50 @@ async function followUp(project: CreationProject) {
     project,
   );
 }
+
+test("conversation-only history does not bind the first canvas image to a missing original account", async () => {
+  const image = connectionFromModelProfile({
+    version: 1,
+    name: "image",
+    baseUrl: "https://canvas-fixture.example.test/v1",
+    model: "image-model",
+    protocol: "openai-chat",
+    authMode: "api-key",
+  });
+  const project = createProject({
+    prompt: "first canvas image",
+    model: "image-model",
+    kind: "image",
+    attachments: [],
+  });
+  project.tasks = [
+    {
+      ...createTask(project),
+      kind: "text",
+      status: "failed",
+      conversationRoundId: "round-only",
+      conversationUserMessageId: "round-user",
+    },
+  ];
+  await withRegistry([image], async () => {
+    setSessionApiKey("synthetic-test-key", image.baseUrl!, image.credentialRef);
+    try {
+      const prepared = await prepareImageTask(
+        {
+          prompt: "first canvas image",
+          model: image.model!,
+          kind: "image",
+          attachments: [],
+          privacyMode: "byok_local",
+        },
+        project,
+      );
+      assert.equal(prepared.id, image.id);
+    } finally {
+      setSessionApiKey("", image.baseUrl!, image.credentialRef);
+    }
+  });
+});
 
 test("a comparison route B never changes the original project A follow-up binding", async () => {
   const original = localConnection("a", "http://127.0.0.1:11434/v1");

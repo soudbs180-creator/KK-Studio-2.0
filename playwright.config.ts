@@ -1,4 +1,5 @@
 import { defineConfig } from "@playwright/test";
+import { headlessEdgeLaunchOptions } from "./scripts/testing/headless-edge-options.mjs";
 const productionPort = "1423";
 const configuredPort = process.env.KK_TEST_PORT;
 if (configuredPort !== undefined && configuredPort !== productionPort)
@@ -14,6 +15,7 @@ export default defineConfig({
   use: {
     baseURL,
     channel: "msedge",
+    launchOptions: headlessEdgeLaunchOptions,
     viewport: { width: 1920, height: 1080 },
   },
   webServer: {
