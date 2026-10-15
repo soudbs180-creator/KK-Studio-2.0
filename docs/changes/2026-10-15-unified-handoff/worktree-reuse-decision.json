@@ -1,0 +1,16 @@
+{
+  "taskId": "TASK-GOV-006",
+  "currentOwnerThread": "01a13e9c-1692-7186-a6b8-2cfb70d26038",
+  "sourceAuthority": "用户本轮安全接管/原账本留档授权；最新指令仅整理交接，另开正式执行会话",
+  "worktree": "D:/kk-studio/.worktrees/TASK-GOV-PHASE0",
+  "originalBranch": "codex/TASK-GOV-PHASE0-governance-baseline",
+  "originalHead": "f0a385fd4d4836cf107d0d3d350a03139d97ec78",
+  "newBranch": "docs/TASK-GOV-006-unified-handoff",
+  "baseMainSha": "235e7f798c38b022d578f8fa41eaea1b9281fd6d",
+  "originalOwnerThread": "UNKNOWN；未定位原会话，不声称已直接回读其idle",
+  "evidence": "local-evidence/governance-phase0-reuse-final-observed.json：原任务自身DONE/PASS，完整untracked clean、ignored空、无worktree/index锁、无路径匹配进程；当前main/canonical无branch/path活跃任务引用。",
+  "rootDecision": "在已获接管留档授权下由root认领已完成且停放的干净治理目录，仅建立可逆的新文档分支。没有中断任何未知owner会话，旧branch及所有SHA保留；不把进程快照当owner会话idle证据。",
+  "remainingBoundary": "原owner线程身份未恢复；若再现相关写入者必须协调，不覆盖。此目录目前仅root写治理资料，未开始产品实现。",
+  "newWorktrees": 0,
+  "productOrUserDataWrites": 0
+}

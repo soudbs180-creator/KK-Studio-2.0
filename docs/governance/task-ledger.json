@@ -6071,5 +6071,1218 @@
     "priorityRationale": "用户明确要求产品参考图连线后可直接使用 Codex 内置生图，并实际桌面验证。",
     "lastVerified": "2026-10-15",
     "baseSha": "cbda65e4389fc807769a8faf7654892415992589"
+  },
+  {
+    "id": "TASK-GOV-006",
+    "title": "统一会话安全交接、全量需求映射与单主控承接",
+    "goal": "保护全部现场并暂停旧会话，在原账本统一全部批准范围与可追溯交付链，再按依赖恢复安全开发。",
+    "scope": "本项目安全交接及治理；不发布/改历史/删除/覆盖用户数据，不将本次暂停授权扩为破坏性权限。",
+    "owner": "root",
+    "ownerRole": "repository-maintainer",
+    "branch": "docs/TASK-GOV-006-unified-handoff",
+    "worktree": "D:/kk-studio/.worktrees/TASK-GOV-PHASE0",
+    "status": "IN_PROGRESS",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "priorityRationale": "统一全部来源与交付链、保护恢复现场并消除并发写入；历史与完整功能验收仍待后续正式会话。",
+    "acceptance": [
+      "支持工具盘点全部项目会话/分支/worktree/完整SHA/dirty与运行命令，分开FACT/INFERENCE/UNKNOWN/CONFLICT，列表50条不冒充全量。",
+      "每个已识别活动项目仅一次安全暂停请求并回读终态；保留不可中断写入、所有成果/用户资料，不kill或关闭用户客户端。",
+      "本账本全部141原任务及本地独有/历史未完成果有来源映射，容量错误/中断重试/未开发优化/排期负责人待确认/用户验收权完整继承。",
+      "单主控、单任务单分支worktree及写入者；遵守worktree预算和PR保护，squash后从实际main承接独有改动、无历史重写/强推。",
+      "每平台交付绑定main/版本源/依赖锁/构建hash/安装进程路径/客户端版本及实际功能和用户验收；全部批准范围/P0/P1/恢复风险清零前总目标不完成。"
+    ],
+    "dependencies": [],
+    "affectedModules": [
+      "docs/governance",
+      "docs/changes/2026-10-15-unified-handoff"
+    ],
+    "evidence": [
+      "docs/changes/2026-10-15-unified-handoff/takeover-context.md",
+      "docs/changes/2026-10-15-unified-handoff/delivery-matrix.md",
+      "docs/changes/2026-10-15-unified-handoff/session-inventory.md",
+      "docs/changes/2026-10-15-unified-handoff/verification.md"
+    ],
+    "verification": "8个原活动主会话各发一次安全暂停；重连后8主+4此前active子会话均支持工具回读idle并交接无写入。114登记worktree/113有效原账本+Cherry冲突两侧内存联合192ID，main141缺51只是覆盖差异；所有历史状态/原对象保留，不批量覆盖原141记录。复用原DONE/PASS clean治理树切新分支，旧分支保留。历史/全局枚举存在缺口，产品未新增实现。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-15",
+    "lastVerified": "2026-10-15",
+    "nextAction": "完成接管包独审与治理门禁并交原主控确认；按用户最新要求另建正式执行会话，此会话不开始产品实现。后续先承接GDI保护、HOME/业务恢复P2，再按依赖Canvas/Responsive、Compress、Design、PR58与历史未完，均正常PR合main及实际客户端验证。",
+    "requirementRefs": [
+      "ledger:TASK-GOV-004",
+      "ledger:TASK-PROV-007",
+      "ledger:TASK-AGENT-001",
+      "ledger:TASK-TASKSTATE-001",
+      "ledger:TASK-ORCH-003",
+      "docs/changes/2026-10-15-unified-handoff/source-instructions.md"
+    ],
+    "featureIds": [],
+    "handoffMatrix": {
+      "version": 1,
+      "baseMainSha": "235e7f798c38b022d578f8fa41eaea1b9281fd6d",
+      "stableSourceTaskCount": 192,
+      "mainTaskCount": 141,
+      "coverageDifferenceCount": 51,
+      "coverageDifferenceMeaning": "待逐项核对的台账覆盖差异，不是51个功能丢失",
+      "sourceManifest": "docs/changes/2026-10-15-unified-handoff/source-manifest.json",
+      "groupPlan": "docs/changes/2026-10-15-unified-handoff/resume-order.md",
+      "sourceIndexEncoding": "逗号分隔闭区间，索引对应sourceManifest.sources；无损保留全部来源",
+      "defaultDisposition": "保留所有来源和独有成果；主任务分组见groupPlan，相近实现先actual diff后裁决；原状态不批量覆盖",
+      "deliveryChainVerified": "UNKNOWN",
+      "entries": [
+        {
+          "taskId": "BACKEND-ASTRA-001",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["TODO"]
+        },
+        {
+          "taskId": "BACKEND-CONVERSATION",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["PARTIAL"]
+        },
+        {
+          "taskId": "BACKEND-IMAGE-PARAMS",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["PARTIAL"]
+        },
+        {
+          "taskId": "BACKEND-MCP-AUTO",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["TODO"]
+        },
+        {
+          "taskId": "BACKEND-MEDIA-001",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["TODO"]
+        },
+        {
+          "taskId": "BACKEND-PLATFORM",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["TODO"]
+        },
+        {
+          "taskId": "BACKEND-TEXT-NODE",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["PARTIAL"]
+        },
+        {
+          "taskId": "EXT-COMFY",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["BLOCKED"]
+        },
+        {
+          "taskId": "EXT-GIT",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["BLOCKED", "DONE"]
+        },
+        {
+          "taskId": "EXT-PROVIDER",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["BLOCKED"]
+        },
+        {
+          "taskId": "FEATURE-SYSTEM",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "PERF-001",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["PARTIAL"]
+        },
+        {
+          "taskId": "PLUGIN-DESKTOP-001",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["DONE", "TODO"]
+        },
+        {
+          "taskId": "REL-2.1.0",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["DONE", "REVIEW"]
+        },
+        {
+          "taskId": "T0",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "T1",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "T10",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["BLOCKED"]
+        },
+        {
+          "taskId": "T10-PREP",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["PARTIAL", "TODO"]
+        },
+        {
+          "taskId": "T11",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["BLOCKED"]
+        },
+        {
+          "taskId": "T12",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["TODO"]
+        },
+        {
+          "taskId": "T2",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "T3a",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "T3b",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "T4",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "T5",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["DONE", "PARTIAL"]
+        },
+        {
+          "taskId": "T6",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["PARTIAL"]
+        },
+        {
+          "taskId": "T7",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["PARTIAL", "TODO"]
+        },
+        {
+          "taskId": "T8",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["TODO"]
+        },
+        {
+          "taskId": "T9",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["TODO"]
+        },
+        {
+          "taskId": "TASK-222-ACTIONS-20261014",
+          "inMainLedger": true,
+          "sourceIndexRanges": "5,10,20,30,33,36,45,56",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-223-ACTIONS-20261014",
+          "inMainLedger": true,
+          "sourceIndexRanges": "5,10,20,30,33,36,45,56",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-AGENT-001",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["PARTIAL"]
+        },
+        {
+          "taskId": "TASK-AGENT-002",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["PARTIAL"]
+        },
+        {
+          "taskId": "TASK-AGENT-003",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-AGENT-004",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-5,7-14,16-21,24-47,50-52,55-56,59-65,67-81,83-113",
+          "observedHistoricalStatuses": ["IN_PROGRESS", "PARTIAL"]
+        },
+        {
+          "taskId": "TASK-AGENT-005",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-5,7-14,16-21,24-47,50-52,55-56,59-65,67-81,83-113",
+          "observedHistoricalStatuses": ["IN_PROGRESS", "PARTIAL"]
+        },
+        {
+          "taskId": "TASK-AGENT-006",
+          "inMainLedger": false,
+          "sourceIndexRanges": "22",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-AGENT-007",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,3-5,7-10,13-14,16-21,23-47,50-52,55-56,59-65,67-81,83-113",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-AGENT-008",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,3-5,7-10,13-14,16-21,24-47,50-52,55-56,59-65,67-81,83-113",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-AGENT-010",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,3-5,7-8,10,13-14,16,20,24-26,28,30-34,36,42,44-45,50,56,62-63,65,71,73-74,78-79,81,85-87,112",
+          "observedHistoricalStatuses": ["REVIEW"]
+        },
+        {
+          "taskId": "TASK-AGENT-RECOVERY-20261013",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,5,10,20,25-26,28,30-33,36,45,56,62-63",
+          "observedHistoricalStatuses": ["PARTIAL"]
+        },
+        {
+          "taskId": "TASK-AGENT-UX-20261014",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,5,10,20,26,28,30,33,36,45,56,63",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-AI-GATEWAY-001",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,3-5,7-8,10,13-14,16-17,20,24-34,36,39,42,44-47,50,56,62-65,68,71-75,77-81,83-87,98,111-112",
+          "observedHistoricalStatuses": ["PARTIAL", "TODO"]
+        },
+        {
+          "taskId": "TASK-ASTRA-001",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-ATELIER-NETWORK-20261014",
+          "inMainLedger": false,
+          "sourceIndexRanges": "0,28,63",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-ATELIER-STORAGE-20261014",
+          "inMainLedger": false,
+          "sourceIndexRanges": "0,26,28,63",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-AUDIT-20261003",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,3-5,7-10,13-14,16-21,24-47,50-52,55-56,59-65,67-81,83-113",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-AUDIT-SEC-001",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["DONE", "REVIEW"]
+        },
+        {
+          "taskId": "TASK-CANVAS-001",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,3-10,13-21,24-47,49-53,55-56,59-65,67-113",
+          "observedHistoricalStatuses": ["PARTIAL"]
+        },
+        {
+          "taskId": "TASK-CANVAS-002",
+          "inMainLedger": false,
+          "sourceIndexRanges": "59,94,105",
+          "observedHistoricalStatuses": ["TODO"]
+        },
+        {
+          "taskId": "TASK-CANVAS-003",
+          "inMainLedger": false,
+          "sourceIndexRanges": "59,94,105",
+          "observedHistoricalStatuses": ["TODO"]
+        },
+        {
+          "taskId": "TASK-CANVAS-GROUP-20261015",
+          "inMainLedger": false,
+          "sourceIndexRanges": "30",
+          "observedHistoricalStatuses": ["IN_PROGRESS"]
+        },
+        {
+          "taskId": "TASK-CANVAS-KAWORKAI-001",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,3-5,7-10,13-14,16-21,24-47,50-52,55-56,59-65,67-81,83-113",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-CANVAS-KAWORKAI-002",
+          "inMainLedger": false,
+          "sourceIndexRanges": "18-19,35,82,104",
+          "observedHistoricalStatuses": ["PARTIAL", "TODO"]
+        },
+        {
+          "taskId": "TASK-CANVAS-SYNC-20261014",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,5,10,20,26,28,30-31,33,36,45,56,63",
+          "observedHistoricalStatuses": ["DONE", "PARTIAL"]
+        },
+        {
+          "taskId": "TASK-CANVAS-TAGS-LIKES-UI-001",
+          "inMainLedger": false,
+          "sourceIndexRanges": "7",
+          "observedHistoricalStatuses": ["REVIEW"]
+        },
+        {
+          "taskId": "TASK-CANVAS-WIDE-PORT-20261014",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,5,10,20,26,28,30-31,33,36,45,56,63",
+          "observedHistoricalStatuses": ["TODO"]
+        },
+        {
+          "taskId": "TASK-CAP-001",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["PARTIAL"]
+        },
+        {
+          "taskId": "TASK-CCSWITCH-LEARN-20261014",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,5,10,20,26,28,30-33,36,45,56,63",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-CHERRY-RED-001",
+          "inMainLedger": false,
+          "sourceIndexRanges": "33",
+          "observedHistoricalStatuses": ["REVIEW"]
+        },
+        {
+          "taskId": "TASK-CLOSEOUT-2026-09-28",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,3-5,7-10,13-21,24-47,50-52,55-56,59-65,67-81,83-113",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-CODEX-HOME-20261015",
+          "inMainLedger": true,
+          "sourceIndexRanges": "5,10,30,33,36,45,56",
+          "observedHistoricalStatuses": ["IN_PROGRESS", "REVIEW"]
+        },
+        {
+          "taskId": "TASK-CODEX-REF-20261015",
+          "inMainLedger": true,
+          "sourceIndexRanges": "5,10,30,33,36,45,56",
+          "observedHistoricalStatuses": ["PARTIAL", "UNKNOWN"]
+        },
+        {
+          "taskId": "TASK-COMPANION-RECOVERY-003",
+          "inMainLedger": false,
+          "sourceIndexRanges": "18-19,35,90,104",
+          "observedHistoricalStatuses": ["PARTIAL", "TODO"]
+        },
+        {
+          "taskId": "TASK-COMPARE-001",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,3-10,13-21,24-47,50-52,55-56,59-65,67-81,83-113",
+          "observedHistoricalStatuses": ["DONE", "REVIEW"]
+        },
+        {
+          "taskId": "TASK-COMPARE-002",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,3-10,13-21,24-47,50-52,55-56,59-65,67-81,83-113",
+          "observedHistoricalStatuses": ["DONE", "REVIEW"]
+        },
+        {
+          "taskId": "TASK-DESIGN-MD-20261015",
+          "inMainLedger": false,
+          "sourceIndexRanges": "20",
+          "observedHistoricalStatuses": ["IN_PROGRESS"]
+        },
+        {
+          "taskId": "TASK-DESKTOP-FLUSH-001",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,3-5,7-10,13-14,16-21,24-47,50-52,55-56,59,61-65,67-81,83-88,90-91,95-105,107-113",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-DESKTOP-INSTALLER-001",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,3-5,7-10,13-14,16-21,24-47,50-52,55-56,59-65,67-81,83-113",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-DOC-CURRENT-002",
+          "inMainLedger": false,
+          "sourceIndexRanges": "18-19,35,104",
+          "observedHistoricalStatuses": ["TODO"]
+        },
+        {
+          "taskId": "TASK-DOCS-HISTORY-001",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,2-113",
+          "observedHistoricalStatuses": ["DONE", "PARTIAL", "TODO"]
+        },
+        {
+          "taskId": "TASK-DOCS-STRUCT-001",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,3-5,7-8,10,13-14,16-17,20,24-34,36,39-40,42,44-47,50,56,62-65,68,71-81,83-87,96,98-100,111-112",
+          "observedHistoricalStatuses": ["DONE", "REVIEW"]
+        },
+        {
+          "taskId": "TASK-DS-001",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["PARTIAL"]
+        },
+        {
+          "taskId": "TASK-DS-002",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-ENG-001",
+          "inMainLedger": true,
+          "sourceIndexRanges": "5,10,20,30,33,36-37,45,56,65",
+          "observedHistoricalStatuses": ["REVIEW"]
+        },
+        {
+          "taskId": "TASK-EXPLORER-GDI-20261015",
+          "inMainLedger": false,
+          "sourceIndexRanges": "10",
+          "observedHistoricalStatuses": ["REVIEW"]
+        },
+        {
+          "taskId": "TASK-FIX-PUSH-GUARD-SPACES-001",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,5,10,13-14,16,20,25-26,28,30-33,35-38,44-45,50,52,56,62-63,65,74,78,86,88",
+          "observedHistoricalStatuses": ["REVIEW", "TODO"]
+        },
+        {
+          "taskId": "TASK-GATEWAY-BUDGET-002",
+          "inMainLedger": false,
+          "sourceIndexRanges": "18-19,35,104",
+          "observedHistoricalStatuses": ["TODO"]
+        },
+        {
+          "taskId": "TASK-GIT-HEALTH-002",
+          "inMainLedger": false,
+          "sourceIndexRanges": "18-19,35,104",
+          "observedHistoricalStatuses": ["TODO"]
+        },
+        {
+          "taskId": "TASK-GOV-001",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-GOV-002",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["DONE", "PARTIAL"]
+        },
+        {
+          "taskId": "TASK-GOV-003",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,5,10,13-14,16,20,25-26,28,30-33,36,44-45,50,56,62-63,65,74,78,86",
+          "observedHistoricalStatuses": ["DONE", "PARTIAL"]
+        },
+        {
+          "taskId": "TASK-GOV-004",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,5,10,13-14,16,20,25-26,28,30-33,36,44-45,50,56,62-63,65,74,78,86",
+          "observedHistoricalStatuses": ["PARTIAL"]
+        },
+        {
+          "taskId": "TASK-GOV-005",
+          "inMainLedger": true,
+          "sourceIndexRanges": "5,10,16,20,30,33,36,45,50,56,65",
+          "observedHistoricalStatuses": ["REVIEW"]
+        },
+        {
+          "taskId": "TASK-GOV-GOALS-001",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,3-5,7-10,13-14,16-21,24-47,50-52,55-56,59-65,67-81,83-113",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-GOV-INTEGRITY",
+          "inMainLedger": false,
+          "sourceIndexRanges": "40",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-GOV-PHASE0",
+          "inMainLedger": false,
+          "sourceIndexRanges": "41",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-GOV-STATE-001",
+          "inMainLedger": false,
+          "sourceIndexRanges": "42-43",
+          "observedHistoricalStatuses": ["DONE", "REVIEW"]
+        },
+        {
+          "taskId": "TASK-HEALTH-ANON-20261015",
+          "inMainLedger": false,
+          "sourceIndexRanges": "30",
+          "observedHistoricalStatuses": ["TODO"]
+        },
+        {
+          "taskId": "TASK-HERMES-POC-001",
+          "inMainLedger": false,
+          "sourceIndexRanges": "44",
+          "observedHistoricalStatuses": ["PARTIAL"]
+        },
+        {
+          "taskId": "TASK-IMAGE-COMPRESS-20261015",
+          "inMainLedger": false,
+          "sourceIndexRanges": "45",
+          "observedHistoricalStatuses": ["REVIEW"]
+        },
+        {
+          "taskId": "TASK-IMAGE-EDIT-001",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,3-5,7-10,13-14,16-21,24-47,50-52,55-56,59,61-65,67-81,83-88,90-91,93,95-105,107-113",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-IMAGE-EDIT-VERIFY-002",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,3-5,7-10,13-14,16-21,24-47,50-52,55-56,59,61-65,67-81,83-88,90-91,93,95-105,107-113",
+          "observedHistoricalStatuses": ["TODO"]
+        },
+        {
+          "taskId": "TASK-IMAGE-REF-003",
+          "inMainLedger": false,
+          "sourceIndexRanges": "18-19,35,104",
+          "observedHistoricalStatuses": ["TODO"]
+        },
+        {
+          "taskId": "TASK-IMAGE-RETRY-004",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,3-5,7-10,13-14,16-21,24-47,50-52,55-56,61-65,67-81,83-88,90-91,95-104,108-113",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-KK2-MAIN-SYNC",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-LAUNCH-001",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,3-5,7-10,13-14,16-21,24-47,50-52,55-56,59,61-65,67-81,83-88,90-113",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-LOCAL-ASSET-002",
+          "inMainLedger": false,
+          "sourceIndexRanges": "18-19,35,95,104",
+          "observedHistoricalStatuses": ["PARTIAL", "TODO"]
+        },
+        {
+          "taskId": "TASK-LOCAL-SERVICE-001",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,3-5,7-10,13-21,24-47,50-52,55-56,59-65,67-81,83-113",
+          "observedHistoricalStatuses": ["PARTIAL"]
+        },
+        {
+          "taskId": "TASK-MAIN-CLOSE-002",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["DONE", "IN_PROGRESS"]
+        },
+        {
+          "taskId": "TASK-MCP-INBOUND-001",
+          "inMainLedger": false,
+          "sourceIndexRanges": "84",
+          "observedHistoricalStatuses": ["PARTIAL"]
+        },
+        {
+          "taskId": "TASK-MCP-PATCH-ANCHOR-001",
+          "inMainLedger": false,
+          "sourceIndexRanges": "46-47",
+          "observedHistoricalStatuses": ["IN_PROGRESS"]
+        },
+        {
+          "taskId": "TASK-MCP-PROTO-001",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,3-10,13-21,24-47,49-53,55-56,59-65,67-113",
+          "observedHistoricalStatuses": ["PARTIAL", "TODO"]
+        },
+        {
+          "taskId": "TASK-MCP-REGISTRY-001",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,3-10,13-21,24-47,49-53,55-56,59-65,67-113",
+          "observedHistoricalStatuses": ["DONE", "TODO"]
+        },
+        {
+          "taskId": "TASK-MCP-REGISTRY-002",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,3-10,13-21,24-47,49-53,55-56,59-65,67-113",
+          "observedHistoricalStatuses": ["DONE", "TODO"]
+        },
+        {
+          "taskId": "TASK-MEMORY-001",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,3-5,7-10,13-14,16-21,23-48,50-52,55-56,59-65,67-81,83-113",
+          "observedHistoricalStatuses": ["PARTIAL"]
+        },
+        {
+          "taskId": "TASK-MEMORY-002",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,3-5,7-10,13-14,16-21,23-48,50-52,55-56,59-65,67-81,83-113",
+          "observedHistoricalStatuses": ["PARTIAL"]
+        },
+        {
+          "taskId": "TASK-MINIMAX-001",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["PARTIAL"]
+        },
+        {
+          "taskId": "TASK-MMD-BEHAVIOR-INTEGRATION-20261012",
+          "inMainLedger": false,
+          "sourceIndexRanges": "14",
+          "observedHistoricalStatuses": ["PARTIAL"]
+        },
+        {
+          "taskId": "TASK-MOBILE-001",
+          "inMainLedger": false,
+          "sourceIndexRanges": "50",
+          "observedHistoricalStatuses": ["IN_PROGRESS"]
+        },
+        {
+          "taskId": "TASK-MODEL-001",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,3-5,7-10,13-14,16-21,24-47,50-52,55-56,59-65,67-81,83-88,90-113",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-MODEL-BATCH-002",
+          "inMainLedger": false,
+          "sourceIndexRanges": "18-19,35,104",
+          "observedHistoricalStatuses": ["TODO"]
+        },
+        {
+          "taskId": "TASK-MOLI-BROWSER-CONTRACT-001",
+          "inMainLedger": false,
+          "sourceIndexRanges": "86",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-MOLI-BROWSER-SIDECAR-001",
+          "inMainLedger": false,
+          "sourceIndexRanges": "86",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-NATIVE-GESTURE-002",
+          "inMainLedger": false,
+          "sourceIndexRanges": "18-19,35,104",
+          "observedHistoricalStatuses": ["TODO"]
+        },
+        {
+          "taskId": "TASK-ORCH-001",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,3-10,13-21,24-47,49-53,55-56,59-65,67-113",
+          "observedHistoricalStatuses": ["DONE", "IN_PROGRESS"]
+        },
+        {
+          "taskId": "TASK-ORCH-002",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,3-10,13-21,24-47,49-53,55-56,59-65,67-113",
+          "observedHistoricalStatuses": ["DONE", "TODO"]
+        },
+        {
+          "taskId": "TASK-ORCH-003",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,3-10,13-21,24-47,49-53,55-56,59-65,67-113",
+          "observedHistoricalStatuses": ["TODO"]
+        },
+        {
+          "taskId": "TASK-ORCH-REPLAN-001",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,3-5,7-10,13-14,16-21,24-47,50-52,55-56,59-65,67-81,83-113",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-PACKAGE-002",
+          "inMainLedger": false,
+          "sourceIndexRanges": "59,105",
+          "observedHistoricalStatuses": ["TODO"]
+        },
+        {
+          "taskId": "TASK-PERF-ASSETS-001",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-PERF-CANVAS-1000-001",
+          "inMainLedger": false,
+          "sourceIndexRanges": "52",
+          "observedHistoricalStatuses": ["TODO"]
+        },
+        {
+          "taskId": "TASK-PLUGIN-DEV-001",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,3-5,7-10,13-14,16-21,24-47,50-52,55-56,59-65,67-81,83-88,90-113",
+          "observedHistoricalStatuses": ["DONE", "TODO"]
+        },
+        {
+          "taskId": "TASK-PLUGIN-MARKDOWN-001",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,3-5,7-10,13-14,16-21,24-47,50-52,55-56,59,61-65,67-81,83-88,90-91,95-105,107-113",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-PLUGIN-RECOVERY-001",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,3-5,7-10,13-14,16-21,24-47,50-52,55-56,59,61-65,67-81,83-88,90-91,95-105,107-113",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-POSTMERGE-MIGRATION-2026-09-28",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,3-5,7-10,13-21,24-47,50-52,55-56,59-65,67-81,83-113",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-PROJECT-001",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,3-5,7-10,13-14,16-21,24-47,50-52,55-56,59-65,67-81,83-113",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-PROJECT-NAMING-001",
+          "inMainLedger": false,
+          "sourceIndexRanges": "80",
+          "observedHistoricalStatuses": ["REVIEW"]
+        },
+        {
+          "taskId": "TASK-PROJECT-SIDEBAR-001",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,3-5,7-10,13-14,16-21,24-47,50-52,55-57,59-65,67-81,83-113",
+          "observedHistoricalStatuses": ["IN_PROGRESS", "PARTIAL"]
+        },
+        {
+          "taskId": "TASK-PROTECT-BATCH-GEN-001",
+          "inMainLedger": false,
+          "sourceIndexRanges": "52",
+          "observedHistoricalStatuses": ["TODO"]
+        },
+        {
+          "taskId": "TASK-PROTOCOL-CLI-20261014",
+          "inMainLedger": true,
+          "sourceIndexRanges": "5,10,20,30,33,36,45,56",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-PROV-001",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-PROV-002",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,3-10,13-21,24-47,50-56,59-65,67-113",
+          "observedHistoricalStatuses": ["DONE", "REVIEW"]
+        },
+        {
+          "taskId": "TASK-PROV-003",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,3-5,7-10,13-14,16-21,24-47,50-56,59-65,67-81,83-113",
+          "observedHistoricalStatuses": ["IN_PROGRESS", "PARTIAL", "REVIEW"]
+        },
+        {
+          "taskId": "TASK-PROV-004",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,3-5,7-10,13-14,16-21,24-47,50-52,54-56,59-65,67-81,83-113",
+          "observedHistoricalStatuses": ["PARTIAL", "REVIEW"]
+        },
+        {
+          "taskId": "TASK-PROV-005",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,3-5,7-10,13-14,16-21,24-47,50-52,55-56,59,61-65,67-81,83-88,90-113",
+          "observedHistoricalStatuses": ["DONE", "TODO"]
+        },
+        {
+          "taskId": "TASK-PROV-006",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,3-5,7-10,13-14,16-21,24-47,50-52,55-56,59,61-65,67-81,83-88,90-113",
+          "observedHistoricalStatuses": ["DONE", "TODO"]
+        },
+        {
+          "taskId": "TASK-PROV-007",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,3-5,7-8,10,13-14,16,20,24-26,28-34,36,39,42,44-47,50,56,62-65,71-75,77-81,84-87,91,103,111-112",
+          "observedHistoricalStatuses": ["DONE", "TODO"]
+        },
+        {
+          "taskId": "TASK-PROV-BYOK-001",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,3-5,7-8,10,13-14,16-17,20,24-34,36,39,42,44-47,50,56,62-65,68,71-75,77-81,83-87,98,111-112",
+          "observedHistoricalStatuses": ["TODO"]
+        },
+        {
+          "taskId": "TASK-PROV-CONFIG-004",
+          "inMainLedger": false,
+          "sourceIndexRanges": "18-19,35,104",
+          "observedHistoricalStatuses": ["REVIEW"]
+        },
+        {
+          "taskId": "TASK-REPO-TIDY-001",
+          "inMainLedger": false,
+          "sourceIndexRanges": "55",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-RESPONSIVE-UI-001",
+          "inMainLedger": false,
+          "sourceIndexRanges": "56",
+          "observedHistoricalStatuses": ["IN_PROGRESS"]
+        },
+        {
+          "taskId": "TASK-REVIEW-REMEDIATION-001",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,5,10,20,25-26,28,30-33,36,45,56,62-63,74,78",
+          "observedHistoricalStatuses": ["DONE", "REVIEW"]
+        },
+        {
+          "taskId": "TASK-RULES-003",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-RULES-004",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,2-113",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-SETTINGS-LATEST-20261015",
+          "inMainLedger": true,
+          "sourceIndexRanges": "5,10,20,30,33,36,45,56",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-SETTINGS-UI-20261015",
+          "inMainLedger": false,
+          "sourceIndexRanges": "0,63",
+          "observedHistoricalStatuses": ["IN_PROGRESS"]
+        },
+        {
+          "taskId": "TASK-TASKSTATE-001",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,3-10,13-21,24-47,49-53,55-56,59-65,67-113",
+          "observedHistoricalStatuses": ["PARTIAL"]
+        },
+        {
+          "taskId": "TASK-TASKSTATE-002",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,3-5,7-10,13-14,16-21,24-47,50-52,55-56,59-65,67-81,83-113",
+          "observedHistoricalStatuses": ["PARTIAL", "TODO"]
+        },
+        {
+          "taskId": "TASK-UI-005",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-UI-006",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-UI-007",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-UI-008",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-UI-009",
+          "inMainLedger": false,
+          "sourceIndexRanges": "58",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-UI-010",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,3-5,7-10,13-14,16-21,24-47,50-52,55-57,59-65,67-81,83-113",
+          "observedHistoricalStatuses": ["DONE", "IN_PROGRESS"]
+        },
+        {
+          "taskId": "TASK-UI-011",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,3-5,7-10,13-14,16-21,24-47,50-52,55-56,59,61-65,67-81,83-88,90-113",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-UI-012",
+          "inMainLedger": false,
+          "sourceIndexRanges": "59,94,105",
+          "observedHistoricalStatuses": ["IN_PROGRESS", "REVIEW"]
+        },
+        {
+          "taskId": "TASK-UI-012-RESUME-001",
+          "inMainLedger": false,
+          "sourceIndexRanges": "18-19,35,104-105",
+          "observedHistoricalStatuses": ["PARTIAL"]
+        },
+        {
+          "taskId": "TASK-UI-013",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,3-5,7-10,13-14,16-21,24-47,50-52,55-56,59,61-65,67-81,83-88,90-113",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-UI-014",
+          "inMainLedger": false,
+          "sourceIndexRanges": "91,106",
+          "observedHistoricalStatuses": ["PARTIAL", "REVIEW"]
+        },
+        {
+          "taskId": "TASK-UI-014-RESUME-001",
+          "inMainLedger": false,
+          "sourceIndexRanges": "18-19,35,104",
+          "observedHistoricalStatuses": ["PARTIAL"]
+        },
+        {
+          "taskId": "TASK-UI-015",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,3-5,7-8,10,13-14,16,20-21,25-26,28-34,36,39,42,44-45,50,56,62-63,65,71-75,78-79,81,84-87,108,111-112",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-UI-CANVAS-001",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,3-5,7-10,13-14,16-21,24-47,50-52,55-56,59-65,67-81,83-113",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-UI-CLASSIFY-20261013",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,5,10,20,25-26,28,30-33,36,45,56,62-63,78",
+          "observedHistoricalStatuses": ["REVIEW"]
+        },
+        {
+          "taskId": "TASK-UI-CLOSE-003",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-UI-COMPONENT-BOUNDARY-001",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,3-5,7-10,13-14,16-21,24-47,50-52,55-56,59-65,67-81,83-113",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-UI-CONSOLIDATE-20261014",
+          "inMainLedger": true,
+          "sourceIndexRanges": "5,10,20,30,33,36,45,56",
+          "observedHistoricalStatuses": ["PARTIAL"]
+        },
+        {
+          "taskId": "TASK-UI-DETAILS-20261015",
+          "inMainLedger": true,
+          "sourceIndexRanges": "5,10,20,30,33,36,45,56",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-UI-DISMISS-002",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-UI-FULL-20261015",
+          "inMainLedger": true,
+          "sourceIndexRanges": "5,10,20,30,33,36,45,56",
+          "observedHistoricalStatuses": ["DONE", "REVIEW"]
+        },
+        {
+          "taskId": "TASK-UI-GOV-003",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,3-5,7-10,13-14,16-21,24-47,50-52,55-56,59-65,67-81,83-113",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-UI-GOV-004",
+          "inMainLedger": false,
+          "sourceIndexRanges": "73",
+          "observedHistoricalStatuses": ["REVIEW"]
+        },
+        {
+          "taskId": "TASK-UI-HOME-002",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,3-5,7-10,13-14,16-21,24-47,50-52,55-56,59-65,67-81,83-113",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-UI-LEGACY-001",
+          "inMainLedger": false,
+          "sourceIndexRanges": "106",
+          "observedHistoricalStatuses": ["TODO"]
+        },
+        {
+          "taskId": "TASK-UI-MAIN-001",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-UI-NODE-20261013",
+          "inMainLedger": false,
+          "sourceIndexRanges": "62",
+          "observedHistoricalStatuses": ["IN_PROGRESS"]
+        },
+        {
+          "taskId": "TASK-UI-PERF-001",
+          "inMainLedger": false,
+          "sourceIndexRanges": "106",
+          "observedHistoricalStatuses": ["TODO"]
+        },
+        {
+          "taskId": "TASK-UI-SWITCH-20261014",
+          "inMainLedger": false,
+          "sourceIndexRanges": "0,26,28,63,65",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-UI-UNMERGED-001",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-VERIFY-CONCURRENCY-002",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,3-5,7-10,13-14,16-21,24-47,50-52,55-56,61-65,67-81,83-88,90-91,95-104,108-113",
+          "observedHistoricalStatuses": ["PARTIAL", "TODO"]
+        },
+        {
+          "taskId": "TASK-VERIFY-ORIGIN-003",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,3-5,7-10,13-14,16-17,19-21,24-47,50-52,55-56,61-65,67-81,83-88,90-91,95-104,108-113",
+          "observedHistoricalStatuses": ["DONE", "PARTIAL", "TODO"]
+        },
+        {
+          "taskId": "TASK-VERSION-001",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,3-5,7-10,13-21,24-47,50-52,55-56,59-65,67-81,83-113",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-WEB-IMAGE-UNKNOWN-002",
+          "inMainLedger": false,
+          "sourceIndexRanges": "18-19,35,104",
+          "observedHistoricalStatuses": ["TODO"]
+        },
+        {
+          "taskId": "TASK-WINDOWS-ENTRY-DIAG-002",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,3-5,7-10,13-14,16-21,24-47,50-52,55-56,61-65,67-81,83-88,90-91,95-104,108-113",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "TASK-WINDOWS-ENTRY-RECOVERY-003",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0,3-5,7-10,13-14,16-21,24-47,50-52,55-56,61-65,67-81,83-88,90-91,95-104,108-113",
+          "observedHistoricalStatuses": ["DONE", "TODO"]
+        },
+        {
+          "taskId": "TASK-WORKBUDDY-SAFE-002",
+          "inMainLedger": false,
+          "sourceIndexRanges": "18-19,35,104",
+          "observedHistoricalStatuses": ["TODO"]
+        },
+        {
+          "taskId": "TEST-PROV-001",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "UI-001",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["PARTIAL"]
+        },
+        {
+          "taskId": "UI-002",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["DONE"]
+        },
+        {
+          "taskId": "UI-003",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["PARTIAL"]
+        },
+        {
+          "taskId": "UI-004",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["PARTIAL"]
+        },
+        {
+          "taskId": "UI-SKILL-POPOVER-001",
+          "inMainLedger": true,
+          "sourceIndexRanges": "0-113",
+          "observedHistoricalStatuses": ["DONE"]
+        }
+      ]
+    }
   }
 ]

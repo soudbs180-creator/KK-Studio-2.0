@@ -1,0 +1,70 @@
+{
+  "purpose": "只读历史盘点附件，非权威账本。root统一接管矩阵与原任务账本为权威。",
+  "status": "READING_STOPPED_AT_USER_REQUEST",
+  "sourceThread": {
+    "id": "01a11954-e368-75e1-9544-1256fc96d0ee",
+    "status": "UNKNOWN_EMPTY_SUPPORTED_READ"
+  },
+  "pauseEvidence": "reconnected-four-children-status.json",
+  "archived": {
+    "threads": 10,
+    "exhausted": 10,
+    "pages": 12,
+    "turns": 18,
+    "manifest": "archived-manifest.json",
+    "summary": "archived-summary.md"
+  },
+  "childrenLatest": {
+    "threads": 50,
+    "scope": "latest one turn only, not full history",
+    "inventory": "children-current-inventory.json"
+  },
+  "reconnectedReferences": {
+    "threads": 8,
+    "pages": 24,
+    "turns": 39,
+    "allReturnedCursorsExhausted": true,
+    "manifest": "reconnected-reference-manifest.json",
+    "extracts": "reconnected-reference-extracts.json",
+    "summary": "reconnected-reference-summary.md",
+    "dedupCandidates": "reconnected-reference-code-clusters.json"
+  },
+  "deeperReferences": {
+    "threads": 6,
+    "exhausted": 1,
+    "partial": 5,
+    "pages": 11,
+    "turns": 21,
+    "manifest": "reconnected-deeper-partial-manifest.json",
+    "extracts": "reconnected-deeper-partial-extracts.json"
+  },
+  "initial32": {
+    "exhausted": 19,
+    "partial": 2,
+    "blocked": 6,
+    "unreadTransferred": 5,
+    "successfulPages": 74,
+    "successfulTurns": 135,
+    "aManifest": "reconnected-initial-a-manifest.json",
+    "bManifest": "reconnected-initial-b-manifest.json",
+    "unreadIds": [
+      "01a12e7f-1a9f-7f32-910b-f1ed05ae724e",
+      "01a12db4-8bbd-7302-86e2-958d430555f1",
+      "01a12490-bd87-7360-8178-53a8f10e75b2",
+      "01a12b67-eda8-7b71-8e4b-c2c5a77086fb",
+      "01a12de4-cb36-7992-957b-6da30dafd37f"
+    ],
+    "partialIds": [
+      "01a12eca-483b-7672-b9d3-23af838d03be",
+      "01a12f8d-0dfe-75a1-9ce5-e63861df2cbd"
+    ]
+  },
+  "limits": [
+    "活动列表没有分页能力，不能声称KK全部会话已发现",
+    "旧主控为空，不能还原其未返回正文",
+    "初始32中6个site测试线程不支持thread/items/list",
+    "两个初始长会话与5个深层review保留中间cursor",
+    "历史源码/验证证据不是当前Git和客户端新验收",
+    "没有向旧会话发送/启动任务，没有修改D项目"
+  ]
+}

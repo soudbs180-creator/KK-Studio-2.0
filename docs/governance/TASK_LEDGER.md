@@ -147,6 +147,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-UI-FULL-20261015 | 完成全页面新UI收敛并验证后合入主线 | DONE | 已完成 | P1 | TASK-UI-DETAILS-20261015 | root | 本任务原范围关闭；新首页默认Codex、来源和输入/弹层修复由TASK-CODEX-HOME-20261015继续。 |
 | TASK-CODEX-HOME-20261015 | 首页默认Codex与模型来源分流及输入弹层修复 | REVIEW | 进行中 | P1 | TASK-UI-FULL-20261015 | root | 提交冻结候选后做精确SHA独审；当前Hosted须实际跑完完整verify（含development）/Delivery后才普通合并，随后main验证、实际本机更新及两独立副本canonical恢复/原7保全；保留另一任务原文与状态，最后以实际收据做纯docs closeout。 |
 | TASK-CODEX-REF-20261015 | Codex 卡片连线参考图直达内置生图 | PARTIAL | 未完成 | P1 | TASK-CODEX-HOME-20261015 | root | 保留功能/live通过证据，跟进上游13项已证预存失败使mandatory fullverify有效通过；补最终SHA正式review及Hosted/PR门禁，不宣称已集成/发布。 |
+| TASK-GOV-006 | 统一会话安全交接、全量需求映射与单主控承接 | IN_PROGRESS | 进行中 | P1 | none | root | 完成接管包独审与治理门禁并交原主控确认；按用户最新要求另建正式执行会话，此会话不开始产品实现。后续先承接GDI保护、HOME/业务恢复P2，再按依赖Canvas/Responsive、Compress、Design、PR58与历史未完，均正常PR合main及实际客户端验证。 |
 
 ## TASK-FIX-PUSH-GUARD-SPACES-001 — 修复 Windows Git pre-push 空格及长路径启动
 
@@ -2828,5 +2829,24 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Verification: PARTIAL — 功能/live PASS，交付PARTIAL：Desktop/Web2.1.33；参考原件42452f4d...经一次真实Codex内置imagegen生成PNG6531e6ac...并归档，1result/1result边/1reference边，外部图片请求0；重载、正常关闭/重建/重启、原桌面快捷方式重开PASS，原件hash不变且重启turn0。最终EXE6353aba3.../inputee1e43be...、reason=current、bundlevihgOeA0。Node1327PASS/14skip、Agent199PASS/2skip、定向45/dirty预检50及browser13/邻域39分别PASS；完整browser784为771PASS13FAIL/0flaky/skip，13项已由任务前源码逐项同断言重现为PRE-EXISTING FAILURE，但fullverify仍FAIL、development未运行。最终SHA正式review/Hosted/PR未完成。 验收后并发漂移边界（2026-10-15T06:48:06Z）：其他任务随后修改无关Rust项目包/vendor/runtime/build输入及dist；native/closeout-source-drift.json最新reason=unverified，当前input627e5b40...，受测inputee1e43be...。此前真实验收/日常重开及EXE6353aba3.../本任务App23a0625a...、agentConnection52a1d8db...仍有效且字节未变，日常PID57824继续运行受测2.1.33；不能宣称最新整个checkout已验收。不继续重建、关闭或覆盖其他作者工作，整体PARTIAL。
 - Evidence: [docs/changes/2026-10-15-codex-card-reference/intent.md](../../docs/changes/2026-10-15-codex-card-reference/intent.md), [docs/changes/2026-10-15-codex-card-reference/spec.md](../../docs/changes/2026-10-15-codex-card-reference/spec.md), [docs/changes/2026-10-15-codex-card-reference/plan.md](../../docs/changes/2026-10-15-codex-card-reference/plan.md), [docs/changes/2026-10-15-codex-card-reference/verification.md](../../docs/changes/2026-10-15-codex-card-reference/verification.md), [docs/changes/2026-10-15-codex-card-reference/review.md](../../docs/changes/2026-10-15-codex-card-reference/review.md)
 - Next action: 保留功能/live通过证据，跟进上游13项已证预存失败使mandatory fullverify有效通过；补最终SHA正式review及Hosted/PR门禁，不宣称已集成/发布。
+- Last verified: 2026-10-15
+- Updated: 2026-10-15
+
+## TASK-GOV-006 — 统一会话安全交接、全量需求映射与单主控承接
+
+- Goal: 保护全部现场并暂停旧会话，在原账本统一全部批准范围与可追溯交付链，再按依赖恢复安全开发。
+- Scope: 本项目安全交接及治理；不发布/改历史/删除/覆盖用户数据，不将本次暂停授权扩为破坏性权限。
+- Display status: 进行中
+- Priority: P1 — 统一全部来源与交付链、保护恢复现场并消除并发写入；历史与完整功能验收仍待后续正式会话。
+- Requirement refs: ledger:TASK-GOV-004, ledger:TASK-PROV-007, ledger:TASK-AGENT-001, ledger:TASK-TASKSTATE-001, ledger:TASK-ORCH-003, docs/changes/2026-10-15-unified-handoff/source-instructions.md
+- Feature IDs: none
+- Owner role: repository-maintainer
+- Acceptance: 支持工具盘点全部项目会话/分支/worktree/完整SHA/dirty与运行命令，分开FACT/INFERENCE/UNKNOWN/CONFLICT，列表50条不冒充全量。; 每个已识别活动项目仅一次安全暂停请求并回读终态；保留不可中断写入、所有成果/用户资料，不kill或关闭用户客户端。; 本账本全部141原任务及本地独有/历史未完成果有来源映射，容量错误/中断重试/未开发优化/排期负责人待确认/用户验收权完整继承。; 单主控、单任务单分支worktree及写入者；遵守worktree预算和PR保护，squash后从实际main承接独有改动、无历史重写/强推。; 每平台交付绑定main/版本源/依赖锁/构建hash/安装进程路径/客户端版本及实际功能和用户验收；全部批准范围/P0/P1/恢复风险清零前总目标不完成。
+- Branch: `docs/TASK-GOV-006-unified-handoff`
+- Worktree: `D:/kk-studio/.worktrees/TASK-GOV-PHASE0`
+- Modules: docs/governance, docs/changes/2026-10-15-unified-handoff
+- Verification: PARTIAL — 8个原活动主会话各发一次安全暂停；重连后8主+4此前active子会话均支持工具回读idle并交接无写入。114登记worktree/113有效原账本+Cherry冲突两侧内存联合192ID，main141缺51只是覆盖差异；所有历史状态/原对象保留，不批量覆盖原141记录。复用原DONE/PASS clean治理树切新分支，旧分支保留。历史/全局枚举存在缺口，产品未新增实现。
+- Evidence: [docs/changes/2026-10-15-unified-handoff/takeover-context.md](../../docs/changes/2026-10-15-unified-handoff/takeover-context.md), [docs/changes/2026-10-15-unified-handoff/delivery-matrix.md](../../docs/changes/2026-10-15-unified-handoff/delivery-matrix.md), [docs/changes/2026-10-15-unified-handoff/session-inventory.md](../../docs/changes/2026-10-15-unified-handoff/session-inventory.md), [docs/changes/2026-10-15-unified-handoff/verification.md](../../docs/changes/2026-10-15-unified-handoff/verification.md)
+- Next action: 完成接管包独审与治理门禁并交原主控确认；按用户最新要求另建正式执行会话，此会话不开始产品实现。后续先承接GDI保护、HOME/业务恢复P2，再按依赖Canvas/Responsive、Compress、Design、PR58与历史未完，均正常PR合main及实际客户端验证。
 - Last verified: 2026-10-15
 - Updated: 2026-10-15

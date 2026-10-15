@@ -8,6 +8,10 @@
 
 本文是最短恢复入口，不是任务状态或产品能力的第二事实源。任务状态只读 [`task-ledger.json`](task-ledger.json)；当前项目事实只读 [`PROJECT_STATE.md`](PROJECT_STATE.md)；历史验证只按带日期的 change package、commit、运行模式和 receipt 回读。
 
+## 统一整理后的正式执行入口（TASK-GOV-006）
+
+最新用户要求：本轮仅安全交接与整理，确认后另建正式执行会话，不在整理会话实现产品或再向旧会话派功能。先读[唯一接管提示词](../changes/2026-10-15-unified-handoff/takeover-context.md)、[原始授权](../changes/2026-10-15-unified-handoff/source-instructions.md)、[会话状态及覆盖缺口](../changes/2026-10-15-unified-handoff/session-inventory.md)、[归并/合入顺序](../changes/2026-10-15-unified-handoff/resume-order.md)与[验证](../changes/2026-10-15-unified-handoff/verification.md)。当前事实以PROJECT_STATE为准；192来源机器矩阵只维护在原task-ledger的TASK-GOV-006.handoffMatrix，Markdown仅派生。下面HOME/REF入口保留历史时点，不代表当前尚未合并或最新用户偏好。
+
 ## Codex 卡片参考图恢复入口（TASK-CODEX-REF-20261015）
 
 先读[本轮验证](../changes/2026-10-15-codex-card-reference/verification.md)与[审查](../changes/2026-10-15-codex-card-reference/review.md)。功能/live PASS，交付PARTIAL：Desktop/Web2.1.33；参考原件42452f4d...经一次真实Codex内置imagegen生成PNG6531e6ac...并归档，1result/1result边/1reference边，外部图片请求0；重载、正常关闭/重建/重启、原桌面快捷方式重开PASS，原件hash不变且重启turn0。最终EXE6353aba3.../inputee1e43be...、reason=current、bundlevihgOeA0。Node1327PASS/14skip、Agent199PASS/2skip、定向45/dirty预检50及browser13/邻域39分别PASS；完整browser784为771PASS13FAIL/0flaky/skip，13项已由任务前源码逐项同断言重现为PRE-EXISTING FAILURE，但fullverify仍FAIL、development未运行。最终SHA正式review/Hosted/PR未完成。 源码来自独立TASK-CODEX-REF工作树并受保护整合入活动HOME候选；保留其他作者更新。最终官方重建34.96秒，现有桌面快捷方式未重写且已启动原资料root/无--data-dir。自有隔离实例正常关闭，无关PID37780未触碰。后续修复有效全量门禁并补最终SHA正式review/Hosted/PR；不提交/推送，不把整体写为DONE/REAL，下方HOME与历史恢复原文保留。
