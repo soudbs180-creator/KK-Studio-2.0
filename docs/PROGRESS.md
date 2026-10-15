@@ -2,7 +2,7 @@
 
 ## 2026-10-15 GDI保护统一承接（IN_PROGRESS）
 
-沿用TASK-EXPLORER-GDI-20261015，由root串行承接af8独有7个测试文件。输出保护6374已补独审两项，正式复验中；治理PR61仍独立等待后段Hosted。版本/产品源码/daily不变，新组合完整验证尚未执行。见[计划](changes/2026-10-15-explorer-gdi-integration/plan.md)。
+沿用TASK-EXPLORER-GDI-20261015，由root串行承接af8独有7个测试文件。输出保护6374已补独审两项，正式复验中；治理PR61已在当前Hosted成功/独立merge-scope后正常合main3a992597，四独有安全提交从该main重绑且tree相同。真实Windows参数/候选PNG探针通过；版本/产品源码/daily不变，新组合完整验证尚未执行。见[计划](changes/2026-10-15-explorer-gdi-integration/plan.md)。
 
 ## 2026-10-15 测试证据输出保护（IN_PROGRESS）
 

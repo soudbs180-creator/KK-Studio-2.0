@@ -9,7 +9,7 @@
 <!-- DOCUMENT_METADATA_END -->
 <!-- CURRENT_FACTS_BEGIN -->
 
-当前执行：root在既有TASK-GOV-PHASE0串行进入fix/TASK-EXPLORER-GDI-20261015-integration；输出保护6374已提交并补充RED/GREEN、Node1333PASS/14skip，精确复验中。治理89fba/PR61冻结，Hosted后段执行。原GDI候选及dirty不改，新分支仅挑af8独有7源码；无新增worktree且只有root写入。见[GDI计划](../changes/2026-10-15-explorer-gdi-integration/plan.md)。
+当前执行：root在既有TASK-GOV-PHASE0串行进入fix/TASK-EXPLORER-GDI-20261015-main，实际base main3a992597。治理PR61已经当前Hosted/独立merge-scope正常squash，fetch后tree与89fba一致；四独有测试安全提交已重绑，不带旧治理历史。原GDI候选dirty/全部旧分支/daily保持，唯一root写入，144任务仅GDI活跃。见[GDI计划](../changes/2026-10-15-explorer-gdi-integration/plan.md)。
 
 最终首轮补证：af8精确HEAD完整verify已exit0（Node1327/Agent199/Edge784首试/development4步）。测试默认目录清理导致旧development receipt/截图缺失且无可校验副本，旧browser备份和.tmp/压力原件仍可核验；详见[incident](../changes/2026-10-15-unified-execution/incident.md)。新增TASK-VERIFY-EVIDENCE-20261015，后续先隔离输出/完整备份保护再继续批量测试；GDI主线集成与用户产品验收仍未完成。
 

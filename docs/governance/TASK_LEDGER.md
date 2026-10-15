@@ -2882,10 +2882,10 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Feature IDs: none
 - Owner role: repository-maintainer
 - Acceptance: 全部现有 msedge launch callers 使用统一保护配置，默认 disabled features 全部保留。; Windows 实际 renderer 参数回归及根侧自有页面资源压力验证通过，无新增 TabProxy。; 相关单元/typecheck/lint/格式及协调后的完整 verify、独立源码审查具有当前候选证据。
-- Branch: `fix/TASK-EXPLORER-GDI-20261015-integration`
+- Branch: `fix/TASK-EXPLORER-GDI-20261015-main`
 - Worktree: `D:/kk-studio/.worktrees/TASK-GOV-PHASE0`
 - Modules: scripts/testing/headless-edge-options.mjs, playwright.config.ts, tests/development/plugins.mjs, scripts/audit/check-composer-runtime.mjs, scripts/audit/check-main-close-runtime.mjs, scripts/audit/check-text-runtime.mjs, tests/desktop/headless-edge-launch.mjs, docs/changes/2026-10-15-explorer-gdi-integration, tests/desktop/test-evidence-preservation.mjs
-- Verification: PARTIAL — 原af8精确HEAD新verify Node1327/Agent199/Edge784首试/development4步通过；原development旧receipt/PNG因清理缺失单列incident，未伪造恢复。当前按原stable ID由root在复用隔离树承接，仅挑af8独有7源码，父tree与main235e相同。新组合、实际main/Hosted/客户端仍未验收。 已挑af8为a6e，配置冲突只保留双保护。真实Windows browser/2renderers保留15+1项，真实PNG正常/失败均保持旧字节，新PNG/report同run。全量verify、100页新组合及最终SHA独审尚待。
+- Verification: PARTIAL — 原af8精确HEAD新verify Node1327/Agent199/Edge784首试/development4步通过；原development旧receipt/PNG因清理缺失单列incident，未伪造恢复。当前按原stable ID由root在复用隔离树承接，仅挑af8独有7源码，父tree与main235e相同。新组合、实际main/Hosted/客户端仍未验收。 已挑af8为a6e，配置冲突只保留双保护。真实Windows browser/2renderers保留15+1项，真实PNG正常/失败均保持旧字节，新PNG/report同run。全量verify、100页新组合及最终SHA独审尚待。 main3a已fetch，tree与精确治理89fba完全相同；从main只挑4独有提交，384546c8树与旧8729完全一致，未复制治理旧提交历史。
 - Evidence: [docs/changes/2026-10-15-explorer-gdi-integration/intent.md](../../docs/changes/2026-10-15-explorer-gdi-integration/intent.md), [docs/changes/2026-10-15-explorer-gdi-integration/spec.md](../../docs/changes/2026-10-15-explorer-gdi-integration/spec.md), [docs/changes/2026-10-15-explorer-gdi-integration/plan.md](../../docs/changes/2026-10-15-explorer-gdi-integration/plan.md), [docs/changes/2026-10-15-explorer-gdi-integration/verification.md](../../docs/changes/2026-10-15-explorer-gdi-integration/verification.md), [docs/changes/2026-10-15-explorer-gdi-integration/review.md](../../docs/changes/2026-10-15-explorer-gdi-integration/review.md)
 - Next action: 保留输出保护边界承接af8后，冻结源码在隔离目录执行Windows回归/完整verify并独审；PR61正常合入后从实际main只承接独有安全提交。
 - Last verified: 2026-10-15

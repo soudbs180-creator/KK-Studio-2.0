@@ -8,3 +8,5 @@
 - 独有af8已承接为a6e066168f473c4004a390f1e3f163712d236b87；仅配置imports发生冲突，解法保留6374完整输出/worker配置并增加GDI import/use，development自动合并保留两套保护，实际7文件差量与af8范围一致。
 - 当前Windows参数回归exit0：唯一feature switch、原15项+msWindowTabManagerPublic、2个自有renderer全部一致。新真实PNG探针正常/主动失败各1：旧合成PNG/report字节保持，真实新PNG签名有效且与report同run。sourceHead=a6e，probe文件当时未提交，结论限候选；最终冻结后重跑绑定。日志gdi-integrated-a6e06616-argv.log/png.json。
 - 治理PR61当前required verify/delivery及quality、hooks均success，无未解决review threads/人工reviews0；独立治理merge-scope PASS，已退出draft后expected head89fba普通squash成功main3a9925977792a7f948eceda9f54d46fbf6f8b294。main fetch/树一致性、后续测试安全候选重绑与Hosted分别记录，不代填产品客户端验收。
+
+- 已fetch远端main3a992597，git diff 89fba→3a exit0；main父235e、tree db1152d018ffaa5dd57ea5ad1f721a849093490e。四独有安全提交重新承接后git diff 8729→384546c8 exit0；新分支祖先真实main，不rebase/force/删除旧分支。

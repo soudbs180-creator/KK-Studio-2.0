@@ -7380,9 +7380,9 @@
     "dependencies": ["TASK-GOV-006", "TASK-VERIFY-EVIDENCE-20261015"],
     "owner": "root",
     "ownerRole": "repository-maintainer",
-    "branch": "fix/TASK-EXPLORER-GDI-20261015-integration",
+    "branch": "fix/TASK-EXPLORER-GDI-20261015-main",
     "worktree": "D:/kk-studio/.worktrees/TASK-GOV-PHASE0",
-    "baseSha": "6374c23f76cac13a8d7d36686c497e068272f965",
+    "baseSha": "3a9925977792a7f948eceda9f54d46fbf6f8b294",
     "affectedModules": [
       "scripts/testing/headless-edge-options.mjs",
       "playwright.config.ts",
@@ -7404,7 +7404,7 @@
       "docs/changes/2026-10-15-explorer-gdi-integration/verification.md",
       "docs/changes/2026-10-15-explorer-gdi-integration/review.md"
     ],
-    "verification": "原af8精确HEAD新verify Node1327/Agent199/Edge784首试/development4步通过；原development旧receipt/PNG因清理缺失单列incident，未伪造恢复。当前按原stable ID由root在复用隔离树承接，仅挑af8独有7源码，父tree与main235e相同。新组合、实际main/Hosted/客户端仍未验收。 已挑af8为a6e，配置冲突只保留双保护。真实Windows browser/2renderers保留15+1项，真实PNG正常/失败均保持旧字节，新PNG/report同run。全量verify、100页新组合及最终SHA独审尚待。",
+    "verification": "原af8精确HEAD新verify Node1327/Agent199/Edge784首试/development4步通过；原development旧receipt/PNG因清理缺失单列incident，未伪造恢复。当前按原stable ID由root在复用隔离树承接，仅挑af8独有7源码，父tree与main235e相同。新组合、实际main/Hosted/客户端仍未验收。 已挑af8为a6e，配置冲突只保留双保护。真实Windows browser/2renderers保留15+1项，真实PNG正常/失败均保持旧字节，新PNG/report同run。全量verify、100页新组合及最终SHA独审尚待。 main3a已fetch，tree与精确治理89fba完全相同；从main只挑4独有提交，384546c8树与旧8729完全一致，未复制治理旧提交历史。",
     "verificationResult": "PARTIAL",
     "updated": "2026-10-15",
     "lastVerified": "2026-10-15",
