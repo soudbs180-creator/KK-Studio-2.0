@@ -993,6 +993,51 @@ test("a pending retry removes a seen attachment while keeping an unseen external
   }
 });
 
+test("a pending retry removes only the selected reference when seen references share an asset", async () => {
+  const saved = savedHomeSnapshot();
+  const first = { ...oldAttachment, id: "reference-a" };
+  const second = { ...oldAttachment, id: "reference-b" };
+  saved.homeDraft.attachments = [first, second];
+  const fixture = await harness(false, undefined, { initial: saved });
+  const gate = readGate();
+  try {
+    fixture.setLoad(async () => {
+      await gate.promise;
+      return { snapshot: saved, recovered: false, durableRevision: 8 };
+    });
+    fixture.render().retryRead();
+    const hook = fixture.render();
+    const attachments = hook.creation.homeDraft.attachments.filter(
+      (attachment) => attachment.id !== first.id,
+    );
+    hook.commitCreation(
+      {
+        ...hook.creation,
+        homeDraft: { ...hook.creation.homeDraft, attachments },
+      },
+      { attachments },
+    );
+    gate.release();
+    await settle();
+    await fixture.render().flush();
+    assert.deepEqual(
+      {
+        memory: fixture
+          .render()
+          .creation.homeDraft.attachments.map((attachment) => attachment.id),
+        durable: fixture
+          .durable()
+          .homeDraft.attachments.map((attachment) => attachment.id),
+        state: fixture.render().state,
+      },
+      { memory: ["reference-b"], durable: ["reference-b"], state: "saved" },
+    );
+    assert.deepEqual(saved.homeDraft.attachments, [first, second]);
+  } finally {
+    fixture.dispose();
+  }
+});
+
 test("loading retains every reference beyond the import count budget without truncating originals", async () => {
   const gate = readGate();
   const saved = savedHomeSnapshot();

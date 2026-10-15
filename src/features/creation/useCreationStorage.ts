@@ -40,14 +40,16 @@ function mergeLoadingDraft(
 ): CreationDraft {
   const next = { ...stored, ...changes };
   if (changes.attachments) {
-    const retained = new Set(changes.attachments.map(attachmentIdentity));
+    const retained = new Set(
+      changes.attachments.map((attachment) => attachment.id),
+    );
     const removed = new Set(
       base.attachments
-        .map(attachmentIdentity)
+        .map((attachment) => attachment.id)
         .filter((id) => !retained.has(id)),
     );
     next.attachments = stored.attachments.filter(
-      (attachment) => !removed.has(attachmentIdentity(attachment)),
+      (attachment) => !removed.has(attachment.id),
     );
     const included = new Set(next.attachments.map(attachmentIdentity));
     for (const attachment of changes.attachments) {
