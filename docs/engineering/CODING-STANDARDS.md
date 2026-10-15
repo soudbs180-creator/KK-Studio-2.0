@@ -17,6 +17,7 @@
 | ESLint                 | `eslint src tests scripts *.config.{ts,mjs} --max-warnings 0`     | 未使用变量（`^_` 前缀豁免）、`debugger`、TS 推荐规则集错误                                                                                          |
 | 架构边界               | `node scripts/check-governance.mjs`                               | `src/domain` 依赖 UI/宿主层、服务端专用模块被浏览器侧引用                                                                                           |
 | UI 标准                | `node scripts/check-ui-standards.mjs`                             | 未定义 CSS 令牌、新增颜色字面量、新增 Lucide 直连、组件超 300 行、Iconsax 绕过 `UiIcon`                                                             |
+| DESIGN.md 一致性 | `npm run design:check` / `npm run design:lint` | 当前 tokens.css 的生成漂移、YAML/引用/章节错误及固定版本官方格式校验；已并入 ui:check |
 | 类型                   | `tsc --noEmit`                                                    | 类型错误                                                                                                                                            |
 | 格式                   | `prettier --check`                                                | 格式偏差                                                                                                                                            |
 | Markdown 链接          | `node scripts/check-markdown.mjs`                                 | 断链、跨仓库链接                                                                                                                                    |
@@ -30,6 +31,8 @@
 | 任务账本               | `node scripts/check-governance.mjs`                               | 账本与 `TASK_LEDGER.md` 不同步、状态字段缺失                                                                                                        |
 | 平台交付与最小 AI 链路 | 人工评审：`AGENTS.md`、`PROJECT_GOALS.md`、`ADR-011` 与功能卡证据 | 当前没有自动 guardrail；检查 Desktop → Web → Mobile 顺序、UI/交互与文本/图片链路、Mobile 目录隔离、VPS 控制面状态，不能仅凭 lint/verify 宣称通过    |
 | UI 体积预算 | 同版本生产构建、gzip 与输入 SHA 的人工量测/评审 | 主入口 JS gzip 增量上限见下节；当前没有自动脚本，不因 lint exit 0 声称预算已检查 |
+
+格式范围同时覆盖独立预览 design/preview 下的 TS、TSX、CSS、HTML 和 JSON。设计工具依赖仅用于开发：yaml 保留 AST/注释，postcss 解析真实 CSS 作用域，固定 @google/design.md 提供官方 lint/export/spec/diff；不进入产品 import 链或原生运行时白名单。
 
 ### 门禁接入状态
 

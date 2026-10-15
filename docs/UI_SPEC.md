@@ -119,3 +119,26 @@
 搜索的四分类、类型/标签过滤和资源库分页分别覆盖。使用记录不把演示、估算或未知 Token 当成真实消耗；预设禁用态与官网/密钥/文档跳转按平台验证。390px 浏览器属于响应式 Web，Native Mobile、真实模型和安装包另记。
 
 体积证据按 [编码规范](engineering/CODING-STANDARDS.md#依赖与体积预算) 执行。规则变更需独立审查与 AI 场景复核；未运行或失败项按实际状态记录，不能用更新测试名称消除有效行为断言。
+
+## DESIGN.md 与独立预览
+
+根 [DESIGN.md](../DESIGN.md) 提供全局设计概览、专项规范链接和由当前 tokens.css 生成的 YAML。UI_INDEX 继续路由各主题唯一承载文件；CSS 仍是唯一数值源。
+
+| 命令 | 用途 |
+| --- | --- |
+| `npm run design:sync` | 从当前 CSS 同步生成角色、完整作用域与源 hash，保留人工正文、未知 YAML 和注释 |
+| `npm run design:check` | 只读检查 YAML、引用、章节和 CSS 漂移；失败不改文件 |
+| `npm run design:lint` | 固定版本 Google DESIGN.md 官方校验 |
+| `npm run design:diff -- <before.md> <after.md>` | 显式比较两份文档的语义差异，不假设未跟踪文件已在 Git 中 |
+| `npm run design:export` | 输出 DTCG JSON 到 stdout；扩展中的原始 CSS 作用域仍保留在源文档 |
+| `npm run design:spec` | 查看所用 alpha 格式与规则 |
+| `npm run design:dev` | 独立开发预览，固定 1421，编辑器修改后自动刷新 |
+| `npm run design:build` | 类型检查并构建独立预览到 .tmp/design-md-preview |
+| `npm run design:preview` | 重建后在 1423 预览；修改源文件后需重新构建 |
+| `npm run test:design` | 定向单测、构建与真实 Edge 预览回归 |
+
+预览 import 链为 design/preview/index.html → main.tsx → 当前 tokens/global/ui-tokens/ui-governance、SettingsControls、UiIcon 与 DESIGN.md 原文。它不读写产品 storage、不调用 Provider，示例反馈只在页内存中生效；文档中的 HTML 以文字显示、不执行。
+
+1421/1423 与产品验证共用固定端口，必须串行，不杀其他任务的进程或复用旧 server。预览 Playwright 使用现有独占分配器、统一 Edge 防护参数，报告、trace 和截图位于同一次新建 test-results/design-md/<run-id>/；不清空旧证据。
+
+验证主题、全部强调色、密度、字阶、语义尺寸、默认/hover/active/selected/disabled/focus、开关边缘、键盘及连续 resize，并保存实际入口和同状态 DOM/截图。预览通过只证明共享角色在此工具中的表现；全页面、Desktop/Web、四渠道真实选择、异步持久化和外部模型必须另有产品链证据，不能升级为 REAL 或整站 UI 完成。

@@ -18,6 +18,7 @@
 
 | 主题 | 唯一文件 | 说明 |
 | --- | --- | --- |
+| 全局设计概览与机器生成 token 投影 | [`DESIGN.md`](../DESIGN.md) | 全局阅读入口，引用本表的专项规则；数值仍由 tokens.css 生成 |
 | 零件规则、操作约束、对齐和反馈 | [`UI_RULES.md`](./UI_RULES.md) | 不定义页面类型 |
 | 五种页面模板和选型 | [`UI_ARCHETYPES.md`](./UI_ARCHETYPES.md) | 不重复定义零件尺寸 |
 | 数值（尺寸/字阶/间距/圆角）索引 | [`DESIGN_TOKENS.md`](./DESIGN_TOKENS.md) | 索引层，数值真值在 `tokens.css` |

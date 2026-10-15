@@ -57,6 +57,7 @@
 
 | 文档                              | 承载内容                               |
 | --------------------------------- | -------------------------------------- |
+| [DESIGN.md](../DESIGN.md) | 全局设计概览、专项规则导航与当前 CSS 生成 token 投影 |
 | [UI_RULES](UI_RULES.md)           | 零件规则、交互约束、复用约束           |
 | [UI_ARCHETYPES](UI_ARCHETYPES.md) | 五种页面类型与选型                     |
 | [DESIGN_TOKENS](DESIGN_TOKENS.md) | token 数值索引                         |

@@ -28,10 +28,10 @@
     "typecheck": "tsc --noEmit",
     "test": "node --test tests/unit/*.test.ts tests/deploy/*.test.mjs",
     "test:ui": "npm run plugins:build && npm run build && node node_modules/@playwright/test/cli.js test",
-    "format:check": "prettier --check src tests scripts *.ts *.mjs *.json design/figma-plugin/*.js design/figma-plugin/*.json config/*.json",
-    "ui:check": "node scripts/check-ui-standards.mjs",
+    "format:check": "prettier --check src tests scripts *.ts *.mjs *.json design/figma-plugin/*.js design/figma-plugin/*.json config/*.json \"design/preview/**/*.{ts,tsx,css,html,json}\"",
+    "ui:check": "node scripts/check-ui-standards.mjs && npm run design:check && npm run design:lint",
     "lint": "eslint src tests scripts *.config.{ts,mjs} --max-warnings 0 && npm run version:check && npm run version:consistency && node scripts/check-project-goals.mjs && node scripts/check-governance.mjs && node scripts/check-features.mjs && node scripts/check-markdown.mjs && npm run index:check && npm run snapshot:check && npm run doc:commands:check && npm run health:check && npm run footguns:check",
-    "verify": "npm run lint && npm run typecheck && npm test && npm run agent:build && npm run test:agent && npm run ui:check && npm run format:check && npm run test:ui && npm run test:development",
+    "verify": "npm run lint && npm run typecheck && npm test && npm run agent:build && npm run test:agent && npm run ui:check && npm run format:check && npm run test:ui && npm run test:design && npm run test:development",
     "tauri": "tauri",
     "client:dev": "tauri dev",
     "client:build": "tauri build",
@@ -64,7 +64,17 @@
     "worktree:reclaim": "node scripts/governance/worktree-reclaim.mjs",
     "worktree:check": "node scripts/governance/worktree-policy.mjs --check-create",
     "health:check": "node scripts/check-code-health.mjs",
-    "footguns:check": "node scripts/check-windows-footguns.mjs"
+    "footguns:check": "node scripts/check-windows-footguns.mjs",
+    "design:sync": "node scripts/design-md/cli.mjs sync",
+    "design:check": "node scripts/design-md/cli.mjs check",
+    "design:lint": "designmd lint DESIGN.md",
+    "design:diff": "designmd diff",
+    "design:export": "designmd export DESIGN.md --format dtcg",
+    "design:spec": "designmd spec --rules",
+    "design:dev": "vite --config design/preview/vite.config.ts",
+    "design:build": "tsc --noEmit -p design/preview/tsconfig.json && vite build --config design/preview/vite.config.ts",
+    "design:preview": "npm run design:build && vite preview --config design/preview/vite.config.ts --host 127.0.0.1 --port 1423 --strictPort",
+    "test:design": "node --test tests/unit/designMarkdown.test.ts tests/design-md/documentSource.test.ts && npm run design:build && node node_modules/@playwright/test/cli.js test --config design/preview/playwright.config.ts"
   },
   "engines": {
     "node": ">=24"
@@ -81,6 +91,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@google/design.md": "0.4.0",
     "@playwright/test": "^1.63.0",
     "@tauri-apps/cli": "^2.11.4",
     "@types/node": "24.13.4",
@@ -89,12 +100,14 @@
     "@vitejs/plugin-react": "^5.2.0",
     "eslint": "^10.10.0",
     "globals": "^16.5.0",
+    "postcss": "8.5.30",
     "prettier": "^3.9.6",
     "remark-gfm": "^4.0.1",
     "remark-parse": "^11.0.0",
     "typescript": "^5.6.3",
     "typescript-eslint": "^8.70.0",
     "unified": "^11.0.5",
-    "vite": "^7.3.6"
+    "vite": "^7.3.6",
+    "yaml": "2.9.1"
   }
 }
