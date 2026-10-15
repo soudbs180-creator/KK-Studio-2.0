@@ -5998,7 +5998,9 @@
       "tests/browser",
       "docs/changes/2026-10-15-codex-home",
       "docs/changes/2026-10-15-home-recovery-integration",
-      "src/features/agent/homeAgentRecovery.ts"
+      "src/features/agent/homeAgentRecovery.ts",
+      "scripts/agent/desktop-entry.mjs",
+      "tests/unit/desktopAgentRuntime.test.ts"
     ],
     "status": "IN_PROGRESS",
     "priority": "P1",
@@ -6015,11 +6017,11 @@
       "docs/changes/2026-10-15-home-recovery-integration/verification.md",
       "docs/changes/2026-10-15-home-recovery-integration/review.md"
     ],
-    "verification": "PR60产品已进入main3a；本轮按统一交接继续三P2，静态定位待运行RED，前置PR62本机测试安全PASS且Hosted中。旧完整verify失败、真实Provider及恢复证据保留于verificationHistory，不代填当前结果。 当前dirty连接46/46、HOME浏览器8项首试PASS；实际两browser RED/同图重复/旧epoch尾部RED均已复现并修复。前置准备/夹具/数量失败保留，加载期独立问题挂TASK-HOME-LOAD-DRAFT-20261015，当前完整冻结验证/Native仍待。 冻结fc76完整verify exit0：Node1342/14skip、Agent199/2skip、Edge785首试0flaky/skip/errors、development5步PASS；906旧文件/备份1812及1333产物/备份2666hash一致，独审SOURCE/LOCAL_VERIFY PASS。PR62正常合main492后仅挑fc76为c180且tree完全一致，旧分支保留。依赖事故发生于完整运行后另记TASK-VERIFY-DEPS-20261015；当前Native/代理及新环境验证待续。",
+    "verification": "PR60产品已进入main3a；本轮按统一交接继续三P2，静态定位待运行RED，前置PR62本机测试安全PASS且Hosted中。旧完整verify失败、真实Provider及恢复证据保留于verificationHistory，不代填当前结果。 当前dirty连接46/46、HOME浏览器8项首试PASS；实际两browser RED/同图重复/旧epoch尾部RED均已复现并修复。前置准备/夹具/数量失败保留，加载期独立问题挂TASK-HOME-LOAD-DRAFT-20261015，当前完整冻结验证/Native仍待。 冻结fc76完整verify exit0：Node1342/14skip、Agent199/2skip、Edge785首试0flaky/skip/errors、development5步PASS；906旧文件/备份1812及1333产物/备份2666hash一致，独审SOURCE/LOCAL_VERIFY PASS。PR62正常合main492后仅挑fc76为c180且tree完全一致，旧分支保留。依赖事故发生于完整运行后另记TASK-VERIFY-DEPS-20261015；当前Native/代理及新环境验证待续。 f10官方Native构建成功、Rust167/fmt与编译proxy1首试PASS；真实冷重开两次FAIL，定位HOME-NATIVE-01私有stdout污染。原FAIL/旧产物保留，真实stdio98行RED→启动合同3项GREEN，待新冻结完整门禁/重建原Native断言与独审。",
     "verificationResult": "NOT_VERIFIED",
     "updated": "2026-10-15",
     "displayStatus": "进行中",
-    "nextAction": "在actual main492承接分支冻结文档后做代理模式及隔离官方Tauri验证，按新环境/精确head补最终门禁与独审，正常HOME PR/main；不代填付费Provider或daily验收。",
+    "nextAction": "冻结stdout隔离修复，重新全量verify/官方Native构建及原冷重开断言；精确独审、正常HOME PR/Hosted/main，不代填真实Provider/daily验收。",
     "ownerRole": "implementer",
     "requirementRefs": [
       "ledger:TASK-CODEX-HOME-20261015",

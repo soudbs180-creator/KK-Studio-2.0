@@ -23,3 +23,11 @@
 - 独审PASS_SOURCE_SCOPE与PASS_LOCAL_VERIFY_SCOPE均绑定fc76，22文件，无未关闭源码P1/P2；HOME-EPOCH-01与HOME-TEST-01关闭。不是Native/真实Provider/用户验收PASS。
 - 前置PR62完整PR/push Hosted成功、最终独审及远端门禁通过后，正常expected-head squash为main492abad4；fetch后git diff f9c→492 exit0，main tree414e7947d13886ee4ee9c52b0cdb95fd3802a583。旧HOME临时分支保留，仅挑fc76为c180c366，git diff fc76→c180 exit0。没有重放旧安全提交或force/rebase。
 - 依赖切换事故发生在上述fullverify结束之后；另见[事故恢复](../2026-10-15-dependency-repair/verification.md)。本轮记录如实保留，不能把恢复后的环境称已重跑全部测试。新原生构建与代理模式验证继续，日常EXE/九项目未用于夹具。
+
+## f10实际Native与HOME-NATIVE-01（保留FAIL）
+
+- f10c59ff官方Agent构建底层成功，版本2.1.34，EXE f58fbad15e69088e43ca39323a442e766d705f94d3f9e1d787800019f6568761，input 2720af2c3a6384fb3bc01c9f332298e7d22d1ed0d1497d3d54bf9e74a94f7514。外层因3个stat-only文件返回失败；raw/normalized均与HEAD相同，备份后只刷新当前index，源码无漂移。Rust167/fmt通过。旧EXE/receipt/运行资源及dist保留在工程外home-native-f10c59ff-preserved。
+- 编译代理VITE_KK_AGENT_PROXY=1、独立outDir和回环重写fixture 1/1首试PASS；生产bundle index-BYiRhwBQ.js，实际HOME与effect只一次config/prepare/turn；报告SHA32900690a4202356eba3f0b3019bdfb84bf641530bddd3146ac55fd901abb943。不是VPS或真实Provider验收。
+- 原Native脚本及仅增加失败DOM捕获的diagnostic clone均FAIL：首次空HOME启动、项目自动连接/保存thread、页面reload正常；正常关闭后reopen的原connected断言失败。两次原件home-native-startup-f10c59ff与home-native-diagnostic-f10c59ff保留，未削弱断言/点击项目掩盖问题。隔离资料，synthetic credential清理true，未替换daily或调用模型turn。
+- diagnostic卡片实际错误“Agent 未返回可验证的启动状态。”；runtime available=true/running=false/healthy=false/pid=null。该错误在当前Rust只可能由32条非READY行耗尽触发；具体32条内容UNKNOWN，不记录token或账号日志。源码证据：冷恢复延后READY，Codex stderr经Winston普通Console回流stdout，私有握手被诊断占用。两位独审一致定位HOME-NATIVE-01/P1。
+- 真实desktop-entry临时packaged-layout夹具先RED：恢复3轮诊断后stdout98行而非1；日志home-stdio-red.log。最小修复在导入前保存原stdout writer仅发READY，普通stdout委托stderr；Native已stderr=null，所有Rust身份/大小/行数/超时限制保留。补长行9000B、伪READY、READY后诊断和真实entry鉴权/owner断开覆盖，home-stdio-green.log 3/3PASS。此为dirty定向结果，新冻结fullverify/重建Native仍待，原FAIL不改写。

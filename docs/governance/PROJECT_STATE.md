@@ -9,7 +9,7 @@
 <!-- DOCUMENT_METADATA_END -->
 <!-- CURRENT_FACTS_BEGIN -->
 
-当前执行：PR62正常合main492abad4，actual tree与f9c相同；root仅挑HOME独有fc76为c180，完整tree相同，保留原临时分支。当前fix/TASK-CODEX-HOME-20261015-main，HOME源码fc76完整verify/独审通过：Node1342/14skip、Agent199/2skip、Edge785首试、development5步。候选双端2.1.34，main/daily仍2.1.33；Native/代理模式与合后main Hosted继续。依赖切换编排错误清空共享生成依赖，已按主仓原锁恢复244包、三项hash不变；独审仅确认版本对齐，未知字节与短时影响保留TASK-VERIFY-DEPS-20261015。九项目/旧分支/证据不作夹具。
+当前执行：f10隔离Native冷重开暴露HOME-NATIVE-01/P1，原两次FAIL保留；入口私有stdout隔离已真实RED/GREEN，待新冻结重建和原断言复验。PR62正常合main492abad4，actual tree与f9c相同；root仅挑HOME独有fc76为c180，完整tree相同，保留原临时分支。当前fix/TASK-CODEX-HOME-20261015-main，HOME源码fc76完整verify/独审通过：Node1342/14skip、Agent199/2skip、Edge785首试、development5步。候选双端2.1.34，main/daily仍2.1.33；Native/代理模式与合后main Hosted继续。依赖切换编排错误清空共享生成依赖，已按主仓原锁恢复244包、三项hash不变；独审仅确认版本对齐，未知字节与短时影响保留TASK-VERIFY-DEPS-20261015。九项目/旧分支/证据不作夹具。
 
 历史首轮补证（原始阶段）：af8精确HEAD完整verify已exit0（Node1327/Agent199/Edge784首试/development4步）。测试默认目录清理导致旧development receipt/截图缺失且无可校验副本，旧browser备份和.tmp/压力原件仍可核验；详见[incident](../changes/2026-10-15-unified-execution/incident.md)。新增TASK-VERIFY-EVIDENCE-20261015，后续先隔离输出/完整备份保护再继续批量测试；GDI主线集成与用户产品验收仍未完成。
 
@@ -22,7 +22,7 @@
 - `canonicalRef`: `origin/main`
 - `canonicalHead`: 492abad48b0695f6117265fba6d29e8ea2a4b9bc
 - `canonicalHeadVerifiedFrom`: root实际API确认PR62 expected-head f9c普通squash与fetch，main492/parent3a/tree414e7947d13886ee4ee9c52b0cdb95fd3802a583，git diff f9c→492 exit0。PR/push quality38722300068/38722224340与guards全成功；main自身新Hosted继续，不能代填。产品仍Desktop/Web2.1.33，daily EXE aeb70dfc未换。
-- `primaryCheckoutState`: 本轮未重新读取primary当前dirty，交接所载codex/ui-redesign-20261011@51fccfc7879cf90f7caaf3ae8e10af4d97a2aa2c与254/477计数仅历史现场；本轮未写primary文件/index。root复用TASK-GOV-PHASE0为当前测试安全branch，旧治理/候选/未提交成果均保留，不把旧f0a治理快照当当前树。
+- `primaryCheckoutState`: 本轮未重新读取primary当前dirty，交接所载codex/ui-redesign-20261011@51fccfc7879cf90f7caaf3ae8e10af4d97a2aa2c与254/477计数仅历史现场；本轮未写primary tracked源码/配置/index；曾误清共享忽略依赖，按原锁恢复的事故见TASK-VERIFY-DEPS-20261015。root复用TASK-GOV-PHASE0为当前测试安全branch，旧治理/候选/未提交成果均保留，不把旧f0a治理快照当当前树。
 - `taskLedger`: 146 records; 83 DONE, 1 IN_PROGRESS, 39 PARTIAL, 13 TODO, 6 REVIEW, 4 BLOCKED; 63 open。原141中仅HOME按授权继续并保存verificationHistory，其余140对象保持；TASK-GOV-006.handoffMatrix原192稳定ID来源矩阵保留，51差额仅覆盖差异；PR58用户后续来源更新追加sourceUpdates，未改旧快照。
 - `workspaceWorktrees`: 2026-10-15只读登记114；approved root内73，默认4/20GiB。114固定账本路径已读，113有效JSON；Cherry当前冲突原件未改，仅内存两侧用于联合。46个ID有历史状态变体，不机械按日期裁决。原始SHA/dirty/来源索引见本轮source-manifest。未新增、删除或清理worktree。
 - `reclamationPolicy`: generated dependencies/build output may be reclaimed only from a recorded, non-primary worktree after immutable SHA inventory and explicit candidate approval; source changes and evidence paths are protected.

@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-10-15 HOME原生冷重开阻断（IN_PROGRESS）
+
+f10实际Windows隔离客户端首次启动/连接/保存/reload通过，正常关闭后reopen两次FAIL；错误唯一对应READY前32行预算耗尽。定位到Codex诊断经Winston占用私有stdout，按入口保存握手writer、普通输出转stderr最小修复，保留全部Rust守卫。真实stdio98行RED→3项GREEN；新冻结全量/重建/原Native断言与精确独审待续。原失败、旧候选、daily/用户资料均保留。见[验证](changes/2026-10-15-home-recovery-integration/verification.md)。
+
 ## 2026-10-15 HOME完整本机验证及安全main承接（IN_PROGRESS）
 
 PR62已按最终独审/双轮Hosted全部通过正常合main492，fetch核tree与f9c相同。HOME源码fc76完整verify exit0：Node1342/14skip、Agent199/2skip、Edge785首试、development5步；906旧文件与备份1812hash保持，1333产物另存，独审SOURCE/LOCAL_VERIFY PASS。仅挑独有fc76为c180且tree相同。Native准备中root编排错误清空共享生成依赖，已按主仓原锁恢复244包，三hash与daily EXE保持；原字节/短时影响UNKNOWN，另挂事故任务并独审。当前候选2.1.34尚未更新daily，继续代理/隔离Tauri与新环境验收。见[HOME验证](changes/2026-10-15-home-recovery-integration/verification.md)和[事故](changes/2026-10-15-dependency-repair/verification.md)。
