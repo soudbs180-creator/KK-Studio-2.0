@@ -1010,19 +1010,14 @@ x-kk-studio:
         - property: --kk-on-accent
           value: "#0a0a0a"
           important: false
-    - selector: "[data-accent=\"blue\"],\r
-
-        [data-accent=\"green\"],\r
-
-        [data-accent=\"yellow\"],\r
-
-        [data-accent=\"pink\"],\r
-
-        [data-accent=\"orange\"],\r
-
-        [data-accent=\"purple\"],\r
-
-        [data-accent=\"white\"]"
+    - selector: |-
+        [data-accent="blue"],
+        [data-accent="green"],
+        [data-accent="yellow"],
+        [data-accent="pink"],
+        [data-accent="orange"],
+        [data-accent="purple"],
+        [data-accent="white"]
       atRules: []
       declarations:
         - property: --kk-text-accent

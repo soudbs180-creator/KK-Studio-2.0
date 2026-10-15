@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { spawnSync } from "node:child_process";
+import { execFileSync, spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import fs from "node:fs";
 import os from "node:os";
@@ -116,6 +116,36 @@ test("source identity and generated checks survive Windows and Linux line ending
   const synced = syncDesignMarkdown(original, windows);
   assert.deepEqual(
     inspectDesignMarkdown(synced, unix).findings.filter(
+      (finding) => finding.severity === "error",
+    ),
+    [],
+  );
+});
+
+test("complete runtime CSS projects identical scopes and metadata for LF and CRLF", async () => {
+  const { buildDesignTokens } = await api();
+  const unix = fs
+    .readFileSync(path.join(root, "src/styles/tokens.css"), "utf8")
+    .replace(/\r\n/g, "\n");
+  const windows = unix.replace(/\n/g, "\r\n");
+  assert.match(unix, /\],\n\[data-accent=/);
+  assert.deepEqual(buildDesignTokens(windows), buildDesignTokens(unix));
+});
+
+test("Windows-generated DESIGN validates against complete committed LF runtime CSS", async () => {
+  const { syncDesignMarkdown, inspectDesignMarkdown } = await api();
+  const committedCss = execFileSync(
+    "git",
+    ["show", "HEAD:src/styles/tokens.css"],
+    { cwd: root, encoding: "utf8", windowsHide: true },
+  );
+  assert.ok(!committedCss.includes("\r"));
+  const markdown = syncDesignMarkdown(
+    fs.readFileSync(path.join(root, "DESIGN.md"), "utf8"),
+    committedCss.replace(/\n/g, "\r\n"),
+  ).replace(/\r\n/g, "\n");
+  assert.deepEqual(
+    inspectDesignMarkdown(markdown, committedCss).findings.filter(
       (finding) => finding.severity === "error",
     ),
     [],

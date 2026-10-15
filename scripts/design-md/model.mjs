@@ -220,13 +220,12 @@ export function managedPathsForScopes(scopes) {
 }
 
 export function buildDesignTokens(css) {
-  const scopes = parseCssScopes(css);
+  const normalizedCss = css.replace(/\r\n/g, "\n");
+  const scopes = parseCssScopes(normalizedCss);
   const tokens = projectScopes(scopes);
   tokens["x-kk-studio"] = {
     source: "src/styles/tokens.css",
-    sha256: createHash("sha256")
-      .update(css.replace(/\r\n/g, "\n"))
-      .digest("hex"),
+    sha256: createHash("sha256").update(normalizedCss).digest("hex"),
     hashEncoding: "utf8-lf",
     scopes,
     managedPaths: pathsOf(tokens),
