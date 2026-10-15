@@ -2,7 +2,7 @@
 
 - 状态：PARTIAL
 - 领域：system
-- 最近更新：2026-10-14
+- 最近更新：2026-10-16
 - 关联任务：T7、TASK-DESKTOP-INSTALLER-001、TASK-LAUNCH-001、TASK-PROTOCOL-CLI-20261014、TASK-222-ACTIONS-20261014、TASK-223-ACTIONS-20261014
 
 ## 用户可见入口
@@ -20,6 +20,8 @@
 - 分享产物目录：`releases/`（只放最新分享产物，禁止打入开发 node_modules、凭据、编译缓存和恢复归档；Agent 生产依赖仅按 runtime-manifest 白名单包含）
 
 ## 测试与证据
+
+- 统一任务 `55a0ac51` 经当前批处理入口重建2.1.35，隔离重复启动同PID/仓库/快照，退出重开身份和草稿恢复、清理无残留；全局记忆未变。Windows重复激活绕开依赖模拟Alt分支，系统不授予前台时提示任务栏。NAT-GUI-01/02精确独审关闭，但实际后台自动触发的focus断言仍失败，整轮PARTIAL，不能冒称前台聚焦已验。EXE/收据与全部原失败见[统一验证](../changes/2026-10-15-kk-unified/verification.md)。
 
 - 2.1.24本地验证（TASK-223，本任务DONE/PASS；功能主状态保持）：最终产品源码对应官方Agent/Tauri、同字节便携及CLI受控运行验证通过；产物与纯文档提交分别由工程外最终收据绑定；最终产品58b5c07f与完整验证、官方/便携回执见[本轮验证](../changes/2026-10-14-action-usability-223/verification.md)。
 

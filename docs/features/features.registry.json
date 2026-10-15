@@ -288,7 +288,7 @@
     "area": "creation",
     "status": "PARTIAL",
     "card": "docs/features/feat-005-comfyui-workflows.md",
-    "summary": "ComfyUI 工作流 JSON 的本地解析、starter、导入/导出与收藏管理（只管文件，不执行；执行见 FEAT-004）。",
+    "summary": "ComfyUI工作流迁入模型接入/本地，保留ID与存储key；导入导出/删除写入ACK及失败保全已验，实际执行链未接通。",
     "entryPoints": ["素材/工作流库 LibraryPage", "工作流导入按钮"],
     "code": [
       "src/features/comfyui/workflowRegistry.ts",
@@ -303,7 +303,7 @@
       "tests/browser/design-system-pages.spec.ts"
     ],
     "tasks": ["T6", "TASK-CAP-001", "TASK-DS-002", "TASK-KK-UNIFIED-20261015"],
-    "updated": "2026-10-15",
+    "updated": "2026-10-16",
     "platforms": ["web", "desktop"],
     "runtimeEvidence": [
       {
@@ -1039,7 +1039,7 @@
     "area": "system",
     "status": "PARTIAL",
     "card": "docs/features/feat-022-settings.md",
-    "summary": "分组设置、公共预设及文档、当前设备使用记录和存储概览已有源码候选；默认绿色与中性主要动作。Token/未接协议明确边界，完整Web/Desktop和真实消耗待补。",
+    "summary": "三组十页设置、旧深链和配置身份保留；分类/响应式/本地推荐/保存保护经精确独审，账号/同步/目录操作按实际支持状态开放。",
     "entryPoints": ["侧栏设置 SettingsPanel", "各设置分区"],
     "code": [
       "src/components/settings",
@@ -1102,7 +1102,7 @@
       "TASK-SETTINGS-LATEST-20261015",
       "TASK-KK-UNIFIED-20261015"
     ],
-    "updated": "2026-10-15",
+    "updated": "2026-10-16",
     "platforms": ["web", "desktop"],
     "runtimeEvidence": [
       {
@@ -1267,7 +1267,7 @@
     "area": "system",
     "status": "PARTIAL",
     "card": "docs/features/feat-026-launcher.md",
-    "summary": "Windows GUI启动器后台检查当前release并支持进度/取消/失败日志，快捷方式使用当前内嵌Logo；portable/NSIS本机验收已具备，干净系统、低版回滚、签名与正式发布仍待T7。",
+    "summary": "官方入口与收据重建、依赖准备和Native仓库互斥/重复启动/重开有隔离证据；后台激活前台焦点仍未通过，发布签名与干净系统待验。",
     "entryPoints": [
       "start-kk-studio.bat",
       "verify-kk-studio.cmd",
@@ -1307,7 +1307,7 @@
       "TASK-223-ACTIONS-20261014",
       "TASK-KK-UNIFIED-20261015"
     ],
-    "updated": "2026-10-15",
+    "updated": "2026-10-16",
     "platforms": ["desktop"],
     "runtimeEvidence": [
       {
@@ -1457,7 +1457,7 @@
     "area": "intelligence",
     "status": "PARTIAL",
     "card": "docs/features/feat-032-provider-connectivity.md",
-    "summary": "原Provider多目标配置与CLI apply/check保持；公共目录区分品牌、协议、官网/密钥/文档。展示不等于执行支持，未接协议禁用或导向专用入口。",
+    "summary": "多协议接入与四渠道精确型号列表、连接元数据/凭据保留已验；跨中转合并/真实优先级/动态参数/Agent授权仍待。",
     "entryPoints": [
       "Agent providers apply/check/apply-claude CLI（App 设置 UI 尚未接入）",
       "设置公共预设目录（UI候选，不表示CLI配置全面接线）"
@@ -1492,7 +1492,7 @@
       "TASK-223-ACTIONS-20261014",
       "TASK-KK-UNIFIED-20261015"
     ],
-    "updated": "2026-10-15"
+    "updated": "2026-10-16"
   },
   {
     "id": "FEAT-036",
@@ -1541,7 +1541,7 @@
     "area": "platform",
     "status": "PARTIAL",
     "card": "docs/features/feat-037-web-local-service.md",
-    "summary": "本机loopback服务提供Web本地读写/迁移/备份；未来主或备份格式和IO失败保护已补。Native/Node尚未可直接共目录，统一本机权威/后台服务及账号仍在实施。",
+    "summary": "旧Node本机服务格式/IO保护与Native权威基础已验；两者格式仍不兼容，Web完整共仓库授权/读写/后台生命周期未交付。",
     "entryPoints": ["设置 → 储存 → 网页本机伴随服务"],
     "code": [
       "src/features/local-service/main.ts",
@@ -1571,7 +1571,7 @@
       "TASK-223-ACTIONS-20261014",
       "TASK-KK-UNIFIED-20261015"
     ],
-    "updated": "2026-10-15"
+    "updated": "2026-10-16"
   },
   {
     "id": "FEAT-038",

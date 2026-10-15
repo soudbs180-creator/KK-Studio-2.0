@@ -6,7 +6,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 | ID | Title | Status | Display | Priority | Dependencies | Owner | Next action |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| TASK-KK-UNIFIED-20261015 | KK Studio 统一修复与重构 | IN_PROGRESS | 进行中 | P1 | none | root | 继续统一本机权威、设置UI和模型接入；DESIGN基础独审后用于实际页面；接通本地安装/运行、多聊天/Agent/媒体及后续账号/手动加密备份。完整需求未关闭。 |
+| TASK-KK-UNIFIED-20261015 | KK Studio 统一修复与重构 | IN_PROGRESS | 进行中 | P1 | none | root | 集中修正全量UI发现的7项回归/过时fixture并精确复审；保持前台焦点验收开放。继续正常多聊天schema/Agent scope与本地包安装适配，随后模型B/C、媒体及账号/手动加密备份，全局UI按DESIGN逐页验收。 |
 | TASK-FIX-PUSH-GUARD-SPACES-001 | 修复 Windows Git pre-push 空格及长路径启动 | REVIEW | 进行中 | P1 | none | root | 补 merged-SHA 独立 review receipt、原始 Hosted artifact manifest 及当前 SHA 的 delivery 结果；本任务验收补齐前保持 REVIEW，签名/安装/用户验收仍属独立发布边界。 |
 | TASK-WINDOWS-ENTRY-DIAG-002 | 补齐Windows入口子进程失败诊断 | DONE | 已完成 | P2 | TASK-LAUNCH-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-WINDOWS-ENTRY-RECOVERY-003 | 继续定位Hosted Windows入口未正常退出的原始原因 | TODO | 未完成 | P1 | TASK-LAUNCH-001 | root | 将 fa78ed12 候选同步到当前 origin/main 后重跑 Hosted Windows，并读取 windows-entry.jsonl；保留 PR43 原失败和本机未复现原件，未取得新分类前保持 TODO。 |
@@ -168,11 +168,11 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `codex/TASK-KK-UNIFIED-20261015`
 - Worktree: `D:/kk-studio/.worktrees/TASK-KK-UNIFIED-20261015`
 - Modules: src/App.tsx, src/features, src/components, src/runtime, src/domain, src-tauri, vendor/canvas-agent, docs/changes/2026-10-15-kk-unified
-- Verification: PARTIAL — 基线d95e4c44/2.1.34，候选Desktop/Web2.1.35。持久项目分组/软删除独审与Edge27/27、Native存储169通过；依赖guard5705独审Approved；12AI7442独立适配器73通过，生产接线待。加载草稿80f6、格式保护6c639、硬件同名GPU d3e均实际RED→GREEN及精确独审Approved；新companion UI保护2/2首试，e01caa99。DESIGN基础e5e4b345承接26文件，46单测/8预览首试通过，0770跨平台修复及精确独审通过，非产品全局UI完成。本地包7e06/aecb容量指引19项及精确独审通过；HiFi/加速/2K来源已只读核对，无安装/生成。统一本机权威/写入协调及设置分类实施中。完整verify、Native实际产物、真实Provider/Web共仓库/账号/云恢复/Hosted未验。
+- Verification: PARTIAL — 候选Desktop/Web2.1.35，基线d95e4c44。项目生命周期/依赖guard/加载草稿80f6/格式保护6c639/硬件d3e/DESIGN e5e0770/本地包7e06aecb均有精确独审及定向证据，12AI适配器73PASS但生产接线待。Native06acdf9权威204Rust/1ignore及独审通过；设置f32/0ad、模型阶段A28c/f472精确修复独审通过，B/C仍开放。55a0新Native EXE6ac913a2/input8ce972b0，隔离同PID/仓库/快照/重开身份草稿及清理/记忆通过，前台focus唯一失败，整轮PARTIAL。55a0组合verify Node1508/14skip、Agent199/2skip与静态/build通过，Browser804PASS/7FAIL/0flaky，exit1，尾段design/development未执行，原失败保留并逐项triage。完整真实Provider/完整共仓库/账号/云恢复/Hosted未验。
 - Evidence: [docs/changes/2026-10-15-kk-unified/intent.md](../../docs/changes/2026-10-15-kk-unified/intent.md), [docs/changes/2026-10-15-kk-unified/spec.md](../../docs/changes/2026-10-15-kk-unified/spec.md), [docs/changes/2026-10-15-kk-unified/plan.md](../../docs/changes/2026-10-15-kk-unified/plan.md), [docs/changes/2026-10-15-kk-unified/verification.md](../../docs/changes/2026-10-15-kk-unified/verification.md), [docs/changes/2026-10-15-kk-unified/review.md](../../docs/changes/2026-10-15-kk-unified/review.md)
-- Next action: 继续统一本机权威、设置UI和模型接入；DESIGN基础独审后用于实际页面；接通本地安装/运行、多聊天/Agent/媒体及后续账号/手动加密备份。完整需求未关闭。
-- Last verified: 2026-10-15
-- Updated: 2026-10-15
+- Next action: 集中修正全量UI发现的7项回归/过时fixture并精确复审；保持前台焦点验收开放。继续正常多聊天schema/Agent scope与本地包安装适配，随后模型B/C、媒体及账号/手动加密备份，全局UI按DESIGN逐页验收。
+- Last verified: 2026-10-16
+- Updated: 2026-10-16
 
 ## TASK-FIX-PUSH-GUARD-SPACES-001 — 修复 Windows Git pre-push 空格及长路径启动
 

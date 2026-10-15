@@ -2,15 +2,15 @@
 
 - 状态：PARTIAL
 - 领域：system
-- 最近更新：2026-10-15
+- 最近更新：2026-10-16
 - 关联任务：TASK-UI-005、TASK-PROV-001、UI-004、TASK-DS-001、TASK-DS-002、TASK-UI-CONSOLIDATE-20261014、TASK-PROTOCOL-CLI-20261014、TASK-222-ACTIONS-20261014、TASK-223-ACTIONS-20261014、TASK-SETTINGS-LATEST-20261015
 
 TASK-SETTINGS-LATEST-20261015本地DONE/PASS：在最新c1fae190 UI上完成2.1.25设置修复，629浏览器首试及实际Web/Tauri、Native配置恢复和独立源码审查通过。当前Desktop入口已指向新版；原配置身份、primary dirty/index保留，旧错误基线与失败证据保留。[当前验证](../changes/2026-10-15-settings-latest-ui/verification.md)。真人Provider/Hosted/签名和用户视觉接受另验，功能继续PARTIAL。
 
 ## 用户可见入口
 
-- 侧栏设置（SettingsPanel）：通用、账号管理、使用记录、模型接入、扩展、ComfyUI、存储、网络、记忆、高级与软件更新；旧分类 ID 和深链接保留兼容。
-- 模型接入按 Codex 主 Agent、官方 API、中转 API、CLI 账号、OAuth 分类；CLI 再选 Gemini / CodeBuddy。手机网页提供设置分类、接入方式、服务商详情的返回路径。
+- 侧栏设置三组：设置（通用、个人主页、套餐与积分、快捷键）、功能（记忆、模型接入、扩展、网络）、数据与安全（数据管理、安全中心）。用量在套餐页，更新及高级选项在通用；旧分类 ID 和深链接保留兼容。
+- 模型接入包含账号、官方/中转 API 和本地入口；本地提供显式硬件推荐、现有服务配置及工作流管理。Qwen/H3 安装和实际运行尚未接通，禁用状态说明真实边界；手机网页保留逐级返回与草稿。
 
 ## 代码位置
 
@@ -18,6 +18,8 @@ TASK-SETTINGS-LATEST-20261015本地DONE/PASS：在最新c1fae190 UI上完成2.1.
 - 连接与凭据：`src/features/creation/providerRegistry.ts`、`providerCredentials.ts`、`src/domain/providerConnections.ts`、`src/domain/settings.ts`
 
 ## 测试与证据
+
+- 统一设置 `f32baad8` 与 `0ad43b20` 精确独审通过，SET-UI-01跨scope残留预设已关闭；21Node、101/69/20生产浏览器及集中修复14项分别通过，完整数字和原失败见[统一验证](../changes/2026-10-15-kk-unified/verification.md)。这些是对应冻结源码的Web证据，不表示所有目录管理、同步和Native页面均已实现。
 
 - 2026-10-15最新UI设置修复（本地DONE/PASS）：从c1fae190最新基线承接Desktop/Web2.1.25，629浏览器全部首试、完整verify及当前Web/Tauri几何与Native20+11+1+5配置恢复通过，独立源/测试054cd53f审查PASS。Desktop已启动新EXEc9c3b4e，原配置身份、primary/index与全部失败保留；真实Provider/Hosted/签名/用户视觉接受另验，功能状态仍PARTIAL，见[当前验证](../changes/2026-10-15-settings-latest-ui/verification.md)。
 

@@ -2,17 +2,18 @@
 
 - 状态：PARTIAL
 - 领域：creation
-- 最近更新：2026-09-22
+- 最近更新：2026-10-16
 - 关联任务：T6、TASK-CAP-001、TASK-DS-002
 
 ## 用户可见入口
 
-- 工作流/素材库页（LibraryPage、CatalogPageBody）：查看 starter 工作流、导入 ComfyUI 导出 JSON、导出、收藏。
+- 设置→模型接入→本地→ComfyUI工作流：导入、导出及删除已有记录。移除独立ComfyUI主侧栏，旧入口重定向到本地设置；原工作流ID和存储key保留。既有库中的导出/查看组件继续复用。
 
 ## 代码位置
 
 - `src/features/comfyui/workflowRegistry.ts`：schema、`parseComfyWorkflow`、`createStarterWorkflow`、本地读写、`createImportedWorkflow`、`workflowToJson`
-- UI：`src/components/LibraryPage.tsx`、`CatalogPageBody.tsx`、`WorkflowCard.tsx`、`WorkflowImportButton.tsx`
+- UI：`src/components/settings/LocalWorkflowSettings.tsx`、`src/components/LibraryPage.tsx`、`CatalogPageBody.tsx`、`WorkflowCard.tsx`、`WorkflowImportButton.tsx`
+- 写入ACK与失败保全：`src/features/comfyui/useLocalWorkflows.ts`
 - 存储：localStorage（本地工作流记录）
 
 ## 测试与证据
@@ -22,7 +23,7 @@
 
 ## 当前能力
 
-- ComfyUI 工作流 JSON 的解析、starter、导入/导出、本地列表与收藏均为真实能力。
+- ComfyUI 工作流 JSON 的解析、starter、导入/导出及本地管理已有实现。新设置入口写入成功后才发布状态；存储不可用时保留原记录并显示错误。`f32baad8` 精确独审及相关生产测试见[统一验证](../changes/2026-10-15-kk-unified/verification.md)；没有用空工作流或预览冒充执行。
 
 ## 差距与后端化
 

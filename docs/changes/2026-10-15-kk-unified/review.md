@@ -21,3 +21,10 @@
 - DESIGN `d3e8838f→e5e4b345` 全26文件独审发现DS-01/P2：仅hash换行规范化，多行CSS selector的CR仍进入YAML，干净LF checkout投影漂移。保留原反例及两RED后，`0770df7c` 统一parse/hash输入并重生投影；41单测及独立git-LF/完整CSS LF-CRLF严格相等复审通过，DS-01 CLOSED、SPEC/QUALITY PASS。预览通过不替代产品全局UI验收。
 - 本地包目录/容量建议 `0770df7c→7e06c171` 四文件已提交，18定向测试及focused strict TS/lint/format通过，精确独审中。只读包计划和硬件容量指引不构成安装、推理或2K接通。
 - 本地包 `7e06c171` 独立SPEC/QUALITY Approved，六Qwen/五唯一H3制品metadata一致；root另加固合法partial GPU输入，`aecb59c1` 实际RED→GREEN及19相关测试，精确增量独审Approved并额外核九种容量组合。原报告保留；未知容量不作低于建议的断言，仍无运行可用性批准。
+- Native权威 `39bbdc3f→06acda64` 14文件独审CHANGES REQUIRED：NAT-AUTH-01/P1，有效主快照+损坏未使用bak被新增准入误拒，窗口前退出，破坏原有归档恢复。原实现者两类真实RED后集中修复，必须保留备份IO/未来格式保护；独立28相关测试通过不能覆盖缺失反例。其余权威/锁/激活基础无第二个确定问题；Native GUI及最终交付仍未验。
+- Native `06acda64→df9f79e1` 精确两文件复审：NAT-AUTH-01 CLOSED，SPEC/QUALITY PASS；20权威及4激活回归由独立上下文通过。实际GUI/跨运行时共仓库不在此批准中。
+- 设置 `df9f79e1→f32baad8` 全50文件独审：仅SET-UI-01/P2，ProviderPresetSelector在运行时localOnly切换后仍有远程分类/详情/回调；固定提交真实组件反例已保留。三文件修复 `0ad43b20` 已提交并交精确复审；未以新测试通过替代独审关闭。
+- 模型阶段A `f32baad8→28c64fcc` 精确30文件提交已交独立审查。明确阶段A不包含实际同模型合并/路由优先级/动态参数/Agent授权；这些仍属原任务待交付范围，不能以阶段A列表变化标记完整模型重构完成。
+- SET-UI-01 精确增量 `28c64fcc→0ad43b20` 独审CLOSED，SPEC/QUALITY PASS；三文件rawhash/Git blob吻合，独立25Node及额外同scope/busy内存断言通过，回读生产14/14证据。没有重跑Native或宣称全局UI完成。
+- 模型 `0ad43b20→f472c8f0` 五文件精确复审：MODEL-A-01/02及非阻断token备注CLOSED，原Menu探针旧提交RED/修复GREEN，独立52Node通过；生产23项及390/1920截图回读。阶段A SPEC/QUALITY PASS，完整MODEL及B/C不在此批准中。
+- `55a0ac51` 三文件精确复审关闭NAT-GUI-01（CDP前失败清理状态缺失）和NAT-GUI-02（重复激活依赖模拟输入路径），修正范围SPEC/QUALITY PASS。独立只读核对新Native run90314c39/EXE6ac913a2/input8ce972b0；单实例/恢复/重开/清理及记忆边界有实证，focus唯一失败保留，整轮PARTIAL。源码修正批准不等同真实前台启动验收。

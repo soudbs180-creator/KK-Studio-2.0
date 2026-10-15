@@ -50,3 +50,29 @@
 - DS-01 `0770df7c`：上述基础独审实际发现完整多行selector换行漂移，原先hash回归不足以证明跨平台投影；两项完整CSS/提交LF回归先RED后GREEN，41/41相关测试与精确差量独审通过。独立git show同提交DESIGN+tokens（纯LF）检查0error，官方25warnings保留。此三文件逻辑修复未新跑浏览器，e5预览仍只覆盖当时冻结来源。
 - 本地包计划 `7e06c171`：Qwen现有推荐目录单源化，固定main+匹配F16 projector的大小/摘要/许可；重新读取三个固定revision的HF LFS metadata，六制品与目录一致，未下载权重。HiFi两模式与共享原件去重；广告16GB/32GB机器容量候选与当前free资源警示分开，canStart始终false/运行未验。原9PASS+新3RED保留，最终18/18定向PASS，focused strict TS/lint/format通过，精确独审中。设置页面消费新增字段；真实安装/启动/峰值/视频/2K仍未验收。
 - 本地包精确独审 `7e06c171` Approved；root后续 `aecb59c1` 对合法partial GPU数据保守处理：已知8GB+未知CUDA容量返回unknown，存在已知符合单卡才candidate，已知RAM不足仍below。新增实际RED后19/19相关PASS，精确差量独审Approved并独立九种组合验证；不相加多卡显存，canStart始终false。原18测试/当时审核状态保留为历史时点。
+
+## 组合检查首轮（仍在实施，非最终提交批准）
+
+`39bbdc3f` 加并发设置候选的组合源码 typecheck通过；全量Node 1514total /1499PASS /1FAIL /14skip，exit1，日志 `.tmp/unified-node-39bb-combination.log`。失败为未修改的desktopAgentRuntime真实子进程在5秒观察窗口内未给ready，stderr为空；同源码定向3/3首试通过（真实服务用例约740ms），日志 `.tmp/desktop-runtime-diagnostic-39bb.log`。尚未证明根因，不能将该全量记PASS或修改超时掩盖。待产品冻结/资源独占后定位及重验；当前仍NOT VERIFIED。
+
+- Native权威 `06acda64`：14文件绑定source-manifest-final.json，Rust200PASS/1既有硬件probe ignore、check/fmt通过。四域真实OS互斥、独立进程/崩溃释放、唯一TaskHost Arc、缺原件身份保留、旧journal恢复排除及有界激活均有隔离证据；未启动用户数据或新GUI。独审发现NAT-AUTH-01有效main+corrupt unusedbak启动回归，原实现者修复中；不把200PASS作为验收完成。
+- 设置候选（尚未提交）：production101/101视觉/交互及69/69保护/响应式首试通过，root查看390模型接入/数据管理截图；冻结自查又发现local编辑误挑Comfy记录/旧authMode覆盖，原实现者补真实RED修复，不以先前通过替代此反例。仍待冻结哈希/提交/独立review，不能标设置完成。
+- DS-01修复后正式重跑 `npm run test:design`：41Node及8/8实际Edge首试通过，run `c76d19a5-4e66-4788-a46c-e06a5149195c`，实际1423，JS `index-BC-WFaQq.js`；`.tmp/design-after-ds01-06ac.log`。仍是开发预览，不代替App全局页面/Native证据。
+- 仅对源码默认Comfy端口8188进行一次有界只读 `/system_stats` 请求，ECONNREFUSED；未扫描其他端口、启动进程或生成，不能据此判断用户模型包不可用。
+
+## 冻结组合与实际 Desktop 验收准备
+
+- Native修复 `df9f79e1`：NAT-AUTH-01 两类真实RED转GREEN，全量Rust204PASS/1既有硬件ignore，精确独审CLOSED、SPEC/QUALITY PASS；独立20权威/4激活用例通过。未使用的损坏bak保留原字节并在原写入链归档，备份IO/未来格式保护仍在。此结论不含实际GUI或Web共仓库。
+- 设置 `f32baad8` 精确50文件已提交；21Node及上述101/69/20生产浏览器证据分别保留。独审发现SET-UI-01/P2：localOnly变更遗留远程分类、详情或旧回调。集中三文件修复 `0ad43b20`：实际组件4项RED转GREEN，旧filter回调新增RED转GREEN；11相关Node、14实际Edge首试通过，run `05257dd6-6fbc-4f56-90fc-e993daf5131c`。修复提交独审进行中，首轮新测试歧义匹配导致12PASS/2FAIL的记录不删除。
+- 模型阶段A `28c64fcc` 精确30文件已提交：四渠道、搜索筛选、精确型号行与连接channel/priority元数据；原source/connectionId/凭据身份不变。84Node、24浏览器及调用方136PASS/2夹具FAIL、精确3项复测通过分别记录于实现报告；不是一次162项洁净运行。旧Agent场景localhost应选择“本地”、Figma标题结构过时两夹具经核对后修正。独立审查进行中。真实同模型合并、执行优先级、动态参数、主Agent及模型调用授权仍待实施。
+- 产品冻结在 `0ad43b2036ac6bf5e408905bc5fa23983bc9bf7a` 后，全量 `npm test`：1522total / **1508PASS /14skip /0fail**，exit0，`.tmp/unified-node-0ad43b20.log`，约23.9秒。此前1514项组合运行失败原件保留，单次新运行不构成旧启动超时根因证明。
+- root新增独立 `tests/desktop/repository-authority.mjs`，唯一证据目录/数据根/WebView profile/CODEX_HOME；通过当前checkout的 `start-kk-studio.bat --background --data-dir` 检查构建收据后验实际窗口、重复启动、拒绝网页激活、重开草稿及全局记忆不变。语法/格式已查，首次重建与实际GUI正在进行；尚不据此记录PASS。
+- 设置修复 `0ad43b20` 精确独审关闭SET-UI-01，独立25相关Node及同scope正常操作、旧callback busy保护通过，SPEC/QUALITY PASS。模型阶段A仍在复审；完整产品仍IMPLEMENTING。
+
+## 2026-10-16 组合修复与原生运行边界
+
+- 模型 `f472c8f0` 集中五文件修复MODEL-A-01/P2（过滤后迁移旧family置顶丢隐藏型号）、MODEL-A-02/P2（禁用账号渠道无可读原因）：原Menu探针及实际Browser两项RED→GREEN，49Node、23/23生产Edge首试/0retry/0flaky通过。精确独审52Node及原探针新旧源码GREEN/RED，两个finding及token备注CLOSED，阶段A SPEC/QUALITY PASS；B/C仍待实施。
+- 0ad源码旧Native四轮失败保留：8bb720为CDP不可达；ab984有额外输入（来源UNKNOWN）；7ee086和15d8焦点false。15d8完成同PID/epoch、非最小化、快照原字节、重开身份/草稿及全局记忆不变，但整轮exit1/PARTIAL。EXE a80c4ce2/input137df0e3与receipt另保全于独立`.tmp/native-0ad-artifact-d98df9ea-d054-4a9d-aa5b-ae13d8fa4e3f`，SHA一致。管道等待和输入来源均不作为已证实根因。
+- `55a0ac51` 精确三文件独审关闭NAT-GUI-01（CDP前失败未记录自有进程清理状态）及NAT-GUI-02（重复激活依赖模拟Alt后备路径）。Windows只请求一次原生前台，拒绝则任务栏提示；没有新增输入注入/强抢焦点，非Windows旧行为保留。脚本记录完整root参数/创建时间、harness SHA、同PID、epoch/快照hash，finally检查pending并保持失败。cargo fmt/check和4激活用例通过，6项dead-code warnings保留；不据此声称初次建窗的依赖路径已改变。
+- 新实际Native绑定 `55a0ac51f87d6f4ccbbc333acfbc99b19512960b`，run `90314c39-d035-4c99-b613-953ac36d8d70`；Desktop2.1.35、`http://tauri.localhost/`、`index-D1sP1AYs.js`。EXE `6ac913a2eb6eb159c71b7123b3de58fb2f0b17157df687dbc5b5f7e105490cc8`、input `8ce972b03d26e9528b5751032652c467ce21db7896394815eb7e866e3797d36b`，harness与提交rawhash一致。63040→63040同仓库/epoch/快照；退出后46508保留仓库身份、更新epoch、恢复草稿，清理无自有残留、全局记忆不变。实际截图及收据已独立回读。唯一focus断言仍失败，Win32两次采样均属其他前台进程；整轮exit1/PARTIAL。真实用户前台入口及具体拒绝条件仍NOT VERIFIED，禁止强抢前台换取通过。
+- `npm run verify` 在55a0冻结产品源码（root文档随后更新）运行：lint/typecheck、Node1508PASS/14skip、Agent199PASS/2skip、ui/format及production build通过；浏览器run `7cd6110b-a21e-40e7-8d21-7d23865578be` 为811项、804PASS/7FAIL/0flaky/0skip，原配置retry1的失败复试均保留。失败涉及旧项目硬删除期望、两处Figma绝对锚点、通用禁用控件、账号菜单、更新入口及菜单生命周期；正在对照新规范逐项诊断，未改断言掩盖。完整verify exit1，后续DESIGN/development未运行，不可称全量通过。
