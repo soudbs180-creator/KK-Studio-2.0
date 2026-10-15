@@ -6095,19 +6095,22 @@
     "dependencies": [],
     "affectedModules": [
       "docs/governance",
-      "docs/changes/2026-10-15-unified-handoff"
+      "docs/changes/2026-10-15-unified-handoff",
+      "docs/changes/2026-10-15-unified-execution"
     ],
     "evidence": [
       "docs/changes/2026-10-15-unified-handoff/takeover-context.md",
       "docs/changes/2026-10-15-unified-handoff/delivery-matrix.md",
       "docs/changes/2026-10-15-unified-handoff/session-inventory.md",
-      "docs/changes/2026-10-15-unified-handoff/verification.md"
+      "docs/changes/2026-10-15-unified-handoff/verification.md",
+      "docs/changes/2026-10-15-unified-execution/verification.md",
+      "docs/changes/2026-10-15-unified-execution/history-readback.md"
     ],
-    "verification": "8个原活动主会话各发一次安全暂停；重连后8主+4此前active子会话均支持工具回读idle并交接无写入。114登记worktree/113有效原账本+Cherry冲突两侧内存联合192ID，main141缺51只是覆盖差异；所有历史状态/原对象保留，不批量覆盖原141记录。复用原DONE/PASS clean治理树切新分支，旧分支保留。历史/全局枚举存在缺口，产品未新增实现。",
+    "verification": "8个原活动主会话各发一次安全暂停；重连后8主+4此前active子会话均支持工具回读idle并交接无写入。114登记worktree/113有效原账本+Cherry冲突两侧内存联合192ID，main141缺51只是覆盖差异；所有历史状态/原对象保留，不批量覆盖原141记录。复用原DONE/PASS clean治理树切新分支，旧分支保留。历史/全局枚举存在缺口，产品未新增实现。 正式执行首轮：原提示词与zip指定hash匹配，receipt21/21及zip23/23独核；新12历史目标26页187轮到游标末尾，6接口仍不支持，原主控/全局枚举UNKNOWN保留。fresh治理lint/typecheck与46回归PASS；GDI真实argv16项/2renderers及100页7采样0自有代理通过，仅候选范围。已push1b895ecb并建草稿PR61，未合main或替换客户端。",
     "verificationResult": "PARTIAL",
     "updated": "2026-10-15",
     "lastVerified": "2026-10-15",
-    "nextAction": "完成接管包独审与治理门禁并交原主控确认；按用户最新要求另建正式执行会话，此会话不开始产品实现。后续先承接GDI保护、HOME/业务恢复P2，再按依赖Canvas/Responsive、Compress、Design、PR58与历史未完，均正常PR合main及实际客户端验证。",
+    "nextAction": "新正式执行会话已接管；PR61当前Hosted门禁通过后正常squash并复核main，再从实际main承接GDI af8独有7文件，完整verify/独审/正常PR；随后HOME恢复P2、Canvas/Responsive、Compress、Design、PR58及历史未完。旧会话不派新开发，原dirty/九项目/日常客户端保留。",
     "requirementRefs": [
       "ledger:TASK-GOV-004",
       "ledger:TASK-PROV-007",
@@ -7283,6 +7286,32 @@
           "observedHistoricalStatuses": ["DONE"]
         }
       ]
+    },
+    "executionTakeover": {
+      "date": "2026-10-15",
+      "source": "当前codex_delegation新正式执行会话",
+      "originalHandoffHead": "1b895ecbe0e93eaff2a115a115c57c047047abe7",
+      "originalPromptSha256": "c4b3d00ef023b70b999f38682d724c51513d2a018adae83603d2734cd79fa860",
+      "originalZipSha256": "d3477f8f56807f432f88f74e72904daf3422511f0e2c012a1bdafebde0a8e7b7",
+      "historyReadback": {
+        "targets": 18,
+        "successfulPages": 26,
+        "returnedTurns": 187,
+        "exhaustedTargets": 12,
+        "interfaceBlockedTargets": 6,
+        "argumentRejectedCalls": 7,
+        "source": "docs/changes/2026-10-15-unified-execution/history-readback.md",
+        "originalMasterBody": "UNKNOWN",
+        "globalEnumeration": "INCOMPLETE"
+      },
+      "governancePullRequest": "https://github.com/soudbs180-creator/KK-Studio-2.0/pull/61",
+      "gdiCandidate": {
+        "head": "af8a32588b90b82feddfe33eef784d775d55fccc",
+        "actualArgumentRegression": "PASS;16 merged disabled features;2 renderers",
+        "protected100Pages": "PASS;7 samples;0 owned TabProxy",
+        "mainIntegration": "NOT YET"
+      },
+      "productGoalStatus": "IN_PROGRESS"
     }
   }
 ]

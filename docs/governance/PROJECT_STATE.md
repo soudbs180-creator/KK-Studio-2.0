@@ -9,6 +9,8 @@
 <!-- DOCUMENT_METADATA_END -->
 <!-- CURRENT_FACTS_BEGIN -->
 
+正式执行首轮（2026-10-15）：已在新执行会话实际接管，原提示词和zip指定hash及包23/23匹配；原交接文件保持原字节。最新main仍235e，quality38703589980/guards38703590139/health38707820126已success；auto-merge38703588755失败单列。治理分支已普通推送并建draft PR61，当前CI未完，不表示已经合main。12可读历史目标新26页187轮耗尽，6接口明确不支持，原主控UNKNOWN/全局枚举缺口保留。GDI候选af8真实argv与100页7采样0自有代理新验通过，产品集成待后续。日常PID78612路径与EXEaeb70dfc实测一致；未重启或替换，九项目未触碰。详见[首轮验证](../changes/2026-10-15-unified-execution/verification.md)；下面字段中交接时未推送/待建会话的表述只属于原交接快照。
+
 ## CURRENT_FACTS (machine-readable current snapshot)
 
 - `snapshotDate`: 2026-10-15

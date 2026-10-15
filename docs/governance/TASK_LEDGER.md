@@ -147,7 +147,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-UI-FULL-20261015 | 完成全页面新UI收敛并验证后合入主线 | DONE | 已完成 | P1 | TASK-UI-DETAILS-20261015 | root | 本任务原范围关闭；新首页默认Codex、来源和输入/弹层修复由TASK-CODEX-HOME-20261015继续。 |
 | TASK-CODEX-HOME-20261015 | 首页默认Codex与模型来源分流及输入弹层修复 | REVIEW | 进行中 | P1 | TASK-UI-FULL-20261015 | root | 提交冻结候选后做精确SHA独审；当前Hosted须实际跑完完整verify（含development）/Delivery后才普通合并，随后main验证、实际本机更新及两独立副本canonical恢复/原7保全；保留另一任务原文与状态，最后以实际收据做纯docs closeout。 |
 | TASK-CODEX-REF-20261015 | Codex 卡片连线参考图直达内置生图 | PARTIAL | 未完成 | P1 | TASK-CODEX-HOME-20261015 | root | 保留功能/live通过证据，跟进上游13项已证预存失败使mandatory fullverify有效通过；补最终SHA正式review及Hosted/PR门禁，不宣称已集成/发布。 |
-| TASK-GOV-006 | 统一会话安全交接、全量需求映射与单主控承接 | IN_PROGRESS | 进行中 | P1 | none | root | 完成接管包独审与治理门禁并交原主控确认；按用户最新要求另建正式执行会话，此会话不开始产品实现。后续先承接GDI保护、HOME/业务恢复P2，再按依赖Canvas/Responsive、Compress、Design、PR58与历史未完，均正常PR合main及实际客户端验证。 |
+| TASK-GOV-006 | 统一会话安全交接、全量需求映射与单主控承接 | IN_PROGRESS | 进行中 | P1 | none | root | 新正式执行会话已接管；PR61当前Hosted门禁通过后正常squash并复核main，再从实际main承接GDI af8独有7文件，完整verify/独审/正常PR；随后HOME恢复P2、Canvas/Responsive、Compress、Design、PR58及历史未完。旧会话不派新开发，原dirty/九项目/日常客户端保留。 |
 
 ## TASK-FIX-PUSH-GUARD-SPACES-001 — 修复 Windows Git pre-push 空格及长路径启动
 
@@ -2844,9 +2844,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Acceptance: 支持工具盘点全部项目会话/分支/worktree/完整SHA/dirty与运行命令，分开FACT/INFERENCE/UNKNOWN/CONFLICT，列表50条不冒充全量。; 每个已识别活动项目仅一次安全暂停请求并回读终态；保留不可中断写入、所有成果/用户资料，不kill或关闭用户客户端。; 本账本全部141原任务及本地独有/历史未完成果有来源映射，容量错误/中断重试/未开发优化/排期负责人待确认/用户验收权完整继承。; 单主控、单任务单分支worktree及写入者；遵守worktree预算和PR保护，squash后从实际main承接独有改动、无历史重写/强推。; 每平台交付绑定main/版本源/依赖锁/构建hash/安装进程路径/客户端版本及实际功能和用户验收；全部批准范围/P0/P1/恢复风险清零前总目标不完成。
 - Branch: `docs/TASK-GOV-006-unified-handoff`
 - Worktree: `D:/kk-studio/.worktrees/TASK-GOV-PHASE0`
-- Modules: docs/governance, docs/changes/2026-10-15-unified-handoff
-- Verification: PARTIAL — 8个原活动主会话各发一次安全暂停；重连后8主+4此前active子会话均支持工具回读idle并交接无写入。114登记worktree/113有效原账本+Cherry冲突两侧内存联合192ID，main141缺51只是覆盖差异；所有历史状态/原对象保留，不批量覆盖原141记录。复用原DONE/PASS clean治理树切新分支，旧分支保留。历史/全局枚举存在缺口，产品未新增实现。
-- Evidence: [docs/changes/2026-10-15-unified-handoff/takeover-context.md](../../docs/changes/2026-10-15-unified-handoff/takeover-context.md), [docs/changes/2026-10-15-unified-handoff/delivery-matrix.md](../../docs/changes/2026-10-15-unified-handoff/delivery-matrix.md), [docs/changes/2026-10-15-unified-handoff/session-inventory.md](../../docs/changes/2026-10-15-unified-handoff/session-inventory.md), [docs/changes/2026-10-15-unified-handoff/verification.md](../../docs/changes/2026-10-15-unified-handoff/verification.md)
-- Next action: 完成接管包独审与治理门禁并交原主控确认；按用户最新要求另建正式执行会话，此会话不开始产品实现。后续先承接GDI保护、HOME/业务恢复P2，再按依赖Canvas/Responsive、Compress、Design、PR58与历史未完，均正常PR合main及实际客户端验证。
+- Modules: docs/governance, docs/changes/2026-10-15-unified-handoff, docs/changes/2026-10-15-unified-execution
+- Verification: PARTIAL — 8个原活动主会话各发一次安全暂停；重连后8主+4此前active子会话均支持工具回读idle并交接无写入。114登记worktree/113有效原账本+Cherry冲突两侧内存联合192ID，main141缺51只是覆盖差异；所有历史状态/原对象保留，不批量覆盖原141记录。复用原DONE/PASS clean治理树切新分支，旧分支保留。历史/全局枚举存在缺口，产品未新增实现。 正式执行首轮：原提示词与zip指定hash匹配，receipt21/21及zip23/23独核；新12历史目标26页187轮到游标末尾，6接口仍不支持，原主控/全局枚举UNKNOWN保留。fresh治理lint/typecheck与46回归PASS；GDI真实argv16项/2renderers及100页7采样0自有代理通过，仅候选范围。已push1b895ecb并建草稿PR61，未合main或替换客户端。
+- Evidence: [docs/changes/2026-10-15-unified-handoff/takeover-context.md](../../docs/changes/2026-10-15-unified-handoff/takeover-context.md), [docs/changes/2026-10-15-unified-handoff/delivery-matrix.md](../../docs/changes/2026-10-15-unified-handoff/delivery-matrix.md), [docs/changes/2026-10-15-unified-handoff/session-inventory.md](../../docs/changes/2026-10-15-unified-handoff/session-inventory.md), [docs/changes/2026-10-15-unified-handoff/verification.md](../../docs/changes/2026-10-15-unified-handoff/verification.md), [docs/changes/2026-10-15-unified-execution/verification.md](../../docs/changes/2026-10-15-unified-execution/verification.md), [docs/changes/2026-10-15-unified-execution/history-readback.md](../../docs/changes/2026-10-15-unified-execution/history-readback.md)
+- Next action: 新正式执行会话已接管；PR61当前Hosted门禁通过后正常squash并复核main，再从实际main承接GDI af8独有7文件，完整verify/独审/正常PR；随后HOME恢复P2、Canvas/Responsive、Compress、Design、PR58及历史未完。旧会话不派新开发，原dirty/九项目/日常客户端保留。
 - Last verified: 2026-10-15
 - Updated: 2026-10-15
