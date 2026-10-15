@@ -3,10 +3,22 @@ import { openSeededProject } from "./helpers";
 
 test.use({ reducedMotion: "reduce" });
 
-test("首页没有图片连接时模型菜单只提供配置入口", async ({ page }) => {
+test("首页没有 API 图片连接时仍可选择账号内置生图，API 目录保持空态和配置入口", async ({
+  page,
+}) => {
   await page.goto("/");
   await page.getByRole("button", { name: "模型", exact: true }).click();
   const menu = page.getByRole("menu", { name: "选择模型" });
+  const builtin = menu.getByRole("menuitemradio", { name: /^Codex 内置生图/ });
+  await expect(menu.getByRole("menuitemradio")).toHaveCount(1);
+  await expect(builtin).toHaveAttribute("aria-checked", "true");
+  await expect(builtin).not.toHaveAttribute("aria-disabled", "true");
+  await builtin.click();
+  await expect(
+    page.getByRole("button", { name: "模型", exact: true }),
+  ).toContainText("Codex 内置生图");
+  await page.getByRole("button", { name: "模型", exact: true }).click();
+  await menu.getByRole("menuitem", { name: /^API 自定义模型/ }).click();
   await expect(menu.getByRole("menuitemradio")).toHaveCount(0);
   await expect(menu).toContainText("暂无模型");
   await expect(
@@ -40,11 +52,14 @@ test("Figma 483 首页输入保持紧凑尺寸，额外能力仍可访问", asyn
   await model.click();
   expect((await composer.boundingBox())!.height).toBe(desktop.height);
   await page.setViewportSize({ width: 390, height: 844 });
-  await expect
-    .poll(async () => (await composer.boundingBox())?.width)
-    .toBe(299);
+  const available = await page
+    .locator(".start-hero")
+    .evaluate((element) => element.clientWidth);
+  await expect(composer).toHaveCSS("width", `${available}px`);
   const phone = (await composer.boundingBox())!;
-  expect(phone.width).toBe(299);
+  expect(phone.width).toBe(available);
+  expect(phone.x).toBeGreaterThanOrEqual(0);
+  expect(phone.x + phone.width).toBeLessThanOrEqual(390);
   expect(phone.height).toBeGreaterThanOrEqual(170);
   const row = await composer
     .locator(".start-composer-footer")
@@ -68,6 +83,10 @@ test("Figma 483 首页输入保持紧凑尺寸，额外能力仍可访问", asyn
     [...row.slice(3).map((item) => item.x)].sort((a, b) => a - b),
   );
   for (const control of row) expect(control.height).toBe(32);
+  expect(
+    Math.max(...row.map((item) => item.y)) -
+      Math.min(...row.map((item) => item.y)),
+  ).toBeLessThanOrEqual(1);
 });
 
 test("首页模型弹层选择真实 API 图片模型并保存连接身份", async ({ page }) => {

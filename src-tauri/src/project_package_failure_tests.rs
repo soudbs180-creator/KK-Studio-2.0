@@ -1,5 +1,178 @@
 use super::*;
 use serde_json::json;
+use std::sync::atomic::{AtomicU64, Ordering};
+
+static NEXT_FIXTURE_ID: AtomicU64 = AtomicU64::new(0);
+
+#[test]
+fn codex_generated_image_media_dimensions_survive_native_package_round_trip() {
+    let f = Fixture::new();
+    let mut value = f.snapshot.clone();
+    value["revision"] = json!(2);
+    let project = &mut value["projects"][0];
+    project["composerDraft"] = json!({
+        "prompt":"", "attachments":[], "conversationChannel":"codex",
+        "modelSelection":{"source":"codex","model":"","kind":"image"}
+    });
+    project["tasks"] = json!([]);
+    project["agentGeneratedImageIds"] = json!(["n1"]);
+    let item = &mut project["items"][0];
+    item["model"] = json!("图片模型未报告");
+    item["generationStatus"] = json!("ready");
+    item["mediaWidth"] = json!(1370);
+    item["mediaHeight"] = json!(1148);
+    item["result"] = json!({
+        "id":"n1", "kind":"image", "title":"图片模型未报告",
+        "description":"图片模型未报告 · 来源：Codex 内置生图",
+        "source":"provider", "src":format!("kk-asset:{}", f.id)
+    });
+    f.snapshots.write(value.clone(), Some(1)).unwrap();
+    let before = f.source_bytes();
+    let package = f.package();
+    let target = f.root.join("codex-media-restored");
+    import_package(&package, &target).unwrap();
+    let restored = SnapshotRepository::new(target.join("projects/creation-v2.json"))
+        .read()
+        .unwrap()
+        .snapshot
+        .unwrap();
+    assert_eq!(restored, value);
+    let loaded = AssetRepository::new(target.join("assets"))
+        .read(&f.id)
+        .unwrap()
+        .unwrap();
+    assert_eq!(
+        asset_validation::hash(&STANDARD.decode(loaded.data_base64).unwrap()),
+        f.sha
+    );
+    assert_eq!(f.source_bytes(), before);
+}
+
+#[test]
+fn media_dimensions_accept_only_optional_lossless_reader_numbers() {
+    let f = Fixture::new();
+    for field in ["mediaWidth", "mediaHeight"] {
+        for valid in [2, 1370, 100_000] {
+            let mut value = f.snapshot.clone();
+            value["projects"][0]["items"][0][field] = json!(valid);
+            snapshot_schema::validate(&value).unwrap();
+        }
+        for invalid in [
+            json!(null),
+            json!("1370"),
+            json!(true),
+            json!([]),
+            json!({}),
+            json!(-1),
+            json!(0),
+            json!(1),
+            json!(1.25),
+            json!(1370.5),
+            json!(100_000.25),
+            json!(100_001),
+            json!(f64::MAX),
+        ] {
+            let mut value = f.snapshot.clone();
+            value["projects"][0]["items"][0][field] = invalid.clone();
+            assert!(
+                snapshot_schema::validate(&value).is_err(),
+                "accepted {field}={invalid}"
+            );
+        }
+    }
+    snapshot_schema::validate(&f.snapshot).unwrap();
+    let mut unknown = f.snapshot.clone();
+    unknown["projects"][0]["items"][0]["mediaDepth"] = json!(8);
+    assert!(snapshot_schema::validate(&unknown).is_err());
+}
+
+#[test]
+fn account_and_api_model_selections_round_trip_without_rewriting_legacy_projects() {
+    for selection in [
+        None,
+        Some(json!({"source":"codex","model":"","kind":"image"})),
+        Some(
+            json!({"source":"api","model":"image-test","kind":"image","connectionId":"chosen-account"}),
+        ),
+    ] {
+        let f = Fixture::new();
+        let mut value = f.snapshot.clone();
+        value["revision"] = json!(2);
+        value["projects"][0]["composerDraft"] = json!({"prompt":"kept draft","attachments":[]});
+        if let Some(selection) = selection {
+            value["homeDraft"]["modelSelection"] = selection.clone();
+            value["projects"][0]["composerDraft"]["modelSelection"] = selection.clone();
+            if selection["source"] == "codex" {
+                value["projects"][0]["composerDraft"]["pendingAgent"] = json!(true);
+                value["projects"][0]["composerDraft"]["conversationChannel"] = json!("codex");
+                value["projects"][0]["items"][0]["generationSource"] = json!("codex");
+                value["projects"][0]["agentGeneratedImageIds"] = json!(["codex-fixture-result"]);
+            } else {
+                value["projects"][0]["composerDraft"]["conversationChannel"] = json!("google");
+                value["projects"][0]["composerDraft"]["providerConnectionId"] =
+                    json!("chosen-account");
+            }
+        }
+        snapshot_schema::validate(&value).unwrap();
+        f.snapshots.write(value.clone(), Some(1)).unwrap();
+        let package = f.package();
+        let before = f.source_bytes();
+        let target = f.root.join("selection-restored");
+        import_package(&package, &target).unwrap();
+        let restored = SnapshotRepository::new(target.join("projects/creation-v2.json"))
+            .read()
+            .unwrap()
+            .snapshot
+            .unwrap();
+        assert_eq!(restored, value);
+        assert_eq!(f.source_bytes(), before);
+    }
+}
+
+#[test]
+fn malformed_model_selection_and_account_metadata_fail_native_package_validation() {
+    let f = Fixture::new();
+    for invalid in [
+        json!(null),
+        json!({"source":"unknown","model":""}),
+        json!({"source":"codex","model":7}),
+        json!({"source":"codex","model":"","kind":"unknown-kind"}),
+        json!({"source":"codex","model":"","connectionId":"api-account"}),
+        json!({"source":"api","model":"","connectionId":""}),
+        json!({"source":"api","model":"a".repeat(121)}),
+        json!({"source":"codex","model":"","displayName":"a".repeat(161)}),
+        json!({"source":"codex","model":"","effectiveModel":"a".repeat(121)}),
+        json!({"source":"codex","model":"","extra":"must-not-survive"}),
+    ] {
+        let mut bad = f.snapshot.clone();
+        bad["homeDraft"]["modelSelection"] = invalid;
+        assert!(snapshot_schema::validate(&bad).is_err());
+    }
+    for (field, invalid) in [
+        ("providerConnectionId", json!(7)),
+        ("providerConnectionId", json!("a".repeat(121))),
+        ("pendingAgent", json!("true")),
+        ("conversationChannel", json!("unknown")),
+    ] {
+        let mut bad = f.snapshot.clone();
+        bad["homeDraft"][field] = invalid;
+        assert!(snapshot_schema::validate(&bad).is_err());
+    }
+    for invalid in [json!("api"), json!(7)] {
+        let mut bad = f.snapshot.clone();
+        bad["projects"][0]["items"][0]["generationSource"] = invalid;
+        assert!(snapshot_schema::validate(&bad).is_err());
+    }
+    for invalid in [
+        json!([7]),
+        json!(["a".repeat(251)]),
+        json!(vec!["id"; 5001]),
+    ] {
+        let mut bad = f.snapshot.clone();
+        bad["projects"][0]["agentGeneratedImageIds"] = invalid;
+        assert!(snapshot_schema::validate(&bad).is_err());
+    }
+}
 
 #[test]
 fn text_protocol_routes_and_plain_outputs_round_trip_through_native_package() {
@@ -87,9 +260,10 @@ struct Fixture {
 impl Fixture {
     fn new() -> Self {
         let root = std::env::temp_dir().join(format!(
-            "kk-package-fault-{}-{}",
+            "kk-package-fault-{}-{}-{}",
             std::process::id(),
-            nonce()
+            nonce(),
+            NEXT_FIXTURE_ID.fetch_add(1, Ordering::Relaxed)
         ));
         fs::create_dir_all(root.join("projects")).unwrap();
         fs::create_dir(root.join("assets")).unwrap();

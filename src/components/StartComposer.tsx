@@ -1,12 +1,14 @@
 import { useRef, useState } from "react";
 import UiIcon from "./UiIcon";
 import type { CreationDraft } from "../features/creation/model";
+import { homeModelSelection } from "../domain/modelSelection";
+import { codexHomeValidation } from "../features/agent/codexGeneration";
 import StartAttachmentList from "./StartAttachmentList";
 import ComposerTextarea from "./ComposerTextarea";
 import useConversationAttachments from "./useConversationAttachments";
 import ComposerExtensionsMenu from "./ComposerExtensionsMenu";
 import StartModelPicker from "./StartModelPicker";
-import { StartApproval, StartModePicker } from "./StartComposerModes";
+import { StartComposerFeedback, StartModePicker } from "./StartComposerModes";
 import VoiceInputButton from "./VoiceInputButton";
 import { useComposerMenus } from "./useComposerMenus";
 import type { SkillRecord } from "../features/skills/skillRegistry";
@@ -24,7 +26,6 @@ export default function StartComposer({
   onOpenModel,
   onOpenSkills,
   onOpenExtension,
-  defaultModel = "",
   modelConfigured = false,
   skills = [],
   onApplySkill,
@@ -32,11 +33,10 @@ export default function StartComposer({
   draft: CreationDraft;
   onDraftChange: (draft: CreationDraft) => void;
   setStatus: (status: string) => void;
-  onSubmit: (input: CreationDraft) => void;
+  onSubmit: (input: CreationDraft) => void | Promise<void>;
   onOpenModel: () => void;
   onOpenSkills: () => void;
   onOpenExtension: (id: string) => void;
-  defaultModel?: string;
   modelConfigured?: boolean;
   skills?: SkillRecord[];
   onApplySkill?: (record: SkillRecord) => string;
@@ -53,7 +53,12 @@ export default function StartComposer({
     openMenu,
     closeMenus,
   } = useComposerMenus(pickerRef);
-  const model = draft.model || defaultModel;
+  const selection = homeModelSelection(draft);
+  const usesCodex = selection.source !== "api";
+  const model = selection.model;
+  const submittingRef = useRef(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [attachmentError, setAttachmentError] = useState<string | null>(null);
   function commit(patch: Partial<CreationDraft>): void {
     onDraftChange({ ...draft, ...patch, updatedAt: Date.now() });
   }
@@ -63,31 +68,54 @@ export default function StartComposer({
     onChange: (attachments) =>
       onDraftChange({ ...draft, attachments, updatedAt: Date.now() }),
     onStatus: setStatus,
+    ...(usesCodex
+      ? {
+          maxAttachments: 6,
+          strictBatch: true,
+          onImportState: setAttachmentError,
+        }
+      : {}),
   });
   const uiState = getGenerationUiState({
     prompt: draft.prompt,
     inputValid: !readingFiles,
-    modelConfigured,
+    modelConfigured: usesCodex || modelConfigured,
     quotaAvailable: true,
     online: typeof navigator === "undefined" ? true : navigator.onLine,
-    serviceConfigured: modelConfigured,
+    serviceConfigured: usesCodex || modelConfigured,
   });
-  const submitDisabled = !canSubmitGeneration(uiState);
-  const disabledReason = getDisabledReason(uiState);
+  const { privacy: privacyReason, count: countReason } = codexHomeValidation(
+    draft,
+    selection,
+  );
+  const submitDisabled =
+    submitting ||
+    (usesCodex && Boolean(attachmentError)) ||
+    Boolean(privacyReason) ||
+    Boolean(countReason) ||
+    !canSubmitGeneration(uiState);
+  const disabledReason =
+    (usesCodex ? attachmentError : undefined) ??
+    privacyReason ??
+    countReason ??
+    getDisabledReason(uiState);
+  async function submitDraft(input: CreationDraft): Promise<void> {
+    if (submittingRef.current) return;
+    submittingRef.current = true;
+    setSubmitting(true);
+    try {
+      await onSubmit(input);
+    } finally {
+      submittingRef.current = false;
+      setSubmitting(false);
+    }
+  }
   function submit(): void {
     if (submitDisabled) {
       setStatus(disabledReason ?? "当前无法提交，请检查创作设置。");
       return;
     }
-    if (readingFiles) {
-      setStatus("正在读取参考素材，请稍候再提交。");
-      return;
-    }
-    if (!draft.prompt.trim()) {
-      setStatus("先写下一句创意，再开始创建项目。");
-      return;
-    }
-    if (!model.trim()) {
+    if (!usesCodex && !model.trim()) {
       setStatus("请选择本次创作使用的模型。");
       closeMenus();
       openMenu("model");
@@ -97,14 +125,15 @@ export default function StartComposer({
       ...draft,
       prompt: draft.prompt.trim(),
       model: model.trim(),
+      modelSelection: selection,
       kind: "image",
     } satisfies CreationDraft;
-    if (nextDraft.approvalMode === "ask" && !pendingSubmit) {
-      setPendingSubmit(nextDraft);
+    if (nextDraft.approvalMode === "ask" && pendingSubmit !== draft) {
+      setPendingSubmit(draft);
       setStatus("项目准备就绪，确认后才会创建并提交任务。");
       return;
     }
-    onSubmit(nextDraft);
+    void submitDraft(nextDraft);
     setPendingSubmit(null);
   }
   return (
@@ -160,15 +189,14 @@ export default function StartComposer({
               }}
             />
             <StartModelPicker
-              draft={draft}
-              model={model}
-              defaultModel={defaultModel}
+              selection={selection}
               open={modelMenuOpen}
               onToggle={() => toggleMenu("model")}
               onSelect={(choice) => {
                 commit({
                   model: choice.model,
                   providerConnectionId: choice.connectionId,
+                  modelSelection: choice,
                 });
                 closeMenus();
               }}
@@ -247,28 +275,22 @@ export default function StartComposer({
           </div>
         </div>
       </form>
-      {draft.prompt.trim() && disabledReason && (
-        <div className="start-composer-feedback" role="status">
-          <span id="start-submit-reason">{disabledReason}</span>
-          {uiState === "service-unconfigured" && (
-            <button type="button" onClick={onOpenModel}>
-              前往模型设置
-            </button>
-          )}
-        </div>
-      )}
-      {pendingSubmit && (
-        <StartApproval
-          onConfirm={() => {
-            onSubmit(pendingSubmit);
-            setPendingSubmit(null);
-          }}
-          onCancel={() => {
-            setPendingSubmit(null);
-            setStatus("已取消创建，输入仍保留。");
-          }}
-        />
-      )}
+      <StartComposerFeedback
+        reason={draft.prompt.trim() ? disabledReason : undefined}
+        countInvalid={Boolean(countReason)}
+        onResetCount={() => commit({ outputCount: 1 })}
+        onConfigure={
+          uiState === "service-unconfigured" ? onOpenModel : undefined
+        }
+        pending={pendingSubmit === draft}
+        onConfirm={() => {
+          if (pendingSubmit === draft) submit();
+        }}
+        onCancel={() => {
+          setPendingSubmit(null);
+          setStatus("已取消创建，输入仍保留。");
+        }}
+      />
     </>
   );
 }

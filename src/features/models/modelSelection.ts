@@ -14,8 +14,13 @@ export interface PickerMemory {
 }
 export function readPickerMemory(scope: string): PickerMemory {
   try {
+    const own = localStorage.getItem("kk:model-picker:" + scope);
     const data = JSON.parse(
-      localStorage.getItem("kk:model-picker:" + scope) ?? "{}",
+      own ??
+        (scope === "home"
+          ? localStorage.getItem("kk:model-picker:canvas-image")
+          : null) ??
+        "{}",
     );
     return {
       page: typeof data.page === "string" ? data.page : "root",

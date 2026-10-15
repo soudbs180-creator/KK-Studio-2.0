@@ -143,6 +143,22 @@ export function createDesktopAgentLifecycle(
     if (!desktop()) return connection.connect(newConversation);
     guardWork();
     setAutomatic(true);
+    const project = connection.getProjectId();
+    const version = epoch;
+    const connectionRevision = connection.getState().connectionRevision;
+    if (flight && attemptedProject !== project) {
+      await flight;
+      if (
+        project !== connection.getProjectId() ||
+        !state.automatic ||
+        connectionRevision !== connection.getState().connectionRevision
+      )
+        return;
+      if (version !== epoch) {
+        if (flight && attemptedProject === project) return flight;
+        return;
+      }
+    }
     return run(newConversation);
   }
   async function ensure() {

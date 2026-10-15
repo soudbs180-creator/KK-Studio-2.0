@@ -129,7 +129,7 @@ test("模型按来源、供应商、模型逐级选择并保持键盘焦点", as
   );
   await menu.getByRole("menuitem", { name: /^Codex/ }).click();
   const codexImage = menu.getByRole("menuitemradio", {
-    name: /^图片模型未报告/,
+    name: /^Codex 内置生图/,
   });
   await expect(codexImage).toHaveAttribute("aria-disabled", "true");
   await expect(codexImage).toHaveAttribute("title", "请先连接 Codex");
@@ -159,8 +159,10 @@ test("首页模型弹层只选模型，保留全局搜索和旧置顶", async ({
   const trigger = page.getByRole("button", { name: "模型", exact: true });
   await trigger.click();
   const menu = page.getByRole("menu", { name: "选择模型" });
-  await expect(menu).toContainText("API 供应商");
-  await expect(menu.getByRole("menuitem", { name: /^Codex/ })).toHaveCount(0);
+  await expect(menu).toContainText("API 自定义模型");
+  await expect(
+    menu.getByRole("menuitemradio", { name: /^Codex 内置生图/ }),
+  ).toHaveAttribute("aria-checked", "true");
   await expect(menu.getByLabel("生成数量", { exact: true })).toHaveCount(0);
   await expect(menu.getByLabel("隐私模式", { exact: true })).toHaveCount(0);
   await expect(menu.getByRole("region", { name: "生成设置" })).toHaveCount(0);

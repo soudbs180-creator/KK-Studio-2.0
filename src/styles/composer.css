@@ -55,6 +55,13 @@
   scrollbar-width: thin;
   overscroll-behavior: contain;
 }
+/* Composed editors use their caret for text focus; toolbar keyboard outlines
+   remain visible. Ordinary fields keep the shared weak focus treatment. */
+.composer-surface > .composer-textarea:focus-visible,
+.creation-composer > textarea:focus-visible {
+  box-shadow: none;
+  caret-color: var(--kk-text-primary);
+}
 .composer-textarea::placeholder {
   color: var(--text-tertiary);
   opacity: 1;
@@ -65,7 +72,7 @@
 }
 .composer-toolbar {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
   gap: var(--ui-space-1);
   width: 100%;
@@ -404,10 +411,10 @@
     grid-area: 2 / 5;
     justify-self: end;
   }
-  /* Compact controls wrap as complete capsules. */
+  /* Compact actions share one row; the model name takes the remaining width. */
   .start-composer .start-composer-footer {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     align-items: center;
   }
   .start-composer .start-footer-left,
@@ -480,10 +487,10 @@
 }
 
 @media (max-width: 767px) {
-  /* Phone controls wrap as complete capsules when the row is full. */
+  /* Keep phone actions on the same baseline. */
   .start-composer .composer-toolbar {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: 4px;
   }
   .start-composer .start-footer-left,
@@ -609,10 +616,10 @@
 }
 
 .start-composer .start-footer-left {
-  flex: 1 1 auto;
+  flex: 1 1 0;
   width: auto;
   min-width: 0;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 .start-composer .start-footer-right {
@@ -857,7 +864,7 @@
   min-width: 0;
   height: var(--kk-control-h-md);
   min-height: var(--kk-control-h-md);
-  padding: 0 var(--kk-space-3);
+  padding: 0 var(--kk-space-2);
   gap: 4px;
   background: var(--ui-task-selected);
   font-size: var(--kk-font-caption);
@@ -972,13 +979,13 @@
 
 .conversation-panel .chat-composer .chat-send {
   order: 10;
-  margin-left: 9px;
+  margin-left: var(--kk-space-1);
 }
 
 @media (max-width: 767px) {
   .start-composer {
-    width: 299px;
-    max-width: calc(100% - 24px);
+    width: 100%;
+    max-width: 100%;
     padding: 12px 13px 12px;
   }
 
@@ -993,7 +1000,7 @@
   }
 
   .start-composer > .composer-textarea {
-    width: 271px;
+    width: 100%;
     min-height: 64px;
     max-height: calc(var(--composer-line) * var(--composer-max-lines));
   }
@@ -1127,11 +1134,69 @@
     margin-left: 0;
   }
 
+  .start-composer .start-model-picker > button {
+    padding-inline: var(--kk-space-1);
+  }
+
   .start-composer [data-voice-state] {
     margin-left: 0;
   }
 
   .start-composer .start-composer-divider {
+    display: none;
+  }
+
+  .start-composer .composer-ext-skill,
+  .start-composer .composer-ext-skill > button {
+    flex-basis: var(--kk-control-h-md);
+    width: var(--kk-control-h-md);
+    min-width: var(--kk-control-h-md);
+    max-width: var(--kk-control-h-md);
+    border-radius: var(--kk-radius-control);
+  }
+
+  .start-composer .composer-ext-skill > button > span {
+    display: none;
+  }
+
+  .start-composer .start-mode-picker,
+  .start-composer .start-mode-button {
+    flex-basis: 44px;
+    width: 44px;
+    min-width: 44px;
+  }
+
+  .start-composer .start-submit-button {
+    margin-left: 0;
+  }
+}
+
+/* Compact rails reserve room for readable model and permission labels. */
+@media (max-width: 1200px) {
+  .conversation-panel .chat-composer .chat-model-picker-wrap,
+  .conversation-panel .chat-composer .chat-send {
+    margin-left: 0;
+  }
+
+  .conversation-panel .chat-composer .chat-model-picker {
+    padding-inline: var(--kk-space-1);
+  }
+
+  .conversation-panel .chat-composer .chat-model-separator,
+  .conversation-panel .chat-composer .chat-footer-separator-right {
+    display: none;
+  }
+
+  .conversation-panel .chat-composer .chat-skill-picker,
+  .conversation-panel .chat-composer .chat-skill-trigger {
+    flex-basis: var(--kk-control-h-md);
+    width: var(--kk-control-h-md);
+    min-width: var(--kk-control-h-md);
+    max-width: var(--kk-control-h-md);
+    border-radius: var(--kk-radius-control);
+  }
+
+  .conversation-panel .chat-composer .chat-skill-trigger > span {
     display: none;
   }
 }

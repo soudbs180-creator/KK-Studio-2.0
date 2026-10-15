@@ -52,6 +52,11 @@ import {
   type AgentDraftAttachment,
 } from "./agentAttachments.ts";
 import { resolveCodexModel } from "./agentModelSelection.ts";
+import type { ModelSelection } from "../../domain/modelSelection.ts";
+import {
+  codexGenerationPrompt,
+  codexReasoningModel,
+} from "./codexGeneration.ts";
 export interface AgentOpResult {
   applied: CanvasAgentOp[];
   rejected: Array<{ op: CanvasAgentOp; reason: string }>;
@@ -828,14 +833,19 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
   async function sendMessage(
     text: string,
     input?: {
+      selection?: ModelSelection;
+      outputCount?: number;
       model?: string;
       effort?: AgentReasoningEffort | "";
       canvasSource?: { nodeId: string; kind: "image" | "text" };
       attachments?: AgentDraftAttachment[];
+      signal?: AbortSignal;
+      validate?: () => string | undefined;
       /** Internal turns such as memory extraction must not learn from themselves. */
       memoryMode?: "normal" | "none";
     },
   ): Promise<{ ok: boolean; error?: string; messageId?: string }> {
+    if (input?.signal?.aborted) return { ok: false, error: "发送已取消" };
     if (toolReceiptError) return { ok: false, error: toolReceiptError };
     if (!text.trim() || state.status !== "connected" || !api)
       return { ok: false, error: "请先连接 Codex 主 Agent。" };
@@ -848,6 +858,17 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
     if (!conversation?.threadId) return { ok: false, error: "对话尚未就绪" };
     if (!["ready", "warning"].includes(conversation.status))
       return { ok: false, error: "当前会话尚未就绪，请等待或重新连接。" };
+    let userInstruction = text.trim();
+    try {
+      if (input?.selection)
+        userInstruction = codexGenerationPrompt(
+          userInstruction,
+          input.selection,
+          input.outputCount,
+        );
+    } catch (error) {
+      return { ok: false, error: errorText(error) };
+    }
     const version = epoch;
     const activeApi = api;
     const messageId = crypto.randomUUID();
@@ -860,8 +881,11 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
         ? "\n\n参考图片：" +
           selectedAttachments.map((item) => item.name).join("、")
         : "");
-    toolController = new AbortController();
-    const signal = toolController.signal;
+    const turnController = new AbortController();
+    toolController = turnController;
+    const signal = turnController.signal;
+    const abort = () => turnController.abort();
+    input?.signal?.addEventListener("abort", abort, { once: true });
     message({
       id: messageId,
       clientMessageId: messageId,
@@ -891,29 +915,29 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
           };
         });
       await refreshUsage();
-      if (version !== epoch || toolController.signal.aborted)
-        throw new Error("发送已取消");
+      if (version !== epoch || signal.aborted) throw new Error("发送已取消");
       if (!state.usageError && isAgentQuotaExhausted(state.usage))
         throw new Error("Codex 额度已用完，请等待重置。");
       await activeApi.activate();
-      if (version !== epoch || toolController.signal.aborted)
-        throw new Error("发送已取消");
+      if (version !== epoch || signal.aborted) throw new Error("发送已取消");
       await activeApi.postState(bridge?.getSnapshot() ?? null);
-      if (version !== epoch || toolController.signal.aborted)
-        throw new Error("发送已取消");
+      if (version !== epoch || signal.aborted) throw new Error("发送已取消");
       const memoryInjection =
         input?.memoryMode === "none"
           ? ""
           : await memoryService.buildInjection(text.trim());
-      if (version !== epoch || toolController.signal.aborted)
-        throw new Error("发送已取消");
-      const requestedModel = input?.model ?? readAgentModel();
+      if (version !== epoch || signal.aborted) throw new Error("发送已取消");
+      const requestedModel = input?.selection
+        ? codexReasoningModel(input.selection)
+        : (input?.model ?? readAgentModel());
+      const validationError = input?.validate?.();
+      if (validationError) throw new Error(validationError);
       const response = await activeApi.postTurn({
         prompt:
           KK_INSTRUCTIONS +
           (memoryInjection ? "\n\n" + memoryInjection + "\n" : "") +
           "\n用户指令：\n" +
-          text.trim() +
+          userInstruction +
           (canvasReferences.length
             ? "\n附图对应画布节点：" + JSON.stringify(canvasReferences)
             : ""),
@@ -928,24 +952,29 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
         effort: input?.effort ?? readAgentEffort(),
         attachments,
         messageMetadata: input?.canvasSource
-          ? canvasGenerationMetadata(
-              projectId,
-              input.canvasSource.nodeId,
-              input.canvasSource.kind,
-            )
+          ? {
+              canvasReferences: [
+                ...canvasGenerationMetadata(
+                  projectId,
+                  input.canvasSource.nodeId,
+                  input.canvasSource.kind,
+                ).canvasReferences!,
+                ...canvasReferences,
+              ],
+            }
           : canvasReferences.length
             ? { canvasReferences }
             : undefined,
       });
       if (version !== epoch)
         return { ok: false, error: "连接已变更，请重连确认执行结果。" };
-      if (toolController.signal.aborted)
+      if (signal.aborted && toolController === turnController)
         await activeApi.interrupt(conversation.threadId);
       if (response.state)
         handle({ kind: "conversation", conversation: response.state });
       return { ok: true, messageId };
     } catch (error) {
-      if (version === epoch) {
+      if (version === epoch && toolController === turnController) {
         if (
           error instanceof AgentApiError &&
           (error.response as AgentTurnResponse).state
@@ -958,6 +987,8 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
         });
       }
       return { ok: false, error: errorText(error) };
+    } finally {
+      input?.signal?.removeEventListener("abort", abort);
     }
   }
   async function interrupt(): Promise<{ ok: boolean; error?: string }> {
@@ -981,7 +1012,11 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
     model: string;
     count: number;
     kind: "image" | "text";
+    attachments?: AgentDraftAttachment[];
+    signal?: AbortSignal;
+    validate?: () => string | undefined;
   }): Promise<string | undefined> {
+    if (input.signal?.aborted) return "发送已取消";
     if (state.sending) return "Codex 正在执行另一项任务，请等待完成。";
     if (!Number.isInteger(input.count) || input.count < 1 || input.count > 4)
       return "Codex 卡片入口每次支持 1 至 4 份，请调整数量。";
@@ -990,17 +1025,31 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
     patch({ canvasNodeId: input.nodeId });
     const instruction =
       input.kind === "image"
-        ? `使用 Codex 账号内置 imagegen/image_generation 生成 ${input.count} 张图片，完成图片将由 KK 自动归档并连到来源节点。不要调用 KK 的 run_generation 或外部生成 API。`
+        ? input.attachments?.length
+          ? "使用所附原件作为参考图调用内置 imagegen/image_generation，按用户要求编辑或生成图片，不要只描述图片。"
+          : ""
         : `直接写出文案，然后通过 canvas_apply_ops 新建文本节点并将最终文案写入 metadata.text，与来源节点 ${input.nodeId} 连线。不调用 run_generation 或外部 API。`;
-    const result = await sendMessage(
+    const version = epoch;
+    const pending = sendMessage(
       `${instruction}\n来源节点：${input.nodeId}\n用户提示词：${input.prompt}`,
       {
-        model: input.model,
+        selection: {
+          source: "codex",
+          model: input.kind === "image" ? "" : input.model,
+          kind: input.kind,
+        },
+        outputCount: input.count,
         canvasSource: { nodeId: input.nodeId, kind: input.kind },
+        attachments: input.attachments,
+        signal: input.signal,
+        validate: input.validate,
       },
     );
+    const requestController = toolController;
+    const result = await pending;
     if (!result.ok) {
-      patch({ canvasNodeId: undefined });
+      if (version === epoch && requestController === toolController)
+        patch({ canvasNodeId: undefined });
       return result.error;
     }
     return undefined;

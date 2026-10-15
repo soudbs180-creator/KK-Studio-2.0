@@ -12,7 +12,19 @@ test("approved composer and shell geometry stays stable at phone and desktop siz
   await page.goto("/");
   const phoneComposer = await rect(page, ".start-composer");
   expect(phoneComposer).not.toBeNull();
-  expect(Math.round(phoneComposer!.width)).toBe(299);
+  const available = await page
+    .locator(".start-hero")
+    .evaluate((element) => element.clientWidth);
+  expect(phoneComposer!.width).toBe(available);
+  expect(phoneComposer!.x).toBeGreaterThanOrEqual(0);
+  expect(phoneComposer!.x + phoneComposer!.width).toBeLessThanOrEqual(390);
+  const label = page.locator(".start-model-picker span");
+  await expect(label).toHaveText("Codex 内置生图");
+  expect(
+    await label.evaluate(
+      (element) => element.clientWidth >= element.scrollWidth,
+    ),
+  ).toBe(true);
   expect(Math.round(phoneComposer!.height)).toBe(170);
 
   await page.setViewportSize({ width: 1920, height: 1080 });

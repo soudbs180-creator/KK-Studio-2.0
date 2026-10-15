@@ -2,8 +2,13 @@ import assert from "node:assert/strict";
 import test, { type TestContext } from "node:test";
 import {
   createAgentConnection,
+  type AgentConnectionOptions,
   type EventSourceLike,
 } from "../../src/features/agent/agentConnection.ts";
+import {
+  prepareAgentAttachments,
+  type AgentDraftAttachment,
+} from "../../src/features/agent/agentAttachments.ts";
 import type {
   CanvasAgentOp,
   CanvasAgentSnapshot,
@@ -675,6 +680,320 @@ test("sendMessage：先回显用户消息，再提交 turn", async (t: TestConte
       ),
   );
 });
+
+test("Codex 图片选择形成内置生图指令并保持原始用户消息，不传图片名作为推理模型", async (t) => {
+  const harness = createHarness();
+  let turn: Record<string, unknown> | undefined;
+  const conn = createAgentConnection({
+    eventSourceFactory: harness.eventSourceFactory,
+    storage: memoryStorage(),
+    fetcher: (async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = String(input);
+      if (url.includes("/agent/codex/turn")) {
+        turn = JSON.parse(String(init?.body));
+        return jsonResponse(200, { ok: true, threadId: "thread-1" });
+      }
+      return jsonResponse(200, {
+        ok: true,
+        protocolVersion: 6,
+        conversation: readyConversation().data,
+        data: [],
+      });
+    }) as typeof fetch,
+  });
+  conn.setBridge({
+    getSnapshot: () => snapshot,
+    applyOps: () => ({ applied: [], rejected: [] }),
+  });
+  t.after(() => conn.disconnect());
+  await conn.connect();
+  const result = await conn.sendMessage("蓝色玻璃球", {
+    selection: { source: "codex", kind: "image", model: "image-test" },
+  });
+  assert.equal(result.ok, true);
+  assert.equal(turn?.messageText, "蓝色玻璃球");
+  assert.match(String(turn?.prompt), /imagegen\/image_generation 生成 1 张/);
+  assert.match(
+    String(turn?.prompt),
+    /不要调用 KK 的 run_generation 或任何外部生成 API/,
+  );
+  assert.equal(turn?.model, undefined);
+});
+
+const canvasReference: AgentDraftAttachment = {
+  id: "ref-1",
+  canvasNodeId: "ref-1",
+  name: "reference.png",
+  mime: "image/png",
+  size: 68,
+  dataUrl:
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/l9sAAAAASUVORK5CYII=",
+};
+const canvasRequest = {
+  nodeId: "image",
+  prompt: "保留主体，改成蓝色背景",
+  model: "",
+  count: 1,
+  kind: "image" as const,
+};
+
+async function canvasGenerationHarness(
+  t: TestContext,
+  prepareAttachments: AgentConnectionOptions["prepareAttachments"] = (
+    files,
+    { signal },
+  ) =>
+    prepareAgentAttachments(files, {
+      signal,
+      inspect: async () => ({ width: 1, height: 1 }),
+    }),
+  onRequest?: (url: string) => void,
+) {
+  const harness = createHarness();
+  const turns: Record<string, unknown>[] = [];
+  const conn = createAgentConnection({
+    eventSourceFactory: harness.eventSourceFactory,
+    storage: memoryStorage(),
+    prepareAttachments,
+    fetcher: (async (input, init) => {
+      const url = String(input);
+      onRequest?.(url);
+      if (url.endsWith("/turn")) turns.push(JSON.parse(String(init?.body)));
+      return jsonResponse(200, {
+        ok: true,
+        protocolVersion: 6,
+        conversation: readyConversation().data,
+        data: [],
+      });
+    }) as typeof fetch,
+  });
+  conn.setBridge({
+    getSnapshot: () => ({
+      ...snapshot,
+      nodes: [
+        ...snapshot.nodes,
+        ...["ref-1", "ref-2"].map((id) => ({ ...snapshot.nodes[0], id })),
+      ],
+    }),
+    applyOps: () => ({ applied: [], rejected: [] }),
+  });
+  t.after(() => conn.disconnect());
+  await conn.connect();
+  harness.sources[0].emit(readyConversation());
+  return { conn, turns, source: harness.sources[0] };
+}
+
+test("Codex 卡片把多张原件传入生图 turn，并保留生成来源和参考节点", async (t) => {
+  const { conn, turns } = await canvasGenerationHarness(t);
+  const styleDataUrl =
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=";
+  const error = await conn.generateFromCanvas({
+    ...canvasRequest,
+    count: 2,
+    attachments: [
+      canvasReference,
+      {
+        ...canvasReference,
+        id: "ref-2",
+        canvasNodeId: "ref-2",
+        name: "style.png",
+        dataUrl: styleDataUrl,
+      },
+    ],
+  });
+  assert.equal(error, undefined);
+  assert.equal(turns.length, 1);
+  assert.deepEqual(turns[0].attachments, [
+    {
+      id: "ref-1",
+      name: "reference.png",
+      type: "image/png",
+      size: 68,
+      width: 1,
+      height: 1,
+      dataUrl: canvasReference.dataUrl,
+    },
+    {
+      id: "ref-2",
+      name: "style.png",
+      type: "image/png",
+      size: 68,
+      width: 1,
+      height: 1,
+      dataUrl: styleDataUrl,
+    },
+  ]);
+  assert.deepEqual(turns[0].messageMetadata, {
+    canvasReferences: [
+      {
+        nodeId: "image",
+        kind: "image",
+        label: "KK 生成来源",
+        title: "image",
+        text: "p1",
+      },
+      {
+        nodeId: "ref-1",
+        kind: "image",
+        label: "参考图片",
+        title: "reference.png",
+      },
+      { nodeId: "ref-2", kind: "image", label: "参考图片", title: "style.png" },
+    ],
+  });
+  assert.match(String(turns[0].prompt), /imagegen\/image_generation 生成 2 张/);
+  assert.match(String(turns[0].prompt), /所附原件/);
+  assert.equal(turns[0].model, undefined);
+});
+
+test("Codex 卡片原件无效时不提交缺图 turn", async (t) => {
+  const { conn, turns } = await canvasGenerationHarness(t);
+  const error = await conn.generateFromCanvas({
+    ...canvasRequest,
+    attachments: [{ ...canvasReference, dataUrl: "data:image/png;base64,???" }],
+  });
+  assert.match(error ?? "", /参考图片格式无效/);
+  assert.equal(turns.length, 0);
+});
+
+test("Codex 卡片在原件读取期间取消时不提交 turn", async (t) => {
+  const started = Promise.withResolvers<void>();
+  const release = Promise.withResolvers<void>();
+  const controller = new AbortController();
+  const { conn, turns } = await canvasGenerationHarness(
+    t,
+    async (_, { signal }) => {
+      started.resolve();
+      await release.promise;
+      signal.throwIfAborted();
+      return [];
+    },
+  );
+  const sending = conn.generateFromCanvas({
+    ...canvasRequest,
+    attachments: [canvasReference],
+    signal: controller.signal,
+  });
+  await started.promise;
+  controller.abort();
+  release.resolve();
+  assert.ok(await sending);
+  assert.equal(turns.length, 0);
+});
+
+test("Codex 卡片已取消的请求不回显消息或提交 turn", async (t) => {
+  const { conn, turns } = await canvasGenerationHarness(t);
+  const before = conn.getState().messages.length;
+  const controller = new AbortController();
+  controller.abort();
+  const error = await conn.generateFromCanvas({
+    ...canvasRequest,
+    signal: controller.signal,
+  });
+  assert.match(error ?? "", /取消/);
+  assert.equal(conn.getState().messages.length, before);
+  assert.equal(conn.getState().canvasNodeId, undefined);
+  assert.equal(turns.length, 0);
+});
+
+test("Codex 卡片在发送前最后一次检查来源变化，拒绝旧图 turn", async (t) => {
+  let armed = false;
+  let changed = false;
+  const { conn, turns } = await canvasGenerationHarness(t, undefined, (url) => {
+    if (armed && url.includes("/canvas/state")) changed = true;
+  });
+  armed = true;
+  const error = await conn.generateFromCanvas({
+    ...canvasRequest,
+    attachments: [canvasReference],
+    validate: () => (changed ? "来源或参考图已变化" : undefined),
+  });
+  assert.equal(error, "来源或参考图已变化");
+  assert.equal(turns.length, 0);
+});
+
+for (const { status, secondNodeId } of [
+  { status: 200, secondNodeId: "image" },
+  { status: 500, secondNodeId: "another-image" },
+  { status: 500, secondNodeId: "image" },
+]) {
+  test(`旧卡片迟到 ${status} 回执不影响后续 ${secondNodeId} turn`, async (t) => {
+    const harness = createHarness();
+    const firstPosted = Promise.withResolvers<void>();
+    const firstResponse = Promise.withResolvers<Response>();
+    const secondReading = Promise.withResolvers<void>();
+    const secondRelease = Promise.withResolvers<void>();
+    const firstController = new AbortController();
+    let preparing = 0;
+    let posts = 0;
+    let interrupts = 0;
+    const conn = createAgentConnection({
+      eventSourceFactory: harness.eventSourceFactory,
+      storage: memoryStorage(),
+      prepareAttachments: async (_, { signal }) => {
+        if (++preparing === 2) {
+          secondReading.resolve();
+          await secondRelease.promise;
+          signal.throwIfAborted();
+        }
+        return [];
+      },
+      fetcher: (async (input) => {
+        const url = String(input);
+        if (url.endsWith("/interrupt")) interrupts++;
+        if (url.endsWith("/turn") && ++posts === 1) {
+          firstPosted.resolve();
+          return firstResponse.promise;
+        }
+        return jsonResponse(200, {
+          ok: true,
+          protocolVersion: 6,
+          conversation: readyConversation().data,
+          messages: [],
+          data: [],
+        });
+      }) as typeof fetch,
+    });
+    conn.setBridge({
+      getSnapshot: () => ({
+        ...snapshot,
+        nodes: [
+          ...snapshot.nodes,
+          { ...snapshot.nodes[0], id: "another-image" },
+        ],
+      }),
+      applyOps: () => ({ applied: [], rejected: [] }),
+    });
+    t.after(() => conn.disconnect());
+    t.after(() => secondRelease.resolve());
+    await conn.connect();
+    harness.sources[0].emit(readyConversation());
+    const first = conn.generateFromCanvas({
+      ...canvasRequest,
+      signal: firstController.signal,
+    });
+    await firstPosted.promise;
+    harness.sources[0].emit({ type: "codex_state", data: { busy: false } });
+    await new Promise((resolve) => setImmediate(resolve));
+    assert.equal(conn.getState().sending, false);
+    const second = conn.generateFromCanvas({
+      ...canvasRequest,
+      nodeId: secondNodeId,
+    });
+    await secondReading.promise;
+    firstController.abort();
+    firstResponse.resolve(
+      jsonResponse(status, { ok: status === 200, error: "旧请求失败" }),
+    );
+    assert.equal(await first, status === 200 ? undefined : "旧请求失败");
+    assert.equal(interrupts, 0);
+    assert.equal(conn.getState().sending, true);
+    assert.equal(conn.getState().canvasNodeId, secondNodeId);
+    secondRelease.resolve();
+    assert.equal(await second, undefined);
+    assert.equal(posts, 2);
+  });
+}
 
 test("assistant 增量通过 SSE 合并到消息", async (t: TestContext) => {
   const harness = createHarness();

@@ -10,6 +10,7 @@ import AgentExecutionProcess from "./AgentExecutionProcess";
 import type { AgentUsageWindow } from "../features/agent/agentUsage";
 import type { AgentDraftAttachment } from "../features/agent/agentAttachments";
 import type { CanvasCollectionItem } from "../domain/canvasItems";
+import type { ModelSelection } from "../domain/modelSelection";
 
 /** 本地 Agent 会话通道（画布旁对话面板与 canvas-agent 的桥）。 */
 export interface AgentConversationProps {
@@ -42,6 +43,7 @@ export interface AgentConversationProps {
   onSend: (
     message: string,
     attachments?: AgentDraftAttachment[],
+    selection?: ModelSelection,
   ) => Promise<{ ok: boolean; error?: string }>;
   onInterrupt: () => Promise<{ ok: boolean; error?: string }>;
   onDecision: (

@@ -82,9 +82,10 @@
       "TASK-CANVAS-SYNC-20261014",
       "TASK-CANVAS-WIDE-PORT-20261014",
       "TASK-222-ACTIONS-20261014",
-      "TASK-223-ACTIONS-20261014"
+      "TASK-223-ACTIONS-20261014",
+      "TASK-CODEX-HOME-20261015"
     ],
-    "updated": "2026-10-14",
+    "updated": "2026-10-15",
     "platforms": ["web", "desktop"],
     "runtimeEvidence": [
       {
@@ -174,9 +175,11 @@
       "TASK-AGENT-004",
       "TASK-AGENT-008",
       "TASK-PROV-005",
-      "TASK-PROV-006"
+      "TASK-PROV-006",
+      "TASK-CODEX-HOME-20261015",
+      "TASK-CODEX-REF-20261015"
     ],
-    "updated": "2026-10-08",
+    "updated": "2026-10-15",
     "platforms": ["web", "desktop"],
     "runtimeEvidence": [
       {
@@ -497,9 +500,10 @@
       "TASK-AGENT-008",
       "TASK-AGENT-RECOVERY-20261013",
       "TASK-CANVAS-SYNC-20261014",
-      "TASK-AGENT-UX-20261014"
+      "TASK-AGENT-UX-20261014",
+      "TASK-CODEX-HOME-20261015"
     ],
-    "updated": "2026-10-14",
+    "updated": "2026-10-15",
     "platforms": ["web", "desktop"],
     "runtimeEvidence": [
       {

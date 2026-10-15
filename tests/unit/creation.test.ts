@@ -49,6 +49,31 @@ test("creation snapshots normalize old drafts without losing project content", (
   assert.equal(snapshot?.projects[0]?.composerDraft.approvalMode, "auto");
 });
 
+test("Codex image selection survives reload without changing legacy API project routing", () => {
+  const legacy = createProject({
+    prompt: "保留原 API 项目",
+    model: "image-test",
+    kind: "image",
+    attachments: [],
+    providerConnectionId: "original-api",
+  });
+  const selection = { source: "codex", model: "", kind: "image" };
+  const snapshot = normalizeCreationSnapshot({
+    version: 2,
+    homeDraft: {
+      prompt: "使用账号生图",
+      model: "image-test",
+      modelSelection: { ...selection, token: "must-not-survive" },
+    },
+    projects: [legacy],
+  });
+  assert.deepEqual(snapshot?.homeDraft.modelSelection, selection);
+  assert.equal(snapshot?.projects[0]?.model, "image-test");
+  assert.equal(snapshot?.projects[0]?.composerDraft.modelSelection, undefined);
+  assert.equal(snapshot?.projects[0]?.items[0]?.generationSource, undefined);
+  assert.equal(JSON.stringify(snapshot).includes("must-not-survive"), false);
+});
+
 test("new tasks keep cost unknown until a provider returns a quote", () => {
   const project = createProject({
     prompt: "生成一张产品图",

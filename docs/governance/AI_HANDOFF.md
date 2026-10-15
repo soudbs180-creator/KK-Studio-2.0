@@ -8,7 +8,21 @@
 
 本文是最短恢复入口，不是任务状态或产品能力的第二事实源。任务状态只读 [`task-ledger.json`](task-ledger.json)；当前项目事实只读 [`PROJECT_STATE.md`](PROJECT_STATE.md)；历史验证只按带日期的 change package、commit、运行模式和 receipt 回读。
 
+## Codex 卡片参考图恢复入口（TASK-CODEX-REF-20261015）
+
+先读[本轮验证](../changes/2026-10-15-codex-card-reference/verification.md)与[审查](../changes/2026-10-15-codex-card-reference/review.md)。功能/live PASS，交付PARTIAL：Desktop/Web2.1.33；参考原件42452f4d...经一次真实Codex内置imagegen生成PNG6531e6ac...并归档，1result/1result边/1reference边，外部图片请求0；重载、正常关闭/重建/重启、原桌面快捷方式重开PASS，原件hash不变且重启turn0。最终EXE6353aba3.../inputee1e43be...、reason=current、bundlevihgOeA0。Node1327PASS/14skip、Agent199PASS/2skip、定向45/dirty预检50及browser13/邻域39分别PASS；完整browser784为771PASS13FAIL/0flaky/skip，13项已由任务前源码逐项同断言重现为PRE-EXISTING FAILURE，但fullverify仍FAIL、development未运行。最终SHA正式review/Hosted/PR未完成。 源码来自独立TASK-CODEX-REF工作树并受保护整合入活动HOME候选；保留其他作者更新。最终官方重建34.96秒，现有桌面快捷方式未重写且已启动原资料root/无--data-dir。自有隔离实例正常关闭，无关PID37780未触碰。后续修复有效全量门禁并补最终SHA正式review/Hosted/PR；不提交/推送，不把整体写为DONE/REAL，下方HOME与历史恢复原文保留。
+
+验收后并发漂移边界（2026-10-15T06:48:06Z）：其他任务随后修改无关Rust项目包/vendor/runtime/build输入及dist；native/closeout-source-drift.json最新reason=unverified，当前input627e5b40...，受测inputee1e43be...。此前真实验收/日常重开及EXE6353aba3.../本任务App23a0625a...、agentConnection52a1d8db...仍有效且字节未变，日常PID57824继续运行受测2.1.33；不能宣称最新整个checkout已验收。不继续重建、关闭或覆盖其他作者工作，整体PARTIAL。
+
 ## 本轮恢复入口
+
+先读[本轮intent](../changes/2026-10-15-codex-home/intent.md)、[spec](../changes/2026-10-15-codex-home/spec.md)、[计划](../changes/2026-10-15-codex-home/plan.md)与[验证](../changes/2026-10-15-codex-home/verification.md)。TASK-CODEX-HOME-20261015进入REVIEW/整体NOT_VERIFIED，候选Desktop/Web2.1.33。full5前置Node1327/14skip、Agent199/2skip与静态/build通过，784浏览器单结果首过/retry0，845源码/测试冻结逐项相同；但development因另一任务占用1421而steps=[]、完整npm verify exit1，未杀进程/复用server。新EXE8f633...实际export/preflight/import及新root冷开1370×1148图文/Codex缺省恢复通过；Rust167/包30、旧EXE TaskHost隔离重跑11PASS均限各自范围，首轮失败保留。精确提交独审及Hosted必须真实跑完整verify/Delivery，之后才考虑普通合并、main与实际本机更新。
+
+canonical仍按7项目/rev2057与before-state95df5c81...保护，4602source不变。candidate1真实生成后用户在独立窗口删图/编辑，恢复边界另见verification：用户最新授权两次窗口编辑分别恢复两个新ID副本，all-input已核对2项目/各2cards/1共享asset，canonical未写且不覆盖原7。整项目包导出因旧媒体未归档拒绝，保留失败；独立副本计划已编码校验但尚未写canonical，不能提前称恢复成功。candidate2已有字段保持，仅一旧empty项目新增空reviewComments/stagePlans，不声称整对象byteexact。另有人类TASK-CODEX-REF写回卡片参考图/版本33，root准备明确来源纳入最终组合review/fullgate；不碰其docs/ledger或代填DONE。跨聊天发消息授权未收到且未发送消息。后续真实门禁后先REVIEW，产品合并及本机更新实际完成后纯文档closeout，premerge不DONE。
+
+PR59已合main cbda、旧UI任务及实际2.1.31激活收束；旧verification与失败保留于历史，见[前置闭环](../changes/2026-10-15-codex-home/verification.md#前置闭环task-ui-full-20261015历史范围)。下面段落是此前阶段事实，不再表示当前main尚未合并。
+
+### 此前2.1.31恢复入口（历史）
 
 先读[最新2.1.31验证](../changes/2026-10-15-ui-full/verification.md#2131-当前本地验收)与[计划](../changes/2026-10-15-ui-full/plan.md)。当前eb5基线加scope恢复layout同步/单回归/版本31，verify9 761首试/0retry、fresh Native10 105项/13图与TaskHost current6无注入11项分别PASS，自有进程退出及端口释放已实查。旧eb5 push759+1flaky严格NON_PASS与旧PR760首过不互相代填；原失败、因果与HTTP guard范围集中最新验证。Native4默认profile自动连接paused、原值NOT_RECORDED，不猜恢复，可模型接入重新连接。最终head、独立base694→head审查、新Hosted/Delivery、普通PR59合并及main/post-main待验，main694未合并；REVIEW/整体NOT_VERIFIED，原138任务、其他功能、primary文件/index、历史与Mobile规划保持。
 

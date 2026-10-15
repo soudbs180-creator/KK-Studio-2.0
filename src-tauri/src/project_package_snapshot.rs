@@ -497,6 +497,36 @@ fn stage_plans(project: &Value) -> Result<(), String> {
     Ok(())
 }
 
+fn model_selection(value: &Value) -> Result<(), String> {
+    shape(
+        value,
+        "modelSelection",
+        &[
+            "source",
+            "model",
+            "connectionId",
+            "kind",
+            "displayName",
+            "effectiveModel",
+        ],
+        &["source", "model"],
+    )?;
+    enumeration(value, "source", &["default", "codex", "api"])?;
+    text(value, "model", 0, 120)?;
+    enumeration(
+        value,
+        "kind",
+        &["text", "image", "video", "audio", "unknown"],
+    )?;
+    text(value, "displayName", 1, 160)?;
+    text(value, "effectiveModel", 1, 120)?;
+    text(value, "connectionId", 1, 120)?;
+    if value.get("connectionId").is_some() && value["source"] != "api" {
+        return Err(invalid("modelSelection.connectionId"));
+    }
+    Ok(())
+}
+
 fn draft(value: &Value) -> Result<(), String> {
     shape(
         value,
@@ -504,6 +534,10 @@ fn draft(value: &Value) -> Result<(), String> {
         &[
             "prompt",
             "model",
+            "modelSelection",
+            "providerConnectionId",
+            "pendingAgent",
+            "conversationChannel",
             "kind",
             "attachments",
             "approvalMode",
@@ -514,6 +548,17 @@ fn draft(value: &Value) -> Result<(), String> {
         &[],
     )?;
     texts(value, &[("prompt", usize::MAX), ("model", usize::MAX)])?;
+    text(value, "providerConnectionId", 0, 120)?;
+    if let Some(selection) = value.get("modelSelection") {
+        model_selection(selection)?;
+    }
+    if value
+        .get("pendingAgent")
+        .is_some_and(|flag| !flag.is_boolean())
+    {
+        return Err(invalid("pendingAgent"));
+    }
+    enumeration(value, "conversationChannel", &["codex", "direct", "google"])?;
     enumeration(value, "kind", KINDS)?;
     enumeration(value, "approvalMode", &["auto", "ask"])?;
     enumeration(
@@ -542,12 +587,15 @@ fn item(value: &Value) -> Result<(), String> {
             "parentAssetId",
             "tags",
             "preview",
+            "mediaWidth",
+            "mediaHeight",
             "updatedAt",
             "referenceMode",
             "referenceOnly",
             "referenceSlot",
             "generationStatus",
             "generationIndex",
+            "generationSource",
             "providerConnectionId",
             "imageEditDraft",
             "imageEditContext",
@@ -589,6 +637,9 @@ fn item(value: &Value) -> Result<(), String> {
         &["主体", "风格", "材质", "构图", "Mask"],
     )?;
     enumeration(value, "generationStatus", &["pending", "ready", "error"])?;
+    enumeration(value, "generationSource", &["codex"])?;
+    number(value, "mediaWidth", 2.0, 100_000.0, true)?;
+    number(value, "mediaHeight", 2.0, 100_000.0, true)?;
     finite(value, "updatedAt")?;
     finite(value, "generationIndex")?;
     for field in ["referenceMode", "referenceOnly"] {
@@ -994,6 +1045,7 @@ pub(super) fn validate(snapshot: &Value) -> Result<(), String> {
                 "providerName",
                 "providerCredentialRef",
                 "agentThreadId",
+                "agentGeneratedImageIds",
                 "items",
                 "messages",
                 "tasks",
@@ -1009,6 +1061,15 @@ pub(super) fn validate(snapshot: &Value) -> Result<(), String> {
             &["id", "items"],
         )?;
         text(project, "id", 1, 160)?;
+        let generated = array(project, "agentGeneratedImageIds")?;
+        if generated.len() > 5000
+            || generated.iter().any(|id| {
+                !id.as_str()
+                    .is_some_and(|id| id.encode_utf16().count() <= 250)
+            })
+        {
+            return Err(invalid("agentGeneratedImageIds"));
+        }
         crate::creation_storage::labels(project, "customTags")?;
         if let Some(thread_id) = project.get("agentThreadId") {
             if !thread_id.as_str().is_some_and(|id| {

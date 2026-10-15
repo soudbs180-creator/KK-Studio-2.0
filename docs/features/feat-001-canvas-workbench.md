@@ -50,3 +50,7 @@
 - 2026-09-29：TASK-CANVAS-KAWORKAI-001 完成参考画布只读审计，并把快照历史、键盘/右键撤销重做、可持久化网格吸附和无分组图层定位并入本地画布；竞品 AI 工具、积分、云端 board 和分组折叠仍未接入。
 
 - 2026-10-08：TASK-UI-011 将参考/结果图片动作统一到选中卡片上方，单击选择/双击预览；画布缩放、顶部手势/重选及历史语义实测，重绘与现有精确模型/原件/审批门禁共用。最新main78组合7d27265完整423浏览器、97Rust与fresh Native UI13/TaskHost11/同EXE模型能力通过，独立补审与产品当前HostedPASS；最终文档推广门禁另绑，见[本轮验收](../changes/2026-10-08-image-selection-actions/verification.md)。未实现的裁剪/高清/多视角没有伪装成可用动作。
+
+## 2026-10-15 首页与来源修复（REVIEW，整体待验）
+
+TASK-CODEX-HOME-20261015：新首页默认Codex/ChatGPT图片能力，首页、聊天、画布沿各自显式Codex/API来源执行；旧API和无selection项目保持legacy路由，局部隐私/草稿/附件及原件保全。输入同排与菜单锚点同步修复。当前进入REVIEW：784浏览器首过及Native单QA包往返/冷开图文通过，但完整npm verify因另一任务占用1421而development未执行/exit1；当前SHA独审与Hosted完整门禁、合并和本机更新待验。见[本轮规格](../changes/2026-10-15-codex-home/spec.md)与[验证](../changes/2026-10-15-codex-home/verification.md)；本卡功能状态保持，不用前置真实账号证据代填新入口或所有外部Provider。

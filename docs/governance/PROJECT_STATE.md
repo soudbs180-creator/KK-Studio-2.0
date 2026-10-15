@@ -14,14 +14,26 @@
 - `snapshotDate`: 2026-10-15
 - `canonicalRepository`: `D:/kk-studio/KK-Studio-2.0`
 - `canonicalRef`: `origin/main`
-- `canonicalHead`: `694a00607f6f63de1b8c43d0ebb117adf5d34f67`
-- `canonicalHeadVerifiedFrom`: 2026-10-15 root实际fetch/API确认main694、PR59未合并；当前2.1.31本地verify9/Native10/TaskHost current6 PASS，最终head精确审查、新Hosted/Delivery及main/post-main待验，旧eb5 push首错与PR首过不互相代填。
-- `primaryCheckoutState`: D:/kk-studio/KK-Studio-2.0保留codex/ui-redesign-20261011@51fccfc7879cf90f7caaf3ae8e10af4d97a2aa2c并发dirty与原index（本轮只读254条），不reset/clean/覆盖。任务工作树branch-consolidation-20261011 / fix/TASK-UI-FULL-20261015，当前eb5基线加scope恢复layout同步/单回归/版本2.1.31差量尚未最终提交。Native4曾写default WebView profile自动连接暂停，原值NOT_RECORDED，不能声称所有用户偏好未触碰；不猜恢复，详见最新验证。
-- `taskLedger`: 139 records; 82 DONE, 0 IN_PROGRESS, 34 PARTIAL, 12 TODO, 7 REVIEW, 4 BLOCKED; 57 open records.
+- `canonicalHead`: `cbda65e4389fc807769a8faf7654892415992589`
+- `canonicalHeadVerifiedFrom`: 2026-10-15 PR59正常squash，main quality38670857295、Guards38670857398、main-health38673059923及独立原始证据审计通过；tree9f3cfd20ac83da043f6d64c2ce35187ef3360a4d。实际2.1.31本机激活通过；新TASK-CODEX-HOME候选不继承这些通过。
+- `primaryCheckoutState`: primary保留codex/ui-redesign-20261011@51fccfc7879cf90f7caaf3ae8e10af4d97a2aa2c、4602受保护文件/254dirty/index不变。复用本聊天干净隔离worktree从main cbda建立fix/TASK-CODEX-HOME-20261015，按唯一文件owner并行；未新增或清理其他worktree，未触碰network候选dirty。日常f231 EXE属于前一已验收main；当前候选实际本机更新待验，关闭/备份由root协调。Native4旧偏好例外保留，随后用户授权普通连接已恢复auto-connect enabled。
+- `taskLedger`: 141 records; 83 DONE, 0 IN_PROGRESS, 35 PARTIAL, 12 TODO, 7 REVIEW, 4 BLOCKED; 58 open records.
 - `workspaceWorktrees`: 本轮末次只读worktree登记回读109项。此前恢复盘点107登记项、39 dirty来源、39一致快照；该盘点时原index变动0，872源路径与313排除路径可溯源。首轮104项/40一致与1volatile记录保留原时点；历史107项快照不覆盖后续登记来源。原分支/index/资料保留，本任务未删除、移动或覆盖其他来源。
 - `reclamationPolicy`: generated dependencies/build output may be reclaimed only from a recorded, non-primary worktree after immutable SHA inventory and explicit candidate approval; source changes and evidence paths are protected.
 - `remoteAutoMerge`: 本轮root已GET回读3个active ruleset；stable23866925对main/master/release启用PR、stale-dismiss/threads和strict verify/delivery（Actions15368）、0强制approving、无bypass/merge_queue；允许merge/squash/rebase。main protected=true由ruleset保护；legacy protection.enabled=false不表示未保护。自动helper activation/paused状态尚无本轮证据，不宣称已启用，不改远端配置。
+- `codexCardReferenceCandidate`: TASK-CODEX-REF-20261015 PARTIAL；功能/live PASS，交付PARTIAL：Desktop/Web2.1.33；参考原件42452f4d...经一次真实Codex内置imagegen生成PNG6531e6ac...并归档，1result/1result边/1reference边，外部图片请求0；重载、正常关闭/重建/重启、原桌面快捷方式重开PASS，原件hash不变且重启turn0。最终EXE6353aba3.../inputee1e43be...、reason=current、bundlevihgOeA0。Node1327PASS/14skip、Agent199PASS/2skip、定向45/dirty预检50及browser13/邻域39分别PASS；完整browser784为771PASS13FAIL/0flaky/skip，13项已由任务前源码逐项同断言重现为PRE-EXISTING FAILURE，但fullverify仍FAIL、development未运行。最终SHA正式review/Hosted/PR未完成。 root限定整合入活动HOME候选并保留其他作者改动，独立source worktree归属保持；未commit/push/远端操作。[本轮验证](../changes/2026-10-15-codex-card-reference/verification.md)。 验收后并发漂移边界（2026-10-15T06:48:06Z）：其他任务随后修改无关Rust项目包/vendor/runtime/build输入及dist；native/closeout-source-drift.json最新reason=unverified，当前input627e5b40...，受测inputee1e43be...。此前真实验收/日常重开及EXE6353aba3.../本任务App23a0625a...、agentConnection52a1d8db...仍有效且字节未变，日常PID57824继续运行受测2.1.33；不能宣称最新整个checkout已验收。不继续重建、关闭或覆盖其他作者工作，整体PARTIAL。
+
 - `historicalRule`: paragraphs after `<!-- HISTORICAL_SNAPSHOTS_BEGIN -->` are dated evidence only and cannot overwrite these facts.
+
+- `codexHomeCandidate`: TASK-CODEX-HOME-20261015 REVIEW / 整体NOT_VERIFIED；Desktop/Web2.1.33、Mobile2.1.1规划。full5前置Node1327/14skip、Agent199/2skip与静态/build通过，784浏览器单结果首过/实际retry0；845源码/测试冻结无漂移。但末端development因另一任务占用1421而steps=[]、完整npm verify exit1，Hosted当前SHA必须真实补齐后才可合并。Rust尺寸包30/167通过，新EXE8f633...实际包往返与冷开1370×1148图文恢复通过；首轮TaskHost失败及旧EXE重跑11PASS分别保留。精确SHA独审/Hosted/产品PR/main/本机更新与两副本恢复仍待验。[当前验证](../changes/2026-10-15-codex-home/verification.md)。
+
+- `codexHomeUserDataBaseline`: 用户本机工作后为7项目/rev2057；工程外codex-home-20261015/before-state.json SHA256 95df5c81a3b75119175b2f3f89c27c714254cf1df76ab5aa92d4954f4f6181fb，4602原source hash一致。旧10/11项目只属先前时点，不恢复用户删除。
+
+- `codexHomeUserEditRecovery`: 用户授权两次验证窗口编辑各一个独立新ID副本；工程外all-input已核对2项目/各2cards/1共享assetb0a9...，canonical尚未写、原7/rev2057不覆盖。candidate2原7已有字段保留但一empty新增空reviewComments/stagePlans，非整对象byteexact。旧全包未归档媒体拒绝与最新单QA尺寸字段corrupt各自保留，不能冒充导出成功。
+
+- `codexHomeCoordination`: 另一人类TASK-CODEX-REF写回卡片参考图及版本33，root只读确认其idle后准备按相关生成契约纳入同一最终组合，明确来源并通过严格review/fullgate；本task不改其docs/ledger或代填DONE。跨聊天发消息授权未收到且未发送消息，精确SHA/合并与最终本机验收待门禁。
+
+- `uiFullMainCloseout`: TASK-UI-FULL-20261015按原范围DONE/PASS：source0ac精确审查、PR59/main与本机2.1.31实际激活已闭环，原verification逐字保存在ledger verificationHistory。原始失败、非必需auto-invalid、API fixture和Native4偏好例外保留，不提升整项目/外部Provider状态。准确SHA、run和回执见[前置闭环](../changes/2026-10-15-codex-home/verification.md#前置闭环task-ui-full-20261015历史范围)。
 
 - `settingsLatestUiCandidate`: 历史2.1.25基线（保留原证据），TASK-SETTINGS-LATEST-20261015本地DONE/PASS；当时基于c1fae190，branch-consolidation-20261011 / fix/TASK-SETTINGS-LATEST-20261015的Desktop/Web2.1.25。产品源码2a4e66d1、完整verify784039e7、独立源/测试054cd53f；Node1278/Agent199（既有skip14/2）、Edge629首试0failure/flaky/skip、UI242/0、development5步。当时production Web/Tauri1280/240/192/#21a673/overflow0；官方EXEc9c3b4e/input2a09db54，Native20+11+1+5及owned凭据/fixture清理PASS。该轮将Desktop入口指向此工作树并实际启动日常PID64772；primary/index和配置身份保留，所有失败原件保留。此后2.1.26以uiDetailsCandidate为准，历史PASS不代填新几何。[原轮验证](../changes/2026-10-15-settings-latest-ui/verification.md)。
 

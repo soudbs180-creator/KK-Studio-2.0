@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("home submit is disabled with an explicit model-setup reason", async ({
+test("home defaults to Codex and offline submission has an explicit reason", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
@@ -13,7 +13,15 @@ test("home submit is disabled with an explicit model-setup reason", async ({
     name: "开始创建项目",
     exact: true,
   });
+  await expect(submit).toBeEnabled();
+  await expect(
+    composer.getByRole("button", { name: "模型", exact: true }),
+  ).toContainText("Codex 内置生图");
+  await page.context().setOffline(true);
+  await composer
+    .getByLabel("创作提示词", { exact: true })
+    .fill("离线编辑仍保留草稿");
   await expect(submit).toBeDisabled();
   await expect(submit).toHaveAttribute("aria-describedby");
-  await expect(page.locator(".start-composer-feedback")).toContainText("模型");
+  await expect(page.locator(".start-composer-feedback")).toContainText("离线");
 });

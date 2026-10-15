@@ -123,18 +123,26 @@ test("首页扩展菜单的选中态和动作项遵守层级圆角", async ({ pa
   ).toHaveCSS("border-radius", "8px");
 });
 
-test("首页未配置模型时只显示一处可见禁用原因", async ({ page }) => {
+test("首页默认账号生图可提交，不显示无关的 API 缺配置原因", async ({
+  page,
+}) => {
   await page.goto("/");
   await page.getByLabel("创作提示词", { exact: true }).fill("测试首页状态");
-  await expect(page.locator(".start-composer-feedback")).toContainText("模型");
+  await expect(
+    page.getByRole("button", { name: "模型", exact: true }),
+  ).toContainText("Codex 内置生图");
+  await expect(
+    page.getByRole("button", { name: "开始创建项目", exact: true }),
+  ).toBeEnabled();
+  await expect(page.locator(".start-composer-feedback")).toHaveCount(0);
   await expect(page.locator(".start-status")).toHaveCount(0);
 });
 
-test("首页未配置模型时模型入口文案不会被截断", async ({ page }) => {
+test("首页默认账号模型入口文案不会被截断", async ({ page }) => {
   await page.goto("/");
   const button = page.locator(".start-model-picker .start-tool-button");
   const label = button.locator("span");
-  await expect(label).toHaveText("选模型");
+  await expect(label).toHaveText("Codex 内置生图");
   expect(
     await label.evaluate(
       (element) => element.scrollWidth <= element.clientWidth,
@@ -156,7 +164,7 @@ test("窄屏首页模型入口保留可读的紧凑标签", async ({ page }) => 
   }
 });
 
-test("首页扩展菜单避开提示词和发现区标签", async ({ page }) => {
+test("首页扩展菜单邻近触发器并避开发现区标签", async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 720 });
   await page.goto("/");
   await page
@@ -165,14 +173,20 @@ test("首页扩展菜单避开提示词和发现区标签", async ({ page }) => 
     .click();
   const menu = page.getByRole("menu", { name: "扩展" });
   const menuBox = await menu.boundingBox();
-  const promptBox = await page
-    .getByLabel("创作提示词", { exact: true })
+  const triggerBox = await page
+    .getByRole("region", { name: "开始创作", exact: true })
+    .getByRole("button", { name: "扩展", exact: true })
     .boundingBox();
   const tabsBox = await page.locator(".start-tabs").boundingBox();
   expect(menuBox).not.toBeNull();
-  expect(promptBox).not.toBeNull();
+  expect(triggerBox).not.toBeNull();
   expect(tabsBox).not.toBeNull();
-  expect(menuBox!.y + menuBox!.height).toBeLessThanOrEqual(promptBox!.y - 4);
+  const gap = Math.min(
+    Math.abs(menuBox!.y - triggerBox!.y - triggerBox!.height),
+    Math.abs(triggerBox!.y - menuBox!.y - menuBox!.height),
+  );
+  expect(gap).toBeGreaterThanOrEqual(4);
+  expect(gap).toBeLessThanOrEqual(12);
   expect(menuBox!.y + menuBox!.height).toBeLessThanOrEqual(tabsBox!.y);
 });
 
@@ -330,8 +344,17 @@ test("首页灵感卡片悬停和焦点状态保持可见层级", async ({ page 
 test("首页卡片写入提示词时不重复显示模板状态", async ({ page }) => {
   await page.goto("/");
   await page.locator(".start-inspiration-card").first().click();
+  await expect(page.getByLabel("创作提示词", { exact: true })).not.toHaveValue(
+    "",
+  );
   await expect(page.locator(".start-status")).toHaveCount(0);
-  await expect(page.locator(".start-composer-feedback")).toContainText("模型");
+  await expect(page.locator(".start-composer-feedback")).toHaveCount(0);
+  await expect(
+    page.getByRole("button", { name: "模型", exact: true }),
+  ).toContainText("Codex 内置生图");
+  await expect(
+    page.getByRole("button", { name: "开始创建项目", exact: true }),
+  ).toBeEnabled();
 });
 
 test("首页工具栏的操作项保持在各自分组边界内", async ({ page }) => {

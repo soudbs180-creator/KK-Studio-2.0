@@ -1,5 +1,50 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Locator } from "@playwright/test";
 import { openWorkspace, waitForConversationPanelSettled } from "./helpers";
+
+async function readableDefault(
+  form: Locator,
+  labelSelector: string,
+  expectedLabel: string,
+) {
+  const geometry = await form.evaluate((element, selector) => {
+    const label = element.querySelector<HTMLElement>(selector)!;
+    const toolbar = element.querySelector(".composer-toolbar")!;
+    const area = toolbar.getBoundingClientRect();
+    const controls = [...toolbar.querySelectorAll("button")]
+      .filter((button) => button.getClientRects().length)
+      .map((button) => {
+        const rect = button.getBoundingClientRect();
+        return {
+          name: button.getAttribute("aria-label") ?? button.textContent,
+          left: rect.left,
+          right: rect.right,
+          center: rect.y + rect.height / 2,
+          height: rect.height,
+        };
+      });
+    return {
+      text: label.textContent,
+      labelWidth: label.clientWidth,
+      fullLabelWidth: label.scrollWidth,
+      left: area.left,
+      right: area.right,
+      controls,
+    };
+  }, labelSelector);
+  await test.info().attach(`default-${labelSelector}`, {
+    body: JSON.stringify(geometry),
+    contentType: "application/json",
+  });
+  expect(geometry.text).toBe(expectedLabel);
+  expect(geometry.labelWidth).toBeGreaterThanOrEqual(geometry.fullLabelWidth);
+  const centers = geometry.controls.map((control) => control.center);
+  expect(Math.max(...centers) - Math.min(...centers)).toBeLessThanOrEqual(1);
+  for (const control of geometry.controls) {
+    expect(control.height, control.name ?? "control").toBe(32);
+    expect(control.left).toBeGreaterThanOrEqual(geometry.left - 0.5);
+    expect(control.right).toBeLessThanOrEqual(geometry.right + 0.5);
+  }
+}
 
 test("默认绿色、方形圆角上传与输入聚焦保持轻量", async ({ page }) => {
   await page.goto("/");
@@ -31,6 +76,10 @@ for (const width of [390, 1099, 1920]) {
     page,
   }, testInfo) => {
     await page.setViewportSize({ width, height: 1080 });
+    await page.goto("/");
+    const home = page.locator(".start-composer");
+    await expect(home.locator(".start-mode-button")).toHaveText(/自动|询问/);
+    await readableDefault(home, ".start-model-picker span", "Codex 内置生图");
     await openWorkspace(page);
     if (
       await page
@@ -41,6 +90,11 @@ for (const width of [390, 1099, 1920]) {
     await waitForConversationPanelSettled(page);
     const model = page.locator(".chat-model-picker");
     await expect(model).toBeVisible();
+    const chat = page.locator(".chat-composer");
+    await expect(chat.getByRole("button", { name: "AI权限模式" })).toHaveText(
+      /自动|询问/,
+    );
+    await readableDefault(chat, ".chat-model-name", "Codex 账号默认");
     await expect(model).toHaveCSS("justify-content", "center");
     await expect(page.locator(".chat-attachment-trigger")).toHaveCSS(
       "border-radius",

@@ -2,8 +2,8 @@
 
 - 状态：PARTIAL
 - 领域：creation
-- 最近更新：2026-10-08
-- 关联任务：T5、TASK-PROV-001、TASK-PROV-005、TASK-PROV-006、EXT-PROVIDER、TASK-AGENT-001、TASK-AGENT-004、TASK-AGENT-008
+- 最近更新：2026-10-15
+- 关联任务：T5、TASK-PROV-001、TASK-PROV-005、TASK-PROV-006、EXT-PROVIDER、TASK-AGENT-001、TASK-AGENT-004、TASK-AGENT-008、TASK-CODEX-REF-20261015
 
 ## 用户可见入口
 
@@ -48,3 +48,11 @@
 图片/文本任务支持显式 providerConnectionId；Agent 新节点继承当前项目选择的账号，避免同名模型误用另一账号。MCP run_generation 返回真实 taskId，受控 HTTP 端到端已覆盖；真实付费供应商逐家验收仍未完成。
 
 代码与测试入口：`src/features/agent/agentHost.ts`、`src/features/models/modelCatalog.ts`、`tests/browser/agent.spec.ts`、`tests/browser/model-picker.spec.ts`。证据见 [本轮验证](../changes/2026-09-22-codex-default-agent/verification.md)。状态仍为 PARTIAL。
+
+## 2026-10-15 首页与来源修复（REVIEW，整体待验）
+
+TASK-CODEX-HOME-20261015：新首页默认Codex/ChatGPT图片能力，首页、聊天、画布沿各自显式Codex/API来源执行；旧API和无selection项目保持legacy路由，局部隐私/草稿/附件及原件保全。输入同排与菜单锚点同步修复。当前进入REVIEW：784浏览器首过及Native单QA包往返/冷开图文通过，但完整npm verify因另一任务占用1421而development未执行/exit1；当前SHA独审与Hosted完整门禁、合并和本机更新待验。见[本轮规格](../changes/2026-10-15-codex-home/spec.md)与[验证](../changes/2026-10-15-codex-home/verification.md)；本卡功能状态保持，不用前置真实账号证据代填新入口或所有外部Provider。
+
+## 2026-10-15 Codex 卡片连线参考图（功能通过，交付 PARTIAL）
+
+TASK-CODEX-REF-20261015：Desktop/Web2.1.33已真实通过卡片参考图→Codex内置imagegen→PNG原件归档/唯一result边，以及重载、正常重启和原桌面快捷方式重开；参考42452f4d.../结果6531e6ac...不变、1实际turn/0外部图片请求。定向与dirty预检通过；完整browser771PASS/13FAIL已逐项证明13项PRE-EXISTING FAILURE，fullverify仍FAIL、development及最终SHA正式review/Hosted/PR未完成，交付PARTIAL。本卡继续PARTIAL，其他Provider/任务状态不变；见[规格](../changes/2026-10-15-codex-card-reference/spec.md)与[验证](../changes/2026-10-15-codex-card-reference/verification.md)。

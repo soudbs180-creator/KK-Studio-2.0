@@ -1,5 +1,17 @@
 # 当前进度
 
+## 2026-10-15 Codex 卡片连线参考图（功能/live PASS；交付 PARTIAL）
+
+TASK-CODEX-REF-20261015：功能/live PASS，交付PARTIAL：Desktop/Web2.1.33；参考原件42452f4d...经一次真实Codex内置imagegen生成PNG6531e6ac...并归档，1result/1result边/1reference边，外部图片请求0；重载、正常关闭/重建/重启、原桌面快捷方式重开PASS，原件hash不变且重启turn0。最终EXE6353aba3.../inputee1e43be...、reason=current、bundlevihgOeA0。Node1327PASS/14skip、Agent199PASS/2skip、定向45/dirty预检50及browser13/邻域39分别PASS；完整browser784为771PASS13FAIL/0flaky/skip，13项已由任务前源码逐项同断言重现为PRE-EXISTING FAILURE，但fullverify仍FAIL、development未运行。最终SHA正式review/Hosted/PR未完成。 FEAT-002保持PARTIAL，其他作者与HOME任务保留，不升级全项目REAL。见[验证](changes/2026-10-15-codex-card-reference/verification.md)与[审查](changes/2026-10-15-codex-card-reference/review.md)。
+
+## 2026-10-15 首页默认Codex与来源/输入修复（REVIEW / 整体NOT_VERIFIED）
+
+用户明确使用Codex/ChatGPT账号，授权首页默认Codex图片及各入口来源/输入/菜单修复，base/main cbda，候选Desktop/Web2.1.33、Mobile2.1.1规划。full5前置Node1327/14skip、Agent199/2skip与静态/build通过，784浏览器单结果首过/retry0/flaky0/skip0/errors0，845源码/测试与full4冻结相同。但npm verify最终exit1：development因另一任务占用1421而未执行/steps=[]，未杀进程或复用server，Hosted当前SHA必须实际补齐。Rust167/包30及新EXE8f633...实际export/preflight/import、冷开1370×1148图文与Codex缺省恢复通过；TaskHost首次9checks失败与旧EXE重跑11PASS分别保留。现REVIEW，最终精确独审/Hosted/PR/main/实际本机更新和两独立副本恢复仍待验，所有阶段失败原件保持。
+
+candidate1真实文本与内置图源blob同fc36a3a...仅证明该时点；之后用户在独立窗口删图/编辑，不能当persist PASS。用户最新授权两次窗口编辑各恢复一个新ID副本（已核对2项目/各2cards/1共享asset），原7项目/rev2057与4602source保全，canonical未写、恢复待验；candidate2原7已有字段保持但一旧empty项目补两个空数组，不能写整对象byteexact。整项目包因旧未归档媒体被拒绝且无成功包。另一人类任务写回参考图及版本33，root准备明确来源纳入最终组合review/fullgate，本task不改其docs/ledger或代填DONE；跨聊天发消息授权未收到且未发送消息。当前事实见[本轮intent](changes/2026-10-15-codex-home/intent.md)与[验证](changes/2026-10-15-codex-home/verification.md)。
+
+前置UI任务已通过source0ac精确审查、PR59/main cbda与实际2.1.31日常激活，在其原范围DONE/PASS；761浏览器首试、Native/开发回执与本机身份分别已审计，旧失败和旧NOT_VERIFIED原文保留，不升级其他Provider/整项目。详情见[前置闭环](changes/2026-10-15-codex-home/verification.md#前置闭环task-ui-full-20261015历史范围)。下文均为此前阶段原文。
+
 ## 2026-10-15 2.1.31本地验收冻结（REVIEW / 整体NOT_VERIFIED）
 
 共享scope恢复仅改为layout同步，修复可编辑后旧草稿抢占真实选区的可达路径；单回归有效RED→本文件8项/邻域6项首试GREEN。完整verify9为Node1304/14平台skip、Agent199/2skip、Edge761首试/0retry、UI242/0与development四步骤；fresh官方Native10保留原87并新增双宽18项，105项/13图及TaskHost current6无注入11项分别通过，owned进程退出与端口释放已实查。
