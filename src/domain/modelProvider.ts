@@ -1,31 +1,52 @@
 import { z } from "zod";
 import { BROWSER_STORAGE_KEYS } from "../runtime/storage-contract.ts";
 import { isAllowedProviderUrl } from "./providerUrl.ts";
+import {
+  providerProtocolSchema,
+  providerAuthModeSchema,
+  isProviderAuthAllowed,
+} from "./providerProtocol.ts";
 
 export const MODEL_PROVIDER_STORAGE_KEY = BROWSER_STORAGE_KEYS.modelProvider;
 
-export const modelProviderSchema = z.object({
-  version: z.literal(1),
-  name: z.string().trim().min(1, "请输入供应商名称").max(60, "供应商名称过长"),
-  baseUrl: z
-    .string()
-    .trim()
-    .url("请输入有效的 API 地址")
-    .refine((value) => /^https?:\/\//i.test(value), "仅支持 HTTP 或 HTTPS 地址")
-    .refine(
-      isAllowedProviderUrl,
-      "远程供应商必须使用 HTTPS；HTTP 仅允许本机回环地址",
-    )
-    .refine((value) => {
-      try {
-        const url = new URL(value);
-        return !url.username && !url.password && !url.search && !url.hash;
-      } catch {
-        return false;
-      }
-    }, "请填写不含账号、密钥参数或片段的 Base URL；密钥请放入 API Key 字段"),
-  model: z.string().trim().max(120, "模型名称过长"),
-});
+export const modelProviderSchema = z
+  .object({
+    version: z.literal(1),
+    name: z
+      .string()
+      .trim()
+      .min(1, "请输入供应商名称")
+      .max(60, "供应商名称过长"),
+    baseUrl: z
+      .string()
+      .trim()
+      .url("请输入有效的 API 地址")
+      .refine(
+        (value) => /^https?:\/\//i.test(value),
+        "仅支持 HTTP 或 HTTPS 地址",
+      )
+      .refine(
+        isAllowedProviderUrl,
+        "远程供应商必须使用 HTTPS；HTTP 仅允许本机回环地址",
+      )
+      .refine((value) => {
+        try {
+          const url = new URL(value);
+          return !url.username && !url.password && !url.search && !url.hash;
+        } catch {
+          return false;
+        }
+      }, "请填写不含账号、密钥参数或片段的 Base URL；密钥请放入 API Key 字段"),
+    model: z.string().trim().max(120, "模型名称过长"),
+    /** Non-secret identity of the selected account in the provider registry. */
+    connectionId: z.string().min(1).max(120).optional(),
+    protocol: providerProtocolSchema.optional(),
+    authMode: providerAuthModeSchema.optional(),
+  })
+  .refine(
+    isProviderAuthAllowed,
+    "请检查协议、地址和认证：Azure 使用 /openai/v1；免密仅用于本机 Chat/Ollama。",
+  );
 
 export type ModelProviderProfile = z.infer<typeof modelProviderSchema>;
 
@@ -40,32 +61,11 @@ export const DEFAULT_MODEL_PROVIDER: ModelProviderProfile = {
   model: "",
 };
 
-export interface ProviderPreset {
-  readonly id: string;
-  readonly label: string;
-  readonly name: string;
-  readonly baseUrl: string;
-}
-
-/**
- * One-click presets for the model provider settings form. Presets fill only
- * name/baseUrl; model ids are left to the model catalog refreshed by the
- * connection test so vendor model names do not go stale in source.
- */
-export const PROVIDER_PRESETS: readonly ProviderPreset[] = [
-  {
-    id: "doubao-ark",
-    label: "豆包（火山方舟）",
-    name: "豆包（火山方舟）",
-    baseUrl: "https://ark.cn-beijing.volces.com/api/v3",
-  },
-];
-
-export function findProviderPreset(
-  id: string | undefined,
-): ProviderPreset | undefined {
-  return PROVIDER_PRESETS.find((preset) => preset.id === id);
-}
+export {
+  PROVIDER_PRESETS,
+  findProviderPreset,
+  type ProviderPreset,
+} from "./providerPresets.ts";
 
 export function parseModelProvider(raw: string | null): {
   profile: ModelProviderProfile;

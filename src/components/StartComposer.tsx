@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import UiIcon from "./UiIcon";
 import type { CreationDraft } from "../features/creation/model";
 import StartAttachmentList from "./StartAttachmentList";
 import ComposerTextarea from "./ComposerTextarea";
@@ -145,7 +146,7 @@ export default function StartComposer({
               aria-label="添加参考素材"
               onClick={() => fileInput.current?.click()}
             >
-              <img src="/design/figma/composer-plus.svg" alt="" />
+              <UiIcon name="add" size={20} />
             </button>
             <input
               ref={fileInput}
@@ -162,7 +163,6 @@ export default function StartComposer({
               draft={draft}
               model={model}
               defaultModel={defaultModel}
-              onOptionsChange={commit}
               open={modelMenuOpen}
               onToggle={() => toggleMenu("model")}
               onSelect={(choice) => {

@@ -1,9 +1,17 @@
+import {
+  providerProtocolSchema,
+  providerAuthModeSchema,
+  isProviderAuthAllowed,
+  type ProviderProtocol,
+  type ProviderAuthMode,
+} from "../../domain/providerProtocol.ts";
 import type {
   CanvasCollectionItem,
   CanvasItemKind,
   CanvasReferenceSlot,
 } from "../../domain/canvasItems";
 import { CANVAS_REFERENCE_SLOTS } from "../../domain/canvasItems.ts";
+import { normalizeTags } from "../../domain/assets.ts";
 import {
   normalizeGoogleConversation,
   type GoogleConversation,
@@ -118,6 +126,8 @@ export interface CreationTask {
   providerCredentialRef?: string;
   /** Provider routing is captured at submission time; it is not a secret. */
   providerBaseUrl?: string;
+  providerProtocol?: ProviderProtocol;
+  providerAuthMode?: ProviderAuthMode;
   providerName?: string;
   /** Resolved provider size label (e.g. "1024x1024") captured at submission. */
   imageSize?: string;
@@ -135,6 +145,8 @@ export interface CreationTask {
 }
 
 export interface CreationProject {
+  /** Non-secret Codex ownership; survives native snapshot/WebView recovery. */
+  agentThreadId?: string;
   googleConversation?: GoogleConversation;
   agentGeneratedImageIds?: string[];
   canvas: ProjectCanvas;
@@ -145,6 +157,8 @@ export interface CreationProject {
   model: string;
   attachments: CreationAttachment[];
   providerBaseUrl?: string;
+  providerProtocol?: ProviderProtocol;
+  providerAuthMode?: ProviderAuthMode;
   providerName?: string;
   providerCredentialRef?: string;
   items: CanvasCollectionItem[];
@@ -155,6 +169,7 @@ export interface CreationProject {
   reviewComments?: ReviewComment[];
   favoriteIds: string[];
   likedIds: string[];
+  customTags?: string[];
   /** Unsubmitted workbench text and attachments survive project switching. */
   composerDraft: CreationDraft;
   createdAt: number;
@@ -205,6 +220,8 @@ export interface CreateProjectInput {
   kind: CanvasItemKind;
   attachments: CreationAttachment[];
   providerBaseUrl?: string;
+  providerProtocol?: ProviderProtocol;
+  providerAuthMode?: ProviderAuthMode;
   providerName?: string;
   providerCredentialRef?: string;
   privacyMode?: "local_only" | "byok_local" | "platform_backed";
@@ -323,6 +340,7 @@ export function normalizeCreationSnapshot(
   };
   if (candidate.version !== 2 || !Array.isArray(candidate.projects))
     return null;
+  if (!candidate.projects.every(isSnapshotProjectRoutingValid)) return null;
   const projects = candidate.projects
     .filter((project): project is CreationProject =>
       Boolean(
@@ -456,6 +474,77 @@ function normalizeCompletedOutputIndices(value: unknown): number[] | undefined {
   return indices.length ? indices : undefined;
 }
 
+type RoutingCandidate = {
+  providerBaseUrl?: unknown;
+  providerProtocol?: unknown;
+  providerAuthMode?: unknown;
+};
+
+/** Missing routing metadata is legacy; supplied values must never disappear on read. */
+export function isCreationProviderRoutingValid(
+  value: RoutingCandidate,
+): boolean {
+  const protocol = providerProtocolSchema
+    .optional()
+    .safeParse(value.providerProtocol);
+  const authMode = providerAuthModeSchema
+    .optional()
+    .safeParse(value.providerAuthMode);
+  if (!protocol.success || !authMode.success) return false;
+  if (authMode.data !== "none") return true;
+  if (
+    typeof value.providerBaseUrl !== "string" ||
+    !isProviderAuthAllowed({
+      baseUrl: value.providerBaseUrl,
+      protocol: protocol.data,
+      authMode: authMode.data,
+    })
+  )
+    return false;
+  const host = new URL(value.providerBaseUrl).hostname.replace(/^\[|\]$/g, "");
+  return ["localhost", "127.0.0.1", "::1"].includes(host);
+}
+
+function isSnapshotProjectRoutingValid(value: unknown): boolean {
+  if (!value || typeof value !== "object") return true;
+  const project = value as Record<string, unknown>;
+  return (
+    isCreationProviderRoutingValid(project) &&
+    (!Array.isArray(project.tasks) ||
+      project.tasks.every(
+        (task) =>
+          !task ||
+          typeof task !== "object" ||
+          isCreationProviderRoutingValid(task),
+      ))
+  );
+}
+
+function creationProviderRouting(
+  value: RoutingCandidate,
+): Pick<CreationProject, "providerProtocol" | "providerAuthMode"> {
+  if (!isCreationProviderRoutingValid(value))
+    throw new Error(
+      "供应商协议或认证配置无效；免密仅支持本机 Chat/Ollama 服务。",
+    );
+  return {
+    ...(value.providerProtocol === undefined
+      ? {}
+      : {
+          providerProtocol: providerProtocolSchema.parse(
+            value.providerProtocol,
+          ),
+        }),
+    ...(value.providerAuthMode === undefined
+      ? {}
+      : {
+          providerAuthMode: providerAuthModeSchema.parse(
+            value.providerAuthMode,
+          ),
+        }),
+  };
+}
+
 function safeBaseUrl(value: unknown): string | undefined {
   if (typeof value !== "string") return undefined;
   try {
@@ -479,6 +568,7 @@ function normalizeCanvasItem(
 ): CanvasCollectionItem {
   const result = value.result;
   return {
+    tags: value.tags === undefined ? undefined : normalizeTags(value.tags),
     // Plugin content is durable project data, independently editable after a read.
     plugin:
       value.plugin === undefined ? undefined : structuredClone(value.plugin),
@@ -524,7 +614,10 @@ function normalizeCanvasItem(
     kind: normalizeKind(value.kind),
     prompt:
       typeof value.prompt === "string"
-        ? value.prompt.slice(0, 4000)
+        ? value.prompt.slice(
+            0,
+            value.kind === "video" || value.kind === "audio" ? 7500 : 4000,
+          )
         : undefined,
     model:
       typeof value.model === "string" ? value.model.slice(0, 120) : undefined,
@@ -620,7 +713,13 @@ function normalizeProject(value: CreationProject): CreationProject {
     kind: normalizeKind(candidate.kind),
     attachments,
     providerBaseUrl: safeBaseUrl(candidate.providerBaseUrl),
+    ...creationProviderRouting(candidate),
     providerName: safeText(candidate.providerName, 80) || undefined,
+    agentThreadId:
+      typeof candidate.agentThreadId === "string" &&
+      /^[A-Za-z0-9_-]{1,160}$/.test(candidate.agentThreadId)
+        ? candidate.agentThreadId
+        : undefined,
     agentGeneratedImageIds: Array.isArray(candidate.agentGeneratedImageIds)
       ? candidate.agentGeneratedImageIds
           .filter(
@@ -753,6 +852,7 @@ function normalizeProject(value: CreationProject): CreationProject {
             ? task.providerConnectionId.slice(0, 160)
             : undefined,
         providerBaseUrl: safeBaseUrl(task.providerBaseUrl),
+        ...creationProviderRouting(task),
         providerName: safeText(task.providerName, 80) || undefined,
         imageEdit: readImageEditSnapshot(task.imageEdit),
         imageEditContext: readImageEditContext(task.imageEditContext),
@@ -912,6 +1012,7 @@ function normalizeProject(value: CreationProject): CreationProject {
           .filter((id): id is string => typeof id === "string")
           .map((id) => id.slice(0, 160))
       : [],
+    customTags: normalizeTags(candidate.customTags),
     composerDraft: candidate.composerDraft
       ? normalizeDraft(candidate.composerDraft)
       : {
@@ -972,6 +1073,7 @@ export function persistCreationSnapshot(snapshot: CreationSnapshot): void {
 }
 
 export function createProject(input: CreateProjectInput): CreationProject {
+  const routing = creationProviderRouting(input);
   const id = projectId();
   const now = Date.now();
   const item: CanvasCollectionItem = {
@@ -1004,7 +1106,9 @@ export function createProject(input: CreateProjectInput): CreationProject {
     tasks: [],
     favoriteIds: [],
     likedIds: [],
+    customTags: [],
     providerBaseUrl: input.providerBaseUrl,
+    ...routing,
     providerName: input.providerName,
     providerCredentialRef: input.providerCredentialRef,
     composerDraft: {
@@ -1044,6 +1148,7 @@ export function createTask(project: CreationProject): CreationTask {
     batchId: `${project.id}-batch-${now.toString(36)}`,
     privacyMode: project.composerDraft.privacyMode,
     providerBaseUrl: project.providerBaseUrl,
+    ...creationProviderRouting(project),
     providerName: project.providerName,
     providerCredentialRef: project.providerCredentialRef,
     outputs: Array.from(

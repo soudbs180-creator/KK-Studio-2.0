@@ -48,6 +48,8 @@
 
 ## 本轮实施
 
+TASK-AGENT-RECOVERY-20261013：桌面启动待项目加载后自动恢复，首页只启动服务；项目保存非敏感 `agentThreadId`，读取历史/模型失败仍保留归属。设置 › 模型接入使用单一普通连接入口，手动连接、新会话和停止服务进入高级选项；主动断开暂停自动恢复。未知会话与运行/审批仍有归属门禁。新增生命周期、归属与桌面重启回归；本轮验收进度见 [验证](../changes/2026-10-13-agent-recovery/verification.md)，不扩展其他适配器的能力声明。
+
 TASK-AGENT-003：图片附件、显式画布引用和视口/选择桥接；验收见 [本轮记录](../changes/2026-09-23-agent-attachments/verification.md)。
 
 TASK-AGENT-004: Google API Key 对话、生图与画布归档的本地/fixture 验证通过；真实服务和桌面待验收，见 [验证](../changes/2026-09-23-google-interactions/verification.md)。

@@ -9,6 +9,11 @@ pub struct OwnedJob {
     _handle: OwnedHandle,
 }
 
+pub fn protect_node_startup(command: &mut std::process::Command) {
+    // Environment preloads run before the private stdin gate can assign our Job.
+    command.env_remove("NODE_OPTIONS").env_remove("NODE_PATH");
+}
+
 impl OwnedJob {
     pub fn assign(process: RawHandle) -> Result<Self, String> {
         // The child waits on private stdin until this non-inheritable handle owns it.
@@ -44,6 +49,36 @@ mod tests {
     use std::process::{Command, Stdio};
     use std::time::{Duration, Instant};
 
+    #[test]
+    fn node_startup_ignores_preloads_before_private_stdin_gate() {
+        let mut command = Command::new("node.exe");
+        command
+            .args([
+                "-e",
+                "process.stdout.write('gate-ready\\n');process.stdin.once('data',()=>process.stdout.write('started\\n'));",
+            ])
+            .env(
+                "NODE_OPTIONS",
+                "--import=data:text/javascript,process.stdout.write('preloaded%5Cn')",
+            )
+            .env("NODE_PATH", "fixture-untrusted-modules")
+            .stdin(Stdio::null())
+            .creation_flags(0x08000000);
+        protect_node_startup(&mut command);
+        let output = command
+            .output()
+            .expect("Windows fixtures require Node on PATH");
+        assert!(output.status.success());
+        assert_eq!(
+            output.stdout, b"gate-ready\n",
+            "environment preloads must not run before the private stdin gate"
+        );
+        for key in ["NODE_OPTIONS", "NODE_PATH"] {
+            assert!(command
+                .get_envs()
+                .any(|(name, value)| name == key && value.is_none()));
+        }
+    }
     #[test]
     fn dropping_job_terminates_owned_process_and_preserves_external_process() {
         fn child() -> std::process::Child {

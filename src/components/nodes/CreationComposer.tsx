@@ -1,6 +1,7 @@
 import type { ModelSelection } from "../../features/models/modelSelection";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import CreationParameterControl from "./CreationParameterControl";
+import CreationSoundButton from "./CreationSoundButton";
 import GenerationCount from "./GenerationCount";
 import {
   modelCapabilities,
@@ -13,6 +14,7 @@ import { GenerationAction, GenerationStatus } from "./GenerationAction";
 import CreationModelPicker from "./CreationModelPicker";
 import ReferenceStrip from "./ReferenceStrip";
 import ComposerActions from "./ComposerActions";
+import CanvasComposerShell from "../canvas/CanvasComposerShell";
 import UiIcon from "../UiIcon";
 import { useCanvasImageGeneration } from "../../features/creation/CanvasImageCommand";
 import { composerReportedHeight } from "../canvas/composerLayout";
@@ -84,6 +86,7 @@ export default function CreationComposer({
     references,
   });
   const generation = video ? localGeneration : imageGeneration;
+  const busy = generation.phase === "loading";
   const incomingReferenceCount = new Set(
     references
       .filter((reference) => reference.id)
@@ -95,11 +98,9 @@ export default function CreationComposer({
     if (selected) onExtraHeightChange(composerReportedHeight(expanded, error));
   }, [selected, expanded, error, onExtraHeightChange]);
   useEffect(() => {
-    if (!selected) {
-      setMenu("");
-      setExpanded(false);
-    }
-  }, [selected]);
+    if (!selected || busy) setMenu("");
+    if (!selected) setExpanded(false);
+  }, [selected, busy]);
   useEffect(() => {
     if (video && localGeneration.phase !== "idle")
       onGenerationState?.(localGeneration.phase);
@@ -107,6 +108,13 @@ export default function CreationComposer({
   useEffect(() => {
     if (!menu) return;
     const dismiss = (event: PointerEvent): void => {
+      // Let a button click finish before a compact menu moves its target.
+      if (
+        event.target instanceof Element &&
+        ref.current?.contains(event.target) &&
+        event.target.closest("button")
+      )
+        return;
       if (
         event.target instanceof Element &&
         !ref.current
@@ -120,7 +128,7 @@ export default function CreationComposer({
   }, [menu]);
   if (!selected) return null;
   return (
-    <div
+    <CanvasComposerShell
       ref={ref}
       className={`creation-composer ${video ? "video-composer" : ""} ${expanded ? "expanded" : ""}`}
       data-testid={`${kind}-composer`}
@@ -144,6 +152,7 @@ export default function CreationComposer({
       />
       {expanded ? (
         <ReferenceStrip
+          disabled={busy}
           references={references}
           referenceCount={incomingReferenceCount}
           limit={referenceLimit}
@@ -158,6 +167,7 @@ export default function CreationComposer({
               {ref.id && onRemoveReference && (
                 <button
                   type="button"
+                  disabled={busy}
                   aria-label="移除参考图"
                   onClick={() => onRemoveReference(ref.id!)}
                 >
@@ -170,7 +180,7 @@ export default function CreationComposer({
             className="composer-ref-add"
             type="button"
             aria-label="添加参考图片"
-            disabled={incomingReferenceCount >= referenceLimit}
+            disabled={busy || incomingReferenceCount >= referenceLimit}
             title={
               referenceLimit === 0
                 ? "当前模型没有可用的参考图位置"
@@ -183,6 +193,8 @@ export default function CreationComposer({
         </div>
       )}
       <textarea
+        disabled={busy}
+        title={busy ? "生成中暂不能编辑，取消或结束后可继续" : undefined}
         aria-label={`${label}提示词`}
         maxLength={video ? 7500 : 4000}
         value={promptProp ?? prompt}
@@ -194,6 +206,7 @@ export default function CreationComposer({
       />
       <div className="creation-controls">
         <CreationModelPicker
+          disabled={busy}
           kind={kind}
           value={selectedModel}
           actualModels={video ? undefined : imageGeneration.models}
@@ -209,6 +222,7 @@ export default function CreationComposer({
           onConfigure={onConfigure}
         />
         <CreationParameterControl
+          disabled={busy}
           kind={kind}
           model={selectedModel}
           parameters={parameters ?? localParameters}
@@ -218,32 +232,14 @@ export default function CreationComposer({
           onModelChange={onModelChange}
         />
         <span className="control-spacer" />
-        <button
-          className="param-button voice-button"
-          disabled={!video}
-          title={
-            video
-              ? `视频声音：${soundEnabled ? "开启" : "关闭"}`
-              : "语音输入将在服务接入后开放"
-          }
-          aria-label={video ? "视频声音" : "语音输入（服务未接入）"}
-          aria-pressed={video ? soundEnabled : undefined}
-          onClick={
-            video
-              ? () => updateParameters({ soundEnabled: !soundEnabled })
-              : undefined
-          }
-        >
-          <img
-            src={
-              video && !soundEnabled
-                ? "/design/figma/mic-off.svg"
-                : "/design/figma/mic.svg"
-            }
-            alt=""
-          />
-        </button>
+        <CreationSoundButton
+          video={video}
+          soundEnabled={soundEnabled}
+          disabled={busy}
+          onToggle={() => updateParameters({ soundEnabled: !soundEnabled })}
+        />
         <GenerationCount
+          disabled={busy}
           maxCount={
             imageGeneration.usesCodex
               ? 4
@@ -278,6 +274,6 @@ export default function CreationComposer({
         </div>
       )}
       <GenerationStatus generation={generation} />
-    </div>
+    </CanvasComposerShell>
   );
 }

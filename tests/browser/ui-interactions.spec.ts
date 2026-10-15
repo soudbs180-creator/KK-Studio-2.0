@@ -104,9 +104,8 @@ test("background pattern scales smoothly and hides at the 50% floor", async ({
   ).toBe(samples.length);
 
   await setZoom(50);
-  await page
-    .getByRole("button", { name: "切换为网格背景", exact: true })
-    .click();
+  await page.getByRole("button", { name: "画布背景", exact: true }).click();
+  await page.getByRole("button", { name: "网格背景", exact: true }).click();
   const grid = await readPattern();
   await page.screenshot({
     path: info.outputPath("grid-50.png"),

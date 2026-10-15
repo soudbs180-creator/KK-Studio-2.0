@@ -127,3 +127,95 @@ export function getDisabledReason(
 export function canSubmitGeneration(state: GenerationUiState): boolean {
   return state === "ready";
 }
+
+/** Presentation derives from receipts and the existing project save state. */
+export function getGenerationProgressLabels(context: {
+  task?: {
+    status:
+      GenerationTaskStatus | "unknown" | "partial" | "offline" | "interrupted";
+    submissionState?: "intent" | "submitted" | "unknown" | "terminal";
+    completedOutputs: number;
+    requestedOutputs: number;
+    error?: string;
+    outputs?: readonly { status: string }[];
+  };
+  saveState:
+    "loading" | "saved" | "saving" | "read_error" | "write_error" | "conflict";
+  resultSaving?: boolean;
+}): { taskLabel: string; saveLabel: string } {
+  const { task, saveState, resultSaving } = context;
+  const saveLabels = {
+    loading: "读取中…",
+    saved: "已保存",
+    saving: "保存中…",
+    read_error: "读取保护 · 尚未保存，请查看恢复提示",
+    write_error: "保存失败 · 请查看恢复提示",
+    conflict: "保存冲突 · 请查看恢复提示",
+  };
+  let saveLabel = saveLabels[saveState];
+  if (!task) return { taskLabel: "", saveLabel };
+  const uncertain =
+    task.status === "unknown" ||
+    task.submissionState === "unknown" ||
+    task.outputs?.some((output) => output.status === "unknown");
+  if (uncertain) {
+    if (saveState === "saved") saveLabel = "任务记录已保存 · 结果需核对";
+    return {
+      taskLabel: task.error ?? "受理状态不明 · 请核对任务与素材库",
+      saveLabel,
+    };
+  }
+  const saveFailed = ["read_error", "write_error", "conflict"].includes(
+    saveState,
+  );
+  let taskLabel: string;
+  switch (task.status) {
+    case "queued":
+      taskLabel = task.error?.includes("暂停") ? "已暂停" : "排队中";
+      break;
+    case "running":
+      taskLabel = resultSaving
+        ? saveFailed
+          ? "结果已返回 · 保存需核对"
+          : saveState === "loading"
+            ? "结果已返回 · 等待项目读取"
+            : "结果已返回，正在保存"
+        : task.completedOutputs > 0
+          ? `生成中（已归档 ${task.completedOutputs}/${task.requestedOutputs}）`
+          : "生成中";
+      if (resultSaving && !saveFailed && saveState !== "loading")
+        saveLabel = "结果保存中…";
+      break;
+    case "succeeded":
+      taskLabel =
+        saveState === "saved"
+          ? "生成已完成 · 结果已保存到本机"
+          : saveState === "saving"
+            ? "生成已完成 · 结果已返回，正在保存"
+            : "生成已完成 · 结果保存需核对";
+      break;
+    case "partial":
+      taskLabel =
+        `部分完成（${task.completedOutputs}/${task.requestedOutputs}）` +
+        (saveState === "saved"
+          ? " · 已保存已归档结果"
+          : saveFailed
+            ? " · 保存需核对"
+            : saveState === "loading"
+              ? " · 等待项目读取"
+              : " · 正在保存结果");
+      break;
+    case "cancelled":
+      taskLabel = "已取消";
+      break;
+    case "offline":
+      taskLabel = "网络断开";
+      break;
+    case "interrupted":
+      taskLabel = "上次任务未完成";
+      break;
+    default:
+      taskLabel = `失败：${task.error ?? "请重试"}`;
+  }
+  return { taskLabel, saveLabel };
+}

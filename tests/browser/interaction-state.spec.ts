@@ -11,15 +11,16 @@ test("画布背景在点和网格之间切换，且不污染对话面板", async
   await openWorkspace(page);
   await showCanvasNavigation(page);
   const canvas = page.getByTestId("infinite-canvas");
-  const pattern = page.getByRole("button", { name: "切换为网格背景" });
-  await expect(pattern).toHaveAttribute("aria-pressed", "false");
+  const pattern = page.getByRole("button", { name: "画布背景", exact: true });
+  await expect(pattern).toHaveAttribute("aria-expanded", "false");
   await expect(pattern.locator("img")).toHaveAttribute(
     "src",
     "/design/figma/nav-background.svg",
   );
   await pattern.click();
-  const dots = page.getByRole("button", { name: "切换为点状背景" });
-  await expect(dots).toHaveAttribute("aria-pressed", "true");
+  await page.getByRole("button", { name: "网格背景", exact: true }).click();
+  const dots = pattern;
+  await expect(dots).toHaveAttribute("aria-expanded", "false");
   await expect(dots.locator("img")).toHaveAttribute(
     "src",
     "/design/figma/canvas-dots.svg",
@@ -102,6 +103,8 @@ test("对话空态在消息区垂直居中，语音输入默认关闭且可用",
   await expect(voice).toHaveAttribute("aria-pressed", "false");
   await expect(voice).toHaveCSS("opacity", "1");
   await expect(voice).toHaveCSS("height", "32px");
+  await expect(voice.locator("img")).toHaveCSS("width", "14px");
+  await expect(voice.locator("img")).toHaveCSS("height", "14px");
   await expect(voice.locator("img")).toHaveAttribute(
     "src",
     "/design/figma/mic-off.svg",

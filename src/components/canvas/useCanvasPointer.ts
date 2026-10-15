@@ -77,7 +77,21 @@ export function useCanvasPointer({
     const drag = dragRef.current;
     if (drag) {
       if (drag.kind === "pan") setTransform(drag.transform);
-      if (drag.kind === "node") setNodes(drag.nodes);
+      if (drag.kind === "node") {
+        const ids =
+          drag.nodeId && !drag.selection.has(drag.nodeId)
+            ? new Set([drag.nodeId])
+            : drag.selection;
+        // Cancel only this gesture; keep external edits to other nodes.
+        setNodes((current) => ({
+          ...current,
+          ...Object.fromEntries(
+            [...ids]
+              .filter((id) => current[id] && drag.nodes[id])
+              .map((id) => [id, drag.nodes[id]]),
+          ),
+        }));
+      }
       select(drag.selection);
     }
     dragRef.current = null;
@@ -207,7 +221,7 @@ export function useCanvasPointer({
         ...current,
         ...Object.fromEntries(
           [...ids]
-            .filter((id) => drag.nodes[id])
+            .filter((id) => current[id] && drag.nodes[id])
             .map((id) => {
               const position = {
                 x: drag.nodes[id].x + logicalDx / drag.transform.scale,

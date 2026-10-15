@@ -4,6 +4,7 @@ import "../../styles/generation-count.css";
 const COUNTS = ["1", "2", "4", "6", "8"];
 
 interface GenerationCountProps {
+  disabled?: boolean;
   maxCount?: number;
   value: string;
   open: boolean;
@@ -17,6 +18,7 @@ export default function GenerationCount({
   onToggle,
   onChange,
   maxCount = 8,
+  disabled = false,
 }: GenerationCountProps) {
   const slider = useRef<HTMLInputElement>(null);
   const counts = COUNTS.filter((count) => Number(count) <= maxCount);
@@ -26,6 +28,10 @@ export default function GenerationCount({
   return (
     <div className="control-anchor count-anchor" data-control="count">
       <button
+        disabled={disabled}
+        title={
+          disabled ? "生成中暂不能修改数量，取消或结束后可继续" : undefined
+        }
         className="count-trigger"
         aria-label="生成数量"
         aria-expanded={open}
@@ -34,7 +40,7 @@ export default function GenerationCount({
         <img src="/design/figma/count-x.svg" alt="" />
         <span>{value}</span>
       </button>
-      {open && (
+      {open && !disabled && (
         <div
           className="generation-count-panel"
           role="group"

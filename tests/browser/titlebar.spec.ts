@@ -23,7 +23,7 @@ for (const width of [390, 1099, 1920]) {
         page.getByRole("button", { name: "切换项目", exact: true }),
       ).toBeVisible();
       await expect(
-        page.getByRole("button", { name: "搜索与收藏", exact: true }),
+        page.getByRole("button", { name: "搜索", exact: true }),
       ).toBeVisible();
     }
     expect(

@@ -2,6 +2,24 @@ import { expect, test } from "@playwright/test";
 import { expandSidebar } from "./helpers";
 import { openWorkspace, showCanvasNavigation } from "./helpers";
 
+for (const width of [1099, 1920]) {
+  test(`应用菜单使用统一几何 ${width}`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 1080 });
+    await page.goto("/");
+    for (const name of ["文件", "编辑", "窗口", "帮助"]) {
+      await page.getByRole("button", { name, exact: true }).click();
+      const menu = page.locator(".menu-popover");
+      await expect(menu).toHaveCSS("border-radius", "10px");
+      for (const button of await menu.locator("button").all()) {
+        await expect(button).toHaveCSS("height", "32px");
+        await expect(button).toHaveCSS("border-radius", "8px");
+      }
+      await page.keyboard.press("Escape");
+      await expect(menu).toHaveCount(0);
+    }
+  });
+}
+
 test("手机断点清除账号弹层并保留固定顶栏操作", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
@@ -14,7 +32,7 @@ test("手机断点清除账号弹层并保留固定顶栏操作", async ({ page 
     page.getByRole("button", { name: "切换项目", exact: true }),
   ).toBeVisible();
   await expect(
-    page.getByRole("button", { name: "搜索与收藏", exact: true }),
+    page.getByRole("button", { name: "搜索", exact: true }),
   ).toBeVisible();
   await page.getByRole("button", { name: "个人信息", exact: true }).click();
   await expect(page.locator(".account-popup")).toBeVisible();
@@ -95,15 +113,40 @@ test("画布导航菜单在切换背景和连线时关闭且操作仍生效", as
   for (const selector of [".canvas-background", ".canvas-lines"]) {
     await zoom.click();
     const button = page.locator(selector);
-    const before = await button.getAttribute("aria-pressed");
+    const before =
+      selector === ".canvas-background"
+        ? await page.getByTestId("infinite-canvas").getAttribute("class")
+        : await button.getAttribute("aria-pressed");
     await button.click();
     await expect(page.getByRole("menu", { name: "画布缩放比例" })).toHaveCount(
       0,
     );
     await expect(zoom).toHaveAttribute("aria-expanded", "false");
-    await expect(button).toHaveAttribute(
-      "aria-pressed",
-      before === "true" ? "false" : "true",
-    );
+    if (selector === ".canvas-background") {
+      await expect(
+        page.getByRole("dialog", { name: "画布背景选项", exact: true }),
+      ).toBeVisible();
+      await page
+        .getByRole("button", {
+          name: before?.includes("canvas-pattern-grid")
+            ? "点状背景"
+            : "网格背景",
+          exact: true,
+        })
+        .click();
+      await expect(page.getByTestId("infinite-canvas")).toHaveClass(
+        before?.includes("canvas-pattern-grid")
+          ? /canvas-pattern-dots/
+          : /canvas-pattern-grid/,
+      );
+      await expect(
+        page.getByRole("dialog", { name: "画布背景选项", exact: true }),
+      ).toHaveCount(0);
+    } else {
+      await expect(button).toHaveAttribute(
+        "aria-pressed",
+        before === "true" ? "false" : "true",
+      );
+    }
   }
 });

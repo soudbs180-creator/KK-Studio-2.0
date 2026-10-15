@@ -6,6 +6,10 @@ import {
 import { reconcileProjectCanvas } from "../../domain/projectCanvas.ts";
 import type { ProviderConnection } from "../../domain/providerConnections.ts";
 import {
+  protocolBindingMatches,
+  providerNeedsKey,
+} from "../../domain/providerProtocol.ts";
+import {
   MODEL_PROVIDER_STORAGE_KEY,
   parseModelProvider,
 } from "../../domain/modelProvider.ts";
@@ -55,6 +59,18 @@ export function assertLiveTextTask(
     task.prompt !== expected.prompt ||
     task.providerBaseUrl !== expected.providerBaseUrl ||
     task.providerCredentialRef !== expected.providerCredentialRef ||
+    !protocolBindingMatches(
+      {
+        baseUrl: task.providerBaseUrl ?? "",
+        protocol: task.providerProtocol,
+        authMode: task.providerAuthMode,
+      },
+      {
+        baseUrl: expected.providerBaseUrl ?? "",
+        protocol: expected.providerProtocol,
+        authMode: expected.providerAuthMode,
+      },
+    ) ||
     !task.sourceItemId ||
     !project?.items.some((item) => item.id === task.sourceItemId)
   )
@@ -113,6 +129,18 @@ function withValidSize(
   return connection;
 }
 
+async function hasConnectionCredentials(
+  connection: Pick<
+    ProviderConnection,
+    "baseUrl" | "credentialRef" | "protocol" | "authMode"
+  >,
+): Promise<boolean> {
+  return (
+    !providerNeedsKey({ ...connection, baseUrl: connection.baseUrl! }) ||
+    (await hasApiKey(connection.baseUrl!, connection.credentialRef))
+  );
+}
+
 /** Every entry uses this binding check; an existing project never swaps accounts. */
 export async function prepareImageTask(
   input: CreateProjectInput,
@@ -159,6 +187,8 @@ export async function prepareImageTask(
       id: selected.id,
       baseUrl: selected.baseUrl,
       credentialRef: selected.credentialRef,
+      protocol: selected.protocol,
+      authMode: selected.authMode,
       referenceCount: input.attachments.length,
       operation:
         input.imageEdit?.nativeMask || input.imageOperation === "inpaint"
@@ -170,7 +200,7 @@ export async function prepareImageTask(
       model: input.model,
     };
     assertSubmissionConnection(binding);
-    if (!(await hasApiKey(selected.baseUrl!, selected.credentialRef)))
+    if (!(await hasConnectionCredentials(selected)))
       throw new ImageTaskCommandError(
         "选择的连接缺少密钥，请配置后重试。",
         true,
@@ -182,7 +212,12 @@ export async function prepareImageTask(
       localStorage.getItem(MODEL_PROVIDER_STORAGE_KEY),
     ).profile;
     const connection = connectionFromModelProfile(profile);
-    if (!(await hasApiKey(profile.baseUrl, connection.credentialRef)))
+    if (
+      !(await hasConnectionCredentials({
+        ...profile,
+        credentialRef: connection.credentialRef,
+      }))
+    )
       throw new ImageTaskCommandError(
         "请先配置模型连接；当前草稿已保留，配置后再次提交。",
         true,
@@ -228,6 +263,8 @@ export async function prepareImageTask(
       )?.id,
     baseUrl: project.providerBaseUrl,
     credentialRef: project.providerCredentialRef,
+    protocol: project.providerProtocol,
+    authMode: project.providerAuthMode,
     referenceCount: input.attachments.length,
     operation:
       input.imageEdit?.nativeMask || input.imageOperation === "inpaint"
@@ -239,7 +276,7 @@ export async function prepareImageTask(
     model: input.model,
   };
   const connection = assertSubmissionConnection(binding);
-  if (!(await hasApiKey(connection.baseUrl!, connection.credentialRef)))
+  if (!(await hasConnectionCredentials(connection)))
     throw new ImageTaskCommandError(
       "原绑定连接缺少密钥，请配置后重试；当前草稿已保留。",
       true,
@@ -260,6 +297,8 @@ export function appendImageTask(
     providerBaseUrl: connection.baseUrl,
     providerName: connection.provider,
     providerCredentialRef: connection.credentialRef,
+    providerProtocol: connection.protocol,
+    providerAuthMode: connection.authMode,
   };
   const task = {
     ...createTask({

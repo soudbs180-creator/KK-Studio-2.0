@@ -69,13 +69,12 @@ export async function loadApiKey(
   baseUrl: string,
   credentialRef?: string,
 ): Promise<string> {
-  const cached = getSessionApiKey(baseUrl, credentialRef);
-  if (cached) return cached;
-  if (!isDesktop()) return "";
+  if (!isDesktop()) return getSessionApiKey(baseUrl, credentialRef);
   const value = await invoke<string | null>("credential_get", {
     providerId: credentialRef ?? credentialId(baseUrl),
   });
-  if (value) setSessionApiKey(value, baseUrl, credentialRef);
+  // Desktop windows share this vault; memory must not hide key rotation/deletion.
+  setSessionApiKey(value ?? "", baseUrl, credentialRef);
   return value ?? "";
 }
 

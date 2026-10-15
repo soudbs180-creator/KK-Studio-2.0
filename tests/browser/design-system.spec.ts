@@ -8,9 +8,9 @@ import {
   themeTokens,
 } from "../helpers/designSystem.ts";
 
-async function paint(locator: Locator) {
-  return locator.evaluate((element) => {
-    const style = getComputedStyle(element);
+async function paint(locator: Locator, pseudo: string | null = null) {
+  return locator.evaluate((element, pseudo) => {
+    const style = getComputedStyle(element, pseudo);
     return {
       color: style.color,
       bg: style.backgroundColor,
@@ -18,7 +18,7 @@ async function paint(locator: Locator) {
       radius: style.borderRadius,
       height: style.height,
     };
-  });
+  }, pseudo);
 }
 
 for (const theme of ["dark", "light"]) {
@@ -57,8 +57,19 @@ for (const theme of ["dark", "light"]) {
         bg: getComputedStyle(el.closest(".settings-panel")!).backgroundColor,
       }));
       expect(contrast(focus.outline, focus.bg)).toBeGreaterThanOrEqual(3);
-      const switchPaint = await paint(
-        dialog.getByRole("switch", { name: "浮岛布局", exact: true }),
+      const switchControl = dialog.getByRole("switch", {
+        name: "浮岛布局",
+        exact: true,
+      });
+      const switchPaint = await paint(switchControl, "::before");
+      expect(switchPaint.bg).toBe(
+        cssRgb(
+          expected(
+            (await switchControl.getAttribute("aria-checked")) === "true"
+              ? "--bg-accent"
+              : "--ui-control-off",
+          ),
+        ),
       );
       const thumbPaint = await paint(
         dialog
@@ -68,26 +79,29 @@ for (const theme of ["dark", "light"]) {
       expect(contrast(thumbPaint.bg, switchPaint.bg)).toBeGreaterThanOrEqual(3);
       expect((await paint(select)).height).toBe("32px");
       await dialog
-        .getByRole("button", { name: "模型供应商", exact: true })
+        .getByRole("button", { name: "模型接入", exact: true })
+        .click();
+      await page
+        .getByRole("button", { name: "API Key（官方）", exact: true })
         .click();
       const save = dialog.getByRole("button", {
-        name: "保存",
+        name: "保存连接",
         exact: true,
       });
       await page.mouse.move(0, 0);
       await expect(save).toHaveCSS(
         "background-color",
-        cssRgb(expected("--bg-accent")),
+        cssRgb(expected("--kk-button-primary-bg")),
       );
       const normal = await paint(save);
       expect(contrast(normal.color, normal.bg)).toBeGreaterThanOrEqual(4.5);
-      expect(normal.radius).toBe("8px");
+      expect(normal.radius).toBe("999px");
       expect(normal.height).toBe("32px");
       expect(normal.filter).toBe("none");
       await save.hover();
       await expect(save).toHaveCSS(
         "background-color",
-        cssRgb(expected("--bg-accent-hover")),
+        cssRgb(expected("--kk-button-primary-hover")),
       );
       const hover = await paint(save);
       expect(contrast(hover.color, hover.bg)).toBeGreaterThanOrEqual(4.5);
@@ -102,7 +116,7 @@ for (const theme of ["dark", "light"]) {
         .boundingBox())!;
       await page.mouse.move(safeArea.x + 4, safeArea.y + 4);
       await page.mouse.up();
-      const field = dialog.locator(".settings-field input").first();
+      const field = dialog.getByLabel("提供商", { exact: true });
       const fieldPaint = await paint(field);
       const placeholder = await field.evaluate(
         (el) => getComputedStyle(el, "::placeholder").color,
@@ -224,16 +238,18 @@ for (const theme of ["dark", "light"]) {
       await page.mouse.move(0, 0);
       await expect(create).toHaveCSS(
         "background-color",
-        cssRgb(token("--bg-accent")),
+        cssRgb(token("--kk-button-primary-bg")),
       );
       await expect(create).toHaveCSS(
         "color",
-        cssRgb(token("--text-on-accent")),
+        cssRgb(token("--kk-button-primary-text")),
       );
+      const normal = await paint(create);
+      expect(contrast(normal.color, normal.bg)).toBeGreaterThanOrEqual(4.5);
       await create.hover();
       await expect(create).toHaveCSS(
         "background-color",
-        cssRgb(token("--bg-accent-hover")),
+        cssRgb(token("--kk-button-primary-hover")),
       );
       const hover = await paint(create);
       expect(contrast(hover.color, hover.bg)).toBeGreaterThanOrEqual(4.5);
@@ -249,6 +265,10 @@ for (const theme of ["dark", "light"]) {
     await page
       .getByRole("dialog", { name: "设置" })
       .getByRole("button", { name: "扩展", exact: true })
+      .click();
+    await page
+      .getByRole("dialog", { name: "设置" })
+      .getByRole("tab", { name: /MCP/ })
       .click();
     const uninstall = page
       .getByRole("button", { name: "卸载", exact: true })

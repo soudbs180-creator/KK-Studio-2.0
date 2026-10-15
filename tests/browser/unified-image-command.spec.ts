@@ -22,11 +22,14 @@ async function openWorkspace(page: Page): Promise<void> {
 async function configure(page: Page, model = "image-test"): Promise<void> {
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
-  await page.getByRole("button", { name: "模型供应商", exact: true }).click();
+  await page.getByRole("button", { name: "模型接入", exact: true }).click();
+  await page
+    .getByRole("button", { name: "API Key（官方）", exact: true })
+    .click();
   await page.getByLabel("接口地址").fill("https://models.example.test/v1");
-  await page.getByLabel("API Key").fill("fixture-key");
+  await page.getByLabel("API Key", { exact: true }).fill("fixture-key");
   await page.getByLabel("模型名称").fill(model);
-  await page.getByRole("button", { name: "保存", exact: true }).click();
+  await page.getByRole("button", { name: "保存连接", exact: true }).click();
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
 }
 
@@ -36,8 +39,10 @@ async function selectImageNode(page: Page) {
   await page.getByRole("button", { name: "添加资源", exact: true }).click();
   await page.getByRole("menuitem", { name: "图片", exact: true }).click();
   const node = page.locator(".canvas-node-image").first();
-  await node.click();
-  await expect(node.getByLabel("图片提示词")).toBeVisible();
+  await expect(node).toHaveClass(/is-selected/);
+  await expect(
+    page.getByTestId("image-composer").getByLabel("图片提示词"),
+  ).toBeVisible();
   return node;
 }
 
@@ -265,11 +270,18 @@ test("已归档图片结果使用上方选择工具栏，收藏重绘对比删�
       })
       .toBe(true);
   }
-  const favorite = actions.getByRole("button", { name: `收藏${result.title}` });
-  await favorite.click();
+  await actions.getByRole("button", { name: "编辑标签", exact: true }).click();
+  const tagEditor = page.getByRole("dialog", { name: "编辑标签", exact: true });
+  await tagEditor.getByRole("button", { name: "收藏", exact: true }).click();
   await expect(
-    actions.getByRole("button", { name: `取消收藏${result.title}` }),
+    tagEditor.getByRole("button", { name: "收藏", exact: true }),
   ).toHaveAttribute("aria-pressed", "true");
+  await expect
+    .poll(async () => (await activeProject(page)).favoriteIds)
+    .toContain(id);
+  await tagEditor
+    .getByRole("button", { name: "关闭标签编辑", exact: true })
+    .click();
   await actions.getByRole("button", { name: /加入对比/ }).click();
   await expect(
     page.getByRole("region", { name: "图片对比选择" }),
@@ -410,6 +422,22 @@ test("active project canvas uses the provider command for a non-root source and 
   for (const expanded of [false, true]) {
     if (expanded)
       await resultComposer.getByRole("button", { name: "展开提示词" }).click();
+    await expect
+      .poll(() =>
+        resultComposer.evaluate(
+          (element) => (element as HTMLElement).offsetHeight,
+        ),
+      )
+      .toBe(expanded ? 330 : 237);
+    await expect
+      .poll(() =>
+        resultComposer.evaluate((element) =>
+          element
+            .getAnimations({ subtree: true })
+            .every((animation) => animation.playState !== "running"),
+        ),
+      )
+      .toBe(true);
     const geometry = await resultComposer.evaluate((element) => {
       const refs = element
         .querySelector(".reference-slots, .composer-refs")!
@@ -418,7 +446,11 @@ test("active project canvas uses the provider command for a non-root source and 
       const controls = element
         .querySelector(".creation-controls")!
         .getBoundingClientRect();
+      const card = element
+        .parentElement!.querySelector(".demo-result-node")!
+        .getBoundingClientRect();
       return {
+        composerGap: element.getBoundingClientRect().top - card.bottom,
         referenceBottom: refs.bottom,
         inputTop: input.top,
         inputBottom: input.bottom,
@@ -428,8 +460,24 @@ test("active project canvas uses the provider command for a non-root source and 
       };
     });
     expect(geometry.inputTop).toBeGreaterThan(geometry.referenceBottom);
+    expect(geometry.composerGap).toBeCloseTo(10, 1);
     expect(geometry.inputBottom).toBeLessThan(geometry.controlsTop);
     expect(geometry.controlsBottom).toBeLessThan(geometry.viewport);
+    const generate = resultComposer.getByRole("button", {
+      name: "生成图片",
+      exact: true,
+    });
+    expect(
+      await generate.evaluate((element) => {
+        const box = element.getBoundingClientRect();
+        return element.contains(
+          document.elementFromPoint(
+            box.x + box.width / 2,
+            box.y + box.height / 2,
+          ),
+        );
+      }),
+    ).toBe(true);
   }
   await resultComposer.getByRole("button", { name: "收起提示词" }).click();
   await resultComposer.getByLabel("图片提示词").fill("继续编辑已生成图片");
@@ -454,6 +502,143 @@ test("active project canvas uses the provider command for a non-root source and 
   );
   expect(editRequestBody).toBeDefined();
 });
+
+for (const media of [
+  { label: "横图", width: 1200, height: 675, viewport: 1920 },
+  { label: "竖图", width: 600, height: 900, viewport: 1280 },
+  { label: "方图", width: 600, height: 600, viewport: 960 },
+  { label: "宽图", width: 1200, height: 300, viewport: 1280 },
+]) {
+  test(`结果${media.label}编辑器在展开终态紧接主体且生成按钮可点击`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: media.viewport, height: 720 });
+    await configure(page);
+    const image = await page.evaluate(({ width, height }) => {
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      canvas.getContext("2d")!.fillRect(0, 0, width, height);
+      return canvas.toDataURL("image/png").split(",")[1];
+    }, media);
+    await page.route(generationsEndpoint, (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({ data: [{ b64_json: image }] }),
+      }),
+    );
+    await openWorkspace(page);
+    const closeChat = page.getByRole("button", {
+      name: "收起对话",
+      exact: true,
+    });
+    if (await closeChat.isVisible()) await closeChat.click();
+    await expect(page.locator(".conversation-panel")).toBeHidden();
+    const source = await selectImageNode(page);
+    await source.getByLabel("图片提示词").fill("比例与终态布局回归");
+    await chooseOneOutput(source);
+    await source.getByRole("button", { name: "生成图片", exact: true }).click();
+    await page.getByRole("button", { name: "批准并提交", exact: true }).click();
+    await expect
+      .poll(async () => (await activeProject(page)).tasks.at(-1)?.status)
+      .toBe("succeeded");
+    const resultId = (await activeProject(page)).tasks.at(-1)!
+      .resultItemId as string;
+    const result = page.getByTestId(`canvas-node-${resultId}`);
+    await expect
+      .poll(() =>
+        result.locator(".demo-result-preview img").evaluate((element) => ({
+          width: (element as HTMLImageElement).naturalWidth,
+          height: (element as HTMLImageElement).naturalHeight,
+        })),
+      )
+      .toEqual({ width: media.width, height: media.height });
+    await result.focus();
+    await result.press("Enter");
+    const composer = result.getByTestId("image-composer");
+    await expect(composer).toBeVisible();
+    if (media.label === "横图" || media.label === "宽图") {
+      await page.getByRole("button", { name: "画布缩放", exact: true }).click();
+      await page
+        .getByRole("menuitemradio", { name: "50%", exact: true })
+        .click();
+      const canvas = await page.getByTestId("infinite-canvas").boundingBox();
+      await page.mouse.move(canvas!.x + 20, canvas!.y + canvas!.height / 2);
+      for (let step = 0; step < 20; step++) {
+        const zoom = await page
+          .getByRole("button", { name: "画布缩放", exact: true })
+          .textContent();
+        if (parseFloat(zoom ?? "100") <= 25) break;
+        await page.mouse.wheel(0, 120);
+      }
+      await expect(
+        page.getByRole("button", { name: "画布缩放", exact: true }),
+      ).toContainText(/2[0-5]%/);
+    }
+    for (const expanded of [false, true]) {
+      if (expanded)
+        await composer
+          .getByRole("button", { name: "展开提示词", exact: true })
+          .click();
+      await expect
+        .poll(() =>
+          composer.evaluate((element) => (element as HTMLElement).offsetHeight),
+        )
+        .toBe(expanded ? 330 : 237);
+      await expect
+        .poll(() =>
+          composer.evaluate((element) =>
+            element
+              .getAnimations({ subtree: true })
+              .every((animation) => animation.playState !== "running"),
+          ),
+        )
+        .toBe(true);
+      const geometry = await composer.evaluate((element) => {
+        const box = element.getBoundingClientRect();
+        const card = element
+          .parentElement!.querySelector(".demo-result-node")!
+          .getBoundingClientRect();
+        const scale = box.width / (element as HTMLElement).offsetWidth;
+        return {
+          gap: (box.top - card.bottom) / scale,
+          bottom: box.bottom,
+          viewport: innerHeight,
+        };
+      });
+      expect(geometry.gap).toBeCloseTo(10, 1);
+      expect(geometry.bottom).toBeLessThan(geometry.viewport);
+      const generate = composer.getByRole("button", {
+        name: "生成图片",
+        exact: true,
+      });
+      expect(
+        await generate.evaluate((element) => {
+          const box = element.getBoundingClientRect();
+          return element.contains(
+            document.elementFromPoint(
+              box.x + box.width / 2,
+              box.y + box.height / 2,
+            ),
+          );
+        }),
+      ).toBe(true);
+      const port = result.getByRole("button", { name: /添加下游/ });
+      expect(
+        await port.evaluate((element) => {
+          const box = element.getBoundingClientRect();
+          return element.contains(
+            document.elementFromPoint(
+              box.x + box.width / 2,
+              box.y + box.height / 2,
+            ),
+          );
+        }),
+      ).toBe(true);
+    }
+  });
+}
 
 test("provider image cancellation cannot publish a late success", async ({
   page,
@@ -596,7 +781,7 @@ test("unconfigured canvas generation opens provider settings and keeps the promp
     .click();
   await expect(page.getByRole("dialog", { name: "设置" })).toBeVisible();
   await expect(
-    page.getByRole("button", { name: "模型供应商", exact: true }),
+    page.getByRole("button", { name: "模型接入", exact: true }),
   ).toBeVisible();
   await expect(source.getByLabel("图片提示词")).toHaveValue(prompt);
 });
@@ -646,7 +831,8 @@ test("actual long model identifiers remain readable without covering canvas cont
   await configure(page, model);
   await openWorkspace(page);
   await page.setViewportSize({ width: 390, height: 844 });
-  const source = await selectImageNode(page);
+  await selectImageNode(page);
+  const source = page.getByTestId("image-composer");
   const button = source.locator(".model-button");
   await expect(button).toHaveAttribute("title", model);
   await expect(button.locator(".model-name")).toHaveText(model);
@@ -657,8 +843,14 @@ test("actual long model identifiers remain readable without covering canvas cont
   ).toBe(true);
   const bounds = await button.boundingBox();
   const params = await source.locator(".image-params").boundingBox();
-  expect(bounds!.x + bounds!.width).toBeLessThanOrEqual(params!.x);
+  expect(
+    bounds!.x + bounds!.width <= params!.x ||
+      bounds!.y + bounds!.height <= params!.y ||
+      params!.x + params!.width <= bounds!.x ||
+      params!.y + params!.height <= bounds!.y,
+  ).toBe(true);
   await button.click();
+  await source.getByRole("button", { name: "切换全部模型" }).click();
   await expect(
     source.getByRole("menuitemradio", { name: model, exact: false }),
   ).toContainText(model);

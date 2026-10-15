@@ -203,6 +203,18 @@ test("desktop launch rebuilds when input content changes without a newer mtime",
   assert.equal(result.rebuilt, true);
 });
 
+test("packaged Gemini bridge content participates in desktop release identity", (t) => {
+  const { root } = fixture(t);
+  const bridge = path.join(root, "scripts", "gemini-bridge.mjs");
+  fs.mkdirSync(path.dirname(bridge), { recursive: true });
+  fs.writeFileSync(bridge, "original bridge");
+  fs.utimesSync(bridge, new Date(500), new Date(500));
+  const original = fingerprintDesktopInputs(root);
+  fs.writeFileSync(bridge, "changed bridge");
+  fs.utimesSync(bridge, new Date(500), new Date(500));
+  assert.notEqual(fingerprintDesktopInputs(root), original);
+});
+
 test("desktop launch rebuilds when a tracked input is deleted", (t) => {
   const { root, executable, source } = fixture(t);
   fs.utimesSync(executable, new Date(3000), new Date(3000));

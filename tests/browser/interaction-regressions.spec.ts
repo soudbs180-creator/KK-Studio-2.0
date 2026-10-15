@@ -92,7 +92,12 @@ test("选中编辑器随窗口缩窄重新适配，卡片坐标和草稿保留",
 
 test("模型测试拒绝 HTML 假成功并可从 HTTP 错误恢复", async ({ page }) => {
   let mode = "html";
+  const requests: Array<{ mode: string; authorization: string }> = [];
   await page.route("https://models.example.test/v1/models", (route) => {
+    requests.push({
+      mode,
+      authorization: route.request().headers().authorization ?? "",
+    });
     if (mode === "html")
       return route.fulfill({
         contentType: "text/html",
@@ -103,16 +108,34 @@ test("模型测试拒绝 HTML 假成功并可从 HTTP 错误恢复", async ({ pa
   });
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
-  await page.getByRole("button", { name: "模型供应商", exact: true }).click();
+  await page.getByRole("button", { name: "模型接入", exact: true }).click();
+  await page
+    .getByRole("button", { name: "API Key（官方）", exact: true })
+    .click();
   await page.getByLabel("接口地址").fill("https://models.example.test/v1");
-  await page.getByRole("button", { name: "测试连接", exact: true }).click();
+  await page.getByLabel("API Key", { exact: true }).fill("fixture-models-key");
+  await page
+    .getByRole("button", { name: "测试连接并刷新模型", exact: true })
+    .click();
   await expect(page.locator(".provider-status")).toHaveClass(/is-error/);
+  await expect(page.locator(".provider-status")).toContainText(
+    "模型列表不完整或格式无效",
+  );
   mode = "error";
-  await page.getByRole("button", { name: "测试连接", exact: true }).click();
+  await page
+    .getByRole("button", { name: "测试连接并刷新模型", exact: true })
+    .click();
   await expect(page.locator(".provider-status")).toContainText("HTTP 401");
   mode = "success";
-  await page.getByRole("button", { name: "测试连接", exact: true }).click();
+  await page
+    .getByRole("button", { name: "测试连接并刷新模型", exact: true })
+    .click();
   await expect(page.locator(".provider-status")).toHaveClass(/is-success/);
+  expect(requests).toEqual([
+    { mode: "html", authorization: "Bearer fixture-models-key" },
+    { mode: "error", authorization: "Bearer fixture-models-key" },
+    { mode: "success", authorization: "Bearer fixture-models-key" },
+  ]);
 });
 
 test("取消、编辑配置与离线状态不会留下过期的连接成功提示", async ({
@@ -134,10 +157,18 @@ test("取消、编辑配置与离线状态不会留下过期的连接成功提�
   });
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
-  await page.getByRole("button", { name: "模型供应商", exact: true }).click();
+  await page.getByRole("button", { name: "模型接入", exact: true }).click();
+  await page
+    .getByRole("button", { name: "API Key（官方）", exact: true })
+    .click();
   await page.getByLabel("接口地址").fill("https://models.example.test/v1");
+  await page
+    .getByLabel("API Key", { exact: true })
+    .fill("fixture-cancel-models-key");
   const request = page.waitForRequest("https://models.example.test/v1/models");
-  await page.getByRole("button", { name: "测试连接", exact: true }).click();
+  await page
+    .getByRole("button", { name: "测试连接并刷新模型", exact: true })
+    .click();
   await request;
   await page.getByRole("button", { name: "取消测试" }).click();
   await expect(page.locator(".provider-status")).toHaveClass(/is-cancelled/);
@@ -146,7 +177,9 @@ test("取消、编辑配置与离线状态不会留下过期的连接成功提�
   await done;
   await expect(page.locator(".provider-status")).toHaveClass(/is-idle/);
   await context.setOffline(true);
-  await page.getByRole("button", { name: "测试连接", exact: true }).click();
+  await page
+    .getByRole("button", { name: "测试连接并刷新模型", exact: true })
+    .click();
   await expect(page.locator(".provider-status")).toHaveClass(/is-offline/);
   await context.setOffline(false);
 });
@@ -171,12 +204,15 @@ test("配置入口定位到对应设置分类，菜单支持 Escape", async ({ p
     .getByRole("button", { name: "关闭任务列表" })
     .click();
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
-  await page.getByRole("button", { name: "模型供应商", exact: true }).click();
+  await page.getByRole("button", { name: "模型接入", exact: true }).click();
+  await page
+    .getByRole("button", { name: "API Key（官方）", exact: true })
+    .click();
   await expect(page.getByLabel("接口地址")).toBeVisible();
   await page.keyboard.press("Escape");
   await page
     .getByRole("navigation", { name: "主导航" })
-    .getByRole("button", { name: "技能", exact: true })
+    .getByRole("button", { name: "扩展", exact: true })
     .click();
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   await expect(

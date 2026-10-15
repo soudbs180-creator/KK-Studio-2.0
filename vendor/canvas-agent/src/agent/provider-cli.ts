@@ -12,6 +12,7 @@ import fs from "node:fs";
 import { applyClaudeProviderConfig } from "./claude-provider-config.js";
 import {
   applyCodexProviderConfig,
+  assertProviderTarget,
   envKeyFor,
   parseProviderConfig,
   providerKey,
@@ -111,10 +112,48 @@ export function runApplyClaude(argv: string[]): number {
   return 0;
 }
 
+/** Mirror the existing model-directory boundary: bounded JSON data with unique IDs. */
+async function checkModels(response: Response, signal: AbortSignal): Promise<void> {
+  if (!response.ok || !response.body) {
+    await response.body?.cancel().catch(() => undefined);
+    throw new Error("模型目录请求失败，请检查地址、凭据和接口协议。");
+  }
+  const reader = response.body.getReader(), decoder = new TextDecoder("utf-8", { fatal: true });
+  const abort = () => { void reader.cancel().catch(() => undefined); };
+  signal.addEventListener("abort", abort, { once: true });
+  let raw = "", bytes = 0;
+  try {
+    signal.throwIfAborted();
+    while (true) {
+      const chunk = await reader.read();
+      signal.throwIfAborted();
+      if (chunk.done) { raw += decoder.decode(); break; }
+      bytes += chunk.value.byteLength;
+      if (bytes > 2 * 1024 * 1024) throw new Error("模型目录超过读取限制。");
+      raw += decoder.decode(chunk.value, { stream: true });
+    }
+  } finally {
+    signal.removeEventListener("abort", abort);
+    await reader.cancel().catch(() => undefined);
+    reader.releaseLock();
+  }
+  const invalid = () => new Error("模型目录 JSON 格式无效，请检查地址和接口协议。");
+  let payload: { data?: unknown };
+  try { payload = JSON.parse(raw) as typeof payload; } catch { throw invalid(); }
+  if (!payload || !Array.isArray(payload.data) || payload.data.length > 5000) throw invalid();
+  const seen = new Set<string>();
+  for (const item of payload.data) {
+    const id = item && typeof item === "object" ? (item as { id?: unknown }).id : undefined;
+    if (typeof id !== "string" || !id.trim() || id.length > 120 || seen.has(id)) throw invalid();
+    seen.add(id);
+  }
+}
+
 /** `providers check`：校验 + 环境变量就绪 + 尽力探测（不进入单测）。 */
 export async function runCheck(argv: string[]): Promise<number> {
   const { configFile } = parseApplyFlags(argv, "check");
   const connections = readProviderConfig(configFile);
+  assertProviderTarget(connections, "codex");
   const lines = [`connections: ${connections.length}`];
   let degraded = 0;
   for (const entry of connections) {
@@ -136,12 +175,14 @@ export async function runCheck(argv: string[]): Promise<number> {
           {
             headers: { Authorization: `Bearer ${process.env[envName]}` },
             signal: controller.signal,
+            redirect: "error",
           },
         );
+        await checkModels(response, controller.signal);
         lines.push(
           `   探测 /models: HTTP ${response.status}${response.ok ? "" : "（非 2xx，尽力而为）"}`,
         );
-        if (!response.ok) degraded++;
+
       } catch (error) {
         lines.push(
           `   探测 /models: 失败（${error instanceof Error ? error.message : String(error)}，尽力而为）`,

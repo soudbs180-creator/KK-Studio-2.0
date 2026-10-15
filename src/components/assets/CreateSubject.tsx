@@ -19,6 +19,7 @@ export default function CreateSubject({
           <label>
             主体名称
             <input
+              className="ui-input"
               autoFocus
               maxLength={60}
               placeholder="例如：品牌代言人"
@@ -28,11 +29,15 @@ export default function CreateSubject({
           </label>
           <p className="muted">保存在本次会话中，可继续添加参考图片。</p>
           <div>
-            <button type="button" onClick={onClose}>
+            <button
+              className="kk-button kk-button--secondary"
+              type="button"
+              onClick={onClose}
+            >
               取消
             </button>
             <button
-              className="primary-button"
+              className="kk-button kk-button--primary"
               disabled={!name.trim()}
               type="submit"
             >

@@ -1,33 +1,28 @@
 # KK Studio Design System
 
-2026-09-30 更新。最高设计基线是 [UI_INDEX](UI_INDEX.md) 指定的 Figma 四页。
-旧 [1.3 文档](archive/ui-history/DESIGN-SYSTEM-2026-09-22.md) 保留历史，
-其 44px 控件、11px 文字和旧圆角不覆盖现行闭合尺寸轴。
+2026-10-14 更新。设计裁决由 [UI_INDEX](UI_INDEX.md) 路由；当前用户设计/反馈优先，历史 Figma 和 [1.3 文档](archive/ui-history/DESIGN-SYSTEM-2026-09-22.md) 保留溯源。
 
 ## 颜色与主题
 
-语义颜色由 [`tokens.css`](../src/styles/tokens.css) 声明；
-[`global.css`](../src/styles/global.css) 和 [`ui-tokens.css`](../src/styles/ui-tokens.css)
-提供旧名称映射。页面不得建立第二套调色板。
-Dark / Light 通过根节点 `data-theme` 切换，强调色通过 `data-accent` 切换；
-偏好仍使用原有存储身份。颜色不得成为成功、错误或禁用的唯一反馈。
+语义颜色的唯一数值源是 [tokens.css](../src/styles/tokens.css)。[global.css](../src/styles/global.css) 与 [ui-tokens.css](../src/styles/ui-tokens.css) 承接主题状态和旧名称映射，页面不建立第二套调色板。
+
+Dark / Light 使用根节点 data-theme；data-accent 与原有偏好身份保持。default 的语义改为绿色，已显式选择的其他颜色保留。普通主要动作在深色主题使用浅色中性表面、浅色主题使用深色中性表面；Primary 是层级而非强调色同义词。状态色同时提供文字/图标，浅色与深色下均核验文字对比。
 
 ## 基础组件
 
-- Primary / Secondary / Tertiary / Danger 复用相同语义尺寸和状态 token。
-- 输入和选择控件使用主题中性的弱焦点边界；醒目 accent 只保留给 Primary、关键状态和明确的操作目标。
-- 图标使用 [`UiIcon`](../src/components/UiIcon.tsx) 或 Figma 导出的 SVG，图形与命中区分开。
-- 输入区复用 [`ComposerTextarea`](../src/components/ComposerTextarea.tsx)，保留 IME、增长高度、语音和附件行为。
-- 弹层使用真实 Escape、外部点击与回焦路径；手机设置分类位于底部横向 rail。
-- 生成入口复用 [`uiGovernance`](../src/domain/uiGovernance.ts) 的状态谓词；未配置、离线和输入无效时有可读原因及恢复入口。
-- 首页模型菜单保存批量数量与数据模式；上传按钮直接选择文件，插件与伙伴从设置访问。
+- Primary / Secondary / Tertiary / Danger 共用语义尺寸、间距和状态。文字动作使用胶囊、按内容扩展；常规文字完整显示，超出容器上限才省略并保留完整名称。可见文字和图标整体居中。
+- 上传与 IconButton 采用方形圆角命中区；上传是可执行的文件选择动作，加载/失败有反馈。
+- 输入过程去掉明显外圈/发光；键盘 focus-visible 保留弱中性提示。IME、增长高度、语音和附件行为继续复用 [ComposerTextarea](../src/components/ComposerTextarea.tsx)。
+- 图标复用 [UiIcon](../src/components/UiIcon.tsx) 或原有 Figma 资产，图形与命中区分开。
+- 生成入口共用 [uiGovernance](../src/domain/uiGovernance.ts) 的可用性谓词；未配置、离线或无效输入有真实原因。
+- 模型菜单只选择来源、供应商和型号。生成数量与数据模式从各生成操作的独立入口编辑，草稿仍按原契约持久化。
+- 设置按分组导航、列表与详情的密度选择二栏或三栏。窄屏保留完整内容，原生 Mobile 的布局与触控验收独立。
+- 共享弹层保持键盘导航、Escape、关闭与回焦；喜欢/标签屏幕面板和数据职责见 [UI_RULES](UI_RULES.md)。
 
-尺寸源见 [DESIGN_TOKENS](DESIGN_TOKENS.md)，交互见 [UI_RULES](UI_RULES.md)，
-页面模板见 [UI_ARCHETYPES](UI_ARCHETYPES.md)。
-运行验证见 [UI_SPEC](UI_SPEC.md) 与本轮 [落地记录](changes/2026-09-29-project-landing/plan.md)。
+尺寸索引见 [DESIGN_TOKENS](DESIGN_TOKENS.md)，页面选型见 [UI_ARCHETYPES](UI_ARCHETYPES.md)，运行证据见 [UI_SPEC](UI_SPEC.md)。
 
 ## 验收边界
 
-构建通过不代表视觉一致。Web production preview 和 Tauri release 分别验证实际 bundle、
-页面入口、computed style、同状态截图和真实操作。历史截图不用于证明当前版本。
-真实账号、积分、云服务和第三方模型能力仍按功能卡记录，未联调不能标为 REAL。
+当前源码与构建不是视觉完成证据。Web development、production preview 和 Tauri release 分别核验实际入口、bundle、computed style、同状态截图及真实操作；旧截图不证明当前候选。响应式 Web 不证明原生 Mobile 已实现。
+
+本轮默认绿、按钮、输入、面板、预设和使用记录的源码候选见 [本轮验证](changes/2026-10-14-ui-consolidation/verification.md)。功能与任务状态仍分别由注册表和账本决定；真实外部模型、Hosted、安装器与用户验收不从 fixture 推导。

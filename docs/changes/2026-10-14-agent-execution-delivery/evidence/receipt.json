@@ -1,0 +1,180 @@
+{
+  "startedAt": "2026-10-13T18:34:28.503Z",
+  "mode": "Tauri release with loopback Agent fixture",
+  "sourceHead": "4e38351c3743abeb9169bf680b629fbcd3fba513",
+  "isolated": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-agent-recovery-QSeQIL",
+  "dataRoot": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-agent-recovery-QSeQIL\\data",
+  "profile": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-agent-recovery-QSeQIL\\webview",
+  "codexHome": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-agent-recovery-QSeQIL\\codex-home",
+  "checks": [
+    {
+      "name": "prebuilt-release-is-current",
+      "passed": true,
+      "detail": "current"
+    },
+    {
+      "name": "desktop-dependencies-current",
+      "passed": true
+    },
+    {
+      "name": "owned-transport-guard-installed",
+      "passed": true
+    },
+    {
+      "name": "storage-isolation-agent-ux",
+      "passed": true
+    },
+    {
+      "name": "memory-isolation-agent-ux",
+      "passed": true
+    },
+    {
+      "name": "loaded-asset-agent-ux-index-C31ISFx5.js",
+      "passed": true
+    },
+    {
+      "name": "loaded-asset-agent-ux-index-CnbkXRxN.css",
+      "passed": true
+    },
+    {
+      "name": "release-identity-agent-ux",
+      "passed": true
+    },
+    {
+      "name": "native-creation-storage-loads",
+      "passed": true
+    },
+    {
+      "name": "native-hud-and-save-state-visible",
+      "passed": true
+    },
+    {
+      "name": "native-fold-and-keyboard-expand",
+      "passed": true
+    },
+    {
+      "name": "native-result-evidence-and-no-late-regression",
+      "passed": true
+    },
+    {
+      "name": "native-approval-entry-retained",
+      "passed": true
+    },
+    {
+      "name": "native-failed-stop-does-not-claim-stopped",
+      "passed": true
+    },
+    {
+      "name": "native-explicit-interruption-display",
+      "passed": true
+    },
+    {
+      "name": "no-model-turn-after-cdp-attach",
+      "passed": true
+    },
+    {
+      "name": "no-loopback-model-turn",
+      "passed": true
+    }
+  ],
+  "launches": [
+    {
+      "tag": "agent-ux",
+      "ProcessId": 54492,
+      "ParentProcessId": 1052,
+      "ExecutablePath": "D:\\kk-studio\\.worktrees\\TASK-AGENT-UX-20261014-execution-delivery\\src-tauri\\target\\release\\kk-studio.exe",
+      "CreationDate": "/Date(1791916470207)/",
+      "url": "http://tauri.localhost/",
+      "loaded": [
+        {
+          "path": "/assets/index-C31ISFx5.js",
+          "sha256": "167a76f10524ed7a9816eb3d9e5f6c7754cac01fa28c14066edc62b6f3c18285"
+        },
+        {
+          "path": "/assets/index-CnbkXRxN.css",
+          "sha256": "1cb7490bddae2a2052630abd24b75f600b5043d2912851d3299be749ae1393c8"
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "observedModelTurnsAfterAttach": 0,
+  "startupTurnObservation": "NOT VERIFIED before CDP attachment; complete startup requests are covered by the loopback browser fixture",
+  "threadMutations": 1,
+  "unknownOwnership": "NOT VERIFIED; covered by the controlled browser fixture",
+  "credential": {
+    "providerId": "agent-recovery-b7503858-23a0-4c22-b429-e189e6128a55",
+    "secretSha256": "eaf1c6ea98f4716e2dd478c3591862de36914ef9667b6343ef463f65a597fce4",
+    "cleanupComplete": false,
+    "created": false
+  },
+  "credentialScope": "No native vault credential is created or changed. Foreign credential IPC probes are intercepted through fetch/postMessage; native invoke is preserved.",
+  "passed": true,
+  "initialRelease": {
+    "releaseExePath": "D:\\kk-studio\\.worktrees\\TASK-AGENT-UX-20261014-execution-delivery\\src-tauri\\target\\release\\kk-studio.exe",
+    "releaseMtimeMs": 1791916274264.275,
+    "newestInputPath": "D:\\kk-studio\\.worktrees\\TASK-AGENT-UX-20261014-execution-delivery\\dist\\assets\\CatalogPanel-64tzeU52.js",
+    "newestInputMtimeMs": 1791916201937.3936,
+    "inputSha256": "db01d5500da525ea66962fc44c8e1ea5f376fe80ad2e255e564c81ab155f8f98",
+    "executableSha256": "f2b71804a8831d309f7850e846b784b5bb6bb66e3398429a2a1ffb266203e4d1",
+    "desktopVersion": "2.1.20",
+    "receiptPath": "D:\\kk-studio\\.worktrees\\TASK-AGENT-UX-20261014-execution-delivery\\src-tauri\\target\\release\\kk-studio.build-receipt.json",
+    "needsBuild": false,
+    "reason": "current"
+  },
+  "scriptSha256": "af3b40a29ceb8efa3d822b025239ed69217113c481bd8fec3e3513630dea6106",
+  "behaviorSha256": "9eb34ccf781f9ed56d4dffbd6625cca97bce2a9123350636b046184b49f12ce4",
+  "transportSha256": "8a8a0177d547873ec1234bd1f17dda3ec48095ae2d9add44832e9ccc4a982d77",
+  "upstreamScriptSha256": "7ec51fc43f95291d32ce944d71a7e2e7bc61b519de65c302a50771a02c1bf66e",
+  "sourceStatus": "M src-tauri/gen/schemas/desktop-schema.json\n M src-tauri/gen/schemas/windows-schema.json\n?? docs/changes/2026-10-14-agent-canvas-sync/evidence/\n?? docs/changes/2026-10-14-ccswitch-status-recovery/evidence/",
+  "versions": {
+    "schemaVersion": 1,
+    "desktop": "2.1.20",
+    "web": "2.1.20",
+    "mobile": "2.1.1"
+  },
+  "capabilityBoundary": "Native launcher, WebView2, loaded assets, storage and HUD are real; Agent runtime IPC and protocol are a loopback fixture. No model, Provider, hosted release, installer or user acceptance is claimed.",
+  "realProvider": "NOT VERIFIED; network calls are blocked after CDP attachment",
+  "transportIsolation": {
+    "wrapperInstalled": true,
+    "guardSelfCheck": true,
+    "invokeUnchanged": true,
+    "invokeWritable": false,
+    "invokeConfigurable": false
+  },
+  "release": {
+    "releaseExePath": "D:\\kk-studio\\.worktrees\\TASK-AGENT-UX-20261014-execution-delivery\\src-tauri\\target\\release\\kk-studio.exe",
+    "releaseMtimeMs": 1791916274264.275,
+    "newestInputPath": "D:\\kk-studio\\.worktrees\\TASK-AGENT-UX-20261014-execution-delivery\\dist\\assets\\CatalogPanel-64tzeU52.js",
+    "newestInputMtimeMs": 1791916201937.3936,
+    "inputSha256": "db01d5500da525ea66962fc44c8e1ea5f376fe80ad2e255e564c81ab155f8f98",
+    "executableSha256": "f2b71804a8831d309f7850e846b784b5bb6bb66e3398429a2a1ffb266203e4d1",
+    "desktopVersion": "2.1.20",
+    "receiptPath": "D:\\kk-studio\\.worktrees\\TASK-AGENT-UX-20261014-execution-delivery\\src-tauri\\target\\release\\kk-studio.build-receipt.json",
+    "needsBuild": false,
+    "reason": "current"
+  },
+  "receiptSha256": "92deaf748affe61379e50ef070221bfdbb633c8ad243dcf0d74d87d5ed80d4fa",
+  "externalRequestsBlocked": [],
+  "agentFixture": {
+    "requests": [
+      "/config",
+      "/events",
+      "/canvas/activate",
+      "/canvas/state",
+      "/agent/codex/conversation/prepare",
+      "/agent/codex/threads/fixture-thread",
+      "/agent/codex/models",
+      "/agent/codex/usage",
+      "/canvas/state",
+      "/canvas/state",
+      "/agent/codex/approval",
+      "/agent/codex/interrupt",
+      "/agent/codex/threads/fixture-thread",
+      "/agent/codex/usage"
+    ],
+    "modelTurns": 0,
+    "approvalDecisions": 1
+  },
+  "completedAt": "2026-10-13T18:34:41.530Z"
+}

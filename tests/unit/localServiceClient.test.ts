@@ -277,3 +277,140 @@ test("asset adapter sends encoded metadata and verifies the response identity", 
   assert.deepEqual(loaded.metadata, metadata);
   assert.deepEqual(loaded.bytes, bytes);
 });
+
+for (const replacement of [
+  "disconnect",
+  "new-endpoint",
+  "new-device",
+  "same-identity-repair",
+] as const) {
+  test("late companion check cannot overwrite " + replacement, async () => {
+    const storage = new MemoryStorage();
+    const initial = {
+      version: 1,
+      endpoint: "http://127.0.0.1:4319",
+      deviceId: "device-a",
+      protocolVersion: 1,
+      enabled: true,
+    };
+    storage.setItem(COMPANION_CONNECTION_STORAGE_KEY, JSON.stringify(initial));
+    let resume!: () => void;
+    let markStarted!: () => void;
+    const gate = new Promise<void>((resolve) => {
+      resume = resolve;
+    });
+    const started = new Promise<void>((resolve) => {
+      markStarted = resolve;
+    });
+    const client = new CompanionClient({
+      storage,
+      fetch: async (input, init) => {
+        if (String(input).endsWith("/health")) return response(health);
+        if (String(input).endsWith("/v1/pair"))
+          return response({ protocolVersion: 1, deviceId: "device-a" });
+        if (init?.method === "DELETE")
+          return new Response(null, { status: 204 });
+        assert.ok(String(input).endsWith("/v1/snapshot"));
+        markStarted();
+        await gate;
+        return response({ status: "missing", snapshot: null, revision: null });
+      },
+    });
+    const pending = client.checkCompanion();
+    await started;
+    if (replacement === "disconnect") await client.disconnectCompanion();
+    else if (replacement === "same-identity-repair") {
+      const replacementClient = new CompanionClient({
+        storage,
+        fetch: async (_input, init) =>
+          init?.method === "DELETE"
+            ? new Response(null, { status: 204 })
+            : response({ protocolVersion: 1, deviceId: "device-a" }),
+      });
+      await replacementClient.disconnectCompanion();
+      await replacementClient.pairCompanion(initial.endpoint, "12345678");
+    } else
+      storage.setItem(
+        COMPANION_CONNECTION_STORAGE_KEY,
+        JSON.stringify({
+          ...initial,
+          endpoint:
+            replacement === "new-endpoint"
+              ? "http://127.0.0.1:4320"
+              : initial.endpoint,
+          deviceId: "device-b",
+        }),
+      );
+    const current = readCompanionConnection(storage);
+    resume();
+    const result = await pending;
+    assert.deepEqual(readCompanionConnection(storage), current);
+    assert.deepEqual(result.connection, current);
+    assert.equal(result.state, current ? "checking" : "unconfigured");
+  });
+}
+
+for (const failure of [
+  "health-format",
+  "health-network",
+  "snapshot-auth",
+] as const) {
+  test(
+    "late companion failure cannot override a replacement connection " +
+      failure,
+    async () => {
+      const storage = new MemoryStorage();
+      const initial = {
+        version: 1,
+        endpoint: "http://127.0.0.1:4319",
+        deviceId: "device-a",
+        protocolVersion: 1,
+        enabled: true,
+      };
+      storage.setItem(
+        COMPANION_CONNECTION_STORAGE_KEY,
+        JSON.stringify(initial),
+      );
+      let resume!: () => void;
+      let markStarted!: () => void;
+      const gate = new Promise<void>((resolve) => {
+        resume = resolve;
+      });
+      const started = new Promise<void>((resolve) => {
+        markStarted = resolve;
+      });
+      const oldClient = new CompanionClient({
+        storage,
+        fetch: async (input) => {
+          if (String(input).endsWith("/health") && failure === "snapshot-auth")
+            return response(health);
+          markStarted();
+          await gate;
+          if (failure === "health-network")
+            throw new TypeError("fixture offline");
+          if (failure === "health-format")
+            return response({ ...health, protocolVersion: 99 });
+          return response({ error: "UNAUTHENTICATED" }, 401);
+        },
+      });
+      const pending = oldClient.checkCompanion();
+      await started;
+      const replacementClient = new CompanionClient({
+        storage,
+        fetch: async () =>
+          response({ protocolVersion: 1, deviceId: "device-b" }),
+      });
+      await replacementClient.pairCompanion(
+        "http://127.0.0.1:4320",
+        "12345678",
+      );
+      const current = readCompanionConnection(storage);
+      resume();
+      const result = await pending;
+      assert.deepEqual(result.connection, current);
+      assert.equal(result.state, "checking");
+      assert.equal(result.error, undefined);
+      assert.deepEqual(readCompanionConnection(storage), current);
+    },
+  );
+}

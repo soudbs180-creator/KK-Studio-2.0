@@ -1,27 +1,45 @@
 import { expect, test, type Page } from "@playwright/test";
 import fs from "node:fs/promises";
+import {
+  CREATION_STORAGE_KEY,
+  createProject,
+  createTask,
+  emptySnapshot,
+} from "../../src/features/creation/model";
 
 const endpoint = "https://models.example.test/v1/images/generations";
 const pixel =
   "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=";
 
-async function configure(page: Page) {
+async function configure(page: Page, outputCount = 4) {
+  const snapshot = emptySnapshot();
+  snapshot.revision = Date.now();
+  snapshot.homeDraft.outputCount = outputCount;
+  // Batch semantics belong to the initial task draft, not the model popup.
+  await page.addInitScript(
+    ({ key, initial }) => {
+      const current = JSON.parse(localStorage.getItem(key) ?? "null");
+      if (!current || current.revision < initial.revision)
+        localStorage.setItem(key, JSON.stringify(initial));
+    },
+    { key: CREATION_STORAGE_KEY, initial: snapshot },
+  );
   await page.goto("/");
   await page.getByRole("button", { name: "模型", exact: true }).click();
   await page
     .getByRole("menu")
-    .getByRole("button", { name: /配置供应商/ })
+    .getByRole("button", { name: "模型接入…", exact: true })
+    .click();
+  await page
+    .getByRole("button", { name: "API Key（官方）", exact: true })
     .click();
   await page.getByLabel("接口地址").fill("https://models.example.test/v1");
-  await page.getByLabel("API Key").fill("fixture-key");
+  await page.getByLabel("API Key", { exact: true }).fill("fixture-key");
   await page.getByLabel("模型名称").fill("image-test");
-  await page.getByRole("button", { name: "保存", exact: true }).click();
+  await page.getByRole("button", { name: "保存连接", exact: true }).click();
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
 }
-async function submit(page: Page, count = "4") {
-  await page.getByRole("button", { name: "模型", exact: true }).click();
-  await page.getByLabel("生成数量").selectOption(count);
-  await page.getByRole("button", { name: "模型", exact: true }).click();
+async function submit(page: Page) {
   await page.getByLabel("创作提示词").fill("带有磨砂材质的白色风扇");
   await page.getByRole("button", { name: "开始创建项目" }).click();
 }
@@ -29,6 +47,177 @@ async function workbench(page: Page) {
   await page.getByRole("button", { name: "打开任务列表" }).click();
   await page.getByRole("button", { name: "打开任务工作台" }).click();
 }
+
+for (const [status, submissionState, reason] of [
+  ["failed", "unknown", /受理状态不明/],
+  ["partial", "submitted", /已提交/],
+  ["interrupted", "unknown", /受理状态不明/],
+] as const) {
+  test(`重试动作遵循受理边界 ${status} ${submissionState}`, async ({
+    page,
+  }, info) => {
+    let requests = 0;
+    await page.route(endpoint, async (route) => {
+      requests += 1;
+      await route.fulfill({ status: 500, body: "unexpected retry" });
+    });
+    const project = createProject({
+      prompt: "恢复的费用边界夹具",
+      model: "image-test",
+      kind: "image",
+      attachments: [],
+    });
+    project.name = "恢复的重试边界";
+    const task = createTask(project);
+    task.status = status;
+    task.submissionState = submissionState;
+    task.outputs = task.outputs.map((output) => ({
+      ...output,
+      status: "failed",
+    }));
+    project.tasks = [task];
+    await page.goto("/");
+    await page.evaluate(
+      ({ key, value }) => localStorage.setItem(key, JSON.stringify(value)),
+      {
+        key: CREATION_STORAGE_KEY,
+        value: {
+          ...emptySnapshot(),
+          revision: Date.now(),
+          activeProjectId: project.id,
+          projects: [project],
+        },
+      },
+    );
+    await page.reload();
+    await page.getByRole("button", { name: "项目库", exact: true }).click();
+    await page
+      .locator(".project-library-card")
+      .filter({ hasText: project.name })
+      .click();
+    const hudRetry = page
+      .locator(".project-task-status")
+      .getByRole("button", { name: "重试", exact: true });
+    await expect(hudRetry).toBeDisabled();
+    await expect(hudRetry).toHaveAttribute("title", reason);
+    await hudRetry.evaluate((element: HTMLButtonElement) => element.click());
+    await page.getByRole("button", { name: "打开任务列表" }).click();
+    await page
+      .getByRole("button", { name: `查看任务 ${task.id}`, exact: true })
+      .click();
+    const detail = page.getByRole("dialog", { name: "任务详情", exact: true });
+    const detailRetry = detail.getByRole("button", {
+      name: "重试任务",
+      exact: true,
+    });
+    await expect(detailRetry).toBeDisabled();
+    await expect(detailRetry).toHaveAttribute("title", reason);
+    await expect(detail).toContainText(reason);
+    await detailRetry.evaluate((element: HTMLButtonElement) => element.click());
+    await detail
+      .getByRole("button", { name: "关闭任务详情", exact: true })
+      .click();
+    await page.getByRole("button", { name: "打开任务工作台" }).click();
+    const retry = page
+      .getByTestId("task-workbench")
+      .getByRole("button", { name: "重试剩余", exact: true });
+    await expect(retry).toBeDisabled();
+    await expect(retry).toHaveAttribute("title", reason);
+    await expect(page.getByTestId("task-workbench")).toContainText(reason);
+    await retry.evaluate((element: HTMLButtonElement) => element.click());
+    await expect(page.locator(".task-queue-item")).toHaveCount(1);
+    expect(requests).toBe(0);
+    await page.screenshot({
+      path: info.outputPath(`retry-${status}-${submissionState}.png`),
+      animations: "disabled",
+    });
+  });
+}
+
+test("重试动作遵循活动子任务的输出保护", async ({ page }, info) => {
+  let requests = 0;
+  let release: (() => void) | undefined;
+  await page.route(endpoint, async (route) => {
+    requests += 1;
+    if (requests === 2)
+      await new Promise<void>((resolve) => {
+        release = resolve;
+      });
+    await route
+      .fulfill({
+        contentType: "application/json",
+        body: JSON.stringify({ data: [] }),
+      })
+      .catch(() => undefined);
+  });
+  try {
+    await configure(page, 1);
+    await submit(page);
+    await page.getByRole("button", { name: "批准并提交" }).click();
+    await expect(page.locator(".project-task-failed")).toBeVisible();
+    await workbench(page);
+    const panel = page.getByTestId("task-workbench");
+    const retry = panel.getByRole("button", {
+      name: "重试剩余",
+      exact: true,
+    });
+    await expect(retry).toBeEnabled();
+    await retry.click();
+    await page.getByRole("button", { name: "批准并提交" }).click();
+    await expect.poll(() => requests).toBe(2);
+    await expect(panel.locator(".task-queue-item")).toHaveCount(2);
+    await expect(retry).toBeDisabled();
+    await expect(retry).toHaveAttribute(
+      "title",
+      /重试任务.*进行|重试任务.*核对/,
+    );
+    await expect(panel).toContainText(/重试任务.*进行|重试任务.*核对/);
+    await retry.evaluate((element: HTMLButtonElement) => element.click());
+    await expect(panel.locator(".task-queue-item")).toHaveCount(2);
+    expect(requests).toBe(2);
+    await page.getByRole("tab", { name: "Generate", exact: true }).click();
+    const singleRetry = panel.getByRole("button", {
+      name: "单项重试",
+      exact: true,
+    });
+    await expect(singleRetry).toBeDisabled();
+    await expect(singleRetry).toHaveAttribute("title", /已有重试任务/);
+    await singleRetry.evaluate((element: HTMLButtonElement) => element.click());
+    const parentId = await page.evaluate((key) => {
+      const snapshot = JSON.parse(localStorage.getItem(key)!);
+      return snapshot.projects.find(
+        (project: { id: string }) => project.id === snapshot.activeProjectId,
+      ).tasks[0].id as string;
+    }, CREATION_STORAGE_KEY);
+    await panel
+      .getByRole("button", { name: "关闭任务工作台", exact: true })
+      .click();
+    await page.getByRole("button", { name: "打开任务列表" }).click();
+    // The running child is outside this filter; the detail still needs all tasks.
+    await page
+      .locator(".task-panel")
+      .getByRole("button", { name: "失败", exact: true })
+      .click();
+    await page
+      .getByRole("button", { name: `查看任务 ${parentId}`, exact: true })
+      .click();
+    const detail = page.getByRole("dialog", { name: "任务详情", exact: true });
+    const detailRetry = detail.getByRole("button", {
+      name: "重试任务",
+      exact: true,
+    });
+    await expect(detailRetry).toBeDisabled();
+    await expect(detailRetry).toHaveAttribute("title", /已有重试任务/);
+    await detailRetry.evaluate((element: HTMLButtonElement) => element.click());
+    expect(requests).toBe(2);
+    await page.screenshot({
+      path: info.outputPath("retry-child-fenced.png"),
+      animations: "disabled",
+    });
+  } finally {
+    release?.();
+  }
+});
 
 async function injectPlanReview(page: Page) {
   await page.waitForFunction(() => {
@@ -290,8 +479,8 @@ test("提交后暂停进入受理状态不明并保留已归档结果", async ({
       })
       .catch(() => {});
   });
-  await configure(page);
-  await submit(page, "1");
+  await configure(page, 1);
+  await submit(page);
   await page.getByRole("button", { name: "批准并提交" }).click();
   await expect(page.locator(".project-task-running")).toBeVisible();
   await workbench(page);
@@ -361,8 +550,8 @@ test("16 项批次在归档 10 项后暂停，剩余受理状态进入未知", a
       })
       .catch(() => {});
   });
-  await configure(page);
-  await submit(page, "16");
+  await configure(page, 16);
+  await submit(page);
   await page.getByRole("button", { name: "批准并提交" }).click();
   await workbench(page);
   await page.getByRole("tab", { name: "Generate" }).click();
@@ -396,8 +585,8 @@ test("重复重试被锁定，重试任务再次重试后回填原始输出", as
       })
       .catch(() => {});
   });
-  await configure(page);
-  await submit(page, "1");
+  await configure(page, 1);
+  await submit(page);
   await page.getByRole("button", { name: "批准并提交" }).click();
   await expect(page.locator(".project-task-failed")).toBeVisible();
   await workbench(page);
@@ -405,7 +594,13 @@ test("重复重试被锁定，重试任务再次重试后回填原始输出", as
   await page.getByRole("button", { name: "单项重试", exact: true }).click();
   await page.getByRole("button", { name: "批准并提交" }).click();
   await expect.poll(() => requests).toBe(2);
-  await page.getByRole("button", { name: "单项重试", exact: true }).click();
+  const fencedRetry = page.getByRole("button", {
+    name: "单项重试",
+    exact: true,
+  });
+  await expect(fencedRetry).toBeDisabled();
+  await expect(fencedRetry).toHaveAttribute("title", /已有重试任务/);
+  await fencedRetry.evaluate((element: HTMLButtonElement) => element.click());
   await expect(page.locator(".task-queue-item")).toHaveCount(2);
   expect(requests).toBe(2);
   release?.();
@@ -433,8 +628,8 @@ test("相同内容重新导入保持 AI 来源，SHA-256 去重和本地集合�
       body: JSON.stringify({ data: [{ b64_json: preview }] }),
     }),
   );
-  await configure(page);
-  await submit(page, "1");
+  await configure(page, 1);
+  await submit(page);
   await page.getByRole("button", { name: "批准并提交" }).click();
   await expect(page.locator(".project-task-succeeded")).toBeVisible();
   await page.getByRole("button", { name: "文件", exact: true }).click();

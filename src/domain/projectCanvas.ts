@@ -14,6 +14,84 @@ export interface ProjectCanvas {
   viewport: ViewTransform;
 }
 
+function samePoint(a: Point | undefined, b: Point | undefined): boolean {
+  return a?.x === b?.x && a?.y === b?.y;
+}
+
+/** Accept external edits without overwriting local drag/add/undo previews. */
+export function mergeCanvasPositions(
+  current: ProjectCanvas["positions"],
+  previous: ProjectCanvas["positions"],
+  incoming: ProjectCanvas["positions"],
+): ProjectCanvas["positions"] {
+  let next = current;
+  for (const id of Object.keys(previous)) {
+    if (!(id in incoming) && id in next) {
+      if (next === current) next = { ...current };
+      delete next[id];
+    }
+  }
+  for (const [id, point] of Object.entries(incoming)) {
+    if (
+      !samePoint(point, previous[id]) &&
+      (!current[id] || samePoint(current[id], previous[id])) &&
+      !samePoint(current[id], point)
+    ) {
+      if (next === current) next = { ...current };
+      next[id] = point;
+    }
+  }
+  return next;
+}
+
+function sameEdge(
+  a: CanvasConnection | undefined,
+  b: CanvasConnection | undefined,
+): boolean {
+  return (
+    a?.source === b?.source && a?.target === b?.target && a?.kind === b?.kind
+  );
+}
+
+export function mergeCanvasEdges(
+  current: CanvasConnection[],
+  previous: CanvasConnection[],
+  incoming: CanvasConnection[],
+): CanvasConnection[] {
+  const before = new Map(previous.map((edge) => [edge.id, edge]));
+  const after = new Map(incoming.map((edge) => [edge.id, edge]));
+  const next = current
+    .filter(
+      (edge) =>
+        after.has(edge.id) ||
+        !before.has(edge.id) ||
+        !sameEdge(edge, before.get(edge.id)),
+    )
+    .map((edge) => {
+      const update = after.get(edge.id);
+      return update &&
+        sameEdge(edge, before.get(edge.id)) &&
+        !sameEdge(edge, update)
+        ? update
+        : edge;
+    });
+  for (const edge of incoming) {
+    if (
+      !before.has(edge.id) &&
+      !next.some(
+        (existing) =>
+          existing.id === edge.id ||
+          (existing.source === edge.source && existing.target === edge.target),
+      )
+    )
+      next.push(edge);
+  }
+  return next.length === current.length &&
+    next.every((edge, index) => edge === current[index])
+    ? current
+    : next;
+}
+
 /** Object member order differs after native JSON roundtrips; it is not an edit. */
 export function projectCanvasFingerprint(canvas?: ProjectCanvas): string {
   if (!canvas) return "";

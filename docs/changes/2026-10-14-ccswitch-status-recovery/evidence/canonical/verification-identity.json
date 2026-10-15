@@ -1,0 +1,75 @@
+{
+  "recordedAt": "2026-10-13T18:00:26.288Z",
+  "root": "D:\\kk-studio\\KK-Studio-2.0",
+  "receiptCurrent": true,
+  "sourceAndExecutableMatchRuntime": true,
+  "driverSha256": "583714d1876929393d73de3cb81c88fed78aa76763a85461f4bfe239546e2c01",
+  "executableSha256": "78098687653e8c463456417469da5d79bf77968dafb92663fa5a76b9cfee453b",
+  "inputSha256": "19cab1aca4ca025dc3d8b2a87bdb08d877ff8289bfc0a72b342dd8e1fd06a959",
+  "functionalChecks": 20,
+  "visualChecks": 11,
+  "allVisualTargetsFullyInViewport": true,
+  "phaseChecks": [
+    {
+      "phase": "native-committed-cache-pending",
+      "revision": 2,
+      "credentialState": "unchanged",
+      "nativeModelCommitted": true,
+      "cacheStillOld": true,
+      "syntheticVaultCredentialPreserved": true
+    }
+  ],
+  "metadataChecks": [
+    {
+      "phase": "synthetic-model-directory-secret-free",
+      "files": [
+        "providers\\connections.json",
+        "providers\\connections.json.lock"
+      ],
+      "browserAndNativeSecretFree": true
+    },
+    {
+      "phase": "native-and-browser-metadata-contain-no-secret",
+      "files": [
+        "providers\\connections.json",
+        "providers\\connections.json.lock"
+      ],
+      "browserAndNativeSecretFree": true
+    },
+    {
+      "phase": "native-committed-cache-pending-secret-free",
+      "files": [
+        "providers\\connections.json",
+        "providers\\connections.json.bak",
+        "providers\\connections.json.lock"
+      ],
+      "browserAndNativeSecretFree": true
+    },
+    {
+      "phase": "cache-publication-crash-restart-1-secret-free",
+      "files": [
+        "providers\\connections.json",
+        "providers\\connections.json.bak",
+        "providers\\connections.json.lock"
+      ],
+      "browserAndNativeSecretFree": true
+    },
+    {
+      "phase": "cache-publication-crash-restart-2-secret-free",
+      "files": [
+        "providers\\connections.json",
+        "providers\\connections.json.bak",
+        "providers\\connections.json.lock"
+      ],
+      "browserAndNativeSecretFree": true
+    }
+  ],
+  "interruptedProcess": {
+    "pid": 90272,
+    "exitCode": 1,
+    "signalCode": null,
+    "forced": true
+  },
+  "credentialCleanupComplete": true,
+  "ownedDebugPortReleased": true
+}

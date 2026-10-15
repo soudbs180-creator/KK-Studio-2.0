@@ -6,12 +6,50 @@ test("图片编辑器展开后仍在卡片下方，输入区不覆盖底部控�
   await expect(page.getByTestId("image-composer")).toHaveCount(0);
   await page.locator(".image-preview").click();
   await page.getByRole("button", { name: "展开提示词", exact: true }).click();
-  const preview = await page.locator(".image-preview").boundingBox();
-  const composer = await page.getByTestId("image-composer").boundingBox();
-  const input = await page.getByLabel("图片提示词").boundingBox();
-  const controls = await page.locator(".creation-controls").boundingBox();
-  expect(composer!.y).toBeGreaterThanOrEqual(preview!.y + preview!.height + 9);
-  expect(input!.y + input!.height).toBeLessThanOrEqual(controls!.y - 8);
+  const geometry = await page.evaluate(() => {
+    const bounds = (selector: string) => {
+      const { y, height } = document
+        .querySelector(selector)!
+        .getBoundingClientRect();
+      return { y, height };
+    };
+    return {
+      preview: bounds(".image-preview"),
+      composer: bounds('[data-testid="image-composer"]'),
+      input: bounds('[aria-label="图片提示词"]'),
+      controls: bounds(".creation-controls"),
+      controlHeight: getComputedStyle(
+        document.querySelector(".creation-controls")!,
+      ).height,
+      reservedBottom: getComputedStyle(
+        document.querySelector('[aria-label="图片提示词"]')!,
+      ).bottom,
+    };
+  });
+  await test.info().attach("composer-geometry.json", {
+    body: JSON.stringify(geometry),
+    contentType: "application/json",
+  });
+  const { preview, composer, input, controls } = geometry;
+  expect(composer.y).toBeGreaterThanOrEqual(preview.y + preview.height + 9);
+  expect(input.y + input.height).toBeLessThanOrEqual(controls.y - 8);
+  await page.getByTestId("image-composer").evaluate(async (node) => {
+    await Promise.all(
+      node
+        .getAnimations({ subtree: true })
+        .map((animation) => animation.finished),
+    );
+  });
+  const settledGap = await page.evaluate(() => {
+    const input = document
+      .querySelector('[aria-label="图片提示词"]')!
+      .getBoundingClientRect();
+    const controls = document
+      .querySelector(".creation-controls")!
+      .getBoundingClientRect();
+    return controls.top - input.bottom;
+  });
+  expect(settledGap).toBeGreaterThanOrEqual(8);
 });
 
 test("菜单 Escape 先收起菜单，再次 Escape 收起编辑器并保留草稿", async ({
@@ -129,7 +167,7 @@ test("平板会话分栏时画布控件左移且标题和输入控件尺寸稳�
   ]);
   const composerIcons = await page
     .locator(
-      ".chat-composer > div > button img:not(.composer-plus-arm), .chat-composer > div > button svg, .chat-composer > div > .chat-model-picker-wrap > button img, .chat-composer > div > .chat-resource-picker > button img",
+      ".chat-composer .composer-toolbar > button img:not(.composer-plus-arm), .chat-composer .composer-toolbar > button svg, .chat-composer .chat-model-picker-wrap > button img, .chat-composer .chat-resource-picker > button img, .chat-composer .composer-trailing-actions > button img:not(.composer-plus-arm)",
     )
     .evaluateAll((icons) =>
       icons.map((icon) => {
@@ -141,7 +179,7 @@ test("平板会话分栏时画布控件左移且标题和输入控件尺寸稳�
     { width: 20, height: 20 },
     { width: 16, height: 16 },
     { width: 16, height: 16 },
-    { width: 20, height: 20 },
+    { width: 14, height: 14 },
     { width: 20, height: 20 },
   ]);
 });

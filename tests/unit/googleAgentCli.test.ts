@@ -6,10 +6,13 @@ import {
   type GoogleConversation,
 } from "../../src/domain/googleConversation.ts";
 import type { AgentBridge } from "../../src/features/agent/agentConnection.ts";
-import { GeminiCliError } from "../../src/features/agent/geminiCliAdapter.ts";
+import {
+  GeminiCliError,
+  type GeminiCliStatus,
+} from "../../src/features/agent/geminiCliAdapter.ts";
 
 function cliHarness(options: {
-  status?: { installed: boolean; login: boolean };
+  status?: GeminiCliStatus;
   chat?: (
     input: { prompt: string; resumeSessionId?: string; model?: string },
     signal: AbortSignal,
@@ -71,7 +74,9 @@ test("CLI connect reports install guidance when gemini is missing", async () => 
 });
 
 test("CLI connect reports login guidance when not logged in", async () => {
-  const { store } = cliHarness({ status: { installed: true, login: false } });
+  const { store } = cliHarness({
+    status: { installed: true, login: false, loginStatus: "required" },
+  });
   await store.connect();
   const state = store.getState();
   assert.equal(state.status, "disconnected");
@@ -180,4 +185,25 @@ test("CLI configure forces text mode", async () => {
   assert.equal(store.getState().settings.mode, "text");
   store.configure({ loginMode: "api-key", mode: "image" });
   assert.equal(store.getState().settings.mode, "image");
+});
+
+test("CLI connection refuses unknown login evidence without reporting an authorization failure", async () => {
+  for (const status of [
+    { installed: true, login: false },
+    { installed: true, login: true, loginStatus: "unknown" as const },
+  ]) {
+    let generated = false;
+    const { store } = cliHarness({
+      status,
+      chat: async () => {
+        generated = true;
+        return { text: "must not submit" };
+      },
+    });
+    await store.connect();
+    assert.equal(store.getState().status, "disconnected");
+    assert.ok(store.getState().error?.includes("未确认"));
+    assert.equal((await store.sendMessage("do not send")).ok, false);
+    assert.equal(generated, false);
+  }
 });

@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
+import { SettingsNavigationContext } from "./SettingsNavigationContext";
+import { useSettingsNavigationBusy } from "./useSettingsBusy";
 import type { McpServerConfig, McpTool } from "../../features/mcp/mcpClient";
 
 export default function McpServerCard({
@@ -27,13 +29,15 @@ export default function McpServerCard({
   onCallTool: (
     tool: McpTool,
     arguments_: Record<string, unknown>,
+    signal?: AbortSignal,
   ) => Promise<unknown>;
 }) {
+  const { busy } = useContext(SettingsNavigationContext);
   return (
     <article className="settings-mcp-server">
       <header>
         <div className="settings-mcp-server-copy">
-          <strong>{server.name}</strong>
+          <strong title={server.name}>{server.name}</strong>
           <code>{server.endpoint}</code>
           <span>
             {state === "connected"
@@ -50,6 +54,7 @@ export default function McpServerCard({
             <button
               type="button"
               className="settings-action secondary"
+              disabled={busy}
               onClick={onDisconnect}
             >
               断开
@@ -66,6 +71,7 @@ export default function McpServerCard({
             <button
               type="button"
               className="settings-action"
+              disabled={busy}
               onClick={onConnect}
             >
               连接
@@ -74,6 +80,7 @@ export default function McpServerCard({
           <button
             type="button"
             className="settings-action secondary"
+            disabled={busy}
             onClick={onRemove}
           >
             移除
@@ -91,21 +98,22 @@ export default function McpServerCard({
             type="button"
             className="settings-mcp-tools-toggle"
             aria-expanded={expanded}
+            disabled={busy}
             onClick={onToggleTools}
           >
             {expanded ? "收起工具详情" : "查看工具详情"}
           </button>
-          {expanded && (
-            <div
-              className="settings-mcp-tools"
-              role="list"
-              aria-label={`${server.name}工具`}
-            >
-              {tools.map((tool) => (
-                <McpToolCall key={tool.name} tool={tool} onCall={onCallTool} />
-              ))}
-            </div>
-          )}
+          <div
+            hidden={!expanded}
+            style={{ display: expanded ? undefined : "none" }}
+            className="settings-mcp-tools"
+            role="list"
+            aria-label={`${server.name}工具`}
+          >
+            {tools.map((tool) => (
+              <McpToolCall key={tool.name} tool={tool} onCall={onCallTool} />
+            ))}
+          </div>
         </>
       )}
     </article>
@@ -120,28 +128,58 @@ function McpToolCall({
   onCall: (
     tool: McpTool,
     arguments_: Record<string, unknown>,
+    signal?: AbortSignal,
   ) => Promise<unknown>;
 }) {
   const [input, setInput] = useState("{}");
   const [result, setResult] = useState("");
   const [calling, setCalling] = useState(false);
+  const { busy } = useContext(SettingsNavigationContext);
+  const setBusy = useSettingsNavigationBusy();
+  const request = useRef<AbortController | null>(null);
+  useEffect(
+    () => () => {
+      if (request.current) {
+        request.current.abort("unmounted");
+        setBusy(false);
+      }
+    },
+    [setBusy],
+  );
   async function call(): Promise<void> {
+    if (calling || busy || request.current) return;
+    const controller = new AbortController();
+    request.current = controller;
+    setCalling(true);
+    setBusy(true);
+    setResult("");
     try {
       const parsed: unknown = JSON.parse(input);
       if (!parsed || typeof parsed !== "object" || Array.isArray(parsed))
         throw new Error("参数必须是 JSON 对象。");
-      setCalling(true);
       setResult(
         JSON.stringify(
-          await onCall(tool, parsed as Record<string, unknown>),
+          await onCall(
+            tool,
+            parsed as Record<string, unknown>,
+            controller.signal,
+          ),
           null,
           2,
         ),
       );
     } catch (error) {
-      setResult(error instanceof Error ? error.message : "工具调用失败。");
+      setResult(
+        controller.signal.aborted
+          ? "已停止等待；本次工具请求可能已在远端执行，请核对结果后再调用。"
+          : error instanceof Error
+            ? error.message
+            : "工具调用失败，请先核对远端结果后再重试。",
+      );
     } finally {
+      request.current = null;
       setCalling(false);
+      setBusy(false);
     }
   }
   return (
@@ -157,6 +195,7 @@ function McpToolCall({
         调用参数（JSON）
         <textarea
           aria-label={`${tool.name} 调用参数`}
+          disabled={busy || calling}
           value={input}
           onChange={(event) => setInput(event.target.value)}
           rows={3}
@@ -165,11 +204,20 @@ function McpToolCall({
       <button
         type="button"
         className="settings-action"
-        disabled={calling}
+        disabled={busy || calling}
         onClick={() => void call()}
       >
         {calling ? "调用中…" : "调用工具（需确认）"}
       </button>
+      {calling && (
+        <button
+          type="button"
+          className="settings-action secondary"
+          onClick={() => request.current?.abort("user")}
+        >
+          停止等待工具结果
+        </button>
+      )}
       {result && (
         <pre className="settings-mcp-tool-result" role="status">
           {result}

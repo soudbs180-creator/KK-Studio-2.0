@@ -5,9 +5,12 @@
 mod agent_process;
 mod agent_runtime;
 mod asset_storage;
+mod cli_runtime;
 mod creation_storage;
 mod project_package;
 mod provider_config;
+mod provider_model_requests;
+mod provider_transaction;
 mod secret_filter;
 mod storage_paths;
 mod task_host;
@@ -18,7 +21,6 @@ use std::fs;
 use std::path::{Path, PathBuf};
 use std::sync::{Arc, Mutex};
 use tauri::{AppHandle, Emitter, Manager, State};
-use zeroize::Zeroize;
 
 // ========== 配置结构 ==========
 
@@ -336,79 +338,100 @@ fn scan_comfyui_path(root: &Path) -> Result<ComfyUIScanResult, String> {
 
 // ========== 系统凭据命令 ==========
 
-const CREDENTIAL_SERVICE: &str = "com.kkstudio.provider";
-
-fn validate_credential_provider_id(provider_id: &str) -> Result<(), String> {
-    if provider_id.is_empty()
-        || provider_id.len() > 128
-        || !provider_id
-            .chars()
-            .all(|value| value.is_ascii_alphanumeric() || value == '_' || value == '-')
-    {
-        return Err("凭据提供商 ID 无效".to_string());
-    }
-    Ok(())
-}
-
-#[cfg(target_os = "windows")]
-fn system_credential_entry(provider_id: &str) -> Result<keyring::Entry, String> {
-    keyring::Entry::new(CREDENTIAL_SERVICE, provider_id)
-        .map_err(|_| "无法访问 Windows 凭据管理器".to_string())
+#[tauri::command(rename_all = "camelCase")]
+async fn credential_set(provider_id: String, secret: String) -> Result<bool, String> {
+    let secret = zeroize::Zeroizing::new(secret);
+    tauri::async_runtime::spawn_blocking(move || {
+        provider_transaction::set_credential(&provider_id, &secret)
+    })
+    .await
+    .map_err(|_| "系统凭据写入任务中断".to_string())?
 }
 
 #[tauri::command(rename_all = "camelCase")]
-fn credential_set(provider_id: String, mut secret: String) -> Result<bool, String> {
-    validate_credential_provider_id(&provider_id)?;
-    if secret.trim().is_empty() || secret.len() > 64 * 1024 {
-        secret.zeroize();
-        return Err("凭据内容为空或过长".to_string());
-    }
+async fn credential_get(provider_id: String) -> Result<Option<String>, String> {
+    tauri::async_runtime::spawn_blocking(move || provider_transaction::get_credential(&provider_id))
+        .await
+        .map_err(|_| "系统凭据读取任务中断".to_string())?
+}
 
-    #[cfg(target_os = "windows")]
-    let result = system_credential_entry(&provider_id)
-        .and_then(|entry| {
-            entry
-                .set_password(secret.trim())
-                .map_err(|_| "无法写入 Windows 凭据管理器".to_string())
+#[tauri::command(rename_all = "camelCase")]
+fn provider_models_prepare(
+    request_id: String,
+    window: tauri::Window,
+    state: State<'_, provider_model_requests::ModelRequests>,
+) -> Result<(), String> {
+    state.prepare(&request_id, window.label())
+}
+
+#[tauri::command(rename_all = "camelCase")]
+fn provider_models_cancel(
+    request_id: String,
+    window: tauri::Window,
+    state: State<'_, provider_model_requests::ModelRequests>,
+) -> Result<bool, String> {
+    state.cancel(&request_id, window.label())
+}
+
+#[tauri::command(rename_all = "camelCase")]
+fn provider_models_release(
+    request_id: String,
+    window: tauri::Window,
+    state: State<'_, provider_model_requests::ModelRequests>,
+) -> Result<bool, String> {
+    state.release(&request_id, window.label())
+}
+
+#[tauri::command(rename_all = "camelCase")]
+async fn provider_models_fetch(
+    request_id: String,
+    window: tauri::Window,
+    state: State<'_, provider_model_requests::ModelRequests>,
+    base_url: String,
+    protocol: Option<String>,
+    auth_mode: Option<String>,
+    credential_ref: Option<String>,
+    secret: Option<String>,
+) -> Result<Vec<String>, String> {
+    state
+        .claim(&request_id, window.label())?
+        .run(async {
+            let needs_key = task_host::validate_provider_options(
+                &base_url,
+                protocol.as_deref(),
+                auth_mode.as_deref(),
+            )?;
+            let secret = if needs_key {
+                match secret {
+                    Some(value) if !value.trim().is_empty() && value.len() <= 4096 => {
+                        Some(zeroize::Zeroizing::new(value))
+                    }
+                    Some(_) => return Err("credential: 密钥为空或超过长度限制".into()),
+                    None => credential_get(credential_ref.ok_or("credential: 请先选择连接")?)
+                        .await?
+                        .map(zeroize::Zeroizing::new),
+                }
+            } else {
+                None
+            };
+            task_host::discover_models(
+                &base_url,
+                protocol.as_deref(),
+                auth_mode.as_deref(),
+                secret.as_deref().map(String::as_str),
+            )
+            .await
         })
-        .map(|_| true);
-    #[cfg(not(target_os = "windows"))]
-    let result = Err("当前桌面平台不支持系统凭据库".to_string());
-
-    secret.zeroize();
-    result
+        .await
 }
 
 #[tauri::command(rename_all = "camelCase")]
-fn credential_get(provider_id: String) -> Result<Option<String>, String> {
-    validate_credential_provider_id(&provider_id)?;
-    #[cfg(target_os = "windows")]
-    {
-        let entry = system_credential_entry(&provider_id)?;
-        return match entry.get_password() {
-            Ok(secret) => Ok(Some(secret)),
-            Err(keyring::Error::NoEntry) => Ok(None),
-            Err(_) => Err("无法读取 Windows 凭据管理器".to_string()),
-        };
-    }
-    #[cfg(not(target_os = "windows"))]
-    Err("当前桌面平台不支持系统凭据库".to_string())
-}
-
-#[tauri::command(rename_all = "camelCase")]
-fn credential_delete(provider_id: String) -> Result<bool, String> {
-    validate_credential_provider_id(&provider_id)?;
-    #[cfg(target_os = "windows")]
-    {
-        let entry = system_credential_entry(&provider_id)?;
-        return match entry.delete_credential() {
-            Ok(()) => Ok(true),
-            Err(keyring::Error::NoEntry) => Ok(false),
-            Err(_) => Err("无法删除 Windows 凭据".to_string()),
-        };
-    }
-    #[cfg(not(target_os = "windows"))]
-    Err("当前桌面平台不支持系统凭据库".to_string())
+async fn credential_delete(provider_id: String) -> Result<bool, String> {
+    tauri::async_runtime::spawn_blocking(move || {
+        provider_transaction::delete_credential(&provider_id)
+    })
+    .await
+    .map_err(|_| "系统凭据清除任务中断".to_string())?
 }
 
 // ========== 配置命令 ==========
@@ -530,6 +553,32 @@ async fn write_provider_config(
     tauri::async_runtime::spawn_blocking(move || providers.write(connections, expected_revision))
         .await
         .map_err(|_| "io: 供应商配置保存任务中断".to_string())?
+}
+
+#[tauri::command(rename_all = "camelCase")]
+async fn commit_provider_connection(
+    state: State<'_, AppState>,
+    connections: serde_json::Value,
+    expected_revision: Option<u64>,
+    provider_id: Option<String>,
+    secret: Option<String>,
+    clear_secret: bool,
+) -> Result<provider_transaction::ProviderCommitReceipt, String> {
+    let providers = Arc::clone(&state.providers);
+    let secret = secret.map(zeroize::Zeroizing::new);
+    tauri::async_runtime::spawn_blocking(move || {
+        provider_transaction::commit_provider_connection(
+            &providers,
+            &provider_transaction::SystemCredentialVault,
+            connections,
+            expected_revision,
+            provider_id.as_deref(),
+            secret.as_deref().map(String::as_str),
+            clear_secret,
+        )
+    })
+    .await
+    .map_err(|_| "系统凭据事务中断，请重新读取连接状态".to_string())?
 }
 
 #[tauri::command(rename_all = "camelCase")]
@@ -1693,6 +1742,12 @@ fn main() {
     tauri::Builder::default()
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_dialog::init())
+        .setup(|app| {
+            app.manage(cli_runtime::CliRuntime::new(
+                app.path().resource_dir()?.join("agent-runtime"),
+            ));
+            Ok(())
+        })
         .manage(agent_runtime::AgentRuntime::new(
             paths
                 .tasks
@@ -1701,6 +1756,7 @@ fn main() {
                 .join("app")
                 .join("agent"),
         ))
+        .manage(provider_model_requests::ModelRequests::default())
         .manage(AppState {
             providers: Arc::new(provider_config::ProviderConfigRepository::new(
                 config_path.with_file_name("connections.json"),
@@ -1722,12 +1778,24 @@ fn main() {
             agent_runtime::agent_runtime_stop,
             credential_set,
             credential_get,
+            provider_models_prepare,
+            provider_models_cancel,
+            provider_models_release,
+            provider_models_fetch,
+            cli_runtime::cli_inspect,
+            cli_runtime::cli_begin,
+            cli_runtime::cli_operation_state,
+            cli_runtime::cli_cancel,
+            cli_runtime::cli_bridge_start,
+            cli_runtime::cli_bridge_state,
+            cli_runtime::cli_bridge_stop,
             credential_delete,
             get_config,
             set_config,
             read_creation_snapshot,
             read_provider_config,
             write_provider_config,
+            commit_provider_connection,
             asset_store,
             asset_read,
             asset_list,
@@ -1761,6 +1829,7 @@ fn main() {
         .run(|app, event| {
             if matches!(event, tauri::RunEvent::Exit) {
                 app.state::<agent_runtime::AgentRuntime>().shutdown();
+                app.state::<cli_runtime::CliRuntime>().shutdown();
             }
         });
 }

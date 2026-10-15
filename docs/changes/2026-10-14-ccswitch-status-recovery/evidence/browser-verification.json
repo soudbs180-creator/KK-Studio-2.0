@@ -1,0 +1,34 @@
+{
+  "status": "PASS",
+  "stats": {
+    "startTime": "2026-10-13T17:51:56.069Z",
+    "duration": 274428.419,
+    "expected": 517,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "workers": 4,
+  "retries": [
+    {
+      "name": "",
+      "retries": 0
+    }
+  ],
+  "sourceCodeCommit": "19decc9391962fda58295deadc5af05e1a6acc2c",
+  "fullReportPath": "test-results/ccswitch-full-ui-stable/browser-results.json",
+  "fullReportSha256": "3e562c5fce7cf8d8a8ddae0ae9e9d15f5eddd41979d6d6ab933b19aa5045a3a7",
+  "candidateReceipt": {
+    "releaseExePath": "D:\\kk-studio\\.worktrees\\TASK-CCSWITCH-LEARN-20261014\\src-tauri\\target\\release\\kk-studio.exe",
+    "releaseMtimeMs": 1791913597364.4683,
+    "newestInputPath": "D:\\kk-studio\\.worktrees\\TASK-CCSWITCH-LEARN-20261014\\dist\\assets\\index-C2KS8_Mm.js",
+    "newestInputMtimeMs": 1791913557035.6975,
+    "inputSha256": "7c95b83ecffa2e028096f794b808b120d3844e88729696224cd93f1119fbebaa",
+    "executableSha256": "fb0b0de59a0de989fc0c199961482c7122337c46d7c80f981e77830843973fe7",
+    "desktopVersion": "2.1.18",
+    "receiptPath": "D:\\kk-studio\\.worktrees\\TASK-CCSWITCH-LEARN-20261014\\src-tauri\\target\\release\\kk-studio.build-receipt.json",
+    "needsBuild": false,
+    "reason": "current"
+  },
+  "note": "Previous 514/3 attempt overlapped native renderer rebuild; no production code was changed for those failures. This complete rerun used stable artifacts."
+}

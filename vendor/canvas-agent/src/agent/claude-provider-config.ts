@@ -17,6 +17,8 @@ import os from "node:os";
 import path from "node:path";
 import {
     assertNoSecrets,
+    assertProviderTarget,
+    parseProviderConfig,
     parseModelWindow,
     providerKey,
     writeFileAtomic,
@@ -44,6 +46,8 @@ export function mergeClaudeSettingsJson(existing: string, patch: ClaudeSettingsP
     const parsed: Record<string, unknown> = existing.replace(/^\uFEFF/, "").trim() === "" ? {} : JSON.parse(existing.replace(/^\uFEFF/, ""));
     if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed))
         throw new Error("settings.json 顶层必须是对象");
+    if (Object.hasOwn(parsed, "env") && (parsed.env === null || typeof parsed.env !== "object" || Array.isArray(parsed.env)))
+        throw new Error("settings.json 的 env 必须为对象；请修复原配置后重试，原文件保留。");
     const env: Record<string, unknown> =
         parsed.env && typeof parsed.env === "object" && !Array.isArray(parsed.env)
             ? { ...(parsed.env as Record<string, unknown>) }
@@ -82,6 +86,8 @@ export function applyClaudeProviderConfig(
     connections: ProviderConfigEntry[],
     options: ApplyClaudeOptions = {},
 ): ApplyClaudeResult {
+    connections = parseProviderConfig(connections);
+    assertProviderTarget(connections, "claude");
     const configDir = path.resolve(options.configDir || defaultClaudeConfigDir());
     const configPath = path.join(configDir, "settings.json");
     const warnings: string[] = [];

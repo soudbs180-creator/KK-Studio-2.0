@@ -61,6 +61,7 @@ export function useAssetArchive(
                   ? ("video" as const)
                   : ("image" as const),
                 tag: asset.tags[0] ?? "AI生成",
+                tags: [...asset.tags],
                 createdAt: asset.provenance.generatedAt,
                 isAiGenerated: asset.isAiGenerated ?? true,
                 provider: asset.provenance.provider,

@@ -11,7 +11,9 @@ export default function ReferenceStrip({
   limit,
   onAdd,
   onRemove,
+  disabled = false,
 }: {
+  disabled?: boolean;
   references: CanvasReference[];
   referenceCount?: number;
   limit: number;
@@ -61,6 +63,7 @@ export default function ReferenceStrip({
                 )}
                 {entry.id && onRemove && (
                   <button
+                    disabled={disabled}
                     className="reference-remove"
                     type="button"
                     aria-label={`移除${slot}参考图${entry.title}`}
@@ -79,7 +82,9 @@ export default function ReferenceStrip({
                     ? "Mask 需要在图像编辑器中绘制"
                     : `添加${slot}参考图`
                 }
-                disabled={slot === "Mask" || referenceCount >= limit}
+                disabled={
+                  disabled || slot === "Mask" || referenceCount >= limit
+                }
                 title={
                   slot === "Mask"
                     ? "Mask 需要通过图像编辑器绘制，不能上传普通参考图"
@@ -101,6 +106,7 @@ export default function ReferenceStrip({
         <div className="reference-overflow">
           {overflow.map((reference, index) => (
             <button
+              disabled={disabled}
               key={reference.id ?? index}
               type="button"
               onClick={() => reference.id && onRemove?.(reference.id)}
@@ -116,7 +122,7 @@ export default function ReferenceStrip({
           className="reference-add"
           type="button"
           aria-label="添加参考图片"
-          disabled={referenceCount >= limit}
+          disabled={disabled || referenceCount >= limit}
           title={
             limit > 0
               ? `最多 ${limit} 张参考图`

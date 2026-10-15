@@ -39,9 +39,30 @@ fn is_secret_key(key: &str) -> bool {
     )
 }
 
+fn reject_secret_fields(value: &Value) -> Result<(), String> {
+    match value {
+        Value::Object(object) => {
+            for (key, value) in object {
+                if is_secret_key(key) {
+                    return Err("unsupported: 供应商配置不能包含秘密字段，请改用系统凭据库".into());
+                }
+                reject_secret_fields(value)?;
+            }
+        }
+        Value::Array(values) => {
+            for value in values {
+                reject_secret_fields(value)?;
+            }
+        }
+        _ => {}
+    }
+    Ok(())
+}
+
 /// Reject secret material and malformed shapes before any file is touched.
 /// Non-secret connection fields (baseUrl/model/credentialRef) pass unchanged.
 fn validate_connections(value: &Value) -> Result<(), String> {
+    reject_secret_fields(value)?;
     let entries = value
         .as_array()
         .ok_or("corrupt: 供应商配置 connections 必须是数组".to_string())?;
@@ -49,6 +70,23 @@ fn validate_connections(value: &Value) -> Result<(), String> {
         let object = entry
             .as_object()
             .ok_or("corrupt: 供应商配置条目必须是对象".to_string())?;
+        if object.contains_key("protocol") || object.contains_key("authMode") {
+            let field = |key: &str| -> Result<Option<&str>, String> {
+                object
+                    .get(key)
+                    .map(|value| {
+                        value
+                            .as_str()
+                            .ok_or_else(|| format!("corrupt: {key} 必须是字符串"))
+                    })
+                    .transpose()
+            };
+            crate::task_host::validate_provider_options(
+                field("baseUrl")?.ok_or("corrupt: 缺少接口地址")?,
+                field("protocol")?,
+                field("authMode")?,
+            )?;
+        }
         for key in object.keys() {
             if is_secret_key(key) {
                 return Err("unsupported: 供应商配置不能包含秘密字段，请改用系统凭据库".to_string());
@@ -134,6 +172,8 @@ impl ProviderConfigRepository {
     }
 
     pub fn read(&self) -> Result<ProviderConfigRead, String> {
+        #[cfg(windows)]
+        let _transaction = crate::provider_transaction::ProviderTransactionGuard::acquire()?;
         let _guard = self
             .lock
             .lock()
@@ -153,9 +193,28 @@ impl ProviderConfigRepository {
         })
     }
 
+    /// A failed first credential save must not establish an authoritative empty
+    /// config over legacy browser metadata. Remove only this owned new revision.
+    pub fn restore_missing(&self, expected_revision: u64) -> Result<(), String> {
+        #[cfg(windows)]
+        let _transaction = crate::provider_transaction::ProviderTransactionGuard::acquire()?;
+        let _guard = self
+            .lock
+            .lock()
+            .map_err(|_| io_error("供应商配置锁不可用"))?;
+        let _file_lock = self.file_lock()?;
+        if self.current()?.0 != Some(expected_revision) {
+            return Err("conflict: 无法回退其他窗口的供应商配置".into());
+        }
+        fs::remove_file(&self.path).map_err(io_error)?;
+        sync_parent(&self.path)
+    }
+
     /// Durable commit. Returns the new revision; the caller must surface the
     /// error to the UI instead of reporting a fake success.
     pub fn write(&self, connections: Value, expected_revision: Option<u64>) -> Result<u64, String> {
+        #[cfg(windows)]
+        let _transaction = crate::provider_transaction::ProviderTransactionGuard::acquire()?;
         validate_connections(&connections)?;
         let _guard = self
             .lock

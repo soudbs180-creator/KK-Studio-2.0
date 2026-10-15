@@ -19,18 +19,28 @@ test("视频上传归档为 kk-asset 引用，刷新后恢复本地预览", asyn
   const node = await openVideoNode(page);
   const nodeId = await node.getAttribute("data-node-id");
   expect(nodeId).toBeTruthy();
+  await node.focus();
+  await page.keyboard.press("ArrowRight");
+  await page.keyboard.press("Shift+ArrowDown");
+  const position = await node.evaluate((element) => ({
+    left: element.style.left,
+    top: element.style.top,
+  }));
   const input = node.locator(
     'input[type="file"][accept="video/mp4,video/webm"]',
   );
   await input.setInputFiles(videoFixture);
   await expect(node.locator(".video-placeholder video")).toBeVisible();
+  expect(
+    await node.evaluate((element) => ({
+      left: element.style.left,
+      top: element.style.top,
+    })),
+  ).toEqual(position);
   await expect(node.getByRole("status")).toContainText(
     "演示生成不会上传或消费视频原件",
   );
-  await expect(node.getByRole("button", { name: "上传视频" })).toHaveAttribute(
-    "title",
-    /本地预览/,
-  );
+  await expect(node.getByRole("button", { name: "上传视频" })).toHaveCount(0);
   await page.waitForFunction((id) => {
     const raw = localStorage.getItem("kk-studio-next:creation:v1");
     if (!raw) return false;
@@ -53,6 +63,12 @@ test("视频上传归档为 kk-asset 引用，刷新后恢复本地预览", asyn
   await projectCard.click();
   const restored = page.locator(`[data-node-id="${nodeId}"]`);
   await expect(restored.locator(".video-placeholder video")).toBeVisible();
+  expect(
+    await restored.evaluate((element) => ({
+      left: element.style.left,
+      top: element.style.top,
+    })),
+  ).toEqual(position);
 });
 
 test("视频上传拒绝空文件、超过 100 MB 和非 MP4/WebM 类型", async ({

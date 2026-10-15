@@ -89,3 +89,24 @@ test("version consistency catches nested lock drift and active source literals",
     { path: "src/version-display.ts", line: 1, value: "2.1.12" },
   ]);
 });
+
+test("version consistency reports changelog drift without blocking", () => {
+  const { root, write } = fixtureRoot();
+  write(
+    "CHANGELOG.md",
+    "# 更新日志\n\n## Unreleased\n\n## 2.1.0 - 2026-09-23\n\n- 历史版本\n",
+  );
+  const report = inspectVersionConsistency(root, { checkRuntime: false });
+  assert.deepEqual(report.errors, []);
+  assert.deepEqual(report.changelogDrift, [
+    { path: "CHANGELOG.md", changelogVersion: "2.1.0", appVersion: "2.1.13" },
+  ]);
+});
+
+test("version consistency accepts a changelog that matches the platform version", () => {
+  const { root, write } = fixtureRoot();
+  write("CHANGELOG.md", "# 更新日志\n\n## 2.1.13 - 2026-10-12\n\n- 当前版本\n");
+  const report = inspectVersionConsistency(root, { checkRuntime: false });
+  assert.deepEqual(report.errors, []);
+  assert.deepEqual(report.changelogDrift, []);
+});

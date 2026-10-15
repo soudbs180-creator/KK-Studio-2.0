@@ -1,4 +1,25 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
+import {
+  CREATION_STORAGE_KEY,
+  emptySnapshot,
+} from "../../src/features/creation/model";
+
+async function seedHomeOutputCount(page: Page, outputCount: number) {
+  const snapshot = emptySnapshot();
+  snapshot.revision = Date.now();
+  snapshot.homeDraft.outputCount = outputCount;
+  // Seed the initial domain draft before the next app boot. Later reloads
+  // retain newer task/asset state instead of reapplying this fixture.
+  await page.addInitScript(
+    ({ key, initial }) => {
+      const current = JSON.parse(localStorage.getItem(key) ?? "null");
+      if (!current || current.revision < initial.revision)
+        localStorage.setItem(key, JSON.stringify(initial));
+    },
+    { key: CREATION_STORAGE_KEY, initial: snapshot },
+  );
+  await page.reload();
+}
 
 test.beforeEach(async ({ page }) => {
   await page.goto("/");
@@ -23,17 +44,23 @@ test("未配置连接时保留首页草稿并打开供应商设置", async ({ pa
     page.getByRole("button", { name: "开始创建项目" }),
   ).toBeDisabled();
   await page.getByRole("button", { name: "前往模型设置", exact: true }).click();
-  await expect(page.getByLabel("API Key")).toBeVisible();
+  await page
+    .getByRole("button", { name: "API Key（官方）", exact: true })
+    .click();
+  await expect(page.getByLabel("API Key", { exact: true })).toBeVisible();
   await expect(page.getByLabel("创作提示词")).toHaveValue(prompt);
 });
 
 test("首页权限模式询问可取消确认且输入仍保留", async ({ page }) => {
   await page.getByRole("button", { name: "模型", exact: true }).click();
-  await page.getByRole("button", { name: /配置供应商与账号/ }).click();
+  await page.getByRole("button", { name: "模型接入…", exact: true }).click();
+  await page
+    .getByRole("button", { name: "API Key（官方）", exact: true })
+    .click();
   await page.getByLabel("接口地址").fill("https://models.example.test/v1");
-  await page.getByLabel("API Key").fill("fixture-key");
+  await page.getByLabel("API Key", { exact: true }).fill("fixture-key");
   await page.getByLabel("模型名称").fill("image-test");
-  await page.getByRole("button", { name: "保存", exact: true }).click();
+  await page.getByRole("button", { name: "保存连接", exact: true }).click();
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
   const prompt = "需要用户确认才创建的项目";
   await page.getByLabel("创作提示词").fill(prompt);
@@ -65,7 +92,7 @@ test("输入栏扩展弹层先列内置 Skill，再可进入 Skill 目录", asyn
   ).toBeVisible();
   await page.getByRole("menuitem", { name: "浏览 Skill 目录" }).click();
   await expect(
-    page.getByRole("heading", { name: "Skill", exact: true }),
+    page.getByRole("heading", { name: "扩展", exact: true }),
   ).toBeVisible();
 });
 
@@ -88,12 +115,15 @@ test("工作台消息属于当前项目，刷新后项目库可重新打开", as
   await page.getByRole("button", { name: "模型", exact: true }).click();
   await page
     .getByRole("menu")
-    .getByRole("button", { name: /配置供应商/ })
+    .getByRole("button", { name: "模型接入…", exact: true })
+    .click();
+  await page
+    .getByRole("button", { name: "API Key（官方）", exact: true })
     .click();
   await page.getByLabel("接口地址").fill("https://models.example.test/v1");
-  await page.getByLabel("API Key").fill("test-key");
+  await page.getByLabel("API Key", { exact: true }).fill("test-key");
   await page.getByLabel("模型名称").fill("image-test");
-  await page.getByRole("button", { name: "保存", exact: true }).click();
+  await page.getByRole("button", { name: "保存连接", exact: true }).click();
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
   await page.getByLabel("创作提示词").fill("项目隔离检查");
   await page.getByRole("button", { name: "开始创建项目" }).click();
@@ -136,7 +166,7 @@ test("首页加号添加图片并支持删除，模型入口是本次创作选�
   await expect(page.getByLabel("已添加的参考素材")).toHaveCount(0);
   await page.getByRole("button", { name: "模型", exact: true }).click();
   await expect(page.getByRole("menu", { name: "选择模型" })).toContainText(
-    "暂无模型，请在设置中保存连接并刷新模型列表。",
+    "暂无模型，请在模型接入中保存连接并刷新模型列表。",
   );
 });
 
@@ -160,12 +190,15 @@ test("配置连接后图片任务使用 provider 响应回填结果节点", asyn
   await page.getByRole("button", { name: "模型", exact: true }).click();
   await page
     .getByRole("menu")
-    .getByRole("button", { name: /配置供应商/ })
+    .getByRole("button", { name: "模型接入…", exact: true })
+    .click();
+  await page
+    .getByRole("button", { name: "API Key（官方）", exact: true })
     .click();
   await page.getByLabel("接口地址").fill("https://models.example.test/v1");
-  await page.getByLabel("API Key").fill("test-key");
+  await page.getByLabel("API Key", { exact: true }).fill("test-key");
   await page.getByLabel("模型名称").fill("image-test");
-  await page.getByRole("button", { name: "保存", exact: true }).click();
+  await page.getByRole("button", { name: "保存连接", exact: true }).click();
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
   await page.getByLabel("创作提示词").fill("provider 回填测试");
   await page.getByRole("button", { name: "开始创建项目" }).click();
@@ -177,6 +210,7 @@ test("配置连接后图片任务使用 provider 响应回填结果节点", asyn
 });
 
 test("批量数量会随请求发送并归档多个 provider 结果", async ({ page }) => {
+  await seedHomeOutputCount(page, 4);
   let requestedCount = 0;
   const pixel =
     "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=";
@@ -199,16 +233,16 @@ test("批量数量会随请求发送并归档多个 provider 结果", async ({ p
   await page.getByRole("button", { name: "模型", exact: true }).click();
   await page
     .getByRole("menu")
-    .getByRole("button", { name: /配置供应商/ })
+    .getByRole("button", { name: "模型接入…", exact: true })
+    .click();
+  await page
+    .getByRole("button", { name: "API Key（官方）", exact: true })
     .click();
   await page.getByLabel("接口地址").fill("https://models.example.test/v1");
-  await page.getByLabel("API Key").fill("test-key");
+  await page.getByLabel("API Key", { exact: true }).fill("test-key");
   await page.getByLabel("模型名称").fill("image-test");
-  await page.getByRole("button", { name: "保存", exact: true }).click();
+  await page.getByRole("button", { name: "保存连接", exact: true }).click();
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
-  await page.getByRole("button", { name: "模型", exact: true }).click();
-  await page.getByLabel("生成数量").selectOption("4");
-  await page.getByRole("button", { name: "模型", exact: true }).click();
   await page.getByLabel("创作提示词").fill("批量结果归档测试");
   await page.getByRole("button", { name: "开始创建项目" }).click();
   await page.getByRole("button", { name: "批准并提交" }).click();
@@ -230,12 +264,15 @@ test("运行中的图片任务可取消并停留在当前项目", async ({ page 
   await page.getByRole("button", { name: "模型", exact: true }).click();
   await page
     .getByRole("menu")
-    .getByRole("button", { name: /配置供应商/ })
+    .getByRole("button", { name: "模型接入…", exact: true })
+    .click();
+  await page
+    .getByRole("button", { name: "API Key（官方）", exact: true })
     .click();
   await page.getByLabel("接口地址").fill("https://models.example.test/v1");
-  await page.getByLabel("API Key").fill("test-key");
+  await page.getByLabel("API Key", { exact: true }).fill("test-key");
   await page.getByLabel("模型名称").fill("image-test");
-  await page.getByRole("button", { name: "保存", exact: true }).click();
+  await page.getByRole("button", { name: "保存连接", exact: true }).click();
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
   await page.getByLabel("创作提示词").fill("取消任务测试");
   await page.getByRole("button", { name: "开始创建项目" }).click();

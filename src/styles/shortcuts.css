@@ -1,8 +1,7 @@
-/* User screenshots: global/canvas/files, 2026-09-08. */
 .modal:has(.shortcuts-panel) {
   width: max-content;
   max-width: calc(100vw - 32px);
-  border-radius: 18px;
+  border-radius: var(--kk-radius-panel);
 }
 .shortcuts-panel {
   width: min(672px, calc(100vw - 32px));
@@ -13,9 +12,9 @@
   /* Figma 394:938 uses the shared border token. The header's internal
      divider remains the darker divider token below; keep those surfaces distinct. */
   border: 1px solid var(--border-default);
-  border-radius: 18px;
+  border-radius: var(--kk-radius-panel);
   color: var(--ui-shortcut-text);
-  padding: 0 14px;
+  padding: 0 var(--kk-space-4);
 }
 .shortcuts-panel.is-canvas {
   width: min(1000px, calc(100vw - 32px));
@@ -32,10 +31,10 @@
 .shortcuts-panel [role="tablist"] {
   height: 100%;
   display: flex;
-  gap: 34px;
+  gap: var(--kk-space-6);
 }
 .shortcuts-panel [role="tab"] {
-  font-size: 18px;
+  font-size: var(--kk-font-subtitle);
   font-weight: 600;
   border-bottom: 1px solid transparent;
 }
@@ -46,9 +45,10 @@
 .shortcuts-close {
   position: absolute;
   right: 12px;
-  top: 4px;
-  width: 40px;
-  height: 40px;
+  top: var(--kk-space-2);
+  width: var(--kk-control-h-md);
+  height: var(--kk-control-h-md);
+  border-radius: var(--kk-icon-button-radius);
   font-size: 26px;
   line-height: 1;
   color: var(--text-primary);
@@ -74,9 +74,9 @@
   justify-content: space-between;
   gap: 10px;
   min-height: 48px;
-  font-size: 18px;
+  font-size: var(--kk-font-body);
   font-weight: 500;
-  border-radius: 12px;
+  border-radius: var(--kk-radius-control);
   color: var(--text-primary);
 }
 .shortcut-row.has-note {
@@ -96,19 +96,19 @@
 }
 .shortcut-row kbd {
   font: inherit;
-  font-size: 20px;
-  line-height: 30px;
-  min-width: 30px;
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-control-h-sm);
+  min-width: var(--kk-control-h-sm);
   text-align: center;
   background: var(--bg-card);
-  border-radius: 14px;
+  border-radius: var(--kk-radius-control);
   padding: 0 6px;
 }
 .shortcuts-panel > footer {
   flex: 0 0 64px;
   padding: 12px 20px;
-  font-size: 11px;
-  line-height: 20px;
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-body);
   color: var(--ui-shortcut-text);
 }
 @media (max-width: 760px) {
@@ -127,16 +127,6 @@
     border-left: 0;
     border-top: 1px solid var(--bg-card-soft);
     padding-top: 12px;
-  }
-  .shortcut-row {
-    font-size: 14px;
-    min-height: 44px;
-  }
-  .shortcut-row kbd {
-    font-size: 16px;
-    line-height: 28px;
-    min-width: 28px;
-    padding: 0 5px;
   }
   .shortcuts-panel > footer {
     flex-basis: 80px;

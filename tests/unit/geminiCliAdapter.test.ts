@@ -3,6 +3,8 @@ import test from "node:test";
 import {
   geminiCliChat,
   geminiCliStatus,
+  resolveGeminiCliLoginStatus,
+  geminiCliStatusMessage,
   GeminiCliError,
   GEMINI_BRIDGE_DEFAULT_URL,
   normalizeGeminiBridgeUrl,
@@ -156,4 +158,67 @@ test("chat rejects empty and oversized prompts before any request", async () => 
     (error: unknown) => error instanceof GeminiCliError,
   );
   assert.equal(called, false);
+});
+
+test("login status keeps legacy success but unknown false reports never claim missing authorization", async () => {
+  assert.equal(resolveGeminiCliLoginStatus({ login: true }), "verified");
+  assert.equal(resolveGeminiCliLoginStatus({ login: false }), "unknown");
+  assert.equal(
+    resolveGeminiCliLoginStatus({ login: true, loginStatus: "unknown" }),
+    "unknown",
+  );
+  assert.equal(
+    resolveGeminiCliLoginStatus({ login: false, loginStatus: "verified" }),
+    "unknown",
+  );
+  for (const loginStatus of ["verified", "required", "unknown"] as const) {
+    const report = await geminiCliStatus({
+      fetcher: async () =>
+        Response.json({
+          installed: true,
+          login: loginStatus === "verified",
+          loginStatus,
+        }),
+    });
+    assert.equal(report.loginStatus, loginStatus);
+    assert.equal(resolveGeminiCliLoginStatus(report), loginStatus);
+  }
+  assert.ok(
+    geminiCliStatusMessage({
+      installed: true,
+      login: false,
+      loginStatus: "unknown",
+    }).includes("未确认"),
+  );
+  assert.ok(
+    geminiCliStatusMessage({
+      installed: true,
+      login: false,
+      loginStatus: "required",
+    }).includes("Login with Google"),
+  );
+  await assert.rejects(
+    geminiCliStatus({
+      fetcher: async () =>
+        Response.json({ installed: true, login: true, loginStatus: "invalid" }),
+    }),
+    (error: unknown) =>
+      error instanceof GeminiCliError && error.code === "failed",
+  );
+});
+
+test("transport normalization keeps contradictory login evidence unknown", async () => {
+  for (const input of [
+    { login: true, loginStatus: "required" },
+    { login: false, loginStatus: "verified" },
+    { login: true, loginStatus: "unknown" },
+  ]) {
+    const report = await geminiCliStatus({
+      fetcher: async () => Response.json({ installed: true, ...input }),
+    });
+    assert.equal(report.login, false);
+    assert.equal(report.loginStatus, "unknown");
+    assert.equal(resolveGeminiCliLoginStatus(report), "unknown");
+    assert.ok(geminiCliStatusMessage(report).includes("未确认"));
+  }
 });

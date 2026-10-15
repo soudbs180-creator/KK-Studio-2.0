@@ -23,6 +23,7 @@ import {
 } from "../domain/canvasViewport";
 import { useAgentCanvasView } from "./canvas/useAgentCanvasView";
 import type { CanvasProps } from "./canvas/CanvasProps";
+import { projectCanvasFingerprint } from "../domain/projectCanvas";
 import "../styles/canvas-layers.css";
 import ImageCompareProvider from "../features/compare/ImageCompareProvider";
 import ImageCompareControls from "../features/compare/ImageCompareControls";
@@ -42,8 +43,6 @@ export default function Canvas({
   onRetryTask,
   items,
   onItemsChange,
-  favoriteIds,
-  onToggleFavorite,
   likedIds,
   onToggleLike,
   initialCanvas,
@@ -52,10 +51,9 @@ export default function Canvas({
   const { contextMenu, setContextMenu, rightGesture, handleContextMenu } =
     useCanvasContextMenu();
   const controls = useCanvasControls({
+    rightGesture,
     items,
     onItemsChange,
-    favoriteIds,
-    onToggleFavorite,
     initialCanvas,
   });
   useAgentCanvasView(controls, projectId, agentViewRef, onAgentViewChange);
@@ -81,21 +79,33 @@ export default function Canvas({
     setRemovedEdge,
     connectionNotice,
     setConnectionNotice,
-  } = useCanvasConnections(items, onItemsChange, initialCanvas?.edges);
-  const { history, layersOpen, setLayersOpen } = useCanvasWorkbenchState({
-    controls,
+  } = useCanvasConnections(
     items,
     onItemsChange,
-    edges,
-    setEdges,
-  });
+    initialCanvas?.edges,
+    controls.isCanvasEcho,
+  );
+  const { history, layersOpen, setLayersOpen, handleKeyDown } =
+    useCanvasWorkbenchState({
+      controls,
+      items,
+      onItemsChange,
+      edges,
+      setEdges,
+    });
   useCanvasPersistence(
     initialCanvas,
     nodes,
     edges,
     transform,
     items,
-    onCanvasChange,
+    onCanvasChange
+      ? (canvas) => {
+          // A delayed save ACK must not overwrite a newer local undo or edit.
+          controls.publishedCanvas.current = projectCanvasFingerprint(canvas);
+          onCanvasChange(canvas);
+        }
+      : undefined,
   );
   const addMenu = useCanvasAddMenu(containerRef, transform, addNode, connect);
   useEffect(() => {
@@ -118,11 +128,8 @@ export default function Canvas({
         role="region"
         aria-label="无限画布"
         tabIndex={0}
-        onKeyDownCapture={(event) => {
-          if (history.handleKeyDown(event)) return;
-          controls.handleViewKeyDown(event);
-        }}
-        onPointerDown={(event) => {
+        onKeyDownCapture={handleKeyDown}
+        onPointerDownCapture={(event) => {
           if (event.button === 2)
             rightGesture.current = {
               x: event.clientX,
@@ -130,6 +137,8 @@ export default function Canvas({
               moved: false,
             };
           else if (rightGesture.current) rightGesture.current = null;
+        }}
+        onPointerDown={(event) => {
           startCanvasPan(event);
         }}
         onDoubleClick={(event) => {
@@ -172,8 +181,7 @@ export default function Canvas({
           controls={controls}
           items={items}
           onItemsChange={onItemsChange}
-          favoriteIds={favoriteIds}
-          onToggleFavorite={onToggleFavorite}
+          onLocalGenerationSettled={history.settleLocalGeneration}
           likedIds={likedIds}
           onToggleLike={onToggleLike}
           onConfigure={() => onOpen?.("settings/providers")}

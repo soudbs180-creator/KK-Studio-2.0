@@ -1,5 +1,24 @@
 import type { RefObject } from "react";
 
+export type ExtensionView = "skills" | "connectors" | "partners";
+const VIEWS = [
+  {
+    id: "skills",
+    label: "Skill",
+    description: "把常用方法整理成可复用的指令。",
+  },
+  {
+    id: "connectors",
+    label: "MCP",
+    description: "连接工具，让 AI 使用外部能力。",
+  },
+  {
+    id: "partners",
+    label: "协作伙伴",
+    description: "按任务选择擅长该工作的 AI 角色。",
+  },
+] as const;
+
 export default function SkillPageControls({
   view,
   tab,
@@ -12,50 +31,31 @@ export default function SkillPageControls({
   onCreate,
   onImport,
   onOpenMcp,
+  onOpenModels,
 }: {
-  view: "skills" | "connectors";
+  view: ExtensionView;
   tab: "catalog" | "mine";
   query: string;
   status: string;
   fileInput: RefObject<HTMLInputElement>;
-  onView: (view: "skills" | "connectors") => void;
+  onView: (view: ExtensionView) => void;
   onTab: (tab: "catalog" | "mine") => void;
   onQuery: (query: string) => void;
   onCreate: () => void;
   onImport: (file: File) => void;
   onOpenMcp?: () => void;
+  onOpenModels?: () => void;
 }) {
+  const active = VIEWS.find((item) => item.id === view)!;
   return (
     <>
-      <div className="catalog-page-tabs catalog-page-top-tabs" role="tablist">
-        <button
-          type="button"
-          role="tab"
-          aria-selected={view === "skills"}
-          onClick={() => onView("skills")}
-        >
-          技能
-        </button>
-        <button
-          type="button"
-          role="tab"
-          aria-selected={view === "connectors"}
-          onClick={() => onView("connectors")}
-        >
-          连接器
-        </button>
-      </div>
       <header className="catalog-page-header">
         <div>
-          <h1>{view === "skills" ? "Skill" : "探索连接器"}</h1>
-          <p>
-            {view === "skills"
-              ? "管理本地指令模板；应用时会把明确文本加入草稿，不会运行脚本或调用云端服务。"
-              : "选择服务，扩展 KK Studio 可访问的信息与可完成的工作。"}
-          </p>
+          <h1>扩展</h1>
+          <p>{active.description}</p>
         </div>
         <div className="catalog-page-actions">
-          {view === "skills" ? (
+          {view === "skills" && (
             <>
               <button
                 type="button"
@@ -69,24 +69,24 @@ export default function SkillPageControls({
                 className="ui-button"
                 onClick={() => fileInput.current?.click()}
               >
-                导入 JSON / SKILL.md
-              </button>
-              <button
-                type="button"
-                className="ui-button"
-                disabled
-                title="云端 Skill 创建服务尚未接入"
-              >
-                通过 KK Studio 创建
+                导入 Skill
               </button>
             </>
-          ) : (
+          )}
+          {view === "connectors" && (
             <button
               type="button"
               className="primary-button"
-              onClick={() => onOpenMcp?.()}
+              onClick={onOpenMcp}
+              disabled={!onOpenMcp}
+              title={!onOpenMcp ? "请从设置 › 扩展 › MCP 配置工具" : undefined}
             >
-              自定义连接器
+              配置 MCP
+            </button>
+          )}
+          {view === "partners" && onOpenModels && (
+            <button type="button" className="ui-button" onClick={onOpenModels}>
+              模型接入
             </button>
           )}
           <input
@@ -102,17 +102,50 @@ export default function SkillPageControls({
           />
         </div>
       </header>
-      <p className="catalog-page-status" role="status">
-        {view === "skills"
-          ? "本地 Skill 已保存到当前浏览器；没有联网安装、官方下载量或自动 Agent 运行。"
-          : "连接器目录仅展示可接入的能力。桌面插件安装和远程服务授权仍需用户在 MCP 设置中明确配置。"}
-      </p>
+      <div
+        className="catalog-page-tabs catalog-page-top-tabs"
+        role="tablist"
+        aria-label="扩展分类"
+      >
+        {VIEWS.map((item, index) => (
+          <button
+            key={item.id}
+            type="button"
+            role="tab"
+            aria-selected={view === item.id}
+            tabIndex={view === item.id ? 0 : -1}
+            aria-controls="extensions-catalog-panel"
+            id={`extensions-catalog-tab-${item.id}`}
+            onClick={() => onView(item.id)}
+            onKeyDown={(event) => {
+              const next =
+                event.key === "Home"
+                  ? 0
+                  : event.key === "End"
+                    ? VIEWS.length - 1
+                    : event.key === "ArrowRight"
+                      ? (index + 1) % VIEWS.length
+                      : event.key === "ArrowLeft"
+                        ? (index + VIEWS.length - 1) % VIEWS.length
+                        : -1;
+              if (next < 0) return;
+              event.preventDefault();
+              onView(VIEWS[next].id);
+              event.currentTarget.parentElement
+                ?.querySelectorAll<HTMLButtonElement>("[role='tab']")
+                .item(next)
+                .focus();
+            }}
+          >
+            {item.label}
+          </button>
+        ))}
+      </div>
       {status && (
         <p className="catalog-page-status" role="status">
           {status}
         </p>
       )}
-      <div className="catalog-page-rule" />
       <div className="catalog-page-toolbar">
         {view === "skills" ? (
           <div
@@ -138,26 +171,30 @@ export default function SkillPageControls({
             </button>
           </div>
         ) : (
-          <div
-            className="catalog-page-tabs"
-            role="tablist"
-            aria-label="连接器筛选"
-          >
-            <button type="button" role="tab" aria-selected="true">
-              全部连接器
-            </button>
-          </div>
+          <span className="extension-boundary">
+            {view === "connectors" ? "工具与服务" : "任务角色"}
+          </span>
         )}
         <label className="catalog-page-search">
           <span aria-hidden="true">⌕</span>
           <input
-            aria-label={view === "skills" ? "搜索 Skill" : "搜索连接器"}
+            aria-label={`搜索 ${active.label}`}
             value={query}
             onChange={(event) => onQuery(event.target.value)}
-            placeholder={view === "skills" ? "搜索 Skill" : "搜索连接器"}
+            placeholder={`搜索 ${active.label}`}
           />
         </label>
       </div>
+      {view !== "partners" && (
+        <details className="extension-help">
+          <summary>使用说明</summary>
+          <p>
+            {view === "skills"
+              ? "Skill 保存在当前设备，应用时把指令加入草稿。可导入 JSON / SKILL.md；启用不会自动执行脚本。"
+              : "MCP 用于连接工具。请在设置中配置受信任的服务；目录中的桌面连接器安装尚未接入。"}
+          </p>
+        </details>
+      )}
     </>
   );
 }

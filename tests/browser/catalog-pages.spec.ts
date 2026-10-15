@@ -36,10 +36,10 @@ test("开始创作首页、目录页和项目行操作保持真实状态", async
   );
   await page
     .getByRole("navigation", { name: "主导航" })
-    .getByRole("button", { name: "技能", exact: true })
+    .getByRole("button", { name: "扩展", exact: true })
     .click();
   await expect(
-    page.getByRole("heading", { name: "Skill", exact: true }),
+    page.getByRole("heading", { name: "扩展", exact: true }),
   ).toBeVisible();
   await page
     .getByRole("button", { name: "ComfyUI 工作流", exact: true })
@@ -82,12 +82,12 @@ test("开始创作的 Skill 选项卡与 Skill 目录页保持职责分离", asy
   await expect(page.getByRole("region", { name: "开始创作" })).toBeVisible();
   await expect(page.getByText("从精选技能开始", { exact: true })).toBeVisible();
   await expect(
-    page.getByRole("heading", { name: "Skill", exact: true }),
+    page.getByRole("heading", { name: "扩展", exact: true }),
   ).toHaveCount(0);
 
   await page.getByRole("button", { name: "浏览技能 ›", exact: true }).click();
   await expect(
-    page.getByRole("heading", { name: "Skill", exact: true }),
+    page.getByRole("heading", { name: "扩展", exact: true }),
   ).toBeVisible();
 });
 
@@ -147,19 +147,22 @@ test("窄屏首页模型入口保留可读的紧凑标签", async ({ page }) => 
     await page.setViewportSize({ width, height: 720 });
     await page.goto("/");
     const label = page.locator(".start-model-picker .start-tool-button span");
-    await expect(label).toHaveCSS("font-size", "0px");
-    expect(
-      await label.evaluate(
-        (element) => getComputedStyle(element, "::before").content,
-      ),
-    ).toBe('"模型"');
+    await expect(label).toHaveCSS("font-size", "12px");
+    const text = await label.evaluate((element) => ({
+      rendered: element.clientWidth,
+      full: element.scrollWidth,
+    }));
+    expect(text.rendered).toBeGreaterThanOrEqual(text.full);
   }
 });
 
 test("首页扩展菜单避开提示词和发现区标签", async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 720 });
   await page.goto("/");
-  await page.getByRole("button", { name: "扩展", exact: true }).click();
+  await page
+    .getByRole("region", { name: "开始创作", exact: true })
+    .getByRole("button", { name: "扩展", exact: true })
+    .click();
   const menu = page.getByRole("menu", { name: "扩展" });
   const menuBox = await menu.boundingBox();
   const promptBox = await page
@@ -203,7 +206,10 @@ test("首页滚动后菜单仍保持可见和可操作", async ({ page }) => {
 test("窄屏首页扩展菜单不遮挡发现区", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 720 });
   await page.goto("/");
-  await page.getByRole("button", { name: "扩展", exact: true }).click();
+  await page
+    .getByRole("region", { name: "开始创作", exact: true })
+    .getByRole("button", { name: "扩展", exact: true })
+    .click();
   const menu = page.getByRole("menu", { name: "扩展" });
   const menuBox = await menu.boundingBox();
   const tabsBox = await page.locator(".start-tabs").boundingBox();
@@ -390,7 +396,7 @@ test("开始创作页的扩展入口打开插件设置分类而不是 Skill 页�
     .getByRole("button", { name: "扩展", exact: true })
     .click();
   const menu = page.getByRole("menu", { name: "扩展" });
-  await menu.getByRole("tab", { name: "插件/MCP", exact: true }).click();
+  await menu.getByRole("tab", { name: "MCP", exact: true }).click();
   await menu.getByRole("menuitem", { name: "管理画布插件" }).click();
   await expect(page.getByRole("dialog", { name: "设置" })).toBeVisible();
   await expect(
@@ -404,12 +410,12 @@ test("开始创作页的扩展入口打开插件设置分类而不是 Skill 页�
       .getByRole("navigation", { name: "设置分类" })
       .locator('[aria-current="page"]'),
   ).toHaveCount(1);
-  await expect(page.getByRole("tab", { name: /插件/ })).toHaveAttribute(
+  await expect(page.getByRole("tab", { name: /MCP/ })).toHaveAttribute(
     "aria-selected",
     "true",
   );
   await expect(
-    page.getByRole("heading", { name: "Skill", exact: true }),
+    page.getByRole("region", { name: "扩展", exact: true }),
   ).toHaveCount(0);
 
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
@@ -425,7 +431,7 @@ test("开始创作页的扩展入口打开插件设置分类而不是 Skill 页�
     .click();
   await page
     .getByRole("menu", { name: "扩展" })
-    .getByRole("tab", { name: "插件/MCP", exact: true })
+    .getByRole("tab", { name: "MCP", exact: true })
     .click();
   await page
     .getByRole("menu", { name: "扩展" })
@@ -445,24 +451,24 @@ test("开始创作页的扩展入口打开插件设置分类而不是 Skill 页�
       .getByRole("navigation", { name: "设置分类" })
       .locator('[aria-current="page"]'),
   ).toHaveCount(1);
-  await expect(page.getByRole("tab", { name: /插件/ })).toHaveAttribute(
+  await expect(page.getByRole("tab", { name: /MCP/ })).toHaveAttribute(
     "aria-selected",
     "true",
   );
 });
 
-test("开始创作与工作台的模型入口都定位到模型供应商设置", async ({ page }) => {
+test("开始创作与工作台的模型入口都定位到模型接入设置", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "模型", exact: true }).click();
   await page
     .getByRole("menu")
-    .getByRole("button", { name: /配置供应商/ })
+    .getByRole("button", { name: /模型接入/ })
     .click();
   await expect(page.getByRole("dialog", { name: "设置" })).toBeVisible();
   await expect(
     page
       .getByRole("navigation", { name: "设置分类" })
-      .getByRole("button", { name: "模型供应商", exact: true }),
+      .getByRole("button", { name: "模型接入", exact: true }),
   ).toHaveAttribute("aria-current", "page");
 
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
@@ -473,26 +479,27 @@ test("开始创作与工作台的模型入口都定位到模型供应商设置",
   await page.getByRole("button", { name: "新建项目", exact: true }).click();
   await expect(page.getByRole("region", { name: "无限画布" })).toBeVisible();
   await page.getByRole("button", { name: "模型", exact: true }).click();
-  await expect(page.getByRole("menu")).toContainText("默认 · Codex 主 Agent");
+  await expect(page.getByRole("menu")).toContainText("Codex");
   await page
     .getByRole("menu")
-    .getByRole("button", { name: /配置供应商/ })
+    .getByRole("button", { name: /模型接入/ })
     .click();
   await expect(page.getByRole("dialog", { name: "设置" })).toBeVisible();
   await expect(
     page
       .getByRole("navigation", { name: "设置分类" })
-      .getByRole("button", { name: "模型供应商", exact: true }),
+      .getByRole("button", { name: "模型接入", exact: true }),
   ).toHaveAttribute("aria-current", "page");
 });
 
-test("Skill 与 ComfyUI 页面状态说明不覆盖副标题", async ({ page }) => {
+test("扩展与 ComfyUI 页面状态说明不覆盖副标题", async ({ page }) => {
   await page.goto("/");
-  for (const name of ["技能", "ComfyUI 工作流"]) {
+  for (const name of ["扩展", "ComfyUI 工作流"]) {
     await page
       .getByRole("navigation", { name: "主导航" })
       .getByRole("button", { name, exact: true })
       .click();
+    if (name === "扩展") await page.locator(".catalog-card").first().click();
     const header = page.locator(".catalog-page-header");
     const subtitle = header.locator("p");
     const status = page.locator(".catalog-page-status").first();
@@ -510,10 +517,10 @@ test("Skill 与工作流卡片保持当前页面并反馈本地预览状态", as
   await page.goto("/");
   await page
     .getByRole("navigation", { name: "主导航" })
-    .getByRole("button", { name: "技能", exact: true })
+    .getByRole("button", { name: "扩展", exact: true })
     .click();
   await expect(
-    page.getByRole("heading", { name: "Skill", exact: true }),
+    page.getByRole("heading", { name: "扩展", exact: true }),
   ).toBeVisible();
   await expect(page.getByText("镜头规划助手", { exact: true })).toBeVisible();
   await page

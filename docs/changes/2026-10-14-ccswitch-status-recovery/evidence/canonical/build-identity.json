@@ -1,0 +1,13 @@
+{
+  "releaseExePath": "D:\\kk-studio\\KK-Studio-2.0\\src-tauri\\target\\release\\kk-studio.exe",
+  "releaseMtimeMs": 1791914312126.1409,
+  "newestInputPath": "D:\\kk-studio\\KK-Studio-2.0\\dist\\assets\\index-C2KS8_Mm.js",
+  "newestInputMtimeMs": 1791914265544.8528,
+  "inputSha256": "19cab1aca4ca025dc3d8b2a87bdb08d877ff8289bfc0a72b342dd8e1fd06a959",
+  "executableSha256": "78098687653e8c463456417469da5d79bf77968dafb92663fa5a76b9cfee453b",
+  "desktopVersion": "2.1.18",
+  "receiptPath": "D:\\kk-studio\\KK-Studio-2.0\\src-tauri\\target\\release\\kk-studio.build-receipt.json",
+  "needsBuild": false,
+  "reason": "current",
+  "rebuilt": true
+}

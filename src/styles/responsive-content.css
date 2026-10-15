@@ -163,7 +163,6 @@
   .settings-panel {
     --ui-input-height: 40px;
     --ui-button-height: 40px;
-    width: min(920px, calc(100vw - 24px));
     max-height: calc(100dvh - 24px);
   }
   .settings-close {
@@ -287,7 +286,7 @@
   .catalog-page-actions button {
     flex: 1 1 auto;
     white-space: nowrap;
-    min-height: 44px;
+    min-height: var(--kk-control-h-lg);
   }
   .modal {
     max-width: calc(100vw - 16px);
@@ -433,6 +432,11 @@
   .workspace.chat-mobile .canvas-hud,
   .workspace.chat-mobile .canvas-toolbar {
     visibility: visible;
+  }
+  .workspace.chat-mobile .canvas-hud {
+    pointer-events: none;
+  }
+  .workspace.chat-mobile .canvas-toolbar {
     pointer-events: auto;
   }
   .workspace.chat-mobile .canvas.has-chat .canvas-top-right {

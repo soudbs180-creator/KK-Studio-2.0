@@ -11,6 +11,7 @@ import ConversationHeader from "./ConversationHeader";
 import ConversationComposerRegion from "./ConversationComposerRegion";
 import GoogleConversationPanel from "./GoogleConversationPanel";
 import useConversationSubmit from "./useConversationSubmit";
+import { useAgentDraftState } from "../features/agent/useAgentComposerDraft";
 import {
   readAgentModel,
   writeAgentModel,
@@ -40,6 +41,7 @@ export default function ConversationPanel({
   agent,
 }: ConversationPanelProps) {
   const panelRef = useConversationOverlay(overlay);
+  const agentDraftState = useAgentDraftState();
   const [channel, setChannel] = useState(() =>
     ["direct", "google"].includes(safeStorage.getItem("kk-chat-channel") ?? "")
       ? safeStorage.getItem("kk-chat-channel")!
@@ -56,6 +58,8 @@ export default function ConversationPanel({
   );
   const [pendingApproval, setPendingApproval] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const modelDisabled =
+    submitting || Boolean(agent?.sending || agent?.connecting);
   useEffect(() => {
     setInput(project?.composerDraft.prompt ?? "");
     setApprovalMode(project?.composerDraft.approvalMode ?? "auto");
@@ -114,6 +118,7 @@ export default function ConversationPanel({
     return (
       <GoogleConversationPanel
         project={project}
+        draftState={agentDraftState}
         onClose={onClose}
         onOpen={onOpen}
         onChannelChange={setChannel}
@@ -157,7 +162,7 @@ export default function ConversationPanel({
         messages={visibleMessages}
         onDelete={deleteMessage}
         onStatus={setStatus}
-        onConfigure={() => onOpen("settings/partners")}
+        onConfigure={() => onOpen("settings/providers")}
         onConfigureDirect={
           directState === "service-unconfigured"
             ? () => onOpen("settings/providers")
@@ -171,6 +176,7 @@ export default function ConversationPanel({
       <ConversationComposerRegion
         agent={agent}
         draftKey={project?.id ?? "workspace"}
+        draftState={agentDraftState}
         agentActive={agentActive}
         agentConnecting={agentConnecting}
         agentModel={agentModel}
@@ -184,6 +190,7 @@ export default function ConversationPanel({
           submitting ||
           (agentActive && (agentConnecting || Boolean(agent?.sending)))
         }
+        modelDisabled={modelDisabled}
         submitDisabled={
           submitting ||
           (!agentActive &&
@@ -221,6 +228,7 @@ export default function ConversationPanel({
               }
         }
         onSelectModel={(option, selection) => {
+          if (modelDisabled) return;
           const codex = selection ? selection.source !== "api" : agentActive;
           setChannel(codex ? "codex" : "direct");
           safeStorage.setItem("kk-chat-channel", codex ? "codex" : "direct");

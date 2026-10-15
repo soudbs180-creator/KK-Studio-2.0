@@ -2,8 +2,8 @@
 
 - 状态：PARTIAL
 - 领域：platform
-- 最近更新：2026-09-29
-- 关联任务：TASK-LOCAL-SERVICE-001
+- 最近更新：2026-10-14
+- 关联任务：TASK-LOCAL-SERVICE-001、TASK-222-ACTIONS-20261014、TASK-223-ACTIONS-20261014
 
 ## 用户可见入口
 
@@ -19,6 +19,10 @@
 
 ## 测试与证据
 
+- 2.1.24本地验证（TASK-223，本任务DONE/PASS；功能主状态保持）：伴随服务父子操作独立busy，连接revision/身份约束迟到成功和错误；同renderer同身份重新配对受保护，跨renderer同字节ABA不冒称闭合；最终产品58b5c07f与完整验证、官方/便携回执见[本轮验证](../changes/2026-10-14-action-usability-223/verification.md)。
+
+- 2.1.23本地按钮修复：`tests/browser/local-service-migration.spec.ts`；结果及Web/Desktop边界见[2.1.23历史验证](../changes/2026-10-14-action-usability-222/verification.md)。
+
 - 规范：[数据存储约定](../architecture/DATA-STORAGE.md)及[ADR-008](../architecture/adr/ADR-008-platform-versions-and-local-first.md)。
 - 单元与协议/文件存储：`tests/unit/localService*.test.ts`、`tests/unit/assetStorage.test.ts`。
 - 真实 loopback 服务迁移验收：`tests/browser/local-service-migration.spec.ts`。
@@ -26,6 +30,8 @@
 - 生产 smoke（Web bundle 边界、全新浏览器上下文、服务重启）：`tests/local-service/production-smoke.mjs`。
 
 ## 当前能力
+
+- 本轮2.1.23已验证恢复备份前展示准确备份ID及快照替换影响；取消不调用恢复，确认仅恢复该ID，旧浏览器原件不删除。
 
 - 服务只监听 `127.0.0.1`，默认端口 `4319`；配对码只使用一次，会话写入 HttpOnly cookie。
 - 显式启用服务后，创作快照和素材服务优先；服务离线/认证失败/版本冲突会返回明确状态，不静默回退并声称已保存。

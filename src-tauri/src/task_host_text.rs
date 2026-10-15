@@ -16,9 +16,18 @@ struct TextStream {
     finished: bool,
     done: bool,
     error_event: bool,
+    event_name: String,
+    modern: Option<protocol_stream::ProtocolStream>,
 }
 
 impl TextStream {
+    fn for_protocol(protocol: provider::Protocol) -> Self {
+        Self {
+            modern: protocol_stream::ProtocolStream::for_protocol(protocol),
+            ..Self::default()
+        }
+    }
+
     fn feed(&mut self, bytes: &[u8]) -> Result<(), &'static str> {
         self.received = self.received.saturating_add(bytes.len());
         if self.received > MAX_TEXT_RESPONSE_BYTES {
@@ -40,6 +49,7 @@ impl TextStream {
                 self.dispatch()?;
             } else if let Some(event) = line.strip_prefix("event:") {
                 self.error_event = event.trim() == "error";
+                self.event_name = event.trim().to_owned();
             } else if let Some(data) = line.strip_prefix("data:") {
                 let data = data.strip_prefix(' ').unwrap_or(data);
                 if self.event.len().saturating_add(data.len() + 1) > MAX_SSE_LINE_BYTES {
@@ -53,6 +63,7 @@ impl TextStream {
     }
 
     fn dispatch(&mut self) -> Result<(), &'static str> {
+        let event_name = std::mem::take(&mut self.event_name);
         if std::mem::take(&mut self.error_event) {
             return Err("供应商返回文本流错误");
         }
@@ -67,12 +78,24 @@ impl TextStream {
             return Err("文本流终止后仍返回数据");
         }
         if data == "[DONE]" {
+            if self.modern.is_some() {
+                return Err("文本流缺少协议终止确认");
+            }
             self.done = true;
             return Ok(());
         }
         let value: Value = serde_json::from_str(data).map_err(|_| "文本流数据格式无效")?;
-        if value.get("error").is_some() {
+        if value.get("error").is_some_and(|error| !error.is_null()) {
             return Err("供应商返回文本流错误");
+        }
+        if let Some(modern) = &mut self.modern {
+            if !event_name.is_empty() && value["type"].as_str() != Some(event_name.as_str()) {
+                return Err("文本流事件类型不匹配");
+            }
+            modern.dispatch(&value, &mut self.text)?;
+            self.done = modern.done();
+            self.finished = self.done;
+            return Ok(());
         }
         let choices = value
             .get("choices")
@@ -177,20 +200,9 @@ impl TaskHost {
         client: Client,
         secret: &str,
     ) -> Result<Vec<String>, RunError> {
-        let send = client
-            .post(format!(
-                "{}/chat/completions",
-                request.base_url.trim_end_matches('/')
-            ))
-            .bearer_auth(secret)
-            .header("Idempotency-Key", &request.idempotency_key)
-            .header(header::ACCEPT, "text/event-stream")
-            .json(&json!({
-                "model": request.model,
-                "messages": [{"role": "user", "content": request.prompt}],
-                "stream": true
-            }))
-            .send();
+        let (builder, protocol) = provider::text_request(&client, request, secret)
+            .map_err(|_| RunError::failed("invalid_request", "文本协议或认证配置无效"))?;
+        let send = builder.send();
         let response = tokio::select! {
             biased;
             _ = cancelled(control) => return Err(RunError::unknown("cancelled", "已停止等待文本生成，供应商最终状态需核对", vec![])),
@@ -236,7 +248,7 @@ impl TaskHost {
         {
             return Err(unknown_text("文本服务没有返回流式响应"));
         }
-        let mut decoder = TextStream::default();
+        let mut decoder = TextStream::for_protocol(protocol);
         let mut stream = response.bytes_stream();
         let mut saved_bytes = 0;
         let mut saved_at = Instant::now();
@@ -250,7 +262,13 @@ impl TaskHost {
             let chunk = chunk.map_err(|_| {
                 RunError::unknown("network", "文本响应读取中断，受理状态需核对", vec![])
             })?;
-            decoder.feed(&chunk).map_err(unknown_text)?;
+            if let Err(message) = decoder.feed(&chunk) {
+                if !decoder.text.is_empty() {
+                    self.persist_text(request, fingerprint, &decoder.text, false)
+                        .map_err(|_| unknown_text("文本草稿保存失败，供应商受理状态需核对"))?;
+                }
+                return Err(unknown_text(message));
+            }
             if decoder.text.len() > saved_bytes
                 && (saved_bytes == 0
                     || decoder.text.len() - saved_bytes >= 256
@@ -343,6 +361,41 @@ mod tests {
         assert!(decoder
             .feed(&vec![b'\n'; MAX_TEXT_RESPONSE_BYTES + 1])
             .is_err());
+    }
+
+    fn modern_frame(value: Value) -> String {
+        format!(
+            "event: {}\r\ndata: {}\r\n\r\n",
+            value["type"].as_str().unwrap(),
+            value
+        )
+    }
+
+    #[test]
+    fn responses_framing_keeps_utf8_and_requires_matching_terminal() {
+        let delta = json!({"type":"response.output_text.delta","item_id":"msg_fixture","output_index":0,"content_index":0,"delta":"你好🌍"});
+        let final_event = json!({"type":"response.completed","response":{"id":"resp_fixture","status":"completed","output":[{"type":"message","id":"msg_fixture","role":"assistant","status":"completed","content":[{"type":"output_text","text":"你好🌍"}]}]}});
+        let mut decoder = TextStream::for_protocol(provider::Protocol::Responses);
+        for byte in modern_frame(delta).as_bytes() {
+            decoder.feed(&[*byte]).unwrap();
+        }
+        assert!(decoder.complete().is_err());
+        decoder.feed(modern_frame(final_event).as_bytes()).unwrap();
+        assert_eq!(decoder.complete().unwrap(), "你好🌍");
+        assert!(decoder.feed(b"data:[DONE]\n\n").is_err());
+    }
+
+    #[test]
+    fn protocol_streams_do_not_accept_chat_done_or_mismatched_event_names() {
+        for protocol in [provider::Protocol::Responses, provider::Protocol::Anthropic] {
+            let mut decoder = TextStream::for_protocol(protocol);
+            assert!(decoder.feed(b"data:[DONE]\n\n").is_err());
+            let mut decoder = TextStream::for_protocol(protocol);
+            assert!(decoder
+                .feed(b"event: message_stop\ndata:{\"type\":\"response.completed\"}\n\n")
+                .is_err());
+            assert!(decoder.complete().is_err());
+        }
     }
 
     #[test]

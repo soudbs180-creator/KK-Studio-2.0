@@ -1,0 +1,7 @@
+{
+  "schemaVersion": 1,
+  "executableRelativePath": "src-tauri/target/release/kk-studio.exe",
+  "desktopVersion": "2.1.16",
+  "inputSha256": "e5faac471d9c30d582147c9c25381404fa98c8a3e2528307bbcd1ff52ec1e28f",
+  "executableSha256": "b3715cc0eb8ddd03cc2ff329ff23422824946e4ae0f5f4e83ad09bd8f3ed9155"
+}

@@ -52,6 +52,7 @@ test("连线和背景控制真实生效，操作不平移画布", async ({ page 
   await expect(page.getByTestId("connector-video1")).not.toBeVisible();
   await lines.click();
   await expect(page.getByTestId("connector-video1")).toBeVisible();
+  await page.getByRole("button", { name: "画布背景", exact: true }).click();
   await page.getByLabel("画布背景颜色", { exact: true }).fill("#253649");
   await expect(page.getByTestId("infinite-canvas")).toHaveCSS(
     "background-color",

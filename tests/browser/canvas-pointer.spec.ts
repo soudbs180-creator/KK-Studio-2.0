@@ -60,6 +60,22 @@ for (const button of ["middle", "right"] as const) {
   });
 }
 
+test("卡片右键点击打开菜单，Escape回到卡片且保留选择", async ({ page }) => {
+  await openWorkspace(page);
+  const node = page.getByTestId("canvas-node-image");
+  await node.locator(".image-preview").click({ button: "right" });
+  const menu = page.getByRole("menu", {
+    name: "卡片菜单：图片创建卡片",
+    exact: true,
+  });
+  await expect(menu).toBeVisible();
+  await expect(node).toHaveClass(/is-selected/);
+  await page.keyboard.press("Escape");
+  await expect(menu).toHaveCount(0);
+  await expect(node).toBeFocused();
+  await expect(node).toHaveClass(/is-selected/);
+});
+
 test("Shift追加多选可一起拖动；Escape取消拖动恢复位置", async ({ page }) => {
   await openWorkspace(page);
   await page.locator(".image-preview").click();

@@ -1,4 +1,9 @@
-import { useRef, type Dispatch, type SetStateAction } from "react";
+import {
+  useLayoutEffect,
+  useRef,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
 import TaskDetail from "./TaskDetail";
 import type {
   CreationTask,
@@ -46,6 +51,7 @@ export function TaskPanelPopover({
   setTab,
   visibleTasks,
   selectedTask,
+  tasks,
   setSelectedTask,
   onOpenTasks,
   onCancelTask,
@@ -57,6 +63,7 @@ export function TaskPanelPopover({
   setTab: Dispatch<SetStateAction<TaskFilter>>;
   visibleTasks: PrototypeTask[];
   selectedTask: PrototypeTask | null;
+  tasks?: readonly CreationTask[];
   setSelectedTask: Dispatch<SetStateAction<PrototypeTask | null>>;
   onOpenTasks?: () => void;
   onCancelTask?: (taskId: string) => void;
@@ -64,8 +71,34 @@ export function TaskPanelPopover({
   onDismiss: () => void;
 }) {
   const detailTrigger = useRef<HTMLButtonElement | null>(null);
+  const panelRef = useRef<HTMLElement>(null);
+  useLayoutEffect(() => {
+    const panel = panelRef.current;
+    if (!panel) return;
+    const update = () => {
+      const gap = parseFloat(getComputedStyle(panel).paddingBottom);
+      const available = Math.max(
+        0,
+        window.innerHeight - panel.getBoundingClientRect().top - gap,
+      );
+      panel.style.setProperty(
+        "--task-panel-available-height",
+        `${available}px`,
+      );
+    };
+    update();
+    const observer = new ResizeObserver(update);
+    const hud = panel.closest(".canvas-hud");
+    if (hud) observer.observe(hud);
+    window.addEventListener("resize", update);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", update);
+    };
+  }, []);
   return (
     <section
+      ref={panelRef}
       className="task-panel"
       aria-label="任务列表"
       data-node-id="396:938"
@@ -177,6 +210,7 @@ export function TaskPanelPopover({
       {selectedTask && (
         <TaskDetail
           selectedTask={selectedTask}
+          tasks={tasks}
           onCancelTask={onCancelTask}
           onRetryTask={onRetryTask}
           onClose={() => setSelectedTask(null)}

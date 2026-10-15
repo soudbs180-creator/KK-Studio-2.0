@@ -3,6 +3,8 @@ import { BROWSER_STORAGE_KEYS } from "../../runtime/storage-contract.ts";
 
 export const COMPANION_CONNECTION_STORAGE_KEY = BROWSER_STORAGE_KEYS.companion;
 
+const connectionRevisions = new WeakMap<Storage, number>();
+
 const loopbackHosts = new Set(["127.0.0.1", "localhost", "[::1]"]);
 const connectionSchema = z
   .object({
@@ -26,6 +28,11 @@ function storageOrNull(storage?: Storage): Storage | null {
   if (storage) return storage;
   if (typeof window !== "undefined") return window.localStorage;
   return null;
+}
+
+export function readCompanionConnectionRevision(storage?: Storage): number {
+  const target = storageOrNull(storage);
+  return target ? (connectionRevisions.get(target) ?? 0) : 0;
 }
 
 export function normalizeCompanionEndpoint(value: string): string {
@@ -86,8 +93,12 @@ export function writeCompanionConnection(
     enabled: value.enabled,
   };
   target.setItem(COMPANION_CONNECTION_STORAGE_KEY, JSON.stringify(connection));
+  connectionRevisions.set(target, (connectionRevisions.get(target) ?? 0) + 1);
 }
 
 export function clearCompanionConnection(storage?: Storage): void {
-  storageOrNull(storage)?.removeItem(COMPANION_CONNECTION_STORAGE_KEY);
+  const target = storageOrNull(storage);
+  if (!target) return;
+  target.removeItem(COMPANION_CONNECTION_STORAGE_KEY);
+  connectionRevisions.set(target, (connectionRevisions.get(target) ?? 0) + 1);
 }

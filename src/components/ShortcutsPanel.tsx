@@ -28,8 +28,8 @@ const GROUPS: Record<string, Shortcut[][]> = {
   ],
   画布: [
     [
-      { label: "撤销", keys: ["Ctrl", "Z"], note: pending },
-      { label: "重做", keys: ["Ctrl", "Shift", "Z"], note: pending },
+      { label: "撤销", keys: ["Ctrl", "Z"] },
+      { label: "重做", keys: ["Ctrl", "Shift", "Z"] },
       { label: "剪切", keys: ["Ctrl", "X"], note: pending },
       { label: "复制", keys: ["Ctrl", "C"], note: pending },
       { label: "粘贴", keys: ["Ctrl", "V"], note: pending },
@@ -49,6 +49,8 @@ const GROUPS: Record<string, Shortcut[][]> = {
       { label: "放大", keys: ["Ctrl", "+"] },
       { label: "缩小", keys: ["Ctrl", "-"] },
       { label: "适应视图", keys: ["Shift", "1"] },
+      { label: "图层管理", keys: ["L"] },
+      { label: "网格吸附", keys: ["G"] },
       { label: "提交生成", keys: ["Ctrl", "Enter"], note: pending },
     ],
   ],

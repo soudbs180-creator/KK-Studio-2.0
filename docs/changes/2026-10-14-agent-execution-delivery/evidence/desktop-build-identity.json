@@ -1,0 +1,13 @@
+{
+  "releaseExePath": "D:\\kk-studio\\.worktrees\\TASK-AGENT-UX-20261014-execution-delivery\\src-tauri\\target\\release\\kk-studio.exe",
+  "releaseMtimeMs": 1791916274264.275,
+  "newestInputPath": "D:\\kk-studio\\.worktrees\\TASK-AGENT-UX-20261014-execution-delivery\\dist\\assets\\CatalogPanel-64tzeU52.js",
+  "newestInputMtimeMs": 1791916201937.3936,
+  "inputSha256": "db01d5500da525ea66962fc44c8e1ea5f376fe80ad2e255e564c81ab155f8f98",
+  "executableSha256": "f2b71804a8831d309f7850e846b784b5bb6bb66e3398429a2a1ffb266203e4d1",
+  "desktopVersion": "2.1.20",
+  "receiptPath": "D:\\kk-studio\\.worktrees\\TASK-AGENT-UX-20261014-execution-delivery\\src-tauri\\target\\release\\kk-studio.build-receipt.json",
+  "needsBuild": false,
+  "reason": "current",
+  "rebuilt": true
+}

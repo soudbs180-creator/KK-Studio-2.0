@@ -3,12 +3,14 @@ import type { CreationDraft } from "../features/creation/model";
 import type { ModelSelection } from "../features/models/modelSelection";
 import type { SkillRecord } from "../features/skills/skillRegistry";
 import type { AgentConversationProps } from "./AgentConversationMessages";
+import type { AgentDraftState } from "../features/agent/useAgentComposerDraft";
 import AgentComposer from "./AgentComposer";
 import ConversationComposer from "./ConversationComposer";
 
 export default function ConversationComposerRegion({
   agent,
   draftKey,
+  draftState,
   agentActive,
   agentConnecting,
   agentModel,
@@ -16,6 +18,7 @@ export default function ConversationComposerRegion({
   onInputChange,
   onSubmitMessage,
   disabled,
+  modelDisabled,
   submitDisabled,
   placeholder,
   composerDraft,
@@ -40,6 +43,7 @@ export default function ConversationComposerRegion({
 }: {
   agent?: AgentConversationProps;
   draftKey: string;
+  draftState: AgentDraftState;
   agentActive: boolean;
   agentConnecting: boolean;
   agentModel?: string;
@@ -47,6 +51,7 @@ export default function ConversationComposerRegion({
   onInputChange: (value: string) => void;
   onSubmitMessage: (message: string) => Promise<void>;
   disabled: boolean;
+  modelDisabled: boolean;
   submitDisabled: boolean;
   placeholder: string;
   composerDraft?: CreationDraft;
@@ -73,6 +78,7 @@ export default function ConversationComposerRegion({
     <AgentComposer
       agent={agent}
       draftKey={draftKey}
+      draftState={draftState}
       active={agentActive}
       composer={
         <ConversationComposer
@@ -80,6 +86,7 @@ export default function ConversationComposerRegion({
           onInputChange={onInputChange}
           onSubmitMessage={onSubmitMessage}
           disabled={disabled || (agentActive && agentConnecting)}
+          modelDisabled={modelDisabled}
           submitDisabled={submitDisabled}
           placeholder={placeholder}
           composerDraft={composerDraft}

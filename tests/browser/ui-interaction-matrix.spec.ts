@@ -202,13 +202,17 @@ test("working-zoom patterns stay visible for both themes and all accents", async
           !(await canvas.getAttribute("class"))?.includes(
             `canvas-pattern-${pattern}`,
           )
-        )
+        ) {
+          await page
+            .getByRole("button", { name: "画布背景", exact: true })
+            .click();
           await page
             .getByRole("button", {
-              name: pattern === "dots" ? "切换为点状背景" : "切换为网格背景",
+              name: pattern === "dots" ? "点状背景" : "网格背景",
               exact: true,
             })
             .click();
+        }
         const paint = await canvas.evaluate((el) => {
           const style = getComputedStyle(el);
           return {

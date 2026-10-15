@@ -6,6 +6,66 @@ const productionOrigin = "http://127.0.0.1:1423";
 const toolbar = (page: Page) =>
   page.getByRole("toolbar", { name: /^图片操作：/ });
 
+for (const width of [390, 320]) {
+  test(`${width} 已有图片展开手机编辑器时不重复上传且保留草稿`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width, height: 844 });
+    await openWorkspace(page);
+    const node = page.getByTestId("canvas-node-image");
+    await uploadImage(node);
+    await node.focus();
+    await node.press("Enter");
+    await showCanvasNavigation(page);
+    await page.getByRole("button", { name: "画布缩放", exact: true }).click();
+    await page.getByRole("menuitemradio", { name: "50%", exact: true }).click();
+    const editor = page.getByTestId("image-composer");
+    await editor.getByLabel("图片提示词").fill("真实上传保留编辑器草稿");
+    await editor
+      .getByRole("button", { name: "展开提示词", exact: true })
+      .click();
+    const position = await node.evaluate((element) => ({
+      left: (element as HTMLElement).style.left,
+      top: (element as HTMLElement).style.top,
+    }));
+    await expect(
+      node.getByRole("button", { name: "上传图片", exact: true }),
+    ).toHaveCount(0);
+    await expect(
+      toolbar(page).getByRole("button", { name: "上传图片", exact: true }),
+    ).toHaveCount(0);
+    await expect(node.locator(".uploaded-image")).toBeVisible();
+    await expect(editor.getByLabel("图片提示词")).toHaveValue(
+      "真实上传保留编辑器草稿",
+    );
+    for (const control of [
+      editor.getByRole("button", { name: "画布模型", exact: true }),
+      editor.locator('[data-control="params"] > button'),
+      editor.getByRole("button", { name: "生成数量", exact: true }),
+    ]) {
+      await control.scrollIntoViewIfNeeded();
+      await expect
+        .poll(() =>
+          control.evaluate((element) => {
+            const rect = element.getBoundingClientRect();
+            const hit = document.elementFromPoint(
+              rect.x + rect.width / 2,
+              rect.y + rect.height / 2,
+            );
+            return element === hit || Boolean(hit && element.contains(hit));
+          }),
+        )
+        .toBe(true);
+    }
+    expect(
+      await node.evaluate((element) => ({
+        left: (element as HTMLElement).style.left,
+        top: (element as HTMLElement).style.top,
+      })),
+    ).toEqual(position);
+  });
+}
+
 async function uploadImage(node: Locator): Promise<void> {
   await node
     .locator('input[type="file"]')

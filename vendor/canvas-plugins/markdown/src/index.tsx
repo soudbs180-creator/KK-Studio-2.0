@@ -10,7 +10,7 @@ import { marked } from "marked";
 
 import css from "./styles.css";
 
-const PLACEHOLDER = "*选中节点,点上方工具条的 ✎ 编辑 Markdown*";
+const PLACEHOLDER = "*选中节点,点击卡片内的编辑按钮编写 Markdown*";
 
 // 解析结果按源码缓存(模块级):同一段 Markdown 只解析一次,重复渲染/重挂载都命中缓存,
 // 返回的是同一个字符串引用,配合下方「值不变不写 DOM」彻底避免图片被重新请求。

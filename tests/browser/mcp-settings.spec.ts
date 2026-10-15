@@ -81,6 +81,7 @@ test("MCP 设置保存 endpoint，完成真实握手并展示 tools/list 返回�
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   const dialog = page.getByRole("dialog", { name: "设置" });
   await dialog.getByRole("button", { name: "扩展", exact: true }).click();
+  await dialog.getByRole("tab", { name: "MCP 工具", exact: true }).click();
   await dialog.getByLabel("MCP服务器名称").fill("Browser fixture");
   await dialog.getByLabel("MCP地址").fill("https://mcp.example.test/mcp");
   await dialog.getByRole("button", { name: "保存服务器" }).click();
@@ -148,6 +149,7 @@ test("MCP 设置显示并显式恢复旧版超限配置", async ({ page }) => {
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   const dialog = page.getByRole("dialog", { name: "设置" });
   await dialog.getByRole("button", { name: "扩展", exact: true }).click();
+  await dialog.getByRole("tab", { name: "MCP 工具", exact: true }).click();
   await expect(dialog.locator(".settings-mcp-error")).toContainText(
     "超过当前 50 项上限",
   );
@@ -177,6 +179,7 @@ test("MCP 设置为损坏配置提供原始导出入口", async ({ page }) => {
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   const dialog = page.getByRole("dialog", { name: "设置" });
   await dialog.getByRole("button", { name: "扩展", exact: true }).click();
+  await dialog.getByRole("tab", { name: "MCP 工具", exact: true }).click();
   await expect(
     dialog.getByRole("alert").filter({ hasText: "无法读取" }).first(),
   ).toContainText("无法读取");
@@ -201,10 +204,130 @@ test("MCP 设置拒绝不安全的远程 HTTP endpoint", async ({ page }) => {
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   const dialog = page.getByRole("dialog", { name: "设置" });
   await dialog.getByRole("button", { name: "扩展", exact: true }).click();
+  await dialog.getByRole("tab", { name: "MCP 工具", exact: true }).click();
   await dialog.getByLabel("MCP服务器名称").fill("Unsafe");
   await dialog.getByLabel("MCP地址").fill("http://remote.example.test/mcp");
   await dialog.getByRole("button", { name: "保存服务器" }).click();
   await expect(dialog.getByRole("alert")).toContainText(
     "远程 MCP 必须使用 HTTPS",
   );
+});
+
+test("MCP pending tool calls retain their result, lock navigation, and stop waiting without claiming remote cancellation", async ({
+  page,
+}) => {
+  await page.goto("/");
+  let calls = 0;
+  let releaseCall!: () => void;
+  await page.route("https://pending-mcp.example.test/mcp", async (route) => {
+    const body = route.request().postDataJSON() as {
+      id: number;
+      method: string;
+    };
+    if (body.method === "server/discover") {
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({
+          jsonrpc: "2.0",
+          id: body.id,
+          result: { protocolVersions: ["2026-07-28"] },
+        }),
+      });
+    } else if (body.method === "tools/list") {
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({
+          jsonrpc: "2.0",
+          id: body.id,
+          result: {
+            tools: [
+              { name: "pending_fixture", inputSchema: { type: "object" } },
+            ],
+          },
+        }),
+      });
+    } else if (body.method === "tools/call") {
+      calls += 1;
+      if (calls === 2)
+        await new Promise<void>((resolve) => {
+          releaseCall = resolve;
+        });
+      await route
+        .fulfill({
+          status: 200,
+          contentType: "application/json",
+          body: JSON.stringify({
+            jsonrpc: "2.0",
+            id: body.id,
+            result: { content: [{ type: "text", text: "fixture receipt" }] },
+          }),
+        })
+        .catch(() => undefined);
+    } else await route.fulfill({ status: 404, body: "" });
+  });
+  await page.getByRole("button", { name: "打开设置", exact: true }).click();
+  const dialog = page.getByRole("dialog", { name: "设置", exact: true });
+  await dialog.getByRole("button", { name: "扩展", exact: true }).click();
+  await dialog.getByRole("tab", { name: "MCP 工具", exact: true }).click();
+  await dialog.getByLabel("MCP服务器名称").fill("Pending fixture");
+  await dialog
+    .getByLabel("MCP地址")
+    .fill("https://pending-mcp.example.test/mcp");
+  await dialog.getByRole("button", { name: "保存服务器", exact: true }).click();
+  await dialog.getByRole("button", { name: "连接", exact: true }).click();
+  await expect(
+    dialog.getByText("已连接 · 1 个工具", { exact: true }),
+  ).toBeVisible();
+  await dialog
+    .getByRole("button", { name: "查看工具详情", exact: true })
+    .click();
+  page.once("dialog", (confirmation) => void confirmation.accept());
+  await dialog
+    .getByRole("button", { name: "调用工具（需确认）", exact: true })
+    .click();
+  await expect(dialog.locator(".settings-mcp-tool-result")).toContainText(
+    "fixture receipt",
+  );
+  await dialog
+    .getByRole("button", { name: "收起工具详情", exact: true })
+    .click();
+  await expect(dialog.locator(".settings-mcp-tools")).toBeHidden();
+  await dialog
+    .getByRole("button", { name: "查看工具详情", exact: true })
+    .click();
+  await expect(dialog.locator(".settings-mcp-tool-result")).toContainText(
+    "fixture receipt",
+  );
+  page.once("dialog", (confirmation) => void confirmation.accept());
+  await dialog
+    .getByRole("button", { name: "调用工具（需确认）", exact: true })
+    .click();
+  await expect.poll(() => calls).toBe(2);
+  await expect(
+    dialog.getByRole("button", { name: "收起工具详情", exact: true }),
+  ).toBeDisabled();
+  await expect(
+    dialog.getByRole("button", { name: "断开", exact: true }),
+  ).toBeDisabled();
+  await expect(
+    dialog.getByRole("button", { name: "移除", exact: true }),
+  ).toBeDisabled();
+  await expect(
+    dialog.getByRole("button", { name: "关闭设置", exact: true }),
+  ).toBeDisabled();
+  for (const tab of await dialog.getByRole("tab").all())
+    await expect(tab).toBeDisabled();
+  await dialog
+    .getByRole("button", { name: "停止等待工具结果", exact: true })
+    .click();
+  await expect(dialog.locator(".settings-mcp-tool-result")).toContainText(
+    "可能已在远端执行",
+  );
+  await expect(
+    dialog.getByRole("button", { name: "关闭设置", exact: true }),
+  ).toBeEnabled();
+  expect(calls).toBe(2);
+  releaseCall();
 });

@@ -188,6 +188,8 @@ impl AgentRuntime {
             .stderr(Stdio::null())
             .kill_on_drop(true);
         #[cfg(windows)]
+        crate::agent_process::protect_node_startup(command.as_std_mut());
+        #[cfg(windows)]
         command.creation_flags(0x08000000);
         let mut child = command
             .spawn()

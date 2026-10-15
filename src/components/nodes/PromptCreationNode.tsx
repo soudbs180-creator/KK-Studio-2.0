@@ -1,7 +1,8 @@
-import { useLayoutEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import CreationModelPicker from "./CreationModelPicker";
 import ModelVariantControl from "../ModelVariantControl";
 import UiIcon from "../UiIcon";
+import CanvasComposerShell from "../canvas/CanvasComposerShell";
 import type {
   CanvasCollectionItem,
   NodeEditingProps,
@@ -50,6 +51,10 @@ export default function PromptCreationNode({
   const demoGeneration = useLocalGeneration(item.kind, onDemoResults);
   const textGeneration = useCanvasImageGeneration();
   const generation = item.kind === "text" ? textGeneration : demoGeneration;
+  const busy = generation.phase === "loading";
+  useEffect(() => {
+    if (!selected || busy) setModelOpen(false);
+  }, [selected, busy]);
   useLayoutEffect(() => {
     if (selected) onExtraHeightChange(60);
   }, [selected, onExtraHeightChange]);
@@ -86,6 +91,7 @@ export default function PromptCreationNode({
               <button
                 key={entry.value}
                 type="button"
+                disabled={busy}
                 className="ui-button"
                 aria-pressed={mode === entry.value}
                 onClick={() => {
@@ -119,65 +125,74 @@ export default function PromptCreationNode({
         )}
       </article>
       {selected && (
-        <div
+        <CanvasComposerShell
           className="creation-composer prompt-composer"
           data-testid={`${item.kind}-composer`}
           onPointerDown={(e) => e.stopPropagation()}
           onWheel={(e) => e.stopPropagation()}
         >
           <textarea
+            disabled={busy}
+            title={busy ? "生成中暂不能编辑，取消或结束后可继续" : undefined}
             aria-label={`${label}提示词`}
             placeholder="描述你想要生成的内容"
             maxLength={item.kind === "text" ? 4000 : 7500}
             value={item.prompt ?? ""}
             onChange={(e) => onChange({ prompt: e.target.value })}
           />
-          {item.kind === "text" && (
-            <CreationModelPicker
-              kind="text"
-              value={item.model ?? textGeneration.model}
-              open={modelOpen}
-              onToggle={() => setModelOpen(!modelOpen)}
-              onChange={(model, selection) => {
-                onChange({
-                  model,
-                  providerConnectionId: selection?.connectionId,
-                  generationSource:
-                    selection?.source === "codex" ? "codex" : undefined,
-                });
-                setModelOpen(false);
+          <div className="creation-controls">
+            {item.kind === "text" && (
+              <CreationModelPicker
+                disabled={busy}
+                kind="text"
+                value={item.model ?? textGeneration.model}
+                open={!busy && modelOpen}
+                onToggle={() => setModelOpen(!modelOpen)}
+                onChange={(model, selection) => {
+                  onChange({
+                    model,
+                    providerConnectionId: selection?.connectionId,
+                    generationSource:
+                      selection?.source === "codex" ? "codex" : undefined,
+                  });
+                  setModelOpen(false);
+                }}
+                onConfigure={() => {
+                  setModelOpen(false);
+                  onConfigure();
+                }}
+              />
+            )}
+            {item.kind === "text" && (
+              <ModelVariantControl
+                disabled={busy}
+                selection={{
+                  source: item.generationSource === "codex" ? "codex" : "api",
+                  model: item.model ?? textGeneration.model,
+                  connectionId: item.providerConnectionId,
+                }}
+                onSelect={(selection) =>
+                  onChange({
+                    model: selection.model,
+                    providerConnectionId: selection.connectionId,
+                  })
+                }
+              />
+            )}
+            <GenerationAction
+              generation={generation}
+              label={label}
+              onRun={() => {
+                if (item.kind === "text")
+                  void textGeneration.run(
+                    item.prompt ?? "",
+                    1,
+                    textGeneration.model,
+                  );
+                else void demoGeneration.run(item.prompt ?? "");
               }}
-              onConfigure={onConfigure}
             />
-          )}
-          {item.kind === "text" && (
-            <ModelVariantControl
-              selection={{
-                source: item.generationSource === "codex" ? "codex" : "api",
-                model: item.model ?? textGeneration.model,
-                connectionId: item.providerConnectionId,
-              }}
-              onSelect={(selection) =>
-                onChange({
-                  model: selection.model,
-                  providerConnectionId: selection.connectionId,
-                })
-              }
-            />
-          )}
-          <GenerationAction
-            generation={generation}
-            label={label}
-            onRun={() => {
-              if (item.kind === "text")
-                void textGeneration.run(
-                  item.prompt ?? "",
-                  1,
-                  textGeneration.model,
-                );
-              else void demoGeneration.run(item.prompt ?? "");
-            }}
-          />
+          </div>
           <GenerationStatus generation={generation} />
           <span className="prompt-composer-label">
             {item.kind === "text"
@@ -189,7 +204,7 @@ export default function PromptCreationNode({
               {status}
             </p>
           )}
-        </div>
+        </CanvasComposerShell>
       )}
     </div>
   );

@@ -6,7 +6,9 @@ import {
   themeTokens,
 } from "../helpers/designSystem.ts";
 
-const pages = ["项目库", "技能", "ComfyUI 工作流"];
+import { selectSettingsSection } from "./helpers";
+
+const pages = ["项目库", "扩展", "ComfyUI 工作流"];
 
 test("sidebar SVG marks remain distinguishable in both themes", async ({
   page,
@@ -88,22 +90,51 @@ for (const width of [390, 1920]) {
         "储存",
         "网络",
         "记忆",
-        "模型供应商",
+        "模型接入",
         "扩展",
         "Comfy UI",
         "高级",
         "软件更新",
       ]) {
-        await dialog
-          .locator(".settings-nav")
-          .getByRole("button", { name: section, exact: true })
-          .click();
+        await selectSettingsSection(page, section);
         const content = dialog.locator(".settings-content");
         await expect(content.locator("h2")).toHaveText(section);
         expect(
           await content.evaluate((el) => el.scrollWidth - el.clientWidth),
           `${theme}/${section} horizontal overflow`,
         ).toBeLessThanOrEqual(1);
+        if (section === "模型接入") {
+          const methods = content.locator(".model-access-methods");
+          if (
+            width === 390 &&
+            (await content
+              .locator(".model-access-settings")
+              .getAttribute("data-navigation")) === "detail"
+          )
+            await content
+              .getByRole("button", { name: "返回接入方式", exact: true })
+              .click();
+          await expect(methods.getByRole("button")).toHaveCount(5);
+          await methods
+            .getByRole("button", { name: "API Key（官方）", exact: true })
+            .click();
+          await expect(
+            methods.locator('[aria-pressed="true"]'),
+          ).toHaveAttribute("aria-pressed", "true");
+          await expect(methods.locator('[aria-pressed="true"]')).toHaveText(
+            "API Key（官方）",
+          );
+          await expect(
+            content.getByRole("region", {
+              name: "官方 API Key 配置",
+              exact: true,
+            }),
+          ).toBeVisible();
+          if (width === 390) await expect(methods).toBeHidden();
+          await expect(
+            content.getByLabel("接口地址", { exact: true }),
+          ).toBeEditable();
+        }
         const fieldErrors = await content
           .locator(
             'input:not([type="file"]):not([type="checkbox"]):not([type="radio"]), select',
@@ -129,21 +160,8 @@ for (const width of [390, 1920]) {
               }),
           );
         expect(fieldErrors, `${theme}/${section} shared fields`).toEqual([]);
-        if (section === "模型供应商") {
-          const radioSizes = await content
-            .locator('input[type="radio"][name="google-login-mode"]')
-            .evaluateAll((elements) =>
-              elements.map((element) => {
-                const css = getComputedStyle(element);
-                return [css.width, css.height];
-              }),
-            );
-          expect(radioSizes).toEqual([
-            ["16px", "16px"],
-            ["16px", "16px"],
-          ]);
-        }
         if (section === "扩展") {
+          await dialog.getByRole("tab", { name: /MCP/ }).click();
           await expect(
             dialog.locator(".settings-nav").locator('[aria-current="page"]'),
           ).toHaveCount(1);
@@ -151,11 +169,11 @@ for (const width of [390, 1920]) {
             "border-radius",
             "20px",
           );
-          await dialog.getByRole("tab", { name: /技能/ }).click();
+          await dialog.getByRole("tab", { name: /Skill/ }).click();
           await expect(dialog.getByRole("tabpanel")).toContainText("Skill");
           await dialog.getByRole("tab", { name: /伙伴/ }).click();
-          await expect(dialog.getByRole("tabpanel")).toContainText("Agent");
-          await dialog.getByRole("tab", { name: /插件/ }).click();
+          await expect(dialog.getByRole("tabpanel")).toContainText("策划伙伴");
+          await dialog.getByRole("tab", { name: /MCP/ }).click();
           const pluginRow = dialog.locator(".plugin-manager-row").first();
           if (await pluginRow.count()) {
             await expect(pluginRow).toHaveCSS("border-radius", "20px");
@@ -233,16 +251,16 @@ for (const theme of ["dark", "light"]) {
           .first();
         await expect(primary).toHaveCSS(
           "background-color",
-          cssRgb(token("--bg-accent")),
+          cssRgb(token("--kk-button-primary-bg")),
         );
         await expect(primary).toHaveCSS(
           "color",
-          cssRgb(token("--text-on-accent")),
+          cssRgb(token("--kk-button-primary-text")),
         );
         await primary.hover();
         await expect(primary).toHaveCSS(
           "background-color",
-          cssRgb(token("--bg-accent-hover")),
+          cssRgb(token("--kk-button-primary-hover")),
         );
         const painted = await colors(primary);
         expect(
@@ -258,7 +276,7 @@ for (const theme of ["dark", "light"]) {
           "background-color",
           cssRgb(token("--bg-input")),
         );
-        if (name === "技能") {
+        if (name === "扩展") {
           const filter = section.locator(".catalog-categories button").first();
           const selected = await filter.evaluate((el) => ({
             border: getComputedStyle(el).borderColor,
@@ -271,7 +289,7 @@ for (const theme of ["dark", "light"]) {
           expect(selected.shadow).toContain("inset");
         }
       }
-      if (name === "技能") {
+      if (name === "扩展") {
         const filter = section.locator(".catalog-categories button").first();
         await expect.soft(filter).toHaveAttribute("aria-pressed", "true");
         await expect.soft(filter).toHaveCSS("border-radius", "999px");
@@ -328,7 +346,7 @@ for (const width of [390, 1920]) {
     await page.setViewportSize({ width, height: width === 1920 ? 1080 : 844 });
     await page.goto("/");
     await page.emulateMedia({ reducedMotion: "reduce" });
-    await navigate(page, "技能");
+    await navigate(page, "扩展");
     const opener = page.getByRole("button", {
       name: "新建本地 Skill",
       exact: true,
@@ -379,7 +397,7 @@ for (const width of [390, 1920]) {
     await expect(dialog).toHaveCount(0);
     await expect(opener).toBeFocused();
     await page.reload();
-    await navigate(page, "技能");
+    await navigate(page, "扩展");
     const category = page
       .getByRole("group", { name: "Skill分类", exact: true })
       .getByRole("button", { name: longCategory, exact: true });

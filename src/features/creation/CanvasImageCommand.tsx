@@ -30,6 +30,10 @@ export const CanvasImageCommandContext = createContext<{
   tasks: CreationTask[];
   items?: CanvasCollectionItem[];
   updateItem?: (id: string, patch: Partial<CanvasCollectionItem>) => void;
+  updateItemTags?: (id: string, tags: string[]) => string | undefined;
+  createTag?: (name: string) => void;
+  customTags?: string[];
+  favoriteIds?: ReadonlySet<string>;
   deleteItem?: (id: string) => void;
   retryTask?: (taskId: string) => void;
   regenerateTask?: (taskId: string) => void;

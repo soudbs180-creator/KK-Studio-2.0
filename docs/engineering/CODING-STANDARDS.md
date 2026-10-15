@@ -8,32 +8,36 @@
 
 ## 门禁映射
 
+当前已承接 `npm run health:check` 与 `npm run footguns:check`，并接入 lint。两者基于主线配置的独立开关运行，当前 advisory；执行输出不能冒充 blocking 已启用。函数/文件规模棘轮、差异范围、静态例外和 Windows 模式规则见 [DEVELOPMENT](DEVELOPMENT.md#代码健康棘轮与-windows-不安全模式扫描)。不为本轮 UI 改动放宽阈值或补白名单。Actions 固定到主线已审 SHA；同步其输入契约。
+
 写代码前先确认要满足哪条门禁。以下命令都在仓库根执行，全部已并入 `npm run lint` 或 `npm run verify`。
 
-| 门禁 | 命令 | 拦截内容 |
-| --- | --- | --- |
-| ESLint | `eslint src tests scripts *.config.{ts,mjs} --max-warnings 0` | 未使用变量（`^_` 前缀豁免）、`debugger`、TS 推荐规则集错误 |
-| 架构边界 | `node scripts/check-governance.mjs` | `src/domain` 依赖 UI/宿主层、服务端专用模块被浏览器侧引用 |
-| UI 标准 | `node scripts/check-ui-standards.mjs` | 未定义 CSS 令牌、新增颜色字面量、新增 Lucide 直连、组件超 300 行、Iconsax 绕过 `UiIcon` |
-| 类型 | `tsc --noEmit` | 类型错误 |
-| 格式 | `prettier --check` | 格式偏差 |
-| Markdown 链接 | `node scripts/check-markdown.mjs` | 断链、跨仓库链接 |
-| 文档索引与 ADR 编号 | `node scripts/check-doc-index.mjs` | `docs/{engineering,architecture,governance}/` 下的 `.md` 未在 `docs/README.md` 索引、ADR 编号重复、ADR 文件名不合规、重建已废止的 `docs/decisions/` |
-| 文档命令引用 | `node scripts/check-doc-commands.mjs` | 文档中引用的 `npm run` 脚本在 `package.json` 中不存在 |
+| 门禁                   | 命令                                                              | 拦截内容                                                                                                                                            |
+| ---------------------- | ----------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ESLint                 | `eslint src tests scripts *.config.{ts,mjs} --max-warnings 0`     | 未使用变量（`^_` 前缀豁免）、`debugger`、TS 推荐规则集错误                                                                                          |
+| 架构边界               | `node scripts/check-governance.mjs`                               | `src/domain` 依赖 UI/宿主层、服务端专用模块被浏览器侧引用                                                                                           |
+| UI 标准                | `node scripts/check-ui-standards.mjs`                             | 未定义 CSS 令牌、新增颜色字面量、新增 Lucide 直连、组件超 300 行、Iconsax 绕过 `UiIcon`                                                             |
+| 类型                   | `tsc --noEmit`                                                    | 类型错误                                                                                                                                            |
+| 格式                   | `prettier --check`                                                | 格式偏差                                                                                                                                            |
+| Markdown 链接          | `node scripts/check-markdown.mjs`                                 | 断链、跨仓库链接                                                                                                                                    |
+| 文档索引与 ADR 编号    | `node scripts/check-doc-index.mjs`                                | `docs/{engineering,architecture,governance}/` 下的 `.md` 未在 `docs/README.md` 索引、ADR 编号重复、ADR 文件名不合规、重建已废止的 `docs/decisions/` |
+| 文档命令引用           | `node scripts/check-doc-commands.mjs`                             | 文档中引用的 `npm run` 脚本在 `package.json` 中不存在                                                                                               |
 | 代码健康棘轮 | `npm run health:check` | 只评变化文件；新增单元须达标，超标存量只许变小；主线 ENFORCEMENT 为 blocking 时拦截未豁免增长，配置缺失同样失败关闭 |
 | Windows 不安全模式 | `npm run footguns:check` | 扫描变化脚本与 workflow 中的不安全模式；主线 FOOTGUNS_ENFORCEMENT 独立决定 advisory/blocking/off，缺失回退 blocking |
-| 交付包完整性 | `node scripts/check-delivery-completeness.mjs` | 本次 diff 触及的交付包缺 intent/spec/plan/verification/review 任一件 |
-| 任务账本 | `node scripts/check-governance.mjs` | 账本与 `TASK_LEDGER.md` 不同步、状态字段缺失 |
-| 平台交付与最小 AI 链路 | 人工评审：`AGENTS.md`、`PROJECT_GOALS.md`、`ADR-011` 与功能卡证据 | 当前没有自动 guardrail；检查 Desktop → Web → Mobile 顺序、UI/交互与文本/图片链路、Mobile 目录隔离、VPS 控制面状态，不能仅凭 lint/verify 宣称通过 |
+| 文档生命周期与时间冲突 | `npm run snapshot:check`                                          | 当前治理文档的稳定 `docId`、`updatedAt`、`source`、`status`、`supersededBy` 缺失/冲突，以及重复 `current` 入口                                      |
+| 代码健康棘轮与 Windows 不安全模式 | 是 | `npm run lint` 顺序执行；两个总开关仅读主线配置，不能由任务分支自行放宽 |
+| 交付包完整性           | `node scripts/check-delivery-completeness.mjs`                    | 本次 diff 触及的交付包缺 intent/spec/plan/verification/review 任一件                                                                                |
+| 任务账本               | `node scripts/check-governance.mjs`                               | 账本与 `TASK_LEDGER.md` 不同步、状态字段缺失                                                                                                        |
+| 平台交付与最小 AI 链路 | 人工评审：`AGENTS.md`、`PROJECT_GOALS.md`、`ADR-011` 与功能卡证据 | 当前没有自动 guardrail；检查 Desktop → Web → Mobile 顺序、UI/交互与文本/图片链路、Mobile 目录隔离、VPS 控制面状态，不能仅凭 lint/verify 宣称通过    |
+| UI 体积预算 | 同版本生产构建、gzip 与输入 SHA 的人工量测/评审 | 主入口 JS gzip 增量上限见下节；当前没有自动脚本，不因 lint exit 0 声称预算已检查 |
 
 ### 门禁接入状态
 
-| 门禁 | 是否并入 `npm run lint` | 说明 |
-| --- | --- | --- |
-| 文档索引与 ADR 编号 | 是 | 全库静态校验，无历史欠账 |
-| 文档命令引用 | 是 | 全库静态校验，无历史欠账 |
-| 代码健康棘轮与 Windows 不安全模式 | 是 | `npm run lint` 顺序执行；两个总开关仅读主线配置，不能由任务分支自行放宽 |
-| 交付包完整性 | **否**，需显式执行 | 依赖 `origin/main...HEAD` diff。本分支存在 7 个早于本门禁的历史缺件包，属存量欠账；清零或标注 `legacy-incomplete` 后再并入 `lint` |
+| 门禁                | 是否并入 `npm run lint` | 说明                                                                                                                              |
+| ------------------- | ----------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| 文档索引与 ADR 编号 | 是                      | 全库静态校验，无历史欠账                                                                                                          |
+| 文档命令引用        | 是                      | 全库静态校验，无历史欠账                                                                                                          |
+| 交付包完整性        | **否**，需显式执行      | 依赖 `origin/main...HEAD` diff。本分支存在 7 个早于本门禁的历史缺件包，属存量欠账；清零或标注 `legacy-incomplete` 后再并入 `lint` |
 
 **ESLint 实际覆盖范围小于命令字面**：`eslint.config.mjs` 的 `files` 为 `src/**/*.{ts,tsx}`、`tests/**/*.ts`、`scripts/**/*.mjs`、`*.config.{ts,mjs}`。因此：
 
@@ -47,14 +51,14 @@
 
 `src/` 六个一级目录各自职责固定。下表「当前实际依赖」一列是**实测存量现状**，不是门禁，也不是推荐目标。
 
-| 目录 | 职责 | 门禁强制的依赖约束 | 当前实际依赖（实测） |
-| --- | --- | --- | --- |
-| `src/domain` | 纯领域模型与规则 | 禁React、Tauri、`components`、`features`、`integrations`、`styles`、Node 内置 | 存在 2 处导入 `runtime/storage-contract.ts`（`modelProvider.ts`、`settings.ts`），门禁**允许**（禁令列表不含 runtime） |
-| `src/components` | 展示组件 | 无 | 178 处导入 `features`（涉及 101 个文件）、7 处导入 `runtime`（`AccountPopup`、`TopBar`、4 个 settings 文件、`useAssetCollections`）。与 features 为**双向**依赖 |
-| `src/features` | 业务能力（agent、creation、mcp、local-service、generation-server、prompts 等） | `generation-server/**` 与 local-service 五个 server 文件不得被浏览器侧导入 | 导入 `components`、`domain`、`integrations`、`runtime` |
-| `src/integrations` | 外部系统适配 | 无 | 少量导入 `features` |
-| `src/runtime` | 宿主运行时桥接 | 无 | 被 domain、components、features 导入 |
-| `src/styles` | token 与全局样式 | 无业务依赖（CSS 无 import） | 不适用 |
+| 目录               | 职责                                                                           | 门禁强制的依赖约束                                                            | 当前实际依赖（实测）                                                                                                                                            |
+| ------------------ | ------------------------------------------------------------------------------ | ----------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/domain`       | 纯领域模型与规则                                                               | 禁React、Tauri、`components`、`features`、`integrations`、`styles`、Node 内置 | 存在 2 处导入 `runtime/storage-contract.ts`（`modelProvider.ts`、`settings.ts`），门禁**允许**（禁令列表不含 runtime）                                          |
+| `src/components`   | 展示组件                                                                       | 无                                                                            | 178 处导入 `features`（涉及 101 个文件）、7 处导入 `runtime`（`AccountPopup`、`TopBar`、4 个 settings 文件、`useAssetCollections`）。与 features 为**双向**依赖 |
+| `src/features`     | 业务能力（agent、creation、mcp、local-service、generation-server、prompts 等） | `generation-server/**` 与 local-service 五个 server 文件不得被浏览器侧导入    | 导入 `components`、`domain`、`integrations`、`runtime`                                                                                                          |
+| `src/integrations` | 外部系统适配                                                                   | 无                                                                            | 少量导入 `features`                                                                                                                                             |
+| `src/runtime`      | 宿主运行时桥接                                                                 | 无                                                                            | 被 domain、components、features 导入                                                                                                                            |
+| `src/styles`       | token 与全局样式                                                               | 无业务依赖（CSS 无 import）                                                   | 不适用                                                                                                                                                          |
 
 ### 硬约束：领域层纯净
 
@@ -94,18 +98,18 @@ src/features/local-service/store.ts
 
 排名前十：
 
-| 文件 | 行数 |
-| --- | --- |
-| `src/App.tsx` | 3152 |
+| 文件                                           | 行数 |
+| ---------------------------------------------- | ---- |
+| `src/App.tsx`                                  | 3152 |
 | `src/features/generation-server/repository.ts` | 1063 |
-| `src/features/creation/model.ts` | 972 |
-| `src/features/agent/agentConnection.ts` | 942 |
-| `src/features/creation/taskRecovery.ts` | 835 |
-| `src/features/creation/nativeTaskHost.ts` | 824 |
-| `src/features/mcp/mcpClient.ts` | 821 |
-| `src/features/agent/orchestrator.ts` | 819 |
-| `src/features/local-service/store.ts` | 775 |
-| `src/features/prompts/promptLibrary.ts` | 644 |
+| `src/features/creation/model.ts`               | 972  |
+| `src/features/agent/agentConnection.ts`        | 942  |
+| `src/features/creation/taskRecovery.ts`        | 835  |
+| `src/features/creation/nativeTaskHost.ts`      | 824  |
+| `src/features/mcp/mcpClient.ts`                | 821  |
+| `src/features/agent/orchestrator.ts`           | 819  |
+| `src/features/local-service/store.ts`          | 775  |
+| `src/features/prompts/promptLibrary.ts`        | 644  |
 
 其余 22 个（300–635 行）：`features/local-service/client.ts` 635、`features/skills/skillRegistry.ts` 581、`features/projects/projectPackage.ts` 567、`features/agent/googleAgentConnection.ts` 548、`features/generation-server/assets.ts` 497、`features/agent/agentCanvas.ts` 485、`features/generation-server/provider.ts` 477、`domain/stagePlan.ts` 467、`features/creation/assetRepository.ts` 462、`features/memory/storage.ts` 460、`features/local-service/migration.ts` 419、`features/creation/imageGeneration.ts` 416、`features/plugins/pluginLoader.ts` 399、`features/local-service/server.ts` 385、`features/creation/providerSubmission.ts` 376、`features/creation/imageTaskCommand.ts` 363、`features/creation/useSpeechInput.ts` 335、`features/creation/storage.ts` 322、`features/memory/memoryService.ts` 321、`components/canvas/useCanvasControls.ts` 320、`features/agent/agentHost.ts` 316、`features/generation-server/http.ts` 306。
 
@@ -126,16 +130,16 @@ src/features/local-service/store.ts
 
 ### 文件
 
-| 类型 | 风格 | 示例 |
-| --- | --- | --- |
-| React 组件 | PascalCase.tsx | `ConversationPanel.tsx` |
-| 组件附属类型 | PascalCase.types.ts | `ConversationPanel.types.ts` |
-| Hook | useCamelCase.ts | `useSidebarLayout.ts` |
-| 领域/服务/工具 | camelCase.ts | `agentConnection.ts`、`promptLibrary.ts` |
-| 样式 | kebab-case.css | `workspace.css`、`ui-tokens.css` |
-| 测试 | camelCase.test.ts / camelCase.spec.ts | `agentConnection.test.ts`、`sidebar.spec.ts` |
-| 脚本 | kebab-case.mjs | `check-ui-standards.mjs`、`desktop-release.mjs` |
-| 文档 | UPPER-CASE.kebab.md | `BRANCH-POLICY.md`、`UI_RULES.md` |
+| 类型           | 风格                                  | 示例                                            |
+| -------------- | ------------------------------------- | ----------------------------------------------- |
+| React 组件     | PascalCase.tsx                        | `ConversationPanel.tsx`                         |
+| 组件附属类型   | PascalCase.types.ts                   | `ConversationPanel.types.ts`                    |
+| Hook           | useCamelCase.ts                       | `useSidebarLayout.ts`                           |
+| 领域/服务/工具 | camelCase.ts                          | `agentConnection.ts`、`promptLibrary.ts`        |
+| 样式           | kebab-case.css                        | `workspace.css`、`ui-tokens.css`                |
+| 测试           | camelCase.test.ts / camelCase.spec.ts | `agentConnection.test.ts`、`sidebar.spec.ts`    |
+| 脚本           | kebab-case.mjs                        | `check-ui-standards.mjs`、`desktop-release.mjs` |
+| 文档           | UPPER-CASE.kebab.md                   | `BRANCH-POLICY.md`、`UI_RULES.md`               |
 
 组件私有子组件用父组件名做前缀，保持家族可辨识：`ConversationPanel` / `ConversationPanel.types`、`TaskWorkbench` / `TaskWorkbenchContent` / `TaskWorkbenchExport` / `TaskWorkbenchReview` / `TaskWorkbenchStages`。
 
@@ -208,15 +212,23 @@ src/features/local-service/store.ts
 
 代码改动若改变契约，必须在同一分支同步对应文档，不留待办：
 
-| 改动类型 | 必须同步的文件 |
-| --- | --- |
-| 新增/移除功能 | `docs/features/features.registry.json` + 对应 `docs/features/feat-*.md`，再跑 `npm run features:write` |
-| 数据结构、存储、协议、依赖变化 | `docs/architecture/adr/` 新增 ADR |
-| 跨模块契约、领域规则 | 本文件与 `AI_RULES.md` 对应章节 |
-| 平台顺序与跨端边界 | `AGENTS.md` + `docs/governance/PROJECT_GOALS.md` + `docs/architecture/adr/ADR-011-platform-delivery-gates-and-vps-control-plane.md`；当前靠人工评审，无自动 guardrail |
-| 新增门禁或放宽既有门禁 | 对应 `scripts/` 脚本 + 本文「门禁映射」表 |
-| UI 令牌、组件契约 | [`../UI_INDEX.md`](../UI_INDEX.md) 指向的唯一承载文件 |
+| 改动类型                       | 必须同步的文件                                                                                                                                                        |
+| ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 新增/移除功能                  | `docs/features/features.registry.json` + 对应 `docs/features/feat-*.md`，再跑 `npm run features:write`                                                                |
+| 数据结构、存储、协议、依赖变化 | `docs/architecture/adr/` 新增 ADR                                                                                                                                     |
+| 跨模块契约、领域规则           | 本文件与 `AI_RULES.md` 对应章节                                                                                                                                       |
+| 平台顺序与跨端边界             | `AGENTS.md` + `docs/governance/PROJECT_GOALS.md` + `docs/architecture/adr/ADR-011-platform-delivery-gates-and-vps-control-plane.md`；当前靠人工评审，无自动 guardrail |
+| 新增门禁或放宽既有门禁         | 对应 `scripts/` 脚本 + 本文「门禁映射」表                                                                                                                             |
+| UI 令牌、组件契约              | [`../UI_INDEX.md`](../UI_INDEX.md) 指向的唯一承载文件                                                                                                                 |
 
 提交前跑 `npm run lint`。门禁全绿仍不等于规则正确，规则变更类改动按 [AI-EVALS](AI-EVALS.md) 做场景回归。
 
 参考：[TypeScript Handbook](https://www.typescriptlang.org/docs/handbook/intro.html)、[ESLint Rules](https://eslint.org/docs/latest/rules/)、[typescript-eslint](https://typescript-eslint.io/rules/)。
+
+## 依赖与体积预算
+
+约定（评审执行，无自动门禁）：本轮 UI 的主入口 JS gzip 允许增长量为 max(冻结基线 gzip 字节 × 3%, 16 × 1024 字节)。对同一平台、同一构建模式与相同 Node/gzip 参数比较冻结基线和候选，分别记录源码 commit/tree、主入口文件 hash、原始字节和 gzip 字节。未量测保持 NOT VERIFIED；超预算先检查重复资源、未用代码与按需功能边界，并记录必要增量的原因和受影响能力，经评审接受后才能交付。
+
+同时报告全部 JS/CSS 和 Agent/插件/原生运行时的包内体积、运行白名单与新增依赖用途；仅把代码移到异步 chunk 不能证明整体变轻。按需加载须有真实入口、离线/失败/重载覆盖，不能通过漏构建插件、删原件/功能或省略 Agent 依赖凑指标。资源重复按 hash 计量，已加载分页数量不当成全库统计。默认复用现有控件、标准库和已安装依赖；新依赖需说明随包字节、收益与退出路径。
+
+文档与产物落点从 [文档入口](../README.md#源码数据与文档的落点) 路由。运行日志、截图、恢复包和构建缓存不随新 change package 大量复制入库；历史原件按既有保留契约处理，体积预算不授权删除。

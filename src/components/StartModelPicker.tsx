@@ -1,5 +1,4 @@
 import type { CreationDraft } from "../features/creation/model";
-import GenerationOptions from "./GenerationOptions";
 import ModelPickerMenu from "./ModelPickerMenu";
 
 export default function StartModelPicker({
@@ -10,7 +9,6 @@ export default function StartModelPicker({
   onToggle,
   onSelect,
   onConfigure,
-  onOptionsChange,
 }: {
   draft: CreationDraft;
   defaultModel: string;
@@ -19,7 +17,6 @@ export default function StartModelPicker({
   onToggle: () => void;
   onSelect: (choice: { model: string; connectionId?: string }) => void;
   onConfigure: () => void;
-  onOptionsChange: (patch: Partial<CreationDraft>) => void;
 }) {
   return (
     <div className="start-model-picker">
@@ -48,9 +45,6 @@ export default function StartModelPicker({
           }}
           onSelect={onSelect}
           onConfigure={onConfigure}
-          options={
-            <GenerationOptions draft={draft} onChange={onOptionsChange} />
-          }
         />
       )}
     </div>

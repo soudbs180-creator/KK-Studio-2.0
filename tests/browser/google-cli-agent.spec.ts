@@ -8,7 +8,12 @@ test("Gemini CLI login mode: configure, connect and chat through the local bridg
     const url = route.request().url();
     if (url.endsWith("/status"))
       return route.fulfill({
-        json: { installed: true, version: "1.2.3", login: true },
+        json: {
+          installed: true,
+          version: "1.2.3",
+          login: true,
+          loginStatus: "verified",
+        },
       });
     const body = route.request().postDataJSON();
     chats.push(body);
@@ -21,8 +26,12 @@ test("Gemini CLI login mode: configure, connect and chat through the local bridg
   });
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
-  await page.getByRole("button", { name: "模型供应商", exact: true }).click();
-  await page.getByRole("radio", { name: /Gemini CLI 账号/ }).check();
+  await page.getByRole("button", { name: "模型接入", exact: true }).click();
+  await page
+    .getByRole("button", { name: "API Key（官方）", exact: true })
+    .click();
+  await page.getByRole("button", { name: "CLI 账号", exact: true }).click();
+  await page.getByRole("button", { name: "Gemini CLI", exact: true }).click();
   await page.getByRole("button", { name: "保存登录方式", exact: true }).click();
   await expect(
     page.getByText("已切换为 Gemini CLI 登录方式", { exact: false }),
@@ -30,7 +39,7 @@ test("Gemini CLI login mode: configure, connect and chat through the local bridg
   await page
     .getByRole("button", { name: "检测 Gemini CLI", exact: true })
     .click();
-  await expect(page.getByText(/Gemini CLI 已就绪/)).toBeVisible();
+  await expect(page.getByText(/Gemini CLI 已验证（1.2.3）/)).toBeVisible();
   expect(
     await page.evaluate(() => localStorage.getItem("kk-google-login-mode")),
   ).toBe("cli");
@@ -51,6 +60,16 @@ test("Gemini CLI login mode: configure, connect and chat through the local bridg
     page.getByText("Google Gemini · 已连接", { exact: true }),
   ).toBeVisible();
 
+  const model = "gemini-cli-fixture-custom";
+  await page.getByRole("button", { name: "Google 模型", exact: true }).click();
+  await page.getByLabel("搜索或输入 Google 型号", { exact: true }).fill(model);
+  await page
+    .getByLabel("搜索或输入 Google 型号", { exact: true })
+    .press("Enter");
+  await expect(
+    page.getByRole("button", { name: "Google 模型", exact: true }),
+  ).toHaveAttribute("title", model);
+
   const input = page.getByPlaceholder(
     "和 Google 聊天（Gemini CLI 通道，仅文字）",
   );
@@ -64,10 +83,11 @@ test("Gemini CLI login mode: configure, connect and chat through the local bridg
   await expect(
     page.getByText("CLI fixture reply 2", { exact: true }),
   ).toBeVisible();
-  expect(chats[0]).toMatchObject({ prompt: "Hello CLI" });
+  expect(chats[0]).toMatchObject({ prompt: "Hello CLI", model });
   expect(chats[1]).toMatchObject({
     prompt: "Again",
     resumeSessionId: "cli-session-1",
+    model,
   });
 
   const output = page.getByLabel("Google 输出", { exact: true });

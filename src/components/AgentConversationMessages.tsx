@@ -6,6 +6,7 @@ import type {
 } from "../features/agent/agentTypes.ts";
 import { useEffect, useRef, useState } from "react";
 import AgentUsageStatus from "./AgentUsageStatus";
+import AgentExecutionProcess from "./AgentExecutionProcess";
 import type { AgentUsageWindow } from "../features/agent/agentUsage";
 import type { AgentDraftAttachment } from "../features/agent/agentAttachments";
 import type { CanvasCollectionItem } from "../domain/canvasItems";
@@ -57,6 +58,21 @@ export default function AgentConversationMessages({
   onConfigure: () => void;
 }) {
   const { messages, sending, connecting, pendingApproval } = agent;
+  const groups = messages.reduce<AgentChatItem[][]>((result, item) => {
+    const previous = result.at(-1);
+    const last = previous?.at(-1);
+    if (
+      item.role === "tool" &&
+      last?.role === "tool" &&
+      item.threadId === last.threadId &&
+      item.turnId === last.turnId
+    )
+      previous!.push(item);
+    else result.push([item]);
+    return result;
+  }, []);
+  const connectionBusy =
+    connecting || agent.preparing || sending || Boolean(pendingApproval);
   const revision = useRef(agent.connectionRevision);
   revision.current = agent.connectionRevision;
   const [busy, setBusy] = useState(false);
@@ -90,14 +106,21 @@ export default function AgentConversationMessages({
           onRefresh={agent.onRefreshUsage}
         />
       )}
-      <p className="chat-agent-banner" role="status">
-        {sending
-          ? "Agent 正在执行…"
-          : connecting
-            ? `正在连接${agent.displayName ?? "本地 Agent"}…`
-            : agent.connected
-              ? `${agent.displayName ?? "Codex 主 Agent"} · 已连接`
-              : `${agent.displayName ?? "Codex 主 Agent"} · 未连接`}
+      <p
+        className={`chat-agent-banner${agent.connected ? " is-connected" : ""}`}
+        role="status"
+      >
+        {pendingApproval
+          ? "Agent 等待确认…"
+          : sending
+            ? agent.activity.includes("已请求停止")
+              ? agent.activity
+              : "Agent 正在执行…"
+            : connecting
+              ? `正在连接${agent.displayName ?? "本地 Agent"}…`
+              : agent.connected
+                ? `${agent.displayName ?? "Codex 主 Agent"} · 已连接`
+                : `${agent.displayName ?? "Codex 主 Agent"} · 未连接`}
         {sending && (
           <button
             type="button"
@@ -110,7 +133,7 @@ export default function AgentConversationMessages({
         )}
       </p>
       {agent.connected && agent.conversation?.status === "warning" && (
-        <p role="status">
+        <p className="chat-agent-warning" role="status">
           可选工具暂不可用：
           {Object.entries(agent.conversation.mcpStatuses)
             .filter(
@@ -145,31 +168,39 @@ export default function AgentConversationMessages({
         </button>
         <button
           type="button"
-          disabled={connecting || sending}
+          className="ui-button is-primary"
+          disabled={connectionBusy || agent.connected}
           onClick={() => agent.onConnect()}
         >
           {connecting
             ? "连接中…"
             : agent.connected
-              ? "重新连接"
+              ? "已连接"
               : `连接 ${agent.displayName ?? "Codex"}`}
         </button>
-        <button
-          type="button"
-          disabled={connecting || sending}
-          onClick={() => agent.onConnect(true)}
-        >
-          新建 Agent 会话
-        </button>
+        <details className="chat-agent-advanced">
+          <summary>高级会话操作</summary>
+          <p>新建后将切换当前项目的会话。</p>
+          <button
+            type="button"
+            disabled={connectionBusy}
+            onClick={() => agent.onConnect(true)}
+          >
+            新建 Agent 会话
+          </button>
+        </details>
+        {connectionBusy && <p>请先停止任务或处理待审批操作，再切换连接。</p>}
       </div>
-      {messages.map((item) => (
-        <div key={item.id} className={`chat-agent-item is-${item.role}`}>
-          {item.role === "tool" && (
-            <span className="chat-agent-tool-tag">工具</span>
-          )}
-          <span>{item.text}</span>
-        </div>
-      ))}
+      {groups.map((items) => {
+        const item = items[0];
+        return item.role === "tool" ? (
+          <AgentExecutionProcess key={item.id} items={items} />
+        ) : (
+          <div key={item.id} className={`chat-agent-item is-${item.role}`}>
+            <span>{item.text}</span>
+          </div>
+        );
+      })}
       {pendingApproval && (
         <div
           className="chat-approval"

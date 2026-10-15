@@ -65,3 +65,8 @@
 | [ADR-013](ADR-013-google-interactions.md) | Google Interactions（既有项目边界内） | — |
 | [ADR-014](ADR-014-vps-portability.md) | 静态 Web 版本与服务器数据分开搬迁 | PROPOSED |
 | [ADR-015](ADR-015-canvas-ui-token-alignment.md) | 画布视觉走 token 体系，停止 Figma 直抄 | 已采纳 |
+
+| [ADR-016](ADR-016-agent-and-provider-recovery.md) | Agent 会话归属与凭据保存恢复 | ACCEPTED |
+
+| [ADR-017](ADR-017-unified-ui-and-collection-compatibility.md) | 统一 UI 与画布分类的兼容边界 | ACCEPTED；当前候选验收另记 |
+| [ADR-018](ADR-018-provider-protocol-and-cli-execution.md) | 显式Provider协议与CLI执行边界 | ACCEPTED；当前任务验证另记 |

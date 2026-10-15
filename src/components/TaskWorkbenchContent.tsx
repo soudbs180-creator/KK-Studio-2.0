@@ -12,6 +12,8 @@ import TaskWorkbenchStages, {
   type StagePlanActions,
 } from "./TaskWorkbenchStages";
 import { formatCostUsd } from "../features/creation/taskState";
+import { taskRetryAvailability } from "../features/creation/taskRetryAvailability";
+export { taskOutputsForDisplay as outputsFor } from "../features/creation/taskRetryAvailability";
 
 export type WorkbenchTab =
   "queue" | "prompt" | "generate" | "review" | "export" | "plan";
@@ -38,36 +40,6 @@ export function statusLabel(task: CreationTask): string {
                   : task.status === "failed"
                     ? "失败"
                     : task.status;
-}
-
-export function outputsFor(task: CreationTask): CreationTaskOutput[] {
-  const completed = new Set(
-    task.completedOutputIndices?.length
-      ? task.completedOutputIndices
-      : Array.from(
-          {
-            length: Math.min(task.completedOutputs, task.requestedOutputs),
-          },
-          (_, index) => index,
-        ),
-  );
-  return task.outputs?.length
-    ? task.outputs
-    : Array.from({ length: task.requestedOutputs }, (_, index) => ({
-        index,
-        status: completed.has(index)
-          ? ("succeeded" as const)
-          : task.status === "failed"
-            ? ("failed" as const)
-            : task.status === "cancelled"
-              ? ("cancelled" as const)
-              : task.status === "unknown"
-                ? ("unknown" as const)
-                : ("waiting" as const),
-        model: task.model,
-        provider: task.providerName,
-        createdAt: task.createdAt,
-      }));
 }
 
 export default function TaskWorkbenchContent({
@@ -118,6 +90,16 @@ export default function TaskWorkbenchContent({
     return (
       <div className="task-workbench-empty">选择一个任务查看批量矩阵。</div>
     );
+  const retry = taskRetryAvailability(selected, project?.tasks);
+  const retryCandidate = [
+    "failed",
+    "partial",
+    "cancelled",
+    "offline",
+    "interrupted",
+  ].includes(selected.status);
+  const retryReason =
+    retryCandidate && !retry.indices.length ? retry.blockedReason : undefined;
   return (
     <>
       <div className="task-workbench-task-head">
@@ -167,16 +149,12 @@ export default function TaskWorkbenchContent({
               </button>
             </>
           )}
-          {[
-            "failed",
-            "partial",
-            "cancelled",
-            "offline",
-            "interrupted",
-          ].includes(selected.status) && (
+          {retryCandidate && (
             <button
               type="button"
               className="kk-button kk-button--secondary"
+              disabled={!retry.indices.length}
+              title={retryReason}
               onClick={() => onRetryTask(selected.id)}
             >
               重试剩余
@@ -184,6 +162,7 @@ export default function TaskWorkbenchContent({
           )}
         </div>
       </div>
+      {retryReason && <p role="status">{retryReason}</p>}
       {tab === "queue" && (
         <div className="task-overview-grid">
           <div>
@@ -239,6 +218,7 @@ export default function TaskWorkbenchContent({
       {tab === "generate" && (
         <BatchMatrix
           task={selected}
+          tasks={project?.tasks}
           outputs={outputs}
           onRetryOutput={onRetryOutput}
         />

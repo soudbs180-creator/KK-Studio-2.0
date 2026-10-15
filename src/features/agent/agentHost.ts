@@ -17,7 +17,9 @@ import type { StagePlan } from "../../domain/stagePlan.ts";
 export interface AgentHostOptions {
   getView?(): AgentCanvasView | null;
   getProject(): CreationProject | undefined;
+  getProjects?(): readonly CreationProject[];
   commit(project: CreationProject): void;
+  flush?(): Promise<void>;
   generate(
     node: CanvasCollectionItem,
     prompt: string,
@@ -30,6 +32,27 @@ export interface AgentHostOptions {
 /** MCP 请求通过 KK 领域和任务入口落地，不直接持有 Provider 凭据。 */
 export function createAgentHost(options: AgentHostOptions) {
   return {
+    readAgentThread() {
+      return options.getProject()?.agentThreadId;
+    },
+    knownAgentProjects() {
+      return (options.getProjects?.() ?? []).map((project) => ({
+        projectId: project.id,
+        threadId: project.agentThreadId,
+      }));
+    },
+    async saveAgentThread(threadId: string, projectId: string) {
+      const project = options.getProject();
+      if (!project || project.id !== projectId)
+        throw new Error("项目已切换，未保存到其他项目。");
+      if (project.agentThreadId !== threadId)
+        options.commit({
+          ...project,
+          agentThreadId: threadId,
+          updatedAt: Date.now(),
+        });
+      await options.flush?.();
+    },
     readGoogleConversation() {
       return options.getProject()?.googleConversation;
     },

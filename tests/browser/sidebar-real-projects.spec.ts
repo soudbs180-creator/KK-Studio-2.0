@@ -87,7 +87,23 @@ test("侧栏按真实项目 ID 打开，改名和删除与项目库及刷新一�
 
   const entry = sidebar.locator(".project-entry").filter({ hasText: "项目乙" });
   await entry.getByRole("button", { name: "更多项目设置" }).click();
+  await expect(entry.locator(".project-menu")).toHaveCSS(
+    "border-radius",
+    "10px",
+  );
+  await expect(entry.getByRole("menuitem", { name: "改名字" })).toHaveCSS(
+    "height",
+    "32px",
+  );
+  await expect(entry.getByRole("menuitem", { name: "改名字" })).toHaveCSS(
+    "border-radius",
+    "8px",
+  );
   await entry.getByRole("menuitem", { name: "改名字" }).click();
+  await expect(sidebar.getByRole("textbox", { name: "项目名称" })).toHaveCSS(
+    "height",
+    "32px",
+  );
   await sidebar.getByRole("textbox", { name: "项目名称" }).fill("项目乙改名");
   await sidebar.getByRole("textbox", { name: "项目名称" }).press("Enter");
   await page.reload();

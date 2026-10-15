@@ -4,10 +4,57 @@ import { prepareImageTask } from "../../src/features/creation/imageTaskCommand.t
 import { createProject } from "../../src/features/creation/model.ts";
 import {
   connectionFromModelProfile,
+  findModelProfileConnection,
   writeProviderConnections,
 } from "../../src/features/creation/providerRegistry.ts";
 import { setSessionApiKey } from "../../src/features/creation/providerCredentials.ts";
 import { saveModelCatalog } from "../../src/features/models/modelCatalog.ts";
+
+test("profile selection resolves the exact account even with duplicate provider, URL and model", () => {
+  const profile = {
+    version: 1 as const,
+    name: "Same",
+    baseUrl: "https://same.example/v1",
+    model: "image-same",
+  };
+  const original = connectionFromModelProfile(profile);
+  const a = { ...original, id: "account-a", credentialRef: "vault_a" };
+  const b = { ...original, id: "account-b", credentialRef: "vault_b" };
+  assert.equal(
+    findModelProfileConnection({ ...profile, connectionId: b.id }, [a, b]),
+    b,
+  );
+  assert.equal(
+    findModelProfileConnection({ ...profile, connectionId: "removed" }, [a, b]),
+    undefined,
+  );
+  assert.equal(findModelProfileConnection(profile, [a, b]), undefined);
+  assert.equal(findModelProfileConnection(profile, [a]), a);
+  const before = Object.getOwnPropertyDescriptor(globalThis, "window");
+  const memory = new Map<string, string>();
+  Object.defineProperty(globalThis, "window", {
+    configurable: true,
+    value: {
+      localStorage: {
+        getItem: (key: string) => memory.get(key) ?? null,
+        setItem: (key: string, value: string) => memory.set(key, value),
+      },
+    },
+  });
+  try {
+    writeProviderConnections([a, b]);
+    const selected = connectionFromModelProfile({
+      ...profile,
+      connectionId: b.id,
+    });
+    assert.equal(selected.id, b.id);
+    assert.equal(selected.credentialRef, b.credentialRef);
+    assert.throws(() => connectionFromModelProfile(profile), /明确选择/);
+  } finally {
+    if (before) Object.defineProperty(globalThis, "window", before);
+    else Reflect.deleteProperty(globalThis, "window");
+  }
+});
 
 test("显式模型选择绑定具体账号；旧项目不覆盖新选择，尺寸必须属于所选模型", async () => {
   const before = ["window", "localStorage"].map(
@@ -24,7 +71,11 @@ test("显式模型选择绑定具体账号；旧项目不覆盖新选择，尺�
   });
   Object.defineProperty(globalThis, "window", {
     configurable: true,
-    value: { localStorage: storage, dispatchEvent: () => true },
+    value: {
+      location: { protocol: "https:", hostname: "fixture.invalid" },
+      localStorage: storage,
+      dispatchEvent: () => true,
+    },
   });
   const a = connectionFromModelProfile({
     version: 1,

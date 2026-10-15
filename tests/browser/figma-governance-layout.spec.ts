@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { selectSettingsSection, showSettingsCategories } from "./helpers";
 
 async function rect(page: import("@playwright/test").Page, selector: string) {
   return page.locator(selector).boundingBox();
@@ -45,7 +46,7 @@ test("approved composer and shell geometry stays stable at phone and desktop siz
   );
 });
 
-test("desktop settings keeps the approved frame and mobile settings uses a bottom rail", async ({
+test("desktop settings uses the compact frame and phone settings uses layered navigation", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 1920, height: 1080 });
@@ -54,8 +55,13 @@ test("desktop settings keeps the approved frame and mobile settings uses a botto
   await page.getByRole("button", { name: "设置", exact: true }).click();
   const desktopSettings = await rect(page, ".settings-panel");
   expect(desktopSettings).not.toBeNull();
-  expect(Math.round(desktopSettings!.width)).toBe(920);
-  expect(Math.round(desktopSettings!.height)).toBe(700);
+  expect(Math.round(desktopSettings!.width)).toBe(960);
+  expect(Math.round(desktopSettings!.height)).toBe(680);
+  const desktopRail = await rect(page, ".settings-sidebar");
+  expect(desktopRail).not.toBeNull();
+  expect(Math.round(desktopRail!.width)).toBe(208);
+  expect(desktopSettings!.x).toBeGreaterThanOrEqual(0);
+  expect(desktopSettings!.x + desktopSettings!.width).toBeLessThanOrEqual(1920);
 
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
   await page.setViewportSize({ width: 390, height: 844 });
@@ -69,11 +75,29 @@ test("desktop settings keeps the approved frame and mobile settings uses a botto
         .map((animation) => animation.finished),
     );
   });
+  const dialog = page.getByRole("dialog", { name: "设置" });
   const mobileSettings = await rect(page, ".settings-panel");
-  const mobileRail = await rect(page, ".settings-sidebar");
   expect(mobileSettings).not.toBeNull();
+  expect(mobileSettings!.x).toBeGreaterThanOrEqual(0);
+  expect(mobileSettings!.x + mobileSettings!.width).toBeLessThanOrEqual(390);
+  await expect(dialog.locator(".settings-content h2")).toHaveText("通用");
+  await expect(dialog.locator(".settings-sidebar")).toBeHidden();
+  const back = dialog.getByRole("button", {
+    name: "返回设置分类",
+    exact: true,
+  });
+  await expect(back).toBeVisible();
+  expect((await back.boundingBox())!.height).toBe(40);
+  const categories = await showSettingsCategories(page);
+  await expect(dialog.locator(".settings-content")).toBeHidden();
+  const mobileRail = await rect(page, ".settings-sidebar");
   expect(mobileRail).not.toBeNull();
-  expect(Math.round(mobileRail!.y + mobileRail!.height)).toBe(
-    Math.round(mobileSettings!.y + mobileSettings!.height),
+  expect(mobileRail!.x).toBeGreaterThanOrEqual(mobileSettings!.x);
+  expect(mobileRail!.x + mobileRail!.width).toBeLessThanOrEqual(
+    mobileSettings!.x + mobileSettings!.width,
   );
+  await expect(categories).toHaveCSS("flex-direction", "column");
+  await selectSettingsSection(page, "通用");
+  await expect(dialog.locator(".settings-content h2")).toHaveText("通用");
+  await expect(dialog.locator(".settings-sidebar")).toBeHidden();
 });

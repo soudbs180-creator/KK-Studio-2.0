@@ -1,4 +1,6 @@
-import type { ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
+import CanvasCollectionToolbar from "./CanvasCollectionToolbar";
+import CanvasCardMenu from "./CanvasCardMenu";
 import type { CanvasCollectionItem } from "../../domain/canvasItems";
 import { cardLayout } from "../../domain/canvasGraph";
 import type { useCanvasControls } from "./useCanvasControls";
@@ -7,6 +9,7 @@ import NodeActions from "./NodeActions";
 
 export default function CanvasNodeFrame({
   item,
+  hasContent,
   controls,
   children,
   onOpenMenu,
@@ -14,8 +17,12 @@ export default function CanvasNodeFrame({
   onConnect,
   onConnectionTargetChange,
   connectionTarget,
+  liked,
+  onLike,
+  onDelete,
 }: {
   item: CanvasCollectionItem;
+  hasContent: boolean;
   controls: ReturnType<typeof useCanvasControls>;
   children: ReactNode;
   onOpenMenu: (request: AddMenuRequest) => void;
@@ -26,7 +33,14 @@ export default function CanvasNodeFrame({
     targetId: string | null,
   ) => void;
   connectionTarget?: boolean;
+  liked: boolean;
+  onLike: () => void;
+  onDelete: () => void;
 }) {
+  const frame = useRef<HTMLDivElement>(null);
+  const [cardMenu, setCardMenu] = useState<{ x: number; y: number } | null>(
+    null,
+  );
   const id = item.id;
   const hasResultComposer = Boolean(
     item.result &&
@@ -48,6 +62,7 @@ export default function CanvasNodeFrame({
   const expanded = controls.selectedNode === id;
   return (
     <div
+      ref={frame}
       className={`canvas-node canvas-node-${variant} ${item.referenceOnly ? "is-reference-only" : ""} ${hasResultComposer ? "has-reference-composer" : ""} ${controls.selectedNode === id ? "is-selected" : ""} ${controls.dragging === "node" && controls.dragRef.current?.nodeId === id ? "is-dragging" : ""} ${connectionTarget ? "is-connection-target" : ""}`}
       data-canvas-node
       data-node-id={id}
@@ -56,7 +71,7 @@ export default function CanvasNodeFrame({
       data-testid={`canvas-node-${id}`}
       role="group"
       tabIndex={0}
-      aria-label={`${item.title}，点击或按回车选择，拖动可移动，方向键可微调${id.startsWith("added-") ? "，按删除键可移除" : ""}`}
+      aria-label={`${item.title}，点击或按回车选择，拖动可移动，方向键可微调，按删除键可移除，Shift+F10打开卡片菜单`}
       aria-expanded={
         item.kind === "image" && !item.referenceOnly
           ? controls.selectedNode === id
@@ -71,9 +86,58 @@ export default function CanvasNodeFrame({
       }}
       onDragStart={(event) => event.preventDefault()}
       onPointerDown={(event) => controls.startNodeDrag(event, id)}
-      onKeyDown={(event) => controls.moveNodeWithKeyboard(event, id)}
+      onContextMenu={(event) => {
+        if (
+          event.target instanceof Element &&
+          event.target.closest("input,textarea,[contenteditable='true']")
+        )
+          return;
+        event.preventDefault();
+        event.stopPropagation();
+        const moved = controls.rightGesture.current?.moved;
+        controls.rightGesture.current = null;
+        if (moved) return;
+        controls.setSelectedNode(id);
+        setCardMenu({ x: event.clientX, y: event.clientY });
+      }}
+      onKeyDown={(event) => {
+        if (
+          event.currentTarget === event.target &&
+          !event.nativeEvent.isComposing &&
+          (event.key === "ContextMenu" ||
+            (event.shiftKey && event.key === "F10"))
+        ) {
+          event.preventDefault();
+          event.stopPropagation();
+          controls.setSelectedNode(id);
+          const box = event.currentTarget.getBoundingClientRect();
+          setCardMenu({ x: box.left + box.width / 2, y: box.top + 32 });
+          return;
+        }
+        controls.moveNodeWithKeyboard(event, id, onDelete);
+      }}
     >
       {children}
+      {!item.plugin && (
+        <CanvasCollectionToolbar
+          item={item}
+          anchor={frame}
+          selected={expanded}
+          hasContent={hasContent}
+          liked={liked}
+          onLike={onLike}
+          onDelete={onDelete}
+        />
+      )}
+      {cardMenu && (
+        <CanvasCardMenu
+          title={item.title}
+          point={cardMenu}
+          trigger={frame}
+          onClose={() => setCardMenu(null)}
+          onDelete={onDelete}
+        />
+      )}
       <NodeActions
         item={item}
         onOpenMenu={onOpenMenu}

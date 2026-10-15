@@ -21,6 +21,12 @@
   border-radius: var(--kk-radius-full);
 }
 
+.image-selection-toolbar > .ui-icon-button {
+  flex: 0 0 auto;
+  width: var(--kk-icon-button-h);
+  height: var(--kk-icon-button-h);
+}
+
 .uploaded-image,
 .demo-result-preview.is-image {
   cursor: inherit;

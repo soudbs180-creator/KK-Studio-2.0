@@ -1,7 +1,7 @@
 import { expect, test, type Locator } from "@playwright/test";
 import { openWorkspace } from "./helpers";
 
-const evidence = "test-results/changes/2026-09-23-input-contract/evidence";
+const evidence = () => test.info().outputPath("input-contract");
 const png = Buffer.from(
   "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4z8DwHwAFgAI/ScLbtAAAAABJRU5ErkJggg==",
   "base64",
@@ -32,6 +32,29 @@ test("short-screen model menu keeps its scroll position and opens the last actio
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 480 });
+  await page.addInitScript(() => {
+    localStorage.setItem(
+      "kk-studio-next:provider-connections:v1",
+      JSON.stringify(
+        Array.from({ length: 20 }, (_, index) => ({
+          id: `scroll-provider-${index}`,
+          provider: `Scroll API ${index}`,
+          displayName: `Scroll API ${index}`,
+          kind: "user_byok",
+          baseUrl: "https://scroll.example.test/v1",
+          credentialRef: `scroll-${index}`,
+          model: `image-scroll-${index}`,
+          state: "active",
+          concurrencyLimit: 1,
+          capabilities: {
+            modalities: ["image"],
+            operations: ["generate"],
+            async: false,
+          },
+        })),
+      ),
+    );
+  });
   await openWorkspace(page);
   if (
     await page
@@ -41,24 +64,21 @@ test("short-screen model menu keeps its scroll position and opens the last actio
     await page.getByRole("button", { name: "打开对话", exact: true }).click();
   await page.getByRole("button", { name: "模型", exact: true }).click();
   const menu = page.getByRole("menu", { name: "选择模型", exact: true });
-  const retained = await menu.evaluate(
-    (el) =>
-      new Promise<number>((resolve) => {
-        el.addEventListener(
-          "scroll",
-          () =>
-            requestAnimationFrame(() =>
-              requestAnimationFrame(() => resolve(el.scrollTop)),
-            ),
-          { once: true },
-        );
-        el.scrollTop = 100;
-      }),
+  await menu.getByRole("button", { name: "切换全部模型", exact: true }).click();
+  const list = menu.locator(".kk-model-menu-list");
+  expect(await list.evaluate((el) => el.scrollHeight > el.clientHeight)).toBe(
+    true,
   );
+  const retained = await list.evaluate((el) => {
+    el.scrollTop = 100;
+    return new Promise<number>((resolve) =>
+      requestAnimationFrame(() =>
+        requestAnimationFrame(() => resolve(el.scrollTop)),
+      ),
+    );
+  });
   expect(retained).toBeGreaterThan(0);
-  await menu
-    .getByRole("button", { name: "配置供应商与账号…", exact: true })
-    .click();
+  await menu.getByRole("button", { name: "模型接入…", exact: true }).click();
   await expect(
     page.getByRole("dialog", { name: "设置", exact: true }),
   ).toBeVisible();
@@ -150,7 +170,7 @@ for (const [width, height] of [
       const input = form.locator("textarea");
       await input.fill("输入框的文字与工具各自对齐");
       await form.screenshot({
-        path: `${evidence}/${width}-${kind}-focused.png`,
+        path: `${evidence()}/${width}-${kind}-focused.png`,
       });
       await expect(input).toHaveCSS("outline-style", "none");
       await expect(form).toHaveCSS("outline-style", "none");
@@ -172,7 +192,7 @@ for (const [width, height] of [
       expect(focus.filter).toBe("none");
       const initial = (await input.boundingBox())!.height;
       const toolbarBox = await form.locator(".composer-toolbar").boundingBox();
-      expect(toolbarBox!.height).toBe(32);
+      expect(toolbarBox!.height).toBeGreaterThanOrEqual(32);
       await input.fill(
         Array.from({ length: 6 }, (_, i) => `第 ${i + 1} 行输入`).join("\n"),
       );
@@ -237,7 +257,7 @@ for (const [width, height] of [
       const region = page.getByLabel("已添加的参考素材", { exact: true });
       await expect(region.locator(".start-attachment-chip")).toHaveCount(4);
       await page.screenshot({
-        path: `${evidence}/${width}-${kind}-attachments.png`,
+        path: `${evidence()}/${width}-${kind}-attachments.png`,
       });
       await expect(form.locator(".start-attachment-row")).toHaveCount(1);
       await assertFlow(form);

@@ -1,21 +1,88 @@
+<!-- DOCUMENT_METADATA_BEGIN -->
+
+- docId: PROJECT_STATE
+- status: current
+- updatedAt: 2026-10-15
+- source: `docs/governance/task-ledger.json`
+- supersededBy: null
+
+<!-- DOCUMENT_METADATA_END -->
 <!-- CURRENT_FACTS_BEGIN -->
 
 ## CURRENT_FACTS (machine-readable current snapshot)
 
-- `snapshotDate`: 2026-10-11
+- `snapshotDate`: 2026-10-15
 - `canonicalRepository`: `D:/kk-studio/KK-Studio-2.0`
 - `canonicalRef`: `origin/main`
-- `canonicalHead`: `7736c99bd5e900e7c5cd8a36663aadcb45326143`
-- `canonicalHeadVerifiedFrom`: `git rev-parse origin/main` in the primary checkout
-- `primaryCheckoutState`: `D:/kk-studio/KK-Studio-2.0` is on local `main` at `6bc45cada7966531452d6826be5fe731ad0918d8`; `origin/main` is the separately read-back remote ref at `7736c99bd5e900e7c5cd8a36663aadcb45326143` (PR #51 merge). The checkout currently has 102 dirty paths across concurrent governance, UI, tests, and Tauri changes; this snapshot preserves unrelated paths while this turn is limited to the scoped docs-history and TaskState closeout evidence/source/test files.
-- `taskLedger`: 120 records; 75 DONE, 29 PARTIAL, 11 TODO, 4 BLOCKED, 1 REVIEW; 45 open records.
-- `workspaceWorktrees`: 87 registered worktrees, with 49 under `D:/kk-studio/.worktrees`, 34 nested under the primary checkout, 2 external Codex checkouts under `C:/Users/Administrator/.codex/worktrees`, 1 external sibling checkout at `D:/kk-studio/KK-Studio-2.0-taskstate`, and the primary checkout; the current audit pointer is `worktree-reclamation-plan-a32b6b9e-3ff4-402b-913f-d04b64a3de56.json`. The audit has zero generated-directory candidates and zero whole-worktree removal candidates. Previously reclaimed generated output remains covered by immutable SHA inventories; dirty, active, nested, external, and duplicate-source worktrees remain protected.
+- `canonicalHead`: `694a00607f6f63de1b8c43d0ebb117adf5d34f67`
+- `canonicalHeadVerifiedFrom`: 2026-10-15 root实际fetch/API确认main694、PR59未合并；当前2.1.31本地verify9/Native10/TaskHost current6 PASS，最终head精确审查、新Hosted/Delivery及main/post-main待验，旧eb5 push首错与PR首过不互相代填。
+- `primaryCheckoutState`: D:/kk-studio/KK-Studio-2.0保留codex/ui-redesign-20261011@51fccfc7879cf90f7caaf3ae8e10af4d97a2aa2c并发dirty与原index（本轮只读254条），不reset/clean/覆盖。任务工作树branch-consolidation-20261011 / fix/TASK-UI-FULL-20261015，当前eb5基线加scope恢复layout同步/单回归/版本2.1.31差量尚未最终提交。Native4曾写default WebView profile自动连接暂停，原值NOT_RECORDED，不能声称所有用户偏好未触碰；不猜恢复，详见最新验证。
+- `taskLedger`: 139 records; 82 DONE, 0 IN_PROGRESS, 34 PARTIAL, 12 TODO, 7 REVIEW, 4 BLOCKED; 57 open records.
+- `workspaceWorktrees`: 本轮末次只读worktree登记回读109项。此前恢复盘点107登记项、39 dirty来源、39一致快照；该盘点时原index变动0，872源路径与313排除路径可溯源。首轮104项/40一致与1volatile记录保留原时点；历史107项快照不覆盖后续登记来源。原分支/index/资料保留，本任务未删除、移动或覆盖其他来源。
 - `reclamationPolicy`: generated dependencies/build output may be reclaimed only from a recorded, non-primary worktree after immutable SHA inventory and explicit candidate approval; source changes and evidence paths are protected.
-- `remoteAutoMerge`: `NOT_READ_BACK`; local workflow and runbooks are reviewable, but no remote setting is claimed as enabled.
+- `remoteAutoMerge`: 本轮root已GET回读3个active ruleset；stable23866925对main/master/release启用PR、stale-dismiss/threads和strict verify/delivery（Actions15368）、0强制approving、无bypass/merge_queue；允许merge/squash/rebase。main protected=true由ruleset保护；legacy protection.enabled=false不表示未保护。自动helper activation/paused状态尚无本轮证据，不宣称已启用，不改远端配置。
 - `historicalRule`: paragraphs after `<!-- HISTORICAL_SNAPSHOTS_BEGIN -->` are dated evidence only and cannot overwrite these facts.
+
+- `settingsLatestUiCandidate`: 历史2.1.25基线（保留原证据），TASK-SETTINGS-LATEST-20261015本地DONE/PASS；当时基于c1fae190，branch-consolidation-20261011 / fix/TASK-SETTINGS-LATEST-20261015的Desktop/Web2.1.25。产品源码2a4e66d1、完整verify784039e7、独立源/测试054cd53f；Node1278/Agent199（既有skip14/2）、Edge629首试0failure/flaky/skip、UI242/0、development5步。当时production Web/Tauri1280/240/192/#21a673/overflow0；官方EXEc9c3b4e/input2a09db54，Native20+11+1+5及owned凭据/fixture清理PASS。该轮将Desktop入口指向此工作树并实际启动日常PID64772；primary/index和配置身份保留，所有失败原件保留。此后2.1.26以uiDetailsCandidate为准，历史PASS不代填新几何。[原轮验证](../changes/2026-10-15-settings-latest-ui/verification.md)。
+
+- `agentRecoveryEvidence`: [TASK-AGENT-RECOVERY-20261013 verification](../changes/2026-10-13-agent-recovery/verification.md)保留原版本范围；最新凭据状态恢复来源与旧profile/保存边界按[2026-10-14原作者证据](../changes/2026-10-14-ccswitch-status-recovery/verification.md)回读，不改旧SHA。本轮2.1.21组合Native使用独立资料，不代替日常profile、实钥或真实Provider验收。
+
+- `uiConsolidationCandidate`: 同一task工作树保留2.1.17冻结与2.1.18中间候选；最新主目录2.1.20一致源f2b0466的51源/测试/历史文档路径和4任务记录已逐项承接，Desktop/Web2.1.21产品提交7a463742完整verify通过（545browser零flaky）、官方Agent构建与真实Tauri9项检查通过，0e/7a源码独立审查通过。41引用原件保留旧SHA，4270生产白名单文件保留且CLI桥绝对路径经实际设置验证。最终分享包/源码/恢复增量由工程外收据绑定，PR55/56与在途分支不冒称主线祖先链合并；Hosted/安装器/用户资料与视觉验收、未接协议和Mobile2.1.1规划继续开放。[本轮验证](../changes/2026-10-14-ui-consolidation/verification.md)。
+
+- `protocolCliCandidate`: Desktop/Web2.1.22产品da6141e6完整verify通过：551浏览器首试、Node1214pass/14既有skip、Agent172pass/2既有skip、UI241/0、development5步骤PASS；Rust163与原生源一致性确认，独立源码审查PASS。官方Agent构建、真实Tauri22项和同字节便携目录23项通过，5协议文本均保存/重载/GET检测/NativeTaskHost一次POST/结果恢复，无重复；4取消/超时场景实际socket关闭且目录字节保持。手机为响应式WebView/Web，非Native Mobile。新依赖0，入口gzip增加3247B<16384；4278生产白名单519462029B，其中8个缺失的当前平台Codex必要文件407521436B已恢复，不把旧残包当同功能体积基线。原资料身份、primary dirty/index和历史失败保留。最终ZIP/源码/Web/恢复与哈希由工程外current-release收据绑定；Hosted、真人CLI安装/登录、付费Provider、签名安装器、日常资料和人工视觉验收继续各自开放。[本轮验证](../changes/2026-10-14-protocol-cli-completion/verification.md)。
+
+- `actionUsabilityCandidate`: Desktop/Web2.1.23产品b4fa7b0e，本地授权范围DONE/PASS。九步verify：Node1251/14既有skip、Agent180/2既有skip、production Edge574首试/0flaky、UI241/0、development5步骤PASS；官方带Agent构建与实际Tauri/同字节便携各35项通过。沿用已确认手机布局，原数据身份及primary dirty/index保留；新依赖0、入口gzip增加1244B。最终文档提交、ZIP/源码/Web/恢复及独立补审分别按工程外收据回读；真实账号、付费Provider、Hosted、签名安装器、实体手机与人工验收继续开放，Mobile2.1.1仍规划。[本轮验证](../changes/2026-10-14-action-usability-222/verification.md)。
+
+- `actionUsability224Candidate`: Desktop/Web2.1.24产品源码58b5c07f34718769e10b76c89d510615bea2fefc，TASK-223本地授权范围DONE/PASS。完整九步verify退出0：Node1273pass/14既有skip，Agent199pass/2既有skip，Edge608全部首试/0flaky/0skip，UI242/0，development5步骤PASS；Rust163与fmt通过。最终源码核心/UI独立审查PASS，官方CLI20项、便携CLI20项，实际Tauri官方46项、同字节便携46项通过。新依赖0，入口gzip增加1221B<16384；生产运行时4280文件/519481278B。用户确认手机布局、主题/独立背景、存储identifier/路径、原件与primary dirty/index保留；旧135任务及37功能状态逐项不变。Native Mobile2.1.1仍PLANNED；Hosted、真人CLI账号/付费Provider、签名安装器、日常资料、实体手机与用户视觉验收分别开放。[本轮验证](../changes/2026-10-14-action-usability-223/verification.md)。
+
+- `uiDetailsCandidate`: TASK-UI-DETAILS-20261015 本地DONE/PASS；fix/TASK-UI-DETAILS-20261015复用branch-consolidation-20261011，base18e143f、产品ab878ffd，Desktop/Web2.1.26，Mobile2.1.1规划不变。完整verify退出0：Node1278/14skip、Agent199/2skip、browser635首试、UI239/0、development PASS；精确源码独立审查PASS。官方Agent重建、实际Tauri38项与dist字节一致性通过，EXE0f65d382/input864b0376；现有快捷方式同路径，owned实例正常关闭，未启动日常profile。primary dirty/index和所有失败保留；用户视觉接受、真实Provider、Hosted/签名/实体手机另验。[本次验证](../changes/2026-10-15-ui-details/verification.md)。
+
+- `uiFullCandidate`: TASK-UI-FULL-20261015 REVIEW / 本地PASS / 整体NOT_VERIFIED。Desktop/Web2.1.31完整verify9：Node1304/14平台skip、Agent199/2skip、Edge761首试/0retry/flaky/skip、UI242/0及development四步骤；fresh Native10 105/0/13图、TaskHost current6无注入11/秘密清理PASS，自有进程退出及端口释放已实查。共享scope恢复最小layout同步、单回归RED→本文件8项/邻域6项GREEN；eb5 push759+1flaky严格NON_PASS与旧PR760首过分别保留。详证、Native4偏好例外与HTTP guard范围集中于[最新验证](../changes/2026-10-15-ui-full/verification.md#2131-当前本地验收)。原138任务/其他功能/历史与Mobile2.1.1规划保持；最终head独立审查、新Hosted/Delivery、普通PR59合并/main/post-main待验，main694未合并。
 
 <!-- CURRENT_FACTS_END -->
 <!-- HISTORICAL_SNAPSHOTS_BEGIN -->
+
+## 2026-10-15 2.1.30最终本地快照（历史；当前状态以上方为准）
+
+- `canonicalHeadVerifiedFrom`: 2026-10-15 root实际fetch/API确认main694、PR59未合并；当前2.1.30本地verify8/Native9/TaskHost current5 PASS，最终head精确审查、Hosted/Delivery与main/post-main待验，旧SHA绿色不代填。
+
+- `primaryCheckoutState`: D:/kk-studio/KK-Studio-2.0保留codex/ui-redesign-20261011@51fccfc7879cf90f7caaf3ae8e10af4d97a2aa2c并发dirty与原index（本轮只读254条），不reset/clean/覆盖。任务工作树branch-consolidation-20261011 / fix/TASK-UI-FULL-20261015，当前d50基线加侧栏CSS/版本2.1.30差量尚未最终提交。Native4曾写default WebView profile自动连接暂停，原值NOT_RECORDED，不能声称所有用户偏好未触碰；不猜恢复，详见最新验证。
+
+- `uiFullCandidate`: TASK-UI-FULL-20261015 REVIEW / 本地PASS / 整体NOT_VERIFIED。Desktop/Web2.1.30完整verify8：Node1304/14平台skip、Agent199/2skip、Edge760首试/0retry/flaky/skip、UI242/0及development四步骤；fresh Native9 87/0/13图、TaskHost current5无注入11/秘密清理PASS，自有进程退出与端口释放已实查。侧栏12行CSS/4新case、定向21首试及真实正常动画/单次创建/折叠重开覆盖成立；旧Hosted因果限制、Native8单位夹具失败、Native4偏好例外与HTTP IPC guard范围集中于[最新验证](../changes/2026-10-15-ui-full/verification.md#2130-当前本地验收)。原138任务/其他功能/历史保全与Mobile2.1.1规划保持；最终head独立审查、Hosted/Delivery、普通PR59合并/main/post-main待验，main694未合并。
+
+
+## 2026-10-15 2.1.29最终本地快照（历史；偏好例外以当前更正为准）
+
+- `canonicalHeadVerifiedFrom`: 2026-10-15 root实际fetch/API确认main694、PR59未合并；当前2.1.29本地verify7/Native7/TaskHost current4 PASS，最终head精确审查、Hosted/Delivery及main/post-main待验，旧SHA绿色不代填。
+
+- `primaryCheckoutState`: D:/kk-studio/KK-Studio-2.0保留codex/ui-redesign-20261011@51fccfc7879cf90f7caaf3ae8e10af4d97a2aa2c并发dirty与原index（本轮只读254条），不reset/clean/覆盖。任务工作树branch-consolidation-20261011 / fix/TASK-UI-FULL-20261015，当前94e基线加CLI卡片/版本2.1.29/TaskHost夹具差量尚未最终提交；当前本地验证见uiFullCandidate，最终SHA门禁待验。
+
+- `uiFullCandidate`: TASK-UI-FULL-20261015 REVIEW / 本地PASS / 整体NOT_VERIFIED。Desktop/Web2.1.29完整verify7：Node1304/14平台skip、Agent199/2skip、Edge756首试/0retry/flaky/skip、UI242/0与development四步骤；fresh Native7 78/0/12图、TaskHost current4无注入11/秘密清理PASS，input/EXE同字节current。三CLI卡片9RED→9GREEN；历史同式invoke赋值/audit空数组安全证明撤回，Native7正向IPC受验阶段与actual3 UNKNOWN边界详见[最新验证](../changes/2026-10-15-ui-full/verification.md#2129-当前本地验收)。原138任务/功能/primary/index/历史保全与Mobile2.1.1规划保持。最终head独立审查、Hosted/Delivery、普通PR59合并/main/post-main待验，origin/main仍694。
+
+
+## 2026-10-15 2.1.28最终本地快照（历史保留；同式guard安全结论以上方勘误为准）
+
+- `canonicalHeadVerifiedFrom`: 2026-10-15 root再次fetch确认main694，PR59未合并。当前2.1.28本地verify-6/Native5/TaskHost新版均PASS，最终提交SHA独立审查、新Hosted和main/post-main待验。2d PR quality38647660224仍FAIL（settings flaky与Native旧菜单）；原失败保留。
+
+- `primaryCheckoutState`: D:/kk-studio/KK-Studio-2.0保留codex/ui-redesign-20261011@51fccfc7879cf90f7caaf3ae8e10af4d97a2aa2c并发dirty与原index，本轮只读计数254条；不reset/clean/覆盖。任务工作树branch-consolidation-20261011 / fix/TASK-UI-FULL-20261015，提交基线2d4be5fca4c2167d4bc0d500634645624f311505上最小设置竞态/测试及Desktop/Web2.1.28本地验收PASS，尚未最终提交。verify-6全量747首试/0retry、fresh官方Native5 56/0/10图、TaskHost新版11/0/秘密清理true通过，verify后input/EXE与Native5同字节；最终SHA review/Hosted/main待验。
+
+- `uiFullCandidate`: TASK-UI-FULL-20261015 REVIEW / 本地PASS / 整体NOT_VERIFIED。Desktop/Web2.1.28完整verify-6 exit0：Node1304PASS/14既有skip、Agent199PASS/2skip、Browser747/747首试/0实际retry/flaky/skip，lint/typecheck/UI242/0/format/build/development四步PASS。文档owner独立确认747结果全passed、单次记录且retry0；health42/footguns2为advisory非0finding。官方fresh Native5 56PASS/0error/10图、实际独立WebView profile/root目视三图与exact dataRoot正常close；新版TaskHost11PASS/0error/secretcleanup true、五自有app退出。verify后input28c2f285与EXE638b5df5完整哈希同Native5、reason=current。Native2/3/4硬编码旧版本/CDP早连/default profile前提失败保留5/0/49 checks，只有Native5为干净完整收据；2d PR quality38647660224 settings首fail retryPASS且Native旧菜单8checks后FAIL，不是Hosted全绿。54 sidebar原缺trace根因UNKNOWN，本地五cold probe和747首试不等于已修复。原main694本地承接/104冲突/25差量/21blob/15包及原138任务与功能状态保持；最终head独立source/integration审查、新Hosted/PR59普通合并/main/post-main待验，origin/main仍694，Mobile2.1.1规划。[验证](../changes/2026-10-15-ui-full/verification.md) / [覆盖](../changes/2026-10-15-ui-full/coverage.md)。
+
+## 2026-10-15 2.1.28完整验证前冻结快照（历史保留）
+
+- `canonicalHeadVerifiedFrom`: 2026-10-15 root实际fetch/API确认main694；PR59未合并。54 push38645320833 Repository verify exit0含Browser746 PASS/1 flaky，Native旧菜单FAIL；2d push38647654947 Browser746 PASS/1 FAIL且retry FAIL。2.1.28新候选完整verify/Native/最终SHA审查/Hosted待验。
+
+- `primaryCheckoutState`: D:/kk-studio/KK-Studio-2.0保留codex/ui-redesign-20261011@51fccfc7879cf90f7caaf3ae8e10af4d97a2aa2c并发dirty与原index，本轮只读计数254条；不reset/clean/覆盖。任务工作树branch-consolidation-20261011 / fix/TASK-UI-FULL-20261015，当前提交基线2d4be5fca4c2167d4bc0d500634645624f311505上有最小设置竞态/测试与Desktop/Web2.1.28候选，尚未最终提交；2.1.28 build及settings42定向PASS，完整verify与fresh Native待验。旧2.1.27 Native56及新增TaskHost11保留旧版本范围，不批准新产品差量。
+
+- `uiFullCandidate`: TASK-UI-FULL-20261015 REVIEW / 整体NOT_VERIFIED。main694本地承接165、原104冲突/25自动差量/21历史blob/15包保全及241 verify-3/Native56/review PASS均保留历史范围。54 push38645320833 Repository verify exit0、Browser746 PASS/1 sidebar flaky（目标文件夹首试缺失、retry通过，原缺trace根因UNKNOWN），Native旧模型菜单定位FAIL。2d push38647654947 Browser746 PASS/1 FAIL且retry FAIL（expected Updated B，received A）；冻结旧产品真实select B→A RED2三项全FAIL→最小字段同步useLayoutEffect修复，dirty/账号/save校验保持。Desktop/Web2.1.28 build、settings七case×六次42 PASS/0retry/flaky/skip；race-red-1测试源在22:50:20.475Z变更，只用单case诊断。当前Native TaskHost夹具11 PASS/0error/secretcleanup true仅实际旧release2.1.27，五进程退出与端口释放。2.1.28完整verify/fresh Native/资源身份、最终SHA独立review、新Hosted/PR59/main/post-main待验；Mobile2.1.1规划及原138任务/功能状态不变。[验证](../changes/2026-10-15-ui-full/verification.md) / [覆盖](../changes/2026-10-15-ui-full/coverage.md)。
+
+## 2026-10-15 2.1.28续修前的当前事实快照（历史保留）
+
+- `canonicalHeadVerifiedFrom`: 2026-10-15 root实际fetch/API确认main694；最新PR59/54a2 Hosted quality38645328109仅gateway首次ready超时，Node1301PASS/1FAIL/13skip，child alive/crash UNKNOWN，main未合并；新测试握手修复本地Node1304PASS/14skip及静态PASS，新HEAD/Hosted待验。
+
+- `primaryCheckoutState`: D:/kk-studio/KK-Studio-2.0 保留codex/ui-redesign-20261011@51fccfc7879cf90f7caaf3ae8e10af4d97a2aa2c并发dirty与原index，本轮只读计数254条；不reset/clean/覆盖。当前task位于branch-consolidation-20261011 / fix/TASK-UI-FULL-20261015，source HEAD241f3050124ad7773ced0b47a55629373177205e，已本地承接main为1653966f；Desktop/Web候选2.1.27已版本脚本递增，当前官方隔离Native56checks/资源身份通过，完整verify-3本地PASS；交付head f09051ecbd2cfb92f7be834eb5a216c049dfcafc/PR59独立aggregate review PASS，Hosted verify被外部snapshot依赖阻断，scripts/tests修复verify-5无外部env本地PASS（Node1301/14skip、Agent199/2skip、Browser747与development）；最终修复head复审/新Hosted待验，产品/Rust/Native源与字节不变，历史2.1.26产物不代填。
+
+- `uiFullCandidate`: TASK-UI-FULL-20261015 REVIEW/整体NOT_VERIFIED，本地验收PASS。source241f3050+test-only音频定位修正完整verify-3 exit0：Node1295PASS/14skip、Agent199PASS/2skip、Browser747/747首试/0flaky/0skip，lint/typecheck/UI242/0/format/build/development PASS；Native56/0errors与资源身份、Rust163/fmt/clientcheck、source241/integration241 review PASS。main694已本地承接为1653966f，104冲突/25自动差量/21历史blob保全与15来源包保持，Delivery704/0。verify-1五失败、verify-2音频selector一失败及所有原始RED/误设勘误保留；f090最终doc/test-only独立aggregate review PASS、ready PR59已建立；Gitguards push/PR与governance/delivery/deploy-linux PASS，quality38641803780 verify在测试前因默认外部snapshot依赖FAIL。root修scripts/tests后完整verify-5无外部env exit0：snapshot3/0、Node1301PASS/14skip、Agent199PASS/2skip、Browser747、development四步PASS；显式外部4/0 PASS。Nativeinspect仍current/EXE与input字节不变；CLI24/offline AI-evals仅有限dirty预检，最终修复新SHA复审/Hosted/main/post-main待验，最新交付c498独立exact aggregate review PASS、Hosted snapshot3/0，但Node1315=1294PASS/8FAIL/13skip，发布fixture短路径触发既有canonical/no-link guard；Browser/Rust未运行。仅测试fixture await realpath修复真实8.3 RED3PASS/8FAIL→GREEN11PASS/0skip；首轮短TEMP Node2fail属自建TEMP过深的git路径前置条件，较浅actual8.3根下canary7PASS/3Linux skip、run2 Node1301PASS/14skip与lint/typecheck/format PASS。非完整verify-6，产品安全脚本/config/Rust未变、Browser747/Native56/Rust163沿用原范围；最终修复head复审/新Hosted仍待验，安全脚本/回滚断言不放宽。最新54a2精确aggregate PASS/Delivery706/0后quality38645328109 Node1301PASS/1FAIL/13skip（gateway首次ready超时，child alive/crash UNKNOWN，未POST/Provider/恢复/Browser/Rust）。仅测试握手84+/14-，preload7s RED→延迟4GREEN/focused21PASS，实际8.3 Node1304PASS/14skip与静态PASS；非完整verify-6，产品未变，Browser747/Native56/Rust163保留原范围；新HEAD/复审/Hosted及旧54 push38645320833结果待验。origin/main仍694。[验证](../changes/2026-10-15-ui-full/verification.md) / [覆盖](../changes/2026-10-15-ui-full/coverage.md)。
 
 ## 2026-10-10 当前主线剩余回归验证
 
@@ -556,3 +623,7 @@ TASK-UI-DISMISS-002 修复账号菜单跨窄屏断点、键盘展开后外部点
 - 早期快照记录 `docs/governance/task-ledger.json` 共 96 项：DONE 55、PARTIAL 27、TODO 10、BLOCKED 4；当前台账以文件顶部和实际账本为准。
 - MCP 注册表现在读取合法超限原件而不清空，写入会重读并检测冲突；现代 MCP 先走 `server/discover`，只对明确不支持发现的响应回退旧握手；编排器 `plan_replan` 会持久化稳定的新计划而不重复成功项。
 - 早期验证记录为 Node 661/653/0/8、Agent 174/172/0/2、Playwright 379/379；当前验证以 `docs/changes/2026-10-03-incomplete-tasks/verification.md` 为准。真实第三方 MCP、Provider/GPU、ComfyUI、VPS、Mobile 和完整 TaskHost 运行态仍未证明。
+
+## 2026-10-13 UI 分类执行补充
+
+TASK-UI-CLASSIFY-20261013 已获用户实施确认：canonical 分类修复在隔离任务 worktree 验证后逐文件集成，保留窗口控件和麦克风预存改动。按用户补充移除模型弹层批量/数据项，40 项定向回归和独立补审通过；最终 Web development / preview / Desktop 分别 7/7/14 项通过，Desktop/Web 2.1.14。全量浏览器 492/495，三个既有 UI 失败使任务保持 REVIEW/PARTIAL；实际运行证据以[本轮 verification](../changes/2026-10-13-capability-ui/verification.md)为准，未声称已推送或正式发布。

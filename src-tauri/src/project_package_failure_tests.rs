@@ -1,6 +1,72 @@
 use super::*;
 use serde_json::json;
 
+#[test]
+fn text_protocol_routes_and_plain_outputs_round_trip_through_native_package() {
+    let f = Fixture::new();
+    let mut value = f.snapshot.clone();
+    value["revision"] = json!(2);
+    value["projects"][0]["providerBaseUrl"] = json!("http://127.0.0.1:11434/v1");
+    value["projects"][0]["providerProtocol"] = json!("ollama");
+    value["projects"][0]["providerAuthMode"] = json!("none");
+    let tasks: Vec<Value> = ["openai-chat", "openai-responses", "anthropic", "azure-openai", "ollama"].into_iter().enumerate().map(|(index, protocol)| {
+        let base = if protocol == "azure-openai" { "https://resource.openai.azure.com/openai/v1" } else { "https://provider.example/v1" };
+        json!({"id":format!("text-{index}"),"prompt":"fixture","model":"fixture-deployment","kind":"text","status":"succeeded","submissionState":"terminal","idempotencyKey":format!("original-idem-{index}"),"providerBaseUrl":base,"providerProtocol":protocol,"providerAuthMode":"api-key","providerCredentialRef":"fixture_account","outputs":[{"index":0,"status":"succeeded","text":"正文🌍","model":"fixture-deployment","createdAt":1}]})
+    }).collect();
+    value["projects"][0]["tasks"] = json!(tasks);
+    f.snapshots.write(value.clone(), Some(1)).unwrap();
+    let package = f.package();
+    let before = f.source_bytes();
+    let target = f.root.join("protocol-restored");
+    import_package(&package, &target).unwrap();
+    let restored = SnapshotRepository::new(target.join("projects/creation-v2.json"))
+        .read()
+        .unwrap()
+        .snapshot
+        .unwrap();
+    assert_eq!(restored, value);
+    assert_eq!(f.source_bytes(), before);
+}
+
+#[test]
+fn package_protocol_and_text_validation_fail_before_portable_export() {
+    let f = Fixture::new();
+    for scope in ["project", "task"] {
+        for (field, invalid) in [
+            ("providerProtocol", json!("unknown")),
+            ("providerAuthMode", json!("unknown")),
+        ] {
+            let mut bad = f.snapshot.clone();
+            let target = if scope == "project" {
+                &mut bad["projects"][0]
+            } else {
+                &mut bad["projects"][0]["tasks"][0]
+            };
+            target[field] = invalid;
+            assert!(snapshot_schema::validate(&bad).is_err());
+        }
+    }
+    for base in [
+        "https://provider.example/v1",
+        "http://127.0.0.2:11434/v1",
+        "http://192.168.1.2/v1",
+    ] {
+        let mut bad = f.snapshot.clone();
+        let task = &mut bad["projects"][0]["tasks"][0];
+        task["providerBaseUrl"] = json!(base);
+        task["providerProtocol"] = json!("ollama");
+        task["providerAuthMode"] = json!("none");
+        assert!(snapshot_schema::validate(&bad).is_err());
+    }
+    for invalid in [json!(42), json!("界".repeat(11_000)), json!("")] {
+        let mut bad = f.snapshot.clone();
+        let output = &mut bad["projects"][0]["tasks"][0]["outputs"][0];
+        output.as_object_mut().unwrap().remove("assetId");
+        output["text"] = invalid;
+        assert!(snapshot_schema::validate(&bad).is_err());
+    }
+}
+
 thread_local! { static FAILURE: std::cell::RefCell<Option<&'static str>> = const { std::cell::RefCell::new(None) }; }
 pub(super) fn fail_at(stage: &str) -> Result<(), String> {
     if FAILURE.with(|point| *point.borrow() == Some(stage)) {

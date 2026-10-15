@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type RefObject } from "react";
 import CreationComposer from "./CreationComposer";
+import { useCanvasMediaContent } from "../canvas/useCanvasMediaContent";
 import type {
   CanvasCollectionItem,
   CanvasReference,
@@ -19,6 +20,8 @@ const LOCAL_VIDEO_NOTICE =
 export default function VideoNode({
   item,
   selected,
+  hasContent,
+  onContentReadyChange,
   onConfigure,
   onChange,
   onExtraHeightChange,
@@ -31,17 +34,29 @@ export default function VideoNode({
   referenceLimit,
   onAddReferences,
   onRemoveReference,
-}: NodeEditingProps & { item: CanvasCollectionItem }) {
+  uploadInput,
+}: NodeEditingProps & {
+  item: CanvasCollectionItem;
+  uploadInput: RefObject<HTMLInputElement>;
+}) {
   const [video, setVideo] = useState("");
+  const [loading, setLoading] = useState(Boolean(item.preview || item.assetId));
+  const videoElement = useRef<HTMLVideoElement>(null);
   const [error, setError] = useState("");
   const uploadVersion = useRef(0);
   const reader = useRef<FileReader | null>(null);
   const referenceFile = useRef<HTMLInputElement>(null);
   const referenceSlot = useRef<CanvasReference["slot"]>();
-  const previewInput = useRef<HTMLInputElement>(null);
+  const reportContentReady = useCanvasMediaContent(
+    videoElement,
+    video,
+    onContentReadyChange,
+  );
   useEffect(() => {
     const version = ++uploadVersion.current;
     setVideo("");
+    onContentReadyChange?.(false);
+    setLoading(Boolean(item.preview || item.assetId));
     setError("");
     const persisted = item.preview;
     const assetId = persisted?.startsWith("kk-asset:")
@@ -52,6 +67,7 @@ export default function VideoNode({
     }
     if (persisted && !persisted.startsWith("kk-asset:")) {
       setVideo(persisted);
+      setLoading(false);
       setError(LOCAL_VIDEO_NOTICE);
       return;
     }
@@ -62,10 +78,12 @@ export default function VideoNode({
         if (!asset || !VIDEO_MIME_TYPES.includes(asset.mime))
           throw new Error("本地视频原件无法恢复，请重新上传。");
         setVideo(asset.preview);
+        setLoading(false);
         setError(LOCAL_VIDEO_NOTICE);
       })
       .catch((reason: unknown) => {
         if (version !== uploadVersion.current) return;
+        setLoading(false);
         setError(
           reason instanceof Error
             ? reason.message
@@ -75,7 +93,7 @@ export default function VideoNode({
     return () => {
       uploadVersion.current += 1;
     };
-  }, [item.id, item.assetId, item.preview]);
+  }, [item.id, item.assetId, item.preview, onContentReadyChange]);
   useEffect(
     () => () => {
       uploadVersion.current += 1;
@@ -102,6 +120,7 @@ export default function VideoNode({
     const nextReader = new FileReader();
     reader.current = nextReader;
     setError("正在读取并归档本地视频…");
+    setLoading(true);
     nextReader.onload = () => {
       if (version !== uploadVersion.current) return;
       const source = String(nextReader.result ?? "");
@@ -120,10 +139,12 @@ export default function VideoNode({
             preview: `kk-asset:${asset.assetId}`,
             title: file.name,
           });
+          setLoading(false);
           setError(LOCAL_VIDEO_NOTICE);
         })
         .catch((reason: unknown) => {
           if (version !== uploadVersion.current) return;
+          setLoading(false);
           setError(
             reason instanceof Error
               ? reason.message
@@ -132,12 +153,16 @@ export default function VideoNode({
         });
     };
     nextReader.onerror = () => {
-      if (version === uploadVersion.current)
+      if (version === uploadVersion.current) {
+        setLoading(false);
         setError("视频读取失败，请重新选择视频。");
+      }
     };
     nextReader.onabort = () => {
-      if (version === uploadVersion.current)
+      if (version === uploadVersion.current) {
+        setLoading(false);
         setError("视频读取已取消，请重新选择视频。");
+      }
     };
     nextReader.readAsDataURL(file);
   }
@@ -154,13 +179,18 @@ export default function VideoNode({
       <div className="video-placeholder">
         {video ? (
           <video
+            ref={videoElement}
             src={video}
             controls
             preload="metadata"
+            onLoadedMetadata={reportContentReady}
             onPointerDown={(e) => e.stopPropagation()}
-            onError={() =>
-              setError("无法预览此视频，请使用浏览器支持的 MP4 或 WebM。")
-            }
+            onError={() => {
+              onContentReadyChange?.(false);
+              setVideo("");
+              setLoading(false);
+              setError("无法预览此视频，请使用浏览器支持的 MP4 或 WebM。");
+            }}
           />
         ) : (
           <img
@@ -169,10 +199,10 @@ export default function VideoNode({
             alt=""
           />
         )}
-        {selected && (
+        {selected && !video && !loading && !hasContent && (
           <button
             className="video-upload"
-            onClick={() => previewInput.current?.click()}
+            onClick={() => uploadInput.current?.click()}
             title="上传视频后仅用于本地预览；演示生成不会上传或消费视频原件"
           >
             上传视频
@@ -201,7 +231,7 @@ export default function VideoNode({
         }}
       />
       <input
-        ref={previewInput}
+        ref={uploadInput}
         hidden
         type="file"
         accept="video/mp4,video/webm"

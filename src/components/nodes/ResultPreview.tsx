@@ -1,6 +1,8 @@
+import { useLayoutEffect, useRef } from "react";
 import type { DemoResult } from "../../domain/canvasItems";
 import UiIcon from "../UiIcon";
 import { aspectRatioForDimensions } from "../../domain/mediaDimensions";
+import { useCanvasMediaContent } from "../canvas/useCanvasMediaContent";
 
 export default function ResultPreview({
   result,
@@ -9,6 +11,9 @@ export default function ResultPreview({
   mediaWidth,
   mediaHeight,
   onDimensions,
+  onContentReadyChange,
+  previewError = false,
+  onPreviewError,
 }: {
   result: DemoResult;
   title: string;
@@ -16,35 +21,92 @@ export default function ResultPreview({
   mediaWidth?: number;
   mediaHeight?: number;
   onDimensions?: (width: number, height: number) => void;
+  onContentReadyChange?: (ready: boolean) => void;
+  previewError?: boolean;
+  onPreviewError?: (failed: boolean) => void;
 }) {
+  const image = useRef<HTMLImageElement>(null);
+  const video = useRef<HTMLVideoElement>(null);
+  const audio = useRef<HTMLAudioElement>(null);
+  const mediaRef =
+    result.kind === "audio" ? audio : result.kind === "video" ? video : image;
+  const reportContentReady = useCanvasMediaContent<
+    HTMLImageElement | HTMLMediaElement
+  >(
+    mediaRef,
+    result.kind === "video" || result.kind === "audio"
+      ? result.src
+      : result.poster || result.src,
+    onContentReadyChange,
+  );
+  useLayoutEffect(() => {
+    const media = mediaRef.current;
+    onPreviewError?.(
+      Boolean(
+        media &&
+        media.currentSrc === media.src &&
+        (media instanceof HTMLMediaElement
+          ? media.error
+          : media.complete && media.naturalWidth === 0),
+      ),
+    );
+  }, [mediaRef, result.src, result.poster, onPreviewError]);
+  const loaded = () => {
+    if (reportContentReady()) onPreviewError?.(false);
+  };
+  const failed = () => {
+    onContentReadyChange?.(false);
+    onPreviewError?.(true);
+  };
   const content = (
     <>
-      {result.poster || result.kind === "image" ? (
+      {result.kind === "video" ? (
+        <video
+          ref={video}
+          src={result.src}
+          poster={result.poster}
+          preload="metadata"
+          style={{ width: "100%", height: "100%", objectFit: "cover" }}
+          onLoadedMetadata={loaded}
+          onError={failed}
+        />
+      ) : result.kind !== "audio" &&
+        (result.poster || result.kind === "image") ? (
         <img
+          ref={image}
           src={result.poster ?? result.src}
           alt={title}
           draggable={false}
-          onLoad={
-            result.kind === "image"
-              ? (event) => {
-                  const { naturalWidth, naturalHeight } = event.currentTarget;
-                  if (
-                    naturalWidth > 1 &&
-                    naturalHeight > 1 &&
-                    (naturalWidth !== mediaWidth ||
-                      naturalHeight !== mediaHeight)
-                  )
-                    onDimensions?.(naturalWidth, naturalHeight);
-                }
-              : undefined
-          }
+          onLoad={(event) => {
+            loaded();
+            if (result.kind === "image") {
+              const { naturalWidth, naturalHeight } = event.currentTarget;
+              if (
+                naturalWidth > 1 &&
+                naturalHeight > 1 &&
+                (naturalWidth !== mediaWidth || naturalHeight !== mediaHeight)
+              )
+                onDimensions?.(naturalWidth, naturalHeight);
+            }
+          }}
+          onError={failed}
         />
       ) : result.kind === "audio" ? (
-        <div className="demo-wave" aria-hidden="true">
-          {Array.from({ length: 27 }, (_, i) => (
-            <i key={i} style={{ height: `${18 + ((i * 19) % 51)}px` }} />
-          ))}
-        </div>
+        <>
+          <audio
+            ref={audio}
+            src={result.src}
+            hidden
+            preload="metadata"
+            onLoadedMetadata={loaded}
+            onError={failed}
+          />
+          <div className="demo-wave" aria-hidden="true">
+            {Array.from({ length: 27 }, (_, i) => (
+              <i key={i} style={{ height: `${18 + ((i * 19) % 51)}px` }} />
+            ))}
+          </div>
+        </>
       ) : (
         <p>{result.text}</p>
       )}
@@ -58,29 +120,44 @@ export default function ResultPreview({
       )}
     </>
   );
-  return result.kind === "image" ? (
-    <div
-      className="demo-result-preview is-image"
-      style={{
-        aspectRatio: aspectRatioForDimensions(
-          mediaWidth ?? 1,
-          mediaHeight ?? 1,
-        ),
-      }}
-      onDoubleClick={(event) => {
-        event.stopPropagation();
-        onPreview();
-      }}
-    >
-      {content}
-    </div>
-  ) : (
-    <button
-      className={`demo-result-preview is-${result.kind}`}
-      aria-label={`预览${title}`}
-      onClick={onPreview}
-    >
-      {content}
-    </button>
+  const preview =
+    result.kind === "image" ? (
+      <div
+        className="demo-result-preview is-image"
+        style={{
+          aspectRatio: aspectRatioForDimensions(
+            mediaWidth ?? 1,
+            mediaHeight ?? 1,
+          ),
+        }}
+        onDoubleClick={(event) => {
+          event.stopPropagation();
+          if (!previewError) onPreview();
+        }}
+      >
+        {content}
+      </div>
+    ) : (
+      <button
+        className={`demo-result-preview is-${result.kind}`}
+        aria-label={`预览${title}`}
+        disabled={previewError}
+        title={
+          previewError ? "预览不可用，请到任务记录核对并恢复原件。" : undefined
+        }
+        onClick={onPreview}
+      >
+        {content}
+      </button>
+    );
+  return (
+    <>
+      {preview}
+      {previewError && (
+        <p className="demo-description" role="status">
+          预览不可用。请到任务记录核对并恢复原件；当前结果记录和归档引用已保留。
+        </p>
+      )}
+    </>
   );
 }

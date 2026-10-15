@@ -3,7 +3,9 @@ import { writeFile } from "node:fs/promises";
 
 async function canvasImageAction(page: Page, name: string) {
   const node = page.locator(".canvas-node-image").first();
-  await node.locator(".uploaded-image").click();
+  if ((await node.getAttribute("data-selected")) !== "true")
+    await node.locator(".uploaded-image").click();
+  await expect(node).toHaveClass(/is-selected/);
   const toolbar = page.getByRole("toolbar", { name: /^图片操作：/ });
   await expect(toolbar).toBeVisible();
   await expect(node.getByRole("button", { name, exact: true })).toHaveCount(0);
@@ -674,11 +676,14 @@ test("unified image tools keep original coordinates across zoom, reset and undo/
 async function configureEdit(page: Page, native: boolean) {
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
-  await page.getByRole("button", { name: "模型供应商", exact: true }).click();
+  await page.getByRole("button", { name: "模型接入", exact: true }).click();
+  await page
+    .getByRole("button", { name: "API Key（官方）", exact: true })
+    .click();
   await page.getByLabel("接口地址").fill("https://models.example.test/v1");
-  await page.getByLabel("API Key").fill("fixture-key");
+  await page.getByLabel("API Key", { exact: true }).fill("fixture-key");
   await page.getByLabel("模型名称").fill("image-test");
-  await page.getByRole("button", { name: "保存", exact: true }).click();
+  await page.getByRole("button", { name: "保存连接", exact: true }).click();
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
   await page.evaluate((native) => {
     const connections = JSON.parse(

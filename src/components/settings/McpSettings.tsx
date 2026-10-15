@@ -1,4 +1,12 @@
-import { useEffect, useRef, useState } from "react";
+import {
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
+import { SettingsNavigationContext } from "./SettingsNavigationContext";
+import { useSettingsNavigationBusy } from "./useSettingsBusy";
 import {
   McpHttpClient,
   McpServerRegistry,
@@ -33,6 +41,11 @@ export default function McpSettings({
   const [name, setName] = useState("");
   const [endpoint, setEndpoint] = useState("");
   const [formError, setFormError] = useState("");
+  const { busy } = useContext(SettingsNavigationContext);
+  const reportBusy = useSettingsNavigationBusy();
+  useLayoutEffect(() => {
+    reportBusy(Object.values(states).some((state) => state === "connecting"));
+  }, [states, reportBusy]);
 
   useEffect(() => {
     mounted.current = true;
@@ -52,6 +65,7 @@ export default function McpSettings({
   }
 
   async function addServer(): Promise<void> {
+    if (busy) return;
     try {
       if (!name.trim()) throw new Error("请填写服务器名称。");
       await registry.add({
@@ -119,6 +133,7 @@ export default function McpSettings({
   }
 
   async function connectServer(server: McpServerConfig): Promise<void> {
+    if (busy) return;
     connectionControllers.get(server.id)?.abort();
     const prior = clients.get(server.id);
     if (prior) void prior.disconnect();
@@ -199,6 +214,7 @@ export default function McpSettings({
     server: McpServerConfig,
     tool: McpTool,
     arguments_: Record<string, unknown>,
+    signal?: AbortSignal,
   ): Promise<unknown> {
     if (
       !(await confirmAction(
@@ -206,9 +222,11 @@ export default function McpSettings({
       ))
     )
       throw new Error("工具调用已取消。");
+    signal?.throwIfAborted();
     const client = clients.get(server.id);
     if (!client) throw new Error("MCP 服务器尚未连接。");
-    const result = await client.callTool(tool.name, arguments_, true);
+    const result = await client.callTool(tool.name, arguments_, true, signal);
+    signal?.throwIfAborted();
     onFeedback(`已调用 ${server.name} · ${tool.name}。`);
     return result;
   }
@@ -236,7 +254,7 @@ export default function McpSettings({
         name={name}
         endpoint={endpoint}
         formError={formError}
-        readOnly={registry.isReadOnly}
+        readOnly={registry.isReadOnly || busy}
         onNameChange={setName}
         onEndpointChange={setEndpoint}
         onSubmit={() => void addServer()}

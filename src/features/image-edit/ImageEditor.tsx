@@ -4,6 +4,7 @@ import {
   useCanvasImageGeneration,
 } from "../creation/CanvasImageCommand.tsx";
 import { loadStoredAsset } from "../creation/assetRepository.ts";
+import RegionRetryList from "./RegionRetryList.tsx";
 import { useImageModelCapabilities } from "../models/useImageModelCapabilities.ts";
 import { GenerationStatus } from "../../components/nodes/GenerationAction.tsx";
 import type {
@@ -259,25 +260,12 @@ export default function ImageEditor({
         </p>
       )}
       <GenerationStatus generation={generation} />
-      {command?.tasks
-        .filter(
-          (task) =>
-            task.sourceItemId === source.id &&
-            task.imageEdit &&
-            ["failed", "offline", "cancelled"].includes(task.status),
-        )
-        .map((task, index) => (
-          <div key={task.id} className="image-edit-feedback" role="status">
-            区域 {index + 1}：{task.error}
-            <button
-              className="ui-button"
-              disabled={loading || !command.retryTask}
-              onClick={() => command.retryTask?.(task.id)}
-            >
-              重试该区域
-            </button>
-          </div>
-        ))}
+      <RegionRetryList
+        tasks={command?.tasks ?? []}
+        sourceId={source.id}
+        loading={loading}
+        onRetry={command?.retryTask}
+      />
     </div>
   );
 }

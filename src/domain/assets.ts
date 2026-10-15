@@ -1,11 +1,46 @@
 import { z } from "zod";
 
+export const DEFAULT_ASSET_TAGS = [
+  "道具",
+  "音色",
+  "场景",
+  "服装",
+  "人物",
+  "最终版",
+  "待定版",
+] as const;
+export function validateTagName(
+  value: string,
+  existing: readonly string[],
+): { name?: string; error?: string } {
+  const name = value.trim();
+  if (!name) return { error: "请输入标签名称。" };
+  if (name.length > 40) return { error: "标签名称不能超过 40 个字符。" };
+  if (existing.includes(name)) return { error: "这个标签已存在。" };
+  return { name };
+}
+export function normalizeTags(
+  values: unknown = [],
+  legacyTag?: string,
+): string[] {
+  const tags: unknown[] = Array.isArray(values) ? values : [];
+  return Array.from(
+    new Set(
+      [...tags, legacyTag ?? ""]
+        .filter((value): value is string => typeof value === "string")
+        .map((value) => value.trim().slice(0, 40))
+        .filter(Boolean),
+    ),
+  ).slice(0, 32);
+}
+
 const assetSchema = z
   .object({
     id: z.string().min(1).max(100),
     name: z.string().min(1).max(120),
     type: z.enum(["image", "video", "subject"]),
     tag: z.string().max(40),
+    tags: z.array(z.string().max(40)).max(32).optional(),
     createdAt: z.iso.datetime(),
   })
   .strict();
@@ -32,6 +67,11 @@ export interface AssetFilter {
   tag: string;
   days: number;
 }
+export function getAssetTags(asset: Pick<Asset, "tag" | "tags">): string[] {
+  return Array.from(
+    new Set([asset.tag, ...(asset.tags ?? [])].filter(Boolean)),
+  );
+}
 export function filterAssets(
   assets: Asset[],
   filter: AssetFilter,
@@ -40,9 +80,10 @@ export function filterAssets(
   const query = filter.query.trim().toLocaleLowerCase();
   return assets.filter((asset) => {
     const age = now - Date.parse(asset.createdAt);
+    const tags = getAssetTags(asset);
     const searchable = [
       asset.name,
-      asset.tag,
+      ...tags,
       asset.provider,
       asset.model,
       asset.promptHash,
@@ -54,7 +95,7 @@ export function filterAssets(
     return (
       searchable.includes(query) &&
       (filter.type === "all" || asset.type === filter.type) &&
-      (filter.tag === "all" || asset.tag === filter.tag) &&
+      (filter.tag === "all" || tags.includes(filter.tag)) &&
       (!filter.days || (age >= 0 && age <= filter.days * 86400000))
     );
   });

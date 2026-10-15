@@ -109,12 +109,12 @@
   --kk-text-primary: #dbdbdb;
   --kk-text-secondary: #a0a0a0;
   --kk-text-tertiary: #9e9e9e;
-  --kk-text-accent: #b2adff;
+  --kk-text-accent: #7fd6b2;
   --kk-text-danger: #ff8585;
   --kk-danger: #b4233c;
   --kk-success: #79cda8;
   --kk-warning: #e6b96a;
-  --kk-focus-ring: #aaa3ff;
+  --kk-focus-ring: #7fd6b2;
   --kk-focus-ring-subtle: rgba(255, 255, 255, 0.58);
   --kk-shadow-color: rgba(0, 0, 0, 0.5);
   --kk-shadow-color-strong: rgba(0, 0, 0, 0.7);
@@ -131,11 +131,15 @@
   --kk-focus-width-subtle: 1px;
   --kk-focus-offset-subtle: 1px;
 
-  /* --- 2.3 层级 z-index（7 档，禁止 9999 之类魔法值） --- */
+  /* --- 2.3 层级 z-index（语义层级，禁止 9999 之类魔法值） --- */
   --kk-z-base: 0;
   --kk-z-sticky: 10;
   --kk-z-sticky-header: 20;
   --kk-z-dropdown: 100;
+  --kk-z-canvas-editor: calc(var(--kk-z-dropdown) + 1);
+  --kk-z-canvas-menu: calc(var(--kk-z-canvas-editor) + 1);
+  --kk-z-floating-panel: calc(var(--kk-z-canvas-menu) + 1);
+  --kk-z-floating-panel-active: calc(var(--kk-z-floating-panel) + 1);
   --kk-z-overlay: 200;
   --kk-z-modal: 300;
   --kk-z-popover: 400;
@@ -188,10 +192,10 @@
   --kk-hit-primary: 40px;
 
   /* --- 2.7 强调色：Default --- */
-  --kk-accent: #635bff;
-  --kk-accent-hover: #5b52ed;
-  --kk-accent-soft: #b3adff;
-  --kk-on-accent: #ffffff;
+  --kk-accent: #21a673;
+  --kk-accent-hover: #2fbe86;
+  --kk-accent-soft: #7fd6b2;
+  --kk-on-accent: #0a0a0a;
 
   /* ==========================================================================
      Tier 3 · 组件层 COMPONENT — 组件唯一取值入口，不许自己拼原始值
@@ -205,7 +209,11 @@
   --kk-button-gap: var(--kk-control-gap-lg);
   --kk-button-font: var(--kk-control-font-lg);
   --kk-button-icon: var(--kk-control-icon-lg);
-  --kk-button-radius: var(--kk-radius-control);
+  --kk-button-radius: var(--kk-radius-full);
+  /* User reference: ordinary primary actions are neutral; state uses accent. */
+  --kk-button-primary-bg: #e9e9e9;
+  --kk-button-primary-hover: #ffffff;
+  --kk-button-primary-text: #161616;
   --kk-button-compact-h: var(--kk-control-h-md);
   --kk-button-compact-px: var(--kk-control-px-md);
   --kk-button-compact-font: var(--kk-control-font-md);
@@ -249,6 +257,24 @@
   --kk-task-workbench-width: 1100px;
   --kk-task-workbench-height: 760px;
   --kk-task-queue-width: 220px;
+  /* Readable task popover from the 2026-10-10 UI review; shared HUD shell. */
+  --kk-task-popover-width: 360px;
+  --kk-account-popup-width: 320px;
+  --kk-task-popover-height: 420px;
+  --kk-task-popover-min-height: 300px;
+  /* 2026-10-15 density feedback: compact settings, wider connection forms. */
+  --kk-settings-width: 1120px;
+  --kk-settings-compact-width: 960px;
+  --kk-settings-height: 680px;
+  --kk-settings-nav-width: 208px;
+  --kk-settings-method-width: 160px;
+  /* Screen editor shell sits above the phone canvas toolbar, below panels. */
+  --kk-canvas-screen-editor-width: 590px;
+  --kk-canvas-screen-editor-bottom: 152px;
+  --kk-canvas-screen-editor-max-height: min(45dvh, calc(100dvh - 232px));
+  --kk-collection-panel-width: 360px;
+  --kk-collection-panel-height: 480px;
+  --kk-model-capsule-max-width: 260px;
 }
 
 /* ============================================================================
@@ -268,17 +294,20 @@
   --kk-text-primary: #252525;
   --kk-text-secondary: #626262;
   --kk-text-tertiary: #636363;
-  --kk-text-accent: #594acc;
+  --kk-text-accent: #166443;
   --kk-text-danger: #aa263b;
   --kk-danger: #aa263b;
   --kk-success: #216947;
   --kk-warning: #8a590c;
-  --kk-on-accent: #ffffff;
-  --kk-focus-ring: #594acc;
+  --kk-on-accent: #0a0a0a;
+  --kk-focus-ring: #166443;
   --kk-focus-ring-subtle: rgba(0, 0, 0, 0.4);
   --kk-shadow-color: rgba(0, 0, 0, 0.12);
   --kk-shadow-color-strong: rgba(0, 0, 0, 0.2);
   --kk-overlay: rgba(237, 237, 237, 0.72);
+  --kk-button-primary-bg: #252525;
+  --kk-button-primary-hover: #3c3c3c;
+  --kk-button-primary-text: #ffffff;
   --kk-like-start: #aa263b;
   --kk-like-end: #8f1f37;
   --kk-star-start: #8a590c;
@@ -329,6 +358,37 @@
   --kk-accent-hover: #e8e8e8;
   --kk-accent-soft: #dbdbdb;
   --kk-on-accent: #0a0a0a;
+}
+[data-accent="blue"],
+[data-accent="green"],
+[data-accent="yellow"],
+[data-accent="pink"],
+[data-accent="orange"],
+[data-accent="purple"],
+[data-accent="white"] {
+  --kk-text-accent: var(--kk-accent-soft);
+  --kk-focus-ring: var(--kk-text-accent);
+}
+[data-theme="light"][data-accent="blue"] {
+  --kk-text-accent: #1458a5;
+}
+[data-theme="light"][data-accent="green"] {
+  --kk-text-accent: #166443;
+}
+[data-theme="light"][data-accent="yellow"] {
+  --kk-text-accent: #78510a;
+}
+[data-theme="light"][data-accent="pink"] {
+  --kk-text-accent: #a12659;
+}
+[data-theme="light"][data-accent="orange"] {
+  --kk-text-accent: #94420c;
+}
+[data-theme="light"][data-accent="purple"] {
+  --kk-text-accent: #6534b0;
+}
+[data-theme="light"][data-accent="white"] {
+  --kk-text-accent: #252525;
 }
 
 /* ============================================================================

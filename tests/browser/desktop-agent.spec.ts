@@ -1,13 +1,14 @@
 import { expect, test, type Page } from "@playwright/test";
 import { startAgentServer } from "../helpers/agentServer";
+import { openSeededProject } from "./helpers";
 
 async function networkSettings(page: Page) {
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   await page
     .getByRole("navigation", { name: "设置分类" })
-    .getByRole("button", { name: "扩展", exact: true })
+    .getByRole("button", { name: "模型接入", exact: true })
     .click();
-  await page.getByRole("tab", { name: /伙伴/ }).click();
+  await page.getByText("高级连接选项", { exact: true }).click();
   return page.getByRole("region", { name: "桌面 Agent 服务" });
 }
 
@@ -16,10 +17,10 @@ test("Web explains desktop ownership while preserving manual connections", async
 }) => {
   await page.goto("/");
   const panel = await networkSettings(page);
-  await expect(panel).toContainText("桌面版可一键启动");
-  await expect(
-    panel.getByRole("button", { name: "启动并连接" }),
-  ).toBeDisabled();
+  await expect(panel).toContainText("浏览器版请连接已运行");
+  await expect(panel.getByRole("button", { name: "启动并连接" })).toHaveCount(
+    0,
+  );
   await expect(page.getByLabel("Agent 地址")).toBeEditable();
 });
 
@@ -57,14 +58,27 @@ test("CodeBuddy delegation distinguishes disconnected, saved and verified states
     });
     await page.goto("/");
     await networkSettings(page);
+    await page.getByRole("button", { name: "CLI 账号", exact: true }).click();
+    await page
+      .getByRole("button", { name: "CodeBuddy CLI", exact: true })
+      .click();
     const pathInput = page.getByRole("textbox", { name: "CodeBuddy CLI 路径" });
     await expect(pathInput).toBeDisabled();
+    await page
+      .getByRole("button", { name: "Codex 主 Agent", exact: true })
+      .click();
     await page.getByLabel("Agent 地址").fill(agent.url);
     await page.getByLabel("连接 Token", { exact: true }).fill("fixture-token");
     await page.getByRole("button", { name: "连接 Agent", exact: true }).click();
     await expect(
-      page.getByRole("button", { name: "已连接", exact: true }),
+      page
+        .getByRole("dialog", { name: "设置" })
+        .getByRole("button", { name: "已连接", exact: true }),
     ).toBeVisible();
+    await page.getByRole("button", { name: "CLI 账号", exact: true }).click();
+    await page
+      .getByRole("button", { name: "CodeBuddy CLI", exact: true })
+      .click();
     await pathInput.fill("C:/WorkBuddy/cli/bin/codebuddy");
     await page.getByRole("button", { name: "保存 CodeBuddy 路径" }).click();
     await expect(
@@ -107,8 +121,103 @@ test("a desktop package without runtime shows its actual unavailable state", asy
   const panel = await networkSettings(page);
   await expect(panel).toContainText("未包含 Windows Agent 运行资源");
   await expect(
-    panel.getByRole("button", { name: "启动并连接" }),
+    page.getByRole("button", { name: "重新连接", exact: true }),
   ).toBeDisabled();
+});
+
+test("CodeBuddy 配置回读未完成时不能编辑或保存，完成后保存真实新路径", async ({
+  page,
+}) => {
+  const agent = await startAgentServer("idle");
+  let release!: () => void;
+  const held = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  let started!: () => void;
+  const reading = new Promise<void>((resolve) => {
+    started = resolve;
+  });
+  let path = "C:/WorkBuddy/previous-cli";
+  try {
+    await page.route(agent.url + "/agent/codebuddy/config", async (route) => {
+      if (route.request().method() === "GET") {
+        const previous = path;
+        started();
+        await held;
+        await route.fulfill({
+          contentType: "application/json",
+          body: JSON.stringify({
+            ok: true,
+            configured: true,
+            cliPath: previous,
+          }),
+        });
+      } else {
+        path = route.request().postDataJSON().cliPath;
+        await route.fulfill({
+          contentType: "application/json",
+          body: JSON.stringify({ ok: true, configured: true, cliPath: path }),
+        });
+      }
+    });
+    await page.goto("/");
+    await networkSettings(page);
+    await page.getByLabel("Agent 地址").fill(agent.url);
+    await page.getByLabel("连接 Token", { exact: true }).fill("fixture-token");
+    await page.getByRole("button", { name: "连接 Agent", exact: true }).click();
+    await expect(
+      page
+        .getByRole("dialog", { name: "设置" })
+        .getByRole("button", { name: "已连接", exact: true }),
+    ).toBeVisible();
+    const firstFrame = await page.evaluateHandle(() => {
+      const observed = { disabled: null as boolean | null };
+      const observer = new MutationObserver(() => {
+        const input = document.querySelector<HTMLInputElement>(
+          "#codebuddy-cli-path",
+        );
+        if (!input) return;
+        observed.disabled = input.disabled;
+        observer.disconnect();
+      });
+      observer.observe(document.body, { childList: true, subtree: true });
+      return observed;
+    });
+    await page.getByRole("button", { name: "CLI 账号", exact: true }).click();
+    await page
+      .getByRole("button", { name: "CodeBuddy CLI", exact: true })
+      .click();
+    await reading;
+    expect(await firstFrame.evaluate((observed) => observed.disabled)).toBe(
+      true,
+    );
+    const input = page.getByRole("textbox", {
+      name: "CodeBuddy CLI 路径",
+      exact: true,
+    });
+    await expect(input).toBeDisabled();
+    await expect(
+      page.getByRole("button", { name: "保存 CodeBuddy 路径", exact: true }),
+    ).toBeDisabled();
+    await expect(
+      page.getByRole("button", { name: "测试 CodeBuddy 连接", exact: true }),
+    ).toBeDisabled();
+    release();
+    await expect(input).toHaveValue("C:/WorkBuddy/previous-cli");
+    await expect(input).toBeEditable();
+    await input.fill("C:/WorkBuddy/new-cli");
+    await page
+      .getByRole("button", { name: "保存 CodeBuddy 路径", exact: true })
+      .click();
+    await expect(
+      page.getByRole("status", { name: "CodeBuddy 状态", exact: true }),
+    ).toContainText("已保存，尚未测试");
+    expect(path).toBe("C:/WorkBuddy/new-cli");
+    await expect(input).toHaveValue(path);
+  } finally {
+    release();
+    await agent.close();
+  }
 });
 
 test("an external handshake cannot be taken over by the desktop start control", async ({
@@ -150,17 +259,19 @@ test("an external handshake cannot be taken over by the desktop start control", 
     await page
       .getByLabel("连接 Token", { exact: true })
       .fill("external-session-token");
-    await page.getByRole("button", { name: "连接 Agent", exact: true }).click();
+    await page
+      .getByRole("button", { name: "连接外部服务", exact: true })
+      .click();
     await handshakeStarted;
     await expect(
       page.getByRole("button", { name: "连接中…", exact: true }),
     ).toBeDisabled();
     await expect(
-      panel.getByRole("button", { name: "启动并连接" }),
+      page.getByRole("button", { name: "连接外部服务", exact: true }),
     ).toBeDisabled();
     await page.getByRole("button", { name: "断开", exact: true }).click();
     await expect(
-      panel.getByRole("button", { name: "启动并连接" }),
+      page.getByRole("button", { name: "重新连接", exact: true }),
     ).toBeEnabled();
   } finally {
     release();
@@ -173,8 +284,7 @@ test("desktop starts, connects and stops the owned service without persisting it
 }) => {
   const agent = await startAgentServer("idle");
   try {
-    await page.goto("/");
-    await expect(page.getByLabel("创作提示词")).toBeVisible();
+    await openSeededProject(page);
     await page.evaluate((endpoint) => {
       let running = false;
       Object.assign(window, {
@@ -198,15 +308,18 @@ test("desktop starts, connects and stops the owned service without persisting it
                 pid: running ? 1234 : null,
               };
             if (command === "credential_get") return null;
+            if (command === "write_creation_snapshot") return;
             throw Error("Unexpected native command");
           },
         },
       });
     }, agent.url);
     const panel = await networkSettings(page);
-    await panel.getByRole("button", { name: "启动并连接" }).click();
+    await page.getByRole("button", { name: "重新连接", exact: true }).click();
     await expect(
-      page.getByRole("button", { name: "已连接", exact: true }),
+      page
+        .getByRole("dialog", { name: "设置" })
+        .getByRole("button", { name: "已连接", exact: true }),
     ).toBeDisabled();
     await expect(panel).toContainText("服务运行中");
     expect(
@@ -215,11 +328,13 @@ test("desktop starts, connects and stops the owned service without persisting it
     await panel.getByRole("button", { name: "停止服务", exact: true }).click();
     await expect(panel).toContainText("服务已停止");
     await expect(
-      page.getByRole("button", { name: "连接 Agent", exact: true }),
+      page.getByRole("button", { name: "重新连接", exact: true }),
     ).toBeEnabled();
-    await panel.getByRole("button", { name: "启动并连接" }).click();
+    await page.getByRole("button", { name: "重新连接", exact: true }).click();
     await expect(
-      page.getByRole("button", { name: "已连接", exact: true }),
+      page
+        .getByRole("dialog", { name: "设置" })
+        .getByRole("button", { name: "已连接", exact: true }),
     ).toBeDisabled();
   } finally {
     await agent.close();

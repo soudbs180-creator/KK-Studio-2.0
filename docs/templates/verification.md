@@ -9,6 +9,8 @@
 - dirty 状态及 patch/文件指纹（有未提交内容时）：
 - Node/npm/Rust/浏览器/OS/工具版本：
 - 规则版本或 commit：
+- 交付包角色：`current` / `historical`
+- 当前包必须绑定本次变更的账本 `taskId`；历史包只能作为辅助证据，不能替代本次 `verification.md` 与 `review.md`
 
 ## 实际命令和结果
 

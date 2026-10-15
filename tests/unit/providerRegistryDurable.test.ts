@@ -2,6 +2,10 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import type { ProviderConnection } from "../../src/domain/providerConnections.ts";
 import {
+  MODEL_PROVIDER_STORAGE_KEY,
+  parseModelProvider,
+} from "../../src/domain/modelProvider.ts";
+import {
   loadProviderConnectionsDurable,
   persistProviderConnectionsDurable,
   readProviderConnections,
@@ -44,6 +48,15 @@ function withTauriStorage(run: () => Promise<void>): Promise<void> {
     configurable: true,
     value: {
       location: { protocol: "tauri:", hostname: "tauri.localhost" },
+      navigator: {
+        locks: {
+          request: (
+            _name: string,
+            _options: unknown,
+            run: () => Promise<unknown>,
+          ) => run(),
+        },
+      },
       __TAURI_INTERNALS__: {
         invoke: (command: string, args?: Record<string, unknown>) => {
           invokeCalls.push({ command, args });
@@ -81,6 +94,45 @@ function withWebStorage(run: () => Promise<void>): Promise<void> {
   });
 }
 
+for (const protocol of ["openai-responses", "anthropic", "ollama"] as const)
+  test(`Desktop hydration restores ${protocol} and its authentication without rewriting account identity`, async () => {
+    await withTauriStorage(async () => {
+      const connection = {
+        ...CONNECTION,
+        protocol,
+        authMode:
+          protocol === "ollama" ? ("none" as const) : ("api-key" as const),
+        baseUrl:
+          protocol === "ollama"
+            ? "http://127.0.0.1:11434/v1"
+            : CONNECTION.baseUrl,
+      };
+      window.localStorage.setItem(
+        MODEL_PROVIDER_STORAGE_KEY,
+        JSON.stringify({
+          version: 1,
+          connectionId: connection.id,
+          name: connection.provider,
+          baseUrl: connection.baseUrl,
+          model: connection.model,
+          protocol: connection.protocol,
+          authMode: connection.authMode,
+        }),
+      );
+      invokeImpl = async (command) => {
+        assert.equal(command, "read_provider_config");
+        return { status: "loaded", revision: 7, connections: [connection] };
+      };
+      await loadProviderConnectionsDurable();
+      const restored = parseModelProvider(
+        window.localStorage.getItem(MODEL_PROVIDER_STORAGE_KEY),
+      ).profile;
+      assert.equal(restored.protocol, protocol);
+      assert.equal(restored.authMode, connection.authMode);
+      assert.equal(restored.connectionId, connection.id);
+    });
+  });
+
 test("桌面 load：native loaded 返回连接并刷新浏览器缓存", async () => {
   await withTauriStorage(async () => {
     invokeCalls.length = 0;
@@ -94,6 +146,7 @@ test("桌面 load：native loaded 返回连接并刷新浏览器缓存", async (
     assert.equal(loaded?.[0].id, "my-openai");
     assert.equal(invokeCalls[0]?.command, "read_provider_config");
     assert.equal(readProviderConnections().length, 1);
+    assert.equal(window.localStorage.getItem(MODEL_PROVIDER_STORAGE_KEY), null);
   });
 });
 
@@ -122,6 +175,147 @@ test("桌面 load：recovered 备份被采用并刷新缓存", async () => {
     const loaded = await loadProviderConnectionsDurable();
     assert.equal(loaded?.length, 1);
     assert.equal(readProviderConnections().length, 1);
+  });
+});
+
+test("桌面重启：恢复选中账号的新模型和配置，重复读取不写原生存储", async () => {
+  await withTauriStorage(async () => {
+    const oldProfile = {
+      version: 1,
+      name: "旧名称",
+      baseUrl: "https://old.example/v1",
+      model: "old-model",
+      connectionId: CONNECTION.id,
+    };
+    window.localStorage.setItem(
+      MODEL_PROVIDER_STORAGE_KEY,
+      JSON.stringify(oldProfile),
+    );
+    invokeCalls.length = 0;
+    invokeImpl = async (command) => {
+      assert.equal(command, "read_provider_config");
+      return { status: "loaded", revision: 8, connections: [CONNECTION] };
+    };
+    for (let restart = 0; restart < 2; restart++) {
+      await loadProviderConnectionsDurable();
+      assert.deepEqual(
+        JSON.parse(window.localStorage.getItem(MODEL_PROVIDER_STORAGE_KEY)!),
+        {
+          version: 1,
+          name: CONNECTION.provider,
+          baseUrl: CONNECTION.baseUrl,
+          model: CONNECTION.model,
+          connectionId: CONNECTION.id,
+        },
+      );
+      assert.equal(readProviderConnections()[0]?.credentialRef, "cred-1");
+    }
+    assert.deepEqual(
+      invokeCalls.map((call) => call.command),
+      ["read_provider_config", "read_provider_config"],
+    );
+  });
+});
+
+test("桌面恢复：唯一旧账号可恢复，缺失、损坏、歧义或已移除的选择保持原样", async () => {
+  await withTauriStorage(async () => {
+    const legacy = {
+      version: 1,
+      name: CONNECTION.provider,
+      baseUrl: CONNECTION.baseUrl,
+      model: "old-model",
+    };
+    invokeImpl = async () => ({
+      status: "loaded",
+      revision: 8,
+      connections: [CONNECTION],
+    });
+    window.localStorage.setItem(
+      MODEL_PROVIDER_STORAGE_KEY,
+      JSON.stringify(legacy),
+    );
+    await loadProviderConnectionsDurable();
+    assert.equal(
+      JSON.parse(window.localStorage.getItem(MODEL_PROVIDER_STORAGE_KEY)!)
+        .connectionId,
+      CONNECTION.id,
+    );
+    for (const raw of [
+      "",
+      "{broken",
+      JSON.stringify({ ...legacy, connectionId: "removed-account" }),
+      JSON.stringify(legacy),
+    ]) {
+      invokeImpl = async () => ({
+        status: "loaded",
+        revision: 8,
+        connections: [
+          CONNECTION,
+          { ...CONNECTION, id: "another-account", credentialRef: "cred-2" },
+        ],
+      });
+      window.localStorage.setItem(MODEL_PROVIDER_STORAGE_KEY, raw);
+      await loadProviderConnectionsDurable();
+      assert.equal(
+        window.localStorage.getItem(MODEL_PROVIDER_STORAGE_KEY),
+        raw,
+      );
+    }
+  });
+});
+
+test("桌面恢复：重复身份或不完整条目不覆盖已有选择", async () => {
+  await withTauriStorage(async () => {
+    const selected = JSON.stringify({
+      version: 1,
+      name: CONNECTION.provider,
+      baseUrl: CONNECTION.baseUrl,
+      model: "old-model",
+      connectionId: CONNECTION.id,
+    });
+    for (const connections of [
+      [CONNECTION, { ...CONNECTION, credentialRef: "duplicate-ref" }],
+      [{ ...CONNECTION, model: undefined }],
+      [{ ...CONNECTION, baseUrl: undefined }],
+    ]) {
+      invokeImpl = async () => ({ status: "loaded", revision: 8, connections });
+      window.localStorage.setItem(MODEL_PROVIDER_STORAGE_KEY, selected);
+      await loadProviderConnectionsDurable();
+      assert.equal(
+        window.localStorage.getItem(MODEL_PROVIDER_STORAGE_KEY),
+        selected,
+      );
+    }
+  });
+});
+
+test("桌面恢复：不发布缓存时保留旧选择，缓存写入失败不写配置或凭据", async () => {
+  await withTauriStorage(async () => {
+    const raw = JSON.stringify({
+      version: 1,
+      name: CONNECTION.provider,
+      baseUrl: CONNECTION.baseUrl,
+      model: "old-model",
+      connectionId: CONNECTION.id,
+    });
+    window.localStorage.setItem(MODEL_PROVIDER_STORAGE_KEY, raw);
+    invokeCalls.length = 0;
+    invokeImpl = async (command) => {
+      assert.equal(command, "read_provider_config");
+      return { status: "loaded", revision: 8, connections: [CONNECTION] };
+    };
+    await loadProviderConnectionsDurable({ publishCache: false });
+    assert.equal(window.localStorage.getItem(MODEL_PROVIDER_STORAGE_KEY), raw);
+    assert.equal(readProviderConnections().length, 0);
+    const write = window.localStorage.setItem;
+    window.localStorage.setItem = (key, value) => {
+      if (key === MODEL_PROVIDER_STORAGE_KEY) throw new Error("cache full");
+      write(key, value);
+    };
+    await assert.rejects(loadProviderConnectionsDurable(), /无法刷新页面缓存/);
+    assert.equal(window.localStorage.getItem(MODEL_PROVIDER_STORAGE_KEY), raw);
+    assert.equal(readProviderConnections()[0]?.credentialRef, "cred-1");
+    assert.equal(invokeCalls.length, 2);
   });
 });
 

@@ -7,7 +7,7 @@ import {
 } from "react";
 import { useCanvasPointer, isInteractiveTarget } from "./useCanvasPointer";
 import { zoomAtPoint } from "../../domain/canvasViewport";
-import { cardLayout } from "../../domain/canvasGraph";
+import { cardLayout, cardSelectionLayout } from "../../domain/canvasGraph";
 import { useCanvasNodeActions } from "./useCanvasNodeActions";
 import { useCanvasView } from "./useCanvasView";
 import { useCanvasViewport } from "./useCanvasViewport";
@@ -15,6 +15,7 @@ import { surfaceScale, toSurfacePoint } from "./canvasSurface";
 import { getImageSelectionPosition } from "./imageSelectionPosition";
 import { visibleComposerExtraHeight } from "./composerLayout";
 import { useCanvasPreferences } from "./useCanvasPreferences";
+import type { useCanvasContextMenu } from "./useCanvasContextMenu";
 import type {
   KeyboardEvent as ReactKeyboardEvent,
   WheelEvent as ReactWheelEvent,
@@ -24,6 +25,8 @@ import type {
 import type { CanvasCollectionItem } from "../../domain/canvasItems";
 import {
   createProjectCanvas,
+  mergeCanvasPositions,
+  projectCanvasFingerprint,
   type ProjectCanvas,
 } from "../../domain/projectCanvas";
 import {
@@ -36,18 +39,25 @@ import {
 } from "./canvasModel";
 
 interface CanvasControlsOptions {
+  rightGesture: ReturnType<typeof useCanvasContextMenu>["rightGesture"];
   initialCanvas?: ProjectCanvas;
   items: CanvasCollectionItem[];
   onItemsChange: Dispatch<SetStateAction<CanvasCollectionItem[]>>;
-  favoriteIds: Set<string>;
-  onToggleFavorite: (id: string) => void;
+}
+
+function hasDraftComposer(item: CanvasCollectionItem): boolean {
+  return (
+    !item.plugin &&
+    !item.result &&
+    !item.referenceOnly &&
+    !item.generationStatus
+  );
 }
 
 export function useCanvasControls({
+  rightGesture,
   items,
   onItemsChange,
-  favoriteIds,
-  onToggleFavorite,
   initialCanvas,
 }: CanvasControlsOptions) {
   const canvasPreferences = useCanvasPreferences();
@@ -55,9 +65,15 @@ export function useCanvasControls({
     () => initialCanvas?.viewport ?? INITIAL_TRANSFORM,
   );
   const automaticViewport = useRef<ViewTransform | null>(null);
+  const skipSelectionReveal = useRef(false);
   const [nodes, setNodes] = useState(
     () => initialCanvas?.positions ?? createProjectCanvas(items).positions,
   );
+  const [observedCanvas, setObservedCanvas] = useState(initialCanvas);
+  const publishedCanvas = useRef("");
+  const isCanvasEcho =
+    initialCanvas !== undefined &&
+    projectCanvasFingerprint(initialCanvas) === publishedCanvas.current;
   const [selectedNode, setSelectedNode] = useState<CanvasNodeId | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const { viewport, measure: usableViewport } = useCanvasViewport(containerRef);
@@ -112,12 +128,40 @@ export function useCanvasControls({
     setSelectedNode,
     snapEnabled: canvasPreferences.preferences.snapEnabled,
   });
+  // Re-render with external geometry before persistence can publish the old graph.
+  if (observedCanvas !== initialCanvas) {
+    setObservedCanvas(initialCanvas);
+    if (initialCanvas && !isCanvasEcho) {
+      const drag = pointer.dragRef.current;
+      setNodes((current) => {
+        const next = mergeCanvasPositions(
+          current,
+          observedCanvas?.positions ?? {},
+          initialCanvas.positions,
+        );
+        if (drag?.kind === "node" && drag.nodeId) {
+          const ids = drag.selection.has(drag.nodeId)
+            ? drag.selection
+            : new Set([drag.nodeId]);
+          // A saved preview is still a local edit until the pointer is released.
+          for (const id of ids)
+            if (current[id] && next[id] && next[id] !== current[id])
+              next[id] = current[id];
+        }
+        return next;
+      });
+    }
+  }
   useLayoutEffect(() => {
     if (!selectedNode) {
       revealSelection.current = null;
       return;
     }
     if (pointer.dragging) return;
+    if (skipSelectionReveal.current) {
+      skipSelectionReveal.current = false;
+      return;
+    }
     const node = nodes[selectedNode];
     const item = items.find((item) => item.id === selectedNode);
     if (!node || !item) return;
@@ -127,8 +171,7 @@ export function useCanvasControls({
       revealSelection.current = selectedNode;
       revealBaselineHeight.current = 0;
     }
-    const hasComposer =
-      !item.result && !item.referenceOnly && !item.generationStatus;
+    const hasComposer = hasDraftComposer(item);
     // 选中后等待编辑器基准高度（composer 挂载后一次报告），避免 0→基线 的双重位移
     if (isNewSelection && hasComposer && composerExtraHeight === 0) return;
     const viewportChanged =
@@ -145,13 +188,10 @@ export function useCanvasControls({
     const toolbar = document.querySelector<HTMLElement>(
       ".image-selection-toolbar",
     );
+    const actionAnchor = item.kind === "image" ? image : frame;
     const imageActions =
-      item.kind === "image" &&
-      Boolean(item.preview || item.result?.src) &&
-      canvas &&
-      image &&
-      toolbar
-        ? getImageSelectionPosition(image, canvas, toolbar)
+      canvas && actionAnchor && toolbar
+        ? getImageSelectionPosition(actionAnchor, canvas, toolbar)
         : undefined;
     const needsImageActions = Boolean(imageActions?.revealDelta);
     const minimumTop = imageActions?.revealDelta
@@ -170,7 +210,7 @@ export function useCanvasControls({
     )
       return;
     revealBaselineHeight.current = composerExtraHeight;
-    const layout = cardLayout(item);
+    const layout = cardSelectionLayout(item);
     const compact = item.result || ["audio", "text"].includes(item.kind);
     const viewWidth = layout.width;
     const actionSpace = compact ? 52 : 0;
@@ -225,6 +265,7 @@ export function useCanvasControls({
       const pointerX = point.x;
       const pointerY = point.y;
       const zoomFactor = event.deltaY > 0 ? 0.9 : 1.1;
+      skipSelectionReveal.current = true;
       setTransform((current) =>
         zoomAtPoint(
           current,
@@ -237,7 +278,11 @@ export function useCanvasControls({
   );
 
   const moveNodeWithKeyboard = useCallback(
-    (event: ReactKeyboardEvent<HTMLDivElement>, nodeId: CanvasNodeId): void => {
+    (
+      event: ReactKeyboardEvent<HTMLDivElement>,
+      nodeId: CanvasNodeId,
+      onDelete: () => void,
+    ): void => {
       if (event.key === "Escape" && !event.nativeEvent.isComposing) {
         event.preventDefault();
         if (pointer.dragRef.current) pointer.cancelGesture();
@@ -251,13 +296,9 @@ export function useCanvasControls({
         setSelectedNode(nodeId);
         return;
       }
-      if (
-        (event.key === "Delete" || event.key === "Backspace") &&
-        nodeId.startsWith("added-")
-      ) {
+      if (event.key === "Delete" || event.key === "Backspace") {
         event.preventDefault();
-        actions.removeNode(nodeId);
-        if (favoriteIds.has(nodeId)) onToggleFavorite(nodeId);
+        onDelete();
         setSelectedNode(null);
         return;
       }
@@ -279,7 +320,7 @@ export function useCanvasControls({
         },
       }));
     },
-    [favoriteIds, items, onItemsChange, onToggleFavorite],
+    [items, onItemsChange],
   );
 
   const resetCanvas = useCallback((): void => {
@@ -295,10 +336,16 @@ export function useCanvasControls({
     selectedNode,
     composerExtraHeight,
     getViewport: usableViewport,
-    setTransform,
+    setTransform: (next) => {
+      skipSelectionReveal.current = true;
+      setTransform(next);
+    },
   });
 
   return {
+    rightGesture,
+    publishedCanvas,
+    isCanvasEcho,
     ...view,
     setComposerExtraHeight,
     composerExtraHeight,

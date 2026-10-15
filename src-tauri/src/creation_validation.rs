@@ -31,6 +31,27 @@ fn optional_strings(value: &Value, fields: &[&str]) -> Result<(), String> {
     }
     Ok(())
 }
+pub(crate) fn labels(value: &Value, field: &str) -> Result<(), String> {
+    let Some(value) = value.get(field) else {
+        return Ok(());
+    };
+    let entries = array(value, field)?;
+    if entries.len() > 32 {
+        return Err(corrupt(field));
+    }
+    let mut seen = HashSet::new();
+    for entry in entries {
+        let label = entry.as_str().ok_or_else(|| corrupt(field))?;
+        if label.is_empty()
+            || label.trim() != label
+            || label.encode_utf16().count() > 40
+            || !seen.insert(label)
+        {
+            return Err(corrupt(field));
+        }
+    }
+    Ok(())
+}
 fn optional_ids(value: &Value, fields: &[&str]) -> Result<(), String> {
     for field in fields {
         if let Some(candidate) = value.get(field) {
@@ -50,6 +71,34 @@ fn optional_enum(value: &Value, field: &str, options: &[&str]) -> Result<(), Str
     }
     Ok(())
 }
+fn provider_routing(value: &Value) -> Result<(), String> {
+    optional_enum(
+        value,
+        "providerProtocol",
+        &[
+            "openai-chat",
+            "openai-responses",
+            "anthropic",
+            "azure-openai",
+            "ollama",
+        ],
+    )?;
+    optional_enum(value, "providerAuthMode", &["api-key", "none"])?;
+    if value.get("providerAuthMode").and_then(Value::as_str) == Some("none") {
+        let base = value
+            .get("providerBaseUrl")
+            .and_then(Value::as_str)
+            .ok_or_else(|| corrupt("providerBaseUrl"))?;
+        crate::task_host::validate_provider_options(
+            base,
+            value.get("providerProtocol").and_then(Value::as_str),
+            Some("none"),
+        )
+        .map_err(|_| corrupt("providerAuthMode"))?;
+    }
+    Ok(())
+}
+
 fn task_submission(value: &Value) -> Result<(), String> {
     optional_enum(
         value,
@@ -165,11 +214,14 @@ pub fn validate(value: &Value) -> Result<(), String> {
         draft(home)?;
     }
     for project in projects {
+        labels(project, "customTags")?;
+        provider_routing(project)?;
         optional_strings(project, &["name", "prompt", "model", "kind"])?;
         attachments(project)?;
         let items = array(&project["items"], "items")?;
         let node_ids = unique_ids(items, "items")?;
         for item in items {
+            labels(item, "tags")?;
             if !item["title"].is_string() || !item["description"].is_string() {
                 return Err(corrupt("items"));
             }
@@ -181,6 +233,7 @@ pub fn validate(value: &Value) -> Result<(), String> {
             optional_strings(task, &["prompt", "model", "status", "kind"])?;
             optional_ids(task, &["sourceItemId"])?;
             task_submission(task)?;
+            provider_routing(task)?;
             attachments(task)?;
         }
         let messages = optional_arrays(project, "messages")?;

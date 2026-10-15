@@ -91,10 +91,7 @@ function readJson(filePath) {
 
 function isLinkedPath(filePath) {
   try {
-    // realpath() may return a different but equivalent spelling on Windows
-    // (for example an 8.3 path). Only lstat() tells us whether the directory
-    // entry itself is a symlink/junction; comparing path spellings creates
-    // false positives for ordinary directories on hosted runners.
+    // Windows 8.3 spellings can differ from realpath without being links.
     return fs.lstatSync(filePath).isSymbolicLink();
   } catch {
     return false;
@@ -277,8 +274,28 @@ function buildDesktopRelease(projectRoot) {
   }
 }
 
-function launchDesktopRelease(executablePath, projectRoot) {
-  const child = spawn(executablePath, [], {
+export function parseDesktopLaunchArguments(args) {
+  let dataDirectory;
+  for (let index = 0; index < args.length; index++) {
+    if (args[index] === "--background") continue;
+    if (args[index] !== "--data-dir" || dataDirectory !== undefined)
+      throw new Error("Unsupported or duplicate desktop launch argument.");
+    const value = args[++index];
+    if (
+      typeof value !== "string" ||
+      !path.isAbsolute(value) ||
+      /[\0\r\n]/.test(value)
+    )
+      throw new Error(
+        "An isolated desktop data directory must be an absolute path.",
+      );
+    dataDirectory = path.resolve(value);
+  }
+  return dataDirectory ? ["--data-dir", dataDirectory] : [];
+}
+
+function launchDesktopRelease(executablePath, projectRoot, args = []) {
+  const child = spawn(executablePath, args, {
     cwd: projectRoot,
     detached: true,
     stdio: "ignore",
@@ -301,6 +318,7 @@ if (isMainModule()) {
     "..",
   );
   try {
+    const launchArguments = parseDesktopLaunchArguments(process.argv.slice(2));
     const initial = inspectDesktopRelease(projectRoot);
     if (initial.reason === "missing") {
       console.log("[KK Studio] Desktop release is missing; building...");
@@ -312,7 +330,7 @@ if (isMainModule()) {
     const result = runDesktopRelease(projectRoot, {
       buildRelease: buildDesktopRelease,
       launchRelease: (executablePath) =>
-        launchDesktopRelease(executablePath, projectRoot),
+        launchDesktopRelease(executablePath, projectRoot, launchArguments),
     });
     console.log(
       `[KK Studio] Launched ${result.rebuilt ? "rebuilt" : "current"} desktop release.`,

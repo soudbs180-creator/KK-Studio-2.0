@@ -14,7 +14,7 @@
   flex: 0 0 auto;
   gap: var(--ui-space-2);
   padding: var(--ui-space-3);
-  border: var(--ui-border-width) solid var(--border-control);
+  border: var(--ui-border-width) solid transparent;
   border-radius: var(--ui-radius-panel);
   background: var(--bg-input);
   color: var(--text-primary);
@@ -65,11 +65,21 @@
 }
 .composer-toolbar {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--ui-space-1);
   width: 100%;
   min-width: 0;
   flex: 0 0 auto;
+}
+.composer-trailing-actions {
+  display: flex;
+  flex: 0 0 auto;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: var(--kk-space-1);
+  order: 10;
+  margin-left: auto;
 }
 .start-footer-left,
 .start-footer-right {
@@ -129,18 +139,57 @@
   border-radius: var(--ui-radius-control);
   background: transparent;
 }
-.composer-toolbar button:hover:not(:disabled),
-.composer-toolbar button[aria-expanded="true"] {
+.composer-toolbar
+  :is(
+    .start-tool-button,
+    .chat-model-picker,
+    .chat-skill-trigger,
+    .chat-plugin-trigger,
+    .chat-mode-trigger,
+    .start-mode-button,
+    .start-add-button,
+    .chat-attachment-trigger,
+    [data-voice-state],
+    .start-submit-button,
+    .chat-send
+  ):hover:not(:disabled),
+.composer-toolbar
+  :is(
+    .start-tool-button,
+    .chat-model-picker,
+    .chat-skill-trigger,
+    .chat-plugin-trigger,
+    .chat-mode-trigger,
+    .start-mode-button,
+    .start-add-button,
+    .chat-attachment-trigger,
+    [data-voice-state],
+    .start-submit-button,
+    .chat-send
+  )[aria-expanded="true"] {
   color: var(--text-primary);
   background: var(--neutral-selected);
 }
-.composer-toolbar button:active:not(:disabled) {
+.composer-toolbar
+  :is(
+    .start-tool-button,
+    .chat-model-picker,
+    .chat-skill-trigger,
+    .chat-plugin-trigger,
+    .chat-mode-trigger,
+    .start-mode-button,
+    .start-add-button,
+    .chat-attachment-trigger,
+    [data-voice-state],
+    .start-submit-button,
+    .chat-send
+  ):active:not(:disabled) {
   background: var(--bg-soft);
 }
 .composer-toolbar :is(.start-model-picker, .chat-model-picker-wrap) {
   order: 2;
   flex: 1 1 110px;
-  max-width: 260px;
+  max-width: var(--kk-model-capsule-max-width);
   min-width: 80px;
 }
 .chat-composer .chat-model-picker-wrap {
@@ -148,7 +197,7 @@
 }
 .composer-toolbar :is(.start-model-picker > button, .chat-model-picker) {
   width: 100%;
-  justify-content: flex-start;
+  justify-content: center;
 }
 .composer-toolbar :is(.start-model-picker > button > span, .chat-model-name) {
   flex: 0 1 auto;
@@ -156,7 +205,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  text-align: left;
+  text-align: center;
 }
 .composer-toolbar :is(.start-add-button, .chat-attachment-trigger) {
   order: 1;
@@ -195,14 +244,7 @@
   height: 16px;
   object-fit: contain;
 }
-.composer-toolbar
-  :is(
-    .start-add-button,
-    .chat-attachment-trigger,
-    .start-submit-button,
-    .chat-send
-  )
-  > img {
+.composer-toolbar :is(.start-submit-button, .chat-send) > img {
   display: block;
   width: 20px;
   height: 20px;
@@ -268,7 +310,7 @@
   min-width: 0;
 }
 .composer-surface .kk-model-variants select {
-  min-height: var(--composer-target);
+  min-height: var(--kk-control-h-md);
   border-radius: var(--ui-radius-control);
   border-color: var(--border-control);
 }
@@ -362,10 +404,10 @@
     grid-area: 2 / 5;
     justify-self: end;
   }
-  /* Keep StartComposer as one row across all breakpoints. */
+  /* Compact controls wrap as complete capsules. */
   .start-composer .start-composer-footer {
     display: flex;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     align-items: center;
   }
   .start-composer .start-footer-left,
@@ -419,13 +461,6 @@
   .start-composer .composer-options {
     display: none;
   }
-  .start-composer .start-model-picker > button > span {
-    font-size: 0;
-  }
-  .start-composer .start-model-picker > button > span::before {
-    content: "模型";
-    font-size: var(--ui-font-body);
-  }
   .start-composer .start-model-picker > button {
     gap: 3px;
     padding: 0 4px;
@@ -445,10 +480,10 @@
 }
 
 @media (max-width: 767px) {
-  /* At phone width the Figma home component is one compact action row. */
+  /* Phone controls wrap as complete capsules when the row is full. */
   .start-composer .composer-toolbar {
     display: flex;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     gap: 4px;
   }
   .start-composer .start-footer-left,
@@ -510,9 +545,8 @@
 
 /*
  * Current Figma composer contracts (483:695 / 483:753 / 407:29265).
- * Keep the visible controls on the shared 32px hit target. Batch and data mode
- * live inside the model menu;
- * plugins and partners remain accessible through settings.
+ * Keep text actions as capsules and icon actions as 32px rounded squares.
+ * Generation parameters belong to canvas editors.
  */
 .start-composer {
   --composer-target: 32px;
@@ -524,7 +558,7 @@
   margin-inline: auto;
   padding: 13px 13px 11px 12px;
   gap: 0;
-  border: 1px solid var(--border-default);
+  border: 1px solid transparent;
   border-radius: 20px;
   background: var(--bg-input);
 }
@@ -559,29 +593,31 @@
   align-items: center;
   width: 625px;
   max-width: none;
-  height: var(--kk-control-h-md);
+  height: auto;
   min-height: var(--kk-control-h-md);
   margin-top: auto;
-  gap: 0;
+  gap: var(--kk-space-1);
 }
 
 .start-composer .start-footer-left,
 .start-composer .start-footer-right {
   display: flex;
   align-items: center;
-  height: var(--kk-control-h-md);
+  height: auto;
   min-height: var(--kk-control-h-md);
-  gap: 0;
+  gap: var(--kk-space-1);
 }
 
 .start-composer .start-footer-left {
-  flex: 0 0 157px;
-  width: 157px;
+  flex: 1 1 auto;
+  width: auto;
+  min-width: 0;
+  flex-wrap: wrap;
 }
 
 .start-composer .start-footer-right {
-  flex: 0 0 140px;
-  width: 140px;
+  flex: 0 0 auto;
+  width: fit-content;
   margin-left: auto;
 }
 
@@ -591,16 +627,13 @@
   width: var(--kk-control-h-md);
   min-width: var(--kk-control-h-md);
   height: var(--kk-control-h-md);
-  border-radius: var(--kk-radius-full);
 }
-
 .start-composer .start-add-button > img,
 .start-composer .start-submit-button > img {
   width: 24px;
   height: 24px;
 }
 
-.start-composer .start-model-picker,
 .start-composer .composer-ext-skill {
   flex: 0 0 58px;
   width: 58px;
@@ -610,6 +643,10 @@
 }
 
 .start-composer .start-model-picker {
+  flex: 0 1 auto;
+  width: fit-content;
+  min-width: 0;
+  max-width: min(var(--kk-model-capsule-max-width), 100%);
   order: initial;
   margin-left: 4px;
 }
@@ -619,7 +656,6 @@
   margin: 0;
 }
 
-.start-composer .start-model-picker > button,
 .start-composer .composer-ext-skill > button {
   box-sizing: border-box;
   width: 58px;
@@ -628,14 +664,17 @@
   min-height: var(--kk-control-h-md);
   padding: 0 5px;
   gap: 4px;
-  border-radius: var(--kk-radius-control);
   background: var(--ui-task-selected);
   font-size: var(--kk-font-caption);
   line-height: var(--kk-line-caption);
 }
 
 .start-composer .start-model-picker > button {
-  justify-content: flex-start;
+  width: auto;
+  min-width: 0;
+  max-width: 100%;
+  justify-content: center;
+  padding-inline: var(--kk-space-3);
 }
 
 .start-composer .start-model-picker > button > img,
@@ -658,29 +697,6 @@
   content: none;
 }
 
-.start-model-options {
-  display: grid;
-  gap: var(--kk-space-2);
-  padding: var(--kk-space-3);
-  border-top: var(--kk-border-width) solid var(--border-default);
-}
-.start-model-options .start-count-picker {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--kk-space-3);
-}
-.start-model-options select {
-  min-width: 0;
-  height: var(--kk-control-h-md);
-  padding-inline: var(--kk-control-px-sm);
-  border: var(--kk-border-width) solid var(--border-control);
-  border-radius: var(--kk-radius-control);
-  background: var(--bg-input);
-  color: var(--text-primary);
-  font-size: var(--kk-font-caption);
-}
-
 .start-composer .start-composer-divider {
   display: block;
   flex: 0 0 1px;
@@ -698,7 +714,6 @@
   height: var(--kk-control-h-md);
   min-height: var(--kk-control-h-md);
   margin-left: 0;
-  border-radius: 50%;
 }
 
 .start-composer .start-footer-right .start-composer-divider {
@@ -706,8 +721,8 @@
 }
 
 .start-composer .start-footer-right [data-voice-state] > img {
-  width: var(--kk-icon-glyph-md);
-  height: var(--kk-icon-glyph-md);
+  width: 14px;
+  height: 14px;
 }
 
 .start-composer .start-mode-picker {
@@ -725,7 +740,6 @@
   height: var(--kk-control-h-md);
   min-height: var(--kk-control-h-md);
   padding: 0 4px;
-  border-radius: var(--kk-radius-control);
   font-size: var(--kk-font-caption);
   line-height: var(--kk-line-caption);
 }
@@ -743,27 +757,14 @@
   height: var(--kk-control-h-md);
   min-height: var(--kk-control-h-md);
   margin-left: 9px;
-  border-radius: var(--kk-radius-full);
 }
 
 .start-composer .start-composer-divider + .start-footer-right {
   margin-left: auto;
 }
 
-/* Desktop keeps enough room for the model label while the phone contract
-   remains the compact 58px control defined below. */
+/* Desktop groups may spread out without changing the controls inside them. */
 @media (min-width: 768px) {
-  .start-composer .start-footer-left {
-    flex-basis: 220px;
-    width: 220px;
-  }
-
-  .start-composer .start-model-picker {
-    flex-basis: calc(var(--kk-control-h-lg) * 2 + var(--kk-space-2));
-    width: calc(var(--kk-control-h-lg) * 2 + var(--kk-space-2));
-    max-width: none;
-  }
-
   .start-composer .composer-ext-skill {
     flex-basis: calc(var(--kk-control-h-lg) * 2);
     width: calc(var(--kk-control-h-lg) * 2);
@@ -771,11 +772,10 @@
   }
 
   .start-composer .start-footer-right {
-    flex-basis: 144px;
-    width: 144px;
+    flex-basis: auto;
+    width: fit-content;
   }
 
-  .start-composer .start-model-picker > button,
   .start-composer .composer-ext-skill > button {
     width: 100%;
     min-width: 100%;
@@ -792,7 +792,7 @@
   margin-left: 2px;
   padding: 12px;
   gap: 0;
-  border: 1px solid var(--border-default);
+  border: 1px solid transparent;
   border-radius: 20px;
   background: var(--bg-input);
 }
@@ -822,10 +822,10 @@
   display: flex;
   align-items: center;
   width: 100%;
-  height: var(--kk-control-h-md);
+  height: auto;
   min-height: var(--kk-control-h-md);
   margin-top: auto;
-  gap: 0;
+  gap: var(--kk-space-1);
 }
 
 .conversation-panel .chat-composer .chat-attachment-trigger,
@@ -835,7 +835,6 @@
   min-width: var(--kk-control-h-md);
   height: var(--kk-control-h-md);
   min-height: var(--kk-control-h-md);
-  border-radius: var(--kk-radius-full);
 }
 
 .conversation-panel .chat-composer .chat-attachment-trigger {
@@ -844,26 +843,26 @@
 
 .conversation-panel .chat-composer .chat-model-picker-wrap {
   order: 2;
-  flex: 0 0 58px;
-  width: 58px;
-  min-width: 58px;
-  max-width: 58px;
+  flex: 0 1 auto;
+  width: fit-content;
+  min-width: 0;
+  max-width: min(var(--kk-model-capsule-max-width), 100%);
   height: var(--kk-control-h-md);
   margin-left: 5px;
 }
 
 .conversation-panel .chat-composer .chat-model-picker {
-  width: 58px;
-  min-width: 58px;
+  width: auto;
+  max-width: 100%;
+  min-width: 0;
   height: var(--kk-control-h-md);
   min-height: var(--kk-control-h-md);
-  padding: 0 5px;
+  padding: 0 var(--kk-space-3);
   gap: 4px;
-  border-radius: var(--kk-radius-control);
   background: var(--ui-task-selected);
   font-size: var(--kk-font-caption);
   line-height: var(--kk-line-caption);
-  justify-content: flex-start;
+  justify-content: center;
 }
 
 .conversation-panel .chat-composer .chat-model-picker > img,
@@ -924,7 +923,6 @@
   min-height: var(--kk-control-h-md);
   padding: 0 5px;
   gap: 4px;
-  border-radius: var(--kk-radius-control);
   background: var(--ui-task-selected);
   font-size: var(--kk-font-caption);
   line-height: var(--kk-line-caption);
@@ -943,12 +941,11 @@
   height: var(--kk-control-h-md);
   min-height: var(--kk-control-h-md);
   margin-left: auto;
-  border-radius: 50%;
 }
 
 .conversation-panel .chat-composer [data-voice-state] > img {
-  width: var(--kk-icon-glyph-md);
-  height: var(--kk-icon-glyph-md);
+  width: 14px;
+  height: 14px;
 }
 
 .conversation-panel .chat-composer .chat-footer-separator-right {
@@ -969,7 +966,6 @@
   height: var(--kk-control-h-md);
   min-height: var(--kk-control-h-md);
   padding: 0 4px;
-  border-radius: var(--kk-radius-control);
   font-size: var(--kk-font-caption);
   line-height: var(--kk-line-caption);
 }
@@ -1023,7 +1019,6 @@
   /* The phone chat surface keeps every action inside its 314px inner row.
      The desktop 58px resource controls are reduced only at this breakpoint;
      labels remain readable while the send target stays inside the panel. */
-  .conversation-panel .chat-composer .chat-model-picker-wrap,
   .conversation-panel .chat-composer .chat-skill-picker,
   .conversation-panel .chat-composer .chat-plugin-picker {
     flex-basis: 48px;
@@ -1032,7 +1027,6 @@
     max-width: 48px;
   }
 
-  .conversation-panel .chat-composer .chat-model-picker,
   .conversation-panel .chat-composer .chat-skill-trigger,
   .conversation-panel .chat-composer .chat-plugin-trigger {
     width: 48px;
@@ -1066,7 +1060,6 @@
   /* The compact conversation rail has the same inner width as phone after
      the tablet split. Reuse the compact resource controls so its toolbar
      cannot create horizontal overflow at 768–1200px. */
-  .conversation-panel .chat-composer .chat-model-picker-wrap,
   .conversation-panel .chat-composer .chat-skill-picker,
   .conversation-panel .chat-composer .chat-plugin-picker {
     flex-basis: 48px;
@@ -1075,7 +1068,6 @@
     max-width: 48px;
   }
 
-  .conversation-panel .chat-composer .chat-model-picker,
   .conversation-panel .chat-composer .chat-skill-trigger,
   .conversation-panel .chat-composer .chat-plugin-trigger {
     width: 48px;
@@ -1104,31 +1096,6 @@
     margin-left: 4px;
   }
 }
-/* Keep the three composer surfaces aligned at the same hit target. */
-.composer-toolbar
-  :is(
-    .start-tool-button,
-    .chat-model-picker,
-    .chat-skill-trigger,
-    .chat-plugin-trigger,
-    .chat-mode-trigger,
-    .start-mode-button
-  ) {
-  min-height: var(--kk-control-h-md);
-  height: var(--kk-control-h-md);
-  border-radius: var(--kk-radius-full);
-}
-.composer-toolbar
-  :is(
-    .start-add-button,
-    .chat-attachment-trigger,
-    .start-submit-button,
-    .chat-send,
-    [data-voice-state]
-  ) {
-  border-radius: var(--kk-radius-full);
-}
-
 /* Compact home controls keep the model affordance readable instead of
    truncating the three-character fallback inside the fixed tool slot. */
 @media (max-width: 1200px) {
@@ -1137,25 +1104,23 @@
     width: 100%;
     max-width: 100%;
   }
-
-  .start-composer .start-model-picker > button > span {
-    font-size: 0;
-  }
-
-  .start-composer .start-model-picker > button > span::before {
-    display: inline;
-    content: "模型";
-    font-size: var(--ui-font-body);
-  }
 }
 
 @media (max-width: 767px) {
   /* The compact phone row has no room for desktop separators. */
-  .start-composer .start-footer-left,
-  .start-composer .start-footer-right {
+  .start-composer .start-footer-left {
     display: contents;
     flex: 0 0 auto;
     width: auto;
+  }
+
+  .start-composer .start-footer-right {
+    display: flex;
+    flex: 0 0 auto;
+    flex-wrap: nowrap;
+    width: auto;
+    order: 10;
+    margin-left: auto;
   }
 
   .start-composer .start-model-picker {

@@ -1,4 +1,4 @@
-import { useRef, type RefObject, type ReactNode } from "react";
+import { useEffect, useRef, type RefObject, type ReactNode } from "react";
 import StartAttachmentList from "./StartAttachmentList";
 import ComposerTextarea from "./ComposerTextarea";
 import ConversationActions from "./ConversationActions";
@@ -13,6 +13,7 @@ export default function ConversationComposer({
   onInputChange,
   onSubmitMessage,
   disabled,
+  modelDisabled = disabled,
   submitDisabled,
   attachmentDisabled,
   placeholder,
@@ -23,7 +24,7 @@ export default function ConversationComposer({
   readingFiles,
   onStatus,
   currentModel,
-  modelControl,
+  renderModelControl,
   modelOptions = [],
   modelSelection,
   onSelectModel,
@@ -41,6 +42,7 @@ export default function ConversationComposer({
   onInputChange: (value: string) => void;
   onSubmitMessage: (message: string) => Promise<void>;
   disabled: boolean;
+  modelDisabled?: boolean;
   submitDisabled?: boolean;
   attachmentDisabled?: boolean;
   placeholder: string;
@@ -51,7 +53,11 @@ export default function ConversationComposer({
   readingFiles: number;
   onStatus: (status: string) => void;
   currentModel?: string;
-  modelControl?: ReactNode;
+  renderModelControl?: (
+    open: boolean,
+    onToggle: () => void,
+    onClose: () => void,
+  ) => ReactNode;
   modelOptions?: string[];
   modelSelection?: ModelSelection;
   onSelectModel: (model: string, selection?: ModelSelection) => void;
@@ -75,6 +81,9 @@ export default function ConversationComposer({
     toggleMenu,
     closeMenus,
   } = useComposerMenus(actionsRef);
+  useEffect(() => {
+    if (modelDisabled) closeMenus();
+  }, [modelDisabled, closeMenus]);
   return (
     <form
       className="chat-composer composer-surface"
@@ -102,8 +111,11 @@ export default function ConversationComposer({
         onRemove={onRemoveAttachment}
       />
       <ModelVariantControl
+        disabled={modelDisabled}
         selection={modelSelection}
-        onSelect={(selection) => onSelectModel(selection.model, selection)}
+        onSelect={(selection) => {
+          if (!modelDisabled) onSelectModel(selection.model, selection);
+        }}
       />
       <ConversationActions
         actionsRef={actionsRef}
@@ -112,14 +124,19 @@ export default function ConversationComposer({
         composerDraft={composerDraft}
         submitting={submitDisabled ?? disabled}
         attachmentDisabled={attachmentDisabled}
+        modelDisabled={modelDisabled}
         currentModel={currentModel}
-        modelControl={modelControl}
+        modelControl={renderModelControl?.(
+          modelMenuOpen,
+          () => toggleMenu("model"),
+          closeMenus,
+        )}
         modelOptions={modelOptions}
         modelSelection={modelSelection}
         modelMenuOpen={modelMenuOpen}
         onToggleModel={() => toggleMenu("model")}
         onSelectModel={(option, selection) => {
-          onSelectModel(option, selection);
+          if (!modelDisabled) onSelectModel(option, selection);
           closeMenus();
         }}
         onConfigureModel={() => {

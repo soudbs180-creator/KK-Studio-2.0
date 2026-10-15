@@ -60,6 +60,7 @@ export interface CanvasCollectionItem {
   model?: string;
   /** Stable local archive identity, never a provider temporary URL. */
   assetId?: string;
+  tags?: string[];
   parentAssetId?: string;
   preview?: string;
   /** Natural media dimensions used to keep image cards proportional. */
@@ -180,6 +181,10 @@ export interface CanvasReference {
 
 export interface NodeEditingProps {
   selected: boolean;
+  /** Transient rendered-content state; never persisted in the project. */
+  hasContent?: boolean;
+  onContentReadyChange?: (ready: boolean) => void;
+  generationActive?: boolean;
   onConfigure: () => void;
   onChange: (patch: Partial<CanvasCollectionItem>) => void;
   liked: boolean;

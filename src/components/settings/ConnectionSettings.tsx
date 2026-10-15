@@ -1,7 +1,7 @@
 import { appVersion } from "../../runtime/appInfo";
 import type { SettingsSection } from "./SettingsSectionData";
-import ModelProviderSettings from "./ModelProviderSettings";
-import GoogleConnectionSettings from "./GoogleConnectionSettings";
+import ModelAccessSettings from "./ModelAccessSettings";
+
 import MemorySettingsSection from "./MemorySettingsSection";
 
 const PENDING_SETTINGS: Partial<
@@ -27,18 +27,15 @@ const PENDING_SETTINGS: Partial<
 
 export default function ConnectionSettings({
   section,
+  active = true,
   onFeedback,
 }: {
   section: SettingsSection;
+  active?: boolean;
   onFeedback: (message: string) => void;
 }) {
   if (section === "providers")
-    return (
-      <>
-        <ModelProviderSettings onFeedback={onFeedback} />
-        <GoogleConnectionSettings onFeedback={onFeedback} />
-      </>
-    );
+    return <ModelAccessSettings active={active} onFeedback={onFeedback} />;
   if (section === "updates")
     return (
       <div className="settings-version">
@@ -143,7 +140,7 @@ export default function ConnectionSettings({
           </div>
         </div>
         <p className="settings-section-intro">
-          需要连接本地 Agent 时，请到「插件·技能·伙伴」的伙伴（智能体）页配置。
+          需要连接 Codex 主 Agent 时，请到「模型接入」配置。
         </p>
       </div>
     );

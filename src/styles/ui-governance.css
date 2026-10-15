@@ -41,18 +41,20 @@
 .kk-button {
   display: inline-flex;
   min-inline-size: 0;
+  max-inline-size: 100%;
   min-block-size: var(--kk-button-h-standard);
   align-items: center;
   justify-content: center;
   gap: var(--kk-button-gap);
   padding: 0 var(--kk-control-px-md);
   border: var(--kk-border-width) solid var(--kk-border-default);
-  border-radius: var(--kk-radius-control);
+  border-radius: var(--kk-button-radius);
   background: var(--kk-bg-card);
   color: var(--kk-text-primary);
   font: var(--kk-font-weight-body-strong) var(--kk-font-body) /
     var(--kk-line-body) var(--kk-font-sans);
   white-space: nowrap;
+  text-align: center;
   transition:
     background-color 120ms ease,
     border-color 120ms ease,
@@ -61,9 +63,9 @@
 
 .kk-button--primary {
   min-block-size: var(--kk-button-h-primary);
-  border-color: var(--kk-accent);
-  background: var(--kk-accent);
-  color: var(--kk-on-accent);
+  border-color: transparent;
+  background: var(--kk-button-primary-bg);
+  color: var(--kk-button-primary-text);
 }
 
 .kk-button--secondary {
@@ -77,18 +79,18 @@
 
 .kk-button--danger {
   border-color: transparent;
-  color: var(--kk-text-primary);
+  color: var(--kk-text-danger);
   background: transparent;
 }
 
 .kk-button:not(:disabled):not([aria-disabled="true"]):hover {
-  border-color: var(--kk-text-accent);
+  border-color: var(--kk-border-default);
   background: var(--kk-bg-elevated);
 }
 
 .kk-button--primary:not(:disabled):not([aria-disabled="true"]):hover {
-  border-color: var(--kk-accent-hover);
-  background: var(--kk-accent-hover);
+  border-color: transparent;
+  background: var(--kk-button-primary-hover);
 }
 .kk-button--danger:not(:disabled):hover,
 .kk-button--danger:focus-visible,
@@ -104,7 +106,7 @@
 }
 
 .kk-button--primary:not(:disabled):not([aria-disabled="true"]):active {
-  background: var(--kk-accent-hover);
+  background: var(--kk-button-primary-hover);
 }
 
 .kk-button:focus-visible {
@@ -168,4 +170,9 @@
   overflow: hidden;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
+}
+/* Page-specific pill actions do not override the standard .kk-button geometry. */
+.ui-button,
+.primary-button {
+  border-radius: var(--kk-radius-full);
 }

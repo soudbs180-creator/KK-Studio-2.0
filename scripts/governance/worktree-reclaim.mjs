@@ -22,6 +22,20 @@ const PROTECTED_EVIDENCE_SEGMENTS = new Set([
   "output",
 ]);
 
+/**
+ * Reclamation audits are container-level outputs, never current governance.
+ * Keep an environment override for non-standard checkouts and tests.
+ */
+export function defaultReclamationOutputDirectory(
+  repositoryRoot = process.cwd(),
+  now = new Date(),
+) {
+  const containerRoot =
+    process.env.KK_CONTAINER_ROOT ?? path.resolve(repositoryRoot, "..");
+  const date = now.toISOString().slice(0, 10);
+  return path.join(containerRoot, "output", `${date}-worktree-reclamation`);
+}
+
 function slash(value) {
   return String(value).replaceAll("\\", "/");
 }
@@ -580,7 +594,7 @@ export function writeImmutablePlan(
   { approvedWorktrees = [] } = {},
 ) {
   const targetDirectory =
-    outputDirectory ?? path.join(process.cwd(), "docs/governance");
+    outputDirectory ?? defaultReclamationOutputDirectory();
   fs.mkdirSync(targetDirectory, { recursive: true });
   const candidates = (plan.candidates ?? []).map((candidate) => ({
     ...candidate,
@@ -801,7 +815,7 @@ export function applyReclamationPlan(
 
 export function writeApplyResult(result, plan, outputDirectory) {
   const targetDirectory =
-    outputDirectory ?? path.join(process.cwd(), "docs/governance");
+    outputDirectory ?? defaultReclamationOutputDirectory();
   fs.mkdirSync(targetDirectory, { recursive: true });
   const destination = path.join(
     targetDirectory,
@@ -823,7 +837,7 @@ const invokedDirectly = process.argv[1]
 if (invokedDirectly) {
   try {
     const repoRoot = process.cwd();
-    const outputDirectory = path.join(repoRoot, "docs/governance");
+    const outputDirectory = defaultReclamationOutputDirectory(repoRoot);
     if (!process.argv.includes("--apply")) {
       const plan = buildReclamationManifest(repoRoot);
       const planPath = writeImmutablePlan(plan, outputDirectory);

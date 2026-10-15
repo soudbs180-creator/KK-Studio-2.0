@@ -84,6 +84,7 @@ test("Agent controls match the vendor protocol fixture, with error feedback and 
     const panel = page.locator(".conversation-panel");
     await panel.getByLabel("执行方式").selectOption("codex");
     await panel.getByRole("button", { name: "连接设置", exact: true }).click();
+    await page.getByText("高级连接选项", { exact: true }).click();
     await page.getByLabel("Agent 地址").fill(server.url);
     await page.getByLabel("连接 Token", { exact: true }).fill("fixture-token");
     await expect(
@@ -91,7 +92,9 @@ test("Agent controls match the vendor protocol fixture, with error feedback and 
     ).toHaveAttribute("type", "password");
     await page.getByRole("button", { name: "连接 Agent", exact: true }).click();
     await expect(
-      page.getByRole("button", { name: "已连接", exact: true }),
+      page
+        .getByRole("dialog", { name: "设置" })
+        .getByRole("button", { name: "已连接", exact: true }),
     ).toBeVisible();
     await expect
       .poll(() =>
@@ -198,6 +201,7 @@ for (const status of ["idle", "warning"] as const) {
       await panel
         .getByRole("button", { name: "连接设置", exact: true })
         .click();
+      await page.getByText("高级连接选项", { exact: true }).click();
       await page.getByLabel("Agent 地址").fill(server.url);
       await page
         .getByLabel("连接 Token", { exact: true })
@@ -206,17 +210,91 @@ for (const status of ["idle", "warning"] as const) {
         .getByRole("button", { name: "连接 Agent", exact: true })
         .click();
       await expect(
-        page.getByRole("button", { name: "已连接", exact: true }),
+        page
+          .getByRole("dialog", { name: "设置" })
+          .getByRole("button", { name: "已连接", exact: true }),
       ).toBeVisible();
       await page.keyboard.press("Escape");
       await panel.getByLabel("对话内容").fill("读取画布");
       expect(server.requests.includes("/agent/codex/threads/new")).toBe(false);
+      for (const theme of ["dark", "light"]) {
+        await page
+          .locator("html")
+          .evaluate(
+            (element, value) => element.setAttribute("data-theme", value),
+            theme,
+          );
+        await expect(panel.locator(".chat-agent-banner")).toHaveCSS(
+          "color",
+          cssRgb(themeTokens(theme, "default")("--kk-success")),
+        );
+        if (status === "warning")
+          await expect(panel.locator(".chat-agent-warning")).toHaveCSS(
+            "color",
+            cssRgb(themeTokens(theme, "default")("--kk-warning")),
+          );
+      }
+      await page
+        .locator("html")
+        .evaluate((element) => element.setAttribute("data-theme", "dark"));
       if (status === "idle") {
         await expect(panel).toContainText("Codex 主 Agent · 已连接");
-        await page.screenshot({
-          path: info.outputPath("agent-idle.png"),
-          animations: "disabled",
-        });
+        for (const width of [390, 1099, 1920]) {
+          await page.setViewportSize({ width, height: 900 });
+          if (!(await panel.isVisible()))
+            await page
+              .getByRole("button", { name: "打开对话", exact: true })
+              .click();
+          await expect(
+            panel.locator(".chat-agent-controls .is-primary"),
+          ).toHaveCount(1);
+          await expect(
+            panel.getByRole("button", { name: "已连接", exact: true }),
+          ).toBeDisabled();
+          expect(
+            await panel.evaluate(
+              (element) => element.scrollWidth - element.clientWidth,
+            ),
+          ).toBeLessThanOrEqual(1);
+          await page.screenshot({
+            path: info.outputPath(`agent-idle-${width}.png`),
+            animations: "disabled",
+          });
+          await info.attach(`agent-idle-${width}-dom`, {
+            contentType: "application/json",
+            body: JSON.stringify({
+              width,
+              evidence: await panel.evaluate((element) => ({
+                url: location.href,
+                mode: document
+                  .querySelector(".app")
+                  ?.getAttribute("data-runtime-mode"),
+                entry: document
+                  .querySelector(".app")
+                  ?.getAttribute("data-runtime-entry"),
+                bundle: [
+                  ...document.querySelectorAll('script[type="module"][src]'),
+                ].map((script) => script.getAttribute("src")),
+                bannerText:
+                  element.querySelector(".chat-agent-banner")?.textContent,
+                bannerColor: getComputedStyle(
+                  element.querySelector(".chat-agent-banner")!,
+                ).color,
+                buttons: [
+                  ...element.querySelectorAll<HTMLButtonElement>(
+                    ".chat-agent-controls button",
+                  ),
+                ].map((button) => ({
+                  label: button.textContent?.trim(),
+                  disabled: button.disabled,
+                  visible:
+                    !button.closest("details:not([open])") &&
+                    button.getClientRects().length > 0,
+                })),
+              })),
+            }),
+          });
+        }
       } else {
         await expect(panel).toContainText("可选工具暂不可用");
         await expect(panel).toContainText("optional");
@@ -241,6 +319,69 @@ for (const status of ["idle", "warning"] as const) {
   });
 }
 
+test("connected Agent keeps session replacement advanced and gates active work", async ({
+  page,
+}) => {
+  const server = await startAgentServer("ready");
+  try {
+    await openWorkspace(page);
+    await ownFixtureThread(page);
+    const panel = page.locator(".conversation-panel");
+    await panel.getByLabel("执行方式").selectOption("codex");
+    await panel.getByRole("button", { name: "连接设置", exact: true }).click();
+    await page.getByText("高级连接选项", { exact: true }).click();
+    await page.getByLabel("Agent 地址").fill(server.url);
+    await page.getByLabel("连接 Token", { exact: true }).fill("fixture-token");
+    await page.getByRole("button", { name: "连接 Agent", exact: true }).click();
+    await expect(
+      page
+        .locator(".settings-agent-card")
+        .filter({
+          has: page.getByRole("heading", { name: /Codex 主 Agent/ }),
+        })
+        .getByRole("button", { name: "已连接", exact: true }),
+    ).toBeDisabled();
+    await page.keyboard.press("Escape");
+    const connected = panel.getByRole("button", {
+      name: "已连接",
+      exact: true,
+    });
+    const fresh = panel.getByRole("button", {
+      name: "新建 Agent 会话",
+      exact: true,
+    });
+    await expect(connected).toBeDisabled();
+    await expect(
+      panel.getByRole("button", { name: "重新连接", exact: true }),
+    ).toHaveCount(0);
+    await expect(fresh).not.toBeVisible();
+    await panel.getByText("高级会话操作", { exact: true }).click();
+    await expect(fresh).toBeEnabled();
+    server.emit("codex_approval", { requestId: "gate", method: "shell" });
+    await expect(fresh).toBeDisabled();
+    await expect(connected).toBeDisabled();
+    server.emit("codex_approval_resolved", { requestId: "gate" });
+    await expect(fresh).toBeEnabled();
+    server.emit("codex_state", { busy: true });
+    await expect(fresh).toBeDisabled();
+    server.emit("codex_state", { busy: false });
+    await expect(fresh).toBeEnabled();
+    expect(server.requests.includes("/agent/codex/threads/new")).toBe(false);
+    await fresh.click();
+    await expect
+      .poll(() => server.conversation().threadId)
+      .toBe("replacement-thread");
+    await expect(connected).toBeDisabled();
+    expect(
+      server.requests.filter(
+        (request) => request === "/agent/codex/threads/new",
+      ),
+    ).toHaveLength(1);
+  } finally {
+    await server.close();
+  }
+});
+
 for (const action of ["interrupt", "turn"] as const) {
   test(`a pending old ${action} cannot lock the reconnected Agent UI`, async ({
     page,
@@ -253,12 +394,14 @@ for (const action of ["interrupt", "turn"] as const) {
       release = resolve;
     });
     let intercepted = false;
+    let settled = false;
     await page.route(`**/agent/codex/${action}`, async (route) => {
       intercepted = true;
       await pending;
       await route
         .fulfill({ status: 503, json: { error: "旧请求已结束" } })
         .catch(() => undefined);
+      settled = true;
     });
     try {
       await openWorkspace(page);
@@ -268,6 +411,7 @@ for (const action of ["interrupt", "turn"] as const) {
       await panel
         .getByRole("button", { name: "连接设置", exact: true })
         .click();
+      await page.getByText("高级连接选项", { exact: true }).click();
       await page.getByLabel("Agent 地址").fill(server.url);
       await page
         .getByLabel("连接 Token", { exact: true })
@@ -276,7 +420,9 @@ for (const action of ["interrupt", "turn"] as const) {
         .getByRole("button", { name: "连接 Agent", exact: true })
         .click();
       await expect(
-        page.getByRole("button", { name: "已连接", exact: true }),
+        page
+          .getByRole("dialog", { name: "设置" })
+          .getByRole("button", { name: "已连接", exact: true }),
       ).toBeVisible();
       await page.keyboard.press("Escape");
       await panel.getByLabel("对话内容").fill("保留的指令");
@@ -290,14 +436,31 @@ for (const action of ["interrupt", "turn"] as const) {
       await panel
         .getByRole("button", { name: "连接设置", exact: true })
         .click();
-      await page.getByRole("button", { name: "断开", exact: true }).click();
+      const disconnect = page.getByRole("button", {
+        name: "断开",
+        exact: true,
+      });
+      await expect(disconnect).toBeDisabled();
+      // The service confirms that work has ended before switching connections;
+      // the old HTTP response stays pending until the new UI is interactive.
+      server.emit("codex_state", { busy: false });
+      server.emit("conversation_changed", {
+        ...server.conversation(),
+        revision: server.conversation().revision + 1,
+        status: "ready",
+      });
+      await expect(disconnect).toBeEnabled();
+      await disconnect.click();
       await page
         .getByRole("button", { name: "连接 Agent", exact: true })
         .click();
       await expect(
-        page.getByRole("button", { name: "已连接", exact: true }),
+        page
+          .getByRole("dialog", { name: "设置" })
+          .getByRole("button", { name: "已连接", exact: true }),
       ).toBeVisible();
       await page.keyboard.press("Escape");
+      if (action === "interrupt") server.emit("codex_state", { busy: true });
       server.emit("codex_approval", { requestId: "new", method: "shell" });
       await expect(
         panel.getByRole("button", { name: "允许", exact: true }),
@@ -310,9 +473,19 @@ for (const action of ["interrupt", "turn"] as const) {
       ).toBeEnabled();
       await expect(panel.getByLabel("对话内容")).toHaveValue("保留的指令");
       release();
+      await expect.poll(() => settled).toBe(true);
       await expect(
         panel.getByText("旧请求已结束", { exact: true }),
       ).toHaveCount(0);
+      await expect(
+        panel.getByRole("button", { name: "允许", exact: true }),
+      ).toBeEnabled();
+      await expect(
+        panel.getByRole("button", {
+          name: action === "interrupt" ? "停止" : "发送消息",
+          exact: true,
+        }),
+      ).toBeEnabled();
     } finally {
       release();
       await server.close();
@@ -369,10 +542,13 @@ for (const width of [768, 1920]) {
         const token = themeTokens(theme, accent);
         await expect(
           dialog.getByRole("button", { name: "加入草稿" }),
-        ).toHaveCSS("background-color", cssRgb(token("--bg-accent")));
+        ).toHaveCSS(
+          "background-color",
+          cssRgb(token("--kk-button-primary-bg")),
+        );
         await expect(
           dialog.getByRole("button", { name: "加入草稿" }),
-        ).toHaveCSS("color", cssRgb(token("--text-on-accent")));
+        ).toHaveCSS("color", cssRgb(token("--kk-button-primary-text")));
         const colors = await dialog
           .getByRole("button", { name: "加入草稿" })
           .evaluate((el) => {
@@ -414,6 +590,7 @@ test("plugin menu reflects installed canvas plugins and opens their manager", as
     .getByRole("navigation", { name: "设置分类" })
     .getByRole("button", { name: "扩展", exact: true })
     .click();
+  await page.getByRole("tab", { name: "MCP 工具", exact: true }).click();
   await expect(page.getByRole("heading", { name: "已安装插件" })).toBeVisible();
 });
 

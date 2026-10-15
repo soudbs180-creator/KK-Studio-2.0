@@ -1,13 +1,10 @@
 import { expect, test, type Page } from "@playwright/test";
+import { openSettingsSection } from "./helpers";
 
 async function openMemorySection(page: Page) {
   await page.goto("/");
-  await page.getByRole("button", { name: "打开设置", exact: true }).click();
+  await openSettingsSection(page, "记忆");
   const dialog = page.getByRole("dialog", { name: "设置" });
-  await dialog
-    .locator(".settings-nav")
-    .getByRole("button", { name: "记忆", exact: true })
-    .click();
   return dialog;
 }
 

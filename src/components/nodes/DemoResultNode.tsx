@@ -9,31 +9,26 @@ import {
 } from "../../domain/canvasItems";
 import UiIcon from "../UiIcon";
 import DemoMediaPreview from "./DemoMediaPreview";
-import DemoRunButton from "./DemoRunButton";
 import CreationComposer from "./CreationComposer";
 import { readReferenceImages } from "./referenceUpload";
-import CompareImageButton from "../../features/compare/CompareImageButton";
 import CanvasImageActions from "./CanvasImageActions";
 import ResultPreview from "./ResultPreview";
+import { useCanvasMediaContent } from "../canvas/useCanvasMediaContent";
 
 export default function DemoResultNode({
   item,
-  favorite,
-  onFavorite,
   onChange,
   onDelete,
-  onResult,
   editing,
 }: {
   item: CanvasCollectionItem;
-  favorite: boolean;
-  onFavorite: () => void;
   onChange: (patch: Partial<CanvasCollectionItem>) => void;
   onDelete: () => void;
   onResult: (result: DemoResult) => void;
   editing?: NodeEditingProps;
 }) {
   const [open, setOpen] = useState(false);
+  const [previewError, setPreviewError] = useState(false);
   const command = useContext(CanvasImageCommandContext);
   const openPreview = () => {
     if (item.kind === "image" && item.assetId && command?.openPreview)
@@ -43,10 +38,36 @@ export default function DemoResultNode({
   const [referenceError, setReferenceError] = useState("");
   const result = item.result;
   const card = useRef<HTMLElement>(null);
-  const imageResult = item.kind === "image" && Boolean(result);
+  const hasResultContent = Boolean(
+    result &&
+    result.kind === item.kind &&
+    (item.kind === "text" ? result.text?.trim() : result.src?.trim()),
+  );
+  const imageSource =
+    item.kind === "image"
+      ? result?.poster || result?.src || item.preview
+      : undefined;
+  const imageResult = item.kind === "image" && Boolean(imageSource);
+  const restoredImage = useRef<HTMLImageElement>(null);
+  const reportContentReady = useCanvasMediaContent(
+    restoredImage,
+    imageSource,
+    !hasResultContent ? editing?.onContentReadyChange : undefined,
+  );
+  const activeTask =
+    !hasResultContent && (item.kind === "image" || item.kind === "text")
+      ? command?.tasks.find(
+          (task) =>
+            task.sourceItemId === item.id &&
+            (task.status === "queued" || task.status === "running"),
+        )
+      : undefined;
+  const activeGeneration = activeTask || editing?.generationActive;
+  const unresolved = !hasResultContent && !activeGeneration;
   const hasReferenceComposer = Boolean(
     editing &&
-    result &&
+    hasResultContent &&
+    !previewError &&
     !item.referenceOnly &&
     (item.kind === "image" || item.kind === "video"),
   );
@@ -67,29 +88,25 @@ export default function DemoResultNode({
             {CANVAS_KIND_LABELS[item.kind]}
           </span>
           <span className="demo-badge">
-            {item.generationStatus === "pending"
-              ? "等待生成"
-              : result
-                ? result.source === "provider"
-                  ? "已生成"
-                  : "示范素材"
-                : "前端草稿"}
+            {previewError
+              ? "预览不可用"
+              : activeGeneration
+                ? activeTask?.status === "queued"
+                  ? "等待生成"
+                  : "正在生成"
+                : unresolved
+                  ? "结果未恢复"
+                  : result
+                    ? result.source === "provider"
+                      ? "已生成"
+                      : "示范素材"
+                    : "前端草稿"}
           </span>
         </header>
         <h3 className={imageResult ? "image-card-name" : undefined}>
           {item.title}
         </h3>
-        {item.generationStatus === "pending" && !result ? (
-          <div className="demo-result-pending" role="status">
-            <span className="demo-pending-spinner" aria-hidden="true" />
-            <strong>等待生成</strong>
-            <p>
-              {item.kind === "image"
-                ? "图片任务处理中"
-                : "正在加载本地演示素材"}
-            </p>
-          </div>
-        ) : result ? (
+        {hasResultContent && result ? (
           <>
             <ResultPreview
               result={result}
@@ -97,6 +114,9 @@ export default function DemoResultNode({
               onPreview={openPreview}
               mediaWidth={item.mediaWidth}
               mediaHeight={item.mediaHeight}
+              onContentReadyChange={editing?.onContentReadyChange}
+              previewError={previewError}
+              onPreviewError={setPreviewError}
               onDimensions={(mediaWidth, mediaHeight) =>
                 onChange({ mediaWidth, mediaHeight })
               }
@@ -105,41 +125,48 @@ export default function DemoResultNode({
               <p className="demo-description">{result.description}</p>
             )}
           </>
-        ) : (
-          <>
-            <textarea
-              className="demo-draft"
-              aria-label={`${CANVAS_KIND_LABELS[item.kind]}提示词`}
-              placeholder="描述想创作的内容，或先试用示范"
-              value={item.prompt ?? ""}
-              onChange={(event) => onChange({ prompt: event.target.value })}
+        ) : imageSource ? (
+          <div className="demo-result-preview is-image">
+            <img
+              ref={restoredImage}
+              src={imageSource}
+              alt={item.title}
+              draggable={false}
+              onLoad={() => {
+                if (reportContentReady()) setPreviewError(false);
+              }}
+              onError={() => {
+                editing?.onContentReadyChange?.(false);
+                setPreviewError(true);
+              }}
             />
-            <DemoRunButton kind={item.kind} onResult={onResult} />
-          </>
-        )}
-        {!imageResult && (
-          <footer>
-            <CompareImageButton item={item} />
-            <button
-              className="ui-button"
-              aria-label={
-                favorite ? `取消收藏${item.title}` : `收藏${item.title}`
-              }
-              aria-pressed={favorite}
-              onClick={onFavorite}
-            >
-              <UiIcon name="favorite" />
-              {favorite ? "已收藏" : "收藏"}
-            </button>
-            <button
-              className="ui-button is-danger"
-              aria-label={`删除${item.title}`}
-              onClick={onDelete}
-            >
-              <UiIcon name="delete" />
-              删除
-            </button>
-          </footer>
+            <p role="status">
+              {previewError
+                ? "原件预览不可用，请到任务记录核对并恢复原件。"
+                : activeGeneration
+                  ? "图片任务处理中，当前原件预览已保留。"
+                  : "图片结果尚未恢复，已保留当前原件预览。"}
+            </p>
+          </div>
+        ) : activeGeneration ? (
+          <div className="demo-result-pending" role="status">
+            <span className="demo-pending-spinner" aria-hidden="true" />
+            <strong>
+              {activeTask?.status === "queued" ? "等待生成" : "正在生成"}
+            </strong>
+            <p>
+              {editing?.generationActive
+                ? "正在加载本地演示素材，可在来源卡片取消。"
+                : `${CANVAS_KIND_LABELS[item.kind]}任务尚未结束，请在任务记录查看进度。`}
+            </p>
+          </div>
+        ) : (
+          <div className="demo-result-pending" role="status">
+            <strong>{CANVAS_KIND_LABELS[item.kind]}结果尚未恢复</strong>
+            <p>
+              此卡片没有可用结果。请到任务记录核对状态，或返回来源卡片恢复。
+            </p>
+          </div>
         )}
         {open && result && (
           <DemoMediaPreview
@@ -150,14 +177,15 @@ export default function DemoResultNode({
           />
         )}
       </article>
-      {imageResult && (
+      {item.kind === "image" && (
         <CanvasImageActions
           item={item}
           anchor={card}
           selected={Boolean(editing?.selected)}
+          hasContent={Boolean(editing?.hasContent)}
           onPreview={openPreview}
-          favorite={favorite}
-          onFavorite={onFavorite}
+          liked={editing?.liked}
+          onLike={editing?.onToggleLike}
           onDelete={onDelete}
           references={editing?.references}
         />

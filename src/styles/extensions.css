@@ -1,0 +1,113 @@
+.catalog-page-skills {
+  padding: var(--kk-layout-gutter-md) var(--kk-container-pad);
+}
+
+.extensions-page-content {
+  width: 100%;
+  max-width: var(--kk-container-max-width);
+  margin-inline: auto;
+}
+
+.catalog-page-skills .catalog-page-top-tabs {
+  margin: var(--kk-space-5) auto var(--kk-space-4);
+  max-width: var(--kk-container-max-width);
+}
+
+.catalog-page-skills .catalog-page-top-tabs button {
+  height: var(--ui-control-h-standard);
+  white-space: nowrap;
+}
+
+.extension-help {
+  margin: 0 0 var(--kk-space-4);
+  color: var(--kk-text-secondary);
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-body);
+}
+
+.catalog-page-subtitle {
+  margin: 0 0 var(--kk-space-4);
+  color: var(--kk-text-secondary);
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-caption);
+}
+
+.extension-help summary {
+  cursor: pointer;
+  width: fit-content;
+}
+
+.extension-help p {
+  margin-top: var(--kk-space-2);
+}
+
+.extension-boundary {
+  color: var(--kk-text-secondary);
+  font-size: var(--kk-font-body);
+  line-height: var(--kk-line-body);
+}
+
+.partner-roles {
+  display: grid;
+  gap: var(--kk-space-4);
+}
+
+.partner-role-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--kk-space-3);
+}
+
+.partner-role-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--kk-space-2);
+  padding: var(--kk-space-4);
+  border: var(--kk-border-width) solid var(--kk-border-default);
+  border-radius: var(--kk-radius-control);
+  background: var(--kk-bg-card);
+  color: var(--kk-text-primary);
+  text-align: left;
+  cursor: pointer;
+}
+
+.partner-role-card span,
+.partner-role-detail p,
+.partner-role-detail small {
+  color: var(--kk-text-secondary);
+  font-size: var(--kk-font-body);
+  line-height: var(--kk-line-body);
+}
+
+.partner-role-card:hover {
+  background: var(--kk-bg-elevated);
+}
+
+.partner-role-card[aria-pressed="true"] {
+  border-color: var(--kk-text-accent);
+  background: var(--kk-neutral-selected);
+}
+
+.partner-role-card:focus-visible {
+  outline: var(--kk-border-width-focus) solid var(--kk-focus-ring);
+}
+
+.partner-role-detail {
+  display: grid;
+  gap: var(--kk-space-3);
+  padding: var(--kk-space-4);
+  border: var(--kk-border-width) solid var(--kk-border-subtle);
+  border-radius: var(--kk-radius-control);
+}
+
+.partner-role-detail small {
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-caption);
+}
+
+@media (max-width: 600px) {
+  .partner-role-grid {
+    grid-template-columns: 1fr;
+  }
+}

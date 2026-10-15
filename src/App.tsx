@@ -1,3 +1,4 @@
+import { isLocalProviderUrl } from "./domain/providerUrl";
 import React, {
   lazy,
   useEffect,
@@ -10,6 +11,9 @@ import React, {
 import { appVersion } from "./runtime/appInfo";
 import { confirmAction } from "./runtime/confirmAction";
 import TopBar from "./components/TopBar";
+import CanvasCollectionsPanels from "./components/CanvasCollectionsPanels";
+import { effectiveTags, splitCollectionTags } from "./domain/collectionTags";
+import { normalizeTags } from "./domain/assets";
 import Sidebar from "./components/Sidebar";
 import type { ModelSelection } from "./features/models/modelSelection";
 import { useSidebarLayout } from "./components/useSidebarLayout";
@@ -51,6 +55,7 @@ import {
   type AgentBridge,
 } from "./features/agent/agentConnection.ts";
 import { googleAgentConnection } from "./features/agent/googleAgentConnection.ts";
+import { appendToActiveAgentDraft } from "./features/agent/agentDraftActions";
 
 import { pluginLoader } from "./features/plugins/pluginLoader.ts";
 import {
@@ -59,6 +64,7 @@ import {
 } from "./features/plugins/pluginRuntime.ts";
 import type { PluginAi } from "./features/plugins/pluginTypes.ts";
 import { createAgentHost } from "./features/agent/agentHost.ts";
+import { desktopAgentLifecycle } from "./features/agent/desktopAgentLifecycle.ts";
 import { assertCanvasDeliveries } from "./features/agent/agentCanvas.ts";
 import {
   createStageOrchestrator,
@@ -144,10 +150,16 @@ import {
   assertSubmissionConnection,
   type ProviderSubmissionReservation,
   ProviderSubmissionError,
+  taskProviderOptions,
+  taskSubmissionBinding,
 } from "./features/creation/providerSubmission";
 import { mapWithConcurrency } from "./features/creation/generationQueue";
 import { compileDesignPrompt } from "./features/creation/promptCompiler";
-import { getDisabledReason, getGenerationUiState } from "./domain/uiGovernance";
+import {
+  getDisabledReason,
+  getGenerationUiState,
+  getGenerationProgressLabels,
+} from "./domain/uiGovernance";
 
 /** Capacity failure hint: name connections the user can switch to right away. */
 function capacitySwitchHint(currentId: string | undefined): string {
@@ -179,6 +191,7 @@ import {
   retryableOutputIndices,
   submissionMayHaveBeenAccepted,
 } from "./features/creation/taskRecovery";
+import { taskRetryAvailability } from "./features/creation/taskRetryAvailability";
 import {
   cancelNativeTask,
   getNativeTask,
@@ -214,6 +227,7 @@ import "./styles/workspace.css";
 import "./styles/sidebar.css";
 import "./styles/account-popup.css";
 import "./styles/catalog-pages.css";
+import "./styles/extensions.css";
 // Keep Figma-scoped conversation geometry after the legacy workspace rules.
 import "./styles/conversation-panel.css";
 import "./styles/model-picker.css";
@@ -233,11 +247,24 @@ const TaskWorkbench = lazy(() => import("./components/TaskWorkbench"));
 
 export default function App() {
   const [active, setActive] = useState("landing");
+  const [extensionView, setExtensionView] = useState<
+    "skills" | "connectors" | "partners"
+  >("skills");
+  const [partnerProjectId, setPartnerProjectId] = useState<string | null>(null);
   const [workspaceVisited, setWorkspaceVisited] = useState(false);
   useEffect(() => {
     if (active === "workspace") setWorkspaceVisited(true);
   }, [active]);
   const [modal, setModal] = useState("");
+  const [likesOpen, setLikesOpen] = useState(false);
+  const [tagsOpen, setTagsOpen] = useState(false);
+  const [activeCollection, setActiveCollection] = useState<"likes" | "tags">(
+    "likes",
+  );
+  const [collectionActivation, setCollectionActivation] = useState({
+    likes: 0,
+    tags: 0,
+  });
   const [settingsSection, setSettingsSection] =
     useState<SettingsSection>("general");
   const sidebar = useSidebarLayout();
@@ -353,6 +380,10 @@ export default function App() {
     });
   }
   const taskControllers = useRef<Record<string, AbortController>>({});
+  const [savingResultTaskIds, setSavingResultTaskIds] = useState(
+    new Set<string>(),
+  );
+  useEffect(() => setSavingResultTaskIds(new Set()), [persistence.loadEpoch]);
   useNativeTaskRecovery(
     creationRef,
     taskControllers,
@@ -375,6 +406,12 @@ export default function App() {
   const activeProject = creation.projects.find(
     (project) => project.id === creation.activeProjectId,
   );
+  const latestProjectTask = activeProject?.tasks.at(-1);
+  const generationProgress = getGenerationProgressLabels({
+    task: latestProjectTask,
+    saveState,
+    resultSaving: savingResultTaskIds.has(latestProjectTask?.id ?? ""),
+  });
   const [imagePreview, setImagePreview] = useState<{
     source: CanvasCollectionItem;
     title: string;
@@ -388,6 +425,10 @@ export default function App() {
   const agentState = useSyncExternalStore(
     agentConnection.subscribe,
     agentConnection.getState,
+  );
+  const desktopAgentState = useSyncExternalStore(
+    desktopAgentLifecycle.subscribe,
+    desktopAgentLifecycle.getState,
   );
   const activeProjectIdRef = useRef<string | null>(creation.activeProjectId);
   activeProjectIdRef.current = creation.activeProjectId;
@@ -405,15 +446,6 @@ export default function App() {
       null
     );
   }
-  useEffect(() => {
-    const ids = new Set(canvasItems.map((item) => item.id));
-    const removeMissing = (current: Set<string>): Set<string> => {
-      const next = new Set([...current].filter((id) => ids.has(id)));
-      return next.size === current.size ? current : next;
-    };
-    setFavoriteIds(removeMissing);
-    setLikedIds(removeMissing);
-  }, [canvasItems]);
   useEffect(() => {
     replaceCanvasItems(activeProject?.items ?? BASE_CANVAS_ITEMS);
     setFavoriteIds(new Set(activeProject?.favoriteIds ?? []));
@@ -458,6 +490,46 @@ export default function App() {
     } catch {
       return "应用失败：Skill 指令与当前草稿合计超过 4000 字，原草稿未改变。";
     }
+  }
+  function applyPartnerToHome(instructions: string): string {
+    const project = partnerProjectId
+      ? creationRef.current.projects.find(
+          (item) => item.id === partnerProjectId,
+        )
+      : undefined;
+    if (partnerProjectId && !project) return "原项目已不可用，未修改草稿。";
+    if (project && creationRef.current.activeProjectId !== project.id)
+      return "原项目已不是当前项目，未修改草稿。";
+    if (project) {
+      // The active composer acknowledges its source; inactive Agent drafts
+      // cannot receive instructions or redirect them into the API draft.
+      for (const draftKey of [project.id, `google-${project.id}`]) {
+        const result = appendToActiveAgentDraft(draftKey, instructions);
+        if (result.handled) {
+          if (result.applied) setActive("workspace");
+          return result.message;
+        }
+      }
+    }
+    const draft = project?.composerDraft ?? creationRef.current.homeDraft;
+    const prompt = [draft.prompt.trim(), instructions]
+      .filter(Boolean)
+      .join("\n\n");
+    if (prompt.length > 4000)
+      return "应用失败：角色说明与草稿合计超过 4000 字，原草稿未改变。";
+    if (project)
+      updateProject(project.id, (current) => ({
+        ...current,
+        composerDraft: {
+          ...current.composerDraft,
+          prompt,
+          updatedAt: Date.now(),
+        },
+        updatedAt: Date.now(),
+      }));
+    else updateHomeDraft({ ...draft, prompt, updatedAt: Date.now() });
+    setActive(project ? "workspace" : "landing");
+    return "协作角色已加入草稿，请选择本次任务的模型。";
   }
   function applySkillToProject(record: SkillRecord): string {
     const project = creationRef.current.projects.find(
@@ -555,6 +627,8 @@ export default function App() {
           creationRef.current.projects.find(
             (item) => item.id === activeProjectIdRef.current,
           ),
+        getProjects: () => creationRef.current.projects,
+        flush: () => persistence.flush(),
         commit: (project) => {
           updateProject(project.id, () => project);
           if (activeProjectIdRef.current === project.id)
@@ -661,6 +735,16 @@ export default function App() {
     };
   }, [agentCanvasBridge]);
   useEffect(() => {
+    if (saveState === "saved" || saveState === "saving")
+      void desktopAgentLifecycle.ensure();
+  }, [
+    creation.activeProjectId,
+    persistence.loadEpoch,
+    saveState,
+    agentCanvasBridge,
+    desktopAgentState.pending,
+  ]);
+  useEffect(() => {
     if (
       import.meta.env.VITE_KK_AGENT_PROXY === "1" &&
       creation.activeProjectId
@@ -741,6 +825,33 @@ export default function App() {
     }
     const controller = new AbortController();
     taskControllers.current[taskId] = controller;
+    const setResultSaving = (saving: boolean) => {
+      if (
+        taskControllers.current[taskId] !== controller ||
+        (saving && controller.signal.aborted)
+      )
+        return;
+      setSavingResultTaskIds((current) => {
+        if (current.has(taskId) === saving) return current;
+        const next = new Set(current);
+        if (saving) next.add(taskId);
+        else next.delete(taskId);
+        return next;
+      });
+    };
+    controller.signal.addEventListener("abort", () => setResultSaving(false), {
+      once: true,
+    });
+    let terminalPublished = false;
+    let terminalSaveFailed = false;
+    const flushPublishedResult = async () => {
+      try {
+        await persistence.flush();
+      } catch (error) {
+        terminalSaveFailed = terminalPublished;
+        throw error;
+      }
+    };
     let outputs = outputsForTask(task);
     const pendingIndices = outputs
       .filter((output) => output.status !== "succeeded")
@@ -799,6 +910,8 @@ export default function App() {
           );
         }
         const publishedStatus = deliveryErrorMessage ? "unknown" : status;
+        terminalPublished =
+          publishedStatus !== "running" && publishedStatus !== "queued";
         const publishedError = deliveryErrorMessage ?? error;
         const publishedSubmissionState = deliveryErrorMessage
           ? ("unknown" as const)
@@ -901,7 +1014,11 @@ export default function App() {
     let reservation: ProviderSubmissionReservation | undefined;
     const nativeTaskHost = usesNativeTaskHost();
     const assertTextCurrent = () => {
-      if (task.kind === "text" && !navigator.onLine)
+      if (
+        task.kind === "text" &&
+        !navigator.onLine &&
+        !isLocalProviderUrl(task.providerBaseUrl ?? "")
+      )
         throw new Error("当前离线，未提交文本任务；草稿已保留。");
       if (task.kind === "text")
         assertLiveTextTask(
@@ -930,17 +1047,7 @@ export default function App() {
       if (controller.signal.aborted) throw new Error("任务已停止。");
       if (!nativeTaskHost)
         reservation = await reserveProviderSubmissionAsync(
-          {
-            id: task.providerConnectionId,
-            baseUrl: task.providerBaseUrl,
-            credentialRef: task.providerCredentialRef,
-            referenceCount: task.attachments.length,
-            kind: task.kind === "text" ? "text" : "image",
-            model: task.model,
-            outputCount: task.requestedOutputs,
-            operation: task.imageEdit?.nativeMask ? "inpaint" : undefined,
-            localEdit: Boolean(task.imageEdit),
-          },
+          taskSubmissionBinding(task),
           { explicitRetry: explicitRetry || Boolean(task.retryOfTaskId) },
         );
       if (controller.signal.aborted) throw new Error("任务已停止。");
@@ -960,17 +1067,7 @@ export default function App() {
         if (controller.signal.aborted) throw new Error("任务已停止。");
         assertTextCurrent();
         const nativeConnection = assertSubmissionConnection(
-          {
-            id: task.providerConnectionId,
-            baseUrl: task.providerBaseUrl,
-            credentialRef: task.providerCredentialRef,
-            referenceCount: task.attachments.length,
-            kind: task.kind === "text" ? "text" : "image",
-            model: task.model,
-            outputCount: task.requestedOutputs,
-            operation: task.imageEdit?.nativeMask ? "inpaint" : undefined,
-            localEdit: Boolean(task.imageEdit),
-          },
+          taskSubmissionBinding(task),
           {
             skipCapacity: true,
             explicitRetry: explicitRetry || Boolean(task.retryOfTaskId),
@@ -995,6 +1092,8 @@ export default function App() {
           taskId: task.id,
           idempotencyKey: task.idempotencyKey,
           baseUrl: task.providerBaseUrl,
+          protocol: task.providerProtocol,
+          authMode: task.providerAuthMode,
           credentialRef: task.providerCredentialRef ?? "",
           model: task.model,
           prompt: compiledPrompt,
@@ -1026,6 +1125,18 @@ export default function App() {
             pendingIndices,
           );
           nativeTaskRecords.current[taskId] = record;
+          setResultSaving(
+            record.status !== "unknown" &&
+              record.outputs.some(
+                (output) =>
+                  output.status === "succeeded" &&
+                  outputs.some(
+                    (prior) =>
+                      prior.index === output.index &&
+                      prior.status !== "succeeded",
+                  ),
+              ),
+          );
           const recordOutputs = new Map(
             record.outputs.map((output) => [output.index, output]),
           );
@@ -1287,7 +1398,8 @@ export default function App() {
                 : "submitted"
               : "terminal",
           );
-          await persistence.flush();
+          await flushPublishedResult();
+          setResultSaving(false);
           return record;
         };
         if (
@@ -1345,6 +1457,8 @@ export default function App() {
           prompt: task.prompt,
           model: task.model,
           providerBaseUrl: task.providerBaseUrl,
+          protocol: task.providerProtocol,
+          authMode: task.providerAuthMode,
           credentialRef: task.providerCredentialRef,
           idempotencyKey: task.idempotencyKey,
           signal: controller.signal,
@@ -1372,7 +1486,7 @@ export default function App() {
           error: undefined,
         };
         publish("succeeded", undefined, "terminal");
-        await persistence.flush();
+        await flushPublishedResult();
         if (task.providerConnectionId && reservation?.healthUnchanged())
           markProviderConnectionHealthy(task.providerConnectionId);
         return;
@@ -1395,6 +1509,7 @@ export default function App() {
           providerRequestStarted = true;
         },
         onChunk: async (sources, offset) => {
+          setResultSaving(true);
           const archived = await mapWithConcurrency(
             sources,
             2,
@@ -1512,6 +1627,7 @@ export default function App() {
             );
           });
           publish("running");
+          setResultSaving(false);
         },
       });
       if (controller.signal.aborted) throw new Error("任务已停止。");
@@ -1573,7 +1689,7 @@ export default function App() {
                     `${completed}/${task.requestedOutputs} 张已归档，可重试未归档结果。`),
         generatedUncertain || archiveUncertain ? "unknown" : "terminal",
       );
-      await persistence.flush();
+      await flushPublishedResult();
       if (task.providerConnectionId) {
         const failure = generated.failure;
         if (
@@ -1597,22 +1713,21 @@ export default function App() {
                 | "network",
               retryAfterSeconds: failure.retryAfterSeconds,
             },
-            {
-              baseUrl: task.providerBaseUrl,
-              credentialRef: task.providerCredentialRef,
-            },
+            taskProviderOptions(task),
           );
         else if (
           !failure &&
           !archiveUncertain &&
           reservation?.healthUnchanged()
         )
-          markProviderConnectionHealthy(task.providerConnectionId, {
-            baseUrl: task.providerBaseUrl,
-            credentialRef: task.providerCredentialRef,
-          });
+          markProviderConnectionHealthy(
+            task.providerConnectionId,
+            taskProviderOptions(task),
+          );
       }
     } catch (error) {
+      // A failed project save cannot undo a completed generation receipt.
+      if (terminalSaveFailed) return;
       const uncertain =
         abortedAfterProviderSubmission({
           durableSubmission,
@@ -1712,13 +1827,11 @@ export default function App() {
               | "network",
             retryAfterSeconds: error.retryAfterSeconds,
           },
-          {
-            baseUrl: task.providerBaseUrl,
-            credentialRef: task.providerCredentialRef,
-          },
+          taskProviderOptions(task),
         );
       }
     } finally {
+      setResultSaving(false);
       try {
         await reservation?.release();
       } catch {
@@ -2401,26 +2514,6 @@ export default function App() {
       updatedAt: Date.now(),
     }));
   }
-  function toggleFavorite(id: string): void {
-    if (activeProject) {
-      const next = new Set(activeProject.favoriteIds);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      setFavoriteIds(next);
-      updateProject(activeProject.id, (project) => ({
-        ...project,
-        favoriteIds: [...next],
-        updatedAt: Date.now(),
-      }));
-      return;
-    }
-    setFavoriteIds((current) => {
-      const next = new Set(current);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-  }
   function toggleLike(id: string): void {
     if (activeProject) {
       const next = new Set(activeProject.likedIds);
@@ -2440,6 +2533,38 @@ export default function App() {
       else next.add(id);
       return next;
     });
+  }
+  function updateItemTags(id: string, tags: string[]): string | undefined {
+    if (!activeProject) return "请选择一个本地项目，再保存标签。";
+    try {
+      const patch = splitCollectionTags(tags);
+      const next = new Set(activeProject.favoriteIds);
+      if (patch.favorite) next.add(id);
+      else next.delete(id);
+      setFavoriteIds(next);
+      updateProject(activeProject.id, (project) => ({
+        ...project,
+        favoriteIds: [...next],
+        items: project.items.map((item) =>
+          item.id === id ? { ...item, tags: patch.tags } : item,
+        ),
+        updatedAt: Date.now(),
+      }));
+      const saved = creationRef.current.projects.find(
+        (project) => project.id === activeProject.id,
+      );
+      if (saved) replaceCanvasItems(saved.items);
+    } catch (error) {
+      return error instanceof Error ? error.message : "标签未能保存，请重试。";
+    }
+  }
+  function createTag(name: string): void {
+    if (!activeProject) return;
+    updateProject(activeProject.id, (project) => ({
+      ...project,
+      customTags: normalizeTags([...(project.customTags ?? []), name]),
+      updatedAt: Date.now(),
+    }));
   }
   function locate(id: string): void {
     open("workspace");
@@ -2545,6 +2670,7 @@ export default function App() {
       ).preferences;
     } catch {
       // Browser storage can be denied; retain the default theme preferences.
+      preferences = DEFAULT_SETTINGS;
     }
     const apply = () => {
       document.documentElement.dataset.accent = preferences.accent;
@@ -2571,6 +2697,22 @@ export default function App() {
     };
   }, []);
   function open(view: string): void {
+    if (view === "skills" || view.startsWith("skills/")) {
+      setPartnerProjectId(
+        active === "workspace" ? creationRef.current.activeProjectId : null,
+      );
+      const requestedView = view.split("/")[1];
+      setExtensionView(
+        requestedView === "partners"
+          ? "partners"
+          : requestedView === "connectors"
+            ? "connectors"
+            : "skills",
+      );
+      setActive("skills");
+      setModal("");
+      return;
+    }
     if (view === "new-project") {
       handleNewBlankProject();
       return;
@@ -2595,7 +2737,22 @@ export default function App() {
       setModal("");
       return;
     }
-    if (["search", "favorites", "likes"].includes(view)) {
+    if (["favorites", "tags", "likes"].includes(view)) {
+      if (!activeProject) {
+        handleNewBlankProject();
+      } else setActive("workspace");
+      if (view === "likes") setLikesOpen(true);
+      else setTagsOpen(true);
+      const id = view === "likes" ? "likes" : "tags";
+      setActiveCollection(id);
+      setCollectionActivation((current) => ({
+        ...current,
+        [id]: current[id] + 1,
+      }));
+      setModal("");
+      return;
+    }
+    if (view === "search") {
       setModal(view);
       return;
     }
@@ -2604,7 +2761,8 @@ export default function App() {
       const sectionAlias: Record<string, SettingsSection> = {
         plugins: "mcp",
         extensions: "extensions",
-        partners: "partners",
+        partners: "providers",
+        codex: "providers",
         skills: "skill",
         skill: "skill",
         mcp: "mcp",
@@ -2747,6 +2905,10 @@ export default function App() {
               <CanvasImageCommandContext.Provider
                 value={{
                   items: activeProject?.items,
+                  updateItemTags,
+                  createTag,
+                  customTags: activeProject?.customTags ?? [],
+                  favoriteIds,
                   updateItem: (id, patch) =>
                     updateCanvasItems((current) =>
                       current.map((item) =>
@@ -2819,62 +2981,52 @@ export default function App() {
                             {activeProject.name}
                           </strong>
                         )}
-                        {activeProject.tasks.slice(-1).map((task) => (
-                          <span
-                            key={task.id}
-                            className={`project-task-${task.status}`}
-                          >
-                            {task.status === "queued"
-                              ? "排队中"
-                              : task.status === "running"
-                                ? "正在生成"
-                                : task.status === "unknown"
-                                  ? "受理状态不明 · 请核对供应商"
-                                  : task.status === "partial"
-                                    ? `部分完成（${task.completedOutputs}/${task.requestedOutputs}）`
-                                    : task.status === "succeeded"
-                                      ? "已完成"
-                                      : task.status === "offline"
-                                        ? "网络断开"
-                                        : task.status === "cancelled"
-                                          ? "已取消"
-                                          : task.status === "interrupted"
-                                            ? "上次任务未完成"
-                                            : `失败：${task.error ?? "请重试"}`}
-                            {task.status === "running" && (
-                              <button
-                                className="ui-button"
-                                type="button"
-                                onClick={() => cancelTask(task.id)}
-                              >
-                                取消
-                              </button>
-                            )}
-                            {(task.status === "partial" ||
-                              task.status === "failed" ||
-                              task.status === "offline" ||
-                              task.status === "cancelled" ||
-                              task.status === "interrupted") && (
-                              <button
-                                className="ui-button"
-                                type="button"
-                                onClick={() =>
-                                  retryTask(activeProject.id, task.id)
-                                }
-                              >
-                                重试
-                              </button>
-                            )}
-                          </span>
-                        ))}
+                        {activeProject.tasks.slice(-1).map((task) => {
+                          const retry = taskRetryAvailability(
+                            task,
+                            activeProject.tasks,
+                          );
+                          const retryReason = !retry.indices.length
+                            ? retry.blockedReason
+                            : undefined;
+                          return (
+                            <span
+                              key={task.id}
+                              className={`project-task-${task.status}`}
+                            >
+                              {generationProgress.taskLabel}
+                              {task.status === "running" && (
+                                <button
+                                  className="ui-button"
+                                  type="button"
+                                  onClick={() => cancelTask(task.id)}
+                                >
+                                  取消
+                                </button>
+                              )}
+                              {(task.status === "partial" ||
+                                task.status === "failed" ||
+                                task.status === "offline" ||
+                                task.status === "cancelled" ||
+                                task.status === "interrupted") && (
+                                <button
+                                  className="ui-button"
+                                  type="button"
+                                  disabled={!retry.indices.length}
+                                  title={retryReason}
+                                  aria-description={retryReason}
+                                  onClick={() =>
+                                    retryTask(activeProject.id, task.id)
+                                  }
+                                >
+                                  重试
+                                </button>
+                              )}
+                            </span>
+                          );
+                        })}
                         <span className="project-save-state">
-                          {saveState === "loading"
-                            ? "读取中…"
-                            : saveState === "saving"
-                              ? "保存中…"
-                              : saveState === "saved"
-                                ? "已保存"
-                                : "未保存 · 请查看恢复提示"}
+                          {generationProgress.saveLabel}
                         </span>
                       </div>
                     )
@@ -2909,10 +3061,8 @@ export default function App() {
                   }}
                   items={activeProject?.items ?? canvasItems}
                   onItemsChange={updateCanvasItems}
-                  favoriteIds={favoriteIds}
                   likedIds={likedIds}
                   onToggleLike={toggleLike}
-                  onToggleFavorite={toggleFavorite}
                 />
                 {imagePreview && (
                   <ImageLightbox
@@ -2957,8 +3107,10 @@ export default function App() {
                           connectionRevision: agentState.connectionRevision,
                           conversation: agentState.conversation,
                           preparing: agentState.preparing,
-                          connecting: agentState.status === "connecting",
-                          error: agentState.error,
+                          connecting:
+                            agentState.status === "connecting" ||
+                            desktopAgentState.pending,
+                          error: agentState.error || desktopAgentState.error,
                           usage: agentState.usage,
                           usageError: agentState.usageError,
                           onRefreshUsage: () => {
@@ -2968,7 +3120,9 @@ export default function App() {
                             (model) => model.model || model.id,
                           ),
                           onConnect: (fresh) => {
-                            void agentConnection.connect(fresh);
+                            void desktopAgentLifecycle
+                              .connect(fresh)
+                              .catch(() => undefined);
                           },
                           sending: agentState.sending,
                           activity: agentState.activity,
@@ -3019,6 +3173,9 @@ export default function App() {
                 registry={skillRegistry}
                 onApply={applySkillToHome}
                 onOpenMcp={() => open("settings/mcp")}
+                onOpenModels={() => open("settings/providers")}
+                onApplyPartner={applyPartnerToHome}
+                defaultView={extensionView}
               />
             </DeferredPanelBoundary>
           )}
@@ -3046,6 +3203,27 @@ export default function App() {
           )}
         </main>
       </div>
+      <CanvasCollectionsPanels
+        key={activeProject?.id ?? "empty"}
+        items={canvasItems.map((item) => ({
+          ...item,
+          tags: effectiveTags(item.tags, favoriteIds.has(item.id)),
+        }))}
+        likedIds={likedIds}
+        likesOpen={active === "workspace" && likesOpen}
+        tagsOpen={active === "workspace" && tagsOpen}
+        customTags={activeProject?.customTags ?? []}
+        activation={collectionActivation}
+        activePanel={activeCollection}
+        onActivate={setActiveCollection}
+        onCloseLikes={() => setLikesOpen(false)}
+        onCloseTags={() => setTagsOpen(false)}
+        onLocate={locate}
+        onLike={toggleLike}
+        onRename={renameCanvasItem}
+        onUpdateTags={updateItemTags}
+        onCreateTag={createTag}
+      />
       {pendingApproval && pendingApprovalTask && (
         <TaskExecutionApproval
           task={pendingApprovalTask}
@@ -3057,8 +3235,8 @@ export default function App() {
       {modal && (
         <Modal
           title={
-            ["search", "favorites", "likes"].includes(modal)
-              ? "搜索与收藏"
+            modal === "search"
+              ? "搜索"
               : modal === "prompts"
                 ? "提示词库"
                 : modal === "settings"
@@ -3074,21 +3252,17 @@ export default function App() {
           onClose={() => setModal("")}
         >
           <DeferredPanelBoundary key={modal} onClose={() => setModal("")}>
-            {["search", "favorites", "likes"].includes(modal) ? (
+            {modal === "search" ? (
               <CatalogPanel
-                initialTab={modal === "search" ? "全部" : "喜欢收藏"}
-                items={canvasItems}
+                items={canvasItems.map((item) => ({
+                  ...item,
+                  tags: effectiveTags(item.tags, favoriteIds.has(item.id)),
+                }))}
                 assets={[...assets, ...subjects]}
-                favoriteIds={favoriteIds}
-                likedIds={likedIds}
-                onClose={() => setModal("")}
                 onOpen={open}
                 projects={creation.projects}
                 onOpenProject={openSavedProject}
                 onLocate={locate}
-                onToggleFavorite={toggleFavorite}
-                onToggleLike={toggleLike}
-                onRename={renameCanvasItem}
               />
             ) : modal === "prompts" ? (
               <PromptLibraryPanel
@@ -3134,6 +3308,7 @@ export default function App() {
                 initialSection={settingsSection}
                 saveState={saveState}
                 revision={creation.revision}
+                projects={creation.projects}
                 registry={skillRegistry}
                 onClose={() => setModal("")}
               />
@@ -3238,4 +3413,5 @@ import "./styles/page-templates.css";
 import "./styles/canvas-compare.css";
 import "./styles/image-edit.css";
 import "./styles/image-selection.css";
+import "./styles/canvas-composer-screen.css";
 import "./styles/desktop-titlebar.css";

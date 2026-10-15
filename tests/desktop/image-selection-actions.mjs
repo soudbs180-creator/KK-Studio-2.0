@@ -284,7 +284,7 @@ try {
   await page.getByRole("button", { name: "模型供应商", exact: true }).click();
   await audit(page.getByRole("dialog", { name: "设置" }), "model-settings");
   await page
-    .getByRole("button", { name: "保存", exact: true })
+    .getByRole("button", { name: "保存连接", exact: true })
     .scrollIntoViewIfNeeded();
   await audit(page.getByRole("dialog", { name: "设置" }), "model-actions");
   await page.getByRole("radio", { name: /Gemini CLI 账号/ }).check();

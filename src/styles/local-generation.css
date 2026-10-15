@@ -43,11 +43,6 @@
   top: 390px;
   left: -105px;
 }
-.prompt-creation .creation-composer > .generate-button {
-  position: absolute;
-  right: 12px;
-  bottom: 12px;
-}
 .prompt-creation .demo-result-node {
   position: relative;
 }
@@ -69,23 +64,38 @@
   align-items: center;
 }
 .prompt-composer-label {
-  position: absolute;
-  left: 22px;
-  top: 18px;
+  order: -1;
   color: var(--ui-muted);
-  font-size: 11px;
+  font-size: var(--kk-font-caption);
 }
 .prompt-tool-status {
-  position: absolute;
-  left: 10px;
-  right: 10px;
-  bottom: -36px;
   color: var(--ui-muted);
-  font-size: 10px;
+  font-size: var(--kk-font-caption);
 }
-.prompt-composer textarea {
-  top: 42px;
+.prompt-composer.creation-composer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kk-space-3);
+  height: auto;
+  min-height: 237px;
+  padding: var(--kk-space-4);
+}
+.prompt-composer.creation-composer textarea {
+  position: static;
+  width: 100%;
   height: 106px;
+  min-height: 106px;
+}
+.prompt-composer .creation-controls {
+  position: static;
+  height: auto;
+  flex-wrap: wrap;
+}
+.prompt-composer .generate-button {
+  margin-left: auto;
+}
+.prompt-composer .local-generation-status {
+  position: static;
 }
 .prompt-creation-placeholder {
   height: 240px;

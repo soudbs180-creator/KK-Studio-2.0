@@ -10,6 +10,8 @@ import type {
   AgentChatItem,
   AgentConversationState,
   AgentEvent,
+  AgentActivityDetail,
+  AgentActivityItem,
 } from "./agentTypes.ts";
 
 export interface AgentSseEvent {
@@ -87,6 +89,9 @@ export function parseAgentSseEvent(
     };
   }
   if (type === "agent_event") {
+    const scope = data as Record<string, unknown>;
+    const threadId = stringOrUndefined(scope.threadId ?? scope.thread_id);
+    const turnId = stringOrUndefined(scope.turnId ?? scope.turn_id);
     const terminal = data as {
       type?: string;
       status?: string;
@@ -95,6 +100,8 @@ export function parseAgentSseEvent(
     if (terminal.type === "turn.completed") {
       return {
         kind: "terminal",
+        threadId,
+        turnId,
         status: terminal.status || "completed",
         error:
           typeof terminal.error === "string"
@@ -106,13 +113,7 @@ export function parseAgentSseEvent(
       turnId?: string;
       threadId?: string;
       type?: string;
-      item?: {
-        id?: string;
-        type?: string;
-        text?: string;
-        delta?: string;
-        command?: string;
-      };
+      item?: AgentActivityItem & { type?: string };
     };
     const item = payload?.item;
     if (!item?.id || !item.type) return null;
@@ -124,8 +125,8 @@ export function parseAgentSseEvent(
         item: {
           id: item.id,
           itemId: item.id,
-          threadId: payload.threadId,
-          turnId: payload.turnId,
+          threadId,
+          turnId,
           role: "assistant",
           text: item.text ?? "",
           detail: { phase, delta: item.delta ?? "" },
@@ -135,7 +136,8 @@ export function parseAgentSseEvent(
     if (!isActivityItemType(item.type)) return null;
     return {
       kind: "activity",
-      turnId: payload.turnId,
+      threadId,
+      turnId,
       itemType: item.type,
       phase,
       item: {
@@ -143,6 +145,13 @@ export function parseAgentSseEvent(
         text: item.text,
         delta: item.delta,
         command: item.command,
+        cwd: item.cwd,
+        aggregatedOutput: item.aggregatedOutput,
+        exitCode: item.exitCode,
+        status: item.status,
+        success: item.success,
+        error: item.error,
+        summary: item.summary,
       },
     };
   }
@@ -238,6 +247,49 @@ export function mergeAgentChatItem(
   current: AgentChatItem | undefined,
   incoming: AgentChatItem,
 ): AgentChatItem {
+  if (incoming.role === "tool" && incoming.detail) {
+    const detail = incoming.detail as AgentActivityDetail;
+    const previous = current?.detail as AgentActivityDetail | undefined;
+    if (
+      current?.activityItems &&
+      incoming.itemId &&
+      current.activityItems[incoming.itemId] !== undefined
+    ) {
+      if (isAgentActivitySettled(previous)) return current;
+      const text =
+        detail.phase === "updated" && detail.delta
+          ? current.activityItems[incoming.itemId] + detail.delta
+          : incoming.text || current.activityItems[incoming.itemId];
+      const activityItems = {
+        ...current.activityItems,
+        [incoming.itemId]: text,
+      };
+      return {
+        ...current,
+        activityItems,
+        text: Object.values(activityItems).join("\n\n"),
+      };
+    }
+    if (isAgentActivitySettled(previous) && detail.phase !== "completed")
+      return current!;
+    const patch = Object.fromEntries(
+      Object.entries(detail).filter(([, value]) => value !== undefined),
+    );
+    const merged = { ...previous, ...patch } as AgentActivityDetail;
+    const outputDelta = detail.kind === "command" || detail.kind === "tool";
+    if (detail.phase === "updated" && detail.delta && outputDelta)
+      merged.output = (previous?.output ?? "") + detail.delta;
+    return {
+      ...current,
+      ...incoming,
+      id: current?.id ?? incoming.id,
+      text:
+        detail.phase === "updated" && detail.delta && !outputDelta
+          ? (current?.text ?? "") + detail.delta
+          : incoming.text || current?.text || "",
+      detail: merged,
+    };
+  }
   if (!current) {
     const first = incoming.detail as { delta?: string } | undefined;
     return { ...incoming, text: incoming.text || first?.delta || "" };
@@ -259,6 +311,134 @@ export function mergeAgentChatItem(
     turnId: incoming.turnId ?? current.turnId,
     id: current.id,
   };
+}
+
+export function isAgentActivitySettled(detail?: AgentActivityDetail): boolean {
+  return Boolean(
+    detail?.phase === "completed" ||
+    (!detail?.phase &&
+      [
+        "completed",
+        "succeeded",
+        "success",
+        "failed",
+        "error",
+        "interrupted",
+        "cancelled",
+      ].includes(detail?.status ?? "")),
+  );
+}
+
+/** 完成 phase 只表示活动结束，成功必须有明确结果证据。 */
+export function agentActivityState(item: AgentChatItem): {
+  label: string;
+  tone:
+    "running" | "success" | "failure" | "interrupted" | "complete" | "unknown";
+} {
+  const detail = item.detail as AgentActivityDetail | undefined;
+  if (!detail) return { label: "结果未报告", tone: "unknown" };
+  const rowExit = Array.isArray(detail.rows)
+    ? detail.rows.find((row) => row?.label === "退出状态")?.value
+    : undefined;
+  const exitCode = Number.isInteger(detail.exitCode)
+    ? detail.exitCode
+    : typeof rowExit === "string" && /^-?\d+$/.test(rowExit)
+      ? Number(rowExit)
+      : undefined;
+  if (
+    detail.error ||
+    detail.success === false ||
+    ["failed", "error"].includes(detail.status ?? "") ||
+    (exitCode !== undefined && exitCode !== 0)
+  )
+    return { label: "失败", tone: "failure" };
+  if (
+    ["interrupted", "cancelled", "canceled"].includes(detail.status ?? "") ||
+    (!isAgentActivitySettled(detail) &&
+      ["interrupted", "cancelled", "canceled"].includes(
+        detail.turnStatus ?? "",
+      ))
+  )
+    return { label: "已中断", tone: "interrupted" };
+  if (
+    exitCode === 0 ||
+    detail.success === true ||
+    ["success", "succeeded"].includes(detail.status ?? "")
+  )
+    return { label: "成功", tone: "success" };
+  if (isAgentActivitySettled(detail))
+    return {
+      label: detail.kind === "command" ? "已执行 · 结果未报告" : "已执行",
+      tone: "complete",
+    };
+  if (detail.turnStatus)
+    return { label: "本轮已结束 · 结果未报告", tone: "unknown" };
+  if (
+    detail.phase ||
+    ["inProgress", "in_progress", "running", "started", "pending"].includes(
+      detail.status ?? "",
+    )
+  )
+    return { label: "执行中", tone: "running" };
+  return { label: "结果未报告", tone: "unknown" };
+}
+
+/** 实时事件与持久历史沿用相同的 kind/status/rows/output 展示字段。 */
+export function agentActivityMessage(
+  event: Extract<AgentEvent, { kind: "activity" }>,
+  activeThreadId?: string,
+): AgentChatItem {
+  const { item, itemType, phase } = event;
+  const threadId = event.threadId ?? activeThreadId;
+  const kinds: Record<string, string> = {
+    command_execution: "command",
+    reasoning: "reasoning",
+    plan: "plan",
+    file_change: "file",
+    web_search: "search",
+    image_view: "image",
+    image_generation: "image",
+    context_compaction: "context",
+  };
+  return {
+    id: "activity:" + JSON.stringify([threadId, event.turnId, item.id]),
+    itemId: item.id,
+    threadId,
+    turnId: event.turnId,
+    role: "tool",
+    title: activityLabel(itemType),
+    text:
+      stringOrUndefined(item.command) ??
+      stringOrUndefined(item.text) ??
+      activitySummary(item.summary),
+    detail: {
+      kind: kinds[itemType] ?? "tool",
+      itemType,
+      phase,
+      status: stringOrUndefined(item.status),
+      command: stringOrUndefined(item.command),
+      cwd: stringOrUndefined(item.cwd),
+      delta: stringOrUndefined(item.delta),
+      output:
+        typeof item.aggregatedOutput === "string"
+          ? item.aggregatedOutput
+          : undefined,
+      exitCode: Number.isInteger(item.exitCode) ? item.exitCode : undefined,
+      success: typeof item.success === "boolean" ? item.success : undefined,
+      error: stringOrUndefined(
+        typeof item.error === "string" ? item.error : item.error?.message,
+      ),
+    } satisfies AgentActivityDetail,
+  };
+}
+
+function activitySummary(summary: unknown): string {
+  if (typeof summary === "string") return summary;
+  if (!Array.isArray(summary)) return "";
+  return summary
+    .map((item) => (typeof item?.text === "string" ? item.text : ""))
+    .filter(Boolean)
+    .join("\n");
 }
 
 /** 把活动条目文本规范化（工具名 + 内容摘要）。 */

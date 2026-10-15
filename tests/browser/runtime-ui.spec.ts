@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { expandSidebar, waitForConversationPanelSettled } from "./helpers";
 
-const evidence = "test-results/runtime/ui-runtime-2026-09-10";
+const evidence = () => test.info().outputPath("runtime");
 
 test("latest Figma shell is loaded by the real production page", async ({
   page,
@@ -24,7 +24,7 @@ test("latest Figma shell is loaded by the real production page", async ({
     "rgb(22, 22, 22)",
   );
   await page.screenshot({
-    path: evidence + "/after-landing.png",
+    path: evidence() + "/after-landing.png",
     animations: "disabled",
   });
   await page
@@ -63,18 +63,22 @@ test("latest Figma shell is loaded by the real production page", async ({
         1,
       ),
     );
-  // The current composer keeps the registered 170px shell and 64px input.
+  // The text region remains fixed while complete action capsules may wrap.
   const form = boxes[".chat-composer"];
   const input = boxes[".chat-composer textarea"];
   const toolbar = boxes[".chat-composer .composer-toolbar"];
   expect(input).toEqual([form[0] + 13, form[1] + 13, form[2] - 26, 64]);
-  expect(toolbar).toEqual([input[0], form[1] + form[3] - 45, input[2], 32]);
-  expect(form[3]).toBe(170);
+  expect(toolbar[0]).toBe(input[0]);
+  expect(toolbar[2]).toBe(input[2]);
+  expect(toolbar[1]).toBeGreaterThanOrEqual(input[1] + input[3]);
+  expect(toolbar[1] + toolbar[3]).toBeLessThanOrEqual(form[1] + form[3] - 12);
+  expect(toolbar[3]).toBeGreaterThanOrEqual(32);
+  expect(form[3]).toBeGreaterThanOrEqual(170);
   await expect(
     page.getByRole("button", { name: "开启语音输入", exact: true }),
   ).toHaveCSS("height", "32px");
   await page.screenshot({
-    path: evidence + "/after-workspace.png",
+    path: evidence() + "/after-workspace.png",
     animations: "disabled",
   });
   await page.getByRole("button", { name: "收起侧边栏", exact: true }).click();
@@ -88,7 +92,7 @@ test("latest Figma shell is loaded by the real production page", async ({
     .poll(async () => (await page.locator(".canvas-toolbar").boundingBox())!.x)
     .toBeCloseTo(719, 0);
   await page.screenshot({
-    path: evidence + "/after-collapsed.png",
+    path: evidence() + "/after-collapsed.png",
     animations: "disabled",
   });
 });
@@ -117,7 +121,10 @@ test("responsive desktop fills the viewport without scaling readable controls", 
   await page.getByLabel("对话内容", { exact: true }).fill("本地 UI 验证草稿");
   await expect(send).toBeDisabled();
   await page.getByRole("button", { name: "前往模型设置", exact: true }).click();
-  await expect(page.getByLabel("API Key")).toBeVisible();
+  await page
+    .getByRole("button", { name: "API Key（官方）", exact: true })
+    .click();
+  await expect(page.getByLabel("API Key", { exact: true })).toBeVisible();
   await expect(page.getByLabel("对话内容")).toHaveValue("本地 UI 验证草稿");
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
   await page.getByRole("button", { name: "AI权限模式", exact: true }).click();
@@ -127,7 +134,7 @@ test("responsive desktop fills the viewport without scaling readable controls", 
   await page.keyboard.press("Escape");
   await expect(page.locator(".chat-mode-popover")).toHaveCount(0);
   await page.screenshot({
-    path: evidence + "/after-1440.png",
+    path: evidence() + "/after-1440.png",
     animations: "disabled",
   });
 });

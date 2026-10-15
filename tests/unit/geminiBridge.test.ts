@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import http from "node:http";
 import { EventEmitter } from "node:events";
+import { spawn } from "node:child_process";
 import { createGeminiBridge } from "../../scripts/gemini-bridge.mjs";
 
 function stubChild({
@@ -115,6 +116,7 @@ test("status detects installed and logged-in gemini", async () => {
     installed: true,
     version: "Gemini CLI 1.2.3",
     login: true,
+    loginStatus: "verified",
   });
 });
 
@@ -136,6 +138,7 @@ test("status reports not logged in when probe returns a login error", async () =
     installed: true,
     version: "Gemini CLI 1.2.3",
     login: false,
+    loginStatus: "required",
   });
 });
 
@@ -251,6 +254,7 @@ test("http smoke: status and chat over localhost with CORS", async (t) => {
     installed: true,
     version: "Gemini CLI 1.2.3",
     login: true,
+    loginStatus: "verified",
   });
   const chat = await new Promise<{ status: number; body: string }>(
     (resolve, reject) => {
@@ -357,3 +361,263 @@ test(
     assert.equal(killed, true);
   },
 );
+
+test("quota, model failure and malformed probes do not falsely report missing login", async () => {
+  for (const probe of [
+    { exitCode: 1, stdout: '{"error":{"message":"Quota exceeded"}}' },
+    { stdout: '{"error":{"message":"Model unavailable"}}' },
+    { stdout: "not-json" },
+  ]) {
+    const report = await bridgeWith({ probe }).handleStatus();
+    assert.equal(report.installed, true);
+    assert.equal(report.login, false);
+    assert.equal(report.loginStatus, "unknown");
+    assert.deepEqual(Object.keys(report).sort(), [
+      "installed",
+      "login",
+      "loginStatus",
+      "version",
+    ]);
+  }
+});
+
+test(
+  "installation after a missing CLI is detected without restarting the bridge",
+  { skip: process.platform !== "win32" },
+  async () => {
+    let installed = false;
+    const bridge = bridgeWith(
+      {},
+      {
+        readFileImpl: async () => {
+          if (!installed) throw new Error("ENOENT");
+          return fakeReadFile();
+        },
+      },
+    );
+    assert.deepEqual(await bridge.handleStatus(), {
+      installed: false,
+      login: false,
+    });
+    installed = true;
+    assert.equal((await bridge.handleStatus()).installed, true);
+  },
+);
+
+test(
+  "uninstalling a CLI is detected without reusing its cached invocation",
+  { skip: process.platform !== "win32" },
+  async () => {
+    let installed = true;
+    const bridge = bridgeWith(
+      {},
+      {
+        readFileImpl: async () => {
+          if (!installed) throw new Error("ENOENT");
+          return fakeReadFile();
+        },
+      },
+    );
+    assert.equal((await bridge.handleStatus()).installed, true);
+    installed = false;
+    assert.deepEqual(await bridge.handleStatus(), {
+      installed: false,
+      login: false,
+    });
+  },
+);
+
+class BridgeResponseFixture extends EventEmitter {
+  status = 0;
+  payload: Record<string, unknown> = {};
+  writableEnded = false;
+  destroyed = false;
+  writeHead(status: number) {
+    this.status = status;
+    return this;
+  }
+  end(body: string) {
+    this.payload = body ? JSON.parse(body) : {};
+    this.writableEnded = true;
+    this.emit("finish");
+    return this;
+  }
+}
+
+function bridgeRequestFixture(
+  bridge: ReturnType<typeof createGeminiBridge>,
+  method: string,
+  url: string,
+  headers: Record<string, string> = {},
+) {
+  bridge.server.address = () => ({
+    address: "127.0.0.1",
+    family: "IPv4",
+    port: 1424,
+  });
+  const req = Object.assign(new EventEmitter(), {
+    method,
+    url,
+    headers: { host: "127.0.0.1:1424", ...headers },
+  });
+  const res = new BridgeResponseFixture();
+  bridge.server.emit("request", req, res);
+  return { req, res };
+}
+
+test("owned health requires its nonce and never starts Gemini or a model probe", () => {
+  let calls = 0;
+  const nonce = "a".repeat(64);
+  const bridge = createGeminiBridge({
+    ownerNonce: nonce,
+    spawnImpl: () => {
+      calls++;
+      throw new Error("unexpected CLI call");
+    },
+  });
+  assert.equal(bridgeRequestFixture(bridge, "GET", "/health").res.status, 403);
+  assert.equal(
+    bridgeRequestFixture(bridge, "GET", "/health", {
+      "x-kk-bridge-owner": "b".repeat(64),
+    }).res.status,
+    403,
+  );
+  const response = bridgeRequestFixture(bridge, "GET", "/health", {
+    "x-kk-bridge-owner": nonce,
+  }).res;
+  assert.equal(response.status, 200);
+  assert.deepEqual(response.payload, {
+    ok: true,
+    service: "kk-gemini-bridge",
+    owned: true,
+    pid: process.pid,
+    nonce,
+  });
+  assert.equal(calls, 0);
+});
+
+test("manual health is free and cannot grant a Native shutdown owner", () => {
+  let calls = 0;
+  const bridge = createGeminiBridge({
+    spawnImpl: () => {
+      calls++;
+      throw new Error("unexpected CLI call");
+    },
+  });
+  const response = bridgeRequestFixture(bridge, "GET", "/health").res;
+  assert.equal(response.status, 200);
+  assert.equal(response.payload.owned, false);
+  assert.equal(Object.hasOwn(response.payload, "nonce"), false);
+  assert.equal(
+    bridgeRequestFixture(bridge, "POST", "/runtime/shutdown", {
+      "x-kk-bridge-owner": "a".repeat(64),
+    }).res.status,
+    403,
+  );
+  assert.equal(calls, 0);
+});
+
+test("owned shutdown refuses an in-flight body then prevents new paid requests", () => {
+  let calls = 0;
+  const nonce = "a".repeat(64);
+  const bridge = createGeminiBridge({
+    ownerNonce: nonce,
+    spawnImpl: () => {
+      calls++;
+      throw new Error("unexpected CLI call");
+    },
+  });
+  const active = bridgeRequestFixture(bridge, "POST", "/chat", {
+    "content-type": "application/json",
+  });
+  const owner = { "x-kk-bridge-owner": nonce };
+  assert.equal(
+    bridgeRequestFixture(bridge, "POST", "/runtime/shutdown").res.status,
+    403,
+  );
+  assert.equal(
+    bridgeRequestFixture(bridge, "POST", "/runtime/shutdown", owner).res.status,
+    409,
+  );
+  active.res.emit("close");
+  assert.equal(
+    bridgeRequestFixture(bridge, "POST", "/runtime/shutdown", owner).res.status,
+    200,
+  );
+  assert.equal(bridgeRequestFixture(bridge, "GET", "/status").res.status, 503);
+  assert.equal(
+    bridgeRequestFixture(bridge, "POST", "/chat", {
+      "content-type": "application/json",
+    }).res.status,
+    503,
+  );
+  assert.equal(calls, 0);
+});
+
+test("owned bridge nonce must be a fixed generated hex identifier", () => {
+  for (const ownerNonce of [
+    "fake",
+    "a".repeat(63),
+    "z".repeat(64),
+    "a\n".repeat(32),
+  ])
+    assert.throws(() => createGeminiBridge({ ownerNonce }), /归属/);
+});
+
+for (const scenario of ["exit7", "timeout"] as const) {
+  test(
+    "real controlled CLI " + scenario + " cannot publish JSON as success",
+    { timeout: 10000 },
+    async (t) => {
+      const children: ReturnType<typeof spawn>[] = [];
+      let output = "";
+      const bridge = createGeminiBridge({
+        timeoutMs: 2000,
+        readFileImpl: fakeReadFile,
+        spawnImpl: (
+          _command: string,
+          args: string[],
+          options: Parameters<typeof spawn>[2],
+        ) => {
+          const npmRoot = args.some((arg) => arg.endsWith("npm-cli.js"));
+          const script = npmRoot
+            ? "console.log('C:/fixture/node_modules')"
+            : "console.log(JSON.stringify({response:'partial fixture text',session_id:'fixture-session'}));" +
+              (scenario === "exit7"
+                ? "process.exitCode=7;"
+                : "setInterval(()=>{},1000);");
+          const child = spawn(process.execPath, ["-e", script], {
+            ...options,
+            env: { ...process.env, NODE_OPTIONS: "", NODE_PATH: "" },
+          });
+          children.push(child);
+          if (!npmRoot)
+            child.stdout?.on("data", (chunk) => {
+              output += String(chunk);
+            });
+          return child;
+        },
+      });
+      t.after(() => {
+        for (const child of children)
+          if (child.exitCode === null && child.signalCode === null)
+            child.kill();
+      });
+      const result = await bridge.handleChat({ prompt: "synthetic request" });
+      assert.match(output, /partial fixture text/);
+      assert.equal(
+        result.error?.code,
+        scenario === "exit7" ? "failed" : "timeout",
+      );
+      assert.equal(result.text, undefined);
+      assert.equal(result.sessionId, undefined);
+      if (scenario === "exit7")
+        assert.match(result.error?.message ?? "", /结果未确认/);
+      assert.ok(
+        children.every(
+          (child) => child.exitCode !== null || child.signalCode !== null,
+        ),
+      );
+    },
+  );
+}

@@ -7,6 +7,7 @@ import {
   assessGeneratedCandidate,
   assessWorktreeRemoval,
   buildRecoveryInventory,
+  defaultReclamationOutputDirectory,
   isContainedPath,
   validateApprovedCandidates,
   writeApplyResult,
@@ -18,6 +19,16 @@ import {
   loadWorktreePolicy,
   measureGeneratedBytes,
 } from "../../scripts/governance/worktree-policy.mjs";
+
+test("reclamation output defaults to the dated container output directory", () => {
+  assert.equal(
+    defaultReclamationOutputDirectory(
+      "D:/kk-studio/KK-Studio-2.0",
+      new Date("2026-10-12T00:00:00Z"),
+    ),
+    path.join("D:/kk-studio", "output", "2026-10-12-worktree-reclamation"),
+  );
+});
 
 test("worktree removal requires every task DONE and a main-reachable commit", () => {
   const base = {

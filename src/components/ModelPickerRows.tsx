@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import type { ModelKind } from "../features/models/modelCatalog";
+import { GOOGLE_CONNECTION_ID } from "../features/agent/googleAgentConfig";
 import {
   modelSelectionId,
   type ModelSelection,
@@ -9,7 +10,7 @@ import type { Entry } from "../features/models/modelMenuEntries";
 export default function ModelPickerRows({
   ordered,
   current,
-  scene,
+  kind,
   pins,
   emptyMessage,
   onChoose,
@@ -17,16 +18,30 @@ export default function ModelPickerRows({
 }: {
   ordered: Array<{ item: Entry; fuzzy: boolean }>;
   current?: ModelSelection;
-  scene: ModelKind;
+  kind?: ModelKind;
   pins: string[];
   emptyMessage: string;
   onChoose: (item: Entry) => void;
-  onTogglePin: (id: string) => void;
+  onTogglePin?: (id: string) => void;
 }) {
+  const listRef = useRef<HTMLDivElement>(null);
   const modelRefs = useRef<Array<HTMLButtonElement | null>>([]);
+  const focusAfterNavigation = useRef(false);
+  const disabledReason = (item: Entry) =>
+    item.selection?.source === "api" &&
+    item.selection.connectionId === GOOGLE_CONNECTION_ID
+      ? "请从对话的执行方式选择 Google Gemini"
+      : item.disabled;
   const isDisabled = (item: Entry) =>
-    Boolean(item.disabled) ||
-    Boolean(item.selection?.kind && item.selection.kind !== scene);
+    Boolean(disabledReason(item)) ||
+    Boolean(kind && item.selection?.kind && item.selection.kind !== kind);
+  const isSelected = (item: Entry) =>
+    item.checked ??
+    Boolean(
+      item.selection &&
+      current &&
+      modelSelectionId(item.selection) === modelSelectionId(current),
+    );
   const enabledIndexes = ordered.flatMap(({ item }, index) =>
     isDisabled(item) ? [] : [index],
   );
@@ -35,27 +50,38 @@ export default function ModelPickerRows({
     firstEnabledIndex >= 0 ? firstEnabledIndex : 0,
   );
   const orderedKey = ordered.map(({ item }) => item.id).join("|");
-  useEffect(() => {
-    setActiveIndex(firstEnabledIndex >= 0 ? firstEnabledIndex : 0);
+  useLayoutEffect(() => {
+    const next = firstEnabledIndex >= 0 ? firstEnabledIndex : 0;
+    setActiveIndex(next);
+    if (!focusAfterNavigation.current) return;
+    focusAfterNavigation.current = false;
+    const target =
+      modelRefs.current[next] ??
+      listRef.current
+        ?.closest('[role="menu"]')
+        ?.querySelector<HTMLButtonElement>(
+          ".kk-model-menu-head button:not(:disabled)",
+        );
+    target?.focus();
   }, [firstEnabledIndex, orderedKey]);
   return (
-    <div className="kk-model-menu-list">
+    <div ref={listRef} className="kk-model-menu-list">
       {ordered.map(({ item, fuzzy }, index) => (
         <div key={item.id} className="kk-model-menu-row">
           <button
             type="button"
-            role={item.selection ? "menuitemradio" : "menuitem"}
+            role={
+              item.selection || item.checked !== undefined
+                ? "menuitemradio"
+                : "menuitem"
+            }
             aria-checked={
-              item.selection
-                ? Boolean(
-                    current &&
-                    modelSelectionId(item.selection) ===
-                      modelSelectionId(current),
-                  )
+              item.selection || item.checked !== undefined
+                ? isSelected(item)
                 : undefined
             }
             aria-disabled={isDisabled(item) || undefined}
-            title={item.disabled ?? item.detail}
+            title={disabledReason(item) ?? item.detail}
             tabIndex={index === activeIndex ? 0 : -1}
             ref={(node) => {
               modelRefs.current[index] = node;
@@ -85,7 +111,9 @@ export default function ModelPickerRows({
               modelRefs.current[next]?.focus();
             }}
             onClick={() => {
-              if (!isDisabled(item)) onChoose(item);
+              if (isDisabled(item)) return;
+              focusAfterNavigation.current = Boolean(item.page);
+              onChoose(item);
             }}
           >
             <span className="kk-model-choice-name">
@@ -94,26 +122,25 @@ export default function ModelPickerRows({
             </span>
             <small>
               {fuzzy ? "可能匹配 · " : ""}
-              {item.disabled ?? item.detail}
+              {disabledReason(item) ?? item.detail}
             </small>
-            {item.selection &&
-              current &&
-              modelSelectionId(item.selection) ===
-                modelSelectionId(current) && (
-                <span className="kk-model-check" aria-hidden="true">
-                  ✓
-                </span>
-              )}
+            {isSelected(item) && (
+              <span className="kk-model-check" aria-hidden="true">
+                ✓
+              </span>
+            )}
           </button>
-          <button
-            type="button"
-            className="kk-model-pin"
-            aria-label={`${pins.includes(item.id) ? "取消置顶" : "置顶"} ${item.label}${item.detail ? `（${item.detail}）` : ""}`}
-            aria-pressed={pins.includes(item.id)}
-            onClick={() => onTogglePin(item.id)}
-          >
-            ☆
-          </button>
+          {onTogglePin && (
+            <button
+              type="button"
+              className="kk-model-pin"
+              aria-label={`${pins.includes(item.id) ? "取消置顶" : "置顶"} ${item.label}${item.detail ? `（${item.detail}）` : ""}`}
+              aria-pressed={pins.includes(item.id)}
+              onClick={() => onTogglePin(item.id)}
+            >
+              ☆
+            </button>
+          )}
         </div>
       ))}
       {!ordered.length && <p>{emptyMessage}</p>}

@@ -3,6 +3,12 @@ import path from "node:path";
 import { createRequire } from "node:module";
 import { createHash, randomUUID } from "node:crypto";
 import { fileURLToPath } from "node:url";
+import { execFile } from "node:child_process";
+import { promisify } from "node:util";
+import { setTimeout as wait } from "node:timers/promises";
+import { prepareProductionAgent } from "./production-install.mjs";
+
+const execFileAsync = promisify(execFile);
 
 const ownDirectory = path.dirname(fileURLToPath(import.meta.url));
 const excluded =
@@ -76,6 +82,15 @@ export async function packageAgentRuntime({
         }
       }
       if (!location) {
+        if (
+          pkg.name === "@openai/codex" &&
+          name === "@openai/codex-" + process.platform + "-" + process.arch
+        )
+          throw Error(
+            "Missing Codex runtime dependency: " +
+              name +
+              ". Repair the isolated Agent production installation before packaging.",
+          );
         if (Object.hasOwn(optional, name)) continue;
         throw Error(`Missing production dependency: ${name}`);
       }
@@ -98,6 +113,10 @@ export async function packageAgentRuntime({
   await copyFile(
     path.join(ownDirectory, "desktop-entry.mjs"),
     "desktop-entry.mjs",
+  );
+  await copyFile(
+    path.join(ownDirectory, "../gemini-bridge.mjs"),
+    "gemini-bridge.mjs",
   );
   await copyTree(path.join(agent, "dist"), "agent/dist");
   await copyFile(
@@ -123,6 +142,46 @@ export async function packageAgentRuntime({
     sha256: createHash("sha256").update(data).digest("hex"),
   });
   await dependencies(agent);
+  if (
+    metadata.dependencies?.["@openai/codex"] ||
+    metadata.optionalDependencies?.["@openai/codex"]
+  ) {
+    const codexPackage = createRequire(metadataPath).resolve(
+      "@openai/codex/package.json",
+    );
+    const codexVersion = JSON.parse(
+      await fs.readFile(codexPackage, "utf8"),
+    ).version;
+    const entry = path.join(path.dirname(codexPackage), "bin", "codex.js");
+    const packagedNode = path.join(
+      target,
+      process.platform === "win32" ? "node.exe" : "node",
+    );
+    try {
+      for (const args of [
+        ["--version"],
+        ["login", "--help"],
+        ["app-server", "--help"],
+      ]) {
+        const { stdout } = await execFileAsync(packagedNode, [entry, ...args], {
+          timeout: 15000,
+          maxBuffer: 64 * 1024,
+          windowsHide: true,
+        });
+        const valid =
+          args[0] === "--version"
+            ? stdout.trim() === "codex-cli " + codexVersion
+            : stdout.includes("Usage: codex " + args[0]) &&
+              (args[0] !== "app-server" || stdout.includes("--stdio"));
+        if (!valid) throw Error("Unexpected Codex version/help response");
+      }
+    } catch (cause) {
+      throw new Error(
+        "Packaged Codex version/help verification failed. Repair the Agent production installation before shipping.",
+        { cause },
+      );
+    }
+  }
   files.sort((left, right) => left.path.localeCompare(right.path));
   const manifest = {
     schemaVersion: 1,
@@ -139,27 +198,139 @@ export async function packageAgentRuntime({
   return manifest;
 }
 
+async function publicationEntry(target) {
+  try {
+    return await fs.lstat(target);
+  } catch (error) {
+    if (error.code === "ENOENT") return null;
+    throw error;
+  }
+}
+async function publicationDirectory(target) {
+  const entry = await publicationEntry(target);
+  if (!entry?.isDirectory() || entry.isSymbolicLink())
+    throw Error(
+      `Runtime publication directory is missing or a link: ${target}`,
+    );
+  if (path.relative(target, await fs.realpath(target)))
+    throw Error(`Runtime publication path must not contain a link: ${target}`);
+  return entry;
+}
+async function renamePublication(source, target, parents, rename, expected) {
+  let failure;
+  for (const delay of [0, 150, 300, 600, 900]) {
+    if (delay) await wait(delay);
+    for (const directory of parents) await publicationDirectory(directory);
+    const current = await publicationDirectory(source);
+    if (current.dev !== expected.dev || current.ino !== expected.ino)
+      throw Error(`Runtime publication source identity changed: ${source}`);
+    if (await publicationEntry(target))
+      throw Error(`Runtime publication destination exists: ${target}`);
+    try {
+      // Windows directory rename refuses an existing destination atomically.
+      await rename(source, target);
+      return;
+    } catch (error) {
+      if (!["EPERM", "EBUSY"].includes(error.code)) throw error;
+      failure = error;
+    }
+  }
+  throw failure;
+}
+
+/**
+ * Publish only this invocation's candidate; failed candidates remain recoverable.
+ * @param {{root: string, staging: string, rename?: (source: string, target: string) => Promise<void>}} options
+ */
+export async function publishAgentRuntime({
+  root,
+  staging,
+  rename = fs.rename,
+}) {
+  if (process.platform !== "win32")
+    throw Error("Safe runtime publication requires Windows directory rename.");
+  if (!path.isAbsolute(root) || !path.isAbsolute(staging))
+    throw Error("Runtime publication paths must be absolute.");
+  root = path.resolve(root);
+  staging = path.resolve(staging);
+  const temporary = path.join(root, ".tmp"),
+    native = path.join(root, "src-tauri"),
+    runtime = path.join(native, "agent-runtime"),
+    parents = [root, temporary, native];
+  for (const directory of parents) await publicationDirectory(directory);
+  if (
+    path.dirname(staging) !== temporary ||
+    !/^agent-runtime-[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/i.test(
+      path.basename(staging),
+    )
+  )
+    throw Error("Runtime publication requires an owned staging directory.");
+  const candidate = await publicationDirectory(staging);
+  const previous = await publicationEntry(runtime);
+  let backup;
+  if (previous) {
+    await publicationDirectory(runtime);
+    backup = path.join(temporary, `agent-runtime-previous-${randomUUID()}`);
+    await renamePublication(runtime, backup, parents, rename, previous);
+  }
+  try {
+    await renamePublication(staging, runtime, parents, rename, candidate);
+  } catch (cause) {
+    let restored = false;
+    try {
+      if (backup && !(await publicationEntry(runtime))) {
+        await renamePublication(backup, runtime, parents, rename, previous);
+        restored = true;
+      }
+    } catch (rollback) {
+      throw new AggregateError(
+        [cause, rollback],
+        `Runtime publication rollback failed; staging preserved at ${staging}; previous runtime preserved at ${backup}.`,
+        { cause: rollback },
+      );
+    }
+    if (restored) {
+      throw new Error(
+        `Runtime publication failed; previous runtime restored; staging preserved at ${staging}.`,
+        { cause },
+      );
+    }
+    throw new Error(
+      `Runtime publication failed: ${cause.message}; staging preserved at ${staging}; backup preserved at ${backup ?? "none"}.`,
+      { cause },
+    );
+  }
+}
+
 if (
   process.argv[1] &&
   path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)
 ) {
   const root = path.resolve(ownDirectory, "../..");
   const staging = path.join(root, ".tmp", `agent-runtime-${randomUUID()}`);
-  const manifest = await packageAgentRuntime({
+  const agent = await prepareProductionAgent({
     agent: path.join(root, "vendor/canvas-agent"),
+    temporaryRoot: path.join(root, ".tmp"),
+  });
+  const manifest = await packageAgentRuntime({
+    agent,
     target: staging,
     node: process.execPath,
   });
-  const runtime = path.join(root, "src-tauri/agent-runtime");
-  if (await fs.lstat(runtime).catch(() => null)) {
-    if ((await fs.lstat(runtime)).isSymbolicLink())
-      throw Error("Runtime destination must not be a link");
-    await fs.rename(
-      runtime,
-      path.join(root, ".tmp", `agent-runtime-previous-${randomUUID()}`),
-    );
+  if (process.platform === "win32") {
+    await publishAgentRuntime({ root, staging });
+  } else {
+    const runtime = path.join(root, "src-tauri/agent-runtime");
+    if (await fs.lstat(runtime).catch(() => null)) {
+      if ((await fs.lstat(runtime)).isSymbolicLink())
+        throw Error("Runtime destination must not be a link");
+      await fs.rename(
+        runtime,
+        path.join(root, ".tmp", `agent-runtime-previous-${randomUUID()}`),
+      );
+    }
+    await fs.rename(staging, runtime);
   }
-  await fs.rename(staging, runtime);
   console.log(
     `Agent runtime packaged: ${manifest.files.length} files, ${manifest.platform}/${manifest.arch}.`,
   );
