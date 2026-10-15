@@ -1,4 +1,9 @@
 import { z } from "zod";
+import {
+  localChatModelPackages,
+  localVideoModelPackages,
+  planLocalModelDownloads,
+} from "./localModelPackages.ts";
 
 const bytes = z.number().int().nonnegative().max(Number.MAX_SAFE_INTEGER);
 const label = z
@@ -102,41 +107,6 @@ export type LocalHardwareReport = z.infer<typeof localHardwareReportSchema>;
 const GiB = 1024 ** 3;
 const reserveRamBytes = 4 * GiB;
 const reserveVramBytes = 2 * GiB;
-const modelCatalog = [
-  {
-    id: "qwen3.5-9b-q4-k-m",
-    name: "Qwen3.5-9B Q4_K_M",
-    repository: "unsloth/Qwen3.5-9B-GGUF",
-    revision: "3885219b6810b007914f3a7950a8d1b469d598a5",
-    filename: "Qwen3.5-9B-Q4_K_M.gguf",
-    mainBytes: 5_680_522_464,
-    visionBytes: 918_166_080,
-    contextTokens: 8192,
-    estimatedRamBytes: 8 * GiB,
-  },
-  {
-    id: "qwen3.5-4b-q4-k-m",
-    name: "Qwen3.5-4B Q4_K_M",
-    repository: "unsloth/Qwen3.5-4B-GGUF",
-    revision: "e87f176479d0855a907a41277aca2f8ee7a09523",
-    filename: "Qwen3.5-4B-Q4_K_M.gguf",
-    mainBytes: 2_740_937_888,
-    visionBytes: 672_423_616,
-    contextTokens: 4096,
-    estimatedRamBytes: 6 * GiB,
-  },
-  {
-    id: "qwen3.8-27b-ud-q4-k-m",
-    name: "Qwen3.8-27B UD-Q4_K_M",
-    repository: "unsloth/Qwen3.8-27B-GGUF",
-    revision: "4ca720788d1e01f1bff70c033e0d0028fd02e502",
-    filename: "Qwen3.8-27B-UD-Q4_K_M.gguf",
-    mainBytes: 16_464_440_224,
-    visionBytes: 927_607_488,
-    contextTokens: 4096,
-    estimatedRamBytes: 21 * GiB,
-  },
-] as const;
 
 type RecommendationReason =
   | "unsupported-platform"
@@ -188,7 +158,7 @@ export function recommendLocalModels(
     .strict()
     .parse(options);
   const resources = resourceReasons(report, diskDrive, nowMs);
-  const profiles = modelCatalog.map((entry, index) => {
+  const profiles = localChatModelPackages.map((entry, index) => {
     const optional = index === 2;
     const downloadBytes = entry.mainBytes + entry.visionBytes;
     // File bytes omit cache/buffers; these reserves are policy estimates, never measured peaks.
@@ -219,9 +189,6 @@ export function recommendLocalModels(
     return {
       model: {
         ...entry,
-        license: "Apache-2.0",
-        maintainer: "Unsloth",
-        sourceUrl: `https://huggingface.co/${entry.repository}/tree/${entry.revision}`,
         text: "declared",
         vision: "declared",
         imageGeneration: false,
@@ -259,6 +226,7 @@ export function recommendLocalModels(
     })),
     manualSelectionAllowed: true,
     installationValidationRequired: true,
+    videoPackages: recommendVideoPackages(report, resources),
     agentFramework: {
       name: "Qwen-Agent",
       kind: "framework",
@@ -289,4 +257,70 @@ export function recommendLocalModels(
       },
     ],
   };
+}
+
+function recommendVideoPackages(
+  report: LocalHardwareReport,
+  resources: ReturnType<typeof resourceReasons>,
+) {
+  const gpus = report.gpus.filter(
+    (item) => item.computeBackend === "cuda-reported",
+  );
+  const guidanceUnknown =
+    report.status !== "supported" ||
+    resources.reasons.includes("stale-report") ||
+    resources.reasons.includes("runtime-architecture-unverified") ||
+    report.memory === null ||
+    !gpus.some((item) => item.dedicatedBytes !== null);
+  return localVideoModelPackages.map((entry) => {
+    const capableGpus = gpus.filter(
+      (item) => (item.dedicatedBytes ?? 0) >= entry.declaredMinVramBytes,
+    );
+    const capacityStatus = guidanceUnknown
+      ? ("unknown" as const)
+      : capableGpus.length &&
+          report.memory!.usableBytes >= entry.declaredMinRamBytes
+        ? ("candidate" as const)
+        : ("below-guidance" as const);
+    const downloadBytes = planLocalModelDownloads([entry.id]).downloadBytes;
+    const requiredDiskBytes = 2 * downloadBytes + 2 * GiB;
+    const diskUnknown =
+      !resources.selectedDisk || resources.reasons.includes("stale-report");
+    const installationSpace = diskUnknown
+      ? ("unknown" as const)
+      : resources.selectedDisk!.freeBytes >= requiredDiskBytes
+        ? ("sufficient" as const)
+        : ("insufficient" as const);
+    const warnings: string[] = [
+      "runtime-and-node-validation-required",
+      "derivative-license-review-required",
+    ];
+    const free = capableGpus.reduce<number | null>(
+      (best, item) =>
+        item.freeBytes === null ? best : Math.max(best ?? 0, item.freeBytes),
+      null,
+    );
+    // Publisher's 16GB/32GB profile leaves ~2GB GPU/~10GB RAM; these are not measured peaks.
+    if (free === null) warnings.push("unknown-current-vram");
+    else if (free < 14_000_000_000) warnings.push("busy-gpu");
+    if (report.memory === null) warnings.push("unknown-current-ram");
+    else if (report.memory.availableBytes < 22_000_000_000)
+      warnings.push("busy-ram");
+    return {
+      id: entry.id,
+      name: entry.name,
+      sourceUrl: entry.sourceUrl,
+      revision: entry.revision,
+      maintainer: entry.maintainer,
+      license: entry.license,
+      defaultMode: entry.defaultMode,
+      downloadBytes,
+      requiredDiskBytes,
+      capacityStatus,
+      installationSpace,
+      warnings,
+      runtimeAcceptance: entry.runtimeAcceptance,
+      canStart: false as const,
+    };
+  });
 }

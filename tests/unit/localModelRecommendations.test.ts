@@ -250,3 +250,66 @@ test("driver and reported compute metadata remain nullable and never imply runti
     "unverified",
   );
 });
+
+test("a busy 16GB PC can be an H3 installation candidate without being ready to run", () => {
+  const report = hardware();
+  report.gpus[0].freeBytes = 3 * GiB;
+  const result = recommendLocalModels(report, options);
+  const h3 = result.videoPackages.find(
+    (p) => p.id === "minimax-h3-16g-hifi-fl2va",
+  )!;
+  assert.equal(h3.capacityStatus, "candidate");
+  assert.equal(h3.runtimeAcceptance, "unverified");
+  assert.ok(h3.warnings.includes("busy-gpu"));
+  assert.equal(h3.downloadBytes, 64_730_399_025);
+  assert.equal(h3.canStart, false);
+  assert.equal(result.manualSelectionAllowed, true);
+});
+
+test("H3 capacity is per GPU, independent of current free memory and never sums cards", () => {
+  const report = hardware();
+  report.gpus = [
+    { ...report.gpus[0], dedicatedBytes: 8 * GiB, freeBytes: 7 * GiB },
+    { ...report.gpus[0], dedicatedBytes: 8 * GiB, freeBytes: 7 * GiB },
+  ];
+  const result = recommendLocalModels(report, options);
+  assert.ok(
+    result.videoPackages.every((p) => p.capacityStatus === "below-guidance"),
+  );
+  report.gpus[0].dedicatedBytes = 16 * GiB;
+  report.memory!.usableBytes = 24 * GiB;
+  report.memory!.availableBytes = 20 * GiB;
+  assert.ok(
+    recommendLocalModels(report, options).videoPackages.every(
+      (p) => p.capacityStatus === "below-guidance",
+    ),
+  );
+});
+
+test("H3 disk, stale and missing probes remain distinct from author hardware guidance", () => {
+  const report = hardware();
+  report.disks[0].freeBytes = 20 * GiB;
+  let result = recommendLocalModels(report, options);
+  assert.equal(result.videoPackages[0].capacityStatus, "candidate");
+  assert.equal(result.videoPackages[0].installationSpace, "insufficient");
+  report.measuredAtMs = now - 60_001;
+  result = recommendLocalModels(report, options);
+  assert.ok(result.videoPackages.every((p) => p.capacityStatus === "unknown"));
+  assert.ok(result.videoPackages.every((p) => p.canStart === false));
+});
+
+test("unknown free VRAM does not erase known H3 capacity or pretend runtime readiness", () => {
+  const report = hardware();
+  report.gpus[0].freeBytes = null;
+  const result = recommendLocalModels(report, options);
+  assert.equal(result.preferredId, null);
+  assert.equal(result.videoPackages[0].capacityStatus, "candidate");
+  assert.ok(result.videoPackages[0].warnings.includes("unknown-current-vram"));
+  assert.equal(result.videoPackages[0].canStart, false);
+  report.gpus = [];
+  assert.ok(
+    recommendLocalModels(report, options).videoPackages.every(
+      (p) => p.capacityStatus === "unknown",
+    ),
+  );
+});
