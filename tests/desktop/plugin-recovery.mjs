@@ -4,6 +4,7 @@ import { execFileSync, spawn } from "node:child_process";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { chromium, expect } from "@playwright/test";
+import { allocateTestEvidenceRun } from "../../scripts/testing/test-evidence.mjs";
 import {
   addAndEditBundledPlugins,
   bundledPlugins,
@@ -12,9 +13,9 @@ import {
 
 const root = process.cwd();
 const executable = path.join(root, "src-tauri/target/release/kk-studio.exe");
-const evidenceDir =
-  process.env.KK_PLUGIN_EVIDENCE_DIR ??
-  path.join(root, "test-results/desktop/plugin-recovery", String(Date.now()));
+const evidenceDir = allocateTestEvidenceRun("desktop-plugin-recovery", {
+  directory: process.env.KK_PLUGIN_EVIDENCE_DIR,
+}).directory;
 const dataRoot = path.join(evidenceDir, "isolated/data");
 const profile = path.join(evidenceDir, "isolated/webview-profile");
 const snapshotPath = path.join(dataRoot, "projects/creation-v2.json");

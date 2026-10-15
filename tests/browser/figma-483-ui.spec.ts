@@ -199,10 +199,18 @@ test("Figma 483 画布输入与模型菜单采用独立尺寸", async ({ page })
   await page.locator(".image-preview").click();
   const composer = page.getByTestId("image-composer");
   await page.screenshot({
-    path: "test-results/changes/2026-09-24-ui-regression/evidence/web-canvas-composer-1440.png",
+    path: test
+      .info()
+      .outputPath(
+        "changes/2026-09-24-ui-regression/evidence/web-canvas-composer-1440.png",
+      ),
   });
   await composer.screenshot({
-    path: "test-results/changes/2026-09-24-ui-regression/evidence/web-canvas-composer-component.png",
+    path: test
+      .info()
+      .outputPath(
+        "changes/2026-09-24-ui-regression/evidence/web-canvas-composer-component.png",
+      ),
   });
   const frame = (await composer.boundingBox())!;
   expect(frame.width).toBe(590);
@@ -246,10 +254,18 @@ test("Figma 483 画布输入与模型菜单采用独立尺寸", async ({ page })
   expect(box.height).toBeGreaterThan(64);
   expect(box.height).toBeLessThanOrEqual(520);
   await page.screenshot({
-    path: "test-results/changes/2026-09-24-ui-regression/evidence/web-canvas-composer-model-1440.png",
+    path: test
+      .info()
+      .outputPath(
+        "changes/2026-09-24-ui-regression/evidence/web-canvas-composer-model-1440.png",
+      ),
   });
   await menu.screenshot({
-    path: "test-results/changes/2026-09-24-ui-regression/evidence/web-canvas-model-menu-component.png",
+    path: test
+      .info()
+      .outputPath(
+        "changes/2026-09-24-ui-regression/evidence/web-canvas-model-menu-component.png",
+      ),
   });
   const title = (await menu
     .locator(".kk-model-menu-top > strong")

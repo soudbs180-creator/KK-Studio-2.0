@@ -51,13 +51,21 @@ test("开启记忆后显示共享状态、提炼入口与空态", async ({ page 
   await expect(extract).toBeDisabled();
   await page.locator(".settings-feedback button").click();
   await page.screenshot({
-    path: "test-results/changes/2026-09-24-local-memory/evidence/memory-enabled-web.png",
+    path: test
+      .info()
+      .outputPath(
+        "changes/2026-09-24-local-memory/evidence/memory-enabled-web.png",
+      ),
   });
   await dialog.locator(".settings-content").evaluate((element) => {
     element.scrollTop = element.scrollHeight;
   });
   await page.screenshot({
-    path: "test-results/changes/2026-09-24-local-memory/evidence/memory-list-web.png",
+    path: test
+      .info()
+      .outputPath(
+        "changes/2026-09-24-local-memory/evidence/memory-list-web.png",
+      ),
   });
 });
 
@@ -100,7 +108,11 @@ test("390 宽度下记忆设置仍可滚动访问按钮和列表", async ({ page
   await expect(dialog.getByText("暂无记忆", { exact: true })).toBeVisible();
   await page.locator(".settings-feedback button").click();
   await page.screenshot({
-    path: "test-results/changes/2026-09-24-local-memory/evidence/memory-enabled-390.png",
+    path: test
+      .info()
+      .outputPath(
+        "changes/2026-09-24-local-memory/evidence/memory-enabled-390.png",
+      ),
   });
 });
 

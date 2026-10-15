@@ -10,10 +10,14 @@ test("资产搜索、空态恢复、列表、紧凑视图及创建主体", async
   await expect(panel).toBeVisible();
   await expect(panel).toHaveCSS("width", "900px");
   await expect(panel).toHaveCSS("height", "696px");
-  await panel.screenshot({ path: "test-results/runtime/assets-desktop.png" });
+  await panel.screenshot({
+    path: test.info().outputPath("runtime/assets-desktop.png"),
+  });
   await page.getByRole("textbox", { name: "搜索文件" }).fill("找不到");
   await expect(page.getByText("没有找到匹配的资产")).toBeVisible();
-  await panel.screenshot({ path: "test-results/runtime/assets-empty.png" });
+  await panel.screenshot({
+    path: test.info().outputPath("runtime/assets-empty.png"),
+  });
   await page.getByRole("button", { name: "清除筛选", exact: true }).click();
   await expect(page.locator(".asset-card")).toHaveCount(9);
   await page.getByLabel("类型筛选").selectOption("video");
@@ -37,7 +41,9 @@ test("资产搜索、空态恢复、列表、紧凑视图及创建主体", async
       .locator(".asset-content")
       .evaluate((e) => e.scrollHeight > e.clientHeight),
   ).toBe(true);
-  await panel.screenshot({ path: "test-results/runtime/assets-compact.png" });
+  await panel.screenshot({
+    path: test.info().outputPath("runtime/assets-compact.png"),
+  });
   await page.getByRole("tab", { name: "资产", exact: true }).click();
   await page.getByRole("button", { name: "创建主体", exact: true }).click();
   await page.getByPlaceholder("例如：品牌代言人").fill("测试角色");
@@ -57,9 +63,9 @@ test("设置主题保存重载、键盘关闭及导航", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   await expect(page.getByRole("dialog", { name: "设置" })).toBeVisible();
-  await page
-    .getByRole("dialog")
-    .screenshot({ path: "test-results/runtime/settings-integrated.png" });
+  await page.getByRole("dialog").screenshot({
+    path: test.info().outputPath("runtime/settings-integrated.png"),
+  });
   await page.getByLabel("主题", { exact: true }).selectOption("light");
   await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
   await page.reload();
@@ -138,9 +144,9 @@ test("模型接入使用 API 地址，连接状态真实且密钥不落盘", asy
   await expect(
     page.getByText("已获取 0 个模型；生成能力仍需实际验证。", { exact: true }),
   ).toBeVisible();
-  await page
-    .getByRole("dialog", { name: "设置" })
-    .screenshot({ path: "test-results/runtime/settings-model-provider.png" });
+  await page.getByRole("dialog", { name: "设置" }).screenshot({
+    path: test.info().outputPath("runtime/settings-model-provider.png"),
+  });
   await page.reload();
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   await page.getByRole("button", { name: "模型接入", exact: true }).click();
@@ -384,9 +390,9 @@ test("无限画布隐藏滚动条，卡片拖动时连接线跟随", async ({ pa
       width: 590,
       height: 237,
     });
-  await page
-    .getByTestId("image-composer")
-    .screenshot({ path: "test-results/runtime/image-composer-selected.png" });
+  await page.getByTestId("image-composer").screenshot({
+    path: test.info().outputPath("runtime/image-composer-selected.png"),
+  });
   await videoPreviews.nth(0).click();
   await expect(page.getByTestId("image-composer")).toHaveCount(0);
   const imageNode = page.getByTestId("canvas-node-image");
@@ -499,7 +505,9 @@ test("画布新增卡片可拖动删除，喜欢内容同步到独立面板", as
   const added = page.locator("[data-testid^='canvas-node-added-image-']");
   await expect(added).toHaveCount(1);
   await expect(page.getByTestId("image-composer")).toBeVisible();
-  await page.screenshot({ path: "test-results/runtime/canvas-added-card.png" });
+  await page.screenshot({
+    path: test.info().outputPath("runtime/canvas-added-card.png"),
+  });
   await expect(page.getByRole("toolbar", { name: /^图片操作：/ })).toHaveCount(
     0,
   );
@@ -516,7 +524,7 @@ test("画布新增卡片可拖动删除，喜欢内容同步到独立面板", as
     likes.locator(".saved-like-card").getByText("blue-hour.png"),
   ).toBeVisible();
   await page.screenshot({
-    path: "test-results/runtime/collection-from-canvas.png",
+    path: test.info().outputPath("runtime/collection-from-canvas.png"),
   });
   await likes.locator(".saved-like-card .saved-text").click();
   await expect(added).toBeVisible();
@@ -631,7 +639,7 @@ for (const [width, height] of [
     await page.setViewportSize({ width, height });
     await openWorkspace(page);
     await page.screenshot({
-      path: `test-results/runtime/workspace-${width}.png`,
+      path: test.info().outputPath(`runtime/workspace-${width}.png`),
     });
     expect(
       await page.evaluate(() => document.documentElement.scrollWidth),
@@ -642,7 +650,9 @@ for (const [width, height] of [
     expect(box!.x + box!.width).toBeLessThanOrEqual(width);
     await page.getByRole("textbox", { name: "搜索文件" }).fill("冷风");
     await expect(page.locator(".asset-card").first()).toBeVisible();
-    await page.screenshot({ path: `test-results/runtime/assets-${width}.png` });
+    await page.screenshot({
+      path: test.info().outputPath(`runtime/assets-${width}.png`),
+    });
     await page.keyboard.press("Escape");
     await page.getByRole("button", { name: "打开设置", exact: true }).click();
     const dialog = page.getByRole("dialog");
@@ -650,7 +660,7 @@ for (const [width, height] of [
     expect(bounds!.x).toBeGreaterThanOrEqual(0);
     expect(bounds!.x + bounds!.width).toBeLessThanOrEqual(width);
     await page.screenshot({
-      path: `test-results/runtime/settings-${width}.png`,
+      path: test.info().outputPath(`runtime/settings-${width}.png`),
     });
   });
 }

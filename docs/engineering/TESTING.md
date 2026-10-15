@@ -10,10 +10,10 @@
 
 | 目录 | 数量 | 运行器 | 证明什么 |
 | --- | --- | --- | --- |
-| `tests/unit/` | 170 文件 | `node --test` | 领域规则、纯函数、序列化、契约边界 |
+| `tests/unit/` | 173 文件 | `node --test` | 领域规则、纯函数、序列化、契约边界 |
 | `tests/deploy/` | 2 文件 | `node --test` | 发布脚本、回滚流程 |
-| `tests/browser/` | 117 文件 | Playwright（Edge） | 真实渲染、交互、布局、视觉回归 |
-| `tests/desktop/` | 22 文件（`.mjs` / `.ps1`） | `node` / `powershell` | Tauri 宿主、安装器、窗口、原生能力 |
+| `tests/browser/` | 120 文件 | Playwright（Edge） | 真实渲染、交互、布局、视觉回归 |
+| `tests/desktop/` | 24 文件（`.mjs` / `.ps1`） | `node` / `powershell` | Tauri 宿主、安装器、窗口、原生能力 |
 | `tests/local-service/` | 2 文件 | `node` | 本地服务 HTTP 集成与生产冒烟 |
 | `tests/development/` | 1 文件 | `node` | 插件装载等开发态行为 |
 | `tests/helpers/` | `agentServer.ts`、`designSystem.ts` | 被引用 | 共享夹具，禁止含断言 |
@@ -33,7 +33,7 @@
 | 命令 | 覆盖 |
 | --- | --- |
 | `npm test` | `tests/unit/*.test.ts` + `tests/deploy/*.test.mjs` |
-| `npm run test:ui` | 先 `npm run build`，再 Playwright 跑 `tests/browser/` |
+| `npm run test:ui` | 先 `npm run plugins:build` 与 `npm run build`，再 Playwright 跑 `tests/browser/` |
 | `npm run test:agent` | `vendor/canvas-agent` 自身测试 |
 | `npm run local-service:test` / `local-service:smoke` | 本地服务集成 / 生产冒烟 |
 | `npm run test:development` | 插件装载 |
@@ -42,7 +42,7 @@
 
 `npm run verify` 是合并前的**主闸门**，串联 lint、typecheck、test、agent:build、test:agent、ui:check、format:check、test:ui、test:development 共 9 步；Agent 必须真实编译通过，不能只用可执行 TS 测试代替构建。
 
-它**不包含**：Rust/cargo 检查、`tests/desktop/`（22 个 `.mjs`/`.ps1`）、`tests/local-service/`、`tests/proxy`、`test:gateway`。涉及 Desktop、Rust、本地服务或真实外部服务的改动必须按本文件「桌面与 Rust 测试」与 [DEVELOPMENT](DEVELOPMENT.md) 单独补跑相应检查。
+它**不包含**：Rust/cargo 检查、`tests/desktop/`（24 个 `.mjs`/`.ps1`）、`tests/local-service/`、`tests/proxy`、`test:gateway`。涉及 Desktop、Rust、本地服务或真实外部服务的改动必须按本文件「桌面与 Rust 测试」与 [DEVELOPMENT](DEVELOPMENT.md) 单独补跑相应检查。
 
 只跑 `npm test` 不构成完整验证；只通过构建也不构成验收。
 
@@ -60,7 +60,7 @@
 | `timeout` | 30000 |
 | `retries` | 1 |
 | `reuseExistingServer` | `false` |
-| 报告 | `list` + `test-results/browser-results.json` |
+| 报告 | `list` + 每轮独立的 `test-results/browser/<run-id>/browser-results.json`，metadata记录源码HEAD |
 
 ### 端口
 
@@ -105,6 +105,9 @@
 - 固定夹具放 `tests/fixtures/`，修改夹具内容必须重跑受影响测试并更新证据，不允许「改了夹具沿用旧结论」。
 - 测试不得写生产目录。禁止把运行产物、日志、截图直接写进 `docs/`。
 - 需要清理输出目录时使用独立临时目录（如 `.tmp/pw-out-default`），不要清空被其他任务共用的 `test-results/`。
+- 显式浏览器截图必须在内联options中直接使用当前testInfo.outputPath，禁止固定写回test-results旧路径；单测AST守卫检查当前全部截图调用；quoted路径同等检查，条件/变量options/shorthand/spread未知形态失败关闭。控制进程分配唯一run并传给worker，报告和worker/重试产物须在同一run内。
+- 默认Playwright仅清理新建run目录中的`artifacts/`，不得把`test-results/`本身作为outputDir；旧报告、开发态receipt和截图留在原处。共享分配器通过独占mkdir拒绝已有目录、文件和链接，不自动清理历史证据。
+- 开发态默认写入`test-results/development-plugins/<run-id>/`，原生插件恢复写入`test-results/desktop-plugin-recovery/<run-id>/`；显式`KK_PLUGIN_EVIDENCE_DIR`必须是本次尚未存在的新目录，冲突在启动服务/客户端前失败。运行前仍须确认CLI覆盖参数及外部工具不会扩大清理范围；若会清理既有路径，先完整备份全部报告/回执/截图并核对清单和hash，不能只备份JSON摘要。
 
 ## 桌面与 Rust 测试
 
@@ -139,3 +142,9 @@ Desktop 侧：`tests/desktop/*.mjs` 覆盖安装器、窗口、原生菜单、�
 - [ ] 交付包 `verification.md` 已记录真实数字与运行身份。
 
 参考：[Node.js Test Runner](https://nodejs.org/docs/latest/api/test.html)、[Playwright Configuration](https://playwright.dev/docs/test-configuration)、[Rust 测试](https://doc.rust-lang.org/book/ch11-01-writing-tests.html)。
+
+### 测试证据保护回归
+
+`node tests/desktop/test-evidence-preservation.mjs`仅在Windows使用已经接入GDI保护的真实Edge，先校验保护再打开自有本地合成页面；正常/主动失败均核对旧PNG/report原字节、新真实PNG签名与report同run。probe使用独立临时profile、无Vite/用户数据/外部Provider，预期失败只属于夹具，脚本总体必须exit0。
+
+复用工作树或曾使用--ignore-scripts时，需完成既定postinstall的Agent和随包插件依赖/构建；UI与development测试入口先plugins:build，缺插件依赖须在浏览器前失败，不能把少四个插件菜单的环境误判为产品回归。

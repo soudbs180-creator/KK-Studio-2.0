@@ -146,7 +146,11 @@ test("模型前缀分组、参数选择和模糊搜索保留实际厂商 ID", as
       }),
     ).toBe(true);
     await page.screenshot({
-      path: `test-results/changes/2026-09-23-input-contract/evidence/${width}-${height}-variants.png`,
+      path: test
+        .info()
+        .outputPath(
+          `changes/2026-09-23-input-contract/evidence/${width}-${height}-variants.png`,
+        ),
     });
   }
   while (await composer.locator(".start-attachment-chip button").count())
@@ -320,7 +324,11 @@ test("分级菜单展示同名 API 图片模型、未知用途原因并保留账
     .getByRole("button", { name: "1536x1024 · 3:2", exact: true })
     .click();
   await page.screenshot({
-    path: "test-results/changes/2026-09-22-codex-default-agent/model-parameters.png",
+    path: test
+      .info()
+      .outputPath(
+        "changes/2026-09-22-codex-default-agent/model-parameters.png",
+      ),
   });
 });
 

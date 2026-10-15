@@ -31,7 +31,7 @@ test("独立喜欢面板可编辑、查找和移除，标签分类保持分开",
   await expect(tags.locator(".catalog-tag-card")).toHaveCount(0);
   await expect(likes).toBeVisible();
   await page.screenshot({
-    path: "test-results/evidence/catalog-saved-desktop.png",
+    path: test.info().outputPath("evidence/catalog-saved-desktop.png"),
     animations: "disabled",
   });
   await likes
@@ -91,7 +91,7 @@ test("视频编辑器只在选中时出现，参数与提示词在切换后保�
   await expect(editor).toBeVisible();
   await page.getByLabel("视频提示词").fill("猎豹在草原上奔跑");
   await page.screenshot({
-    path: "test-results/evidence/video-composer-desktop.png",
+    path: test.info().outputPath("evidence/video-composer-desktop.png"),
     animations: "disabled",
   });
   await page.getByRole("button", { name: "视频参数", exact: true }).click();
@@ -156,7 +156,9 @@ test("任务面板按 Runtime / Tasks 展示卡片，滚轮和 Escape 不影响�
     panel.getByRole("button", { name: "全部", exact: true }),
   ).toHaveCSS("min-height", "32px");
   await panel.screenshot({
-    path: "test-results/evidence/runtime-tasks-2026-09-11/task-panel.png",
+    path: test
+      .info()
+      .outputPath("evidence/runtime-tasks-2026-09-11/task-panel.png"),
     animations: "disabled",
   });
   await expect(panel.locator(".task-card")).toHaveCount(2);
@@ -202,7 +204,7 @@ test("整理画布与小地图可实际定位节点，导航控件不跟随画�
   const map = page.getByRole("region", { name: "画布小地图" });
   await expect(map).toBeVisible();
   await map.screenshot({
-    path: "test-results/evidence/canvas-minimap.png",
+    path: test.info().outputPath("evidence/canvas-minimap.png"),
     animations: "disabled",
   });
   await map.getByRole("button", { name: "定位 图片创建卡片" }).click();
@@ -304,7 +306,7 @@ for (const [width, height] of [
       ).toBe(true);
     }
     await panel.screenshot({
-      path: `test-results/evidence/catalog-${width}.png`,
+      path: test.info().outputPath(`evidence/catalog-${width}.png`),
       animations: "disabled",
     });
     const box = await panel.boundingBox();
