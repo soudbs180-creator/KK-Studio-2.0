@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
+import { executableDir } from "@tauri-apps/api/path";
 import { usesNativeAssets } from "../../features/creation/nativeAssetAdapter";
 import { readCompanionConnection } from "../../features/local-service/connection";
 import type { CreationProject } from "../../features/creation/model";
@@ -15,6 +16,8 @@ export default function StorageOverview({
   const [revision, refresh] = useState(0);
   const [info, setInfo] = useState({
     location: "读取中…",
+    installation: "读取中…",
+    native: false,
     usage: "未报告",
     quota: "未报告",
     error: "",
@@ -29,16 +32,22 @@ export default function StorageOverview({
         ? `${(value / 1024 / 1024).toFixed(1)} MiB`
         : "未报告";
     void (async () => {
-      if (usesNativeAssets())
+      if (usesNativeAssets()) {
+        const location = await invoke<string>("get_storage_root");
         return {
-          location: await invoke<string>("get_storage_root"),
+          location,
+          installation: await executableDir().catch(() => "未能读取，请重试"),
+          native: true,
           usage: "未报告",
           quota: "未报告",
           error: "",
         };
+      }
       if (companion?.enabled)
         return {
           location: `本机伴随服务 · ${companion.endpoint}`,
+          installation: "网页无需安装",
+          native: false,
           usage: "未报告",
           quota: "未报告",
           error: "",
@@ -46,6 +55,8 @@ export default function StorageOverview({
       const estimate = await navigator.storage?.estimate?.();
       return {
         location: `当前浏览器 · ${location.origin}`,
+        installation: "网页无需安装",
+        native: false,
         usage: bytes(estimate?.usage),
         quota: bytes(estimate?.quota),
         error: "",
@@ -58,6 +69,8 @@ export default function StorageOverview({
         if (active)
           setInfo({
             location: "读取失败",
+            installation: "未能读取",
+            native: false,
             usage: "未报告",
             quota: "未报告",
             error: "保存位置未能读取，请重试；现有项目与原件保留。",
@@ -88,8 +101,42 @@ export default function StorageOverview({
       </p>
       <div className="settings-detail-card">
         <div>
+          <span>客户端位置</span>
+          <strong>{info.installation}</strong>
+        </div>
+        <div>
           <span>保存位置</span>
           <strong>{info.location}</strong>
+        </div>
+        <div>
+          <span>项目保存位置</span>
+          <strong>
+            {info.native
+              ? `${info.location.replace(/[\\/]+$/, "")}/projects`
+              : info.location}
+          </strong>
+        </div>
+        <div>
+          <span>生成原件位置</span>
+          <strong>
+            {info.native
+              ? `${info.location.replace(/[\\/]+$/, "")}/assets`
+              : "与项目共用当前本地仓库"}
+          </strong>
+        </div>
+        <div>
+          <span>下载目录</span>
+          <strong>
+            {info.native ? "独立目录选择尚未接入" : "使用浏览器下载设置"}
+          </strong>
+        </div>
+        <div>
+          <span>磁盘缓存</span>
+          <strong>独立统计与清理尚未接入</strong>
+        </div>
+        <div>
+          <span>内存占用</span>
+          <strong>进程统计与管理尚未接入</strong>
         </div>
         <div>
           <span>当前项目记录</span>
@@ -110,6 +157,7 @@ export default function StorageOverview({
       </div>
       <p className="settings-section-intro">
         项目引用数量不代表完整资源库大小。浏览器估算包含本站所有本地数据；桌面文件和伴随服务占用未接入统计。
+        当前尚不支持从设置更改项目、生成与下载目录，也不会自动搬移或清理原件。
       </p>
       {info.error && <p role="alert">{info.error}</p>}
       <div className="settings-action-group">

@@ -90,16 +90,11 @@ for (const [width, height] of [
     for (const [name, heading] of [
       ["项目库", "项目库"],
       ["扩展", "扩展"],
-      ["ComfyUI 工作流", "ComfyUI 工作流"],
     ]) {
-      if (width < 768 && name === "ComfyUI 工作流")
-        await page.setViewportSize({ width: 834, height });
       await page
         .getByRole("navigation", { name: "主导航" })
         .getByRole("button", { name, exact: true })
         .click();
-      if (width < 768 && name === "ComfyUI 工作流")
-        await page.setViewportSize({ width, height });
       await expect(
         page.getByRole("heading", { name: heading, exact: true }),
       ).toBeVisible();

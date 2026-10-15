@@ -67,11 +67,19 @@ const GROUPS: Record<string, Shortcut[][]> = {
 };
 const TABS = Object.keys(GROUPS);
 
-export default function ShortcutsPanel({ onClose }: { onClose: () => void }) {
+export default function ShortcutsPanel({
+  onClose,
+  embedded = false,
+}: {
+  onClose?: () => void;
+  embedded?: boolean;
+}) {
   const [tab, setTab] = useState("全局");
   const [detail, setDetail] = useState("");
   return (
-    <section className={`shortcuts-panel ${tab === "画布" ? "is-canvas" : ""}`}>
+    <section
+      className={`shortcuts-panel ${tab === "画布" ? "is-canvas" : ""}${embedded ? " is-embedded" : ""}`}
+    >
       <header>
         <div
           role="tablist"
@@ -113,13 +121,15 @@ export default function ShortcutsPanel({ onClose }: { onClose: () => void }) {
             </button>
           ))}
         </div>
-        <button
-          className="shortcuts-close"
-          aria-label="关闭快捷键"
-          onClick={onClose}
-        >
-          ×
-        </button>
+        {!embedded && (
+          <button
+            className="shortcuts-close"
+            aria-label="关闭快捷键"
+            onClick={onClose}
+          >
+            ×
+          </button>
+        )}
       </header>
       <div
         className="shortcuts-body"

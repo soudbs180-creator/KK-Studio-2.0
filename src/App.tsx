@@ -27,10 +27,6 @@ import {
   requiredApprovalGates,
   type ApprovalGate,
 } from "./domain/agentWorkflow";
-import {
-  SETTINGS_SECTIONS,
-  type SettingsSection,
-} from "./components/settings/SettingsSectionData";
 import StartPage from "./components/StartPage";
 import { ensureTemplates } from "./features/skills/templateSkills";
 import {
@@ -220,11 +216,7 @@ import {
   DEFAULT_SETTINGS,
   type SettingsPreferences,
 } from "./domain/settings";
-import {
-  readLocalWorkflows,
-  writeLocalWorkflows,
-  type WorkflowRecord,
-} from "./features/comfyui/workflowRegistry";
+import { useLocalWorkflows } from "./features/comfyui/useLocalWorkflows";
 // App owns lazy panel styles before the final screen overrides.
 import "./components/assets/assets.css";
 import "./components/settings/plugin-manager.css";
@@ -274,8 +266,7 @@ export default function App() {
     likes: 0,
     tags: 0,
   });
-  const [settingsSection, setSettingsSection] =
-    useState<SettingsSection>("general");
+  const [settingsSection, setSettingsSection] = useState("general");
   const sidebar = useSidebarLayout();
   const chatCoversCanvas =
     sidebar.surface === "phone" ||
@@ -304,9 +295,7 @@ export default function App() {
   }, []);
   const assetArchive = useAssetArchive(setAssets);
   const [subjects, setSubjects] = useState(initialSubjects);
-  const [localWorkflows, setLocalWorkflows] = useState<WorkflowRecord[]>(() =>
-    readLocalWorkflows(),
-  );
+  const workflows = useLocalWorkflows();
   const persistence = useCreationStorage(
     recoverInterruptedTasks,
     reconcileNativeTasks,
@@ -360,17 +349,6 @@ export default function App() {
       return { model: "", configured: false };
     }
   }, [providerVersion]);
-  function saveWorkflow(workflow: WorkflowRecord): void {
-    setLocalWorkflows((current) => {
-      const next = [
-        workflow,
-        ...current.filter((item) => item.id !== workflow.id),
-      ];
-      writeLocalWorkflows(next);
-      return next;
-    });
-  }
-
   function hasArchivedOutputEvidence(
     task: Pick<CreationTask, "kind">,
     output: Pick<CreationTaskOutput, "assetId" | "text" | "status">,
@@ -381,13 +359,6 @@ export default function App() {
       output.text?.trim() &&
       new TextEncoder().encode(output.text).length <= 32768,
     );
-  }
-  function deleteWorkflow(workflow: WorkflowRecord): void {
-    setLocalWorkflows((current) => {
-      const next = current.filter((item) => item.id !== workflow.id);
-      writeLocalWorkflows(next);
-      return next;
-    });
   }
   const taskControllers = useRef<Record<string, AbortController>>({});
   const [savingResultTaskIds, setSavingResultTaskIds] = useState(
@@ -2872,22 +2843,10 @@ export default function App() {
       setModal(view);
       return;
     }
+    if (view === "comfyui") view = "settings/comfy";
     if (view === "settings" || view.startsWith("settings/")) {
       const requestedSection = view.split("/")[1];
-      const sectionAlias: Record<string, SettingsSection> = {
-        plugins: "mcp",
-        extensions: "extensions",
-        partners: "providers",
-        codex: "providers",
-        skills: "skill",
-        skill: "skill",
-        mcp: "mcp",
-      };
-      setSettingsSection(
-        sectionAlias[requestedSection] ??
-          SETTINGS_SECTIONS.find((item) => item.id === requestedSection)?.id ??
-          "general",
-      );
+      setSettingsSection(requestedSection || "general");
       setModal("settings");
       return;
     }
@@ -2897,15 +2856,12 @@ export default function App() {
         "workspace",
         "projects",
         "skills",
-        "comfyui",
         "favorites",
         "likes",
         "search",
       ].includes(view)
     ) {
-      if (
-        ["landing", "workspace", "projects", "skills", "comfyui"].includes(view)
-      )
+      if (["landing", "workspace", "projects", "skills"].includes(view))
         setMobileChat(false);
       setActive(view);
       setModal("");
@@ -3307,25 +3263,14 @@ export default function App() {
               />
             </DeferredPanelBoundary>
           )}
-          {["projects", "comfyui"].includes(active) && (
+          {active === "projects" && (
             <DeferredPanelBoundary key={active}>
               <LibraryPage
                 key={active}
-                view={active as "projects" | "comfyui"}
+                view="projects"
                 onOpen={open}
                 projects={creation.projects}
                 projectActions={projectLibrary.actions}
-                localWorkflows={localWorkflows}
-                onSaveWorkflow={saveWorkflow}
-                onDeleteWorkflow={deleteWorkflow}
-                onRunWorkflow={(workflow) => {
-                  setModal("tasks");
-                  window.dispatchEvent(
-                    new CustomEvent("kk:comfyui-workflow-requested", {
-                      detail: workflow.id,
-                    }),
-                  );
-                }}
                 onOpenProject={openSavedProject}
               />
             </DeferredPanelBoundary>
@@ -3439,6 +3384,7 @@ export default function App() {
                 revision={creation.revision}
                 projects={creation.projects}
                 registry={skillRegistry}
+                workflows={workflows}
                 onClose={() => setModal("")}
               />
             ) : modal === "assets" ? (

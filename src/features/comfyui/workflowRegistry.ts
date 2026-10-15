@@ -124,11 +124,13 @@ export function readLocalWorkflows(): WorkflowRecord[] {
   }
 }
 export function writeLocalWorkflows(workflows: WorkflowRecord[]): void {
+  const target = storage();
+  if (!target) throw new Error("本地存储不可用，工作流未保存。");
   const safe = workflows.flatMap((workflow) => {
     const result = workflowRecordSchema.safeParse(workflow);
     return result.success ? [result.data] : [];
   });
-  storage()?.setItem(WORKFLOW_STORAGE_KEY, JSON.stringify(safe));
+  target.setItem(WORKFLOW_STORAGE_KEY, JSON.stringify(safe));
 }
 export function createImportedWorkflow(
   name: string,

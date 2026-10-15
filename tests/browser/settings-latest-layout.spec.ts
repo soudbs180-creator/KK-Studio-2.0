@@ -135,7 +135,7 @@ for (const width of [779, 800, 801, 1099]) {
     await page.setViewportSize({ width, height: 800 });
     await page.goto("/");
     await page.getByRole("button", { name: "打开设置", exact: true }).click();
-    await openSection(page, "软件更新");
+    await openSection(page, "通用");
     const content = page.locator(".settings-content");
     expect(
       await content.evaluate((el) => el.scrollWidth - el.clientWidth),

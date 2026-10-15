@@ -1,4 +1,4 @@
-.modal:has(.shortcuts-panel) {
+.modal:has(.shortcuts-panel:not(.is-embedded)) {
   width: max-content;
   max-width: calc(100vw - 32px);
   border-radius: var(--kk-radius-panel);

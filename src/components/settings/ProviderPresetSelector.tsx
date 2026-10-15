@@ -10,9 +10,11 @@ import {
 export default function ProviderPresetSelector({
   onSelect,
   onOpenGoogle,
+  localOnly = false,
 }: {
   onSelect: (preset: ProviderPreset) => void;
   onOpenGoogle: () => void;
+  localOnly?: boolean;
 }) {
   const { busy } = useContext(SettingsNavigationContext);
   const disclosure = useRef<HTMLDetailsElement>(null);
@@ -35,6 +37,7 @@ export default function ProviderPresetSelector({
   const needle = query.trim().toLocaleLowerCase();
   const matches = PROVIDER_PRESETS.filter(
     (item) =>
+      (!localOnly || item.category === "本地") &&
       (category === "全部" || item.category === category) &&
       `${item.label} ${item.protocol} ${item.website}`
         .toLocaleLowerCase()
@@ -73,7 +76,10 @@ export default function ProviderPresetSelector({
           role="group"
           aria-label="服务商分类"
         >
-          {["全部", "官方", "网关", "本地"].map((value) => (
+          {(localOnly
+            ? ["全部", "本地"]
+            : ["全部", "官方", "网关", "本地"]
+          ).map((value) => (
             <button
               type="button"
               className="settings-action secondary"

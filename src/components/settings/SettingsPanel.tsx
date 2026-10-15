@@ -10,7 +10,10 @@ import type { SettingsPreferences } from "../../domain/settings";
 import GeneralSettings from "./GeneralSettings";
 import SettingsSections from "./SettingsSections";
 import type { SettingsSection } from "./SettingsSectionData";
-import { SETTINGS_NAV_GROUPS, SETTINGS_SECTIONS } from "./SettingsSectionData";
+import {
+  SETTINGS_NAV_GROUPS,
+  resolveSettingsRoute,
+} from "./SettingsSectionData";
 import {
   SettingsNavigationContext,
   useSettingsNavigationLock,
@@ -21,32 +24,8 @@ import type { ExtensionsTab } from "./ExtensionsSettings";
 import type { SaveState } from "../../features/creation/useCreationStorage";
 import type { CreationProject } from "../../features/creation/model";
 import type { SkillRegistry } from "../../features/skills/skillRegistry";
+import type { LocalWorkflowAccess } from "./LocalWorkflowSettings";
 import "./settings.css";
-
-/** Keep old deep links working while exposing one consolidated extensions rail item. */
-const LEGACY_EXTENSION_TAB: Record<string, ExtensionsTab> = {
-  mcp: "plugins",
-  plugins: "plugins",
-  skill: "skills",
-  skills: "skills",
-};
-
-function resolveInitialSection(initial: SettingsSection): {
-  section: SettingsSection;
-  extensionsTab?: ExtensionsTab;
-} {
-  if (initial === "partners") return { section: "providers" };
-  const legacyTab = LEGACY_EXTENSION_TAB[initial];
-  if (legacyTab) {
-    return {
-      section: "extensions",
-      extensionsTab: legacyTab,
-    };
-  }
-  if (initial === "extensions")
-    return { section: "extensions", extensionsTab: "plugins" };
-  return { section: initial };
-}
 
 function readInitialSettings(): {
   preferences: SettingsPreferences;
@@ -81,13 +60,15 @@ export default function SettingsPanel({
   revision = 0,
   projects,
   registry,
+  workflows,
 }: {
   onClose: () => void;
-  initialSection?: SettingsSection;
+  initialSection?: string;
   saveState?: SaveState;
   revision?: number;
   projects: readonly CreationProject[];
   registry: SkillRegistry;
+  workflows: LocalWorkflowAccess;
 }) {
   const panelRef = useRef<HTMLDivElement>(null);
   const [navigation, setNavigation] = useState<"categories" | "detail">(
@@ -113,7 +94,7 @@ export default function SettingsPanel({
   }, [navigation]);
   const [initial] = useState(readInitialSettings);
   const [preferences, setPreferences] = useState(initial.preferences);
-  const [resolved] = useState(() => resolveInitialSection(initialSection));
+  const [resolved] = useState(() => resolveSettingsRoute(initialSection));
   const [section, setSection] = useState<SettingsSection>(resolved.section);
   const [modelsMounted, setModelsMounted] = useState(
     resolved.section === "providers",
@@ -182,9 +163,6 @@ export default function SettingsPanel({
           >
             返回设置分类
           </button>
-          <strong>
-            {SETTINGS_SECTIONS.find((item) => item.id === section)?.label}
-          </strong>
         </div>
         <aside className="settings-sidebar">
           <h1 id="settings-dialog-title">设置</h1>
@@ -213,7 +191,7 @@ export default function SettingsPanel({
                   >
                     <img
                       className="settings-nav-icon"
-                      src={`/design/figma/settings-nav-${item.id === "usage" ? "account" : item.id === "skill" || item.id === "extensions" ? "mcp" : item.id}.svg`}
+                      src={`/design/figma/settings-nav-${item.icon}.svg`}
                       alt=""
                       width="20"
                       height="20"
@@ -234,6 +212,13 @@ export default function SettingsPanel({
             <GeneralSettings
               preferences={preferences}
               onChange={updatePreferences}
+              generalDetail={resolved.generalDetail}
+              onReset={() =>
+                updatePreferences(
+                  { ...DEFAULT_SETTINGS },
+                  "已恢复默认偏好。项目和资产未改动。",
+                )
+              }
             />
           )}
           {[
@@ -251,13 +236,9 @@ export default function SettingsPanel({
               projects={projects}
               preferences={preferences}
               registry={registry}
+              workflows={workflows}
+              initialModelMethod={resolved.modelMethod}
               extensionsTab={item === "extensions" ? extensionsTab : undefined}
-              onReset={() =>
-                updatePreferences(
-                  { ...DEFAULT_SETTINGS },
-                  "已恢复默认偏好。项目和资产未改动。",
-                )
-              }
               onFeedback={(message) => setFeedback({ message, error: false })}
             />
           ))}

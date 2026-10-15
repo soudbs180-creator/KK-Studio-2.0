@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { expandSidebar } from "./helpers";
+import { expandSidebar, openSettingsSection } from "./helpers";
 
 test("开始创作首页、目录页和项目行操作保持真实状态", async ({ page }) => {
   await page.goto("/");
@@ -41,12 +41,12 @@ test("开始创作首页、目录页和项目行操作保持真实状态", async
   await expect(
     page.getByRole("heading", { name: "扩展", exact: true }),
   ).toBeVisible();
-  await page
-    .getByRole("button", { name: "ComfyUI 工作流", exact: true })
-    .click();
+  await openSettingsSection(page, "模型接入");
+  await page.getByRole("button", { name: "本地", exact: true }).click();
   await expect(
-    page.getByRole("heading", { name: "ComfyUI 工作流", exact: true }),
+    page.getByText("ComfyUI 工作流 · 0 个", { exact: true }),
   ).toBeVisible();
+  await page.getByRole("button", { name: "关闭设置", exact: true }).click();
 
   await expandSidebar(page);
   await page.getByRole("button", { name: "创建项目文件夹" }).click();
@@ -515,9 +515,9 @@ test("开始创作与工作台的模型入口都定位到模型接入设置", as
   ).toHaveAttribute("aria-current", "page");
 });
 
-test("扩展与 ComfyUI 页面状态说明不覆盖副标题", async ({ page }) => {
+test("扩展页面状态说明不覆盖副标题", async ({ page }) => {
   await page.goto("/");
-  for (const name of ["扩展", "ComfyUI 工作流"]) {
+  for (const name of ["扩展"]) {
     await page
       .getByRole("navigation", { name: "主导航" })
       .getByRole("button", { name, exact: true })
@@ -561,24 +561,22 @@ test("Skill 与工作流卡片保持当前页面并反馈本地预览状态", as
     page.getByRole("heading", { name: "KK Studio", exact: true }),
   ).toBeVisible();
 
-  await page
-    .getByRole("button", { name: "ComfyUI 工作流", exact: true })
-    .click();
-  await page
-    .locator(".workflow-card")
-    .filter({ hasText: "H3 轻量版 · 文生视频" })
-    .first()
-    .click();
-  await expect(
-    page.getByText("已选择工作流：H3 轻量版 · 文生视频。", { exact: false }),
-  ).toBeVisible();
-  await page
-    .getByRole("button", { name: "导入/新建工作流", exact: true })
-    .click();
-  await page.getByRole("tab", { name: "我的工作流", exact: true }).click();
+  await openSettingsSection(page, "模型接入");
+  await page.getByRole("button", { name: "本地", exact: true }).click();
+  await page.getByText("ComfyUI 工作流 · 0 个", { exact: true }).click();
+  await page.locator('.settings-disclosure input[type="file"]').setInputFiles({
+    name: "我的 ComfyUI 工作流.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(
+      JSON.stringify({ "1": { class_type: "SaveImage", inputs: {} } }),
+    ),
+  });
   await expect(
     page.getByText("我的 ComfyUI 工作流", { exact: true }),
   ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "运行未接通", exact: true }),
+  ).toBeDisabled();
 });
 
 test("项目区支持筛选、排序和创建文件夹入口", async ({ page }) => {

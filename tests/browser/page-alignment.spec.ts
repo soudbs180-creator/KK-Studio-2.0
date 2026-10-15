@@ -23,6 +23,7 @@ test("current Figma modal shells keep dimensions and settings content origin", a
     "系统托盘",
     "防止系统休眠",
     "开机自启动",
+    "软件更新",
   ]);
   await page.keyboard.press("Escape");
   await page.getByRole("button", { name: "搜索", exact: true }).click();
@@ -46,15 +47,16 @@ test("unconnected account and memory controls do not advertise working services"
 }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
-  await page.getByRole("button", { name: "账号管理", exact: true }).click();
+  await page.getByRole("button", { name: "个人主页", exact: true }).click();
   await expect(page.locator(".settings-content")).toContainText(
-    "未登录 · Prototype",
+    "未登录 · 本地使用",
   );
   await expect(
     page.getByRole("button", { name: "删除账号", exact: true }),
-  ).toBeDisabled();
+  ).toHaveCount(0);
   await page.getByRole("button", { name: "网络", exact: true }).click();
-  await expect(page.locator(".settings-content")).toContainText("本地转发代理");
+  await page.getByText("独立转发代理", { exact: true }).click();
+  await expect(page.locator(".settings-content")).toContainText("独立转发代理");
   await expect(page.locator(".settings-content")).toContainText(
     "npm run proxy",
   );
