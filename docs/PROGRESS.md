@@ -1,5 +1,11 @@
 # 当前进度
 
+## 2026-10-15 测试安全本机验证（REVIEW / PARTIAL）
+
+TASK-EXPLORER-GDI-20261015与TASK-VERIFY-EVIDENCE-20261015合为一个测试安全PR。冻结源码9aa12e92完整verify exit0：Node1334/14既有skip、Agent199/2既有skip、Edge784首试0flaky、development5步。Windows真实argv保留15+1、真实PNG成功/主动失败、100页7次0TabProxy均通过；454旧文件及备份908哈希一致，879本轮产物另存。47文件独立审查PASS_LOCAL_TEST_SAFETY_SCOPE，SHOT-01/DOC-01关闭。首轮环境遗漏11FAIL及同SHA复测保留。下一步文档冻结、正式PR/Hosted/main及合后验证；daily和产品2.1.33未更新，真实Provider/用户验收另行完成。见[验证](changes/2026-10-15-explorer-gdi-integration/verification.md)。
+
+## 以下为此前阶段记录
+
 ## 2026-10-15 GDI保护统一承接（IN_PROGRESS）
 
 沿用TASK-EXPLORER-GDI-20261015，由root串行承接af8独有7个测试文件。输出保护6374已补独审两项，正式复验中；治理PR61已在当前Hosted成功/独立merge-scope后正常合main3a992597，四独有安全提交从该main重绑且tree相同。真实Windows参数/候选PNG探针通过；版本/产品源码/daily不变，f727首轮完整Browser773PASS/11FAIL，缺随包插件构建；只补既定依赖/构建后11项同源码首试全过，441产物与旧三项hash保留。SHOT-01补强及测试入口先构建插件后，准备新冻结全量验证，仍非完整PASS。见[计划](changes/2026-10-15-explorer-gdi-integration/plan.md)。

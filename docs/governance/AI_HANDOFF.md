@@ -10,7 +10,7 @@
 
 ## 统一整理后的正式执行入口（TASK-GOV-006）
 
-当前任务先读[GDI承接计划](../changes/2026-10-15-explorer-gdi-integration/plan.md)。root在fix/TASK-EXPLORER-GDI-20261015-main，从实际main3a992597只承接四独有测试安全提交；治理PR61正常合入，未更新产品/daily。f727参数/PNG/100页已通过；首轮完整verify11FAIL为插件环境缺口，只补依赖/构建后同SHA原11项全过。SHOT-01补强后需新冻结全量与独审/正常PR。旧候选dirty/原件/九项目不动。
+当前任务先读[GDI承接验证](../changes/2026-10-15-explorer-gdi-integration/verification.md)。root在fix/TASK-EXPLORER-GDI-20261015-main；源码9aa12e92完整verify及47文件独审本机PASS（Node1334/14skip、Agent199/2skip、Edge784首试、development5步）。Windows参数/PNG/100页保护与454旧文件908hash保持。下一步文档冻结/差量复审、正常测试安全PR、当前Hosted/main/合后验证，再HOME三P2；首轮失败与全部旧分支/候选dirty/九项目保留。
 
 最新限制：af8精确HEAD完整verify已新跑PASS；但测试默认目录清理移除了旧开发态原件，不能再声称其旧路径可读。先读[事件](../changes/2026-10-15-unified-execution/incident.md)，下一执行先落实TASK-VERIFY-EVIDENCE-20261015保护，再承接GDI。
 

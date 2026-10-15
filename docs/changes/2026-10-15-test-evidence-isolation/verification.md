@@ -1,4 +1,17 @@
-# Verification：测试输出隔离
+### 9aa12e92 本机完整验证与独审
+
+- 测试源码冻结为 **9aa12e923b4c6e4f45c243585658b073a0de1ccb**，基线为实际 main **3a9925977792a7f948eceda9f54d46fbf6f8b294**；本节后续仅记录文档，不能把旧收据 sourceHead 改成文档提交。
+- 实际 Windows 执行 `npm run verify` **exit0**：Node 1348 total / 1334 PASS / 14既有平台skip / 0FAIL；Agent 201 total / 199 PASS / 2既有平台skip / 0FAIL；Edge **784首试通过 / 0FAIL / 0flaky / 0skip**。development **PASS / 5步骤 / errors=[]**，额外一步验证本树链接依赖的父目录仍被403拒绝。lint/typecheck/UI规则/format/production build等完整链通过。
+- 当前浏览器报告：`test-results/browser/1b917fe3-e0fe-400e-bc7e-9bc60f14b90e/browser-results.json`，SHA256 `7e57201794cf76941c3d544ff14b763b508b7a9b103bbd7ab0670a995f12947c`；development回执：`test-results/development-plugins/408ce0ce-7075-4b4f-8b22-249e8520210b/receipt.json`，SHA256 `684ce4e1034e7e04f60bc0428d0fbf259166c288bf92a1265215c68dfa044baa`。两者实际sourceHead均9aa12e92。
+- Windows真实browser/2 renderer参数保留原15项并仅追加msWindowTabManagerPublic；独立真实PNG探针的成功/主动失败两例均保留旧合成字节，新PNG签名有效且与report同run。100个自有页面7次采样均0个自有TabProxy，随后正常关闭自有browser；未杀用户进程或重启Explorer。
+- 验证前454份既有产物完整外部备份；原件与备份 **908次SHA256比对零缺失/零差异**。本轮879份完整产物另存，独审对原件与备份1758项及4份关键日志哈希再次核对。新404张截图均在本轮目录。首轮f727的441份失败产物及同SHA11项因果复测保留，不能改写首轮exit1；旧历史receipt/PNG缺失仍按incident处理。
+- 外部不可混写证据根：`D:/kk-studio/.verification/2026-10-15-unified-execution-0908/`。汇总 `safety-9aa12e92-result.json` 含命令退出码、报告身份及879文件hash清单；完整日志 `safety-9aa12e92-verify.log` SHA256 `7299748ebb769fdabd8ff19b389560e1608d0915a5fc3ace59737673cd95a568`。该目录不进产品分享包。
+- 独立只读审查 **PASS_LOCAL_TEST_SAFETY_SCOPE**：实际base3a992597→head9aa12e92共47文件，无未关闭发现。EVID-01/02与SHOT-01、DOC-01关闭；7类守卫负例已RED→GREEN，122处截图直接outputPath。用户原件/默认profile/daily未用作夹具。
+- **尚未覆盖**：本测试安全分支Hosted、正常PR/main合并及合后main验证；产品UI/日常客户端/真实Provider验收。Desktop/Web保持2.1.33、Mobile2.1.1；本机测试安全PASS不能代填产品或全项目完成。
+
+## 此前阶段记录（保留原结果，最新范围以上节为准）
+
+ Verification：测试输出隔离
 
 - Task ID：TASK-VERIFY-EVIDENCE-20261015；角色：current；状态：PARTIAL；[Intent](intent.md)、[Spec](spec.md)、[Plan](plan.md)。
 - base89fba48244d58f0a18df8766951b02a785c5810b；cwd为既有TASK-GOV-PHASE0，root单写入者；原治理分支/原GDI候选/旧回执缺失均保留。
