@@ -1789,6 +1789,25 @@ fn main() {
                             window
                                 .unminimize()
                                 .map_err(|_| "无法恢复窗口".to_string())?;
+                            #[cfg(target_os = "windows")]
+                            {
+                                let hwnd = window.hwnd().map_err(|_| "无法读取窗口".to_string())?;
+                                // Respect the foreground lock; tao's focus fallback injects Alt input.
+                                if unsafe {
+                                    windows_sys::Win32::UI::WindowsAndMessaging::SetForegroundWindow(
+                                        hwnd.0,
+                                    )
+                                } == 0
+                                {
+                                    window
+                                        .request_user_attention(Some(
+                                            tauri::UserAttentionType::Informational,
+                                        ))
+                                        .map_err(|_| "无法提示窗口".to_string())?;
+                                }
+                                Ok(())
+                            }
+                            #[cfg(not(target_os = "windows"))]
                             window.set_focus().map_err(|_| "无法激活窗口".to_string())
                         })();
                         let _ = sender.send(result);
