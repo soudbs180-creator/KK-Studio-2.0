@@ -6,3 +6,5 @@
 - 日常EXE SHA256仍为aeb70dfce5d3e31f76a779986e041ce88ebddb2a5fe9771b0906d70af40371d5；未停止/重启用户进程或替换该EXE。
 - 限制：原共享依赖字节未事先清点，不能称与原件byteexact；原junction入口被npm移除，没有声称成功保留。其他运行任务在短暂缺依赖期间的影响UNKNOWN。用户项目/素材未作为此操作输入，但不能把未观察影响写成零影响。
 - 工程外证据根D:/kk-studio/.verification/2026-10-15-unified-execution-0908：dependency-incident-before-repair.json、dependency-incident-primary-repair.log、dependency-incident-repair-result.json、home-fc76e404-local-dependencies.log。旧HOME全量运行结果保持原sourceHead，不因事故或后续修复重写。
+
+- 后续实体依赖上的a85完整verify和官方Windows重建/原Native38项均实际通过，依赖版本对齐之后的本轮执行可用性已有直接证据；不代表primary其他dirty源码全体验收，不追回未知旧依赖字节或短时用户影响。详见[HOME本轮记录](../2026-10-15-home-recovery-integration/verification.md)。

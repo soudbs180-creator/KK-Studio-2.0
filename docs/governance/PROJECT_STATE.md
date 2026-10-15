@@ -9,7 +9,7 @@
 <!-- DOCUMENT_METADATA_END -->
 <!-- CURRENT_FACTS_BEGIN -->
 
-当前执行：f10隔离Native冷重开暴露HOME-NATIVE-01/P1，原两次FAIL保留；入口私有stdout隔离已真实RED/GREEN，待新冻结重建和原断言复验。PR62正常合main492abad4，actual tree与f9c相同；root仅挑HOME独有fc76为c180，完整tree相同，保留原临时分支。当前fix/TASK-CODEX-HOME-20261015-main，HOME源码fc76完整verify/独审通过：Node1342/14skip、Agent199/2skip、Edge785首试、development5步。候选双端2.1.34，main/daily仍2.1.33；Native/代理模式与合后main Hosted继续。依赖切换编排错误清空共享生成依赖，已按主仓原锁恢复244包、三项hash不变；独审仅确认版本对齐，未知字节与短时影响保留TASK-VERIFY-DEPS-20261015。九项目/旧分支/证据不作夹具。
+当前执行：HOME源码a85ace90在actual main492承接分支完整verify通过（Node1343/14skip、Agent199/2skip、Edge785首试、development4步），官方Windows重建2.1.34及原Native38项/3次launch、Rust167均PASS；HOME-NATIVE-01经精确结果独审关闭，原f10两FAIL保留。尚未HOME PR/Hosted/main或daily更新。旧1336证据与最终1763产物共6198hash独立核对一致。原依赖事故已按原锁恢复，未知旧字节/短时影响仍记TASK-VERIFY-DEPS-20261015；九项目/两副本/旧分支保护。
 
 历史首轮补证（原始阶段）：af8精确HEAD完整verify已exit0（Node1327/Agent199/Edge784首试/development4步）。测试默认目录清理导致旧development receipt/截图缺失且无可校验副本，旧browser备份和.tmp/压力原件仍可核验；详见[incident](../changes/2026-10-15-unified-execution/incident.md)。新增TASK-VERIFY-EVIDENCE-20261015，后续先隔离输出/完整备份保护再继续批量测试；GDI主线集成与用户产品验收仍未完成。
 
@@ -27,7 +27,7 @@
 - `workspaceWorktrees`: 2026-10-15只读登记114；approved root内73，默认4/20GiB。114固定账本路径已读，113有效JSON；Cherry当前冲突原件未改，仅内存两侧用于联合。46个ID有历史状态变体，不机械按日期裁决。原始SHA/dirty/来源索引见本轮source-manifest。未新增、删除或清理worktree。
 - `reclamationPolicy`: generated dependencies/build output may be reclaimed only from a recorded, non-primary worktree after immutable SHA inventory and explicit candidate approval; source changes and evidence paths are protected.
 - `remoteAutoMerge`: 本轮root已GET回读3个active ruleset；stable23866925对main/master/release启用PR、stale-dismiss/threads和strict verify/delivery（Actions15368）、0强制approving、无bypass/merge_queue；允许merge/squash/rebase。main protected=true由ruleset保护；legacy protection.enabled=false不表示未保护。自动helper activation/paused状态尚无本轮证据，不宣称已启用，不改远端配置。
-- `codexCardReferenceCandidate`: REF产品代码已随PR60进入实际main235e；原任务状态仍PARTIAL，历史真实内置生图/参考原件/连线与旧产物重开证据按原SHA有效，不自动升级为当前main全体验收。HOME/REF静态重试草稿/连接竞态/canvasSource三P2尚未独立运行复现。旧verification及失败原件保留。
+- `codexCardReferenceCandidate`: REF产品代码已随PR60进入实际main235e；原任务状态仍PARTIAL，历史真实内置生图/参考原件/连线与旧产物重开证据按原SHA有效，不自动升级为当前main全体验收。HOME/REF重试草稿/连接竞态/canvasSource三P2已由当前HOME任务实际RED/GREEN及a85完整回归，Native冷重开38项通过；正常PR/main及真实Provider/日常验收继续。旧verification及失败原件保留。
 
 - `historicalRule`: paragraphs after `<!-- HISTORICAL_SNAPSHOTS_BEGIN -->` are dated evidence only and cannot overwrite these facts.
 

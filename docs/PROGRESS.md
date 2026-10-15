@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-10-15 HOME当前本机验收通过（IN_PROGRESS）
+
+冻结a85完整verify：Node1343/14skip、Agent199/2skip、Edge785首试、development4步，独立6198hash匹配。官方Windows候选2.1.34 EXEf8cbfd5d/source a85，原Native38/3次launch与Rust167通过，实际正常关闭重开恢复、暂停/重连/服务重启及未知归属保护成立。原f10两FAIL与旧产物保留，HOME-NATIVE-01结果补审/正式PR/Hosted/main继续；main/daily仍2.1.33，不代填付费Provider或用户验收。见[验证](changes/2026-10-15-home-recovery-integration/verification.md)。
+
 ## 2026-10-15 HOME原生冷重开阻断（IN_PROGRESS）
 
 f10实际Windows隔离客户端首次启动/连接/保存/reload通过，正常关闭后reopen两次FAIL；错误唯一对应READY前32行预算耗尽。定位到Codex诊断经Winston占用私有stdout，按入口保存握手writer、普通输出转stderr最小修复，保留全部Rust守卫。真实stdio98行RED→3项GREEN；新冻结全量/重建/原Native断言与精确独审待续。原失败、旧候选、daily/用户资料均保留。见[验证](changes/2026-10-15-home-recovery-integration/verification.md)。

@@ -8,3 +8,5 @@
 - 精确fc76已获PASS_SOURCE_SCOPE和PASS_LOCAL_VERIFY_SCOPE；source/运行各自绑定同一head，完整785浏览器及旧/新产物哈希均由独审回读。c180为actual main492上的单独cherry，完整tree与fc76相同；当前纯文档承接后还需差量审查。Native/代理模式/新环境后验证及正常HOME PR/main仍待。
 
 - HOME-NATIVE-01/P1：f10实际重开FAIL，两个只读审查均确认stdout诊断占用32行握手预算。root先真实stdio RED，再按入口边界最小修复；3项GREEN尚不能关闭原生阻断。新冻结源码/实际重开和完整门禁须独审。
+
+- a85精确差量已获PASS_SOURCE_DELTA_SCOPE；本轮完整verify与6198输出hash经独审PASS_OUTPUT_RETENTION_SCOPE。原Native脚本38/38和官方新产物实际通过，独审PASS_LOCAL_NATIVE_STARTUP_RECOVERY_SCOPE绑定a85、原Native脚本hash相同，HOME-NATIVE-01关闭；本机通过不代填Hosted/main、真实Provider、日常资料和用户验收。
