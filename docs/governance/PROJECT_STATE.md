@@ -25,7 +25,7 @@
 
 - `historicalRule`: paragraphs after `<!-- HISTORICAL_SNAPSHOTS_BEGIN -->` are dated evidence only and cannot overwrite these facts.
 
-- `codexHomeCandidate`: TASK-CODEX-HOME-20261015 REVIEW / 整体NOT_VERIFIED；Desktop/Web2.1.33、Mobile2.1.1规划。full5前置Node1327/14skip、Agent199/2skip与静态/build通过，784浏览器单结果首过/实际retry0；845源码/测试冻结无漂移。但末端development因另一任务占用1421而steps=[]、完整npm verify exit1，Hosted当前SHA必须真实补齐后才可合并。Rust尺寸包30/167通过，新EXE8f633...实际包往返与冷开1370×1148图文恢复通过；首轮TaskHost失败及旧EXE重跑11PASS分别保留。精确SHA独审/Hosted/产品PR/main/本机更新与两副本恢复仍待验。[当前验证](../changes/2026-10-15-codex-home/verification.md)。
+- `codexHomeCandidate`: TASK-CODEX-HOME-20261015 REVIEW / 整体NOT_VERIFIED；Desktop/Web2.1.33、Mobile2.1.1规划。full5前置Node1327/14skip、Agent199/2skip与静态/build通过，784浏览器单结果首过/实际retry0；845源码/测试冻结无漂移。但末端development因另一任务占用1421而steps=[]、完整npm verify exit1，Hosted当前SHA必须真实补齐后才可合并。Rust尺寸包30/167通过，新EXE8f633...实际包往返与冷开1370×1148图文恢复通过；首轮TaskHost失败及旧EXE重跑11PASS分别保留。精确SHA独审/Hosted/产品PR/main/本机更新与两副本恢复仍待验。[当前验证](../changes/2026-10-15-codex-home/verification.md)。 后续UIalignment独立串行development四stage/exit0及root源码hash独审已通过（sourceHead为cbda dirty、845内容同源），不改full5退出码。产品eeac已提交，用户明确授权跨聊天统一集成，HOME evidence绑定REF验证包而不改其原entry；实际首页新1254²图已归档，新图cold reopen仍pending。
 
 - `codexHomeUserDataBaseline`: 用户本机工作后为7项目/rev2057；工程外codex-home-20261015/before-state.json SHA256 95df5c81a3b75119175b2f3f89c27c714254cf1df76ab5aa92d4954f4f6181fb，4602原source hash一致。旧10/11项目只属先前时点，不恢复用户删除。
 

@@ -6005,9 +6005,10 @@
       "docs/changes/2026-10-15-codex-home/spec.md",
       "docs/changes/2026-10-15-codex-home/plan.md",
       "docs/changes/2026-10-15-codex-home/verification.md",
-      "docs/changes/2026-10-15-codex-home/review.md"
+      "docs/changes/2026-10-15-codex-home/review.md",
+      "docs/changes/2026-10-15-codex-card-reference/verification.md"
     ],
-    "verification": "本地分项：full5前置Node1327PASS/14skip、Agent199PASS/2skip及lint/typecheck/format/build通过；原始verify-full-5-browser.json独立回读784unique/784单结果首过/实际retry0/flaky0/skip0/errors0。845源码及测试与full4冻结清单逐项相同。完整npm verify仍exit1：development因另一人类任务长期占用1421而steps=[]，未执行、未杀进程/复用server；当前SHA Hosted须真实完成全部必需门禁。Rust媒体尺寸包30/全量167/fmt/check通过；新EXE8f633...2.1.33/vihgOeA0实际export/preflight/import，canonical project/homeDraft及单QA2items/1generatedID/1370x1148无损，源PNG/importedblob同2596cb...，新导入root冷开图文/Codex默认恢复通过。TaskHost首轮passed=false/9checks与旧EXE隔离重跑11PASS/cleanuptrue分别保留。full1-4、REPL/跨realm观察错误、真实Native旧包失败和所有阶段raw在本task verification原文保留。其他TASK-CODEX-REF docs/entry/status未改，组合来源明确、精确SHA独审/Hosted/PR/main与本机更新/两副本canonical恢复仍待验，不提前DONE。",
+    "verification": "本地分项：full5前置Node1327PASS/14skip、Agent199PASS/2skip及lint/typecheck/format/build通过；原始verify-full-5-browser.json独立回读784unique/784单结果首过/实际retry0/flaky0/skip0/errors0。845源码及测试与full4冻结清单逐项相同。完整npm verify仍exit1：development因另一人类任务长期占用1421而steps=[]，未执行、未杀进程/复用server；当前SHA Hosted须真实完成全部必需门禁。Rust媒体尺寸包30/全量167/fmt/check通过；新EXE8f633...2.1.33/vihgOeA0实际export/preflight/import，canonical project/homeDraft及单QA2items/1generatedID/1370x1148无损，源PNG/importedblob同2596cb...，新导入root冷开图文/Codex默认恢复通过。TaskHost首轮passed=false/9checks与旧EXE隔离重跑11PASS/cleanuptrue分别保留。full1-4、REPL/跨realm观察错误、真实Native旧包失败和所有阶段raw在本task verification原文保留。其他TASK-CODEX-REF docs/entry/status未改，组合来源明确、精确SHA独审/Hosted/PR/main与本机更新/两副本canonical恢复仍待验，不提前DONE。 后续UIalignment临时释放自有1421，development独立串行四stage PASS/exit0，原receipt SHA4b2925...与root独审loader hash一致；sourceHead为cbda dirty、845内容同冻结，full5原整体exit1不改写。产品eeac已提交，实际首页1254x1254新图3848a9...已归档/sourcePending=null，该新图cold reopen仍pending。用户明确授权跨聊天协调统一集成，HOME evidence补REF验证包真实归属，不改REF原branch/entry/docs；此前Delivery归属失败保留，最终文档SHA/独审/Hosted与交付待验。",
     "verificationResult": "NOT_VERIFIED",
     "updated": "2026-10-15",
     "displayStatus": "进行中",

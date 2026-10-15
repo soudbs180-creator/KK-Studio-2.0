@@ -112,6 +112,12 @@ root正修旧API缺省语义的测试前置，以及4张同字节图片在Codex�
 
 现任务REVIEW/整体NOT_VERIFIED，最终head待提交；dirty分项收据不构成精确SHA独立批准。Hosted完整verify/Delivery、普通PR合并、main验证、实际本机更新及两独立恢复副本/原7保全另按真实收据完成，premerge不DONE，其他功能/任务状态不提升。
 
+后续本地末端已独立串行完成：UIalignment临时释放其自有1421后运行development四stage，`D:/kk-studio/.analysis/desktop-web-alignment-20261015-142133-312/development-serial.log`与`development-serial-exit.json`为exit0。原始`test-results/development-plugins/1792047660198/receipt.json` SHA256 `4b2925fd25c70ce45ed295d19f161586238526482d6039ec6dc07a2773a24eae`为PASS/四stage/errors0；root独审`development-serialized-independent-audit.json`（`30c12220952a01bbcf117c87d94b9302f4b00caf3a6f7a507de985acdf859bc9`）确认loader hash一致。其sourceHead为当时cbda dirty，845源码/测试内容与冻结清单相同，文档owner再次逐项重算无漂移。这是独立串行分项通过，full5原完整命令exit1不改写；当前提交Hosted仍须真实完成完整verify/Delivery。
+
+产品提交`eeac521cf5fa14fa242c77824601a8d9f634e771`已形成，后续文档关联提交与最终精确SHA另绑。用户现明确授权跨聊天协调并统一集成相关卡片参考图差量；HOME task.evidence显式追加该[验证包](../2026-10-15-codex-card-reference/verification.md)作为本分支真实集成归属，REF原branch/entry/docs与状态不改。此前Delivery归属检查失败保留，补对应关系不变更门禁实现。
+
+该head的实际首页生成另见`native-head-generated-archived.json` SHA256 `dca50ca0f2ee3a381425fa57c3d74ee6b29936aff6867e036bbd4befc9315f0e`：2.1.33/vihgOeA0、缺省Codex内置生图、一次真实turn，1254×1254 PNG/1560591 bytes已归档，SHA256 `3848a9de05f114aebf940a8473c103d4fa6e4eb1bf416bd9a95c805368827d5d`，1generated ID、状态ready/sourcePending=null。窗口后来关闭，原因UNKNOWN，不归因为自动丢失或产品成功；这次新图的cold reopen仍pending，不能借先前单QA包冷开结果代填。
+
 提交前保护收据`protected-primary-git-before-commit-corrected.json` SHA256 `7ead8b1f6cfef975aa409629aad39c7773a3da4f326b98c3dbb97b1c259acaa0`为allMatch=true：primary HEAD/branch/index、staged/unstaged diff及porcelain-v1-z状态与baseline相同；root另重算4602源码与native受保护metadata/assets均相同。初次使用-uall/non-z造成的status false比较原件保留，纠正的是比较格式，未声称发生或恢复过数据漂移。文档owner未操作应用、项目或primary。
 
 ### Candidate1真实结果与后续用户编辑
