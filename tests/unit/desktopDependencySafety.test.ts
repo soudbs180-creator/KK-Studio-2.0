@@ -108,51 +108,98 @@ process.exit(mode === "build-fail" ? 24 : 0);
   };
 }
 
-test("a linked dependency root cannot reach a custom builder, npm, receipt or launch", (t) => {
-  const f = fixture(t);
-  const target = path.join(f.root, "shared-target");
-  fs.renameSync(path.join(f.root, "node_modules"), target);
-  const sentinel = path.join(target, "owner-sentinel.bin");
-  fs.writeFileSync(sentinel, Buffer.from([0, 255, 2, 10]));
-  const sentinelBefore = fs.readFileSync(sentinel);
-  try {
-    fs.symlinkSync(target, path.join(f.root, "node_modules"), "junction");
-  } catch (error) {
-    if (
-      ["EPERM", "EACCES"].includes((error as NodeJS.ErrnoException).code ?? "")
-    ) {
-      t.skip(`junction creation unavailable: ${error}`);
-      return;
+for (const linked of ["root", "package", "scope"] as const) {
+  test(`a linked dependency ${linked} cannot reach a custom builder, npm, receipt or launch`, (t) => {
+    const f = fixture(t);
+    const linkedPath =
+      linked === "root"
+        ? path.join(f.root, "node_modules")
+        : linked === "package"
+          ? path.dirname(f.dependency)
+          : path.join(f.root, "node_modules", "@fixture");
+    if (linked === "scope") {
+      f.write(
+        "node_modules/@fixture/package/package.json",
+        '{"version":"1.0.0"}',
+      );
+      fs.writeFileSync(
+        f.lock,
+        JSON.stringify({
+          packages: {
+            "node_modules/@fixture/package": { version: "1.0.0" },
+          },
+        }),
+      );
     }
-    throw error;
-  }
+    const target = path.join(f.root, "shared-target");
+    fs.renameSync(linkedPath, target);
+    const sentinel = path.join(target, "owner-sentinel.bin");
+    fs.writeFileSync(sentinel, Buffer.from([0, 255, 2, 10]));
+    const sentinelBefore = fs.readFileSync(sentinel);
+    try {
+      fs.symlinkSync(target, linkedPath, "junction");
+    } catch (error) {
+      if (
+        ["EPERM", "EACCES"].includes(
+          (error as NodeJS.ErrnoException).code ?? "",
+        )
+      ) {
+        t.skip(`junction creation unavailable: ${error}`);
+        return;
+      }
+      throw error;
+    }
+    let built = 0;
+    let launched = 0;
+    assert.throws(
+      () =>
+        runDesktopRelease(f.root, {
+          buildRelease: () => {
+            built++;
+          },
+          launchRelease: () => {
+            launched++;
+          },
+        }),
+      /linked dependencies/,
+    );
+    assert.equal(built, 0);
+    assert.equal(launched, 0);
+    const result = f.run("success");
+    assert.equal(result.status, 1, result.stderr);
+    assert.match(result.stderr, /linked dependencies/);
+    assert.deepEqual(f.calls(), []);
+    assert.deepEqual(fs.readFileSync(sentinel), sentinelBefore);
+    assert.deepEqual(fs.readFileSync(f.receipt), f.receiptBefore);
+    assert.equal(fs.readFileSync(f.executable, "utf8"), "previous executable");
+    assert.equal(fs.lstatSync(linkedPath).isSymbolicLink(), true);
+  });
+}
+
+test("a dependency path escaping node_modules stops before a custom builder or npm", (t) => {
+  const f = fixture(t);
+  fs.writeFileSync(
+    f.lock,
+    JSON.stringify({
+      packages: {
+        "node_modules/../../escaped": { version: "1.0.0" },
+      },
+    }),
+  );
   let built = 0;
-  let launched = 0;
   assert.throws(
     () =>
-      runDesktopRelease(f.root, {
-        buildRelease: () => {
-          built++;
-        },
-        launchRelease: () => {
-          launched++;
-        },
+      ensureDesktopRelease(f.root, () => {
+        built++;
       }),
-    /local node_modules directory/,
+    /within local node_modules/,
   );
   assert.equal(built, 0);
-  assert.equal(launched, 0);
   const result = f.run("success");
   assert.equal(result.status, 1, result.stderr);
-  assert.match(result.stderr, /local node_modules directory/);
+  assert.match(result.stderr, /within local node_modules/);
   assert.deepEqual(f.calls(), []);
-  assert.deepEqual(fs.readFileSync(sentinel), sentinelBefore);
   assert.deepEqual(fs.readFileSync(f.receipt), f.receiptBefore);
-  assert.equal(fs.readFileSync(f.executable, "utf8"), "previous executable");
-  assert.equal(
-    fs.lstatSync(path.join(f.root, "node_modules")).isSymbolicLink(),
-    true,
-  );
 });
 
 for (const invalid of ["missing", "invalid", "array", "string"] as const) {
@@ -223,6 +270,10 @@ for (const mode of ["install-fail", "install-stale", "build-fail"] as const) {
 
 test("the default builder repairs and builds through the checked entry before issuing a receipt", (t) => {
   const f = fixture(t);
+  f.write("node_modules/@fixture/package/package.json", '{"version":"1.0.0"}');
+  const lock = JSON.parse(fs.readFileSync(f.lock, "utf8"));
+  lock.packages["node_modules/@fixture/package"] = { version: "1.0.0" };
+  fs.writeFileSync(f.lock, JSON.stringify(lock));
   fs.rmSync(f.dependency);
   const wrapper = f.write(
     "prepare.mjs",

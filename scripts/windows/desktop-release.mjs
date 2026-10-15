@@ -108,15 +108,43 @@ function readDesktopDependencyPackages(projectRoot) {
 }
 
 function assertDesktopDependencyPreparationSafe(projectRoot) {
-  if (isLinkedPath(path.join(projectRoot, "node_modules"))) {
+  const nodeModulesPath = path.resolve(projectRoot, "node_modules");
+  if (isLinkedPath(nodeModulesPath)) {
     throw new Error(
       "Desktop dependency repair requires a local node_modules directory; linked dependencies must be repaired in their owner checkout.",
     );
   }
-  if (!readDesktopDependencyPackages(projectRoot)) {
+  const packages = readDesktopDependencyPackages(projectRoot);
+  if (!packages) {
     throw new Error(
       "Desktop dependency preparation requires a valid package-lock.json with a packages object.",
     );
+  }
+  for (const packagePath of Object.keys(packages)) {
+    if (!packagePath.startsWith("node_modules/")) continue;
+    const relative = path.relative(
+      nodeModulesPath,
+      path.resolve(projectRoot, ...packagePath.split("/")),
+    );
+    if (
+      !relative ||
+      relative === ".." ||
+      relative.startsWith(`..${path.sep}`) ||
+      path.isAbsolute(relative)
+    ) {
+      throw new Error(
+        "Desktop dependency preparation requires package-lock.json paths within local node_modules.",
+      );
+    }
+    let candidate = nodeModulesPath;
+    for (const component of relative.split(path.sep)) {
+      candidate = path.join(candidate, component);
+      if (isLinkedPath(candidate)) {
+        throw new Error(
+          `Desktop dependency preparation requires local dependency directories; linked dependencies must be repaired in their owner checkout (${packagePath}).`,
+        );
+      }
+    }
   }
 }
 
@@ -174,6 +202,7 @@ export function ensureDesktopRelease(
   projectRoot,
   buildRelease = buildDesktopRelease,
 ) {
+  assertDesktopDependencyPreparationSafe(projectRoot);
   const beforeRelease = inspectDesktopRelease(projectRoot);
   const dependencyState = inspectDesktopDependencies(projectRoot);
   const before = {
@@ -182,7 +211,6 @@ export function ensureDesktopRelease(
   };
   if (!before.needsBuild) return { ...before, rebuilt: false };
 
-  assertDesktopDependencyPreparationSafe(projectRoot);
   buildRelease(projectRoot);
   const afterBuild = inspectDesktopRelease(projectRoot);
   const replaced =
