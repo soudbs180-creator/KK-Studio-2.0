@@ -201,7 +201,7 @@ for (const width of [1099, 1920]) {
     }));
     expect(geometry.scroll).toBeLessThanOrEqual(geometry.width + 1);
     await page.screenshot({
-      path: `test-results/stage-workbench-${width}.png`,
+      path: test.info().outputPath(`stage-workbench-${width}.png`),
       fullPage: true,
     });
   });
@@ -241,7 +241,7 @@ test("窄屏仍可查看计划与提交审批", async ({ page }) => {
     .poll(async () => (await savedPlan(page))?.stages[0].status)
     .toBe("doing");
   await page.screenshot({
-    path: "test-results/stage-workbench-390.png",
+    path: test.info().outputPath("stage-workbench-390.png"),
     fullPage: true,
   });
 });

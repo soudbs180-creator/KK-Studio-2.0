@@ -81,10 +81,14 @@ test("文本请求经真实产品链生成中文、保存并在刷新后恢复",
   await page.getByRole("menuitem", { name: "适应视图" }).click();
   await expect(result).toBeInViewport();
   await result.screenshot({
-    path: "test-results/changes/2026-09-21-text-and-rule-audit/text-result.png",
+    path: test
+      .info()
+      .outputPath("changes/2026-09-21-text-and-rule-audit/text-result.png"),
   });
   await page.screenshot({
-    path: "test-results/changes/2026-09-21-text-and-rule-audit/text-preview.png",
+    path: test
+      .info()
+      .outputPath("changes/2026-09-21-text-and-rule-audit/text-preview.png"),
   });
   await page.reload();
   await page.getByRole("button", { name: "项目库", exact: true }).click();

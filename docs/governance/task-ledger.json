@@ -7343,7 +7343,8 @@
       "tests/unit",
       "docs/changes/2026-10-15-unified-execution/incident.md",
       "tests/desktop/plugin-recovery.mjs",
-      "docs/changes/2026-10-15-test-evidence-isolation"
+      "docs/changes/2026-10-15-test-evidence-isolation",
+      "tests/browser"
     ],
     "evidence": [
       "docs/changes/2026-10-15-unified-execution/incident.md",
@@ -7353,7 +7354,7 @@
       "docs/changes/2026-10-15-test-evidence-isolation/verification.md",
       "docs/changes/2026-10-15-test-evidence-isolation/review.md"
     ],
-    "verification": "真实合成Playwright成功/失败均在基线删除旧receipt而RED；独占run目录实现后定向7/7 GREEN（目录/文件/junction拒绝、旧三类原字节保留、新report/metadata、suite边界）。完整Node1346/1332PASS/14既有skip/0FAIL，lint/typecheck通过；sandbox junction EPERM经平台批准复验。无浏览器页面，版本不递增。原旧回执缺失不伪造恢复；完整verify、最终SHA独审与main集成待GDI安全接入后进行。",
+    "verification": "真实合成Playwright成功/失败均在基线删除旧receipt而RED；独占run目录实现后定向7/7 GREEN（目录/文件/junction拒绝、旧三类原字节保留、新report/metadata、suite边界）。完整Node1346/1332PASS/14既有skip/0FAIL，lint/typecheck通过；sandbox junction EPERM经平台批准复验。无浏览器页面，版本不递增。原旧回执缺失不伪造恢复；完整verify、最终SHA独审与main集成待GDI安全接入后进行。 独审e5d5dc31提出EVID-01固定截图/P1、EVID-02worker分散/P2；已各先RED再本地GREEN，17文件48截图仅迁移路径，新增截图守卫。补充完整Node/静态与正式复验、实际安全PNG未完成前不代填通过。 补充完整Node1347/1333PASS/14既有skip/0FAIL、lint/typecheck通过；format首报2文件后修正复验通过。真实PNG需GDI安全接入后验证，精确最终独审待续。",
     "verificationResult": "PARTIAL",
     "updated": "2026-10-15",
     "lastVerified": "2026-10-15",

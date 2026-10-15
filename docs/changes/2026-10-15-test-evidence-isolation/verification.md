@@ -20,3 +20,11 @@
 - 提交前源码冻结，最终SHA、format与独立审查以随后回执追加；完整浏览器验证需先在本分支接入GDI保护。
 
 - `npm run format:check` exit0；治理生成143项/0违规。完整verify仍待GDI保护，不能将当前单测/静态通过替代浏览器与客户端验收。
+
+## 独审后的补充回归
+
+- e5d5dc31精确HEAD定向7/7、两个正式插件入口existing-dir拒绝2/2通过；外部test-evidence-result-e5d5dc31.json记录6份日志hash。
+- 后续独审CHANGES REQUIRED，初始通过不代表完整保护。worker产物/报告同run新断言在正常/失败两项均2!=1而RED；修正后2/2 GREEN。截图守卫先把6个已安全helper误报，核对后支持已验证outputPath helper，再以48个真实固定路径RED；迁移17文件48处后与worker共3/3 GREEN。日志review-worker-red/green、review-screenshot-red-validated、review-both-green均保留在工程外原本轮目录。
+- 浏览器尚未启动；补充完整Node/静态与冻结提交独审待续，真实PNG/旧文件字节保留随GDI保护接入后验证。
+
+- 审查修正后完整npm test exit0：1347 total/1333 PASS/14既有平台skip/0FAIL（test-evidence-review-unit.log）；typecheck/lint exit0。首format因两条链式截图格式报告失败，二次格式化后完整format:check exit0，首错与复验分文件保留。补充仅路径与worker配置，未启动浏览器或修改业务断言。

@@ -18,7 +18,9 @@ test("左键框选可见卡片，不平移画布；空白点击清空选择", as
     page.locator('[data-canvas-node][data-selected="true"]'),
   ).toHaveCount(3);
   await page.screenshot({
-    path: "test-results/evidence/user-comments-2026-09-08/marquee.png",
+    path: test
+      .info()
+      .outputPath("evidence/user-comments-2026-09-08/marquee.png"),
   });
   await page.mouse.up();
   await expect(page.getByTestId("canvas-marquee")).toHaveCount(0);

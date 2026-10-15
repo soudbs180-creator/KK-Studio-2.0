@@ -67,9 +67,9 @@ test("菜单 Escape 先收起菜单，再次 Escape 收起编辑器并保留草�
   await expect(page.getByTestId("image-composer")).toHaveCount(0);
   await page.locator(".image-preview").click();
   await expect(page.getByLabel("图片提示词")).toHaveValue("切换时保留内容");
-  await page
-    .getByTestId("image-composer")
-    .screenshot({ path: "test-results/runtime/image-composer-refined.png" });
+  await page.getByTestId("image-composer").screenshot({
+    path: test.info().outputPath("runtime/image-composer-refined.png"),
+  });
 });
 
 test("平板会话分栏时画布控件左移且标题和输入控件尺寸稳定", async ({ page }) => {

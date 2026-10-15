@@ -1,5 +1,6 @@
 import { defineConfig } from "@playwright/test";
 import { execFileSync } from "node:child_process";
+import path from "node:path";
 import { allocateTestEvidenceRun } from "./scripts/testing/test-evidence.mjs";
 const productionPort = "1423";
 const configuredPort = process.env.KK_TEST_PORT;
@@ -15,10 +16,16 @@ const sourceHead = execFileSync("git", ["rev-parse", "HEAD"], {
   windowsHide: true,
   timeout: 10_000,
 }).trim();
-const evidence = allocateTestEvidenceRun("browser");
+// Workers reload this config, but must inherit the runner's one exclusive run.
+if (process.env.TEST_WORKER_INDEX === undefined)
+  process.env.KK_BROWSER_EVIDENCE_RUN =
+    allocateTestEvidenceRun("browser").directory;
+const evidenceDirectory = process.env.KK_BROWSER_EVIDENCE_RUN;
+if (!evidenceDirectory)
+  throw new Error("Browser worker is missing its evidence run");
 export default defineConfig({
   testDir: "./tests/browser",
-  outputDir: evidence.artifactsDir,
+  outputDir: path.join(evidenceDirectory, "artifacts"),
   metadata: { sourceHead },
   timeout: 30000,
   retries: 1,
@@ -32,5 +39,11 @@ export default defineConfig({
     url: baseURL,
     reuseExistingServer: false,
   },
-  reporter: [["list"], ["json", { outputFile: evidence.reportFile }]],
+  reporter: [
+    ["list"],
+    [
+      "json",
+      { outputFile: path.join(evidenceDirectory, "browser-results.json") },
+    ],
+  ],
 });

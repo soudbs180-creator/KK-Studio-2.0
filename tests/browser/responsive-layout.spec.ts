@@ -5,8 +5,7 @@ test.beforeEach(async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
 });
 
-const evidence =
-  "test-results/changes/2026-09-22-responsive-ui/evidence/verified";
+const evidence = "changes/2026-09-22-responsive-ui/evidence/verified";
 async function expectInside(page: Page, selector: string) {
   const boxes = await page.locator(selector).evaluateAll((elements) =>
     elements
@@ -85,7 +84,9 @@ for (const [width, height] of [
     const icon = (await model.locator("img").boundingBox())!;
     const label = (await model.locator("span").boundingBox())!;
     expect(label.x - icon.x - icon.width).toBeLessThanOrEqual(12);
-    await page.screenshot({ path: `${evidence}/${width}-landing.png` });
+    await page.screenshot({
+      path: test.info().outputPath(`${evidence}/${width}-landing.png`),
+    });
     for (const [name, heading] of [
       ["项目库", "项目库"],
       ["扩展", "扩展"],
@@ -120,7 +121,9 @@ for (const [width, height] of [
       expect(
         (await page.locator(".project-task-status").boundingBox())!.height,
       ).toBeLessThan(80);
-    await page.screenshot({ path: `${evidence}/${width}-canvas.png` });
+    await page.screenshot({
+      path: test.info().outputPath(`${evidence}/${width}-canvas.png`),
+    });
     if (
       await page
         .getByRole("button", { name: "收起对话", exact: true })
@@ -136,7 +139,9 @@ for (const [width, height] of [
       page,
       ".conversation-panel button, .conversation-panel select, .conversation-panel textarea",
     );
-    await page.screenshot({ path: `${evidence}/${width}-chat.png` });
+    await page.screenshot({
+      path: test.info().outputPath(`${evidence}/${width}-chat.png`),
+    });
     if (width < 960) {
       await expect(page.getByTestId("infinite-canvas")).toHaveAttribute(
         "inert",
@@ -271,7 +276,9 @@ for (const [width, height] of [
     }
     await expect(draft).toHaveValue("短屏仍可编辑，不发送真实请求");
     expect((await page.locator(".topbar").boundingBox())!.y).toBe(0);
-    await page.screenshot({ path: `${evidence}/${width}x${height}-chat.png` });
+    await page.screenshot({
+      path: test.info().outputPath(`${evidence}/${width}x${height}-chat.png`),
+    });
     await page.keyboard.press("Escape");
     await expect(panel).toBeVisible();
     await panel.getByRole("button", { name: "收起对话" }).click();
@@ -280,7 +287,9 @@ for (const [width, height] of [
     const dialog = page.getByRole("dialog", { name: "设置", exact: true });
     await dialog.getByLabel("主题", { exact: true }).selectOption("light");
     await page.screenshot({
-      path: `${evidence}/${width}x${height}-settings-light.png`,
+      path: test
+        .info()
+        .outputPath(`${evidence}/${width}x${height}-settings-light.png`),
     });
     await page.keyboard.press("Escape");
     await expect(dialog).toHaveCount(0);

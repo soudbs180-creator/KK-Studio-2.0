@@ -149,7 +149,7 @@ for (const viewport of [
     ).toBe(true);
     await expect(stage).toHaveAttribute("style", before!);
     await page.screenshot({
-      path: `test-results/evidence/menu-short-${viewport.width}.png`,
+      path: test.info().outputPath(`evidence/menu-short-${viewport.width}.png`),
       animations: "disabled",
     });
     await last.tap();
@@ -210,7 +210,7 @@ for (const width of [320, 1920]) {
     await showCanvasNavigation(page);
     await page.locator(".canvas-background").tap();
     await page.screenshot({
-      path: `test-results/evidence/background-visible-${width}.png`,
+      path: test.info().outputPath(`evidence/background-visible-${width}.png`),
       animations: "disabled",
     });
     await page.keyboard.press("Escape");

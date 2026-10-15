@@ -578,7 +578,11 @@ test("Agent 图片上传发送、离线保留、API 草稿隔离与真实视口�
       }));
     expect(actual).toEqual({ x: "120px", y: "90px" });
     await page.screenshot({
-      path: "test-results/changes/2026-09-23-agent-attachments/evidence/web-attachments.png",
+      path: test
+        .info()
+        .outputPath(
+          "changes/2026-09-23-agent-attachments/evidence/web-attachments.png",
+        ),
     });
     await page.reload();
     await page.getByRole("button", { name: "项目库", exact: true }).click();

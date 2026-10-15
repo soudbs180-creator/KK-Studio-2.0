@@ -11,3 +11,5 @@
 - [ ] PR61实际CI满足门禁后正常合入；从当前main承接本任务独有提交，重核branch/ledger/diff及精确SHA。
 
 治理PR61尚未合入时本分支基于已推送冻结head；不在main开发，不rebase/force。后续从新main挑选独有提交，保留原分支。风险重点：Playwright隐式清理、路径复用、错误/取消、旧历史原件与新报告身份。
+
+- 独审补项：worker共享run与48处固定截图迁移均先RED再GREEN；在安全Edge运行验证真实PNG位于同run、旧合成截图不变，随后精确SHA独审。

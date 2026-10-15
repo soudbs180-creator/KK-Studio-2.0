@@ -110,7 +110,11 @@ test("画布菜单可以切换吸附并打开图层搜索定位", async ({ page 
   const panel = page.getByRole("region", { name: "画布图层" });
   await expect(panel).toBeVisible();
   await panel.screenshot({
-    path: "test-results/changes/2026-09-29-kaworkai-canvas/evidence/layers-panel.png",
+    path: test
+      .info()
+      .outputPath(
+        "changes/2026-09-29-kaworkai-canvas/evidence/layers-panel.png",
+      ),
   });
   await panel.getByRole("searchbox", { name: "搜索图层" }).fill("新图片");
   await expect(

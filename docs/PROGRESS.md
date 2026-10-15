@@ -2,7 +2,7 @@
 
 ## 2026-10-15 测试证据输出保护（IN_PROGRESS）
 
-用户要求继续实施。TASK-VERIFY-EVIDENCE-20261015由root在原隔离树串行承接，治理PR61冻结；按真实无浏览器fixture先RED，再实现独立产物目录与旧路径拒绝。已实现每轮独占目录/旧路径拒绝；真实合成Playwright正常与失败运行均保留旧字节，定向7/7、完整Node1332通过/14既有skip，lint/typecheck/format通过。没有新产品能力进入客户端，完整verify与独审待续，旧回执缺失不改写。见[计划](changes/2026-10-15-test-evidence-isolation/plan.md)。
+用户要求继续实施。TASK-VERIFY-EVIDENCE-20261015由root在原隔离树串行承接，治理PR61冻结；按真实无浏览器fixture先RED，再实现独立产物目录与旧路径拒绝。已实现每轮独占目录/旧路径拒绝；真实合成Playwright正常与失败运行均保留旧字节，定向7/7、完整Node1332通过/14既有skip，lint/typecheck/format通过。独审提出固定截图/worker分散两项并已RED/GREEN修正；补充Node1333通过/14skip，17文件48处只迁移截图路径。没有新产品能力进入客户端，完整verify与正式复验待续，旧回执缺失不改写。见[计划](changes/2026-10-15-test-evidence-isolation/plan.md)。
 
 ## 2026-10-15 新正式执行首轮（IN_PROGRESS / PARTIAL）
 

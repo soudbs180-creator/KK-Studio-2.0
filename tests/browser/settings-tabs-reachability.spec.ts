@@ -43,7 +43,7 @@ for (const width of [320, 390, 1920]) {
     await tabs.getByRole("tab", { name: /^MCP/ }).click();
     await expect(dialog.getByLabel("MCP服务器名称")).toBeVisible();
     await page.screenshot({
-      path: `test-results/evidence/settings-extensions-${width}.png`,
+      path: test.info().outputPath(`evidence/settings-extensions-${width}.png`),
       animations: "disabled",
     });
   });
