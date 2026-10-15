@@ -9,6 +9,8 @@
 <!-- DOCUMENT_METADATA_END -->
 <!-- CURRENT_FACTS_BEGIN -->
 
+2026-10-16 最新增量：8e17cb13全量UI失败修复九文件已精确独审SPEC/QUALITY PASS，相关九组87/87首试、0retry/flaky/skip；侧栏偏移根因是垃圾箱独立行，归入原菜单后五锚点误差0，未放宽原Figma断言。静态/build及Node1508/14既有skip通过，未以此覆盖下文55a0完整verify失败或Native焦点边界。ADR022/023已接受并独审；正常多聊天实现者独占App/快照/聊天/Agent共享核心，本地安装实现者只写独立适配器，root保留main/Cargo/全局tokens/版本及任务文档。两条实现均未冻结/验收，模型B/C实际执行链并行只读核对。详见[当前验证](../changes/2026-10-15-kk-unified/verification.md)。
+
 2026-10-15 新授权实施：TASK-KK-UNIFIED-20261015，从origin/main d95e4c44 / Desktop-Web2.1.34建立独立工作树，候选2.1.35，完整范围见[批准规格](../changes/2026-10-15-kk-unified/spec.md)。持久项目分组/软删除、依赖guard、加载草稿80f6、格式保护6c639、硬件观测d3e各子范围已精确独审；12AI独立适配器73PASS但生产接线待。DESIGN基础e5e/0770及本地包7e06/aecb已独审；DESIGN正式41Node+8预览首试，不代表全产品UI完成。Native权威06ac/df9及设置f32/0ad精确独审通过；四渠道28c/f472阶段A及修复已精确独审，B/C仍开放。55a0组合verify Node1508/14skip、Agent199/2skip通过，Browser804PASS/7FAIL/0flaky，原配置重试后仍失败，正在集中核对。完整verify exit1，尾段未运行，原失败保留。root依赖为本任务实体目录，canonical/vendor链接只读。新Native55a0单实例/重开/清理已验，前台焦点失败保留，整轮PARTIAL；下面HOME/其他候选按此前时点理解，真实模型、完整共仓库、账号与云恢复仍未验收。
 
 当前执行：HOME源码a85ace90在actual main492承接分支完整verify通过（Node1343/14skip、Agent199/2skip、Edge785首试、development4步），官方Windows重建2.1.34及原Native38项/3次launch、Rust167均PASS；HOME-NATIVE-01经精确结果独审关闭，原f10两FAIL保留。前置GDI已按main新证据DONE；输出保护另缺取消/reporter失败实测保持PARTIAL。尚未HOME PR/Hosted/main或daily更新。旧1336证据与最终1763产物共6198hash独立核对一致。原依赖事故已按原锁恢复，未知旧字节/短时影响仍记TASK-VERIFY-DEPS-20261015；九项目/两副本/旧分支保护。

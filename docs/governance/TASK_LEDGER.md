@@ -6,7 +6,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 | ID | Title | Status | Display | Priority | Dependencies | Owner | Next action |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| TASK-KK-UNIFIED-20261015 | KK Studio 统一修复与重构 | IN_PROGRESS | 进行中 | P1 | none | root | 集中修正全量UI发现的7项回归/过时fixture并精确复审；保持前台焦点验收开放。继续正常多聊天schema/Agent scope与本地包安装适配，随后模型B/C、媒体及账号/手动加密备份，全局UI按DESIGN逐页验收。 |
+| TASK-KK-UNIFIED-20261015 | KK Studio 统一修复与重构 | IN_PROGRESS | 进行中 | P1 | none | root | 继续正常多聊天schema/Agent scope和独立本地包安装适配，按冻结源码补迁移/故障/调用方及实际产物证据。随后模型B/C、媒体、共仓库及账号/手动加密备份；全局UI按DESIGN逐页验收，保留前台焦点和最终完整verify/Hosted开放。 |
 | TASK-FIX-PUSH-GUARD-SPACES-001 | 修复 Windows Git pre-push 空格及长路径启动 | REVIEW | 进行中 | P1 | none | root | 补 merged-SHA 独立 review receipt、原始 Hosted artifact manifest 及当前 SHA 的 delivery 结果；本任务验收补齐前保持 REVIEW，签名/安装/用户验收仍属独立发布边界。 |
 | TASK-WINDOWS-ENTRY-DIAG-002 | 补齐Windows入口子进程失败诊断 | DONE | 已完成 | P2 | TASK-LAUNCH-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-WINDOWS-ENTRY-RECOVERY-003 | 继续定位Hosted Windows入口未正常退出的原始原因 | TODO | 未完成 | P1 | TASK-LAUNCH-001 | root | 将 fa78ed12 候选同步到当前 origin/main 后重跑 Hosted Windows，并读取 windows-entry.jsonl；保留 PR43 原失败和本机未复现原件，未取得新分类前保持 TODO。 |
@@ -168,9 +168,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `codex/TASK-KK-UNIFIED-20261015`
 - Worktree: `D:/kk-studio/.worktrees/TASK-KK-UNIFIED-20261015`
 - Modules: src/App.tsx, src/features, src/components, src/runtime, src/domain, src-tauri, vendor/canvas-agent, docs/changes/2026-10-15-kk-unified
-- Verification: PARTIAL — 候选Desktop/Web2.1.35，基线d95e4c44。项目生命周期/依赖guard/加载草稿80f6/格式保护6c639/硬件d3e/DESIGN e5e0770/本地包7e06aecb均有精确独审及定向证据，12AI适配器73PASS但生产接线待。Native06acdf9权威204Rust/1ignore及独审通过；设置f32/0ad、模型阶段A28c/f472精确修复独审通过，B/C仍开放。55a0新Native EXE6ac913a2/input8ce972b0，隔离同PID/仓库/快照/重开身份草稿及清理/记忆通过，前台focus唯一失败，整轮PARTIAL。55a0组合verify Node1508/14skip、Agent199/2skip与静态/build通过，Browser804PASS/7FAIL/0flaky，exit1，尾段design/development未执行，原失败保留并逐项triage。完整真实Provider/完整共仓库/账号/云恢复/Hosted未验。
+- Verification: PARTIAL — 候选Desktop/Web2.1.35，基线d95e4c44。项目生命周期/依赖guard/加载草稿80f6/格式保护6c639/硬件d3e/DESIGN e5e0770/本地包7e06aecb均有精确独审及定向证据，12AI适配器73PASS但生产接线待。Native06acdf9权威204Rust/1ignore及独审通过；设置f32/0ad、模型阶段A28c/f472精确修复独审通过，B/C仍开放。55a0新Native单实例/重开/清理通过，前台focus唯一失败，整轮PARTIAL；原完整verify Node1508/14skip、Agent199/2skip通过，Browser804PASS/7FAIL/0flaky，exit1和未执行尾段保留。8e17九文件修复及精确独审PASS，相关87/87首试、0retry/flaky/skip；原Figma坐标/0.1容差未改、五锚点误差0，静态/build和Node1508/14skip通过。完整verify/新Native未重跑，ADR022/023契约已接受并独审，正常多聊天和独立安装适配实施中。完整真实Provider/共仓库/账号/云恢复/Hosted未验。
 - Evidence: [docs/changes/2026-10-15-kk-unified/intent.md](../../docs/changes/2026-10-15-kk-unified/intent.md), [docs/changes/2026-10-15-kk-unified/spec.md](../../docs/changes/2026-10-15-kk-unified/spec.md), [docs/changes/2026-10-15-kk-unified/plan.md](../../docs/changes/2026-10-15-kk-unified/plan.md), [docs/changes/2026-10-15-kk-unified/verification.md](../../docs/changes/2026-10-15-kk-unified/verification.md), [docs/changes/2026-10-15-kk-unified/review.md](../../docs/changes/2026-10-15-kk-unified/review.md)
-- Next action: 集中修正全量UI发现的7项回归/过时fixture并精确复审；保持前台焦点验收开放。继续正常多聊天schema/Agent scope与本地包安装适配，随后模型B/C、媒体及账号/手动加密备份，全局UI按DESIGN逐页验收。
+- Next action: 继续正常多聊天schema/Agent scope和独立本地包安装适配，按冻结源码补迁移/故障/调用方及实际产物证据。随后模型B/C、媒体、共仓库及账号/手动加密备份；全局UI按DESIGN逐页验收，保留前台焦点和最终完整verify/Hosted开放。
 - Last verified: 2026-10-16
 - Updated: 2026-10-16
 

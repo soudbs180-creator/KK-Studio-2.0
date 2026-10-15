@@ -18,7 +18,7 @@
 
 每阶段先读调用链并增加有意义的失败回归，最小完整实现后运行相关检查，再独立审查。共享 App、模型配置、存储依次集成；共享产品模块实现者仅一位；依用户批准计划，独立适配器、测试与审查可并行。本轮项目生命周期独占 App/模型/存储/UI；依赖安全实现者仅占构建准备脚本及独立测试，禁止交叉。不能以某一阶段完成代替总任务完成。
 
-当前所有权：用户明确本会话独占隔离分支代码写入，其他用户任务只读。项目生命周期、加载草稿、硬件、DESIGN、设置及Native基础均已提交；模型阶段A与设置单项修复处于独立复审，产品源码冻结。root独占实际Native构建/产物验收和任务文档，reviewer只读固定提交。后续模型B/C、媒体、存储与App按明确路径顺序集成；所有实现者先报告，再由root发逐文件提交租约。Native权威决策见[ADR-021](../../architecture/adr/ADR-021-native-local-repository-authority.md)。
+当前所有权：用户明确本会话独占隔离分支代码写入，其他用户任务只读。项目生命周期、加载草稿、硬件、DESIGN、设置、模型阶段A及Native基础均已提交并通过对应精确复审；8e17全量UI修复九文件已独审，相关87项首试通过，完整verify仍待新冻结后重跑。当前多聊天实现者独占共享App/快照/聊天/Agent作用域路径，本地安装实现者只写独立适配器，root独占main/Cargo、全局tokens、版本和任务文档；Cargo、dist/1423及实际Native逐项协调，reviewer只读固定提交。后续模型B/C、媒体及账号等按明确路径继续集成，所有实现者先报告，再由root发逐文件提交租约。基础、正常多聊天及安装边界分别见[ADR-021](../../architecture/adr/ADR-021-native-local-repository-authority.md)、[ADR-022](../../architecture/adr/ADR-022-project-chats-and-v3-migration.md)、[ADR-023](../../architecture/adr/ADR-023-local-model-installation-and-owned-runtime.md)。
 
 候选归并：主线已包含 #62 测试进程/历史证据隔离及 #63 首页恢复。图片压缩复用 970d0b5e 的产品增量；响应式复用 baa117af、f22f2b68、3b294c12、2ea7639f、68d46984 的有效增量；DESIGN 脏候选只取固定快照独有内容。旧测试启动器不能覆盖主线隔离实现；候选未获当前 SHA 验收。
 

@@ -28,3 +28,5 @@
 - SET-UI-01 精确增量 `28c64fcc→0ad43b20` 独审CLOSED，SPEC/QUALITY PASS；三文件rawhash/Git blob吻合，独立25Node及额外同scope/busy内存断言通过，回读生产14/14证据。没有重跑Native或宣称全局UI完成。
 - 模型 `0ad43b20→f472c8f0` 五文件精确复审：MODEL-A-01/02及非阻断token备注CLOSED，原Menu探针旧提交RED/修复GREEN，独立52Node通过；生产23项及390/1920截图回读。阶段A SPEC/QUALITY PASS，完整MODEL及B/C不在此批准中。
 - `55a0ac51` 三文件精确复审关闭NAT-GUI-01（CDP前失败清理状态缺失）和NAT-GUI-02（重复激活依赖模拟输入路径），修正范围SPEC/QUALITY PASS。独立只读核对新Native run90314c39/EXE6ac913a2/input8ce972b0；单实例/恢复/重开/清理及记忆边界有实证，focus唯一失败保留，整轮PARTIAL。源码修正批准不等同真实前台启动验收。
+- 契约 `0a80be70→6a72e50b`：ADR-022/023及两份忽略目录实施计划独审未发现确定P1/P2，可进入正常多聊天和独立安装适配实现。额外只读核对旧235e/d95 Native面对未来main/bak会拒绝写入；迁移故障注入、跨运行时Windows锁和真实安装仍须分别验收。
+- UI修复 `6a72e50b→8e17cb13` 精确九文件独审SPEC/QUALITY PASS，manifest与Git blob全匹配；固定提交组件探针验证原菜单计数/选中/关闭/焦点，原Figma坐标及0.1容差未改、最终五锚点误差0。回读87/87首试报告及原804/811失败记录，未把定向通过冒充完整verify。未新跑Native、Cargo或浏览器，整体仍IN_PROGRESS。
