@@ -15,6 +15,7 @@ import { withProviderStoreLock } from "./providerCoordination.ts";
 import { credentialId } from "./providerCredentials.ts";
 import { BROWSER_STORAGE_KEYS } from "../../runtime/storage-contract.ts";
 import { modelSupportsKind } from "./model.ts";
+import { providerChannel } from "../../domain/modelChannels.ts";
 import {
   protocolBindingMatches,
   supportsProviderImages,
@@ -121,6 +122,8 @@ export async function loadProviderConnectionsDurable(
               connectionId: selected.id,
               protocol: selected.protocol,
               authMode: selected.authMode,
+              channel: selected.channel,
+              priority: selected.priority,
             }),
           );
       } catch {
@@ -466,6 +469,8 @@ export function newModelProfileConnection(
     id: `byok-${credentialRef}`,
     provider: profile.name,
     kind: "user_byok",
+    channel: providerChannel(profile),
+    priority: profile.priority,
     displayName: profile.name,
     baseUrl: profile.baseUrl,
     credentialRef,
@@ -514,6 +519,8 @@ export function connectionFromModelProfile(
         model: profile.model,
         protocol: profile.protocol,
         authMode: profile.authMode,
+        channel: profile.channel ?? existing.channel,
+        priority: profile.priority ?? existing.priority,
         capabilities:
           existing.model === profile.model &&
           protocolBindingMatches(

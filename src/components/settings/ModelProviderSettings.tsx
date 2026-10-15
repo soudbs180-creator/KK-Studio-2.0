@@ -25,6 +25,7 @@ import useScopedModelProviderDraft, {
   readModelProviderDraft,
 } from "./useScopedModelProviderDraft";
 import { isLocalProviderUrl } from "../../domain/providerUrl";
+import { providerChannel } from "../../domain/modelChannels";
 export default function ModelProviderSettings({
   onFeedback,
   scope = "official",
@@ -138,6 +139,8 @@ export default function ModelProviderSettings({
       model: connection.model ?? "",
       protocol: connection.protocol,
       authMode: connection.authMode,
+      channel: providerChannel(connection),
+      priority: connection.priority,
     });
     setCredentialRef(
       connection.credentialRef ??

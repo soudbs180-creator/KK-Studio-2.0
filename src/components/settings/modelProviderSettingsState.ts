@@ -83,6 +83,8 @@ export function resolveModelProviderConnection(
         model: profile.model,
         protocol: profile.protocol,
         authMode: profile.authMode,
+        channel: profile.channel ?? existing.channel,
+        priority: profile.priority ?? existing.priority,
         verificationStatus: protocolBindingMatches(
           { ...existing, baseUrl: existing.baseUrl! },
           profile,

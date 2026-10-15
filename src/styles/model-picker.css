@@ -23,6 +23,39 @@
   margin-bottom: 8px;
   flex-shrink: 0;
 }
+.kk-model-channels {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--kk-space-1);
+  padding: var(--kk-space-1);
+  margin-bottom: var(--kk-space-2);
+  flex-shrink: 0;
+  background: var(--bg-input);
+  border-radius: var(--kk-radius-control);
+}
+.kk-model-menu .kk-model-channels button {
+  padding: var(--kk-space-1);
+  text-align: center;
+  white-space: nowrap;
+}
+.kk-model-menu .kk-model-channels button[aria-selected="true"] {
+  background: var(--ui-neutral-selected);
+  box-shadow: inset 0 0 0 1px var(--border-default);
+  font-weight: 600;
+}
+.kk-model-menu .kk-model-filter {
+  width: auto;
+  max-width: 80px;
+  min-width: 0;
+  height: var(--kk-control-h-md);
+  font-size: var(--kk-font-caption);
+  margin: 0;
+}
+.kk-model-scope {
+  flex-shrink: 0;
+  font-size: var(--kk-font-caption);
+  color: var(--text-secondary);
+}
 .kk-model-menu-top > strong {
   flex: 0 0 auto;
   font-size: var(--ui-font-body);
@@ -38,7 +71,7 @@
 .kk-model-menu .kk-model-search {
   width: 0;
   min-width: 0;
-  height: 24px;
+  height: var(--kk-control-h-md);
   flex: 1;
   margin: 0;
   padding: 4px 8px;

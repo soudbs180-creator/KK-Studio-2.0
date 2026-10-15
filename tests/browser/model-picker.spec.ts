@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 import { openSeededProject } from "./helpers";
 const pixel =
   "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=";
-test("模型前缀分组、参数选择和模糊搜索保留实际厂商 ID", async ({
+test("模型精确版本、参数选择和模糊搜索保留实际厂商 ID", async ({
   page,
 }, info) => {
   const sent: Record<string, unknown>[] = [];
@@ -53,11 +53,12 @@ test("模型前缀分组、参数选择和模糊搜索保留实际厂商 ID", as
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
   await page.getByRole("button", { name: "模型", exact: true }).click();
   const menu = page.getByRole("menu", { name: "选择模型" });
+  await menu.getByRole("tab", { name: "官方 API", exact: true }).click();
   const search = menu.getByRole("searchbox", { name: "搜索模型、厂商或参数" });
   await search.fill("auorra");
   await expect(
     menu.getByRole("menuitemradio", { name: /aurora-1/ }),
-  ).toHaveCount(1);
+  ).toHaveCount(3);
   await expect(menu).toContainText("可能匹配");
   await search.fill("8k");
   await expect(menu.getByRole("menuitemradio")).toHaveCount(0);
@@ -183,7 +184,7 @@ test("模型前缀分组、参数选择和模糊搜索保留实际厂商 ID", as
   ).toHaveCount(0);
   await page.screenshot({ path: info.outputPath("model-variants-search.png") });
 });
-test("分级菜单展示同名 API 图片模型、未知用途原因并保留账号选择", async ({
+test("渠道内展示同名 API 图片模型、未知用途原因并保留账号选择", async ({
   page,
 }) => {
   const sent: string[] = [];
@@ -239,7 +240,7 @@ test("分级菜单展示同名 API 图片模型、未知用途原因并保留账
   await trigger.click();
   const menu = page.getByRole("menu", { name: "选择模型" });
   await expect(menu.getByRole("menuitemradio", { name: /默认/ })).toBeVisible();
-  await menu.getByRole("button", { name: "切换全部模型", exact: true }).click();
+  await menu.getByRole("tab", { name: "官方 API", exact: true }).click();
   const enabledImageOptions = menu.getByRole("menuitemradio", {
     name: /image-same/,
   });
@@ -248,9 +249,6 @@ test("分级菜单展示同名 API 图片模型、未知用途原因并保留账
   await enabledImageOptions.first().press("End");
   await expect(enabledImageOptions.last()).toBeFocused();
   await enabledImageOptions.last().press("ArrowDown");
-  const defaultModel = menu.getByRole("menuitemradio", { name: /^默认/ });
-  await expect(defaultModel).toBeFocused();
-  await defaultModel.press("ArrowDown");
   await expect(enabledImageOptions.first()).toBeFocused();
   await expect(
     menu.getByRole("menuitemradio", { name: /brand-new-model/ }).first(),
@@ -367,6 +365,7 @@ test("视频和音频模型明确保持禁用并可键盘阅读原因", async ({
   const menu = page.getByRole("menu", { name: "选择模型" });
   for (const model of ["media-video", "media-audio"]) {
     await trigger.click();
+    await menu.getByRole("tab", { name: "官方 API", exact: true }).click();
     await menu.getByRole("searchbox").fill(model);
     const option = menu.getByRole("menuitemradio", { name: model });
     await expect(option).toHaveAttribute("aria-disabled", "true");

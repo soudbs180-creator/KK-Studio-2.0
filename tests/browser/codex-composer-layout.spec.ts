@@ -52,9 +52,8 @@ async function selectLongHomeModel(page: Page): Promise<void> {
   const trigger = form.getByRole("button", { name: "模型", exact: true });
   await trigger.click();
   const menu = form.getByRole("menu", { name: "选择模型", exact: true });
-  const api = menu.getByRole("menuitem", { name: /^API 自定义模型/ });
-  if (await api.count()) await api.click();
-  await menu.getByRole("menuitem", { name: /^布局供应商 0/ }).click();
+  await menu.getByRole("tab", { name: "中转 API", exact: true }).click();
+  await menu.getByRole("searchbox").fill("布局供应商 0");
   await menu
     .getByRole("menuitemradio", { name: new RegExp(longModel) })
     .click();
@@ -221,19 +220,14 @@ for (const width of [1280, 1920]) {
     await trigger.click();
     const menu = form.getByRole("menu", { name: "选择模型", exact: true });
     await anchored(page, trigger, menu);
-    await menu
-      .getByRole("button", { name: "切换全部模型", exact: true })
-      .click();
+    await menu.getByRole("tab", { name: "中转 API", exact: true }).click();
     await anchored(page, trigger, menu);
-    await menu
-      .getByRole("button", { name: "切换分级模型", exact: true })
-      .click();
+    await menu.getByRole("tab", { name: "登录账号", exact: true }).click();
     await anchored(page, trigger, menu);
-    const api = menu.getByRole("menuitem", { name: /^API 自定义模型/ });
-    if (await api.count()) await api.click();
-    await menu.getByRole("menuitem", { name: /^布局供应商 0/ }).click();
+    await menu.getByRole("tab", { name: "中转 API", exact: true }).click();
+    await menu.getByRole("searchbox").fill("布局供应商 0");
     await anchored(page, trigger, menu);
-    await menu.getByRole("button", { name: "返回上一级", exact: true }).click();
+    await menu.getByRole("searchbox").fill("");
     await anchored(page, trigger, menu);
     await page.evaluate(() => {
       (

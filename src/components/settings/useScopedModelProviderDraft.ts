@@ -17,6 +17,7 @@ import {
   type ConnectionState,
 } from "./modelProviderSettingsState";
 import { isLocalProviderUrl } from "../../domain/providerUrl";
+import { providerChannel } from "../../domain/modelChannels";
 
 type ProviderDraft = {
   profile: ModelProviderProfile;
@@ -49,6 +50,8 @@ export function readModelProviderDraft(
           model: local.model ?? "",
           protocol: local.protocol,
           authMode: local.authMode,
+          channel: providerChannel(local),
+          priority: local.priority,
         }
       : {
           version: 1,
@@ -60,6 +63,13 @@ export function readModelProviderDraft(
         };
   }
   const existing = findModelProfileConnection(profile, connections);
+  profile = {
+    ...profile,
+    channel: existing
+      ? providerChannel(existing)
+      : providerChannel({ ...profile, channel: scope ?? profile.channel }),
+    priority: existing?.priority ?? profile.priority,
+  };
   return {
     profile,
     apiKey: "",
@@ -139,6 +149,7 @@ export default function useScopedModelProviderDraft({
     const nextProfile = { ...profile, ...patch };
     if ("baseUrl" in patch || "name" in patch) {
       nextProfile.connectionId = undefined;
+      nextProfile.channel = providerChannel({ ...nextProfile, channel: scope });
       setApiKey("");
       setCredentialRef(credentialId(nextProfile.baseUrl, nextProfile.name));
     }

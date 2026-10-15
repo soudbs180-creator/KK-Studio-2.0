@@ -50,7 +50,7 @@ test("未配置 API 时首页仍默认 Codex，打开 API 接入保留草稿", a
     page.getByRole("button", { name: "模型", exact: true }),
   ).toContainText("Codex 内置生图");
   await page.getByRole("button", { name: "模型", exact: true }).click();
-  await page.getByRole("menuitem", { name: /^API 自定义模型/ }).click();
+  await page.getByRole("tab", { name: "中转 API", exact: true }).click();
   await expect(page.getByRole("menu", { name: "选择模型" })).toContainText(
     "暂无模型",
   );
@@ -181,7 +181,7 @@ test("首页加号添加图片并支持删除，模型入口是本次创作选�
   await expect(page.getByRole("menu", { name: "选择模型" })).toContainText(
     "Codex 内置生图",
   );
-  await page.getByRole("menuitem", { name: /^API 自定义模型/ }).click();
+  await page.getByRole("tab", { name: "中转 API", exact: true }).click();
   await expect(page.getByRole("menu", { name: "选择模型" })).toContainText(
     "暂无模型，请在模型接入中保存连接并刷新模型列表。",
   );

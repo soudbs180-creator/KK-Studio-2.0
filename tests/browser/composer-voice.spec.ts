@@ -148,8 +148,7 @@ test("首页模型名称保持单行并在过长时省略", async ({ page }) => 
   const button = page.locator(".start-model-picker .start-tool-button");
   await button.click();
   const menu = page.getByRole("menu", { name: "选择模型", exact: true });
-  await menu.getByRole("menuitem", { name: /^API 自定义模型/ }).click();
-  await menu.getByRole("menuitem", { name: /^本地兼容服务/ }).click();
+  await menu.getByRole("tab", { name: "中转 API", exact: true }).click();
   await menu
     .getByRole("menuitemradio", {
       name: /kk-image-model-with-a-very-long-display-name/,

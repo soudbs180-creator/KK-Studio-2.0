@@ -60,3 +60,50 @@ test("image API rows show the exact verified model id before its family", () => 
     restore();
   }
 });
+
+test("picker lists every exact model version and keeps duplicate routes separate", () => {
+  const connections = ["a", "b"].map((id) => ({
+    id,
+    provider: "Same",
+    kind: "user_byok",
+    displayName: id,
+    baseUrl: `https://${id}.example/v1`,
+    credentialRef: id,
+    capabilities: { modalities: ["image"] },
+    state: "active",
+  }));
+  const restore = installStorage(
+    JSON.stringify(
+      connections.map((connection) => ({
+        ...connection,
+        fetchedAt: 1,
+        models: ["aurora-2k-low", "aurora-2k-high", "aurora-4k-high"].map(
+          (id) => ({ id, kind: "image", family: "Aurora" }),
+        ),
+      })),
+    ),
+  );
+  try {
+    const entries = apiMenuEntries(
+      connections as Parameters<typeof apiMenuEntries>[0],
+      undefined,
+      "image",
+      "",
+    );
+    assert.equal(entries.length, 6);
+    assert.deepEqual(
+      entries.map((item) => item.selection?.model),
+      [
+        "aurora-2k-low",
+        "aurora-2k-high",
+        "aurora-4k-high",
+        "aurora-2k-low",
+        "aurora-2k-high",
+        "aurora-4k-high",
+      ],
+    );
+    assert.equal(new Set(entries.map((item) => item.id)).size, 6);
+  } finally {
+    restore();
+  }
+});
