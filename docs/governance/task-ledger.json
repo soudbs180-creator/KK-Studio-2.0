@@ -7401,11 +7401,11 @@
       "docs/changes/2026-10-15-test-evidence-isolation/verification.md",
       "docs/changes/2026-10-15-test-evidence-isolation/review.md"
     ],
-    "verification": "真实合成Playwright成功/失败均在基线删除旧receipt而RED；独占run目录实现后定向7/7 GREEN（目录/文件/junction拒绝、旧三类原字节保留、新report/metadata、suite边界）。完整Node1346/1332PASS/14既有skip/0FAIL，lint/typecheck通过；sandbox junction EPERM经平台批准复验。无浏览器页面，版本不递增。原旧回执缺失不伪造恢复；完整verify、最终SHA独审与main集成待GDI安全接入后进行。 独审e5d5dc31提出EVID-01固定截图/P1、EVID-02worker分散/P2；已各先RED再本地GREEN，17文件48截图仅迁移路径，新增截图守卫。补充完整Node/静态与正式复验、实际安全PNG未完成前不代填通过。 补充完整Node1347/1333PASS/14既有skip/0FAIL、lint/typecheck通过；format首报2文件后修正复验通过。真实PNG需GDI安全接入后验证，精确最终独审待续。 精确6374独立源码复验限定PASS，无新阻断；当前a6e组合新增安全真实PNG探针正常/失败两种旧字节均保持，新PNG/report同run，未提交probe范围清楚。 f727完整失败但旧PNG/report/receipt三项hash均保留且441输出已备份；仅缺插件环境补齐后原11失败全部同SHA/原断言通过。SHOT-01已自修复并补7种AST负例，最终新head待审。 最新冻结源码9aa12e92完整verify exit0：Node1348/1334PASS/14skip、Agent201/199PASS/2skip、Edge784首试0fail/flaky/skip、development5步PASS；Windows实际15+1参数、真实PNG成功/主动失败和100页7次0TabProxy通过。454旧文件与备份908项hash一致，879最终产物另存。独审actual main3a→9aa47文件PASS_LOCAL_TEST_SAFETY_SCOPE，SHOT-01/DOC-01关闭；首轮f727失败保留，Hosted/PR/main/产品验收仍未完成。 PR62 exact f9c所有required PR/push verify/delivery及client/native成功，final独审PASS后正常squash main492abad4；已实际fetch/tree与f9c完全相同，合后新main Hosted仍单独等待。",
+    "verification": "真实合成Playwright成功/失败均在基线删除旧receipt而RED；独占run目录实现后定向7/7 GREEN（目录/文件/junction拒绝、旧三类原字节保留、新report/metadata、suite边界）。完整Node1346/1332PASS/14既有skip/0FAIL，lint/typecheck通过；sandbox junction EPERM经平台批准复验。无浏览器页面，版本不递增。原旧回执缺失不伪造恢复；完整verify、最终SHA独审与main集成待GDI安全接入后进行。 独审e5d5dc31提出EVID-01固定截图/P1、EVID-02worker分散/P2；已各先RED再本地GREEN，17文件48截图仅迁移路径，新增截图守卫。补充完整Node/静态与正式复验、实际安全PNG未完成前不代填通过。 补充完整Node1347/1333PASS/14既有skip/0FAIL、lint/typecheck通过；format首报2文件后修正复验通过。真实PNG需GDI安全接入后验证，精确最终独审待续。 精确6374独立源码复验限定PASS，无新阻断；当前a6e组合新增安全真实PNG探针正常/失败两种旧字节均保持，新PNG/report同run，未提交probe范围清楚。 f727完整失败但旧PNG/report/receipt三项hash均保留且441输出已备份；仅缺插件环境补齐后原11失败全部同SHA/原断言通过。SHOT-01已自修复并补7种AST负例，最终新head待审。 最新冻结源码9aa12e92完整verify exit0：Node1348/1334PASS/14skip、Agent201/199PASS/2skip、Edge784首试0fail/flaky/skip、development5步PASS；Windows实际15+1参数、真实PNG成功/主动失败和100页7次0TabProxy通过。454旧文件与备份908项hash一致，879最终产物另存。独审actual main3a→9aa47文件PASS_LOCAL_TEST_SAFETY_SCOPE，SHOT-01/DOC-01关闭；首轮f727失败保留，Hosted/PR/main/产品验收仍未完成。 PR62 exact f9c所有required PR/push verify/delivery及client/native成功，final独审PASS后正常squash main492abad4；已实际fetch/tree与f9c完全相同，合后新main Hosted仍单独等待。 main492新Hosted与合后范围已独立确认成功；取消运行/报告写入失败尚无直接注入证据，不能代填，仍PARTIAL。",
     "verificationResult": "PARTIAL",
     "updated": "2026-10-15",
     "lastVerified": "2026-10-15",
-    "nextAction": "保持原安全分支只读，等待main492新Hosted结果与合后范围确认后关闭；HOME已串行在新承接分支进行，daily及产品验收不代填。",
+    "nextAction": "在独立新目录补Playwright受控取消和reporter写入失败两类真实负向运行，记录非0/中断状态并核对旧回执/PNG hash保持；保留全部旧失败与缺失UNKNOWN，不改当前HOME源码。",
     "requirementRefs": [
       "ledger:TASK-GOV-006",
       "docs/changes/2026-10-15-unified-execution/incident.md"
@@ -7441,7 +7441,7 @@
       "tests/desktop/test-evidence-preservation.mjs",
       "package.json"
     ],
-    "status": "PARTIAL",
+    "status": "DONE",
     "priority": "P1",
     "priorityRationale": "大量 headless Edge 测试会遗留 Shell 图标资源，曾使 Explorer GDI 接近10000上限并丢失桌面。",
     "evidence": [
@@ -7451,12 +7451,12 @@
       "docs/changes/2026-10-15-explorer-gdi-integration/verification.md",
       "docs/changes/2026-10-15-explorer-gdi-integration/review.md"
     ],
-    "verification": "原af8精确HEAD新verify Node1327/Agent199/Edge784首试/development4步通过；原development旧receipt/PNG因清理缺失单列incident，未伪造恢复。当前按原stable ID由root在复用隔离树承接，仅挑af8独有7源码，父tree与main235e相同。新组合、实际main/Hosted/客户端仍未验收。 已挑af8为a6e，配置冲突只保留双保护。真实Windows browser/2renderers保留15+1项，真实PNG正常/失败均保持旧字节，新PNG/report同run。全量verify、100页新组合及最终SHA独审尚待。 main3a已fetch，tree与精确治理89fba完全相同；从main只挑4独有提交，384546c8树与旧8729完全一致，未复制治理旧提交历史。 f727首轮完整verify exit1：Node1333/Agent199通过，Browser773PASS/11FAIL/0flaky、development未运行；441产物完整保留，旧3项字节一致。发现缺既定postinstall插件依赖/构建；只补17packages/插件构建与生产dist后，同f727/原断言11项13.6s全部首试PASS。新test入口先plugins:build防同类遗漏。SHOT-01 quoted/条件/变量options/shorthand/spread先5项全漏RED，补getter再次RED，严格直接路径后7负例与当前截图守卫GREEN；新完整verify/独审待续。 最新冻结源码9aa12e92完整verify exit0：Node1348/1334PASS/14skip、Agent201/199PASS/2skip、Edge784首试0fail/flaky/skip、development5步PASS；Windows实际15+1参数、真实PNG成功/主动失败和100页7次0TabProxy通过。454旧文件与备份908项hash一致，879最终产物另存。独审actual main3a→9aa47文件PASS_LOCAL_TEST_SAFETY_SCOPE，SHOT-01/DOC-01关闭；首轮f727失败保留，Hosted/PR/main/产品验收仍未完成。 PR62 exact f9c所有required PR/push verify/delivery及client/native成功，final独审PASS后正常squash main492abad4；已实际fetch/tree与f9c完全相同，合后新main Hosted仍单独等待。",
-    "verificationResult": "PARTIAL",
+    "verification": "原af8精确HEAD新verify Node1327/Agent199/Edge784首试/development4步通过；原development旧receipt/PNG因清理缺失单列incident，未伪造恢复。当前按原stable ID由root在复用隔离树承接，仅挑af8独有7源码，父tree与main235e相同。新组合、实际main/Hosted/客户端仍未验收。 已挑af8为a6e，配置冲突只保留双保护。真实Windows browser/2renderers保留15+1项，真实PNG正常/失败均保持旧字节，新PNG/report同run。全量verify、100页新组合及最终SHA独审尚待。 main3a已fetch，tree与精确治理89fba完全相同；从main只挑4独有提交，384546c8树与旧8729完全一致，未复制治理旧提交历史。 f727首轮完整verify exit1：Node1333/Agent199通过，Browser773PASS/11FAIL/0flaky、development未运行；441产物完整保留，旧3项字节一致。发现缺既定postinstall插件依赖/构建；只补17packages/插件构建与生产dist后，同f727/原断言11项13.6s全部首试PASS。新test入口先plugins:build防同类遗漏。SHOT-01 quoted/条件/变量options/shorthand/spread先5项全漏RED，补getter再次RED，严格直接路径后7负例与当前截图守卫GREEN；新完整verify/独审待续。 最新冻结源码9aa12e92完整verify exit0：Node1348/1334PASS/14skip、Agent201/199PASS/2skip、Edge784首试0fail/flaky/skip、development5步PASS；Windows实际15+1参数、真实PNG成功/主动失败和100页7次0TabProxy通过。454旧文件与备份908项hash一致，879最终产物另存。独审actual main3a→9aa47文件PASS_LOCAL_TEST_SAFETY_SCOPE，SHOT-01/DOC-01关闭；首轮f727失败保留，Hosted/PR/main/产品验收仍未完成。 PR62 exact f9c所有required PR/push verify/delivery及client/native成功，final独审PASS后正常squash main492abad4；已实际fetch/tree与f9c完全相同，合后新main Hosted仍单独等待。 2026-10-15 11:54:34 UTC独立只读回读actual main492abad48b0695f6117265fba6d29e8ea2a4b9bc；本轮quality38726260549全部success（repo verify/Rust fmt+test/client check+build/WebView2/隔离Native TaskHost/证据上传），双平台guards38726260498与main-health38730589177成功，7个check-runs全success，必需verify/delivery满足。产物11969904183/39602109B未过期，未下载检验内文。非必需auto-merge38726259041 failure/jobs=[]原因UNKNOWN单列。 独立PASS_POST_MERGE_GDI_SCOPE，三项acceptance满足，测试任务DONE。",
+    "verificationResult": "PASS",
     "updated": "2026-10-15",
     "lastVerified": "2026-10-15",
-    "displayStatus": "进行中",
-    "nextAction": "保持原安全分支只读，等待main492新Hosted结果与合后范围确认后关闭；HOME已串行在新承接分支进行，daily及产品验收不代填。",
+    "displayStatus": "已完成",
+    "nextAction": "测试安全GDI范围已闭环，保留原分支与证据；产品/日常客户端真实验收仍按各任务继续。",
     "requirementRefs": [
       "ledger:TASK-GOV-006",
       "ledger:TASK-VERIFY-EVIDENCE-20261015",

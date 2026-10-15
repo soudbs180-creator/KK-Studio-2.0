@@ -41,3 +41,5 @@
 - 原tests/desktop/agent-startup-recovery.mjs实际exit0，38checks全部true、3次launch、errors=[]；home-native-startup-a85ace90/receipt.json SHAbcf228243303f00f00670dded7f3e69c0e6db927a0109d5b21bb3ff928855957。官方start-kk-studio.bat --background --data-dir隔离启动；独立profile/CODEX_HOME且剥离API凭据，3轮实际加载assets字节与dist一致，URL http://tauri.localhost/、production、index-lkY5wj3H.js，route/import沿main→App→SettingsPanel Agent卡片/desktop bridge。实际正常关闭重开恢复原thread、显式disconnect跨reload/reopen暂停、manual reconnect/stop/restart和未知归属拒绝都通过；reopen-connected.png/DOM显示已连接，原断言未改。
 - 观测CDP attach后model turns=0，CDP前请求仍NOT VERIFIED且未被此结果代填；唯一synthetic credential清理true，owned实例正常关闭。证据25文件另有home-native-a85ace90-manifest.json。不是日常profile/真实Provider/用户视觉或正式安装包验收。原f10两次Native FAIL不重标。
 - 源码差量独审PASS_SOURCE_DELTA_SCOPE绑定f10→a85（11文件），无新增P1/P2，所有Rust守卫保留；HOME-DOC-PRIMARY关闭。实际Native获PASS_LOCAL_NATIVE_STARTUP_RECOVERY_SCOPE，原脚本hash与失败时相同，HOME-NATIVE-01关闭；正常HOME PR/Hosted/main与剩余数据/外部验收继续。
+
+- 正式PR前重新fetch/API核对main仍492；前置main新质量/guards/health全部success，GDI按独立合后范围DONE。输出保护仍缺取消/reporter失败实测，明确PARTIAL并交给独立外部探针，不阻碍已受独占目录/6198hash验证的本轮HOME证据。

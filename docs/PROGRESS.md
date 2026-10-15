@@ -1161,3 +1161,7 @@ Codex 主 Agent 移至模型接入；侧栏扩展统一 Skill、MCP、协作伙�
 ## 2026-10-15 UI细节收敛（本地完成）
 
 TASK-UI-DETAILS-20261015从最新18e143f修复，Desktop/Web2.1.26产品ab878ffd：紧凑设置、共享composer控件、末尾动作组、空/非空上传与扩展内容轴，删除三项旧组件及入口。完整verify退出0：Node1278/14skip、Agent199/2skip、browser635首试、UI239/0、development PASS；精确源码独立审查、官方重建及38项Native与资源字节一致性通过。原数据身份和primary dirty/index保留，owned测试实例正常关闭。Mobile2.1.1规划、真实Provider/Hosted/签名及用户视觉接受继续各自开放；[当前验证](changes/2026-10-15-ui-details/verification.md)。
+
+## 2026-10-15 PR62合后必需门禁闭环
+
+2026-10-15 11:54:34 UTC独立只读回读actual main492abad48b0695f6117265fba6d29e8ea2a4b9bc；本轮quality38726260549全部success（repo verify/Rust fmt+test/client check+build/WebView2/隔离Native TaskHost/证据上传），双平台guards38726260498与main-health38730589177成功，7个check-runs全success，必需verify/delivery满足。产物11969904183/39602109B未过期，未下载检验内文。非必需auto-merge38726259041 failure/jobs=[]原因UNKNOWN单列。 GDI三项验收独审满足，测试任务DONE；输出证据保护另缺取消/reporter失败两类实测，继续PARTIAL，不把结构性保护冒称运行证据。HOME源码a85及Windows38项通过，正式HOME PR继续。

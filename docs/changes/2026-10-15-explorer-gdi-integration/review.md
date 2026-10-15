@@ -14,3 +14,5 @@
 ## 此前审查（原文保留，不覆盖当前结论）
 
 - 独立safety_integration_review对base3a→f727全部44文件审查CHANGES REQUIRED：无额外P0/P1，SHOT-01/P2守卫未知形态漏检、DOC-01/P2当前事实漂移。已接受并先RED补强/同步，待新SHA复验；f727 argv/真实PNG/100页证据独立核验，但首轮完整失败不得报PASS。
+
+- PASS_POST_MERGE_GDI_SCOPE：独立pr62_gate逐项核对GDI三项acceptance全部满足，当前main492新Hosted成功，TASK-EXPLORER-GDI-20261015按测试范围DONE。旧候选/dirty/用户资料未改变。
