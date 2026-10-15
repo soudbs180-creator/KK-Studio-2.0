@@ -13,6 +13,9 @@ import type {
   CanvasAgentOp,
   CanvasAgentSnapshot,
 } from "../../src/features/agent/agentTypes.ts";
+import { createDesktopAgentLifecycle } from "../../src/features/agent/desktopAgentLifecycle.ts";
+import { clearSentPendingDraft } from "../../src/features/agent/homeAgentRecovery.ts";
+import { createProject } from "../../src/features/creation/model.ts";
 
 /**
  * Agent 连接 store：connect 流程、SSE 事件驱动、画布工具回执、权限审批。
@@ -113,6 +116,440 @@ function memoryStorage() {
     removeItem: (key: string) => void map.delete(key),
   };
 }
+
+function connectionGate() {
+  let release!: () => void;
+  const promise = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  return { promise, release };
+}
+
+test("连接恢复：旧发送只能清除自己拥有的持久待发草稿", () => {
+  const project = createProject({
+    prompt: "pending A",
+    model: "",
+    kind: "image",
+    attachments: [],
+  });
+  project.composerDraft.pendingAgent = true;
+  project.composerDraft.prompt = "pending A";
+  project.composerDraft.attachments = [
+    {
+      id: "old-draft",
+      name: "old.png",
+      mime: "image/png",
+      size: 1,
+      dataUrl: "data:image/png;base64,YQ==",
+    },
+  ];
+  const sent = project.composerDraft;
+  const newer = {
+    ...project,
+    composerDraft: { ...sent, prompt: "new durable pending B" },
+  };
+  assert.equal(clearSentPendingDraft(newer, sent), newer);
+  const ordinary = {
+    ...project,
+    composerDraft: { ...sent, pendingAgent: undefined },
+  };
+  assert.equal(
+    clearSentPendingDraft(ordinary, ordinary.composerDraft),
+    ordinary,
+  );
+  const cleared = clearSentPendingDraft(project, sent);
+  assert.equal(cleared.composerDraft.prompt, "");
+  assert.equal(cleared.composerDraft.pendingAgent, undefined);
+  assert.deepEqual(cleared.composerDraft.attachments, []);
+  assert.equal(project.composerDraft.prompt, "pending A");
+  assert.equal(project.composerDraft.attachments.length, 1);
+});
+
+const connectionReadyResponse = () =>
+  jsonResponse(200, {
+    ok: true,
+    protocolVersion: 6,
+    conversation: readyConversation().data,
+    data: [],
+    messages: [],
+  });
+
+test("连接恢复：重复完成通知共享同一原图读取与归档", async (t) => {
+  const harness = createHarness({
+    codex: { busy: false },
+    conversation: readyConversation().data,
+  });
+  const entered = connectionGate(),
+    image = connectionGate(),
+    imported = connectionGate();
+  let history: unknown[] = [],
+    imageReads = 0,
+    imports = 0;
+  const conn = createAgentConnection({
+    storage: memoryStorage(),
+    eventSourceFactory: harness.eventSourceFactory,
+    fetcher: (async (input) => {
+      const url = String(input);
+      if (url.includes("/generated-image/")) {
+        imageReads++;
+        entered.release();
+        await image.promise;
+        return new Response(
+          new Blob(["independent synthetic image bytes"], {
+            type: "image/png",
+          }),
+        );
+      }
+      if (url.endsWith("/threads/thread-1"))
+        return jsonResponse(200, {
+          ok: true,
+          conversation: readyConversation().data,
+          messages: history,
+        });
+      return connectionReadyResponse();
+    }) as typeof fetch,
+  });
+  conn.setBridge({
+    getSnapshot: () => ({
+      projectId: "image-project",
+      title: "fixture",
+      nodes: [],
+      edges: [],
+      viewport: { x: 0, y: 0, scale: 1 },
+    }),
+    readAgentThread: () => "thread-1",
+    applyOps: () => ({ applied: [], rejected: [] }),
+    hasGeneratedImage: () => imports > 0,
+    importGeneratedImage: async () => {
+      imports++;
+      imported.release();
+    },
+  });
+  t.after(() => {
+    image.release();
+    conn.disconnect();
+  });
+  await conn.connect();
+  await conn.sendMessage("一次图片", { memoryMode: "none" });
+  history = [
+    {
+      id: "result-1",
+      itemId: "result-1",
+      role: "tool",
+      threadId: "thread-1",
+      turnId: "turn-1",
+      text: "completed",
+      detail: { kind: "image", status: "completed", savedPath: "fixture.png" },
+    },
+  ];
+  harness.sources[0].emit({
+    type: "agent_event",
+    data: { type: "turn.completed", status: "completed" },
+  });
+  await entered.promise;
+  harness.sources[0].emit({ type: "codex_state", data: { busy: false } });
+  await new Promise((resolve) => setImmediate(resolve));
+  assert.equal(imageReads, 1, "同一结果的并发完成通知不能重复取原图");
+  image.release();
+  await imported.promise;
+  await new Promise((resolve) => setImmediate(resolve));
+  assert.equal(imports, 1);
+  assert.equal(conn.getState().sending, false);
+});
+
+test("连接恢复：Web生命周期等待已有连接初始化后只发送一次", async (t) => {
+  const harness = createHarness();
+  const entered = connectionGate(),
+    models = connectionGate();
+  const paths: string[] = [];
+  const conn = createAgentConnection({
+    storage: memoryStorage(),
+    eventSourceFactory: harness.eventSourceFactory,
+    fetcher: (async (input) => {
+      const url = String(input);
+      paths.push(url);
+      if (url.endsWith("/models")) {
+        entered.release();
+        await models.promise;
+      }
+      return connectionReadyResponse();
+    }) as typeof fetch,
+  });
+  t.after(() => {
+    models.release();
+    conn.disconnect();
+  });
+  const first = conn.connect();
+  await entered.promise;
+  const lifecycle = createDesktopAgentLifecycle({
+    connection: conn,
+    isDesktop: () => false,
+  });
+  let completed = false;
+  const second = lifecycle.connect().then(() => {
+    completed = true;
+  });
+  await new Promise((resolve) => setImmediate(resolve));
+  assert.equal(completed, false, "同一次连接未就绪前不能提前完成");
+  models.release();
+  await Promise.all([first, second]);
+  assert.equal(conn.getState().status, "connected");
+  assert.equal(harness.sources.length, 1);
+  assert.equal(paths.filter((p) => p.endsWith("/prepare")).length, 1);
+  assert.equal(paths.filter((p) => p.endsWith("/threads/new")).length, 0);
+  assert.equal(
+    (await conn.sendMessage("本轮只发一次", { memoryMode: "none" })).ok,
+    true,
+  );
+  assert.equal(paths.filter((p) => p.endsWith("/turn")).length, 1);
+});
+
+test("连接恢复：相同trim凭据在连接中及就绪后均不取消或清会话", async (t) => {
+  const harness = createHarness();
+  const entered = connectionGate(),
+    config = connectionGate();
+  let signal: AbortSignal | null | undefined;
+  const storage = memoryStorage();
+  const conn = createAgentConnection({
+    storage,
+    eventSourceFactory: harness.eventSourceFactory,
+    fetcher: (async (input, init) => {
+      if (String(input).endsWith("/config")) {
+        signal = init?.signal;
+        entered.release();
+        await config.promise;
+      }
+      return connectionReadyResponse();
+    }) as typeof fetch,
+  });
+  t.after(() => {
+    config.release();
+    conn.disconnect();
+  });
+  conn.setCredentials("/kk-agent", "");
+  const first = conn.connect();
+  await entered.promise;
+  const revision = conn.getState().connectionRevision;
+  conn.setCredentials(" /kk-agent ", " ");
+  assert.equal(signal?.aborted, false);
+  assert.equal(conn.getState().connectionRevision, revision);
+  config.release();
+  await first;
+  assert.equal(conn.getState().status, "connected");
+  const conversation = conn.getState().conversation;
+  conn.setCredentials("/kk-agent", "");
+  assert.equal(conn.getState().status, "connected");
+  assert.equal(conn.getState().conversation, conversation);
+  assert.equal(harness.sources[0].closed, false);
+  assert.equal(storage.getItem("canvas-agent-token"), null);
+});
+
+test("连接恢复：取消旧连接后迟到完成不能释放新连接等待", async (t) => {
+  const harness = createHarness();
+  const aEntered = connectionGate(),
+    bEntered = connectionGate();
+  const a = connectionGate(),
+    b = connectionGate();
+  let modelRequests = 0;
+  const conn = createAgentConnection({
+    storage: memoryStorage(),
+    eventSourceFactory: harness.eventSourceFactory,
+    fetcher: (async (input) => {
+      if (String(input).endsWith("/models")) {
+        modelRequests++;
+        if (modelRequests === 1) {
+          aEntered.release();
+          await a.promise;
+        } else {
+          bEntered.release();
+          await b.promise;
+        }
+      }
+      return connectionReadyResponse();
+    }) as typeof fetch,
+  });
+  t.after(() => {
+    a.release();
+    b.release();
+    conn.disconnect();
+  });
+  const old = conn.connect();
+  await aEntered.promise;
+  conn.setCredentials("http://127.0.0.1:17382", "new-in-memory");
+  const current = conn.connect();
+  await bEntered.promise;
+  a.release();
+  await old;
+  let completed = false;
+  const joined = conn.connect().then(() => {
+    completed = true;
+  });
+  await new Promise((resolve) => setImmediate(resolve));
+  assert.equal(completed, false, "旧连接不能清掉新连接的共享等待");
+  b.release();
+  await Promise.all([current, joined]);
+  assert.equal(modelRequests, 2);
+  assert.equal(conn.getState().status, "connected");
+  assert.equal(harness.sources[0].closed, true);
+  assert.equal(harness.sources[1].closed, false);
+});
+
+test("连接恢复：共享失败保持错误并允许下一次真实重试", async (t) => {
+  const harness = createHarness();
+  const entered = connectionGate(),
+    config = connectionGate();
+  let attempts = 0;
+  const conn = createAgentConnection({
+    storage: memoryStorage(),
+    eventSourceFactory: harness.eventSourceFactory,
+    fetcher: (async (input) => {
+      if (String(input).endsWith("/config")) {
+        if (++attempts === 1) {
+          entered.release();
+          await config.promise;
+          return jsonResponse(503, { error: "fixture offline" });
+        }
+      }
+      return connectionReadyResponse();
+    }) as typeof fetch,
+  });
+  t.after(() => {
+    config.release();
+    conn.disconnect();
+  });
+  const first = conn.connect();
+  await entered.promise;
+  let joined = false;
+  const second = conn.connect().then(() => {
+    joined = true;
+  });
+  await new Promise((resolve) => setImmediate(resolve));
+  assert.equal(joined, false);
+  config.release();
+  await Promise.all([first, second]);
+  assert.equal(conn.getState().status, "error");
+  await conn.connect();
+  assert.equal(attempts, 2);
+  assert.equal(conn.getState().status, "connected");
+});
+
+test("连接恢复：同步订阅重入也等待当前连接", async (t) => {
+  const harness = createHarness();
+  const entered = connectionGate(),
+    models = connectionGate();
+  let reentrant: Promise<void> | undefined,
+    joined = false;
+  const conn = createAgentConnection({
+    storage: memoryStorage(),
+    eventSourceFactory: harness.eventSourceFactory,
+    fetcher: (async (input) => {
+      if (String(input).endsWith("/models")) {
+        entered.release();
+        await models.promise;
+      }
+      return connectionReadyResponse();
+    }) as typeof fetch,
+  });
+  t.after(() => {
+    models.release();
+    conn.disconnect();
+  });
+  const unsubscribe = conn.subscribe(() => {
+    if (conn.getState().status === "connecting" && !reentrant) {
+      reentrant = conn.connect().then(() => {
+        joined = true;
+      });
+    }
+  });
+  t.after(unsubscribe);
+  const first = conn.connect();
+  await entered.promise;
+  await new Promise((resolve) => setImmediate(resolve));
+  assert.equal(joined, false);
+  models.release();
+  await Promise.all([first, reentrant]);
+  assert.equal(harness.sources.length, 1);
+});
+
+test("连接恢复：就绪后读取额度期间显式新会话仍执行", async (t) => {
+  const harness = createHarness({
+    codex: { busy: false },
+    conversation: readyConversation().data,
+  });
+  const entered = connectionGate(),
+    usage = connectionGate();
+  let usageRequests = 0,
+    newThreads = 0;
+  const imageRequests: string[] = [];
+  const conn = createAgentConnection({
+    storage: memoryStorage(),
+    eventSourceFactory: harness.eventSourceFactory,
+    fetcher: (async (input) => {
+      const url = String(input);
+      if (url.endsWith("/usage") && ++usageRequests === 1) {
+        entered.release();
+        await usage.promise;
+      }
+      if (url.endsWith("/threads/new")) newThreads++;
+      if (url.includes("/generated-image/")) {
+        imageRequests.push(url);
+        return new Response(new Blob(["synthetic"], { type: "image/png" }));
+      }
+      if (url.endsWith("/threads/thread-1"))
+        return jsonResponse(200, {
+          ok: true,
+          conversation: readyConversation().data,
+          messages: [
+            {
+              id: "old-project-image",
+              role: "tool",
+              threadId: "thread-1",
+              turnId: "old-turn",
+              text: "old",
+              detail: {
+                kind: "image",
+                status: "completed",
+                savedPath: "old.png",
+              },
+            },
+          ],
+        });
+      if (newThreads)
+        return jsonResponse(200, {
+          ok: true,
+          protocolVersion: 6,
+          data: [],
+          messages: [],
+          conversation: readyConversation({ threadId: "thread-new" }).data,
+        });
+      return connectionReadyResponse();
+    }) as typeof fetch,
+  });
+  conn.setBridge({
+    getSnapshot: () => ({
+      projectId: "epoch-project",
+      title: "fixture",
+      nodes: [],
+      edges: [],
+      viewport: { x: 0, y: 0, scale: 1 },
+    }),
+    readAgentThread: () => "thread-1",
+    applyOps: () => ({ applied: [], rejected: [] }),
+    importGeneratedImage: async () => {},
+  });
+  t.after(() => {
+    usage.release();
+    conn.disconnect();
+  });
+  const first = conn.connect();
+  await entered.promise;
+  assert.equal(conn.getState().status, "connected");
+  await conn.connect(true);
+  assert.equal(newThreads, 1);
+  usage.release();
+  await first;
+  assert.deepEqual(imageRequests, [], "旧连接额度迟到后不能把旧图投射进新线程");
+});
 
 test("图片发送冻结附件快照并携带实际图片和名称，不混入凭据", async (t) => {
   const harness = createHarness({

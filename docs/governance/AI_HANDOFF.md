@@ -10,7 +10,7 @@
 
 ## 统一整理后的正式执行入口（TASK-GOV-006）
 
-当前任务先读[GDI承接验证](../changes/2026-10-15-explorer-gdi-integration/verification.md)。root在fix/TASK-EXPLORER-GDI-20261015-main；源码9aa12e92完整verify及47文件独审本机PASS（Node1334/14skip、Agent199/2skip、Edge784首试、development5步）。Windows参数/PNG/100页保护与454旧文件908hash保持。下一步文档冻结/差量复审、正常测试安全PR、当前Hosted/main/合后验证，再HOME三P2；首轮失败与全部旧分支/候选dirty/九项目保留。
+当前任务先读[HOME恢复计划](../changes/2026-10-15-home-recovery-integration/plan.md)。root串行在fix/TASK-CODEX-HOME-20261015-recovery，临时堆叠已推送PR62 f9c6aa71；安全PR冻结/本机和独审PASS，Hosted中。HOME dirty已完成三P2实际RED与46项连接/8项浏览器GREEN，新增重复完成导入与旧epoch尾部保护；读取期编辑数量问题独立TODO。下一步冻结后完整verify、隔离Tauri、精确独审，再从上游squash后的稳定main仅承接HOME独有提交。候选双端2.1.34不覆盖daily/九项目，旧失败/分支/dirty保留。
 
 最新限制：af8精确HEAD完整verify已新跑PASS；但测试默认目录清理移除了旧开发态原件，不能再声称其旧路径可读。先读[事件](../changes/2026-10-15-unified-execution/incident.md)，下一执行先落实TASK-VERIFY-EVIDENCE-20261015保护，再承接GDI。
 

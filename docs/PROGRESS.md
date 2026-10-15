@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-10-15 HOME恢复三P2（IN_PROGRESS / NOT_VERIFIED）
+
+root在PR62已推送冻结head上串行临时堆叠HOME任务；三P2已实际RED，编辑重试/所有权清理/来源恢复最小修复后连接46项和HOME8项首试通过。补实际RED关闭重复原图读取及旧连接usage尾部跨线程风险；首轮环境、夹具和数量失败保留。受控读取观察证明默认数量覆盖已有设置，另挂TASK-HOME-LOAD-DRAFT-20261015 TODO。双端候选2.1.34，尚未完整冻结verify/新Tauri/精确独审或main/客户端验收。见[验证](changes/2026-10-15-home-recovery-integration/verification.md)。
+
 ## 2026-10-15 测试安全本机验证（REVIEW / PARTIAL）
 
 TASK-EXPLORER-GDI-20261015与TASK-VERIFY-EVIDENCE-20261015合为一个测试安全PR。冻结源码9aa12e92完整verify exit0：Node1334/14既有skip、Agent199/2既有skip、Edge784首试0flaky、development5步。Windows真实argv保留15+1、真实PNG成功/主动失败、100页7次0TabProxy均通过；454旧文件及备份908哈希一致，879本轮产物另存。47文件独立审查PASS_LOCAL_TEST_SAFETY_SCOPE，SHOT-01/DOC-01关闭。首轮环境遗漏11FAIL及同SHA复测保留。下一步文档冻结、正式PR/Hosted/main及合后验证；daily和产品2.1.33未更新，真实Provider/用户验收另行完成。见[验证](changes/2026-10-15-explorer-gdi-integration/verification.md)。
