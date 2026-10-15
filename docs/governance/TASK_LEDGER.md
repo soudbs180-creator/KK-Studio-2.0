@@ -148,7 +148,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-CODEX-HOME-20261015 | 首页默认Codex与模型来源分流及输入弹层修复 | REVIEW | 进行中 | P1 | TASK-UI-FULL-20261015 | root | 提交冻结候选后做精确SHA独审；当前Hosted须实际跑完完整verify（含development）/Delivery后才普通合并，随后main验证、实际本机更新及两独立副本canonical恢复/原7保全；保留另一任务原文与状态，最后以实际收据做纯docs closeout。 |
 | TASK-CODEX-REF-20261015 | Codex 卡片连线参考图直达内置生图 | PARTIAL | 未完成 | P1 | TASK-CODEX-HOME-20261015 | root | 保留功能/live通过证据，跟进上游13项已证预存失败使mandatory fullverify有效通过；补最终SHA正式review及Hosted/PR门禁，不宣称已集成/发布。 |
 | TASK-GOV-006 | 统一会话安全交接、全量需求映射与单主控承接 | PARTIAL | 进行中 | P1 | none | root | PR61已正常squash为main3a992597，当前fetch核实后，测试安全组合从实际main承接；其余历史接口/产品任务仍开放。 |
-| TASK-VERIFY-EVIDENCE-20261015 | 隔离测试输出并保护历史回执 | PARTIAL | 进行中 | P1 | TASK-GOV-006 | root | 6374代码修正提交独立复验中；root串行接GDI后补真实PNG/旧字节和完整受保护verify，再精确独审/正常PR。 |
+| TASK-VERIFY-EVIDENCE-20261015 | 隔离测试输出并保护历史回执 | PARTIAL | 进行中 | P1 | TASK-GOV-006 | root | 与依赖GDI合为同一测试进程/证据安全逻辑PR；仅GDI为当前树IN_PROGRESS，输出任务保持PARTIAL至组合完整验证/独审/main。旧输出分支保留来源。 |
 | TASK-EXPLORER-GDI-20261015 | 阻断 headless Edge 测试遗留 Shell 标签代理 | IN_PROGRESS | 进行中 | P1 | TASK-GOV-006, TASK-VERIFY-EVIDENCE-20261015 | root | 保留输出保护边界承接af8后，冻结源码在隔离目录执行Windows回归/完整verify并独审；PR61正常合入后从实际main只承接独有安全提交。 |
 
 ## TASK-FIX-PUSH-GUARD-SPACES-001 — 修复 Windows Git pre-push 空格及长路径启动
@@ -2863,12 +2863,12 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Feature IDs: none
 - Owner role: repository-maintainer
 - Acceptance: 合成旧receipt/截图与Playwright共享目录的RED可复现，修复后原hash保持。; 每轮输出独立且包含source SHA；运行失败、取消和报告写入失败仍保留旧证据。; 正式入口先校验独立目录或完整备份清单，不能只备份browser JSON。
-- Branch: `fix/TASK-VERIFY-EVIDENCE-20261015-output-isolation`
+- Branch: `fix/TASK-EXPLORER-GDI-20261015-main`
 - Worktree: `D:/kk-studio/.worktrees/TASK-GOV-PHASE0`
 - Modules: playwright.config.ts, tests/development/plugins.mjs, scripts/testing, tests/unit, docs/changes/2026-10-15-unified-execution/incident.md, tests/desktop/plugin-recovery.mjs, docs/changes/2026-10-15-test-evidence-isolation, tests/browser, tests/desktop/test-evidence-preservation.mjs
 - Verification: PARTIAL — 真实合成Playwright成功/失败均在基线删除旧receipt而RED；独占run目录实现后定向7/7 GREEN（目录/文件/junction拒绝、旧三类原字节保留、新report/metadata、suite边界）。完整Node1346/1332PASS/14既有skip/0FAIL，lint/typecheck通过；sandbox junction EPERM经平台批准复验。无浏览器页面，版本不递增。原旧回执缺失不伪造恢复；完整verify、最终SHA独审与main集成待GDI安全接入后进行。 独审e5d5dc31提出EVID-01固定截图/P1、EVID-02worker分散/P2；已各先RED再本地GREEN，17文件48截图仅迁移路径，新增截图守卫。补充完整Node/静态与正式复验、实际安全PNG未完成前不代填通过。 补充完整Node1347/1333PASS/14既有skip/0FAIL、lint/typecheck通过；format首报2文件后修正复验通过。真实PNG需GDI安全接入后验证，精确最终独审待续。 精确6374独立源码复验限定PASS，无新阻断；当前a6e组合新增安全真实PNG探针正常/失败两种旧字节均保持，新PNG/report同run，未提交probe范围清楚。
 - Evidence: [docs/changes/2026-10-15-unified-execution/incident.md](../../docs/changes/2026-10-15-unified-execution/incident.md), [docs/changes/2026-10-15-test-evidence-isolation/intent.md](../../docs/changes/2026-10-15-test-evidence-isolation/intent.md), [docs/changes/2026-10-15-test-evidence-isolation/spec.md](../../docs/changes/2026-10-15-test-evidence-isolation/spec.md), [docs/changes/2026-10-15-test-evidence-isolation/plan.md](../../docs/changes/2026-10-15-test-evidence-isolation/plan.md), [docs/changes/2026-10-15-test-evidence-isolation/verification.md](../../docs/changes/2026-10-15-test-evidence-isolation/verification.md), [docs/changes/2026-10-15-test-evidence-isolation/review.md](../../docs/changes/2026-10-15-test-evidence-isolation/review.md)
-- Next action: 6374代码修正提交独立复验中；root串行接GDI后补真实PNG/旧字节和完整受保护verify，再精确独审/正常PR。
+- Next action: 与依赖GDI合为同一测试进程/证据安全逻辑PR；仅GDI为当前树IN_PROGRESS，输出任务保持PARTIAL至组合完整验证/独审/main。旧输出分支保留来源。
 - Last verified: 2026-10-15
 - Updated: 2026-10-15
 

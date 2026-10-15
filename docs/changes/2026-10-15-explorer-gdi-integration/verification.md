@@ -10,3 +10,5 @@
 - 治理PR61当前required verify/delivery及quality、hooks均success，无未解决review threads/人工reviews0；独立治理merge-scope PASS，已退出draft后expected head89fba普通squash成功main3a9925977792a7f948eceda9f54d46fbf6f8b294。main fetch/树一致性、后续测试安全候选重绑与Hosted分别记录，不代填产品客户端验收。
 
 - 已fetch远端main3a992597，git diff 89fba→3a exit0；main父235e、tree db1152d018ffaa5dd57ea5ad1f721a849093490e。四独有安全提交重新承接后git diff 8729→384546c8 exit0；新分支祖先真实main，不rebase/force/删除旧分支。
+
+- 首次重绑delivery44文件报1项：输出任务仍指旧分支，导致其新交付包未绑定当前branch。已改为同一逻辑测试安全PR的实际branch，两个稳定ID保留、只有GDI IN_PROGRESS；门禁不放宽，修正后复验结果另记。

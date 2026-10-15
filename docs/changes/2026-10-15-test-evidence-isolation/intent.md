@@ -6,3 +6,5 @@
 - root是唯一写入者；治理分支冻结，不改原GDI候选/其他dirty工作树；不新增worktree或用户数据操作。
 - 验收：默认Playwright成功/失败都保留合成旧receipt/截图/报告；每次产物和report目录独立；显式开发态输出目录已有内容时，在任何测试副作用前拒绝覆盖。
 - 不改产品运行产物/版本，不调用真实Provider，不借新结果恢复旧回执；[Spec](spec.md)、[Plan](plan.md)。
+
+- main3a实际承接后，本任务与依赖GDI统一为一个测试进程/证据安全PR，当前branch fix/TASK-EXPLORER-GDI-20261015-main；原独立输出分支保留。两个稳定任务ID保留，输出任务PARTIAL，只有GDI为本树IN_PROGRESS/root单写。
