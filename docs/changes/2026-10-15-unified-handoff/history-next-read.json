@@ -1,0 +1,224 @@
+{
+  "notice": "只读补核队列，不是任务状态权威；不发旧会话消息/启动工作，不读会话存储。",
+  "historyEvidenceRoot": "C:\\Users\\Administrator\\Documents\\Codex\\2026-10-15\\task\\history-evidence",
+  "firstBatchUnread": [
+    {
+      "index": 27,
+      "id": "01a12e7f-1a9f-7f32-910b-f1ed05ae724e",
+      "status": "NOT_STARTED",
+      "successfulPages": 0,
+      "nextCursor": null,
+      "nextCursorMeaning": "no request issued; this is not exhaustion"
+    },
+    {
+      "index": 28,
+      "id": "01a12db4-8bbd-7302-86e2-958d430555f1",
+      "status": "NOT_STARTED",
+      "successfulPages": 0,
+      "nextCursor": null,
+      "nextCursorMeaning": "no request issued; this is not exhaustion"
+    },
+    {
+      "index": 29,
+      "id": "01a12490-bd87-7360-8178-53a8f10e75b2",
+      "status": "NOT_STARTED",
+      "successfulPages": 0,
+      "nextCursor": null,
+      "nextCursorMeaning": "no request issued; this is not exhaustion"
+    },
+    {
+      "index": 30,
+      "id": "01a12b67-eda8-7b71-8e4b-c2c5a77086fb",
+      "status": "NOT_STARTED",
+      "successfulPages": 0,
+      "nextCursor": null,
+      "nextCursorMeaning": "no request issued; this is not exhaustion"
+    },
+    {
+      "index": 31,
+      "id": "01a12de4-cb36-7992-957b-6da30dafd37f",
+      "status": "NOT_STARTED",
+      "successfulPages": 0,
+      "nextCursor": null,
+      "nextCursorMeaning": "no request issued; this is not exhaustion"
+    }
+  ],
+  "firstBatchInterfaceBlocked": [
+    {
+      "index": 0,
+      "id": "01a13e8b-d2ee-7572-8592-7d905634257a",
+      "title": "KK Studio",
+      "status": "BLOCKED",
+      "pages": 0,
+      "turns": 0,
+      "error": "thread/items/list is not supported yet",
+      "extract": "reconnected-initial-a-01a13e8b-d2ee-7572-8592-7d905634257a.extract.json",
+      "summary": "reconnected-initial-a-01a13e8b-d2ee-7572-8592-7d905634257a.summary.md",
+      "rawFiles": [
+        "reconnected-initial-a-01a13e8b-d2ee-7572-8592-7d905634257a-page-001.raw.json"
+      ]
+    },
+    {
+      "index": 1,
+      "id": "01a13e8a-1f57-7e73-b9d9-cec59f1ff80a",
+      "title": "KK Studio",
+      "status": "BLOCKED",
+      "pages": 0,
+      "turns": 0,
+      "error": "thread/items/list is not supported yet",
+      "extract": "reconnected-initial-a-01a13e8a-1f57-7e73-b9d9-cec59f1ff80a.extract.json",
+      "summary": "reconnected-initial-a-01a13e8a-1f57-7e73-b9d9-cec59f1ff80a.summary.md",
+      "rawFiles": [
+        "reconnected-initial-a-01a13e8a-1f57-7e73-b9d9-cec59f1ff80a-page-001.raw.json"
+      ]
+    },
+    {
+      "index": 2,
+      "id": "01a13e5f-b79d-7a52-a776-5902fb61bf54",
+      "title": "KK Studio",
+      "status": "BLOCKED",
+      "pages": 0,
+      "turns": 0,
+      "error": "thread/items/list is not supported yet",
+      "extract": "reconnected-initial-a-01a13e5f-b79d-7a52-a776-5902fb61bf54.extract.json",
+      "summary": "reconnected-initial-a-01a13e5f-b79d-7a52-a776-5902fb61bf54.summary.md",
+      "rawFiles": [
+        "reconnected-initial-a-01a13e5f-b79d-7a52-a776-5902fb61bf54-page-001.raw.json"
+      ]
+    },
+    {
+      "index": 3,
+      "id": "01a13e40-0f28-71d2-b5a7-cc03ac9dc98c",
+      "title": "KK Studio",
+      "status": "BLOCKED",
+      "pages": 0,
+      "turns": 0,
+      "error": "thread/items/list is not supported yet",
+      "extract": "reconnected-initial-a-01a13e40-0f28-71d2-b5a7-cc03ac9dc98c.extract.json",
+      "summary": "reconnected-initial-a-01a13e40-0f28-71d2-b5a7-cc03ac9dc98c.summary.md",
+      "rawFiles": [
+        "reconnected-initial-a-01a13e40-0f28-71d2-b5a7-cc03ac9dc98c-page-001.raw.json"
+      ]
+    },
+    {
+      "index": 4,
+      "id": "01a13e34-6f5a-77b0-a84c-6146bb2af299",
+      "title": "KK Studio",
+      "status": "BLOCKED",
+      "pages": 0,
+      "turns": 0,
+      "error": "thread/items/list is not supported yet",
+      "extract": "reconnected-initial-a-01a13e34-6f5a-77b0-a84c-6146bb2af299.extract.json",
+      "summary": "reconnected-initial-a-01a13e34-6f5a-77b0-a84c-6146bb2af299.summary.md",
+      "rawFiles": [
+        "reconnected-initial-a-01a13e34-6f5a-77b0-a84c-6146bb2af299-page-001.raw.json"
+      ]
+    },
+    {
+      "index": 5,
+      "id": "01a13e28-6d58-7902-be4c-e2f2dbdab729",
+      "title": "KK Studio",
+      "status": "BLOCKED",
+      "pages": 0,
+      "turns": 0,
+      "error": "thread/items/list is not supported yet",
+      "extract": "reconnected-initial-a-01a13e28-6d58-7902-be4c-e2f2dbdab729.extract.json",
+      "summary": "reconnected-initial-a-01a13e28-6d58-7902-be4c-e2f2dbdab729.summary.md",
+      "rawFiles": [
+        "reconnected-initial-a-01a13e28-6d58-7902-be4c-e2f2dbdab729-page-001.raw.json"
+      ]
+    }
+  ],
+  "continuePartialInitial": [
+    {
+      "index": 24,
+      "id": "01a12eca-483b-7672-b9d3-23af838d03be",
+      "page": 5,
+      "cursor": "{\"requestedThreadId\":\"01a12eca-483b-7672-b9d3-23af838d03be\",\"rolloutOrdinal\":1492,\"includeAnchor\":false,\"scope\":{\"kind\":\"turns\"}}",
+      "complete": false
+    },
+    {
+      "index": 26,
+      "id": "01a12f8d-0dfe-75a1-9ce5-e63861df2cbd",
+      "page": 3,
+      "cursor": "{\"requestedThreadId\":\"01a12f8d-0dfe-75a1-9ce5-e63861df2cbd\",\"rolloutOrdinal\":50,\"includeAnchor\":false,\"scope\":{\"kind\":\"turns\"}}",
+      "complete": false
+    }
+  ],
+  "deeperPartialManifest": [
+    {
+      "id": "01a13e8b-022e-77b2-a290-f52dbc5067ff",
+      "title": null,
+      "pages": 1,
+      "turns": 1,
+      "complete": true,
+      "cursor": null,
+      "rawFiles": [
+        "reconnected-reference-01a13e8b-022e-77b2-a290-f52dbc5067ff-page-001.raw.json"
+      ]
+    },
+    {
+      "id": "01a11d2a-8d2f-7800-8684-a184e8ada276",
+      "title": null,
+      "pages": 2,
+      "turns": 4,
+      "complete": false,
+      "cursor": "{\"requestedThreadId\":\"01a11d2a-8d2f-7800-8684-a184e8ada276\",\"rolloutOrdinal\":803,\"includeAnchor\":false,\"scope\":{\"kind\":\"turns\"}}",
+      "rawFiles": [
+        "reconnected-reference-01a11d2a-8d2f-7800-8684-a184e8ada276-page-001.raw.json",
+        "reconnected-reference-01a11d2a-8d2f-7800-8684-a184e8ada276-page-002.raw.json"
+      ]
+    },
+    {
+      "id": "01a0ff39-c7a4-7071-8bc4-fdfdb204131a",
+      "title": null,
+      "pages": 2,
+      "turns": 4,
+      "complete": false,
+      "cursor": "{\"requestedThreadId\":\"01a0ff39-c7a4-7071-8bc4-fdfdb204131a\",\"rolloutOrdinal\":9013,\"includeAnchor\":false,\"scope\":{\"kind\":\"turns\"}}",
+      "rawFiles": [
+        "reconnected-reference-01a0ff39-c7a4-7071-8bc4-fdfdb204131a-page-001.raw.json",
+        "reconnected-reference-01a0ff39-c7a4-7071-8bc4-fdfdb204131a-page-002.raw.json"
+      ]
+    },
+    {
+      "id": "01a11d81-f117-7692-a475-f6bb43c02486",
+      "title": null,
+      "pages": 2,
+      "turns": 4,
+      "complete": false,
+      "cursor": "{\"requestedThreadId\":\"01a11d81-f117-7692-a475-f6bb43c02486\",\"rolloutOrdinal\":588,\"includeAnchor\":false,\"scope\":{\"kind\":\"turns\"}}",
+      "rawFiles": [
+        "reconnected-reference-01a11d81-f117-7692-a475-f6bb43c02486-page-001.raw.json",
+        "reconnected-reference-01a11d81-f117-7692-a475-f6bb43c02486-page-002.raw.json"
+      ]
+    },
+    {
+      "id": "01a11cbb-b597-7cb3-86d2-63b0accc667c",
+      "title": null,
+      "pages": 2,
+      "turns": 4,
+      "complete": false,
+      "cursor": "{\"requestedThreadId\":\"01a11cbb-b597-7cb3-86d2-63b0accc667c\",\"rolloutOrdinal\":1264,\"includeAnchor\":false,\"scope\":{\"kind\":\"turns\"}}",
+      "rawFiles": [
+        "reconnected-reference-01a11cbb-b597-7cb3-86d2-63b0accc667c-page-001.raw.json",
+        "reconnected-reference-01a11cbb-b597-7cb3-86d2-63b0accc667c-page-002.raw.json"
+      ]
+    },
+    {
+      "id": "01a0fe2c-3049-7743-b8b1-126133a1b6fc",
+      "title": null,
+      "pages": 2,
+      "turns": 4,
+      "complete": false,
+      "cursor": "{\"requestedThreadId\":\"01a0fe2c-3049-7743-b8b1-126133a1b6fc\",\"rolloutOrdinal\":2989,\"includeAnchor\":false,\"scope\":{\"kind\":\"turns\"}}",
+      "rawFiles": [
+        "reconnected-reference-01a0fe2c-3049-7743-b8b1-126133a1b6fc-page-001.raw.json",
+        "reconnected-reference-01a0fe2c-3049-7743-b8b1-126133a1b6fc-page-002.raw.json"
+      ]
+    }
+  ],
+  "sourceMasterUnknown": "01a11954-e368-75e1-9544-1256fc96d0ee",
+  "globalEnumerationLimit": "list_threads最大50且无cursor，禁止声称已发现全部历史会话。",
+  "failureHandling": "接口仍不支持则记录目标/操作/原错误，不无限重试或绕过；先做无依赖安全工作。"
+}

@@ -1,0 +1,161 @@
+{
+  "reviewer": "/root/handoff_review",
+  "reviewedAtUtc": "2026-10-15T08:48:47.511Z",
+  "baseSha": "235e7f798c38b022d578f8fa41eaea1b9281fd6d",
+  "branch": "docs/TASK-GOV-006-unified-handoff",
+  "mode": "read-only independent governance handoff review",
+  "status": "PASS_GOVERNANCE_SCOPE",
+  "productImplementationAssessment": "NOT_IN_SCOPE_NOT_CLAIMED_COMPLETE",
+  "snapshotHashes": {
+    "docs/governance/task-ledger.json": "043b8cb84f9529188a2e093f91467c30f16ce908a3a1ef3bc8c8abfb9e11dce7",
+    "docs/governance/PROJECT_STATE.md": "73c722d01815bd9950b972c86d5328a7267bbb04430fc4c6d73565065dff16bb",
+    "docs/governance/AI_HANDOFF.md": "ff49d6657d657d4c395fd58d4878a8adaaf2d4990b16dd68f2f76e4ea4812262",
+    "docs/changes/2026-10-15-unified-handoff/takeover-context.md": "66f055d110f433b1d84533f0404710731a0bc66118bfe5be572e6769b5b57af2",
+    "docs/changes/2026-10-15-unified-handoff/resume-order.md": "4e465566785332e9ee7532f8b658e70ab0be946856e5858bf7ba48639d3233ed",
+    "docs/changes/2026-10-15-unified-handoff/session-inventory.md": "54bf3007ff5552e5ed83a26764e5386fd41d068f34c90d65c0b38547d3860cba",
+    "docs/changes/2026-10-15-unified-handoff/source-manifest.json": "5cf711221287d9b07a905700ba79277415b8ea77cb16e06690d29ea5112e0a98"
+  },
+  "checks": {
+    "original141Objects": "PASS: byte-independent JSON object and order comparison to base; only TASK-GOV-006 appended",
+    "stableMatrix192": "PASS: 192 unique IDs; every source range and historical status compared with 12970 original observed objects; missing source statuses normalized to UNKNOWN",
+    "sourceManifest": "PASS: 114 sources equal original union sources; all 192 task IDs match; raw union SHA256 matches manifest",
+    "coverageDifference": "PASS: 51 IDs outside original main141; no task state overwrite or functional-loss inference",
+    "pauseEvidence": "PASS: 8 named main IDs idle in reconnected list; 4 named children idle/completed with stop final and running=[]",
+    "branchProtection": "PASS: old PHASE0 branch SHA preserved; current new branch based on 235e; no new worktree in reviewed evidence",
+    "safetyAndData": "PASS: supported-tools-only, no kill/client closure/credential or user data operations, HOME9 and empty-field correction retained",
+    "candidatePreservation": "PASS: Canvas, Responsive, Compress, Design, GDI, HOME/REF, business proposals, PR58, Hermes Phase2 and capacity/recovery gaps retained",
+    "sessionRoles": "PASS: collection governance only; original controller confirms before new formal execution session"
+  },
+  "findings": [
+    {
+      "id": "HR-1",
+      "severity": "P2",
+      "status": "CLOSED",
+      "location": "docs/governance/PROJECT_STATE.md:28,30,32,34,52",
+      "problem": "Current-facts block retains unmarked older HOME7 baseline/recovery-not-written and pending HOME/PR59 merge statements alongside new main235e and HOME9 current baseline.",
+      "concreteRisk": "A new controller reading named current baseline fields can use the stale seven-project checkpoint or repeat already merged work.",
+      "smallestFix": "Mark these entries explicitly as dated historical snapshots superseded by canonicalHead/dailyDataBoundary, or move them below historical delimiter; preserve original verification and all original ledger objects.",
+      "originalStatus": "OPEN"
+    },
+    {
+      "id": "HR-2",
+      "severity": "P3_EVIDENCE_GAP",
+      "status": "CLOSED_AS_DOCUMENTATION_GAP",
+      "location": "local-evidence/governance-phase0-reuse-final-observed.json:59",
+      "problem": "Reuse qualification note explicitly leaves owner-idle/writer ownership confirmation to root; reviewed attachments contain no explicit confirmation receipt while final handoff states reuse complete.",
+      "concreteRisk": "Future reviewers cannot distinguish the demonstrated clean/DONE/PASS/no-process checks from root ownership decision.",
+      "smallestFix": "Append root ownership confirmation and its basis; do not claim a new observed fact or a rule violation from this absence.",
+      "originalStatus": "OPEN"
+    }
+  ],
+  "knownLimitations": [
+    "Global active-session pagination unavailable; source main-controller body empty; history coverage explicitly incomplete.",
+    "Product full verify/Native/real provider/build/install/user acceptance not run or inferred.",
+    "Root gate outputs were reported by parent; reviewer independently verified JSON/source preservation and git diff, not all product gates."
+  ],
+  "mutationLog": [
+    "Only this review JSON written in task/review-evidence; D project files untouched; no old-session messages, storage reads, process kills or client/data operations."
+  ],
+  "initialReviewPreserved": {
+    "reviewer": "/root/handoff_review",
+    "reviewedAtUtc": "2026-10-15T08:48:47.511Z",
+    "baseSha": "235e7f798c38b022d578f8fa41eaea1b9281fd6d",
+    "branch": "docs/TASK-GOV-006-unified-handoff",
+    "mode": "read-only independent governance handoff review",
+    "status": "REPAIRS_PENDING",
+    "productImplementationAssessment": "NOT_IN_SCOPE_NOT_CLAIMED_COMPLETE",
+    "snapshotHashes": {
+      "docs/governance/task-ledger.json": "043b8cb84f9529188a2e093f91467c30f16ce908a3a1ef3bc8c8abfb9e11dce7",
+      "docs/governance/PROJECT_STATE.md": "73c722d01815bd9950b972c86d5328a7267bbb04430fc4c6d73565065dff16bb",
+      "docs/governance/AI_HANDOFF.md": "ff49d6657d657d4c395fd58d4878a8adaaf2d4990b16dd68f2f76e4ea4812262",
+      "docs/changes/2026-10-15-unified-handoff/takeover-context.md": "66f055d110f433b1d84533f0404710731a0bc66118bfe5be572e6769b5b57af2",
+      "docs/changes/2026-10-15-unified-handoff/resume-order.md": "4e465566785332e9ee7532f8b658e70ab0be946856e5858bf7ba48639d3233ed",
+      "docs/changes/2026-10-15-unified-handoff/session-inventory.md": "54bf3007ff5552e5ed83a26764e5386fd41d068f34c90d65c0b38547d3860cba",
+      "docs/changes/2026-10-15-unified-handoff/source-manifest.json": "5cf711221287d9b07a905700ba79277415b8ea77cb16e06690d29ea5112e0a98"
+    },
+    "checks": {
+      "original141Objects": "PASS: byte-independent JSON object and order comparison to base; only TASK-GOV-006 appended",
+      "stableMatrix192": "PASS: 192 unique IDs; every source range and historical status compared with 12970 original observed objects; missing source statuses normalized to UNKNOWN",
+      "sourceManifest": "PASS: 114 sources equal original union sources; all 192 task IDs match; raw union SHA256 matches manifest",
+      "coverageDifference": "PASS: 51 IDs outside original main141; no task state overwrite or functional-loss inference",
+      "pauseEvidence": "PASS: 8 named main IDs idle in reconnected list; 4 named children idle/completed with stop final and running=[]",
+      "branchProtection": "PASS: old PHASE0 branch SHA preserved; current new branch based on 235e; no new worktree in reviewed evidence",
+      "safetyAndData": "PASS: supported-tools-only, no kill/client closure/credential or user data operations, HOME9 and empty-field correction retained",
+      "candidatePreservation": "PASS: Canvas, Responsive, Compress, Design, GDI, HOME/REF, business proposals, PR58, Hermes Phase2 and capacity/recovery gaps retained",
+      "sessionRoles": "PASS: collection governance only; original controller confirms before new formal execution session"
+    },
+    "findings": [
+      {
+        "id": "HR-1",
+        "severity": "P2",
+        "status": "OPEN",
+        "location": "docs/governance/PROJECT_STATE.md:28,30,32,34,52",
+        "problem": "Current-facts block retains unmarked older HOME7 baseline/recovery-not-written and pending HOME/PR59 merge statements alongside new main235e and HOME9 current baseline.",
+        "concreteRisk": "A new controller reading named current baseline fields can use the stale seven-project checkpoint or repeat already merged work.",
+        "smallestFix": "Mark these entries explicitly as dated historical snapshots superseded by canonicalHead/dailyDataBoundary, or move them below historical delimiter; preserve original verification and all original ledger objects."
+      },
+      {
+        "id": "HR-2",
+        "severity": "P3_EVIDENCE_GAP",
+        "status": "OPEN",
+        "location": "local-evidence/governance-phase0-reuse-final-observed.json:59",
+        "problem": "Reuse qualification note explicitly leaves owner-idle/writer ownership confirmation to root; reviewed attachments contain no explicit confirmation receipt while final handoff states reuse complete.",
+        "concreteRisk": "Future reviewers cannot distinguish the demonstrated clean/DONE/PASS/no-process checks from root ownership decision.",
+        "smallestFix": "Append root ownership confirmation and its basis; do not claim a new observed fact or a rule violation from this absence."
+      }
+    ],
+    "knownLimitations": [
+      "Global active-session pagination unavailable; source main-controller body empty; history coverage explicitly incomplete.",
+      "Product full verify/Native/real provider/build/install/user acceptance not run or inferred.",
+      "Root gate outputs were reported by parent; reviewer independently verified JSON/source preservation and git diff, not all product gates."
+    ],
+    "mutationLog": [
+      "Only this review JSON written in task/review-evidence; D project files untouched; no old-session messages, storage reads, process kills or client/data operations."
+    ]
+  },
+  "supplementalReview": {
+    "reviewedAtUtc": "2026-10-15T08:50:19.717Z",
+    "scope": [
+      "HR-1 historical markers in CURRENT_FACTS",
+      "HR-2 explicit root reuse decision and preserved owner UNKNOWN",
+      "latest Hermes Phase2 context"
+    ],
+    "resolutions": [
+      {
+        "id": "HR-1",
+        "status": "CLOSED",
+        "evidence": "PROJECT_STATE.md:28/30/32/34/52 now explicitly mark historical time, with current canonicalHead/dailyClientAtTakeover/dailyDataBoundary taking precedence; old verification text preserved.",
+        "validation": "Fresh marker assertion passes; original141 JSON objects unchanged."
+      },
+      {
+        "id": "HR-2",
+        "status": "CLOSED_AS_DOCUMENTATION_GAP",
+        "evidence": "worktree-reuse-decision.json:10/12/13 records root ownership decision and authority while original owner thread remains UNKNOWN; does not invent direct idle evidence.",
+        "validation": "Independent safety subreview /root/handoff_review/safety_evidence confirmed closure."
+      }
+    ],
+    "hermesContext": "PASS: takeover-context.md:23 retains Phase2 implementation 01c4d422ded9b87a49e6b0226197ddfc04d822dc and final HEAD463e774f26a393cd70fbbcc7c61b4743060d5c24, isolated 8/8 checks, actual Hermes not started, Gate2 NOT VERIFIED/PARTIAL.",
+    "freshChecks": {
+      "base141ObjectsUnchanged": true,
+      "currentLedgerCount": 142,
+      "matrixEntries": 192,
+      "matrixUniqueIds": 192,
+      "requiredHistoricalMarkersPresent": true,
+      "gitDiffCheckExitCode": 0,
+      "currentBranch": "docs/TASK-GOV-006-unified-handoff",
+      "head": "235e7f798c38b022d578f8fa41eaea1b9281fd6d"
+    },
+    "remainingBlockingFindings": [],
+    "verdict": "PASS for local governance/handoff commit only. Does not approve push, product merge, full historical coverage, product implementation, client or final user acceptance.",
+    "snapshotHashes": {
+      "docs/governance/task-ledger.json": "043b8cb84f9529188a2e093f91467c30f16ce908a3a1ef3bc8c8abfb9e11dce7",
+      "docs/governance/PROJECT_STATE.md": "3061644434e996daa4223536d1a3a5b34be5d4aabd51dd49da0c56a036ed3207",
+      "docs/governance/AI_HANDOFF.md": "ff49d6657d657d4c395fd58d4878a8adaaf2d4990b16dd68f2f76e4ea4812262",
+      "docs/changes/2026-10-15-unified-handoff/takeover-context.md": "66f055d110f433b1d84533f0404710731a0bc66118bfe5be572e6769b5b57af2",
+      "docs/changes/2026-10-15-unified-handoff/resume-order.md": "4e465566785332e9ee7532f8b658e70ab0be946856e5858bf7ba48639d3233ed",
+      "docs/changes/2026-10-15-unified-handoff/session-inventory.md": "54bf3007ff5552e5ed83a26764e5386fd41d068f34c90d65c0b38547d3860cba",
+      "docs/changes/2026-10-15-unified-handoff/source-manifest.json": "5cf711221287d9b07a905700ba79277415b8ea77cb16e06690d29ea5112e0a98",
+      "docs/changes/2026-10-15-unified-handoff/worktree-reuse-decision.json": "7a076cd237357fe4eb3982968d8ae51916761c2ef168d9e4074688a20b917480"
+    }
+  }
+}
