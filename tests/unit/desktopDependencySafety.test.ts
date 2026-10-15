@@ -6,6 +6,7 @@ import { spawnSync } from "node:child_process";
 import test from "node:test";
 import {
   ensureDesktopRelease,
+  inspectDesktopDependencies,
   inspectDesktopRelease,
   runDesktopRelease,
 } from "../../scripts/windows/desktop-release.mjs";
@@ -149,6 +150,8 @@ for (const linked of ["root", "package", "scope"] as const) {
       }
       throw error;
     }
+    if (linked === "root") writeDesktopReleaseReceipt(f.root);
+    const receiptBefore = fs.readFileSync(f.receipt);
     let built = 0;
     let launched = 0;
     assert.throws(
@@ -170,11 +173,52 @@ for (const linked of ["root", "package", "scope"] as const) {
     assert.match(result.stderr, /linked dependencies/);
     assert.deepEqual(f.calls(), []);
     assert.deepEqual(fs.readFileSync(sentinel), sentinelBefore);
-    assert.deepEqual(fs.readFileSync(f.receipt), f.receiptBefore);
+    assert.deepEqual(fs.readFileSync(f.receipt), receiptBefore);
     assert.equal(fs.readFileSync(f.executable, "utf8"), "previous executable");
     assert.equal(fs.lstatSync(linkedPath).isSymbolicLink(), true);
   });
 }
+
+test("a current release with aligned dependencies through a scoped junction launches without preparation", (t) => {
+  const f = fixture(t);
+  const packageContent = '{"version":"1.0.0"}';
+  f.write("node_modules/@fixture/package/package.json", packageContent);
+  fs.writeFileSync(
+    f.lock,
+    JSON.stringify({
+      packages: {
+        "node_modules/@fixture/package": { version: "1.0.0" },
+      },
+    }),
+  );
+  const scope = path.join(f.root, "node_modules", "@fixture");
+  const target = path.join(f.root, "shared-target");
+  fs.renameSync(scope, target);
+  fs.symlinkSync(target, scope, "junction");
+  writeDesktopReleaseReceipt(f.root);
+  const receiptBefore = fs.readFileSync(f.receipt);
+  assert.equal(inspectDesktopRelease(f.root).needsBuild, false);
+  assert.equal(inspectDesktopDependencies(f.root).needsInstall, false);
+  let built = 0;
+  let launched = "";
+  const release = runDesktopRelease(f.root, {
+    buildRelease: () => {
+      built++;
+    },
+    launchRelease: (file: string) => {
+      launched = file;
+    },
+  });
+  assert.equal(release.rebuilt, false);
+  assert.equal(built, 0);
+  assert.equal(launched, f.executable);
+  assert.deepEqual(f.calls(), []);
+  assert.deepEqual(fs.readFileSync(f.receipt), receiptBefore);
+  assert.equal(
+    fs.readFileSync(path.join(target, "package/package.json"), "utf8"),
+    packageContent,
+  );
+});
 
 test("a dependency path escaping node_modules stops before a custom builder or npm", (t) => {
   const f = fixture(t);

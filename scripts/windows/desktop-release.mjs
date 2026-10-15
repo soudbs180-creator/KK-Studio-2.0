@@ -202,7 +202,6 @@ export function ensureDesktopRelease(
   projectRoot,
   buildRelease = buildDesktopRelease,
 ) {
-  assertDesktopDependencyPreparationSafe(projectRoot);
   const beforeRelease = inspectDesktopRelease(projectRoot);
   const dependencyState = inspectDesktopDependencies(projectRoot);
   const before = {
@@ -211,6 +210,7 @@ export function ensureDesktopRelease(
   };
   if (!before.needsBuild) return { ...before, rebuilt: false };
 
+  assertDesktopDependencyPreparationSafe(projectRoot);
   buildRelease(projectRoot);
   const afterBuild = inspectDesktopRelease(projectRoot);
   const replaced =
