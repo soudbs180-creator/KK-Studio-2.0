@@ -20,6 +20,10 @@
 
 当前所有权：用户明确本会话独占隔离分支代码写入，其他用户任务只读。项目生命周期、加载草稿、硬件、DESIGN、设置、模型阶段A及Native基础均已提交并通过对应精确复审；8e17全量UI修复九文件已独审，相关87项首试通过，完整verify仍待新冻结后重跑。当前多聊天实现者独占共享App/快照/聊天/Agent作用域路径，本地安装实现者只写独立适配器，root独占main/Cargo、全局tokens、版本和任务文档；Cargo、dist/1423及实际Native逐项协调，reviewer只读固定提交。后续模型B/C、媒体及账号等按明确路径继续集成，所有实现者先报告，再由root发逐文件提交租约。基础、正常多聊天及安装边界分别见[ADR-021](../../architecture/adr/ADR-021-native-local-repository-authority.md)、[ADR-022](../../architecture/adr/ADR-022-project-chats-and-v3-migration.md)、[ADR-023](../../architecture/adr/ADR-023-local-model-installation-and-owned-runtime.md)。
 
+2026-10-16 账号/目录补充已并入spec与ADR019：固定用户信息/配置位置，项目及素材位置可调；匿名独立Web优先设备指纹/PIN解锁API密文，设备不支持则密钥仅当前会话，其他本地内容继续持久保存。账号协议只读实施契约已核对成熟依赖、KE3/授权码单次消费、认证修订撤销与根封套CAS；尚未安装依赖或实现账号，先完成Desktop当前核心链，不以方案代替运行证据。
+
+后续技术裁决：隔离Node真实库及Edge production Worker/CSP兼容测试通过后，接受ADR019第10条协议边界，开始独立账号服务端子模块与测试；root保留现有gateway/SQLite构造、依赖和宿主回跳集成所有权。此并行范围只提供Desktop登录所需控制面，不交付完整Web功能，也不改变本地创作/模型/存储授权；真实Desktop闭环和持久安全验收继续优先。
+
 候选归并：主线已包含 #62 测试进程/历史证据隔离及 #63 首页恢复。图片压缩复用 970d0b5e 的产品增量；响应式复用 baa117af、f22f2b68、3b294c12、2ea7639f、68d46984 的有效增量；DESIGN 脏候选只取固定快照独有内容。旧测试启动器不能覆盖主线隔离实现；候选未获当前 SHA 验收。
 
 实施裁决：原生 create_worktree 因父目录非 Git 拒绝，按工作区技能使用 git worktree fallback。73 个现有工作区和 138129072015 字节生成内容超过默认预算；单次采用仓库提供的受控参数，将活动上限设为74、生成上限150GiB，仅增加本任务工作区。基线junction复用依赖，DESIGN新增固定开发依赖后改为本任务实体root依赖，shared vendor仍只读复用，见[隔离记录](baseline-alignment.md#5-依赖隔离约束与本轮更新)。错误代价：构建/专属依赖会增加磁盘占用，不清理他人证据。App attach 不支持手动 worktree，Git 登记仍有效。
