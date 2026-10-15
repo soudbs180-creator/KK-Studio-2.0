@@ -1,5 +1,13 @@
 # Review：全页面新UI收敛与主线集成
 
+## 当前2.1.30审查输入（2026-10-15）
+
+当前d50基线加侧栏12行CSS/4新case/版本30尚未形成最终head；verify8 760首试、Native9 87项及TaskHost current5无注入11项本地PASS，只作为动态审查输入。实际变化不改业务handler、依赖、重试或超时。
+
+审查回读[最新验证](verification.md#2130-当前本地验收)，保留d50 PR两flaky与push首试结果的区别；受控正常动画复现不能替每个缺pointer trace的旧失败定因。Native8单位误设、Native4偏好例外及HTTP IPC guard范围须保持准确。最终精确head独立审查、Hosted/Delivery及PR59/main/post-main均待完成，REVIEW/整体NOT_VERIFIED。
+
+## 此前阶段记录（原文保留，最新状态以上方为准）
+
 ## 当前2.1.29审查输入（2026-10-15）
 
 当前94e加CLI卡片/版本29/TaskHost夹具差量尚未形成最终head；verify7的756首试、Native7的78项及TaskHost current4无注入11项本地PASS，只作为动态审查输入。产品操作owner未变，三CLI共享卡片与reload readiness为最小差量。

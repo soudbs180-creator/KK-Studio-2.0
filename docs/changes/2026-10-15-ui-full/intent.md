@@ -1,5 +1,13 @@
 # Intent：全页面新UI收敛与主线集成
 
+## 当前2.1.30冻结事实（2026-10-15）
+
+TASK-UI-FULL-20261015 保持 REVIEW / 整体NOT_VERIFIED。当前d50基线加侧栏动画12行CSS、4个回归case及Desktop/Web2.1.30，完整verify8的760浏览器首试、fresh Native9的87项/13图、TaskHost current5的11项本地通过；最终提交、精确独立审查、Hosted/Delivery与PR59/main/post-main待验。
+
+本轮修复正常动画中的项目操作命中，不增加依赖、重试或超时。详细证据、旧Hosted边界及Native4默认profile自动连接偏好例外集中于[最新验证](verification.md#2130-当前本地验收)；原138任务/primary文件与index保全，不能概括为所有用户偏好未触碰。Mobile2.1.1规划不变。
+
+## 此前阶段记录（原文保留，最新状态以上方为准）
+
 ## 当前2.1.29冻结事实（2026-10-15）
 
 TASK-UI-FULL-20261015 保持 REVIEW / NOT_VERIFIED。当前94e基线加共享CLI卡片、Desktop/Web2.1.29与TaskHost夹具差量，已完成本地verify7（756浏览器首试/0retry）、Native7（78项）和TaskHost current4（11项）。本轮追加修复仍在用户既有授权内，不增加依赖、账号能力或用户数据迁移。

@@ -1,5 +1,41 @@
 # Verification：全页面新UI收敛与主线集成
 
+## 2.1.30 当前本地验收
+
+当前冻结基线d50f2ccfc33311e86c4c98db0654862e8996c64d，加侧栏动画12行CSS、4个回归case及Desktop/Web2.1.30；最终提交尚未形成。TASK-UI-FULL-20261015继续REVIEW / verificationResult=NOT_VERIFIED，origin/main仍694a00607f6f63de1b8c43d0ebb117adf5d34f67、PR59未合并。下方2.1.29及更早段落保留原收据，不能覆盖本节与当前风险更正。
+
+### Hosted差异与侧栏正常动画修复
+
+d50 PR quality38655974700的job虽SUCCESS，原始Browser为754首试PASS/2flaky、2实际retry（文件夹右键菜单、点击项目条目收起文件夹），不满足严格首试验收；同SHA push为756首试PASS，两份回执分别保留。原Hosted缺pointer trace，不能据相似缺文件夹现象认定每个历史失败都已证明同一原因。
+
+真实300ms motion、单次物理mouse32ms按下/抬起探针在同一文档/同一group、storage ready时4/4FAIL；只等待真实rail动画完成后同条件4/4PASS。最小修复在sidebar.css新增12行，沿用既有motion token，以step-end visibility在展开完成前隐藏project-groups，阻止hit/focus与裁切滚动影响；稳定后才显示。不改JS handler、旧断言、重试、超时或依赖，减少动画与窄屏保留原行为。新增4个回归case；有效regression RED2为1FAIL/3PASS，首轮RED1另有390入口夹具误设，原件保留。定向21/21首试PASS、0retry/flaky/skip；Browser为观察中间态把token临时延至1200ms，真实300ms另由事件探针及Native9验证。
+
+### 完整verify8与Native9当前收据
+
+verify-merged-8实际exit0：Node1318=1304PASS/14既有平台skip，Agent201=199PASS/2skip，lint/typecheck/UI242/0/format/build与development四步骤PASS。生产Edge760 unique tests/760单次results全部passed，实际retry/flaky/skip/global errors均0；文档owner与独立reviewer分别核对，原始JSON SHA256=a9ea73f4487dc9dad692c4df61ae3eeef749ec3ab2114ba12d21f7b1980ed2eb，start=2026-10-15T00:36:03.725Z、duration=232726.398ms。原advisory/日志警告保持，不称所有console无警告。
+
+官方launcher当前release2.1.30、fresh data及WebView profile/CIM的Native9实际87PASS/errors[]/13图：原78项完整保留，新增9项正常动画/单次创建/折叠重开断言。原Native7先reduce，未覆盖这个动作阶段。Native9实际token“.3s”规范为300ms，width动画duration=300；展开初期控件hidden/focusBlocked/hitBlocked均true。稳定后一次物理32ms输入的down/up/click各1，按钮x252在按下/抬起/点击后保持，folder0→1无重复；正常折叠/重开保留folder1、scrollLeft0且稳定命中。随后才切回reduce并完成原设置/三CLI/空upload/有内容唯一toolbar/归档重开检查；root目视sidebar-normal-motion、image-reopened和settings-models。
+
+Native9保留受验UI导航前后4项正向IPC自检：suppressedCredentialReads=3（synthetic2）、harmlessProbeRejections=2、真正UI forbiddenCommands=[]、deniedNetworkHosts=[]。安全证明仍仅限route安装至unroute之间的Windows HTTP IPC动作阶段，不推广启动前、全进程、其他transport或真实CLI账号；历史同式只读invoke赋值/audit空数组的安全结论继续按2.1.29勘误收窄。
+
+Native9与TaskHost current5的EXE SHA256=c062a9d8b3ce8b758c8c15ecda16a77ef58931658a4713d4e3b02f6db0b5ef00；Native9 release-identity为reason=current/needsBuild=false，input SHA256=07a4b4e374dbfd52907fb96e8389574e9e34052cec2c6baf28bf7b150aa20914。实际加载JS /assets/index-C8GjzPpe.js（caa206cf53077013181d738f7571034844d04af6c204df37e2ef6df280b220e6）、CSS /assets/index-DfoqcFla.css（1d4c47c30bbb7fc915f2d11378999d272fefbe90d364f85678429fa1a43d8e47）与当前dist同字节。Native9脚本SHA256=08c10cbec48bbf5996defcee4d92a34ceac2d85fcc684c4e8ef80e1fccd9daa0；Web生产固定1423、Tauri route=http://tauri.localhost/、CDP9429，runtime mode=production/entry=src/main.tsx分别留证。
+
+### Native8夹具失败、TaskHost及清理
+
+Native8仅13项前置通过后因initial.duration字面预期“300ms”而FAIL；现场token“.3s”与actual width duration300等价。root从window-ready回读hidden/focus/hit正确；独立summary明确这些是现场CDP观察转录，非原receipt字段。不把该单位夹具误设记为productFAIL或完整PASS。Native9只规范秒/毫秒单位、保留actual animation.duration===300和全部87项/原超时；8项单位换算自检通过，Native8原件不覆盖。
+
+TaskHost-current-5在当前2.1.30同EXE上真实无注入11/11PASS、errors[]、credentialCleanupComplete=true，原n4/结果原件/重启恢复/unknown/幂等/秘密/超时断言保持。actual-current3根因UNKNOWN及受控readiness与实际失败不等同、无效RED1的旧边界继续保留。Native9 exact-dataRoot正常close PASS；2026-10-15T00:45:10.1457859Z实查Native9 PID6108、Native8 PID76440及TaskHost5五个自有PID均退出，9349/9428/9429/1423监听为空。
+
+### 当前资料偏好风险与剩余交付门禁
+
+Native4误用default WebView profile，并写入kk-agent-auto-connect=disabled（暂停自动连接），原偏好值NOT_RECORDED；不能声称所有用户偏好未触碰。项目快照/原件仍在已验证的自有native data root，这不证明默认WebView偏好未变。该影响已告知用户，不猜测或自动恢复原值；用户可在模型接入点击重新连接恢复自动连接。后续Native5–9采用显式fresh独立profile，未清除默认profile；原primary文件/index与原件保全结论不扩展为默认profile偏好保全。
+
+工程外证据仍在D:/kk-studio/.analysis/ui-full-20261015/：hosted-pr-audit-d50f2ccf.json、sidebar-rail-fix-receipt.json、sidebar-create-events-normal-2026-10-15T00-29-44.042Z/results.json与settled-2026-10-15T00-30-25.525Z/results.json、sidebar-rail-regression-red-2/green-1回执、verify-merged-8.log/-browser-results.json、native-8-unit-literal-diagnosis.json、native-9/native-ui-full.json/profile-observation.json/release-identity.json/close-owned-native.json、native-taskhost-current-5/receipt.json、native30-process-cleanup.json及native4-preference-impact-erratum.json均保留原件。
+
+本地组合PASS不是最终SHA批准。仍须提交最终head、独立base694→head精确source/integration审查与当前SHA Hosted/Delivery，通过后普通合并PR59、fetch核对main实际树与post-main。原138任务raw/对象、其他功能状态、历史全文和Mobile2.1.1规划保持；真实付费Provider、真实CLI账号/实体手机、签名安装器/发布和用户最终接受仍按原边界另验。
+
+## 此前阶段记录（原文保留，最新状态以上方为准）
+
 ## 2.1.29 当前本地验收
 
 当前冻结基线为 94e129215ede7cdffe55b149e9b978e6638cc984，加本轮 CLI 卡片样式、Desktop/Web 2.1.29 与 TaskHost 测试夹具差量；最终产品/测试/版本/docs 提交尚未形成。任务 TASK-UI-FULL-20261015 保持 REVIEW / verificationResult=NOT_VERIFIED；origin/main 仍为 694a00607f6f63de1b8c43d0ebb117adf5d34f67，PR59 未合并。以下旧阶段的“当前”均指当时版本，不能覆盖本节。

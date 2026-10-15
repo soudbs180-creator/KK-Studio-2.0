@@ -1,5 +1,13 @@
 # 当前进度
 
+## 2026-10-15 2.1.30本地验收冻结（REVIEW / 整体NOT_VERIFIED）
+
+完整verify8通过：Node1304/14平台skip、Agent199/2skip、Edge760全部首试/0retry、UI242/0及development四步骤；fresh官方Native9 87项/13图、TaskHost current5无注入11项/秘密清理PASS，自有进程退出与端口释放已实查。最小12行CSS在侧栏展开稳定前隐藏项目控件，真实300ms/32ms点击、折叠重开及4新case/定向21项通过；旧Hosted因果限制与Native8单位夹具失败见[最新验证](changes/2026-10-15-ui-full/verification.md#2130-当前本地验收)。
+
+当前d50加版本30/最小差量尚未形成最终head；独立精确审查、Hosted/Delivery、普通PR59合并与main/post-main待验。原138任务/功能状态与primary文件/index保持；Native4默认profile自动连接暂停、原值NOT_RECORDED为明确偏好例外，详证集中最新验证，不能概括所有偏好未触碰。Mobile2.1.1规划不变。
+
+## 此前阶段记录（原文保留，最新状态以上方为准）
+
 ## 2026-10-15 2.1.29本地验收冻结（REVIEW / 整体NOT_VERIFIED）
 
 完整verify7通过：Node1304/14平台skip、Agent199/2skip、Edge756全部首试/0retry、UI242/0及development四步骤；fresh Native7 78项/12图和TaskHost current4无注入11项分别通过，input/EXE同字节current。三CLI卡片9有效RED→9GREEN已补漏，历史同式guard安全结论勘误与actual3 UNKNOWN边界集中于[最新验证](changes/2026-10-15-ui-full/verification.md#2129-当前本地验收)。

@@ -1,5 +1,17 @@
 # 本轮可达 UI 覆盖与验证边界
 
+## 当前2.1.30新增覆盖（2026-10-15）
+
+| 范围 | 当前证据 | 边界 |
+| --- | --- | --- |
+| 正常动画、减少动画及窄屏侧栏 | 真实300ms/32ms事件4FAIL→等待稳定4PASS；4新case及定向21首试PASS | Browser中间态采样使用1200ms；真实300ms另由事件探针与Native9确认 |
+| 全页面/卡片与侧栏折叠重开 | verify8 Edge760首试/0retry；Native9 87项/13图含稳定单次创建及folder保留 | Native7先reduce未覆盖该正常动画阶段；旧Hosted缺pointer trace不全判同因 |
+| TaskHost、隔离与资料边界 | current5无注入11PASS；Native9前后4正向HTTP IPC自检 | 旧guard勘误继续有效；Native4默认profile自动连接原值NOT_RECORDED |
+
+详细统计、当前哈希、旧失败与偏好风险集中于[最新验证](verification.md#2130-当前本地验收)。REVIEW/整体NOT_VERIFIED；最终head审查、Hosted/Delivery、普通PR59合并及main/post-main待验，其他功能成熟度和Mobile规划不变。
+
+## 此前阶段记录（原文保留，最新状态以上方为准）
+
 ## 当前2.1.29新增覆盖（2026-10-15）
 
 | 范围 | 当前证据 | 边界 |

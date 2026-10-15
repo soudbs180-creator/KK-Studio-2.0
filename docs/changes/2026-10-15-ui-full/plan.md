@@ -1,5 +1,17 @@
 # 全页面新UI收敛实施计划
 
+## 当前执行位置：2.1.30本地冻结（2026-10-15）
+
+- [x] 复证真实300ms/物理32ms侧栏点击4FAIL→仅等rail完成4PASS，最小12行CSS与4新case，定向21首试PASS；Desktop/Web递增2.1.30。
+- [x] 完整verify8的760浏览器首试/0retry、fresh Native9的87项/13图与TaskHost current5无注入11项分别PASS，自有进程退出及端口释放已实查。
+- [x] 旧Hosted因果限制、Native8单位夹具失败、Native4默认profile偏好例外及保全记录集中于[最新验证](verification.md#2130-当前本地验收)。
+- [ ] 形成最终head，完成精确base694→head独立source/integration审查与当前SHA Hosted/Delivery。
+- [ ] 普通合并PR59，fetch核对main实际树及post-main；原任务、历史分支、primary文件/index保持。
+
+当前REVIEW/整体NOT_VERIFIED；旧SHA绿色不能代替最终2.1.30门禁。
+
+## 此前阶段记录（原文保留，最新状态以上方为准）
+
 ## 当前执行位置：2.1.29本地冻结（2026-10-15）
 
 - [x] 三CLI卡片最小共享修复、三宽9有效RED→9GREEN，Desktop/Web递增2.1.29。

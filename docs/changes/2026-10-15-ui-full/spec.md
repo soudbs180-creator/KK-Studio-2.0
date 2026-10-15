@@ -1,5 +1,13 @@
 # Spec：全页面新UI收敛与主线集成
 
+## 当前2.1.30验收补充（2026-10-15）
+
+正常桌面侧栏展开期间，项目控件不可命中或focus；真实300ms轨道稳定后，一次物理32ms按下/抬起只创建一个文件夹，坐标不漂移，正常折叠再展开保留该文件夹。复用既有motion token及step-end visibility，减少动画和窄屏保持原行为，不改handler/数据/timeout。
+
+verify8 760首试、Native9 87项及TaskHost current5无注入11项分别通过。实际覆盖、旧Hosted因果限制、Native8单位夹具更正及Native4偏好风险以[最新验证](verification.md#2130-当前本地验收)为准；最终SHA门禁和普通PR59集成未完成，继续REVIEW/整体NOT_VERIFIED。
+
+## 此前阶段记录（原文保留，最新状态以上方为准）
+
 ## 当前2.1.29验收补充（2026-10-15）
 
 三种CLI管理区共用独立卡片角色：card surface、16px内边距、20px容器圆角、14/20标题正文、可见文字>=12px且不横溢；保留其他键值卡片和原操作/busy/安全owner。TaskHost reload后等真实storage ready、无alert及UI/持久草稿一致，原n4/恢复/unknown/秘密断言不放宽。

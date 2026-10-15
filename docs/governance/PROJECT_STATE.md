@@ -15,8 +15,8 @@
 - `canonicalRepository`: `D:/kk-studio/KK-Studio-2.0`
 - `canonicalRef`: `origin/main`
 - `canonicalHead`: `694a00607f6f63de1b8c43d0ebb117adf5d34f67`
-- `canonicalHeadVerifiedFrom`: 2026-10-15 root实际fetch/API确认main694、PR59未合并；当前2.1.29本地verify7/Native7/TaskHost current4 PASS，最终head精确审查、Hosted/Delivery及main/post-main待验，旧SHA绿色不代填。
-- `primaryCheckoutState`: D:/kk-studio/KK-Studio-2.0保留codex/ui-redesign-20261011@51fccfc7879cf90f7caaf3ae8e10af4d97a2aa2c并发dirty与原index（本轮只读254条），不reset/clean/覆盖。任务工作树branch-consolidation-20261011 / fix/TASK-UI-FULL-20261015，当前94e基线加CLI卡片/版本2.1.29/TaskHost夹具差量尚未最终提交；当前本地验证见uiFullCandidate，最终SHA门禁待验。
+- `canonicalHeadVerifiedFrom`: 2026-10-15 root实际fetch/API确认main694、PR59未合并；当前2.1.30本地verify8/Native9/TaskHost current5 PASS，最终head精确审查、Hosted/Delivery与main/post-main待验，旧SHA绿色不代填。
+- `primaryCheckoutState`: D:/kk-studio/KK-Studio-2.0保留codex/ui-redesign-20261011@51fccfc7879cf90f7caaf3ae8e10af4d97a2aa2c并发dirty与原index（本轮只读254条），不reset/clean/覆盖。任务工作树branch-consolidation-20261011 / fix/TASK-UI-FULL-20261015，当前d50基线加侧栏CSS/版本2.1.30差量尚未最终提交。Native4曾写default WebView profile自动连接暂停，原值NOT_RECORDED，不能声称所有用户偏好未触碰；不猜恢复，详见最新验证。
 - `taskLedger`: 139 records; 82 DONE, 0 IN_PROGRESS, 34 PARTIAL, 12 TODO, 7 REVIEW, 4 BLOCKED; 57 open records.
 - `workspaceWorktrees`: 本轮末次只读worktree登记回读109项。此前恢复盘点107登记项、39 dirty来源、39一致快照；该盘点时原index变动0，872源路径与313排除路径可溯源。首轮104项/40一致与1volatile记录保留原时点；历史107项快照不覆盖后续登记来源。原分支/index/资料保留，本任务未删除、移动或覆盖其他来源。
 - `reclamationPolicy`: generated dependencies/build output may be reclaimed only from a recorded, non-primary worktree after immutable SHA inventory and explicit candidate approval; source changes and evidence paths are protected.
@@ -37,10 +37,18 @@
 
 - `uiDetailsCandidate`: TASK-UI-DETAILS-20261015 本地DONE/PASS；fix/TASK-UI-DETAILS-20261015复用branch-consolidation-20261011，base18e143f、产品ab878ffd，Desktop/Web2.1.26，Mobile2.1.1规划不变。完整verify退出0：Node1278/14skip、Agent199/2skip、browser635首试、UI239/0、development PASS；精确源码独立审查PASS。官方Agent重建、实际Tauri38项与dist字节一致性通过，EXE0f65d382/input864b0376；现有快捷方式同路径，owned实例正常关闭，未启动日常profile。primary dirty/index和所有失败保留；用户视觉接受、真实Provider、Hosted/签名/实体手机另验。[本次验证](../changes/2026-10-15-ui-details/verification.md)。
 
-- `uiFullCandidate`: TASK-UI-FULL-20261015 REVIEW / 本地PASS / 整体NOT_VERIFIED。Desktop/Web2.1.29完整verify7：Node1304/14平台skip、Agent199/2skip、Edge756首试/0retry/flaky/skip、UI242/0与development四步骤；fresh Native7 78/0/12图、TaskHost current4无注入11/秘密清理PASS，input/EXE同字节current。三CLI卡片9RED→9GREEN；历史同式invoke赋值/audit空数组安全证明撤回，Native7正向IPC受验阶段与actual3 UNKNOWN边界详见[最新验证](../changes/2026-10-15-ui-full/verification.md#2129-当前本地验收)。原138任务/功能/primary/index/历史保全与Mobile2.1.1规划保持。最终head独立审查、Hosted/Delivery、普通PR59合并/main/post-main待验，origin/main仍694。
+- `uiFullCandidate`: TASK-UI-FULL-20261015 REVIEW / 本地PASS / 整体NOT_VERIFIED。Desktop/Web2.1.30完整verify8：Node1304/14平台skip、Agent199/2skip、Edge760首试/0retry/flaky/skip、UI242/0及development四步骤；fresh Native9 87/0/13图、TaskHost current5无注入11/秘密清理PASS，自有进程退出与端口释放已实查。侧栏12行CSS/4新case、定向21首试及真实正常动画/单次创建/折叠重开覆盖成立；旧Hosted因果限制、Native8单位夹具失败、Native4偏好例外与HTTP IPC guard范围集中于[最新验证](../changes/2026-10-15-ui-full/verification.md#2130-当前本地验收)。原138任务/其他功能/历史保全与Mobile2.1.1规划保持；最终head独立审查、Hosted/Delivery、普通PR59合并/main/post-main待验，main694未合并。
 
 <!-- CURRENT_FACTS_END -->
 <!-- HISTORICAL_SNAPSHOTS_BEGIN -->
+
+## 2026-10-15 2.1.29最终本地快照（历史；偏好例外以当前更正为准）
+
+- `canonicalHeadVerifiedFrom`: 2026-10-15 root实际fetch/API确认main694、PR59未合并；当前2.1.29本地verify7/Native7/TaskHost current4 PASS，最终head精确审查、Hosted/Delivery及main/post-main待验，旧SHA绿色不代填。
+
+- `primaryCheckoutState`: D:/kk-studio/KK-Studio-2.0保留codex/ui-redesign-20261011@51fccfc7879cf90f7caaf3ae8e10af4d97a2aa2c并发dirty与原index（本轮只读254条），不reset/clean/覆盖。任务工作树branch-consolidation-20261011 / fix/TASK-UI-FULL-20261015，当前94e基线加CLI卡片/版本2.1.29/TaskHost夹具差量尚未最终提交；当前本地验证见uiFullCandidate，最终SHA门禁待验。
+
+- `uiFullCandidate`: TASK-UI-FULL-20261015 REVIEW / 本地PASS / 整体NOT_VERIFIED。Desktop/Web2.1.29完整verify7：Node1304/14平台skip、Agent199/2skip、Edge756首试/0retry/flaky/skip、UI242/0与development四步骤；fresh Native7 78/0/12图、TaskHost current4无注入11/秘密清理PASS，input/EXE同字节current。三CLI卡片9RED→9GREEN；历史同式invoke赋值/audit空数组安全证明撤回，Native7正向IPC受验阶段与actual3 UNKNOWN边界详见[最新验证](../changes/2026-10-15-ui-full/verification.md#2129-当前本地验收)。原138任务/功能/primary/index/历史保全与Mobile2.1.1规划保持。最终head独立审查、Hosted/Delivery、普通PR59合并/main/post-main待验，origin/main仍694。
 
 
 ## 2026-10-15 2.1.28最终本地快照（历史保留；同式guard安全结论以上方勘误为准）

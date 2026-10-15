@@ -10,6 +10,10 @@
 
 ## 本轮恢复入口
 
+先读[最新2.1.30验证](../changes/2026-10-15-ui-full/verification.md#2130-当前本地验收)与[计划](../changes/2026-10-15-ui-full/plan.md)。当前d50基线加侧栏12行CSS/4新case/版本30，verify8 760首试/0retry、Native9 87项/13图与TaskHost current5无注入11项PASS，资源current、自有进程退出及端口释放已实查。Native4默认profile自动连接被暂停，原值NOT_RECORDED，不猜恢复；可在模型接入重新连接。旧Hosted、单位夹具及HTTP guard范围见验证。最终head、独立base694→head审查、新Hosted/Delivery、普通PR59合并与main/post-main待验，main694未合并；REVIEW/整体NOT_VERIFIED，原138任务/primary文件/index及Mobile规划保持。
+
+### 此前2.1.29恢复入口（历史；偏好例外以上方勘误为准）
+
 先读[最新2.1.29验证与勘误](../changes/2026-10-15-ui-full/verification.md#2129-当前本地验收)和[计划](../changes/2026-10-15-ui-full/plan.md)。当前94e基线加CLI卡片/版本29/TaskHost夹具差量，本地verify7 756首试/0retry、Native7 78项/12图与TaskHost current4无注入11项PASS，input/EXE同字节current。历史同式guard安全证明撤回、当前正向IPC证据与actual3 UNKNOWN见验证。最终head尚未形成，下一步独立base694→head审查、新Hosted/Delivery、普通PR59合并与main/post-main；main694未合并，REVIEW/整体NOT_VERIFIED。原138任务/primary/index/Mobile2.1.1规划不变。
 
 ### 此前2.1.28恢复入口（历史，安全结论按上方勘误）
