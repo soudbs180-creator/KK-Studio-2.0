@@ -222,7 +222,6 @@ function rejectLoss(original: unknown, normalized: unknown): void {
   }
 }
 export function decodeSnapshot(value: unknown): CreationSnapshot {
-  rejectSecrets(value);
   if (
     value &&
     typeof value === "object" &&
@@ -233,6 +232,7 @@ export function decodeSnapshot(value: unknown): CreationSnapshot {
       "unsupported",
       "项目版本不受支持，未覆盖原件。",
     );
+  rejectSecrets(value);
   const parsed = schema.safeParse(value);
   if (!parsed.success)
     throw new SnapshotStorageError(
