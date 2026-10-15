@@ -267,11 +267,10 @@ fn collect(mut run: impl FnMut(&'static str) -> Result<String, &'static str>) ->
     match run(NVIDIA).and_then(|v| parse_nvidia(&v)) {
         Ok(values) => {
             for value in values {
-                if let Some(existing) = report
-                    .gpus
-                    .iter_mut()
-                    .find(|g| g.name.eq_ignore_ascii_case(&value.name))
-                {
+                // Same-name cards must consume separate, still-unfilled CIM slots.
+                if let Some(existing) = report.gpus.iter_mut().find(|g| {
+                    g.dedicated_bytes.is_none() && g.name.eq_ignore_ascii_case(&value.name)
+                }) {
                     *existing = value;
                 } else if report.gpus.len() < 32 {
                     report.gpus.push(value);
@@ -499,6 +498,33 @@ mod tests {
             "NVIDIA RTX, 16, 8, 610.88, 12.0;execute",
         ] {
             assert!(parse_nvidia(invalid).is_err());
+        }
+    }
+    #[test]
+    fn local_hardware_collect_preserves_same_name_gpu_rows_in_both_orders() {
+        for cim in [
+            r#"[{"name":"Intel"},{"name":"Virtual"},{"name":"NVIDIA RTX 5080"},{"name":"NVIDIA RTX 5080"}]"#,
+            r#"[{"name":"Intel"},{"name":"Virtual"},{"name":"NVIDIA RTX 5080"}]"#,
+        ] {
+            for smi in [
+                "NVIDIA RTX 5080, 16384, 12288, 610.88, 12.0\nNVIDIA RTX 5080, 16384, 2048, 610.88, 12.0",
+                "NVIDIA RTX 5080, 16384, 2048, 610.88, 12.0\nNVIDIA RTX 5080, 16384, 12288, 610.88, 12.0",
+            ] {
+                let report = collect(|script| match script {
+                    CPU => Ok(r#"{"name":"Fixture CPU","logicalCores":24}"#.into()),
+                    SYSTEM => Ok(r#"{"name":"Fixture Windows","architecture":"X64","usableBytes":68719476736,"availableBytes":42949672960}"#.into()),
+                    DISK => Ok(r#"[{"drive":"D:","totalBytes":1099511627776,"freeBytes":536870912000}]"#.into()),
+                    GPU => Ok(cim.into()), NVIDIA => Ok(smi.into()), _ => Err("unavailable"),
+                });
+                let mut free: Vec<_> = report.gpus.iter().filter_map(|g| g.free_bytes).collect();
+                free.sort_unstable();
+                assert_eq!(free, [2 * 1024_u64.pow(3), 12 * 1024_u64.pow(3)]);
+                assert_eq!(report.gpus.len(), 4);
+                assert_eq!(report.gpus[0].name, "Intel");
+                assert_eq!(report.gpus[1].name, "Virtual");
+                let json = serde_json::to_string(&report).unwrap();
+                println!("LOCAL_HW_01_FIXTURE={json}");
+            }
         }
     }
     #[test]
