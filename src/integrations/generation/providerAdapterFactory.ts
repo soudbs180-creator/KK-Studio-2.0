@@ -19,6 +19,7 @@ export function createGenerationAdapter(
     return new LocalComfyUiAdapter(connection);
   if (twelveAiApiBase(connection.baseUrl)) {
     try {
+      // Unbound adapters allow recovery queries; submit requires the host's durable intent port.
       return new TwelveAiTaskAdapter(connection);
     } catch {
       return null;

@@ -13,21 +13,30 @@ import {
 import {
   buildTwelveAiTaskBody,
   parseTwelveAiTask,
+  parseTwelveAiSubmissionReceipt,
   twelveAiApiBase,
   twelveAiIntentKeySchema,
   twelveAiModelKind,
   twelveAiTaskIdSchema,
   type TwelveAiMediaInput,
   type TwelveAiTaskState,
+  type TwelveAiSubmissionReceipt,
 } from "./twelveAiTaskProtocol.ts";
+export type { TwelveAiSubmissionReceipt } from "./twelveAiTaskProtocol.ts";
 
 export type TwelveAiGenerationRequest = GenerationRequest & {
   media?: TwelveAiMediaInput;
 };
-export interface TwelveAiSubmissionReceipt {
-  idempotencyKey: string;
-  acceptance: "accepted" | "unknown" | "rejected";
-  providerJobId?: string;
+export interface TwelveAiSubmissionPersistence {
+  readonly connectionId: string;
+  /** Atomically insert by connectionId + idempotencyKey; commit durably before created:true, or return the unchanged existing receipt. */
+  claimSubmission(
+    receipt: TwelveAiSubmissionReceipt,
+  ): Promise<
+    { created: true } | { created: false; receipt: TwelveAiSubmissionReceipt }
+  >;
+  /** Durably update the claimed intent without changing its connection binding before resolving. */
+  persistSubmissionReceipt(receipt: TwelveAiSubmissionReceipt): Promise<void>;
 }
 export interface TwelveAiTaskSnapshot extends SubmittedGenerationJob {
   providerStatus: TwelveAiTaskState["providerStatus"];
@@ -43,6 +52,7 @@ type Reason =
   | "submission_unknown"
   | "request_failed"
   | "receipt_persistence_failed"
+  | "receipt_persistence_required"
   | "polling_stopped"
   | "remote_cancel_unsupported";
 export class TwelveAiTaskError extends ProviderAdapterError {
@@ -81,9 +91,7 @@ export interface TwelveAiTaskAdapterOptions {
   ) => Promise<string | undefined>;
   /** Host persists these opaque receipts before allowing a retry after reload. No prompts or secrets. */
   submissionReceipts?: readonly TwelveAiSubmissionReceipt[];
-  persistSubmissionReceipt?: (
-    receipt: TwelveAiSubmissionReceipt,
-  ) => Promise<void>;
+  submissionPersistence?: TwelveAiSubmissionPersistence;
 }
 const maxResponseBytes = 1024 * 1024;
 
@@ -176,7 +184,7 @@ export class TwelveAiTaskAdapter implements GenerationProviderAdapter {
   private readonly resolveCredential: NonNullable<
     TwelveAiTaskAdapterOptions["resolveCredential"]
   >;
-  private readonly persistSubmissionReceipt?: TwelveAiTaskAdapterOptions["persistSubmissionReceipt"];
+  private readonly submissionPersistence?: TwelveAiSubmissionPersistence;
   private readonly submissions = new Map<
     string,
     {
@@ -202,28 +210,21 @@ export class TwelveAiTaskAdapter implements GenerationProviderAdapter {
     this.base = base;
     this.fetch = options.fetch ?? fetch;
     this.resolveCredential = options.resolveCredential ?? loadApiKey;
-    this.persistSubmissionReceipt = options.persistSubmissionReceipt;
+    this.submissionPersistence = options.submissionPersistence;
     for (const receipt of options.submissionReceipts ?? []) {
-      if (
-        !receipt ||
-        !twelveAiIntentKeySchema.safeParse(receipt.idempotencyKey).success ||
-        !["accepted", "unknown", "rejected"].includes(receipt.acceptance) ||
-        (receipt.acceptance === "accepted" &&
-          !twelveAiTaskIdSchema.safeParse(receipt.providerJobId).success) ||
-        (receipt.providerJobId !== undefined &&
-          (!twelveAiTaskIdSchema.safeParse(receipt.providerJobId).success ||
-            receipt.acceptance === "rejected")) ||
-        this.submissions.has(receipt.idempotencyKey)
-      )
+      let parsedReceipt: TwelveAiSubmissionReceipt;
+      try {
+        parsedReceipt = parseTwelveAiSubmissionReceipt(
+          receipt,
+          this.connection.id,
+        );
+      } catch {
         throw new TwelveAiTaskError("invalid_request");
-      this.submissions.set(receipt.idempotencyKey, {
-        receipt: {
-          idempotencyKey: receipt.idempotencyKey,
-          acceptance: receipt.acceptance,
-          ...(receipt.providerJobId
-            ? { providerJobId: receipt.providerJobId }
-            : {}),
-        },
+      }
+      if (this.submissions.has(parsedReceipt.idempotencyKey))
+        throw new TwelveAiTaskError("invalid_request");
+      this.submissions.set(parsedReceipt.idempotencyKey, {
+        receipt: parsedReceipt,
       });
     }
   }
@@ -267,6 +268,7 @@ export class TwelveAiTaskAdapter implements GenerationProviderAdapter {
       throw new TwelveAiTaskError("polling_stopped", {
         failureClass: "cancelled",
       });
+    this.persistence();
     let body: ReturnType<typeof buildTwelveAiTaskBody>;
     try {
       if (
@@ -290,36 +292,27 @@ export class TwelveAiTaskAdapter implements GenerationProviderAdapter {
       throw new TwelveAiTaskError("invalid_request");
     }
     const existing = this.submissions.get(request.idempotencyKey);
-    if (existing?.promise) return existing.promise;
-    if (existing?.receipt.acceptance === "accepted")
-      return {
-        providerJobId: existing.receipt.providerJobId!,
-        async: true,
-        status: "queued",
-      };
-    if (existing)
-      throw new TwelveAiTaskError(
-        existing.receipt.acceptance === "unknown"
-          ? "submission_unknown"
-          : "request_failed",
-        {
-          uncertain: existing.receipt.acceptance === "unknown",
-          providerJobId: existing.receipt.providerJobId,
-        },
-      );
+    if (existing) return existing.promise ?? this.receiptJob(existing.receipt);
     const entry: {
       receipt: TwelveAiSubmissionReceipt;
       promise?: Promise<SubmittedGenerationJob>;
     } = {
       receipt: {
+        connectionId: this.connection.id,
         idempotencyKey: request.idempotencyKey,
         acceptance: "unknown",
       },
     };
     this.submissions.set(request.idempotencyKey, entry);
     entry.promise = (async () => {
+      let claimed = false;
       try {
-        await this.persistReceipt(entry.receipt);
+        const existingReceipt = await this.claimReceipt(entry.receipt);
+        if (existingReceipt) {
+          entry.receipt = existingReceipt;
+          return this.receiptJob(existingReceipt);
+        }
+        claimed = true;
         const task = await this.submitTask(body, request.signal);
         entry.receipt = {
           ...entry.receipt,
@@ -329,7 +322,7 @@ export class TwelveAiTaskAdapter implements GenerationProviderAdapter {
         await this.persistReceipt(entry.receipt, true);
         return task;
       } catch (error: unknown) {
-        if (error instanceof TwelveAiTaskError) {
+        if (claimed && error instanceof TwelveAiTaskError) {
           if (!error.uncertain && entry.receipt.acceptance !== "accepted")
             entry.receipt = { ...entry.receipt, acceptance: "rejected" };
           if (error.providerJobId)
@@ -345,12 +338,59 @@ export class TwelveAiTaskAdapter implements GenerationProviderAdapter {
     })();
     return entry.promise;
   }
+  private persistence(): TwelveAiSubmissionPersistence {
+    const port = this.submissionPersistence;
+    if (
+      !port ||
+      port.connectionId !== this.connection.id ||
+      typeof port.claimSubmission !== "function" ||
+      typeof port.persistSubmissionReceipt !== "function"
+    )
+      throw new TwelveAiTaskError("receipt_persistence_required");
+    return port;
+  }
+  private receiptJob(
+    receipt: TwelveAiSubmissionReceipt,
+  ): SubmittedGenerationJob {
+    if (receipt.acceptance === "accepted")
+      return {
+        providerJobId: receipt.providerJobId!,
+        async: true,
+        status: "queued",
+      };
+    throw new TwelveAiTaskError(
+      receipt.acceptance === "unknown"
+        ? "submission_unknown"
+        : "request_failed",
+      {
+        uncertain: receipt.acceptance === "unknown",
+        providerJobId: receipt.providerJobId,
+      },
+    );
+  }
+  private async claimReceipt(
+    receipt: TwelveAiSubmissionReceipt,
+  ): Promise<TwelveAiSubmissionReceipt | undefined> {
+    try {
+      const claimed = await this.persistence().claimSubmission({ ...receipt });
+      if (claimed?.created === true) return undefined;
+      if (claimed?.created === false)
+        return parseTwelveAiSubmissionReceipt(
+          claimed.receipt,
+          this.connection.id,
+          receipt.idempotencyKey,
+        );
+      throw new Error();
+    } catch {
+      throw new TwelveAiTaskError("receipt_persistence_failed");
+    }
+  }
   private async persistReceipt(
     receipt: TwelveAiSubmissionReceipt,
     uncertain = false,
   ): Promise<void> {
     try {
-      await this.persistSubmissionReceipt?.({ ...receipt });
+      await this.persistence().persistSubmissionReceipt({ ...receipt });
     } catch {
       throw new TwelveAiTaskError("receipt_persistence_failed", {
         uncertain,

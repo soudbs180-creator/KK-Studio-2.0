@@ -6,11 +6,12 @@ import {
 } from "node:http";
 import test from "node:test";
 import type { ProviderConnection } from "../../src/domain/providerConnections.ts";
-import { createGenerationAdapter } from "../../src/integrations/generation/providerAdapterFactory.ts";
 import {
   TwelveAiTaskAdapter,
   TwelveAiTaskError,
   type TwelveAiGenerationRequest,
+  type TwelveAiSubmissionPersistence,
+  type TwelveAiSubmissionReceipt,
 } from "../../src/integrations/generation/twelveAiTaskAdapter.ts";
 
 const secret = "sk-private-fixture-12ai-never-print";
@@ -56,6 +57,7 @@ async function body(req: IncomingMessage) {
 async function fixture(
   handler: (req: IncomingMessage, res: ServerResponse) => void | Promise<void>,
 ) {
+  const submissionPersistence = persistence();
   const errors: unknown[] = [];
   const server = createServer((req, res) => {
     Promise.resolve(handler(req, res)).catch((error) => {
@@ -76,6 +78,7 @@ async function fixture(
   return {
     adapter: (baseUrl?: string) =>
       new TwelveAiTaskAdapter(connection(baseUrl), {
+        submissionPersistence,
         fetch: fetchFixture,
         resolveCredential: async (base, ref) => {
           assert.ok(base.startsWith("https://"));
@@ -84,12 +87,28 @@ async function fixture(
         },
       }),
     fetchFixture,
+    submissionPersistence,
     async close() {
       server.closeAllConnections();
       await new Promise<void>((resolve, reject) =>
         server.close((error) => (error ? reject(error) : resolve())),
       );
       assert.deepEqual(errors, []);
+    },
+  };
+}
+function persistence(): TwelveAiSubmissionPersistence {
+  const receipts = new Map<string, TwelveAiSubmissionReceipt>();
+  return {
+    connectionId: connection().id,
+    async claimSubmission(receipt) {
+      const existing = receipts.get(receipt.idempotencyKey);
+      if (existing) return { created: false, receipt: { ...existing } };
+      receipts.set(receipt.idempotencyKey, { ...receipt });
+      return { created: true };
+    },
+    async persistSubmissionReceipt(receipt) {
+      receipts.set(receipt.idempotencyKey, { ...receipt });
     },
   };
 }
@@ -103,6 +122,15 @@ function errorIs(error: unknown, expected: Partial<TwelveAiTaskError>) {
   assert.equal(error.cause, undefined);
   return true;
 }
+
+test("12AI unknown configured models advertise no enabled media capability", async () => {
+  const adapter = new TwelveAiTaskAdapter({
+    ...connection(),
+    model: "unknown-unreviewed",
+  });
+  assert.deepEqual((await adapter.discoverCapabilities()).modalities, []);
+  assert.deepEqual((await adapter.discoverCapabilities()).operations, []);
+});
 
 test("12AI sends documented async image payload with transient Bearer credentials and coalesces submissions", async () => {
   let posts = 0;
@@ -149,6 +177,7 @@ test("12AI sends documented async image payload with transient Bearer credential
     assert.deepEqual(receipts[0], receipts[1]);
     assert.equal(posts, 1);
     assert.deepEqual(adapter.submissionReceipt(input.idempotencyKey), {
+      connectionId: connection().id,
       idempotencyKey: input.idempotencyKey,
       acceptance: "accepted",
       providerJobId: "task_one",
@@ -314,6 +343,7 @@ test("12AI validates GPT quality and size without interpreting prompt parameters
 test("12AI rejects unsupported or cross-family input before credential resolution/network", async () => {
   let calls = 0;
   const adapter = new TwelveAiTaskAdapter(connection(), {
+    submissionPersistence: persistence(),
     fetch: async () => {
       calls++;
       throw new Error("must not fetch");
@@ -433,6 +463,7 @@ test("12AI rejects oversized and malformed submit responses as unknown and never
 test("12AI known late acceptance retains task ID after local interruption", async () => {
   const controller = new AbortController();
   const adapter = new TwelveAiTaskAdapter(connection(), {
+    submissionPersistence: persistence(),
     resolveCredential: async () => secret,
     fetch: async () => {
       controller.abort();
@@ -474,6 +505,7 @@ test("12AI accepted socket abort is unknown and restored intent prevents another
     const receipt = adapter.submissionReceipt("opaque-intent-one");
     assert.ok(receipt);
     const restored = new TwelveAiTaskAdapter(connection(), {
+      submissionPersistence: server.submissionPersistence,
       fetch: server.fetchFixture,
       resolveCredential: async () => secret,
       submissionReceipts: [receipt],
@@ -553,40 +585,4 @@ test("12AI blocks redirects and redacts response bodies and arbitrary transport 
   await assert.rejects(adapter.getTask("task_one"), (error) =>
     errorIs(error, { failureClass: "network" }),
   );
-});
-
-test("12AI factory recognition uses exact secure hosts and never a provider-name substring", () => {
-  assert.equal(
-    createGenerationAdapter({ ...connection(), credentialRef: undefined }),
-    null,
-  );
-  for (const host of ["cdn.12ai.org", "api.12ai.org"]) {
-    assert.ok(
-      createGenerationAdapter(connection(`https://${host}/v1`)) instanceof
-        TwelveAiTaskAdapter,
-    );
-    assert.ok(
-      createGenerationAdapter(connection(`https://${host}`)) instanceof
-        TwelveAiTaskAdapter,
-    );
-  }
-  for (const url of [
-    "https://cdn.12ai.org.evil.test/v1",
-    "https://evil.test/cdn.12ai.org",
-    "http://cdn.12ai.org",
-    "https://cdn.12ai.org:444/v1",
-    "https://cdn.12ai.org/v1?key=secret",
-  ]) {
-    assert.throws(
-      () => new TwelveAiTaskAdapter(connection(url)),
-      (error) => errorIs(error, { reason: "invalid_connection" }),
-    );
-    assert.equal(
-      createGenerationAdapter({
-        ...connection(url),
-        provider: "12ai",
-      }) instanceof TwelveAiTaskAdapter,
-      false,
-    );
-  }
 });

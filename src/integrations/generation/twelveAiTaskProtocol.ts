@@ -18,6 +18,38 @@ export const twelveAiTaskIdSchema = z.string().regex(/^[A-Za-z0-9_-]{1,240}$/);
 export const twelveAiIntentKeySchema = z
   .string()
   .regex(/^[A-Za-z0-9_-]{1,160}$/);
+const submissionReceiptSchema = z
+  .object({
+    connectionId: z.string().min(1).max(120),
+    idempotencyKey: twelveAiIntentKeySchema,
+    acceptance: z.enum(["accepted", "unknown", "rejected"]),
+    providerJobId: twelveAiTaskIdSchema.optional(),
+  })
+  .strict()
+  .refine((receipt) =>
+    receipt.acceptance === "accepted"
+      ? Boolean(receipt.providerJobId)
+      : receipt.acceptance !== "rejected" ||
+        receipt.providerJobId === undefined,
+  );
+export type TwelveAiSubmissionReceipt = z.infer<typeof submissionReceiptSchema>;
+
+export function parseTwelveAiSubmissionReceipt(
+  value: unknown,
+  connectionId: string,
+  idempotencyKey?: string,
+): TwelveAiSubmissionReceipt {
+  const parsed = submissionReceiptSchema.safeParse(value);
+  if (
+    !parsed.success ||
+    parsed.data.connectionId !== connectionId ||
+    (idempotencyKey !== undefined &&
+      parsed.data.idempotencyKey !== idempotencyKey)
+  )
+    invalid();
+  return parsed.data;
+}
+
 const imageReferenceSchema = z
   .string()
   .max(14_000_000)
