@@ -144,74 +144,106 @@ test("suite names cannot escape the evidence directory", async () => {
   assert.deepEqual(await readdir(rootDir), []);
 });
 
+function screenshotPathViolations(file: string, contents: string): string[] {
+  const violations: string[] = [];
+  const source = ts.createSourceFile(
+    file,
+    contents,
+    ts.ScriptTarget.Latest,
+    true,
+  );
+  const reject = (node: ts.Node) => {
+    const { line } = source.getLineAndCharacterOfPosition(
+      node.getStart(source),
+    );
+    violations.push(
+      file +
+        ":" +
+        (line + 1) +
+        " must use an inline screenshot path calling testInfo.outputPath()",
+    );
+  };
+  const inspect = (node: ts.Node) => {
+    if (
+      ts.isCallExpression(node) &&
+      ts.isPropertyAccessExpression(node.expression) &&
+      node.expression.name.text === "screenshot"
+    ) {
+      const options = node.arguments[0];
+      if (options && !ts.isObjectLiteralExpression(options)) reject(options);
+      else if (options && ts.isObjectLiteralExpression(options)) {
+        for (const property of options.properties) {
+          if (ts.isSpreadAssignment(property)) {
+            reject(property);
+            continue;
+          }
+          if (ts.isComputedPropertyName(property.name)) {
+            reject(property);
+            continue;
+          }
+          const name =
+            ts.isIdentifier(property.name) || ts.isStringLiteral(property.name)
+              ? property.name.text
+              : undefined;
+          if (name !== "path") continue;
+          if (!ts.isPropertyAssignment(property)) {
+            reject(property);
+            continue;
+          }
+          const value = property.initializer;
+          if (!(
+            ts.isCallExpression(value) &&
+            ts.isPropertyAccessExpression(value.expression) &&
+            value.expression.name.text === "outputPath"
+          ))
+            reject(property);
+        }
+      }
+    }
+    ts.forEachChild(node, inspect);
+  };
+  inspect(source);
+  return violations;
+}
+
 test("browser screenshot paths belong to the current test output directory", async () => {
   const browserTests = path.join(repository, "tests/browser");
   const violations: string[] = [];
   for (const file of await readdir(browserTests)) {
     if (!file.endsWith(".ts")) continue;
-    const source = ts.createSourceFile(
-      file,
-      await readFile(path.join(browserTests, file), "utf8"),
-      ts.ScriptTarget.Latest,
-      true,
+    violations.push(
+      ...screenshotPathViolations(
+        file,
+        await readFile(path.join(browserTests, file), "utf8"),
+      ),
     );
-    const outputPathHelpers = new Set<string>();
-    const collectHelpers = (node: ts.Node) => {
-      if (
-        ts.isVariableDeclaration(node) &&
-        ts.isIdentifier(node.name) &&
-        node.initializer &&
-        ts.isArrowFunction(node.initializer) &&
-        ts.isCallExpression(node.initializer.body) &&
-        ts.isPropertyAccessExpression(node.initializer.body.expression) &&
-        node.initializer.body.expression.name.text === "outputPath"
-      )
-        outputPathHelpers.add(node.name.text);
-      ts.forEachChild(node, collectHelpers);
-    };
-    collectHelpers(source);
-    const usesOutputPath = (node: ts.Node): boolean => {
-      if (
-        ts.isCallExpression(node) &&
-        ((ts.isPropertyAccessExpression(node.expression) &&
-          node.expression.name.text === "outputPath") ||
-          (ts.isIdentifier(node.expression) &&
-            outputPathHelpers.has(node.expression.text)))
-      )
-        return true;
-      let safe = false;
-      ts.forEachChild(node, (child) => {
-        safe ||= usesOutputPath(child);
-      });
-      return safe;
-    };
-    const inspect = (node: ts.Node) => {
-      if (
-        ts.isCallExpression(node) &&
-        ts.isPropertyAccessExpression(node.expression) &&
-        node.expression.name.text === "screenshot"
-      ) {
-        const options = node.arguments[0];
-        if (options && ts.isObjectLiteralExpression(options)) {
-          for (const property of options.properties) {
-            if (
-              ts.isPropertyAssignment(property) &&
-              property.name.getText(source) === "path" &&
-              !usesOutputPath(property.initializer)
-            ) {
-              const { line } = source.getLineAndCharacterOfPosition(
-                property.getStart(source),
-              );
-              violations.push(
-                `${file}:${line + 1} must use testInfo.outputPath()`,
-              );
-            }
-          }
-        }
-      }
-      ts.forEachChild(node, inspect);
-    };
-    inspect(source);
   }
   assert.deepEqual(violations, []);
+});
+
+test("screenshot guard rejects quoted, conditional and uninspectable paths", () => {
+  const options = [
+    '{"path":"test-results/runtime/old.png"}',
+    '{path: condition ? test.info().outputPath("safe.png") : "test-results/runtime/old.png"}',
+    "options",
+    "{path}",
+    "{...options}",
+    '{["path"]:"test-results/runtime/old.png"}',
+    '{get path(){return "test-results/runtime/old.png"}}',
+  ];
+  assert.deepEqual(
+    options.map(
+      (value) =>
+        screenshotPathViolations("probe.ts", `page.screenshot(${value})`)
+          .length,
+    ),
+    [1, 1, 1, 1, 1, 1, 1],
+  );
+  assert.deepEqual(
+    screenshotPathViolations(
+      "probe.ts",
+      'page.screenshot({"path":test.info().outputPath("safe.png")})',
+    ),
+    [],
+  );
 });

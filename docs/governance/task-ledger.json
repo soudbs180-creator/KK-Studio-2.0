@@ -7315,7 +7315,22 @@
       },
       "productGoalStatus": "IN_PROGRESS",
       "evidenceIncident": "docs/changes/2026-10-15-unified-execution/incident.md"
-    }
+    },
+    "sourceUpdates": [
+      {
+        "reportedAt": "2026-10-15",
+        "sourceThreadId": "01a11954-e368-75e1-9544-1256fc96d0ee",
+        "evidenceType": "USER_REPORTED_REMOTE_READ",
+        "pullRequest": 58,
+        "reportedHead": "06f5fde94e320ea3e1c4213717358ffa00bd263c",
+        "reportedUpdatedAt": "2026-10-15T08:09:39Z",
+        "staleBodyHead": "26f75569",
+        "additionalCommits": ["cbda65e4", "5ab6f7e3", "c9dda701", "06f5fde9"],
+        "reportedSuccessfulRuns": ["38703693291", "38703693360", "38703693324"],
+        "acceptance": "原始产物未独审，不继承26f验收计数，不认定MCP CORS已修复。",
+        "nextAction": "保持GDI→HOME/REF→Canvas/Responsive→图片压缩→Design→PR58顺序；到PR58依赖时重新读取远端，保留并逐项比较独有成果及GDI重叠，不重启旧会话。"
+      }
+    ]
   },
   {
     "id": "TASK-VERIFY-EVIDENCE-20261015",
@@ -7345,7 +7360,8 @@
       "tests/desktop/plugin-recovery.mjs",
       "docs/changes/2026-10-15-test-evidence-isolation",
       "tests/browser",
-      "tests/desktop/test-evidence-preservation.mjs"
+      "tests/desktop/test-evidence-preservation.mjs",
+      "package.json"
     ],
     "evidence": [
       "docs/changes/2026-10-15-unified-execution/incident.md",
@@ -7355,7 +7371,7 @@
       "docs/changes/2026-10-15-test-evidence-isolation/verification.md",
       "docs/changes/2026-10-15-test-evidence-isolation/review.md"
     ],
-    "verification": "真实合成Playwright成功/失败均在基线删除旧receipt而RED；独占run目录实现后定向7/7 GREEN（目录/文件/junction拒绝、旧三类原字节保留、新report/metadata、suite边界）。完整Node1346/1332PASS/14既有skip/0FAIL，lint/typecheck通过；sandbox junction EPERM经平台批准复验。无浏览器页面，版本不递增。原旧回执缺失不伪造恢复；完整verify、最终SHA独审与main集成待GDI安全接入后进行。 独审e5d5dc31提出EVID-01固定截图/P1、EVID-02worker分散/P2；已各先RED再本地GREEN，17文件48截图仅迁移路径，新增截图守卫。补充完整Node/静态与正式复验、实际安全PNG未完成前不代填通过。 补充完整Node1347/1333PASS/14既有skip/0FAIL、lint/typecheck通过；format首报2文件后修正复验通过。真实PNG需GDI安全接入后验证，精确最终独审待续。 精确6374独立源码复验限定PASS，无新阻断；当前a6e组合新增安全真实PNG探针正常/失败两种旧字节均保持，新PNG/report同run，未提交probe范围清楚。",
+    "verification": "真实合成Playwright成功/失败均在基线删除旧receipt而RED；独占run目录实现后定向7/7 GREEN（目录/文件/junction拒绝、旧三类原字节保留、新report/metadata、suite边界）。完整Node1346/1332PASS/14既有skip/0FAIL，lint/typecheck通过；sandbox junction EPERM经平台批准复验。无浏览器页面，版本不递增。原旧回执缺失不伪造恢复；完整verify、最终SHA独审与main集成待GDI安全接入后进行。 独审e5d5dc31提出EVID-01固定截图/P1、EVID-02worker分散/P2；已各先RED再本地GREEN，17文件48截图仅迁移路径，新增截图守卫。补充完整Node/静态与正式复验、实际安全PNG未完成前不代填通过。 补充完整Node1347/1333PASS/14既有skip/0FAIL、lint/typecheck通过；format首报2文件后修正复验通过。真实PNG需GDI安全接入后验证，精确最终独审待续。 精确6374独立源码复验限定PASS，无新阻断；当前a6e组合新增安全真实PNG探针正常/失败两种旧字节均保持，新PNG/report同run，未提交probe范围清楚。 f727完整失败但旧PNG/report/receipt三项hash均保留且441输出已备份；仅缺插件环境补齐后原11失败全部同SHA/原断言通过。SHOT-01已自修复并补7种AST负例，最终新head待审。",
     "verificationResult": "PARTIAL",
     "updated": "2026-10-15",
     "lastVerified": "2026-10-15",
@@ -7392,7 +7408,8 @@
       "scripts/audit/check-text-runtime.mjs",
       "tests/desktop/headless-edge-launch.mjs",
       "docs/changes/2026-10-15-explorer-gdi-integration",
-      "tests/desktop/test-evidence-preservation.mjs"
+      "tests/desktop/test-evidence-preservation.mjs",
+      "package.json"
     ],
     "status": "IN_PROGRESS",
     "priority": "P1",
@@ -7404,7 +7421,7 @@
       "docs/changes/2026-10-15-explorer-gdi-integration/verification.md",
       "docs/changes/2026-10-15-explorer-gdi-integration/review.md"
     ],
-    "verification": "原af8精确HEAD新verify Node1327/Agent199/Edge784首试/development4步通过；原development旧receipt/PNG因清理缺失单列incident，未伪造恢复。当前按原stable ID由root在复用隔离树承接，仅挑af8独有7源码，父tree与main235e相同。新组合、实际main/Hosted/客户端仍未验收。 已挑af8为a6e，配置冲突只保留双保护。真实Windows browser/2renderers保留15+1项，真实PNG正常/失败均保持旧字节，新PNG/report同run。全量verify、100页新组合及最终SHA独审尚待。 main3a已fetch，tree与精确治理89fba完全相同；从main只挑4独有提交，384546c8树与旧8729完全一致，未复制治理旧提交历史。",
+    "verification": "原af8精确HEAD新verify Node1327/Agent199/Edge784首试/development4步通过；原development旧receipt/PNG因清理缺失单列incident，未伪造恢复。当前按原stable ID由root在复用隔离树承接，仅挑af8独有7源码，父tree与main235e相同。新组合、实际main/Hosted/客户端仍未验收。 已挑af8为a6e，配置冲突只保留双保护。真实Windows browser/2renderers保留15+1项，真实PNG正常/失败均保持旧字节，新PNG/report同run。全量verify、100页新组合及最终SHA独审尚待。 main3a已fetch，tree与精确治理89fba完全相同；从main只挑4独有提交，384546c8树与旧8729完全一致，未复制治理旧提交历史。 f727首轮完整verify exit1：Node1333/Agent199通过，Browser773PASS/11FAIL/0flaky、development未运行；441产物完整保留，旧3项字节一致。发现缺既定postinstall插件依赖/构建；只补17packages/插件构建与生产dist后，同f727/原断言11项13.6s全部首试PASS。新test入口先plugins:build防同类遗漏。SHOT-01 quoted/条件/变量options/shorthand/spread先5项全漏RED，补getter再次RED，严格直接路径后7负例与当前截图守卫GREEN；新完整verify/独审待续。",
     "verificationResult": "PARTIAL",
     "updated": "2026-10-15",
     "lastVerified": "2026-10-15",

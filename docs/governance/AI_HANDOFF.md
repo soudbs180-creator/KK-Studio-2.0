@@ -10,13 +10,15 @@
 
 ## 统一整理后的正式执行入口（TASK-GOV-006）
 
-当前任务先读[GDI承接计划](../changes/2026-10-15-explorer-gdi-integration/plan.md)。root在fix/TASK-EXPLORER-GDI-20261015-main，从实际main3a992597只承接四独有测试安全提交；治理PR61正常合入，未更新产品/daily。下一步冻结新SHA做100页、真实PNG与完整安全verify，再独审/正常PR。旧候选dirty/原件/九项目不动。
+当前任务先读[GDI承接计划](../changes/2026-10-15-explorer-gdi-integration/plan.md)。root在fix/TASK-EXPLORER-GDI-20261015-main，从实际main3a992597只承接四独有测试安全提交；治理PR61正常合入，未更新产品/daily。f727参数/PNG/100页已通过；首轮完整verify11FAIL为插件环境缺口，只补依赖/构建后同SHA原11项全过。SHOT-01补强后需新冻结全量与独审/正常PR。旧候选dirty/原件/九项目不动。
 
 最新限制：af8精确HEAD完整verify已新跑PASS；但测试默认目录清理移除了旧开发态原件，不能再声称其旧路径可读。先读[事件](../changes/2026-10-15-unified-execution/incident.md)，下一执行先落实TASK-VERIFY-EVIDENCE-20261015保护，再承接GDI。
 
 正式执行会话现已接管：先读[本轮首轮验证](../changes/2026-10-15-unified-execution/verification.md)和[新增历史续读](../changes/2026-10-15-unified-execution/history-readback.md)。原始交接包保持原hash；旧段落是整理会话时点。12可读目标续至末尾、6接口仍受限；GDI候选真实Windows参数与100页保护已新验。PR61尚待当前Hosted，不关闭日常窗口、不动九项目；下一步正常合治理PR/main复验后，从实际main只承接af8。总目标仍IN_PROGRESS。
 
 最新用户要求：本轮仅安全交接与整理，确认后另建正式执行会话，不在整理会话实现产品或再向旧会话派功能。先读[唯一接管提示词](../changes/2026-10-15-unified-handoff/takeover-context.md)、[原始授权](../changes/2026-10-15-unified-handoff/source-instructions.md)、[会话状态及覆盖缺口](../changes/2026-10-15-unified-handoff/session-inventory.md)、[归并/合入顺序](../changes/2026-10-15-unified-handoff/resume-order.md)与[验证](../changes/2026-10-15-unified-handoff/verification.md)。当前事实以PROJECT_STATE为准；192来源机器矩阵只维护在原task-ledger的TASK-GOV-006.handoffMatrix，Markdown仅派生。下面HOME/REF入口保留历史时点，不代表当前尚未合并或最新用户偏好。
+
+PR58后续来源按用户补充记在原TASK-GOV-006.sourceUpdates：reported head06f5fde9而旧正文26f过期；到依赖时重新读远端/独有提交及GDI重叠，不继承旧验收或断言MCP CORS已修复。当前GDI顺序不变。
 
 ## Codex 卡片参考图恢复入口（TASK-CODEX-REF-20261015）
 

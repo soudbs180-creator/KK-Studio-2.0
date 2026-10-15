@@ -1,8 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { expandSidebar, waitForConversationPanelSettled } from "./helpers";
 
-const evidence = () => test.info().outputPath("runtime");
-
 test("latest Figma shell is loaded by the real production page", async ({
   page,
 }) => {
@@ -24,7 +22,7 @@ test("latest Figma shell is loaded by the real production page", async ({
     "rgb(22, 22, 22)",
   );
   await page.screenshot({
-    path: evidence() + "/after-landing.png",
+    path: test.info().outputPath("runtime/after-landing.png"),
     animations: "disabled",
   });
   await page
@@ -78,7 +76,7 @@ test("latest Figma shell is loaded by the real production page", async ({
     page.getByRole("button", { name: "开启语音输入", exact: true }),
   ).toHaveCSS("height", "32px");
   await page.screenshot({
-    path: evidence() + "/after-workspace.png",
+    path: test.info().outputPath("runtime/after-workspace.png"),
     animations: "disabled",
   });
   await page.getByRole("button", { name: "收起侧边栏", exact: true }).click();
@@ -92,7 +90,7 @@ test("latest Figma shell is loaded by the real production page", async ({
     .poll(async () => (await page.locator(".canvas-toolbar").boundingBox())!.x)
     .toBeCloseTo(719, 0);
   await page.screenshot({
-    path: evidence() + "/after-collapsed.png",
+    path: test.info().outputPath("runtime/after-collapsed.png"),
     animations: "disabled",
   });
 });
@@ -134,7 +132,7 @@ test("responsive desktop fills the viewport without scaling readable controls", 
   await page.keyboard.press("Escape");
   await expect(page.locator(".chat-mode-popover")).toHaveCount(0);
   await page.screenshot({
-    path: evidence() + "/after-1440.png",
+    path: test.info().outputPath("runtime/after-1440.png"),
     animations: "disabled",
   });
 });
