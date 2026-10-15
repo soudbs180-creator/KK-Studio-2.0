@@ -145,12 +145,13 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-SETTINGS-LATEST-20261015 | 在最新 UI 修复设置溢出、提示遮挡与配置保存风险 | DONE | 已完成 | P1 | TASK-223-ACTIONS-20261014 | root | 保持当前桌面入口指向最新工作区；产品源码改变后按官方launcher重建并重新验证，用户视觉与外部能力另验。 |
 | TASK-UI-DETAILS-20261015 | 统一输入框、设置密度和卡片空态UI | DONE | 已完成 | P1 | TASK-SETTINGS-LATEST-20261015 | root | 本次本地UI范围完成；用户视觉接受、真实Provider、Hosted/安装器及实体手机另验，不自动关闭原开放能力。 |
 | TASK-UI-FULL-20261015 | 完成全页面新UI收敛并验证后合入主线 | DONE | 已完成 | P1 | TASK-UI-DETAILS-20261015 | root | 本任务原范围关闭；新首页默认Codex、来源和输入/弹层修复由TASK-CODEX-HOME-20261015继续。 |
-| TASK-CODEX-HOME-20261015 | 首页默认Codex与模型来源分流及输入弹层修复 | IN_PROGRESS | 进行中 | P1 | TASK-UI-FULL-20261015, TASK-EXPLORER-GDI-20261015 | root | 在已推送PR62 head上串行复现/修复HOME三P2；上游squash后从稳定main只承接本任务独有提交。隔离资料测试、版本递增、完整verify/Native/精确独审及正常PR/main，保护九项目与新输入。 |
+| TASK-CODEX-HOME-20261015 | 首页默认Codex与模型来源分流及输入弹层修复 | IN_PROGRESS | 进行中 | P1 | TASK-UI-FULL-20261015, TASK-EXPLORER-GDI-20261015 | root | 在actual main492承接分支冻结文档后做代理模式及隔离官方Tauri验证，按新环境/精确head补最终门禁与独审，正常HOME PR/main；不代填付费Provider或daily验收。 |
 | TASK-CODEX-REF-20261015 | Codex 卡片连线参考图直达内置生图 | PARTIAL | 未完成 | P1 | TASK-CODEX-HOME-20261015 | root | 保留功能/live通过证据，跟进上游13项已证预存失败使mandatory fullverify有效通过；补最终SHA正式review及Hosted/PR门禁，不宣称已集成/发布。 |
 | TASK-GOV-006 | 统一会话安全交接、全量需求映射与单主控承接 | PARTIAL | 进行中 | P1 | none | root | PR61已正常squash为main3a992597，当前fetch核实后，测试安全组合从实际main承接；其余历史接口/产品任务仍开放。 |
-| TASK-VERIFY-EVIDENCE-20261015 | 隔离测试输出并保护历史回执 | PARTIAL | 进行中 | P1 | TASK-GOV-006 | root | 冻结验证文档并独立差量复审，源码对9aa零差异；正常推送同一测试安全PR，当前Hosted通过后正常squash并验证实际main，再串行HOME三P2。保留所有旧分支/dirty/用户资料。 |
-| TASK-EXPLORER-GDI-20261015 | 阻断 headless Edge 测试遗留 Shell 标签代理 | PARTIAL | 进行中 | P1 | TASK-GOV-006, TASK-VERIFY-EVIDENCE-20261015 | root | PR62冻结f9c6aa71等待当前Hosted及正常合main；本机/独审PASS。该分支只读保留，root已串行切至HOME恢复分支；若CI需要修复，先暂停HOME并切回干净安全分支。 |
+| TASK-VERIFY-EVIDENCE-20261015 | 隔离测试输出并保护历史回执 | PARTIAL | 进行中 | P1 | TASK-GOV-006 | root | 保持原安全分支只读，等待main492新Hosted结果与合后范围确认后关闭；HOME已串行在新承接分支进行，daily及产品验收不代填。 |
+| TASK-EXPLORER-GDI-20261015 | 阻断 headless Edge 测试遗留 Shell 标签代理 | PARTIAL | 进行中 | P1 | TASK-GOV-006, TASK-VERIFY-EVIDENCE-20261015 | root | 保持原安全分支只读，等待main492新Hosted结果与合后范围确认后关闭；HOME已串行在新承接分支进行，daily及产品验收不代填。 |
 | TASK-HOME-LOAD-DRAFT-20261015 | 保护读取期间编辑不覆盖已有首页草稿设置 | TODO | 未完成 | P2 | TASK-CODEX-HOME-20261015 | root | 在HOME恢复闭环后复用clean隔离树领取本问题，先按受控读取写产品RED，再选择最小输入保护或字段合并方案，验证后正常集成。 |
+| TASK-VERIFY-DEPS-20261015 | 恢复共享依赖清理事故并核验执行边界 | PARTIAL | 进行中 | P1 | TASK-CODEX-HOME-20261015 | root | 保存独立事故记录，严格前置exit0才执行下游；在物理本地依赖上补当前隔离Native/受影响门禁，并对纯docs精确差量复审后确定恢复闭环范围。 |
 
 ## TASK-FIX-PUSH-GUARD-SPACES-001 — 修复 Windows Git pre-push 空格及长路径启动
 
@@ -2807,12 +2808,12 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Feature IDs: FEAT-001, FEAT-002, FEAT-009
 - Owner role: implementer
 - Acceptance: 新首页默认Codex且显式API选择可用，实际提交与来源/连接/能力一致; 聊天与画布显式Codex/API分流，无selection旧项目、隐私/草稿/附件/询问身份/线程及unknown/取消保护保持；原生项目包合法字段严格往返且非法拒绝; 390/1099/1920及短屏长名下控件同排、输入无额外横线，菜单触发点定位/键盘/滚动可达; 当前版本真实账号文本与一张内置图片、原件归档/正常重开通过，旧项目与primary/index保全; 当前完整verify/相关Native/Rust、精确SHA独立审查、Hosted/Delivery及普通PR/main通过后本机重建验收; 两次候选窗口用户编辑按授权各恢复新ID独立副本，原7项目不覆盖；导出/恢复失败如实保留
-- Branch: `fix/TASK-CODEX-HOME-20261015-recovery`
+- Branch: `fix/TASK-CODEX-HOME-20261015-main`
 - Worktree: `D:/kk-studio/.worktrees/TASK-GOV-PHASE0`
 - Modules: src/App.tsx, src/components/StartPage.tsx, src/components/StartComposer.tsx, src/components/StartModelPicker.tsx, src/components/ModelPickerMenu.tsx, src/components/AgentComposer.tsx, src/domain/modelSelection.ts, src/features/creation/model.ts, src/features/agent, src/styles, tests/unit, tests/browser, docs/changes/2026-10-15-codex-home, docs/changes/2026-10-15-home-recovery-integration, src/features/agent/homeAgentRecovery.ts
-- Verification: NOT_VERIFIED — PR60产品已进入main3a；本轮按统一交接继续三P2，静态定位待运行RED，前置PR62本机测试安全PASS且Hosted中。旧完整verify失败、真实Provider及恢复证据保留于verificationHistory，不代填当前结果。 当前dirty连接46/46、HOME浏览器8项首试PASS；实际两browser RED/同图重复/旧epoch尾部RED均已复现并修复。前置准备/夹具/数量失败保留，加载期独立问题挂TASK-HOME-LOAD-DRAFT-20261015，当前完整冻结验证/Native仍待。
+- Verification: NOT_VERIFIED — PR60产品已进入main3a；本轮按统一交接继续三P2，静态定位待运行RED，前置PR62本机测试安全PASS且Hosted中。旧完整verify失败、真实Provider及恢复证据保留于verificationHistory，不代填当前结果。 当前dirty连接46/46、HOME浏览器8项首试PASS；实际两browser RED/同图重复/旧epoch尾部RED均已复现并修复。前置准备/夹具/数量失败保留，加载期独立问题挂TASK-HOME-LOAD-DRAFT-20261015，当前完整冻结验证/Native仍待。 冻结fc76完整verify exit0：Node1342/14skip、Agent199/2skip、Edge785首试0flaky/skip/errors、development5步PASS；906旧文件/备份1812及1333产物/备份2666hash一致，独审SOURCE/LOCAL_VERIFY PASS。PR62正常合main492后仅挑fc76为c180且tree完全一致，旧分支保留。依赖事故发生于完整运行后另记TASK-VERIFY-DEPS-20261015；当前Native/代理及新环境验证待续。
 - Evidence: [docs/changes/2026-10-15-codex-home/intent.md](../../docs/changes/2026-10-15-codex-home/intent.md), [docs/changes/2026-10-15-codex-home/spec.md](../../docs/changes/2026-10-15-codex-home/spec.md), [docs/changes/2026-10-15-codex-home/plan.md](../../docs/changes/2026-10-15-codex-home/plan.md), [docs/changes/2026-10-15-codex-home/verification.md](../../docs/changes/2026-10-15-codex-home/verification.md), [docs/changes/2026-10-15-codex-home/review.md](../../docs/changes/2026-10-15-codex-home/review.md), [docs/changes/2026-10-15-codex-card-reference/verification.md](../../docs/changes/2026-10-15-codex-card-reference/verification.md), [docs/changes/2026-10-15-home-recovery-integration/intent.md](../../docs/changes/2026-10-15-home-recovery-integration/intent.md), [docs/changes/2026-10-15-home-recovery-integration/spec.md](../../docs/changes/2026-10-15-home-recovery-integration/spec.md), [docs/changes/2026-10-15-home-recovery-integration/plan.md](../../docs/changes/2026-10-15-home-recovery-integration/plan.md), [docs/changes/2026-10-15-home-recovery-integration/verification.md](../../docs/changes/2026-10-15-home-recovery-integration/verification.md), [docs/changes/2026-10-15-home-recovery-integration/review.md](../../docs/changes/2026-10-15-home-recovery-integration/review.md)
-- Next action: 在已推送PR62 head上串行复现/修复HOME三P2；上游squash后从稳定main只承接本任务独有提交。隔离资料测试、版本递增、完整verify/Native/精确独审及正常PR/main，保护九项目与新输入。
+- Next action: 在actual main492承接分支冻结文档后做代理模式及隔离官方Tauri验证，按新环境/精确head补最终门禁与独审，正常HOME PR/main；不代填付费Provider或daily验收。
 - Last verified: 2026-10-15
 - Updated: 2026-10-15
 
@@ -2867,9 +2868,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `fix/TASK-EXPLORER-GDI-20261015-main`
 - Worktree: `D:/kk-studio/.worktrees/TASK-GOV-PHASE0`
 - Modules: playwright.config.ts, tests/development/plugins.mjs, scripts/testing, tests/unit, docs/changes/2026-10-15-unified-execution/incident.md, tests/desktop/plugin-recovery.mjs, docs/changes/2026-10-15-test-evidence-isolation, tests/browser, tests/desktop/test-evidence-preservation.mjs, package.json
-- Verification: PARTIAL — 真实合成Playwright成功/失败均在基线删除旧receipt而RED；独占run目录实现后定向7/7 GREEN（目录/文件/junction拒绝、旧三类原字节保留、新report/metadata、suite边界）。完整Node1346/1332PASS/14既有skip/0FAIL，lint/typecheck通过；sandbox junction EPERM经平台批准复验。无浏览器页面，版本不递增。原旧回执缺失不伪造恢复；完整verify、最终SHA独审与main集成待GDI安全接入后进行。 独审e5d5dc31提出EVID-01固定截图/P1、EVID-02worker分散/P2；已各先RED再本地GREEN，17文件48截图仅迁移路径，新增截图守卫。补充完整Node/静态与正式复验、实际安全PNG未完成前不代填通过。 补充完整Node1347/1333PASS/14既有skip/0FAIL、lint/typecheck通过；format首报2文件后修正复验通过。真实PNG需GDI安全接入后验证，精确最终独审待续。 精确6374独立源码复验限定PASS，无新阻断；当前a6e组合新增安全真实PNG探针正常/失败两种旧字节均保持，新PNG/report同run，未提交probe范围清楚。 f727完整失败但旧PNG/report/receipt三项hash均保留且441输出已备份；仅缺插件环境补齐后原11失败全部同SHA/原断言通过。SHOT-01已自修复并补7种AST负例，最终新head待审。 最新冻结源码9aa12e92完整verify exit0：Node1348/1334PASS/14skip、Agent201/199PASS/2skip、Edge784首试0fail/flaky/skip、development5步PASS；Windows实际15+1参数、真实PNG成功/主动失败和100页7次0TabProxy通过。454旧文件与备份908项hash一致，879最终产物另存。独审actual main3a→9aa47文件PASS_LOCAL_TEST_SAFETY_SCOPE，SHOT-01/DOC-01关闭；首轮f727失败保留，Hosted/PR/main/产品验收仍未完成。
+- Verification: PARTIAL — 真实合成Playwright成功/失败均在基线删除旧receipt而RED；独占run目录实现后定向7/7 GREEN（目录/文件/junction拒绝、旧三类原字节保留、新report/metadata、suite边界）。完整Node1346/1332PASS/14既有skip/0FAIL，lint/typecheck通过；sandbox junction EPERM经平台批准复验。无浏览器页面，版本不递增。原旧回执缺失不伪造恢复；完整verify、最终SHA独审与main集成待GDI安全接入后进行。 独审e5d5dc31提出EVID-01固定截图/P1、EVID-02worker分散/P2；已各先RED再本地GREEN，17文件48截图仅迁移路径，新增截图守卫。补充完整Node/静态与正式复验、实际安全PNG未完成前不代填通过。 补充完整Node1347/1333PASS/14既有skip/0FAIL、lint/typecheck通过；format首报2文件后修正复验通过。真实PNG需GDI安全接入后验证，精确最终独审待续。 精确6374独立源码复验限定PASS，无新阻断；当前a6e组合新增安全真实PNG探针正常/失败两种旧字节均保持，新PNG/report同run，未提交probe范围清楚。 f727完整失败但旧PNG/report/receipt三项hash均保留且441输出已备份；仅缺插件环境补齐后原11失败全部同SHA/原断言通过。SHOT-01已自修复并补7种AST负例，最终新head待审。 最新冻结源码9aa12e92完整verify exit0：Node1348/1334PASS/14skip、Agent201/199PASS/2skip、Edge784首试0fail/flaky/skip、development5步PASS；Windows实际15+1参数、真实PNG成功/主动失败和100页7次0TabProxy通过。454旧文件与备份908项hash一致，879最终产物另存。独审actual main3a→9aa47文件PASS_LOCAL_TEST_SAFETY_SCOPE，SHOT-01/DOC-01关闭；首轮f727失败保留，Hosted/PR/main/产品验收仍未完成。 PR62 exact f9c所有required PR/push verify/delivery及client/native成功，final独审PASS后正常squash main492abad4；已实际fetch/tree与f9c完全相同，合后新main Hosted仍单独等待。
 - Evidence: [docs/changes/2026-10-15-unified-execution/incident.md](../../docs/changes/2026-10-15-unified-execution/incident.md), [docs/changes/2026-10-15-test-evidence-isolation/intent.md](../../docs/changes/2026-10-15-test-evidence-isolation/intent.md), [docs/changes/2026-10-15-test-evidence-isolation/spec.md](../../docs/changes/2026-10-15-test-evidence-isolation/spec.md), [docs/changes/2026-10-15-test-evidence-isolation/plan.md](../../docs/changes/2026-10-15-test-evidence-isolation/plan.md), [docs/changes/2026-10-15-test-evidence-isolation/verification.md](../../docs/changes/2026-10-15-test-evidence-isolation/verification.md), [docs/changes/2026-10-15-test-evidence-isolation/review.md](../../docs/changes/2026-10-15-test-evidence-isolation/review.md)
-- Next action: 冻结验证文档并独立差量复审，源码对9aa零差异；正常推送同一测试安全PR，当前Hosted通过后正常squash并验证实际main，再串行HOME三P2。保留所有旧分支/dirty/用户资料。
+- Next action: 保持原安全分支只读，等待main492新Hosted结果与合后范围确认后关闭；HOME已串行在新承接分支进行，daily及产品验收不代填。
 - Last verified: 2026-10-15
 - Updated: 2026-10-15
 
@@ -2886,9 +2887,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `fix/TASK-EXPLORER-GDI-20261015-main`
 - Worktree: `D:/kk-studio/.worktrees/TASK-GOV-PHASE0`
 - Modules: scripts/testing/headless-edge-options.mjs, playwright.config.ts, tests/development/plugins.mjs, scripts/audit/check-composer-runtime.mjs, scripts/audit/check-main-close-runtime.mjs, scripts/audit/check-text-runtime.mjs, tests/desktop/headless-edge-launch.mjs, docs/changes/2026-10-15-explorer-gdi-integration, tests/desktop/test-evidence-preservation.mjs, package.json
-- Verification: PARTIAL — 原af8精确HEAD新verify Node1327/Agent199/Edge784首试/development4步通过；原development旧receipt/PNG因清理缺失单列incident，未伪造恢复。当前按原stable ID由root在复用隔离树承接，仅挑af8独有7源码，父tree与main235e相同。新组合、实际main/Hosted/客户端仍未验收。 已挑af8为a6e，配置冲突只保留双保护。真实Windows browser/2renderers保留15+1项，真实PNG正常/失败均保持旧字节，新PNG/report同run。全量verify、100页新组合及最终SHA独审尚待。 main3a已fetch，tree与精确治理89fba完全相同；从main只挑4独有提交，384546c8树与旧8729完全一致，未复制治理旧提交历史。 f727首轮完整verify exit1：Node1333/Agent199通过，Browser773PASS/11FAIL/0flaky、development未运行；441产物完整保留，旧3项字节一致。发现缺既定postinstall插件依赖/构建；只补17packages/插件构建与生产dist后，同f727/原断言11项13.6s全部首试PASS。新test入口先plugins:build防同类遗漏。SHOT-01 quoted/条件/变量options/shorthand/spread先5项全漏RED，补getter再次RED，严格直接路径后7负例与当前截图守卫GREEN；新完整verify/独审待续。 最新冻结源码9aa12e92完整verify exit0：Node1348/1334PASS/14skip、Agent201/199PASS/2skip、Edge784首试0fail/flaky/skip、development5步PASS；Windows实际15+1参数、真实PNG成功/主动失败和100页7次0TabProxy通过。454旧文件与备份908项hash一致，879最终产物另存。独审actual main3a→9aa47文件PASS_LOCAL_TEST_SAFETY_SCOPE，SHOT-01/DOC-01关闭；首轮f727失败保留，Hosted/PR/main/产品验收仍未完成。
+- Verification: PARTIAL — 原af8精确HEAD新verify Node1327/Agent199/Edge784首试/development4步通过；原development旧receipt/PNG因清理缺失单列incident，未伪造恢复。当前按原stable ID由root在复用隔离树承接，仅挑af8独有7源码，父tree与main235e相同。新组合、实际main/Hosted/客户端仍未验收。 已挑af8为a6e，配置冲突只保留双保护。真实Windows browser/2renderers保留15+1项，真实PNG正常/失败均保持旧字节，新PNG/report同run。全量verify、100页新组合及最终SHA独审尚待。 main3a已fetch，tree与精确治理89fba完全相同；从main只挑4独有提交，384546c8树与旧8729完全一致，未复制治理旧提交历史。 f727首轮完整verify exit1：Node1333/Agent199通过，Browser773PASS/11FAIL/0flaky、development未运行；441产物完整保留，旧3项字节一致。发现缺既定postinstall插件依赖/构建；只补17packages/插件构建与生产dist后，同f727/原断言11项13.6s全部首试PASS。新test入口先plugins:build防同类遗漏。SHOT-01 quoted/条件/变量options/shorthand/spread先5项全漏RED，补getter再次RED，严格直接路径后7负例与当前截图守卫GREEN；新完整verify/独审待续。 最新冻结源码9aa12e92完整verify exit0：Node1348/1334PASS/14skip、Agent201/199PASS/2skip、Edge784首试0fail/flaky/skip、development5步PASS；Windows实际15+1参数、真实PNG成功/主动失败和100页7次0TabProxy通过。454旧文件与备份908项hash一致，879最终产物另存。独审actual main3a→9aa47文件PASS_LOCAL_TEST_SAFETY_SCOPE，SHOT-01/DOC-01关闭；首轮f727失败保留，Hosted/PR/main/产品验收仍未完成。 PR62 exact f9c所有required PR/push verify/delivery及client/native成功，final独审PASS后正常squash main492abad4；已实际fetch/tree与f9c完全相同，合后新main Hosted仍单独等待。
 - Evidence: [docs/changes/2026-10-15-explorer-gdi-integration/intent.md](../../docs/changes/2026-10-15-explorer-gdi-integration/intent.md), [docs/changes/2026-10-15-explorer-gdi-integration/spec.md](../../docs/changes/2026-10-15-explorer-gdi-integration/spec.md), [docs/changes/2026-10-15-explorer-gdi-integration/plan.md](../../docs/changes/2026-10-15-explorer-gdi-integration/plan.md), [docs/changes/2026-10-15-explorer-gdi-integration/verification.md](../../docs/changes/2026-10-15-explorer-gdi-integration/verification.md), [docs/changes/2026-10-15-explorer-gdi-integration/review.md](../../docs/changes/2026-10-15-explorer-gdi-integration/review.md)
-- Next action: PR62冻结f9c6aa71等待当前Hosted及正常合main；本机/独审PASS。该分支只读保留，root已串行切至HOME恢复分支；若CI需要修复，先暂停HOME并切回干净安全分支。
+- Next action: 保持原安全分支只读，等待main492新Hosted结果与合后范围确认后关闭；HOME已串行在新承接分支进行，daily及产品验收不代填。
 - Last verified: 2026-10-15
 - Updated: 2026-10-15
 
@@ -2908,5 +2909,24 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Verification: NOT_VERIFIED — FACT：工程外受保护Edge探针延迟独立profile的creation DB读取，seed outputCount4、读取中真实输入、读取完成/持久化后文字保留但count1。相关产品文件与main3a相同。探针配置cwd和未等落盘的前两次失败保留；最终观察PASS只证明问题，不是修复。本轮8项首次数量失败的实际时序UNKNOWN，读取期覆盖为有证据的因果线索。
 - Evidence: [docs/changes/2026-10-15-home-recovery-integration/verification.md](../../docs/changes/2026-10-15-home-recovery-integration/verification.md)
 - Next action: 在HOME恢复闭环后复用clean隔离树领取本问题，先按受控读取写产品RED，再选择最小输入保护或字段合并方案，验证后正常集成。
+- Last verified: 2026-10-15
+- Updated: 2026-10-15
+
+## TASK-VERIFY-DEPS-20261015 — 恢复共享依赖清理事故并核验执行边界
+
+- Goal: 按主仓原锁恢复生成依赖，核对package/lock/index不变并如实记录未知影响。
+- Scope: HOME原生准备期间的依赖事故恢复与独立证据；无产品或用户数据改动。
+- Display status: 进行中
+- Priority: P1 — root未在前置guard失败后停止，bare npm ci清空共享依赖，影响其他工作树可运行性。
+- Requirement refs: ledger:TASK-CODEX-HOME-20261015
+- Feature IDs: none
+- Owner role: repository-maintainer
+- Acceptance: 两树锁定依赖版本对齐，主仓package/lock/index hash保持; 独立审查直接证据，保留原依赖字节及用户短时影响UNKNOWN; 后续仅在成功前置和物理本地目录运行隔离官方Native验证，禁止在linked root裸跑npm ci
+- Branch: `fix/TASK-CODEX-HOME-20261015-main`
+- Worktree: `D:/kk-studio/.worktrees/TASK-GOV-PHASE0`
+- Modules: docs/changes/2026-10-15-dependency-repair, node_modules (ignored generated dependencies)
+- Verification: PARTIAL — 共享目标清空已直接确认，按主仓现有锁、ignore-scripts重装244包exit0。两树244包版本匹配、60缺失均optional；主仓package/lock/index三hash不变，daily EXE aeb70dfc不变。独审PASS_CURRENT_LOCK_VERSION_ALIGNMENT_ONLY；原依赖字节无before清单、短时用户影响UNKNOWN。当前无需重复重装，禁止以此称新环境完整验收。
+- Evidence: [docs/changes/2026-10-15-dependency-repair/intent.md](../../docs/changes/2026-10-15-dependency-repair/intent.md), [docs/changes/2026-10-15-dependency-repair/spec.md](../../docs/changes/2026-10-15-dependency-repair/spec.md), [docs/changes/2026-10-15-dependency-repair/plan.md](../../docs/changes/2026-10-15-dependency-repair/plan.md), [docs/changes/2026-10-15-dependency-repair/verification.md](../../docs/changes/2026-10-15-dependency-repair/verification.md), [docs/changes/2026-10-15-dependency-repair/review.md](../../docs/changes/2026-10-15-dependency-repair/review.md)
+- Next action: 保存独立事故记录，严格前置exit0才执行下游；在物理本地依赖上补当前隔离Native/受影响门禁，并对纯docs精确差量复审后确定恢复闭环范围。
 - Last verified: 2026-10-15
 - Updated: 2026-10-15

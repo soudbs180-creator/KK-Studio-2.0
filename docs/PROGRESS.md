@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-10-15 HOME完整本机验证及安全main承接（IN_PROGRESS）
+
+PR62已按最终独审/双轮Hosted全部通过正常合main492，fetch核tree与f9c相同。HOME源码fc76完整verify exit0：Node1342/14skip、Agent199/2skip、Edge785首试、development5步；906旧文件与备份1812hash保持，1333产物另存，独审SOURCE/LOCAL_VERIFY PASS。仅挑独有fc76为c180且tree相同。Native准备中root编排错误清空共享生成依赖，已按主仓原锁恢复244包，三hash与daily EXE保持；原字节/短时影响UNKNOWN，另挂事故任务并独审。当前候选2.1.34尚未更新daily，继续代理/隔离Tauri与新环境验收。见[HOME验证](changes/2026-10-15-home-recovery-integration/verification.md)和[事故](changes/2026-10-15-dependency-repair/verification.md)。
+
 ## 2026-10-15 HOME恢复三P2（IN_PROGRESS / NOT_VERIFIED）
 
 root在PR62已推送冻结head上串行临时堆叠HOME任务；三P2已实际RED，编辑重试/所有权清理/来源恢复最小修复后连接46项和HOME8项首试通过。补实际RED关闭重复原图读取及旧连接usage尾部跨线程风险；首轮环境、夹具和数量失败保留。受控读取观察证明默认数量覆盖已有设置，另挂TASK-HOME-LOAD-DRAFT-20261015 TODO。双端候选2.1.34，尚未完整冻结verify/新Tauri/精确独审或main/客户端验收。见[验证](changes/2026-10-15-home-recovery-integration/verification.md)。

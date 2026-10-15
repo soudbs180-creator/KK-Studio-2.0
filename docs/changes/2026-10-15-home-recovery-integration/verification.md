@@ -2,7 +2,7 @@
 
 - Task ID：TASK-CODEX-HOME-20261015；状态：NOT VERIFIED；[Plan](plan.md)。
 - 基线main3a992597 / 安全堆叠f9c6aa71，产品仍2.1.33。前置安全源码9aa完整verify及47文件独审通过，PR62当前Hosted中，不代填HOME结果。
-- 本任务尚未运行RED、修复、当前版本完整验证或客户端验收。全部新产物将写入独立run及工程外清单；旧失败与九项目保留。
+- 领取时本任务尚未运行RED、修复、当前版本完整验证或客户端验收。全部新产物将写入独立run及工程外清单；旧失败与九项目保留。
 - 领取时governance正确拦截同树两个active任务（GDI仍REVIEW）；现将已推送冻结PR62的GDI停在PARTIAL/等待Hosted，root串行领取HOME为唯一active写入。没有新建worktree或唤醒原会话，安全PR源码不再修改。
 
 ## 当前dirty运行证据
@@ -14,3 +14,12 @@
 - 全文件首轮数量1/4失败及单项不变源码PASS都保留。静态线索为初始emptySnapshot=1、读取中输入导致整个新homeDraft覆盖seed4；工程外控制IndexedDB读取的探针实际证明seed4→读取期编辑→持久count1，文字保留。探针首轮cwd错与未等落盘失败保留，最终观察PASS仅证明问题存在，不是修复。原随机失败具体时序未记录，因果推断单列；正式回归补等待真实读取提示消失，并仍断言4张。新问题挂TASK-HOME-LOAD-DRAFT-20261015，不伪称已解决。
 - 日志均在工程外统一证据根，home-connection-red-valid.log / home-connection-image-epoch-green.log / home-retry-red.log / home-retry-coalesced-neighborhood.log / home-loading-observation-durable.log。运行sourceHead为f9c基线上dirty，不能声称最终冻结SHA通过；源码冻结后须完整verify。
 - Desktop/Web源码2.1.33→2.1.34由version:bump产生，Mobile2.1.1不变；尚未新Tauri构建/真实客户端验收。PR62仍待Hosted，不提前合并或更换daily。
+
+## fc76冻结完整运行与实际main承接
+
+- 源码fc76e40424872e3c43fa8ef3b2444c2512832394完整Windows npm run verify exit0：Node1356/1342PASS/14既有skip/0FAIL，Agent201/199PASS/2既有skip/0FAIL，Edge785唯一测试/785次执行/全首试/0flaky/skip/errors；development5步骤PASS/errors=[]。sourceHead均fc76，未重标。
+- 浏览器报告cb60d062-2e80-40ac-92f1-85c66b15fdf6，SHA2566cd5b707f3ac203a9d9235c5ff82b068f33924be96a89b7b30f1d4a2b4d83e07；906旧文件/备份1812hash与1333最终产物/备份2666hash均独立核对一致。外部完整日志home-fc76e404-verify.log及before/after-manifest.json保留。
+- 同状态截图与DOM：1920×1080、http://127.0.0.1:1423/、production、entry src/main.tsx，实际加载index-lkY5wj3H.js。链路src/main.tsx→App workspace→ConversationPanel→AgentComposer；结果由agentConnection/agentImages→App bridge归档Canvas。截图证明新输入保留及来源结果边；新模块homeAgentRecovery只承载请求/草稿所有权，不新增视觉规则。
+- 独审PASS_SOURCE_SCOPE与PASS_LOCAL_VERIFY_SCOPE均绑定fc76，22文件，无未关闭源码P1/P2；HOME-EPOCH-01与HOME-TEST-01关闭。不是Native/真实Provider/用户验收PASS。
+- 前置PR62完整PR/push Hosted成功、最终独审及远端门禁通过后，正常expected-head squash为main492abad4；fetch后git diff f9c→492 exit0，main tree414e7947d13886ee4ee9c52b0cdb95fd3802a583。旧HOME临时分支保留，仅挑fc76为c180c366，git diff fc76→c180 exit0。没有重放旧安全提交或force/rebase。
+- 依赖切换事故发生在上述fullverify结束之后；另见[事故恢复](../2026-10-15-dependency-repair/verification.md)。本轮记录如实保留，不能把恢复后的环境称已重跑全部测试。新原生构建与代理模式验证继续，日常EXE/九项目未用于夹具。

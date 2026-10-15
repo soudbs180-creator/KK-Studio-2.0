@@ -10,7 +10,7 @@
 
 ## 统一整理后的正式执行入口（TASK-GOV-006）
 
-当前任务先读[HOME恢复计划](../changes/2026-10-15-home-recovery-integration/plan.md)。root串行在fix/TASK-CODEX-HOME-20261015-recovery，临时堆叠已推送PR62 f9c6aa71；安全PR冻结/本机和独审PASS，Hosted中。HOME dirty已完成三P2实际RED与46项连接/8项浏览器GREEN，新增重复完成导入与旧epoch尾部保护；读取期编辑数量问题独立TODO。下一步冻结后完整verify、隔离Tauri、精确独审，再从上游squash后的稳定main仅承接HOME独有提交。候选双端2.1.34不覆盖daily/九项目，旧失败/分支/dirty保留。
+当前任务先读[HOME验证](../changes/2026-10-15-home-recovery-integration/verification.md)及[依赖事故](../changes/2026-10-15-dependency-repair/verification.md)。PR62已正常合main492，HOME仅挑fc76为c180（tree相同），当前fix/TASK-CODEX-HOME-20261015-main；fc76完整verify785首试及独审通过。下一步新物理依赖上的代理模式/隔离官方Tauri、精确新环境验证/差量审查、正常HOME PR/main。依赖事故已恢复244锁定包且主仓三hash不变，但原字节/短时影响UNKNOWN不掩盖；日常EXE及九项目不触碰。
 
 最新限制：af8精确HEAD完整verify已新跑PASS；但测试默认目录清理移除了旧开发态原件，不能再声称其旧路径可读。先读[事件](../changes/2026-10-15-unified-execution/incident.md)，下一执行先落实TASK-VERIFY-EVIDENCE-20261015保护，再承接GDI。
 
