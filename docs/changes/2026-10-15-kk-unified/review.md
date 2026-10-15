@@ -14,3 +14,10 @@
 - 项目生命周期初审及 `00e00e40` 定向复审：SPEC/QUALITY Approved；真实浏览器组编辑竞态修复与最终 27/27 证据补入 verification，Native UI、最终整体验收分别保留。
 - 12AI 初审 `3b49f605`：R1/P2 未绑定持久回执允许付费 POST。`7442c4fb` 定向复审确认强制原子认领端口、仅 owner 提交及未绑定失败关闭，R1 ADDRESSED、SPEC/QUALITY PASS。生产端口与真实 Provider 尚未验收。
 - 外部提交 `56cb1381` 对依赖状态的旧断言已按上述精确提交回执纠正。主仓切换/清理不在本轮执行记录中，不因文档存在而追认授权；用户随后明确当前会话独占代码写入。
+
+- 加载草稿初审 `5ddda4fb`：LOAD-01/P2，同素材的两个引用中移除一个会被恢复。`80f6ce4d` 改按引用ID删除、新增仍按素材身份去重；精确两文件复审 Approved，独立 actual-hook 三反例3/3通过，原RED及27hook/81邻域证据保留。
+- Companion 格式保护 `84c6a136` 初审：CF-01/P1，有效v2主文件配未来版bak时，写入和恢复仍覆盖唯一新版bak；实际两组文件证明已保留。原实现者在 `6c639e8a` 补mutation前无条件检查bak；两例RED→GREEN、115相关测试及独立精确复审通过，CF-01 CLOSED，SPEC/QUALITY Approved。此结论不含未交付的统一本机仓库。
+- 硬件 `f1b549b6` 初审：LOCAL-HW-01/P2 同名显卡覆盖已填充槽位，顺序影响推荐。`d3e8838f` 保留逐卡观测，四组真实collect夹具及原TS schema/推荐独立回放通过，不相加显存；定向SPEC/QUALITY Approved。未验实际模型运行。
+- DESIGN `d3e8838f→e5e4b345` 全26文件独审发现DS-01/P2：仅hash换行规范化，多行CSS selector的CR仍进入YAML，干净LF checkout投影漂移。保留原反例及两RED后，`0770df7c` 统一parse/hash输入并重生投影；41单测及独立git-LF/完整CSS LF-CRLF严格相等复审通过，DS-01 CLOSED、SPEC/QUALITY PASS。预览通过不替代产品全局UI验收。
+- 本地包目录/容量建议 `0770df7c→7e06c171` 四文件已提交，18定向测试及focused strict TS/lint/format通过，精确独审中。只读包计划和硬件容量指引不构成安装、推理或2K接通。
+- 本地包 `7e06c171` 独立SPEC/QUALITY Approved，六Qwen/五唯一H3制品metadata一致；root另加固合法partial GPU输入，`aecb59c1` 实际RED→GREEN及19相关测试，精确增量独审Approved并额外核九种容量组合。原报告保留；未知容量不作低于建议的断言，仍无运行可用性批准。

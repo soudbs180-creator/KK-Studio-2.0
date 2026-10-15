@@ -102,8 +102,10 @@ node --test tests/unit/creationSaveQueue.test.ts
 | 日常客户端 | 仍是旧 EXE，未替换、未重启 | 未动，隔离验证结论不代填日常客户端 |
 | 真实 Provider / 付费授权 / 云配额 | 未验证 | 未验证 |
 
-## 5. 共享 junction 约束（生效中）
+## 5. 依赖隔离约束与本轮更新
 
-`D:/kk-studio/.worktrees/TASK-KK-UNIFIED-20261015/node_modules` 是指向 `D:/kk-studio/KK-Studio-2.0/node_modules` 的符号链接。本轮全程未在该工作区执行 `npm ci`、`npm install` 或任何依赖安装/清理命令。
+基线时 `D:/kk-studio/.worktrees/TASK-KK-UNIFIED-20261015/node_modules` 为 canonical 依赖的链接；基线核对没有执行安装。此结论只适用于当时的核对，不描述后续全部实施。
+
+DESIGN 工具链需要官方校验器及 YAML/CSS AST。本轮显式评审固定 devDependencies 后，先做 lock-only/ignore-scripts 解析，再在本任务新建的实体临时目录执行 `npm ci --ignore-scripts --no-audit --no-fund`（282 packages，成功）。核对目录归属、输入哈希、实体属性及原链接目标后，仅解除本任务创建的 root 链接，将实体依赖移到任务 root。当前 root node_modules 是独占实体目录，canonical 目标未被安装或改写；vendor 下原有依赖链接仍仅复用。回执 `.tmp/current-dependency-runtime.json` 保留原链接目标与安装输入；后续 package 仅增加脚本，lock 未再变化。
 
 新增依赖必须走 `package.json` + `package-lock.json` 的显式评审流程，并在专属、实体依赖目录验证；不能把 canonical 共享依赖目录当作本轮安装目标。**严禁**在 junction 上裸跑安装命令。相关防护测试见 §3.1。

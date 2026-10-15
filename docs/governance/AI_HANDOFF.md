@@ -14,7 +14,7 @@
 
 先读 [统一实施计划](../changes/2026-10-15-kk-unified/plan.md)、[批准规格](../changes/2026-10-15-kk-unified/spec.md) 和 [验证](../changes/2026-10-15-kk-unified/verification.md)。用户已授权实施，不重复请求形式批准。当前 task branch codex/TASK-KK-UNIFIED-20261015；起点 d95e4c44 / 2.1.34，单个项目实现者串行集成共享 App/存储。日常235e7f79和其他候选保持原状。旧段落按其时点理解，不覆盖本次授权和当前实际验证。
 
-最新核对：本轮项目子范围独审/production Edge27/27通过，12AI独立适配器73PASS并复审通过但生产接线待；加载草稿与硬件探测实施中。外部提交56cb1381及其主仓切换记录已保留并标注来源，当前主仓只读核对为main@d95e4c44干净；原保全目录完整恢复未验。用户明确本会话独占隔离分支代码写入，其他任务只读。不要重复主仓清理、移动或重放外部提交；不要将旧交接中“回调入口缺口未修”当作当前事实。
+最新恢复点：项目子范围Edge27/27、12AI独立适配器73项已验但生产接线待；加载草稿80f6、格式保护6c639、硬件同名GPU d3e精确独审通过。DESIGN基础e5e及0770跨平台修复已独审，本地包目录7e06独审中；Native权威/旧锁/激活与设置App TS分别独占实现。root统一文档，提交一律逐文件lease，不能混入另一worker。实际模块/失败和验收边界见统一verification。当前root node_modules为本任务实体依赖；vendor链接目标只读，不能在那里安装。外部56cb1381和保全目录保留，完整恢复未验。用户本会话独占写入、其他任务只读，不重复主仓清理/切换，不把旧未修断言作为当前事实。
 
 
 当前任务先读[HOME验证](../changes/2026-10-15-home-recovery-integration/verification.md)及[依赖事故](../changes/2026-10-15-dependency-repair/verification.md)。当前HOME fix/TASK-CODEX-HOME-20261015-main：冻结源码a85完整verify/785首试、官方新EXE/Native38及Rust167通过，精确本机结果独审通过，正式PR/Hosted/main继续。main仍492/2.1.33，候选2.1.34；尚未切daily/碰九项目。原失败和依赖事故未知影响保留，额外加载期草稿问题TASK-HOME-LOAD-DRAFT-20261015待下一串行任务。

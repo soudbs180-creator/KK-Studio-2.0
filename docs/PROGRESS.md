@@ -2,7 +2,7 @@
 
 ## 2026-10-15 统一修复与重构实施
 
-用户已批准完整方案，实施从 origin/main d95e4c44 / Desktop-Web2.1.34 开始；隔离分支 codex/TASK-KK-UNIFIED-20261015，候选2.1.35。项目生命周期/持久分组/完整软删除已实现并任务级独审，7442c4fb production Edge27/27首试、Native存储/包169PASS；依赖guard精确5705fc73独审Approved；12AI异步适配器7442c4fb定向73PASS并复审PASS，但未接生产宿主。组合3b49全量Node1400PASS/14skip。加载期草稿原6PASS/8RED沿原ID修复；本地模型新增真实硬件检测/推荐，用户现有ComfyUI目录只读审计后仍待运行验收。基线缺Agent dist两失败及后续竞态失败均保留。真实生成、Native新产物、共仓库、账号、云恢复、托管CI未执行。完整范围与阶段状态见 [实施计划](changes/2026-10-15-kk-unified/plan.md)、[验证](changes/2026-10-15-kk-unified/verification.md)。
+用户已批准完整方案，实施从 origin/main d95e4c44 / Desktop-Web2.1.34 开始；隔离分支 codex/TASK-KK-UNIFIED-20261015，候选2.1.35。持久项目分组/软删除子范围、依赖guard、12AI独立适配器分别已独审；12AI生产接线仍待。加载草稿 `80f6ce4d`、未来格式保护 `6c639e8a`、同名GPU观测 `d3e8838f` 均经实际RED→GREEN及精确独审，相关浏览器/单测证据保留。DESIGN基础 `e5e4b345` 接入当前tokens的规则、同步校验及预览；独审DS-01跨平台问题由`0770df7c`修复，41相关单测和精确复审通过，先前8预览首试保留，不等于全局产品UI已收敛。本地包目录`7e06c171`新增固定制品/容量建议，18单测通过、独审中；H3 HiFi/加速/2K费用已只读核对，未安装或生成。统一本机权威与写入协调、设置与全局UI实际接入实施中，后续模型/Agent/媒体/窗口/共仓库/账号/云备份范围继续开放。基线缺Agent dist及全部阶段失败保留。真实生成、Native新产物、完整verify与托管CI尚未验。完整范围与阶段状态见 [实施计划](changes/2026-10-15-kk-unified/plan.md)、[验证](changes/2026-10-15-kk-unified/verification.md)。
 
 
 ## 2026-10-15 HOME当前本机验收通过（IN_PROGRESS）

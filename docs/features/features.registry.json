@@ -788,10 +788,10 @@
     "area": "system",
     "status": "PARTIAL",
     "card": "docs/features/feat-015-projects.md",
-    "summary": "原生项目快照/项目包与侧栏真实项目创建、打开、改名、确认删除可用；文件夹/置顶为明示会话态，持久分组与 Web 容量/离线仍未完成。",
+    "summary": "同一快照中的真实项目、持久分组/成员、手动名称和完整软删除恢复；项目库/侧栏共用操作。多聊天、共仓库及本轮新Native UI继续开放。",
     "entryPoints": [
       "项目库与侧栏真实本地项目",
-      "侧栏会话文件夹/置顶",
+      "持久项目分组与项目垃圾箱",
       "项目包导入/导出"
     ],
     "code": [
@@ -800,7 +800,8 @@
       "src/features/creation/storage.ts",
       "src/features/creation/snapshotCodec.ts",
       "src-tauri/src/project_package.rs",
-      "src-tauri/src/creation_storage.rs"
+      "src-tauri/src/creation_storage.rs",
+      "src/features/projects/useProjectLibrary.ts"
     ],
     "tests": [
       "tests/unit/projectPackage.test.ts",
@@ -809,7 +810,8 @@
       "tests/browser/project-package.spec.ts",
       "tests/browser/desktop-data-stability.spec.ts",
       "tests/browser/design-system-pages.spec.ts",
-      "tests/desktop/project-landing.mjs"
+      "tests/desktop/project-landing.mjs",
+      "tests/browser/project-lifecycle.spec.ts"
     ],
     "tasks": [
       "T3a",
@@ -837,6 +839,10 @@
       {
         "platform": "desktop",
         "path": "docs/changes/2026-09-29-project-landing/verification.md"
+      },
+      {
+        "platform": "web",
+        "path": "docs/changes/2026-10-15-kk-unified/verification.md"
       }
     ]
   },
@@ -1143,7 +1149,7 @@
     "area": "system",
     "status": "PARTIAL",
     "card": "docs/features/feat-023-navigation.md",
-    "summary": "真实快照驱动项目列表与四类搜索；喜欢/标签独立面板见FEAT-039。当前新版平台证据待补，持久分组与多创作页继续开放。",
+    "summary": "同一快照驱动项目列表、持久分组/成员、共享菜单与软删除恢复；搜索/喜欢/标签保持。置顶/排序、多聊天及新Native UI继续开放。",
     "entryPoints": ["左侧栏 Sidebar", "独立搜索（Ctrl/⌘+K）", "项目分组"],
     "code": [
       "src/components/Sidebar.tsx",
@@ -1201,6 +1207,10 @@
       {
         "platform": "desktop",
         "path": "docs/changes/2026-10-08-single-row-titlebar/verification.md"
+      },
+      {
+        "platform": "web",
+        "path": "docs/changes/2026-10-15-kk-unified/verification.md"
       }
     ]
   },
@@ -1531,7 +1541,7 @@
     "area": "platform",
     "status": "PARTIAL",
     "card": "docs/features/feat-037-web-local-service.md",
-    "summary": "本机 loopback 服务已提供 Web 项目/素材服务优先读写、旧 IndexedDB 用户触发迁移和备份恢复；账号绑定、安装器与 Mobile 仍未完成。",
+    "summary": "本机loopback服务提供Web本地读写/迁移/备份；未来主或备份格式和IO失败保护已补。Native/Node尚未可直接共目录，统一本机权威/后台服务及账号仍在实施。",
     "entryPoints": ["设置 → 储存 → 网页本机伴随服务"],
     "code": [
       "src/features/local-service/main.ts",
@@ -1552,7 +1562,8 @@
       "tests/unit/assetStorage.test.ts",
       "tests/browser/local-service-migration.spec.ts",
       "tests/browser/local-service-connection.spec.ts",
-      "tests/local-service/production-smoke.mjs"
+      "tests/local-service/production-smoke.mjs",
+      "tests/browser/companion-format.spec.ts"
     ],
     "tasks": [
       "TASK-LOCAL-SERVICE-001",

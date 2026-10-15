@@ -6,7 +6,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 | ID | Title | Status | Display | Priority | Dependencies | Owner | Next action |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| TASK-KK-UNIFIED-20261015 | KK Studio 统一修复与重构 | IN_PROGRESS | 进行中 | P1 | none | root | 修复加载草稿并独审；完善单写入仓库协议，再实施多聊天；独立硬件探测与推荐适配器并行，按计划继续模型、Agent及全链验收。 |
+| TASK-KK-UNIFIED-20261015 | KK Studio 统一修复与重构 | IN_PROGRESS | 进行中 | P1 | none | root | 继续统一本机权威、设置UI和模型接入；DESIGN基础独审后用于实际页面；接通本地安装/运行、多聊天/Agent/媒体及后续账号/手动加密备份。完整需求未关闭。 |
 | TASK-FIX-PUSH-GUARD-SPACES-001 | 修复 Windows Git pre-push 空格及长路径启动 | REVIEW | 进行中 | P1 | none | root | 补 merged-SHA 独立 review receipt、原始 Hosted artifact manifest 及当前 SHA 的 delivery 结果；本任务验收补齐前保持 REVIEW，签名/安装/用户验收仍属独立发布边界。 |
 | TASK-WINDOWS-ENTRY-DIAG-002 | 补齐Windows入口子进程失败诊断 | DONE | 已完成 | P2 | TASK-LAUNCH-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-WINDOWS-ENTRY-RECOVERY-003 | 继续定位Hosted Windows入口未正常退出的原始原因 | TODO | 未完成 | P1 | TASK-LAUNCH-001 | root | 将 fa78ed12 候选同步到当前 origin/main 后重跑 Hosted Windows，并读取 windows-entry.jsonl；保留 PR43 原失败和本机未复现原件，未取得新分类前保持 TODO。 |
@@ -31,7 +31,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | T5 | 持久本地 TaskHost 与未知受理恢复 | DONE | 已完成 | P3 | T4 | root | 保留当前证据，合并后按原验收范围回读主线；分支 codex/T5-native-lifecycle 已通过 PR#37 78cea37a 集成 main，保留作历史追溯，禁止再次合并（会以旧内容回滚主线） |
 | T6 | Desktop ComfyUI最小链实现 | PARTIAL | 进行中 | P2 | T5 | root | 补充负责人、优先级、分支和下一步验收证据 |
 | EXT-PROVIDER | 真实 Provider/GPU 生成验收 | BLOCKED | 未完成 | P2 | T4 | root | 复核阻塞条件，解除后重新验证并保留原失败证据 |
-| EXT-COMFY | 真实 ComfyUI/模型验收 | PARTIAL | 进行中 | P2 | T6 | root | 按LOCAL扩展安全Hub目录识别、硬件探测及推荐；显式本地运行入口接通H3 T2V/I2V并验收，R2V缺权重不开放，不能中断外部Hub任务。 |
+| EXT-COMFY | 真实 ComfyUI/模型验收 | PARTIAL | 进行中 | P2 | T6 | root | 模型接入统一安装/关联与硬件容量推荐；先验证现有H3，HiFi为固定来源独立配方，实际ABI/工作流/资源通过才开放。2K单列远端阶段，不能隐式上传或称无条件更便宜。 |
 | T7 | Desktop可用版本及安装恢复验收 | PARTIAL | 进行中 | P2 | T3b, T4, T5, T6, EXT-PROVIDER, EXT-COMFY | root | 补充负责人、优先级、分支和下一步验收证据 |
 | T8 | 成熟Core职责和平台能力边界 | TODO | 未完成 | P2 | T7 | root | 补充负责人、优先级、分支和下一步验收证据 |
 | T9 | Web本地版及浏览器容量/离线能力 | TODO | 未完成 | P2 | T8 | root | 补充负责人、优先级、分支和下一步验收证据 |
@@ -94,7 +94,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-COMPARE-001 | 画布图片对比操作 | DONE | 已完成 | P3 | none | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-COMPARE-002 | 对比控件窄屏命中区主线回归 | DONE | 已完成 | P3 | TASK-COMPARE-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-VERSION-001 | 桌面/Web/Mobile 独立版本源与自动递增 | DONE | 已完成 | P3 | none | root | 保留当前证据，合并后按原验收范围回读主线 |
-| TASK-LOCAL-SERVICE-001 | Web 本机伴随服务与既有浏览器数据迁移 | PARTIAL | 进行中 | P2 | TASK-VERSION-001, BACKEND-PLATFORM | root | 按验收条件完成实现、验证、独立审查和文档同步 |
+| TASK-LOCAL-SERVICE-001 | Web 本机伴随服务与既有浏览器数据迁移 | PARTIAL | 进行中 | P2 | TASK-VERSION-001, BACKEND-PLATFORM | root | 沿统一任务实现Native权威/目录身份/写入协调/显式授权和Web适配，再验证关窗口后台服务与双端共完整仓库。 |
 | TASK-CLOSEOUT-2026-09-28 | 合并后版本与 VPS 状态收口 | DONE | 已完成 | P3 | TASK-VERSION-001, T10-PREP | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-POSTMERGE-MIGRATION-2026-09-28 | 主线合并后迁移操作单收口 | DONE | 已完成 | P3 | T10-PREP, T10, T11 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-UI-CANVAS-001 | 画布会话分栏与固定侧栏交互修复 | DONE | 已完成 | P3 | TASK-UI-007 | root | 保留当前证据，合并后按原验收范围回读主线 |
@@ -151,8 +151,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-GOV-006 | 统一会话安全交接、全量需求映射与单主控承接 | PARTIAL | 进行中 | P1 | none | root | PR61已正常squash为main3a992597，当前fetch核实后，测试安全组合从实际main承接；其余历史接口/产品任务仍开放。 |
 | TASK-VERIFY-EVIDENCE-20261015 | 隔离测试输出并保护历史回执 | PARTIAL | 进行中 | P1 | TASK-GOV-006 | root | 在独立新目录补Playwright受控取消和reporter写入失败两类真实负向运行，记录非0/中断状态并核对旧回执/PNG hash保持；保留全部旧失败与缺失UNKNOWN，不改当前HOME源码。 |
 | TASK-EXPLORER-GDI-20261015 | 阻断 headless Edge 测试遗留 Shell 标签代理 | DONE | 已完成 | P1 | TASK-GOV-006, TASK-VERIFY-EVIDENCE-20261015 | root | 测试安全GDI范围已闭环，保留原分支与证据；产品/日常客户端真实验收仍按各任务继续。 |
-| TASK-HOME-LOAD-DRAFT-20261015 | 保护读取期间编辑不覆盖已有首页草稿设置 | PARTIAL | 进行中 | P2 | TASK-CODEX-HOME-20261015 | root | 在统一入口按 TDD 实施：先为 read() 补字段级合并与 readSequence 竞态的产品 RED，再以最小输入保护或字段合并方案修复；不得以固定等待或重试掩盖；验证后独立复审。禁止新建重复任务。 |
+| TASK-HOME-LOAD-DRAFT-20261015 | 保护读取期间编辑不覆盖已有首页草稿设置 | PARTIAL | 进行中 | P2 | TASK-CODEX-HOME-20261015 | root | 保留通过的代码子范围与失败证据，随当前组合源码执行完整verify、新Native重建、最终精确独审/Hosted与交付，不重复开发已修复读取合并。 |
 | TASK-VERIFY-DEPS-20261015 | 恢复共享依赖清理事故并核验执行边界 | PARTIAL | 进行中 | P1 | TASK-CODEX-HOME-20261015 | root | 保持防复发子范围PASS与旧事故UNKNOWN分离；不在共享依赖安装或清理。原始字节及影响如无证据不得补写；最终当前提交/托管/交付门禁另验。 |
+| TASK-DESIGN-MD-20261015 | 统一DESIGN设计系统与产品UI收敛 | PARTIAL | 进行中 | P1 | none | root | 关闭基础独审问题，将规则落入设置/模型/聊天/画布/项目/素材等实际页面，按Desktop→Web留同状态证据。 |
 
 ## TASK-KK-UNIFIED-20261015 — KK Studio 统一修复与重构
 
@@ -167,9 +168,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `codex/TASK-KK-UNIFIED-20261015`
 - Worktree: `D:/kk-studio/.worktrees/TASK-KK-UNIFIED-20261015`
 - Modules: src/App.tsx, src/features, src/components, src/runtime, src/domain, src-tauri, vendor/canvas-agent, docs/changes/2026-10-15-kk-unified
-- Verification: PARTIAL — 基线 d95e4c44/2.1.34，候选 Desktop/Web2.1.35。项目生命周期00e00e40独审Approved，最终7442c4fb实际production Edge27/27首试PASS、Native存储/包169PASS；依赖guard5705fc73独审Approved；12AI独立适配器7442c4fb定向73PASS并复审PASS，尚无生产调用方/真实生成。组合3b49f605全量Node1400PASS/14skip。加载期6PASS/8RED已承接并修复中；用户提供ComfyUI目录和硬件推荐需求，静态审计/官方研究已完成，探测适配器实施中。整体未完成，Native实际产物/Web共仓库/账号/云备份/最终CI及交付未验。
+- Verification: PARTIAL — 基线d95e4c44/2.1.34，候选Desktop/Web2.1.35。持久项目分组/软删除独审与Edge27/27、Native存储169通过；依赖guard5705独审Approved；12AI7442独立适配器73通过，生产接线待。加载草稿80f6、格式保护6c639、硬件同名GPU d3e均实际RED→GREEN及精确独审Approved；新companion UI保护2/2首试，e01caa99。DESIGN基础e5e4b345承接26文件，46单测/8预览首试通过，0770跨平台修复及精确独审通过，非产品全局UI完成。本地包7e06/aecb容量指引19项及精确独审通过；HiFi/加速/2K来源已只读核对，无安装/生成。统一本机权威/写入协调及设置分类实施中。完整verify、Native实际产物、真实Provider/Web共仓库/账号/云恢复/Hosted未验。
 - Evidence: [docs/changes/2026-10-15-kk-unified/intent.md](../../docs/changes/2026-10-15-kk-unified/intent.md), [docs/changes/2026-10-15-kk-unified/spec.md](../../docs/changes/2026-10-15-kk-unified/spec.md), [docs/changes/2026-10-15-kk-unified/plan.md](../../docs/changes/2026-10-15-kk-unified/plan.md), [docs/changes/2026-10-15-kk-unified/verification.md](../../docs/changes/2026-10-15-kk-unified/verification.md), [docs/changes/2026-10-15-kk-unified/review.md](../../docs/changes/2026-10-15-kk-unified/review.md)
-- Next action: 修复加载草稿并独审；完善单写入仓库协议，再实施多聊天；独立硬件探测与推荐适配器并行，按计划继续模型、Agent及全链验收。
+- Next action: 继续统一本机权威、设置UI和模型接入；DESIGN基础独审后用于实际页面；接通本地安装/运行、多聊天/Agent/媒体及后续账号/手动加密备份。完整需求未关闭。
 - Last verified: 2026-10-15
 - Updated: 2026-10-15
 
@@ -643,9 +644,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `codex/TASK-KK-UNIFIED-20261015`
 - Worktree: `D:/kk-studio/.worktrees/TASK-KK-UNIFIED-20261015`
 - Modules: ComfyUI live acceptance
-- Verification: PARTIAL — 用户已指定 C:/Users/Administrator/.hub/plugin-data/comfyui/，解除“无目录/workflow/model”旧阻塞。只读静态审计确认Hub wrapper、backend/bmPE1Rw/ComfyUI0.34.1、外部Python3.12.8，userdata/models中H3 T2V/I2V四权重42.47GB；R2V ref2va缺失、未发现Flux/GGUF。API图在wrapper.output内，不可直接提交UI .workflow。未启动/下载/推理或修改原目录，实际节点注册/CUDA显存/结果归档及重启恢复未验。
+- Verification: PARTIAL — 用户已指定 C:/Users/Administrator/.hub/plugin-data/comfyui/，解除“无目录/workflow/model”旧阻塞。只读静态审计确认Hub wrapper、backend/bmPE1Rw/ComfyUI0.34.1、外部Python3.12.8，userdata/models中H3 T2V/I2V四权重42.47GB；R2V ref2va缺失、未发现Flux/GGUF。API图在wrapper.output内，不可直接提交UI .workflow。未启动/下载/推理或修改原目录，实际节点注册/CUDA显存/结果归档及重启恢复未验。 固定ModelScope190e955f HiFi来源/加速节点/官方2K协议只读核对：FL2VA64.73GB，两模式93.13GB；16G指运行目标。现有Hub不能推断兼容；HiFi→付费2K接受性/价格/性能未知。未安装权重或节点。
 - Evidence: [docs/changes/2026-09-16-launch-readiness-audit/verification.md](../../docs/changes/2026-09-16-launch-readiness-audit/verification.md), [docs/changes/2026-10-15-kk-unified/spec.md](../../docs/changes/2026-10-15-kk-unified/spec.md), [docs/changes/2026-10-15-kk-unified/verification.md](../../docs/changes/2026-10-15-kk-unified/verification.md)
-- Next action: 按LOCAL扩展安全Hub目录识别、硬件探测及推荐；显式本地运行入口接通H3 T2V/I2V并验收，R2V缺权重不开放，不能中断外部Hub任务。
+- Next action: 模型接入统一安装/关联与硬件容量推荐；先验证现有H3，HiFi为固定来源独立配方，实际ABI/工作流/资源通过才开放。2K单列远端阶段，不能隐式上传或称无条件更便宜。
 - Last verified: 2026-10-15
 - Updated: 2026-10-15
 
@@ -1842,11 +1843,11 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `feat/TASK-LOCAL-SERVICE-001-companion`
 - Worktree: `D:/kk-studio/.worktrees/platform-versioning`
 - Modules: src/runtime, src/features/creation, local companion service, docs/architecture/DATA-STORAGE.md, src/components/settings, tests/browser, tests/local-service
-- Verification: PARTIAL — 本机 loopback 服务、HttpOnly 配对、项目/素材服务优先读写、旧 IndexedDB 只读迁移、备份恢复、连接/断线 UI 与 production smoke 已通过本地和真实临时服务验收；真实账号登录、安装/更新、Mobile 和 VPS 生产部署仍未完成，因此产品任务保持 PARTIAL。
-- Evidence: [docs/changes/2026-09-29-local-companion/intent.md](../../docs/changes/2026-09-29-local-companion/intent.md), [docs/changes/2026-09-29-local-companion/spec.md](../../docs/changes/2026-09-29-local-companion/spec.md), [docs/changes/2026-09-29-local-companion/plan.md](../../docs/changes/2026-09-29-local-companion/plan.md), [docs/changes/2026-09-29-local-companion/verification.md](../../docs/changes/2026-09-29-local-companion/verification.md), [docs/changes/2026-09-29-local-companion/review.md](../../docs/changes/2026-09-29-local-companion/review.md), [docs/architecture/adr/ADR-008-platform-versions-and-local-first.md](../../docs/architecture/adr/ADR-008-platform-versions-and-local-first.md), [docs/features/feat-037-web-local-service.md](../../docs/features/feat-037-web-local-service.md)
-- Next action: 按验收条件完成实现、验证、独立审查和文档同步
-- Last verified: 2026-09-29
-- Updated: 2026-09-29
+- Verification: PARTIAL — 本机 loopback 服务、HttpOnly 配对、项目/素材服务优先读写、旧 IndexedDB 只读迁移、备份恢复、连接/断线 UI 与 production smoke 已通过本地和真实临时服务验收；真实账号登录、安装/更新、Mobile 和 VPS 生产部署仍未完成，因此产品任务保持 PARTIAL。 2026-10-15统一分支补84c6→6c639未来主/备份格式与IO失败关闭；CF-01主旧版/备份新版覆写实际两RED修复，115相关PASS及精确独审Approved。e01caa99界面2/2首试保留草稿、不写旧数据、不另建IDB。Native与Node格式仍不兼容，统一本机权威实施中，不能直接共目录。
+- Evidence: [docs/changes/2026-09-29-local-companion/intent.md](../../docs/changes/2026-09-29-local-companion/intent.md), [docs/changes/2026-09-29-local-companion/spec.md](../../docs/changes/2026-09-29-local-companion/spec.md), [docs/changes/2026-09-29-local-companion/plan.md](../../docs/changes/2026-09-29-local-companion/plan.md), [docs/changes/2026-09-29-local-companion/verification.md](../../docs/changes/2026-09-29-local-companion/verification.md), [docs/changes/2026-09-29-local-companion/review.md](../../docs/changes/2026-09-29-local-companion/review.md), [docs/architecture/adr/ADR-008-platform-versions-and-local-first.md](../../docs/architecture/adr/ADR-008-platform-versions-and-local-first.md), [docs/features/feat-037-web-local-service.md](../../docs/features/feat-037-web-local-service.md), [docs/changes/2026-10-15-kk-unified/verification.md](../../docs/changes/2026-10-15-kk-unified/verification.md), [docs/changes/2026-10-15-kk-unified/review.md](../../docs/changes/2026-10-15-kk-unified/review.md)
+- Next action: 沿统一任务实现Native权威/目录身份/写入协调/显式授权和Web适配，再验证关窗口后台服务与双端共完整仓库。
+- Last verified: 2026-10-15
+- Updated: 2026-10-15
 
 ## TASK-CLOSEOUT-2026-09-28 — 合并后版本与 VPS 状态收口
 
@@ -2925,9 +2926,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `codex/TASK-KK-UNIFIED-20261015`
 - Worktree: `TASK-KK-UNIFIED-20261015`
 - Modules: src/features/creation/useCreationStorage.ts, src/components/StartComposer.tsx, tests/browser
-- Verification: PARTIAL — FACT：统一入口承接 9d4a005 的 tests/unit/creationSaveQueue.test.ts（316→620 行，14 用例），node --test 实跑 6 PASS / 8 RED，exit=1，RED 与交接记录一致（用例 7-14：加载期 prompt/审批默认值/model route/附件增删/异步协调中输入/unmount 失效/保存时间戳超前）。根因在 src/features/creation/useCreationStorage.ts 的 read() 第 81-104 行：仅 dirty.current 为真时进入合并，且只按 updatedAt 合并 homeDraft 单字段，其余加载期显式编辑被已存快照覆盖。反向证伪：origin/main 同文件与统一入口逐行相同（readSequence 第 40/61/67/114 行、dirty 分支第 81 行），即 8 RED 在纯主线 d95e4c44 上同样存在，非本任务引入的回归，也未被既有提交掩盖。未实施产品修复，任务保持 PARTIAL。
-- Evidence: [docs/changes/2026-10-15-home-recovery-integration/verification.md](../../docs/changes/2026-10-15-home-recovery-integration/verification.md)
-- Next action: 在统一入口按 TDD 实施：先为 read() 补字段级合并与 readSequence 竞态的产品 RED，再以最小输入保护或字段合并方案修复；不得以固定等待或重试掩盖；验证后独立复审。禁止新建重复任务。
+- Verification: PARTIAL — 46e30fb0实现加载期显式字段patch、同队列读取/写入及末端sequence校验；5ddda4fb新增真实生产加载期草稿回归。原6PASS/8RED及后续竞态RED保留，LOAD-01同素材多引用删除反例由80f6按引用ID修复，新增仍按素材去重。27hook/81邻域PASS；独立actual-hook三反例3/3及精确复审Approved。production1423四组23/23首试、0flaky，run d0858bb6-fe82-4aac-9864-a8f64951271b；Native/UI和最终总交付另验。
+- Evidence: [docs/changes/2026-10-15-home-recovery-integration/verification.md](../../docs/changes/2026-10-15-home-recovery-integration/verification.md), [docs/changes/2026-10-15-kk-unified/verification.md](../../docs/changes/2026-10-15-kk-unified/verification.md), [docs/changes/2026-10-15-kk-unified/review.md](../../docs/changes/2026-10-15-kk-unified/review.md)
+- Next action: 保留通过的代码子范围与失败证据，随当前组合源码执行完整verify、新Native重建、最终精确独审/Hosted与交付，不重复开发已修复读取合并。
 - Last verified: 2026-10-15
 - Updated: 2026-10-15
 
@@ -2947,5 +2948,24 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Verification: PARTIAL — 统一入口防复发314ac750→11e991bf→5705fc73：自定义准备回调/官方installer前校验根及package/scope祖先链接、lock结构和越界路径；无构建缓存启动保持。原RED、DEP-01和DEP-02失败均保留，最终44PASS/1既有skip、共享junction只读callback0，精确5705fc73独立SPEC/QUALITY Approved。56cb1381承接的“回调缺口未修”属过时断言，现已纠正；不重复开发。原事故字节及短时影响仍UNKNOWN，目录差异不得自动归因事故；整体PARTIAL。
 - Evidence: [docs/changes/2026-10-15-dependency-repair/intent.md](../../docs/changes/2026-10-15-dependency-repair/intent.md), [docs/changes/2026-10-15-dependency-repair/spec.md](../../docs/changes/2026-10-15-dependency-repair/spec.md), [docs/changes/2026-10-15-dependency-repair/plan.md](../../docs/changes/2026-10-15-dependency-repair/plan.md), [docs/changes/2026-10-15-dependency-repair/verification.md](../../docs/changes/2026-10-15-dependency-repair/verification.md), [docs/changes/2026-10-15-dependency-repair/review.md](../../docs/changes/2026-10-15-dependency-repair/review.md), [docs/changes/2026-10-15-kk-unified/verification.md](../../docs/changes/2026-10-15-kk-unified/verification.md), [docs/changes/2026-10-15-kk-unified/review.md](../../docs/changes/2026-10-15-kk-unified/review.md)
 - Next action: 保持防复发子范围PASS与旧事故UNKNOWN分离；不在共享依赖安装或清理。原始字节及影响如无证据不得补写；最终当前提交/托管/交付门禁另验。
+- Last verified: 2026-10-15
+- Updated: 2026-10-15
+
+## TASK-DESIGN-MD-20261015 — 统一DESIGN设计系统与产品UI收敛
+
+- Goal: 承接用户指定DESIGN候选，形成完整设计系统并将规则用于全局产品页面与状态。
+- Scope: 根DESIGN、token同步校验、共享组件预览和产品UI规则；具体页面验收沿统一任务。
+- Display status: 进行中
+- Priority: P1 — 用户最新强调全局UI一致性与完整设计系统。
+- Requirement refs: docs/changes/2026-10-15-kk-unified/spec.md
+- Feature IDs: FEAT-022, FEAT-023
+- Owner role: implementation-integrator
+- Acceptance: 保留指定候选及当前tokens身份，统一规则入口和工具链，禁止覆盖当前设计。; Desktop/Web实际页面按DESIGN统一，连续缩放/选中/焦点/弹层/离线等状态同态验收。; 当前提交独审、相关完整检查与实际产物验证通过才关闭。
+- Branch: `codex/TASK-KK-UNIFIED-20261015`
+- Worktree: `D:/kk-studio/.worktrees/TASK-KK-UNIFIED-20261015`
+- Modules: DESIGN.md, scripts/design-md, design/preview, src/styles, src/components, docs/UI_INDEX.md
+- Verification: PARTIAL — 来源sync-pr45-main-20261010/codex/TASK-DESIGN-MD-20261015@cbda65e4，17tracked/22new保留并冻结。e5e4b345仅承接26文件，以当前runtime tokens生成，不修改产品CSS。46单测/8预览首试及定向静态通过，保留官方25项orphan警告，初审DS-01发现真实多行selector换行漂移，0770df7c修复后41单测/真实git-LF及精确独审PASS。Mobbin/getdesign只读参考，未执行不固定npx或覆盖配色。全局产品页面/Native/完整交付未验。
+- Evidence: [docs/changes/2026-10-15-kk-unified/intent.md](../../docs/changes/2026-10-15-kk-unified/intent.md), [docs/changes/2026-10-15-kk-unified/spec.md](../../docs/changes/2026-10-15-kk-unified/spec.md), [docs/changes/2026-10-15-kk-unified/plan.md](../../docs/changes/2026-10-15-kk-unified/plan.md), [docs/changes/2026-10-15-kk-unified/verification.md](../../docs/changes/2026-10-15-kk-unified/verification.md), [docs/changes/2026-10-15-kk-unified/review.md](../../docs/changes/2026-10-15-kk-unified/review.md)
+- Next action: 关闭基础独审问题，将规则落入设置/模型/聊天/画布/项目/素材等实际页面，按Desktop→Web留同状态证据。
 - Last verified: 2026-10-15
 - Updated: 2026-10-15

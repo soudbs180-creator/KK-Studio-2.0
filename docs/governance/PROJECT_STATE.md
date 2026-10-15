@@ -9,7 +9,7 @@
 <!-- DOCUMENT_METADATA_END -->
 <!-- CURRENT_FACTS_BEGIN -->
 
-2026-10-15 新授权实施：TASK-KK-UNIFIED-20261015，从实际 origin/main d95e4c44 / Desktop-Web2.1.34 建立独立工作树，候选2.1.35，完整范围见[批准规格](../changes/2026-10-15-kk-unified/spec.md)。项目生命周期与分组子范围独审/production Edge27/27通过；依赖guard5705fc73独审Approved，事故UNKNOWN保留；12AI独立适配器73PASS及复审，生产接线待。加载草稿和硬件探测实施中，其余阶段开放。下面 HOME/其他候选文字为此前证据，不代表本任务完成。真实模型、Native重建、账号与云恢复未验收。
+2026-10-15 新授权实施：TASK-KK-UNIFIED-20261015，从origin/main d95e4c44 / Desktop-Web2.1.34建立独立工作树，候选2.1.35，完整范围见[批准规格](../changes/2026-10-15-kk-unified/spec.md)。持久项目分组/软删除、依赖guard、加载草稿80f6、格式保护6c639、硬件观测d3e各子范围已精确独审；12AI独立适配器73PASS但生产接线待。DESIGN基础e5e及0770跨平台修复已独审，41相关单测/先前8预览首试，不代表全产品UI完成；本地包目录7e06独审中。Native权威/旧锁协调及设置分类实际接入实施中，其余范围开放。root依赖改本任务实体目录，未安装到canonical/vendor链接目标。下面HOME/其他候选按此前时点理解，真实模型、Native新产物、共仓库、账号与云恢复未验收。
 
 当前执行：HOME源码a85ace90在actual main492承接分支完整verify通过（Node1343/14skip、Agent199/2skip、Edge785首试、development4步），官方Windows重建2.1.34及原Native38项/3次launch、Rust167均PASS；HOME-NATIVE-01经精确结果独审关闭，原f10两FAIL保留。前置GDI已按main新证据DONE；输出保护另缺取消/reporter失败实测保持PARTIAL。尚未HOME PR/Hosted/main或daily更新。旧1336证据与最终1763产物共6198hash独立核对一致。原依赖事故已按原锁恢复，未知旧字节/短时影响仍记TASK-VERIFY-DEPS-20261015；九项目/两副本/旧分支保护。
 

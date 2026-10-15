@@ -32,11 +32,11 @@
       "docs/changes/2026-10-15-kk-unified/verification.md",
       "docs/changes/2026-10-15-kk-unified/review.md"
     ],
-    "verification": "基线 d95e4c44/2.1.34，候选 Desktop/Web2.1.35。项目生命周期00e00e40独审Approved，最终7442c4fb实际production Edge27/27首试PASS、Native存储/包169PASS；依赖guard5705fc73独审Approved；12AI独立适配器7442c4fb定向73PASS并复审PASS，尚无生产调用方/真实生成。组合3b49f605全量Node1400PASS/14skip。加载期6PASS/8RED已承接并修复中；用户提供ComfyUI目录和硬件推荐需求，静态审计/官方研究已完成，探测适配器实施中。整体未完成，Native实际产物/Web共仓库/账号/云备份/最终CI及交付未验。",
+    "verification": "基线d95e4c44/2.1.34，候选Desktop/Web2.1.35。持久项目分组/软删除独审与Edge27/27、Native存储169通过；依赖guard5705独审Approved；12AI7442独立适配器73通过，生产接线待。加载草稿80f6、格式保护6c639、硬件同名GPU d3e均实际RED→GREEN及精确独审Approved；新companion UI保护2/2首试，e01caa99。DESIGN基础e5e4b345承接26文件，46单测/8预览首试通过，0770跨平台修复及精确独审通过，非产品全局UI完成。本地包7e06/aecb容量指引19项及精确独审通过；HiFi/加速/2K来源已只读核对，无安装/生成。统一本机权威/写入协调及设置分类实施中。完整verify、Native实际产物、真实Provider/Web共仓库/账号/云恢复/Hosted未验。",
     "verificationResult": "PARTIAL",
     "updated": "2026-10-15",
     "displayStatus": "进行中",
-    "nextAction": "修复加载草稿并独审；完善单写入仓库协议，再实施多聊天；独立硬件探测与推荐适配器并行，按计划继续模型、Agent及全链验收。",
+    "nextAction": "继续统一本机权威、设置UI和模型接入；DESIGN基础独审后用于实际页面；接通本地安装/运行、多聊天/Agent/媒体及后续账号/手动加密备份。完整需求未关闭。",
     "lastVerified": "2026-10-15",
     "ownerRole": "implementation-integrator",
     "requirementRefs": [
@@ -1169,7 +1169,7 @@
       "docs/changes/2026-10-15-kk-unified/spec.md",
       "docs/changes/2026-10-15-kk-unified/verification.md"
     ],
-    "verification": "用户已指定 C:/Users/Administrator/.hub/plugin-data/comfyui/，解除“无目录/workflow/model”旧阻塞。只读静态审计确认Hub wrapper、backend/bmPE1Rw/ComfyUI0.34.1、外部Python3.12.8，userdata/models中H3 T2V/I2V四权重42.47GB；R2V ref2va缺失、未发现Flux/GGUF。API图在wrapper.output内，不可直接提交UI .workflow。未启动/下载/推理或修改原目录，实际节点注册/CUDA显存/结果归档及重启恢复未验。",
+    "verification": "用户已指定 C:/Users/Administrator/.hub/plugin-data/comfyui/，解除“无目录/workflow/model”旧阻塞。只读静态审计确认Hub wrapper、backend/bmPE1Rw/ComfyUI0.34.1、外部Python3.12.8，userdata/models中H3 T2V/I2V四权重42.47GB；R2V ref2va缺失、未发现Flux/GGUF。API图在wrapper.output内，不可直接提交UI .workflow。未启动/下载/推理或修改原目录，实际节点注册/CUDA显存/结果归档及重启恢复未验。 固定ModelScope190e955f HiFi来源/加速节点/官方2K协议只读核对：FL2VA64.73GB，两模式93.13GB；16G指运行目标。现有Hub不能推断兼容；HiFi→付费2K接受性/价格/性能未知。未安装权重或节点。",
     "updated": "2026-10-15",
     "verificationResult": "PARTIAL",
     "requirementRefs": [
@@ -1181,7 +1181,7 @@
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
     "displayStatus": "进行中",
-    "nextAction": "按LOCAL扩展安全Hub目录识别、硬件探测及推荐；显式本地运行入口接通H3 T2V/I2V并验收，R2V缺权重不开放，不能中断外部Hub任务。",
+    "nextAction": "模型接入统一安装/关联与硬件容量推荐；先验证现有H3，HiFi为固定来源独立配方，实际ABI/工作流/资源通过才开放。2K单列远端阶段，不能隐式上传或称无条件更便宜。",
     "lastVerified": "2026-10-15",
     "ownerRole": "repository-maintainer"
   },
@@ -4146,10 +4146,12 @@
       "docs/changes/2026-09-29-local-companion/verification.md",
       "docs/changes/2026-09-29-local-companion/review.md",
       "docs/architecture/adr/ADR-008-platform-versions-and-local-first.md",
-      "docs/features/feat-037-web-local-service.md"
+      "docs/features/feat-037-web-local-service.md",
+      "docs/changes/2026-10-15-kk-unified/verification.md",
+      "docs/changes/2026-10-15-kk-unified/review.md"
     ],
-    "verification": "本机 loopback 服务、HttpOnly 配对、项目/素材服务优先读写、旧 IndexedDB 只读迁移、备份恢复、连接/断线 UI 与 production smoke 已通过本地和真实临时服务验收；真实账号登录、安装/更新、Mobile 和 VPS 生产部署仍未完成，因此产品任务保持 PARTIAL。",
-    "updated": "2026-09-29",
+    "verification": "本机 loopback 服务、HttpOnly 配对、项目/素材服务优先读写、旧 IndexedDB 只读迁移、备份恢复、连接/断线 UI 与 production smoke 已通过本地和真实临时服务验收；真实账号登录、安装/更新、Mobile 和 VPS 生产部署仍未完成，因此产品任务保持 PARTIAL。 2026-10-15统一分支补84c6→6c639未来主/备份格式与IO失败关闭；CF-01主旧版/备份新版覆写实际两RED修复，115相关PASS及精确独审Approved。e01caa99界面2/2首试保留草稿、不写旧数据、不另建IDB。Native与Node格式仍不兼容，统一本机权威实施中，不能直接共目录。",
+    "updated": "2026-10-15",
     "verificationResult": "PARTIAL",
     "requirementRefs": [
       "ledger:TASK-LOCAL-SERVICE-001"
@@ -4160,8 +4162,8 @@
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
     "displayStatus": "进行中",
-    "nextAction": "按验收条件完成实现、验证、独立审查和文档同步",
-    "lastVerified": "2026-09-29",
+    "nextAction": "沿统一任务实现Native权威/目录身份/写入协调/显式授权和Web适配，再验证关窗口后台服务与双端共完整仓库。",
+    "lastVerified": "2026-10-15",
     "ownerRole": "repository-maintainer"
   },
   {
@@ -8865,13 +8867,15 @@
       "tests/browser"
     ],
     "evidence": [
-      "docs/changes/2026-10-15-home-recovery-integration/verification.md"
+      "docs/changes/2026-10-15-home-recovery-integration/verification.md",
+      "docs/changes/2026-10-15-kk-unified/verification.md",
+      "docs/changes/2026-10-15-kk-unified/review.md"
     ],
-    "verification": "FACT：统一入口承接 9d4a005 的 tests/unit/creationSaveQueue.test.ts（316→620 行，14 用例），node --test 实跑 6 PASS / 8 RED，exit=1，RED 与交接记录一致（用例 7-14：加载期 prompt/审批默认值/model route/附件增删/异步协调中输入/unmount 失效/保存时间戳超前）。根因在 src/features/creation/useCreationStorage.ts 的 read() 第 81-104 行：仅 dirty.current 为真时进入合并，且只按 updatedAt 合并 homeDraft 单字段，其余加载期显式编辑被已存快照覆盖。反向证伪：origin/main 同文件与统一入口逐行相同（readSequence 第 40/61/67/114 行、dirty 分支第 81 行），即 8 RED 在纯主线 d95e4c44 上同样存在，非本任务引入的回归，也未被既有提交掩盖。未实施产品修复，任务保持 PARTIAL。",
+    "verification": "46e30fb0实现加载期显式字段patch、同队列读取/写入及末端sequence校验；5ddda4fb新增真实生产加载期草稿回归。原6PASS/8RED及后续竞态RED保留，LOAD-01同素材多引用删除反例由80f6按引用ID修复，新增仍按素材去重。27hook/81邻域PASS；独立actual-hook三反例3/3及精确复审Approved。production1423四组23/23首试、0flaky，run d0858bb6-fe82-4aac-9864-a8f64951271b；Native/UI和最终总交付另验。",
     "verificationResult": "PARTIAL",
     "updated": "2026-10-15",
     "lastVerified": "2026-10-15",
-    "nextAction": "在统一入口按 TDD 实施：先为 read() 补字段级合并与 readSequence 竞态的产品 RED，再以最小输入保护或字段合并方案修复；不得以固定等待或重试掩盖；验证后独立复审。禁止新建重复任务。",
+    "nextAction": "保留通过的代码子范围与失败证据，随当前组合源码执行完整verify、新Native重建、最终精确独审/Hosted与交付，不重复开发已修复读取合并。",
     "requirementRefs": [
       "ledger:TASK-CODEX-HOME-20261015"
     ],
@@ -8926,5 +8930,52 @@
       "ledger:TASK-CODEX-HOME-20261015"
     ],
     "featureIds": []
+  },
+  {
+    "id": "TASK-DESIGN-MD-20261015",
+    "title": "统一DESIGN设计系统与产品UI收敛",
+    "goal": "承接用户指定DESIGN候选，形成完整设计系统并将规则用于全局产品页面与状态。",
+    "scope": "根DESIGN、token同步校验、共享组件预览和产品UI规则；具体页面验收沿统一任务。",
+    "acceptance": [
+      "保留指定候选及当前tokens身份，统一规则入口和工具链，禁止覆盖当前设计。",
+      "Desktop/Web实际页面按DESIGN统一，连续缩放/选中/焦点/弹层/离线等状态同态验收。",
+      "当前提交独审、相关完整检查与实际产物验证通过才关闭。"
+    ],
+    "dependencies": [],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "codex/TASK-KK-UNIFIED-20261015",
+    "worktree": "D:/kk-studio/.worktrees/TASK-KK-UNIFIED-20261015",
+    "affectedModules": [
+      "DESIGN.md",
+      "scripts/design-md",
+      "design/preview",
+      "src/styles",
+      "src/components",
+      "docs/UI_INDEX.md"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "priorityRationale": "用户最新强调全局UI一致性与完整设计系统。",
+    "evidence": [
+      "docs/changes/2026-10-15-kk-unified/intent.md",
+      "docs/changes/2026-10-15-kk-unified/spec.md",
+      "docs/changes/2026-10-15-kk-unified/plan.md",
+      "docs/changes/2026-10-15-kk-unified/verification.md",
+      "docs/changes/2026-10-15-kk-unified/review.md"
+    ],
+    "verification": "来源sync-pr45-main-20261010/codex/TASK-DESIGN-MD-20261015@cbda65e4，17tracked/22new保留并冻结。e5e4b345仅承接26文件，以当前runtime tokens生成，不修改产品CSS。46单测/8预览首试及定向静态通过，保留官方25项orphan警告，初审DS-01发现真实多行selector换行漂移，0770df7c修复后41单测/真实git-LF及精确独审PASS。Mobbin/getdesign只读参考，未执行不固定npx或覆盖配色。全局产品页面/Native/完整交付未验。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-15",
+    "lastVerified": "2026-10-15",
+    "nextAction": "关闭基础独审问题，将规则落入设置/模型/聊天/画布/项目/素材等实际页面，按Desktop→Web留同状态证据。",
+    "requirementRefs": [
+      "docs/changes/2026-10-15-kk-unified/spec.md"
+    ],
+    "featureIds": [
+      "FEAT-022",
+      "FEAT-023"
+    ]
   }
 ]
