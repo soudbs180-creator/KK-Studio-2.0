@@ -1,5 +1,18 @@
 # 本轮可达 UI 覆盖与验证边界
 
+## 当前2.1.31新增覆盖（2026-10-15）
+
+| 范围 | 当前证据 | 边界 |
+| --- | --- | --- |
+| 官方/中转可编辑首刻与CLI切回草稿 | 受控6轮CPU1三次同前缀FAIL/CPU4三次PASS；新增单case有效RED，本文件8项/邻域6项GREEN | 真实选区与32ms输入，无value注入、scope初值等待或超时放宽；旧Hosted缺事件时间线 |
+| 全页面/卡片与会话草稿 | verify9 Edge761首试/0retry；Native10保留87项并新增1920/390各9项，105PASS/13图 | 提供商/合成key双向保持，未保存草稿不进浏览器或项目；不等真实账号/Provider |
+| Native身份、TaskHost与隔离 | current6无注入11PASS；Native10前后4正向HTTP IPC自检、owned关闭/退出 | guard仅受验HTTP route动作阶段，旧guard勘误与Native4偏好例外继续有效 |
+
+详细统计、哈希、原eb5 push与PR区别及风险集中于[最新验证](verification.md#2131-当前本地验收)。REVIEW/整体NOT_VERIFIED；最终head审查、新Hosted/Delivery、普通PR59合并及main/post-main待验，其他功能成熟度和Mobile规划不变。
+
+## 此前阶段记录（原文保留，最新状态以上方为准）
+
+
 ## 当前2.1.30新增覆盖（2026-10-15）
 
 | 范围 | 当前证据 | 边界 |

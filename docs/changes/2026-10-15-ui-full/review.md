@@ -1,5 +1,14 @@
 # Review：全页面新UI收敛与主线集成
 
+## 当前2.1.31审查输入（2026-10-15）
+
+当前eb5ce112加scope恢复layout同步/单回归/版本31尚未形成最终head。verify9的761首试、Native10的105项/13图与TaskHost current6无注入11项本地PASS，只作为动态审查输入；原helper、既有case、秘密、busy/取消与超时契约保留。
+
+审查回读[最新验证](verification.md#2131-当前本地验收)：eb5 push759首过/1flaky严格NON_PASS与旧PR760首过分别成立，不互相代填；受控真实setter抢选区证明可达路径，但原Hosted缺事件时间线，不对每个历史尝试强定同因。Native4偏好例外与HTTP IPC guard范围继续有效。最终精确head独立审查、新Hosted/Delivery及PR59/main/post-main待完成，REVIEW/整体NOT_VERIFIED。
+
+## 此前阶段记录（原文保留，最新状态以上方为准）
+
+
 ## 当前2.1.30审查输入（2026-10-15）
 
 当前d50基线加侧栏12行CSS/4新case/版本30尚未形成最终head；verify8 760首试、Native9 87项及TaskHost current5无注入11项本地PASS，只作为动态审查输入。实际变化不改业务handler、依赖、重试或超时。

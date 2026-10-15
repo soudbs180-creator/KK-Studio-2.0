@@ -1,5 +1,19 @@
 # 全页面新UI收敛实施计划
 
+## 当前执行位置：2.1.31本地冻结（2026-10-15）
+
+- [x] 保留eb5 push的759首过/1flaky及旧PR760首过原件；受控真实选区/32ms输入复证同前缀，单回归有效RED后，仅scope恢复改用layout同步。
+- [x] 本文件8项与邻域6项首试通过；完整verify9为761浏览器首试/0retry，Desktop/Web递增2.1.31。
+- [x] fresh官方Native10保留原87项，新增双宽18项后105项/13图通过；TaskHost current6无注入11项通过，自有进程退出及端口释放已实查。
+- [x] 详证、旧失败及Native4偏好例外集中于[最新验证](verification.md#2131-当前本地验收)，原138任务与其他功能保全。
+- [ ] 提交最终head，完成精确base694→head独立source/integration审查与当前SHA新Hosted/Delivery。
+- [ ] 普通合并PR59，fetch核对main实际树及post-main。
+
+当前REVIEW/整体NOT_VERIFIED；旧eb5 PR绿色不覆盖push首错，也不代替2.1.31最终门禁。
+
+## 此前阶段记录（原文保留，最新状态以上方为准）
+
+
 ## 当前执行位置：2.1.30本地冻结（2026-10-15）
 
 - [x] 复证真实300ms/物理32ms侧栏点击4FAIL→仅等rail完成4PASS，最小12行CSS与4新case，定向21首试PASS；Desktop/Web递增2.1.30。

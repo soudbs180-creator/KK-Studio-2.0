@@ -1,5 +1,40 @@
 # Verification：全页面新UI收敛与主线集成
 
+## 2.1.31 当前本地验收
+
+当前冻结基线eb5ce1129be21436bfaf3886a49234fa689853db，加共享scope草稿恢复的最小layout同步、单个回归case及Desktop/Web2.1.31；最终提交尚未形成。TASK-UI-FULL-20261015继续REVIEW / verificationResult=NOT_VERIFIED，origin/main仍694a00607f6f63de1b8c43d0ebb117adf5d34f67、PR59未合并。下方verify8/Native9及全部历史保留原时点含义。
+
+### eb5 Hosted首错与scope输入时序修复
+
+eb5 push quality38662294657虽SUCCESS，原始Browser为760 unique/761 results、759首过/1flaky：settingsDraftRetention.spec.ts:274的390用例，在330:61提供商断言预期“Relay draft”、实际“Draft fixtureRelay draft”，原5s断言超时（test timeout30s），首次7063ms FAIL、retry1为2404ms PASS；严格首试结论NON_PASS。ZIP先与API digest匹配再仅提取固定basename，raw JSON SHA256=2c09f3a38f076dc42d2c9c49eb14fa1bf390b943620a9ac084f2fe4c5702fdd7；唯一失败附件为error-context，无截图。独立push审计SHA256=17a7e27a79465dc1f97e1c553663a5e4ee38264157cb50263a3773a70e7ff825。旧eb5 PR的760首过PASS独立成立，其审计SHA256=cdfc24e39a06ad7cebcca13ccce3848022b6c65b9812c52626fa9b6f56802a7c；两次运行不互相覆盖，旧绿色不代替新版门禁。
+
+原case/helper真实冷启动12轮未失败；随后保持真实UI，选区后32ms输入的受控6轮中CPU1三次出现同前缀FAIL，CPU4三次PASS。事件记录显示选中“Official draft”的0..14后，React setter回填“Draft fixture”并把选区折叠为13..13，随后可信insertText追加“Relay draft”。这证明共享scope的passive回填可抢占用户选区；原Hosted没有该事件时间线，相同指纹及可达路径支持本次修复，不宣称每个历史尝试均已同因证明。首轮外部probe缺baseURL而在导航前失败，原件保留但不作有效RED。
+
+产品仅把useScopedModelProviderDraft的scope恢复useEffect改为useLayoutEffect及对应import；busy上报、active取消、缓存身份、错误、凭据与持久化不改。新增一个390首个可编辑时刻回归，观察真实详情可见后focus/select、32ms用户输入，不注入字段值或等scope初值。该case在旧产品上有效RED1同前缀FAIL→当前本文件8PASS、邻域6PASS，均0retry/flaky/skip；原case/helper及原秘密/超时断言保持。
+
+### 完整verify9与Native10实际收据
+
+verify-merged-9实际exit0且freshBrowserReport=true：Node1318=1304PASS/14既有平台skip、Agent201=199PASS/2skip，lint/typecheck/UI242/0/format/build与development四步骤PASS。生产Edge761 unique/761单次results全部passed，实际retry/flaky/skip/global errors均0；文档owner与独立reviewer分别递归核对。JSON SHA256=ea19af72570577ca8fb2e3f068c73bd93244f8da7c34c0f98fde4a76dd7edf8f，start=2026-10-15T01:29:01.037Z、duration=261160.38ms。原advisory/日志警告保持。
+
+官方launcher重建33.50s后，fresh data/WebView profile及CIM的Native10真实release2.1.31为105PASS/errors[]/13图：原87项及300ms单位规范完整保留，在1920/390各增加9项真实fill/切换草稿检查，官方↔中转与CLI返回分别保留提供商和合成key；未保存草稿不进localStorage/native项目，原项目及素材仍各1且task/message均0。新增流程不预读/等待scope初值、不作DOM value注入，不点保存、测试、连接Agent或真实Provider；放在原UI/归档检查后、guard-after前。root目视image-empty/settings-update，版本31与空卡片仅上传成立。
+
+Native10前后4项正向HTTP IPC自检PASS，suppressedCredentialReads=26（synthetic2）、harmlessProbeRejections=2、真正UI forbiddenCommands=[]、deniedNetworkHosts=[]。仍仅证明route安装到unroute之间的Windows HTTP IPC受验动作阶段，不推广启动前、全进程、其他transport或真实CLI登录；历史同式只读invoke赋值/audit空数组的安全勘误继续按2.1.29节生效。
+
+Native10 release-identity为reason=current/needsBuild=false，input SHA256=dac79e2e4eb124a1286236d73064c1bc8ba7ba83804c988ce27b76d6c5297f4a、EXE SHA256=202b4ae972989d9892aba88a09c8008d438b01c6d373b8441b5cf71a86b4379d。实际JS /assets/index-Db7ifhXq.js（8c9d50b22c59f35011b126c2adcb9e8ed9e2506c39b8cbd8aa045cba46a047e4）、CSS /assets/index-DfoqcFla.css（1d4c47c30bbb7fc915f2d11378999d272fefbe90d364f85678429fa1a43d8e47）与当前dist同字节。Native10脚本SHA256=08213b4906249dd3a3fa63b257e5d5475586908709b72a3d9aaca8d2b8b2afcc；Web生产固定1423、Tauri route=http://tauri.localhost/、CDP9430，production/entry=src/main.tsx分别留证。运行链仍为src/main.tsx→App→SettingsPanel→ModelAccessSettings→ModelProviderSettings→共享scope hook。
+
+TaskHost-current-6在当前31同EXE/JS/CSS上真实无注入11/11PASS、errors[]、credentialCleanupComplete=true，既有结果/恢复/unknown/幂等/秘密/超时断言不放宽。Native10 exact-dataRoot正常close exit0；native31-process-cleanup.json于2026-10-15T01:36:59.7546047Z实查6个自有PID均退出，9430/9349/1423监听为空。
+
+### 当前风险、保全与剩余门禁
+
+Native4曾误用default WebView profile并把自动连接设为paused/disabled，原值NOT_RECORDED；该偏好例外已告知用户，不猜恢复，用户可在模型接入重新连接。后续fresh profile不等于默认偏好未触碰，不能概括所有用户偏好保全。旧guard安全勘误、actual-current3 UNKNOWN与旧Hosted因果边界保持；原138任务raw/对象、功能registry、primary文件/index、全部历史及Mobile2.1.1规划不改。
+
+工程外新证据位于D:/kk-studio/.analysis/ui-full-20261015/：hosted-push-audit-eb5ce112.json、hosted-pr-audit-eb5ce112.json、provider-scope-fix-receipt.json、provider-scope-probe-2026-10-15T01-24-07.101Z/results.json、provider-scope-regression-red-1/green-1/adjacent-green-1相关原件、verify-merged-9.log/-browser-results.json、local-final-verification-9.json、native-10/native-ui-full.json/profile-observation.json/release-identity.json/close-owned-native.json、native-taskhost-current-6/receipt.json及native31-process-cleanup.json；旧失败不覆盖。
+
+本地组合PASS不是最终SHA批准。仍须提交最终head、独立base694→head精确source/integration审查与当前SHA新Hosted/Delivery，通过后普通合并PR59、fetch核对main实际树及post-main。真实付费Provider、真实CLI账号/实体手机、签名安装器/发布与用户最终接受仍按原边界另验。
+
+## 此前阶段记录（原文保留，最新状态以上方为准）
+
+
 ## 2.1.30 当前本地验收
 
 当前冻结基线d50f2ccfc33311e86c4c98db0654862e8996c64d，加侧栏动画12行CSS、4个回归case及Desktop/Web2.1.30；最终提交尚未形成。TASK-UI-FULL-20261015继续REVIEW / verificationResult=NOT_VERIFIED，origin/main仍694a00607f6f63de1b8c43d0ebb117adf5d34f67、PR59未合并。下方2.1.29及更早段落保留原收据，不能覆盖本节与当前风险更正。

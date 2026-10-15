@@ -1,5 +1,14 @@
 # Intent：全页面新UI收敛与主线集成
 
+## 当前2.1.31冻结事实（2026-10-15）
+
+TASK-UI-FULL-20261015 保持 REVIEW / 整体NOT_VERIFIED。当前eb5ce112基线加共享scope草稿恢复的最小layout同步、单个回归case及Desktop/Web2.1.31，完整verify9的761浏览器首试、fresh Native10的105项/13图与TaskHost current6无注入11项分别通过；最终提交、精确独立审查、新Hosted/Delivery及PR59/main/post-main待验。
+
+本轮修复官方/中转切换后真实用户选区被旧草稿回填抢占的问题，保留原测试/helper、秘密、取消与超时契约。[最新验证](verification.md#2131-当前本地验收)集中记录eb5 push首错、旧PR首过的分别范围、受控同指纹复证及Native4偏好例外；旧收据、原138任务与其他功能状态保持，Mobile2.1.1规划不变。
+
+## 此前阶段记录（原文保留，最新状态以上方为准）
+
+
 ## 当前2.1.30冻结事实（2026-10-15）
 
 TASK-UI-FULL-20261015 保持 REVIEW / 整体NOT_VERIFIED。当前d50基线加侧栏动画12行CSS、4个回归case及Desktop/Web2.1.30，完整verify8的760浏览器首试、fresh Native9的87项/13图、TaskHost current5的11项本地通过；最终提交、精确独立审查、Hosted/Delivery与PR59/main/post-main待验。

@@ -270,6 +270,61 @@ test("型号首尾空格不创建第二份草稿或目录记录", async ({ page 
   expect(requests).toEqual([]);
 });
 
+test("接入方式切换后首个可编辑时刻替换提供商不会被迟到草稿打断", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 1080 });
+  const { dialog, requests } = await openDrafts(page);
+  const provider = dialog.getByLabel("提供商", { exact: true });
+  await provider.fill("Official draft");
+  const selection = provider.evaluate(
+    (input: HTMLInputElement) =>
+      new Promise<{ value: string; start: number | null; end: number | null }>(
+        (resolve) => {
+          const access = input.closest(".model-access-settings")!;
+          const observer = new MutationObserver(() => {
+            if (
+              access.getAttribute("data-navigation") !== "detail" ||
+              access
+                .querySelector('[aria-pressed="true"]')
+                ?.textContent?.trim() !== "API Key（中转站）" ||
+              !input.getClientRects().length ||
+              input.matches(":disabled")
+            )
+              return;
+            observer.disconnect();
+            input.focus();
+            input.select();
+            resolve({
+              value: input.value,
+              start: input.selectionStart,
+              end: input.selectionEnd,
+            });
+          });
+          observer.observe(access, {
+            subtree: true,
+            attributes: true,
+            attributeFilter: ["data-navigation", "aria-pressed", "hidden"],
+          });
+        },
+      ),
+  );
+  await dialog
+    .getByRole("button", { name: "返回接入方式", exact: true })
+    .click();
+  await dialog
+    .getByRole("button", { name: "API Key（中转站）", exact: true })
+    .click();
+  const selected = await selection;
+  expect(selected.start).toBe(0);
+  expect(selected.end).toBe(selected.value.length);
+  // Model a short pause between selecting visible text and typing its replacement.
+  await page.waitForTimeout(32);
+  await page.keyboard.insertText("Relay draft");
+  await expect(provider).toHaveValue("Relay draft");
+  expect(requests).toEqual([]);
+});
+
 for (const width of [1920, 390]) {
   test(`分类和官方/中转/CLI切换保留会话草稿且不外发或持久化凭据 ${width}`, async ({
     page,

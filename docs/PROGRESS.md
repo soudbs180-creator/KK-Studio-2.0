@@ -1,5 +1,14 @@
 # 当前进度
 
+## 2026-10-15 2.1.31本地验收冻结（REVIEW / 整体NOT_VERIFIED）
+
+共享scope恢复仅改为layout同步，修复可编辑后旧草稿抢占真实选区的可达路径；单回归有效RED→本文件8项/邻域6项首试GREEN。完整verify9为Node1304/14平台skip、Agent199/2skip、Edge761首试/0retry、UI242/0与development四步骤；fresh官方Native10保留原87并新增双宽18项，105项/13图及TaskHost current6无注入11项分别通过，owned进程退出与端口释放已实查。
+
+eb5 push759首过/1flaky严格NON_PASS与旧PR760首过分别保留，完整指纹、因果边界和Native4默认profile偏好例外集中于[最新验证](changes/2026-10-15-ui-full/verification.md#2131-当前本地验收)。当前eb5加版本31/最小差量尚未形成最终head；精确独立审查、新Hosted/Delivery、普通PR59合并及main/post-main待验。原138任务/其他功能/primary文件与index/历史保持，Mobile2.1.1规划不变。
+
+## 此前阶段记录（原文保留，最新状态以上方为准）
+
+
 ## 2026-10-15 2.1.30本地验收冻结（REVIEW / 整体NOT_VERIFIED）
 
 完整verify8通过：Node1304/14平台skip、Agent199/2skip、Edge760全部首试/0retry、UI242/0及development四步骤；fresh官方Native9 87项/13图、TaskHost current5无注入11项/秘密清理PASS，自有进程退出与端口释放已实查。最小12行CSS在侧栏展开稳定前隐藏项目控件，真实300ms/32ms点击、折叠重开及4新case/定向21项通过；旧Hosted因果限制与Native8单位夹具失败见[最新验证](changes/2026-10-15-ui-full/verification.md#2130-当前本地验收)。

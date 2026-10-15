@@ -10,6 +10,10 @@
 
 ## 本轮恢复入口
 
+先读[最新2.1.31验证](../changes/2026-10-15-ui-full/verification.md#2131-当前本地验收)与[计划](../changes/2026-10-15-ui-full/plan.md)。当前eb5基线加scope恢复layout同步/单回归/版本31，verify9 761首试/0retry、fresh Native10 105项/13图与TaskHost current6无注入11项分别PASS，自有进程退出及端口释放已实查。旧eb5 push759+1flaky严格NON_PASS与旧PR760首过不互相代填；原失败、因果与HTTP guard范围集中最新验证。Native4默认profile自动连接paused、原值NOT_RECORDED，不猜恢复，可模型接入重新连接。最终head、独立base694→head审查、新Hosted/Delivery、普通PR59合并及main/post-main待验，main694未合并；REVIEW/整体NOT_VERIFIED，原138任务、其他功能、primary文件/index、历史与Mobile规划保持。
+
+### 此前2.1.30恢复入口（历史；最新状态以上方为准）
+
 先读[最新2.1.30验证](../changes/2026-10-15-ui-full/verification.md#2130-当前本地验收)与[计划](../changes/2026-10-15-ui-full/plan.md)。当前d50基线加侧栏12行CSS/4新case/版本30，verify8 760首试/0retry、Native9 87项/13图与TaskHost current5无注入11项PASS，资源current、自有进程退出及端口释放已实查。Native4默认profile自动连接被暂停，原值NOT_RECORDED，不猜恢复；可在模型接入重新连接。旧Hosted、单位夹具及HTTP guard范围见验证。最终head、独立base694→head审查、新Hosted/Delivery、普通PR59合并与main/post-main待验，main694未合并；REVIEW/整体NOT_VERIFIED，原138任务/primary文件/index及Mobile规划保持。
 
 ### 此前2.1.29恢复入口（历史；偏好例外以上方勘误为准）

@@ -1,4 +1,10 @@
-import { useEffect, useRef, type Dispatch, type SetStateAction } from "react";
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
 import { credentialId } from "../../features/creation/providerCredentials";
 import type { ModelProviderProfile } from "../../domain/modelProvider";
 import {
@@ -81,7 +87,7 @@ export default function useScopedModelProviderDraft({
     );
   }, [active]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (previousScopeRef.current === scope) return;
     draftsRef.current[previousScopeRef.current] = {
       profile,
