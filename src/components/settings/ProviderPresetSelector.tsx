@@ -7,6 +7,28 @@ import {
   type ProviderPreset,
 } from "../../domain/providerPresets";
 
+type PresetBrowserState = {
+  localOnly: boolean;
+  view: "list" | "detail";
+  query: string;
+  category: string;
+  selected: string;
+  feedback: string;
+};
+function initialBrowser(localOnly: boolean): PresetBrowserState {
+  return {
+    localOnly,
+    view: "list",
+    query: "",
+    category: "全部",
+    selected: localOnly
+      ? (PROVIDER_PRESETS.find((item) => item.category === "本地")?.id ??
+        "openai")
+      : "openai",
+    feedback: "",
+  };
+}
+
 export default function ProviderPresetSelector({
   onSelect,
   onOpenGoogle,
@@ -17,20 +39,39 @@ export default function ProviderPresetSelector({
   localOnly?: boolean;
 }) {
   const { busy } = useContext(SettingsNavigationContext);
+  const policy = useRef({ busy, localOnly });
+  policy.current = { busy, localOnly };
   const disclosure = useRef<HTMLDetailsElement>(null);
-  const [view, setView] = useState<"list" | "detail">("list");
-  const [query, setQuery] = useState("");
-  const [category, setCategory] = useState("全部");
-  const [selected, setSelected] = useState("openai");
-  const [feedback, setFeedback] = useState("");
+  const [stored, setBrowser] = useState(() => initialBrowser(localOnly));
+  const { view, query, category, selected, feedback } =
+    stored.localOnly === localOnly ? stored : initialBrowser(localOnly);
+  function update(patch: Partial<PresetBrowserState>): void {
+    const scope = policy.current.localOnly;
+    if (scope !== localOnly) return;
+    setBrowser((current) => ({
+      ...(current.localOnly === scope ? current : initialBrowser(scope)),
+      ...patch,
+      localOnly: scope,
+    }));
+  }
+  function scopeAllows(candidate: ProviderPreset): boolean {
+    return (
+      policy.current.localOnly === localOnly &&
+      (!localOnly || candidate.category === "本地")
+    );
+  }
   async function openLink(event: MouseEvent<HTMLAnchorElement>): Promise<void> {
+    if (!scopeAllows(preset)) {
+      event.preventDefault();
+      return;
+    }
     if (!isTauri()) return;
     event.preventDefault();
-    setFeedback("");
+    update({ feedback: "" });
     try {
       await invoke("plugin:shell|open", { path: event.currentTarget.href });
     } catch {
-      setFeedback("外部浏览器未能打开，请重试或复制链接到浏览器。");
+      update({ feedback: "外部浏览器未能打开，请重试或复制链接到浏览器。" });
     }
   }
   const preset = findProviderPreset(selected)!;
@@ -48,7 +89,7 @@ export default function ProviderPresetSelector({
       ref={disclosure}
       className="provider-presets"
       onToggle={(event) => {
-        if (!event.currentTarget.open) setView("list");
+        if (!event.currentTarget.open) update({ view: "list" });
       }}
     >
       <summary
@@ -67,7 +108,7 @@ export default function ProviderPresetSelector({
             disabled={busy}
             title={busy ? "连接操作进行中，完成后可切换预设" : undefined}
             value={query}
-            onChange={(event) => setQuery(event.target.value)}
+            onChange={(event) => update({ query: event.target.value })}
             placeholder="名称、协议或网站"
           />
         </label>
@@ -87,7 +128,7 @@ export default function ProviderPresetSelector({
               disabled={busy}
               title={busy ? "连接操作进行中，完成后可切换预设" : undefined}
               aria-pressed={category === value}
-              onClick={() => setCategory(value)}
+              onClick={() => update({ category: value })}
             >
               {value}
             </button>
@@ -114,10 +155,8 @@ export default function ProviderPresetSelector({
               }
               aria-pressed={selected === item.id}
               onClick={() => {
-                if (busy) return;
-                setSelected(item.id);
-                setView("detail");
-                setFeedback("");
+                if (policy.current.busy || !scopeAllows(item)) return;
+                update({ selected: item.id, view: "detail", feedback: "" });
               }}
             >
               <strong>{item.label}</strong>
@@ -130,7 +169,9 @@ export default function ProviderPresetSelector({
         </div>
         <section
           className="provider-preset-detail"
-          hidden={view !== "detail"}
+          hidden={
+            view !== "detail" || (localOnly && preset.category !== "本地")
+          }
           aria-label="预设详情"
         >
           <div className="settings-subpage-header">
@@ -141,7 +182,7 @@ export default function ProviderPresetSelector({
               title={busy ? "连接操作进行中，完成后可切换预设" : undefined}
               onClick={() => {
                 if (!busy) {
-                  setView("list");
+                  update({ view: "list" });
                   window.requestAnimationFrame(() =>
                     disclosure.current
                       ?.querySelector<HTMLButtonElement>(
@@ -197,6 +238,7 @@ export default function ProviderPresetSelector({
             className="settings-action"
             disabled={
               busy ||
+              (localOnly && preset.category !== "本地") ||
               (preset.id !== "gemini" && Boolean(preset.unavailableReason))
             }
             title={
@@ -205,7 +247,12 @@ export default function ProviderPresetSelector({
                 : preset.unavailableReason
             }
             onClick={() => {
-              if (busy) return;
+              if (
+                policy.current.busy ||
+                !scopeAllows(preset) ||
+                (preset.id !== "gemini" && preset.unavailableReason)
+              )
+                return;
               if (preset.id === "gemini") onOpenGoogle();
               else onSelect(preset);
               if (disclosure.current) disclosure.current.open = false;
