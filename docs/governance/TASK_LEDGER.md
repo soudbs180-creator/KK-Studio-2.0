@@ -151,8 +151,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-GOV-006 | 统一会话安全交接、全量需求映射与单主控承接 | PARTIAL | 进行中 | P1 | none | root | PR61已正常squash为main3a992597，当前fetch核实后，测试安全组合从实际main承接；其余历史接口/产品任务仍开放。 |
 | TASK-VERIFY-EVIDENCE-20261015 | 隔离测试输出并保护历史回执 | PARTIAL | 进行中 | P1 | TASK-GOV-006 | root | 在独立新目录补Playwright受控取消和reporter写入失败两类真实负向运行，记录非0/中断状态并核对旧回执/PNG hash保持；保留全部旧失败与缺失UNKNOWN，不改当前HOME源码。 |
 | TASK-EXPLORER-GDI-20261015 | 阻断 headless Edge 测试遗留 Shell 标签代理 | DONE | 已完成 | P1 | TASK-GOV-006, TASK-VERIFY-EVIDENCE-20261015 | root | 测试安全GDI范围已闭环，保留原分支与证据；产品/日常客户端真实验收仍按各任务继续。 |
-| TASK-HOME-LOAD-DRAFT-20261015 | 保护读取期间编辑不覆盖已有首页草稿设置 | TODO | 未完成 | P2 | TASK-CODEX-HOME-20261015 | root | 在HOME恢复闭环后复用clean隔离树领取本问题，先按受控读取写产品RED，再选择最小输入保护或字段合并方案，验证后正常集成。 |
-| TASK-VERIFY-DEPS-20261015 | 恢复共享依赖清理事故并核验执行边界 | PARTIAL | 进行中 | P1 | TASK-CODEX-HOME-20261015 | root | 保存独立事故记录，严格前置exit0才执行下游；在物理本地依赖上补当前隔离Native/受影响门禁，并对纯docs精确差量复审后确定恢复闭环范围。 |
+| TASK-HOME-LOAD-DRAFT-20261015 | 保护读取期间编辑不覆盖已有首页草稿设置 | PARTIAL | 进行中 | P2 | TASK-CODEX-HOME-20261015 | root | 在统一入口按 TDD 实施：先为 read() 补字段级合并与 readSequence 竞态的产品 RED，再以最小输入保护或字段合并方案修复；不得以固定等待或重试掩盖；验证后独立复审。禁止新建重复任务。 |
+| TASK-VERIFY-DEPS-20261015 | 恢复共享依赖清理事故并核验执行边界 | PARTIAL | 进行中 | P1 | TASK-CODEX-HOME-20261015 | root | 统一入口承接并保持 PARTIAL：补自定义构建准备回调入口防护；继续只用隔离夹具，禁止在共享 node_modules junction 上裸跑 npm ci/安装清理；原字节与影响面 UNKNOWN 需独立取证后才可议关闭。 |
 
 ## TASK-KK-UNIFIED-20261015 — KK Studio 统一修复与重构
 
@@ -2917,18 +2917,18 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 - Goal: 读取已有首页草稿期间输入新文字时，未修改的数量和其他设置不被初始默认值覆盖。
 - Scope: 首页读取状态与草稿合并边界；独立于本轮已发请求的pending草稿清理。
-- Display status: 未完成
+- Display status: 进行中
 - Priority: P2 — 隔离实际运行已证明读取期输入使seed数量4降为1；需保护用户未编辑设置。
 - Requirement refs: ledger:TASK-CODEX-HOME-20261015
 - Feature IDs: FEAT-002
 - Owner role: repository-maintainer
 - Acceptance: 独立受控读取夹具保留用户新增文字及已有数量/附件/来源/隐私设置; 读取、错误、取消及重载状态有可观察保护，不以固定等待或重试掩盖; 相关Node/浏览器与Desktop隔离证据、独审及正常PR/main绑定当前源码
-- Branch: `unallocated`
-- Worktree: `unallocated`
+- Branch: `codex/TASK-KK-UNIFIED-20261015`
+- Worktree: `TASK-KK-UNIFIED-20261015`
 - Modules: src/features/creation/useCreationStorage.ts, src/components/StartComposer.tsx, tests/browser
-- Verification: NOT_VERIFIED — FACT：工程外受保护Edge探针延迟独立profile的creation DB读取，seed outputCount4、读取中真实输入、读取完成/持久化后文字保留但count1。相关产品文件与main3a相同。探针配置cwd和未等落盘的前两次失败保留；最终观察PASS只证明问题，不是修复。本轮8项首次数量失败的实际时序UNKNOWN，读取期覆盖为有证据的因果线索。
+- Verification: PARTIAL — FACT：统一入口承接 9d4a005 的 tests/unit/creationSaveQueue.test.ts（316→620 行，14 用例），node --test 实跑 6 PASS / 8 RED，exit=1，RED 与交接记录一致（用例 7-14：加载期 prompt/审批默认值/model route/附件增删/异步协调中输入/unmount 失效/保存时间戳超前）。根因在 src/features/creation/useCreationStorage.ts 的 read() 第 81-104 行：仅 dirty.current 为真时进入合并，且只按 updatedAt 合并 homeDraft 单字段，其余加载期显式编辑被已存快照覆盖。反向证伪：origin/main 同文件与统一入口逐行相同（readSequence 第 40/61/67/114 行、dirty 分支第 81 行），即 8 RED 在纯主线 d95e4c44 上同样存在，非本任务引入的回归，也未被既有提交掩盖。未实施产品修复，任务保持 PARTIAL。
 - Evidence: [docs/changes/2026-10-15-home-recovery-integration/verification.md](../../docs/changes/2026-10-15-home-recovery-integration/verification.md)
-- Next action: 在HOME恢复闭环后复用clean隔离树领取本问题，先按受控读取写产品RED，再选择最小输入保护或字段合并方案，验证后正常集成。
+- Next action: 在统一入口按 TDD 实施：先为 read() 补字段级合并与 readSequence 竞态的产品 RED，再以最小输入保护或字段合并方案修复；不得以固定等待或重试掩盖；验证后独立复审。禁止新建重复任务。
 - Last verified: 2026-10-15
 - Updated: 2026-10-15
 
@@ -2945,8 +2945,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `fix/TASK-CODEX-HOME-20261015-main`
 - Worktree: `D:/kk-studio/.worktrees/TASK-GOV-PHASE0`
 - Modules: docs/changes/2026-10-15-dependency-repair, node_modules (ignored generated dependencies)
-- Verification: PARTIAL — 共享目标清空已直接确认，按主仓现有锁、ignore-scripts重装244包exit0。两树244包版本匹配、60缺失均optional；主仓package/lock/index三hash不变，daily EXE aeb70dfc不变。独审PASS_CURRENT_LOCK_VERSION_ALIGNMENT_ONLY；原依赖字节无before清单、短时用户影响UNKNOWN。当前无需重复重装，禁止以此称新环境完整验收。
-- Evidence: [docs/changes/2026-10-15-dependency-repair/intent.md](../../docs/changes/2026-10-15-dependency-repair/intent.md), [docs/changes/2026-10-15-dependency-repair/spec.md](../../docs/changes/2026-10-15-dependency-repair/spec.md), [docs/changes/2026-10-15-dependency-repair/plan.md](../../docs/changes/2026-10-15-dependency-repair/plan.md), [docs/changes/2026-10-15-dependency-repair/verification.md](../../docs/changes/2026-10-15-dependency-repair/verification.md), [docs/changes/2026-10-15-dependency-repair/review.md](../../docs/changes/2026-10-15-dependency-repair/review.md)
-- Next action: 保存独立事故记录，严格前置exit0才执行下游；在物理本地依赖上补当前隔离Native/受影响门禁，并对纯docs精确差量复审后确定恢复闭环范围。
+- Verification: PARTIAL — FACT(2026-10-15 统一入口)：cefd55dd 的 7 用例版本已被分支 HEAD 的强版本取代（tests/unit/desktopDependencySafety.test.ts 展开为 13 个测试，覆盖 linked 依赖 root/package/scope、越界依赖路径、lockfile 异常、真实桌面 CLI、默认 builder 修复路径），故不采纳旧版以免回退。以 HEAD 强版本实跑 13 PASS / 0 FAIL / exit=0；转绿来自 314ac750 基础回调防护、11e991bf 拒绝 linked 依赖祖先、5705fc73 保留已缓存启动，非测试被改弱。仍不关闭：自定义构建准备回调的入口防护缺口未修；原始依赖字节与事故期间影响 UNKNOWN；37 独立目录中 26 匹配 / 10 不符 / 1 package-lock 与 lock UU 不可比、41 根缺失，不得归因本事故。保持 PARTIAL。
+- Evidence: [docs/changes/2026-10-15-dependency-repair/intent.md](../../docs/changes/2026-10-15-dependency-repair/intent.md), [docs/changes/2026-10-15-dependency-repair/spec.md](../../docs/changes/2026-10-15-dependency-repair/spec.md), [docs/changes/2026-10-15-dependency-repair/plan.md](../../docs/changes/2026-10-15-dependency-repair/plan.md), [docs/changes/2026-10-15-dependency-repair/verification.md](../../docs/changes/2026-10-15-dependency-repair/verification.md), [docs/changes/2026-10-15-dependency-repair/review.md](../../docs/changes/2026-10-15-dependency-repair/review.md), [docs/changes/2026-10-15-kk-unified/verification.md](../../docs/changes/2026-10-15-kk-unified/verification.md), [docs/changes/2026-10-15-kk-unified/review.md](../../docs/changes/2026-10-15-kk-unified/review.md)
+- Next action: 统一入口承接并保持 PARTIAL：补自定义构建准备回调入口防护；继续只用隔离夹具，禁止在共享 node_modules junction 上裸跑 npm ci/安装清理；原字节与影响面 UNKNOWN 需独立取证后才可议关闭。
 - Last verified: 2026-10-15
 - Updated: 2026-10-15
