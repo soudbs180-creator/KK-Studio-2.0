@@ -9,6 +9,10 @@ const control = createInterface({ input: process.stdin, crlfDelay: Infinity });
 control.once("close", () => process.exit(0));
 const [command] = await once(control, "line");
 if (command !== "start" || !process.env.KK_AGENT_DATA_DIR) process.exit(1);
+// Stdout is the native owner's bounded private handshake, not a log stream.
+// Imported Agent/provider diagnostics go to stderr, which the owner discards.
+const writeReadiness = process.stdout.write.bind(process.stdout);
+process.stdout.write = process.stderr.write.bind(process.stderr);
 const token = randomBytes(32).toString("hex");
 process.env.CANVAS_AGENT_TOKEN = token;
 process.env.KK_AGENT_CONFIG_DIR = path.resolve(process.env.KK_AGENT_DATA_DIR);
@@ -37,7 +41,7 @@ try {
       throw Error("Conversation preparation timed out");
     await new Promise((resolve) => setTimeout(resolve, 100));
   }
-  process.stdout.write(
+  writeReadiness(
     `KK_AGENT_READY ${JSON.stringify({ endpoint, token, pid: process.pid })}\n`,
   );
 } catch {

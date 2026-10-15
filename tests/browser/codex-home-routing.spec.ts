@@ -86,6 +86,29 @@ async function snapshot(page: Page): Promise<CreationSnapshot> {
   );
 }
 
+async function attachHomeRuntime(page: Page) {
+  await test.info().attach("home-recovery-runtime", {
+    body: JSON.stringify(
+      await page.evaluate(() => {
+        const app = document.querySelector<HTMLElement>(".app");
+        const composer = document.querySelector('[aria-label="对话内容"]');
+        return {
+          url: location.href,
+          route: location.pathname,
+          mode: app?.dataset.runtimeMode,
+          entry: app?.dataset.runtimeEntry,
+          scripts: [...document.scripts]
+            .map((script) => script.src)
+            .filter(Boolean),
+          viewport: { width: innerWidth, height: innerHeight },
+          composer: composer?.getBoundingClientRect().toJSON(),
+        };
+      }),
+    ),
+    contentType: "application/json",
+  });
+}
+
 test("首页默认账号生图不被旧 image-test 接管，保存后只发一个 turn 并归档重载", async ({
   page,
 }) => {
@@ -274,21 +297,35 @@ test("聊天选择 Codex 图片后保留意图，普通输入会调用内置生�
     );
     expect(agent.turns[0].messageText).toBe("一只橙色小猫");
     expect(agent.turns[0].model).toBeUndefined();
+    expect(JSON.stringify(agent.turns[0].messageMetadata ?? {})).not.toContain(
+      "KK 生成来源",
+    );
   } finally {
     await agent.close();
   }
 });
 
-test("首页连接失败保留项目和首页草稿附件，手动重连只发送一次", async ({
+test("首页连接失败后编辑重试清除旧待发草稿并保留下一条输入", async ({
   page,
 }) => {
   const agent = await startAgentServer("idle");
+  let releaseTurn!: () => void;
+  const turnGate = new Promise<void>((resolve) => {
+    releaseTurn = resolve;
+  });
   try {
     await seed(page, agent.url, 4);
     await page.route(agent.url + "/config", (route) =>
       route.fulfill({ status: 503, json: { error: "fixture Agent 暂不可用" } }),
     );
     await page.goto("/");
+    await expect(page.getByLabel("创作提示词")).toBeVisible();
+    await expect(
+      page
+        .locator(".creation-storage-notice")
+        .filter({ hasText: "正在读取本地项目" }),
+    ).toHaveCount(0);
+    expect((await snapshot(page)).homeDraft.outputCount).toBe(4);
     await page.getByLabel("创作提示词").fill("失败后仍保留的账号任务");
     await page.locator('.start-composer input[type="file"]').setInputFiles({
       name: "kept.png",
@@ -311,18 +348,189 @@ test("首页连接失败保留项目和首页草稿附件，手动重连只发�
       "失败后仍保留的账号任务",
     );
     expect(agent.turns).toHaveLength(0);
+    const failed = await snapshot(page);
+    await page.getByLabel("对话内容").fill("编辑后只发送本轮新提示词");
+    await page
+      .getByRole("button", { name: "移除素材 kept.png", exact: true })
+      .click();
+    await page.locator('.chat-composer input[type="file"]').setInputFiles({
+      name: "retry.png",
+      mimeType: "image/png",
+      buffer: Buffer.from(pixel, "base64"),
+    });
     await page.unroute(agent.url + "/config");
     await page.getByRole("button", { name: "连接 Codex", exact: true }).click();
     await expect(page.locator(".chat-agent-banner")).toContainText("已连接");
+    let enteredTurn = false;
+    await page.route(agent.url + "/agent/codex/turn", async (route) => {
+      enteredTurn = true;
+      await turnGate;
+      await route.continue();
+    });
     await page.getByRole("button", { name: "发送消息", exact: true }).click();
+    await expect.poll(() => enteredTurn).toBe(true);
+    await page.getByLabel("对话内容").fill("正在发送时输入的下一条保留");
+    releaseTurn();
     await expect.poll(() => agent.turns.length).toBe(1);
-    expect(agent.turns[0].attachments).toMatchObject([{ name: "kept.png" }]);
+    expect(agent.turns[0].attachments).toMatchObject([{ name: "retry.png" }]);
+    expect(agent.turns[0].attachments).toHaveLength(1);
+    expect(agent.turns[0].messageText).toBe(
+      "编辑后只发送本轮新提示词\n\n参考图片：retry.png",
+    );
     expect(agent.turns[0].prompt).toContain(
       "imagegen/image_generation 生成 4 张图片",
     );
     await expect
       .poll(async () => (await snapshot(page)).projects[0].composerDraft.prompt)
       .toBe("");
+    const saved = await snapshot(page);
+    expect(saved.projects[0].composerDraft.attachments).toEqual([]);
+    expect(saved.projects[0].composerDraft.pendingAgent).toBeUndefined();
+    expect(saved.homeDraft).toEqual(failed.homeDraft);
+    expect(saved.projects[0].attachments).toEqual(
+      failed.projects[0].attachments,
+    );
+    await expect(page.getByLabel("对话内容")).toHaveValue(
+      "正在发送时输入的下一条保留",
+    );
+    await page.screenshot({
+      path: test.info().outputPath("home-retry-next-input.png"),
+    });
+    await attachHomeRuntime(page);
+    await page.reload();
+    await expandSidebar(page);
+    await page.getByRole("button", { name: "项目库", exact: true }).click();
+    await page.locator(".project-library-card").first().click();
+    await expect(page.getByLabel("对话内容")).toHaveValue("");
+    expect(agent.turns).toHaveLength(1);
+  } finally {
+    releaseTurn();
+    await agent.close();
+  }
+});
+
+test("首页失败后手动重试按实际turn来源归档连线且重载不重复", async ({
+  page,
+}) => {
+  const agent = await startAgentServer("idle");
+  const history: unknown[] = [];
+  let originals = 0;
+  try {
+    await seed(page, agent.url);
+    await page.route(agent.url + "/config", (route) =>
+      route.fulfill({ status: 503, json: { error: "retry source offline" } }),
+    );
+    await page.route(agent.url + "/agent/codex/threads/*", (route) =>
+      route.request().method() === "GET"
+        ? route.fulfill({
+            json: {
+              ok: true,
+              conversation: agent.conversation(),
+              messages: history,
+            },
+          })
+        : route.continue(),
+    );
+    await page.route(agent.url + "/agent/codex/generated-image/**", (route) => {
+      originals++;
+      return route.fulfill({
+        contentType: "image/png",
+        body: Buffer.from(pixel, "base64"),
+      });
+    });
+    await page.goto("/");
+    await page.getByLabel("创作提示词").fill("手动恢复的来源图片");
+    await page
+      .getByRole("button", { name: "开始创建项目", exact: true })
+      .click();
+    await expect(
+      page.getByRole("alert").filter({ hasText: "retry source offline" }),
+    ).toBeVisible();
+    const project = (await snapshot(page)).projects[0];
+    const rootId = project.items[0].id;
+    await page.unroute(agent.url + "/config");
+    await page.getByRole("button", { name: "连接 Codex", exact: true }).click();
+    await expect(page.locator(".chat-agent-banner")).toContainText("已连接");
+    await page.getByRole("button", { name: "发送消息", exact: true }).click();
+    await expect.poll(() => agent.turns.length).toBe(1);
+    const turn = agent.turns[0];
+    expect(turn.messageMetadata).toMatchObject({
+      canvasReferences: [
+        {
+          label: "KK 生成来源",
+          nodeId: rootId,
+          kind: "image",
+          text: project.id,
+        },
+      ],
+    });
+    const threadId = agent.conversation().threadId,
+      turnId = "retry-source-turn";
+    history.push({
+      id: String(turn.messageId),
+      role: "user",
+      threadId,
+      turnId,
+      ...(turn.messageMetadata as object),
+    });
+    history.push({
+      id: "retry-image",
+      itemId: "retry-image",
+      role: "tool",
+      threadId,
+      turnId,
+      text: "图片生成完成",
+      detail: {
+        kind: "image",
+        status: "completed",
+        savedPath: "retry-source.png",
+      },
+    });
+    agent.emit("conversation_changed", {
+      ...agent.conversation(),
+      status: "ready",
+    });
+    agent.emit("codex_state", { busy: false });
+    agent.emit("agent_event", { type: "turn.completed", status: "completed" });
+    await expect(
+      page.locator('.demo-result-node[data-source="provider"]'),
+    ).toHaveCount(1);
+    await expect
+      .poll(
+        async () =>
+          (await snapshot(page)).projects[0].canvas.edges.filter(
+            (edge) => edge.source === rootId && edge.kind === "result",
+          ).length,
+      )
+      .toBe(1);
+    const saved = (await snapshot(page)).projects[0];
+    const result = saved.items.find((item) => item.assetId)!;
+    expect(result.assetId).toBeTruthy();
+    expect(saved.canvas.edges.filter((edge) => edge.kind === "result")).toEqual(
+      [expect.objectContaining({ source: rootId, target: result.id })],
+    );
+    expect(originals).toBe(1);
+    await page.screenshot({
+      path: test.info().outputPath("home-retry-source-result.png"),
+    });
+    await attachHomeRuntime(page);
+    await page.reload();
+    await expandSidebar(page);
+    await page.getByRole("button", { name: "项目库", exact: true }).click();
+    await page.locator(".project-library-card").first().click();
+    await page.getByRole("button", { name: "连接 Codex", exact: true }).click();
+    await expect(page.locator(".chat-agent-banner")).toContainText("已连接");
+    await expect(
+      page.locator('.demo-result-node[data-source="provider"]'),
+    ).toHaveCount(1);
+    const restored = (await snapshot(page)).projects[0];
+    expect(restored.items.filter((item) => item.assetId)).toHaveLength(1);
+    expect(restored.items.find((item) => item.assetId)?.assetId).toBe(
+      result.assetId,
+    );
+    expect(restored.canvas.edges).toEqual(saved.canvas.edges);
+    expect(originals).toBe(1);
+    expect(agent.turns).toHaveLength(1);
   } finally {
     await agent.close();
   }

@@ -41,3 +41,7 @@
 - 浏览器尚未启动；补充完整Node/静态与冻结提交独审待续，真实PNG/旧文件字节保留随GDI保护接入后验证。
 
 - 审查修正后完整npm test exit0：1347 total/1333 PASS/14既有平台skip/0FAIL（test-evidence-review-unit.log）；typecheck/lint exit0。首format因两条链式截图格式报告失败，二次格式化后完整format:check exit0，首错与复验分文件保留。补充仅路径与worker配置，未启动浏览器或修改业务断言。
+
+## PR62合后main独立验证
+
+2026-10-15 11:54:34 UTC独立只读回读actual main492abad48b0695f6117265fba6d29e8ea2a4b9bc；本轮quality38726260549全部success（repo verify/Rust fmt+test/client check+build/WebView2/隔离Native TaskHost/证据上传），双平台guards38726260498与main-health38730589177成功，7个check-runs全success，必需verify/delivery满足。产物11969904183/39602109B未过期，未下载检验内文。非必需auto-merge38726259041 failure/jobs=[]原因UNKNOWN单列。 f9c与main492完整tree均414e7947d13886ee4ee9c52b0cdb95fd3802a583，9aa→f9c仅11docs；本机/主线证据不代填daily或产品真实Provider。

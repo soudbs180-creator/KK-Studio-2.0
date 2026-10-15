@@ -66,6 +66,11 @@ import {
 import type { PluginAi } from "./features/plugins/pluginTypes.ts";
 import { createAgentHost } from "./features/agent/agentHost.ts";
 import { desktopAgentLifecycle } from "./features/agent/desktopAgentLifecycle.ts";
+import {
+  clearSentPendingDraft,
+  configureAgentProxy,
+  sendProjectAgentMessage,
+} from "./features/agent/homeAgentRecovery";
 import { prepareAgentAttachments } from "./features/agent/agentAttachments.ts";
 import { codexGenerationPrompt } from "./features/agent/codexGeneration.ts";
 import { assertCanvasDeliveries } from "./features/agent/agentCanvas.ts";
@@ -755,10 +760,12 @@ export default function App() {
   ]);
   useEffect(() => {
     if (
-      import.meta.env.VITE_KK_AGENT_PROXY === "1" &&
-      creation.activeProjectId
+      creation.activeProjectId &&
+      configureAgentProxy(
+        agentConnection,
+        import.meta.env.VITE_KK_AGENT_PROXY === "1",
+      )
     ) {
-      agentConnection.setCredentials("/kk-agent", "");
       void agentConnection.connect();
     }
   }, [creation.activeProjectId]);
@@ -2535,6 +2542,10 @@ export default function App() {
         creationRef.current.activeProjectId === project.id &&
         activePageRef.current === "workspace";
       if (!ownsProject()) return "项目已切换，当前未发送；原项目草稿仍保留。";
+      configureAgentProxy(
+        agentConnection,
+        import.meta.env.VITE_KK_AGENT_PROXY === "1",
+      );
       await desktopAgentLifecycle.connect();
       if (!ownsProject()) return "项目已切换，当前未发送；原项目草稿仍保留。";
       const result = await agentConnection.sendMessage(input.prompt.trim(), {
@@ -3267,36 +3278,22 @@ export default function App() {
                             (item) => item.kind === "image" && item.assetId,
                           ),
                           onSend: async (message, attachments, selection) => {
-                            // 不传 model：Codex 使用其账号默认模型（如 gpt-6-astra）。
-                            // 项目模型是本地生成链路的模型，与 Codex 账号支持的模型集不同，
-                            // 传过去会导致 ChatGPT 账号报 "model is not supported"。
-                            const result = await agentConnection.sendMessage(
+                            const projectId = activeProject.id;
+                            const currentProject =
+                              creationRef.current.projects.find(
+                                (project) => project.id === projectId,
+                              );
+                            const draftAtSend = currentProject?.composerDraft;
+                            const result = await sendProjectAgentMessage(
+                              agentConnection,
+                              currentProject,
                               message,
-                              {
-                                attachments,
-                                selection,
-                                outputCount:
-                                  selection?.kind === "image"
-                                    ? activeProject.composerDraft.outputCount
-                                    : undefined,
-                              },
+                              attachments,
+                              selection,
                             );
                             if (result.ok) {
-                              const projectId = activeProject.id;
                               updateProject(projectId, (project) =>
-                                project.composerDraft.pendingAgent &&
-                                project.composerDraft.prompt.trim() ===
-                                  message.trim()
-                                  ? {
-                                      ...project,
-                                      composerDraft: {
-                                        ...project.composerDraft,
-                                        prompt: "",
-                                        attachments: [],
-                                        pendingAgent: undefined,
-                                      },
-                                    }
-                                  : project,
+                                clearSentPendingDraft(project, draftAtSend),
                               );
                             }
                             return result;

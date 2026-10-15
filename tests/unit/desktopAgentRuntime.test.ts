@@ -103,11 +103,111 @@ test("desktop Agent waits for its owner, authenticates readiness and clears on o
       503,
       "new requests cannot race acknowledged shutdown",
     );
+    assert.equal(output.trim().split(/\r?\n/).length, 1);
+    assert.equal(diagnostic.includes(ready.token), false);
     child.stdin.end();
     await exited;
     await assert.rejects(
       fetch(ready.endpoint + "/health", { signal: AbortSignal.timeout(500) }),
     );
+  } finally {
+    child.kill();
+    await exited;
+    await fs.rm(root, { recursive: true, force: true });
+  }
+});
+
+test("desktop Agent reserves stdout for readiness while a noisy conversation restores", async () => {
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), "kk-agent-restore-"));
+  const entry = path.join(root, "desktop-entry.mjs");
+  await fs.copyFile("scripts/agent/desktop-entry.mjs", entry);
+  await fs.mkdir(path.join(root, "agent/dist/server"), { recursive: true });
+  await fs.writeFile(path.join(root, "package.json"), '{"type":"module"}');
+  await fs.writeFile(
+    path.join(root, "agent/dist/server/http.js"),
+    `import http from "node:http";
+     console.log("fixture import diagnostic");
+     process.stdout.write("L".repeat(9000) + "\\n");
+     console.log("KK_AGENT_READY fixture-diagnostic");
+     export function startHttpServer() {
+       console.log("fixture start diagnostic");
+       let polls = 0;
+       return http.createServer((_request, response) => {
+         polls++;
+         if (polls <= 3) {
+           for (let line = 0; line < 16; line++) {
+             console.log("fixture restore diagnostic");
+             process.stdout.write("fixture direct diagnostic\\n");
+           }
+         } else {
+           process.stdout.write("fixture ready diagnostic\\n");
+         }
+         response.setHeader("Content-Type", "application/json");
+         response.end(JSON.stringify({
+           ok: true,
+           conversation: { status: polls <= 3 ? "preparing" : "ready" },
+         }));
+       }).listen(0, "127.0.0.1");
+     }`,
+  );
+  const child = spawn(process.execPath, [entry], {
+    cwd: root,
+    env: { ...process.env, KK_AGENT_DATA_DIR: root },
+    windowsHide: true,
+    stdio: ["pipe", "pipe", "pipe"],
+  });
+  const exited = once(child, "close");
+  let output = "";
+  let diagnostics = "";
+  child.stdout.on("data", (data) => (output += String(data)));
+  child.stderr.on("data", (data) => (diagnostics += String(data)));
+  try {
+    child.stdin.write("start\n");
+    await Promise.race([
+      new Promise<void>((resolve, reject) => {
+        const timeout = setTimeout(
+          () => reject(new Error("No readiness after controlled restoration")),
+          5000,
+        );
+        const read = () => {
+          if (!output.includes("KK_AGENT_READY ")) return;
+          clearTimeout(timeout);
+          child.stdout.off("data", read);
+          resolve();
+        };
+        child.stdout.on("data", read);
+      }),
+      exited.then(() => {
+        throw new Error("Fixture exited before readiness");
+      }),
+    ]);
+    const lines = output.trim().split(/\r?\n/);
+    assert.equal(
+      lines.length,
+      1,
+      "diagnostics must not consume native readiness lines",
+    );
+    assert.equal(lines[0].startsWith("KK_AGENT_READY "), true);
+    const ready = JSON.parse(lines[0].slice("KK_AGENT_READY ".length));
+    assert.equal(ready.pid, child.pid);
+    assert.equal(/^[a-f0-9]{64}$/.test(ready.token), true);
+    const health = await (await fetch(ready.endpoint + "/health")).json();
+    assert.equal(health.conversation.status, "ready");
+    child.stdin.end();
+    assert.equal((await exited)[0], 0);
+    assert.equal(output.trim().split(/\r?\n/).length, 1);
+    assert.equal(diagnostics.includes("L".repeat(9000)), true);
+    assert.equal(
+      diagnostics.includes("KK_AGENT_READY fixture-diagnostic"),
+      true,
+    );
+    assert.equal(diagnostics.includes("fixture ready diagnostic"), true);
+    assert.equal(diagnostics.includes(ready.token), false);
+    assert.equal(
+      diagnostics.split("fixture restore diagnostic").length - 1,
+      48,
+    );
+    assert.equal(diagnostics.split("fixture direct diagnostic").length - 1, 48);
   } finally {
     child.kill();
     await exited;

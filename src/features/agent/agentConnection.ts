@@ -213,8 +213,11 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
   let epoch = 0;
   let projectId = "";
   let initializing = false;
+  let connectionFlight: { promise: Promise<void>; ready: boolean } | null =
+    null;
   let rejectHello: ((error: Error) => void) | null = null;
   const handledTools = new Map<string, Promise<void>>();
+  const imageImports = new Map<string, Promise<void>>();
   let toolQueue = Promise.resolve();
   let toolReceiptError: string | null = null;
   const approvals = new Map<string, AgentApprovalRequest>();
@@ -264,6 +267,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
     handledTools.clear();
   }
   function disconnect() {
+    connectionFlight = null;
     stopTransport();
     patch({
       status: "disconnected",
@@ -281,6 +285,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
     });
   }
   function fail(error: unknown) {
+    connectionFlight = null;
     stopTransport();
     patch({
       status: "error",
@@ -429,21 +434,36 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
         activeBridge.getSnapshot()?.nodes.some((node) => node.id === id)
       )
         continue;
-      const blob = await activeApi.generatedImage(
-        threadId,
-        item.itemId ?? item.id,
-      );
-      if (version !== epoch || signal.aborted) return;
-      await activeBridge.importGeneratedImage({
-        id,
-        blob,
-        projectId: boundProject,
-        signal,
-        sourceNodeId: generatedImageSource(history, item, boundProject),
-        ...(reportedImageModel(item)
-          ? { effectiveModel: reportedImageModel(item) }
-          : {}),
-      });
+      const importKey = `${version}:${id}`;
+      const pending = imageImports.get(importKey);
+      if (pending) {
+        await pending;
+        continue;
+      }
+      const importing = (async () => {
+        const blob = await activeApi.generatedImage(
+          threadId,
+          item.itemId ?? item.id,
+        );
+        if (version !== epoch || signal.aborted) return;
+        await activeBridge.importGeneratedImage!({
+          id,
+          blob,
+          projectId: boundProject,
+          signal,
+          sourceNodeId: generatedImageSource(history, item, boundProject),
+          ...(reportedImageModel(item)
+            ? { effectiveModel: reportedImageModel(item) }
+            : {}),
+        });
+      })();
+      imageImports.set(importKey, importing);
+      try {
+        await importing;
+      } finally {
+        if (imageImports.get(importKey) === importing)
+          imageImports.delete(importKey);
+      }
     }
   }
   async function finishTurn(
@@ -537,8 +557,38 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
           .catch(() => undefined);
     }
   }
-  async function connect(newConversation = false): Promise<void> {
-    if (state.status === "connecting") return;
+  function connectShared(newConversation = false): Promise<void> {
+    if (connectionFlight && (!newConversation || !connectionFlight.ready))
+      return connectionFlight.promise;
+    let resolve!: () => void;
+    let reject!: (error: unknown) => void;
+    const flight = {
+      promise: new Promise<void>((done, failed) => {
+        resolve = done;
+        reject = failed;
+      }),
+      ready: false,
+    };
+    // Publish before connect notifies synchronous subscribers.
+    connectionFlight = flight;
+    void connect(newConversation, () => {
+      flight.ready = true;
+    }).then(
+      () => {
+        if (connectionFlight === flight) connectionFlight = null;
+        resolve();
+      },
+      (error) => {
+        if (connectionFlight === flight) connectionFlight = null;
+        reject(error);
+      },
+    );
+    return flight.promise;
+  }
+  async function connect(
+    newConversation: boolean,
+    ready: () => void,
+  ): Promise<void> {
     stopTransport();
     const version = epoch;
     projectId = currentProject();
@@ -769,6 +819,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
       if (saved && saved === remote?.threadId)
         for (const approval of hello.pendingApprovals)
           approvals.set(approval.requestId, approval);
+      ready();
       patch({
         status: "connected",
         activity: "Codex 已就绪",
@@ -803,6 +854,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
         handle(event);
       }
       await refreshUsage();
+      if (version !== epoch) return;
       await syncGeneratedImages(thread.messages ?? []);
     } catch (error) {
       if (version === epoch) fail(error);
@@ -1081,7 +1133,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
         listeners.delete(listener);
       };
     },
-    connect,
+    connect: connectShared,
     getProjectId: currentProject,
     refreshUsage,
     disconnect,
@@ -1115,9 +1167,13 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
       }
     },
     setCredentials(endpoint: string, token: string) {
-      disconnect();
-      patch({ endpoint: endpoint.trim(), token: token.trim() });
-      storage.setItem("canvas-agent-url", endpoint.trim());
+      const nextEndpoint = endpoint.trim();
+      const nextToken = token.trim();
+      if (state.endpoint !== nextEndpoint || state.token !== nextToken) {
+        disconnect();
+        patch({ endpoint: nextEndpoint, token: nextToken });
+      }
+      storage.setItem("canvas-agent-url", nextEndpoint);
       storage.removeItem("canvas-agent-token");
     },
     clientId,

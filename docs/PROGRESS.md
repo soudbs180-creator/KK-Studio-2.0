@@ -1,5 +1,21 @@
 # 当前进度
 
+## 2026-10-15 HOME当前本机验收通过（IN_PROGRESS）
+
+冻结a85完整verify：Node1343/14skip、Agent199/2skip、Edge785首试、development4步，独立6198hash匹配。官方Windows候选2.1.34 EXEf8cbfd5d/source a85，原Native38/3次launch与Rust167通过，实际正常关闭重开恢复、暂停/重连/服务重启及未知归属保护成立。原f10两FAIL与旧产物保留，HOME-NATIVE-01结果补审/正式PR/Hosted/main继续；main/daily仍2.1.33，不代填付费Provider或用户验收。见[验证](changes/2026-10-15-home-recovery-integration/verification.md)。
+
+## 2026-10-15 HOME原生冷重开阻断（IN_PROGRESS）
+
+f10实际Windows隔离客户端首次启动/连接/保存/reload通过，正常关闭后reopen两次FAIL；错误唯一对应READY前32行预算耗尽。定位到Codex诊断经Winston占用私有stdout，按入口保存握手writer、普通输出转stderr最小修复，保留全部Rust守卫。真实stdio98行RED→3项GREEN；新冻结全量/重建/原Native断言与精确独审待续。原失败、旧候选、daily/用户资料均保留。见[验证](changes/2026-10-15-home-recovery-integration/verification.md)。
+
+## 2026-10-15 HOME完整本机验证及安全main承接（IN_PROGRESS）
+
+PR62已按最终独审/双轮Hosted全部通过正常合main492，fetch核tree与f9c相同。HOME源码fc76完整verify exit0：Node1342/14skip、Agent199/2skip、Edge785首试、development5步；906旧文件与备份1812hash保持，1333产物另存，独审SOURCE/LOCAL_VERIFY PASS。仅挑独有fc76为c180且tree相同。Native准备中root编排错误清空共享生成依赖，已按主仓原锁恢复244包，三hash与daily EXE保持；原字节/短时影响UNKNOWN，另挂事故任务并独审。当前候选2.1.34尚未更新daily，继续代理/隔离Tauri与新环境验收。见[HOME验证](changes/2026-10-15-home-recovery-integration/verification.md)和[事故](changes/2026-10-15-dependency-repair/verification.md)。
+
+## 2026-10-15 HOME恢复三P2（IN_PROGRESS / NOT_VERIFIED）
+
+root在PR62已推送冻结head上串行临时堆叠HOME任务；三P2已实际RED，编辑重试/所有权清理/来源恢复最小修复后连接46项和HOME8项首试通过。补实际RED关闭重复原图读取及旧连接usage尾部跨线程风险；首轮环境、夹具和数量失败保留。受控读取观察证明默认数量覆盖已有设置，另挂TASK-HOME-LOAD-DRAFT-20261015 TODO。双端候选2.1.34，尚未完整冻结verify/新Tauri/精确独审或main/客户端验收。见[验证](changes/2026-10-15-home-recovery-integration/verification.md)。
+
 ## 2026-10-15 测试安全本机验证（REVIEW / PARTIAL）
 
 TASK-EXPLORER-GDI-20261015与TASK-VERIFY-EVIDENCE-20261015合为一个测试安全PR。冻结源码9aa12e92完整verify exit0：Node1334/14既有skip、Agent199/2既有skip、Edge784首试0flaky、development5步。Windows真实argv保留15+1、真实PNG成功/主动失败、100页7次0TabProxy均通过；454旧文件及备份908哈希一致，879本轮产物另存。47文件独立审查PASS_LOCAL_TEST_SAFETY_SCOPE，SHOT-01/DOC-01关闭。首轮环境遗漏11FAIL及同SHA复测保留。下一步文档冻结、正式PR/Hosted/main及合后验证；daily和产品2.1.33未更新，真实Provider/用户验收另行完成。见[验证](changes/2026-10-15-explorer-gdi-integration/verification.md)。
@@ -1145,3 +1161,7 @@ Codex 主 Agent 移至模型接入；侧栏扩展统一 Skill、MCP、协作伙�
 ## 2026-10-15 UI细节收敛（本地完成）
 
 TASK-UI-DETAILS-20261015从最新18e143f修复，Desktop/Web2.1.26产品ab878ffd：紧凑设置、共享composer控件、末尾动作组、空/非空上传与扩展内容轴，删除三项旧组件及入口。完整verify退出0：Node1278/14skip、Agent199/2skip、browser635首试、UI239/0、development PASS；精确源码独立审查、官方重建及38项Native与资源字节一致性通过。原数据身份和primary dirty/index保留，owned测试实例正常关闭。Mobile2.1.1规划、真实Provider/Hosted/签名及用户视觉接受继续各自开放；[当前验证](changes/2026-10-15-ui-details/verification.md)。
+
+## 2026-10-15 PR62合后必需门禁闭环
+
+2026-10-15 11:54:34 UTC独立只读回读actual main492abad48b0695f6117265fba6d29e8ea2a4b9bc；本轮quality38726260549全部success（repo verify/Rust fmt+test/client check+build/WebView2/隔离Native TaskHost/证据上传），双平台guards38726260498与main-health38730589177成功，7个check-runs全success，必需verify/delivery满足。产物11969904183/39602109B未过期，未下载检验内文。非必需auto-merge38726259041 failure/jobs=[]原因UNKNOWN单列。 GDI三项验收独审满足，测试任务DONE；输出证据保护另缺取消/reporter失败两类实测，继续PARTIAL，不把结构性保护冒称运行证据。HOME源码a85及Windows38项通过，正式HOME PR继续。
