@@ -1,5 +1,6 @@
 import { modelChannels, type PickerChannel } from "../domain/modelChannels";
 import type { ModelKind } from "../domain/modelSelection";
+import { useId } from "react";
 
 const filters = [
   ["all", "全部"],
@@ -28,6 +29,8 @@ export default function ModelPickerFilters({
   onFilter: (filter: ModelKind | "all") => void;
   onQuery: (query: string) => void;
 }) {
+  const accountReasonId = useId();
+  const accountReason = "当前图片编辑仅支持 API 执行，登录账号暂不支持此操作。";
   return (
     <>
       <div className="kk-model-channels" role="tablist" aria-label="模型渠道">
@@ -38,6 +41,10 @@ export default function ModelPickerFilters({
             role="tab"
             aria-selected={channel === item.id}
             disabled={apiOnly && item.id === "account"}
+            title={apiOnly && item.id === "account" ? accountReason : undefined}
+            aria-describedby={
+              apiOnly && item.id === "account" ? accountReasonId : undefined
+            }
             tabIndex={channel === item.id ? 0 : -1}
             onClick={() => onChannel(item.id)}
             onKeyDown={(event) => {
@@ -76,6 +83,11 @@ export default function ModelPickerFilters({
           </button>
         ))}
       </div>
+      {apiOnly && (
+        <p id={accountReasonId} className="kk-model-channel-help">
+          {accountReason}
+        </p>
+      )}
       <div className="kk-model-menu-top">
         <input
           type="search"

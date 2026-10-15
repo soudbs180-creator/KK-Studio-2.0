@@ -158,7 +158,7 @@ export default function ModelPickerMenu({
           ),
         ]
       : [];
-  const visible: Entry[] = (
+  const entries: Entry[] =
     channel === "account"
       ? [...defaults, ...codexImage, ...codex]
       : apiMenuEntries(
@@ -170,8 +170,8 @@ export default function ModelPickerMenu({
           current,
           kind,
           "",
-        )
-  ).filter(
+        );
+  const visible = entries.filter(
     (item) =>
       filter === "all" ||
       item.selection?.kind === filter ||
@@ -188,7 +188,7 @@ export default function ModelPickerMenu({
           ),
         ),
       ];
-  const pins = resolvePickerPins(visible, storedPins);
+  const pins = resolvePickerPins(entries, storedPins);
   const ordered = searchModels(
     visible.map((item) => ({
       ...item,

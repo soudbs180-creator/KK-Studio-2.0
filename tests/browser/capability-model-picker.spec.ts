@@ -30,6 +30,106 @@ const providers = [
   verificationStatus: "unverified",
 }));
 
+test("类型筛选后修改置顶保留隐藏的旧family成员及其他渠道精确ID", async ({
+  page,
+}) => {
+  await seed(page);
+  const pin = (model: string, connectionId = providers[0].id) =>
+    JSON.stringify(["api", connectionId, model]);
+  const hiddenIds = [
+    pin("exact-hidden-official", "official-unavailable"),
+    pin("exact-hidden-local", "local-unavailable"),
+    JSON.stringify(["codex", "", "exact-account-model"]),
+    pin("exact-removed", "removed"),
+  ];
+  await page.addInitScript(
+    ({ connection, registryKey, initialPins }) => {
+      const connections = JSON.parse(localStorage.getItem(registryKey) ?? "[]");
+      localStorage.setItem(
+        registryKey,
+        JSON.stringify(
+          connections.map((item: { id: string }) =>
+            item.id === connection.id
+              ? {
+                  ...connection,
+                  capabilities: {
+                    modalities: ["text", "image"],
+                    operations: ["generate"],
+                    async: false,
+                  },
+                }
+              : item,
+          ),
+        ),
+      );
+      localStorage.setItem(
+        "kk-studio:model-catalog:v1",
+        JSON.stringify([
+          {
+            ...connection,
+            fetchedAt: 1,
+            models: [
+              { id: "shared-chat", kind: "text", family: "Shared" },
+              { id: "shared-image", kind: "image", family: "Shared" },
+              { id: "other-image", kind: "image", family: "Other" },
+            ],
+          },
+        ]),
+      );
+      localStorage.setItem(
+        "kk:model-picker:conversation",
+        JSON.stringify({
+          page: "api",
+          all: true,
+          channel: "relay",
+          filter: "text",
+          pins: { all: initialPins },
+        }),
+      );
+    },
+    {
+      connection: providers[0],
+      registryKey: PROVIDER_CONNECTIONS_STORAGE_KEY,
+      initialPins: [pin("Shared"), ...hiddenIds],
+    },
+  );
+  await openSeededProject(page);
+  await page.getByRole("button", { name: "模型", exact: true }).click();
+  const menu = page.getByRole("menu", { name: "选择模型" });
+  const filter = menu.getByLabel("模型类型", { exact: true });
+  await expect(
+    menu.getByRole("button", { name: /^取消置顶 shared-chat/ }),
+  ).toHaveAttribute("aria-pressed", "true");
+  await filter.selectOption("image");
+  await menu.getByRole("button", { name: /^置顶 other-image/ }).click();
+  await filter.selectOption("text");
+  await expect(
+    menu.getByRole("button", { name: /^取消置顶 shared-chat/ }),
+  ).toHaveAttribute("aria-pressed", "true");
+  await filter.selectOption("image");
+  await expect(
+    menu.getByRole("button", { name: /^取消置顶 shared-image/ }),
+  ).toHaveAttribute("aria-pressed", "true");
+  await expect(
+    menu.getByRole("button", { name: /^取消置顶 other-image/ }),
+  ).toHaveAttribute("aria-pressed", "true");
+  await menu.getByRole("tab", { name: "官方 API", exact: true }).click();
+  await menu.getByRole("tab", { name: "中转 API", exact: true }).click();
+  const storedPins = await page.evaluate(
+    () =>
+      JSON.parse(localStorage.getItem("kk:model-picker:conversation") ?? "{}")
+        .pins.all,
+  );
+  expect(storedPins).toEqual(
+    expect.arrayContaining([
+      pin("shared-chat"),
+      pin("shared-image"),
+      pin("other-image"),
+      ...hiddenIds,
+    ]),
+  );
+});
+
 async function seed(page: Page, legacyPin = false) {
   await page.addInitScript(
     ({ providers, registryKey, profileKey, legacyPin }) => {
