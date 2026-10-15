@@ -142,3 +142,7 @@ Desktop 侧：`tests/desktop/*.mjs` 覆盖安装器、窗口、原生菜单、�
 - [ ] 交付包 `verification.md` 已记录真实数字与运行身份。
 
 参考：[Node.js Test Runner](https://nodejs.org/docs/latest/api/test.html)、[Playwright Configuration](https://playwright.dev/docs/test-configuration)、[Rust 测试](https://doc.rust-lang.org/book/ch11-01-writing-tests.html)。
+
+### 测试证据保护回归
+
+`node tests/desktop/test-evidence-preservation.mjs`仅在Windows使用已经接入GDI保护的真实Edge，先校验保护再打开自有本地合成页面；正常/主动失败均核对旧PNG/report原字节、新真实PNG签名与report同run。probe使用独立临时profile、无Vite/用户数据/外部Provider，预期失败只属于夹具，脚本总体必须exit0。

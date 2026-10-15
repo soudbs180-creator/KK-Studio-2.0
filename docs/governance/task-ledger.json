@@ -6111,7 +6111,7 @@
     "verificationResult": "PARTIAL",
     "updated": "2026-10-15",
     "lastVerified": "2026-10-15",
-    "nextAction": "治理PR61冻结head89fba，等待当前Hosted后按门禁正常合main；root当前唯一写入者已串行转入测试输出保护任务，旧分支/全部证据保留。",
+    "nextAction": "PR61已正常squash为main3a992597，当前fetch核实后，测试安全组合从实际main承接；其余历史接口/产品任务仍开放。",
     "requirementRefs": [
       "ledger:TASK-GOV-004",
       "ledger:TASK-PROV-007",
@@ -7326,7 +7326,7 @@
     "ownerRole": "repository-maintainer",
     "branch": "fix/TASK-VERIFY-EVIDENCE-20261015-output-isolation",
     "worktree": "D:/kk-studio/.worktrees/TASK-GOV-PHASE0",
-    "status": "IN_PROGRESS",
+    "status": "PARTIAL",
     "displayStatus": "进行中",
     "priority": "P1",
     "priorityRationale": "本轮Playwright默认outputDir清理造成旧开发态原件不可校验；后续测试必须先阻断重复损失。",
@@ -7344,7 +7344,8 @@
       "docs/changes/2026-10-15-unified-execution/incident.md",
       "tests/desktop/plugin-recovery.mjs",
       "docs/changes/2026-10-15-test-evidence-isolation",
-      "tests/browser"
+      "tests/browser",
+      "tests/desktop/test-evidence-preservation.mjs"
     ],
     "evidence": [
       "docs/changes/2026-10-15-unified-execution/incident.md",
@@ -7354,16 +7355,66 @@
       "docs/changes/2026-10-15-test-evidence-isolation/verification.md",
       "docs/changes/2026-10-15-test-evidence-isolation/review.md"
     ],
-    "verification": "真实合成Playwright成功/失败均在基线删除旧receipt而RED；独占run目录实现后定向7/7 GREEN（目录/文件/junction拒绝、旧三类原字节保留、新report/metadata、suite边界）。完整Node1346/1332PASS/14既有skip/0FAIL，lint/typecheck通过；sandbox junction EPERM经平台批准复验。无浏览器页面，版本不递增。原旧回执缺失不伪造恢复；完整verify、最终SHA独审与main集成待GDI安全接入后进行。 独审e5d5dc31提出EVID-01固定截图/P1、EVID-02worker分散/P2；已各先RED再本地GREEN，17文件48截图仅迁移路径，新增截图守卫。补充完整Node/静态与正式复验、实际安全PNG未完成前不代填通过。 补充完整Node1347/1333PASS/14既有skip/0FAIL、lint/typecheck通过；format首报2文件后修正复验通过。真实PNG需GDI安全接入后验证，精确最终独审待续。",
+    "verification": "真实合成Playwright成功/失败均在基线删除旧receipt而RED；独占run目录实现后定向7/7 GREEN（目录/文件/junction拒绝、旧三类原字节保留、新report/metadata、suite边界）。完整Node1346/1332PASS/14既有skip/0FAIL，lint/typecheck通过；sandbox junction EPERM经平台批准复验。无浏览器页面，版本不递增。原旧回执缺失不伪造恢复；完整verify、最终SHA独审与main集成待GDI安全接入后进行。 独审e5d5dc31提出EVID-01固定截图/P1、EVID-02worker分散/P2；已各先RED再本地GREEN，17文件48截图仅迁移路径，新增截图守卫。补充完整Node/静态与正式复验、实际安全PNG未完成前不代填通过。 补充完整Node1347/1333PASS/14既有skip/0FAIL、lint/typecheck通过；format首报2文件后修正复验通过。真实PNG需GDI安全接入后验证，精确最终独审待续。 精确6374独立源码复验限定PASS，无新阻断；当前a6e组合新增安全真实PNG探针正常/失败两种旧字节均保持，新PNG/report同run，未提交probe范围清楚。",
     "verificationResult": "PARTIAL",
     "updated": "2026-10-15",
     "lastVerified": "2026-10-15",
-    "nextAction": "提交输出保护冻结源码并做精确SHA独审；再接入GDI保护后运行完整verify。PR61通过当前Hosted后正常合main，再从实际main只承接独有安全测试提交并合规PR。",
+    "nextAction": "6374代码修正提交独立复验中；root串行接GDI后补真实PNG/旧字节和完整受保护verify，再精确独审/正常PR。",
     "requirementRefs": [
       "ledger:TASK-GOV-006",
       "docs/changes/2026-10-15-unified-execution/incident.md"
     ],
     "featureIds": [],
     "baseSha": "89fba48244d58f0a18df8766951b02a785c5810b"
+  },
+  {
+    "id": "TASK-EXPLORER-GDI-20261015",
+    "title": "阻断 headless Edge 测试遗留 Shell 标签代理",
+    "goal": "Windows 批量浏览器验证不再向 Explorer 注册泄漏的 TabProxy，并保留 Playwright 默认启动保护。",
+    "scope": "仅测试启动配置、五个 msedge 消费入口、实际 Windows 参数回归和任务证据；不改产品、用户数据、注册表配额或其他运行工作树。",
+    "acceptance": [
+      "全部现有 msedge launch callers 使用统一保护配置，默认 disabled features 全部保留。",
+      "Windows 实际 renderer 参数回归及根侧自有页面资源压力验证通过，无新增 TabProxy。",
+      "相关单元/typecheck/lint/格式及协调后的完整 verify、独立源码审查具有当前候选证据。"
+    ],
+    "dependencies": ["TASK-GOV-006", "TASK-VERIFY-EVIDENCE-20261015"],
+    "owner": "root",
+    "ownerRole": "repository-maintainer",
+    "branch": "fix/TASK-EXPLORER-GDI-20261015-integration",
+    "worktree": "D:/kk-studio/.worktrees/TASK-GOV-PHASE0",
+    "baseSha": "6374c23f76cac13a8d7d36686c497e068272f965",
+    "affectedModules": [
+      "scripts/testing/headless-edge-options.mjs",
+      "playwright.config.ts",
+      "tests/development/plugins.mjs",
+      "scripts/audit/check-composer-runtime.mjs",
+      "scripts/audit/check-main-close-runtime.mjs",
+      "scripts/audit/check-text-runtime.mjs",
+      "tests/desktop/headless-edge-launch.mjs",
+      "docs/changes/2026-10-15-explorer-gdi-integration",
+      "tests/desktop/test-evidence-preservation.mjs"
+    ],
+    "status": "IN_PROGRESS",
+    "priority": "P1",
+    "priorityRationale": "大量 headless Edge 测试会遗留 Shell 图标资源，曾使 Explorer GDI 接近10000上限并丢失桌面。",
+    "evidence": [
+      "docs/changes/2026-10-15-explorer-gdi-integration/intent.md",
+      "docs/changes/2026-10-15-explorer-gdi-integration/spec.md",
+      "docs/changes/2026-10-15-explorer-gdi-integration/plan.md",
+      "docs/changes/2026-10-15-explorer-gdi-integration/verification.md",
+      "docs/changes/2026-10-15-explorer-gdi-integration/review.md"
+    ],
+    "verification": "原af8精确HEAD新verify Node1327/Agent199/Edge784首试/development4步通过；原development旧receipt/PNG因清理缺失单列incident，未伪造恢复。当前按原stable ID由root在复用隔离树承接，仅挑af8独有7源码，父tree与main235e相同。新组合、实际main/Hosted/客户端仍未验收。 已挑af8为a6e，配置冲突只保留双保护。真实Windows browser/2renderers保留15+1项，真实PNG正常/失败均保持旧字节，新PNG/report同run。全量verify、100页新组合及最终SHA独审尚待。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-15",
+    "lastVerified": "2026-10-15",
+    "displayStatus": "进行中",
+    "nextAction": "保留输出保护边界承接af8后，冻结源码在隔离目录执行Windows回归/完整verify并独审；PR61正常合入后从实际main只承接独有安全提交。",
+    "requirementRefs": [
+      "ledger:TASK-GOV-006",
+      "ledger:TASK-VERIFY-EVIDENCE-20261015",
+      "commit:af8a32588b90b82feddfe33eef784d775d55fccc"
+    ],
+    "featureIds": []
   }
 ]

@@ -147,8 +147,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-UI-FULL-20261015 | 完成全页面新UI收敛并验证后合入主线 | DONE | 已完成 | P1 | TASK-UI-DETAILS-20261015 | root | 本任务原范围关闭；新首页默认Codex、来源和输入/弹层修复由TASK-CODEX-HOME-20261015继续。 |
 | TASK-CODEX-HOME-20261015 | 首页默认Codex与模型来源分流及输入弹层修复 | REVIEW | 进行中 | P1 | TASK-UI-FULL-20261015 | root | 提交冻结候选后做精确SHA独审；当前Hosted须实际跑完完整verify（含development）/Delivery后才普通合并，随后main验证、实际本机更新及两独立副本canonical恢复/原7保全；保留另一任务原文与状态，最后以实际收据做纯docs closeout。 |
 | TASK-CODEX-REF-20261015 | Codex 卡片连线参考图直达内置生图 | PARTIAL | 未完成 | P1 | TASK-CODEX-HOME-20261015 | root | 保留功能/live通过证据，跟进上游13项已证预存失败使mandatory fullverify有效通过；补最终SHA正式review及Hosted/PR门禁，不宣称已集成/发布。 |
-| TASK-GOV-006 | 统一会话安全交接、全量需求映射与单主控承接 | PARTIAL | 进行中 | P1 | none | root | 治理PR61冻结head89fba，等待当前Hosted后按门禁正常合main；root当前唯一写入者已串行转入测试输出保护任务，旧分支/全部证据保留。 |
-| TASK-VERIFY-EVIDENCE-20261015 | 隔离测试输出并保护历史回执 | IN_PROGRESS | 进行中 | P1 | TASK-GOV-006 | root | 提交输出保护冻结源码并做精确SHA独审；再接入GDI保护后运行完整verify。PR61通过当前Hosted后正常合main，再从实际main只承接独有安全测试提交并合规PR。 |
+| TASK-GOV-006 | 统一会话安全交接、全量需求映射与单主控承接 | PARTIAL | 进行中 | P1 | none | root | PR61已正常squash为main3a992597，当前fetch核实后，测试安全组合从实际main承接；其余历史接口/产品任务仍开放。 |
+| TASK-VERIFY-EVIDENCE-20261015 | 隔离测试输出并保护历史回执 | PARTIAL | 进行中 | P1 | TASK-GOV-006 | root | 6374代码修正提交独立复验中；root串行接GDI后补真实PNG/旧字节和完整受保护verify，再精确独审/正常PR。 |
+| TASK-EXPLORER-GDI-20261015 | 阻断 headless Edge 测试遗留 Shell 标签代理 | IN_PROGRESS | 进行中 | P1 | TASK-GOV-006, TASK-VERIFY-EVIDENCE-20261015 | root | 保留输出保护边界承接af8后，冻结源码在隔离目录执行Windows回归/完整verify并独审；PR61正常合入后从实际main只承接独有安全提交。 |
 
 ## TASK-FIX-PUSH-GUARD-SPACES-001 — 修复 Windows Git pre-push 空格及长路径启动
 
@@ -2848,7 +2849,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: docs/governance, docs/changes/2026-10-15-unified-handoff, docs/changes/2026-10-15-unified-execution
 - Verification: PARTIAL — 8个原活动主会话各发一次安全暂停；重连后8主+4此前active子会话均支持工具回读idle并交接无写入。114登记worktree/113有效原账本+Cherry冲突两侧内存联合192ID，main141缺51只是覆盖差异；所有历史状态/原对象保留，不批量覆盖原141记录。复用原DONE/PASS clean治理树切新分支，旧分支保留。历史/全局枚举存在缺口，产品未新增实现。 正式执行首轮：原提示词与zip指定hash匹配，receipt21/21及zip23/23独核；新12历史目标26页187轮到游标末尾，6接口仍不支持，原主控/全局枚举UNKNOWN保留。fresh治理lint/typecheck与46回归PASS；GDI真实argv16项/2renderers及100页7采样0自有代理通过，仅候选范围。已push1b895ecb并建草稿PR61，未合main或替换客户端。 最终af8精确HEAD完整verify新跑exit0：Node1327/14skip、Agent199/2skip、Edge784首试0flaky/skip、development4步。发现默认test-results清理移除旧development receipt/截图，旧browser已备份；恢复无可校验副本，事件已公开记录并新增自动保护任务。
 - Evidence: [docs/changes/2026-10-15-unified-handoff/takeover-context.md](../../docs/changes/2026-10-15-unified-handoff/takeover-context.md), [docs/changes/2026-10-15-unified-handoff/delivery-matrix.md](../../docs/changes/2026-10-15-unified-handoff/delivery-matrix.md), [docs/changes/2026-10-15-unified-handoff/session-inventory.md](../../docs/changes/2026-10-15-unified-handoff/session-inventory.md), [docs/changes/2026-10-15-unified-handoff/verification.md](../../docs/changes/2026-10-15-unified-handoff/verification.md), [docs/changes/2026-10-15-unified-execution/verification.md](../../docs/changes/2026-10-15-unified-execution/verification.md), [docs/changes/2026-10-15-unified-execution/history-readback.md](../../docs/changes/2026-10-15-unified-execution/history-readback.md), [docs/changes/2026-10-15-unified-execution/incident.md](../../docs/changes/2026-10-15-unified-execution/incident.md)
-- Next action: 治理PR61冻结head89fba，等待当前Hosted后按门禁正常合main；root当前唯一写入者已串行转入测试输出保护任务，旧分支/全部证据保留。
+- Next action: PR61已正常squash为main3a992597，当前fetch核实后，测试安全组合从实际main承接；其余历史接口/产品任务仍开放。
 - Last verified: 2026-10-15
 - Updated: 2026-10-15
 
@@ -2864,9 +2865,28 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Acceptance: 合成旧receipt/截图与Playwright共享目录的RED可复现，修复后原hash保持。; 每轮输出独立且包含source SHA；运行失败、取消和报告写入失败仍保留旧证据。; 正式入口先校验独立目录或完整备份清单，不能只备份browser JSON。
 - Branch: `fix/TASK-VERIFY-EVIDENCE-20261015-output-isolation`
 - Worktree: `D:/kk-studio/.worktrees/TASK-GOV-PHASE0`
-- Modules: playwright.config.ts, tests/development/plugins.mjs, scripts/testing, tests/unit, docs/changes/2026-10-15-unified-execution/incident.md, tests/desktop/plugin-recovery.mjs, docs/changes/2026-10-15-test-evidence-isolation, tests/browser
-- Verification: PARTIAL — 真实合成Playwright成功/失败均在基线删除旧receipt而RED；独占run目录实现后定向7/7 GREEN（目录/文件/junction拒绝、旧三类原字节保留、新report/metadata、suite边界）。完整Node1346/1332PASS/14既有skip/0FAIL，lint/typecheck通过；sandbox junction EPERM经平台批准复验。无浏览器页面，版本不递增。原旧回执缺失不伪造恢复；完整verify、最终SHA独审与main集成待GDI安全接入后进行。 独审e5d5dc31提出EVID-01固定截图/P1、EVID-02worker分散/P2；已各先RED再本地GREEN，17文件48截图仅迁移路径，新增截图守卫。补充完整Node/静态与正式复验、实际安全PNG未完成前不代填通过。 补充完整Node1347/1333PASS/14既有skip/0FAIL、lint/typecheck通过；format首报2文件后修正复验通过。真实PNG需GDI安全接入后验证，精确最终独审待续。
+- Modules: playwright.config.ts, tests/development/plugins.mjs, scripts/testing, tests/unit, docs/changes/2026-10-15-unified-execution/incident.md, tests/desktop/plugin-recovery.mjs, docs/changes/2026-10-15-test-evidence-isolation, tests/browser, tests/desktop/test-evidence-preservation.mjs
+- Verification: PARTIAL — 真实合成Playwright成功/失败均在基线删除旧receipt而RED；独占run目录实现后定向7/7 GREEN（目录/文件/junction拒绝、旧三类原字节保留、新report/metadata、suite边界）。完整Node1346/1332PASS/14既有skip/0FAIL，lint/typecheck通过；sandbox junction EPERM经平台批准复验。无浏览器页面，版本不递增。原旧回执缺失不伪造恢复；完整verify、最终SHA独审与main集成待GDI安全接入后进行。 独审e5d5dc31提出EVID-01固定截图/P1、EVID-02worker分散/P2；已各先RED再本地GREEN，17文件48截图仅迁移路径，新增截图守卫。补充完整Node/静态与正式复验、实际安全PNG未完成前不代填通过。 补充完整Node1347/1333PASS/14既有skip/0FAIL、lint/typecheck通过；format首报2文件后修正复验通过。真实PNG需GDI安全接入后验证，精确最终独审待续。 精确6374独立源码复验限定PASS，无新阻断；当前a6e组合新增安全真实PNG探针正常/失败两种旧字节均保持，新PNG/report同run，未提交probe范围清楚。
 - Evidence: [docs/changes/2026-10-15-unified-execution/incident.md](../../docs/changes/2026-10-15-unified-execution/incident.md), [docs/changes/2026-10-15-test-evidence-isolation/intent.md](../../docs/changes/2026-10-15-test-evidence-isolation/intent.md), [docs/changes/2026-10-15-test-evidence-isolation/spec.md](../../docs/changes/2026-10-15-test-evidence-isolation/spec.md), [docs/changes/2026-10-15-test-evidence-isolation/plan.md](../../docs/changes/2026-10-15-test-evidence-isolation/plan.md), [docs/changes/2026-10-15-test-evidence-isolation/verification.md](../../docs/changes/2026-10-15-test-evidence-isolation/verification.md), [docs/changes/2026-10-15-test-evidence-isolation/review.md](../../docs/changes/2026-10-15-test-evidence-isolation/review.md)
-- Next action: 提交输出保护冻结源码并做精确SHA独审；再接入GDI保护后运行完整verify。PR61通过当前Hosted后正常合main，再从实际main只承接独有安全测试提交并合规PR。
+- Next action: 6374代码修正提交独立复验中；root串行接GDI后补真实PNG/旧字节和完整受保护verify，再精确独审/正常PR。
+- Last verified: 2026-10-15
+- Updated: 2026-10-15
+
+## TASK-EXPLORER-GDI-20261015 — 阻断 headless Edge 测试遗留 Shell 标签代理
+
+- Goal: Windows 批量浏览器验证不再向 Explorer 注册泄漏的 TabProxy，并保留 Playwright 默认启动保护。
+- Scope: 仅测试启动配置、五个 msedge 消费入口、实际 Windows 参数回归和任务证据；不改产品、用户数据、注册表配额或其他运行工作树。
+- Display status: 进行中
+- Priority: P1 — 大量 headless Edge 测试会遗留 Shell 图标资源，曾使 Explorer GDI 接近10000上限并丢失桌面。
+- Requirement refs: ledger:TASK-GOV-006, ledger:TASK-VERIFY-EVIDENCE-20261015, commit:af8a32588b90b82feddfe33eef784d775d55fccc
+- Feature IDs: none
+- Owner role: repository-maintainer
+- Acceptance: 全部现有 msedge launch callers 使用统一保护配置，默认 disabled features 全部保留。; Windows 实际 renderer 参数回归及根侧自有页面资源压力验证通过，无新增 TabProxy。; 相关单元/typecheck/lint/格式及协调后的完整 verify、独立源码审查具有当前候选证据。
+- Branch: `fix/TASK-EXPLORER-GDI-20261015-integration`
+- Worktree: `D:/kk-studio/.worktrees/TASK-GOV-PHASE0`
+- Modules: scripts/testing/headless-edge-options.mjs, playwright.config.ts, tests/development/plugins.mjs, scripts/audit/check-composer-runtime.mjs, scripts/audit/check-main-close-runtime.mjs, scripts/audit/check-text-runtime.mjs, tests/desktop/headless-edge-launch.mjs, docs/changes/2026-10-15-explorer-gdi-integration, tests/desktop/test-evidence-preservation.mjs
+- Verification: PARTIAL — 原af8精确HEAD新verify Node1327/Agent199/Edge784首试/development4步通过；原development旧receipt/PNG因清理缺失单列incident，未伪造恢复。当前按原stable ID由root在复用隔离树承接，仅挑af8独有7源码，父tree与main235e相同。新组合、实际main/Hosted/客户端仍未验收。 已挑af8为a6e，配置冲突只保留双保护。真实Windows browser/2renderers保留15+1项，真实PNG正常/失败均保持旧字节，新PNG/report同run。全量verify、100页新组合及最终SHA独审尚待。
+- Evidence: [docs/changes/2026-10-15-explorer-gdi-integration/intent.md](../../docs/changes/2026-10-15-explorer-gdi-integration/intent.md), [docs/changes/2026-10-15-explorer-gdi-integration/spec.md](../../docs/changes/2026-10-15-explorer-gdi-integration/spec.md), [docs/changes/2026-10-15-explorer-gdi-integration/plan.md](../../docs/changes/2026-10-15-explorer-gdi-integration/plan.md), [docs/changes/2026-10-15-explorer-gdi-integration/verification.md](../../docs/changes/2026-10-15-explorer-gdi-integration/verification.md), [docs/changes/2026-10-15-explorer-gdi-integration/review.md](../../docs/changes/2026-10-15-explorer-gdi-integration/review.md)
+- Next action: 保留输出保护边界承接af8后，冻结源码在隔离目录执行Windows回归/完整verify并独审；PR61正常合入后从实际main只承接独有安全提交。
 - Last verified: 2026-10-15
 - Updated: 2026-10-15

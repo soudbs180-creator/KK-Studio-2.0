@@ -10,7 +10,7 @@
 
 ## 统一整理后的正式执行入口（TASK-GOV-006）
 
-当前任务先读[输出保护计划](../changes/2026-10-15-test-evidence-isolation/plan.md)。root已串行转入fix/TASK-VERIFY-EVIDENCE-20261015-output-isolation；治理89fba分支冻结保留，PR61当前Hosted待门禁。只有root写当前树，不新增/清理worktree；旧开发态原件仍缺失，后续使用新run目录。
+当前任务先读[GDI承接计划](../changes/2026-10-15-explorer-gdi-integration/plan.md)。root已串行进入fix/TASK-EXPLORER-GDI-20261015-integration，输出保护6374冻结复验中；治理89fba/PR61单独等待Hosted。旧候选dirty/全部原件/日常九项目保持，唯一root写入当前树，不新增或清理worktree。
 
 最新限制：af8精确HEAD完整verify已新跑PASS；但测试默认目录清理移除了旧开发态原件，不能再声称其旧路径可读。先读[事件](../changes/2026-10-15-unified-execution/incident.md)，下一执行先落实TASK-VERIFY-EVIDENCE-20261015保护，再承接GDI。
 

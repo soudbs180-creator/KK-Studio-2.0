@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-10-15 GDI保护统一承接（IN_PROGRESS）
+
+沿用TASK-EXPLORER-GDI-20261015，由root串行承接af8独有7个测试文件。输出保护6374已补独审两项，正式复验中；治理PR61仍独立等待后段Hosted。版本/产品源码/daily不变，新组合完整验证尚未执行。见[计划](changes/2026-10-15-explorer-gdi-integration/plan.md)。
+
 ## 2026-10-15 测试证据输出保护（IN_PROGRESS）
 
 用户要求继续实施。TASK-VERIFY-EVIDENCE-20261015由root在原隔离树串行承接，治理PR61冻结；按真实无浏览器fixture先RED，再实现独立产物目录与旧路径拒绝。已实现每轮独占目录/旧路径拒绝；真实合成Playwright正常与失败运行均保留旧字节，定向7/7、完整Node1332通过/14既有skip，lint/typecheck/format通过。独审提出固定截图/worker分散两项并已RED/GREEN修正；补充Node1333通过/14skip，17文件48处只迁移截图路径。没有新产品能力进入客户端，完整verify与正式复验待续，旧回执缺失不改写。见[计划](changes/2026-10-15-test-evidence-isolation/plan.md)。

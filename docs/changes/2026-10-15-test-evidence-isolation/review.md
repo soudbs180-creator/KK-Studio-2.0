@@ -10,3 +10,5 @@
 - 独立只读evidence_review审查base89fba→e5d5dc31，结论CHANGES REQUIRED；EVID-01/P1：48处固定截图覆盖旧路径；EVID-02/P2：worker重载分配第二run。两项阻断本任务输出保护验收，初始7/7不覆盖这些路径。
 - EVID-02真实无浏览器probe加入outputPath产物后，成功/失败均2目录而RED；runner独占分配并通过KK_BROWSER_EVIDENCE_RUN传给worker后，两项GREEN、同run报告/产物。worker缺运行身份时失败关闭。
 - EVID-01独立AST清单123文件/122截图，48调用点分布17文件需迁移；6个既有安全helper调用不改。新增守卫先针对48处RED，迁移到test.info().outputPath后GREEN；不改用户交互断言/夹具/重试。全量受保护Edge补实际PNG/旧字节证据后再正式复验，当前不提前关闭最终验收。
+
+- 6374精确base/head独立复验限定PASS：123文件/122截图，116直接outputPath、6既有惰性helper；17修改文件AST确认只有截图路径和responsive前缀语义变化。worker源码与真实无浏览器回归PASS。实际PNG候选后续接入GDI已通过，最终组合/完整verify仍待新冻结SHA独审。
