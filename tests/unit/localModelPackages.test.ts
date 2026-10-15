@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { createHash } from "node:crypto";
 import {
   localChatModelPackages,
   localVideoModelPackages,
@@ -25,6 +26,37 @@ test("each Qwen vision plan contains its matching model and projector, never all
       ),
     );
   }
+});
+
+test("shared catalog migration preserves every existing public package and download-plan value", () => {
+  const value = {
+    chat: localChatModelPackages,
+    video: localVideoModelPackages,
+    plans: [
+      [],
+      ...localChatModelPackages.map((v) => [v.id]),
+      localVideoModelPackages.map((v) => v.id),
+    ].map((v) => planLocalModelDownloads(v)),
+  };
+  const sorted = (value: unknown): unknown =>
+    Array.isArray(value)
+      ? value.map(sorted)
+      : value && typeof value === "object"
+        ? Object.fromEntries(
+            Object.keys(value)
+              .sort()
+              .map((key) => [
+                key,
+                sorted((value as Record<string, unknown>)[key]),
+              ]),
+          )
+        : value;
+  assert.equal(
+    createHash("sha256")
+      .update(JSON.stringify(sorted(value)))
+      .digest("hex"),
+    "2ae56d92876626ae5f3b4947caa4f24b392d60d35d93bf1de76720fa718b07bd",
+  );
 });
 
 test("H3 16G means a runtime target; selected modes share encoder/VAEs only once", () => {
