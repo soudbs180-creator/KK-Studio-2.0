@@ -70,3 +70,5 @@
 Windows Desktop CLI 管理已接实际检测、用户主动安装/登录、取消自有操作及 Gemini 桥启停；终端退出和进程健康不推导账号验证，模型连通测试另有明确入口与额度说明。原 apply/check 不因新页面而声称全面接线。最终源码门禁、实际构建和产物身份见[2.1.22协议/CLI验证](../changes/2026-10-14-protocol-cli-completion/verification.md)；真实安装/账号登录/付费供应商调用及 Native Mobile 仍未验收，状态保持 PARTIAL。
 
 2.1.22本机交付完成：五协议真实Native与四取消/超时socket关闭、已保存凭据/迟到目录/旧检测错误隔离均有回执；真实供应商/真人CLI会话与其他配置/MCP接线保持PARTIAL，按本轮verification回读，不能将fixture当云端验收。
+
+- 2026-10-15：TASK-KK-UNIFIED-20261015 已获用户实施授权，新增范围见 [统一规格](../changes/2026-10-15-kk-unified/spec.md)。本卡既有证据仍限原版本；新范围实现/真实验收尚未完成，不能沿用旧 PASS 关闭。

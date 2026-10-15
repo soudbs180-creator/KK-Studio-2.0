@@ -54,3 +54,5 @@
 
 - 2026-10-08：`5cbfe99`/`dc05556` 完成原生回执双重身份、索引一致性和非法类型校验，实时与恢复共用围栏；既有归档、合法子集及缺失 outputs 的旧 assetIds 格式保留。定向原生/恢复53项与完整浏览器388项通过，独立源码复验PASS；真实Provider/Desktop运行与外部门禁仍未完成。
 - 2026-10-11：补充成本报价回执 schema、任务/幂等键绑定、快照和 portable package 校验及 fixture 回归；真实 Provider adapter/webhook、账单回执和每平台运行仍保持 `NOT_VERIFIED`，TASK-TASKSTATE-001/002 保持 `PARTIAL`。详见 `docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-verification.md`。
+
+- 2026-10-15：TASK-KK-UNIFIED-20261015 已获用户实施授权，新增范围见 [统一规格](../changes/2026-10-15-kk-unified/spec.md)。本卡既有证据仍限原版本；新范围实现/真实验收尚未完成，不能沿用旧 PASS 关闭。

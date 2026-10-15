@@ -6,6 +6,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 | ID | Title | Status | Display | Priority | Dependencies | Owner | Next action |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| TASK-KK-UNIFIED-20261015 | KK Studio 统一修复与重构 | IN_PROGRESS | 进行中 | P1 | none | root | 完成项目持久分组、手动名称及垃圾箱共享操作，再按批准计划顺序实施。 |
 | TASK-FIX-PUSH-GUARD-SPACES-001 | 修复 Windows Git pre-push 空格及长路径启动 | REVIEW | 进行中 | P1 | none | root | 补 merged-SHA 独立 review receipt、原始 Hosted artifact manifest 及当前 SHA 的 delivery 结果；本任务验收补齐前保持 REVIEW，签名/安装/用户验收仍属独立发布边界。 |
 | TASK-WINDOWS-ENTRY-DIAG-002 | 补齐Windows入口子进程失败诊断 | DONE | 已完成 | P2 | TASK-LAUNCH-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-WINDOWS-ENTRY-RECOVERY-003 | 继续定位Hosted Windows入口未正常退出的原始原因 | TODO | 未完成 | P1 | TASK-LAUNCH-001 | root | 将 fa78ed12 候选同步到当前 origin/main 后重跑 Hosted Windows，并读取 windows-entry.jsonl；保留 PR43 原失败和本机未复现原件，未取得新分类前保持 TODO。 |
@@ -152,6 +153,25 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-EXPLORER-GDI-20261015 | 阻断 headless Edge 测试遗留 Shell 标签代理 | DONE | 已完成 | P1 | TASK-GOV-006, TASK-VERIFY-EVIDENCE-20261015 | root | 测试安全GDI范围已闭环，保留原分支与证据；产品/日常客户端真实验收仍按各任务继续。 |
 | TASK-HOME-LOAD-DRAFT-20261015 | 保护读取期间编辑不覆盖已有首页草稿设置 | TODO | 未完成 | P2 | TASK-CODEX-HOME-20261015 | root | 在HOME恢复闭环后复用clean隔离树领取本问题，先按受控读取写产品RED，再选择最小输入保护或字段合并方案，验证后正常集成。 |
 | TASK-VERIFY-DEPS-20261015 | 恢复共享依赖清理事故并核验执行边界 | PARTIAL | 进行中 | P1 | TASK-CODEX-HOME-20261015 | root | 保存独立事故记录，严格前置exit0才执行下游；在物理本地依赖上补当前隔离Native/受影响门禁，并对纯docs精确差量复审后确定恢复闭环范围。 |
+
+## TASK-KK-UNIFIED-20261015 — KK Studio 统一修复与重构
+
+- Goal: 实施用户批准的统一方案，保留本地数据与身份，按 Desktop→Web 验收真实功能链和交互。
+- Scope: 详见 docs/changes/2026-10-15-kk-unified/spec.md；涵盖项目仓库、模型和 Agent、媒体、统一界面、账号与手动加密备份。
+- Display status: 进行中
+- Priority: P1 — 用户明确批准的统一产品修复与重构。
+- Requirement refs: docs/changes/2026-10-15-kk-unified/spec.md
+- Feature IDs: FEAT-002, FEAT-003, FEAT-004, FEAT-005, FEAT-006, FEAT-008, FEAT-009, FEAT-014, FEAT-015, FEAT-017, FEAT-018, FEAT-019, FEAT-022, FEAT-023, FEAT-026, FEAT-030, FEAT-031, FEAT-032, FEAT-037
+- Owner role: implementation-integrator
+- Acceptance: 逐项实现 spec 中 BASE/UI/MODEL/API/AGENT/LOCAL/PROJECT/TEMP/REF/MEDIA/REPO/TRASH/WINDOW/AUTH/SITE/SYNC。; 相关回归、实际 Desktop/Web、真实服务和恢复逐项留证；不以 mock、旧 SHA 或构建代替真实验收。; 保持配置、credentialRef、项目和素材身份及旧链接，保留并行改动。
+- Branch: `codex/TASK-KK-UNIFIED-20261015`
+- Worktree: `D:/kk-studio/.worktrees/TASK-KK-UNIFIED-20261015`
+- Modules: src/App.tsx, src/features, src/components, src/runtime, src/domain, src-tauri, vendor/canvas-agent, docs/changes/2026-10-15-kk-unified
+- Verification: NOT_VERIFIED — 主线 d95e4c44/2.1.34，基线 typecheck PASS，实施及各项真实验收尚未完成。
+- Evidence: [docs/changes/2026-10-15-kk-unified/intent.md](../../docs/changes/2026-10-15-kk-unified/intent.md), [docs/changes/2026-10-15-kk-unified/spec.md](../../docs/changes/2026-10-15-kk-unified/spec.md), [docs/changes/2026-10-15-kk-unified/plan.md](../../docs/changes/2026-10-15-kk-unified/plan.md), [docs/changes/2026-10-15-kk-unified/verification.md](../../docs/changes/2026-10-15-kk-unified/verification.md), [docs/changes/2026-10-15-kk-unified/review.md](../../docs/changes/2026-10-15-kk-unified/review.md)
+- Next action: 完成项目持久分组、手动名称及垃圾箱共享操作，再按批准计划顺序实施。
+- Last verified: 2026-10-15
+- Updated: 2026-10-15
 
 ## TASK-FIX-PUSH-GUARD-SPACES-001 — 修复 Windows Git pre-push 空格及长路径启动
 

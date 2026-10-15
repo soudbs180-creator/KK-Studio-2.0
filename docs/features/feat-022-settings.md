@@ -68,3 +68,5 @@ TASK-AGENT-RECOVERY-20261013：模型接入将普通桌面连接合为一个入�
 默认绿、中性动作、弱焦点和分组导航按 UI_INDEX 消费。公共预设提供官网、认证说明与接口文档；Gemini 前往独立 Google 配置，浏览目录不发请求。UsageSettings 派生本机已保存项目/任务与有效 provider 实际 USD 回执；Token 未报告，demo、估算、冲突与其他币种不计。StorageOverview 区分原生 get_storage_root、伴随服务地址和浏览器位置；storage.estimate 仅是浏览器估算，项目引用数不是全库大小，未报告的字节不猜测，读取错误有重试。
 
 原 UI 收敛的历史结果见[收敛验证](../changes/2026-10-14-ui-consolidation/verification.md)。本轮新协议、CLI 与手机网页的最终源码门禁、实际构建和产物身份由[2.1.22协议/CLI验证](../changes/2026-10-14-protocol-cli-completion/verification.md)记录；真实账号安装/登录、付费供应商调用和 Native Mobile 未验收，状态保持 PARTIAL。
+
+- 2026-10-15：TASK-KK-UNIFIED-20261015 已获用户实施授权，新增范围见 [统一规格](../changes/2026-10-15-kk-unified/spec.md)。本卡既有证据仍限原版本；新范围实现/真实验收尚未完成，不能沿用旧 PASS 关闭。

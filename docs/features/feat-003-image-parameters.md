@@ -49,3 +49,5 @@
 状态按 [本轮验证与勘误](../changes/2026-09-21-text-and-rule-audit/verification.md) 纠正为 PARTIAL；保留早期记录的历史含义，不当作现行完成结论。
 
 本轮目录与参数改动见 [默认 Agent 验证](../changes/2026-09-22-codex-default-agent/verification.md)。新增 modelCatalog/modelRouting 单测、model-picker 与 desktop-data-stability 浏览器回归；Codex 内置生图不虚构可选 API 尺寸。
+
+- 2026-10-15：TASK-KK-UNIFIED-20261015 已获用户实施授权，新增范围见 [统一规格](../changes/2026-10-15-kk-unified/spec.md)。本卡既有证据仍限原版本；新范围实现/真实验收尚未完成，不能沿用旧 PASS 关闭。

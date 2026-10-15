@@ -10,6 +10,11 @@
 
 ## 统一整理后的正式执行入口（TASK-GOV-006）
 
+## 当前授权：统一修复与重构（2026-10-15）
+
+先读 [统一实施计划](../changes/2026-10-15-kk-unified/plan.md)、[批准规格](../changes/2026-10-15-kk-unified/spec.md) 和 [验证](../changes/2026-10-15-kk-unified/verification.md)。用户已授权实施，不重复请求形式批准。当前 task branch codex/TASK-KK-UNIFIED-20261015；起点 d95e4c44 / 2.1.34，单个项目实现者串行集成共享 App/存储。日常235e7f79和其他候选保持原状。旧段落按其时点理解，不覆盖本次授权和当前实际验证。
+
+
 当前任务先读[HOME验证](../changes/2026-10-15-home-recovery-integration/verification.md)及[依赖事故](../changes/2026-10-15-dependency-repair/verification.md)。当前HOME fix/TASK-CODEX-HOME-20261015-main：冻结源码a85完整verify/785首试、官方新EXE/Native38及Rust167通过，精确本机结果独审通过，正式PR/Hosted/main继续。main仍492/2.1.33，候选2.1.34；尚未切daily/碰九项目。原失败和依赖事故未知影响保留，额外加载期草稿问题TASK-HOME-LOAD-DRAFT-20261015待下一串行任务。
 
 历史首轮限制（已落实独立输出/完整备份）：af8精确HEAD完整verify已新跑PASS；但测试默认目录清理移除了旧开发态原件，不能再声称其旧路径可读。先读[事件](../changes/2026-10-15-unified-execution/incident.md)，下一执行先落实TASK-VERIFY-EVIDENCE-20261015保护，再承接GDI。

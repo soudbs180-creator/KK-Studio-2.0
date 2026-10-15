@@ -70,3 +70,4 @@
 
 | [ADR-017](ADR-017-unified-ui-and-collection-compatibility.md) | 统一 UI 与画布分类的兼容边界 | ACCEPTED；当前候选验收另记 |
 | [ADR-018](ADR-018-provider-protocol-and-cli-execution.md) | 显式Provider协议与CLI执行边界 | ACCEPTED；当前任务验证另记 |
+| [ADR-019](ADR-019-unified-local-repository-and-optional-account.md) | 统一本地仓库、可选账号与手动加密同步 | ACCEPTED；实现和发布未完成 |

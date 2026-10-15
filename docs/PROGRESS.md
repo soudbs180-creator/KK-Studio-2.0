@@ -1,5 +1,10 @@
 # 当前进度
 
+## 2026-10-15 统一修复与重构实施
+
+用户已批准完整方案，实施从 origin/main d95e4c44 / Desktop-Web2.1.34 开始；隔离分支 codex/TASK-KK-UNIFIED-20261015。当前项目生命周期与持久分组正在实现，尚未验收。基线类型检查通过；unit 首轮1357（1341通过、2失败、14skip），两失败因新工作区缺 Agent dist；补齐依赖 junction 并 agent:build 后 desktopAgentRuntime3/3复测通过，原失败日志保留。真实生成、Native新产物、账号、云恢复、托管CI未执行。完整范围与阶段状态见 [实施计划](changes/2026-10-15-kk-unified/plan.md)、[验证](changes/2026-10-15-kk-unified/verification.md)。
+
+
 ## 2026-10-15 HOME当前本机验收通过（IN_PROGRESS）
 
 冻结a85完整verify：Node1343/14skip、Agent199/2skip、Edge785首试、development4步，独立6198hash匹配。官方Windows候选2.1.34 EXEf8cbfd5d/source a85，原Native38/3次launch与Rust167通过，实际正常关闭重开恢复、暂停/重连/服务重启及未知归属保护成立。原f10两FAIL与旧产物保留，HOME-NATIVE-01结果补审/正式PR/Hosted/main继续；main/daily仍2.1.33，不代填付费Provider或用户验收。见[验证](changes/2026-10-15-home-recovery-integration/verification.md)。

@@ -81,3 +81,5 @@
 - 2026-10-08 主线融合：保留PR #34的唯一Plan入口与新主线重规划/回执/MCP能力，在TaskWorkbenchStages融合本轮增强审批及保存确认，不保留第二面板。组合本地49/49、708root/172Agent/400browser零retry、Rust97及fresh Desktop2.1.5真实重启/冲突恢复通过；精确新SHA独立补审/当前CI和推广以本轮PR为准，见本轮verification末节。功能仍PARTIAL。
 
 本轮扩展页新增七种协作角色职责模板：可检索、查看、复制或应用到保留原内容的草稿，执行模型在任务菜单选择。角色自动分派到不同模型尚未接入；不提升编排能力状态，见[分类修复](../changes/2026-10-13-capability-ui/spec.md)。
+
+- 2026-10-15：TASK-KK-UNIFIED-20261015 已获用户实施授权，新增范围见 [统一规格](../changes/2026-10-15-kk-unified/spec.md)。本卡既有证据仍限原版本；新范围实现/真实验收尚未完成，不能沿用旧 PASS 关闭。
