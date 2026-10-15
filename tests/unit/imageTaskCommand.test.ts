@@ -7,6 +7,7 @@ import {
   appendImageTaskResults,
   canvasImageAttachments,
   ImageTaskCommandError,
+  taskSourceItemId,
   validateImageTaskInput,
 } from "../../src/features/creation/imageTaskCommand.ts";
 import {
@@ -29,6 +30,34 @@ const input: CreateProjectInput = {
 
 const pixelDataUrl =
   "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=";
+
+test("conversation tasks cannot inherit a canvas source during publish, cancel or retry", () => {
+  const project = createProject(input);
+  const image = createTask(project);
+  const conversation = { ...image, conversationRoundId: "round-1" };
+  for (const status of [
+    "failed",
+    "offline",
+    "queued",
+    "running",
+    "unknown",
+  ] as const) {
+    const candidate = { ...conversation, status };
+    assert.equal(taskSourceItemId(project, candidate), undefined);
+  }
+  assert.equal(taskSourceItemId(project, image), project.items[0].id);
+  assert.equal(
+    taskSourceItemId(project, { sourceItemId: "explicit-image" }),
+    "explicit-image",
+  );
+  assert.equal(
+    taskSourceItemId(project, {
+      ...conversation,
+      sourceItemId: "explicit-source",
+    }),
+    "explicit-source",
+  );
+});
 
 test("text cannot submit a deleted source, cancelled task or changed identity", () => {
   const project = createProject({

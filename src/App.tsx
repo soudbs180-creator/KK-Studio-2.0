@@ -126,6 +126,7 @@ import {
   prepareImageTask,
   ImageTaskCommandError,
   rootItemId,
+  taskSourceItemId,
   projectConnectionId,
 } from "./features/creation/imageTaskCommand";
 import {
@@ -839,7 +840,7 @@ export default function App() {
         const withResults = appendImageTaskResults(
           current,
           pendingResults,
-          task.sourceItemId ?? rootItemId(current),
+          taskSourceItemId(current, task),
         );
         acceptedResults = [];
         for (const result of pendingResults) {
@@ -875,9 +876,7 @@ export default function App() {
         const publishedSubmissionState = deliveryErrorMessage
           ? ("unknown" as const)
           : submissionState;
-        const sourceItemId = task.conversationRoundId
-          ? undefined
-          : (task.sourceItemId ?? rootItemId(current));
+        const sourceItemId = taskSourceItemId(current, task);
         const nextProject = appendImageTaskResults(
           current,
           acceptedResults,
@@ -919,8 +918,7 @@ export default function App() {
           };
         });
         const sourceTasks = nextTasks.filter(
-          (candidate) =>
-            (candidate.sourceItemId ?? rootItemId(current)) === sourceItemId,
+          (candidate) => taskSourceItemId(current, candidate) === sourceItemId,
         );
         const sourceUncertain = sourceTasks.some(
           (candidate) =>
@@ -1845,9 +1843,10 @@ export default function App() {
       item.tasks.some((task) => task.id === taskId && task.status === "queued"),
     );
     if (!project) return;
-    const sourceItemId =
-      project.tasks.find((task) => task.id === taskId)?.sourceItemId ??
-      rootItemId(project);
+    const sourceItemId = taskSourceItemId(
+      project,
+      project.tasks.find((task) => task.id === taskId),
+    );
     updateProject(project.id, (current) => ({
       ...current,
       items: current.items.map((item) =>
@@ -1904,8 +1903,10 @@ export default function App() {
         ? project.items
         : project.items.map((item) =>
             item.id ===
-            (project.tasks.find((task) => task.id === pendingApproval.taskId)
-              ?.sourceItemId ?? rootItemId(project))
+            taskSourceItemId(
+              project,
+              project.tasks.find((task) => task.id === pendingApproval.taskId),
+            )
               ? { ...item, generationStatus: undefined }
               : item,
           ),
@@ -2078,7 +2079,7 @@ export default function App() {
       ...project,
       tasks: [...project.tasks, retry],
       items: project.items.map((item) =>
-        item.id === (retry.sourceItemId ?? rootItemId(project))
+        item.id === taskSourceItemId(project, retry)
           ? { ...item, generationStatus: "pending" as const }
           : item,
       ),

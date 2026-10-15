@@ -239,6 +239,14 @@ export function rootItemId(project: CreationProject): string | null {
   );
 }
 
+export function taskSourceItemId(
+  project: CreationProject,
+  task?: Pick<CreationTask, "sourceItemId" | "conversationRoundId">,
+): string | null | undefined {
+  if (task?.conversationRoundId && !task.sourceItemId) return undefined;
+  return task?.sourceItemId ?? rootItemId(project);
+}
+
 function validateTextTaskInput(input: CreateProjectInput): void {
   if (!input.prompt.trim() || input.prompt.length > 4000)
     throw new ImageTaskCommandError("请填写不超过 4000 字的文案描述。");

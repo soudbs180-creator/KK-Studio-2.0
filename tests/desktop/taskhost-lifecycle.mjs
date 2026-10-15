@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
-import { spawn, execFileSync } from "node:child_process";
+import { spawn, execFile, execFileSync } from "node:child_process";
+import { promisify } from "node:util";
 import { createHash, randomUUID } from "node:crypto";
 import { createServer } from "node:http";
 import fs from "node:fs/promises";
@@ -463,7 +464,9 @@ async function launch() {
   );
   await expect(
     page.getByText("正在读取本地项目…", { exact: true }),
-  ).toHaveCount(0);
+  ).toHaveCount(0, { timeout: 30000 });
+  startup.storageReadyAt = new Date().toISOString();
+  startup.storageReadyAfterMs = Date.now() - Date.parse(startup.startedAt);
   await expect(
     page.locator('.creation-storage-notice[role="alert"]'),
   ).toHaveCount(0);
@@ -505,10 +508,19 @@ async function stop(graceful = false) {
         { windowsHide: true, stdio: "ignore" },
       );
     } else {
-      execFileSync("taskkill", ["/PID", String(app.pid), "/T", "/F"], {
-        windowsHide: true,
-        stdio: "ignore",
-      });
+      try {
+        await promisify(execFile)(
+          "taskkill",
+          ["/PID", String(app.pid), "/T", "/F"],
+          {
+            windowsHide: true,
+          },
+        );
+      } catch (cause) {
+        report.startups.at(-1).cleanupCommandFailure = String(cause);
+        // A child may exit before taskkill runs; observe its exit instead of masking the test failure.
+        await expect.poll(() => app.exitCode, { timeout: 1000 }).not.toBeNull();
+      }
     }
     await expect.poll(() => app.exitCode, { timeout: 10000 }).not.toBeNull();
   }
@@ -943,15 +955,17 @@ try {
         await stop();
         await launch();
       }
-      for (const id of ownedCredentials)
+      for (const id of ownedCredentials) {
         await invoke("credential_delete", { providerId: id });
+        assert.equal(await invoke("credential_get", { providerId: id }), null);
+      }
       ownedCredentials.clear();
     }
     await stop();
   } catch (cause) {
     report.passed = false;
     report.cleanupFailure = String(cause);
-    throw cause;
+    if (!report.failure) throw cause;
   } finally {
     server.closeAllConnections();
     await new Promise((resolve) => server.close(resolve));

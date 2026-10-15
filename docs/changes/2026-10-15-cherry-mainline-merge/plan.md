@@ -13,8 +13,8 @@
 - [x] 固定 PR49/52/53 head、逐逻辑和测试核验替代关系；保留旧分支和规划缺口。
 - [x] 捕获 PR58 clean baseline、主仓 index hash、worktree 登记；typecheck PASS，单测 1159/1145 PASS/14 SKIP/0 FAIL。
 - [x] 在原 source branch merge current main，记录 86 个冲突路径，不改主仓或运行中目录。
-- [ ] 逐项合并 Provider/Native/Settings/共享 UI；检查无冲突自动合并文件，清除重复字段、重复 IPC 和旧协议引用。
-- [ ] 合并账本/功能卡/版本和本交付包，保留历史证据及当前主线全部任务。
+- [x] 逐项合并 Provider/Native/Settings/共享 UI；检查无冲突自动合并文件，清除重复字段、重复 IPC 和旧协议引用。
+- [x] 合并账本/功能卡/版本和本交付包，保留历史证据及当前主线全部任务。
 - [ ] 定向测试后执行完整 verify、Rust、桌面构建及隔离 Native 回归；固定端口有占用时不终止其他任务进程。
 - [ ] 冻结完整 head，独立复审；修复 blocker 后按新 SHA 重验/复审，保留首轮失败。
 - [ ] 普通 push 更新 PR58，核对 Hosted/Delivery/实际远端规则，满足后 squash merge；fetch 并验新 main。
