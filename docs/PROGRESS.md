@@ -2,6 +2,8 @@
 
 ## 2026-10-15 新正式执行首轮（IN_PROGRESS / PARTIAL）
 
+最终补证：af8当前完整verify已exit0（1327/199/784首试、development4步）。同时确认默认测试输出清理移除了旧开发态回执/截图，未找到可校验副本；原browser已备份，旧.tmp/压力/交接原件保留。已登记TASK-VERIFY-EVIDENCE-20261015，后续先建立隔离输出/完整备份保护；见[事件与限制](changes/2026-10-15-unified-execution/incident.md)。
+
 TASK-GOV-006已实际核验交接提示词/zip指定hash及完整23文件包；原141任务不变。只读补核12目标至游标末尾、6接口受限，原主控/全局枚举仍UNKNOWN。新Windows GDI真实argv及100页保护验证通过，7采样自有代理均0；未运行未保护批次，未改九项目/日常客户端。已普通推送治理分支并建草稿PR61；当前CI待完成，不称合入main或产品全部完成。新证据见[首轮验证](changes/2026-10-15-unified-execution/verification.md)；下面交接段落保留原时点。
 
 ## 2026-10-15 统一安全交接与需求归并（IN_PROGRESS / PARTIAL）

@@ -13,6 +13,8 @@
 - [x] 只使用已保护 GDI 候选执行 Windows真实argv及100页合成测试，保护原dirty与日常进程。
 - [x] 推送已独审的1b895ecb并建立草稿PR61；不直接推main/force。
 - [x] 同步唯一账本、当前事实、恢复入口与进展；当前增量的提交后精确SHA独审由工程外review收据绑定。
-- [ ] 当前PR Hosted verify/delivery全绿后正常squash，重核main；再从实际main承接af8独有7文件，重跑验证并独审。
+- [ ] 当前PR Hosted verify/delivery全绿后正常squash，重核main；先落实新发现的证据输出保护，再从实际main承接af8独有7文件，重跑验证并独审。
+
+计划变更：实际完整verify通过后发现默认输出清理造成旧开发态原件缺失，见[incident](incident.md)。TASK-VERIFY-EVIDENCE-20261015作为后续本地批量测试的安全前置；不扩为产品功能或用户数据迁移。
 
 Review focus：原包字节不变、原141任务不变、历史范围不夸大、隔离测试不触用户数据、PR/客户端状态不混写。无新增产品行为，本轮无需新产品测试。

@@ -14,3 +14,10 @@
 - 已普通push精确1b895ecb，建立[草稿PR61](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/61)，当前Hosted仍执行；本地未跑完整verify，未合main。当前新增文档需再检查/精确SHA独审，结果另追加。
 - GDI原候选的完整verify是提交前冻结源码证据；新main承接、完整verify、Native范围与正式集成review仍待做。压缩候选仅plugins已接保护，其余入口未接，不在旧候选上跑批量浏览器。
 - 本轮无新产品功能进入日常客户端，无真实Provider/安装/发布/用户UI验收；总目标IN_PROGRESS。
+
+## 最终新增结果与证据勘误
+
+- af8精确提交的完整 `npm run verify` 已实际退出0：Node1327通过/14既有skip，Agent199通过/2既有skip，Edge784首试/0unexpected/0flaky/0skip，development四步骤PASS/0errors。仅原五份dirty治理路径与五份未跟踪交付文档保留，未新增tracked产品差量；仍非main集成或日常客户端验收。
+- 新完整日志SHA256 `508f77a5a336a41c59d3a8c78e68d246f4d6eb335569c90e6d0fc7a764144388`；新browser JSON `96417f959750cce3f8ca167abe7d6ba6b64dbdf292f775479b8159ff0223e22e`；新development receipt `52076526b3ef86b7de494a7194face24a023df95cb66df4fd35b69a286065709`，均在工程外本轮证据目录，test-results已整体另存。
+- 重要勘误：执行前只备份旧browser JSON，Playwright默认清理test-results移除了旧development receipt及相邻截图；无可校验副本，不宣称恢复或原输出全部保留。原.tmp日志/审查/压力原件仍在；详情和后续保护任务见[incident](incident.md)。后续本地清理型测试暂停至独立输出/完整备份边界确认。
+- 本轮新增文档的精确提交独立review以工程外带head的review收据及PR61回读为准；原1b895和56e2独立PASS分别保留，不能移用为后续SHA批准。
