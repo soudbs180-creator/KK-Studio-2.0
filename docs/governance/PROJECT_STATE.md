@@ -9,6 +9,8 @@
 <!-- DOCUMENT_METADATA_END -->
 <!-- CURRENT_FACTS_BEGIN -->
 
+当前执行：root在既有TASK-GOV-PHASE0 clean隔离树串行切到fix/TASK-VERIFY-EVIDENCE-20261015-output-isolation，实施证据输出保护；原治理89fba/PR61冻结且仅Hosted读取。TASK-GOV-006暂为PARTIAL，输出保护IN_PROGRESS，仍仅一个活跃写入者，无新增worktree。见[任务计划](../changes/2026-10-15-test-evidence-isolation/plan.md)。
+
 最终首轮补证：af8精确HEAD完整verify已exit0（Node1327/Agent199/Edge784首试/development4步）。测试默认目录清理导致旧development receipt/截图缺失且无可校验副本，旧browser备份和.tmp/压力原件仍可核验；详见[incident](../changes/2026-10-15-unified-execution/incident.md)。新增TASK-VERIFY-EVIDENCE-20261015，后续先隔离输出/完整备份保护再继续批量测试；GDI主线集成与用户产品验收仍未完成。
 
 正式执行首轮（2026-10-15）：已在新执行会话实际接管，原提示词和zip指定hash及包23/23匹配；原交接文件保持原字节。最新main仍235e，quality38703589980/guards38703590139/health38707820126已success；auto-merge38703588755失败单列。治理分支已普通推送并建draft PR61，当前CI未完，不表示已经合main。12可读历史目标新26页187轮耗尽，6接口明确不支持，原主控UNKNOWN/全局枚举缺口保留。GDI候选af8真实argv与100页7采样0自有代理新验通过，产品集成待后续。日常PID78612路径与EXEaeb70dfc实测一致；未重启或替换，九项目未触碰。详见[首轮验证](../changes/2026-10-15-unified-execution/verification.md)；下面字段中交接时未推送/待建会话的表述只属于原交接快照。
@@ -21,7 +23,7 @@
 - `canonicalHead`: 235e7f798c38b022d578f8fa41eaea1b9281fd6d
 - `canonicalHeadVerifiedFrom`: 2026-10-15 08:36UTC支持GitHub回读PR60正常squash已合；tree5636c8a986be432539c3fbe67a2fef4bbb2e61a0、Desktop/Web2.1.33/Mobile2.1.1。main quality38703589980当时仍in_progress，不能继承PR/旧SHA绿色；实际daily与未验边界见本轮交接。
 - `primaryCheckoutState`: 主checkout保留codex/ui-redesign-20261011@51fccfc7879cf90f7caaf3ae8e10af4d97a2aa2c及dirty/index；默认status折叠254与untracked=all477口径不同。HOME原保护清单/新增DESIGN来源保留，不覆盖主checkout。本轮只复用已DONE/PASS clean的TASK-GOV-PHASE0切docs/TASK-GOV-006-unified-handoff；旧f0a385fd4d4836cf107d0d3d350a03139d97ec78分支保留。
-- `taskLedger`: 143 records; 83 DONE, 1 IN_PROGRESS, 35 PARTIAL, 13 TODO, 7 REVIEW, 4 BLOCKED; 60 open。原141记录对象保持；TASK-GOV-006.handoffMatrix维护192稳定ID来源映射，51差额仅覆盖差异，不代表功能丢失或批量状态回填。
+- `taskLedger`: 143 records; 83 DONE, 1 IN_PROGRESS, 36 PARTIAL, 12 TODO, 7 REVIEW, 4 BLOCKED; 60 open。原141记录对象保持；TASK-GOV-006.handoffMatrix维护192稳定ID来源映射，51差额仅覆盖差异，不代表功能丢失或批量状态回填。
 - `workspaceWorktrees`: 2026-10-15只读登记114；approved root内73，默认4/20GiB。114固定账本路径已读，113有效JSON；Cherry当前冲突原件未改，仅内存两侧用于联合。46个ID有历史状态变体，不机械按日期裁决。原始SHA/dirty/来源索引见本轮source-manifest。未新增、删除或清理worktree。
 - `reclamationPolicy`: generated dependencies/build output may be reclaimed only from a recorded, non-primary worktree after immutable SHA inventory and explicit candidate approval; source changes and evidence paths are protected.
 - `remoteAutoMerge`: 本轮root已GET回读3个active ruleset；stable23866925对main/master/release启用PR、stale-dismiss/threads和strict verify/delivery（Actions15368）、0强制approving、无bypass/merge_queue；允许merge/squash/rebase。main protected=true由ruleset保护；legacy protection.enabled=false不表示未保护。自动helper activation/paused状态尚无本轮证据，不宣称已启用，不改远端配置。

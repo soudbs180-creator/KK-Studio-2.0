@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-10-15 测试证据输出保护（IN_PROGRESS）
+
+用户要求继续实施。TASK-VERIFY-EVIDENCE-20261015由root在原隔离树串行承接，治理PR61冻结；按真实无浏览器fixture先RED，再实现独立产物目录与旧路径拒绝。已实现每轮独占目录/旧路径拒绝；真实合成Playwright正常与失败运行均保留旧字节，定向7/7、完整Node1332通过/14既有skip，lint/typecheck/format通过。没有新产品能力进入客户端，完整verify与独审待续，旧回执缺失不改写。见[计划](changes/2026-10-15-test-evidence-isolation/plan.md)。
+
 ## 2026-10-15 新正式执行首轮（IN_PROGRESS / PARTIAL）
 
 最终补证：af8当前完整verify已exit0（1327/199/784首试、development4步）。同时确认默认测试输出清理移除了旧开发态回执/截图，未找到可校验副本；原browser已备份，旧.tmp/压力/交接原件保留。已登记TASK-VERIFY-EVIDENCE-20261015，后续先建立隔离输出/完整备份保护；见[事件与限制](changes/2026-10-15-unified-execution/incident.md)。

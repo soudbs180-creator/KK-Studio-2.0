@@ -1,10 +1,11 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
-import { mkdir, readFile, realpath, writeFile } from "node:fs/promises";
+import { readFile, realpath, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { chromium, expect } from "@playwright/test";
 import { createServer } from "vite";
+import { allocateTestEvidenceRun } from "../../scripts/testing/test-evidence.mjs";
 import {
   bundledPlugins as plugins,
   addAndEditBundledPlugins,
@@ -12,9 +13,9 @@ import {
 } from "../support/pluginFlow.mjs";
 
 const root = process.cwd();
-const evidenceDir =
-  process.env.KK_PLUGIN_EVIDENCE_DIR ??
-  path.join(root, "test-results", "development-plugins", String(Date.now()));
+const evidenceDir = allocateTestEvidenceRun("development-plugins", {
+  directory: process.env.KK_PLUGIN_EVIDENCE_DIR,
+}).directory;
 const receipt = {
   runtime: "Vite development",
   sourceHead: execFileSync("git", ["rev-parse", "HEAD"], {
@@ -34,7 +35,6 @@ const receipt = {
   steps: [],
   result: "FAIL",
 };
-await mkdir(evidenceDir, { recursive: true });
 let server;
 let browser;
 let page;

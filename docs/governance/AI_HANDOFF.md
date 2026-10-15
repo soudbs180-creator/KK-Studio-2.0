@@ -10,6 +10,8 @@
 
 ## 统一整理后的正式执行入口（TASK-GOV-006）
 
+当前任务先读[输出保护计划](../changes/2026-10-15-test-evidence-isolation/plan.md)。root已串行转入fix/TASK-VERIFY-EVIDENCE-20261015-output-isolation；治理89fba分支冻结保留，PR61当前Hosted待门禁。只有root写当前树，不新增/清理worktree；旧开发态原件仍缺失，后续使用新run目录。
+
 最新限制：af8精确HEAD完整verify已新跑PASS；但测试默认目录清理移除了旧开发态原件，不能再声称其旧路径可读。先读[事件](../changes/2026-10-15-unified-execution/incident.md)，下一执行先落实TASK-VERIFY-EVIDENCE-20261015保护，再承接GDI。
 
 正式执行会话现已接管：先读[本轮首轮验证](../changes/2026-10-15-unified-execution/verification.md)和[新增历史续读](../changes/2026-10-15-unified-execution/history-readback.md)。原始交接包保持原hash；旧段落是整理会话时点。12可读目标续至末尾、6接口仍受限；GDI候选真实Windows参数与100页保护已新验。PR61尚待当前Hosted，不关闭日常窗口、不动九项目；下一步正常合治理PR/main复验后，从实际main只承接af8。总目标仍IN_PROGRESS。

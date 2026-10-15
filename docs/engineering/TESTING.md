@@ -60,7 +60,7 @@
 | `timeout` | 30000 |
 | `retries` | 1 |
 | `reuseExistingServer` | `false` |
-| 报告 | `list` + `test-results/browser-results.json` |
+| 报告 | `list` + 每轮独立的 `test-results/browser/<run-id>/browser-results.json`，metadata记录源码HEAD |
 
 ### 端口
 
@@ -105,6 +105,8 @@
 - 固定夹具放 `tests/fixtures/`，修改夹具内容必须重跑受影响测试并更新证据，不允许「改了夹具沿用旧结论」。
 - 测试不得写生产目录。禁止把运行产物、日志、截图直接写进 `docs/`。
 - 需要清理输出目录时使用独立临时目录（如 `.tmp/pw-out-default`），不要清空被其他任务共用的 `test-results/`。
+- 默认Playwright仅清理新建run目录中的`artifacts/`，不得把`test-results/`本身作为outputDir；旧报告、开发态receipt和截图留在原处。共享分配器通过独占mkdir拒绝已有目录、文件和链接，不自动清理历史证据。
+- 开发态默认写入`test-results/development-plugins/<run-id>/`，原生插件恢复写入`test-results/desktop-plugin-recovery/<run-id>/`；显式`KK_PLUGIN_EVIDENCE_DIR`必须是本次尚未存在的新目录，冲突在启动服务/客户端前失败。运行前仍须确认CLI覆盖参数及外部工具不会扩大清理范围；若会清理既有路径，先完整备份全部报告/回执/截图并核对清单和hash，不能只备份JSON摘要。
 
 ## 桌面与 Rust 测试
 

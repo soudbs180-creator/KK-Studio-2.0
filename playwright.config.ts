@@ -1,4 +1,6 @@
 import { defineConfig } from "@playwright/test";
+import { execFileSync } from "node:child_process";
+import { allocateTestEvidenceRun } from "./scripts/testing/test-evidence.mjs";
 const productionPort = "1423";
 const configuredPort = process.env.KK_TEST_PORT;
 if (configuredPort !== undefined && configuredPort !== productionPort)
@@ -7,8 +9,17 @@ if (configuredPort !== undefined && configuredPort !== productionPort)
   );
 const port = productionPort;
 const baseURL = `http://127.0.0.1:${port}`;
+const sourceHead = execFileSync("git", ["rev-parse", "HEAD"], {
+  cwd: new URL(".", import.meta.url),
+  encoding: "utf8",
+  windowsHide: true,
+  timeout: 10_000,
+}).trim();
+const evidence = allocateTestEvidenceRun("browser");
 export default defineConfig({
   testDir: "./tests/browser",
+  outputDir: evidence.artifactsDir,
+  metadata: { sourceHead },
   timeout: 30000,
   retries: 1,
   use: {
@@ -21,8 +32,5 @@ export default defineConfig({
     url: baseURL,
     reuseExistingServer: false,
   },
-  reporter: [
-    ["list"],
-    ["json", { outputFile: "test-results/browser-results.json" }],
-  ],
+  reporter: [["list"], ["json", { outputFile: evidence.reportFile }]],
 });
