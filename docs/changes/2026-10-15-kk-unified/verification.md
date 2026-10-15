@@ -11,3 +11,5 @@
 - App attach 手动工作树失败：The checkout exists but is not a managed worktree；未影响 Git 隔离。
 
 证据仅适用于记录的版本和实际检查范围。Desktop、Web、真实服务、CI 及用户验收分别记录。
+
+- 集成候选源码版本：Desktop/Web 2.1.35，Mobile 2.1.1保持；通过 version:bump 生成镜像，version:check/consistency PASS。CHANGELOG旧发布2.1.0落后警告保留，不把未发布候选写为release；实际产物尚未重建。
