@@ -14,3 +14,5 @@
 原账本已应用：142条，原141对象逐项完全相同，仅TASK-GOV-006新增；机器矩阵192唯一ID，索引区间无损解码与原12,970来源对象逐项相符。governance142/0、Markdown122活动文件/0、snapshot3/0、显式本轮文档Prettier全部通过、staged diffcheck通过。均只验证治理结构与本次文档，不代表产品测试通过。
 
 独立审查及补审PASS，首轮P2历史混写修正并保原文，owner认领依据与UNKNOWN边界如实记录。审查原始记录SHA见review.md。最终本地提交、exact-head delivery检查、完整文件哈希和dirty状态由工程外handoff-final-receipt.json绑定；没有推送/PR/main合并、发布、新产品实现或客户端替换。
+
+首轮本地提交b9acec06756ba3f57e19ebf4b72a3802e30a4fe7的delivery检查退出1，仅缺docs/PROGRESS.md。本轮补入独立治理进展记录并保留该失败；不放宽检查。只读续读队列生成时先把未开始转交项误算为partial，断言阻止落盘；现按原manifest索引24/26精确提取2项，5未读/6受限分别保留，无历史原件改写。

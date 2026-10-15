@@ -1,5 +1,15 @@
 # 当前进度
 
+## 2026-10-15 统一安全交接与需求归并（IN_PROGRESS / PARTIAL）
+
+TASK-GOV-006：8个原活动主会话各一次安全暂停，重连后8主+4此前活动子会话均支持工具回读idle并交接无写入。原task-ledger仅新增接管条目及192稳定ID来源矩阵，原141条对象不变；51差额是待核对的台账覆盖差异，不能解释为丢失功能。114登记worktree原对象/dirty/冲突及所有失败保留，复用已完成clean治理目录建新文档分支，旧branch保留，没有新增或清理worktree。
+
+当前远端main235e7f798c38b022d578f8fa41eaea1b9281fd6d已包含PR60，Desktop/Web2.1.33；本轮没有新产品功能进入客户端，没有推送/PR/main合并或客户端替换。HOME九项目和勘误以PROJECT_STATE当前区为准。旧版本/验证段落均保留各自历史时点，不作为当前恢复基线。
+
+独立审查与补审PASS，治理/链接/快照/格式检查通过；全历史仍有19耗尽/2部分/6接口受限/5未读及更深cursor、原主控UNKNOWN/列表分页限制，已留只读补核队列。最新用户要求本轮整理完成后交原主控确认，再另建正式执行会话；这里不实现产品或新派实现任务。见[唯一接管提示词](changes/2026-10-15-unified-handoff/takeover-context.md)、[归并/合入顺序](changes/2026-10-15-unified-handoff/resume-order.md)、[验证](changes/2026-10-15-unified-handoff/verification.md)与[审查](changes/2026-10-15-unified-handoff/review.md)。
+
+## 以下为此前迭代原始时点（保留原文，不能覆盖上述当前交接）
+
 ## 2026-10-15 Codex 卡片连线参考图（功能/live PASS；交付 PARTIAL）
 
 TASK-CODEX-REF-20261015：功能/live PASS，交付PARTIAL：Desktop/Web2.1.33；参考原件42452f4d...经一次真实Codex内置imagegen生成PNG6531e6ac...并归档，1result/1result边/1reference边，外部图片请求0；重载、正常关闭/重建/重启、原桌面快捷方式重开PASS，原件hash不变且重启turn0。最终EXE6353aba3.../inputee1e43be...、reason=current、bundlevihgOeA0。Node1327PASS/14skip、Agent199PASS/2skip、定向45/dirty预检50及browser13/邻域39分别PASS；完整browser784为771PASS13FAIL/0flaky/skip，13项已由任务前源码逐项同断言重现为PRE-EXISTING FAILURE，但fullverify仍FAIL、development未运行。最终SHA正式review/Hosted/PR未完成。 FEAT-002保持PARTIAL，其他作者与HOME任务保留，不升级全项目REAL。见[验证](changes/2026-10-15-codex-card-reference/verification.md)与[审查](changes/2026-10-15-codex-card-reference/review.md)。
@@ -19,7 +29,6 @@ candidate1真实文本与内置图源blob同fc36a3a...仅证明该时点；之�
 eb5 push759首过/1flaky严格NON_PASS与旧PR760首过分别保留，完整指纹、因果边界和Native4默认profile偏好例外集中于[最新验证](changes/2026-10-15-ui-full/verification.md#2131-当前本地验收)。当前eb5加版本31/最小差量尚未形成最终head；精确独立审查、新Hosted/Delivery、普通PR59合并及main/post-main待验。原138任务/其他功能/primary文件与index/历史保持，Mobile2.1.1规划不变。
 
 ## 此前阶段记录（原文保留，最新状态以上方为准）
-
 
 ## 2026-10-15 2.1.30本地验收冻结（REVIEW / 整体NOT_VERIFIED）
 
@@ -150,7 +159,6 @@ TASK-AGENT-RECOVERY-20261013 按用户新要求复验原数据/profile，已证�
 - 历史交付包仅在包内明确写入 `legacy-incomplete.md` 时获得有限豁免；同一变更中的新修复包仍必须具备五件套并绑定当前台账任务。
 - Windows `desktopRelease` 的链接判定改为直接读取 `lstat().isSymbolicLink()`，避免 hosted runner 的 8.3/realpath 等价路径误报普通 `node_modules`；真实 symlink/junction 仍拒绝。
 - 本节在本地定向测试、独立 exact-SHA review 和 Hosted `verify`/`delivery` 回执完成前保持 `REVIEW/NOT_VERIFIED`；不代表 PR #55 已合并、客户端已发布或 Hermes 已集成。
-
 
 ## 2026-10-12 分支收敛 P0-P1：规则门禁入主线 + 100 分支全量分类
 
