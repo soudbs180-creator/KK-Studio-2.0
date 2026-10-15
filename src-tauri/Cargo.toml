@@ -6,7 +6,7 @@ authors = ["kk Studio"]
 license = "MIT"
 repository = ""
 edition = "2021"
-rust-version = "1.77"
+rust-version = "1.80"
 
 [build-dependencies]
 tauri-build = { version = "2", features = [] }
@@ -28,6 +28,8 @@ base64 = "0.22"
 sha2 = "0.10"
 zip = { version = "2.4.2", default-features = false, features = ["deflate"] }
 ryu-js = "1.0.3"
+getrandom = "=0.3.4"
+axum = { version = "=0.8.9", default-features = false, features = ["http1", "json", "tokio"] }
 
 [target.'cfg(target_os = "windows")'.dependencies]
 keyring = { version = "3.6.3", default-features = false, features = ["windows-native"] }

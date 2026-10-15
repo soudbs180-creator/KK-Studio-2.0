@@ -8,6 +8,9 @@ mod asset_storage;
 mod cli_runtime;
 mod creation_storage;
 mod local_hardware;
+mod native_activation;
+mod native_repository_lock;
+mod native_root_authority;
 mod project_package;
 mod provider_config;
 mod provider_model_requests;
@@ -1722,17 +1725,34 @@ fn task_host_cancel(
 
 fn main() {
     let paths = storage_paths::AppPaths::initialize().expect("KK Studio 无法初始化用户数据目录");
+    let authority = match native_root_authority::NativeRootAuthority::elect(&paths)
+        .expect("KK Studio 无法取得仓库所有权")
+    {
+        Some(authority) => authority,
+        None => {
+            if let Err(error) =
+                tauri::async_runtime::block_on(native_activation::activate_existing(
+                    &paths.root,
+                    std::time::Duration::from_secs(10),
+                ))
+            {
+                eprintln!("{error}");
+                std::process::exit(1);
+            }
+            return;
+        }
+    };
     let (memory_path, legacy_memory_path) = memory_paths(paths.memory.clone(), paths.isolated);
     let config_path = paths.config;
     let conversations_path = paths.conversations;
-    // TaskHost and IPC serialize through one in-process asset lock. Separate
-    // repositories can race on the same exclusive Windows repository.lock.
-    let assets = Arc::new(asset_storage::AssetRepository::new(paths.assets));
+    let assets = Arc::clone(&authority.assets);
     // Legacy memory is validated and migrated only when enabled memory is first read.
-    let task_host = Arc::new(
-        task_host::TaskHost::new(paths.tasks.join("native-host"), Arc::clone(&assets))
-            .expect("KK Studio 无法初始化原生任务主机"),
-    );
+    let task_host = Arc::clone(&authority.task_host);
+    let activation = tauri::async_runtime::block_on(native_activation::ActivationServer::start(
+        Arc::clone(&authority),
+    ))
+    .expect("KK Studio 无法启动窗口激活服务");
+    let focus = Arc::clone(&activation.focus);
 
     let config = if config_path.exists() {
         fs::read_to_string(&config_path)
@@ -1750,12 +1770,38 @@ fn main() {
     tauri::Builder::default()
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_dialog::init())
-        .setup(|app| {
+        .setup(move |app| {
             app.manage(cli_runtime::CliRuntime::new(
                 app.path().resource_dir()?.join("agent-runtime"),
             ));
+            let owner = app.handle().clone();
+            focus.register(Arc::new(move || {
+                let owner = owner.clone();
+                let (sender, receiver) = std::sync::mpsc::sync_channel(1);
+                let focus_handle = owner.clone();
+                owner
+                    .run_on_main_thread(move || {
+                        let result = (|| {
+                            let window = focus_handle
+                                .get_webview_window("main")
+                                .ok_or_else(|| "窗口未就绪".to_string())?;
+                            window.show().map_err(|_| "无法显示窗口".to_string())?;
+                            window
+                                .unminimize()
+                                .map_err(|_| "无法恢复窗口".to_string())?;
+                            window.set_focus().map_err(|_| "无法激活窗口".to_string())
+                        })();
+                        let _ = sender.send(result);
+                    })
+                    .map_err(|_| "io: 窗口激活调度失败".to_string())?;
+                receiver
+                    .recv_timeout(std::time::Duration::from_secs(2))
+                    .map_err(|_| "io: 窗口激活超时".to_string())?
+            }))?;
             Ok(())
         })
+        .manage(Mutex::new(Some(activation)))
+        .manage(Arc::clone(&authority))
         .manage(agent_runtime::AgentRuntime::new(
             paths
                 .tasks
@@ -1774,7 +1820,7 @@ fn main() {
             conversations_path,
             memory_path,
             legacy_memory_path,
-            creation: Arc::new(creation_storage::SnapshotRepository::new(paths.creation)),
+            creation: Arc::clone(&authority.snapshots),
             assets,
             task_host,
             restored_roots: Mutex::new(std::collections::HashSet::new()),
@@ -1839,6 +1885,14 @@ fn main() {
             if matches!(event, tauri::RunEvent::Exit) {
                 app.state::<agent_runtime::AgentRuntime>().shutdown();
                 app.state::<cli_runtime::CliRuntime>().shutdown();
+                if let Some(activation) = app
+                    .state::<Mutex<Option<native_activation::ActivationServer>>>()
+                    .lock()
+                    .ok()
+                    .and_then(|mut server| server.take())
+                {
+                    tauri::async_runtime::block_on(activation.shutdown());
+                }
             }
         });
 }
