@@ -43,7 +43,8 @@ export default function ModelPickerMenu({
   onConfigure,
   apiOnly = false,
 }: {
-  scope: "conversation" | "canvas-image" | "canvas-video" | "canvas-text";
+  scope:
+    "home" | "conversation" | "canvas-image" | "canvas-video" | "canvas-text";
   kind?: ModelKind;
   apiOnly?: boolean;
   current?: ModelSelection;
@@ -126,9 +127,11 @@ export default function ModelPickerMenu({
                   ? current.effectiveModel
                   : undefined,
             },
-            imageLabel,
-            "Codex 内置生图 · 型号以上游回执为准",
-            agent.status !== "connected" ? "请先连接 Codex" : undefined,
+            "Codex 内置生图",
+            `ChatGPT 账号 · ${imageLabel}`,
+            scope !== "home" && agent.status !== "connected"
+              ? "请先连接 Codex"
+              : undefined,
           ),
         ]
       : [];
@@ -165,7 +168,9 @@ export default function ModelPickerMenu({
   const visible: Entry[] = global
     ? [...defaults, ...codexImage, ...codex, ...apis]
     : page === "root"
-      ? [...defaults, ...sources]
+      ? scope === "home"
+        ? [...codexImage, ...sources.filter((item) => item.id === "api")]
+        : [...defaults, ...sources]
       : page === "codex"
         ? [...codex, ...codexImage]
         : page === "api"

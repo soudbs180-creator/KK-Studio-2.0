@@ -20,6 +20,7 @@ export default function useAgentComposerDraft(
   draftKey: string,
   active: boolean,
   draftState: AgentDraftState,
+  initialPrompt = "",
 ) {
   const [drafts, setDrafts] = draftState.text;
   const draftsRef = useRef(drafts);
@@ -32,7 +33,10 @@ export default function useAgentComposerDraft(
     instructions: string,
     limit: number,
   ): AgentDraftAppendResult => {
-    const text = [draftsRef.current[draftKey]?.trimEnd(), instructions]
+    const text = [
+      (draftsRef.current[draftKey] ?? initialPrompt).trimEnd(),
+      instructions,
+    ]
       .filter(Boolean)
       .join("\n\n");
     if (text.length > limit)
@@ -66,12 +70,12 @@ export default function useAgentComposerDraft(
     return () => window.removeEventListener(AGENT_DRAFT_APPEND_EVENT, append);
   }, [active, draftKey]);
   const clearSentDraft = (key: string, sent: string) => {
-    if (draftsRef.current[key] !== sent) return;
+    if ((draftsRef.current[key] ?? initialPrompt) !== sent) return;
     draftsRef.current = { ...draftsRef.current, [key]: "" };
     setDrafts(draftsRef.current);
   };
   return {
-    input: drafts[draftKey] ?? "",
+    input: drafts[draftKey] ?? initialPrompt,
     update,
     appendInstructions,
     clearSentDraft,

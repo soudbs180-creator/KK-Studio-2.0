@@ -1,11 +1,15 @@
 import { expect, test, type Locator } from "@playwright/test";
+import { readFileSync } from "node:fs";
 import { openWorkspace } from "./helpers";
 
 const evidence = () => test.info().outputPath("input-contract");
-const png = Buffer.from(
-  "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4z8DwHwAFgAI/ScLbtAAAAABJRU5ErkJggg==",
-  "base64",
-);
+// Account attachments deduplicate by original bytes, so layout needs distinct images.
+const pngFixtures = [
+  "../../public/fixtures/demo/blue-hour.png",
+  "../../public/design/figma/timer-start.png",
+  "../../public/design/figma/task-placeholder-running.png",
+  "../../public/design/figma/task-placeholder-complete.png",
+].map((file) => readFileSync(new URL(file, import.meta.url)));
 async function assertFlow(form: Locator) {
   const input = await form.locator("textarea").boundingBox();
   const attachments = await form.locator(".start-attachment-row").boundingBox();
@@ -134,7 +138,7 @@ test("growing the home input keeps the discovery section below the entire form",
     Array.from({ length: 4 }, (_, i) => ({
       name: `素材-${i}.png`,
       mimeType: "image/png",
-      buffer: png,
+      buffer: pngFixtures[i],
     })),
   );
   await expect(page.locator(".start-attachment-chip")).toHaveCount(4);
@@ -250,7 +254,7 @@ for (const [width, height] of [
         Array.from({ length: 4 }, (_, i) => ({
           name: `参考素材-${i}-一个很长的文件名.png`,
           mimeType: "image/png",
-          buffer: png,
+          buffer: pngFixtures[i],
         })),
       );
       // This lookup deliberately includes the home list before the flow correction.

@@ -56,3 +56,7 @@ TASK-AGENT-004: Google API Key 对话、生图与画布归档的本地/fixture �
 
 TASK-AGENT-005: Gemini CLI 登录文字对话及续接的本地/fixture 验证通过；真实安装、登录、桌面待验收，见 [验证](../changes/2026-09-23-google-cli-login/verification.md)。
 TASK-AGENT-007：CodeBuddy CLI 受控短文本委派；后续设计师全链路按 [剩余顺序](../changes/2026-09-24-codebuddy-delegation/remaining.md) 推进。
+
+## 2026-10-15 首页与来源修复（REVIEW，整体待验）
+
+TASK-CODEX-HOME-20261015：新首页默认Codex/ChatGPT图片能力，首页、聊天、画布沿各自显式Codex/API来源执行；旧API和无selection项目保持legacy路由，局部隐私/草稿/附件及原件保全。输入同排与菜单锚点同步修复。当前进入REVIEW：784浏览器首过及Native单QA包往返/冷开图文通过，但完整npm verify因另一任务占用1421而development未执行/exit1；当前SHA独审与Hosted完整门禁、合并和本机更新待验。见[本轮规格](../changes/2026-10-15-codex-home/spec.md)与[验证](../changes/2026-10-15-codex-home/verification.md)；本卡功能状态保持，不用前置真实账号证据代填新入口或所有外部Provider。

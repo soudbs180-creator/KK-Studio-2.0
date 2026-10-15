@@ -30,6 +30,12 @@ export default function useConversationAttachments({
 }) {
   const fileInput = useRef<HTMLInputElement>(null);
   const attachmentRef = useRef(attachments);
+  const callbacks = useRef({
+    onChange,
+    onStatus,
+    onImportState,
+    maxAttachments,
+  });
   const draftKeyRef = useRef(draftKey);
   const readersRef = useRef<Set<FileReader>>(new Set());
   const liveRef = useRef(true);
@@ -37,6 +43,7 @@ export default function useConversationAttachments({
   const pendingRef = useRef(0);
   const [readingFiles, setReadingFiles] = useState(0);
   attachmentRef.current = attachments;
+  callbacks.current = { onChange, onStatus, onImportState, maxAttachments };
   // Update during render as well as in the effect: a FileReader event can be
   // delivered between the new render and the effect flush.
   draftKeyRef.current = draftKey;
@@ -103,10 +110,14 @@ export default function useConversationAttachments({
               all.findIndex((entry) => entry.assetId === item.assetId) ===
               index,
           );
+          if (next.length > callbacks.current.maxAttachments)
+            throw new Error(
+              `最多添加 ${callbacks.current.maxAttachments} 张参考图片，本批图片未添加。`,
+            );
           attachmentRef.current = next;
-          onChange(next);
-          onImportState?.(null);
-          onStatus("");
+          callbacks.current.onChange(next);
+          callbacks.current.onImportState?.(null);
+          callbacks.current.onStatus("");
         })
         .catch((error) => {
           if (!isCurrent()) return;
@@ -114,8 +125,8 @@ export default function useConversationAttachments({
             error instanceof Error
               ? error.message
               : "本批图片读取失败，未添加。";
-          onStatus(message);
-          onImportState?.(message);
+          callbacks.current.onStatus(message);
+          callbacks.current.onImportState?.(message);
         })
         .finally(() => {
           if (!isCurrent()) return;
@@ -181,18 +192,26 @@ export default function useConversationAttachments({
               typeof reader.result === "string" ? reader.result : undefined,
           };
           const next = [...attachmentRef.current, attachment];
+          if (next.length > callbacks.current.maxAttachments) {
+            callbacks.current.onStatus(
+              `最多添加 ${callbacks.current.maxAttachments} 张参考图片，${file.name} 未添加。`,
+            );
+            return;
+          }
           attachmentRef.current = next;
-          onChange(next);
-          if (pendingRef.current <= 1) onStatus("");
+          callbacks.current.onChange(next);
+          if (pendingRef.current <= 1) callbacks.current.onStatus("");
         } catch {
-          if (isCurrent()) onStatus(`${file.name} 本地归档失败，请重试。`);
+          if (isCurrent())
+            callbacks.current.onStatus(`${file.name} 本地归档失败，请重试。`);
         } finally {
           finish();
         }
       };
       reader.onerror = () => {
         finish();
-        if (isCurrent()) onStatus(`${file.name} 读取失败，请重试。`);
+        if (isCurrent())
+          callbacks.current.onStatus(`${file.name} 读取失败，请重试。`);
       };
       reader.onabort = finish;
       reader.readAsDataURL(file);

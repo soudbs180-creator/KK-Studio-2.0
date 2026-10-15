@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import { selectHomeApiModel } from "./helpers";
 import {
   createProject,
   createTask,
@@ -26,6 +27,7 @@ async function submit(page: Page) {
   await page.getByLabel("模型名称").fill("image-test");
   await page.getByRole("button", { name: "保存连接", exact: true }).click();
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
+  await selectHomeApiModel(page);
   await page.getByLabel("创作提示词").fill("生成保存状态 fixture");
   await page.getByRole("button", { name: "开始创建项目" }).click();
   await page.getByRole("button", { name: "批准并提交" }).click();

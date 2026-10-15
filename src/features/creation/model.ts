@@ -11,6 +11,10 @@ import type {
   CanvasReferenceSlot,
 } from "../../domain/canvasItems";
 import { CANVAS_REFERENCE_SLOTS } from "../../domain/canvasItems.ts";
+import {
+  normalizeModelSelection,
+  type ModelSelection,
+} from "../../domain/modelSelection.ts";
 import { normalizeTags } from "../../domain/assets.ts";
 import {
   normalizeGoogleConversation,
@@ -198,6 +202,10 @@ export interface CreationSnapshot {
 }
 
 export interface CreationDraft {
+  modelSelection?: ModelSelection;
+  conversationChannel?: "codex" | "direct" | "google";
+  /** Only a new home request may seed the Agent editor from this pending draft. */
+  pendingAgent?: boolean;
   providerConnectionId?: string;
   prompt: string;
   model: string;
@@ -210,6 +218,7 @@ export interface CreationDraft {
 }
 
 export interface CreateProjectInput {
+  modelSelection?: ModelSelection;
   /** Preliminary binding check before request crops and masks are archived. */
   imageOperation?: "inpaint";
   imageEdit?: ImageEditSnapshot;
@@ -374,6 +383,17 @@ function normalizeDraft(value: unknown): CreationDraft {
   const candidate =
     value && typeof value === "object" ? (value as Partial<CreationDraft>) : {};
   return {
+    modelSelection: normalizeModelSelection(candidate.modelSelection),
+    conversationChannel:
+      candidate.conversationChannel === "codex" ||
+      candidate.conversationChannel === "direct" ||
+      candidate.conversationChannel === "google"
+        ? candidate.conversationChannel
+        : undefined,
+    pendingAgent:
+      typeof candidate.pendingAgent === "boolean"
+        ? candidate.pendingAgent
+        : undefined,
     prompt: typeof candidate.prompt === "string" ? candidate.prompt : "",
     providerConnectionId:
       typeof candidate.providerConnectionId === "string"
@@ -1073,18 +1093,26 @@ export function persistCreationSnapshot(snapshot: CreationSnapshot): void {
 }
 
 export function createProject(input: CreateProjectInput): CreationProject {
+  const selection = normalizeModelSelection(input.modelSelection);
+  const codex = selection && selection.source !== "api";
   const routing = creationProviderRouting(input);
   const id = projectId();
   const now = Date.now();
   const item: CanvasCollectionItem = {
     id: itemId(id),
     title: "图片创作",
-    description: input.model ? `${input.model} · 待执行` : "图片 · 待配置模型",
+    description: codex
+      ? "Codex 内置生图"
+      : input.model
+        ? `${input.model} · 待执行`
+        : "图片 · 待配置模型",
     kind: input.kind,
     prompt: input.prompt,
     model: input.model,
+    generationSource: codex ? "codex" : undefined,
+    providerConnectionId: codex ? undefined : input.providerConnectionId,
     updatedAt: now,
-    generationStatus: "pending",
+    generationStatus: codex ? undefined : "pending",
   };
   return {
     id,
@@ -1112,6 +1140,8 @@ export function createProject(input: CreateProjectInput): CreationProject {
     providerName: input.providerName,
     providerCredentialRef: input.providerCredentialRef,
     composerDraft: {
+      modelSelection: selection,
+      providerConnectionId: codex ? undefined : input.providerConnectionId,
       prompt: "",
       model: input.model,
       kind: input.kind,

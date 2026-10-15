@@ -66,3 +66,42 @@ export function StartApproval({
     </div>
   );
 }
+
+export function StartComposerFeedback({
+  reason,
+  countInvalid,
+  onResetCount,
+  onConfigure,
+  pending,
+  onConfirm,
+  onCancel,
+}: {
+  reason?: string | null;
+  countInvalid: boolean;
+  onResetCount: () => void;
+  onConfigure?: () => void;
+  pending: boolean;
+  onConfirm: () => void;
+  onCancel: () => void;
+}) {
+  return (
+    <>
+      {reason && (
+        <div className="start-composer-feedback" role="status">
+          <span id="start-submit-reason">{reason}</span>
+          {countInvalid && (
+            <button type="button" onClick={onResetCount}>
+              改为生成 1 张
+            </button>
+          )}
+          {onConfigure && (
+            <button type="button" onClick={onConfigure}>
+              前往模型设置
+            </button>
+          )}
+        </div>
+      )}
+      {pending && <StartApproval onConfirm={onConfirm} onCancel={onCancel} />}
+    </>
+  );
+}

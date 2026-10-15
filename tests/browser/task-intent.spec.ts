@@ -1,4 +1,5 @@
 import { expect, test, type Page, type Route } from "@playwright/test";
+import { selectHomeApiModel } from "./helpers";
 
 const generationsEndpoint = "https://models.example.test/v1/images/generations";
 const creationKey = "kk-studio-next:creation:v1";
@@ -190,6 +191,7 @@ async function configure(page: Page): Promise<void> {
     "连接信息已保存",
   );
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
+  await selectHomeApiModel(page);
 }
 
 async function submitHome(

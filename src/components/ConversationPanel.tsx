@@ -12,11 +12,7 @@ import ConversationComposerRegion from "./ConversationComposerRegion";
 import GoogleConversationPanel from "./GoogleConversationPanel";
 import useConversationSubmit from "./useConversationSubmit";
 import { useAgentDraftState } from "../features/agent/useAgentComposerDraft";
-import {
-  readAgentModel,
-  writeAgentModel,
-  safeStorage,
-} from "../features/agent/agentConnection";
+import useConversationSelection from "./useConversationSelection";
 import {
   canSubmitGeneration,
   getDisabledReason,
@@ -42,13 +38,6 @@ export default function ConversationPanel({
 }: ConversationPanelProps) {
   const panelRef = useConversationOverlay(overlay);
   const agentDraftState = useAgentDraftState();
-  const [channel, setChannel] = useState(() =>
-    ["direct", "google"].includes(safeStorage.getItem("kk-chat-channel") ?? "")
-      ? safeStorage.getItem("kk-chat-channel")!
-      : "codex",
-  );
-  const [agentModel, setAgentModel] = useState(readAgentModel);
-  const agentActive = Boolean(agent && channel === "codex");
   const agentConnecting = Boolean(agent?.connecting);
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<string[]>([]);
@@ -60,6 +49,16 @@ export default function ConversationPanel({
   const [submitting, setSubmitting] = useState(false);
   const modelDisabled =
     submitting || Boolean(agent?.sending || agent?.connecting);
+  const { channel, agentSelection, agentModel, changeChannel, selectModel } =
+    useConversationSelection({
+      projectId: project?.id,
+      draft: composerDraft,
+      locked: modelDisabled,
+      patch: updateDraft,
+      onApiModel: onModelChange,
+      onStatus: setStatus,
+    });
+  const agentActive = Boolean(agent && channel === "codex");
   useEffect(() => {
     setInput(project?.composerDraft.prompt ?? "");
     setApprovalMode(project?.composerDraft.approvalMode ?? "auto");
@@ -121,7 +120,7 @@ export default function ConversationPanel({
         draftState={agentDraftState}
         onClose={onClose}
         onOpen={onOpen}
-        onChannelChange={setChannel}
+        onChannelChange={changeChannel}
         overlay={overlay}
         codexBusy={Boolean(agent?.sending || agent?.connecting)}
       />
@@ -150,10 +149,7 @@ export default function ConversationPanel({
         <ConversationChannelSelector
           value={channel}
           disabled={agent.sending || agent.connecting}
-          onChange={(value) => {
-            setChannel(value);
-            setStatus("");
-          }}
+          onChange={changeChannel}
         />
       )}
       <ConversationMessageFeed
@@ -217,30 +213,14 @@ export default function ConversationPanel({
         modelOptions={modelOptions}
         modelSelection={
           agentActive
-            ? {
-                source: agentModel ? "codex" : "default",
-                model: agentModel ?? "",
-              }
+            ? agentSelection
             : {
                 source: "api",
                 model: currentModel ?? "",
                 connectionId: project?.composerDraft.providerConnectionId,
               }
         }
-        onSelectModel={(option, selection) => {
-          if (modelDisabled) return;
-          const codex = selection ? selection.source !== "api" : agentActive;
-          setChannel(codex ? "codex" : "direct");
-          safeStorage.setItem("kk-chat-channel", codex ? "codex" : "direct");
-          if (codex) {
-            const model =
-              selection?.source === "default" || option === "Codex 账号默认"
-                ? undefined
-                : option;
-            setAgentModel(model);
-            writeAgentModel(model);
-          } else onModelChange?.(option, selection);
-        }}
+        onSelectModel={selectModel}
         onOpen={onOpen}
         skills={skills}
         onApplySkill={onApplySkill}

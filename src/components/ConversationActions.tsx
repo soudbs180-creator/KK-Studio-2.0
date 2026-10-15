@@ -116,12 +116,14 @@ export default function ConversationActions({
         <button
           type="button"
           className="chat-skill-trigger"
+          aria-label="扩展"
+          title="扩展"
           aria-haspopup="menu"
           aria-expanded={skillMenuOpen}
           onClick={onToggleSkill}
         >
           <img src="/design/figma/composer-puzzle.svg" alt="" />
-          扩展
+          <span>扩展</span>
         </button>
         {skillMenuOpen && (
           <ComposerExtensionsMenu

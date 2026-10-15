@@ -468,16 +468,6 @@
   }
 }
 
-@media (max-width: 1023px) {
-  /* Keep a compact popover below the composer without covering the discovery
-     controls. The menu remains anchored to the existing toolbar; this local
-     reserve only gives the page enough flow space while it is open. */
-  .start-composer:has(.start-composer-footer [role="menu"]),
-  .start-composer:has(.start-composer-footer [role="dialog"]) {
-    margin-bottom: 288px;
-  }
-}
-
 @media (max-width: 900px) {
   .start-skill-popover,
   .start-plugin-popover {

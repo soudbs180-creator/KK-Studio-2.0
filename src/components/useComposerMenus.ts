@@ -29,6 +29,8 @@ export function useComposerMenus(boundary: RefObject<HTMLElement>) {
       '[role="menu"], [role="dialog"]',
     );
     if (!popover) return;
+    const home = boundary.current?.closest<HTMLElement>(".start-composer");
+    const viewport = window.visualViewport;
     const place = () => {
       const panel = boundary.current?.closest(
         ".start-page, .conversation-panel",
@@ -39,61 +41,45 @@ export function useComposerMenus(boundary: RefObject<HTMLElement>) {
         setMenu(null);
         return;
       }
-      const left = Math.max(8, (bounds?.left ?? 0) + 8);
+      const viewportLeft = viewport?.offsetLeft ?? 0;
+      const viewportTop = viewport?.offsetTop ?? 0;
+      const viewportRight =
+        viewportLeft + (viewport?.width ?? window.innerWidth);
+      const viewportBottom =
+        viewportTop + (viewport?.height ?? window.innerHeight);
+      const left = Math.max(
+        viewportLeft + 8,
+        (bounds?.left ?? viewportLeft) + 8,
+      );
       const right = Math.min(
-        window.innerWidth - 8,
-        (bounds?.right ?? window.innerWidth) - 8,
+        viewportRight - 8,
+        (bounds?.right ?? viewportRight) - 8,
       );
-      const top = Math.max(8, (bounds?.top ?? 0) + 8);
+      const top = Math.max(viewportTop + 8, (bounds?.top ?? viewportTop) + 8);
       const bottom = Math.min(
-        window.innerHeight - 8,
-        (bounds?.bottom ?? window.innerHeight) - 8,
+        viewportBottom - 8,
+        (bounds?.bottom ?? viewportBottom) - 8,
       );
-      const controls = boundary.current?.getBoundingClientRect();
+      const controls = trigger.current?.getBoundingClientRect();
       if (!controls) return;
-      // Home generation options are also actions: a popup must clear them.
-      const home = boundary.current?.closest(".start-composer");
-      // Keep the desktop workbench hierarchy (home popovers open above the
-      // composer) while using the full form top as the collision boundary.
-      // Anchoring to the footer alone makes a tall menu cover the textarea.
-      // Compact layouts keep the existing below-placement algorithm; the
-      // home page reserves local flow space so discovery controls stay clear.
-      const homePopoverAbove = !!home && window.innerWidth >= 1024;
-      const controlBottom = home
-        ? home.getBoundingClientRect().bottom
-        : controls.bottom;
-      const homeTop = home?.getBoundingClientRect().top ?? controls.top;
-      const above = Math.max(
-        0,
-        (homePopoverAbove ? homeTop : controls.top) - top - 8,
-      );
-      const below = Math.max(0, bottom - controlBottom - 8);
+      const above = Math.max(0, controls.top - top - 8);
+      const below = Math.max(0, bottom - controls.bottom - 8);
       const scrollTop = popover.scrollTop;
       popover.style.maxWidth = `${Math.max(0, right - left)}px`;
       popover.style.translate = "none";
-      popover.style.maxHeight = "none";
+      popover.style.maxHeight = "";
       const naturalHeight = popover.getBoundingClientRect().height;
-      // Prefer the desktop home hierarchy (above the composer) while the
-      // composer is in view. Once the page has scrolled far enough that the
-      // upper slot is clipped, use the visible space below the composer so a
-      // menu does not collapse to a zero-height strip at the viewport edge.
-      const aboveFits = above >= naturalHeight;
-      const down =
-        (!homePopoverAbove &&
-          (below >= naturalHeight ||
-            (above < naturalHeight && below > above))) ||
-        (homePopoverAbove && !aboveFits && below > above);
+      const down = below >= naturalHeight || below > above;
       popover.style.maxHeight = `${down ? below : above}px`;
+      popover.style.top = down ? "calc(100% + 8px)" : "auto";
+      popover.style.bottom = down ? "auto" : "calc(100% + 8px)";
       popover.style.overflowY = "auto";
       const rect = popover.getBoundingClientRect();
       const x = Math.max(left - rect.left, Math.min(0, right - rect.right));
-      const y =
-        (down
-          ? controlBottom + 8
-          : (homePopoverAbove ? homeTop : controls.top) - 8 - rect.height) -
-        rect.top;
-      popover.style.translate = `${x}px ${y}px`;
+      popover.style.translate = `${x}px 0px`;
       popover.scrollTop = scrollTop;
+      // Discovery stays in flow when a home menu opens below the action row.
+      if (home) home.style.marginBottom = down ? `${rect.height + 8}px` : "";
     };
     const onScroll = (event: Event) => {
       // Scrolling a limited menu changes its content, not its anchor.
@@ -106,12 +92,18 @@ export function useComposerMenus(boundary: RefObject<HTMLElement>) {
     observer.observe(popover);
     if (boundary.current)
       observer.observe(boundary.current.closest("form") ?? boundary.current);
+    if (trigger.current) observer.observe(trigger.current);
     window.addEventListener("resize", place);
     window.addEventListener("scroll", onScroll, true);
+    viewport?.addEventListener("resize", place);
+    viewport?.addEventListener("scroll", place);
     return () => {
       observer.disconnect();
+      home?.style.removeProperty("margin-bottom");
       window.removeEventListener("resize", place);
       window.removeEventListener("scroll", onScroll, true);
+      viewport?.removeEventListener("resize", place);
+      viewport?.removeEventListener("scroll", place);
     };
   }, [boundary, menu, restoreHiddenFocus]);
 

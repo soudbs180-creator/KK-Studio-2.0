@@ -36,9 +36,19 @@ export default function AgentComposer({
   composer: ReactElement<ComponentProps<typeof ConversationComposer>>;
 }) {
   const { input, update, appendInstructions, clearSentDraft } =
-    useAgentComposerDraft(draftKey, Boolean(active && agent), draftState);
+    useAgentComposerDraft(
+      draftKey,
+      Boolean(active && agent),
+      draftState,
+      composer.props.composerDraft?.pendingAgent
+        ? composer.props.composerDraft.prompt
+        : "",
+    );
   const [imageDrafts, setImageDrafts] = draftState.images;
-  const attachments = imageDrafts[draftKey] ?? [];
+  const initialAttachments = composer.props.composerDraft?.pendingAgent
+    ? composer.props.composerDraft.attachments
+    : [];
+  const attachments = imageDrafts[draftKey] ?? initialAttachments;
   const [readingCanvas, setReadingCanvas] = useState(false);
   const [importErrors, setImportErrors] = draftState.errors;
   const importError = importErrors[draftKey];
@@ -113,7 +123,7 @@ export default function AgentComposer({
       };
       setImageDrafts((previous) => ({
         ...previous,
-        [draftKey]: [...(previous[draftKey] ?? []), attachment],
+        [draftKey]: [...(previous[draftKey] ?? initialAttachments), attachment],
       }));
       setFeedback("");
       setImportError(null);
@@ -147,13 +157,17 @@ export default function AgentComposer({
     setSubmitting(agent.connectionRevision);
     setFeedback("");
     try {
-      const result = await agent.onSend(sent.trim(), sentAttachments);
+      const result = await agent.onSend(
+        sent.trim(),
+        sentAttachments,
+        composer.props.modelSelection,
+      );
       if (generation.current !== current) return;
       if (result.ok) {
         clearSentDraft(key, sent);
         setImageDrafts((previous) => ({
           ...previous,
-          [key]: (previous[key] ?? []).filter(
+          [key]: (previous[key] ?? initialAttachments).filter(
             (item) =>
               !sentAttachments.some((sentItem) => sentItem.id === item.id),
           ),
@@ -235,7 +249,7 @@ export default function AgentComposer({
         onRemoveAttachment: (id) =>
           setImageDrafts((previous) => ({
             ...previous,
-            [draftKey]: (previous[draftKey] ?? []).filter(
+            [draftKey]: (previous[draftKey] ?? initialAttachments).filter(
               (item) => item.id !== id,
             ),
           })),

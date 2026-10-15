@@ -16,6 +16,7 @@ import { effectiveTags, splitCollectionTags } from "./domain/collectionTags";
 import { normalizeTags } from "./domain/assets";
 import Sidebar from "./components/Sidebar";
 import type { ModelSelection } from "./features/models/modelSelection";
+import { homeModelSelection } from "./domain/modelSelection";
 import { useSidebarLayout } from "./components/useSidebarLayout";
 import Canvas from "./components/Canvas";
 import ConversationPanel from "./components/ConversationPanel";
@@ -65,6 +66,8 @@ import {
 import type { PluginAi } from "./features/plugins/pluginTypes.ts";
 import { createAgentHost } from "./features/agent/agentHost.ts";
 import { desktopAgentLifecycle } from "./features/agent/desktopAgentLifecycle.ts";
+import { prepareAgentAttachments } from "./features/agent/agentAttachments.ts";
+import { codexGenerationPrompt } from "./features/agent/codexGeneration.ts";
 import { assertCanvasDeliveries } from "./features/agent/agentCanvas.ts";
 import {
   createStageOrchestrator,
@@ -247,6 +250,8 @@ const TaskWorkbench = lazy(() => import("./components/TaskWorkbench"));
 
 export default function App() {
   const [active, setActive] = useState("landing");
+  const activePageRef = useRef(active);
+  activePageRef.current = active;
   const [extensionView, setExtensionView] = useState<
     "skills" | "connectors" | "partners"
   >("skills");
@@ -307,6 +312,7 @@ export default function App() {
   const saveStateRef = useRef(saveState);
   saveStateRef.current = saveState;
   const submitLock = useRef(false);
+  const homeCodexStarting = useRef(false);
   const [providerVersion, setProviderVersion] = useState(0);
   useEffect(() => {
     let active = true;
@@ -735,7 +741,10 @@ export default function App() {
     };
   }, [agentCanvasBridge]);
   useEffect(() => {
-    if (saveState === "saved" || saveState === "saving")
+    if (
+      !homeCodexStarting.current &&
+      (saveState === "saved" || saveState === "saving")
+    )
       void desktopAgentLifecycle.ensure();
   }, [
     creation.activeProjectId,
@@ -2254,24 +2263,44 @@ export default function App() {
           return "来源节点已删除或不支持，当前未提交生成。";
         sourceSignature = canvasSignature(original!, source.id);
         if (source.generationSource === "codex") {
-          if (
-            original!.canvas.edges.some(
-              (edge) =>
-                edge.target === source.id &&
-                edge.kind !== "result" &&
-                original!.items.find((item) => item.id === edge.source)
-                  ?.kind !== "text",
-            ) ||
-            source.assetId
-          )
-            return "Codex 卡片入口暂不接收参考图片，请选择支持编辑的 API 连接。";
-          if (signal?.aborted) return "已取消提交";
+          if (request.input.imageEdit?.document.regions.length)
+            return "Codex 卡片暂不支持局部区域编辑，请选择支持编辑的 API 连接。";
+          const validate = () => {
+            if (signal?.aborted) return "已取消提交，草稿和参考图已保留。";
+            const current = creationRef.current.projects.find(
+              (project) => project.id === projectId,
+            );
+            if (!current || activeProjectIdRef.current !== projectId)
+              return "项目已切换，当前未提交生成。";
+            if (
+              current.tasks.some(
+                (task) => task.status === "queued" || task.status === "running",
+              )
+            )
+              return "已有任务正在执行，当前未重复提交。";
+            if (canvasSignature(current, source.id) !== sourceSignature)
+              return "节点或参考图在检查期间发生变化，请重新提交；当前内容已保留。";
+            return undefined;
+          };
+          const beforeRead = validate();
+          if (beforeRead) return beforeRead;
+          const attachments = await canvasImageAttachments(original!, source);
+          if (source.kind === "text" && attachments.length)
+            return "Codex 文本卡片暂不接收参考图片，请在右侧 Agent 面板提交。";
+          const afterRead = validate();
+          if (afterRead) return afterRead;
           return agentConnection.generateFromCanvas({
             nodeId: source.id,
             prompt: request.input.prompt,
             model: request.input.model,
             count: request.input.count,
             kind: source.kind,
+            attachments: attachments.map((attachment) => ({
+              ...attachment,
+              canvasNodeId: attachment.id,
+            })),
+            signal,
+            validate,
           });
         }
         input = {
@@ -2434,7 +2463,108 @@ export default function App() {
   async function handleCreateProject(
     input: CreateProjectInput,
   ): Promise<string | undefined> {
-    return submitImageCommand({ origin: "home", input });
+    const selection = homeModelSelection(input);
+    if (selection.source === "api")
+      return submitImageCommand({
+        origin: "home",
+        input: {
+          ...input,
+          model: selection.model,
+          providerConnectionId: selection.connectionId,
+        },
+      });
+    if (submitLock.current) return "正在开始创作，请稍候。";
+    if (!["saved", "saving"].includes(saveStateRef.current))
+      return "请先处理项目读取或保存提示，当前未提交生成。";
+    if (!input.prompt.trim() || input.prompt.length > 4000)
+      return "请输入 1 至 4,000 字的创作提示词。";
+    if (input.privacyMode && input.privacyMode !== "byok_local")
+      return "当前隐私模式不允许 Codex 账号调用，草稿与参考图已保留。";
+    if (!navigator.onLine) return "当前离线，草稿与参考图已保留。";
+    const state = agentConnection.getState();
+    if (state.sending || state.preparing || state.pendingApproval)
+      return "请先完成或停止当前 Agent 任务，再开始新项目。";
+    const previousProjectId = creationRef.current.activeProjectId;
+    const draftAtStart = creationRef.current.homeDraft;
+    const attachments = input.attachments.map((item) => ({ ...item }));
+    submitLock.current = true;
+    homeCodexStarting.current = true;
+    try {
+      codexGenerationPrompt(input.prompt, selection, input.outputCount);
+      // Validate immutable originals locally before creating a project or a turn.
+      await prepareAgentAttachments(attachments, {
+        signal: new AbortController().signal,
+      });
+      if (
+        activePageRef.current !== "landing" ||
+        creationRef.current.activeProjectId !== previousProjectId
+      )
+        return "页面或项目已切换，当前未提交；首页草稿仍保留。";
+      const created = createProject({
+        prompt: input.prompt.trim(),
+        model: "",
+        modelSelection: selection,
+        kind: "image",
+        attachments,
+        privacyMode: input.privacyMode,
+        outputCount: input.outputCount,
+      });
+      // Keep an unsent Agent draft in the project if connection or send fails.
+      const project = {
+        ...created,
+        composerDraft: {
+          ...created.composerDraft,
+          prompt: input.prompt.trim(),
+          pendingAgent: true,
+          conversationChannel: "codex" as const,
+        },
+      };
+      commitCreation({
+        ...creationRef.current,
+        projects: [project, ...creationRef.current.projects],
+        activeProjectId: project.id,
+      });
+      activeProjectIdRef.current = project.id;
+      activePageRef.current = "workspace";
+      setActive("workspace");
+      setChat(true);
+      replaceCanvasItems(project.items);
+      agentConnection.syncProject();
+      await persistence.flush();
+      const ownsProject = () =>
+        creationRef.current.activeProjectId === project.id &&
+        activePageRef.current === "workspace";
+      if (!ownsProject()) return "项目已切换，当前未发送；原项目草稿仍保留。";
+      await desktopAgentLifecycle.connect();
+      if (!ownsProject()) return "项目已切换，当前未发送；原项目草稿仍保留。";
+      const result = await agentConnection.sendMessage(input.prompt.trim(), {
+        selection,
+        outputCount: input.outputCount,
+        attachments,
+        canvasSource: { nodeId: project.items[0].id, kind: "image" },
+      });
+      if (!result.ok) return result.error ?? "发送未确认，草稿仍保留。";
+      updateProject(project.id, (current) => ({
+        ...current,
+        composerDraft: {
+          ...current.composerDraft,
+          prompt: "",
+          attachments: [],
+          pendingAgent: undefined,
+        },
+      }));
+      if (creationRef.current.homeDraft === draftAtStart)
+        updateHomeDraft(emptyDraft());
+      await persistence.flush();
+      return undefined;
+    } catch (error) {
+      return error instanceof Error
+        ? error.message
+        : "无法连接 Codex，草稿仍保留。";
+    } finally {
+      homeCodexStarting.current = false;
+      submitLock.current = false;
+    }
   }
   async function handleSendMessage(message: string): Promise<boolean | string> {
     const project = creationRef.current.projects.find(
@@ -2479,6 +2609,9 @@ export default function App() {
       composerDraft: {
         ...activeProject.composerDraft,
         model,
+        modelSelection: selection ?? { source: "api", model },
+        conversationChannel: "direct" as const,
+        pendingAgent: undefined,
         providerConnectionId: selection?.connectionId,
         updatedAt: Date.now(),
       },
@@ -2897,7 +3030,6 @@ export default function App() {
               modelConfigured={homeModelConfig.configured}
               skills={skillRegistry.listRecords()}
               onApplySkill={applySkillToHome}
-              defaultModel={homeModelConfig.model}
             />
           )}
           {(active === "workspace" || workspaceVisited) && (
@@ -3134,13 +3266,41 @@ export default function App() {
                           canvasImages: activeProject.items.filter(
                             (item) => item.kind === "image" && item.assetId,
                           ),
-                          onSend: (message, attachments) =>
+                          onSend: async (message, attachments, selection) => {
                             // 不传 model：Codex 使用其账号默认模型（如 gpt-6-astra）。
                             // 项目模型是本地生成链路的模型，与 Codex 账号支持的模型集不同，
                             // 传过去会导致 ChatGPT 账号报 "model is not supported"。
-                            agentConnection.sendMessage(message, {
-                              attachments,
-                            }),
+                            const result = await agentConnection.sendMessage(
+                              message,
+                              {
+                                attachments,
+                                selection,
+                                outputCount:
+                                  selection?.kind === "image"
+                                    ? activeProject.composerDraft.outputCount
+                                    : undefined,
+                              },
+                            );
+                            if (result.ok) {
+                              const projectId = activeProject.id;
+                              updateProject(projectId, (project) =>
+                                project.composerDraft.pendingAgent &&
+                                project.composerDraft.prompt.trim() ===
+                                  message.trim()
+                                  ? {
+                                      ...project,
+                                      composerDraft: {
+                                        ...project.composerDraft,
+                                        prompt: "",
+                                        attachments: [],
+                                        pendingAgent: undefined,
+                                      },
+                                    }
+                                  : project,
+                              );
+                            }
+                            return result;
+                          },
                           onInterrupt: () => agentConnection.interrupt(),
                           onDecision: (decision) =>
                             agentConnection.resolveApproval(decision),

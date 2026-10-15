@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import { selectHomeApiModel } from "./helpers";
 import fs from "node:fs/promises";
 import {
   CREATION_STORAGE_KEY,
@@ -38,6 +39,7 @@ async function configure(page: Page, outputCount = 4) {
   await page.getByLabel("模型名称").fill("image-test");
   await page.getByRole("button", { name: "保存连接", exact: true }).click();
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
+  await selectHomeApiModel(page);
 }
 async function submit(page: Page) {
   await page.getByLabel("创作提示词").fill("带有磨砂材质的白色风扇");

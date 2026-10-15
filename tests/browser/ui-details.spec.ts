@@ -15,9 +15,27 @@ for (const width of [390, 1099, 1920]) {
     const home = page.locator(".start-composer");
     await expect(home.getByText("生成参数", { exact: true })).toHaveCount(0);
     await expect(home.getByLabel("生成数量", { exact: true })).toHaveCount(0);
-    for (const selector of [".start-tool-button", ".start-mode-button"])
-      for (const control of await home.locator(selector).all())
-        await expect(control).toHaveCSS("border-radius", "999px");
+    for (const selector of [
+      ".start-model-picker > button",
+      ".start-mode-button",
+    ])
+      await expect(home.locator(selector)).toHaveCSS("border-radius", "999px");
+    const homeExtensions = home.getByRole("button", {
+      name: "扩展",
+      exact: true,
+    });
+    await expect(homeExtensions).toBeVisible();
+    await expect(homeExtensions).toHaveAttribute("title", "扩展");
+    await expect(homeExtensions).toHaveAttribute("aria-haspopup", "menu");
+    await expect(homeExtensions).toHaveCSS(
+      "border-radius",
+      width < 768 ? "8px" : "999px",
+    );
+    if (width < 768) {
+      await expect(homeExtensions).toHaveCSS("width", "32px");
+      await expect(homeExtensions).toHaveCSS("height", "32px");
+      await expect(homeExtensions.locator("span")).toBeHidden();
+    } else await expect(homeExtensions.locator("span")).toBeVisible();
     const homeTops = await home
       .locator(".start-footer-right button")
       .evaluateAll((buttons) =>
@@ -32,12 +50,25 @@ for (const width of [390, 1099, 1920]) {
     await waitForConversationPanelSettled(page);
     const chat = page.locator(".chat-composer");
     await expect(chat).toBeVisible();
-    for (const selector of [
-      ".chat-model-picker",
-      ".chat-skill-trigger",
-      ".chat-mode-trigger",
-    ])
+    for (const selector of [".chat-model-picker", ".chat-mode-trigger"])
       await expect(chat.locator(selector)).toHaveCSS("border-radius", "999px");
+    const chatExtensions = chat.getByRole("button", {
+      name: "扩展",
+      exact: true,
+    });
+    await expect(chatExtensions).toBeVisible();
+    await expect(chatExtensions).toHaveAttribute("aria-label", "扩展");
+    await expect(chatExtensions).toHaveAttribute("title", "扩展");
+    await expect(chatExtensions).toHaveAttribute("aria-haspopup", "menu");
+    await expect(chatExtensions).toHaveCSS(
+      "border-radius",
+      width <= 1200 ? "8px" : "999px",
+    );
+    if (width <= 1200) {
+      await expect(chatExtensions).toHaveCSS("width", "32px");
+      await expect(chatExtensions).toHaveCSS("height", "32px");
+      await expect(chatExtensions.locator("span")).toBeHidden();
+    } else await expect(chatExtensions.locator("span")).toBeVisible();
     const tail = chat.locator(".composer-trailing-actions");
     await expect(tail).toBeVisible();
     const layout = await tail.evaluate((group) => {

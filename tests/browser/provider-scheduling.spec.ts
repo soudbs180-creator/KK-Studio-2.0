@@ -1,4 +1,5 @@
 import { test, expect, type Page } from "@playwright/test";
+import { selectHomeApiModel } from "./helpers";
 import type { ProviderConnection } from "../../src/domain/providerConnections";
 const endpoint = "https://models.example.test/v1/images/generations";
 const key = "kk-studio-next:provider-connections:v1";
@@ -19,6 +20,7 @@ async function configure(page: Page) {
   await page.getByLabel("模型名称").fill("image-test");
   await page.getByRole("button", { name: "保存连接", exact: true }).click();
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
+  await selectHomeApiModel(page);
 }
 async function change(page: Page, patch: Partial<ProviderConnection>) {
   await page.evaluate(

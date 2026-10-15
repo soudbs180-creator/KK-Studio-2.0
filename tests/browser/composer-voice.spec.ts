@@ -123,9 +123,38 @@ test("首页模型名称保持单行并在过长时省略", async ({ page }) => 
         model: "kk-image-model-with-a-very-long-display-name",
       }),
     );
+    localStorage.setItem(
+      "kk-studio-next:provider-connections:v1",
+      JSON.stringify([
+        {
+          id: "voice-layout-api",
+          provider: "本地兼容服务",
+          displayName: "本地兼容服务",
+          kind: "user_byok",
+          baseUrl: "https://models.example.test/v1",
+          model: "kk-image-model-with-a-very-long-display-name",
+          state: "active",
+          concurrencyLimit: 1,
+          capabilities: {
+            modalities: ["image"],
+            operations: ["generate"],
+            async: false,
+          },
+        },
+      ]),
+    );
   });
   await page.goto("/");
   const button = page.locator(".start-model-picker .start-tool-button");
+  await button.click();
+  const menu = page.getByRole("menu", { name: "选择模型", exact: true });
+  await menu.getByRole("menuitem", { name: /^API 自定义模型/ }).click();
+  await menu.getByRole("menuitem", { name: /^本地兼容服务/ }).click();
+  await menu
+    .getByRole("menuitemradio", {
+      name: /kk-image-model-with-a-very-long-display-name/,
+    })
+    .click();
   const name = button.locator("span");
   await expect(name).toHaveText("kk-image-model-with-a-very-long-display-name");
   await expect(name).toHaveCSS("white-space", "nowrap");

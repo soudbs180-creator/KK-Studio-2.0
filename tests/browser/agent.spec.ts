@@ -848,6 +848,209 @@ test("画布引用发送真实原件；原件丢失和损坏图片均保留草�
   }
 });
 
+for (const scenario of ["image", "missing-original", "text"] as const) {
+  const missingOriginal = scenario === "missing-original";
+  const textCard = scenario === "text";
+  test(`Codex 卡片参考图：${textCard ? "文本卡片拒绝参考图并保留草稿" : missingOriginal ? "原件缺失保留草稿且不提交" : "发送归档原件并恢复唯一结果连线"}`, async ({
+    page,
+  }) => {
+    const agent = await fixture(true);
+    const original = Buffer.concat([
+      Buffer.from(png, "base64"),
+      Buffer.from("product-reference-original"),
+    ]);
+    const prompt = "保留参考产品外形，将背景改成浅蓝色";
+    let externalRequests = 0;
+    await page.route("**/images/{generations,edits}", (route) => {
+      externalRequests++;
+      return route.abort();
+    });
+    try {
+      await page.addInitScript(
+        (url) => localStorage.setItem("canvas-agent-url", url),
+        agent.url,
+      );
+      await project(page);
+      const reference = page.getByTestId("canvas-node-image");
+      await reference.locator('input[type="file"]').first().setInputFiles({
+        name: "product-reference.png",
+        mimeType: "image/png",
+        buffer: original,
+      });
+      await expect(reference.locator(".uploaded-image")).toBeVisible();
+      await reference.locator(".node-add-follow").press("Enter");
+      await page
+        .getByRole("menu", { name: "新增下游卡片" })
+        .getByRole("menuitem", {
+          name: textCard ? "文本" : "图片",
+          exact: true,
+        })
+        .click();
+      const generator = page
+        .getByTestId(
+          textCard ? /^canvas-node-added-text-/ : /^canvas-node-added-image-/,
+        )
+        .first();
+      const generatorId = (await generator.getAttribute(
+        "data-testid",
+      ))!.replace("canvas-node-", "");
+      await page
+        .getByRole("button", { name: "连接 Codex", exact: true })
+        .click();
+      await expect(page.locator(".chat-agent-banner")).toContainText("已连接");
+      await generator
+        .getByRole("button", { name: "画布模型", exact: true })
+        .click();
+      const menu = generator.getByRole("menu", { name: "选择模型" });
+      await menu
+        .getByRole("searchbox")
+        .fill(textCard ? "Fixture Codex" : "Codex 内置生图");
+      await menu
+        .getByRole("menuitemradio", {
+          name: textCard ? /^Fixture Codex/ : /^Codex 内置生图/,
+        })
+        .click();
+      const promptField = generator.getByLabel(
+        textCard ? "文案提示词" : "图片提示词",
+      );
+      await promptField.fill(prompt);
+      if (!textCard) {
+        await generator
+          .getByRole("button", { name: "生成数量", exact: true })
+          .click();
+        await generator
+          .getByRole("button", { name: "生成 1 个", exact: true })
+          .click();
+      }
+      await expect
+        .poll(
+          async () =>
+            (await readCanvasSnapshot(page)).projects[0].items.find(
+              (item) => item.id === "image",
+            )?.assetId,
+        )
+        .toBeTruthy();
+      const before = (await readCanvasSnapshot(page)).projects[0];
+      expect(before.canvas.edges).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({ source: "image", target: generatorId }),
+        ]),
+      );
+      if (missingOriginal) {
+        const assetId = before.items.find(
+          (item) => item.id === "image",
+        )!.assetId!;
+        await page.evaluate(
+          (id) =>
+            new Promise<void>((resolve, reject) => {
+              const request = indexedDB.open("kk-studio-assets", 1);
+              request.onsuccess = () => {
+                const db = request.result;
+                const transaction = db.transaction("blobs", "readwrite");
+                transaction.objectStore("blobs").delete(id);
+                transaction.oncomplete = () => {
+                  db.close();
+                  resolve();
+                };
+                transaction.onerror = () => reject(transaction.error);
+              };
+              request.onerror = () => reject(request.error);
+            }),
+          assetId,
+        );
+      }
+      await generator
+        .getByRole("button", {
+          name: textCard ? "生成文案" : "生成图片",
+          exact: true,
+        })
+        .click();
+      if (textCard) {
+        await expect(generator.locator("[role=status]")).toContainText(
+          "文本卡片暂不接收参考图片",
+        );
+        await expect(promptField).toHaveValue(prompt);
+        expect(agent.received.turns).toHaveLength(0);
+      } else if (missingOriginal) {
+        await expect(generator.locator("[role=status]")).toContainText(
+          /原件缺失/,
+        );
+        await expect(generator.getByLabel("图片提示词")).toHaveValue(prompt);
+        expect(agent.received.turns).toHaveLength(0);
+      } else {
+        await expect.poll(() => agent.received.turns.length).toBe(1);
+        expect(agent.received.turns[0].attachments).toEqual([
+          expect.objectContaining({
+            name: "product-reference.png",
+            dataUrl: "data:image/png;base64," + original.toString("base64"),
+          }),
+        ]);
+        expect(agent.received.turns[0].messageMetadata).toMatchObject({
+          canvasReferences: [
+            {
+              nodeId: generatorId,
+              kind: "image",
+              label: "KK 生成来源",
+              text: before.id,
+            },
+            {
+              nodeId: "image",
+              kind: "image",
+              label: "参考图片",
+              title: "product-reference.png",
+            },
+          ],
+        });
+        agent.completeNative();
+        const resultId = "codex-thread-fixture-native-image";
+        await expect
+          .poll(async () => (await readCanvasSnapshot(page)).projects[0].items)
+          .toEqual(
+            expect.arrayContaining([
+              expect.objectContaining({
+                id: resultId,
+                assetId: expect.any(String),
+                generationStatus: "ready",
+              }),
+            ]),
+          );
+        agent.emit("agent_event", {
+          type: "turn.completed",
+          status: "completed",
+        });
+        await page.reload();
+        await page.getByRole("button", { name: "项目库", exact: true }).click();
+        await page.locator(".project-library-card").first().click();
+        await page
+          .getByRole("button", { name: "连接 Codex", exact: true })
+          .click();
+        await expect(
+          page.locator('.demo-result-node[data-source="provider"]'),
+        ).toHaveCount(1);
+        const restored = (await readCanvasSnapshot(page)).projects[0];
+        expect(
+          restored.items.filter((item) => item.id === resultId),
+        ).toHaveLength(1);
+        expect(
+          restored.canvas.edges.filter((edge) => edge.target === resultId),
+        ).toEqual([
+          expect.objectContaining({ source: generatorId, kind: "result" }),
+        ]);
+        expect(restored.canvas.edges).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({ source: "image", target: generatorId }),
+          ]),
+        );
+        expect(agent.received.turns).toHaveLength(1);
+      }
+      expect(agent.received.images).toHaveLength(0);
+      expect(externalRequests).toBe(0);
+    } finally {
+      await agent.close();
+    }
+  });
+}
+
 test("卡片 Codex 生图在刷新后归档并恢复来源；切 API 清除旧路由", async ({
   page,
 }) => {

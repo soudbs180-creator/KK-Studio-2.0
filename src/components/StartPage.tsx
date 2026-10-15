@@ -37,7 +37,6 @@ export default function StartPage({
   onOpenModel,
   onOpenSkills,
   onOpenExtension,
-  defaultModel = "",
   modelConfigured = false,
   draft: externalDraft,
   onDraftChange,
@@ -52,7 +51,6 @@ export default function StartPage({
   onOpenModel: () => void;
   onOpenSkills: () => void;
   onOpenExtension: (id: string) => void;
-  defaultModel?: string;
   modelConfigured?: boolean;
   draft?: CreationDraft;
   onDraftChange?: (draft: CreationDraft) => void;
@@ -105,7 +103,7 @@ export default function StartPage({
       const error = await onCreateProject({ ...input, kind: "image" });
       if (error) setStatus(error);
     } catch {
-      setStatus("无法检查模型连接，请打开供应商设置后重试。");
+      setStatus("无法开始创作，草稿仍保留，请重试。");
     }
   }
   return (
@@ -124,7 +122,6 @@ export default function StartPage({
           onOpenModel={onOpenModel}
           onOpenSkills={onOpenSkills}
           onOpenExtension={onOpenExtension}
-          defaultModel={defaultModel}
           modelConfigured={modelConfigured}
           skills={skills}
           onApplySkill={onApplySkill}

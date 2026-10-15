@@ -15,6 +15,30 @@ export async function openWorkspace(page: Page): Promise<void> {
   await openSeededProject(page);
 }
 
+/** API scenarios explicitly choose their fixture; a fresh home stays on Codex. */
+export async function selectHomeApiModel(
+  page: Page,
+  model?: string,
+): Promise<void> {
+  const query =
+    model ??
+    (await page.evaluate(
+      (key) => JSON.parse(localStorage.getItem(key) ?? "{}").model as string,
+      MODEL_PROVIDER_STORAGE_KEY,
+    ));
+  if (!query)
+    throw new Error("API fixture must declare a model before selecting it");
+  await page
+    .locator(".start-composer")
+    .getByRole("button", { name: "模型", exact: true })
+    .click();
+  const menu = page.getByRole("menu", { name: "选择模型" });
+  await menu.getByRole("searchbox").fill(query);
+  const choices = menu.getByRole("menuitemradio");
+  await expect(choices).toHaveCount(1);
+  await choices.click();
+}
+
 export async function uploadCanvasMedia(
   node: Locator,
   kind: "image" | "video",

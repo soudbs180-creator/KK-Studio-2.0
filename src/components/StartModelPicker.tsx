@@ -1,23 +1,27 @@
-import type { CreationDraft } from "../features/creation/model";
+import {
+  codexSelectionLabel,
+  type ModelSelection,
+} from "../domain/modelSelection";
+import { selectedModelLabel } from "../features/models/modelPresentation";
 import ModelPickerMenu from "./ModelPickerMenu";
 
 export default function StartModelPicker({
-  draft,
-  defaultModel,
-  model,
+  selection,
   open,
   onToggle,
   onSelect,
   onConfigure,
 }: {
-  draft: CreationDraft;
-  defaultModel: string;
-  model: string;
+  selection: ModelSelection;
   open: boolean;
   onToggle: () => void;
-  onSelect: (choice: { model: string; connectionId?: string }) => void;
+  onSelect: (choice: ModelSelection) => void;
   onConfigure: () => void;
 }) {
+  const label =
+    selection.source === "api"
+      ? selectedModelLabel(selection, selection.model)
+      : codexSelectionLabel(selection);
   return (
     <div className="start-model-picker">
       <button
@@ -26,23 +30,17 @@ export default function StartModelPicker({
         aria-label="模型"
         aria-haspopup="menu"
         aria-expanded={open}
-        title={model}
+        title={label}
         onClick={onToggle}
       >
         <img src="/design/figma/composer-package.svg" alt="" />
-        <span>{draft.model || defaultModel ? model : "选模型"}</span>
+        <span>{label || "选模型"}</span>
       </button>
       {open && (
         <ModelPickerMenu
-          scope="canvas-image"
+          scope="home"
           kind="image"
-          apiOnly
-          current={{
-            source: "api",
-            model,
-            connectionId: draft.providerConnectionId,
-            kind: "image",
-          }}
+          current={selection}
           onSelect={onSelect}
           onConfigure={onConfigure}
         />
