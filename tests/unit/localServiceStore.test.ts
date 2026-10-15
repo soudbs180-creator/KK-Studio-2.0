@@ -210,6 +210,33 @@ test("backup restore cannot replace an unsupported backup when the primary is mi
   assert.equal(readFileSync(store.backupPath, "utf8"), future);
 });
 
+for (const operation of ["write", "restore"] as const) {
+  test(`${operation} preserves a future backup even when the supported primary loads`, () => {
+    const store = new CompanionStore(root());
+    const supported = { ...emptySnapshot(), revision: 4 };
+    store.writeSnapshot(supported, null);
+    const archive = store.createBackup();
+    writeFileSync(
+      store.backupPath,
+      JSON.stringify({ ...emptySnapshot(), version: 999, revision: 7 }),
+    );
+    const primary = readFileSync(store.snapshotPath);
+    const backup = readFileSync(store.backupPath);
+    assert.equal(store.readSnapshot().revision, 4);
+    assert.throws(
+      () =>
+        operation === "write"
+          ? store.writeSnapshot({ ...supported, revision: 5 }, 4)
+          : store.restoreBackup(archive.directory.split(/[\\/]/).pop()!),
+      (error: unknown) =>
+        error instanceof CompanionProtocolError &&
+        error.code === "SNAPSHOT_UNSUPPORTED",
+    );
+    assert.deepEqual(readFileSync(store.snapshotPath), primary);
+    assert.deepEqual(readFileSync(store.backupPath), backup);
+  });
+}
+
 test("snapshot writes reject missing asset references and accept hydrated service assets", () => {
   const store = new CompanionStore(root());
   const initial = emptySnapshot();

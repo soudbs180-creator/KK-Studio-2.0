@@ -239,6 +239,7 @@ export class CompanionStore {
           "项目引用的素材尚未归档。",
         );
     }
+    this.readSnapshotFile(this.backupPath);
     const current = this.readSnapshot();
     if (current.revision !== expectedRevision)
       throw new CompanionProtocolError("CONFLICT", 409, "项目版本已变化。");
@@ -736,7 +737,7 @@ export class CompanionStore {
       capture(this.snapshotPath);
       capture(this.backupPath);
       const current = this.readSnapshotFile(this.snapshotPath);
-      if (!current) this.readSnapshotFile(this.backupPath);
+      this.readSnapshotFile(this.backupPath);
       if (current)
         writeAtomic(this.backupPath, asBytes(readFileSync(this.snapshotPath)));
       try {
