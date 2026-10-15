@@ -159,7 +159,7 @@ test("sidebar menus, app menus and prompt dialog keep closure and focus contract
   await page.goto("/");
   await toggleCycle(
     page.getByRole("button", { name: "个人信息", exact: true }),
-    page.getByLabel("个人信息（本地 Prototype）"),
+    page.getByLabel("个人信息（本地会话）"),
   );
   const menus = page.getByRole("navigation", { name: "应用菜单" });
   for (const name of ["文件", "编辑", "窗口", "帮助"])

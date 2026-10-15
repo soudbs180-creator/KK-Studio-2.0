@@ -91,6 +91,10 @@ test("未接入的通用设置明确禁用原因", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   const dialog = page.getByRole("dialog", { name: "设置" });
+  await dialog
+    .locator("summary")
+    .filter({ hasText: "系统与未接入偏好" })
+    .click();
   const watermark = dialog.getByRole("switch", {
     name: "去除水印",
     exact: true,

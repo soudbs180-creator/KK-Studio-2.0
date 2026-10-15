@@ -115,9 +115,13 @@ test("项目库与侧栏共用名称分组和完整垃圾箱，取消删除不�
   await expandSidebar(page);
   const sidebar = page.getByRole("complementary", { name: "工作台侧栏" });
   await expect(sidebar.locator(".project-link")).toHaveCount(0);
+  await sidebar.getByRole("button", { name: "项目显示与排序" }).click();
   await sidebar
-    .getByRole("button", { name: "项目垃圾箱 (1)", exact: true })
+    .getByRole("menuitemcheckbox", { name: "项目垃圾箱 (1)", exact: true })
     .click();
+  await expect(
+    sidebar.getByRole("menu", { name: "项目显示与排序" }),
+  ).toHaveCount(0);
   const trashRow = sidebar.locator(".project-trash-list .project-entry");
   await trashRow.getByRole("button", { name: "更多项目设置" }).click();
   await trashRow
@@ -126,7 +130,13 @@ test("项目库与侧栏共用名称分组和完整垃圾箱，取消删除不�
   await expect
     .poll(async () => (await snapshot(page)).projects[0].trashedAt)
     .toBeUndefined();
-  await sidebar.getByRole("button", { name: "返回项目", exact: true }).click();
+  await sidebar.getByRole("button", { name: "项目显示与排序" }).click();
+  const returnToProjects = sidebar.getByRole("menuitemcheckbox", {
+    name: "返回项目",
+    exact: true,
+  });
+  await expect(returnToProjects).toHaveAttribute("aria-checked", "true");
+  await returnToProjects.click();
   const row = sidebar.locator(".project-entry").filter({ hasText: "手动名称" });
   await row.getByRole("button", { name: "更多项目设置" }).click();
   page.once("dialog", (dialog) => dialog.accept());
@@ -145,6 +155,122 @@ test("项目库与侧栏共用名称分组和完整垃圾箱，取消删除不�
   expect((await snapshot(page)).projects[0].id).toBe(original.id);
   expect((await snapshot(page)).projects[0].nameSource).toBe("manual");
 });
+
+for (const [width, height] of [
+  [390, 480],
+  [390, 844],
+  [1920, 1080],
+]) {
+  test(`侧栏垃圾箱收进原项目菜单，键盘切换和命中可用 ${width}×${height}`, async ({
+    page,
+  }, info) => {
+    const original = await seed(page);
+    await page.setViewportSize({ width, height });
+    if (width < 768) {
+      await page
+        .getByRole("button", { name: "应用功能菜单", exact: true })
+        .click();
+      await page
+        .getByRole("menuitem", { name: "展开 / 收起侧边栏", exact: true })
+        .click();
+    }
+    await expandSidebar(page);
+    const sidebar = page.getByRole("complementary", { name: "工作台侧栏" });
+    const trigger = sidebar.getByRole("button", {
+      name: "项目显示与排序",
+      exact: true,
+    });
+    const menu = sidebar.getByRole("menu", {
+      name: "项目显示与排序",
+      exact: true,
+    });
+    await expect(sidebar.locator(".project-trash-toggle")).toHaveCount(0);
+    await expect(
+      sidebar.locator(
+        ".project-groups-header > .project-groups-actions > button",
+      ),
+    ).toHaveCount(2);
+    await trigger.click();
+    const radios = menu.getByRole("menuitemradio");
+    await expect(radios).toHaveCount(5);
+    const trash = menu.getByRole("menuitemcheckbox", {
+      name: "项目垃圾箱 (0)",
+      exact: true,
+    });
+    await expect(trash).toHaveAttribute("aria-checked", "false");
+    await radios.last().focus();
+    await page.keyboard.press("Tab");
+    await expect(trash).toBeFocused();
+    const hit = await trash.evaluate((element) => {
+      const box = element.getBoundingClientRect();
+      return {
+        x: box.x,
+        y: box.y,
+        width: box.width,
+        height: box.height,
+        reachable: element.contains(
+          document.elementFromPoint(
+            box.x + box.width / 2,
+            box.y + box.height / 2,
+          ),
+        ),
+      };
+    });
+    expect(hit.x).toBeGreaterThanOrEqual(0);
+    expect(hit.y).toBeGreaterThanOrEqual(0);
+    expect(hit.x + hit.width).toBeLessThanOrEqual(width);
+    expect(hit.y + hit.height).toBeLessThanOrEqual(height);
+    expect(hit.reachable).toBe(true);
+    await info.attach("trash-menu-dom", {
+      body: JSON.stringify({
+        width,
+        height,
+        hit,
+        radioLabels: await radios.allTextContents(),
+        runtime: await page.evaluate(() => {
+          const root = document.querySelector<HTMLElement>(
+            "[data-runtime-mode]",
+          );
+          return {
+            url: location.href,
+            mode: root?.dataset.runtimeMode,
+            entry: root?.dataset.runtimeEntry,
+            scripts: [...document.scripts]
+              .map((script) => script.src)
+              .filter(Boolean),
+          };
+        }),
+      }),
+      contentType: "application/json",
+    });
+    await page.screenshot({
+      path: info.outputPath(`trash-menu-${width}-${height}.png`),
+      animations: "disabled",
+    });
+    await page.keyboard.press("Space");
+    await expect(menu).toHaveCount(0);
+    await expect(sidebar.getByLabel("侧栏项目垃圾箱")).toBeVisible();
+    await expect(
+      page.getByRole("region", { name: "项目库", exact: true }),
+    ).toBeVisible();
+    expect((await snapshot(page)).activeProjectId).toBe(original.id);
+    await trigger.click();
+    const back = menu.getByRole("menuitemcheckbox", {
+      name: "返回项目",
+      exact: true,
+    });
+    await expect(back).toHaveAttribute("aria-checked", "true");
+    await back.press("Escape");
+    await expect(menu).toHaveCount(0);
+    await expect(trigger).toBeFocused();
+    await trigger.click();
+    await back.click();
+    await expect(menu).toHaveCount(0);
+    await expect(sidebar.getByLabel("侧栏项目垃圾箱")).toHaveCount(0);
+    await expect(sidebar.locator(".project-link")).toHaveCount(1);
+    await expect(page.getByRole("region", { name: "无限画布" })).toHaveCount(0);
+  });
+}
 
 test("两个入口对状态不明任务显示同一个禁用原因，删组重载只解除归属", async ({
   page,

@@ -96,6 +96,7 @@ test("原生连续保存更新 CAS，删除等待异步确认且取消保留项�
   await expect
     .poll(async () => (await saved())?.projects[0]?.name)
     .toBe("确认保护项目");
+  const original = (await saved())!.projects[0];
   const entry = page
     .locator(".sidebar .project-entry")
     .filter({ hasText: "确认保护项目" });
@@ -113,6 +114,7 @@ test("原生连续保存更新 CAS，删除等待异步确认且取消保留项�
       .toBe(true);
     await expect(entry).toHaveCount(1);
     expect((await saved())?.projects).toHaveLength(1);
+    expect((await saved())?.projects[0]).toEqual(original);
   };
   const respond = (result: string) =>
     page.evaluate((answer) => {
@@ -123,10 +125,54 @@ test("原生连续保存更新 CAS，删除等待异步确认且取消保留项�
   await remove();
   await respond("取消");
   await expect(entry).toHaveCount(1);
+  expect((await saved())?.projects[0]).toEqual(original);
   await remove();
   await respond("确认");
   await expect(entry).toHaveCount(0);
-  await expect.poll(async () => (await saved())?.projects.length).toBe(0);
+  await expect
+    .poll(
+      async () =>
+        (await saved())?.projects.filter(
+          (project) => project.trashedAt === undefined,
+        ).length,
+    )
+    .toBe(0);
+  const trashed = (await saved())!;
+  expect(trashed.activeProjectId).toBeNull();
+  expect(trashed.projects).toHaveLength(1);
+  expect(trashed.projects[0]).toEqual({
+    ...original,
+    updatedAt: expect.any(Number),
+    trashedAt: expect.any(Number),
+  });
+  expect(
+    await page.evaluate(
+      () => (window as unknown as NativeWindow).nativeAcceptance.confirmations,
+    ),
+  ).toBe(2);
+  await page
+    .getByRole("button", { name: "项目显示与排序", exact: true })
+    .click();
+  await page
+    .getByRole("menuitemcheckbox", { name: "项目垃圾箱 (1)", exact: true })
+    .click();
+  const trashEntry = page
+    .getByLabel("侧栏项目垃圾箱")
+    .locator(".project-entry");
+  await trashEntry
+    .getByRole("button", { name: "更多项目设置", exact: true })
+    .click();
+  await trashEntry
+    .getByRole("menuitem", { name: "恢复项目", exact: true })
+    .click();
+  await expect
+    .poll(async () => (await saved())?.projects[0]?.trashedAt)
+    .toBeUndefined();
+  expect((await saved())?.projects[0]).toEqual({
+    ...original,
+    updatedAt: expect.any(Number),
+    trashedAt: undefined,
+  });
   await expect(page.getByRole("alert")).toHaveCount(0);
 });
 

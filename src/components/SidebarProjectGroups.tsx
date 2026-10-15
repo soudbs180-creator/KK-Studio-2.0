@@ -145,16 +145,10 @@ export default function SidebarProjectGroups({
         }}
         onFilterChange={setProjectFilter}
         onSortChange={setSortMode}
+        showTrash={showTrash}
+        trashCount={trash.length}
+        onToggleTrash={() => setShowTrash((value) => !value)}
       />
-      {!collapsed && (
-        <button
-          className="project-trash-toggle ui-capsule"
-          aria-pressed={showTrash}
-          onClick={() => setShowTrash((value) => !value)}
-        >
-          {showTrash ? "返回项目" : `项目垃圾箱 (${trash.length})`}
-        </button>
-      )}
       {showTrash ? (
         <div
           className="project-trash-list"
