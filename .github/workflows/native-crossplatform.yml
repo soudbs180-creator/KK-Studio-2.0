@@ -1,0 +1,164 @@
+name: native-crossplatform
+
+on:
+  push:
+    branches:
+      [main, codex/TASK-CHERRY-RED-001, codex/TASK-CHERRY-RED-001-mainline]
+    paths:
+      - "src/**"
+      - "public/**"
+      - "src-tauri/**"
+      - "scripts/agent/**"
+      - "scripts/windows/**"
+      - "vendor/canvas-agent/**"
+      - "config/platform-versions.json"
+      - "index.html"
+      - "tsconfig*.json"
+      - "vite.config.ts"
+      - ".gitattributes"
+      - "tests/desktop/package-portability*.mjs"
+      - "tests/desktop/native-crossplatform.mjs"
+      - "tests/desktop/installer.mjs"
+      - ".github/scripts/invoke-native-installer.ps1"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/native-crossplatform.yml"
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "src/**"
+      - "public/**"
+      - "src-tauri/**"
+      - "scripts/agent/**"
+      - "scripts/windows/**"
+      - "vendor/canvas-agent/**"
+      - "config/platform-versions.json"
+      - "index.html"
+      - "tsconfig*.json"
+      - "vite.config.ts"
+      - ".gitattributes"
+      - "tests/desktop/package-portability*.mjs"
+      - "tests/desktop/native-crossplatform.mjs"
+      - "tests/desktop/installer.mjs"
+      - ".github/scripts/invoke-native-installer.ps1"
+      - "tests/unit/agentPackage.test.ts"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/native-crossplatform.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: native-crossplatform-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  native:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-22.04, macos-14]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 24
+      - uses: dtolnay/rust-toolchain@e2a55d2ffb04f378e9626c28d38b36d230d1e12f
+        with:
+          toolchain: stable
+      - name: Install Linux native build prerequisites
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev build-essential libssl-dev libayatana-appindicator3-dev librsvg2-dev patchelf pkg-config xvfb dbus-x11 gnome-keyring
+      - name: Install existing locked application dependencies
+        run: npm ci
+      - name: Verify platform-bound Agent packaging fixtures
+        run: node --test tests/unit/agentPackage.test.ts
+      - name: Verify package validation and isolation contracts
+        run: node tests/desktop/package-portability.mjs --self-test
+      - name: Build frontend assets needed by Tauri
+        run: npm run build
+      - name: Check native formatting
+        run: cargo fmt --manifest-path src-tauri/Cargo.toml --check
+      - name: Run native tests including Unix guardian ownership and parent SIGKILL
+        run: cargo test --manifest-path src-tauri/Cargo.toml --no-default-features --locked
+      - name: Check the native host
+        run: cargo check --manifest-path src-tauri/Cargo.toml --locked
+      - name: Build the platform-bound desktop with Agent resources
+        run: npm run client:build:agent -- --no-bundle
+      - name: Bind default package build to immutable source inputs
+        if: runner.os != 'Windows'
+        run: node tests/desktop/package-portability.mjs prepare
+      - name: Build default macOS app and DMG with free ad-hoc signing
+        if: runner.os == 'macOS'
+        env:
+          APPLE_SIGNING_IDENTITY: "-"
+        # This is the default shipping feature set; Apple notarization remains unverified.
+        run: npm run client:build:agent -- --bundles app,dmg
+      - name: Build default Linux AppImage and Debian package
+        if: runner.os == 'Linux'
+        run: npm run client:build:agent -- --bundles appimage,deb
+      - name: Verify original macOS package bytes and isolated default startup
+        if: runner.os == 'macOS'
+        run: node tests/desktop/package-portability.mjs verify
+      - name: Verify original Linux package bytes and isolated default startup
+        if: runner.os == 'Linux'
+        run: xvfb-run -a dbus-run-session -- node tests/desktop/package-portability.mjs verify
+      - name: Build the isolated Windows installer candidate
+        if: runner.os == 'Windows'
+        run: npm run client:installer
+      - name: Verify and exercise the Windows installer without a user's existing application
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          git status --short
+          # Tauri emits platform ACL documentation. These files are excluded
+          # from release inputs; preserve the build diff before restoring only
+          # these generated documents. All source dirt still blocks the receipt.
+          New-Item -ItemType Directory -Path .tmp/native-installer -Force | Out-Null
+          git diff -- src-tauri/gen/schemas > .tmp/native-installer/generated-acl.diff
+          git restore -- src-tauri/gen/schemas/acl-manifests.json src-tauri/gen/schemas/capabilities.json src-tauri/gen/schemas/desktop-schema.json src-tauri/gen/schemas/windows-schema.json
+          $taskDesktopVersion = (Get-Content config/platform-versions.json -Raw | ConvertFrom-Json).desktop
+          $taskInstaller = Join-Path $PWD "src-tauri/target/release/bundle/nsis/KK Studio_$($taskDesktopVersion)_x64-setup.exe"
+          $taskRelease = Join-Path $PWD ".tmp/native-installer/release"
+          npm run client:installer:receipt -- "$taskInstaller" "$taskRelease"
+          if ($LASTEXITCODE -ne 0) { throw "Installer receipt failed" }
+          npm run client:installer:verify -- "$taskRelease/installer-receipt.json"
+          if ($LASTEXITCODE -ne 0) { throw "Installer verification failed" }
+          $env:KK_DESKTOP_AUDIT_OUTPUT = Join-Path $PWD ".tmp/native-installer/evidence"
+          ./.github/scripts/invoke-native-installer.ps1 -ReceiptPath "$taskRelease/installer-receipt.json"
+          Get-Content "$env:KK_DESKTOP_AUDIT_OUTPUT/runtime.json" -Raw
+      - name: Build an explicitly enabled test driver in a separate target directory
+        run: node scripts/agent/native-e2e-build.mjs
+      - name: Exercise actual Native UI, local HTTP, system vault, package and bundled Agent
+        if: runner.os != 'Linux'
+        shell: bash
+        run: |
+          executable=src-tauri/target/native-e2e/release/kk-studio
+          if [[ "$RUNNER_OS" == Windows ]]; then executable="$executable.exe"; fi
+          node tests/desktop/native-crossplatform.mjs "$executable"
+      - name: Exercise Linux Native UI with a real isolated Secret Service
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          xvfb-run -a dbus-run-session -- bash -e -c '
+            printf "%s" "synthetic-ci-keyring-password" | gnome-keyring-daemon --unlock --components=secrets
+            node tests/desktop/native-crossplatform.mjs src-tauri/target/native-e2e/release/kk-studio
+          '
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: native-${{ runner.os }}-evidence
+          path: |
+            .tmp/native-e2e/
+            .tmp/native-installer/generated-acl.diff
+            .tmp/native-installer/release/installer-receipt.json
+            .tmp/native-installer/release/installer-inputs.json
+            .tmp/native-installer/evidence/
+            .tmp/package-portability/*.json
+            .tmp/appimage-runtime-patchelf/*.json
+          if-no-files-found: ignore

@@ -14,16 +14,18 @@ pub(super) enum Protocol {
     Anthropic,
     Azure,
     Ollama,
+    Gemini,
 }
 
 impl Protocol {
     pub(super) fn parse(value: Option<&str>) -> Result<Self, String> {
         match value {
-            None | Some("openai-chat") => Ok(Self::Chat),
+            None | Some("openai-chat" | "openai-compatible") => Ok(Self::Chat),
             Some("openai-responses") => Ok(Self::Responses),
-            Some("anthropic") => Ok(Self::Anthropic),
+            Some("anthropic" | "anthropic-messages") => Ok(Self::Anthropic),
             Some("azure-openai") => Ok(Self::Azure),
             Some("ollama") => Ok(Self::Ollama),
+            Some("gemini") => Ok(Self::Gemini),
             _ => Err("invalid: protocol".into()),
         }
     }
@@ -42,7 +44,7 @@ fn options(
 ) -> Result<(reqwest::Url, Protocol, AuthMode), String> {
     let protocol = Protocol::parse(protocol)?;
     let auth = match auth_mode {
-        None | Some("api-key") => AuthMode::ApiKey,
+        None | Some("api-key" | "api_key") => AuthMode::ApiKey,
         Some("none") => AuthMode::None,
         _ => return Err("invalid: authMode".into()),
     };
@@ -107,6 +109,7 @@ fn authentication(
     Ok(match protocol {
         Protocol::Anthropic => builder.header("x-api-key", secret),
         Protocol::Azure => builder.header("api-key", secret),
+        Protocol::Gemini => builder.header("x-goog-api-key", secret),
         _ => builder.bearer_auth(secret),
     })
 }
@@ -121,22 +124,9 @@ pub(super) fn text_request(
         request.protocol.as_deref(),
         request.auth_mode.as_deref(),
     )?;
-    let (path, body) = match protocol {
-        Protocol::Responses => (
-            "responses",
-            json!({"model": request.model, "input": [{"role":"user","content":request.prompt}], "stream":true, "store":false}),
-        ),
-        Protocol::Anthropic => (
-            "messages",
-            json!({"model":request.model,"messages":[{"role":"user","content":request.prompt}],"stream":true,"max_tokens":ANTHROPIC_MAX_TOKENS}),
-        ),
-        _ => (
-            "chat/completions",
-            json!({"model":request.model,"messages":[{"role":"user","content":request.prompt}],"stream":true}),
-        ),
-    };
+    let (url, body) = protocol::request_parts(request)?;
     let builder = client
-        .post(format!("{}/{path}", request.base_url.trim_end_matches('/')))
+        .post(url)
         .header("Idempotency-Key", &request.idempotency_key)
         .header(header::ACCEPT, "text/event-stream")
         .json(&body);
@@ -158,6 +148,32 @@ fn model_id(value: &Value) -> Result<&str, String> {
 }
 
 fn model_page(value: &Value, protocol: Protocol) -> Result<(Vec<String>, Option<String>), String> {
+    if protocol == Protocol::Gemini {
+        let data = value
+            .get("models")
+            .and_then(Value::as_array)
+            .ok_or("models: 模型列表格式无效")?;
+        if data.len() > MAX_MODELS {
+            return Err("models: 模型列表过大".into());
+        }
+        let ids = data
+            .iter()
+            .map(|item| {
+                let raw = model_id(&item["name"])?;
+                let id = raw.strip_prefix("models/").unwrap_or(raw);
+                if id.is_empty() {
+                    return Err("models: 模型列表格式无效".to_string());
+                }
+                Ok(id.to_owned())
+            })
+            .collect::<Result<Vec<_>, _>>()?;
+        let next = value
+            .get("nextPageToken")
+            .map(model_id)
+            .transpose()?
+            .map(str::to_owned);
+        return Ok((ids, next));
+    }
     let data = value
         .get("data")
         .and_then(Value::as_array)
@@ -265,10 +281,15 @@ async fn discover_with_client(
         if !cursors.insert(cursor.clone()) {
             return Err("models: 模型分页游标重复".into());
         }
-        url.query_pairs_mut()
-            .clear()
-            .append_pair("limit", "100")
-            .append_pair("after_id", &cursor);
+        let mut query = url.query_pairs_mut();
+        query.clear();
+        if protocol == Protocol::Gemini {
+            query.append_pair("pageToken", &cursor);
+        } else {
+            query
+                .append_pair("limit", "100")
+                .append_pair("after_id", &cursor);
+        }
     }
     Err("models: 模型分页超过读取上限".into())
 }
@@ -302,6 +323,30 @@ mod tests {
             requests
         });
         (base, server)
+    }
+
+    #[tokio::test]
+    async fn gemini_discovery_preserves_auth_and_bounds_pagination() {
+        let (base, server) = serve_pages(vec![
+            json!({"models":[{"name":"models/fixture-a"}],"nextPageToken":"next-page"}).to_string(),
+            json!({"models":[{"name":"models/fixture-b"}]}).to_string(),
+        ])
+        .await;
+        let models = discover_models(
+            &base,
+            Some("gemini"),
+            Some("api-key"),
+            Some("fixture-secret"),
+        )
+        .await
+        .unwrap();
+        assert_eq!(models, vec!["fixture-a", "fixture-b"]);
+        let requests = server.await.unwrap();
+        assert!(requests[1].starts_with("get /v1/models?pagetoken=next-page http/1.1"));
+        assert!(requests
+            .iter()
+            .all(|request| request.contains("x-goog-api-key: fixture-secret")
+                && !request.lines().next().unwrap().contains("fixture-secret")));
     }
 
     #[tokio::test]

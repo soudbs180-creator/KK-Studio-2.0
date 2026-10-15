@@ -1,0 +1,94 @@
+✔ MCP endpoint accepts loopback HTTP and remote HTTPS only (2.5403ms)
+✔ server registry persists endpoint metadata without credentials or session state (0.8755ms)
+✔ server registry never writes more servers than it can read back (10.6888ms)
+✔ MCP server labels reject credential-like text before persistence (0.366ms)
+✔ corrupted MCP persistence is reported and cannot be overwritten (0.1945ms)
+✔ MCP registry serializes concurrent writers without losing either entry (0.2012ms)
+✔ default browser MCP storage delegates all mutations to the same exclusive Web Lock (0.4406ms)
+✔ default browser MCP storage rejects mutations without Web Locks and preserves readable export (0.8866ms)
+✔ MCP registry rebases independent instances instead of overwriting newer entries (6.2329ms)
+✔ MCP registry reports a capacity conflict instead of hiding the first writer (4.706ms)
+✔ MCP registry rejects stale same-id updates and preserves the newer value (0.4401ms)
+✔ MCP registry rejects stale deletes after another tab removes or adds the id (0.2148ms)
+✔ MCP registry rejects stale adds after another tab removes the id (0.1306ms)
+✔ legacy over-limit MCP persistence remains viewable, exportable, and explicitly recoverable (2.2008ms)
+✖ MCP auto negotiation uses modern discover and keeps modern calls sessionless (14.7713ms)
+✔ MCP auto negotiation falls back to legacy only when discovery is unsupported (0.5855ms)
+✖ MCP discovery authentication and service failures never masquerade as legacy support (0.6512ms)
+✖ MCP auto recognizes SDK legacy transport 400 without accepting null-id RPC results (0.6972ms)
+✔ MCP transport 400 still rejects auth, modern protocol errors and unrelated RPC IDs (1.1579ms)
+✔ MCP pinned modern and successful null-id replies never initialize a legacy session (0.318ms)
+✔ MCP auto negotiation fails closed on a malformed successful discovery response (0.2928ms)
+✔ MCP discovery errors mentioning unsupported auth never fall back to legacy (0.2544ms)
+✔ Streamable HTTP performs initialize, initialized, paginated tools/list, and SSE parsing (0.7843ms)
+✔ unknown MCP tool and malformed tool list fail closed (0.3585ms)
+✔ MCP request timeout and caller cancellation abort safely (4.5361ms)
+✔ MCP response size limit rejects bodies larger than 2 MB (2.4663ms)
+✔ MCP tool discovery rejects more than 500 tools (1.2609ms)
+✔ MCP tool pagination rejects repeated cursors and more than 32 pages (2.1222ms)
+ℹ tests 28
+ℹ suites 0
+ℹ pass 25
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 202.1443
+
+✖ failing tests:
+
+test at tests\unit\mcpClient.test.ts:376:1
+✖ MCP auto negotiation uses modern discover and keeps modern calls sessionless (14.7713ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + undefined
+  - {
+  -   'io.modelcontextprotocol/clientCapabilities': {},
+  -   'io.modelcontextprotocol/clientInfo': {
+  -     name: 'kk-studio',
+  -     version: '2.1.17'
+  -   },
+  -   'io.modelcontextprotocol/protocolVersion': '2026-07-28'
+  - }
+  
+      at TestContext.<anonymous> (file:///D:/kk-studio/.worktrees/TASK-CHERRY-RED-001/tests/unit/mcpClient.test.ts:440:14)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: { 'io.modelcontextprotocol/protocolVersion': '2026-07-28', 'io.modelcontextprotocol/clientInfo': { name: 'kk-studio', version: '2.1.17' }, 'io.modelcontextprotocol/clientCapabilities': {} },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests\unit\mcpClient.test.ts:512:1
+✖ MCP discovery authentication and service failures never masquerade as legacy support (0.6512ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+      'server/discover',
+  +   'initialize'
+    ]
+  
+      at TestContext.<anonymous> (file:///D:/kk-studio/.worktrees/TASK-CHERRY-RED-001/tests/unit/mcpClient.test.ts:525:14)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'server/discover', 'initialize' ],
+    expected: [ 'server/discover' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests\unit\mcpClient.test.ts:532:1
+✖ MCP auto recognizes SDK legacy transport 400 without accepting null-id RPC results (0.6972ms)
+  Error: MCP 请求失败（HTTP 400）。
+      at McpHttpClient.discoverModern (file:///D:/kk-studio/.worktrees/TASK-CHERRY-RED-001/src/features/mcp/mcpClient.ts:339:15)
+      at async McpHttpClient.connect (file:///D:/kk-studio/.worktrees/TASK-CHERRY-RED-001/src/features/mcp/mcpClient.ts:473:24)
+      at async TestContext.<anonymous> (file:///D:/kk-studio/.worktrees/TASK-CHERRY-RED-001/tests/unit/mcpClient.test.ts:566:25)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7)

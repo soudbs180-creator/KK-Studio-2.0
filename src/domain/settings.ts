@@ -23,6 +23,7 @@ export const settingsSchema = z.object({
     .default("default")
     .catch("default"),
   floatingLayout: z.boolean(),
+  transparentWindow: z.boolean().default(false).catch(false),
   removeWatermark: z.boolean(),
 });
 
@@ -34,6 +35,7 @@ export const DEFAULT_SETTINGS: SettingsPreferences = {
   theme: "dark",
   accent: "default",
   floatingLayout: true,
+  transparentWindow: false,
   removeWatermark: true,
 };
 

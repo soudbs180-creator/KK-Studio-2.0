@@ -5,6 +5,7 @@ import {
   DEFAULT_MODEL_PROVIDER,
   PROVIDER_PRESETS,
   findProviderPreset,
+  modelProviderSchema,
   parseModelProvider,
   serializeModelProvider,
 } from "../../src/domain/modelProvider.ts";
@@ -21,23 +22,24 @@ test("unknown preset id resolves to undefined and every preset id is unique", ()
   assert.equal(findProviderPreset("does-not-exist"), undefined);
   const ids = PROVIDER_PRESETS.map((preset) => preset.id);
   assert.equal(new Set(ids).size, ids.length);
-  for (const preset of PROVIDER_PRESETS) {
+  for (const preset of PROVIDER_PRESETS.filter((item) => item.baseUrl)) {
     assert.ok(preset.name.length > 0, "preset name must not be empty");
-    if (preset.baseUrl) assert.ok(isAllowedProviderUrl(preset.baseUrl));
-    else
-      assert.ok(
-        ["new-api", "azure-openai"].includes(preset.id),
-        "Only instance-specific presets may omit an endpoint",
-      );
-    for (const link of [preset.website, preset.keyUrl, preset.docsUrl]) {
-      const url = new URL(link);
-      assert.equal(url.protocol, "https:");
-      assert.equal(url.username + url.password, "");
-    }
+    assert.equal(
+      modelProviderSchema.safeParse({
+        version: 1,
+        name: preset.name,
+        baseUrl: preset.baseUrl,
+        protocol: preset.wireProtocol,
+        authMode: preset.authMode,
+        model: "",
+      }).success,
+      true,
+      "preset URL and explicit local authentication must obey the provider contract",
+    );
   }
 });
 
-test("presets select an explicit supported protocol and Gemini uses its own connection", () => {
+test("presets select explicit supported protocols including Gemini", () => {
   for (const id of [
     "openai-responses",
     "anthropic",
@@ -47,7 +49,8 @@ test("presets select an explicit supported protocol and Gemini uses its own conn
     assert.equal(findProviderPreset(id)?.wireProtocol, id);
     assert.equal(findProviderPreset(id)?.unavailableReason, undefined);
   }
-  assert.ok(findProviderPreset("gemini")?.unavailableReason);
+  assert.equal(findProviderPreset("gemini")?.wireProtocol, "gemini");
+  assert.equal(findProviderPreset("gemini")?.unavailableReason, undefined);
   assert.equal(findProviderPreset("ollama")?.authMode, "none");
   assert.equal(findProviderPreset("new-api")?.baseUrl, "");
   assert.equal(

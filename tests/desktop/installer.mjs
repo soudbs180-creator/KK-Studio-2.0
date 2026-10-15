@@ -39,7 +39,7 @@ const isolated = await fs.mkdtemp(
 );
 const installDirectory = path.join(isolated, "app");
 const dataRoot = path.join(isolated, "data");
-const profile = path.join(isolated, "profile");
+const profile = await installerProfile(isolated);
 const output =
   process.env.KK_DESKTOP_AUDIT_OUTPUT ??
   // Playwright clears test-results before browser runs; keep native evidence.
@@ -50,6 +50,8 @@ const report = {
   timestamp: new Date().toISOString(),
   receiptCommit: receipt.commit,
   isolated,
+  profile,
+  hostElevated: process.env.KK_INSTALLER_ELEVATED ?? "not-recorded",
   platform: "Windows host with existing WebView2 (not a clean Windows VM)",
   installerSha256: receipt.installer.sha256,
   checks: [],
@@ -58,6 +60,32 @@ const report = {
 };
 let app, browser, page;
 let installed = false;
+
+async function installerProfile(isolated) {
+  const configured = process.env.KK_INSTALLER_PROFILE;
+  if (configured === undefined) return path.join(isolated, "profile");
+  assert.equal(process.env.GITHUB_ACTIONS, "true");
+  assert.equal(process.env.RUNNER_ENVIRONMENT, "github-hosted");
+  assert.ok(
+    process.env.RUNNER_TEMP && path.isAbsolute(process.env.RUNNER_TEMP),
+  );
+  assert.ok(path.isAbsolute(configured));
+  assert.equal(
+    (await fs.realpath(path.dirname(configured))).toLowerCase(),
+    (await fs.realpath(process.env.RUNNER_TEMP)).toLowerCase(),
+    "Installer profile must be directly inside the hosted runner temporary directory",
+  );
+  assert.match(
+    path.basename(configured),
+    /^kk-installer-profile-[0-9a-f]{32}$/u,
+  );
+  await assert.rejects(
+    fs.access(configured),
+    { code: "ENOENT" },
+    "Installer profile must be fresh for this hosted run",
+  );
+  return configured;
+}
 
 function ownedLocation(value) {
   assert.equal(
@@ -178,7 +206,7 @@ async function launch(label) {
     root: await window.__TAURI_INTERNALS__.invoke("get_storage_root"),
   }));
   assert.equal(
-    path.resolve(identity.root).toLowerCase(),
+    (await fs.realpath(identity.root)).toLowerCase(),
     (await fs.realpath(dataRoot)).toLowerCase(),
   );
   report.launches.push({

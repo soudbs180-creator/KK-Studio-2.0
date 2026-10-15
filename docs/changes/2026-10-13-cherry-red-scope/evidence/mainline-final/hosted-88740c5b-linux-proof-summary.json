@@ -1,0 +1,290 @@
+[
+  {
+    "artifactId": 11837315792,
+    "sourceHead": "e9822e9642d321d852cf5322e9a7a65f7bcd91be",
+    "inputSha256": "05354b9505bb68965bc4ec3ddcc3a2847e35c1d5df0672db7664a62e06d5e655",
+    "beforeAfterSame": true,
+    "packagePassed": true,
+    "packageErrors": [],
+    "packages": [
+      {
+        "format": "appimage",
+        "passed": true,
+        "package": {
+          "size": 260770296,
+          "sha256": "f50f0e919c727fc3326041595cb398dfc376ee63cd906546b1eb75bade795958",
+          "mode": 493
+        },
+        "exe": {
+          "path": "usr/bin/kk-studio",
+          "size": 25734640,
+          "sha256": "63c5512c29743b0b3e47dab320b1f3816c1967d5795a79a49d59c2b74f15d35c",
+          "mode": 493
+        },
+        "launcher": {
+          "path": "AppRun",
+          "size": 274,
+          "sha256": "eb0b254ac0dae6543e6dd7cd02e1baf40a060de95b927313122d6b46323c00aa",
+          "mode": 493
+        },
+        "manifest": {
+          "size": 819479,
+          "sha256": "a43df4706012d6967617903dc589f67fcb5a0f3fce2c538e6bf46864bc25d88c",
+          "mode": 420
+        },
+        "node": {
+          "version": "v24.21.0",
+          "platform": "linux",
+          "arch": "x64"
+        },
+        "files": 4316,
+        "filesSha256": "65d0966b91d305bdd2e8dbb40a3b01836a442f3fff988a5df5fa80a490731041",
+        "markers": 14,
+        "ownPid": 31132,
+        "termination": {
+          "pid": 31132,
+          "exitCode": null,
+          "signalCode": "SIGTERM"
+        }
+      },
+      {
+        "format": "deb",
+        "passed": true,
+        "package": {
+          "size": 203624260,
+          "sha256": "7e813be4f76a74301aa11ec15f17c852eec43816ed14896718b502e3a2e4e30f",
+          "mode": 420
+        },
+        "exe": {
+          "path": "usr/bin/kk-studio",
+          "size": 25699064,
+          "sha256": "305e572220904141fc8d0e4569392141a5ec18a9195b12c83db4f5ae50aeda8a",
+          "mode": 493
+        },
+        "launcher": {
+          "path": "usr/bin/kk-studio",
+          "size": 25699064,
+          "sha256": "305e572220904141fc8d0e4569392141a5ec18a9195b12c83db4f5ae50aeda8a",
+          "mode": 493
+        },
+        "manifest": {
+          "size": 819479,
+          "sha256": "a43df4706012d6967617903dc589f67fcb5a0f3fce2c538e6bf46864bc25d88c",
+          "mode": 420
+        },
+        "node": {
+          "version": "v24.21.0",
+          "platform": "linux",
+          "arch": "x64"
+        },
+        "files": 4316,
+        "filesSha256": "65d0966b91d305bdd2e8dbb40a3b01836a442f3fff988a5df5fa80a490731041",
+        "markers": 14,
+        "ownPid": 31299,
+        "termination": {
+          "pid": 31299,
+          "exitCode": null,
+          "signalCode": "SIGTERM"
+        }
+      }
+    ],
+    "twoFormatsResourcesSame": true,
+    "native": {
+      "passed": true,
+      "checks": [
+        "real-synthetic-system-vault",
+        "real-local-model-discovery",
+        "real-ui-two-model-round-native-journal-markdown",
+        "real-native-package-roundtrip",
+        "real-bundled-agent-start",
+        "real-app-restart-vault-and-project"
+      ],
+      "errors": [],
+      "sourceHead": "e9822e9642d321d852cf5322e9a7a65f7bcd91be",
+      "inputSha256": "05354b9505bb68965bc4ec3ddcc3a2847e35c1d5df0672db7664a62e06d5e655",
+      "packageExportRevision": 17,
+      "exportRevisionSafeInteger": true,
+      "scope": "Production frontend/shared Native host with explicitly compiled test-only driver; not byte-identical to shipping build"
+    },
+    "producer": {
+      "passed": true,
+      "before": {
+        "sourceHead": "e9822e9642d321d852cf5322e9a7a65f7bcd91be",
+        "inputSha256": "05354b9505bb68965bc4ec3ddcc3a2847e35c1d5df0672db7664a62e06d5e655"
+      },
+      "after": {
+        "sourceHead": "e9822e9642d321d852cf5322e9a7a65f7bcd91be",
+        "inputSha256": "05354b9505bb68965bc4ec3ddcc3a2847e35c1d5df0672db7664a62e06d5e655"
+      },
+      "realTool": {
+        "path": "/usr/bin/patchelf",
+        "size": 166240,
+        "sha256": "ebc7bde09fdc923acdfade62f49c32b7c32de3d64f83aea14fc38143ecf77c25",
+        "mode": 493,
+        "version": "patchelf 0.14.3"
+      },
+      "manifest": {
+        "size": 819479,
+        "sha256": "a43df4706012d6967617903dc589f67fcb5a0f3fce2c538e6bf46864bc25d88c",
+        "mode": 420
+      },
+      "package": {
+        "path": "src-tauri/target/release/bundle/appimage/KK Studio_2.1.18_amd64.AppImage",
+        "size": 260770296,
+        "sha256": "f50f0e919c727fc3326041595cb398dfc376ee63cd906546b1eb75bade795958",
+        "mode": 493
+      },
+      "preserved": 66,
+      "files": 4316,
+      "filesSha256": "65d0966b91d305bdd2e8dbb40a3b01836a442f3fff988a5df5fa80a490731041",
+      "finalPackageBound": true,
+      "filesExactEqual": true,
+      "manifestBound": true,
+      "preservedBound": true
+    }
+  },
+  {
+    "artifactId": 11837370637,
+    "sourceHead": "88740c5b23f1cf5f0896d471b4339d9db39f4b9b",
+    "inputSha256": "05354b9505bb68965bc4ec3ddcc3a2847e35c1d5df0672db7664a62e06d5e655",
+    "beforeAfterSame": true,
+    "packagePassed": true,
+    "packageErrors": [],
+    "packages": [
+      {
+        "format": "appimage",
+        "passed": true,
+        "package": {
+          "size": 260770296,
+          "sha256": "74cf4e81440c1ffb838502fce19cec39c156b8c8ad01b9b08f8a1a2fbc682b01",
+          "mode": 493
+        },
+        "exe": {
+          "path": "usr/bin/kk-studio",
+          "size": 25734640,
+          "sha256": "63c5512c29743b0b3e47dab320b1f3816c1967d5795a79a49d59c2b74f15d35c",
+          "mode": 493
+        },
+        "launcher": {
+          "path": "AppRun",
+          "size": 274,
+          "sha256": "eb0b254ac0dae6543e6dd7cd02e1baf40a060de95b927313122d6b46323c00aa",
+          "mode": 493
+        },
+        "manifest": {
+          "size": 819479,
+          "sha256": "a43df4706012d6967617903dc589f67fcb5a0f3fce2c538e6bf46864bc25d88c",
+          "mode": 420
+        },
+        "node": {
+          "version": "v24.21.0",
+          "platform": "linux",
+          "arch": "x64"
+        },
+        "files": 4316,
+        "filesSha256": "65d0966b91d305bdd2e8dbb40a3b01836a442f3fff988a5df5fa80a490731041",
+        "markers": 14,
+        "ownPid": 31144,
+        "termination": {
+          "pid": 31144,
+          "exitCode": null,
+          "signalCode": "SIGTERM"
+        }
+      },
+      {
+        "format": "deb",
+        "passed": true,
+        "package": {
+          "size": 203624200,
+          "sha256": "792d62ada59b21aca65029c8c1e1be737f40552f29e78c80ed27649bfee63226",
+          "mode": 420
+        },
+        "exe": {
+          "path": "usr/bin/kk-studio",
+          "size": 25699064,
+          "sha256": "305e572220904141fc8d0e4569392141a5ec18a9195b12c83db4f5ae50aeda8a",
+          "mode": 493
+        },
+        "launcher": {
+          "path": "usr/bin/kk-studio",
+          "size": 25699064,
+          "sha256": "305e572220904141fc8d0e4569392141a5ec18a9195b12c83db4f5ae50aeda8a",
+          "mode": 493
+        },
+        "manifest": {
+          "size": 819479,
+          "sha256": "a43df4706012d6967617903dc589f67fcb5a0f3fce2c538e6bf46864bc25d88c",
+          "mode": 420
+        },
+        "node": {
+          "version": "v24.21.0",
+          "platform": "linux",
+          "arch": "x64"
+        },
+        "files": 4316,
+        "filesSha256": "65d0966b91d305bdd2e8dbb40a3b01836a442f3fff988a5df5fa80a490731041",
+        "markers": 14,
+        "ownPid": 31321,
+        "termination": {
+          "pid": 31321,
+          "exitCode": null,
+          "signalCode": "SIGTERM"
+        }
+      }
+    ],
+    "twoFormatsResourcesSame": true,
+    "native": {
+      "passed": true,
+      "checks": [
+        "real-synthetic-system-vault",
+        "real-local-model-discovery",
+        "real-ui-two-model-round-native-journal-markdown",
+        "real-native-package-roundtrip",
+        "real-bundled-agent-start",
+        "real-app-restart-vault-and-project"
+      ],
+      "errors": [],
+      "sourceHead": "88740c5b23f1cf5f0896d471b4339d9db39f4b9b",
+      "inputSha256": "05354b9505bb68965bc4ec3ddcc3a2847e35c1d5df0672db7664a62e06d5e655",
+      "packageExportRevision": 17,
+      "exportRevisionSafeInteger": true,
+      "scope": "Production frontend/shared Native host with explicitly compiled test-only driver; not byte-identical to shipping build"
+    },
+    "producer": {
+      "passed": true,
+      "before": {
+        "sourceHead": "88740c5b23f1cf5f0896d471b4339d9db39f4b9b",
+        "inputSha256": "05354b9505bb68965bc4ec3ddcc3a2847e35c1d5df0672db7664a62e06d5e655"
+      },
+      "after": {
+        "sourceHead": "88740c5b23f1cf5f0896d471b4339d9db39f4b9b",
+        "inputSha256": "05354b9505bb68965bc4ec3ddcc3a2847e35c1d5df0672db7664a62e06d5e655"
+      },
+      "realTool": {
+        "path": "/usr/bin/patchelf",
+        "size": 166240,
+        "sha256": "ebc7bde09fdc923acdfade62f49c32b7c32de3d64f83aea14fc38143ecf77c25",
+        "mode": 493,
+        "version": "patchelf 0.14.3"
+      },
+      "manifest": {
+        "size": 819479,
+        "sha256": "a43df4706012d6967617903dc589f67fcb5a0f3fce2c538e6bf46864bc25d88c",
+        "mode": 420
+      },
+      "package": {
+        "path": "src-tauri/target/release/bundle/appimage/KK Studio_2.1.18_amd64.AppImage",
+        "size": 260770296,
+        "sha256": "74cf4e81440c1ffb838502fce19cec39c156b8c8ad01b9b08f8a1a2fbc682b01",
+        "mode": 493
+      },
+      "preserved": 66,
+      "files": 4316,
+      "filesSha256": "65d0966b91d305bdd2e8dbb40a3b01836a442f3fff988a5df5fa80a490731041",
+      "finalPackageBound": true,
+      "filesExactEqual": true,
+      "manifestBound": true,
+      "preservedBound": true
+    }
+  }
+]

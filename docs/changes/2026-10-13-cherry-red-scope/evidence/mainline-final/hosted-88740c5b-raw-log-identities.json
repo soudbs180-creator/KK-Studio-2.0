@@ -1,0 +1,42 @@
+[
+  {
+    "name": "job-115444775350-final.log",
+    "bytes": 416527,
+    "sha256": "f3a137f615d045961d55809c05d9f45e30bf85a49e2d74285ffe5e01fbf64304"
+  },
+  {
+    "name": "job-115444778934-final.log",
+    "bytes": 336888,
+    "sha256": "f21744d0fd0892fcc30abe1441cb87ae5857e63186bda517bfa1d702d2db6ed5"
+  },
+  {
+    "name": "job-115444779232-final.log",
+    "bytes": 217892,
+    "sha256": "63dd646cf58466ded0de66320e906525a060ef80f503acb2bd5570daf4514c64"
+  },
+  {
+    "name": "job-115444779387-final.log",
+    "bytes": 237454,
+    "sha256": "37d0d9d959eaa2dde642230fa70d0a68a860a50a64235417a34b67960bb13e56"
+  },
+  {
+    "name": "job-115444806736-final.log",
+    "bytes": 418062,
+    "sha256": "b660627116eede8c5aa729298ea95ebb62f5cf5e7892d11be3b6402db0aa685b"
+  },
+  {
+    "name": "job-115444807543-final.log",
+    "bytes": 216700,
+    "sha256": "d24595feea43f677802096614849231b6a3cb2e3b3f98850f596b19f2b0c8724"
+  },
+  {
+    "name": "job-115444808106-final.log",
+    "bytes": 337753,
+    "sha256": "1e28d0c5445c4941299d7615ca56260f1eec2d88148ac80fc4c211ec22622c9c"
+  },
+  {
+    "name": "job-115444808255-final.log",
+    "bytes": 238390,
+    "sha256": "ae51bc785e980c3c29e0027981d87d78c2fc51e643fdddf8a1f1a824fe273dfd"
+  }
+]

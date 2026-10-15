@@ -1,0 +1,31 @@
+[
+  {
+    "command": "KK Studio_2.1.18_amd64.AppImage",
+    "args": [
+      "--appimage-extract"
+    ],
+    "status": 0,
+    "signal": null,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": "node",
+    "args": [
+      "-p",
+      "JSON.stringify({version:process.version,platform:process.platform,arch:process.arch})"
+    ],
+    "status": 0,
+    "signal": null,
+    "stdout": "{\"version\":\"v24.21.0\",\"platform\":\"linux\",\"arch\":\"x64\"}\n",
+    "stderr": ""
+  },
+  {
+    "defaultProcessLog": "\n(kk-studio:31132): dbind-WARNING **: 17:53:44.511: AT-SPI: Error retrieving accessibility bus address: org.freedesktop.DBus.Error.ServiceUnknown: The name org.a11y.Bus was not provided by any .service files\n",
+    "termination": {
+      "pid": 31132,
+      "exitCode": null,
+      "signalCode": "SIGTERM"
+    }
+  }
+]

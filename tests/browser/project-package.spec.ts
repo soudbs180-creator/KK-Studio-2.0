@@ -34,6 +34,12 @@ async function installNativePackageMock(
       packageTest: state,
       __TAURI_INTERNALS__: {
         invoke: async (command: string, args: Record<string, unknown> = {}) => {
+          if (command === "window_appearance_get")
+            return {
+              supported: false,
+              enabled: false,
+              reason: "项目包测试未提供原生透明窗口。",
+            };
           state.calls.push({ command, args });
           if (command === "get_storage_root") return "C:/KK-Studio-Test/Data";
           if (command === "plugin:dialog|save") return null;

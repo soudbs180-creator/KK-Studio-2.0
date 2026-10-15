@@ -1,0 +1,20 @@
+{
+  "reviewer": "/root/cherry_mainline_review",
+  "reviewedAt": "2026-10-13T17:33:21.926Z",
+  "base": "694a00607f6f63de1b8c43d0ebb117adf5d34f67",
+  "incrementalBase": "cc184e5928f8cc67a84864822cc3b246e8cb51f0",
+  "head": "88740c5b23f1cf5f0896d471b4339d9db39f4b9b",
+  "standards": "PASS",
+  "spec": "PASS",
+  "confirmedOpenP0P1P2": 0,
+  "MR004": "remains closed",
+  "independentMemoryTransitionChecks": 11,
+  "exportContract": "Actual saved UI and safe-integer durable revision equal in two consecutive observations; strict expectedRevision, single export and original poll/timeout retained",
+  "staticChecks": ["syntax", "ESLint", "Prettier", "committed diff"],
+  "productSourceEquivalentTo": "cc184e5928f8cc67a84864822cc3b246e8cb51f0",
+  "inputSha256": "f2fdcc3fbdc54fc7b3122bcd50dbf46d4da2d699eae38fe6696904ab07b7f124",
+  "proofsMatched": 59,
+  "originalTasksPreserved": 125,
+  "licensing": "SDK1 MIT and SDK2 Apache-2.0 versions/proofs retained separately",
+  "scope": "No reviewer Native runs, builds, services or writes; original GUI/Hosted receipts remain bound to their source SHA; root generated schema dirt observed only"
+}

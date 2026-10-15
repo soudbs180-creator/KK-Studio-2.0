@@ -1,0 +1,566 @@
+{
+  "checkedAt": "2026-10-13T18:35:08.954Z",
+  "primary": "D:/kk-studio/KK-Studio-2.0",
+  "head": "51fccfc7879cf90f7caaf3ae8e10af4d97a2aa2c",
+  "branch": "codex/ui-redesign-20261011",
+  "indexSha256": "28346dcea2311b07762aa0fec9a079ca9003b4bc17fa8f20c6cbb9decd3ef9cf",
+  "capturedIndexSha256": "5f55ebe547973db9f57cbca5b1775e4319a3dd6d1112e2ef3f8dcc923406cf53",
+  "stagedPaths": "",
+  "files": [
+    {
+      "file": "docs/DESIGN-SYSTEM.md",
+      "status": "same",
+      "sha256": "11f64fcb3fec834b0b29b04aef6aaf37b23a8048b40592a633ebf6a1a342d363"
+    },
+    {
+      "file": "docs/DESIGN_TOKENS.md",
+      "status": "same",
+      "sha256": "6e8ac7cabc404fa871c6e9bad3fc70d77c9226d061e3bf268c63f0c32b86b8f4"
+    },
+    {
+      "file": "docs/UI_RULES.md",
+      "status": "same",
+      "sha256": "e3955aede14be58dfdc5f8fc4e49804af717d6453228a3466592340ea1529546"
+    },
+    {
+      "file": "docs/changes/2026-10-13-capability-ui/intent.md",
+      "status": "same",
+      "sha256": "a27eff00851d419a49b779eae0cc780696789bb9fc7202f230b0a4c0230b8907"
+    },
+    {
+      "file": "docs/changes/2026-10-13-capability-ui/plan.md",
+      "status": "same",
+      "sha256": "f20589a21e3685f6e92267bbc735b6d2a579055e608271293786aa0296a0ee78"
+    },
+    {
+      "file": "docs/changes/2026-10-13-capability-ui/review.md",
+      "status": "same",
+      "sha256": "bf04c2dced76d9b14418e953723976fbdc70735fcf7b4cb9dd9877809c7c244d"
+    },
+    {
+      "file": "docs/changes/2026-10-13-capability-ui/spec.md",
+      "status": "same",
+      "sha256": "3b3c2485f876a921f7ce11d1405e283d90e7b8e76556bf5fc5e0258ce22d6b36"
+    },
+    {
+      "file": "docs/changes/2026-10-13-capability-ui/verification.md",
+      "status": "same",
+      "sha256": "3336c71f6bfd4311b61e06e86b24eab0f4458d5f0f153d0b0bfd063f55d0b928"
+    },
+    {
+      "file": "docs/changes/2026-10-13-ui-remaining-fixes/intent.md",
+      "status": "same",
+      "sha256": "c81ef28e358b678b411451835289168c6af0049bcdd45af94a93771a3b80d490"
+    },
+    {
+      "file": "docs/changes/2026-10-13-ui-remaining-fixes/plan.md",
+      "status": "same",
+      "sha256": "c726f9fd3ca023f33858438f23cd9eb80f67b4c39dfb4d806b8de4ff1892b006"
+    },
+    {
+      "file": "docs/changes/2026-10-13-ui-remaining-fixes/review.md",
+      "status": "same",
+      "sha256": "b2624b2bd096cbbe9ef85a3db8756113d19f7d0285f59a484ebd5f2aef208aab"
+    },
+    {
+      "file": "docs/changes/2026-10-13-ui-remaining-fixes/spec.md",
+      "status": "same",
+      "sha256": "d0e636f98cb75d3fef2af726bd355c425431315059ac01dadeb79b08868fd94e"
+    },
+    {
+      "file": "docs/changes/2026-10-13-ui-remaining-fixes/verification.md",
+      "status": "same",
+      "sha256": "98b8c24330e3595831c56d7a20f398a520bfafded27bf6408c8cce21bcc820bf"
+    },
+    {
+      "file": "src/App.tsx",
+      "status": "subsequently-changed",
+      "sha256": "202c08a5dd9f4bc1c51605bb71120bcd82971027539cc361051a06e6368f35ce"
+    },
+    {
+      "file": "src/components/AgentComposer.tsx",
+      "status": "same",
+      "sha256": "7f0521e4239b1c4dc6cfe7da783a8043c3bef080732839cfc0a9606a4b44cf9b"
+    },
+    {
+      "file": "src/components/ComposerExtensionsMenu.tsx",
+      "status": "same",
+      "sha256": "58b385bc767b66c25e37d156e100648027ea487d4fa1ddd185722b997a22d212"
+    },
+    {
+      "file": "src/components/ConversationPanel.tsx",
+      "status": "same",
+      "sha256": "29acd7ccff15da26457f44c4c752f983bbdb8a8e787335843321ab0939bbd5da"
+    },
+    {
+      "file": "src/components/InfoPanel.tsx",
+      "status": "same",
+      "sha256": "eaa0097f31570f5bd23dc40ac5516b3b553694fd9eee0d330e62a5255f102c43"
+    },
+    {
+      "file": "src/components/ModelPickerMenu.tsx",
+      "status": "same",
+      "sha256": "7e2fd84787e69456d6e882f1e518473d338885c4d514116eda1ede79d61f327a"
+    },
+    {
+      "file": "src/components/ModelPickerRows.tsx",
+      "status": "same",
+      "sha256": "0156e489bb4a63b841e423e9276b01ab0a529166908cffb9ca6f914a0d4dd5a6"
+    },
+    {
+      "file": "src/components/SidebarNavigation.tsx",
+      "status": "same",
+      "sha256": "83dec4c9d7733b49fcc76cb2ad7b0380ca20f88eba0f443094103450a7aff649"
+    },
+    {
+      "file": "src/components/SkillPageControls.tsx",
+      "status": "same",
+      "sha256": "c2084bafe510aa72b418cb33ed3ead3b1902bd188907694418af15c1a9f5b88e"
+    },
+    {
+      "file": "src/components/SkillsPage.tsx",
+      "status": "same",
+      "sha256": "00acea4f6e6c9eca3c888ff6c307d85da066178d52b0161ed5689496f87b1856"
+    },
+    {
+      "file": "src/components/StartComposer.tsx",
+      "status": "same",
+      "sha256": "c5d4b060df9dad81432dc82aeac606b995a94d0bd8f56c1cdaffc90c809a3a07"
+    },
+    {
+      "file": "src/components/StartModelPicker.tsx",
+      "status": "same",
+      "sha256": "c2e313de768ac4ab9bed381a464810dee93818b404795da1cf7f78fcf24d80fb"
+    },
+    {
+      "file": "src/components/WindowControls.tsx",
+      "status": "same",
+      "sha256": "952e53846b4df3a82b9a29c3fbefebaf9a7f6331d698dbda0dc39291d32642d0"
+    },
+    {
+      "file": "src/components/canvas/TaskPanelPopover.tsx",
+      "status": "same",
+      "sha256": "3f0ee360fb46364e3d118fb1cc04ccab64b4663041baed4eaab67f11c2b7eee8"
+    },
+    {
+      "file": "src/components/canvas/useCanvasControls.ts",
+      "status": "subsequently-changed",
+      "sha256": "fc9b21795de99a2d82c7ec0d15737ae261169c63e4a280c7b99137a94fda8ccb"
+    },
+    {
+      "file": "src/components/canvas/useCanvasNodeActions.ts",
+      "status": "same",
+      "sha256": "40c287d54e94bae9e2d1b7d76e41f1191699b306b7618d1919389d4722d0f93e"
+    },
+    {
+      "file": "src/components/canvas/useCanvasView.ts",
+      "status": "same",
+      "sha256": "7432639a6e7f5e444db4922248f00bf20119ddf0d67947d5995f11c79aa2f4d8"
+    },
+    {
+      "file": "src/components/settings/AgentConnectionSettings.tsx",
+      "status": "subsequently-changed",
+      "sha256": "d31a954a7f0474be9098df28ea9311e2c5a2b746381f34d0f79628f13fec0ed5"
+    },
+    {
+      "file": "src/components/settings/CodeBuddyConnectionSettings.tsx",
+      "status": "same",
+      "sha256": "b8d3787a492c5358ca8a4eabdd00c954cd57434a0f590c9d76a9109e3795db5f"
+    },
+    {
+      "file": "src/components/settings/ConnectionSettings.tsx",
+      "status": "same",
+      "sha256": "3c6301677c9d863007540351a1f77882f76ed59d8530c29c74ac4a8c1eba2eb0"
+    },
+    {
+      "file": "src/components/settings/ExtensionsSettings.tsx",
+      "status": "same",
+      "sha256": "2f56a22bc8fa3a728934bc8ce71a26e622918992ed88d39c070d47951fc501c6"
+    },
+    {
+      "file": "src/components/settings/GoogleConnectionActions.tsx",
+      "status": "same",
+      "sha256": "765f4099c14992d4bbc5260f446661f642d1eabdd59ce11dfc774abfff946797"
+    },
+    {
+      "file": "src/components/settings/GoogleConnectionSettings.tsx",
+      "status": "subsequently-changed",
+      "sha256": "a1c431bcaf761ffb7f6003b0eb6efc63e8d00d6eb1eed93d4189b15b3adfdd93"
+    },
+    {
+      "file": "src/components/settings/ModelAccessSettings.tsx",
+      "status": "same",
+      "sha256": "033d2403adb2521b25acde506cecde6cab4a5cf5106a92620a522f6cbfcf7177"
+    },
+    {
+      "file": "src/components/settings/ModelProviderSettings.tsx",
+      "status": "subsequently-changed",
+      "sha256": "95d4f0a8a66cd05d2fcde8ff633fa033a3f0a7151a4e9631e466ef108934ad3d"
+    },
+    {
+      "file": "src/components/settings/OAuthAccessPanel.tsx",
+      "status": "same",
+      "sha256": "c28faae46a67e42df5f346e0bb130a93d9a79f4fe94294bca4279815ab10cf0e"
+    },
+    {
+      "file": "src/components/settings/ProviderConnectionList.tsx",
+      "status": "subsequently-changed",
+      "sha256": "8ca989f91d9bfa8f71c2c7b8852b1b2e249f60bb28c133400080afd5d632a7e5"
+    },
+    {
+      "file": "src/components/settings/ProviderModelCatalog.tsx",
+      "status": "same",
+      "sha256": "52e866f23700109feef9e2fc9070c2d554b82c653360827f57751e5f3e08895d"
+    },
+    {
+      "file": "src/components/settings/ProviderSettingsActions.tsx",
+      "status": "same",
+      "sha256": "6a10a55f49742e8a9eb7110690e85c7c49a96d9a6afd659e91fcb4a3860be33d"
+    },
+    {
+      "file": "src/components/settings/SettingsPanel.tsx",
+      "status": "same",
+      "sha256": "02d77c84adb6ca2d1ad0b86e8cf9064af423fd9876cf84ec06619843826caa96"
+    },
+    {
+      "file": "src/components/settings/SettingsSectionData.tsx",
+      "status": "same",
+      "sha256": "a11b0f377f1416ce665f39a24e5fb0eaa40fea2e5b5528b4c3960c186008faab"
+    },
+    {
+      "file": "src/components/settings/modelProviderSettingsState.ts",
+      "status": "same",
+      "sha256": "cfea2a3fe44a25d4b34fb9fa85374e042a1d043c44eb86f2e17e7b5ba6e25908"
+    },
+    {
+      "file": "src/components/settings/settings.css",
+      "status": "same",
+      "sha256": "25da5f7e36dafd0fffb426c9454818d6b4fb6a730b4de258f1a755ac7f640124"
+    },
+    {
+      "file": "src/components/settings/useScopedModelProviderDraft.ts",
+      "status": "same",
+      "sha256": "e979d6c7dc91b660cd09dcbbf0de8bfd01b946e9851a43ad005470fd2d6d6aa3"
+    },
+    {
+      "file": "src/components/settings/useSettingsBusy.ts",
+      "status": "same",
+      "sha256": "0fc6ff33c8625de5de5ab4f0fd20a58de9fdd9650e405e7c2fc8f74456b3ae84"
+    },
+    {
+      "file": "src/components/useConversationSubmit.ts",
+      "status": "same",
+      "sha256": "20d423e8bc371b08c91ce7bc896a449af7e3d312dcc32563f077658645e64ba1"
+    },
+    {
+      "file": "src/domain/canvasGraph.ts",
+      "status": "same",
+      "sha256": "4f75febeb7df62f23e2c4c78f09fb1480969ad66d9018149aed2efe8453bd9df"
+    },
+    {
+      "file": "src/domain/modelProvider.ts",
+      "status": "same",
+      "sha256": "0b62aa11d7b69bd2c03ec4fd8337eda9cbf4acfc44e73ed7b7224b40a883b5ce"
+    },
+    {
+      "file": "src/features/agent/agentDraftActions.ts",
+      "status": "same",
+      "sha256": "9638c8661a9f45f447019ff787ad21f531c320a84babbdd08fb4fae99a75ca23"
+    },
+    {
+      "file": "src/features/agent/googleAgentConfig.ts",
+      "status": "subsequently-changed",
+      "sha256": "745da09f122474b9b12ca895fba9d3a7e03b09ec1ce5fdc156c86d18e537b33d"
+    },
+    {
+      "file": "src/features/agent/useAgentComposerDraft.ts",
+      "status": "same",
+      "sha256": "ba72b5dc3c52356207ca63f9bd3f8936a1a25c1cda85ef20ddf1dd239fe52165"
+    },
+    {
+      "file": "src/features/creation/providerRegistry.ts",
+      "status": "subsequently-changed",
+      "sha256": "93c9e7bae89dc2f865ce80c02035d01232af5e02535bb14f2b081b02db89c5c8"
+    },
+    {
+      "file": "src/features/partners/PartnerRoles.tsx",
+      "status": "same",
+      "sha256": "c3672ba984ff8923481eca18f953fb7fb2530929a0dca2dec1995407611f401a"
+    },
+    {
+      "file": "src/features/partners/partnerRoleData.ts",
+      "status": "same",
+      "sha256": "83b03cdda7ecbf1a25611ab72a0a4b773a8fd7496e2711203ef2c77aada79a13"
+    },
+    {
+      "file": "src/styles/canvas-hud.css",
+      "status": "same",
+      "sha256": "424e4c1326397c4fd390079f098455501d50da3e6cc379f61b7d68bf7a1a858a"
+    },
+    {
+      "file": "src/styles/composer.css",
+      "status": "same",
+      "sha256": "eeb6628796a1ddc99e214ae3f3961b65c93a3e6a6f022ee13069ba653b519220"
+    },
+    {
+      "file": "src/styles/extensions.css",
+      "status": "same",
+      "sha256": "d02a81eaecd1fd73d43936c544b54917a3dbe7e80f1610d2651c7a9ec68d44fe"
+    },
+    {
+      "file": "src/styles/model-picker.css",
+      "status": "same",
+      "sha256": "5b9a98aa75a56d9cf177adf937d7a34c8d3b13ad86013a307337f1614fa86679"
+    },
+    {
+      "file": "src/styles/responsive.css",
+      "status": "same",
+      "sha256": "8a59ada2586ee2d27c71a72d6281c696469545bd560bcaa7ed89d6fe0563bc52"
+    },
+    {
+      "file": "src/styles/tokens.css",
+      "status": "same",
+      "sha256": "98bf5ffeabd25988f8c527440f6b4cb5c0d7513850ba7a79cea742d94a1090da"
+    },
+    {
+      "file": "src/styles/ui-governance.css",
+      "status": "same",
+      "sha256": "c392ba055c5f601a5dc25e5aec19b52f7666f7c3cd507f48b43d7fc66a47ecb0"
+    },
+    {
+      "file": "src/styles/workspace.css",
+      "status": "same",
+      "sha256": "3e61575402072ed9df85983dbe7e9d2bd130676dd45e3ea71749b4156f089bfb"
+    },
+    {
+      "file": "tests/browser/agent.spec.ts",
+      "status": "subsequently-changed",
+      "sha256": "f72ade6010f6117cd49392a68da708cd76d1b74277ea29e706ab578f7e6f63a7"
+    },
+    {
+      "file": "tests/browser/capability-extensions.spec.ts",
+      "status": "same",
+      "sha256": "c1a3f4ac951ef032b5baf803af4d42ea10c8fce02e1155ecc340a03ee821585a"
+    },
+    {
+      "file": "tests/browser/capability-google-drafts.spec.ts",
+      "status": "same",
+      "sha256": "c24d10fa2f21714acf288947445107117d4a048a814d6042e5352b0baf663967"
+    },
+    {
+      "file": "tests/browser/capability-model-access.spec.ts",
+      "status": "subsequently-changed",
+      "sha256": "82378dda4d9658a6cdecf67fea70154d2f6643a5b8a1ed623b96a8e0f8f4abe6"
+    },
+    {
+      "file": "tests/browser/capability-model-picker.spec.ts",
+      "status": "same",
+      "sha256": "fd0a77da13181bc88113cf98218030101adb6a51c28fb6fe8442f552390716f4"
+    },
+    {
+      "file": "tests/browser/catalog-pages.spec.ts",
+      "status": "same",
+      "sha256": "b7ee1b9ee0101530eac41103cc2e2a556a2a36fdd91e2584f1ad97c5fa653d40"
+    },
+    {
+      "file": "tests/browser/composer-fidelity.spec.ts",
+      "status": "same",
+      "sha256": "5a64fbf8059f15d8bcd6f5b927829bf0989de8dd357c82f49044688f7cdfaf9e"
+    },
+    {
+      "file": "tests/browser/composer-voice.spec.ts",
+      "status": "same",
+      "sha256": "2e00a2ade039d7a3693a823a6b94d010794d0239cc10670f223397e30e6b57a4"
+    },
+    {
+      "file": "tests/browser/creation-flow.spec.ts",
+      "status": "same",
+      "sha256": "54c44d5b6d27aa9c7520e9c8cfd67507941727fe4eb5b0b06ac3fa6c83c354cd"
+    },
+    {
+      "file": "tests/browser/design-system-pages.spec.ts",
+      "status": "same",
+      "sha256": "41d93ea8157feac72f5c14902b86be8568f47253f808333011528d6c046fe30a"
+    },
+    {
+      "file": "tests/browser/design-system.spec.ts",
+      "status": "same",
+      "sha256": "7df3a2bbd2f8d991a9c13fdb04dda5621d779ed9264d3e9085026c1c8e0c0f2e"
+    },
+    {
+      "file": "tests/browser/desktop-agent.spec.ts",
+      "status": "subsequently-changed",
+      "sha256": "951ddbb93015f7b94d42e953e5fc27f8082c775c1eaa71218858c557d9da1e60"
+    },
+    {
+      "file": "tests/browser/desktop-data-stability.spec.ts",
+      "status": "same",
+      "sha256": "2535104239c5b935b04f97ff9ccdbf26f39bf278920b2cb3495d4acb178bb1b7"
+    },
+    {
+      "file": "tests/browser/figma-483-ui.spec.ts",
+      "status": "same",
+      "sha256": "55f74bc77d499da0c3e069c33497ec75e8ce9d4a969346c8cb6aef02f88de073"
+    },
+    {
+      "file": "tests/browser/frontend.spec.ts",
+      "status": "subsequently-changed",
+      "sha256": "5b5f58d6bb66e1a2c305206a52bec07588be59eb20e6138ced05d3bce61060ae"
+    },
+    {
+      "file": "tests/browser/generation-flow.spec.ts",
+      "status": "same",
+      "sha256": "a9549bbeb184de2509c38779ddfd77592af747ba895166fddda1d5ed44eccb86"
+    },
+    {
+      "file": "tests/browser/google-agent.spec.ts",
+      "status": "same",
+      "sha256": "e258d812aa592d95641a43d7782d98304ba749d19219965e090258fd5056ef77"
+    },
+    {
+      "file": "tests/browser/google-cli-agent.spec.ts",
+      "status": "same",
+      "sha256": "639c153c6fb21995468dadfb15833b9950bd6d9dfd6737510068a7932cf2aa9b"
+    },
+    {
+      "file": "tests/browser/image-edit.spec.ts",
+      "status": "same",
+      "sha256": "a29ebec2ece1829a1379c42e1013ef8583c566b8b3c5db2ba50e20763fce250c"
+    },
+    {
+      "file": "tests/browser/input-contract.spec.ts",
+      "status": "same",
+      "sha256": "71fec2aa4850ead43cdc4e94d4cefc9684ba0c4169ed78e42e4e3110ea03ad07"
+    },
+    {
+      "file": "tests/browser/interaction-regressions.spec.ts",
+      "status": "same",
+      "sha256": "b57dbdf4b57a4c7bcfe1e645524cdf8c320111b85dfb1dc07aadd3dc9aa74478"
+    },
+    {
+      "file": "tests/browser/interaction-state.spec.ts",
+      "status": "same",
+      "sha256": "d54775876cc12d1737c716d3226d7a6e4eeffd04f3b52a0d6e02ffab1f784757"
+    },
+    {
+      "file": "tests/browser/mcp-settings.spec.ts",
+      "status": "same",
+      "sha256": "ee70044f71b1f68153ac38ddcf79f0fea79bb68c1327d1affed90e3bdc22990d"
+    },
+    {
+      "file": "tests/browser/model-capabilities.spec.ts",
+      "status": "same",
+      "sha256": "729b4fcb8d83907dce873f9d34bb345bb7d5c09cbc2c3b751fdc201aaeed01e3"
+    },
+    {
+      "file": "tests/browser/model-picker.spec.ts",
+      "status": "same",
+      "sha256": "175de4c0114c45d186150606beaa148a4ecd9cfd571769dd3110841d294a0683"
+    },
+    {
+      "file": "tests/browser/page-alignment.spec.ts",
+      "status": "same",
+      "sha256": "33d755ab6bcae3f39a0c9cb1cdcdec87d55f1e279c60b4a685180a49017405b2"
+    },
+    {
+      "file": "tests/browser/plugins.spec.ts",
+      "status": "same",
+      "sha256": "f6a9cd6ed3e9698ba955bad6b095354d9d9db9ef687a6be676b60bd29bccfe55"
+    },
+    {
+      "file": "tests/browser/provider-scheduling.spec.ts",
+      "status": "same",
+      "sha256": "e5ccc2827dcb27d0ddb15c473bce7cec6694baf42048c3d524bc4bb7ee7fa00c"
+    },
+    {
+      "file": "tests/browser/responsive-layout.spec.ts",
+      "status": "same",
+      "sha256": "e55788605b0855e4a918772d2238fd1df347c36a8315fe0d3ba765c31fd59cf8"
+    },
+    {
+      "file": "tests/browser/runtime-ui.spec.ts",
+      "status": "same",
+      "sha256": "41c745f943a05efd04124e97ded4fc65f33db53b27b9e5cc9ec09dfcb80c5817"
+    },
+    {
+      "file": "tests/browser/settings-scroll.spec.ts",
+      "status": "same",
+      "sha256": "de0791a80407ca82c5fd1641fb88f115763de037c42ed437714843ead7cef0cb"
+    },
+    {
+      "file": "tests/browser/sidebar.spec.ts",
+      "status": "same",
+      "sha256": "82feccf8009e469615662f39a639ff3aa5706d981f640cf6d104e69b185821f1"
+    },
+    {
+      "file": "tests/browser/task-intent.spec.ts",
+      "status": "subsequently-changed",
+      "sha256": "2cd7ddbc0673cf3913892d7656668217a57ec5104b0a674671e63daf44efdb97"
+    },
+    {
+      "file": "tests/browser/task-workbench.spec.ts",
+      "status": "same",
+      "sha256": "05ffab0fc410caa2f9532d4bc003b292d8e53ebbc59183eca3cf71d19a05b79b"
+    },
+    {
+      "file": "tests/browser/text-generation.spec.ts",
+      "status": "same",
+      "sha256": "e26497c7d766ab0148819b6cab5e11224a8ee2c2e627f8b1f168ece00c1449d2"
+    },
+    {
+      "file": "tests/browser/ui-architecture.spec.ts",
+      "status": "same",
+      "sha256": "4cd54c89edc062a369e1a78fde635fa7bc80eb07de75189c01ea586d6ec3b447"
+    },
+    {
+      "file": "tests/browser/ui-feature-parity.spec.ts",
+      "status": "subsequently-changed",
+      "sha256": "d52764e70662afcf929cd26b6fe0e881f650146bb085d1b656ebdc90ea8218c1"
+    },
+    {
+      "file": "tests/browser/ui-motion.spec.ts",
+      "status": "same",
+      "sha256": "74ae731ed343af7b13b817a260a34caf83559d3d1ede2cc664b86dd64538dc33"
+    },
+    {
+      "file": "tests/browser/ui-page-rules.spec.ts",
+      "status": "same",
+      "sha256": "a3232d0ed45b23bfa694cb1742913cb9f52741287c552d7bc1624bda76f09460"
+    },
+    {
+      "file": "tests/browser/uiRemainingLayout.spec.ts",
+      "status": "same",
+      "sha256": "1b9162a48e05a470b781242b9a3617e1fab7acf2d6134f6cf20deb3c10a2536b"
+    },
+    {
+      "file": "tests/browser/unified-image-command.spec.ts",
+      "status": "same",
+      "sha256": "1988d895565d41cac64d131f3d8e10040c317907c93019fbbc6178f9ea18125f"
+    },
+    {
+      "file": "tests/development/plugins.mjs",
+      "status": "same",
+      "sha256": "bd27284395b781ca1e260693ee98669aae965b1fb6b82e586156eb1a3cce1fb3"
+    },
+    {
+      "file": "tests/unit/modelProvider.test.ts",
+      "status": "same",
+      "sha256": "21e244afca87e3799707eeb52493362ef6b1bbddb94bf19e84613b00c004e631"
+    },
+    {
+      "file": "tests/unit/modelProviderIdentity.test.ts",
+      "status": "same",
+      "sha256": "a97d61f7288112ee2364f59de18a2e21821665ec7599ab9c5e5a2e81b2711948"
+    },
+    {
+      "file": "tests/unit/modelRouting.test.ts",
+      "status": "subsequently-changed",
+      "sha256": "664dadb0814a5be2201c54ddabc6a6137b9f4967a3d401d478e239b7e63de94f"
+    },
+    {
+      "file": "vite.config.ts",
+      "status": "same",
+      "sha256": "8855f931c5578b28deebdbc0b7f04855b067ad56e9fbfc9b22e4c3c44a65c13e"
+    }
+  ]
+}

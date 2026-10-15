@@ -9,6 +9,9 @@ const MAX_TEXT_RESPONSE_BYTES: usize = 2 * 1024 * 1024;
 
 #[derive(Default)]
 struct TextStream {
+    protocol: String,
+    started: bool,
+    anthropic_stop: bool,
     line: Vec<u8>,
     event: Vec<u8>,
     received: usize,
@@ -23,6 +26,11 @@ struct TextStream {
 impl TextStream {
     fn for_protocol(protocol: provider::Protocol) -> Self {
         Self {
+            protocol: if protocol == provider::Protocol::Gemini {
+                "gemini".into()
+            } else {
+                String::new()
+            },
             modern: protocol_stream::ProtocolStream::for_protocol(protocol),
             ..Self::default()
         }
@@ -77,7 +85,7 @@ impl TextStream {
         if self.done {
             return Err("文本流终止后仍返回数据");
         }
-        if data == "[DONE]" {
+        if data == "[DONE]" && !matches!(self.protocol.as_str(), "anthropic-messages" | "gemini") {
             if self.modern.is_some() {
                 return Err("文本流缺少协议终止确认");
             }
@@ -96,6 +104,9 @@ impl TextStream {
             self.done = modern.done();
             self.finished = self.done;
             return Ok(());
+        }
+        if matches!(self.protocol.as_str(), "anthropic-messages" | "gemini") {
+            return self.dispatch_protocol(&value);
         }
         let choices = value
             .get("choices")
@@ -136,6 +147,115 @@ impl TextStream {
             self.finished = true;
         }
         Ok(())
+    }
+
+    fn append(&mut self, value: &str) -> Result<(), &'static str> {
+        if self.finished && !value.is_empty() {
+            return Err("文本流完成后仍返回内容");
+        }
+        if self.text.len().saturating_add(value.len()) > MAX_TEXT_BYTES {
+            return Err("生成文本超过本地保存上限");
+        }
+        self.text.push_str(value);
+        Ok(())
+    }
+
+    fn dispatch_protocol(&mut self, value: &Value) -> Result<(), &'static str> {
+        if self.protocol == "anthropic-messages" {
+            match value["type"].as_str().ok_or("文本流事件类型无效")? {
+                "ping" => Ok(()),
+                "message_start" => {
+                    if self.started {
+                        return Err("文本流重复开始");
+                    }
+                    self.started = true;
+                    let content = value["message"]["content"]
+                        .as_array()
+                        .ok_or("文本流起始内容无效")?;
+                    for part in content {
+                        if part["type"] != "text" {
+                            return Err("文本流包含非文本内容");
+                        }
+                        self.append(part["text"].as_str().ok_or("文本内容无效")?)?;
+                    }
+                    Ok(())
+                }
+                "content_block_start" => {
+                    if !self.started || value["content_block"]["type"] != "text" {
+                        return Err("文本流包含非文本内容");
+                    }
+                    self.append(
+                        value["content_block"]["text"]
+                            .as_str()
+                            .ok_or("文本内容无效")?,
+                    )
+                }
+                "content_block_delta" => {
+                    if !self.started || value["delta"]["type"] != "text_delta" {
+                        return Err("文本流包含非文本增量");
+                    }
+                    self.append(value["delta"]["text"].as_str().ok_or("文本内容无效")?)
+                }
+                "content_block_stop" => {
+                    if self.started {
+                        Ok(())
+                    } else {
+                        Err("文本流尚未开始")
+                    }
+                }
+                "message_delta" => {
+                    if !self.started {
+                        return Err("文本流尚未开始");
+                    }
+                    if let Some(reason) = value["delta"]["stop_reason"].as_str() {
+                        if !matches!(reason, "end_turn" | "stop_sequence") {
+                            return Err("文本生成未完整结束");
+                        }
+                        self.anthropic_stop = true;
+                    }
+                    Ok(())
+                }
+                "message_stop" => {
+                    if !self.started || !self.anthropic_stop {
+                        return Err("文本流提前结束");
+                    }
+                    self.finished = true;
+                    self.done = true;
+                    Ok(())
+                }
+                _ => Err("文本流事件无效"),
+            }
+        } else {
+            if !value["promptFeedback"]["blockReason"].is_null() {
+                return Err("文本生成被服务拒绝");
+            }
+            let Some(candidates) = value["candidates"].as_array() else {
+                return if value.get("usageMetadata").is_some() {
+                    Ok(())
+                } else {
+                    Err("文本流缺少候选")
+                };
+            };
+            if candidates.len() != 1 {
+                return Err("文本流返回意外的候选数量");
+            }
+            let candidate = &candidates[0];
+            if let Some(content) = candidate.get("content") {
+                for part in content["parts"].as_array().ok_or("文本内容无效")? {
+                    let text = part["text"].as_str().ok_or("文本流包含非文本内容")?;
+                    if part["thought"] != true {
+                        self.append(text)?;
+                    }
+                }
+            }
+            if let Some(reason) = candidate["finishReason"].as_str() {
+                if reason != "STOP" {
+                    return Err("文本生成未完整结束");
+                }
+                self.finished = true;
+            }
+            Ok(())
+        }
     }
 
     fn complete(&self) -> Result<&str, &'static str> {
@@ -304,6 +424,71 @@ mod tests {
     const CHINESE: &str = "data: {\"choices\":[{\"index\":0,\"delta\":{\"content\":\"你好🌍\"},\"finish_reason\":null}]}\r\n\r\n";
     const STOP: &str =
         "data:{\"choices\":[{\"index\":0,\"delta\":{},\"finish_reason\":\"stop\"}]}\n\n";
+
+    #[test]
+    fn anthropic_success_requires_message_stop_and_end_turn() {
+        let mut stream = TextStream {
+            protocol: "anthropic-messages".into(),
+            ..Default::default()
+        };
+        for frame in [
+            json!({"type":"message_start","message":{"content":[]}}),
+            json!({"type":"content_block_start","content_block":{"type":"text","text":"你好"}}),
+            json!({"type":"content_block_delta","delta":{"type":"text_delta","text":"🌍"}}),
+            json!({"type":"message_delta","delta":{"stop_reason":"end_turn"}}),
+        ] {
+            stream
+                .feed(format!("data: {frame}\n\n").as_bytes())
+                .unwrap();
+        }
+        assert!(stream.complete().is_err());
+        stream
+            .feed(b"data: {\"type\":\"message_stop\"}\n\n")
+            .unwrap();
+        assert_eq!(stream.complete().unwrap(), "你好🌍");
+        assert!(stream
+            .feed(b"data: {\"type\":\"message_stop\"}\n\n")
+            .is_err());
+    }
+    #[test]
+    fn gemini_success_requires_stop_and_text_parts() {
+        let mut stream = TextStream {
+            protocol: "gemini".into(),
+            ..Default::default()
+        };
+        stream
+            .feed(
+                format!(
+                    "data: {}\n\n",
+                    json!({"candidates":[{"content":{"parts":[{"text":"answer"}]}}]})
+                )
+                .as_bytes(),
+            )
+            .unwrap();
+        assert!(stream.complete().is_err());
+        stream
+            .feed(
+                format!(
+                    "data: {}\n\n",
+                    json!({"candidates":[{"finishReason":"STOP"}]})
+                )
+                .as_bytes(),
+            )
+            .unwrap();
+        assert_eq!(stream.complete().unwrap(), "answer");
+        for value in [
+            json!({"candidates":[{"finishReason":"MAX_TOKENS"}]}),
+            json!({"candidates":[{"content":{"parts":[{"functionCall":{}}]}}]}),
+        ] {
+            let mut invalid = TextStream {
+                protocol: "gemini".into(),
+                ..Default::default()
+            };
+            assert!(invalid
+                .feed(format!("data: {value}\n\n").as_bytes())
+                .is_err());
+        }
+    }
 
     #[test]
     fn utf8_network_boundaries_and_done_preserve_text() {

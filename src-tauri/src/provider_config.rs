@@ -172,7 +172,6 @@ impl ProviderConfigRepository {
     }
 
     pub fn read(&self) -> Result<ProviderConfigRead, String> {
-        #[cfg(windows)]
         let _transaction = crate::provider_transaction::ProviderTransactionGuard::acquire()?;
         let _guard = self
             .lock
@@ -196,7 +195,6 @@ impl ProviderConfigRepository {
     /// A failed first credential save must not establish an authoritative empty
     /// config over legacy browser metadata. Remove only this owned new revision.
     pub fn restore_missing(&self, expected_revision: u64) -> Result<(), String> {
-        #[cfg(windows)]
         let _transaction = crate::provider_transaction::ProviderTransactionGuard::acquire()?;
         let _guard = self
             .lock
@@ -213,7 +211,6 @@ impl ProviderConfigRepository {
     /// Durable commit. Returns the new revision; the caller must surface the
     /// error to the UI instead of reporting a fake success.
     pub fn write(&self, connections: Value, expected_revision: Option<u64>) -> Result<u64, String> {
-        #[cfg(windows)]
         let _transaction = crate::provider_transaction::ProviderTransactionGuard::acquire()?;
         validate_connections(&connections)?;
         let _guard = self

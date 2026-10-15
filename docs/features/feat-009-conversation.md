@@ -1,5 +1,9 @@
 # 对话与创作消息面板（FEAT-009）
 
+## 2026-10-13 Cherry 红框补齐
+
+共享安全Markdown、原文复制/本地导出，新增2–3个文本模型独立多轮对话，复用既有项目/CreationTask与Native journal；单路失败不丢成功结果，比较不更改原画布账号。五个常用助手与自定义沿用SkillRegistry，Codex默认、Google与API各通道保持。状态仍PARTIAL；[实现与证据](../changes/2026-10-13-cherry-red-scope/verification.md)分别记录本地、真实服务和跨平台缺口。
+
 - 状态：PARTIAL
 - 领域：creation
 - 最近更新：2026-10-01
@@ -56,3 +60,9 @@ TASK-AGENT-004: Google API Key 对话、生图与画布归档的本地/fixture �
 
 TASK-AGENT-005: Gemini CLI 登录文字对话及续接的本地/fixture 验证通过；真实安装、登录、桌面待验收，见 [验证](../changes/2026-09-23-google-cli-login/verification.md)。
 TASK-AGENT-007：CodeBuddy CLI 受控短文本委派；后续设计师全链路按 [剩余顺序](../changes/2026-09-24-codebuddy-delegation/remaining.md) 推进。
+
+2026-10-13 7da 主线候选：正式 production Tauri Native6、真实 Ollama13、严格隔离NSIS生命周期已通过相关链路；不同源码/产物和 Hosted/用户验收边界见[最终记录](../changes/2026-10-13-cherry-red-scope/mainline-final-status.md)。功能总体仍PARTIAL，不据此关闭其他开放任务或真实云/图片/视频能力。
+
+2026-10-14 最新验收：安全Markdown/本地复制导出、2–3独立文本模型的三平台Native6及本机真实Ollama13已PASS；不把文字助手当真实图像/视频生成服务。 完整身份与许可见[最终记录](../changes/2026-10-13-cherry-red-scope/mainline-final-status.md)。保留功能整体PARTIAL及其他开放任务。
+
+最终技术锚点0d61：三平台Native7与本机真实Ollama13完整通过，安全Markdown/分享及2–3独立模型多轮复用现有任务和journal。 本期技术步骤完成，用户最终产品/发布范围待验收；功能总体及其他任务状态不批量升级，详见[最终记录](../changes/2026-10-13-cherry-red-scope/mainline-final-status.md)。

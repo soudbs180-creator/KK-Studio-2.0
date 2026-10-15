@@ -1,0 +1,23 @@
+
+> kk-studio@2.1.18 client:installer:test
+> node tests/desktop/installer.mjs .tmp/cherry-red/installer-0d61ae03/installer-receipt.json
+
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected "actual" to be strictly unequal to:
+
+'process'
+    at install (file:///D:/kk-studio/.worktrees/TASK-CHERRY-RED-001/tests/desktop/installer.mjs:136:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async file:///D:/kk-studio/.worktrees/TASK-CHERRY-RED-001/tests/desktop/installer.mjs:291:3 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 'process',
+  expected: 'process',
+  operator: 'notStrictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.20.0

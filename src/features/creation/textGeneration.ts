@@ -9,6 +9,8 @@ import {
 import {
   buildTextRequest,
   providerNeedsKey,
+  providerProtocol,
+  type ProviderTextMessage,
   type ProviderProtocolOptions,
   type ProviderProtocol,
 } from "../../domain/providerProtocol.ts";
@@ -23,6 +25,7 @@ export async function readTextStream(
   onText?: (text: string) => void,
   protocol: ProviderProtocol = "openai-chat",
 ): Promise<string> {
+  protocol = providerProtocol({ protocol });
   signal.throwIfAborted();
   if (
     !response.headers.get("content-type")?.includes("text/event-stream") ||
@@ -34,7 +37,7 @@ export async function readTextStream(
   const reader = response.body.getReader();
   const decoder = new TextDecoder("utf-8", { fatal: true });
   const encoder = new TextEncoder();
-  const modern = protocol === "openai-responses" || protocol === "anthropic";
+  const modern = ["openai-responses", "anthropic", "gemini"].includes(protocol);
   const state: TextProtocolState = {
     text: "",
     complete: false,
@@ -61,8 +64,7 @@ export async function readTextStream(
     data = [];
     eventBytes = 0;
     if (value === "[DONE]") {
-      if (protocol === "openai-responses" || protocol === "anthropic")
-        throw invalidStream();
+      if (modern) throw invalidStream();
       finished = true;
       return;
     }
@@ -138,10 +140,11 @@ export async function readTextStream(
   }
 }
 
-export async function generateText(options: {
+export async function generateText(input: {
   protocol?: ProviderProtocolOptions["protocol"];
   authMode?: ProviderProtocolOptions["authMode"];
   prompt: string;
+  messages?: readonly ProviderTextMessage[];
   model: string;
   providerBaseUrl: string;
   credentialRef?: string;
@@ -151,6 +154,10 @@ export async function generateText(options: {
   onRequestStart: () => void;
   onText?: (text: string) => void;
 }): Promise<string> {
+  const options = {
+    ...input,
+    messages: input.messages?.map((message) => ({ ...message })),
+  };
   const signal = AbortSignal.any([
     options.signal,
     AbortSignal.timeout(120_000),
@@ -185,6 +192,7 @@ export async function generateText(options: {
       prompt: options.prompt,
       model: options.model,
       idempotencyKey: options.idempotencyKey,
+      messages: options.messages,
     },
     apiKey,
   );

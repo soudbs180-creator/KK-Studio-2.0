@@ -36,6 +36,7 @@ import {
   type ImageEditContext,
 } from "../image-edit/snapshot.ts";
 import { normalizeTaskCostReceipt, type TaskCostReceipt } from "./taskState.ts";
+import type { ProviderTextMessage } from "../../integrations/providerTextProtocol";
 
 export type CreationTaskStatus =
   | "queued"
@@ -81,6 +82,7 @@ export interface CreationAttachment {
 }
 
 export interface CreationMessage {
+  roundId?: string;
   id: string;
   role: "user" | "system";
   content: string;
@@ -88,6 +90,9 @@ export interface CreationMessage {
 }
 
 export interface CreationTask {
+  conversationRoundId?: string;
+  conversationUserMessageId?: string;
+  conversationMessages?: readonly ProviderTextMessage[];
   imageEdit?: ImageEditSnapshot;
   imageEditContext?: ImageEditContext;
   id: string;
@@ -198,6 +203,8 @@ export interface CreationSnapshot {
 }
 
 export interface CreationDraft {
+  assistantId?: string;
+  conversationRoutes?: Array<{ connectionId: string; modelId: string }>;
   providerConnectionId?: string;
   prompt: string;
   model: string;
@@ -370,10 +377,80 @@ export function normalizeCreationSnapshot(
   };
 }
 
+function readConversationMessages(
+  value: unknown,
+): ProviderTextMessage[] | undefined {
+  if (!Array.isArray(value) || !value.length || value.length > 32)
+    return undefined;
+  const messages: ProviderTextMessage[] = [];
+  for (const raw of value) {
+    if (!raw || typeof raw !== "object") return undefined;
+    const message = raw as Record<string, unknown>;
+    if (
+      !(
+        message.role === "user" ||
+        message.role === "assistant" ||
+        message.role === "system"
+      ) ||
+      typeof message.content !== "string" ||
+      !message.content.trim()
+    )
+      return undefined;
+    messages.push({ role: message.role, content: message.content });
+  }
+  return new TextEncoder().encode(
+    messages.map((message) => message.content).join(""),
+  ).byteLength <=
+    64 * 1024
+    ? messages
+    : undefined;
+}
+function normalizeTaskConversationMetadata(
+  task: Record<string, unknown>,
+): Pick<
+  CreationTask,
+  | "providerBaseUrl"
+  | "providerProtocol"
+  | "providerAuthMode"
+  | "conversationRoundId"
+  | "conversationUserMessageId"
+  | "conversationMessages"
+> {
+  return {
+    providerBaseUrl: safeBaseUrl(task.providerBaseUrl),
+    ...creationProviderRouting(task),
+    conversationRoundId: safeText(task.conversationRoundId, 160) || undefined,
+    conversationUserMessageId:
+      safeText(task.conversationUserMessageId, 160) || undefined,
+    conversationMessages: readConversationMessages(task.conversationMessages),
+  };
+}
+
 function normalizeDraft(value: unknown): CreationDraft {
   const candidate =
     value && typeof value === "object" ? (value as Partial<CreationDraft>) : {};
   return {
+    assistantId:
+      typeof candidate.assistantId === "string" &&
+      /^assistant-[\w-]{1,140}$/.test(candidate.assistantId)
+        ? candidate.assistantId
+        : undefined,
+    conversationRoutes: Array.isArray(candidate.conversationRoutes)
+      ? candidate.conversationRoutes
+          .filter(
+            (route) =>
+              route &&
+              typeof route.connectionId === "string" &&
+              route.connectionId.length <= 160 &&
+              typeof route.modelId === "string" &&
+              route.modelId.length <= 120,
+          )
+          .slice(0, 3)
+          .map((route) => ({
+            connectionId: route.connectionId,
+            modelId: route.modelId,
+          }))
+      : undefined,
     prompt: typeof candidate.prompt === "string" ? candidate.prompt : "",
     providerConnectionId:
       typeof candidate.providerConnectionId === "string"
@@ -515,7 +592,11 @@ function isSnapshotProjectRoutingValid(value: unknown): boolean {
         (task) =>
           !task ||
           typeof task !== "object" ||
-          isCreationProviderRoutingValid(task),
+          (isCreationProviderRoutingValid(task) &&
+            (task.conversationMessages === undefined ||
+              (task.kind === "text" &&
+                readConversationMessages(task.conversationMessages) !==
+                  undefined))),
       ))
   );
 }
@@ -746,6 +827,7 @@ function normalizeProject(value: CreationProject): CreationProject {
             ),
           )
           .map((message) => ({
+            roundId: safeText(message.roundId, 160) || undefined,
             id: safeText(message.id, 160),
             role:
               message.role === "system"
@@ -851,8 +933,7 @@ function normalizeProject(value: CreationProject): CreationProject {
           typeof task.providerConnectionId === "string"
             ? task.providerConnectionId.slice(0, 160)
             : undefined,
-        providerBaseUrl: safeBaseUrl(task.providerBaseUrl),
-        ...creationProviderRouting(task),
+        ...normalizeTaskConversationMetadata(task),
         providerName: safeText(task.providerName, 80) || undefined,
         imageEdit: readImageEditSnapshot(task.imageEdit),
         imageEditContext: readImageEditContext(task.imageEditContext),

@@ -19,6 +19,11 @@ export default function SkillRecordCard({
   onStatus: (message: string) => void;
 }) {
   const redraw = (message: string) => onStatus(message);
+  const readOnlyAssistant =
+    record.manifest.source === "bundled" &&
+    record.manifest.id.startsWith("assistant-");
+  const readOnlyReason = "内置助手为只读，请新建自定义助手。";
+  const readOnlyNoteId = record.manifest.id + "-read-only-reason";
   return (
     <article className="catalog-card">
       <div className="catalog-card-image workflow-image workflow-image-0">
@@ -32,6 +37,9 @@ export default function SkillRecordCard({
           {record.manifest.author} · v{record.manifest.version} ·{" "}
           {record.installed ? "本地已安装" : "未安装"}
         </small>
+        {readOnlyAssistant && (
+          <small id={readOnlyNoteId}>{readOnlyReason}</small>
+        )}
       </div>
       <div className="catalog-page-actions">
         <button
@@ -50,6 +58,9 @@ export default function SkillRecordCard({
           type="button"
           className="ui-button"
           onClick={() => onEdit(record)}
+          disabled={readOnlyAssistant}
+          title={readOnlyAssistant ? readOnlyReason : undefined}
+          aria-describedby={readOnlyAssistant ? readOnlyNoteId : undefined}
         >
           编辑
         </button>

@@ -1,0 +1,215 @@
+{
+  "timestamp": "2026-10-13T18:40:37.472Z",
+  "receiptCommit": "0d61ae0334659d692b62b34a688a4d3f1cd4d842",
+  "isolated": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-installer-audit space-zabkkl",
+  "profile": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-installer-audit space-zabkkl\\profile",
+  "hostElevated": "not-recorded",
+  "platform": "Windows host with existing WebView2 (not a clean Windows VM)",
+  "installerSha256": "8e8e2b39c6c328726d2cc54f9de4789c04e0d9f7097a8c61acbe586382896696",
+  "checks": [
+    {
+      "action": "damaged-package",
+      "refusedBeforeExecution": true
+    },
+    {
+      "action": "install",
+      "verifiedFiles": 4280,
+      "entries": [
+        {
+          "kind": "uninstall",
+          "hive": "CurrentUser",
+          "view": "Registry32",
+          "location": "\"C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-installer-audit space-zabkkl\\app\"",
+          "version": "2.1.18"
+        },
+        {
+          "kind": "settings",
+          "hive": "CurrentUser",
+          "view": "Registry32",
+          "location": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-installer-audit space-zabkkl\\app"
+        },
+        {
+          "kind": "uninstall",
+          "hive": "CurrentUser",
+          "view": "Registry64",
+          "location": "\"C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-installer-audit space-zabkkl\\app\"",
+          "version": "2.1.18"
+        },
+        {
+          "kind": "settings",
+          "hive": "CurrentUser",
+          "view": "Registry64",
+          "location": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-installer-audit space-zabkkl\\app"
+        }
+      ]
+    },
+    {
+      "action": "bundled-agent",
+      "healthy": true
+    },
+    {
+      "action": "install",
+      "verifiedFiles": 4280,
+      "entries": [
+        {
+          "kind": "uninstall",
+          "hive": "CurrentUser",
+          "view": "Registry32",
+          "location": "\"C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-installer-audit space-zabkkl\\app\"",
+          "version": "2.1.18"
+        },
+        {
+          "kind": "settings",
+          "hive": "CurrentUser",
+          "view": "Registry32",
+          "location": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-installer-audit space-zabkkl\\app"
+        },
+        {
+          "kind": "uninstall",
+          "hive": "CurrentUser",
+          "view": "Registry64",
+          "location": "\"C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-installer-audit space-zabkkl\\app\"",
+          "version": "2.1.18"
+        },
+        {
+          "kind": "settings",
+          "hive": "CurrentUser",
+          "view": "Registry64",
+          "location": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-installer-audit space-zabkkl\\app"
+        }
+      ]
+    },
+    {
+      "action": "install",
+      "verifiedFiles": 4280,
+      "entries": [
+        {
+          "kind": "uninstall",
+          "hive": "CurrentUser",
+          "view": "Registry32",
+          "location": "\"C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-installer-audit space-zabkkl\\app\"",
+          "version": "2.1.18"
+        },
+        {
+          "kind": "settings",
+          "hive": "CurrentUser",
+          "view": "Registry32",
+          "location": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-installer-audit space-zabkkl\\app"
+        },
+        {
+          "kind": "uninstall",
+          "hive": "CurrentUser",
+          "view": "Registry64",
+          "location": "\"C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-installer-audit space-zabkkl\\app\"",
+          "version": "2.1.18"
+        },
+        {
+          "kind": "settings",
+          "hive": "CurrentUser",
+          "view": "Registry64",
+          "location": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-installer-audit space-zabkkl\\app"
+        }
+      ]
+    },
+    {
+      "action": "uninstall",
+      "registrationRemoved": true
+    },
+    {
+      "action": "install",
+      "verifiedFiles": 4280,
+      "entries": [
+        {
+          "kind": "uninstall",
+          "hive": "CurrentUser",
+          "view": "Registry32",
+          "location": "\"C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-installer-audit space-zabkkl\\app\"",
+          "version": "2.1.18"
+        },
+        {
+          "kind": "settings",
+          "hive": "CurrentUser",
+          "view": "Registry32",
+          "location": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-installer-audit space-zabkkl\\app"
+        },
+        {
+          "kind": "uninstall",
+          "hive": "CurrentUser",
+          "view": "Registry64",
+          "location": "\"C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-installer-audit space-zabkkl\\app\"",
+          "version": "2.1.18"
+        },
+        {
+          "kind": "settings",
+          "hive": "CurrentUser",
+          "view": "Registry64",
+          "location": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-installer-audit space-zabkkl\\app"
+        }
+      ]
+    },
+    {
+      "action": "uninstall",
+      "registrationRemoved": true
+    },
+    {
+      "action": "data-retention",
+      "reinstall": true,
+      "resourceRepair": true,
+      "uninstallReinstall": true,
+      "offlineScope": "App DNS blocked; installer uses existing WebView2 and invalid proxy",
+      "cleanWindowsWithoutWebView2": "NOT RUN",
+      "lowerVersionRollback": "NOT RUN"
+    }
+  ],
+  "launches": [
+    {
+      "label": "installed",
+      "url": "http://tauri.localhost/",
+      "scripts": [
+        "http://tauri.localhost/assets/index-Dz2hYLqp.js"
+      ],
+      "root": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-installer-audit space-zabkkl\\data",
+      "executable": {
+        "size": 20054016,
+        "sha256": "28087c801e6ac6c7820e387b2ef9ae5fd7c903189914f61374b01f83825a09df"
+      }
+    },
+    {
+      "label": "reinstalled",
+      "url": "http://tauri.localhost/",
+      "scripts": [
+        "http://tauri.localhost/assets/index-Dz2hYLqp.js"
+      ],
+      "root": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-installer-audit space-zabkkl\\data",
+      "executable": {
+        "size": 20054016,
+        "sha256": "28087c801e6ac6c7820e387b2ef9ae5fd7c903189914f61374b01f83825a09df"
+      }
+    },
+    {
+      "label": "repaired",
+      "url": "http://tauri.localhost/",
+      "scripts": [
+        "http://tauri.localhost/assets/index-Dz2hYLqp.js"
+      ],
+      "root": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-installer-audit space-zabkkl\\data",
+      "executable": {
+        "size": 20054016,
+        "sha256": "28087c801e6ac6c7820e387b2ef9ae5fd7c903189914f61374b01f83825a09df"
+      }
+    },
+    {
+      "label": "restored-after-uninstall",
+      "url": "http://tauri.localhost/",
+      "scripts": [
+        "http://tauri.localhost/assets/index-Dz2hYLqp.js"
+      ],
+      "root": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-installer-audit space-zabkkl\\data",
+      "executable": {
+        "size": 20054016,
+        "sha256": "28087c801e6ac6c7820e387b2ef9ae5fd7c903189914f61374b01f83825a09df"
+      }
+    }
+  ],
+  "passed": true
+}

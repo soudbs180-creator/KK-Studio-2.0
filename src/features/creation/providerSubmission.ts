@@ -129,7 +129,11 @@ export function assertSubmissionConnection(
   if (
     connection.kind !== "user_byok" ||
     !connection.baseUrl ||
-    !connection.credentialRef
+    (!connection.credentialRef &&
+      !(
+        binding.kind === "text" &&
+        !providerNeedsKey({ ...connection, baseUrl: connection.baseUrl })
+      ))
   )
     throw new ProviderSubmissionError("此入口只支持已配置凭据的 BYOK 连接。");
   const selectedModel = catalogForConnection(connection).find(

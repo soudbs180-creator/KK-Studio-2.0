@@ -145,6 +145,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-SETTINGS-LATEST-20261015 | 在最新 UI 修复设置溢出、提示遮挡与配置保存风险 | DONE | 已完成 | P1 | TASK-223-ACTIONS-20261014 | root | 保持当前桌面入口指向最新工作区；产品源码改变后按官方launcher重建并重新验证，用户视觉与外部能力另验。 |
 | TASK-UI-DETAILS-20261015 | 统一输入框、设置密度和卡片空态UI | DONE | 已完成 | P1 | TASK-SETTINGS-LATEST-20261015 | root | 本次本地UI范围完成；用户视觉接受、真实Provider、Hosted/安装器及实体手机另验，不自动关闭原开放能力。 |
 | TASK-UI-FULL-20261015 | 完成全页面新UI收敛并验证后合入主线 | REVIEW | 进行中 | P1 | TASK-UI-DETAILS-20261015 | root | 提交2.1.31最终head并独立base694→head精确审查；本地verify9 761首试/Native10 105/TaskHost current6 11已PASS。当前SHA新Hosted/Delivery通过后普通合并PR59、fetch核对main/post-main。旧eb5 push首错不被PR绿色覆盖；偏好例外与其他边界见verification最新2.1.31节，REVIEW/整体NOT_VERIFIED。 |
+| TASK-CHERRY-RED-001 | Cherry 红框能力选择性融合与三桌面平台补齐 | REVIEW | 进行中 | P1 | none | root | 按用户2026-10-15授权融合当前main，完整验证与当前head独立复审、Hosted/Delivery后合并；不删工作区/分支，保留primary和daily并发内容。 |
 
 ## TASK-FIX-PUSH-GUARD-SPACES-001 — 修复 Windows Git pre-push 空格及长路径启动
 
@@ -2789,4 +2790,23 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Evidence: [docs/changes/2026-10-15-ui-full/verification.md](../../docs/changes/2026-10-15-ui-full/verification.md), [docs/changes/2026-10-15-ui-full/review.md](../../docs/changes/2026-10-15-ui-full/review.md), [docs/changes/2026-10-12-governance-currentness/verification.md](../../docs/changes/2026-10-12-governance-currentness/verification.md), [docs/changes/2026-10-12-p1-audit-closeout/verification.md](../../docs/changes/2026-10-12-p1-audit-closeout/verification.md), [docs/changes/2026-10-13-agent-recovery/verification.md](../../docs/changes/2026-10-13-agent-recovery/verification.md), [docs/changes/2026-10-13-capability-ui/verification.md](../../docs/changes/2026-10-13-capability-ui/verification.md), [docs/changes/2026-10-13-review-remediation/verification.md](../../docs/changes/2026-10-13-review-remediation/verification.md), [docs/changes/2026-10-13-ui-remaining-fixes/verification.md](../../docs/changes/2026-10-13-ui-remaining-fixes/verification.md), [docs/changes/2026-10-14-action-usability-222/verification.md](../../docs/changes/2026-10-14-action-usability-222/verification.md), [docs/changes/2026-10-14-action-usability-223/verification.md](../../docs/changes/2026-10-14-action-usability-223/verification.md), [docs/changes/2026-10-14-agent-canvas-sync/verification.md](../../docs/changes/2026-10-14-agent-canvas-sync/verification.md), [docs/changes/2026-10-14-agent-execution-delivery/verification.md](../../docs/changes/2026-10-14-agent-execution-delivery/verification.md), [docs/changes/2026-10-14-ccswitch-status-recovery/verification.md](../../docs/changes/2026-10-14-ccswitch-status-recovery/verification.md), [docs/changes/2026-10-14-protocol-cli-completion/verification.md](../../docs/changes/2026-10-14-protocol-cli-completion/verification.md), [docs/changes/2026-10-14-ui-consolidation/verification.md](../../docs/changes/2026-10-14-ui-consolidation/verification.md), [docs/changes/2026-10-15-settings-latest-ui/verification.md](../../docs/changes/2026-10-15-settings-latest-ui/verification.md), [docs/changes/2026-10-15-ui-details/verification.md](../../docs/changes/2026-10-15-ui-details/verification.md), [docs/changes/2026-10-15-ui-full/coverage.md](../../docs/changes/2026-10-15-ui-full/coverage.md)
 - Next action: 提交2.1.31最终head并独立base694→head精确审查；本地verify9 761首试/Native10 105/TaskHost current6 11已PASS。当前SHA新Hosted/Delivery通过后普通合并PR59、fetch核对main/post-main。旧eb5 push首错不被PR绿色覆盖；偏好例外与其他边界见verification最新2.1.31节，REVIEW/整体NOT_VERIFIED。
 - Last verified: 2026-10-15
+- Updated: 2026-10-15
+
+## TASK-CHERRY-RED-001 — Cherry 红框能力选择性融合与三桌面平台补齐
+
+- Goal: 以 KK 为主体补齐近期模型/助手/MCP/桌面体验，保留已有行为并完成实际实现和相应验证。
+- Scope: 免费开源、本地模型、多协议、精选自定义助手与文本比较、共享安全 Markdown/本地分享、原生凭据/runtime/平台能力；框外功能保持后续可选。
+- Display status: 进行中
+- Priority: P1 — 用户以红框确定近期范围并明确授权实际实施。
+- Requirement refs: ledger:TASK-CHERRY-RED-001
+- Feature IDs: FEAT-009, FEAT-011, FEAT-012, FEAT-022, FEAT-032
+- Owner role: repository-maintainer
+- Acceptance: 旧数据/账号/模型/任务身份保留，故障/取消/迟到恢复回归通过。; 采纳项有源码接线、类型检查、测试、构建和相应运行证据。; 外部能力、Mac/Linux实际设备缺口与Windows本地验证分别记录，不假升级REAL。
+- Branch: `codex/TASK-CHERRY-RED-001-mainline`
+- Worktree: `D:/kk-studio/.worktrees/TASK-CHERRY-RED-001`
+- Modules: src/components, src/domain, src/features/creation, src/features/agent, src/features/models, src/integrations, src-tauri, tests, docs/changes/2026-10-13-cherry-red-scope, scripts/agent, config/platform-versions.json, .github/workflows/native-crossplatform.yml
+- Verification: NOT_VERIFIED — 产品/测试源码锚点0d61，产品代码cc184 byte-identical；当前适用quality PR/push与Native PR全SUCCESS，Nativepush按doc-only规则未触发。完整verify1159unit(1145PASS14SKIP)/174Agent(172PASS2SKIP)/528browser、Rust154、TaskHost11通过；三OS Native7、默认四包/Windows严格4280文件与生命周期、独立source/artifact审计PASS。真实Ollama13、官方SDK1.30/2.3.1 Native各18通过。本机最新NSIS9checks/4launch原严格fixture最终PASS；首postflight process FAIL原因UNKNOWN、保护和原件/复查保留。primary96same/15随后changed/0missing且暂存为空，125旧任务文本/语义保留。各source/feature/input/EXE/ZIP与未验能力见最终记录，不将技术PASS当用户最终验收。 2026-10-15主线组合进行中：旧原件保留，不代填新组合；新交付包记录本轮base/head/门禁。
+- Evidence: [docs/changes/2026-10-13-cherry-red-scope/verification.md](../../docs/changes/2026-10-13-cherry-red-scope/verification.md), [docs/changes/2026-10-13-cherry-red-scope/review.md](../../docs/changes/2026-10-13-cherry-red-scope/review.md), [docs/changes/2026-10-13-cherry-red-scope/native-runtime-closeout.md](../../docs/changes/2026-10-13-cherry-red-scope/native-runtime-closeout.md), [docs/changes/2026-10-13-cherry-red-scope/mainline-integration.md](../../docs/changes/2026-10-13-cherry-red-scope/mainline-integration.md), [docs/changes/2026-10-13-cherry-red-scope/mainline-final-status.md](../../docs/changes/2026-10-13-cherry-red-scope/mainline-final-status.md), [docs/changes/2026-10-15-cherry-mainline-merge/verification.md](../../docs/changes/2026-10-15-cherry-mainline-merge/verification.md), [docs/changes/2026-10-15-cherry-mainline-merge/review.md](../../docs/changes/2026-10-15-cherry-mainline-merge/review.md)
+- Next action: 按用户2026-10-15授权融合当前main，完整验证与当前head独立复审、Hosted/Delivery后合并；不删工作区/分支，保留primary和daily并发内容。
+- Last verified: 2026-10-14
 - Updated: 2026-10-15

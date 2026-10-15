@@ -76,7 +76,10 @@ async function expectMenuUsable(page: Page, menu: Locator): Promise<void> {
     }),
   ).toBe(true);
   await expectInViewport(page, menu.locator("button").first());
-  await expectInViewport(page, menu.locator("button").last());
+  const lastAction = menu.locator("button").last();
+  // Additional assistants may scroll inside the bounded menu; actions stay reachable.
+  await lastAction.scrollIntoViewIfNeeded();
+  await expectInViewport(page, lastAction);
 }
 
 function workspaceTriggers(panel: Locator): Locator[] {

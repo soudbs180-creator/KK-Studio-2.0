@@ -9,13 +9,13 @@
 <!-- DOCUMENT_METADATA_END -->
 <!-- CURRENT_FACTS_BEGIN -->
 
-## CURRENT_FACTS (machine-readable current snapshot)
+## CURRENT_FACTS
 
 - `snapshotDate`: 2026-10-15
 - `canonicalRepository`: `D:/kk-studio/KK-Studio-2.0`
 - `canonicalRef`: `origin/main`
-- `canonicalHead`: `694a00607f6f63de1b8c43d0ebb117adf5d34f67`
-- `canonicalHeadVerifiedFrom`: 2026-10-15 root实际fetch/API确认main694、PR59未合并；当前2.1.31本地verify9/Native10/TaskHost current6 PASS，最终head精确审查、新Hosted/Delivery及main/post-main待验，旧eb5 push首错与PR首过不互相代填。
+- `canonicalHead`: `cbda65e4389fc807769a8faf7654892415992589`
+- `canonicalHeadVerifiedFrom`: 2026-10-15 本轮 fetch/ls-remote 与 GitHub 核验：PR59已合入cbda65e4，source 0ac9e29e与merge完整tree一致；quality/Delivery/双OS guards/main-health实际成功。PR58当前正在源分支融合此base，新组合的本地/Native/独立review/Hosted仍待本轮验证。
 - `primaryCheckoutState`: D:/kk-studio/KK-Studio-2.0保留codex/ui-redesign-20261011@51fccfc7879cf90f7caaf3ae8e10af4d97a2aa2c并发dirty与原index（本轮只读254条），不reset/clean/覆盖。任务工作树branch-consolidation-20261011 / fix/TASK-UI-FULL-20261015，当前eb5基线加scope恢复layout同步/单回归/版本2.1.31差量尚未最终提交。Native4曾写default WebView profile自动连接暂停，原值NOT_RECORDED，不能声称所有用户偏好未触碰；不猜恢复，详见最新验证。
 - `taskLedger`: 139 records; 82 DONE, 0 IN_PROGRESS, 34 PARTIAL, 12 TODO, 7 REVIEW, 4 BLOCKED; 57 open records.
 - `workspaceWorktrees`: 本轮末次只读worktree登记回读109项。此前恢复盘点107登记项、39 dirty来源、39一致快照；该盘点时原index变动0，872源路径与313排除路径可溯源。首轮104项/40一致与1volatile记录保留原时点；历史107项快照不覆盖后续登记来源。原分支/index/资料保留，本任务未删除、移动或覆盖其他来源。
@@ -37,7 +37,9 @@
 
 - `uiDetailsCandidate`: TASK-UI-DETAILS-20261015 本地DONE/PASS；fix/TASK-UI-DETAILS-20261015复用branch-consolidation-20261011，base18e143f、产品ab878ffd，Desktop/Web2.1.26，Mobile2.1.1规划不变。完整verify退出0：Node1278/14skip、Agent199/2skip、browser635首试、UI239/0、development PASS；精确源码独立审查PASS。官方Agent重建、实际Tauri38项与dist字节一致性通过，EXE0f65d382/input864b0376；现有快捷方式同路径，owned实例正常关闭，未启动日常profile。primary dirty/index和所有失败保留；用户视觉接受、真实Provider、Hosted/签名/实体手机另验。[本次验证](../changes/2026-10-15-ui-details/verification.md)。
 
-- `uiFullCandidate`: TASK-UI-FULL-20261015 REVIEW / 本地PASS / 整体NOT_VERIFIED。Desktop/Web2.1.31完整verify9：Node1304/14平台skip、Agent199/2skip、Edge761首试/0retry/flaky/skip、UI242/0及development四步骤；fresh Native10 105/0/13图、TaskHost current6无注入11/秘密清理PASS，自有进程退出及端口释放已实查。共享scope恢复最小layout同步、单回归RED→本文件8项/邻域6项GREEN；eb5 push759+1flaky严格NON_PASS与旧PR760首过分别保留。详证、Native4偏好例外与HTTP guard范围集中于[最新验证](../changes/2026-10-15-ui-full/verification.md#2131-当前本地验收)。原138任务/其他功能/历史与Mobile2.1.1规划保持；最终head独立审查、新Hosted/Delivery、普通PR59合并/main/post-main待验，main694未合并。
+- `uiFullCandidate`: PR59已合并到cbda65e4，Desktop/Web2.1.31；原source和失败证据保留，主线门禁已核验。后续daily工作区并发修改不自动当成main或本轮PR58证据。
+
+- `cherryMainlineMergeCandidate`: TASK-CHERRY-RED-001 / source branch codex/TASK-CHERRY-RED-001-mainline；原head26f75569、当前base cbda65e4，复用原clean工作区，Desktop/Web候选2.1.32；[本轮验证](../changes/2026-10-15-cherry-mainline-merge/verification.md)记录新组合，旧Cherry2.1.18与main2.1.31的历史PASS不代填。主仓/其他dirty、分支和工作区保留。
 
 <!-- CURRENT_FACTS_END -->
 <!-- HISTORICAL_SNAPSHOTS_BEGIN -->

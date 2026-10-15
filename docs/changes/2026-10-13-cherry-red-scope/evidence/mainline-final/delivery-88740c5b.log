@@ -1,0 +1,5 @@
+
+> kk-studio@2.1.18 delivery:check
+> node scripts/check-delivery.mjs --base 694a00607f6f63de1b8c43d0ebb117adf5d34f67 --branch codex/TASK-CHERRY-RED-001-mainline
+
+Delivery: 395 files; 0 violations. Structure only; not proof of review quality.

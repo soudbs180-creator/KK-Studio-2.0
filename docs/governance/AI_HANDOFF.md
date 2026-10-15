@@ -115,3 +115,5 @@ TASK-AGENT-RECOVERY-20261013：[验证](../changes/2026-10-13-agent-recovery/ver
 ## 日常 APP 实际验收补充（进行中）
 
 用户授权正常关闭/重开默认数据APP并直接修复。2.1.16实际83652→87180恢复同项目/thread，API metadata未变；主动断开后87180正常exit0→75784仍暂停。原当前API ref在关闭前就是missing，不将配置active冒充实钥保留。聊天横幅危险色/按钮未同步已RED，共享2.1.17修复和最终复验在执行中；原2.1.16证据保留。
+
+本轮恢复入口：PR58当前源分支的[主线融合计划](../changes/2026-10-15-cherry-mainline-merge/plan.md)与[验证](../changes/2026-10-15-cherry-mainline-merge/verification.md)。保留主仓/daily和所有其他未提交内容，不删worktree/分支；仅当前TASK-CHERRY-RED-001源工作区由本任务整合。

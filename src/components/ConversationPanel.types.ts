@@ -3,9 +3,13 @@ import type {
   CreationDraft,
   CreationProject,
 } from "../features/creation/model";
-import type { SkillRecord } from "../features/skills/skillRegistry";
+import type {
+  SkillRecord,
+  SkillRegistry,
+} from "../features/skills/skillRegistry";
 import type { AgentConversationProps } from "./AgentConversationMessages";
 import type { ConversationSend } from "./useConversationSubmit";
+import type { ProviderConversationInput } from "./ProviderConversationPanel";
 
 export interface ConversationPanelProps {
   overlay?: boolean;
@@ -22,6 +26,11 @@ export interface ConversationPanelProps {
   onDraftChange?: (draft: CreationDraft) => void;
   voiceEnabled?: boolean;
   skills?: SkillRecord[];
+  assistantRegistry?: SkillRegistry;
+  onProviderConversation?: (
+    input: ProviderConversationInput,
+  ) => Promise<string | { notice: string } | undefined>;
+  onCancelTask?: (id: string) => void;
   onApplySkill?: (record: SkillRecord) => string;
   agent?: AgentConversationProps;
 }

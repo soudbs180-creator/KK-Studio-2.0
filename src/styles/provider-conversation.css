@@ -1,0 +1,72 @@
+.provider-conversation-routes,
+.provider-conversation-composer {
+  padding: var(--kk-space-3, 12px);
+  display: grid;
+  gap: 8px;
+  border-bottom: 1px solid var(--border-default);
+}
+.provider-conversation-routes p {
+  font-size: var(--kk-font-caption);
+  color: var(--text-secondary);
+  margin: 0;
+}
+.provider-conversation-routes label {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.provider-conversation-routes select {
+  min-width: 0;
+  flex: 1;
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--ui-radius-control);
+  padding: 6px;
+}
+.provider-conversation-round {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.provider-conversation-replies {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  gap: 8px;
+}
+.provider-conversation-replies article {
+  min-width: 0;
+  border: 1px solid var(--border-default);
+  border-radius: var(--ui-radius-card);
+  padding: 12px;
+  background: var(--bg-surface);
+}
+.provider-conversation-replies h3 {
+  font-size: var(--kk-font-body);
+  margin: 0 0 8px;
+  overflow-wrap: anywhere;
+}
+.provider-conversation-replies p[role="status"] {
+  font-size: var(--kk-font-caption);
+  color: var(--text-secondary);
+}
+.provider-conversation-composer textarea {
+  width: 100%;
+  min-height: 88px;
+  resize: vertical;
+  border: 1px solid var(--border-default);
+  border-radius: var(--ui-radius-control);
+  padding: 8px;
+}
+.provider-conversation-composer button {
+  padding: 8px 12px;
+  border: 1px solid var(--border-default);
+  border-radius: var(--ui-radius-control);
+}
+.provider-conversation-composer div {
+  display: flex;
+  gap: 8px;
+}
+.provider-conversation-composer label {
+  font-size: var(--kk-font-caption);
+}

@@ -5,13 +5,18 @@
 - 最近更新：2026-10-14
 - 关联任务：TASK-CAP-001、BACKEND-MCP-AUTO、TASK-AGENT-001、TASK-AGENT-003、TASK-MINIMAX-001、TASK-MCP-PROTO-001、TASK-MCP-REGISTRY-001、TASK-MCP-REGISTRY-002、TASK-222-ACTIONS-20261014、TASK-223-ACTIONS-20261014
 
+### Cherry source 历史范围（仅原 SHA）
+
+- 最近更新：2026-10-13
+- 关联任务：TASK-CAP-001、BACKEND-MCP-AUTO、TASK-AGENT-001、TASK-AGENT-003、TASK-MINIMAX-001、TASK-MCP-PROTO-001、TASK-MCP-REGISTRY-001、TASK-MCP-REGISTRY-002
+
 ## 用户可见入口
 
 - 设置 › MCP 服务器（McpSettings、McpServerCard）：添加 Streamable HTTP 端点、初始化、查看工具。
 
 ## 代码位置
 
-- `src/features/mcp/mcpClient.ts`：2025-11-25 Streamable HTTP（initialize/session），强制 HTTPS、HTTP 仅允许 loopback
+- `src/features/mcp/mcpClient.ts`：2026-07-28 `server/discover` 与2025-11-25 initialize/session兼容，强制 HTTPS、HTTP 仅允许 loopback
 - UI：`src/components/settings/McpSettings.tsx`、`McpServerCard.tsx`
 
 ## 测试与证据
@@ -33,7 +38,9 @@
 
 - “自动调用”仍为 Prototype：需要工具选择/授权/调用编排、与技能和对话的集成、错误与取消状态。
 - 未用真实第三方 MCP 服务器做桌面 release 验收（TASK-CAP-001 缺口）。
-- 当前客户端固定 `2025-11-25` 的 `initialize`/session 流程；[MCP 官方协议版本说明](https://ts.sdk.modelcontextprotocol.io/v2/protocol-versions)列出的 `2026-07-28` modern 流程使用 `server/discover`。新版专用服务器兼容性尚未实测，按静态契约推断当前不支持；由 TASK-MCP-PROTO-001 跟进，不把“手动真实连接”泛化成全部 MCP 版本。
+- 当前代码已尝试modern发现并按明确支持版本选择modern/legacy路径，不能继续标为“固定旧协议/不支持modern”。TASK-MCP-PROTO-001 的本地协议证据与实际第三方Native验收仍分开记录；不能以握手fixture泛化成全部服务器或自动调用已通过。
+
+2026-10-13 Cherry学习纠错：保留现有客户端和KK画布server，修正文档与源码不一致。没有新建第二套MCP，也没有将通用自动工具标为完成。见[本轮规格](../changes/2026-10-13-cherry-red-scope/spec.md)。
 
 ## 变更记录
 
@@ -54,3 +61,9 @@ TASK-AGENT-003：图片附件、显式画布引用和视口/选择桥接；验�
 原 registry 写入允许第 51 个服务器，但读取 schema 最多接受 50 个，重启后会误判整份配置损坏。现写前按同一上限拒绝第 51 个，同时允许同 id 更新，原数据不变；证据见 [本轮验证](../changes/2026-09-24-mcp-registry-limit/verification.md)。功能状态仍 PARTIAL。
 
 2026-09-26 独立审查另复现两个基线问题：多标签页基于旧快照写入会互相覆盖（TASK-MCP-REGISTRY-001）；旧版已写出 51 项时界面显示空列表且无恢复入口（TASK-MCP-REGISTRY-002）。这两项未由本次预防性写入修复关闭。
+
+2026-10-14：官方SDK1.30真实服务器的control/显式legacy联调与production auto失败、2.1.18对应握手与modern core修复见[最终记录](../changes/2026-10-13-cherry-red-scope/mainline-final-status.md)。新版本production UI及SDK2实际控制待证据；不将协议fixture升级为通用自动工具REAL。
+
+2026-10-14 最新验收：cc184产品源码的官方SDK1.30与SDK2.3.1 production Native UI各18/18 PASS，含保存/重启/连接/真实原生手动确认调用/断开、legacy session及modern SSE/metadata/header。不扩展通用自动编排/OAuth，不以fixture替代外部能力。 完整身份与许可见[最终记录](../changes/2026-10-13-cherry-red-scope/mainline-final-status.md)。保留功能整体PARTIAL及其他开放任务。
+
+最终技术锚点0d61：两官方SDK production Native UI各18已PASS，精确legacy/modern握手与安全schema预算修复完成；不关闭通用自动工具/OAuth开放任务。 本期技术步骤完成，用户最终产品/发布范围待验收；功能总体及其他任务状态不批量升级，详见[最终记录](../changes/2026-10-13-cherry-red-scope/mainline-final-status.md)。

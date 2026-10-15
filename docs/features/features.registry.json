@@ -6,7 +6,10 @@
     "status": "PARTIAL",
     "card": "docs/features/feat-035-image-mask-editing.md",
     "summary": "框选、画笔、色块共用原像素Mask、裁剪/请求/保护融合；Web/Desktop保存、重绘和灯箱本地验收通过，真实模型质量与移动真机待验。",
-    "entryPoints": ["图片节点重绘", "图片灯箱重绘"],
+    "entryPoints": [
+      "图片节点重绘",
+      "图片灯箱重绘"
+    ],
     "code": [
       "src/domain/imageEdit.ts",
       "src/features/image-edit/mask.ts",
@@ -27,7 +30,10 @@
       "tests/browser/image-edit.spec.ts",
       "tests/desktop/image-edit.mjs"
     ],
-    "tasks": ["TASK-IMAGE-EDIT-001", "TASK-IMAGE-EDIT-VERIFY-002"],
+    "tasks": [
+      "TASK-IMAGE-EDIT-001",
+      "TASK-IMAGE-EDIT-VERIFY-002"
+    ],
     "updated": "2026-10-08"
   },
   {
@@ -85,7 +91,10 @@
       "TASK-223-ACTIONS-20261014"
     ],
     "updated": "2026-10-14",
-    "platforms": ["web", "desktop"],
+    "platforms": [
+      "web",
+      "desktop"
+    ],
     "runtimeEvidence": [
       {
         "platform": "web",
@@ -136,7 +145,11 @@
     "status": "PARTIAL",
     "card": "docs/features/feat-002-image-generation.md",
     "summary": "自带 API Key 的浏览器提交门禁 + Desktop 原生 TaskHost；Codex 内置生图已有真实生产归档/恢复证据，BYOK逐家真实出图仍待验收。",
-    "entryPoints": ["图片节点生成按钮", "开始页/对话提交", "任务状态与重试"],
+    "entryPoints": [
+      "图片节点生成按钮",
+      "开始页/对话提交",
+      "任务状态与重试"
+    ],
     "code": [
       "src/features/creation/imageGeneration.ts",
       "src/features/creation/imageTaskCommand.ts",
@@ -177,7 +190,10 @@
       "TASK-PROV-006"
     ],
     "updated": "2026-10-08",
-    "platforms": ["web", "desktop"],
+    "platforms": [
+      "web",
+      "desktop"
+    ],
     "runtimeEvidence": [
       {
         "platform": "web",
@@ -237,9 +253,16 @@
       "tests/browser/model-capabilities.spec.ts",
       "tests/desktop/model-capabilities.mjs"
     ],
-    "tasks": ["BACKEND-IMAGE-PARAMS", "TASK-AGENT-001", "TASK-MODEL-001"],
+    "tasks": [
+      "BACKEND-IMAGE-PARAMS",
+      "TASK-AGENT-001",
+      "TASK-MODEL-001"
+    ],
     "updated": "2026-10-08",
-    "platforms": ["web", "desktop"],
+    "platforms": [
+      "web",
+      "desktop"
+    ],
     "runtimeEvidence": [
       {
         "platform": "web",
@@ -262,16 +285,27 @@
     "status": "PARTIAL",
     "card": "docs/features/feat-004-comfyui.md",
     "summary": "本地 ComfyUI 适配器与 Rust 命令已写，但前端未接 invoke 桥、未接图片任务命令，当前不能真正出图。",
-    "entryPoints": ["设置 › ComfyUI 连接", "图片节点（规划中的本地后端）"],
+    "entryPoints": [
+      "设置 › ComfyUI 连接",
+      "图片节点（规划中的本地后端）"
+    ],
     "code": [
       "src/integrations/generation/localComfyUiAdapter.ts",
       "src/integrations/generation/providerAdapterFactory.ts",
       "src-tauri/src/main.rs"
     ],
-    "tests": ["tests/unit/generationServerProvider.test.ts"],
-    "tasks": ["T6", "EXT-COMFY"],
+    "tests": [
+      "tests/unit/generationServerProvider.test.ts"
+    ],
+    "tasks": [
+      "T6",
+      "EXT-COMFY"
+    ],
     "updated": "2026-09-21",
-    "platforms": ["web", "desktop"]
+    "platforms": [
+      "web",
+      "desktop"
+    ]
   },
   {
     "id": "FEAT-005",
@@ -280,7 +314,10 @@
     "status": "PARTIAL",
     "card": "docs/features/feat-005-comfyui-workflows.md",
     "summary": "ComfyUI 工作流 JSON 的本地解析、starter、导入/导出与收藏管理（只管文件，不执行；执行见 FEAT-004）。",
-    "entryPoints": ["素材/工作流库 LibraryPage", "工作流导入按钮"],
+    "entryPoints": [
+      "素材/工作流库 LibraryPage",
+      "工作流导入按钮"
+    ],
     "code": [
       "src/features/comfyui/workflowRegistry.ts",
       "src/components/LibraryPage.tsx",
@@ -293,9 +330,16 @@
       "tests/browser/catalog-pages.spec.ts",
       "tests/browser/design-system-pages.spec.ts"
     ],
-    "tasks": ["T6", "TASK-CAP-001", "TASK-DS-002"],
+    "tasks": [
+      "T6",
+      "TASK-CAP-001",
+      "TASK-DS-002"
+    ],
     "updated": "2026-09-22",
-    "platforms": ["web", "desktop"],
+    "platforms": [
+      "web",
+      "desktop"
+    ],
     "runtimeEvidence": [
       {
         "platform": "web",
@@ -314,17 +358,29 @@
     "status": "PROTOTYPE",
     "card": "docs/features/feat-006-video-generation.md",
     "summary": "视频节点（标注 MiniMax H3）当前只回放固定本地演示素材，提示词/参数不改变结果，无供应商提交链。",
-    "entryPoints": ["添加节点 › 视频", "VideoNode"],
+    "entryPoints": [
+      "添加节点 › 视频",
+      "VideoNode"
+    ],
     "code": [
       "src/components/nodes/VideoNode.tsx",
       "src/components/nodes/useLocalGeneration.ts",
       "src/domain/demoMedia.ts",
       "src/domain/localGeneration.ts"
     ],
-    "tests": ["tests/browser/demo-results.spec.ts"],
-    "tasks": ["BACKEND-MEDIA-001", "TASK-MINIMAX-001", "EXT-PROVIDER"],
+    "tests": [
+      "tests/browser/demo-results.spec.ts"
+    ],
+    "tasks": [
+      "BACKEND-MEDIA-001",
+      "TASK-MINIMAX-001",
+      "EXT-PROVIDER"
+    ],
     "updated": "2026-09-21",
-    "platforms": ["web", "desktop"]
+    "platforms": [
+      "web",
+      "desktop"
+    ]
   },
   {
     "id": "FEAT-007",
@@ -333,7 +389,10 @@
     "status": "PARTIAL",
     "card": "docs/features/feat-007-audio-generation.md",
     "summary": "音频节点仍回放本地演示素材；OpenAI 兼容 TTS 请求构造、音频选项规范化与代理拼接（vendor 移植 audioGeneration.ts）已可用。",
-    "entryPoints": ["添加节点 › 音频", "PromptCreationNode"],
+    "entryPoints": [
+      "添加节点 › 音频",
+      "PromptCreationNode"
+    ],
     "code": [
       "src/components/nodes/PromptCreationNode.tsx",
       "src/components/nodes/useLocalGeneration.ts",
@@ -345,9 +404,16 @@
       "tests/unit/audioGeneration.test.ts",
       "tests/browser/ui-feature-parity.spec.ts"
     ],
-    "tasks": ["BACKEND-MEDIA-001", "EXT-PROVIDER", "TASK-UI-005"],
+    "tasks": [
+      "BACKEND-MEDIA-001",
+      "EXT-PROVIDER",
+      "TASK-UI-005"
+    ],
     "updated": "2026-09-22",
-    "platforms": ["web", "desktop"]
+    "platforms": [
+      "web",
+      "desktop"
+    ]
   },
   {
     "id": "FEAT-008",
@@ -356,7 +422,10 @@
     "status": "PARTIAL",
     "card": "docs/features/feat-008-text-node.md",
     "summary": "文本节点复用 BYOK/TaskHost：流式、取消、离线、编辑、重载、实际进程异常退出恢复与原生容量已通过双端 fixture；真实 Provider/health 统一仍待验收。",
-    "entryPoints": ["添加节点 › 文本", "PromptCreationNode"],
+    "entryPoints": [
+      "添加节点 › 文本",
+      "PromptCreationNode"
+    ],
     "code": [
       "src/components/nodes/PromptCreationNode.tsx",
       "src/components/nodes/useLocalGeneration.ts",
@@ -383,7 +452,10 @@
       "EXT-PROVIDER"
     ],
     "updated": "2026-10-08",
-    "platforms": ["web", "desktop"],
+    "platforms": [
+      "web",
+      "desktop"
+    ],
     "runtimeEvidence": [
       {
         "platform": "web",
@@ -405,8 +477,11 @@
     "area": "creation",
     "status": "PARTIAL",
     "card": "docs/features/feat-009-conversation.md",
-    "summary": "KK 默认 Codex 已接通 Web/Windows、Agent 本地图片和显式画布原件引用；其他登录适配、参考图编辑与后台网页仍待办。",
-    "entryPoints": ["右侧对话面板 ConversationPanel", "开始页对话入口"],
+    "summary": "KK 默认 Codex 已接通 Web/Windows、Agent 本地图片和显式画布原件引用；其他登录适配、参考图编辑与后台网页仍待办。 Cherry候选增量：Codex默认Agent及Google保持；新增安全Markdown/原文复制/本地导出、2-3模型独立多轮文本比较，复用持久任务，原画布账号保持。真实外部服务及跨平台设备验收单列。 当前组合证据见2026-10-15-cherry-mainline-merge。",
+    "entryPoints": [
+      "右侧对话面板 ConversationPanel",
+      "开始页对话入口"
+    ],
     "code": [
       "src/components/ConversationPanel.tsx",
       "src/components/ConversationActions.tsx",
@@ -445,7 +520,10 @@
       "src/features/agent/desktopAgentLifecycle.ts",
       "src/features/creation/model.ts",
       "src-tauri/src/project_package_snapshot.rs",
-      "scripts/agent/prepareIdleConversation.ts"
+      "scripts/agent/prepareIdleConversation.ts",
+      "src/components/ProviderConversationPanel.tsx",
+      "src/features/conversation/providerConversationRound.ts",
+      "src/components/MessageMarkdown.tsx"
     ],
     "tests": [
       "tests/browser/frontend.spec.ts",
@@ -482,7 +560,9 @@
       "tests/unit/agentOwnershipRecovery.test.ts",
       "tests/unit/desktopAgentLifecycle.test.ts",
       "tests/browser/agent-connection-recovery.spec.ts",
-      "tests/desktop/agent-startup-recovery.mjs"
+      "tests/desktop/agent-startup-recovery.mjs",
+      "tests/browser/provider-conversation.spec.ts",
+      "tests/browser/message-content.spec.ts"
     ],
     "tasks": [
       "T4",
@@ -497,10 +577,14 @@
       "TASK-AGENT-008",
       "TASK-AGENT-RECOVERY-20261013",
       "TASK-CANVAS-SYNC-20261014",
-      "TASK-AGENT-UX-20261014"
+      "TASK-AGENT-UX-20261014",
+      "TASK-CHERRY-RED-001"
     ],
-    "updated": "2026-10-14",
-    "platforms": ["web", "desktop"],
+    "updated": "2026-10-15",
+    "platforms": [
+      "web",
+      "desktop"
+    ],
     "runtimeEvidence": [
       {
         "platform": "web",
@@ -537,6 +621,14 @@
       {
         "platform": "web",
         "path": "docs/changes/2026-10-14-agent-canvas-sync/verification.md"
+      },
+      {
+        "platform": "web",
+        "path": "docs/changes/2026-10-13-cherry-red-scope/verification.md"
+      },
+      {
+        "platform": "desktop",
+        "path": "docs/changes/2026-10-13-cherry-red-scope/mainline-final-status.md"
       }
     ]
   },
@@ -547,15 +639,24 @@
     "status": "PARTIAL",
     "card": "docs/features/feat-010-voice-input.md",
     "summary": "基于浏览器 Web Speech API 的真实语音转文字，浏览器回归通过；Desktop WebView2 可用性未验证。",
-    "entryPoints": ["输入框麦克风按钮 VoiceInputButton"],
+    "entryPoints": [
+      "输入框麦克风按钮 VoiceInputButton"
+    ],
     "code": [
       "src/features/creation/useSpeechInput.ts",
       "src/components/VoiceInputButton.tsx"
     ],
-    "tests": ["tests/browser/composer-voice.spec.ts"],
-    "tasks": ["TASK-CAP-001"],
+    "tests": [
+      "tests/browser/composer-voice.spec.ts"
+    ],
+    "tasks": [
+      "TASK-CAP-001"
+    ],
     "updated": "2026-09-21",
-    "platforms": ["web", "desktop"]
+    "platforms": [
+      "web",
+      "desktop"
+    ]
   },
   {
     "id": "FEAT-011",
@@ -563,7 +664,7 @@
     "area": "intelligence",
     "status": "PARTIAL",
     "card": "docs/features/feat-011-skills.md",
-    "summary": "本地技能的模板、CRUD、编辑器与 prompt 触发真实可用（localStorage）；联网目录/官方安装/下载统计为 Prototype。",
+    "summary": "本地技能的模板、CRUD、编辑器与 prompt 触发真实可用（localStorage）；联网目录/官方安装/下载统计为 Prototype。 Cherry候选增量：现有SkillRegistry新增五个原创编程/图片/视频助手与自定义角色，内置数据层只读、失败不伪报保存；同一存储。目录/真实服务仍分别验收。 当前组合证据见2026-10-15-cherry-mainline-merge。",
     "entryPoints": [
       "侧栏扩展页 SkillsPage",
       "技能编辑器 SkillEditor",
@@ -573,16 +674,28 @@
       "src/features/skills/skillRegistry.ts",
       "src/components/SkillsPage.tsx",
       "src/components/SkillEditor.tsx",
-      "src/components/SkillCollection.tsx"
+      "src/components/SkillCollection.tsx",
+      "src/features/assistants/assistantProfiles.ts",
+      "src/components/AssistantPicker.tsx"
     ],
     "tests": [
       "tests/unit/skillRegistry.test.ts",
       "tests/browser/design-system-pages.spec.ts",
-      "tests/browser/capability-extensions.spec.ts"
+      "tests/browser/capability-extensions.spec.ts",
+      "tests/unit/assistantProfiles.test.ts",
+      "tests/unit/assistantReadOnly.test.ts",
+      "tests/browser/assistant-profiles.spec.ts"
     ],
-    "tasks": ["TASK-CAP-001", "TASK-DS-002"],
-    "updated": "2026-10-13",
-    "platforms": ["web", "desktop"],
+    "tasks": [
+      "TASK-CAP-001",
+      "TASK-DS-002",
+      "TASK-CHERRY-RED-001"
+    ],
+    "updated": "2026-10-15",
+    "platforms": [
+      "web",
+      "desktop"
+    ],
     "runtimeEvidence": [
       {
         "platform": "web",
@@ -591,6 +704,14 @@
       {
         "platform": "desktop",
         "path": "docs/changes/2026-09-22-design-system-pages/verification.md"
+      },
+      {
+        "platform": "web",
+        "path": "docs/changes/2026-10-13-cherry-red-scope/verification.md"
+      },
+      {
+        "platform": "desktop",
+        "path": "docs/changes/2026-10-13-cherry-red-scope/mainline-final-status.md"
       }
     ]
   },
@@ -600,8 +721,11 @@
     "area": "intelligence",
     "status": "PARTIAL",
     "card": "docs/features/feat-012-mcp.md",
-    "summary": "通用 MCP 手动连接保留；KK 画布自动工具新增真实单/多/空选择和视口控制。通用第三方自动调用仍待独立验收。",
-    "entryPoints": ["设置 › MCP 服务器 McpSettings", "McpServerCard"],
+    "summary": "通用 MCP 手动连接保留；KK 画布自动工具新增真实单/多/空选择和视口控制。通用第三方自动调用仍待独立验收。 Cherry候选增量：MCP已有2026 modern发现/legacy兼容及KK画布server；修正旧协议文档。第三方真实Native和通用自动工具仍待验收。 当前组合证据见2026-10-15-cherry-mainline-merge。",
+    "entryPoints": [
+      "设置 › MCP 服务器 McpSettings",
+      "McpServerCard"
+    ],
     "code": [
       "src/features/mcp/mcpClient.ts",
       "src/components/settings/McpSettings.tsx",
@@ -633,10 +757,14 @@
       "TASK-MCP-REGISTRY-002",
       "TASK-CANVAS-SYNC-20261014",
       "TASK-222-ACTIONS-20261014",
-      "TASK-223-ACTIONS-20261014"
+      "TASK-223-ACTIONS-20261014",
+      "TASK-CHERRY-RED-001"
     ],
-    "updated": "2026-10-14",
-    "platforms": ["web", "desktop"],
+    "updated": "2026-10-15",
+    "platforms": [
+      "web",
+      "desktop"
+    ],
     "runtimeEvidence": [
       {
         "platform": "web",
@@ -657,6 +785,14 @@
       {
         "platform": "web",
         "path": "docs/changes/2026-10-14-action-usability-222/verification.md"
+      },
+      {
+        "platform": "web",
+        "path": "docs/changes/2026-10-13-cherry-red-scope/verification.md"
+      },
+      {
+        "platform": "desktop",
+        "path": "docs/changes/2026-10-13-cherry-red-scope/mainline-final-status.md"
       }
     ]
   },
@@ -667,7 +803,9 @@
     "status": "PARTIAL",
     "card": "docs/features/feat-013-connectors.md",
     "summary": "四种随包插件在固定1421开发、Web生产和fresh Tauri可创建、编辑、离线渲染并完整恢复；立即关闭耐久保存、写入失败留窗及坏数据主备保护已验证，CSP仍self。连接器统一入口、ctx.ai真实管线及远程Desktop插件仍未完成。",
-    "entryPoints": ["技能页内连接器目录 ConnectorCatalog"],
+    "entryPoints": [
+      "技能页内连接器目录 ConnectorCatalog"
+    ],
     "code": [
       "src/components/ConnectorCatalog.tsx",
       "src/features/plugins/pluginLoader.ts",
@@ -699,7 +837,10 @@
       "TASK-DESKTOP-FLUSH-001"
     ],
     "updated": "2026-10-09",
-    "platforms": ["web", "desktop"],
+    "platforms": [
+      "web",
+      "desktop"
+    ],
     "runtimeEvidence": [
       {
         "platform": "web",
@@ -718,7 +859,10 @@
     "status": "REAL",
     "card": "docs/features/feat-014-assets.md",
     "summary": "素材导入、归档、校验、预览、集合与来源追踪；Desktop 走 Rust 原生素材存储（含完整性校验）。",
-    "entryPoints": ["素材面板 AssetPanel", "素材详情/筛选/创建主体"],
+    "entryPoints": [
+      "素材面板 AssetPanel",
+      "素材详情/筛选/创建主体"
+    ],
     "code": [
       "src/components/assets",
       "src/features/creation/assetRepository.ts",
@@ -744,7 +888,10 @@
       "TASK-223-ACTIONS-20261014"
     ],
     "updated": "2026-10-14",
-    "platforms": ["web", "desktop"],
+    "platforms": [
+      "web",
+      "desktop"
+    ],
     "runtimeEvidence": [
       {
         "platform": "web",
@@ -793,9 +940,18 @@
       "tests/browser/design-system-pages.spec.ts",
       "tests/desktop/project-landing.mjs"
     ],
-    "tasks": ["T3a", "T3b", "T9", "TASK-DS-002", "TASK-PROJECT-SIDEBAR-001"],
+    "tasks": [
+      "T3a",
+      "T3b",
+      "T9",
+      "TASK-DS-002",
+      "TASK-PROJECT-SIDEBAR-001"
+    ],
     "updated": "2026-09-30",
-    "platforms": ["web", "desktop"],
+    "platforms": [
+      "web",
+      "desktop"
+    ],
     "runtimeEvidence": [
       {
         "platform": "web",
@@ -853,7 +1009,10 @@
       "TASK-AGENT-UX-20261014"
     ],
     "updated": "2026-10-14",
-    "platforms": ["web", "desktop"],
+    "platforms": [
+      "web",
+      "desktop"
+    ],
     "runtimeEvidence": [
       {
         "platform": "web",
@@ -872,15 +1031,24 @@
     "status": "PROTOTYPE",
     "card": "docs/features/feat-017-account.md",
     "summary": "账号弹窗与连接设置中的 UID/登录态为本地写死演示，无认证服务、会话或用户体系。",
-    "entryPoints": ["右上角账号 AccountPopup", "设置 › 连接 › 账号"],
+    "entryPoints": [
+      "右上角账号 AccountPopup",
+      "设置 › 连接 › 账号"
+    ],
     "code": [
       "src/components/AccountPopup.tsx",
       "src/components/settings/ConnectionSettings.tsx"
     ],
     "tests": [],
-    "tasks": ["BACKEND-PLATFORM", "T10"],
+    "tasks": [
+      "BACKEND-PLATFORM",
+      "T10"
+    ],
     "updated": "2026-09-21",
-    "platforms": ["web", "desktop"]
+    "platforms": [
+      "web",
+      "desktop"
+    ]
   },
   {
     "id": "FEAT-018",
@@ -903,9 +1071,15 @@
       "tests/browser/task-intent.spec.ts",
       "tests/unit/generationServer.test.ts"
     ],
-    "tasks": ["BACKEND-PLATFORM", "T10"],
+    "tasks": [
+      "BACKEND-PLATFORM",
+      "T10"
+    ],
     "updated": "2026-09-21",
-    "platforms": ["web", "desktop"]
+    "platforms": [
+      "web",
+      "desktop"
+    ]
   },
   {
     "id": "FEAT-019",
@@ -914,17 +1088,29 @@
     "status": "PARTIAL",
     "card": "docs/features/feat-019-cloud-sync.md",
     "summary": "项目/素材仍以本机持久化为主；WebDAV 云端同步服务层（vendor 移植：目录自动创建、上传/下载 manifest、Basic 认证、连接测试）已就绪，UI 接线与账号同步待排期。",
-    "entryPoints": ["信息面板说明", "CatalogTutorial 云端条目"],
+    "entryPoints": [
+      "信息面板说明",
+      "CatalogTutorial 云端条目"
+    ],
     "code": [
       "src/components/InfoPanel.tsx",
       "src/components/CatalogTutorial.tsx",
       "docs/architecture/DATA-STORAGE.md",
       "src/features/sync/webdav.ts"
     ],
-    "tests": ["tests/unit/webdavSync.test.ts"],
-    "tasks": ["BACKEND-PLATFORM", "T10", "T9"],
+    "tests": [
+      "tests/unit/webdavSync.test.ts"
+    ],
+    "tasks": [
+      "BACKEND-PLATFORM",
+      "T10",
+      "T9"
+    ],
     "updated": "2026-09-22",
-    "platforms": ["web", "desktop"]
+    "platforms": [
+      "web",
+      "desktop"
+    ]
   },
   {
     "id": "FEAT-020",
@@ -933,7 +1119,9 @@
     "status": "PARTIAL",
     "card": "docs/features/feat-020-memory.md",
     "summary": "KK 本地记忆开关、规则采集和相关片段注入已有实现；Desktop 默认共享，--data-dir 隔离且迁移只在开启后执行。真实 Codex 和跨应用联调待完成。",
-    "entryPoints": ["设置 › 记忆"],
+    "entryPoints": [
+      "设置 › 记忆"
+    ],
     "code": [
       "src/features/memory",
       "src/components/settings/ConnectionSettings.tsx",
@@ -961,7 +1149,10 @@
       "TASK-223-ACTIONS-20261014"
     ],
     "updated": "2026-10-14",
-    "platforms": ["web", "desktop"],
+    "platforms": [
+      "web",
+      "desktop"
+    ],
     "runtimeEvidence": [
       {
         "platform": "web",
@@ -992,15 +1183,25 @@
     "status": "PARTIAL",
     "card": "docs/features/feat-021-proxy.md",
     "summary": "本地转发代理（vendor/canvas-proxy：零依赖 CORS 转发、SSE 透传）已移植并可在设置 › 网络查看启动命令与地址；应用级代理设置与一键启停待接。",
-    "entryPoints": ["设置 › 连接 › 网络代理"],
-    "code": ["src/components/settings/ConnectionSettings.tsx"],
+    "entryPoints": [
+      "设置 › 连接 › 网络代理"
+    ],
+    "code": [
+      "src/components/settings/ConnectionSettings.tsx"
+    ],
     "tests": [
       "tests/unit/proxyForward.test.ts",
       "tests/browser/ui-feature-parity.spec.ts"
     ],
-    "tasks": ["BACKEND-PLATFORM", "TASK-UI-005"],
+    "tasks": [
+      "BACKEND-PLATFORM",
+      "TASK-UI-005"
+    ],
     "updated": "2026-09-22",
-    "platforms": ["web", "desktop"]
+    "platforms": [
+      "web",
+      "desktop"
+    ]
   },
   {
     "id": "FEAT-022",
@@ -1008,8 +1209,11 @@
     "area": "system",
     "status": "PARTIAL",
     "card": "docs/features/feat-022-settings.md",
-    "summary": "分组设置、公共预设及文档、当前设备使用记录和存储概览已有源码候选；默认绿色与中性主要动作。Token/未接协议明确边界，完整Web/Desktop和真实消耗待补。",
-    "entryPoints": ["侧栏设置 SettingsPanel", "各设置分区"],
+    "summary": "分组设置、公共预设及文档、当前设备使用记录和存储概览已有源码候选；默认绿色与中性主要动作。Token/未接协议明确边界，完整Web/Desktop和真实消耗待补。 Cherry候选增量：现有深浅/系统主题保持，新增实际native背景读回确认的透明开关与恢复；Web/无合成能力明确禁用。三平台实际效果分别验收。 当前组合证据见2026-10-15-cherry-mainline-merge。",
+    "entryPoints": [
+      "侧栏设置 SettingsPanel",
+      "各设置分区"
+    ],
     "code": [
       "src/components/settings",
       "src/features/creation/providerRegistry.ts",
@@ -1030,7 +1234,9 @@
       "src/domain/providerPresets.ts",
       "src/components/settings/UsageSettings.tsx",
       "src/features/creation/usageSummary.ts",
-      "src/components/settings/StorageOverview.tsx"
+      "src/components/settings/StorageOverview.tsx",
+      "src/components/settings/WindowTransparencySetting.tsx",
+      "src-tauri/src/window_appearance.rs"
     ],
     "tests": [
       "tests/unit/settings.test.ts",
@@ -1053,7 +1259,9 @@
       "tests/browser/ui-unification.spec.ts",
       "tests/browser/settings-control-usability.spec.ts",
       "tests/browser/settings-persistence-failures.spec.ts",
-      "tests/unit/pluginStartupRace.test.ts"
+      "tests/unit/pluginStartupRace.test.ts",
+      "tests/unit/windowAppearance.test.ts",
+      "tests/desktop/cherry-red-native.mjs"
     ],
     "tasks": [
       "TASK-PROV-001",
@@ -1068,10 +1276,14 @@
       "TASK-PROTOCOL-CLI-20261014",
       "TASK-222-ACTIONS-20261014",
       "TASK-223-ACTIONS-20261014",
-      "TASK-SETTINGS-LATEST-20261015"
+      "TASK-SETTINGS-LATEST-20261015",
+      "TASK-CHERRY-RED-001"
     ],
     "updated": "2026-10-15",
-    "platforms": ["web", "desktop"],
+    "platforms": [
+      "web",
+      "desktop"
+    ],
     "runtimeEvidence": [
       {
         "platform": "web",
@@ -1108,6 +1320,14 @@
       {
         "platform": "desktop",
         "path": "docs/changes/2026-10-14-action-usability-222/verification.md"
+      },
+      {
+        "platform": "web",
+        "path": "docs/changes/2026-10-13-cherry-red-scope/verification.md"
+      },
+      {
+        "platform": "desktop",
+        "path": "docs/changes/2026-10-13-cherry-red-scope/mainline-final-status.md"
       }
     ]
   },
@@ -1118,7 +1338,11 @@
     "status": "PARTIAL",
     "card": "docs/features/feat-023-navigation.md",
     "summary": "真实快照驱动项目列表与四类搜索；喜欢/标签独立面板见FEAT-039。当前新版平台证据待补，持久分组与多创作页继续开放。",
-    "entryPoints": ["左侧栏 Sidebar", "独立搜索（Ctrl/⌘+K）", "项目分组"],
+    "entryPoints": [
+      "左侧栏 Sidebar",
+      "独立搜索（Ctrl/⌘+K）",
+      "项目分组"
+    ],
     "code": [
       "src/components/Sidebar.tsx",
       "src/components/SidebarProjectEntry.tsx",
@@ -1149,7 +1373,10 @@
       "TASK-UI-CONSOLIDATE-20261014"
     ],
     "updated": "2026-10-14",
-    "platforms": ["web", "desktop"],
+    "platforms": [
+      "web",
+      "desktop"
+    ],
     "runtimeEvidence": [
       {
         "platform": "web",
@@ -1201,9 +1428,14 @@
       "tests/unit/generationServerRuntime.test.ts",
       "tests/unit/generationServerWebhook.test.ts"
     ],
-    "tasks": ["T5", "T8"],
+    "tasks": [
+      "T5",
+      "T8"
+    ],
     "updated": "2026-09-21",
-    "platforms": ["service"]
+    "platforms": [
+      "service"
+    ]
   },
   {
     "id": "FEAT-025",
@@ -1212,17 +1444,28 @@
     "status": "PROTOTYPE",
     "card": "docs/features/feat-025-demo-media.md",
     "summary": "视频/音频节点仍使用固定本地演示素材；文本已切换到FEAT-008任务链，历史demo资源仅保留旧项目兼容。",
-    "entryPoints": ["视频/音频/文本节点的“生成/演示”动作"],
+    "entryPoints": [
+      "视频/音频/文本节点的“生成/演示”动作"
+    ],
     "code": [
       "src/components/nodes/useLocalGeneration.ts",
       "src/domain/demoMedia.ts",
       "src/domain/localGeneration.ts",
       "public/fixtures/demo"
     ],
-    "tests": ["tests/browser/demo-results.spec.ts"],
-    "tasks": ["UI-003", "BACKEND-MEDIA-001", "BACKEND-TEXT-NODE"],
+    "tests": [
+      "tests/browser/demo-results.spec.ts"
+    ],
+    "tasks": [
+      "UI-003",
+      "BACKEND-MEDIA-001",
+      "BACKEND-TEXT-NODE"
+    ],
     "updated": "2026-09-21",
-    "platforms": ["web", "desktop"]
+    "platforms": [
+      "web",
+      "desktop"
+    ]
   },
   {
     "id": "FEAT-026",
@@ -1270,7 +1513,9 @@
       "TASK-223-ACTIONS-20261014"
     ],
     "updated": "2026-10-14",
-    "platforms": ["desktop"],
+    "platforms": [
+      "desktop"
+    ],
     "runtimeEvidence": [
       {
         "platform": "desktop",
@@ -1289,12 +1534,22 @@
     "status": "PLANNED",
     "card": "docs/features/feat-027-astra.md",
     "summary": "仅有计划与 Git 同步（TASK-ASTRA-001 完成的是计划），src/scripts/Rust 零代码、无 UI。",
-    "entryPoints": ["无（未实现）"],
-    "code": ["docs/changes/2026-09-20-gpt-6-astra"],
+    "entryPoints": [
+      "无（未实现）"
+    ],
+    "code": [
+      "docs/changes/2026-09-20-gpt-6-astra"
+    ],
     "tests": [],
-    "tasks": ["TASK-ASTRA-001", "BACKEND-ASTRA-001"],
+    "tasks": [
+      "TASK-ASTRA-001",
+      "BACKEND-ASTRA-001"
+    ],
     "updated": "2026-09-21",
-    "platforms": ["web", "desktop"]
+    "platforms": [
+      "web",
+      "desktop"
+    ]
   },
   {
     "id": "FEAT-028",
@@ -1303,8 +1558,12 @@
     "status": "PLANNED",
     "card": "docs/features/feat-028-mobile.md",
     "summary": "当前仅响应式Web的窄窗口布局；Native Mobile独立工程、登录/本地数据、真机和安装包仍未实现，规划版本2.1.1。",
-    "entryPoints": ["无（未实现）"],
-    "code": ["src/styles/responsive.css"],
+    "entryPoints": [
+      "无（未实现）"
+    ],
+    "code": [
+      "src/styles/responsive.css"
+    ],
     "tests": [
       "tests/browser/frame-accuracy.spec.ts",
       "tests/browser/canvas-selected-zoom-menu.spec.ts",
@@ -1326,7 +1585,9 @@
     "status": "PARTIAL",
     "card": "docs/features/feat-029-prompt-library.md",
     "summary": "提示词来源解析/缓存与浏览、搜索、预览、取消、应用到草稿已接；真实远端目录与账号同步仍待验收。",
-    "entryPoints": ["首页/图片对话：提示词库"],
+    "entryPoints": [
+      "首页/图片对话：提示词库"
+    ],
     "code": [
       "src/features/prompts/promptLibrary.ts",
       "src/components/PromptLibraryPanel.tsx"
@@ -1335,9 +1596,15 @@
       "tests/unit/promptLibrary.test.ts",
       "tests/browser/ui-feature-parity.spec.ts"
     ],
-    "tasks": ["TASK-UI-005", "BACKEND-PLATFORM"],
+    "tasks": [
+      "TASK-UI-005",
+      "BACKEND-PLATFORM"
+    ],
     "updated": "2026-09-22",
-    "platforms": ["web", "desktop"]
+    "platforms": [
+      "web",
+      "desktop"
+    ]
   },
   {
     "id": "FEAT-030",
@@ -1390,7 +1657,10 @@
     "status": "PARTIAL",
     "card": "docs/features/feat-031-unified-task-state.md",
     "summary": "图片/文本共用9态任务契约：幂等、未知状态防重、失败子项重试、原生回执一致性校验；无供应商报价时成本保持未知，视频/音频链路仍待接入。",
-    "entryPoints": ["任务工作台队列与批量矩阵", "任务审批成本估算显示"],
+    "entryPoints": [
+      "任务工作台队列与批量矩阵",
+      "任务审批成本估算显示"
+    ],
     "code": [
       "src/features/creation/taskState.ts",
       "src/features/creation/model.ts",
@@ -1404,7 +1674,11 @@
       "tests/unit/taskRecovery.test.ts",
       "tests/browser/task-intent.spec.ts"
     ],
-    "tasks": ["TASK-TASKSTATE-001", "TASK-TASKSTATE-002", "BACKEND-MEDIA-001"],
+    "tasks": [
+      "TASK-TASKSTATE-001",
+      "TASK-TASKSTATE-002",
+      "BACKEND-MEDIA-001"
+    ],
     "updated": "2026-10-08"
   },
   {
@@ -1413,7 +1687,7 @@
     "area": "intelligence",
     "status": "PARTIAL",
     "card": "docs/features/feat-032-provider-connectivity.md",
-    "summary": "原Provider多目标配置与CLI apply/check保持；公共目录区分品牌、协议、官网/密钥/文档。展示不等于执行支持，未接协议禁用或导向专用入口。",
+    "summary": "原Provider多目标配置与CLI apply/check保持；公共目录区分品牌、协议、官网/密钥/文档。展示不等于执行支持，未接协议禁用或导向专用入口。 Cherry候选增量：统一连接身份与目录增量支持OpenAI/Anthropic/Gemini文本协议、明确loopback免密、Ollama/LM Studio预设；Native共享vault/journal，不采购付费依赖，网站入口与API分开。 当前组合证据见2026-10-15-cherry-mainline-merge。",
     "entryPoints": [
       "Agent providers apply/check/apply-claude CLI（App 设置 UI 尚未接入）",
       "设置公共预设目录（UI候选，不表示CLI配置全面接线）"
@@ -1426,7 +1700,10 @@
       "vendor/canvas-agent/src/agent/codex-provider-config.ts",
       "vendor/canvas-agent/src/agent/provider-cli.ts",
       "src/domain/providerPresets.ts",
-      "src/components/settings/ProviderPresetSelector.tsx"
+      "src/components/settings/ProviderPresetSelector.tsx",
+      "src/integrations/providerTextProtocol.ts",
+      "src/integrations/providerTextStream.ts",
+      "src-tauri/src/task_host_protocol.rs"
     ],
     "tests": [
       "tests/unit/providerTargetRenderers.test.ts",
@@ -1436,7 +1713,10 @@
       "vendor/canvas-agent/src/agent/codex-provider-config.test.ts",
       "vendor/canvas-agent/src/agent/provider-cli.test.ts",
       "tests/unit/geminiBridge.test.ts",
-      "tests/unit/agentDesktopSupportInstaller.test.ts"
+      "tests/unit/agentDesktopSupportInstaller.test.ts",
+      "tests/unit/providerProtocols.test.ts",
+      "tests/unit/providerProjectBinding.test.ts",
+      "tests/desktop/cherry-red-native.mjs"
     ],
     "tasks": [
       "TASK-PROV-002",
@@ -1445,9 +1725,24 @@
       "TASK-UI-CONSOLIDATE-20261014",
       "TASK-PROTOCOL-CLI-20261014",
       "TASK-222-ACTIONS-20261014",
-      "TASK-223-ACTIONS-20261014"
+      "TASK-223-ACTIONS-20261014",
+      "TASK-CHERRY-RED-001"
     ],
-    "updated": "2026-10-14"
+    "updated": "2026-10-15",
+    "runtimeEvidence": [
+      {
+        "platform": "web",
+        "path": "docs/changes/2026-10-13-cherry-red-scope/verification.md"
+      },
+      {
+        "platform": "desktop",
+        "path": "docs/changes/2026-10-13-cherry-red-scope/mainline-final-status.md"
+      }
+    ],
+    "platforms": [
+      "web",
+      "desktop"
+    ]
   },
   {
     "id": "FEAT-036",
@@ -1456,7 +1751,10 @@
     "status": "PARTIAL",
     "card": "docs/features/feat-036-image-compare.md",
     "summary": "画布2–4张并排和两图滑块可用，当前窄屏/production Web/fresh Tauri 复验通过；选择会话态，用户最终视觉确认由UI-004保留。",
-    "entryPoints": ["图片卡片加入对比", "画布对比选择条"],
+    "entryPoints": [
+      "图片卡片加入对比",
+      "画布对比选择条"
+    ],
     "code": [
       "src/features/compare/imageCompare.ts",
       "src/features/compare/ImageCompareProvider.tsx",
@@ -1468,9 +1766,16 @@
       "tests/browser/image-compare.spec.ts",
       "tests/desktop/image-compare.mjs"
     ],
-    "tasks": ["TASK-COMPARE-001", "TASK-COMPARE-002", "UI-004"],
+    "tasks": [
+      "TASK-COMPARE-001",
+      "TASK-COMPARE-002",
+      "UI-004"
+    ],
     "updated": "2026-09-30",
-    "platforms": ["web", "desktop"],
+    "platforms": [
+      "web",
+      "desktop"
+    ],
     "runtimeEvidence": [
       {
         "platform": "web",
@@ -1497,7 +1802,9 @@
     "status": "PARTIAL",
     "card": "docs/features/feat-037-web-local-service.md",
     "summary": "本机 loopback 服务已提供 Web 项目/素材服务优先读写、旧 IndexedDB 用户触发迁移和备份恢复；账号绑定、安装器与 Mobile 仍未完成。",
-    "entryPoints": ["设置 → 储存 → 网页本机伴随服务"],
+    "entryPoints": [
+      "设置 → 储存 → 网页本机伴随服务"
+    ],
     "code": [
       "src/features/local-service/main.ts",
       "src/features/local-service/server.ts",
@@ -1557,7 +1864,9 @@
       "tests/unit/modelMenuEntries.test.ts",
       "tests/unit/agentImages.test.ts"
     ],
-    "tasks": ["TASK-AI-GATEWAY-001"],
+    "tasks": [
+      "TASK-AI-GATEWAY-001"
+    ],
     "updated": "2026-10-10"
   },
   {
@@ -1601,6 +1910,9 @@
       "TASK-223-ACTIONS-20261014"
     ],
     "updated": "2026-10-14",
-    "platforms": ["web", "desktop"]
+    "platforms": [
+      "web",
+      "desktop"
+    ]
   }
 ]

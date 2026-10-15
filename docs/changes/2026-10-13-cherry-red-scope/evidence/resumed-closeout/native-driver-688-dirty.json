@@ -1,0 +1,91 @@
+{
+  "startedAt": "2026-10-13T12:57:33.434Z",
+  "platform": "win32",
+  "arch": "x64",
+  "sourceHead": "688381352fb4943b2195f4da5f4be5c9eb8dfe7a",
+  "sourceDirty": "M .github/workflows/native-crossplatform.yml\n M src-tauri/Cargo.lock\n M src-tauri/Cargo.toml\n M src-tauri/src/main.rs\n M src-tauri/src/provider_models_tests.rs\n M src-tauri/src/runtime_resources.rs\n M src-tauri/src/task_host.rs\n M src/components/settings/ModelProviderSettings.tsx\n M src/features/creation/providerRegistry.ts\n M tests/browser/capability-model-access.spec.ts\n?? src/components/settings/persistModelProviderSettings.ts\n?? tests/desktop/native-crossplatform.mjs",
+  "executableSha256": "2923a6413214dea3483ffddb2a499fb630552bfd1c8b133673454c730f200db3",
+  "buildScope": "Production frontend/shared Native host with explicitly compiled test-only driver; not byte-identical to shipping build",
+  "data": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-native-e2e-kzkEn9\\data",
+  "checks": [
+    {
+      "name": "real-synthetic-system-vault",
+      "passed": true
+    },
+    {
+      "name": "real-local-model-discovery",
+      "passed": true
+    },
+    {
+      "name": "real-ui-two-model-round-native-journal-markdown",
+      "taskIds": [
+        "conversation-8d14a6b6-5a0f-405f-863a-2fbb0dfcef99-route-0",
+        "conversation-8d14a6b6-5a0f-405f-863a-2fbb0dfcef99-route-1"
+      ],
+      "passed": true
+    },
+    {
+      "name": "real-native-package-roundtrip",
+      "passed": true
+    },
+    {
+      "name": "real-bundled-agent-start",
+      "pid": 99560,
+      "passed": true
+    },
+    {
+      "name": "real-app-restart-vault-and-project",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "passed": true,
+  "resourceDirectory": "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\src-tauri\\target\\native-e2e\\release",
+  "runtimeManifestSha256": "9f3e222e06937b515de5562b632218e27915ffad7a58bc0ace0b710749f4467b",
+  "finishedAt": "2026-10-13T12:57:40.812Z",
+  "requests": [
+    {
+      "path": "/v1/models",
+      "method": "GET",
+      "authorization": false
+    },
+    {
+      "path": "/v1/chat/completions",
+      "method": "POST",
+      "authorization": false,
+      "body": {
+        "messages": [
+          {
+            "content": "沿实际调用链检查正确性、权限、并发、取消、迟到响应、恢复和数据兼容。每项问题给出具体依据、影响与最小修复建议；区分已确认问题和待验证风险，不为风格偏好提出无关重构。",
+            "role": "system"
+          },
+          {
+            "content": "Report your model ID in Markdown.",
+            "role": "user"
+          }
+        ],
+        "model": "fixture-text-a",
+        "stream": true
+      }
+    },
+    {
+      "path": "/v1/chat/completions",
+      "method": "POST",
+      "authorization": false,
+      "body": {
+        "messages": [
+          {
+            "content": "沿实际调用链检查正确性、权限、并发、取消、迟到响应、恢复和数据兼容。每项问题给出具体依据、影响与最小修复建议；区分已确认问题和待验证风险，不为风格偏好提出无关重构。",
+            "role": "system"
+          },
+          {
+            "content": "Report your model ID in Markdown.",
+            "role": "user"
+          }
+        ],
+        "model": "fixture-text-b",
+        "stream": true
+      }
+    }
+  ]
+}

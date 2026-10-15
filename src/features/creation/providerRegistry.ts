@@ -249,7 +249,9 @@ export function mergeProviderConnection(
         state: previous.state,
         activeJobs: previous.activeJobs,
         cooldownUntil: previous.cooldownUntil,
-        lastHealthCheckAt: previous.lastHealthCheckAt,
+        lastHealthCheckAt: identityChanged
+          ? undefined
+          : previous.lastHealthCheckAt,
         healthRevision: identityChanged
           ? (previous.healthRevision ?? 0) + 1
           : previous.healthRevision,
@@ -331,6 +333,7 @@ export function markProviderConnectionHealthy(
     protocol?: ProviderProtocol;
     authMode?: ProviderAuthMode;
   },
+  generationKind: "image" | "text" = "image",
 ): ProviderConnection[] {
   const validatedAt = new Date().toISOString();
   return updateProviderConnection(id, (connection) => {
@@ -343,8 +346,12 @@ export function markProviderConnectionHealthy(
       cooldownUntil: undefined,
       lastHealthCheckAt: validatedAt,
       healthRevision: (connection.healthRevision ?? 0) + 1,
-      verificationStatus: "verified",
-      lastSuccessfulGenerationAt: validatedAt,
+      ...(generationKind === "image"
+        ? {
+            verificationStatus: "verified" as const,
+            lastSuccessfulGenerationAt: validatedAt,
+          }
+        : {}),
     };
   });
 }

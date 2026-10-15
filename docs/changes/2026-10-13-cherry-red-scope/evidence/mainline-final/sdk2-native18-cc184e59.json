@@ -1,0 +1,1613 @@
+{
+  "startedAt": "2026-10-13T17:16:50.843Z",
+  "runId": "9b3c48fd-8634-4b60-ad2d-30681872e3da",
+  "sourceHead": "cc184e5928f8cc67a84864822cc3b246e8cb51f0",
+  "sourceDirtyBefore": "",
+  "release": {
+    "releaseExePath": "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\src-tauri\\target\\release\\kk-studio.exe",
+    "releaseMtimeMs": 1791911357542.6143,
+    "newestInputPath": "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\dist\\assets\\index-Dz2hYLqp.js",
+    "newestInputMtimeMs": 1791911310465.13,
+    "inputSha256": "f2fdcc3fbdc54fc7b3122bcd50dbf46d4da2d699eae38fe6696904ab07b7f124",
+    "executableSha256": "37aa6f2854e9fd9a5540c6975133687beda9cdd7370718a61a03376be6974816",
+    "desktopVersion": "2.1.18",
+    "receiptPath": "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\src-tauri\\target\\release\\kk-studio.build-receipt.json",
+    "needsBuild": false,
+    "reason": "current"
+  },
+  "exe": "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\src-tauri\\target\\release\\kk-studio.exe",
+  "exeHashBefore": "37aa6f2854e9fd9a5540c6975133687beda9cdd7370718a61a03376be6974816",
+  "profile": "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\.tmp\\cherry-red\\mcp-native-7da\\sdk2\\native\\9b3c48fd-8634-4b60-ad2d-30681872e3da\\profile",
+  "dataRoot": "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\.tmp\\cherry-red\\mcp-native-7da\\sdk2\\native\\9b3c48fd-8634-4b60-ad2d-30681872e3da\\data",
+  "endpoint": "http://127.0.0.1:9367/mcp",
+  "cdp": "http://127.0.0.1:9355",
+  "sdk": {
+    "version": "2.3.1",
+    "license": "Apache-2.0",
+    "lock": {
+      "version": "2.3.1",
+      "resolved": "https://registry.npmjs.org/@modelcontextprotocol/server/-/server-2.3.1.tgz",
+      "integrity": "sha512-e59MfWuSssj6DoQ96JCTqdW1AXT5/XtnTl0WWd6MU1Ka434fFUGGosCLJbGNySDhHGvxQWoRWK137FXYFkYNWw==",
+      "license": "Apache-2.0",
+      "dependencies": {
+        "@modelcontextprotocol/core": "2.3.1",
+        "zod": "^4.2.0"
+      },
+      "engines": {
+        "node": ">=20"
+      }
+    },
+    "supportedProtocols": [
+      "2026-07-28"
+    ],
+    "packageSha256": "66d43886157bb694672d5e24a590dc543ff44a482e0ec86fd78d437a2d5e0451",
+    "licenseSha256": "0382b0057770ca05e9c350a50aa3b1c1fea84da0bc81d723bf00b9aa841be58a",
+    "officialHandler": "createMcpHandler(factory,{legacy:reject,responseMode:sse}) -> official @modelcontextprotocol/node toNodeHandler"
+  },
+  "scope": "Actual production Tauri manual MCP UI and isolated official SDK2 modern-only handler; own synthetic loopback only. Modern header/schema validation uses real SDK responses.",
+  "credentialBoundary": "Fresh UUID profile/data; the read-only native bridge remains unmodified. Actual IPC command names are observed through CDP after attachment and checked for zero credential commands. Pre-attachment IPC is not observed. No credential, provider or external model request is initiated by this fixture.",
+  "importChain": "src/main.tsx -> App -> SettingsPanel -> SettingsSections -> ExtensionsSettings -> McpSettings -> McpServerForm/McpServerCard -> McpHttpClient",
+  "sourceHashes": {
+    "src/main.tsx": "137db75fc5311b1aabd60c6578bb9c8af8caef5b9b5b8b3cde3942fc89bd3983",
+    "src/App.tsx": "ef52ba437f5bd739d644ee943ff2a73f793510fd9e103b97c8acac2d54ca2535",
+    "src/features/mcp/mcpClient.ts": "a5eab66ad482482292f33046d0e6ac7880a7edf5d09770f22dba09dd4bb38788",
+    "src/components/settings/McpSettings.tsx": "3339e48609ca4bab4e906a107249036b0c805ab869bffb222ff6c7c64ecbfa38",
+    "src/components/settings/McpServerForm.tsx": "db12df9b71a6fbf670a5c364357b4a51b5f1f7a94e3ae9beac595fdf2c9e36e5",
+    "src/components/settings/McpServerCard.tsx": "d89b6cd0ffec032a42837032fc2e4393be408add85effee26f37156a1d1b561e",
+    "src/components/settings/ExtensionsSettings.tsx": "2f56a22bc8fa3a728934bc8ce71a26e622918992ed88d39c070d47951fc501c6",
+    "src/runtime/confirmAction.ts": "ef3ac10de181707c7125e33f33417937945565b6f5917edfd4c764ac463a90d6",
+    "tests/desktop/native-confirm.ps1": "4408b2d185c574e751d4f2febc77f641c5a51c6ab2e16413b570d1f3f1d25617",
+    "src/features/mcp/mcpHttpHeaders.ts": "ee18fc066b31c1a197e5f73f28d5c1607e0c89191a1eb3a8ec3275bdc8843a0d",
+    ".tmp/cherry-red/mcp-native-7da/sdk2/package-lock.json": "ef777f3a51e561c745f935f9ad27c445adc28c5e12e1de677c93ac584bede9df",
+    ".tmp/cherry-red/mcp-native-7da/sdk2/server.mjs": "33e218058569d5d66b8975c944c7b80f5d53ef1d3bf4db468dc384b75ede9d5a"
+  },
+  "phase": "production-ui-disconnect",
+  "sdkObservations": [],
+  "checks": [
+    {
+      "name": "exclusive-free-modern-server-port",
+      "port": 9367,
+      "passed": true
+    },
+    {
+      "name": "official-SDK2-modern-handler",
+      "passed": true,
+      "endpoint": "http://127.0.0.1:9367/mcp",
+      "address": {
+        "address": "127.0.0.1",
+        "family": "IPv4",
+        "port": 9367
+      },
+      "mode": "modern-only createMcpHandler -> official toNodeHandler",
+      "responseMode": "sse",
+      "corsOrigins": [
+        "http://tauri.localhost",
+        "http://127.0.0.1:9367",
+        "http://localhost:9367"
+      ],
+      "protocolResponsesUnmodified": true,
+      "rawTools": [
+        "audit_echo",
+        "invalid_header_tool"
+      ]
+    },
+    {
+      "name": "exclusive-free-port-before-start",
+      "port": 9355,
+      "passed": true
+    },
+    {
+      "name": "production-native-launch-initial",
+      "passed": true,
+      "identity": {
+        "url": "http://tauri.localhost/",
+        "scripts": [
+          "http://tauri.localhost/assets/index-Dz2hYLqp.js"
+        ],
+        "runtimeMode": "production",
+        "runtimeEntry": "src/main.tsx",
+        "viewport": {
+          "width": 1920,
+          "height": 1080
+        }
+      },
+      "storageRoot": "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\.tmp\\cherry-red\\mcp-native-7da\\sdk2\\native\\9b3c48fd-8634-4b60-ad2d-30681872e3da\\data",
+      "profile": "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\.tmp\\cherry-red\\mcp-native-7da\\sdk2\\native\\9b3c48fd-8634-4b60-ad2d-30681872e3da\\profile",
+      "credentialGuardInstalled": false,
+      "nativeObservationValidated": true,
+      "bridgeUnmodified": true
+    },
+    {
+      "name": "production-ui-save-config",
+      "passed": true,
+      "config": {
+        "id": "e80b70df-4da0-4d9b-a3fa-a9300344d4a4",
+        "name": "KK MCP SDK audit 9b3c48fd-8634-4b60-ad2d-30681872e3da",
+        "transport": "streamable_http",
+        "endpoint": "http://127.0.0.1:9367/mcp",
+        "enabled": true
+      },
+      "storageKey": "kk-studio-next:mcp-servers:v1",
+      "persistence": "WebView localStorage in the unique profile"
+    },
+    {
+      "name": "production-ui-auto-discovery-invalid-schema-filtered",
+      "passed": true,
+      "rawSDKTools": 2,
+      "actualUISelectableTools": 1
+    },
+    {
+      "name": "production-ui-auto-discovery",
+      "passed": true,
+      "cardText": "KK MCP SDK audit 9b3c48fd-8634-4b60-ad2d-30681872e3da\nhttp://127.0.0.1:9367/mcp\n已连接 · 1 个工具\n断开\n移除\n查看工具详情",
+      "traceCount": 3
+    },
+    {
+      "name": "production-ui-manual-confirmed-tool",
+      "passed": true,
+      "rawCallTrace": {
+        "timestamp": "2026-10-13T17:16:53.908Z",
+        "phase": "production-ui-manual-confirmed-tool",
+        "httpMethod": "POST",
+        "path": "/mcp",
+        "headers": {
+          "host": "127.0.0.1:9367",
+          "connection": "keep-alive",
+          "content-length": "460",
+          "mcp-param-note": "=?base64?IHBhZGRlZCA=?=",
+          "mcp-param-count": "42",
+          "sec-ch-ua-platform": "\"Windows\"",
+          "mcp-method": "tools/call",
+          "sec-ch-ua": "\"Microsoft Edge WebView2\";v=\"155\", \"Not(A:Brand\";v=\"24\", \"Microsoft Edge\";v=\"155\", \"Chromium\";v=\"155\"",
+          "mcp-name": "audit_echo",
+          "mcp-param-enabled": "false",
+          "mcp-param-region": "=?base64?SGVsbG8sIOS4lueVjA0K?=",
+          "sec-ch-ua-mobile": "?0",
+          "mcp-protocol-version": "2026-07-28",
+          "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+          "accept": "application/json, text/event-stream",
+          "content-type": "application/json",
+          "origin": "http://tauri.localhost",
+          "sec-fetch-site": "cross-site",
+          "sec-fetch-mode": "cors",
+          "sec-fetch-dest": "empty",
+          "referer": "http://tauri.localhost/",
+          "accept-encoding": "gzip, deflate, br, zstd",
+          "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6"
+        },
+        "requestBody": "{\"jsonrpc\":\"2.0\",\"id\":3982554696142916,\"method\":\"tools/call\",\"params\":{\"name\":\"audit_echo\",\"arguments\":{\"message\":\"real-production-ui\",\"marker\":\"9b3c48fd-8634-4b60-ad2d-30681872e3da\",\"region\":\"Hello, 世界\\r\\n\",\"count\":42,\"enabled\":false,\"nested\":{\"note\":\" padded \"}},\"_meta\":{\"io.modelcontextprotocol/protocolVersion\":\"2026-07-28\",\"io.modelcontextprotocol/clientInfo\":{\"name\":\"kk-studio\",\"version\":\"2.1.18\"},\"io.modelcontextprotocol/clientCapabilities\":{}}}}",
+        "rpc": {
+          "jsonrpc": "2.0",
+          "id": 3982554696142916,
+          "method": "tools/call",
+          "params": {
+            "name": "audit_echo",
+            "arguments": {
+              "message": "real-production-ui",
+              "marker": "9b3c48fd-8634-4b60-ad2d-30681872e3da",
+              "region": "Hello, 世界\r\n",
+              "count": 42,
+              "enabled": false,
+              "nested": {
+                "note": " padded "
+              }
+            },
+            "_meta": {
+              "io.modelcontextprotocol/protocolVersion": "2026-07-28",
+              "io.modelcontextprotocol/clientInfo": {
+                "name": "kk-studio",
+                "version": "2.1.18"
+              },
+              "io.modelcontextprotocol/clientCapabilities": {}
+            }
+          }
+        },
+        "status": 200,
+        "responseHeaders": {
+          "access-control-allow-origin": "http://tauri.localhost",
+          "vary": "Origin",
+          "access-control-allow-methods": "POST, OPTIONS",
+          "access-control-allow-headers": "Content-Type, MCP-Protocol-Version, Mcp-Method, Mcp-Name, Mcp-Param-Region, Mcp-Param-Count, Mcp-Param-Enabled, Mcp-Param-Note",
+          "cache-control": "no-cache, no-transform",
+          "connection": "keep-alive",
+          "content-type": "text/event-stream",
+          "x-accel-buffering": "no"
+        },
+        "responseBody": "event: message\ndata: {\"result\":{\"content\":[{\"type\":\"text\",\"text\":\"mcp-owned-result:9b3c48fd-8634-4b60-ad2d-30681872e3da:real-production-ui\"}],\"resultType\":\"complete\",\"_meta\":{\"io.modelcontextprotocol/serverInfo\":{\"name\":\"KK isolated SDK2 9b3c48fd-8634-4b60-ad2d-30681872e3da\",\"version\":\"1.0.0\"}}},\"jsonrpc\":\"2.0\",\"id\":3982554696142916}\n\n"
+      },
+      "arguments": {
+        "message": "real-production-ui",
+        "marker": "9b3c48fd-8634-4b60-ad2d-30681872e3da",
+        "region": "Hello, 世界\r\n",
+        "count": 42,
+        "enabled": false,
+        "nested": {
+          "note": " padded "
+        }
+      },
+      "actualDialogButton": "Owned native dialog: accept",
+      "nativeCalls": [
+        {
+          "phase": "production-ui-manual-confirmed-tool",
+          "command": "plugin:dialog|message",
+          "source": "actual-CDP-IPC-request",
+          "args": {
+            "message": "确认向 KK MCP SDK audit 9b3c48fd-8634-4b60-ad2d-30681872e3da 发送工具 audit_echo 的参数吗？",
+            "title": "KK Studio",
+            "kind": "warning",
+            "buttons": {
+              "OkCancelCustom": [
+                "确认",
+                "取消"
+              ]
+            }
+          }
+        }
+      ],
+      "result": "{\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"mcp-owned-result:9b3c48fd-8634-4b60-ad2d-30681872e3da:real-production-ui\"\n    }\n  ],\n  \"resultType\": \"complete\",\n  \"_meta\": {\n    \"io.modelcontextprotocol/serverInfo\": {\n      \"name\": \"KK isolated SDK2 9b3c48fd-8634-4b60-ad2d-30681872e3da\",\n      \"version\": \"1.0.0\"\n    }\n  }\n}"
+    },
+    {
+      "name": "production-ui-disconnect",
+      "passed": true,
+      "modernStateless": true,
+      "noSessionOrDelete": true
+    },
+    {
+      "name": "exclusive-free-port-before-start",
+      "port": 9355,
+      "passed": true
+    },
+    {
+      "name": "production-native-launch-restart",
+      "passed": true,
+      "identity": {
+        "url": "http://tauri.localhost/",
+        "scripts": [
+          "http://tauri.localhost/assets/index-Dz2hYLqp.js"
+        ],
+        "runtimeMode": "production",
+        "runtimeEntry": "src/main.tsx",
+        "viewport": {
+          "width": 1920,
+          "height": 1080
+        }
+      },
+      "storageRoot": "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\.tmp\\cherry-red\\mcp-native-7da\\sdk2\\native\\9b3c48fd-8634-4b60-ad2d-30681872e3da\\data",
+      "profile": "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\.tmp\\cherry-red\\mcp-native-7da\\sdk2\\native\\9b3c48fd-8634-4b60-ad2d-30681872e3da\\profile",
+      "credentialGuardInstalled": false,
+      "nativeObservationValidated": true,
+      "bridgeUnmodified": true
+    },
+    {
+      "name": "production-restart-exact-config-retention",
+      "passed": true,
+      "unchangedRawConfig": true,
+      "config": {
+        "id": "e80b70df-4da0-4d9b-a3fa-a9300344d4a4",
+        "name": "KK MCP SDK audit 9b3c48fd-8634-4b60-ad2d-30681872e3da",
+        "transport": "streamable_http",
+        "endpoint": "http://127.0.0.1:9367/mcp",
+        "enabled": true
+      },
+      "defaultDisconnected": true
+    },
+    {
+      "name": "production-ui-restart-auto-discovery-invalid-schema-filtered",
+      "passed": true,
+      "rawSDKTools": 2,
+      "actualUISelectableTools": 1
+    },
+    {
+      "name": "production-ui-restart-auto-discovery",
+      "passed": true,
+      "cardText": "KK MCP SDK audit 9b3c48fd-8634-4b60-ad2d-30681872e3da\nhttp://127.0.0.1:9367/mcp\n已连接 · 1 个工具\n断开\n移除\n查看工具详情",
+      "traceCount": 3
+    },
+    {
+      "name": "production-ui-manual-confirmed-tool",
+      "passed": true,
+      "rawCallTrace": {
+        "timestamp": "2026-10-13T17:16:57.931Z",
+        "phase": "production-ui-manual-confirmed-tool",
+        "httpMethod": "POST",
+        "path": "/mcp",
+        "headers": {
+          "host": "127.0.0.1:9367",
+          "connection": "keep-alive",
+          "content-length": "460",
+          "mcp-param-note": "=?base64?IHBhZGRlZCA=?=",
+          "mcp-param-count": "42",
+          "sec-ch-ua-platform": "\"Windows\"",
+          "mcp-method": "tools/call",
+          "sec-ch-ua": "\"Microsoft Edge WebView2\";v=\"155\", \"Not(A:Brand\";v=\"24\", \"Microsoft Edge\";v=\"155\", \"Chromium\";v=\"155\"",
+          "mcp-name": "audit_echo",
+          "mcp-param-enabled": "false",
+          "mcp-param-region": "=?base64?SGVsbG8sIOS4lueVjA0K?=",
+          "sec-ch-ua-mobile": "?0",
+          "mcp-protocol-version": "2026-07-28",
+          "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+          "accept": "application/json, text/event-stream",
+          "content-type": "application/json",
+          "origin": "http://tauri.localhost",
+          "sec-fetch-site": "cross-site",
+          "sec-fetch-mode": "cors",
+          "sec-fetch-dest": "empty",
+          "referer": "http://tauri.localhost/",
+          "accept-encoding": "gzip, deflate, br, zstd",
+          "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6"
+        },
+        "requestBody": "{\"jsonrpc\":\"2.0\",\"id\":7379992674563492,\"method\":\"tools/call\",\"params\":{\"name\":\"audit_echo\",\"arguments\":{\"message\":\"real-production-ui\",\"marker\":\"9b3c48fd-8634-4b60-ad2d-30681872e3da\",\"region\":\"Hello, 世界\\r\\n\",\"count\":42,\"enabled\":false,\"nested\":{\"note\":\" padded \"}},\"_meta\":{\"io.modelcontextprotocol/protocolVersion\":\"2026-07-28\",\"io.modelcontextprotocol/clientInfo\":{\"name\":\"kk-studio\",\"version\":\"2.1.18\"},\"io.modelcontextprotocol/clientCapabilities\":{}}}}",
+        "rpc": {
+          "jsonrpc": "2.0",
+          "id": 7379992674563492,
+          "method": "tools/call",
+          "params": {
+            "name": "audit_echo",
+            "arguments": {
+              "message": "real-production-ui",
+              "marker": "9b3c48fd-8634-4b60-ad2d-30681872e3da",
+              "region": "Hello, 世界\r\n",
+              "count": 42,
+              "enabled": false,
+              "nested": {
+                "note": " padded "
+              }
+            },
+            "_meta": {
+              "io.modelcontextprotocol/protocolVersion": "2026-07-28",
+              "io.modelcontextprotocol/clientInfo": {
+                "name": "kk-studio",
+                "version": "2.1.18"
+              },
+              "io.modelcontextprotocol/clientCapabilities": {}
+            }
+          }
+        },
+        "status": 200,
+        "responseHeaders": {
+          "access-control-allow-origin": "http://tauri.localhost",
+          "vary": "Origin",
+          "access-control-allow-methods": "POST, OPTIONS",
+          "access-control-allow-headers": "Content-Type, MCP-Protocol-Version, Mcp-Method, Mcp-Name, Mcp-Param-Region, Mcp-Param-Count, Mcp-Param-Enabled, Mcp-Param-Note",
+          "cache-control": "no-cache, no-transform",
+          "connection": "keep-alive",
+          "content-type": "text/event-stream",
+          "x-accel-buffering": "no"
+        },
+        "responseBody": "event: message\ndata: {\"result\":{\"content\":[{\"type\":\"text\",\"text\":\"mcp-owned-result:9b3c48fd-8634-4b60-ad2d-30681872e3da:real-production-ui\"}],\"resultType\":\"complete\",\"_meta\":{\"io.modelcontextprotocol/serverInfo\":{\"name\":\"KK isolated SDK2 9b3c48fd-8634-4b60-ad2d-30681872e3da\",\"version\":\"1.0.0\"}}},\"jsonrpc\":\"2.0\",\"id\":7379992674563492}\n\n"
+      },
+      "arguments": {
+        "message": "real-production-ui",
+        "marker": "9b3c48fd-8634-4b60-ad2d-30681872e3da",
+        "region": "Hello, 世界\r\n",
+        "count": 42,
+        "enabled": false,
+        "nested": {
+          "note": " padded "
+        }
+      },
+      "actualDialogButton": "Owned native dialog: accept",
+      "nativeCalls": [
+        {
+          "phase": "production-ui-manual-confirmed-tool",
+          "command": "plugin:dialog|message",
+          "source": "actual-CDP-IPC-request",
+          "args": {
+            "message": "确认向 KK MCP SDK audit 9b3c48fd-8634-4b60-ad2d-30681872e3da 发送工具 audit_echo 的参数吗？",
+            "title": "KK Studio",
+            "kind": "warning",
+            "buttons": {
+              "OkCancelCustom": [
+                "确认",
+                "取消"
+              ]
+            }
+          }
+        },
+        {
+          "phase": "production-ui-manual-confirmed-tool",
+          "command": "plugin:dialog|message",
+          "source": "actual-CDP-IPC-request",
+          "args": {
+            "message": "确认向 KK MCP SDK audit 9b3c48fd-8634-4b60-ad2d-30681872e3da 发送工具 audit_echo 的参数吗？",
+            "title": "KK Studio",
+            "kind": "warning",
+            "buttons": {
+              "OkCancelCustom": [
+                "确认",
+                "取消"
+              ]
+            }
+          }
+        }
+      ],
+      "result": "{\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"mcp-owned-result:9b3c48fd-8634-4b60-ad2d-30681872e3da:real-production-ui\"\n    }\n  ],\n  \"resultType\": \"complete\",\n  \"_meta\": {\n    \"io.modelcontextprotocol/serverInfo\": {\n      \"name\": \"KK isolated SDK2 9b3c48fd-8634-4b60-ad2d-30681872e3da\",\n      \"version\": \"1.0.0\"\n    }\n  }\n}"
+    },
+    {
+      "name": "production-ui-disconnect",
+      "passed": true,
+      "modernStateless": true,
+      "noSessionOrDelete": true
+    },
+    {
+      "name": "zero-observed-credential-IPC",
+      "passed": true,
+      "boundary": "After CDP attachment only; actual bridge unmodified, observation positively validated."
+    },
+    {
+      "name": "frozen-source-and-exe-preserved",
+      "passed": true
+    }
+  ],
+  "traces": [
+    {
+      "timestamp": "2026-10-13T17:16:52.159Z",
+      "phase": "production-ui-auto-discovery",
+      "httpMethod": "OPTIONS",
+      "path": "/mcp",
+      "headers": {
+        "host": "127.0.0.1:9367",
+        "connection": "keep-alive",
+        "accept": "*/*",
+        "access-control-request-method": "POST",
+        "access-control-request-headers": "content-type,mcp-method,mcp-protocol-version",
+        "origin": "http://tauri.localhost",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "cross-site",
+        "sec-fetch-dest": "empty",
+        "referer": "http://tauri.localhost/",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6"
+      },
+      "requestBody": "",
+      "rpc": null,
+      "status": 204,
+      "responseHeaders": {
+        "access-control-allow-origin": "http://tauri.localhost",
+        "vary": "Origin",
+        "access-control-allow-methods": "POST, OPTIONS",
+        "access-control-allow-headers": "Content-Type, MCP-Protocol-Version, Mcp-Method, Mcp-Name, Mcp-Param-Region, Mcp-Param-Count, Mcp-Param-Enabled, Mcp-Param-Note"
+      },
+      "responseBody": ""
+    },
+    {
+      "timestamp": "2026-10-13T17:16:52.161Z",
+      "phase": "production-ui-auto-discovery",
+      "httpMethod": "POST",
+      "path": "/mcp",
+      "headers": {
+        "host": "127.0.0.1:9367",
+        "connection": "keep-alive",
+        "content-length": "267",
+        "sec-ch-ua-platform": "\"Windows\"",
+        "mcp-method": "server/discover",
+        "sec-ch-ua": "\"Microsoft Edge WebView2\";v=\"155\", \"Not(A:Brand\";v=\"24\", \"Microsoft Edge\";v=\"155\", \"Chromium\";v=\"155\"",
+        "sec-ch-ua-mobile": "?0",
+        "mcp-protocol-version": "2026-07-28",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+        "accept": "application/json, text/event-stream",
+        "content-type": "application/json",
+        "origin": "http://tauri.localhost",
+        "sec-fetch-site": "cross-site",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "http://tauri.localhost/",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6"
+      },
+      "requestBody": "{\"jsonrpc\":\"2.0\",\"id\":4251135218395817,\"method\":\"server/discover\",\"params\":{\"_meta\":{\"io.modelcontextprotocol/protocolVersion\":\"2026-07-28\",\"io.modelcontextprotocol/clientInfo\":{\"name\":\"kk-studio\",\"version\":\"2.1.18\"},\"io.modelcontextprotocol/clientCapabilities\":{}}}}",
+      "rpc": {
+        "jsonrpc": "2.0",
+        "id": 4251135218395817,
+        "method": "server/discover",
+        "params": {
+          "_meta": {
+            "io.modelcontextprotocol/protocolVersion": "2026-07-28",
+            "io.modelcontextprotocol/clientInfo": {
+              "name": "kk-studio",
+              "version": "2.1.18"
+            },
+            "io.modelcontextprotocol/clientCapabilities": {}
+          }
+        }
+      },
+      "status": 200,
+      "responseHeaders": {
+        "access-control-allow-origin": "http://tauri.localhost",
+        "vary": "Origin",
+        "access-control-allow-methods": "POST, OPTIONS",
+        "access-control-allow-headers": "Content-Type, MCP-Protocol-Version, Mcp-Method, Mcp-Name, Mcp-Param-Region, Mcp-Param-Count, Mcp-Param-Enabled, Mcp-Param-Note",
+        "cache-control": "no-cache, no-transform",
+        "connection": "keep-alive",
+        "content-type": "text/event-stream",
+        "x-accel-buffering": "no"
+      },
+      "responseBody": "event: message\ndata: {\"result\":{\"supportedVersions\":[\"2026-07-28\"],\"capabilities\":{\"tools\":{\"listChanged\":true}},\"resultType\":\"complete\",\"ttlMs\":0,\"cacheScope\":\"private\",\"_meta\":{\"io.modelcontextprotocol/serverInfo\":{\"name\":\"KK isolated SDK2 9b3c48fd-8634-4b60-ad2d-30681872e3da\",\"version\":\"1.0.0\"}}},\"jsonrpc\":\"2.0\",\"id\":4251135218395817}\n\n"
+    },
+    {
+      "timestamp": "2026-10-13T17:16:52.183Z",
+      "phase": "production-ui-auto-discovery",
+      "httpMethod": "POST",
+      "path": "/mcp",
+      "headers": {
+        "host": "127.0.0.1:9367",
+        "connection": "keep-alive",
+        "content-length": "262",
+        "sec-ch-ua-platform": "\"Windows\"",
+        "mcp-method": "tools/list",
+        "sec-ch-ua": "\"Microsoft Edge WebView2\";v=\"155\", \"Not(A:Brand\";v=\"24\", \"Microsoft Edge\";v=\"155\", \"Chromium\";v=\"155\"",
+        "sec-ch-ua-mobile": "?0",
+        "mcp-protocol-version": "2026-07-28",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+        "accept": "application/json, text/event-stream",
+        "content-type": "application/json",
+        "origin": "http://tauri.localhost",
+        "sec-fetch-site": "cross-site",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "http://tauri.localhost/",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6"
+      },
+      "requestBody": "{\"jsonrpc\":\"2.0\",\"id\":6618087084589512,\"method\":\"tools/list\",\"params\":{\"_meta\":{\"io.modelcontextprotocol/protocolVersion\":\"2026-07-28\",\"io.modelcontextprotocol/clientInfo\":{\"name\":\"kk-studio\",\"version\":\"2.1.18\"},\"io.modelcontextprotocol/clientCapabilities\":{}}}}",
+      "rpc": {
+        "jsonrpc": "2.0",
+        "id": 6618087084589512,
+        "method": "tools/list",
+        "params": {
+          "_meta": {
+            "io.modelcontextprotocol/protocolVersion": "2026-07-28",
+            "io.modelcontextprotocol/clientInfo": {
+              "name": "kk-studio",
+              "version": "2.1.18"
+            },
+            "io.modelcontextprotocol/clientCapabilities": {}
+          }
+        }
+      },
+      "status": 200,
+      "responseHeaders": {
+        "access-control-allow-origin": "http://tauri.localhost",
+        "vary": "Origin",
+        "access-control-allow-methods": "POST, OPTIONS",
+        "access-control-allow-headers": "Content-Type, MCP-Protocol-Version, Mcp-Method, Mcp-Name, Mcp-Param-Region, Mcp-Param-Count, Mcp-Param-Enabled, Mcp-Param-Note",
+        "cache-control": "no-cache, no-transform",
+        "connection": "keep-alive",
+        "content-type": "text/event-stream",
+        "x-accel-buffering": "no"
+      },
+      "responseBody": "event: message\ndata: {\"result\":{\"tools\":[{\"name\":\"audit_echo\",\"title\":\"独立现代 MCP 回声工具\",\"description\":\"Own synthetic run only; no file, shell or external provider access.\",\"inputSchema\":{\"type\":\"object\",\"additionalProperties\":false,\"properties\":{\"message\":{\"type\":\"string\"},\"marker\":{\"type\":\"string\",\"const\":\"9b3c48fd-8634-4b60-ad2d-30681872e3da\"},\"region\":{\"type\":\"string\",\"x-mcp-header\":\"Region\"},\"count\":{\"type\":\"integer\",\"x-mcp-header\":\"Count\"},\"enabled\":{\"type\":\"boolean\",\"x-mcp-header\":\"Enabled\"},\"nested\":{\"type\":\"object\",\"additionalProperties\":false,\"properties\":{\"note\":{\"type\":\"string\",\"x-mcp-header\":\"Note\"}},\"required\":[\"note\"]}},\"required\":[\"message\",\"marker\",\"region\",\"count\",\"enabled\",\"nested\"]}},{\"name\":\"invalid_header_tool\",\"inputSchema\":{\"type\":\"object\",\"properties\":{\"unsafe\":{\"type\":\"number\",\"x-mcp-header\":\"InvalidNumber\"}}}}],\"resultType\":\"complete\",\"ttlMs\":0,\"cacheScope\":\"private\",\"_meta\":{\"io.modelcontextprotocol/serverInfo\":{\"name\":\"KK isolated SDK2 9b3c48fd-8634-4b60-ad2d-30681872e3da\",\"version\":\"1.0.0\"}}},\"jsonrpc\":\"2.0\",\"id\":6618087084589512}\n\n"
+    },
+    {
+      "timestamp": "2026-10-13T17:16:53.908Z",
+      "phase": "production-ui-manual-confirmed-tool",
+      "httpMethod": "POST",
+      "path": "/mcp",
+      "headers": {
+        "host": "127.0.0.1:9367",
+        "connection": "keep-alive",
+        "content-length": "460",
+        "mcp-param-note": "=?base64?IHBhZGRlZCA=?=",
+        "mcp-param-count": "42",
+        "sec-ch-ua-platform": "\"Windows\"",
+        "mcp-method": "tools/call",
+        "sec-ch-ua": "\"Microsoft Edge WebView2\";v=\"155\", \"Not(A:Brand\";v=\"24\", \"Microsoft Edge\";v=\"155\", \"Chromium\";v=\"155\"",
+        "mcp-name": "audit_echo",
+        "mcp-param-enabled": "false",
+        "mcp-param-region": "=?base64?SGVsbG8sIOS4lueVjA0K?=",
+        "sec-ch-ua-mobile": "?0",
+        "mcp-protocol-version": "2026-07-28",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+        "accept": "application/json, text/event-stream",
+        "content-type": "application/json",
+        "origin": "http://tauri.localhost",
+        "sec-fetch-site": "cross-site",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "http://tauri.localhost/",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6"
+      },
+      "requestBody": "{\"jsonrpc\":\"2.0\",\"id\":3982554696142916,\"method\":\"tools/call\",\"params\":{\"name\":\"audit_echo\",\"arguments\":{\"message\":\"real-production-ui\",\"marker\":\"9b3c48fd-8634-4b60-ad2d-30681872e3da\",\"region\":\"Hello, 世界\\r\\n\",\"count\":42,\"enabled\":false,\"nested\":{\"note\":\" padded \"}},\"_meta\":{\"io.modelcontextprotocol/protocolVersion\":\"2026-07-28\",\"io.modelcontextprotocol/clientInfo\":{\"name\":\"kk-studio\",\"version\":\"2.1.18\"},\"io.modelcontextprotocol/clientCapabilities\":{}}}}",
+      "rpc": {
+        "jsonrpc": "2.0",
+        "id": 3982554696142916,
+        "method": "tools/call",
+        "params": {
+          "name": "audit_echo",
+          "arguments": {
+            "message": "real-production-ui",
+            "marker": "9b3c48fd-8634-4b60-ad2d-30681872e3da",
+            "region": "Hello, 世界\r\n",
+            "count": 42,
+            "enabled": false,
+            "nested": {
+              "note": " padded "
+            }
+          },
+          "_meta": {
+            "io.modelcontextprotocol/protocolVersion": "2026-07-28",
+            "io.modelcontextprotocol/clientInfo": {
+              "name": "kk-studio",
+              "version": "2.1.18"
+            },
+            "io.modelcontextprotocol/clientCapabilities": {}
+          }
+        }
+      },
+      "status": 200,
+      "responseHeaders": {
+        "access-control-allow-origin": "http://tauri.localhost",
+        "vary": "Origin",
+        "access-control-allow-methods": "POST, OPTIONS",
+        "access-control-allow-headers": "Content-Type, MCP-Protocol-Version, Mcp-Method, Mcp-Name, Mcp-Param-Region, Mcp-Param-Count, Mcp-Param-Enabled, Mcp-Param-Note",
+        "cache-control": "no-cache, no-transform",
+        "connection": "keep-alive",
+        "content-type": "text/event-stream",
+        "x-accel-buffering": "no"
+      },
+      "responseBody": "event: message\ndata: {\"result\":{\"content\":[{\"type\":\"text\",\"text\":\"mcp-owned-result:9b3c48fd-8634-4b60-ad2d-30681872e3da:real-production-ui\"}],\"resultType\":\"complete\",\"_meta\":{\"io.modelcontextprotocol/serverInfo\":{\"name\":\"KK isolated SDK2 9b3c48fd-8634-4b60-ad2d-30681872e3da\",\"version\":\"1.0.0\"}}},\"jsonrpc\":\"2.0\",\"id\":3982554696142916}\n\n"
+    },
+    {
+      "timestamp": "2026-10-13T17:16:56.242Z",
+      "phase": "production-ui-restart-auto-discovery",
+      "httpMethod": "OPTIONS",
+      "path": "/mcp",
+      "headers": {
+        "host": "127.0.0.1:9367",
+        "connection": "keep-alive",
+        "accept": "*/*",
+        "access-control-request-method": "POST",
+        "access-control-request-headers": "content-type,mcp-method,mcp-protocol-version",
+        "origin": "http://tauri.localhost",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "cross-site",
+        "sec-fetch-dest": "empty",
+        "referer": "http://tauri.localhost/",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6"
+      },
+      "requestBody": "",
+      "rpc": null,
+      "status": 204,
+      "responseHeaders": {
+        "access-control-allow-origin": "http://tauri.localhost",
+        "vary": "Origin",
+        "access-control-allow-methods": "POST, OPTIONS",
+        "access-control-allow-headers": "Content-Type, MCP-Protocol-Version, Mcp-Method, Mcp-Name, Mcp-Param-Region, Mcp-Param-Count, Mcp-Param-Enabled, Mcp-Param-Note"
+      },
+      "responseBody": ""
+    },
+    {
+      "timestamp": "2026-10-13T17:16:56.243Z",
+      "phase": "production-ui-restart-auto-discovery",
+      "httpMethod": "POST",
+      "path": "/mcp",
+      "headers": {
+        "host": "127.0.0.1:9367",
+        "connection": "keep-alive",
+        "content-length": "267",
+        "sec-ch-ua-platform": "\"Windows\"",
+        "mcp-method": "server/discover",
+        "sec-ch-ua": "\"Microsoft Edge WebView2\";v=\"155\", \"Not(A:Brand\";v=\"24\", \"Microsoft Edge\";v=\"155\", \"Chromium\";v=\"155\"",
+        "sec-ch-ua-mobile": "?0",
+        "mcp-protocol-version": "2026-07-28",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+        "accept": "application/json, text/event-stream",
+        "content-type": "application/json",
+        "origin": "http://tauri.localhost",
+        "sec-fetch-site": "cross-site",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "http://tauri.localhost/",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6"
+      },
+      "requestBody": "{\"jsonrpc\":\"2.0\",\"id\":1199299517810686,\"method\":\"server/discover\",\"params\":{\"_meta\":{\"io.modelcontextprotocol/protocolVersion\":\"2026-07-28\",\"io.modelcontextprotocol/clientInfo\":{\"name\":\"kk-studio\",\"version\":\"2.1.18\"},\"io.modelcontextprotocol/clientCapabilities\":{}}}}",
+      "rpc": {
+        "jsonrpc": "2.0",
+        "id": 1199299517810686,
+        "method": "server/discover",
+        "params": {
+          "_meta": {
+            "io.modelcontextprotocol/protocolVersion": "2026-07-28",
+            "io.modelcontextprotocol/clientInfo": {
+              "name": "kk-studio",
+              "version": "2.1.18"
+            },
+            "io.modelcontextprotocol/clientCapabilities": {}
+          }
+        }
+      },
+      "status": 200,
+      "responseHeaders": {
+        "access-control-allow-origin": "http://tauri.localhost",
+        "vary": "Origin",
+        "access-control-allow-methods": "POST, OPTIONS",
+        "access-control-allow-headers": "Content-Type, MCP-Protocol-Version, Mcp-Method, Mcp-Name, Mcp-Param-Region, Mcp-Param-Count, Mcp-Param-Enabled, Mcp-Param-Note",
+        "cache-control": "no-cache, no-transform",
+        "connection": "keep-alive",
+        "content-type": "text/event-stream",
+        "x-accel-buffering": "no"
+      },
+      "responseBody": "event: message\ndata: {\"result\":{\"supportedVersions\":[\"2026-07-28\"],\"capabilities\":{\"tools\":{\"listChanged\":true}},\"resultType\":\"complete\",\"ttlMs\":0,\"cacheScope\":\"private\",\"_meta\":{\"io.modelcontextprotocol/serverInfo\":{\"name\":\"KK isolated SDK2 9b3c48fd-8634-4b60-ad2d-30681872e3da\",\"version\":\"1.0.0\"}}},\"jsonrpc\":\"2.0\",\"id\":1199299517810686}\n\n"
+    },
+    {
+      "timestamp": "2026-10-13T17:16:56.247Z",
+      "phase": "production-ui-restart-auto-discovery",
+      "httpMethod": "POST",
+      "path": "/mcp",
+      "headers": {
+        "host": "127.0.0.1:9367",
+        "connection": "keep-alive",
+        "content-length": "262",
+        "sec-ch-ua-platform": "\"Windows\"",
+        "mcp-method": "tools/list",
+        "sec-ch-ua": "\"Microsoft Edge WebView2\";v=\"155\", \"Not(A:Brand\";v=\"24\", \"Microsoft Edge\";v=\"155\", \"Chromium\";v=\"155\"",
+        "sec-ch-ua-mobile": "?0",
+        "mcp-protocol-version": "2026-07-28",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+        "accept": "application/json, text/event-stream",
+        "content-type": "application/json",
+        "origin": "http://tauri.localhost",
+        "sec-fetch-site": "cross-site",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "http://tauri.localhost/",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6"
+      },
+      "requestBody": "{\"jsonrpc\":\"2.0\",\"id\":1577058579895248,\"method\":\"tools/list\",\"params\":{\"_meta\":{\"io.modelcontextprotocol/protocolVersion\":\"2026-07-28\",\"io.modelcontextprotocol/clientInfo\":{\"name\":\"kk-studio\",\"version\":\"2.1.18\"},\"io.modelcontextprotocol/clientCapabilities\":{}}}}",
+      "rpc": {
+        "jsonrpc": "2.0",
+        "id": 1577058579895248,
+        "method": "tools/list",
+        "params": {
+          "_meta": {
+            "io.modelcontextprotocol/protocolVersion": "2026-07-28",
+            "io.modelcontextprotocol/clientInfo": {
+              "name": "kk-studio",
+              "version": "2.1.18"
+            },
+            "io.modelcontextprotocol/clientCapabilities": {}
+          }
+        }
+      },
+      "status": 200,
+      "responseHeaders": {
+        "access-control-allow-origin": "http://tauri.localhost",
+        "vary": "Origin",
+        "access-control-allow-methods": "POST, OPTIONS",
+        "access-control-allow-headers": "Content-Type, MCP-Protocol-Version, Mcp-Method, Mcp-Name, Mcp-Param-Region, Mcp-Param-Count, Mcp-Param-Enabled, Mcp-Param-Note",
+        "cache-control": "no-cache, no-transform",
+        "connection": "keep-alive",
+        "content-type": "text/event-stream",
+        "x-accel-buffering": "no"
+      },
+      "responseBody": "event: message\ndata: {\"result\":{\"tools\":[{\"name\":\"audit_echo\",\"title\":\"独立现代 MCP 回声工具\",\"description\":\"Own synthetic run only; no file, shell or external provider access.\",\"inputSchema\":{\"type\":\"object\",\"additionalProperties\":false,\"properties\":{\"message\":{\"type\":\"string\"},\"marker\":{\"type\":\"string\",\"const\":\"9b3c48fd-8634-4b60-ad2d-30681872e3da\"},\"region\":{\"type\":\"string\",\"x-mcp-header\":\"Region\"},\"count\":{\"type\":\"integer\",\"x-mcp-header\":\"Count\"},\"enabled\":{\"type\":\"boolean\",\"x-mcp-header\":\"Enabled\"},\"nested\":{\"type\":\"object\",\"additionalProperties\":false,\"properties\":{\"note\":{\"type\":\"string\",\"x-mcp-header\":\"Note\"}},\"required\":[\"note\"]}},\"required\":[\"message\",\"marker\",\"region\",\"count\",\"enabled\",\"nested\"]}},{\"name\":\"invalid_header_tool\",\"inputSchema\":{\"type\":\"object\",\"properties\":{\"unsafe\":{\"type\":\"number\",\"x-mcp-header\":\"InvalidNumber\"}}}}],\"resultType\":\"complete\",\"ttlMs\":0,\"cacheScope\":\"private\",\"_meta\":{\"io.modelcontextprotocol/serverInfo\":{\"name\":\"KK isolated SDK2 9b3c48fd-8634-4b60-ad2d-30681872e3da\",\"version\":\"1.0.0\"}}},\"jsonrpc\":\"2.0\",\"id\":1577058579895248}\n\n"
+    },
+    {
+      "timestamp": "2026-10-13T17:16:57.931Z",
+      "phase": "production-ui-manual-confirmed-tool",
+      "httpMethod": "POST",
+      "path": "/mcp",
+      "headers": {
+        "host": "127.0.0.1:9367",
+        "connection": "keep-alive",
+        "content-length": "460",
+        "mcp-param-note": "=?base64?IHBhZGRlZCA=?=",
+        "mcp-param-count": "42",
+        "sec-ch-ua-platform": "\"Windows\"",
+        "mcp-method": "tools/call",
+        "sec-ch-ua": "\"Microsoft Edge WebView2\";v=\"155\", \"Not(A:Brand\";v=\"24\", \"Microsoft Edge\";v=\"155\", \"Chromium\";v=\"155\"",
+        "mcp-name": "audit_echo",
+        "mcp-param-enabled": "false",
+        "mcp-param-region": "=?base64?SGVsbG8sIOS4lueVjA0K?=",
+        "sec-ch-ua-mobile": "?0",
+        "mcp-protocol-version": "2026-07-28",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+        "accept": "application/json, text/event-stream",
+        "content-type": "application/json",
+        "origin": "http://tauri.localhost",
+        "sec-fetch-site": "cross-site",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "http://tauri.localhost/",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6"
+      },
+      "requestBody": "{\"jsonrpc\":\"2.0\",\"id\":7379992674563492,\"method\":\"tools/call\",\"params\":{\"name\":\"audit_echo\",\"arguments\":{\"message\":\"real-production-ui\",\"marker\":\"9b3c48fd-8634-4b60-ad2d-30681872e3da\",\"region\":\"Hello, 世界\\r\\n\",\"count\":42,\"enabled\":false,\"nested\":{\"note\":\" padded \"}},\"_meta\":{\"io.modelcontextprotocol/protocolVersion\":\"2026-07-28\",\"io.modelcontextprotocol/clientInfo\":{\"name\":\"kk-studio\",\"version\":\"2.1.18\"},\"io.modelcontextprotocol/clientCapabilities\":{}}}}",
+      "rpc": {
+        "jsonrpc": "2.0",
+        "id": 7379992674563492,
+        "method": "tools/call",
+        "params": {
+          "name": "audit_echo",
+          "arguments": {
+            "message": "real-production-ui",
+            "marker": "9b3c48fd-8634-4b60-ad2d-30681872e3da",
+            "region": "Hello, 世界\r\n",
+            "count": 42,
+            "enabled": false,
+            "nested": {
+              "note": " padded "
+            }
+          },
+          "_meta": {
+            "io.modelcontextprotocol/protocolVersion": "2026-07-28",
+            "io.modelcontextprotocol/clientInfo": {
+              "name": "kk-studio",
+              "version": "2.1.18"
+            },
+            "io.modelcontextprotocol/clientCapabilities": {}
+          }
+        }
+      },
+      "status": 200,
+      "responseHeaders": {
+        "access-control-allow-origin": "http://tauri.localhost",
+        "vary": "Origin",
+        "access-control-allow-methods": "POST, OPTIONS",
+        "access-control-allow-headers": "Content-Type, MCP-Protocol-Version, Mcp-Method, Mcp-Name, Mcp-Param-Region, Mcp-Param-Count, Mcp-Param-Enabled, Mcp-Param-Note",
+        "cache-control": "no-cache, no-transform",
+        "connection": "keep-alive",
+        "content-type": "text/event-stream",
+        "x-accel-buffering": "no"
+      },
+      "responseBody": "event: message\ndata: {\"result\":{\"content\":[{\"type\":\"text\",\"text\":\"mcp-owned-result:9b3c48fd-8634-4b60-ad2d-30681872e3da:real-production-ui\"}],\"resultType\":\"complete\",\"_meta\":{\"io.modelcontextprotocol/serverInfo\":{\"name\":\"KK isolated SDK2 9b3c48fd-8634-4b60-ad2d-30681872e3da\",\"version\":\"1.0.0\"}}},\"jsonrpc\":\"2.0\",\"id\":7379992674563492}\n\n"
+    }
+  ],
+  "toolExecutions": [
+    {
+      "timestamp": "2026-10-13T17:16:53.911Z",
+      "phase": "production-ui-manual-confirmed-tool",
+      "name": "audit_echo",
+      "arguments": {
+        "message": "real-production-ui",
+        "marker": "9b3c48fd-8634-4b60-ad2d-30681872e3da",
+        "region": "Hello, 世界\r\n",
+        "count": 42,
+        "enabled": false,
+        "nested": {
+          "note": " padded "
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "mcp-owned-result:9b3c48fd-8634-4b60-ad2d-30681872e3da:real-production-ui"
+          }
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-10-13T17:16:57.933Z",
+      "phase": "production-ui-manual-confirmed-tool",
+      "name": "audit_echo",
+      "arguments": {
+        "message": "real-production-ui",
+        "marker": "9b3c48fd-8634-4b60-ad2d-30681872e3da",
+        "region": "Hello, 世界\r\n",
+        "count": 42,
+        "enabled": false,
+        "nested": {
+          "note": " padded "
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "mcp-owned-result:9b3c48fd-8634-4b60-ad2d-30681872e3da:real-production-ui"
+          }
+        ]
+      }
+    }
+  ],
+  "launches": [
+    {
+      "label": "initial",
+      "pid": 68696,
+      "startedAt": "2026-10-13T17:16:51.049Z",
+      "stdout": "",
+      "stderr": "",
+      "nativeBridge": {
+        "writable": false,
+        "configurable": false,
+        "modified": false
+      },
+      "identity": {
+        "url": "http://tauri.localhost/",
+        "scripts": [
+          "http://tauri.localhost/assets/index-Dz2hYLqp.js"
+        ],
+        "runtimeMode": "production",
+        "runtimeEntry": "src/main.tsx",
+        "viewport": {
+          "width": 1920,
+          "height": 1080
+        }
+      },
+      "storageRoot": "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\.tmp\\cherry-red\\mcp-native-7da\\sdk2\\native\\9b3c48fd-8634-4b60-ad2d-30681872e3da\\data",
+      "cleanupRequestedAt": "2026-10-13T17:16:54.181Z",
+      "exitAt": "2026-10-13T17:16:54.661Z",
+      "exitCode": 0,
+      "exitSignal": null
+    },
+    {
+      "label": "restart",
+      "pid": 50552,
+      "startedAt": "2026-10-13T17:16:54.835Z",
+      "stdout": "",
+      "stderr": "",
+      "nativeBridge": {
+        "writable": false,
+        "configurable": false,
+        "modified": false
+      },
+      "identity": {
+        "url": "http://tauri.localhost/",
+        "scripts": [
+          "http://tauri.localhost/assets/index-Dz2hYLqp.js"
+        ],
+        "runtimeMode": "production",
+        "runtimeEntry": "src/main.tsx",
+        "viewport": {
+          "width": 1920,
+          "height": 1080
+        }
+      },
+      "storageRoot": "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\.tmp\\cherry-red\\mcp-native-7da\\sdk2\\native\\9b3c48fd-8634-4b60-ad2d-30681872e3da\\data",
+      "cleanupRequestedAt": "2026-10-13T17:16:58.213Z",
+      "exitAt": "2026-10-13T17:16:58.703Z",
+      "exitCode": 0,
+      "exitSignal": null
+    }
+  ],
+  "networkRequests": [
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/assets/index-Dz2hYLqp.js"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/assets/index-Av6SlLx8.css"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/assets/inter-latin-400-normal-C38fXH4l.woff2"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/assets/inter-latin-700-normal-Yt3aPRUw.woff2"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/design/figma/search.svg"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/design/figma/sidebar-archive.svg"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/design/figma/sidebar-settings-container.svg"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/design/figma/project-ellipsis-glyph.svg"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/design/figma/logo.svg"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/design/figma/sidebar-search-container.svg"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/design/figma/sidebar-expand.svg"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/design/figma/sidebar-add.svg"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/design/figma/sidebar-skill.svg"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/design/figma/sidebar-workflow.svg"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/design/figma/project-chevron.svg"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/design/figma/project-plus-glyph.svg"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/design/figma/project-open-container.svg"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/design/figma/project-add-container.svg"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/design/figma/logo-hero.svg"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/design/figma/composer-plus.svg"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/design/figma/composer-package.svg"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/design/figma/composer-puzzle.svg"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/design/figma/mic-off.svg"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/design/figma/composer-chevron.svg"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/design/figma/composer-send.svg"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/fixtures/demo/blue-hour.png"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "POST",
+      "url": "http://ipc.localhost/plugin%3Awindow%7Cis_maximized"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "POST",
+      "url": "http://ipc.localhost/plugin%3Aevent%7Clisten"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "POST",
+      "url": "http://ipc.localhost/asset_list"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "POST",
+      "url": "http://ipc.localhost/plugin%3Aevent%7Clisten"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "POST",
+      "url": "http://ipc.localhost/read_provider_config"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/plugins/index.json"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "POST",
+      "url": "http://ipc.localhost/window_appearance_get"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "POST",
+      "url": "http://ipc.localhost/read_creation_snapshot"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/design/figma/logo.svg"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/plugins/html.js?t=1791911811707"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/plugins/markdown.js?t=1791911811707"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/plugins/sticky-note.js?t=1791911811707"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/plugins/svg.js?t=1791911811707"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "POST",
+      "url": "http://ipc.localhost/task_host_list"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/plugins/html.js?t=1791911811707"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/plugins/svg.js?t=1791911811707"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/plugins/sticky-note.js?t=1791911811707"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/plugins/markdown.js?t=1791911811707"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "POST",
+      "url": "http://ipc.localhost/get_storage_root"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/plugins/html.js?t=1791911811716"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/plugins/svg.js?t=1791911811716"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/plugins/sticky-note.js?t=1791911811716"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/plugins/markdown.js?t=1791911811716"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/plugins/html.js?t=1791911811716"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/plugins/svg.js?t=1791911811716"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/plugins/sticky-note.js?t=1791911811716"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/plugins/markdown.js?t=1791911811716"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/assets/SettingsPanel-C01ewCMG.js"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/assets/PartnerRoles-Y9Iyey3R.js"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/assets/x-CiB2RHZF.js"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "POST",
+      "url": "http://ipc.localhost/window_appearance_get"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/assets/inter-latin-600-normal-LgqL8muc.woff2"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/assets/inter-latin-500-normal-Cerq10X2.woff2"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/design/figma/settings-nav-general.svg"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/design/figma/settings-nav-account.svg"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/design/figma/settings-nav-storage.svg"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/design/figma/settings-nav-network.svg"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/design/figma/settings-nav-memory.svg"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/design/figma/settings-nav-providers.svg"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/design/figma/settings-nav-mcp.svg"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/design/figma/settings-nav-comfy.svg"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/design/figma/settings-nav-advanced.svg"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/design/figma/settings-nav-updates.svg"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/design/figma/settings-close.svg"
+    },
+    {
+      "phase": "production-ui-save",
+      "method": "GET",
+      "url": "http://tauri.localhost/design/figma/settings-nav-skills.svg"
+    },
+    {
+      "phase": "production-ui-auto-discovery",
+      "method": "POST",
+      "url": "http://127.0.0.1:9367/mcp"
+    },
+    {
+      "phase": "production-ui-auto-discovery",
+      "method": "POST",
+      "url": "http://127.0.0.1:9367/mcp"
+    },
+    {
+      "phase": "production-ui-manual-confirmed-tool",
+      "method": "POST",
+      "url": "http://ipc.localhost/plugin%3Adialog%7Cmessage"
+    },
+    {
+      "phase": "production-ui-manual-confirmed-tool",
+      "method": "POST",
+      "url": "http://127.0.0.1:9367/mcp"
+    },
+    {
+      "phase": "production-ui-disconnect",
+      "method": "POST",
+      "url": "http://ipc.localhost/plugin%3Awindow%7Cdestroy"
+    },
+    {
+      "phase": "production-restart-config",
+      "method": "POST",
+      "url": "http://ipc.localhost/get_storage_root"
+    },
+    {
+      "phase": "production-restart-config",
+      "method": "GET",
+      "url": "http://tauri.localhost/assets/SettingsPanel-C01ewCMG.js"
+    },
+    {
+      "phase": "production-restart-config",
+      "method": "GET",
+      "url": "http://tauri.localhost/assets/PartnerRoles-Y9Iyey3R.js"
+    },
+    {
+      "phase": "production-restart-config",
+      "method": "GET",
+      "url": "http://tauri.localhost/assets/x-CiB2RHZF.js"
+    },
+    {
+      "phase": "production-restart-config",
+      "method": "POST",
+      "url": "http://ipc.localhost/window_appearance_get"
+    },
+    {
+      "phase": "production-restart-config",
+      "method": "GET",
+      "url": "http://tauri.localhost/assets/inter-latin-600-normal-LgqL8muc.woff2"
+    },
+    {
+      "phase": "production-restart-config",
+      "method": "GET",
+      "url": "http://tauri.localhost/assets/inter-latin-500-normal-Cerq10X2.woff2"
+    },
+    {
+      "phase": "production-restart-config",
+      "method": "GET",
+      "url": "http://tauri.localhost/design/figma/settings-nav-general.svg"
+    },
+    {
+      "phase": "production-restart-config",
+      "method": "GET",
+      "url": "http://tauri.localhost/design/figma/settings-nav-account.svg"
+    },
+    {
+      "phase": "production-restart-config",
+      "method": "GET",
+      "url": "http://tauri.localhost/design/figma/settings-nav-storage.svg"
+    },
+    {
+      "phase": "production-restart-config",
+      "method": "GET",
+      "url": "http://tauri.localhost/design/figma/settings-nav-network.svg"
+    },
+    {
+      "phase": "production-restart-config",
+      "method": "GET",
+      "url": "http://tauri.localhost/design/figma/settings-nav-memory.svg"
+    },
+    {
+      "phase": "production-restart-config",
+      "method": "GET",
+      "url": "http://tauri.localhost/design/figma/settings-nav-providers.svg"
+    },
+    {
+      "phase": "production-restart-config",
+      "method": "GET",
+      "url": "http://tauri.localhost/design/figma/settings-nav-mcp.svg"
+    },
+    {
+      "phase": "production-restart-config",
+      "method": "GET",
+      "url": "http://tauri.localhost/design/figma/settings-nav-comfy.svg"
+    },
+    {
+      "phase": "production-restart-config",
+      "method": "GET",
+      "url": "http://tauri.localhost/design/figma/settings-nav-advanced.svg"
+    },
+    {
+      "phase": "production-restart-config",
+      "method": "GET",
+      "url": "http://tauri.localhost/design/figma/settings-nav-updates.svg"
+    },
+    {
+      "phase": "production-restart-config",
+      "method": "GET",
+      "url": "http://tauri.localhost/design/figma/settings-close.svg"
+    },
+    {
+      "phase": "production-restart-config",
+      "method": "GET",
+      "url": "http://tauri.localhost/design/figma/settings-nav-skills.svg"
+    },
+    {
+      "phase": "production-ui-restart-auto-discovery",
+      "method": "POST",
+      "url": "http://127.0.0.1:9367/mcp"
+    },
+    {
+      "phase": "production-ui-restart-auto-discovery",
+      "method": "POST",
+      "url": "http://127.0.0.1:9367/mcp"
+    },
+    {
+      "phase": "production-ui-manual-confirmed-tool",
+      "method": "POST",
+      "url": "http://ipc.localhost/plugin%3Adialog%7Cmessage"
+    },
+    {
+      "phase": "production-ui-manual-confirmed-tool",
+      "method": "POST",
+      "url": "http://127.0.0.1:9367/mcp"
+    },
+    {
+      "phase": "production-ui-disconnect",
+      "method": "POST",
+      "url": "http://ipc.localhost/plugin%3Awindow%7Cdestroy"
+    }
+  ],
+  "nativeCalls": [
+    {
+      "phase": "production-ui-save",
+      "command": "plugin:window|is_maximized",
+      "source": "actual-CDP-IPC-request"
+    },
+    {
+      "phase": "production-ui-save",
+      "command": "plugin:event|listen",
+      "source": "actual-CDP-IPC-request"
+    },
+    {
+      "phase": "production-ui-save",
+      "command": "asset_list",
+      "source": "actual-CDP-IPC-request"
+    },
+    {
+      "phase": "production-ui-save",
+      "command": "plugin:event|listen",
+      "source": "actual-CDP-IPC-request"
+    },
+    {
+      "phase": "production-ui-save",
+      "command": "read_provider_config",
+      "source": "actual-CDP-IPC-request"
+    },
+    {
+      "phase": "production-ui-save",
+      "command": "window_appearance_get",
+      "source": "actual-CDP-IPC-request"
+    },
+    {
+      "phase": "production-ui-save",
+      "command": "read_creation_snapshot",
+      "source": "actual-CDP-IPC-request"
+    },
+    {
+      "phase": "production-ui-save",
+      "command": "task_host_list",
+      "source": "actual-CDP-IPC-request"
+    },
+    {
+      "phase": "production-ui-save",
+      "command": "get_storage_root",
+      "source": "actual-CDP-IPC-request"
+    },
+    {
+      "phase": "production-ui-save",
+      "command": "window_appearance_get",
+      "source": "actual-CDP-IPC-request"
+    },
+    {
+      "phase": "production-ui-manual-confirmed-tool",
+      "command": "plugin:dialog|message",
+      "source": "actual-CDP-IPC-request",
+      "args": {
+        "message": "确认向 KK MCP SDK audit 9b3c48fd-8634-4b60-ad2d-30681872e3da 发送工具 audit_echo 的参数吗？",
+        "title": "KK Studio",
+        "kind": "warning",
+        "buttons": {
+          "OkCancelCustom": [
+            "确认",
+            "取消"
+          ]
+        }
+      }
+    },
+    {
+      "phase": "production-ui-disconnect",
+      "command": "plugin:window|destroy",
+      "source": "actual-CDP-IPC-request"
+    },
+    {
+      "phase": "production-restart-config",
+      "command": "get_storage_root",
+      "source": "actual-CDP-IPC-request"
+    },
+    {
+      "phase": "production-restart-config",
+      "command": "window_appearance_get",
+      "source": "actual-CDP-IPC-request"
+    },
+    {
+      "phase": "production-ui-manual-confirmed-tool",
+      "command": "plugin:dialog|message",
+      "source": "actual-CDP-IPC-request",
+      "args": {
+        "message": "确认向 KK MCP SDK audit 9b3c48fd-8634-4b60-ad2d-30681872e3da 发送工具 audit_echo 的参数吗？",
+        "title": "KK Studio",
+        "kind": "warning",
+        "buttons": {
+          "OkCancelCustom": [
+            "确认",
+            "取消"
+          ]
+        }
+      }
+    },
+    {
+      "phase": "production-ui-disconnect",
+      "command": "plugin:window|destroy",
+      "source": "actual-CDP-IPC-request"
+    }
+  ],
+  "errors": [],
+  "passed": true,
+  "expectedFrozenIdentity": {
+    "head": "cc184e5928f8cc67a84864822cc3b246e8cb51f0",
+    "input": "f2fdcc3fbdc54fc7b3122bcd50dbf46d4da2d699eae38fe6696904ab07b7f124",
+    "exe": "37aa6f2854e9fd9a5540c6975133687beda9cdd7370718a61a03376be6974816"
+  },
+  "auditHarnessSha256": "d92c450eca5d0db87096b11fc91131c7038d7015ba948c035ca85c0ff58e54e7",
+  "exeHashAfter": "37aa6f2854e9fd9a5540c6975133687beda9cdd7370718a61a03376be6974816",
+  "releaseAfter": {
+    "releaseExePath": "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\src-tauri\\target\\release\\kk-studio.exe",
+    "releaseMtimeMs": 1791911357542.6143,
+    "newestInputPath": "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\dist\\assets\\index-Dz2hYLqp.js",
+    "newestInputMtimeMs": 1791911310465.13,
+    "inputSha256": "f2fdcc3fbdc54fc7b3122bcd50dbf46d4da2d699eae38fe6696904ab07b7f124",
+    "executableSha256": "37aa6f2854e9fd9a5540c6975133687beda9cdd7370718a61a03376be6974816",
+    "desktopVersion": "2.1.18",
+    "receiptPath": "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\src-tauri\\target\\release\\kk-studio.build-receipt.json",
+    "needsBuild": false,
+    "reason": "current"
+  },
+  "sourceDirtyAfter": "",
+  "finishedAt": "2026-10-13T17:16:59.037Z",
+  "sessionModel": "Modern SDK handler is stateless; no session initialized or deleted.",
+  "cleanup": {
+    "ownAppExitCode": 0,
+    "cdpUnavailable": true,
+    "ownHttpServerClosed": true,
+    "profilesRetainedForEvidence": true,
+    "vaultWrites": 0,
+    "vaultWriteMeasurementBoundary": "Actual CDP IPC observation after attachment; pre-attachment IPC unobserved."
+  }
+}

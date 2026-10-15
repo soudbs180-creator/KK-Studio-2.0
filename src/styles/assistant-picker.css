@@ -1,0 +1,126 @@
+.assistant-picker {
+  min-width: 0;
+  margin-block: var(--kk-space-2);
+}
+
+.assistant-picker-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--kk-space-2);
+}
+
+.assistant-picker-field {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  align-items: center;
+  gap: var(--kk-space-2);
+  color: var(--kk-text-secondary);
+  font-size: var(--kk-control-font-sm);
+}
+
+.assistant-picker-field select {
+  flex: 1;
+  min-width: 0;
+  max-width: 100%;
+  height: var(--kk-control-h-md);
+  padding-inline: var(--kk-control-px-sm);
+  border: var(--kk-border-width) solid var(--kk-border-control);
+  border-radius: var(--kk-radius-control);
+  background: var(--kk-bg-input);
+  color: var(--kk-text-primary);
+  font-size: var(--kk-control-font-sm);
+  font-family: inherit;
+}
+
+.assistant-picker-controls .ui-button {
+  min-height: var(--kk-control-h-md);
+  padding-inline: var(--kk-control-px-sm);
+  font-size: var(--kk-control-font-sm);
+  flex-shrink: 0;
+}
+
+.assistant-picker-note {
+  margin-block: var(--kk-space-1) 0;
+  color: var(--kk-text-secondary);
+  font-size: var(--kk-font-caption);
+}
+
+.assistant-picker select:disabled,
+.assistant-picker .ui-button:disabled {
+  cursor: not-allowed;
+  opacity: var(--ui-disabled-opacity);
+}
+
+.assistant-picker select:focus-visible {
+  outline: var(--kk-border-width-focus) solid var(--kk-focus-ring);
+  outline-offset: var(--kk-space-hair);
+}
+
+.assistant-editor-form {
+  display: grid;
+  gap: var(--kk-space-3);
+  min-width: 0;
+}
+
+.assistant-editor-form label {
+  display: grid;
+  gap: var(--kk-space-1);
+  min-width: 0;
+  color: var(--kk-text-primary);
+  font-size: var(--kk-font-body);
+}
+
+.assistant-editor-form .ui-input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.assistant-editor-form textarea {
+  resize: vertical;
+}
+.assistant-editor-form [readonly] {
+  color: var(--kk-text-secondary);
+}
+.assistant-editor-error {
+  color: var(--kk-text-danger);
+}
+
+@media (max-width: 1200px) and (max-height: 600px) {
+  .workspace.chat-mobile .conversation-panel:has(> .assistant-picker) {
+    gap: 0;
+  }
+  .conversation-panel > .assistant-picker {
+    margin-block: 0;
+  }
+  .conversation-panel:has(> .assistant-picker) .conversation-messages {
+    min-height: 0;
+  }
+  .conversation-panel:has(> .assistant-picker) .chat-composer {
+    min-height: 0;
+  }
+  .workspace:has(.workspace-content:not([hidden]) .assistant-picker) {
+    display: flex;
+    flex-direction: column;
+  }
+  .workspace:has(.workspace-content:not([hidden]) .assistant-picker)
+    > .creation-storage-notice {
+    position: static;
+    flex-shrink: 0;
+    max-width: 100%;
+    padding: var(--kk-space-2);
+  }
+  .workspace:has(.workspace-content:not([hidden]) .assistant-picker)
+    > .workspace-content {
+    flex: 1;
+    height: auto;
+  }
+}
+
+.assistant-editor-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--kk-space-2);
+}

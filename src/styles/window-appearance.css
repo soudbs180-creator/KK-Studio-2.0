@@ -1,0 +1,10 @@
+html[data-window-transparent="true"],
+html[data-window-transparent="true"] body,
+html[data-window-transparent="true"] #root,
+html[data-window-transparent="true"] .app,
+html[data-window-transparent="true"] .workspace-content {
+  background: transparent;
+}
+html[data-window-transparent="true"] .canvas {
+  background-color: transparent !important;
+}

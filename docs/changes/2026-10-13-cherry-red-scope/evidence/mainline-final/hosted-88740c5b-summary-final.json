@@ -1,0 +1,317 @@
+{
+  "head": "88740c5b23f1cf5f0896d471b4339d9db39f4b9b",
+  "base": "694a00607f6f63de1b8c43d0ebb117adf5d34f67",
+  "prBuiltMerge": "e9822e9642d321d852cf5322e9a7a65f7bcd91be",
+  "sourceTree": "c1ab0640d08bea64f4e57692df90c41f22a181bb",
+  "readAt": "2026-10-13 18:11:03 UTC",
+  "overall": "All four exact-HEAD requested Hosted runs finalSUCCESS; independent Windows raw/artifact byte audit PASS",
+  "runs": [
+    {
+      "run_id": 38440294448,
+      "event": "pull_request",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "88740c5b23f1cf5f0896d471b4339d9db39f4b9b",
+      "url": "https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/38440294448",
+      "run_attempt": 1,
+      "jobs": [
+        {
+          "job_id": 115444807543,
+          "name": "native (macos-14)",
+          "status": "completed",
+          "conclusion": "success",
+          "failedSteps": []
+        },
+        {
+          "job_id": 115444808106,
+          "name": "native (ubuntu-22.04)",
+          "status": "completed",
+          "conclusion": "success",
+          "failedSteps": []
+        },
+        {
+          "job_id": 115444808255,
+          "name": "native (windows-latest)",
+          "status": "completed",
+          "conclusion": "success",
+          "failedSteps": []
+        }
+      ],
+      "artifacts": [
+        {
+          "artifact_id": 11837797562,
+          "name": "native-Windows-evidence",
+          "size_in_bytes": 679299,
+          "digest": "sha256:24476a3767aedbf5f1fa8edb0b4985624373d4655b1544ed682baef4f4a5bf3d",
+          "actuallyDownloadedSmallNativeEvidence": true,
+          "actuallyDownloadedVerificationEvidence": false
+        },
+        {
+          "artifact_id": 11837315792,
+          "name": "native-Linux-evidence",
+          "size_in_bytes": 692566,
+          "digest": "sha256:1ad7edfdbd0897e4a56fc6b1a4ddaa790c836f6c02dcd992dbd5b2649341f072",
+          "actuallyDownloadedSmallNativeEvidence": true,
+          "actuallyDownloadedVerificationEvidence": false
+        },
+        {
+          "artifact_id": 11835342721,
+          "name": "native-macOS-evidence",
+          "size_in_bytes": 562994,
+          "digest": "sha256:c3d740bd3d84cb7cd6f3031e975c4735c63d1e7d990486ba7150a509564ac387",
+          "actuallyDownloadedSmallNativeEvidence": true,
+          "actuallyDownloadedVerificationEvidence": false
+        }
+      ]
+    },
+    {
+      "run_id": 38440294429,
+      "event": "pull_request",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "88740c5b23f1cf5f0896d471b4339d9db39f4b9b",
+      "url": "https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/38440294429",
+      "run_attempt": 1,
+      "jobs": [
+        {
+          "job_id": 115444806736,
+          "name": "verify",
+          "status": "completed",
+          "conclusion": "success",
+          "failedSteps": []
+        },
+        {
+          "job_id": 115444806773,
+          "name": "delivery",
+          "status": "completed",
+          "conclusion": "success",
+          "failedSteps": []
+        },
+        {
+          "job_id": 115444806782,
+          "name": "governance",
+          "status": "completed",
+          "conclusion": "success",
+          "failedSteps": []
+        },
+        {
+          "job_id": 115444806831,
+          "name": "snapshot-portability (macos-latest)",
+          "status": "completed",
+          "conclusion": "success",
+          "failedSteps": []
+        },
+        {
+          "job_id": 115444806852,
+          "name": "deploy-linux",
+          "status": "completed",
+          "conclusion": "success",
+          "failedSteps": []
+        },
+        {
+          "job_id": 115444806853,
+          "name": "snapshot-portability (windows-latest)",
+          "status": "completed",
+          "conclusion": "success",
+          "failedSteps": []
+        },
+        {
+          "job_id": 115444807014,
+          "name": "snapshot-portability (ubuntu-latest)",
+          "status": "completed",
+          "conclusion": "success",
+          "failedSteps": []
+        }
+      ],
+      "artifacts": [
+        {
+          "artifact_id": 11836614466,
+          "name": "verification-evidence",
+          "size_in_bytes": 22423291,
+          "digest": "sha256:23666449cf1c8c66a859fb85bdbe9bcafc2e5316c1533057f72766316838814f",
+          "actuallyDownloadedSmallNativeEvidence": false,
+          "actuallyDownloadedVerificationEvidence": false
+        }
+      ]
+    },
+    {
+      "run_id": 38440285384,
+      "event": "push",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "88740c5b23f1cf5f0896d471b4339d9db39f4b9b",
+      "url": "https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/38440285384",
+      "run_attempt": 1,
+      "jobs": [
+        {
+          "job_id": 115444775019,
+          "name": "deploy-linux",
+          "status": "completed",
+          "conclusion": "success",
+          "failedSteps": []
+        },
+        {
+          "job_id": 115444775277,
+          "name": "snapshot-portability (ubuntu-latest)",
+          "status": "completed",
+          "conclusion": "success",
+          "failedSteps": []
+        },
+        {
+          "job_id": 115444775345,
+          "name": "snapshot-portability (macos-latest)",
+          "status": "completed",
+          "conclusion": "success",
+          "failedSteps": []
+        },
+        {
+          "job_id": 115444775350,
+          "name": "verify",
+          "status": "completed",
+          "conclusion": "success",
+          "failedSteps": []
+        },
+        {
+          "job_id": 115444775399,
+          "name": "snapshot-portability (windows-latest)",
+          "status": "completed",
+          "conclusion": "success",
+          "failedSteps": []
+        },
+        {
+          "job_id": 115444776869,
+          "name": "governance",
+          "status": "completed",
+          "conclusion": "skipped"
+        },
+        {
+          "job_id": 115444777738,
+          "name": "delivery",
+          "status": "completed",
+          "conclusion": "skipped"
+        }
+      ],
+      "artifacts": [
+        {
+          "artifact_id": 11837232505,
+          "name": "verification-evidence",
+          "size_in_bytes": 22343653,
+          "digest": "sha256:01e60413f00fdcf4390402db427032201a55e7848a0e99bc2a60f2c12e0b9f33",
+          "actuallyDownloadedSmallNativeEvidence": false,
+          "actuallyDownloadedVerificationEvidence": false
+        }
+      ]
+    },
+    {
+      "run_id": 38440285848,
+      "event": "push",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "88740c5b23f1cf5f0896d471b4339d9db39f4b9b",
+      "url": "https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/38440285848",
+      "run_attempt": 1,
+      "jobs": [
+        {
+          "job_id": 115444778934,
+          "name": "native (ubuntu-22.04)",
+          "status": "completed",
+          "conclusion": "success",
+          "failedSteps": []
+        },
+        {
+          "job_id": 115444779232,
+          "name": "native (macos-14)",
+          "status": "completed",
+          "conclusion": "success",
+          "failedSteps": []
+        },
+        {
+          "job_id": 115444779387,
+          "name": "native (windows-latest)",
+          "status": "completed",
+          "conclusion": "success",
+          "failedSteps": []
+        }
+      ],
+      "artifacts": [
+        {
+          "artifact_id": 11837477734,
+          "name": "native-Windows-evidence",
+          "size_in_bytes": 679306,
+          "digest": "sha256:1da7913017bcc851d825033695c9689a46a76a47b1f7ae75e941a57ad447f978",
+          "actuallyDownloadedSmallNativeEvidence": true,
+          "actuallyDownloadedVerificationEvidence": false
+        },
+        {
+          "artifact_id": 11837370637,
+          "name": "native-Linux-evidence",
+          "size_in_bytes": 692832,
+          "digest": "sha256:233980edd0b47a3c032969ef6af73793f5f9c311b119f1690e83d7258090562a",
+          "actuallyDownloadedSmallNativeEvidence": true,
+          "actuallyDownloadedVerificationEvidence": false
+        },
+        {
+          "artifact_id": 11837160039,
+          "name": "native-macOS-evidence",
+          "size_in_bytes": 563010,
+          "digest": "sha256:0cd536f9b9b4203e3791216ef7fe29f621a1dca7031818fcd24315b80f9780bf",
+          "actuallyDownloadedSmallNativeEvidence": true,
+          "actuallyDownloadedVerificationEvidence": false
+        }
+      ]
+    }
+  ],
+  "gitGuards": [
+    {
+      "run_id": 38440294466,
+      "event": "pull_request",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "88740c5b23f1cf5f0896d471b4339d9db39f4b9b"
+    },
+    {
+      "run_id": 38440285457,
+      "event": "push",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "88740c5b23f1cf5f0896d471b4339d9db39f4b9b"
+    }
+  ],
+  "quality": {
+    "pr": {
+      "rustTests": 154,
+      "nativeTaskHostChecks": 11,
+      "rawJob": 115444806736
+    },
+    "push": {
+      "rustTests": 154,
+      "nativeTaskHostChecks": 11,
+      "rawJob": 115444775350
+    }
+  },
+  "defaultPackages": {
+    "linux": {
+      "bothEvents": "AppImage/deb2checksPASS each,4316 runtime files per format,actual bundled Nodev24.21.0 linux/x64,14 isolated Native-storage markers each,owned SIGTERM; AppImage actual AppRun launcher",
+      "producer": "Both actual reports preserve66 RPATH operations; all4316 file arrays match strict original-package receipt exactly,manifest/preservation/currentfinalpackageSHA bound,before/afterHEAD/input identical"
+    },
+    "mac": {
+      "bothEvents": "App/dmg2checksPASS each,4314 runtime files per format,actual bundled Nodev24.20.0 darwin/arm64,14 isolated Native-storage markers each,owned SIGTERM",
+      "signing": "Free ad-hoc '-'; notarization/downloaded Gatekeeper acceptance NOT VERIFIED"
+    }
+  },
+  "native": {
+    "all6JobsChecks": 6,
+    "allChecksPassed": true,
+    "allPackageExportRevision": 17,
+    "scope": "Production frontend/shared Native host with explicitly compiled native-e2e driver; not byte-identical shipping artifact"
+  },
+  "windows": {
+    "bothEvents": "Strict4280installedFiles receipts; actual four install/hash/CurrentUser32and64registration passes; four compiled tauri.localhost productionUI launches,damaged-package refusal,bundledAgenthealthy,sameversionrepair/reinstall/uninstall-reinstall data retention,two uninstall; elevated=true and unique isolated GUID profiles; raw explicitlyapp-specificpoliciesremoved/lifecyclepassed",
+    "independentAudit": "PASS by hosted_windows_evidence: rawlog SHA and all four saved JSON/diff entry bytes/SHA per artifact match; independent actual GitHub artifact metadata GET confirms digest/size/head; proper push887 and PRmergee982 identities/tree/input; four4280-file installs, compiled production UI/data roots/NSS EXE binding, isolated elevated GUID profile, damaged-package refusal, Agent healthy, same-version repair/reinstall/data retention/two uninstall, no cleanup/shutdownError and raw policy removal; Native6 independently separate with revision17",
+    "releaseInputSha256": "ac99d0036998e2efc07cd3f02fc8732643ec1cc82ff0be8526cf0fa19a9fc754",
+    "boundaries": "Windows host with existing WebView2; cleanWindowsWebView2bootstrap,realversionupgrade,Authenticode,publicreleaseanduseracceptance NOT VERIFIED; shippingNSSexe separatelyboundfrombareUNKeXe"
+  },
+  "history": "Oldcc184pushLinux Native3checksFAIL revisionconflict and7da allNativefail evidence preservedunchanged; new8876checksPASS doesnoteraseoldfail.",
+  "archive": "All8 finalrawlogs+6 native smallZIPmetadata+savedJSON/diff+fourfinalREST+jobs nowactuallysaved/readback in ownworktree;quality22MBartifactmetadataonly,noverificationZIPdownload;early1739/1742fulljobswere notpersisted and cannotrecover,seearchive-integrity-incident.json;later snapshots/rawartifactreadbackcomplete.",
+  "scope": "Read-onlysource;onlyowntmpevidencewrites;noapp/buildstartup,stage/commit/push/merge/release/oldSHArerun"
+}

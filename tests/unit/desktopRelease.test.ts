@@ -132,6 +132,41 @@ test("stale desktop release is rebuilt before it can launch", (t) => {
   assert.equal(result.needsBuild, false);
 });
 
+test("Windows short-name ancestors do not turn real local dependencies into a junction", (t) => {
+  if (process.platform !== "win32") return t.skip("Windows path aliases only");
+  const { root } = fixture(t);
+  const result = spawnSync(
+    "powershell.exe",
+    [
+      "-NoProfile",
+      "-Command",
+      `
+    Add-Type -TypeDefinition 'using System; using System.Text; using System.Runtime.InteropServices; public static class KKShortPath { [DllImport("kernel32.dll", CharSet=CharSet.Unicode, SetLastError=true)] public static extern uint GetShortPathName(string path, StringBuilder output, uint length); }';
+    $taskAliasBuffer = New-Object System.Text.StringBuilder 32768;
+    $taskAliasSize = [KKShortPath]::GetShortPathName($env:KK_FIXTURE_ALIAS_ROOT, $taskAliasBuffer, 32768);
+    if ($taskAliasSize -eq 0) { exit 2 }; $taskAliasBuffer.ToString()
+  `,
+    ],
+    {
+      encoding: "utf8",
+      windowsHide: true,
+      env: { ...process.env, KK_FIXTURE_ALIAS_ROOT: root },
+    },
+  );
+  assert.equal(result.status, 0, result.stderr);
+  const alias = result.stdout.trim();
+  if (alias.toLowerCase() === fs.realpathSync.native(root).toLowerCase())
+    return t.skip("This volume did not create an 8.3 alias");
+  assert.notEqual(
+    path.resolve(alias).toLowerCase(),
+    fs.realpathSync.native(alias).toLowerCase(),
+  );
+  assert.deepEqual(inspectDesktopDependencies(alias), {
+    needsInstall: false,
+    mismatches: [],
+  });
+});
+
 test("failed desktop rebuild cannot launch the previous release", (t) => {
   const { root } = fixture(t);
   let launched = false;
@@ -560,7 +595,7 @@ test(
     const { root, executable } = fixture(t);
     const checkerReceipt = path.join(root, "freshness-checked.txt");
     const compiler = path.join(
-      process.env.WINDIR ?? "C:\\Windows",
+      process.env.WINDIR ?? "C:/Windows",
       "Microsoft.NET",
       "Framework64",
       "v4.0.30319",

@@ -1,0 +1,47 @@
+✔ MCP endpoint accepts loopback HTTP and remote HTTPS only (2.9976ms)
+✔ server registry persists endpoint metadata without credentials or session state (0.955ms)
+✔ server registry never writes more servers than it can read back (9.5318ms)
+✔ MCP server labels reject credential-like text before persistence (0.398ms)
+✔ corrupted MCP persistence is reported and cannot be overwritten (0.2145ms)
+✔ MCP registry serializes concurrent writers without losing either entry (0.2901ms)
+✔ default browser MCP storage delegates all mutations to the same exclusive Web Lock (0.4365ms)
+✔ default browser MCP storage rejects mutations without Web Locks and preserves readable export (0.8664ms)
+✔ MCP registry rebases independent instances instead of overwriting newer entries (7.0946ms)
+✔ MCP registry reports a capacity conflict instead of hiding the first writer (6.4662ms)
+✔ MCP registry rejects stale same-id updates and preserves the newer value (0.2543ms)
+✔ MCP registry rejects stale deletes after another tab removes or adds the id (0.1749ms)
+✔ MCP registry rejects stale adds after another tab removes the id (0.1066ms)
+✔ legacy over-limit MCP persistence remains viewable, exportable, and explicitly recoverable (1.1769ms)
+✔ MCP auto negotiation uses modern discover and keeps modern calls sessionless (14.3756ms)
+✔ MCP modern tool-name headers preserve Unicode, whitespace and sentinel values without header injection (1.5496ms)
+✔ MCP modern mirrors valid x-mcp-header declarations from exact body paths and rejects wrong primitive values (7.7148ms)
+✔ MCP modern excludes invalid header-annotated schemas while legacy retains its original tools and headers (1.3311ms)
+✔ MCP legacy fallback preserves original headers, payload and redirect/credential boundaries (0.4269ms)
+✔ MCP malformed HTTP discovery bodies fail closed without legacy retries (0.7593ms)
+✔ MCP auto negotiation falls back to legacy only when discovery is unsupported (0.2698ms)
+✔ MCP discovery authentication and service failures never masquerade as legacy support (0.4158ms)
+✔ MCP auto recognizes SDK legacy transport 400 without accepting null-id RPC results (0.9796ms)
+✔ MCP structured unsupported-version offers select only the available legacy revision without retry loops (1.7568ms)
+✔ MCP transport 400 still rejects auth, modern protocol errors and unrelated RPC IDs (0.9572ms)
+✔ MCP pinned modern and successful null-id replies never initialize a legacy session (0.2859ms)
+✔ MCP auto negotiation fails closed on a malformed successful discovery response (0.2125ms)
+✔ MCP discovery errors mentioning unsupported auth never fall back to legacy (0.2096ms)
+✔ Streamable HTTP performs initialize, initialized, paginated tools/list, and SSE parsing (0.6552ms)
+✔ unknown MCP tool and malformed tool list fail closed (0.2803ms)
+✔ MCP request timeout and caller cancellation abort safely (18.0796ms)
+✔ MCP response size limit rejects bodies larger than 2 MB (2.4007ms)
+✔ MCP tool discovery rejects more than 500 tools (1.4522ms)
+✔ MCP tool pagination rejects repeated cursors and more than 32 pages (1.6794ms)
+✔ stdio 命令白名单：裸名与绝对路径放行 (0.5835ms)
+✔ stdio 命令白名单：注入与越权形态拒绝 (0.0813ms)
+✔ stdio schema：合法配置通过，空参数/非法命令拒绝 (1.578ms)
+✔ stdio env：疑似密钥值被拒绝写入本地配置 (0.9552ms)
+✔ v2 契约：streamable_http（现状）与 stdio 均可解析，非法 transport 拒绝 (0.5404ms)
+ℹ tests 39
+ℹ suites 0
+ℹ pass 39
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 244.9264

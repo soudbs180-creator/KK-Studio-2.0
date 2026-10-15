@@ -1,5 +1,7 @@
 # 设置中心（FEAT-022）
 
+2026-10-13：保留既有主题/强调色，增加实际Native背景读回的透明窗口开关与恢复；不支持的宿主明确禁用，不能以CSS浮岛代替透底。见[实现与平台证据](../changes/2026-10-13-cherry-red-scope/verification.md)。平台物理效果与签名安装继续独立验收，状态保持PARTIAL。
+
 - 状态：PARTIAL
 - 领域：system
 - 最近更新：2026-10-15
@@ -68,3 +70,11 @@ TASK-AGENT-RECOVERY-20261013：模型接入将普通桌面连接合为一个入�
 默认绿、中性动作、弱焦点和分组导航按 UI_INDEX 消费。公共预设提供官网、认证说明与接口文档；Gemini 前往独立 Google 配置，浏览目录不发请求。UsageSettings 派生本机已保存项目/任务与有效 provider 实际 USD 回执；Token 未报告，demo、估算、冲突与其他币种不计。StorageOverview 区分原生 get_storage_root、伴随服务地址和浏览器位置；storage.estimate 仅是浏览器估算，项目引用数不是全库大小，未报告的字节不猜测，读取错误有重试。
 
 原 UI 收敛的历史结果见[收敛验证](../changes/2026-10-14-ui-consolidation/verification.md)。本轮新协议、CLI 与手机网页的最终源码门禁、实际构建和产物身份由[2.1.22协议/CLI验证](../changes/2026-10-14-protocol-cli-completion/verification.md)记录；真实账号安装/登录、付费供应商调用和 Native Mobile 未验收，状态保持 PARTIAL。
+
+### Cherry source 历史范围（仅原 SHA）
+
+2026-10-13 7da 主线候选：正式 production Tauri Native6、真实 Ollama13、严格隔离NSIS生命周期已通过相关链路；不同源码/产物和 Hosted/用户验收边界见[最终记录](../changes/2026-10-13-cherry-red-scope/mainline-final-status.md)。功能总体仍PARTIAL，不据此关闭其他开放任务或真实云/图片/视频能力。
+
+2026-10-14 最新验收：Win默认production Native13含实际透明开启/读回/不透明恢复已PASS；三平台Native6与默认包已PASS。新增Mac/Linux真实原生背景读回/恢复断言尚待新head Native7实跑，物理透底体验/签名下载仍分开。 完整身份与许可见[最终记录](../changes/2026-10-13-cherry-red-scope/mainline-final-status.md)。保留功能整体PARTIAL及其他开放任务。
+
+最终技术锚点0d61：Windows/Mac真实背景开启/读回/关闭恢复通过；Linux此runner无compositor而明确禁用，Native7及默认包完整通过，物理效果条件与签名仍单列。 本期技术步骤完成，用户最终产品/发布范围待验收；功能总体及其他任务状态不批量升级，详见[最终记录](../changes/2026-10-13-cherry-red-scope/mainline-final-status.md)。

@@ -1,0 +1,17 @@
+✔ accepts the bounded platform-specific runtime manifest (1.3663ms)
+✔ rejects mismatched platform, architecture and Node major (0.9978ms)
+✔ rejects traversal, alternate separators and absolute resources (0.4126ms)
+✔ rejects duplicates, oversized files, bad hashes and missing entry points (0.2737ms)
+✔ keeps real source dirt blocking and preserves porcelain columns (0.2675ms)
+✔ rejects source HEAD or input hash changes (0.2928ms)
+✔ hashes actual contained bytes and rejects linked resource parents (13.536ms)
+✔ bounded Node fixture exercises owned PID cleanup and absent storage markers (2226.0088ms)
+✔ bounded Node fixture exiting early cannot pass default startup smoke (118.8935ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2365.1991

@@ -81,9 +81,12 @@ fn provider_routing(value: &Value) -> Result<(), String> {
             "anthropic",
             "azure-openai",
             "ollama",
+            "gemini",
+            "openai-compatible",
+            "anthropic-messages",
         ],
     )?;
-    optional_enum(value, "providerAuthMode", &["api-key", "none"])?;
+    optional_enum(value, "providerAuthMode", &["api-key", "api_key", "none"])?;
     if value.get("providerAuthMode").and_then(Value::as_str) == Some("none") {
         let base = value
             .get("providerBaseUrl")

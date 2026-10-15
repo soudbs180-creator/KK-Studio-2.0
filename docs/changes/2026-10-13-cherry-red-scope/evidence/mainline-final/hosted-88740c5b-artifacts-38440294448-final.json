@@ -1,0 +1,61 @@
+{
+  "artifacts": [
+    {
+      "id": 11837797562,
+      "name": "native-Windows-evidence",
+      "size_in_bytes": 679299,
+      "url": "https://api.github.com/repos/soudbs180-creator/KK-Studio-2.0/actions/artifacts/11837797562",
+      "archive_download_url": "https://api.github.com/repos/soudbs180-creator/KK-Studio-2.0/actions/artifacts/11837797562/zip",
+      "expired": false,
+      "created_at": "2026-10-13T18:08:55Z",
+      "expires_at": "2027-01-11T17:38:33Z",
+      "updated_at": "2026-10-13T18:08:55Z",
+      "digest": "sha256:24476a3767aedbf5f1fa8edb0b4985624373d4655b1544ed682baef4f4a5bf3d",
+      "workflow_run": {
+        "id": 38440294448,
+        "repository_id": 1377822538,
+        "head_repository_id": 1377822538,
+        "head_branch": "codex/TASK-CHERRY-RED-001-mainline",
+        "head_sha": "88740c5b23f1cf5f0896d471b4339d9db39f4b9b"
+      }
+    },
+    {
+      "id": 11837315792,
+      "name": "native-Linux-evidence",
+      "size_in_bytes": 692566,
+      "url": "https://api.github.com/repos/soudbs180-creator/KK-Studio-2.0/actions/artifacts/11837315792",
+      "archive_download_url": "https://api.github.com/repos/soudbs180-creator/KK-Studio-2.0/actions/artifacts/11837315792/zip",
+      "expired": false,
+      "created_at": "2026-10-13T17:57:50Z",
+      "expires_at": "2027-01-11T17:38:33Z",
+      "updated_at": "2026-10-13T17:57:50Z",
+      "digest": "sha256:1ad7edfdbd0897e4a56fc6b1a4ddaa790c836f6c02dcd992dbd5b2649341f072",
+      "workflow_run": {
+        "id": 38440294448,
+        "repository_id": 1377822538,
+        "head_repository_id": 1377822538,
+        "head_branch": "codex/TASK-CHERRY-RED-001-mainline",
+        "head_sha": "88740c5b23f1cf5f0896d471b4339d9db39f4b9b"
+      }
+    },
+    {
+      "id": 11835342721,
+      "name": "native-macOS-evidence",
+      "size_in_bytes": 562994,
+      "url": "https://api.github.com/repos/soudbs180-creator/KK-Studio-2.0/actions/artifacts/11835342721",
+      "archive_download_url": "https://api.github.com/repos/soudbs180-creator/KK-Studio-2.0/actions/artifacts/11835342721/zip",
+      "expired": false,
+      "created_at": "2026-10-13T17:52:01Z",
+      "expires_at": "2027-01-11T17:38:33Z",
+      "updated_at": "2026-10-13T17:52:01Z",
+      "digest": "sha256:c3d740bd3d84cb7cd6f3031e975c4735c63d1e7d990486ba7150a509564ac387",
+      "workflow_run": {
+        "id": 38440294448,
+        "repository_id": 1377822538,
+        "head_repository_id": 1377822538,
+        "head_branch": "codex/TASK-CHERRY-RED-001-mainline",
+        "head_sha": "88740c5b23f1cf5f0896d471b4339d9db39f4b9b"
+      }
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+
+> kk-studio@2.1.18 snapshot:check
+> node scripts/check-snapshot-header.mjs
+
+docs/governance/PROJECT_STATE.md: updatedAt 不能晚于当前日期
+Snapshot scope: repository; container not requested (external documents NOT VERIFIED).
+docs/governance/AI_HANDOFF.md: updatedAt 不能晚于当前日期
+Snapshot/lifecycle headers: 3 unique documents, 2 violations.

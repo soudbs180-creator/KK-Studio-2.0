@@ -1,0 +1,181 @@
+{
+  "buildReceipt": {
+    "sourceHead": "88740c5b23f1cf5f0896d471b4339d9db39f4b9b",
+    "inputSha256": "05354b9505bb68965bc4ec3ddcc3a2847e35c1d5df0672db7664a62e06d5e655",
+    "runtimeManifestSha256": "a43df4706012d6967617903dc589f67fcb5a0f3fce2c538e6bf46864bc25d88c",
+    "executableSha256": "d4714f557e3aaf6490242f0ab58eb10e6ad8e341f38c038f413813ceb037840f",
+    "platform": "linux",
+    "arch": "x64",
+    "feature": "native-e2e",
+    "generatedDocuments": [
+      "?? src-tauri/gen/schemas/linux-schema.json"
+    ],
+    "createdAt": "2026-10-13T17:56:47.047Z"
+  },
+  "startedAt": "2026-10-13T17:56:47.326Z",
+  "platform": "linux",
+  "arch": "x64",
+  "sourceHead": "88740c5b23f1cf5f0896d471b4339d9db39f4b9b",
+  "sourceDirty": "M src-tauri/gen/schemas/acl-manifests.json\n M src-tauri/gen/schemas/desktop-schema.json\n?? src-tauri/gen/schemas/linux-schema.json",
+  "executableSha256": "d4714f557e3aaf6490242f0ab58eb10e6ad8e341f38c038f413813ceb037840f",
+  "buildScope": "Production frontend/shared Native host with explicitly compiled test-only driver; not byte-identical to shipping build",
+  "data": "/tmp/kk-native-e2e-f05U3F/data",
+  "checks": [
+    {
+      "name": "real-synthetic-system-vault",
+      "passed": true
+    },
+    {
+      "name": "real-local-model-discovery",
+      "passed": true
+    },
+    {
+      "name": "real-ui-two-model-round-native-journal-markdown",
+      "taskIds": [
+        "conversation-ab16fb37-38d7-4c34-903e-d9b4b6d8d4ab-route-0",
+        "conversation-ab16fb37-38d7-4c34-903e-d9b4b6d8d4ab-route-1"
+      ],
+      "passed": true
+    },
+    {
+      "name": "real-native-package-roundtrip",
+      "passed": true
+    },
+    {
+      "name": "real-bundled-agent-start",
+      "pid": 39436,
+      "passed": true
+    },
+    {
+      "name": "real-app-restart-vault-and-project",
+      "passed": true
+    }
+  ],
+  "startupSignals": [
+    {
+      "stage": "spawn",
+      "at": "2026-10-13T17:56:47.419Z",
+      "pid": 39312,
+      "value": "/home/runner/work/KK-Studio-2.0/KK-Studio-2.0/src-tauri/target/native-e2e/release/kk-studio"
+    },
+    {
+      "stage": "webview-registered",
+      "at": "2026-10-13T17:56:47.837Z",
+      "pid": 39312,
+      "value": true
+    },
+    {
+      "stage": "production-url",
+      "at": "2026-10-13T17:56:47.934Z",
+      "pid": 39312,
+      "value": "tauri://localhost"
+    },
+    {
+      "stage": "production-title",
+      "at": "2026-10-13T17:56:47.971Z",
+      "pid": 39312,
+      "value": "KK Studio 2.0"
+    },
+    {
+      "stage": "production-dom",
+      "at": "2026-10-13T17:56:48.467Z",
+      "pid": 39312,
+      "value": true
+    },
+    {
+      "stage": "process-exit",
+      "at": "2026-10-13T17:56:54.931Z",
+      "pid": 39312,
+      "code": null,
+      "signal": "SIGTERM"
+    },
+    {
+      "stage": "spawn",
+      "at": "2026-10-13T17:56:55.124Z",
+      "pid": 39459,
+      "value": "/home/runner/work/KK-Studio-2.0/KK-Studio-2.0/src-tauri/target/native-e2e/release/kk-studio"
+    },
+    {
+      "stage": "webview-registered",
+      "at": "2026-10-13T17:56:55.327Z",
+      "pid": 39459,
+      "value": true
+    },
+    {
+      "stage": "production-url",
+      "at": "2026-10-13T17:56:55.701Z",
+      "pid": 39459,
+      "value": "tauri://localhost"
+    },
+    {
+      "stage": "production-title",
+      "at": "2026-10-13T17:56:55.707Z",
+      "pid": 39459,
+      "value": "KK Studio 2.0"
+    },
+    {
+      "stage": "production-dom",
+      "at": "2026-10-13T17:56:55.837Z",
+      "pid": 39459,
+      "value": true
+    },
+    {
+      "stage": "process-exit",
+      "at": "2026-10-13T17:56:55.940Z",
+      "pid": 39459,
+      "code": null,
+      "signal": "SIGTERM"
+    }
+  ],
+  "errors": [],
+  "passed": true,
+  "packageExportRevision": 17,
+  "resourceDirectory": "/home/runner/work/KK-Studio-2.0/KK-Studio-2.0/src-tauri/target/native-e2e/release",
+  "runtimeManifestSha256": "a43df4706012d6967617903dc589f67fcb5a0f3fce2c538e6bf46864bc25d88c",
+  "finishedAt": "2026-10-13T17:56:56.127Z",
+  "requests": [
+    {
+      "path": "/v1/models",
+      "method": "GET",
+      "authorization": false
+    },
+    {
+      "path": "/v1/chat/completions",
+      "method": "POST",
+      "authorization": false,
+      "body": {
+        "messages": [
+          {
+            "content": "沿实际调用链检查正确性、权限、并发、取消、迟到响应、恢复和数据兼容。每项问题给出具体依据、影响与最小修复建议；区分已确认问题和待验证风险，不为风格偏好提出无关重构。",
+            "role": "system"
+          },
+          {
+            "content": "Report your model ID in Markdown.",
+            "role": "user"
+          }
+        ],
+        "model": "fixture-text-b",
+        "stream": true
+      }
+    },
+    {
+      "path": "/v1/chat/completions",
+      "method": "POST",
+      "authorization": false,
+      "body": {
+        "messages": [
+          {
+            "content": "沿实际调用链检查正确性、权限、并发、取消、迟到响应、恢复和数据兼容。每项问题给出具体依据、影响与最小修复建议；区分已确认问题和待验证风险，不为风格偏好提出无关重构。",
+            "role": "system"
+          },
+          {
+            "content": "Report your model ID in Markdown.",
+            "role": "user"
+          }
+        ],
+        "model": "fixture-text-a",
+        "stream": true
+      }
+    }
+  ]
+}

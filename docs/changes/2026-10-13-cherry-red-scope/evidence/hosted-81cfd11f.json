@@ -1,0 +1,346 @@
+{
+  "sourceHead": "81cfd11fe79279df2379e402ddefa00a908099a8",
+  "runId": 38374225965,
+  "url": "https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/38374225965",
+  "scope": "Standard runners; locked resources and real Unix subprocess fixtures; no GUI, installer or signing claim",
+  "jobs": [
+    {
+      "id": 115218444622,
+      "name": "native (macos-14)",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 38374225965,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Run actions/setup-node@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Run dtolnay/rust-toolchain@stable",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Install Linux native build prerequisites",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 5
+        },
+        {
+          "name": "Install existing locked application dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Verify platform-bound Agent packaging fixtures",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7
+        },
+        {
+          "name": "Build frontend assets needed by Tauri",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "Check native formatting",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Run native tests including Unix guardian ownership and parent SIGKILL",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10
+        },
+        {
+          "name": "Check the native host",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11
+        },
+        {
+          "name": "Build the platform-bound desktop with Agent resources",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12
+        },
+        {
+          "name": "Post Run actions/setup-node@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 23
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 24
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 25
+        }
+      ]
+    },
+    {
+      "id": 115218444924,
+      "name": "native (windows-latest)",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 38374225965,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Run actions/setup-node@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Run dtolnay/rust-toolchain@stable",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Install Linux native build prerequisites",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 5
+        },
+        {
+          "name": "Install existing locked application dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Verify platform-bound Agent packaging fixtures",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7
+        },
+        {
+          "name": "Build frontend assets needed by Tauri",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "Check native formatting",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Run native tests including Unix guardian ownership and parent SIGKILL",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10
+        },
+        {
+          "name": "Check the native host",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11
+        },
+        {
+          "name": "Build the platform-bound desktop with Agent resources",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12
+        },
+        {
+          "name": "Post Run actions/setup-node@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 23
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 24
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 25
+        }
+      ]
+    },
+    {
+      "id": 115218445059,
+      "name": "native (ubuntu-22.04)",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 38374225965,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Run actions/setup-node@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Run dtolnay/rust-toolchain@stable",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Install Linux native build prerequisites",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Install existing locked application dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Verify platform-bound Agent packaging fixtures",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7
+        },
+        {
+          "name": "Build frontend assets needed by Tauri",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "Check native formatting",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Run native tests including Unix guardian ownership and parent SIGKILL",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10
+        },
+        {
+          "name": "Check the native host",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11
+        },
+        {
+          "name": "Build the platform-bound desktop with Agent resources",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12
+        },
+        {
+          "name": "Post Run actions/setup-node@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 23
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 24
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 25
+        }
+      ]
+    }
+  ],
+  "excerpts": [
+    {
+      "jobId": 115218444622,
+      "lines": [
+        "2026-10-13T09:12:12.9728130Z test agent_owner::unix_tests::owner_parent_process_fixture ... ignored, subprocess fixture, invoked only by the parent SIGKILL test",
+        "2026-10-13T09:12:14.4843060Z test agent_owner::unix_tests::native_parent_sigkill_triggers_eof_without_killing_an_external_instance ... ok",
+        "2026-10-13T09:12:14.5358200Z test agent_owner::unix_tests::stdout_disconnect_reclaims_logging_tree_while_control_input_is_open ... ok",
+        "2026-10-13T09:12:14.6351790Z test agent_owner::unix_tests::eof_keeps_inherited_owner_lock_until_child_and_grandchild_stop ... ok",
+        "2026-10-13T09:12:20.6231470Z test result: ok. 138 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 7.68s",
+        "2026-10-13T09:13:25.2310520Z Agent runtime packaged: 4314 files, darwin/arm64.",
+        "2026-10-13T09:16:32.2248300Z \u001b[1m\u001b[92m    Finished\u001b[0m `release` profile [optimized] target(s) in 2m 48s",
+        "2026-10-13T09:16:32.2968330Z        Built application at: /Users/runner/work/KK-Studio-2.0/KK-Studio-2.0/src-tauri/target/release/kk-studio"
+      ]
+    },
+    {
+      "jobId": 115218445059,
+      "lines": [
+        "2026-10-13T09:12:28.3707447Z test agent_owner::unix_tests::owner_parent_process_fixture ... ignored, subprocess fixture, invoked only by the parent SIGKILL test",
+        "2026-10-13T09:12:29.5255708Z test agent_owner::unix_tests::native_parent_sigkill_triggers_eof_without_killing_an_external_instance ... ok",
+        "2026-10-13T09:12:29.5582108Z test agent_owner::unix_tests::stdout_disconnect_reclaims_logging_tree_while_control_input_is_open ... ok",
+        "2026-10-13T09:12:29.5654256Z test agent_owner::unix_tests::eof_keeps_inherited_owner_lock_until_child_and_grandchild_stop ... ok",
+        "2026-10-13T09:12:30.2662742Z test result: ok. 138 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 1.90s",
+        "2026-10-13T09:13:16.9928555Z Agent runtime packaged: 4316 files, linux/x64.",
+        "2026-10-13T09:15:45.1541996Z \u001b[1m\u001b[92m    Finished\u001b[0m `release` profile [optimized] target(s) in 2m 18s",
+        "2026-10-13T09:15:45.1904978Z        Built application at: /home/runner/work/KK-Studio-2.0/KK-Studio-2.0/src-tauri/target/release/kk-studio"
+      ]
+    },
+    {
+      "jobId": 115218444924,
+      "lines": [
+        "2026-10-13T09:14:34.2782066Z test result: ok. 138 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.60s",
+        "2026-10-13T09:16:24.6969071Z Agent runtime packaged: 4278 files, win32/x64.",
+        "2026-10-13T09:22:09.1255514Z \u001b[1m\u001b[92m    Finished\u001b[0m `release` profile [optimized] target(s) in 5m 25s",
+        "2026-10-13T09:22:09.2467708Z        Built application at: D:\\a\\KK-Studio-2.0\\KK-Studio-2.0\\src-tauri\\target\\release\\kk-studio.exe"
+      ]
+    }
+  ],
+  "conclusion": "success"
+}

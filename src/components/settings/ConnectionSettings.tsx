@@ -1,6 +1,7 @@
 import { appVersion } from "../../runtime/appInfo";
 import type { SettingsSection } from "./SettingsSectionData";
 import ModelAccessSettings from "./ModelAccessSettings";
+import AiWebsiteLinks from "./AiWebsiteLinks";
 
 import MemorySettingsSection from "./MemorySettingsSection";
 
@@ -35,7 +36,12 @@ export default function ConnectionSettings({
   onFeedback: (message: string) => void;
 }) {
   if (section === "providers")
-    return <ModelAccessSettings active={active} onFeedback={onFeedback} />;
+    return (
+      <>
+        <ModelAccessSettings active={active} onFeedback={onFeedback} />
+        <AiWebsiteLinks onFeedback={onFeedback} />
+      </>
+    );
   if (section === "updates")
     return (
       <div className="settings-version">

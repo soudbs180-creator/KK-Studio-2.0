@@ -20,6 +20,7 @@ import {
   type ModelSelection,
 } from "../features/models/modelSelection";
 import ModelPickerRows from "./ModelPickerRows";
+import { codexPickerEntries, pickerPage } from "./modelPickerData";
 const sources: Entry[] = [
   { id: "google", label: "Google", disabled: "请从对话执行方式选择" },
   { id: "codex", label: "Codex", page: "codex" },
@@ -97,41 +98,12 @@ export default function ModelPickerMenu({
   const connections = readProviderConnections().filter(
     (connection) => connection.kind === "user_byok",
   );
-  const codex =
-    !apiOnly && (!kind || kind === "text")
-      ? agent.models.map((model) =>
-          entry(
-            { source: "codex", model: model.model || model.id, kind: "text" },
-            model.displayName || model.model,
-            "Codex · 已登录账号",
-            agent.status !== "connected" ? "请先连接 Codex" : undefined,
-          ),
-        )
-      : [];
-  const imageLabel =
-    current?.source === "codex" && current.kind === "image"
-      ? current.effectiveModel || current.displayName || "图片模型未报告"
-      : "图片模型未报告";
-  const codexImage =
-    !apiOnly && (!kind || kind === "image")
-      ? [
-          entry(
-            {
-              source: "codex",
-              model: "",
-              kind: "image",
-              displayName: imageLabel,
-              effectiveModel:
-                current?.source === "codex" && current.kind === "image"
-                  ? current.effectiveModel
-                  : undefined,
-            },
-            imageLabel,
-            "Codex 内置生图 · 型号以上游回执为准",
-            agent.status !== "connected" ? "请先连接 Codex" : undefined,
-          ),
-        ]
-      : [];
+  const { codex, codexImage } = codexPickerEntries(
+    agent,
+    apiOnly,
+    kind,
+    current,
+  );
   const apis = apiMenuEntries(connections, current, kind, query).filter(
     (item) =>
       !kind ||
@@ -149,12 +121,7 @@ export default function ModelPickerMenu({
         ]
       : [];
   const rootPage = apiOnly ? "api" : "root";
-  const page =
-    memory.page === "api" || memory.page.startsWith("api/")
-      ? memory.page
-      : !apiOnly && memory.page === "codex"
-        ? "codex"
-        : rootPage;
+  const page = pickerPage(apiOnly, memory.page);
   const providers: Entry[] = connections.map((connection) => ({
     id: connection.id,
     label: connection.displayName,

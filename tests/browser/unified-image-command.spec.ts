@@ -2,6 +2,7 @@ import { expect, test, type Page, type Route } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { waitForConversationPanelSettled } from "./helpers";
 import type { ProviderConnection } from "../../src/domain/providerConnections";
+import { createProject, createTask } from "../../src/features/creation/model";
 
 const generationsEndpoint = "https://models.example.test/v1/images/generations";
 const editsEndpoint = "https://models.example.test/v1/images/edits";
@@ -144,6 +145,80 @@ async function routeImageResult(route: Route): Promise<void> {
     },
   });
 }
+
+test("failed model conversation stays separate from a successful root image generation", async ({
+  page,
+}) => {
+  await configure(page);
+  await openWorkspace(page);
+  const initialSource = await selectImageNode(page);
+  const sourceId = await initialSource.getAttribute("data-node-id");
+  await expect
+    .poll(async () =>
+      (await activeProject(page)).items.some((item) => item.id === sourceId),
+    )
+    .toBe(true);
+  const state = await snapshot(page);
+  const conversation = {
+    ...createTask(
+      createProject({
+        prompt: "failed conversation",
+        model: "text-fixture",
+        kind: "text",
+        attachments: [],
+      }),
+    ),
+    status: "failed",
+    conversationRoundId: "failed-round",
+    conversationUserMessageId: "failed-message",
+    conversationMessages: [{ role: "user", content: "failed conversation" }],
+  };
+  await page.evaluate(
+    ({ key, state, conversation }) => {
+      state.projects
+        .find((project) => project.id === state.activeProjectId)!
+        .tasks.push(conversation);
+      localStorage.setItem(
+        key,
+        JSON.stringify({ ...state, revision: Date.now() }),
+      );
+    },
+    { key: creationKey, state, conversation },
+  );
+  await page.reload();
+  await page.getByRole("button", { name: "打开设置", exact: true }).click();
+  await page.getByRole("button", { name: "模型接入", exact: true }).click();
+  await page
+    .getByRole("button", { name: "API Key（官方）", exact: true })
+    .click();
+  await page
+    .getByRole("listitem")
+    .filter({ hasText: "https://models.example.test/v1" })
+    .click();
+  await page.getByLabel("API Key", { exact: true }).fill("fixture-key");
+  await page.getByRole("button", { name: "保存连接", exact: true }).click();
+  await page.getByRole("button", { name: "关闭设置", exact: true }).click();
+  await page.route(generationsEndpoint, routeImageResult);
+  await page.getByRole("button", { name: "项目库", exact: true }).click();
+  await page.locator(".project-library-card").click();
+  const source = page.getByTestId(`canvas-node-${sourceId}`);
+  await source.click();
+  await source.getByLabel("图片提示词").fill("对话失败后生成图片");
+  await chooseOneOutput(source);
+  await source.getByRole("button", { name: "生成图片", exact: true }).click();
+  await page.getByRole("button", { name: "批准并提交" }).click();
+  await expect
+    .poll(async () => (await activeProject(page)).tasks.at(-1)?.status)
+    .toBe("succeeded");
+  const project = await activeProject(page);
+  expect(
+    project.tasks.find((task) => task.id === conversation.id)?.status,
+  ).toBe("failed");
+  expect(
+    project.items.find((item) => item.id === sourceId)?.generationStatus,
+  ).toBeUndefined();
+  expect(project.tasks.at(-1)?.resultItemId).toBeTruthy();
+});
 
 test("已归档图片结果使用上方选择工具栏，收藏重绘对比删除保留原件", async ({
   page,
@@ -652,9 +727,13 @@ test("provider image cancellation cannot publish a late success", async ({
         release = async () => {
           try {
             await routeImageResult(route);
-          } catch {
+          } catch (error) {
             // Cancellation may abort the intercepted request before the late
             // fixture response is released; that is the behavior under test.
+            expect(error).toBeInstanceOf(Error);
+            expect(String(error)).toMatch(
+              /Route is already handled|Target.*closed|Invalid InterceptionId|Fetch\.fulfillRequest.*not found/i,
+            );
           } finally {
             resolve();
           }
@@ -850,9 +929,10 @@ test("actual long model identifiers remain readable without covering canvas cont
       params!.y + params!.height <= bounds!.y,
   ).toBe(true);
   await button.click();
+  const menu = source.getByRole("menu", { name: "选择模型", exact: true });
   await source.getByRole("button", { name: "切换全部模型" }).click();
   await expect(
-    source.getByRole("menuitemradio", { name: model, exact: false }),
+    menu.getByRole("menuitemradio", { name: model, exact: false }),
   ).toContainText(model);
   await page.keyboard.press("Escape");
   await expect(source.getByRole("menu", { name: "选择模型" })).toHaveCount(0);

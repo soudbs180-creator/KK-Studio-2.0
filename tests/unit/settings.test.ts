@@ -46,6 +46,7 @@ test("saved preferences restore user choices after reload", () => {
       theme: "system",
       accent: "default",
       floatingLayout: false,
+      transparentWindow: false,
       removeWatermark: false,
     },
   });
@@ -65,6 +66,7 @@ test("old v1 settings gain a default accent without losing existing choices", ()
   assert.equal(result.preferences.accent, "default");
   assert.equal(result.preferences.theme, "light");
   assert.equal(result.preferences.floatingLayout, false);
+  assert.equal(result.preferences.transparentWindow, false);
 });
 
 test("all eight accent choices survive serialization and an invalid accent falls back locally", () => {

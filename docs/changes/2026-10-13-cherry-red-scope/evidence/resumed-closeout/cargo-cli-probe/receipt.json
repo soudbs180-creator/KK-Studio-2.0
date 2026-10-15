@@ -1,0 +1,154 @@
+{
+  "createdAt": "2026-10-13T13:46:54.072Z",
+  "scope": "Private exact-byte Cargo/config probe; Node runner exits 75; no Rust compilation, frontend build, application launch or original source mutation",
+  "summary": [
+    {
+      "name": "old-git-lf-agent",
+      "oldSha": "0e77c54cb879bbb856dc916de0e64ab716917865",
+      "cliVersion": "2.11.4",
+      "nodeRunner": "D:\\tools\\node-v24.20.0-win-x64\\node.exe",
+      "result": 1,
+      "runnerMarker": true,
+      "beforeSha256": "ee5f2755b83bead307d9de10588530e4847153b25082fdc6c8e7b994288a850d",
+      "afterSha256": "ee5f2755b83bead307d9de10588530e4847153b25082fdc6c8e7b994288a850d",
+      "beforeSize": 1894,
+      "afterSize": 1894,
+      "changed": false,
+      "diff": "",
+      "stdoutTail": [
+        "PROBE_RUNNER_NO_COMPILATION",
+        ""
+      ],
+      "stderrTail": [
+        "        Info Looking up installed tauri packages to check mismatched versions...",
+        "        Warn The bundle identifier \"com.kkstudio.app\" set in `\"tauri.conf.json\" identifier` ends with `.app`. This is not recommended because it conflicts with the application bundle extension on macOS.",
+        "failed to build app: failed to build app",
+        "       Error failed to build app: failed to build app",
+        ""
+      ]
+    },
+    {
+      "name": "old-git-lf-installer",
+      "oldSha": "0e77c54cb879bbb856dc916de0e64ab716917865",
+      "cliVersion": "2.11.4",
+      "nodeRunner": "D:\\tools\\node-v24.20.0-win-x64\\node.exe",
+      "result": 1,
+      "runnerMarker": true,
+      "beforeSha256": "ee5f2755b83bead307d9de10588530e4847153b25082fdc6c8e7b994288a850d",
+      "afterSha256": "ee5f2755b83bead307d9de10588530e4847153b25082fdc6c8e7b994288a850d",
+      "beforeSize": 1894,
+      "afterSize": 1894,
+      "changed": false,
+      "diff": "",
+      "stdoutTail": [
+        "PROBE_RUNNER_NO_COMPILATION",
+        ""
+      ],
+      "stderrTail": [
+        "        Info Looking up installed tauri packages to check mismatched versions...",
+        "        Warn The bundle identifier \"com.kkstudio.app\" set in `\"tauri.conf.json\" identifier` ends with `.app`. This is not recommended because it conflicts with the application bundle extension on macOS.",
+        "failed to build app: failed to build app",
+        "       Error failed to build app: failed to build app",
+        ""
+      ]
+    },
+    {
+      "name": "old-checkout-crlf-agent",
+      "oldSha": "0e77c54cb879bbb856dc916de0e64ab716917865",
+      "cliVersion": "2.11.4",
+      "nodeRunner": "D:\\tools\\node-v24.20.0-win-x64\\node.exe",
+      "result": 1,
+      "runnerMarker": true,
+      "beforeSha256": "6856d631c0c825a13f379ac9a4f8685c3b80804c6a1f0de287a73b7ecca89775",
+      "afterSha256": "ee5f2755b83bead307d9de10588530e4847153b25082fdc6c8e7b994288a850d",
+      "beforeSize": 1948,
+      "afterSize": 1894,
+      "changed": true,
+      "diff": "",
+      "stdoutTail": [
+        "PROBE_RUNNER_NO_COMPILATION",
+        ""
+      ],
+      "stderrTail": [
+        "        Info Looking up installed tauri packages to check mismatched versions...",
+        "        Warn The bundle identifier \"com.kkstudio.app\" set in `\"tauri.conf.json\" identifier` ends with `.app`. This is not recommended because it conflicts with the application bundle extension on macOS.",
+        "failed to build app: failed to build app",
+        "       Error failed to build app: failed to build app",
+        ""
+      ]
+    },
+    {
+      "name": "old-checkout-crlf-installer",
+      "oldSha": "0e77c54cb879bbb856dc916de0e64ab716917865",
+      "cliVersion": "2.11.4",
+      "nodeRunner": "D:\\tools\\node-v24.20.0-win-x64\\node.exe",
+      "result": 1,
+      "runnerMarker": true,
+      "beforeSha256": "6856d631c0c825a13f379ac9a4f8685c3b80804c6a1f0de287a73b7ecca89775",
+      "afterSha256": "ee5f2755b83bead307d9de10588530e4847153b25082fdc6c8e7b994288a850d",
+      "beforeSize": 1948,
+      "afterSize": 1894,
+      "changed": true,
+      "diff": "",
+      "stdoutTail": [
+        "PROBE_RUNNER_NO_COMPILATION",
+        ""
+      ],
+      "stderrTail": [
+        "        Info Looking up installed tauri packages to check mismatched versions...",
+        "        Warn The bundle identifier \"com.kkstudio.app\" set in `\"tauri.conf.json\" identifier` ends with `.app`. This is not recommended because it conflicts with the application bundle extension on macOS.",
+        "failed to build app: failed to build app",
+        "       Error failed to build app: failed to build app",
+        ""
+      ]
+    },
+    {
+      "name": "current-working-exact-agent",
+      "cliVersion": "2.11.4",
+      "nodeRunner": "D:\\tools\\node-v24.20.0-win-x64\\node.exe",
+      "result": 1,
+      "runnerMarker": true,
+      "beforeSha256": "6856d631c0c825a13f379ac9a4f8685c3b80804c6a1f0de287a73b7ecca89775",
+      "afterSha256": "ee5f2755b83bead307d9de10588530e4847153b25082fdc6c8e7b994288a850d",
+      "beforeSize": 1948,
+      "afterSize": 1894,
+      "changed": true,
+      "diff": "",
+      "stdoutTail": [
+        "PROBE_RUNNER_NO_COMPILATION",
+        ""
+      ],
+      "stderrTail": [
+        "        Info Looking up installed tauri packages to check mismatched versions...",
+        "        Warn The bundle identifier \"com.kkstudio.app\" set in `\"tauri.conf.json\" identifier` ends with `.app`. This is not recommended because it conflicts with the application bundle extension on macOS.",
+        "failed to build app: failed to build app",
+        "       Error failed to build app: failed to build app",
+        ""
+      ]
+    },
+    {
+      "name": "current-working-exact-installer",
+      "cliVersion": "2.11.4",
+      "nodeRunner": "D:\\tools\\node-v24.20.0-win-x64\\node.exe",
+      "result": 1,
+      "runnerMarker": true,
+      "beforeSha256": "6856d631c0c825a13f379ac9a4f8685c3b80804c6a1f0de287a73b7ecca89775",
+      "afterSha256": "ee5f2755b83bead307d9de10588530e4847153b25082fdc6c8e7b994288a850d",
+      "beforeSize": 1948,
+      "afterSize": 1894,
+      "changed": true,
+      "diff": "",
+      "stdoutTail": [
+        "PROBE_RUNNER_NO_COMPILATION",
+        ""
+      ],
+      "stderrTail": [
+        "        Info Looking up installed tauri packages to check mismatched versions...",
+        "        Warn The bundle identifier \"com.kkstudio.app\" set in `\"tauri.conf.json\" identifier` ends with `.app`. This is not recommended because it conflicts with the application bundle extension on macOS.",
+        "failed to build app: failed to build app",
+        "       Error failed to build app: failed to build app",
+        ""
+      ]
+    }
+  ]
+}

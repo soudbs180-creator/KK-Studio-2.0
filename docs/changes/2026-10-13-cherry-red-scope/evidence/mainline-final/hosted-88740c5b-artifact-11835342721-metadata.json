@@ -1,0 +1,47 @@
+{
+  "artifact_id": 11835342721,
+  "head": "88740c5b23f1cf5f0896d471b4339d9db39f4b9b",
+  "run_id": 38440294448,
+  "job_id": 115444807543,
+  "digest": "sha256:c3d740bd3d84cb7cd6f3031e975c4735c63d1e7d990486ba7150a509564ac387",
+  "downloadBytes": 562994,
+  "sha256": "c3d740bd3d84cb7cd6f3031e975c4735c63d1e7d990486ba7150a509564ac387",
+  "entries": [
+    {
+      "name": "native-e2e/two-model-round.png",
+      "bytes": 185661,
+      "sha256": "03dc0a589ce396cf7dfd188c5aad97e9aa7f7a9099f5ef919cd9c34c9a918d02",
+      "saved": false
+    },
+    {
+      "name": "package-portability/app.log.json",
+      "bytes": 1954,
+      "sha256": "929803beace1eb01b39262fcc6bcc4bd5fc68c4555e23472b399826adb1fbdae",
+      "saved": true
+    },
+    {
+      "name": "native-e2e/receipt.json",
+      "bytes": 5443,
+      "sha256": "ab52a2438c574a0f462b03e75f4b772e05c9ccae15ef7251f13b788fc44b3e92",
+      "saved": true
+    },
+    {
+      "name": "package-portability/before.json",
+      "bytes": 291,
+      "sha256": "92590cf2d7da575c1226c430f686ad3bde44dae200be44a8c156f2b8e4531b93",
+      "saved": true
+    },
+    {
+      "name": "package-portability/dmg.log.json",
+      "bytes": 3767,
+      "sha256": "79285a7c0deccaf433bc0fc9b09190934bcd19079a9bbe1c44874803f1ad0dc2",
+      "saved": true
+    },
+    {
+      "name": "package-portability/receipt.json",
+      "bytes": 2117666,
+      "sha256": "3d4d38a3b2eaf5dac4ba68d4e469e7abe928f90c0c35f984c20917efd67762df",
+      "saved": true
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "noticedAt": "2026-10-13 17:47:54 UTC",
+  "scope": "hosted-88740c5b archive",
+  "cause": "Initial GitHub workflow-run object serialized into one Node tool code exceeded 64K parameter bound; nested isError was not checked. Directory variable was not initialized, so initial write and subsequent snapshot writes did not run.",
+  "correction": "Created exact own-worktree directory; reconstructed original initial GET object and latest 17:46:07 complete jobs from in-session stores in 12000-character chunks; each tool isError and file-byte SHA readback checked; independent PowerShell filesystem existence readback performed.",
+  "lostRawSnapshots": [
+    "2026-10-13 17:39:08 full jobs",
+    "2026-10-13 17:42:31 full jobs"
+  ],
+  "retainedEarlierEvidence": "Real tool-result compact job summaries in conversation; no fabricated full snapshot reconstruction.",
+  "retainedOriginalGet": "runs-initial.json actual initial GET99547bytes; pr-identity.json300bytes; four jobs-*-1746.json actual retained GET full objects; old cc184/7da original files preserved",
+  "sourceWrite": "None",
+  "scopeLimit": "Only own .tmp evidence",
+  "observedToolError": "JavaScript execution exceeds the 64000-byte strict auto-review limit",
+  "observedToolErrorIsError": true
+}

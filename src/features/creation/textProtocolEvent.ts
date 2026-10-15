@@ -307,7 +307,31 @@ export function consumeTextEvent(
   if (value.error != null || !Object.keys(value).length) invalid();
   if (protocol === "openai-responses") return responses(value, state);
   if (protocol === "anthropic") return anthropic(value, state);
+  if (protocol === "gemini") return gemini(value, state);
   return consumeChat(value, state);
+}
+function gemini(value: Json, state: TextProtocolState) {
+  if (state.complete || object(value.promptFeedback).blockReason) invalid();
+  if (!Array.isArray(value.candidates)) {
+    if (value.usageMetadata) return;
+    invalid();
+  }
+  if ((value.candidates as unknown[]).length !== 1) invalid();
+  const candidate = object((value.candidates as unknown[])[0]);
+  if (candidate.index !== undefined && candidate.index !== 0) invalid();
+  if (candidate.content) {
+    const parts = object(candidate.content).parts;
+    if (!Array.isArray(parts)) invalid();
+    for (const raw of parts as unknown[]) {
+      const part = object(raw);
+      if (typeof part.text !== "string") invalid();
+      if (part.thought !== true) state.text += part.text;
+    }
+  }
+  if (candidate.finishReason != null) {
+    if (candidate.finishReason !== "STOP") invalid();
+    state.complete = true;
+  }
 }
 function consumeChat(value: Json, state: TextProtocolState) {
   if (!Array.isArray(value.choices)) invalid();

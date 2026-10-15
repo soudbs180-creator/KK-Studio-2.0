@@ -1,0 +1,659 @@
+[
+  {
+    "artifactId": 11839372214,
+    "sourceHead": "4e72c29ace7f6d84580c7bb5e2e1d385c6d11f86",
+    "inputSha256": "05354b9505bb68965bc4ec3ddcc3a2847e35c1d5df0672db7664a62e06d5e655",
+    "beforeAfterSame": true,
+    "packagePassed": true,
+    "packageErrors": [],
+    "signing": "Ad-hoc identity '-'; Apple notarization and downloaded Gatekeeper acceptance NOT VERIFIED",
+    "packages": [
+      {
+        "format": "app",
+        "passed": true,
+        "package": {
+          "kind": "directory",
+          "executableSha256": "36804156f60b0ef916d0b775fb26473798ef93a790e63f726feb19f3729b6e4f",
+          "manifestSha256": "8f76ebec42a0f056d3417f3edd25c6d630726970df69dafc6365017ab75bdb1f"
+        },
+        "exe": {
+          "path": "../../../../../../../private/var/folders/s6/5hzmn6lx4dz5nxs7k_0slzph0000gn/T/kk-package-cKXOsv/KK Studio.app/Contents/MacOS/kk-studio",
+          "size": 21549440,
+          "sha256": "36804156f60b0ef916d0b775fb26473798ef93a790e63f726feb19f3729b6e4f",
+          "mode": 493
+        },
+        "launcher": {
+          "path": "../../../../../../../private/var/folders/s6/5hzmn6lx4dz5nxs7k_0slzph0000gn/T/kk-package-cKXOsv/KK Studio.app/Contents/MacOS/kk-studio",
+          "size": 21549440,
+          "sha256": "36804156f60b0ef916d0b775fb26473798ef93a790e63f726feb19f3729b6e4f",
+          "mode": 493
+        },
+        "manifest": {
+          "size": 818918,
+          "sha256": "8f76ebec42a0f056d3417f3edd25c6d630726970df69dafc6365017ab75bdb1f",
+          "mode": 420
+        },
+        "node": {
+          "version": "v24.20.0",
+          "platform": "darwin",
+          "arch": "arm64"
+        },
+        "files": 4314,
+        "filesSha256": "433284e476a4b698b9455a0ed73fce39ba17453609597e5413ddecf81386c3f5",
+        "markers": [
+          "app",
+          "providers",
+          "profile",
+          "memory",
+          "projects",
+          "conversations",
+          "assets",
+          "models",
+          "comfyui",
+          "cache",
+          "backups",
+          "logs",
+          "tasks",
+          "tasks/native-host"
+        ],
+        "ownPid": 15921,
+        "termination": {
+          "pid": 15921,
+          "exitCode": null,
+          "signalCode": "SIGTERM"
+        },
+        "scope": "Default package launcher startup and Native storage initialization only; UI, IPC, vault and Agent functionality NOT VERIFIED by this smoke"
+      },
+      {
+        "format": "dmg",
+        "passed": true,
+        "package": {
+          "size": 176344875,
+          "sha256": "82d8bb7043c9f3c47bbf50c54f44e8be8bca8de3a010988123792a9be534c7e4",
+          "mode": 420
+        },
+        "exe": {
+          "path": "../../../../../../../../private/var/folders/s6/5hzmn6lx4dz5nxs7k_0slzph0000gn/T/kk-package-RoVWk9/mount/KK Studio.app/Contents/MacOS/kk-studio",
+          "size": 21549440,
+          "sha256": "36804156f60b0ef916d0b775fb26473798ef93a790e63f726feb19f3729b6e4f",
+          "mode": 493
+        },
+        "launcher": {
+          "path": "../../../../../../../../private/var/folders/s6/5hzmn6lx4dz5nxs7k_0slzph0000gn/T/kk-package-RoVWk9/mount/KK Studio.app/Contents/MacOS/kk-studio",
+          "size": 21549440,
+          "sha256": "36804156f60b0ef916d0b775fb26473798ef93a790e63f726feb19f3729b6e4f",
+          "mode": 493
+        },
+        "manifest": {
+          "size": 818918,
+          "sha256": "8f76ebec42a0f056d3417f3edd25c6d630726970df69dafc6365017ab75bdb1f",
+          "mode": 420
+        },
+        "node": {
+          "version": "v24.20.0",
+          "platform": "darwin",
+          "arch": "arm64"
+        },
+        "files": 4314,
+        "filesSha256": "433284e476a4b698b9455a0ed73fce39ba17453609597e5413ddecf81386c3f5",
+        "markers": [
+          "app",
+          "providers",
+          "profile",
+          "memory",
+          "projects",
+          "conversations",
+          "assets",
+          "models",
+          "comfyui",
+          "cache",
+          "backups",
+          "logs",
+          "tasks",
+          "tasks/native-host"
+        ],
+        "ownPid": 16047,
+        "termination": {
+          "pid": 16047,
+          "exitCode": null,
+          "signalCode": "SIGTERM"
+        },
+        "scope": "Default package launcher startup and Native storage initialization only; UI, IPC, vault and Agent functionality NOT VERIFIED by this smoke"
+      }
+    ],
+    "twoFormatsResourcesSame": true,
+    "native": {
+      "passed": true,
+      "checks": [
+        {
+          "name": "real-synthetic-system-vault",
+          "passed": true
+        },
+        {
+          "name": "real-native-window-background-readback-and-restoration",
+          "initial": {
+            "enabled": false,
+            "supported": true
+          },
+          "transitions": [
+            {
+              "requested": true,
+              "applied": {
+                "enabled": true,
+                "supported": true
+              },
+              "actual": {
+                "enabled": true,
+                "supported": true
+              }
+            },
+            {
+              "requested": false,
+              "applied": {
+                "enabled": false,
+                "supported": true
+              },
+              "actual": {
+                "enabled": false,
+                "supported": true
+              }
+            }
+          ],
+          "passed": true
+        },
+        {
+          "name": "real-local-model-discovery",
+          "passed": true
+        },
+        {
+          "name": "real-ui-two-model-round-native-journal-markdown",
+          "taskIds": [
+            "conversation-c896bc5b-d388-4d0a-8b4f-82e21170f86e-route-0",
+            "conversation-c896bc5b-d388-4d0a-8b4f-82e21170f86e-route-1"
+          ],
+          "passed": true
+        },
+        {
+          "name": "real-native-package-roundtrip",
+          "passed": true
+        },
+        {
+          "name": "real-bundled-agent-start",
+          "pid": 24726,
+          "passed": true
+        },
+        {
+          "name": "real-app-restart-vault-and-project",
+          "passed": true
+        }
+      ],
+      "errors": [],
+      "sourceHead": "4e72c29ace7f6d84580c7bb5e2e1d385c6d11f86",
+      "inputSha256": "05354b9505bb68965bc4ec3ddcc3a2847e35c1d5df0672db7664a62e06d5e655",
+      "executableSha256": "8d8a2b5586ae4773ff950265873a1e861488a26c2a17a7489a069626824cc13f",
+      "packageExportRevision": 17,
+      "exportRevisionSafeInteger": true,
+      "scope": "Production frontend/shared Native host with explicitly compiled test-only driver; not byte-identical to shipping build",
+      "startupSignals": [
+        {
+          "stage": "spawn",
+          "at": "2026-10-13T18:39:01.523Z",
+          "pid": 24456,
+          "value": "/Users/runner/work/KK-Studio-2.0/KK-Studio-2.0/src-tauri/target/native-e2e/release/kk-studio"
+        },
+        {
+          "stage": "webview-registered",
+          "at": "2026-10-13T18:39:02.166Z",
+          "pid": 24456,
+          "value": true
+        },
+        {
+          "stage": "production-url",
+          "at": "2026-10-13T18:39:04.967Z",
+          "pid": 24456,
+          "value": "tauri://localhost"
+        },
+        {
+          "stage": "production-title",
+          "at": "2026-10-13T18:39:05.099Z",
+          "pid": 24456,
+          "value": "KK Studio 2.0"
+        },
+        {
+          "stage": "production-dom",
+          "at": "2026-10-13T18:39:08.015Z",
+          "pid": 24456,
+          "value": true
+        },
+        {
+          "stage": "process-exit",
+          "at": "2026-10-13T18:39:20.507Z",
+          "pid": 24456,
+          "code": null,
+          "signal": "SIGTERM"
+        },
+        {
+          "stage": "spawn",
+          "at": "2026-10-13T18:39:20.572Z",
+          "pid": 24731,
+          "value": "/Users/runner/work/KK-Studio-2.0/KK-Studio-2.0/src-tauri/target/native-e2e/release/kk-studio"
+        },
+        {
+          "stage": "webview-registered",
+          "at": "2026-10-13T18:39:21.219Z",
+          "pid": 24731,
+          "value": true
+        },
+        {
+          "stage": "production-url",
+          "at": "2026-10-13T18:39:24.470Z",
+          "pid": 24731,
+          "value": "tauri://localhost"
+        },
+        {
+          "stage": "production-title",
+          "at": "2026-10-13T18:39:24.496Z",
+          "pid": 24731,
+          "value": "KK Studio 2.0"
+        },
+        {
+          "stage": "production-dom",
+          "at": "2026-10-13T18:39:25.110Z",
+          "pid": 24731,
+          "value": true
+        },
+        {
+          "stage": "process-exit",
+          "at": "2026-10-13T18:39:25.274Z",
+          "pid": 24731,
+          "code": null,
+          "signal": "SIGTERM"
+        }
+      ],
+      "appearance": {
+        "name": "real-native-window-background-readback-and-restoration",
+        "initial": {
+          "enabled": false,
+          "supported": true
+        },
+        "transitions": [
+          {
+            "requested": true,
+            "applied": {
+              "enabled": true,
+              "supported": true
+            },
+            "actual": {
+              "enabled": true,
+              "supported": true
+            }
+          },
+          {
+            "requested": false,
+            "applied": {
+              "enabled": false,
+              "supported": true
+            },
+            "actual": {
+              "enabled": false,
+              "supported": true
+            }
+          }
+        ],
+        "passed": true
+      }
+    },
+    "producer": null
+  },
+  {
+    "artifactId": 11838967817,
+    "sourceHead": "4e72c29ace7f6d84580c7bb5e2e1d385c6d11f86",
+    "inputSha256": "05354b9505bb68965bc4ec3ddcc3a2847e35c1d5df0672db7664a62e06d5e655",
+    "beforeAfterSame": true,
+    "packagePassed": true,
+    "packageErrors": [],
+    "signing": "Distribution signing NOT VERIFIED",
+    "packages": [
+      {
+        "format": "appimage",
+        "passed": true,
+        "package": {
+          "size": 260770296,
+          "sha256": "931be4e327fc3da945a53f955a2af5144e488a31a12ee4c10d291524301b773e",
+          "mode": 493
+        },
+        "exe": {
+          "path": "usr/bin/kk-studio",
+          "size": 25734640,
+          "sha256": "63c5512c29743b0b3e47dab320b1f3816c1967d5795a79a49d59c2b74f15d35c",
+          "mode": 493
+        },
+        "launcher": {
+          "path": "AppRun",
+          "size": 274,
+          "sha256": "eb0b254ac0dae6543e6dd7cd02e1baf40a060de95b927313122d6b46323c00aa",
+          "mode": 493
+        },
+        "manifest": {
+          "size": 819479,
+          "sha256": "a43df4706012d6967617903dc589f67fcb5a0f3fce2c538e6bf46864bc25d88c",
+          "mode": 420
+        },
+        "node": {
+          "version": "v24.21.0",
+          "platform": "linux",
+          "arch": "x64"
+        },
+        "files": 4316,
+        "filesSha256": "65d0966b91d305bdd2e8dbb40a3b01836a442f3fff988a5df5fa80a490731041",
+        "markers": [
+          "app",
+          "providers",
+          "profile",
+          "memory",
+          "projects",
+          "conversations",
+          "assets",
+          "models",
+          "comfyui",
+          "cache",
+          "backups",
+          "logs",
+          "tasks",
+          "tasks/native-host"
+        ],
+        "ownPid": 31079,
+        "termination": {
+          "pid": 31079,
+          "exitCode": null,
+          "signalCode": "SIGTERM"
+        },
+        "scope": "Default package launcher startup and Native storage initialization only; UI, IPC, vault and Agent functionality NOT VERIFIED by this smoke"
+      },
+      {
+        "format": "deb",
+        "passed": true,
+        "package": {
+          "size": 203623834,
+          "sha256": "843f13f3259388d8d74fd1d857c42a0ead6ce106bdd8ac67c479e0b80dd19447",
+          "mode": 420
+        },
+        "exe": {
+          "path": "usr/bin/kk-studio",
+          "size": 25699064,
+          "sha256": "305e572220904141fc8d0e4569392141a5ec18a9195b12c83db4f5ae50aeda8a",
+          "mode": 493
+        },
+        "launcher": {
+          "path": "usr/bin/kk-studio",
+          "size": 25699064,
+          "sha256": "305e572220904141fc8d0e4569392141a5ec18a9195b12c83db4f5ae50aeda8a",
+          "mode": 493
+        },
+        "manifest": {
+          "size": 819479,
+          "sha256": "a43df4706012d6967617903dc589f67fcb5a0f3fce2c538e6bf46864bc25d88c",
+          "mode": 420
+        },
+        "node": {
+          "version": "v24.21.0",
+          "platform": "linux",
+          "arch": "x64"
+        },
+        "files": 4316,
+        "filesSha256": "65d0966b91d305bdd2e8dbb40a3b01836a442f3fff988a5df5fa80a490731041",
+        "markers": [
+          "app",
+          "providers",
+          "profile",
+          "memory",
+          "projects",
+          "conversations",
+          "assets",
+          "models",
+          "comfyui",
+          "cache",
+          "backups",
+          "logs",
+          "tasks",
+          "tasks/native-host"
+        ],
+        "ownPid": 31248,
+        "termination": {
+          "pid": 31248,
+          "exitCode": null,
+          "signalCode": "SIGTERM"
+        },
+        "scope": "Default package launcher startup and Native storage initialization only; UI, IPC, vault and Agent functionality NOT VERIFIED by this smoke"
+      }
+    ],
+    "twoFormatsResourcesSame": true,
+    "native": {
+      "passed": true,
+      "checks": [
+        {
+          "name": "real-synthetic-system-vault",
+          "passed": true
+        },
+        {
+          "name": "real-native-window-background-readback-and-restoration",
+          "initial": {
+            "enabled": false,
+            "reason": "当前 Linux 窗口管理器未提供透明合成能力。",
+            "supported": false
+          },
+          "transitions": [
+            {
+              "requested": true,
+              "applied": {
+                "enabled": false,
+                "reason": "当前 Linux 窗口管理器未提供透明合成能力。",
+                "supported": false
+              },
+              "actual": {
+                "enabled": false,
+                "reason": "当前 Linux 窗口管理器未提供透明合成能力。",
+                "supported": false
+              }
+            },
+            {
+              "requested": false,
+              "applied": {
+                "enabled": false,
+                "reason": "当前 Linux 窗口管理器未提供透明合成能力。",
+                "supported": false
+              },
+              "actual": {
+                "enabled": false,
+                "reason": "当前 Linux 窗口管理器未提供透明合成能力。",
+                "supported": false
+              }
+            }
+          ],
+          "passed": true
+        },
+        {
+          "name": "real-local-model-discovery",
+          "passed": true
+        },
+        {
+          "name": "real-ui-two-model-round-native-journal-markdown",
+          "taskIds": [
+            "conversation-ee309871-cacb-4b75-9aa3-78d75266369b-route-0",
+            "conversation-ee309871-cacb-4b75-9aa3-78d75266369b-route-1"
+          ],
+          "passed": true
+        },
+        {
+          "name": "real-native-package-roundtrip",
+          "passed": true
+        },
+        {
+          "name": "real-bundled-agent-start",
+          "pid": 39418,
+          "passed": true
+        },
+        {
+          "name": "real-app-restart-vault-and-project",
+          "passed": true
+        }
+      ],
+      "errors": [],
+      "sourceHead": "4e72c29ace7f6d84580c7bb5e2e1d385c6d11f86",
+      "inputSha256": "05354b9505bb68965bc4ec3ddcc3a2847e35c1d5df0672db7664a62e06d5e655",
+      "executableSha256": "d4714f557e3aaf6490242f0ab58eb10e6ad8e341f38c038f413813ceb037840f",
+      "packageExportRevision": 17,
+      "exportRevisionSafeInteger": true,
+      "scope": "Production frontend/shared Native host with explicitly compiled test-only driver; not byte-identical to shipping build",
+      "startupSignals": [
+        {
+          "stage": "spawn",
+          "at": "2026-10-13T18:41:23.870Z",
+          "pid": 39293,
+          "value": "/home/runner/work/KK-Studio-2.0/KK-Studio-2.0/src-tauri/target/native-e2e/release/kk-studio"
+        },
+        {
+          "stage": "webview-registered",
+          "at": "2026-10-13T18:41:24.292Z",
+          "pid": 39293,
+          "value": true
+        },
+        {
+          "stage": "production-url",
+          "at": "2026-10-13T18:41:24.411Z",
+          "pid": 39293,
+          "value": "tauri://localhost"
+        },
+        {
+          "stage": "production-title",
+          "at": "2026-10-13T18:41:24.427Z",
+          "pid": 39293,
+          "value": "KK Studio 2.0"
+        },
+        {
+          "stage": "production-dom",
+          "at": "2026-10-13T18:41:24.641Z",
+          "pid": 39293,
+          "value": true
+        },
+        {
+          "stage": "process-exit",
+          "at": "2026-10-13T18:41:31.402Z",
+          "pid": 39293,
+          "code": null,
+          "signal": "SIGTERM"
+        },
+        {
+          "stage": "spawn",
+          "at": "2026-10-13T18:41:31.594Z",
+          "pid": 39440,
+          "value": "/home/runner/work/KK-Studio-2.0/KK-Studio-2.0/src-tauri/target/native-e2e/release/kk-studio"
+        },
+        {
+          "stage": "webview-registered",
+          "at": "2026-10-13T18:41:31.798Z",
+          "pid": 39440,
+          "value": true
+        },
+        {
+          "stage": "production-url",
+          "at": "2026-10-13T18:41:31.871Z",
+          "pid": 39440,
+          "value": "tauri://localhost"
+        },
+        {
+          "stage": "production-title",
+          "at": "2026-10-13T18:41:31.872Z",
+          "pid": 39440,
+          "value": "KK Studio 2.0"
+        },
+        {
+          "stage": "production-dom",
+          "at": "2026-10-13T18:41:32.262Z",
+          "pid": 39440,
+          "value": true
+        },
+        {
+          "stage": "process-exit",
+          "at": "2026-10-13T18:41:32.352Z",
+          "pid": 39440,
+          "code": null,
+          "signal": "SIGTERM"
+        }
+      ],
+      "appearance": {
+        "name": "real-native-window-background-readback-and-restoration",
+        "initial": {
+          "enabled": false,
+          "reason": "当前 Linux 窗口管理器未提供透明合成能力。",
+          "supported": false
+        },
+        "transitions": [
+          {
+            "requested": true,
+            "applied": {
+              "enabled": false,
+              "reason": "当前 Linux 窗口管理器未提供透明合成能力。",
+              "supported": false
+            },
+            "actual": {
+              "enabled": false,
+              "reason": "当前 Linux 窗口管理器未提供透明合成能力。",
+              "supported": false
+            }
+          },
+          {
+            "requested": false,
+            "applied": {
+              "enabled": false,
+              "reason": "当前 Linux 窗口管理器未提供透明合成能力。",
+              "supported": false
+            },
+            "actual": {
+              "enabled": false,
+              "reason": "当前 Linux 窗口管理器未提供透明合成能力。",
+              "supported": false
+            }
+          }
+        ],
+        "passed": true
+      }
+    },
+    "producer": {
+      "passed": true,
+      "before": {
+        "sourceHead": "4e72c29ace7f6d84580c7bb5e2e1d385c6d11f86",
+        "inputSha256": "05354b9505bb68965bc4ec3ddcc3a2847e35c1d5df0672db7664a62e06d5e655"
+      },
+      "after": {
+        "sourceHead": "4e72c29ace7f6d84580c7bb5e2e1d385c6d11f86",
+        "inputSha256": "05354b9505bb68965bc4ec3ddcc3a2847e35c1d5df0672db7664a62e06d5e655"
+      },
+      "realTool": {
+        "path": "/usr/bin/patchelf",
+        "size": 166240,
+        "sha256": "ebc7bde09fdc923acdfade62f49c32b7c32de3d64f83aea14fc38143ecf77c25",
+        "mode": 493,
+        "version": "patchelf 0.14.3"
+      },
+      "manifest": {
+        "size": 819479,
+        "sha256": "a43df4706012d6967617903dc589f67fcb5a0f3fce2c538e6bf46864bc25d88c",
+        "mode": 420
+      },
+      "package": {
+        "path": "src-tauri/target/release/bundle/appimage/KK Studio_2.1.18_amd64.AppImage",
+        "size": 260770296,
+        "sha256": "931be4e327fc3da945a53f955a2af5144e488a31a12ee4c10d291524301b773e",
+        "mode": 493
+      },
+      "preserved": 66,
+      "files": 4316,
+      "filesSha256": "65d0966b91d305bdd2e8dbb40a3b01836a442f3fff988a5df5fa80a490731041",
+      "finalPackageBound": true,
+      "filesExactEqual": true,
+      "manifestBound": true,
+      "preservedBound": true
+    }
+  }
+]

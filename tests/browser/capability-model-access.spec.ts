@@ -19,6 +19,92 @@ const opaqueConnection = {
   concurrencyLimit: 2,
 };
 
+test("隐藏或免密的提供商不读取凭据，切回 API Key 才读取精确引用", async ({
+  page,
+}) => {
+  const name = "keyless-vault-read-guard";
+  const baseUrl = "http://127.0.0.1:11434/v1";
+  const ref = credentialId(baseUrl, name);
+  await page.addInitScript(
+    ({ key, profile }) => {
+      localStorage.setItem(key, JSON.stringify(profile));
+    },
+    {
+      key: BROWSER_STORAGE_KEYS.modelProvider,
+      profile: {
+        version: 1,
+        name,
+        baseUrl,
+        model: "qwen2.5:0.5b",
+        protocol: "openai-compatible",
+        authMode: "none",
+      },
+    },
+  );
+  await page.goto("/");
+  await page.evaluate(() => {
+    const state = window as Window & { __vaultReadGuard?: string[] };
+    state.__vaultReadGuard = [];
+    Object.assign(window, {
+      __TAURI_INTERNALS__: {
+        invoke: async (command: string, args: { providerId?: string }) => {
+          if (command === "credential_get") {
+            state.__vaultReadGuard!.push(args.providerId!);
+            return "fixture-secret-used-only-in-memory";
+          }
+          if (command === "window_appearance_get")
+            return { supported: false, enabled: false, reason: "fixture" };
+          if (command === "asset_list") return [];
+          return { available: false, running: false };
+        },
+      },
+    });
+  });
+  const reads = () =>
+    page.evaluate(
+      (ref) =>
+        (
+          window as Window & { __vaultReadGuard: string[] }
+        ).__vaultReadGuard.filter((id) => id === ref).length,
+      ref,
+    );
+  await page.getByRole("button", { name: "打开设置", exact: true }).click();
+  const dialog = page.getByRole("dialog", { name: "设置", exact: true });
+  await dialog.getByRole("button", { name: "模型接入", exact: true }).click();
+  await expect(
+    dialog.getByRole("region", { name: "Codex 主 Agent 接入" }),
+  ).toBeVisible();
+  expect(await reads()).toBe(0);
+  await dialog
+    .getByRole("button", { name: "API Key（官方）", exact: true })
+    .click();
+  const profile = dialog.getByRole("region", { name: "官方 API Key 配置" });
+  await expect(
+    profile.getByRole("combobox", { name: "认证方式", exact: true }),
+  ).toHaveValue("none");
+  await expect(
+    profile.getByRole("button", { name: "清除密钥", exact: true }),
+  ).toHaveCount(0);
+  expect(await reads()).toBe(0);
+  await profile
+    .getByRole("combobox", { name: "认证方式", exact: true })
+    .selectOption("api-key");
+  await expect.poll(reads).toBe(1);
+  await expect(
+    profile.getByRole("button", { name: "清除密钥", exact: true }),
+  ).toBeVisible();
+  await profile
+    .getByLabel("API Key", { exact: true })
+    .fill("unsaved-fixture-secret");
+  await profile
+    .getByRole("combobox", { name: "认证方式", exact: true })
+    .selectOption("none");
+  await expect(
+    profile.getByRole("button", { name: "清除密钥", exact: true }),
+  ).toHaveCount(0);
+  expect(await reads()).toBe(1);
+});
+
 test("Codex 主 Agent 在模型接入，手动字段折叠且状态真实", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();

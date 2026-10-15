@@ -1,0 +1,46 @@
+[
+  {
+    "command": "codesign",
+    "args": [
+      "--verify",
+      "--deep",
+      "--strict",
+      "/var/folders/s6/5hzmn6lx4dz5nxs7k_0slzph0000gn/T/kk-package-cd2WMB/KK Studio.app"
+    ],
+    "status": 0,
+    "signal": null,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": "codesign",
+    "args": [
+      "--display",
+      "--verbose=4",
+      "/var/folders/s6/5hzmn6lx4dz5nxs7k_0slzph0000gn/T/kk-package-cd2WMB/KK Studio.app"
+    ],
+    "status": 0,
+    "signal": null,
+    "stdout": "",
+    "stderr": "Executable=/private/var/folders/s6/5hzmn6lx4dz5nxs7k_0slzph0000gn/T/kk-package-cd2WMB/KK Studio.app/Contents/MacOS/kk-studio\nIdentifier=com.kkstudio.app\nFormat=app bundle with Mach-O thin (arm64)\nCodeDirectory v=20500 size=167121 flags=0x10002(adhoc,runtime) hashes=5216+3 location=embedded\nVersionPlatform=1\nVersionMin=720896\nVersionSDK=918784\nHash type=sha256 size=32\nCandidateCDHash sha256=64b6323ece9d71365c533371eb8045df49fc2d54\nCandidateCDHashFull sha256=64b6323ece9d71365c533371eb8045df49fc2d544e708ae41f71e9d61f5c7c1c\nHash choices=sha256\nCMSDigest=64b6323ece9d71365c533371eb8045df49fc2d544e708ae41f71e9d61f5c7c1c\nCMSDigestType=2\nExecutable Segment base=0\nExecutable Segment limit=15237120\nExecutable Segment flags=0x1\nPage size=4096\nCDHash=64b6323ece9d71365c533371eb8045df49fc2d54\nSignature=adhoc\nInfo.plist entries=15\nTeamIdentifier=not set\nRuntime Version=14.5.0\nSealed Resources version=2 rules=13 files=4316\nInternal requirements count=0 size=12\n"
+  },
+  {
+    "command": "node",
+    "args": [
+      "-p",
+      "JSON.stringify({version:process.version,platform:process.platform,arch:process.arch})"
+    ],
+    "status": 0,
+    "signal": null,
+    "stdout": "{\"version\":\"v24.20.0\",\"platform\":\"darwin\",\"arch\":\"arm64\"}\n",
+    "stderr": ""
+  },
+  {
+    "defaultProcessLog": "",
+    "termination": {
+      "pid": 15888,
+      "exitCode": null,
+      "signalCode": "SIGTERM"
+    }
+  }
+]

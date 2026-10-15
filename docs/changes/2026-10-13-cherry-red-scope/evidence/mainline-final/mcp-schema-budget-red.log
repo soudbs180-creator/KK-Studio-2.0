@@ -1,0 +1,57 @@
+✖ modern MCP rejects deeply nested schemas below the response byte limit (5038.6561ms)
+✖ modern MCP bounds wide schema scans and retains ordinary header declarations (15.7293ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 0
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 5216.7436
+
+✖ failing tests:
+
+test at tests\unit\mcpClient.test.ts:22:1
+✖ modern MCP rejects deeply nested schemas below the response byte limit (5038.6561ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+      declarations: [],
+  +   valid: true
+  -   valid: false
+    }
+  
+      at TestContext.<anonymous> (file:///D:/kk-studio/.worktrees/TASK-CHERRY-RED-001/tests/unit/mcpClient.test.ts:28:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1397:25)
+      at Test.start (node:internal/test_runner/test:1257:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { valid: true, declarations: [] },
+    expected: { valid: false, declarations: [] },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests\unit\mcpClient.test.ts:38:1
+✖ modern MCP bounds wide schema scans and retains ordinary header declarations (15.7293ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  true !== false
+  
+      at TestContext.<anonymous> (file:///D:/kk-studio/.worktrees/TASK-CHERRY-RED-001/tests/unit/mcpClient.test.ts:46:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1397:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:969:18)
+      at Test.postRun (node:internal/test_runner/test:1537:19)
+      at Test.run (node:internal/test_runner/test:1462:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

@@ -3,6 +3,7 @@ import {
   type SettingsPreferences,
 } from "../../domain/settings";
 import { SettingRow, SettingsToggle } from "./SettingsControls";
+import WindowTransparencySetting from "./WindowTransparencySetting";
 
 interface GeneralSettingsProps {
   preferences: SettingsPreferences;
@@ -20,6 +21,11 @@ export default function GeneralSettings({
         通用
       </h2>
       <div className="settings-general-rows">
+        <WindowTransparencySetting
+          onSaved={(transparentWindow) =>
+            onChange({ transparentWindow }, "窗口状态已确认，偏好已保存。")
+          }
+        />
         <SettingRow id="language" title="语言" description="选择应用显示的语言">
           <span title="当前原型仅提供中文，其他语言尚未翻译。">
             <select

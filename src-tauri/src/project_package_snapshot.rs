@@ -92,9 +92,12 @@ fn routing(value: &Value) -> Result<(), String> {
             "anthropic",
             "azure-openai",
             "ollama",
+            "gemini",
+            "openai-compatible",
+            "anthropic-messages",
         ],
     )?;
-    enumeration(value, "providerAuthMode", &["api-key", "none"])?;
+    enumeration(value, "providerAuthMode", &["api-key", "api_key", "none"])?;
     if value.get("providerAuthMode").and_then(Value::as_str) == Some("none") {
         let base = value
             .get("providerBaseUrl")
@@ -510,10 +513,40 @@ fn draft(value: &Value) -> Result<(), String> {
             "privacyMode",
             "outputCount",
             "updatedAt",
+            "providerConnectionId",
+            "assistantId",
+            "conversationRoutes",
         ],
         &[],
     )?;
     texts(value, &[("prompt", usize::MAX), ("model", usize::MAX)])?;
+    text(value, "providerConnectionId", 0, 120)?;
+    if let Some(id) = value.get("assistantId") {
+        let suffix = id.as_str().and_then(|id| id.strip_prefix("assistant-"));
+        if !suffix.is_some_and(|suffix| {
+            !suffix.is_empty()
+                && suffix.len() <= 140
+                && suffix
+                    .bytes()
+                    .all(|byte| byte.is_ascii_alphanumeric() || matches!(byte, b'_' | b'-'))
+        }) {
+            return Err(invalid("assistantId"));
+        }
+    }
+    let routes = array(value, "conversationRoutes")?;
+    if routes.len() > 3 {
+        return Err(invalid("conversationRoutes"));
+    }
+    for route in routes {
+        shape(
+            route,
+            "conversationRoutes",
+            &["connectionId", "modelId"],
+            &["connectionId", "modelId"],
+        )?;
+        text(route, "connectionId", 0, 160)?;
+        text(route, "modelId", 0, 120)?;
+    }
     enumeration(value, "kind", KINDS)?;
     enumeration(value, "approvalMode", &["auto", "ask"])?;
     enumeration(
@@ -683,6 +716,7 @@ fn task(value: &Value) -> Result<(), String> {
             "attempt",
             "requestedOutputs",
             "completedOutputs",
+            "completedOutputIndices",
             "idempotencyKey",
             "batchId",
             "privacyMode",
@@ -692,6 +726,9 @@ fn task(value: &Value) -> Result<(), String> {
             "providerProtocol",
             "providerAuthMode",
             "providerName",
+            "conversationRoundId",
+            "conversationUserMessageId",
+            "conversationMessages",
             "outputs",
             "estimatedCostUsd",
             "actualCostUsd",
@@ -733,6 +770,105 @@ fn task(value: &Value) -> Result<(), String> {
         .ok_or_else(|| invalid("id"))?;
     let idempotency_key = value.get("idempotencyKey").and_then(Value::as_str);
     text(value, "retryOfTaskId", 1, 160)?;
+    text(value, "conversationRoundId", 1, 160)?;
+    text(value, "conversationUserMessageId", 1, 160)?;
+    enumeration(
+        value,
+        "providerProtocol",
+        &[
+            "openai-chat",
+            "openai-responses",
+            "anthropic",
+            "azure-openai",
+            "ollama",
+            "gemini",
+            "openai-compatible",
+            "anthropic-messages",
+        ],
+    )?;
+    enumeration(value, "providerAuthMode", &["api-key", "api_key", "none"])?;
+    if value["providerAuthMode"] == "none" {
+        let url = value["providerBaseUrl"]
+            .as_str()
+            .and_then(|raw| reqwest::Url::parse(raw).ok());
+        if value["kind"] != "text"
+            || !url.is_some_and(|url| {
+                matches!(url.host_str(), Some("localhost" | "127.0.0.1" | "[::1]"))
+            })
+        {
+            return Err(invalid("providerAuthMode"));
+        }
+    }
+    if [
+        "conversationRoundId",
+        "conversationUserMessageId",
+        "conversationMessages",
+    ]
+    .iter()
+    .any(|field| value.get(field).is_some())
+        && value["kind"] != "text"
+    {
+        return Err(invalid("conversationMessages"));
+    }
+    if value.get("conversationMessages").is_some() {
+        let messages = array(value, "conversationMessages")?;
+        if messages.is_empty() || messages.len() > 32 {
+            return Err(invalid("conversationMessages"));
+        }
+        let mut bytes = 0;
+        for message in messages {
+            shape(
+                message,
+                "conversationMessages",
+                &["role", "content"],
+                &["role", "content"],
+            )?;
+            enumeration(message, "role", &["user", "assistant", "system"])?;
+            let content = message["content"]
+                .as_str()
+                // Match JavaScript String.trim, used by readConversationMessages.
+                .filter(|content| {
+                    content.chars().any(|character| {
+                        !matches!(
+                            character,
+                            '\u{0009}'..='\u{000d}'
+                                | '\u{0020}'
+                                | '\u{00a0}'
+                                | '\u{1680}'
+                                | '\u{2000}'..='\u{200a}'
+                                | '\u{2028}'
+                                | '\u{2029}'
+                                | '\u{202f}'
+                                | '\u{205f}'
+                                | '\u{3000}'
+                                | '\u{feff}'
+                        )
+                    })
+                })
+                .ok_or_else(|| invalid("conversationMessages.content"))?;
+            bytes += content.len();
+            if bytes > 64 * 1024 {
+                return Err(invalid("conversationMessages.content"));
+            }
+        }
+    }
+    if value.get("completedOutputIndices").is_some() {
+        let indices = array(value, "completedOutputIndices")?;
+        if indices.is_empty() || indices.len() > 64 {
+            return Err(invalid("completedOutputIndices"));
+        }
+        let mut previous = None;
+        for index in indices {
+            let index = index
+                .as_f64()
+                .filter(|index| (0.0..64.0).contains(index) && index.fract() == 0.0)
+                .ok_or_else(|| invalid("completedOutputIndices"))?;
+            if previous.is_some_and(|previous| previous >= index) {
+                return Err(invalid("completedOutputIndices"));
+            }
+            previous = Some(index);
+        }
+    }
     enumeration(value, "kind", KINDS)?;
     enumeration(
         value,
@@ -1038,11 +1174,12 @@ pub(super) fn validate(snapshot: &Value) -> Result<(), String> {
             shape(
                 message,
                 "messages",
-                &["id", "role", "content", "createdAt"],
+                &["id", "role", "content", "createdAt", "roundId"],
                 &["id", "role", "content"],
             )?;
             text(message, "id", 1, 160)?;
             text(message, "content", 0, 10000)?;
+            text(message, "roundId", 1, 160)?;
             finite(message, "createdAt")?;
         }
         for field in ["favoriteIds", "likedIds"] {

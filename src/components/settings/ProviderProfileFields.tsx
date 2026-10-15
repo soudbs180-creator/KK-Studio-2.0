@@ -78,6 +78,7 @@ export default function ProviderProfileFields({
           <option value="openai-chat">OpenAI Chat Completions</option>
           <option value="openai-responses">OpenAI Responses</option>
           <option value="anthropic">Anthropic Messages</option>
+          <option value="gemini">Google Gemini</option>
           <option value="azure-openai">Azure OpenAI v1</option>
           <option value="ollama">Ollama（OpenAI 兼容）</option>
         </select>
@@ -134,7 +135,7 @@ export default function ProviderProfileFields({
       <p className="settings-field-help">
         {profile.protocol === "azure-openai"
           ? "使用 Azure /openai/v1 地址和部署名称；模型列表不能代替部署管理。"
-          : "模型列表仅检测连接；请使用当前协议支持的文本模型。Responses、Messages、Azure 和 Ollama 当前只用于文案生成。"}
+          : "模型列表仅检测连接；请使用当前协议支持的文本模型。Responses、Messages、Gemini、Azure 和 Ollama 当前只用于文案生成。"}
       </p>
     </>
   );

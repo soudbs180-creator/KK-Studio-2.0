@@ -127,7 +127,7 @@ TASK-AGENT-RECOVERY-20261013 按用户新要求复验原数据/profile，已证�
 
 ## 2026-10-13 TASK-ENG-001 PR #56 主线承接（REVIEW / NOT_VERIFIED）
 
-- 基于 `origin/main@bcf55851d296c753d9610e86f1e32bf8db333a41` 重建承接提交；候选精确 HEAD 以本 checkout 的 `git rev-parse HEAD` 与对应 delivery 日志为准；PR #56 原 HEAD、主线历史和 `TASK-ENG-001` 独立交付包均保留。
+- 基于 `origin/main@694a0060d296c753d9610e86f1e32bf8db333a41` 重建承接提交；候选精确 HEAD 以本 checkout 的 `git rev-parse HEAD` 与对应 delivery 日志为准；PR #56 原 HEAD、主线历史和 `TASK-ENG-001` 独立交付包均保留。
 - 已解决 `package.json`、`docs/engineering/DEVELOPMENT.md`、`docs/governance/task-ledger.json`、`docs/governance/TASK_LEDGER.md` 四处冲突；主线版本/治理命令保留，代码健康与 Windows footgun 检查追加，账本从主线 124 条记录加上当前 schema 的 `TASK-ENG-001`。
 - 修复 `**/` glob 的零层/多层目录匹配并补回归测试；补齐所有当前 workflow action 的 commit SHA 固定（含 `dtolnay/rust-toolchain` 与 stable 输入）；最终复审修复工作区的本地 lint、typecheck、1019 项 Node 测试（1005 pass、14 skipped、0 fail）、版本、治理、文档和 footgun 检查均已通过。基线缺少治理配置时工具按 fail-closed 回退 blocking，未声称 advisory。
 - `9c849aa2ac640a3db4a05335a537247fbe1b2a4d` 的 Hosted quality/git-guards 全部成功；用户随后授权合并。最终独立复审仍发现 Rust action 输入、门禁映射、开关串读、重复模式豁免及清单 revision 五项阻断，因此继续在原 PR 修复并等待新 HEAD 的独立复审与 Hosted CI；本记录不表示 PR #56 已合并 main 或已发布。
@@ -1105,3 +1105,19 @@ Codex 主 Agent 移至模型接入；侧栏扩展统一 Skill、MCP、协作伙�
 ## 2026-10-15 UI细节收敛（本地完成）
 
 TASK-UI-DETAILS-20261015从最新18e143f修复，Desktop/Web2.1.26产品ab878ffd：紧凑设置、共享composer控件、末尾动作组、空/非空上传与扩展内容轴，删除三项旧组件及入口。完整verify退出0：Node1278/14skip、Agent199/2skip、browser635首试、UI239/0、development PASS；精确源码独立审查、官方重建及38项Native与资源字节一致性通过。原数据身份和primary dirty/index保留，owned测试实例正常关闭。Mobile2.1.1规划、真实Provider/Hosted/签名及用户视觉接受继续各自开放；[当前验证](changes/2026-10-15-ui-details/verification.md)。
+
+## 2026-10-13 Cherry 融合集成候选
+
+基于 origin/main@694a0060 承接已验证净改动；保留现行治理和全部原账本任务。完整本地 verify 520 浏览器通过，154 Rust通过，真实 Ollama Native13组通过。最终 mainline 构建、Hosted、独立补审和用户验收继续以本次 [验证](changes/2026-10-13-cherry-red-scope/verification.md) 为准，任务未标 DONE。
+
+## 2026-10-13 Cherry 7da 原生与安装闭环
+
+冻结源码 7daeba25、draft PR #58；完整 verify1138/174/528（浏览器1次首试超时重试成功，另8次零重试复核全通过），Rust154；7da正式 Native6、默认发行真实 Ollama13及ddacf严格4280文件NSIS实际安装/重装/资源修复/卸载后恢复均 PASS。Linux/Mac/Hosted Windows 的新验收与最终产品验收继续独立判定，主线/primary未覆盖，任务PARTIAL。详见 [当前记录](changes/2026-10-13-cherry-red-scope/mainline-final-status.md)。
+
+## 2026-10-14 Cherry 当前技术验收
+
+887 四Hosted quality/Native全部SUCCESS；Rust154、NativeTaskHost11、六Native6、Linux AppImage/deb与Mac app/dmg严格原包、Windows NSIS4280文件和实际生命周期通过，独立source/Windows artifact审计通过。本机生产协议/透明恢复13、真实Ollama13、官方两个MCP SDK各18通过。最后新增三平台Native背景读回/恢复断言待新head验证及补审；用户最终产品结果/发布范围尚待验收，task PARTIAL。证据与各SHA边界见[最终记录](changes/2026-10-13-cherry-red-scope/mainline-final-status.md)。
+
+## Cherry 本期最终技术结果（UTC 2026-10-13 / 本地 2026-10-14）
+
+0d61源码/测试锚点：当前适用三Hosted全SUCCESS、三OS Native7/默认原包/Windows安装及独立审查PASS，本机严格NSIS9checks/4launch最终PASS；首次未知PID保护FAIL及真实复查保留。所有技术步骤已完成，后续事实文档与当前PR检查按各SHA记录；Task仍PARTIAL，仅最终用户产品/发布范围验收及其后主线收敛待处理。primary111捕获96same/15随后changed/0missing，暂存为空，后续并发源文件不覆盖。详见[最终记录](changes/2026-10-13-cherry-red-scope/mainline-final-status.md)。

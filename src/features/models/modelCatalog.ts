@@ -2,6 +2,7 @@
 import type { ModelKind } from "../../domain/modelSelection.ts";
 import {
   protocolBindingMatches,
+  isProviderAuthAllowed,
   providerProtocolSchema,
   providerAuthModeSchema,
   type ProviderProtocol,
@@ -46,6 +47,27 @@ const sizePattern = /^(?:[1-9]\d{1,4})x(?:[1-9]\d{1,4})$/;
 const kinds = ["text", "image", "video", "audio"];
 const record = (value: unknown): Record<string, unknown> =>
   value && typeof value === "object" ? (value as Record<string, unknown>) : {};
+function catalogIdentity(value: {
+  baseUrl?: unknown;
+  protocol?: unknown;
+  authMode?: unknown;
+}) {
+  const protocol = providerProtocolSchema.optional().safeParse(value.protocol);
+  const authMode = providerAuthModeSchema.optional().safeParse(value.authMode);
+  if (!protocol.success || !authMode.success) return null;
+  if (
+    authMode.data === "none" &&
+    (typeof value.baseUrl !== "string" ||
+      !isProviderAuthAllowed({
+        baseUrl: value.baseUrl,
+        protocol: protocol.data,
+        authMode: authMode.data,
+      }))
+  )
+    return null;
+  return { protocol: protocol.data, authMode: authMode.data };
+}
+
 function displayMetadata(value: Record<string, unknown>) {
   const text = (key: string) =>
     typeof value[key] === "string"
@@ -137,11 +159,8 @@ export function readModelCatalogs(): ModelCatalog[] {
     return raw.slice(0, 200).flatMap((value) => {
       const item = record(value);
       if (typeof item.id !== "string" || !Array.isArray(item.models)) return [];
-      const protocol = providerProtocolSchema
-          .optional()
-          .safeParse(item.protocol),
-        authMode = providerAuthModeSchema.optional().safeParse(item.authMode);
-      if (!protocol.success || !authMode.success) return [];
+      const identity = catalogIdentity(item);
+      if (!identity) return [];
       const models = item.models.slice(0, 5000).flatMap((value) => {
         const model = storedModel(value);
         return model ? [model] : [];
@@ -149,8 +168,8 @@ export function readModelCatalogs(): ModelCatalog[] {
       return [
         {
           id: item.id,
-          protocol: protocol.data,
-          authMode: authMode.data,
+          protocol: identity.protocol,
+          authMode: identity.authMode,
           baseUrl: typeof item.baseUrl === "string" ? item.baseUrl : undefined,
           credentialRef:
             typeof item.credentialRef === "string"
@@ -166,6 +185,7 @@ export function readModelCatalogs(): ModelCatalog[] {
   }
 }
 function matches(connection: Connection, catalog: ModelCatalog) {
+  if (!catalogIdentity(connection) || !catalogIdentity(catalog)) return false;
   return (
     connection.id === catalog.id &&
     connection.baseUrl === catalog.baseUrl &&
@@ -200,6 +220,8 @@ export function saveModelCatalog(
   models: CatalogModel[],
   manual = false,
 ): void {
+  const identity = catalogIdentity(connection);
+  if (!identity) throw new Error("模型目录协议或认证身份无效，原目录已保留。");
   const current = readModelCatalogs();
   const previous = current.find((item) => matches(connection, item));
   const next = manual
@@ -218,8 +240,8 @@ export function saveModelCatalog(
         id: connection.id,
         baseUrl: connection.baseUrl,
         credentialRef: connection.credentialRef,
-        protocol: connection.protocol,
-        authMode: connection.authMode,
+        protocol: identity.protocol,
+        authMode: identity.authMode,
         fetchedAt: Date.now(),
         models: next.slice(0, 5000).flatMap((value) => {
           const model = storedModel(value);

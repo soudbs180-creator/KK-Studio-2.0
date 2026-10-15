@@ -1,0 +1,215 @@
+{
+  "timestamp": "2026-10-13T15:26:32.802Z",
+  "receiptCommit": "ddacf165c8bef1a9601e20efccaed2fcf838739d",
+  "isolated": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-installer-audit space-dDibAV",
+  "profile": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-installer-audit space-dDibAV\\profile",
+  "hostElevated": "not-recorded",
+  "platform": "Windows host with existing WebView2 (not a clean Windows VM)",
+  "installerSha256": "68f7ce2c15fbb5d342c3109d88cca89fdaf51856fce5b529c61eb8ebba87723d",
+  "checks": [
+    {
+      "action": "damaged-package",
+      "refusedBeforeExecution": true
+    },
+    {
+      "action": "install",
+      "verifiedFiles": 4280,
+      "entries": [
+        {
+          "kind": "uninstall",
+          "hive": "CurrentUser",
+          "view": "Registry32",
+          "location": "\"C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-installer-audit space-dDibAV\\app\"",
+          "version": "2.1.17"
+        },
+        {
+          "kind": "settings",
+          "hive": "CurrentUser",
+          "view": "Registry32",
+          "location": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-installer-audit space-dDibAV\\app"
+        },
+        {
+          "kind": "uninstall",
+          "hive": "CurrentUser",
+          "view": "Registry64",
+          "location": "\"C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-installer-audit space-dDibAV\\app\"",
+          "version": "2.1.17"
+        },
+        {
+          "kind": "settings",
+          "hive": "CurrentUser",
+          "view": "Registry64",
+          "location": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-installer-audit space-dDibAV\\app"
+        }
+      ]
+    },
+    {
+      "action": "bundled-agent",
+      "healthy": true
+    },
+    {
+      "action": "install",
+      "verifiedFiles": 4280,
+      "entries": [
+        {
+          "kind": "uninstall",
+          "hive": "CurrentUser",
+          "view": "Registry32",
+          "location": "\"C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-installer-audit space-dDibAV\\app\"",
+          "version": "2.1.17"
+        },
+        {
+          "kind": "settings",
+          "hive": "CurrentUser",
+          "view": "Registry32",
+          "location": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-installer-audit space-dDibAV\\app"
+        },
+        {
+          "kind": "uninstall",
+          "hive": "CurrentUser",
+          "view": "Registry64",
+          "location": "\"C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-installer-audit space-dDibAV\\app\"",
+          "version": "2.1.17"
+        },
+        {
+          "kind": "settings",
+          "hive": "CurrentUser",
+          "view": "Registry64",
+          "location": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-installer-audit space-dDibAV\\app"
+        }
+      ]
+    },
+    {
+      "action": "install",
+      "verifiedFiles": 4280,
+      "entries": [
+        {
+          "kind": "uninstall",
+          "hive": "CurrentUser",
+          "view": "Registry32",
+          "location": "\"C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-installer-audit space-dDibAV\\app\"",
+          "version": "2.1.17"
+        },
+        {
+          "kind": "settings",
+          "hive": "CurrentUser",
+          "view": "Registry32",
+          "location": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-installer-audit space-dDibAV\\app"
+        },
+        {
+          "kind": "uninstall",
+          "hive": "CurrentUser",
+          "view": "Registry64",
+          "location": "\"C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-installer-audit space-dDibAV\\app\"",
+          "version": "2.1.17"
+        },
+        {
+          "kind": "settings",
+          "hive": "CurrentUser",
+          "view": "Registry64",
+          "location": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-installer-audit space-dDibAV\\app"
+        }
+      ]
+    },
+    {
+      "action": "uninstall",
+      "registrationRemoved": true
+    },
+    {
+      "action": "install",
+      "verifiedFiles": 4280,
+      "entries": [
+        {
+          "kind": "uninstall",
+          "hive": "CurrentUser",
+          "view": "Registry32",
+          "location": "\"C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-installer-audit space-dDibAV\\app\"",
+          "version": "2.1.17"
+        },
+        {
+          "kind": "settings",
+          "hive": "CurrentUser",
+          "view": "Registry32",
+          "location": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-installer-audit space-dDibAV\\app"
+        },
+        {
+          "kind": "uninstall",
+          "hive": "CurrentUser",
+          "view": "Registry64",
+          "location": "\"C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-installer-audit space-dDibAV\\app\"",
+          "version": "2.1.17"
+        },
+        {
+          "kind": "settings",
+          "hive": "CurrentUser",
+          "view": "Registry64",
+          "location": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-installer-audit space-dDibAV\\app"
+        }
+      ]
+    },
+    {
+      "action": "uninstall",
+      "registrationRemoved": true
+    },
+    {
+      "action": "data-retention",
+      "reinstall": true,
+      "resourceRepair": true,
+      "uninstallReinstall": true,
+      "offlineScope": "App DNS blocked; installer uses existing WebView2 and invalid proxy",
+      "cleanWindowsWithoutWebView2": "NOT RUN",
+      "lowerVersionRollback": "NOT RUN"
+    }
+  ],
+  "launches": [
+    {
+      "label": "installed",
+      "url": "http://tauri.localhost/",
+      "scripts": [
+        "http://tauri.localhost/assets/index-ClDT8V-t.js"
+      ],
+      "root": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-installer-audit space-dDibAV\\data",
+      "executable": {
+        "size": 20052480,
+        "sha256": "aeacc57ad7097afa7870cd4f6b28a930026a3de24131e7a10f23a2923688655f"
+      }
+    },
+    {
+      "label": "reinstalled",
+      "url": "http://tauri.localhost/",
+      "scripts": [
+        "http://tauri.localhost/assets/index-ClDT8V-t.js"
+      ],
+      "root": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-installer-audit space-dDibAV\\data",
+      "executable": {
+        "size": 20052480,
+        "sha256": "aeacc57ad7097afa7870cd4f6b28a930026a3de24131e7a10f23a2923688655f"
+      }
+    },
+    {
+      "label": "repaired",
+      "url": "http://tauri.localhost/",
+      "scripts": [
+        "http://tauri.localhost/assets/index-ClDT8V-t.js"
+      ],
+      "root": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-installer-audit space-dDibAV\\data",
+      "executable": {
+        "size": 20052480,
+        "sha256": "aeacc57ad7097afa7870cd4f6b28a930026a3de24131e7a10f23a2923688655f"
+      }
+    },
+    {
+      "label": "restored-after-uninstall",
+      "url": "http://tauri.localhost/",
+      "scripts": [
+        "http://tauri.localhost/assets/index-ClDT8V-t.js"
+      ],
+      "root": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-installer-audit space-dDibAV\\data",
+      "executable": {
+        "size": 20052480,
+        "sha256": "aeacc57ad7097afa7870cd4f6b28a930026a3de24131e7a10f23a2923688655f"
+      }
+    }
+  ],
+  "passed": true
+}

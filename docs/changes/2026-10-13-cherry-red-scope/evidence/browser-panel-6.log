@@ -1,0 +1,15 @@
+[WebServer] (node:77360) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 6 tests using 1 worker
+
+(node:21000) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 tests\browser\message-content.spec.ts:66:3 › safe message Markdown and original copy remain usable in dark (2.3s)
+  ok 2 tests\browser\message-content.spec.ts:66:3 › safe message Markdown and original copy remain usable in light (2.2s)
+  ok 3 tests\browser\message-content.spec.ts:123:1 › local Markdown export includes originals and excludes internal status objects (2.4s)
+  ok 4 tests\browser\panel-resize.spec.ts:4:1 › 桌面宽度可用鼠标和键盘调整，平板不出现无效拖拽柄 (1.6s)
+  ok 5 tests\browser\panel-resize.spec.ts:53:1 › 对话宽度的无障碍最大值等于键盘可达宽度 (1.9s)
+  ok 6 tests\browser\panel-resize.spec.ts:94:1 › 侧栏只使用固定展开与收起宽度，键盘切换保持焦点 (2.0s)
+
+  6 passed (14.6s)

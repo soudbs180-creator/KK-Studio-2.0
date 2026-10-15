@@ -1,5 +1,7 @@
 # 本地技能 Skills（FEAT-011）
 
+2026-10-13：同一Registry新增五个原创编程/图片/视频助手与自定义保存/编辑。内置助手在编辑、导入和manifest覆写边界只读；3000字符留出任务输入空间。复用存储身份、失败原件保护，未新建助手库。见[本轮证据](../changes/2026-10-13-cherry-red-scope/verification.md)，联网目录/真实生成仍单独验收。
+
 - 状态：PARTIAL
 - 领域：intelligence
 - 最近更新：2026-09-22
@@ -36,3 +38,11 @@
 - 2026-09-22（TASK-DS-002）：目录和设置控件按Design System 1.1迁移；新增 `tests/browser/design-system-pages.spec.ts`，Web与实际Tauri证据见 `docs/changes/2026-09-22-design-system-pages/verification.md`。桌面重启已验证偏好和本地Skill记录保留；本证据不覆盖Provider/GPU或任务宿主恢复，功能状态保持PARTIAL。
 
 本轮入口分类：侧栏「扩展」→ Skill，MCP 与协作伙伴并列；创建/导入/编辑/启停/应用职责保持本地操作，见[分类修复](../changes/2026-10-13-capability-ui/spec.md)。
+
+### Cherry source 历史范围（仅原 SHA）
+
+2026-10-13 7da 主线候选：正式 production Tauri Native6、真实 Ollama13、严格隔离NSIS生命周期已通过相关链路；不同源码/产物和 Hosted/用户验收边界见[最终记录](../changes/2026-10-13-cherry-red-scope/mainline-final-status.md)。功能总体仍PARTIAL，不据此关闭其他开放任务或真实云/图片/视频能力。
+
+2026-10-14 最新验收：五个原创代码/图片提示/视频分镜助手与自定义沿用同一Registry，当前Web/Native链路通过；后续助手数量按需求增加。 完整身份与许可见[最终记录](../changes/2026-10-13-cherry-red-scope/mainline-final-status.md)。保留功能整体PARTIAL及其他开放任务。
+
+最终技术锚点0d61：五原创编程/图片提示/编辑/视频分镜助手与自定义链路已验收，保持既有Registry和不提升工具权限的边界。 本期技术步骤完成，用户最终产品/发布范围待验收；功能总体及其他任务状态不批量升级，详见[最终记录](../changes/2026-10-13-cherry-red-scope/mainline-final-status.md)。

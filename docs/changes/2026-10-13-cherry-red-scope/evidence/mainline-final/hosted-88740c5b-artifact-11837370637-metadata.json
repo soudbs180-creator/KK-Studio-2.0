@@ -1,0 +1,59 @@
+{
+  "artifact_id": 11837370637,
+  "head": "88740c5b23f1cf5f0896d471b4339d9db39f4b9b",
+  "run_id": 38440285848,
+  "job_id": 115444778934,
+  "digest": "sha256:233980edd0b47a3c032969ef6af73793f5f9c311b119f1690e83d7258090562a",
+  "downloadBytes": 692832,
+  "sha256": "233980edd0b47a3c032969ef6af73793f5f9c311b119f1690e83d7258090562a",
+  "entries": [
+    {
+      "name": "native-e2e/native-process.log",
+      "bytes": 416,
+      "sha256": "3440e660e0f6cc273752148f0f0b9f066346da6e425bad9451f12972ffcf3d87",
+      "saved": true
+    },
+    {
+      "name": "native-e2e/receipt.json",
+      "bytes": 5390,
+      "sha256": "82be4882b3cff000b4cd153642206c1e4ae0a97f4cb728451a4533d2f25d6df1",
+      "saved": true
+    },
+    {
+      "name": "native-e2e/two-model-round.png",
+      "bytes": 89571,
+      "sha256": "05695cc5a27442694da9aac9b2b518ca1e5900eed0b0dc13343081e9a50abd93",
+      "saved": false
+    },
+    {
+      "name": "package-portability/appimage.log.json",
+      "bytes": 830,
+      "sha256": "1e5d90b5663ad3118e2727a55dd5699ca1f543abdf5216e5247fdb820b053af4",
+      "saved": true
+    },
+    {
+      "name": "package-portability/before.json",
+      "bytes": 291,
+      "sha256": "a53b01e7885298ac9a4fee7053ecfa2943b917cf3b3da674ce55d51bc122588b",
+      "saved": true
+    },
+    {
+      "name": "package-portability/deb.log.json",
+      "bytes": 2378,
+      "sha256": "52dc76d3878d82acc8393e3cb0cecb02ff51831b8381c9d820dc4ee8f15609ce",
+      "saved": true
+    },
+    {
+      "name": "package-portability/receipt.json",
+      "bytes": 2118296,
+      "sha256": "1a8d9e7d0d9d498d19e14b5b2dbd0b7ef08b993fcbf7a497c85ed40f484bce06",
+      "saved": true
+    },
+    {
+      "name": "appimage-runtime-patchelf/c42b7107-9fe2-48fb-b78c-bf60eab15b28.json",
+      "bytes": 925859,
+      "sha256": "19488395f199341e19c86e5e578d91c6f8cde34480e7ec624008513a53e0f12e",
+      "saved": true
+    }
+  ]
+}

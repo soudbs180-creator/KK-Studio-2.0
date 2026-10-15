@@ -18,8 +18,32 @@ export async function packageAgentRuntime({
   agent,
   target,
   node,
-  nodeLicense = path.join(path.dirname(node), "LICENSE"),
+  nodeLicense,
+  platform = process.platform,
+  arch = process.arch,
 }) {
+  if (platform !== process.platform || arch !== process.arch)
+    throw Error(
+      "Runtime platform or architecture does not match the build host",
+    );
+  if (
+    !["win32", "darwin", "linux"].includes(platform) ||
+    !["x64", "arm64"].includes(arch)
+  )
+    throw Error("Unsupported runtime platform or architecture");
+  if (!nodeLicense) {
+    // Official Unix Node archives put the binary in bin/, Windows puts it beside LICENSE.
+    for (const candidate of [
+      path.join(path.dirname(node), "LICENSE"),
+      path.join(path.dirname(node), "..", "LICENSE"),
+    ]) {
+      if ((await fs.stat(candidate).catch(() => null))?.isFile()) {
+        nodeLicense = candidate;
+        break;
+      }
+    }
+    if (!nodeLicense) throw Error("Node distribution LICENSE is missing");
+  }
   if (await fs.stat(target).catch(() => null))
     throw Error("Runtime destination exists");
   const files = [];
@@ -108,11 +132,18 @@ export async function packageAgentRuntime({
       await dependencies(location);
     }
   }
-  await copyFile(node, process.platform === "win32" ? "node.exe" : "node");
+  const nodeExecutable = platform === "win32" ? "node.exe" : "node";
+  if (platform !== "win32" && !((await fs.stat(node)).mode & 0o111))
+    throw Error("Runtime Node binary is not executable");
+  await copyFile(node, nodeExecutable);
   await copyFile(nodeLicense, "NODE-LICENSE.txt");
   await copyFile(
     path.join(ownDirectory, "desktop-entry.mjs"),
     "desktop-entry.mjs",
+  );
+  await copyFile(
+    path.join(ownDirectory, "unix-guardian.mjs"),
+    "unix-guardian.mjs",
   );
   await copyFile(
     path.join(ownDirectory, "../gemini-bridge.mjs"),
@@ -185,8 +216,9 @@ export async function packageAgentRuntime({
   files.sort((left, right) => left.path.localeCompare(right.path));
   const manifest = {
     schemaVersion: 1,
-    platform: process.platform,
-    arch: process.arch,
+    platform,
+    arch,
+    nodeExecutable,
     node: process.version,
     agentVersion: metadata.version,
     files,

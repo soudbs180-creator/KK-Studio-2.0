@@ -48,12 +48,11 @@ export const PROVIDER_PRESETS: readonly ProviderPreset[] = [
     name: "Google Gemini",
     category: "官方",
     protocol: "GenerateContent",
+    wireProtocol: "gemini",
     baseUrl: "https://generativelanguage.googleapis.com/v1beta",
     website: "https://ai.google.dev",
     keyUrl: "https://aistudio.google.com/apikey",
     docsUrl: "https://ai.google.dev/api",
-    unavailableReason:
-      "请在下方 Google 连接中配置 Gemini API Key；通用 API 表单暂不支持此协议。",
   },
   {
     id: "anthropic",

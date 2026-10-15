@@ -1,0 +1,16 @@
+
+> kk-studio@2.1.18 client:installer:verify
+> node scripts/windows/verify-installer-receipt.mjs .tmp/cherry-red/installer-0d61ae03/installer-receipt.json
+
+{
+  "verified": true,
+  "commit": "0d61ae0334659d692b62b34a688a4d3f1cd4d842",
+  "sourceTree": "ed7ccb00db59cf0ddaadae3ecadd5cb663544e4a",
+  "installer": "KK Studio_2.1.18_x64-setup.exe",
+  "versions": {
+    "schemaVersion": 1,
+    "desktop": "2.1.18",
+    "web": "2.1.18",
+    "mobile": "2.1.1"
+  }
+}

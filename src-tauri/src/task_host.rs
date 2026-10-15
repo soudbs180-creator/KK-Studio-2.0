@@ -18,6 +18,8 @@ use tokio::sync::Notify;
 
 #[path = "asset_io.rs"]
 mod io;
+#[path = "task_host_protocol.rs"]
+mod protocol;
 #[path = "task_host_protocol_stream.rs"]
 mod protocol_stream;
 #[path = "task_host_provider.rs"]
@@ -75,6 +77,8 @@ pub struct TaskHostRequest {
     pub kind: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub concurrency_limit: Option<usize>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub messages: Option<Vec<protocol::TextMessage>>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -136,6 +140,7 @@ pub struct TaskHost {
     root: PathBuf,
     assets: Arc<AssetRepository>,
     jobs: Mutex<HashMap<String, JobControl>>,
+    journal: Mutex<()>,
 }
 
 impl TaskHost {
@@ -145,13 +150,20 @@ impl TaskHost {
             root,
             assets,
             jobs: Mutex::new(HashMap::new()),
+            journal: Mutex::new(()),
         };
         host.recover_submitted()?;
         Ok(host)
     }
 
-    fn lock(&self) -> Result<fs::File, String> {
-        io::lock(&self.root)
+    fn lock(&self) -> Result<(fs::File, std::sync::MutexGuard<'_, ()>), String> {
+        // Serialize this host's workers before taking the cross-process lock.
+        // The external lock stays exclusive and fails closed for other hosts.
+        let guard = self
+            .journal
+            .lock()
+            .map_err(|_| "io: 原生任务日志锁不可用".to_string())?;
+        Ok((io::lock(&self.root)?, guard))
     }
     fn path(&self, task_id: &str) -> PathBuf {
         self.root.join(format!("{task_id}.json"))
@@ -1012,6 +1024,7 @@ fn append_bounded_chunk(
 }
 
 fn validate_request(value: &TaskHostRequest) -> Result<(), String> {
+    protocol::validate(value)?;
     if value.image_edit_required == Some(true)
         && (value.kind.as_deref() == Some("text") || value.attachments.is_empty())
     {
@@ -1218,39 +1231,56 @@ fn civil_from_days(days: i64) -> (i32, u32, u32) {
 }
 
 fn credential(provider_id: &str) -> Result<Option<String>, String> {
-    #[cfg(target_os = "windows")]
-    {
-        let entry = keyring::Entry::new("com.kkstudio.provider", provider_id)
-            .map_err(|_| "credential unavailable")?;
-        return match entry.get_password() {
-            Ok(v) => Ok(Some(v)),
-            Err(keyring::Error::NoEntry) => Ok(None),
-            Err(_) => Err("credential unavailable".into()),
-        };
-    }
-    #[cfg(not(target_os = "windows"))]
-    {
-        let _ = provider_id;
-        Ok(None)
-    }
+    crate::provider_transaction::get_credential(provider_id)
+        .map_err(|_| "credential unavailable".into())
 }
-
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn journal_operations_on_one_host_wait_for_each_other() {
+        let root = root();
+        let host = Arc::new(
+            TaskHost::new(
+                root.join("jobs"),
+                Arc::new(AssetRepository::new(root.join("assets"))),
+            )
+            .unwrap(),
+        );
+        let held = host.lock().unwrap();
+        let other = Arc::clone(&host);
+        let (send, receive) = std::sync::mpsc::channel();
+        let thread = std::thread::spawn(move || {
+            let result = other.lock();
+            send.send(result.is_ok()).unwrap();
+        });
+        let early = receive.recv_timeout(Duration::from_millis(100));
+        drop(held);
+        let result = early
+            .clone()
+            .unwrap_or_else(|_| receive.recv_timeout(Duration::from_secs(2)).unwrap());
+        thread.join().unwrap();
+        assert!(
+            early.is_err(),
+            "another operation must wait, not fail on the host's own exclusive file lock"
+        );
+        assert!(result);
+        fs::remove_dir_all(root).unwrap();
+    }
     pub(super) fn fail_at(_stage: &str) -> Result<(), String> {
         Ok(())
     }
     fn request(task: &str) -> TaskHostRequest {
         TaskHostRequest {
+            protocol: None,
+            auth_mode: None,
+            messages: None,
             image_edit_required: None,
             mask_asset_id: None,
             task_id: task.into(),
             idempotency_key: "idem-1".into(),
             base_url: "http://127.0.0.1:1234/v1".into(),
             credential_ref: "test".into(),
-            protocol: None,
-            auth_mode: None,
             model: "demo".into(),
             prompt: "hello".into(),
             output_indices: vec![0],
@@ -1453,6 +1483,17 @@ mod tests {
         value.kind = Some("text".into());
         value.base_url = "https://provider.test/v1".into();
         assert!(validate_request(&value).is_err());
+    }
+
+    #[test]
+    fn legacy_image_fingerprint_preserves_committed_field_order() {
+        let mut value = request("legacy-image-fingerprint");
+        value.protocol = Some("openai-chat".into());
+        value.auth_mode = Some("api-key".into());
+        assert_eq!(
+            fingerprint(&value).unwrap(),
+            "389698f49da3934f914dd661538e994a43dda7ed52bca4f89b28e476ded5a536"
+        );
     }
 
     #[test]

@@ -1,6 +1,7 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+mod agent_owner;
 #[cfg(windows)]
 mod agent_process;
 mod agent_runtime;
@@ -10,10 +11,14 @@ mod creation_storage;
 mod project_package;
 mod provider_config;
 mod provider_model_requests;
+mod provider_models;
 mod provider_transaction;
+mod runtime_resources;
 mod secret_filter;
 mod storage_paths;
+mod system_credentials;
 mod task_host;
+mod window_appearance;
 
 use futures_util::StreamExt;
 use serde::{Deserialize, Serialize};
@@ -143,6 +148,7 @@ struct AppState {
     providers: Arc<provider_config::ProviderConfigRepository>,
     assets: Arc<asset_storage::AssetRepository>,
     task_host: Arc<task_host::TaskHost>,
+    model_discovery: provider_models::ModelDiscovery,
     restored_roots: Mutex<std::collections::HashSet<PathBuf>>,
 }
 
@@ -369,7 +375,11 @@ fn provider_models_cancel(
     request_id: String,
     window: tauri::Window,
     state: State<'_, provider_model_requests::ModelRequests>,
+    app_state: State<'_, AppState>,
 ) -> Result<bool, String> {
+    if request_id.starts_with("model-page-") {
+        return app_state.model_discovery.cancel(&request_id);
+    }
     state.cancel(&request_id, window.label())
 }
 
@@ -433,7 +443,6 @@ async fn credential_delete(provider_id: String) -> Result<bool, String> {
     .await
     .map_err(|_| "系统凭据清除任务中断".to_string())?
 }
-
 // ========== 配置命令 ==========
 
 #[tauri::command]
@@ -677,6 +686,19 @@ fn open_restored_project_package(
     Ok(())
 }
 // ========== 测试连接命令 ==========
+
+#[tauri::command(rename_all = "camelCase")]
+async fn provider_models_read(
+    state: State<'_, AppState>,
+    request_id: String,
+    url: String,
+    protocol: String,
+) -> Result<provider_models::ModelPage, String> {
+    state
+        .model_discovery
+        .read(&request_id, &url, &protocol)
+        .await
+}
 
 #[derive(Debug, Serialize, Deserialize)]
 struct TestResult {
@@ -1713,6 +1735,23 @@ fn task_host_cancel(
 // ========== 主函数 ==========
 
 fn main() {
+    #[cfg(feature = "native-e2e")]
+    let test_driver_port = {
+        assert_eq!(
+            std::env::var("KK_NATIVE_E2E").as_deref(),
+            Ok("1"),
+            "test-only driver requires explicit opt-in"
+        );
+        assert!(
+            std::env::args().any(|arg| arg == "--data-dir"),
+            "test-only driver requires an isolated data directory"
+        );
+        std::env::var("TAURI_WEBDRIVER_PORT")
+            .ok()
+            .and_then(|value| value.parse::<u16>().ok())
+            .filter(|port| *port > 1024)
+            .expect("test-only driver requires an explicit local port")
+    };
     let paths = storage_paths::AppPaths::initialize().expect("KK Studio 无法初始化用户数据目录");
     let (memory_path, legacy_memory_path) = memory_paths(paths.memory.clone(), paths.isolated);
     let config_path = paths.config;
@@ -1739,10 +1778,16 @@ fn main() {
         AppConfig::default()
     };
 
-    tauri::Builder::default()
+    let builder = tauri::Builder::default()
         .plugin(tauri_plugin_shell::init())
-        .plugin(tauri_plugin_dialog::init())
+        .plugin(tauri_plugin_dialog::init());
+    #[cfg(feature = "native-e2e")]
+    let builder = builder.plugin(tauri_plugin_wdio_webdriver::init_with_port(
+        test_driver_port,
+    ));
+    builder
         .setup(|app| {
+            window_appearance::initialize_opaque(app)?;
             app.manage(cli_runtime::CliRuntime::new(
                 app.path().resource_dir()?.join("agent-runtime"),
             ));
@@ -1769,6 +1814,7 @@ fn main() {
             creation: Arc::new(creation_storage::SnapshotRepository::new(paths.creation)),
             assets,
             task_host,
+            model_discovery: provider_models::ModelDiscovery::default(),
             restored_roots: Mutex::new(std::collections::HashSet::new()),
         })
         .invoke_handler(tauri::generate_handler![
@@ -1776,6 +1822,8 @@ fn main() {
             agent_runtime::agent_runtime_start,
             agent_runtime::agent_runtime_status,
             agent_runtime::agent_runtime_stop,
+            window_appearance::window_appearance_get,
+            window_appearance::window_appearance_set,
             credential_set,
             credential_get,
             provider_models_prepare,
@@ -1806,6 +1854,7 @@ fn main() {
             import_project_package,
             open_restored_project_package,
             test_connection,
+            provider_models_read,
             list_conversations,
             save_conversation,
             delete_conversation,

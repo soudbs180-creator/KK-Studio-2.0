@@ -1,0 +1,66 @@
+{
+  "artifact_id": 11837477734,
+  "head": "88740c5b23f1cf5f0896d471b4339d9db39f4b9b",
+  "builtHead": "88740c5b23f1cf5f0896d471b4339d9db39f4b9b",
+  "run_id": 38440285848,
+  "job_id": 115444779387,
+  "digest": "sha256:1da7913017bcc851d825033695c9689a46a76a47b1f7ae75e941a57ad447f978",
+  "downloadBytes": 679306,
+  "sha256": "1da7913017bcc851d825033695c9689a46a76a47b1f7ae75e941a57ad447f978",
+  "entries": [
+    {
+      "name": "native-e2e/receipt.json",
+      "bytes": 5350,
+      "sha256": "2a4a40ac59b56511cbd4e07cf6cc33c4055a8e211d84f3c3e43446cee39e04b7",
+      "saved": true
+    },
+    {
+      "name": "native-e2e/two-model-round.png",
+      "bytes": 44263,
+      "sha256": "ed5ede5001471c94ac9baf0ff1e89b5b3fe6c4b9487d173f612c2757b2019636",
+      "saved": false
+    },
+    {
+      "name": "native-installer/generated-acl.diff",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "saved": true
+    },
+    {
+      "name": "native-installer/release/installer-receipt.json",
+      "bytes": 871597,
+      "sha256": "968e596eec584c2ced82b89e8a4ca4052bc09121d09899c0019c0246e95adc62",
+      "saved": true
+    },
+    {
+      "name": "native-installer/evidence/installed.png",
+      "bytes": 111609,
+      "sha256": "37b4ce9146509792f3dd758db182359d70efb3a0041c5705889b39152f0120bc",
+      "saved": false
+    },
+    {
+      "name": "native-installer/evidence/reinstalled.png",
+      "bytes": 111609,
+      "sha256": "37b4ce9146509792f3dd758db182359d70efb3a0041c5705889b39152f0120bc",
+      "saved": false
+    },
+    {
+      "name": "native-installer/evidence/repaired.png",
+      "bytes": 111609,
+      "sha256": "37b4ce9146509792f3dd758db182359d70efb3a0041c5705889b39152f0120bc",
+      "saved": false
+    },
+    {
+      "name": "native-installer/evidence/restored-after-uninstall.png",
+      "bytes": 111609,
+      "sha256": "37b4ce9146509792f3dd758db182359d70efb3a0041c5705889b39152f0120bc",
+      "saved": false
+    },
+    {
+      "name": "native-installer/evidence/runtime.json",
+      "bytes": 6984,
+      "sha256": "7602e6d3656b2e8bfcb229b5bbc2d3ba83a4cd6f2435bdaa2b111572b81ca65b",
+      "saved": true
+    }
+  ]
+}

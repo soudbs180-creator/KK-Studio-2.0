@@ -152,9 +152,23 @@ test("任务面板按 Runtime / Tasks 展示卡片，滚轮和 Escape 不影响�
       width: 360,
       height: 420,
     });
-  await expect(
-    panel.getByRole("button", { name: "全部", exact: true }),
-  ).toHaveCSS("min-height", "32px");
+  // The 2026-10-10 readability contract expands the popover and its filters.
+  for (const name of ["全部", "执行中", "未完成", "失败"]) {
+    const filter = panel.getByRole("button", { name, exact: true });
+    await expect(filter).toHaveCSS("min-height", "32px");
+    await expect(filter).toHaveCSS("font-size", "12px");
+    expect(
+      await filter.evaluate((element) => {
+        const box = element.getBoundingClientRect();
+        return element.contains(
+          document.elementFromPoint(
+            box.x + box.width / 2,
+            box.y + box.height / 2,
+          ),
+        );
+      }),
+    ).toBe(true);
+  }
   await panel.screenshot({
     path: "test-results/evidence/runtime-tasks-2026-09-11/task-panel.png",
     animations: "disabled",

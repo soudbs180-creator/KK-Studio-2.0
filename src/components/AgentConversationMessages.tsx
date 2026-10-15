@@ -10,6 +10,8 @@ import AgentExecutionProcess from "./AgentExecutionProcess";
 import type { AgentUsageWindow } from "../features/agent/agentUsage";
 import type { AgentDraftAttachment } from "../features/agent/agentAttachments";
 import type { CanvasCollectionItem } from "../domain/canvasItems";
+import MessageMarkdown from "./MessageMarkdown";
+import MessageActions from "./MessageActions";
 
 /** 本地 Agent 会话通道（画布旁对话面板与 canvas-agent 的桥）。 */
 export interface AgentConversationProps {
@@ -197,7 +199,15 @@ export default function AgentConversationMessages({
           <AgentExecutionProcess key={item.id} items={items} />
         ) : (
           <div key={item.id} className={`chat-agent-item is-${item.role}`}>
-            <span>{item.text}</span>
+            {item.role === "user" || item.role === "assistant" ? (
+              <>
+                {" "}
+                <MessageMarkdown content={item.text} />
+                <MessageActions content={item.text} />{" "}
+              </>
+            ) : (
+              <span>{item.text}</span>
+            )}
           </div>
         );
       })}

@@ -18,6 +18,7 @@ import { useProviderCredentialState } from "./useProviderCredentialState";
 import ProviderCredentialStatus from "./ProviderCredentialStatus";
 import {
   resolveModelProviderConnection,
+  requiresModelProviderSelection,
   validateModelProviderProfile,
   type ConnectionState,
 } from "./modelProviderSettingsState";
@@ -58,7 +59,9 @@ export default function ModelProviderSettings({
     profile.baseUrl,
     credentialRef,
     requestRef,
-    providerNeedsKey(profile),
+    active &&
+      providerNeedsKey(profile) &&
+      !requiresModelProviderSelection(profile, connections),
   );
   const credentialBlocked =
     credentialStatus === "loading" || credentialStatus === "error";
@@ -101,7 +104,7 @@ export default function ModelProviderSettings({
         providerNeedsKey(valid) ? apiKey : "",
         valid,
       );
-      if (apiKey.trim()) setHasStoredKey(true);
+      if (providerNeedsKey(valid) && apiKey.trim()) setHasStoredKey(true);
       setApiKey("");
       setProfile(valid);
       setConnections(next);

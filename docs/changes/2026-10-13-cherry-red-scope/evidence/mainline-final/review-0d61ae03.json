@@ -1,0 +1,38 @@
+{
+  "sourceHead": "0d61ae0334659d692b62b34a688a4d3f1cd4d842",
+  "reviewedAt": "2026-10-13T18:27:49Z",
+  "status": "PASS",
+  "scope": {
+    "kind": "独立只读增量源码、fixture、文档与证据审查",
+    "base": "694a00607f6f63de1b8c43d0ebb117adf5d34f67",
+    "parent": "88740c5b23f1cf5f0896d471b4339d9db39f4b9b",
+    "productSourceEquivalentTo": "cc184e5928f8cc67a84864822cc3b246e8cb51f0"
+  },
+  "checks": {
+    "appearanceUnitTests": "2/2 PASS",
+    "appearanceMockCases": "6/6 PASS",
+    "staticChecks": "syntax、ESLint、Prettier、committed diff check PASS",
+    "evidence": "133 targets及133原件全部字节/SHA一致；旧131项记录未改",
+    "originalTasks": "125项语义及提交文本原样保留",
+    "governance": "126 tasks、36 features、3 snapshot documents均0违规",
+    "taskStatus": "PARTIAL / NOT_VERIFIED保持",
+    "productInputSha256": "f2fdcc3fbdc54fc7b3122bcd50dbf46d4da2d699eae38fe6696904ab07b7f124",
+    "historicalIdentity": "887 Native6、安装及Hosted保留原head/merge/feature身份",
+    "utcMetadataFix": "仅修正3日期行；7abc RED保留，checker未改",
+    "nativePush": "NOT TRIGGERED；doc-only增量不匹配既有paths规则"
+  },
+  "openFindings": {
+    "P0": 0,
+    "P1": 0,
+    "P2": 0,
+    "items": []
+  },
+  "limits": [
+    "Native7及当前head三平台runtime、required verify/Delivery尚待实际验证。",
+    "当前PR merge完整tree等值由CI另核，不以旧四run代替新门禁。",
+    "Linux unsupported检查证明如实拒绝，不能据此宣称透明开启成功。",
+    "成功路径确认关闭读回；失败路径判FAIL并关闭自有窗口。",
+    "未启动应用、构建或服务，未写文件；Root产生的两份generated schema dirt保留。",
+    "本结论不构成GitHub human approval、发布或用户产品验收。"
+  ]
+}

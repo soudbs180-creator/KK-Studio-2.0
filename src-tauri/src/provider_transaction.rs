@@ -1,4 +1,4 @@
-//! All application metadata and vault writers share one Windows-session mutex.
+//! Metadata and vault writers share a Windows-session mutex or a Unix file lock.
 //! Guards stay on their acquiring thread; secrets never enter metadata or receipts.
 use crate::provider_config::ProviderConfigRepository;
 use serde::Serialize;
@@ -7,6 +7,11 @@ use std::marker::PhantomData;
 use std::rc::Rc;
 
 pub const CREDENTIAL_SERVICE: &str = "com.kkstudio.provider";
+#[cfg(unix)]
+thread_local! {
+    static UNIX_TRANSACTION: std::cell::RefCell<Option<(std::path::PathBuf, std::fs::File, usize)>> = const { std::cell::RefCell::new(None) };
+}
+
 pub struct ProviderTransactionGuard {
     #[cfg(windows)]
     handle: windows_sys::Win32::Foundation::HANDLE,
@@ -14,6 +19,25 @@ pub struct ProviderTransactionGuard {
 }
 
 impl ProviderTransactionGuard {
+    #[cfg(unix)]
+    fn acquire_unix(root: &std::path::Path) -> Result<Self, String> {
+        UNIX_TRANSACTION.with(|state| {
+            let mut state = state.borrow_mut();
+            if let Some((held, _, depth)) = state.as_mut() {
+                if held != root {
+                    return Err("lock: 凭据事务目录不一致".into());
+                }
+                *depth += 1;
+            } else {
+                let file = private_unix_lock(root)?;
+                *state = Some((root.to_path_buf(), file, 1));
+            }
+            Ok(Self {
+                _thread: PhantomData,
+            })
+        })
+    }
+
     pub fn acquire() -> Result<Self, String> {
         #[cfg(windows)]
         {
@@ -53,9 +77,56 @@ impl ProviderTransactionGuard {
             }
             .into());
         }
-        #[cfg(not(windows))]
+        #[cfg(unix)]
+        {
+            let root = std::env::temp_dir()
+                .join(format!("kk-studio-provider-transactions-{}", unsafe {
+                    libc::geteuid()
+                }));
+            Self::acquire_unix(&root)
+        }
+        #[cfg(not(any(windows, unix)))]
         Err("unsupported: 当前桌面平台不支持安全凭据事务".into())
     }
+}
+
+#[cfg(unix)]
+fn private_unix_lock(root: &std::path::Path) -> Result<std::fs::File, String> {
+    use std::os::fd::AsRawFd;
+    use std::os::unix::fs::{DirBuilderExt, MetadataExt, OpenOptionsExt};
+    let error = || "lock: 系统凭据共享锁目录或文件不安全或不可用，请重试".to_string();
+    match std::fs::DirBuilder::new().mode(0o700).create(root) {
+        Ok(()) => (),
+        Err(cause) if cause.kind() == std::io::ErrorKind::AlreadyExists => (),
+        Err(_) => return Err(error()),
+    }
+    let uid = unsafe { libc::geteuid() };
+    let metadata = std::fs::symlink_metadata(root).map_err(|_| error())?;
+    // Never repair foreign/shared state: another account could replace the locked inode.
+    if !metadata.is_dir() || metadata.uid() != uid || metadata.mode() & 0o077 != 0 {
+        return Err(error());
+    }
+    let file = std::fs::OpenOptions::new()
+        .read(true)
+        .write(true)
+        .create(true)
+        .truncate(false)
+        .mode(0o600)
+        .custom_flags(libc::O_NOFOLLOW | libc::O_CLOEXEC)
+        .open(root.join("repository.lock"))
+        .map_err(|_| error())?;
+    let metadata = file.metadata().map_err(|_| error())?;
+    if !metadata.is_file()
+        || metadata.uid() != uid
+        || metadata.mode() & 0o077 != 0
+        || metadata.nlink() != 1
+    {
+        return Err(error());
+    }
+    if unsafe { libc::flock(file.as_raw_fd(), libc::LOCK_EX | libc::LOCK_NB) } != 0 {
+        return Err("lock: 系统凭据共享锁不可用，请重试".into());
+    }
+    Ok(file)
 }
 
 #[cfg(windows)]
@@ -65,6 +136,21 @@ impl Drop for ProviderTransactionGuard {
             windows_sys::Win32::System::Threading::ReleaseMutex(self.handle);
             windows_sys::Win32::Foundation::CloseHandle(self.handle);
         }
+    }
+}
+
+#[cfg(unix)]
+impl Drop for ProviderTransactionGuard {
+    fn drop(&mut self) {
+        UNIX_TRANSACTION.with(|state| {
+            let mut state = state.borrow_mut();
+            if let Some((_, _, depth)) = state.as_mut() {
+                *depth -= 1;
+                if *depth == 0 {
+                    *state = None;
+                }
+            }
+        });
     }
 }
 
@@ -100,8 +186,7 @@ impl CredentialVault for SystemCredentialVault {
         }
         #[cfg(not(windows))]
         {
-            let _ = (provider_id, secret);
-            Err("当前桌面平台不支持系统凭据库".into())
+            crate::system_credentials::set(provider_id, secret.to_owned()).map(|_| ())
         }
     }
     fn delete(&self, provider_id: &str) -> Result<(), String> {
@@ -114,8 +199,7 @@ impl CredentialVault for SystemCredentialVault {
         }
         #[cfg(not(windows))]
         {
-            let _ = provider_id;
-            Err("当前桌面平台不支持系统凭据库".into())
+            crate::system_credentials::delete(provider_id).map(|_| ())
         }
     }
 }
@@ -141,7 +225,7 @@ pub fn get_credential(provider_id: &str) -> Result<Option<String>, String> {
         }
     }
     #[cfg(not(windows))]
-    Err("当前桌面平台不支持系统凭据库".into())
+    crate::system_credentials::get(provider_id)
 }
 pub fn delete_credential(provider_id: &str) -> Result<bool, String> {
     validate_provider_id(provider_id)?;
@@ -155,7 +239,7 @@ pub fn delete_credential(provider_id: &str) -> Result<bool, String> {
         }
     }
     #[cfg(not(windows))]
-    Err("当前桌面平台不支持系统凭据库".into())
+    crate::system_credentials::delete(provider_id)
 }
 
 #[derive(Debug, Serialize)]
@@ -227,3 +311,78 @@ pub(crate) fn provider_test_guard() -> std::sync::MutexGuard<'static, ()> {
 #[cfg(all(test, windows))]
 #[path = "provider_transaction_tests.rs"]
 mod tests;
+
+#[cfg(all(test, unix))]
+mod unix_tests {
+    use super::*;
+    use std::os::unix::fs::{symlink, DirBuilderExt, PermissionsExt};
+
+    fn test_root() -> std::path::PathBuf {
+        std::env::temp_dir().join(format!(
+            "kk-provider-lock-{}-{}",
+            std::process::id(),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ))
+    }
+
+    #[test]
+    fn shared_or_symlink_transaction_root_is_rejected_without_repair() {
+        let root = test_root();
+        std::fs::DirBuilder::new()
+            .mode(0o700)
+            .create(&root)
+            .unwrap();
+        std::fs::set_permissions(&root, std::fs::Permissions::from_mode(0o777)).unwrap();
+        assert!(ProviderTransactionGuard::acquire_unix(&root).is_err());
+        assert_eq!(
+            std::fs::metadata(&root).unwrap().permissions().mode() & 0o777,
+            0o777
+        );
+        let link = root.with_extension("link");
+        symlink(&root, &link).unwrap();
+        assert!(ProviderTransactionGuard::acquire_unix(&link).is_err());
+        assert!(!root.join("repository.lock").exists());
+        std::fs::remove_file(link).unwrap();
+        std::fs::remove_dir(root).unwrap();
+    }
+
+    #[test]
+    fn symlink_or_hardlinked_transaction_lock_is_rejected() {
+        let root = test_root();
+        std::fs::DirBuilder::new()
+            .mode(0o700)
+            .create(&root)
+            .unwrap();
+        let target = root.join("original");
+        std::fs::write(&target, b"original").unwrap();
+        std::fs::set_permissions(&target, std::fs::Permissions::from_mode(0o600)).unwrap();
+        let lock = root.join("repository.lock");
+        symlink(&target, &lock).unwrap();
+        assert!(ProviderTransactionGuard::acquire_unix(&root).is_err());
+        std::fs::remove_file(&lock).unwrap();
+        std::fs::hard_link(&target, &lock).unwrap();
+        assert!(ProviderTransactionGuard::acquire_unix(&root).is_err());
+        assert_eq!(std::fs::read(&target).unwrap(), b"original");
+        std::fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn shared_transaction_lock_is_exclusive_and_released() {
+        let root = test_root();
+        let first = ProviderTransactionGuard::acquire_unix(&root).unwrap();
+        let nested = ProviderTransactionGuard::acquire_unix(&root).unwrap();
+        drop(first);
+        let other = root.clone();
+        assert!(
+            std::thread::spawn(move || ProviderTransactionGuard::acquire_unix(&other).is_err())
+                .join()
+                .unwrap()
+        );
+        drop(nested);
+        drop(ProviderTransactionGuard::acquire_unix(&root).unwrap());
+        std::fs::remove_dir_all(root).unwrap();
+    }
+}

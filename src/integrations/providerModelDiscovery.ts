@@ -11,12 +11,33 @@ import {
 
 const invalid = () =>
   new Error("模型列表不完整或格式无效，请检查地址和接口协议。");
-type DiscoveryPage = { data?: unknown[]; has_more?: boolean; last_id?: string };
+type DiscoveryPage = {
+  data?: unknown[];
+  models?: unknown[];
+  has_more?: boolean;
+  last_id?: string;
+  nextPageToken?: string;
+};
 function nextCursor(
   payload: DiscoveryPage,
   options: ProviderProtocolOptions,
   cursors: Set<string>,
 ): string | undefined {
+  if (providerProtocol(options) === "gemini") {
+    if (payload.nextPageToken === undefined || payload.nextPageToken === "")
+      return;
+    if (
+      typeof payload.nextPageToken !== "string" ||
+      payload.nextPageToken.length > 2048 ||
+      [...payload.nextPageToken].some(
+        (character) =>
+          character.charCodeAt(0) < 32 || character.charCodeAt(0) === 127,
+      ) ||
+      cursors.has(payload.nextPageToken)
+    )
+      throw invalid();
+    return payload.nextPageToken;
+  }
   if (
     providerProtocol(options) !== "anthropic" ||
     payload.has_more === false ||
@@ -54,7 +75,11 @@ export async function discoverProviderModels(
   for (let page = 0; page < 32; page++) {
     signal.throwIfAborted();
     const url = new URL(getModelsEndpoint(options.baseUrl));
-    if (cursor) url.searchParams.set("after_id", cursor);
+    if (cursor)
+      url.searchParams.set(
+        providerProtocol(options) === "gemini" ? "pageToken" : "after_id",
+        cursor,
+      );
     const response = await fetch(url, {
       method: "GET",
       headers,
@@ -93,16 +118,40 @@ export async function discoverProviderModels(
       await reader.cancel().catch(() => undefined);
       reader.releaseLock();
     }
-    let payload: { data?: unknown[]; has_more?: boolean; last_id?: string };
+    let payload: DiscoveryPage;
     try {
       payload = JSON.parse(raw);
     } catch {
       throw invalid();
     }
-    if (!payload || !Array.isArray(payload.data) || payload.data.length > 5000)
-      throw invalid();
-    const parsed = parseCatalogModels(payload);
-    if (parsed.length !== payload.data.length) throw invalid();
+    const data =
+      providerProtocol(options) === "gemini" ? payload?.models : payload?.data;
+    if (!payload || !Array.isArray(data) || data.length > 5000) throw invalid();
+    const normalized =
+      providerProtocol(options) === "gemini"
+        ? data.map((raw) => {
+            if (!raw || typeof raw !== "object" || Array.isArray(raw))
+              throw invalid();
+            const model = raw as Record<string, unknown>;
+            if (
+              typeof model.name !== "string" ||
+              !model.name.startsWith("models/")
+            )
+              throw invalid();
+            return {
+              id: model.name.slice(7),
+              capabilities: {
+                modalities:
+                  Array.isArray(model.supportedGenerationMethods) &&
+                  model.supportedGenerationMethods.includes("generateContent")
+                    ? ["text"]
+                    : [],
+              },
+            };
+          })
+        : data;
+    const parsed = parseCatalogModels({ data: normalized });
+    if (parsed.length !== data.length) throw invalid();
     for (const model of parsed) {
       if (!seen.has(model.id)) {
         seen.add(model.id);

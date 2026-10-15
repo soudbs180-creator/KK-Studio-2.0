@@ -1,0 +1,1091 @@
+[
+  {
+    "artifactId": 11833382956,
+    "sourceHead": "1e79bba24d28e5c24bd0a91c6e0595c9270f1234",
+    "inputSha256": "05354b9505bb68965bc4ec3ddcc3a2847e35c1d5df0672db7664a62e06d5e655",
+    "beforeAfterEqual": true,
+    "passed": true,
+    "signing": "Distribution signing NOT VERIFIED",
+    "packages": [
+      {
+        "format": "appimage",
+        "passed": true,
+        "package": {
+          "size": 260770296,
+          "sha256": "777adcdc78bd318d4d3b0fc9b35216f1e5225a5e40afaf9e584bc3e05125b3b3",
+          "mode": 493
+        },
+        "exe": {
+          "path": "usr/bin/kk-studio",
+          "size": 25734640,
+          "sha256": "63c5512c29743b0b3e47dab320b1f3816c1967d5795a79a49d59c2b74f15d35c",
+          "mode": 493
+        },
+        "launcher": {
+          "path": "AppRun",
+          "size": 274,
+          "sha256": "eb0b254ac0dae6543e6dd7cd02e1baf40a060de95b927313122d6b46323c00aa",
+          "mode": 493
+        },
+        "manifest": {
+          "size": 819479,
+          "sha256": "a43df4706012d6967617903dc589f67fcb5a0f3fce2c538e6bf46864bc25d88c",
+          "mode": 420
+        },
+        "node": {
+          "version": "v24.21.0",
+          "platform": "linux",
+          "arch": "x64"
+        },
+        "filesCount": 4316,
+        "filesSha256": "65d0966b91d305bdd2e8dbb40a3b01836a442f3fff988a5df5fa80a490731041",
+        "markers": [
+          "app",
+          "providers",
+          "profile",
+          "memory",
+          "projects",
+          "conversations",
+          "assets",
+          "models",
+          "comfyui",
+          "cache",
+          "backups",
+          "logs",
+          "tasks",
+          "tasks/native-host"
+        ],
+        "termination": {
+          "pid": 31104,
+          "exitCode": null,
+          "signalCode": "SIGTERM"
+        },
+        "launchPid": 31104,
+        "dataRoot": "/tmp/kk-package-oPgcP8/data"
+      },
+      {
+        "format": "deb",
+        "passed": true,
+        "package": {
+          "size": 203624302,
+          "sha256": "589a73ff9f5c1cdf9a2d0b5ffb92016355110b5a38c2edb783154cf1eda586d1",
+          "mode": 420
+        },
+        "exe": {
+          "path": "usr/bin/kk-studio",
+          "size": 25699064,
+          "sha256": "305e572220904141fc8d0e4569392141a5ec18a9195b12c83db4f5ae50aeda8a",
+          "mode": 493
+        },
+        "launcher": {
+          "path": "usr/bin/kk-studio",
+          "size": 25699064,
+          "sha256": "305e572220904141fc8d0e4569392141a5ec18a9195b12c83db4f5ae50aeda8a",
+          "mode": 493
+        },
+        "manifest": {
+          "size": 819479,
+          "sha256": "a43df4706012d6967617903dc589f67fcb5a0f3fce2c538e6bf46864bc25d88c",
+          "mode": 420
+        },
+        "node": {
+          "version": "v24.21.0",
+          "platform": "linux",
+          "arch": "x64"
+        },
+        "filesCount": 4316,
+        "filesSha256": "65d0966b91d305bdd2e8dbb40a3b01836a442f3fff988a5df5fa80a490731041",
+        "markers": [
+          "app",
+          "providers",
+          "profile",
+          "memory",
+          "projects",
+          "conversations",
+          "assets",
+          "models",
+          "comfyui",
+          "cache",
+          "backups",
+          "logs",
+          "tasks",
+          "tasks/native-host"
+        ],
+        "termination": {
+          "pid": 31279,
+          "exitCode": null,
+          "signalCode": "SIGTERM"
+        },
+        "launchPid": 31279,
+        "dataRoot": "/tmp/kk-package-h7XHXK/data"
+      }
+    ],
+    "native": {
+      "passed": true,
+      "checks": [
+        "real-synthetic-system-vault",
+        "real-local-model-discovery",
+        "real-ui-two-model-round-native-journal-markdown",
+        "real-native-package-roundtrip",
+        "real-bundled-agent-start",
+        "real-app-restart-vault-and-project"
+      ],
+      "errors": [],
+      "sourceHead": "1e79bba24d28e5c24bd0a91c6e0595c9270f1234",
+      "inputSha256": "05354b9505bb68965bc4ec3ddcc3a2847e35c1d5df0672db7664a62e06d5e655",
+      "executableSha256": "d4714f557e3aaf6490242f0ab58eb10e6ad8e341f38c038f413813ceb037840f",
+      "scope": "Production frontend/shared Native host with explicitly compiled test-only driver; not byte-identical to shipping build",
+      "urls": [
+        "tauri://localhost",
+        "tauri://localhost"
+      ],
+      "exitSignals": [
+        {
+          "stage": "process-exit",
+          "at": "2026-10-13T17:19:49.375Z",
+          "pid": 39271,
+          "code": null,
+          "signal": "SIGTERM"
+        },
+        {
+          "stage": "process-exit",
+          "at": "2026-10-13T17:19:50.428Z",
+          "pid": 39421,
+          "code": null,
+          "signal": "SIGTERM"
+        }
+      ]
+    },
+    "producer": {
+      "runId": "f1966bed-f662-4a2f-983a-dc8f2523043a",
+      "passed": true,
+      "before": {
+        "sourceHead": "1e79bba24d28e5c24bd0a91c6e0595c9270f1234",
+        "inputSha256": "05354b9505bb68965bc4ec3ddcc3a2847e35c1d5df0672db7664a62e06d5e655"
+      },
+      "after": {
+        "sourceHead": "1e79bba24d28e5c24bd0a91c6e0595c9270f1234",
+        "inputSha256": "05354b9505bb68965bc4ec3ddcc3a2847e35c1d5df0672db7664a62e06d5e655"
+      },
+      "realTool": {
+        "path": "/usr/bin/patchelf",
+        "size": 166240,
+        "sha256": "ebc7bde09fdc923acdfade62f49c32b7c32de3d64f83aea14fc38143ecf77c25",
+        "mode": 493,
+        "version": "patchelf 0.14.3"
+      },
+      "manifest": {
+        "size": 819479,
+        "sha256": "a43df4706012d6967617903dc589f67fcb5a0f3fce2c538e6bf46864bc25d88c",
+        "mode": 420
+      },
+      "files": 4316,
+      "filesSha256": "65d0966b91d305bdd2e8dbb40a3b01836a442f3fff988a5df5fa80a490731041",
+      "package": {
+        "path": "src-tauri/target/release/bundle/appimage/KK Studio_2.1.18_amd64.AppImage",
+        "size": 260770296,
+        "sha256": "777adcdc78bd318d4d3b0fc9b35216f1e5225a5e40afaf9e584bc3e05125b3b3",
+        "mode": 493
+      },
+      "preservedCount": 66,
+      "preservedUnique": [
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/bin/codex",
+          "size": 269273536,
+          "sha256": "0753dfe1d8b87a52436deb13eb1c549661ef4c84fee2c5aa688385eebeccb761",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/bin/codex-code-mode-host",
+          "size": 69423168,
+          "sha256": "210ab8ebaebf4bc1421d9e30339c858354ca35fa91e2f87f4c6204e5382f8a63",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path/rg",
+          "size": 5408904,
+          "sha256": "e62198eb19b136b88c330af83647b5a962cb99b6b1f066758568f12de1974849",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/bwrap",
+          "size": 529776,
+          "sha256": "77360cb751ccedc5971391444ac86a8a33c15b04d6b4a6fe45f5d25496e62c4c",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/voice/bin/codex-voice-host",
+          "size": 12806552,
+          "sha256": "c5cea0a307d683a4f11dd0bf4aaa26430aef3b3299c3abb4a744830c41f88401",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/voice/lib/gstreamer-1.0/libgstapp.so",
+          "size": 6488,
+          "sha256": "273dd0cef410ba933580142b4d3aecb9de9a02ea8ccb44d4cd0072f1be13624d",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/voice/lib/gstreamer-1.0/libgstaudioconvert.so",
+          "size": 40928,
+          "sha256": "cec016217ca8461d6c1aff1e07f05cc350ef4f11301c18d05d917d7909f84e98",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/voice/lib/gstreamer-1.0/libgstaudioresample.so",
+          "size": 35120,
+          "sha256": "3754b172d3902141aa65b307ebb2cb2e5953ecb8be1d3ec48b059d9825765e7f",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/voice/lib/gstreamer-1.0/libgstcoreelements.so",
+          "size": 473176,
+          "sha256": "825037b9e1b82dc33fa40e507a5ea11c6604f053121a7731012450919a34f4ff",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/voice/lib/gstreamer-1.0/libgstopus.so",
+          "size": 71992,
+          "sha256": "9ff0058e22b4b17a3ff739fcf4956ec4288626cb522e7f3be632c11c66e4eafd",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/voice/lib/gstreamer-1.0/libgstrtp.so",
+          "size": 739744,
+          "sha256": "2c550ec3a4a8ffc949b4d8c7ee56305019ed8dfb6ddc11dc616f0d32da63decc",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/voice/lib/gstreamer-1.0/libgstrtpmanager.so",
+          "size": 558104,
+          "sha256": "a8324c765a0431250e842a81626ed4be51af27bbce6db1132ff80f424404091d",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/voice/lib/libffi.so.8",
+          "size": 63112,
+          "sha256": "6ef5db59b2e4b1eb63032fa6c8afb1669bc09b073789233c379efda85b1353db",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/voice/lib/libgio-2.0.so.0",
+          "size": 2307904,
+          "sha256": "f2b01325b9880a6050a6d9b380495c05920ccb614b65070bfe50a883ad3c5b59",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/voice/lib/libglib-2.0.so.0",
+          "size": 1480224,
+          "sha256": "0beb2da5be4e426aff91394172e09dccf5e9a413de450dd32504ca47db7ce67c",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/voice/lib/libgmodule-2.0.so.0",
+          "size": 15656,
+          "sha256": "dd6bf973282b80ac308ad8c453b69ba94eafe358cddd17dc5f256602482bd60d",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/voice/lib/libgobject-2.0.so.0",
+          "size": 449600,
+          "sha256": "43f50b570200c3bec7f04ae0e75b74f78b455b1f767467665beb2e4990147cce",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/voice/lib/libgstallocators-1.0.so.0",
+          "size": 30128,
+          "sha256": "b9dd63b6676e3bab1ad25cedcf1ecd3ccd34adc8564b4be0931ba1096d006024",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/voice/lib/libgstapp-1.0.so.0",
+          "size": 105200,
+          "sha256": "94a2c78ec2589014aa719d0f45320fb48cc30e90568f518f749b0220d06bac6a",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/voice/lib/libgstaudio-1.0.so.0",
+          "size": 597832,
+          "sha256": "80cbe5f0ce5bdd8111cbc550cdcf53d5ef2aa6828441b76fba052590f4c0e84d",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/voice/lib/libgstbase-1.0.so.0",
+          "size": 564592,
+          "sha256": "61ed2fac21b57f9691cb102fa40aad58e08ba148e74a7bbce4470e43776b1dfe",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/voice/lib/libgstnet-1.0.so.0",
+          "size": 73856,
+          "sha256": "0dcc313fa275232f356a83f7a7b6e18c7a22c7accf24768a8d9f946e9a07a92e",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/voice/lib/libgstpbutils-1.0.so.0",
+          "size": 316576,
+          "sha256": "3f245e363a7b500867cff43012bcb1e84bdd7b5d4044c3455e32c4816cbe89b8",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/voice/lib/libgstreamer-1.0.so.0",
+          "size": 1548568,
+          "sha256": "19f9b840b0b1b825059fb1bbd7000c7fe1f871b5bf7238919bc5ef38cd4ff4f3",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/voice/lib/libgstrtp-1.0.so.0",
+          "size": 209200,
+          "sha256": "10dfe4d90cf550b237b97ec73ece5cd127f3f48aa0015be0a25d5913b8efeb86",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/voice/lib/libgsttag-1.0.so.0",
+          "size": 268280,
+          "sha256": "6e17b41a0d975e308cca86984c4a067e458ab81019da1b1c0669db250932549e",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/voice/lib/libgstvideo-1.0.so.0",
+          "size": 975136,
+          "sha256": "c27531d2bdbc01700d4f87db771f217d6950da81347d95cf734e80820d13a1ca",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/voice/lib/libintl.so.8",
+          "size": 6288,
+          "sha256": "f50f3ab34be7b3392f2db82bd67d50e133b35fa41d352dc3b3a97b70b0ffd960",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/voice/lib/libopus.so.0",
+          "size": 565744,
+          "sha256": "9b768239b031926f3ae8a47a4974683dc7703281e1698c1735aee447b14a14e2",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/voice/lib/libpcre2-8.so.0",
+          "size": 442424,
+          "sha256": "e39519b242f40686734ed8d0218f68cac24f0e956ec64c8c1b49b9da5cc9788b",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/voice/lib/libz.so.1",
+          "size": 109296,
+          "sha256": "6c5d765f42d9368cc4bdbd11f725c1bcf6b14b78322033d3c94f787fc6261f5e",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/zsh/bin/zsh",
+          "size": 898480,
+          "sha256": "67faaaa89242c4a332e16e508a1977cffc24bf7fca31d4411cdfd101f3831ef3",
+          "mode": 493
+        },
+        {
+          "path": "node",
+          "size": 126595440,
+          "sha256": "7fde7b8afa198da66257f42ee2001d874c7355631e6d1579a5fb5ef1f246df4c",
+          "mode": 493
+        }
+      ]
+    }
+  },
+  {
+    "artifactId": 11833073397,
+    "sourceHead": "1e79bba24d28e5c24bd0a91c6e0595c9270f1234",
+    "inputSha256": "05354b9505bb68965bc4ec3ddcc3a2847e35c1d5df0672db7664a62e06d5e655",
+    "beforeAfterEqual": true,
+    "passed": true,
+    "signing": "Ad-hoc identity '-'; Apple notarization and downloaded Gatekeeper acceptance NOT VERIFIED",
+    "packages": [
+      {
+        "format": "app",
+        "passed": true,
+        "package": {
+          "kind": "directory",
+          "executableSha256": "36804156f60b0ef916d0b775fb26473798ef93a790e63f726feb19f3729b6e4f",
+          "manifestSha256": "8f76ebec42a0f056d3417f3edd25c6d630726970df69dafc6365017ab75bdb1f"
+        },
+        "exe": {
+          "path": "../../../../../../../private/var/folders/s6/5hzmn6lx4dz5nxs7k_0slzph0000gn/T/kk-package-mqc85R/KK Studio.app/Contents/MacOS/kk-studio",
+          "size": 21549440,
+          "sha256": "36804156f60b0ef916d0b775fb26473798ef93a790e63f726feb19f3729b6e4f",
+          "mode": 493
+        },
+        "launcher": {
+          "path": "../../../../../../../private/var/folders/s6/5hzmn6lx4dz5nxs7k_0slzph0000gn/T/kk-package-mqc85R/KK Studio.app/Contents/MacOS/kk-studio",
+          "size": 21549440,
+          "sha256": "36804156f60b0ef916d0b775fb26473798ef93a790e63f726feb19f3729b6e4f",
+          "mode": 493
+        },
+        "manifest": {
+          "size": 818918,
+          "sha256": "8f76ebec42a0f056d3417f3edd25c6d630726970df69dafc6365017ab75bdb1f",
+          "mode": 420
+        },
+        "node": {
+          "version": "v24.20.0",
+          "platform": "darwin",
+          "arch": "arm64"
+        },
+        "filesCount": 4314,
+        "filesSha256": "433284e476a4b698b9455a0ed73fce39ba17453609597e5413ddecf81386c3f5",
+        "markers": [
+          "app",
+          "providers",
+          "profile",
+          "memory",
+          "projects",
+          "conversations",
+          "assets",
+          "models",
+          "comfyui",
+          "cache",
+          "backups",
+          "logs",
+          "tasks",
+          "tasks/native-host"
+        ],
+        "termination": {
+          "pid": 18553,
+          "exitCode": null,
+          "signalCode": "SIGTERM"
+        },
+        "launchPid": 18553,
+        "dataRoot": "/var/folders/s6/5hzmn6lx4dz5nxs7k_0slzph0000gn/T/kk-package-mqc85R/data"
+      },
+      {
+        "format": "dmg",
+        "passed": true,
+        "package": {
+          "size": 176344791,
+          "sha256": "98b62c9f46fcce65c60c6db9ea8f142c18b2f7577a127987196e9f1598c253e7",
+          "mode": 420
+        },
+        "exe": {
+          "path": "../../../../../../../../private/var/folders/s6/5hzmn6lx4dz5nxs7k_0slzph0000gn/T/kk-package-Z0pgdo/mount/KK Studio.app/Contents/MacOS/kk-studio",
+          "size": 21549440,
+          "sha256": "36804156f60b0ef916d0b775fb26473798ef93a790e63f726feb19f3729b6e4f",
+          "mode": 493
+        },
+        "launcher": {
+          "path": "../../../../../../../../private/var/folders/s6/5hzmn6lx4dz5nxs7k_0slzph0000gn/T/kk-package-Z0pgdo/mount/KK Studio.app/Contents/MacOS/kk-studio",
+          "size": 21549440,
+          "sha256": "36804156f60b0ef916d0b775fb26473798ef93a790e63f726feb19f3729b6e4f",
+          "mode": 493
+        },
+        "manifest": {
+          "size": 818918,
+          "sha256": "8f76ebec42a0f056d3417f3edd25c6d630726970df69dafc6365017ab75bdb1f",
+          "mode": 420
+        },
+        "node": {
+          "version": "v24.20.0",
+          "platform": "darwin",
+          "arch": "arm64"
+        },
+        "filesCount": 4314,
+        "filesSha256": "433284e476a4b698b9455a0ed73fce39ba17453609597e5413ddecf81386c3f5",
+        "markers": [
+          "app",
+          "providers",
+          "profile",
+          "memory",
+          "projects",
+          "conversations",
+          "assets",
+          "models",
+          "comfyui",
+          "cache",
+          "backups",
+          "logs",
+          "tasks",
+          "tasks/native-host"
+        ],
+        "termination": {
+          "pid": 18849,
+          "exitCode": null,
+          "signalCode": "SIGTERM"
+        },
+        "launchPid": 18849,
+        "dataRoot": "/var/folders/s6/5hzmn6lx4dz5nxs7k_0slzph0000gn/T/kk-package-Z0pgdo/data"
+      }
+    ],
+    "native": {
+      "passed": true,
+      "checks": [
+        "real-synthetic-system-vault",
+        "real-local-model-discovery",
+        "real-ui-two-model-round-native-journal-markdown",
+        "real-native-package-roundtrip",
+        "real-bundled-agent-start",
+        "real-app-restart-vault-and-project"
+      ],
+      "errors": [],
+      "sourceHead": "1e79bba24d28e5c24bd0a91c6e0595c9270f1234",
+      "inputSha256": "05354b9505bb68965bc4ec3ddcc3a2847e35c1d5df0672db7664a62e06d5e655",
+      "executableSha256": "8d8a2b5586ae4773ff950265873a1e861488a26c2a17a7489a069626824cc13f",
+      "scope": "Production frontend/shared Native host with explicitly compiled test-only driver; not byte-identical to shipping build",
+      "urls": [
+        "tauri://localhost",
+        "tauri://localhost"
+      ],
+      "exitSignals": [
+        {
+          "stage": "process-exit",
+          "at": "2026-10-13T17:16:46.525Z",
+          "pid": 26230,
+          "code": null,
+          "signal": "SIGTERM"
+        },
+        {
+          "stage": "process-exit",
+          "at": "2026-10-13T17:16:50.736Z",
+          "pid": 26679,
+          "code": null,
+          "signal": "SIGTERM"
+        }
+      ]
+    }
+  },
+  {
+    "artifactId": 11832664348,
+    "sourceHead": "cc184e5928f8cc67a84864822cc3b246e8cb51f0",
+    "inputSha256": "05354b9505bb68965bc4ec3ddcc3a2847e35c1d5df0672db7664a62e06d5e655",
+    "beforeAfterEqual": true,
+    "passed": true,
+    "signing": "Ad-hoc identity '-'; Apple notarization and downloaded Gatekeeper acceptance NOT VERIFIED",
+    "packages": [
+      {
+        "format": "app",
+        "passed": true,
+        "package": {
+          "kind": "directory",
+          "executableSha256": "36804156f60b0ef916d0b775fb26473798ef93a790e63f726feb19f3729b6e4f",
+          "manifestSha256": "8f76ebec42a0f056d3417f3edd25c6d630726970df69dafc6365017ab75bdb1f"
+        },
+        "exe": {
+          "path": "../../../../../../../private/var/folders/s6/5hzmn6lx4dz5nxs7k_0slzph0000gn/T/kk-package-9d257h/KK Studio.app/Contents/MacOS/kk-studio",
+          "size": 21549440,
+          "sha256": "36804156f60b0ef916d0b775fb26473798ef93a790e63f726feb19f3729b6e4f",
+          "mode": 493
+        },
+        "launcher": {
+          "path": "../../../../../../../private/var/folders/s6/5hzmn6lx4dz5nxs7k_0slzph0000gn/T/kk-package-9d257h/KK Studio.app/Contents/MacOS/kk-studio",
+          "size": 21549440,
+          "sha256": "36804156f60b0ef916d0b775fb26473798ef93a790e63f726feb19f3729b6e4f",
+          "mode": 493
+        },
+        "manifest": {
+          "size": 818918,
+          "sha256": "8f76ebec42a0f056d3417f3edd25c6d630726970df69dafc6365017ab75bdb1f",
+          "mode": 420
+        },
+        "node": {
+          "version": "v24.20.0",
+          "platform": "darwin",
+          "arch": "arm64"
+        },
+        "filesCount": 4314,
+        "filesSha256": "433284e476a4b698b9455a0ed73fce39ba17453609597e5413ddecf81386c3f5",
+        "markers": [
+          "app",
+          "providers",
+          "profile",
+          "memory",
+          "projects",
+          "conversations",
+          "assets",
+          "models",
+          "comfyui",
+          "cache",
+          "backups",
+          "logs",
+          "tasks",
+          "tasks/native-host"
+        ],
+        "termination": {
+          "pid": 18593,
+          "exitCode": null,
+          "signalCode": "SIGTERM"
+        },
+        "launchPid": 18593,
+        "dataRoot": "/var/folders/s6/5hzmn6lx4dz5nxs7k_0slzph0000gn/T/kk-package-9d257h/data"
+      },
+      {
+        "format": "dmg",
+        "passed": true,
+        "package": {
+          "size": 176344737,
+          "sha256": "e6d21a7d9299640d1089f9630e1a0d2b98f83a6794aeb816346bae275ceef4b6",
+          "mode": 420
+        },
+        "exe": {
+          "path": "../../../../../../../../private/var/folders/s6/5hzmn6lx4dz5nxs7k_0slzph0000gn/T/kk-package-rhaTG4/mount/KK Studio.app/Contents/MacOS/kk-studio",
+          "size": 21549440,
+          "sha256": "36804156f60b0ef916d0b775fb26473798ef93a790e63f726feb19f3729b6e4f",
+          "mode": 493
+        },
+        "launcher": {
+          "path": "../../../../../../../../private/var/folders/s6/5hzmn6lx4dz5nxs7k_0slzph0000gn/T/kk-package-rhaTG4/mount/KK Studio.app/Contents/MacOS/kk-studio",
+          "size": 21549440,
+          "sha256": "36804156f60b0ef916d0b775fb26473798ef93a790e63f726feb19f3729b6e4f",
+          "mode": 493
+        },
+        "manifest": {
+          "size": 818918,
+          "sha256": "8f76ebec42a0f056d3417f3edd25c6d630726970df69dafc6365017ab75bdb1f",
+          "mode": 420
+        },
+        "node": {
+          "version": "v24.20.0",
+          "platform": "darwin",
+          "arch": "arm64"
+        },
+        "filesCount": 4314,
+        "filesSha256": "433284e476a4b698b9455a0ed73fce39ba17453609597e5413ddecf81386c3f5",
+        "markers": [
+          "app",
+          "providers",
+          "profile",
+          "memory",
+          "projects",
+          "conversations",
+          "assets",
+          "models",
+          "comfyui",
+          "cache",
+          "backups",
+          "logs",
+          "tasks",
+          "tasks/native-host"
+        ],
+        "termination": {
+          "pid": 18912,
+          "exitCode": null,
+          "signalCode": "SIGTERM"
+        },
+        "launchPid": 18912,
+        "dataRoot": "/var/folders/s6/5hzmn6lx4dz5nxs7k_0slzph0000gn/T/kk-package-rhaTG4/data"
+      }
+    ],
+    "native": {
+      "passed": true,
+      "checks": [
+        "real-synthetic-system-vault",
+        "real-local-model-discovery",
+        "real-ui-two-model-round-native-journal-markdown",
+        "real-native-package-roundtrip",
+        "real-bundled-agent-start",
+        "real-app-restart-vault-and-project"
+      ],
+      "errors": [],
+      "sourceHead": "cc184e5928f8cc67a84864822cc3b246e8cb51f0",
+      "inputSha256": "05354b9505bb68965bc4ec3ddcc3a2847e35c1d5df0672db7664a62e06d5e655",
+      "executableSha256": "8d8a2b5586ae4773ff950265873a1e861488a26c2a17a7489a069626824cc13f",
+      "scope": "Production frontend/shared Native host with explicitly compiled test-only driver; not byte-identical to shipping build",
+      "urls": [
+        "tauri://localhost",
+        "tauri://localhost"
+      ],
+      "exitSignals": [
+        {
+          "stage": "process-exit",
+          "at": "2026-10-13T17:17:23.117Z",
+          "pid": 26614,
+          "code": null,
+          "signal": "SIGTERM"
+        },
+        {
+          "stage": "process-exit",
+          "at": "2026-10-13T17:17:26.947Z",
+          "pid": 26892,
+          "code": null,
+          "signal": "SIGTERM"
+        }
+      ]
+    }
+  },
+  {
+    "artifactId": 11832539949,
+    "sourceHead": "cc184e5928f8cc67a84864822cc3b246e8cb51f0",
+    "inputSha256": "05354b9505bb68965bc4ec3ddcc3a2847e35c1d5df0672db7664a62e06d5e655",
+    "beforeAfterEqual": true,
+    "passed": true,
+    "signing": "Distribution signing NOT VERIFIED",
+    "packages": [
+      {
+        "format": "appimage",
+        "passed": true,
+        "package": {
+          "size": 260770296,
+          "sha256": "468f739292ff7f8bb821c436833d5a0bafd89fd8413c73a5c7f535f15a818f19",
+          "mode": 493
+        },
+        "exe": {
+          "path": "usr/bin/kk-studio",
+          "size": 25734640,
+          "sha256": "63c5512c29743b0b3e47dab320b1f3816c1967d5795a79a49d59c2b74f15d35c",
+          "mode": 493
+        },
+        "launcher": {
+          "path": "AppRun",
+          "size": 274,
+          "sha256": "eb0b254ac0dae6543e6dd7cd02e1baf40a060de95b927313122d6b46323c00aa",
+          "mode": 493
+        },
+        "manifest": {
+          "size": 819479,
+          "sha256": "a43df4706012d6967617903dc589f67fcb5a0f3fce2c538e6bf46864bc25d88c",
+          "mode": 420
+        },
+        "node": {
+          "version": "v24.21.0",
+          "platform": "linux",
+          "arch": "x64"
+        },
+        "filesCount": 4316,
+        "filesSha256": "65d0966b91d305bdd2e8dbb40a3b01836a442f3fff988a5df5fa80a490731041",
+        "markers": [
+          "app",
+          "providers",
+          "profile",
+          "memory",
+          "projects",
+          "conversations",
+          "assets",
+          "models",
+          "comfyui",
+          "cache",
+          "backups",
+          "logs",
+          "tasks",
+          "tasks/native-host"
+        ],
+        "termination": {
+          "pid": 31135,
+          "exitCode": null,
+          "signalCode": "SIGTERM"
+        },
+        "launchPid": 31135,
+        "dataRoot": "/tmp/kk-package-CrYMED/data"
+      },
+      {
+        "format": "deb",
+        "passed": true,
+        "package": {
+          "size": 203624278,
+          "sha256": "bdd298700483e7a21a54940dfb326be5849c97d89a0952bb892f38d4a9ba4f6a",
+          "mode": 420
+        },
+        "exe": {
+          "path": "usr/bin/kk-studio",
+          "size": 25699064,
+          "sha256": "305e572220904141fc8d0e4569392141a5ec18a9195b12c83db4f5ae50aeda8a",
+          "mode": 493
+        },
+        "launcher": {
+          "path": "usr/bin/kk-studio",
+          "size": 25699064,
+          "sha256": "305e572220904141fc8d0e4569392141a5ec18a9195b12c83db4f5ae50aeda8a",
+          "mode": 493
+        },
+        "manifest": {
+          "size": 819479,
+          "sha256": "a43df4706012d6967617903dc589f67fcb5a0f3fce2c538e6bf46864bc25d88c",
+          "mode": 420
+        },
+        "node": {
+          "version": "v24.21.0",
+          "platform": "linux",
+          "arch": "x64"
+        },
+        "filesCount": 4316,
+        "filesSha256": "65d0966b91d305bdd2e8dbb40a3b01836a442f3fff988a5df5fa80a490731041",
+        "markers": [
+          "app",
+          "providers",
+          "profile",
+          "memory",
+          "projects",
+          "conversations",
+          "assets",
+          "models",
+          "comfyui",
+          "cache",
+          "backups",
+          "logs",
+          "tasks",
+          "tasks/native-host"
+        ],
+        "termination": {
+          "pid": 31309,
+          "exitCode": null,
+          "signalCode": "SIGTERM"
+        },
+        "launchPid": 31309,
+        "dataRoot": "/tmp/kk-package-8qcxWx/data"
+      }
+    ],
+    "native": {
+      "passed": false,
+      "checks": [
+        "real-synthetic-system-vault",
+        "real-local-model-discovery",
+        "real-ui-two-model-round-native-journal-markdown"
+      ],
+      "errors": [
+        "AssertionError [ERR_ASSERTION]: conflict: 项目在选择文件期间发生变化，请保存完成后重新导出\n\nfalse !== true\n\n    at invoke (file:///home/runner/work/KK-Studio-2.0/KK-Studio-2.0/tests/desktop/native-crossplatform.mjs:137:10)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///home/runner/work/KK-Studio-2.0/KK-Studio-2.0/tests/desktop/native-crossplatform.mjs:404:3"
+      ],
+      "sourceHead": "cc184e5928f8cc67a84864822cc3b246e8cb51f0",
+      "inputSha256": "05354b9505bb68965bc4ec3ddcc3a2847e35c1d5df0672db7664a62e06d5e655",
+      "executableSha256": "d4714f557e3aaf6490242f0ab58eb10e6ad8e341f38c038f413813ceb037840f",
+      "scope": "Production frontend/shared Native host with explicitly compiled test-only driver; not byte-identical to shipping build",
+      "urls": [
+        "tauri://localhost"
+      ],
+      "exitSignals": [
+        {
+          "stage": "process-exit",
+          "at": "2026-10-13T17:19:29.279Z",
+          "pid": 39293,
+          "code": null,
+          "signal": "SIGTERM"
+        }
+      ]
+    },
+    "producer": {
+      "runId": "acfe8642-e001-4e28-aeb7-e7216830e9a6",
+      "passed": true,
+      "before": {
+        "sourceHead": "cc184e5928f8cc67a84864822cc3b246e8cb51f0",
+        "inputSha256": "05354b9505bb68965bc4ec3ddcc3a2847e35c1d5df0672db7664a62e06d5e655"
+      },
+      "after": {
+        "sourceHead": "cc184e5928f8cc67a84864822cc3b246e8cb51f0",
+        "inputSha256": "05354b9505bb68965bc4ec3ddcc3a2847e35c1d5df0672db7664a62e06d5e655"
+      },
+      "realTool": {
+        "path": "/usr/bin/patchelf",
+        "size": 166240,
+        "sha256": "ebc7bde09fdc923acdfade62f49c32b7c32de3d64f83aea14fc38143ecf77c25",
+        "mode": 493,
+        "version": "patchelf 0.14.3"
+      },
+      "manifest": {
+        "size": 819479,
+        "sha256": "a43df4706012d6967617903dc589f67fcb5a0f3fce2c538e6bf46864bc25d88c",
+        "mode": 420
+      },
+      "files": 4316,
+      "filesSha256": "65d0966b91d305bdd2e8dbb40a3b01836a442f3fff988a5df5fa80a490731041",
+      "package": {
+        "path": "src-tauri/target/release/bundle/appimage/KK Studio_2.1.18_amd64.AppImage",
+        "size": 260770296,
+        "sha256": "468f739292ff7f8bb821c436833d5a0bafd89fd8413c73a5c7f535f15a818f19",
+        "mode": 493
+      },
+      "preservedCount": 66,
+      "preservedUnique": [
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/bin/codex",
+          "size": 269273536,
+          "sha256": "0753dfe1d8b87a52436deb13eb1c549661ef4c84fee2c5aa688385eebeccb761",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/bin/codex-code-mode-host",
+          "size": 69423168,
+          "sha256": "210ab8ebaebf4bc1421d9e30339c858354ca35fa91e2f87f4c6204e5382f8a63",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path/rg",
+          "size": 5408904,
+          "sha256": "e62198eb19b136b88c330af83647b5a962cb99b6b1f066758568f12de1974849",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/bwrap",
+          "size": 529776,
+          "sha256": "77360cb751ccedc5971391444ac86a8a33c15b04d6b4a6fe45f5d25496e62c4c",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/voice/bin/codex-voice-host",
+          "size": 12806552,
+          "sha256": "c5cea0a307d683a4f11dd0bf4aaa26430aef3b3299c3abb4a744830c41f88401",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/voice/lib/gstreamer-1.0/libgstapp.so",
+          "size": 6488,
+          "sha256": "273dd0cef410ba933580142b4d3aecb9de9a02ea8ccb44d4cd0072f1be13624d",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/voice/lib/gstreamer-1.0/libgstaudioconvert.so",
+          "size": 40928,
+          "sha256": "cec016217ca8461d6c1aff1e07f05cc350ef4f11301c18d05d917d7909f84e98",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/voice/lib/gstreamer-1.0/libgstaudioresample.so",
+          "size": 35120,
+          "sha256": "3754b172d3902141aa65b307ebb2cb2e5953ecb8be1d3ec48b059d9825765e7f",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/voice/lib/gstreamer-1.0/libgstcoreelements.so",
+          "size": 473176,
+          "sha256": "825037b9e1b82dc33fa40e507a5ea11c6604f053121a7731012450919a34f4ff",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/voice/lib/gstreamer-1.0/libgstopus.so",
+          "size": 71992,
+          "sha256": "9ff0058e22b4b17a3ff739fcf4956ec4288626cb522e7f3be632c11c66e4eafd",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/voice/lib/gstreamer-1.0/libgstrtp.so",
+          "size": 739744,
+          "sha256": "2c550ec3a4a8ffc949b4d8c7ee56305019ed8dfb6ddc11dc616f0d32da63decc",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/voice/lib/gstreamer-1.0/libgstrtpmanager.so",
+          "size": 558104,
+          "sha256": "a8324c765a0431250e842a81626ed4be51af27bbce6db1132ff80f424404091d",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/voice/lib/libffi.so.8",
+          "size": 63112,
+          "sha256": "6ef5db59b2e4b1eb63032fa6c8afb1669bc09b073789233c379efda85b1353db",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/voice/lib/libgio-2.0.so.0",
+          "size": 2307904,
+          "sha256": "f2b01325b9880a6050a6d9b380495c05920ccb614b65070bfe50a883ad3c5b59",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/voice/lib/libglib-2.0.so.0",
+          "size": 1480224,
+          "sha256": "0beb2da5be4e426aff91394172e09dccf5e9a413de450dd32504ca47db7ce67c",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/voice/lib/libgmodule-2.0.so.0",
+          "size": 15656,
+          "sha256": "dd6bf973282b80ac308ad8c453b69ba94eafe358cddd17dc5f256602482bd60d",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/voice/lib/libgobject-2.0.so.0",
+          "size": 449600,
+          "sha256": "43f50b570200c3bec7f04ae0e75b74f78b455b1f767467665beb2e4990147cce",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/voice/lib/libgstallocators-1.0.so.0",
+          "size": 30128,
+          "sha256": "b9dd63b6676e3bab1ad25cedcf1ecd3ccd34adc8564b4be0931ba1096d006024",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/voice/lib/libgstapp-1.0.so.0",
+          "size": 105200,
+          "sha256": "94a2c78ec2589014aa719d0f45320fb48cc30e90568f518f749b0220d06bac6a",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/voice/lib/libgstaudio-1.0.so.0",
+          "size": 597832,
+          "sha256": "80cbe5f0ce5bdd8111cbc550cdcf53d5ef2aa6828441b76fba052590f4c0e84d",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/voice/lib/libgstbase-1.0.so.0",
+          "size": 564592,
+          "sha256": "61ed2fac21b57f9691cb102fa40aad58e08ba148e74a7bbce4470e43776b1dfe",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/voice/lib/libgstnet-1.0.so.0",
+          "size": 73856,
+          "sha256": "0dcc313fa275232f356a83f7a7b6e18c7a22c7accf24768a8d9f946e9a07a92e",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/voice/lib/libgstpbutils-1.0.so.0",
+          "size": 316576,
+          "sha256": "3f245e363a7b500867cff43012bcb1e84bdd7b5d4044c3455e32c4816cbe89b8",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/voice/lib/libgstreamer-1.0.so.0",
+          "size": 1548568,
+          "sha256": "19f9b840b0b1b825059fb1bbd7000c7fe1f871b5bf7238919bc5ef38cd4ff4f3",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/voice/lib/libgstrtp-1.0.so.0",
+          "size": 209200,
+          "sha256": "10dfe4d90cf550b237b97ec73ece5cd127f3f48aa0015be0a25d5913b8efeb86",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/voice/lib/libgsttag-1.0.so.0",
+          "size": 268280,
+          "sha256": "6e17b41a0d975e308cca86984c4a067e458ab81019da1b1c0669db250932549e",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/voice/lib/libgstvideo-1.0.so.0",
+          "size": 975136,
+          "sha256": "c27531d2bdbc01700d4f87db771f217d6950da81347d95cf734e80820d13a1ca",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/voice/lib/libintl.so.8",
+          "size": 6288,
+          "sha256": "f50f3ab34be7b3392f2db82bd67d50e133b35fa41d352dc3b3a97b70b0ffd960",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/voice/lib/libopus.so.0",
+          "size": 565744,
+          "sha256": "9b768239b031926f3ae8a47a4974683dc7703281e1698c1735aee447b14a14e2",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/voice/lib/libpcre2-8.so.0",
+          "size": 442424,
+          "sha256": "e39519b242f40686734ed8d0218f68cac24f0e956ec64c8c1b49b9da5cc9788b",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/voice/lib/libz.so.1",
+          "size": 109296,
+          "sha256": "6c5d765f42d9368cc4bdbd11f725c1bcf6b14b78322033d3c94f787fc6261f5e",
+          "mode": 493
+        },
+        {
+          "path": "agent/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources/zsh/bin/zsh",
+          "size": 898480,
+          "sha256": "67faaaa89242c4a332e16e508a1977cffc24bf7fca31d4411cdfd101f3831ef3",
+          "mode": 493
+        },
+        {
+          "path": "node",
+          "size": 126595440,
+          "sha256": "7fde7b8afa198da66257f42ee2001d874c7355631e6d1579a5fb5ef1f246df4c",
+          "mode": 493
+        }
+      ]
+    }
+  }
+]

@@ -5,6 +5,9 @@ import {
   providerProtocolSchema,
   providerAuthModeSchema,
   isProviderAuthAllowed,
+  providerProtocol,
+  providerAuthMode,
+  type ProviderProtocolOptions,
 } from "./providerProtocol.ts";
 
 export const MODEL_PROVIDER_STORAGE_KEY = BROWSER_STORAGE_KEYS.modelProvider;
@@ -93,4 +96,26 @@ export function getModelsEndpoint(baseUrl: string): string {
   url.search = "";
   url.hash = "";
   return url.toString();
+}
+
+export {
+  providerProtocolSchema,
+  providerAuthModeSchema,
+  isStrictLoopbackProviderUrl,
+  type ProviderProtocol,
+  type ProviderAuthMode,
+} from "./providerProtocol.ts";
+export type { ProviderProtocolOptions } from "./providerProtocol.ts";
+export function resolveProviderProtocol(
+  options: Pick<ProviderProtocolOptions, "protocol"> = {},
+) {
+  return providerProtocol(options);
+}
+export function resolveProviderAuthMode(
+  baseUrl: string,
+  options: Omit<ProviderProtocolOptions, "baseUrl"> = {},
+) {
+  if (!isProviderAuthAllowed({ baseUrl, ...options }))
+    throw new Error("免密认证仅允许显式配置的本机 Chat/Ollama 服务。");
+  return providerAuthMode(options);
 }

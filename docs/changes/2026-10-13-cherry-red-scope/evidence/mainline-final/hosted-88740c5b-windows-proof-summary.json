@@ -1,0 +1,768 @@
+[
+  {
+    "artifactId": 11837797562,
+    "receiptCommit": "e9822e9642d321d852cf5322e9a7a65f7bcd91be",
+    "sourceTree": "c1ab0640d08bea64f4e57692df90c41f22a181bb",
+    "buildInputs": {
+      "createdAt": "2026-10-13T17:53:01.489Z",
+      "buildCommit": "e9822e9642d321d852cf5322e9a7a65f7bcd91be",
+      "sourceTree": "c1ab0640d08bea64f4e57692df90c41f22a181bb",
+      "releaseInputSha256": "ac99d0036998e2efc07cd3f02fc8732643ec1cc82ff0be8526cf0fa19a9fc754",
+      "releaseExecutableSha256": "824386cf8a2801bb4c92e850f67da489c284451f242102f392fde8353a8230b2",
+      "executable": {
+        "size": 20050944,
+        "sha256": "824386cf8a2801bb4c92e850f67da489c284451f242102f392fde8353a8230b2"
+      },
+      "bundledExecutable": {
+        "size": 20050944,
+        "sha256": "9f292f06f6a94ee014542860e6bf9974178407dbcf50a72838f8feae0cf5442b"
+      },
+      "installerConfig": {
+        "size": 581,
+        "sha256": "0de6fe7e161e297a9200ef71a9560e7ed5ca2153bfe8799b4b985354eef73c98"
+      },
+      "runtimeManifest": {
+        "size": 809805,
+        "sha256": "bf671dae1a168313d017fc23874628798fab9880423c985fd0429faba2358ae6"
+      }
+    },
+    "versions": {
+      "schemaVersion": 1,
+      "desktop": "2.1.18",
+      "web": "2.1.18",
+      "mobile": "2.1.1"
+    },
+    "installer": {
+      "path": "KK Studio_2.1.18_x64-setup.exe",
+      "size": 345815338,
+      "sha256": "b5dd109be9bba9f7a73e365378546d4febbea3249b169742716dcebd1f636b76"
+    },
+    "installedFiles": 4280,
+    "signing": "NOT VERIFIED; inspect Authenticode before formal distribution",
+    "acceptance": "Receipt is file identity only; see installer runtime evidence",
+    "runtime": {
+      "timestamp": "2026-10-13T17:59:06.726Z",
+      "receiptCommit": "e9822e9642d321d852cf5322e9a7a65f7bcd91be",
+      "isolated": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\kk-installer-audit space-cTWTmr",
+      "profile": "D:\\a\\_temp\\kk-installer-profile-681411aa2e4548b4a7b4e7cd17d9bb4f",
+      "hostElevated": "true",
+      "platform": "Windows host with existing WebView2 (not a clean Windows VM)",
+      "installerSha256": "b5dd109be9bba9f7a73e365378546d4febbea3249b169742716dcebd1f636b76",
+      "checks": [
+        {
+          "action": "damaged-package",
+          "refusedBeforeExecution": true
+        },
+        {
+          "action": "install",
+          "verifiedFiles": 4280,
+          "entries": [
+            {
+              "kind": "uninstall",
+              "hive": "CurrentUser",
+              "view": "Registry32",
+              "location": "\"C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\kk-installer-audit space-cTWTmr\\app\"",
+              "version": "2.1.18"
+            },
+            {
+              "kind": "settings",
+              "hive": "CurrentUser",
+              "view": "Registry32",
+              "location": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\kk-installer-audit space-cTWTmr\\app"
+            },
+            {
+              "kind": "uninstall",
+              "hive": "CurrentUser",
+              "view": "Registry64",
+              "location": "\"C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\kk-installer-audit space-cTWTmr\\app\"",
+              "version": "2.1.18"
+            },
+            {
+              "kind": "settings",
+              "hive": "CurrentUser",
+              "view": "Registry64",
+              "location": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\kk-installer-audit space-cTWTmr\\app"
+            }
+          ]
+        },
+        {
+          "action": "bundled-agent",
+          "healthy": true
+        },
+        {
+          "action": "install",
+          "verifiedFiles": 4280,
+          "entries": [
+            {
+              "kind": "uninstall",
+              "hive": "CurrentUser",
+              "view": "Registry32",
+              "location": "\"C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\kk-installer-audit space-cTWTmr\\app\"",
+              "version": "2.1.18"
+            },
+            {
+              "kind": "settings",
+              "hive": "CurrentUser",
+              "view": "Registry32",
+              "location": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\kk-installer-audit space-cTWTmr\\app"
+            },
+            {
+              "kind": "uninstall",
+              "hive": "CurrentUser",
+              "view": "Registry64",
+              "location": "\"C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\kk-installer-audit space-cTWTmr\\app\"",
+              "version": "2.1.18"
+            },
+            {
+              "kind": "settings",
+              "hive": "CurrentUser",
+              "view": "Registry64",
+              "location": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\kk-installer-audit space-cTWTmr\\app"
+            }
+          ]
+        },
+        {
+          "action": "install",
+          "verifiedFiles": 4280,
+          "entries": [
+            {
+              "kind": "uninstall",
+              "hive": "CurrentUser",
+              "view": "Registry32",
+              "location": "\"C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\kk-installer-audit space-cTWTmr\\app\"",
+              "version": "2.1.18"
+            },
+            {
+              "kind": "settings",
+              "hive": "CurrentUser",
+              "view": "Registry32",
+              "location": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\kk-installer-audit space-cTWTmr\\app"
+            },
+            {
+              "kind": "uninstall",
+              "hive": "CurrentUser",
+              "view": "Registry64",
+              "location": "\"C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\kk-installer-audit space-cTWTmr\\app\"",
+              "version": "2.1.18"
+            },
+            {
+              "kind": "settings",
+              "hive": "CurrentUser",
+              "view": "Registry64",
+              "location": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\kk-installer-audit space-cTWTmr\\app"
+            }
+          ]
+        },
+        {
+          "action": "uninstall",
+          "registrationRemoved": true
+        },
+        {
+          "action": "install",
+          "verifiedFiles": 4280,
+          "entries": [
+            {
+              "kind": "uninstall",
+              "hive": "CurrentUser",
+              "view": "Registry32",
+              "location": "\"C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\kk-installer-audit space-cTWTmr\\app\"",
+              "version": "2.1.18"
+            },
+            {
+              "kind": "settings",
+              "hive": "CurrentUser",
+              "view": "Registry32",
+              "location": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\kk-installer-audit space-cTWTmr\\app"
+            },
+            {
+              "kind": "uninstall",
+              "hive": "CurrentUser",
+              "view": "Registry64",
+              "location": "\"C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\kk-installer-audit space-cTWTmr\\app\"",
+              "version": "2.1.18"
+            },
+            {
+              "kind": "settings",
+              "hive": "CurrentUser",
+              "view": "Registry64",
+              "location": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\kk-installer-audit space-cTWTmr\\app"
+            }
+          ]
+        },
+        {
+          "action": "uninstall",
+          "registrationRemoved": true
+        },
+        {
+          "action": "data-retention",
+          "reinstall": true,
+          "resourceRepair": true,
+          "uninstallReinstall": true,
+          "offlineScope": "App DNS blocked; installer uses existing WebView2 and invalid proxy",
+          "cleanWindowsWithoutWebView2": "NOT RUN",
+          "lowerVersionRollback": "NOT RUN"
+        }
+      ],
+      "launches": [
+        {
+          "label": "installed",
+          "url": "http://tauri.localhost/",
+          "scripts": [
+            "http://tauri.localhost/assets/index-Dz2hYLqp.js"
+          ],
+          "root": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\kk-installer-audit space-cTWTmr\\data",
+          "executable": {
+            "size": 20050944,
+            "sha256": "9f292f06f6a94ee014542860e6bf9974178407dbcf50a72838f8feae0cf5442b"
+          }
+        },
+        {
+          "label": "reinstalled",
+          "url": "http://tauri.localhost/",
+          "scripts": [
+            "http://tauri.localhost/assets/index-Dz2hYLqp.js"
+          ],
+          "root": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\kk-installer-audit space-cTWTmr\\data",
+          "executable": {
+            "size": 20050944,
+            "sha256": "9f292f06f6a94ee014542860e6bf9974178407dbcf50a72838f8feae0cf5442b"
+          }
+        },
+        {
+          "label": "repaired",
+          "url": "http://tauri.localhost/",
+          "scripts": [
+            "http://tauri.localhost/assets/index-Dz2hYLqp.js"
+          ],
+          "root": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\kk-installer-audit space-cTWTmr\\data",
+          "executable": {
+            "size": 20050944,
+            "sha256": "9f292f06f6a94ee014542860e6bf9974178407dbcf50a72838f8feae0cf5442b"
+          }
+        },
+        {
+          "label": "restored-after-uninstall",
+          "url": "http://tauri.localhost/",
+          "scripts": [
+            "http://tauri.localhost/assets/index-Dz2hYLqp.js"
+          ],
+          "root": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\kk-installer-audit space-cTWTmr\\data",
+          "executable": {
+            "size": 20050944,
+            "sha256": "9f292f06f6a94ee014542860e6bf9974178407dbcf50a72838f8feae0cf5442b"
+          }
+        }
+      ],
+      "passed": true
+    },
+    "native": {
+      "passed": true,
+      "checks": [
+        {
+          "name": "real-synthetic-system-vault",
+          "passed": true
+        },
+        {
+          "name": "real-local-model-discovery",
+          "passed": true
+        },
+        {
+          "name": "real-ui-two-model-round-native-journal-markdown",
+          "taskIds": [
+            "conversation-49d94b51-5f3b-4a43-ab35-991173e0f1d4-route-0",
+            "conversation-49d94b51-5f3b-4a43-ab35-991173e0f1d4-route-1"
+          ],
+          "passed": true
+        },
+        {
+          "name": "real-native-package-roundtrip",
+          "passed": true
+        },
+        {
+          "name": "real-bundled-agent-start",
+          "pid": 3332,
+          "passed": true
+        },
+        {
+          "name": "real-app-restart-vault-and-project",
+          "passed": true
+        }
+      ],
+      "sourceHead": "e9822e9642d321d852cf5322e9a7a65f7bcd91be",
+      "buildReceipt": {
+        "sourceHead": "e9822e9642d321d852cf5322e9a7a65f7bcd91be",
+        "inputSha256": "ac99d0036998e2efc07cd3f02fc8732643ec1cc82ff0be8526cf0fa19a9fc754",
+        "runtimeManifestSha256": "bf671dae1a168313d017fc23874628798fab9880423c985fd0429faba2358ae6",
+        "executableSha256": "7c2e6dfa06f72e3f0932f8052edcc8a11f1169f2780a10b1ad6a09029edc353a",
+        "platform": "win32",
+        "arch": "x64",
+        "feature": "native-e2e",
+        "generatedDocuments": [],
+        "createdAt": "2026-10-13T18:08:40.946Z"
+      },
+      "scope": "Production frontend/shared Native host with explicitly compiled test-only driver; not byte-identical to shipping build",
+      "packageExportRevision": 17,
+      "exportRevisionSafeInteger": true,
+      "errors": [],
+      "startupSignals": [
+        {
+          "stage": "spawn",
+          "at": "2026-10-13T18:08:41.543Z",
+          "pid": 2892,
+          "value": "D:\\a\\KK-Studio-2.0\\KK-Studio-2.0\\src-tauri\\target\\native-e2e\\release\\kk-studio.exe"
+        },
+        {
+          "stage": "webview-registered",
+          "at": "2026-10-13T18:08:42.184Z",
+          "pid": 2892,
+          "value": true
+        },
+        {
+          "stage": "production-url",
+          "at": "2026-10-13T18:08:43.147Z",
+          "pid": 2892,
+          "value": "http://tauri.localhost/"
+        },
+        {
+          "stage": "production-title",
+          "at": "2026-10-13T18:08:43.157Z",
+          "pid": 2892,
+          "value": "KK Studio 2.0"
+        },
+        {
+          "stage": "production-dom",
+          "at": "2026-10-13T18:08:43.424Z",
+          "pid": 2892,
+          "value": true
+        },
+        {
+          "stage": "process-exit",
+          "at": "2026-10-13T18:08:52.393Z",
+          "pid": 2892,
+          "code": 0,
+          "signal": null
+        },
+        {
+          "stage": "spawn",
+          "at": "2026-10-13T18:08:52.596Z",
+          "pid": 5272,
+          "value": "D:\\a\\KK-Studio-2.0\\KK-Studio-2.0\\src-tauri\\target\\native-e2e\\release\\kk-studio.exe"
+        },
+        {
+          "stage": "webview-registered",
+          "at": "2026-10-13T18:08:53.211Z",
+          "pid": 5272,
+          "value": true
+        },
+        {
+          "stage": "production-url",
+          "at": "2026-10-13T18:08:53.338Z",
+          "pid": 5272,
+          "value": "http://tauri.localhost/"
+        },
+        {
+          "stage": "production-title",
+          "at": "2026-10-13T18:08:53.347Z",
+          "pid": 5272,
+          "value": "KK Studio 2.0"
+        },
+        {
+          "stage": "production-dom",
+          "at": "2026-10-13T18:08:53.388Z",
+          "pid": 5272,
+          "value": true
+        },
+        {
+          "stage": "process-exit",
+          "at": "2026-10-13T18:08:53.829Z",
+          "pid": 5272,
+          "code": 0,
+          "signal": null
+        }
+      ]
+    }
+  },
+  {
+    "artifactId": 11837477734,
+    "receiptCommit": "88740c5b23f1cf5f0896d471b4339d9db39f4b9b",
+    "sourceTree": "c1ab0640d08bea64f4e57692df90c41f22a181bb",
+    "buildInputs": {
+      "createdAt": "2026-10-13T17:53:55.870Z",
+      "buildCommit": "88740c5b23f1cf5f0896d471b4339d9db39f4b9b",
+      "sourceTree": "c1ab0640d08bea64f4e57692df90c41f22a181bb",
+      "releaseInputSha256": "ac99d0036998e2efc07cd3f02fc8732643ec1cc82ff0be8526cf0fa19a9fc754",
+      "releaseExecutableSha256": "b7f977c1a4ed9b79a07445bf559128331e9ce2102346e37d3d220d0fe7f854ea",
+      "executable": {
+        "size": 20050944,
+        "sha256": "b7f977c1a4ed9b79a07445bf559128331e9ce2102346e37d3d220d0fe7f854ea"
+      },
+      "bundledExecutable": {
+        "size": 20050944,
+        "sha256": "f0c96daab4df69141ade112e2d68d43873789d36bfe25b21b32e2a5ab5d554eb"
+      },
+      "installerConfig": {
+        "size": 581,
+        "sha256": "0de6fe7e161e297a9200ef71a9560e7ed5ca2153bfe8799b4b985354eef73c98"
+      },
+      "runtimeManifest": {
+        "size": 809805,
+        "sha256": "bf671dae1a168313d017fc23874628798fab9880423c985fd0429faba2358ae6"
+      }
+    },
+    "versions": {
+      "schemaVersion": 1,
+      "desktop": "2.1.18",
+      "web": "2.1.18",
+      "mobile": "2.1.1"
+    },
+    "installer": {
+      "path": "KK Studio_2.1.18_x64-setup.exe",
+      "size": 345878456,
+      "sha256": "067b179427a138c01ce0e54316733dcf934375381a042dc6ac0072a95457e62f"
+    },
+    "installedFiles": 4280,
+    "signing": "NOT VERIFIED; inspect Authenticode before formal distribution",
+    "acceptance": "Receipt is file identity only; see installer runtime evidence",
+    "runtime": {
+      "timestamp": "2026-10-13T18:00:04.430Z",
+      "receiptCommit": "88740c5b23f1cf5f0896d471b4339d9db39f4b9b",
+      "isolated": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\kk-installer-audit space-s9Fkfe",
+      "profile": "D:\\a\\_temp\\kk-installer-profile-bc22acab571645b6ba9936cc9edc13cd",
+      "hostElevated": "true",
+      "platform": "Windows host with existing WebView2 (not a clean Windows VM)",
+      "installerSha256": "067b179427a138c01ce0e54316733dcf934375381a042dc6ac0072a95457e62f",
+      "checks": [
+        {
+          "action": "damaged-package",
+          "refusedBeforeExecution": true
+        },
+        {
+          "action": "install",
+          "verifiedFiles": 4280,
+          "entries": [
+            {
+              "kind": "uninstall",
+              "hive": "CurrentUser",
+              "view": "Registry32",
+              "location": "\"C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\kk-installer-audit space-s9Fkfe\\app\"",
+              "version": "2.1.18"
+            },
+            {
+              "kind": "settings",
+              "hive": "CurrentUser",
+              "view": "Registry32",
+              "location": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\kk-installer-audit space-s9Fkfe\\app"
+            },
+            {
+              "kind": "uninstall",
+              "hive": "CurrentUser",
+              "view": "Registry64",
+              "location": "\"C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\kk-installer-audit space-s9Fkfe\\app\"",
+              "version": "2.1.18"
+            },
+            {
+              "kind": "settings",
+              "hive": "CurrentUser",
+              "view": "Registry64",
+              "location": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\kk-installer-audit space-s9Fkfe\\app"
+            }
+          ]
+        },
+        {
+          "action": "bundled-agent",
+          "healthy": true
+        },
+        {
+          "action": "install",
+          "verifiedFiles": 4280,
+          "entries": [
+            {
+              "kind": "uninstall",
+              "hive": "CurrentUser",
+              "view": "Registry32",
+              "location": "\"C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\kk-installer-audit space-s9Fkfe\\app\"",
+              "version": "2.1.18"
+            },
+            {
+              "kind": "settings",
+              "hive": "CurrentUser",
+              "view": "Registry32",
+              "location": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\kk-installer-audit space-s9Fkfe\\app"
+            },
+            {
+              "kind": "uninstall",
+              "hive": "CurrentUser",
+              "view": "Registry64",
+              "location": "\"C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\kk-installer-audit space-s9Fkfe\\app\"",
+              "version": "2.1.18"
+            },
+            {
+              "kind": "settings",
+              "hive": "CurrentUser",
+              "view": "Registry64",
+              "location": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\kk-installer-audit space-s9Fkfe\\app"
+            }
+          ]
+        },
+        {
+          "action": "install",
+          "verifiedFiles": 4280,
+          "entries": [
+            {
+              "kind": "uninstall",
+              "hive": "CurrentUser",
+              "view": "Registry32",
+              "location": "\"C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\kk-installer-audit space-s9Fkfe\\app\"",
+              "version": "2.1.18"
+            },
+            {
+              "kind": "settings",
+              "hive": "CurrentUser",
+              "view": "Registry32",
+              "location": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\kk-installer-audit space-s9Fkfe\\app"
+            },
+            {
+              "kind": "uninstall",
+              "hive": "CurrentUser",
+              "view": "Registry64",
+              "location": "\"C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\kk-installer-audit space-s9Fkfe\\app\"",
+              "version": "2.1.18"
+            },
+            {
+              "kind": "settings",
+              "hive": "CurrentUser",
+              "view": "Registry64",
+              "location": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\kk-installer-audit space-s9Fkfe\\app"
+            }
+          ]
+        },
+        {
+          "action": "uninstall",
+          "registrationRemoved": true
+        },
+        {
+          "action": "install",
+          "verifiedFiles": 4280,
+          "entries": [
+            {
+              "kind": "uninstall",
+              "hive": "CurrentUser",
+              "view": "Registry32",
+              "location": "\"C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\kk-installer-audit space-s9Fkfe\\app\"",
+              "version": "2.1.18"
+            },
+            {
+              "kind": "settings",
+              "hive": "CurrentUser",
+              "view": "Registry32",
+              "location": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\kk-installer-audit space-s9Fkfe\\app"
+            },
+            {
+              "kind": "uninstall",
+              "hive": "CurrentUser",
+              "view": "Registry64",
+              "location": "\"C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\kk-installer-audit space-s9Fkfe\\app\"",
+              "version": "2.1.18"
+            },
+            {
+              "kind": "settings",
+              "hive": "CurrentUser",
+              "view": "Registry64",
+              "location": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\kk-installer-audit space-s9Fkfe\\app"
+            }
+          ]
+        },
+        {
+          "action": "uninstall",
+          "registrationRemoved": true
+        },
+        {
+          "action": "data-retention",
+          "reinstall": true,
+          "resourceRepair": true,
+          "uninstallReinstall": true,
+          "offlineScope": "App DNS blocked; installer uses existing WebView2 and invalid proxy",
+          "cleanWindowsWithoutWebView2": "NOT RUN",
+          "lowerVersionRollback": "NOT RUN"
+        }
+      ],
+      "launches": [
+        {
+          "label": "installed",
+          "url": "http://tauri.localhost/",
+          "scripts": [
+            "http://tauri.localhost/assets/index-Dz2hYLqp.js"
+          ],
+          "root": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\kk-installer-audit space-s9Fkfe\\data",
+          "executable": {
+            "size": 20050944,
+            "sha256": "f0c96daab4df69141ade112e2d68d43873789d36bfe25b21b32e2a5ab5d554eb"
+          }
+        },
+        {
+          "label": "reinstalled",
+          "url": "http://tauri.localhost/",
+          "scripts": [
+            "http://tauri.localhost/assets/index-Dz2hYLqp.js"
+          ],
+          "root": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\kk-installer-audit space-s9Fkfe\\data",
+          "executable": {
+            "size": 20050944,
+            "sha256": "f0c96daab4df69141ade112e2d68d43873789d36bfe25b21b32e2a5ab5d554eb"
+          }
+        },
+        {
+          "label": "repaired",
+          "url": "http://tauri.localhost/",
+          "scripts": [
+            "http://tauri.localhost/assets/index-Dz2hYLqp.js"
+          ],
+          "root": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\kk-installer-audit space-s9Fkfe\\data",
+          "executable": {
+            "size": 20050944,
+            "sha256": "f0c96daab4df69141ade112e2d68d43873789d36bfe25b21b32e2a5ab5d554eb"
+          }
+        },
+        {
+          "label": "restored-after-uninstall",
+          "url": "http://tauri.localhost/",
+          "scripts": [
+            "http://tauri.localhost/assets/index-Dz2hYLqp.js"
+          ],
+          "root": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\kk-installer-audit space-s9Fkfe\\data",
+          "executable": {
+            "size": 20050944,
+            "sha256": "f0c96daab4df69141ade112e2d68d43873789d36bfe25b21b32e2a5ab5d554eb"
+          }
+        }
+      ],
+      "passed": true
+    },
+    "native": {
+      "passed": true,
+      "checks": [
+        {
+          "name": "real-synthetic-system-vault",
+          "passed": true
+        },
+        {
+          "name": "real-local-model-discovery",
+          "passed": true
+        },
+        {
+          "name": "real-ui-two-model-round-native-journal-markdown",
+          "taskIds": [
+            "conversation-490f1592-b70d-4671-9097-a5b2755fe0d0-route-0",
+            "conversation-490f1592-b70d-4671-9097-a5b2755fe0d0-route-1"
+          ],
+          "passed": true
+        },
+        {
+          "name": "real-native-package-roundtrip",
+          "passed": true
+        },
+        {
+          "name": "real-bundled-agent-start",
+          "pid": 9404,
+          "passed": true
+        },
+        {
+          "name": "real-app-restart-vault-and-project",
+          "passed": true
+        }
+      ],
+      "sourceHead": "88740c5b23f1cf5f0896d471b4339d9db39f4b9b",
+      "buildReceipt": {
+        "sourceHead": "88740c5b23f1cf5f0896d471b4339d9db39f4b9b",
+        "inputSha256": "ac99d0036998e2efc07cd3f02fc8732643ec1cc82ff0be8526cf0fa19a9fc754",
+        "runtimeManifestSha256": "bf671dae1a168313d017fc23874628798fab9880423c985fd0429faba2358ae6",
+        "executableSha256": "45b61160643f820a257a371b41577ba6314d1f4fd5f2bb221873d4472448cf05",
+        "platform": "win32",
+        "arch": "x64",
+        "feature": "native-e2e",
+        "generatedDocuments": [],
+        "createdAt": "2026-10-13T18:10:14.529Z"
+      },
+      "scope": "Production frontend/shared Native host with explicitly compiled test-only driver; not byte-identical to shipping build",
+      "packageExportRevision": 17,
+      "exportRevisionSafeInteger": true,
+      "errors": [],
+      "startupSignals": [
+        {
+          "stage": "spawn",
+          "at": "2026-10-13T18:10:15.145Z",
+          "pid": 1584,
+          "value": "D:\\a\\KK-Studio-2.0\\KK-Studio-2.0\\src-tauri\\target\\native-e2e\\release\\kk-studio.exe"
+        },
+        {
+          "stage": "webview-registered",
+          "at": "2026-10-13T18:10:15.781Z",
+          "pid": 1584,
+          "value": true
+        },
+        {
+          "stage": "production-url",
+          "at": "2026-10-13T18:10:16.592Z",
+          "pid": 1584,
+          "value": "http://tauri.localhost/"
+        },
+        {
+          "stage": "production-title",
+          "at": "2026-10-13T18:10:16.595Z",
+          "pid": 1584,
+          "value": "KK Studio 2.0"
+        },
+        {
+          "stage": "production-dom",
+          "at": "2026-10-13T18:10:16.867Z",
+          "pid": 1584,
+          "value": true
+        },
+        {
+          "stage": "process-exit",
+          "at": "2026-10-13T18:10:25.848Z",
+          "pid": 1584,
+          "code": 0,
+          "signal": null
+        },
+        {
+          "stage": "spawn",
+          "at": "2026-10-13T18:10:26.051Z",
+          "pid": 3704,
+          "value": "D:\\a\\KK-Studio-2.0\\KK-Studio-2.0\\src-tauri\\target\\native-e2e\\release\\kk-studio.exe"
+        },
+        {
+          "stage": "webview-registered",
+          "at": "2026-10-13T18:10:26.678Z",
+          "pid": 3704,
+          "value": true
+        },
+        {
+          "stage": "production-url",
+          "at": "2026-10-13T18:10:26.795Z",
+          "pid": 3704,
+          "value": "http://tauri.localhost/"
+        },
+        {
+          "stage": "production-title",
+          "at": "2026-10-13T18:10:26.813Z",
+          "pid": 3704,
+          "value": "KK Studio 2.0"
+        },
+        {
+          "stage": "production-dom",
+          "at": "2026-10-13T18:10:26.847Z",
+          "pid": 3704,
+          "value": true
+        },
+        {
+          "stage": "process-exit",
+          "at": "2026-10-13T18:10:27.330Z",
+          "pid": 3704,
+          "code": 0,
+          "signal": null
+        }
+      ]
+    }
+  }
+]
