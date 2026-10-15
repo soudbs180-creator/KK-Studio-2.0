@@ -480,12 +480,15 @@ export default function App() {
     commitCreation(next);
   }
 
-  function updateHomeDraft(draft: CreationDraft): void {
+  function updateHomeDraft(
+    draft: CreationDraft,
+    changes?: Partial<CreationDraft>,
+  ): void {
     const next = {
       ...creationRef.current,
       homeDraft: { ...draft, updatedAt: Date.now() },
     };
-    commitCreation(next);
+    commitCreation(next, changes);
   }
   function applySkillToHome(record: SkillRecord): string {
     const draft = creationRef.current.homeDraft;
