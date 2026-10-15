@@ -7,6 +7,7 @@ mod agent_runtime;
 mod asset_storage;
 mod cli_runtime;
 mod creation_storage;
+mod local_hardware;
 mod project_package;
 mod provider_config;
 mod provider_model_requests;
@@ -677,6 +678,13 @@ fn open_restored_project_package(
     Ok(())
 }
 // ========== 测试连接命令 ==========
+
+#[tauri::command]
+async fn detect_local_hardware() -> Result<local_hardware::HardwareReport, String> {
+    tauri::async_runtime::spawn_blocking(local_hardware::detect)
+        .await
+        .map_err(|_| "本机硬件检测任务中断".to_string())
+}
 
 #[derive(Debug, Serialize, Deserialize)]
 struct TestResult {
@@ -1772,6 +1780,7 @@ fn main() {
             restored_roots: Mutex::new(std::collections::HashSet::new()),
         })
         .invoke_handler(tauri::generate_handler![
+            detect_local_hardware,
             memory_storage_info,
             agent_runtime::agent_runtime_start,
             agent_runtime::agent_runtime_status,
