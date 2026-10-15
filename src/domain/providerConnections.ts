@@ -1,10 +1,10 @@
 import { z } from "zod";
 import { isAllowedProviderUrl } from "./providerUrl.ts";
 import {
-  isStrictLoopbackProviderUrl,
-  providerAuthModeSchema,
   providerProtocolSchema,
-} from "./modelProvider.ts";
+  providerAuthModeSchema,
+  isProviderAuthAllowed,
+} from "./providerProtocol.ts";
 
 /** Credentials are referenced by id only; secret material lives in a vault. */
 export const connectionKindSchema = z.enum([
@@ -113,15 +113,13 @@ export const providerConnectionSchema = z
     activeLeaseIds: z.array(z.string().min(1).max(96)).max(256).optional(),
   })
   .refine(
-    (connection) =>
-      connection.authMode !== "none" ||
+    (value) =>
+      value.authMode !== "none" ||
       Boolean(
-        connection.baseUrl && isStrictLoopbackProviderUrl(connection.baseUrl),
+        value.baseUrl &&
+        isProviderAuthAllowed({ ...value, baseUrl: value.baseUrl }),
       ),
-    {
-      path: ["authMode"],
-      message: "免密认证仅允许本机回环服务",
-    },
+    "免密仅支持本机 Chat/Ollama 服务。",
   );
 export type ProviderConnection = z.infer<typeof providerConnectionSchema>;
 

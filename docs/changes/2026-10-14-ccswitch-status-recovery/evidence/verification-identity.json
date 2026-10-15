@@ -1,0 +1,29 @@
+{
+  "recordedAt": "2026-10-13T17:51:06.433Z",
+  "receiptCurrent": true,
+  "sourceAndExecutableMatchRuntime": true,
+  "driverSha256": "583714d1876929393d73de3cb81c88fed78aa76763a85461f4bfe239546e2c01",
+  "executableSha256": "fb0b0de59a0de989fc0c199961482c7122337c46d7c80f981e77830843973fe7",
+  "inputSha256": "7c95b83ecffa2e028096f794b808b120d3844e88729696224cd93f1119fbebaa",
+  "functionalChecks": 20,
+  "visualChecks": 11,
+  "allVisualTargetsFullyInViewport": true,
+  "phaseChecks": [
+    {
+      "phase": "native-committed-cache-pending",
+      "revision": 2,
+      "credentialState": "unchanged",
+      "nativeModelCommitted": true,
+      "cacheStillOld": true,
+      "syntheticVaultCredentialPreserved": true
+    }
+  ],
+  "interruptedProcess": {
+    "pid": 76236,
+    "exitCode": 1,
+    "signalCode": null,
+    "forced": true
+  },
+  "credentialCleanupComplete": true,
+  "ownedDebugPortReleased": true
+}

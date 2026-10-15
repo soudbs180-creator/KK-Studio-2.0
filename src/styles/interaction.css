@@ -28,12 +28,20 @@
 }
 .video-upload {
   position: absolute;
-  bottom: 14px;
-  padding: 6px 12px;
+  bottom: var(--kk-space-3);
+  left: 50%;
+  transform: scale(calc(1 / var(--canvas-scale, 1))) translateX(-50%);
+  transform-origin: 0 100%;
+  height: var(--kk-control-h-md);
+  padding: 0 var(--kk-space-3);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   background: var(--bg-input);
-  border: 1px solid var(--border-default);
-  border-radius: 20px;
-  font-size: 10px;
+  border: var(--kk-border-width) solid var(--border-default);
+  border-radius: var(--kk-icon-button-radius);
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-caption);
 }
 .video-params {
   width: 176px;
@@ -151,7 +159,7 @@
 .creation-composer.expanded:has(.reference-slots) textarea {
   top: 110px;
   /* Anchor to the controls throughout the shell's expansion animation. */
-  bottom: calc(var(--kk-space-3) + 19px + 35px);
+  bottom: calc(var(--kk-space-3) + 19px + var(--kk-control-h-lg));
   height: auto;
 }
 .reference-slot-grid {
@@ -236,14 +244,14 @@
 .reference-slots-footer .reference-add {
   position: static;
   width: auto;
-  height: var(--kk-control-h-sm);
-  min-height: 18px;
+  height: var(--kk-control-h-md);
+  min-height: var(--kk-control-h-md);
   padding: 0 6px;
   display: inline-flex;
   align-items: center;
   gap: 3px;
   border: 1px solid var(--border-subtle);
-  border-radius: 6px;
+  border-radius: var(--kk-radius-full);
   font-size: var(--kk-font-caption);
 }
 .reference-slots-footer .reference-limit {
@@ -328,7 +336,7 @@
   width: 16px;
   height: 16px;
 }
-@media (max-width: 800px) {
+@media (max-width: 767px) {
   .mobile-search {
     display: grid;
     place-items: center;

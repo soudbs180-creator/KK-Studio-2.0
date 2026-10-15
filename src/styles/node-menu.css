@@ -1,6 +1,6 @@
 .add-node-menu {
   position: fixed;
-  z-index: 60;
+  z-index: var(--kk-z-popover);
   width: 296px;
   height: 586px;
   max-width: calc(100vw - 32px);

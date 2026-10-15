@@ -76,7 +76,10 @@ async function expectMenuUsable(page: Page, menu: Locator): Promise<void> {
     }),
   ).toBe(true);
   await expectInViewport(page, menu.locator("button").first());
-  await expectInViewport(page, menu.locator("button").last());
+  const lastAction = menu.locator("button").last();
+  // Additional assistants may scroll inside the bounded menu; actions stay reachable.
+  await lastAction.scrollIntoViewIfNeeded();
+  await expectInViewport(page, lastAction);
 }
 
 function workspaceTriggers(panel: Locator): Locator[] {
@@ -182,12 +185,15 @@ test("长模型名不会挤出工作台动作区，模型菜单仍完整可操�
       area!.x + area!.width + 0.5,
     );
   }
-  const ordered = [...controls].sort((left, right) => left.x - right.x);
-  ordered.slice(1).forEach((control, index) => {
-    expect(
-      control.x,
-      `${ordered[index].name} overlaps ${control.name}`,
-    ).toBeGreaterThanOrEqual(ordered[index].x + ordered[index].width - 0.5);
+  controls.forEach((control, index) => {
+    for (const other of controls.slice(index + 1)) {
+      const separated =
+        control.x + control.width <= other.x + 0.5 ||
+        other.x + other.width <= control.x + 0.5 ||
+        control.y + control.height <= other.y + 0.5 ||
+        other.y + other.height <= control.y + 0.5;
+      expect(separated, `${control.name} overlaps ${other.name}`).toBe(true);
+    }
   });
   await model.click();
   await expectStableControls(actions, controls);

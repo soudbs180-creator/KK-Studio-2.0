@@ -11,7 +11,9 @@ export default function CreationParameterControl({
   onToggle,
   onChange,
   onModelChange,
+  disabled = false,
 }: {
+  disabled?: boolean;
   kind: "image" | "video";
   model: string;
   parameters: CanvasParameters;
@@ -26,6 +28,10 @@ export default function CreationParameterControl({
     <div className="control-anchor" data-control="params">
       <button
         className={"param-button " + (video ? "video-params" : "image-params")}
+        disabled={disabled}
+        aria-description={
+          disabled ? "生成中暂不能修改参数，取消或结束后可继续" : undefined
+        }
         aria-label={video ? "视频参数" : undefined}
         title={video ? undefined : "使用当前模型声明支持的尺寸"}
         aria-expanded={open}
@@ -51,7 +57,7 @@ export default function CreationParameterControl({
           </span>
         )}
       </button>
-      {open && !video && (
+      {open && !disabled && !video && (
         <ImageModelParameters
           model={model}
           onModelChange={onModelChange}
@@ -65,7 +71,7 @@ export default function CreationParameterControl({
           }
         />
       )}
-      {open && video && (
+      {open && !disabled && video && (
         <CreationParameters
           kind={kind}
           ratio={ratio}

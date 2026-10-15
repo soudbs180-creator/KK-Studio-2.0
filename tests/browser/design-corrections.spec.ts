@@ -1,17 +1,21 @@
 import { expect, test } from "@playwright/test";
 import { openWorkspace, waitForConversationPanelSettled } from "./helpers";
 
-test("底栏心形无需选择节点，直接打开喜欢与收藏搜索", async ({ page }) => {
+test("底栏心形无需选择节点，直接打开独立喜欢面板", async ({ page }) => {
   await openWorkspace(page);
   const library = page.getByRole("button", {
-    name: "喜欢与收藏",
+    name: "喜欢与标签",
     exact: true,
   });
   await expect(library).toBeEnabled();
   await library.click();
   await page.getByRole("menuitem", { name: "我喜欢的", exact: true }).click();
-  await expect(page.locator(".catalog-panel")).toBeVisible();
+  const likes = page.getByTestId("canvas-likes-panel");
+  await expect(likes).toBeVisible();
+  await expect(page.getByTestId("catalog-panel")).toHaveCount(0);
+  await expect(page.getByTestId("canvas-tags-panel")).toHaveCount(0);
   await page.keyboard.press("Escape");
+  await expect(likes).toHaveCount(0);
   await expect(library).toBeFocused();
 });
 

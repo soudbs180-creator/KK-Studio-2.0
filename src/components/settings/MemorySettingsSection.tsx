@@ -47,6 +47,7 @@ export default function MemorySettingsSection({
     mode,
     storageStatus,
     loadError,
+    settingsError,
     loading,
     extracting,
     busy,
@@ -98,6 +99,9 @@ export default function MemorySettingsSection({
         </button>
       </div>
 
+      <p role="alert" hidden={!settingsError}>
+        {settingsError}
+      </p>
       {enabled && (
         <>
           <h3 className="settings-detail-label">共享状态</h3>

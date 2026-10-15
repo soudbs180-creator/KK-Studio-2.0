@@ -34,23 +34,6 @@ export default function GoogleAgentControls({
           Gemini CLI 通道仅支持对话；生图请改用 API Key 登录方式。
         </p>
       )}
-      <label className="google-agent-model">
-        模型
-        <input
-          aria-label="Google 模型"
-          value={settings.model}
-          list="google-models"
-          disabled={disabled}
-          onChange={(e) =>
-            googleAgentConnection.configure({ model: e.target.value })
-          }
-        />
-      </label>
-      <datalist id="google-models">
-        {state.models.map((model) => (
-          <option key={model} value={model} />
-        ))}
-      </datalist>
       {settings.mode === "image" && (
         <>
           <label>

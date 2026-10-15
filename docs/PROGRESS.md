@@ -1,5 +1,130 @@
 # 当前进度
 
+## 2026-10-15 2.1.31本地验收冻结（REVIEW / 整体NOT_VERIFIED）
+
+共享scope恢复仅改为layout同步，修复可编辑后旧草稿抢占真实选区的可达路径；单回归有效RED→本文件8项/邻域6项首试GREEN。完整verify9为Node1304/14平台skip、Agent199/2skip、Edge761首试/0retry、UI242/0与development四步骤；fresh官方Native10保留原87并新增双宽18项，105项/13图及TaskHost current6无注入11项分别通过，owned进程退出与端口释放已实查。
+
+eb5 push759首过/1flaky严格NON_PASS与旧PR760首过分别保留，完整指纹、因果边界和Native4默认profile偏好例外集中于[最新验证](changes/2026-10-15-ui-full/verification.md#2131-当前本地验收)。当前eb5加版本31/最小差量尚未形成最终head；精确独立审查、新Hosted/Delivery、普通PR59合并及main/post-main待验。原138任务/其他功能/primary文件与index/历史保持，Mobile2.1.1规划不变。
+
+## 此前阶段记录（原文保留，最新状态以上方为准）
+
+
+## 2026-10-15 2.1.30本地验收冻结（REVIEW / 整体NOT_VERIFIED）
+
+完整verify8通过：Node1304/14平台skip、Agent199/2skip、Edge760全部首试/0retry、UI242/0及development四步骤；fresh官方Native9 87项/13图、TaskHost current5无注入11项/秘密清理PASS，自有进程退出与端口释放已实查。最小12行CSS在侧栏展开稳定前隐藏项目控件，真实300ms/32ms点击、折叠重开及4新case/定向21项通过；旧Hosted因果限制与Native8单位夹具失败见[最新验证](changes/2026-10-15-ui-full/verification.md#2130-当前本地验收)。
+
+当前d50加版本30/最小差量尚未形成最终head；独立精确审查、Hosted/Delivery、普通PR59合并与main/post-main待验。原138任务/功能状态与primary文件/index保持；Native4默认profile自动连接暂停、原值NOT_RECORDED为明确偏好例外，详证集中最新验证，不能概括所有偏好未触碰。Mobile2.1.1规划不变。
+
+## 此前阶段记录（原文保留，最新状态以上方为准）
+
+## 2026-10-15 2.1.29本地验收冻结（REVIEW / 整体NOT_VERIFIED）
+
+完整verify7通过：Node1304/14平台skip、Agent199/2skip、Edge756全部首试/0retry、UI242/0及development四步骤；fresh Native7 78项/12图和TaskHost current4无注入11项分别通过，input/EXE同字节current。三CLI卡片9有效RED→9GREEN已补漏，历史同式guard安全结论勘误与actual3 UNKNOWN边界集中于[最新验证](changes/2026-10-15-ui-full/verification.md#2129-当前本地验收)。
+
+当前94e基线加版本29/最小差量尚未形成最终head；独立精确审查、Hosted/Delivery、普通PR59合并及main/post-main待验，main694未合并。原138任务/功能状态、primary/index和历史原件保持，Mobile2.1.1仍规划。
+
+## 此前进度与原始收据（保留原范围）
+
+## 2026-10-15 2.1.28最终本地验收（REVIEW / 本地PASS，整体NOT_VERIFIED）
+
+TASK-UI-FULL-20261015基于2d4be5fca4c2167d4bc0d500634645624f311505加最小字段同步修复、版本2.1.28与测试/docs，完整verify-6 exit0：Node1318=1304 PASS/14既有platform skip、Agent201=199 PASS/2skip，production Browser747/747首试PASS/0实际retry/flaky/skip，lint/typecheck/UI242/0/format/build/development四步骤PASS。文档owner独立遍历747 result records确认0实际retry；health42及footguns2为advisory，原警告保持。
+
+官方2.1.28重建34.34s，fresh Native5 56 PASS/0errors/10图，root实查独立WebView profile并目视空态/重开/更新三图；新版TaskHost11 PASS/0error/credentialCleanupComplete=true，五自有app退出。verify-6后release仍current，input28c2f285与EXE638b5df5同Native5完整哈希相同。Native2/3/4版本硬编码/CDP早连/default profile前提失败保留，只有Native5是fresh完整验收；2d PR quality38647660224 Browser746 PASS/1 settings flaky且Native旧菜单8 checks后FAIL，非Hosted全绿。sidebar原缺trace根因UNKNOWN，本地不复现不称已修复。
+
+当前本地组合PASS；最终提交SHA独立source/integration review、新Hosted/PR59普通合并及main/post-main仍待验，main fetch仍694、PR59未合并。原138任务/功能状态、primary资料与历史失败保持，Mobile2.1.1规划。[最终验证](changes/2026-10-15-ui-full/verification.md)。
+
+## 2026-10-15 设置草稿竞态与Native夹具续修（首轮文档冻结时，保留原范围）
+
+TASK-UI-FULL-20261015当前基于2d4be5fca4c2167d4bc0d500634645624f311505追加最小ProviderModelCatalog字段同步useEffect→useLayoutEffect，保留dirty/账号隔离/保存校验；Desktop/Web2.1.27→2.1.28已版本脚本递增并build，Mobile2.1.1仍规划。Hosted54 push38645320833 Repository verify exit0含Browser746 PASS/1 sidebar flaky，Native旧模型菜单定位FAIL；2d push38647654947 Browser746 PASS/1 FAIL且retry FAIL，B型号收到A草稿。冻结旧产品真实select B→A RED2为3/3 FAIL；修复后settings七case×六次42 PASS/0retry/flaky/skip。原race-red-1运行中测试源曾修改，仅作单case诊断；sidebar首试目标文件夹缺失但原缺trace，根因UNKNOWN。
+
+Native TaskHost夹具对齐当前模型接入/官方API表单、精确模型菜单及既有快照CAS四结果草稿，真实旧release2.1.27为11 PASS、exit0、0error、credentialCleanupComplete=true，五自有进程退出与端口释放。此收据不能代填2.1.28；新版本完整verify、fresh Native/资源身份、最终SHA独立review及新Hosted/PR/main/post-main待验。main694 / PR59未合并，原138任务和功能状态保持。[当前验证](changes/2026-10-15-ui-full/verification.md)。
+
+## 2026-10-15 全页面新UI与主线保全（此前2.1.27阶段，保留原范围）
+
+- TASK-UI-FULL-20261015 当前source241f3050124ad7773ced0b47a55629373177205e，Desktop/Web2.1.27；Mobile2.1.1规划不变。用户新增空card仅upload/内容才toolbar、状态互斥与真实功能链按新矩阵验收，旧79/50 GREEN只保留原范围。
+- main694经真实checkpoint0f506ae1→任务分支merge1653966f承接，tree一致；104实际冲突、25自动差量逐项核验、21外移历史blob保全。main独有历史文档补回，当前任务承接15包，原任务branch/status保持；Delivery704 paths/0 violations。origin/main仍694，未远端落地。
+- 首轮完整verify：Node1295PASS/14skip、Agent199PASS/2skip、Browser740PASS/5FAIL/0flaky，lint/typecheck/UI242/0/format/build及单独Rust163/clientcheck通过；Browser失败使完整verify未通过，development未运行。正式source/integration review三P2均CHANGES_REQUIRED。
+- 241已修text纯prompt分类、坏audio媒体可用性和rightpan，并修首页16:9与旧screen/LG夹具；green-review-fixes-1真实14/14 PASS、0retry。首次五失败与text/audio等有效RED全部保留；当前官方隔离Native56checks/0errors与资源字节身份、owned正常关闭PASS，source241/integration241复审PASS关闭三P2；完整verify-3已exit0：Node1295/14skip、Agent199/2skip、Browser747/747首试、UI242/0及development PASS；verify-2音频selector夹具一失败与修正后严格播放2PASS保留。最终doc/test-only提交head复审及Hosted/PR/main/post-main仍待实际回执，任务转REVIEW、不提前DONE。primary254条dirty/index、109登记worktree与原件保留。[本轮验证](changes/2026-10-15-ui-full/verification.md) / [覆盖](changes/2026-10-15-ui-full/coverage.md)。
+
+- Hosted更正：ready [PR59](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/59)精确f090独立aggregate review PASS；Gitguards push/PR及governance/delivery/deploy-linux PASS，[quality38641803780](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/38641803780) verify在产品测试前因默认扫描未入库外部snapshot FAIL。main694未合并。root仅修scripts/tests可移植性、显式外部范围仍fail-closed；有效RED2FAIL/3PASS与定向23PASS保留，完整无外部env的verify-4/新SHA Hosted待验，整体REVIEW/NOT_VERIFIED；产品/Rust/Native2.1.27源与字节未变。
+
+- 可移植性修复最终本地PASS：verify-5无KK_CONTAINER_ROOT exit0，snapshot3/0、Node1301/14skip、Agent199/2skip、Browser747（2.9m）、development四步；显式容器snapshot4/0亦PASS。Native仍current且input/EXE字节不变，版本2.1.27不变；CLI24与offline AI-evals仅有限dirty预检。verify-4 lint失败/继承JSON NOT-RUN和f090 Hosted失败保留，最终修复提交head/独立exact-SHA复审/新Hosted/PR59/main待验，整体REVIEW/NOT_VERIFIED。
+
+- 最新Hosted边界：c498独立exact aggregate review PASS，quality38643592443 snapshot3/0；Node1315=1294PASS/8FAIL/13skip，8条Windows发布fixture short-path被既有canonical/no-link guard拒绝，Browser/Rust未运行。只修测试fixture realpath、安全脚本/回滚断言保持；修复证明与同8.3短TEMP/TMP完整Node与静态检查待验，旧verify-5仅本地范围。PR59未合并/main694，REVIEW/NOT_VERIFIED。
+
+- 最新短TEMP本地PASS：真实8.3 fixture11项RED3PASS/8FAIL→GREEN11PASS/0skip，只有测试fixture await realpath 4+/1-，产品安全脚本无变更。首轮完整Node1299PASS/2FAIL/14skip及canary1失败来自自建TEMP过深的git路径前置条件；较浅actual8.3根下canary7PASS/3Linux skip、run2 Node1301PASS/14skip和lint/typecheck/format全部PASS。不是完整verify-6；Browser747/Native56/Rust163沿用未变产品范围，最终head/新Hosted/PR59/main待验，REVIEW/NOT_VERIFIED。
+
+- 最新54a2独立aggregate PASS/Delivery706/0，但quality38645328109 Node1301PASS/1FAIL/13skip，仅首次gateway ready超时；POST/Provider/恢复/Browser/Rust未运行，未输出child日志故alive/crash UNKNOWN，时长差不定slow CI。单测试握手84+/14-实证preload7s RED→双冷启动4GREEN/focused21PASS，保留20s及恢复断言；实际8.3 Node1318=1304PASS/14skip与静态全PASS，非完整verify-6。产品未变，Browser747/Native56/Rust163沿用；新head/独立review/新Hosted/PR59/main及旧54 push38645320833结果待验，REVIEW/NOT_VERIFIED。
+
+## 2026-10-15 最新 UI 设置修复（本地DONE/PASS）
+
+TASK-SETTINGS-LATEST-20261015从正确最新UI c1fae190承接，Desktop/Web2.1.25保留1280/240/192、默认绿色与手机分级导航。设置长名称、提示避让、主动清空确认、能力/连接/分类草稿、型号trim与连接操作范围已修；原新版async owner锁、协议/CLI及配置身份保留。完整verify退出0：Node1278/14既有skip，Agent199/2既有skip，Edge629首试0flaky/0skip，UI242/0，development5步骤。当前Web和实际官方Tauri几何与bundle一致；EXEc9c3b4e/input2a09db54，Native20功能+11视觉+1中断阶段+5无秘密metadata通过，owned凭据/fixture清理完成。默认Desktop入口已切到最新工作区并实际启动；primary旧代码/并发dirty/index保留，只追加来源指针。独立c1→054源/测试审查PASS，无finding；本次所有失败与首轮Native旧fixture纠正留证。入口gzip增量0，无新依赖；Mobile/外部Provider/Hosted/签名与用户视觉接受另验。
+
+[当前验证](changes/2026-10-15-settings-latest-ui/verification.md)和[独立审查](changes/2026-10-15-settings-latest-ui/review.md)。以下旧版本保留原义；primary51fcc+428a错误UI基线不作最新证据。
+
+## 2026-10-15 2.1.24按钮续修本机交付
+
+Desktop/Web2.1.24产品源码58b5c07f34718769e10b76c89d510615bea2fefc，TASK-223本地授权范围DONE/PASS。完整九步verify退出0：Node1273pass/14既有skip，Agent199pass/2既有skip，Edge608全部首试/0flaky/0skip，UI242/0，development5步骤PASS；Rust163与fmt通过。最终源码核心/UI独立审查PASS，官方CLI20项、便携CLI20项，实际Tauri官方46项、同字节便携46项通过。新依赖0，入口gzip增加1221B<16384；生产运行时4280文件/519481278B。用户确认手机布局、主题/独立背景、存储identifier/路径、原件与primary dirty/index保留；旧135任务及37功能状态逐项不变。Native Mobile2.1.1仍PLANNED；Hosted、真人CLI账号/付费Provider、签名安装器、日常资料、实体手机与用户视觉验收分别开放。
+
+[当前验证](changes/2026-10-14-action-usability-223/verification.md)与[独立审查](changes/2026-10-14-action-usability-223/review.md)分别绑定已测产品源码。最终纯文档/输出以工程外current-release为准。
+
+### 本轮初始候选（以下保留当时PARTIAL含义）
+
+- TASK-223-ACTIONS-20261014从6b5a2012继续：CLI显式协议/认证、合法多行TOML与受管键、配置发布失败保全、Claude损坏env和模型JSON检查进入源码候选；TOML边界为保守词法识别，恢复副本不等于跨文件崩溃事务。
+- 设置busy按操作所有者保持，记忆和本机服务检测增加迟到结果守卫；画布取消/删除/撤销、生成参数、快捷键、背景入口与短屏菜单沿现有链路修复。手机沿用已确认的新布局，原数据身份、主题与独立背景偏好保留；窄屏仍是响应式Web/WebView。
+- Desktop/Web源码递增2.1.24，Mobile2.1.1规划不变；账本136项，本任务PARTIAL。当前源码冻结SHA、完整verify、官方Agent/Native重建、独立review和最终output均待回执，2.1.23历史证据保留。[本轮验证](changes/2026-10-14-action-usability-223/verification.md)。
+
+## 2026-10-14 2.1.23按钮可用性本机交付
+
+Desktop/Web2.1.23产品b4fa7b0e已补CLI配置/失败回执、记忆与插件保存/迟到防护、MCP停止等待及回执、备份确认、画布顶部上传删除/撤销和筛选。手机沿用已确认的新布局，补菜单层级、避让与内容边界；主题及背景偏好保留。九步verify通过（浏览器574首试），实际官方Tauri与同字节便携各35项通过，新依赖0、入口gzip增加1244B。原资料/primary dirty/index和历史失败保留；最终文档/产物身份及外部未验范围统一见[验证](changes/2026-10-14-action-usability-222/verification.md)。
+
+## 2026-10-14 2.1.22协议/CLI本机交付
+
+Desktop/Web2.1.22产品da6141e6完整verify通过：551浏览器首试、Node1214pass/14既有skip、Agent172pass/2既有skip、UI241/0、development5步骤PASS；Rust163与原生源一致性确认，独立源码审查PASS。官方Agent构建、真实Tauri22项和同字节便携目录23项通过，5协议文本均保存/重载/GET检测/NativeTaskHost一次POST/结果恢复，无重复；4取消/超时场景实际socket关闭且目录字节保持。手机为响应式WebView/Web，非Native Mobile。新依赖0，入口gzip增加3247B<16384；4278生产白名单519462029B，其中8个缺失的当前平台Codex必要文件407521436B已恢复，不把旧残包当同功能体积基线。原资料身份、primary dirty/index和历史失败保留。最终ZIP/源码/Web/恢复与哈希由工程外current-release收据绑定；Hosted、真人CLI安装/登录、付费Provider、签名安装器、日常资料和人工视觉验收继续各自开放。[本轮验证](changes/2026-10-14-protocol-cli-completion/verification.md)。
+
+## 2026-10-14 UI源码候选与当前验收（PARTIAL）
+
+最新Desktop/Web2.1.21产品提交7a463742已通过完整verify：545production场景全部首试通过、Node1142pass/14既有skip、Agent172pass/2skip、UI236/0、开发5步骤PASS。官方Agent桌面构建与真实Tauri9项检查通过，原生保存/重载、视频坐标/原件、面板层级和随包桥绝对命令均有独立数据目录回执；0e与7a两段源码独立审查通过，早期失败保留。主入口gzip增加9625B，低于16384预算；新依赖0。最终分享包与恢复增量按工程外哈希收据绑定；这些本地检查不代表未接协议、日常用户资料、安装器、Hosted和Native Mobile已验收。
+
+### 此前阶段记录（7a463742完整验收前，保留历史）
+
+默认绿、中性动作/胶囊/上传方角/弱焦点、独立固定大小喜欢/标签面板、收藏兼容、分类搜索、分组设置/预设、CLI子页及使用/存储概览已接入。2.1.18中间候选532browser零flaky、开发及预算通过，复审修正后533含1分组flaky，原件均保留。主目录随后推进2.1.20，凭据恢复/Agent展示/画布同步及51限定路径已逐项承接，当前Desktop/Web2.1.21组合验证中；随包Gemini桥和绝对路径命令已修正。0e5087e6的完整verify通过（544browser零flaky），实际桌面确认视频坐标和原件保存后，发现图片工具栏遮挡面板关闭按钮；共享层级修正先browser RED再8场景零重试GREEN，当前修正组合仍待完整复验和新桌面回执。最终SHA审查及发布分别收口。Native Mobile2.1.1仍规划，窄屏为响应式Web。[本轮验证](changes/2026-10-14-ui-consolidation/verification.md)、[兼容决定](architecture/adr/ADR-017-unified-ui-and-collection-compatibility.md)。
+
+## 2026-10-14 历史冻结阶段（保留原时点与收据）
+
+全分支/worktree/dirty来源已盘点并保存恢复refs、hash与校验bundle，原文件/index/资料保持。当前日常2.1.17源码冻结196be1de，候选version/typecheck/build和1082单测通过（14既有skip）；这是本机冻结，不是所有候选集成或正式发布。用户新增绿色/输入描边/按钮规则、固定大小拖动面板、8类协议/CLI、二三栏设置、多端和体积治理已写入[规格](changes/2026-10-14-ui-consolidation/spec.md)与[计划](changes/2026-10-14-ui-consolidation/plan.md)。新产品UI未实现、最新main组合与完整平台验收继续开放。
+
+补充：最终Node1085通过/14skip、Agent172通过/2skip；515生产浏览器514首试通过/1flaky，相关场景5次zero retry通过，根因仍UNKNOWN。开发字体403已最小修复，694e3d18提交实测5步骤PASS/父目录403保护；原失败未覆盖。冻结提交df737905及已校验Web/恢复包已输出，后续在途源继续保留而不冒充已整合。
+
+## 2026-10-13 日常 APP 重开验收补充（进行中）
+
+TASK-AGENT-RECOVERY-20261013 按用户新要求复验原数据/profile，已证正常close0/reopen自动同thread及主动断开重开保持暂停、原API metadata未变。日常当前连接关闭前无已保存密钥，实钥保留保持NOT VERIFIED。发现聊天“已连接”染危险色及按钮与设置不一致，已按授权最小修复并新增RED/GREEN；共享Desktop/Web2.1.17最终门禁和日常复验进行中。原2.1.16验收仅按历史范围回读。[验收记录](changes/2026-10-13-agent-recovery/verification.md)。
+
+## 2026-10-13 Agent 自动恢复与凭据安全保存
+
+- TASK-AGENT-RECOVERY-20261013 产品与本地运行验收通过：项目先保存线程归属，桌面打开自动恢复同线程；主动断开/停止持久暂停，设置普通连接入口统一，高级操作折叠。
+- 普通与 Google API 共用原生事务边界，跨窗口CAS/共享锁与严格读取避免误报或覆盖；系统凭据库保存秘密，读取错误可重试，输入与项目不回填明文。
+- 完整verify出口0（浏览器514/514零flaky、Node1076pass/14既有skip、Agent172pass/2既有skip），Rust126/126、development PASS；canonical官方2.1.16 Agent38/38及凭据6/6正常重开通过，桌面快捷方式已更新。
+- 原dirty UI、index、用户数据与凭据保留；生产源6f8ff257、测试补充1cf93cb4已有独立审查。本任务 DONE/PASS，最终文档独立补审通过；Hosted/真实Provider/签名发布/人工验收不冒称完成。详见[验证](changes/2026-10-13-agent-recovery/verification.md) / [审查](changes/2026-10-13-agent-recovery/review.md)。
+
+## 2026-10-13 审查 P1/P2 修复与运行时边界拆分
+
+- `TASK-REVIEW-REMEDIATION-001` 已完成定向修复：生命周期门禁、日志脱敏、插件同步/异步失败隔离和交付模板规则均有回归证据；治理、运行时、版本一致性改动分别落在独立提交 `057a5d84`、`44195097`、`f0a6b0c4`，格式和 lint 修复随后单独提交。
+- `snapshot:check` 为 4/0，`governance:check` 为 124/0；定向 `docIndex`、`runtimeLogger`、`pluginLoader` 测试 43/43 通过。完整 `npm run verify` 的前置阶段和生产构建通过，但 Playwright 475 项有 5 项既有 UI 失败；`test:development` 在 Vite 启动阶段未产生 receipt，任务保持 `REVIEW/PARTIAL`。
+- 工作树保留未纳入本任务的并发改动 `src/components/WindowControls.tsx`、`src/styles/composer.css`、`tests/browser/composer-voice.spec.ts`、`tests/browser/interaction-state.spec.ts`；未推送、合并、发布，也未改变其他 worktree。Hosted、Provider、Tauri、签名、安装和用户验收继续保持未验证。
+
+## 2026-10-12 规则生命周期与治理入口收敛
+
+按用户确认继续 TASK-GOV-003：同一任务使用稳定 `taskId`，同一治理文档使用稳定 `docId`；更新时刷新 `updated`/`updatedAt`，旧入口用 `supersededBy` 退出 current 路由。`TASK_STATUS` 已刷新为 123 条账本快照（75 `DONE` / 31 `PARTIAL` / 11 `TODO` / 4 `BLOCKED` / 2 `REVIEW`，47 项开放），`AI_HANDOFF` 已收敛为当前恢复入口，`PROJECT_STATE` 补齐生命周期元数据；`snapshot:check` 现在检查身份、来源、更新时间、替代关系和重复 current。B3-3、B4、B5 未执行。
+
+## 2026-10-12 P1 审计收口与当前证据边界
+
+- 当前事实已刷新：primary `codex/ui-redesign-20261011@ac5e6a4a` 在本轮开始时 clean，当前包含本轮 5 个 tracked 文件改动和 1 个新证据目录；本地 `origin/main` ref `1f6cbd37`；实时台账 123 条（76 DONE / 30 PARTIAL / 11 TODO / 4 BLOCKED / 2 REVIEW）；94 个 worktree。旧 `PROJECT_STATE` 快照不再作为当前事实。
+- 修复 `scripts/governance/branch-audit.mjs` 的 Prettier 门禁失败；逻辑未改。当前 unit/deploy 现场重跑为 1004 项、990 pass、0 fail、14 skip。
+- PR #53 已合并至 `1f6cbd37`，Windows/Ubuntu hook、verify、deploy-linux 为 Hosted SUCCESS，delivery 为 SKIPPED；merged-SHA 独立 review receipt、原始 artifact、签名、安装和用户验收仍未补齐。
+- `TASK-WINDOWS-ENTRY-RECOVERY-003`、`TASK-AGENT-010`、`TASK-TASKSTATE-002`、`TASK-AI-GATEWAY-001` 和 `TASK-IMAGE-EDIT-VERIFY-002` 保持未完成/未验证边界；本轮未推送、合并、触发 CI、读取凭据或调用真实 Provider。
+- 证据包：`docs/changes/2026-10-12-p1-audit-closeout/`。
+
 ## 2026-10-13 TASK-ENG-001 PR #56 主线承接（REVIEW / NOT_VERIFIED）
 
 - 基于 `origin/main@694a0060d296c753d9610e86f1e32bf8db333a41` 重建承接提交；候选精确 HEAD 以本 checkout 的 `git rev-parse HEAD` 与对应 delivery 日志为准；PR #56 原 HEAD、主线历史和 `TASK-ENG-001` 独立交付包均保留。
@@ -13,6 +138,7 @@
 - 历史交付包仅在包内明确写入 `legacy-incomplete.md` 时获得有限豁免；同一变更中的新修复包仍必须具备五件套并绑定当前台账任务。
 - Windows `desktopRelease` 的链接判定改为直接读取 `lstat().isSymbolicLink()`，避免 hosted runner 的 8.3/realpath 等价路径误报普通 `node_modules`；真实 symlink/junction 仍拒绝。
 - 本节在本地定向测试、独立 exact-SHA review 和 Hosted `verify`/`delivery` 回执完成前保持 `REVIEW/NOT_VERIFIED`；不代表 PR #55 已合并、客户端已发布或 Hermes 已集成。
+
 
 ## 2026-10-12 分支收敛 P0-P1：规则门禁入主线 + 100 分支全量分类
 
@@ -971,6 +1097,14 @@ TASK-PLUGIN-DEV-001修复开发public import及真实React静态JSX校验后，�
 - 本地已登录 Codex 账号经 KK 浏览器工作区真实验证：文本调用成功、Codex 内置图片生成成功并回写画布、`canvas_apply_ops` 新增文本节点成功，随后由 Codex 只读读取并确认节点存在。
 - 图片卡片按要求显示 `图片模型未报告` 与 `来源：Codex 内置生图`，没有把 Codex 名称误当成图片模型名。
 - 首次联调发现的默认模型问题已修复并复验：旧缓存 `gpt-6.1-sol` 会按 Agent `/models` 列表回退到 `gpt-6-astra`，不显式选模型的 KK 文本调用已成功；项目图片模型也不会传给 Codex 推理接口。详见 [kk 模型能力验证](changes/2026-10-10-kk-model-capability/verification.md)。
+
+## 2026-10-13 模型接入与扩展分类
+
+Codex 主 Agent 移至模型接入；侧栏扩展统一 Skill、MCP、协作伙伴，七种角色职责可加入对应草稿；模型菜单恢复来源层次、320px 紧凑布局与稳定滚动。按用户补充移除模型弹层的批量/数据项，节点数量和旧批次归档的 40 项定向回归通过。独立复核关闭同地址多账号身份、Google 未保存配置保留及角色来源隔离问题后，最终 Web development 7 项、production preview 7 项、Desktop 2.1.14 14 项重新验收通过；Desktop 随包 Agent 启动、健康检查、停止通过。生产浏览器全量 495 项中 492 pass，本轮 20 项全部通过，3 个已记录的既有 UI 失败；任务保持 REVIEW/PARTIAL。[验证记录](changes/2026-10-13-capability-ui/verification.md)包含资源身份、原生持久保存和无关改动哈希。自动分派与 OAuth 授权继续保持未接入。
+
+## 2026-10-15 UI细节收敛（本地完成）
+
+TASK-UI-DETAILS-20261015从最新18e143f修复，Desktop/Web2.1.26产品ab878ffd：紧凑设置、共享composer控件、末尾动作组、空/非空上传与扩展内容轴，删除三项旧组件及入口。完整verify退出0：Node1278/14skip、Agent199/2skip、browser635首试、UI239/0、development PASS；精确源码独立审查、官方重建及38项Native与资源字节一致性通过。原数据身份和primary dirty/index保留，owned测试实例正常关闭。Mobile2.1.1规划、真实Provider/Hosted/签名及用户视觉接受继续各自开放；[当前验证](changes/2026-10-15-ui-details/verification.md)。
 
 ## 2026-10-13 Cherry 融合集成候选
 

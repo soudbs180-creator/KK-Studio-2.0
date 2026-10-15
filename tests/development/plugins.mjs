@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile, realpath, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { chromium, expect } from "@playwright/test";
 import { createServer } from "vite";
@@ -47,6 +47,24 @@ try {
     server: { host: "127.0.0.1", port: 1421, strictPort: true },
   });
   await server.listen();
+  const dependencyParent = path.dirname(
+    await realpath(path.join(root, "node_modules")),
+  );
+  if (
+    path.resolve(dependencyParent).toLowerCase() !==
+    path.resolve(root).toLowerCase()
+  ) {
+    const outsideFile = path
+      .join(dependencyParent, "AGENTS.md")
+      .replaceAll("\\", "/");
+    const denied = await fetch(`${receipt.url}@fs/${outsideFile}`);
+    assert.equal(
+      denied.status,
+      403,
+      "linked dependency parent must remain outside the serving allowlist",
+    );
+    receipt.steps.push("linked-dependency-parent-remains-denied");
+  }
   browser = await chromium.launch({ channel: "msedge" });
   page = await browser.newPage({ viewport: { width: 1920, height: 1080 } });
   page.setDefaultTimeout(15_000);

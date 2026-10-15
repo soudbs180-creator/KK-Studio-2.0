@@ -190,6 +190,7 @@ export default function ModelPickerMenu({
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           onKeyDown={(event) => {
+            if (event.key === "Enter") event.preventDefault();
             if (event.key !== "Escape") event.stopPropagation();
           }}
         />
@@ -208,7 +209,7 @@ export default function ModelPickerMenu({
         >
           ←
         </button>
-        <strong>{title}</strong>
+        <strong title={title}>{title}</strong>
         <button
           type="button"
           aria-label={memory.all ? "切换分级模型" : "切换全部模型"}

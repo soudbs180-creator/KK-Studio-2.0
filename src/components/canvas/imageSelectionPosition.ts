@@ -7,8 +7,13 @@ export function getImageSelectionPosition(
   toolbar: HTMLElement,
 ) {
   const card = element.getBoundingClientRect();
-  const caption = element.parentElement
+  const caption = element
+    .closest("[data-canvas-node]")
     ?.querySelector(".image-caption")
+    ?.getBoundingClientRect();
+  const upload = element
+    .closest("[data-canvas-node]")
+    ?.querySelector(".upload-image")
     ?.getBoundingClientRect();
   const bounds = canvas.getBoundingClientRect();
   const scale = surfaceScale(canvas);
@@ -21,18 +26,30 @@ export function getImageSelectionPosition(
   const rightEdge =
     Math.min(window.innerWidth, bounds.right, bounds.left + usableWidth) - gap;
   const top =
-    Math.min(card.top, caption?.top ?? card.top) - toolbar.offsetHeight - gap;
+    Math.min(
+      card.top,
+      caption?.top ?? card.top,
+      upload?.height ? upload.top : card.top,
+    ) -
+    toolbar.offsetHeight -
+    gap;
   const obstacles = [
     ...canvas.querySelectorAll<HTMLElement>(
-      ".canvas-hud-actions,.canvas-top-right,.canvas-minimap",
+      ".canvas-hud-actions,.canvas-hud .chat-reopen,.canvas-top-right,.canvas-zoom-menu,.canvas-background-menu,.canvas-minimap,.canvas-composer-screen,.canvas-toolbar",
     ),
   ]
     .filter((hud) => getComputedStyle(hud).visibility !== "hidden")
     .map((hud) => hud.getBoundingClientRect())
     .filter((box) => box.width > 0 && box.height > 0);
   const center = card.left + card.width / 2;
+  const firstAction = toolbar.querySelector("button");
+  // A clamped button width feeds back into maxWidth; measure its full contents.
   const minimumWidth =
-    (toolbar.querySelector("button")?.getBoundingClientRect().width ?? 0) +
+    (firstAction
+      ? firstAction.scrollWidth +
+        firstAction.offsetWidth -
+        firstAction.clientWidth
+      : 0) +
     gap * 2;
   const slotAt = (actionTop: number): [number, number] | undefined => {
     let slots: Array<[number, number]> = [[leftEdge, rightEdge]];
@@ -59,37 +76,38 @@ export function getImageSelectionPosition(
           Math.abs(Math.max(b[0], Math.min(center, b[1])) - center),
       )[0];
   };
-  const slot = slotAt(top);
+  // Search both sides of overlays; moving only down can hide actions beneath
+  // the phone editor and bottom toolbar even when a clear row exists above.
+  const minimumTop = bounds.top + gap;
+  const maximumTop =
+    Math.min(bounds.bottom, window.innerHeight) - gap - toolbar.offsetHeight;
+  const reachableTop =
+    [
+      Math.max(top, minimumTop),
+      ...obstacles.flatMap((box) => [
+        box.top - gap - toolbar.offsetHeight,
+        box.bottom + gap,
+      ]),
+    ]
+      .filter((value) => value >= minimumTop && value <= maximumTop)
+      .sort((left, right) => Math.abs(left - top) - Math.abs(right - top))
+      .find((value) => slotAt(value)) ?? Math.max(top, minimumTop);
+  const slot = slotAt(reachableTop);
   const maxWidth = slot ? slot[1] - slot[0] : 0;
   const width = Math.min(toolbar.scrollWidth, maxWidth);
   const left = slot
     ? Math.max(slot[0], Math.min(center - width / 2, slot[1] - width))
     : leftEdge;
-  // Find the nearest row that can hold the first action. Compact HUD rows can
-  // jointly occupy the full width even when each row leaves a horizontal gap.
-  let reachableTop = Math.max(top, bounds.top + gap);
-  for (
-    let index = 0;
-    !slotAt(reachableTop) && index <= obstacles.length;
-    index++
-  ) {
-    const blocking = obstacles.filter(
-      (box) =>
-        reachableTop < box.bottom + gap &&
-        reachableTop + toolbar.offsetHeight > box.top - gap,
-    );
-    if (!blocking.length) break;
-    reachableTop = Math.max(...blocking.map((box) => box.bottom + gap));
-  }
   return {
     left,
-    top,
+    top: reachableTop,
     maxWidth,
     revealDelta: reachableTop > top ? reachableTop - top + 1 : 0,
     visible:
       !canvas.closest("[inert]") &&
       maxWidth > 0 &&
-      top >= bounds.top + gap &&
+      reachableTop + toolbar.offsetHeight <=
+        Math.min(bounds.bottom, window.innerHeight) - gap &&
       card.bottom > bounds.top &&
       card.top < bounds.bottom &&
       card.right > leftEdge &&

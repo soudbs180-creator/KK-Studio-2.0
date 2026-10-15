@@ -340,7 +340,7 @@
 }
 .sidebar.is-collapsed .account-popup {
   bottom: 62px;
-  width: min(260px, calc(100vw - 24px));
+  width: min(var(--kk-account-popup-width), calc(100vw - 24px));
   z-index: 31;
 }
 @media (max-width: 800px) {
@@ -429,6 +429,10 @@
   .sidebar .project-groups {
     overflow-x: clip;
     overflow-y: auto;
+  }
+  .sidebar:not(.is-collapsed):not(.is-narrow) .project-groups {
+    /* A clipped scroll container can move a focused control mid-click. */
+    animation: sidebar-projects-enter var(--motion-sidebar) step-end both;
   }
   .sidebar .project-groups-header,
   .sidebar .project-groups > section {
@@ -598,6 +602,14 @@
   }
 }
 
+@keyframes sidebar-projects-enter {
+  from {
+    visibility: hidden;
+  }
+  to {
+    visibility: visible;
+  }
+}
 @keyframes sidebar-brand-enter {
   from {
     opacity: 0;

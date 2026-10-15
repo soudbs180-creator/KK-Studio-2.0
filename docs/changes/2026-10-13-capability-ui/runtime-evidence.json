@@ -1,0 +1,525 @@
+{
+  "createdAt": "2026-10-13T05:04:44.333Z",
+  "canonical": "D:\\kk-studio\\KK-Studio-2.0",
+  "baseHead": "51fccfc7879cf90f7caaf3ae8e10af4d97a2aa2c",
+  "branch": "codex/ui-redesign-20261011",
+  "identity": {
+    "releaseExePath": "D:\\kk-studio\\KK-Studio-2.0\\src-tauri\\target\\release\\kk-studio.exe",
+    "releaseMtimeMs": 1791867196458.6926,
+    "newestInputPath": "D:\\kk-studio\\KK-Studio-2.0\\dist\\assets\\index-J-mn98-v.js",
+    "newestInputMtimeMs": 1791867170055.6753,
+    "inputSha256": "d0712f45132d1299d93c797928d0f8390899dcdb5908de3ffbe7369d3cd9e6c0",
+    "executableSha256": "b826ed68c120d651fd2d1427501024df974751748b2e45f01df84f82d0163130",
+    "desktopVersion": "2.1.14",
+    "receiptPath": "D:\\kk-studio\\KK-Studio-2.0\\src-tauri\\target\\release\\kk-studio.build-receipt.json",
+    "needsBuild": false,
+    "reason": "current"
+  },
+  "sourceFiles": {
+    "VERSION": "5a958d3121cc7a44adb81fd40bd4f836bc5a877fefb42db9f32a7ceb2eebaddb",
+    "config/platform-versions.json": "c91add0d8243c97878c8d4c2fbce1271c96c74c7eab45cc515d2899efe16b188",
+    "package-lock.json": "fe6210a333c5108f4c5174fc3852e3526855ad457778fc7ef5d2c03f853445b4",
+    "package.json": "bc43cd9afb4e9f2110aa126158b9856d27e4b7a10e4bd8430fc11cf3254cdc47",
+    "src-tauri/Cargo.lock": "c61567f878b930f31c9ef906ff36d1ee03eb83f59a02d670a5a4006913b2192a",
+    "src-tauri/Cargo.toml": "e82b0b7ad39ae2b7bf5d751257bb9132c40847d251a57b883efbdac19632b588",
+    "src-tauri/tauri.conf.json": "9468daa3f1b61bbaed6d9d0c2b4f90a3e696f423d7494de2e8dbe98e53f60fd7",
+    "src/App.tsx": "73be9423ea6cf30aecc7922577c248bd92b5c4d731ddcb147f9cedc3d3f905b8",
+    "src/components/AgentComposer.tsx": "7f0521e4239b1c4dc6cfe7da783a8043c3bef080732839cfc0a9606a4b44cf9b",
+    "src/components/ComposerExtensionsMenu.tsx": "58b385bc767b66c25e37d156e100648027ea487d4fa1ddd185722b997a22d212",
+    "src/components/ConversationPanel.tsx": "29acd7ccff15da26457f44c4c752f983bbdb8a8e787335843321ab0939bbd5da",
+    "src/components/InfoPanel.tsx": "eaa0097f31570f5bd23dc40ac5516b3b553694fd9eee0d330e62a5255f102c43",
+    "src/components/ModelPickerMenu.tsx": "7e2fd84787e69456d6e882f1e518473d338885c4d514116eda1ede79d61f327a",
+    "src/components/ModelPickerRows.tsx": "0156e489bb4a63b841e423e9276b01ab0a529166908cffb9ca6f914a0d4dd5a6",
+    "src/components/SidebarNavigation.tsx": "83dec4c9d7733b49fcc76cb2ad7b0380ca20f88eba0f443094103450a7aff649",
+    "src/components/SkillPageControls.tsx": "c2084bafe510aa72b418cb33ed3ead3b1902bd188907694418af15c1a9f5b88e",
+    "src/components/SkillsPage.tsx": "00acea4f6e6c9eca3c888ff6c307d85da066178d52b0161ed5689496f87b1856",
+    "src/components/StartComposer.tsx": "c5d4b060df9dad81432dc82aeac606b995a94d0bd8f56c1cdaffc90c809a3a07",
+    "src/components/StartModelPicker.tsx": "c2e313de768ac4ab9bed381a464810dee93818b404795da1cf7f78fcf24d80fb",
+    "src/components/WindowControls.tsx": "952e53846b4df3a82b9a29c3fbefebaf9a7f6331d698dbda0dc39291d32642d0",
+    "src/components/settings/AgentConnectionSettings.tsx": "3759042873ef2933897aeedd2fdf7912372c0292c7902c01a164e87352816aeb",
+    "src/components/settings/ConnectionSettings.tsx": "3c6301677c9d863007540351a1f77882f76ed59d8530c29c74ac4a8c1eba2eb0",
+    "src/components/settings/ExtensionsSettings.tsx": "2f56a22bc8fa3a728934bc8ce71a26e622918992ed88d39c070d47951fc501c6",
+    "src/components/settings/GoogleConnectionActions.tsx": "765f4099c14992d4bbc5260f446661f642d1eabdd59ce11dfc774abfff946797",
+    "src/components/settings/GoogleConnectionSettings.tsx": "50fb40d785c2b5071eefe17fd0b3d4236abd5cd636b8981958d05485be9b396a",
+    "src/components/settings/ModelAccessSettings.tsx": "033d2403adb2521b25acde506cecde6cab4a5cf5106a92620a522f6cbfcf7177",
+    "src/components/settings/ModelProviderSettings.tsx": "b8fd5592433230e849780d8ccca061b37cf38e480d0fdb0ec88f81481e690fa0",
+    "src/components/settings/OAuthAccessPanel.tsx": "c28faae46a67e42df5f346e0bb130a93d9a79f4fe94294bca4279815ab10cf0e",
+    "src/components/settings/ProviderConnectionList.tsx": "6bca131620bbbd3f0cf07d6fb0e02783897aacf922c7adda49a101183b14b145",
+    "src/components/settings/ProviderModelCatalog.tsx": "52e866f23700109feef9e2fc9070c2d554b82c653360827f57751e5f3e08895d",
+    "src/components/settings/ProviderSettingsActions.tsx": "6a10a55f49742e8a9eb7110690e85c7c49a96d9a6afd659e91fcb4a3860be33d",
+    "src/components/settings/SettingsPanel.tsx": "02d77c84adb6ca2d1ad0b86e8cf9064af423fd9876cf84ec06619843826caa96",
+    "src/components/settings/SettingsSectionData.tsx": "a11b0f377f1416ce665f39a24e5fb0eaa40fea2e5b5528b4c3960c186008faab",
+    "src/components/settings/modelProviderSettingsState.ts": "cfea2a3fe44a25d4b34fb9fa85374e042a1d043c44eb86f2e17e7b5ba6e25908",
+    "src/components/settings/settings.css": "25da5f7e36dafd0fffb426c9454818d6b4fb6a730b4de258f1a755ac7f640124",
+    "src/components/settings/useScopedModelProviderDraft.ts": "e979d6c7dc91b660cd09dcbbf0de8bfd01b946e9851a43ad005470fd2d6d6aa3",
+    "src/components/settings/useSettingsBusy.ts": "0fc6ff33c8625de5de5ab4f0fd20a58de9fdd9650e405e7c2fc8f74456b3ae84",
+    "src/components/useConversationSubmit.ts": "20d423e8bc371b08c91ce7bc896a449af7e3d312dcc32563f077658645e64ba1",
+    "src/domain/modelProvider.ts": "0b62aa11d7b69bd2c03ec4fd8337eda9cbf4acfc44e73ed7b7224b40a883b5ce",
+    "src/features/agent/agentDraftActions.ts": "9638c8661a9f45f447019ff787ad21f531c320a84babbdd08fb4fae99a75ca23",
+    "src/features/agent/googleAgentConfig.ts": "efcbac5c3b0f42dc9374b3303bd4fe23278ada0a4a529e400bae3fa36bba594c",
+    "src/features/agent/useAgentComposerDraft.ts": "ba72b5dc3c52356207ca63f9bd3f8936a1a25c1cda85ef20ddf1dd239fe52165",
+    "src/features/creation/providerRegistry.ts": "b0391f4124a878bf5362c1d5202a72252ea61d986aebd06813ba41844d793ab7",
+    "src/features/partners/PartnerRoles.tsx": "c3672ba984ff8923481eca18f953fb7fb2530929a0dca2dec1995407611f401a",
+    "src/features/partners/partnerRoleData.ts": "83b03cdda7ecbf1a25611ab72a0a4b773a8fd7496e2711203ef2c77aada79a13",
+    "src/styles/composer.css": "eeb6628796a1ddc99e214ae3f3961b65c93a3e6a6f022ee13069ba653b519220",
+    "src/styles/extensions.css": "d02a81eaecd1fd73d43936c544b54917a3dbe7e80f1610d2651c7a9ec68d44fe",
+    "src/styles/model-picker.css": "5b9a98aa75a56d9cf177adf937d7a34c8d3b13ad86013a307337f1614fa86679",
+    "vite.config.ts": "8855f931c5578b28deebdbc0b7f04855b067ad56e9fbfc9b22e4c3c44a65c13e"
+  },
+  "verificationFiles": {
+    "tests/browser/agent.spec.ts": "e93e9625cb45fa426a67b29b85b17dfa56963d87fa8b3ec44d02ea42296fc37f",
+    "tests/browser/capability-extensions.spec.ts": "c1a3f4ac951ef032b5baf803af4d42ea10c8fce02e1155ecc340a03ee821585a",
+    "tests/browser/capability-google-drafts.spec.ts": "c24d10fa2f21714acf288947445107117d4a048a814d6042e5352b0baf663967",
+    "tests/browser/capability-model-access.spec.ts": "964df890a785e93419edcf8f419500cc52e00b40b50617def14cd892c6ee3638",
+    "tests/browser/capability-model-picker.spec.ts": "fd0a77da13181bc88113cf98218030101adb6a51c28fb6fe8442f552390716f4",
+    "tests/browser/catalog-pages.spec.ts": "b7ee1b9ee0101530eac41103cc2e2a556a2a36fdd91e2584f1ad97c5fa653d40",
+    "tests/browser/composer-fidelity.spec.ts": "5a64fbf8059f15d8bcd6f5b927829bf0989de8dd357c82f49044688f7cdfaf9e",
+    "tests/browser/composer-voice.spec.ts": "2e00a2ade039d7a3693a823a6b94d010794d0239cc10670f223397e30e6b57a4",
+    "tests/browser/creation-flow.spec.ts": "54c44d5b6d27aa9c7520e9c8cfd67507941727fe4eb5b0b06ac3fa6c83c354cd",
+    "tests/browser/design-system-pages.spec.ts": "41d93ea8157feac72f5c14902b86be8568f47253f808333011528d6c046fe30a",
+    "tests/browser/design-system.spec.ts": "7df3a2bbd2f8d991a9c13fdb04dda5621d779ed9264d3e9085026c1c8e0c0f2e",
+    "tests/browser/desktop-agent.spec.ts": "8392c1cb1688b8ae751b6230f32832bfc095fd68e75d3ba32e65bf8e764304ac",
+    "tests/browser/desktop-data-stability.spec.ts": "2535104239c5b935b04f97ff9ccdbf26f39bf278920b2cb3495d4acb178bb1b7",
+    "tests/browser/figma-483-ui.spec.ts": "55f74bc77d499da0c3e069c33497ec75e8ce9d4a969346c8cb6aef02f88de073",
+    "tests/browser/frontend.spec.ts": "2f42845e2d1457d447ee091eb82e12366d23dcf4f1f757396d88ddc59fa13bd7",
+    "tests/browser/generation-flow.spec.ts": "a9549bbeb184de2509c38779ddfd77592af747ba895166fddda1d5ed44eccb86",
+    "tests/browser/google-agent.spec.ts": "e258d812aa592d95641a43d7782d98304ba749d19219965e090258fd5056ef77",
+    "tests/browser/google-cli-agent.spec.ts": "639c153c6fb21995468dadfb15833b9950bd6d9dfd6737510068a7932cf2aa9b",
+    "tests/browser/image-edit.spec.ts": "a29ebec2ece1829a1379c42e1013ef8583c566b8b3c5db2ba50e20763fce250c",
+    "tests/browser/input-contract.spec.ts": "71fec2aa4850ead43cdc4e94d4cefc9684ba0c4169ed78e42e4e3110ea03ad07",
+    "tests/browser/interaction-regressions.spec.ts": "b57dbdf4b57a4c7bcfe1e645524cdf8c320111b85dfb1dc07aadd3dc9aa74478",
+    "tests/browser/interaction-state.spec.ts": "d54775876cc12d1737c716d3226d7a6e4eeffd04f3b52a0d6e02ffab1f784757",
+    "tests/browser/mcp-settings.spec.ts": "ee70044f71b1f68153ac38ddcf79f0fea79bb68c1327d1affed90e3bdc22990d",
+    "tests/browser/model-capabilities.spec.ts": "729b4fcb8d83907dce873f9d34bb345bb7d5c09cbc2c3b751fdc201aaeed01e3",
+    "tests/browser/model-picker.spec.ts": "175de4c0114c45d186150606beaa148a4ecd9cfd571769dd3110841d294a0683",
+    "tests/browser/page-alignment.spec.ts": "33d755ab6bcae3f39a0c9cb1cdcdec87d55f1e279c60b4a685180a49017405b2",
+    "tests/browser/plugins.spec.ts": "f6a9cd6ed3e9698ba955bad6b095354d9d9db9ef687a6be676b60bd29bccfe55",
+    "tests/browser/provider-scheduling.spec.ts": "e5ccc2827dcb27d0ddb15c473bce7cec6694baf42048c3d524bc4bb7ee7fa00c",
+    "tests/browser/responsive-layout.spec.ts": "e55788605b0855e4a918772d2238fd1df347c36a8315fe0d3ba765c31fd59cf8",
+    "tests/browser/runtime-ui.spec.ts": "41c745f943a05efd04124e97ded4fc65f33db53b27b9e5cc9ec09dfcb80c5817",
+    "tests/browser/settings-scroll.spec.ts": "de0791a80407ca82c5fd1641fb88f115763de037c42ed437714843ead7cef0cb",
+    "tests/browser/sidebar.spec.ts": "82feccf8009e469615662f39a639ff3aa5706d981f640cf6d104e69b185821f1",
+    "tests/browser/task-intent.spec.ts": "81fc3004d4ec2a901f0096c9260da8600c38872aec1e4346766ca6b8d131034b",
+    "tests/browser/task-workbench.spec.ts": "05ffab0fc410caa2f9532d4bc003b292d8e53ebbc59183eca3cf71d19a05b79b",
+    "tests/browser/text-generation.spec.ts": "e26497c7d766ab0148819b6cab5e11224a8ee2c2e627f8b1f168ece00c1449d2",
+    "tests/browser/ui-architecture.spec.ts": "4cd54c89edc062a369e1a78fde635fa7bc80eb07de75189c01ea586d6ec3b447",
+    "tests/browser/ui-feature-parity.spec.ts": "8c154eefea51373a02dac8d22eb017f36e757bfff52f8f9cac066ec76630063e",
+    "tests/browser/ui-page-rules.spec.ts": "a3232d0ed45b23bfa694cb1742913cb9f52741287c552d7bc1624bda76f09460",
+    "tests/browser/unified-image-command.spec.ts": "84f3643c734c082ad260e0bcb2e0246babe20539cf9dae0a7fac68c047432e0a",
+    "tests/development/plugins.mjs": "bd27284395b781ca1e260693ee98669aae965b1fb6b82e586156eb1a3cce1fb3",
+    "tests/unit/modelProvider.test.ts": "21e244afca87e3799707eeb52493362ef6b1bbddb94bf19e84613b00c004e631",
+    "tests/unit/modelProviderIdentity.test.ts": "a97d61f7288112ee2364f59de18a2e21821665ec7599ab9c5e5a2e81b2711948",
+    "tests/unit/modelRouting.test.ts": "df79476c2db7a36b364661cdba6faa4ebe8bd70b6abb5675f6d97a56390a53b9"
+  },
+  "protectedFiles": {
+    "src/components/WindowControls.tsx": "952e53846b4df3a82b9a29c3fbefebaf9a7f6331d698dbda0dc39291d32642d0",
+    "src/styles/composer.css": "eeb6628796a1ddc99e214ae3f3961b65c93a3e6a6f022ee13069ba653b519220",
+    "tests/browser/composer-voice.spec.ts": "2e00a2ade039d7a3693a823a6b94d010794d0239cc10670f223397e30e6b57a4",
+    "tests/browser/interaction-state.spec.ts": "d54775876cc12d1737c716d3226d7a6e4eeffd04f3b52a0d6e02ffab1f784757"
+  },
+  "indexUnchanged": true,
+  "receiptPaths": {
+    "desktop": ".tmp/capability-desktop/1791867793484-701e56b3-4ebe-4ad3-9da9-7c61c5e91c04/desktop-ui.json",
+    "development": ".tmp/capability/development-1791867662091/web-ui.json",
+    "preview": ".tmp/capability/preview-1791867668569/web-ui.json",
+    "plugins": ".tmp/capability/development-plugins-model-only-final/receipt.json"
+  },
+  "browser": {
+    "stats": {
+      "startTime": "2026-10-13T04:57:24.929Z",
+      "duration": 159105.03699999998,
+      "expected": 492,
+      "skipped": 0,
+      "unexpected": 3,
+      "flaky": 0
+    },
+    "retries": 0,
+    "workers": 8,
+    "evidence": ".tmp/capability/browser-model-only-final.json"
+  },
+  "modelOnlyTargeted": {
+    "stats": {
+      "startTime": "2026-10-13T04:53:59.737Z",
+      "duration": 23255.150999999998,
+      "expected": 40,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "retries": 0,
+    "workers": 6,
+    "evidence": ".tmp/capability/model-only-targeted.json"
+  },
+  "development": {
+    "mode": "development",
+    "port": 1421,
+    "url": "http://127.0.0.1:1421/",
+    "checks": [
+      "actual-entry-current-mode-and-mic",
+      "codex-model-access-and-real-local-config-save",
+      "compact-provider-menu-without-generation-options",
+      "three-extension-categories",
+      "same-url-model-account-reopen-identity",
+      "google-key-cli-draft-retention",
+      "google-partner-role-api-codex-isolation"
+    ],
+    "screenshots": [
+      "D:\\kk-studio\\KK-Studio-2.0\\.tmp\\capability\\development-1791867662091\\model-access-codex.png",
+      "D:\\kk-studio\\KK-Studio-2.0\\.tmp\\capability\\development-1791867662091\\model-access-api.png",
+      "D:\\kk-studio\\KK-Studio-2.0\\.tmp\\capability\\development-1791867662091\\compact-home-model-menu.png",
+      "D:\\kk-studio\\KK-Studio-2.0\\.tmp\\capability\\development-1791867662091\\extensions-skill.png",
+      "D:\\kk-studio\\KK-Studio-2.0\\.tmp\\capability\\development-1791867662091\\extensions-mcp.png",
+      "D:\\kk-studio\\KK-Studio-2.0\\.tmp\\capability\\development-1791867662091\\extensions-partners.png",
+      "D:\\kk-studio\\KK-Studio-2.0\\.tmp\\capability\\development-1791867662091\\exact-provider-account.png",
+      "D:\\kk-studio\\KK-Studio-2.0\\.tmp\\capability\\development-1791867662091\\google-drafts-retained.png",
+      "D:\\kk-studio\\KK-Studio-2.0\\.tmp\\capability\\development-1791867662091\\google-role-correct-draft.png"
+    ],
+    "passed": true,
+    "runtime": {
+      "url": "http://127.0.0.1:1421/",
+      "mode": "development",
+      "entry": "src/main.tsx",
+      "scripts": [
+        "http://127.0.0.1:1421/@vite/client",
+        "http://127.0.0.1:1421/src/main.tsx"
+      ],
+      "styles": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    "mic": {
+      "width": "14px",
+      "height": "14px"
+    },
+    "modelMenu": {
+      "x": 713,
+      "y": 208.140625,
+      "width": 320,
+      "height": 180
+    },
+    "serverLog": "\n  VITE v7.3.6  ready in 177 ms\n\n  ➜  Local:   http://127.0.0.1:1421/\n"
+  },
+  "preview": {
+    "mode": "preview",
+    "port": 1423,
+    "url": "http://127.0.0.1:1423/",
+    "checks": [
+      "actual-entry-current-mode-and-mic",
+      "codex-model-access-and-real-local-config-save",
+      "compact-provider-menu-without-generation-options",
+      "three-extension-categories",
+      "same-url-model-account-reopen-identity",
+      "google-key-cli-draft-retention",
+      "google-partner-role-api-codex-isolation"
+    ],
+    "screenshots": [
+      "D:\\kk-studio\\KK-Studio-2.0\\.tmp\\capability\\preview-1791867668569\\model-access-codex.png",
+      "D:\\kk-studio\\KK-Studio-2.0\\.tmp\\capability\\preview-1791867668569\\model-access-api.png",
+      "D:\\kk-studio\\KK-Studio-2.0\\.tmp\\capability\\preview-1791867668569\\compact-home-model-menu.png",
+      "D:\\kk-studio\\KK-Studio-2.0\\.tmp\\capability\\preview-1791867668569\\extensions-skill.png",
+      "D:\\kk-studio\\KK-Studio-2.0\\.tmp\\capability\\preview-1791867668569\\extensions-mcp.png",
+      "D:\\kk-studio\\KK-Studio-2.0\\.tmp\\capability\\preview-1791867668569\\extensions-partners.png",
+      "D:\\kk-studio\\KK-Studio-2.0\\.tmp\\capability\\preview-1791867668569\\exact-provider-account.png",
+      "D:\\kk-studio\\KK-Studio-2.0\\.tmp\\capability\\preview-1791867668569\\google-drafts-retained.png",
+      "D:\\kk-studio\\KK-Studio-2.0\\.tmp\\capability\\preview-1791867668569\\google-role-correct-draft.png"
+    ],
+    "passed": true,
+    "runtime": {
+      "url": "http://127.0.0.1:1423/",
+      "mode": "production",
+      "entry": "src/main.tsx",
+      "scripts": ["http://127.0.0.1:1423/assets/index-J-mn98-v.js"],
+      "styles": ["http://127.0.0.1:1423/assets/index-DiuQNAm_.css"]
+    },
+    "assets": [
+      {
+        "path": "/assets/index-J-mn98-v.js",
+        "sha256": "4e85ce08eb0e86536b314c0ba9f8a40fda56f4c79a719ded8d787a709b4e7f2e"
+      }
+    ],
+    "mic": {
+      "width": "14px",
+      "height": "14px"
+    },
+    "modelMenu": {
+      "x": 713,
+      "y": 208.140625,
+      "width": 320,
+      "height": 180
+    },
+    "serverLog": "  ➜  Local:   http://127.0.0.1:1423/\n"
+  },
+  "desktop": {
+    "startedAt": "2026-10-13T05:03:13.485Z",
+    "root": "D:\\kk-studio\\KK-Studio-2.0",
+    "dataRoot": "D:\\kk-studio\\KK-Studio-2.0\\.tmp\\capability-desktop\\1791867793484-701e56b3-4ebe-4ad3-9da9-7c61c5e91c04\\isolated-data",
+    "profile": "D:\\kk-studio\\KK-Studio-2.0\\.tmp\\capability-desktop\\1791867793484-701e56b3-4ebe-4ad3-9da9-7c61c5e91c04\\webview-profile",
+    "sourceHead": "51fccfc7879cf90f7caaf3ae8e10af4d97a2aa2c",
+    "identity": {
+      "releaseExePath": "D:\\kk-studio\\KK-Studio-2.0\\src-tauri\\target\\release\\kk-studio.exe",
+      "releaseMtimeMs": 1791867196458.6926,
+      "newestInputPath": "D:\\kk-studio\\KK-Studio-2.0\\dist\\assets\\index-J-mn98-v.js",
+      "newestInputMtimeMs": 1791867170055.6753,
+      "inputSha256": "d0712f45132d1299d93c797928d0f8390899dcdb5908de3ffbe7369d3cd9e6c0",
+      "executableSha256": "b826ed68c120d651fd2d1427501024df974751748b2e45f01df84f82d0163130",
+      "desktopVersion": "2.1.14",
+      "receiptPath": "D:\\kk-studio\\KK-Studio-2.0\\src-tauri\\target\\release\\kk-studio.build-receipt.json",
+      "needsBuild": false,
+      "reason": "current"
+    },
+    "checks": [
+      {
+        "name": "isolated-native-data-root",
+        "detail": "D:\\kk-studio\\KK-Studio-2.0\\.tmp\\capability-desktop\\1791867793484-701e56b3-4ebe-4ad3-9da9-7c61c5e91c04\\isolated-data",
+        "passed": true
+      },
+      {
+        "name": "release-loads-canonical-dist",
+        "detail": [
+          {
+            "relative": "assets/index-J-mn98-v.js",
+            "sha256": "4e85ce08eb0e86536b314c0ba9f8a40fda56f4c79a719ded8d787a709b4e7f2e"
+          }
+        ],
+        "passed": true
+      },
+      {
+        "name": "home-microphone-14px",
+        "detail": {
+          "width": "14px",
+          "height": "14px"
+        },
+        "passed": true
+      },
+      {
+        "name": "compact-home-model-menu",
+        "detail": {
+          "width": "320px",
+          "box": {
+            "x": 712.6666870117188,
+            "y": 230.46875,
+            "width": 320,
+            "height": 157.33334350585938
+          },
+          "viewport": {
+            "width": 1920,
+            "height": 1080
+          },
+          "devicePixelRatio": 1.5,
+          "visualScale": 1
+        },
+        "passed": true
+      },
+      {
+        "name": "codex-in-model-access-and-runtime-available",
+        "detail": {
+          "available": true,
+          "running": false,
+          "healthy": false,
+          "endpoint": null,
+          "pid": null,
+          "reason": null
+        },
+        "passed": true
+      },
+      {
+        "name": "provider-metadata-durable-without-secret",
+        "detail": {
+          "status": "loaded",
+          "revision": 1
+        },
+        "passed": true
+      },
+      {
+        "name": "official-relay-draft-isolation",
+        "detail": true,
+        "passed": true
+      },
+      {
+        "name": "google-key-cli-unsaved-drafts-isolated-in-memory",
+        "detail": {
+          "automaticRequests": 0
+        },
+        "passed": true
+      },
+      {
+        "name": "unsupported-oauth-honest",
+        "detail": true,
+        "passed": true
+      },
+      {
+        "name": "partner-role-home-draft-native-recovery",
+        "detail": true,
+        "passed": true
+      },
+      {
+        "name": "source-provider-model-keyboard-selection",
+        "detail": true,
+        "passed": true
+      },
+      {
+        "name": "native-same-endpoint-account-b-retains-id-ref-on-save-reopen",
+        "detail": {
+          "revision": 3,
+          "connectionId": "desktop-opaque-account-b",
+          "credentialRefs": [
+            "capability_vault_a_1791867793484_701e56b3_4ebe_4ad3_9da9_7c61c5e91c04",
+            "capability_vault_b_1791867793484_701e56b3_4ebe_4ad3_9da9_7c61c5e91c04"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "name": "google-role-target-overlimit-keeps-api-codex-isolated",
+        "detail": true,
+        "passed": true
+      },
+      {
+        "name": "packaged-agent-start-health-stop",
+        "detail": {
+          "available": true,
+          "running": true,
+          "healthy": true,
+          "endpoint": "http://127.0.0.1:59044",
+          "pid": 79252,
+          "reason": null
+        },
+        "passed": true
+      }
+    ],
+    "errors": [],
+    "screenshots": [
+      "D:\\kk-studio\\KK-Studio-2.0\\.tmp\\capability-desktop\\1791867793484-701e56b3-4ebe-4ad3-9da9-7c61c5e91c04\\home-model-menu.png",
+      "D:\\kk-studio\\KK-Studio-2.0\\.tmp\\capability-desktop\\1791867793484-701e56b3-4ebe-4ad3-9da9-7c61c5e91c04\\model-access-codex.png",
+      "D:\\kk-studio\\KK-Studio-2.0\\.tmp\\capability-desktop\\1791867793484-701e56b3-4ebe-4ad3-9da9-7c61c5e91c04\\model-access-api.png",
+      "D:\\kk-studio\\KK-Studio-2.0\\.tmp\\capability-desktop\\1791867793484-701e56b3-4ebe-4ad3-9da9-7c61c5e91c04\\model-access-cli.png",
+      "D:\\kk-studio\\KK-Studio-2.0\\.tmp\\capability-desktop\\1791867793484-701e56b3-4ebe-4ad3-9da9-7c61c5e91c04\\extensions-settings-partners.png",
+      "D:\\kk-studio\\KK-Studio-2.0\\.tmp\\capability-desktop\\1791867793484-701e56b3-4ebe-4ad3-9da9-7c61c5e91c04\\extensions-skill.png",
+      "D:\\kk-studio\\KK-Studio-2.0\\.tmp\\capability-desktop\\1791867793484-701e56b3-4ebe-4ad3-9da9-7c61c5e91c04\\extensions-mcp.png",
+      "D:\\kk-studio\\KK-Studio-2.0\\.tmp\\capability-desktop\\1791867793484-701e56b3-4ebe-4ad3-9da9-7c61c5e91c04\\extensions-partners.png",
+      "D:\\kk-studio\\KK-Studio-2.0\\.tmp\\capability-desktop\\1791867793484-701e56b3-4ebe-4ad3-9da9-7c61c5e91c04\\conversation-model-sources.png",
+      "D:\\kk-studio\\KK-Studio-2.0\\.tmp\\capability-desktop\\1791867793484-701e56b3-4ebe-4ad3-9da9-7c61c5e91c04\\conversation-model-provider.png",
+      "D:\\kk-studio\\KK-Studio-2.0\\.tmp\\capability-desktop\\1791867793484-701e56b3-4ebe-4ad3-9da9-7c61c5e91c04\\model-access-native-account-identity.png",
+      "D:\\kk-studio\\KK-Studio-2.0\\.tmp\\capability-desktop\\1791867793484-701e56b3-4ebe-4ad3-9da9-7c61c5e91c04\\workspace-google-role-source.png"
+    ],
+    "passed": true,
+    "pid": 83088,
+    "runtime": {
+      "url": "http://tauri.localhost/",
+      "mode": "production",
+      "entry": "src/main.tsx",
+      "native": true,
+      "scripts": ["http://tauri.localhost/assets/index-J-mn98-v.js"],
+      "styles": ["http://tauri.localhost/assets/index-DiuQNAm_.css"]
+    },
+    "loadedScripts": [
+      {
+        "relative": "assets/index-J-mn98-v.js",
+        "sha256": "4e85ce08eb0e86536b314c0ba9f8a40fda56f4c79a719ded8d787a709b4e7f2e"
+      }
+    ],
+    "modelMenuGeometry": {
+      "width": "320px",
+      "box": {
+        "x": 712.6666870117188,
+        "y": 230.46875,
+        "width": 320,
+        "height": 157.33334350585938
+      },
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "devicePixelRatio": 1.5,
+      "visualScale": 1
+    },
+    "nativeAgentBefore": {
+      "available": true,
+      "running": false,
+      "healthy": false,
+      "endpoint": null,
+      "pid": null,
+      "reason": null
+    },
+    "nativeAgentRunning": {
+      "available": true,
+      "running": true,
+      "healthy": true,
+      "endpoint": "http://127.0.0.1:59044",
+      "pid": 79252,
+      "reason": null
+    },
+    "nativeAgentAfter": {
+      "available": true,
+      "running": false,
+      "healthy": false,
+      "endpoint": null,
+      "pid": null,
+      "reason": null
+    },
+    "executableSha256": "b826ed68c120d651fd2d1427501024df974751748b2e45f01df84f82d0163130",
+    "finishedAt": "2026-10-13T05:03:26.668Z"
+  },
+  "developmentPlugins": {
+    "result": "PASS",
+    "steps": [
+      "discover-four-plugins-without-overlay",
+      "add-edit-and-render-four-plugin-nodes-without-cdn",
+      "disable-reload-restore-enable",
+      "reject-unsafe-remote-before-request"
+    ],
+    "errors": [],
+    "evidenceDir": ".tmp/capability/development-plugins-model-only-final"
+  },
+  "packagedAgentResources": {
+    "platform": "win32",
+    "arch": "x64",
+    "node": "v24.20.0",
+    "agentVersion": "0.6.0",
+    "files": 4269,
+    "missing": 0,
+    "mismatch": 0
+  }
+}

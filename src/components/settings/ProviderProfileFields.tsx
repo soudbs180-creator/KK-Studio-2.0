@@ -1,59 +1,54 @@
 import { isTauri } from "@tauri-apps/api/core";
-import {
-  PROVIDER_PRESETS,
-  findProviderPreset,
-  type ModelProviderProfile,
-  isStrictLoopbackProviderUrl,
-} from "../../domain/modelProvider";
+import { type ModelProviderProfile } from "../../domain/modelProvider";
 import ProviderApiKeyField from "./ProviderApiKeyField";
+import ProviderPresetSelector from "./ProviderPresetSelector";
+import type { CredentialReadState } from "./useProviderCredentialState";
+import {
+  providerProtocolSchema,
+  providerAuthModeSchema,
+  providerNeedsKey,
+} from "../../domain/providerProtocol.ts";
 
 export default function ProviderProfileFields({
   profile,
   apiKey,
   hasStoredKey,
+  credentialStatus,
   onUpdate,
   onUpdateMany,
   onApiKeyChange,
+  onOpenGoogle,
 }: {
   profile: ModelProviderProfile;
   apiKey: string;
   hasStoredKey: boolean;
+  credentialStatus?: CredentialReadState;
   onUpdate: (field: keyof ModelProviderProfile, value: string) => void;
   onUpdateMany: (patch: Partial<ModelProviderProfile>) => void;
   onApiKeyChange: (value: string) => void;
+  onOpenGoogle: () => void;
 }) {
   return (
     <>
-      <label className="settings-field">
-        <span>预置提供商</span>
-        <select
-          value=""
-          onChange={(event) => {
-            const preset = findProviderPreset(event.target.value);
-            if (!preset) return;
-            onUpdateMany({
-              name: preset.name,
-              baseUrl: preset.baseUrl,
-              protocol: preset.protocol,
-              authMode: preset.authMode,
-            });
-          }}
-        >
-          <option value="">选择预置（可选）</option>
-          {PROVIDER_PRESETS.map((preset) => (
-            <option key={preset.id} value={preset.id}>
-              {preset.label}
-            </option>
-          ))}
-        </select>
-      </label>
+      <ProviderPresetSelector
+        onOpenGoogle={onOpenGoogle}
+        onSelect={(preset) =>
+          onUpdateMany({
+            name: preset.name,
+            baseUrl: preset.baseUrl,
+            protocol: preset.wireProtocol ?? "openai-chat",
+            authMode: preset.authMode ?? "api-key",
+          })
+        }
+      />
       <label className="settings-field">
         <span>提供商</span>
         <input
           value={profile.name}
+          required
           maxLength={60}
           onChange={(event) => onUpdate("name", event.target.value)}
-          placeholder="选填：用于区分供应商"
+          placeholder="必填：用于区分供应商"
         />
       </label>
       <label className="settings-field">
@@ -62,54 +57,74 @@ export default function ProviderProfileFields({
           type="url"
           value={profile.baseUrl}
           onChange={(event) => onUpdate("baseUrl", event.target.value)}
-          placeholder="https://api.example.com/v1"
+          placeholder={
+            profile.protocol === "azure-openai"
+              ? "https://你的资源.openai.azure.com/openai/v1"
+              : "https://api.example.com/v1"
+          }
           spellCheck={false}
         />
       </label>
       <label className="settings-field">
         <span>接口协议</span>
         <select
-          aria-label="接口协议"
-          value={profile.protocol ?? "openai-compatible"}
-          onChange={(event) => onUpdate("protocol", event.target.value)}
+          value={profile.protocol ?? "openai-chat"}
+          onChange={(event) =>
+            onUpdateMany({
+              protocol: providerProtocolSchema.parse(event.target.value),
+            })
+          }
         >
-          <option value="openai-compatible">OpenAI 兼容</option>
-          <option value="anthropic-messages">Anthropic Messages</option>
+          <option value="openai-chat">OpenAI Chat Completions</option>
+          <option value="openai-responses">OpenAI Responses</option>
+          <option value="anthropic">Anthropic Messages</option>
           <option value="gemini">Google Gemini</option>
+          <option value="azure-openai">Azure OpenAI v1</option>
+          <option value="ollama">Ollama（OpenAI 兼容）</option>
         </select>
       </label>
       <label className="settings-field">
         <span>认证方式</span>
         <select
-          aria-label="认证方式"
-          value={profile.authMode ?? "api_key"}
-          onChange={(event) => onUpdate("authMode", event.target.value)}
+          value={profile.authMode ?? "api-key"}
+          onChange={(event) =>
+            onUpdateMany({
+              authMode: providerAuthModeSchema.parse(event.target.value),
+            })
+          }
         >
-          <option value="api_key">API Key</option>
+          <option value="api-key">API Key</option>
           <option
             value="none"
-            disabled={!isStrictLoopbackProviderUrl(profile.baseUrl)}
+            disabled={
+              !["openai-chat", "ollama"].includes(
+                profile.protocol ?? "openai-chat",
+              )
+            }
           >
-            本机免密接口
+            本机免密
           </option>
         </select>
       </label>
-      {profile.authMode !== "none" && (
+      {providerNeedsKey(profile) && (
         <ProviderApiKeyField
           value={apiKey}
           hasStoredKey={hasStoredKey}
+          credentialStatus={credentialStatus}
           onChange={onApiKeyChange}
         />
       )}
       <p className="settings-field-help">
-        {profile.authMode === "none"
-          ? "仅连接本机回环接口；请先自行启动 Ollama 或 LM Studio 并加载模型。启用服务端认证后，请改选 API Key。"
+        {!providerNeedsKey(profile)
+          ? "免密仅用于 localhost、127.0.0.1 或 ::1 的 Chat/Ollama 服务；原密钥保留。"
           : isTauri()
             ? "密钥保存在系统凭据库；留空可保留已保存的密钥。"
             : "网页密钥仅保留在当前会话内，不会写入浏览器存储；留空可保留本次会话的密钥。"}
       </p>
       <label className="settings-field">
-        <span>模型名称</span>
+        <span>
+          {profile.protocol === "azure-openai" ? "部署名称" : "模型名称"}
+        </span>
         <input
           value={profile.model}
           maxLength={120}
@@ -118,8 +133,9 @@ export default function ProviderProfileFields({
         />
       </label>
       <p className="settings-field-help">
-        预置仅填写接口配置，不安装软件或模型。云 API
-        可能由服务商计费；不会自动请求。连接测试不代表已验证生成能力。
+        {profile.protocol === "azure-openai"
+          ? "使用 Azure /openai/v1 地址和部署名称；模型列表不能代替部署管理。"
+          : "模型列表仅检测连接；请使用当前协议支持的文本模型。Responses、Messages、Gemini、Azure 和 Ollama 当前只用于文案生成。"}
       </p>
     </>
   );

@@ -42,12 +42,14 @@ export default function ProviderConnectionList({
               title={connection.baseUrl ?? connection.displayName}
             >
               <span>
-                <strong>{connection.displayName}</strong>
+                <strong title={connection.displayName}>
+                  {connection.displayName}
+                </strong>
                 <small>{connection.baseUrl ?? "本地连接"}</small>
               </span>
               <em>
                 {active
-                  ? "当前"
+                  ? "正在编辑"
                   : connection.kind === "user_byok"
                     ? "BYOK"
                     : "本地"}

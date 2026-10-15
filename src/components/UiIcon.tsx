@@ -23,6 +23,7 @@ import {
   EyeSlash,
   Minus,
   Stop,
+  Hashtag,
 } from "iconsax-react";
 import { getUiIconSizeName, normalizeUiIconSize } from "./uiIconSizing";
 
@@ -39,6 +40,7 @@ const ICONS = {
   preview: Maximize,
   copy: Copy,
   favorite: Heart,
+  tag: Hashtag,
   next: ArrowRight2,
   folder: FolderOpen,
   pin: Location,

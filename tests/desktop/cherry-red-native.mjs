@@ -9,7 +9,7 @@ import { SETTINGS_STORAGE_KEY } from "../../src/domain/settings.ts";
 import { inspectDesktopRelease } from "../../scripts/windows/desktop-release.mjs";
 
 // Run serially with taskhost-lifecycle.mjs: both own CDP port 9349.
-// All Provider traffic goes to this run's loopback server. No vault calls.
+// Provider traffic stays on this run's loopback server; only owned synthetic vault refs are used.
 if (process.argv.includes("--help")) {
   process.stdout.write(
     "Usage: node tests/desktop/cherry-red-native.mjs\n" +
@@ -51,7 +51,7 @@ const report = {
   profile,
   cdp,
   providerTrafficScope:
-    "Explicit keyless requests to this run's loopback fixture only",
+    "Explicit requests to this run's loopback fixture; owned synthetic credentials only",
   invocations: [],
   checks: [],
   requests: [],
@@ -92,6 +92,21 @@ assert(
 let app, browser, page, baseUrl;
 const expected = new Map();
 const responsesClosed = new Set();
+const ownedCredentials = new Set();
+const credentialSecrets = new Map();
+const protocolCredentials = new Map();
+const canonicalProtocol = (protocol) =>
+  protocol === "openai-compatible"
+    ? "openai-chat"
+    : protocol === "anthropic-messages"
+      ? "anthropic"
+      : protocol;
+const redact = (value) => {
+  let safe = String(value);
+  for (const secret of credentialSecrets.values())
+    safe = safe.replaceAll(secret, "[REDACTED]");
+  return safe;
+};
 const available = () =>
   fetch(`${cdp}/json/version`, { signal: AbortSignal.timeout(1000) })
     .then((response) => response.ok)
@@ -113,22 +128,58 @@ const journal = async (taskId) =>
   );
 const posts = (taskId) =>
   report.requests.filter((request) => request.taskId === taskId).length;
-const frame = (value) => `data: ${JSON.stringify(value)}\n\n`;
+const frame = (value) =>
+  `${value.type ? `event: ${value.type}\n` : ""}data: ${JSON.stringify(value)}\n\n`;
 function stream(protocol, text, complete) {
-  if (protocol === "anthropic-messages")
+  protocol = canonicalProtocol(protocol);
+  if (protocol === "anthropic")
     return (
-      frame({ type: "message_start", message: { content: [] } }) +
+      frame({
+        type: "message_start",
+        message: { id: "msg_fixture", role: "assistant", content: [] },
+      }) +
       frame({
         type: "content_block_start",
+        index: 0,
         content_block: { type: "text", text: "" },
       }) +
       frame({
         type: "content_block_delta",
+        index: 0,
         delta: { type: "text_delta", text },
       }) +
       (complete
-        ? frame({ type: "message_delta", delta: { stop_reason: "end_turn" } }) +
+        ? frame({ type: "content_block_stop", index: 0 }) +
+          frame({ type: "message_delta", delta: { stop_reason: "end_turn" } }) +
           frame({ type: "message_stop" })
+        : "")
+    );
+  if (protocol === "openai-responses")
+    return (
+      frame({
+        type: "response.output_text.delta",
+        item_id: "msg_fixture",
+        output_index: 0,
+        content_index: 0,
+        delta: text,
+      }) +
+      (complete
+        ? frame({
+            type: "response.completed",
+            response: {
+              id: "resp_fixture",
+              status: "completed",
+              output: [
+                {
+                  type: "message",
+                  id: "msg_fixture",
+                  role: "assistant",
+                  status: "completed",
+                  content: [{ type: "output_text", text }],
+                },
+              ],
+            },
+          })
         : "")
     );
   if (protocol === "gemini")
@@ -139,10 +190,68 @@ function stream(protocol, text, complete) {
   return (
     frame({ choices: [{ index: 0, delta: { content: text } }] }) +
     (complete
-      ? frame({
-          choices: [{ index: 0, delta: {}, finish_reason: "stop" }],
-        }) + "data: [DONE]\n\n"
+      ? frame({ choices: [{ index: 0, delta: {}, finish_reason: "stop" }] }) +
+        "data: [DONE]\n\n"
       : "")
+  );
+}
+
+async function ownCredential(protocol) {
+  const existing = protocolCredentials.get(protocol);
+  if (existing) return existing;
+  const ref = `cherry-native-${protocol}-${randomUUID()}`;
+  assert(
+    (await invoke("credential_get", { providerId: ref })) === null,
+    "Refusing to overwrite a pre-existing credential",
+  );
+  const secret = `synthetic-${randomUUID()}`;
+  credentialSecrets.set(ref, secret);
+  // Own the attempted write before IPC: a lost receipt must still be cleaned.
+  ownedCredentials.add(ref);
+  assert(
+    (await invoke("credential_set", { providerId: ref, secret })) === true,
+    "Synthetic credential write must be acknowledged",
+  );
+  assert(
+    (await invoke("credential_get", { providerId: ref })) === secret,
+    "Synthetic credential readback mismatch",
+  );
+  protocolCredentials.set(protocol, ref);
+  return ref;
+}
+
+async function cleanupCredentials() {
+  const failures = [];
+  if (
+    ownedCredentials.size &&
+    (!page ||
+      page.isClosed() ||
+      app?.exitCode !== null ||
+      app?.signalCode !== null)
+  ) {
+    await stop();
+    await launch();
+  }
+  for (const ref of ownedCredentials) {
+    try {
+      await invoke("credential_delete", { providerId: ref });
+      assert(
+        (await invoke("credential_get", { providerId: ref })) === null,
+        "Owned synthetic credential must be absent after cleanup",
+      );
+      ownedCredentials.delete(ref);
+    } catch (cause) {
+      failures.push(redact(cause));
+    }
+  }
+  report.credentialCleanupComplete = ownedCredentials.size === 0;
+  report.credentialCleanup = {
+    ownedRefsRemaining: [...ownedCredentials],
+    failures,
+  };
+  assert(
+    report.credentialCleanupComplete,
+    "Owned synthetic credential cleanup incomplete",
   );
 }
 
@@ -157,9 +266,38 @@ const server = createServer(async (request, response) => {
     assert.equal(durable.status, "submitted", "Journal must precede POST");
     assert.equal(durable.idempotencyKey, key);
     assert.match(durable.fingerprint, /^[a-f0-9]{64}$/);
-    assert.equal(request.headers.authorization, undefined);
-    assert.equal(request.headers["x-api-key"], undefined);
-    assert.equal(request.headers["x-goog-api-key"], undefined);
+    const protocol = canonicalProtocol(native.protocol);
+    const authHeader =
+      protocol === "anthropic"
+        ? "x-api-key"
+        : protocol === "gemini"
+          ? "x-goog-api-key"
+          : protocol === "azure-openai"
+            ? "api-key"
+            : "authorization";
+    const secret = credentialSecrets.get(native.credentialRef);
+    for (const header of [
+      "authorization",
+      "api-key",
+      "x-api-key",
+      "x-goog-api-key",
+    ]) {
+      const expectedHeader =
+        native.authMode === "none" || header !== authHeader
+          ? undefined
+          : header === "authorization"
+            ? `Bearer ${secret}`
+            : secret;
+      assert(
+        request.headers[header] === expectedHeader,
+        `Owned authentication contract mismatch: ${header}`,
+      );
+    }
+    assert(
+      native.authMode === "none" ||
+        (ownedCredentials.has(native.credentialRef) && secret),
+      "Only this run's owned key may authorize the fixture",
+    );
     assert.equal(request.headers.accept, "text/event-stream");
     const chunks = [];
     for await (const chunk of request) chunks.push(chunk);
@@ -170,7 +308,7 @@ const server = createServer(async (request, response) => {
       .filter((message) => message.role === "system")
       .map((message) => message.content)
       .join("\n\n");
-    if (native.protocol === "anthropic-messages") {
+    if (protocol === "anthropic") {
       assert.equal(request.url, "/v1/messages");
       assert.equal(request.headers["anthropic-version"], "2023-06-01");
       assert.deepEqual(body, {
@@ -180,7 +318,7 @@ const server = createServer(async (request, response) => {
         max_tokens: 4096,
         stream: true,
       });
-    } else if (native.protocol === "gemini") {
+    } else if (protocol === "gemini") {
       assert.equal(
         request.url,
         `/v1beta/models/${native.model}:streamGenerateContent?alt=sse`,
@@ -192,8 +330,21 @@ const server = createServer(async (request, response) => {
         })),
         systemInstruction: { parts: [{ text: system }] },
       });
+    } else if (protocol === "openai-responses") {
+      assert.equal(request.url, "/v1/responses");
+      assert.deepEqual(body, {
+        model: native.model,
+        input: messages,
+        stream: true,
+        store: false,
+      });
     } else {
-      assert.equal(request.url, "/v1/chat/completions");
+      assert.equal(
+        request.url,
+        protocol === "azure-openai"
+          ? "/openai/v1/chat/completions"
+          : "/v1/chat/completions",
+      );
       assert.deepEqual(body, {
         model: native.model,
         messages,
@@ -209,7 +360,8 @@ const server = createServer(async (request, response) => {
       path: request.url,
       body,
       durableBeforePost: true,
-      authHeadersAbsent: true,
+      ownedAuthenticationVerified: true,
+      authHeadersAbsent: native.authMode === "none",
     });
     response.once("close", () => responsesClosed.add(native.taskId));
     if (mode === "rejected") {
@@ -226,7 +378,7 @@ const server = createServer(async (request, response) => {
     if (mode === "cancel") response.write(bodyStream);
     else response.end(bodyStream);
   } catch (cause) {
-    report.errors.push(String(cause));
+    report.errors.push(redact(cause));
     if (!response.headersSent) response.writeHead(500);
     response.end("fixture assertion failed");
   }
@@ -266,7 +418,7 @@ async function launch() {
   browser = await chromium.connectOverCDP(cdp);
   page = browser.contexts().flatMap((context) => context.pages())[0];
   assert(page, "Native WebView missing");
-  page.on("pageerror", (cause) => report.errors.push(cause.message));
+  page.on("pageerror", (cause) => report.errors.push(redact(cause.message)));
   await page.waitForURL("http://tauri.localhost/");
   await expect(page.locator(".app")).toHaveAttribute(
     "data-runtime-mode",
@@ -314,15 +466,22 @@ async function stop() {
 }
 
 async function protocolCase(protocol, mode) {
+  const canonical = canonicalProtocol(protocol);
+  const keyless = canonical === "openai-chat" || canonical === "ollama";
+  const credentialRef = keyless ? "" : await ownCredential(canonical);
   const prompt = `cherry-native-${protocol}-${mode}`;
   const text = `原生 fixture ${mode === "complete" ? "确认结果" : "未确认草稿"} 🌍 ${protocol}`;
   const native = {
     taskId: `cherry-native-${randomUUID()}`,
     idempotencyKey: `cherry-native-${randomUUID()}`,
-    baseUrl: `${baseUrl}/${protocol === "gemini" ? "v1beta" : "v1"}`,
-    credentialRef: "",
+    baseUrl: `${baseUrl}/${canonical === "gemini" ? "v1beta" : canonical === "azure-openai" ? "openai/v1" : "v1"}`,
+    credentialRef,
     protocol,
-    authMode: "none",
+    authMode: keyless
+      ? "none"
+      : protocol === "anthropic-messages"
+        ? "api_key"
+        : "api-key",
     kind: "text",
     model: "native-fixture-model",
     prompt,
@@ -589,13 +748,21 @@ try {
   await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
   baseUrl = `http://127.0.0.1:${server.address().port}`;
   await launch();
-  for (const protocol of ["openai-compatible", "anthropic-messages", "gemini"])
+  for (const protocol of ["openai-chat", "anthropic", "gemini"])
     for (const mode of ["complete", "partial", "cancel", "rejected"])
       await protocolCase(protocol, mode);
+  for (const protocol of [
+    "openai-responses",
+    "azure-openai",
+    "ollama",
+    "openai-compatible",
+    "anthropic-messages",
+  ])
+    await protocolCase(protocol, "complete");
   await transparencyCase();
-  assert.equal(
-    report.invocations.some((command) => command.startsWith("credential_")),
-    false,
+  assert(
+    [...protocolCredentials.values()].every((ref) => ownedCredentials.has(ref)),
+    "Every synthetic reference must remain owned until finally cleanup",
   );
   assert.deepEqual(report.errors, []);
   const after = inspectDesktopRelease(root);
@@ -618,28 +785,34 @@ try {
     );
   report.passed = true;
 } catch (cause) {
-  report.failure = String(cause);
+  report.failure = redact(cause);
   if (page && !page.isClosed())
     await page
       .screenshot({ path: path.join(output, "failure.png") })
       .catch(() => {});
-  throw cause;
+  throw new Error(redact(cause));
 } finally {
+  let cleanupFailure;
   try {
+    await cleanupCredentials();
     if (page && !page.isClosed() && app?.exitCode === null)
       await invoke("window_appearance_set", { enabled: false }).catch(() => {});
+  } catch (cause) {
+    report.passed = false;
+    cleanupFailure = report.cleanupFailure = redact(cause);
+  }
+  try {
     await stop();
   } catch (cause) {
     report.passed = false;
-    report.cleanupFailure = String(cause);
-    throw cause;
+    cleanupFailure = report.appCleanupFailure = redact(cause);
   } finally {
     server.closeAllConnections();
     if (server.listening) await new Promise((resolve) => server.close(resolve));
     report.finishedAt = new Date().toISOString();
     await fs.writeFile(
       path.join(output, "receipt.json"),
-      JSON.stringify(report, null, 2) + "\n",
+      redact(JSON.stringify(report, null, 2)) + "\n",
     );
     process.stdout.write(
       JSON.stringify({
@@ -649,4 +822,5 @@ try {
       }) + "\n",
     );
   }
+  if (cleanupFailure) throw new Error(cleanupFailure);
 }

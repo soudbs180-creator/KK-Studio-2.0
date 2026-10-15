@@ -1,0 +1,11 @@
+# Spec
+
+1. Desktop waits for project hydration, starts its owned loopback service and restores the saved project thread automatically. Home is service-ready and creates no conversation.
+2. Save non-secret ownership in the project snapshot before history/model reads. Keep existing per-project storage keys compatible. Unknown foreign threads and active work/approvals fail closed. A first conversation in another known project keeps the former project ownership. Same-project reconnect never replaces a thread.
+3. One ordinary reconnect/status action; manual URL/token, explicit new conversation and stop belong to advanced settings. Explicit disconnect/stop pauses automatic connection persistently. Permissions govern operations, not reconnects.
+4. API secrets stay in Windows Credential Manager or Web request memory. Google and ordinary API saves share durable metadata and success semantics. Credential errors are retryable and differ from missing keys. No plaintext refill, log, URL or export.
+5. Validate faults, cancellation, project switching, restart, UI and real native credential retention with synthetic credentials only. No paid model turn or user-secret access is needed.
+
+Recovery details: an owned failed thread may be resumed once per reconnect, with no busy work or pending approval. Invalid native provider entries fail the whole read and preserve the original configuration; only an actually valid empty array represents empty configuration. A successful credential commit followed by a failed Google login-preference write reports partial completion rather than claiming the key was lost or everything saved.
+
+Daily-profile supplement: normally close and reopen the actual default-data APP through its official GUI launcher, compare the same project/thread and API metadata, verify explicit disconnect remains paused across process reopen, and restore the initially connected preference after acceptance. A connected chat banner must use healthy status styling, its ordinary connected button is disabled, and explicit new conversation belongs to advanced controls. Credential state distinguishes configuration metadata from actual saved/missing/loading/error, including Desktop versus session-only Web behavior. An initially missing real key is not evidence of restart loss, and cannot support a real-key retention PASS.

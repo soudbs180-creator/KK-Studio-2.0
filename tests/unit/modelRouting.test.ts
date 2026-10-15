@@ -71,7 +71,11 @@ test("显式模型选择绑定具体账号；旧项目不覆盖新选择，尺�
   });
   Object.defineProperty(globalThis, "window", {
     configurable: true,
-    value: { localStorage: storage, dispatchEvent: () => true },
+    value: {
+      location: { protocol: "https:", hostname: "fixture.invalid" },
+      localStorage: storage,
+      dispatchEvent: () => true,
+    },
   });
   const a = connectionFromModelProfile({
     version: 1,

@@ -27,7 +27,7 @@
   color: var(--settings-text);
 }
 .plugin-manager-info span {
-  font-size: 11px;
+  font-size: var(--kk-font-caption);
   color: var(--settings-muted);
 }
 .plugin-manager-info p {

@@ -1,7 +1,7 @@
 /* 插件节点渲染层（vendor/canvas-plugins 接入） */
 .canvas-node.canvas-node-plugin {
   border: 1px solid var(--border-default);
-  border-radius: 16px;
+  border-radius: var(--kk-radius-card);
   background: var(--bg-card);
   overflow: visible;
 }
@@ -15,8 +15,22 @@
   width: 100%;
   height: 100%;
   overflow: hidden;
-  border-radius: 16px;
+  border-radius: var(--kk-radius-card);
   background: var(--bg-card);
+  display: flex;
+  flex-direction: column;
+}
+.plugin-node-content {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+}
+.plugin-node-empty-actions {
+  display: flex;
+  flex: 0 0 auto;
+  justify-content: center;
+  gap: var(--ui-space-2);
+  padding: var(--ui-space-2);
 }
 .plugin-node-missing {
   display: flex;
@@ -31,37 +45,6 @@
   font-size: 12px;
 }
 .plugin-node-missing-hint {
-  font-size: 11px;
+  font-size: var(--kk-font-caption);
   color: var(--text-tertiary);
-}
-.plugin-node-toolbar {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  z-index: 6;
-  display: flex;
-  gap: 4px;
-  padding: 4px;
-  background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
-  border-radius: 10px;
-  box-shadow: var(--ui-shadow);
-}
-.plugin-node-toolbar button {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 4px 8px;
-  border-radius: 6px;
-  background: transparent;
-  color: var(--text-secondary);
-  font-size: 11px;
-}
-.plugin-node-toolbar button:hover {
-  background: var(--bg-card-hover);
-  color: var(--text-primary);
-}
-.plugin-node-toolbar button[aria-pressed="true"] {
-  background: var(--bg-accent);
-  color: var(--text-on-accent);
 }

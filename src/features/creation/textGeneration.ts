@@ -1,32 +1,31 @@
-import {
-  isStrictLoopbackProviderUrl,
-  modelProviderSchema,
-  resolveProviderAuthMode,
-  resolveProviderProtocol,
-  type ProviderProtocol,
-  type ProviderProtocolOptions,
-} from "../../domain/modelProvider.ts";
-import {
-  buildProviderTextRequest,
-  providerRequestHeaders,
-  type ProviderTextMessage,
-} from "../../integrations/providerTextProtocol.ts";
-import {
-  createTextStreamDecoder,
-  invalidTextStream,
-} from "../../integrations/providerTextStream.ts";
+import { modelProviderSchema } from "../../domain/modelProvider.ts";
+import { isLocalProviderUrl } from "../../domain/providerUrl.ts";
 import { loadApiKey } from "./providerCredentials.ts";
 import { GenerationProviderError } from "./imageGeneration.ts";
+import {
+  consumeTextEvent,
+  type TextProtocolState,
+} from "./textProtocolEvent.ts";
+import {
+  buildTextRequest,
+  providerNeedsKey,
+  providerProtocol,
+  type ProviderTextMessage,
+  type ProviderProtocolOptions,
+  type ProviderProtocol,
+} from "../../domain/providerProtocol.ts";
 
-const invalidStream = invalidTextStream;
+const invalidStream = () =>
+  new Error("文本响应不完整或格式无效，请先核对供应商；不会自动重复提交。");
 
 /** Strict bounded SSE consumer. Partial output is a draft, never a completed result. */
 export async function readTextStream(
   response: Response,
   signal: AbortSignal,
   onText?: (text: string) => void,
-  protocol: ProviderProtocol = "openai-compatible",
+  protocol: ProviderProtocol = "openai-chat",
 ): Promise<string> {
+  protocol = providerProtocol({ protocol });
   signal.throwIfAborted();
   if (
     !response.headers.get("content-type")?.includes("text/event-stream") ||
@@ -38,30 +37,74 @@ export async function readTextStream(
   const reader = response.body.getReader();
   const decoder = new TextDecoder("utf-8", { fatal: true });
   const encoder = new TextEncoder();
+  const modern = ["openai-responses", "anthropic", "gemini"].includes(protocol);
+  const state: TextProtocolState = {
+    text: "",
+    complete: false,
+    endTurn: false,
+  };
   let buffer = "",
     text = "",
-    data: string[] = [];
+    data: string[] = [],
+    eventType = "";
   let bytes = 0,
+    finished = false,
     eventBytes = 0;
-  const streamDecoder = createTextStreamDecoder(protocol);
   const abort = () => {
     void reader.cancel().catch(() => undefined);
   };
   signal.addEventListener("abort", abort, { once: true });
   function dispatch() {
-    if (!data.length) return;
+    if (!data.length) {
+      eventType = "";
+      return;
+    }
+    if (modern && finished) throw invalidStream();
     const value = data.join("\n");
     data = [];
     eventBytes = 0;
-    const content = streamDecoder.decode(value);
-    if (content) {
-      text += content;
+    if (value === "[DONE]") {
+      if (modern) throw invalidStream();
+      finished = true;
+      return;
+    }
+    let payload;
+    try {
+      payload = JSON.parse(value);
+    } catch {
+      throw invalidStream();
+    }
+    if (
+      eventType &&
+      ["openai-responses", "anthropic"].includes(protocol) &&
+      payload.type !== eventType
+    )
+      throw invalidStream();
+    eventType = "";
+    const previous = state.text;
+    consumeTextEvent(payload, state, protocol);
+    text = state.text;
+    if (text !== previous) {
       if (encoder.encode(text).length > 32768) throw invalidStream();
       onText?.(text);
     }
+    finished = state.complete;
+  }
+  function consumeLine(line: string): void {
+    if (encoder.encode(line).length > 65536) throw invalidStream();
+    if (!line) dispatch();
+    else if (line.startsWith("data:")) {
+      const value = line.slice(5).replace(/^ /, "");
+      eventBytes += encoder.encode(value).length;
+      if (eventBytes > 65536) throw invalidStream();
+      data.push(value);
+    } else if (line.startsWith("event:")) {
+      eventType = line.slice(6).trim();
+      if (eventType === "error") throw invalidStream();
+    }
   }
   try {
-    while (!streamDecoder.isFinished()) {
+    while (!finished) {
       const chunk = await reader.read();
       signal.throwIfAborted();
       if (chunk.done) {
@@ -72,29 +115,19 @@ export async function readTextStream(
       if (bytes > 2 * 1024 * 1024) throw invalidStream();
       buffer += decoder.decode(chunk.value, { stream: true });
       let newline: number;
-      while (
-        !streamDecoder.isFinished() &&
-        (newline = buffer.indexOf("\n")) >= 0
-      ) {
+      while ((!finished || modern) && (newline = buffer.indexOf("\n")) >= 0) {
         const line = buffer.slice(0, newline).replace(/\r$/, "");
         buffer = buffer.slice(newline + 1);
-        if (encoder.encode(line).length > 65536) throw invalidStream();
-        if (!line) dispatch();
-        else if (line.startsWith("data:")) {
-          const value = line.slice(5).replace(/^ /, "");
-          eventBytes += encoder.encode(value).length;
-          if (eventBytes > 65536) throw invalidStream();
-          data.push(value);
-        } else if (
-          line.startsWith("event:") &&
-          line.slice(6).trim() === "error"
-        )
-          throw invalidStream();
+        consumeLine(line);
       }
       if (encoder.encode(buffer).length > 65536) throw invalidStream();
+      if (modern && finished) {
+        buffer += decoder.decode();
+        if (buffer || data.length) throw invalidStream();
+      }
     }
     signal.throwIfAborted();
-    if (!streamDecoder.isFinished() || !text.trim()) throw invalidStream();
+    if (!finished || !text.trim()) throw invalidStream();
     return text;
   } catch (error) {
     if (signal.aborted) throw signal.reason;
@@ -107,20 +140,20 @@ export async function readTextStream(
   }
 }
 
-export async function generateText(
-  input: ProviderProtocolOptions & {
-    prompt: string;
-    model: string;
-    providerBaseUrl: string;
-    credentialRef?: string;
-    idempotencyKey: string;
-    signal: AbortSignal;
-    beforeRequest: () => void;
-    onRequestStart: () => void;
-    onText?: (text: string) => void;
-    messages?: readonly ProviderTextMessage[];
-  },
-): Promise<string> {
+export async function generateText(input: {
+  protocol?: ProviderProtocolOptions["protocol"];
+  authMode?: ProviderProtocolOptions["authMode"];
+  prompt: string;
+  messages?: readonly ProviderTextMessage[];
+  model: string;
+  providerBaseUrl: string;
+  credentialRef?: string;
+  idempotencyKey: string;
+  signal: AbortSignal;
+  beforeRequest: () => void;
+  onRequestStart: () => void;
+  onText?: (text: string) => void;
+}): Promise<string> {
   const options = {
     ...input,
     messages: input.messages?.map((message) => ({ ...message })),
@@ -140,44 +173,41 @@ export async function generateText(
   signal.throwIfAborted();
   if (
     typeof navigator !== "undefined" &&
-    navigator.onLine === false &&
-    !isStrictLoopbackProviderUrl(options.providerBaseUrl)
+    !navigator.onLine &&
+    !isLocalProviderUrl(options.providerBaseUrl)
   )
     throw new Error("当前离线，未提交文本任务；草稿已保留。");
-  const apiKey =
-    resolveProviderAuthMode(options.providerBaseUrl, options) === "none"
-      ? ""
-      : await loadApiKey(options.providerBaseUrl, options.credentialRef);
-  signal.throwIfAborted();
-  const authentication = providerRequestHeaders(
-    options.providerBaseUrl,
-    apiKey,
-    options,
-  );
-  const { url, body } = buildProviderTextRequest({
+  const route = {
     baseUrl: options.providerBaseUrl,
-    model: options.model,
-    prompt: options.prompt,
-    messages: options.messages,
     protocol: options.protocol,
-  });
+    authMode: options.authMode,
+  };
+  const apiKey = providerNeedsKey(route)
+    ? await loadApiKey(options.providerBaseUrl, options.credentialRef)
+    : "";
+  signal.throwIfAborted();
+  const request = buildTextRequest(
+    {
+      ...route,
+      prompt: options.prompt,
+      model: options.model,
+      idempotencyKey: options.idempotencyKey,
+      messages: options.messages,
+    },
+    apiKey,
+  );
   options.beforeRequest();
   signal.throwIfAborted();
   options.onRequestStart();
   let response: Response;
   try {
-    response = await fetch(url, {
+    response = await fetch(request.url, {
       method: "POST",
       credentials: "omit",
       redirect: "error",
       signal,
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "text/event-stream",
-        ...authentication,
-        "Idempotency-Key": options.idempotencyKey,
-      },
-      body: JSON.stringify(body),
+      headers: request.headers,
+      body: JSON.stringify(request.body),
     });
   } catch {
     signal.throwIfAborted();
@@ -218,10 +248,5 @@ export async function generateText(
       },
     );
   }
-  return readTextStream(
-    response,
-    signal,
-    options.onText,
-    resolveProviderProtocol(options),
-  );
+  return readTextStream(response, signal, options.onText, options.protocol);
 }

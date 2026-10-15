@@ -1,4 +1,5 @@
 use super::*;
+use crate::provider_transaction::provider_test_guard;
 use serde_json::json;
 use std::sync::atomic::{AtomicU64, Ordering};
 use std::sync::Arc;
@@ -46,6 +47,7 @@ fn connection(overrides: serde_json::Map<String, Value>) -> Value {
 
 #[test]
 fn missing_then_roundtrip() {
+    let _isolation = provider_test_guard();
     let (_root, repo) = temp_repository("roundtrip");
     let read = repo.read().expect("read missing");
     assert_eq!(read.status, "missing");
@@ -69,6 +71,7 @@ fn missing_then_roundtrip() {
 
 #[test]
 fn conflict_rejects_without_overwriting() {
+    let _isolation = provider_test_guard();
     let (_root, repo) = temp_repository("conflict");
     let connections = json!([connection(serde_json::Map::new())]);
     repo.write(connections.clone(), None).expect("first write");
@@ -85,6 +88,7 @@ fn conflict_rejects_without_overwriting() {
 
 #[test]
 fn corrupt_main_recovers_from_backup() {
+    let _isolation = provider_test_guard();
     let (_root, repo) = temp_repository("recovery");
     let first = json!([connection(serde_json::Map::new())]);
     repo.write(first.clone(), None).expect("first write");
@@ -104,6 +108,7 @@ fn corrupt_main_recovers_from_backup() {
 
 #[test]
 fn secret_fields_are_rejected_before_write() {
+    let _isolation = provider_test_guard();
     let (_root, repo) = temp_repository("secrets");
     let leaked = json!([connection(
         serde_json::from_str(r#"{"apiKey":"sk-abcdef1234567890"}"#).expect("override")
@@ -129,6 +134,7 @@ fn secret_fields_are_rejected_before_write() {
 
 #[test]
 fn malformed_shape_is_rejected() {
+    let _isolation = provider_test_guard();
     let (_root, repo) = temp_repository("malformed");
     let error = repo
         .write(json!({"connections": "not-an-array"}), None)
@@ -139,6 +145,7 @@ fn malformed_shape_is_rejected() {
 
 #[test]
 fn credential_ref_and_metadata_pass_through() {
+    let _isolation = provider_test_guard();
     let (_root, repo) = temp_repository("metadata");
     let mut map = serde_json::Map::new();
     map.insert("credentialRef".to_string(), json!("provider-abc123"));

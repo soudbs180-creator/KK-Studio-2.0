@@ -55,7 +55,7 @@ export default function SavedPane({
               {query
                 ? "清除搜索或换个关键词。"
                 : like
-                  ? "选中卡片，点击编辑器中的心形按钮。"
+                  ? "选中卡片，点击顶部工具栏中的喜欢按钮。"
                   : "在生成结果卡片上点击收藏按钮。"}
             </p>
           </div>
@@ -97,7 +97,7 @@ export default function SavedPane({
                 <form
                   className="saved-edit"
                   onKeyDown={(e) => {
-                    if (e.key === "Escape") {
+                    if (e.key === "Escape" && !e.nativeEvent.isComposing) {
                       e.preventDefault();
                       e.stopPropagation();
                       setEditing("");

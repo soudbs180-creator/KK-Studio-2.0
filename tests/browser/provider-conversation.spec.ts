@@ -85,7 +85,7 @@ for (const status of [401, 429])
           const connections = JSON.parse(localStorage.getItem(key)!);
           const connection = connections[0];
           connection.healthRevision = (connection.healthRevision ?? 0) + 1;
-          if (change === "protocol") connection.protocol = "anthropic-messages";
+          if (change === "protocol") connection.protocol = "ollama";
           if (change === "auth") connection.authMode = "api_key";
           localStorage.setItem(key, JSON.stringify(connections));
           window.dispatchEvent(new Event("kk:model-provider-changed"));
@@ -114,6 +114,7 @@ for (const status of [401, 429])
       expect(connection.state).toBe("active");
       expect(connection.cooldownUntil).toBeUndefined();
       expect(connection.healthRevision).toBe(savedRevision);
+      if (change === "protocol") expect(connection.protocol).toBe("ollama");
       expect(requests).toBe(2);
     });
 test("explicit text declarations remain selectable on a connection with an older image default", async ({

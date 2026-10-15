@@ -84,4 +84,3 @@ GitHub Actions 统一固定到 commit SHA 并附版本注释；新增 action 时
 验证失败时先复现、归因、最小修复，再重跑受影响检查；不要禁用有效检查、放宽断言或增加重试掩盖问题。额外缺陷入账，不未经说明扩张任务。没有真实凭据、ComfyUI/GPU 或 live eval 预算时，只继续可完成的本地工作，外部验收标 NOT RUN/NOT VERIFIED。
 
 完成或中断前更新 change package、任务账本、PROJECT_STATE/AI_HANDOFF 的适用部分和 PROGRESS。恢复时重新读当前 SHA、worktree、端口/进程和文档，确认哪些旧 review/证据已失效。不要凭聊天中的“之前通过”继续发布。
-

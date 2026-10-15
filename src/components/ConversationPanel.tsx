@@ -17,6 +17,7 @@ import useConversationChannel from "./useConversationChannel";
 import { conversationComposerState } from "./conversationComposerState";
 import { isStrictLoopbackProviderUrl } from "../domain/modelProvider";
 import { readProviderConnections } from "../features/creation/providerRegistry";
+import { useAgentDraftState } from "../features/agent/useAgentComposerDraft";
 import {
   getDisabledReason,
   getGenerationUiState,
@@ -43,6 +44,7 @@ export default function ConversationPanel({
   agent,
 }: ConversationPanelProps) {
   const panelRef = useConversationOverlay(overlay);
+  const agentDraftState = useAgentDraftState();
   const { channel, setChannel, agentModel, onSelectModel } =
     useConversationChannel(Boolean(agent), onModelChange);
   const agentActive = Boolean(agent && channel === "codex");
@@ -61,6 +63,8 @@ export default function ConversationPanel({
     selectedAssistant,
     agent,
   );
+  const modelDisabled =
+    submitting || Boolean(agent?.sending || agent?.connecting);
   useEffect(() => {
     setInput(project?.composerDraft.prompt ?? "");
     setApprovalMode(project?.composerDraft.approvalMode ?? "auto");
@@ -133,6 +137,7 @@ export default function ConversationPanel({
   )
     return (
       <ConversationAlternateChannel
+        draftState={agentDraftState}
         key={project.id + channel}
         {...{
           channel,
@@ -217,6 +222,7 @@ export default function ConversationPanel({
       <ConversationComposerRegion
         agent={assistantAgent}
         draftKey={project?.id ?? "workspace"}
+        draftState={agentDraftState}
         agentActive={agentActive}
         agentConnecting={agentConnecting}
         agentModel={agentModel}
@@ -227,6 +233,7 @@ export default function ConversationPanel({
         }}
         onSubmitMessage={submitMessage}
         {...composerState}
+        modelDisabled={modelDisabled}
         composerDraft={composerDraft}
         onRemoveAttachment={(id) =>
           updateDraft({
@@ -241,7 +248,9 @@ export default function ConversationPanel({
         onStatus={setStatus}
         currentModel={currentModel}
         modelOptions={modelOptions}
-        onSelectModel={onSelectModel}
+        onSelectModel={(option, selection) => {
+          if (!modelDisabled) onSelectModel(option, selection);
+        }}
         onOpen={onOpen}
         skills={skills}
         onApplySkill={onApplySkill}

@@ -23,17 +23,38 @@ import type {
 } from "./pluginTypes.ts";
 import type { AgentBridge } from "../agent/agentConnection.ts";
 import { appVersion } from "../../runtime/appInfo.ts";
+import { createLogger } from "../../runtime/logger.ts";
+
+// 插件域诊断日志：替代散落的 console 调用，失败可定位、可导出。
+const pluginLog = createLogger("plugins");
 
 export interface PluginEventBus {
   emit(event: string, payload?: unknown): void;
-  on(event: string, handler: (payload: unknown) => void): () => void;
+  on(
+    event: string,
+    handler: (payload: unknown) => void | PromiseLike<void>,
+  ): () => void;
 }
 
 function createDefaultBus(): PluginEventBus {
-  const listeners = new Map<string, Set<(payload: unknown) => void>>();
+  const listeners = new Map<
+    string,
+    Set<(payload: unknown) => void | PromiseLike<void>>
+  >();
   return {
     emit(event, payload) {
-      listeners.get(event)?.forEach((handler) => handler(payload));
+      listeners.get(event)?.forEach((handler) => {
+        try {
+          const result = handler(payload);
+          if (result && typeof result.then === "function")
+            Promise.resolve(result).catch((error) => {
+              pluginLog.error("事件处理器执行失败", { event, error });
+            });
+        } catch (error) {
+          // 单个插件处理器崩溃不得影响其他订阅者（上游 canvas-event-bus 同款隔离）。
+          pluginLog.error("事件处理器执行失败", { event, error });
+        }
+      });
     },
     on(event, handler) {
       const set = listeners.get(event) ?? new Set();
@@ -59,6 +80,7 @@ export interface PluginLoaderOptions {
 }
 
 interface LoadedPluginState {
+  plugin: CanvasPlugin;
   record: InstalledPlugin;
   disposers: Array<() => void>;
 }
@@ -78,6 +100,41 @@ function assertSecureRemotePluginUrl(value: string): void {
     url.hash
   )
     throw new Error("仅支持不含凭据或片段的 HTTPS 插件地址");
+}
+
+// Imports cannot be aborted; a late module must never continue into activation.
+async function waitForPluginLoad<T>(
+  load: (signal: AbortSignal) => Promise<T>,
+  signal?: AbortSignal,
+): Promise<T> {
+  signal?.throwIfAborted();
+  const controller = new AbortController();
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  let rejectWaiting!: (reason: Error) => void;
+  const cancel = () => {
+    const error = new Error(
+      "已停止等待插件加载，原记录保留；模块可能已执行，请检查插件后重试。",
+    );
+    controller.abort(error);
+    rejectWaiting(error);
+  };
+  try {
+    const waiting = new Promise<never>((_resolve, reject) => {
+      rejectWaiting = reject;
+      timer = setTimeout(() => {
+        const error = new Error(
+          "插件加载超时，已停止等待；原记录保留，模块可能已执行，请检查网络或插件后重试。",
+        );
+        controller.abort(error);
+        reject(error);
+      }, 15_000);
+    });
+    signal?.addEventListener("abort", cancel, { once: true });
+    return await Promise.race([load(controller.signal), waiting]);
+  } finally {
+    signal?.removeEventListener("abort", cancel);
+    if (timer !== undefined) clearTimeout(timer);
+  }
 }
 
 export function createPluginLoader(options: PluginLoaderOptions = {}) {
@@ -156,14 +213,20 @@ export function createPluginLoader(options: PluginLoaderOptions = {}) {
   async function evaluatePluginSource(
     source: string,
     moduleUrl?: string,
+    signal?: AbortSignal,
   ): Promise<CanvasPlugin> {
     const useBundledModule =
       Boolean(moduleUrl) &&
       isBundledPluginUrl(moduleUrl ?? "") &&
       (Boolean(options.importUrl) || !options.importModule);
-    const mod = useBundledModule
-      ? await importBundledModule(moduleUrl as string)
-      : await importModule(source);
+    const mod = await waitForPluginLoad(
+      () =>
+        useBundledModule
+          ? importBundledModule(moduleUrl as string)
+          : importModule(source),
+      signal,
+    );
+    signal?.throwIfAborted();
     const exported = mod.default ?? mod.plugin;
     const plugin =
       typeof exported === "function"
@@ -176,15 +239,19 @@ export function createPluginLoader(options: PluginLoaderOptions = {}) {
   async function fetchPluginSource(
     url: string,
     remote = false,
+    signal?: AbortSignal,
   ): Promise<string> {
     if (remote) assertSecureRemotePluginUrl(url);
-    const response = remote
-      ? await fetcher(url, { redirect: "error" })
-      : await fetcher(url);
-    if (!response.ok)
-      throw new Error(`插件下载失败（HTTP ${response.status}）`);
-    if (remote && response.url) assertSecureRemotePluginUrl(response.url);
-    return response.text();
+    return waitForPluginLoad(async (signal) => {
+      const response = await fetcher(url, {
+        signal,
+        ...(remote ? { redirect: "error" } : {}),
+      });
+      if (!response.ok)
+        throw new Error(`插件下载失败（HTTP ${response.status}）`);
+      if (remote && response.url) assertSecureRemotePluginUrl(response.url);
+      return response.text();
+    }, signal);
   }
 
   function withCacheBust(url: string): string {
@@ -193,16 +260,8 @@ export function createPluginLoader(options: PluginLoaderOptions = {}) {
 
   function activatePlugin(plugin: CanvasPlugin): void {
     const disposers: Array<() => void> = [];
-    if (plugin.css) disposers.push(injectPluginCss(plugin.css, plugin.id));
-    const cleanup = plugin.setup?.({
-      version: appVersion,
-      emit: bus.emit,
-      on: bus.on,
-      injectCSS: injectPluginCss,
-    });
-    if (typeof cleanup === "function") disposers.push(cleanup);
-    registerPluginNodes(plugin.id, plugin.nodes);
     loadedPlugins.set(plugin.id, {
+      plugin,
       record: {
         id: plugin.id,
         name: plugin.name || plugin.id,
@@ -214,6 +273,28 @@ export function createPluginLoader(options: PluginLoaderOptions = {}) {
       },
       disposers,
     });
+    try {
+      if (plugin.css) disposers.push(injectPluginCss(plugin.css, plugin.id));
+      const cleanup = plugin.setup?.({
+        version: appVersion,
+        emit: bus.emit,
+        on: (event, handler) => {
+          const dispose = bus.on(event, handler);
+          disposers.push(dispose);
+          return dispose;
+        },
+        injectCSS: (css, key) => {
+          const dispose = injectPluginCss(css, key);
+          disposers.push(dispose);
+          return dispose;
+        },
+      });
+      if (typeof cleanup === "function") disposers.push(cleanup);
+      registerPluginNodes(plugin.id, plugin.nodes);
+    } catch (error) {
+      deactivatePlugin(plugin.id);
+      throw error;
+    }
   }
 
   function deactivatePlugin(pluginId: string): void {
@@ -235,15 +316,25 @@ export function createPluginLoader(options: PluginLoaderOptions = {}) {
 
   async function installFromUrl(
     url: string,
-    opts?: { official?: boolean; bustCache?: boolean },
+    opts?: {
+      official?: boolean;
+      bustCache?: boolean;
+      enabled?: boolean;
+      expectedId?: string;
+      signal?: AbortSignal;
+    },
   ): Promise<CanvasPlugin> {
     assertSecureRemotePluginUrl(url);
     const source = await fetchPluginSource(
       opts?.bustCache ? withCacheBust(url) : url,
       true,
+      opts?.signal,
     );
-    const plugin = await evaluatePluginSource(source);
-    deactivatePlugin(plugin.id);
+    const plugin = await evaluatePluginSource(source, undefined, opts?.signal);
+    opts?.signal?.throwIfAborted();
+    if (opts?.expectedId && plugin.id !== opts.expectedId)
+      throw new Error("更新包的插件身份不一致，原插件保留。");
+    const previous = loadedPlugins.get(plugin.id)?.plugin;
     const record: InstalledPlugin = {
       id: plugin.id,
       name: plugin.name || plugin.id,
@@ -251,42 +342,77 @@ export function createPluginLoader(options: PluginLoaderOptions = {}) {
       description: plugin.description,
       url,
       source,
-      enabled: true,
+      enabled: opts?.enabled ?? true,
       official: opts?.official,
     };
-    store.upsert(record);
-    activatePlugin(plugin);
+    try {
+      opts?.signal?.throwIfAborted();
+      deactivatePlugin(plugin.id);
+      if (record.enabled) activatePlugin(plugin);
+      opts?.signal?.throwIfAborted();
+      store.upsert(record);
+    } catch (error) {
+      deactivatePlugin(plugin.id);
+      try {
+        if (previous) activatePlugin(previous);
+      } catch {
+        throw new Error(
+          "插件操作失败，原记录保留；原插件恢复失败，请重新打开应用。",
+        );
+      }
+      throw error;
+    }
     return plugin;
   }
 
-  async function updatePlugin(record: InstalledPlugin): Promise<CanvasPlugin> {
+  async function updatePlugin(
+    record: InstalledPlugin,
+    signal?: AbortSignal,
+  ): Promise<CanvasPlugin> {
     return installFromUrl(record.url, {
       official: record.official,
       bustCache: true,
+      enabled: record.enabled,
+      expectedId: record.id,
+      signal,
     });
   }
 
   async function setPluginEnabled(
     record: InstalledPlugin,
     enabled: boolean,
+    signal?: AbortSignal,
   ): Promise<void> {
+    signal?.throwIfAborted();
     if (enabled && !record.local) assertSecureRemotePluginUrl(record.url);
-    store.setEnabled(record.id, enabled);
     if (!enabled) {
+      store.setEnabled(record.id, false);
       deactivatePlugin(record.id);
       return;
     }
     const moduleUrl = record.local ? withCacheBust(record.url) : undefined;
     const source = moduleUrl
-      ? await fetchPluginSource(moduleUrl)
+      ? await fetchPluginSource(moduleUrl, false, signal)
       : record.source;
-    const plugin = await evaluatePluginSource(source, moduleUrl);
+    const plugin = await evaluatePluginSource(source, moduleUrl, signal);
+    signal?.throwIfAborted();
+    if (plugin.id !== record.id)
+      throw new Error("插件身份不一致，原启停状态保留。");
+    if (!store.getState().plugins.some((item) => item.id === record.id))
+      throw new Error("插件已卸载，本次启用已取消。");
     activatePlugin(plugin);
+    try {
+      signal?.throwIfAborted();
+      store.setEnabled(record.id, true);
+    } catch (error) {
+      deactivatePlugin(plugin.id);
+      throw error;
+    }
   }
 
   function uninstallPlugin(id: string): void {
-    deactivatePlugin(id);
     store.remove(id);
+    deactivatePlugin(id);
   }
 
   async function loadLocalPlugins(): Promise<void> {
@@ -307,6 +433,11 @@ export function createPluginLoader(options: PluginLoaderOptions = {}) {
           const source = await fetchPluginSource(moduleUrl);
           const plugin = await evaluatePluginSource(source, moduleUrl);
           const existing = records.find((item) => item.id === plugin.id);
+          if (
+            store.getState().plugins.find((item) => item.id === plugin.id) !==
+            existing
+          )
+            return;
           store.upsert({
             id: plugin.id,
             name: plugin.name || plugin.id,
@@ -318,7 +449,7 @@ export function createPluginLoader(options: PluginLoaderOptions = {}) {
             local: true,
           });
         } catch (error) {
-          console.error(`[plugins] 发现本地插件失败：${url}`, error);
+          pluginLog.error("发现本地插件失败", { url, error });
         }
       }),
     );
@@ -337,8 +468,14 @@ export function createPluginLoader(options: PluginLoaderOptions = {}) {
           try {
             assertSecureRemotePluginUrl(record.url);
           } catch {
-            store.setEnabled(record.id, false);
-            store.setError(`已停用不安全的旧版插件：${record.name}`);
+            try {
+              store.setEnabled(record.id, false);
+              store.setError(`已停用不安全的旧版插件：${record.name}`);
+            } catch {
+              store.setError(
+                `不安全的旧版插件未加载，但停用状态未保存：${record.name}。请允许本地存储后重试。`,
+              );
+            }
             return;
           }
         }
@@ -349,9 +486,16 @@ export function createPluginLoader(options: PluginLoaderOptions = {}) {
           const source = moduleUrl
             ? await fetchPluginSource(moduleUrl)
             : record.source;
-          activatePlugin(await evaluatePluginSource(source, moduleUrl));
+          const plugin = await evaluatePluginSource(source, moduleUrl);
+          const current = store
+            .getState()
+            .plugins.find((item) => item.id === record.id);
+          if (current !== record || !current.enabled) return;
+          if (plugin.id !== record.id)
+            throw new Error("插件身份不一致，启动加载已取消。");
+          activatePlugin(plugin);
         } catch (error) {
-          console.error(`[plugins] 加载失败：${record.id}`, error);
+          pluginLog.error("插件加载失败", { pluginId: record.id, error });
         }
       }),
     );

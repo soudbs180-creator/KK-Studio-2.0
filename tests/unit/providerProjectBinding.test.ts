@@ -19,7 +19,7 @@ function localConnection(id: string, baseUrl: string): ProviderConnection {
       name: id,
       baseUrl,
       model: "text-model",
-      protocol: "openai-compatible",
+      protocol: "openai-chat",
       authMode: "none",
     }),
     id,
@@ -114,6 +114,8 @@ test("a comparison route B never changes the original project A follow-up bindin
   const comparison = {
     ...localConnection("b", "http://127.0.0.1:1234/v1"),
     protocol: "gemini" as const,
+    authMode: "api-key" as const,
+    credentialRef: "vault_compare",
   };
   await withRegistry([original, comparison], async () => {
     const prepared = await followUp(
@@ -148,14 +150,27 @@ test("a project without a normal task restores only its complete registry bindin
 
 test("an original frozen connection cannot be replaced by a comparison account", async () => {
   const original = localConnection("a", "http://127.0.0.1:11434/v1");
-  const comparison = { ...original, id: "b", protocol: "gemini" as const };
+  const comparison = {
+    ...original,
+    id: "b",
+    protocol: "gemini" as const,
+    authMode: "api-key" as const,
+    credentialRef: "vault_compare",
+  };
   const project = projectWithComparison(original, comparison);
   await withRegistry([comparison], async () => {
     await assert.rejects(() => followUp(project), /移除|绑定/);
-    writeProviderConnections([
-      { ...original, protocol: "anthropic-messages" },
-      comparison,
-    ]);
+    writeProviderConnections([{ ...original, protocol: "ollama" }, comparison]);
     await assert.rejects(() => followUp(project), /身份已变化/);
+  });
+});
+
+test("an explicit project route without a normal task cannot change protocol on lookup", async () => {
+  const original = localConnection("a", "http://127.0.0.1:11434/v1");
+  const project = projectWithComparison(original, original, false);
+  project.providerProtocol = "openai-chat";
+  project.providerAuthMode = "none";
+  await withRegistry([{ ...original, protocol: "ollama" }], async () => {
+    await assert.rejects(() => followUp(project), /绑定|明确|选择/);
   });
 });

@@ -15,6 +15,7 @@ import {
   type CanvasAgentSnapshot,
   type AgentTurnResponse,
   type AgentThreadResponse,
+  type AgentActivityDetail,
 } from "./agentTypes.ts";
 import {
   AgentApiError,
@@ -26,6 +27,8 @@ import {
   formatAgentActivity,
   mergeAgentChatItem,
   parseAgentSseEvent,
+  agentActivityMessage,
+  isAgentActivitySettled,
 } from "./agentEvents.ts";
 import {
   createAgentEventStream,
@@ -55,6 +58,9 @@ export interface AgentOpResult {
   tasks?: Array<{ taskId: string; nodeId: string; status: string }>;
 }
 export interface AgentBridge {
+  readAgentThread?(): string | undefined;
+  saveAgentThread?(threadId: string, projectId: string): void | Promise<void>;
+  knownAgentProjects?(): readonly { projectId: string; threadId?: string }[];
   readGoogleConversation?():
     import("../../domain/googleConversation.ts").GoogleConversation | undefined;
   saveGoogleConversation?(
@@ -215,6 +221,25 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
     error instanceof Error ? error.message : "Agent 请求失败";
   const currentProject = () => bridge?.getSnapshot()?.projectId ?? "";
   const threadKey = () => "kk-agent-thread:" + (projectId || "workspace");
+  const preparationKey = () =>
+    "kk-agent-preparation:" + (projectId || "workspace");
+  function preparationOwners(): string[] {
+    try {
+      const owners: unknown = JSON.parse(
+        storage.getItem(preparationKey()) ?? "[]",
+      );
+      return Array.isArray(owners)
+        ? owners
+            .filter(
+              (id): id is string =>
+                typeof id === "string" && /^[A-Za-z0-9_-]{1,160}$/.test(id),
+            )
+            .slice(-8)
+        : [];
+    } catch {
+      return [];
+    }
+  }
   function stopTransport() {
     toolController.abort();
     epoch++;
@@ -262,11 +287,16 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
   function message(item: AgentChatItem) {
     const existing = state.messages.find(
       (x) =>
-        x.id === item.id ||
+        (x.id === item.id &&
+          (!x.turnId || !item.turnId || x.turnId === item.turnId) &&
+          (!x.threadId || !item.threadId || x.threadId === item.threadId)) ||
         Boolean(
           x.turnId &&
           x.turnId === item.turnId &&
-          (x.itemId ?? x.id) === (item.itemId ?? item.id) &&
+          ((x.itemId ?? x.id) === (item.itemId ?? item.id) ||
+            Boolean(
+              item.itemId && x.activityItems?.[item.itemId] !== undefined,
+            )) &&
           (!x.threadId || !item.threadId || x.threadId === item.threadId),
         ) ||
         Boolean(
@@ -282,6 +312,13 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
     });
   }
   function handle(event: AgentEvent) {
+    if (
+      "threadId" in event &&
+      event.threadId &&
+      state.conversation?.threadId &&
+      event.threadId !== state.conversation.threadId
+    )
+      return;
     switch (event.kind) {
       case "conversation":
         if (
@@ -309,7 +346,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
       case "activity": {
         const text = formatAgentActivity(event.itemType, event.item);
         patch({ activity: text });
-        message({ id: "activity:" + event.item.id, role: "tool", text });
+        message(agentActivityMessage(event, state.conversation?.threadId));
         break;
       }
       case "terminal":
@@ -317,6 +354,12 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
         void finishTurn(event);
         break;
       case "approval":
+        if (
+          event.approval.threadId &&
+          state.conversation?.threadId &&
+          event.approval.threadId !== state.conversation.threadId
+        )
+          return;
         approvals.set(event.approval.requestId, event.approval);
         patch({ pendingApproval: approvals.values().next().value ?? null });
         break;
@@ -409,6 +452,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
       error = errorText(failure) + "；请重新连接以重试归档，勿重复生成。";
     }
     if (version !== epoch) return;
+    if (event.status === "completed") error ??= state.error;
     approvals.clear();
     patch({
       sending: false,
@@ -416,6 +460,26 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
       activity: event.status === "completed" ? "本轮已完成" : "本轮已结束",
       error,
       canvasNodeId: undefined,
+      messages: state.messages.map((item) => {
+        const detail = item.detail as AgentActivityDetail | undefined;
+        if (
+          item.role !== "tool" ||
+          !detail?.phase ||
+          isAgentActivitySettled(detail) ||
+          (event.turnId && item.turnId !== event.turnId)
+        )
+          return item;
+        return {
+          ...item,
+          detail: {
+            ...detail,
+            turnStatus:
+              event.status === "completed" && detail.turnStatus
+                ? detail.turnStatus
+                : event.status,
+          },
+        };
+      }),
     });
     if (error) message({ id: crypto.randomUUID(), role: "error", text: error });
     void refreshUsage();
@@ -574,38 +638,102 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
         },
       );
       if (version !== epoch) return;
-      const saved = newConversation ? null : storage.getItem(threadKey());
+      const saved = newConversation
+        ? null
+        : bridge?.readAgentThread?.() || storage.getItem(threadKey());
       const remote = hello.conversation;
       patch({ conversation: remote ?? null });
       if (
-        hello.busy &&
+        (hello.busy || hello.pendingApprovals.length > 0) &&
         (newConversation || !saved || saved !== remote?.threadId)
       )
         throw new Error("Codex 当前有其他会话运行，未接管。请等待结束后重连。");
-      if (!newConversation && !saved && remote?.threadId)
+      const knownOwners = bridge
+        ?.knownAgentProjects?.()
+        .filter(
+          (owner) =>
+            (owner.threadId ||
+              storage.getItem("kk-agent-thread:" + owner.projectId)) ===
+            remote?.threadId,
+        );
+      const knownOwner = knownOwners?.length === 1 ? knownOwners[0] : undefined;
+      const initializeProject = Boolean(
+        projectId &&
+        !saved &&
+        remote?.threadId &&
+        knownOwner &&
+        knownOwner.projectId !== projectId &&
+        ["ready", "warning"].includes(remote.status),
+      );
+      if (!newConversation && !saved && remote?.threadId && !initializeProject)
         throw new Error(
           "服务已有其他会话，未创建或替换。请在原项目继续，或明确点击新建 Agent 会话。",
         );
       await activeApi.activate();
+      if (version !== epoch) return;
       await activeApi.postState(bridge?.getSnapshot() ?? null);
+      if (version !== epoch) return;
+      const rememberOwnership = async (
+        conversation?: AgentConversationState | null,
+      ) => {
+        if (version !== epoch || !conversation?.threadId) return;
+        if (!/^[A-Za-z0-9_-]{1,160}$/.test(conversation.threadId))
+          throw new Error("Agent 返回了无效会话身份，未保存或接管。");
+        // Ownership is a receipt for this operation, not a success badge. Save
+        // it before history/model reads so a transient failure cannot orphan
+        // the thread we just prepared. Native projects also retain the receipt.
+        storage.setItem(threadKey(), conversation.threadId);
+        storage.removeItem(preparationKey());
+        if (projectId)
+          await bridge?.saveAgentThread?.(conversation.threadId, projectId);
+      };
       let thread: AgentThreadResponse;
-      if (newConversation)
+      if (newConversation || initializeProject) {
         thread = await activeApi.newThread(readPermissionMode());
-      else if (saved && saved === remote?.threadId) {
-        thread = await activeApi.readThread(saved);
+        await rememberOwnership(thread.conversation);
+      } else if (saved && saved === remote?.threadId) {
+        await rememberOwnership(remote);
+        if (version !== epoch) return;
+        const retryOwnedPreparation =
+          remote.status === "failed" &&
+          !hello.busy &&
+          hello.pendingApprovals.length === 0;
+        if (retryOwnedPreparation) patch({ preparing: true });
+        thread = retryOwnedPreparation
+          ? await activeApi.resumeThread(saved, readPermissionMode())
+          : await activeApi.readThread(saved);
+        if (retryOwnedPreparation) await rememberOwnership(thread.conversation);
         thread.conversation ??= remote;
-      } else if (saved)
+      } else if (saved) {
         thread = await activeApi.resumeThread(saved, readPermissionMode());
-      else {
-        if (!remote || remote.status !== "idle" || remote.threadId)
+        await rememberOwnership(thread.conversation);
+      } else {
+        const ownedFailedPreparation =
+          remote?.status === "failed" &&
+          Boolean(remote.sourceClientId) &&
+          preparationOwners().includes(remote.sourceClientId!);
+        if (
+          !remote ||
+          (remote.status !== "idle" && !ownedFailedPreparation) ||
+          remote.threadId
+        )
           throw new Error(
             "Agent 未返回可安全初始化的空会话，请更新服务后重连。",
           );
         patch({ preparing: true });
+        storage.setItem(
+          preparationKey(),
+          JSON.stringify(
+            [...new Set([...preparationOwners(), clientId])].slice(-8),
+          ),
+        );
         thread = await activeApi.prepareConversation(
           readPermissionMode(),
           remote,
+          ownedFailedPreparation ? remote.sourceClientId : undefined,
         );
+        await rememberOwnership(thread.conversation);
+        if (version !== epoch) return;
         if (thread.conversation?.threadId)
           thread = {
             ...thread,
@@ -905,6 +1033,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
       };
     },
     connect,
+    getProjectId: currentProject,
     refreshUsage,
     disconnect,
     sendMessage,

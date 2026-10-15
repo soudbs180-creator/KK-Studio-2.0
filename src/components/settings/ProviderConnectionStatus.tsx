@@ -9,7 +9,7 @@ export default function ProviderConnectionStatus({
     <div className={`provider-status is-${kind}`} role="status">
       <span className="settings-status-dot" />
       <div>
-        <strong>{kind === "success" ? "连接可用" : "API 连接"}</strong>
+        <strong>{kind === "success" ? "模型列表已获取" : "API 连接"}</strong>
         <p>{message}</p>
       </div>
     </div>

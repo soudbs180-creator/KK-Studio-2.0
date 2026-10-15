@@ -60,7 +60,7 @@ test("首页权限模式询问可取消确认且输入仍保留", async ({ page 
   await page.getByLabel("接口地址").fill("https://models.example.test/v1");
   await page.getByLabel("API Key", { exact: true }).fill("fixture-key");
   await page.getByLabel("模型名称").fill("image-test");
-  await page.getByRole("button", { name: "保存", exact: true }).click();
+  await page.getByRole("button", { name: "保存连接", exact: true }).click();
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
   const prompt = "需要用户确认才创建的项目";
   await page.getByLabel("创作提示词").fill(prompt);
@@ -123,7 +123,7 @@ test("工作台消息属于当前项目，刷新后项目库可重新打开", as
   await page.getByLabel("接口地址").fill("https://models.example.test/v1");
   await page.getByLabel("API Key", { exact: true }).fill("test-key");
   await page.getByLabel("模型名称").fill("image-test");
-  await page.getByRole("button", { name: "保存", exact: true }).click();
+  await page.getByRole("button", { name: "保存连接", exact: true }).click();
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
   await page.getByLabel("创作提示词").fill("项目隔离检查");
   await page.getByRole("button", { name: "开始创建项目" }).click();
@@ -198,7 +198,7 @@ test("配置连接后图片任务使用 provider 响应回填结果节点", asyn
   await page.getByLabel("接口地址").fill("https://models.example.test/v1");
   await page.getByLabel("API Key", { exact: true }).fill("test-key");
   await page.getByLabel("模型名称").fill("image-test");
-  await page.getByRole("button", { name: "保存", exact: true }).click();
+  await page.getByRole("button", { name: "保存连接", exact: true }).click();
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
   await page.getByLabel("创作提示词").fill("provider 回填测试");
   await page.getByRole("button", { name: "开始创建项目" }).click();
@@ -241,7 +241,7 @@ test("批量数量会随请求发送并归档多个 provider 结果", async ({ p
   await page.getByLabel("接口地址").fill("https://models.example.test/v1");
   await page.getByLabel("API Key", { exact: true }).fill("test-key");
   await page.getByLabel("模型名称").fill("image-test");
-  await page.getByRole("button", { name: "保存", exact: true }).click();
+  await page.getByRole("button", { name: "保存连接", exact: true }).click();
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
   await page.getByLabel("创作提示词").fill("批量结果归档测试");
   await page.getByRole("button", { name: "开始创建项目" }).click();
@@ -272,7 +272,7 @@ test("运行中的图片任务可取消并停留在当前项目", async ({ page 
   await page.getByLabel("接口地址").fill("https://models.example.test/v1");
   await page.getByLabel("API Key", { exact: true }).fill("test-key");
   await page.getByLabel("模型名称").fill("image-test");
-  await page.getByRole("button", { name: "保存", exact: true }).click();
+  await page.getByRole("button", { name: "保存连接", exact: true }).click();
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
   await page.getByLabel("创作提示词").fill("取消任务测试");
   await page.getByRole("button", { name: "开始创建项目" }).click();

@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { SettingsNavigationContext } from "./SettingsNavigationContext";
 import type { SkillRegistry } from "../../features/skills/skillRegistry";
 import McpSettings from "./McpSettings";
 import PluginManagerSettings from "./PluginManagerSettings";
@@ -47,6 +48,7 @@ export default function ExtensionsSettings({
   defaultTab?: ExtensionsTab;
 }) {
   const [tab, setTab] = useState<ExtensionsTab>(defaultTab);
+  const { busy } = useContext(SettingsNavigationContext);
 
   return (
     <div className="settings-extensions">
@@ -66,8 +68,13 @@ export default function ExtensionsSettings({
               aria-selected={tab === item.id}
               tabIndex={tab === item.id ? 0 : -1}
               className={`settings-ext-tab${tab === item.id ? " is-active" : ""}`}
-              onClick={() => setTab(item.id)}
+              disabled={busy}
+              title={busy ? "扩展操作进行中，完成后可切换" : undefined}
+              onClick={() => {
+                if (!busy) setTab(item.id);
+              }}
               onKeyDown={(event) => {
+                if (busy) return;
                 const count = EXTENSION_TABS.length;
                 const next =
                   event.key === "Home"

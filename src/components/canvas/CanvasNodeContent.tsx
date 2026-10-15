@@ -1,3 +1,4 @@
+import type { RefObject } from "react";
 import type {
   CanvasCollectionItem,
   NodeEditingProps,
@@ -11,17 +12,15 @@ import PluginNode from "../nodes/PluginNode";
 
 export default function CanvasNodeContent({
   item,
-  favorite,
-  onFavorite,
   onDelete,
   editing,
+  uploadInput,
   scale = 1,
 }: {
   item: CanvasCollectionItem;
-  favorite: boolean;
-  onFavorite: () => void;
   onDelete: () => void;
   editing: NodeEditingProps;
+  uploadInput: RefObject<HTMLInputElement>;
   scale?: number;
 }) {
   if (item.plugin)
@@ -30,6 +29,7 @@ export default function CanvasNodeContent({
         item={item as CanvasCollectionItem & { plugin: PluginItemPayload }}
         editing={editing}
         scale={scale}
+        onDelete={onDelete}
       />
     );
   if (
@@ -41,8 +41,6 @@ export default function CanvasNodeContent({
     return (
       <DemoResultNode
         item={item}
-        favorite={favorite}
-        onFavorite={onFavorite}
         onDelete={onDelete}
         onChange={editing.onChange}
         onResult={(result) => editing.onDemoResults?.([result])}
@@ -52,8 +50,13 @@ export default function CanvasNodeContent({
   if (item.kind === "text" || item.kind === "audio")
     return <PromptCreationNode item={item} {...editing} />;
   return item.kind === "image" ? (
-    <ImageCreationNode item={item} {...editing} />
+    <ImageCreationNode
+      item={item}
+      {...editing}
+      uploadInput={uploadInput}
+      onDelete={onDelete}
+    />
   ) : (
-    <VideoNode item={item} {...editing} />
+    <VideoNode item={item} {...editing} uploadInput={uploadInput} />
   );
 }

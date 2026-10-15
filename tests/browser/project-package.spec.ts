@@ -41,6 +41,7 @@ async function installNativePackageMock(
               reason: "项目包测试未提供原生透明窗口。",
             };
           state.calls.push({ command, args });
+          if (command === "get_storage_root") return "C:/KK-Studio-Test/Data";
           if (command === "plugin:dialog|save") return null;
           if (command === "plugin:dialog|open") {
             const dialog = args.options as { directory?: boolean };
@@ -111,6 +112,7 @@ test("Desktop 取消导出文件选择不会调用项目包写入", async ({ pag
     section.getByRole("button", { name: "导出项目包" }),
   ).toBeEnabled();
   expect((await nativeCalls(page)).map((call) => call.command)).toEqual([
+    "get_storage_root",
     "plugin:dialog|save",
   ]);
 });
@@ -132,6 +134,7 @@ test("项目包预检失败显示错误且不允许恢复", async ({ page }) => 
     section.getByRole("button", { name: "选择项目包" }),
   ).toBeEnabled();
   expect((await nativeCalls(page)).map((call) => call.command)).toEqual([
+    "get_storage_root",
     "plugin:dialog|open",
     "preflight_project_package",
   ]);

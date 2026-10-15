@@ -2,8 +2,8 @@
 
 - 状态：PARTIAL
 - 领域：platform
-- 最近更新：2026-09-30
-- 关联任务：TASK-MEMORY-001、TASK-MEMORY-002、BACKEND-PLATFORM、T10、FEAT-017
+- 最近更新：2026-10-14
+- 关联任务：TASK-MEMORY-001、TASK-MEMORY-002、BACKEND-PLATFORM、T10、FEAT-017、TASK-222-ACTIONS-20261014、TASK-223-ACTIONS-20261014
 
 ## 用户可见入口
 
@@ -19,11 +19,17 @@
 
 ## 测试与证据
 
+- 2.1.24本地验证（TASK-223，本任务DONE/PASS；功能主状态保持）：提炼迟到结果不回填当前服务实例已经清除/删除/重置的记忆，失败保持真实状态；保护不外推为跨进程修改版本，已发送请求不冒称撤回；最终产品58b5c07f与完整验证、官方/便携回执见[本轮验证](../changes/2026-10-14-action-usability-223/verification.md)。
+
+- 2.1.23本地按钮修复：`tests/unit/memoryService.test.ts`、`tests/browser/settings-persistence-failures.spec.ts`；结果及Web/Desktop边界见[2.1.23历史验证](../changes/2026-10-14-action-usability-222/verification.md)。
+
 - 单测：tests/unit/memoryExtractor.test.ts、memoryInjector.test.ts、memoryStorage.test.ts、memoryService.test.ts、memoryReply.test.ts。
 - 浏览器：tests/browser/memory-settings.spec.ts（开关、共享状态、空态、损坏数据、清空确认、390 px 可达性与存储库初始化）；提炼/注入由单测覆盖，真实会话仍待联调。
 - 本轮验证：docs/changes/2026-09-24-local-memory/verification.md。
 
 ## 当前能力
+
+- 记忆本轮2.1.23保存失败保留真实开关；关闭后排队采集、注入和提炼在异步读取后再核对状态，人工管理仍可使用。已发出的写入不能追溯撤回。
 
 - 本地长期记忆（用户级）：对话消息规则采集 + 手动 Codex 提炼；Desktop 默认读写 `~/.kk-memory/memory.json`，`--data-dir` 将记忆隔离在指定数据根内，启动不迁移；开启后才在锁内读取/校验/迁移，Web 授权目录后只读参考共享文件。Web 未授权时使用可写的私有 IndexedDB，界面明示且可从共享视图切回；私有记忆不自动合并。
 - 跨产品共享文件格式与路径已定义；当前自动采集和注入只接入 KK Studio 的 Codex 对话。豆包、WorkBuddy 原生客户端尚未实现该契约；换账号/换人时用户需手动清空或重置。

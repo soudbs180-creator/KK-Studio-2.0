@@ -1,0 +1,72 @@
+{
+  "url": "http://tauri.localhost/",
+  "mode": "production",
+  "entry": "src/main.tsx",
+  "viewport": {
+    "width": 1920,
+    "height": 1080
+  },
+  "nativeBridgePresent": true,
+  "scripts": [
+    "http://tauri.localhost/assets/index-C31ISFx5.js"
+  ],
+  "styles": [
+    "http://tauri.localhost/assets/index-CnbkXRxN.css"
+  ],
+  "process": {
+    "text": "执行过程 · 1 项 · 执行中\n命令执行\n执行中\n\nnative fixture command\n\nchecking\n",
+    "bounds": {
+      "x": 1448,
+      "y": 382,
+      "width": 431.66668701171875,
+      "height": 115.33333587646484
+    },
+    "display": "block",
+    "visibility": "visible",
+    "fontSize": "12px",
+    "scrollWidth": 430,
+    "clientWidth": 430
+  },
+  "summary": {
+    "text": "执行过程 · 1 项 · 执行中",
+    "bounds": {
+      "x": 1460.666748046875,
+      "y": 390.66668701171875,
+      "width": 406.3333435058594,
+      "height": 24
+    },
+    "display": "list-item",
+    "visibility": "visible",
+    "fontSize": "12px",
+    "scrollWidth": 406,
+    "clientWidth": 406
+  },
+  "hud": {
+    "text": "任务列表\n已保存\n100%\n整理\n小地图",
+    "bounds": {
+      "x": 320.66668701171875,
+      "y": 71.66667175292969,
+      "width": 1556.666748046875,
+      "height": 71.33333587646484
+    },
+    "display": "flex",
+    "visibility": "visible",
+    "fontSize": "14px",
+    "scrollWidth": 1557,
+    "clientWidth": 1557
+  },
+  "save": {
+    "text": "已保存",
+    "bounds": {
+      "x": 331.3333435058594,
+      "y": 117.33333587646484,
+      "width": 42,
+      "height": 18
+    },
+    "display": "block",
+    "visibility": "visible",
+    "fontSize": "14px",
+    "scrollWidth": 42,
+    "clientWidth": 42
+  }
+}

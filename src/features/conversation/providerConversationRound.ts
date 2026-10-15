@@ -60,10 +60,12 @@ function sameProvider(
     task.model === model &&
     endpoint(task.providerBaseUrl) === endpoint(connection.baseUrl) &&
     task.providerCredentialRef === connection.credentialRef &&
-    (task.providerProtocol ?? "openai-compatible") ===
+    resolveProviderProtocol({ protocol: task.providerProtocol }) ===
       resolveProviderProtocol(connection) &&
-    (task.providerAuthMode ?? "api_key") ===
-      resolveProviderAuthMode(connection.baseUrl!, connection)
+    resolveProviderAuthMode(task.providerBaseUrl ?? "", {
+      protocol: task.providerProtocol,
+      authMode: task.providerAuthMode,
+    }) === resolveProviderAuthMode(connection.baseUrl!, connection)
   );
 }
 
@@ -190,7 +192,7 @@ export function prepareProviderConversationRound(
     allocated.set(connection.id, count);
     const protocol = resolveProviderProtocol(connection),
       authMode = resolveProviderAuthMode(connection.baseUrl, connection);
-    if (authMode === "api_key" && !connection.credentialRef)
+    if (authMode === "api-key" && !connection.credentialRef)
       throw new Error("所选连接缺少凭据身份，请重新配置。");
     const taskId = `${input.roundId}-route-${index}`;
     const context = routeMessages(input, connection, route.modelId);

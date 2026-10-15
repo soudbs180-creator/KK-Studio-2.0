@@ -4,6 +4,7 @@ import {
   useRef,
   useState,
   type CSSProperties,
+  type RefObject,
 } from "react";
 import { CanvasImageCommandContext } from "../../features/creation/CanvasImageCommand.tsx";
 import { Upload } from "lucide-react";
@@ -16,14 +17,16 @@ import type {
 import DemoMediaPreview from "./DemoMediaPreview";
 import { readReferenceImages } from "./referenceUpload";
 import CanvasImageActions from "./CanvasImageActions";
+import { useCanvasMediaContent } from "../canvas/useCanvasMediaContent";
 import { readImageDimensions } from "../../features/creation/mediaDimensions";
 import { aspectRatioForDimensions } from "../../domain/mediaDimensions";
-import UiIcon from "../UiIcon";
 
 export default function ImageCreationNode({
   item,
   onConfigure,
   selected,
+  hasContent,
+  onContentReadyChange,
   onChange,
   liked,
   onToggleLike,
@@ -37,7 +40,13 @@ export default function ImageCreationNode({
   referenceLimit,
   onAddReferences,
   onRemoveReference,
-}: NodeEditingProps & { item: CanvasCollectionItem }) {
+  uploadInput,
+  onDelete,
+}: NodeEditingProps & {
+  item: CanvasCollectionItem;
+  uploadInput: RefObject<HTMLInputElement>;
+  onDelete: () => void;
+}) {
   const [image, setImage] = useState(item.preview ?? "");
   const [error, setError] = useState("");
   const [previewOpen, setPreviewOpen] = useState(false);
@@ -47,7 +56,7 @@ export default function ImageCreationNode({
       ? command.openPreview(item.id, "参考图片")
       : setPreviewOpen(true);
   const preview = useRef<HTMLDivElement>(null);
-  const file = useRef<HTMLInputElement>(null);
+  const imageElement = useRef<HTMLImageElement>(null);
   const referenceFile = useRef<HTMLInputElement>(null);
   const referenceSlot = useRef<CanvasReference["slot"]>();
   const uploadVersion = useRef(0);
@@ -58,6 +67,11 @@ export default function ImageCreationNode({
     [],
   );
   useEffect(() => setImage(item.preview ?? ""), [item.preview]);
+  const reportContentReady = useCanvasMediaContent(
+    imageElement,
+    image,
+    onContentReadyChange,
+  );
   useEffect(() => {
     if (item.referenceOnly) onExtraHeightChange(0);
   }, [item.referenceOnly, onExtraHeightChange]);
@@ -93,7 +107,6 @@ export default function ImageCreationNode({
     void readReferenceImages([value])
       .then(async ([asset]) => {
         if (version !== uploadVersion.current) return;
-        setImage(asset.preview ?? "");
         const dimensions = await readImageDimensions(asset.preview ?? "");
         if (version !== uploadVersion.current) return;
         onChange({
@@ -108,6 +121,7 @@ export default function ImageCreationNode({
           // are created exclusively by the composer slot upload flow.
           referenceOnly: false,
         });
+        setImage(asset.preview ?? "");
         setError("");
       })
       .catch((reason: unknown) => {
@@ -131,24 +145,12 @@ export default function ImageCreationNode({
       <div className="image-node-header">
         <span className="image-caption">{item.title}</span>
         <div className="image-node-header-actions">
-          {onToggleLike && (
-            <button
-              type="button"
-              className="image-card-like"
-              aria-label={liked ? "取消喜欢当前卡片" : "喜欢当前卡片"}
-              title={liked ? `取消喜欢${item.title}` : `喜欢${item.title}`}
-              aria-pressed={liked}
-              onClick={onToggleLike}
-            >
-              <UiIcon name="favorite" size={20} />
-            </button>
-          )}
-          {!image && (
+          {!image && !hasContent && (
             <button
               type="button"
               className="upload-image"
               aria-label="上传图片"
-              onClick={() => file.current?.click()}
+              onClick={() => uploadInput.current?.click()}
             >
               <Upload size={16} />
               上传图片
@@ -157,7 +159,7 @@ export default function ImageCreationNode({
         </div>
       </div>
       <input
-        ref={file}
+        ref={uploadInput}
         hidden
         type="file"
         accept="image/png,image/jpeg,image/webp,image/gif"
@@ -199,11 +201,13 @@ export default function ImageCreationNode({
         {image ? (
           <>
             <img
+              ref={imageElement}
               className="uploaded-image"
               src={image}
               alt="参考图片"
               draggable={false}
               onLoad={(event) => {
+                reportContentReady();
                 const { naturalWidth, naturalHeight } = event.currentTarget;
                 if (
                   naturalWidth > 1 &&
@@ -215,6 +219,11 @@ export default function ImageCreationNode({
                     mediaWidth: naturalWidth,
                     mediaHeight: naturalHeight,
                   });
+              }}
+              onError={() => {
+                onContentReadyChange?.(false);
+                setImage("");
+                setError("本地图片无法预览，请重新导入原件。");
               }}
               onDoubleClick={(event) => {
                 event.stopPropagation();
@@ -230,15 +239,17 @@ export default function ImageCreationNode({
           />
         )}
       </div>
-      {image && (
-        <CanvasImageActions
-          item={item}
-          anchor={preview}
-          selected={selected}
-          onPreview={openPreview}
-          references={incomingReferences}
-        />
-      )}
+      <CanvasImageActions
+        item={item}
+        anchor={preview}
+        selected={selected}
+        hasContent={Boolean(hasContent)}
+        onPreview={openPreview}
+        references={incomingReferences}
+        liked={liked}
+        onLike={onToggleLike}
+        onDelete={onDelete}
+      />
       {!selected && error && (
         <p className="upload-feedback" role="status">
           {error}

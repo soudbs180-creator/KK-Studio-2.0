@@ -33,8 +33,8 @@ export function nativeRequestForTask(
         ? false
         : undefined,
     kind: task.kind === "text" ? "text" : undefined,
-    protocol: task.kind === "text" ? task.providerProtocol : undefined,
-    authMode: task.kind === "text" ? task.providerAuthMode : undefined,
+    protocol: task.providerProtocol,
+    authMode: task.providerAuthMode,
     messages: task.conversationMessages,
     concurrencyLimit: concurrencyLimit,
     taskId: task.id,

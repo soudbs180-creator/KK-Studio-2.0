@@ -153,93 +153,95 @@ export default function SkillsPage({
   }
   return (
     <section className="catalog-page catalog-page-skills" aria-label="扩展">
-      <SkillPageControls
-        view={view}
-        tab={tab}
-        query={query}
-        status={status}
-        fileInput={fileInput}
-        onView={(next) => {
-          setView(next);
-          setQuery("");
-          setStatus("");
-        }}
-        onTab={setTab}
-        onQuery={setQuery}
-        onCreate={openCreate}
-        onImport={importFile}
-        onOpenMcp={onOpenMcp}
-        onOpenModels={onOpenModels}
-      />
-      <div
-        id="extensions-catalog-panel"
-        role="tabpanel"
-        aria-labelledby={`extensions-catalog-tab-${view}`}
-      >
-        {view === "skills" ? (
-          <>
-            {tab === "catalog" && !query.trim() && (
-              <>
-                <h2 className="catalog-section-title">精选示例</h2>
-                <p className="catalog-page-subtitle">
-                  本地演示 Prototype；没有联网目录、官方安装或下载统计。
-                </p>
-                <div className="catalog-card-grid">
-                  {OFFICIAL_SKILLS.map(([name, description]) => (
-                    <button
-                      className="catalog-card"
-                      key={name}
-                      type="button"
-                      onClick={() => setStatus(`已选择Skill：${name}。`)}
-                    >
-                      <div className="catalog-card-image">
-                        <img
-                          src="/fixtures/demo/blue-hour.png"
-                          alt=""
-                          draggable={false}
-                        />
-                        <span>H3</span>
-                      </div>
-                      <div className="catalog-card-body">
-                        <strong>{name}</strong>
-                        <p>{description}</p>
-                        <small>
-                          KK Studio 本地演示 · Prototype · 仅本地预览
-                        </small>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              </>
-            )}
-            <SkillCollection
-              records={visible}
-              category={category}
-              tab={tab}
-              registry={registry}
-              onCategory={setCategory}
-              onApply={onApply}
-              onEdit={(value) => {
-                setEditing(value);
-                setEditorOpen(true);
-              }}
-              onExport={(value) => downloadSkill(value, "markdown")}
-              onStatus={redraw}
+      <div className="extensions-page-content">
+        <SkillPageControls
+          view={view}
+          tab={tab}
+          query={query}
+          status={status}
+          fileInput={fileInput}
+          onView={(next) => {
+            setView(next);
+            setQuery("");
+            setStatus("");
+          }}
+          onTab={setTab}
+          onQuery={setQuery}
+          onCreate={openCreate}
+          onImport={importFile}
+          onOpenMcp={onOpenMcp}
+          onOpenModels={onOpenModels}
+        />
+        <div
+          id="extensions-catalog-panel"
+          role="tabpanel"
+          aria-labelledby={`extensions-catalog-tab-${view}`}
+        >
+          {view === "skills" ? (
+            <>
+              {tab === "catalog" && !query.trim() && (
+                <>
+                  <h2 className="catalog-section-title">精选示例</h2>
+                  <p className="catalog-page-subtitle">
+                    本地演示 Prototype；没有联网目录、官方安装或下载统计。
+                  </p>
+                  <div className="catalog-card-grid">
+                    {OFFICIAL_SKILLS.map(([name, description]) => (
+                      <button
+                        className="catalog-card"
+                        key={name}
+                        type="button"
+                        onClick={() => setStatus(`已选择Skill：${name}。`)}
+                      >
+                        <div className="catalog-card-image">
+                          <img
+                            src="/fixtures/demo/blue-hour.png"
+                            alt=""
+                            draggable={false}
+                          />
+                          <span>H3</span>
+                        </div>
+                        <div className="catalog-card-body">
+                          <strong>{name}</strong>
+                          <p>{description}</p>
+                          <small>
+                            KK Studio 本地演示 · Prototype · 仅本地预览
+                          </small>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
+              <SkillCollection
+                records={visible}
+                category={category}
+                tab={tab}
+                registry={registry}
+                onCategory={setCategory}
+                onApply={onApply}
+                onEdit={(value) => {
+                  setEditing(value);
+                  setEditorOpen(true);
+                }}
+                onExport={(value) => downloadSkill(value, "markdown")}
+                onStatus={redraw}
+              />
+            </>
+          ) : view === "connectors" ? (
+            <ConnectorCatalog
+              query={query}
+              onOpenMcp={onOpenMcp}
+              onStatus={setStatus}
             />
-          </>
-        ) : view === "connectors" ? (
-          <ConnectorCatalog
-            query={query}
-            onOpenMcp={onOpenMcp}
-            onStatus={setStatus}
-          />
-        ) : (
-          <PartnerRoles
-            query={query}
-            onApply={onApplyPartner}
-            onStatus={setStatus}
-          />
-        )}
+          ) : (
+            <PartnerRoles
+              query={query}
+              onApply={onApplyPartner}
+              onStatus={setStatus}
+            />
+          )}
+        </div>
       </div>
       {editorOpen && (
         <SkillEditor

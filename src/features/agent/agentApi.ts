@@ -156,6 +156,7 @@ export function createAgentApi(options: AgentApiClientOptions) {
     async prepareConversation(
       permissionMode: AgentPermissionMode,
       conversation: AgentConversationState,
+      failedPreparationClientId?: string,
     ) {
       try {
         return await request<AgentThreadResponse>(
@@ -165,6 +166,7 @@ export function createAgentApi(options: AgentApiClientOptions) {
             permissionMode,
             expectedConversationId: conversation.conversationId,
             expectedRevision: conversation.revision,
+            ...(failedPreparationClientId ? { failedPreparationClientId } : {}),
           },
         );
       } catch (error) {

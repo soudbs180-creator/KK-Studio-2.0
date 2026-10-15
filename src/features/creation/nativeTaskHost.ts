@@ -1,6 +1,9 @@
 import { invoke } from "@tauri-apps/api/core";
-import type { ProviderProtocolOptions } from "../../domain/modelProvider.ts";
-import type { ProviderTextMessage } from "../../integrations/providerTextProtocol.ts";
+import type {
+  ProviderProtocol,
+  ProviderAuthMode,
+  ProviderTextMessage,
+} from "../../domain/providerProtocol.ts";
 import type {
   CreationSnapshot,
   CreationProject,
@@ -17,7 +20,7 @@ import { ImageEditMappingError } from "../image-edit/imageProcessing.ts";
 import { editReceiptReason } from "../image-edit/recovery.ts";
 
 /** The request crossing the Desktop TaskHost IPC boundary. It contains no API key. */
-export interface NativeTaskHostRequest extends ProviderProtocolOptions {
+export interface NativeTaskHostRequest {
   messages?: readonly ProviderTextMessage[];
   imageEditRequired?: boolean;
   maskAssetId?: string;
@@ -27,6 +30,8 @@ export interface NativeTaskHostRequest extends ProviderProtocolOptions {
   idempotencyKey: string;
   baseUrl: string;
   credentialRef: string;
+  protocol?: ProviderProtocol;
+  authMode?: ProviderAuthMode;
   model: string;
   prompt: string;
   outputIndices: number[];

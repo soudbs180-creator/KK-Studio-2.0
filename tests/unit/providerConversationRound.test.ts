@@ -16,7 +16,7 @@ function input() {
       name,
       model: "opaque-text",
       baseUrl: "http://127.0.0.1:11434/v1",
-      protocol: "openai-compatible",
+      protocol: "openai-chat",
       authMode: "none",
     }),
   );

@@ -8,12 +8,12 @@ test("current Figma modal shells keep dimensions and settings content origin", a
   await openWorkspace(page);
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   const panel = page.locator(".settings-panel");
-  await expect(panel).toHaveCSS("width", "920px");
-  await expect(panel).toHaveCSS("height", "700px");
+  await expect(panel).toHaveCSS("width", "960px");
+  await expect(panel).toHaveCSS("height", "680px");
   const panelBox = (await panel.boundingBox())!;
   const title = (await page.locator(".settings-page-title").boundingBox())!;
-  expect(title.x - panelBox.x).toBe(364);
-  expect(title.y - panelBox.y).toBe(38);
+  expect(title.x - panelBox.x).toBe(233);
+  expect(title.y - panelBox.y).toBe(41);
   expect(await panel.locator(".settings-row h3").allTextContents()).toEqual([
     "透明窗口",
     "语言",

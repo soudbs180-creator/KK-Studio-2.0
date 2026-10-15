@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { openWorkspace } from "./helpers";
+import { openWorkspace, uploadCanvasMedia } from "./helpers";
 
 test("资产搜索、空态恢复、列表、紧凑视图及创建主体", async ({ page }) => {
   const errors: string[] = [];
@@ -128,14 +128,16 @@ test("模型接入使用 API 地址，连接状态真实且密钥不落盘", asy
   await page.getByLabel("接口地址").fill("https://models.example.test/v1");
   await page.getByLabel("API Key", { exact: true }).fill("session-key");
   await page.getByLabel("模型名称").fill("image-model-v2");
-  await page.getByRole("button", { name: "保存", exact: true }).click();
+  await page.getByRole("button", { name: "保存连接", exact: true }).click();
   const saved = await page.evaluate(() =>
     localStorage.getItem("kk-studio-next:model-provider:v1"),
   );
   expect(saved).toContain("models.example.test");
   expect(saved).not.toContain("session-key");
-  await page.getByRole("button", { name: "测试连接" }).click();
-  await expect(page.getByText(/连接成功，已刷新 0 个模型/)).toBeVisible();
+  await page.getByRole("button", { name: "测试连接并刷新模型" }).click();
+  await expect(
+    page.getByText("已获取 0 个模型；生成能力仍需实际验证。", { exact: true }),
+  ).toBeVisible();
   await page
     .getByRole("dialog", { name: "设置" })
     .screenshot({ path: "test-results/runtime/settings-model-provider.png" });
@@ -158,7 +160,27 @@ test("豆包预置一次性填入名称和方舟地址", async ({ page }) => {
   await page
     .getByRole("button", { name: "API Key（官方）", exact: true })
     .click();
-  await page.getByLabel("预置提供商").selectOption("doubao-ark");
+  const presets = page.locator("details.provider-presets");
+  await presets.getByText("服务商预设与接口文档", { exact: true }).click();
+  await presets.getByLabel("搜索服务商", { exact: true }).fill("豆包");
+  await presets
+    .getByRole("group", { name: "服务商预设", exact: true })
+    .getByRole("button", { name: "豆包（火山方舟） OpenAI 兼容", exact: true })
+    .click();
+  const detail = presets.getByRole("region", { name: "预设详情", exact: true });
+  await expect(detail.getByRole("link", { name: "官方网站" })).toHaveAttribute(
+    "href",
+    "https://www.volcengine.com/product/ark",
+  );
+  await expect(detail.getByRole("link", { name: "获取密钥" })).toHaveAttribute(
+    "href",
+    "https://console.volcengine.com/ark/region:ark+cn-beijing/apiKey",
+  );
+  await expect(detail.getByRole("link", { name: "接口文档" })).toHaveAttribute(
+    "href",
+    "https://www.volcengine.com/docs/82379",
+  );
+  await detail.getByRole("button", { name: "使用此预设", exact: true }).click();
   await expect(page.getByRole("textbox", { name: "提供商" })).toHaveValue(
     "豆包（火山方舟）",
   );
@@ -178,7 +200,7 @@ test("模型接入可以登记多个非敏感连接并切换当前配置", async
     await page.getByRole("textbox", { name: "提供商" }).fill(name);
     await page.getByLabel("接口地址").fill(baseUrl);
     await page.getByLabel("模型名称").fill(model);
-    await page.getByRole("button", { name: "保存", exact: true }).click();
+    await page.getByRole("button", { name: "保存连接", exact: true }).click();
   };
   await save("连接一", "https://one.example.test/v1", "image-one");
   await save("连接二", "https://two.example.test/v1", "image-two");
@@ -374,13 +396,13 @@ test("无限画布隐藏滚动条，卡片拖动时连接线跟随", async ({ pa
   await page.keyboard.press("Escape");
   await expect(page.getByTestId("image-composer")).toHaveCount(0);
   const favoriteButton = page.getByRole("button", {
-    name: "喜欢与收藏",
+    name: "喜欢与标签",
     exact: true,
   });
   await expect(favoriteButton).toBeEnabled();
   await favoriteButton.click();
-  await page.getByRole("menuitem", { name: "我的收藏", exact: true }).click();
-  await expect(page.locator(".catalog-panel")).toBeVisible();
+  await page.getByRole("menuitem", { name: "画布标签", exact: true }).click();
+  await expect(page.getByTestId("canvas-tags-panel")).toBeVisible();
   await page.keyboard.press("Escape");
   await page.getByRole("button", { name: "选择画布工具", exact: true }).click();
   await page
@@ -470,7 +492,7 @@ test("无限画布隐藏滚动条，卡片拖动时连接线跟随", async ({ pa
   );
 });
 
-test("画布新增卡片可拖动删除，喜欢内容同步到搜索", async ({ page }) => {
+test("画布新增卡片可拖动删除，喜欢内容同步到独立面板", async ({ page }) => {
   await openWorkspace(page);
   await page.getByRole("button", { name: "添加资源" }).click();
   await page.getByRole("menuitem", { name: "图片" }).click();
@@ -478,17 +500,30 @@ test("画布新增卡片可拖动删除，喜欢内容同步到搜索", async ({
   await expect(added).toHaveCount(1);
   await expect(page.getByTestId("image-composer")).toBeVisible();
   await page.screenshot({ path: "test-results/runtime/canvas-added-card.png" });
-  await added.getByRole("button", { name: "喜欢当前卡片" }).click();
-  await page.getByRole("button", { name: "搜索", exact: true }).click();
-  await page.getByRole("tab", { name: "喜欢收藏" }).click();
+  await expect(page.getByRole("toolbar", { name: /^图片操作：/ })).toHaveCount(
+    0,
+  );
+  await uploadCanvasMedia(added, "image");
+  await page
+    .getByRole("toolbar", { name: "图片操作：blue-hour.png", exact: true })
+    .getByRole("button", { name: "喜欢blue-hour.png", exact: true })
+    .click();
+  const library = page.getByRole("button", { name: "喜欢与标签", exact: true });
+  await library.click();
+  await page.getByRole("menuitem", { name: "我喜欢的", exact: true }).click();
+  const likes = page.getByTestId("canvas-likes-panel");
   await expect(
-    page.locator(".saved-like-card").getByText("新图片卡片"),
+    likes.locator(".saved-like-card").getByText("blue-hour.png"),
   ).toBeVisible();
   await page.screenshot({
     path: "test-results/runtime/collection-from-canvas.png",
   });
-  await page.locator(".saved-like-card .saved-text").click();
+  await likes.locator(".saved-like-card .saved-text").click();
   await expect(added).toBeVisible();
+  await expect(added).toHaveClass(/is-selected/);
+  await likes
+    .getByRole("button", { name: "关闭喜欢面板", exact: true })
+    .click();
   const before = await added.boundingBox();
   const dragPreview = (await added.locator(".image-preview").boundingBox())!;
   await page.mouse.move(dragPreview.x + 100, dragPreview.y + 100);
@@ -500,31 +535,38 @@ test("画布新增卡片可拖动删除，喜欢内容同步到搜索", async ({
   await added.focus();
   await page.keyboard.press("Delete");
   await expect(added).toHaveCount(0);
-  await page.getByRole("button", { name: "搜索", exact: true }).click();
-  await page.getByRole("tab", { name: "喜欢收藏" }).click();
-  await expect(page.getByText("还没有收藏的内容")).toBeVisible();
+  await library.click();
+  await page.getByRole("menuitem", { name: "我喜欢的", exact: true }).click();
+  await expect(likes.locator(".saved-like-card")).toHaveCount(0);
+  await expect(
+    likes.getByText("还没有喜欢的内容", { exact: true }),
+  ).toBeVisible();
 });
 
-test("收藏与全局搜索弹窗可导航、筛选并恢复焦点", async ({ page }) => {
-  await page.goto("/");
+test("全局搜索按四类导航、筛选并恢复焦点", async ({ page }) => {
+  await openWorkspace(page);
   await page.getByRole("button", { name: "搜索", exact: true }).click();
-  const dialog = page.getByRole("dialog", { name: "搜索与收藏" });
-  const search = page.getByLabel("搜索内容");
+  const dialog = page.getByRole("dialog", { name: "搜索" });
+  const search = dialog.getByLabel("搜索内容", { exact: true });
   await expect(search).toBeFocused();
-  await dialog.getByRole("tab", { name: "喜欢收藏" }).click();
-  await expect(
-    dialog.getByRole("heading", { name: "收藏", exact: true }),
-  ).toBeVisible();
-  await expect(
-    dialog.getByRole("heading", { name: "喜欢", exact: true }),
-  ).toBeVisible();
+  for (const name of ["全部", "画布卡片", "项目", "已加载资源"]) {
+    const tab = dialog.getByRole("tab", { name, exact: true });
+    await tab.click();
+    await expect(tab).toHaveAttribute("aria-selected", "true");
+    await expect(
+      dialog.getByRole("tabpanel", { name, exact: true }),
+    ).toBeVisible();
+  }
+  await dialog.getByRole("tab", { name: "画布卡片", exact: true }).click();
   await search.fill("找不到");
   await expect(
-    dialog.getByText("没有找到匹配的内容", { exact: true }),
-  ).toHaveCount(2);
-  await dialog.getByRole("tab", { name: "类型", exact: true }).click();
-  await dialog.getByRole("button", { name: "清除搜索" }).click();
-  await page.getByLabel("卡片类型").selectOption("video");
+    dialog.getByText("没有匹配的内容，试试其他关键词、类型或标签。", {
+      exact: true,
+    }),
+  ).toBeVisible();
+  await expect(dialog.locator(".catalog-result")).toHaveCount(0);
+  await search.fill("");
+  await dialog.getByLabel("搜索类型", { exact: true }).selectOption("video");
   await expect(dialog.locator(".catalog-result")).toHaveCount(2);
   await search.fill("视频卡片 1");
   await expect(dialog.locator(".catalog-result")).toHaveCount(1);
@@ -534,6 +576,49 @@ test("收藏与全局搜索弹窗可导航、筛选并恢复焦点", async ({ pa
     page.getByRole("button", { name: "搜索", exact: true }),
   ).toBeFocused();
 });
+
+test("项目搜索按项目类型筛选，卡片标签不会清空项目结果", async ({ page }) => {
+  await openWorkspace(page);
+  const snapshot = await page.evaluate(() =>
+    JSON.parse(localStorage.getItem("kk-studio-next:creation:v1")!),
+  );
+  const text = snapshot.projects[0];
+  text.kind = "text";
+  text.name = "文案筛选项目";
+  text.items[0].tags = ["场景"];
+  snapshot.projects.push({
+    ...structuredClone(text),
+    id: "project-video",
+    kind: "video",
+    name: "视频筛选项目",
+  });
+  snapshot.revision = Date.now() + 1;
+  await page.evaluate(
+    (value) => localStorage.setItem("kk-studio-next:creation:v1", value),
+    JSON.stringify(snapshot),
+  );
+  await page.reload();
+  await page.getByRole("button", { name: "搜索", exact: true }).click();
+  const dialog = page.getByRole("dialog", { name: "搜索", exact: true });
+  const kind = dialog.getByLabel("搜索类型", { exact: true });
+  const tag = dialog.getByLabel("搜索标签", { exact: true });
+  await dialog.getByRole("tab", { name: "画布卡片", exact: true }).click();
+  await tag.selectOption("场景");
+  await dialog.getByRole("tab", { name: "项目", exact: true }).click();
+  await kind.selectOption("text");
+  await expect(dialog.locator(".catalog-result")).toHaveCount(1);
+  await expect(dialog.locator(".catalog-result")).toContainText("文案筛选项目");
+  await expect(tag).toBeDisabled();
+  await expect(tag).toHaveValue("all");
+  await expect(dialog).toContainText("标签仅用于卡片和已加载资源");
+  await kind.selectOption("video");
+  await expect(dialog.locator(".catalog-result")).toHaveCount(1);
+  await expect(dialog.locator(".catalog-result")).toContainText("视频筛选项目");
+  await dialog.getByRole("tab", { name: "画布卡片", exact: true }).click();
+  await expect(tag).toBeEnabled();
+  await expect(tag).toHaveValue("场景");
+});
+
 for (const [width, height] of [
   [1920, 1080],
   [1440, 900],

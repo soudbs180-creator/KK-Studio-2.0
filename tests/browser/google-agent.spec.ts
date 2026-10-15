@@ -54,6 +54,7 @@ test("Google key configuration, dialogue continuity, image archive and restored 
     .getByRole("button", { name: "API Key（官方）", exact: true })
     .click();
   await page.getByRole("button", { name: "CLI 账号", exact: true }).click();
+  await page.getByRole("button", { name: "Gemini CLI", exact: true }).click();
   await page.getByRole("button", { name: "保存登录方式", exact: true }).click();
   await page
     .getByRole("button", { name: "API Key（官方）", exact: true })
@@ -74,6 +75,7 @@ test("Google key configuration, dialogue continuity, image archive and restored 
     }),
   ).toBeVisible();
   await page.getByRole("button", { name: "CLI 账号", exact: true }).click();
+  await page.getByRole("button", { name: "Gemini CLI", exact: true }).click();
   await page.getByRole("button", { name: "保存登录方式", exact: true }).click();
   expect(
     await page.evaluate(() => localStorage.getItem("kk-google-login-mode")),

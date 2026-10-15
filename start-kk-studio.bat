@@ -14,7 +14,7 @@ if errorlevel 1 (
 
 rem Check source freshness on every launch. The existing launcher rebuilds
 rem only missing/stale releases and never starts the old executable on failure.
-node "%~dp0scripts\windows\desktop-release.mjs"
+node "%~dp0scripts\windows\desktop-release.mjs" %*
 if errorlevel 1 (
     echo [KK Studio] Desktop launch failed. The previous release was not started.
     if /i not "%~1"=="--background" pause

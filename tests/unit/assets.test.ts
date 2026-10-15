@@ -2,10 +2,19 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   filterAssets,
+  normalizeTags,
   parseResourcePack,
   type Asset,
 } from "../../src/domain/assets.ts";
 import { storeGeneratedAsset } from "../../src/features/creation/assetRepository.ts";
+
+test("标签在共享入口验证类型，归一化不把坏值转成字符串", () => {
+  assert.deepEqual(normalizeTags([null, 4, {}, " 人物 ", "人物", ""]), [
+    "人物",
+  ]);
+  assert.deepEqual(normalizeTags("人物"), []);
+  assert.deepEqual(normalizeTags(undefined, " 收藏 "), ["收藏"]);
+});
 
 const items: Asset[] = [
   {
@@ -31,6 +40,13 @@ const items: Asset[] = [
   },
 ];
 const defaults = { query: "", type: "all", tag: "all", days: 0 } as const;
+test("归档多标签和旧主标签都可搜索筛选", () => {
+  const asset = { ...items[0], tag: "主标签", tags: ["AI生成", "人物"] };
+  assert.equal(filterAssets([asset], { ...defaults, query: "人物" }).length, 1);
+  for (const tag of ["人物", "主标签"])
+    assert.equal(filterAssets([asset], { ...defaults, tag }).length, 1);
+  assert.equal(filterAssets([asset], { ...defaults, tag: "服装" }).length, 0);
+});
 test("中文搜索与类型、标签过滤同时生效", () => {
   assert.deepEqual(
     filterAssets(items, {

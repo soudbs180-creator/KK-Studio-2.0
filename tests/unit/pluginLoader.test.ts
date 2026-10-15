@@ -6,6 +6,11 @@ import {
   getPluginNodeDefinition,
   hasPluginNodeType,
 } from "../../src/features/plugins/nodeRegistry.ts";
+import {
+  clearLog,
+  configureLogSink,
+  getLogEntries,
+} from "../../src/runtime/logger.ts";
 import type { CanvasPlugin } from "../../src/features/plugins/pluginTypes.ts";
 
 function memoryStorage() {
@@ -319,4 +324,326 @@ test("deactivate 执行 setup/css 清理", async () => {
   custom.deactivatePlugin(plugin.id);
   assert.equal(cleanupRan, true);
   assert.equal(hasPluginNodeType("cleanup:node"), false);
+});
+
+test("事件总线隔离同步异常和异步拒绝，且继续通知其他订阅者", async () => {
+  clearLog();
+  const received: unknown[] = [];
+  configureLogSink((entry) => received.push(entry));
+  try {
+    const loader = createPluginLoader();
+    const calls: string[] = [];
+    loader.getBus().on("ready", async () => {
+      calls.push("async");
+      throw new Error("api_key=should-not-leak");
+    });
+    loader.getBus().on("ready", () => {
+      calls.push("sync");
+      throw new Proxy(
+        {},
+        {
+          ownKeys() {
+            throw new Error("hostile proxy");
+          },
+        },
+      );
+    });
+    loader.getBus().on("ready", () => calls.push("after"));
+
+    loader.getBus().emit("ready");
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    assert.deepEqual(calls, ["async", "sync", "after"]);
+    assert.equal(received.length, 2);
+    const diagnostics = JSON.stringify(getLogEntries());
+    assert.doesNotMatch(diagnostics, /should-not-leak/);
+    assert.doesNotMatch(diagnostics, /hostile proxy/);
+  } finally {
+    configureLogSink(null);
+  }
+});
+
+test("updating a disabled plugin keeps it disabled and does not run setup", async () => {
+  const store = createPluginStore(memoryStorage());
+  let setups = 0;
+  const loader = createPluginLoader({
+    store,
+    runtime,
+    fetcher: (async () => new Response("fixture")) as typeof fetch,
+    importModule: async () => ({
+      default: {
+        ...samplePlugin(),
+        setup: () => {
+          setups += 1;
+        },
+      },
+    }),
+  });
+  store.upsert({
+    id: "sample",
+    name: "Fixture",
+    version: "0",
+    url: "https://example.test/sample.js",
+    source: "old",
+    enabled: false,
+  });
+  await loader.updatePlugin(store.getState().plugins[0]);
+  assert.equal(store.getState().plugins[0].enabled, false);
+  assert.equal(loader.isLoaded("sample"), false);
+  assert.equal(setups, 0);
+});
+
+test("failed plugin activation preserves the disabled record and releases setup listeners", async () => {
+  const store = createPluginStore(memoryStorage());
+  let listenerCalls = 0;
+  const loader = createPluginLoader({
+    store,
+    runtime,
+    importModule: async () => ({
+      default: {
+        ...samplePlugin(),
+        setup: (
+          app: import("../../src/features/plugins/pluginTypes.ts").PluginApp,
+        ) => {
+          app.on("activation-fixture", () => {
+            listenerCalls += 1;
+          });
+          throw new Error("fixture setup failure");
+        },
+      },
+    }),
+  });
+  const record = {
+    id: "sample",
+    name: "Fixture",
+    version: "0",
+    url: "https://example.test/sample.js",
+    source: "fixture",
+    enabled: false,
+  };
+  store.upsert(record);
+  await assert.rejects(
+    loader.setPluginEnabled(record, true),
+    /fixture setup failure/,
+  );
+  assert.equal(store.getState().plugins[0].enabled, false);
+  assert.equal(loader.isLoaded("sample"), false);
+  assert.equal(hasPluginNodeType("sample:card"), false);
+  // A stale listener must not run after activation failed.
+  loader.getBus().emit("activation-fixture");
+  assert.equal(listenerCalls, 0);
+});
+
+test("a late enable cannot activate a plugin removed while its module was loading", async () => {
+  const store = createPluginStore(memoryStorage());
+  let release!: (module: { default: CanvasPlugin }) => void;
+  const loader = createPluginLoader({
+    store,
+    runtime,
+    importModule: () =>
+      new Promise((resolve) => {
+        release = resolve;
+      }),
+  });
+  const record = {
+    id: "sample",
+    name: "Fixture",
+    version: "0",
+    url: "https://example.test/sample.js",
+    source: "fixture",
+    enabled: false,
+  };
+  store.upsert(record);
+  const enabling = loader.setPluginEnabled(record, true);
+  loader.uninstallPlugin(record.id);
+  release({ default: samplePlugin() });
+  await assert.rejects(enabling, /插件已卸载/);
+  assert.equal(store.getState().plugins.length, 0);
+  assert.equal(loader.isLoaded("sample"), false);
+  assert.equal(hasPluginNodeType("sample:card"), false);
+});
+
+test("failed replacement activation restores the prior active plugin and saved version", async () => {
+  const store = createPluginStore(memoryStorage());
+  let replacement = false;
+  const loader = createPluginLoader({
+    store,
+    runtime,
+    fetcher: (async () => new Response("fixture")) as typeof fetch,
+    importModule: async () => ({
+      default: replacement
+        ? {
+            ...samplePlugin(),
+            version: "2",
+            setup: () => {
+              throw new Error("fixture replacement failure");
+            },
+          }
+        : samplePlugin(),
+    }),
+  });
+  await loader.installFromUrl("https://example.test/sample.js");
+  const record = store.getState().plugins[0];
+  replacement = true;
+  await assert.rejects(
+    loader.updatePlugin(record),
+    /fixture replacement failure/,
+  );
+  assert.equal(store.getState().plugins[0].version, record.version);
+  assert.equal(loader.isLoaded("sample"), true);
+  assert.equal(hasPluginNodeType("sample:card"), true);
+  loader.uninstallPlugin(record.id);
+});
+
+test("module timeout releases the operation and cannot activate a late plugin", async (t) => {
+  t.mock.timers.enable({ apis: ["setTimeout"] });
+  const store = createPluginStore(memoryStorage());
+  let release!: (value: { default: CanvasPlugin }) => void;
+  const loader = createPluginLoader({
+    store,
+    runtime,
+    importModule: () =>
+      new Promise((resolve) => {
+        release = resolve;
+      }),
+  });
+  const record = {
+    id: "sample",
+    name: "Fixture",
+    version: "0",
+    url: "https://example.test/sample.js",
+    source: "fixture",
+    enabled: false,
+  };
+  store.upsert(record);
+  let failure: unknown;
+  const operation = loader.setPluginEnabled(record, true).catch((error) => {
+    failure = error;
+  });
+  try {
+    await new Promise(setImmediate);
+    t.mock.timers.tick(15_000);
+    await new Promise(setImmediate);
+    assert.match(failure instanceof Error ? failure.message : "", /加载超时/);
+    release({ default: samplePlugin() });
+    await operation;
+    assert.equal(store.getState().plugins[0].enabled, false);
+    assert.equal(loader.isLoaded(record.id), false);
+    assert.equal(hasPluginNodeType("sample:card"), false);
+  } finally {
+    release({ default: samplePlugin() });
+    await operation;
+    loader.uninstallPlugin(record.id);
+  }
+});
+
+test("plugin download timeout covers the response body and aborts without replacing records", async (t) => {
+  t.mock.timers.enable({ apis: ["setTimeout"] });
+  const store = createPluginStore(memoryStorage());
+  let release!: (value: string) => void;
+  let signal: AbortSignal | undefined;
+  let evaluated = 0;
+  const loader = createPluginLoader({
+    store,
+    runtime,
+    fetcher: (async (_input, init) => {
+      signal = init?.signal ?? undefined;
+      const response = new Response("fixture");
+      response.text = () =>
+        new Promise((resolve) => {
+          release = resolve;
+        });
+      return response;
+    }) as typeof fetch,
+    importModule: async () => {
+      evaluated += 1;
+      return { default: samplePlugin() };
+    },
+  });
+  let failure: unknown;
+  const operation = loader
+    .installFromUrl("https://example.test/sample.js")
+    .catch((error) => {
+      failure = error;
+    });
+  try {
+    await new Promise(setImmediate);
+    t.mock.timers.tick(15_000);
+    await new Promise(setImmediate);
+    assert.match(failure instanceof Error ? failure.message : "", /加载超时/);
+    assert.equal(signal?.aborted, true);
+    release("fixture");
+    await operation;
+    assert.equal(evaluated, 0);
+    assert.equal(store.getState().plugins.length, 0);
+  } finally {
+    release("fixture");
+    await operation;
+    if (store.getState().plugins.length) loader.uninstallPlugin("sample");
+  }
+});
+
+test("cancelling deferred plugin evaluation stops waiting and refuses late factory and activation", async () => {
+  const store = createPluginStore(memoryStorage());
+  const controller = new AbortController();
+  let release!: (module: { default: () => CanvasPlugin }) => void;
+  let factories = 0;
+  const loader = createPluginLoader({
+    store,
+    runtime,
+    importModule: () =>
+      new Promise((resolve) => {
+        release = resolve;
+      }),
+  });
+  const record = {
+    id: "sample",
+    name: "Fixture",
+    version: "0",
+    url: "https://example.test/sample.js",
+    source: "fixture",
+    enabled: false,
+  };
+  const lateModule = {
+    default: () => {
+      factories += 1;
+      return samplePlugin();
+    },
+  };
+  store.upsert(record);
+  let settled = false;
+  let failure: unknown;
+  const operation = loader
+    .setPluginEnabled(record, true, controller.signal)
+    .then(
+      () => {
+        settled = true;
+      },
+      (error) => {
+        settled = true;
+        failure = error;
+      },
+    );
+  try {
+    await new Promise(setImmediate);
+    controller.abort("user");
+    await new Promise(setImmediate);
+    assert.equal(
+      settled,
+      true,
+      "cancel must settle before the module completes",
+    );
+    assert.match(failure instanceof Error ? failure.message : "", /已停止等待/);
+    assert.equal(store.getState().plugins[0].enabled, false);
+    release(lateModule);
+    await new Promise(setImmediate);
+    assert.equal(factories, 0);
+    assert.equal(loader.isLoaded(record.id), false);
+    assert.equal(hasPluginNodeType("sample:card"), false);
+    assert.deepEqual(store.getState().plugins, [record]);
+  } finally {
+    release(lateModule);
+    await operation;
+    loader.uninstallPlugin(record.id);
+  }
 });

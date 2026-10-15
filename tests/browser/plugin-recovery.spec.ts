@@ -31,39 +31,44 @@ async function readDurable(page: Page): Promise<CreationSnapshot> {
   );
 }
 
-test("四个随包插件离线编辑并刷新恢复完整内容和负载", async ({ page }, info) => {
-  const errors: string[] = [];
-  page.on("pageerror", (error) => errors.push(String(error)));
-  page.on("console", (message) => {
-    if (message.type() === "error") errors.push(message.text());
+for (const width of [390, 1099, 1920]) {
+  test(`四个随包插件离线编辑并刷新恢复完整内容和负载 ${width}`, async ({
+    page,
+  }, info) => {
+    await page.setViewportSize({ width, height: width === 390 ? 844 : 1080 });
+    const errors: string[] = [];
+    page.on("pageerror", (error) => errors.push(String(error)));
+    page.on("console", (message) => {
+      if (message.type() === "error") errors.push(message.text());
+    });
+    await page.route("https://esm.sh/**", (route) => route.abort());
+    await page.goto("/");
+    await page.getByRole("button", { name: "项目库", exact: true }).click();
+    await page.getByRole("button", { name: "新建项目", exact: true }).click();
+    await addAndEditBundledPlugins(page);
+    await expect
+      .poll(async () =>
+        (await readDurable(page))?.projects[0]?.items.map(
+          (item) => item.plugin?.metadata?.content,
+        ),
+      )
+      .toEqual(bundledPlugins.map((plugin) => plugin.content));
+    const original = (await readDurable(page)).projects[0].items;
+    // Require actual IndexedDB recovery rather than a local recovery copy.
+    await page.evaluate(() => {
+      localStorage.removeItem("kk-studio-next:creation:v1");
+      sessionStorage.removeItem("kk-studio-next:creation:v1:pending");
+    });
+    await page.reload();
+    await page.getByRole("button", { name: "项目库", exact: true }).click();
+    await expect(page.locator(".project-library-card")).toHaveCount(1);
+    await page.locator(".project-library-card").click();
+    await expectBundledPluginContents(page);
+    expect((await readDurable(page)).projects[0].items).toEqual(original);
+    expect(errors).toEqual([]);
+    await page.screenshot({ path: info.outputPath("plugins-recovered.png") });
   });
-  await page.route("https://esm.sh/**", (route) => route.abort());
-  await page.goto("/");
-  await page.getByRole("button", { name: "项目库", exact: true }).click();
-  await page.getByRole("button", { name: "新建项目", exact: true }).click();
-  await addAndEditBundledPlugins(page);
-  await expect
-    .poll(async () =>
-      (await readDurable(page))?.projects[0]?.items.map(
-        (item) => item.plugin?.metadata?.content,
-      ),
-    )
-    .toEqual(bundledPlugins.map((plugin) => plugin.content));
-  const original = (await readDurable(page)).projects[0].items;
-  // Require actual IndexedDB recovery rather than a local recovery copy.
-  await page.evaluate(() => {
-    localStorage.removeItem("kk-studio-next:creation:v1");
-    sessionStorage.removeItem("kk-studio-next:creation:v1:pending");
-  });
-  await page.reload();
-  await page.getByRole("button", { name: "项目库", exact: true }).click();
-  await expect(page.locator(".project-library-card")).toHaveCount(1);
-  await page.locator(".project-library-card").click();
-  await expectBundledPluginContents(page);
-  expect((await readDurable(page)).projects[0].items).toEqual(original);
-  expect(errors).toEqual([]);
-  await page.screenshot({ path: info.outputPath("plugins-recovered.png") });
-});
+}
 
 test("损坏插件读取和重试不会覆盖IndexedDB原件及备份", async ({ page }) => {
   await page.goto("/");

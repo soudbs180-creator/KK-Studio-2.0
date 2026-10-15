@@ -1,12 +1,13 @@
 /** Non-secret, account-scoped discovery. A model list is not generation verification. */
 import type { ModelKind } from "../../domain/modelSelection.ts";
 import {
-  isStrictLoopbackProviderUrl,
+  protocolBindingMatches,
+  isProviderAuthAllowed,
   providerProtocolSchema,
   providerAuthModeSchema,
   type ProviderProtocol,
   type ProviderAuthMode,
-} from "../../domain/modelProvider.ts";
+} from "../../domain/providerProtocol.ts";
 import {
   parseImageModelCapabilities,
   type ImageModelCapabilities,
@@ -46,25 +47,25 @@ const sizePattern = /^(?:[1-9]\d{1,4})x(?:[1-9]\d{1,4})$/;
 const kinds = ["text", "image", "video", "audio"];
 const record = (value: unknown): Record<string, unknown> =>
   value && typeof value === "object" ? (value as Record<string, unknown>) : {};
-
 function catalogIdentity(value: {
   baseUrl?: unknown;
   protocol?: unknown;
   authMode?: unknown;
-}): { protocol: ProviderProtocol; authMode: ProviderAuthMode } | null {
+}) {
   const protocol = providerProtocolSchema.optional().safeParse(value.protocol);
   const authMode = providerAuthModeSchema.optional().safeParse(value.authMode);
   if (!protocol.success || !authMode.success) return null;
   if (
     authMode.data === "none" &&
     (typeof value.baseUrl !== "string" ||
-      !isStrictLoopbackProviderUrl(value.baseUrl))
+      !isProviderAuthAllowed({
+        baseUrl: value.baseUrl,
+        protocol: protocol.data,
+        authMode: authMode.data,
+      }))
   )
     return null;
-  return {
-    protocol: protocol.data ?? "openai-compatible",
-    authMode: authMode.data ?? "api_key",
-  };
+  return { protocol: protocol.data, authMode: authMode.data };
 }
 
 function displayMetadata(value: Record<string, unknown>) {
@@ -167,12 +168,13 @@ export function readModelCatalogs(): ModelCatalog[] {
       return [
         {
           id: item.id,
+          protocol: identity.protocol,
+          authMode: identity.authMode,
           baseUrl: typeof item.baseUrl === "string" ? item.baseUrl : undefined,
           credentialRef:
             typeof item.credentialRef === "string"
               ? item.credentialRef
               : undefined,
-          ...identity,
           fetchedAt: typeof item.fetchedAt === "number" ? item.fetchedAt : 0,
           models,
         },
@@ -183,16 +185,15 @@ export function readModelCatalogs(): ModelCatalog[] {
   }
 }
 function matches(connection: Connection, catalog: ModelCatalog) {
-  const connectionIdentity = catalogIdentity(connection);
-  const savedIdentity = catalogIdentity(catalog);
+  if (!catalogIdentity(connection) || !catalogIdentity(catalog)) return false;
   return (
-    connectionIdentity !== null &&
-    savedIdentity !== null &&
     connection.id === catalog.id &&
     connection.baseUrl === catalog.baseUrl &&
     connection.credentialRef === catalog.credentialRef &&
-    connectionIdentity.protocol === savedIdentity.protocol &&
-    connectionIdentity.authMode === savedIdentity.authMode
+    protocolBindingMatches(
+      { ...connection, baseUrl: connection.baseUrl ?? "" },
+      { ...catalog, baseUrl: catalog.baseUrl ?? "" },
+    )
   );
 }
 export function catalogForConnection(
@@ -220,7 +221,7 @@ export function saveModelCatalog(
   manual = false,
 ): void {
   const identity = catalogIdentity(connection);
-  if (!identity) throw new Error("模型目录的协议或认证方式无效。");
+  if (!identity) throw new Error("模型目录协议或认证身份无效，原目录已保留。");
   const current = readModelCatalogs();
   const previous = current.find((item) => matches(connection, item));
   const next = manual
@@ -239,7 +240,8 @@ export function saveModelCatalog(
         id: connection.id,
         baseUrl: connection.baseUrl,
         credentialRef: connection.credentialRef,
-        ...identity,
+        protocol: identity.protocol,
+        authMode: identity.authMode,
         fetchedAt: Date.now(),
         models: next.slice(0, 5000).flatMap((value) => {
           const model = storedModel(value);

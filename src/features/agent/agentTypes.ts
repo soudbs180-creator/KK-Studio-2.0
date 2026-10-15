@@ -126,6 +126,38 @@ export interface AgentChatItem {
   activityItems?: Record<string, string>;
 }
 
+/** 已有历史 detail 的实时活动补充；不另建任务或持久化契约。 */
+export interface AgentActivityDetail {
+  kind: string;
+  phase?: "started" | "updated" | "completed";
+  status?: string;
+  itemType?: string;
+  command?: string;
+  cwd?: string;
+  delta?: string;
+  output?: string;
+  exitCode?: number;
+  success?: boolean;
+  error?: string;
+  turnStatus?: string;
+  rows?: Array<{ label: string; value: string }>;
+  files?: Array<{ path: string; action: string }>;
+}
+
+export interface AgentActivityItem {
+  id: string;
+  text?: string;
+  delta?: string;
+  command?: string;
+  cwd?: string;
+  aggregatedOutput?: string;
+  exitCode?: number;
+  status?: string;
+  success?: boolean;
+  error?: string | { message?: string };
+  summary?: unknown;
+}
+
 export interface AgentConversationState {
   revision: number;
   conversationId: string;
@@ -217,7 +249,13 @@ export type AgentEvent =
       busy: boolean;
       pendingApprovals: AgentApprovalRequest[];
     }
-  | { kind: "terminal"; status: string; error?: string }
+  | {
+      kind: "terminal";
+      status: string;
+      error?: string;
+      threadId?: string;
+      turnId?: string;
+    }
   | {
       kind: "conversation";
       conversation: AgentConversationState;
@@ -225,10 +263,11 @@ export type AgentEvent =
   | { kind: "message"; item: AgentChatItem }
   | {
       kind: "activity";
+      threadId?: string;
       turnId?: string;
       itemType: string;
       phase: "started" | "updated" | "completed";
-      item: { id: string; text?: string; delta?: string; command?: string };
+      item: AgentActivityItem;
     }
   | { kind: "approval"; approval: AgentApprovalRequest }
   | { kind: "approval_resolved"; requestId: string; decision: string }

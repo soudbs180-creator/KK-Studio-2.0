@@ -1,0 +1,38 @@
+{
+  "sourceHead": "6f8ff257e8996eaf11ca4446e8781dd10d9aa1d9",
+  "executable": "D:\\kk-studio\\.worktrees\\TASK-AGENT-RECOVERY-20261013\\src-tauri\\target\\release\\kk-studio.exe",
+  "executableSha256": "aaa46e22b9ef95308f33e1d89d0678160d5c2ac202aecad1e2b2bfa26a092848",
+  "dataRoot": "D:\\kk-studio\\.worktrees\\TASK-AGENT-RECOVERY-20261013\\src-tauri\\target\\provider-credential-acceptance\\2f53dbd5-6f23-4910-a9bf-532271a0d6eb\\data",
+  "profile": "D:\\kk-studio\\.worktrees\\TASK-AGENT-RECOVERY-20261013\\src-tauri\\target\\provider-credential-acceptance\\2f53dbd5-6f23-4910-a9bf-532271a0d6eb\\profile",
+  "codexHome": "D:\\kk-studio\\.worktrees\\TASK-AGENT-RECOVERY-20261013\\src-tauri\\target\\provider-credential-acceptance\\2f53dbd5-6f23-4910-a9bf-532271a0d6eb\\codex-home",
+  "startupScope": "Owned candidate EXE smoke; executable hash is recorded. Does not replace official launcher freshness/receipt acceptance.",
+  "credentialScope": "Only the unique owned credential reference reaches the real vault. Unrelated settings credential probes are isolated.",
+  "checks": [
+    "save-does-not-refill-plaintext",
+    "webview-reload-restores-key-status",
+    "user-close-exits-owned-process",
+    "native-process-restart-restores-key-status",
+    "native-and-browser-metadata-contain-no-secret",
+    "cleanup-user-close-exits-owned-process"
+  ],
+  "runtimeLoads": [
+    {
+      "url": "http://tauri.localhost/",
+      "assets": [
+        "http://tauri.localhost/assets/index-C4eyZL54.js"
+      ],
+      "entry": "src/main.tsx -> src/App.tsx"
+    },
+    {
+      "url": "http://tauri.localhost/",
+      "assets": [
+        "http://tauri.localhost/assets/index-C4eyZL54.js"
+      ],
+      "entry": "src/main.tsx -> src/App.tsx"
+    }
+  ],
+  "errors": [],
+  "passed": true,
+  "credentialCleanupComplete": true,
+  "connectionId": "byok-provider-215ba0b943da4209"
+}

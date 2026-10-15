@@ -18,11 +18,13 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { z } from "zod";
+import { randomUUID } from "node:crypto";
+import { scanTomlLines, isSingleLineTomlString, normalizeTomlHeader } from "./provider-config-toml.js";
 
 // ── 密钥防线（镜像 app 侧，源文件为权威）───────────────────────────────
 
 const CREDENTIAL_PATTERNS = [
-  /(?:api[_-]?key|access[_-]?token|refresh[_-]?token|client[_-]?secret|password)\s*[:=]/i,
+  /(?:api[_-]?key|access[_-]?token|refresh[_-]?token|client[_-]?secret|password)\s*["']?\s*[:=]/i,
   /sk-[A-Za-z0-9_-]{12,}/,
   /-----BEGIN [A-Z ]+ PRIVATE KEY-----/,
   /(?:Bearer|Basic)\s+[A-Za-z0-9+/._-]{16,}/i,
@@ -86,21 +88,32 @@ export const providerConfigEntrySchema = z.object({
   model: z.string().min(1).max(120).optional(),
   credentialRef: z.string().min(1).max(160).optional(),
   wireApi: z.literal("responses").optional(),
-});
+  protocol: z.enum(["openai-chat", "openai-responses", "anthropic", "azure-openai", "ollama"]).optional(),
+  authMode: z.enum(["api-key", "none"]).optional(),
+}).passthrough();
 export type ProviderConfigEntry = z.infer<typeof providerConfigEntrySchema>;
 
 export const providerConfigSchema = z.object({
   connections: z.array(providerConfigEntrySchema).max(16),
-});
+}).passthrough();
 export type ProviderConfigFile = z.infer<typeof providerConfigSchema>;
 
 /** 接受裸数组或 { connections: [...] } 两种形态。 */
 export function parseProviderConfig(raw: unknown): ProviderConfigEntry[] {
   const input = Array.isArray(raw) ? { connections: raw } : raw;
-  const parsed = providerConfigSchema.parse(input);
-  for (const entry of parsed.connections)
-    assertNoSecrets(entry, "Provider 配置");
-  return parsed.connections;
+  assertNoSecrets(input, "Provider 配置");
+  const parsed = providerConfigSchema.safeParse(input);
+  if (!parsed.success) throw new Error("Provider 配置格式无效，请检查连接地址、协议、认证和字段限制。");
+  return parsed.data.connections;
+}
+
+/** Explicit portable metadata may never silently change an execution target. */
+export function assertProviderTarget(connections: ProviderConfigEntry[], target: "codex" | "claude"): void {
+  const protocol = target === "codex" ? "openai-responses" : "anthropic";
+  if (connections.some((entry) => entry.protocol !== undefined && entry.protocol !== protocol))
+    throw new Error("当前 " + target + " 配置仅支持 " + protocol + " 协议；请使用兼容连接，原文件未改动。");
+  if (connections.some((entry) => entry.authMode !== undefined && entry.authMode !== "api-key"))
+    throw new Error("当前 " + target + " 配置不支持免密认证；请使用 API Key 或原 CLI 登录，原文件未改动。");
 }
 
 // ── Codex provider 表渲染 ───────────────────────────────────────────────
@@ -158,17 +171,9 @@ export function splitTrailingComment(value: string): {
   value: string;
   comment?: string;
 } {
-  let inQuote = false;
-  for (let i = 0; i < value.length; i++) {
-    const ch = value[i];
-    if (ch === '"' && value[i - 1] !== "\\") inQuote = !inQuote;
-    else if (ch === "#" && !inQuote)
-      return {
-        value: value.slice(0, i).trimEnd(),
-        comment: value.slice(i).trimEnd(),
-      };
-  }
-  return { value: value.trimEnd() };
+  const line = scanTomlLines([value])[0];
+  const comment = value.slice(line.code.length).trimStart();
+  return { value: line.code, ...(comment.startsWith("#") ? { comment: comment.trimEnd() } : {}) };
 }
 
 /**
@@ -187,19 +192,19 @@ export function mergeCodexConfigToml(
   const eol = existing.includes("\r\n") ? "\r\n" : "\n";
   const lines = existing === "" ? [] : existing.split(/\r\n|\n/);
   const hasTrailingEol = lines.length > 0 && lines[lines.length - 1] === "";
+  const lexical = scanTomlLines(lines);
 
   // 1. 分节：顶层区 + sections
   const sections: TomlSection[] = [];
   let topLevelEnd = lines.length;
   for (let i = 0; i < lines.length; i++) {
-    const trimmed = lines[i].trim();
+    const trimmed = lexical[i].code.trim();
     if (
-      trimmed.startsWith("[") &&
-      trimmed.endsWith("]") &&
-      !trimmed.includes("=")
+      lexical[i].statementStart && trimmed.startsWith("[")
     ) {
       if (sections.length === 0) topLevelEnd = i;
-      sections.push({ headerIndex: i, bodyEnd: i + 1, header: trimmed });
+      const header = normalizeTomlHeader(trimmed);
+      sections.push({ headerIndex: i, bodyEnd: i + 1, header });
     } else if (sections.length > 0) {
       sections[sections.length - 1].bodyEnd = i + 1;
     }
@@ -222,13 +227,25 @@ export function mergeCodexConfigToml(
   }
   if (patch.modelCatalogJson !== undefined)
     topKeys.model_catalog_json = patch.modelCatalogJson;
-  const replaced = new Set<string>();
+  const replaced = new Set<string>(), observed = new Set<string>();
+  const managed = new Set(["model", "model_provider", "model_catalog_json"]);
   for (let i = 0; i < topLevelEnd; i++) {
+    if (!lexical[i].statementStart) continue;
+    const quotedKey = /^\s*("(?:[^"\\]|\\.)*")\s*=/.exec(lines[i]);
+    if (quotedKey?.[1].includes("\\")) throw new Error("config.toml 转义根键暂不能安全合并，请使用普通键名后重试；原文件保留。");
+    const quoted = /^\s*["'](model|model_provider|model_catalog_json)["']\s*=/.exec(lines[i]);
+    if (quoted) throw new Error("config.toml 受管根键使用引号，暂不能安全替换；请改用普通键名后重试，原文件保留。");
     const match = TOP_LEVEL_KEY.exec(lines[i]);
     if (!match) continue;
     const key = match[1];
-    if (topKeys[key] === undefined || replaced.has(key)) continue;
     const eq = lines[i].indexOf("=");
+    if (managed.has(key)) {
+      if (observed.has(key)) throw new Error("config.toml 受管根键重复，请修复原文件后重试；原文件保留。");
+      if (!lexical[i].complete || !isSingleLineTomlString(lexical[i].code.slice(eq + 1).trim()))
+        throw new Error("config.toml 受管根键必须是完整单行字符串（可含尾部注释），请修复原文件后重试；原文件保留。");
+      observed.add(key);
+    }
+    if (!Object.hasOwn(topKeys, key)) continue;
     const before = lines[i].slice(0, eq).trimEnd();
     const after = lines[i].slice(eq + 1);
     const { comment } = splitTrailingComment(after);
@@ -366,12 +383,12 @@ export function defaultCodexConfigDir(): string {
 /** 原子写盘：临时文件 + rename，目录 0700、文件 0600。 */
 export function writeFileAtomic(
   file: string,
-  content: string,
+  content: string | Uint8Array,
   mode: number,
 ): void {
   const dir = path.dirname(file);
   fs.mkdirSync(dir, { recursive: true, mode: 0o700 });
-  const tmp = path.join(dir, `.${path.basename(file)}.tmp-${process.pid}`);
+  const tmp = path.join(dir, `.${path.basename(file)}.tmp-${process.pid}-${randomUUID()}`);
   fs.writeFileSync(tmp, content, { mode });
   fs.renameSync(tmp, file);
   try {
@@ -381,12 +398,48 @@ export function writeFileAtomic(
   }
 }
 
+/** Preserve preimages; rollback only paths still containing this invocation's bytes. */
+function publishCodexFiles(files: Array<{ file: string; content: string; expected?: string }>): string[] {
+  const prepared = files.map((item) => {
+    const before = fs.existsSync(item.file) ? fs.readFileSync(item.file) : undefined;
+    if (item.expected !== undefined && (before?.toString("utf8") ?? "") !== item.expected)
+      throw new Error("配置在准备期间被修改，请重新读取后重试；原文件保留。");
+    return { ...item, before, bytes: Buffer.from(item.content), recovery: before ? item.file + ".kk-recovery-" + randomUUID() : undefined };
+  }).filter((item) => !item.before?.equals(item.bytes));
+  const recovery = prepared.flatMap((item) => item.recovery ? [item.recovery] : []);
+  for (const item of prepared) if (item.recovery) writeFileAtomic(item.recovery, item.before!, 0o600);
+  const published: typeof prepared = [];
+  try {
+    for (const item of prepared) {
+      const current = fs.existsSync(item.file) ? fs.readFileSync(item.file) : undefined;
+      if (item.before ? !current?.equals(item.before) : current !== undefined)
+        throw new Error("目标配置被另一个操作修改，请重新读取后重试。");
+      published.push(item);
+      writeFileAtomic(item.file, item.bytes, 0o600);
+    }
+  } catch {
+    const unknown: string[] = [];
+    for (const item of published.reverse()) {
+      try {
+        const current = fs.existsSync(item.file) ? fs.readFileSync(item.file) : undefined;
+        if (item.before ? current?.equals(item.before) : current === undefined) continue;
+        if (!current?.equals(item.bytes)) { unknown.push(item.file); continue; }
+        if (item.before) writeFileAtomic(item.file, item.before, 0o600);
+        else fs.unlinkSync(item.file);
+      } catch { unknown.push(item.file); }
+    }
+    throw new Error("配置发布失败；" + (unknown.length ? "结果未确认，未覆盖外来修改或无法恢复：" + unknown.join(", ") : "已恢复本次已发布改动") + "。原件恢复副本：" + (recovery.join(", ") || "无既有文件") + "。请核对后重试。");
+  }
+  return recovery;
+}
+
 /** 应用 Provider 配置到 Codex（合并 config.toml + 可选 catalog 落盘）。 */
 export function applyCodexProviderConfig(
   connections: ProviderConfigEntry[],
   options: ApplyProviderOptions = {},
 ): ApplyProviderResult {
   const validated = parseProviderConfig(connections);
+  assertProviderTarget(validated, "codex");
   const configDir = path.resolve(options.configDir || defaultCodexConfigDir());
   const configPath = path.join(configDir, "config.toml");
   const warnings: string[] = [];
@@ -418,6 +471,7 @@ export function applyCodexProviderConfig(
       }
     : undefined;
 
+  let catalogContent: string | undefined;
   let catalogPath: string | undefined;
   let modelCatalogJson: string | undefined;
   if (options.catalogProfileId) {
@@ -431,7 +485,7 @@ export function applyCodexProviderConfig(
     if (catalog.json !== "[]") {
       catalogPath = path.join(configDir, catalog.path);
       modelCatalogJson = catalog.path;
-      if (!options.dryRun) writeFileAtomic(catalogPath, catalog.json, 0o600);
+      catalogContent = catalog.json;
     } else {
       warnings.push(
         "catalogProfileId 已指定但没有带 model 的连接，跳过 catalog 落盘",
@@ -449,7 +503,13 @@ export function applyCodexProviderConfig(
   });
   assertNoSecrets(configToml, "Codex config.toml 合并结果");
 
-  if (!options.dryRun) writeFileAtomic(configPath, configToml, 0o600);
+  if (!options.dryRun) {
+    const files = [
+      ...(catalogPath && catalogContent ? [{ file: catalogPath, content: catalogContent }] : []),
+      { file: configPath, content: configToml, expected: existing },
+    ];
+    warnings.push(...publishCodexFiles(files).map((file) => "原件恢复副本：" + file));
+  }
 
   return {
     configPath,

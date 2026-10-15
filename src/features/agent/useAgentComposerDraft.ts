@@ -1,16 +1,27 @@
 import { useEffect, useRef, useState } from "react";
+import type { AgentDraftAttachment } from "./agentAttachments";
 import {
   AGENT_DRAFT_APPEND_EVENT,
   type AgentDraftAppendRequest,
   type AgentDraftAppendResult,
 } from "./agentDraftActions";
 
+/** Keep live drafts above the channel panels, without adding persistence. */
+export function useAgentDraftState() {
+  const text = useState<Record<string, string>>({});
+  const images = useState<Record<string, AgentDraftAttachment[]>>({});
+  const errors = useState<Record<string, string | null>>({});
+  return { text, images, errors };
+}
+export type AgentDraftState = ReturnType<typeof useAgentDraftState>;
+
 /** Agent text stays separate from the API draft and is scoped to its project. */
 export default function useAgentComposerDraft(
   draftKey: string,
   active: boolean,
+  draftState: AgentDraftState,
 ) {
-  const [drafts, setDrafts] = useState<Record<string, string>>({});
+  const [drafts, setDrafts] = draftState.text;
   const draftsRef = useRef(drafts);
   draftsRef.current = drafts;
   const update = (text: string) => {

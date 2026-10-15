@@ -1,47 +1,86 @@
 import { expect, test } from "@playwright/test";
-import { openWorkspace, showCanvasNavigation } from "./helpers";
+import {
+  openWorkspace,
+  showCanvasNavigation,
+  uploadCanvasMedia,
+} from "./helpers";
 
-test("搜索弹窗按原稿展示喜欢与收藏双栏，收藏可编辑、查找与移除", async ({
-  page,
-}) => {
+test("独立喜欢面板可编辑、查找和移除，标签分类保持分开", async ({ page }) => {
   await openWorkspace(page);
+  await uploadCanvasMedia(page.getByTestId("canvas-node-image"), "image");
   await page.locator(".image-preview").click();
   await page.getByLabel("图片提示词").fill("清晨森林中的小屋");
-  await page.getByRole("button", { name: "喜欢当前卡片", exact: true }).click();
-  await page.getByRole("button", { name: "搜索", exact: true }).click();
-  const dialog = page.getByRole("dialog", { name: "搜索与收藏" });
-  await expect(dialog).toBeVisible();
-  await dialog.getByRole("tab", { name: "喜欢收藏" }).click();
+  await page
+    .getByRole("toolbar", { name: "图片操作：blue-hour.png", exact: true })
+    .getByRole("button", { name: "喜欢blue-hour.png", exact: true })
+    .click();
+  const library = page.getByRole("button", { name: "喜欢与标签", exact: true });
+  await library.click();
+  await page.getByRole("menuitem", { name: "我喜欢的", exact: true }).click();
+  const likes = page.getByTestId("canvas-likes-panel");
+  await expect(likes).toBeVisible();
   await expect(
-    dialog.getByRole("heading", { name: "喜欢", exact: true }),
+    likes.getByRole("heading", { name: "喜欢", exact: true }),
   ).toBeVisible();
-  await expect(
-    dialog.getByRole("heading", { name: "收藏", exact: true }),
-  ).toBeVisible();
-  await expect(dialog.locator(".saved-like-card")).toHaveCount(1);
-  await expect(dialog.locator(".saved-prompt-card")).toHaveCount(0);
-  await dialog.screenshot({
+  await expect(likes.locator(".saved-like-card")).toHaveCount(1);
+  await library.click();
+  await page.getByRole("menuitem", { name: "画布标签", exact: true }).click();
+  const tags = page.getByTestId("canvas-tags-panel");
+  await expect(tags).toBeVisible();
+  await tags.getByLabel("标签分类", { exact: true }).selectOption("收藏");
+  await expect(tags.locator(".catalog-tag-card")).toHaveCount(0);
+  await expect(likes).toBeVisible();
+  await page.screenshot({
     path: "test-results/evidence/catalog-saved-desktop.png",
     animations: "disabled",
   });
-  await dialog
+  await likes
     .locator(".saved-like-card")
-    .getByRole("button", { name: "编辑" })
+    .getByRole("button", { name: "编辑", exact: true })
     .click();
-  await dialog.getByLabel("喜欢名称").fill("森林场景");
-  await dialog.getByRole("button", { name: "保存名称" }).click();
-  await dialog.getByLabel("搜索内容").fill("森林场景");
-  await expect(dialog.locator(".saved-like-card")).toContainText("森林场景");
-  await dialog
-    .locator(".saved-like-card")
-    .getByRole("button", { name: "移除喜欢" })
-    .click();
-  await expect(dialog.locator(".saved-prompt-card")).toHaveCount(0);
-  await page.keyboard.press("Escape");
-  await expect(dialog).toHaveCount(0);
+  await likes.getByLabel("喜欢名称").fill("森林场景");
+  await likes.getByRole("button", { name: "保存名称", exact: true }).click();
+  await likes.getByLabel("搜索喜欢", { exact: true }).fill("森林场景");
+  await expect(likes.locator(".saved-like-card")).toContainText("森林场景");
+  await likes.getByLabel("搜索喜欢", { exact: true }).fill("找不到");
+  await expect(likes.locator(".saved-like-card")).toHaveCount(0);
   await expect(
-    page.getByRole("button", { name: "搜索", exact: true }),
-  ).toBeFocused();
+    likes.getByText("没有找到匹配的内容", { exact: true }),
+  ).toBeVisible();
+  await likes.getByLabel("搜索喜欢", { exact: true }).fill("清晨森林中的小屋");
+  await expect(likes.locator(".saved-like-card")).toHaveCount(1);
+  await likes.getByLabel("搜索喜欢", { exact: true }).fill("");
+  await page.getByRole("button", { name: "搜索", exact: true }).click();
+  const search = page.getByRole("dialog", { name: "搜索" });
+  await search.getByRole("tab", { name: "画布卡片", exact: true }).click();
+  await search.getByLabel("搜索内容", { exact: true }).fill("森林场景");
+  await expect(search.locator(".catalog-result")).toHaveCount(1);
+  await expect(search.locator(".catalog-result")).toContainText("森林场景");
+  await search.locator(".catalog-result").click();
+  await expect(search).toHaveCount(0);
+  await expect(page.getByTestId("canvas-node-image")).toHaveClass(
+    /is-selected/,
+  );
+  await likes
+    .locator(".saved-like-card")
+    .getByRole("button", { name: "移除喜欢", exact: true })
+    .click();
+  await expect(likes.locator(".saved-like-card")).toHaveCount(0);
+  await expect(
+    likes.getByText("还没有喜欢的内容", { exact: true }),
+  ).toBeVisible();
+  await expect(tags.locator(".catalog-tag-card")).toHaveCount(0);
+  await likes
+    .getByRole("button", { name: "移动喜欢面板", exact: true })
+    .focus();
+  await page.keyboard.press("Escape");
+  await expect(likes).toHaveCount(0);
+  await expect(tags).toBeVisible();
+  await expect(library).toBeFocused();
+  await tags.getByRole("button", { name: "移动标签面板", exact: true }).focus();
+  await page.keyboard.press("Escape");
+  await expect(tags).toHaveCount(0);
+  await expect(library).toBeFocused();
 });
 
 test("视频编辑器只在选中时出现，参数与提示词在切换后保留", async ({ page }) => {
@@ -254,20 +293,30 @@ for (const [width, height] of [
   [768, 1024],
   [390, 844],
 ]) {
-  test(`搜索收藏弹窗 ${width} 可操作且无横向溢出`, async ({ page }) => {
+  test(`分类搜索弹窗 ${width} 可操作且无横向溢出`, async ({ page }) => {
     await page.setViewportSize({ width, height });
     await page.goto("/");
     if (width <= 800)
-      await page
-        .getByRole("button", { name: "搜索与收藏", exact: true })
-        .click();
+      await page.getByRole("button", { name: "搜索", exact: true }).click();
     else {
       await page.getByRole("button", { name: "搜索", exact: true }).focus();
       await page.keyboard.press("Control+k");
     }
     const panel = page.getByTestId("catalog-panel");
     await expect(page.getByLabel("搜索内容")).toBeFocused();
-    await panel.getByRole("tab", { name: "喜欢收藏" }).click();
+    for (const name of ["全部", "画布卡片", "项目", "已加载资源"]) {
+      const tab = panel.getByRole("tab", { name, exact: true });
+      await tab.click();
+      await expect(tab).toHaveAttribute("aria-selected", "true");
+      await expect(
+        panel.getByRole("tabpanel", { name, exact: true }),
+      ).toBeVisible();
+      expect(
+        await panel.evaluate(
+          (element) => element.scrollWidth <= element.clientWidth,
+        ),
+      ).toBe(true);
+    }
     await panel.screenshot({
       path: `test-results/evidence/catalog-${width}.png`,
       animations: "disabled",

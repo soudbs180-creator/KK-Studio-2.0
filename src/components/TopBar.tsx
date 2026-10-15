@@ -97,8 +97,8 @@ export default function TopBar({
       </nav>
       <button
         className="mobile-search"
-        aria-label="搜索与收藏"
-        title="搜索与收藏"
+        aria-label="搜索"
+        title="搜索"
         onClick={() => onOpen("search")}
       >
         <img src="/design/figma/search.svg" alt="" />

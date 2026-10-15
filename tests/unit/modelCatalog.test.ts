@@ -13,8 +13,8 @@ const ownedConnection = {
   id: "catalog-identity-fixture",
   baseUrl: "http://127.0.0.1:11434/v1",
   credentialRef: "opaque_catalog_fixture",
-  protocol: "openai-compatible" as const,
-  authMode: "api_key" as const,
+  protocol: "openai-chat" as const,
+  authMode: "api-key" as const,
 };
 
 function withCatalogStorage(run: (values: Map<string, string>) => void): void {
@@ -179,8 +179,8 @@ test("refreshing the same protocol and authentication retains manual declaration
   withCatalogStorage(() => {
     const connection = {
       ...ownedConnection,
-      protocol: "anthropic-messages" as const,
-      authMode: "none" as const,
+      protocol: "anthropic" as const,
+      authMode: "api-key" as const,
     };
     saveModelCatalog(
       connection,
@@ -209,7 +209,7 @@ test("catalog persistence restores protocol and authentication without copying s
     const connection = {
       ...ownedConnection,
       protocol: "gemini" as const,
-      authMode: "none" as const,
+      authMode: "api-key" as const,
       apiKey: "synthetic-catalog-secret-must-not-persist",
     };
     saveModelCatalog(connection, [
@@ -217,7 +217,7 @@ test("catalog persistence restores protocol and authentication without copying s
     ]);
     const catalog = readModelCatalogs()[0];
     assert.equal(catalog.protocol, "gemini");
-    assert.equal(catalog.authMode, "none");
+    assert.equal(catalog.authMode, "api-key");
     assert.equal(catalogForConnection(connection)[0].id, "restored-model");
     const raw = values.get(catalogKey)!;
     assert.equal(

@@ -10,7 +10,9 @@ import {
 export default function ModelVariantControl({
   selection,
   onSelect,
+  disabled = false,
 }: {
+  disabled?: boolean;
   selection?: ModelSelection;
   onSelect: (selection: ModelSelection) => void;
 }) {
@@ -38,6 +40,7 @@ export default function ModelVariantControl({
     <label className="kk-model-variants">
       型号参数
       <select
+        disabled={disabled}
         aria-label="型号参数"
         className="ui-input"
         value={selection.model}

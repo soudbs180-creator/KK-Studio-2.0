@@ -1,0 +1,12 @@
+{
+  "width": 340,
+  "scrollWidth": 338,
+  "clientWidth": 338,
+  "fontSize": "12px",
+  "text": "执行过程 · 4 项 · 已中断 · 1 项失败\n命令执行\n失败\n\nnpm test\n\n退出状态\n1\nchecking\nfailed assertion\n命令执行\n已执行 · 结果未报告\n\nunknown result\n\n命令执行\n成功\n\nexit 0\n\n退出状态\n0\n命令执行\n已中断\n\nwaiting command",
+  "url": "http://127.0.0.1:1423/",
+  "mode": "production",
+  "scripts": [
+    "http://127.0.0.1:1423/assets/index-C31ISFx5.js"
+  ]
+}

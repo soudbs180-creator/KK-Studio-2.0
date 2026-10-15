@@ -17,6 +17,14 @@ export function isLoopbackHostname(hostname: string): boolean {
   );
 }
 
+export function isLocalProviderUrl(value: string): boolean {
+  try {
+    return isLoopbackHostname(new URL(value).hostname);
+  } catch {
+    return false;
+  }
+}
+
 export function isAllowedProviderUrl(value: string): boolean {
   try {
     const url = new URL(value);

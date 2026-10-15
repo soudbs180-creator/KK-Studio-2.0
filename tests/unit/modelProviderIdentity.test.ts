@@ -50,8 +50,8 @@ test("settings and execution resolve the edited protocol/auth/model on the selec
     const current = {
       ...opaque,
       baseUrl: "http://127.0.0.1:11434/v1",
-      protocol: "openai-compatible" as const,
-      authMode: "api_key" as const,
+      protocol: "openai-chat" as const,
+      authMode: "api-key" as const,
     };
     writeProviderConnections([current]);
     const edited = {
@@ -59,8 +59,8 @@ test("settings and execution resolve the edited protocol/auth/model on the selec
       baseUrl: current.baseUrl,
       connectionId: current.id,
       model: "claude-next",
-      protocol: "anthropic-messages" as const,
-      authMode: "none" as const,
+      protocol: "anthropic" as const,
+      authMode: "api-key" as const,
     };
     const saved = resolveModelProviderConnection(edited, "vault_b", [current]);
     const executed = connectionFromModelProfile(edited);
@@ -68,8 +68,8 @@ test("settings and execution resolve the edited protocol/auth/model on the selec
       assert.equal(connection.id, "opaque-b");
       assert.equal(connection.credentialRef, "vault_b");
       assert.equal(connection.model, "claude-next");
-      assert.equal(connection.protocol, "anthropic-messages");
-      assert.equal(connection.authMode, "none");
+      assert.equal(connection.protocol, "anthropic");
+      assert.equal(connection.authMode, "api-key");
     }
   });
 });
@@ -79,8 +79,8 @@ test("omitted legacy protocol/auth select their compatible defaults on both reso
     const current = {
       ...opaque,
       baseUrl: "http://127.0.0.1:1234/v1",
-      protocol: "gemini" as const,
-      authMode: "none" as const,
+      protocol: "openai-responses" as const,
+      authMode: "api-key" as const,
     };
     writeProviderConnections([current]);
     const edited = {
@@ -93,10 +93,10 @@ test("omitted legacy protocol/auth select their compatible defaults on both reso
     for (const connection of [saved, executed]) {
       assert.equal(connection.id, "opaque-b");
       assert.equal(connection.credentialRef, "vault_b");
-      assert.equal(resolveProviderProtocol(connection), "openai-compatible");
+      assert.equal(resolveProviderProtocol(connection), "openai-chat");
       assert.equal(
         resolveProviderAuthMode(current.baseUrl, connection),
-        "api_key",
+        "api-key",
       );
     }
   });
@@ -108,8 +108,8 @@ for (const changedField of ["protocol", "authMode"] as const) {
       const current = {
         ...opaque,
         baseUrl: "http://127.0.0.1:1234/v1",
-        protocol: "openai-compatible" as const,
-        authMode: "api_key" as const,
+        protocol: "openai-chat" as const,
+        authMode: "api-key" as const,
         state: "cooldown" as const,
         activeJobs: 1,
         activeLeaseIds: ["in-flight"],

@@ -1,4 +1,5 @@
-import type { ReactNode } from "react";
+import { useRef, type ReactNode } from "react";
+import CanvasCollectionToolbar from "../canvas/CanvasCollectionToolbar";
 import type {
   CanvasCollectionItem,
   NodeEditingProps,
@@ -39,23 +40,39 @@ export default function PluginNode({
   item,
   editing,
   scale,
+  onDelete,
 }: {
   item: CanvasCollectionItem & { plugin: PluginItemPayload };
   editing: NodeEditingProps;
   scale: number;
+  onDelete: () => void;
 }) {
+  const anchor = useRef<HTMLDivElement>(null);
+  const toolbarProps = {
+    item,
+    anchor,
+    selected: editing.selected,
+    hasContent: Boolean(editing.hasContent),
+    liked: editing.liked,
+    onLike: editing.onToggleLike,
+    onDelete,
+  };
   const definition = getPluginNodeDefinition(item.plugin.type);
   if (!definition || !definition.Content) {
     return (
-      <div
-        className="plugin-node plugin-node-missing"
-        data-plugin-type={item.plugin.type}
-      >
-        <span>插件未加载：{item.plugin.type}</span>
-        <span className="plugin-node-missing-hint">
-          请到设置 → 插件中安装或启用该插件
-        </span>
-      </div>
+      <>
+        <div
+          ref={anchor}
+          className="plugin-node plugin-node-missing"
+          data-plugin-type={item.plugin.type}
+        >
+          <span>插件未加载：{item.plugin.type}</span>
+          <span className="plugin-node-missing-hint">
+            请到设置 → 插件中安装或启用该插件
+          </span>
+        </div>
+        <CanvasCollectionToolbar {...toolbarProps} />
+      </>
     );
   }
   const bridge = pluginLoader.getBridge();
@@ -148,38 +165,42 @@ export default function PluginNode({
   };
 
   const toolbarItems = definition.toolbar?.(ctx) ?? [];
-  return (
-    <div
-      className="plugin-node"
-      data-plugin-type={item.plugin.type}
-      data-canvas-no-zoom
+  const actions = toolbarItems.map((toolbarItem) => (
+    <button
+      key={toolbarItem.id}
+      type="button"
+      className="kk-button kk-button--tertiary"
+      title={toolbarItem.title}
+      aria-pressed={toolbarItem.active}
+      onClick={(event) => {
+        event.stopPropagation();
+        toolbarItem.onClick();
+      }}
+      onPointerDown={(event) => event.stopPropagation()}
+      onDoubleClick={(event) => event.stopPropagation()}
     >
-      <definition.Content ctx={ctx} />
-      {toolbarItems.length > 0 && (
-        <div
-          className="plugin-node-toolbar"
-          role="group"
-          aria-label={`${definition.title} 工具`}
-        >
-          {toolbarItems.map((toolbarItem) => (
-            <button
-              key={toolbarItem.id}
-              type="button"
-              title={toolbarItem.title}
-              aria-pressed={toolbarItem.active}
-              onClick={(event) => {
-                event.stopPropagation();
-                toolbarItem.onClick();
-              }}
-              onPointerDown={(event) => event.stopPropagation()}
-              onDoubleClick={(event) => event.stopPropagation()}
-            >
-              {toolbarItem.icon as ReactNode}
-              <span>{toolbarItem.label}</span>
-            </button>
-          ))}
+      {toolbarItem.icon as ReactNode}
+      <span>{toolbarItem.label}</span>
+    </button>
+  ));
+  return (
+    <>
+      <div
+        ref={anchor}
+        className="plugin-node"
+        data-plugin-type={item.plugin.type}
+        data-canvas-no-zoom
+      >
+        <div className="plugin-node-content">
+          <definition.Content ctx={ctx} />
         </div>
-      )}
-    </div>
+        {!editing.hasContent && editing.selected && actions.length > 0 && (
+          <div className="plugin-node-empty-actions">{actions}</div>
+        )}
+      </div>
+      <CanvasCollectionToolbar {...toolbarProps}>
+        {actions}
+      </CanvasCollectionToolbar>
+    </>
   );
 }

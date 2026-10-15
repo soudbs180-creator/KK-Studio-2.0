@@ -14,12 +14,21 @@ import {
 import { googleAgentConnection } from "../../features/agent/googleAgentConnection";
 import {
   geminiCliStatus,
+  geminiCliStatusMessage,
+  type GeminiCliStatus,
   GEMINI_BRIDGE_DEFAULT_URL,
   normalizeGeminiBridgeUrl,
 } from "../../features/agent/geminiCliAdapter";
 import GoogleConnectionActions from "./GoogleConnectionActions";
-import { GoogleCliSetup, GoogleKeySetup } from "./GoogleLoginModePanels";
+import {
+  GoogleCliSetup,
+  GoogleKeySetup,
+  GoogleLoginModeChoice,
+} from "./GoogleLoginModePanels";
 import useSettingsBusy from "./useSettingsBusy";
+import { useProviderCredentialState } from "./useProviderCredentialState";
+import ProviderCredentialStatus from "./ProviderCredentialStatus";
+import { providerSaveErrorMessage } from "../../features/creation/providerSaveRecovery";
 export default function GoogleConnectionSettings({
   onFeedback,
   mode = "all",
@@ -33,12 +42,27 @@ export default function GoogleConnectionSettings({
 }) {
   const [initialPreference] = useState(readGoogleCliPreference);
   const [key, setKey] = useState("");
-  const [stored, setStored] = useState(false);
+  const [cliReport, setCliReport] = useState<GeminiCliStatus>();
   const [loginMode, setLoginMode] = useState(initialPreference.loginMode);
   const [bridgeUrl, setBridgeUrl] = useState(initialPreference.bridgeUrl);
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState("");
   const request = useRef<AbortController | null>(null);
+  const effectiveLoginMode =
+    mode === "cli" ? "cli" : mode === "api-key" ? "api-key" : loginMode;
+  const cli = effectiveLoginMode === "cli";
+  const {
+    hasStoredKey: stored,
+    setHasStoredKey: setStored,
+    credentialStatus,
+    retryCredentialLoad,
+    reflectCommittedCredential,
+  } = useProviderCredentialState(
+    GOOGLE_API_BASE,
+    GOOGLE_CREDENTIAL_REF,
+    request,
+    active && !cli,
+  );
   const modeRef = useRef(mode);
   const activeRef = useRef(active);
   const mounted = useRef(true);
@@ -47,31 +71,24 @@ export default function GoogleConnectionSettings({
     googleAgentConnection.getState,
   );
   const disabled = busy || agent.sending || agent.status === "connecting";
+  const operationDisabled =
+    disabled ||
+    (!cli && (credentialStatus === "loading" || credentialStatus === "error"));
   useSettingsBusy(busy, onBusyChange);
   modeRef.current = mode;
   activeRef.current = active;
   useEffect(() => {
     mounted.current = true;
-    modeRef.current = mode;
-    activeRef.current = active;
+    setBusy(false);
     if (!active) {
       request.current?.abort("inactive");
       request.current = null;
-      setBusy(false);
-      return () => {
-        mounted.current = false;
-      };
+    } else {
+      setStatus("");
+      setCliReport(undefined);
+      if (mode === "all")
+        googleAgentConnection.configure(readGoogleCliPreference());
     }
-    setStatus("");
-    setBusy(false);
-    if (mode === "all") {
-      googleAgentConnection.configure(readGoogleCliPreference());
-    }
-    void loadApiKey(GOOGLE_API_BASE, GOOGLE_CREDENTIAL_REF)
-      .then((value) => {
-        if (mounted.current) setStored(Boolean(value));
-      })
-      .catch(() => undefined);
     return () => {
       mounted.current = false;
       request.current?.abort();
@@ -84,7 +101,10 @@ export default function GoogleConnectionSettings({
     setStatus("");
     try {
       const normalizedUrl = normalizeGeminiBridgeUrl(bridgeUrl);
-      writeGoogleCliPreference(effectiveLoginMode, normalizedUrl);
+      if (!writeGoogleCliPreference(effectiveLoginMode, normalizedUrl)) {
+        setStatus("Google 登录偏好未保存，请检查本地存储后重试。");
+        return;
+      }
       googleAgentConnection.configure({
         loginMode: effectiveLoginMode,
         bridgeUrl: normalizedUrl,
@@ -107,8 +127,10 @@ export default function GoogleConnectionSettings({
     }
   }
   async function saveKey() {
-    if (disabled || !activeRef.current || (!key.trim() && !stored)) return;
-    const saveMode = "api-key";
+    if (operationDisabled || !activeRef.current || (!key.trim() && !stored))
+      return;
+    const saveMode = modeRef.current;
+    let keyCommitted = false;
     setBusy(true);
     setStatus("");
     try {
@@ -122,74 +144,68 @@ export default function GoogleConnectionSettings({
         modeRef.current !== saveMode
       )
         return;
-      writeGoogleCliPreference("api-key", GEMINI_BRIDGE_DEFAULT_URL);
+      if (!setStored(true)) return;
+      keyCommitted = true;
+      setKey("");
+      if (!writeGoogleCliPreference("api-key", GEMINI_BRIDGE_DEFAULT_URL)) {
+        setStatus("Google 密钥已保存，但登录偏好未完成；请重试保存登录方式。");
+        return;
+      }
       googleAgentConnection.configure({
         loginMode: "api-key",
         bridgeUrl: GEMINI_BRIDGE_DEFAULT_URL,
       });
       googleAgentConnection.disconnect();
       window.dispatchEvent(new Event("kk:model-provider-changed"));
-      if (
-        mounted.current &&
-        activeRef.current &&
-        modeRef.current === saveMode
-      ) {
-        setStored(true);
-        setKey("");
-        setStatus("Google 已保存，可在对话的执行方式中选择 Google Gemini。");
-        onFeedback("Google 配置已更新。");
-      }
-    } catch {
+      setStatus("Google 已保存，可在对话的执行方式中选择 Google Gemini。");
+      onFeedback("Google 配置已更新。");
+    } catch (error) {
+      reflectCommittedCredential(error, () => setKey(""));
       if (mounted.current && activeRef.current && modeRef.current === saveMode)
-        setStatus("Google 保存失败，请检查系统凭据库和本地存储。");
-    } finally {
-      if (mounted.current && activeRef.current && modeRef.current === saveMode)
-        setBusy(false);
-    }
-  }
-  async function checkCli(controller: AbortController) {
-    setStatus("正在检测本机 Gemini CLI…");
-    try {
-      const result = await geminiCliStatus({
-        baseUrl: bridgeUrl.trim() || GEMINI_BRIDGE_DEFAULT_URL,
-        signal: controller.signal,
-      });
-      if (mounted.current && request.current === controller) {
-        if (!result.installed)
-          setStatus(
-            "未安装 Gemini CLI。请先在终端运行 npm install -g @google/gemini-cli。",
-          );
-        else if (!result.login)
-          setStatus(
-            "Gemini CLI 已安装但未登录。请在终端运行 gemini，选择 Login with Google 完成登录。",
-          );
-        else
-          setStatus(
-            `Gemini CLI 已就绪（${result.version ?? "未知版本"}），可连接使用。`,
-          );
-      }
-    } catch {
-      if (mounted.current && request.current === controller)
         setStatus(
-          controller.signal.aborted
-            ? "检测已取消。"
-            : "无法连接 Gemini CLI 桥，请先运行 node scripts/gemini-bridge.mjs 启动本地桥。",
+          keyCommitted
+            ? "Google 密钥已保存，但登录偏好未完成；请重试保存登录方式。"
+            : providerSaveErrorMessage(
+                error,
+                "Google 保存失败，原密钥和草稿已保留；请检查系统凭据库和本地存储。",
+              ),
         );
     } finally {
-      if (mounted.current && request.current === controller) {
-        request.current = null;
+      if (mounted.current && activeRef.current && modeRef.current === saveMode)
         setBusy(false);
-      }
     }
   }
   async function check() {
-    if (disabled || !activeRef.current) return;
+    if (operationDisabled || !activeRef.current) return;
     request.current?.abort();
     const controller = new AbortController();
     request.current = controller;
     setBusy(true);
     if (effectiveLoginMode === "cli") {
-      await checkCli(controller);
+      setCliReport(undefined);
+      setStatus("正在检测本机 Gemini CLI…");
+      try {
+        const result = await geminiCliStatus({
+          baseUrl: bridgeUrl.trim() || GEMINI_BRIDGE_DEFAULT_URL,
+          signal: controller.signal,
+        });
+        if (mounted.current && request.current === controller) {
+          setCliReport(result);
+          setStatus(geminiCliStatusMessage(result));
+        }
+      } catch {
+        if (mounted.current && request.current === controller)
+          setStatus(
+            controller.signal.aborted
+              ? "检测已取消。"
+              : "无法连接 Gemini CLI 桥，请复制上方启动桥命令，并在安装 Gemini CLI 的同一 Node/npm 环境中执行。",
+          );
+      } finally {
+        if (mounted.current && request.current === controller) {
+          request.current = null;
+          setBusy(false);
+        }
+      }
       return;
     }
     setStatus("正在连接 Google…");
@@ -219,9 +235,6 @@ export default function GoogleConnectionSettings({
       }
     }
   }
-  const effectiveLoginMode =
-    mode === "cli" ? "cli" : mode === "api-key" ? "api-key" : loginMode;
-  const cli = effectiveLoginMode === "cli";
   return (
     <section
       className="settings-network-row settings-agent-card"
@@ -234,36 +247,20 @@ export default function GoogleConnectionSettings({
         </span>
       </h3>
       {mode === "all" && (
-        <fieldset className="settings-login-modes">
-          <legend>登录方式</legend>
-          <label className="settings-radio">
-            <input
-              type="radio"
-              name="google-login-mode"
-              value="api-key"
-              checked={!cli}
-              disabled={disabled}
-              onChange={() => setLoginMode("api-key")}
-            />
-            密钥登录（对话与生图）
-          </label>
-          <label className="settings-radio">
-            <input
-              type="radio"
-              name="google-login-mode"
-              value="cli"
-              checked={cli}
-              disabled={disabled}
-              onChange={() => setLoginMode("cli")}
-            />
-            Gemini CLI 账号（Google 登录，免 Key，仅对话）
-          </label>
-        </fieldset>
+        <GoogleLoginModeChoice
+          cli={cli}
+          disabled={disabled}
+          onChange={setLoginMode}
+        />
       )}
       {cli ? (
         <GoogleCliSetup
           bridgeUrl={bridgeUrl}
-          onChange={setBridgeUrl}
+          report={cliReport}
+          onChange={(value) => {
+            setCliReport(undefined);
+            setBridgeUrl(value);
+          }}
           disabled={disabled}
         />
       ) : (
@@ -274,9 +271,15 @@ export default function GoogleConnectionSettings({
           stored={stored}
         />
       )}
+      {!cli && (
+        <ProviderCredentialStatus
+          status={credentialStatus}
+          onRetry={retryCredentialLoad}
+        />
+      )}
       <GoogleConnectionActions
         cli={cli}
-        disabled={disabled}
+        disabled={operationDisabled}
         canSave={Boolean(key.trim() || stored)}
         busy={busy}
         hasRequest={Boolean(request.current)}

@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { useDismissible } from "../useDismissible";
 import type { CanvasCollectionItem } from "../../domain/canvasItems";
 import type { Point, ViewTransform } from "./canvasModel";
@@ -39,16 +39,44 @@ export default function CanvasNavigation({
   backgroundPattern,
   onToggleBackgroundPattern,
 }: NavigationProps) {
-  const [open, setOpen] = useState<"zoom" | "map" | null>(null);
+  const [open, setOpen] = useState<"zoom" | "map" | "background" | null>(null);
   const ref = useRef<HTMLDivElement>(null);
   const opener = useRef<HTMLButtonElement | null>(null);
-  const color = useRef<HTMLInputElement>(null);
   const dismiss = useCallback(() => setOpen(null), []);
   useDismissible(open !== null, ref, dismiss, opener);
   function closeAndFocus(): void {
     dismiss();
     opener.current?.focus({ preventScroll: true });
   }
+  useLayoutEffect(() => {
+    const menu = ref.current?.querySelector<HTMLElement>(
+      ".canvas-zoom-menu,.canvas-background-menu",
+    );
+    if (!menu) return;
+    const canvas = menu.closest(".infinite-canvas");
+    const update = () => {
+      const gap = parseFloat(getComputedStyle(menu).paddingBottom);
+      const bottom = Math.min(
+        window.innerHeight,
+        canvas?.getBoundingClientRect().bottom ?? window.innerHeight,
+      );
+      menu.style.setProperty(
+        "--canvas-menu-available-height",
+        `${Math.max(0, bottom - menu.getBoundingClientRect().top - gap)}px`,
+      );
+    };
+    update();
+    if (open === "background") menu.querySelector("button")?.focus();
+    const observer = new ResizeObserver(update);
+    const hud = menu.closest(".canvas-hud");
+    if (hud) observer.observe(hud);
+    if (canvas) observer.observe(canvas);
+    window.addEventListener("resize", update);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", update);
+    };
+  }, [open]);
   return (
     <div
       ref={ref}
@@ -90,16 +118,13 @@ export default function CanvasNavigation({
         <span className="canvas-navigation-divider" aria-hidden="true" />
         <button
           className="canvas-background"
-          aria-label={
-            backgroundPattern === "dots" ? "切换为网格背景" : "切换为点状背景"
-          }
-          title={
-            backgroundPattern === "dots" ? "切换为网格背景" : "切换为点状背景"
-          }
-          aria-pressed={backgroundPattern === "grid"}
-          onClick={() => {
-            dismiss();
-            onToggleBackgroundPattern();
+          aria-label="画布背景"
+          title="背景样式与颜色"
+          aria-haspopup="dialog"
+          aria-expanded={open === "background"}
+          onClick={(event) => {
+            opener.current = event.currentTarget;
+            setOpen(open === "background" ? null : "background");
           }}
         >
           <img
@@ -111,18 +136,6 @@ export default function CanvasNavigation({
             alt=""
           />
         </button>
-        <input
-          ref={color}
-          className="canvas-color-input"
-          type="color"
-          aria-label="画布背景颜色"
-          tabIndex={-1}
-          value={backgroundColor}
-          onChange={(event) => {
-            dismiss();
-            onBackgroundColor(event.target.value);
-          }}
-        />
         <button
           className="canvas-lines"
           onClick={() => {
@@ -149,6 +162,40 @@ export default function CanvasNavigation({
           <span>小地图</span>
         </button>
       </div>
+      {open === "background" && (
+        <div
+          className="canvas-background-menu"
+          role="dialog"
+          aria-label="画布背景选项"
+        >
+          {(["dots", "grid"] as const).map((pattern) => (
+            <button
+              key={pattern}
+              type="button"
+              aria-pressed={backgroundPattern === pattern}
+              onClick={() => {
+                if (backgroundPattern !== pattern) onToggleBackgroundPattern();
+                closeAndFocus();
+              }}
+            >
+              {pattern === "dots" ? "点状背景" : "网格背景"}
+            </button>
+          ))}
+          <label className="canvas-background-color">
+            背景颜色
+            <input
+              className="canvas-color-input"
+              type="color"
+              aria-label="画布背景颜色"
+              value={backgroundColor}
+              onChange={(event) => {
+                onBackgroundColor(event.target.value);
+                closeAndFocus();
+              }}
+            />
+          </label>
+        </div>
+      )}
       {open === "zoom" && (
         <CanvasZoomMenu
           scale={transform.scale}

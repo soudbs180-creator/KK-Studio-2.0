@@ -1,4 +1,10 @@
-import { useEffect, useRef, type Dispatch, type SetStateAction } from "react";
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
 import { credentialId } from "../../features/creation/providerCredentials";
 import type { ModelProviderProfile } from "../../domain/modelProvider";
 import {
@@ -41,6 +47,7 @@ export default function useScopedModelProviderDraft({
   credentialRef,
   active,
   saving,
+  testing = false,
   onBusyChange,
   cancelRequest,
   setProfile,
@@ -54,6 +61,7 @@ export default function useScopedModelProviderDraft({
   credentialRef: string;
   active: boolean;
   saving: boolean;
+  testing?: boolean;
   onBusyChange?: (busy: boolean) => void;
   cancelRequest: () => void;
   setProfile: (profile: ModelProviderProfile) => void;
@@ -67,8 +75,8 @@ export default function useScopedModelProviderDraft({
   >({});
 
   useEffect(() => {
-    onBusyChange?.(saving);
-  }, [saving, onBusyChange]);
+    onBusyChange?.(saving || testing);
+  }, [saving, testing, onBusyChange]);
   useEffect(() => {
     if (active) return;
     cancelRequest();
@@ -79,7 +87,7 @@ export default function useScopedModelProviderDraft({
     );
   }, [active]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (previousScopeRef.current === scope) return;
     draftsRef.current[previousScopeRef.current] = {
       profile,
@@ -94,27 +102,16 @@ export default function useScopedModelProviderDraft({
     setConnection({ kind: "idle", message: "有尚未测试的更改。" });
     previousScopeRef.current = scope;
   }, [scope]);
-  return {
-    updateProfile: (patch: Partial<ModelProviderProfile>): void => {
-      if (saving) return;
-      cancelRequest();
-      const nextProfile = { ...profile, ...patch };
-      if ("baseUrl" in patch || "name" in patch) {
-        nextProfile.connectionId = undefined;
-        setApiKey("");
-        setCredentialRef(credentialId(nextProfile.baseUrl, nextProfile.name));
-      }
-      setProfile(nextProfile);
-      setConnection({ kind: "idle", message: "有尚未测试的更改。" });
-    },
-    updateApiKey: (value: string): void => {
-      if (saving) return;
-      cancelRequest();
-      setApiKey(value);
-      setConnection({
-        kind: "idle",
-        message: "密钥已更改，请重新测试连接。",
-      });
-    },
+  return (patch: Partial<ModelProviderProfile>): void => {
+    if (saving) return;
+    cancelRequest();
+    const nextProfile = { ...profile, ...patch };
+    if ("baseUrl" in patch || "name" in patch) {
+      nextProfile.connectionId = undefined;
+      setApiKey("");
+      setCredentialRef(credentialId(nextProfile.baseUrl, nextProfile.name));
+    }
+    setProfile(nextProfile);
+    setConnection({ kind: "idle", message: "有尚未测试的更改。" });
   };
 }

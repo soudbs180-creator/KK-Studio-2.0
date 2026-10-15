@@ -38,6 +38,7 @@ export const pluginSafeStorage: PluginStorage =
 export function createPluginStore(storage: PluginStorage = pluginSafeStorage) {
   let state: PluginStoreState = { plugins: [], busy: [], error: null };
   const listeners = new Set<() => void>();
+  let readBlocked = false;
 
   function emit() {
     listeners.forEach((listener) => listener());
@@ -46,59 +47,85 @@ export function createPluginStore(storage: PluginStorage = pluginSafeStorage) {
     state = { ...state, ...patch };
     emit();
   }
-  function persist() {
+  function persist(plugins: InstalledPlugin[]): void {
+    if (readBlocked)
+      throw new Error(
+        "插件记录未能读取，保存已暂停；原记录保留，请重新打开应用后重试。",
+      );
     try {
-      storage.setItem(STORAGE_KEY, JSON.stringify(state.plugins));
+      storage.setItem(STORAGE_KEY, JSON.stringify(plugins));
     } catch {
-      // 持久化失败不影响运行态。
+      const message =
+        "插件设置未保存，当前状态和原记录保留；请允许本地存储后重试。";
+      patch({ error: message });
+      throw new Error(message);
     }
   }
 
   function rehydrate(): PluginStoreState["plugins"] {
     try {
       const raw = storage.getItem(STORAGE_KEY);
-      if (!raw) return [];
-      const parsed = JSON.parse(raw);
-      if (!Array.isArray(parsed)) return [];
-      state = { ...state, plugins: parsed as InstalledPlugin[] };
+      const parsed = raw === null ? [] : JSON.parse(raw);
+      if (
+        !Array.isArray(parsed) ||
+        !parsed.every((item: unknown) => {
+          if (!item || typeof item !== "object" || Array.isArray(item))
+            return false;
+          const record = item as Record<string, unknown>;
+          return (
+            ["id", "name", "version", "url", "source"].every(
+              (key) => typeof record[key] === "string",
+            ) &&
+            typeof record.enabled === "boolean" &&
+            (record.description === undefined ||
+              typeof record.description === "string") &&
+            ["official", "local"].every(
+              (key) =>
+                record[key] === undefined || typeof record[key] === "boolean",
+            )
+          );
+        })
+      )
+        throw new Error("插件记录格式无效");
+      readBlocked = false;
+      state = { ...state, plugins: parsed as InstalledPlugin[], error: null };
       emit();
       return state.plugins;
     } catch {
-      return [];
+      readBlocked = true;
+      patch({
+        error:
+          "插件记录未能读取，保存已暂停；原记录保留，请重新打开应用后重试。",
+      });
+      return state.plugins;
     }
   }
 
   function upsert(record: InstalledPlugin): void {
     const existing = state.plugins.find((item) => item.id === record.id);
-    state = {
-      ...state,
-      plugins: existing
-        ? state.plugins.map((item) =>
-            item.id === record.id ? { ...item, ...record } : item,
-          )
-        : [...state.plugins, record],
-    };
-    persist();
+    const plugins = existing
+      ? state.plugins.map((item) =>
+          item.id === record.id ? { ...item, ...record } : item,
+        )
+      : [...state.plugins, record];
+    persist(plugins);
+    state = { ...state, plugins, error: null };
     emit();
   }
 
   function setEnabled(id: string, enabled: boolean): void {
-    state = {
-      ...state,
-      plugins: state.plugins.map((item) =>
-        item.id === id ? { ...item, enabled } : item,
-      ),
-    };
-    persist();
+    const plugins = state.plugins.map((item) =>
+      item.id === id ? { ...item, enabled } : item,
+    );
+    persist(plugins);
+    state = { ...state, plugins, error: null };
     emit();
   }
 
   function remove(id: string): void {
-    state = {
-      ...state,
-      plugins: state.plugins.filter((item) => item.id !== id),
-    };
-    persist();
+    const plugins = state.plugins.filter((item) => item.id !== id);
+    persist(plugins);
+    state = { ...state, plugins, error: null };
     emit();
   }
 

@@ -1,15 +1,19 @@
 import { useEffect, useRef, type RefObject } from "react";
 import { useDismissible } from "../useDismissible";
 import type { PrototypeTask } from "./TaskPanelPopover";
+import type { CreationTask } from "../../features/creation/model";
+import { taskRetryAvailability } from "../../features/creation/taskRetryAvailability";
 
 export default function TaskDetail({
   selectedTask,
+  tasks,
   onCancelTask,
   onRetryTask,
   onClose,
   trigger,
 }: {
   selectedTask: PrototypeTask;
+  tasks?: readonly CreationTask[];
   onCancelTask?: (taskId: string) => void;
   onRetryTask?: (taskId: string) => void;
   onClose: () => void;
@@ -26,6 +30,18 @@ export default function TaskDetail({
       ?.querySelector<HTMLButtonElement>("button")
       ?.focus({ preventScroll: true });
   }, [selectedTask.id]);
+  const retry = selectedTask.task
+    ? taskRetryAvailability(selectedTask.task, tasks)
+    : undefined;
+  const retryCandidate =
+    selectedTask.task &&
+    ["failed", "partial", "cancelled", "offline", "interrupted"].includes(
+      selectedTask.task.status,
+    );
+  const retryReason =
+    retryCandidate && retry && !retry.indices.length
+      ? retry.blockedReason
+      : undefined;
   return (
     <div ref={root} className="task-detail" role="dialog" aria-label="任务详情">
       <div className="task-detail-heading">
@@ -80,19 +96,18 @@ export default function TaskDetail({
             取消任务
           </button>
         )}
-      {selectedTask.task &&
-        ["failed", "partial", "cancelled", "offline", "interrupted"].includes(
-          selectedTask.task.status,
-        ) &&
-        onRetryTask && (
-          <button
-            type="button"
-            className="task-detail-action"
-            onClick={() => onRetryTask(selectedTask.task!.id)}
-          >
-            重试任务
-          </button>
-        )}
+      {retryReason && <p role="status">{retryReason}</p>}
+      {selectedTask.task && retryCandidate && onRetryTask && (
+        <button
+          type="button"
+          className="task-detail-action"
+          disabled={!retry?.indices.length}
+          title={retryReason}
+          onClick={() => onRetryTask(selectedTask.task!.id)}
+        >
+          重试任务
+        </button>
+      )}
       <p>
         {selectedTask.task
           ? selectedTask.task.status === "unknown"

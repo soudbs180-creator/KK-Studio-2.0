@@ -1,4 +1,11 @@
-import { useContext, type Dispatch, type SetStateAction } from "react";
+import {
+  useCallback,
+  useContext,
+  useRef,
+  useState,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
 import type {
   CanvasCollectionItem,
   CanvasReference,
@@ -25,12 +32,10 @@ export default function CanvasNodeItem({
   item,
   controls,
   addMenu,
-  favorite,
   liked,
   connectionTarget,
   onConnect,
   onConnectionTargetChange,
-  onToggleFavorite,
   onDelete,
   onToggleLike,
   onConfigure,
@@ -41,11 +46,11 @@ export default function CanvasNodeItem({
   onAddReferences,
   onRemoveReference,
   onGenerationState,
+  activeLocalResultIds = [],
 }: {
   item: CanvasCollectionItem;
   controls: ReturnType<typeof useCanvasControls>;
   addMenu: ReturnType<typeof useCanvasAddMenu>;
-  favorite: boolean;
   liked: boolean;
   connectionTarget: boolean;
   onConnect: (
@@ -54,7 +59,6 @@ export default function CanvasNodeItem({
     kind?: CanvasConnection["kind"],
   ) => void;
   onConnectionTargetChange: (sourceId: string, targetId: string | null) => void;
-  onToggleFavorite: (id: string) => void;
   onDelete: (id: string) => void;
   onToggleLike: (id: string) => void;
   onConfigure: () => void;
@@ -65,10 +69,50 @@ export default function CanvasNodeItem({
   onAddReferences: (id: string, references: CanvasReference[]) => void;
   onRemoveReference: (id: string) => void;
   onGenerationState: (id: string, phase: GenerationPhase) => void;
+  activeLocalResultIds?: readonly string[];
 }) {
   const command = useContext(CanvasImageCommandContext);
+  const uploadInput = useRef<HTMLInputElement>(null);
+  const mediaSource =
+    item.kind === "audio"
+      ? item.result?.kind === "audio"
+        ? item.result.src || ""
+        : ""
+      : item.result?.poster ||
+        item.result?.src ||
+        item.preview ||
+        item.assetId ||
+        "";
+  const [mediaContent, setMediaContent] = useState({
+    source: "",
+    ready: false,
+  });
+  const onContentReadyChange = useCallback(
+    (ready: boolean) =>
+      setMediaContent((current) =>
+        current.source === mediaSource && current.ready === ready
+          ? current
+          : { source: mediaSource, ready },
+      ),
+    [mediaSource],
+  );
+  const hasContent = item.plugin
+    ? Boolean(
+        typeof item.plugin.metadata?.content === "string" &&
+        item.plugin.metadata.content.trim(),
+      )
+    : item.kind === "text"
+      ? Boolean(item.result?.kind === "text" && item.result.text?.trim())
+      : Boolean(
+          mediaSource &&
+          mediaContent.source === mediaSource &&
+          mediaContent.ready,
+        );
   const editing: NodeEditingProps = {
     selected: controls.selectedNode === item.id,
+    hasContent,
+    onContentReadyChange,
+    generationActive: activeLocalResultIds.includes(item.id),
     liked,
     onToggleLike: () => onToggleLike(item.id),
     onConfigure,
@@ -128,19 +172,22 @@ export default function CanvasNodeItem({
     <CanvasImageNodeContext.Provider value={item}>
       <CanvasNodeFrame
         item={item}
+        hasContent={hasContent}
         controls={controls}
         onOpenMenu={addMenu.open}
         menuOpen={addMenu.menu?.parentId === item.id}
         onConnect={onConnect}
         onConnectionTargetChange={onConnectionTargetChange}
         connectionTarget={connectionTarget}
+        liked={liked}
+        onLike={() => onToggleLike(item.id)}
+        onDelete={() => onDelete(item.id)}
       >
         <CanvasNodeContent
           item={item}
-          favorite={favorite}
-          onFavorite={() => onToggleFavorite(item.id)}
           onDelete={() => onDelete(item.id)}
           editing={editing}
+          uploadInput={uploadInput}
           scale={controls.transform.scale}
         />
       </CanvasNodeFrame>

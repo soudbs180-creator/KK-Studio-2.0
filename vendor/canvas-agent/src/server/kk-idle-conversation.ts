@@ -4,6 +4,7 @@ interface Conversation {
   conversationId: string;
   threadId: string;
   status: string;
+  sourceClientId?: string;
 }
 
 export async function prepareIdleConversation<C extends Conversation>(
@@ -30,8 +31,12 @@ export async function prepareIdleConversation<C extends Conversation>(
       body: { ok: false, error: "发起准备的页面已断开，请重新连接。", state },
     };
   }
+  const ownedFailedPreparation =
+    state.status === "failed" &&
+    Boolean(state.sourceClientId) &&
+    body.failedPreparationClientId === state.sourceClientId;
   if (
-    state.status !== "idle" ||
+    (state.status !== "idle" && !ownedFailedPreparation) ||
     state.threadId ||
     body.expectedConversationId !== state.conversationId ||
     body.expectedRevision !== state.revision

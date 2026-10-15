@@ -8,24 +8,47 @@ import {
   updateProviderConnection,
 } from "./providerRegistry.ts";
 import { hasApiKey } from "./providerCredentials.ts";
-import {
-  resolveProviderAuthMode,
-  resolveProviderProtocol,
-  type ProviderProtocolOptions,
-} from "../../domain/modelProvider.ts";
-import {
-  catalogForConnection,
-  type CatalogModel,
-} from "../models/modelCatalog.ts";
+import { catalogForConnection } from "../models/modelCatalog.ts";
 import { resolveImageModelCapabilities } from "../models/imageModelCapabilities.ts";
+import {
+  protocolBindingMatches,
+  providerNeedsKey,
+  supportsProviderImages,
+  type ProviderProtocol,
+  type ProviderAuthMode,
+} from "../../domain/providerProtocol.ts";
+
+import type { CreationTask } from "./model.ts";
 
 export class ProviderSubmissionError extends Error {}
-export interface SubmissionBinding extends ProviderProtocolOptions {
+export function taskProviderOptions(task: CreationTask) {
+  return {
+    baseUrl: task.providerBaseUrl,
+    credentialRef: task.providerCredentialRef,
+    protocol: task.providerProtocol,
+    authMode: task.providerAuthMode,
+  };
+}
+export function taskSubmissionBinding(task: CreationTask): SubmissionBinding {
+  return {
+    ...taskProviderOptions(task),
+    id: task.providerConnectionId,
+    referenceCount: task.attachments.length,
+    kind: task.kind === "text" ? "text" : "image",
+    model: task.model,
+    outputCount: task.requestedOutputs,
+    operation: task.imageEdit?.nativeMask ? "inpaint" : undefined,
+    localEdit: Boolean(task.imageEdit),
+  };
+}
+export interface SubmissionBinding {
   operation?: "generate" | "edit" | "inpaint";
   localEdit?: boolean;
   id?: string;
   baseUrl?: string;
   credentialRef?: string;
+  protocol?: ProviderProtocol;
+  authMode?: ProviderAuthMode;
   referenceCount: number;
   kind?: "image" | "text";
   model?: string;
@@ -70,27 +93,28 @@ function locksOrThrow(): BrowserLocks {
   return navigator.locks as unknown as BrowserLocks;
 }
 
-function assertSubmissionIdentity(
+function assertBindingIdentity(
   connection: ProviderConnection,
   binding: SubmissionBinding,
-  selectedModel: CatalogModel | undefined,
+  selectedModelKind?: string,
 ): void {
   if (
     endpoint(connection.baseUrl) !== endpoint(binding.baseUrl) ||
     connection.credentialRef !== binding.credentialRef ||
-    resolveProviderProtocol(connection) !== resolveProviderProtocol(binding) ||
-    resolveProviderAuthMode(connection.baseUrl!, connection) !==
-      resolveProviderAuthMode(binding.baseUrl ?? "", binding) ||
+    !protocolBindingMatches(
+      { ...connection, baseUrl: connection.baseUrl ?? "" },
+      { ...binding, baseUrl: binding.baseUrl ?? "" },
+    ) ||
     (binding.kind === "text" &&
       connection.model !== binding.model &&
-      selectedModel?.kind !== "text")
+      selectedModelKind !== "text")
   )
     throw new ProviderSubmissionError(
-      "绑定连接的地址或凭据身份已变化，请重新确认连接后创建任务。",
+      "绑定连接的地址、协议、认证或凭据身份已变化，请重新确认连接后创建任务。",
     );
 }
 
-/** Local BYOK image endpoint only; other adapters retain their own contracts. */
+/** Local BYOK endpoint only; other adapters retain their own contracts. */
 export function assertSubmissionConnection(
   binding: SubmissionBinding,
   options: SubmissionOptions = {},
@@ -102,14 +126,14 @@ export function assertSubmissionConnection(
     throw new ProviderSubmissionError(
       "原绑定连接已移除或未登记，请重新配置后创建任务；当前内容已保留。",
     );
-  const keylessText =
-    binding.kind === "text" &&
-    resolveProviderAuthMode(connection.baseUrl ?? "", connection) === "none";
   if (
     connection.kind !== "user_byok" ||
     !connection.baseUrl ||
-    (!keylessText && !connection.credentialRef) ||
-    (connection.authMode === "none" && !keylessText)
+    (!connection.credentialRef &&
+      !(
+        binding.kind === "text" &&
+        !providerNeedsKey({ ...connection, baseUrl: connection.baseUrl })
+      ))
   )
     throw new ProviderSubmissionError("此入口只支持已配置凭据的 BYOK 连接。");
   const selectedModel = catalogForConnection(connection).find(
@@ -120,7 +144,7 @@ export function assertSubmissionConnection(
     connection,
     binding.model ?? connection.model ?? "",
   );
-  assertSubmissionIdentity(connection, binding, selectedModel);
+  assertBindingIdentity(connection, binding, selectedModel?.kind);
   const health =
     options.explicitRetry && connection.state === "degraded"
       ? { ...connection, state: "active" as const }
@@ -145,6 +169,9 @@ export function assertSubmissionConnection(
       "连接并发已满，请等待当前任务结束后重试。",
     );
   if (
+    (isImage &&
+      (!supportsProviderImages(connection) ||
+        !providerNeedsKey({ ...connection, baseUrl: connection.baseUrl }))) ||
     !(selectedModel && selectedModel.kind !== "unknown"
       ? selectedModel.kind === (binding.kind ?? "image")
       : connection.capabilities.modalities.includes(binding.kind ?? "image")) ||
@@ -210,10 +237,7 @@ export async function selectSubmissionConnection(
     try {
       assertSubmissionConnection(binding);
       if (
-        !(
-          kind === "text" &&
-          resolveProviderAuthMode(candidate.baseUrl!, candidate) === "none"
-        ) &&
+        providerNeedsKey({ ...candidate, baseUrl: candidate.baseUrl! }) &&
         !(await hasApiKey(candidate.baseUrl!, candidate.credentialRef))
       )
         continue;

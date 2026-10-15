@@ -38,18 +38,18 @@ export async function startMcpServer() {
       inputSchema: { prompt: z.string().trim().min(1).max(3000) },
     },
     async ({ prompt }, extra) => {
-      const cliPath = loadConfig().codebuddy?.cliPath;
-      if (!cliPath)
-        return {
-          isError: true,
-          content: [
-            {
-              type: "text" as const,
-              text: "尚未在 KK 设置中配置 CodeBuddy CLI 路径",
-            },
-          ],
-        };
       try {
+        const cliPath = loadConfig().codebuddy?.cliPath;
+        if (!cliPath)
+          return {
+            isError: true,
+            content: [
+              {
+                type: "text" as const,
+                text: "尚未在 KK 设置中配置 CodeBuddy CLI 路径",
+              },
+            ],
+          };
         const result = await runCodeBuddy({
           cliPath,
           prompt,

@@ -84,12 +84,12 @@ test("首页模型弹层选择真实 API 图片模型并保存连接身份", asy
   await page.getByLabel("接口地址").fill("https://models.example.test/v1");
   await page.getByLabel("API Key", { exact: true }).fill("fixture-key");
   await page.getByLabel("模型名称").fill("image-test");
-  await page.getByRole("button", { name: "保存", exact: true }).click();
+  await page.getByRole("button", { name: "保存连接", exact: true }).click();
   await page.getByLabel("提供商", { exact: true }).fill("星河 API B");
   await page.getByLabel("接口地址").fill("https://models-b.example.test/v1");
   await page.getByLabel("API Key", { exact: true }).fill("fixture-key-b");
   await page.getByLabel("模型名称").fill("image-second");
-  await page.getByRole("button", { name: "保存", exact: true }).click();
+  await page.getByRole("button", { name: "保存连接", exact: true }).click();
   await page.getByRole("button", { name: "关闭设置" }).click();
   await page.getByRole("button", { name: "模型", exact: true }).click();
   const menu = page.getByRole("menu", { name: "选择模型" });
@@ -135,31 +135,43 @@ test("首页模型弹层选择真实 API 图片模型并保存连接身份", asy
   ).toHaveAttribute("aria-checked", "true");
 });
 
-test("搜索分类指示线沿底边移动，顶部手柄保持静态", async ({ page }) => {
+test("搜索四类保持点击、方向键导航、单一选中与关闭回焦", async ({ page }) => {
   await page.goto("/");
-  await page.getByRole("button", { name: "搜索", exact: true }).click();
-  const tabs = page.getByRole("tablist", { name: "搜索分类" });
-  const marker = tabs.locator(".catalog-tab-indicator");
-  const first = (await marker.boundingBox())!;
-  const tabBox = (await tabs.boundingBox())!;
-  expect(
-    Math.abs(first.y + first.height - tabBox.y - tabBox.height),
-  ).toBeLessThan(2);
-  await tabs.getByRole("tab", { name: "项目", exact: true }).click();
-  const next = (await marker.boundingBox())!;
-  const selected = (await tabs
-    .getByRole("tab", { name: "项目" })
-    .boundingBox())!;
-  expect(next.x).toBeGreaterThan(first.x);
-  expect(Math.abs(next.x - selected.x)).toBeLessThan(1);
-  await expect(tabs.getByRole("tab", { name: "项目" })).toHaveAttribute(
-    "aria-selected",
-    "true",
-  );
-  await expect(page.locator(".catalog-handle")).toHaveCSS(
-    "background-color",
-    "rgb(133, 133, 133)",
-  );
+  const opener = page.getByRole("button", { name: "搜索", exact: true });
+  await opener.click();
+  const dialog = page.getByRole("dialog", { name: "搜索", exact: true });
+  const tabs = dialog.getByRole("tablist", { name: "搜索分类" });
+  await expect(tabs.getByRole("tab")).toHaveText([
+    "全部",
+    "画布卡片",
+    "项目",
+    "已加载资源",
+  ]);
+  const selected = (name: string) =>
+    tabs.getByRole("tab", { name, exact: true });
+  await selected("项目").click();
+  await expect(selected("项目")).toHaveAttribute("aria-selected", "true");
+  await expect(
+    dialog.getByRole("tabpanel", { name: "项目", exact: true }),
+  ).toBeVisible();
+  await selected("项目").focus();
+  await selected("项目").press("End");
+  await expect(selected("已加载资源")).toBeFocused();
+  await expect(selected("已加载资源")).toHaveAttribute("aria-selected", "true");
+  await selected("已加载资源").press("Home");
+  await expect(selected("全部")).toBeFocused();
+  await selected("全部").press("ArrowRight");
+  await expect(selected("画布卡片")).toBeFocused();
+  await expect(selected("画布卡片")).toHaveAttribute("aria-selected", "true");
+  await selected("画布卡片").press("ArrowLeft");
+  await expect(selected("全部")).toBeFocused();
+  await expect(selected("全部")).toHaveAttribute("aria-selected", "true");
+  await expect(tabs.locator('[aria-selected="true"]')).toHaveCount(1);
+  await expect(tabs.locator('[tabindex="0"]')).toHaveCount(1);
+  await expect(tabs.locator('[tabindex="-1"]')).toHaveCount(3);
+  await page.keyboard.press("Escape");
+  await expect(dialog).toBeHidden();
+  await expect(opener).toBeFocused();
 });
 
 test("Figma 483 画布输入与模型菜单采用独立尺寸", async ({ page }) => {
@@ -177,9 +189,34 @@ test("Figma 483 画布输入与模型菜单采用独立尺寸", async ({ page })
   expect(frame.width).toBe(590);
   expect(frame.height).toBe(237);
   await expect(composer).toHaveCSS("border-radius", "30px");
-  expect((await composer.locator(".model-button").boundingBox())!.width).toBe(
-    106,
+  const modelButton = composer.locator(".model-button");
+  const modelGeometry = await modelButton.evaluate((button) => {
+    const box = button.getBoundingClientRect();
+    const label = button.querySelector<HTMLElement>(".model-name")!;
+    const style = getComputedStyle(button);
+    const hit = document.elementFromPoint(
+      box.x + box.width / 2,
+      box.y + box.height / 2,
+    );
+    return {
+      width: box.width,
+      height: box.height,
+      labelWidth: label.clientWidth,
+      fullLabelWidth: label.scrollWidth,
+      fontSize: parseFloat(style.fontSize),
+      alignment: style.justifyContent,
+      hit: hit === button || (hit !== null && button.contains(hit)),
+    };
+  });
+  expect(modelGeometry.width).toBeGreaterThanOrEqual(32);
+  expect(modelGeometry.width).toBeLessThanOrEqual(260);
+  expect(modelGeometry.height).toBe(32);
+  expect(modelGeometry.labelWidth).toBeGreaterThanOrEqual(
+    modelGeometry.fullLabelWidth,
   );
+  expect(modelGeometry.fontSize).toBeGreaterThanOrEqual(12);
+  expect(modelGeometry.alignment).toBe("center");
+  expect(modelGeometry.hit).toBe(true);
   expect((await composer.locator(".image-params").boundingBox())!.width).toBe(
     119,
   );

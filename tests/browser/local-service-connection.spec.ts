@@ -4,6 +4,8 @@ import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
+import { openSettingsSection } from "./helpers";
+
 const productionOrigin = "http://127.0.0.1:1423";
 
 type RunningService = {
@@ -56,9 +58,8 @@ async function openStorageSettings(
   await page.setViewportSize({ width, height: width < 500 ? 800 : 1080 });
   await page.goto("/");
   expect(new URL(page.url()).origin).toBe(productionOrigin);
-  await page.getByRole("button", { name: "打开设置", exact: true }).click();
+  await openSettingsSection(page, "储存");
   const dialog = page.getByRole("dialog", { name: "设置", exact: true });
-  await dialog.getByRole("button", { name: "储存", exact: true }).click();
   return dialog.getByTestId("companion-settings");
 }
 

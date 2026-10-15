@@ -29,7 +29,7 @@ async function configure(page: Page, model = "image-test"): Promise<void> {
   await page.getByLabel("接口地址").fill("https://models.example.test/v1");
   await page.getByLabel("API Key", { exact: true }).fill("fixture-key");
   await page.getByLabel("模型名称").fill(model);
-  await page.getByRole("button", { name: "保存", exact: true }).click();
+  await page.getByRole("button", { name: "保存连接", exact: true }).click();
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
 }
 
@@ -39,8 +39,10 @@ async function selectImageNode(page: Page) {
   await page.getByRole("button", { name: "添加资源", exact: true }).click();
   await page.getByRole("menuitem", { name: "图片", exact: true }).click();
   const node = page.locator(".canvas-node-image").first();
-  await node.click();
-  await expect(node.getByLabel("图片提示词")).toBeVisible();
+  await expect(node).toHaveClass(/is-selected/);
+  await expect(
+    page.getByTestId("image-composer").getByLabel("图片提示词"),
+  ).toBeVisible();
   return node;
 }
 
@@ -268,11 +270,18 @@ test("已归档图片结果使用上方选择工具栏，收藏重绘对比删�
       })
       .toBe(true);
   }
-  const favorite = actions.getByRole("button", { name: `收藏${result.title}` });
-  await favorite.click();
+  await actions.getByRole("button", { name: "编辑标签", exact: true }).click();
+  const tagEditor = page.getByRole("dialog", { name: "编辑标签", exact: true });
+  await tagEditor.getByRole("button", { name: "收藏", exact: true }).click();
   await expect(
-    actions.getByRole("button", { name: `取消收藏${result.title}` }),
+    tagEditor.getByRole("button", { name: "收藏", exact: true }),
   ).toHaveAttribute("aria-pressed", "true");
+  await expect
+    .poll(async () => (await activeProject(page)).favoriteIds)
+    .toContain(id);
+  await tagEditor
+    .getByRole("button", { name: "关闭标签编辑", exact: true })
+    .click();
   await actions.getByRole("button", { name: /加入对比/ }).click();
   await expect(
     page.getByRole("region", { name: "图片对比选择" }),
@@ -826,7 +835,8 @@ test("actual long model identifiers remain readable without covering canvas cont
   await configure(page, model);
   await openWorkspace(page);
   await page.setViewportSize({ width: 390, height: 844 });
-  const source = await selectImageNode(page);
+  await selectImageNode(page);
+  const source = page.getByTestId("image-composer");
   const button = source.locator(".model-button");
   await expect(button).toHaveAttribute("title", model);
   await expect(button.locator(".model-name")).toHaveText(model);
@@ -837,12 +847,15 @@ test("actual long model identifiers remain readable without covering canvas cont
   ).toBe(true);
   const bounds = await button.boundingBox();
   const params = await source.locator(".image-params").boundingBox();
-  expect(bounds!.x + bounds!.width).toBeLessThanOrEqual(params!.x);
+  expect(
+    bounds!.x + bounds!.width <= params!.x ||
+      bounds!.y + bounds!.height <= params!.y ||
+      params!.x + params!.width <= bounds!.x ||
+      params!.y + params!.height <= bounds!.y,
+  ).toBe(true);
   await button.click();
   const menu = source.getByRole("menu", { name: "选择模型", exact: true });
-  await menu
-    .getByRole("searchbox", { name: "搜索模型、厂商或参数", exact: true })
-    .fill(model);
+  await source.getByRole("button", { name: "切换全部模型" }).click();
   await expect(
     menu.getByRole("menuitemradio", { name: model, exact: false }),
   ).toContainText(model);

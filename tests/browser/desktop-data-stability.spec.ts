@@ -314,9 +314,18 @@ test("重新读取同一项目后搜索与改名使用新原件", async ({ page 
   await expect(page.getByRole("alert")).toContainText("读取保护");
   await page.getByRole("button", { name: "重新读取", exact: true }).click();
   await expect(page.getByTestId("canvas-node-added-text-remote")).toBeVisible();
-  await page.getByRole("button", { name: "喜欢与收藏", exact: true }).click();
+  await page.getByRole("button", { name: "搜索", exact: true }).click();
+  const search = page.getByRole("dialog", { name: "搜索" });
+  await search.getByRole("tab", { name: "画布卡片", exact: true }).click();
+  await search.getByLabel("搜索内容", { exact: true }).fill("远端新名称");
+  await expect(search.locator(".catalog-result")).toHaveCount(1);
+  await search.getByLabel("搜索内容", { exact: true }).fill("旧名称");
+  await expect(search.locator(".catalog-result")).toHaveCount(0);
+  await page.keyboard.press("Escape");
+  await expect(search).toHaveCount(0);
+  await page.getByRole("button", { name: "喜欢与标签", exact: true }).click();
   await page.getByRole("menuitem", { name: "我喜欢的", exact: true }).click();
-  const likes = page.locator(".saved-likes");
+  const likes = page.getByTestId("canvas-likes-panel");
   await expect(likes).toContainText("远端新名称");
   await likes.getByRole("button", { name: "编辑", exact: true }).click();
   await likes.getByLabel("喜欢名称").fill("本次改名");
@@ -490,7 +499,7 @@ test("画布参数不会在重开项目后回到默认值", async ({ page }) => 
     .click();
   await page.getByLabel("接口地址").fill("https://models.example.test/v1");
   await page.getByLabel("模型名称").fill("image-test");
-  await page.getByRole("button", { name: "保存", exact: true }).click();
+  await page.getByRole("button", { name: "保存连接", exact: true }).click();
   await page.getByLabel("当前模型用途").selectOption("image");
   await page.getByLabel("支持的图片尺寸").fill("1024x1024, 1536x1024");
   await page

@@ -31,6 +31,7 @@ export default function McpServerList({
     server: McpServerConfig,
     tool: McpTool,
     arguments_: Record<string, unknown>,
+    signal?: AbortSignal,
   ) => Promise<unknown>;
 }) {
   return (
@@ -55,8 +56,8 @@ export default function McpServerList({
             onDisconnect={() => onDisconnect(server)}
             onRemove={() => onRemove(server)}
             onToggleTools={() => onToggleTools(server)}
-            onCallTool={(tool, arguments_) =>
-              onCallTool(server, tool, arguments_)
+            onCallTool={(tool, arguments_, signal) =>
+              onCallTool(server, tool, arguments_, signal)
             }
           />
         ))

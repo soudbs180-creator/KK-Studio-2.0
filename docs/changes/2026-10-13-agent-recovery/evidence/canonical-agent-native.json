@@ -1,0 +1,276 @@
+{
+  "startedAt": "2026-10-13T11:34:36.094Z",
+  "mode": "Tauri release",
+  "sourceHead": "51fccfc7879cf90f7caaf3ae8e10af4d97a2aa2c",
+  "isolated": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-agent-recovery-T0cRrr",
+  "dataRoot": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-agent-recovery-T0cRrr\\data",
+  "profile": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-agent-recovery-T0cRrr\\webview",
+  "codexHome": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-agent-recovery-T0cRrr\\codex-home",
+  "checks": [
+    {
+      "name": "storage-isolation-first",
+      "passed": true
+    },
+    {
+      "name": "memory-isolation-first",
+      "passed": true
+    },
+    {
+      "name": "loaded-asset-first-index-C4eyZL54.js",
+      "passed": true
+    },
+    {
+      "name": "loaded-asset-first-index-DeEjVB-7.css",
+      "passed": true
+    },
+    {
+      "name": "release-identity-first",
+      "passed": true
+    },
+    {
+      "name": "home-auto-start-service",
+      "passed": true
+    },
+    {
+      "name": "home-keeps-empty-projects",
+      "passed": true
+    },
+    {
+      "name": "home-does-not-create-agent-conversation",
+      "passed": true
+    },
+    {
+      "name": "project-auto-connect-persists-thread",
+      "passed": true
+    },
+    {
+      "name": "auto-connect-no-observed-turn-after-attach",
+      "passed": true
+    },
+    {
+      "name": "credential-id-was-absent",
+      "passed": true
+    },
+    {
+      "name": "synthetic-system-credential-set",
+      "passed": true
+    },
+    {
+      "name": "reload-retains-thread",
+      "passed": true
+    },
+    {
+      "name": "storage-isolation-reopen",
+      "passed": true
+    },
+    {
+      "name": "memory-isolation-reopen",
+      "passed": true
+    },
+    {
+      "name": "loaded-asset-reopen-index-C4eyZL54.js",
+      "passed": true
+    },
+    {
+      "name": "loaded-asset-reopen-index-DeEjVB-7.css",
+      "passed": true
+    },
+    {
+      "name": "release-identity-reopen",
+      "passed": true
+    },
+    {
+      "name": "release-unchanged-reopen",
+      "passed": true
+    },
+    {
+      "name": "normal-close-reopen-retains-thread",
+      "passed": true
+    },
+    {
+      "name": "system-credential-reopens-with-same-hash",
+      "passed": true
+    },
+    {
+      "name": "credential-is-absent-from-local-storage",
+      "passed": true
+    },
+    {
+      "name": "credential-is-absent-from-export",
+      "passed": true
+    },
+    {
+      "name": "explicit-disconnect-pauses-after-reload",
+      "passed": true
+    },
+    {
+      "name": "storage-isolation-paused-reopen",
+      "passed": true
+    },
+    {
+      "name": "memory-isolation-paused-reopen",
+      "passed": true
+    },
+    {
+      "name": "loaded-asset-paused-reopen-index-C4eyZL54.js",
+      "passed": true
+    },
+    {
+      "name": "loaded-asset-paused-reopen-index-DeEjVB-7.css",
+      "passed": true
+    },
+    {
+      "name": "release-identity-paused-reopen",
+      "passed": true
+    },
+    {
+      "name": "release-unchanged-paused-reopen",
+      "passed": true
+    },
+    {
+      "name": "explicit-disconnect-pauses-after-normal-reopen",
+      "passed": true
+    },
+    {
+      "name": "manual-reconnect-retains-thread",
+      "passed": true
+    },
+    {
+      "name": "stop-preserves-thread",
+      "passed": true
+    },
+    {
+      "name": "service-restart-retains-thread",
+      "passed": true
+    },
+    {
+      "name": "no-observed-model-turn-after-each-cdp-attach",
+      "passed": true
+    },
+    {
+      "name": "unknown-ownership-does-not-create-or-replace-thread",
+      "passed": true
+    },
+    {
+      "name": "unknown-ownership-keeps-owned-service",
+      "passed": true
+    },
+    {
+      "name": "synthetic-credential-cleanup",
+      "passed": true
+    }
+  ],
+  "launches": [
+    {
+      "tag": "first",
+      "ProcessId": 44332,
+      "ParentProcessId": 87752,
+      "ExecutablePath": "D:\\kk-studio\\KK-Studio-2.0\\src-tauri\\target\\release\\kk-studio.exe",
+      "CreationDate": "/Date(1791891368856)/",
+      "url": "http://tauri.localhost/",
+      "loaded": [
+        {
+          "path": "/assets/index-C4eyZL54.js",
+          "sha256": "c73e18b6aaec34ccdcb174053deb133287908d22f89aa880ccbbce86e2fb8656"
+        },
+        {
+          "path": "/assets/index-DeEjVB-7.css",
+          "sha256": "a98ea7f045fbf6670e187f949b4fe19adaac14f0358cca11902cef47bced5f1f"
+        }
+      ]
+    },
+    {
+      "tag": "reopen",
+      "ProcessId": 51696,
+      "ParentProcessId": 71004,
+      "ExecutablePath": "D:\\kk-studio\\KK-Studio-2.0\\src-tauri\\target\\release\\kk-studio.exe",
+      "CreationDate": "/Date(1791891384838)/",
+      "url": "http://tauri.localhost/",
+      "loaded": [
+        {
+          "path": "/assets/index-C4eyZL54.js",
+          "sha256": "c73e18b6aaec34ccdcb174053deb133287908d22f89aa880ccbbce86e2fb8656"
+        },
+        {
+          "path": "/assets/index-DeEjVB-7.css",
+          "sha256": "a98ea7f045fbf6670e187f949b4fe19adaac14f0358cca11902cef47bced5f1f"
+        }
+      ]
+    },
+    {
+      "tag": "paused-reopen",
+      "ProcessId": 36640,
+      "ParentProcessId": 84732,
+      "ExecutablePath": "D:\\kk-studio\\KK-Studio-2.0\\src-tauri\\target\\release\\kk-studio.exe",
+      "CreationDate": "/Date(1791891395128)/",
+      "url": "http://tauri.localhost/",
+      "loaded": [
+        {
+          "path": "/assets/index-C4eyZL54.js",
+          "sha256": "c73e18b6aaec34ccdcb174053deb133287908d22f89aa880ccbbce86e2fb8656"
+        },
+        {
+          "path": "/assets/index-DeEjVB-7.css",
+          "sha256": "a98ea7f045fbf6670e187f949b4fe19adaac14f0358cca11902cef47bced5f1f"
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "observedModelTurnsAfterAttach": 0,
+  "startupTurnObservation": "NOT VERIFIED before CDP attachment; complete startup requests are covered by the loopback browser fixture",
+  "threadMutations": 1,
+  "unknownOwnership": "PASS; missing association simulated only in the isolated native snapshot",
+  "credential": {
+    "providerId": "agent-recovery-c7904dfd-4094-4a2a-a322-eb4ee0296ac4",
+    "secretSha256": "949c7027d2a5fda2632993745e247dbe8c70be2a94731df00e4d7cae843cb513",
+    "cleanupComplete": true,
+    "reopen": {
+      "exists": true,
+      "sha256": "949c7027d2a5fda2632993745e247dbe8c70be2a94731df00e4d7cae843cb513",
+      "matches": true,
+      "absentFromLocalStorage": true
+    }
+  },
+  "credentialScope": "Only this run's unique provider ID reaches the native vault; fixed Google credential probes return null and are NOT VERIFIED",
+  "passed": true,
+  "initialRelease": {
+    "releaseExePath": "D:\\kk-studio\\KK-Studio-2.0\\src-tauri\\target\\release\\kk-studio.exe",
+    "releaseMtimeMs": 1791878438488.8992,
+    "newestInputPath": "D:\\kk-studio\\KK-Studio-2.0\\vendor\\canvas-agent\\src\\server\\kk-idle-conversation.ts",
+    "newestInputMtimeMs": 1791890925562.8347,
+    "inputSha256": "140fbb4c6a39007b6c89194aac6917fc30f252c72e99e25555619a77571ec05c",
+    "executableSha256": "8cf497fcd4780f04838549564760c5a4abaf1b2f7e94bad9c28ac0ae8527545d",
+    "desktopVersion": "2.1.16",
+    "receiptPath": "D:\\kk-studio\\KK-Studio-2.0\\src-tauri\\target\\release\\kk-studio.build-receipt.json",
+    "needsBuild": true,
+    "reason": "unverified"
+  },
+  "scriptSha256": "7ec51fc43f95291d32ce944d71a7e2e7bc61b519de65c302a50771a02c1bf66e",
+  "versions": {
+    "schemaVersion": 1,
+    "desktop": "2.1.16",
+    "web": "2.1.16",
+    "mobile": "2.1.1"
+  },
+  "release": {
+    "releaseExePath": "D:\\kk-studio\\KK-Studio-2.0\\src-tauri\\target\\release\\kk-studio.exe",
+    "releaseMtimeMs": 1791891368022.7358,
+    "newestInputPath": "D:\\kk-studio\\KK-Studio-2.0\\dist\\assets\\index-C4eyZL54.js",
+    "newestInputMtimeMs": 1791891328832.0015,
+    "inputSha256": "e5faac471d9c30d582147c9c25381404fa98c8a3e2528307bbcd1ff52ec1e28f",
+    "executableSha256": "b3715cc0eb8ddd03cc2ff329ff23422824946e4ae0f5f4e83ad09bd8f3ed9155",
+    "desktopVersion": "2.1.16",
+    "receiptPath": "D:\\kk-studio\\KK-Studio-2.0\\src-tauri\\target\\release\\kk-studio.build-receipt.json",
+    "needsBuild": false,
+    "reason": "current"
+  },
+  "receiptSha256": "9a2835f8abc5bcff093367ccfb09f0f9d55c86f0745ec546f3c43a18d002de80",
+  "export": {
+    "sha256": "5645f6ffc2a9347945a7d96875d0f843020a6b2983f7aead4c6e842381aa00d9",
+    "files": [
+      "manifest.json"
+    ]
+  },
+  "completedAt": "2026-10-13T11:36:46.113Z"
+}

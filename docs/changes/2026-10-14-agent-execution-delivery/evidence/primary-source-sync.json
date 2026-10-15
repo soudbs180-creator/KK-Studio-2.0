@@ -1,0 +1,467 @@
+{
+  "at": "2026-10-13T18:56:17.526Z",
+  "sourceHead": "4e38351c3743abeb9169bf680b629fbcd3fba513",
+  "version": "2.1.20",
+  "indexBefore": "28346dcea2311b07762aa0fec9a079ca9003b4bc17fa8f20c6cbb9decd3ef9cf",
+  "indexAfter": "28346dcea2311b07762aa0fec9a079ca9003b4bc17fa8f20c6cbb9decd3ef9cf",
+  "ownedFiles": 67,
+  "readbackDrift": 0,
+  "preservedUnownedCodeFiles": 140,
+  "unrelatedLedgerRowsPreserved": true,
+  "untouchedFeaturesPreserved": true,
+  "files": [
+    {
+      "path": "src/features/agent/agentTypes.ts",
+      "beforeSha256": "e4dcb6bd0260a1cb1959db2d9972bc9be5f6329c0f435e12c4258898b7133d7f",
+      "afterSha256": "5d532bc035e43765262cbe0266e3a3410efe44dac9fde49297a6313e5b792c57",
+      "finalSha256": "5d532bc035e43765262cbe0266e3a3410efe44dac9fde49297a6313e5b792c57"
+    },
+    {
+      "path": "src/features/agent/agentEvents.ts",
+      "beforeSha256": "a84e6cc0ded4560ea088d835ad8bb5ddbc3265e59ea407b2a121898d0e22d02a",
+      "afterSha256": "09e4802a165c41b0cb0b0af8e2981f2fe9e358da675a096439375413247b5193",
+      "finalSha256": "09e4802a165c41b0cb0b0af8e2981f2fe9e358da675a096439375413247b5193"
+    },
+    {
+      "path": "src/features/agent/agentConnection.ts",
+      "beforeSha256": "72a5f3d4a789556587245e2f629378e8ddad40a0fff7e3c5382830c570940a10",
+      "afterSha256": "922ad96a38845cc2203ad4b7d70477b265ae9d237a8e08ab1660eb931d0a7bff",
+      "finalSha256": "922ad96a38845cc2203ad4b7d70477b265ae9d237a8e08ab1660eb931d0a7bff"
+    },
+    {
+      "path": "src/components/AgentConversationMessages.tsx",
+      "beforeSha256": "a37118c11b1a5c3613dedb2bb868a24b2458938ec718d14867f2def4b6b7ec7a",
+      "afterSha256": "db07f5ced8a76d2f74cd04330319bbfcc1b45eae32f93c1429e8f9ad50e6854c",
+      "finalSha256": "db07f5ced8a76d2f74cd04330319bbfcc1b45eae32f93c1429e8f9ad50e6854c"
+    },
+    {
+      "path": "src/components/AgentExecutionProcess.tsx",
+      "beforeSha256": null,
+      "afterSha256": "a39aac20130355b4101a34349507dfd81b43b0a3e490b18ed07fd6fc31c6c086",
+      "finalSha256": "a39aac20130355b4101a34349507dfd81b43b0a3e490b18ed07fd6fc31c6c086"
+    },
+    {
+      "path": "src/styles/agent-panel.css",
+      "beforeSha256": "5ede20f739c5748ce450b22ce923681e5196d8b6893d4dd5122e0fd31eb39bf8",
+      "afterSha256": "60ce84513a96aed263f10fa0395ca7e5b063de7d73197dec150c0d55e5c1a3e8",
+      "finalSha256": "60ce84513a96aed263f10fa0395ca7e5b063de7d73197dec150c0d55e5c1a3e8"
+    },
+    {
+      "path": "src/App.tsx",
+      "beforeSha256": "202c08a5dd9f4bc1c51605bb71120bcd82971027539cc361051a06e6368f35ce",
+      "afterSha256": "5ee34dfe69962035c53fbd3b7404612c8d4d3295203c6d5472d510f340a89d78",
+      "finalSha256": "5ee34dfe69962035c53fbd3b7404612c8d4d3295203c6d5472d510f340a89d78"
+    },
+    {
+      "path": "src/domain/uiGovernance.ts",
+      "beforeSha256": "a006a81a0b5a4ce46e7f245db87c5096a723264c82b48236b3b31f1be041271b",
+      "afterSha256": "049a486d3ee9b1c0965e16fe17e67b0b0c17d89db90d904cc3365f8f52887279",
+      "finalSha256": "049a486d3ee9b1c0965e16fe17e67b0b0c17d89db90d904cc3365f8f52887279"
+    },
+    {
+      "path": "tests/unit/agentEvents.test.ts",
+      "beforeSha256": "df99bca51e32c737c718b5d7d7c8a41fecceca3e5922917970fe4803dcf82ffe",
+      "afterSha256": "c4c851bef8865be2e90ca95ed4bc319457a0007c985a9dde1805d432a442f08e",
+      "finalSha256": "c4c851bef8865be2e90ca95ed4bc319457a0007c985a9dde1805d432a442f08e"
+    },
+    {
+      "path": "tests/unit/agentConnection.test.ts",
+      "beforeSha256": "df9bb5e77978ee406eeadd52b4eca3cd01ac55da857c6ddb01c6952962ed6348",
+      "afterSha256": "c8dce2d9c2b8328446ee0e15ce375e011c56d4b5fff45bfa2efc7dae186e6bc1",
+      "finalSha256": "c8dce2d9c2b8328446ee0e15ce375e011c56d4b5fff45bfa2efc7dae186e6bc1"
+    },
+    {
+      "path": "tests/unit/uiGovernance.test.ts",
+      "beforeSha256": "07ea0d37aeb3a08f4c4945c7a964a6e683c613fa80da5e7ea7e54ff2778b5e36",
+      "afterSha256": "9ca41a24d7aa958cf8897bcf1edb2780d5547c5281329f233f3e331c9c844c5f",
+      "finalSha256": "9ca41a24d7aa958cf8897bcf1edb2780d5547c5281329f233f3e331c9c844c5f"
+    },
+    {
+      "path": "tests/browser/agent-execution.spec.ts",
+      "beforeSha256": null,
+      "afterSha256": "14812d3aeaa595bc68cec1890d820a4f5197d3885717e24f94ca829bbd40f1e0",
+      "finalSha256": "14812d3aeaa595bc68cec1890d820a4f5197d3885717e24f94ca829bbd40f1e0"
+    },
+    {
+      "path": "tests/browser/generation-save-status.spec.ts",
+      "beforeSha256": null,
+      "afterSha256": "575c0ab9a62d1f46a71241a6b463c39e6432d3b9a5174ffedc3c6b7818e5278a",
+      "finalSha256": "575c0ab9a62d1f46a71241a6b463c39e6432d3b9a5174ffedc3c6b7818e5278a"
+    },
+    {
+      "path": "VERSION",
+      "beforeSha256": "1e668cb3b46f328b87fcc7f77d2356c2b06a320aa0cd51834dd9b55670706d3c",
+      "afterSha256": "cf06f85588663ae237ffcf5e36a34b3004d90597a0e8b495b56a350783214342",
+      "finalSha256": "cf06f85588663ae237ffcf5e36a34b3004d90597a0e8b495b56a350783214342"
+    },
+    {
+      "path": "config/platform-versions.json",
+      "beforeSha256": "995438e1469a2dc22726910f5be2721a22daee415d47f7a5da700bfdcd86889c",
+      "afterSha256": "71992e128f38abde3857b5a700494e46f08bfa429961659b035c9cc75723ff10",
+      "finalSha256": "71992e128f38abde3857b5a700494e46f08bfa429961659b035c9cc75723ff10"
+    },
+    {
+      "path": "package.json",
+      "beforeSha256": "27a03e3abac5766df82e331e04f6b1ac13c3eeb93c250d774811b8f05d426205",
+      "afterSha256": "bd5bdb002bf2c1b0c4b6c9c67555f6f3be3e4405dec8bdf1845506564b115018",
+      "finalSha256": "bd5bdb002bf2c1b0c4b6c9c67555f6f3be3e4405dec8bdf1845506564b115018"
+    },
+    {
+      "path": "package-lock.json",
+      "beforeSha256": "670d95910542db86ea10dfcbbe6f6423964dafff137bbe16861889a311410dbb",
+      "afterSha256": "ddeb050823d4b5c1107cf8042e7615c7ae1fd34cce2c927b477a8d021cfc2e1e",
+      "finalSha256": "ddeb050823d4b5c1107cf8042e7615c7ae1fd34cce2c927b477a8d021cfc2e1e"
+    },
+    {
+      "path": "src-tauri/Cargo.toml",
+      "beforeSha256": "62ef122c3c8f63cdabebf935a16b976f49c7110902292d65e53850d3b293805f",
+      "afterSha256": "47893af72f78873ea464f154c5777d8b039d706aad57a71e7146a8c4467c4444",
+      "finalSha256": "47893af72f78873ea464f154c5777d8b039d706aad57a71e7146a8c4467c4444"
+    },
+    {
+      "path": "src-tauri/Cargo.lock",
+      "beforeSha256": "eff84e0f9557a84b0f5e9d22a543df577feab96c5aed078d06883f6e01318902",
+      "afterSha256": "6997fd2faef209b8feb1452f30b169f25a2fde862dbafa6ee3aac9959ab8a731",
+      "finalSha256": "6997fd2faef209b8feb1452f30b169f25a2fde862dbafa6ee3aac9959ab8a731"
+    },
+    {
+      "path": "src-tauri/tauri.conf.json",
+      "beforeSha256": "d6b9aa2aeefda8c4adfc7555a1cee4548954de30d5539eaba3293bc9a3e192c8",
+      "afterSha256": "11448a613ac3981be644e2f04787aba3661c97f9fa15a4203df953395f43b175",
+      "finalSha256": "11448a613ac3981be644e2f04787aba3661c97f9fa15a4203df953395f43b175"
+    },
+    {
+      "path": "docs/changes/2026-10-14-agent-execution-delivery/intent.md",
+      "beforeSha256": null,
+      "afterSha256": "7474091945cf264d9a9ff29b8b8625b2a619e11f38da8b3e4dee0a9416cfd8d5",
+      "finalSha256": "7474091945cf264d9a9ff29b8b8625b2a619e11f38da8b3e4dee0a9416cfd8d5"
+    },
+    {
+      "path": "docs/changes/2026-10-14-agent-execution-delivery/spec.md",
+      "beforeSha256": null,
+      "afterSha256": "104ed77418ec49c92646a52de764fb12bafb0abdfd84d810507c98b67a90133e",
+      "finalSha256": "104ed77418ec49c92646a52de764fb12bafb0abdfd84d810507c98b67a90133e"
+    },
+    {
+      "path": "docs/changes/2026-10-14-agent-execution-delivery/plan.md",
+      "beforeSha256": null,
+      "afterSha256": "2a9293b8b935c7bb26eb9e144c2d8b4bb91082ac5eae68ab3f7eb70f0099c2d7",
+      "finalSha256": "2a9293b8b935c7bb26eb9e144c2d8b4bb91082ac5eae68ab3f7eb70f0099c2d7"
+    },
+    {
+      "path": "docs/changes/2026-10-14-agent-execution-delivery/verification.md",
+      "beforeSha256": null,
+      "afterSha256": "b03951acd02942e50213a8149ab8696c035e76810a491578aafca76409355ec1",
+      "finalSha256": "b03951acd02942e50213a8149ab8696c035e76810a491578aafca76409355ec1"
+    },
+    {
+      "path": "docs/changes/2026-10-14-agent-execution-delivery/review.md",
+      "beforeSha256": null,
+      "afterSha256": "a7b9694bbad6a1f6a84eb51ecd6a51454761e40601f31be7c6a209b650c3cda9",
+      "finalSha256": "a7b9694bbad6a1f6a84eb51ecd6a51454761e40601f31be7c6a209b650c3cda9"
+    },
+    {
+      "path": "src/styles/canvas-hud.css",
+      "beforeSha256": "424e4c1326397c4fd390079f098455501d50da3e6cc379f61b7d68bf7a1a858a",
+      "afterSha256": "6e5bc9804ca7c51dc03743a93fa96fe2473cc1e36330a9e43ba104993a52dedd",
+      "finalSha256": "6e5bc9804ca7c51dc03743a93fa96fe2473cc1e36330a9e43ba104993a52dedd"
+    },
+    {
+      "path": "src/styles/responsive-content.css",
+      "beforeSha256": "1326d8b5907a73b646721f47615b9a97bf5c1d1a0bdb353325b7aa158135b125",
+      "afterSha256": "e033e442821bd489e65f9a5412206eed2bbc9651ee6fd1420206a6728b56b73e",
+      "finalSha256": "e033e442821bd489e65f9a5412206eed2bbc9651ee6fd1420206a6728b56b73e"
+    },
+    {
+      "path": "tests/browser/canvas-history-layers.spec.ts",
+      "beforeSha256": "61e27f4cd939e1223b19a52a2016a21e3faaaf3edadd7d8d1ab2cc5696ba952a",
+      "afterSha256": "6e9f7221c6e149c9e73a14b03a943ae780f8cff9c0c3d936f7e6c03ad077be1f",
+      "finalSha256": "6e9f7221c6e149c9e73a14b03a943ae780f8cff9c0c3d936f7e6c03ad077be1f"
+    },
+    {
+      "path": "docs/changes/2026-10-14-agent-execution-delivery/evidence/canvas-history-red-hit.json",
+      "beforeSha256": null,
+      "afterSha256": "cf9877d80f1220c07eb1ff63660792591cfed36c262b1bd0c39ec2ae8a914c24",
+      "finalSha256": "cf9877d80f1220c07eb1ff63660792591cfed36c262b1bd0c39ec2ae8a914c24"
+    },
+    {
+      "path": "docs/changes/2026-10-14-agent-execution-delivery/evidence/combined-full-verify-failed.log",
+      "beforeSha256": null,
+      "afterSha256": "23ed5c098c260d548ee934ed933ea72564374cde170e23591cc1f7312752f146",
+      "finalSha256": "23ed5c098c260d548ee934ed933ea72564374cde170e23591cc1f7312752f146"
+    },
+    {
+      "path": "docs/changes/2026-10-14-agent-execution-delivery/evidence/desktop-build-identity.json",
+      "beforeSha256": null,
+      "afterSha256": "cba8693cee2911f72327c202f4a82949d47ba44a86e9a139a49a7bcda1a0ad97",
+      "finalSha256": "cba8693cee2911f72327c202f4a82949d47ba44a86e9a139a49a7bcda1a0ad97"
+    },
+    {
+      "path": "docs/changes/2026-10-14-agent-execution-delivery/evidence/final-checks-port-occupied.log",
+      "beforeSha256": null,
+      "afterSha256": "658ac76b09961779613cac6c83683226833fb7f6d33cb376b57798c6eadd5fa1",
+      "finalSha256": "658ac76b09961779613cac6c83683226833fb7f6d33cb376b57798c6eadd5fa1"
+    },
+    {
+      "path": "docs/changes/2026-10-14-agent-execution-delivery/evidence/initial-full-verify-failed.log",
+      "beforeSha256": null,
+      "afterSha256": "bd3fd690a9c1dd3bd84dd5ebb3752f94cf713583d27c028ace5af49fe297e05c",
+      "finalSha256": "bd3fd690a9c1dd3bd84dd5ebb3752f94cf713583d27c028ace5af49fe297e05c"
+    },
+    {
+      "path": "docs/changes/2026-10-14-agent-execution-delivery/evidence/native-approval.dom.json",
+      "beforeSha256": null,
+      "afterSha256": "2e30e908bbe32c89cc422872181dac0167f052e75574e789fe28a7632d7bd03a",
+      "finalSha256": "2e30e908bbe32c89cc422872181dac0167f052e75574e789fe28a7632d7bd03a"
+    },
+    {
+      "path": "docs/changes/2026-10-14-agent-execution-delivery/evidence/native-approval.png",
+      "beforeSha256": null,
+      "afterSha256": "8a5dc59c865d8209f04fd5d06e8ac16f5edccfbc5f35d2288c316e541d6eb8e1",
+      "finalSha256": "8a5dc59c865d8209f04fd5d06e8ac16f5edccfbc5f35d2288c316e541d6eb8e1"
+    },
+    {
+      "path": "docs/changes/2026-10-14-agent-execution-delivery/evidence/native-collapsed.dom.json",
+      "beforeSha256": null,
+      "afterSha256": "44df630f443a4bf45b3b4bbac10eec6c43d1ab57f8baf27c173fe72cf42c8977",
+      "finalSha256": "44df630f443a4bf45b3b4bbac10eec6c43d1ab57f8baf27c173fe72cf42c8977"
+    },
+    {
+      "path": "docs/changes/2026-10-14-agent-execution-delivery/evidence/native-collapsed.png",
+      "beforeSha256": null,
+      "afterSha256": "1dd7909567d4f53e511bb9bf3ffba16dc0ccb4a1c9ee4e5bd4bde0cb3a2468ac",
+      "finalSha256": "1dd7909567d4f53e511bb9bf3ffba16dc0ccb4a1c9ee4e5bd4bde0cb3a2468ac"
+    },
+    {
+      "path": "docs/changes/2026-10-14-agent-execution-delivery/evidence/native-interrupted.dom.json",
+      "beforeSha256": null,
+      "afterSha256": "52d3fc4894e627ed29845cb5d6edb1303cd5f56069281b76e578129a3027392d",
+      "finalSha256": "52d3fc4894e627ed29845cb5d6edb1303cd5f56069281b76e578129a3027392d"
+    },
+    {
+      "path": "docs/changes/2026-10-14-agent-execution-delivery/evidence/native-interrupted.png",
+      "beforeSha256": null,
+      "afterSha256": "79ad1c2730d9073ff4afbd87c1f42b1a84a3de3b4458321b9c63eefa67b63750",
+      "finalSha256": "79ad1c2730d9073ff4afbd87c1f42b1a84a3de3b4458321b9c63eefa67b63750"
+    },
+    {
+      "path": "docs/changes/2026-10-14-agent-execution-delivery/evidence/native-running.dom.json",
+      "beforeSha256": null,
+      "afterSha256": "9cf718b1e9f058f22b92df7dc580303252532987f5e580e8d811c662721091a1",
+      "finalSha256": "9cf718b1e9f058f22b92df7dc580303252532987f5e580e8d811c662721091a1"
+    },
+    {
+      "path": "docs/changes/2026-10-14-agent-execution-delivery/evidence/native-running.png",
+      "beforeSha256": null,
+      "afterSha256": "a1c6e30dc7d155c21f274a19bdb1a6308e7d0e655029d19c06e50cc93d987844",
+      "finalSha256": "a1c6e30dc7d155c21f274a19bdb1a6308e7d0e655029d19c06e50cc93d987844"
+    },
+    {
+      "path": "docs/changes/2026-10-14-agent-execution-delivery/evidence/receipt.json",
+      "beforeSha256": null,
+      "afterSha256": "5b616ca9fd3789d4fbb827c473527a6f898c986f18c190e1b98e68f22611fd94",
+      "finalSha256": "5b616ca9fd3789d4fbb827c473527a6f898c986f18c190e1b98e68f22611fd94"
+    },
+    {
+      "path": "docs/changes/2026-10-14-agent-execution-delivery/evidence/scoped-browser-diagnostic.log",
+      "beforeSha256": null,
+      "afterSha256": "b5c2bebc4b8dab055169821fa9efaa17335cdd79c4694f9192a4f33885cde5ca",
+      "finalSha256": "b5c2bebc4b8dab055169821fa9efaa17335cdd79c4694f9192a4f33885cde5ca"
+    },
+    {
+      "path": "docs/changes/2026-10-14-agent-execution-delivery/evidence/source-hashes.json",
+      "beforeSha256": null,
+      "afterSha256": "208f338545cb1ce6c56f4fd8be3e50bfb3699338a2f317b619f7c84d54f1481f",
+      "finalSha256": "208f338545cb1ce6c56f4fd8be3e50bfb3699338a2f317b619f7c84d54f1481f"
+    },
+    {
+      "path": "docs/changes/2026-10-14-agent-execution-delivery/evidence/manifest.json",
+      "beforeSha256": null,
+      "afterSha256": "69c524e5dbf41f8206d00d450eb7ad69346dd78dfecf57d11dc6e8cdca72a7fb",
+      "finalSha256": "69c524e5dbf41f8206d00d450eb7ad69346dd78dfecf57d11dc6e8cdca72a7fb"
+    },
+    {
+      "path": "docs/changes/2026-10-14-agent-execution-delivery/evidence/execution-1099.dom.json",
+      "beforeSha256": null,
+      "afterSha256": "97045276e9251f8be960753f9fc523b1000b9618dca091550c6892aee5d63203",
+      "finalSha256": "97045276e9251f8be960753f9fc523b1000b9618dca091550c6892aee5d63203"
+    },
+    {
+      "path": "docs/changes/2026-10-14-agent-execution-delivery/evidence/execution-1099.png",
+      "beforeSha256": null,
+      "afterSha256": "c71d69353c20aecf009d5880339095f13bd4c9467e9bacef5c9b69979ad0c788",
+      "finalSha256": "c71d69353c20aecf009d5880339095f13bd4c9467e9bacef5c9b69979ad0c788"
+    },
+    {
+      "path": "docs/changes/2026-10-14-agent-execution-delivery/evidence/execution-1920.dom.json",
+      "beforeSha256": null,
+      "afterSha256": "504a8e7d16eca528bca43f6b34c417c393cf6b4ca8549fd995160ee39e054f50",
+      "finalSha256": "504a8e7d16eca528bca43f6b34c417c393cf6b4ca8549fd995160ee39e054f50"
+    },
+    {
+      "path": "docs/changes/2026-10-14-agent-execution-delivery/evidence/execution-1920.png",
+      "beforeSha256": null,
+      "afterSha256": "0db3a10be1b0000fdcf0189d86be8357508044ec9aff8c00dbe6b9d968695f9f",
+      "finalSha256": "0db3a10be1b0000fdcf0189d86be8357508044ec9aff8c00dbe6b9d968695f9f"
+    },
+    {
+      "path": "docs/changes/2026-10-14-agent-execution-delivery/evidence/execution-390.dom.json",
+      "beforeSha256": null,
+      "afterSha256": "25b2c75160d248a5ea8e465f7c0762d0a3b3bcf9dea2dec0ccf6bdf2cb558400",
+      "finalSha256": "25b2c75160d248a5ea8e465f7c0762d0a3b3bcf9dea2dec0ccf6bdf2cb558400"
+    },
+    {
+      "path": "docs/changes/2026-10-14-agent-execution-delivery/evidence/execution-390.png",
+      "beforeSha256": null,
+      "afterSha256": "b9cd86afef9db9828bb38892060e9ac2ce71c1a8a7d7e3cd1f28147c5954bd2d",
+      "finalSha256": "b9cd86afef9db9828bb38892060e9ac2ce71c1a8a7d7e3cd1f28147c5954bd2d"
+    },
+    {
+      "path": "docs/changes/2026-10-14-agent-execution-delivery/evidence/production-browser-results.json",
+      "beforeSha256": null,
+      "afterSha256": "209e020063a0fc981b702cfa71f6f2d2f37efed1177033b6a85d2a823469d7f1",
+      "finalSha256": "209e020063a0fc981b702cfa71f6f2d2f37efed1177033b6a85d2a823469d7f1"
+    },
+    {
+      "path": "docs/changes/2026-10-14-agent-execution-delivery/evidence/production-browser.log",
+      "beforeSha256": null,
+      "afterSha256": "e028c3a89f8e362d61d4d59be165828a90c8bbb9d536c10f8dc279af48bd0a1d",
+      "finalSha256": "e028c3a89f8e362d61d4d59be165828a90c8bbb9d536c10f8dc279af48bd0a1d"
+    },
+    {
+      "path": "docs/changes/2026-10-14-agent-execution-delivery/evidence/saving-1099.png",
+      "beforeSha256": null,
+      "afterSha256": "d032cca6ed15a00099cfbe034bed197ba40df493bd7e792a9d6d1dc987255e21",
+      "finalSha256": "d032cca6ed15a00099cfbe034bed197ba40df493bd7e792a9d6d1dc987255e21"
+    },
+    {
+      "path": "docs/changes/2026-10-14-agent-execution-delivery/evidence/saving-1920.png",
+      "beforeSha256": null,
+      "afterSha256": "f246930d38705b4e893eccd7d6a5f0788f96104bd9b4c6f063d0c3829b6df39f",
+      "finalSha256": "f246930d38705b4e893eccd7d6a5f0788f96104bd9b4c6f063d0c3829b6df39f"
+    },
+    {
+      "path": "docs/changes/2026-10-14-agent-execution-delivery/evidence/saving-390.png",
+      "beforeSha256": null,
+      "afterSha256": "749c090a3f52176e23326fb4145108d31f74352f101b81e5900f08e608159023",
+      "finalSha256": "749c090a3f52176e23326fb4145108d31f74352f101b81e5900f08e608159023"
+    },
+    {
+      "path": "docs/changes/2026-10-14-agent-execution-delivery/evidence/development-plugins.png",
+      "beforeSha256": null,
+      "afterSha256": "f2b90783cc1cc6f776c317e86596bd5da4f52be866012ce45b5e971e0bbd8ae5",
+      "finalSha256": "f2b90783cc1cc6f776c317e86596bd5da4f52be866012ce45b5e971e0bbd8ae5"
+    },
+    {
+      "path": "docs/changes/2026-10-14-agent-execution-delivery/evidence/development-receipt.json",
+      "beforeSha256": null,
+      "afterSha256": "904425442b2335032233b957dbd401bea567afaff3253a53b56482142492e771",
+      "finalSha256": "904425442b2335032233b957dbd401bea567afaff3253a53b56482142492e771"
+    },
+    {
+      "path": "docs/changes/2026-10-14-agent-execution-delivery/evidence/development.log",
+      "beforeSha256": null,
+      "afterSha256": "3ed471732a6e9c44288be32c1a2bfe4d03eece7ddce083a76e9b80dd9a67eb51",
+      "finalSha256": "3ed471732a6e9c44288be32c1a2bfe4d03eece7ddce083a76e9b80dd9a67eb51"
+    },
+    {
+      "path": "docs/PROGRESS.md",
+      "beforeSha256": "4c8a2b834b43c24792479986e53a4a367f803a0832b71717cbd705781074df5c",
+      "afterSha256": "a48d335ead56931a24738e62cc280627cf910561001a388bf2b6cbbf5bc1370f",
+      "finalSha256": "a48d335ead56931a24738e62cc280627cf910561001a388bf2b6cbbf5bc1370f"
+    },
+    {
+      "path": "docs/features/feat-009-conversation.md",
+      "beforeSha256": "aa88c4d15e3d15c2bcec68b4ac974ade2e2c0d4c3a778f82ddb7568b9f93e738",
+      "afterSha256": "2320a90f6448368fe92922046778e68778de7832224876d57fe1a8087bcd52d2",
+      "finalSha256": "2320a90f6448368fe92922046778e68778de7832224876d57fe1a8087bcd52d2"
+    },
+    {
+      "path": "docs/features/feat-016-task-workbench.md",
+      "beforeSha256": "6983c2e88e01e94e0f9a48f85430c201fa54215c8456bfdb8b03883ad19ab2c0",
+      "afterSha256": "e0b8ebf3d75f37cf7ade8af29a75979308fa4a91efb5e10919fc3cee34e863a4",
+      "finalSha256": "e0b8ebf3d75f37cf7ade8af29a75979308fa4a91efb5e10919fc3cee34e863a4"
+    },
+    {
+      "path": "docs/governance/PROJECT_STATE.md",
+      "beforeSha256": "0a292756d0d149330d48a7ce4a2b8e4698f1a5154e24d26ecbe87f54670f49ad",
+      "afterSha256": "e82a1800d990cff48e38e11a9bd124f9e9a48e9bbd1443544348a70e40b24f67",
+      "finalSha256": "e82a1800d990cff48e38e11a9bd124f9e9a48e9bbd1443544348a70e40b24f67"
+    },
+    {
+      "path": "docs/governance/AI_HANDOFF.md",
+      "beforeSha256": "dd14a5e466591cb532163bb822afd2a6e02c94a59ca0bc6d1944cfae1b39d10d",
+      "afterSha256": "d4d755264431ec214150f1239e2849d8e3ad5c0a6f20054b87a5558ef306270a",
+      "finalSha256": "d4d755264431ec214150f1239e2849d8e3ad5c0a6f20054b87a5558ef306270a"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "beforeSha256": "7de19cf91953ba2f370a474ca7adb3d5055522eda07343916faf0d3dee5714ed",
+      "afterSha256": "0b334fc1b7c3fef3f5f78ff23340810ab685f405fa508f4723c0e12669c22366",
+      "finalSha256": "0b334fc1b7c3fef3f5f78ff23340810ab685f405fa508f4723c0e12669c22366"
+    },
+    {
+      "path": "docs/governance/task-ledger.json",
+      "beforeSha256": "5b41ec0897e15f4d45d1ffeb91fdabd0492d3f48bee5d72284afbdcf6436e558",
+      "afterSha256": "94dde80b1aafdc12acf6890d668830887c394acadbd2833b348e1e824efd20a1",
+      "finalSha256": "b2f0903d98e9b3dd9a57061c469ff8f2fd8f203d148566b282c11e98e6113b2c"
+    },
+    {
+      "path": "docs/features/features.registry.json",
+      "beforeSha256": "a0aa8d9cf11fa49f7bc83666ad67d21cf6138d211b89a4db1ac2b659f5e9df1c",
+      "afterSha256": "1bebded94a5050c05c58bdf94a7110662d0eb29b582c88086a543e3ae2051cff",
+      "finalSha256": "b334fa6bc39aa73bb6c41238dcd6e65cb5f197fc0a4aa9fd7b98450ae29c4511"
+    }
+  ],
+  "finalOwnedSourceMatches": true,
+  "primaryLint": true,
+  "primaryTypecheck": true,
+  "primaryRelatedUnits": 107,
+  "primaryUiCheck": true,
+  "primaryFormat": true,
+  "primaryDesktopBuild": {
+    "releaseExePath": "D:\\kk-studio\\KK-Studio-2.0\\src-tauri\\target\\release\\kk-studio.exe",
+    "releaseMtimeMs": 1791917922999.37,
+    "newestInputPath": "D:\\kk-studio\\KK-Studio-2.0\\dist\\assets\\index-C31ISFx5.js",
+    "newestInputMtimeMs": 1791917887210.314,
+    "inputSha256": "ccb59dfb3742a3ea9e951d50630873257a8f1e5da295b3c390d7dee292961362",
+    "executableSha256": "e0003b71a2a4223e382e8621abfab026aac2138408afbb693b5069c0d0e0dcce",
+    "desktopVersion": "2.1.20",
+    "receiptPath": "D:\\kk-studio\\KK-Studio-2.0\\src-tauri\\target\\release\\kk-studio.build-receipt.json",
+    "needsBuild": false,
+    "reason": "current",
+    "rebuilt": true
+  },
+  "indexAfterAllChecks": "a0184fdb59d4e1d54a46517a391d1c99e62e6ea37a447eef8afc08387ea34fea",
+  "stagedContentTree": "868c52bc5d96b2b9e829e7b1263f1752cb776a35",
+  "stagedContentPreserved": true,
+  "indexNote": "Byte hash matched immediately after source sync; later stat/cache bytes changed. Staged entries remain the original empty diff and HEAD tree.",
+  "primaryNative": {
+    "passed": true,
+    "checks": 17,
+    "sourceHead": "51fccfc7879cf90f7caaf3ae8e10af4d97a2aa2c",
+    "context": "canonical dirty source with owned source hashes verified",
+    "release": {
+      "releaseExePath": "D:\\kk-studio\\KK-Studio-2.0\\src-tauri\\target\\release\\kk-studio.exe",
+      "releaseMtimeMs": 1791917922999.37,
+      "newestInputPath": "D:\\kk-studio\\KK-Studio-2.0\\dist\\assets\\index-C31ISFx5.js",
+      "newestInputMtimeMs": 1791917887210.314,
+      "inputSha256": "ccb59dfb3742a3ea9e951d50630873257a8f1e5da295b3c390d7dee292961362",
+      "executableSha256": "e0003b71a2a4223e382e8621abfab026aac2138408afbb693b5069c0d0e0dcce",
+      "desktopVersion": "2.1.20",
+      "receiptPath": "D:\\kk-studio\\KK-Studio-2.0\\src-tauri\\target\\release\\kk-studio.build-receipt.json",
+      "needsBuild": false,
+      "reason": "current"
+    },
+    "loaded": [
+      {
+        "path": "/assets/index-C31ISFx5.js",
+        "sha256": "167a76f10524ed7a9816eb3d9e5f6c7754cac01fa28c14066edc62b6f3c18285"
+      },
+      {
+        "path": "/assets/index-CnbkXRxN.css",
+        "sha256": "1cb7490bddae2a2052630abd24b75f600b5043d2912851d3299be749ae1393c8"
+      }
+    ]
+  }
+}

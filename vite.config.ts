@@ -1,7 +1,11 @@
-import { defineConfig } from "vite";
+import { realpathSync } from "node:fs";
+import { resolve } from "node:path";
+import { defineConfig, searchForWorkspaceRoot } from "vite";
 import react from "@vitejs/plugin-react";
 
 export default defineConfig({
+  // Settings load this dependency lazily; prebundle it before the first dialog opens.
+  optimizeDeps: { include: ["@tauri-apps/api/path"] },
   plugins: [
     react(),
     {
@@ -25,6 +29,13 @@ export default defineConfig({
     },
   ],
   server: {
+    fs: {
+      // Linked dependencies must load without exposing their parent checkout.
+      allow: [
+        searchForWorkspaceRoot(process.cwd()),
+        realpathSync("node_modules"),
+      ],
+    },
     port: 1421,
     host: "127.0.0.1",
     strictPort: true,
@@ -40,7 +51,7 @@ export default defineConfig({
     watch: {
       ignored: [
         "**/.tmp/**",
-        "**/.worktrees/**",
+        resolve(".worktrees").replaceAll("\\", "/") + "/**",
         "**/node_modules/**",
         "**/src-tauri/**",
         "**/*.agent_infra_tmp_*",

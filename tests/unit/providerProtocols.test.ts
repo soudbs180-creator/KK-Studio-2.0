@@ -25,6 +25,29 @@ const sse = (value: string) =>
   new Response(value, { headers: { "content-type": "text/event-stream" } });
 const openai =
   'data: {"choices":[{"delta":{"content":"local answer"},"finish_reason":null}]}\n\ndata: [DONE]\n\n';
+const anthropicStream = (text: string, initial = "") =>
+  [
+    {
+      type: "message_start",
+      message: { id: "m", role: "assistant", content: [] },
+    },
+    {
+      type: "content_block_start",
+      index: 0,
+      content_block: { type: "text", text: initial },
+    },
+    {
+      type: "content_block_delta",
+      index: 0,
+      delta: { type: "text_delta", text },
+    },
+    { type: "content_block_stop", index: 0 },
+    { type: "message_delta", delta: { stop_reason: "end_turn" } },
+    { type: "message_stop" },
+  ]
+    .map((frame) => "data: " + JSON.stringify(frame) + "\n\n")
+    .join("");
+
 test("a single-output text request rejects another output index or multiple choices", async () => {
   for (const choices of [
     [{ index: 1, delta: { content: "wrong" }, finish_reason: "stop" }],
@@ -55,13 +78,13 @@ const options = (providerBaseUrl = base.baseUrl) => ({
 test("explicit loopback authentication and protocol survive profile and registry mapping", () => {
   const profile = modelProviderSchema.parse({
     ...base,
-    protocol: "openai-compatible",
+    protocol: "openai-chat",
     authMode: "none",
   });
   assert.equal(profile.authMode, "none");
   const connection = connectionFromModelProfile(profile);
   assert.equal(connection.authMode, "none");
-  assert.equal(connection.protocol, "openai-compatible");
+  assert.equal(connection.protocol, "openai-chat");
   assert.equal(
     connection.id,
     connectionFromModelProfile(modelProviderSchema.parse(base)).id,
@@ -98,19 +121,23 @@ test("legacy profiles retain their stored object without adding defaults", () =>
   assert.deepEqual(parseModelProvider(JSON.stringify(base)).profile, base);
 });
 
-test("keyless local Anthropic retains the protocol-version header without exposing a key", () => {
-  const headers = providerRequestHeaders(base.baseUrl, "must-not-be-sent", {
-    protocol: "anthropic-messages",
-    authMode: "none",
-  });
-  assert.deepEqual(headers, { "anthropic-version": "2023-06-01" });
+test("keyless local Anthropic is rejected before exposing a key", () => {
+  assert.throws(() =>
+    providerRequestHeaders(base.baseUrl, "", {
+      protocol: "anthropic",
+      authMode: "none",
+    }),
+  );
 });
 
 test("Ollama and LM Studio presets select only an explicit local OpenAI-compatible interface", () => {
   for (const id of ["ollama", "lm-studio"]) {
     const preset = findProviderPreset(id);
     assert.ok(preset);
-    assert.equal(preset.protocol, "openai-compatible");
+    assert.equal(
+      preset.wireProtocol ?? "openai-chat",
+      id === "ollama" ? "ollama" : "openai-chat",
+    );
     assert.equal(preset.authMode, "none");
   }
 });
@@ -181,13 +208,11 @@ test("Anthropic discovery and Messages use native headers and preserve multi-tur
       });
       return init?.method === "GET"
         ? Response.json({ data: [{ id: "claude-exact" }], has_more: false })
-        : sse(
-            'event: message_start\ndata: {"type":"message_start","message":{"id":"m"}}\n\nevent: content_block_delta\ndata: {"type":"content_block_delta","delta":{"type":"text_delta","text":"你好"}}\n\nevent: message_delta\ndata: {"type":"message_delta","delta":{"stop_reason":"end_turn"}}\n\nevent: message_stop\ndata: {"type":"message_stop"}\n\n',
-          );
+        : sse(anthropicStream("你好"));
     },
   );
   const models = await checkModelProvider(url, "fixture-key", signal(), {
-    protocol: "anthropic-messages",
+    protocol: "anthropic",
   });
   assert.equal(models[0].id, "claude-exact");
   const messages = [
@@ -199,7 +224,7 @@ test("Anthropic discovery and Messages use native headers and preserve multi-tur
   assert.equal(
     await generateText({
       ...options(url),
-      protocol: "anthropic-messages",
+      protocol: "anthropic",
       messages,
     }),
     "你好",
@@ -293,7 +318,7 @@ for (const status of [401, 429])
     assert.equal(calls, 1);
   });
 
-for (const protocol of ["anthropic-messages", "gemini"] as const)
+for (const protocol of ["anthropic", "gemini"] as const)
   test(`${protocol} requires an actual success terminal and rejects tool/error/oversized output`, async () => {
     const payloads =
       protocol === "gemini"
@@ -304,7 +329,7 @@ for (const protocol of ["anthropic-messages", "gemini"] as const)
             `data: ${JSON.stringify({ candidates: [{ content: { parts: [{ text: "x".repeat(32769) }] }, finishReason: "STOP" }] })}\n\n`,
           ]
         : [
-            'data: {"type":"content_block_delta","delta":{"type":"text_delta","text":"partial"}}\n\n',
+            'data: {"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"partial"}}\n\n',
             'data: {"type":"message_delta","delta":{"stop_reason":"tool_use"}}\n\ndata: {"type":"message_stop"}\n\n',
             'event: error\ndata: {"error":{"message":"private-secret"}}\n\n',
             `data: ${JSON.stringify({ type: "content_block_delta", delta: { type: "text_delta", text: "x".repeat(32769) } })}\n\n`,
@@ -338,26 +363,21 @@ test("a text submission freezes its model and messages before reading credential
 });
 
 test("Anthropic includes text from content-block start as well as deltas", async () => {
-  const body =
-    'data: {"type":"message_start","message":{"id":"m"}}\n\ndata: {"type":"content_block_start","content_block":{"type":"text","text":"first"}}\n\ndata: {"type":"content_block_delta","delta":{"type":"text_delta","text":" second"}}\n\ndata: {"type":"message_delta","delta":{"stop_reason":"end_turn"}}\n\ndata: {"type":"message_stop"}\n\n';
+  const body = anthropicStream(" second", "first");
   assert.equal(
-    await readTextStream(sse(body), signal(), undefined, "anthropic-messages"),
+    await readTextStream(sse(body), signal(), undefined, "anthropic"),
     "first second",
   );
 });
 
-for (const protocol of [
-  "openai-compatible",
-  "anthropic-messages",
-  "gemini",
-] as const) {
+for (const protocol of ["openai-chat", "anthropic", "gemini"] as const) {
   test(`${protocol} preserves UTF-8 splits and cancels the source at terminal`, async () => {
     const source =
-      protocol === "openai-compatible"
+      protocol === "openai-chat"
         ? openai.replace("local answer", "你好🌏")
         : protocol === "gemini"
           ? 'data: {"candidates":[{"content":{"parts":[{"text":"你好🌏"}]},"finishReason":"STOP"}]}\n\n'
-          : 'data: {"type":"message_start","message":{"id":"m"}}\n\ndata: {"type":"content_block_delta","delta":{"type":"text_delta","text":"你好🌏"}}\n\ndata: {"type":"message_delta","delta":{"stop_reason":"end_turn"}}\n\ndata: {"type":"message_stop"}\n\n';
+          : anthropicStream("你好🌏");
     const bytes = new TextEncoder().encode(source);
     let offset = 0;
     let cancelled = false;
@@ -406,7 +426,7 @@ for (const protocol of [
 }
 
 test("native discovery follows bounded pages without changing host or authentication", async (t) => {
-  for (const protocol of ["anthropic-messages", "gemini"] as const) {
+  for (const protocol of ["anthropic", "gemini"] as const) {
     const requests: string[] = [];
     t.mock.method(globalThis, "fetch", async (input: unknown) => {
       requests.push(String(input));

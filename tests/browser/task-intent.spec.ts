@@ -124,6 +124,57 @@ function snapshot(taskValue: StoredTask) {
   };
 }
 
+async function nativeProviderFixture(page: Page): Promise<void> {
+  let revision: number | null = null;
+  let connections: unknown[] = [];
+  // Model the native stores across renderer reloads, without putting a secret
+  // in the browser snapshot, sessionStorage or localStorage.
+  const credentials = new Map<string, string>();
+  await page.exposeBinding(
+    "t5ProviderInvoke",
+    async (_source, command: string, args: Record<string, unknown> = {}) => {
+      if (command === "credential_get")
+        return credentials.get(String(args.providerId)) ?? null;
+      if (command === "credential_set") {
+        credentials.set(String(args.providerId), String(args.secret));
+        return true;
+      }
+      if (command === "credential_delete") {
+        credentials.delete(String(args.providerId));
+        return true;
+      }
+      if (command === "read_provider_config")
+        return {
+          status: revision === null ? "missing" : "loaded",
+          revision,
+          connections,
+        };
+      if (
+        command === "write_provider_config" ||
+        command === "commit_provider_connection"
+      ) {
+        if (args.expectedRevision !== revision)
+          throw new Error("conflict: synthetic provider revision changed");
+        connections = structuredClone(args.connections as unknown[]);
+        revision = (revision ?? 0) + 1;
+        if (command === "write_provider_config") return revision;
+        if (args.secret)
+          credentials.set(String(args.providerId), String(args.secret));
+        if (args.clearSecret) credentials.delete(String(args.providerId));
+        return {
+          revision,
+          credentialState: args.clearSecret
+            ? "missing"
+            : args.secret
+              ? "saved"
+              : "unchanged",
+        };
+      }
+      throw new Error(`Unexpected synthetic provider IPC: ${command}`);
+    },
+  );
+}
+
 async function configure(page: Page): Promise<void> {
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
@@ -134,7 +185,10 @@ async function configure(page: Page): Promise<void> {
   await page.getByLabel("接口地址").fill("https://models.example.test/v1");
   await page.getByLabel("API Key", { exact: true }).fill("fixture-key");
   await page.getByLabel("模型名称").fill("image-test");
-  await page.getByRole("button", { name: "保存", exact: true }).click();
+  await page.getByRole("button", { name: "保存连接", exact: true }).click();
+  await expect(page.locator(".provider-status")).toContainText(
+    "连接信息已保存",
+  );
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
 }
 
@@ -221,6 +275,7 @@ for (const scenario of [
       providerPosts++;
       await fulfillPixel(route);
     });
+    await nativeProviderFixture(page);
     await page.addInitScript(({ mode, phase }) => {
       type Receipt = {
         taskId: string;
@@ -303,15 +358,6 @@ for (const scenario of [
               save();
               return;
             }
-            if (command === "credential_get") return null;
-            if (command === "credential_set") return true;
-            if (command === "read_provider_config")
-              return {
-                status: "missing",
-                revision: null,
-                connections: [],
-              };
-            if (command === "write_provider_config") return 1;
             if (command === "task_host_list") {
               // Recovery reads the index before probing a task. Live polling
               // reads the task directly, while its controller is still active.
@@ -350,7 +396,14 @@ for (const scenario of [
               save();
               return null;
             }
-            throw new Error(`Unexpected native receipt IPC: ${command}`);
+            return (
+              window as Window & {
+                t5ProviderInvoke: (
+                  command: string,
+                  args?: Record<string, unknown>,
+                ) => Promise<unknown>;
+              }
+            ).t5ProviderInvoke(command, args);
           },
         },
       });
@@ -534,28 +587,27 @@ test("durable intent write failure prevents every provider POST", async ({
   page,
 }) => {
   let requests = 0;
+  await nativeProviderFixture(page);
   await page.addInitScript(() => {
     const state = { writes: 0 };
     Object.assign(window, {
       t5StorageTest: state,
       __TAURI_INTERNALS__: {
-        invoke: async (command: string) => {
+        invoke: async (command: string, args?: Record<string, unknown>) => {
           if (command === "read_creation_snapshot")
             return { status: "missing", snapshot: null };
-          if (command === "credential_get") return null;
-          if (command === "credential_set") return true;
-          if (command === "read_provider_config")
-            return {
-              status: "missing",
-              revision: null,
-              connections: [],
-            };
-          if (command === "write_provider_config") return 1;
           if (command === "write_creation_snapshot") {
             state.writes++;
             throw new Error("io: synthetic durable write failure");
           }
-          throw new Error(`Unexpected IPC: ${command}`);
+          return (
+            window as Window & {
+              t5ProviderInvoke: (
+                command: string,
+                args?: Record<string, unknown>,
+              ) => Promise<unknown>;
+            }
+          ).t5ProviderInvoke(command, args);
         },
       },
     });

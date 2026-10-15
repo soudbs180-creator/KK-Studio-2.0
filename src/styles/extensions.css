@@ -1,3 +1,13 @@
+.catalog-page-skills {
+  padding: var(--kk-layout-gutter-md) var(--kk-container-pad);
+}
+
+.extensions-page-content {
+  width: 100%;
+  max-width: var(--kk-container-max-width);
+  margin-inline: auto;
+}
+
 .catalog-page-skills .catalog-page-top-tabs {
   margin: var(--kk-space-5) auto var(--kk-space-4);
   max-width: var(--kk-container-max-width);
@@ -13,6 +23,13 @@
   color: var(--kk-text-secondary);
   font-size: var(--kk-font-caption);
   line-height: var(--kk-line-body);
+}
+
+.catalog-page-subtitle {
+  margin: 0 0 var(--kk-space-4);
+  color: var(--kk-text-secondary);
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-caption);
 }
 
 .extension-help summary {

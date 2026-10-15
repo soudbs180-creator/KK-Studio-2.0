@@ -163,8 +163,8 @@ export default function CanvasToolbar({
       </button>
       <button
         className="toolbar-save"
-        aria-label="喜欢与收藏"
-        title="喜欢与收藏"
+        aria-label="喜欢与标签"
+        title="喜欢与标签"
         aria-haspopup="menu"
         aria-expanded={popup === "save"}
         onClick={(event) => toggle("save", event.currentTarget)}
@@ -172,7 +172,7 @@ export default function CanvasToolbar({
         <ToolbarIcon name="favorite" />
       </button>
       {popup === "save" && (
-        <div className="canvas-save-menu" role="menu" aria-label="喜欢与收藏">
+        <div className="canvas-save-menu" role="menu" aria-label="喜欢与标签">
           <button
             role="menuitem"
             onClick={() => {
@@ -187,11 +187,11 @@ export default function CanvasToolbar({
             role="menuitem"
             onClick={() => {
               close();
-              onOpen("favorites");
+              onOpen("tags");
             }}
           >
             <span className="canvas-save-star-dot" aria-hidden="true" />
-            <span>我的收藏</span>
+            <span>画布标签</span>
           </button>
         </div>
       )}

@@ -107,7 +107,7 @@ for (const duplicate of [true, false]) {
       .toBe(true);
     await settings(page);
     await page.getByLabel("API Key", { exact: true }).fill("fixture-key");
-    await page.getByRole("button", { name: "保存", exact: true }).click();
+    await page.getByRole("button", { name: "保存连接", exact: true }).click();
     await page.getByLabel("当前模型用途").selectOption("image");
     await page
       .getByLabel("参考图编辑能力", { exact: true })
@@ -233,7 +233,7 @@ async function configure(page: Page) {
   await page.getByLabel("接口地址").fill(api);
   await page.getByLabel("API Key", { exact: true }).fill("fixture-key");
   await page.getByLabel("模型名称").fill("image-capability-a");
-  await page.getByRole("button", { name: "保存", exact: true }).click();
+  await page.getByRole("button", { name: "保存连接", exact: true }).click();
 }
 async function node(page: Page) {
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
@@ -268,7 +268,9 @@ test("仅显示元数据更新时刷新分组、型号和别名草稿", async ({
     }),
   );
   await configure(page);
-  await page.getByRole("button", { name: "刷新模型列表", exact: true }).click();
+  await page
+    .getByRole("button", { name: "测试连接并刷新模型", exact: true })
+    .click();
   await page.getByText("型号显示与搜索别名", { exact: true }).click();
   await expect(page.getByLabel("模型分组名称", { exact: true })).toHaveValue(
     "Old group",
@@ -280,7 +282,9 @@ test("仅显示元数据更新时刷新分组、型号和别名草稿", async ({
     "old-alias",
   );
   updated = true;
-  await page.getByRole("button", { name: "刷新模型列表", exact: true }).click();
+  await page
+    .getByRole("button", { name: "测试连接并刷新模型", exact: true })
+    .click();
   await expect(page.getByLabel("模型分组名称", { exact: true })).toHaveValue(
     "New group",
   );
@@ -349,7 +353,9 @@ test("手动三态声明保存恢复并切模型，不把未知变成支持", as
     }),
   );
   await configure(page);
-  await page.getByRole("button", { name: "刷新模型列表", exact: true }).click();
+  await page
+    .getByRole("button", { name: "测试连接并刷新模型", exact: true })
+    .click();
   await expect(page.getByLabel("已发现的模型")).toContainText(
     "image-capability-b",
   );
@@ -523,7 +529,9 @@ test("报告能力限制数量且 unknown 蒙版保留未声明状态和编辑�
     }),
   );
   await configure(page);
-  await page.getByRole("button", { name: "刷新模型列表", exact: true }).click();
+  await page
+    .getByRole("button", { name: "测试连接并刷新模型", exact: true })
+    .click();
   await expect(page.getByLabel("参考图编辑能力", { exact: true })).toHaveValue(
     "supported",
   );

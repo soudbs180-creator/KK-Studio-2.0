@@ -1,4 +1,5 @@
 import type { ProviderConnection } from "../../domain/providerConnections";
+import { protocolBindingMatches } from "../../domain/providerProtocol.ts";
 import {
   findModelProfileConnection,
   newModelProfileConnection,
@@ -82,25 +83,26 @@ export function resolveModelProviderConnection(
         model: profile.model,
         protocol: profile.protocol,
         authMode: profile.authMode,
+        verificationStatus: protocolBindingMatches(
+          { ...existing, baseUrl: existing.baseUrl! },
+          profile,
+        )
+          ? existing.verificationStatus
+          : "unverified",
+        lastSuccessfulGenerationAt: protocolBindingMatches(
+          { ...existing, baseUrl: existing.baseUrl! },
+          profile,
+        )
+          ? existing.lastSuccessfulGenerationAt
+          : undefined,
         capabilities:
-          existing.model === profile.model
+          existing.model === profile.model &&
+          protocolBindingMatches(
+            { ...existing, baseUrl: existing.baseUrl! },
+            profile,
+          )
             ? existing.capabilities
             : newModelProfileConnection(profile).capabilities,
       }
     : { ...newModelProfileConnection(profile), credentialRef };
-}
-
-export function modelProfileFromConnection(
-  connection: ProviderConnection,
-): ModelProviderProfile {
-  if (!connection.baseUrl) throw new Error("此连接没有可用的 API 地址。");
-  return {
-    version: 1,
-    connectionId: connection.id,
-    name: connection.provider,
-    baseUrl: connection.baseUrl,
-    model: connection.model ?? "",
-    ...(connection.protocol ? { protocol: connection.protocol } : {}),
-    ...(connection.authMode ? { authMode: connection.authMode } : {}),
-  };
 }

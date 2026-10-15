@@ -11,6 +11,7 @@ use std::sync::Mutex;
 mod tests;
 #[path = "creation_validation.rs"]
 mod validation;
+pub(crate) use validation::labels;
 
 #[derive(Debug, Serialize)]
 pub struct ReadResult {

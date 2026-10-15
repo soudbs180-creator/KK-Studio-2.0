@@ -93,8 +93,14 @@ test("音频草稿选中后在卡片下方输入，生成后可以播放本地�
   await expect(
     page.locator(".demo-result-node[data-source=demo][data-kind=audio]"),
   ).toHaveCount(1);
+  await expect(
+    page.locator('.demo-result-node[data-kind="audio"] audio[hidden]'),
+  ).toHaveJSProperty("paused", true);
   await page.getByRole("button", { name: "预览蓝调氛围", exact: true }).click();
-  const media = page.locator("audio");
+  const media = page
+    .getByRole("dialog", { name: "预览蓝调氛围", exact: true })
+    .locator("audio");
+  await expect(media).toBeVisible();
   await expect
     .poll(() => media.evaluate((el) => el.readyState))
     .toBeGreaterThanOrEqual(2);

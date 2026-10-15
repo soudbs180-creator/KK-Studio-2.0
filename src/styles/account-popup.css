@@ -1,319 +1,95 @@
-/* Figma 312:2436 — the popup is a 260×230 source frame. */
 .account-popup {
   position: absolute;
   bottom: 72px;
   left: 10px;
   z-index: 20;
   box-sizing: border-box;
-  width: 260px;
-  height: 230px;
-  min-height: 230px;
-  overflow: hidden;
-  display: block;
-  gap: 0;
-  padding: 0;
+  width: var(--kk-account-popup-width);
+  max-width: calc(100vw - 24px);
+  max-height: calc(100dvh - 96px);
+  overflow: auto;
+  display: grid;
+  gap: var(--kk-space-4);
+  padding: var(--kk-space-4);
   border: 1px solid var(--border-default);
-  border-radius: 10px;
+  border-radius: var(--kk-radius-panel);
   background: var(--bg-input);
   color: var(--text-primary);
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-caption);
 }
-
 .account-identity {
-  position: absolute;
-  top: 17px;
-  left: 12px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  width: 143px;
-  height: 26px;
+  gap: var(--kk-space-3);
 }
-
 .account-logo,
 .account-logo img {
   display: block;
-  flex: 0 0 26px;
-  width: 26px;
-  height: 26px;
+  flex: 0 0 var(--kk-control-h-md);
+  width: var(--kk-control-h-md);
+  height: var(--kk-control-h-md);
 }
-
 .account-identity > div {
-  width: 108px;
-  min-width: 108px;
-  color: var(--text-strong);
+  min-width: 0;
 }
-
 .account-identity strong {
   display: block;
-  color: var(--text-strong);
-  font-size: 12px;
-  font-weight: 700;
-  line-height: 14px;
+  font-size: var(--kk-font-body-strong);
+  line-height: var(--kk-line-body-strong);
 }
-
 .account-identity p {
-  overflow: hidden;
-  margin-top: 0;
-  color: var(--text-strong);
-  font-size: 8px;
-  line-height: 10px;
-  text-overflow: clip;
-  white-space: nowrap;
+  margin: var(--kk-space-1) 0 0;
+  color: var(--text-secondary);
+  overflow-wrap: anywhere;
 }
-
 .account-popup-actions {
-  position: absolute;
-  top: 53px;
-  left: 12px;
   display: grid;
-  grid-template-columns: 116px 116px;
-  gap: 4px;
-  width: 236px;
-  height: 30px;
-  padding: 0;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--kk-space-2);
 }
-
-.account-popup-actions button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  width: 116px;
-  height: 30px;
-  padding: 0;
-  border: 0;
-  border-radius: 10px;
-  background: var(--ui-account-action-bg);
-  color: var(--text-strong);
-  font-size: 8px;
-  font-weight: 400;
-  line-height: 10px;
-}
-
-.account-popup-actions button:disabled {
-  opacity: 1;
-}
-
-.account-popup-actions button:hover,
-.account-popup-actions button:focus-visible {
-  background: var(--bg-card-hover);
-}
-
-.account-popup-actions button:last-child {
-  color: var(--ui-account-danger);
-}
-
-.account-popup-actions img {
-  display: block;
-  width: auto;
-  height: 14px;
-}
-
-.account-credit-panel {
-  position: absolute;
-  top: 93px;
-  left: 12px;
-  box-sizing: border-box;
-  width: 236px;
-  height: 57px;
-  overflow: hidden;
-  display: block;
-  gap: 0;
-  padding: 0;
-  border: 1px solid var(--border-default);
-  border-radius: 10px;
-  background: var(--ui-account-panel-bg);
-  color: var(--text-strong);
-}
-
-.account-credit-panel::before {
-  position: absolute;
-  top: 10px;
-  left: 3px;
-  width: 228px;
-  height: 16px;
-  border-radius: 10px;
-  background: var(--bg-card);
-  content: "";
-}
-
-.account-credit-balance-label {
-  position: absolute;
-  top: 13px;
-  left: 10px;
-  color: var(--text-strong);
-  font-size: 8px;
-  font-weight: 500;
-  line-height: 10px;
-  white-space: nowrap;
-}
-
-.account-credit-points {
-  position: absolute;
-  top: 10px;
-  left: 159px;
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  height: 16px;
-  white-space: nowrap;
-}
-
+.account-popup-actions img,
+.account-popup-row-label img,
+.account-version-row button img,
 .account-credit-points img {
-  display: block;
-  width: 10px;
-  height: 10px;
+  width: var(--kk-icon-glyph-sm);
+  height: var(--kk-icon-glyph-sm);
+  object-fit: contain;
 }
-
-.account-credit-points b {
-  color: var(--ui-account-icon);
-  font-size: 12px;
-  font-style: italic;
-  font-weight: 700;
-  line-height: 14px;
-}
-
-.account-subscription-row {
-  position: absolute;
-  top: 30px;
-  left: 3px;
-  display: flex;
+.account-credit-panel {
+  display: grid;
+  grid-template-columns: 1fr auto;
   align-items: center;
-  width: 139px;
-  height: 16px;
-  padding-left: 7px;
-  border-radius: 10px;
-  background: var(--bg-card);
-  color: var(--text-strong);
-  font-size: 8px;
-  font-weight: 500;
-  line-height: 10px;
+  gap: var(--kk-space-3);
+  padding: var(--kk-space-3);
+  border: 1px solid var(--border-default);
+  border-radius: var(--kk-radius-card);
+  background: var(--ui-account-panel-bg);
 }
-
-.account-badge {
-  position: absolute;
-  top: 30px;
-  left: 149px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 65px;
-  height: 16px;
-  padding: 0;
-  border-radius: 10px;
-  background: var(--ui-account-subscription);
-  color: var(--text-on-success);
-  font-size: 8px;
-  font-weight: 400;
-  line-height: 10px;
-  white-space: nowrap;
-}
-
-.account-credit-chevron {
-  position: absolute;
-  display: block;
-  width: 7px;
-  height: 4px;
-  transform: rotate(-90deg);
-}
-
-.account-credit-chevron-top {
-  top: 16px;
-  left: 221px;
-}
-
-.account-credit-chevron-bottom {
-  top: 36px;
-  left: 221px;
-}
-
-.account-popup-row {
-  position: absolute;
-  left: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 236px;
-  height: 22px;
-  padding: 0 10px;
-  color: var(--ui-account-muted);
-  font-size: 8px;
-  line-height: 10px;
-}
-
-.account-theme-row {
-  top: 160px;
-}
-
-.account-version-row {
-  top: 192px;
-}
-
+.account-credit-points,
+.account-popup-row,
 .account-popup-row-label {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--kk-space-2);
   min-width: 0;
-  color: var(--ui-account-muted);
-  font-size: 8px;
-  font-weight: 500;
-  line-height: 10px;
-  white-space: nowrap;
 }
-
-.account-theme-row .account-popup-row-label img {
-  display: block;
-  width: 11px;
-  height: 12px;
+.account-credit-points b {
+  font-size: var(--kk-font-body-strong);
+  line-height: var(--kk-line-body-strong);
 }
-
-.account-version-row .account-popup-row-label img {
-  display: block;
-  width: 11px;
-  height: 10px;
+.account-badge {
+  padding: var(--kk-space-1) var(--kk-space-2);
+  border-radius: var(--kk-radius-full);
+  background: var(--bg-card);
 }
-
-.account-theme-button {
-  display: block;
-  flex: 0 0 62px;
-  width: 62px;
-  height: 22px;
-  padding: 0;
-  border-radius: 4px;
+.account-popup-row {
+  justify-content: space-between;
+  color: var(--text-secondary);
 }
-
-.account-theme-button img {
-  display: block;
-  width: 62px;
-  height: 22px;
+.account-popup-row-label {
+  overflow-wrap: anywhere;
 }
-
-.account-version-row button {
-  display: flex;
-  flex: 0 0 41px;
-  align-items: center;
-  justify-content: center;
-  gap: 3px;
-  width: 41px;
-  height: 22px;
-  padding: 0;
-  border: 0;
-  border-radius: 4px;
-  background: var(--ui-sidebar-control);
-  color: var(--ui-account-check);
-  font-size: 8px;
-  font-weight: 700;
-  line-height: 10px;
-}
-
-.account-version-row button img {
-  display: block;
-  width: 9px;
-  height: 9px;
-}
-
-@media (max-width: 800px) {
-  .account-popup {
-    max-width: calc(100vw - 24px);
-  }
+.account-popup-row button {
+  flex-shrink: 0;
 }

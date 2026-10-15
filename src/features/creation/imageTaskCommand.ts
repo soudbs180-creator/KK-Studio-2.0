@@ -6,6 +6,10 @@ import {
 import { reconcileProjectCanvas } from "../../domain/projectCanvas.ts";
 import type { ProviderConnection } from "../../domain/providerConnections.ts";
 import {
+  protocolBindingMatches,
+  providerNeedsKey,
+} from "../../domain/providerProtocol.ts";
+import {
   MODEL_PROVIDER_STORAGE_KEY,
   parseModelProvider,
   resolveProviderAuthMode,
@@ -76,9 +80,19 @@ export function assertLiveTextTask(
     task.providerBaseUrl !== expected.providerBaseUrl ||
     task.providerCredentialRef !== expected.providerCredentialRef ||
     task.providerConnectionId !== expected.providerConnectionId ||
-    task.providerProtocol !== expected.providerProtocol ||
-    task.providerAuthMode !== expected.providerAuthMode ||
     task.sourceItemId !== expected.sourceItemId ||
+    !protocolBindingMatches(
+      {
+        baseUrl: task.providerBaseUrl ?? "",
+        protocol: task.providerProtocol,
+        authMode: task.providerAuthMode,
+      },
+      {
+        baseUrl: expected.providerBaseUrl ?? "",
+        protocol: expected.providerProtocol,
+        authMode: expected.providerAuthMode,
+      },
+    ) ||
     !task.sourceItemId ||
     !project?.items.some((item) => item.id === task.sourceItemId)
   )
@@ -173,13 +187,24 @@ export function originalProjectBinding(
   const matches = readProviderConnections().filter(
     (item) =>
       matchesProject(item.baseUrl, item.credentialRef, item.model) &&
-      (!task ||
-        (resolveProviderProtocol(item) ===
-          resolveProviderProtocol({ protocol: task.providerProtocol }) &&
+      (!task
+        ? (project.providerProtocol === undefined &&
+            project.providerAuthMode === undefined) ||
+          protocolBindingMatches(
+            { ...item, baseUrl: item.baseUrl ?? "" },
+            {
+              baseUrl: project.providerBaseUrl ?? "",
+              protocol: project.providerProtocol,
+              authMode: project.providerAuthMode,
+            },
+          )
+        : resolveProviderProtocol(item) ===
+            resolveProviderProtocol({ protocol: task.providerProtocol }) &&
           resolveProviderAuthMode(item.baseUrl ?? "", item) ===
             resolveProviderAuthMode(task.providerBaseUrl ?? "", {
+              protocol: task.providerProtocol,
               authMode: task.providerAuthMode,
-            }))),
+            })),
   );
   if (matches.length !== 1)
     throw new ImageTaskCommandError(
@@ -232,6 +257,18 @@ function validateTextTaskInput(input: CreateProjectInput): void {
     );
 }
 
+async function hasConnectionCredentials(
+  connection: Pick<
+    ProviderConnection,
+    "baseUrl" | "credentialRef" | "protocol" | "authMode"
+  >,
+): Promise<boolean> {
+  return (
+    !providerNeedsKey({ ...connection, baseUrl: connection.baseUrl! }) ||
+    (await hasApiKey(connection.baseUrl!, connection.credentialRef))
+  );
+}
+
 /** Every entry uses this binding check; an existing project never swaps accounts. */
 export async function prepareImageTask(
   input: CreateProjectInput,
@@ -276,13 +313,7 @@ export async function prepareImageTask(
       model: input.model,
     };
     assertSubmissionConnection(binding);
-    if (
-      !(
-        input.kind === "text" &&
-        resolveProviderAuthMode(selected.baseUrl!, selected) === "none"
-      ) &&
-      !(await hasApiKey(selected.baseUrl!, selected.credentialRef))
-    )
+    if (!(await hasConnectionCredentials(selected)))
       throw new ImageTaskCommandError(
         "选择的连接缺少密钥，请配置后重试。",
         true,
@@ -295,11 +326,10 @@ export async function prepareImageTask(
     ).profile;
     const connection = connectionFromModelProfile(profile);
     if (
-      !(
-        input.kind === "text" &&
-        resolveProviderAuthMode(profile.baseUrl, connection) === "none"
-      ) &&
-      !(await hasApiKey(profile.baseUrl, connection.credentialRef))
+      !(await hasConnectionCredentials({
+        ...profile,
+        credentialRef: connection.credentialRef,
+      }))
     )
       throw new ImageTaskCommandError(
         "请先配置模型连接；当前草稿已保留，配置后再次提交。",
@@ -351,13 +381,7 @@ export async function prepareImageTask(
     model: input.model,
   };
   const connection = assertSubmissionConnection(binding);
-  if (
-    !(
-      input.kind === "text" &&
-      resolveProviderAuthMode(connection.baseUrl!, connection) === "none"
-    ) &&
-    !(await hasApiKey(connection.baseUrl!, connection.credentialRef))
-  )
+  if (!(await hasConnectionCredentials(connection)))
     throw new ImageTaskCommandError(
       "原绑定连接缺少密钥，请配置后重试；当前草稿已保留。",
       true,
@@ -378,6 +402,8 @@ export function appendImageTask(
     providerBaseUrl: connection.baseUrl,
     providerName: connection.provider,
     providerCredentialRef: connection.credentialRef,
+    providerProtocol: connection.protocol,
+    providerAuthMode: connection.authMode,
   };
   const task = {
     ...createTask({

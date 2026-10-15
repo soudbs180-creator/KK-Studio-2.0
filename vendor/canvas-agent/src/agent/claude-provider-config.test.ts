@@ -156,3 +156,10 @@ test("applyClaudeProviderConfig dry-run 返回合并结果且不写盘", () => {
   assert.ok(noModel.warnings.some((w) => w.includes("没有连接带 model")));
   assert.equal(JSON.parse(noModel.settingsJson).model, undefined);
 });
+
+test("CLI-223-04 rejects invalid existing env containers instead of dropping their data", () => {
+  for (const env of [null, false, 42, "original", ["original"]]) {
+    const existing = JSON.stringify({ env, unknown: { keep: true } });
+    assert.throws(() => mergeClaudeSettingsJson(existing, { baseUrl: "https://fixture.example.test/v1" }), /env/);
+  }
+});

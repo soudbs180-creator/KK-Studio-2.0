@@ -68,6 +68,26 @@ class FakeStorage implements MemoryStorage {
   }
 }
 
+function pauseNextRead(storage: FakeStorage) {
+  const read = storage.read.bind(storage);
+  let resume!: () => void;
+  let markStarted!: () => void;
+  const gate = new Promise<void>((resolve) => {
+    resume = resolve;
+  });
+  const started = new Promise<void>((resolve) => {
+    markStarted = resolve;
+  });
+  storage.read = async () => {
+    storage.read = read;
+    const store = await read();
+    markStarted();
+    await gate;
+    return store;
+  };
+  return { started, resume };
+}
+
 function createService() {
   const storage = new FakeStorage();
   const settings = new FakeSettings();
@@ -206,6 +226,7 @@ test("deleteRecord removes one record", async () => {
   const { service, storage } = createService();
   service.setEnabled(true);
   await service.ingestMessage("以后请用日系插画风格", "user");
+  service.setEnabled(false);
   const id = storage.store.records[0].id;
   const store = await service.deleteRecord(id);
   assert.equal(store.records.length, 0);
@@ -215,6 +236,7 @@ test("clearAll empties records and keeps store shape", async () => {
   const { service, storage } = createService();
   service.setEnabled(true);
   await service.ingestMessage("以后请用日系插画风格", "user");
+  service.setEnabled(false);
   const store = await service.clearAll();
   assert.equal(store.records.length, 0);
   assert.equal(storage.store.records.length, 0);
@@ -232,7 +254,149 @@ test("resetIdentity returns empty store", async () => {
   service.setEnabled(true);
   await service.ingestMessage("以后请用日系插画风格", "user");
   assert.equal(storage.store.records.length, 1);
+  service.setEnabled(false);
   const store = await service.resetIdentity();
   assert.equal(store.records.length, 0);
   assert.equal(store.namespace, "");
+});
+
+test("default memory preference reports a failed disable and retains the actual enabled state", async (t) => {
+  const previous = Object.getOwnPropertyDescriptor(globalThis, "window");
+  let raw = JSON.stringify({ enabled: true });
+  let blocked = true;
+  Object.defineProperty(globalThis, "window", {
+    configurable: true,
+    value: {
+      localStorage: {
+        getItem: () => raw,
+        setItem: (_key: string, value: string) => {
+          if (blocked) throw new Error("fixture storage failure");
+          raw = value;
+        },
+      },
+    },
+  });
+  t.after(() => {
+    if (previous) Object.defineProperty(globalThis, "window", previous);
+    else Reflect.deleteProperty(globalThis, "window");
+  });
+  const storage = new FakeStorage();
+  const service = new MemoryService({ storage });
+  assert.throws(() => service.setEnabled(false), /fixture storage failure/);
+  assert.equal(service.isEnabled(), true);
+  blocked = false;
+  service.setEnabled(false);
+  assert.equal(service.isEnabled(), false);
+  await service.ingestMessage("以后请用日系插画风格", "user");
+  assert.equal(storage.store.records.length, 0);
+});
+
+test("buildInjection does not inject after disabling during a pending read", async () => {
+  const { service, storage } = createService();
+  service.setEnabled(true);
+  await service.ingestMessage("以后请用日系插画风格", "user");
+  const read = pauseNextRead(storage);
+  const injection = service.buildInjection("帮我生成日系插画风格的海报");
+  await read.started;
+  service.setEnabled(false);
+  read.resume();
+  assert.equal(await injection, "");
+  assert.equal(storage.store.records.length, 1);
+});
+
+test("saveCodexExtraction does not save after disabling while queued", async () => {
+  const { service, storage } = createService();
+  service.setEnabled(true);
+  const read = pauseNextRead(storage);
+  const clear = service.clearAll();
+  await read.started;
+  const extraction = service.saveCodexExtraction("记忆：用户偏好日系插画风格");
+  service.setEnabled(false);
+  read.resume();
+  await clear;
+  assert.equal(await extraction, 0);
+  assert.deepEqual(storage.store.records, []);
+});
+
+test("saveCodexExtraction does not save after disabling during a pending read", async () => {
+  const { service, storage } = createService();
+  service.setEnabled(true);
+  const read = pauseNextRead(storage);
+  const extraction = service.saveCodexExtraction("记忆：用户偏好日系插画风格");
+  await read.started;
+  service.setEnabled(false);
+  read.resume();
+  assert.equal(await extraction, 0);
+  assert.deepEqual(storage.store.records, []);
+});
+
+test("ingestMessage does not save after disabling during a pending read", async () => {
+  const { service, storage } = createService();
+  service.setEnabled(true);
+  const read = pauseNextRead(storage);
+  const ingestion = service.ingestMessage("以后请用日系插画风格", "user");
+  await read.started;
+  service.setEnabled(false);
+  read.resume();
+  await ingestion;
+  assert.deepEqual(storage.store.records, []);
+});
+
+for (const mutation of ["clearAll", "resetIdentity", "deleteRecord"] as const) {
+  test("late extraction cannot refill memory after " + mutation, async () => {
+    const { service, storage } = createService();
+    service.setEnabled(true);
+    await service.ingestMessage("以后请用日系插画风格", "user");
+    const id = storage.store.records[0].id;
+    if (mutation === "deleteRecord") await service.deleteRecord(id);
+    else await service[mutation]();
+    assert.equal(
+      await service.saveCodexExtraction(
+        "记忆：用户偏好日系插画风格",
+        "old-thread",
+        0,
+      ),
+      0,
+    );
+    assert.deepEqual(storage.store.records, []);
+    assert.equal(
+      await service.saveCodexExtraction("记忆：用户偏好暖色调", "new-thread"),
+      1,
+    );
+  });
+}
+
+test("failed clear preserves memory and does not invalidate a pending extraction", async () => {
+  const { service, storage } = createService();
+  service.setEnabled(true);
+  await service.ingestMessage("以后请用日系插画风格", "user");
+  storage.failures.push("write");
+  await assert.rejects(() => service.clearAll(), /write failed/);
+  storage.failures = [];
+  assert.equal(
+    await service.saveCodexExtraction(
+      "记忆：用户偏好暖色调",
+      "pending-thread",
+      0,
+    ),
+    1,
+  );
+  assert.equal(storage.store.records.length, 2);
+});
+
+test("queued extraction is discarded after clearing while the clear read waits", async () => {
+  const { service, storage } = createService();
+  service.setEnabled(true);
+  const read = pauseNextRead(storage);
+  const clear = service.clearAll();
+  await read.started;
+  const extraction = service.saveCodexExtraction(
+    "记忆：用户偏好日系插画风格",
+    "pending-thread",
+    0,
+  );
+  read.resume();
+  await clear;
+  assert.equal(await extraction, 0);
+  assert.deepEqual(storage.store.records, []);
 });

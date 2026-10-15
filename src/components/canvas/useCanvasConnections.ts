@@ -12,6 +12,7 @@ import {
 } from "../../domain/canvasGraph";
 import { type CanvasCollectionItem } from "../../domain/canvasItems";
 import { reconcileCanvasConnections } from "../../domain/canvasConnections";
+import { mergeCanvasEdges } from "../../domain/projectCanvas";
 import { canvasImageReferenceLimit } from "../../features/models/imageModelCapabilities";
 import { readProviderConnections } from "../../features/creation/providerRegistry";
 import { CanvasImageCommandContext } from "../../features/creation/CanvasImageCommand";
@@ -21,27 +22,22 @@ export function useCanvasConnections(
   items: CanvasCollectionItem[],
   onItemsChange: Dispatch<SetStateAction<CanvasCollectionItem[]>>,
   initialEdges: CanvasConnection[] = INITIAL_CONNECTIONS,
+  isCanvasEcho = false,
 ) {
   const command = useContext(CanvasImageCommandContext);
   const [edges, setEdges] = useState(initialEdges);
   const [observedEdges, setObservedEdges] = useState(initialEdges);
-  // Async provider results arrive through project state while this canvas stays
-  // mounted. Merge only newly published result edges before children commit;
-  // otherwise the persistence effect could write the old graph back to App.
+  // Apply external graph edits before persistence, preserving local undo/connect.
   if (observedEdges !== initialEdges) {
     setObservedEdges(initialEdges);
-    const additions = initialEdges.filter(
-      (edge) =>
-        edge.kind === "result" &&
-        !observedEdges.some((previous) => previous.id === edge.id),
+    setEdges((current) =>
+      reconcileCanvasConnections(
+        items,
+        isCanvasEcho
+          ? current
+          : mergeCanvasEdges(current, observedEdges, initialEdges),
+      ),
     );
-    if (additions.length)
-      setEdges((current) => [
-        ...current,
-        ...additions.filter(
-          (edge) => !current.some((existing) => existing.id === edge.id),
-        ),
-      ]);
   }
   const [removedEdge, setRemovedEdge] = useState<CanvasConnection | null>(null);
   const [connectionNotice, setConnectionNotice] = useState("");

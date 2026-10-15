@@ -23,7 +23,7 @@ if (args.length > 0) {
   else containerRoot = args[1];
 }
 if (containerRoot !== undefined && !containerRoot.trim())
-  issues.push("KK_CONTAINER_ROOT 必须提供非空路径");
+  issues.push("KK_CONTAINER_ROOT must not be blank; 必须提供非空路径");
 const explicitContainerRoot = containerRoot?.trim()
   ? path.resolve(containerRoot)
   : null;
@@ -113,6 +113,10 @@ console.log(
       ...snapshotRoots.map(({ relativePath }) => relativePath),
       ...TEMPORAL_DOCUMENTS.map(({ relativePath }) => relativePath),
     ]).size
-  } unique documents, ${issues.length} violations.`,
+  } unique documents, ${issues.length} violations. Container snapshots: ${
+    explicitContainerRoot
+      ? CONTAINER_SNAPSHOT_DOCUMENTS.length
+      : "not configured"
+  }.`,
 );
 process.exitCode = issues.length ? 1 : 0;

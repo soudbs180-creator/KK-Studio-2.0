@@ -1,0 +1,35 @@
+{
+  "canonicalRoot": "D:\\kk-studio\\KK-Studio-2.0",
+  "sourceHead": "51fccfc7879cf90f7caaf3ae8e10af4d97a2aa2c",
+  "sourceDirty": true,
+  "reviewedProductionSource": "6f8ff257e8996eaf11ca4446e8781dd10d9aa1d9",
+  "sourceEquivalence": "Root separately verified 714 normalized official source inputs with zero mismatch",
+  "testScriptSha256": "1bb5a88d361de52962171fe59bcc83ef56388ab4f867d829a9b4c14f97256b41",
+  "receiptPath": "D:\\kk-studio\\KK-Studio-2.0\\src-tauri\\target\\release\\kk-studio.build-receipt.json",
+  "receiptSha256": "9a2835f8abc5bcff093367ccfb09f0f9d55c86f0745ec546f3c43a18d002de80",
+  "inputSha256": "e5faac471d9c30d582147c9c25381404fa98c8a3e2528307bbcd1ff52ec1e28f",
+  "executableSha256": "b3715cc0eb8ddd03cc2ff329ff23422824946e4ae0f5f4e83ad09bd8f3ed9155",
+  "actualExecutableSha256": "b3715cc0eb8ddd03cc2ff329ff23422824946e4ae0f5f4e83ad09bd8f3ed9155",
+  "runtimeLoads": [
+    {
+      "url": "http://tauri.localhost/",
+      "assets": [
+        "http://tauri.localhost/assets/index-C4eyZL54.js"
+      ],
+      "entry": "src/main.tsx -> src/App.tsx"
+    },
+    {
+      "url": "http://tauri.localhost/",
+      "assets": [
+        "http://tauri.localhost/assets/index-C4eyZL54.js"
+      ],
+      "entry": "src/main.tsx -> src/App.tsx"
+    }
+  ],
+  "passed": true,
+  "credentialCleanupComplete": true,
+  "ownedProcessesRemaining": 0,
+  "debuggerListenersRemaining": 0,
+  "guardScope": "Only the unique owned credential reference reaches the real vault. Unrelated settings credential probes are isolated.",
+  "verificationScope": "Real owned credential save/read/reload/user-close/reopen/delete; direct candidate EXE smoke. Official launcher receipt and 38 Agent checks are separate evidence. Forced-crash last-selected profile recovery is not asserted."
+}

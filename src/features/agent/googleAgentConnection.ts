@@ -25,6 +25,8 @@ import { executeGoogleTool, GOOGLE_CANVAS_TOOLS } from "./googleAgentTools.ts";
 import {
   geminiCliChat,
   geminiCliStatus,
+  geminiCliStatusMessage,
+  resolveGeminiCliLoginStatus,
   GeminiCliError,
   GEMINI_CLI_MODELS,
   GEMINI_BRIDGE_DEFAULT_URL,
@@ -156,20 +158,13 @@ export function createGoogleAgentConnection(options: Options = {}) {
           signal: controller.signal,
         });
         if (version !== epoch || projectId !== current()) return;
-        if (!status.installed) {
+        if (
+          !status.installed ||
+          resolveGeminiCliLoginStatus(status) !== "verified"
+        ) {
           patch({
             status: "disconnected",
-            error:
-              "未安装 Gemini CLI，请先在终端运行 npm install -g @google/gemini-cli。",
-            activity: "",
-          });
-          return;
-        }
-        if (!status.login) {
-          patch({
-            status: "disconnected",
-            error:
-              "Gemini CLI 未登录，请先在终端运行 gemini 并选择 Login with Google。",
+            error: geminiCliStatusMessage(status),
             activity: "",
           });
           return;

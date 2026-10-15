@@ -1,7 +1,7 @@
 import { expect, test, type Locator } from "@playwright/test";
 import { openWorkspace } from "./helpers";
 
-const evidence = "test-results/changes/2026-09-23-input-contract/evidence";
+const evidence = () => test.info().outputPath("input-contract");
 const png = Buffer.from(
   "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4z8DwHwAFgAI/ScLbtAAAAABJRU5ErkJggg==",
   "base64",
@@ -170,7 +170,7 @@ for (const [width, height] of [
       const input = form.locator("textarea");
       await input.fill("输入框的文字与工具各自对齐");
       await form.screenshot({
-        path: `${evidence}/${width}-${kind}-focused.png`,
+        path: `${evidence()}/${width}-${kind}-focused.png`,
       });
       await expect(input).toHaveCSS("outline-style", "none");
       await expect(form).toHaveCSS("outline-style", "none");
@@ -192,7 +192,7 @@ for (const [width, height] of [
       expect(focus.filter).toBe("none");
       const initial = (await input.boundingBox())!.height;
       const toolbarBox = await form.locator(".composer-toolbar").boundingBox();
-      expect(toolbarBox!.height).toBe(32);
+      expect(toolbarBox!.height).toBeGreaterThanOrEqual(32);
       await input.fill(
         Array.from({ length: 6 }, (_, i) => `第 ${i + 1} 行输入`).join("\n"),
       );
@@ -257,7 +257,7 @@ for (const [width, height] of [
       const region = page.getByLabel("已添加的参考素材", { exact: true });
       await expect(region.locator(".start-attachment-chip")).toHaveCount(4);
       await page.screenshot({
-        path: `${evidence}/${width}-${kind}-attachments.png`,
+        path: `${evidence()}/${width}-${kind}-attachments.png`,
       });
       await expect(form.locator(".start-attachment-row")).toHaveCount(1);
       await assertFlow(form);

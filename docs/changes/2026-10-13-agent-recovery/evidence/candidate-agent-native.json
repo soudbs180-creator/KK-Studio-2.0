@@ -1,0 +1,275 @@
+{
+  "startedAt": "2026-10-13T11:12:07.273Z",
+  "mode": "Tauri release",
+  "sourceHead": "6f8ff257e8996eaf11ca4446e8781dd10d9aa1d9",
+  "isolated": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-agent-recovery-16M9Lm",
+  "dataRoot": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-agent-recovery-16M9Lm\\data",
+  "profile": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-agent-recovery-16M9Lm\\webview",
+  "codexHome": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-agent-recovery-16M9Lm\\codex-home",
+  "checks": [
+    {
+      "name": "storage-isolation-first",
+      "passed": true
+    },
+    {
+      "name": "memory-isolation-first",
+      "passed": true
+    },
+    {
+      "name": "loaded-asset-first-index-C4eyZL54.js",
+      "passed": true
+    },
+    {
+      "name": "loaded-asset-first-index-DeEjVB-7.css",
+      "passed": true
+    },
+    {
+      "name": "release-identity-first",
+      "passed": true
+    },
+    {
+      "name": "home-auto-start-service",
+      "passed": true
+    },
+    {
+      "name": "home-keeps-empty-projects",
+      "passed": true
+    },
+    {
+      "name": "home-does-not-create-agent-conversation",
+      "passed": true
+    },
+    {
+      "name": "project-auto-connect-persists-thread",
+      "passed": true
+    },
+    {
+      "name": "auto-connect-no-observed-turn-after-attach",
+      "passed": true
+    },
+    {
+      "name": "credential-id-was-absent",
+      "passed": true
+    },
+    {
+      "name": "synthetic-system-credential-set",
+      "passed": true
+    },
+    {
+      "name": "reload-retains-thread",
+      "passed": true
+    },
+    {
+      "name": "storage-isolation-reopen",
+      "passed": true
+    },
+    {
+      "name": "memory-isolation-reopen",
+      "passed": true
+    },
+    {
+      "name": "loaded-asset-reopen-index-C4eyZL54.js",
+      "passed": true
+    },
+    {
+      "name": "loaded-asset-reopen-index-DeEjVB-7.css",
+      "passed": true
+    },
+    {
+      "name": "release-identity-reopen",
+      "passed": true
+    },
+    {
+      "name": "release-unchanged-reopen",
+      "passed": true
+    },
+    {
+      "name": "normal-close-reopen-retains-thread",
+      "passed": true
+    },
+    {
+      "name": "system-credential-reopens-with-same-hash",
+      "passed": true
+    },
+    {
+      "name": "credential-is-absent-from-local-storage",
+      "passed": true
+    },
+    {
+      "name": "credential-is-absent-from-export",
+      "passed": true
+    },
+    {
+      "name": "explicit-disconnect-pauses-after-reload",
+      "passed": true
+    },
+    {
+      "name": "storage-isolation-paused-reopen",
+      "passed": true
+    },
+    {
+      "name": "memory-isolation-paused-reopen",
+      "passed": true
+    },
+    {
+      "name": "loaded-asset-paused-reopen-index-C4eyZL54.js",
+      "passed": true
+    },
+    {
+      "name": "loaded-asset-paused-reopen-index-DeEjVB-7.css",
+      "passed": true
+    },
+    {
+      "name": "release-identity-paused-reopen",
+      "passed": true
+    },
+    {
+      "name": "release-unchanged-paused-reopen",
+      "passed": true
+    },
+    {
+      "name": "explicit-disconnect-pauses-after-normal-reopen",
+      "passed": true
+    },
+    {
+      "name": "manual-reconnect-retains-thread",
+      "passed": true
+    },
+    {
+      "name": "stop-preserves-thread",
+      "passed": true
+    },
+    {
+      "name": "service-restart-retains-thread",
+      "passed": true
+    },
+    {
+      "name": "no-observed-model-turn-after-each-cdp-attach",
+      "passed": true
+    },
+    {
+      "name": "unknown-ownership-does-not-create-or-replace-thread",
+      "passed": true
+    },
+    {
+      "name": "unknown-ownership-keeps-owned-service",
+      "passed": true
+    },
+    {
+      "name": "synthetic-credential-cleanup",
+      "passed": true
+    }
+  ],
+  "launches": [
+    {
+      "tag": "first",
+      "ProcessId": 89260,
+      "ParentProcessId": 66404,
+      "ExecutablePath": "D:\\kk-studio\\.worktrees\\TASK-AGENT-RECOVERY-20261013\\src-tauri\\target\\release\\kk-studio.exe",
+      "CreationDate": "/Date(1791890009219)/",
+      "url": "http://tauri.localhost/",
+      "loaded": [
+        {
+          "path": "/assets/index-C4eyZL54.js",
+          "sha256": "c73e18b6aaec34ccdcb174053deb133287908d22f89aa880ccbbce86e2fb8656"
+        },
+        {
+          "path": "/assets/index-DeEjVB-7.css",
+          "sha256": "a98ea7f045fbf6670e187f949b4fe19adaac14f0358cca11902cef47bced5f1f"
+        }
+      ]
+    },
+    {
+      "tag": "reopen",
+      "ProcessId": 41228,
+      "ParentProcessId": 7124,
+      "ExecutablePath": "D:\\kk-studio\\.worktrees\\TASK-AGENT-RECOVERY-20261013\\src-tauri\\target\\release\\kk-studio.exe",
+      "CreationDate": "/Date(1791890025339)/",
+      "url": "http://tauri.localhost/",
+      "loaded": [
+        {
+          "path": "/assets/index-C4eyZL54.js",
+          "sha256": "c73e18b6aaec34ccdcb174053deb133287908d22f89aa880ccbbce86e2fb8656"
+        },
+        {
+          "path": "/assets/index-DeEjVB-7.css",
+          "sha256": "a98ea7f045fbf6670e187f949b4fe19adaac14f0358cca11902cef47bced5f1f"
+        }
+      ]
+    },
+    {
+      "tag": "paused-reopen",
+      "ProcessId": 15392,
+      "ParentProcessId": 58600,
+      "ExecutablePath": "D:\\kk-studio\\.worktrees\\TASK-AGENT-RECOVERY-20261013\\src-tauri\\target\\release\\kk-studio.exe",
+      "CreationDate": "/Date(1791890035786)/",
+      "url": "http://tauri.localhost/",
+      "loaded": [
+        {
+          "path": "/assets/index-C4eyZL54.js",
+          "sha256": "c73e18b6aaec34ccdcb174053deb133287908d22f89aa880ccbbce86e2fb8656"
+        },
+        {
+          "path": "/assets/index-DeEjVB-7.css",
+          "sha256": "a98ea7f045fbf6670e187f949b4fe19adaac14f0358cca11902cef47bced5f1f"
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "observedModelTurnsAfterAttach": 0,
+  "startupTurnObservation": "NOT VERIFIED before CDP attachment; complete startup requests are covered by the loopback browser fixture",
+  "threadMutations": 1,
+  "unknownOwnership": "PASS; missing association simulated only in the isolated native snapshot",
+  "credential": {
+    "providerId": "agent-recovery-c4fdd24d-06ba-432e-91da-68e89b33bdd6",
+    "secretSha256": "96f181da7ab4751ab8faaea1c594af6f8d533a646b046d9b4b6a076bb65f585a",
+    "cleanupComplete": true,
+    "reopen": {
+      "exists": true,
+      "sha256": "96f181da7ab4751ab8faaea1c594af6f8d533a646b046d9b4b6a076bb65f585a",
+      "matches": true,
+      "absentFromLocalStorage": true
+    }
+  },
+  "passed": true,
+  "initialRelease": {
+    "releaseExePath": "D:\\kk-studio\\.worktrees\\TASK-AGENT-RECOVERY-20261013\\src-tauri\\target\\release\\kk-studio.exe",
+    "releaseMtimeMs": 1791883733071.995,
+    "newestInputPath": "D:\\kk-studio\\.worktrees\\TASK-AGENT-RECOVERY-20261013\\src\\components\\settings\\GoogleConnectionSettings.tsx",
+    "newestInputMtimeMs": 1791889674473.6143,
+    "inputSha256": "a034f9639f34068358424f30c1f60cf7b3f7d55c24e55952ce7e3e7d77707e4c",
+    "executableSha256": "de420abf1daad3ae13702e9f70266c4a3859d9eca2f52c2a5d558b877a46d19f",
+    "desktopVersion": "2.1.16",
+    "receiptPath": "D:\\kk-studio\\.worktrees\\TASK-AGENT-RECOVERY-20261013\\src-tauri\\target\\release\\kk-studio.build-receipt.json",
+    "needsBuild": true,
+    "reason": "unverified"
+  },
+  "scriptSha256": "d42a1b16ad08185bb600860238a8aeb47fac815e0dee146630509743502b5713",
+  "versions": {
+    "schemaVersion": 1,
+    "desktop": "2.1.16",
+    "web": "2.1.16",
+    "mobile": "2.1.1"
+  },
+  "release": {
+    "releaseExePath": "D:\\kk-studio\\.worktrees\\TASK-AGENT-RECOVERY-20261013\\src-tauri\\target\\release\\kk-studio.exe",
+    "releaseMtimeMs": 1791890008141.962,
+    "newestInputPath": "D:\\kk-studio\\.worktrees\\TASK-AGENT-RECOVERY-20261013\\dist\\assets\\AssetPanel-C1ieve5m.js",
+    "newestInputMtimeMs": 1791889967455.7766,
+    "inputSha256": "98891f7a23bd217d67f1e83750a14402579b57195576f57c9e8f2d01bbdc6b92",
+    "executableSha256": "aaa46e22b9ef95308f33e1d89d0678160d5c2ac202aecad1e2b2bfa26a092848",
+    "desktopVersion": "2.1.16",
+    "receiptPath": "D:\\kk-studio\\.worktrees\\TASK-AGENT-RECOVERY-20261013\\src-tauri\\target\\release\\kk-studio.build-receipt.json",
+    "needsBuild": false,
+    "reason": "current"
+  },
+  "receiptSha256": "3df7ee9436fb237d6157c7eb0ab740661e50566494d44f5248cef76bbb06a64a",
+  "export": {
+    "sha256": "38afc1da77e6d486a7581854261cb41e718dcfb0c57db9c476dafda721b1f90f",
+    "files": [
+      "manifest.json"
+    ]
+  },
+  "completedAt": "2026-10-13T11:14:06.759Z"
+}

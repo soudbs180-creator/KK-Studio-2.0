@@ -27,8 +27,7 @@ interface CanvasNodeLayerProps {
   controls: ReturnType<typeof useCanvasControls>;
   items: CanvasCollectionItem[];
   onItemsChange: Dispatch<SetStateAction<CanvasCollectionItem[]>>;
-  favoriteIds: Set<string>;
-  onToggleFavorite: (id: string) => void;
+  onLocalGenerationSettled: (terminal: CanvasCollectionItem[]) => void;
   likedIds: Set<string>;
   onToggleLike: (id: string) => void;
   onConfigure: () => void;
@@ -49,8 +48,7 @@ export default function CanvasNodeLayer({
   controls,
   items,
   onItemsChange,
-  favoriteIds,
-  onToggleFavorite,
+  onLocalGenerationSettled,
   likedIds,
   onToggleLike,
   onConfigure,
@@ -78,6 +76,15 @@ export default function CanvasNodeLayer({
   } | null>(null);
   const [connectionTarget, setConnectionTarget] = useState<string | null>(null);
   const pendingByParent = useRef<Record<string, string[]>>({});
+  const currentItems = useRef(items);
+  currentItems.current = items;
+  useEffect(() => {
+    for (const parentId of Object.keys(pendingByParent.current)) {
+      if (items.some((item) => item.id === parentId)) continue;
+      markPending(parentId, "cancelled");
+      delete pendingByParent.current[parentId];
+    }
+  }, [items]);
   useEffect(() => {
     if (!pendingResultIds.length || !pendingResultIds.every((id) => nodes[id]))
       return;
@@ -126,33 +133,33 @@ export default function CanvasNodeLayer({
     setPendingResultIds(ids);
   }
   function addGeneratedResults(parentId: string, results: DemoResult[]): void {
-    const source = items.find((item) => item.id === parentId);
+    const source = currentItems.current.find((item) => item.id === parentId);
+    if (!source) return;
     const pending = pendingByParent.current[parentId] ?? [];
     if (source && pending.length >= results.length) {
-      onItemsChange((current) =>
-        current.map((item) => {
-          const index = pending.indexOf(item.id);
-          const result = index >= 0 ? results[index] : undefined;
-          if (!result) return item;
-          const title =
-            results.length === 1
-              ? result.title
-              : result.title.includes("（演示")
-                ? result.title
-                : `${result.title}（演示 ${index + 1}/${results.length}）`;
-          return {
-            ...item,
-            result: { ...result, title },
-            title,
-            description: result.description,
-            preview:
-              result.poster ??
-              (result.kind === "image" ? result.src : undefined),
-            prompt: source.prompt,
-            generationStatus: "ready",
-          };
-        }),
-      );
+      const terminal: CanvasCollectionItem[] = results.map((result, index) => {
+        const title =
+          results.length === 1 || result.title.includes("（演示")
+            ? result.title
+            : result.title +
+              "（演示 " +
+              (index + 1) +
+              "/" +
+              results.length +
+              "）";
+        return {
+          id: pending[index],
+          kind: result.kind,
+          generationIndex: index,
+          result: { ...result, title },
+          title,
+          description: result.description,
+          preview:
+            result.poster ?? (result.kind === "image" ? result.src : undefined),
+          generationStatus: "ready",
+        };
+      });
+      onLocalGenerationSettled(terminal);
       pendingByParent.current[parentId] = [];
       return;
     }
@@ -178,20 +185,21 @@ export default function CanvasNodeLayer({
   }
   function markPending(
     parentId: string,
-    phase: "error" | "cancelled" | "offline",
+    phase: "loading" | "success" | "error" | "cancelled" | "offline",
   ): void {
+    if (phase === "loading" || phase === "success") return;
     const pending = pendingByParent.current[parentId] ?? [];
     if (!pending.length) return;
-    onItemsChange((current) =>
-      current.map((item) =>
-        pending.includes(item.id)
-          ? {
-              ...item,
-              generationStatus: "error",
-              title: phase === "cancelled" ? "已取消生成" : "生成失败，请重试",
-            }
-          : item,
-      ),
+
+    onLocalGenerationSettled(
+      pending.map((id, generationIndex) => ({
+        id,
+        kind: "video",
+        generationIndex,
+        description: "",
+        generationStatus: "error",
+        title: phase === "cancelled" ? "已取消生成" : "生成失败，请重试",
+      })),
     );
     pendingByParent.current[parentId] = [];
   }
@@ -246,7 +254,6 @@ export default function CanvasNodeLayer({
           item={item}
           controls={controls}
           addMenu={addMenu}
-          favorite={favoriteIds.has(item.id)}
           liked={likedIds.has(item.id)}
           connectionTarget={connectionTarget === item.id}
           onConnect={onConnect}
@@ -264,8 +271,11 @@ export default function CanvasNodeLayer({
                 : null,
             )
           }
-          onToggleFavorite={onToggleFavorite}
-          onDelete={controls.removeNode}
+          onDelete={(id) => {
+            markPending(id, "cancelled");
+            controls.removeNode(id);
+          }}
+          activeLocalResultIds={Object.values(pendingByParent.current).flat()}
           onToggleLike={onToggleLike}
           onConfigure={onConfigure}
           onItemsChange={onItemsChange}
@@ -274,14 +284,7 @@ export default function CanvasNodeLayer({
           onGenerationStart={reserveGeneratedResults}
           onAddReferences={addReferences}
           onRemoveReference={onDeleteConnection}
-          onGenerationState={(id, phase) => {
-            if (
-              phase === "error" ||
-              phase === "cancelled" ||
-              phase === "offline"
-            )
-              markPending(id, phase);
-          }}
+          onGenerationState={markPending}
         />
       ))}
       <CanvasConnections

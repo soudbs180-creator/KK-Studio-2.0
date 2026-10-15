@@ -13,6 +13,7 @@ export interface Entry {
   detail?: string;
   page?: string;
   selection?: ModelSelection;
+  checked?: boolean;
   disabled?: string;
   terms?: string[];
 }

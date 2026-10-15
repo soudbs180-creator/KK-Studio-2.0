@@ -9,16 +9,23 @@ pub struct TextMessage {
 pub(super) fn validate(request: &TaskHostRequest) -> Result<(), String> {
     if !matches!(
         request.protocol.as_deref(),
-        None | Some("openai-compatible" | "anthropic-messages" | "gemini")
+        None | Some(
+            "openai-chat"
+                | "openai-responses"
+                | "anthropic"
+                | "azure-openai"
+                | "ollama"
+                | "gemini"
+                | "openai-compatible"
+                | "anthropic-messages"
+        )
     ) || !matches!(
         request.auth_mode.as_deref(),
-        None | Some("api_key" | "none")
+        None | Some("api-key" | "api_key" | "none")
     ) {
         return Err("invalid: text protocol/authMode".into());
     }
-    if request.kind.as_deref() != Some("text")
-        && (request.protocol.is_some() || request.auth_mode.is_some() || request.messages.is_some())
-    {
+    if request.kind.as_deref() != Some("text") && request.messages.is_some() {
         return Err("invalid: text routing on image request".into());
     }
     if request.auth_mode.as_deref() == Some("none") && !strict_loopback(&request.base_url) {
@@ -39,17 +46,6 @@ pub(super) fn validate(request: &TaskHostRequest) -> Result<(), String> {
     }
     Ok(())
 }
-pub(super) fn capacity_identity(request: &TaskHostRequest) -> String {
-    if request.auth_mode.as_deref() == Some("none") && request.credential_ref.is_empty() {
-        format!(
-            "local-{:x}",
-            Sha256::digest(request.base_url.trim_end_matches('/').as_bytes())
-        )
-    } else {
-        request.credential_ref.clone()
-    }
-}
-
 fn strict_loopback(value: &str) -> bool {
     let Some((scheme, rest)) = value.split_once("://") else {
         return false;
@@ -92,17 +88,23 @@ pub(super) fn request_parts(request: &TaskHostRequest) -> Result<(reqwest::Url, 
         .iter()
         .filter(|m| m.role != "system")
         .collect::<Vec<_>>();
-    match request.protocol.as_deref().unwrap_or("openai-compatible") {
-        "anthropic-messages" => {
+    match provider::Protocol::parse(request.protocol.as_deref())? {
+        provider::Protocol::Responses => {
+            url.set_path(&format!("{prefix}/responses"));
+            Ok((
+                url,
+                json!({"model":request.model,"input":messages,"stream":true,"store":false}),
+            ))
+        }
+        provider::Protocol::Anthropic => {
             url.set_path(&format!("{prefix}/messages"));
-            let mut body =
-                json!({"model":request.model,"messages":chat,"max_tokens":4096,"stream":true});
+            let mut body = json!({"model":request.model,"messages":chat,"max_tokens":provider::ANTHROPIC_MAX_TOKENS,"stream":true});
             if !system.is_empty() {
                 body["system"] = json!(system);
             }
             Ok((url, body))
         }
-        "gemini" => {
+        provider::Protocol::Gemini => {
             let model = request
                 .model
                 .strip_prefix("models/")
@@ -138,6 +140,44 @@ mod tests {
     fn request(protocol: &str, auth: &str, base: &str) -> TaskHostRequest {
         serde_json::from_value(json!({"taskId":"chat-task","idempotencyKey":"idem","baseUrl":base,"credentialRef":"local","model":"chat","prompt":"next","kind":"text","outputIndices":[0],"protocol":protocol,"authMode":auth,"messages":[{"role":"system","content":"instructions"},{"role":"user","content":"first"},{"role":"assistant","content":"answer"},{"role":"user","content":"next"}]})).unwrap()
     }
+    #[test]
+    fn canonical_protocols_preserve_history_and_responses_privacy() {
+        for name in [
+            "openai-chat",
+            "openai-responses",
+            "anthropic",
+            "azure-openai",
+            "ollama",
+            "gemini",
+        ] {
+            let base = if name == "azure-openai" {
+                "https://example.com/openai/v1"
+            } else {
+                "https://example.com/v1"
+            };
+            let value = request(name, "api-key", base);
+            assert!(validate_request(&value).is_ok(), "{name}");
+            let (url, body) = request_parts(&value).unwrap();
+            match name {
+                "openai-responses" => {
+                    assert!(url.path().ends_with("/responses"));
+                    assert_eq!(body["input"].as_array().unwrap().len(), 4);
+                    assert_eq!(body["store"], false);
+                }
+                "anthropic" => {
+                    assert_eq!(body["system"], "instructions");
+                    assert_eq!(body["messages"].as_array().unwrap().len(), 3);
+                }
+                "gemini" => {
+                    assert_eq!(url.query(), Some("alt=sse"));
+                    assert_eq!(body["contents"].as_array().unwrap().len(), 3);
+                    assert_eq!(body["contents"][1]["role"], "model");
+                }
+                _ => assert_eq!(body["messages"].as_array().unwrap().len(), 4),
+            }
+        }
+    }
+
     #[test]
     fn protocol_native_parts_preserve_history_and_system() {
         let (url, body) = request_parts(&request(
@@ -182,9 +222,9 @@ mod tests {
         let mut value = request("openai-compatible", "none", "http://localhost:11434/v1");
         value.credential_ref.clear();
         assert!(validate_request(&value).is_ok());
-        let identity = capacity_identity(&value);
+        let identity = connection_capacity_key(&value);
         value.base_url = "http://localhost:1234/v1".into();
-        assert_ne!(capacity_identity(&value), identity);
+        assert_ne!(connection_capacity_key(&value), identity);
         value.auth_mode = None;
         assert!(validate_request(&value).is_err());
     }

@@ -45,7 +45,7 @@ function liveTaskCard(task: CreationTask): PrototypeTask {
                   ? "网络断开"
                   : task.status === "interrupted"
                     ? "上次未完成"
-                    : "失败，请重试";
+                    : "失败";
   return {
     id: task.id,
     status: task.status,
@@ -84,6 +84,9 @@ export default function TaskPanel({
   useDismissible(open, ref, dismiss);
   const displayTasks = tasks.length ? tasks.map(liveTaskCard) : PROTOTYPE_TASKS;
   const visibleTasks = tasksForFilter(displayTasks, tab);
+  const currentSelected = selectedTask
+    ? (displayTasks.find((task) => task.id === selectedTask.id) ?? null)
+    : null;
 
   return (
     <div
@@ -114,7 +117,8 @@ export default function TaskPanel({
           tab={tab}
           setTab={setTab}
           visibleTasks={visibleTasks}
-          selectedTask={selectedTask}
+          selectedTask={currentSelected}
+          tasks={tasks}
           setSelectedTask={setSelectedTask}
           onOpenTasks={onOpenTasks}
           onCancelTask={onCancelTask}

@@ -43,8 +43,10 @@ test("模型前缀分组、参数选择和模糊搜索保留实际厂商 ID", as
   await page.getByLabel("接口地址").fill("https://variants.example/v1");
   await page.getByLabel("API Key", { exact: true }).fill("fixture-key");
   await page.getByLabel("模型名称").fill("aurora-1-2k-low");
-  await page.getByRole("button", { name: "保存", exact: true }).click();
-  await page.getByRole("button", { name: "刷新模型列表", exact: true }).click();
+  await page.getByRole("button", { name: "保存连接", exact: true }).click();
+  await page
+    .getByRole("button", { name: "测试连接并刷新模型", exact: true })
+    .click();
   await expect(page.getByLabel("已发现的模型")).toContainText(
     "aurora-1-4k-high",
   );
@@ -82,8 +84,10 @@ test("模型前缀分组、参数选择和模糊搜索保留实际厂商 ID", as
   for (const [width, height] of [
     [390, 844],
     [834, 1112],
+    [1099, 1080],
     [1440, 900],
     [1440, 480],
+    [1920, 1080],
   ]) {
     await page.setViewportSize({ width, height });
     if (
@@ -95,6 +99,21 @@ test("模型前缀分组、参数选择和模糊搜索保留实际厂商 ID", as
     await panel
       .getByLabel("对话内容", { exact: true })
       .fill("输入内容与型号参数分别排列\n".repeat(5));
+    await expect(panel.getByLabel("型号参数", { exact: true })).toHaveCSS(
+      "height",
+      "32px",
+    );
+    await expect(panel.getByLabel("型号参数", { exact: true })).toHaveCSS(
+      "border-radius",
+      "8px",
+    );
+    expect(
+      await composer
+        .locator(".kk-model-variants")
+        .evaluate((element) =>
+          Number.parseFloat(getComputedStyle(element).fontSize),
+        ),
+    ).toBeGreaterThanOrEqual(12);
     const attachments = (await composer
       .locator(".start-attachment-row")
       .boundingBox())!;
@@ -201,9 +220,9 @@ test("分级菜单展示同名 API 图片模型、未知用途原因并保留账
       .fill("https://" + name.toLowerCase() + ".example/v1");
     await page.getByLabel("API Key", { exact: true }).fill("fixture-" + name);
     await page.getByLabel("模型名称").fill("image-same");
-    await page.getByRole("button", { name: "保存", exact: true }).click();
+    await page.getByRole("button", { name: "保存连接", exact: true }).click();
     await page
-      .getByRole("button", { name: "刷新模型列表", exact: true })
+      .getByRole("button", { name: "测试连接并刷新模型", exact: true })
       .click();
     await expect(page.getByLabel("已发现的模型")).toContainText(
       "brand-new-model",
@@ -241,6 +260,17 @@ test("分级菜单展示同名 API 图片模型、未知用途原因并保留账
   await expect(unknownOptions).toHaveCount(2);
   await unknownOptions.first().focus();
   await expect(unknownOptions.first()).toBeFocused();
+  const disabledStyle = await unknownOptions.first().evaluate((button) => ({
+    color: getComputedStyle(button).color,
+    background: getComputedStyle(button).backgroundColor,
+  }));
+  await unknownOptions.first().hover();
+  expect(
+    await unknownOptions.first().evaluate((button) => ({
+      color: getComputedStyle(button).color,
+      background: getComputedStyle(button).backgroundColor,
+    })),
+  ).toEqual(disabledStyle);
   await unknownOptions.first().press("Enter");
   await expect(menu).toBeVisible();
   await search.fill("");
@@ -318,8 +348,10 @@ test("视频和音频模型明确保持禁用并可键盘阅读原因", async ({
   await page.getByLabel("接口地址").fill("https://media.example/v1");
   await page.getByLabel("API Key", { exact: true }).fill("fixture-media");
   await page.getByLabel("模型名称").fill("media-video");
-  await page.getByRole("button", { name: "保存", exact: true }).click();
-  await page.getByRole("button", { name: "刷新模型列表", exact: true }).click();
+  await page.getByRole("button", { name: "保存连接", exact: true }).click();
+  await page
+    .getByRole("button", { name: "测试连接并刷新模型", exact: true })
+    .click();
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
   await page.getByRole("button", { name: "项目库", exact: true }).click();
   await page.getByRole("button", { name: "新建项目", exact: true }).click();

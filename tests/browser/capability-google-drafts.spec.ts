@@ -41,6 +41,7 @@ test("Google 密钥与 CLI 地址草稿跨接入方式保留，关闭后恢复�
   const key = dialog.getByLabel("Google 密钥", { exact: true });
   await key.fill(draftKey);
   await dialog.getByRole("button", { name: "CLI 账号", exact: true }).click();
+  await dialog.getByRole("button", { name: "Gemini CLI", exact: true }).click();
   const bridge = dialog.getByLabel("Gemini CLI 桥地址", { exact: true });
   await expect(bridge).toHaveValue(savedBridge);
   await bridge.fill(draftBridge);
@@ -51,6 +52,9 @@ test("Google 密钥与 CLI 地址草稿跨接入方式保留，关闭后恢复�
       .click();
     await expect(key).toHaveValue(draftKey);
     await dialog.getByRole("button", { name: "CLI 账号", exact: true }).click();
+    await dialog
+      .getByRole("button", { name: "Gemini CLI", exact: true })
+      .click();
     await expect(bridge).toHaveValue(draftBridge);
   }
   expect(calls).toEqual([]);
@@ -73,6 +77,7 @@ test("Google 密钥与 CLI 地址草稿跨接入方式保留，关闭后恢复�
     .click();
   await expect(key).toHaveValue("");
   await dialog.getByRole("button", { name: "CLI 账号", exact: true }).click();
+  await dialog.getByRole("button", { name: "Gemini CLI", exact: true }).click();
   await expect(bridge).toHaveValue(savedBridge);
 });
 
@@ -116,6 +121,9 @@ test("取消 Google 检测后切换方式不丢草稿，迟到响应不能覆盖
     await dialog.getByRole("button", { name: "取消检测", exact: true }).click();
     await expect(cliMethod).toBeEnabled();
     await cliMethod.click();
+    await dialog
+      .getByRole("button", { name: "Gemini CLI", exact: true })
+      .click();
     await dialog
       .getByLabel("Gemini CLI 桥地址", { exact: true })
       .fill(draftBridge);

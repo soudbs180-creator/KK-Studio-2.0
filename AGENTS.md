@@ -45,7 +45,7 @@
 ## 设计与交互
 
 - **UI 规范唯一入口是 [`docs/UI_INDEX.md`](docs/UI_INDEX.md)**。任何 UI 改动先读索引，再读该主题的唯一承载文件，不要在多份规范里各取一份。分工：`UI_RULES.md`（零件/交互规则）· `UI_ARCHETYPES.md`（页面类型）· `DESIGN_TOKENS.md`（数值）· `DESIGN-SYSTEM.md`（颜色与基础组件）· `UI_SPEC.md`（运行与验证）。旧 `UI-STANDARDS.md` / `UI-ALIGNMENT.md` 已合并，仅作历史溯源，不再更新。
-- 现行设计以 `docs/UI_INDEX.md` 指定的 Figma 四页 `505:13071/13430/13731/14180` 为最高基线，数值以 `src/styles/tokens.css` 为唯一运行时源；`DESIGN_TOKENS.md` 是索引，`DESIGN-SYSTEM.md` 承载主题和基础组件用法。Ardot 2026-09-22 PDF、旧页面 Frame 与 `tokens.json` 保留历史含义，不能覆盖新版规则；外壳几何必须注册，通用控件采用 24/32/40 高度、16/20/24 图标和不小于 12px 的文字。
+- 设计裁决先读 UI_INDEX：当前用户设计/已确认反馈 → 注册 tokens 与共享组件 → 未被覆盖的历史 Figma 基线；四页节点、Ardot 和旧 tokens.json 保留溯源。数值仍以 src/styles/tokens.css 为唯一运行时源；外壳几何先注册，通用控件采用 24/32/40 高度、16/20/24 图标和不小于 12px 的文字。
 - 每个可见控件必须有真实行为，或显示禁用原因；异步操作必须覆盖 loading、success、error、cancel 和离线状态。
 - UI/交互与功能链路是每个平台的最高优先级双门。平台最小链路必须先通过“连接健康检查 → 一次文本生成 → 一次图片生成 → 结果/原件回写 → 保存或重载恢复”，并在同一版本提供 UI 状态证据；静态 UI、fixture、mock 或单一平台证据不能替代真实 API 回执。性能优化与 Mobile 体验优化只能在对应平台最小链路通过后进行。
 - 视觉验收必须有相同状态的浏览器截图/DOM 证据；构建通过不等于 Figma 一致。

@@ -83,6 +83,33 @@ fn array<'a>(value: &'a Value, field: &str) -> Result<&'a [Value], String> {
 
 fn routing(value: &Value) -> Result<(), String> {
     text(value, "providerName", 1, 80)?;
+    enumeration(
+        value,
+        "providerProtocol",
+        &[
+            "openai-chat",
+            "openai-responses",
+            "anthropic",
+            "azure-openai",
+            "ollama",
+            "gemini",
+            "openai-compatible",
+            "anthropic-messages",
+        ],
+    )?;
+    enumeration(value, "providerAuthMode", &["api-key", "api_key", "none"])?;
+    if value.get("providerAuthMode").and_then(Value::as_str) == Some("none") {
+        let base = value
+            .get("providerBaseUrl")
+            .and_then(Value::as_str)
+            .ok_or_else(|| invalid("providerBaseUrl"))?;
+        crate::task_host::validate_provider_options(
+            base,
+            value.get("providerProtocol").and_then(Value::as_str),
+            Some("none"),
+        )
+        .map_err(|_| invalid("providerAuthMode"))?;
+    }
     if let Some(credential) = value.get("providerCredentialRef") {
         let credential = credential
             .as_str()
@@ -546,6 +573,7 @@ fn item(value: &Value) -> Result<(), String> {
             "model",
             "assetId",
             "parentAssetId",
+            "tags",
             "preview",
             "updatedAt",
             "referenceMode",
@@ -564,6 +592,7 @@ fn item(value: &Value) -> Result<(), String> {
     )?;
     text(value, "id", 1, 160)?;
     text(value, "parentAssetId", 1, 160)?;
+    crate::creation_storage::labels(value, "tags")?;
     text(value, "providerConnectionId", 0, 120)?;
     text(value, "imageEditPrompt", 0, 2000)?;
     if let Some(document) = value.get("imageEditDraft") {
@@ -694,9 +723,9 @@ fn task(value: &Value) -> Result<(), String> {
             "providerConnectionId",
             "providerCredentialRef",
             "providerBaseUrl",
-            "providerName",
             "providerProtocol",
             "providerAuthMode",
+            "providerName",
             "conversationRoundId",
             "conversationUserMessageId",
             "conversationMessages",
@@ -746,9 +775,18 @@ fn task(value: &Value) -> Result<(), String> {
     enumeration(
         value,
         "providerProtocol",
-        &["openai-compatible", "anthropic-messages", "gemini"],
+        &[
+            "openai-chat",
+            "openai-responses",
+            "anthropic",
+            "azure-openai",
+            "ollama",
+            "gemini",
+            "openai-compatible",
+            "anthropic-messages",
+        ],
     )?;
-    enumeration(value, "providerAuthMode", &["api_key", "none"])?;
+    enumeration(value, "providerAuthMode", &["api-key", "api_key", "none"])?;
     if value["providerAuthMode"] == "none" {
         let url = value["providerBaseUrl"]
             .as_str()
@@ -907,11 +945,17 @@ fn task(value: &Value) -> Result<(), String> {
             ],
         )?;
         texts(output, &[("assetId", 160), ("model", 120)])?;
-        if output
-            .get("text")
-            .is_some_and(|text| !text.as_str().is_some_and(|text| text.len() <= 32768))
-        {
-            return Err(invalid("outputs.text"));
+        if let Some(raw) = output.get("text") {
+            let text = raw
+                .as_str()
+                .filter(|text| text.len() <= 32768)
+                .ok_or_else(|| invalid("outputs.text"))?;
+            if output.get("assetId").is_some()
+                || (output.get("status").and_then(Value::as_str) == Some("succeeded")
+                    && text.trim().is_empty())
+            {
+                return Err(invalid("outputs.text"));
+            }
         }
         text(output, "provider", 1, 80)?;
         text(output, "promptHash", 1, 120)?;
@@ -1081,8 +1125,11 @@ pub(super) fn validate(snapshot: &Value) -> Result<(), String> {
                 "model",
                 "attachments",
                 "providerBaseUrl",
+                "providerProtocol",
+                "providerAuthMode",
                 "providerName",
                 "providerCredentialRef",
+                "agentThreadId",
                 "items",
                 "messages",
                 "tasks",
@@ -1090,6 +1137,7 @@ pub(super) fn validate(snapshot: &Value) -> Result<(), String> {
                 "reviewComments",
                 "favoriteIds",
                 "likedIds",
+                "customTags",
                 "composerDraft",
                 "createdAt",
                 "updatedAt",
@@ -1097,6 +1145,18 @@ pub(super) fn validate(snapshot: &Value) -> Result<(), String> {
             &["id", "items"],
         )?;
         text(project, "id", 1, 160)?;
+        crate::creation_storage::labels(project, "customTags")?;
+        if let Some(thread_id) = project.get("agentThreadId") {
+            if !thread_id.as_str().is_some_and(|id| {
+                !id.is_empty()
+                    && id.len() <= 160
+                    && id.bytes().all(|value| {
+                        value.is_ascii_alphanumeric() || value == b'_' || value == b'-'
+                    })
+            }) {
+                return Err(invalid("agentThreadId"));
+            }
+        }
         texts(project, &[("name", 120), ("prompt", 4000), ("model", 120)])?;
         enumeration(project, "kind", KINDS)?;
         finite(project, "createdAt")?;

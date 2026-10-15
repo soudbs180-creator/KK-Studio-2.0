@@ -67,7 +67,7 @@ try {
     .fill("https://desktop-capabilities.example.test/v1");
   await page.getByLabel("模型名称").fill("image-capability-native");
   // This test exercises local declarations; it never creates a vault credential.
-  await page.getByRole("button", { name: "保存", exact: true }).click();
+  await page.getByRole("button", { name: "保存连接", exact: true }).click();
   await page.getByLabel("当前模型用途").selectOption("image");
   await page
     .getByLabel("图片生成能力", { exact: true })

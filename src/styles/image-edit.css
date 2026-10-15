@@ -171,16 +171,14 @@
   font-size: var(--kk-font-caption);
   color: var(--kk-text-secondary);
 }
-.image-edit-model label {
+.image-edit-model .model-anchor {
+  position: relative;
   display: flex;
   align-items: center;
   min-width: 0;
   gap: var(--kk-space-1);
-}
-.image-edit-model select {
   max-width: var(--kk-image-model-width);
 }
-.image-edit-model select,
 .image-edit-toolbar select,
 .image-region-instruction input {
   background: var(--kk-bg-input);

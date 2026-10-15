@@ -6,9 +6,11 @@ import type { SkillRegistry } from "../features/skills/skillRegistry";
 import type { ConversationPanelProps } from "./ConversationPanel.types";
 import GoogleConversationPanel from "./GoogleConversationPanel";
 import ProviderConversationPanel from "./ProviderConversationPanel";
+import type { AgentDraftState } from "../features/agent/useAgentComposerDraft";
 export default function ConversationAlternateChannel({
   channel,
   project,
+  draftState,
   onClose,
   onOpen,
   overlay,
@@ -24,6 +26,7 @@ export default function ConversationAlternateChannel({
 > & {
   channel: string;
   project: CreationProject;
+  draftState: AgentDraftState;
   onChannelChange: (channel: string) => void;
   channelBusy: boolean;
   assistantRegistry?: SkillRegistry;
@@ -46,6 +49,7 @@ export default function ConversationAlternateChannel({
   return (
     <GoogleConversationPanel
       project={project}
+      draftState={draftState}
       onClose={onClose}
       onOpen={onOpen}
       onChannelChange={onChannelChange}

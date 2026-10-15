@@ -1,0 +1,10 @@
+{
+  "task": "TASK-AGENT-RECOVERY-20261013",
+  "atUtc": "2026-10-13T11:47:11.9575052Z",
+  "sourceHead": "b3bdc3d29d0a2912bda4d2d0ac7a85b8bb6100c1",
+  "lintExitCode": 0,
+  "affectedFormatExitCode": 0,
+  "diffExitCode": 0,
+  "productCodeChangedSinceFullVerify": false,
+  "passed": true
+}

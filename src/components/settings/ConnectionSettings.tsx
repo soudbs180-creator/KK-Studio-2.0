@@ -1,9 +1,9 @@
 import { appVersion } from "../../runtime/appInfo";
 import type { SettingsSection } from "./SettingsSectionData";
 import ModelAccessSettings from "./ModelAccessSettings";
+import AiWebsiteLinks from "./AiWebsiteLinks";
 
 import MemorySettingsSection from "./MemorySettingsSection";
-import AiWebsiteLinks from "./AiWebsiteLinks";
 
 const PENDING_SETTINGS: Partial<
   Record<SettingsSection, { title: string; description: string }>
@@ -28,15 +28,17 @@ const PENDING_SETTINGS: Partial<
 
 export default function ConnectionSettings({
   section,
+  active = true,
   onFeedback,
 }: {
   section: SettingsSection;
+  active?: boolean;
   onFeedback: (message: string) => void;
 }) {
   if (section === "providers")
     return (
       <>
-        <ModelAccessSettings onFeedback={onFeedback} />
+        <ModelAccessSettings active={active} onFeedback={onFeedback} />
         <AiWebsiteLinks onFeedback={onFeedback} />
       </>
     );

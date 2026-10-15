@@ -21,7 +21,7 @@ const connection = () => ({
     name: "local",
     model: "text-model",
     baseUrl: "http://127.0.0.1:11434/v1",
-    protocol: "openai-compatible",
+    protocol: "openai-chat",
     authMode: "none",
   }),
   capabilities: {
@@ -63,7 +63,7 @@ test("only explicit keyless text can bypass the credential gate; image and chang
     };
     assert.equal(assertSubmissionConnection(binding).id, selected.id);
     assert.throws(() =>
-      assertSubmissionConnection({ ...binding, authMode: "api_key" }),
+      assertSubmissionConnection({ ...binding, authMode: "api-key" }),
     );
     assert.throws(() =>
       assertSubmissionConnection({ ...binding, protocol: "gemini" }),
@@ -211,7 +211,7 @@ test("a conversation task without a canvas source needs the exact project, round
     assertLiveTextTask(
       {
         ...project,
-        tasks: [{ ...round.tasks[0], providerAuthMode: "api_key" }],
+        tasks: [{ ...round.tasks[0], providerAuthMode: "api-key" }],
       },
       round.tasks[0],
       "project",

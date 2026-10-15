@@ -1,32 +1,30 @@
 # KK Studio 运行时 Token 索引
 
-2026-09-30 更新。设计裁决从 [UI_INDEX](UI_INDEX.md) 开始，以新版 Figma
-四页治理基线为准。[历史 v2 表](archive/ui-history/DESIGN-TOKENS-2026-09-28.md)
-保留溯源，不能覆盖当前运行时。
+2026-10-14 更新。设计裁决从 [UI_INDEX](UI_INDEX.md) 开始；本页索引当前组件角色，不维护第二份可加载的数值表。[历史 v2 表](archive/ui-history/DESIGN-TOKENS-2026-09-28.md) 保留溯源。
 
 ## 唯一数值源
 
-[`src/styles/tokens.css`](../src/styles/tokens.css) 是实际加载的 `--kk-*` 数值源。
-[`ui-tokens.css`](../src/styles/ui-tokens.css) 只提供兼容别名，
-[`ui-governance.css`](../src/styles/ui-governance.css) 提供共享状态类。
-`tokens.json` 是历史导出快照，未被应用加载，不作为现行数值依据。
+[tokens.css](../src/styles/tokens.css) 声明全部 --kk-* 语义值；[ui-tokens.css](../src/styles/ui-tokens.css) 仅承接兼容别名，[ui-governance.css](../src/styles/ui-governance.css) 提供共享状态类。tokens.json 是历史导出快照。
 
-| 角色           | 当前 token                                                                                                                                    |
-| -------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| 控件高度       | `--kk-control-h-sm/md/lg`：24 / 32 / 40                                                                                                       |
-| 图标图形       | `--kk-icon-glyph-sm/md/lg`：16 / 20 / 24                                                                                                      |
-| 标准控件圆角   | `--kk-radius-control`：8                                                                                                                      |
-| 弱焦点边界     | `--kk-focus-ring-subtle`：主题中性浅色，宽度/偏移 1px                                                                                         |
-| 菜单圆角       | `--kk-radius-menu`：10                                                                                                                        |
-| 已注册面板外壳 | `--kk-radius-panel`：20                                                                                                                       |
-| 任务弹层外壳   | `--kk-task-popover-width/height/min-height`：360 / 420 / 300；来源为 2026-10-10 可读性修复，由 workspace/HUD 共用，实际高度受窗口剩余空间限制 |
-| 字体           | Caption 12/16；Body 14/20；Subtitle 16/24；Title 20/28；Display 26/32                                                                         |
+| 角色 | 当前 token 与使用者 |
+| --- | --- |
+| 控件高度 | --kk-control-h-sm/md/lg：24 / 32 / 40；共享按钮和设置控件 |
+| 图标图形 | --kk-icon-glyph-sm/md/lg：16 / 20 / 24；UiIcon |
+| 胶囊动作 | --kk-button-radius 引用 --kk-radius-full；--kk-model-capsule-max-width：260，超出上限的长模型名才省略 |
+| 方形圆角控件 | --kk-radius-control：8；输入、上传及 IconButton |
+| 中性主动作 | --kk-button-primary-bg/hover/text；深浅主题分别配对 |
+| 强调状态 | --kk-accent、--kk-accent-soft、--kk-text-accent；默认绿色、显式其他颜色兼容 |
+| 弱键盘焦点 | --kk-focus-ring-subtle、--kk-focus-width-subtle、--kk-focus-offset-subtle；输入聚焦提示 |
+| 菜单与面板 | --kk-radius-menu、--kk-radius-panel；不复制局部圆角 |
+| 设置外壳与接入导航 | --kk-settings-width（1120）、--kk-settings-compact-width（960）、--kk-settings-height（680）、--kk-settings-nav-width（208）、--kk-settings-method-width（160）；2026-10-15用户密度反馈，SettingsPanel按分类消费，手机分级导航保留 |
+| 手机画布屏幕编辑器 | --kk-canvas-screen-editor-width/bottom/max-height；CanvasComposerShell 与 canvas-composer-screen.css，固定屏幕容器受窗口和安全区限制，节点草稿与动作保持同源 |
+| 屏幕编辑器层级 | --kk-z-canvas-editor：高于 dropdown，低于浮动喜欢/标签面板；编辑器仍在画布 covered/inert 边界内 |
+| 画布菜单层级 | --kk-z-canvas-menu：HUD普通入口及缩放/背景菜单高于屏幕编辑器，低于喜欢/标签面板；入口和展开后使用同一层级，卡片动作避让实际矩形；临时可用高度限制短屏滚动，颜色入口采用32px/8px共享控件 |
+| 喜欢/标签面板 | --kk-collection-panel-width/height：360 / 480；FloatingCollectionPanel，受可视窗口限制、不随画布缩放 |
+| 浮动面板层级 | --kk-z-floating-panel/active：高于画布工具栏、canvas-editor 和 canvas-menu，低于 overlay、modal、popover；活动面板在同类面板之上 |
+| 任务弹层 | --kk-task-popover-width/height/min-height；任务浮层与 HUD |
+| 字体与间距 | --kk-font-*、--kk-line-*、--kk-space-*；文字层级与 4px 间距网格 |
 
-页面实例消费语义或组件 token。外壳几何必须先注册；断点只改变布局和容器宽度。
-交互规则见 [UI_RULES](UI_RULES.md)，页面选型见 [UI_ARCHETYPES](UI_ARCHETYPES.md)。
-新增数值必须同时说明来源和实际使用者，并通过 `npm run ui:check` 与浏览器验证。
+数值的实际使用者、默认/hover/pressed/selected/disabled/focus 状态须消费同一角色。断点可改变容器、排列和宽度，不复制第二套语义；新几何先注册 token 再使用。交互规则见 [UI_RULES](UI_RULES.md)，颜色与组件用法见 [DESIGN-SYSTEM](DESIGN-SYSTEM.md)。
 
-## 主题与组件
-
-主题、强调色和基础组件用法见 [DESIGN-SYSTEM](DESIGN-SYSTEM.md)。
-本次更新没有在线改写 Ardot 或 Figma；工程证据不能代替外部设计文件同步与用户视觉验收。
+本轮没有修改在线 Figma 文件；代码和文档不能冒充外部设计同步或用户视觉验收。

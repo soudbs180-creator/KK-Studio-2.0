@@ -147,12 +147,12 @@ test("窄屏首页模型入口保留可读的紧凑标签", async ({ page }) => 
     await page.setViewportSize({ width, height: 720 });
     await page.goto("/");
     const label = page.locator(".start-model-picker .start-tool-button span");
-    await expect(label).toHaveCSS("font-size", "0px");
-    expect(
-      await label.evaluate(
-        (element) => getComputedStyle(element, "::before").content,
-      ),
-    ).toBe('"模型"');
+    await expect(label).toHaveCSS("font-size", "12px");
+    const text = await label.evaluate((element) => ({
+      rendered: element.clientWidth,
+      full: element.scrollWidth,
+    }));
+    expect(text.rendered).toBeGreaterThanOrEqual(text.full);
   }
 });
 

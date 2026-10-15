@@ -2,8 +2,8 @@
 
 - 状态：REAL
 - 领域：canvas
-- 最近更新：2026-10-08
-- 关联任务：T2、UI-004、TASK-UI-006、TASK-CANVAS-KAWORKAI-001、TASK-UI-011
+- 最近更新：2026-10-14
+- 关联任务：T2、UI-004、TASK-UI-006、TASK-CANVAS-KAWORKAI-001、TASK-UI-011、TASK-222-ACTIONS-20261014、TASK-223-ACTIONS-20261014
 
 ## 用户可见入口
 
@@ -20,11 +20,17 @@
 
 ## 测试与证据
 
+- 2.1.24本地验证（TASK-223，本任务DONE/PASS；功能主状态保持）：背景样式/颜色、短屏菜单、L/G弹层边界及取消/删除/撤销已按现有链路验证；隐藏loading等待卡在成功/取消后Redo恢复终态，手机确认布局与原坐标保留；最终产品58b5c07f与完整验证、官方/便携回执见[本轮验证](../changes/2026-10-14-action-usability-223/verification.md)。
+
+- 2.1.23本地按钮修复：`tests/browser/canvas-node-actions.spec.ts`、`tests/browser/canvas-selected-zoom-menu.spec.ts`；结果及Web/Desktop边界见[2.1.23历史验证](../changes/2026-10-14-action-usability-222/verification.md)。
+
 - 浏览器：`tests/browser/canvas-actions/layout/navigation/pointer.spec.ts`、`connection-drag`、`context-menu`、`canvas-history-layers.spec.ts`、`interaction-regressions`、`ui-motion`
 - 单测：`tests/unit/canvasGraph.test.ts`、`projectCanvas.test.ts`、`canvasHistory.test.ts`、`canvasPreferences.test.ts`
 - 证据：`docs/changes/2026-09-20-ui-main-alignment/`、`docs/evidence/2026-09-21-main-close-002/`、`docs/changes/2026-09-29-kaworkai-canvas/`
 
 ## 当前能力
+
+- 本轮2.1.23已验证补齐草稿顶部删除、屏幕尺寸上传、320px HUD避让与撤销偏好恢复；不删除归档原件。
 
 - 节点增删改、结果边/参考边、框选多选、小地图、右键操作、会话内快照撤销/重做与本地持久化均为真实能力。
 - 右键画布菜单会按历史状态动态启用撤销/重做，并提供网格吸附和轻量图层管理入口；吸附偏好写入浏览器本地存储，图层面板支持搜索、类型标识、选中和定位。

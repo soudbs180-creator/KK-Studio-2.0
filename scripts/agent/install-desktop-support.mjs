@@ -46,6 +46,7 @@ const patches = [
     "src/config.ts",
     "if (process.env.CANVAS_AGENT_TOKEN) config.token = process.env.CANVAS_AGENT_TOKEN;",
     'config.token = process.env.CANVAS_AGENT_TOKEN || crypto.randomBytes(32).toString("hex");',
+    'return { ...parsed.data, token: process.env.CANVAS_AGENT_TOKEN || crypto.randomBytes(32).toString("hex") };',
   ],
   [
     "src/config.ts",
@@ -122,12 +123,16 @@ if (existingHelper !== null && existingHelper !== helper)
   throw Error(
     "Agent shutdown gate has local edits; reconcile before building.",
   );
-for (const [relative, before, after] of patches) {
+for (const [relative, before, after, integratedVariant] of patches) {
   const target = path.join(root, relative);
   const source =
     pending.get(target) ??
     (await fs.readFile(target, "utf8")).replaceAll("\r\n", "\n");
-  if (source.includes(after)) continue;
+  if (
+    source.includes(after) ||
+    (integratedVariant && source.includes(integratedVariant))
+  )
+    continue;
   if (source.split(before).length !== 2)
     throw Error(`Unsupported Agent integration anchor: ${relative}`);
   pending.set(target, source.replace(before, after));

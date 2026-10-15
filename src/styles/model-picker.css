@@ -43,7 +43,7 @@
   margin: 0;
   padding: 4px 8px;
   border: 1px solid var(--border-default);
-  border-radius: 6px;
+  border-radius: var(--kk-radius-control);
   background: var(--bg-surface);
   color: var(--text-primary);
   font-size: 12px;
@@ -54,15 +54,17 @@
   align-items: center;
   gap: 6px;
   margin: 6px 0;
-  font-size: 11px;
+  font-size: var(--kk-font-caption);
   color: var(--text-secondary);
 }
 .kk-model-variants select {
+  height: var(--kk-control-h-md);
+  min-height: var(--kk-control-h-md);
   max-width: 100%;
   min-width: 0;
   padding: 4px;
   border: 1px solid var(--border-default);
-  border-radius: 4px;
+  border-radius: var(--kk-radius-control);
   background: var(--bg-surface);
   color: var(--text-primary);
 }
@@ -72,7 +74,17 @@
 }
 .kk-model-menu-head strong {
   flex: 1;
-  font-size: 12px;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--kk-font-caption);
+}
+.kk-model-menu-head > button {
+  flex-shrink: 0;
+}
+.kk-model-menu-head > button:last-child {
+  border-radius: var(--kk-radius-full);
 }
 .kk-model-menu-list {
   min-height: 32px;
@@ -90,7 +102,7 @@
   height: auto;
   padding: 7px;
   border: 0;
-  border-radius: 6px;
+  border-radius: var(--kk-radius-control);
   background: transparent;
   color: var(--text-primary);
   text-align: left;

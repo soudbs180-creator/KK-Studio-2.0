@@ -1,0 +1,30 @@
+{
+  "task": "TASK-AGENT-RECOVERY-20261013",
+  "createdAtUtc": "2026-10-13T11:38:31.4810304Z",
+  "command": "npm run client:shortcut",
+  "exitCode": 0,
+  "launcher": "D:\\kk-studio\\KK-Studio-2.0\\KK Studio Launcher.exe",
+  "launcherSha256": "5680e0ad733ea8c4033ca9ffb79aa98fcb455700a922572d5cd18fecb38684f2",
+  "shortcutMetadata": [
+    {
+      "Path": "D:\\kk-studio\\KK-Studio-2.0\\启动 KK Studio.lnk",
+      "Target": "D:\\kk-studio\\KK-Studio-2.0\\KK Studio Launcher.exe",
+      "Arguments": "",
+      "WorkingDirectory": "D:\\kk-studio\\KK-Studio-2.0",
+      "Icon": "D:\\kk-studio\\KK-Studio-2.0\\KK Studio Launcher.exe,0",
+      "WindowStyle": 1
+    },
+    {
+      "Path": "C:\\Users\\Administrator\\Desktop\\启动 KK Studio.lnk",
+      "Target": "D:\\kk-studio\\KK-Studio-2.0\\KK Studio Launcher.exe",
+      "Arguments": "",
+      "WorkingDirectory": "D:\\kk-studio\\KK-Studio-2.0",
+      "Icon": "D:\\kk-studio\\KK-Studio-2.0\\KK Studio Launcher.exe,0",
+      "WindowStyle": 1
+    }
+  ],
+  "previousMetadataReceipts": [
+    "D:\\kk-studio\\KK-Studio-2.0\\.tmp\\launcher\\shortcuts-before-20261013-193815-208.json"
+  ],
+  "claimScope": "Canonical GUI and Desktop shortcut were regenerated; native freshness acceptance is a separate build receipt."
+}

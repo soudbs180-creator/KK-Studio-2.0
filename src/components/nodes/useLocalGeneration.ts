@@ -17,7 +17,13 @@ export function useLocalGeneration(
   const request = useRef<AbortController | null>(null);
   const deliver = useRef(onResults);
   deliver.current = onResults;
-  useEffect(() => () => request.current?.abort(), []);
+  useEffect(
+    () => () => {
+      request.current?.abort();
+      request.current = null;
+    },
+    [],
+  );
   function cancel(): void {
     request.current?.abort();
     request.current = null;

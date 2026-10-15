@@ -10,6 +10,7 @@ import {
   DEFAULT_MODEL_PROVIDER,
   MODEL_PROVIDER_STORAGE_KEY,
 } from "../../src/domain/modelProvider.ts";
+import { emptySnapshot } from "../../src/features/creation/model.ts";
 
 async function openProjectFromLibrary(
   currentPage,
@@ -199,6 +200,55 @@ async function snapshot() {
   return JSON.parse(
     await fs.readFile(path.join(dataRoot, "projects/creation-v2.json"), "utf8"),
   );
+}
+async function seedHomeBatch() {
+  const loaded = await invoke("read_creation_snapshot");
+  const saved = loaded.snapshot ?? emptySnapshot();
+  // Batch size belongs to the persisted draft, not the shared model menu.
+  await invoke("write_creation_snapshot", {
+    expectedRevision: loaded.status === "missing" ? null : saved.revision,
+    snapshot: {
+      ...saved,
+      revision: saved.revision + 1,
+      homeDraft: {
+        ...saved.homeDraft,
+        outputCount: 4,
+        updatedAt: Date.now(),
+      },
+    },
+  });
+  await page.reload();
+  await expect(page.locator(".app")).toHaveAttribute(
+    "data-runtime-mode",
+    "production",
+  );
+  await expect(
+    page.getByText("正在读取本地项目…", { exact: true }),
+  ).toHaveCount(0);
+  await expect(
+    page.locator('.creation-storage-notice[role="alert"]'),
+  ).toHaveCount(0);
+  await page.getByRole("button", { name: "开始创作", exact: true }).click();
+  await expect
+    .poll(async () => (await snapshot()).homeDraft.outputCount)
+    .toBe(4);
+}
+async function expectHomeDraft(prompt) {
+  await expect(page.getByLabel("创作提示词")).toHaveValue(prompt);
+  await expect(page.locator(".start-model-picker button")).toHaveAttribute(
+    "title",
+    "image-test",
+  );
+  await expect
+    .poll(async () => {
+      const draft = (await snapshot()).homeDraft;
+      return {
+        prompt: draft.prompt,
+        model: draft.model,
+        outputCount: draft.outputCount,
+      };
+    })
+    .toEqual({ prompt, model: "image-test", outputCount: 4 });
 }
 const server = createServer(async (request, response) => {
   try {
@@ -672,59 +722,33 @@ try {
       },
     },
   );
-  await page.getByRole("button", { name: "打开设置", exact: true }).click();
-  const settings = page.getByRole("dialog", { name: "设置" });
-  await settings.getByRole("button", { name: "模型接入", exact: true }).click();
-  await settings
+  await seedHomeBatch();
+  await page.getByRole("button", { name: "模型", exact: true }).click();
+  await page
+    .getByRole("menu", { name: "选择模型", exact: true })
+    .getByRole("button", { name: "模型接入…", exact: true })
+    .click();
+  await page
     .getByRole("button", { name: "API Key（官方）", exact: true })
     .click();
-  const fields = settings.getByRole("region", { name: "官方 API Key 配置" });
-  await fields.getByLabel("提供商", { exact: true }).fill(providerName);
-  await fields.getByLabel("接口地址").fill(baseUrl);
-  await fields.getByLabel("API Key", { exact: true }).fill(secret);
-  await fields.getByLabel("模型名称").fill("image-test");
+  await page.getByLabel("提供商", { exact: true }).fill(providerName);
+  await page.getByLabel("接口地址").fill(baseUrl);
+  await page.getByLabel("API Key", { exact: true }).fill(secret);
+  await page.getByLabel("模型名称").fill("image-test");
   ownedCredentials.add(uiRef);
-  await fields.getByRole("button", { name: "保存", exact: true }).click();
-  await expect(
-    fields.getByText("连接信息已保存。API Key 不会写入浏览器存储或项目快照。", {
-      exact: true,
-    }),
-  ).toBeVisible();
+  await page.getByRole("button", { name: "保存连接", exact: true }).click();
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
-  async function createUiImageBatch(prompt) {
-    await page.getByRole("button", { name: "项目库", exact: true }).click();
-    await page.getByRole("button", { name: "新建项目", exact: true }).click();
-    await expect(page.getByRole("region", { name: "无限画布" })).toBeVisible();
-    await page.getByRole("button", { name: "添加资源", exact: true }).click();
-    await page.getByRole("menuitem", { name: "图片", exact: true }).click();
-    const source = page.locator(".canvas-node-image").first();
-    await source.click();
-    await source.getByRole("button", { name: "画布模型", exact: true }).click();
-    const menu = source.getByRole("menu", { name: "选择模型", exact: true });
-    await menu.getByRole("searchbox").fill("image-test");
-    await expect(menu.getByRole("menuitemradio")).toHaveCount(1);
-    await menu.getByRole("menuitemradio").click();
-    await source.getByRole("button", { name: "生成数量", exact: true }).click();
-    await source
-      .getByRole("button", { name: "生成 4 个", exact: true })
-      .click();
-    await source.getByLabel("图片提示词").fill(prompt);
-    const sourceId = await source.getAttribute("data-node-id");
-    assert(sourceId, "The UI source must expose its exact saved identity");
-    await expect
-      .poll(async () => {
-        const state = await snapshot();
-        return state.projects
-          .find((project) => project.id === state.activeProjectId)
-          ?.items.find((item) => item.id === sourceId)?.parameters?.count;
-      })
-      .toBe("4");
-    await source.getByRole("button", { name: "生成图片", exact: true }).click();
-    const gate = page.getByRole("dialog", { name: "人工审批任务" });
-    if (await gate.isVisible())
-      await gate.getByRole("button", { name: "批准并提交" }).click();
-  }
-  await createUiImageBatch("ui-success");
+  await page.getByRole("button", { name: "模型", exact: true }).click();
+  const initialModelMenu = page.getByRole("menu", {
+    name: "选择模型",
+    exact: true,
+  });
+  await initialModelMenu.getByRole("searchbox").fill("image-test");
+  await expect(initialModelMenu.getByRole("menuitemradio")).toHaveCount(1);
+  await initialModelMenu.getByRole("menuitemradio").click();
+  await page.getByLabel("创作提示词").fill("ui-success");
+  await expectHomeDraft("ui-success");
+  await page.getByRole("button", { name: "开始创建项目" }).click();
   const approval = page.getByRole("dialog", { name: "人工审批任务" });
   if (await approval.isVisible())
     await approval.getByRole("button", { name: "批准并提交" }).click();
@@ -770,9 +794,20 @@ try {
     true,
     "The saved fixture credential must survive a native process restart",
   );
-  // Four-output control is on image nodes in the current UI; keep the same
-  // real settings/menu/batch/restart evidence instead of altering batch size.
-  await createUiImageBatch("ui-partial-restart");
+  await seedHomeBatch();
+  // Creating a project clears the Home draft. Select the persisted connection
+  // through the real menu rather than rewriting settings or credentials.
+  await page.getByRole("button", { name: "模型", exact: true }).click();
+  const modelMenu = page.getByRole("menu", { name: "选择模型", exact: true });
+  await modelMenu.getByRole("searchbox").fill("image-test");
+  await expect(modelMenu.getByRole("menuitemradio")).toHaveCount(1);
+  await modelMenu.getByRole("menuitemradio").click();
+  await expect
+    .poll(async () => (await snapshot()).homeDraft.outputCount)
+    .toBe(4);
+  await page.getByLabel("创作提示词").fill("ui-partial-restart");
+  await expectHomeDraft("ui-partial-restart");
+  await page.getByRole("button", { name: "开始创建项目" }).click();
   await expect
     .poll(() => posts("ui-partial-restart"), { timeout: 10000 })
     .toBe(1);
@@ -870,6 +905,24 @@ try {
     report.failureUi = (await page.locator("body").innerText())
       .replaceAll(secret, "<synthetic credential>")
       .slice(0, 12000);
+    report.failureUiState = await page.evaluate(() => ({
+      storageLoading: [
+        ...document.querySelectorAll(".creation-storage-notice"),
+      ].some((element) => element.textContent.includes("正在读取本地项目…")),
+      storageAlert: Boolean(
+        document.querySelector('.creation-storage-notice[role="alert"]'),
+      ),
+      textarea:
+        document.querySelector('textarea[aria-label="创作提示词"]')?.value ??
+        null,
+      modelTitle:
+        document
+          .querySelector(".start-model-picker button")
+          ?.getAttribute("title") ?? null,
+      submitDisabled:
+        document.querySelector('button[aria-label="开始创建项目"]')?.disabled ??
+        null,
+    }));
     report.failureMetadata = await page.evaluate((key) => {
       const provider = JSON.parse(localStorage.getItem(key) ?? "null");
       return {
