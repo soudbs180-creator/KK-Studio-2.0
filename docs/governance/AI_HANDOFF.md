@@ -14,6 +14,8 @@
 
 先读 [统一实施计划](../changes/2026-10-15-kk-unified/plan.md)、[批准规格](../changes/2026-10-15-kk-unified/spec.md) 和 [验证](../changes/2026-10-15-kk-unified/verification.md)。用户已授权实施，不重复请求形式批准。当前 task branch codex/TASK-KK-UNIFIED-20261015；起点 d95e4c44 / 2.1.34，单个项目实现者串行集成共享 App/存储。日常235e7f79和其他候选保持原状。旧段落按其时点理解，不覆盖本次授权和当前实际验证。
 
+最新核对：本轮项目子范围独审/production Edge27/27通过，12AI独立适配器73PASS并复审通过但生产接线待；加载草稿与硬件探测实施中。外部提交56cb1381及其主仓切换记录已保留并标注来源，当前主仓只读核对为main@d95e4c44干净；原保全目录完整恢复未验。用户明确本会话独占隔离分支代码写入，其他任务只读。不要重复主仓清理、移动或重放外部提交；不要将旧交接中“回调入口缺口未修”当作当前事实。
+
 
 当前任务先读[HOME验证](../changes/2026-10-15-home-recovery-integration/verification.md)及[依赖事故](../changes/2026-10-15-dependency-repair/verification.md)。当前HOME fix/TASK-CODEX-HOME-20261015-main：冻结源码a85完整verify/785首试、官方新EXE/Native38及Rust167通过，精确本机结果独审通过，正式PR/Hosted/main继续。main仍492/2.1.33，候选2.1.34；尚未切daily/碰九项目。原失败和依赖事故未知影响保留，额外加载期草稿问题TASK-HOME-LOAD-DRAFT-20261015待下一串行任务。
 

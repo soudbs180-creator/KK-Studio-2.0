@@ -6,7 +6,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 | ID | Title | Status | Display | Priority | Dependencies | Owner | Next action |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| TASK-KK-UNIFIED-20261015 | KK Studio 统一修复与重构 | IN_PROGRESS | 进行中 | P1 | none | root | 完成项目持久分组、手动名称及垃圾箱共享操作，再按批准计划顺序实施。 |
+| TASK-KK-UNIFIED-20261015 | KK Studio 统一修复与重构 | IN_PROGRESS | 进行中 | P1 | none | root | 修复加载草稿并独审；完善单写入仓库协议，再实施多聊天；独立硬件探测与推荐适配器并行，按计划继续模型、Agent及全链验收。 |
 | TASK-FIX-PUSH-GUARD-SPACES-001 | 修复 Windows Git pre-push 空格及长路径启动 | REVIEW | 进行中 | P1 | none | root | 补 merged-SHA 独立 review receipt、原始 Hosted artifact manifest 及当前 SHA 的 delivery 结果；本任务验收补齐前保持 REVIEW，签名/安装/用户验收仍属独立发布边界。 |
 | TASK-WINDOWS-ENTRY-DIAG-002 | 补齐Windows入口子进程失败诊断 | DONE | 已完成 | P2 | TASK-LAUNCH-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-WINDOWS-ENTRY-RECOVERY-003 | 继续定位Hosted Windows入口未正常退出的原始原因 | TODO | 未完成 | P1 | TASK-LAUNCH-001 | root | 将 fa78ed12 候选同步到当前 origin/main 后重跑 Hosted Windows，并读取 windows-entry.jsonl；保留 PR43 原失败和本机未复现原件，未取得新分类前保持 TODO。 |
@@ -31,7 +31,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | T5 | 持久本地 TaskHost 与未知受理恢复 | DONE | 已完成 | P3 | T4 | root | 保留当前证据，合并后按原验收范围回读主线；分支 codex/T5-native-lifecycle 已通过 PR#37 78cea37a 集成 main，保留作历史追溯，禁止再次合并（会以旧内容回滚主线） |
 | T6 | Desktop ComfyUI最小链实现 | PARTIAL | 进行中 | P2 | T5 | root | 补充负责人、优先级、分支和下一步验收证据 |
 | EXT-PROVIDER | 真实 Provider/GPU 生成验收 | BLOCKED | 未完成 | P2 | T4 | root | 复核阻塞条件，解除后重新验证并保留原失败证据 |
-| EXT-COMFY | 真实 ComfyUI/模型验收 | BLOCKED | 未完成 | P2 | T6 | root | 复核阻塞条件，解除后重新验证并保留原失败证据 |
+| EXT-COMFY | 真实 ComfyUI/模型验收 | PARTIAL | 进行中 | P2 | T6 | root | 按LOCAL扩展安全Hub目录识别、硬件探测及推荐；显式本地运行入口接通H3 T2V/I2V并验收，R2V缺权重不开放，不能中断外部Hub任务。 |
 | T7 | Desktop可用版本及安装恢复验收 | PARTIAL | 进行中 | P2 | T3b, T4, T5, T6, EXT-PROVIDER, EXT-COMFY | root | 补充负责人、优先级、分支和下一步验收证据 |
 | T8 | 成熟Core职责和平台能力边界 | TODO | 未完成 | P2 | T7 | root | 补充负责人、优先级、分支和下一步验收证据 |
 | T9 | Web本地版及浏览器容量/离线能力 | TODO | 未完成 | P2 | T8 | root | 补充负责人、优先级、分支和下一步验收证据 |
@@ -103,7 +103,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-CANVAS-KAWORKAI-001 | Kaworkai 无限画布交互研究与本地画布增强 | DONE | 已完成 | P3 | none | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-PROJECT-001 | 项目落地与分支收敛 | DONE | 已完成 | P3 | TASK-UI-GOV-003, TASK-CANVAS-KAWORKAI-001, TASK-LOCAL-SERVICE-001 | root | 保留当前证据，合并后按原验收范围回读主线；分支 codex/TASK-PROJECT-001-landing-integration 已通过 PR#31 bd3bc668 集成 main，保留作历史追溯，禁止再次合并（会以旧内容回滚主线） |
 | TASK-UI-010 | 现行 UI 规则与真实操作回归 | DONE | 已完成 | P3 | TASK-UI-008, TASK-AGENT-003 | root | 保留当前证据，合并后按原验收范围回读主线 |
-| TASK-PROJECT-SIDEBAR-001 | 侧栏项目列表与真实项目数据统一 | PARTIAL | 进行中 | P2 | TASK-UI-010 | root | 按验收条件完成实现、验证、独立审查和文档同步；分支 codex/TASK-PROJECT-001-landing-integration 已通过 PR#31 bd3bc668 集成 main，保留作历史追溯，禁止再次合并（会以旧内容回滚主线） |
+| TASK-PROJECT-SIDEBAR-001 | 侧栏项目列表与真实项目数据统一 | PARTIAL | 进行中 | P2 | TASK-UI-010 | root | 继续多聊天/仓库协调及新Native产物验收，保留本轮27/27及旧失败。不要再次合并历史PR31分支。 |
 | TASK-PROV-003 | Codex Provider 配置注入与 model catalog 落盘（agent 侧接线） | PARTIAL | 进行中 | P2 | TASK-PROV-002 | root | 按验收条件完成实现、验证、独立审查和文档同步 |
 | TASK-PROV-004 | Claude Code settings.json 落盘（agent 侧接线） | PARTIAL | 进行中 | P2 | TASK-PROV-002, TASK-PROV-003 | root | 按验收条件完成实现、验证、独立审查和文档同步 |
 | TASK-AGENT-004 | Google Interactions 对话和生图 | PARTIAL | 进行中 | P2 | TASK-AGENT-003 | root | 按验收条件完成实现、验证、独立审查和文档同步 |
@@ -152,7 +152,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-VERIFY-EVIDENCE-20261015 | 隔离测试输出并保护历史回执 | PARTIAL | 进行中 | P1 | TASK-GOV-006 | root | 在独立新目录补Playwright受控取消和reporter写入失败两类真实负向运行，记录非0/中断状态并核对旧回执/PNG hash保持；保留全部旧失败与缺失UNKNOWN，不改当前HOME源码。 |
 | TASK-EXPLORER-GDI-20261015 | 阻断 headless Edge 测试遗留 Shell 标签代理 | DONE | 已完成 | P1 | TASK-GOV-006, TASK-VERIFY-EVIDENCE-20261015 | root | 测试安全GDI范围已闭环，保留原分支与证据；产品/日常客户端真实验收仍按各任务继续。 |
 | TASK-HOME-LOAD-DRAFT-20261015 | 保护读取期间编辑不覆盖已有首页草稿设置 | PARTIAL | 进行中 | P2 | TASK-CODEX-HOME-20261015 | root | 在统一入口按 TDD 实施：先为 read() 补字段级合并与 readSequence 竞态的产品 RED，再以最小输入保护或字段合并方案修复；不得以固定等待或重试掩盖；验证后独立复审。禁止新建重复任务。 |
-| TASK-VERIFY-DEPS-20261015 | 恢复共享依赖清理事故并核验执行边界 | PARTIAL | 进行中 | P1 | TASK-CODEX-HOME-20261015 | root | 统一入口承接并保持 PARTIAL：补自定义构建准备回调入口防护；继续只用隔离夹具，禁止在共享 node_modules junction 上裸跑 npm ci/安装清理；原字节与影响面 UNKNOWN 需独立取证后才可议关闭。 |
+| TASK-VERIFY-DEPS-20261015 | 恢复共享依赖清理事故并核验执行边界 | PARTIAL | 进行中 | P1 | TASK-CODEX-HOME-20261015 | root | 保持防复发子范围PASS与旧事故UNKNOWN分离；不在共享依赖安装或清理。原始字节及影响如无证据不得补写；最终当前提交/托管/交付门禁另验。 |
 
 ## TASK-KK-UNIFIED-20261015 — KK Studio 统一修复与重构
 
@@ -167,9 +167,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `codex/TASK-KK-UNIFIED-20261015`
 - Worktree: `D:/kk-studio/.worktrees/TASK-KK-UNIFIED-20261015`
 - Modules: src/App.tsx, src/features, src/components, src/runtime, src/domain, src-tauri, vendor/canvas-agent, docs/changes/2026-10-15-kk-unified
-- Verification: NOT_VERIFIED — 主线 d95e4c44/2.1.34，基线 typecheck PASS，实施及各项真实验收尚未完成。
+- Verification: PARTIAL — 基线 d95e4c44/2.1.34，候选 Desktop/Web2.1.35。项目生命周期00e00e40独审Approved，最终7442c4fb实际production Edge27/27首试PASS、Native存储/包169PASS；依赖guard5705fc73独审Approved；12AI独立适配器7442c4fb定向73PASS并复审PASS，尚无生产调用方/真实生成。组合3b49f605全量Node1400PASS/14skip。加载期6PASS/8RED已承接并修复中；用户提供ComfyUI目录和硬件推荐需求，静态审计/官方研究已完成，探测适配器实施中。整体未完成，Native实际产物/Web共仓库/账号/云备份/最终CI及交付未验。
 - Evidence: [docs/changes/2026-10-15-kk-unified/intent.md](../../docs/changes/2026-10-15-kk-unified/intent.md), [docs/changes/2026-10-15-kk-unified/spec.md](../../docs/changes/2026-10-15-kk-unified/spec.md), [docs/changes/2026-10-15-kk-unified/plan.md](../../docs/changes/2026-10-15-kk-unified/plan.md), [docs/changes/2026-10-15-kk-unified/verification.md](../../docs/changes/2026-10-15-kk-unified/verification.md), [docs/changes/2026-10-15-kk-unified/review.md](../../docs/changes/2026-10-15-kk-unified/review.md)
-- Next action: 完成项目持久分组、手动名称及垃圾箱共享操作，再按批准计划顺序实施。
+- Next action: 修复加载草稿并独审；完善单写入仓库协议，再实施多聊天；独立硬件探测与推荐适配器并行，按计划继续模型、Agent及全链验收。
 - Last verified: 2026-10-15
 - Updated: 2026-10-15
 
@@ -634,21 +634,20 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 - Goal: 真实 ComfyUI/模型验收
 - Scope: ComfyUI live acceptance
-- Display status: 未完成
+- Display status: 进行中
 - Priority: P2 — 开放任务默认待治理排序
 - Requirement refs: ledger:EXT-COMFY
 - Feature IDs: FEAT-004
 - Owner role: repository-maintainer
 - Acceptance: 真实workflow成功/缺模型/断连/重启与原图hash验收
-- Branch: `unallocated`
-- Worktree: `unallocated`
+- Branch: `codex/TASK-KK-UNIFIED-20261015`
+- Worktree: `D:/kk-studio/.worktrees/TASK-KK-UNIFIED-20261015`
 - Modules: ComfyUI live acceptance
-- Verification: NOT_VERIFIED — NOT VERIFIED
-- Evidence: [docs/changes/2026-09-16-launch-readiness-audit/verification.md](../../docs/changes/2026-09-16-launch-readiness-audit/verification.md)
-- External condition: 尚无已确认的用户选择ComfyUI目录、运行服务、workflow与模型
-- Next action: 复核阻塞条件，解除后重新验证并保留原失败证据
-- Last verified: 2026-09-17
-- Updated: 2026-09-17
+- Verification: PARTIAL — 用户已指定 C:/Users/Administrator/.hub/plugin-data/comfyui/，解除“无目录/workflow/model”旧阻塞。只读静态审计确认Hub wrapper、backend/bmPE1Rw/ComfyUI0.34.1、外部Python3.12.8，userdata/models中H3 T2V/I2V四权重42.47GB；R2V ref2va缺失、未发现Flux/GGUF。API图在wrapper.output内，不可直接提交UI .workflow。未启动/下载/推理或修改原目录，实际节点注册/CUDA显存/结果归档及重启恢复未验。
+- Evidence: [docs/changes/2026-09-16-launch-readiness-audit/verification.md](../../docs/changes/2026-09-16-launch-readiness-audit/verification.md), [docs/changes/2026-10-15-kk-unified/spec.md](../../docs/changes/2026-10-15-kk-unified/spec.md), [docs/changes/2026-10-15-kk-unified/verification.md](../../docs/changes/2026-10-15-kk-unified/verification.md)
+- Next action: 按LOCAL扩展安全Hub目录识别、硬件探测及推荐；显式本地运行入口接通H3 T2V/I2V并验收，R2V缺权重不开放，不能中断外部Hub任务。
+- Last verified: 2026-10-15
+- Updated: 2026-10-15
 
 ## T7 — Desktop可用版本及安装恢复验收
 
@@ -2011,14 +2010,14 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Feature IDs: FEAT-015, FEAT-023
 - Owner role: repository-maintainer
 - Acceptance: 侧栏项目列表从真实已保存项目生成，空库时没有伪造项目，打开后与项目库指向同一项目; 分组、重命名、置顶、移动、删除按现有项目存储能力持久化；暂不可用的动作明确禁用并说明原因; Web 与 fresh Tauri 在创建、重启、删除后核对侧栏及项目库一致，键盘和窄屏入口可用
-- Branch: `codex/TASK-PROJECT-001-landing-integration`
-- Worktree: `D:/kk-studio/KK-Studio-2.0`
+- Branch: `codex/TASK-KK-UNIFIED-20261015`
+- Worktree: `D:/kk-studio/.worktrees/TASK-KK-UNIFIED-20261015`
 - Modules: src/components/SidebarProjectEntry.tsx, src/components/SidebarProjectGroup.tsx, src/features/creation, tests/browser, docs
-- Verification: PARTIAL — 真实项目的创建/打开/改名/确认删除与项目库统一；Web 刷新及 fresh Tauri 重启通过。修复原生连续保存 CAS 和异步确认。文件夹/置顶仍是明示会话态，持久快照/项目包迁移未完成。
-- Evidence: [docs/changes/2026-09-24-ui-regression/review.md](../../docs/changes/2026-09-24-ui-regression/review.md), [docs/features/feat-015-projects.md](../../docs/features/feat-015-projects.md), [docs/features/feat-023-navigation.md](../../docs/features/feat-023-navigation.md), [docs/changes/2026-09-29-project-landing/verification.md](../../docs/changes/2026-09-29-project-landing/verification.md), [docs/changes/2026-09-29-project-landing/audit.md](../../docs/changes/2026-09-29-project-landing/audit.md)
-- Next action: 按验收条件完成实现、验证、独立审查和文档同步；分支 codex/TASK-PROJECT-001-landing-integration 已通过 PR#31 bd3bc668 集成 main，保留作历史追溯，禁止再次合并（会以旧内容回滚主线）
-- Last verified: 2026-09-30
-- Updated: 2026-09-30
+- Verification: PARTIAL — 历史PR31保留。本轮13efa3fe→00e00e40扩展同一v2快照：持久分组、手动名称保护、完整软删除/恢复，项目库与侧栏共用菜单。组删除解除归属，恢复为空组；菜单不误打开、未知任务禁止删除、冲突保护及迟到保存不夺取新导航。独立SPEC/QUALITY Approved；7442c4fb production1423三组Edge27/27首试PASS；Native存储/包169PASS。旧23/3及后续竞态RED保留。fresh新Native UI、完整总交付仍待，因此PARTIAL。
+- Evidence: [docs/changes/2026-09-24-ui-regression/review.md](../../docs/changes/2026-09-24-ui-regression/review.md), [docs/features/feat-015-projects.md](../../docs/features/feat-015-projects.md), [docs/features/feat-023-navigation.md](../../docs/features/feat-023-navigation.md), [docs/changes/2026-09-29-project-landing/verification.md](../../docs/changes/2026-09-29-project-landing/verification.md), [docs/changes/2026-09-29-project-landing/audit.md](../../docs/changes/2026-09-29-project-landing/audit.md), [docs/changes/2026-10-15-kk-unified/verification.md](../../docs/changes/2026-10-15-kk-unified/verification.md), [docs/changes/2026-10-15-kk-unified/review.md](../../docs/changes/2026-10-15-kk-unified/review.md), [docs/architecture/adr/ADR-020-project-lifecycle-in-creation-snapshot.md](../../docs/architecture/adr/ADR-020-project-lifecycle-in-creation-snapshot.md)
+- Next action: 继续多聊天/仓库协调及新Native产物验收，保留本轮27/27及旧失败。不要再次合并历史PR31分支。
+- Last verified: 2026-10-15
+- Updated: 2026-10-15
 
 ## TASK-PROV-003 — Codex Provider 配置注入与 model catalog 落盘（agent 侧接线）
 
@@ -2942,11 +2941,11 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Feature IDs: none
 - Owner role: repository-maintainer
 - Acceptance: 两树锁定依赖版本对齐，主仓package/lock/index hash保持; 独立审查直接证据，保留原依赖字节及用户短时影响UNKNOWN; 后续仅在成功前置和物理本地目录运行隔离官方Native验证，禁止在linked root裸跑npm ci
-- Branch: `fix/TASK-CODEX-HOME-20261015-main`
-- Worktree: `D:/kk-studio/.worktrees/TASK-GOV-PHASE0`
-- Modules: docs/changes/2026-10-15-dependency-repair, node_modules (ignored generated dependencies)
-- Verification: PARTIAL — FACT(2026-10-15 统一入口)：cefd55dd 的 7 用例版本已被分支 HEAD 的强版本取代（tests/unit/desktopDependencySafety.test.ts 展开为 13 个测试，覆盖 linked 依赖 root/package/scope、越界依赖路径、lockfile 异常、真实桌面 CLI、默认 builder 修复路径），故不采纳旧版以免回退。以 HEAD 强版本实跑 13 PASS / 0 FAIL / exit=0；转绿来自 314ac750 基础回调防护、11e991bf 拒绝 linked 依赖祖先、5705fc73 保留已缓存启动，非测试被改弱。仍不关闭：自定义构建准备回调的入口防护缺口未修；原始依赖字节与事故期间影响 UNKNOWN；37 独立目录中 26 匹配 / 10 不符 / 1 package-lock 与 lock UU 不可比、41 根缺失，不得归因本事故。保持 PARTIAL。
+- Branch: `codex/TASK-KK-UNIFIED-20261015`
+- Worktree: `D:/kk-studio/.worktrees/TASK-KK-UNIFIED-20261015`
+- Modules: docs/changes/2026-10-15-dependency-repair, node_modules (ignored generated dependencies), scripts/windows/desktop-release.mjs, tests/unit/desktopDependencySafety.test.ts, tests/unit/desktopRelease.test.ts
+- Verification: PARTIAL — 统一入口防复发314ac750→11e991bf→5705fc73：自定义准备回调/官方installer前校验根及package/scope祖先链接、lock结构和越界路径；无构建缓存启动保持。原RED、DEP-01和DEP-02失败均保留，最终44PASS/1既有skip、共享junction只读callback0，精确5705fc73独立SPEC/QUALITY Approved。56cb1381承接的“回调缺口未修”属过时断言，现已纠正；不重复开发。原事故字节及短时影响仍UNKNOWN，目录差异不得自动归因事故；整体PARTIAL。
 - Evidence: [docs/changes/2026-10-15-dependency-repair/intent.md](../../docs/changes/2026-10-15-dependency-repair/intent.md), [docs/changes/2026-10-15-dependency-repair/spec.md](../../docs/changes/2026-10-15-dependency-repair/spec.md), [docs/changes/2026-10-15-dependency-repair/plan.md](../../docs/changes/2026-10-15-dependency-repair/plan.md), [docs/changes/2026-10-15-dependency-repair/verification.md](../../docs/changes/2026-10-15-dependency-repair/verification.md), [docs/changes/2026-10-15-dependency-repair/review.md](../../docs/changes/2026-10-15-dependency-repair/review.md), [docs/changes/2026-10-15-kk-unified/verification.md](../../docs/changes/2026-10-15-kk-unified/verification.md), [docs/changes/2026-10-15-kk-unified/review.md](../../docs/changes/2026-10-15-kk-unified/review.md)
-- Next action: 统一入口承接并保持 PARTIAL：补自定义构建准备回调入口防护；继续只用隔离夹具，禁止在共享 node_modules junction 上裸跑 npm ci/安装清理；原字节与影响面 UNKNOWN 需独立取证后才可议关闭。
+- Next action: 保持防复发子范围PASS与旧事故UNKNOWN分离；不在共享依赖安装或清理。原始字节及影响如无证据不得补写；最终当前提交/托管/交付门禁另验。
 - Last verified: 2026-10-15
 - Updated: 2026-10-15

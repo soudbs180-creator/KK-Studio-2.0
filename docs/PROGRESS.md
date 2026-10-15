@@ -2,7 +2,7 @@
 
 ## 2026-10-15 统一修复与重构实施
 
-用户已批准完整方案，实施从 origin/main d95e4c44 / Desktop-Web2.1.34 开始；隔离分支 codex/TASK-KK-UNIFIED-20261015。当前项目生命周期与持久分组正在实现，尚未验收。基线类型检查通过；unit 首轮1357（1341通过、2失败、14skip），两失败因新工作区缺 Agent dist；补齐依赖 junction 并 agent:build 后 desktopAgentRuntime3/3复测通过，原失败日志保留。真实生成、Native新产物、账号、云恢复、托管CI未执行。完整范围与阶段状态见 [实施计划](changes/2026-10-15-kk-unified/plan.md)、[验证](changes/2026-10-15-kk-unified/verification.md)。
+用户已批准完整方案，实施从 origin/main d95e4c44 / Desktop-Web2.1.34 开始；隔离分支 codex/TASK-KK-UNIFIED-20261015，候选2.1.35。项目生命周期/持久分组/完整软删除已实现并任务级独审，7442c4fb production Edge27/27首试、Native存储/包169PASS；依赖guard精确5705fc73独审Approved；12AI异步适配器7442c4fb定向73PASS并复审PASS，但未接生产宿主。组合3b49全量Node1400PASS/14skip。加载期草稿原6PASS/8RED沿原ID修复；本地模型新增真实硬件检测/推荐，用户现有ComfyUI目录只读审计后仍待运行验收。基线缺Agent dist两失败及后续竞态失败均保留。真实生成、Native新产物、共仓库、账号、云恢复、托管CI未执行。完整范围与阶段状态见 [实施计划](changes/2026-10-15-kk-unified/plan.md)、[验证](changes/2026-10-15-kk-unified/verification.md)。
 
 
 ## 2026-10-15 HOME当前本机验收通过（IN_PROGRESS）

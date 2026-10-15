@@ -1,6 +1,8 @@
 # 主线对齐与旧成果收敛（阶段 0 收口）
 
-时间：2026-10-15。统一开发入口：`codex/TASK-KK-UNIFIED-20261015`（工作区 `D:/kk-studio/.worktrees/TASK-KK-UNIFIED-20261015`）。承接 [coordination-pause.md](../../../TASK-GOV-PHASE0/docs/changes/2026-10-15-unified-execution/coordination-pause.md)。
+时间：2026-10-15。统一开发入口：`codex/TASK-KK-UNIFIED-20261015`（工作区 `D:/kk-studio/.worktrees/TASK-KK-UNIFIED-20261015`）。交接来源为外部工作区 `TASK-GOV-PHASE0/docs/changes/2026-10-15-unified-execution/coordination-pause.md`。
+
+核对注记：本文件随外部提交 `56cb1381` 进入当前分支；其中主仓 reset/checkout/清理并非当前实现者执行或授权。当前只读确认主仓 main@d95e4c44 干净、reflog 记录切换，保全目录及 906047 字节 patch 存在；尚未验证全部备份字节和可恢复性。下文历史操作记录保留，不作为继续清理的授权。用户随后明确当前会话独占此分支代码写入，其他任务只读；不回退或重放外部提交。
 
 ## 1. 主线对齐（已完成）
 
@@ -62,7 +64,7 @@ node --test tests/unit/desktopDependencySafety.test.ts
 - `11e991bf` fix(TASK-VERIFY-DEPS-20261015): reject linked dependency ancestors
 - `5705fc73` fix(TASK-VERIFY-DEPS-20261015): preserve cached desktop launch
 
-**但仍不算关闭**：交接明确「构建准备自定义回调的入口防护缺口尚未修复」，且原始依赖字节与事故期间影响仍为 **UNKNOWN**，37 个独立目录中 26 匹配 / 10 不符 / 1 package-lock 与 lock UU 不可比、41 根缺失。任务保持 **PARTIAL**，不得因 13/13 绿标记 DONE。
+**任务仍不算关闭**：原始依赖字节与事故期间影响仍为 **UNKNOWN**；历史目录统计不能归因于本事故。自定义回调入口缺口已由 `314ac750`、`11e991bf`、`5705fc73` 修复，最终定向 44 PASS / 1 既有 skip，并在 `5705fc73` 获独立任务级 SPEC/QUALITY Approved。此前交接中“入口防护尚未修复”已过时，不能重复开发或据此否认修复。整体任务保持 **PARTIAL**，不把代码子范围验收替代事故取证及最终交付。
 
 ### 3.2 TASK-HOME-LOAD-DRAFT-20261015 — 8 RED 复现，确认为主线既有真实缺陷
 
@@ -104,4 +106,4 @@ node --test tests/unit/creationSaveQueue.test.ts
 
 `D:/kk-studio/.worktrees/TASK-KK-UNIFIED-20261015/node_modules` 是指向 `D:/kk-studio/KK-Studio-2.0/node_modules` 的符号链接。本轮全程未在该工作区执行 `npm ci`、`npm install` 或任何依赖安装/清理命令。
 
-新增依赖必须走 `package.json` + `package-lock.json` 的显式评审流程，并在主仓实体目录执行安装后由 junction 自动生效；**严禁**在 junction 上裸跑安装命令。相关防护测试见 §3.1。
+新增依赖必须走 `package.json` + `package-lock.json` 的显式评审流程，并在专属、实体依赖目录验证；不能把 canonical 共享依赖目录当作本轮安装目标。**严禁**在 junction 上裸跑安装命令。相关防护测试见 §3.1。

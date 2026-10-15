@@ -9,7 +9,7 @@
 <!-- DOCUMENT_METADATA_END -->
 <!-- CURRENT_FACTS_BEGIN -->
 
-2026-10-15 新授权实施：TASK-KK-UNIFIED-20261015，从实际 origin/main d95e4c44 / Desktop-Web2.1.34 建立独立工作树，完整范围见[批准规格](../changes/2026-10-15-kk-unified/spec.md)。项目生命周期与持久分组实施中；其余阶段开放。下面 HOME/其他候选文字为此前证据，不代表本任务完成。真实模型、Native重建、账号与云恢复未验收。
+2026-10-15 新授权实施：TASK-KK-UNIFIED-20261015，从实际 origin/main d95e4c44 / Desktop-Web2.1.34 建立独立工作树，候选2.1.35，完整范围见[批准规格](../changes/2026-10-15-kk-unified/spec.md)。项目生命周期与分组子范围独审/production Edge27/27通过；依赖guard5705fc73独审Approved，事故UNKNOWN保留；12AI独立适配器73PASS及复审，生产接线待。加载草稿和硬件探测实施中，其余阶段开放。下面 HOME/其他候选文字为此前证据，不代表本任务完成。真实模型、Native重建、账号与云恢复未验收。
 
 当前执行：HOME源码a85ace90在actual main492承接分支完整verify通过（Node1343/14skip、Agent199/2skip、Edge785首试、development4步），官方Windows重建2.1.34及原Native38项/3次launch、Rust167均PASS；HOME-NATIVE-01经精确结果独审关闭，原f10两FAIL保留。前置GDI已按main新证据DONE；输出保护另缺取消/reporter失败实测保持PARTIAL。尚未HOME PR/Hosted/main或daily更新。旧1336证据与最终1763产物共6198hash独立核对一致。原依赖事故已按原锁恢复，未知旧字节/短时影响仍记TASK-VERIFY-DEPS-20261015；九项目/两副本/旧分支保护。
 
@@ -24,8 +24,8 @@
 - `canonicalRef`: `origin/main`
 - `canonicalHead`: d95e4c446d3b4ae5419ce0f58c68057ebabc286a
 - `canonicalHeadVerifiedFrom`: 2026-10-15 本任务实际 git fetch origin 和 git log/readback，d95e4c44 父提交492abad4，含PR63。当前托管CI未重新回读，不能继承旧492的检查结果。日常235e7f79/2.1.33未替换。
-- `primaryCheckoutState`: 本轮未重新读取primary当前dirty，交接所载codex/ui-redesign-20261011@51fccfc7879cf90f7caaf3ae8e10af4d97a2aa2c与254/477计数仅历史现场；本轮未写primary tracked源码/配置/index；曾误清共享忽略依赖，按原锁恢复的事故见TASK-VERIFY-DEPS-20261015。root复用TASK-GOV-PHASE0为当前测试安全branch，旧治理/候选/未提交成果均保留，不把旧f0a治理快照当当前树。
-- `taskLedger`: 147 records；当前数量 {"IN_PROGRESS":2,"REVIEW":6,"DONE":84,"TODO":13,"PARTIAL":38,"BLOCKED":4}。统一新需求在TASK-KK-UNIFIED-20261015，重复范围沿用原任务ID和来源，历史对象未被批量结案；TASK-GOV-006原矩阵仍保留。
+- `primaryCheckoutState`: 当前只读核对primary为main@d95e4c44干净，reflog记录21:17:59切换；外部提交56cb1381描述reset/checkout/清理，不是本轮实现者执行或授权。保全目录2026-10-15-main-align-preserve及906047字节patch存在，完整恢复未验。旧51fccfc7分支仍保留。当前实现仅写TASK-KK-UNIFIED隔离树，用户明确其他任务只读。
+- `taskLedger`: 147 records；当前数量 {"IN_PROGRESS":2,"REVIEW":6,"DONE":84,"TODO":12,"PARTIAL":40,"BLOCKED":3}。统一新需求在TASK-KK-UNIFIED-20261015，重复范围沿用原任务ID和来源；EXT-COMFY已由用户提供目录解除旧阻塞，仍待真实运行。历史对象未被批量结案；TASK-GOV-006原矩阵仍保留。
 - `workspaceWorktrees`: 启动时 approved root内73，本任务在受控预算74/150GiB下新增唯一隔离树TASK-KK-UNIFIED-20261015，未删改其他树。原生成内容实测138129072015字节；本任务依赖junction复用，后续产物另计。历史全局盘点见原source-manifest。
 - `reclamationPolicy`: generated dependencies/build output may be reclaimed only from a recorded, non-primary worktree after immutable SHA inventory and explicit candidate approval; source changes and evidence paths are protected.
 - `remoteAutoMerge`: 本轮root已GET回读3个active ruleset；stable23866925对main/master/release启用PR、stale-dismiss/threads和strict verify/delivery（Actions15368）、0强制approving、无bypass/merge_queue；允许merge/squash/rebase。main protected=true由ruleset保护；legacy protection.enabled=false不表示未保护。自动helper activation/paused状态尚无本轮证据，不宣称已启用，不改远端配置。
