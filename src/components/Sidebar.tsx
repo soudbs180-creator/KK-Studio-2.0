@@ -7,6 +7,7 @@ import SidebarNavigation from "./SidebarNavigation";
 import BrandLogo from "./BrandLogo";
 import { useHiddenControlFocus } from "./useHiddenControlFocus";
 import type { CreationProject } from "../features/creation/model";
+import type { ProjectLibraryActions } from "../features/projects/projectLifecycle";
 
 export default function Sidebar({
   active,
@@ -20,8 +21,7 @@ export default function Sidebar({
   canEditProjects,
   onCreateProject,
   onOpenProject,
-  onRenameProject,
-  onDeleteProject,
+  projectActions,
 }: {
   active: string;
   onNavigate: (id: string) => void;
@@ -34,8 +34,7 @@ export default function Sidebar({
   canEditProjects: boolean;
   onCreateProject: () => string;
   onOpenProject: (id: string) => void;
-  onRenameProject: (id: string, title: string) => void;
-  onDeleteProject: (id: string) => void;
+  projectActions: ProjectLibraryActions;
 }) {
   const [menu, setMenu] = useState<"account" | "projects" | null>(null);
   const account = menu === "account";
@@ -143,8 +142,7 @@ export default function Sidebar({
           onOpenProject(id);
           if (narrow && !collapsed) onCollapse();
         }}
-        onRenameProject={onRenameProject}
-        onDeleteProject={onDeleteProject}
+        projectActions={projectActions}
       />
       {account && (
         <AccountPopup

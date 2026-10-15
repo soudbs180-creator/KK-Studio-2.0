@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useDismissible } from "./useDismissible";
+import ProjectEntryMenu from "./ProjectEntryMenu";
 import {
   SIDEBAR_PROJECT_DRAG_TYPE,
   SIDEBAR_PROJECT_TITLE_TYPE,
@@ -27,6 +28,8 @@ export default function SidebarProjectEntry({
   onMoveNewFolder,
   onRename,
   onDelete,
+  onRestore,
+  trashed = false,
   deleteDisabledReason,
   pinned = false,
   onTogglePin,
@@ -46,6 +49,8 @@ export default function SidebarProjectEntry({
   onMoveNewFolder?: () => void;
   onRename?: (title: string) => void;
   onDelete?: () => void;
+  onRestore?: () => void;
+  trashed?: boolean;
   deleteDisabledReason?: string;
   pinned?: boolean;
   onTogglePin?: () => void;
@@ -53,7 +58,7 @@ export default function SidebarProjectEntry({
   visual?: SidebarProjectVisual;
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [moveMenuOpen, setMoveMenuOpen] = useState(false);
+  const editActive = useRef(autoEdit);
   const [title, setTitle] = useState(defaultTitle ?? "未命名项目");
   const [editing, setEditing] = useState(autoEdit);
   const root = useRef<HTMLDivElement>(null);
@@ -64,14 +69,13 @@ export default function SidebarProjectEntry({
     menuRef,
     () => {
       setMenuOpen(false);
-      setMoveMenuOpen(false);
     },
     menuTrigger,
   );
   useEffect(() => {
     if (!visible) {
       setMenuOpen(false);
-      setMoveMenuOpen(false);
+
       setEditing(false);
     }
   }, [visible]);
@@ -86,9 +90,10 @@ export default function SidebarProjectEntry({
   }, [menuOpen, visible]);
   function closeMenus(): void {
     setMenuOpen(false);
-    setMoveMenuOpen(false);
   }
   function commitTitle(): void {
+    if (!editActive.current) return;
+    editActive.current = false;
     const next = title.trim();
     if (next) onRename?.(next);
     setEditing(false);
@@ -115,12 +120,14 @@ export default function SidebarProjectEntry({
           className="project-title-input"
           value={title}
           aria-label="项目名称"
+          maxLength={120}
           autoFocus
           onChange={(event) => setTitle(event.target.value)}
           onBlur={commitTitle}
           onKeyDown={(event) => {
             if (event.key === "Enter") commitTitle();
             if (event.key === "Escape") {
+              editActive.current = false;
               setTitle(defaultTitle ?? "未命名项目");
               setEditing(false);
             }
@@ -130,6 +137,7 @@ export default function SidebarProjectEntry({
         <button
           className={`project-link ${selected ? "is-selected" : ""}`}
           aria-current={selected ? "page" : undefined}
+          disabled={trashed}
           onClick={() => {
             closeMenus();
             onNavigate("workspace");
@@ -165,19 +173,21 @@ export default function SidebarProjectEntry({
           <span>{title}</span>
         </button>
       )}
-      <button
-        className="project-pin"
-        aria-label={pinned ? "取消置顶项目" : "置顶项目"}
-        aria-pressed={pinned}
-        title={pinned ? "取消会话置顶" : "会话内置顶，刷新恢复原顺序"}
-        onClick={onTogglePin}
-      >
-        <img
-          className="project-action-container"
-          src="/design/figma/project-pin-container.svg"
-          alt=""
-        />
-      </button>
+      {onTogglePin && !trashed && (
+        <button
+          className="project-pin"
+          aria-label={pinned ? "取消置顶项目" : "置顶项目"}
+          aria-pressed={pinned}
+          title={pinned ? "取消会话置顶" : "会话内置顶，刷新恢复原顺序"}
+          onClick={onTogglePin}
+        >
+          <img
+            className="project-action-container"
+            src="/design/figma/project-pin-container.svg"
+            alt=""
+          />
+        </button>
+      )}
       <button
         ref={menuTrigger}
         className="project-more"
@@ -186,7 +196,6 @@ export default function SidebarProjectEntry({
         title="更多项目设置"
         onClick={() => {
           setMenuOpen((value) => !value);
-          setMoveMenuOpen(false);
         }}
       >
         <img
@@ -196,98 +205,23 @@ export default function SidebarProjectEntry({
         />
       </button>
       {menuOpen && (
-        <div
-          ref={menuRef}
-          className="project-menu"
-          role="menu"
-          aria-label="项目设置"
-          onKeyDown={(event) => {
-            if (
-              event.nativeEvent.isComposing ||
-              !["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)
-            )
-              return;
-            event.preventDefault();
-            const items = [
-              ...event.currentTarget.querySelectorAll<HTMLButtonElement>(
-                '[role="menuitem"]:not(:disabled)',
-              ),
-            ];
-            const current = items.indexOf(
-              document.activeElement as HTMLButtonElement,
-            );
-            const next =
-              event.key === "Home"
-                ? 0
-                : event.key === "End"
-                  ? items.length - 1
-                  : (current +
-                      (event.key === "ArrowDown" ? 1 : -1) +
-                      items.length) %
-                    items.length;
-            items[next]?.focus();
+        <ProjectEntryMenu
+          menuRef={menuRef}
+          canEdit={canEditProject}
+          trashed={trashed}
+          deleteDisabledReason={deleteDisabledReason}
+          moveTargets={moveTargets}
+          onOpen={() => onNavigate("workspace")}
+          onRename={() => {
+            editActive.current = true;
+            setEditing(true);
           }}
-        >
-          <button
-            role="menuitem"
-            disabled={!canEditProject}
-            title={!canEditProject ? "项目存储尚未就绪" : undefined}
-            onClick={() => {
-              setEditing(true);
-              closeMenus();
-            }}
-          >
-            改名字
-          </button>
-          <button
-            role="menuitem"
-            aria-haspopup="menu"
-            aria-expanded={moveMenuOpen}
-            onClick={() => setMoveMenuOpen((value) => !value)}
-          >
-            移动到项目组
-          </button>
-          <button
-            role="menuitem"
-            disabled={Boolean(deleteDisabledReason) || !onDelete}
-            title={deleteDisabledReason}
-            onClick={() => {
-              onDelete?.();
-              closeMenus();
-            }}
-          >
-            删除项目
-          </button>
-          {moveMenuOpen && (
-            <div
-              className="project-menu project-menu-sub"
-              role="menu"
-              aria-label="移动到项目组"
-            >
-              {moveTargets.map((target) => (
-                <button
-                  key={target.id}
-                  role="menuitem"
-                  onClick={() => {
-                    onMoveToFolder?.(target.id);
-                    closeMenus();
-                  }}
-                >
-                  {target.title}
-                </button>
-              ))}
-              <button
-                role="menuitem"
-                onClick={() => {
-                  onMoveNewFolder?.();
-                  closeMenus();
-                }}
-              >
-                新建项目文件夹
-              </button>
-            </div>
-          )}
-        </div>
+          onDelete={onDelete}
+          onRestore={onRestore}
+          onMove={onMoveToFolder}
+          onNewGroup={onMoveNewFolder}
+          onClose={closeMenus}
+        />
       )}
     </div>
   );

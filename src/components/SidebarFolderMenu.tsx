@@ -29,12 +29,14 @@ export default function SidebarFolderMenu({
   onTogglePinned,
   onRename,
   onDelete,
+  canEdit = true,
 }: {
   menuRef: RefObject<HTMLDivElement>;
   pinned: boolean;
   onTogglePinned: () => void;
   onRename: () => void;
   onDelete: () => void;
+  canEdit?: boolean;
 }) {
   return (
     <div
@@ -47,10 +49,20 @@ export default function SidebarFolderMenu({
       <button role="menuitem" onClick={onTogglePinned}>
         {pinned ? "取消置顶文件夹" : "置顶文件夹"}
       </button>
-      <button role="menuitem" onClick={onRename}>
+      <button
+        role="menuitem"
+        disabled={!canEdit}
+        title={!canEdit ? "项目存储尚未就绪" : undefined}
+        onClick={onRename}
+      >
         改名字
       </button>
-      <button role="menuitem" onClick={onDelete}>
+      <button
+        role="menuitem"
+        disabled={!canEdit}
+        title={!canEdit ? "项目存储尚未就绪" : "仅解除分组，项目和素材会保留"}
+        onClick={onDelete}
+      >
         删除项目组
       </button>
     </div>

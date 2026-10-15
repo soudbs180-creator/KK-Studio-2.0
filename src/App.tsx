@@ -9,12 +9,12 @@ import React, {
   type SetStateAction,
 } from "react";
 import { appVersion } from "./runtime/appInfo";
-import { confirmAction } from "./runtime/confirmAction";
 import TopBar from "./components/TopBar";
 import CanvasCollectionsPanels from "./components/CanvasCollectionsPanels";
 import { effectiveTags, splitCollectionTags } from "./domain/collectionTags";
 import { normalizeTags } from "./domain/assets";
 import Sidebar from "./components/Sidebar";
+import { useProjectLibrary } from "./features/projects/useProjectLibrary";
 import type { ModelSelection } from "./features/models/modelSelection";
 import { homeModelSelection } from "./domain/modelSelection";
 import { useSidebarLayout } from "./components/useSidebarLayout";
@@ -41,7 +41,6 @@ import {
 } from "./features/skills/skillRegistry";
 import {
   createProject,
-  projectHasUnsettledTasks,
   emptyDraft,
   type CreationDraft,
   type CreationProject,
@@ -414,9 +413,8 @@ export default function App() {
   const pendingApprovalTask = creation.projects
     .find((project) => project.id === pendingApproval?.projectId)
     ?.tasks.find((task) => task.id === pendingApproval?.taskId);
-  const activeProject = creation.projects.find(
-    (project) => project.id === creation.activeProjectId,
-  );
+  const projectLibrary = useProjectLibrary(persistence, () => open("projects"));
+  const activeProject = projectLibrary.activeProject;
   const latestProjectTask = activeProject?.tasks.at(-1);
   const generationProgress = getGenerationProgressLabels({
     task: latestProjectTask,
@@ -2717,6 +2715,10 @@ export default function App() {
     );
   }
   function handleNewBlankProject(): string {
+    if (saveStateRef.current !== "saved" && saveStateRef.current !== "saving") {
+      projectLibrary.report("项目存储尚未就绪，请先处理保存或恢复提示。");
+      return "";
+    }
     const profile = parseModelProvider(
       localStorage.getItem(MODEL_PROVIDER_STORAGE_KEY),
     ).profile;
@@ -2746,48 +2748,15 @@ export default function App() {
     return nextProject.id;
   }
   function openSavedProject(id: string): void {
-    if (!creationRef.current.projects.some((project) => project.id === id))
+    if (
+      !creationRef.current.projects.some(
+        (project) => project.id === id && project.trashedAt === undefined,
+      )
+    )
       return;
     commitCreation({ ...creationRef.current, activeProjectId: id });
     setActive("workspace");
     setModal("");
-  }
-  function renameSavedProject(id: string, title: string): void {
-    if (persistence.state !== "saved" && persistence.state !== "saving") return;
-    const name = title.trim().slice(0, 120);
-    if (!name) return;
-    updateProject(id, (project) => ({
-      ...project,
-      name,
-      updatedAt: Date.now(),
-    }));
-  }
-  async function deleteSavedProject(id: string): Promise<void> {
-    if (persistence.state !== "saved" && persistence.state !== "saving") return;
-    const project = creationRef.current.projects.find((item) => item.id === id);
-    if (!project) return;
-    if (projectHasUnsettledTasks(project)) return;
-    if (
-      !(await confirmAction(
-        `确定删除项目「${project.name}」？此操作会从本地项目库移除该项目。`,
-      ))
-    )
-      return;
-    const current = creationRef.current;
-    const confirmedProject = current.projects.find((item) => item.id === id);
-    if (
-      !confirmedProject ||
-      projectHasUnsettledTasks(confirmedProject) ||
-      (saveStateRef.current !== "saved" && saveStateRef.current !== "saving")
-    )
-      return;
-    commitCreation({
-      ...current,
-      projects: current.projects.filter((item) => item.id !== id),
-      activeProjectId:
-        current.activeProjectId === id ? null : current.activeProjectId,
-    });
-    if (current.activeProjectId === id) setActive("projects");
   }
   useEffect(() => {
     const shortcut = (event: KeyboardEvent): void => {
@@ -3018,13 +2987,12 @@ export default function App() {
           canEditProjects={saveState === "saved" || saveState === "saving"}
           onCreateProject={handleNewBlankProject}
           onOpenProject={openSavedProject}
-          onRenameProject={renameSavedProject}
-          onDeleteProject={deleteSavedProject}
+          projectActions={projectLibrary.actions}
         />
         <main className={"workspace " + (mobileChat ? "chat-mobile" : "")}>
           <CreationStorageNotice
             state={persistence.state}
-            message={persistence.message}
+            message={projectLibrary.message}
             hasRecoveryDraft={Boolean(persistence.recoveryDraft)}
             onRead={persistence.retryRead}
             onSave={persistence.retrySave}
@@ -3343,6 +3311,7 @@ export default function App() {
                 view={active as "projects" | "comfyui"}
                 onOpen={open}
                 projects={creation.projects}
+                projectActions={projectLibrary.actions}
                 localWorkflows={localWorkflows}
                 onSaveWorkflow={saveWorkflow}
                 onDeleteWorkflow={deleteWorkflow}
@@ -3417,7 +3386,7 @@ export default function App() {
                 }))}
                 assets={[...assets, ...subjects]}
                 onOpen={open}
-                projects={creation.projects}
+                projects={projectLibrary.projects}
                 onOpenProject={openSavedProject}
                 onLocate={locate}
               />

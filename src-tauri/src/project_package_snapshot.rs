@@ -1017,6 +1017,7 @@ pub(super) fn validate(snapshot: &Value) -> Result<(), String> {
             "activeProjectId",
             "projects",
             "homeDraft",
+            "projectGroups",
         ],
         &[
             "version",
@@ -1027,6 +1028,17 @@ pub(super) fn validate(snapshot: &Value) -> Result<(), String> {
         ],
     )?;
     draft(&snapshot["homeDraft"])?;
+    for group in array(snapshot, "projectGroups")? {
+        shape(
+            group,
+            "projectGroups",
+            &["id", "name", "deletedAt"],
+            &["id", "name"],
+        )?;
+        text(group, "id", 1, 160)?;
+        text(group, "name", 1, 120)?;
+        finite(group, "deletedAt")?;
+    }
     for project in array(snapshot, "projects")? {
         shape(
             project,
@@ -1035,6 +1047,9 @@ pub(super) fn validate(snapshot: &Value) -> Result<(), String> {
                 "canvas",
                 "id",
                 "name",
+                "nameSource",
+                "groupId",
+                "trashedAt",
                 "kind",
                 "prompt",
                 "model",

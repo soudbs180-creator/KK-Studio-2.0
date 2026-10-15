@@ -10,7 +10,11 @@ import {
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
-import { emptySnapshot } from "../../src/features/creation/model.ts";
+import {
+  createProject,
+  emptySnapshot,
+} from "../../src/features/creation/model.ts";
+import { applyProjectLifecycle } from "../../src/features/projects/projectLifecycle.ts";
 import {
   CompanionProtocolError,
   type CompanionAssetMetadata,
@@ -32,6 +36,51 @@ const metadata: CompanionAssetMetadata = {
 function root(): string {
   return mkdtempSync(join(tmpdir(), "kk-companion-store-"));
 }
+
+test("Companion 保存完整垃圾箱和分组，拒绝过期写入且保留全部原件引用", () => {
+  const store = new CompanionStore(root());
+  store.publishStagedAsset(store.stageAsset(metadata, bytes).stageId);
+  const project = createProject({
+    prompt: "客户项目",
+    model: "image-test",
+    kind: "image",
+    attachments: [],
+  });
+  project.items[0].assetId = metadata.assetId;
+  let snapshot = {
+    ...emptySnapshot(),
+    projects: [project],
+    activeProjectId: project.id,
+  };
+  snapshot = applyProjectLifecycle(snapshot, {
+    type: "create-group",
+    id: "g",
+    name: "客户",
+    projectId: project.id,
+  });
+  snapshot = applyProjectLifecycle(snapshot, {
+    type: "rename-project",
+    id: project.id,
+    name: "手动项目名",
+  });
+  snapshot = applyProjectLifecycle(
+    snapshot,
+    { type: "trash-project", id: project.id },
+    10,
+  );
+  store.writeSnapshot(snapshot, null);
+  const loaded = store.readSnapshot().snapshot!;
+  assert.equal(loaded.projects[0].trashedAt, 10);
+  assert.equal(loaded.projects[0].nameSource, "manual");
+  assert.deepEqual(loaded.projectGroups, snapshot.projectGroups);
+  assert.ok(store.readAsset(metadata.assetId));
+  assert.throws(
+    () => store.writeSnapshot({ ...snapshot, revision: 1, projects: [] }, null),
+    (error: unknown) =>
+      error instanceof CompanionProtocolError && error.code === "CONFLICT",
+  );
+  assert.equal(store.readSnapshot().snapshot!.projects[0].id, project.id);
+});
 
 test("store initializes with a missing snapshot and enforces revisions", () => {
   const store = new CompanionStore(root());

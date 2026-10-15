@@ -69,6 +69,13 @@ const project = z
     providerAuthMode: providerAuthModeSchema.optional(),
     items: z.array(item),
     name: z.string().optional(),
+    nameSource: z.enum(["auto", "manual"]).optional(),
+    groupId: id.optional(),
+    trashedAt: number
+      .int()
+      .nonnegative()
+      .max(Number.MAX_SAFE_INTEGER)
+      .optional(),
     kind: kind.optional(),
     attachments: z.array(attachment).optional(),
     messages: z
@@ -120,6 +127,21 @@ const schema = z.object({
   revision: number.int().nonnegative().max(Number.MAX_SAFE_INTEGER),
   activeProjectId: id.nullable(),
   projects: z.array(project),
+  projectGroups: z
+    .array(
+      z
+        .object({
+          id,
+          name: z.string().trim().min(1).max(120),
+          deletedAt: number
+            .int()
+            .nonnegative()
+            .max(Number.MAX_SAFE_INTEGER)
+            .optional(),
+        })
+        .strict(),
+    )
+    .optional(),
   homeDraft: draft,
 });
 
@@ -218,7 +240,19 @@ export function decodeSnapshot(value: unknown): CreationSnapshot {
       "项目结构不完整，已暂停保存以保护原件。",
     );
   unique(parsed.data.projects, "项目");
+  unique(parsed.data.projectGroups ?? [], "项目组");
   for (const project of parsed.data.projects) {
+    if (
+      project.groupId &&
+      !parsed.data.projectGroups?.some(
+        (group) =>
+          group.id === project.groupId && group.deletedAt === undefined,
+      )
+    )
+      throw new SnapshotStorageError(
+        "corrupt",
+        "项目分组引用无效，已暂停保存。",
+      );
     unique(project.items, "画布节点");
     unique(project.messages ?? [], "消息");
     unique(project.tasks ?? [], "任务");

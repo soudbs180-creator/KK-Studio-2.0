@@ -97,6 +97,33 @@ fn snapshot(revision: u64) -> Value {
 }
 
 #[test]
+fn project_lifecycle_metadata_survives_native_storage_and_invalid_references_fail() {
+    let f = Fixture::new();
+    let mut value = snapshot(1);
+    value["activeProjectId"] = Value::Null;
+    value["projectGroups"] = json!([{"id":"g", "name":"客户"}]);
+    value["projects"][0]["groupId"] = json!("g");
+    value["projects"][0]["nameSource"] = json!("manual");
+    value["projects"][0]["trashedAt"] = json!(10);
+    f.repo.write(value.clone(), None).unwrap();
+    assert_eq!(f.repo.read().unwrap().snapshot.unwrap(), value);
+    for (field, bad) in [
+        ("groupId", json!("missing")),
+        ("trashedAt", json!(-1)),
+        ("nameSource", json!("invented")),
+    ] {
+        let mut invalid = value.clone();
+        invalid["revision"] = json!(2);
+        invalid["projects"][0][field] = bad;
+        assert!(f.repo.write(invalid, Some(1)).is_err(), "accepted {field}");
+        assert_eq!(f.repo.read().unwrap().snapshot.unwrap(), value);
+    }
+    let mut duplicate = value.clone();
+    duplicate["projectGroups"] = json!([{"id":"g", "name":"客户"}, {"id":"g", "name":"重复"}]);
+    assert!(validation::validate(&duplicate).is_err());
+}
+
+#[test]
 fn source_item_id_is_optional_bounded_and_history_safe() {
     let mut value = snapshot(1);
     value["projects"][0]["tasks"] = json!([{
