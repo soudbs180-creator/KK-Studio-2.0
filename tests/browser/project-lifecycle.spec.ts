@@ -59,10 +59,17 @@ test("项目库与侧栏共用名称分组和完整垃圾箱，取消删除不�
   await library
     .getByLabel("筛选项目分组")
     .selectOption({ label: "新建文件夹" });
+  const initialName = await library
+    .getByLabel("项目组名称", { exact: true })
+    .inputValue();
+  expect(initialName).toBe("新建文件夹");
   await library.getByLabel("项目组名称", { exact: true }).fill("客户组");
   await library
     .getByRole("button", { name: "保存分组名称", exact: true })
     .click();
+  await expect
+    .poll(async () => (await snapshot(page)).projectGroups?.[0].name)
+    .toBe("客户组");
   await library.getByLabel("筛选项目分组").selectOption("all");
   const card = library.locator(".project-library-card");
   await card.getByRole("button", { name: "更多项目设置" }).click();
@@ -305,7 +312,7 @@ test("并发保存冲突保留磁盘原件和内存草稿，两个入口暂停�
     return {
       savedName: saved.projects[0].name,
       draft: JSON.parse(
-        localStorage.getItem("kk-studio-next:creation:v1:pending") ?? "{}",
+        sessionStorage.getItem("kk-studio-next:creation:v1:pending") ?? "{}",
       ).snapshot.projects[0].name,
     };
   });

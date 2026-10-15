@@ -22,11 +22,14 @@ export default function ProjectLibraryContent({
   const groups =
     actions?.groups.filter((group) => group.deletedAt === undefined) ?? [];
   const selectedGroup = groups.find((group) => group.id === groupId);
-  const [groupName, setGroupName] = useState("");
-  useEffect(
-    () => setGroupName(selectedGroup?.name ?? ""),
-    [selectedGroup?.id, selectedGroup?.name],
-  );
+  const [groupDraft, setGroupDraft] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
+  const groupName =
+    groupDraft?.id === selectedGroup?.id
+      ? (groupDraft?.name ?? "")
+      : (selectedGroup?.name ?? "");
   useEffect(() => {
     if (groupId !== "all" && groupId !== "ungrouped" && !selectedGroup)
       setGroupId("all");
@@ -93,7 +96,10 @@ export default function ProjectLibraryContent({
           <select
             aria-label="筛选项目分组"
             value={groupId}
-            onChange={(event) => setGroupId(event.target.value)}
+            onChange={(event) => {
+              setGroupId(event.target.value);
+              setGroupDraft(null);
+            }}
           >
             <option value="all">全部项目</option>
             <option value="ungrouped">未分组</option>
@@ -111,14 +117,20 @@ export default function ProjectLibraryContent({
               maxLength={120}
               value={groupName}
               disabled={!actions?.canEdit}
-              onChange={(event) => setGroupName(event.target.value)}
+              onChange={(event) =>
+                setGroupDraft({
+                  id: selectedGroup.id,
+                  name: event.target.value,
+                })
+              }
             />
             <button
               className="ui-capsule"
               disabled={!actions?.canEdit || !groupName.trim()}
-              onClick={() =>
-                actions?.onRenameGroup(selectedGroup.id, groupName)
-              }
+              onClick={() => {
+                actions?.onRenameGroup(selectedGroup.id, groupName);
+                setGroupDraft(null);
+              }}
             >
               保存分组名称
             </button>
