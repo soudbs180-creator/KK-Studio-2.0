@@ -35,12 +35,12 @@
 
 原存在 3 组编号重复，且 3 份 ADR 是**互不相关的决策**（不是替代关系），因此按**登记时间先后**重新编号，不使用 superseded 语义：
 
-| 原文件名 | 新文件名 | 依据 | 引用更新 |
-| --- | --- | --- | --- |
-| `ADR-002-taskhost-text-output.md` | `ADR-012-taskhost-text-output.md` | 2026-09-21，晚于同号 ADR-002（2026-09-17） | 无外部引用 |
-| `ADR-006-google-interactions.md` | `ADR-013-google-interactions.md` | 2026-09-23，早于同号 ADR-006（2026-09-24），但被引用于 `changes/2026-09-23-google-interactions/` | 已同步 |
-| `ADR-007-vps-portability.md` | `ADR-014-vps-portability.md` | 2026-09-28，晚于同号 ADR-007（2026-09-23） | 已同步 |
-| `decisions/0001-canvas-ui-token-alignment.md` | `ADR-015-canvas-ui-token-alignment.md` | 原属另一编号体系，归并后取当前最大号+1 | 无外部引用 |
+| 原文件名                                      | 新文件名                               | 依据                                                                                             | 引用更新   |
+| --------------------------------------------- | -------------------------------------- | ------------------------------------------------------------------------------------------------ | ---------- |
+| `ADR-002-taskhost-text-output.md`             | `ADR-012-taskhost-text-output.md`      | 2026-09-21，晚于同号 ADR-002（2026-09-17）                                                       | 无外部引用 |
+| `ADR-006-google-interactions.md`              | `ADR-013-google-interactions.md`       | 2026-09-23，早于同号 ADR-006（2026-09-24），但被引用于 `changes/2026-09-23-google-interactions/` | 已同步     |
+| `ADR-007-vps-portability.md`                  | `ADR-014-vps-portability.md`           | 2026-09-28，晚于同号 ADR-007（2026-09-23）                                                       | 已同步     |
+| `decisions/0001-canvas-ui-token-alignment.md` | `ADR-015-canvas-ui-token-alignment.md` | 原属另一编号体系，归并后取当前最大号+1                                                           | 无外部引用 |
 
 保留原编号不变的三份：`ADR-002-local-main-integration.md`、`ADR-006-stage-plan-package-contract.md`、`ADR-007-gemini-cli-bridge.md`。
 
@@ -48,23 +48,23 @@
 
 ## 现有决策
 
-| 编号 | 标题 | 状态 |
-| --- | --- | --- |
-| [ADR-001](ADR-001-task-isolation.md) | 任务隔离 | — |
-| [ADR-002](ADR-002-local-main-integration.md) | 经验证候选进入本地主线 | Accepted |
-| [ADR-003](ADR-003-asset-metadata-paging.md) | 资产元数据分页 | — |
-| [ADR-004](ADR-004-desktop-agent-runtime.md) | 桌面 Agent 运行时 | — |
-| [ADR-005](ADR-005-agent-attachments-and-canvas-view.md) | Agent 附件与画布视图 | — |
-| [ADR-006](ADR-006-stage-plan-package-contract.md) | 阶段计划与项目包的跨端契约 | ACCEPTED |
-| [ADR-007](ADR-007-gemini-cli-bridge.md) | Gemini CLI 本地登录桥 | 本地候选 |
-| [ADR-008](ADR-008-platform-versions-and-local-first.md) | 平台版本与本地优先 | — |
-| [ADR-009](ADR-009-image-model-capabilities.md) | 图片模型能力 | — |
-| [ADR-010](ADR-010-unified-image-mask.md) | 统一图片蒙版 | — |
-| [ADR-011](ADR-011-platform-delivery-gates-and-vps-control-plane.md) | 平台交付门禁与 VPS 控制面 | — |
-| [ADR-012](ADR-012-taskhost-text-output.md) | 在现有 TaskHost 保存文本输出 | 接受 |
-| [ADR-013](ADR-013-google-interactions.md) | Google Interactions（既有项目边界内） | — |
-| [ADR-014](ADR-014-vps-portability.md) | 静态 Web 版本与服务器数据分开搬迁 | PROPOSED |
-| [ADR-015](ADR-015-canvas-ui-token-alignment.md) | 画布视觉走 token 体系，停止 Figma 直抄 | 已采纳 |
+| 编号                                                                | 标题                                   | 状态     |
+| ------------------------------------------------------------------- | -------------------------------------- | -------- |
+| [ADR-001](ADR-001-task-isolation.md)                                | 任务隔离                               | —        |
+| [ADR-002](ADR-002-local-main-integration.md)                        | 经验证候选进入本地主线                 | Accepted |
+| [ADR-003](ADR-003-asset-metadata-paging.md)                         | 资产元数据分页                         | —        |
+| [ADR-004](ADR-004-desktop-agent-runtime.md)                         | 桌面 Agent 运行时                      | —        |
+| [ADR-005](ADR-005-agent-attachments-and-canvas-view.md)             | Agent 附件与画布视图                   | —        |
+| [ADR-006](ADR-006-stage-plan-package-contract.md)                   | 阶段计划与项目包的跨端契约             | ACCEPTED |
+| [ADR-007](ADR-007-gemini-cli-bridge.md)                             | Gemini CLI 本地登录桥                  | 本地候选 |
+| [ADR-008](ADR-008-platform-versions-and-local-first.md)             | 平台版本与本地优先                     | —        |
+| [ADR-009](ADR-009-image-model-capabilities.md)                      | 图片模型能力                           | —        |
+| [ADR-010](ADR-010-unified-image-mask.md)                            | 统一图片蒙版                           | —        |
+| [ADR-011](ADR-011-platform-delivery-gates-and-vps-control-plane.md) | 平台交付门禁与 VPS 控制面              | —        |
+| [ADR-012](ADR-012-taskhost-text-output.md)                          | 在现有 TaskHost 保存文本输出           | 接受     |
+| [ADR-013](ADR-013-google-interactions.md)                           | Google Interactions（既有项目边界内）  | —        |
+| [ADR-014](ADR-014-vps-portability.md)                               | 静态 Web 版本与服务器数据分开搬迁      | PROPOSED |
+| [ADR-015](ADR-015-canvas-ui-token-alignment.md)                     | 画布视觉走 token 体系，停止 Figma 直抄 | 已采纳   |
 
 | [ADR-016](ADR-016-agent-and-provider-recovery.md) | Agent 会话归属与凭据保存恢复 | ACCEPTED |
 
@@ -72,3 +72,6 @@
 | [ADR-018](ADR-018-provider-protocol-and-cli-execution.md) | 显式Provider协议与CLI执行边界 | ACCEPTED；当前任务验证另记 |
 | [ADR-019](ADR-019-unified-local-repository-and-optional-account.md) | 统一本地仓库、可选账号与手动加密同步 | ACCEPTED；实现和发布未完成 |
 | [ADR-020](ADR-020-project-lifecycle-in-creation-snapshot.md) | 项目生命周期保存在现有创作快照 | ACCEPTED；实现进行中 |
+| [ADR-021](ADR-021-native-local-repository-authority.md) | Native统一仓库权威与重复启动 | ACCEPTED；基础已验，Web数据面与后台租约待 |
+| [ADR-022](ADR-022-project-chats-and-v3-migration.md) | 普通多聊天与不可降级快照迁移 | ACCEPTED；实现与验收未完成 |
+| [ADR-023](ADR-023-local-model-installation-and-owned-runtime.md) | 可信本地包安装与自有引擎 | ACCEPTED；实现与验收未完成 |
