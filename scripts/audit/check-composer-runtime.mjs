@@ -2,6 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { spawn, execFileSync } from "node:child_process";
 import { chromium, expect } from "@playwright/test";
+import { headlessEdgeLaunchOptions } from "../testing/headless-edge-options.mjs";
 import { capturePageAlignment } from "./capture-page-alignment.mjs";
 
 const repo = process.cwd();
@@ -77,7 +78,11 @@ try {
     );
     report.isolatedDataRoot = true;
   } else {
-    browser = await chromium.launch({ channel: "msedge", headless: true });
+    browser = await chromium.launch({
+      channel: "msedge",
+      headless: true,
+      ...headlessEdgeLaunchOptions,
+    });
     page = await browser.newPage({ viewport: { width: 1920, height: 1080 } });
     await page.goto(url);
   }

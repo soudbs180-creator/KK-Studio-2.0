@@ -3,6 +3,7 @@ import path from "node:path";
 import { spawn, execFileSync } from "node:child_process";
 import { createServer } from "node:http";
 import { chromium, expect } from "@playwright/test";
+import { headlessEdgeLaunchOptions } from "../testing/headless-edge-options.mjs";
 
 const repo = process.cwd();
 const desktop = process.argv.includes("--desktop");
@@ -127,7 +128,11 @@ try {
     );
     report.isolatedData = true;
   } else {
-    browser = await chromium.launch({ channel: "msedge", headless: true });
+    browser = await chromium.launch({
+      channel: "msedge",
+      headless: true,
+      ...headlessEdgeLaunchOptions,
+    });
     page = await browser.newPage({ viewport: { width: 1920, height: 1080 } });
     await page.goto("http://127.0.0.1:1421/");
   }
