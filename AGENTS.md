@@ -49,9 +49,9 @@
 ## 数据与安全
 
 - 桌面数据根目录为 `%APPDATA%\\kk-studio`（跨平台规则见 `docs/architecture/DATA-STORAGE.md`）。模型权重留在用户选择的 ComfyUI 根目录，仓库只放适配器和索引契约。
-- API key、OAuth token 和代理凭据只进系统凭据库（service `com.kkstudio.provider`）或请求内存，禁止进入 localStorage、项目文件、导出包、URL 和日志。
-- 当前 Web 的项目/任务/消息和素材仍在 IndexedDB 本地持久化，localStorage 保存非敏感设置、provider 元数据与恢复副本；Desktop 创作快照及素材使用原生仓库。Web 的目标部署与账号、会话、积分、会员和用量控制面位于 VPS；项目/素材是否云端保存或同步仍由独立数据契约决定，本机伴随服务仍是当前本地持久化路径。Desktop 可免登录或选择登录，Web/Mobile 需登录，Mobile 使用设备本地持久化。本地持久化不代表云端保存；账号、积分、记忆、云端保存或 Provider 生成未接真实服务时必须明确标为 Prototype 或禁用。具体现状与目标以 `docs/architecture/DATA-STORAGE.md` 与相关 ADR 为准。
-- Desktop 当前优先支持用户自带 AI 账号登录或本机 API Key 的本地直接使用。产品化的“用户自有 API 接入”是后续高优先级 TODO；在 Desktop 最小文本/图片链路和 Web VPS 身份/会话契约完成前，不实现新的跨端 onboarding、服务端代理或账号复用功能。
+- API key、OAuth token 和代理凭据使用系统凭据库（service `com.kkstudio.provider`）或请求内存；Web 仅允许经审查的客户端加密持久化，解锁密钥不得随密文明文存放。秘密禁止进入明文 localStorage、项目文件、项目导出包、URL 和日志；用户选择的密钥同步使用独立加密内容。
+- 当前 Web 的项目/任务/消息和素材仍在 IndexedDB 本地持久化，localStorage 保存非敏感设置、provider 元数据与恢复副本；Desktop 创作快照及素材使用原生仓库。Web 的目标部署与账号、会话、积分、会员和用量控制面位于 VPS；项目/素材是否云端保存或同步仍由独立数据契约决定，本机伴随服务仍是当前本地持久化路径。Desktop/Web 均可免登录本地使用；登录不自动上传产品数据，只有用户在网络设置手动同步所选内容。Mobile 的独立交付与设备持久化由原任务承接。本地持久化不代表云端保存；账号、积分、记忆、云端保存或 Provider 生成未接真实服务时必须明确标为 Prototype 或禁用。具体现状与目标以 `docs/architecture/DATA-STORAGE.md` 与相关 ADR 为准。
+- 当前已授权实施用户自有 API 接入、四渠道模型选择、统一本地仓库和可选账号；按 Desktop→Web 顺序及真实功能链双门验收，不把消费者登录推断为 API 能力。账号、本机目录授权与模型渠道凭据分开；详细边界见 [ADR-019](docs/architecture/adr/ADR-019-unified-local-repository-and-optional-account.md)。
 - 用户记忆的存储契约是本机共享文件（`~/.kk-memory/memory.json`）：完整文件不进同步/localStorage/日志/导出包；开启记忆时，相关片段可随当前请求发送给所选模型用于推理。豆包、WorkBuddy 原生客户端只有完成适配并经真实联调后才可标为已共享。任何 Agent 遵循 `docs/MEMORY-CONTRACT.md` 的读取/写入/隐私规则。
 
 ## 设计与交互

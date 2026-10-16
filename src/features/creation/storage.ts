@@ -152,7 +152,12 @@ function companionStorageError(error: unknown): SnapshotStorageError {
         "unsupported",
         "本机服务协议版本不兼容，请更新客户端或本机服务。",
       );
-    if (error.code === "INVALID_SNAPSHOT")
+    if (error.code === "SNAPSHOT_UNSUPPORTED")
+      return new SnapshotStorageError(
+        "unsupported",
+        "项目版本较新，请更新客户端或本机服务，已暂停保存以保护原件。",
+      );
+    if (error.code === "INVALID_SNAPSHOT" || error.code === "CORRUPT")
       return new SnapshotStorageError(
         "corrupt",
         "本机服务中的项目快照格式无效，原件已保留。",

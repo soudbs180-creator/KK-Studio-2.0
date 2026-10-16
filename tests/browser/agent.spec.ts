@@ -906,6 +906,7 @@ for (const scenario of ["image", "missing-original", "text"] as const) {
         .getByRole("button", { name: "画布模型", exact: true })
         .click();
       const menu = generator.getByRole("menu", { name: "选择模型" });
+      await menu.getByRole("tab", { name: "登录账号", exact: true }).click();
       await menu
         .getByRole("searchbox")
         .fill(textCard ? "Fixture Codex" : "Codex 内置生图");
@@ -1085,7 +1086,7 @@ test("卡片 Codex 生图在刷新后归档并恢复来源；切 API 清除旧�
     await source.press("Enter");
     await source.getByRole("button", { name: "画布模型", exact: true }).click();
     const menu = source.getByRole("menu", { name: "选择模型" });
-    await menu.getByRole("menuitem", { name: /^Codex/ }).click();
+    await menu.getByRole("tab", { name: "登录账号", exact: true }).click();
     await menu.getByRole("menuitemradio", { name: /图片模型未报告/ }).click();
     await expect(
       source.getByText("图片模型未报告", { exact: true }),
@@ -1121,6 +1122,7 @@ test("卡片 Codex 生图在刷新后归档并恢复来源；切 API 清除旧�
     expect(agent.received.images).toHaveLength(0);
     await page.getByRole("button", { name: "模型", exact: true }).click();
     const chatMenu = page.getByRole("menu", { name: "选择模型" });
+    await chatMenu.getByRole("tab", { name: "本地", exact: true }).click();
     await chatMenu.getByRole("searchbox").fill("image-fixture");
     await chatMenu
       .getByRole("menuitemradio", { name: /image-fixture/ })

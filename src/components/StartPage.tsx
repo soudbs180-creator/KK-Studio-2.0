@@ -53,7 +53,10 @@ export default function StartPage({
   onOpenExtension: (id: string) => void;
   modelConfigured?: boolean;
   draft?: CreationDraft;
-  onDraftChange?: (draft: CreationDraft) => void;
+  onDraftChange?: (
+    draft: CreationDraft,
+    changes?: Partial<CreationDraft>,
+  ) => void;
   saveState?: "saved" | "saving" | "error";
   onRetrySave?: () => void;
   skills?: SkillRecord[];
@@ -94,8 +97,11 @@ export default function StartPage({
     setActiveTab(nextTab);
     document.getElementById(`start-tab-${nextTab}`)?.focus();
   }
-  function updateDraft(next: CreationDraft): void {
-    if (onDraftChange) onDraftChange(next);
+  function updateDraft(
+    next: CreationDraft,
+    changes?: Partial<CreationDraft>,
+  ): void {
+    if (onDraftChange) onDraftChange(next, changes);
     else setLocalDraft(next);
   }
   async function create(input: CreationDraft): Promise<void> {

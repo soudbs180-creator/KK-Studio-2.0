@@ -56,3 +56,5 @@ TASK-CODEX-HOME-20261015：新首页默认Codex/ChatGPT图片能力，首页、�
 ## 2026-10-15 Codex 卡片连线参考图（功能通过，交付 PARTIAL）
 
 TASK-CODEX-REF-20261015：Desktop/Web2.1.33已真实通过卡片参考图→Codex内置imagegen→PNG原件归档/唯一result边，以及重载、正常重启和原桌面快捷方式重开；参考42452f4d.../结果6531e6ac...不变、1实际turn/0外部图片请求。定向与dirty预检通过；完整browser771PASS/13FAIL已逐项证明13项PRE-EXISTING FAILURE，fullverify仍FAIL、development及最终SHA正式review/Hosted/PR未完成，交付PARTIAL。本卡继续PARTIAL，其他Provider/任务状态不变；见[规格](../changes/2026-10-15-codex-card-reference/spec.md)与[验证](../changes/2026-10-15-codex-card-reference/verification.md)。
+
+- 2026-10-15：TASK-KK-UNIFIED-20261015 已获用户实施授权，新增范围见 [统一规格](../changes/2026-10-15-kk-unified/spec.md)。本卡既有证据仍限原版本；新范围实现/真实验收尚未完成，不能沿用旧 PASS 关闭。

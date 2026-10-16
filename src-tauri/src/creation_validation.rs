@@ -23,6 +23,44 @@ fn number(value: &Value, field: &str) -> Result<f64, String> {
         .filter(|n| n.is_finite())
         .ok_or_else(|| corrupt(field))
 }
+fn optional_timestamp(value: &Value, field: &str) -> Result<(), String> {
+    if let Some(value) = value.get(field) {
+        if !value.as_u64().is_some_and(|n| n <= 9_007_199_254_740_991) {
+            return Err(corrupt(field));
+        }
+    }
+    Ok(())
+}
+fn project_groups(value: &Value, projects: &[Value]) -> Result<(), String> {
+    let groups = optional_arrays(value, "projectGroups")?;
+    unique_ids(groups, "projectGroups")?;
+    for group in groups {
+        let fields = object(group, "projectGroups")?;
+        if fields
+            .keys()
+            .any(|key| !["id", "name", "deletedAt"].contains(&key.as_str()))
+            || !group["name"]
+                .as_str()
+                .is_some_and(|name| !name.trim().is_empty() && name.encode_utf16().count() <= 120)
+        {
+            return Err(corrupt("projectGroups"));
+        }
+        optional_timestamp(group, "deletedAt")?;
+    }
+    for project in projects {
+        optional_enum(project, "nameSource", &["auto", "manual"])?;
+        optional_timestamp(project, "trashedAt")?;
+        if let Some(group_id) = project.get("groupId") {
+            let group_id = id(group_id, "groupId")?;
+            if !groups.iter().any(|group| {
+                group["id"].as_str() == Some(group_id) && group.get("deletedAt").is_none()
+            }) {
+                return Err(corrupt("groupId"));
+            }
+        }
+    }
+    Ok(())
+}
 fn optional_strings(value: &Value, fields: &[&str]) -> Result<(), String> {
     for field in fields {
         if value.get(field).is_some_and(|v| !v.is_string()) {
@@ -205,6 +243,7 @@ pub fn validate(value: &Value) -> Result<(), String> {
     reject_secrets(value)?;
     let projects = array(&value["projects"], "projects")?;
     let project_ids = unique_ids(projects, "projects")?;
+    project_groups(value, projects)?;
     match value.get("activeProjectId") {
         Some(Value::Null) => (),
         Some(Value::String(active)) if project_ids.contains(active.as_str()) => (),

@@ -6,7 +6,6 @@ type NavItem = {
   compact: string;
   icon: string;
   phoneOnly?: boolean;
-  desktopOnly?: boolean;
 };
 
 const ITEMS: NavItem[] = [
@@ -20,13 +19,6 @@ const ITEMS: NavItem[] = [
   },
   { id: "projects", label: "项目库", compact: "项目", icon: "archive" },
   { id: "skills", label: "扩展", compact: "扩展", icon: "skill" },
-  {
-    id: "comfyui",
-    label: "ComfyUI 工作流",
-    compact: "工作流",
-    icon: "workflow",
-    desktopOnly: true,
-  },
 ];
 
 /** One navigation model for a desktop rail, tablet rail and phone tab bar. */
@@ -41,9 +33,7 @@ export default function SidebarNavigation({
   onNavigate: (id: string) => void;
   phone?: boolean;
 }) {
-  const items = ITEMS.filter((item) =>
-    phone ? !item.desktopOnly : !item.phoneOnly,
-  );
+  const items = ITEMS.filter((item) => phone || !item.phoneOnly);
   return (
     <nav className="primary-nav" aria-label="主导航">
       {items.map(({ id, label, compact, icon }) => (

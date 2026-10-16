@@ -23,7 +23,7 @@ const STATE_LABELS: Record<CompanionConnectionState, string> = {
   offline: "服务离线",
   unauthenticated: "需要重新配对",
   conflict: "存在版本冲突",
-  "migration-required": "协议版本不兼容",
+  "migration-required": "需要更新",
   error: "检查失败",
 };
 

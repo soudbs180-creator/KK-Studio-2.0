@@ -17,6 +17,10 @@ export default function SidebarProjectHeader({
   onCreateFolder,
   onFilterChange,
   onSortChange,
+  canEditProjects,
+  showTrash,
+  trashCount,
+  onToggleTrash,
 }: {
   expanded: boolean;
   projectFilter: "all" | "ungrouped";
@@ -30,6 +34,10 @@ export default function SidebarProjectHeader({
   onCreateFolder: () => void;
   onFilterChange: (value: "all" | "ungrouped") => void;
   onSortChange: (value: "manual" | "recent" | "priority") => void;
+  canEditProjects: boolean;
+  showTrash: boolean;
+  trashCount: number;
+  onToggleTrash: () => void;
 }) {
   return (
     <div className="project-groups-header">
@@ -66,7 +74,8 @@ export default function SidebarProjectHeader({
           type="button"
           className="project-groups-action"
           aria-label="创建项目文件夹"
-          title="创建项目文件夹（会话内 Prototype）"
+          title={canEditProjects ? "创建持久项目文件夹" : "项目存储尚未就绪"}
+          disabled={!canEditProjects}
           onClick={onCreateFolder}
         >
           <img
@@ -122,6 +131,19 @@ export default function SidebarProjectHeader({
                   : "任务状态优先"}
             </button>
           ))}
+          <button
+            type="button"
+            role="menuitemcheckbox"
+            aria-checked={showTrash}
+            aria-label={showTrash ? "返回项目" : `项目垃圾箱 (${trashCount})`}
+            onClick={() => {
+              onToggleTrash();
+              onCloseMenu();
+              filterTriggerRef.current?.focus({ preventScroll: true });
+            }}
+          >
+            {showTrash ? "返回项目" : `项目垃圾箱 (${trashCount})`}
+          </button>
         </div>
       )}
     </div>

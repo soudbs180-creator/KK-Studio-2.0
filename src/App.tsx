@@ -9,12 +9,12 @@ import React, {
   type SetStateAction,
 } from "react";
 import { appVersion } from "./runtime/appInfo";
-import { confirmAction } from "./runtime/confirmAction";
 import TopBar from "./components/TopBar";
 import CanvasCollectionsPanels from "./components/CanvasCollectionsPanels";
 import { effectiveTags, splitCollectionTags } from "./domain/collectionTags";
 import { normalizeTags } from "./domain/assets";
 import Sidebar from "./components/Sidebar";
+import { useProjectLibrary } from "./features/projects/useProjectLibrary";
 import type { ModelSelection } from "./features/models/modelSelection";
 import { homeModelSelection } from "./domain/modelSelection";
 import { useSidebarLayout } from "./components/useSidebarLayout";
@@ -27,10 +27,6 @@ import {
   requiredApprovalGates,
   type ApprovalGate,
 } from "./domain/agentWorkflow";
-import {
-  SETTINGS_SECTIONS,
-  type SettingsSection,
-} from "./components/settings/SettingsSectionData";
 import StartPage from "./components/StartPage";
 import { ensureTemplates } from "./features/skills/templateSkills";
 import {
@@ -41,7 +37,6 @@ import {
 } from "./features/skills/skillRegistry";
 import {
   createProject,
-  projectHasUnsettledTasks,
   emptyDraft,
   type CreationDraft,
   type CreationProject,
@@ -221,11 +216,7 @@ import {
   DEFAULT_SETTINGS,
   type SettingsPreferences,
 } from "./domain/settings";
-import {
-  readLocalWorkflows,
-  writeLocalWorkflows,
-  type WorkflowRecord,
-} from "./features/comfyui/workflowRegistry";
+import { useLocalWorkflows } from "./features/comfyui/useLocalWorkflows";
 // App owns lazy panel styles before the final screen overrides.
 import "./components/assets/assets.css";
 import "./components/settings/plugin-manager.css";
@@ -275,8 +266,7 @@ export default function App() {
     likes: 0,
     tags: 0,
   });
-  const [settingsSection, setSettingsSection] =
-    useState<SettingsSection>("general");
+  const [settingsSection, setSettingsSection] = useState("general");
   const sidebar = useSidebarLayout();
   const chatCoversCanvas =
     sidebar.surface === "phone" ||
@@ -305,9 +295,7 @@ export default function App() {
   }, []);
   const assetArchive = useAssetArchive(setAssets);
   const [subjects, setSubjects] = useState(initialSubjects);
-  const [localWorkflows, setLocalWorkflows] = useState<WorkflowRecord[]>(() =>
-    readLocalWorkflows(),
-  );
+  const workflows = useLocalWorkflows();
   const persistence = useCreationStorage(
     recoverInterruptedTasks,
     reconcileNativeTasks,
@@ -361,17 +349,6 @@ export default function App() {
       return { model: "", configured: false };
     }
   }, [providerVersion]);
-  function saveWorkflow(workflow: WorkflowRecord): void {
-    setLocalWorkflows((current) => {
-      const next = [
-        workflow,
-        ...current.filter((item) => item.id !== workflow.id),
-      ];
-      writeLocalWorkflows(next);
-      return next;
-    });
-  }
-
   function hasArchivedOutputEvidence(
     task: Pick<CreationTask, "kind">,
     output: Pick<CreationTaskOutput, "assetId" | "text" | "status">,
@@ -382,13 +359,6 @@ export default function App() {
       output.text?.trim() &&
       new TextEncoder().encode(output.text).length <= 32768,
     );
-  }
-  function deleteWorkflow(workflow: WorkflowRecord): void {
-    setLocalWorkflows((current) => {
-      const next = current.filter((item) => item.id !== workflow.id);
-      writeLocalWorkflows(next);
-      return next;
-    });
   }
   const taskControllers = useRef<Record<string, AbortController>>({});
   const [savingResultTaskIds, setSavingResultTaskIds] = useState(
@@ -414,9 +384,8 @@ export default function App() {
   const pendingApprovalTask = creation.projects
     .find((project) => project.id === pendingApproval?.projectId)
     ?.tasks.find((task) => task.id === pendingApproval?.taskId);
-  const activeProject = creation.projects.find(
-    (project) => project.id === creation.activeProjectId,
-  );
+  const projectLibrary = useProjectLibrary(persistence, () => open("projects"));
+  const activeProject = projectLibrary.activeProject;
   const latestProjectTask = activeProject?.tasks.at(-1);
   const generationProgress = getGenerationProgressLabels({
     task: latestProjectTask,
@@ -482,12 +451,15 @@ export default function App() {
     commitCreation(next);
   }
 
-  function updateHomeDraft(draft: CreationDraft): void {
+  function updateHomeDraft(
+    draft: CreationDraft,
+    changes?: Partial<CreationDraft>,
+  ): void {
     const next = {
       ...creationRef.current,
       homeDraft: { ...draft, updatedAt: Date.now() },
     };
-    commitCreation(next);
+    commitCreation(next, changes);
   }
   function applySkillToHome(record: SkillRecord): string {
     const draft = creationRef.current.homeDraft;
@@ -2717,6 +2689,10 @@ export default function App() {
     );
   }
   function handleNewBlankProject(): string {
+    if (saveStateRef.current !== "saved" && saveStateRef.current !== "saving") {
+      projectLibrary.report("项目存储尚未就绪，请先处理保存或恢复提示。");
+      return "";
+    }
     const profile = parseModelProvider(
       localStorage.getItem(MODEL_PROVIDER_STORAGE_KEY),
     ).profile;
@@ -2746,48 +2722,15 @@ export default function App() {
     return nextProject.id;
   }
   function openSavedProject(id: string): void {
-    if (!creationRef.current.projects.some((project) => project.id === id))
+    if (
+      !creationRef.current.projects.some(
+        (project) => project.id === id && project.trashedAt === undefined,
+      )
+    )
       return;
     commitCreation({ ...creationRef.current, activeProjectId: id });
     setActive("workspace");
     setModal("");
-  }
-  function renameSavedProject(id: string, title: string): void {
-    if (persistence.state !== "saved" && persistence.state !== "saving") return;
-    const name = title.trim().slice(0, 120);
-    if (!name) return;
-    updateProject(id, (project) => ({
-      ...project,
-      name,
-      updatedAt: Date.now(),
-    }));
-  }
-  async function deleteSavedProject(id: string): Promise<void> {
-    if (persistence.state !== "saved" && persistence.state !== "saving") return;
-    const project = creationRef.current.projects.find((item) => item.id === id);
-    if (!project) return;
-    if (projectHasUnsettledTasks(project)) return;
-    if (
-      !(await confirmAction(
-        `确定删除项目「${project.name}」？此操作会从本地项目库移除该项目。`,
-      ))
-    )
-      return;
-    const current = creationRef.current;
-    const confirmedProject = current.projects.find((item) => item.id === id);
-    if (
-      !confirmedProject ||
-      projectHasUnsettledTasks(confirmedProject) ||
-      (saveStateRef.current !== "saved" && saveStateRef.current !== "saving")
-    )
-      return;
-    commitCreation({
-      ...current,
-      projects: current.projects.filter((item) => item.id !== id),
-      activeProjectId:
-        current.activeProjectId === id ? null : current.activeProjectId,
-    });
-    if (current.activeProjectId === id) setActive("projects");
   }
   useEffect(() => {
     const shortcut = (event: KeyboardEvent): void => {
@@ -2908,22 +2851,10 @@ export default function App() {
       setModal(view);
       return;
     }
+    if (view === "comfyui") view = "settings/comfy";
     if (view === "settings" || view.startsWith("settings/")) {
       const requestedSection = view.split("/")[1];
-      const sectionAlias: Record<string, SettingsSection> = {
-        plugins: "mcp",
-        extensions: "extensions",
-        partners: "providers",
-        codex: "providers",
-        skills: "skill",
-        skill: "skill",
-        mcp: "mcp",
-      };
-      setSettingsSection(
-        sectionAlias[requestedSection] ??
-          SETTINGS_SECTIONS.find((item) => item.id === requestedSection)?.id ??
-          "general",
-      );
+      setSettingsSection(requestedSection || "general");
       setModal("settings");
       return;
     }
@@ -2933,15 +2864,12 @@ export default function App() {
         "workspace",
         "projects",
         "skills",
-        "comfyui",
         "favorites",
         "likes",
         "search",
       ].includes(view)
     ) {
-      if (
-        ["landing", "workspace", "projects", "skills", "comfyui"].includes(view)
-      )
+      if (["landing", "workspace", "projects", "skills"].includes(view))
         setMobileChat(false);
       setActive(view);
       setModal("");
@@ -3030,13 +2958,12 @@ export default function App() {
           canEditProjects={saveState === "saved" || saveState === "saving"}
           onCreateProject={handleNewBlankProject}
           onOpenProject={openSavedProject}
-          onRenameProject={renameSavedProject}
-          onDeleteProject={deleteSavedProject}
+          projectActions={projectLibrary.actions}
         />
         <main className={"workspace " + (mobileChat ? "chat-mobile" : "")}>
           <CreationStorageNotice
             state={persistence.state}
-            message={persistence.message}
+            message={projectLibrary.message}
             hasRecoveryDraft={Boolean(persistence.recoveryDraft)}
             onRead={persistence.retryRead}
             onSave={persistence.retrySave}
@@ -3348,24 +3275,14 @@ export default function App() {
               />
             </DeferredPanelBoundary>
           )}
-          {["projects", "comfyui"].includes(active) && (
+          {active === "projects" && (
             <DeferredPanelBoundary key={active}>
               <LibraryPage
                 key={active}
-                view={active as "projects" | "comfyui"}
+                view="projects"
                 onOpen={open}
                 projects={creation.projects}
-                localWorkflows={localWorkflows}
-                onSaveWorkflow={saveWorkflow}
-                onDeleteWorkflow={deleteWorkflow}
-                onRunWorkflow={(workflow) => {
-                  setModal("tasks");
-                  window.dispatchEvent(
-                    new CustomEvent("kk:comfyui-workflow-requested", {
-                      detail: workflow.id,
-                    }),
-                  );
-                }}
+                projectActions={projectLibrary.actions}
                 onOpenProject={openSavedProject}
               />
             </DeferredPanelBoundary>
@@ -3429,7 +3346,7 @@ export default function App() {
                 }))}
                 assets={[...assets, ...subjects]}
                 onOpen={open}
-                projects={creation.projects}
+                projects={projectLibrary.projects}
                 onOpenProject={openSavedProject}
                 onLocate={locate}
               />
@@ -3479,6 +3396,7 @@ export default function App() {
                 revision={creation.revision}
                 projects={creation.projects}
                 registry={skillRegistry}
+                workflows={workflows}
                 onClose={() => setModal("")}
               />
             ) : modal === "assets" ? (

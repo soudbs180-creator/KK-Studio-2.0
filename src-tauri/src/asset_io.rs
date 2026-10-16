@@ -6,7 +6,7 @@ use std::sync::atomic::{AtomicU64, Ordering};
 pub fn error(error: impl std::fmt::Display) -> String {
     format!("io: 素材文件操作失败：{error}")
 }
-fn checked_metadata(path: &Path) -> Result<Option<fs::Metadata>, String> {
+pub(crate) fn checked_metadata(path: &Path) -> Result<Option<fs::Metadata>, String> {
     let metadata = match fs::symlink_metadata(path) {
         Ok(metadata) => metadata,
         Err(e) if e.kind() == io::ErrorKind::NotFound => return Ok(None),

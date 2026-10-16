@@ -1,6 +1,7 @@
 # ADR-008：三端独立版本与设备本地数据目标
 
 - 状态：ACCEPTED（产品与版本目标；本地服务、账号和 Mobile 实现状态见账本）
+- 部分替代：2026-10-15 [ADR-019](ADR-019-unified-local-repository-and-optional-account.md) 将 Web 使用条件更新为可免登录本地使用；下文保留原决定的历史语义，版本与数据身份边界继续有效。
 - 日期 / Task ID / Owner：2026-09-28 / TASK-VERSION-001 / root
 - Intent / Spec / Plan：[交付包](../../changes/2026-09-28-platform-versioning/intent.md)、[规范](../../changes/2026-09-28-platform-versioning/spec.md)、[计划](../../changes/2026-09-28-platform-versioning/plan.md)
 - 补充：平台双门、Web VPS 控制面与 Mobile 独立目录见 [ADR-011](ADR-011-platform-delivery-gates-and-vps-control-plane.md)；本 ADR 的版本源与本地项目/素材数据边界继续有效。

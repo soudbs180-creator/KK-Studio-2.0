@@ -850,7 +850,7 @@ test("actual long model identifiers remain readable without covering canvas cont
       params!.y + params!.height <= bounds!.y,
   ).toBe(true);
   await button.click();
-  await source.getByRole("button", { name: "切换全部模型" }).click();
+  await source.getByRole("tab", { name: "官方 API", exact: true }).click();
   await expect(
     source.getByRole("menuitemradio", { name: model, exact: false }),
   ).toContainText(model);

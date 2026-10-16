@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { Search } from "lucide-react";
 import CatalogPageBody from "./CatalogPageBody";
 import type { CreationProject } from "../features/creation/model";
+import type { ProjectLibraryActions } from "../features/projects/projectLifecycle";
 import CatalogTutorial from "./CatalogTutorial";
 import { type WorkflowRecord } from "../features/comfyui/workflowRegistry";
 import { downloadWorkflow } from "./WorkflowImportButton";
@@ -109,6 +110,7 @@ export default function LibraryPage({
   view,
   onOpen,
   projects = [],
+  projectActions,
   onOpenProject,
   localWorkflows = [],
   onSaveWorkflow,
@@ -118,6 +120,7 @@ export default function LibraryPage({
   view: CatalogView;
   onOpen: (id: string) => void;
   projects?: CreationProject[];
+  projectActions?: ProjectLibraryActions;
   onOpenProject?: (id: string) => void;
   localWorkflows?: readonly WorkflowRecord[];
   onSaveWorkflow?: (workflow: WorkflowRecord) => void;
@@ -154,7 +157,7 @@ export default function LibraryPage({
   );
   const tabs =
     view === "projects"
-      ? ["本地项目", "共享项目"]
+      ? ["本地项目", "共享项目", "垃圾箱"]
       : view === "skills"
         ? ["Skill", "我的 Skill"]
         : ["精选工作流", "我的工作流"];
@@ -227,6 +230,7 @@ export default function LibraryPage({
         workflows={workflows}
         category={category}
         projects={projects}
+        projectActions={projectActions}
         onCategory={setCategory}
         tab={tab}
         localWorkflows={localWorkflows}

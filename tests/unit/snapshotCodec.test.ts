@@ -4,6 +4,7 @@ import {
   decodeSnapshot,
   parseSnapshot,
   storageError,
+  SnapshotStorageError,
 } from "../../src/features/creation/snapshotCodec.ts";
 const basic = () => ({
   version: 2,
@@ -16,6 +17,16 @@ const basic = () => ({
       items: [{ id: "image", title: "图片", description: "", kind: "image" }],
     },
   ],
+});
+test("future format is unsupported before examining secret-like fields", () => {
+  assert.throws(
+    () =>
+      decodeSnapshot({ ...basic(), version: 999, apiKey: "synthetic-private" }),
+    (error: unknown) =>
+      error instanceof SnapshotStorageError &&
+      error.code === "unsupported" &&
+      !error.message.includes("synthetic-private"),
+  );
 });
 test("原生素材缺失提示保留可操作原因且不泄露原始错误", () => {
   const error = storageError("missing: synthetic-private-path");

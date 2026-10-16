@@ -80,6 +80,8 @@
 }
 .settings-nav-item.is-active {
   background: var(--settings-selected);
+  color: var(--kk-text-primary);
+  box-shadow: inset var(--kk-space-1) 0 var(--kk-text-accent);
 }
 .settings-nav-item:hover {
   color: var(--settings-text);
@@ -366,6 +368,8 @@
 .settings-ext-tab.is-active {
   background: var(--settings-selected);
   color: var(--settings-text);
+  box-shadow: inset 0 calc(-1 * var(--kk-border-width-focus))
+    var(--kk-text-accent);
 }
 .settings-ext-tab:hover:not(.is-active) {
   color: var(--settings-text);
@@ -1914,4 +1918,132 @@
 }
 .settings-detail-card > .settings-field-help {
   overflow-wrap: anywhere;
+}
+
+.settings-panel .settings-action.secondary[aria-pressed="true"] {
+  background: var(--kk-neutral-selected);
+  border-color: var(--kk-text-accent);
+  color: var(--kk-text-primary);
+}
+.settings-general-section,
+.settings-disclosure {
+  margin-top: var(--kk-space-5);
+  padding-top: var(--kk-space-4);
+  border-top: var(--kk-border-width) solid var(--kk-border-subtle);
+}
+.settings-disclosure > summary {
+  min-height: var(--kk-control-h-md);
+  cursor: pointer;
+  font-size: var(--kk-font-body);
+  line-height: var(--kk-line-body);
+  font-weight: var(--kk-weight-medium);
+}
+.settings-disclosure > summary:focus-visible {
+  outline: var(--kk-focus-width-subtle) solid var(--kk-focus-ring-subtle);
+  outline-offset: var(--kk-focus-offset-subtle);
+}
+.settings-disclosure > .settings-detail-stack {
+  margin-top: var(--kk-space-3);
+}
+.settings-unavailable-note {
+  margin-top: var(--kk-space-2);
+}
+.settings-section-heading,
+.settings-workflow-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--kk-space-3);
+}
+.settings-section-heading .settings-detail-label {
+  margin: 0;
+}
+.settings-model-candidates {
+  display: grid;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  gap: var(--kk-space-3);
+}
+.settings-model-candidates legend {
+  margin-bottom: var(--kk-space-3);
+  font-size: var(--kk-font-body);
+  line-height: var(--kk-line-body);
+}
+.settings-model-candidate {
+  min-width: 0;
+  border: var(--kk-border-width) solid var(--kk-border-subtle);
+  border-radius: var(--kk-radius-control);
+  padding: var(--kk-space-3);
+  font-size: var(--kk-font-body);
+  line-height: var(--kk-line-body);
+  overflow-wrap: anywhere;
+}
+.settings-model-candidate[data-selected="true"] {
+  border-color: var(--kk-text-accent);
+  background: var(--kk-neutral-selected);
+}
+.settings-model-candidate p,
+.settings-workflow-row p {
+  margin-top: var(--kk-space-2);
+  color: var(--kk-text-secondary);
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-caption);
+}
+.settings-model-candidate a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--kk-control-h-md);
+  color: var(--kk-text-accent);
+  font-size: var(--kk-font-caption);
+}
+.settings-candidate-choice {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--kk-space-2);
+  cursor: pointer;
+}
+.settings-candidate-choice input {
+  accent-color: var(--kk-text-accent);
+}
+.settings-candidate-choice span {
+  margin-left: auto;
+  font-size: var(--kk-font-caption);
+}
+.settings-workflow-row {
+  border-top: var(--kk-border-width) solid var(--kk-border-subtle);
+  padding-top: var(--kk-space-3);
+}
+.settings-workflow-row > div:first-child {
+  min-width: 0;
+  flex: 1 1 auto;
+  overflow-wrap: anywhere;
+}
+.settings-detail-card strong,
+.settings-info-row strong {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.settings-content .shortcuts-panel.is-embedded {
+  width: 100%;
+  height: auto;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.settings-content .shortcuts-panel.is-embedded .shortcuts-body {
+  flex-direction: column;
+  overflow: visible;
+}
+.settings-content .shortcuts-panel.is-embedded .shortcut-column {
+  flex: 0 0 auto;
+  padding: 0;
+  border: 0;
+}
+.settings-content .shortcuts-panel.is-embedded > footer {
+  flex-basis: auto;
+  padding: var(--kk-space-3) 0;
 }

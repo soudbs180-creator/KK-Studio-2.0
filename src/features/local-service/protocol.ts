@@ -16,6 +16,7 @@ export const companionErrorCodes = [
   "PAIRING_INVALID",
   "PAIRING_USED",
   "PROTOCOL_UNSUPPORTED",
+  "SNAPSHOT_UNSUPPORTED",
   "NOT_FOUND",
   "BODY_TOO_LARGE",
   "CORRUPT",

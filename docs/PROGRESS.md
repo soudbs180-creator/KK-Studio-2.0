@@ -1,5 +1,25 @@
 # 当前进度
 
+## 2026-10-16 安装安全复验与真实UI回读（进行中）
+
+独审捕获的硬链接原件损坏/续传空间误拒均已实际RED→GREEN；修复19路径预检通过，fresh integration41/41、Node21/21及原件SHA保全探针通过，真实ZIP/模型推理仍未验。冻结573输入构建成功，新bundle相关25/25及动画/原frame邻域10/10首试通过，36状态审计无document溢出；手机聊天实际settled在viewport内。截图动画中间态与旧seed失败已按真实状态修正，未改frame坐标/容差；顶部实际命中24px，纠正先前32px推断。Native模型能力DTO丢失已修，正常多聊天/Agent又补两项scope隔离，需再重建后验。账号后台正用真SQLite/OPAQUE/OIDC/JWE实现独立控制面，尚未接Desktop/真实邮件；全局DESIGN、执行模型参数、媒体、共仓库及同步继续推进，详见[验证](changes/2026-10-15-kk-unified/verification.md)。
+
+## 2026-10-16 安装接线与账号兼容预检（进行中）
+
+本地安装Native薄命令已接线，完整校验后再探测硬件，bin编译检查通过；共享设置hook四类竞态经真实反例修复，16项及独立复审通过。独立安装适配器19路径冻结并送审，作者34项integration/32项bin/21项Node通过，尚无真实下载/模型执行。正常多聊天仍在共享核心收口，待其冻结后统一重建UI；旧bundle审计发现1920顶部菜单命中高15px并已源码修正，仍待新bundle验证。账号成熟库已在隔离目录验证实际密码协议、封装、PAR/PKCE及Edge Worker/CSP兼容，产品账号与设备解锁尚未实现。用户确认固定用户信息位置、内容目录可调及Web设备指纹/PIN不支持时仅会话密钥，已并入spec/ADR019；总任务继续IN_PROGRESS，详见[验证](changes/2026-10-15-kk-unified/verification.md)。
+
+## 2026-10-16 统一 UI 回归修复与核心迁移（进行中）
+
+8e17九文件修复及精确独审通过，相关九组87/87首试、0retry/flaky/skip；垃圾箱入口归入既有菜单，侧栏五锚点恢复误差0，未改Figma坐标或0.1容差。Node1508PASS/14既有skip、静态/build通过；原55a0完整verify的804/811与exit1仍保留，尚未新跑完整verify或Native。正常多聊天ADR022和本地安装ADR023契约已接受并独审，现按共享核心与独立适配器划分开始实现；未称迁移或安装可用。模型B/C、媒体、全局DESIGN逐页验收、共仓库、账号及手动加密备份继续推进，前台焦点与真实服务验收仍开放。详见[验证](changes/2026-10-15-kk-unified/verification.md)。
+
+## 2026-10-16 统一交互与原生基线（进行中）
+
+设置f32/0ad及四渠道模型阶段A28c/f472精确复审已通过，旧预设跨scope与过滤后置顶丢失等反例保留并关闭。Native55a0实际重建2.1.35，重复启动同PID/仓库/快照、退出重开草稿及清理通过；Win32前台焦点仍未通过，整轮PARTIAL，不抢前台强行过测。组合verify中Node1508/Agent199通过（14/2既有skip），Browser804/811、7失败，全部原配置重试仍失败；DESIGN/development尾段未执行。原设置与项目菜单期望正在逐项核对，整体继续IN_PROGRESS。后续正常多聊天新格式/作用域迁移与本地包安装适配已完成只读调用链及实施计划，尚未写新阶段产品；全局DESIGN、模型B/C、媒体、账号、共仓库和手动加密同步仍在原范围，详见[统一验证](changes/2026-10-15-kk-unified/verification.md)。
+
+## 2026-10-15 统一修复与重构实施
+
+用户已批准完整方案，实施从 origin/main d95e4c44 / Desktop-Web2.1.34 开始；隔离分支 codex/TASK-KK-UNIFIED-20261015，候选2.1.35。项目分组/软删除、依赖guard、加载草稿80f6、格式保护6c639、硬件d3e均已精确独审；12AI独立适配器73PASS，生产接线待。DESIGN e5e/0770已独审，正式41Node及8预览首试通过，完整产品UI收敛仍待；本地包7e06/aecb容量指引19项及精确独审通过，无安装或生成。Native权威06ac/df9已独审，204Rust/1既有ignore；设置f32/0ad分类、保存保护与响应式及独审通过。模型28c阶段A四渠道/精确型号已提交，独审发现旧置顶丢失/禁用原因缺失，待集中修复；B/C、Agent、动态参数仍开放。0ad冻结组合Node1508PASS/14skip/0fail，原超时失败保留；实际Native新产物验收中。多聊天、媒体、窗口、完整共仓库、账号、云备份及托管CI继续按原计划实施，不能以基础模块替代全功能完成。完整范围与各次失败见 [实施计划](changes/2026-10-15-kk-unified/plan.md)、[验证](changes/2026-10-15-kk-unified/verification.md)。
+
 ## 2026-10-15 HOME当前本机验收通过（IN_PROGRESS）
 
 冻结a85完整verify：Node1343/14skip、Agent199/2skip、Edge785首试、development4步，独立6198hash匹配。官方Windows候选2.1.34 EXEf8cbfd5d/source a85，原Native38/3次launch与Rust167通过，实际正常关闭重开恢复、暂停/重连/服务重启及未知归属保护成立。原f10两FAIL与旧产物保留，HOME-NATIVE-01结果补审/正式PR/Hosted/main继续；main/daily仍2.1.33，不代填付费Provider或用户验收。见[验证](changes/2026-10-15-home-recovery-integration/verification.md)。

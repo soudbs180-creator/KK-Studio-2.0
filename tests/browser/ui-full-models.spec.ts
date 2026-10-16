@@ -26,7 +26,31 @@ for (const width of [390, 1099, 1920]) {
     await expect(
       page.locator(".image-edit-model .kk-model-menu"),
     ).toBeVisible();
+    const menu = page.locator(".image-edit-model .kk-model-menu");
+    const account = menu.getByRole("tab", { name: "登录账号", exact: true });
+    await expect(account).toBeDisabled();
+    await expect(account).toHaveAccessibleDescription(
+      "当前图片编辑仅支持 API 执行，登录账号暂不支持此操作。",
+    );
+    await expect(
+      menu.getByText("当前图片编辑仅支持 API 执行，登录账号暂不支持此操作。", {
+        exact: true,
+      }),
+    ).toBeVisible();
+    const relay = menu.getByRole("tab", { name: "中转 API", exact: true });
+    await relay.focus();
+    await relay.press("ArrowRight");
+    await expect(
+      menu.getByRole("tab", { name: "官方 API", exact: true }),
+    ).toBeFocused();
+    await menu
+      .getByRole("tab", { name: "官方 API", exact: true })
+      .press("ArrowLeft");
+    await expect(relay).toBeFocused();
     await expect(page.locator(".image-edit-model select")).toHaveCount(0);
+    await menu.screenshot({
+      path: info.outputPath(`api-only-channel-reason-${width}.png`),
+    });
     await page.keyboard.press("Escape");
     await expect(model).toBeFocused();
     await expect(page.locator(".image-edit-model .kk-model-menu")).toHaveCount(

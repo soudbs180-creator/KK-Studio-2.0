@@ -1,4 +1,6 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { runInNewContext } from "node:vm";
@@ -7,26 +9,37 @@ import {
   emptySnapshot,
   type CreationSnapshot,
 } from "../../src/features/creation/model.ts";
-import { storageError } from "../../src/features/creation/snapshotCodec.ts";
+import {
+  decodeSnapshot,
+  storageError,
+} from "../../src/features/creation/snapshotCodec.ts";
 import { reconcileProjectCanvas } from "../../src/domain/projectCanvas.ts";
 import {
   createNativeCloseHandler,
   flushCreationBeforeClose,
 } from "../../src/features/creation/nativeClose.ts";
 
-type StorageHook = ReturnType<
-  typeof import("../../src/features/creation/useCreationStorage.ts").useCreationStorage
->;
+type LoadingOptions = {
+  initial?: CreationSnapshot;
+  readGate?: Promise<void>;
+  readError?: Error;
+  reconcile?: (snapshot: CreationSnapshot) => Promise<CreationSnapshot>;
+  waitForLoad?: boolean;
+};
 
 // Run the actual hook with deterministic React lifecycle/timers and IO boundaries.
 // No save-queue, revision, conflict or recovery logic is replaced by this harness.
-async function harness(native = false, registration?: Promise<() => void>) {
+async function harness(
+  native = false,
+  registration?: Promise<() => void>,
+  options: LoadingOptions = {},
+) {
   const slots: unknown[] = [];
   const effects: (() => void | (() => void))[] = [];
   const cleanup: (() => void)[] = [];
   let cursor = 0;
   const writes: CreationSnapshot[] = [];
-  const loaded = { ...emptySnapshot(), revision: 1 };
+  const loaded = options.initial ?? { ...emptySnapshot(), revision: 1 };
   let stored = loaded;
   let persist: (snapshot: CreationSnapshot) => Promise<void> = async (
     snapshot,
@@ -59,14 +72,20 @@ async function harness(native = false, registration?: Promise<() => void>) {
       }
     },
   };
-  const storage = {
-    loadCreationSnapshot: async () => ({
+  let load = async () => {
+    await options.readGate;
+    if (options.readError) throw options.readError;
+    return {
       snapshot: stored,
       recovered: false,
       durableRevision: stored.revision,
-    }),
+    };
+  };
+  const storage = {
+    loadCreationSnapshot: () => load(),
     persistCreationSnapshotAsync: async (snapshot: CreationSnapshot) => {
       writes.push(snapshot);
+      decodeSnapshot(snapshot);
       await persist(snapshot);
     },
     persistCreationSnapshotSync: () => {},
@@ -104,9 +123,7 @@ async function harness(native = false, registration?: Promise<() => void>) {
     "../../domain/projectCanvas": { reconcileProjectCanvas },
   };
   const exports: {
-    useCreationStorage?: (
-      recover: (snapshot: CreationSnapshot) => CreationSnapshot,
-    ) => StorageHook;
+    useCreationStorage?: typeof import("../../src/features/creation/useCreationStorage.ts").useCreationStorage;
   } = {};
   const source = await readFile(
     new URL(
@@ -136,21 +153,29 @@ async function harness(native = false, registration?: Promise<() => void>) {
   });
   const render = () => {
     cursor = 0;
-    return exports.useCreationStorage!((snapshot) => snapshot);
+    return exports.useCreationStorage!(
+      (snapshot) => snapshot,
+      options.reconcile,
+    );
   };
   render();
   effects.forEach((effect) => {
     const stop = effect();
     if (stop) cleanup.push(stop);
   });
-  await new Promise<void>((resolve) => setImmediate(resolve));
-  assert.equal(render().state, "saved");
+  if (options.waitForLoad !== false) {
+    await new Promise<void>((resolve) => setImmediate(resolve));
+    assert.equal(render().state, "saved");
+  }
   return {
     render,
     writes,
     durable: () => stored,
     setPersist: (next: typeof persist) => {
       persist = next;
+    },
+    setLoad: (next: typeof load) => {
+      load = next;
     },
     nativeClose: () => {
       assert(nativeClose);
@@ -313,4 +338,773 @@ test("a native subscription resolving after unmount is released without a stale 
   assert.equal(stopped, 1);
   assert.equal(fixture.destroyed(), 0);
   assert.equal(fixture.writes.length, 0);
+});
+
+function readGate() {
+  let release!: () => void;
+  const promise = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  return { promise, release };
+}
+
+const settle = () => new Promise<void>((resolve) => setImmediate(resolve));
+function referenceFixture(id: string, file: string) {
+  const bytes = readFileSync(new URL(file, import.meta.url));
+  return {
+    id,
+    name: `${id}.png`,
+    mime: "image/png",
+    size: bytes.length,
+    dataUrl: `data:image/png;base64,${bytes.toString("base64")}`,
+    assetId: `asset-${createHash("sha256").update(bytes).digest("hex").slice(0, 24)}`,
+  };
+}
+const oldAttachment = referenceFixture(
+  "saved-reference",
+  "../../src-tauri/icons/32x32.png",
+);
+const newAttachment = referenceFixture(
+  "new-reference",
+  "../../src-tauri/icons/64x64.png",
+);
+function savedHomeSnapshot(): CreationSnapshot {
+  const initial = emptySnapshot();
+  return {
+    ...initial,
+    revision: 8,
+    homeDraft: {
+      ...initial.homeDraft,
+      prompt: "saved prompt",
+      outputCount: 4,
+      privacyMode: "local_only",
+      approvalMode: "ask",
+      model: "saved-model",
+      providerConnectionId: "saved-provider",
+      modelSelection: {
+        source: "api",
+        kind: "image",
+        model: "saved-model",
+        connectionId: "saved-provider",
+      },
+      attachments: [oldAttachment],
+      updatedAt: 10,
+    },
+  };
+}
+
+test("loading prompt edits preserve stored settings and unseen attachments through durable flush", async () => {
+  const gate = readGate();
+  const saved = savedHomeSnapshot();
+  const fixture = await harness(false, undefined, {
+    initial: saved,
+    readGate: gate.promise,
+    waitForLoad: false,
+  });
+  try {
+    const hook = fixture.render();
+    hook.commitCreation({
+      ...hook.creation,
+      homeDraft: {
+        ...hook.creation.homeDraft,
+        prompt: "typed while loading",
+        updatedAt: 20,
+      },
+    });
+    assert.equal(fixture.render().state, "loading");
+    assert.equal(fixture.writes.length, 0);
+    assert.equal(fixture.durable(), saved);
+    gate.release();
+    await settle();
+    const loaded = fixture.render();
+    assert.equal(loaded.creation.homeDraft.prompt, "typed while loading");
+    for (const key of [
+      "outputCount",
+      "privacyMode",
+      "approvalMode",
+      "model",
+      "providerConnectionId",
+    ] as const)
+      assert.equal(loaded.creation.homeDraft[key], saved.homeDraft[key], key);
+    assert.deepEqual(
+      loaded.creation.homeDraft.attachments,
+      saved.homeDraft.attachments,
+    );
+    assert.deepEqual(
+      loaded.creation.homeDraft.modelSelection,
+      saved.homeDraft.modelSelection,
+    );
+    await loaded.flush();
+    assert.deepEqual(fixture.durable().homeDraft, loaded.creation.homeDraft);
+  } finally {
+    fixture.dispose();
+  }
+});
+
+test("an explicit default approval choice during loading overrides only that stored field", async () => {
+  const gate = readGate();
+  const fixture = await harness(false, undefined, {
+    initial: savedHomeSnapshot(),
+    readGate: gate.promise,
+    waitForLoad: false,
+  });
+  try {
+    const hook = fixture.render();
+    hook.commitCreation(
+      {
+        ...hook.creation,
+        homeDraft: {
+          ...hook.creation.homeDraft,
+          approvalMode: "auto",
+          updatedAt: 20,
+        },
+      },
+      { approvalMode: "auto" },
+    );
+    gate.release();
+    await settle();
+    assert.equal(fixture.render().creation.homeDraft.approvalMode, "auto");
+    assert.equal(fixture.render().creation.homeDraft.outputCount, 4);
+    assert.equal(fixture.render().creation.homeDraft.prompt, "saved prompt");
+  } finally {
+    fixture.dispose();
+  }
+});
+
+test("loading model edits keep the selected route together and preserve untouched privacy", async () => {
+  const gate = readGate();
+  const fixture = await harness(false, undefined, {
+    initial: savedHomeSnapshot(),
+    readGate: gate.promise,
+    waitForLoad: false,
+  });
+  try {
+    const hook = fixture.render();
+    const selection = { source: "codex", kind: "image", model: "" } as const;
+    const patch = {
+      modelSelection: selection,
+      model: "",
+      providerConnectionId: undefined,
+    };
+    hook.commitCreation(
+      {
+        ...hook.creation,
+        homeDraft: { ...hook.creation.homeDraft, ...patch, updatedAt: 20 },
+      },
+      patch,
+    );
+    gate.release();
+    await settle();
+    const draft = fixture.render().creation.homeDraft;
+    assert.equal(draft.modelSelection?.source, "codex");
+    assert.equal(draft.model, "");
+    assert.equal(draft.providerConnectionId, undefined);
+    assert.equal(draft.privacyMode, "local_only");
+    assert.equal(draft.outputCount, 4);
+  } finally {
+    fixture.dispose();
+  }
+});
+
+for (const removeNew of [false, true]) {
+  test(`loading attachment ${removeNew ? "removal" : "addition"} keeps an unseen saved reference`, async () => {
+    const gate = readGate();
+    const fixture = await harness(false, undefined, {
+      initial: savedHomeSnapshot(),
+      readGate: gate.promise,
+      waitForLoad: false,
+    });
+    try {
+      let hook = fixture.render();
+      hook.commitCreation({
+        ...hook.creation,
+        homeDraft: {
+          ...hook.creation.homeDraft,
+          attachments: [newAttachment],
+          updatedAt: 20,
+        },
+      });
+      if (removeNew) {
+        hook = fixture.render();
+        hook.commitCreation({
+          ...hook.creation,
+          homeDraft: {
+            ...hook.creation.homeDraft,
+            attachments: [],
+            updatedAt: 21,
+          },
+        });
+      }
+      gate.release();
+      await settle();
+      const draft = fixture.render().creation.homeDraft;
+      assert.deepEqual(
+        [...draft.attachments].map((item) => item.id),
+        removeNew ? [oldAttachment.id] : [oldAttachment.id, newAttachment.id],
+      );
+      assert.equal(draft.outputCount, 4);
+    } finally {
+      fixture.dispose();
+    }
+  });
+}
+
+test("input during asynchronous reconciliation survives the earlier captured draft", async () => {
+  const gate = readGate();
+  const fixture = await harness(false, undefined, {
+    initial: savedHomeSnapshot(),
+    waitForLoad: false,
+    reconcile: async (snapshot) => {
+      await gate.promise;
+      return snapshot;
+    },
+  });
+  try {
+    await settle();
+    const hook = fixture.render();
+    hook.commitCreation({
+      ...hook.creation,
+      homeDraft: {
+        ...hook.creation.homeDraft,
+        prompt: "latest during reconcile",
+        updatedAt: 20,
+      },
+    });
+    gate.release();
+    await settle();
+    assert.equal(
+      fixture.render().creation.homeDraft.prompt,
+      "latest during reconcile",
+    );
+    assert.equal(fixture.render().creation.homeDraft.outputCount, 4);
+  } finally {
+    fixture.dispose();
+  }
+});
+
+test("unmount invalidates a reconciliation that already passed the first read check", async () => {
+  const gate = readGate();
+  const fixture = await harness(false, undefined, {
+    initial: savedHomeSnapshot(),
+    waitForLoad: false,
+    reconcile: async (snapshot) => {
+      await gate.promise;
+      return snapshot;
+    },
+  });
+  await settle();
+  const before = fixture.render().creationRef.current;
+  fixture.dispose();
+  gate.release();
+  await settle();
+  assert.equal(fixture.render().creationRef.current, before);
+  assert.equal(fixture.writes.length, 0);
+});
+
+test("an explicit loading edit is preserved even if the saved timestamp is ahead", async () => {
+  const gate = readGate();
+  const saved = savedHomeSnapshot();
+  saved.homeDraft.updatedAt = 1000;
+  const fixture = await harness(false, undefined, {
+    initial: saved,
+    readGate: gate.promise,
+    waitForLoad: false,
+  });
+  try {
+    const hook = fixture.render();
+    hook.commitCreation({
+      ...hook.creation,
+      homeDraft: {
+        ...hook.creation.homeDraft,
+        prompt: "current intent",
+        updatedAt: 20,
+      },
+    });
+    gate.release();
+    await settle();
+    assert.equal(fixture.render().creation.homeDraft.prompt, "current intent");
+    assert.equal(fixture.render().creation.homeDraft.outputCount, 4);
+  } finally {
+    fixture.dispose();
+  }
+});
+
+test("a timestamp-only default seed adopts the durable draft without another write", async () => {
+  const gate = readGate();
+  const saved = savedHomeSnapshot();
+  const fixture = await harness(false, undefined, {
+    initial: saved,
+    readGate: gate.promise,
+    waitForLoad: false,
+  });
+  try {
+    const hook = fixture.render();
+    hook.commitCreation({
+      ...hook.creation,
+      homeDraft: { ...hook.creation.homeDraft, updatedAt: Date.now() },
+    });
+    gate.release();
+    await settle();
+    assert.deepEqual(fixture.render().creation.homeDraft, saved.homeDraft);
+    await fixture.render().flush();
+    assert.equal(fixture.writes.length, 0);
+  } finally {
+    fixture.dispose();
+  }
+});
+
+test("an explicit event patch cannot reset earlier input from a stale composer render", async () => {
+  const gate = readGate();
+  const fixture = await harness(false, undefined, {
+    initial: savedHomeSnapshot(),
+    readGate: gate.promise,
+    waitForLoad: false,
+  });
+  try {
+    const hook = fixture.render();
+    hook.commitCreation(
+      {
+        ...hook.creation,
+        homeDraft: { ...hook.creation.homeDraft, prompt: "latest input" },
+      },
+      { prompt: "latest input" },
+    );
+    hook.commitCreation(
+      {
+        ...hook.creation,
+        homeDraft: { ...hook.creation.homeDraft, approvalMode: "auto" },
+      },
+      { approvalMode: "auto" },
+    );
+    gate.release();
+    await settle();
+    assert.equal(fixture.render().creation.homeDraft.prompt, "latest input");
+    assert.equal(fixture.render().creation.homeDraft.approvalMode, "auto");
+    assert.equal(fixture.render().creation.homeDraft.outputCount, 4);
+  } finally {
+    fixture.dispose();
+  }
+});
+
+test("an initial read failure freezes writes and retains edits across retry", async () => {
+  const first = readGate();
+  const retry = readGate();
+  const saved = savedHomeSnapshot();
+  const fixture = await harness(false, undefined, {
+    initial: saved,
+    readGate: first.promise,
+    readError: new Error("unavailable"),
+    waitForLoad: false,
+  });
+  try {
+    let hook = fixture.render();
+    hook.commitCreation({
+      ...hook.creation,
+      homeDraft: { ...hook.creation.homeDraft, prompt: "before failure" },
+    });
+    first.release();
+    await settle();
+    assert.equal(fixture.render().state, "read_error");
+    await assert.rejects(fixture.render().flush(), /尚未读取成功/);
+    assert.equal(fixture.writes.length, 0);
+    fixture.setLoad(async () => {
+      await retry.promise;
+      return { snapshot: saved, recovered: false, durableRevision: 8 };
+    });
+    fixture.render().retryRead();
+    hook = fixture.render();
+    hook.commitCreation(
+      {
+        ...hook.creation,
+        homeDraft: { ...hook.creation.homeDraft, approvalMode: "auto" },
+      },
+      { approvalMode: "auto" },
+    );
+    retry.release();
+    await settle();
+    const loaded = fixture.render();
+    assert.equal(loaded.creation.homeDraft.prompt, "before failure");
+    assert.equal(loaded.creation.homeDraft.approvalMode, "auto");
+    assert.equal(loaded.creation.homeDraft.outputCount, 4);
+    await loaded.flush();
+    assert.equal(fixture.durable().homeDraft.prompt, "before failure");
+  } finally {
+    fixture.dispose();
+  }
+});
+
+test("retry merges only edits made during the read and keeps the prior conflict draft separate", async () => {
+  const saved = savedHomeSnapshot();
+  const fixture = await harness(false, undefined, { initial: saved });
+  const retry = readGate();
+  try {
+    let hook = fixture.render();
+    hook.commitCreation({
+      ...hook.creation,
+      homeDraft: { ...hook.creation.homeDraft, prompt: "old conflict draft" },
+    });
+    fixture.setPersist(async () => {
+      throw new Error("conflict: another window changed the snapshot");
+    });
+    await assert.rejects(fixture.render().flush(), /conflict:/);
+    const external = {
+      ...saved,
+      revision: 15,
+      homeDraft: {
+        ...saved.homeDraft,
+        prompt: "external prompt",
+        outputCount: 3,
+      },
+    };
+    fixture.setLoad(async () => {
+      await retry.promise;
+      return { snapshot: external, recovered: false, durableRevision: 15 };
+    });
+    fixture.render().retryRead();
+    hook = fixture.render();
+    hook.commitCreation({
+      ...hook.creation,
+      homeDraft: { ...hook.creation.homeDraft, approvalMode: "auto" },
+    });
+    retry.release();
+    await settle();
+    hook = fixture.render();
+    assert.equal(hook.creation.homeDraft.prompt, "external prompt");
+    assert.equal(hook.creation.homeDraft.outputCount, 3);
+    assert.equal(hook.creation.homeDraft.approvalMode, "auto");
+    assert.equal(hook.recoveryDraft?.homeDraft.prompt, "old conflict draft");
+    fixture.setPersist(async () => {});
+    await hook.flush();
+    assert.equal(fixture.render().state, "saved");
+  } finally {
+    fixture.dispose();
+  }
+});
+
+test("rereading a journal recovery does not replace the current conflict recovery draft", async () => {
+  const saved = savedHomeSnapshot();
+  const fixture = await harness(false, undefined, { initial: saved });
+  try {
+    const hook = fixture.render();
+    hook.commitCreation({
+      ...hook.creation,
+      homeDraft: {
+        ...hook.creation.homeDraft,
+        prompt: "current conflict draft",
+      },
+    });
+    fixture.setPersist(async () => {
+      throw new Error("conflict: source changed");
+    });
+    await assert.rejects(fixture.render().flush(), /conflict:/);
+    fixture.setLoad(async () => ({
+      snapshot: saved,
+      recovered: true,
+      durableRevision: 8,
+      recoveryDraft: {
+        ...saved,
+        homeDraft: { ...saved.homeDraft, prompt: "older journal draft" },
+      },
+    }));
+    fixture.render().retryRead();
+    await settle();
+    assert.equal(
+      fixture.render().recoveryDraft?.homeDraft.prompt,
+      "current conflict draft",
+    );
+    assert.equal(fixture.render().creation.homeDraft.prompt, "saved prompt");
+  } finally {
+    fixture.dispose();
+  }
+});
+
+test("a newer read cancels late reconciliation without losing edits from the pending read", async () => {
+  const oldReconcile = readGate();
+  let reconciliations = 0;
+  const saved = savedHomeSnapshot();
+  const fixture = await harness(false, undefined, {
+    initial: saved,
+    waitForLoad: false,
+    reconcile: async (snapshot) => {
+      if (++reconciliations === 1) await oldReconcile.promise;
+      return snapshot;
+    },
+  });
+  try {
+    await settle();
+    let hook = fixture.render();
+    hook.commitCreation({
+      ...hook.creation,
+      homeDraft: { ...hook.creation.homeDraft, prompt: "pending input" },
+    });
+    const newer = {
+      ...saved,
+      revision: 20,
+      homeDraft: { ...saved.homeDraft, outputCount: 2 },
+    };
+    fixture.setLoad(async () => ({
+      snapshot: newer,
+      recovered: false,
+      durableRevision: 20,
+    }));
+    fixture.render().retryRead();
+    await settle();
+    hook = fixture.render();
+    assert.equal(hook.creation.homeDraft.prompt, "pending input");
+    assert.equal(hook.creation.homeDraft.outputCount, 2);
+    const accepted = hook.creation;
+    oldReconcile.release();
+    await settle();
+    assert.equal(fixture.render().creation, accepted);
+    await fixture.render().flush();
+    assert.equal(fixture.writes.length, 1);
+    assert.equal(fixture.durable().revision, 21);
+  } finally {
+    fixture.dispose();
+  }
+});
+
+test("overlapping reads serialize storage access before accepting the newer source", async () => {
+  const first = readGate();
+  const saved = savedHomeSnapshot();
+  const fixture = await harness(false, undefined, {
+    initial: saved,
+    readGate: first.promise,
+    waitForLoad: false,
+  });
+  try {
+    await settle();
+    let laterRead = false;
+    fixture.setLoad(async () => {
+      laterRead = true;
+      return { snapshot: saved, recovered: false, durableRevision: 8 };
+    });
+    fixture.render().retryRead();
+    await settle();
+    assert.equal(laterRead, false);
+    first.release();
+    await settle();
+    assert.equal(laterRead, true);
+    assert.equal(fixture.render().state, "saved");
+    assert.equal(fixture.render().creation.revision, 8);
+  } finally {
+    fixture.dispose();
+  }
+});
+
+test("an earlier save receipt cannot enable project editing during a pending reread", async () => {
+  const fixture = await harness();
+  const writing = readGate();
+  const reading = readGate();
+  try {
+    const hook = fixture.render();
+    hook.commitCreation({
+      ...hook.creation,
+      homeDraft: { ...hook.creation.homeDraft, prompt: "save before reread" },
+    });
+    const saved = hook.creationRef.current;
+    fixture.setPersist(async () => {
+      await writing.promise;
+    });
+    const flush = fixture.render().flush();
+    await settle();
+    fixture.setLoad(async () => {
+      await reading.promise;
+      return {
+        snapshot: saved,
+        recovered: false,
+        durableRevision: saved.revision,
+      };
+    });
+    fixture.render().retryRead();
+    writing.release();
+    await flush;
+    await settle();
+    assert.equal(fixture.render().state, "loading");
+    await assert.rejects(fixture.render().flush(), /尚未读取成功/);
+    reading.release();
+    await settle();
+    assert.equal(fixture.render().state, "saved");
+  } finally {
+    fixture.dispose();
+  }
+});
+
+test("loading the same asset under another attachment ID retains the stored reference identity", async () => {
+  const gate = readGate();
+  const saved = savedHomeSnapshot();
+  const fixture = await harness(false, undefined, {
+    initial: saved,
+    readGate: gate.promise,
+    waitForLoad: false,
+  });
+  try {
+    const hook = fixture.render();
+    hook.commitCreation({
+      ...hook.creation,
+      homeDraft: {
+        ...hook.creation.homeDraft,
+        attachments: [{ ...oldAttachment, id: "reimported-copy" }],
+        updatedAt: 20,
+      },
+    });
+    gate.release();
+    await settle();
+    assert.deepEqual(fixture.render().creation.homeDraft.attachments, [
+      oldAttachment,
+    ]);
+    await fixture.render().flush();
+    assert.deepEqual(fixture.durable().homeDraft.attachments, [oldAttachment]);
+  } finally {
+    fixture.dispose();
+  }
+});
+
+test("a pending retry removes a seen attachment while keeping an unseen external asset", async () => {
+  const saved = savedHomeSnapshot();
+  const fixture = await harness(false, undefined, { initial: saved });
+  const gate = readGate();
+  try {
+    const newer = {
+      ...saved,
+      revision: 9,
+      homeDraft: {
+        ...saved.homeDraft,
+        attachments: [oldAttachment, newAttachment],
+      },
+    };
+    fixture.setLoad(async () => {
+      await gate.promise;
+      return { snapshot: newer, recovered: false, durableRevision: 9 };
+    });
+    fixture.render().retryRead();
+    const hook = fixture.render();
+    hook.commitCreation({
+      ...hook.creation,
+      homeDraft: { ...hook.creation.homeDraft, attachments: [] },
+    });
+    gate.release();
+    await settle();
+    assert.deepEqual(fixture.render().creation.homeDraft.attachments, [
+      newAttachment,
+    ]);
+  } finally {
+    fixture.dispose();
+  }
+});
+
+test("a pending retry removes only the selected reference when seen references share an asset", async () => {
+  const saved = savedHomeSnapshot();
+  const first = { ...oldAttachment, id: "reference-a" };
+  const second = { ...oldAttachment, id: "reference-b" };
+  saved.homeDraft.attachments = [first, second];
+  const fixture = await harness(false, undefined, { initial: saved });
+  const gate = readGate();
+  try {
+    fixture.setLoad(async () => {
+      await gate.promise;
+      return { snapshot: saved, recovered: false, durableRevision: 8 };
+    });
+    fixture.render().retryRead();
+    const hook = fixture.render();
+    const attachments = hook.creation.homeDraft.attachments.filter(
+      (attachment) => attachment.id !== first.id,
+    );
+    hook.commitCreation(
+      {
+        ...hook.creation,
+        homeDraft: { ...hook.creation.homeDraft, attachments },
+      },
+      { attachments },
+    );
+    gate.release();
+    await settle();
+    await fixture.render().flush();
+    assert.deepEqual(
+      {
+        memory: fixture
+          .render()
+          .creation.homeDraft.attachments.map((attachment) => attachment.id),
+        durable: fixture
+          .durable()
+          .homeDraft.attachments.map((attachment) => attachment.id),
+        state: fixture.render().state,
+      },
+      { memory: ["reference-b"], durable: ["reference-b"], state: "saved" },
+    );
+    assert.deepEqual(saved.homeDraft.attachments, [first, second]);
+  } finally {
+    fixture.dispose();
+  }
+});
+
+test("loading retains every reference beyond the import count budget without truncating originals", async () => {
+  const gate = readGate();
+  const saved = savedHomeSnapshot();
+  saved.homeDraft.attachments = Array.from({ length: 6 }, (_, index) => ({
+    ...oldAttachment,
+    id: `saved-${index}`,
+  }));
+  const fixture = await harness(false, undefined, {
+    initial: saved,
+    readGate: gate.promise,
+    waitForLoad: false,
+  });
+  try {
+    const hook = fixture.render();
+    hook.commitCreation({
+      ...hook.creation,
+      homeDraft: { ...hook.creation.homeDraft, attachments: [newAttachment] },
+    });
+    gate.release();
+    await settle();
+    const loaded = fixture.render();
+    assert.equal(loaded.creation.homeDraft.attachments.length, 7);
+    assert.equal(
+      loaded.creation.homeDraft.attachments[6].assetId,
+      newAttachment.assetId,
+    );
+    assert.equal(saved.homeDraft.attachments.length, 6);
+    await loaded.flush();
+    assert.equal(fixture.durable().homeDraft.attachments.length, 7);
+  } finally {
+    fixture.dispose();
+  }
+});
+
+test("an oversized loading attachment cannot acknowledge a write or erase the durable original", async () => {
+  const gate = readGate();
+  const saved = savedHomeSnapshot();
+  const fixture = await harness(false, undefined, {
+    initial: saved,
+    readGate: gate.promise,
+    waitForLoad: false,
+  });
+  try {
+    const oversized = {
+      ...newAttachment,
+      dataUrl: "data:image/png;base64," + "A".repeat(16 * 1024 * 1024),
+    };
+    const hook = fixture.render();
+    hook.commitCreation({
+      ...hook.creation,
+      homeDraft: {
+        ...hook.creation.homeDraft,
+        attachments: [oversized],
+        updatedAt: 20,
+      },
+    });
+    gate.release();
+    await settle();
+    await assert.rejects(fixture.render().flush(), /原件已保留/);
+    assert.equal(fixture.render().state, "read_error");
+    assert.equal(fixture.durable(), saved);
+    assert.equal(
+      fixture.render().creation.homeDraft.attachments[1].dataUrl,
+      oversized.dataUrl,
+    );
+    await assert.rejects(fixture.render().flush(), /尚未读取成功/);
+  } finally {
+    fixture.dispose();
+  }
 });

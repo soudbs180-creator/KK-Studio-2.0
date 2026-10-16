@@ -1,20 +1,17 @@
 import { useEffect, useMemo, useState } from "react";
 import type { RefObject } from "react";
 import type { CreationProject } from "../features/creation/model";
-import { projectHasUnsettledTasks } from "../features/creation/model";
+import type { ProjectLibraryActions } from "../features/projects/projectLifecycle";
 import {
-  createSidebarId,
   resolveSidebarFolders,
-  restoreSidebarFolder,
   sidebarProjectItem,
   sortSidebarProjects,
-  type SidebarFolderItem,
-  type SidebarProjectItem,
 } from "../features/projects/sidebarProjectModel";
 import SidebarProjectSections from "./SidebarProjectSections";
 import SidebarProjectHeader from "./SidebarProjectHeader";
+import SidebarProjectEntry from "./SidebarProjectEntry";
 
-/** 真实项目列表 + 会话内文件夹收纳；不创建演示项目。 */
+/** Project data and membership come from the durable creation snapshot. */
 export default function SidebarProjectGroups({
   collapsed,
   projectMenuOpen,
@@ -28,8 +25,7 @@ export default function SidebarProjectGroups({
   onNavigate,
   onCreateProject,
   onOpenProject,
-  onRenameProject,
-  onDeleteProject,
+  projectActions,
 }: {
   collapsed: boolean;
   projectMenuOpen: boolean;
@@ -43,205 +39,92 @@ export default function SidebarProjectGroups({
   onNavigate: (id: string) => void;
   onCreateProject: () => string;
   onOpenProject: (id: string) => void;
-  onRenameProject: (id: string, title: string) => void;
-  onDeleteProject: (id: string) => void;
+  projectActions: ProjectLibraryActions;
 }) {
   const [groups, setGroups] = useState([true, true]);
+  const [showTrash, setShowTrash] = useState(false);
   const [projectFilter, setProjectFilter] = useState<"all" | "ungrouped">(
     "all",
   );
   const [sortMode, setSortMode] = useState<"manual" | "recent" | "priority">(
     "manual",
   );
-  const [folders, setFolders] = useState<SidebarFolderItem[]>([]);
-  const [pinnedProjectIds, setPinnedProjectIds] = useState<Set<string>>(
-    () => new Set(),
-  );
-  const [pinnedFolderIds, setPinnedFolderIds] = useState<Set<string>>(
-    () => new Set(),
-  );
+  const [collapsedFolders, setCollapsedFolders] = useState(new Set<string>());
+  const [pinnedProjectIds, setPinnedProjectIds] = useState(new Set<string>());
+  const [pinnedFolderIds, setPinnedFolderIds] = useState(new Set<string>());
   const [newProjectId, setNewProjectId] = useState<string | null>(null);
-  const items = useMemo(() => projects.map(sidebarProjectItem), [projects]);
+  const normalProjects = useMemo(
+    () => projects.filter((project) => project.trashedAt === undefined),
+    [projects],
+  );
+  const trash = projects.filter((project) => project.trashedAt !== undefined);
+  const items = useMemo(
+    () => normalProjects.map(sidebarProjectItem),
+    [normalProjects],
+  );
   useEffect(() => {
-    // Newly created rows consume auto-edit once; remounting after grouping must
-    // not reopen the editor after Escape or a folder move.
     if (newProjectId && items.some((item) => item.id === newProjectId))
       setNewProjectId(null);
   }, [items, newProjectId]);
-  const itemById = useMemo(
-    () => new Map(items.map((item) => [item.id, item])),
-    [items],
-  );
-  const groupedIds = new Set(
-    folders.flatMap((folder) =>
-      folder.deleted ? [] : folder.children.map((child) => child.id),
-    ),
-  );
-  const ungroupedProjects = items.filter((item) => !groupedIds.has(item.id));
+  const itemById = new Map(items.map((item) => [item.id, item]));
+  const folders = projectActions.groups.map((group) => ({
+    id: group.id,
+    title: group.name,
+    deleted: group.deletedAt !== undefined,
+    expanded: !collapsedFolders.has(group.id),
+    children: normalProjects
+      .filter((project) => project.groupId === group.id)
+      .map(sidebarProjectItem),
+  }));
   const sortedUngroupedProjects = sortSidebarProjects(
-    ungroupedProjects,
-    projects,
+    items.filter(
+      (item) =>
+        !normalProjects.find((project) => project.id === item.id)?.groupId,
+    ),
+    normalProjects,
     pinnedProjectIds,
     sortMode,
   );
   const visibleFolders = resolveSidebarFolders(
     folders,
     itemById,
-    projects,
+    normalProjects,
     pinnedProjectIds,
     pinnedFolderIds,
     sortMode,
   );
-
-  function toggleProjectPin(id: string): void {
-    setPinnedProjectIds((current) => {
+  function togglePin(set: typeof setPinnedProjectIds, id: string): void {
+    set((current) => {
       const next = new Set(current);
       if (next.has(id)) next.delete(id);
       else next.add(id);
       return next;
     });
-  }
-  function toggleFolderPin(id: string): void {
-    setPinnedFolderIds((current) => {
-      const next = new Set(current);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-  }
-
-  function collapseFolders(): void {
-    setFolders((current) =>
-      current.map((folder) => ({ ...folder, expanded: false })),
-    );
   }
   function openProject(id: string): void {
     if (!itemById.has(id)) return;
-    collapseFolders();
+    setCollapsedFolders(new Set(folders.map((folder) => folder.id)));
     onOpenProject(id);
   }
-  function openFolder(id: string): void {
-    const child = visibleFolders.find((folder) => folder.id === id)
-      ?.children[0];
-    if (child) onOpenProject(child.id);
-    else onNavigate("projects");
-  }
   function revealFolders(): void {
+    setShowTrash(false);
     setProjectFilter("all");
     setGroups((current) => [true, current[1]]);
   }
-  function createFolder(): void {
-    revealFolders();
-    setFolders((current) => [
-      ...current,
-      {
-        id: createSidebarId(),
-        title:
-          current.length === 0
-            ? "新建文件夹"
-            : "新建文件夹 " + (current.length + 1),
-        expanded: true,
-        children: [],
-      },
-    ]);
-  }
-  function createUngroupedProject(): void {
-    if (!canEditProjects) return;
-    setGroups((current) => [current[0], true]);
-    setNewProjectId(onCreateProject());
-  }
-  function toggleFolder(id: string): void {
-    setFolders((current) =>
-      current.map((folder) =>
-        folder.id === id ? { ...folder, expanded: !folder.expanded } : folder,
-      ),
-    );
-  }
-  function renameFolder(id: string, title: string): void {
-    const next = title.trim();
-    if (!next) return;
-    setFolders((current) =>
-      current.map((folder) =>
-        folder.id === id ? { ...folder, title: next } : folder,
-      ),
-    );
-  }
-  function deleteFolder(id: string): void {
-    setGroups((current) => [current[0], true]);
-    setFolders((current) =>
-      current.map((folder) =>
-        folder.id === id ? { ...folder, deleted: true } : folder,
-      ),
-    );
-  }
-  function restoreFolder(id: string): void {
-    setFolders((current) => restoreSidebarFolder(current, id));
-  }
-  function renameProject(id: string, title: string): void {
-    if (canEditProjects) onRenameProject(id, title);
-    setNewProjectId(null);
-  }
-  function fromId(id: string): SidebarProjectItem | undefined {
-    return itemById.get(id);
-  }
-  function dropToSection(projectId: string): void {
-    const item = fromId(projectId);
-    if (!item || groupedIds.has(projectId)) return;
-    revealFolders();
-    setFolders((current) => [
-      ...current,
-      {
-        id: createSidebarId(),
-        title: item.title,
-        expanded: true,
-        children: [item],
-      },
-    ]);
-  }
-  function dropProject(folderId: string, projectId: string): void {
-    moveProjectToFolder(projectId, folderId);
-  }
   function moveProjectToFolder(projectId: string, folderId: string): void {
-    const item = fromId(projectId);
-    if (!item) return;
     revealFolders();
-    setFolders((current) =>
-      current.map((folder) => ({
-        ...folder,
-        expanded: folder.id === folderId ? true : folder.expanded,
-        children:
-          folder.id === folderId
-            ? [
-                ...folder.children.filter((child) => child.id !== projectId),
-                item,
-              ]
-            : folder.children.filter((child) => child.id !== projectId),
-      })),
-    );
+    setCollapsedFolders((current) => {
+      const next = new Set(current);
+      next.delete(folderId);
+      return next;
+    });
+    projectActions.onMove(projectId, folderId || undefined);
   }
   function createFolderForProject(projectId: string): void {
-    const item = fromId(projectId);
+    const item = itemById.get(projectId);
     if (!item) return;
     revealFolders();
-    setFolders((current) => [
-      ...current.map((folder) => ({
-        ...folder,
-        children: folder.children.filter((child) => child.id !== projectId),
-      })),
-      {
-        id: createSidebarId(),
-        title: item.title,
-        expanded: true,
-        children: [item],
-      },
-    ]);
-  }
-  function deleteDisabledReason(id: string): string | undefined {
-    if (!canEditProjects) return "项目存储尚未就绪";
-    const project = projects.find((item) => item.id === id);
-    if (project && projectHasUnsettledTasks(project))
-      return "项目仍有未完成或状态不明的任务，请先处理任务";
-    return undefined;
+    projectActions.onCreateGroup(item.title, projectId);
   }
   return (
     <div className="project-groups">
@@ -252,47 +135,97 @@ export default function SidebarProjectGroups({
         projectMenuOpen={projectMenuOpen}
         menuRef={menuRef}
         filterTriggerRef={filterTriggerRef}
-        onToggleTitle={() =>
-          setGroups(
-            groups.map((value, index) => (index === 0 ? !value : value)),
-          )
-        }
+        canEditProjects={canEditProjects}
+        onToggleTitle={() => setGroups((current) => [!current[0], current[1]])}
         onToggleMenu={onToggleProjectMenu}
         onCloseMenu={onCloseMenu}
-        onCreateFolder={createFolder}
+        onCreateFolder={() => {
+          revealFolders();
+          projectActions.onCreateGroup();
+        }}
         onFilterChange={setProjectFilter}
         onSortChange={setSortMode}
+        showTrash={showTrash}
+        trashCount={trash.length}
+        onToggleTrash={() => setShowTrash((value) => !value)}
       />
-      <SidebarProjectSections
-        collapsed={collapsed}
-        groups={groups}
-        projectFilter={projectFilter}
-        setGroups={setGroups}
-        ungroupedProjects={sortedUngroupedProjects}
-        folders={visibleFolders}
-        activeProjectId={activeProjectId}
-        newProjectId={newProjectId}
-        canEditProjects={canEditProjects}
-        isProjectPinned={(id) => pinnedProjectIds.has(id)}
-        onToggleProjectPin={toggleProjectPin}
-        isFolderPinned={(id) => pinnedFolderIds.has(id)}
-        onToggleFolderPin={toggleFolderPin}
-        openProject={openProject}
-        openFolder={openFolder}
-        createUngroupedProject={createUngroupedProject}
-        toggleFolder={toggleFolder}
-        renameFolder={renameFolder}
-        deleteFolder={deleteFolder}
-        restoreFolder={restoreFolder}
-        renameProject={renameProject}
-        deleteProject={onDeleteProject}
-        deleteDisabledReason={deleteDisabledReason}
-        dropProject={dropProject}
-        dropToSection={dropToSection}
-        moveProjectToFolder={moveProjectToFolder}
-        createFolderForProject={createFolderForProject}
-        onNavigate={onNavigate}
-      />
+      {showTrash ? (
+        <div
+          className="project-trash-list"
+          hidden={collapsed}
+          aria-label="侧栏项目垃圾箱"
+        >
+          {trash.map((project) => (
+            <SidebarProjectEntry
+              key={project.id}
+              visible={!collapsed}
+              selected={false}
+              defaultTitle={project.name}
+              trashed
+              canEditProject={canEditProjects}
+              onRestore={() => projectActions.onRestore(project.id)}
+              onNavigate={() => undefined}
+            />
+          ))}
+          {!trash.length && (
+            <small className="project-folder-empty">垃圾箱为空</small>
+          )}
+        </div>
+      ) : (
+        <SidebarProjectSections
+          collapsed={collapsed}
+          groups={groups}
+          projectFilter={projectFilter}
+          setGroups={setGroups}
+          ungroupedProjects={sortedUngroupedProjects}
+          folders={visibleFolders}
+          activeProjectId={activeProjectId}
+          newProjectId={newProjectId}
+          canEditProjects={canEditProjects}
+          isProjectPinned={(id) => pinnedProjectIds.has(id)}
+          onToggleProjectPin={(id) => togglePin(setPinnedProjectIds, id)}
+          isFolderPinned={(id) => pinnedFolderIds.has(id)}
+          onToggleFolderPin={(id) => togglePin(setPinnedFolderIds, id)}
+          openProject={openProject}
+          openFolder={(id) => {
+            const child = visibleFolders.find((folder) => folder.id === id)
+              ?.children[0];
+            if (child) onOpenProject(child.id);
+            else onNavigate("projects");
+          }}
+          createUngroupedProject={() => {
+            if (!canEditProjects) return;
+            setGroups((current) => [current[0], true]);
+            setNewProjectId(onCreateProject());
+          }}
+          toggleFolder={(id) => togglePin(setCollapsedFolders, id)}
+          renameFolder={projectActions.onRenameGroup}
+          deleteFolder={(id) => {
+            setGroups((current) => [current[0], true]);
+            projectActions.onDeleteGroup(id);
+          }}
+          restoreFolder={projectActions.onRestoreGroup}
+          renameProject={(id, title) => {
+            projectActions.onRename(id, title);
+            setNewProjectId(null);
+          }}
+          deleteProject={projectActions.onTrash}
+          deleteDisabledReason={projectActions.trashDisabledReason}
+          dropProject={(folderId, projectId) =>
+            moveProjectToFolder(projectId, folderId)
+          }
+          dropToSection={(projectId) => {
+            if (
+              !normalProjects.find((project) => project.id === projectId)
+                ?.groupId
+            )
+              createFolderForProject(projectId);
+          }}
+          moveProjectToFolder={moveProjectToFolder}
+          createFolderForProject={createFolderForProject}
+          onNavigate={onNavigate}
+        />
+      )}
     </div>
   );
 }

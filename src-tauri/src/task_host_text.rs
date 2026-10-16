@@ -173,7 +173,7 @@ impl TaskHost {
     ) -> Result<(), String> {
         let _lock = self.lock()?;
         let mut journal = self
-            .read_one(&request.task_id)?
+            .read_one_unlocked(&request.task_id)?
             .ok_or_else(|| "io: 原生文本任务记录丢失".to_string())?;
         if journal.fingerprint != fingerprint {
             return Err("conflict: 原生文本任务身份已变化".into());

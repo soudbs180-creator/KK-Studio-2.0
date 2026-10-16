@@ -37,10 +37,11 @@
 | `npm run test:agent` | `vendor/canvas-agent` 自身测试 |
 | `npm run local-service:test` / `local-service:smoke` | 本地服务集成 / 生产冒烟 |
 | `npm run test:development` | 插件装载 |
+| `npm run test:design` | DESIGN.md 同步/校验与不执行 HTML 的单测、独立预览构建、真实 Edge 控件回归 |
 | `npm run client:installer:test` / `client:taskhost:test` | 安装器 / 任务宿主生命周期 |
-| `npm run verify` | lint + typecheck + test + agent:build + test:agent + ui:check + format:check + test:ui + test:development |
+| `npm run verify` | lint + typecheck + test + agent:build + test:agent + ui:check + format:check + test:ui + test:design + test:development |
 
-`npm run verify` 是合并前的**主闸门**，串联 lint、typecheck、test、agent:build、test:agent、ui:check、format:check、test:ui、test:development 共 9 步；Agent 必须真实编译通过，不能只用可执行 TS 测试代替构建。
+`npm run verify` 是合并前的**主闸门**，串联 lint、typecheck、test、agent:build、test:agent、ui:check、format:check、test:ui、test:design、test:development 共 10 步；Agent 必须真实编译通过，不能只用可执行 TS 测试代替构建。test:design 在产品浏览器之后串行运行，避免占用同一 1423。
 
 它**不包含**：Rust/cargo 检查、`tests/desktop/`（24 个 `.mjs`/`.ps1`）、`tests/local-service/`、`tests/proxy`、`test:gateway`。涉及 Desktop、Rust、本地服务或真实外部服务的改动必须按本文件「桌面与 Rust 测试」与 [DEVELOPMENT](DEVELOPMENT.md) 单独补跑相应检查。
 
@@ -67,6 +68,7 @@
 - Playwright 自己拉起 preview，生产验收固定使用 `1423`，`--strictPort`；若显式 `KK_TEST_PORT` 不是 `1423`，配置在启动测试前直接拒绝。
 - `reuseExistingServer: false` 是刻意设置：复用旧进程会让测试跑到过期 bundle 上，产生假绿。端口被占用时应先清理占用进程，**不得**改成随机端口或 `reuseExistingServer: true` 绕过。
 - 固定占用 `1421`（Vite dev）与 `1423`（Playwright preview）的运行验证必须串行，不能为跑测试杀掉其他任务的进程。
+- 独立设计预览使用 design/preview/playwright.config.ts、同一固定1423与共享Edge参数，独占分配test-results/design-md/<run-id>/；报告在run根、截图/trace在artifacts内。预览不读写产品storage，其通过不能替代产品和Desktop验收。
 - 证据里必须写明实际端口。旧端口、旧窗口的截图不能作为当前源码的验证依据。
 
 ### retries 不得掩盖失败

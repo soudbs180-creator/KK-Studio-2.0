@@ -190,14 +190,17 @@ test("个人信息弹层提供可读的账户信息和可用的更新入口", as
     "14px",
   );
   await expect(popup.locator(".account-popup-actions button")).toHaveCount(2);
-  for (const button of await popup
-    .locator(".account-popup-actions button")
-    .all())
-    await expect(button).toBeDisabled();
+  await expect(
+    popup.getByRole("button", { name: "个人主页", exact: true }),
+  ).toBeEnabled();
+  await expect(
+    popup.getByRole("button", { name: "退出登录", exact: true }),
+  ).toBeDisabled();
+  await expect(popup).not.toContainText("308311652306456581");
   await expect(
     popup.getByRole("button", { name: "打开主题设置" }),
   ).toBeVisible();
-  const updateButton = popup.getByRole("button", { name: "检测" });
+  const updateButton = popup.getByRole("button", { name: "查看" });
   await expect(updateButton).toBeEnabled();
   await updateButton.click();
   await expect(page.getByRole("heading", { name: "软件更新" })).toBeVisible();

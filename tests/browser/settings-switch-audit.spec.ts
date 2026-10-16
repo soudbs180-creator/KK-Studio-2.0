@@ -49,6 +49,7 @@ test("桌面专属开关和更新开关明确暴露禁用状态", async ({ page 
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   const dialog = page.getByRole("dialog", { name: "设置" });
 
+  await dialog.getByText("系统与未接入偏好", { exact: true }).click();
   for (const name of ["开机自启动", "系统托盘", "防止系统休眠"]) {
     const toggle = dialog.getByRole("switch", { name });
     await expect(toggle).toBeDisabled();
@@ -57,13 +58,11 @@ test("桌面专属开关和更新开关明确暴露禁用状态", async ({ page 
     await expect(toggle).toHaveCSS("opacity", "0.45");
   }
 
-  await dialog.getByRole("button", { name: "软件更新", exact: true }).click();
-  const automaticUpdates = dialog.getByRole("switch", {
-    name: "自动安装更新不可用",
-  });
-  await expect(automaticUpdates).toBeDisabled();
-  await expect(automaticUpdates).toHaveAttribute("aria-checked", "false");
-  await expect(automaticUpdates).toHaveAttribute("aria-disabled", "true");
+  const updates = dialog.getByRole("region", { name: "软件更新", exact: true });
+  await expect(
+    updates.getByRole("button", { name: "服务未接入", exact: true }),
+  ).toBeDisabled();
+  await expect(updates).toContainText("不表示当前版本已是最新");
 
   await page.keyboard.press("Escape");
   await expect(

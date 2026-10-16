@@ -129,6 +129,13 @@ const projectV2Schema = z
     providerAuthMode: providerAuthModeSchema.optional(),
     items: z.array(item),
     name: z.string().optional(),
+    nameSource: z.enum(["auto", "manual"]).optional(),
+    groupId: id.optional(),
+    trashedAt: number
+      .int()
+      .nonnegative()
+      .max(Number.MAX_SAFE_INTEGER)
+      .optional(),
     kind: kind.optional(),
     attachments: z.array(attachment).optional(),
     messages: z.array(chatMessageSchema).optional(),
@@ -177,11 +184,24 @@ const projectV3Schema = z
     return true;
   }, "chat key 与 chat.id 必须一致");
 
+const projectGroupSchema = z
+  .object({
+    id,
+    name: z.string().trim().min(1).max(120),
+    deletedAt: number
+      .int()
+      .nonnegative()
+      .max(Number.MAX_SAFE_INTEGER)
+      .optional(),
+  })
+  .strict();
+
 const schemaV2 = z.object({
   version: z.literal(2),
   revision: number.int().nonnegative().max(Number.MAX_SAFE_INTEGER),
   activeProjectId: id.nullable(),
   projects: z.array(projectV2Schema),
+  projectGroups: z.array(projectGroupSchema).optional(),
   homeDraft: draft,
 });
 
@@ -190,6 +210,7 @@ const schemaV3 = z.object({
   revision: number.int().nonnegative().max(Number.MAX_SAFE_INTEGER),
   activeProjectId: id.nullable(),
   projects: z.array(projectV3Schema),
+  projectGroups: z.array(projectGroupSchema).optional(),
   homeDraft: draft.or(z.record(z.string(), z.unknown())),
 });
 
@@ -356,8 +377,6 @@ function rejectLoss(original: unknown, normalized: unknown): void {
       if (key in normalized)
         rejectLoss(value, (normalized as Record<string, unknown>)[key]);
   }
-}
-
 function decodeSnapshotV3(value: unknown): CreationSnapshot {
   validateSnapshotV3(value);
   const parsed = schemaV3.safeParse(value);
@@ -368,7 +387,20 @@ function decodeSnapshotV3(value: unknown): CreationSnapshot {
     );
   }
   unique(parsed.data.projects, "项目");
+  unique(parsed.data.projectGroups ?? [], "项目组");
   for (const project of parsed.data.projects) {
+    if (
+      project.groupId &&
+      !parsed.data.projectGroups?.some(
+        (group) =>
+          group.id === project.groupId && group.deletedAt === undefined,
+      )
+    ) {
+      throw new SnapshotStorageError(
+        "corrupt",
+        "项目分组引用无效，已暂停保存。",
+      );
+    }
     unique(project.items, "画布节点");
     unique(project.tasks ?? [], "任务");
     for (const [chatId, chat] of Object.entries(project.chats)) {
@@ -398,7 +430,19 @@ function decodeSnapshotV2(value: unknown): CreationSnapshot {
     );
   }
   unique(parsed.data.projects, "项目");
+  unique(parsed.data.projectGroups ?? [], "项目组");
   for (const project of parsed.data.projects) {
+    if (
+      project.groupId &&
+      !parsed.data.projectGroups?.some(
+        (group) =>
+          group.id === project.groupId && group.deletedAt === undefined,
+      )
+    )
+      throw new SnapshotStorageError(
+        "corrupt",
+        "项目分组引用无效，已暂停保存。",
+      );
     unique(project.items, "画布节点");
     unique(project.messages ?? [], "消息");
     unique(project.tasks ?? [], "任务");

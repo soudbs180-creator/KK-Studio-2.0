@@ -22,6 +22,7 @@ pub struct ReadResult {
 pub struct SnapshotRepository {
     path: PathBuf,
     lock: Mutex<()>,
+    access: crate::native_repository_lock::RepositoryAccess,
 }
 
 struct Stored {
@@ -55,6 +56,18 @@ impl SnapshotRepository {
         Self {
             path,
             lock: Mutex::new(()),
+            access: crate::native_repository_lock::RepositoryAccess::Standalone,
+        }
+    }
+
+    pub(crate) fn owned(
+        path: PathBuf,
+        access: crate::native_repository_lock::RepositoryAccess,
+    ) -> Self {
+        Self {
+            path,
+            lock: Mutex::new(()),
+            access,
         }
     }
 
@@ -122,8 +135,7 @@ impl SnapshotRepository {
     }
 
     pub fn read(&self) -> Result<ReadResult, String> {
-        let _guard = self.lock.lock().map_err(|_| io_error("项目快照锁不可用"))?;
-        let _file_lock = self.file_lock()?;
+        let _transaction = self.access.begin(&self.lock, || self.file_lock())?;
         let current = self.current()?;
         Ok(ReadResult {
             status: if current.recovered {
@@ -140,8 +152,7 @@ impl SnapshotRepository {
 
     pub fn write(&self, snapshot: Value, expected_revision: Option<u64>) -> Result<(), String> {
         validation::validate(&snapshot)?;
-        let _guard = self.lock.lock().map_err(|_| io_error("项目快照锁不可用"))?;
-        let _file_lock = self.file_lock()?;
+        let _transaction = self.access.begin(&self.lock, || self.file_lock())?;
         let current = self.current()?;
         let revision = current
             .stored

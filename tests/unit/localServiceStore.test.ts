@@ -10,7 +10,11 @@ import {
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
-import { emptySnapshot } from "../../src/features/creation/model.ts";
+import {
+  createProject,
+  emptySnapshot,
+} from "../../src/features/creation/model.ts";
+import { applyProjectLifecycle } from "../../src/features/projects/projectLifecycle.ts";
 import {
   CompanionProtocolError,
   type CompanionAssetMetadata,
@@ -32,6 +36,51 @@ const metadata: CompanionAssetMetadata = {
 function root(): string {
   return mkdtempSync(join(tmpdir(), "kk-companion-store-"));
 }
+
+test("Companion 保存完整垃圾箱和分组，拒绝过期写入且保留全部原件引用", () => {
+  const store = new CompanionStore(root());
+  store.publishStagedAsset(store.stageAsset(metadata, bytes).stageId);
+  const project = createProject({
+    prompt: "客户项目",
+    model: "image-test",
+    kind: "image",
+    attachments: [],
+  });
+  project.items[0].assetId = metadata.assetId;
+  let snapshot = {
+    ...emptySnapshot(),
+    projects: [project],
+    activeProjectId: project.id,
+  };
+  snapshot = applyProjectLifecycle(snapshot, {
+    type: "create-group",
+    id: "g",
+    name: "客户",
+    projectId: project.id,
+  });
+  snapshot = applyProjectLifecycle(snapshot, {
+    type: "rename-project",
+    id: project.id,
+    name: "手动项目名",
+  });
+  snapshot = applyProjectLifecycle(
+    snapshot,
+    { type: "trash-project", id: project.id },
+    10,
+  );
+  store.writeSnapshot(snapshot, null);
+  const loaded = store.readSnapshot().snapshot!;
+  assert.equal(loaded.projects[0].trashedAt, 10);
+  assert.equal(loaded.projects[0].nameSource, "manual");
+  assert.deepEqual(loaded.projectGroups, snapshot.projectGroups);
+  assert.ok(store.readAsset(metadata.assetId));
+  assert.throws(
+    () => store.writeSnapshot({ ...snapshot, revision: 1, projects: [] }, null),
+    (error: unknown) =>
+      error instanceof CompanionProtocolError && error.code === "CONFLICT",
+  );
+  assert.equal(store.readSnapshot().snapshot!.projects[0].id, project.id);
+});
 
 test("store initializes with a missing snapshot and enforces revisions", () => {
   const store = new CompanionStore(root());
@@ -63,7 +112,130 @@ test("store recovers the previous valid snapshot from its backup", () => {
   assert.equal(recovered.status, "recovered");
   assert.equal(recovered.revision, 0);
   assert.equal(recovered.snapshot?.revision, 0);
+  const backup = readFileSync(store.backupPath);
+  assert.throws(
+    () => store.writeSnapshot({ ...initial, revision: 2 }, 1),
+    (error: unknown) =>
+      error instanceof CompanionProtocolError && error.code === "CONFLICT",
+  );
+  store.writeSnapshot({ ...initial, revision: 1 }, 0);
+  assert.equal(store.readSnapshot().status, "loaded");
+  assert.equal(store.readSnapshot().revision, 1);
+  assert.deepEqual(readFileSync(store.backupPath), backup);
 });
+
+for (const primary of ["future", "missing", "corrupt"] as const) {
+  test(`store preserves unsupported ${primary === "future" ? "primary over an older backup" : "backup with " + primary + " primary"}`, () => {
+    const store = new CompanionStore(root());
+    const supported = JSON.stringify({ ...emptySnapshot(), revision: 4 });
+    const future = JSON.stringify({
+      ...emptySnapshot(),
+      version: 999,
+      revision: 7,
+      futureContent: { messages: ["must-survive"] },
+      apiKey: "synthetic-must-not-be-read-or-exposed",
+    });
+    if (primary !== "missing")
+      writeFileSync(
+        store.snapshotPath,
+        primary === "future" ? future : "{broken",
+      );
+    writeFileSync(store.backupPath, primary === "future" ? supported : future);
+    const original = existsSync(store.snapshotPath)
+      ? readFileSync(store.snapshotPath)
+      : null;
+    const backup = readFileSync(store.backupPath);
+    for (const operation of [
+      () => store.readSnapshot(),
+      () => store.writeSnapshot({ ...emptySnapshot(), revision: 5 }, 4),
+      () => store.createBackup(),
+    ])
+      assert.throws(
+        operation,
+        (error: unknown) =>
+          error instanceof CompanionProtocolError &&
+          error.code === "SNAPSHOT_UNSUPPORTED" &&
+          /更新/.test(error.message) &&
+          !error.message.includes(store.root),
+      );
+    assert.deepEqual(
+      existsSync(store.snapshotPath) ? readFileSync(store.snapshotPath) : null,
+      original,
+    );
+    assert.deepEqual(readFileSync(store.backupPath), backup);
+  });
+}
+
+for (const hasBackup of [false, true]) {
+  test(`store surfaces snapshot read errors without ${hasBackup ? "recovering an older backup" : "creating empty data"}`, () => {
+    const store = new CompanionStore(root());
+    // A directory produces a real read failure without machine-specific ACL setup.
+    mkdirSync(store.snapshotPath);
+    const backup = JSON.stringify({ ...emptySnapshot(), revision: 4 });
+    if (hasBackup) writeFileSync(store.backupPath, backup);
+    for (const operation of [
+      () => store.readSnapshot(),
+      () =>
+        store.writeSnapshot(
+          { ...emptySnapshot(), revision: 5 },
+          hasBackup ? 4 : null,
+        ),
+    ])
+      assert.throws(
+        operation,
+        (error: unknown) =>
+          error instanceof CompanionProtocolError &&
+          error.code === "IO" &&
+          !error.message.includes(store.root),
+      );
+    assert.equal(existsSync(store.backupPath), hasBackup);
+    if (hasBackup) assert.equal(readFileSync(store.backupPath, "utf8"), backup);
+  });
+}
+
+test("backup restore cannot replace an unsupported backup when the primary is missing", () => {
+  const store = new CompanionStore(root());
+  store.writeSnapshot(emptySnapshot(), null);
+  const backup = store.createBackup();
+  rmSync(store.snapshotPath);
+  const future = JSON.stringify({ ...emptySnapshot(), version: 999 });
+  writeFileSync(store.backupPath, future);
+  assert.throws(
+    () => store.restoreBackup(backup.directory.split(/[\\/]/).pop()!),
+    (error: unknown) =>
+      error instanceof CompanionProtocolError &&
+      error.code === "SNAPSHOT_UNSUPPORTED",
+  );
+  assert.equal(existsSync(store.snapshotPath), false);
+  assert.equal(readFileSync(store.backupPath, "utf8"), future);
+});
+
+for (const operation of ["write", "restore"] as const) {
+  test(`${operation} preserves a future backup even when the supported primary loads`, () => {
+    const store = new CompanionStore(root());
+    const supported = { ...emptySnapshot(), revision: 4 };
+    store.writeSnapshot(supported, null);
+    const archive = store.createBackup();
+    writeFileSync(
+      store.backupPath,
+      JSON.stringify({ ...emptySnapshot(), version: 999, revision: 7 }),
+    );
+    const primary = readFileSync(store.snapshotPath);
+    const backup = readFileSync(store.backupPath);
+    assert.equal(store.readSnapshot().revision, 4);
+    assert.throws(
+      () =>
+        operation === "write"
+          ? store.writeSnapshot({ ...supported, revision: 5 }, 4)
+          : store.restoreBackup(archive.directory.split(/[\\/]/).pop()!),
+      (error: unknown) =>
+        error instanceof CompanionProtocolError &&
+        error.code === "SNAPSHOT_UNSUPPORTED",
+    );
+    assert.deepEqual(readFileSync(store.snapshotPath), primary);
+    assert.deepEqual(readFileSync(store.backupPath), backup);
+  });
+}
 
 test("snapshot writes reject missing asset references and accept hydrated service assets", () => {
   const store = new CompanionStore(root());
@@ -108,6 +280,13 @@ test("store refuses to create an empty project when both snapshot copies are cor
     (error: unknown) =>
       error instanceof CompanionProtocolError && error.code === "CORRUPT",
   );
+  assert.throws(
+    () => store.writeSnapshot(emptySnapshot(), null),
+    (error: unknown) =>
+      error instanceof CompanionProtocolError && error.code === "CORRUPT",
+  );
+  assert.equal(readFileSync(store.snapshotPath, "utf8"), "{broken");
+  assert.equal(readFileSync(store.backupPath, "utf8"), "{also-broken");
 });
 
 test("staged asset validates hash and publishes content-addressed bytes", () => {

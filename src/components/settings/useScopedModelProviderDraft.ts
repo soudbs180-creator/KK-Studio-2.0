@@ -16,6 +16,8 @@ import {
   requiresModelProviderSelection,
   type ConnectionState,
 } from "./modelProviderSettingsState";
+import { isLocalProviderUrl } from "../../domain/providerUrl";
+import { providerChannel } from "../../domain/modelChannels";
 
 type ProviderDraft = {
   profile: ModelProviderProfile;
@@ -23,18 +25,57 @@ type ProviderDraft = {
   credentialRef: string;
 };
 
-export function readModelProviderDraft(): ProviderDraft {
-  const profile = readModelProviderProfile();
-  const existing = findModelProfileConnection(
-    profile,
-    readProviderConnections(),
-  );
+export function readModelProviderDraft(
+  scope?: "official" | "relay" | "local",
+): ProviderDraft {
+  let profile = readModelProviderProfile();
+  const connections = readProviderConnections();
+  const current = findModelProfileConnection(profile, connections);
+  if (
+    scope === "local" &&
+    (!isLocalProviderUrl(profile.baseUrl) || current?.kind === "local_comfyui")
+  ) {
+    const local = connections.find(
+      (item) =>
+        item.kind === "user_byok" &&
+        item.baseUrl &&
+        isLocalProviderUrl(item.baseUrl),
+    );
+    profile = local?.baseUrl
+      ? {
+          version: 1,
+          connectionId: local.id,
+          name: local.provider,
+          baseUrl: local.baseUrl,
+          model: local.model ?? "",
+          protocol: local.protocol,
+          authMode: local.authMode,
+          channel: providerChannel(local),
+          priority: local.priority,
+        }
+      : {
+          version: 1,
+          name: "本地对话服务",
+          baseUrl: "http://127.0.0.1:8080/v1",
+          model: "",
+          protocol: "openai-chat",
+          authMode: "none",
+        };
+  }
+  const existing = findModelProfileConnection(profile, connections);
+  profile = {
+    ...profile,
+    channel: existing
+      ? providerChannel(existing)
+      : providerChannel({ ...profile, channel: scope ?? profile.channel }),
+    priority: existing?.priority ?? profile.priority,
+  };
   return {
     profile,
     apiKey: "",
     credentialRef:
       existing?.credentialRef ??
-      (requiresModelProviderSelection(profile, readProviderConnections())
+      (requiresModelProviderSelection(profile, connections)
         ? "unselected_provider_account"
         : credentialId(profile.baseUrl, profile.name)),
   };
@@ -55,7 +96,7 @@ export default function useScopedModelProviderDraft({
   setCredentialRef,
   setConnection,
 }: {
-  scope: "official" | "relay";
+  scope: "official" | "relay" | "local";
   profile: ModelProviderProfile;
   apiKey: string;
   credentialRef: string;
@@ -71,7 +112,7 @@ export default function useScopedModelProviderDraft({
 }) {
   const previousScopeRef = useRef(scope);
   const draftsRef = useRef<
-    Partial<Record<"official" | "relay", ProviderDraft>>
+    Partial<Record<"official" | "relay" | "local", ProviderDraft>>
   >({});
 
   useEffect(() => {
@@ -95,7 +136,7 @@ export default function useScopedModelProviderDraft({
       credentialRef,
     };
     cancelRequest();
-    const next = draftsRef.current[scope] ?? readModelProviderDraft();
+    const next = draftsRef.current[scope] ?? readModelProviderDraft(scope);
     setProfile(next.profile);
     setApiKey(next.apiKey);
     setCredentialRef(next.credentialRef);
@@ -108,6 +149,7 @@ export default function useScopedModelProviderDraft({
     const nextProfile = { ...profile, ...patch };
     if ("baseUrl" in patch || "name" in patch) {
       nextProfile.connectionId = undefined;
+      nextProfile.channel = providerChannel({ ...nextProfile, channel: scope });
       setApiKey("");
       setCredentialRef(credentialId(nextProfile.baseUrl, nextProfile.name));
     }

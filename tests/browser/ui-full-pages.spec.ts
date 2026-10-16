@@ -17,8 +17,7 @@ for (const width of [390, 1099, 1920]) {
     "asset-detail",
   ]) {
     test(`全部页面新UI ${surface} ${width}`, async ({ page }, info) => {
-      // ComfyUI has a desktop entry; verify its narrow layout after opening it.
-      const entryWidth = surface === "comfy" && width === 390 ? 1099 : width;
+      const entryWidth = width;
       await page.setViewportSize({
         width: entryWidth,
         height: width === 390 ? 844 : 1080,
@@ -30,22 +29,20 @@ for (const width of [390, 1099, 1920]) {
           .getByRole("button", { name: "个人信息", exact: true })
           .click();
         root = page.locator(".account-popup");
-      } else if (surface === "extensions" || surface === "comfy") {
+      } else if (surface === "comfy") {
+        await openSettingsSection(page, "模型接入");
+        await page.getByRole("button", { name: "本地", exact: true }).click();
+        root = page.getByRole("dialog", { name: "设置", exact: true });
+      } else if (surface === "extensions") {
         if (entryWidth >= 768) await expandSidebar(page);
         await page
           .getByRole("complementary", { name: "工作台侧栏" })
           .getByRole("button", {
-            name: surface === "extensions" ? "扩展" : "ComfyUI 工作流",
+            name: "扩展",
             exact: true,
           })
           .click();
-        root = page.locator(
-          surface === "extensions"
-            ? ".catalog-page-skills"
-            : ".catalog-page-comfyui",
-        );
-        if (surface === "comfy" && width === 390)
-          await page.setViewportSize({ width, height: 844 });
+        root = page.locator(".catalog-page-skills");
       } else if (surface === "search") {
         await openWorkspace(page);
         await page.getByRole("button", { name: "搜索", exact: true }).click();

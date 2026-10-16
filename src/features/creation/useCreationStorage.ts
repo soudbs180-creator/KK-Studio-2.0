@@ -1,7 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { isTauri } from "@tauri-apps/api/core";
 import { getCurrentWindow } from "@tauri-apps/api/window";
-import { emptySnapshot, type CreationSnapshot } from "./model";
+import {
+  emptySnapshot,
+  type CreationAttachment,
+  type CreationDraft,
+  type CreationSnapshot,
+} from "./model";
 import {
   loadCreationSnapshot,
   persistCreationSnapshotAsync,
@@ -17,6 +22,83 @@ import {
 
 export type SaveState =
   "loading" | "saved" | "saving" | "read_error" | "write_error" | "conflict";
+
+type LoadingDraft = {
+  base: CreationSnapshot;
+  changes: Partial<CreationDraft>;
+  preservePriorDraft: boolean;
+};
+
+function attachmentIdentity(attachment: CreationAttachment): string {
+  return attachment.assetId ?? attachment.dataUrl ?? attachment.id;
+}
+
+function mergeLoadingDraft(
+  stored: CreationDraft,
+  base: CreationDraft,
+  changes: Partial<CreationDraft>,
+): CreationDraft {
+  const next = { ...stored, ...changes };
+  if (changes.attachments) {
+    const retained = new Set(
+      changes.attachments.map((attachment) => attachment.id),
+    );
+    const removed = new Set(
+      base.attachments
+        .map((attachment) => attachment.id)
+        .filter((id) => !retained.has(id)),
+    );
+    next.attachments = stored.attachments.filter(
+      (attachment) => !removed.has(attachment.id),
+    );
+    const included = new Set(next.attachments.map(attachmentIdentity));
+    for (const attachment of changes.attachments) {
+      const id = attachmentIdentity(attachment);
+      if (!included.has(id)) {
+        next.attachments.push(attachment);
+        included.add(id);
+      }
+    }
+  }
+  return next;
+}
+
+function mergeLoadingSnapshot(
+  stored: CreationSnapshot,
+  current: CreationSnapshot,
+  pending: LoadingDraft,
+  initialRead: boolean,
+): CreationSnapshot {
+  const projects = initialRead
+    ? current.projects.filter(
+        (project) => !stored.projects.some((saved) => saved.id === project.id),
+      )
+    : [];
+  const activeProjectId = initialRead ? current.activeProjectId : null;
+  if (
+    !Object.keys(pending.changes).length &&
+    !projects.length &&
+    !activeProjectId
+  )
+    return stored;
+  return {
+    ...stored,
+    homeDraft: {
+      ...mergeLoadingDraft(
+        stored.homeDraft,
+        pending.base.homeDraft,
+        pending.changes,
+      ),
+      updatedAt: Math.max(
+        stored.homeDraft.updatedAt,
+        current.homeDraft.updatedAt,
+      ),
+    },
+    projects: [...stored.projects, ...projects],
+    activeProjectId: activeProjectId ?? stored.activeProjectId,
+    revision: Math.max(stored.revision, current.revision) + 1,
+  };
+}
 
 export function useCreationStorage(
   recover: (snapshot: CreationSnapshot) => CreationSnapshot,
@@ -39,8 +121,34 @@ export function useCreationStorage(
   const mounted = useRef(false);
   const readSequence = useRef(0);
   const pendingRead = useRef(Promise.resolve());
+  const loadedOnce = useRef(false);
+  const loadingDraft = useRef<LoadingDraft | null>({
+    base: creation,
+    changes: {},
+    preservePriorDraft: false,
+  });
 
-  function commitCreation(next: CreationSnapshot): void {
+  function commitCreation(
+    next: CreationSnapshot,
+    homeDraftChanges?: Partial<CreationDraft>,
+  ): void {
+    if (loadingDraft.current) {
+      if (homeDraftChanges)
+        Object.assign(loadingDraft.current.changes, homeDraftChanges);
+      else {
+        const previous = creationRef.current.homeDraft;
+        const keys = new Set([
+          ...Object.keys(previous),
+          ...Object.keys(next.homeDraft),
+        ]) as Set<keyof CreationDraft>;
+        for (const key of keys)
+          if (key !== "updatedAt" && next.homeDraft[key] !== previous[key])
+            Object.assign(loadingDraft.current.changes, {
+              [key]: next.homeDraft[key],
+            });
+      }
+      delete loadingDraft.current.changes.updatedAt;
+    }
     next = {
       ...next,
       projects: next.projects.map((project) => ({
@@ -57,53 +165,59 @@ export function useCreationStorage(
     }
     setCreation(next);
   }
+  function isCurrentRead(sequence: number): boolean {
+    return mounted.current && sequence === readSequence.current;
+  }
   async function read(retry = false): Promise<void> {
     const sequence = ++readSequence.current;
+    if (!loadingDraft.current) {
+      loadingDraft.current = {
+        base: creationRef.current,
+        changes: {},
+        preservePriorDraft: dirty.current,
+      };
+      if (dirty.current) setRecoveryDraft(creationRef.current);
+    }
     ready.current = false;
     setState("loading");
-    await queue.current;
+    // Reads share the write queue because storage also owns the CAS baseline.
+    const loading = queue.current.then(() => {
+      if (!isCurrentRead(sequence)) return;
+      return loadCreationSnapshot(retry);
+    });
+    queue.current = loading.then(
+      () => undefined,
+      () => undefined,
+    );
     try {
-      const loaded = await loadCreationSnapshot(retry);
-      if (!mounted.current || sequence !== readSequence.current) return;
-      const current = creationRef.current;
+      const loaded = await loading;
+      if (!loaded || !isCurrentRead(sequence)) return;
       const reconciled = reconcile
         ? await reconcile(loaded.snapshot)
         : loaded.snapshot;
+      if (!isCurrentRead(sequence)) return;
+      const current = creationRef.current;
       let next = recover(reconciled);
-      acknowledged.current = loaded.durableRevision ?? 0;
       if (
         loaded.durableRevision === null &&
         loaded.recovered &&
         next.revision === 0
       )
         next = { ...next, revision: 1 };
-      if (loaded.recoveryDraft) setRecoveryDraft(loaded.recoveryDraft);
-      if (dirty.current) {
-        if (retry) {
-          // Keep the user's draft separately. Never merge a stale revision over
-          // data that another process has saved in the meantime.
-          setRecoveryDraft(current);
-          setMessage("已重新读取原件；刚才的内存草稿仍可单独下载。");
-        } else {
-          next = {
-            ...next,
-            homeDraft:
-              current.homeDraft.updatedAt > next.homeDraft.updatedAt
-                ? current.homeDraft
-                : next.homeDraft,
-            projects: [
-              ...next.projects,
-              ...current.projects.filter(
-                (project) =>
-                  !next.projects.some((stored) => stored.id === project.id),
-              ),
-            ],
-            activeProjectId: current.activeProjectId ?? next.activeProjectId,
-            revision: Math.max(next.revision, current.revision) + 1,
-          };
-        }
-      } else
-        setMessage(loaded.recovered ? "已读取恢复副本，原始数据仍保留。" : "");
+      const pending = loadingDraft.current!;
+      if (loaded.recoveryDraft && !pending.preservePriorDraft)
+        setRecoveryDraft(loaded.recoveryDraft);
+      next = mergeLoadingSnapshot(next, current, pending, !loadedOnce.current);
+      setMessage(
+        pending.preservePriorDraft
+          ? "已重新读取原件；读取前的内存草稿仍可单独下载。"
+          : loaded.recovered
+            ? "已读取恢复副本，原始数据仍保留。"
+            : "",
+      );
+      acknowledged.current = loaded.durableRevision ?? 0;
+      loadedOnce.current = true;
+      loadingDraft.current = null;
       ready.current = true;
       creationRef.current = next;
       dirty.current = next.revision > acknowledged.current;
@@ -111,7 +225,7 @@ export function useCreationStorage(
       setLoadEpoch((epoch) => epoch + 1);
       setState(dirty.current ? "saving" : "saved");
     } catch (error) {
-      if (!mounted.current || sequence !== readSequence.current) return;
+      if (!isCurrentRead(sequence)) return;
       const failure = storageError(error);
       ready.current = false;
       setMessage(failure.message);
@@ -133,7 +247,7 @@ export function useCreationStorage(
         await persistCreationSnapshotAsync(snapshot);
         acknowledged.current = snapshot.revision;
         dirty.current = creationRef.current.revision > snapshot.revision;
-        if (mounted.current) {
+        if (mounted.current && ready.current) {
           setMessage("");
           setState(dirty.current ? "saving" : "saved");
         }

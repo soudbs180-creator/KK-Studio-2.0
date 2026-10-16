@@ -98,9 +98,59 @@ function isLinkedPath(filePath) {
   }
 }
 
+function readDesktopDependencyPackages(projectRoot) {
+  const packages = readJson(
+    path.join(projectRoot, "package-lock.json"),
+  )?.packages;
+  return packages && typeof packages === "object" && !Array.isArray(packages)
+    ? packages
+    : null;
+}
+
+function assertDesktopDependencyPreparationSafe(projectRoot) {
+  const nodeModulesPath = path.resolve(projectRoot, "node_modules");
+  if (isLinkedPath(nodeModulesPath)) {
+    throw new Error(
+      "Desktop dependency repair requires a local node_modules directory; linked dependencies must be repaired in their owner checkout.",
+    );
+  }
+  const packages = readDesktopDependencyPackages(projectRoot);
+  if (!packages) {
+    throw new Error(
+      "Desktop dependency preparation requires a valid package-lock.json with a packages object.",
+    );
+  }
+  for (const packagePath of Object.keys(packages)) {
+    if (!packagePath.startsWith("node_modules/")) continue;
+    const relative = path.relative(
+      nodeModulesPath,
+      path.resolve(projectRoot, ...packagePath.split("/")),
+    );
+    if (
+      !relative ||
+      relative === ".." ||
+      relative.startsWith(`..${path.sep}`) ||
+      path.isAbsolute(relative)
+    ) {
+      throw new Error(
+        "Desktop dependency preparation requires package-lock.json paths within local node_modules.",
+      );
+    }
+    let candidate = nodeModulesPath;
+    for (const component of relative.split(path.sep)) {
+      candidate = path.join(candidate, component);
+      if (isLinkedPath(candidate)) {
+        throw new Error(
+          `Desktop dependency preparation requires local dependency directories; linked dependencies must be repaired in their owner checkout (${packagePath}).`,
+        );
+      }
+    }
+  }
+}
+
 export function inspectDesktopDependencies(projectRoot) {
-  const lockfile = readJson(path.join(projectRoot, "package-lock.json"));
-  if (!lockfile?.packages) {
+  const packages = readDesktopDependencyPackages(projectRoot);
+  if (!packages) {
     return {
       needsInstall: true,
       mismatches: [
@@ -127,7 +177,7 @@ export function inspectDesktopDependencies(projectRoot) {
     };
   }
 
-  const mismatches = Object.entries(lockfile.packages).flatMap(
+  const mismatches = Object.entries(packages).flatMap(
     ([packagePath, lockEntry]) => {
       if (!packagePath.startsWith("node_modules/") || !lockEntry?.version) {
         return [];
@@ -148,7 +198,10 @@ export function inspectDesktopDependencies(projectRoot) {
   return { needsInstall: mismatches.length > 0, mismatches };
 }
 
-export function ensureDesktopRelease(projectRoot, buildRelease) {
+export function ensureDesktopRelease(
+  projectRoot,
+  buildRelease = buildDesktopRelease,
+) {
   const beforeRelease = inspectDesktopRelease(projectRoot);
   const dependencyState = inspectDesktopDependencies(projectRoot);
   const before = {
@@ -157,6 +210,7 @@ export function ensureDesktopRelease(projectRoot, buildRelease) {
   };
   if (!before.needsBuild) return { ...before, rebuilt: false };
 
+  assertDesktopDependencyPreparationSafe(projectRoot);
   buildRelease(projectRoot);
   const afterBuild = inspectDesktopRelease(projectRoot);
   const replaced =
@@ -211,12 +265,7 @@ function resolveNpmCliPath(projectRoot) {
 }
 
 function installDesktopDependencies(projectRoot) {
-  const nodeModulesPath = path.join(projectRoot, "node_modules");
-  if (isLinkedPath(nodeModulesPath)) {
-    throw new Error(
-      "Desktop dependency repair requires a local node_modules directory; linked dependencies must be repaired in their owner checkout.",
-    );
-  }
+  assertDesktopDependencyPreparationSafe(projectRoot);
   const result = spawnSync(
     process.execPath,
     [

@@ -7,7 +7,7 @@ import { createCompanionServer } from "../../src/features/local-service/server.t
 import { decodeSnapshot } from "../../src/features/creation/snapshotCodec.ts";
 import { sha256Json } from "../../src/features/local-service/manifest.ts";
 import test from "node:test";
-import { mkdtempSync } from "node:fs";
+import { mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
@@ -39,6 +39,7 @@ async function runningServer(maxBodyBytes = 120 * 1024 * 1024) {
   return {
     server,
     base,
+    root,
     close: async () => {
       server.close();
       await once(server, "close");
@@ -85,6 +86,49 @@ test("health honors exact CORS origins and exposes protocol metadata", async () 
     assert.deepEqual(await jsonResponse(forbidden), {
       error: "ORIGIN_FORBIDDEN",
     });
+  } finally {
+    await app.close();
+  }
+});
+
+test("HTTP snapshot reads and writes reject future format without replacing either copy", async () => {
+  const app = await runningServer();
+  try {
+    const cookie = await pair(app.base);
+    const primaryPath = join(app.root, "projects", "creation-v2.json");
+    const backupPath = `${primaryPath}.bak`;
+    const primary = JSON.stringify({
+      ...emptySnapshot(),
+      version: 999,
+      revision: 8,
+    });
+    const backup = JSON.stringify({ ...emptySnapshot(), revision: 4 });
+    writeFileSync(primaryPath, primary);
+    writeFileSync(backupPath, backup);
+    for (const method of ["GET", "PUT"]) {
+      const response = await fetch(`${app.base}/v1/snapshot`, {
+        method,
+        headers: {
+          Origin: origin,
+          Cookie: cookie,
+          "Content-Type": "application/json",
+        },
+        ...(method === "PUT"
+          ? {
+              body: JSON.stringify({
+                expectedRevision: 4,
+                snapshot: { ...emptySnapshot(), revision: 5 },
+              }),
+            }
+          : {}),
+      });
+      assert.equal(response.status, 409);
+      assert.deepEqual(await jsonResponse(response), {
+        error: "SNAPSHOT_UNSUPPORTED",
+      });
+    }
+    assert.equal(readFileSync(primaryPath, "utf8"), primary);
+    assert.equal(readFileSync(backupPath, "utf8"), backup);
   } finally {
     await app.close();
   }

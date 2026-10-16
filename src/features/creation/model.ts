@@ -200,6 +200,11 @@ export interface CreationProject {
   id: string;
   name: string;
   kind: CanvasItemKind;
+  /** Missing on legacy projects; preserve those names as manually chosen. */
+  nameSource?: "auto" | "manual";
+  groupId?: string;
+  /** Soft deletion retains this complete project and every original reference. */
+  trashedAt?: number;
   prompt: string;
   model: string;
   attachments: CreationAttachment[];
@@ -234,14 +239,18 @@ export type CreationProjectV3 = CreationProject & {
 
 /** Do not remove a project while its provider submission may still be active. */
 export function projectHasUnsettledTasks(project: CreationProject): boolean {
-  return project.tasks.some(
-    (task) =>
-      ["queued", "running", "unknown"].includes(task.status) ||
-      task.submissionState === "submitted" ||
-      task.submissionState === "unknown" ||
-      task.outputs?.some((output) =>
-        ["waiting", "running", "unknown"].includes(output.status),
-      ),
+  return (
+    project.googleConversation?.status === "running" ||
+    project.googleConversation?.status === "unknown" ||
+    project.tasks.some(
+      (task) =>
+        ["queued", "running", "unknown"].includes(task.status) ||
+        task.submissionState === "submitted" ||
+        task.submissionState === "unknown" ||
+        task.outputs?.some((output) =>
+          ["waiting", "running", "unknown"].includes(output.status),
+        ),
+    )
   );
 }
 
@@ -250,7 +259,14 @@ export interface CreationSnapshotV2 {
   revision: number;
   activeProjectId: string | null;
   projects: CreationProject[];
+  projectGroups?: CreationProjectGroup[];
   homeDraft: CreationDraft;
+}
+
+export interface CreationProjectGroup {
+  id: string;
+  name: string;
+  deletedAt?: number;
 }
 
 export interface CreationSnapshotV3 {
@@ -258,11 +274,11 @@ export interface CreationSnapshotV3 {
   revision: number;
   activeProjectId: string | null;
   projects: CreationProject[];
+  projectGroups?: CreationProjectGroup[];
   homeDraft: CreationDraft;
 }
 
 export type CreationSnapshot = CreationSnapshotV2 | CreationSnapshotV3;
-
 export interface CreationDraft {
   modelSelection?: ModelSelection;
   conversationChannel?: "codex" | "direct" | "google";
@@ -427,6 +443,7 @@ export function normalizeCreationSnapshot(
     revision?: unknown;
     activeProjectId?: unknown;
     projects?: unknown;
+    projectGroups?: unknown;
     homeDraft?: unknown;
   };
   if (
@@ -448,6 +465,44 @@ export function normalizeCreationSnapshot(
     )
     .map((project) => normalizeProject(project, version));
 
+  const projectGroups = candidate.projectGroups;
+  if (
+    projectGroups !== undefined &&
+    (!Array.isArray(projectGroups) ||
+      !projectGroups.every((group): group is CreationProjectGroup =>
+        Boolean(
+          group &&
+          typeof group === "object" &&
+          typeof group.id === "string" &&
+          group.id.length > 0 &&
+          group.id.length <= 160 &&
+          typeof group.name === "string" &&
+          group.name.trim().length > 0 &&
+          group.name.length <= 120 &&
+          (group.deletedAt === undefined ||
+            (Number.isSafeInteger(group.deletedAt) && group.deletedAt >= 0)),
+        ),
+      ))
+  )
+    return null;
+  if (
+    projectGroups &&
+    new Set(projectGroups.map((group) => group.id)).size !==
+      projectGroups.length
+  )
+    return null;
+  if (
+    projects.some(
+      (project) =>
+        project.groupId &&
+        !projectGroups?.some(
+          (group) =>
+            group.id === project.groupId && group.deletedAt === undefined,
+        ),
+    )
+  )
+    return null;
+
   if (version === 3) {
     for (const project of projects) {
       if (
@@ -462,7 +517,11 @@ export function normalizeCreationSnapshot(
 
   const activeProjectId =
     typeof candidate.activeProjectId === "string" &&
-    projects.some((project) => project.id === candidate.activeProjectId)
+    projects.some(
+      (project) =>
+        project.id === candidate.activeProjectId &&
+        project.trashedAt === undefined,
+    )
       ? candidate.activeProjectId
       : null;
 
@@ -479,6 +538,7 @@ export function normalizeCreationSnapshot(
       revision,
       activeProjectId,
       projects,
+      ...(projectGroups === undefined ? {} : { projectGroups }),
       homeDraft: normalizeDraft(candidate.homeDraft),
     };
   }
@@ -488,6 +548,7 @@ export function normalizeCreationSnapshot(
     revision,
     activeProjectId,
     projects,
+    ...(projectGroups === undefined ? {} : { projectGroups }),
     homeDraft: normalizeDraft(candidate.homeDraft),
   };
 }
@@ -929,6 +990,11 @@ function normalizeProject(
     canvas: readProjectCanvas(candidate.canvas, items),
     id: projectId,
     name: safeText(candidate.name, 120, "未命名项目"),
+    nameSource: candidate.nameSource === "auto" ? "auto" : "manual",
+    groupId:
+      typeof candidate.groupId === "string" ? candidate.groupId : undefined,
+    trashedAt:
+      typeof candidate.trashedAt === "number" ? candidate.trashedAt : undefined,
     prompt: safeText(candidate.prompt, 4000),
     model: safeText(candidate.model, 120),
     kind: normalizeKind(candidate.kind),
@@ -1328,6 +1394,7 @@ export function createProject(input: CreateProjectInput): CreationProject {
     id,
     canvas: createProjectCanvas([item]),
     name: input.prompt.trim().replace(/\s+/g, " ").slice(0, 32) || "未命名项目",
+    nameSource: "auto",
     kind: input.kind,
     prompt: input.prompt,
     model: input.model,

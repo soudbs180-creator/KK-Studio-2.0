@@ -136,27 +136,56 @@ pub struct TaskHost {
     root: PathBuf,
     assets: Arc<AssetRepository>,
     jobs: Mutex<HashMap<String, JobControl>>,
+    journal_lock: Mutex<()>,
+    access: crate::native_repository_lock::RepositoryAccess,
 }
 
 impl TaskHost {
     pub fn new(root: PathBuf, assets: Arc<AssetRepository>) -> Result<Self, String> {
+        Self::initialize(
+            root,
+            assets,
+            crate::native_repository_lock::RepositoryAccess::Standalone,
+        )
+    }
+
+    pub(crate) fn owned(
+        root: PathBuf,
+        assets: Arc<AssetRepository>,
+        access: crate::native_repository_lock::RepositoryAccess,
+    ) -> Result<Self, String> {
+        Self::initialize(root, assets, access)
+    }
+
+    fn initialize(
+        root: PathBuf,
+        assets: Arc<AssetRepository>,
+        access: crate::native_repository_lock::RepositoryAccess,
+    ) -> Result<Self, String> {
         io::directory(&root)?;
         let host = Self {
             root,
             assets,
             jobs: Mutex::new(HashMap::new()),
+            journal_lock: Mutex::new(()),
+            access,
         };
         host.recover_submitted()?;
         Ok(host)
     }
 
-    fn lock(&self) -> Result<fs::File, String> {
-        io::lock(&self.root)
+    fn lock(&self) -> Result<crate::native_repository_lock::Transaction<'_>, String> {
+        self.access
+            .begin(&self.journal_lock, || io::lock(&self.root))
     }
     fn path(&self, task_id: &str) -> PathBuf {
         self.root.join(format!("{task_id}.json"))
     }
     fn read_one(&self, task_id: &str) -> Result<Option<JournalRecord>, String> {
+        let _lock = self.lock()?;
+        self.read_one_unlocked(task_id)
+    }
+    fn read_one_unlocked(&self, task_id: &str) -> Result<Option<JournalRecord>, String> {
         let Some(raw) = io::read(&self.path(task_id), 256 * 1024)? else {
             return Ok(None);
         };
@@ -191,7 +220,7 @@ impl TaskHost {
     ) -> Result<(), String> {
         let _lock = self.lock()?;
         let mut journal = self
-            .read_one(task_id)?
+            .read_one_unlocked(task_id)?
             .ok_or_else(|| "io: 原生任务记录在结果归档时丢失".to_string())?;
         if journal.fingerprint != fingerprint {
             return Err("conflict: 原生任务身份在结果归档时发生变化".into());
@@ -256,7 +285,7 @@ impl TaskHost {
         let fingerprint = fingerprint(&request)?;
         let capacity_key = connection_capacity_key(&request);
         let _journal_lock = self.lock()?;
-        if let Some(existing) = self.read_one(&request.task_id)? {
+        if let Some(existing) = self.read_one_unlocked(&request.task_id)? {
             if existing.record.idempotency_key != request.idempotency_key
                 || existing.fingerprint != fingerprint
             {
@@ -1261,6 +1290,39 @@ mod tests {
             kind: None,
             concurrency_limit: None,
         }
+    }
+    #[test]
+    fn owned_authority_asset_transaction_is_usable_by_taskhost() {
+        let fixture = crate::native_root_authority::tests::Fixture::new();
+        let owner = fixture.owner();
+        let host = Arc::clone(&owner.task_host);
+        let bytes = b"isolated TaskHost archive fixture";
+        let metadata = image_output_metadata(&request("owned-archive"), bytes, "image/png", &None);
+        let archived = host.assets.store(STANDARD.encode(bytes), metadata).unwrap();
+        let read = owner
+            .assets
+            .read(archived["assetId"].as_str().unwrap())
+            .unwrap()
+            .unwrap();
+        assert_eq!(STANDARD.decode(read.data_base64).unwrap(), bytes);
+        let record: JournalRecord = serde_json::from_value(json!({"taskId":"owned-archive","idempotencyKey":"owned-idem","outputIndices":[0],"status":"submitted","assetIds":[],"outputs":[{"index":0,"status":"submitted"}],"updatedAt":1,"fingerprint":"a".repeat(64)})).unwrap();
+        host.write_one(&record).unwrap();
+        host.persist_output(
+            "owned-archive",
+            &"a".repeat(64),
+            0,
+            archived["assetId"].as_str().unwrap(),
+        )
+        .unwrap();
+        assert_eq!(
+            host.get("owned-archive").unwrap().unwrap().outputs[0]
+                .asset_id
+                .as_deref(),
+            archived["assetId"].as_str()
+        );
+        assert!(AssetRepository::new(fixture.0.join("assets"))
+            .list()
+            .is_err());
     }
     #[test]
     fn image_output_without_optional_receipt_metadata_can_be_archived() {

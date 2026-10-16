@@ -264,7 +264,7 @@ test("desktop launch does not treat a missing lockfile as aligned", (t) => {
           launched = true;
         },
       }),
-    /replaced executable with aligned dependencies/,
+    /valid package-lock.json/,
   );
   assert.equal(launched, false);
 });

@@ -14,28 +14,17 @@ import {
 } from "../features/models/modelMenuEntries";
 import { searchModels } from "../features/models/modelSearch";
 import { readProviderConnections } from "../features/creation/providerRegistry";
+import { providerChannel, type PickerChannel } from "../domain/modelChannels";
 import type { ModelKind } from "../features/models/modelCatalog";
 import {
   readPickerMemory,
+  resolvePickerPins,
   writePickerMemory,
   type ModelSelection,
 } from "../features/models/modelSelection";
 import ModelPickerRows from "./ModelPickerRows";
-const sources: Entry[] = [
-  { id: "google", label: "Google", disabled: "请从对话执行方式选择" },
-  { id: "codex", label: "Codex", page: "codex" },
-  {
-    id: "doubao",
-    label: "豆包 Doubao",
-    disabled: "账号调用尚未接入；API Key 可通过 API 自定义模型使用",
-  },
-  {
-    id: "workbuddy",
-    label: "WorkBuddy",
-    disabled: "账号调用尚未接入；请在模型接入中查看可用连接",
-  },
-  { id: "api", label: "API 自定义模型", page: "api" },
-];
+import ModelPickerFilters from "./ModelPickerFilters";
+
 export default function ModelPickerMenu({
   scope,
   kind,
@@ -52,7 +41,29 @@ export default function ModelPickerMenu({
   onSelect: (selection: ModelSelection) => void;
   onConfigure: () => void;
 }) {
-  const [memory, setMemory] = useState(() => readPickerMemory(scope));
+  const connections = readProviderConnections();
+  const [memory, setMemory] = useState(() => {
+    const saved = readPickerMemory(scope);
+    const connection = connections.find(
+      (item) => item.id === current?.connectionId,
+    );
+    const legacy = saved.page.startsWith("api")
+      ? providerChannel(
+          connections.find((item) => saved.page === "api/" + item.id) ?? {},
+        )
+      : undefined;
+    return {
+      ...saved,
+      channel:
+        saved.channel ??
+        legacy ??
+        (current?.source === "api"
+          ? providerChannel(connection ?? {})
+          : apiOnly
+            ? "relay"
+            : "account"),
+    };
+  });
   const [query, setQuery] = useState("");
   const menuRef = useRef<HTMLDivElement>(null);
   const [, setRevision] = useState(0);
@@ -60,10 +71,12 @@ export default function ModelPickerMenu({
     agentConnection.subscribe,
     agentConnection.getState,
   );
+  const channel: PickerChannel =
+    apiOnly && memory.channel === "account" ? "relay" : memory.channel;
+  const filter = kind ?? memory.filter ?? "all";
   useLayoutEffect(() => {
     const menu = menuRef.current;
-    if (!menu) return;
-    if (menu.closest(".start-composer, .chat-composer")) return;
+    if (!menu || menu.closest(".start-composer, .chat-composer")) return;
     const place = () => {
       const anchor = menu.parentElement?.getBoundingClientRect();
       if (!anchor) return;
@@ -90,15 +103,15 @@ export default function ModelPickerMenu({
   useEffect(() => {
     const listener = () => setRevision((value) => value + 1);
     window.addEventListener("kk:model-provider-changed", listener);
-    return () =>
+    window.addEventListener("storage", listener);
+    return () => {
       window.removeEventListener("kk:model-provider-changed", listener);
+      window.removeEventListener("storage", listener);
+    };
   }, []);
   useEffect(() => {
     writePickerMemory(scope, memory);
   }, [scope, memory]);
-  const connections = readProviderConnections().filter(
-    (connection) => connection.kind === "user_byok",
-  );
   const codex =
     !apiOnly && (!kind || kind === "text")
       ? agent.models.map((model) =>
@@ -136,55 +149,37 @@ export default function ModelPickerMenu({
           ),
         ]
       : [];
-  const apis = deduplicateRelayEntries(
-    apiMenuEntries(connections, current, kind, query).filter(
-      (item) =>
-        !kind ||
-        item.selection?.kind === kind ||
-        item.selection?.kind === "unknown",
-    ),
-    { current },
-  );
   const defaults =
     scope === "conversation" && !apiOnly
       ? [
           entry(
-            { source: "default", model: "" },
+            { source: "default", model: "", kind: "text" },
             "默认 · Codex 主 Agent",
             "使用账号默认模型，负责规划与调用工具",
           ),
         ]
       : [];
-  const rootPage = apiOnly ? "api" : "root";
-  const page =
-    memory.page === "api" || memory.page.startsWith("api/")
-      ? memory.page
-      : !apiOnly && memory.page === "codex"
-        ? "codex"
-        : rootPage;
-  const providers: Entry[] = connections.map((connection) => ({
-    id: connection.id,
-    label: connection.displayName,
-    detail: connection.baseUrl,
-    page: "api/" + connection.id,
-  }));
-  const global = Boolean(query.trim()) || memory.all;
-  const visible: Entry[] = global
-    ? [...defaults, ...codexImage, ...codex, ...apis]
-    : page === "root"
-      ? scope === "home"
-        ? [...codexImage, ...sources.filter((item) => item.id === "api")]
-        : [...defaults, ...sources]
-      : page === "codex"
-        ? [...codex, ...codexImage]
-        : page === "api"
-          ? providers
-          : apis.filter(
-              (item) =>
-                item.selection?.connectionId === page.slice(4) ||
-                item.metadata?.candidateConnectionIds?.includes(page.slice(4)),
-            );
-  const pins = Array.isArray(memory.pins.all)
+  const channelEntries = apiMenuEntries(
+    connections.filter(
+      (connection) =>
+        connection.kind !== "user_oauth_local" &&
+        providerChannel(connection) === channel,
+    ),
+    current,
+    kind,
+    "",
+  );
+  const entries: Entry[] =
+    channel === "account"
+      ? [...defaults, ...codexImage, ...codex]
+      : deduplicateRelayEntries(channelEntries, { current });
+  const visible = entries.filter(
+    (item) =>
+      filter === "all" ||
+      item.selection?.kind === filter ||
+      item.selection?.kind === "unknown",
+  );
+  const storedPins = Array.isArray(memory.pins.all)
     ? memory.pins.all
     : [
         ...new Set(
@@ -195,6 +190,7 @@ export default function ModelPickerMenu({
           ),
         ),
       ];
+  const pins = resolvePickerPins(entries, storedPins);
   const ordered = searchModels(
     visible.map((item) => ({
       ...item,
@@ -206,16 +202,6 @@ export default function ModelPickerMenu({
       Number(pins.includes(b.item.id)) - Number(pins.includes(a.item.id)) ||
       a.score - b.score,
   );
-  const title = global
-    ? "全部模型"
-    : page === "root"
-      ? "选择来源"
-      : page === "codex"
-        ? "Codex 模型"
-        : page === "api"
-          ? "API 供应商"
-          : (connections.find((connection) => "api/" + connection.id === page)
-              ?.displayName ?? "供应商已移除");
   return (
     <div
       ref={menuRef}
@@ -223,45 +209,16 @@ export default function ModelPickerMenu({
       role="menu"
       aria-label="选择模型"
     >
-      <div className="kk-model-menu-top">
-        <strong>模型</strong>
-        <input
-          type="search"
-          className="kk-model-search ui-input"
-          aria-label="搜索模型、厂商或参数"
-          placeholder="搜索模型…"
-          maxLength={120}
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
-          onKeyDown={(event) => {
-            if (event.key === "Enter") event.preventDefault();
-            if (event.key !== "Escape") event.stopPropagation();
-          }}
-        />
-      </div>
-      <div className="kk-model-menu-head">
-        <button
-          type="button"
-          disabled={global || page === rootPage}
-          aria-label="返回上一级"
-          onClick={() =>
-            setMemory({
-              ...memory,
-              page: page.startsWith("api/") ? "api" : rootPage,
-            })
-          }
-        >
-          ←
-        </button>
-        <strong title={title}>{title}</strong>
-        <button
-          type="button"
-          aria-label={memory.all ? "切换分级模型" : "切换全部模型"}
-          onClick={() => setMemory({ ...memory, all: !memory.all })}
-        >
-          {memory.all ? "分级" : "全部"}
-        </button>
-      </div>
+      <ModelPickerFilters
+        channel={channel}
+        apiOnly={apiOnly}
+        kind={kind}
+        filter={filter}
+        query={query}
+        onChannel={(channel) => setMemory({ ...memory, channel })}
+        onFilter={(filter) => setMemory({ ...memory, filter })}
+        onQuery={setQuery}
+      />
       <ModelPickerRows
         ordered={ordered}
         current={current}
@@ -270,15 +227,13 @@ export default function ModelPickerMenu({
         emptyMessage={
           query.trim()
             ? "没有匹配模型。请减少关键词，或在模型接入中刷新目录。"
-            : page === "codex"
+            : channel === "account"
               ? "连接 Codex 后读取账号可用模型。"
               : "暂无模型，请在模型接入中保存连接并刷新模型列表。"
         }
-        onChoose={(item) =>
-          item.page
-            ? setMemory({ ...memory, page: item.page })
-            : item.selection && onSelect(item.selection)
-        }
+        onChoose={(item) => {
+          if (item.selection) onSelect(item.selection);
+        }}
         onTogglePin={(id) =>
           setMemory({
             ...memory,

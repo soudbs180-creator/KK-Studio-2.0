@@ -2,6 +2,10 @@
 
 本文定义 KK Studio 客户端的文件边界。实现以 `D:/kk-studio/KK-Studio-2.0` 为唯一工程来源；`D:/kk-studio` 仅为父容器，用户数据不存放在代码仓库。
 
+## 2026-10-15 已批准目标与当前实现
+
+[ADR-019](adr/ADR-019-unified-local-repository-and-optional-account.md) 与[统一规格](../changes/2026-10-15-kk-unified/spec.md)更新目标：Desktop/Web 可免登录本地使用，登录不自动上传；同机共用完整仓库，通过统一格式、写入协调与独立目录授权接入；关闭窗口后按网页租约及任务保留必要服务。手动同步才上传所选加密内容。以下路径和代码段描述既有实现，不代表这些目标已全部交付。当前 Native 与 companion 记录格式不同，禁止直接混写同目录。
+
 ## 运行时数据根目录
 
 桌面版本通过 Tauri `dirs::data_dir()` 取得应用数据根目录：

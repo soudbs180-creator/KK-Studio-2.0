@@ -866,7 +866,7 @@
 .project-library-card {
   position: relative;
   min-width: 0;
-  overflow: hidden;
+  overflow: visible;
   text-align: left;
   border: 1px solid var(--border-subtle);
   border-radius: var(--ui-radius-menu);
@@ -878,6 +878,28 @@
   height: 180px;
   color: var(--text-accent);
   background: linear-gradient(145deg, var(--bg-card-hover), var(--bg-input));
+  width: 100%;
+  border-radius: var(--kk-radius-card) var(--kk-radius-card) 0 0;
+}
+.project-library-card .project-entry {
+  margin: var(--kk-space-3);
+}
+.project-library-group-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--kk-space-2);
+  margin-block: var(--kk-space-3);
+}
+.project-library-group-controls input,
+.project-library-group-controls select {
+  min-width: 0;
+  max-width: 100%;
+  height: var(--kk-input-h);
+  color: var(--kk-text-primary);
+  background: var(--kk-bg-input);
+  border: 1px solid var(--kk-border-subtle);
+  border-radius: var(--kk-radius-control);
 }
 .catalog-folder-mark {
   font-size: 54px;

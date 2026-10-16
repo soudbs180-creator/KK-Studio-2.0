@@ -18,7 +18,7 @@ test("部分完成和离线终态不会显示为仍在处理中", async ({ page 
     JSON.stringify(snapshot),
   );
   await page.reload();
-  await openSettingsSection(page, "使用记录");
+  await openSettingsSection(page, "套餐与积分");
   const usage = page.locator("[data-usage-state]");
   await expect(
     usage.getByText("任务记录", { exact: true }).locator(".."),
@@ -42,7 +42,7 @@ test("使用记录只展示当前项目和真实回执，浏览器占用注明�
     });
   });
   await openWorkspace(page);
-  await openSettingsSection(page, "使用记录");
+  await openSettingsSection(page, "套餐与积分");
   const dialog = page.getByRole("dialog", { name: "设置", exact: true });
   const usage = dialog.locator("[data-usage-state]");
   await expect(usage).toHaveAttribute("data-usage-state", "saved");
@@ -55,7 +55,7 @@ test("使用记录只展示当前项目和真实回执，浏览器占用注明�
   await expect(
     usage.getByText("已报告的 USD 费用").locator(".."),
   ).toContainText("未报告");
-  await dialog.getByRole("button", { name: "储存", exact: true }).click();
+  await dialog.getByRole("button", { name: "数据管理", exact: true }).click();
   const storage = dialog.getByRole("region", { name: "数据保存与资源管理" });
   await expect(storage).toHaveAttribute("aria-busy", "false");
   await expect(storage.getByText("浏览器估算占用").locator("..")).toContainText(
@@ -86,7 +86,7 @@ test("存储估算失败给出可重试状态，已保存项目不变", async ({
     });
   });
   await openWorkspace(page);
-  await openSettingsSection(page, "储存");
+  await openSettingsSection(page, "数据管理");
   const storage = page.getByRole("region", { name: "数据保存与资源管理" });
   await expect(storage.getByRole("alert")).toContainText("保存位置未能读取");
   await storage.getByRole("button", { name: "刷新存储信息" }).click();

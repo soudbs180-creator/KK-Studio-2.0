@@ -16,6 +16,7 @@ import {
   emptySnapshot,
 } from "../../src/features/creation/model.ts";
 import { createStagePlan } from "../../src/domain/stagePlan.ts";
+import { applyProjectLifecycle } from "../../src/features/projects/projectLifecycle.ts";
 
 const sha256 =
   "039058c6f2c0cb492c533b0a4d14ef77cc0f78abccced5287d84a1a2011cfb81";
@@ -98,6 +99,45 @@ async function validPackage(): Promise<{
   );
   return { input: built, source };
 }
+
+test("垃圾箱项目完整打包恢复，保留手动名称、分组、任务、草稿和原件", async () => {
+  const source = fixture();
+  const project = source.snapshot.projects[0];
+  project.tasks[0].status = "succeeded";
+  project.tasks[0].submissionState = "terminal";
+  let snapshot = applyProjectLifecycle(source.snapshot, {
+    type: "create-group",
+    id: "g",
+    name: "客户",
+    projectId: project.id,
+  });
+  snapshot = applyProjectLifecycle(snapshot, {
+    type: "rename-project",
+    id: project.id,
+    name: "手动标题",
+  });
+  snapshot = applyProjectLifecycle(
+    snapshot,
+    { type: "trash-project", id: project.id },
+    25,
+  );
+  const built = await createProjectPackageManifest(
+    snapshot,
+    async () => source.asset,
+  );
+  const restored = await preflightProjectPackage(built);
+  assert.equal(restored.snapshot.projects[0].trashedAt, 25);
+  assert.equal(restored.snapshot.projects[0].nameSource, "manual");
+  assert.equal(restored.snapshot.projects[0].name, "手动标题");
+  assert.equal(restored.snapshot.projects[0].groupId, "g");
+  assert.deepEqual(restored.snapshot.projectGroups, snapshot.projectGroups);
+  assert.deepEqual(collectReferencedAssetIds(restored.snapshot), [assetId]);
+  assert.ok(restored.assets.has(assetId));
+  assert.deepEqual(
+    restored.snapshot.projects[0].tasks,
+    built.manifest.snapshot.projects[0].tasks,
+  );
+});
 
 test("Web package export and preflight both reject unknown nested editing fields", async () => {
   const source = fixture();

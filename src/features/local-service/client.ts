@@ -36,7 +36,12 @@ export class CompanionClientError extends Error {
   readonly status: number;
 
   constructor(code: CompanionClientErrorCode, status = 0, message?: string) {
-    super(message ?? code);
+    super(
+      message ??
+        (code === "SNAPSHOT_UNSUPPORTED"
+          ? "项目版本较新，请更新客户端或本机服务，已暂停保存以保护原件。"
+          : code),
+    );
     this.name = "CompanionClientError";
     this.code = code;
     this.status = status;
@@ -103,7 +108,11 @@ const saveResponseSchema = z
 function stateForError(error: CompanionClientError): CompanionConnectionState {
   if (error.code === "UNAUTHENTICATED") return "unauthenticated";
   if (error.code === "CONFLICT") return "conflict";
-  if (error.code === "PROTOCOL_UNSUPPORTED") return "migration-required";
+  if (
+    error.code === "PROTOCOL_UNSUPPORTED" ||
+    error.code === "SNAPSHOT_UNSUPPORTED"
+  )
+    return "migration-required";
   if (error.code === "SERVICE_UNAVAILABLE") return "offline";
   if (error.code === "UNCONFIGURED") return "unconfigured";
   return "error";
@@ -189,6 +198,7 @@ export class CompanionClient {
           "PAIRING_INVALID",
           "PAIRING_USED",
           "PROTOCOL_UNSUPPORTED",
+          "SNAPSHOT_UNSUPPORTED",
           "NOT_FOUND",
           "BODY_TOO_LARGE",
           "CORRUPT",

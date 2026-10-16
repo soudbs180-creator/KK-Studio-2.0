@@ -4,6 +4,7 @@ use std::path::{Path, PathBuf};
 /// Canonical desktop data layout. Runtime files must never be written to the repo.
 #[derive(Debug)]
 pub struct AppPaths {
+    pub root: PathBuf,
     pub config: PathBuf,
     pub conversations: PathBuf,
     pub creation: PathBuf,
@@ -44,8 +45,18 @@ impl AppPaths {
 
     /// Initialize a caller-selected root. Kept private to production callers so tests can
     /// exercise the directory contract without touching the real user profile.
-    fn initialize_at(root: &Path) -> Result<Self, String> {
+    pub(crate) fn initialize_at(root: &Path) -> Result<Self, String> {
         fs::create_dir_all(root).map_err(|error| format!("无法创建应用数据目录：{error}"))?;
+        let root =
+            dunce::canonicalize(root).map_err(|error| format!("无法解析应用数据目录：{error}"))?;
+        for directory in DATA_DIRECTORIES {
+            if crate::asset_storage::io::checked_metadata(&root.join(directory))?
+                .is_some_and(|metadata| !metadata.is_dir())
+            {
+                return Err(format!("corrupt: 数据目录 {directory} 被文件占用"));
+            }
+        }
+        crate::native_root_authority::read_identity(&root)?;
         for directory in DATA_DIRECTORIES {
             fs::create_dir_all(root.join(directory))
                 .map_err(|error| format!("无法创建数据目录 {directory}：{error}"))?;
@@ -59,6 +70,7 @@ impl AppPaths {
         let memory = root.join("memory").join("memory.json");
 
         Ok(Self {
+            root,
             config,
             conversations,
             creation,
@@ -158,6 +170,26 @@ mod tests {
         assert!(!paths.config.exists());
         assert!(!paths.conversations.exists());
         assert!(!paths.memory.exists());
+    }
+
+    #[test]
+    fn controlled_directory_failure_does_not_create_other_directories() {
+        let root = TestRoot::new("occupied");
+        fs::write(root.path("projects"), b"preserve").unwrap();
+        assert!(AppPaths::initialize_at(&root.0).is_err());
+        assert!(!root.path("app").exists());
+        assert_eq!(fs::read(root.path("projects")).unwrap(), b"preserve");
+    }
+
+    #[test]
+    fn unsupported_root_marker_preserves_directory_bytes() {
+        let root = TestRoot::new("future");
+        fs::create_dir(root.path("app")).unwrap();
+        let raw = br#"{"version":1,"repositoryId":"0123456789abcdef0123456789abcdef","formatVersion":99,"minimumWriterVersion":99}"#;
+        fs::write(root.path("app/repository.json"), raw).unwrap();
+        assert!(AppPaths::initialize_at(&root.0).is_err());
+        assert!(!root.path("projects").exists());
+        assert_eq!(fs::read(root.path("app/repository.json")).unwrap(), raw);
     }
 
     #[test]

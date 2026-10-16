@@ -178,15 +178,13 @@ test("首页默认账号生图不被旧 image-test 接管，保存后只发一�
       name: /^Codex 内置生图/,
     });
     await expect(builtin).not.toHaveAttribute("aria-disabled", "true");
-    await menu.getByRole("menuitem", { name: /^API 自定义模型/ }).click();
-    await menu.getByRole("menuitem", { name: /^Main Gate Fixture/ }).click();
+    await menu.getByRole("tab", { name: "中转 API", exact: true }).click();
     await menu.getByRole("menuitemradio", { name: /^image-test/ }).click();
     await expect(
       page.getByRole("button", { name: "模型", exact: true }),
     ).toContainText("image-test");
     await page.getByRole("button", { name: "模型", exact: true }).click();
-    await menu.getByRole("button", { name: "返回上一级", exact: true }).click();
-    await menu.getByRole("button", { name: "返回上一级", exact: true }).click();
+    await menu.getByRole("tab", { name: "登录账号", exact: true }).click();
     await builtin.click();
     await page.getByLabel("创作提示词").fill("生成一个蓝色玻璃球");
     await page.locator('.start-composer input[type="file"]').setInputFiles({
@@ -284,7 +282,7 @@ test("聊天选择 Codex 图片后保留意图，普通输入会调用内置生�
     await expect(page.locator(".chat-agent-banner")).toContainText("已连接");
     await page.getByRole("button", { name: "模型", exact: true }).click();
     const menu = page.getByRole("menu", { name: "选择模型" });
-    await menu.getByRole("menuitem", { name: /^Codex/ }).click();
+    await menu.getByRole("tab", { name: "登录账号", exact: true }).click();
     await menu.getByRole("menuitemradio", { name: /^Codex 内置生图/ }).click();
     await expect(
       page.getByRole("button", { name: "模型", exact: true }),
@@ -681,6 +679,7 @@ test("项目 API 切到 Codex 图片和 Google 后可重开，各通道草稿保
     });
     await page.getByRole("button", { name: "模型", exact: true }).click();
     const menu = page.getByRole("menu", { name: "选择模型" });
+    await menu.getByRole("tab", { name: "中转 API", exact: true }).click();
     await menu.getByRole("searchbox").fill("image-test");
     await menu.getByRole("menuitemradio", { name: /^image-test/ }).click();
     await expect
@@ -700,6 +699,7 @@ test("项目 API 切到 Codex 图片和 Google 后可重开，各通道草稿保
     await page.getByRole("button", { name: "连接 Codex", exact: true }).click();
     await expect(page.locator(".chat-agent-banner")).toContainText("已连接");
     await page.getByRole("button", { name: "模型", exact: true }).click();
+    await menu.getByRole("tab", { name: "登录账号", exact: true }).click();
     await menu.getByRole("searchbox").fill("Codex 内置生图");
     await menu.getByRole("menuitemradio", { name: /^Codex 内置生图/ }).click();
     await page.getByLabel("执行方式").selectOption("google");

@@ -2,6 +2,10 @@ import { z } from "zod";
 import { BROWSER_STORAGE_KEYS } from "../runtime/storage-contract.ts";
 import { isAllowedProviderUrl } from "./providerUrl.ts";
 import {
+  providerChannelSchema,
+  providerPrioritySchema,
+} from "./modelChannels.ts";
+import {
   providerProtocolSchema,
   providerAuthModeSchema,
   isProviderAuthAllowed,
@@ -12,6 +16,8 @@ export const MODEL_PROVIDER_STORAGE_KEY = BROWSER_STORAGE_KEYS.modelProvider;
 export const modelProviderSchema = z
   .object({
     version: z.literal(1),
+    channel: providerChannelSchema.optional(),
+    priority: providerPrioritySchema.optional(),
     name: z
       .string()
       .trim()
