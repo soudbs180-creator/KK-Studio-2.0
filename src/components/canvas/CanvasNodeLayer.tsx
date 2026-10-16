@@ -17,6 +17,7 @@ import type { useCanvasControls } from "./useCanvasControls";
 import type { useCanvasAddMenu } from "./useCanvasAddMenu";
 import CanvasNodeItem from "./CanvasNodeItem";
 import CanvasConnections from "./CanvasConnections";
+import { canConnectTarget } from "./connectionRules";
 import { canvasOccupiedRects, canvasReferencesFor } from "./canvasReferences";
 import { CanvasImageCommandContext } from "../../features/creation/CanvasImageCommand";
 import type { ModelSelection } from "../../domain/modelSelection";

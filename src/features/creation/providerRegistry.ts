@@ -182,6 +182,8 @@ export async function persistProviderConnectionsDurable(
   return options.publishCache === false
     ? commit()
     : withProviderStoreLock(true, commit);
+}
+
 let lastRawProviderConnections: string | null = null;
 let cachedProviderConnections: ProviderConnection[] = [];
 
