@@ -1,6 +1,6 @@
 .node-actions {
   position: absolute;
-  z-index: 8;
+  z-index: 14;
   /* Keep the logical 8px port offset constant on screen at every canvas zoom.
      Inverse scaling surrounds the translation in the transform matrix,
      cancelling the canvas zoom for both the offset and the hit target. */

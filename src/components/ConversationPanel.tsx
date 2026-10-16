@@ -10,6 +10,7 @@ import ConversationTaskApproval from "./ConversationTaskApproval";
 import ConversationHeader from "./ConversationHeader";
 import ConversationComposerRegion from "./ConversationComposerRegion";
 import GoogleConversationPanel from "./GoogleConversationPanel";
+import ChatImageLightbox from "./chat/ChatImageLightbox.tsx";
 import useConversationSubmit from "./useConversationSubmit";
 import { useAgentDraftState } from "../features/agent/useAgentComposerDraft";
 import useConversationSelection from "./useConversationSelection";
@@ -46,6 +47,10 @@ export default function ConversationPanel({
     composerDraft?.approvalMode ?? "auto",
   );
   const [pendingApproval, setPendingApproval] = useState<string | null>(null);
+  const [previewImage, setPreviewImage] = useState<{
+    src: string;
+    prompt?: string;
+  } | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const modelDisabled =
     submitting || Boolean(agent?.sending || agent?.connecting);
@@ -83,6 +88,28 @@ export default function ConversationPanel({
   function updateDraft(patch: Partial<CreationDraft>): void {
     if (!onDraftChange || !composerDraft) return;
     onDraftChange({ ...composerDraft, ...patch, updatedAt: Date.now() });
+  }
+  function handleSetReference(src: string): void {
+    if (!onDraftChange || !composerDraft) return;
+    const existing = composerDraft.attachments || [];
+    if (existing.some((att) => att.dataUrl === src)) {
+      setStatus("该图片已在参考列表中");
+      return;
+    }
+    updateDraft({
+      attachments: [
+        ...existing.slice(-3),
+        {
+          id: `chat-ref-${Date.now()}`,
+          name: "生成参考图",
+          mime: "image/png",
+          size: 0,
+          role: "主体",
+          dataUrl: src,
+        },
+      ],
+    });
+    setStatus("已设为主体参考图");
   }
   const { fileInput, addFiles, readingFiles } = useConversationAttachments({
     draftKey: project?.id,
@@ -159,15 +186,10 @@ export default function ConversationPanel({
         onDelete={deleteMessage}
         onStatus={setStatus}
         onConfigure={() => onOpen("settings/providers")}
-        onConfigureDirect={
-          directState === "service-unconfigured"
-            ? () => onOpen("settings/providers")
-            : undefined
-        }
-        status={
-          status ||
-          (!agentActive && input.trim() ? (directDisabledReason ?? "") : "")
-        }
+        onConfigureDirect={directState === "service-unconfigured" ? () => onOpen("settings/providers") : undefined}
+        onPreviewImage={(src, prompt) => setPreviewImage({ src, prompt })}
+        onSetReference={handleSetReference}
+        status={status || (!agentActive && input.trim() ? (directDisabledReason ?? "") : "")}
       />
       <ConversationComposerRegion
         agent={agent}
@@ -257,6 +279,14 @@ export default function ConversationPanel({
             setPendingApproval(null);
             setStatus("已取消本次执行，输入仍保留。");
           }}
+        />
+      )}
+      {previewImage && (
+        <ChatImageLightbox
+          src={previewImage.src}
+          prompt={previewImage.prompt}
+          onClose={() => setPreviewImage(null)}
+          onSetReference={handleSetReference}
         />
       )}
       <footer>请确保不侵权，合法使用</footer>

@@ -71,6 +71,8 @@ export default function Sidebar({
         "comfyui",
         "workspace",
         "chat",
+        "assets",
+        "tasks",
       ].includes(id)
     )
       onCollapse();

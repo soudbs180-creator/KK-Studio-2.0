@@ -1,6 +1,16 @@
 # KK Studio 工作台协作规范
 
-本文件是全部 AI 的**最高规则入口**，定义技术边界、禁止事项与验证要求。本文件与 `AI_RULES.md` 的分工：
+## 核心档案分工与治理定位
+
+项目确立三大顶级治理档案分工。**保持规则先治理好，然后再依靠这个规则来优化代码和 UI**：
+
+| 档案 | 谁来读 | 它的定义 | 职责定位 |
+| --- | --- | --- | --- |
+| [`README.md`](README.md) | **人类**（开发者、用户） | **项目内容** | 项目定位、功能总览、运行环境、安装步骤与使用示例 |
+| [`AGENTS.md`](AGENTS.md)（本文件） | **编码代理**（Coding Agents） | **如何构建项目** | 技术边界、数据安全、构建验证门禁、SDLC 交付与 Git 规则 |
+| [`DESIGN.md`](DESIGN.md) | **设计代理**（Design Agents / UI Agents） | **项目应该是什么样子和感觉** | 视觉语言、设计令牌（Tokens）、三端响应式与视口双向自适应规范 |
+
+本文件是全部编码 AI 的**最高规则入口**，定义技术边界、禁止事项与验证要求。本文件与 [`AI_RULES.md`](AI_RULES.md) 的分工：
 
 | 文件 | 承载内容 | 性质 |
 | --- | --- | --- |
@@ -9,6 +19,8 @@
 | [`docs/README.md`](docs/README.md) | 全部文档索引、权威优先级与冲突裁决 | 导航与裁决 |
 
 两者不重复承载同类条目。发现同一规则在两处都出现时，以本文件为准并删除另一处。文档索引与冲突裁决规则见 `docs/README.md`。
+
+> **防新页面违规刚性约束**：所有新建页面、卡片、组件在编码前**必须先读取并严格遵循 [`DESIGN.md`](DESIGN.md)**。严禁私自硬编码孤立色值、固定宽度或忽略矮屏适配，编码代理必须先以 `DESIGN.md` 的规范自检通过后方可提交。
 
 ## 所有 AI 必须先理解意图
 
@@ -44,11 +56,17 @@
 
 ## 设计与交互
 
-- **UI 规范唯一入口是 [`docs/UI_INDEX.md`](docs/UI_INDEX.md)**。任何 UI 改动先读索引，再读该主题的唯一承载文件，不要在多份规范里各取一份。分工：`UI_RULES.md`（零件/交互规则）· `UI_ARCHETYPES.md`（页面类型）· `DESIGN_TOKENS.md`（数值）· `DESIGN-SYSTEM.md`（颜色与基础组件）· `UI_SPEC.md`（运行与验证）。旧 `UI-STANDARDS.md` / `UI-ALIGNMENT.md` 已合并，仅作历史溯源，不再更新。
-- 设计裁决先读 UI_INDEX：当前用户设计/已确认反馈 → 注册 tokens 与共享组件 → 未被覆盖的历史 Figma 基线；四页节点、Ardot 和旧 tokens.json 保留溯源。数值仍以 src/styles/tokens.css 为唯一运行时源；外壳几何先注册，通用控件采用 24/32/40 高度、16/20/24 图标和不小于 12px 的文字。
+- **UI 设计规范唯一入口是根目录 [`DESIGN.md`](DESIGN.md)**（对齐 Google Stitch Specification 标准）。任何 UI、页面、卡片、浮层或组件改动，**编码代理必须先读 `DESIGN.md`，严格遵循其样式规则、Tokens、流式网格自适应与矮屏弹性规范**。细分主题索引见 [`docs/UI_INDEX.md`](docs/UI_INDEX.md)。
+- **防止新页面违规的刚性法则**：所有新页面、新卡片、新控件必须满足以下五项硬约束方可合入：
+  1. **禁止裸写颜色**：所有颜色必须消费 `DESIGN.md` 注册的语义令牌（如 `var(--bg-surface)`、`var(--text-primary)`），严禁直接出现 Hex/RGB 硬编码；
+  2. **双向自适应弹性**：页面与卡片容器严禁使用写死固定像素宽度（必须使用 `width: min(100%, ...)`、流式网格 `grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr))` 与 `min-width: 0` 防溢出）；
+  3. **矮屏与弹性高度**：所有弹窗与面板必须使用三段式结构（Header + Scrollable Body + Sticky Footer），并响应 `@media (max-height: 640px)`，确保主操作按钮在任何矮屏下始终可见可点；
+  4. **触控与桌面双达标**：移动端与平板端所有交互元素触控面积不小于 `44px × 44px`；
+  5. **单行防爆与全端拓扑**：文字单行容器必须带 `overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0;`；
+  6. **双端互补与同构规范（Mobile & Desktop Complementary Dual-Track）**：开发手机端（React Native / 移动 Web）与电脑端（Desktop / 宽屏 Web）时，必须严格遵照 `DESIGN.md`：电脑端发挥大屏优势以**无限画布（Infinite Canvas）**为主；手机端遵从单手舒适模式以**聊天为主（Chat-Centric）**（聊天流直接显示图片卡片、底部直达资源库与排队任务页）；相同部分（色彩阶梯、任务 9 状态机、多模态 5 槽位、Token、Schema）必须 100% 复用，保证跨端同态漫游。
 - 每个可见控件必须有真实行为，或显示禁用原因；异步操作必须覆盖 loading、success、error、cancel 和离线状态。
 - UI/交互与功能链路是每个平台的最高优先级双门。平台最小链路必须先通过“连接健康检查 → 一次文本生成 → 一次图片生成 → 结果/原件回写 → 保存或重载恢复”，并在同一版本提供 UI 状态证据；静态 UI、fixture、mock 或单一平台证据不能替代真实 API 回执。性能优化与 Mobile 体验优化只能在对应平台最小链路通过后进行。
-- 视觉验收必须有相同状态的浏览器截图/DOM 证据；构建通过不等于 Figma 一致。
+- 视觉验收必须有相同状态的浏览器截图/DOM 证据；构建通过不等于设计一致。
 
 ## 文档与验证
 

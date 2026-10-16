@@ -1,6 +1,8 @@
 # KK Studio Design System
 
-2026-10-14 更新。设计裁决由 [UI_INDEX](UI_INDEX.md) 路由；当前用户设计/反馈优先，历史 Figma 和 [1.3 文档](archive/ui-history/DESIGN-SYSTEM-2026-09-22.md) 保留溯源。
+> 本系统权威标准规范已全面对齐 **[Google Stitch DESIGN.md Specification](https://stitch.withgoogle.com/docs/design-md/specification)**，完整规范见 [**`DESIGN.md`**](../DESIGN.md)。所有后续页面、卡片、组件、断点与自适应规则均严格以此为唯一真实源。
+
+设计裁决由 [UI_INDEX](UI_INDEX.md) 路由；本文件作为导读，完整规约以 [DESIGN.md](../DESIGN.md) 为准。
 
 ## 颜色与主题
 

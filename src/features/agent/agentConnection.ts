@@ -57,6 +57,7 @@ import {
   codexGenerationPrompt,
   codexReasoningModel,
 } from "./codexGeneration.ts";
+import { compileStructuredPrompt } from "../prompts/structuredPromptCompiler.ts";
 export interface AgentOpResult {
   applied: CanvasAgentOp[];
   rejected: Array<{ op: CanvasAgentOp; reason: string }>;
@@ -910,7 +911,16 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
     if (!conversation?.threadId) return { ok: false, error: "对话尚未就绪" };
     if (!["ready", "warning"].includes(conversation.status))
       return { ok: false, error: "当前会话尚未就绪，请等待或重新连接。" };
-    let userInstruction = text.trim();
+    const selectedAttachments = (input?.attachments ?? []).map((item) => ({
+      ...item,
+    }));
+    const compiled = compileStructuredPrompt({
+      prompt: text.trim(),
+      attachments: selectedAttachments,
+    });
+    let userInstruction = compiled.preamble
+      ? `${compiled.preamble}\n\n【用户创作指令】：\n${compiled.cleanPrompt || "按各参考素材与要求执行生成"}`
+      : compiled.cleanPrompt || text.trim();
     try {
       if (input?.selection)
         userInstruction = codexGenerationPrompt(
@@ -924,11 +934,8 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
     const version = epoch;
     const activeApi = api;
     const messageId = crypto.randomUUID();
-    const selectedAttachments = (input?.attachments ?? []).map((item) => ({
-      ...item,
-    }));
     const messageText =
-      text.trim() +
+      compiled.cleanPrompt +
       (selectedAttachments.length
         ? "\n\n参考图片：" +
           selectedAttachments.map((item) => item.name).join("、")

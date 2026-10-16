@@ -484,7 +484,7 @@
 }
 @media (max-width: 700px) {
   .asset-panel {
-    width: 305px;
+    width: min(560px, calc(100vw - 16px));
   }
   .asset-header {
     left: 24px;

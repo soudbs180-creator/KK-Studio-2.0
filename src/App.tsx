@@ -2862,10 +2862,18 @@ export default function App() {
       return;
     }
     if (view === "chat") {
-      if (active === "workspace" && chat && (!sidebar.narrow || mobileChat)) {
-        setChat(false);
-        setMobileChat(false);
+      if (modal) {
+        setModal("");
+        setChat(true);
+        setMobileChat(sidebar.narrow);
         return;
+      }
+      if (active === "workspace" && chat && (!sidebar.narrow || mobileChat)) {
+        if (!sidebar.narrow) {
+          setChat(false);
+          setMobileChat(false);
+          return;
+        }
       }
       if (
         !creationRef.current.projects.some(
@@ -3001,12 +3009,16 @@ export default function App() {
         )}
         <Sidebar
           active={
-            sidebar.surface === "phone" &&
-            active === "workspace" &&
-            mobileChat &&
-            chat
-              ? "chat"
-              : active
+            modal === "assets"
+              ? "assets"
+              : modal === "tasks"
+                ? "tasks"
+                : sidebar.surface === "phone" &&
+                    active === "workspace" &&
+                    mobileChat &&
+                    chat
+                  ? "chat"
+                  : active
           }
           onNavigate={open}
           collapsed={sidebar.collapsed}
@@ -3566,6 +3578,7 @@ import "./styles/feature-parity.css";
 import "./styles/responsive.css";
 import "./styles/responsive-content.css";
 import "./styles/composer.css";
+import "./styles/tokenized-composer.css";
 import "./styles/page-templates.css";
 import "./styles/canvas-compare.css";
 import "./styles/image-edit.css";
