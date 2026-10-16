@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import type { MouseEvent as ReactMouseEvent, PointerEvent as ReactPointerEvent, RefObject } from "react";
+import type { MouseEvent as ReactMouseEvent, MutableRefObject, PointerEvent as ReactPointerEvent } from "react";
 
 interface GestureState {
   x: number;
@@ -8,7 +8,7 @@ interface GestureState {
 }
 
 interface UseCanvasGesturesProps {
-  rightGesture: RefObject<GestureState | null>;
+  rightGesture: MutableRefObject<GestureState | null>;
   controls: {
     tool: string;
     spaceHeld: boolean;
