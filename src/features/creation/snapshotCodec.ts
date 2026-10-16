@@ -377,6 +377,8 @@ function rejectLoss(original: unknown, normalized: unknown): void {
       if (key in normalized)
         rejectLoss(value, (normalized as Record<string, unknown>)[key]);
   }
+}
+
 function decodeSnapshotV3(value: unknown): CreationSnapshot {
   validateSnapshotV3(value);
   const parsed = schemaV3.safeParse(value);
