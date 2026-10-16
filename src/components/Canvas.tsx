@@ -27,6 +27,7 @@ import { projectCanvasFingerprint } from "../domain/projectCanvas";
 import "../styles/canvas-layers.css";
 import ImageCompareProvider from "../features/compare/ImageCompareProvider";
 import ImageCompareControls from "../features/compare/ImageCompareControls";
+import { useCanvasGestures } from "./canvas/useCanvasGestures";
 
 export default function Canvas({
   projectId,
@@ -131,6 +132,18 @@ export default function Canvas({
     [setEdges, setRemovedEdge, containerRef],
   );
 
+  const gestures = useCanvasGestures({
+    rightGesture,
+    controls: {
+      tool: controls.tool,
+      spaceHeld: controls.spaceHeld,
+      startCanvasPan,
+    },
+    addMenu,
+    movePointer,
+    finishPointer,
+  });
+
   return (
     <ImageCompareProvider key={projectId} items={items} active={!covered}>
       <div
@@ -145,39 +158,7 @@ export default function Canvas({
         aria-label="无限画布"
         tabIndex={0}
         onKeyDownCapture={handleKeyDown}
-        onPointerDownCapture={(event) => {
-          if (event.button === 2)
-            rightGesture.current = {
-              x: event.clientX,
-              y: event.clientY,
-              moved: false,
-            };
-          else if (rightGesture.current) rightGesture.current = null;
-        }}
-        onPointerDown={(event) => {
-          startCanvasPan(event);
-        }}
-        onDoubleClick={(event) => {
-          addMenu.openAtPoint(
-            event,
-            controls.tool === "select" && !controls.spaceHeld,
-          );
-        }}
-        onPointerMove={(event) => {
-          const right = rightGesture.current;
-          if (
-            right &&
-            (event.buttons & 2) !== 0 &&
-            Math.hypot(event.clientX - right.x, event.clientY - right.y) > 4
-          )
-            right.moved = true;
-          movePointer(event);
-        }}
-        onPointerUp={(event) => {
-          finishPointer(event);
-        }}
-        onPointerCancel={finishPointer}
-        onLostPointerCapture={finishPointer}
+        {...gestures}
         onWheel={zoomCanvas}
         style={
           {
