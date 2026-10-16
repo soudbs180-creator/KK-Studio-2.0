@@ -465,7 +465,6 @@ function decodeSnapshotV2(value: unknown): CreationSnapshot {
 }
 
 export function decodeSnapshot(value: unknown): CreationSnapshot {
-  rejectSecrets(value);
   if (
     value &&
     typeof value === "object" &&
@@ -478,6 +477,7 @@ export function decodeSnapshot(value: unknown): CreationSnapshot {
       "项目版本不受支持，未覆盖原件。",
     );
   }
+  rejectSecrets(value);
 
   const v = (value as { version?: unknown })?.version;
   if (v === 3) {

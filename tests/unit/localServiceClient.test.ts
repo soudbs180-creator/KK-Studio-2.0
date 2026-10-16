@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import test from "node:test";
 import { readFileSync } from "node:fs";
 import { runInNewContext } from "node:vm";
@@ -239,6 +240,7 @@ test("unsupported snapshot format reaches the client and freezes storage without
   const modules: Record<string, unknown> = {
     "@tauri-apps/api/core": { invoke: forbidden },
     "./assetRepository": { loadStoredAsset: forbidden },
+    "./assetRepository.ts": { loadStoredAsset: forbidden },
     "./snapshotAssets": {
       encodeSnapshotAssets: forbidden,
       hydrateSnapshotAssets: forbidden,
@@ -255,6 +257,10 @@ test("unsupported snapshot format reaches the client and freezes storage without
     },
     "./model": { emptySnapshot },
     "./snapshotCodec": snapshotCodec,
+    "./chatMigration": {
+      sha256Hex: (data: string) =>
+        createHash("sha256").update(data).digest("hex"),
+    },
   };
   const compiled = ts.transpileModule(
     readFileSync(
@@ -266,8 +272,10 @@ test("unsupported snapshot format reaches the client and freezes storage without
   runInNewContext(compiled.outputText, {
     exports,
     require: (name: string) => {
-      assert.ok(name in modules, `unexpected storage dependency: ${name}`);
-      return modules[name];
+      const stripped = name.endsWith(".ts") ? name.slice(0, -3) : name;
+      const mod = modules[name] ?? modules[stripped];
+      assert.ok(mod !== undefined, `unexpected storage dependency: ${name}`);
+      return mod;
     },
     window: { localStorage: storage, sessionStorage: new MemoryStorage() },
     indexedDB: { open: forbidden },
