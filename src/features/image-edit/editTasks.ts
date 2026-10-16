@@ -29,6 +29,7 @@ import {
   cropImage,
   decodeImage,
   drawMask,
+  resolveCanvasMime,
 } from "./imageProcessing.ts";
 
 export interface ImageEditRequest {
@@ -38,10 +39,12 @@ export interface ImageEditRequest {
 function attachment(
   asset: StoredGeneratedAsset,
   name: string,
+  originalAssetId?: string,
 ): CreationAttachment {
   return {
     id: asset.assetId,
     assetId: asset.assetId,
+    originalAssetId: originalAssetId ?? asset.parentId ?? asset.assetId,
     name,
     mime: asset.mime,
     size: Math.floor(((asset.preview.split(",")[1]?.length ?? 0) * 3) / 4),
@@ -76,12 +79,17 @@ export async function prepareEditInputs(
     throw new Error("请填写修改意见。");
   const capabilities = resolveImageModelCapabilities(connection, input.model),
     local = active.regions.length > 0;
-  const context = source.imageEditContext ?? {
-    originalPrompt: source.prompt ?? project.prompt,
-    originalAssetId: source.assetId,
-    referenceAssetIds: project.attachments.flatMap((a) =>
-      a.assetId && a.assetId !== source.assetId ? [a.assetId] : [],
-    ),
+  const context = {
+    originalPrompt:
+      source.imageEditContext?.originalPrompt ?? source.prompt ?? project.prompt,
+    originalAssetId:
+      source.imageEditContext?.originalAssetId ?? source.assetId,
+    lastInstruction: source.imageEditContext?.lastInstruction,
+    referenceAssetIds:
+      source.imageEditContext?.referenceAssetIds ??
+      project.attachments.flatMap((a) =>
+        a.assetId && a.assetId !== source.assetId ? [a.assetId] : [],
+      ),
   };
   const ids = [
     ...context.referenceAssetIds,
@@ -131,7 +139,10 @@ export async function prepareEditInputs(
           instructions: [],
         }),
         imageSize: undefined,
-        attachments: [attachment(sourceAsset, "当前编辑原图"), ...references],
+        attachments: [
+          attachment(sourceAsset, "当前编辑原图", context.originalAssetId),
+          ...references,
+        ],
         imageEditContext: { ...context, lastInstruction: input.prompt },
       },
     ];
@@ -145,21 +156,26 @@ export async function prepareEditInputs(
   for (const crop of plan.crops) {
     signal?.throwIfAborted();
     const cropped = cropImage(decoded, crop);
+    const cropMime = resolveCanvasMime(cropped, "image/png");
     const cropAsset = await storeGeneratedAsset({
-      source: cropped.toDataURL("image/png"),
+      source: cropped.toDataURL(cropMime),
       sourceKind: "upload",
       isAiGenerated: false,
-      parentId: source.assetId,
+      parentId: context.originalAssetId ?? source.assetId,
       tags: ["编辑输入"],
       signal,
     });
-    const images = [attachment(cropAsset, "当前编辑原图"), ...references];
+    const images = [
+      attachment(cropAsset, "当前编辑原图", context.originalAssetId),
+      ...references,
+    ];
     let maskAssetId: string | undefined;
     if (native) {
       const mask = drawMask(active, crop, cropped.width, cropped.height, true);
+      const maskMime = resolveCanvasMime(mask, "image/png");
       maskAssetId = (
         await storeGeneratedAsset({
-          source: mask.toDataURL("image/png"),
+          source: mask.toDataURL(maskMime),
           sourceKind: "upload",
           isAiGenerated: false,
           tags: ["编辑蒙版"],
@@ -171,15 +187,25 @@ export async function prepareEditInputs(
       !native ||
       active.regions.some((r) => crop.regionIds.includes(r.id) && r.color)
     ) {
-      const annotated = await storeGeneratedAsset({
-        source: annotateImage(decoded, active, crop).toDataURL("image/png"),
+      const annotated = annotateImage(decoded, active, crop);
+      const annotatedMime = resolveCanvasMime(annotated, "image/png");
+      const annotatedAsset = await storeGeneratedAsset({
+        source: annotated.toDataURL(annotatedMime),
         sourceKind: "upload",
         isAiGenerated: false,
-        parentId: source.assetId,
+        parentId: context.originalAssetId ?? source.assetId,
         tags: ["区域标注"],
         signal,
       });
-      images.splice(1, 0, attachment(annotated, "区域标注图（仅用于定位）"));
+      images.splice(
+        1,
+        0,
+        attachment(
+          annotatedAsset,
+          "区域标注图（仅用于定位）",
+          context.originalAssetId,
+        ),
+      );
     }
     inputs.push({
       ...input,
@@ -254,9 +280,9 @@ export async function composeEditResult(
     );
   }
   const generated = await decodeImage(source, signal);
-  return composePixels(base, generated, edit.document, edit.crop).toDataURL(
-    "image/png",
-  );
+  const composed = composePixels(base, generated, edit.document, edit.crop);
+  const targetMime = resolveCanvasMime(composed, "image/png");
+  return composed.toDataURL(targetMime);
 }
 export async function composeNativeEditAsset(
   task: CreationTask,
@@ -272,7 +298,8 @@ export async function composeNativeEditAsset(
     sourceJobId: task.id,
     connectionId: task.providerConnectionId,
     promptHash: asset.promptHash,
-    parentId: task.imageEdit.sourceAssetId,
+    parentId:
+      task.imageEditContext?.originalAssetId ?? task.imageEdit.sourceAssetId,
     tags: ["AI生成", "蒙版重绘"],
   });
 }

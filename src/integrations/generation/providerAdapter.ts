@@ -69,6 +69,7 @@ export interface ProviderResult {
   b64Json?: string;
   mime?: string;
   index: number;
+  kind?: "image" | "video";
 }
 
 export interface GenerationProviderAdapter {

@@ -7,15 +7,37 @@ import { searchModels } from "./modelSearch.ts";
 import { catalogForConnection, type ModelKind } from "./modelCatalog.ts";
 import { modelSelectionId, type ModelSelection } from "./modelSelection.ts";
 import type { readProviderConnections } from "../creation/providerRegistry.ts";
+
+export interface RelayCandidate {
+  connectionId: string;
+  connectionName?: string;
+  priority: number;
+  weight: number;
+  state?: "active" | "disabled" | "quarantined";
+}
+
+export interface EntryMetadata {
+  candidateConnectionIds?: string[];
+  candidates?: RelayCandidate[];
+  badgeLabel?: string;
+  priority?: number;
+  weight?: number;
+  state?: "active" | "disabled" | "quarantined";
+  connectionName?: string;
+  [key: string]: unknown;
+}
+
 export interface Entry {
   id: string;
   label: string;
   detail?: string;
+  badge?: string;
   page?: string;
   selection?: ModelSelection;
   checked?: boolean;
   disabled?: string;
   terms?: string[];
+  metadata?: EntryMetadata;
 }
 
 export const entry = (
@@ -96,3 +118,5 @@ export function apiMenuEntries(
     }),
   );
 }
+
+export { deduplicateRelayEntries } from "./modelDeduplication.ts";

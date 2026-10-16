@@ -6,6 +6,9 @@ import ConversationModelPicker from "./ConversationModelPicker";
 import type { CreationDraft } from "../features/creation/model";
 import VoiceInputButton from "./VoiceInputButton";
 import type { SkillRecord } from "../features/skills/skillRegistry";
+import AgentActionButton, {
+  type AgentActionState,
+} from "./AgentActionButton";
 
 export default function ConversationActions({
   actionsRef,
@@ -38,6 +41,12 @@ export default function ConversationActions({
   voiceSessionKey,
   skills = [],
   onApplySkill,
+  agentActionState,
+  onPause,
+  onResume,
+  onSend,
+  onAgentPause,
+  onAgentResume,
 }: {
   actionsRef: RefObject<HTMLDivElement>;
   fileInput: RefObject<HTMLInputElement>;
@@ -71,7 +80,22 @@ export default function ConversationActions({
   voiceSessionKey: string;
   skills?: SkillRecord[];
   onApplySkill?: (record: SkillRecord) => void;
+  agentActionState?: AgentActionState;
+  onPause?: () => void | Promise<void>;
+  onResume?: () => void | Promise<void>;
+  onSend?: () => void | Promise<void>;
+  onAgentPause?: () => void | Promise<void>;
+  onAgentResume?: () => void | Promise<void>;
 }) {
+  const hasContent = Boolean(
+    input.trim() ||
+      (composerDraft?.attachments && composerDraft.attachments.length > 0),
+  );
+  const resolvedState: AgentActionState =
+    agentActionState ?? (submitting ? "executing" : "idle");
+  const handlePause = onPause ?? onAgentPause;
+  const handleResume = onResume ?? onAgentResume;
+
   return (
     <div className="composer-toolbar" ref={actionsRef} data-node-id="407:29315">
       <button
@@ -193,19 +217,15 @@ export default function ConversationActions({
           className="chat-footer-separator chat-footer-separator-right"
           aria-hidden="true"
         />
-        <button
-          type="submit"
-          aria-label="发送消息"
-          disabled={!input.trim() || submitting}
-          className="chat-send"
-        >
-          <img
-            src="/design/figma/composer-send.svg"
-            width="24"
-            height="24"
-            alt=""
-          />
-        </button>
+        <AgentActionButton
+          state={resolvedState}
+          hasDraft={hasContent}
+          hasContent={hasContent}
+          disabled={submitting && !agentActionState}
+          onSend={onSend}
+          onPause={handlePause}
+          onResume={handleResume}
+        />
       </div>
     </div>
   );

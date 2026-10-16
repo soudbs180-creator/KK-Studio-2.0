@@ -8,6 +8,7 @@ import {
 import { agentConnection } from "../features/agent/agentConnection";
 import {
   apiMenuEntries,
+  deduplicateRelayEntries,
   entry,
   type Entry,
 } from "../features/models/modelMenuEntries";
@@ -135,11 +136,14 @@ export default function ModelPickerMenu({
           ),
         ]
       : [];
-  const apis = apiMenuEntries(connections, current, kind, query).filter(
-    (item) =>
-      !kind ||
-      item.selection?.kind === kind ||
-      item.selection?.kind === "unknown",
+  const apis = deduplicateRelayEntries(
+    apiMenuEntries(connections, current, kind, query).filter(
+      (item) =>
+        !kind ||
+        item.selection?.kind === kind ||
+        item.selection?.kind === "unknown",
+    ),
+    { current },
   );
   const defaults =
     scope === "conversation" && !apiOnly
@@ -176,7 +180,9 @@ export default function ModelPickerMenu({
         : page === "api"
           ? providers
           : apis.filter(
-              (item) => item.selection?.connectionId === page.slice(4),
+              (item) =>
+                item.selection?.connectionId === page.slice(4) ||
+                item.metadata?.candidateConnectionIds?.includes(page.slice(4)),
             );
   const pins = Array.isArray(memory.pins.all)
     ? memory.pins.all

@@ -190,11 +190,12 @@ fn draft(value: &Value) -> Result<(), String> {
 }
 pub fn validate(value: &Value) -> Result<(), String> {
     object(value, "snapshot")?;
-    match value["version"].as_u64() {
-        Some(2) => (),
+    let version = match value["version"].as_u64() {
+        Some(2) => 2,
+        Some(3) => 3,
         Some(_) => return Err("unsupported: 项目快照版本不受支持，已保留原文件".to_string()),
         None => return Err(corrupt("version")),
-    }
+    };
     if !value["revision"]
         .as_u64()
         .is_some_and(|r| r <= 9_007_199_254_740_991)
@@ -209,53 +210,144 @@ pub fn validate(value: &Value) -> Result<(), String> {
         Some(Value::String(active)) if project_ids.contains(active.as_str()) => (),
         _ => return Err(corrupt("activeProjectId")),
     }
-    // Absent additive v2 fields are defaulted by the UI; malformed present fields fail.
+    // Absent additive fields are defaulted by the UI; malformed present fields fail.
     if let Some(home) = value.get("homeDraft") {
         draft(home)?;
     }
     for project in projects {
-        labels(project, "customTags")?;
-        provider_routing(project)?;
-        optional_strings(project, &["name", "prompt", "model", "kind"])?;
-        attachments(project)?;
-        let items = array(&project["items"], "items")?;
-        let node_ids = unique_ids(items, "items")?;
-        for item in items {
-            labels(item, "tags")?;
-            if !item["title"].is_string() || !item["description"].is_string() {
-                return Err(corrupt("items"));
+        validate_project(project, version)?;
+    }
+    Ok(())
+}
+
+fn validate_project(project: &Value, version: u64) -> Result<(), String> {
+    object(project, "project")?;
+    id(&project["id"], "project.id")?;
+    labels(project, "customTags")?;
+    provider_routing(project)?;
+    optional_strings(project, &["name", "prompt", "model", "kind"])?;
+    attachments(project)?;
+    let items = array(&project["items"], "items")?;
+    let node_ids = unique_ids(items, "items")?;
+    for item in items {
+        labels(item, "tags")?;
+        if !item["title"].is_string() || !item["description"].is_string() {
+            return Err(corrupt("items"));
+        }
+        optional_strings(item, &["kind", "prompt", "model"])?;
+    }
+    let tasks = optional_arrays(project, "tasks")?;
+    unique_ids(tasks, "tasks")?;
+    for task in tasks {
+        optional_strings(task, &["prompt", "model", "status", "kind"])?;
+        optional_ids(task, &["sourceItemId", "originChatId"])?;
+        task_submission(task)?;
+        provider_routing(task)?;
+        attachments(task)?;
+    }
+    for field in ["favoriteIds", "likedIds"] {
+        for entry in optional_arrays(project, field)? {
+            id(entry, field)?;
+        }
+    }
+    if let Some(canvas) = project.get("canvas") {
+        validate_canvas(canvas, &node_ids)?;
+    }
+
+    if version == 3 {
+        validate_v3_chats(project)?;
+    } else {
+        validate_v2_messages_and_draft(project)?;
+    }
+    Ok(())
+}
+
+fn validate_v2_messages_and_draft(project: &Value) -> Result<(), String> {
+    let messages = optional_arrays(project, "messages")?;
+    unique_ids(messages, "messages")?;
+    for message in messages {
+        if !message["content"].is_string()
+            || !matches!(message["role"].as_str(), Some("user" | "system" | "assistant"))
+        {
+            return Err(corrupt("messages"));
+        }
+    }
+    if let Some(composer) = project.get("composerDraft") {
+        draft(composer)?;
+    }
+    Ok(())
+}
+
+fn validate_v3_chats(project: &Value) -> Result<(), String> {
+    let active_chat_id = id(&project["activeChatId"], "activeChatId")?;
+    let chats = object(&project["chats"], "chats")?;
+    if !chats.contains_key(active_chat_id) {
+        return Err(corrupt("activeChatId 在 chats 中不存在"));
+    }
+    for (chat_key, chat_val) in chats {
+        let chat_obj = object(chat_val, "chat")?;
+        let chat_id = id(&chat_obj["id"], "chat.id")?;
+        if chat_id != chat_key {
+            return Err(corrupt("chat key 与 chat.id 不匹配"));
+        }
+        if !chat_obj.get("name").is_some_and(|n| n.is_string()) {
+            return Err(corrupt("chat.name"));
+        }
+        for time_field in ["createdAt", "updatedAt"] {
+            if let Some(t_val) = chat_obj.get(time_field) {
+                let t = number(t_val, time_field)?;
+                if !(0.0..=9_007_199_254_740_991.0).contains(&t) || t.fract() != 0.0 {
+                    return Err(corrupt(time_field));
+                }
             }
-            optional_strings(item, &["kind", "prompt", "model"])?;
         }
-        let tasks = optional_arrays(project, "tasks")?;
-        unique_ids(tasks, "tasks")?;
-        for task in tasks {
-            optional_strings(task, &["prompt", "model", "status", "kind"])?;
-            optional_ids(task, &["sourceItemId"])?;
-            task_submission(task)?;
-            provider_routing(task)?;
-            attachments(task)?;
-        }
-        let messages = optional_arrays(project, "messages")?;
-        unique_ids(messages, "messages")?;
-        for message in messages {
-            if !message["content"].is_string()
-                || !matches!(message["role"].as_str(), Some("user" | "system"))
-            {
-                return Err(corrupt("messages"));
+        if let Some(main_agent) = chat_obj.get("mainAgent") {
+            if !main_agent.as_str().is_some_and(|s| !s.trim().is_empty()) {
+                return Err(corrupt("chat.mainAgent"));
             }
         }
-        for field in ["favoriteIds", "likedIds"] {
-            for entry in optional_arrays(project, field)? {
-                id(entry, field)?;
+        if let Some(allowlist_val) = chat_obj.get("modelAllowlist") {
+            let allowlist = array(allowlist_val, "chat.modelAllowlist")?;
+            if allowlist.len() > 64 {
+                return Err(corrupt("chat.modelAllowlist 超出长度限制"));
+            }
+            for model_id in allowlist {
+                if !model_id.as_str().is_some_and(|s| !s.trim().is_empty() && s.chars().count() <= 120) {
+                    return Err(corrupt("chat.modelAllowlist 条目无效"));
+                }
             }
         }
-        if let Some(composer) = project.get("composerDraft") {
-            draft(composer)?;
+        if let Some(chat_draft) = chat_obj.get("draft") {
+            draft(chat_draft)?;
         }
-        if let Some(canvas) = project.get("canvas") {
-            validate_canvas(canvas, &node_ids)?;
+        if let Some(messages_val) = chat_obj.get("messages") {
+            let messages = array(messages_val, "chat.messages")?;
+            unique_ids(messages, "chat.messages")?;
+            for message in messages {
+                if !message["content"].is_string()
+                    || !matches!(message["role"].as_str(), Some("user" | "assistant" | "system"))
+                {
+                    return Err(corrupt("chat.messages"));
+                }
+                optional_ids(message, &["taskId"])?;
+                if let Some(created_at) = message.get("createdAt") {
+                    number(created_at, "createdAt")?;
+                }
+            }
         }
+        optional_ids(chat_val, &["agentThreadId", "originChatId"])?;
+        if let Some(gc) = chat_obj.get("googleConversation") {
+            object(gc, "googleConversation")?;
+        }
+    }
+    // Also validate optional legacy messages and composerDraft if present during transition
+    if let Some(messages_val) = project.get("messages") {
+        if let Ok(messages) = array(messages_val, "messages") {
+            unique_ids(messages, "messages")?;
+        }
+    }
+    if let Some(composer) = project.get("composerDraft") {
+        draft(composer)?;
     }
     Ok(())
 }

@@ -221,7 +221,7 @@ fn corrupt_main_never_replaces_good_backup_on_recovered_write() {
 fn future_main_is_not_hidden_by_older_backup() {
     let f = Fixture::new();
     let mut future = snapshot(9);
-    future["version"] = json!(3);
+    future["version"] = json!(4);
     let raw = f.main(&future);
     f.backup(&snapshot(4));
     assert!(f.repo.read().unwrap_err().starts_with("unsupported:"));
@@ -231,6 +231,36 @@ fn future_main_is_not_hidden_by_older_backup() {
         .unwrap_err()
         .starts_with("unsupported:"));
     assert_eq!(fs::read(&f.repo.path).unwrap(), raw);
+}
+
+#[test]
+fn snapshot_v3_validation_accepts_valid_and_rejects_corrupt() {
+    let mut v3 = snapshot(10);
+    v3["version"] = json!(3);
+    v3["projects"][0]["activeChatId"] = json!("chat-main");
+    v3["projects"][0]["chats"] = json!({
+        "chat-main": {
+            "id": "chat-main",
+            "name": "Main Chat",
+            "createdAt": 1000,
+            "updatedAt": 1000,
+            "draft": {},
+            "messages": [{"id": "m1", "role": "user", "content": "Hello"}],
+            "mainAgent": "codex",
+            "modelAllowlist": ["gpt-4o"]
+        }
+    });
+    assert!(validation::validate(&v3).is_ok());
+
+    // Rejects missing activeChatId in chats
+    let mut bad_active = v3.clone();
+    bad_active["projects"][0]["activeChatId"] = json!("chat-missing");
+    assert!(validation::validate(&bad_active).is_err());
+
+    // Rejects chat key != chat.id
+    let mut bad_key = v3.clone();
+    bad_key["projects"][0]["chats"]["chat-main"]["id"] = json!("different-id");
+    assert!(validation::validate(&bad_key).is_err());
 }
 #[test]
 fn both_corrupt_is_error_and_write_preserves_both() {

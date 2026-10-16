@@ -54,6 +54,12 @@ import {
 import { resolveCodexModel } from "./agentModelSelection.ts";
 import type { ModelSelection } from "../../domain/modelSelection.ts";
 import {
+  createTurnFreezingController,
+  type AgentActionState,
+  type TurnFreezingController,
+} from "./agentTurnFreezing.ts";
+export type { AgentActionState, TurnFreezingController } from "./agentTurnFreezing.ts";
+import {
   codexGenerationPrompt,
   codexReasoningModel,
 } from "./codexGeneration.ts";
@@ -112,6 +118,7 @@ export interface AgentConnectionState {
   usageError: string | null;
   usageCheckedAt?: number;
   canvasNodeId?: string;
+  freezingState: AgentActionState;
 }
 export interface AgentConnectionOptions {
   prepareAttachments?: typeof prepareAgentAttachments;
@@ -184,6 +191,7 @@ run_generation 通过 KK 已配置的 Provider 提交真实任务，返回任务
 用户主动添加的图片会作为附件传给你；引用画布图片时以所附原件为准。附件导入画布工具尚未接入，其他工具如返回 unsupported，不得声称已执行。不要为实现画布操作修改项目源码。
 `;
 export function createAgentConnection(options: AgentConnectionOptions = {}) {
+  const turnFreezing = createTurnFreezingController();
   const clientId = options.clientId ?? crypto.randomUUID();
   const storage = options.storage ?? safeStorage;
   storage.removeItem("canvas-agent-token");
@@ -204,6 +212,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
     models: [],
     usage: [],
     usageError: null,
+    freezingState: "idle",
   };
   const listeners = new Set<() => void>();
   let api: AgentApi | null = null;
@@ -226,6 +235,9 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
     state = { ...state, ...next };
     listeners.forEach((fn) => fn());
   };
+  turnFreezing.subscribe(() => {
+    patch({ freezingState: turnFreezing.getState().state });
+  });
   const errorText = (error: unknown) =>
     error instanceof Error ? error.message : "Agent 请求失败";
   const currentProject = () => bridge?.getSnapshot()?.projectId ?? "";
@@ -250,6 +262,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
     }
   }
   function stopTransport() {
+    turnFreezing.reset();
     toolController.abort();
     epoch++;
     approvals.clear();
@@ -397,7 +410,14 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
           // Do not execute another write until the previous receipt is confirmed.
           const run = toolQueue.then(async () => {
             if (version !== epoch || signal.aborted || toolReceiptError) return;
-            await handleTool(event.requestId, event.name, event.input);
+            await turnFreezing.awaitUnfrozen();
+            if (version !== epoch || signal.aborted || toolReceiptError) return;
+            const endStep = turnFreezing.beginStep(event.requestId);
+            try {
+              await handleTool(event.requestId, event.name, event.input);
+            } finally {
+              endStep();
+            }
           });
           toolQueue = run.catch(() => undefined);
           handledTools.set(event.requestId, run);
@@ -480,6 +500,9 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
     if (version !== epoch) return;
     if (event.status === "completed") error ??= state.error;
     approvals.clear();
+    turnFreezing.onTurnComplete(
+      event.status === "completed" ? "completed" : "failed",
+    );
     patch({
       sending: false,
       pendingApproval: null,
@@ -898,6 +921,8 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
       memoryMode?: "normal" | "none";
     },
   ): Promise<{ ok: boolean; error?: string; messageId?: string }> {
+    if (turnFreezing.isFrozen())
+      return { ok: false, error: "会话当前已暂停，请点击继续按钮恢复执行。" };
     if (input?.signal?.aborted) return { ok: false, error: "发送已取消" };
     if (toolReceiptError) return { ok: false, error: toolReceiptError };
     if (!text.trim() || state.status !== "connected" || !api)
@@ -953,6 +978,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
       threadId: conversation.threadId,
     });
     patch({ sending: true, error: null, activity: "发送中…" });
+    turnFreezing.onTurnStart();
     if (input?.memoryMode !== "none")
       void memoryService.ingestMessage(text.trim(), "user");
     try {
@@ -1075,6 +1101,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
     signal?: AbortSignal;
     validate?: () => string | undefined;
   }): Promise<string | undefined> {
+    if (turnFreezing.isFrozen()) return "会话当前已暂停，请点击继续按钮恢复执行。";
     if (input.signal?.aborted) return "发送已取消";
     if (state.sending) return "Codex 正在执行另一项任务，请等待完成。";
     if (!Number.isInteger(input.count) || input.count < 1 || input.count > 4)
@@ -1148,6 +1175,11 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
     generateFromCanvas,
     interrupt,
     resolveApproval,
+    pauseTurn: () => turnFreezing.pause(),
+    resumeTurn: () => turnFreezing.resume(),
+    isPaused: () => turnFreezing.isFrozen(),
+    getFreezingState: () => turnFreezing.getState().state,
+    turnFreezing,
     setBridge(next: AgentBridge | null) {
       bridge = next;
       if (state.status === "connected" && currentProject() !== projectId)
