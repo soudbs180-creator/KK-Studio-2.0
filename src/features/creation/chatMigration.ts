@@ -3,7 +3,6 @@
  * Guarantees zero message loss, zero attachment loss, and non-downgradable write barrier.
  */
 
-import { createHash } from "node:crypto";
 import type {
   ChatItem,
   ChatItemDraft,
@@ -187,11 +186,7 @@ function pureJsSha256(content: string | Uint8Array): string {
 }
 
 export function sha256Hex(content: string | Uint8Array): string {
-  try {
-    return createHash("sha256").update(content).digest("hex");
-  } catch {
-    return pureJsSha256(content);
-  }
+  return pureJsSha256(content);
 }
 
 function buildLegacyChats(proj: LegacyV2Project, now: number): Record<string, ChatItem> {
