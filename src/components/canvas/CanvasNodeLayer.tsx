@@ -17,7 +17,6 @@ import type { useCanvasControls } from "./useCanvasControls";
 import type { useCanvasAddMenu } from "./useCanvasAddMenu";
 import CanvasNodeItem from "./CanvasNodeItem";
 import CanvasConnections from "./CanvasConnections";
-import { canConnectTarget } from "./connectionRules";
 import { canvasOccupiedRects, canvasReferencesFor } from "./canvasReferences";
 import { CanvasImageCommandContext } from "../../features/creation/CanvasImageCommand";
 import type { ModelSelection } from "../../domain/modelSelection";
@@ -203,8 +202,37 @@ export default function CanvasNodeLayer({
     );
     pendingByParent.current[parentId] = [];
   }
+  /**
+   * 预计算 item 查找表 & 按 target 分组的参考边，避免每个节点渲染时
+   * 都对全部 edges 做 O(E) 遍历（整体从 O(N×E) 降为 O(E)）。
+   */
+  const itemById = new Map(items.map((item) => [item.id, item]));
+  const referenceEdgesByTarget = new Map<string, typeof edges>();
+  for (const edge of edges) {
+    if (edge.kind === "result") continue;
+    const group = referenceEdgesByTarget.get(edge.target) ?? [];
+    group.push(edge);
+    referenceEdgesByTarget.set(edge.target, group);
+  }
   function referencesFor(parentId: string): CanvasReference[] {
-    return canvasReferencesFor(items, edges, parentId);
+    const targetEdges = referenceEdgesByTarget.get(parentId) ?? [];
+    return targetEdges
+      .map((edge) => ({ edge, source: itemById.get(edge.source) }))
+      .filter(
+        (
+          entry,
+        ): entry is {
+          edge: (typeof edges)[number];
+          source: CanvasCollectionItem;
+        } => entry.source?.kind === "image",
+      )
+      .map(({ edge, source }) => ({
+        id: edge.id,
+        assetId: source.assetId,
+        title: source.title,
+        preview: source.preview ?? source.result?.poster ?? source.result?.src,
+        slot: source.referenceSlot,
+      }));
   }
   function addReferences(
     parentId: string,
@@ -237,6 +265,27 @@ export default function CanvasNodeLayer({
       });
   }
 
+  const handleConnectionTargetChange = (
+    sourceId: string,
+    targetId: string | null,
+  ) => {
+    setConnectionTarget(
+      targetId &&
+        canConnectTarget(items, edges, sourceId, targetId, defaultSelection)
+        ? targetId
+        : null,
+    );
+  };
+
+  const handleGenerationState = (
+    id: string,
+    phase: "loading" | "success" | "error" | "cancelled" | "offline",
+  ) => {
+    if (phase === "error" || phase === "cancelled" || phase === "offline") {
+      markPending(id, phase);
+    }
+  };
+
   return (
     <div
       className="canvas-stage"
@@ -257,20 +306,7 @@ export default function CanvasNodeLayer({
           liked={likedIds.has(item.id)}
           connectionTarget={connectionTarget === item.id}
           onConnect={onConnect}
-          onConnectionTargetChange={(sourceId, targetId) =>
-            setConnectionTarget(
-              targetId &&
-                canConnectTarget(
-                  items,
-                  edges,
-                  sourceId,
-                  targetId,
-                  defaultSelection,
-                )
-                ? targetId
-                : null,
-            )
-          }
+          onConnectionTargetChange={handleConnectionTargetChange}
           onDelete={(id) => {
             markPending(id, "cancelled");
             controls.removeNode(id);
@@ -284,7 +320,7 @@ export default function CanvasNodeLayer({
           onGenerationStart={reserveGeneratedResults}
           onAddReferences={addReferences}
           onRemoveReference={onDeleteConnection}
-          onGenerationState={markPending}
+          onGenerationState={handleGenerationState}
         />
       ))}
       <CanvasConnections

@@ -115,14 +115,20 @@ export function zoomAtPoint(
 
 export function enclosingRect(rects: ViewportRect[]): ViewportRect | null {
   if (!rects.length) return null;
-  const x = Math.min(...rects.map((rect) => rect.x));
-  const y = Math.min(...rects.map((rect) => rect.y));
-  return {
-    x,
-    y,
-    width: Math.max(...rects.map((rect) => rect.x + rect.width)) - x,
-    height: Math.max(...rects.map((rect) => rect.y + rect.height)) - y,
-  };
+  let minX = rects[0].x;
+  let minY = rects[0].y;
+  let maxX = rects[0].x + rects[0].width;
+  let maxY = rects[0].y + rects[0].height;
+  for (let i = 1; i < rects.length; i++) {
+    const r = rects[i];
+    if (r.x < minX) minX = r.x;
+    if (r.y < minY) minY = r.y;
+    const rx = r.x + r.width;
+    const ry = r.y + r.height;
+    if (rx > maxX) maxX = rx;
+    if (ry > maxY) maxY = ry;
+  }
+  return { x: minX, y: minY, width: maxX - minX, height: maxY - minY };
 }
 
 export function fitRects(

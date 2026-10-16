@@ -96,9 +96,9 @@ export function useCanvasControls({
           y: 107 + Math.floor(index / 2) * 520,
         };
       });
-      const entries = Object.entries(next).filter(([id]) =>
-        items.some((item) => item.id === id),
-      );
+      // 用 Set 替代 items.some 做 O(1) 查找，整体从 O(N×M) 降为 O(N+M)
+      const itemIds = new Set(items.map((item) => item.id));
+      const entries = Object.entries(next).filter(([id]) => itemIds.has(id));
       return entries.length === Object.keys(current).length &&
         entries.every(([id, point]) => point === current[id])
         ? current
@@ -252,27 +252,57 @@ export function useCanvasControls({
   // 用 useLayoutEffect 让"选中→高度报告→reveal"链路在首帧绘制前完成，
   // 避免编辑器挂载后（0→60 基准高度）的二次位移被用户/测试观察到。
 
+  const pendingZoomRef = useRef<{
+    pointerX: number;
+    pointerY: number;
+    factor: number;
+    rafId: number | null;
+  }>({
+    pointerX: 0,
+    pointerY: 0,
+    factor: 1,
+    rafId: null,
+  });
+
+  useEffect(() => {
+    return () => {
+      if (pendingZoomRef.current.rafId !== null) {
+        cancelAnimationFrame(pendingZoomRef.current.rafId);
+      }
+    };
+  }, []);
+
   const zoomCanvas = useCallback(
     (event: ReactWheelEvent<HTMLDivElement>): void => {
       if (isInteractiveTarget(event.target)) return;
       event.preventDefault();
-      const bounds = containerRef.current?.getBoundingClientRect();
-      if (!bounds) return;
-      const point = toSurfacePoint(containerRef.current!, {
+      const canvas = containerRef.current;
+      if (!canvas) return;
+      const point = toSurfacePoint(canvas, {
         x: event.clientX,
         y: event.clientY,
       });
-      const pointerX = point.x;
-      const pointerY = point.y;
       const zoomFactor = event.deltaY > 0 ? 0.9 : 1.1;
       skipSelectionReveal.current = true;
-      setTransform((current) =>
-        zoomAtPoint(
-          current,
-          { x: pointerX, y: pointerY },
-          current.scale * zoomFactor,
-        ),
-      );
+      const state = pendingZoomRef.current;
+      state.pointerX = point.x;
+      state.pointerY = point.y;
+      state.factor *= zoomFactor;
+
+      if (state.rafId === null) {
+        state.rafId = requestAnimationFrame(() => {
+          const { pointerX, pointerY, factor } = pendingZoomRef.current;
+          pendingZoomRef.current.factor = 1;
+          pendingZoomRef.current.rafId = null;
+          setTransform((current) =>
+            zoomAtPoint(
+              current,
+              { x: pointerX, y: pointerY },
+              current.scale * factor,
+            ),
+          );
+        });
+      }
     },
     [],
   );

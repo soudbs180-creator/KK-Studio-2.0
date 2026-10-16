@@ -182,17 +182,22 @@ export async function persistProviderConnectionsDurable(
   return options.publishCache === false
     ? commit()
     : withProviderStoreLock(true, commit);
-}
+let lastRawProviderConnections: string | null = null;
+let cachedProviderConnections: ProviderConnection[] = [];
 
 /** Browser-persisted metadata only. Credentials are never part of this record. */
 export function readProviderConnections(): ProviderConnection[] {
   if (typeof window === "undefined") return [];
   try {
-    return safeConnections(
-      JSON.parse(
-        window.localStorage.getItem(PROVIDER_CONNECTIONS_STORAGE_KEY) ?? "[]",
-      ),
-    );
+    const raw =
+      window.localStorage.getItem(PROVIDER_CONNECTIONS_STORAGE_KEY) ?? "[]";
+    if (raw === lastRawProviderConnections) {
+      return cachedProviderConnections;
+    }
+    const parsed = safeConnections(JSON.parse(raw));
+    lastRawProviderConnections = raw;
+    cachedProviderConnections = parsed;
+    return parsed;
   } catch {
     return [];
   }
@@ -204,10 +209,10 @@ export function writeProviderConnections(
   if (typeof window === "undefined") return false;
   const sanitized = sanitizeConnections(connections);
   try {
-    window.localStorage.setItem(
-      PROVIDER_CONNECTIONS_STORAGE_KEY,
-      JSON.stringify(sanitized),
-    );
+    const json = JSON.stringify(sanitized);
+    window.localStorage.setItem(PROVIDER_CONNECTIONS_STORAGE_KEY, json);
+    lastRawProviderConnections = json;
+    cachedProviderConnections = sanitized;
     return true;
   } catch {
     // Callers that submit work must fail closed if a slot cannot be recorded.

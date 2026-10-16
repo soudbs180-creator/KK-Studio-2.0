@@ -134,7 +134,7 @@ export function useCanvasHistory({
   const apply = useCallback(
     (next: CanvasHistorySnapshot): void => {
       applyingFingerprint.current = canvasHistoryFingerprint(next);
-      onItemsChange(cloneCanvasHistorySnapshot(next).items);
+      onItemsChange(structuredClone(next.items));
       setPositions({ ...next.positions });
       setEdges(next.edges.map((edge) => ({ ...edge })));
       setViewport({ ...next.viewport });

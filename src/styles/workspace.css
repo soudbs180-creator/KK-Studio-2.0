@@ -508,6 +508,10 @@
   left: 1px;
   top: 1px;
   transform-origin: 0 0;
+  /* 提示浏览器将画布 stage 提升到合成层，pan/zoom 期间跳过 paint 步骤。
+     contain:layout+style 将重排范围限制在 stage 内部。 */
+  will-change: transform;
+  contain: layout style;
 }
 .canvas-node {
   position: absolute;

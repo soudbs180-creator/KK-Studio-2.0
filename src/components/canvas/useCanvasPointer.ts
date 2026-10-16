@@ -12,6 +12,16 @@ import { surfaceScale, toSurfacePoint } from "./canvasSurface";
 
 export type CanvasTool = "select" | "hand";
 type SelectionRect = { x: number; y: number; width: number; height: number };
+
+/** 缓存框选开始时的节点 rect，避免拖动中每帧 DOM 查询造成 layout thrashing。 */
+type CachedNodeRect = {
+  nodeId: string;
+  left: number;
+  right: number;
+  top: number;
+  bottom: number;
+};
+
 type Gesture = {
   kind: "pan" | "node" | "marquee";
   pointerId: number;
@@ -23,6 +33,10 @@ type Gesture = {
   additive: boolean;
   snap: boolean;
   captureTarget?: Element;
+  /** 框选时缓存的节点 rects，在 pointerdown 时一次性读取 */
+  cachedNodeRects?: CachedNodeRect[];
+  /** 拖动周期内缓存的 surfaceScale，避免每帧强制 reflow */
+  cachedScale?: number;
 };
 export const CANVAS_SNAP_GRID = 16;
 
@@ -150,6 +164,33 @@ export function useCanvasPointer({
     };
   }, []);
 
+  /**
+   * 在框选开始时（pointerdown 位于空白区域）一次性读取所有节点 rect，
+   * 整个拖动周期直接读缓存，避免每帧 querySelectorAll+getBoundingClientRect
+   * 造成的 layout thrashing。
+   */
+  function buildNodeRectCache(canvas: HTMLDivElement): CachedNodeRect[] {
+    const result: CachedNodeRect[] = [];
+    canvas
+      .querySelectorAll<HTMLElement>("[data-canvas-node]")
+      .forEach((node) => {
+        const nodeId = node.dataset.nodeId;
+        if (!nodeId) return;
+        const card = node.querySelector<HTMLElement>(
+          ".image-preview,.video-placeholder,.demo-result-node",
+        );
+        const rect = (card ?? node).getBoundingClientRect();
+        result.push({
+          nodeId,
+          left: rect.left,
+          right: rect.right,
+          top: rect.top,
+          bottom: rect.bottom,
+        });
+      });
+    return result;
+  }
+
   function start(event: PointerEvent<HTMLDivElement>, nodeId?: string): void {
     if (
       isInteractiveTarget(event.target) ||
@@ -166,6 +207,12 @@ export function useCanvasPointer({
       kind === "node" && event.target instanceof Element
         ? event.target
         : (containerRef.current ?? undefined);
+    const canvas = containerRef.current;
+    // 框选时预读所有节点 rect（仅一次 layout，不在 pointermove 中重复）
+    const cachedNodeRects =
+      kind === "marquee" && canvas ? buildNodeRectCache(canvas) : undefined;
+    // 缓存 surfaceScale，整个拖动周期无需重复触发 reflow
+    const cachedScale = canvas ? surfaceScale(canvas) : 1;
     dragRef.current = {
       kind,
       pointerId: event.pointerId,
@@ -177,6 +224,8 @@ export function useCanvasPointer({
       additive: event.shiftKey,
       snap: snapEnabled && !event.ctrlKey && !event.metaKey,
       captureTarget,
+      cachedNodeRects,
+      cachedScale,
     };
     setDragging(kind);
     (kind === "node" ? event.currentTarget : containerRef.current)?.focus({
@@ -201,7 +250,8 @@ export function useCanvasPointer({
     event.preventDefault();
     const dx = event.clientX - drag.client.x;
     const dy = event.clientY - drag.client.y;
-    const displayScale = surfaceScale(canvas);
+    // 使用拖动开始时缓存的 scale，不再每帧强制 reflow
+    const displayScale = drag.cachedScale ?? surfaceScale(canvas);
     const logicalDx = dx / displayScale;
     const logicalDy = dy / displayScale;
     if (Math.hypot(dx, dy) <= 4) return;
@@ -245,23 +295,37 @@ export function useCanvasPointer({
       height: (bottom - top) / displayScale,
     });
     const ids = drag.additive ? new Set(drag.selection) : new Set<string>();
-    canvas
-      .querySelectorAll<HTMLElement>("[data-canvas-node]")
-      .forEach((node) => {
-        // Select visible card bodies; invisible composer shells must not capture the marquee.
-        const card = node.querySelector(
-          ".image-preview,.video-placeholder,.demo-result-node",
-        );
-        const rect = (card ?? node).getBoundingClientRect();
+    // 读缓存 rects，不触发 DOM 查询
+    const rects = drag.cachedNodeRects;
+    if (rects) {
+      for (const cached of rects) {
         if (
-          rect.left < right &&
-          rect.right > left &&
-          rect.top < bottom &&
-          rect.bottom > top &&
-          node.dataset.nodeId
+          cached.left < right &&
+          cached.right > left &&
+          cached.top < bottom &&
+          cached.bottom > top
         )
-          ids.add(node.dataset.nodeId);
-      });
+          ids.add(cached.nodeId);
+      }
+    } else {
+      // 降级：无缓存时保持原逻辑
+      canvas
+        .querySelectorAll<HTMLElement>("[data-canvas-node]")
+        .forEach((node) => {
+          const card = node.querySelector(
+            ".image-preview,.video-placeholder,.demo-result-node",
+          );
+          const rect = (card ?? node).getBoundingClientRect();
+          if (
+            rect.left < right &&
+            rect.right > left &&
+            rect.top < bottom &&
+            rect.bottom > top &&
+            node.dataset.nodeId
+          )
+            ids.add(node.dataset.nodeId);
+        });
+    }
     // Keep composers closed during selection to avoid changing the geometry being measured.
     setSelectedNode(null);
     setSelectedIds(ids);

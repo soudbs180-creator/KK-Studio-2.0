@@ -1,5 +1,5 @@
 import CanvasHud from "./canvas/CanvasHud";
-import { useEffect, type CSSProperties } from "react";
+import { useCallback, useEffect, type CSSProperties } from "react";
 import CanvasNavigation from "./canvas/CanvasNavigation";
 import { deleteConnection, restoreConnection } from "../domain/canvasGraph";
 import CanvasNodeLayer from "./canvas/CanvasNodeLayer";
@@ -115,6 +115,22 @@ export default function Canvas({
     return () => window.removeEventListener("kk:focus-node", locate);
   }, [locateNode]);
 
+  const handleConfigure = useCallback(() => {
+    onOpen?.("settings/providers");
+  }, [onOpen]);
+
+  const handleDeleteConnection = useCallback(
+    (id: string) => {
+      setEdges((current) => {
+        const edge = current.find((edge) => edge.id === id);
+        if (edge) setRemovedEdge(edge);
+        return deleteConnection(current, id);
+      });
+      containerRef.current?.focus({ preventScroll: true });
+    },
+    [setEdges, setRemovedEdge, containerRef],
+  );
+
   return (
     <ImageCompareProvider key={projectId} items={items} active={!covered}>
       <div
@@ -184,17 +200,13 @@ export default function Canvas({
           onLocalGenerationSettled={history.settleLocalGeneration}
           likedIds={likedIds}
           onToggleLike={onToggleLike}
-          onConfigure={() => onOpen?.("settings/providers")}
+          onConfigure={handleConfigure}
           addMenu={addMenu}
           edges={edges}
           showConnections={preferences.showConnections}
           onConnect={connect}
           onConnectionNotice={setConnectionNotice}
-          onDeleteConnection={(id) => {
-            setRemovedEdge(edges.find((edge) => edge.id === id) ?? null);
-            setEdges((current) => deleteConnection(current, id));
-            containerRef.current?.focus({ preventScroll: true });
-          }}
+          onDeleteConnection={handleDeleteConnection}
         />
         <ImageCompareControls />
 

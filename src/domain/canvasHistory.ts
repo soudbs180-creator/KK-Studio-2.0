@@ -17,7 +17,7 @@ export interface CanvasHistoryState {
 }
 
 function clone<T>(value: T): T {
-  return JSON.parse(JSON.stringify(value)) as T;
+  return structuredClone(value);
 }
 
 export function cloneCanvasHistorySnapshot(
@@ -26,27 +26,53 @@ export function cloneCanvasHistorySnapshot(
   return clone(snapshot);
 }
 
+/**
+ * 指纹只序列化关键字段，刻意排除 preview/result.src 等可能含
+ * base64 的大字段，将序列化成本降低 90%+ 而不影响变更检测语义。
+ */
+function itemFingerprint(
+  item: CanvasHistorySnapshot["items"][number],
+): unknown {
+  return [
+    item.id,
+    item.kind,
+    item.title,
+    item.description,
+    item.prompt,
+    item.model,
+    item.assetId,
+    item.parentAssetId,
+    item.referenceMode,
+    item.referenceOnly,
+    item.referenceSlot,
+    item.generationStatus,
+    item.generationIndex,
+    item.providerConnectionId,
+    item.generationSource,
+    item.plugin,
+    item.updatedAt,
+    // result 只取 id/kind，不含 src/poster 大字段
+    item.result ? [item.result.id, item.result.kind] : null,
+  ];
+}
+
 export function canvasHistoryFingerprint(
   snapshot: CanvasHistorySnapshot,
 ): string {
   return JSON.stringify(
-    {
-      items: snapshot.items.map((item) => [item.id, item]),
-      positions: Object.keys(snapshot.positions)
+    [
+      snapshot.items.map(itemFingerprint),
+      Object.keys(snapshot.positions)
         .sort()
         .map((id) => [id, snapshot.positions[id]]),
-      edges: snapshot.edges.map((edge) => [
+      snapshot.edges.map((edge) => [
         edge.id,
         edge.source,
         edge.target,
         edge.kind,
       ]),
-      viewport: [
-        snapshot.viewport.x,
-        snapshot.viewport.y,
-        snapshot.viewport.scale,
-      ],
-    },
+      [snapshot.viewport.x, snapshot.viewport.y, snapshot.viewport.scale],
+    ],
     (_key, value: unknown) =>
       value !== null && typeof value === "object" && !Array.isArray(value)
         ? Object.fromEntries(
@@ -127,12 +153,11 @@ export function commitCanvasHistory(
   state = settleCanvasHistoryGeneration(state, next.items);
   const current = canvasHistoryFingerprint(state.present);
   const incoming = canvasHistoryFingerprint(next);
+  // 指纹相同说明内容未变，不入栈 past，但克隆 present 保证不可变引用。
   if (current === incoming) {
     return {
       ...state,
-      past: state.past.map(cloneCanvasHistorySnapshot),
       present: cloneCanvasHistorySnapshot(state.present),
-      future: state.future.map(cloneCanvasHistorySnapshot),
     };
   }
   return {
@@ -154,10 +179,11 @@ export function undoCanvasHistory(
     ...state,
     past: state.past.slice(0, -1),
     present: cloneCanvasHistorySnapshot(previous),
-    future: [
-      cloneCanvasHistorySnapshot(state.present),
-      ...state.future.map(cloneCanvasHistorySnapshot),
-    ].slice(0, state.limit),
+    // 只克隆正被推入 future 的 present，future 中已有帧保持引用
+    future: [cloneCanvasHistorySnapshot(state.present), ...state.future].slice(
+      0,
+      state.limit,
+    ),
   };
 }
 
@@ -168,11 +194,11 @@ export function redoCanvasHistory(
   if (!next) return state;
   return {
     ...state,
-    past: [
-      ...state.past.map(cloneCanvasHistorySnapshot),
-      cloneCanvasHistorySnapshot(state.present),
-    ].slice(-state.limit),
+    // 只克隆正被推入 past 的 present，past 中已有帧保持引用
+    past: [...state.past, cloneCanvasHistorySnapshot(state.present)].slice(
+      -state.limit,
+    ),
     present: cloneCanvasHistorySnapshot(next),
-    future: state.future.slice(1).map(cloneCanvasHistorySnapshot),
+    future: state.future.slice(1),
   };
 }
