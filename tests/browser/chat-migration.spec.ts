@@ -9,7 +9,7 @@ import {
   type CreationSnapshot,
 } from "../../src/features/creation/model";
 import { startAgentServer } from "../helpers/agentServer";
-import { expandSidebar } from "./helpers";
+import { expandSidebar, waitForConversationPanelSettled } from "./helpers";
 
 async function stored(page: Page): Promise<CreationSnapshot> {
   return page.evaluate(
@@ -155,7 +155,14 @@ test("ordinary old chats edit and send within their own canonical scope and reop
       "离线历史 B",
     );
     await page.setViewportSize({ width: 390, height: 480 });
+    await page.getByRole("button", { name: "打开对话", exact: true }).click();
+    await waitForConversationPanelSettled(page);
+    await expect(input).toBeVisible();
     await expect(input).toBeEnabled();
+    await expect(input).toHaveValue("编辑后的 B");
+    await expect(page.locator(".conversation-messages")).toContainText(
+      "离线历史 B",
+    );
     await page.screenshot({
       path: info.outputPath("canonical-chats-reopened-phone.png"),
     });

@@ -18,6 +18,108 @@ import { clearSentPendingDraft } from "../../src/features/agent/homeAgentRecover
 import { createProject } from "../../src/features/creation/model.ts";
 import { createAgentHost } from "../../src/features/agent/agentHost.ts";
 
+test("reconnect persists thinner remote history without losing canonical identities or metadata", async (t) => {
+  let project = createProject({
+    prompt: "",
+    model: "",
+    kind: "text",
+    attachments: [],
+  });
+  const chat = project.chats![project.activeChatId!];
+  chat.mainAgent = "codex";
+  chat.agentThreadId = "thread-1";
+  const roles = ["user", "system", "error", "assistant"] as const;
+  chat.messages = roles.map((role) => ({
+    id: `local-${role}`,
+    clientMessageId: `client-${role}`,
+    threadId: "thread-1",
+    role,
+    content: `saved ${role}`,
+    attachments: [{ id: `attachment-${role}`, assetId: `asset-${role}` }],
+    assetIds: [`asset-${role}`],
+    opaqueMetadata: { source: role, retained: true },
+  }));
+  const originals = structuredClone(chat.messages);
+  const harness = createHarness({
+    conversation: readyConversation().data,
+    codex: { busy: false },
+  });
+  let saves = 0;
+  const conn = createAgentConnection({
+    storage: memoryStorage(),
+    eventSourceFactory: harness.eventSourceFactory,
+    fetcher: (async (input) => {
+      if (new URL(String(input)).pathname.endsWith("/threads/thread-1")) {
+        harness.sources.at(-1)!.emit({
+          type: "chat_message",
+          data: {
+            message: {
+              id: "remote-user",
+              clientMessageId: "client-user",
+              threadId: "thread-1",
+              role: "user",
+              text: "restored user",
+            },
+          },
+        });
+        return jsonResponse(200, {
+          ok: true,
+          conversation: readyConversation().data,
+          messages: roles.map((role) => ({
+            id: role === "user" ? "remote-user" : `local-${role}`,
+            clientMessageId: `client-${role}`,
+            threadId: "thread-1",
+            role,
+            text: `restored ${role}`,
+          })),
+        });
+      }
+      return connectionReadyResponse();
+    }) as typeof fetch,
+  });
+  conn.setBridge(
+    createAgentHost({
+      getProject: () => project,
+      getProjects: () => [project],
+      commit: (next) => {
+        project = next;
+        saves++;
+      },
+      generate: async () => ({}),
+    }),
+  );
+  t.after(() => conn.disconnect());
+  for (let attempt = 0; attempt < 2; attempt++) {
+    await conn.connect();
+    assert.equal(
+      conn.getState().status,
+      "connected",
+      conn.getState().error ?? "",
+    );
+    const saved = project.chats![chat.id].messages;
+    assert.equal(saved.length, originals.length);
+    for (const original of originals) {
+      const restored = saved.find(
+        (message) => message.clientMessageId === original.clientMessageId,
+      )!;
+      assert.equal(
+        restored.id,
+        original.id,
+        `${original.role} keeps its canonical id`,
+      );
+      assert.deepEqual(restored.attachments, original.attachments);
+      assert.deepEqual(restored.assetIds, original.assetIds);
+      assert.deepEqual(restored.opaqueMetadata, original.opaqueMetadata);
+      assert.equal(restored.content, `restored ${original.role}`);
+    }
+    conn.disconnect();
+  }
+  assert.ok(
+    saves >= 2,
+    "real AgentHost canonical persistence ran on reconnect",
+  );
+});
+
 test("migrated legacy-codex resumes its exact old thread while original empty chats receive separate ownership", async (t) => {
   let project = createProject({
     prompt: "",

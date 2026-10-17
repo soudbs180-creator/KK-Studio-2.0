@@ -1,5 +1,5 @@
 import { ConversationResizeHandle } from "./ResizeHandle";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useConversationOverlay } from "./useConversationOverlay";
 import useConversationAttachments from "./useConversationAttachments";
 import type { CreationDraft } from "../features/creation/model";
@@ -56,6 +56,7 @@ export default function ConversationPanel({
     prompt?: string;
   } | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const draftRevision = useRef(0);
   const agentBusy = Boolean(agent?.sending || agent?.connecting);
   const modelDisabled =
     Boolean(executionDisabledReason) || submitting || agentBusy;
@@ -63,6 +64,7 @@ export default function ConversationPanel({
     project?.id ?? "workspace",
     project?.activeChatId ?? null,
   ]);
+  useEffect(() => setSubmitting(false), [draftKey]);
   const { channel, agentSelection, agentModel, changeChannel, selectModel } =
     useConversationSelection({
       projectId: draftKey,
@@ -96,6 +98,7 @@ export default function ConversationPanel({
   function updateDraft(patch: Partial<CreationDraft>): void {
     if (executionDisabledReason) return;
     if (!onDraftChange || !composerDraft) return;
+    draftRevision.current++;
     onDraftChange({ ...composerDraft, ...patch, updatedAt: Date.now() });
   }
   function changeInput(prompt: string): void {
@@ -125,6 +128,9 @@ export default function ConversationPanel({
   });
   const directDisabledReason = getDisabledReason(directState);
   const submitMessage = useConversationSubmit({
+    draftKey,
+    input,
+    getDraftRevision: () => draftRevision.current,
     submitting,
     setSubmitting,
     agentActive,

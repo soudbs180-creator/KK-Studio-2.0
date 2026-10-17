@@ -85,6 +85,7 @@ export default function ConversationComposerRegion({
       onDraftChange={onDraftChange}
       composer={
         <ConversationComposer
+          key={draftKey}
           input={input}
           onInputChange={onInputChange}
           onSubmitMessage={onSubmitMessage}

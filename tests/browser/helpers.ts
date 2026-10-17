@@ -3,6 +3,8 @@ import {
   CREATION_STORAGE_KEY,
   createProject,
   emptySnapshot,
+  projectChatView,
+  serializeCreationSnapshot,
 } from "../../src/features/creation/model";
 import { BASE_CANVAS_ITEMS } from "../../src/domain/canvasItems";
 import { createProjectCanvas } from "../../src/domain/projectCanvas";
@@ -136,14 +138,15 @@ export async function openSeededProject(page: Page): Promise<void> {
     canvas: createProjectCanvas(items),
     messages: [],
   };
-  const snapshot = {
+  const snapshot = serializeCreationSnapshot({
     ...emptySnapshot(),
+    version: 3,
     // Home drafts may already have been saved to IndexedDB in this context.
     // The local recovery copy only wins when its revision is newer.
     revision: Date.now(),
     activeProjectId: project.id,
-    projects: [project],
-  };
+    projects: [projectChatView(project)],
+  });
   await page.evaluate(({ key, value }) => localStorage.setItem(key, value), {
     key: CREATION_STORAGE_KEY,
     value: JSON.stringify(snapshot),

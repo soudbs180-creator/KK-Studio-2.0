@@ -208,6 +208,16 @@ run_generation 通过 KK 已配置的 Provider 提交真实任务，返回任务
 用户明确要求 Codex/ChatGPT 内置生图、或选择 Codex 图片入口时，可直接使用内置 imagegen/image_generation 工具，KK 会读取完成事件并将图片归档到画布；这使用 Codex 账号额度，不需要生成 API Key。必须实际调用内置工具，不能用脚本绘图冒充。
 用户主动添加的图片会作为附件传给你；引用画布图片时以所附原件为准。附件导入画布工具尚未接入，其他工具如返回 unsupported，不得声称已执行。不要为实现画布操作修改项目源码。
 `;
+function mergeRetainedMessage(
+  previous: AgentChatItem | undefined,
+  incoming: AgentChatItem,
+): AgentChatItem {
+  return {
+    ...previous,
+    ...mergeAgentChatItem(previous, incoming),
+    id: previous?.id ?? incoming.id,
+  };
+}
 function mergeHistory(
   saved: AgentChatItem[],
   remote: AgentChatItem[],
@@ -223,7 +233,7 @@ function mergeHistory(
         ),
     );
     if (index < 0) messages.push(item);
-    else messages[index] = mergeAgentChatItem(messages[index], item);
+    else messages[index] = mergeRetainedMessage(messages[index], item);
   }
   return messages;
 }
@@ -406,9 +416,9 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
     patch({
       messages: existing
         ? state.messages.map((x) =>
-            x === existing ? mergeAgentChatItem(x, item) : x,
+            x === existing ? mergeRetainedMessage(x, item) : x,
           )
-        : [...state.messages, mergeAgentChatItem(undefined, item)],
+        : [...state.messages, mergeRetainedMessage(undefined, item)],
     });
     void persistMessages().catch(() => undefined);
   }
@@ -934,9 +944,9 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
         throw new Error(
           "服务已有其他会话，未创建或替换。请在原项目继续，或明确点击新建 Agent 会话。",
         );
-      await activeApi.activate();
-      if (!isCurrent(version)) return;
       await activeApi.postState(bridge?.getSnapshot() ?? null);
+      if (!isCurrent(version)) return;
+      await activeApi.activate();
       if (!isCurrent(version)) return;
       const rememberOwnership = async (
         conversation?: AgentConversationState | null,

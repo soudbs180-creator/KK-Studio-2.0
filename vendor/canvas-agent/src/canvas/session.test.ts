@@ -4,6 +4,143 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import { CanvasSession } from "./session.js";
+import type { ChatScope } from "./chat-scope.js";
+import { createAgentConnection, type EventSourceLike } from "../../../../src/features/agent/agentConnection.ts";
+
+test("real scoped client reconnect restores the running turn, visible approval and interrupt without a listener or provider", async (t) => {
+    const chat = { projectId: "project", chatId: "chat-a" };
+    const session = new CanvasSession("thread-1", { "thread-1": { ...chat, epoch: "persisted" } });
+    const scopes: ChatScope[] = [];
+    const responses: FakeSseResponse[] = [];
+    let approvals = 0, interrupts = 0, mutations = 0;
+    const conn = createAgentConnection({
+        clientId: "window",
+        storage: { getItem: () => null, setItem: () => undefined, removeItem: () => undefined },
+        eventSourceFactory: url => {
+            const source: EventSourceLike = { onmessage: null, onerror: null, close: () => response.close() };
+            const response = new FakeSseResponse(frame => source.onmessage?.(frame));
+            responses.push(response);
+            const parsed = new URL(url);
+            scopes.push(JSON.parse(parsed.searchParams.get("scope")!));
+            queueMicrotask(() => session.openEvents(parsed, response as unknown as ServerResponse, "thread-1"));
+            return source;
+        },
+        fetcher: (async (input, init) => {
+            const path = new URL(String(input)).pathname;
+            const scope = JSON.parse(new Headers(init?.headers).get("x-canvas-agent-scope") ?? "null");
+            const body = init?.body ? JSON.parse(String(init.body)) : {};
+            try {
+                if (path === "/config") return Response.json({ ok: true, protocolVersion: 7 });
+                if (path === "/canvas/state") session.updateState(body, "window");
+                else session.assertClientScope("window", scope);
+                if (path === "/canvas/activate") session.activateClient("window");
+                if (path === "/agent/codex/threads/thread-1") {
+                    session.assertThreadScope("window", scope, "thread-1");
+                    return Response.json({ ok: true, conversation: session.conversationStateSnapshot, messages: [] });
+                }
+                if (path === "/agent/codex/approval") {
+                    session.assertTurnScope("window", scope);
+                    assert.equal(body.requestId, "approval-1");
+                    approvals++;
+                    session.trackCodexEvent("codex_approval_resolved", body);
+                    session.emitThread("codex_approval_resolved", "thread-1", body);
+                }
+                if (path === "/agent/codex/interrupt") {
+                    session.assertTurnScope("window", scope);
+                    assert.equal(body.threadId, "thread-1");
+                    interrupts++;
+                }
+                return Response.json({ ok: true, data: [] });
+            } catch (error) {
+                return Response.json({ ok: false, error: String(error) }, { status: 409 });
+            }
+        }) as typeof fetch,
+    });
+    conn.setBridge({
+        getChatScope: () => chat,
+        getSnapshot: () => ({ projectId: "project", threadId: "thread-1", title: "fixture", nodes: [], connections: [], selectedNodeIds: [], viewport: { x: 0, y: 0, scale: 1 } }),
+        readAgentThread: () => "thread-1",
+        applyOps: () => { mutations++; return { applied: [], rejected: [] }; },
+    });
+    t.after(() => conn.disconnect());
+    await conn.connect();
+    assert.equal(conn.getState().status, "connected", conn.getState().error ?? "");
+    session.bindClient("window", scopes[0]);
+    session.markConversationRunning("thread-1");
+    session.setCodexState({ busy: true, threadId: "thread-1", turnId: "turn-1" });
+    const approval = { requestId: "approval-1", threadId: "thread-1", turnId: "turn-1", method: "shell", scope: scopes[0] };
+    session.trackCodexEvent("codex_approval", approval);
+    session.emitThread("codex_approval", "thread-1", approval);
+    assert.equal(conn.getState().pendingApproval?.requestId, "approval-1");
+    conn.disconnect();
+    await conn.connect();
+    assert.notEqual(scopes[1].epoch, scopes[0].epoch);
+    assert.equal(conn.getState().status, "connected", conn.getState().error ?? "");
+    assert.equal(conn.getState().sending, true);
+    assert.equal(conn.getState().conversation?.threadId, "thread-1");
+    assert.equal(conn.getState().conversation?.status, "running");
+    assert.equal(conn.getState().pendingApproval?.requestId, "approval-1");
+    responses[1].write(`event: tool_call\ndata: ${JSON.stringify({ requestId: "stale", name: "canvas_apply_ops", input: { ops: [] }, scope: scopes[0], threadId: "thread-1", turnId: "turn-1" })}\n\n`);
+    assert.equal(mutations, 0, "the new client ignores late writes from the old epoch");
+    session.emitThread("agent_event", "thread-1", { turnId: "turn-1", type: "item.completed", item: { id: "answer", type: "agent_message", text: "resumed stream" } });
+    assert.ok(conn.getState().messages.some(message => message.text === "resumed stream"));
+    assert.deepEqual(await conn.resolveApproval("accept"), { ok: true });
+    assert.equal(conn.getState().pendingApproval, null);
+    assert.equal(approvals, 1);
+    assert.deepEqual(await conn.interrupt(), { ok: true });
+    assert.equal(interrupts, 1);
+    assert.match(conn.getState().activity, /已请求停止/);
+});
+
+test("scoped running turn reconnect restores controls and events only for its proven client/chat/thread", async (t) => {
+    const original = { projectId: "project", chatId: "chat-a", epoch: "old" };
+    const restored = { ...original, epoch: "reconnected" };
+    const session = new CanvasSession("thread-1", { "thread-1": original });
+    const client = connect(session, "window", "thread-1", original);
+    const frozen = { ...snapshot("project"), scope: original, threadId: "thread-1", nodes: [{ id: "accepted-canvas", type: "text", position: { x: 0, y: 0 }, width: 100, height: 100 }] };
+    session.updateState(frozen, "window");
+    session.bindClient("window", original);
+    session.setCodexState({ busy: true, threadId: "thread-1", turnId: "turn-1" });
+    const approval = { requestId: "approval-1", threadId: "thread-1", turnId: "turn-1", scope: original, method: "shell" };
+    session.trackCodexEvent("codex_approval", approval);
+    session.emitThread("agent_event", "thread-1", { turnId: "turn-1", type: "item.updated", item: { id: "reasoning", type: "reasoning", text: "still running" } });
+    const oldRequest = session.callTool("canvas_create_text_node", { text: "accepted once" }).then(() => "unexpected success", error => String(error));
+    const oldCall = client.event("tool_call") as Record<string, unknown>;
+    const reconnected = connect(session, "window", "thread-1", restored);
+    t.after(() => { client.close(); reconnected.close(); });
+    session.updateState({ ...snapshot("project"), scope: restored }, "window");
+    assert.throws(() => session.assertTurnScope("window", restored), /其他聊天|连接/);
+    session.updateState({ ...snapshot("project"), scope: restored, threadId: "wrong-thread" }, "window");
+    assert.throws(() => session.assertTurnScope("window", restored), /其他聊天|连接/);
+    session.updateState({ ...snapshot("project"), scope: restored, threadId: "thread-1", nodes: [{ ...frozen.nodes[0], id: "later-canvas" }] }, "window");
+    assert.deepEqual(session.assertTurnScope("window", restored), restored, "approval and interrupt share the restored turn gate");
+    assert.deepEqual(session.codexEventScope, { scope: restored, threadId: "thread-1", turnId: "turn-1", sourceClientId: "window" });
+    assert.deepEqual(session.codexPendingApprovals[0].scope, restored);
+    assert.ok(reconnected.events("codex_approval").some(event => JSON.stringify(field(event, "scope")) === JSON.stringify(restored)));
+    assert.ok(reconnected.events("agent_event").some(event => JSON.stringify(field(event, "scope")) === JSON.stringify(restored) && field(field(event, "item"), "text") === "still running"));
+    assert.equal(reconnected.events("tool_call").length, 0, "an accepted tool write is never replayed");
+    assert.match(await oldRequest, /未确认|断开|连接/);
+    assert.equal(session.resolveResult("window", { requestId: String(oldCall.requestId), scope: original, threadId: "thread-1", turnId: "turn-1", result: { ok: true } }), false);
+    assert.equal(JSON.stringify(await session.callTool("canvas_get_state", {})).includes("accepted-canvas"), true);
+    assert.equal(JSON.stringify(await session.callTool("canvas_get_state", {})).includes("later-canvas"), false);
+    assert.throws(() => session.assertTurnScope("window", original), /聊天|连接/);
+    const next = session.callTool("canvas_create_text_node", { text: "new request" });
+    const call = reconnected.event("tool_call") as Record<string, unknown>;
+    assert.deepEqual(call.scope, restored);
+    assert.equal(session.resolveResult("window", { requestId: String(call.requestId), scope: original, threadId: "thread-1", turnId: "turn-1", result: {} }), false);
+    assert.equal(session.resolveResult("window", { requestId: String(call.requestId), scope: restored, threadId: "thread-1", turnId: "wrong-turn", result: {} }), false);
+    assert.equal(session.resolveResult("window", { requestId: String(call.requestId), scope: restored, threadId: "thread-1", turnId: "turn-1", result: { ok: true } }), true);
+    assert.deepEqual(await next, { ok: true });
+    const stranger = connect(session, "other-window", "thread-1", restored);
+    t.after(() => stranger.close());
+    session.updateState({ ...snapshot("project"), scope: restored, threadId: "thread-1" }, "other-window");
+    assert.throws(() => session.assertTurnScope("other-window", restored), /其他聊天/);
+    const otherChat = { ...restored, chatId: "chat-b", epoch: "other-chat" };
+    const switched = connect(session, "window", "thread-1", otherChat);
+    t.after(() => switched.close());
+    assert.throws(() => session.updateState({ ...snapshot("project"), scope: otherChat, threadId: "thread-1" }, "window"), /其他聊天/);
+    assert.throws(() => session.assertTurnScope("window", otherChat), /聊天|连接/);
+});
 
 test("thread ownership receipt survives restart and rejects another chat claiming it", () => {
     const scope = { projectId: "project", chatId: "legacy-codex", epoch: "old-connection" };
@@ -582,9 +719,11 @@ test("切换活动线程会清除上一线程的实时快照", (t) => {
 });
 
 /** 创建用于测试的画布 SSE 连接。 */
-function connect(session: CanvasSession, clientId: string, activeThreadId = "") {
+function connect(session: CanvasSession, clientId: string, activeThreadId = "", scope?: ChatScope) {
     const response = new FakeSseResponse();
-    session.openEvents(new URL(`http://127.0.0.1/events?clientId=${clientId}`), response as unknown as ServerResponse, activeThreadId);
+    const url = new URL(`http://127.0.0.1/events?clientId=${clientId}`);
+    if (scope) url.searchParams.set("scope", JSON.stringify(scope));
+    session.openEvents(url, response as unknown as ServerResponse, activeThreadId);
     return response;
 }
 
@@ -602,6 +741,10 @@ function field(value: unknown, key: string) {
 class FakeSseResponse extends EventEmitter {
     private chunks: string[] = [];
 
+    constructor(private readonly onFrame?: (frame: { type: string; data: string }) => void) {
+        super();
+    }
+
     /** 模拟写入响应头。 */
     writeHead() {
         return this;
@@ -610,6 +753,9 @@ class FakeSseResponse extends EventEmitter {
     /** 保存写入的 SSE 文本块。 */
     write(chunk: string) {
         this.chunks.push(chunk);
+        const type = chunk.split("\n").find(line => line.startsWith("event: "))?.slice(7);
+        const data = chunk.split("\n").find(line => line.startsWith("data: "))?.slice(6);
+        if (type && data) this.onFrame?.({ type, data });
         return true;
     }
 

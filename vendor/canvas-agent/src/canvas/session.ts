@@ -368,9 +368,40 @@ export class CanvasSession {
             if (connectedScope && !sameScope(connectedScope, state.scope)) throw new Error("聊天 scope 与连接不一致。");
             if (state.projectId !== state.scope.projectId) throw new Error("画布与聊天身份不一致。");
         }
+        const previousOwner = state.threadId ? this.threadScopes.get(state.threadId) : undefined;
         if (state.scope && state.threadId) this.recordThreadScope(state.scope, state.threadId);
         this.canvasStates.set(targetClientId, state);
+        this.restoreTurnConnection(targetClientId, state, previousOwner);
         logger.debug("Canvas state updated", { clientId: targetClientId, nodes: state.nodes?.length || 0, connections: state.connections?.length || 0 });
+    }
+
+    /** Restore only a proven running turn's transport; its canvas and accepted writes stay frozen. */
+    private restoreTurnConnection(clientId: string, state: CanvasSnapshot, owner?: ChatScope) {
+        const previous = this.boundScope;
+        const scope = state.scope;
+        if (!previous || !scope || sameScope(previous, scope) || !this.codexState.busy || clientId !== this.boundClientId || !state.threadId || state.threadId !== this.codexState.threadId || !owner || !sameChat(owner, previous) || !sameChat(previous, scope) || !sameScope(this.clientScopes.get(clientId), scope)) return;
+        this.boundScope = scope;
+        this.pending.forEach((request, requestId) => {
+            if (request.clientId !== clientId || !sameScope(request.scope, previous)) return;
+            this.pending.delete(requestId);
+            request.reject(new Error("旧连接工具的执行结果未确认，未重放；请先核对原操作状态。"));
+        });
+        this.turnAttachments.forEach(attachment => {
+            if (attachment.clientId === clientId && sameScope(attachment.scope, previous)) attachment.scope = scope;
+        });
+        this.pendingApprovals.forEach((approval, requestId) => {
+            if (String(approval.threadId || approval.thread_id || "") !== state.threadId || (approval.turnId && approval.turnId !== this.codexState.turnId)) return;
+            const restored = { ...approval, scope };
+            this.pendingApprovals.set(requestId, restored);
+            sendEvent(this.clients.get(clientId)!, "codex_approval", restored);
+        });
+        this.codexReplayEvents.forEach((event, key) => {
+            if (!sameScope(event.payload.scope as ChatScope | undefined, previous)) return;
+            const restored = { ...event, payload: { ...event.payload, scope } };
+            this.codexReplayEvents.set(key, restored);
+            sendEvent(this.clients.get(clientId)!, restored.type, restored.payload);
+        });
+        if (this.conversationState.threadId === state.threadId) this.updateConversation({ scope });
     }
 
     /** 将指定网页设为最近激活的工具目标。 */

@@ -2446,10 +2446,6 @@ export default function App() {
           ...nextProject,
           prompt: input.prompt,
           attachments: input.attachments,
-          composerDraft:
-            current!.composerDraft.prompt === input.prompt
-              ? { ...current!.composerDraft, prompt: "", updatedAt: Date.now() }
-              : current!.composerDraft,
           messages: [
             ...current!.messages,
             {
@@ -2507,7 +2503,9 @@ export default function App() {
       }
       if (
         signal?.aborted ||
-        (projectId && activeProjectIdRef.current !== projectId)
+        (request.origin !== "chat" &&
+          projectId &&
+          activeProjectIdRef.current !== projectId)
       ) {
         cancelTask(appended.task.id);
         return "已取消提交，任务未发送。";
@@ -2719,13 +2717,48 @@ export default function App() {
     });
     return error ?? true;
   }
-  function handleProjectDraftChange(draft: CreationDraft): void {
+  function handleProjectDraftChange(
+    draft: CreationDraft,
+    expected?: CreationDraft,
+  ): void {
     if (!activeProject) return;
-    updateProject(activeProject.id, (project) => ({
-      ...project,
-      composerDraft: { ...draft, updatedAt: Date.now() },
-      updatedAt: Date.now(),
-    }));
+    const projectId = activeProject.id;
+    const chatId = activeProject.activeChatId;
+    const legacy = activeProject.chats === undefined && chatId === undefined;
+    const legacyDraft = activeProject.composerDraft;
+    updateProject(projectId, (project) => {
+      if (legacy) {
+        if (
+          creationRef.current.version !== 2 ||
+          project.chats !== undefined ||
+          project.activeChatId !== undefined ||
+          JSON.stringify(project.composerDraft) !==
+            JSON.stringify(expected ?? legacyDraft)
+        )
+          return project;
+        return {
+          ...project,
+          composerDraft: { ...draft, updatedAt: Date.now() },
+          updatedAt: Date.now(),
+        };
+      }
+      if (!chatId || !project.chats?.[chatId]) return project;
+      const scoped = projectChatView({ ...project, activeChatId: chatId });
+      if (
+        expected &&
+        JSON.stringify(scoped.composerDraft) !== JSON.stringify(expected)
+      )
+        return project;
+      const updated = updateProjectChatView(scoped, (current) => ({
+        ...current,
+        composerDraft: { ...draft, updatedAt: Date.now() },
+        updatedAt: Date.now(),
+      }));
+      return projectChatView({
+        ...updated,
+        activeChatId: project.activeChatId,
+      });
+    });
   }
 
   function handleProjectModelChange(
