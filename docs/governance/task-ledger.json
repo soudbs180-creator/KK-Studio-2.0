@@ -15,7 +15,7 @@
     ],
     "owner": "root",
     "ownerRole": "implementer",
-    "branch": "fix/TASK-WEB-RELEASE-20261017-mobile-entry",
+    "branch": "docs/TASK-WEB-RELEASE-20261017-production-receipt",
     "worktree": "D:/kk-studio/.worktrees/TASK-WEB-RELEASE-20261017",
     "affectedModules": [
       "deploy",
@@ -29,12 +29,17 @@
       "packages/creation-contracts",
       ".github/workflows/quality.yml",
       "scripts/platform-versions.mjs",
-      "docs/changes/2026-10-17-web-release-receipt"
+      "docs/changes/2026-10-17-web-release-receipt",
+      "tests/mobile-web",
+      "docs/changes/2026-10-18-web-mobile-production-receipt",
+      "docs/governance",
+      "docs/features",
+      "docs/PROGRESS.md"
     ],
-    "status": "IN_PROGRESS",
-    "displayStatus": "进行中",
+    "status": "DONE",
+    "displayStatus": "已完成",
     "priority": "P1",
-    "priorityRationale": "用户已明确拒绝桌面缩放布局，需接入已做好的独立手机版并验证实际入口。",
+    "priorityRationale": "独立手机UI已由用户实际手机确认；本次有界Web发布、单份回滚与临时授权清理已有完整收据。",
     "evidence": [
       "docs/changes/2026-10-17-web-release/intent.md",
       "docs/changes/2026-10-17-web-release/spec.md",
@@ -49,16 +54,23 @@
       "docs/changes/2026-10-17-web-release-receipt/plan.md",
       "docs/changes/2026-10-17-web-release-receipt/verification.md",
       "docs/changes/2026-10-17-web-release-receipt/review.md",
-      "docs/changes/2026-10-17-web-release-receipt/release.md"
+      "docs/changes/2026-10-17-web-release-receipt/release.md",
+      "docs/changes/2026-10-18-web-mobile-production-receipt/intent.md",
+      "docs/changes/2026-10-18-web-mobile-production-receipt/spec.md",
+      "docs/changes/2026-10-18-web-mobile-production-receipt/plan.md",
+      "docs/changes/2026-10-18-web-mobile-production-receipt/verification.md",
+      "docs/changes/2026-10-18-web-mobile-production-receipt/review.md",
+      "docs/changes/2026-10-18-web-mobile-production-receipt/release.md"
     ],
-    "verification": "固定bbc8/产品469隔离构建154文件与验收dist逐哈希一致。独立聚合140定向测试通过；发布器独审与Linux31/31通过。PR64的verify因Windows短路径断言失败，测试已修；PR65接续聚合交付上游三个未入main的change package，在本记录绑定其原始verification，不修改原149任务。原服务器122文件字节不变，已安装受限普通账号/单配置备份/缓存及previous资源回退；API/DB/Nginx主PID保持。最终Hosted/main门禁、正式Release/生产手机/回滚与临时root key撤销仍待本轮验收。 后续用户明确授权本次修手机菜单并重新验收，新增两真实浏览器回归先在旧包RED；Desktop/Web版本工具升级2.1.37，Mobile保留2.1.1。同Release重试要求归档可重复，正增加mtime/目录顺序反例。 2026-10-18勘误：2.1.37 main503dedbe Hosted与正式Web自动部署已成功，旧40项仅桌面响应式，用户拒绝其为手机版。当前从58df恢复282份独立Mobile/contracts原始文件，正实现真实Web local context和/mobile/组合入口；新UI与生产接受未完成，保持PARTIAL。 最终本地Mobile323/323、真实独立手机Edge9/9首试且零外网/API/异常、root完整verify通过（旧插件恢复2flaky另4/4严格目标复验）、增量Node1852PASS20SKIP与真实Linux部署14/14均通过；SDK57路由/启动深链/取消交错/本地图片回调有RED/GREEN与独立复核。正式提交/Hosted/新生产与撤钥仍待执行。",
-    "verificationResult": "PARTIAL",
+    "verification": "正式Web2.1.38 / Mobile源码2.1.3，来源f730f1dc32fb2e568dda6d4a52c58b05802d6b6b，main Hosted五项与guards及正式Release自动部署通过。kkai.plus独立手机生产9/9首试、0重试/波动/跳过，用户实际手机UI确认正常；current179与previous155文件完整哈希及7个入口资源HTTPS逐哈希核对。仅保留38/37两个受管目录，临时root授权已撤、原授权逐字节恢复，本机两私钥已删，业务PID与原dirty工作区保护已核验。文档分支docs/TASK-WEB-RELEASE-20261017-production-receipt；完整范围和证据见docs/changes/2026-10-18-web-mobile-production-receipt/verification.md。",
+    "verificationResult": "PASS",
     "updated": "2026-10-18",
     "lastVerified": "2026-10-18",
-    "nextAction": "完成独立手机UI/browser验收、精确SHA审查与Hosted门禁，正式组合Web上线，核验单份回滚并撤临时root key。",
+    "nextAction": "本次Web交付已完成；最终文档PR另按提交HEAD完成独立审查与Hosted/Delivery。Mobile其余能力由T12按原范围继续。",
     "requirementRefs": [
       "docs/changes/2026-10-17-web-release/spec.md",
-      "docs/changes/2026-10-17-web-release-receipt/spec.md"
+      "docs/changes/2026-10-17-web-release-receipt/spec.md",
+      "docs/changes/2026-10-18-web-mobile-production-receipt/spec.md"
     ],
     "featureIds": [
       "FEAT-028"
