@@ -11,10 +11,10 @@
 
 # 当前项目事实（2026-10-18）
 
-- `currentTask`: TASK-SIDEBAR-CANVAS-20261018 有界本地DONE/PASS，branch fix/TASK-SIDEBAR-CANVAS-20261018；base ab2ceef0、冻结产品source793ddaf355e38591cf0da3d66d115b636d68b967，复用D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017，未新增工作树、未移动现有目录。
-- `sourceVersionBoundary`: Desktop/Web2.1.39，Mobile2.1.1规划不变；完整verify Node1960PASS14skip、Agent204PASS2skip、Edge851首试零flaky、Design41+8/dev4步骤，Rust228PASS1ignore+41集成。官方EXE2164e413、input52536852、loaded index-DowrIPTW.js/97ca191d；产品输入和实际bundle匹配，精确收据见[验证](../changes/2026-10-18-sidebar-canvas/verification.md)。
+- `currentTask`: TASK-SIDEBAR-CANVAS-20261018 IN_PROGRESS/NOT_VERIFIED，branch fix/TASK-SIDEBAR-CANVAS-20261018；base ab2ceef0、冻结产品source793ddaf355e38591cf0da3d66d115b636d68b967，复用D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017，未新增工作树、未移动现有目录。
+- `sourceVersionBoundary`: Desktop/Web2.1.39，Mobile2.1.1规划不变；完整verify Node1960PASS14skip、Agent204PASS2skip、首次浏览器852项：851常规通过+1flaky、Design41+8/dev4步骤，Rust228PASS1ignore+41集成。官方EXE2164e413、input52536852、loaded index-DowrIPTW.js/97ca191d；产品输入和实际bundle匹配，精确收据见[验证](../changes/2026-10-18-sidebar-canvas/verification.md)。
 - `nativeAndData`: fresh官方Native实际四次正常启闭，pin/unpin/priority持久、真实UI创建/改名/软删恢复/项目库同ID、新root项目包往返及宽图6状态PASS。原默认库两次正常启闭9项目/11聊天/21消息及身份/草稿/选择/memory保持，输入框非只读。合成auth:none/loopback与真实Provider能力分开；没有生成提交或额度reset操作。
-- `tasksAndTrees`: 本候选152项：89DONE/48PARTIAL/11TODO/3BLOCKED/1IN_PROGRESS，开放63；本子任务和原侧栏、宽图两任务仅有界本地技术验收完成。37功能成熟度/runtimeEvidence不提升；7登记树/14本地分支、approved root5/4，拒绝新增而允许现树复用，全部目录/分支保留。
+- `tasksAndTrees`: 本候选152项：88DONE/48PARTIAL/11TODO/3BLOCKED/2IN_PROGRESS，开放64；本子任务和原侧栏、宽图两任务仅有界本地技术验收完成。37功能成熟度/runtimeEvidence不提升；7登记树/14本地分支、approved root5/4，拒绝新增而允许现树复用，全部目录/分支保留。
 - `branchRoutes`: DS-001、AGENT-004/005旧路由无.git/分支ref，当前unallocated/NOT_VERIFIED且原PARTIAL状态不变，完整旧记录在verificationHistory。并行WEB-RELEASE ref曾前移0cb2fc09，不冒称全局冻结；容器coord只读主仓旧账本且git claim刷新风险未接管。
 - `preservation`: 工程外sidebar-canvas-20261018-69e77b85-6d69-4f51-8602-a6c3236eb6c2保全开工7树110dirty/index/diff/status/all-ref/raw3；完整Roaming/WebView2763文件349615784B，独立重枚举源/副本hash0差异。main8c36a6b/原63字节和index保持、现69dirty及并发新增6路径另存；旧v2/v3/失败/38产物全保留。harness三次失败与原生控件校准不改写成PASS。
 - `finalHeadBoundary`: 产品source793ddaf3已完整验证；最终文档只同步事实/ADR/任务，精确最终HEAD独立Spec/Standards补审、Delivery、私有归档和两真实lnk同PID/无CDP日常还原以工程外最终收据裁决，无收据按未验处理。日常lnk仍引用本树，不可清理。
@@ -731,3 +731,5 @@ TASK-UI-DISMISS-002 修复账号菜单跨窄屏断点、键盘展开后外部点
 ## 2026-10-13 UI 分类执行补充
 
 TASK-UI-CLASSIFY-20261013 已获用户实施确认：canonical 分类修复在隔离任务 worktree 验证后逐文件集成，保留窗口控件和麦克风预存改动。按用户补充移除模型弹层批量/数据项，40 项定向回归和独立补审通过；最终 Web development / preview / Desktop 分别 7/7/14 项通过，Desktop/Web 2.1.14。全量浏览器 492/495，三个既有 UI 失败使任务保持 REVIEW/PARTIAL；实际运行证据以[本轮 verification](../changes/2026-10-13-capability-ui/verification.md)为准，未声称已推送或正式发布。
+
+当前补修：独立最终审核发现首次全量852项含1flaky（851常规通过），并定位429健康标记晚于保存/终态的真实竞态；本子任务重新IN_PROGRESS，父侧栏/宽图仅旧source793范围已验。新修复/新EXE与完整验证待完成，最终交付暂不放行；原错误汇总/审核/失败完整保留，见本轮verification。

@@ -1721,6 +1721,31 @@ export default function App() {
       );
       const finalStatus =
         generatedUncertain || archiveUncertain ? ("unknown" as const) : status;
+      const failure = generated.failure;
+      if (
+        task.providerConnectionId &&
+        failure instanceof GenerationProviderError &&
+        [
+          "rate_limited",
+          "unauthorized",
+          "forbidden",
+          "provider_unavailable",
+          "network",
+        ].includes(failure.failureClass)
+      )
+        markProviderConnectionFailure(
+          task.providerConnectionId,
+          {
+            kind: failure.failureClass as
+              | "rate_limited"
+              | "unauthorized"
+              | "forbidden"
+              | "provider_unavailable"
+              | "network",
+            retryAfterSeconds: failure.retryAfterSeconds,
+          },
+          taskProviderOptions(task),
+        );
       publish(
         finalStatus,
         archiveUncertain
@@ -1741,41 +1766,16 @@ export default function App() {
         generatedUncertain || archiveUncertain ? "unknown" : "terminal",
       );
       await flushPublishedResult();
-      if (task.providerConnectionId) {
-        const failure = generated.failure;
-        if (
-          failure instanceof GenerationProviderError &&
-          [
-            "rate_limited",
-            "unauthorized",
-            "forbidden",
-            "provider_unavailable",
-            "network",
-          ].includes(failure.failureClass)
-        )
-          markProviderConnectionFailure(
-            task.providerConnectionId,
-            {
-              kind: failure.failureClass as
-                | "rate_limited"
-                | "unauthorized"
-                | "forbidden"
-                | "provider_unavailable"
-                | "network",
-              retryAfterSeconds: failure.retryAfterSeconds,
-            },
-            taskProviderOptions(task),
-          );
-        else if (
-          !failure &&
-          !archiveUncertain &&
-          reservation?.healthUnchanged()
-        )
-          markProviderConnectionHealthy(
-            task.providerConnectionId,
-            taskProviderOptions(task),
-          );
-      }
+      if (
+        task.providerConnectionId &&
+        !failure &&
+        !archiveUncertain &&
+        reservation?.healthUnchanged()
+      )
+        markProviderConnectionHealthy(
+          task.providerConnectionId,
+          taskProviderOptions(task),
+        );
     } catch (error) {
       // A failed project save cannot undo a completed generation receipt.
       if (terminalSaveFailed) return;
@@ -1828,32 +1828,6 @@ export default function App() {
                     )}`
                   : error.message
                 : "任务失败，请重试。";
-      outputs = outputs.map((output) =>
-        output.status === "succeeded"
-          ? output
-          : {
-              ...output,
-              status:
-                uncertain || nativeCancelUncertain
-                  ? "unknown"
-                  : paused
-                    ? "waiting"
-                    : controller.signal.aborted
-                      ? "cancelled"
-                      : "failed",
-              error: message,
-            },
-      );
-      publish(
-        status,
-        message,
-        uncertain || nativeCancelUncertain
-          ? "unknown"
-          : durableSubmission
-            ? "terminal"
-            : "intent",
-      );
-      await persistence.flush().catch(() => undefined);
       if (
         task.providerConnectionId &&
         reservation &&
@@ -1881,6 +1855,32 @@ export default function App() {
           taskProviderOptions(task),
         );
       }
+      outputs = outputs.map((output) =>
+        output.status === "succeeded"
+          ? output
+          : {
+              ...output,
+              status:
+                uncertain || nativeCancelUncertain
+                  ? "unknown"
+                  : paused
+                    ? "waiting"
+                    : controller.signal.aborted
+                      ? "cancelled"
+                      : "failed",
+              error: message,
+            },
+      );
+      publish(
+        status,
+        message,
+        uncertain || nativeCancelUncertain
+          ? "unknown"
+          : durableSubmission
+            ? "terminal"
+            : "intent",
+      );
+      await persistence.flush().catch(() => undefined);
     } finally {
       setResultSaving(false);
       try {

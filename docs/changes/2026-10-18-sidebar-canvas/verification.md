@@ -20,7 +20,7 @@ TASK-SIDEBAR-CANVAS-20261018：有界本地DONE/PASS；base ab2ceef0 / 产品sou
 
 ## 当前冻结验证与桌面收口
 
-产品source793ddaf355e38591cf0da3d66d115b636d68b967，Desktop/Web2.1.39，Mobile2.1.1规划不变。完整npm run verify exit0：Node1960PASS/14既存skip、Agent204PASS/2skip、production Edge851/851首试零flaky，Design41单元+8浏览器、development4步骤PASS；lint/type/UI/format/build通过。Rust fmt/test exit0，228PASS/1既存hardware ignore+41集成PASS；全部警告保留，非零skip不能推导硬件验收。
+产品source793ddaf355e38591cf0da3d66d115b636d68b967，Desktop/Web2.1.39，Mobile2.1.1规划不变。完整npm run verify exit0：Node1960PASS/14既存skip、Agent204PASS/2skip、首次浏览器852项：851常规通过+1flaky，Design41单元+8浏览器、development4步骤PASS；lint/type/UI/format/build通过。Rust fmt/test exit0，228PASS/1既存hardware ignore+41集成PASS；全部警告保留，非零skip不能推导硬件验收。
 
 官方client:build使用实体目标目录、既有Agent白名单4282文件逐项核验，无npm ci或Agent包previous轮转。EXE SHA2164e413d8a7b159073a2f719c87dac1c044978041de659f9e63d9091ef98b06，input5253685267c32f762158b292d1d50b9ba7fcae66bbad7c3be6a3d35d9e533516，native-build-3311cfbd-5774-43a6-9b7f-9b34b3c76d72.json为current。本地current不代表Hosted、签名或安装器发布。实际loaded index-DowrIPTW.js SHA97ca191da29f9acb909d19c288d95364f45d3ea81382ee8e3c0f531218cf690f、CSS index-DfNLqnic.css SHA c705166358c5aced1c6efe6abe3d85dfc2182ff4a04de6cb5c48455b4506987b与dist逐字节一致。
 
@@ -37,3 +37,15 @@ fresh Native最终运行run-5df963e0-e205-4609-a395-40d47ba7e726/report.json，S
 本候选152任务89DONE/48PARTIAL/11TODO/3BLOCKED/1IN_PROGRESS，开放63；本子任务、原侧栏和宽图两父任务仅本地技术验收DONE。37功能成熟度/runtimeEvidence不提升；统一仓库/真实回复、上游增量、Mobile、Hosted/签名/发布及用户整体产品验收仍各自开放。main原63项字节/HEAD/index独立保持，现69dirty及6并发新增路径另存primary-concurrent-382a77c8-d84d-43e7-8ba4-5ccd909da846，receipt2d598420ef8fee29f01c9c0e0fdcfc2ad9bc244b1380d4931a87359e7ee6b482；其他树/旧v2/v3/失败/38产物保留。
 
 Spec源码独审0 findings PASS，Standards源码P2 ADR缺口已在ADR020追加本轮契约，P3原提交命名偏差保留不改写SHA，后续中文真实模块scope。最终文档精确HEAD补审、Delivery、全refs/产物/证据私有归档及最后两个真实日常lnk同PID无CDP还原，均按工程外最终收据裁决；没有这些收据不得认定最终交付。不push/merge，不发布，不做文件清理/迁移，不提交真实生成或消费额度reset。
+
+## 独立最终审查撤回首次“零flaky”汇总（当前补修中）
+
+f3b1e41的最终事实审核CHANGES REQUIRED：SPEC-FINAL-001/P2及STD-EVIDENCE-003/P1指出full-verify-793ddaf3.log4525–4543与browser run8412d3c6-08ae-4db3-80d5-c06960ccc2a8/stats真实为852用例/853attempts、851常规PASS+1flaky，非“851首试零flaky”。原报告SHA12a9c32b2b8ffcf740512004d7c3b95be82055175bc27fb9332d9849e8b26cb7，错误汇总不沿用，未改写原日志或失败。最终Spec收据1d7c4a8a...、Standards c7191b82...均保留，Delivery结构0违规不代替审核签收。
+
+首次失败provider-scheduling.spec.ts123的429冷却expected cooldown/actual active，retry1通过；已确认不是纯测试时机：App.executeTask的异常路径1847publish(failed)→1856等待项目flush→1870才markProviderConnectionFailure，部分输出路径1724publish→1743flush→1756mark，保存失败还可能跳过健康标记。当前lease可挡同任务重试，但默认并发2允许其他项目在等待保存时继续占第二槽。将先以真实IndexedDB保存阻塞保留确定性RED，再把已知失败的冷却/隔离标记前移到发布终态和保存之前；身份/取消/持有lease保护、健康成功后标记语义保持。新源码、完整复验、官方新构建与精确最终补审尚未完成，不能以旧39EXE/Native批准新修复。
+
+### 429保存竞态的确定性修复
+
+旧793产物在真实creation IndexedDB readwrite事务持有时，两新增用例稳定RED2/2：run12208c2e-ea2c-4af7-bf3c-443df013d2f6，完整失败与部分结果后429的cooldown均读到active，非mock/延长timeout。App两条failure标记原条件整体前移到publish与awaitflush之前，healthy仍在成功保存后、租约/身份/取消保护不变。定向63 unit通过。原始严格429断言未改；定向provider-scheduling14/14 PASS/0retry，日志provider-health-browser-green-2.log。首轮新增case后半因首页回默认Codex、未重新选择合成API的harness失配保留（13PASS/1FAIL），补明确模型选择后14全绿，不把此误作产品错误。
+
+没有新增产品抽象或存储；跨标签页通用read-map-set竞争未在本轮证明，不扩大为全跨tab保证。新的完整verify/当前源官方EXE/Native验收、最终文档与审核仍待后续精确收据。补修前2164e413 EXE及完整dist已逐字节保全prebuild39-reviewfix-8605aa73-d17d-461d-a766-d3048ae3a15f/receipt SHA0ba943bc4adc6596ad42a5275e71cbeaf8cea1eb5263badf94516f2e885b7206；默认Roaming/WebView再次保存2797文件350163965B，round源/副本hashPASS，receipt52c15fd9。后续独立源重查遇到一份BrowserMetrics.pma已不在当前源，错误原样保留；这是快照之后的源变化，归档副本仍保留，不伪称后续独立源全量0差异。初始2763文件的完整独立0mismatch仍为其原时点事实。

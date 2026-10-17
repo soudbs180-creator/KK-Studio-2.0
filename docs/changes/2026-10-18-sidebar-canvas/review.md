@@ -14,6 +14,6 @@ STD-ADR-001/P2最终文档缺口：已追加ADR020的optional sidebarPreferences
 
 ## Spec
 
-独立上下文sidebar_canvas_spec_review，精确源码PASS/0 findings，58/58独立定向测试；收据review-spec-e50f2832-7b75-4395-b41c-010329aeda3e.json SHAcb87ba7ab951f80b39c2ec7601e67f3ff656c999a70d50b8e5b123ac7590dff5。另抽查旧dirty候选几何最大误差0.000061 CSSpx，该预检不替代793ddaf3完整851和新Native。最终Native证据/任务关闭与文档真实边界待精确最终SHA补审。
+独立上下文sidebar_canvas_spec_review，精确源码PASS/0 findings，58/58独立定向测试；收据review-spec-e50f2832-7b75-4395-b41c-010329aeda3e.json SHAcb87ba7ab951f80b39c2ec7601e67f3ff656c999a70d50b8e5b123ac7590dff5。另抽查旧dirty候选几何最大误差0.000061 CSSpx，该预检不替代793ddaf3首次852（1flaky）和新Native。最终Native证据/任务关闭与文档真实边界待精确最终SHA补审。
 
 源码双轴统计：Standards P2文档缺口1（最终文档已修、独立待关）、P3命名1非阻断；Spec0。Hosted CI/人类审批/合并/签名/发布未执行，独立AI审查不代填这些结果。

@@ -20,7 +20,7 @@
 
 ## 2026-10-18 当前有界本地验证
 
-Desktop/Web2.1.39/source793ddaf3：项目/文件夹pin及manual/recent/priority排序在同CreationSnapshot/CAS持久化，存储未就绪/冲突时真实禁用。Web侧栏32PASS、820窄屏键盘/重载通过；fresh官方Native真实项目/组操作和priority/pin/unpin跨四次正常启闭保持，项目包新root完整往返保留偏好。宽图共享几何按真实主体修复，四比例Web24与fresh Native宽图6状态SVG/DOM/实际拖线/端口和生成按钮命中PASS。完整verify851浏览器及原用户库9项目11聊天21消息保全见[本轮验证](../changes/2026-10-18-sidebar-canvas/verification.md)。原任务仅本地技术完成，不提升本功能成熟度/runtimeEvidence；真实Provider/Hosted/发布及用户整体接受另验。
+Desktop/Web2.1.39/source793ddaf3：项目/文件夹pin及manual/recent/priority排序在同CreationSnapshot/CAS持久化，存储未就绪/冲突时真实禁用。Web侧栏32PASS、820窄屏键盘/重载通过；fresh官方Native真实项目/组操作和priority/pin/unpin跨四次正常启闭保持，项目包新root完整往返保留偏好。宽图共享几何按真实主体修复，四比例Web24与fresh Native宽图6状态SVG/DOM/实际拖线/端口和生成按钮命中PASS。首次完整verify852项（1flaky）及原用户库9项目11聊天21消息保全见[本轮验证](../changes/2026-10-18-sidebar-canvas/verification.md)。原任务仅本地技术完成，不提升本功能成熟度/runtimeEvidence；真实Provider/Hosted/发布及用户整体接受另验。
 
 ## 测试与证据
 

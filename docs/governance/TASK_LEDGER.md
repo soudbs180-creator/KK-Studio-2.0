@@ -157,7 +157,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-HOME-LOAD-DRAFT-20261015 | 保护读取期间编辑不覆盖已有首页草稿设置 | PARTIAL | 进行中 | P2 | TASK-CODEX-HOME-20261015 | root | 保留通过的代码子范围与失败证据，随当前组合源码执行完整verify、新Native重建、最终精确独审/Hosted与交付，不重复开发已修复读取合并。 该工作树只作历史承接来源；本轮安全修复见TASK-AUDIT-REPAIR-20261017，未新增活动分配。 |
 | TASK-VERIFY-DEPS-20261015 | 恢复共享依赖清理事故并核验执行边界 | PARTIAL | 进行中 | P1 | TASK-CODEX-HOME-20261015 | root | 保持防复发子范围PASS与旧事故UNKNOWN分离；不在共享依赖安装或清理。原始字节及影响如无证据不得补写；最终当前提交/托管/交付门禁另验。 |
 | TASK-DESIGN-MD-20261015 | 统一DESIGN设计系统与产品UI收敛 | PARTIAL | 进行中 | P1 | none | root | 关闭基础独审问题，将规则落入设置/模型/聊天/画布/项目/素材等实际页面，按Desktop→Web留同状态证据。 |
-| TASK-SIDEBAR-CANVAS-20261018 | 侧栏置顶排序持久化与宽图连线桌面验收 | DONE | 已完成 | P1 | none | root | 本轮有界本地技术验收完成；真实Provider/Hosted/发布和用户最终产品验收另行，保留全部历史及原件。 |
+| TASK-SIDEBAR-CANVAS-20261018 | 侧栏置顶排序持久化与宽图连线桌面验收 | IN_PROGRESS | 进行中 | P1 | none | root | 先确定性保存阻塞反例，再修正429/部分成功健康标记时序；重新完整verify/官方Native/最终精确审核，原失败保留。 |
 
 ## TASK-LOCAL-GUARDS-20261018 — 修复本地安全边界并核对剩余任务与工作树规则
 
@@ -2075,7 +2075,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `unallocated`
 - Worktree: `unallocated`
 - Modules: src/components/SidebarProjectEntry.tsx, src/components/SidebarProjectGroup.tsx, src/features/creation, tests/browser, docs
-- Verification: PASS — 由TASK-SIDEBAR-CANVAS-20261018/source793ddaf3补齐optional同snapshot pin/sort、只读冲突门禁和Native/包校验；production侧栏32PASS/全量851PASS。fresh2.1.39真实UI创建/改名/pin/softtrash/恢复、项目库同ID及组delete/restore通过，非默认priority及pin/unpin在四次正常启闭保持；Web820窄屏键盘通过。原历史路由与验证在verificationHistory；统一仓库、多聊天真实回复和用户整体视觉验收不由此任务代填。
+- Verification: PASS — 由TASK-SIDEBAR-CANVAS-20261018/source793ddaf3补齐optional同snapshot pin/sort、只读冲突门禁和Native/包校验；production侧栏32PASS/首次全量852项（1flaky）。fresh2.1.39真实UI创建/改名/pin/softtrash/恢复、项目库同ID及组delete/restore通过，非默认priority及pin/unpin在四次正常启闭保持；Web820窄屏键盘通过。原历史路由与验证在verificationHistory；统一仓库、多聊天真实回复和用户整体视觉验收不由此任务代填。
 - Evidence: [docs/changes/2026-09-24-ui-regression/review.md](../../docs/changes/2026-09-24-ui-regression/review.md), [docs/features/feat-015-projects.md](../../docs/features/feat-015-projects.md), [docs/features/feat-023-navigation.md](../../docs/features/feat-023-navigation.md), [docs/changes/2026-09-29-project-landing/verification.md](../../docs/changes/2026-09-29-project-landing/verification.md), [docs/changes/2026-09-29-project-landing/audit.md](../../docs/changes/2026-09-29-project-landing/audit.md), [docs/changes/2026-10-15-kk-unified/verification.md](../../docs/changes/2026-10-15-kk-unified/verification.md), [docs/changes/2026-10-15-kk-unified/review.md](../../docs/changes/2026-10-15-kk-unified/review.md), [docs/architecture/adr/ADR-020-project-lifecycle-in-creation-snapshot.md](../../docs/architecture/adr/ADR-020-project-lifecycle-in-creation-snapshot.md), [docs/changes/2026-10-18-sidebar-canvas/verification.md](../../docs/changes/2026-10-18-sidebar-canvas/verification.md)
 - Next action: 本轮有界本地技术验收完成；真实Provider/Hosted/发布和用户最终产品验收另行，保留全部历史及原件。
 - Last verified: 2026-10-18
@@ -2740,7 +2740,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `unallocated`
 - Worktree: `unallocated`
 - Modules: src/domain/canvasGraph.ts, src/components/canvas/NodeActions.tsx, src/styles/workspace.css, tests/browser/unified-image-command.spec.ts
-- Verification: PASS — source793ddaf3先真实SVG↔DOM6项反例（21%偏13.17749px），共享高度改2+378/ratio。四比例×3缩放×折叠展开production24PASS，精确HEAD全量851PASS；fresh官方2.1.39的1200×300三缩放双状态6PASS，真实拖线持久、SVG起终点/剪线中点/端口/生成按钮命中和10px间距均验。Native包与正常重启保留图关系；无真实生成提交。原始失败/旧端口命中证据均保留。
+- Verification: PASS — source793ddaf3先真实SVG↔DOM6项反例（21%偏13.17749px），共享高度改2+378/ratio。四比例×3缩放×折叠展开production24PASS，精确HEAD首次全量852项（1flaky）；fresh官方2.1.39的1200×300三缩放双状态6PASS，真实拖线持久、SVG起终点/剪线中点/端口/生成按钮命中和10px间距均验。Native包与正常重启保留图关系；无真实生成提交。原始失败/旧端口命中证据均保留。
 - Evidence: [docs/changes/2026-10-14-agent-canvas-sync/evidence/wide-layout-comparison.json](../../docs/changes/2026-10-14-agent-canvas-sync/evidence/wide-layout-comparison.json), [docs/changes/2026-10-14-agent-canvas-sync/verification.md](../../docs/changes/2026-10-14-agent-canvas-sync/verification.md), [docs/changes/2026-10-18-sidebar-canvas/verification.md](../../docs/changes/2026-10-18-sidebar-canvas/verification.md)
 - Next action: 本轮有界本地技术验收完成；真实Provider/Hosted/发布和用户最终产品验收另行，保留全部历史及原件。
 - Last verified: 2026-10-18
@@ -3034,8 +3034,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 ## TASK-SIDEBAR-CANVAS-20261018 — 侧栏置顶排序持久化与宽图连线桌面验收
 
 - Goal: 先完成侧栏偏好持久化，再复证修复宽图几何并完成fresh桌面验收
-- Scope: 现有CreationSnapshot/CAS、sidebar actions、共享result geometry与相应本地回归；不新增存储源或外部能力
-- Display status: 已完成
+- Scope: 现有CreationSnapshot/CAS、sidebar actions、共享result geometry与相应本地回归；不新增存储源或外部能力；独立验收发现429健康标记与保存的真实竞态，在本次修复并复验
+- Display status: 进行中
 - Priority: P1 — 用户明确要求按侧栏持久化→宽图连线→桌面验收推进
 - Requirement refs: ledger:TASK-PROJECT-SIDEBAR-001, ledger:TASK-CANVAS-WIDE-PORT-20261014
 - Feature IDs: FEAT-015, FEAT-023, FEAT-001
@@ -3043,9 +3043,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Acceptance: 项目/组pin及三种sort在Web重载和fresh Native正常启闭后保持，旧资料兼容且失败/CAS/包往返保留原件; 1200x300三缩放×双编辑状态真实连线SVG端点/端口/按钮与DOM几何正确; 完整verify/Rust/官方Native/独审/Delivery通过并同步任务事实，原改动和用户资料保全，无删除移动
 - Branch: `fix/TASK-SIDEBAR-CANVAS-20261018`
 - Worktree: `D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017`
-- Modules: src/features/creation, src/features/projects, src/components/SidebarProjectGroups.tsx, src/components/SidebarProjectHeader.tsx, src/domain/canvasGraph.ts, src-tauri/src/creation_validation.rs, src-tauri/src/project_package_snapshot.rs, tests/unit, tests/browser, tests/desktop
-- Verification: PASS — source793ddaf3 / Desktop/Web2.1.39：完整verify Node1960PASS14skip、Agent204PASS2skip、Edge851首试0flaky、Design41+8/dev4步；Rust228PASS1ignore+41集成。Web pin/sort32与几何24PASS，fresh官方Native四次正常启闭验证pin/unpin/priority、真实新项目/组和trash恢复、新root包往返及宽图6状态；原库2周期9项目11chat21消息/身份草稿选择保全。全量工程外保全，无文件删移或生成提交；最终精确文档补审/Delivery/日常启动按工程外收据裁决。
+- Modules: src/features/creation, src/features/projects, src/components/SidebarProjectGroups.tsx, src/components/SidebarProjectHeader.tsx, src/domain/canvasGraph.ts, src-tauri/src/creation_validation.rs, src-tauri/src/project_package_snapshot.rs, tests/unit, tests/browser, tests/desktop, src/App.tsx
+- Verification: NOT_VERIFIED — 侧栏/宽图source793ddaf3有界本地实现和旧39Native已验；首次完整verify852项含1flaky，独审发现真实429健康标记晚于保存/失败终态，当前补修并重新完整验证，最终交付不放行。
 - Evidence: [docs/changes/2026-10-18-sidebar-canvas/intent.md](../../docs/changes/2026-10-18-sidebar-canvas/intent.md), [docs/changes/2026-10-18-sidebar-canvas/spec.md](../../docs/changes/2026-10-18-sidebar-canvas/spec.md), [docs/changes/2026-10-18-sidebar-canvas/plan.md](../../docs/changes/2026-10-18-sidebar-canvas/plan.md), [docs/changes/2026-10-18-sidebar-canvas/verification.md](../../docs/changes/2026-10-18-sidebar-canvas/verification.md), [docs/changes/2026-10-18-sidebar-canvas/review.md](../../docs/changes/2026-10-18-sidebar-canvas/review.md)
-- Next action: 本轮有界本地技术验收完成；真实Provider/Hosted/发布和用户最终产品验收另行，保留全部历史及原件。
+- Next action: 先确定性保存阻塞反例，再修正429/部分成功健康标记时序；重新完整verify/官方Native/最终精确审核，原失败保留。
 - Last verified: 2026-10-18
 - Updated: 2026-10-18

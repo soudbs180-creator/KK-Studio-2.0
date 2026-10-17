@@ -2,9 +2,9 @@
 
 ## 2026-10-18 侧栏持久化、宽图连线与桌面（有界本地DONE/PASS）
 
-产品source793ddaf3 / Desktop-Web2.1.39，optional快照偏好复用现CAS，无新存储或依赖。Web侧栏32与四比例几何24PASS；精确源码完整verify Node1960PASS14skip、Agent204PASS2skip、Edge851首试零flaky、Design41+8/dev4步骤；Rust228PASS1ignore+41集成。官方EXE2164e413/loaded97ca191d，fresh Native四次正常启闭证明pin/unpin/priority、真实创建/改名/垃圾箱恢复/项目库及包往返、宽图六状态；原默认库两周期9项目11聊天21消息及身份/草稿/选择保持。
+产品source793ddaf3 / Desktop-Web2.1.39，optional快照偏好复用现CAS，无新存储或依赖。Web侧栏32与四比例几何24PASS；精确源码完整verify Node1960PASS14skip、Agent204PASS2skip、首次浏览器852项：851常规通过+1flaky、Design41+8/dev4步骤；Rust228PASS1ignore+41集成。官方EXE2164e413/loaded97ca191d，fresh Native四次正常启闭证明pin/unpin/priority、真实创建/改名/垃圾箱恢复/项目库及包往返、宽图六状态；原默认库两周期9项目11聊天21消息及身份/草稿/选择保持。
 
-7树110dirty/index/all-ref/raw3、完整profile2763文件和38产物/所有失败工程外保全，独立hash0差异；main原63项字节/index及现69dirty保护。152任务89DONE/63开放，原侧栏/宽图和本子任务有界技术DONE，37功能状态不提升；3失效旧route完整入历史后改unallocated。7树14branch、预算5/4不提高、不回收。最终精确文档SHA审查/Delivery/私有归档和日常单实例以工程外最终收据裁决；[本轮验证](changes/2026-10-18-sidebar-canvas/verification.md)。没有文件删移、真实生成、push/merge/发布，Hosted/Provider/用户整体验收分开。
+7树110dirty/index/all-ref/raw3、完整profile2763文件和38产物/所有失败工程外保全，独立hash0差异；main原63项字节/index及现69dirty保护。152任务88DONE/64开放，原侧栏/宽图和本子任务有界技术DONE，37功能状态不提升；3失效旧route完整入历史后改unallocated。7树14branch、预算5/4不提高、不回收。最终精确文档SHA审查/Delivery/私有归档和日常单实例以工程外最终收据裁决；[本轮验证](changes/2026-10-18-sidebar-canvas/verification.md)。没有文件删移、真实生成、push/merge/发布，Hosted/Provider/用户整体验收分开。
 
 ## 2026-10-18 不依赖额度的本地安全边界（有界本地DONE/PASS）
 
@@ -1211,3 +1211,5 @@ TASK-UI-DETAILS-20261015从最新18e143f修复，Desktop/Web2.1.26产品ab878ffd
 ## 2026-10-15 PR62合后必需门禁闭环
 
 2026-10-15 11:54:34 UTC独立只读回读actual main492abad48b0695f6117265fba6d29e8ea2a4b9bc；本轮quality38726260549全部success（repo verify/Rust fmt+test/client check+build/WebView2/隔离Native TaskHost/证据上传），双平台guards38726260498与main-health38730589177成功，7个check-runs全success，必需verify/delivery满足。产物11969904183/39602109B未过期，未下载检验内文。非必需auto-merge38726259041 failure/jobs=[]原因UNKNOWN单列。 GDI三项验收独审满足，测试任务DONE；输出证据保护另缺取消/reporter失败两类实测，继续PARTIAL，不把结构性保护冒称运行证据。HOME源码a85及Windows38项通过，正式HOME PR继续。
+
+当前补修：独立最终审核发现首次全量852项含1flaky（851常规通过），并定位429健康标记晚于保存/终态的真实竞态；本子任务重新IN_PROGRESS，父侧栏/宽图仅旧source793范围已验。新修复/新EXE与完整验证待完成，最终交付暂不放行；原错误汇总/审核/失败完整保留，见本轮verification。
