@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-10-17 旧聊天迁移与编辑恢复（IN_PROGRESS / NOT_VERIFIED）
+
+TASK-CHAT-MIGRATION-20261017已保全2491个资料文件并独立逐文件校验，默认资料尚未迁移。Desktop/Web候选2.1.37，使用snapshot3、同repositoryId格式屏障、canonical聊天权威与HTTP7隔离。原始正文/草稿冲突丢失、空库坏journal提前改身份和未知版本数字覆盖三项独审问题已按真实反例修复；TS存储160项、Node服务69项及Rust226+41项通过（1项既有硬件ignore），dirty限定复审通过。完整verify首轮因新增server-only模块未登记中止，修正边界后第二轮发现旧安全测试fixture挂起，保留日志并继续处理。实际桌面副本迁移、默认库恢复、聊天与重开及最终冻结验证未完成，不沿用下方旧审计PASS。见[本轮验证](changes/2026-10-17-chat-migration/verification.md)。
+
 ## 2026-10-17 审计安全修复与治理同步（有界本地A–D DONE/PASS）
 
 最终产品source `4699458de1c3437309b7cdc3f019454104c81fce`、tree `a1905e2aa6e11a24b4c62d829dc82a8f0d566972`，Desktop/Web2.1.36，Mobile2.1.1规划。冻结前后CLEAN的完整`npm run verify` exit0：Node1846=1832PASS/14既有SKIP、Agent201=199PASS/2既有SKIP、产品Edge823/823首试零fail/retry/flaky/skip、DESIGN41单元+8浏览器、development四步，lint/type/UI/format/build通过，警告/advisory保留。469精确增量独审PASS；此前FSR01–06按原SHA关闭。Native五源自436后未变，Rust bin213PASS/1既有硬件ignored+integration41/check/fmt仍按该源身份解释。

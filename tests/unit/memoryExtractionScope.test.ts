@@ -34,8 +34,10 @@ function extractionHarness(
     kind: "image",
     prompt: "synthetic",
     model: "fixture",
+    modelSelection: { source: "codex", model: "fixture" },
     attachments: [],
   });
+  project.chats![project.activeChatId!].agentThreadId = "synthetic-thread";
   const state = {
     ...agentConnection.getState(),
     status: "connected" as const,
@@ -52,7 +54,7 @@ function extractionHarness(
   };
   let snapshot: CreationSnapshot = {
     ...emptySnapshot(),
-    version: 2,
+    version: 3,
     activeProjectId: project.id,
     projects: [project],
   };
@@ -124,7 +126,7 @@ function extractionHarness(
     project,
     host,
     unsupportedSnapshot() {
-      snapshot = { ...snapshot, version: 3 };
+      snapshot = { ...snapshot, version: 99 as CreationSnapshot["version"] };
     },
     feedback,
     sent,
@@ -193,21 +195,18 @@ for (const [name, options, target] of [
 
 for (const reason of [
   "temporary",
-  "multiple",
-  "thread-conflict",
+  "duplicate-thread",
+  "invalid-thread",
   "unsupported",
 ] as const) {
   test(`memory extraction without options honors the actual ${reason} host block`, async (t) => {
     const h = extractionHarness(t);
     const chat = h.project.chats![h.project.activeChatId!];
     if (reason === "temporary") chat.isTemporary = true;
-    else if (reason === "multiple")
+    else if (reason === "duplicate-thread")
       h.project.chats!.other = { ...chat, id: "other" };
     else if (reason === "unsupported") h.unsupportedSnapshot();
-    else {
-      h.project.agentThreadId = "root-thread";
-      chat.agentThreadId = "different-thread";
-    }
+    else chat.agentThreadId = "invalid/thread";
     const block = h.host.getExecutionBlockReason();
     assert.ok(block);
     await h.hook.extractWithCodex(false);
@@ -228,8 +227,13 @@ for (const change of [
   test(`memory extraction cancels ${change} changes while storage mode is pending`, async (t) => {
     const h = extractionHarness(t);
     const mode = deferred<"isolated">();
-    t.mock.method(memoryService, "storageMode", () => mode.promise);
+    let modeRequested = false;
+    t.mock.method(memoryService, "storageMode", () => {
+      modeRequested = true;
+      return mode.promise;
+    });
     const pending = h.hook.extractWithCodex();
+    assert.equal(modeRequested, true, "extraction must reach the awaited gate");
     if (change === "revision") h.state.connectionRevision++;
     else if (change === "project") h.project.id = "different-project";
     else if (change === "thread") h.state.conversation.threadId = "new-thread";
@@ -284,25 +288,45 @@ test("memory extraction keeps read-only shared directories protected", async (t)
   assert.equal(h.saved.length, 0);
 });
 
-test("memory extraction in an ordinary scope saves the matching completed reply and mutation version", async (t) => {
-  const h = extractionHarness(t);
-  h.allowReply();
-  const pending = h.hook.extractWithCodex();
-  await new Promise(setImmediate);
-  h.complete();
-  h.poll();
-  await pending;
-  assert.equal(h.sent.length, 1);
-  assert.deepEqual(h.sent[0]?.[1], { memoryMode: "none", isTemporary: false });
-  assert.deepEqual(
-    h.saved.map((args) => args.slice(0, 3)),
-    [["记忆：用户偏好合成测试颜色", "synthetic-thread", 7]],
-  );
-  assert.equal((h.saved[0]?.[3] as () => boolean)(), true);
-  assert.ok(
-    h.feedback.some((message) => message.includes("已提炼并保存 1 条记忆")),
-  );
-});
+for (const scope of [
+  "ordinary",
+  "multiple chats",
+  "stale root thread",
+] as const) {
+  test(`memory extraction in a ${scope} scope saves the matching completed reply and mutation version`, async (t) => {
+    const h = extractionHarness(t);
+    if (scope === "multiple chats") {
+      const chat = h.project.chats![h.project.activeChatId!];
+      h.project.chats!.other = {
+        ...chat,
+        id: "other",
+        agentThreadId: "other-thread",
+      };
+    } else if (scope === "stale root thread")
+      h.project.agentThreadId = "stale-root-thread";
+    assert.equal(h.host.getExecutionBlockReason(), undefined);
+    assert.equal(h.host.readAgentThread?.(), "synthetic-thread");
+    h.allowReply();
+    const pending = h.hook.extractWithCodex();
+    await new Promise(setImmediate);
+    h.complete();
+    h.poll();
+    await pending;
+    assert.equal(h.sent.length, 1);
+    assert.deepEqual(h.sent[0]?.[1], {
+      memoryMode: "none",
+      isTemporary: false,
+    });
+    assert.deepEqual(
+      h.saved.map((args) => args.slice(0, 3)),
+      [["记忆：用户偏好合成测试颜色", "synthetic-thread", 7]],
+    );
+    assert.equal((h.saved[0]?.[3] as () => boolean)(), true);
+    assert.ok(
+      h.feedback.some((message) => message.includes("已提炼并保存 1 条记忆")),
+    );
+  });
+}
 
 for (const revokeAt of ["queued", "read", "fingerprint", "never"] as const) {
   test(`manual extraction storage authorization is checked when scope changes ${revokeAt}`, async (t) => {

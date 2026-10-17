@@ -8,6 +8,7 @@ export async function startAgentServer(
   safePreparation = true,
 ) {
   const streams = new Set<ServerResponse>();
+  const streamScopes = new Map<ServerResponse, unknown>();
   const clients = new Set<string>();
   const requests: string[] = [];
   const turns: Record<string, unknown>[] = [];
@@ -38,13 +39,15 @@ export async function startAgentServer(
     if (type === "conversation_changed")
       conversation = data as AgentConversationState;
     for (const stream of streams)
-      stream.write(`event: ${type}\ndata: ${JSON.stringify(data)}\n\n`);
+      stream.write(
+        `event: ${type}\ndata: ${JSON.stringify(data && typeof data === "object" ? { scope: streamScopes.get(stream), ...(type === "tool_call" ? { threadId: conversation.threadId, turnId: "fixture-turn" } : {}), ...data } : data)}\n\n`,
+      );
   };
   const server = createServer(async (request, response) => {
     response.setHeader("Access-Control-Allow-Origin", "*");
     response.setHeader(
       "Access-Control-Allow-Headers",
-      "content-type, authorization, x-canvas-agent-token",
+      "content-type, authorization, x-canvas-agent-token,x-canvas-agent-client,x-canvas-agent-scope",
     );
     response.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
     if (request.method === "OPTIONS") {
@@ -64,14 +67,19 @@ export async function startAgentServer(
         "Cache-Control": "no-cache",
       });
       streams.add(response);
+      streamScopes.set(
+        response,
+        JSON.parse(url.searchParams.get("scope") ?? "null"),
+      );
       const clientId = url.searchParams.get("clientId") ?? "";
       clients.add(clientId);
       response.on("close", () => {
         streams.delete(response);
+        streamScopes.delete(response);
         clients.delete(clientId);
       });
       response.write(
-        `event: hello\ndata: ${JSON.stringify({ ok: true, protocolVersion: 6, clientId, conversation, workspace: { activeThreadId: conversation.threadId }, codex: { busy: busyOverride ?? conversation.status === "running" }, pendingApprovals: [...pendingApprovals.values()] })}\n\n`,
+        `event: hello\ndata: ${JSON.stringify({ ok: true, protocolVersion: 7, clientId, conversation, workspace: { activeThreadId: conversation.threadId }, codex: { busy: busyOverride ?? conversation.status === "running" }, pendingApprovals: [...pendingApprovals.values()] })}\n\n`,
       );
       return;
     }
@@ -81,7 +89,7 @@ export async function startAgentServer(
     const body = text ? JSON.parse(text) : {};
     response.setHeader("Content-Type", "application/json");
     if (url.pathname === "/config") {
-      response.end(JSON.stringify({ ok: true, protocolVersion: 6 }));
+      response.end(JSON.stringify({ ok: true, protocolVersion: 7 }));
       return;
     }
     if (

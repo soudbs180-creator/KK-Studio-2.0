@@ -16,6 +16,7 @@ export default function ConversationComposerRegion({
   agentModel,
   input,
   onInputChange,
+  onDraftChange,
   onSubmitMessage,
   disabled,
   modelDisabled,
@@ -49,6 +50,7 @@ export default function ConversationComposerRegion({
   agentModel?: string;
   input: string;
   onInputChange: (value: string) => void;
+  onDraftChange?: (patch: Partial<CreationDraft>) => void;
   onSubmitMessage: (message: string) => Promise<void>;
   disabled: boolean;
   modelDisabled: boolean;
@@ -80,6 +82,7 @@ export default function ConversationComposerRegion({
       draftKey={draftKey}
       draftState={draftState}
       active={agentActive}
+      onDraftChange={onDraftChange}
       composer={
         <ConversationComposer
           input={input}

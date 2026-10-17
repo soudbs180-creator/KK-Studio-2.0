@@ -12,7 +12,7 @@ export const VERSION = readPackageVersion();
 export const AGENT_PROMPT = fs.readFileSync(new URL("../agent-instructions.md", import.meta.url), "utf8");
 const initializedWorkspaces = new Set<string>();
 
-export type SiteWorkspaceConfig = { workspacePath: string; activeThreadId?: string; pinnedThreadIds?: string[] };
+export type SiteWorkspaceConfig = { workspacePath: string; activeThreadId?: string; pinnedThreadIds?: string[]; threadScopes?: Record<string, import("./canvas/chat-scope.js").ChatScope> };
 export type CanvasAgentConfig = { url: string; token: string; origins?: string[]; workspace?: SiteWorkspaceConfig; codebuddy?: { cliPath: string } };
 
 const configSchema = z.object({

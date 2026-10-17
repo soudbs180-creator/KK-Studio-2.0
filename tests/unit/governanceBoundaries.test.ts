@@ -34,12 +34,20 @@ test("browser boundaries reject Node builtins and server directory imports in ev
   for (const [source, specifier] of [
     ["src/components/example.ts", "../features/local-service/server.ts"],
     ["src/features/local-service/client.ts", "./server.ts"],
+    ["src/features/local-service/client.ts", "./standaloneRoot.ts"],
   ])
     assert.ok(
       checkImportBoundaries(source, `import server from "${specifier}";`)
         .length > 0,
       source,
     );
+  assert.deepEqual(
+    checkImportBoundaries(
+      "src/features/local-service/standaloneRoot.ts",
+      'import fs from "node:fs";',
+    ),
+    [],
+  );
 });
 
 test("domain dependencies reject presentation and adapters without blocking valid pure modules", () => {

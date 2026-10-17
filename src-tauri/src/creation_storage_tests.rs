@@ -291,18 +291,28 @@ fn snapshot_v3_validation_accepts_valid_and_rejects_corrupt() {
 }
 
 #[test]
-fn legacy_writer_cannot_publish_v3_or_replace_supported_main_with_v3_backup() {
+fn current_writer_cannot_downgrade_v3_or_replace_mixed_format_backup() {
     let f = Fixture::new();
     let mut future = snapshot(2);
     future["version"] = json!(3);
     future["projects"][0]["activeChatId"] = json!("chat");
     future["projects"][0]["chats"] = json!({"chat":{"id":"chat","name":"history","messages":[]}});
+    future["projects"][0]
+        .as_object_mut()
+        .unwrap()
+        .remove("messages");
+    future["projects"][0]
+        .as_object_mut()
+        .unwrap()
+        .remove("composerDraft");
+    f.repo.write(future.clone(), None).unwrap();
+    let upgraded = fs::read(&f.repo.path).unwrap();
     assert!(f
         .repo
-        .write(future.clone(), None)
+        .write(snapshot(3), Some(2))
         .unwrap_err()
-        .starts_with("readonly:"));
-    assert!(!f.repo.path.exists());
+        .starts_with("unsupported:"));
+    assert_eq!(fs::read(&f.repo.path).unwrap(), upgraded);
     let main = f.main(&snapshot(1));
     let backup = f.backup(&future);
     assert!(f.repo.read().unwrap().read_only_reason.is_some());

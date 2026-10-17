@@ -28,6 +28,7 @@ export interface AgentConversationProps {
   usageError?: string | null;
   onRefreshUsage: () => void;
   onConnect: (fresh?: boolean) => void;
+  freshDisabledReason?: string;
   connecting: boolean;
   sending: boolean;
   activity: string;
@@ -187,10 +188,11 @@ export default function AgentConversationMessages({
         </button>
         <details className="chat-agent-advanced">
           <summary>高级会话操作</summary>
-          <p>新建后将切换当前项目的会话。</p>
+          <p>{agent.freshDisabledReason ?? "新建后将切换当前项目的会话。"}</p>
           <button
             type="button"
-            disabled={connectionBusy}
+            disabled={connectionBusy || Boolean(agent.freshDisabledReason)}
+            title={agent.freshDisabledReason}
             onClick={() => agent.onConnect(true)}
           >
             新建 Agent 会话

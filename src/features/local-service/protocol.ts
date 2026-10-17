@@ -53,7 +53,7 @@ export const pairRequestSchema = z
 
 export const snapshotEnvelopeSchema = z
   .object({
-    version: z.literal(2),
+    version: z.union([z.literal(2), z.literal(3)]),
     revision: z.number().int().nonnegative().max(Number.MAX_SAFE_INTEGER),
     activeProjectId: z.string().min(1).max(160).nullable(),
     projects: z.array(z.unknown()).max(10_000),

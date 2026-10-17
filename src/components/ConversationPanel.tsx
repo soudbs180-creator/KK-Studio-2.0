@@ -65,7 +65,7 @@ export default function ConversationPanel({
   ]);
   const { channel, agentSelection, agentModel, changeChannel, selectModel } =
     useConversationSelection({
-      projectId: project?.id,
+      projectId: draftKey,
       draft: composerDraft,
       locked: modelDisabled,
       patch: updateDraft,
@@ -148,6 +148,8 @@ export default function ConversationPanel({
         onChannelChange={changeChannel}
         overlay={overlay}
         codexBusy={agentBusy}
+        onDraftChange={updateDraft}
+        onSelectChat={onSelectChat}
       />
     );
   return (
@@ -206,6 +208,7 @@ export default function ConversationPanel({
         agentModel={agentModel}
         input={input}
         onInputChange={changeInput}
+        onDraftChange={updateDraft}
         onSubmitMessage={submitMessage}
         disabled={
           Boolean(executionDisabledReason) ||

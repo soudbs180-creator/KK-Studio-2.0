@@ -123,6 +123,8 @@ export async function openSeededProject(page: Page): Promise<void> {
     kind: "image",
     attachments: [],
   });
+  base.chats![base.activeChatId!].mainAgent = "codex";
+  base.chats![base.activeChatId!].draft.conversationChannel = "codex";
   const items = BASE_CANVAS_ITEMS.map((item) => ({
     ...item,
     model: item.kind === "image" ? model : item.model,

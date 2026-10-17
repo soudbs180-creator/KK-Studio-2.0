@@ -9,6 +9,7 @@ export function checkImportBoundaries(file, content, root = process.cwd()) {
     "src/features/local-service/manifest.ts",
     "src/features/local-service/server.ts",
     "src/features/local-service/session.ts",
+    "src/features/local-service/standaloneRoot.ts",
     "src/features/local-service/store.ts",
   ]);
   const serverOnly = localServiceServerFiles.has(relative);

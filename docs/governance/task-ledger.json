@@ -1,5 +1,60 @@
 [
   {
+    "id": "TASK-CHAT-MIGRATION-20261017",
+    "lastVerified": "2026-10-17",
+    "title": "保全旧聊天资料并恢复迁移、编辑与聊天",
+    "goal": "无损迁移原聊天数据，恢复独立草稿、正文、线程及正常保存重连。",
+    "scope": "ADR-022已接受的旧通道与现有chat原始Value迁移、Native/IDB不可降级屏障、普通聊天canonical读写与HTTP7执行scope、聊天素材项目包及Node/Native隔离；不扩临时/新窗口/Mobile/额外Provider。",
+    "acceptance": [
+      "主备/身份/原资料不可变归档、逐文件SHA与隔离恢复通过，不删除或移动原文件",
+      "迁移后项目/chat/消息/草稿/线程/素材及未知字段保全，失败与future格式保护、重开不丢且不重复迁移",
+      "现有普通聊天独立编辑、离线历史与正常发送/重连，迟到回调和服务执行scope不串chat",
+      "当前源码完整verify/Rust/独审/官方产物、资料副本及默认库迁移/关闭重开通过并同步文档"
+    ],
+    "dependencies": [],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "fix/TASK-CHAT-MIGRATION-20261017",
+    "worktree": "D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017",
+    "baseSha": "bbc8a766740ec94d30171020cf208a6aeb3c87d4",
+    "status": "IN_PROGRESS",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "priorityRationale": "默认资料只读，需完成真正迁移和执行隔离后恢复用户编辑聊天。",
+    "affectedModules": [
+      "src/features/creation",
+      "src/App.tsx",
+      "src/features/agent",
+      "src/features/google",
+      "src/features/local-service",
+      "src/features/projects",
+      "src-tauri/src",
+      "vendor/canvas-agent",
+      "scripts/agent",
+      "docs/changes/2026-10-17-chat-migration"
+    ],
+    "evidence": [
+      "docs/changes/2026-10-17-chat-migration/intent.md",
+      "docs/changes/2026-10-17-chat-migration/spec.md",
+      "docs/changes/2026-10-17-chat-migration/plan.md",
+      "docs/changes/2026-10-17-chat-migration/verification.md",
+      "docs/changes/2026-10-17-chat-migration/review.md"
+    ],
+    "verification": "当前只读根因已确证；原9项目v2/revision2226，其中一项目2普通chat。已正常关闭原Native并另存2491文件/259972032B，独立2491枚举与重哈希0 mismatch。迁移/运行实现尚未完成，不能复用旧审计PASS代批。",
+    "verificationResult": "NOT_VERIFIED",
+    "updated": "2026-10-17",
+    "nextAction": "按已接受ADR-022完成原始Value迁移、真实事务屏障与scope7；先在资料副本验证，再当前产物/独审后迁移默认根并验证编辑聊天重开。",
+    "requirementRefs": [
+      "docs/changes/2026-10-17-chat-migration/intent.md",
+      "docs/architecture/adr/ADR-022-project-chats-and-v3-migration.md",
+      "ledger:TASK-KK-UNIFIED-20261015"
+    ],
+    "featureIds": [
+      "FEAT-009",
+      "FEAT-014"
+    ]
+  },
+  {
     "id": "TASK-AUDIT-REPAIR-20261017",
     "title": "审计安全修复、启动恢复与当前治理收敛",
     "goal": "先完整保全，再隔离修复五个P1与素材垃圾箱误导，验证可信启动并纠正当前任务/版本/规则事实。",

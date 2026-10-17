@@ -8,7 +8,11 @@
 
 本文是最短恢复入口，不是任务状态或产品能力的第二事实源。任务状态只读 [`task-ledger.json`](task-ledger.json)；当前项目事实只读 [`PROJECT_STATE.md`](PROJECT_STATE.md)；历史验证只按带日期的 change package、commit、运行模式和 receipt 回读。
 
-## 当前恢复入口：审计修复本地收口（2026-10-17）
+## 当前恢复入口：旧聊天迁移与编辑恢复（2026-10-17）
+
+先读[本轮计划](../changes/2026-10-17-chat-migration/plan.md)、[验证](../changes/2026-10-17-chat-migration/verification.md)和权威Project State。当前任务TASK-CHAT-MIGRATION-20261017、branch `fix/TASK-CHAT-MIGRATION-20261017`、复用原审计实体树，Desktop/Web候选2.1.37。原始2491文件独立校验PASS，默认库未迁移；不得以源码定向测试通过宣称旧资料可编辑或聊天已恢复。继续完整验证、独立审查、官方新Native、原库副本迁移后默认库迁移及重开。仍禁止删除/移动原文件，原main/index/dirty与旧审计ref保留；详细结果只以当前验证文档和精确收据为准。
+
+## 前一阶段：审计修复本地收口（2026-10-17，历史）
 
 先读[实际验证](../changes/2026-10-17-audit-repair/verification.md)和[独立审查](../changes/2026-10-17-audit-repair/review.md)。TASK-AUDIT-REPAIR-20261017仅本地A–D DONE/PASS；source `4699458de1c3437309b7cdc3f019454104c81fce` / tree `a1905e2aa6e11a24b4c62d829dc82a8f0d566972`，任务树`D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017` / branch `fix/TASK-AUDIT-REPAIR-20261017`，Desktop/Web2.1.36、Mobile2.1.1规划。原main8c/63dirty/index与远端d95保持。
 

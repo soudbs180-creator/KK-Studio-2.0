@@ -8,6 +8,7 @@ import type {
   CanvasAgentSnapshot,
   AgentTurnInput,
   AgentTurnResponse,
+  AgentExecutionScope,
 } from "./agentTypes.ts";
 
 export class AgentApiError<T = unknown> extends Error {
@@ -39,6 +40,7 @@ export type AgentApiClientOptions = {
   clientId: string;
   fetcher?: typeof fetch;
   signal?: AbortSignal;
+  scope?: AgentExecutionScope;
 };
 
 export function agentEndpoint(value: string): string {
@@ -69,11 +71,25 @@ export function createAgentApi(options: AgentApiClientOptions) {
       method: body === undefined ? "GET" : "POST",
       headers: {
         ...(authenticated
-          ? { "x-canvas-agent-token": options.token.trim() }
+          ? {
+              "x-canvas-agent-token": options.token.trim(),
+              "x-canvas-agent-client": options.clientId,
+              ...(options.scope
+                ? { "x-canvas-agent-scope": JSON.stringify(options.scope) }
+                : {}),
+            }
           : {}),
         ...(body === undefined ? {} : { "content-type": "application/json" }),
       },
-      ...(body === undefined ? {} : { body: JSON.stringify(body) }),
+      ...(body === undefined
+        ? {}
+        : {
+            body: JSON.stringify(
+              options.scope && body && typeof body === "object"
+                ? { ...body, scope: options.scope }
+                : body,
+            ),
+          }),
       signal: options.signal
         ? AbortSignal.any([options.signal, AbortSignal.timeout(60000)])
         : AbortSignal.timeout(60000),
@@ -94,7 +110,16 @@ export function createAgentApi(options: AgentApiClientOptions) {
     if (
       history.messages !== undefined &&
       (!Array.isArray(history.messages) ||
-        history.messages.some((item) => !item || typeof item.text !== "string"))
+        history.messages.some(
+          (item) =>
+            !item ||
+            typeof item.text !== "string" ||
+            typeof item.id !== "string" ||
+            !item.id ||
+            !["user", "assistant", "system", "tool", "error"].includes(
+              item.role,
+            ),
+        ))
     )
       throw new AgentHistoryError(history.conversation);
     return history;
@@ -145,6 +170,8 @@ export function createAgentApi(options: AgentApiClientOptions) {
     },
     async postToolResult(body: {
       requestId: string;
+      threadId?: string;
+      turnId?: string;
       result?: unknown;
       error?: string;
     }): Promise<void> {
@@ -206,7 +233,13 @@ export function createAgentApi(options: AgentApiClientOptions) {
         endpoint +
           `/agent/codex/generated-image/${encodeURIComponent(threadId)}/${encodeURIComponent(itemId)}`,
         {
-          headers: { "x-canvas-agent-token": options.token.trim() },
+          headers: {
+            "x-canvas-agent-token": options.token.trim(),
+            "x-canvas-agent-client": options.clientId,
+            ...(options.scope
+              ? { "x-canvas-agent-scope": JSON.stringify(options.scope) }
+              : {}),
+          },
           signal: options.signal
             ? AbortSignal.any([options.signal, AbortSignal.timeout(60000)])
             : AbortSignal.timeout(60000),

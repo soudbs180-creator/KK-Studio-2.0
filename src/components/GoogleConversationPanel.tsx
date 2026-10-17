@@ -22,6 +22,8 @@ export default function GoogleConversationPanel({
   onChannelChange,
   overlay,
   codexBusy,
+  onDraftChange,
+  onSelectChat,
 }: {
   project: CreationProject;
   draftState: AgentDraftState;
@@ -30,6 +32,10 @@ export default function GoogleConversationPanel({
   onChannelChange: (channel: string) => void;
   overlay?: boolean;
   codexBusy: boolean;
+  onDraftChange: (
+    patch: Partial<import("../features/creation/model").CreationDraft>,
+  ) => void;
+  onSelectChat?: (chatId: string) => void;
 }) {
   const state = useSyncExternalStore(
     googleAgentConnection.subscribe,
@@ -62,6 +68,9 @@ export default function GoogleConversationPanel({
     onConnect: (fresh) => {
       void googleAgentConnection.connect(fresh);
     },
+    freshDisabledReason: project.chats
+      ? "当前聊天的会话不能被替换；请继续当前聊天。"
+      : undefined,
     activity: state.activity,
     messages: state.messages,
     pendingApproval: state.pendingApproval,
@@ -86,6 +95,9 @@ export default function GoogleConversationPanel({
         messageCount={state.messages.length}
         onStatus={setStatus}
         onClose={onClose}
+        chats={project.chats}
+        activeChatId={project.activeChatId}
+        onSelectChat={onSelectChat}
       />
       <ConversationChannelSelector
         value="google"
@@ -106,12 +118,14 @@ export default function GoogleConversationPanel({
       </div>
       <AgentComposer
         agent={agent}
-        draftKey={`google-${project.id}`}
+        draftKey={JSON.stringify([project.id, project.activeChatId ?? null])}
+        onDraftChange={onDraftChange}
         draftState={draftState}
         active
         composer={
           <ConversationComposer
             input=""
+            composerDraft={project.composerDraft}
             onInputChange={() => {}}
             onSubmitMessage={async () => {}}
             disabled={state.sending}
@@ -145,7 +159,10 @@ export default function GoogleConversationPanel({
             voiceEnabled={!state.sending}
             onVoiceChange={() => {}}
             onVoiceStatus={setStatus}
-            voiceSessionKey={`google-${project.id}`}
+            voiceSessionKey={JSON.stringify([
+              project.id,
+              project.activeChatId ?? null,
+            ])}
           />
         }
       />

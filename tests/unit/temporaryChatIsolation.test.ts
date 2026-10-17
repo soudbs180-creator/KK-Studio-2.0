@@ -53,7 +53,6 @@ function createTestSnapshot(projects: CreationProjectV3[]): CreationSnapshot {
     homeDraft: { ...emptyDraft(), attachments: [] },
     projects: projects.map((p) => ({
       attachments: [],
-      composerDraft: { ...emptyDraft(), attachments: [] },
       ...p,
     })) as CreationProjectV3[],
   };
@@ -569,7 +568,7 @@ test("R2-ISO-10: agentConnection blocks buildInjection and ingestMessage when is
           return new Response(
             JSON.stringify({
               ok: true,
-              protocolVersion: 6,
+              protocolVersion: 7,
               data: [],
               messages: [],
             }),

@@ -324,6 +324,7 @@ test("已保存的拖动预览不被 Agent 同节点更新覆盖，松开后可�
 
 async function fixture(nativeImage = false) {
   let stream: ServerResponse | undefined;
+  let scope: unknown;
   const conversation = {
     revision: 1,
     conversationId: "conv-fixture",
@@ -339,12 +340,14 @@ async function fixture(nativeImage = false) {
   } = { turns: [], tools: [], images: [], state: {} };
   const messages: unknown[] = [];
   const emit = (type: string, data: unknown) =>
-    stream?.write(`event: ${type}\r\ndata: ${JSON.stringify(data)}\r\n\r\n`);
+    stream?.write(
+      `event: ${type}\r\ndata: ${JSON.stringify(data && typeof data === "object" ? { scope, ...(type === "tool_call" ? { threadId: conversation.threadId, turnId: "fixture-turn" } : {}), ...data } : data)}\r\n\r\n`,
+    );
   const server = createServer(async (req, res) => {
     res.setHeader("Access-Control-Allow-Origin", productionOrigin);
     res.setHeader(
       "Access-Control-Allow-Headers",
-      "content-type,x-canvas-agent-token,authorization,idempotency-key",
+      "content-type,x-canvas-agent-token,authorization,idempotency-key,x-canvas-agent-client,x-canvas-agent-scope",
     );
     res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
     if (req.method === "OPTIONS") {
@@ -361,6 +364,10 @@ async function fixture(nativeImage = false) {
       return;
     }
     if (path === "/events") {
+      scope = JSON.parse(
+        new URL(req.url!, "http://localhost").searchParams.get("scope") ??
+          "null",
+      );
       stream = res;
       res.writeHead(200, {
         "Content-Type": "text/event-stream",
@@ -371,7 +378,7 @@ async function fixture(nativeImage = false) {
     }
     res.setHeader("Content-Type", "application/json");
     let payload: unknown = { ok: true };
-    if (path === "/config") payload = { ok: true, protocolVersion: 6 };
+    if (path === "/config") payload = { ok: true, protocolVersion: 7 };
     if (path === "/canvas/state") received.state = body;
     if (path.endsWith("/models"))
       payload = {

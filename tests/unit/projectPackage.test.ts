@@ -14,6 +14,7 @@ import {
   createProject,
   createTask,
   emptySnapshot,
+  serializeCreationSnapshot,
 } from "../../src/features/creation/model.ts";
 import { createStagePlan } from "../../src/domain/stagePlan.ts";
 import { applyProjectLifecycle } from "../../src/features/projects/projectLifecycle.ts";
@@ -99,6 +100,124 @@ async function validPackage(): Promise<{
   );
   return { input: built, source };
 }
+
+test("v3 packages include inactive chat-only draft and message assets without root authority", async () => {
+  const source = fixture();
+  const bytes2 = new Uint8Array([4, 5, 6]);
+  const hash2 = createHash("sha256").update(bytes2).digest("hex");
+  const id2 = `asset-${hash2.slice(0, 24)}`;
+  const asset2 = {
+    ...source.asset,
+    assetId: id2,
+    sha256: hash2,
+    preview: "data:image/png;base64,BAUG",
+  };
+  const project = source.snapshot.projects[0];
+  project.chats!["chat-default"].draft = { ...project.composerDraft };
+  project.chats!.inactive = {
+    id: "inactive",
+    name: "Inactive",
+    createdAt: 1,
+    updatedAt: 1,
+    mainAgent: "codex",
+    modelAllowlist: [],
+    draft: {
+      attachments: [
+        {
+          id: "chat-only",
+          assetId: id2,
+          name: "chat.png",
+          mime: "image/png",
+          size: 3,
+          dataUrl: asset2.preview,
+        },
+      ],
+    },
+    messages: [
+      {
+        id: "assistant",
+        role: "assistant",
+        content: "result",
+        assetIds: [id2],
+        attachments: [
+          {
+            id: "message-only",
+            assetId: id2,
+            name: "result.png",
+            mime: "image/png",
+            size: 3,
+            dataUrl: asset2.preview,
+          },
+        ],
+      },
+    ],
+  };
+  const snapshot = { ...source.snapshot, version: 3 as const };
+  const built = await createProjectPackageManifest(snapshot, async (id) =>
+    id === id2 ? asset2 : source.asset,
+  );
+  assert.equal(built.entries.length, 2);
+  assert.equal(
+    Object.hasOwn(built.manifest.snapshot.projects[0], "composerDraft"),
+    false,
+  );
+  assert.equal(
+    built.manifest.snapshot.projects[0].chats!.inactive.draft.attachments![0]
+      .dataUrl,
+    `kk-asset:${id2}`,
+  );
+  const restored = await preflightProjectPackage(built);
+  assert.deepEqual(
+    serializeCreationSnapshot(restored.snapshot),
+    built.manifest.snapshot,
+  );
+  await assert.rejects(
+    createProjectPackageManifest(snapshot, async (id) =>
+      id === id2 ? null : source.asset,
+    ),
+    /缺失|缺少|未归档/,
+  );
+});
+
+test("raw v3 package conflicts reject before erasing roots or reading any asset", async () => {
+  const source = fixture();
+  const raw = { ...source.snapshot, version: 3 as const };
+  raw.projects[0].composerDraft.prompt = "root";
+  raw.projects[0].chats!["chat-default"].draft = {
+    ...raw.projects[0].composerDraft,
+    prompt: "chat",
+  };
+  raw.projects[0].messages = [
+    { id: "root-only", role: "user", content: "root", createdAt: 1 },
+  ];
+  raw.projects[0].chats!["chat-default"].messages = [
+    { id: "chat-only", role: "user", content: "chat", createdAt: 1 },
+  ];
+  const before = JSON.stringify(raw);
+  let reads = 0;
+  await assert.rejects(
+    createProjectPackageManifest(raw, async () => {
+      reads++;
+      return source.asset;
+    }),
+    /权威|迁移/,
+  );
+  assert.equal(reads, 0);
+  const manifest = {
+    kind: "kk-studio-project" as const,
+    version: 1 as const,
+    exportedAt: "2026-10-17T00:00:00.000Z",
+    snapshot: raw,
+    assets: [],
+    checksum: "",
+  };
+  manifest.checksum = await manifestChecksum(manifest);
+  await assert.rejects(
+    preflightProjectPackage({ manifest, entries: [] }),
+    (error) => (error as { code?: string }).code === "corrupt",
+  );
+  assert.equal(JSON.stringify(raw), before);
+});
 
 test("垃圾箱项目完整打包恢复，保留手动名称、分组、任务、草稿和原件", async () => {
   const source = fixture();
@@ -485,21 +604,22 @@ test("preflight rejects secrets, unknown manifest fields and duplicate metadata"
     }),
     (error: unknown) => (error as { code?: string }).code === "corrupt",
   );
+  const duplicates = {
+    ...input.manifest,
+    assets: [...input.manifest.assets, input.manifest.assets[0]],
+  };
+  duplicates.checksum = await manifestChecksum(duplicates);
   await assert.rejects(
-    preflightProjectPackage({
-      ...input,
-      manifest: {
-        ...input.manifest,
-        assets: [...input.manifest.assets, input.manifest.assets[0]],
-      },
-    }),
+    preflightProjectPackage({ ...input, manifest: duplicates }),
     (error: unknown) => (error as { code?: string }).code === "duplicate-entry",
   );
   const mismatch = structuredClone(input.manifest) as {
     snapshot: { projects: Array<{ items: Array<{ preview?: string }> }> };
+    checksum: string;
   };
   mismatch.snapshot.projects[0].items[0].preview =
     "kk-asset:asset-ffffffffffffffffffffffff";
+  mismatch.checksum = await manifestChecksum(mismatch as typeof input.manifest);
   await assert.rejects(
     preflightProjectPackage({ ...input, manifest: mismatch }),
     (error: unknown) => (error as { code?: string }).code === "corrupt",

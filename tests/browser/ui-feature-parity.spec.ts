@@ -8,12 +8,20 @@ async function ownFixtureThread(page: import("@playwright/test").Page) {
       ),
     )
     .toBeTruthy();
-  await page.evaluate(() => {
-    const id = JSON.parse(
-      localStorage.getItem("kk-studio-next:creation:v1")!,
-    ).activeProjectId;
-    localStorage.setItem("kk-agent-thread:" + id, "fixture-thread");
+  const name = await page.evaluate(() => {
+    const key = "kk-studio-next:creation:v1";
+    const snapshot = JSON.parse(localStorage.getItem(key)!);
+    const project = snapshot.projects.find(
+      (entry: { id: string }) => entry.id === snapshot.activeProjectId,
+    );
+    project.chats[project.activeChatId].agentThreadId = "fixture-thread";
+    snapshot.revision = Math.max(snapshot.revision, Date.now()) + 1;
+    localStorage.setItem(key, JSON.stringify(snapshot));
+    return project.name as string;
   });
+  await page.reload();
+  await page.getByRole("button", { name: "项目库", exact: true }).click();
+  await page.locator(".project-library-card").filter({ hasText: name }).click();
 }
 import { expect, test } from "@playwright/test";
 import { openWorkspace } from "./helpers";
@@ -319,7 +327,7 @@ for (const status of ["idle", "warning"] as const) {
   });
 }
 
-test("connected legacy Agent keeps session replacement advanced and gates active work", async ({
+test("migrated chat keeps its thread and disables advanced session replacement", async ({
   page,
 }) => {
   const server = await startAgentServer("ready");
@@ -373,27 +381,25 @@ test("connected legacy Agent keeps session replacement advanced and gates active
     ).toHaveCount(0);
     await expect(fresh).not.toBeVisible();
     await panel.getByText("高级会话操作", { exact: true }).click();
-    await expect(fresh).toBeEnabled();
+    await expect(fresh).toBeDisabled();
+    await expect(fresh).toHaveAttribute("title", /线程不能被替换/);
     server.emit("codex_approval", { requestId: "gate", method: "shell" });
     await expect(fresh).toBeDisabled();
     await expect(connected).toBeDisabled();
     server.emit("codex_approval_resolved", { requestId: "gate" });
-    await expect(fresh).toBeEnabled();
+    await expect(fresh).toBeDisabled();
     server.emit("codex_state", { busy: true });
     await expect(fresh).toBeDisabled();
     server.emit("codex_state", { busy: false });
-    await expect(fresh).toBeEnabled();
+    await expect(fresh).toBeDisabled();
     expect(server.requests.includes("/agent/codex/threads/new")).toBe(false);
-    await fresh.click();
-    await expect
-      .poll(() => server.conversation().threadId)
-      .toBe("replacement-thread");
+    expect(server.conversation().threadId).toBe("fixture-thread");
     await expect(connected).toBeDisabled();
     expect(
       server.requests.filter(
         (request) => request === "/agent/codex/threads/new",
       ),
-    ).toHaveLength(1);
+    ).toHaveLength(0);
   } finally {
     await server.close();
   }

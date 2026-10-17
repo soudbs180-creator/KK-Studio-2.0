@@ -13,6 +13,7 @@ import type { CodexReasoningEffort, CodexSkillSelector } from "../agent/codex-pr
 import { messageMetadataStore } from "../agent/message-metadata.js";
 import type { AgentAttachment, AgentPermissionMode } from "../agent/types.js";
 import { AGENT_PROTOCOL_VERSION, CanvasSession } from "../canvas/session.js";
+import { parseChatScope } from "../canvas/chat-scope.js";
 import { DEFAULT_PORT, ensureSiteWorkspace, loadConfig, saveConfig, updateSiteWorkspace, type CanvasAgentConfig } from "../config.js";
 import { logger } from "../utils/logger.js";
 import { checkVersions } from "../version-check.js";
@@ -26,7 +27,7 @@ export function startHttpServer() {
     saveConfig(config);
 
     const initialWorkspace = ensureSiteWorkspace(config);
-    const session = new CanvasSession(initialWorkspace.activeThreadId || "");
+    const session = new CanvasSession(initialWorkspace.activeThreadId || "", initialWorkspace.threadScopes, (threadScopes) => { updateSiteWorkspace(config, { threadScopes }); });
     const skillStore = new SkillStore(initialWorkspace.workspacePath);
     /** 将 Agent 事件广播到所属线程或全部网页。 */
     const emit = (type: string, payload: unknown) => {
@@ -73,6 +74,8 @@ export function startHttpServer() {
                 if (draftThreadStart !== prepared) return thread;
                 const threadId = String((thread as Record<string, unknown>).id || "");
                 if (threadId && !ensureSiteWorkspace(config).activeThreadId) {
+                    const scope = session.conversationStateSnapshot.scope;
+                    if (scope) session.recordThreadScope(scope, threadId);
                     session.completeConversationPreparation(threadId);
                     setActiveThread(threadId, { emptyThread: true, draftThread: true, sourceClientId: clientId }, true);
                 }
@@ -130,6 +133,26 @@ export function startHttpServer() {
         if (validToken(req, requestUrl(req, config), config.token)) return next();
         res.status(401).json({ ok: false, error: "invalid token" });
     });
+    app.use((req, res, next) => {
+        const scoped = req.path.startsWith("/canvas/") || req.path.startsWith("/agent/attachments/") || /^\/agent\/codex\/(turn|threads|conversation|history|generated-image|approval|interrupt)/.test(req.path) || (req.path === "/events" && req.query.role !== "status");
+        if (!scoped) return next();
+        try {
+            const scope = requestScope(req);
+            if (req.path !== "/events") {
+                const clientId = requestClient(req);
+                if (!session.hasClient(clientId)) throw new Error("聊天连接已关闭，请重新连接。");
+                if (req.path !== "/canvas/state") session.assertClientScope(clientId, scope);
+                if (["/agent/codex/approval", "/agent/codex/interrupt"].includes(req.path)) session.assertTurnScope(clientId, scope);
+                if (req.path === "/agent/codex/history/ack") session.assertThreadScope(clientId, scope, String(req.body?.threadId || ""));
+                if (req.body && typeof req.body === "object") req.body.scope = scope;
+                const match = /^\/agent\/codex\/(?:threads|generated-image)\/([^/]+)/.exec(req.path);
+                if (match && !["new", "reset"].includes(match[1])) session.assertThreadScope(clientId, scope, decodeURIComponent(match[1]));
+            }
+            next();
+        } catch (error) {
+            res.status(409).json({ ok: false, code: "CHAT_SCOPE_STALE", error: error instanceof Error ? error.message : "聊天身份无效。" });
+        }
+    });
     const drain = createRuntimeDrain(() => Boolean(session.codexBusy || skillDraftRunning || draftThreadStart || ["preparing", "running"].includes(session.conversationStateSnapshot.status)));
     app.post("/runtime/shutdown", (_req, res) => {
         if (!process.env.KK_AGENT_DESKTOP) return void res.status(404).json({ ok: false });
@@ -149,7 +172,7 @@ export function startHttpServer() {
         session.openEvents(requestUrl(req, config), res, ensureSiteWorkspace(config).activeThreadId || "");
     });
     app.post("/canvas/state", (req, res) => {
-        session.updateState(req.body, String(req.query.clientId || "") || undefined);
+        session.updateState(req.body, requestClient(req));
         res.json({ ok: true });
     });
     app.post("/canvas/activate", (req, res) => {
@@ -161,7 +184,7 @@ export function startHttpServer() {
         res.status(ok ? 200 : 409).json({ ok });
     });
     app.get("/agent/attachments/:attachmentId", route(async (req, res) => {
-        const attachment = session.getTurnAttachment(String(req.query.clientId || ""), routeParam(req.params.attachmentId));
+        const attachment = session.getTurnAttachment(requestClient(req), routeParam(req.params.attachmentId), requestScope(req));
         const data = attachment.dataUrl.split(",", 2)[1];
         if (!data) throw new Error("图片附件内容无效");
         res.setHeader("Cache-Control", "no-store");
@@ -312,25 +335,28 @@ export function startHttpServer() {
             hasClient: (clientId) => session.hasClient(clientId),
             conversation: () => session.conversationStateSnapshot,
             begin: (clientId) => {
-                session.beginConversation({ sourceClientId: clientId });
+                session.beginConversation({ sourceClientId: clientId, scope: requestScope(req) });
                 setActiveThread("", { emptyThread: true, draftThread: true, sourceClientId: clientId }, true);
             },
             prepare: (clientId, mode) => prepareDraftThread(clientId, mode),
         });
+        if (result.status === 200 && session.conversationStateSnapshot.threadId) session.recordThreadScope(requestScope(req), session.conversationStateSnapshot.threadId);
         res.status(result.status).json(result.body);
     }));
     app.post("/agent/codex/threads/new", codexMutation(async (req, res) => {
         const clientId = String(req.body?.clientId || "");
-        session.beginConversation({ sourceClientId: clientId });
+        session.beginConversation({ sourceClientId: clientId, scope: requestScope(req) });
         setActiveThread("", { emptyThread: true, draftThread: true, sourceClientId: clientId }, true);
         const thread = await prepareDraftThread(clientId, permissionMode(req.body?.permissionMode));
+        session.recordThreadScope(requestScope(req), session.conversationStateSnapshot.threadId);
         res.json({ ok: true, workspace: ensureSiteWorkspace(config), conversation: session.conversationStateSnapshot, thread: summarizeCodexThread(thread), messages: [] });
     }));
     app.post("/agent/codex/threads/reset", codexMutation(async (req, res) => {
         const clientId = String(req.body?.clientId || "");
-        session.beginConversation({ sourceClientId: clientId });
+        session.beginConversation({ sourceClientId: clientId, scope: requestScope(req) });
         setActiveThread("", { emptyThread: true, draftThread: true, sourceClientId: clientId }, true);
         await prepareDraftThread(clientId, permissionMode(req.body?.permissionMode));
+        session.recordThreadScope(requestScope(req), session.conversationStateSnapshot.threadId);
         res.json({ ok: true, workspace: ensureSiteWorkspace(config), conversation: session.conversationStateSnapshot });
     }));
     app.get("/agent/codex/threads/:threadId", route(async (req, res) => {
@@ -364,6 +390,7 @@ export function startHttpServer() {
         const threadId = routeParam(req.params.threadId);
         const clientId = String(req.body?.clientId || "");
         try {
+            session.claimThread(clientId, requestScope(req), threadId);
             const result = await prepareExistingThread(threadId, clientId, permissionMode(req.body?.permissionMode));
             const nextWorkspace = setActiveThread(threadId, { sourceClientId: clientId }, true);
             res.json({ ok: true, workspace: nextWorkspace, conversation: session.conversationStateSnapshot, ...result });
@@ -403,9 +430,10 @@ export function startHttpServer() {
         const messageId = String(req.body?.messageId || Date.now());
         const messageText = String(req.body?.messageText || prompt || `发送了 ${attachments.length} 张图片`);
         const messageMetadata = await messageMetadataStore.recordPending(messageId, req.body?.messageMetadata);
+        const chatScope = session.assertThreadScope(clientId, requestScope(req), activeThreadId);
         let threadId = activeThreadId;
         logger.info("Codex turn accepted", { threadId: req.body?.threadId, model: model || "default", reasoningEffort: effort || "default", promptLength: prompt.length, attachmentCount: attachments.length });
-        session.bindClient(clientId);
+        session.bindClient(clientId, chatScope);
         session.markConversationRunning(threadId);
         session.setCodexState({ busy: true, threadId, turnId: "" });
         try {
@@ -439,11 +467,12 @@ export function startHttpServer() {
                 ...(skill ? { skill: { name: skill.name, path: skill.path } } : {}),
                 messageText,
                 appEmit: emit,
-                onStart: () => session.bindClient(clientId),
+                onStart: () => undefined,
                 onThread: (actualThreadId) => {
                     const threadChanged = actualThreadId !== threadId;
                     void messageMetadataStore.bindThread(messageId, actualThreadId).catch((error) => logger.warn("Failed to bind message metadata to thread", { clientMessageId: messageId, threadId: actualThreadId, error }));
                     if (actualThreadId !== threadId) {
+                        session.recordThreadScope(chatScope, actualThreadId);
                         threadId = actualThreadId;
                         setActiveThread(threadId, { emptyThread: true, sourceClientId: clientId });
                     }
@@ -609,6 +638,16 @@ function revealLocalFile(filePath: string, isDirectory: boolean) {
 }
 
 /** 结合服务配置解析当前请求 URL。 */
+function requestClient(req: Request): string {
+    return String(req.headers["x-canvas-agent-client"] || req.query.clientId || req.body?.clientId || "");
+}
+
+function requestScope(req: Request) {
+    const header = req.headers["x-canvas-agent-scope"];
+    const raw = header ?? req.query.scope;
+    return parseChatScope(typeof raw === "string" ? JSON.parse(raw) : req.body?.scope);
+}
+
 function requestUrl(req: Request, config: CanvasAgentConfig) {
     return new URL(req.originalUrl || req.url || "/", config.url);
 }
@@ -617,7 +656,7 @@ function requestUrl(req: Request, config: CanvasAgentConfig) {
 function setCors(req: Request, res: Response, url: URL, config: CanvasAgentConfig) {
     const origin = req.headers.origin;
     res.setHeader("Access-Control-Allow-Origin", origin || "*");
-    res.setHeader("Access-Control-Allow-Headers", "content-type,x-canvas-agent-token");
+    res.setHeader("Access-Control-Allow-Headers", "content-type,x-canvas-agent-token,x-canvas-agent-client,x-canvas-agent-scope");
     res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
     res.setHeader("Access-Control-Allow-Private-Network", "true");
     if (!origin || req.method === "OPTIONS" || url.pathname === "/health" || url.pathname === "/config") return true;

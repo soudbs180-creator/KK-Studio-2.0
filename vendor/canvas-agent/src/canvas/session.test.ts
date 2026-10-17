@@ -5,6 +5,57 @@ import test from "node:test";
 
 import { CanvasSession } from "./session.js";
 
+test("thread ownership receipt survives restart and rejects another chat claiming it", () => {
+    const scope = { projectId: "project", chatId: "legacy-codex", epoch: "old-connection" };
+    let receipt: Record<string, typeof scope> = {};
+    const session = new CanvasSession("", {}, owners => { receipt = owners as typeof receipt; });
+    session.recordThreadScope(scope, "old-thread");
+    const reopened = new CanvasSession("old-thread", JSON.parse(JSON.stringify(receipt)));
+    assert.deepEqual(reopened.conversationStateSnapshot.scope, scope);
+    assert.throws(() => reopened.recordThreadScope({ ...scope, chatId: "original-empty-chat", epoch: "new" }, "old-thread"), /其他聊天/);
+    reopened.recordThreadScope({ ...scope, epoch: "new" }, "old-thread");
+});
+
+test("accepted turn keeps its chat and canvas when the same window changes chat", async (t) => {
+    const session = new CanvasSession();
+    const client = connect(session, "window");
+    t.after(() => client.close());
+    const original = { projectId: "project", chatId: "chat-a", epoch: "connection-a" };
+    const later = { projectId: "project", chatId: "chat-b", epoch: "connection-b" };
+    session.updateState({ ...snapshot("project"), scope: original, nodes: [{ id: "original", type: "text", position: { x: 0, y: 0 }, width: 100, height: 100 }] }, "window");
+    session.bindClient("window", original);
+    session.setTurnAttachments("window", [{ id: "private", name: "private.png", type: "image/png", dataUrl: "data:image/png;base64,aW1hZ2U=" }]);
+    session.updateState({ ...snapshot("project"), scope: later, nodes: [{ id: "other-chat", type: "text", position: { x: 0, y: 0 }, width: 100, height: 100 }] }, "window");
+    const frozen = await session.callTool("canvas_get_state", {});
+    assert.equal(JSON.stringify(frozen).includes("original"), true);
+    assert.equal(JSON.stringify(frozen).includes("other-chat"), false);
+    assert.throws(() => session.assertTurnScope("window", later), /其他聊天/);
+    assert.throws(() => session.getTurnAttachment("window", "private", later), /其他聊天/);
+    assert.equal(session.getTurnAttachment("window", "private", original).name, "private.png");
+    await assert.rejects(session.callTool("canvas_create_text_node", { text: "late" }), /scope|聊天|连接/);
+});
+
+test("scoped tool receipt rejects the same window's other chat and epoch", async (t) => {
+    const session = new CanvasSession();
+    const client = connect(session, "window");
+    t.after(() => client.close());
+    const scope = { projectId: "project", chatId: "chat-a", epoch: "connection-a" };
+    session.updateState({ ...snapshot("project"), scope }, "window");
+    session.bindClient("window", scope);
+    const result = session.callTool("canvas_create_text_node", { text: "correct" });
+    const call = client.event("tool_call");
+    const requestId = String(field(call, "requestId"));
+    assert.deepEqual(field(call, "scope"), scope);
+    const turn = { threadId: "", turnId: "" };
+    assert.equal(session.resolveResult("window", { requestId, scope: { ...scope, chatId: "chat-b" }, result: {} }), false);
+    assert.equal(session.resolveResult("window", { requestId, scope: { ...scope, epoch: "late" }, result: {} }), false);
+    assert.equal(session.resolveResult("window", { requestId, scope, result: {} }), false);
+    assert.equal(session.resolveResult("window", { requestId, scope, threadId: "other-thread", turnId: "", result: {} }), false);
+    assert.equal(session.resolveResult("window", { requestId, scope, threadId: "", turnId: "other-turn", result: {} }), false);
+    assert.equal(session.resolveResult("window", { requestId, scope, ...turn, result: { ok: true } }), true);
+    assert.deepEqual(await result, { ok: true });
+});
+
 test("MCP 读取当前激活网页的画布", async (t) => {
     const session = new CanvasSession();
     const first = connect(session, "first");
@@ -221,7 +272,7 @@ test("new clients receive the current Codex state and later updates", (t) => {
     t.after(() => client.close());
 
     const hello = client.event("hello");
-    assert.equal(field(hello, "protocolVersion"), 6);
+    assert.equal(field(hello, "protocolVersion"), 7);
     assert.deepEqual(field(hello, "workspace"), { activeThreadId: "thread-2" });
     assert.deepEqual(field(hello, "conversation"), { revision: 1, conversationId: "thread-2", threadId: "thread-2", status: "ready", mcpStatuses: {} });
     assert.deepEqual(field(hello, "codex"), { busy: true, threadId: "thread-2", turnId: "turn-1" });

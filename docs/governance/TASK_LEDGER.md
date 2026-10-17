@@ -6,6 +6,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 | ID | Title | Status | Display | Priority | Dependencies | Owner | Next action |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| TASK-CHAT-MIGRATION-20261017 | 保全旧聊天资料并恢复迁移、编辑与聊天 | IN_PROGRESS | 进行中 | P1 | none | root | 按已接受ADR-022完成原始Value迁移、真实事务屏障与scope7；先在资料副本验证，再当前产物/独审后迁移默认根并验证编辑聊天重开。 |
 | TASK-AUDIT-REPAIR-20261017 | 审计安全修复、启动恢复与当前治理收敛 | DONE | 已完成 | P1 | none | root | 保留被日常链接引用的任务worktree/EXE及所有恢复证据；root完成最终文档提交后的精确review/正式Delivery和runtime-input不变核对。其余64开放项按原任务继续，尤其旧聊天数据完整迁移/protocol7、统一接入/12AI持久恢复/素材垃圾箱、真实Provider/ComfyUI/GPU/VPS/Mobile/签名及用户验收；不得解除READ_ONLY或批量结案。 |
 | TASK-KK-UNIFIED-20261015 | KK Studio 统一修复与重构 | IN_PROGRESS | 进行中 | P1 | none | root | 原统一scope继续开放；当前后续源码已进入local main@8c36a6b并有63条dirty，已保全为未验收221560a3。当前安全修复由TASK-AUDIT-REPAIR-20261017独占承接；原branch/worktree仅历史来源，不作为当前产品验收或并行写入分配。完整多聊天、12AI持久恢复、Provider/共仓库/账号/同步等仍按原scope另行实施和验收。 |
 | TASK-FIX-PUSH-GUARD-SPACES-001 | 修复 Windows Git pre-push 空格及长路径启动 | PARTIAL | 未完成 | P1 | none | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
@@ -155,6 +156,25 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-HOME-LOAD-DRAFT-20261015 | 保护读取期间编辑不覆盖已有首页草稿设置 | PARTIAL | 进行中 | P2 | TASK-CODEX-HOME-20261015 | root | 保留通过的代码子范围与失败证据，随当前组合源码执行完整verify、新Native重建、最终精确独审/Hosted与交付，不重复开发已修复读取合并。 该工作树只作历史承接来源；本轮安全修复见TASK-AUDIT-REPAIR-20261017，未新增活动分配。 |
 | TASK-VERIFY-DEPS-20261015 | 恢复共享依赖清理事故并核验执行边界 | PARTIAL | 进行中 | P1 | TASK-CODEX-HOME-20261015 | root | 保持防复发子范围PASS与旧事故UNKNOWN分离；不在共享依赖安装或清理。原始字节及影响如无证据不得补写；最终当前提交/托管/交付门禁另验。 |
 | TASK-DESIGN-MD-20261015 | 统一DESIGN设计系统与产品UI收敛 | PARTIAL | 进行中 | P1 | none | root | 关闭基础独审问题，将规则落入设置/模型/聊天/画布/项目/素材等实际页面，按Desktop→Web留同状态证据。 |
+
+## TASK-CHAT-MIGRATION-20261017 — 保全旧聊天资料并恢复迁移、编辑与聊天
+
+- Goal: 无损迁移原聊天数据，恢复独立草稿、正文、线程及正常保存重连。
+- Scope: ADR-022已接受的旧通道与现有chat原始Value迁移、Native/IDB不可降级屏障、普通聊天canonical读写与HTTP7执行scope、聊天素材项目包及Node/Native隔离；不扩临时/新窗口/Mobile/额外Provider。
+- Display status: 进行中
+- Priority: P1 — 默认资料只读，需完成真正迁移和执行隔离后恢复用户编辑聊天。
+- Requirement refs: docs/changes/2026-10-17-chat-migration/intent.md, docs/architecture/adr/ADR-022-project-chats-and-v3-migration.md, ledger:TASK-KK-UNIFIED-20261015
+- Feature IDs: FEAT-009, FEAT-014
+- Owner role: implementation-integrator
+- Acceptance: 主备/身份/原资料不可变归档、逐文件SHA与隔离恢复通过，不删除或移动原文件; 迁移后项目/chat/消息/草稿/线程/素材及未知字段保全，失败与future格式保护、重开不丢且不重复迁移; 现有普通聊天独立编辑、离线历史与正常发送/重连，迟到回调和服务执行scope不串chat; 当前源码完整verify/Rust/独审/官方产物、资料副本及默认库迁移/关闭重开通过并同步文档
+- Branch: `fix/TASK-CHAT-MIGRATION-20261017`
+- Worktree: `D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017`
+- Modules: src/features/creation, src/App.tsx, src/features/agent, src/features/google, src/features/local-service, src/features/projects, src-tauri/src, vendor/canvas-agent, scripts/agent, docs/changes/2026-10-17-chat-migration
+- Verification: NOT_VERIFIED — 当前只读根因已确证；原9项目v2/revision2226，其中一项目2普通chat。已正常关闭原Native并另存2491文件/259972032B，独立2491枚举与重哈希0 mismatch。迁移/运行实现尚未完成，不能复用旧审计PASS代批。
+- Evidence: [docs/changes/2026-10-17-chat-migration/intent.md](../../docs/changes/2026-10-17-chat-migration/intent.md), [docs/changes/2026-10-17-chat-migration/spec.md](../../docs/changes/2026-10-17-chat-migration/spec.md), [docs/changes/2026-10-17-chat-migration/plan.md](../../docs/changes/2026-10-17-chat-migration/plan.md), [docs/changes/2026-10-17-chat-migration/verification.md](../../docs/changes/2026-10-17-chat-migration/verification.md), [docs/changes/2026-10-17-chat-migration/review.md](../../docs/changes/2026-10-17-chat-migration/review.md)
+- Next action: 按已接受ADR-022完成原始Value迁移、真实事务屏障与scope7；先在资料副本验证，再当前产物/独审后迁移默认根并验证编辑聊天重开。
+- Last verified: 2026-10-17
+- Updated: 2026-10-17
 
 ## TASK-AUDIT-REPAIR-20261017 — 审计安全修复、启动恢复与当前治理收敛
 
