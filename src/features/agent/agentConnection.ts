@@ -56,7 +56,6 @@ import type { ModelSelection } from "../../domain/modelSelection.ts";
 import {
   createTurnFreezingController,
   type AgentActionState,
-  type TurnFreezingController,
 } from "./agentTurnFreezing.ts";
 export type { AgentActionState, TurnFreezingController } from "./agentTurnFreezing.ts";
 import {
@@ -919,6 +918,10 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
       validate?: () => string | undefined;
       /** Internal turns such as memory extraction must not learn from themselves. */
       memoryMode?: "normal" | "none";
+      /** Temporary chat does not ingest or inject durable memory. */
+      isTemporary?: boolean;
+      /** Model allowlist constraint enforced at execution time. */
+      modelAllowlist?: string[];
     },
   ): Promise<{ ok: boolean; error?: string; messageId?: string }> {
     if (turnFreezing.isFrozen())
@@ -979,7 +982,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
     });
     patch({ sending: true, error: null, activity: "发送中…" });
     turnFreezing.onTurnStart();
-    if (input?.memoryMode !== "none")
+    if (input?.memoryMode !== "none" && !input?.isTemporary)
       void memoryService.ingestMessage(text.trim(), "user");
     try {
       const attachments = await (
@@ -1008,13 +1011,18 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
       await activeApi.postState(bridge?.getSnapshot() ?? null);
       if (version !== epoch || signal.aborted) throw new Error("发送已取消");
       const memoryInjection =
-        input?.memoryMode === "none"
+        input?.memoryMode === "none" || input?.isTemporary
           ? ""
           : await memoryService.buildInjection(text.trim());
       if (version !== epoch || signal.aborted) throw new Error("发送已取消");
       const requestedModel = input?.selection
         ? codexReasoningModel(input.selection)
         : (input?.model ?? readAgentModel());
+      if (input?.modelAllowlist !== undefined) {
+        if (!requestedModel || !input.modelAllowlist.includes(requestedModel)) {
+          throw new Error(`模型 ${requestedModel} 不在允许调用的模型白名单中`);
+        }
+      }
       const validationError = input?.validate?.();
       if (validationError) throw new Error(validationError);
       const response = await activeApi.postTurn({

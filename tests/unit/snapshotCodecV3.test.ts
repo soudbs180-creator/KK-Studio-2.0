@@ -7,9 +7,7 @@ import {
   SnapshotStorageError,
 } from "../../src/features/creation/snapshotCodec.ts";
 import type {
-  CreationSnapshot,
   CreationSnapshotV3,
-  ChatItem,
   CreationProjectV3,
 } from "../../src/features/creation/model.ts";
 import {

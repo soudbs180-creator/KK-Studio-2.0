@@ -7,7 +7,6 @@ import { renderToStaticMarkup } from "react-dom/server";
 import ts from "typescript";
 import {
   createTurnFreezingController,
-  type AgentActionState as RealAgentActionState,
 } from "../../src/features/agent/agentTurnFreezing.ts";
 
 export type AgentActionState =
@@ -568,7 +567,6 @@ test("T4.1: pauseTurn allows in-flight active step to resolve completely without
   const controller = createMockTurnFreezingController();
   controller.startExecution();
 
-  let stepResult: string | null = null;
   let stepExecuted = false;
 
   const stepPromise = controller.executeStep("tool-op", async () => {
@@ -583,7 +581,7 @@ test("T4.1: pauseTurn allows in-flight active step to resolve completely without
   assert.equal(controller.isPausing(), true);
 
   // Await step resolution
-  stepResult = await stepPromise;
+  const stepResult = await stepPromise;
   await pausePromise;
 
   assert.equal(stepExecuted, true);

@@ -5,7 +5,6 @@ import {
   verifyAlphaIntegrity,
   calculateAdaptiveResize,
   resolveTargetImageMime,
-  type PixelBuffer,
 } from "./harness.ts";
 import { blendMaskedPixels } from "../../src/features/image-edit/pixels.ts";
 

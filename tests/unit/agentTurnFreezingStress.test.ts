@@ -3,7 +3,6 @@ import test from "node:test";
 import {
   createTurnFreezingController,
   type TurnFreezingController,
-  type AgentActionState,
 } from "../../src/features/agent/agentTurnFreezing.ts";
 
 /* =========================================================================
@@ -563,8 +562,8 @@ test("STRESS-5.1: remote background task polling continues uninterrupted while a
   assert.equal(controller.isPaused(), true);
   assert.equal(controller.isFrozen(), true);
 
-  // Keep turn paused for 80ms while remote task completes in the background
-  await sleep(80);
+  // Keep turn paused for 120ms while remote task completes in the background (accommodates Windows 15.6ms timer granularity)
+  await sleep(120);
 
   // Check empirical polling observations during the freeze
   const pollsWhileFrozen = pollLog.filter((p) => p.isFrozen);

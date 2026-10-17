@@ -84,6 +84,52 @@
   height: 30px;
   padding: 0;
 }
+
+.canvas-view-mode-toggle {
+  display: inline-flex;
+  align-items: center;
+  height: 30px;
+  padding: 2px;
+  border-radius: var(--ui-radius-pill);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-control);
+  box-shadow: var(--ui-shadow);
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.canvas-view-mode-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 24px;
+  padding: 0 10px;
+  border-radius: var(--ui-radius-pill);
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 400;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.canvas-view-mode-btn:hover:not(.active) {
+  color: var(--text-primary);
+  background: var(--bg-card-hover);
+}
+
+.canvas-view-mode-btn.active {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  font-weight: 500;
+  box-shadow: var(--ui-shadow);
+}
+
+.canvas-view-mode-btn:active {
+  transform: scale(0.94);
+}
 .canvas-hud .task-panel {
   /* Figma 312:2679 task panel: 196×240, 8px radius, zero inner padding.
      The component stylesheet is loaded after workspace.css, so keep the

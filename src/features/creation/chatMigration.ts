@@ -287,13 +287,11 @@ export function resolveActiveChatId(chats: Record<string, ChatItem>): string {
 function migrateProjectV2(proj: LegacyV2Project, now: number): CreationProjectV3 {
   const chats = buildLegacyChats(proj, now);
   const activeChatId = resolveActiveChatId(chats);
-  const {
-    messages: _m,
-    composerDraft: _d,
-    agentThreadId: _a,
-    googleConversation: _g,
-    ...rest
-  } = proj;
+  const rest = { ...proj };
+  delete (rest as Record<string, unknown>).messages;
+  delete (rest as Record<string, unknown>).composerDraft;
+  delete (rest as Record<string, unknown>).agentThreadId;
+  delete (rest as Record<string, unknown>).googleConversation;
 
   return {
     ...rest,

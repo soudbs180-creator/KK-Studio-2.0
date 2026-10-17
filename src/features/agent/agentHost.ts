@@ -27,6 +27,8 @@ export interface AgentHostOptions {
   ): Promise<{ taskId?: string; error?: string }>;
   /** Stage 编排器：存在时宿主暴露 plan 工具面（A1）。 */
   orchestrator?: StageOrchestrator;
+  /** 可选的模型白名单限制（或由当前活动会话获取）。 */
+  modelAllowlist?: string[] | (() => string[] | undefined);
 }
 
 /** MCP 请求通过 KK 领域和任务入口落地，不直接持有 Provider 凭据。 */
@@ -213,6 +215,29 @@ export function createAgentHost(options: AgentHostOptions) {
             result.rejected.push({ op, reason: "生成节点不存在" });
             continue;
           }
+
+          const allowlist =
+            typeof options.modelAllowlist === "function"
+              ? options.modelAllowlist()
+              : options.modelAllowlist !== undefined
+                ? options.modelAllowlist
+                : project.activeChatId && project.chats
+                  ? (project.chats[project.activeChatId]?.modelAllowlist?.length
+                      ? project.chats[project.activeChatId].modelAllowlist
+                      : undefined)
+                  : undefined;
+
+          if (allowlist !== undefined) {
+            const requestedModel = op.model ?? node.model;
+            if (!requestedModel || !allowlist.includes(requestedModel)) {
+              result.rejected.push({
+                op,
+                reason: `模型 ${requestedModel || "未指定"} 不在允许调用的模型白名单中`,
+              });
+              continue;
+            }
+          }
+
           if (
             node.plugin ||
             !["image", "text"].includes(op.mode ?? node.kind) ||
@@ -239,8 +264,9 @@ export function createAgentHost(options: AgentHostOptions) {
               })
               .trim();
             if (!prompt) throw new Error("生成提示词为空");
+            const targetNode = op.model ? { ...node, model: op.model } : node;
             const accepted = await options.generate(
-              node,
+              targetNode,
               prompt,
               context?.signal,
             );

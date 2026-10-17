@@ -3,7 +3,6 @@ import {
   normalizeCreationSnapshot,
   isCreationProviderRoutingValid,
   type CreationSnapshot,
-  type CreationSnapshotV2,
   type CreationSnapshotV3,
   type CreationProjectV3,
   type ChatItem,
@@ -83,7 +82,7 @@ const chatMessageSchema = z
   })
   .passthrough();
 
-const chatItemSchema = z
+export const chatItemSchema = z
   .object({
     id,
     name: z.string(),
@@ -96,6 +95,7 @@ const chatItemSchema = z
     agentThreadId: id.optional(),
     googleConversation: z.unknown().optional(),
     originChatId: id.optional(),
+    isTemporary: z.boolean().optional(),
   })
   .passthrough();
 

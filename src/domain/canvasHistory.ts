@@ -86,7 +86,7 @@ export function canvasHistoryFingerprint(
 
 export function createCanvasHistory(
   initial: CanvasHistorySnapshot,
-  limit = 80,
+  limit = 20,
 ): CanvasHistoryState {
   return {
     limit: Math.max(1, Math.floor(limit)),

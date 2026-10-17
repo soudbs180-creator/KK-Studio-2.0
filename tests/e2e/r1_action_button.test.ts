@@ -3,7 +3,6 @@ import test from "node:test";
 import {
   ActionButtonStateMachine,
   ACTION_BUTTON_DIMENSIONS,
-  type AgentActionButtonState,
   type AgentActionButtonProps,
 } from "./harness.ts";
 

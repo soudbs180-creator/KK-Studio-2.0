@@ -8,7 +8,10 @@ import {
 import { readCompanionConnection } from "../local-service/connection.ts";
 import {
   CREATION_STORAGE_KEY,
+  emptyDraft,
   emptySnapshot,
+  type ChatItem,
+  type ChatItemDraft,
   type CreationSnapshot,
   type CreationSnapshotV3,
 } from "./model.ts";
@@ -370,9 +373,10 @@ export function pendingRecoveryDraft(): CreationSnapshot | null {
 /** A per-tab draft never overwrites the shared durable source or another tab. */
 export function persistCreationSnapshotSync(snapshot: CreationSnapshot): void {
   if (!writable || isDesktop()) return;
+  const cleanSnapshot = sanitizeSnapshotForPersistence(snapshot);
   const serialized = JSON.stringify({
     baseRevision: expectedRevision,
-    snapshot,
+    snapshot: cleanSnapshot,
   });
   if (serialized.length < 4_000_000) {
     try {
@@ -382,6 +386,45 @@ export function persistCreationSnapshotSync(snapshot: CreationSnapshot): void {
     }
   }
 }
+export function sanitizeSnapshotForPersistence(
+  snapshot: CreationSnapshot,
+): CreationSnapshot {
+  return {
+    ...snapshot,
+    projects: snapshot.projects.map((proj) => {
+      if (!proj.chats) return proj;
+      const sanitizedChats: Record<string, ChatItem> = {};
+      let activeChatId = proj.activeChatId;
+      for (const [id, chat] of Object.entries(proj.chats)) {
+        if (!chat.isTemporary) {
+          sanitizedChats[id] = chat;
+        }
+      }
+      if (Object.keys(sanitizedChats).length === 0) {
+        const defaultId = "chat-default";
+        sanitizedChats[defaultId] = {
+          id: defaultId,
+          name: "对话 1",
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+          draft: { ...emptyDraft() } as ChatItemDraft,
+          messages: [],
+          mainAgent: "codex",
+          modelAllowlist: [],
+        };
+        activeChatId = defaultId;
+      } else if (activeChatId && !sanitizedChats[activeChatId]) {
+        activeChatId = Object.keys(sanitizedChats)[0];
+      }
+      return {
+        ...proj,
+        chats: sanitizedChats,
+        activeChatId,
+      };
+    }),
+  };
+}
+
 export async function persistCreationSnapshotAsync(
   snapshot: CreationSnapshot,
 ): Promise<void> {
@@ -390,10 +433,11 @@ export async function persistCreationSnapshotAsync(
       "corrupt",
       "项目尚未读取成功，禁止覆盖原件。",
     );
+  const cleanSnapshot = sanitizeSnapshotForPersistence(snapshot);
   const persisted =
     isDesktop() || isCompanionEnabled()
-      ? await encodeSnapshotAssets(snapshot, loadStoredAsset)
-      : snapshot;
+      ? await encodeSnapshotAssets(cleanSnapshot, loadStoredAsset)
+      : cleanSnapshot;
   decodeSnapshot(persisted);
   if (isDesktop()) {
     await invoke("write_creation_snapshot", {
@@ -412,8 +456,8 @@ export async function persistCreationSnapshotAsync(
       throw companionStorageError(error);
     }
   } else {
-    await writeIndexed(snapshot);
-    expectedRevision = snapshot.revision;
+    await writeIndexed(cleanSnapshot);
+    expectedRevision = cleanSnapshot.revision;
   }
   if (isDesktop()) return;
   try {
@@ -423,7 +467,7 @@ export async function persistCreationSnapshotAsync(
         snapshot: CreationSnapshot;
         baseRevision: number | null;
       };
-      if (pending.snapshot.revision <= snapshot.revision)
+      if (pending.snapshot.revision <= cleanSnapshot.revision)
         window.sessionStorage.removeItem(JOURNAL);
       else
         window.sessionStorage.setItem(
@@ -431,11 +475,11 @@ export async function persistCreationSnapshotAsync(
           JSON.stringify({ ...pending, baseRevision: expectedRevision }),
         );
     }
-    const serialized = JSON.stringify(snapshot);
+    const serialized = JSON.stringify(cleanSnapshot);
     const previous = window.localStorage.getItem(CREATION_STORAGE_KEY);
     if (
       serialized.length < 4_000_000 &&
-      (!previous || parseSnapshot(previous).revision <= snapshot.revision)
+      (!previous || parseSnapshot(previous).revision <= cleanSnapshot.revision)
     )
       window.localStorage.setItem(CREATION_STORAGE_KEY, serialized);
   } catch {

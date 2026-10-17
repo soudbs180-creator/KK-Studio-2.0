@@ -215,7 +215,7 @@ test("R5-T2-04: running task targeted cancellation invokes /interrupt with speci
 });
 
 test("R5-T2-05: malformed history payload with null fields or unknown formats skips gracefully", () => {
-  const malformedHistory: any = {
+  const malformedHistory: Record<string, unknown> = {
     "broken-node-1": null,
     "broken-node-2": {
       videos: [{ filename: null }], // null filename

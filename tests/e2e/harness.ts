@@ -1,12 +1,8 @@
-import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import {
   ChannelRegistry,
   type ChannelRegistration,
-  type ChannelIndexEntry,
 } from "../../src/features/ai-gateway/channels/registry.ts";
-import { blendMaskedPixels } from "../../src/features/image-edit/pixels.ts";
-import type { CapabilityManifest } from "../../src/domain/providerConnections.ts";
 
 /* -------------------------------------------------------------------------
  * R1: Agent Circular 6-State Action Button & Turn Freezing Contracts
@@ -47,7 +43,7 @@ export const ACTION_BUTTON_DIMENSIONS: ButtonDimensions = {
 export class ActionButtonStateMachine {
   #state: AgentActionButtonState = "idle";
   #lastClickTime = 0;
-  #debounceMs = 300;
+  #debounceMs = 0;
   #activeStepRunning = false;
   #turnQueueFrozen = false;
   #remotePollingActive = false;
@@ -56,8 +52,9 @@ export class ActionButtonStateMachine {
     attachments: [],
   };
 
-  constructor(initialState: AgentActionButtonState = "idle") {
+  constructor(initialState: AgentActionButtonState = "idle", debounceMs: number = 0) {
     this.#state = initialState;
+    this.#debounceMs = debounceMs;
   }
 
   get state(): AgentActionButtonState {
@@ -70,6 +67,10 @@ export class ActionButtonStateMachine {
 
   get isRemotePollingActive(): boolean {
     return this.#remotePollingActive;
+  }
+
+  get isActiveStepRunning(): boolean {
+    return this.#activeStepRunning;
   }
 
   get draft(): { text: string; attachments: string[] } {
@@ -107,11 +108,11 @@ export class ActionButtonStateMachine {
     currentState: AgentActionButtonState;
   }> {
     const now = Date.now();
-    const isDebounced = now - this.#lastClickTime < this.#debounceMs;
+    const isDebounced = this.#lastClickTime > 0 && now - this.#lastClickTime < this.#debounceMs;
     const prev = this.#state;
 
-    // Disabled states reject click events
-    if (this.#state === "pausing" || this.#state === "resuming") {
+    // Disabled states reject click events, and debounced clicks are ignored
+    if (this.#state === "pausing" || this.#state === "resuming" || isDebounced) {
       return { transitioned: false, previousState: prev, currentState: prev };
     }
 
@@ -417,13 +418,11 @@ function resolveActiveChatId(chats: Record<string, ChatItem>): string {
 function migrateProjectV2(proj: LegacyV2Project, now: number): CreationProjectV3 {
   const chats = buildLegacyChats(proj, now);
   const activeChatId = resolveActiveChatId(chats);
-  const {
-    messages: _m,
-    composerDraft: _d,
-    agentThreadId: _a,
-    googleConversation: _g,
-    ...rest
-  } = proj;
+  const rest = { ...proj };
+  delete (rest as Record<string, unknown>).messages;
+  delete (rest as Record<string, unknown>).composerDraft;
+  delete (rest as Record<string, unknown>).agentThreadId;
+  delete (rest as Record<string, unknown>).googleConversation;
 
   return {
     ...rest,
@@ -594,7 +593,7 @@ export function deduplicateRelayModels(entries: ModelMenuEntry[]): DeduplicatedM
       (e) => e.state === "disabled" || e.state === "quarantined",
     );
 
-    let badgeLabel = "";
+    let badgeLabel: string;
     if (activeCandidates.length > 1) {
       badgeLabel = `中转 · ${activeCandidates.length} 个可用`;
     } else if (activeCandidates.length === 1) {
@@ -682,13 +681,10 @@ export function verifyAlphaIntegrity(buffer: PixelBuffer): {
   minAlpha: number;
 } {
   let hasTransparency = false;
-  let hasCorruptedBlackMatte = false;
+  const hasCorruptedBlackMatte = false;
   let minAlpha = 255;
 
   for (let i = 0; i < buffer.data.length; i += 4) {
-    const r = buffer.data[i];
-    const g = buffer.data[i + 1];
-    const b = buffer.data[i + 2];
     const a = buffer.data[i + 3];
 
     if (a < minAlpha) minAlpha = a;

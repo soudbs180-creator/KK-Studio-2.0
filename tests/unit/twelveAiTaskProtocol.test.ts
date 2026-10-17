@@ -87,7 +87,7 @@ test("12AI fresh adapters without durable persistence never read credentials or 
   }
 });
 
-test("12AI factory defaults to read-only task recovery without a durable persistence port", async () => {
+test("12AI factory binds default persistence delegate and allows task recovery and submission", async () => {
   const originalFetch = globalThis.fetch;
   let calls = 0;
   setSessionApiKey(
@@ -97,6 +97,11 @@ test("12AI factory defaults to read-only task recovery without a durable persist
   );
   globalThis.fetch = async (_url, init) => {
     calls++;
+    if (init?.method === "POST") {
+      return new Response(
+        JSON.stringify({ id: "task_two", status: "queued", outputs: [] }),
+      );
+    }
     assert.equal(init?.method, "GET");
     return new Response(
       JSON.stringify({ id: "task_two", status: "in_progress" }),
@@ -105,14 +110,10 @@ test("12AI factory defaults to read-only task recovery without a durable persist
   try {
     const adapter = createGenerationAdapter(connection);
     assert.ok(adapter instanceof TwelveAiTaskAdapter);
-    await assert.rejects(
-      adapter.submit(request()),
-      (error: unknown) =>
-        error instanceof TwelveAiTaskError &&
-        error.reason === "receipt_persistence_required",
-    );
+    const submitted = await adapter.submit(request());
+    assert.equal(submitted.providerJobId, "task_two");
     assert.equal((await adapter.getTask("task_two")).status, "running");
-    assert.equal(calls, 1);
+    assert.equal(calls, 2);
   } finally {
     globalThis.fetch = originalFetch;
     setSessionApiKey("", connection.baseUrl!, connection.credentialRef);

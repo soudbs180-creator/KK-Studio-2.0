@@ -21,13 +21,11 @@ import {
   decodeSnapshot,
   parseSnapshot,
   validateSnapshotV3,
-  SnapshotStorageError,
 } from "../../src/features/creation/snapshotCodec.ts";
 import {
   migrateSnapshotV2ToV3,
   sha256Hex,
   rejectSecretsInSnapshot,
-  resolveActiveChatId,
   type LegacyV2Snapshot,
   type LegacyV2Project,
 } from "../../src/features/creation/chatMigration.ts";
@@ -570,8 +568,6 @@ test("R2-STRESS-RECOVERY-03: Crash recovery is strictly idempotent across repeat
 
 test("R2-STRESS-LOAD-01: Deterministic migration of 1,100 messages across direct, codex, and google threads preserves 100% messages and attachments with exact originChatId mapping", () => {
   const directMessageCount = 600;
-  const codexMessageCount = 500;
-  const totalMessageCount = directMessageCount + codexMessageCount;
 
   // 1. Build 600 realistic direct messages
   const generatedMessages: Array<{

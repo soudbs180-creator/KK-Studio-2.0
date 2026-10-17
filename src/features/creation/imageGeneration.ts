@@ -10,6 +10,10 @@ import { loadStoredAsset } from "./assetRepository.ts";
 import { resolveImageAttachments } from "./resolveAttachments.ts";
 import { ProviderSubmissionError } from "./providerSubmission.ts";
 import { readModelCatalogs } from "../models/modelCatalog.ts";
+import { createGenerationAdapter } from "../../integrations/generation/providerAdapterFactory.ts";
+import { readProviderConnections } from "./providerRegistry.ts";
+import { twelveAiApiBase } from "../../integrations/generation/twelveAiTaskProtocol.ts";
+import type { ProviderConnection } from "../../domain/providerConnections.ts";
 
 export { getSessionApiKey, setSessionApiKey } from "./providerCredentials.ts";
 
@@ -312,6 +316,8 @@ export async function generateImages(options: {
   attachments: CreationAttachment[];
   signal: AbortSignal;
   providerBaseUrl?: string;
+  providerConnectionId?: string;
+  providerName?: string;
   credentialRef?: string;
   count?: number;
   idempotencyKey?: string;
@@ -341,9 +347,6 @@ export async function generateImages(options: {
     )
   )
     throw new Error("当前模型不支持图片创作，请更换图片模型。");
-  const sessionApiKey = await loadApiKey(baseUrl, options.credentialRef);
-  if (!sessionApiKey.trim())
-    throw new Error("尚未配置 API Key，请先在设置中配置模型连接。");
   const requestedCount = Math.max(
     1,
     Math.min(64, Math.floor(options.count ?? 1)),
@@ -360,6 +363,104 @@ export async function generateImages(options: {
     (!mask || mask.mime !== "image/png" || !attachments.length)
   )
     throw new Error("编辑蒙版原件缺失或格式无效，本次未发送。");
+
+  // Check if an adapter handles this provider (e.g. 12AI or ComfyUI)
+  const connections = readProviderConnections();
+  const matchedConn = connections.find(
+    (c) =>
+      c.id === options.providerConnectionId ||
+      c.baseUrl === baseUrl,
+  );
+  const candidateConnection: ProviderConnection | undefined =
+    matchedConn ??
+    (baseUrl
+      ? {
+          id: options.providerConnectionId || `conn-${baseUrl}`,
+          displayName: options.providerName || "Provider",
+          provider: twelveAiApiBase(baseUrl)
+            ? "12ai"
+            : baseUrl.includes("8188")
+              ? "comfyui"
+              : "custom",
+          baseUrl,
+          kind: baseUrl.includes("8188")
+            ? ("local_comfyui" as const)
+            : ("managed_api" as const),
+          state: "active" as const,
+          credentialRef: options.credentialRef,
+          capabilities: {
+            modalities: ["image"],
+            operations: ["generate"],
+            maxOutputs: 4,
+            async: false,
+          },
+          concurrencyLimit: 1,
+        }
+      : undefined);
+  const adapter = candidateConnection
+    ? createGenerationAdapter(candidateConnection)
+    : null;
+
+  if (
+    adapter &&
+    (adapter.connection.kind === "local_comfyui" ||
+      twelveAiApiBase(adapter.connection.baseUrl))
+  ) {
+    options.beforeRequest?.();
+    options.onRequestStart?.();
+    const job = await adapter.submit({
+      prompt: options.prompt,
+      model,
+      attachments,
+      requestedOutputs: requestedCount,
+      idempotencyKey: options.idempotencyKey ?? `job-${Date.now()}`,
+      signal: options.signal,
+    });
+    let currentJob = job;
+    while (currentJob.status === "queued" || currentJob.status === "running") {
+      if (options.signal.aborted) {
+        await adapter
+          .cancel(currentJob.providerJobId, options.signal)
+          .catch(() => {});
+        throw new GenerationProviderError("已取消任务。", {
+          failureClass: "cancelled",
+          retryable: false,
+        });
+      }
+      await new Promise((resolve) => setTimeout(resolve, 800));
+      currentJob = await adapter.getStatus(
+        currentJob.providerJobId,
+        options.signal,
+      );
+    }
+    if (currentJob.status === "failed") {
+      throw new GenerationProviderError("生成任务失败。", {
+        failureClass: "provider_unavailable",
+        retryable: true,
+      });
+    }
+    const outputs = await adapter.listResults(
+      currentJob.providerJobId,
+      options.signal,
+    );
+    const sources = outputs
+      .map(
+        (out) =>
+          out.url ||
+          (out.b64Json
+            ? `data:${out.mime || "image/png"};base64,${out.b64Json}`
+            : ""),
+      )
+      .filter(Boolean);
+    if (options.onChunk && sources.length) {
+      await options.onChunk(sources, 0);
+    }
+    return { sources };
+  }
+
+  const sessionApiKey = await loadApiKey(baseUrl, options.credentialRef);
+  if (!sessionApiKey.trim())
+    throw new Error("尚未配置 API Key，请先在设置中配置模型连接。");
   // OpenAI's official image endpoint accepts at most ten outputs per request
   // (and dall-e-3 only accepts one). Larger UI batches become idempotent chunks.
   const perRequest = /dall[-_ ]?e[-_ ]?3/i.test(model) ? 1 : 10;

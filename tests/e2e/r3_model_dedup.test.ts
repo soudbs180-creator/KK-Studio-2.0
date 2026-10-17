@@ -5,10 +5,7 @@ import {
   createTestChannelRegistry,
   type ModelMenuEntry,
 } from "./harness.ts";
-import {
-  ChannelRegistry,
-  type ChannelRegistration,
-} from "../../src/features/ai-gateway/channels/registry.ts";
+import type { ChannelRegistration } from "../../src/features/ai-gateway/channels/registry.ts";
 import type { ChannelAdapter } from "../../src/features/ai-gateway/channels/adapter.ts";
 import type { CapabilityManifest } from "../../src/domain/providerConnections.ts";
 

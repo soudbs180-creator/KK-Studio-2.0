@@ -1730,16 +1730,18 @@
   z-index: 1;
 }
 .conversation-panel > header {
-  height: 28px;
+  min-height: 28px;
+  height: auto;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: stretch;
   gap: 8px;
 }
 .conversation-panel strong {
   font-size: var(--ui-font-title);
   margin-right: auto;
 }
-.conversation-panel header button {
+.conversation-panel header > div:first-child button {
   color: var(--text-secondary);
   display: grid;
   place-items: center;
@@ -1748,19 +1750,67 @@
   flex: 0 0 var(--ui-control-h-compact);
   border-radius: 8px;
 }
-.conversation-panel header button:last-child {
+.conversation-panel header > div:first-child button:last-child {
   position: static;
   margin-right: -17px;
 }
-.conversation-panel header button img,
-.conversation-panel header button svg {
+.conversation-panel header > div:first-child button img,
+.conversation-panel header > div:first-child button svg {
   width: var(--ui-icon-md);
   height: var(--ui-icon-md);
 }
-.conversation-panel header button:hover,
-.conversation-panel header button:focus-visible {
+.conversation-panel header > div:first-child button:hover,
+.conversation-panel header > div:first-child button:focus-visible {
   color: var(--text-primary);
   background: var(--bg-card-hover);
+}
+.conversation-chat-tabs-wrapper {
+  margin-top: 4px;
+}
+.conversation-chat-tabs button.conversation-chat-tab {
+  all: unset;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  height: 26px;
+  padding: 0 10px;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 12px;
+  cursor: pointer;
+  flex: 0 0 auto;
+  max-width: 140px;
+  white-space: nowrap;
+}
+.conversation-chat-tabs button.conversation-chat-tab.active {
+  background: var(--kk-bg-surface);
+  color: var(--text-primary);
+  border-bottom: 2px solid var(--kk-accent);
+}
+.conversation-chat-tabs button.conversation-chat-tab:hover {
+  background: var(--bg-card-hover, var(--kk-bg-surface));
+  color: var(--text-primary);
+}
+.conversation-chat-tab-add {
+  all: unset;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  border: 1px dashed var(--border-default);
+  color: var(--text-secondary);
+  cursor: pointer;
+  flex: 0 0 auto;
+  font-size: 14px;
+  line-height: 1;
+}
+.conversation-chat-tab-add:hover {
+  color: var(--text-primary);
+  border-color: var(--border-hover, var(--kk-border-control));
 }
 .conversation-messages {
   flex: 1;

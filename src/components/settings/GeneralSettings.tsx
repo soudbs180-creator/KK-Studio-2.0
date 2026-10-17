@@ -96,6 +96,52 @@ export default function GeneralSettings({
             onChange={(floatingLayout) => onChange({ floatingLayout })}
           />
         </SettingRow>
+        <SettingRow
+          id="historyLimit"
+          title="画布历史步数"
+          description="画布撤销 / 重做的历史步数（范围 5~100 步，默认 20 步）"
+        >
+          <div className="settings-stepper-wrap">
+            <button
+              type="button"
+              className="settings-stepper-btn"
+              aria-label="减少步数"
+              onClick={() => {
+                const current = preferences.historyLimit ?? 20;
+                onChange({ historyLimit: Math.max(5, current - 5) });
+              }}
+            >
+              −
+            </button>
+            <input
+              type="number"
+              id="historyLimit"
+              className="settings-stepper-input"
+              aria-labelledby="historyLimit-label"
+              aria-describedby="historyLimit-description"
+              min={5}
+              max={100}
+              value={preferences.historyLimit ?? 20}
+              onChange={(event) => {
+                const val = parseInt(event.target.value, 10);
+                if (!isNaN(val)) {
+                  onChange({ historyLimit: Math.max(5, Math.min(100, val)) });
+                }
+              }}
+            />
+            <button
+              type="button"
+              className="settings-stepper-btn"
+              aria-label="增加步数"
+              onClick={() => {
+                const current = preferences.historyLimit ?? 20;
+                onChange({ historyLimit: Math.min(100, current + 5) });
+              }}
+            >
+              +
+            </button>
+          </div>
+        </SettingRow>
         <details className="settings-disclosure">
           <summary>系统与未接入偏好</summary>
           <div className="settings-general-rows">

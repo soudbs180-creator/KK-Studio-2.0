@@ -122,6 +122,7 @@ export interface ChatItem {
   agentThreadId?: string;
   googleConversation?: GoogleConversation | unknown;
   originChatId?: string;
+  isTemporary?: boolean;
   [k: string]: unknown;
 }
 
@@ -910,7 +911,10 @@ function normalizeChatMessages(raw: unknown): ChatItemMessage[] {
     }));
 }
 
-function normalizeChat(candidate: unknown, fallbackId: string): ChatItem {
+export function normalizeChat(
+  candidate: unknown,
+  fallbackId = "chat-default",
+): ChatItem {
   const c = (candidate && typeof candidate === "object" ? candidate : {}) as Partial<ChatItem>;
   const id = typeof c.id === "string" && c.id.trim() ? safeText(c.id, 160) : fallbackId;
   const name = typeof c.name === "string" && c.name.trim() ? safeText(c.name, 160) : "默认对话";
@@ -935,6 +939,7 @@ function normalizeChat(candidate: unknown, fallbackId: string): ChatItem {
     agentThreadId: typeof c.agentThreadId === "string" && /^[A-Za-z0-9_-]{1,160}$/.test(c.agentThreadId) ? c.agentThreadId : undefined,
     googleConversation: normalizeGoogleConversation(c.googleConversation),
     originChatId: typeof c.originChatId === "string" ? safeText(c.originChatId, 160) : undefined,
+    isTemporary: Boolean(c.isTemporary),
   };
 }
 

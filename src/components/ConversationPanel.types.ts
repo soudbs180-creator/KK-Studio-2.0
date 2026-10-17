@@ -24,4 +24,6 @@ export interface ConversationPanelProps {
   skills?: SkillRecord[];
   onApplySkill?: (record: SkillRecord) => string;
   agent?: AgentConversationProps;
+  onSelectChat?: (chatId: string) => void;
+  onCreateChat?: (isTemporary?: boolean) => void;
 }

@@ -9,10 +9,20 @@ export default function TopBar({
   onOpen,
   onToggleSidebar,
   onToggleChat,
+  onNewWindow,
+  onNewChat,
+  onNewTempChat,
+  onUndo,
+  onRedo,
 }: {
   onOpen: (view: string) => void;
   onToggleSidebar: () => void;
   onToggleChat: () => void;
+  onNewWindow?: () => void;
+  onNewChat?: () => void;
+  onNewTempChat?: () => void;
+  onUndo?: () => void;
+  onRedo?: () => void;
 }) {
   const desktop = isTauri();
   const [menu, setMenu] = useState("");
@@ -44,11 +54,56 @@ export default function TopBar({
   useDismissible(menu !== "", navRef, () => setMenu(""), triggerRef);
   const entries: Record<string, { text: string; action: () => void }[]> = {
     文件: [
+      {
+        text: "新建窗口",
+        action: () =>
+          onNewWindow
+            ? onNewWindow()
+            : window.open(window.location.href, "_blank"),
+      },
+      {
+        text: "新建聊天",
+        action: () => (onNewChat ? onNewChat() : onOpen("chat")),
+      },
+      {
+        text: "新建临时聊天",
+        action: () => (onNewTempChat ? onNewTempChat() : onOpen("chat")),
+      },
       { text: "项目库", action: () => onOpen("projects") },
       { text: "资产管理", action: () => onOpen("assets") },
       { text: "提示词库", action: () => onOpen("prompts") },
     ],
-    编辑: [{ text: "设置", action: () => onOpen("settings") }],
+    编辑: [
+      {
+        text: "撤销",
+        action: () => {
+          if (onUndo) onUndo();
+          else window.dispatchEvent(new CustomEvent("kk:canvas-undo"));
+        },
+      },
+      {
+        text: "重做",
+        action: () => {
+          if (onRedo) onRedo();
+          else window.dispatchEvent(new CustomEvent("kk:canvas-redo"));
+        },
+      },
+      { text: "剪切", action: () => document.execCommand("cut") },
+      { text: "复制", action: () => document.execCommand("copy") },
+      {
+        text: "粘贴",
+        action: () => {
+          navigator.clipboard
+            ?.readText?.()
+            .then((text) => {
+              if (text) document.execCommand("insertText", false, text);
+            })
+            .catch(() => {});
+        },
+      },
+      { text: "全选", action: () => document.execCommand("selectAll") },
+      { text: "设置", action: () => onOpen("settings") },
+    ],
     窗口: [
       { text: "展开 / 收起侧边栏", action: onToggleSidebar },
       { text: "展开 / 收起对话", action: onToggleChat },

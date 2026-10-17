@@ -1,4 +1,4 @@
-import { useEffect, useRef, type RefObject, type ReactNode } from "react";
+import { useState, useEffect, useRef, type RefObject, type ReactNode } from "react";
 import StartAttachmentList from "./StartAttachmentList";
 import ComposerTextarea from "./ComposerTextarea";
 import ConversationActions from "./ConversationActions";
@@ -81,6 +81,7 @@ export default function ConversationComposer({
     toggleMenu,
     closeMenus,
   } = useComposerMenus(actionsRef);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   useEffect(() => {
     if (modelDisabled) closeMenus();
   }, [modelDisabled, closeMenus]);
@@ -90,12 +91,17 @@ export default function ConversationComposer({
       data-node-id="407:29310"
       onSubmit={async (e) => {
         e.preventDefault();
-        if (!input.trim()) return;
+        if (!input.trim() || isSubmitting) return;
         if (readingFiles) {
           onStatus("正在读取参考素材，请稍候再提交。");
           return;
         }
-        await onSubmitMessage(input.trim());
+        try {
+          setIsSubmitting(true);
+          await onSubmitMessage(input.trim());
+        } finally {
+          setIsSubmitting(false);
+        }
       }}
     >
       <ComposerTextarea
@@ -122,7 +128,8 @@ export default function ConversationComposer({
         fileInput={fileInput}
         onAddFiles={onAddFiles}
         composerDraft={composerDraft}
-        submitting={submitDisabled ?? disabled}
+        submitting={isSubmitting}
+        submitDisabled={Boolean(disabled || submitDisabled || !input.trim())}
         attachmentDisabled={attachmentDisabled}
         modelDisabled={modelDisabled}
         currentModel={currentModel}

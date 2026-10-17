@@ -22,7 +22,7 @@ export default function ConversationChatTabs({
   const handleKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLButtonElement>, currentIndex: number) => {
       if (chatEntries.length === 0) return;
-      let nextIndex = currentIndex;
+      let nextIndex: number;
 
       if (event.key === "ArrowRight") {
         nextIndex = (currentIndex + 1) % chatEntries.length;

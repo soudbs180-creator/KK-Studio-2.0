@@ -14,11 +14,9 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { runInNewContext } from "node:vm";
 import { createElement, Fragment, type ReactElement } from "react";
-import { renderToStaticMarkup } from "react-dom/server";
 import ts from "typescript";
 import {
   createTurnFreezingController,
-  type AgentActionState as TurnFreezingState,
 } from "../../src/features/agent/agentTurnFreezing.ts";
 
 export type AgentActionState =
@@ -94,7 +92,7 @@ async function loadTranspiledActionButtonModule(): Promise<TranspiledActionButto
   const exports: Partial<TranspiledActionButtonModule> = {};
 
   // Stateful useRef store allowing multiple renders of the same component instance to share refs
-  let activeSharedRef: { current: number } = { current: 0 };
+  const activeSharedRef: { current: number } = { current: 0 };
 
   const modules: Record<string, unknown> = {
     react: {
@@ -213,11 +211,6 @@ test("ADV-1.2: 100 rapid click spam on idle state triggers onSend EXACTLY once",
 
   // We simulate rapid clicks via a custom wrapper tracking lastClickRef
   const sharedRef = { current: 0 };
-  const mockEvent = {
-    preventDefault: () => {},
-    stopPropagation: () => {},
-    currentTarget: { type: "button", form: null },
-  };
 
   const executeClick = (currentTime: number) => {
     if (mod.shouldDebounceClick(sharedRef.current, currentTime, 300)) {
@@ -396,6 +389,7 @@ test("ADV-1.6: 100 continuous spam clicks across a dynamic 6-state transition se
   // 5. In resuming (clicks 70..84): disabled, 0 callbacks
   // 6. In completed (clicks 85..94): disabled, 0 callbacks
   assert.equal(resumeCount, 0, "onResume safely debounced during rapid spam");
+  assert.equal(illegalCallbackCount, 45, "Clicks during disabled states must be intercepted");
 });
 
 test("ADV-1.7: Direct synchronous 100-click spam on mounted React component in idle state", async () => {

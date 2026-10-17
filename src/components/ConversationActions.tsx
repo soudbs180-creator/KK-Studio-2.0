@@ -16,6 +16,7 @@ export default function ConversationActions({
   onAddFiles,
   composerDraft,
   submitting,
+  submitDisabled,
   attachmentDisabled,
   modelDisabled,
   currentModel,
@@ -53,6 +54,7 @@ export default function ConversationActions({
   onAddFiles: (files: FileList | null) => void;
   composerDraft?: CreationDraft;
   submitting: boolean;
+  submitDisabled?: boolean;
   attachmentDisabled?: boolean;
   modelDisabled?: boolean;
   currentModel?: string;
@@ -218,10 +220,11 @@ export default function ConversationActions({
           aria-hidden="true"
         />
         <AgentActionButton
+          className="chat-send"
           state={resolvedState}
           hasDraft={hasContent}
           hasContent={hasContent}
-          disabled={submitting && !agentActionState}
+          disabled={Boolean((submitting && !agentActionState) || (resolvedState === "idle" && submitDisabled))}
           onSend={onSend}
           onPause={handlePause}
           onResume={handleResume}

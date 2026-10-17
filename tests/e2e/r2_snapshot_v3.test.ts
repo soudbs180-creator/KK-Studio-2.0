@@ -394,7 +394,7 @@ test("R2-T2-04: active tasks maintain originChatId during multi-chat switching w
 });
 
 test("R2-T2-05: rapid concurrent chat creation maintains draft isolation and unique scoped identifiers", () => {
-  const chats: Record<string, any> = {};
+  const chats: Record<string, unknown> = {};
   const chatCount = 10;
 
   for (let i = 0; i < chatCount; i++) {

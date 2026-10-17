@@ -35,9 +35,12 @@ import {
   SKILLS_CHANGED_EVENT,
   type SkillRecord,
 } from "./features/skills/skillRegistry";
+import { isTauri } from "@tauri-apps/api/core";
 import {
   createProject,
   emptyDraft,
+  type ChatItem,
+  type ChatItemDraft,
   type CreationDraft,
   type CreationProject,
   type CreationTask,
@@ -2413,7 +2416,21 @@ export default function App() {
       });
       if (!current || activeProjectIdRef.current === projectId)
         replaceCanvasItems(nextProject.items);
-      if (!current) setActive("workspace");
+      if (!current) {
+        const transitionToWorkspace = () => {
+          setActive("workspace");
+          setChat(true);
+        };
+        if (typeof document !== "undefined" && "startViewTransition" in document) {
+          (
+            document as Document & {
+              startViewTransition: (cb: () => void) => void;
+            }
+          ).startViewTransition(transitionToWorkspace);
+        } else {
+          transitionToWorkspace();
+        }
+      }
       // The queued task and its stable idempotency key must survive a crash
       // before any provider request is allowed to start.
       await persistence.flush();
@@ -2504,10 +2521,21 @@ export default function App() {
         activeProjectId: project.id,
       });
       activeProjectIdRef.current = project.id;
-      activePageRef.current = "workspace";
-      setActive("workspace");
-      setChat(true);
-      replaceCanvasItems(project.items);
+      const transitionToWorkspace = () => {
+        activePageRef.current = "workspace";
+        setActive("workspace");
+        setChat(true);
+        replaceCanvasItems(project.items);
+      };
+      if (typeof document !== "undefined" && "startViewTransition" in document) {
+        (
+          document as Document & {
+            startViewTransition: (cb: () => void) => void;
+          }
+        ).startViewTransition(transitionToWorkspace);
+      } else {
+        transitionToWorkspace();
+      }
       agentConnection.syncProject();
       await persistence.flush();
       const ownsProject = () =>
@@ -2520,11 +2548,11 @@ export default function App() {
       );
       await desktopAgentLifecycle.connect();
       if (!ownsProject()) return "项目已切换，当前未发送；原项目草稿仍保留。";
+      const currentProject = project;
       const result = await agentConnection.sendMessage(input.prompt.trim(), {
-        selection,
-        outputCount: input.outputCount,
-        attachments,
+        selection, outputCount: input.outputCount, attachments,
         canvasSource: { nodeId: project.items[0].id, kind: "image" },
+        isTemporary: Boolean(currentProject?.activeChatId && currentProject.chats?.[currentProject.activeChatId]?.isTemporary),
       });
       if (!result.ok) return result.error ?? "发送未确认，草稿仍保留。";
       updateProject(project.id, (current) => ({
@@ -2622,13 +2650,126 @@ export default function App() {
     });
     replaceCanvasItems(updated.items);
   }
-  function handleDeleteMessage(messageId: string): void {
-    if (!activeProject) return;
-    updateProject(activeProject.id, (project) => ({
-      ...project,
-      messages: project.messages.filter((message) => message.id !== messageId),
+  function handleNewWindow(): void {
+    if (isTauri()) {
+      import("@tauri-apps/api/webviewWindow")
+        .then(({ WebviewWindow }) => {
+          const label = `win-${Date.now()}`;
+          new WebviewWindow(label, { url: "/" });
+        })
+        .catch(() => {
+          window.open(window.location.href, "_blank");
+        });
+    } else {
+      window.open(window.location.href, "_blank");
+    }
+  }
+
+  function handleCreateChat(isTemporary = false): void {
+    const project = activeProject;
+    if (!project) {
+      const newProj = createProject({
+        prompt: "",
+        model: "",
+        kind: "image",
+        attachments: [],
+      });
+      newProj.name = isTemporary ? "临时会话" : "新建项目";
+      const chatId = isTemporary
+        ? `chat-temp-${Date.now()}`
+        : `chat-${Date.now()}`;
+      newProj.chats = {
+        [chatId]: {
+          id: chatId,
+          name: isTemporary ? "临时会话" : "对话 1",
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+          draft: { ...emptyDraft() } as ChatItemDraft,
+          messages: [],
+          mainAgent: "codex",
+          modelAllowlist: [],
+          isTemporary,
+        },
+      };
+      newProj.activeChatId = chatId;
+      commitCreation({
+        ...creationRef.current,
+        projects: [newProj, ...creationRef.current.projects],
+        activeProjectId: newProj.id,
+      });
+      setActive("workspace");
+      setChat(true);
+      setModal("");
+      return;
+    }
+    const chatId = isTemporary
+      ? `chat-temp-${Date.now()}`
+      : `chat-${Date.now()}`;
+    const nextCount = Object.keys(project.chats || {}).length + 1;
+    const newChat: ChatItem = {
+      id: chatId,
+      name: isTemporary ? "临时会话" : `对话 ${nextCount}`,
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+      draft: { ...emptyDraft() } as ChatItemDraft,
+      messages: [],
+      mainAgent: "codex",
+      modelAllowlist: [],
+      isTemporary,
+    };
+    updateProject(project.id, (proj) => ({
+      ...proj,
+      chats: {
+        ...(proj.chats || {}),
+        [chatId]: newChat,
+      },
+      activeChatId: chatId,
       updatedAt: Date.now(),
     }));
+    setActive("workspace");
+    setChat(true);
+    setModal("");
+  }
+
+  function handleSelectChat(chatId: string): void {
+    if (!activeProject) return;
+    updateProject(activeProject.id, (proj) => ({
+      ...proj,
+      activeChatId: chatId,
+      updatedAt: Date.now(),
+    }));
+  }
+
+  function handleDeleteMessage(messageId: string): void {
+    if (!activeProject) return;
+    updateProject(activeProject.id, (project) => {
+      const activeChatId = project.activeChatId;
+      if (activeChatId && project.chats && project.chats[activeChatId]) {
+        const chat = project.chats[activeChatId];
+        return {
+          ...project,
+          chats: {
+            ...project.chats,
+            [activeChatId]: {
+              ...chat,
+              messages: chat.messages.filter((m) => m.id !== messageId),
+              updatedAt: Date.now(),
+            },
+          },
+          messages: project.messages.filter(
+            (message) => message.id !== messageId,
+          ),
+          updatedAt: Date.now(),
+        };
+      }
+      return {
+        ...project,
+        messages: project.messages.filter(
+          (message) => message.id !== messageId,
+        ),
+        updatedAt: Date.now(),
+      };
+    });
   }
   function toggleLike(id: string): void {
     if (activeProject) {
@@ -2918,6 +3059,18 @@ export default function App() {
         }));
     }
   }
+
+  const [trashedAssets, setTrashedAssets] = useState<Asset[]>([]);
+  function handleRestoreAsset(assetId: string): void {
+    const item = trashedAssets.find((a) => a.id === assetId);
+    if (!item) return;
+    setTrashedAssets((prev) => prev.filter((a) => a.id !== assetId));
+    add([item], item.type === "subject");
+  }
+  function handlePermanentlyDeleteAsset(assetId: string): void {
+    setTrashedAssets((prev) => prev.filter((a) => a.id !== assetId));
+  }
+
   return (
     <div
       className="app"
@@ -2930,6 +3083,9 @@ export default function App() {
         onOpen={open}
         onToggleSidebar={sidebar.toggle}
         onToggleChat={() => open("chat")}
+        onNewWindow={handleNewWindow}
+        onNewChat={() => handleCreateChat(false)}
+        onNewTempChat={() => handleCreateChat(true)}
       />
       <div className="app-body">
         {sidebar.narrow && !sidebar.collapsed && (
@@ -3058,11 +3214,6 @@ export default function App() {
                   projectStatus={
                     activeProject && (
                       <div className="project-task-status" aria-live="polite">
-                        {activeProject.name !== "未命名项目" && (
-                          <strong title={activeProject.name}>
-                            {activeProject.name}
-                          </strong>
-                        )}
                         {activeProject.tasks.slice(-1).map((task) => {
                           const retry = taskRetryAvailability(
                             task,
@@ -3161,6 +3312,8 @@ export default function App() {
                   onOpen={open}
                   project={activeProject}
                   currentModel={activeProject?.model}
+                  onSelectChat={handleSelectChat}
+                  onCreateChat={handleCreateChat}
                   modelOptions={[
                     ...new Set(
                       [
@@ -3405,7 +3558,10 @@ export default function App() {
                 archive={assetArchive}
                 assets={assets}
                 subjects={subjects}
+                trashedAssets={trashedAssets}
                 onAdd={add}
+                onRestoreAsset={handleRestoreAsset}
+                onPermanentlyDeleteAsset={handlePermanentlyDeleteAsset}
               />
             ) : modal === "tasks" ? (
               <TaskWorkbench

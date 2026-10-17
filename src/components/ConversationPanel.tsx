@@ -20,22 +20,9 @@ import {
   getGenerationUiState,
 } from "../domain/uiGovernance";
 export default function ConversationPanel({
-  overlay = false,
-  onClose,
-  onOpen,
-  project,
-  currentModel,
-  modelConfigured = false,
-  onModelChange,
-  composerDraft,
-  onDraftChange,
-  voiceEnabled = true,
-  modelOptions = [],
-  onSend,
-  onDeleteMessage,
-  skills = [],
-  onApplySkill,
-  agent,
+  overlay = false, onClose, onOpen, project, currentModel, modelConfigured = false,
+  onModelChange, composerDraft, onDraftChange, voiceEnabled = true, modelOptions = [],
+  onSend, onDeleteMessage, skills = [], onApplySkill, agent, onSelectChat, onCreateChat,
 }: ConversationPanelProps) {
   const panelRef = useConversationOverlay(overlay);
   const agentDraftState = useAgentDraftState();
@@ -43,25 +30,15 @@ export default function ConversationPanel({
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<string[]>([]);
   const [status, setStatus] = useState("");
-  const [approvalMode, setApprovalMode] = useState<"auto" | "ask">(
-    composerDraft?.approvalMode ?? "auto",
-  );
+  const [approvalMode, setApprovalMode] = useState<"auto" | "ask">(composerDraft?.approvalMode ?? "auto");
   const [pendingApproval, setPendingApproval] = useState<string | null>(null);
-  const [previewImage, setPreviewImage] = useState<{
-    src: string;
-    prompt?: string;
-  } | null>(null);
+  const [previewImage, setPreviewImage] = useState<{ src: string; prompt?: string } | null>(null);
   const [submitting, setSubmitting] = useState(false);
-  const modelDisabled =
-    submitting || Boolean(agent?.sending || agent?.connecting);
+  const modelDisabled = submitting || Boolean(agent?.sending || agent?.connecting);
   const { channel, agentSelection, agentModel, changeChannel, selectModel } =
     useConversationSelection({
-      projectId: project?.id,
-      draft: composerDraft,
-      locked: modelDisabled,
-      patch: updateDraft,
-      onApiModel: onModelChange,
-      onStatus: setStatus,
+      projectId: project?.id, draft: composerDraft, locked: modelDisabled,
+      patch: updateDraft, onApiModel: onModelChange, onStatus: setStatus,
     });
   const agentActive = Boolean(agent && channel === "codex");
   useEffect(() => {
@@ -69,12 +46,13 @@ export default function ConversationPanel({
     setApprovalMode(project?.composerDraft.approvalMode ?? "auto");
     setPendingApproval(null);
     setStatus("");
-  }, [
-    project?.id,
-    project?.composerDraft.prompt,
-    project?.composerDraft.approvalMode,
-  ]);
+  }, [project?.id, project?.composerDraft.prompt, project?.composerDraft.approvalMode]);
+  const activeChat =
+    project?.chats && project?.activeChatId
+      ? project.chats[project.activeChatId]
+      : undefined;
   const visibleMessages =
+    activeChat?.messages ??
     project?.messages ??
     messages.map((content, index) => ({ id: `local-${index}`, content }));
   const deleteMessage =
@@ -171,6 +149,10 @@ export default function ConversationPanel({
         }
         onStatus={setStatus}
         onClose={onClose}
+        chats={project?.chats}
+        activeChatId={project?.activeChatId}
+        onSelectChat={onSelectChat}
+        onCreateChat={onCreateChat}
       />
       {agent && (
         <ConversationChannelSelector

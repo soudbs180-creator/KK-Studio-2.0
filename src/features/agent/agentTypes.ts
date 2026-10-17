@@ -71,6 +71,7 @@ export type CanvasAgentOp =
       nodeId: string;
       mode?: "text" | "image" | "video" | "audio";
       prompt?: string;
+      model?: string;
     };
 
 export interface CanvasAgentSnapshot {

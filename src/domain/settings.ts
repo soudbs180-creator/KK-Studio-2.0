@@ -24,6 +24,7 @@ export const settingsSchema = z.object({
     .catch("default"),
   floatingLayout: z.boolean(),
   removeWatermark: z.boolean(),
+  historyLimit: z.number().int().min(5).max(100).default(20).catch(20),
 });
 
 export type SettingsPreferences = z.infer<typeof settingsSchema>;
@@ -35,6 +36,7 @@ export const DEFAULT_SETTINGS: SettingsPreferences = {
   accent: "default",
   floatingLayout: true,
   removeWatermark: true,
+  historyLimit: 20,
 };
 
 export function parseSettings(raw: string | null): {

@@ -23,8 +23,8 @@
 .conversation-panel > header {
   position: relative;
   width: calc(100% - 7px);
-  height: 24px;
-  flex: 0 0 24px;
+  height: auto;
+  min-height: 24px;
   margin-left: 2.5px;
   align-items: flex-start;
 }
@@ -34,40 +34,36 @@
   line-height: 23px;
   color: var(--text-strong);
 }
-.conversation-panel > header button {
-  position: absolute;
-  top: 0;
-  right: 41px;
+.conversation-header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--kk-space-2);
+}
+.conversation-header-actions button {
+  position: static;
   width: 20px;
   height: 20px;
   padding: 0;
+  border: none;
+  background: transparent;
   border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: all 0.14s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-.conversation-panel > header button:last-child {
-  position: absolute;
-  left: auto;
-  right: -2.5px;
-  top: 1px;
-  margin: 0;
+.conversation-header-actions button:hover {
+  color: var(--text-primary);
+  background: var(--bg-card-hover);
+}
+.conversation-header-actions button:active {
+  transform: scale(0.92);
+}
+.conversation-header-actions button img {
   width: 18px;
   height: 18px;
-}
-@media (min-width: 768px) and (max-width: 1200px) {
-  /* Match the canvas reopen anchor across the panel border and 8px inset. */
-  .conversation-panel > header button:last-child {
-    transform: translate(
-      calc(var(--kk-space-2) + var(--kk-border-width)),
-      calc(-1 * (var(--kk-space-2) + var(--kk-border-width)))
-    );
-  }
-}
-.conversation-panel > header button img {
-  width: 20px;
-  height: 20px;
-}
-.conversation-panel > header button:last-child img {
-  width: 21.5px;
-  height: 21.5px;
 }
 .conversation-panel .conversation-messages {
   padding-top: 0;
@@ -309,14 +305,13 @@
     flex-basis: 30px;
     margin: 0;
   }
-  .conversation-panel > header button,
-  .conversation-panel > header button:last-child {
+  .conversation-header-actions button {
     position: static;
     width: 30px;
     height: 30px;
     flex: 0 0 30px;
   }
-  .conversation-panel > header button:last-child img {
+  .conversation-header-actions button img {
     width: 20px;
     height: 20px;
   }

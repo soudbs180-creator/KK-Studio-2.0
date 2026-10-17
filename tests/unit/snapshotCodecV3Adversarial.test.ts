@@ -18,15 +18,12 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   decodeSnapshot,
-  parseSnapshot,
   validateSnapshotV3,
   rejectSecrets,
   SnapshotStorageError,
 } from "../../src/features/creation/snapshotCodec.ts";
 import type {
   CreationSnapshotV3,
-  ChatItem,
-  CreationProjectV3,
 } from "../../src/features/creation/model.ts";
 import { NonDowngradableWriteBarrier } from "../../src/features/creation/storage.ts";
 
