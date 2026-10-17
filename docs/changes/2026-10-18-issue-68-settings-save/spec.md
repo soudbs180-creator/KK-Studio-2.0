@@ -1,6 +1,6 @@
 # Spec：Issue 68 设置保存与关闭同步
 
-- Task ID：`TASK-ISSUE-68`；方案状态：READY，真实 native 定向验证通过，完整 verify / 提交 / 独审 / Hosted 尚未完成；日期：2026-10-18。
+- Task ID：`TASK-ISSUE-68`；方案状态：LOCAL VERIFIED，完整verify及真实native通过，实现提交C1独审PASS，最终文档head/Hosted待验；日期：2026-10-18。
 - 关联：[intent](intent.md)、[plan](plan.md)、[既有任务账本](../../governance/task-ledger.json)。
 - 实现基线：`6b933f4ffd80cdd5ca2d3508678a4562fc2b02d8`。
 - Source of truth：[native lifecycle](../../../tests/desktop/taskhost-lifecycle.mjs)、[设置导航回归](../../../tests/browser/settings-navigation.spec.ts)、[ModelProviderSettings](../../../src/components/settings/ModelProviderSettings.tsx)、[busy 传播](../../../src/components/settings/useSettingsBusy.ts)及[SettingsPanel](../../../src/components/settings/SettingsPanel.tsx)；本文件限定本专项验收，不复制持久化协议。
@@ -48,6 +48,6 @@
 - INFERENCE：CI 中关闭点击被 busy/关闭保护拦截的具体机制仍缺事件轨迹；原工件最终保存成功不能证明点击时已完成。修复明确测试完成边界，不宣称完整还原 CI 事件机制。
 - FACT：`native-delay-evidence-v3/receipt.json` 的真实回执延迟实验 13 checks 全部通过，`passed=true`、`credentialCleanupComplete=true`；其中 hold 时无提前成功提示，关闭 disabled、Escape/遮罩保护均有效，释放后正常关闭通过。`native-final-evidence/receipt.json` 的正式 native 11 checks 全部通过，`passed=true`、`credentialCleanupComplete=true`。
 - 前两次替换冻结的 Tauri invoke 失败属于 hook 未安装的注入方法失败，原记录保留，不计为产品失败或通过结果。
-- 测试同步最小方案已确定且无产品改动；native 通过不替代完整 verify、最终提交、当前 SHA 独立审查及 Hosted。上述待办完成前不将本专项标为 VERIFIED 或 DONE。
+- 本地最小测试修复、完整verify及C1提交独审已完成；最终文档head补审、Hosted与主线集成仍独立验收，任务保持REVIEW，不标整体DONE。
 
-本地收尾追加：完整 verify exit0，产品浏览器827首试/0flaky/skip、设计41+8、开发态4步，Node1852/20既有skip、Agent199/2既有skip；Rust213/1ignored+41通过。此前进行中描述保留原阶段含义，以 verification 本地收尾为准；已提交head独审、draft PR及Hosted仍独立待验。
+本地收尾追加：完整 verify exit0，产品浏览器827首试/0flaky/skip、设计41+8、开发态4步，Node1852/20既有skip、Agent199/2既有skip；Rust213/1ignored+41通过。此前进行中描述保留原阶段含义，以 verification 本地收尾为准；C1提交独审已PASS，最终文档head补审、draft PR及Hosted仍独立待验。

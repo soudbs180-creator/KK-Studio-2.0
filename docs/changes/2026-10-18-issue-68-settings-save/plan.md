@@ -50,7 +50,7 @@
 ## 验证和交付
 
 - 原 CI 失败、浏览器 gate 2/2、前两次 hook 注入失败、真实延迟 native 13/13 与正式 native 11/11 通过回执分别保留。继续完成适用的 lint、typecheck、test、build、verify、Markdown 和 delivery 门禁，具体结果写 verification。
-- 本次状态更新时完整 verify 仍在进行：Node 1852 PASS / 20 SKIP、Agent 199 PASS / 2 SKIP 已通过，browser 827 项正在运行；不得据此宣称完整 verify 通过。最终 commit、独立当前 SHA 审查及 Hosted 仍待办。
+- 阶段记录（已由本地收尾替代）：当时完整 verify 仍在进行：Node 1852 PASS / 20 SKIP、Agent 199 PASS / 2 SKIP 已通过，browser 827 项正在运行；不得据此宣称完整 verify 通过。最终 commit、独立当前 SHA 审查及 Hosted 仍待办。
 - native 检查绑定本树源码和实际工件；如需 UI 运行证据，按仓库端口及 Tauri 契约记录，不能以 Web 或旧 EXE 代替。
 - 实现者自检后由独立上下文审查已提交 base/head；新 head 需要补审。verification/review 由专项执行者补齐。
 - 既有账本及 PROGRESS 等状态同步由专项执行者处理，本计划文档协作者不写这些文件。
@@ -58,7 +58,7 @@
 
 ## 计划变更记录
 
-- 2026-10-18：浏览器 gate 2/2 与独立只读诊断将方案收敛为两份测试的同步/断言修复，无产品改动；随后真实延迟 native 13/13 与正式 native 11/11 均通过且凭据清理完成。验收条件保持，完整 verify、最终 commit、独审与 Hosted 仍待办；CI 精确吞点击时序仍为 INFERENCE。
+- 2026-10-18：浏览器 gate 2/2 与独立只读诊断将方案收敛为两份测试的同步/断言修复，无产品改动；随后真实延迟 native 13/13 与正式 native 11/11 均通过且凭据清理完成。当时验收条件保持，完整 verify、最终 commit、独审与 Hosted 待办；现以本地收尾及review为准；CI 精确吞点击时序仍为 INFERENCE。
 - 产品意图与授权范围无变化；不修改 intent 或其他任务记录。后续新证据若改变修复层，继续同步 spec/plan 并重跑受影响检查。
 
-本地收尾追加：完整 verify exit0，产品浏览器827首试/0flaky/skip、设计41+8、开发态4步，Node1852/20既有skip、Agent199/2既有skip；Rust213/1ignored+41通过。此前进行中描述保留原阶段含义，以 verification 本地收尾为准；已提交head独审、draft PR及Hosted仍独立待验。
+本地收尾追加：完整 verify exit0，产品浏览器827首试/0flaky/skip、设计41+8、开发态4步，Node1852/20既有skip、Agent199/2既有skip；Rust213/1ignored+41通过。此前进行中描述保留原阶段含义，以 verification 本地收尾为准；C1提交独审已PASS，最终文档head补审、draft PR及Hosted仍独立待验。
