@@ -6,6 +6,8 @@ import {
   createProject,
   createTask,
   emptySnapshot,
+  projectChatView,
+  serializeCreationSnapshot,
 } from "../../src/features/creation/model";
 
 const endpoint = "https://models.example.test/v1/images/generations";
@@ -83,12 +85,13 @@ for (const [status, submissionState, reason] of [
       ({ key, value }) => localStorage.setItem(key, JSON.stringify(value)),
       {
         key: CREATION_STORAGE_KEY,
-        value: {
+        value: serializeCreationSnapshot({
           ...emptySnapshot(),
+          version: 3,
           revision: Date.now(),
           activeProjectId: project.id,
-          projects: [project],
-        },
+          projects: [projectChatView(project)],
+        }),
       },
     );
     await page.reload();

@@ -70,3 +70,7 @@ clean c8406ea07eb01e71156cd96db356c740031835b1完整`npm run verify`退出0，�
 首页加载交接确认有真实产品竞态：StartComposer传明确patch，但App.updateHomeDraft忽略patch，旧render整份默认草稿可覆盖刚加载的数量、隐私、参考图和模型连接。真实App函数RED为1!==8（home-loaded-draft-red-3e636f6f-5ecd-400e-9b8d-824eb7b3d83e.log），仅在存在patch时基于最新ref合并；无patch的显式整份替换保持。两新增回归及邻域148/148、root实际函数46/46通过。旧首试无trace，不虚称重播了该次准确时序。
 
 生产重建后两份相关浏览器文件关闭重试并各重复3次，60/60首试PASS（two-flaky-repairs-repeat3.log）。侧栏种子明确canonical3、保留所有原断言；迁移防降级屏障未改。下一clean HEAD再跑完整verify，Native/default仍在门禁后执行。
+
+## 第六候选09fcd947：完整verify退出0，一处同类fixture继续修复
+
+09fcd9470647916d8cf15e12c2ff99f2bb883f3a完整verify退出0（full-verify-09fcd947.log）：Node1938=1924PASS/14既有SKIP、Agent204PASS/2既有SKIP、产品Edge825首试+1flaky，DESIGN41+8及development四步骤PASS。原两条flaky首试通过；新阶段结果审批失败run34243b06的UI明确提示迁移状态不一致，openPlans仍在page.goto后写高revision v2。完整扫描剩余emptySnapshot调用者，修正stage/task/ui-page三处普通种子为canonical3/serialize；有意的v2迁移、Native旧契约mock、companion和纯SSR兼容场景保留，不解除生产读取保护。三文件重复3次、关闭重试84/84首试PASS（remaining-canonical-fixtures-repeat3.log）。产品源码不再变化，下一clean候选再执行完整门禁。
