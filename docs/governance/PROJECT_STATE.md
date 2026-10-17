@@ -14,23 +14,24 @@
 - `snapshotDate`: 2026-10-18
 - `canonicalRepository`: `D:/kk-studio/KK-Studio-2.0`
 - `canonicalRef`: `origin/main`
-- `canonicalHead`: origin/main `503dedbeda39f133c7f77f88ab66825d156f81cf`（PR65已合入）；Desktop/Web2.1.37。正式v2.1.37自动Web上线成功，但用户拒绝其桌面响应式为独立手机UI。
-- `localMainHead`: 8c36a6b138205613ae1a7c27950b86792da8de1a，领先origin/main49提交；63条原dirty、index/status/staged0保持。最新56872dc7完整性收据PASS，未reset/clean/覆盖。
-- `currentTask`: TASK-WEB-RELEASE-20261017，IN_PROGRESS/PARTIAL；隔离树 `D:/kk-studio/.worktrees/TASK-WEB-RELEASE-20261017`，branch `fix/TASK-WEB-RELEASE-20261017-mobile-entry`。按用户新反馈恢复既有独立Mobile UI、Web本机创作与/mobile/入口，保持正式Release自动部署及单份回滚；当前线上仍v2.1.37，正确手机UI尚未发布接受。
-- `acceptedClientCandidate`: TASK-AUDIT-REPAIR-20261017 的有界本地A–D DONE/PASS，固定文档head bbc8a766、产品source `4699458de1c3437309b7cdc3f019454104c81fce`、tree `a1905e2aa6e11a24b4c62d829dc82a8f0d566972`。新隔离树重建154文件逐hash匹配原dist；后续聊天迁移dirty不纳入发布。221560a3仍仅未验收原始快照。
-- `sourceVersionBoundary`: 当前候选Desktop2.1.37不变，Web2.1.38、Mobile独立源码2.1.3；Mobile来源267f04f2/58df，仅恢复mobile/contracts，不带入旧Desktop2.1.13。组合Web发布不等于Native新包、正式账号或真实Provider接受。
-- `taskLedger`: 150 records；DONE85、PARTIAL48、TODO12、BLOCKED3、IN_PROGRESS2、REVIEW0，开放65。只新增Web发布任务，原149任务对象保持；旧审计和原统一scope的验收边界不变，不批量结案。
-- `workspaceWorktrees`: 当前任务沿用已登记隔离树，从main503dedbe新fix分支；原fix分支和所有失败证据保留。其他原worktree/dirty不纳入本次发布，不执行移动删除。旧workspace-inventory为时间点采样，不据其过时HEAD启动或清理。
-- `preservation`: A core PASS；工程外`D:/KK-Studio-recovery-20260921/audit-repair-20261017-1f00ccc3-1207-4cd3-90e1-bd0192d64d21/final-preservation-receipt.json`，517368文件版本/56336959878 B/6 bundles、两个dirty恢复。外部变化、新增文件、长路径首轮失败与所有旧日志/运行原件保留。
-- `safetyRepairs`: 五P1/垃圾箱误报、原始identity/格式写保护、空授权与精确账号、scope/epoch/记忆/迟到回调、预览重试/标签撤销和交互问题通过有界反例/回归。协议6新/临时聊天、不支持v3/多聊天、无持久receipt的12AI及未接持久垃圾箱保持禁用；不是完成这些能力。
-- `finalVerify`: 469源码完整verify前后CLEAN且exit0；Node1832PASS/14既有SKIP、Agent199PASS/2既有SKIP、产品Edge823首试零fail/retry/flaky/skip、DESIGN41单元/8浏览器、development四步，lint/type/UI/format/build通过。Rust bin213PASS/1硬件ignored+integration41/check/fmt绑定未变Native源。advisory与警告保留。
-- `nativeDelivery`: 官方构建source469/EXE b6299445/input a53dee81；隔离Native六检查、focus/真退出/重开/identity/草稿/loaded资源字节及版本2.1.36均PASS。两个日常lnk先复制保全再原位恢复，默认实际启动关闭重开PASS，留下正常无CDP单实例PID50136。见[完整身份与收据](../changes/2026-10-17-audit-repair/verification.md)。
-- `defaultDataBoundary`: 默认9项目原始快照SHA998e0101、identity14441803与shared memory保持；旧聊天资料仍READ_ONLY保护，未强制迁移或改为可写。启动恢复DONE不等于完整迁移/protocol7/付费Provider验收。
-- `reviewBoundary`: 469增量源码/连接调用链独审PASS；此前FSR01–06按原SHA关闭，菜单遮挡实际RED→GREEN与新Native/daily复验通过。最终文档HEAD独审与正式Delivery按提交后精确收据裁决，不预填Hosted或发布结果。75的12FAIL/8026中止/d356 dailyFAIL/旧helper失败均保留。
-- `remoteWorkBoundary`: 18:08→19:07可比字段69heads/7Draft PR/3active rulesets零漂移，7PR autoMerge=null；旧ref名与新baseSHA不可直接比较，不声称全部字段一致。stable实际严格verify/delivery、approvals0；merge queue及governance/deploy-linux未强制，classic保护GET403为权限边界，未修改settings。
-- `localHook`: 四处无core.hooksPath覆盖，同common pre-push v2；installed/policy/source按LF归一相等，旧v1.bak保持。既有fixture27=22PASS/5Windows平台SKIP/0FAIL本轮未重跑，7相关guard源自a95未变；hook可绕过，不替代Hosted。
-- `reclamationPolicy`: 54份runtime previous、旧clone/worktree/输出/恢复材料仍在，没有删除或移动。所有build输出/依赖物理owned，共享junction/symlink只读。E/F实体整理未执行。
-- `historicalRule`: 下方历史不覆盖本区。本轮仅FEAT-028由PLANNED按已恢复独立源码改为PARTIAL；其余36功能与原runtimeEvidence不变；真实Provider/ComfyUI/GPU、完整多聊天/垃圾箱/12AI恢复、账号/VPS、Mobile、签名与用户验收按原任务保持开放。
+- `canonicalHead`: 产品发布及本次文档基线 `f730f1dc32fb2e568dda6d4a52c58b05802d6b6b`（PR66已合入），正式 tag `v2.1.38` / Release415969948；最终文档HEAD及其CI/合并由文档PR单独记录，不替代生产来源。
+- `localMainHead`: 原主树main `8c36a6b138205613ae1a7c27950b86792da8de1a`。2026-10-18北京时间只读观察为69条status、staged0，index SHA `e37a93a380b386a4e16a6132e008c8743e7c6c054fdf431b07286719833ae474`与本轮较早回读一致；此前63条是另一时点。并发改动不纳入发布，不宣称所有dirty文件字节恒定；本轮未reset/clean/覆盖/暂存原主树。
+- `currentTask`: TASK-WEB-RELEASE-20261017，本次独立手机Web发布有界DONE/PASS；隔离树 `D:/kk-studio/.worktrees/TASK-WEB-RELEASE-20261017`，文档分支 `docs/TASK-WEB-RELEASE-20261017-production-receipt`。恢复入口见[最终生产验证](../changes/2026-10-18-web-mobile-production-receipt/verification.md)。
+- `sourceVersionBoundary`: Desktop源码2.1.37、正式Web2.1.38、独立Mobile源码2.1.3。Mobile/contracts恢复源 `58df6791e1de31317502686039a95a85faede63e`，未带入旧Desktop2.1.13；本次组合Web交付不等于更新用户本机Desktop安装器或发布新Native包。
+- `webDelivery`: 正式Release的released事件才部署；普通提交、草稿、预发布不部署。main quality39052635456五项与guards39052635453均success；正式Web部署39055538017 / job117462622818成功，受限普通部署账户与GitHub专用secret保留。
+- `artifactIdentity`: Linux archive SHA `aadf8e217147be7cdbc2a27c939dcab25b10fa479ebbd4a5ca528dda46b30f6e`；manifest SHA `8ba352804364b3bf2130bb6cb6dc0cfbc371131327327832c7387fae8c0b8a1b`，179个文件含23个Mobile文件。current179与previous155实际文件完整核验；撤钥后7个公开入口资源HTTP200/no-cache/gzip与manifest逐哈希相等，不称179文件全部经HTTP下载。
+- `phoneAcceptance`: https://kkai.plus 首次手机UA或viewport≤767进入独立 `/mobile/`，保留query/hash；宽屏及 `/?view=desktop` 可访问原桌面资料，使用中resize不强制导航。生产独立Edge浏览器9/9首试、0retry/flaky/skip，9项网络/运行记录blocked/errors均为空；2026-10-18用户实际手机答复“已显示独立手机 UI，正常”。设备/引擎未记录，Safari专项和完整真机生成链未验。
+- `rollbackState`: `current=releases/v2.1.38`、`previous=releases/v2.1.37`，受管目录恰好2个，只有一份回滚版本；旧4a06ea8受管目录已由发布控制器回收。previous的155文件及原manifest `cfb89f6fb6c24ec850531fa7c3db5364799acc832c0b596848713dcaa38e6a7b` / source503dedbe完整保留。健康失败回滚有隔离测试证据，本次未执行生产降版演练。
+- `serverBoundary`: Nginx配置SHA `cde19ee25fb9950dc5f81a1d8b603abbe9c423c18fffd519beff57043f52f9c0`，单份原配置备份4ebce46e保留；API/PG/Nginx均active/running，MainPID仍693/673/666。本轮未改业务数据或重启API/数据库；这些观察不声称运行中数据库每字节静止。
+- `temporaryAccess`: 临时root授权唯一tag已移除，实际计数0；原authorized_keys完整SHA `2cce758797a8511f3ae4e6c006d4cf9f5beb8022c5a57fe6c752cdd560a5e51d`已逐字节恢复。仅指定临时身份且禁用agent/password回退的新SSH连接exit255被拒绝；固定UUID隔离测试目录及本机本次两份私钥均已清理，自动发布受限账户未改。
+- `taskLedger`: 150 records；DONE86、PARTIAL48、TODO12、BLOCKED3、IN_PROGRESS1、REVIEW0，开放64。仅task0更新，其他149完整JSON对象保持；按Python默认分隔符、ensure_ascii=False、sort_keys=True规范SHA仍6471490cfab1823c0ee646353e24304c191fcbac01e8e379625686d161aae542。
+- `featureBoundary`: 37功能仍29PARTIAL/2REAL/5PROTOTYPE/1PLANNED；FEAT-028保持PARTIAL，T12开放。其他36功能完整对象及全部runtimeEvidence不变。独立手机浏览器UI已接受，不代填Safari专项、新原生包、真实身份/Provider文本图片与原件闭环、Companion或云同步验收。
+- `finalVerify`: 本轮发布main的Hosted实际结果：Node1853PASS/19SKIP、Agent199PASS/2SKIP、根Edge827PASS且无flaky、DESIGN41单元+8浏览器、Rust213PASS/1ignored+integration41、Native TaskHost11检查；Mobile323PASS/0SKIP及Hosted本地独立手机浏览器9PASS。完整来源与限制见[生产验证](../changes/2026-10-18-web-mobile-production-receipt/verification.md)，不改写旧本地失败或2flaky记录。
+- `acceptedClientCandidate`: 历史本地审计A–D source4699458d / docs bbc8a766、原Native EXE2.1.36及日常PID50136只按[原审计收据](../changes/2026-10-17-audit-repair/verification.md)解释；旧PID已退出，不当作当前存活进程。本次Hosted Native TaskHost证据与历史日常接受分列。
+- `defaultDataBoundary`: 原Desktop数据入口保持，旧聊天资料的READ_ONLY保护未解除；不自动迁移或清空Desktop资料。独立Mobile本机namespace、草稿刷新恢复与可选账号隔离已验，不能据此宣称云保存或真实Provider全链完成。
+- `workspaceWorktrees`: 仅在本任务隔离树写入；其他工作树、并发dirty、恢复归档及旧证据不纳入静态发布，也未删除或移动。本次获准清理仅受管静态旧版本、固定隔离测试目录和本次临时私钥/授权。
+- `reviewBoundary`: 产品head690d864b的独立审查、合入main f730的tree一致与Hosted/生产/helper收据齐全；最终文档HEAD、独审/Hosted/Delivery以本收据PR当前HEAD/checks与外部回执为准，不把产品源审查当文档批准。旧RED、超时、Windows换行/路径和helper失败证据保留于原包。
+- `historicalRule`: 下方历史不覆盖本区；Mobile完整能力、原统一scope、真实服务及本机安装接受沿原任务处理，不批量结案。
 
 <!-- CURRENT_FACTS_END -->
 <!-- HISTORICAL_SNAPSHOTS_BEGIN -->

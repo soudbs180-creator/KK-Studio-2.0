@@ -1,5 +1,15 @@
 # 当前进度
 
+## 2026-10-18 独立手机 Web 正式交付（有界 DONE/PASS）
+
+正式Release `v2.1.38` 已从main `f730f1dc32fb2e568dda6d4a52c58b05802d6b6b` 自动发布：Web2.1.38、独立Mobile源码2.1.3、Desktop源码2.1.37。根网址初次按手机UA/窄屏进入 `/mobile/`，`/?view=desktop` 保留旧资料入口，使用中resize不强制导航。生产Edge9/9首试、0retry/flaky/skip及9组空blocked/errors记录通过；用户实际手机回复“已显示独立手机 UI，正常”。
+
+main Hosted五项与guards、正式部署均success；179个current文件（含23Mobile）及155个previous文件完整核验，撤钥后7个入口资源HTTPS逐哈希匹配。current38/previous37恰好两个受管目录，只有一个回滚版本；旧4a受管版本已回收，原配置单备份保留。API/PG/Nginx保持active且MainPID693/673/666一致。临时root授权实际计数0、原授权逐字节恢复，新临时身份SSH被拒绝；指定隔离测试目录和本机两私钥已清理，受限GitHub自动发布凭据保留。
+
+仅本任务DONE；150任务为86DONE/1IN_PROGRESS/48PARTIAL/12TODO/3BLOCKED、开放64，其他149对象不变。FEAT-028仍PARTIAL、T12开放；Safari专项、原生新包、真实身份与Provider文本/图片/原件闭环继续验收。原main只读观察为69条dirty/staged0，不把并发变化纳入发布或声称所有原文件永久不变。本次产品、Hosted、生产、用户确认与数据保护范围见[最终生产收据](changes/2026-10-18-web-mobile-production-receipt/verification.md)；最终文档head的独立审查与Hosted由文档PR另记。
+
+## 以下为此前阶段历史记录（原文保留）
+
 ## 2026-10-18 独立手机 UI 修正（IN_PROGRESS）
 
 2.1.37 已由 PR65/main `503dedbe` 的 exact-main quality 与正式 Release 自动上线，完整155文件与静态旧版保留已核对；旧四尺寸40项只验证桌面响应式。用户明确拒绝该布局作为手机版，要求原独立 Cherry 参考手机 UI，因此本轮不结案。已恢复58df中的282份 mobile/contracts 原创源码，新增真实 Web 本机 context、可选账号、初次 viewport/手机UA `/mobile/` 分流和组合发布；Web2.1.38、Mobile候选2.1.3、Desktop2.1.37。Mobile323/323测试、type/lint与组合构建已通过，独立手机browser9/9首试、Linux发布/回滚14/14及有界独立复核通过；精确SHA绑定/Hosted及新正式上线仍在执行。数据库、业务服务、原Desktop资料和其他dirty保持；临时root key已安全延期，正确手机UI验收后撤销。详见[当前交付包](changes/2026-10-17-web-release-receipt/verification.md)。

@@ -1343,7 +1343,7 @@
     "area": "future",
     "status": "PARTIAL",
     "card": "docs/features/feat-028-mobile.md",
-    "summary": "已恢复独立Expo Mobile源码与手机Web入口，真实本机创作/资料持久化及可选账号边界正在验收；Native新包、实体手机与正式身份/Provider仍未接受。",
+    "summary": "独立手机Web2.1.38已正式上线，/mobile/入口、本机草稿恢复和可选账号边界经生产9项与用户实际手机UI确认；Mobile源码2.1.3，新原生包、Safari专项及真实身份/Provider生成闭环未验，T12开放。",
     "entryPoints": [
       "kkai.plus 手机初次访问 /mobile/；桌面资料入口 /?view=desktop"
     ],
@@ -1358,7 +1358,10 @@
       "tests/browser/canvas-selected-zoom-menu.spec.ts",
       "tests/browser/settings-control-usability.spec.ts",
       "mobile/tests/applicationLocalMode.test.ts",
-      "tests/deploy/combined-web.test.mjs"
+      "tests/deploy/combined-web.test.mjs",
+      "tests/mobile-web/entry.spec.ts",
+      "mobile/tests/uiOriginalPreviewLocal.test.ts",
+      "mobile/tests/uiPreview.test.ts"
     ],
     "tasks": [
       "T12",
