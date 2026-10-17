@@ -10,6 +10,7 @@ import {
   mkdtemp,
   readFile,
   readdir,
+  realpath,
   readlink,
   rm,
   symlink,
@@ -72,7 +73,9 @@ test("release workflow accepts stable released events and protected version tags
 });
 
 async function fixture(t) {
-  const root = await mkdtemp(path.join(tmpdir(), "kk-managed-web-"));
+  const root = await realpath(
+    await mkdtemp(path.join(tmpdir(), "kk-managed-web-")),
+  );
   t.after(() => rm(root, { recursive: true, force: true }));
   return root;
 }

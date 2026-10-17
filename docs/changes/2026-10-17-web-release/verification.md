@@ -13,5 +13,7 @@
 - 临时 root SSH 公钥经用户明确授权；设置 restrict 和到期时间，完成后必须删除。私钥仅工程外，不进入 Git/日志/发布包。
 - PR65 首轮 Delivery 在 HEAD_BRANCH 条件下发现上游三个未入 main 的 change package 尚未绑定本聚合发布记录；本任务追加其原始 verification 作为交付来源，保留原149任务对象和原分支历史，门禁本身不变。后续本地验证显式传入同一 --branch。
 - 受限普通发布账号、root持有控制器/SSH授权文件、旧版adopt及等价relative current已安装，旧122文件逐哈希不变。Nginx配置检查/reload通过；首次紧接reload读到旧worker后，独立HTTPS重读确认no-cache；API693/DB673/Nginx666保持。正式Release与生产切换仍未执行。
+- run39036730592 的 Node 测试1838 PASS/2 FAIL/18 SKIP：新增发布测试夹具也受到 Windows TEMP 8.3 别名影响，Python安全校验正确拒绝非规范目录。本轮只在fixture创建后realpath，不改控制器；同一真实短路径环境先复现两项RED，再GREEN，完整deploy31组18 PASS/13既有Windows SKIP/0 FAIL。Linux和新托管结果待当前提交。
+- 隔离production preview手机390×844/390×480：首页、底部导航、项目、聊天、设置、草稿旋转和重载通过；平板844×390、桌面1920×1080全10步通过。**已验收469版本的手机应用菜单存在左侧裁切68px，fresh首次打开且无缩放/旋转也复现；完整手机报告保持FAIL，只有corePass。** 本次发布保持已验收产品字节，未夹带CSS改动；此既有问题与生产布局证据必须分别报告。工程外stage保留完整失败截图和DOM。
 
 尚未执行上线、生产手机验收或旧版本清理；自动发布尚未完成。原有本地/原生通过不替代这些门禁。
