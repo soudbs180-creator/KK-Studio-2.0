@@ -579,6 +579,33 @@ fn unsupported_chat_snapshots() -> Vec<Value> {
     matching_invalid_threads["projects"][0]["chats"]["chat-main"]["agentThreadId"] =
         json!("bad/thread");
     cases.push(matching_invalid_threads);
+    let mut null_chats_without_active = single.clone();
+    null_chats_without_active["projects"][0]["chats"] = Value::Null;
+    null_chats_without_active["projects"][0]
+        .as_object_mut()
+        .unwrap()
+        .remove("activeChatId");
+    cases.push(null_chats_without_active);
+    for null_chats in [false, true] {
+        for active in [Value::Null, json!("")] {
+            let mut explicit_invalid = single.clone();
+            if null_chats {
+                explicit_invalid["projects"][0]["chats"] = Value::Null;
+            } else {
+                explicit_invalid["projects"][0]
+                    .as_object_mut()
+                    .unwrap()
+                    .remove("chats");
+            }
+            explicit_invalid["projects"][0]["activeChatId"] = active;
+            cases.push(explicit_invalid);
+        }
+    }
+    let mut empty_active_and_chat_id = single.clone();
+    empty_active_and_chat_id["projects"][0]["activeChatId"] = json!("");
+    empty_active_and_chat_id["projects"][0]["chats"] =
+        json!({"":{"id":"","name":"Invalid identity","agentThreadId":"legacy-thread"}});
+    cases.push(empty_active_and_chat_id);
     let mut missing_active = single;
     missing_active["projects"][0]
         .as_object_mut()
@@ -718,5 +745,34 @@ fn legacy_single_chat_keeps_writes_and_submitted_recovery() {
     legacy["projects"][0]["agentThreadId"] = json!(longest_valid_thread);
     legacy["projects"][0]["chats"]["chat-main"]["agentThreadId"] =
         legacy["projects"][0]["agentThreadId"].clone();
-    owner.snapshots.write(legacy, Some(2)).unwrap();
+    owner.snapshots.write(legacy.clone(), Some(2)).unwrap();
+    drop(owner);
+    legacy["revision"] = json!(4);
+    legacy["projects"][0]
+        .as_object_mut()
+        .unwrap()
+        .remove("chats");
+    legacy["projects"][0]
+        .as_object_mut()
+        .unwrap()
+        .remove("activeChatId");
+    fs::write(&paths.creation, serde_json::to_vec(&legacy).unwrap()).unwrap();
+    fs::write(
+        paths.tasks.join("native-host/pending.json"),
+        submitted_journal(),
+    )
+    .unwrap();
+    let reopened = f.owner();
+    assert!(reopened
+        .snapshots
+        .read()
+        .unwrap()
+        .read_only_reason
+        .is_none());
+    assert_eq!(
+        reopened.task_host.get("pending").unwrap().unwrap().status,
+        "unknown"
+    );
+    legacy["revision"] = json!(5);
+    reopened.snapshots.write(legacy, Some(4)).unwrap();
 }

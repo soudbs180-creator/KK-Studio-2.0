@@ -270,7 +270,10 @@ test("raw v2 chat identities cannot become writable through normalization", asyn
   const malformed = [
     { ...project, activeChatId: "missing-chat" },
     { ...project, activeChatId: undefined },
+    { ...project, activeChatId: "" },
+    { ...project, activeChatId: null },
     { ...project, chats: undefined },
+    { ...project, chats: null, activeChatId: undefined },
     { ...project, chats: [] },
     { ...project, agentThreadId: "bad/root" },
     {

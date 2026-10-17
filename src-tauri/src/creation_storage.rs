@@ -72,11 +72,8 @@ fn write_block_reason(snapshot: &Value) -> Option<&'static str> {
         if invalid_thread(project) {
             return Some("Agent 线程身份无效，已暂停执行以保留原件。");
         }
-        let Some(chats) = project.get("chats").filter(|value| !value.is_null()) else {
-            if project
-                .get("activeChatId")
-                .is_some_and(|value| !value.is_null() && value != "")
-            {
+        let Some(chats) = project.get("chats") else {
+            if project.get("activeChatId").is_some() {
                 return Some("聊天身份不完整，已暂停执行以保留原件。");
             }
             continue;
@@ -93,7 +90,7 @@ fn write_block_reason(snapshot: &Value) -> Option<&'static str> {
         if chats.len() != 1 {
             return Some("多聊天执行隔离尚未完成，当前记录仅供恢复查看。");
         }
-        let Some(active) = project["activeChatId"].as_str() else {
+        let Some(active) = project["activeChatId"].as_str().filter(|id| !id.is_empty()) else {
             return Some("聊天身份不完整，已暂停执行以保留原件。");
         };
         let Some(chat) = chats.get(active).filter(|chat| chat["id"] == active) else {

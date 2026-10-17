@@ -297,8 +297,9 @@ export function projectChatExecutionBlockReason(
     )
   )
     return "Agent 线程身份无效，已暂停执行以保留原件。";
+  if (project.chats === null) return "聊天身份不完整，已暂停执行以保留原件。";
   if (!project.chats) {
-    return project.activeChatId
+    return project.activeChatId !== undefined
       ? "聊天身份不完整，已暂停执行以保留原件。"
       : undefined;
   }
