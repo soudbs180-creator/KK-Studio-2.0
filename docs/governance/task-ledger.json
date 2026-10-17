@@ -1,5 +1,50 @@
 [
   {
+    "id": "TASK-WEB-RELEASE-20261017",
+    "title": "Web固定版本发布与正式Release自动同步",
+    "goal": "将kkai.plus发布到客户端已验收2.1.36，手机布局实测一致，并仅在正式Release自动更新，保留一个回滚版本。",
+    "scope": "固定已验收产品源码、托管门禁、受限静态发布器/清单/正式Release工作流、备份回滚和生产浏览器证据；保护业务数据、本地dirty与其他服务。",
+    "acceptance": [
+      "固定源码隔离构建与客户端验收154文件逐哈希一致，不纳入原dirty",
+      "当前SHA的托管门禁/独立审查与main身份通过后发布；生产手机首页/项目/聊天/设置和真实bundle可核对",
+      "坏包/链接/路径穿越/错误hash被拒绝，健康失败回滚；仅保留current和一个previous且不清理非受管数据",
+      "只正式Release自动部署；普通提交/预发布不触发，专用受限普通用户密钥，不留临时root key"
+    ],
+    "dependencies": [
+      "TASK-AUDIT-REPAIR-20261017"
+    ],
+    "owner": "root",
+    "ownerRole": "implementer",
+    "branch": "fix/TASK-WEB-RELEASE-20261017",
+    "worktree": "D:/kk-studio/.worktrees/TASK-WEB-RELEASE-20261017",
+    "affectedModules": [
+      "deploy",
+      ".github/workflows/web-release.yml",
+      "tests/deploy",
+      "docs/changes/2026-10-17-web-release"
+    ],
+    "status": "IN_PROGRESS",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "priorityRationale": "线上仍为9月18日旧包，需与已验收客户端对齐并保留回滚与业务数据。",
+    "evidence": [
+      "docs/changes/2026-10-17-web-release/intent.md",
+      "docs/changes/2026-10-17-web-release/spec.md",
+      "docs/changes/2026-10-17-web-release/plan.md",
+      "docs/changes/2026-10-17-web-release/verification.md",
+      "docs/changes/2026-10-17-web-release/review.md"
+    ],
+    "verification": "固定bbc8/产品469隔离构建154文件与验收dist逐哈希一致。独立聚合140定向测试通过，无静态发布阻断。PR64托管治理/Delivery/deploy-linux通过，完整verify仍在运行。VPS只有旧4a06ea8版，API/PostgreSQL运行；临时SSH获用户授权并限时。新增发布器Windows平台软链限制与首次Linux旧shell CRLF失败保留；新工作流/生产/手机/回滚/正式Release仍待本轮验收。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-17",
+    "lastVerified": "2026-10-17",
+    "nextAction": "完成Linux/独立脚本审查、当前托管门禁及正式Release自动发布实测，保留一个旧版并撤销临时root key。",
+    "requirementRefs": [
+      "docs/changes/2026-10-17-web-release/spec.md"
+    ],
+    "featureIds": []
+  },
+  {
     "id": "TASK-AUDIT-REPAIR-20261017",
     "title": "审计安全修复、启动恢复与当前治理收敛",
     "goal": "先完整保全，再隔离修复五个P1与素材垃圾箱误导，验证可信启动并纠正当前任务/版本/规则事实。",

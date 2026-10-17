@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-10-17 Web发布与正式Release自动同步（IN_PROGRESS）
+
+用户授权将kkai.plus更新到客户端已验收2.1.36，并仅在正式Release自动更新、保留一个回滚版本。固定bbc8/产品469在新隔离树重建154文件与验收dist逐哈希一致，原dirty不纳入。VPS只有旧4a06ea8发布，API/PostgreSQL保持运行；受限发布器、托管门禁、生产手机和回滚仍在验收。新增发布任务后账本150项，原149对象保持，未提前宣称生产更新。详见[发布验证](changes/2026-10-17-web-release/verification.md)。下节审计的未推送/未发布结论保留其历史时点含义。
+
 ## 2026-10-17 审计安全修复与治理同步（有界本地A–D DONE/PASS）
 
 最终产品source `4699458de1c3437309b7cdc3f019454104c81fce`、tree `a1905e2aa6e11a24b4c62d829dc82a8f0d566972`，Desktop/Web2.1.36，Mobile2.1.1规划。冻结前后CLEAN的完整`npm run verify` exit0：Node1846=1832PASS/14既有SKIP、Agent201=199PASS/2既有SKIP、产品Edge823/823首试零fail/retry/flaky/skip、DESIGN41单元+8浏览器、development四步，lint/type/UI/format/build通过，警告/advisory保留。469精确增量独审PASS；此前FSR01–06按原SHA关闭。Native五源自436后未变，Rust bin213PASS/1既有硬件ignored+integration41/check/fmt仍按该源身份解释。

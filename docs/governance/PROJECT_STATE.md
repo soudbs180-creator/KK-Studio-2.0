@@ -16,9 +16,10 @@
 - `canonicalRef`: `origin/main`
 - `canonicalHead`: d95e4c446d3b4ae5419ce0f58c68057ebabc286a，Desktop/Web2.1.34；19:07只读回读仍此SHA，本轮候选未推送/合入main/发布。
 - `localMainHead`: 8c36a6b138205613ae1a7c27950b86792da8de1a，领先origin/main49提交；63条原dirty、index/status/staged0保持。最新56872dc7完整性收据PASS，未reset/clean/覆盖。
-- `currentTask`: TASK-AUDIT-REPAIR-20261017，DONE/PASS仅有界本地A–D；任务树`D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017`，branch `fix/TASK-AUDIT-REPAIR-20261017`。产品source `4699458de1c3437309b7cdc3f019454104c81fce`、tree `a1905e2aa6e11a24b4c62d829dc82a8f0d566972`；221560a3仍仅未验收原始快照。
+- `currentTask`: TASK-WEB-RELEASE-20261017，IN_PROGRESS；隔离树 `D:/kk-studio/.worktrees/TASK-WEB-RELEASE-20261017`，branch `fix/TASK-WEB-RELEASE-20261017`。用户授权更新 kkai.plus、保留一个回滚版本并仅跟随正式 Release 自动更新；只操作网站静态发布，不触碰数据库、上传或原 dirty。当前生产仍为 releases/4a06ea8，尚未完成上线验收。
+- `acceptedClientCandidate`: TASK-AUDIT-REPAIR-20261017 的有界本地A–D DONE/PASS，固定文档head bbc8a766、产品source `4699458de1c3437309b7cdc3f019454104c81fce`、tree `a1905e2aa6e11a24b4c62d829dc82a8f0d566972`。新隔离树重建154文件逐hash匹配原dist；后续聊天迁移dirty不纳入发布。221560a3仍仅未验收原始快照。
 - `sourceVersionBoundary`: Desktop/Web2.1.36，Mobile2.1.1规划；版本源`config/platform-versions.json`。源码、本机启动、main集成/正式发布和用户验收分别记录。
-- `taskLedger`: 149 records；DONE85、PARTIAL48、TODO12、BLOCKED3、IN_PROGRESS1、REVIEW0，开放64。仅新增审计任务本地DONE，原148完整对象（含验收/依赖/lastVerified/84DONE）保持；26失效分配、5旧REVIEW/HOME及branch不符任务完整历史仍保留，原统一scope继续开放。
+- `taskLedger`: 150 records；DONE85、PARTIAL48、TODO12、BLOCKED3、IN_PROGRESS2、REVIEW0，开放65。只新增Web发布任务，原149任务对象保持；旧审计和原统一scope的验收边界不变，不批量结案。
 - `workspaceWorktrees`: 4登记checkout/5本地分支；主仓8c36a6b、本任务产品source4699458d、统一df08748e、taskstate5e2d2ab6；最终文档HEAD由Git/精确收据回读，469不是稍后文档提交的branch tip。[清单](workspace-inventory.json)为2026-10-17T11:18:46.286Z采样，由现有生成器更新，26条目全部deletable=false/destructiveActionsPerformed=false；旧清单另存，候选分类不是清理授权。
 - `preservation`: A core PASS；工程外`D:/KK-Studio-recovery-20260921/audit-repair-20261017-1f00ccc3-1207-4cd3-90e1-bd0192d64d21/final-preservation-receipt.json`，517368文件版本/56336959878 B/6 bundles、两个dirty恢复。外部变化、新增文件、长路径首轮失败与所有旧日志/运行原件保留。
 - `safetyRepairs`: 五P1/垃圾箱误报、原始identity/格式写保护、空授权与精确账号、scope/epoch/记忆/迟到回调、预览重试/标签撤销和交互问题通过有界反例/回归。协议6新/临时聊天、不支持v3/多聊天、无持久receipt的12AI及未接持久垃圾箱保持禁用；不是完成这些能力。
