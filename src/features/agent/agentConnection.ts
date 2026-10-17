@@ -20,6 +20,7 @@ import {
 } from "./agentTypes.ts";
 import {
   AgentApiError,
+  AgentHistoryError,
   agentEndpoint,
   createAgentApi,
   type AgentApi,
@@ -813,7 +814,10 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
         conversation?: AgentConversationState | null,
       ) => {
         if (!isCurrent(version) || !conversation?.threadId) return;
-        if (!/^[A-Za-z0-9_-]{1,160}$/.test(conversation.threadId))
+        if (
+          typeof conversation.threadId !== "string" ||
+          !/^[A-Za-z0-9_-]{1,160}$/.test(conversation.threadId)
+        )
           throw new Error("Agent 返回了无效会话身份，未保存或接管。");
         // Ownership is a receipt for this operation, not a success badge. Save
         // it before history/model reads so a transient failure cannot orphan
@@ -823,10 +827,24 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
         if (projectId)
           await bridge?.saveAgentThread?.(conversation.threadId, projectId);
       };
+      const rememberThreadMutation = async (
+        request: Promise<AgentThreadResponse>,
+      ) => {
+        try {
+          const response = await request;
+          await rememberOwnership(response.conversation);
+          return response;
+        } catch (error) {
+          if (error instanceof AgentHistoryError)
+            await rememberOwnership(error.conversation);
+          throw error;
+        }
+      };
       let thread: AgentThreadResponse;
       if (newConversation || initializeProject) {
-        thread = await activeApi.newThread(readPermissionMode());
-        await rememberOwnership(thread.conversation);
+        thread = await rememberThreadMutation(
+          activeApi.newThread(readPermissionMode()),
+        );
       } else if (saved && saved === remote?.threadId) {
         await rememberOwnership(remote);
         if (!isCurrent(version)) return;
@@ -836,13 +854,15 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
           hello.pendingApprovals.length === 0;
         if (retryOwnedPreparation) patch({ preparing: true });
         thread = retryOwnedPreparation
-          ? await activeApi.resumeThread(saved, readPermissionMode())
+          ? await rememberThreadMutation(
+              activeApi.resumeThread(saved, readPermissionMode()),
+            )
           : await activeApi.readThread(saved);
-        if (retryOwnedPreparation) await rememberOwnership(thread.conversation);
         thread.conversation ??= remote;
       } else if (saved) {
-        thread = await activeApi.resumeThread(saved, readPermissionMode());
-        await rememberOwnership(thread.conversation);
+        thread = await rememberThreadMutation(
+          activeApi.resumeThread(saved, readPermissionMode()),
+        );
       } else {
         const ownedFailedPreparation =
           remote?.status === "failed" &&
@@ -863,12 +883,13 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
             [...new Set([...preparationOwners(), clientId])].slice(-8),
           ),
         );
-        thread = await activeApi.prepareConversation(
-          readPermissionMode(),
-          remote,
-          ownedFailedPreparation ? remote.sourceClientId : undefined,
+        thread = await rememberThreadMutation(
+          activeApi.prepareConversation(
+            readPermissionMode(),
+            remote,
+            ownedFailedPreparation ? remote.sourceClientId : undefined,
+          ),
         );
-        await rememberOwnership(thread.conversation);
         if (!isCurrent(version)) return;
         if (thread.conversation?.threadId)
           thread = {

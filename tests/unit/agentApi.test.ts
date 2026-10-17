@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   AgentApiError,
+  AgentHistoryError,
   createAgentApi,
 } from "../../src/features/agent/agentApi.ts";
 import type {
@@ -90,7 +91,12 @@ for (const method of [
       [{ id: "missing-text", role: "user" }],
       [{ text: 123 }],
     ])
-      await assert.rejects(request(), /历史消息格式/);
+      await assert.rejects(request(), (error: unknown) => {
+        assert.ok(error instanceof AgentHistoryError);
+        assert.match(error.message, /历史消息格式/);
+        assert.deepEqual(error.conversation, conversation);
+        return true;
+      });
     for (messages of [
       undefined,
       [],

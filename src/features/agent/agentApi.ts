@@ -24,6 +24,15 @@ export class AgentApiError<T = unknown> extends Error {
   }
 }
 
+export class AgentHistoryError extends Error {
+  readonly conversation?: AgentConversationState;
+  constructor(conversation?: AgentConversationState) {
+    super("Agent 历史消息格式无效，未载入该历史，请检查本地服务后重试。");
+    this.name = "AgentHistoryError";
+    this.conversation = conversation;
+  }
+}
+
 export type AgentApiClientOptions = {
   endpoint: string;
   token: string;
@@ -87,9 +96,7 @@ export function createAgentApi(options: AgentApiClientOptions) {
       (!Array.isArray(history.messages) ||
         history.messages.some((item) => !item || typeof item.text !== "string"))
     )
-      throw new Error(
-        "Agent 历史消息格式无效，未载入该历史，请检查本地服务后重试。",
-      );
+      throw new AgentHistoryError(history.conversation);
     return history;
   }
   const clientQuery = `?clientId=${encodeURIComponent(options.clientId)}`;
