@@ -32,9 +32,12 @@
       "docs/changes/2026-10-17-web-release/spec.md",
       "docs/changes/2026-10-17-web-release/plan.md",
       "docs/changes/2026-10-17-web-release/verification.md",
-      "docs/changes/2026-10-17-web-release/review.md"
+      "docs/changes/2026-10-17-web-release/review.md",
+      "docs/changes/2026-10-15-kk-unified/verification.md",
+      "docs/changes/2026-10-15-unified-provider-access/verification.md",
+      "docs/changes/2026-10-17-audit-repair/verification.md"
     ],
-    "verification": "固定bbc8/产品469隔离构建154文件与验收dist逐哈希一致。独立聚合140定向测试通过，无静态发布阻断。PR64托管治理/Delivery/deploy-linux通过，完整verify仍在运行。VPS只有旧4a06ea8版，API/PostgreSQL运行；临时SSH获用户授权并限时。新增发布器Windows平台软链限制与首次Linux旧shell CRLF失败保留；新工作流/生产/手机/回滚/正式Release仍待本轮验收。",
+    "verification": "固定bbc8/产品469隔离构建154文件与验收dist逐哈希一致。独立聚合140定向测试通过；发布器独审与Linux31/31通过。PR64的verify因Windows短路径断言失败，测试已修；PR65接续聚合交付上游三个未入main的change package，在本记录绑定其原始verification，不修改原149任务。原服务器122文件字节不变，已安装受限普通账号/单配置备份/缓存及previous资源回退；API/DB/Nginx主PID保持。最终Hosted/main门禁、正式Release/生产手机/回滚与临时root key撤销仍待本轮验收。",
     "verificationResult": "PARTIAL",
     "updated": "2026-10-17",
     "lastVerified": "2026-10-17",
