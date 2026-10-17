@@ -4,8 +4,8 @@ import type { ProviderConnection } from "../../src/domain/providerConnections";
 import {
   CREATION_STORAGE_KEY,
   emptySnapshot,
+  serializeCreationSnapshot,
 } from "../../src/features/creation/model";
-import { serializeCreationSnapshot } from "../../src/features/creation/snapshotCodec";
 const endpoint = "https://models.example.test/v1/images/generations";
 const key = "kk-studio-next:provider-connections:v1";
 const pixel =
