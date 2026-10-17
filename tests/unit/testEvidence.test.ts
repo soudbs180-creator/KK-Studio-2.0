@@ -33,6 +33,7 @@ for (const [scenario, expectedExit] of [
   ["cancelled", 130],
   ["reporter-failed", 1],
   ["polluted-parent", 0],
+  ["mixed-case-parent", 0],
 ] as const) {
   test(`a ${scenario} Playwright run preserves historical receipts, screenshots and reports`, async () => {
     const failure = scenario === "failed";
@@ -86,16 +87,27 @@ for (const [scenario, expectedExit] of [
             KK_TEST_PORT: "1437",
           }
         : {}),
+      ...(scenario === "mixed-case-parent"
+        ? {
+            playwright_json_output_file: originals[2][0],
+            kK_bRoWsEr_EvIdEnCe_RuN: historical,
+            tEsT_wOrKeR_iNdEx: "99",
+            kK_tEsT_pOrT: "1423",
+          }
+        : {}),
     };
     const parentSnapshot = { ...parentEnvironment };
     const childEnvironment: NodeJS.ProcessEnv = { ...parentEnvironment };
-    for (const key of [
-      "PLAYWRIGHT_JSON_OUTPUT_FILE",
-      "KK_BROWSER_EVIDENCE_RUN",
-      "TEST_WORKER_INDEX",
-      "KK_TEST_PORT",
-    ])
-      delete childEnvironment[key];
+    for (const key of Object.keys(childEnvironment))
+      if (
+        [
+          "PLAYWRIGHT_JSON_OUTPUT_FILE",
+          "KK_BROWSER_EVIDENCE_RUN",
+          "TEST_WORKER_INDEX",
+          "KK_TEST_PORT",
+        ].includes(key.toUpperCase())
+      )
+        delete childEnvironment[key];
     const result = spawnSync(
       process.execPath,
       [
