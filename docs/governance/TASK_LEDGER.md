@@ -6,7 +6,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 | ID | Title | Status | Display | Priority | Dependencies | Owner | Next action |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| TASK-CHAT-MIGRATION-20261017 | 保全旧聊天资料并恢复迁移、编辑与聊天 | PARTIAL | 未完成 | P1 | none | root | 账号Codex额度解除后，从当前v3原线程进行一次普通文本受理/回复及持久化重开验收；此前/turn0，无UNKNOWN重放。保留原始v2不可变归档，不回滚、删除或移动；Hosted/PR/main/发布与原统一范围另行验收。 |
+| TASK-LOCAL-GUARDS-20261018 | 修复本地安全边界并核对剩余任务与工作树规则 | IN_PROGRESS | 进行中 | P1 | none | root | 先真实RED/GREEN修复三个独占文件组，完成完整验证和独立复审，同步工作树/账本事实；不以本地通过代替外部能力。 |
+| TASK-CHAT-MIGRATION-20261017 | 保全旧聊天资料并恢复迁移、编辑与聊天 | PARTIAL | 未完成 | P1 | none | root | 账号Codex额度解除后，从当前v3原线程进行一次普通文本受理/回复及持久化重开验收；此前/turn0，无UNKNOWN重放。保留原始v2不可变归档，不回滚、删除或移动；Hosted/PR/main/发布与原统一范围另行验收。 原e11b87a5分支和恢复收据保留；物理树由TASK-LOCAL-GUARDS-20261018复用，额度解除后重新分配，不把旧分支冒充当前checkout。 |
 | TASK-AUDIT-REPAIR-20261017 | 审计安全修复、启动恢复与当前治理收敛 | DONE | 已完成 | P1 | none | root | 保留被日常链接引用的任务worktree/EXE及所有恢复证据；root完成最终文档提交后的精确review/正式Delivery和runtime-input不变核对。其余64开放项按原任务继续，尤其旧聊天数据完整迁移/protocol7、统一接入/12AI持久恢复/素材垃圾箱、真实Provider/ComfyUI/GPU/VPS/Mobile/签名及用户验收；不得解除READ_ONLY或批量结案。 |
 | TASK-KK-UNIFIED-20261015 | KK Studio 统一修复与重构 | IN_PROGRESS | 进行中 | P1 | none | root | 原统一scope继续开放；原main8c及最初63dirty字节/index保全，并发6项后当前69dirty未并入。当前有界恢复由TASK-CHAT-MIGRATION-20261017在原审计实体树承接，2.1.37本地迁移/编辑通过，真实新回复受Codex额度阻塞。旧branch/worktree保留历史来源，不作为活动写入分配。12AI持久恢复、Provider/共仓库/账号/同步等按原scope继续验收。 |
 | TASK-FIX-PUSH-GUARD-SPACES-001 | 修复 Windows Git pre-push 空格及长路径启动 | PARTIAL | 未完成 | P1 | none | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
@@ -157,6 +158,25 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-VERIFY-DEPS-20261015 | 恢复共享依赖清理事故并核验执行边界 | PARTIAL | 进行中 | P1 | TASK-CODEX-HOME-20261015 | root | 保持防复发子范围PASS与旧事故UNKNOWN分离；不在共享依赖安装或清理。原始字节及影响如无证据不得补写；最终当前提交/托管/交付门禁另验。 |
 | TASK-DESIGN-MD-20261015 | 统一DESIGN设计系统与产品UI收敛 | PARTIAL | 进行中 | P1 | none | root | 关闭基础独审问题，将规则落入设置/模型/聊天/画布/项目/素材等实际页面，按Desktop→Web留同状态证据。 |
 
+## TASK-LOCAL-GUARDS-20261018 — 修复本地安全边界并核对剩余任务与工作树规则
+
+- Goal: 不依赖额度修复工作树检查误放行、凭据缓存失败污染并补测试证据负向验收
+- Scope: worktree-policy、LayeredCredentialStore、testEvidence取消/报告失败及任务事实同步；不扩展Provider或新产品功能
+- Display status: 进行中
+- Priority: P1 — 本地检查误放行与失败凭据状态不依赖额度，应先修复
+- Requirement refs: ledger:TASK-GOV-004, ledger:TASK-AI-GATEWAY-001, ledger:TASK-VERIFY-EVIDENCE-20261015
+- Feature IDs: FEAT-038
+- Owner role: implementation-integrator
+- Acceptance: 工作树Git查询/CLI目标路径/缺失登记失败关闭，正常已有分支仍复用; 凭据持久失败不污染缓存，成功/失败轮换及相邻异步边界回归通过; 真实Playwright取消和reporter写失败非0/中断，旧三类证据字节与哈希保持; 当前源码完整验证、独立审查、Delivery与任务事实同步；保全改动不删除移动
+- Branch: `fix/TASK-LOCAL-GUARDS-20261018`
+- Worktree: `D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017`
+- Modules: scripts/governance/worktree-policy.mjs, src/features/ai-gateway/credentials.ts, tests/unit/worktreeLifecycle.test.ts, tests/unit/aiGatewayCredentials.test.ts, tests/unit/testEvidence.test.ts, docs/changes/2026-10-18-local-guards
+- Verification: NOT_VERIFIED — 开工前7登记树105项dirty/index/全部Git引用及当前raw3检查点已复制逐字节保全，规则与缓存有只读RED；完整修复与验证未完成。
+- Evidence: [docs/changes/2026-10-18-local-guards/intent.md](../../docs/changes/2026-10-18-local-guards/intent.md), [docs/changes/2026-10-18-local-guards/spec.md](../../docs/changes/2026-10-18-local-guards/spec.md), [docs/changes/2026-10-18-local-guards/plan.md](../../docs/changes/2026-10-18-local-guards/plan.md), [docs/changes/2026-10-18-local-guards/verification.md](../../docs/changes/2026-10-18-local-guards/verification.md), [docs/changes/2026-10-18-local-guards/review.md](../../docs/changes/2026-10-18-local-guards/review.md)
+- Next action: 先真实RED/GREEN修复三个独占文件组，完成完整验证和独立复审，同步工作树/账本事实；不以本地通过代替外部能力。
+- Last verified: 2026-10-18
+- Updated: 2026-10-18
+
 ## TASK-CHAT-MIGRATION-20261017 — 保全旧聊天资料并恢复迁移、编辑与聊天
 
 - Goal: 无损迁移原聊天数据，恢复独立草稿、正文、线程及正常保存重连。
@@ -167,14 +187,14 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Feature IDs: FEAT-009, FEAT-014
 - Owner role: implementation-integrator
 - Acceptance: 主备/身份/原资料不可变归档、逐文件SHA与隔离恢复通过，不删除或移动原文件; 迁移后项目/chat/消息/草稿/线程/素材及未知字段保全，失败与future格式保护、重开不丢且不重复迁移; 现有普通聊天独立编辑、离线历史与正常发送/重连，迟到回调和服务执行scope不串chat; 当前源码完整verify/Rust/独审/官方产物、资料副本及默认库迁移/关闭重开通过并同步文档
-- Branch: `fix/TASK-CHAT-MIGRATION-20261017`
-- Worktree: `D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017`
+- Branch: `unallocated`
+- Worktree: `unallocated`
 - Modules: src/features/creation, src/App.tsx, src/features/agent, src/features/google, src/features/local-service, src/features/projects, src-tauri/src, vendor/canvas-agent, scripts/agent, docs/changes/2026-10-17-chat-migration
 - Verification: NOT_VERIFIED — Desktop/Web 2.1.37（Mobile 2.1.1规划），冻结源码89b8291b；默认原9项目已迁移snapshot3、11个独立聊天上下文，repositoryId和原始资料保持；编辑、旧历史持久化及正常关闭重开证据见本轮验证。真实新回复仍未验收：Codex共享周额度100%、ordinaryUsageAllowed=false，发送前拒绝，/turn提交0；预计北京时间2026-10-23 04:08:15重置。未消耗reset、未购买额度或绕过保护。 完整verify Node1924/14skip、Agent204/2skip、Edge826首试零flaky、DESIGN41+8/development四步；Rust226+41/1ignore；双轴源码PASS，官方EXE与loaded bundle绑定89b；副本130检查、默认v3迁移与旧历史/编辑重开收据见verification。所有原件和失败保留。
 - Evidence: [docs/changes/2026-10-17-chat-migration/intent.md](../../docs/changes/2026-10-17-chat-migration/intent.md), [docs/changes/2026-10-17-chat-migration/spec.md](../../docs/changes/2026-10-17-chat-migration/spec.md), [docs/changes/2026-10-17-chat-migration/plan.md](../../docs/changes/2026-10-17-chat-migration/plan.md), [docs/changes/2026-10-17-chat-migration/verification.md](../../docs/changes/2026-10-17-chat-migration/verification.md), [docs/changes/2026-10-17-chat-migration/review.md](../../docs/changes/2026-10-17-chat-migration/review.md)
-- Next action: 账号Codex额度解除后，从当前v3原线程进行一次普通文本受理/回复及持久化重开验收；此前/turn0，无UNKNOWN重放。保留原始v2不可变归档，不回滚、删除或移动；Hosted/PR/main/发布与原统一范围另行验收。
+- Next action: 账号Codex额度解除后，从当前v3原线程进行一次普通文本受理/回复及持久化重开验收；此前/turn0，无UNKNOWN重放。保留原始v2不可变归档，不回滚、删除或移动；Hosted/PR/main/发布与原统一范围另行验收。 原e11b87a5分支和恢复收据保留；物理树由TASK-LOCAL-GUARDS-20261018复用，额度解除后重新分配，不把旧分支冒充当前checkout。
 - Last verified: 2026-10-17
-- Updated: 2026-10-17
+- Updated: 2026-10-18
 
 ## TASK-AUDIT-REPAIR-20261017 — 审计安全修复、启动恢复与当前治理收敛
 

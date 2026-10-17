@@ -2,13 +2,17 @@
 
 - docId: AI_HANDOFF
 - status: current
-- updatedAt: 2026-10-17
+- updatedAt: 2026-10-18
 - source: `docs/governance/PROJECT_STATE.md`
 - supersededBy: null
 
 本文是最短恢复入口，不是任务状态或产品能力的第二事实源。任务状态只读 [`task-ledger.json`](task-ledger.json)；当前项目事实只读 [`PROJECT_STATE.md`](PROJECT_STATE.md)；历史验证只按带日期的 change package、commit、运行模式和 receipt 回读。
 
-## 当前恢复入口：旧聊天迁移与编辑恢复（2026-10-17）
+## 当前恢复入口：本地剩余任务安全边界（2026-10-18）
+
+TASK-LOCAL-GUARDS-20261018 / fix/TASK-LOCAL-GUARDS-20261018，物理树仍为原审计目录，base e11b87a5；候选Desktop/Web2.1.38尚未本轮完整交付。先读[计划](../changes/2026-10-18-local-guards/plan.md)、[验证](../changes/2026-10-18-local-guards/verification.md)与权威PROJECT_STATE。三个实施组已限定policy/credentials/testEvidence不相交文件；root独占版本、文档、端口/Native/最终Git。禁止删移现有文件、在共享依赖安装或停止别的任务进程；原chat分支e11和9项目/11chat/v3保留，无真实新消息验收。
+
+## 上一阶段：旧聊天迁移与编辑恢复（2026-10-17）
 
 先读[计划](../changes/2026-10-17-chat-migration/plan.md)、[验证](../changes/2026-10-17-chat-migration/verification.md)和权威Project State。TASK-CHAT-MIGRATION-20261017 PARTIAL/NOT_VERIFIED，branch `fix/TASK-CHAT-MIGRATION-20261017`，实体树仍为原审计worktree；完整verify/Native source89b8291b。Desktop/Web 2.1.37（Mobile 2.1.1规划），冻结源码89b8291b；默认原9项目已迁移snapshot3、11个独立聊天上下文，repositoryId和原始资料保持；编辑、旧历史持久化及正常关闭重开证据见本轮验证。真实新回复仍未验收：Codex共享周额度100%、ordinaryUsageAllowed=false，发送前拒绝，/turn提交0；预计北京时间2026-10-23 04:08:15重置。未消耗reset、未购买额度或绕过保护。 继续时先读当前v3与immutable迁移manifest，不覆盖原库、不重放UNKNOWN、不再执行旧v2默认迁移脚本；额度解除后一次真实文本回复仍待验。原main69dirty/index、5worktrees/8分支及旧审计ref保护，仍禁止删除/移动，日常lnk引用本任务树。详细精确收据见本轮验证；无Hosted/发布成功声明。
 

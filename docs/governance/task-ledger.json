@@ -1,5 +1,55 @@
 [
   {
+    "id": "TASK-LOCAL-GUARDS-20261018",
+    "title": "修复本地安全边界并核对剩余任务与工作树规则",
+    "goal": "不依赖额度修复工作树检查误放行、凭据缓存失败污染并补测试证据负向验收",
+    "scope": "worktree-policy、LayeredCredentialStore、testEvidence取消/报告失败及任务事实同步；不扩展Provider或新产品功能",
+    "acceptance": [
+      "工作树Git查询/CLI目标路径/缺失登记失败关闭，正常已有分支仍复用",
+      "凭据持久失败不污染缓存，成功/失败轮换及相邻异步边界回归通过",
+      "真实Playwright取消和reporter写失败非0/中断，旧三类证据字节与哈希保持",
+      "当前源码完整验证、独立审查、Delivery与任务事实同步；保全改动不删除移动"
+    ],
+    "dependencies": [],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "fix/TASK-LOCAL-GUARDS-20261018",
+    "worktree": "D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017",
+    "baseSha": "e11b87a579a92f89d7d60f9c2f1be15bfb033065",
+    "status": "IN_PROGRESS",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "priorityRationale": "本地检查误放行与失败凭据状态不依赖额度，应先修复",
+    "affectedModules": [
+      "scripts/governance/worktree-policy.mjs",
+      "src/features/ai-gateway/credentials.ts",
+      "tests/unit/worktreeLifecycle.test.ts",
+      "tests/unit/aiGatewayCredentials.test.ts",
+      "tests/unit/testEvidence.test.ts",
+      "docs/changes/2026-10-18-local-guards"
+    ],
+    "evidence": [
+      "docs/changes/2026-10-18-local-guards/intent.md",
+      "docs/changes/2026-10-18-local-guards/spec.md",
+      "docs/changes/2026-10-18-local-guards/plan.md",
+      "docs/changes/2026-10-18-local-guards/verification.md",
+      "docs/changes/2026-10-18-local-guards/review.md"
+    ],
+    "verification": "开工前7登记树105项dirty/index/全部Git引用及当前raw3检查点已复制逐字节保全，规则与缓存有只读RED；完整修复与验证未完成。",
+    "verificationResult": "NOT_VERIFIED",
+    "updated": "2026-10-18",
+    "lastVerified": "2026-10-18",
+    "nextAction": "先真实RED/GREEN修复三个独占文件组，完成完整验证和独立复审，同步工作树/账本事实；不以本地通过代替外部能力。",
+    "requirementRefs": [
+      "ledger:TASK-GOV-004",
+      "ledger:TASK-AI-GATEWAY-001",
+      "ledger:TASK-VERIFY-EVIDENCE-20261015"
+    ],
+    "featureIds": [
+      "FEAT-038"
+    ]
+  },
+  {
     "id": "TASK-CHAT-MIGRATION-20261017",
     "lastVerified": "2026-10-17",
     "title": "保全旧聊天资料并恢复迁移、编辑与聊天",
@@ -14,8 +64,8 @@
     "dependencies": [],
     "owner": "root",
     "ownerRole": "implementation-integrator",
-    "branch": "fix/TASK-CHAT-MIGRATION-20261017",
-    "worktree": "D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "baseSha": "bbc8a766740ec94d30171020cf208a6aeb3c87d4",
     "status": "PARTIAL",
     "displayStatus": "未完成",
@@ -42,8 +92,8 @@
     ],
     "verification": "Desktop/Web 2.1.37（Mobile 2.1.1规划），冻结源码89b8291b；默认原9项目已迁移snapshot3、11个独立聊天上下文，repositoryId和原始资料保持；编辑、旧历史持久化及正常关闭重开证据见本轮验证。真实新回复仍未验收：Codex共享周额度100%、ordinaryUsageAllowed=false，发送前拒绝，/turn提交0；预计北京时间2026-10-23 04:08:15重置。未消耗reset、未购买额度或绕过保护。 完整verify Node1924/14skip、Agent204/2skip、Edge826首试零flaky、DESIGN41+8/development四步；Rust226+41/1ignore；双轴源码PASS，官方EXE与loaded bundle绑定89b；副本130检查、默认v3迁移与旧历史/编辑重开收据见verification。所有原件和失败保留。",
     "verificationResult": "NOT_VERIFIED",
-    "updated": "2026-10-17",
-    "nextAction": "账号Codex额度解除后，从当前v3原线程进行一次普通文本受理/回复及持久化重开验收；此前/turn0，无UNKNOWN重放。保留原始v2不可变归档，不回滚、删除或移动；Hosted/PR/main/发布与原统一范围另行验收。",
+    "updated": "2026-10-18",
+    "nextAction": "账号Codex额度解除后，从当前v3原线程进行一次普通文本受理/回复及持久化重开验收；此前/turn0，无UNKNOWN重放。保留原始v2不可变归档，不回滚、删除或移动；Hosted/PR/main/发布与原统一范围另行验收。 原e11b87a5分支和恢复收据保留；物理树由TASK-LOCAL-GUARDS-20261018复用，额度解除后重新分配，不把旧分支冒充当前checkout。",
     "requirementRefs": [
       "docs/changes/2026-10-17-chat-migration/intent.md",
       "docs/architecture/adr/ADR-022-project-chats-and-v3-migration.md",
@@ -52,6 +102,16 @@
     "featureIds": [
       "FEAT-009",
       "FEAT-014"
+    ],
+    "sourceUpdates": [
+      {
+        "recordedAt": "2026-10-18",
+        "type": "physical-tree-reused-for-local-guards",
+        "branch": "fix/TASK-CHAT-MIGRATION-20261017",
+        "worktree": "D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017",
+        "sourceHead": "e11b87a579a92f89d7d60f9c2f1be15bfb033065",
+        "source": "docs/changes/2026-10-18-local-guards/verification.md"
+      }
     ]
   },
   {

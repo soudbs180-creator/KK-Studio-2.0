@@ -2,8 +2,12 @@
 
 - 状态：PROTOTYPE
 - 领域：backend
-- 最近更新：2026-10-10
-- 关联任务：TASK-AI-GATEWAY-001
+- 最近更新：2026-10-18
+- 关联任务：TASK-AI-GATEWAY-001、TASK-LOCAL-GUARDS-20261018
+
+## 2026-10-18 本地凭据状态修复
+
+LayeredCredentialStore只在持久写成功后发布缓存；迟到读取和每层删除结算均核对状态变化，避免轮换/撤销后旧值回流。新增合成凭据失败与并发回归，结果见[本轮验证](../changes/2026-10-18-local-guards/verification.md)。当前该类仅在单测构造，不把纯内存验证当作真实系统凭据、DPAPI或Provider联调；功能仍为PROTOTYPE，父任务继续PARTIAL。
 
 ## 用户可见入口
 

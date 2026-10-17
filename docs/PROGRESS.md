@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-10-18 不依赖额度的本地安全边界（IN_PROGRESS）
+
+TASK-LOCAL-GUARDS-20261018复用原审计实体树，当前branch fix/TASK-LOCAL-GUARDS-20261018/base e11b87a5。7树105dirty/index/all-ref bundle已保全，原始用户资料不变；修复工作树检查fail-open和凭据缓存失败发布，补真实runner取消/报告写失败及环境隔离。单项RED/GREEN已保留，候选Desktop/Web2.1.38，完整verify/Native/独审待续；不把本地基础修复当作真实Provider或额度恢复。见[本轮验证](changes/2026-10-18-local-guards/verification.md)。
+
 ## 2026-10-17 旧聊天迁移与编辑恢复（PARTIAL：新回复受额度阻塞）
 
 Desktop/Web 2.1.37（Mobile 2.1.1规划），冻结源码89b8291b；默认原9项目已迁移snapshot3、11个独立聊天上下文，repositoryId和原始资料保持；编辑、旧历史持久化及正常关闭重开证据见本轮验证。真实新回复仍未验收：Codex共享周额度100%、ordinaryUsageAllowed=false，发送前拒绝，/turn提交0；预计北京时间2026-10-23 04:08:15重置。未消耗reset、未购买额度或绕过保护。 冻结89b完整verify通过：Node1924PASS/14既有SKIP、Agent204PASS/2既有SKIP、Edge826首试零flaky、DESIGN41+8/development四步；Rust226+41/1既有ignore；双轴源码审查、官方Native、原库副本130及实际默认资料验收详见[本轮验证](changes/2026-10-17-chat-migration/verification.md)。最初v2全量原件、5旧rollout、所有失败和CAS恢复证据保留，无删除/移动。原main63项字节/index保持；并发新增6项使当前69dirty，未回退或并入。当前150任务85DONE/65开放，功能成熟度不提高。

@@ -2,14 +2,30 @@
 
 - docId: PROJECT_STATE
 - status: current
-- updatedAt: 2026-10-17
+- updatedAt: 2026-10-18
 - source: `docs/governance/task-ledger.json`
 - supersededBy: null
 
 <!-- DOCUMENT_METADATA_END -->
 <!-- CURRENT_FACTS_BEGIN -->
 
-# 当前项目事实（2026-10-17）
+# 当前项目事实（2026-10-18）
+
+- `currentTask`: TASK-LOCAL-GUARDS-20261018 IN_PROGRESS/NOT_VERIFIED；branch `fix/TASK-LOCAL-GUARDS-20261018`，base e11b87a579a92f89d7d60f9c2f1be15bfb033065，物理树仍为`D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017`，未新建或移动目录。[本轮计划](../changes/2026-10-18-local-guards/plan.md)和[验证](../changes/2026-10-18-local-guards/verification.md)为当前执行入口。
+- `sourceVersionBoundary`: Desktop/Web候选2.1.38、Mobile2.1.1规划；正式源码冻结/完整verify/官方Native待本轮收据。当前日常进程仍为上轮2.1.37，不把候选版本说成已交付。
+- `canonicalRepository`: `D:/kk-studio/KK-Studio-2.0`；本地main8c36a6b1/69dirty，原63项字节/index已保护；并发改动不回退/并入。本轮fetch后origin/main f730f1dc32fb2e568dda6d4a52c58b05802d6b6b，未重新读Hosted或整合其他任务。
+- `workspaceWorktrees`: 本轮开工7登记tree/12分支；复用干净树新建本轮branch后为7/13。approved root内计5/4，生成物开工测量约15.25GiB/20GiB。超限拒绝新增，已有登记合法分支仍可复用；现有树全部保留，不把总数7直接等同违规。
+- `parallelBoundary`: main和Image POC dirty，POC审查期间继续变化；BACKEND/POC/Web任务路由存在分支版本差异，本轮只读登记来源，不改其文件或冒填交付。日常两个lnk引用本树，禁止清理该树。
+- `taskLedger`: 本候选账本151项，85DONE/49PARTIAL/12TODO/3BLOCKED/2IN_PROGRESS，开放66；新任务未验收。并行分支的新增任务不自动覆盖本候选账本。
+- `preservation`: 开工7树105项dirty/index/diff/status、全部引用bundle和当前raw3检查点复制逐字节保全至`D:/KK-Studio-recovery-20260921/remaining-local-20261018-c7960435-8faa-4397-8009-1dbafcdeece3`，receipt SHA5b4c7b82，refsStable=true。所有上轮原v2/v3、完整rollout、失败和最终证据保留。
+- `localFixScope`: 工作树Git查询失败/空分支/缺失登记/显式越界目标失败关闭；凭据持久写失败与迟到读/删除缓存边界；真实runner取消/JSON reporter写失败及子环境隔离。已有单项RED/GREEN，完整验证与独审未完成；无真实凭据/模型调用。
+- `defaultDataBoundary`: 上轮9项目11chat已迁移snapshot3、同repositoryId format2/minWriter2，旧历史与编辑重开通过；原件不可覆盖回库。本轮不迁移资料或发送文本，真实新回复仍按旧额度证据未验，不提升为DONE。
+- `reclamationPolicy`: 没有文件删除/移动、共享依赖安装、push/merge或发布；不增加工作树预算。37功能成熟度及真实Provider/DPAPI/12AI/持久垃圾箱/账号/VPS/Mobile/签名边界不提升。下方旧事实只按各时点解释。
+
+<!-- CURRENT_FACTS_END -->
+<!-- HISTORICAL_SNAPSHOTS_BEGIN -->
+
+## 2026-10-17 旧聊天恢复完成时的快照（历史）
 
 - `snapshotDate`: 2026-10-17；精确事实与失败详见[迁移验证](../changes/2026-10-17-chat-migration/verification.md)。
 - `canonicalRepository`: `D:/kk-studio/KK-Studio-2.0`；容器根不是Git仓库。
@@ -29,9 +45,6 @@
 - `localHook`: 原v2 shared pre-push四处按LF归一一致，旧bak保留；hook不替代Hosted，远端规则仅按前次A–D采样历史解释，当前无设置变更。
 - `reclamationPolicy`: 无文件删除/移动，54份runtime previous/历史clone/worktree/恢复资料保留；本任务build依赖为物理owned，日常lnk引用的任务树不得清理。原A保全517368文件版本/56336959878B/6bundles仍按其历史收据解释。
 - `historicalRule`: 下方历史不覆盖本区；37功能成熟度/runtimeEvidence未提升。临时/新窗口、无持久receipt的12AI、未接持久垃圾箱继续禁用；12AI持久恢复/成本/记忆/垃圾箱、真实Provider/Comfy/GPU、Web/VPS/账号/同步、Mobile及签名安装器/用户验收按原任务开放。
-
-<!-- CURRENT_FACTS_END -->
-<!-- HISTORICAL_SNAPSHOTS_BEGIN -->
 
 
 ## 2026-10-17 迁移执行前的事实快照（历史，已由上方事实替代）

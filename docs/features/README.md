@@ -85,7 +85,7 @@
 | ID | 功能 | 状态 | 卡片 | 关联任务 |
 | --- | --- | --- | --- | --- |
 | FEAT-024 | Generation Gateway/Worker（持久后端） | PARTIAL（部分可用） | [卡片](feat-024-gateway.md) | T5, T8 |
-| FEAT-038 | 多平台 AI 模型网关 | PROTOTYPE（仅演示/UI） | [卡片](feat-038-ai-model-gateway.md) | TASK-AI-GATEWAY-001 |
+| FEAT-038 | 多平台 AI 模型网关 | PROTOTYPE（仅演示/UI） | [卡片](feat-038-ai-model-gateway.md) | TASK-AI-GATEWAY-001, TASK-LOCAL-GUARDS-20261018 |
 
 ## 未来规划
 

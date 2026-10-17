@@ -147,6 +147,153 @@ test("layered store prefers the durable side so rotation takes effect", async ()
   assert.deepEqual(await layered.list(), ["conn.b"]);
 });
 
+function deferred<T>() {
+  let resolve!: (value: T) => void;
+  const promise = new Promise<T>((done) => {
+    resolve = done;
+  });
+  return { promise, resolve };
+}
+
+test("layered store does not publish a credential when its first durable write fails", async () => {
+  const durable = new MemoryCredentialStore();
+  durable.write = async () => {
+    throw new Error("fixture write failed");
+  };
+  const layered = new LayeredCredentialStore(
+    durable,
+    new MemoryCredentialStore(),
+  );
+  await assert.rejects(
+    layered.write("conn.a", "not-saved"),
+    /fixture write failed/,
+  );
+  assert.equal(await layered.read("conn.a"), undefined);
+});
+
+test("layered store preserves its saved credential when rotation fails", async () => {
+  const durable = new MemoryCredentialStore({ "conn.a": "saved" });
+  const layered = new LayeredCredentialStore(
+    durable,
+    new MemoryCredentialStore(),
+  );
+  assert.equal(await layered.read("conn.a"), "saved");
+  durable.write = async () => {
+    throw new Error("fixture rotation failed");
+  };
+  await assert.rejects(
+    layered.write("conn.a", "not-saved"),
+    /fixture rotation failed/,
+  );
+  assert.equal(await layered.read("conn.a"), "saved");
+});
+
+test("layered store publishes rotation only after the durable write succeeds", async () => {
+  const durable = new MemoryCredentialStore({ "conn.a": "saved" });
+  const write = durable.write.bind(durable);
+  const release = deferred<void>();
+  durable.write = async (ref, secret) => {
+    await release.promise;
+    await write(ref, secret);
+  };
+  const layered = new LayeredCredentialStore(
+    durable,
+    new MemoryCredentialStore(),
+  );
+  assert.equal(await layered.read("conn.a"), "saved");
+  const saving = layered.write("conn.a", "rotated");
+  try {
+    assert.equal(await layered.read("conn.a"), "saved");
+  } finally {
+    release.resolve();
+    await saving;
+  }
+  assert.equal(await layered.read("conn.a"), "rotated");
+});
+
+test("layered store follows durable commit order when concurrent rotations finish out of order", async () => {
+  const durable = new MemoryCredentialStore({ "conn.a": "saved" });
+  const write = durable.write.bind(durable);
+  const firstRelease = deferred<void>();
+  const secondRelease = deferred<void>();
+  durable.write = async (ref, secret) => {
+    await (secret === "first" ? firstRelease.promise : secondRelease.promise);
+    await write(ref, secret);
+  };
+  const layered = new LayeredCredentialStore(
+    durable,
+    new MemoryCredentialStore(),
+  );
+  const first = layered.write("conn.a", "first");
+  const second = layered.write("conn.a", "second");
+  secondRelease.resolve();
+  await second;
+  try {
+    assert.equal(await layered.read("conn.a"), "second");
+    assert.equal(await durable.read("conn.a"), "second");
+  } finally {
+    firstRelease.resolve();
+    await first;
+  }
+  assert.equal(await layered.read("conn.a"), "first");
+  assert.equal(await durable.read("conn.a"), "first");
+});
+
+for (const mutation of ["rotation", "deletion"] as const) {
+  test(`layered store does not resurrect a delayed read after ${mutation}`, async () => {
+    const durable = new MemoryCredentialStore({ "conn.a": "saved" });
+    const read = durable.read.bind(durable);
+    const started = deferred<void>();
+    const release = deferred<void>();
+    let delayed = true;
+    durable.read = async (ref) => {
+      const value = await read(ref);
+      if (delayed) {
+        delayed = false;
+        started.resolve();
+        await release.promise;
+      }
+      return value;
+    };
+    const layered = new LayeredCredentialStore(
+      durable,
+      new MemoryCredentialStore(),
+    );
+    const reading = layered.read("conn.a");
+    await started.promise;
+    if (mutation === "rotation") await layered.write("conn.a", "rotated");
+    else await layered.delete("conn.a");
+    release.resolve();
+    const expected = mutation === "rotation" ? "rotated" : undefined;
+    assert.equal(await reading, expected);
+    assert.equal(await layered.read("conn.a"), expected);
+  });
+}
+
+test("layered store invalidates a late successful deletion when the other layer fails", async () => {
+  const durable = new MemoryCredentialStore();
+  durable.delete = async () => {
+    throw new Error("fixture deletion failed");
+  };
+  const legacy = new MemoryCredentialStore({ "conn.a": "legacy" });
+  const remove = legacy.delete.bind(legacy);
+  const release = deferred<void>();
+  let deletion!: Promise<boolean>;
+  legacy.delete = (ref) => {
+    deletion = release.promise.then(() => remove(ref));
+    return deletion;
+  };
+  const layered = new LayeredCredentialStore(durable, legacy);
+  await assert.rejects(layered.delete("conn.a"), /fixture deletion failed/);
+  try {
+    assert.equal(await layered.read("conn.a"), "legacy");
+  } finally {
+    release.resolve();
+    await deletion;
+  }
+  assert.equal(await layered.read("conn.a"), undefined);
+});
+
 test("every store rejects secret-shaped references on read", async () => {
   const secretish = "sk-abcdefghijklmnopqrstuvwxyz";
   for (const store of [

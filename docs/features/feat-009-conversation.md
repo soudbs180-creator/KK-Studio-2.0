@@ -3,9 +3,7 @@
 - 状态：PARTIAL
 - 领域：creation
 - 最近更新：2026-10-17
-- 关联任务：T4、BACKEND-CONVERSATION、TASK-AGENT-001、TASK-AGENT-002、TASK-AGENT-003、TASK-AGENT-004、TASK-AGENT-005、TASK-AGENT-008
-- 最近更新：2026-10-17
-- 关联任务：T4、BACKEND-CONVERSATION、TASK-AGENT-001、TASK-AGENT-002、TASK-AGENT-003、TASK-AGENT-007、TASK-AGENT-008
+- 关联任务：T4、BACKEND-CONVERSATION、TASK-AGENT-001、TASK-AGENT-002、TASK-AGENT-003、TASK-AGENT-004、TASK-AGENT-005、TASK-AGENT-007、TASK-AGENT-008、TASK-CHAT-MIGRATION-20261017
 
 ## 2026-10-17旧聊天恢复（本地验证通过，任务仍PARTIAL）
 
@@ -37,7 +35,7 @@
 - KK 对话默认 Codex：命名 SSE、真实账号模型/额度、项目会话恢复、停止和权限请求已接通；API 来源需显式选择。
 - 已从 KK 输入取得真实回复、MCP 画布操作和内置生图结果。图片进入 KK 自有素材仓库；卡片来源按 thread/turn 元数据持久化。工具回执未知时阻止自动重试。
 - 分级/全部模型菜单、关闭记忆页、返回、页内置顶由 ModelPickerMenu 统一提供。Google API Key 的对话/生图和 Gemini CLI 登录的文字对话已有本地接线与 fixture 浏览器回归；真实账号与 Tauri 仍待验收。豆包/WorkBuddy 仍未接通。
-- 分级/全部模型菜单、关闭记忆页、返回、页内置顶由 ModelPickerMenu 统一提供。Google/豆包/WorkBuddy 适配器保持禁用。
+- 豆包/WorkBuddy未完成的独立适配器保持禁用；Google API/Gemini CLI按上一条的本地接线与外部待验边界解释。
 - 设置 › 网络增加 CodeBuddy CLI 路径、保存和真实连通测试；Codex MCP 增加 `codebuddy_consult`，可受控委派有限短文本。本机已登录 CLI、随包 MCP 与新 Tauri 内 Codex 工具调用和可见回复通过；独立的 WorkBuddy 原生 OAuth、自动高效路由仍未实现，菜单中 WorkBuddy 仍禁用。见 [本轮验证](../changes/2026-09-24-codebuddy-delegation/verification.md)。
 - 新增文本节点（FEAT-008）是单次文本生成，不能作为本面板多轮文本聊天验收。
 
