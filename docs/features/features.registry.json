@@ -1341,24 +1341,34 @@
     "id": "FEAT-028",
     "title": "Mobile 适配",
     "area": "future",
-    "status": "PLANNED",
+    "status": "PARTIAL",
     "card": "docs/features/feat-028-mobile.md",
-    "summary": "当前仅响应式Web的窄窗口布局；Native Mobile独立工程、登录/本地数据、真机和安装包仍未实现，规划版本2.1.1。",
-    "entryPoints": ["无（未实现）"],
-    "code": ["src/styles/responsive.css"],
+    "summary": "已恢复独立Expo Mobile源码与手机Web入口，真实本机创作/资料持久化及可选账号边界正在验收；Native新包、实体手机与正式身份/Provider仍未接受。",
+    "entryPoints": [
+      "kkai.plus 手机初次访问 /mobile/；桌面资料入口 /?view=desktop"
+    ],
+    "code": [
+      "mobile/src/app/_layout.tsx",
+      "mobile/src/screens/ChatScreen.tsx",
+      "deploy/build-combined-web.mjs",
+      "deploy/initial-web-entry.js"
+    ],
     "tests": [
       "tests/browser/frame-accuracy.spec.ts",
       "tests/browser/canvas-selected-zoom-menu.spec.ts",
-      "tests/browser/settings-control-usability.spec.ts"
+      "tests/browser/settings-control-usability.spec.ts",
+      "mobile/tests/applicationLocalMode.test.ts",
+      "tests/deploy/combined-web.test.mjs"
     ],
     "tasks": [
       "T12",
       "TASK-UI-CONSOLIDATE-20261014",
       "TASK-PROTOCOL-CLI-20261014",
       "TASK-222-ACTIONS-20261014",
-      "TASK-223-ACTIONS-20261014"
+      "TASK-223-ACTIONS-20261014",
+      "TASK-WEB-RELEASE-20261017"
     ],
-    "updated": "2026-10-14"
+    "updated": "2026-10-18"
   },
   {
     "id": "FEAT-029",

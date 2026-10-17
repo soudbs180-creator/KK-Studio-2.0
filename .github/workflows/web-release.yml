@@ -60,15 +60,17 @@ jobs:
           test "$quality_ready" = true || { echo 'Matching main quality run did not succeed within 45 minutes'; exit 1; }
           run_id=$(jq -r '.id' <<< "$run")
           jobs=$(gh api --paginate "repos/$GITHUB_REPOSITORY/actions/runs/$run_id/jobs?filter=latest&per_page=100" --jq '.jobs[] | {name,status,conclusion}' | jq -s .)
-          jq -e 'all(.[]; .status == "completed" and .conclusion == "success") and ([.[].name] as $names | all(["deploy-linux","delivery","governance","verify"][]; . as $required | $names | index($required) != null))' <<< "$jobs" >/dev/null
+          jq -e 'all(.[]; .status == "completed" and .conclusion == "success") and ([.[].name] as $names | all(["deploy-linux","delivery","governance","verify","mobile"][]; . as $required | $names | index($required) != null))' <<< "$jobs" >/dev/null
           printf 'SOURCE_COMMIT=%s\nWEB_VERSION=%s\nRELEASE_ID=%s\n' "$source" "$version" "$RELEASE_TAG" >> "$GITHUB_ENV"
           printf 'Verified quality run %s for %s\n' "$run_id" "$source"
-      - name: Build only the static Web and its existing plugins
+      - name: Build the independent Desktop Web and Mobile Web entries
         run: |
           npm ci --ignore-scripts
           npm ci --prefix vendor/canvas-plugins --ignore-scripts --no-audit --no-fund
+          npm ci --prefix mobile --ignore-scripts --no-audit --no-fund
           npm run plugins:build
           npm run build
+          node deploy/build-combined-web.mjs
       - name: Package and validate without activating
         shell: bash
         run: |

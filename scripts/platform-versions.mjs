@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -31,6 +31,17 @@ function inputs(projectRoot) {
     cargoLock: "src-tauri/Cargo.lock",
     tauri: "src-tauri/tauri.conf.json",
   };
+  const mobilePaths = {
+    mobilePackage: "mobile/package.json",
+    mobileLock: "mobile/package-lock.json",
+    mobileApp: "mobile/app.json",
+  };
+  if (
+    Object.values(mobilePaths).some((path) =>
+      existsSync(join(projectRoot, path)),
+    )
+  )
+    Object.assign(paths, mobilePaths);
   const texts = Object.fromEntries(
     Object.entries(paths).map(([key, path]) => [
       key,
@@ -47,6 +58,14 @@ function inputs(projectRoot) {
     tauri: JSON.parse(texts.tauri),
     cargo: versionInRustFile(texts.cargo, "manifest"),
     cargoLock: versionInRustFile(texts.cargoLock, "lock"),
+    mobile:
+      texts.mobilePackage === undefined
+        ? null
+        : {
+            package: JSON.parse(texts.mobilePackage),
+            lock: JSON.parse(texts.mobileLock),
+            app: JSON.parse(texts.mobileApp),
+          },
   };
 }
 
@@ -73,6 +92,30 @@ function errorsFor(data) {
     ["src-tauri/Cargo.toml", data.cargo.version, expectedDesktop],
     ["src-tauri/Cargo.lock", data.cargoLock.version, expectedDesktop],
     ["src-tauri/tauri.conf.json", data.tauri.version, expectedDesktop],
+    ...(data.mobile
+      ? [
+          [
+            "mobile/package.json",
+            data.mobile.package?.version,
+            data.versions.mobile,
+          ],
+          [
+            "mobile/package-lock.json",
+            data.mobile.lock?.version,
+            data.versions.mobile,
+          ],
+          [
+            "mobile/package-lock.json root package",
+            data.mobile.lock?.packages?.[""]?.version,
+            data.versions.mobile,
+          ],
+          [
+            "mobile/app.json expo",
+            data.mobile.app?.expo?.version,
+            data.versions.mobile,
+          ],
+        ]
+      : []),
   ]) {
     if (actual !== expected)
       errors.push(`${file}: ${actual ?? "missing"} differs from ${expected}`);
@@ -149,6 +192,18 @@ export function bumpVersions(projectRoot, selectedPlatforms, kind = "patch") {
         (_, start, _old, end) => `${start}${data.versions.desktop}${end}`,
       ),
     );
+  }
+  if (selectedPlatforms.includes("mobile") && data.mobile) {
+    data.mobile.package.version = data.versions.mobile;
+    data.mobile.lock.version = data.versions.mobile;
+    data.mobile.lock.packages[""].version = data.versions.mobile;
+    data.mobile.app.expo.version = data.versions.mobile;
+    for (const [key, content] of [
+      ["mobilePackage", data.mobile.package],
+      ["mobileLock", data.mobile.lock],
+      ["mobileApp", data.mobile.app],
+    ])
+      updates.set(data.paths[key], JSON.stringify(content, null, 2) + "\n");
   }
   for (const [path, content] of updates)
     writeFileSync(join(projectRoot, path), content);
