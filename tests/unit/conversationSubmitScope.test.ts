@@ -17,6 +17,7 @@ import {
 import { decodeSnapshot } from "../../src/features/creation/snapshotCodec.ts";
 import { sameJson } from "../../src/features/creation/chatMigration.ts";
 import { updateProjectChatView } from "../../src/features/agent/chatProjectUpdate.ts";
+import { clearSentPendingDraft } from "../../src/features/agent/homeAgentRecovery.ts";
 import {
   appendImageTask,
   ImageTaskCommandError,
@@ -821,3 +822,190 @@ test("App duplicate submission remains blocked while an accepted task is saving"
   assert.equal(h.executed.length, 1);
   assert.equal(h.creationRef.current.projects[0].tasks.length, 1);
 });
+
+function appHomeSubmissionHarness(accepted: boolean) {
+  const creationRef = {
+    current: {
+      ...emptySnapshot(),
+      version: 3 as const,
+      homeDraft: { ...emptyDraft(), prompt: "HOME original" },
+    },
+  };
+  const entered = deferred<void>();
+  const release = deferred<void>();
+  const calls: { message: string; options: Record<string, unknown> }[] = [];
+  const submitLock = { current: false };
+  const homeCodexStarting = { current: false };
+  const loaded = evaluate(
+    `${appFunction("updateProject")}
+     ${appFunction("updateHomeDraft")}
+     export ${appFunction("handleCreateProject")}`.replaceAll(
+      "import.meta.env.VITE_KK_AGENT_PROXY",
+      '"0"',
+    ),
+    {
+      creationRef,
+      createProject,
+      updateProjectChatView,
+      clearSentPendingDraft,
+      emptyDraft,
+      activePageRef: { current: "landing" },
+      activeProjectIdRef: { current: null },
+      submitLock,
+      homeCodexStarting,
+      saveStateRef: { current: "saved" },
+      homeModelSelection: () => ({ source: "codex", model: "", kind: "image" }),
+      navigator: { onLine: true },
+      AbortController,
+      agentConnection: {
+        getState: () => ({
+          sending: false,
+          preparing: false,
+          pendingApproval: null,
+        }),
+        syncProject() {},
+        async sendMessage(message: string, options: Record<string, unknown>) {
+          calls.push({ message, options });
+          entered.resolve();
+          await release.promise;
+          return accepted
+            ? { ok: true }
+            : { ok: false, error: "synthetic first-send failure" };
+        },
+      },
+      prepareAgentAttachments: async () => [],
+      codexGenerationPrompt: () => "",
+      commitCreation(next: typeof creationRef.current) {
+        creationRef.current = next;
+      },
+      setActive() {},
+      setChat() {},
+      replaceCanvasItems() {},
+      persistence: { async flush() {} },
+      desktopAgentLifecycle: { async connect() {} },
+      configureAgentProxy() {},
+    },
+  );
+  const submit = loaded.handleCreateProject as (
+    input: unknown,
+  ) => Promise<string | undefined>;
+  return {
+    creationRef,
+    entered,
+    release,
+    calls,
+    submitLock,
+    homeCodexStarting,
+    submit: () =>
+      submit({
+        prompt: "HOME original",
+        model: "",
+        kind: "image",
+        attachments: [],
+      }),
+  };
+}
+
+for (const outcome of [
+  "unchanged",
+  "edited A",
+  "switched B",
+  "failure",
+] as const)
+  test(`App first HOME acceptance preserves the frozen chat source after ${outcome}`, async () => {
+    const h = appHomeSubmissionHarness(outcome !== "failure");
+    const pending = h.submit();
+    await h.entered.promise;
+    const project = h.creationRef.current.projects[0];
+    const originChatId = project.activeChatId!;
+    const originalA = structuredClone(project.chats![originChatId]);
+    if (outcome !== "unchanged") {
+      const scoped = updateProjectChatView(project, (view) => ({
+        ...view,
+        composerDraft: {
+          ...view.composerDraft,
+          prompt: "next first-HOME input",
+          model: "next preferred model",
+          attachments: [
+            {
+              id: "next-reference",
+              name: "next.png",
+              mime: "image/png",
+              size: 1,
+            },
+          ],
+        },
+      }));
+      h.creationRef.current.projects[0] = scoped;
+      h.creationRef.current.homeDraft = {
+        ...emptyDraft(),
+        prompt: "next HOME draft",
+      };
+    }
+    let beforeB: string | undefined;
+    if (outcome === "switched B") {
+      const current = h.creationRef.current.projects[0];
+      const chatB = {
+        ...originalA,
+        id: "B",
+        name: "B",
+        agentThreadId: "thread-B",
+        draft: { ...emptyDraft(), prompt: "new B draft", text: "new B draft" },
+        messages: [
+          { id: "B-saved", role: "assistant" as const, content: "B history" },
+        ],
+      };
+      beforeB = JSON.stringify(chatB);
+      h.creationRef.current.projects[0] = projectChatView({
+        ...current,
+        activeChatId: "B",
+        chats: { ...current.chats, B: chatB },
+      });
+    }
+    const before = structuredClone(h.creationRef.current);
+    h.release.resolve();
+    const result = await pending;
+    const saved = h.creationRef.current.projects[0];
+    const draftA = saved.chats![originChatId].draft;
+    assert.equal(h.calls.length, 1);
+    assert.equal(h.calls[0].message, "HOME original");
+    assert.equal(
+      (h.calls[0].options.canvasSource as { nodeId: string }).nodeId,
+      project.items[0].id,
+    );
+    assert.equal(h.submitLock.current, false);
+    assert.equal(h.homeCodexStarting.current, false);
+    if (outcome === "failure") {
+      assert.equal(result, "synthetic first-send failure");
+      assert.deepEqual(structuredClone(h.creationRef.current), before);
+      return;
+    }
+    assert.equal(result, undefined);
+    assert.equal(draftA.pendingAgent, undefined);
+    assert.equal(
+      draftA.prompt,
+      outcome === "unchanged" ? "" : "next first-HOME input",
+    );
+    assert.deepEqual(
+      structuredClone(draftA.attachments),
+      outcome === "unchanged"
+        ? []
+        : before.projects[0].chats![originChatId].draft.attachments,
+    );
+    assert.deepEqual(saved.chats![originChatId].messages, originalA.messages);
+    if (outcome !== "unchanged") {
+      assert.equal(draftA.model, "next preferred model");
+      assert.equal(h.creationRef.current.homeDraft.prompt, "next HOME draft");
+    } else assert.equal(h.creationRef.current.homeDraft.prompt, "");
+    if (beforeB) {
+      assert.equal(saved.activeChatId, "B");
+      assert.equal(JSON.stringify(saved.chats!.B), beforeB);
+    }
+    assert.equal(
+      Object.hasOwn(
+        serializeCreationSnapshot(h.creationRef.current).projects[0],
+        "composerDraft",
+      ),
+      false,
+    );
+  });

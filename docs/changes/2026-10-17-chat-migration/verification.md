@@ -34,3 +34,13 @@ e248正式双轴独审另确认三P1，见[审查](review.md)，分别为远端�
 新2.1.37完整`cargo test --no-default-features`为226PASS/1既有硬件ignored及integration41PASS（`.tmp/chat-migration-20261017/cargo-final-2-1-37.log`）。5份旧rollout的原件/保全副本再次由独立脚本逐对重哈希，0 mismatch；工程外收据`legacy-rollouts-independent-check-e40d16dc-bba1-4d22-9cfc-47af5d4756b8.json` SHA620959e3a9f210579f21059698ce576110bacfb2f4da834ab3c9c535b71dc64e。
 
 统一重建后的47项定向Edge为45PASS/2FAIL（run132d335e，`browser-focused-repair-3.log`）：Direct迟到回执两case、设置、卡片路由及旧线程迁移/离线重开均通过。剩余2项在保存中立即读取弱镜像，改为等待实际pending退役与原chat选择落盘、按冻结原chat ID比较完整草稿后，`browser-codex-persisted-4.log`为8/8首试通过。未增timeout、未放宽原字段断言。该阶段结果只绑定对应工作树文件，下一冻结提交须完整verify及新独审。
+
+## 第三候选751c7d1a：CHANGES REQUIRED，证据保留
+
+clean提交751c7d1aaafcf1c18d13bf0c29e97777a6542978完整verify的lint/typecheck、Node1930=1916PASS/14既有SKIP、Agent206=204PASS/2既有SKIP通过；在UI门禁发现ConversationPanel306行超过300停止，未运行后续browser/DESIGN/development。日志`full-verify-751c7d1a.log`。通过复用现有blocked/agentBusy条件去重降至299行，UI0违规，未放宽规则或新拆组件。
+
+两轴独审又复现首次HOME成功回执无条件清新草稿：STD-CHAT-03 / SPEC-CHAT-02，P1。Standards收据`standards-final-1a2a7254-062d-4efc-8cd8-8efa2bb8e48b.json` SHA25b1df766a118bb34da09fd005e99a12e5f915e68b9ddff17f9c48f6eb97c6e3；Spec收据`spec-final-5b80940a-a368-482c-bfe8-03739676ff75.json` SHAd6009edd4f77ad43e2ad66b539232d29e50672df4d42b81516ac99414351a3b6。旧三P1仍按22352关闭，新问题不被单位总数掩盖。首次HOME路径现复用已冻结原project/chat/draft的clearSentPendingDraft；新增真实函数完整await链RED/GREEN，覆盖晚新稿/新附件/model、切B保留所有字段和选择、失败保留；邻域100/100。该修复仍须新head独审及完整运行验收。
+
+21:52主目录保护检查发现status/dirty摘要漂移（原失败`primary-integrity-8dcd2450-bdee-4a22-afc7-0dc95c21f894.json`保留），只读对账确认HEAD/index/staged0及原63项逐字节均保持，额外6项为AGENTS、ADR索引/ADR024、release checklist及MCP/记忆功能文档。未推断作者、未回退或并入本任务。当前69文件/1501601B及index/原始diff/status另存工程外`primary-concurrent-53e82ec2-f434-4036-91f1-6af094a4a9cf`，稳定复核PASS，收据SHA6c1f73f1df2ec4827743730d0d250444eb4cc94116f8276baa5288e16754265a。不得继续声称当前主目录总共只有63dirty或status完全相同。
+
+首次HOME修复后重新生成生产dist，增强首次延迟受理/真实UI新稿/保留原参考图/保存刷新用例，codex-home8/8首试PASS（`first-home-browser-green.log`）。准备冻结下一提交，仍须全verify及双轴新收据后才可进行Native/默认资料验收。

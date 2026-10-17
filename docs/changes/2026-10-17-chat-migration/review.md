@@ -27,3 +27,7 @@ SPEC01移除保存成功前的草稿清空；回调绑定原project/chat且只�
 ## 22352acc源码双轴复审：PASS（运行交付仍未验收）
 
 固定head22352accda1c29bbcf7b7aac4408429a4069ef8e、tree e805c2a14cb5a9ef34cdcb40e49a5695be9c6deb；两独立上下文复核增量与base全diff。STD01/STD02/SPEC01源码问题关闭，Spec87+34、Standards69项独立验证通过，收据摘要见[验证记录](verification.md)。此批准仅绑定该提交源码，不包含后续首页连接修复、测试夹具调整、完整浏览器、Native或实际资料迁移；后续新head仍须复审。原e248的CHANGES REQUIRED收据保持原结论。
+
+## 751c7d1a双轴独审：CHANGES REQUIRED
+
+固定head751c7d1aaafcf1c18d13bf0c29e97777a6542978、tree653aa09f；109文件中95项与此前正式收据hash相同、14项增量及调用链完整审查。两位独立reviewer分别从固定提交提取真实首次handleCreateProject生产函数，延迟成功时编辑新A/切B，均复现正文与附件被无条件清空，新增STD-CHAT-03 / SPEC-CHAT-02，P1验收阻断。独立94单位及112+34+35检查通过不能覆盖该缺口；3browser夹具按ADR修改未发现弱化有效保护。新收据路径/摘要见[验证记录](verification.md)，后续修复须新SHA复审，不改写751结论。

@@ -131,6 +131,11 @@ test("首页默认账号生图不被旧 image-test 接管，保存后只发一�
   const history: unknown[] = [];
   let apiCalls = 0;
   let durableAtTurn: CreationSnapshot | undefined;
+  let releaseFirstTurn!: () => void;
+  const firstTurnGate = new Promise<void>((resolve) => {
+    releaseFirstTurn = resolve;
+  });
+  let firstTurnEntered = false;
   try {
     await seed(page, agent.url);
     await page.route("https://main-gate.example.test/**", async (route) => {
@@ -160,6 +165,8 @@ test("首页默认账号生图不被旧 image-test 接管，保存后只发一�
             };
           }),
       );
+      firstTurnEntered = true;
+      await firstTurnGate;
       await route.continue();
     });
     await page.route(agent.url + "/agent/codex/threads/*", (route) =>
@@ -210,7 +217,17 @@ test("首页默认账号生图不被旧 image-test 接管，保存后只发一�
     await page
       .getByRole("button", { name: "开始创建项目", exact: true })
       .click();
+    await expect.poll(() => firstTurnEntered).toBe(true);
+    await expect(page.getByLabel("对话内容")).toBeEnabled();
+    await page.getByLabel("对话内容").fill("首次发送等待期间的新草稿");
+    releaseFirstTurn();
     await expect.poll(() => agent.turns.length).toBe(1);
+    await expect
+      .poll(async () => {
+        const draft = activeDraft((await snapshot(page)).projects[0]);
+        return { prompt: draft.prompt, pendingAgent: draft.pendingAgent };
+      })
+      .toEqual({ prompt: "首次发送等待期间的新草稿", pendingAgent: undefined });
     expect(durableAtTurn?.projects).toHaveLength(1);
     expect(durableAtTurn?.activeProjectId).toBe(durableAtTurn?.projects[0].id);
     expect(durableAtTurn?.projects[0].tasks).toHaveLength(0);
@@ -271,6 +288,12 @@ test("首页默认账号生图不被旧 image-test 接管，保存后只发一�
     await expandSidebar(page);
     await page.getByRole("button", { name: "项目库", exact: true }).click();
     await page.locator(".project-library-card").first().click();
+    await expect(page.getByLabel("对话内容")).toHaveValue(
+      "首次发送等待期间的新草稿",
+    );
+    await expect(
+      page.getByRole("button", { name: "移除素材 reference.png", exact: true }),
+    ).toBeVisible();
     await expect(
       page.locator('.demo-result-node[data-source="provider"]'),
     ).toHaveCount(1);
@@ -280,6 +303,7 @@ test("首页默认账号生图不被旧 image-test 接管，保存后只发一�
     ).toBe(result?.assetId);
     expect(agent.turns).toHaveLength(1);
   } finally {
+    releaseFirstTurn();
     await agent.close();
   }
 });

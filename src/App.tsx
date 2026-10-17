@@ -2642,15 +2642,13 @@ export default function App() {
         ),
       });
       if (!result.ok) return result.error ?? "发送未确认，草稿仍保留。";
-      updateProject(project.id, (current) => ({
-        ...current,
-        composerDraft: {
-          ...current.composerDraft,
-          prompt: "",
-          attachments: [],
-          pendingAgent: undefined,
-        },
-      }));
+      updateProject(project.id, (current) =>
+        clearSentPendingDraft(
+          current,
+          project.composerDraft,
+          project.activeChatId,
+        ),
+      );
       if (creationRef.current.homeDraft === draftAtStart)
         updateHomeDraft(emptyDraft());
       await persistence.flush();

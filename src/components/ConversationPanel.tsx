@@ -58,8 +58,8 @@ export default function ConversationPanel({
   const [submitting, setSubmitting] = useState(false);
   const draftRevision = useRef(0);
   const agentBusy = Boolean(agent?.sending || agent?.connecting);
-  const modelDisabled =
-    Boolean(executionDisabledReason) || submitting || agentBusy;
+  const blocked = Boolean(executionDisabledReason);
+  const modelDisabled = blocked || submitting || agentBusy;
   const draftKey = JSON.stringify([
     project?.id ?? "workspace",
     project?.activeChatId ?? null,
@@ -74,9 +74,7 @@ export default function ConversationPanel({
       onApiModel: onModelChange,
       onStatus: setStatus,
     });
-  const agentActive = Boolean(
-    agent && channel === "codex" && !executionDisabledReason,
-  );
+  const agentActive = Boolean(agent && channel === "codex" && !blocked);
   useEffect(() => {
     setInput(composerDraft?.prompt ?? "");
     setApprovalMode(composerDraft?.approvalMode ?? "auto");
@@ -96,8 +94,7 @@ export default function ConversationPanel({
       );
     });
   function updateDraft(patch: Partial<CreationDraft>): void {
-    if (executionDisabledReason) return;
-    if (!onDraftChange || !composerDraft) return;
+    if (blocked || !onDraftChange || !composerDraft) return;
     draftRevision.current++;
     onDraftChange({ ...composerDraft, ...patch, updatedAt: Date.now() });
   }
@@ -181,7 +178,7 @@ export default function ConversationPanel({
       {agent && (
         <ConversationChannelSelector
           value={channel}
-          disabled={Boolean(executionDisabledReason) || agentBusy}
+          disabled={blocked || agentBusy}
           onChange={changeChannel}
         />
       )}
@@ -216,14 +213,10 @@ export default function ConversationPanel({
         onInputChange={changeInput}
         onDraftChange={updateDraft}
         onSubmitMessage={submitMessage}
-        disabled={
-          Boolean(executionDisabledReason) ||
-          submitting ||
-          (agentActive && (agentConnecting || Boolean(agent?.sending)))
-        }
+        disabled={blocked || submitting || (agentActive && agentBusy)}
         modelDisabled={modelDisabled}
         submitDisabled={
-          Boolean(executionDisabledReason) ||
+          blocked ||
           submitting ||
           (!agentActive &&
             (!canSubmitGeneration(directState) || readingFiles > 0))

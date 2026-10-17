@@ -15,7 +15,7 @@
 - `canonicalRepository`: `D:/kk-studio/KK-Studio-2.0`
 - `canonicalRef`: `origin/main`
 - `canonicalHead`: d95e4c446d3b4ae5419ce0f58c68057ebabc286a，Desktop/Web2.1.34；19:07只读回读仍此SHA，本轮候选未推送/合入main/发布。
-- `localMainHead`: 8c36a6b138205613ae1a7c27950b86792da8de1a，领先origin/main49提交；63条原dirty、index/status/staged0保持。最新56872dc7完整性收据PASS，未reset/clean/覆盖。
+- `localMainHead`: 8c36a6b138205613ae1a7c27950b86792da8de1a，领先原origin/main49提交；21:52确认原63项字节、HEAD/index/staged0保持，新增6项并发文档改动使当前69dirty，status摘要不再相同。69文件另行稳定保全及独立对账PASS（收据6c1f73f1），旧8dcd完整性失败保留，未回退/并入他人改动，详见本轮验证。
 - `currentTask`: TASK-CHAT-MIGRATION-20261017，IN_PROGRESS/NOT_VERIFIED；用户新授权保全旧聊天后迁移并恢复编辑聊天。复用已完成审计实体目录，当前branch `fix/TASK-CHAT-MIGRATION-20261017` / base bbc8a766；原审计ref与A–D历史PASS保留，实际旧Native2.1.36已正常关闭。详见[当前计划](../changes/2026-10-17-chat-migration/plan.md)。
 - `sourceVersionBoundary`: Desktop/Web候选2.1.37，Mobile2.1.1规划；版本源`config/platform-versions.json`。新源码尚未完成全量/Native验收，下方469及2.1.36为前次审计已验证边界。
 - `taskLedger`: 150 records；DONE85、PARTIAL48、TODO12、BLOCKED3、IN_PROGRESS2，开放65。新增旧聊天迁移任务尚未完成，不沿用审计PASS；原任务保持开放。
