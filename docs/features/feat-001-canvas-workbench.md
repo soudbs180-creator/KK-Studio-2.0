@@ -2,7 +2,7 @@
 
 - 状态：REAL
 - 领域：canvas
-- 最近更新：2026-10-14
+- 最近更新：2026-10-18
 - 关联任务：T2、UI-004、TASK-UI-006、TASK-CANVAS-KAWORKAI-001、TASK-UI-011、TASK-222-ACTIONS-20261014、TASK-223-ACTIONS-20261014
 
 ## 用户可见入口
@@ -17,6 +17,10 @@
 - 领域模型：`src/domain/canvasGraph.ts`、`src/domain/canvasItems.ts`、`src/domain/projectCanvas.ts`
 - 持久化：画布随 `src/features/creation/snapshotCodec.ts` 编入项目快照
 - 桌面 Rust：无直接画布命令（节点结果素材经 FEAT-014/015 的原生存储）
+
+## 2026-10-18 当前有界本地验证
+
+Desktop/Web2.1.39/source793ddaf3：项目/文件夹pin及manual/recent/priority排序在同CreationSnapshot/CAS持久化，存储未就绪/冲突时真实禁用。Web侧栏32PASS、820窄屏键盘/重载通过；fresh官方Native真实项目/组操作和priority/pin/unpin跨四次正常启闭保持，项目包新root完整往返保留偏好。宽图共享几何按真实主体修复，四比例Web24与fresh Native宽图6状态SVG/DOM/实际拖线/端口和生成按钮命中PASS。完整verify851浏览器及原用户库9项目11聊天21消息保全见[本轮验证](../changes/2026-10-18-sidebar-canvas/verification.md)。原任务仅本地技术完成，不提升本功能成熟度/runtimeEvidence；真实Provider/Hosted/发布及用户整体接受另验。
 
 ## 测试与证据
 

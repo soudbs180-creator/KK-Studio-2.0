@@ -10,7 +10,9 @@
 
 ## 当前恢复入口：侧栏持久化与宽图桌面（2026-10-18）
 
-TASK-SIDEBAR-CANVAS-20261018 IN_PROGRESS/NOT_VERIFIED / fix/TASK-SIDEBAR-CANVAS-20261018；base ab2ceef0，复用原审计物理树，原两个parent保持PARTIAL。先读[Spec](../changes/2026-10-18-sidebar-canvas/spec.md)、[Plan](../changes/2026-10-18-sidebar-canvas/plan.md)、[Verification](../changes/2026-10-18-sidebar-canvas/verification.md)。152项86DONE/66开放，7树14branch/预算5/4拒绝新建；原Native2.1.38仍正常，候选2.1.39新验收待做。7树110dirty及raw3已工程外保全，不重跑旧v2默认迁移，不删移文件/目录，不发新模型请求、不覆盖并行资料。root独占版本/文档/账本/Git/端口/Native，实施者仅改白名单。
+TASK-SIDEBAR-CANVAS-20261018 有界本地DONE/PASS / fix/TASK-SIDEBAR-CANVAS-20261018；base ab2ceef0、产品source793ddaf3 / Desktop-Web2.1.39，原审计物理树不动。先读[验证](../changes/2026-10-18-sidebar-canvas/verification.md)、[审查](../changes/2026-10-18-sidebar-canvas/review.md)及PROJECT_STATE。完整verify851浏览器、Rust、fresh Native四正常启闭/宽图6状态/包往返及原默认库两正常启闭通过；9项目11聊天21消息/身份/草稿/选择保全，未发送新回复。最终文档精确HEAD补审/Delivery/私有归档和两个lnk单实例日常还原以工程外收据裁决，不能以旧source review代替最终head。
+
+152任务89DONE/63开放，7树14分支/approved root5/4拒绝新建；本子任务和侧栏/宽图原任务本地技术完成，37功能成熟度不提升。3条旧无效route已unallocated且全部历史保留；main原63字节/index与现69dirty、并行POC/Web改动保护。原始v2/v3、完整profile及所有失败/38产物留在工程外sidebar-canvas-20261018-69e77b85-6d69-4f51-8602-a6c3236eb6c2，不能重放旧v2迁移、删除/移动或覆盖旧资料。Gateway真实增量/真实回复、Mobile/Hosted/签名/发布和用户整体验收仍开放；coord并非当前任务事实源，不运行其刷新来覆盖并行claim。不发模型请求、不push/merge，日常lnk引用本树不可清理。
 
 ## 上轮恢复入口：本地剩余任务安全边界（2026-10-18）
 

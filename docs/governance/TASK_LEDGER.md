@@ -74,7 +74,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | UI-SKILL-POPOVER-001 | 窄屏首页弹层遮挡修复与 Skill 空态断言更新 | DONE | 已完成 | P3 | TASK-CAP-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-RULES-003 | 修复功能状态与运行证据门禁 | DONE | 已完成 | P3 | none | root | 保留当前证据，合并后按原验收范围回读主线 |
 | BACKEND-CONVERSATION | 对话面板文本多轮能力与实际状态收敛 | PARTIAL | 进行中 | P2 | none | root | 补充负责人、优先级、分支和下一步验收证据 |
-| TASK-DS-001 | Design System校正与公共UI对齐 | PARTIAL | 进行中 | P2 | none | root | 按验收条件完成实现、验证、独立审查和文档同步 |
+| TASK-DS-001 | Design System校正与公共UI对齐 | PARTIAL | 进行中 | P2 | none | root | 按原验收重新认领合法task branch/worktree并核验当前实现；保留原目录和证据，不在残留路径继续写入。 |
 | TASK-DS-002 | Design System逐页迁移与桌面验收 | DONE | 已完成 | P3 | TASK-DS-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-UI-005 | 新增功能 UI 入口与能力展示对齐 | DONE | 已完成 | P3 | TASK-DS-002 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-UI-006 | 折叠与弹层交互、画布重叠和缩放背景修复 | DONE | 已完成 | P3 | TASK-UI-005 | root | 保留当前证据，合并后按原验收范围回读主线 |
@@ -106,11 +106,11 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-CANVAS-KAWORKAI-001 | Kaworkai 无限画布交互研究与本地画布增强 | DONE | 已完成 | P3 | none | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-PROJECT-001 | 项目落地与分支收敛 | DONE | 已完成 | P3 | TASK-UI-GOV-003, TASK-CANVAS-KAWORKAI-001, TASK-LOCAL-SERVICE-001 | root | 保留当前证据，合并后按原验收范围回读主线；分支 codex/TASK-PROJECT-001-landing-integration 已通过 PR#31 bd3bc668 集成 main，保留作历史追溯，禁止再次合并（会以旧内容回滚主线） |
 | TASK-UI-010 | 现行 UI 规则与真实操作回归 | DONE | 已完成 | P3 | TASK-UI-008, TASK-AGENT-003 | root | 保留当前证据，合并后按原验收范围回读主线 |
-| TASK-PROJECT-SIDEBAR-001 | 侧栏项目列表与真实项目数据统一 | PARTIAL | 进行中 | P2 | TASK-UI-010 | root | 继续多聊天/仓库协调及新Native产物验收，保留本轮27/27及旧失败。不要再次合并历史PR31分支。 |
+| TASK-PROJECT-SIDEBAR-001 | 侧栏项目列表与真实项目数据统一 | DONE | 已完成 | P2 | TASK-UI-010 | root | 本轮有界本地技术验收完成；真实Provider/Hosted/发布和用户最终产品验收另行，保留全部历史及原件。 |
 | TASK-PROV-003 | Codex Provider 配置注入与 model catalog 落盘（agent 侧接线） | PARTIAL | 未完成 | P2 | TASK-PROV-002 | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
 | TASK-PROV-004 | Claude Code settings.json 落盘（agent 侧接线） | PARTIAL | 未完成 | P2 | TASK-PROV-002, TASK-PROV-003 | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
-| TASK-AGENT-004 | Google Interactions 对话和生图 | PARTIAL | 进行中 | P2 | TASK-AGENT-003 | root | 按验收条件完成实现、验证、独立审查和文档同步 |
-| TASK-AGENT-005 | Gemini CLI 账号登录通道（免 API Key 对话） | PARTIAL | 进行中 | P2 | TASK-AGENT-004 | root | 按验收条件完成实现、验证、独立审查和文档同步 |
+| TASK-AGENT-004 | Google Interactions 对话和生图 | PARTIAL | 进行中 | P2 | TASK-AGENT-003 | root | 按原验收重新认领合法task branch/worktree并核验当前实现；保留原目录和证据，不在残留路径继续写入。 |
+| TASK-AGENT-005 | Gemini CLI 账号登录通道（免 API Key 对话） | PARTIAL | 进行中 | P2 | TASK-AGENT-004 | root | 按原验收重新认领合法task branch/worktree并核验当前实现；保留原目录和证据，不在残留路径继续写入。 |
 | TASK-MEMORY-001 | 本地长期记忆服务接入对话 | PARTIAL | 未完成 | P2 | none | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
 | TASK-MEMORY-002 | 跨产品共享本地记忆（本机共享） | PARTIAL | 未完成 | P2 | TASK-MEMORY-001 | MainAgent | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
 | TASK-AGENT-007 | Codex 通过本机 CodeBuddy CLI 受限委派短文本 | DONE | 已完成 | P3 | TASK-AGENT-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
@@ -141,7 +141,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-ENG-001 | 引入 hermes-agent 工程实践：代码健康棘轮、Windows 不安全模式扫描与 Actions SHA 固定 | PARTIAL | 未完成 | P1 | none | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
 | TASK-CCSWITCH-LEARN-20261014 | 澄清供应商编辑状态并验证跨存储中断恢复 | DONE | 已完成 | P1 | TASK-AGENT-RECOVERY-20261013 | root | 本轮实现与本地验收完成；Hosted、物理断电、收费Provider、实际用户profile及签名发布仍未验证。 |
 | TASK-CANVAS-SYNC-20261014 | 修复 Agent 与已挂载画布图同步 | PARTIAL | 未完成 | P1 | none | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
-| TASK-CANVAS-WIDE-PORT-20261014 | 宽图结果编辑器遮挡下游按钮 | PARTIAL | 进行中 | P2 | none | root | 补齐连线曲线/锚点几何及同状态Native验收；先用当前证据复核，不重做已生效的z14/CSS。 |
+| TASK-CANVAS-WIDE-PORT-20261014 | 宽图结果编辑器遮挡下游按钮 | DONE | 已完成 | P2 | none | root | 本轮有界本地技术验收完成；真实Provider/Hosted/发布和用户最终产品验收另行，保留全部历史及原件。 |
 | TASK-AGENT-UX-20261014 | Agent 执行过程与生成保存状态提示 | DONE | 已完成 | P2 | none | root | 保留证据并完成日常APP人工验收，真实Provider和发布沿原独立任务推进 |
 | TASK-PROTOCOL-CLI-20261014 | 从2.1.21接通Provider协议和CLI实际执行，优化分端控件 | DONE | 已完成 | P1 | TASK-UI-CONSOLIDATE-20261014 | root | 从2.1.22继续真实供应商与真人CLI登录/安装、签名安装器、日常资料和人工视觉验收；最终产物回读工程外current-release哈希收据。 |
 | TASK-222-ACTIONS-20261014 | 2.1.22 CLI、设置与画布按钮真实行为和分端修复 | DONE | 已完成 | P1 | TASK-PROTOCOL-CLI-20261014 | root | 回读最终current-release与独立文档补审；从2.1.23继续真人CLI/供应商、签名安装器、日常资料与实体手机验收，沿用已确认手机布局。 |
@@ -157,7 +157,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-HOME-LOAD-DRAFT-20261015 | 保护读取期间编辑不覆盖已有首页草稿设置 | PARTIAL | 进行中 | P2 | TASK-CODEX-HOME-20261015 | root | 保留通过的代码子范围与失败证据，随当前组合源码执行完整verify、新Native重建、最终精确独审/Hosted与交付，不重复开发已修复读取合并。 该工作树只作历史承接来源；本轮安全修复见TASK-AUDIT-REPAIR-20261017，未新增活动分配。 |
 | TASK-VERIFY-DEPS-20261015 | 恢复共享依赖清理事故并核验执行边界 | PARTIAL | 进行中 | P1 | TASK-CODEX-HOME-20261015 | root | 保持防复发子范围PASS与旧事故UNKNOWN分离；不在共享依赖安装或清理。原始字节及影响如无证据不得补写；最终当前提交/托管/交付门禁另验。 |
 | TASK-DESIGN-MD-20261015 | 统一DESIGN设计系统与产品UI收敛 | PARTIAL | 进行中 | P1 | none | root | 关闭基础独审问题，将规则落入设置/模型/聊天/画布/项目/素材等实际页面，按Desktop→Web留同状态证据。 |
-| TASK-SIDEBAR-CANVAS-20261018 | 侧栏置顶排序持久化与宽图连线桌面验收 | IN_PROGRESS | 进行中 | P1 | none | root | 先真实RED并最小补全侧栏snapshot/校验/动作/UI/包往返，再真实宽图几何反例与fresh官方Native验收；保留旧失败和父任务边界。 |
+| TASK-SIDEBAR-CANVAS-20261018 | 侧栏置顶排序持久化与宽图连线桌面验收 | DONE | 已完成 | P1 | none | root | 本轮有界本地技术验收完成；真实Provider/Hosted/发布和用户最终产品验收另行，保留全部历史及原件。 |
 
 ## TASK-LOCAL-GUARDS-20261018 — 修复本地安全边界并核对剩余任务与工作树规则
 
@@ -1464,14 +1464,14 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Feature IDs: FEAT-022
 - Owner role: repository-maintainer
 - Acceptance: PDF全页审计并记录可追溯勘误; 双主题8色及基础组件正确消费配对语义; 旧设置兼容和键盘/回焦/重载/窄屏回归; 规范统一且明确Ardot与Desktop证据边界
-- Branch: `fix/TASK-DS-001-alignment`
-- Worktree: `C:/Users/Administrator/.codex/worktrees/design-system-alignment/KK-Studio-2.0`
+- Branch: `unallocated`
+- Worktree: `unallocated`
 - Modules: src/styles, src/domain/settings.ts, src/components/settings, docs/DESIGN-SYSTEM.md, docs/UI_SPEC.md, tests
-- Verification: PARTIAL — Design System 1.1与双主题8色已落实；TASK-DS-002补目录/设置、原工程完整verify309/229及新Tauri资源包/重启验证。在线Ardot写入与用户视觉验收仍未完成。
+- Verification: NOT_VERIFIED — 2026-10-18只读核对：旧分支不在refs，旧路径无.git且未登记，仅残留依赖/资源，当前未分配。原功能PARTIAL结果、路由和验证全文保留于verificationHistory，本轮不复验其功能。
 - Evidence: [docs/changes/2026-09-22-design-system/spec.md](../../docs/changes/2026-09-22-design-system/spec.md), [docs/changes/2026-09-22-design-system/audit.md](../../docs/changes/2026-09-22-design-system/audit.md), [docs/changes/2026-09-22-design-system/verification.md](../../docs/changes/2026-09-22-design-system/verification.md), [docs/changes/2026-09-22-design-system/review.md](../../docs/changes/2026-09-22-design-system/review.md), [docs/changes/2026-09-22-design-system/remaining.md](../../docs/changes/2026-09-22-design-system/remaining.md), [docs/changes/2026-09-22-design-system-pages/verification.md](../../docs/changes/2026-09-22-design-system-pages/verification.md)
-- Next action: 按验收条件完成实现、验证、独立审查和文档同步
+- Next action: 按原验收重新认领合法task branch/worktree并核验当前实现；保留原目录和证据，不在残留路径继续写入。
 - Last verified: 2026-09-22
-- Updated: 2026-09-22
+- Updated: 2026-10-18
 
 ## TASK-DS-002 — Design System逐页迁移与桌面验收
 
@@ -2066,20 +2066,20 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 - Goal: 让侧栏项目和分组反映同一份 CreationSnapshot 中已保存的项目，消除静态演示行冒充项目管理的状态
 - Scope: SidebarProjectEntry、SidebarProjectGroup、项目快照和项目操作
-- Display status: 进行中
+- Display status: 已完成
 - Priority: P2 — 开放任务默认待治理排序
 - Requirement refs: ledger:TASK-PROJECT-SIDEBAR-001
 - Feature IDs: FEAT-015, FEAT-023
 - Owner role: repository-maintainer
 - Acceptance: 侧栏项目列表从真实已保存项目生成，空库时没有伪造项目，打开后与项目库指向同一项目; 分组、重命名、置顶、移动、删除按现有项目存储能力持久化；暂不可用的动作明确禁用并说明原因; Web 与 fresh Tauri 在创建、重启、删除后核对侧栏及项目库一致，键盘和窄屏入口可用
-- Branch: `codex/TASK-KK-UNIFIED-20261015`
-- Worktree: `D:/kk-studio/.worktrees/TASK-KK-UNIFIED-20261015`
+- Branch: `unallocated`
+- Worktree: `unallocated`
 - Modules: src/components/SidebarProjectEntry.tsx, src/components/SidebarProjectGroup.tsx, src/features/creation, tests/browser, docs
-- Verification: PARTIAL — 历史PR31保留。本轮13efa3fe→00e00e40扩展同一v2快照：持久分组、手动名称保护、完整软删除/恢复，项目库与侧栏共用菜单。组删除解除归属，恢复为空组；菜单不误打开、未知任务禁止删除、冲突保护及迟到保存不夺取新导航。独立SPEC/QUALITY Approved；7442c4fb production1423三组Edge27/27首试PASS；Native存储/包169PASS。旧23/3及后续竞态RED保留。fresh新Native UI、完整总交付仍待，因此PARTIAL。
-- Evidence: [docs/changes/2026-09-24-ui-regression/review.md](../../docs/changes/2026-09-24-ui-regression/review.md), [docs/features/feat-015-projects.md](../../docs/features/feat-015-projects.md), [docs/features/feat-023-navigation.md](../../docs/features/feat-023-navigation.md), [docs/changes/2026-09-29-project-landing/verification.md](../../docs/changes/2026-09-29-project-landing/verification.md), [docs/changes/2026-09-29-project-landing/audit.md](../../docs/changes/2026-09-29-project-landing/audit.md), [docs/changes/2026-10-15-kk-unified/verification.md](../../docs/changes/2026-10-15-kk-unified/verification.md), [docs/changes/2026-10-15-kk-unified/review.md](../../docs/changes/2026-10-15-kk-unified/review.md), [docs/architecture/adr/ADR-020-project-lifecycle-in-creation-snapshot.md](../../docs/architecture/adr/ADR-020-project-lifecycle-in-creation-snapshot.md)
-- Next action: 继续多聊天/仓库协调及新Native产物验收，保留本轮27/27及旧失败。不要再次合并历史PR31分支。
-- Last verified: 2026-10-15
-- Updated: 2026-10-15
+- Verification: PASS — 由TASK-SIDEBAR-CANVAS-20261018/source793ddaf3补齐optional同snapshot pin/sort、只读冲突门禁和Native/包校验；production侧栏32PASS/全量851PASS。fresh2.1.39真实UI创建/改名/pin/softtrash/恢复、项目库同ID及组delete/restore通过，非默认priority及pin/unpin在四次正常启闭保持；Web820窄屏键盘通过。原历史路由与验证在verificationHistory；统一仓库、多聊天真实回复和用户整体视觉验收不由此任务代填。
+- Evidence: [docs/changes/2026-09-24-ui-regression/review.md](../../docs/changes/2026-09-24-ui-regression/review.md), [docs/features/feat-015-projects.md](../../docs/features/feat-015-projects.md), [docs/features/feat-023-navigation.md](../../docs/features/feat-023-navigation.md), [docs/changes/2026-09-29-project-landing/verification.md](../../docs/changes/2026-09-29-project-landing/verification.md), [docs/changes/2026-09-29-project-landing/audit.md](../../docs/changes/2026-09-29-project-landing/audit.md), [docs/changes/2026-10-15-kk-unified/verification.md](../../docs/changes/2026-10-15-kk-unified/verification.md), [docs/changes/2026-10-15-kk-unified/review.md](../../docs/changes/2026-10-15-kk-unified/review.md), [docs/architecture/adr/ADR-020-project-lifecycle-in-creation-snapshot.md](../../docs/architecture/adr/ADR-020-project-lifecycle-in-creation-snapshot.md), [docs/changes/2026-10-18-sidebar-canvas/verification.md](../../docs/changes/2026-10-18-sidebar-canvas/verification.md)
+- Next action: 本轮有界本地技术验收完成；真实Provider/Hosted/发布和用户最终产品验收另行，保留全部历史及原件。
+- Last verified: 2026-10-18
+- Updated: 2026-10-18
 
 ## TASK-PROV-003 — Codex Provider 配置注入与 model catalog 落盘（agent 侧接线）
 
@@ -2129,14 +2129,14 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Feature IDs: FEAT-002, FEAT-009
 - Owner role: repository-maintainer
 - Acceptance: 连续对话和图片生成经官方协议接线，图片归档当前画布; 密钥只存系统凭据库或内存，项目切换与取消不污染状态; Web交互、故障回归、完整验证与独立审查；真实凭据验收单列
-- Branch: `feat/TASK-AGENT-004-google-closeout`
-- Worktree: `C:/Users/Administrator/.codex/worktrees/google-closeout/KK-Studio-2.0`
+- Branch: `unallocated`
+- Worktree: `unallocated`
 - Modules: src/features/agent, src/components, src/domain, src/App.tsx
-- Verification: PARTIAL — 13671d7 的 Google/CLI 接线已承接，当前连续对话/图片归档/取消与项目切换 fixture 回归通过。真实 Google 凭据、CLI 登录和完整原生生成未验收。
+- Verification: NOT_VERIFIED — 2026-10-18只读核对：旧分支不在refs，旧路径无.git且未登记，仅残留依赖/资源，当前未分配。原功能PARTIAL结果、路由和验证全文保留于verificationHistory，本轮不复验其功能。
 - Evidence: [docs/changes/2026-09-23-google-interactions/verification.md](../../docs/changes/2026-09-23-google-interactions/verification.md), [docs/changes/2026-09-29-project-landing/verification.md](../../docs/changes/2026-09-29-project-landing/verification.md), [docs/changes/2026-09-29-project-landing/audit.md](../../docs/changes/2026-09-29-project-landing/audit.md)
-- Next action: 按验收条件完成实现、验证、独立审查和文档同步
+- Next action: 按原验收重新认领合法task branch/worktree并核验当前实现；保留原目录和证据，不在残留路径继续写入。
 - Last verified: 2026-09-30
-- Updated: 2026-09-30
+- Updated: 2026-10-18
 
 ## TASK-AGENT-005 — Gemini CLI 账号登录通道（免 API Key 对话）
 
@@ -2148,14 +2148,14 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Feature IDs: FEAT-009
 - Owner role: repository-maintainer
 - Acceptance: CLI 登录状态可检测并给出安装/登录指引; 文字对话经本地桥接通且连续会话续接; cli 模式生图与附件被明确拒绝，凭据不入 KK; Web 交互、故障回归、完整验证与独立审查；真实 gemini 验收单列
-- Branch: `feat/TASK-AGENT-004-google-closeout`
-- Worktree: `C:/Users/Administrator/.codex/worktrees/google-closeout/KK-Studio-2.0`
+- Branch: `unallocated`
+- Worktree: `unallocated`
 - Modules: src/features/agent, src/components, src/domain, scripts
-- Verification: PARTIAL — Superseded for review by combined 004 closeout candidate: local CLI bridge/adapter fixture tests, browser flow and security regression checks pass there. Full verify rerun green after main merge. Real Gemini CLI install/login/bridge, desktop runtime and final independent review pending.
+- Verification: NOT_VERIFIED — 2026-10-18只读核对：旧分支不在refs，旧路径无.git且未登记，仅残留依赖/资源，当前未分配。原功能PARTIAL结果、路由和验证全文保留于verificationHistory，本轮不复验其功能。
 - Evidence: [docs/changes/2026-09-23-google-cli-login/verification.md](../../docs/changes/2026-09-23-google-cli-login/verification.md)
-- Next action: 按验收条件完成实现、验证、独立审查和文档同步
+- Next action: 按原验收重新认领合法task branch/worktree并核验当前实现；保留原目录和证据，不在残留路径继续写入。
 - Last verified: 2026-09-23
-- Updated: 2026-09-23
+- Updated: 2026-10-18
 
 ## TASK-MEMORY-001 — 本地长期记忆服务接入对话
 
@@ -2731,7 +2731,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 - Goal: 宽图低缩放时下游按钮仍可点击
 - Scope: 既有结果主体尺寸、下游锚点和编辑器层级
-- Display status: 进行中
+- Display status: 已完成
 - Priority: P2 — 未记录
 - Requirement refs: derived:full-browser-port-hit-test
 - Feature IDs: FEAT-001
@@ -2740,9 +2740,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `unallocated`
 - Worktree: `unallocated`
 - Modules: src/domain/canvasGraph.ts, src/components/canvas/NodeActions.tsx, src/styles/workspace.css, tests/browser/unified-image-command.spec.ts
-- Verification: PARTIAL — 2026-10-18当前production bundle index-DQjSs-w5.js/source92643d67，1200×300合成结果在21%/23.333333%/25%×折叠展开6状态，端口/生成按钮elementFromPoint、enabled和10px间距通过；3/3首试0flaky，无生成提交。旧23.33% FAIL按历史保留，不再推定当前仍失败；首轮probe因server.cwd启动失败原件保留，非产品RED。连线曲线/锚点几何及对应Native布局仍未验，因此不DONE。
-- Evidence: [docs/changes/2026-10-14-agent-canvas-sync/evidence/wide-layout-comparison.json](../../docs/changes/2026-10-14-agent-canvas-sync/evidence/wide-layout-comparison.json), [docs/changes/2026-10-14-agent-canvas-sync/verification.md](../../docs/changes/2026-10-14-agent-canvas-sync/verification.md)
-- Next action: 补齐连线曲线/锚点几何及同状态Native验收；先用当前证据复核，不重做已生效的z14/CSS。
+- Verification: PASS — source793ddaf3先真实SVG↔DOM6项反例（21%偏13.17749px），共享高度改2+378/ratio。四比例×3缩放×折叠展开production24PASS，精确HEAD全量851PASS；fresh官方2.1.39的1200×300三缩放双状态6PASS，真实拖线持久、SVG起终点/剪线中点/端口/生成按钮命中和10px间距均验。Native包与正常重启保留图关系；无真实生成提交。原始失败/旧端口命中证据均保留。
+- Evidence: [docs/changes/2026-10-14-agent-canvas-sync/evidence/wide-layout-comparison.json](../../docs/changes/2026-10-14-agent-canvas-sync/evidence/wide-layout-comparison.json), [docs/changes/2026-10-14-agent-canvas-sync/verification.md](../../docs/changes/2026-10-14-agent-canvas-sync/verification.md), [docs/changes/2026-10-18-sidebar-canvas/verification.md](../../docs/changes/2026-10-18-sidebar-canvas/verification.md)
+- Next action: 本轮有界本地技术验收完成；真实Provider/Hosted/发布和用户最终产品验收另行，保留全部历史及原件。
 - Last verified: 2026-10-18
 - Updated: 2026-10-18
 
@@ -3035,7 +3035,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 - Goal: 先完成侧栏偏好持久化，再复证修复宽图几何并完成fresh桌面验收
 - Scope: 现有CreationSnapshot/CAS、sidebar actions、共享result geometry与相应本地回归；不新增存储源或外部能力
-- Display status: 进行中
+- Display status: 已完成
 - Priority: P1 — 用户明确要求按侧栏持久化→宽图连线→桌面验收推进
 - Requirement refs: ledger:TASK-PROJECT-SIDEBAR-001, ledger:TASK-CANVAS-WIDE-PORT-20261014
 - Feature IDs: FEAT-015, FEAT-023, FEAT-001
@@ -3044,8 +3044,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `fix/TASK-SIDEBAR-CANVAS-20261018`
 - Worktree: `D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017`
 - Modules: src/features/creation, src/features/projects, src/components/SidebarProjectGroups.tsx, src/components/SidebarProjectHeader.tsx, src/domain/canvasGraph.ts, src-tauri/src/creation_validation.rs, src-tauri/src/project_package_snapshot.rs, tests/unit, tests/browser, tests/desktop
-- Verification: NOT_VERIFIED — 7树110dirty/index/all-ref/raw3已工程外保全，typecheck及42定向基线PASS；实现与新Native验收尚未完成。
+- Verification: PASS — source793ddaf3 / Desktop/Web2.1.39：完整verify Node1960PASS14skip、Agent204PASS2skip、Edge851首试0flaky、Design41+8/dev4步；Rust228PASS1ignore+41集成。Web pin/sort32与几何24PASS，fresh官方Native四次正常启闭验证pin/unpin/priority、真实新项目/组和trash恢复、新root包往返及宽图6状态；原库2周期9项目11chat21消息/身份草稿选择保全。全量工程外保全，无文件删移或生成提交；最终精确文档补审/Delivery/日常启动按工程外收据裁决。
 - Evidence: [docs/changes/2026-10-18-sidebar-canvas/intent.md](../../docs/changes/2026-10-18-sidebar-canvas/intent.md), [docs/changes/2026-10-18-sidebar-canvas/spec.md](../../docs/changes/2026-10-18-sidebar-canvas/spec.md), [docs/changes/2026-10-18-sidebar-canvas/plan.md](../../docs/changes/2026-10-18-sidebar-canvas/plan.md), [docs/changes/2026-10-18-sidebar-canvas/verification.md](../../docs/changes/2026-10-18-sidebar-canvas/verification.md), [docs/changes/2026-10-18-sidebar-canvas/review.md](../../docs/changes/2026-10-18-sidebar-canvas/review.md)
-- Next action: 先真实RED并最小补全侧栏snapshot/校验/动作/UI/包往返，再真实宽图几何反例与fresh官方Native验收；保留旧失败和父任务边界。
+- Next action: 本轮有界本地技术验收完成；真实Provider/Hosted/发布和用户最终产品验收另行，保留全部历史及原件。
 - Last verified: 2026-10-18
 - Updated: 2026-10-18

@@ -2,7 +2,7 @@
 
 - 状态：PARTIAL
 - 领域：system
-- 最近更新：2026-10-14
+- 最近更新：2026-10-18
 - 关联任务：TASK-UI-DISMISS-002、UI-004、TASK-UI-006、TASK-PROJECT-SIDEBAR-001、TASK-UI-013、TASK-UI-CONSOLIDATE-20261014
 
 ## 用户可见入口
@@ -16,6 +16,10 @@
 - 路由：`src/App.tsx` 的 open/modal 视图
 - 桌面单排标题栏：`src/components/TopBar.tsx`、`WindowControls.tsx`、`src/styles/desktop-titlebar.css`
 
+## 2026-10-18 当前有界本地验证
+
+Desktop/Web2.1.39/source793ddaf3：项目/文件夹pin及manual/recent/priority排序在同CreationSnapshot/CAS持久化，存储未就绪/冲突时真实禁用。Web侧栏32PASS、820窄屏键盘/重载通过；fresh官方Native真实项目/组操作和priority/pin/unpin跨四次正常启闭保持，项目包新root完整往返保留偏好。宽图共享几何按真实主体修复，四比例Web24与fresh Native宽图6状态SVG/DOM/实际拖线/端口和生成按钮命中PASS。完整verify851浏览器及原用户库9项目11聊天21消息保全见[本轮验证](../changes/2026-10-18-sidebar-canvas/verification.md)。原任务仅本地技术完成，不提升本功能成熟度/runtimeEvidence；真实Provider/Hosted/发布及用户整体接受另验。
+
 ## 测试与证据
 
 - 浏览器：`sidebar`、`sidebar-real-projects`、`sidebar-project-groups`、`menu-boundaries`、`catalog-pages`、`composer-menu-audit`、`topbar-popup-lifecycle`
@@ -23,12 +27,12 @@
 
 ## 当前能力
 
-- 导航、搜索/收藏弹窗、真实项目库打开、窄屏菜单可用。侧栏项目与搜索结果由同一快照生成。本轮 `13efa3fe→00e00e40` 已将分组、成员及名称持久化，项目库与侧栏共用菜单和完整项目软删除/恢复；production1423 Edge27/27首试、Native存储/包169项及精确独审通过。拖拽顺序和置顶仍为当前会话状态；历史fresh Tauri不批准本轮新Native UI，正式交付另验。
+- 导航、搜索/收藏弹窗、真实项目库打开、窄屏菜单可用。侧栏项目与搜索结果由同一快照生成。历史 `13efa3fe→00e00e40` 已将分组、成员及名称持久化，项目库与侧栏共用菜单和完整项目软删除/恢复；production1423 Edge27/27首试、Native存储/包169项及精确独审通过。当时置顶未持久化；本轮结果见下文。自由拖动重排未新增，正式发布另验。
 
 ## 差距与后端化
 
-- 多聊天和窗口独立草稿仍未接入；项目分组已持久保存，成员顺序与置顶尚待持久化。
-- TASK-PROJECT-SIDEBAR-001：持久分组子范围已验；新Native产物/界面、Desktop/Web共仓库和用户最终产品验收待完成。见[统一验证](../changes/2026-10-15-kk-unified/verification.md)。
+- canonical snapshot3多聊天及独立草稿已接入，旧资料恢复见聊天迁移验收；真实新回复和Desktop/Web完整共仓协调仍由各自任务验收。本轮pin/sort持久化不扩展自由拖动排序。
+- TASK-PROJECT-SIDEBAR-001有界本地技术验收本轮完成；Desktop/Web共仓库完整协调和用户整体产品验收仍由[统一验证](../changes/2026-10-15-kk-unified/verification.md)承接。
 - 部分页面 Figma Frame 缺失随 UI-004 处理。
 
 ## 变更记录

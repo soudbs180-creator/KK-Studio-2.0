@@ -3336,8 +3336,8 @@
     ],
     "dependencies": [],
     "owner": "root",
-    "branch": "fix/TASK-DS-001-alignment",
-    "worktree": "C:/Users/Administrator/.codex/worktrees/design-system-alignment/KK-Studio-2.0",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/styles",
       "src/domain/settings.ts",
@@ -3355,9 +3355,9 @@
       "docs/changes/2026-09-22-design-system/remaining.md",
       "docs/changes/2026-09-22-design-system-pages/verification.md"
     ],
-    "verification": "Design System 1.1与双主题8色已落实；TASK-DS-002补目录/设置、原工程完整verify309/229及新Tauri资源包/重启验证。在线Ardot写入与用户视觉验收仍未完成。",
-    "updated": "2026-09-22",
-    "verificationResult": "PARTIAL",
+    "verification": "2026-10-18只读核对：旧分支不在refs，旧路径无.git且未登记，仅残留依赖/资源，当前未分配。原功能PARTIAL结果、路由和验证全文保留于verificationHistory，本轮不复验其功能。",
+    "updated": "2026-10-18",
+    "verificationResult": "NOT_VERIFIED",
     "requirementRefs": [
       "ledger:TASK-DS-001"
     ],
@@ -3367,9 +3367,26 @@
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
     "displayStatus": "进行中",
-    "nextAction": "按验收条件完成实现、验证、独立审查和文档同步",
+    "nextAction": "按原验收重新认领合法task branch/worktree并核验当前实现；保留原目录和证据，不在残留路径继续写入。",
     "lastVerified": "2026-09-22",
-    "ownerRole": "repository-maintainer"
+    "ownerRole": "repository-maintainer",
+    "verificationHistory": [
+      {
+        "branch": "fix/TASK-DS-001-alignment",
+        "worktree": "C:/Users/Administrator/.codex/worktrees/design-system-alignment/KK-Studio-2.0",
+        "status": "PARTIAL",
+        "displayStatus": "进行中",
+        "verificationResult": "PARTIAL",
+        "verification": "Design System 1.1与双主题8色已落实；TASK-DS-002补目录/设置、原工程完整verify309/229及新Tauri资源包/重启验证。在线Ardot写入与用户视觉验收仍未完成。",
+        "nextAction": "按验收条件完成实现、验证、独立审查和文档同步",
+        "lastVerified": "2026-09-22",
+        "updated": "2026-09-22",
+        "recordedAt": "2026-10-18",
+        "recordBaseSha": "793ddaf355e38591cf0da3d66d115b636d68b967",
+        "reason": "旧路径仅有残留资源且无.git，分支不在当前refs；不删除或移动目录。",
+        "source": "docs/changes/2026-10-18-sidebar-canvas/verification.md"
+      }
+    ]
   },
   {
     "id": "TASK-DS-002",
@@ -5046,8 +5063,8 @@
       "TASK-UI-010"
     ],
     "owner": "root",
-    "branch": "codex/TASK-KK-UNIFIED-20261015",
-    "worktree": "D:/kk-studio/.worktrees/TASK-KK-UNIFIED-20261015",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/components/SidebarProjectEntry.tsx",
       "src/components/SidebarProjectGroup.tsx",
@@ -5055,7 +5072,7 @@
       "tests/browser",
       "docs"
     ],
-    "status": "PARTIAL",
+    "status": "DONE",
     "evidence": [
       "docs/changes/2026-09-24-ui-regression/review.md",
       "docs/features/feat-015-projects.md",
@@ -5064,11 +5081,12 @@
       "docs/changes/2026-09-29-project-landing/audit.md",
       "docs/changes/2026-10-15-kk-unified/verification.md",
       "docs/changes/2026-10-15-kk-unified/review.md",
-      "docs/architecture/adr/ADR-020-project-lifecycle-in-creation-snapshot.md"
+      "docs/architecture/adr/ADR-020-project-lifecycle-in-creation-snapshot.md",
+      "docs/changes/2026-10-18-sidebar-canvas/verification.md"
     ],
-    "verification": "历史PR31保留。本轮13efa3fe→00e00e40扩展同一v2快照：持久分组、手动名称保护、完整软删除/恢复，项目库与侧栏共用菜单。组删除解除归属，恢复为空组；菜单不误打开、未知任务禁止删除、冲突保护及迟到保存不夺取新导航。独立SPEC/QUALITY Approved；7442c4fb production1423三组Edge27/27首试PASS；Native存储/包169PASS。旧23/3及后续竞态RED保留。fresh新Native UI、完整总交付仍待，因此PARTIAL。",
-    "verificationResult": "PARTIAL",
-    "updated": "2026-10-15",
+    "verification": "由TASK-SIDEBAR-CANVAS-20261018/source793ddaf3补齐optional同snapshot pin/sort、只读冲突门禁和Native/包校验；production侧栏32PASS/全量851PASS。fresh2.1.39真实UI创建/改名/pin/softtrash/恢复、项目库同ID及组delete/restore通过，非默认priority及pin/unpin在四次正常启闭保持；Web820窄屏键盘通过。原历史路由与验证在verificationHistory；统一仓库、多聊天真实回复和用户整体视觉验收不由此任务代填。",
+    "verificationResult": "PASS",
+    "updated": "2026-10-18",
     "requirementRefs": [
       "ledger:TASK-PROJECT-SIDEBAR-001"
     ],
@@ -5078,10 +5096,27 @@
     ],
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
-    "displayStatus": "进行中",
-    "nextAction": "继续多聊天/仓库协调及新Native产物验收，保留本轮27/27及旧失败。不要再次合并历史PR31分支。",
-    "lastVerified": "2026-10-15",
-    "ownerRole": "repository-maintainer"
+    "displayStatus": "已完成",
+    "nextAction": "本轮有界本地技术验收完成；真实Provider/Hosted/发布和用户最终产品验收另行，保留全部历史及原件。",
+    "lastVerified": "2026-10-18",
+    "ownerRole": "repository-maintainer",
+    "verificationHistory": [
+      {
+        "branch": "codex/TASK-KK-UNIFIED-20261015",
+        "worktree": "D:/kk-studio/.worktrees/TASK-KK-UNIFIED-20261015",
+        "status": "PARTIAL",
+        "displayStatus": "进行中",
+        "verificationResult": "PARTIAL",
+        "verification": "历史PR31保留。本轮13efa3fe→00e00e40扩展同一v2快照：持久分组、手动名称保护、完整软删除/恢复，项目库与侧栏共用菜单。组删除解除归属，恢复为空组；菜单不误打开、未知任务禁止删除、冲突保护及迟到保存不夺取新导航。独立SPEC/QUALITY Approved；7442c4fb production1423三组Edge27/27首试PASS；Native存储/包169PASS。旧23/3及后续竞态RED保留。fresh新Native UI、完整总交付仍待，因此PARTIAL。",
+        "nextAction": "继续多聊天/仓库协调及新Native产物验收，保留本轮27/27及旧失败。不要再次合并历史PR31分支。",
+        "lastVerified": "2026-10-15",
+        "updated": "2026-10-15",
+        "recordedAt": "2026-10-18",
+        "recordBaseSha": "793ddaf355e38591cf0da3d66d115b636d68b967",
+        "reason": "完成当前有界验收，原路由与验证全文保留。",
+        "source": "docs/changes/2026-10-18-sidebar-canvas/verification.md"
+      }
+    ]
   },
   {
     "id": "TASK-PROV-003",
@@ -5235,8 +5270,8 @@
       "TASK-AGENT-003"
     ],
     "owner": "root",
-    "branch": "feat/TASK-AGENT-004-google-closeout",
-    "worktree": "C:/Users/Administrator/.codex/worktrees/google-closeout/KK-Studio-2.0",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/features/agent",
       "src/components",
@@ -5249,9 +5284,9 @@
       "docs/changes/2026-09-29-project-landing/verification.md",
       "docs/changes/2026-09-29-project-landing/audit.md"
     ],
-    "verification": "13671d7 的 Google/CLI 接线已承接，当前连续对话/图片归档/取消与项目切换 fixture 回归通过。真实 Google 凭据、CLI 登录和完整原生生成未验收。",
-    "verificationResult": "PARTIAL",
-    "updated": "2026-09-30",
+    "verification": "2026-10-18只读核对：旧分支不在refs，旧路径无.git且未登记，仅残留依赖/资源，当前未分配。原功能PARTIAL结果、路由和验证全文保留于verificationHistory，本轮不复验其功能。",
+    "verificationResult": "NOT_VERIFIED",
+    "updated": "2026-10-18",
     "requirementRefs": [
       "ledger:TASK-AGENT-004"
     ],
@@ -5262,9 +5297,26 @@
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
     "displayStatus": "进行中",
-    "nextAction": "按验收条件完成实现、验证、独立审查和文档同步",
+    "nextAction": "按原验收重新认领合法task branch/worktree并核验当前实现；保留原目录和证据，不在残留路径继续写入。",
     "lastVerified": "2026-09-30",
-    "ownerRole": "repository-maintainer"
+    "ownerRole": "repository-maintainer",
+    "verificationHistory": [
+      {
+        "branch": "feat/TASK-AGENT-004-google-closeout",
+        "worktree": "C:/Users/Administrator/.codex/worktrees/google-closeout/KK-Studio-2.0",
+        "status": "PARTIAL",
+        "displayStatus": "进行中",
+        "verificationResult": "PARTIAL",
+        "verification": "13671d7 的 Google/CLI 接线已承接，当前连续对话/图片归档/取消与项目切换 fixture 回归通过。真实 Google 凭据、CLI 登录和完整原生生成未验收。",
+        "nextAction": "按验收条件完成实现、验证、独立审查和文档同步",
+        "lastVerified": "2026-09-30",
+        "updated": "2026-09-30",
+        "recordedAt": "2026-10-18",
+        "recordBaseSha": "793ddaf355e38591cf0da3d66d115b636d68b967",
+        "reason": "旧路径仅有残留资源且无.git，分支不在当前refs；不删除或移动目录。",
+        "source": "docs/changes/2026-10-18-sidebar-canvas/verification.md"
+      }
+    ]
   },
   {
     "id": "TASK-AGENT-005",
@@ -5281,8 +5333,8 @@
       "TASK-AGENT-004"
     ],
     "owner": "root",
-    "branch": "feat/TASK-AGENT-004-google-closeout",
-    "worktree": "C:/Users/Administrator/.codex/worktrees/google-closeout/KK-Studio-2.0",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/features/agent",
       "src/components",
@@ -5293,9 +5345,9 @@
     "evidence": [
       "docs/changes/2026-09-23-google-cli-login/verification.md"
     ],
-    "verification": "Superseded for review by combined 004 closeout candidate: local CLI bridge/adapter fixture tests, browser flow and security regression checks pass there. Full verify rerun green after main merge. Real Gemini CLI install/login/bridge, desktop runtime and final independent review pending.",
-    "verificationResult": "PARTIAL",
-    "updated": "2026-09-23",
+    "verification": "2026-10-18只读核对：旧分支不在refs，旧路径无.git且未登记，仅残留依赖/资源，当前未分配。原功能PARTIAL结果、路由和验证全文保留于verificationHistory，本轮不复验其功能。",
+    "verificationResult": "NOT_VERIFIED",
+    "updated": "2026-10-18",
     "requirementRefs": [
       "ledger:TASK-AGENT-005"
     ],
@@ -5305,9 +5357,26 @@
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
     "displayStatus": "进行中",
-    "nextAction": "按验收条件完成实现、验证、独立审查和文档同步",
+    "nextAction": "按原验收重新认领合法task branch/worktree并核验当前实现；保留原目录和证据，不在残留路径继续写入。",
     "lastVerified": "2026-09-23",
-    "ownerRole": "repository-maintainer"
+    "ownerRole": "repository-maintainer",
+    "verificationHistory": [
+      {
+        "branch": "feat/TASK-AGENT-004-google-closeout",
+        "worktree": "C:/Users/Administrator/.codex/worktrees/google-closeout/KK-Studio-2.0",
+        "status": "PARTIAL",
+        "displayStatus": "进行中",
+        "verificationResult": "PARTIAL",
+        "verification": "Superseded for review by combined 004 closeout candidate: local CLI bridge/adapter fixture tests, browser flow and security regression checks pass there. Full verify rerun green after main merge. Real Gemini CLI install/login/bridge, desktop runtime and final independent review pending.",
+        "nextAction": "按验收条件完成实现、验证、独立审查和文档同步",
+        "lastVerified": "2026-09-23",
+        "updated": "2026-09-23",
+        "recordedAt": "2026-10-18",
+        "recordBaseSha": "793ddaf355e38591cf0da3d66d115b636d68b967",
+        "reason": "旧路径仅有残留资源且无.git，分支不在当前refs；不删除或移动目录。",
+        "source": "docs/changes/2026-10-18-sidebar-canvas/verification.md"
+      }
+    ]
   },
   {
     "id": "TASK-MEMORY-001",
@@ -7093,14 +7162,15 @@
       "src/styles/workspace.css",
       "tests/browser/unified-image-command.spec.ts"
     ],
-    "status": "PARTIAL",
+    "status": "DONE",
     "priority": "P2",
     "evidence": [
       "docs/changes/2026-10-14-agent-canvas-sync/evidence/wide-layout-comparison.json",
-      "docs/changes/2026-10-14-agent-canvas-sync/verification.md"
+      "docs/changes/2026-10-14-agent-canvas-sync/verification.md",
+      "docs/changes/2026-10-18-sidebar-canvas/verification.md"
     ],
-    "verification": "2026-10-18当前production bundle index-DQjSs-w5.js/source92643d67，1200×300合成结果在21%/23.333333%/25%×折叠展开6状态，端口/生成按钮elementFromPoint、enabled和10px间距通过；3/3首试0flaky，无生成提交。旧23.33% FAIL按历史保留，不再推定当前仍失败；首轮probe因server.cwd启动失败原件保留，非产品RED。连线曲线/锚点几何及对应Native布局仍未验，因此不DONE。",
-    "verificationResult": "PARTIAL",
+    "verification": "source793ddaf3先真实SVG↔DOM6项反例（21%偏13.17749px），共享高度改2+378/ratio。四比例×3缩放×折叠展开production24PASS，精确HEAD全量851PASS；fresh官方2.1.39的1200×300三缩放双状态6PASS，真实拖线持久、SVG起终点/剪线中点/端口/生成按钮命中和10px间距均验。Native包与正常重启保留图关系；无真实生成提交。原始失败/旧端口命中证据均保留。",
+    "verificationResult": "PASS",
     "updated": "2026-10-18",
     "lastVerified": "2026-10-18",
     "featureIds": [
@@ -7109,8 +7179,8 @@
     "requirementRefs": [
       "derived:full-browser-port-hit-test"
     ],
-    "displayStatus": "进行中",
-    "nextAction": "补齐连线曲线/锚点几何及同状态Native验收；先用当前证据复核，不重做已生效的z14/CSS。",
+    "displayStatus": "已完成",
+    "nextAction": "本轮有界本地技术验收完成；真实Provider/Hosted/发布和用户最终产品验收另行，保留全部历史及原件。",
     "ownerRole": "repository-maintainer",
     "sourceUpdates": [
       {
@@ -7136,6 +7206,21 @@
         "recordBaseSha": "92643d6729caa667a89779cdba7b37eee614f938",
         "reason": "新增本轮有界本地回归，原始失败和原任务验收保留。",
         "source": "docs/changes/2026-10-18-local-guards/verification.md"
+      },
+      {
+        "branch": "unallocated",
+        "worktree": "unallocated",
+        "status": "PARTIAL",
+        "displayStatus": "进行中",
+        "verificationResult": "PARTIAL",
+        "verification": "2026-10-18当前production bundle index-DQjSs-w5.js/source92643d67，1200×300合成结果在21%/23.333333%/25%×折叠展开6状态，端口/生成按钮elementFromPoint、enabled和10px间距通过；3/3首试0flaky，无生成提交。旧23.33% FAIL按历史保留，不再推定当前仍失败；首轮probe因server.cwd启动失败原件保留，非产品RED。连线曲线/锚点几何及对应Native布局仍未验，因此不DONE。",
+        "nextAction": "补齐连线曲线/锚点几何及同状态Native验收；先用当前证据复核，不重做已生效的z14/CSS。",
+        "lastVerified": "2026-10-18",
+        "updated": "2026-10-18",
+        "recordedAt": "2026-10-18",
+        "recordBaseSha": "793ddaf355e38591cf0da3d66d115b636d68b967",
+        "reason": "完成当前有界验收，原路由与验证全文保留。",
+        "source": "docs/changes/2026-10-18-sidebar-canvas/verification.md"
       }
     ]
   },
@@ -9798,8 +9883,8 @@
     "branch": "fix/TASK-SIDEBAR-CANVAS-20261018",
     "worktree": "D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017",
     "baseSha": "ab2ceef00df6452580b839f29f39747174ad0b68",
-    "status": "IN_PROGRESS",
-    "displayStatus": "进行中",
+    "status": "DONE",
+    "displayStatus": "已完成",
     "priority": "P1",
     "priorityRationale": "用户明确要求按侧栏持久化→宽图连线→桌面验收推进",
     "affectedModules": [
@@ -9821,11 +9906,11 @@
       "docs/changes/2026-10-18-sidebar-canvas/verification.md",
       "docs/changes/2026-10-18-sidebar-canvas/review.md"
     ],
-    "verification": "7树110dirty/index/all-ref/raw3已工程外保全，typecheck及42定向基线PASS；实现与新Native验收尚未完成。",
-    "verificationResult": "NOT_VERIFIED",
+    "verification": "source793ddaf3 / Desktop/Web2.1.39：完整verify Node1960PASS14skip、Agent204PASS2skip、Edge851首试0flaky、Design41+8/dev4步；Rust228PASS1ignore+41集成。Web pin/sort32与几何24PASS，fresh官方Native四次正常启闭验证pin/unpin/priority、真实新项目/组和trash恢复、新root包往返及宽图6状态；原库2周期9项目11chat21消息/身份草稿选择保全。全量工程外保全，无文件删移或生成提交；最终精确文档补审/Delivery/日常启动按工程外收据裁决。",
+    "verificationResult": "PASS",
     "updated": "2026-10-18",
     "lastVerified": "2026-10-18",
-    "nextAction": "先真实RED并最小补全侧栏snapshot/校验/动作/UI/包往返，再真实宽图几何反例与fresh官方Native验收；保留旧失败和父任务边界。",
+    "nextAction": "本轮有界本地技术验收完成；真实Provider/Hosted/发布和用户最终产品验收另行，保留全部历史及原件。",
     "requirementRefs": [
       "ledger:TASK-PROJECT-SIDEBAR-001",
       "ledger:TASK-CANVAS-WIDE-PORT-20261014"

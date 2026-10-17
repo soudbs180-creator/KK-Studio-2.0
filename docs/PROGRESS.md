@@ -1,8 +1,10 @@
 # 当前进度
 
-## 2026-10-18 侧栏持久化、宽图连线与桌面（IN_PROGRESS）
+## 2026-10-18 侧栏持久化、宽图连线与桌面（有界本地DONE/PASS）
 
-TASK-SIDEBAR-CANVAS-20261018/base ab2ceef0，复用原审计树的新branch；7树110dirty/index/all-ref/raw3已逐字节工程外保全。先以optional快照偏好复用CAS完成置顶/排序，后复证宽图共享anchor与真实DOM偏差、完成fresh官方桌面验收。原2.1.38正常运行；候选2.1.39尚未交付，父任务与功能状态不先提升，见[本轮计划](changes/2026-10-18-sidebar-canvas/plan.md)。
+产品source793ddaf3 / Desktop-Web2.1.39，optional快照偏好复用现CAS，无新存储或依赖。Web侧栏32与四比例几何24PASS；精确源码完整verify Node1960PASS14skip、Agent204PASS2skip、Edge851首试零flaky、Design41+8/dev4步骤；Rust228PASS1ignore+41集成。官方EXE2164e413/loaded97ca191d，fresh Native四次正常启闭证明pin/unpin/priority、真实创建/改名/垃圾箱恢复/项目库及包往返、宽图六状态；原默认库两周期9项目11聊天21消息及身份/草稿/选择保持。
+
+7树110dirty/index/all-ref/raw3、完整profile2763文件和38产物/所有失败工程外保全，独立hash0差异；main原63项字节/index及现69dirty保护。152任务89DONE/63开放，原侧栏/宽图和本子任务有界技术DONE，37功能状态不提升；3失效旧route完整入历史后改unallocated。7树14branch、预算5/4不提高、不回收。最终精确文档SHA审查/Delivery/私有归档和日常单实例以工程外最终收据裁决；[本轮验证](changes/2026-10-18-sidebar-canvas/verification.md)。没有文件删移、真实生成、push/merge/发布，Hosted/Provider/用户整体验收分开。
 
 ## 2026-10-18 不依赖额度的本地安全边界（有界本地DONE/PASS）
 

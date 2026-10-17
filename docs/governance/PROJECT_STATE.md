@@ -11,12 +11,14 @@
 
 # 当前项目事实（2026-10-18）
 
-- `currentTask`: TASK-SIDEBAR-CANVAS-20261018 IN_PROGRESS/NOT_VERIFIED；branch fix/TASK-SIDEBAR-CANVAS-20261018，base ab2ceef00df6452580b839f29f39747174ad0b68，复用D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017，未新建/移动目录。
-- `scope`: 先侧栏pin/sort在现snapshot/CAS持久化，再真实宽图SVG/DOM几何与fresh官方Native；不发模型调用，不扩大为导入合并或新存储。见[Spec](../changes/2026-10-18-sidebar-canvas/spec.md)和[验证](../changes/2026-10-18-sidebar-canvas/verification.md)。
-- `preservation`: 7树110dirty、精确index/diff/status/all-ref bundle及当前raw3复制核验至工程外sidebar-canvas-20261018-69e77b85-6d69-4f51-8602-a6c3236eb6c2，receipt a1fd9341/refsStable=true；原v2/v3、旧失败、主仓和并行树不回退/覆盖。
-- `versions`: 当前实际Native仍2.1.38；本轮共享代码候选递增Desktop/Web2.1.39，Mobile2.1.1不变，未完成新构建与验收。
-- `tasksAndTrees`: 本候选152任务，86DONE/50PARTIAL/11TODO/3BLOCKED/2IN_PROGRESS，开放66；7登记树/14本地分支，approved root5/4不允许新增，现树保留。原两个parent task保持PARTIAL，37功能成熟度/runtimeEvidence不提升。
-- `boundaries`: root独占文档/版本/Git/1421/1423/Native，独立任务限定文件；原main/POC/Web并发资料保全。没有删除/移动、push/merge或发布；Hosted/真实Provider/额度回复/签名和用户验收不由本轮替代。
+- `currentTask`: TASK-SIDEBAR-CANVAS-20261018 有界本地DONE/PASS，branch fix/TASK-SIDEBAR-CANVAS-20261018；base ab2ceef0、冻结产品source793ddaf355e38591cf0da3d66d115b636d68b967，复用D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017，未新增工作树、未移动现有目录。
+- `sourceVersionBoundary`: Desktop/Web2.1.39，Mobile2.1.1规划不变；完整verify Node1960PASS14skip、Agent204PASS2skip、Edge851首试零flaky、Design41+8/dev4步骤，Rust228PASS1ignore+41集成。官方EXE2164e413、input52536852、loaded index-DowrIPTW.js/97ca191d；产品输入和实际bundle匹配，精确收据见[验证](../changes/2026-10-18-sidebar-canvas/verification.md)。
+- `nativeAndData`: fresh官方Native实际四次正常启闭，pin/unpin/priority持久、真实UI创建/改名/软删恢复/项目库同ID、新root项目包往返及宽图6状态PASS。原默认库两次正常启闭9项目/11聊天/21消息及身份/草稿/选择/memory保持，输入框非只读。合成auth:none/loopback与真实Provider能力分开；没有生成提交或额度reset操作。
+- `tasksAndTrees`: 本候选152项：89DONE/48PARTIAL/11TODO/3BLOCKED/1IN_PROGRESS，开放63；本子任务和原侧栏、宽图两任务仅有界本地技术验收完成。37功能成熟度/runtimeEvidence不提升；7登记树/14本地分支、approved root5/4，拒绝新增而允许现树复用，全部目录/分支保留。
+- `branchRoutes`: DS-001、AGENT-004/005旧路由无.git/分支ref，当前unallocated/NOT_VERIFIED且原PARTIAL状态不变，完整旧记录在verificationHistory。并行WEB-RELEASE ref曾前移0cb2fc09，不冒称全局冻结；容器coord只读主仓旧账本且git claim刷新风险未接管。
+- `preservation`: 工程外sidebar-canvas-20261018-69e77b85-6d69-4f51-8602-a6c3236eb6c2保全开工7树110dirty/index/diff/status/all-ref/raw3；完整Roaming/WebView2763文件349615784B，独立重枚举源/副本hash0差异。main8c36a6b/原63字节和index保持、现69dirty及并发新增6路径另存；旧v2/v3/失败/38产物全保留。harness三次失败与原生控件校准不改写成PASS。
+- `finalHeadBoundary`: 产品source793ddaf3已完整验证；最终文档只同步事实/ADR/任务，精确最终HEAD独立Spec/Standards补审、Delivery、私有归档和两真实lnk同PID/无CDP日常还原以工程外最终收据裁决，无收据按未验处理。日常lnk仍引用本树，不可清理。
+- `boundaries`: 不删除/移动现有文件、不回收工作树、不覆盖并行改动、不push/merge/发布；未验真实新回复/上游增量/Hosted/签名/安装器/Mobile及用户整体产品接受。内部Native IPC未instrument，不声称零内部凭据或生成IPC；首CDP前自动网络不可观测。
 
 <!-- CURRENT_FACTS_END -->
 <!-- HISTORICAL_SNAPSHOTS_BEGIN -->
