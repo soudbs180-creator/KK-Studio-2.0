@@ -2912,6 +2912,7 @@ export default function App() {
     const blank = createProject({
       prompt: "",
       model: profile.model || "kk-image-2",
+      modelSelection: { source: "default", model: "", kind: "text" },
       kind: "image",
       attachments: [],
     });

@@ -31,3 +31,7 @@ SPEC01移除保存成功前的草稿清空；回调绑定原project/chat且只�
 ## 751c7d1a双轴独审：CHANGES REQUIRED
 
 固定head751c7d1aaafcf1c18d13bf0c29e97777a6542978、tree653aa09f；109文件中95项与此前正式收据hash相同、14项增量及调用链完整审查。两位独立reviewer分别从固定提交提取真实首次handleCreateProject生产函数，延迟成功时编辑新A/切B，均复现正文与附件被无条件清空，新增STD-CHAT-03 / SPEC-CHAT-02，P1验收阻断。独立94单位及112+34+35检查通过不能覆盖该缺口；3browser夹具按ADR修改未发现弱化有效保护。新收据路径/摘要见[验证记录](verification.md)，后续修复须新SHA复审，不改写751结论。
+
+## d92e1761源码双轴补审：PASS（运行门禁未满足）
+
+两独立上下文绑定d92e1761ab283fd00b712a86ce1358bbab780e61 / tree3b1dd058复核7项增量与原102项hash。原首次HOME probe在751失败、固定d92通过，新稿/附件/model与B完整数据/选择保留；Standards98单位、Spec116单位/原2反例/35静态检查通过。STD-CHAT-03、SPEC-CHAT-02关闭，无新增源码阻断。新收据摘要见[验证](verification.md)。之后完整browser另发现旧fixture/blank入口问题并修复，须下一新head复审；本结论不含后续dirty变更或实际Native迁移。

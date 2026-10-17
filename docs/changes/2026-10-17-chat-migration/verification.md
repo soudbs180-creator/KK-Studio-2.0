@@ -44,3 +44,15 @@ clean提交751c7d1aaafcf1c18d13bf0c29e97777a6542978完整verify的lint/typecheck
 21:52主目录保护检查发现status/dirty摘要漂移（原失败`primary-integrity-8dcd2450-bdee-4a22-afc7-0dc95c21f894.json`保留），只读对账确认HEAD/index/staged0及原63项逐字节均保持，额外6项为AGENTS、ADR索引/ADR024、release checklist及MCP/记忆功能文档。未推断作者、未回退或并入本任务。当前69文件/1501601B及index/原始diff/status另存工程外`primary-concurrent-53e82ec2-f434-4036-91f1-6af094a4a9cf`，稳定复核PASS，收据SHA6c1f73f1df2ec4827743730d0d250444eb4cc94116f8276baa5288e16754265a。不得继续声称当前主目录总共只有63dirty或status完全相同。
 
 首次HOME修复后重新生成生产dist，增强首次延迟受理/真实UI新稿/保留原参考图/保存刷新用例，codex-home8/8首试PASS（`first-home-browser-green.log`）。准备冻结下一提交，仍须全verify及双轴新收据后才可进行Native/默认资料验收。
+
+## 第四候选d92e1761：源码复审PASS，完整运行未通过
+
+clean d92e1761ab283fd00b712a86ce1358bbab780e61 / tree3b1dd058，Standards新收据`standards-final-recheck-aeea2aa5-856b-4b6d-8907-39edfaad1602.json` SHA5c4b6c709d16c9e9b6cf82d0c6c52e55f4391cf6e2c4132460f50d6c65d990dd，Spec新收据`spec-final-c76dc66b-2080-426c-a929-878f59be49dd.json` SHA305547f191a820fda129e8ed500654d909c1a9aae36b056f4fb76d0f32f89ce3；首次HOME两ID均独立关闭，原751反例RED/d92GREEN保留，源代码审查PASS不替代运行。
+
+完整verify的lint/type、Node1934=1920PASS/14既有SKIP、Agent206=204PASS/2既有SKIP、UI/format/生产build通过。826项产品Edge中发现多组旧fixture在已建v3/format2后写回v2被保护拒绝、raw3误读project-root草稿、聊天选型误当画布卡选型、同chat三hidden草稿断言。持续同类legacy卡种子超时后，root核对runner53552→parent58880→本exec shell42928命令行，仅终止该测试树；run4ac775ff、完整日志`full-verify-d92e1761.log`和`interrupted-d92-browser-owner.json`保留，记INTERRUPTED/FAIL，后续DESIGN/development未执行。未解除保护、延长timeout或隐藏失败。
+
+真实新增入口问题另以AST RED确认：App.handleNewBlankProject未明确selection，创建direct而非ADR默认Codex。仅给该入口传现有default/空model/text selection，保留项目画布型号、kind=image及其他API创建语义；新增2单位/邻域68PASS。其余按真实canonical chat/确定origin/serialize3与实际UI模型入口修fixture；垃圾箱新增完整多chat/线程/未知消息字段保全断言，SSR v2兼容测试、布局/卡片/状态断言不弱化。15文件邻域定向Edge158项中157PASS/1FAIL（run4716f97f），剩余API首次用例补明确从默认Codex切direct后，provider-scheduling12/12首试PASS。下一冻结提交再执行完整verify与独审。
+
+Agent生产包在d92重新从专属fresh production安装完成，4282文件逐一核验原位复制，旧EXE/receipt/两个runtime共8566文件先保全至`native-before-build-77f4180d-4db2-4f7c-bd4d-dfec24a630ce`；无发布目录旋转。后续只改App/测试、vendor Agent源未变，此包需与最终Native收据共同绑定。Native新EXE尚未构建。
+
+体积预算用同Node24.20.0/zlib默认参数，从固定469原源在fresh隔离fixture重建出相同入口`index-BlBp6PG3.js`（SHA0d47ae2c/701677B/gzip230670B）；d92入口`index-CEpPnlcV.js`（SHA2f49b21d/722752B/gzip237396B），增长6726B，小于16384B预算。首次Windows tar解码历史中文截图路径失败，残留和日志保留，改为只提取实际构建输入的ZIP且路径包含性校验后成功，不影响原仓。收据`.tmp/bundle-baseline-165d2589-31a5-4c93-8baf-19a1b7a9de3d/bundle-budget.json`；最终App改变后另测最终入口，不把该数字冒充新包。

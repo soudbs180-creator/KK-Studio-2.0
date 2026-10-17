@@ -5,6 +5,7 @@ import {
   emptySnapshot,
   projectChatView,
   serializeCreationSnapshot,
+  type ChatItem,
 } from "../../src/features/creation/model";
 import { BASE_CANVAS_ITEMS } from "../../src/domain/canvasItems";
 import { createProjectCanvas } from "../../src/domain/projectCanvas";
@@ -14,8 +15,11 @@ import {
   parseModelProvider,
 } from "../../src/domain/modelProvider";
 
-export async function openWorkspace(page: Page): Promise<void> {
-  await openSeededProject(page);
+export async function openWorkspace(
+  page: Page,
+  chats?: Record<string, ChatItem>,
+): Promise<void> {
+  await openSeededProject(page, chats);
 }
 
 /** API scenarios explicitly choose their fixture; a fresh home stays on Codex. */
@@ -112,7 +116,10 @@ export async function selectSettingsSection(
 }
 
 /** Give Agent tests a real project containing the canonical demo graph. */
-export async function openSeededProject(page: Page): Promise<void> {
+export async function openSeededProject(
+  page: Page,
+  chats?: Record<string, ChatItem>,
+): Promise<void> {
   await page.goto("/");
   const providerRaw = await page.evaluate(
     (key) => localStorage.getItem(key),
@@ -127,6 +134,11 @@ export async function openSeededProject(page: Page): Promise<void> {
   });
   base.chats![base.activeChatId!].mainAgent = "codex";
   base.chats![base.activeChatId!].draft.conversationChannel = "codex";
+  base.chats![base.activeChatId!].messages = [];
+  if (chats) {
+    base.chats = chats;
+    base.activeChatId = Object.keys(chats)[0];
+  }
   const items = BASE_CANVAS_ITEMS.map((item) => ({
     ...item,
     model: item.kind === "image" ? model : item.model,

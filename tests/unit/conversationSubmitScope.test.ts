@@ -18,6 +18,11 @@ import { decodeSnapshot } from "../../src/features/creation/snapshotCodec.ts";
 import { sameJson } from "../../src/features/creation/chatMigration.ts";
 import { updateProjectChatView } from "../../src/features/agent/chatProjectUpdate.ts";
 import { clearSentPendingDraft } from "../../src/features/agent/homeAgentRecovery.ts";
+import { createProjectCanvas } from "../../src/domain/projectCanvas.ts";
+import {
+  MODEL_PROVIDER_STORAGE_KEY,
+  parseModelProvider,
+} from "../../src/domain/modelProvider.ts";
 import {
   appendImageTask,
   ImageTaskCommandError,
@@ -1007,5 +1012,80 @@ for (const outcome of [
         "composerDraft",
       ),
       false,
+    );
+  });
+
+for (const state of ["saved", "unavailable"] as const)
+  test(`App blank project defaults to scoped Codex text and keeps canvas preferences when storage is ${state}`, () => {
+    const existing = projectFixture();
+    const existingBytes = JSON.stringify(existing);
+    const creationRef = {
+      current: {
+        ...emptySnapshot(),
+        version: 3 as const,
+        projects: [existing],
+        activeProjectId: existing.id,
+      },
+    };
+    const reports: string[] = [];
+    const loaded = evaluate(`export ${appFunction("handleNewBlankProject")}`, {
+      saveStateRef: { current: state },
+      projectLibrary: { report: (message: string) => reports.push(message) },
+      localStorage: {
+        getItem: () =>
+          JSON.stringify({
+            version: 1,
+            name: "Fixture",
+            model: "retained-image-model",
+            baseUrl: "https://fixture.invalid/v1",
+          }),
+      },
+      MODEL_PROVIDER_STORAGE_KEY,
+      parseModelProvider,
+      createProject,
+      updateProjectChatView,
+      createProjectCanvas,
+      creationRef,
+      commitCreation(next: typeof creationRef.current) {
+        creationRef.current = next;
+      },
+      replaceCanvasItems() {},
+      setActive() {},
+    });
+    const id = (loaded.handleNewBlankProject as () => string)();
+    if (state === "unavailable") {
+      assert.equal(id, "");
+      assert.equal(creationRef.current.projects.length, 1);
+      assert.equal(reports.length, 1);
+    } else {
+      const created = creationRef.current.projects[0];
+      const chat = created.chats![created.activeChatId!];
+      assert.equal(created.id, id);
+      assert.equal(created.kind, "image");
+      assert.equal(created.model, "retained-image-model");
+      assert.equal(created.items.length, 0);
+      assert.equal(created.tasks.length, 0);
+      assert.equal(chat.mainAgent, "codex");
+      assert.equal(chat.draft.conversationChannel, "codex");
+      assert.deepEqual(chat.draft.modelSelection, {
+        source: "default",
+        model: "",
+        kind: "text",
+      });
+      assert.deepEqual(chat.modelAllowlist, []);
+      assert.deepEqual(structuredClone(chat.messages), []);
+      assert.equal(chat.agentThreadId, undefined);
+      assert.equal(
+        Object.hasOwn(
+          serializeCreationSnapshot(creationRef.current).projects[0],
+          "composerDraft",
+        ),
+        false,
+      );
+      assert.equal(reports.length, 0);
+    }
+    assert.equal(
+      JSON.stringify(creationRef.current.projects.at(-1)),
+      existingBytes,
     );
   });

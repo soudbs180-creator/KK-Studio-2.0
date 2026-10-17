@@ -502,6 +502,10 @@ test("开始创作与工作台的模型入口都定位到模型接入设置", as
   await page.getByRole("button", { name: "新建项目", exact: true }).click();
   await expect(page.getByRole("region", { name: "无限画布" })).toBeVisible();
   await page.getByRole("button", { name: "模型", exact: true }).click();
+  await page
+    .getByRole("menu")
+    .getByRole("tab", { name: "登录账号", exact: true })
+    .click();
   await expect(page.getByRole("menu")).toContainText("Codex");
   await page
     .getByRole("menu")
