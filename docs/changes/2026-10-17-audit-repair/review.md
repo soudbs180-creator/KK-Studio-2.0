@@ -1,5 +1,26 @@
 # Review：审计修复与当前事实收敛
 
+## 当前源码审查结论（d356）
+
+- 实现者root与独立reviewer `/root/final_source_review`分离；审查最终source `d356791caf807e26dbfc0cde6f3774b06188b156`、tree `090db406613948cd9f6daee53e9a1f8cf1cef9d3`。
+- 最终增量base `8026d65aaea153a89640b32d5eea435755797dfb`；reviewer独立读取六文件及周边ownership分支、重放四份原probe、运行四正式suite共62/62 PASS、tracked source/tests前后CLEAN。精确收据`.tmp/fresh-review-d356791c.json` SHA `da660b32212e6482a2cdff03cf627f71bc44d7aee723b13993424aca8dc1877c`。
+- 结论：此源码增量PASS，FSR01–06按实际分阶段复验关闭，无该审查范围未关闭P1/P2；不是全仓逐文件安全保证，不替代C、最终文档HEAD、Hosted、发布或用户验收。
+
+| Finding | 实际修复与复核 |
+| --- | --- |
+| FSR01 原始格式/身份与Native保护 | 75阶段按原始Value/显式null/empty权威校验及main/backup/journal矩阵关闭；未支持格式保持只读、损坏identity可read_error，原件保留。先前收据与RED/GREEN保持原SHA |
+| FSR02 只读草稿显示兼容 | 75阶段保留text-only历史草稿可见性，不开放写入；audit-safety真实浏览器保持原快照字节并在reload后显示第二聊天草稿，先前收据保留原SHA |
+| FSR03 直接src素材重试 | failed重试重建img，懒预览错误DOM保留到真正加载成功；原生产模块probe GREEN，正式实际组件直src/懒重试回归通过 |
+| FSR04 resumed历史无text | 四history-bearing API统一校验，错误不发布给renderer；原真实resume probe GREEN，响应metadata/settledTurnIds及receipt原样保留 |
+| FSR05 active样式覆盖手机44px | 高优先级仅保护transform，不提高基础width/height优先级；真实390按下时assert active=true/44x44，边缘释放删除连线且节点保留，实际生产浏览器5/5 PASS |
+| FSR06 创建成功/坏历史丢失归属receipt | 特定AgentHistoryError保留conversation，仅mutation走原rememberOwnership后重抛；GET不认领，scope/epoch不松绑，threadId严格string。原真实module probe与new/prepare/resume/failed-resume重连/迟到/数值identity/foreign GET矩阵62/62 PASS |
+
+75cae26f与8026d65a的CHANGES_REQUIRED及失败原件保留，不能用最终d356收据回填旧SHA。d356完整npmverify独立于源码审查已经exit0（产品Edge823首试及DESIGN/development尾段完成），详见[实际验证](verification.md)。d356官方build与隔离Native六检查PASS，两日常链接恢复/回读PASS；但默认只读资料真实恢复banner遮挡account popup“查看”导致C FAIL（不是helper旧selector），已授权最小层级修复与真实click回归。新source需独审/完整verify/重建及Native/daily复验，不沿用d356结论批准新代码。D文档正在同步，最终已提交文档HEAD的独立补审及正式Delivery尚待root；整体任务仍IN_PROGRESS/NOT_VERIFIED。
+
+## 以下为冻结前审查路由历史原文
+
+下方NOT_RUN/NOT_VERIFIED只表示原preflight时点；原描述与证据不改写。
+
 - Task ID：TASK-AUDIT-REPAIR-20261017；2026-10-17（Asia/Shanghai）。
 - Branch / worktree：`fix/TASK-AUDIT-REPAIR-20261017` / `D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017`。
 - [Intent](intent.md)、[Spec](spec.md)、[Plan](plan.md)、[Verification](verification.md)。

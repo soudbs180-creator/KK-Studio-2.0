@@ -71,6 +71,15 @@ test("受保护历史聊天可切换查看，重开仍保留原始快照", async
   await expect(page.locator(".creation-storage-notice")).toContainText(
     "读取保护",
   );
+  await page.getByRole("button", { name: "个人信息", exact: true }).click();
+  await page
+    .locator(".account-popup")
+    .getByRole("button", { name: "查看", exact: true })
+    .click();
+  await expect(
+    page.getByRole("heading", { name: "软件更新", exact: true }),
+  ).toBeVisible();
+  await page.keyboard.press("Escape");
   await expandSidebar(page);
   await page.getByRole("button", { name: "项目库", exact: true }).click();
   await page

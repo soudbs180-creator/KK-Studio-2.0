@@ -32,4 +32,4 @@
 
 ## 已知事实与风险
 
-保全 core 已通过；原外部 memory 变更、两份新增文档和长路径首轮恢复失败保留各自记录。该结论不表示其他聊天永久静止。当前Desktop/Web已递增2.1.36，并取得unit/lint、4项浏览器与Rust bin的preflight证据；HEAD221560a3加dirty尚待冻结，完整verify、Native界面/启动、Hosted、最终SHA审查和用户验收仍无本包通过结论。
+保全core通过，原外部memory变化、新增文档和长路径首轮失败保留。Desktop/Web2.1.36最终source d356791c完整verify与精确源码独审已通过；75的12浏览器失败、8026中止及FSR01–06反例/修复证据仍按原阶段保留。官方Native重建已完成并绑定EXE/input/receipt，d356隔离Native六检查与两个日常链接回读通过，但默认只读资料发现恢复banner遮挡账号菜单“查看”，C验收FAIL待最小层级修复及真实click回归；之后须新source完整verify/独审/重建和Native/daily复验。D最终文档HEAD检查/独审、Hosted和用户验收分列，整体任务IN_PROGRESS/NOT_VERIFIED。

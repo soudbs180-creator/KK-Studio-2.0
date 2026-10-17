@@ -6,7 +6,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 | ID | Title | Status | Display | Priority | Dependencies | Owner | Next action |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| TASK-AUDIT-REPAIR-20261017 | 审计安全修复、启动恢复与当前治理收敛 | IN_PROGRESS | 进行中 | P1 | none | root | root冻结独立source提交并补精确SHA/receipt；完成完整verify、最终Cargo汇总与官方重建/Native实际启动和关闭重开，再按实测同步C与日常入口、精确SHA独审。D本次文档已同步，生成视图由root刷新；Hosted/产品/发布未验不得预填。 |
+| TASK-AUDIT-REPAIR-20261017 | 审计安全修复、启动恢复与当前治理收敛 | IN_PROGRESS | 进行中 | P1 | none | root | root最小修复默认只读恢复banner与账号菜单层级、补synthetic实际click回归；冻结新source后完整verify/独审/官方重建/Native及daily正常关闭重开重验，再完成D最终文档检查/提交/正式Delivery，审计保持IN_PROGRESS；不触碰数据/schema/只读门控或原任务范围。 |
 | TASK-KK-UNIFIED-20261015 | KK Studio 统一修复与重构 | IN_PROGRESS | 进行中 | P1 | none | root | 原统一scope继续开放；当前后续源码已进入local main@8c36a6b并有63条dirty，已保全为未验收221560a3。当前安全修复由TASK-AUDIT-REPAIR-20261017独占承接；原branch/worktree仅历史来源，不作为当前产品验收或并行写入分配。完整多聊天、12AI持久恢复、Provider/共仓库/账号/同步等仍按原scope另行实施和验收。 |
 | TASK-FIX-PUSH-GUARD-SPACES-001 | 修复 Windows Git pre-push 空格及长路径启动 | PARTIAL | 未完成 | P1 | none | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
 | TASK-WINDOWS-ENTRY-DIAG-002 | 补齐Windows入口子进程失败诊断 | DONE | 已完成 | P2 | TASK-LAUNCH-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
@@ -169,9 +169,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `fix/TASK-AUDIT-REPAIR-20261017`
 - Worktree: `D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017`
 - Modules: src/App.tsx, src/features/agent, src/features/creation, src/integrations/generation, src/components/assets, scripts/windows, scripts/agent, scripts/git, docs/governance, docs/features, docs/engineering/BRANCH-POLICY.md, docs/engineering/LAUNCHER.md, docs/changes/2026-10-17-audit-repair, docs/changes/2026-10-15-unified-provider-access
-- Verification: NOT_VERIFIED — A core保全和两个dirty恢复PASS，原失败保留。Desktop/Web已由版本脚本递增2.1.36，Mobile2.1.1规划；HEAD仍221560a3加dirty未冻结。最新preflight：unit1826=1812PASS14SKIP0fail，lint exit0但health30/footguns2 advisory，真实浏览器audit-safety4/4首过无retry，Rust bin214=213PASS1既有硬件ignored；见本包verification及.tmp日志。这些不替代完整verify、Native界面/官方启动/关闭重开、最终已提交SHA独审、Hosted或产品验收；整体NOT_VERIFIED。
+- Verification: NOT_VERIFIED — A core保全/两个dirty恢复PASS，原primary63/index/status/staged0保持（e47ec59e回执）。Desktop/Web2.1.36冻结source d356791caf807e26dbfc0cde6f3774b06188b156 tree 090db406613948cd9f6daee53e9a1f8cf1cef9d3；完整npm verify exit0：Node1846=1832PASS14SKIP，Agent201=199PASS2SKIP，产品Edge823首试零fail/retry/flaky/skip，DESIGN41单元+8浏览器、development四步、lint/type/UI/format/build PASS，advisory保留。Native源未变，Rust bin213PASS1既有硬件ignored+integration41/check/fmt PASS；精确源码独审PASS关闭FSR01–06。C官方Native构建/启动重开与日常入口、最终文档SHA审查及正式Delivery尚待实测，整体NOT_VERIFIED；75完整12browser失败/8026中止/RED保留。 d356官方build/隔离Native六检查/两日常链接恢复回读PASS；默认受保护只读资料实际恢复banner遮挡账号菜单查看，C真实FAIL待修，全部旧收据保留。
 - Evidence: [docs/changes/2026-10-17-audit-repair/intent.md](../../docs/changes/2026-10-17-audit-repair/intent.md), [docs/changes/2026-10-17-audit-repair/spec.md](../../docs/changes/2026-10-17-audit-repair/spec.md), [docs/changes/2026-10-17-audit-repair/plan.md](../../docs/changes/2026-10-17-audit-repair/plan.md), [docs/changes/2026-10-17-audit-repair/verification.md](../../docs/changes/2026-10-17-audit-repair/verification.md), [docs/changes/2026-10-17-audit-repair/review.md](../../docs/changes/2026-10-17-audit-repair/review.md), [docs/changes/2026-10-15-unified-provider-access/verification.md](../../docs/changes/2026-10-15-unified-provider-access/verification.md), [docs/changes/2026-10-15-kk-unified/verification.md](../../docs/changes/2026-10-15-kk-unified/verification.md)
-- Next action: root冻结独立source提交并补精确SHA/receipt；完成完整verify、最终Cargo汇总与官方重建/Native实际启动和关闭重开，再按实测同步C与日常入口、精确SHA独审。D本次文档已同步，生成视图由root刷新；Hosted/产品/发布未验不得预填。
+- Next action: root最小修复默认只读恢复banner与账号菜单层级、补synthetic实际click回归；冻结新source后完整verify/独审/官方重建/Native及daily正常关闭重开重验，再完成D最终文档检查/提交/正式Delivery，审计保持IN_PROGRESS；不触碰数据/schema/只读门控或原任务范围。
 - Last verified: 2026-10-17
 - Updated: 2026-10-17
 

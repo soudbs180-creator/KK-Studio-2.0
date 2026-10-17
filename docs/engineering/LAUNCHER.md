@@ -10,8 +10,7 @@ GUI 启动器继续调用根目录 `start-kk-studio.bat --background` 和唯一�
 
 链接读写使用 `scripts/windows/unicode-shortcut.cs` 的 Unicode Shell Link 接口，支持包含中文和 emoji 的目录，不依赖 Windows 系统 ANSI 编码。重复安装会保留原链接 metadata；测试通过真实 `.lnk` 启动并检查无控制台、工作目录和后台参数。
 
-2026-10-17当前入口恢复由TASK-AUDIT-REPAIR-20261017承接：审计发现两个日常快捷方式指向已不存在的旧工作树，主仓2.1.35 EXE与旧2.1.23收据不匹配。当前候选Desktop/Web已递增2.1.36；本轮官方构建、source/版本/receipt/EXE hash、实际路径与进程、正常关闭重开尚待本轮新回执；在[本轮验证](../changes/2026-10-17-audit-repair/verification.md)补齐前，不把旧包或入口存在称为更新成功。安装与全部构建写入前，须核对当前checkout及Agent依赖、dist、Rust target、runtime staging等输出为任务独占实体目录；共享链接目标只读。日常用户数据标识和凭据服务保持原契约。
-
+2026-10-17当前入口恢复由TASK-AUDIT-REPAIR-20261017承接：审计时两个日常快捷方式指向已不存在的旧树、主仓2.1.35 EXE与2.1.23收据不匹配。候选Desktop/Web2.1.36冻结source d356791c，完整verify与源码独审已通过；d356官方build与隔离Native六项检查已通过，两个原日常链接已保全后原位改指本任务新Launcher并回读；默认资料实际验收发现只读恢复banner遮挡账号菜单“查看”，C为真实FAIL待修，需新source完整verify/独审/重建和Native/daily重验，不能把链接回读与隔离成功替代默认资料验收。必须在[本轮验证](../changes/2026-10-17-audit-repair/verification.md)绑定当前source/版本/input/EXE/receipt/hash/实际进程后再更新入口；旧包、旧收据或Rust单测不代填。默认用户数据及WebView2 profile已完整复制并逐文件复核，启用前仍须检查实际变化；存储标识、凭据服务和原件保持。全部构建输出/Agent依赖须物理owned，共享链接目标只读；用户暂不授权文件删除/移动，快捷方式原件先保全、原路径原位写入。
 以下为历史2.1.27时点记录，不能证明当前候选或日常入口：当前任务 checkout 的 Desktop/Web 源码241f3050候选已由版本脚本递增至2.1.27（Mobile2.1.1规划），main694已本地承接；本轮官方启动器隔离重建及实际Native56checks已PASS，EXE37a82390/input79c3a8e5、资源字节与dist一致、owned正常关闭；完整verify-3本地PASS，最终提交head及Hosted/PR/main仍待验，历史2.1.26产物不代填当前源码。`2.1.2` portable ZIP 是历史交付，不能用来证明本次源码已更新。portable 的正式交付收据仍保存在 `releases/DELIVERY.md`；解压整个目录后运行 `kk-studio.exe`，保留旁边的 agent-runtime，无需 Node/Rust。portable 需要已有 WebView2。用户数据仍写入 `%APPDATA%/kk-studio`，应用标识和凭据服务保持不变。
 
 隔离桌面验收可使用 `start-kk-studio.bat --background --data-dir "C:\绝对路径\独立测试数据"`；路径原样传给应用，重复、缺失、相对路径和未知参数会在启动前拒绝。日常快捷方式不传这个参数，继续使用原数据目录。测试还需独立 WebView2 profile 与 CODEX_HOME，系统凭据使用唯一 synthetic ID，验收后只清理本次拥有的进程与凭据。

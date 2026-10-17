@@ -7,9 +7,9 @@
 - 最近更新：2026-10-17
 - 关联任务：T4、BACKEND-CONVERSATION、TASK-AGENT-001、TASK-AGENT-002、TASK-AGENT-003、TASK-AGENT-007、TASK-AGENT-008
 
-## 2026-10-17安全修复边界（preflight通过，完整待验）
+## 2026-10-17安全修复边界（完整本地verify与源码独审通过）
 
-关联开放任务：TASK-AUDIT-REPAIR-20261017；[规格](../changes/2026-10-17-audit-repair/spec.md) / [实际验证](../changes/2026-10-17-audit-repair/verification.md)。协议6未具备完整chat scope隔离，新增普通聊天、临时聊天及不支持的多聊天/v3写入须门控并说明原因；保留v2 legacy单聊天。草稿/thread/正文、历史/journal/记忆隔离未全部验收前，不宣称多聊天或临时隐私可用；外部模型授权空数组应拒绝，不混同主Agent自身推理模型。 候选Desktop/Web2.1.36已取得unit/lint、4项浏览器及Rust bin的安全preflight；尚未冻结最终head，完整verify、C启动与最终审查未完成，不用旧SHA或定向预检代填；本卡成熟度与既有runtimeEvidence保持原范围。
+关联开放任务：TASK-AUDIT-REPAIR-20261017；[规格](../changes/2026-10-17-audit-repair/spec.md) / [实际验证](../changes/2026-10-17-audit-repair/verification.md)。协议6未具备完整chat scope隔离，新增普通聊天、临时聊天及不支持的多聊天/v3写入须门控并说明原因；保留v2 legacy单聊天。草稿/thread/正文、历史/journal/记忆隔离未全部验收前，不宣称多聊天或临时隐私可用；外部模型授权空数组应拒绝，不混同主Agent自身推理模型。 候选Desktop/Web2.1.36冻结source d356791c，完整本地verify已通过（Node1832/14既有skip、Agent199/2既有skip、产品Edge823首试、DESIGN41+8、development四步），精确源码独审关闭FSR01–06；Native源未变，Rust213/1硬件ignored+integration41通过。d356官方build与隔离Native六检查/链接回读通过，默认只读资料因恢复banner遮挡“查看”菜单FAIL，C待最小修复及新source/Native日常重验；最终文档HEAD验收仍待，见本轮验证；真实服务/Hosted/用户验收另列。本卡成熟度与既有runtimeEvidence保持原范围，未将门控当完整能力。
 
 ## 用户可见入口
 

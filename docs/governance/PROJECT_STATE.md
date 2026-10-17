@@ -14,22 +14,20 @@
 - `snapshotDate`: 2026-10-17
 - `canonicalRepository`: `D:/kk-studio/KK-Studio-2.0`
 - `canonicalRef`: `origin/main`
-- `canonicalHead`: d95e4c446d3b4ae5419ce0f58c68057ebabc286a
-- `canonicalHeadVerifiedFrom`: 2026-10-17审计实际远端回读；Desktop/Web2.1.34。此值是托管基线，不是本地主仓当前HEAD；本轮未以旧CI代填候选Hosted结果。
-- `localMainHead`: 8c36a6b138205613ae1a7c27950b86792da8de1a，本地领先origin/main49提交；保全时另有63条dirty。
-- `primaryCheckoutState`: 主仓main/原index/63条dirty保持，禁止reset/clean/覆盖或直接开发。其原始dirty字节已纳入未验收隔离source snapshot221560a322107092f66c142c7b911439087019f8；该快照不代表修复、可运行或正式交付。
-- `currentTask`: TASK-AUDIT-REPAIR-20261017，IN_PROGRESS / NOT_VERIFIED；唯一写入树 `D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017`，branch `fix/TASK-AUDIT-REPAIR-20261017`。范围、实际命令和剩余验收见[当前计划](../changes/2026-10-17-audit-repair/plan.md)及[验证](../changes/2026-10-17-audit-repair/verification.md)。
-- `sourceVersionBoundary`: 审计源码Desktop/Web2.1.35；本轮已通过版本脚本递增至2.1.36，实际当前值以[版本源](../../config/platform-versions.json)和本轮验证回执为准。Mobile2.1.1规划不变；版本递增不等于安装、发布或用户验收。
-- `taskLedger`: 149 records；DONE84、PARTIAL48、TODO12、BLOCKED3、IN_PROGRESS2、REVIEW0，开放65。26个失效worktree的原branch/worktree/status/verification完整保留在verificationHistory，当前unallocated；5个REVIEW、HOME和branch不符的REVIEW-REMEDIATION改PARTIAL，未批量DONE。目录审计未冒充产品复验刷新原lastVerified；原统一scope继续开放，旧树仅历史来源，安全修复由本任务承接。
-- `workspaceWorktrees`: 审计原有3个登记checkout，无缺失登记；A后新增本任务为4个：主仓8c36a6b、本任务221560a3、统一树df08748e、taskstate5e2d2ab6。没有删除/移动旧树；原73/74数量只属历史时点。
-- `preservation`: A core PASS；工程外 `D:/KK-Studio-recovery-20260921/audit-repair-20261017-1f00ccc3-1207-4cd3-90e1-bd0192d64d21/final-preservation-receipt.json`，517368文件版本/56336959878 B/6 bundles，两个dirty隔离恢复status/index一致。外部memory变化、两份新增文档及长路径首轮恢复失败单列并保留，不宣称其他聊天永久静止。
-- `dailyClientBoundary`: 审计两个日常快捷方式指向已不存在的branch-consolidation目录；主仓2.1.35 EXE与2.1.23 receipt不匹配，审计时未发现产品运行进程。本任务C官方重建/实际启动/关闭重开及入口更新均待新证据，旧EXE/旧截图不证明当前交付。
-- `capabilityBoundary`: 协议6未具备聊天隔离时门控新聊天/临时聊天及不支持的多聊天v3写入，保留v2单聊天；12AI无持久receipt端口时拒绝执行，完整恢复继续开放。当前安全门控已取得unit/lint、4项浏览器与Rust bin的preflight；素材垃圾箱在未接持久功能时禁用操作。完整功能/真实服务和已提交SHA验收仍未完成，不将定向预检写成全通过。既有feature成熟度/runtimeEvidence不变，新范围由开放任务跟踪。
-- `preflightBoundary`: HEAD221560a3加dirty尚待冻结；unit1826total/1812PASS/14SKIP/0fail，lint exit0但health30与footguns2均为advisory，新增浏览器4/4首过无retry，Rust bin214=213PASS/1既有硬件ignored。日志见本轮verification；完整verify、C产物与实际启动/关闭重开、最终SHA独审和Hosted尚待，不能以Rust单测代替Native UI。
-- `remoteWorkBoundary`: 审计回读69个远端分支、7个draft PR；未把本地49提交/dirty、旧PR或历史绿色视为当前组合已交付。远端配置、Hosted/PR/main/post-main、发布/签名、真实Provider和用户验收各自待证。
-- `remoteAutoMerge`: scripts/governance/merge-auto.mjs及受控工作流已存在；activation/paused、required checks和merge queue未在本任务重新回读为可用，保持未验证/不宣称启用，不修改远端settings。
-- `reclamationPolicy`: 源码、历史、证据与恢复材料保护；54份runtime previous目录未直接删除。安装/构建/发布的写入目标必须由本任务独占实体目录承载，共享junction/symlink目标只读。
-- `historicalRule`: 下方HISTORICAL_SNAPSHOTS_BEGIN之后均为带日期历史证据，不能覆盖本区事实；历史FAIL、旧授权和未知边界不改写。
+- `canonicalHead`: d95e4c446d3b4ae5419ce0f58c68057ebabc286a，Desktop/Web2.1.34；本轮只读远端回执，不沿用旧Hosted结果批准新组合。
+- `localMainHead`: 8c36a6b138205613ae1a7c27950b86792da8de1a，领先origin/main49提交；主仓63条原dirty、原index/staged0保持。最新完整性回执e47ec59e-9c30-4595-a7f4-eee9b67148fb为PASS；未reset/clean/覆盖。
+- `currentTask`: TASK-AUDIT-REPAIR-20261017，IN_PROGRESS / NOT_VERIFIED；唯一写入树`D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017`，branch `fix/TASK-AUDIT-REPAIR-20261017`。原始隔离快照221560a3未验收；最终产品source `d356791caf807e26dbfc0cde6f3774b06188b156`、tree `090db406613948cd9f6daee53e9a1f8cf1cef9d3`。
+- `sourceVersionBoundary`: Desktop/Web2.1.36，Mobile2.1.1规划；版本源为`config/platform-versions.json`。源码、Native实际运行、main集成、发布和用户验收分别记录。
+- `taskLedger`: 149 records；DONE84、PARTIAL48、TODO12、BLOCKED3、IN_PROGRESS2、REVIEW0，开放65。26项失效分配原branch/worktree/status/verification保留于verificationHistory；不借目录整理刷新原lastVerified、不批量DONE。原统一scope继续开放。
+- `workspaceWorktrees`: 4个登记checkout/5个本地分支；主仓8c36a6b、本任务d356791c、统一df08748e、taskstate5e2d2ab6。[现有清单](workspace-inventory.json)由只读枚举/哈希生成器更新，26容器条目全部deletable=false；旧清单原件已工程外保全。无文件删除/移动。
+- `preservation`: A core PASS；工程外`D:/KK-Studio-recovery-20260921/audit-repair-20261017-1f00ccc3-1207-4cd3-90e1-bd0192d64d21/final-preservation-receipt.json`，517368文件版本/56336959878 B/6 bundles，两个dirty隔离恢复status/index一致。外部memory变化、新增文件、长路径首轮失败及两轮用户数据备份差异均单列保留。
+- `safetyRepairs`: 五P1及垃圾箱误报通过真实反例/回归；协议6新/临时聊天、不支持的v3/多聊天与12AI无持久receipt执行保持禁用。格式不支持时只读，原始identity损坏时可read_error并保留原件；不是自动修复成可写。草稿/记忆/迟到结果按scope与epoch门控，精确connectionId/凭据绑定、空外部模型授权拒绝；正常v2单聊天保留。
+- `finalVerify`: d356冻结前后CLEAN，完整`npm run verify` exit0：Node1832PASS/14既有SKIP、Agent199PASS/2既有SKIP、产品Edge823首试零fail/retry/flaky/skip、DESIGN41单元/8浏览器、development四步PASS，lint/type/UI/format/build通过。Rust bin213PASS/1既有硬件ignored及integration41PASS绑定未变Native源码，check/fmt通过。警告/advisory不等于已清零。
+- `reviewBoundary`: d356精确源码独审PASS（FSR01–06按其实际阶段复核关闭）；d356官方build与隔离Native六检查、两日常链接回读通过；默认只读资料因恢复banner遮挡账号菜单“查看”实际FAIL，C待最小修复及新source完整verify/独审/重建/Native日常重验；最终文档HEAD独审仍待，详见[本轮验证](../changes/2026-10-17-audit-repair/verification.md)与[审查](../changes/2026-10-17-audit-repair/review.md)。旧75浏览器12FAIL与8026中止不改写。
+- `remoteWorkBoundary`: 只读回执69远端heads、7Draft PR与3active rulesets。远端stable实际严格要求verify/delivery，approvals0；merge queue及governance/deploy-linux未强制，classic保护GET403为权限边界。没有远端配置、push、merge或发布。
+- `localHook`: 共享pre-push从已核验v1按现有升级路径安装v2，旧v1.bak保留；安装/源码按LF归一内容一致，fixture22PASS/5Windows平台SKIP/0FAIL。本地hook可绕过，不替代Hosted门禁。
+- `reclamationPolicy`: 54份runtime previous、历史clone/输出/恢复证据继续保护；全部构建目标及依赖须本任务独占实体目录，共享junction/symlink只读。候选分类不构成删除/移动授权。
+- `historicalRule`: 下方HISTORICAL_SNAPSHOTS_BEGIN之后为带日期历史证据，不能覆盖本区事实。真实Provider/ComfyUI/GPU、完整多聊天/统一接入/持久垃圾箱、VPS/账号、Mobile、签名及用户验收保持各自原边界，37功能成熟度/runtimeEvidence未提升。
 
 <!-- CURRENT_FACTS_END -->
 <!-- HISTORICAL_SNAPSHOTS_BEGIN -->

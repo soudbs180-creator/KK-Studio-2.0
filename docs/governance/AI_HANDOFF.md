@@ -10,9 +10,11 @@
 
 ## 当前恢复入口：审计安全修复（2026-10-17）
 
-先读[本轮intent](../changes/2026-10-17-audit-repair/intent.md)、[spec](../changes/2026-10-17-audit-repair/spec.md)、[plan](../changes/2026-10-17-audit-repair/plan.md)和[实际验证](../changes/2026-10-17-audit-repair/verification.md)。用户已授权A–D，不重复请求形式确认。只写 `fix/TASK-AUDIT-REPAIR-20261017` / `D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017`；起点221560a322107092f66c142c7b911439087019f8是原main8c及63条dirty的未验收快照，主仓/index不动。origin/main仍d95/2.1.34，审计源码2.1.35；本轮已由版本脚本递增Desktop/Web2.1.36，Mobile2.1.1规划不变，HEAD仍221560a3加dirty待冻结。
+先读[本轮计划](../changes/2026-10-17-audit-repair/plan.md)、[实际验证](../changes/2026-10-17-audit-repair/verification.md)和[审查](../changes/2026-10-17-audit-repair/review.md)。A–D已授权，不重复请求形式确认；严禁文件删除/移动。唯一修复树`D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017` / `fix/TASK-AUDIT-REPAIR-20261017`，source `d356791caf807e26dbfc0cde6f3774b06188b156`、tree `090db406613948cd9f6daee53e9a1f8cf1cef9d3`；Desktop/Web2.1.36，Mobile2.1.1规划。原main8c/63dirty/index及origin/main d95保持，221560a3只是未验收原始快照。
 
-A保全core及两个dirty隔离恢复通过，工程外final-preservation-receipt.json保留原memory/新增文档/长路径失败；B已取得unit1812PASS/14SKIP、lint exit0但health30/footguns2 advisory、4/4浏览器首过、Rust bin213PASS/1硬件ignored的preflight。完整verify、C官方重建/实际进程/关闭重开及新入口、最终已提交SHA独审仍待，Rust bin不替代Native界面验收。共享依赖目标只读，安装和所有build写入必须物理owned；root独占生成视图/版本/完整验证和Native。26个失效分配已保全历史再unallocated，原task和feature成熟度保留；原统一scope继续开放，旧树只作历史，不能重新并行写共享核心或以旧PASS关闭本次门控。统一接入新包只补需求文档，原intent及八项优先级不动。当前任务IN_PROGRESS/NOT_VERIFIED，Hosted、最终SHA独审、真实Provider及产品/发布验收未发生。
+A core/两个dirty恢复PASS。d356完整verify exit0（Node1832/14既有skip、Agent199/2既有skip、产品Edge823首试、DESIGN41+8、development四步），精确源码独审PASS，FSR01–06关闭。Native源未变，Rust213/1既有ignore+integration41/check/fmt通过；d356官方build与隔离Native六检查通过，两个日常链接已恢复；默认只读资料实际验收因恢复banner遮挡账号菜单“查看”FAIL，root已授权本任务修层级与synthetic真实click回归。审计任务IN_PROGRESS/整体NOT_VERIFIED。下一步冻结新source完整verify/独审/重建并重验Native/daily，再完成D最终检查/文档提交后精确补审和正式Delivery；不得把Rust或源码review代替Native/托管验收。75完整12浏览器失败、8026中止及原RED保留。
+
+149任务/84DONE/65开放；原148任务身份/验收/依赖/lastVerified和37功能成熟度/runtimeEvidence保持，26失效分配已保全历史。旧清单另存后生成26条目/4worktrees/all deletable=false；v2 hook及远端规则实际边界见当前事实。统一接入补件仅requirements-only、原intent八优先级不变；新/临时聊天、无持久12AI/垃圾箱等未实现能力保持明确禁用。共享依赖只读，所有build目标物理owned；无Hosted/真实Provider/签名/用户验收或发布证据。
 
 ## 以下为2026-10-16及之前的历史交接
 

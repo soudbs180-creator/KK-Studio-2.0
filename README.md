@@ -2,7 +2,7 @@
 
 KK Studio 是以无限画布为中心的多模态 Agent 创作工作台。本机唯一工程仓库为 `D:/kk-studio/KK-Studio-2.0`；任务在登记的隔离 worktree 开发。平台版本以[版本源](config/platform-versions.json)为准，当前能力、候选与未完成项见[项目状态](docs/governance/PROJECT_STATE.md)和[任务账本](docs/governance/task-ledger.json)。
 
-2026-10-17审计：远端main d95e4c44为Desktop/Web2.1.34；本地main8c36a6b的2.1.35源码另有未交付改动。安全修复在TASK-AUDIT-REPAIR-20261017隔离候选进行，现已通过版本脚本递增至Desktop/Web2.1.36，当前仅preflight通过，HEAD221560a3加dirty尚待冻结；当前官方构建、日常入口和完整验收见[实际验证](docs/changes/2026-10-17-audit-repair/verification.md)，未完成时保持NOT_VERIFIED。Mobile2.1.1仍为规划，源码版本与历史包不等于正式发布。
+2026-10-17审计修复：远端main d95e4c44仍为Desktop/Web2.1.34；本地main8c36a6b及63条原dirty保持。本轮隔离候选Desktop/Web2.1.36冻结于`d356791caf807e26dbfc0cde6f3774b06188b156`，完整verify通过（Node1832PASS/14既有SKIP、Agent199PASS/2既有SKIP、产品Edge823首过、DESIGN41单元/8浏览器及development四步），精确源码独审通过。d356官方构建与隔离Native六检查已通过，两个日常链接已恢复；默认只读资料实际验收发现恢复banner遮挡账号菜单“查看”（P2），C暂FAIL待修，新source验证/重建与最终审查仍待，整体IN_PROGRESS/NOT_VERIFIED；见[实际验证](docs/changes/2026-10-17-audit-repair/verification.md)。Mobile2.1.1仍为规划，未发布或合入main。
 
 分享包只包含已验收白名单内容；Git历史、开发依赖、编译缓存、用户项目和恢复归档不属于分享包。见[发布说明](RELEASE.md)。
 

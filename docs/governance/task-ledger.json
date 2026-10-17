@@ -44,11 +44,11 @@
       "docs/changes/2026-10-15-unified-provider-access/verification.md",
       "docs/changes/2026-10-15-kk-unified/verification.md"
     ],
-    "verification": "A core保全和两个dirty恢复PASS，原失败保留。Desktop/Web已由版本脚本递增2.1.36，Mobile2.1.1规划；HEAD仍221560a3加dirty未冻结。最新preflight：unit1826=1812PASS14SKIP0fail，lint exit0但health30/footguns2 advisory，真实浏览器audit-safety4/4首过无retry，Rust bin214=213PASS1既有硬件ignored；见本包verification及.tmp日志。这些不替代完整verify、Native界面/官方启动/关闭重开、最终已提交SHA独审、Hosted或产品验收；整体NOT_VERIFIED。",
+    "verification": "A core保全/两个dirty恢复PASS，原primary63/index/status/staged0保持（e47ec59e回执）。Desktop/Web2.1.36冻结source d356791caf807e26dbfc0cde6f3774b06188b156 tree 090db406613948cd9f6daee53e9a1f8cf1cef9d3；完整npm verify exit0：Node1846=1832PASS14SKIP，Agent201=199PASS2SKIP，产品Edge823首试零fail/retry/flaky/skip，DESIGN41单元+8浏览器、development四步、lint/type/UI/format/build PASS，advisory保留。Native源未变，Rust bin213PASS1既有硬件ignored+integration41/check/fmt PASS；精确源码独审PASS关闭FSR01–06。C官方Native构建/启动重开与日常入口、最终文档SHA审查及正式Delivery尚待实测，整体NOT_VERIFIED；75完整12browser失败/8026中止/RED保留。 d356官方build/隔离Native六检查/两日常链接恢复回读PASS；默认受保护只读资料实际恢复banner遮挡账号菜单查看，C真实FAIL待修，全部旧收据保留。",
     "verificationResult": "NOT_VERIFIED",
     "updated": "2026-10-17",
     "lastVerified": "2026-10-17",
-    "nextAction": "root冻结独立source提交并补精确SHA/receipt；完成完整verify、最终Cargo汇总与官方重建/Native实际启动和关闭重开，再按实测同步C与日常入口、精确SHA独审。D本次文档已同步，生成视图由root刷新；Hosted/产品/发布未验不得预填。",
+    "nextAction": "root最小修复默认只读恢复banner与账号菜单层级、补synthetic实际click回归；冻结新source后完整verify/独审/官方重建/Native及daily正常关闭重开重验，再完成D最终文档检查/提交/正式Delivery，审计保持IN_PROGRESS；不触碰数据/schema/只读门控或原任务范围。",
     "requirementRefs": [
       "docs/changes/2026-10-17-audit-repair/intent.md",
       "docs/architecture/adr/ADR-022-project-chats-and-v3-migration.md",
@@ -75,6 +75,17 @@
         "sourcePackageRole": "Preserved source and bounded safety-repair input only; full unified implementation and original acceptance remain with TASK-KK-UNIFIED-20261015; historical PASS is not inherited.",
         "preservationReceipt": "D:/KK-Studio-recovery-20260921/audit-repair-20261017-1f00ccc3-1207-4cd3-90e1-bd0192d64d21/final-preservation-receipt.json",
         "preservationResult": "core PASS; external changes and original failures retained; product NOT_VERIFIED"
+      },
+      {
+        "recordedAt": "2026-10-17",
+        "type": "frozen-source-verified-local-only",
+        "sourceHead": "d356791caf807e26dbfc0cde6f3774b06188b156",
+        "sourceTree": "090db406613948cd9f6daee53e9a1f8cf1cef9d3",
+        "verificationLog": ".tmp/audit-repair-20261017/verify-d356791c.log",
+        "verificationLogSha256": "fcd28a6f57d0feb373f5d4f5216ed1289422b6fb39e97bd22ba8deb7d9f300d4",
+        "sourceReviewReceipt": ".tmp/fresh-review-d356791c.json",
+        "sourceReviewSha256": "da660b32212e6482a2cdff03cf627f71bc44d7aee723b13993424aca8dc1877c",
+        "result": "Full local verify and exact-source review PASS; C Native/daily and final document HEAD pending, overall NOT_VERIFIED. Historical failures retained."
       }
     ]
   },

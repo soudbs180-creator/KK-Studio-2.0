@@ -12,8 +12,7 @@
 
 当前账本包含149项任务：84 `DONE`、2 `IN_PROGRESS`、12 `TODO`、48 `PARTIAL`、3 `BLOCKED`、0 `REVIEW`，共65项未关闭。状态、负责人、依赖和证据以[task-ledger.json](task-ledger.json)为唯一事实源；[TASK_LEDGER.md](TASK_LEDGER.md)是生成视图。
 
-当前安全修复入口为TASK-AUDIT-REPAIR-20261017：A core保全通过，原main8c/63条dirty在221560a3隔离快照，候选Desktop/Web2.1.36，当前unit1812PASS/14SKIP、lint和4项浏览器/Rust bin预检通过；完整verify、C与最终SHA验收仍NOT_VERIFIED。26项缺失目录、5个旧REVIEW与HOME及branch不符的审查任务已保留完整历史，再按当前分配改unallocated/PARTIAL；不是批量结案。原统一任务继续开放，旧树仅历史来源，新安全修复由本审计task独占承接。详细状态和实际结果见[本轮验证](../changes/2026-10-17-audit-repair/verification.md)，不能用旧UI/Native/Hosted PASS代填。
-
+当前安全修复入口为TASK-AUDIT-REPAIR-20261017，IN_PROGRESS/整体NOT_VERIFIED：A core及恢复通过；source d356791c / Desktop-Web2.1.36完整verify通过（Node1832PASS/14既有SKIP、Agent199PASS/2既有SKIP、产品Edge823首试、DESIGN41+8、development四步），精确源码独审PASS，Native不变源Rust213PASS/1硬件ignored+integration41/check/fmt通过。d356官方build与隔离Native六检查通过，两个日常链接已恢复；默认只读资料实际验收因恢复banner遮挡“查看”菜单FAIL，C待修，新source完整verify/独审/重建/日常复验及最终文档HEAD验收仍待。26项缺失分配、5个旧REVIEW与HOME及branch不符任务保留历史再纠正分配/状态，原统一scope继续开放；[本轮验证](../changes/2026-10-17-audit-repair/verification.md)保留75浏览器12FAIL/8026中止，不能拿新结果重写历史。
 旧TASK-UI-FULL/source241/Browser747等路由已由当前事实替代，仍保留于对应历史change package及verificationHistory。
 
 如果本快照过期，应更新 `updatedAt` 与快照数字；如果不再承担当前路由，则写 `status: superseded` 和 `supersededBy: <新入口>`。不得通过复制同一任务并改日期来制造新的当前记录。
