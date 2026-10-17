@@ -9,6 +9,9 @@
 <!-- DOCUMENT_METADATA_END -->
 <!-- CURRENT_FACTS_BEGIN -->
 
+Issue68专项候选从最新origin/main6b933f4f隔离执行，仅补Native设置保存/关闭测试后置条件和既有延迟回归；真实回执gate13检查通过。无产品、版本或生产改动。当前验证/独审/PR状态见[专项验证](../changes/2026-10-18-issue-68-settings-save/verification.md)。以下发布事实保留其原时点。
+
+
 # 当前项目事实（2026-10-18）
 
 - `snapshotDate`: 2026-10-18

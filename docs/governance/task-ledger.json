@@ -9626,5 +9626,46 @@
       "FEAT-022",
       "FEAT-023"
     ]
+  },
+  {
+    "id": "TASK-ISSUE-68",
+    "title": "修复原生设置保存后的测试同步缺口",
+    "goal": "Issue68的Native lifecycle在异步保存后确认成功和设置弹窗消失，正常进入模型菜单。",
+    "scope": "仅Native生命周期与既有延迟设置测试及交付记录；不改产品关闭契约、版本或部署。",
+    "acceptance": [
+      "保留run39060650077原失败并核对artifact12111469102，确认无其他认领或候选重叠。",
+      "真实Native保存回执延迟时保护关闭，释放后确认保存成功、弹窗消失和模型菜单可达。",
+      "最小测试修复、相关完整验证及已提交SHA独立审查通过后建立关联Issue68的draft PR，交现有main协调者。"
+    ],
+    "dependencies": [],
+    "owner": "issue68-specialist",
+    "ownerRole": "implementation-integrator",
+    "branch": "fix/TASK-ISSUE-68-settings-save",
+    "worktree": "C:/Users/Administrator/Documents/Codex/2026-10-18/task/issue68",
+    "baseSha": "6b933f4ffd80cdd5ca2d3508678a4562fc2b02d8",
+    "affectedModules": [
+      "tests/desktop/taskhost-lifecycle.mjs",
+      "tests/browser/settings-navigation.spec.ts"
+    ],
+    "status": "REVIEW",
+    "displayStatus": "未完成",
+    "priority": "P1",
+    "priorityRationale": "main quality Native生命周期失败，阻断主线质量验收。",
+    "evidence": [
+      "docs/changes/2026-10-18-issue-68-settings-save/intent.md",
+      "docs/changes/2026-10-18-issue-68-settings-save/spec.md",
+      "docs/changes/2026-10-18-issue-68-settings-save/plan.md",
+      "docs/changes/2026-10-18-issue-68-settings-save/verification.md",
+      "docs/changes/2026-10-18-issue-68-settings-save/review.md"
+    ],
+    "verification": "最小测试同步修复；真实Native回执gate13/正式生命周期11均PASS且凭据清理完成。完整verify exit0：Node1852/20既有skip、Agent199/2既有skip、Edge827首试0flaky/skip、设计41+8、开发态4步PASS；Rust213/1既有ignored+41通过。原96文件hash一致，原150账本对象未变。已提交SHA独审/delivery/Hosted/PR另记。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-18",
+    "lastVerified": "2026-10-18",
+    "nextAction": "完成提交SHA独审、delivery与draft PR，交现有main协调者按当前Hosted门禁集成；不merge/发布。",
+    "requirementRefs": [
+      "https://github.com/soudbs180-creator/KK-Studio-2.0/issues/68"
+    ],
+    "featureIds": []
   }
 ]

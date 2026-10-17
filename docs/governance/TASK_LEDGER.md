@@ -156,6 +156,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-HOME-LOAD-DRAFT-20261015 | 保护读取期间编辑不覆盖已有首页草稿设置 | PARTIAL | 进行中 | P2 | TASK-CODEX-HOME-20261015 | root | 保留通过的代码子范围与失败证据，随当前组合源码执行完整verify、新Native重建、最终精确独审/Hosted与交付，不重复开发已修复读取合并。 该工作树只作历史承接来源；本轮安全修复见TASK-AUDIT-REPAIR-20261017，未新增活动分配。 |
 | TASK-VERIFY-DEPS-20261015 | 恢复共享依赖清理事故并核验执行边界 | PARTIAL | 进行中 | P1 | TASK-CODEX-HOME-20261015 | root | 保持防复发子范围PASS与旧事故UNKNOWN分离；不在共享依赖安装或清理。原始字节及影响如无证据不得补写；最终当前提交/托管/交付门禁另验。 |
 | TASK-DESIGN-MD-20261015 | 统一DESIGN设计系统与产品UI收敛 | PARTIAL | 进行中 | P1 | none | root | 关闭基础独审问题，将规则落入设置/模型/聊天/画布/项目/素材等实际页面，按Desktop→Web留同状态证据。 |
+| TASK-ISSUE-68 | 修复原生设置保存后的测试同步缺口 | REVIEW | 未完成 | P1 | none | issue68-specialist | 完成提交SHA独审、delivery与draft PR，交现有main协调者按当前Hosted门禁集成；不merge/发布。 |
 
 ## TASK-WEB-RELEASE-20261017 — 独立手机UI接入与正式Web Release自动同步
 
@@ -3009,3 +3010,22 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Next action: 关闭基础独审问题，将规则落入设置/模型/聊天/画布/项目/素材等实际页面，按Desktop→Web留同状态证据。
 - Last verified: 2026-10-15
 - Updated: 2026-10-15
+
+## TASK-ISSUE-68 — 修复原生设置保存后的测试同步缺口
+
+- Goal: Issue68的Native lifecycle在异步保存后确认成功和设置弹窗消失，正常进入模型菜单。
+- Scope: 仅Native生命周期与既有延迟设置测试及交付记录；不改产品关闭契约、版本或部署。
+- Display status: 未完成
+- Priority: P1 — main quality Native生命周期失败，阻断主线质量验收。
+- Requirement refs: https://github.com/soudbs180-creator/KK-Studio-2.0/issues/68
+- Feature IDs: none
+- Owner role: implementation-integrator
+- Acceptance: 保留run39060650077原失败并核对artifact12111469102，确认无其他认领或候选重叠。; 真实Native保存回执延迟时保护关闭，释放后确认保存成功、弹窗消失和模型菜单可达。; 最小测试修复、相关完整验证及已提交SHA独立审查通过后建立关联Issue68的draft PR，交现有main协调者。
+- Branch: `fix/TASK-ISSUE-68-settings-save`
+- Worktree: `C:/Users/Administrator/Documents/Codex/2026-10-18/task/issue68`
+- Modules: tests/desktop/taskhost-lifecycle.mjs, tests/browser/settings-navigation.spec.ts
+- Verification: PARTIAL — 最小测试同步修复；真实Native回执gate13/正式生命周期11均PASS且凭据清理完成。完整verify exit0：Node1852/20既有skip、Agent199/2既有skip、Edge827首试0flaky/skip、设计41+8、开发态4步PASS；Rust213/1既有ignored+41通过。原96文件hash一致，原150账本对象未变。已提交SHA独审/delivery/Hosted/PR另记。
+- Evidence: [docs/changes/2026-10-18-issue-68-settings-save/intent.md](../../docs/changes/2026-10-18-issue-68-settings-save/intent.md), [docs/changes/2026-10-18-issue-68-settings-save/spec.md](../../docs/changes/2026-10-18-issue-68-settings-save/spec.md), [docs/changes/2026-10-18-issue-68-settings-save/plan.md](../../docs/changes/2026-10-18-issue-68-settings-save/plan.md), [docs/changes/2026-10-18-issue-68-settings-save/verification.md](../../docs/changes/2026-10-18-issue-68-settings-save/verification.md), [docs/changes/2026-10-18-issue-68-settings-save/review.md](../../docs/changes/2026-10-18-issue-68-settings-save/review.md)
+- Next action: 完成提交SHA独审、delivery与draft PR，交现有main协调者按当前Hosted门禁集成；不merge/发布。
+- Last verified: 2026-10-18
+- Updated: 2026-10-18
