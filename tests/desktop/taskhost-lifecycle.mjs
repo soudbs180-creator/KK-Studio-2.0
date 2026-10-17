@@ -631,6 +631,9 @@ try {
     name: "选择模型",
     exact: true,
   });
+  await initialModelMenu
+    .getByRole("tab", { name: "本地", exact: true })
+    .click();
   await initialModelMenu.getByRole("searchbox").fill("image-test");
   await expect(initialModelMenu.getByRole("menuitemradio")).toHaveCount(1);
   await initialModelMenu.getByRole("menuitemradio").click();
@@ -687,6 +690,7 @@ try {
   // through the real menu rather than rewriting settings or credentials.
   await page.getByRole("button", { name: "模型", exact: true }).click();
   const modelMenu = page.getByRole("menu", { name: "选择模型", exact: true });
+  await modelMenu.getByRole("tab", { name: "本地", exact: true }).click();
   await modelMenu.getByRole("searchbox").fill("image-test");
   await expect(modelMenu.getByRole("menuitemradio")).toHaveCount(1);
   await modelMenu.getByRole("menuitemradio").click();

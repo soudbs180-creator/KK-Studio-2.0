@@ -65,6 +65,7 @@ async function delayReads(page: Page) {
 async function chooseCodex(page: Page) {
   await page.getByRole("button", { name: "模型", exact: true }).click();
   const menu = page.getByRole("menu", { name: "选择模型" });
+  await menu.getByRole("tab", { name: "登录账号", exact: true }).click();
   await menu.getByRole("searchbox").fill("Codex");
   await menu.getByRole("menuitemradio", { name: /^Codex 内置生图/ }).click();
 }

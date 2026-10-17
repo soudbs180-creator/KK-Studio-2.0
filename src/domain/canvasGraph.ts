@@ -160,10 +160,15 @@ export function cardSelectionLayout(
 export function connectionGeometry(
   edge: CanvasConnection,
   nodes: Record<string, Point>,
-  items: CanvasCollectionItem[],
+  items: CanvasCollectionItem[] | Map<string, CanvasCollectionItem>,
 ): { path: string; start: Point; end: Point; midpoint: Point } | null {
-  const a = items.find((item) => item.id === edge.source);
-  const b = items.find((item) => item.id === edge.target);
+  const isMap = items instanceof Map;
+  const a = isMap
+    ? items.get(edge.source)
+    : items.find((item) => item.id === edge.source);
+  const b = isMap
+    ? items.get(edge.target)
+    : items.find((item) => item.id === edge.target);
   const from = nodes[edge.source];
   const to = nodes[edge.target];
   if (!a || !b || !from || !to) return null;

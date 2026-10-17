@@ -100,6 +100,14 @@ test("设置按内容选择紧凑宽度，切换模型后普通页不保留宽�
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   const panel = page.locator(".settings-panel");
+  await panel.evaluate(async (element) => {
+    await Promise.all(
+      element
+        .closest("dialog")!
+        .getAnimations({ subtree: true })
+        .map((animation) => animation.finished),
+    );
+  });
   const general = (await panel.boundingBox())!;
   expect(general.width).toBeLessThanOrEqual(960);
   expect(Math.round(general.height)).toBe(680);
@@ -111,7 +119,7 @@ test("设置按内容选择紧凑宽度，切换模型后普通页不保留宽�
     path: info.outputPath("settings-models.png"),
     animations: "disabled",
   });
-  await selectSettingsSection(page, "软件更新");
+  await selectSettingsSection(page, "通用");
   expect((await panel.boundingBox())!.width).toBe(general.width);
   await page.screenshot({
     path: info.outputPath("settings-update.png"),

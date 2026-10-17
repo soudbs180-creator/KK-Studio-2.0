@@ -24,6 +24,8 @@ import {
 import useScopedModelProviderDraft, {
   readModelProviderDraft,
 } from "./useScopedModelProviderDraft";
+import { isLocalProviderUrl } from "../../domain/providerUrl";
+import { providerChannel } from "../../domain/modelChannels";
 export default function ModelProviderSettings({
   onFeedback,
   scope = "official",
@@ -32,12 +34,12 @@ export default function ModelProviderSettings({
   onOpenGoogle,
 }: {
   onFeedback: (message: string) => void;
-  scope?: "official" | "relay";
+  scope?: "official" | "relay" | "local";
   active?: boolean;
   onBusyChange?: (busy: boolean) => void;
   onOpenGoogle: () => void;
 }) {
-  const [initial] = useState(readModelProviderDraft);
+  const [initial] = useState(() => readModelProviderDraft(scope));
   const [profile, setProfile] = useState(initial.profile);
   const [apiKey, setApiKey] = useState("");
   const [credentialRef, setCredentialRef] = useState(initial.credentialRef);
@@ -137,6 +139,8 @@ export default function ModelProviderSettings({
       model: connection.model ?? "",
       protocol: connection.protocol,
       authMode: connection.authMode,
+      channel: providerChannel(connection),
+      priority: connection.priority,
     });
     setCredentialRef(
       connection.credentialRef ??
@@ -208,6 +212,7 @@ export default function ModelProviderSettings({
       >
         <div className="provider-connection-editor">
           <ProviderProfileFields
+            scope={scope}
             onOpenGoogle={onOpenGoogle}
             profile={profile}
             apiKey={apiKey}
@@ -241,7 +246,16 @@ export default function ModelProviderSettings({
           />
         </div>
         <ProviderConnectionList
-          connections={connections}
+          connections={
+            scope === "local"
+              ? connections.filter(
+                  (item) =>
+                    item.kind === "user_byok" &&
+                    item.baseUrl &&
+                    isLocalProviderUrl(item.baseUrl),
+                )
+              : connections
+          }
           activeBaseUrl={profile.baseUrl}
           activeCredentialRef={credentialRef}
           activeConnectionId={profile.connectionId}

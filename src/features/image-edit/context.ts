@@ -5,15 +5,18 @@ export function imageResultContext(
   task: CreationTask,
   assetId: string,
 ): ImageEditContext {
-  return (
-    task.imageEditContext ?? {
-      originalPrompt: task.prompt,
-      originalAssetId: assetId,
-      referenceAssetIds: [
-        ...new Set(
-          task.attachments.flatMap((a) => (a.assetId ? [a.assetId] : [])),
-        ),
-      ],
-    }
-  );
+  return task.imageEditContext
+    ? {
+        ...task.imageEditContext,
+        originalAssetId: task.imageEditContext.originalAssetId ?? assetId,
+      }
+    : {
+        originalPrompt: task.prompt,
+        originalAssetId: assetId,
+        referenceAssetIds: [
+          ...new Set(
+            task.attachments.flatMap((a) => (a.assetId ? [a.assetId] : [])),
+          ),
+        ],
+      };
 }

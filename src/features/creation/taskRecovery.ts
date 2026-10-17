@@ -685,6 +685,11 @@ function isInterruptible(status: string): boolean {
   return INTERRUPTIBLE_STATUSES.has(status);
 }
 
+/** A user-paused task is queued intentionally and remains resumable after reload. */
+function isPausedTask(task: Pick<CreationTask, "status" | "error">): boolean {
+  return task.status === "queued" && task.error?.includes("暂停") === true;
+}
+
 /**
  * Selects the conservative source used by tasks written before sourceItemId
  * existed. A project root remains the historical anchor; projects without it
@@ -766,7 +771,7 @@ function interruptedSourceIds(project: CreationProject): Set<string> {
   const ids = new Set<string>();
   const fallback = historicalSourceItemId(project);
   for (const task of project.tasks) {
-    if (!isInterruptible(task.status)) continue;
+    if (!isInterruptible(task.status) || isPausedTask(task)) continue;
     if (task.sourceItemId !== undefined && task.sourceItemId !== "") {
       // An explicit but deleted source must not fall back to an unrelated node.
       if (project.items.some((item) => item.id === task.sourceItemId))
@@ -790,8 +795,8 @@ export function recoverInterruptedTasks(
 ): CreationSnapshot {
   let interruptedAny = false;
   const projects = snapshot.projects.map((project) => {
-    const interrupted = project.tasks.some((task) =>
-      isInterruptible(task.status),
+    const interrupted = project.tasks.some(
+      (task) => isInterruptible(task.status) && !isPausedTask(task),
     );
     if (!interrupted) return project;
     interruptedAny = true;
@@ -799,7 +804,7 @@ export function recoverInterruptedTasks(
     return {
       ...project,
       tasks: project.tasks.map((task) => {
-        if (!isInterruptible(task.status)) return task;
+        if (!isInterruptible(task.status) || isPausedTask(task)) return task;
         const uncertain =
           task.status === "running" ||
           task.submissionState === "submitted" ||

@@ -1,6 +1,15 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import test from "node:test";
-import { emptySnapshot } from "../../src/features/creation/model.ts";
+import { readFileSync } from "node:fs";
+import { runInNewContext } from "node:vm";
+import ts from "typescript";
+import {
+  emptySnapshot,
+  snapshotWriteBlockReason,
+} from "../../src/features/creation/model.ts";
+import * as snapshotCodec from "../../src/features/creation/snapshotCodec.ts";
+import * as connectionModule from "../../src/features/local-service/connection.ts";
 import {
   CompanionClient,
   CompanionClientError,
@@ -190,6 +199,105 @@ test("snapshot writes only report success after a 2xx and preserve conflict deta
       error.code === "CONFLICT" &&
       error.status === 409,
   );
+});
+
+test("unsupported snapshot format reaches the client and freezes storage without browser fallback", async () => {
+  const storage = new MemoryStorage();
+  storage.setItem(
+    COMPANION_CONNECTION_STORAGE_KEY,
+    JSON.stringify({
+      version: 1,
+      endpoint: "http://127.0.0.1:4319",
+      protocolVersion: 1,
+      enabled: true,
+    }),
+  );
+  const client = new CompanionClient({
+    storage,
+    fetch: async (input) =>
+      String(input).endsWith("/health")
+        ? response(health)
+        : response(
+            { error: "SNAPSHOT_UNSUPPORTED", detail: "private-path" },
+            409,
+          ),
+  });
+  await assert.rejects(
+    () => client.loadCompanionSnapshot(),
+    (error: unknown) =>
+      error instanceof CompanionClientError &&
+      error.code === "SNAPSHOT_UNSUPPORTED" &&
+      /更新/.test(error.message) &&
+      !error.message.includes("private-path"),
+  );
+  const check = await client.checkCompanion();
+  assert.equal(check.state, "migration-required");
+  assert.equal(check.error?.code, "SNAPSHOT_UNSUPPORTED");
+
+  // Run the real storage adapter; replace only platform IO and asset boundaries.
+  const exports: Record<string, (...args: unknown[]) => unknown> = {};
+  const forbidden = () =>
+    assert.fail(
+      "failed Companion load must not access browser/native/asset storage",
+    );
+  const modules: Record<string, unknown> = {
+    "@tauri-apps/api/core": { invoke: forbidden },
+    "./assetRepository": { loadStoredAsset: forbidden },
+    "./assetRepository.ts": { loadStoredAsset: forbidden },
+    "./snapshotAssets": {
+      encodeSnapshotAssets: forbidden,
+      hydrateSnapshotAssets: forbidden,
+    },
+    "../local-service/client.ts": {
+      CompanionClient: class {
+        loadCompanionSnapshot = () => client.loadCompanionSnapshot();
+      },
+      CompanionClientError,
+    },
+    "../local-service/connection.ts": {
+      ...connectionModule,
+      readCompanionConnection: () => readCompanionConnection(storage),
+    },
+    "./model": { emptySnapshot, snapshotWriteBlockReason },
+    "./snapshotCodec": snapshotCodec,
+    "./chatMigration": {
+      sha256Hex: (data: string) =>
+        createHash("sha256").update(data).digest("hex"),
+    },
+  };
+  const compiled = ts.transpileModule(
+    readFileSync(
+      new URL("../../src/features/creation/storage.ts", import.meta.url),
+      "utf8",
+    ),
+    { compilerOptions: { module: ts.ModuleKind.CommonJS } },
+  );
+  runInNewContext(compiled.outputText, {
+    exports,
+    require: (name: string) => {
+      const stripped = name.endsWith(".ts") ? name.slice(0, -3) : name;
+      const mod = modules[name] ?? modules[stripped];
+      assert.ok(mod !== undefined, `unexpected storage dependency: ${name}`);
+      return mod;
+    },
+    window: { localStorage: storage, sessionStorage: new MemoryStorage() },
+    indexedDB: { open: forbidden },
+  });
+  await assert.rejects(
+    async () => exports.loadCreationSnapshot(),
+    (error: unknown) =>
+      error instanceof snapshotCodec.SnapshotStorageError &&
+      error.code === "unsupported" &&
+      /更新/.test(error.message),
+  );
+  await assert.rejects(
+    async () => exports.persistCreationSnapshotAsync(emptySnapshot()),
+    (error: unknown) =>
+      error instanceof snapshotCodec.SnapshotStorageError &&
+      /禁止覆盖/.test(error.message),
+  );
+  exports.persistCreationSnapshotSync(emptySnapshot());
+  assert.equal(storage.length, 1);
 });
 
 test("disconnect revokes the session and clears the connection metadata", async () => {

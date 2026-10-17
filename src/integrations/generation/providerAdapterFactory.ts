@@ -2,6 +2,11 @@ import type { ProviderConnection } from "../../domain/providerConnections.ts";
 import { GeminiApiAdapter } from "./geminiApiAdapter.ts";
 import { LocalComfyUiAdapter } from "./localComfyUiAdapter.ts";
 import { OpenAiImageAdapter } from "./openAiImageAdapter.ts";
+import {
+  TwelveAiTaskAdapter,
+  type TwelveAiTaskAdapterOptions,
+} from "./twelveAiTaskAdapter.ts";
+import { twelveAiApiBase } from "./twelveAiTaskProtocol.ts";
 import type { GenerationProviderAdapter } from "./providerAdapter.ts";
 
 /**
@@ -10,11 +15,19 @@ import type { GenerationProviderAdapter } from "./providerAdapter.ts";
  */
 export function createGenerationAdapter(
   connection: ProviderConnection,
+  options?: TwelveAiTaskAdapterOptions,
 ): GenerationProviderAdapter | null {
   if (connection.state === "disabled" || connection.state === "quarantined")
     return null;
   if (connection.kind === "local_comfyui")
     return new LocalComfyUiAdapter(connection);
+  if (twelveAiApiBase(connection.baseUrl)) {
+    try {
+      return new TwelveAiTaskAdapter(connection, options);
+    } catch {
+      return null;
+    }
+  }
   const provider =
     `${connection.provider} ${connection.baseUrl ?? ""}`.toLowerCase();
   if (provider.includes("gemini") || provider.includes("generativelanguage"))

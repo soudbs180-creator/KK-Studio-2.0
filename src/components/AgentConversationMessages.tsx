@@ -11,6 +11,7 @@ import type { AgentUsageWindow } from "../features/agent/agentUsage";
 import type { AgentDraftAttachment } from "../features/agent/agentAttachments";
 import type { CanvasCollectionItem } from "../domain/canvasItems";
 import type { ModelSelection } from "../domain/modelSelection";
+import ChatImageCard from "./chat/ChatImageCard.tsx";
 
 /** 本地 Agent 会话通道（画布旁对话面板与 canvas-agent 的桥）。 */
 export interface AgentConversationProps {
@@ -55,9 +56,13 @@ export interface AgentConversationProps {
 export default function AgentConversationMessages({
   agent,
   onConfigure,
+  onPreviewImage,
+  onSetReference,
 }: {
   agent: AgentConversationProps;
   onConfigure: () => void;
+  onPreviewImage?: (src: string, prompt?: string) => void;
+  onSetReference?: (src: string) => void;
 }) {
   const { messages, sending, connecting, pendingApproval } = agent;
   const groups = messages.reduce<AgentChatItem[][]>((result, item) => {
@@ -195,11 +200,46 @@ export default function AgentConversationMessages({
       </div>
       {groups.map((items) => {
         const item = items[0];
-        return item.role === "tool" ? (
-          <AgentExecutionProcess key={item.id} items={items} />
-        ) : (
+        if (item.role === "tool") {
+          return <AgentExecutionProcess key={item.id} items={items} />;
+        }
+        const detail = item.detail as
+          | { kind?: string; status?: string; savedPath?: string; url?: string }
+          | undefined;
+        const mdImageMatch = item.text.match(/!\[(.*?)\]\((.*?)\)/);
+        const imageUrl =
+          detail?.url ||
+          (detail?.kind === "image" && detail?.savedPath?.startsWith("http")
+            ? detail.savedPath
+            : undefined) ||
+          mdImageMatch?.[2];
+        const displayText = mdImageMatch
+          ? item.text.replace(mdImageMatch[0], "").trim()
+          : item.text;
+
+        return (
           <div key={item.id} className={`chat-agent-item is-${item.role}`}>
-            <span>{item.text}</span>
+            {displayText ? <span>{displayText}</span> : null}
+            {imageUrl ? (
+              <ChatImageCard
+                src={imageUrl}
+                alt={mdImageMatch?.[1] || "生成的图像"}
+                prompt={displayText}
+                status={
+                  detail?.status === "failed"
+                    ? "failed"
+                    : detail?.status === "started"
+                      ? "pending"
+                      : "completed"
+                }
+                onPreview={(src) =>
+                  onPreviewImage
+                    ? onPreviewImage(src, displayText)
+                    : window.open(src, "_blank")
+                }
+                onSetReference={onSetReference}
+              />
+            ) : null}
           </div>
         );
       })}

@@ -1,157 +1,84 @@
-import { appVersion } from "../../runtime/appInfo";
 import type { SettingsSection } from "./SettingsSectionData";
 import ModelAccessSettings from "./ModelAccessSettings";
-
 import MemorySettingsSection from "./MemorySettingsSection";
-
-const PENDING_SETTINGS: Partial<
-  Record<SettingsSection, { title: string; description: string }>
-> = {
-  account: {
-    title: "本地会话",
-    description: "当前无需登录即可使用工作台。账号登录与云端同步尚未开放。",
-  },
-  network: {
-    title: "本地服务",
-    description: "转发代理为独立服务，尚未接入全局网络配置。",
-  },
-  memory: {
-    title: "暂无记忆",
-    description: "对话记忆功能尚未开放，当前不会自动提取或保存对话记忆。",
-  },
-  comfy: {
-    title: "未连接 ComfyUI",
-    description: "工作流执行功能尚未开放，当前不会向本地实例提交任务。",
-  },
-};
+import CompanionSettings from "./CompanionSettings";
+import SecuritySettings from "./SecuritySettings";
+import type { LocalWorkflowAccess } from "./LocalWorkflowSettings";
 
 export default function ConnectionSettings({
   section,
   active = true,
   onFeedback,
+  initialModelMethod,
+  workflows,
 }: {
   section: SettingsSection;
   active?: boolean;
   onFeedback: (message: string) => void;
+  initialModelMethod?: "local";
+  workflows: LocalWorkflowAccess;
 }) {
   if (section === "providers")
-    return <ModelAccessSettings active={active} onFeedback={onFeedback} />;
-  if (section === "updates")
     return (
-      <div className="settings-version">
-        <div className="settings-version-card">
-          <div className="settings-version-icon" aria-hidden="true">
-            ↑
-          </div>
-          <div className="settings-version-copy">
-            <strong>软件更新</strong>
-            <span>更新检查尚未接入</span>
-          </div>
-          <span className="settings-version-tag">Prototype</span>
-          <span className="settings-version-current">
-            当前版本 {appVersion}
-          </span>
-          <button
-            type="button"
-            className="settings-action settings-restart-button"
-            disabled
-            title="更新服务尚未接入"
-          >
-            更新服务未接入
-          </button>
-        </div>
-        <div className="settings-version-detail">
-          <h3>更新提示</h3>
-          <p>当前版本检查、下载和重启安装尚未接入，因此不会伪造更新状态。</p>
-        </div>
-        <div className="settings-update-row">
-          <div>
-            <h3>更新详情</h3>
-            <p>服务接入后将在这里显示真实版本和变更说明。</p>
-          </div>
-        </div>
-        <div className="settings-update-row settings-update-toggle-row">
-          <div>
-            <h3>自动安装更新</h3>
-            <p>更新服务尚未接入，自动安装暂不可用。</p>
-          </div>
-          <button
-            type="button"
-            role="switch"
-            aria-checked="false"
-            aria-disabled="true"
-            className="settings-toggle settings-toggle-disabled"
-            aria-label="自动安装更新不可用"
-            disabled
-          >
-            <span aria-hidden="true" />
-          </button>
-        </div>
-      </div>
+      <ModelAccessSettings
+        active={active}
+        onFeedback={onFeedback}
+        initialMethod={initialModelMethod}
+        workflows={workflows}
+      />
     );
+  if (section === "memory")
+    return <MemorySettingsSection onFeedback={onFeedback} />;
+  if (section === "security") return <SecuritySettings />;
   if (section === "account")
     return (
       <div className="settings-detail-stack">
-        <h3 className="settings-detail-label">账号信息</h3>
-        <div className="settings-detail-card">
-          <div>
-            <span>账号</span>
-            <strong>未登录 · Prototype</strong>
-          </div>
-          <div>
-            <span>UID</span>
-            <strong>本地会话</strong>
-          </div>
+        <div className="settings-info-row">
+          <span>账号</span>
+          <strong>未登录 · 本地使用</strong>
         </div>
-        <h3 className="settings-detail-label">团队账号</h3>
-        <div className="settings-detail-card">
-          <span>暂无团队账号</span>
+        <p className="settings-section-intro">
+          无需登录即可使用本地项目和素材。统一账号登录服务尚未接入。
+        </p>
+        <div className="settings-info-row">
+          <span>云端个人资料</span>
+          <strong>未连接</strong>
         </div>
-        <div className="settings-danger-row">
-          <div>
-            <h3>永久删除账号</h3>
-            <p>账号服务尚未接入，当前没有可删除的云端账号。</p>
-          </div>
-          <button
-            type="button"
-            className="settings-danger-button"
-            disabled
-            title="Prototype · 账号服务尚未接入"
-          >
-            删除账号
-          </button>
-        </div>
+        <p className="settings-section-intro">
+          登录不代表自动上传；项目、素材与同步需要分别授权。
+        </p>
       </div>
     );
   if (section === "network")
     return (
       <div className="settings-detail-stack">
-        <h3 className="settings-detail-label">本地服务</h3>
-        <div className="settings-network-row">
-          <div>
-            <h3>本地转发代理</h3>
-            <p>
-              需独立启动 · 应用尚未提供全局代理配置。此服务当前供支持
-              localProxyUrl 的接口调用，不会自动影响模型请求。
-            </p>
-            <p className="settings-network-code">
-              npm run proxy → http://127.0.0.1:23210
-            </p>
-          </div>
+        <div className="settings-info-row">
+          <span>全局代理</span>
+          <strong>尚未接入</strong>
         </div>
         <p className="settings-section-intro">
-          需要连接 Codex 主 Agent 时，请到「模型接入」配置。
+          当前没有可保存的全局代理配置；模型连接与本地推理服务在「模型接入」中管理。
         </p>
+        <details className="settings-disclosure">
+          <summary>独立转发代理</summary>
+          <p className="settings-section-intro">
+            仅支持配置了 localProxyUrl 的调用，不会自动影响所有模型请求。
+          </p>
+          <p className="settings-network-code">
+            npm run proxy → http://127.0.0.1:23210
+          </p>
+        </details>
+        <div className="settings-info-row">
+          <span>加密云同步与备份</span>
+          <strong>尚未接入</strong>
+        </div>
+        <p className="settings-section-intro">
+          当前不会自动上传项目与素材。Cloudinary、WebDAV、S3
+          的完整加密备份与恢复尚未开放。
+        </p>
+        <h3 className="settings-detail-label">网页本机仓库连接</h3>
+        <CompanionSettings onFeedback={onFeedback} />
       </div>
     );
-  if (section === "memory")
-    return <MemorySettingsSection onFeedback={onFeedback} />;
-  const pending = PENDING_SETTINGS[section];
-  if (!pending) return null;
-  return (
-    <div className="settings-empty-state">
-      <strong>{pending.title}</strong>
-      <p>{pending.description}</p>
-    </div>
-  );
+  return null;
 }

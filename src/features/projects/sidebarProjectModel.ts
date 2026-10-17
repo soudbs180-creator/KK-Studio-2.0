@@ -1,6 +1,6 @@
 import type { CreationProject } from "../creation/model";
 
-/** 项目条目来自 CreationSnapshot；文件夹收纳仍是会话内状态。 */
+/** 项目及分组归属来自 CreationSnapshot；展开和置顶仅影响会话显示。 */
 
 /**
  * 项目行左侧缩略图（按内容类型区分，用户 2026-09-24 第四轮口径）：
@@ -23,7 +23,7 @@ export interface SidebarProjectItem {
 
 export interface SidebarFolderItem {
   id: string;
-  /** 会话内删除可撤销；删除期间成员回到未分组。 */
+  /** 删除组仅解除归属；恢复的是空组。 */
   deleted?: boolean;
   /** 新建时按顺序命名："新建文件夹"、"新建文件夹 2"… */
   title: string;
@@ -172,7 +172,7 @@ export function sidebarProjectItem(
   };
 }
 
-/** 会话内自增 id 生成器（同一渲染内多次调用保持递增） */
+/** 为持久项目组创建独立身份。 */
 export function createSidebarId(): string {
   return `sidebar-project-${Date.now().toString(36)}-${Math.random()
     .toString(36)

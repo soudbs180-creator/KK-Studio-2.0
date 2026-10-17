@@ -91,6 +91,7 @@ export function createGoogleAgentConnection(options: Options = {}) {
   let bridge: AgentBridge | null = null,
     projectId = "",
     epoch = 0;
+  let connectedScopeKey = "";
   let controller = new AbortController(),
     record: GoogleConversation | undefined;
   let identity = "";
@@ -102,8 +103,35 @@ export function createGoogleAgentConnection(options: Options = {}) {
   function current() {
     return bridge?.getSnapshot()?.projectId ?? "";
   }
+  function currentScopeKey() {
+    const scope = bridge?.getChatScope?.();
+    return JSON.stringify([
+      scope?.projectId ?? current(),
+      scope?.chatId ?? null,
+    ]);
+  }
+  function getExecutionBlockReason() {
+    return (
+      bridge?.getExecutionBlockReason?.() ??
+      (connectedScopeKey !== currentScopeKey()
+        ? "项目或聊天已切换，请重新连接。"
+        : undefined)
+    );
+  }
+  function isCurrent(version: number) {
+    if (version !== epoch) return false;
+    if (getExecutionBlockReason()) {
+      syncProject();
+      return false;
+    }
+    return true;
+  }
   function save(next: GoogleConversation) {
-    if (!bridge?.saveGoogleConversation || current() !== projectId)
+    if (
+      getExecutionBlockReason() ||
+      !bridge?.saveGoogleConversation ||
+      current() !== projectId
+    )
       throw new Error("当前项目不可保存 Google 会话。");
     if (!isPersistableGoogleConversation(next))
       throw new Error("Google 会话超出本地保存限制，未写入不完整记录。");
@@ -133,15 +161,32 @@ export function createGoogleAgentConnection(options: Options = {}) {
     });
   }
   function syncProject() {
-    if (projectId === current()) return;
+    const blocked = bridge?.getExecutionBlockReason?.();
+    if (
+      projectId === current() &&
+      connectedScopeKey === currentScopeKey() &&
+      !blocked
+    )
+      return;
     invalidate();
     projectId = current();
+    connectedScopeKey = currentScopeKey();
     identity = "";
+    if (blocked) {
+      record = undefined;
+      patch({ messages: [], uncertain: false, error: blocked });
+      return;
+    }
     restore();
   }
   async function connect(fresh = false) {
     if (state.sending || state.status === "connecting") return;
     syncProject();
+    const blocked = getExecutionBlockReason();
+    if (blocked) {
+      patch({ error: blocked });
+      return;
+    }
     if (!projectId || !bridge?.saveGoogleConversation) {
       patch({ error: "请先打开一个可保存的项目。" });
       return;
@@ -157,7 +202,7 @@ export function createGoogleAgentConnection(options: Options = {}) {
           baseUrl,
           signal: controller.signal,
         });
-        if (version !== epoch || projectId !== current()) return;
+        if (!isCurrent(version)) return;
         if (
           !status.installed ||
           resolveGeminiCliLoginStatus(status) !== "verified"
@@ -189,14 +234,14 @@ export function createGoogleAgentConnection(options: Options = {}) {
         return;
       }
       const credential = await (options.getCredential ?? getGoogleCredential)();
-      if (version !== epoch) return;
+      if (!isCurrent(version)) return;
       const client = (options.clientFactory ?? createGoogleInteractions)({
         apiKey: credential.apiKey,
       });
       const models = await client.models(
         AbortSignal.any([controller.signal, AbortSignal.timeout(30000)]),
       );
-      if (version !== epoch || projectId !== current()) return;
+      if (!isCurrent(version)) return;
       identity = credential.identity;
       restore();
       if (fresh || !record || record.identity !== identity) {
@@ -215,7 +260,7 @@ export function createGoogleAgentConnection(options: Options = {}) {
         activity: "Google API 已连接",
       });
     } catch (error) {
-      if (version === epoch)
+      if (isCurrent(version))
         patch({
           status: "disconnected",
           error:
@@ -257,6 +302,8 @@ export function createGoogleAgentConnection(options: Options = {}) {
   ): Promise<{ ok: boolean; error?: string }> {
     syncProject();
     const reject = (error: string) => ({ ok: false, error });
+    const blocked = getExecutionBlockReason();
+    if (blocked) return reject(blocked);
     if (state.sending) return reject("Google 正在执行，请等待完成。");
     if (state.status !== "connected" || !record || !bridge)
       return reject("请先连接 Google；未连接时不会提交请求。");
@@ -275,8 +322,20 @@ export function createGoogleAgentConnection(options: Options = {}) {
     ]);
     const guard = () => {
       signal.throwIfAborted();
-      if (version !== epoch || current() !== boundProject)
-        throw new Error("项目已切换");
+      if (!isCurrent(version) || current() !== boundProject)
+        throw new Error("项目或聊天已切换，当前未继续执行。");
+    };
+    // Approval can wait while the UI changes; enforce the original scope at use.
+    const scopedHost: AgentBridge = {
+      ...host,
+      getSnapshot: () => {
+        guard();
+        return host.getSnapshot();
+      },
+      applyOps: (ops, context) => {
+        guard();
+        return host.applyOps(ops, context);
+      },
     };
     let submitted = false,
       userAdded = false,
@@ -439,7 +498,7 @@ export function createGoogleAgentConnection(options: Options = {}) {
           if (!receipts.has(call.id)) {
             let output: unknown;
             try {
-              output = await executeGoogleTool(call, host, signal, () =>
+              output = await executeGoogleTool(call, scopedHost, signal, () =>
                 approval(call.id, signal),
               );
             } catch {
@@ -479,7 +538,7 @@ export function createGoogleAgentConnection(options: Options = {}) {
             : signal.aborted
               ? "请求已停止，尚未提交给 Google。"
               : "Google 请求准备失败，请检查凭据、附件或本地存储。";
-      if (version === epoch && current() === boundProject) {
+      if (isCurrent(version) && current() === boundProject) {
         if (userAdded && record) {
           try {
             save({ ...record, status: uncertain ? "unknown" : "ready" });
@@ -495,7 +554,7 @@ export function createGoogleAgentConnection(options: Options = {}) {
       }
       return reject(text);
     } finally {
-      if (version === epoch) patch({ sending: false, pendingApproval: null });
+      if (isCurrent(version)) patch({ sending: false, pendingApproval: null });
     }
   }
   return {
@@ -522,6 +581,11 @@ export function createGoogleAgentConnection(options: Options = {}) {
       return { ok: true };
     },
     async resolveApproval(value: AgentApprovalDecision) {
+      const blocked = getExecutionBlockReason();
+      if (blocked) {
+        syncProject();
+        return { ok: false, error: blocked };
+      }
       decision?.(value !== "decline");
       return { ok: true };
     },

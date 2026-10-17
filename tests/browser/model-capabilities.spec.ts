@@ -138,6 +138,7 @@ for (const duplicate of [true, false]) {
       .toEqual({ edit: true, maxReferences: 1 });
     await page.getByRole("button", { name: "关闭设置", exact: true }).click();
     await item.getByRole("button", { name: "画布模型", exact: true }).click();
+    await page.getByRole("tab", { name: "官方 API", exact: true }).click();
     await page
       .getByRole("searchbox", { name: "搜索模型、厂商或参数" })
       .fill("image-capability-a");

@@ -1,6 +1,10 @@
 import { z } from "zod";
 import { isAllowedProviderUrl } from "./providerUrl.ts";
 import {
+  providerChannelSchema,
+  providerPrioritySchema,
+} from "./modelChannels.ts";
+import {
   providerProtocolSchema,
   providerAuthModeSchema,
   isProviderAuthAllowed,
@@ -68,6 +72,8 @@ export const providerConnectionSchema = z
     id: z.string().min(1).max(120),
     provider: z.string().min(1).max(80),
     kind: connectionKindSchema,
+    channel: providerChannelSchema.optional(),
+    priority: providerPrioritySchema.optional(),
     displayName: z.string().min(1).max(120),
     /** Non-secret endpoint metadata used to switch between saved connections. */
     baseUrl: z

@@ -9,6 +9,7 @@ const rootFiles = [
   "AI_RULES.md",
   "CLAUDE.md",
   "CONTRIBUTING.md",
+  "DESIGN.md",
   "GEMINI.md",
   "README.md",
   ".github/PULL_REQUEST_TEMPLATE.md",

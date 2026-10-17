@@ -47,6 +47,7 @@ test("Codex执行中模型菜单不能绕过执行方式锁", async ({ page }) =
     const trigger = page.getByRole("button", { name: "模型", exact: true });
     await trigger.click();
     const menu = page.getByRole("menu", { name: "选择模型", exact: true });
+    await menu.getByRole("tab", { name: "中转 API", exact: true }).click();
     await menu.getByRole("searchbox").fill("state-image-model");
     await expect(
       menu.getByRole("menuitemradio", { name: /^state-image-model/ }),
@@ -217,6 +218,7 @@ test("API后台任务保留提交型号，新草稿与选型可编辑", async ({
     const trigger = page.getByRole("button", { name: "模型", exact: true });
     await trigger.click();
     const menu = page.getByRole("menu", { name: "选择模型", exact: true });
+    await menu.getByRole("tab", { name: "官方 API", exact: true }).click();
     await menu.getByRole("searchbox").fill("aurora-1-2k-high");
     await menu.getByRole("menuitemradio", { name: /aurora-1/ }).click();
     await page.getByLabel("对话内容", { exact: true }).fill("等待中的图片任务");

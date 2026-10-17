@@ -35,88 +35,92 @@ export default function CanvasConnections({
   }, []);
   return (
     <div style={{ visibility: visible ? "visible" : "hidden" }}>
-      {edges.map((edge) => {
-        const geometry = connectionGeometry(edge, nodes, items);
-        if (!geometry) return null;
-        const name = `${items.find((item) => item.id === edge.source)!.title} → ${items.find((item) => item.id === edge.target)!.title}`;
-        const related = Boolean(
-          selectedNode &&
-          (edge.source === selectedNode || edge.target === selectedNode),
-        );
-        return (
-          <div
-            key={edge.id}
-            className={`connection ${active === edge.id ? "is-active" : ""} ${related ? "is-related" : ""}`}
-            onPointerEnter={() => setActive(edge.id)}
-            onFocus={() => setActive(edge.id)}
-            onBlur={(event) => {
-              if (!event.currentTarget.contains(event.relatedTarget))
-                setActive(null);
-            }}
-            onPointerDown={(event) => event.stopPropagation()}
-          >
-            <svg className="canvas-connectors">
-              <path d={geometry.path} data-testid={edge.id} />
-              {related && (
-                <g className="connection-particles" aria-hidden="true">
-                  {[0, 1, 2].map((index) => (
-                    <circle
-                      key={index}
-                      className={`connection-particle connection-particle-${index}`}
-                      r={index === 0 ? "3" : "2.25"}
-                    >
-                      <animateMotion
-                        dur="3.2s"
-                        begin={`${index * 0.2}s`}
-                        repeatCount="indefinite"
-                        path={geometry.path}
-                      />
-                    </circle>
-                  ))}
-                </g>
-              )}
-              <path
-                className="connection-hit"
-                d={geometry.path}
-                role="button"
-                tabIndex={visible ? 0 : -1}
-                aria-label={`连接 ${name}`}
-                onClick={() => setActive(edge.id)}
-                onKeyDown={(event) => {
-                  if (["Delete", "Backspace"].includes(event.key)) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    onDelete(edge.id);
-                  }
-                  if (["Enter", " "].includes(event.key)) {
-                    event.preventDefault();
-                    setActive(edge.id);
-                  }
-                  if (event.key === "Escape") {
-                    event.stopPropagation();
-                    setActive(null);
-                  }
-                }}
-              />
-            </svg>
-            <button
-              className="connection-delete"
-              data-testid={`connection-cut-${edge.id}`}
-              style={{
-                left: geometry.midpoint.x,
-                top: geometry.midpoint.y,
+      {(() => {
+        // 预建查找表，避免每条边做 2 次 items.find（O(E×N) → O(E+N)）
+        const itemById = new Map(items.map((item) => [item.id, item]));
+        return edges.map((edge) => {
+          const geometry = connectionGeometry(edge, nodes, itemById);
+          if (!geometry) return null;
+          const name = `${itemById.get(edge.source)?.title ?? ""} → ${itemById.get(edge.target)?.title ?? ""}`;
+          const related = Boolean(
+            selectedNode &&
+            (edge.source === selectedNode || edge.target === selectedNode),
+          );
+          return (
+            <div
+              key={edge.id}
+              className={`connection ${active === edge.id ? "is-active" : ""} ${related ? "is-related" : ""}`}
+              onPointerEnter={() => setActive(edge.id)}
+              onFocus={() => setActive(edge.id)}
+              onBlur={(event) => {
+                if (!event.currentTarget.contains(event.relatedTarget))
+                  setActive(null);
               }}
-              aria-label={`删除连线 ${name}`}
-              title="剪开连线，保留两端卡片"
-              tabIndex={visible && active === edge.id ? 0 : -1}
-              onClick={() => onDelete(edge.id)}
+              onPointerDown={(event) => event.stopPropagation()}
             >
-              <span className="connection-cut-icon" aria-hidden="true" />
-              <span className="connection-delete-label">剪开连线</span>
-            </button>
-          </div>
-        );
-      })}
+              <svg className="canvas-connectors">
+                <path d={geometry.path} data-testid={edge.id} />
+                {related && (
+                  <g className="connection-particles" aria-hidden="true">
+                    {[0, 1, 2].map((index) => (
+                      <circle
+                        key={index}
+                        className={`connection-particle connection-particle-${index}`}
+                        r={index === 0 ? "3" : "2.25"}
+                      >
+                        <animateMotion
+                          dur="3.2s"
+                          begin={`${index * 0.2}s`}
+                          repeatCount="indefinite"
+                          path={geometry.path}
+                        />
+                      </circle>
+                    ))}
+                  </g>
+                )}
+                <path
+                  className="connection-hit"
+                  d={geometry.path}
+                  role="button"
+                  tabIndex={visible ? 0 : -1}
+                  aria-label={`连接 ${name}`}
+                  onClick={() => setActive(edge.id)}
+                  onKeyDown={(event) => {
+                    if (["Delete", "Backspace"].includes(event.key)) {
+                      event.preventDefault();
+                      event.stopPropagation();
+                      onDelete(edge.id);
+                    }
+                    if (["Enter", " "].includes(event.key)) {
+                      event.preventDefault();
+                      setActive(edge.id);
+                    }
+                    if (event.key === "Escape") {
+                      event.stopPropagation();
+                      setActive(null);
+                    }
+                  }}
+                />
+              </svg>
+              <button
+                className="connection-delete"
+                data-testid={`connection-cut-${edge.id}`}
+                style={{
+                  left: geometry.midpoint.x,
+                  top: geometry.midpoint.y,
+                }}
+                aria-label={`删除连线 ${name}`}
+                title="剪开连线，保留两端卡片"
+                tabIndex={visible && active === edge.id ? 0 : -1}
+                onClick={() => onDelete(edge.id)}
+              >
+                <span className="connection-cut-icon" aria-hidden="true" />
+                <span className="connection-delete-label">剪开连线</span>
+              </button>
+            </div>
+          );
+        });
+      })()}
     </div>
   );
 }

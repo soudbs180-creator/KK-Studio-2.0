@@ -1,10 +1,14 @@
 # KK Studio 运行时 Token 索引
 
-2026-10-14 更新。设计裁决从 [UI_INDEX](UI_INDEX.md) 开始；本页索引当前组件角色，不维护第二份可加载的数值表。[历史 v2 表](archive/ui-history/DESIGN-TOKENS-2026-09-28.md) 保留溯源。
+> 权威设计系统与 Token 规范已全面对齐 **[Google Stitch DESIGN.md Specification](https://stitch.withgoogle.com/docs/design-md/specification)**，完整规范见 [**`DESIGN.md`**](../DESIGN.md)。
+
+设计裁决从 [UI_INDEX](UI_INDEX.md) 开始；本页索引当前组件角色，不维护第二份可加载的数值表。[历史 v2 表](archive/ui-history/DESIGN-TOKENS-2026-09-28.md) 保留溯源。
 
 ## 唯一数值源
 
 [tokens.css](../src/styles/tokens.css) 声明全部 --kk-* 语义值；[ui-tokens.css](../src/styles/ui-tokens.css) 仅承接兼容别名，[ui-governance.css](../src/styles/ui-governance.css) 提供共享状态类。tokens.json 是历史导出快照。
+
+根 [DESIGN.md](../DESIGN.md) 的 YAML 是当前 CSS 的生成投影：标准角色、全部声明及作用域、源 SHA-256（UTF-8、LF 规范化，兼容 Windows/Linux 换行）和生成路径归属。运行 `npm run design:sync` 更新、`npm run design:check` 检查漂移；未知 YAML 和人工正文保留，不把投影当作第二数值源。预览与导出见 [UI_SPEC](UI_SPEC.md#designmd-与独立预览)。
 
 | 角色 | 当前 token 与使用者 |
 | --- | --- |

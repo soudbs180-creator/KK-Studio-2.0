@@ -1,4 +1,5 @@
-import UiIcon from "./UiIcon";
+import ProjectLibraryContent from "./ProjectLibraryContent";
+import type { ProjectLibraryActions } from "../features/projects/projectLifecycle";
 import type { CreationProject } from "../features/creation/model";
 import WorkflowCard from "./WorkflowCard";
 import type { WorkflowRecord } from "../features/comfyui/workflowRegistry";
@@ -18,6 +19,7 @@ export default function CatalogPageBody({
   tab,
   onSelect,
   projects = [],
+  projectActions,
   localWorkflows = [],
   onOpenWorkflow,
   onExportWorkflow,
@@ -34,6 +36,7 @@ export default function CatalogPageBody({
   tab: string;
   onSelect: (label: string) => void;
   projects?: CreationProject[];
+  projectActions?: ProjectLibraryActions;
   localWorkflows?: readonly WorkflowRecord[];
   onOpenWorkflow?: (workflow: WorkflowRecord) => void;
   onExportWorkflow?: (workflow: WorkflowRecord) => void;
@@ -55,72 +58,15 @@ export default function CatalogPageBody({
         </div>
       );
     }
-    const visibleProjects = projects.filter((project) =>
-      `${project.name}${project.prompt}`.toLowerCase().includes(search),
-    );
     return (
-      <div className="project-library-content" data-template-body={template}>
-        <div className="project-library-actions" aria-label="项目资源操作">
-          <button
-            type="button"
-            className="project-library-action"
-            aria-label="新建文件夹"
-            disabled
-            title="请在侧栏创建会话文件夹；项目库文件夹持久化尚未接入"
-          >
-            <UiIcon name="folderAdd" size={20} />
-            <span>
-              <strong>新建文件夹</strong>
-              <small>在当前目录新建</small>
-            </span>
-          </button>
-          <button
-            type="button"
-            className="project-library-action"
-            aria-label="上传文件"
-            disabled
-            title="文件上传将在本地资源服务接入后可用"
-          >
-            <UiIcon name="upload" size={20} />
-            <span>
-              <strong>上传文件</strong>
-              <small>支持批量上传</small>
-            </span>
-          </button>
-        </div>
-        <div className="project-grid">
-          {visibleProjects.map((project) => (
-            <button
-              className="project-library-card"
-              key={project.id}
-              onClick={() => onSelect(project.id)}
-            >
-              <div className="project-library-preview">
-                <span className="catalog-folder-mark">▱</span>
-              </div>
-              <strong>{project.name}</strong>
-              <span>
-                {new Date(project.updatedAt).toLocaleDateString("zh-CN")} ·
-                本地项目 · {project.items.length} 个画布节点
-              </span>
-              <span className="catalog-card-arrow" aria-hidden="true">
-                ↗
-              </span>
-            </button>
-          ))}
-        </div>
-        {!visibleProjects.length && (
-          <div className="catalog-empty" role="status">
-            <span className="catalog-empty-mark" aria-hidden="true">
-              ⌕
-            </span>
-            <p>
-              {search
-                ? "没有找到匹配的项目"
-                : "还没有本地项目，点击“新建项目”开始创作。"}
-            </p>
-          </div>
-        )}
+      <div data-template-body={template}>
+        <ProjectLibraryContent
+          projects={projects}
+          actions={projectActions}
+          search={search}
+          trash={tab === "垃圾箱"}
+          onOpen={onSelect}
+        />
       </div>
     );
   }

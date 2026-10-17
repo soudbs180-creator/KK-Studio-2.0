@@ -4,6 +4,8 @@ const ASSETS: Record<string, string> = {
   skill: "/design/figma/sidebar-skill.svg",
   workflow: "/design/figma/sidebar-workflow.svg",
   chat: "/design/figma/chat-open.svg",
+  assets: "/design/figma/toolbar-assets.svg",
+  tasks: "/design/figma/task-clipboard.svg",
   search: "/design/figma/sidebar-search-container.svg",
   // The expanded state uses the filled-left variant from the Figma
   // "左展开和关闭" component. Keep the public icon name stable for the

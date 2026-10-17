@@ -245,6 +245,9 @@
   }
 }
 @media (max-width: 767px) {
+  .app .topbar:has(.compact-app-popover) {
+    z-index: var(--kk-z-popover);
+  }
   .sidebar,
   .sidebar.is-narrow:not(.is-collapsed) {
     z-index: 42;
@@ -387,9 +390,12 @@
     width: calc(100% - 24px);
   }
   .compact-app-popover {
-    position: absolute;
+    position: fixed;
     right: 12px;
-    top: calc(100% + 4px);
+    top: calc(
+      6px + var(--kk-control-h-lg) + var(--kk-space-1) +
+        env(safe-area-inset-top, 0px)
+    );
     width: min(288px, calc(100vw - 24px));
     max-height: calc(100dvh - 140px);
     overflow-y: auto;
@@ -684,4 +690,9 @@
   .sidebar-scrim {
     display: none;
   }
+}
+
+/* Keep the account menu above recovery notices in every sidebar context. */
+.app .sidebar:has(> .account-popup) {
+  z-index: var(--kk-z-popover);
 }

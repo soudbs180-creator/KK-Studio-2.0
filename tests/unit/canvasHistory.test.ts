@@ -65,3 +65,56 @@ test("canvas history fingerprint includes items, graph and viewport", () => {
     canvasHistoryFingerprint(changed),
   );
 });
+
+test("tag-only edits update the present without adding an undo step, and survive deletion undo", () => {
+  const initial = snapshot(0);
+  const tagged = {
+    ...initial,
+    items: initial.items.map((item) => ({ ...item, tags: ["人物"] })),
+  };
+  assert.equal(
+    canvasHistoryFingerprint(initial),
+    canvasHistoryFingerprint(tagged),
+  );
+  let state = commitCanvasHistory(createCanvasHistory(initial), tagged);
+  assert.deepEqual(state.present.items[0].tags, ["人物"]);
+  assert.equal(state.past.length, 0, "tags are not a canvas undo step");
+  state = commitCanvasHistory(state, { ...tagged, items: [], positions: {} });
+  tagged.items[0].tags.push("外部变更");
+  const restored = undoCanvasHistory(state);
+  assert.deepEqual(restored.present.items[0].tags, ["人物"]);
+  assert.equal(restored.present.items[0].title, initial.items[0].title);
+  assert.deepEqual(restored.present.positions, initial.positions);
+  assert.equal(redoCanvasHistory(restored).present.items.length, 0);
+  assert.equal(initial.items[0].tags, undefined, "input stays immutable");
+});
+
+test("tag changes and clearing survive old past/future frames without consuming redo", () => {
+  const initial = snapshot(0);
+  const moved = snapshot(10);
+  const beforeTags = commitCanvasHistory(createCanvasHistory(initial), moved);
+  let state = undoCanvasHistory(beforeTags);
+  const tagged = {
+    ...state.present,
+    items: state.present.items.map((item) => ({ ...item, tags: ["人物"] })),
+  };
+  state = commitCanvasHistory(state, tagged);
+  assert.equal(state.future.length, 1, "metadata preserves redo");
+  state = redoCanvasHistory(state);
+  assert.deepEqual(state.present.items[0].tags, ["人物"]);
+  assert.deepEqual(state.present.positions, moved.positions);
+  const cleared = {
+    ...state.present,
+    items: state.present.items.map((item) => ({ ...item, tags: [] })),
+  };
+  state = commitCanvasHistory(state, cleared);
+  state = undoCanvasHistory(state);
+  assert.deepEqual(state.present.items[0].tags, []);
+  assert.deepEqual(state.present.positions, initial.positions);
+  assert.deepEqual(redoCanvasHistory(state).present.items[0].tags, []);
+  assert.equal(
+    beforeTags.present.items[0].tags,
+    undefined,
+    "history input stays immutable",
+  );
+});

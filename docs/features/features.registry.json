@@ -136,7 +136,7 @@
     "area": "creation",
     "status": "PARTIAL",
     "card": "docs/features/feat-002-image-generation.md",
-    "summary": "自带 API Key 的浏览器提交门禁 + Desktop 原生 TaskHost；Codex 内置生图已有真实生产归档/恢复证据，BYOK逐家真实出图仍待验收。",
+    "summary": "自带 API Key 的浏览器提交门禁 + Desktop 原生 TaskHost；Codex 内置生图已有真实生产归档/恢复证据，BYOK逐家真实出图仍待验收。本轮469本地安全修复/完整verify与Native启动重开通过；精确connectionId/凭据绑定及12AI无持久receipt端口禁用，不等于真实逐家Provider或完整重启恢复完成。",
     "entryPoints": ["图片节点生成按钮", "开始页/对话提交", "任务状态与重试"],
     "code": [
       "src/features/creation/imageGeneration.ts",
@@ -177,9 +177,11 @@
       "TASK-PROV-005",
       "TASK-PROV-006",
       "TASK-CODEX-HOME-20261015",
-      "TASK-CODEX-REF-20261015"
+      "TASK-CODEX-REF-20261015",
+      "TASK-KK-UNIFIED-20261015",
+      "TASK-AUDIT-REPAIR-20261017"
     ],
-    "updated": "2026-10-15",
+    "updated": "2026-10-17",
     "platforms": ["web", "desktop"],
     "runtimeEvidence": [
       {
@@ -240,8 +242,13 @@
       "tests/browser/model-capabilities.spec.ts",
       "tests/desktop/model-capabilities.mjs"
     ],
-    "tasks": ["BACKEND-IMAGE-PARAMS", "TASK-AGENT-001", "TASK-MODEL-001"],
-    "updated": "2026-10-08",
+    "tasks": [
+      "BACKEND-IMAGE-PARAMS",
+      "TASK-AGENT-001",
+      "TASK-MODEL-001",
+      "TASK-KK-UNIFIED-20261015"
+    ],
+    "updated": "2026-10-15",
     "platforms": ["web", "desktop"],
     "runtimeEvidence": [
       {
@@ -272,8 +279,8 @@
       "src-tauri/src/main.rs"
     ],
     "tests": ["tests/unit/generationServerProvider.test.ts"],
-    "tasks": ["T6", "EXT-COMFY"],
-    "updated": "2026-09-21",
+    "tasks": ["T6", "EXT-COMFY", "TASK-KK-UNIFIED-20261015"],
+    "updated": "2026-10-15",
     "platforms": ["web", "desktop"]
   },
   {
@@ -282,7 +289,7 @@
     "area": "creation",
     "status": "PARTIAL",
     "card": "docs/features/feat-005-comfyui-workflows.md",
-    "summary": "ComfyUI 工作流 JSON 的本地解析、starter、导入/导出与收藏管理（只管文件，不执行；执行见 FEAT-004）。",
+    "summary": "ComfyUI工作流迁入模型接入/本地，保留ID与存储key；导入导出/删除写入ACK及失败保全已验，实际执行链未接通。",
     "entryPoints": ["素材/工作流库 LibraryPage", "工作流导入按钮"],
     "code": [
       "src/features/comfyui/workflowRegistry.ts",
@@ -296,8 +303,8 @@
       "tests/browser/catalog-pages.spec.ts",
       "tests/browser/design-system-pages.spec.ts"
     ],
-    "tasks": ["T6", "TASK-CAP-001", "TASK-DS-002"],
-    "updated": "2026-09-22",
+    "tasks": ["T6", "TASK-CAP-001", "TASK-DS-002", "TASK-KK-UNIFIED-20261015"],
+    "updated": "2026-10-16",
     "platforms": ["web", "desktop"],
     "runtimeEvidence": [
       {
@@ -325,8 +332,13 @@
       "src/domain/localGeneration.ts"
     ],
     "tests": ["tests/browser/demo-results.spec.ts"],
-    "tasks": ["BACKEND-MEDIA-001", "TASK-MINIMAX-001", "EXT-PROVIDER"],
-    "updated": "2026-09-21",
+    "tasks": [
+      "BACKEND-MEDIA-001",
+      "TASK-MINIMAX-001",
+      "EXT-PROVIDER",
+      "TASK-KK-UNIFIED-20261015"
+    ],
+    "updated": "2026-10-15",
     "platforms": ["web", "desktop"]
   },
   {
@@ -383,9 +395,10 @@
       "TASK-UI-005",
       "T5",
       "TASK-PROV-006",
-      "EXT-PROVIDER"
+      "EXT-PROVIDER",
+      "TASK-KK-UNIFIED-20261015"
     ],
-    "updated": "2026-10-08",
+    "updated": "2026-10-15",
     "platforms": ["web", "desktop"],
     "runtimeEvidence": [
       {
@@ -408,7 +421,7 @@
     "area": "creation",
     "status": "PARTIAL",
     "card": "docs/features/feat-009-conversation.md",
-    "summary": "KK 默认 Codex 已接通 Web/Windows、Agent 本地图片和显式画布原件引用；其他登录适配、参考图编辑与后台网页仍待办。",
+    "summary": "KK 默认 Codex 已接通 Web/Windows、Agent 本地图片和显式画布原件引用；其他登录适配、参考图编辑与后台网页仍待办。本轮469本地安全修复/启动恢复通过，默认旧聊天资料仍READ_ONLY；协议6新/临时聊天及不支持的多聊天/v3写入禁用，完整迁移/protocol7仍开放。",
     "entryPoints": ["右侧对话面板 ConversationPanel", "开始页对话入口"],
     "code": [
       "src/components/ConversationPanel.tsx",
@@ -501,9 +514,11 @@
       "TASK-AGENT-RECOVERY-20261013",
       "TASK-CANVAS-SYNC-20261014",
       "TASK-AGENT-UX-20261014",
-      "TASK-CODEX-HOME-20261015"
+      "TASK-CODEX-HOME-20261015",
+      "TASK-KK-UNIFIED-20261015",
+      "TASK-AUDIT-REPAIR-20261017"
     ],
-    "updated": "2026-10-15",
+    "updated": "2026-10-17",
     "platforms": ["web", "desktop"],
     "runtimeEvidence": [
       {
@@ -721,7 +736,7 @@
     "area": "system",
     "status": "REAL",
     "card": "docs/features/feat-014-assets.md",
-    "summary": "素材导入、归档、校验、预览、集合与来源追踪；Desktop 走 Rust 原生素材存储（含完整性校验）。",
+    "summary": "素材导入、归档、校验、预览、集合与来源追踪；Desktop 走 Rust 原生素材存储（含完整性校验）。 既有REAL仅限已验导入/归档/预览等范围；当前未接持久垃圾箱时禁用软删除/永久删除，完整持久化仍待实现验收。",
     "entryPoints": ["素材面板 AssetPanel", "素材详情/筛选/创建主体"],
     "code": [
       "src/components/assets",
@@ -745,9 +760,11 @@
       "TASK-PERF-ASSETS-001",
       "PERF-001",
       "TASK-222-ACTIONS-20261014",
-      "TASK-223-ACTIONS-20261014"
+      "TASK-223-ACTIONS-20261014",
+      "TASK-KK-UNIFIED-20261015",
+      "TASK-AUDIT-REPAIR-20261017"
     ],
-    "updated": "2026-10-14",
+    "updated": "2026-10-17",
     "platforms": ["web", "desktop"],
     "runtimeEvidence": [
       {
@@ -774,10 +791,10 @@
     "area": "system",
     "status": "PARTIAL",
     "card": "docs/features/feat-015-projects.md",
-    "summary": "原生项目快照/项目包与侧栏真实项目创建、打开、改名、确认删除可用；文件夹/置顶为明示会话态，持久分组与 Web 容量/离线仍未完成。",
+    "summary": "同一快照中的真实项目、持久分组/成员、手动名称和完整软删除恢复；项目库/侧栏共用操作。多聊天、共仓库及本轮新Native UI继续开放。",
     "entryPoints": [
       "项目库与侧栏真实本地项目",
-      "侧栏会话文件夹/置顶",
+      "持久项目分组与项目垃圾箱",
       "项目包导入/导出"
     ],
     "code": [
@@ -786,7 +803,8 @@
       "src/features/creation/storage.ts",
       "src/features/creation/snapshotCodec.ts",
       "src-tauri/src/project_package.rs",
-      "src-tauri/src/creation_storage.rs"
+      "src-tauri/src/creation_storage.rs",
+      "src/features/projects/useProjectLibrary.ts"
     ],
     "tests": [
       "tests/unit/projectPackage.test.ts",
@@ -795,10 +813,18 @@
       "tests/browser/project-package.spec.ts",
       "tests/browser/desktop-data-stability.spec.ts",
       "tests/browser/design-system-pages.spec.ts",
-      "tests/desktop/project-landing.mjs"
+      "tests/desktop/project-landing.mjs",
+      "tests/browser/project-lifecycle.spec.ts"
     ],
-    "tasks": ["T3a", "T3b", "T9", "TASK-DS-002", "TASK-PROJECT-SIDEBAR-001"],
-    "updated": "2026-09-30",
+    "tasks": [
+      "T3a",
+      "T3b",
+      "T9",
+      "TASK-DS-002",
+      "TASK-PROJECT-SIDEBAR-001",
+      "TASK-KK-UNIFIED-20261015"
+    ],
+    "updated": "2026-10-15",
     "platforms": ["web", "desktop"],
     "runtimeEvidence": [
       {
@@ -816,6 +842,10 @@
       {
         "platform": "desktop",
         "path": "docs/changes/2026-09-29-project-landing/verification.md"
+      },
+      {
+        "platform": "web",
+        "path": "docs/changes/2026-10-15-kk-unified/verification.md"
       }
     ]
   },
@@ -882,8 +912,8 @@
       "src/components/settings/ConnectionSettings.tsx"
     ],
     "tests": [],
-    "tasks": ["BACKEND-PLATFORM", "T10"],
-    "updated": "2026-09-21",
+    "tasks": ["BACKEND-PLATFORM", "T10", "TASK-KK-UNIFIED-20261015"],
+    "updated": "2026-10-15",
     "platforms": ["web", "desktop"]
   },
   {
@@ -907,8 +937,8 @@
       "tests/browser/task-intent.spec.ts",
       "tests/unit/generationServer.test.ts"
     ],
-    "tasks": ["BACKEND-PLATFORM", "T10"],
-    "updated": "2026-09-21",
+    "tasks": ["BACKEND-PLATFORM", "T10", "TASK-KK-UNIFIED-20261015"],
+    "updated": "2026-10-15",
     "platforms": ["web", "desktop"]
   },
   {
@@ -926,8 +956,8 @@
       "src/features/sync/webdav.ts"
     ],
     "tests": ["tests/unit/webdavSync.test.ts"],
-    "tasks": ["BACKEND-PLATFORM", "T10", "T9"],
-    "updated": "2026-09-22",
+    "tasks": ["BACKEND-PLATFORM", "T10", "T9", "TASK-KK-UNIFIED-20261015"],
+    "updated": "2026-10-15",
     "platforms": ["web", "desktop"]
   },
   {
@@ -1012,7 +1042,7 @@
     "area": "system",
     "status": "PARTIAL",
     "card": "docs/features/feat-022-settings.md",
-    "summary": "分组设置、公共预设及文档、当前设备使用记录和存储概览已有源码候选；默认绿色与中性主要动作。Token/未接协议明确边界，完整Web/Desktop和真实消耗待补。",
+    "summary": "三组十页设置、旧深链和配置身份保留；分类/响应式/本地推荐/保存保护经精确独审，账号/同步/目录操作按实际支持状态开放。",
     "entryPoints": ["侧栏设置 SettingsPanel", "各设置分区"],
     "code": [
       "src/components/settings",
@@ -1072,9 +1102,10 @@
       "TASK-PROTOCOL-CLI-20261014",
       "TASK-222-ACTIONS-20261014",
       "TASK-223-ACTIONS-20261014",
-      "TASK-SETTINGS-LATEST-20261015"
+      "TASK-SETTINGS-LATEST-20261015",
+      "TASK-KK-UNIFIED-20261015"
     ],
-    "updated": "2026-10-15",
+    "updated": "2026-10-16",
     "platforms": ["web", "desktop"],
     "runtimeEvidence": [
       {
@@ -1121,7 +1152,7 @@
     "area": "system",
     "status": "PARTIAL",
     "card": "docs/features/feat-023-navigation.md",
-    "summary": "真实快照驱动项目列表与四类搜索；喜欢/标签独立面板见FEAT-039。当前新版平台证据待补，持久分组与多创作页继续开放。",
+    "summary": "同一快照驱动项目列表、持久分组/成员、共享菜单与软删除恢复；搜索/喜欢/标签保持。置顶/排序、多聊天及新Native UI继续开放。",
     "entryPoints": ["左侧栏 Sidebar", "独立搜索（Ctrl/⌘+K）", "项目分组"],
     "code": [
       "src/components/Sidebar.tsx",
@@ -1150,9 +1181,10 @@
       "TASK-UI-006",
       "TASK-PROJECT-SIDEBAR-001",
       "TASK-UI-013",
-      "TASK-UI-CONSOLIDATE-20261014"
+      "TASK-UI-CONSOLIDATE-20261014",
+      "TASK-KK-UNIFIED-20261015"
     ],
-    "updated": "2026-10-14",
+    "updated": "2026-10-15",
     "platforms": ["web", "desktop"],
     "runtimeEvidence": [
       {
@@ -1178,6 +1210,10 @@
       {
         "platform": "desktop",
         "path": "docs/changes/2026-10-08-single-row-titlebar/verification.md"
+      },
+      {
+        "platform": "web",
+        "path": "docs/changes/2026-10-15-kk-unified/verification.md"
       }
     ]
   },
@@ -1234,7 +1270,7 @@
     "area": "system",
     "status": "PARTIAL",
     "card": "docs/features/feat-026-launcher.md",
-    "summary": "Windows GUI启动器后台检查当前release并支持进度/取消/失败日志，快捷方式使用当前内嵌Logo；portable/NSIS本机验收已具备，干净系统、低版回滚、签名与正式发布仍待T7。",
+    "summary": "官方入口与收据重建、依赖准备和Native仓库互斥/重复启动/重开有隔离证据；后台激活前台焦点仍未通过，发布签名与干净系统待验。",
     "entryPoints": [
       "start-kk-studio.bat",
       "verify-kk-studio.cmd",
@@ -1271,9 +1307,10 @@
       "TASK-LAUNCH-001",
       "TASK-PROTOCOL-CLI-20261014",
       "TASK-222-ACTIONS-20261014",
-      "TASK-223-ACTIONS-20261014"
+      "TASK-223-ACTIONS-20261014",
+      "TASK-KK-UNIFIED-20261015"
     ],
-    "updated": "2026-10-14",
+    "updated": "2026-10-16",
     "platforms": ["desktop"],
     "runtimeEvidence": [
       {
@@ -1383,9 +1420,10 @@
       "TASK-ORCH-002",
       "TASK-ORCH-003",
       "TASK-CANVAS-001",
-      "TASK-UI-CLASSIFY-20261013"
+      "TASK-UI-CLASSIFY-20261013",
+      "TASK-KK-UNIFIED-20261015"
     ],
-    "updated": "2026-10-13"
+    "updated": "2026-10-15"
   },
   {
     "id": "FEAT-031",
@@ -1408,8 +1446,13 @@
       "tests/unit/taskRecovery.test.ts",
       "tests/browser/task-intent.spec.ts"
     ],
-    "tasks": ["TASK-TASKSTATE-001", "TASK-TASKSTATE-002", "BACKEND-MEDIA-001"],
-    "updated": "2026-10-08"
+    "tasks": [
+      "TASK-TASKSTATE-001",
+      "TASK-TASKSTATE-002",
+      "BACKEND-MEDIA-001",
+      "TASK-KK-UNIFIED-20261015"
+    ],
+    "updated": "2026-10-15"
   },
   {
     "id": "FEAT-032",
@@ -1417,7 +1460,7 @@
     "area": "intelligence",
     "status": "PARTIAL",
     "card": "docs/features/feat-032-provider-connectivity.md",
-    "summary": "原Provider多目标配置与CLI apply/check保持；公共目录区分品牌、协议、官网/密钥/文档。展示不等于执行支持，未接协议禁用或导向专用入口。",
+    "summary": "多协议接入与四渠道精确型号列表、连接元数据/凭据保留已验；跨中转合并/真实优先级/动态参数/Agent授权仍待。本轮469本地安全修复/启动恢复通过，连接身份不按同URL替代、空外部授权拒绝；统一接入完整需求与真实服务验收仍开放。",
     "entryPoints": [
       "Agent providers apply/check/apply-claude CLI（App 设置 UI 尚未接入）",
       "设置公共预设目录（UI候选，不表示CLI配置全面接线）"
@@ -1449,9 +1492,11 @@
       "TASK-UI-CONSOLIDATE-20261014",
       "TASK-PROTOCOL-CLI-20261014",
       "TASK-222-ACTIONS-20261014",
-      "TASK-223-ACTIONS-20261014"
+      "TASK-223-ACTIONS-20261014",
+      "TASK-KK-UNIFIED-20261015",
+      "TASK-AUDIT-REPAIR-20261017"
     ],
-    "updated": "2026-10-14"
+    "updated": "2026-10-17"
   },
   {
     "id": "FEAT-036",
@@ -1500,7 +1545,7 @@
     "area": "platform",
     "status": "PARTIAL",
     "card": "docs/features/feat-037-web-local-service.md",
-    "summary": "本机 loopback 服务已提供 Web 项目/素材服务优先读写、旧 IndexedDB 用户触发迁移和备份恢复；账号绑定、安装器与 Mobile 仍未完成。",
+    "summary": "旧Node本机服务格式/IO保护与Native权威基础已验；两者格式仍不兼容，Web完整共仓库授权/读写/后台生命周期未交付。",
     "entryPoints": ["设置 → 储存 → 网页本机伴随服务"],
     "code": [
       "src/features/local-service/main.ts",
@@ -1521,14 +1566,16 @@
       "tests/unit/assetStorage.test.ts",
       "tests/browser/local-service-migration.spec.ts",
       "tests/browser/local-service-connection.spec.ts",
-      "tests/local-service/production-smoke.mjs"
+      "tests/local-service/production-smoke.mjs",
+      "tests/browser/companion-format.spec.ts"
     ],
     "tasks": [
       "TASK-LOCAL-SERVICE-001",
       "TASK-222-ACTIONS-20261014",
-      "TASK-223-ACTIONS-20261014"
+      "TASK-223-ACTIONS-20261014",
+      "TASK-KK-UNIFIED-20261015"
     ],
-    "updated": "2026-10-14"
+    "updated": "2026-10-16"
   },
   {
     "id": "FEAT-038",

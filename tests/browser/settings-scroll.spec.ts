@@ -15,7 +15,7 @@ test("窄屏设置分类逐行展示，并保留触屏命中区", async ({ page 
     nav.getByRole("button", { name: "通用", exact: true }),
   ).toBeVisible();
   await expect(
-    nav.getByRole("button", { name: "账号管理", exact: true }),
+    nav.getByRole("button", { name: "个人主页", exact: true }),
   ).toBeVisible();
   // The opening animation moves all three together; compare one frame.
   const { general, account, bar } = await nav.evaluate((el) => {
@@ -28,7 +28,7 @@ test("窄屏设置分类逐行展示，并保留触屏命中区", async ({ page 
     };
     return {
       general: box("通用"),
-      account: box("账号管理"),
+      account: box("个人主页"),
       bar: el.getBoundingClientRect().toJSON(),
     };
   });
@@ -155,6 +155,7 @@ for (const viewport of [
     await page.getByRole("button", { name: "打开设置", exact: true }).click();
     const dialog = page.getByRole("dialog", { name: "设置" });
     const content = dialog.locator(".settings-content");
+    await dialog.getByText("系统与未接入偏好", { exact: true }).click();
     await expect(content).toHaveCSS("scrollbar-width", "none");
     await content.hover();
     await page.mouse.wheel(0, 450);
@@ -169,18 +170,18 @@ for (const viewport of [
       .poll(() => content.evaluate((el) => el.scrollTop))
       .toBeGreaterThan(0);
     await expect(
-      dialog.getByRole("switch", { name: "防止系统休眠" }),
+      dialog.getByRole("region", { name: "软件更新", exact: true }),
     ).toBeInViewport();
     // Categories are a separate phone level; return before keyboard navigation.
     await showSettingsCategories(page);
     const updates = dialog.getByRole("button", {
-      name: "软件更新",
+      name: "安全中心",
       exact: true,
     });
     await updates.focus();
     await expect(updates).toBeInViewport();
     await page.keyboard.press("Enter");
-    await expect(dialog.locator(".settings-version")).toBeVisible();
+    await expect(dialog.locator(".settings-content h2")).toHaveText("安全中心");
     await expect(dialog.getByRole("textbox")).toHaveCount(0);
     await page.keyboard.press("Escape");
     await expect(
@@ -210,9 +211,9 @@ test("手机设置分类可纵向滚动，详情返回当前分类", async ({ pa
   await expect
     .poll(() => sidebar.evaluate((el) => el.scrollTop))
     .toBeGreaterThan(0);
-  const updates = nav.getByRole("button", { name: "软件更新", exact: true });
+  const updates = nav.getByRole("button", { name: "安全中心", exact: true });
   await updates.click();
-  await expect(dialog.locator(".settings-content h2")).toHaveText("软件更新");
+  await expect(dialog.locator(".settings-content h2")).toHaveText("安全中心");
   await expect(sidebar).toBeHidden();
   await showSettingsCategories(page);
   await expect(updates).toHaveAttribute("aria-current", "page");

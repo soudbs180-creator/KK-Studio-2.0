@@ -19,6 +19,7 @@ function harness() {
       calls.push({ nodeId: node.id, prompt });
       return { taskId: "task-1" };
     },
+    modelAllowlist: ["image-model"],
   });
   return { host, calls, getProject: () => project };
 }
@@ -247,7 +248,11 @@ test("同批新建配置及提示词后生成，返回真实任务 ID", async ()
       type: "add_node",
       id: "config-1",
       nodeType: "config",
-      metadata: { generationMode: "image", prompt: "@[node:prompt-1]" },
+      metadata: {
+        generationMode: "image",
+        model: "image-model",
+        prompt: "@[node:prompt-1]",
+      },
     },
     { type: "connect_nodes", fromNodeId: "prompt-1", toNodeId: "config-1" },
     {
@@ -320,10 +325,16 @@ test("取消在途生成后，不再落地同批后续操作", async () => {
       await pending;
       return signal?.aborted ? { error: "已取消" } : { taskId: "unexpected" };
     },
+    modelAllowlist: ["gpt-image-1"],
   });
   const run = host.applyOps(
     [
-      { type: "add_node", id: "cancel-image", nodeType: "image" },
+      {
+        type: "add_node",
+        id: "cancel-image",
+        nodeType: "image",
+        metadata: { model: "gpt-image-1" },
+      },
       { type: "run_generation", nodeId: "cancel-image", prompt: "test" },
       { type: "add_node", id: "late-node", nodeType: "text" },
     ],

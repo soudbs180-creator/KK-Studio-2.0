@@ -140,7 +140,13 @@ export function getGenerationProgressLabels(context: {
     outputs?: readonly { status: string }[];
   };
   saveState:
-    "loading" | "saved" | "saving" | "read_error" | "write_error" | "conflict";
+    | "loading"
+    | "saved"
+    | "saving"
+    | "read_error"
+    | "write_error"
+    | "conflict"
+    | "read_only";
   resultSaving?: boolean;
 }): { taskLabel: string; saveLabel: string } {
   const { task, saveState, resultSaving } = context;
@@ -151,6 +157,7 @@ export function getGenerationProgressLabels(context: {
     read_error: "读取保护 · 尚未保存，请查看恢复提示",
     write_error: "保存失败 · 请查看恢复提示",
     conflict: "保存冲突 · 请查看恢复提示",
+    read_only: "只读保护 · 已暂停编辑和执行",
   };
   let saveLabel = saveLabels[saveState];
   if (!task) return { taskLabel: "", saveLabel };
@@ -165,9 +172,12 @@ export function getGenerationProgressLabels(context: {
       saveLabel,
     };
   }
-  const saveFailed = ["read_error", "write_error", "conflict"].includes(
-    saveState,
-  );
+  const saveFailed = [
+    "read_error",
+    "write_error",
+    "conflict",
+    "read_only",
+  ].includes(saveState);
   let taskLabel: string;
   switch (task.status) {
     case "queued":

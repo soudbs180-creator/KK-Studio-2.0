@@ -14,7 +14,11 @@ import {
 import { randomUUID } from "node:crypto";
 import { join, resolve, sep } from "node:path";
 import type { CreationSnapshot } from "../creation/model.ts";
-import { decodeSnapshot } from "../creation/snapshotCodec.ts";
+import {
+  decodeSnapshot,
+  parseSnapshot,
+  SnapshotStorageError,
+} from "../creation/snapshotCodec.ts";
 import {
   assetMetadataSchema,
   backupManifestSchema,
@@ -188,9 +192,6 @@ export class CompanionStore {
   }
 
   readSnapshot(): SnapshotReadResult {
-    if (!existsSync(this.snapshotPath) && !existsSync(this.backupPath))
-      return { status: "missing", snapshot: null, revision: null };
-
     const primary = this.readSnapshotFile(this.snapshotPath);
     if (primary)
       return {
@@ -206,6 +207,8 @@ export class CompanionStore {
         snapshot: backup,
         revision: backup.revision,
       };
+    if (primary === undefined && backup === undefined)
+      return { status: "missing", snapshot: null, revision: null };
 
     throw new CompanionProtocolError(
       "CORRUPT",
@@ -236,6 +239,7 @@ export class CompanionStore {
           "项目引用的素材尚未归档。",
         );
     }
+    this.readSnapshotFile(this.backupPath);
     const current = this.readSnapshot();
     if (current.revision !== expectedRevision)
       throw new CompanionProtocolError("CONFLICT", 409, "项目版本已变化。");
@@ -732,9 +736,8 @@ export class CompanionStore {
       }
       capture(this.snapshotPath);
       capture(this.backupPath);
-      const current = this.validSnapshotFile(this.snapshotPath)
-        ? this.readSnapshotFile(this.snapshotPath)
-        : null;
+      const current = this.readSnapshotFile(this.snapshotPath);
+      this.readSnapshotFile(this.backupPath);
       if (current)
         writeAtomic(this.backupPath, asBytes(readFileSync(this.snapshotPath)));
       try {
@@ -761,15 +764,27 @@ export class CompanionStore {
   }
 
   private validSnapshotFile(path: string): boolean {
-    return existsSync(path) && this.readSnapshotFile(path) !== null;
+    return this.readSnapshotFile(path) != null;
   }
 
-  private readSnapshotFile(path: string): CreationSnapshot | null {
-    if (!existsSync(path)) return null;
+  private readSnapshotFile(path: string): CreationSnapshot | null | undefined {
     try {
-      return decodeSnapshot(JSON.parse(readFileSync(path, "utf8")));
-    } catch {
-      return null;
+      return parseSnapshot(readFileSync(path, "utf8"));
+    } catch (error) {
+      if (error instanceof SnapshotStorageError) {
+        if (error.code === "corrupt") return null;
+        throw new CompanionProtocolError(
+          "SNAPSHOT_UNSUPPORTED",
+          409,
+          "项目版本较新，请更新客户端或本机服务，已暂停保存以保护原件。",
+        );
+      }
+      if ((error as NodeJS.ErrnoException).code === "ENOENT") return undefined;
+      throw new CompanionProtocolError(
+        "IO",
+        500,
+        "无法读取项目文件，原件已保留。",
+      );
     }
   }
 }

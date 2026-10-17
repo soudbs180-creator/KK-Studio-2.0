@@ -9,12 +9,12 @@ import React, {
   type SetStateAction,
 } from "react";
 import { appVersion } from "./runtime/appInfo";
-import { confirmAction } from "./runtime/confirmAction";
 import TopBar from "./components/TopBar";
 import CanvasCollectionsPanels from "./components/CanvasCollectionsPanels";
 import { effectiveTags, splitCollectionTags } from "./domain/collectionTags";
 import { normalizeTags } from "./domain/assets";
 import Sidebar from "./components/Sidebar";
+import { useProjectLibrary } from "./features/projects/useProjectLibrary";
 import type { ModelSelection } from "./features/models/modelSelection";
 import { homeModelSelection } from "./domain/modelSelection";
 import { useSidebarLayout } from "./components/useSidebarLayout";
@@ -27,10 +27,6 @@ import {
   requiredApprovalGates,
   type ApprovalGate,
 } from "./domain/agentWorkflow";
-import {
-  SETTINGS_SECTIONS,
-  type SettingsSection,
-} from "./components/settings/SettingsSectionData";
 import StartPage from "./components/StartPage";
 import { ensureTemplates } from "./features/skills/templateSkills";
 import {
@@ -41,8 +37,8 @@ import {
 } from "./features/skills/skillRegistry";
 import {
   createProject,
-  projectHasUnsettledTasks,
   emptyDraft,
+  snapshotWriteBlockReason,
   type CreationDraft,
   type CreationProject,
   type CreationTask,
@@ -221,11 +217,7 @@ import {
   DEFAULT_SETTINGS,
   type SettingsPreferences,
 } from "./domain/settings";
-import {
-  readLocalWorkflows,
-  writeLocalWorkflows,
-  type WorkflowRecord,
-} from "./features/comfyui/workflowRegistry";
+import { useLocalWorkflows } from "./features/comfyui/useLocalWorkflows";
 // App owns lazy panel styles before the final screen overrides.
 import "./components/assets/assets.css";
 import "./components/settings/plugin-manager.css";
@@ -275,8 +267,7 @@ export default function App() {
     likes: 0,
     tags: 0,
   });
-  const [settingsSection, setSettingsSection] =
-    useState<SettingsSection>("general");
+  const [settingsSection, setSettingsSection] = useState("general");
   const sidebar = useSidebarLayout();
   const chatCoversCanvas =
     sidebar.surface === "phone" ||
@@ -305,9 +296,7 @@ export default function App() {
   }, []);
   const assetArchive = useAssetArchive(setAssets);
   const [subjects, setSubjects] = useState(initialSubjects);
-  const [localWorkflows, setLocalWorkflows] = useState<WorkflowRecord[]>(() =>
-    readLocalWorkflows(),
-  );
+  const workflows = useLocalWorkflows();
   const persistence = useCreationStorage(
     recoverInterruptedTasks,
     reconcileNativeTasks,
@@ -361,17 +350,6 @@ export default function App() {
       return { model: "", configured: false };
     }
   }, [providerVersion]);
-  function saveWorkflow(workflow: WorkflowRecord): void {
-    setLocalWorkflows((current) => {
-      const next = [
-        workflow,
-        ...current.filter((item) => item.id !== workflow.id),
-      ];
-      writeLocalWorkflows(next);
-      return next;
-    });
-  }
-
   function hasArchivedOutputEvidence(
     task: Pick<CreationTask, "kind">,
     output: Pick<CreationTaskOutput, "assetId" | "text" | "status">,
@@ -382,13 +360,6 @@ export default function App() {
       output.text?.trim() &&
       new TextEncoder().encode(output.text).length <= 32768,
     );
-  }
-  function deleteWorkflow(workflow: WorkflowRecord): void {
-    setLocalWorkflows((current) => {
-      const next = current.filter((item) => item.id !== workflow.id);
-      writeLocalWorkflows(next);
-      return next;
-    });
   }
   const taskControllers = useRef<Record<string, AbortController>>({});
   const [savingResultTaskIds, setSavingResultTaskIds] = useState(
@@ -414,9 +385,28 @@ export default function App() {
   const pendingApprovalTask = creation.projects
     .find((project) => project.id === pendingApproval?.projectId)
     ?.tasks.find((task) => task.id === pendingApproval?.taskId);
-  const activeProject = creation.projects.find(
-    (project) => project.id === creation.activeProjectId,
-  );
+  const projectLibrary = useProjectLibrary(persistence, () => open("projects"));
+  const activeProject = projectLibrary.activeProject;
+  const conversationDisabledReason =
+    snapshotWriteBlockReason(creation) ??
+    (saveState === "saved" || saveState === "saving"
+      ? undefined
+      : "请先处理项目读取或保存提示，当前暂不可编辑或执行。");
+  const selectedChat = activeProject?.activeChatId
+    ? activeProject.chats?.[activeProject.activeChatId]
+    : undefined;
+  const conversationDraft: CreationDraft | undefined =
+    saveState === "read_only" && activeProject && selectedChat
+      ? {
+          ...activeProject.composerDraft,
+          prompt: selectedChat.draft.text ?? selectedChat.draft.prompt ?? "",
+          attachments: selectedChat.draft.attachments ?? [],
+          model: selectedChat.draft.model ?? "",
+          modelSelection: selectedChat.draft.modelSelection,
+          conversationChannel:
+            selectedChat.draft.conversationChannel ?? "direct",
+        }
+      : activeProject?.composerDraft;
   const latestProjectTask = activeProject?.tasks.at(-1);
   const generationProgress = getGenerationProgressLabels({
     task: latestProjectTask,
@@ -482,12 +472,15 @@ export default function App() {
     commitCreation(next);
   }
 
-  function updateHomeDraft(draft: CreationDraft): void {
+  function updateHomeDraft(
+    draft: CreationDraft,
+    changes?: Partial<CreationDraft>,
+  ): void {
     const next = {
       ...creationRef.current,
       homeDraft: { ...draft, updatedAt: Date.now() },
     };
-    commitCreation(next);
+    commitCreation(next, changes);
   }
   function applySkillToHome(record: SkillRecord): string {
     const draft = creationRef.current.homeDraft;
@@ -503,6 +496,8 @@ export default function App() {
     }
   }
   function applyPartnerToHome(instructions: string): string {
+    const blocked = persistence.getWriteBlockReason();
+    if (blocked) return blocked;
     const project = partnerProjectId
       ? creationRef.current.projects.find(
           (item) => item.id === partnerProjectId,
@@ -514,7 +509,10 @@ export default function App() {
     if (project) {
       // The active composer acknowledges its source; inactive Agent drafts
       // cannot receive instructions or redirect them into the API draft.
-      for (const draftKey of [project.id, `google-${project.id}`]) {
+      for (const draftKey of [
+        JSON.stringify([project.id, project.activeChatId ?? null]),
+        `google-${project.id}`,
+      ]) {
         const result = appendToActiveAgentDraft(draftKey, instructions);
         if (result.handled) {
           if (result.applied) setActive("workspace");
@@ -624,6 +622,7 @@ export default function App() {
       node: CanvasCollectionItem,
       prompt: string,
       signal?: AbortSignal,
+      validate?: () => string | undefined,
     ) => Promise<{ taskId?: string; error?: string }>
   >(async () => ({ error: "生成入口未就绪" }));
   const agentViewRef = useRef<AgentCanvasBinding | null>(null);
@@ -639,19 +638,22 @@ export default function App() {
             (item) => item.id === activeProjectIdRef.current,
           ),
         getProjects: () => creationRef.current.projects,
+        getExecutionBlockReason: () =>
+          persistence.getWriteBlockReason() ??
+          snapshotWriteBlockReason(creationRef.current),
         flush: () => persistence.flush(),
         commit: (project) => {
           updateProject(project.id, () => project);
           if (activeProjectIdRef.current === project.id)
             replaceCanvasItems(project.items);
         },
-        generate: (node, prompt, signal) =>
-          agentSubmitRef.current(node, prompt, signal),
+        generate: (node, prompt, signal, validate) =>
+          agentSubmitRef.current(node, prompt, signal, validate),
         orchestrator: stageOrchestrator,
       }),
     [stageOrchestrator],
   );
-  agentSubmitRef.current = async (node, prompt, signal) => {
+  agentSubmitRef.current = async (node, prompt, signal, validate) => {
     const project = creationRef.current.projects.find(
       (item) => item.id === activeProjectIdRef.current,
     );
@@ -681,13 +683,18 @@ export default function App() {
       (id) => {
         taskId = id;
       },
+      validate,
     );
     return { taskId, error };
   };
   useEffect(() => {
     agentConnection.syncProject();
     googleAgentConnection.syncProject();
-  }, [creation.activeProjectId]);
+  }, [
+    creation.activeProjectId,
+    activeProject?.activeChatId,
+    conversationDisabledReason,
+  ]);
   useEffect(() => {
     const timer = setTimeout(() => agentConnection.pushState(), 100);
     return () => clearTimeout(timer);
@@ -1513,6 +1520,7 @@ export default function App() {
         attachments: task.attachments,
         signal: controller.signal,
         providerBaseUrl: task.providerBaseUrl,
+        providerConnectionId: task.providerConnectionId,
         credentialRef: task.providerCredentialRef,
         count: pendingIndices.length,
         idempotencyKey: `${task.idempotencyKey}-remaining-${pendingIndices.join("-")}`,
@@ -2181,7 +2189,10 @@ export default function App() {
         }
       | { origin: "canvas"; input: CanvasImageRequest },
     onAccepted?: (taskId: string) => void,
+    validateAcceptance?: () => string | undefined,
   ): Promise<string | undefined> {
+    const initialBlock = validateAcceptance?.();
+    if (initialBlock) return initialBlock;
     if (submitLock.current) return "正在提交图片任务，请稍候。";
     if (!["saved", "saving"].includes(persistence.state))
       return "请先处理项目读取或保存提示，当前未提交生成。";
@@ -2388,6 +2399,8 @@ export default function App() {
         canvasSignature(current, sourceItemId!) !== sourceSignature
       )
         return "节点或参考图在检查期间发生变化，请重新提交；当前内容已保留。";
+      const acceptanceBlock = validateAcceptance?.();
+      if (acceptanceBlock) return acceptanceBlock;
       const base = current ?? createProject(input);
       sourceItemId ??= rootItemId(base) ?? undefined;
       const appended = appendImageTask(
@@ -2441,10 +2454,32 @@ export default function App() {
       });
       if (!current || activeProjectIdRef.current === projectId)
         replaceCanvasItems(nextProject.items);
-      if (!current) setActive("workspace");
+      if (!current) {
+        const transitionToWorkspace = () => {
+          setActive("workspace");
+          setChat(true);
+        };
+        if (
+          typeof document !== "undefined" &&
+          "startViewTransition" in document
+        ) {
+          (
+            document as Document & {
+              startViewTransition: (cb: () => void) => void;
+            }
+          ).startViewTransition(transitionToWorkspace);
+        } else {
+          transitionToWorkspace();
+        }
+      }
       // The queued task and its stable idempotency key must survive a crash
       // before any provider request is allowed to start.
       await persistence.flush();
+      const afterSaveBlock = validateAcceptance?.();
+      if (afterSaveBlock) {
+        cancelTask(appended.task.id);
+        return afterSaveBlock;
+      }
       if (
         signal?.aborted ||
         (projectId && activeProjectIdRef.current !== projectId)
@@ -2532,10 +2567,32 @@ export default function App() {
         activeProjectId: project.id,
       });
       activeProjectIdRef.current = project.id;
-      activePageRef.current = "workspace";
-      setActive("workspace");
-      setChat(true);
-      replaceCanvasItems(project.items);
+      const transitionToWorkspace = () => {
+        if (
+          creationRef.current.activeProjectId !== project.id ||
+          activePageRef.current !== "landing"
+        )
+          return;
+        activePageRef.current = "workspace";
+        setActive("workspace");
+        setChat(true);
+        replaceCanvasItems(project.items);
+      };
+      if (
+        typeof document !== "undefined" &&
+        "startViewTransition" in document
+      ) {
+        const transition = (
+          document as Document & {
+            startViewTransition: (cb: () => void) => {
+              updateCallbackDone: Promise<void>;
+            };
+          }
+        ).startViewTransition(transitionToWorkspace);
+        await transition.updateCallbackDone;
+      } else {
+        transitionToWorkspace();
+      }
       agentConnection.syncProject();
       await persistence.flush();
       const ownsProject = () =>
@@ -2548,11 +2605,16 @@ export default function App() {
       );
       await desktopAgentLifecycle.connect();
       if (!ownsProject()) return "项目已切换，当前未发送；原项目草稿仍保留。";
+      const currentProject = project;
       const result = await agentConnection.sendMessage(input.prompt.trim(), {
         selection,
         outputCount: input.outputCount,
         attachments,
         canvasSource: { nodeId: project.items[0].id, kind: "image" },
+        isTemporary: Boolean(
+          currentProject?.activeChatId &&
+          currentProject.chats?.[currentProject.activeChatId]?.isTemporary,
+        ),
       });
       if (!result.ok) return result.error ?? "发送未确认，草稿仍保留。";
       updateProject(project.id, (current) => ({
@@ -2650,13 +2712,45 @@ export default function App() {
     });
     replaceCanvasItems(updated.items);
   }
-  function handleDeleteMessage(messageId: string): void {
+  function handleSelectChat(chatId: string): void {
     if (!activeProject) return;
-    updateProject(activeProject.id, (project) => ({
-      ...project,
-      messages: project.messages.filter((message) => message.id !== messageId),
+    updateProject(activeProject.id, (proj) => ({
+      ...proj,
+      activeChatId: chatId,
       updatedAt: Date.now(),
     }));
+  }
+
+  function handleDeleteMessage(messageId: string): void {
+    if (!activeProject) return;
+    updateProject(activeProject.id, (project) => {
+      const activeChatId = project.activeChatId;
+      if (activeChatId && project.chats && project.chats[activeChatId]) {
+        const chat = project.chats[activeChatId];
+        return {
+          ...project,
+          chats: {
+            ...project.chats,
+            [activeChatId]: {
+              ...chat,
+              messages: chat.messages.filter((m) => m.id !== messageId),
+              updatedAt: Date.now(),
+            },
+          },
+          messages: project.messages.filter(
+            (message) => message.id !== messageId,
+          ),
+          updatedAt: Date.now(),
+        };
+      }
+      return {
+        ...project,
+        messages: project.messages.filter(
+          (message) => message.id !== messageId,
+        ),
+        updatedAt: Date.now(),
+      };
+    });
   }
   function toggleLike(id: string): void {
     if (activeProject) {
@@ -2717,6 +2811,10 @@ export default function App() {
     );
   }
   function handleNewBlankProject(): string {
+    if (saveStateRef.current !== "saved" && saveStateRef.current !== "saving") {
+      projectLibrary.report("项目存储尚未就绪，请先处理保存或恢复提示。");
+      return "";
+    }
     const profile = parseModelProvider(
       localStorage.getItem(MODEL_PROVIDER_STORAGE_KEY),
     ).profile;
@@ -2746,48 +2844,15 @@ export default function App() {
     return nextProject.id;
   }
   function openSavedProject(id: string): void {
-    if (!creationRef.current.projects.some((project) => project.id === id))
+    if (
+      !creationRef.current.projects.some(
+        (project) => project.id === id && project.trashedAt === undefined,
+      )
+    )
       return;
     commitCreation({ ...creationRef.current, activeProjectId: id });
     setActive("workspace");
     setModal("");
-  }
-  function renameSavedProject(id: string, title: string): void {
-    if (persistence.state !== "saved" && persistence.state !== "saving") return;
-    const name = title.trim().slice(0, 120);
-    if (!name) return;
-    updateProject(id, (project) => ({
-      ...project,
-      name,
-      updatedAt: Date.now(),
-    }));
-  }
-  async function deleteSavedProject(id: string): Promise<void> {
-    if (persistence.state !== "saved" && persistence.state !== "saving") return;
-    const project = creationRef.current.projects.find((item) => item.id === id);
-    if (!project) return;
-    if (projectHasUnsettledTasks(project)) return;
-    if (
-      !(await confirmAction(
-        `确定删除项目「${project.name}」？此操作会从本地项目库移除该项目。`,
-      ))
-    )
-      return;
-    const current = creationRef.current;
-    const confirmedProject = current.projects.find((item) => item.id === id);
-    if (
-      !confirmedProject ||
-      projectHasUnsettledTasks(confirmedProject) ||
-      (saveStateRef.current !== "saved" && saveStateRef.current !== "saving")
-    )
-      return;
-    commitCreation({
-      ...current,
-      projects: current.projects.filter((item) => item.id !== id),
-      activeProjectId:
-        current.activeProjectId === id ? null : current.activeProjectId,
-    });
-    if (current.activeProjectId === id) setActive("projects");
   }
   useEffect(() => {
     const shortcut = (event: KeyboardEvent): void => {
@@ -2862,6 +2927,12 @@ export default function App() {
       return;
     }
     if (view === "chat") {
+      if (modal) {
+        setModal("");
+        setChat(true);
+        setMobileChat(sidebar.narrow);
+        return;
+      }
       if (active === "workspace" && chat && (!sidebar.narrow || mobileChat)) {
         setChat(false);
         setMobileChat(false);
@@ -2900,22 +2971,10 @@ export default function App() {
       setModal(view);
       return;
     }
+    if (view === "comfyui") view = "settings/comfy";
     if (view === "settings" || view.startsWith("settings/")) {
       const requestedSection = view.split("/")[1];
-      const sectionAlias: Record<string, SettingsSection> = {
-        plugins: "mcp",
-        extensions: "extensions",
-        partners: "providers",
-        codex: "providers",
-        skills: "skill",
-        skill: "skill",
-        mcp: "mcp",
-      };
-      setSettingsSection(
-        sectionAlias[requestedSection] ??
-          SETTINGS_SECTIONS.find((item) => item.id === requestedSection)?.id ??
-          "general",
-      );
+      setSettingsSection(requestedSection || "general");
       setModal("settings");
       return;
     }
@@ -2925,15 +2984,12 @@ export default function App() {
         "workspace",
         "projects",
         "skills",
-        "comfyui",
         "favorites",
         "likes",
         "search",
       ].includes(view)
     ) {
-      if (
-        ["landing", "workspace", "projects", "skills", "comfyui"].includes(view)
-      )
+      if (["landing", "workspace", "projects", "skills"].includes(view))
         setMobileChat(false);
       setActive(view);
       setModal("");
@@ -2982,6 +3038,7 @@ export default function App() {
         }));
     }
   }
+
   return (
     <div
       className="app"
@@ -2994,6 +3051,9 @@ export default function App() {
         onOpen={open}
         onToggleSidebar={sidebar.toggle}
         onToggleChat={() => open("chat")}
+        newWindowDisabledReason="多窗口仓库协调尚未完成，暂不可新建窗口。"
+        newChatDisabledReason="多聊天隔离尚未完成，暂不可新建聊天。"
+        newTempChatDisabledReason="临时聊天的历史与记忆隔离尚未完成，暂不可用。"
       />
       <div className="app-body">
         {sidebar.narrow && !sidebar.collapsed && (
@@ -3001,12 +3061,16 @@ export default function App() {
         )}
         <Sidebar
           active={
-            sidebar.surface === "phone" &&
-            active === "workspace" &&
-            mobileChat &&
-            chat
-              ? "chat"
-              : active
+            modal === "assets"
+              ? "assets"
+              : modal === "tasks"
+                ? "tasks"
+                : sidebar.surface === "phone" &&
+                    active === "workspace" &&
+                    mobileChat &&
+                    chat
+                  ? "chat"
+                  : active
           }
           onNavigate={open}
           collapsed={sidebar.collapsed}
@@ -3018,13 +3082,12 @@ export default function App() {
           canEditProjects={saveState === "saved" || saveState === "saving"}
           onCreateProject={handleNewBlankProject}
           onOpenProject={openSavedProject}
-          onRenameProject={renameSavedProject}
-          onDeleteProject={deleteSavedProject}
+          projectActions={projectLibrary.actions}
         />
         <main className={"workspace " + (mobileChat ? "chat-mobile" : "")}>
           <CreationStorageNotice
             state={persistence.state}
-            message={persistence.message}
+            message={projectLibrary.message}
             hasRecoveryDraft={Boolean(persistence.recoveryDraft)}
             onRead={persistence.retryRead}
             onSave={persistence.retrySave}
@@ -3221,7 +3284,14 @@ export default function App() {
                   overlay={sidebar.narrow && mobileChat && chat}
                   onOpen={open}
                   project={activeProject}
+                  readOnlyMessages={
+                    saveState === "read_only"
+                      ? selectedChat?.messages
+                      : undefined
+                  }
+                  executionDisabledReason={conversationDisabledReason}
                   currentModel={activeProject?.model}
+                  onSelectChat={handleSelectChat}
                   modelOptions={[
                     ...new Set(
                       [
@@ -3234,7 +3304,7 @@ export default function App() {
                   ]}
                   modelConfigured={homeModelConfig.configured}
                   onModelChange={handleProjectModelChange}
-                  composerDraft={activeProject?.composerDraft}
+                  composerDraft={conversationDraft}
                   onDraftChange={handleProjectDraftChange}
                   onSend={activeProject ? handleSendMessage : undefined}
                   onDeleteMessage={
@@ -3336,24 +3406,14 @@ export default function App() {
               />
             </DeferredPanelBoundary>
           )}
-          {["projects", "comfyui"].includes(active) && (
+          {active === "projects" && (
             <DeferredPanelBoundary key={active}>
               <LibraryPage
                 key={active}
-                view={active as "projects" | "comfyui"}
+                view="projects"
                 onOpen={open}
                 projects={creation.projects}
-                localWorkflows={localWorkflows}
-                onSaveWorkflow={saveWorkflow}
-                onDeleteWorkflow={deleteWorkflow}
-                onRunWorkflow={(workflow) => {
-                  setModal("tasks");
-                  window.dispatchEvent(
-                    new CustomEvent("kk:comfyui-workflow-requested", {
-                      detail: workflow.id,
-                    }),
-                  );
-                }}
+                projectActions={projectLibrary.actions}
                 onOpenProject={openSavedProject}
               />
             </DeferredPanelBoundary>
@@ -3417,7 +3477,7 @@ export default function App() {
                 }))}
                 assets={[...assets, ...subjects]}
                 onOpen={open}
-                projects={creation.projects}
+                projects={projectLibrary.projects}
                 onOpenProject={openSavedProject}
                 onLocate={locate}
               />
@@ -3467,6 +3527,7 @@ export default function App() {
                 revision={creation.revision}
                 projects={creation.projects}
                 registry={skillRegistry}
+                workflows={workflows}
                 onClose={() => setModal("")}
               />
             ) : modal === "assets" ? (
@@ -3566,6 +3627,7 @@ import "./styles/feature-parity.css";
 import "./styles/responsive.css";
 import "./styles/responsive-content.css";
 import "./styles/composer.css";
+import "./styles/tokenized-composer.css";
 import "./styles/page-templates.css";
 import "./styles/canvas-compare.css";
 import "./styles/image-edit.css";

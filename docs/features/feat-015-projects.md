@@ -2,12 +2,12 @@
 
 - 状态：PARTIAL
 - 领域：system
-- 最近更新：2026-09-30
+- 最近更新：2026-10-15
 - 关联任务：T3a、T3b、T9、TASK-DS-002、TASK-PROJECT-SIDEBAR-001
 
 ## 用户可见入口
 
-- 项目库和侧栏中的真实本地项目、侧栏会话文件夹、项目包导入导出（ProjectPackageActions）、启动恢复。
+- 项目库和侧栏中的真实本地项目、持久项目分组、项目垃圾箱、项目包导入导出（ProjectPackageActions）、启动恢复。
 
 ## 代码位置
 
@@ -24,12 +24,12 @@
 
 ## 当前能力
 
-- Desktop 原生素材、完整项目包与隔离恢复验收通过；损坏快照不会静默变空项目。当前集成版本侧栏和搜索改从同一份 `CreationSnapshot` 读取真实项目；侧栏可创建、打开、改名和确认删除，空库没有演示项目。当前 fresh Tauri release 已复验；正式安装器尚未完成，主线推广以集成 PR 记录为准。
+- 当前候选 `13efa3fe→00e00e40` 在同一 `CreationSnapshot` 中持久化项目分组、成员和手动名称，项目库与侧栏共用打开、改名、移动分组、移入垃圾箱、恢复菜单；删除组只解除归属，恢复为空组。删除项目保留完整画布数据，手动名不会被自动命名覆盖。`7442c4fb` production1423三组Edge27/27首试和Native存储/包169项通过，精确子范围独审Approved；旧失败保留。历史fresh Tauri不替代本次新Native界面与产物验收，见[统一验证](../changes/2026-10-15-kk-unified/verification.md)。
 
 ## 差距与后端化
 
 - T9：Web 本地版项目包文件适配、浏览器容量/离线、跨 origin 项目包；Web 现存 Desktop 专属入口需收掉。
-- TASK-PROJECT-SIDEBAR-001：文件夹收纳、改名、置顶、成员移动仍是会话态，刷新后恢复未分组；持久分组需要 Web/原生快照和项目包迁移，尚未实现。候选的真实项目操作已在隔离 fresh Desktop 中验证，持久分组仍待实现；用户最终产品验收没有记录。
+- TASK-PROJECT-SIDEBAR-001：持久分组与成员已实现；置顶/排序仍未完成持久化，一个项目多个独立聊天和Desktop/Web同仓库协调继续实施。新Native界面、完整交付及用户产品验收尚无本轮记录，状态保持PARTIAL。
 
 ## 变更记录
 
@@ -38,3 +38,5 @@
 - 2026-09-22（TASK-DS-002）：目录和设置控件按Design System 1.1迁移；新增 `tests/browser/design-system-pages.spec.ts`，Web与实际Tauri证据见 `docs/changes/2026-09-22-design-system-pages/verification.md`。桌面重启已验证偏好和本地Skill记录保留；本证据不覆盖Provider/GPU或任务宿主恢复，功能状态保持PARTIAL。
 
 - 2026-09-30：集成版本当前验证与剩余边界见 [落地验证](../changes/2026-09-29-project-landing/verification.md)。
+
+- 2026-10-15：TASK-KK-UNIFIED-20261015 已获用户实施授权，新增范围见 [统一规格](../changes/2026-10-15-kk-unified/spec.md)。本卡既有证据仍限原版本；新范围实现/真实验收尚未完成，不能沿用旧 PASS 关闭。

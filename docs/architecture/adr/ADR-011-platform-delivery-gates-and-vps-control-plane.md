@@ -1,6 +1,7 @@
 # ADR-011：平台交付顺序、最小 AI 链路与 Web VPS 控制面
 
 - 状态：ACCEPTED（用户规则更新，产品实现按阶段验收）
+- 部分替代：2026-10-15 [ADR-019](ADR-019-unified-local-repository-and-optional-account.md) 依据用户批准方案开放 BYOK、可选 Web 账号和手动同步的实施；原文保留历史语义，平台交付顺序和真实链路双门继续有效。
 - 日期 / Owner：2026-10-09 / root
 - 关联规划：[项目建设目标与验收标准](../../governance/PROJECT_GOALS.md)；仓库外工作区规划不作为本 ADR 的可移植来源。
 

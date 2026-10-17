@@ -111,7 +111,7 @@ async function fixture(page: Page) {
     });
   });
   await page.goto("/");
-  await openSettingsSection(page, "储存");
+  await openSettingsSection(page, "网络");
   const dialog = page.getByRole("dialog", { name: "设置", exact: true });
   const companion = dialog.getByTestId("companion-settings");
   await expect(companion.locator(".settings-companion-status")).toHaveText(

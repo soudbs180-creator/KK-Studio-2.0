@@ -3,6 +3,7 @@ import test from "node:test";
 import {
   readPickerMemory,
   writePickerMemory,
+  resolvePickerPins,
 } from "../../src/features/models/modelSelection.ts";
 
 test("home inherits old pins only before its own preference exists and never rewrites canvas memory", (t) => {
@@ -29,4 +30,16 @@ test("home inherits old pins only before its own preference exists and never rew
   writePickerMemory("home", own);
   assert.deepEqual(readPickerMemory("home"), own);
   assert.equal(data.get("kk:model-picker:canvas-image"), legacy);
+});
+
+test("legacy family pins expand into exact version pins without losing hidden pins", () => {
+  const result = resolvePickerPins(
+    [
+      { id: "exact-low", legacyPinId: "old-family" },
+      { id: "exact-high", legacyPinId: "old-family" },
+    ],
+    ["old-family", "other-channel"],
+  );
+  assert.deepEqual(result, ["other-channel", "exact-low", "exact-high"]);
+  assert.deepEqual(resolvePickerPins([], result), result);
 });

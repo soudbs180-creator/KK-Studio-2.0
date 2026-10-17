@@ -13,6 +13,8 @@ export default function ConversationMessageFeed({
   onStatus,
   onConfigure,
   onConfigureDirect,
+  onPreviewImage,
+  onSetReference,
   status,
 }: {
   agent?: AgentConversationProps;
@@ -22,18 +24,27 @@ export default function ConversationMessageFeed({
   onStatus: (status: string) => void;
   onConfigure: () => void;
   onConfigureDirect?: () => void;
+  onPreviewImage?: (src: string, prompt?: string) => void;
+  onSetReference?: (src: string) => void;
   status: string;
 }) {
   return (
     <div className="conversation-messages">
       {agentActive && agent ? (
-        <AgentConversationMessages agent={agent} onConfigure={onConfigure} />
+        <AgentConversationMessages
+          agent={agent}
+          onConfigure={onConfigure}
+          onPreviewImage={onPreviewImage}
+          onSetReference={onSetReference}
+        />
       ) : (
         <ConversationMessages
           messages={messages}
           onDelete={onDelete}
           onStatus={onStatus}
           onConfigure={onConfigureDirect}
+          onPreviewImage={onPreviewImage}
+          onSetReference={onSetReference}
         />
       )}
       {status && (

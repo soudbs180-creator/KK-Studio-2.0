@@ -19,10 +19,12 @@ test("current Figma modal shells keep dimensions and settings content origin", a
     "主题",
     "强调色",
     "浮岛布局",
+    "画布历史步数",
     "去除水印",
     "系统托盘",
     "防止系统休眠",
     "开机自启动",
+    "软件更新",
   ]);
   await page.keyboard.press("Escape");
   await page.getByRole("button", { name: "搜索", exact: true }).click();
@@ -46,15 +48,16 @@ test("unconnected account and memory controls do not advertise working services"
 }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
-  await page.getByRole("button", { name: "账号管理", exact: true }).click();
+  await page.getByRole("button", { name: "个人主页", exact: true }).click();
   await expect(page.locator(".settings-content")).toContainText(
-    "未登录 · Prototype",
+    "未登录 · 本地使用",
   );
   await expect(
     page.getByRole("button", { name: "删除账号", exact: true }),
-  ).toBeDisabled();
+  ).toHaveCount(0);
   await page.getByRole("button", { name: "网络", exact: true }).click();
-  await expect(page.locator(".settings-content")).toContainText("本地转发代理");
+  await page.getByText("独立转发代理", { exact: true }).click();
+  await expect(page.locator(".settings-content")).toContainText("独立转发代理");
   await expect(page.locator(".settings-content")).toContainText(
     "npm run proxy",
   );
@@ -103,9 +106,10 @@ test("task workbench action does not overlap the tabs and demo status is visible
 test("landing discovery content remains reachable below the desktop fold", async ({
   page,
 }) => {
+  await page.setViewportSize({ width: 1920, height: 900 });
   await page.goto("/");
   const landing = page.locator(".start-page");
-  await landing.hover();
+  await landing.hover({ position: { x: 10, y: 10 } });
   await page.mouse.wheel(0, 700);
   await expect
     .poll(() => landing.evaluate((el) => el.scrollTop))

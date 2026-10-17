@@ -78,7 +78,7 @@ test("侧栏菜单互斥，IME 合成不误关闭，打开设置会收起来源�
   const projectMenu = page.getByRole("menu", { name: "项目显示与排序" });
   await expect(projectMenu).toBeVisible();
   await accountTrigger.click();
-  const accountMenu = page.getByLabel("个人信息（本地 Prototype）");
+  const accountMenu = page.getByLabel("个人信息（本地会话）");
   await expect(accountMenu).toBeVisible();
   await expect(projectMenu).toHaveCount(0);
 
@@ -102,7 +102,7 @@ test("侧栏菜单互斥，IME 合成不误关闭，打开设置会收起来源�
 
   await accountTrigger.click();
   await page
-    .getByLabel("个人信息（本地 Prototype）")
+    .getByLabel("个人信息（本地会话）")
     .getByRole("button", {
       name: "打开主题设置",
       exact: true,

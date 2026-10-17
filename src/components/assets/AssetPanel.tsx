@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
-import { X, ArrowLeft } from "lucide-react";
+import UiIcon from "../UiIcon";
 import {
   filterAssets,
-  getAssetTags,
   type Asset,
   type AssetFilter,
 } from "../../domain/assets";
@@ -11,40 +10,48 @@ import CreateSubject from "./CreateSubject";
 import AssetCard from "./AssetCard";
 import useAssetImport from "./useAssetImport";
 import AssetDetail from "./AssetDetail";
-import AssetFilterControls from "./AssetFilterControls";
+import AssetPanelNavigation, {
+  type AssetPanelTab,
+} from "./AssetPanelNavigation";
 import useAssetCollections from "./useAssetCollections";
 import type { AssetArchiveState } from "../../features/creation/useAssetArchive";
 import useAssetDetail from "./useAssetDetail";
 import AssetActions from "./AssetActions";
+import AssetTrashActions, {
+  AssetSoftDeleteAction,
+  useAssetTrash,
+} from "./AssetTrashActions";
 
 export interface AssetPanelProps {
   onClose: () => void;
   assets: Asset[];
   subjects: Asset[];
+  trashedAssets?: Asset[];
   onAdd: (assets: Asset[], subject: boolean) => void;
+  onRestoreAsset?: (assetId: string) => void;
+  onPermanentlyDeleteAsset?: (assetId: string) => void;
+  onDeleteAsset?: (assetId: string) => void;
   archive?: AssetArchiveState;
 }
+
 const EMPTY_FILTER: AssetFilter = {
   query: "",
   type: "all",
   tag: "all",
   days: 0,
 };
-const Icon = ({ name }: { name: string }) => (
-  <img
-    className="asset-icon"
-    src={`/design/figma/${name === "asset-grid" ? "asset-list" : name === "asset-list" ? "asset-grid" : name}.svg`}
-    alt=""
-  />
-);
 export default function AssetPanel({
   onClose,
   assets,
   subjects,
+  trashedAssets = [],
   onAdd,
+  onRestoreAsset,
+  onPermanentlyDeleteAsset,
+  onDeleteAsset,
   archive,
 }: AssetPanelProps) {
-  const [tab, setTab] = useState<"canvas" | "assets">("canvas");
+  const [tab, setTab] = useState<AssetPanelTab>("canvas");
   const [compact, setCompact] = useState(false);
   const [view, setView] = useState<"grid" | "list">("grid");
   const [filter, setFilter] = useState(EMPTY_FILTER);
@@ -54,6 +61,7 @@ export default function AssetPanel({
   const [creating, setCreating] = useState(false);
   const [name, setName] = useState("");
   const [sourceFilter, setSourceFilter] = useState("all");
+
   const { message, setMessage, busy, input, importFiles } = useAssetImport(
     (additions) => {
       onAdd(additions, tab === "assets");
@@ -61,7 +69,29 @@ export default function AssetPanel({
     },
   );
   const { collectionIds, toggleCollection } = useAssetCollections(setMessage);
-  const source = tab === "canvas" ? assets : subjects;
+
+  const {
+    activeTrash,
+    trashedIds,
+    handleSoftDelete,
+    handleRestore,
+    handlePermanentDelete,
+    disabledReason,
+  } = useAssetTrash({
+    trashedAssets,
+    onRestoreAsset,
+    onPermanentlyDeleteAsset,
+    onDeleteAsset,
+    setMessage,
+  });
+
+  const source =
+    tab === "canvas"
+      ? assets.filter((a) => !trashedIds.has(a.id))
+      : tab === "assets"
+        ? subjects.filter((a) => !trashedIds.has(a.id))
+        : activeTrash;
+
   const items = filterAssets(source, filter).filter(
     (asset) =>
       sourceFilter === "all" ||
@@ -73,6 +103,7 @@ export default function AssetPanel({
             ? asset.source === "upload"
             : !asset.src && !asset.sha256),
   );
+
   const searchingArchive =
     tab === "canvas" &&
     Boolean(
@@ -83,125 +114,81 @@ export default function AssetPanel({
       sourceFilter !== "all",
     ) &&
     Boolean(archive?.hasMore);
+
   useEffect(() => {
     if (searchingArchive && !archive?.loading && !archive?.error)
       archive?.loadMore();
   }, [searchingArchive, archive?.loading, archive?.error, archive?.loadMore]);
+
   function clearFilters(): void {
     setFilter(EMPTY_FILTER);
     setSourceFilter("all");
   }
-  function switchTab(value: "canvas" | "assets"): void {
+
+  function switchTab(value: AssetPanelTab): void {
     setTab(value);
     clearFilters();
     closeDetail(false);
     setSelected(
-      value === "canvas" ? (assets[0]?.id ?? "") : (subjects[0]?.id ?? ""),
+      value === "canvas"
+        ? (assets[0]?.id ?? "")
+        : value === "assets"
+          ? (subjects[0]?.id ?? "")
+          : (activeTrash[0]?.id ?? ""),
     );
     setMessage("");
   }
+
   function createSubject(event: React.FormEvent): void {
     event.preventDefault();
     const title = name.trim();
     if (!title) return;
-    const subject: Asset = {
-      id: crypto.randomUUID(),
-      name: title,
-      type: "subject",
-      tag: "人物",
-      createdAt: new Date().toISOString(),
-    };
-    onAdd([subject], true);
+    onAdd(
+      [
+        {
+          id: crypto.randomUUID(),
+          name: title,
+          type: "subject",
+          tag: "人物",
+          createdAt: new Date().toISOString(),
+        },
+      ],
+      true,
+    );
     setCreating(false);
     setName("");
-    setSelected(subject.id);
+    setSelected(title);
     setMessage("主体已创建 · 本次会话可用");
   }
+
   return (
     <section
       className={`asset-panel ${compact ? "compact" : ""}`}
       data-testid="asset-panel"
     >
-      <header className="asset-header">
-        <span>资产管理</span>
-        <div className="asset-window-actions">
-          <button
-            aria-label={compact ? "展开资产管理" : "收起资产管理"}
-            onClick={() => setCompact(!compact)}
-          >
-            <Icon name={compact ? "expand" : "collapse"} />
-          </button>
-          <button aria-label="关闭资产管理" onClick={onClose}>
-            <X size={20} />
-          </button>
-        </div>
-      </header>
-      <h2 className="asset-title">KK工作流画布</h2>
-      <div className="asset-tabs" role="tablist" aria-label="资源范围">
-        {(["canvas", "assets"] as const).map((value) => (
-          <button
-            key={value}
-            role="tab"
-            aria-selected={tab === value}
-            onClick={() => switchTab(value)}
-          >
-            {value === "canvas" ? "画布" : "资产"}
-          </button>
-        ))}
-      </div>
-      <div className="asset-search-row">
-        <label className="asset-search">
-          <Icon name="search" />
-          <input
-            aria-label="搜索文件"
-            placeholder="搜索文件"
-            value={filter.query}
-            onChange={(e) => setFilter({ ...filter, query: e.target.value })}
-          />
-        </label>
-        <div className="asset-view">
-          <button
-            aria-label="列表视图"
-            aria-pressed={view === "list"}
-            onClick={() => setView("list")}
-          >
-            <Icon name="asset-list" />
-          </button>
-          <button
-            aria-label="网格视图"
-            aria-pressed={view === "grid"}
-            onClick={() => setView("grid")}
-          >
-            <Icon name="asset-grid" />
-          </button>
-        </div>
-      </div>
-      <AssetFilterControls
+      <AssetPanelNavigation
+        compact={compact}
+        tab={tab}
+        view={view}
         filter={filter}
-        tags={Array.from(new Set(source.flatMap(getAssetTags)))}
         sourceFilter={sourceFilter}
+        source={source}
+        selected={selected}
+        onClose={onClose}
+        onToggleCompact={() => setCompact(!compact)}
+        onTab={switchTab}
+        onView={setView}
         onFilter={(patch) => setFilter({ ...filter, ...patch })}
         onSource={setSourceFilter}
+        onOpen={(asset) => {
+          setSelected(asset.id);
+          void openDetail(asset);
+        }}
       />
-      <nav className="asset-file-nav" aria-label="文件列表">
-        {source.slice(0, 4).map((asset) => (
-          <button
-            key={asset.id}
-            aria-pressed={selected === asset.id}
-            onClick={() => {
-              setSelected(asset.id);
-              void openDetail(asset);
-            }}
-          >
-            <span className="file-square" />
-            {asset.name}
-          </button>
-        ))}
-      </nav>
       <div className={`asset-content ${view}`}>
         {detail ? (
           <AssetDetail
-            backIcon={<ArrowLeft size={14} />}
+            backIcon={<UiIcon name="undo" size={16} />}
             detail={detail}
             assets={assets}
             loading={detailLoading}
@@ -213,29 +200,56 @@ export default function AssetPanel({
           />
         ) : items.length ? (
           items.map((asset) => (
-            <AssetCard
+            <div
               key={asset.id}
-              asset={asset}
-              selected={selected === asset.id}
-              onSelect={() => setSelected(asset.id)}
-              onOpen={() => void openDetail(asset)}
-              loadPreview={archive?.loadPreview}
-            />
+              className="asset-card-wrapper"
+              style={{ display: "flex", flexDirection: "column" }}
+            >
+              <AssetCard
+                asset={asset}
+                selected={selected === asset.id}
+                onSelect={() => setSelected(asset.id)}
+                onOpen={() => void openDetail(asset)}
+                loadPreview={archive?.loadPreview}
+              />
+              {tab === "trash" ? (
+                <AssetTrashActions
+                  asset={asset}
+                  onRestore={handleRestore}
+                  onPermanentlyDelete={handlePermanentDelete}
+                  disabledReason={disabledReason}
+                />
+              ) : (
+                <AssetSoftDeleteAction
+                  asset={asset}
+                  onDelete={handleSoftDelete}
+                  disabledReason={disabledReason}
+                />
+              )}
+            </div>
           ))
         ) : (
           <div className="asset-empty">
-            <Icon name="search" />
+            <img className="asset-icon" src="/design/figma/search.svg" alt="" />
             <h3>
-              {searchingArchive ? "正在搜索本地素材库…" : "没有找到匹配的资产"}
+              {tab === "trash"
+                ? "垃圾箱为空"
+                : searchingArchive
+                  ? "正在搜索本地素材库…"
+                  : "没有找到匹配的资产"}
             </h3>
             <p>
-              {searchingArchive
-                ? "正在读取其余素材信息。"
-                : "试试其他关键词，或清除筛选条件。"}
+              {tab === "trash"
+                ? (disabledReason ?? "已删除的素材会显示在这里，可随时还原。")
+                : searchingArchive
+                  ? "正在读取其余素材信息。"
+                  : "试试其他关键词，或清除筛选条件。"}
             </p>
-            <button className="primary-button" onClick={clearFilters}>
-              清除筛选
-            </button>
+            {tab !== "trash" && (
+              <button className="primary-button" onClick={clearFilters}>
+                清除筛选
+              </button>
+            )}
           </div>
         )}
       </div>
@@ -249,39 +263,18 @@ export default function AssetPanel({
           {archive.loading ? "正在读取…" : "加载更多素材"}
         </button>
       )}
-      {tab === "assets" && (
-        <AssetActions
-          busy={busy}
-          onCreate={() => {
-            setCreating(true);
-            setMessage("");
-          }}
-          onImport={() => input.current?.click()}
-        />
-      )}
-      <input
-        className="visually-hidden"
-        tabIndex={-1}
-        ref={input}
-        type="file"
-        multiple
-        accept="image/png,image/jpeg,image/webp,image/gif,.json"
-        onChange={(e) => void importFiles(e.target.files)}
+      <AssetActions
+        showSubjectActions={tab === "assets"}
+        busy={busy}
+        onCreate={() => {
+          setCreating(true);
+          setMessage("");
+        }}
+        input={input}
+        onImportFiles={importFiles}
+        message={message}
+        archive={archive}
       />
-      {(message || archive?.loading || archive?.error) && (
-        <p
-          className="asset-feedback"
-          role={archive?.error ? "alert" : "status"}
-        >
-          {archive?.loading ? "正在读取本地素材库… " : archive?.error}
-          {archive?.error && (
-            <button className="ui-button" type="button" onClick={archive.retry}>
-              重新读取素材库
-            </button>
-          )}
-          {message}
-        </p>
-      )}
       {creating && (
         <CreateSubject
           name={name}

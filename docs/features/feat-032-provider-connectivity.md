@@ -2,8 +2,12 @@
 
 - 状态：PARTIAL
 - 领域：intelligence
-- 最近更新：2026-10-14
+- 最近更新：2026-10-17
 - 关联任务：TASK-PROV-002（已合入）、TASK-PROV-003/004（PARTIAL）、TASK-UI-CONSOLIDATE-20261014、TASK-PROTOCOL-CLI-20261014、TASK-222-ACTIONS-20261014、TASK-223-ACTIONS-20261014
+
+## 2026-10-17安全修复边界（完整本地verify与源码独审通过）
+
+关联本地安全修复任务：TASK-AUDIT-REPAIR-20261017（有界A–D DONE；完整功能缺口继续由本卡原开放任务承接）；[规格](../changes/2026-10-17-audit-repair/spec.md) / [实际验证](../changes/2026-10-17-audit-repair/verification.md)。账号身份不可因endpoint相同而替代；生成调用须固定connectionId并核对凭据绑定，空外部模型授权默认拒绝。12AI无持久receipt端口时禁用执行；统一接入需求四补件仅requirements-only，原intent及八优先级保持，不宣称多账号、额度或真实路由已完成。 候选Desktop/Web2.1.36最终source4699458d完整verify、精确源码独审、官方重建、隔离Native与两日常入口正常关闭重开通过；旧d356真实菜单遮挡失败及所有原失败保留。默认旧聊天资料仍READ_ONLY，9项目raw/identity/shared memory保持；不宣称可编辑、完整迁移/protocol7、真实Provider或完整多聊天/垃圾箱/12AI恢复已完成。本卡成熟度与既有runtimeEvidence保持原范围，详细证据见本轮验证；Hosted/发布/用户验收另列。
 
 ## 用户可见入口
 
@@ -21,6 +25,8 @@
 - 数据/存储：Profile / ProviderConnection 保存可选 protocol/authMode，Project / Task 捕获 providerProtocol/providerAuthMode 并经快照/项目包往返；旧字段缺省仍是 Chat/API Key，不补写旧数据。密钥仅在系统凭据库或请求内存，沿用既有 credentialRef 和保存事务；配置渲染器本身不写存储，Agent apply/check 仍只显式写指定目录。
 
 ## 测试与证据
+
+- 模型选择阶段A `28c64fcc/f472c8f0` 已精确独审：四渠道→搜索筛选→精确型号，连接channel/priority元数据保留；旧family置顶和禁用渠道原因反例已修，独立52Node、生产23项复测通过。实际合并/执行优先级、动态参数及Agent授权尚待，不把列表改动当真实路由完成。见[统一验证](../changes/2026-10-15-kk-unified/verification.md)。
 
 - 2.1.24本地验证（TASK-223，本任务DONE/PASS；功能主状态保持）：显式CLI协议/认证、TOML词法/受管键保守保护、配置失败恢复副本、损坏env拒绝及有界模型JSON检查通过；受控CLI/HTTP夹具不表示真实账号或付费供应商验收；最终产品58b5c07f与完整验证、官方/便携回执见[本轮验证](../changes/2026-10-14-action-usability-223/verification.md)。
 
@@ -70,3 +76,5 @@
 Windows Desktop CLI 管理已接实际检测、用户主动安装/登录、取消自有操作及 Gemini 桥启停；终端退出和进程健康不推导账号验证，模型连通测试另有明确入口与额度说明。原 apply/check 不因新页面而声称全面接线。最终源码门禁、实际构建和产物身份见[2.1.22协议/CLI验证](../changes/2026-10-14-protocol-cli-completion/verification.md)；真实安装/账号登录/付费供应商调用及 Native Mobile 仍未验收，状态保持 PARTIAL。
 
 2.1.22本机交付完成：五协议真实Native与四取消/超时socket关闭、已保存凭据/迟到目录/旧检测错误隔离均有回执；真实供应商/真人CLI会话与其他配置/MCP接线保持PARTIAL，按本轮verification回读，不能将fixture当云端验收。
+
+- 2026-10-15：TASK-KK-UNIFIED-20261015 已获用户实施授权，新增范围见 [统一规格](../changes/2026-10-15-kk-unified/spec.md)。本卡既有证据仍限原版本；新范围实现/真实验收尚未完成，不能沿用旧 PASS 关闭。

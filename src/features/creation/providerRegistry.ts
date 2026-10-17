@@ -15,6 +15,7 @@ import { withProviderStoreLock } from "./providerCoordination.ts";
 import { credentialId } from "./providerCredentials.ts";
 import { BROWSER_STORAGE_KEYS } from "../../runtime/storage-contract.ts";
 import { modelSupportsKind } from "./model.ts";
+import { providerChannel } from "../../domain/modelChannels.ts";
 import {
   protocolBindingMatches,
   supportsProviderImages,
@@ -121,6 +122,8 @@ export async function loadProviderConnectionsDurable(
               connectionId: selected.id,
               protocol: selected.protocol,
               authMode: selected.authMode,
+              channel: selected.channel,
+              priority: selected.priority,
             }),
           );
       } catch {
@@ -184,15 +187,22 @@ export async function persistProviderConnectionsDurable(
     : withProviderStoreLock(true, commit);
 }
 
+let lastRawProviderConnections: string | null = null;
+let cachedProviderConnections: ProviderConnection[] = [];
+
 /** Browser-persisted metadata only. Credentials are never part of this record. */
 export function readProviderConnections(): ProviderConnection[] {
   if (typeof window === "undefined") return [];
   try {
-    return safeConnections(
-      JSON.parse(
-        window.localStorage.getItem(PROVIDER_CONNECTIONS_STORAGE_KEY) ?? "[]",
-      ),
-    );
+    const raw =
+      window.localStorage.getItem(PROVIDER_CONNECTIONS_STORAGE_KEY) ?? "[]";
+    if (raw === lastRawProviderConnections) {
+      return cachedProviderConnections;
+    }
+    const parsed = safeConnections(JSON.parse(raw));
+    lastRawProviderConnections = raw;
+    cachedProviderConnections = parsed;
+    return parsed;
   } catch {
     return [];
   }
@@ -204,10 +214,10 @@ export function writeProviderConnections(
   if (typeof window === "undefined") return false;
   const sanitized = sanitizeConnections(connections);
   try {
-    window.localStorage.setItem(
-      PROVIDER_CONNECTIONS_STORAGE_KEY,
-      JSON.stringify(sanitized),
-    );
+    const json = JSON.stringify(sanitized);
+    window.localStorage.setItem(PROVIDER_CONNECTIONS_STORAGE_KEY, json);
+    lastRawProviderConnections = json;
+    cachedProviderConnections = sanitized;
     return true;
   } catch {
     // Callers that submit work must fail closed if a slot cannot be recorded.
@@ -466,6 +476,8 @@ export function newModelProfileConnection(
     id: `byok-${credentialRef}`,
     provider: profile.name,
     kind: "user_byok",
+    channel: providerChannel(profile),
+    priority: profile.priority,
     displayName: profile.name,
     baseUrl: profile.baseUrl,
     credentialRef,
@@ -514,6 +526,8 @@ export function connectionFromModelProfile(
         model: profile.model,
         protocol: profile.protocol,
         authMode: profile.authMode,
+        channel: profile.channel ?? existing.channel,
+        priority: profile.priority ?? existing.priority,
         capabilities:
           existing.model === profile.model &&
           protocolBindingMatches(

@@ -2,13 +2,37 @@
 
 - docId: AI_HANDOFF
 - status: current
-- updatedAt: 2026-10-15
+- updatedAt: 2026-10-17
 - source: `docs/governance/PROJECT_STATE.md`
 - supersededBy: null
 
 本文是最短恢复入口，不是任务状态或产品能力的第二事实源。任务状态只读 [`task-ledger.json`](task-ledger.json)；当前项目事实只读 [`PROJECT_STATE.md`](PROJECT_STATE.md)；历史验证只按带日期的 change package、commit、运行模式和 receipt 回读。
 
+## 当前恢复入口：Web 正式 Release 发布（2026-10-17）
+
+TASK-WEB-RELEASE-20261017 为 IN_PROGRESS；先读[发布验证](../changes/2026-10-17-web-release/verification.md)与[发布审查](../changes/2026-10-17-web-release/review.md)。隔离树 `D:/kk-studio/.worktrees/TASK-WEB-RELEASE-20261017` 承载发布器和治理记录；其他树的未提交改动不进入本次交付。产品固定 source469 / docs bbc8，154 个重建文件逐字节相同。正式 Release 的 released 事件才发布，普通提交、草稿、预发布均不同步；只保留 current 和一个 previous。
+
+用户后续明确选择本次一起修复手机菜单并重新验收：新候选Desktop/Web2.1.37、Mobile仍2.1.1，产品差异限手机菜单视口定位与版本元数据；新四尺寸40/40本地步骤及两菜单browser回归通过，旧裁切FAIL原件保留。发布包固定元数据以支持同Release重试，控制器安全规则不放宽。原PR64的Rust断言及后续新增fixture的Windows8.3失败均保留，已做真实RED/GREEN修复。当前PR65托管检查/最终main/正式Release/真实域名手机/临时root key撤销仍待完成，不得把本地通过写成线上完成。原本地审计树有后续聊天迁移dirty、原PID50136已退出，勿照旧交接启动或清理。
+
+## 以下为审计修复本地收口的历史交接（2026-10-17）
+
+先读[实际验证](../changes/2026-10-17-audit-repair/verification.md)和[独立审查](../changes/2026-10-17-audit-repair/review.md)。TASK-AUDIT-REPAIR-20261017仅本地A–D DONE/PASS；source `4699458de1c3437309b7cdc3f019454104c81fce` / tree `a1905e2aa6e11a24b4c62d829dc82a8f0d566972`，任务树`D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017` / branch `fix/TASK-AUDIT-REPAIR-20261017`，Desktop/Web2.1.36、Mobile2.1.1规划。原main8c/63dirty/index与远端d95保持。
+
+469完整verify exit0（Node1832/14既有skip、Agent199/2既有skip、产品Edge823首试、DESIGN41+8、development四步），精确源码独审PASS；Native不变源Rust213/1ignore+integration41通过。官方EXE b6299445/input a53dee81、隔离六检查和两个真实日常lnk正常关闭/重开均PASS，正常默认实例PID50136、无CDP。**默认旧聊天资料仍READ_ONLY，9项目raw/identity/shared memory保持；完整迁移/protocol7未完成，不能为了恢复编辑而解除保护。** 旧75/8026/d356 daily及helper失败、原件备份均保留。
+
+149任务/85DONE/64开放；仅本审计新增DONE，原148对象与37功能成熟度/runtimeEvidence不变，26失效分配历史保留。4worktrees/26条目均不可据分类删除；用户仍禁止删除/移动原文件，E/F未执行。后续先按原任务接续完整多聊天/迁移、统一接入/12AI/持久垃圾箱、真实服务与用户验收；不要批量结案或把本机PASS当Hosted/main/发布。最终文档HEAD独审/正式Delivery由root提交后对应收据裁决；本轮没有push/merge/远端设置变更或付费生成。日常链接引用本任务树，不能清理该树。
+
+## 以下为2026-10-16及之前的历史交接
+
+原文保留其当时SHA、授权和失败；其中“当前/最新/实施中”均不再是本会话的活动写入分配，恢复必须先以上方当前入口和权威账本核对。
+
 ## 统一整理后的正式执行入口（TASK-GOV-006）
+
+## 当前授权：统一修复与重构（2026-10-15）
+
+先读 [统一实施计划](../changes/2026-10-15-kk-unified/plan.md)、[批准规格](../changes/2026-10-15-kk-unified/spec.md) 和 [验证](../changes/2026-10-15-kk-unified/verification.md)。用户已授权实施，不重复请求形式批准。当前 task branch codex/TASK-KK-UNIFIED-20261015；起点 d95e4c44 / 2.1.34，单个项目实现者串行集成共享 App/存储。日常235e7f79和其他候选保持原状。旧段落按其时点理解，不覆盖本次授权和当前实际验证。
+
+最新恢复点：8e17九文件UI回归修复已精确独审，相关87/87首试，侧栏五锚点误差0、原Figma断言未改；Node1508PASS/14skip及静态/build通过。原55a0完整verify Browser804/811、7失败、exit1仍保留，未新跑完整verify或Native。ADR022/023已接受并独审，多聊天实现者正独占App/快照/聊天/Agent共享核心，本地安装实现者只写独立适配器，root保留main/Cargo、全局tokens、版本及任务文档；Cargo/dist/1423/Native逐项协调，提交仍一律逐文件lease。此前项目Edge27、12AI适配器73、加载草稿/格式/硬件/DESIGN/设置/Native基础及模型A独审仅各自范围有效；模型B/C、完整多聊天/安装、媒体、全局UI、共仓库、账号与同步仍开放。55a0实际Native单实例/重开/清理通过、前台focus仍失败，整轮PARTIAL。root node_modules为本任务实体依赖，vendor链接目标只读、不能安装；外部56cb1381及保全目录保留、完整恢复未验。用户本会话独占写入、其他任务只读，不重复主仓清理/切换。详细失败、实际模块和验收边界见统一verification，不能用基础子范围代替完整方案。
 
 当前任务先读[HOME验证](../changes/2026-10-15-home-recovery-integration/verification.md)及[依赖事故](../changes/2026-10-15-dependency-repair/verification.md)。当前HOME fix/TASK-CODEX-HOME-20261015-main：冻结源码a85完整verify/785首试、官方新EXE/Native38及Rust167通过，精确本机结果独审通过，正式PR/Hosted/main继续。main仍492/2.1.33，候选2.1.34；尚未切daily/碰九项目。原失败和依赖事故未知影响保留，额外加载期草稿问题TASK-HOME-LOAD-DRAFT-20261015待下一串行任务。
 

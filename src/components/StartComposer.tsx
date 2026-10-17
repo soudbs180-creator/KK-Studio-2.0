@@ -31,7 +31,10 @@ export default function StartComposer({
   onApplySkill,
 }: {
   draft: CreationDraft;
-  onDraftChange: (draft: CreationDraft) => void;
+  onDraftChange: (
+    draft: CreationDraft,
+    changes?: Partial<CreationDraft>,
+  ) => void;
   setStatus: (status: string) => void;
   onSubmit: (input: CreationDraft) => void | Promise<void>;
   onOpenModel: () => void;
@@ -60,13 +63,13 @@ export default function StartComposer({
   const [submitting, setSubmitting] = useState(false);
   const [attachmentError, setAttachmentError] = useState<string | null>(null);
   function commit(patch: Partial<CreationDraft>): void {
-    onDraftChange({ ...draft, ...patch, updatedAt: Date.now() });
+    const next = { ...draft, ...patch, updatedAt: Date.now() };
+    onDraftChange(next, patch);
   }
   const { fileInput, addFiles, readingFiles } = useConversationAttachments({
     draftKey: "home",
     attachments: draft.attachments,
-    onChange: (attachments) =>
-      onDraftChange({ ...draft, attachments, updatedAt: Date.now() }),
+    onChange: (attachments) => commit({ attachments }),
     onStatus: setStatus,
     ...(usesCodex
       ? {

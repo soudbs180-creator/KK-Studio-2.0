@@ -9,11 +9,12 @@ import { useSettingsNavigationBusy } from "./useSettingsBusy";
 import { agentConnection } from "../../features/agent/agentConnection";
 import { desktopAgentLifecycle } from "../../features/agent/desktopAgentLifecycle";
 import AgentConnectionSettings from "./AgentConnectionSettings";
-import ModelProviderSettings from "./ModelProviderSettings";
+import ModelAccessApiPanel from "./ModelAccessApiPanel";
 import GoogleConnectionSettings from "./GoogleConnectionSettings";
 import CodeBuddyConnectionSettings from "./CodeBuddyConnectionSettings";
 import OAuthAccessPanel from "./OAuthAccessPanel";
 import NativeCliControls from "./NativeCliControls";
+import type { LocalWorkflowAccess } from "./LocalWorkflowSettings";
 
 const METHODS = [
   ["codex", "Codex 主 Agent"],
@@ -21,6 +22,7 @@ const METHODS = [
   ["relay", "API Key（中转站）"],
   ["cli", "CLI 账号"],
   ["oauth", "OAuth"],
+  ["local", "本地"],
 ] as const;
 type Method = (typeof METHODS)[number][0];
 
@@ -28,12 +30,18 @@ type Method = (typeof METHODS)[number][0];
 export default function ModelAccessSettings({
   onFeedback,
   active = true,
+  initialMethod = "codex",
+  workflows,
 }: {
   onFeedback: (message: string) => void;
   active?: boolean;
+  initialMethod?: Method;
+  workflows: LocalWorkflowAccess;
 }) {
   const setBusy = useSettingsNavigationBusy();
-  const [navigation, setNavigation] = useState<"methods" | "detail">("methods");
+  const [navigation, setNavigation] = useState<"methods" | "detail">(
+    initialMethod === "local" ? "detail" : "methods",
+  );
   const agent = useSyncExternalStore(
     agentConnection.subscribe,
     agentConnection.getState,
@@ -42,7 +50,7 @@ export default function ModelAccessSettings({
     desktopAgentLifecycle.subscribe,
     desktopAgentLifecycle.getState,
   );
-  const [method, setMethod] = useState<Method>("codex");
+  const [method, setMethod] = useState<Method>(initialMethod);
   const [apiSaving, setApiSaving] = useState(false);
   const [googleBusy, setGoogleBusy] = useState(false);
   const [codeBuddyBusy, setCodeBuddyBusy] = useState(false);
@@ -110,7 +118,7 @@ export default function ModelAccessSettings({
             className="settings-action secondary"
             aria-pressed={method === id}
             disabled={busy}
-            aria-controls={`model-access-${id === "official" || id === "relay" ? "api" : id}`}
+            aria-controls={`model-access-${id === "official" || id === "relay" || id === "local" ? "api" : id}`}
             onClick={() => {
               if (busy) return;
               setMethod(id);
@@ -133,26 +141,19 @@ export default function ModelAccessSettings({
           onBusyChange={setCodexCliBusy}
         />
       </section>
-      <section
-        id="model-access-api"
-        hidden={method !== "official" && method !== "relay"}
-        aria-label={
-          method === "relay" ? "中转站 API Key 配置" : "官方 API Key 配置"
-        }
-      >
-        <ModelProviderSettings
-          scope={method === "relay" ? "relay" : "official"}
-          active={active && (method === "official" || method === "relay")}
-          onBusyChange={setApiSaving}
-          onOpenGoogle={() => {
-            if (busy) return;
-            setNavigation("detail");
-            setMethod("official");
-            setFocusGoogle(true);
-          }}
-          onFeedback={onFeedback}
-        />
-      </section>
+      <ModelAccessApiPanel
+        method={method}
+        active={active}
+        workflows={workflows}
+        onBusyChange={setApiSaving}
+        onOpenGoogle={() => {
+          if (busy) return;
+          setNavigation("detail");
+          setMethod("official");
+          setFocusGoogle(true);
+        }}
+        onFeedback={onFeedback}
+      />
       <section
         id="model-access-cli"
         hidden={method !== "cli"}

@@ -1,0 +1,273 @@
+/* Tokenized Composer, Inline Pills, Mention and Slash Autocomplete Menus
+ * Fully tokenized adhering to Google Stitch DESIGN.md and KK-Studio design tokens.
+ */
+
+.composer-autocomplete-menu {
+  position: absolute;
+  bottom: calc(100% + var(--kk-space-2));
+  left: 0;
+  right: 0;
+  max-height: 280px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--kk-radius-menu);
+  box-shadow: var(--kk-elevation-3);
+  display: flex;
+  flex-direction: column;
+  z-index: var(--kk-z-dropdown);
+  overflow: hidden;
+  backdrop-filter: blur(16px);
+  animation: autocomplete-appear var(--motion-fast) var(--motion-ease);
+}
+
+@keyframes autocomplete-appear {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.autocomplete-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--kk-space-2) var(--kk-space-3);
+  font-size: var(--kk-font-caption);
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--bg-card);
+}
+
+.autocomplete-kbd-hint {
+  font-size: 10px;
+  opacity: 0.75;
+}
+
+.autocomplete-items {
+  overflow-y: auto;
+  max-height: 240px;
+  padding: var(--kk-space-1);
+  display: flex;
+  flex-direction: column;
+  gap: var(--kk-space-hair);
+}
+
+.autocomplete-item {
+  display: flex;
+  align-items: center;
+  gap: var(--kk-space-2);
+  width: 100%;
+  padding: var(--kk-space-2);
+  border: none;
+  background: transparent;
+  color: var(--text-primary);
+  border-radius: var(--kk-radius-control);
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--motion-fast) var(--motion-ease);
+  user-select: none;
+}
+
+.autocomplete-item:hover,
+.autocomplete-item.selected {
+  background: var(--bg-elevated);
+}
+
+.autocomplete-item.selected {
+  outline: 1px solid var(--focus-ring);
+}
+
+/* Slash Menu Items */
+.slash-badge {
+  font-family: var(--kk-font-mono);
+  font-weight: var(--kk-weight-semibold);
+  font-size: var(--kk-font-caption);
+  color: var(--text-accent);
+  background: var(--bg-soft);
+  padding: 2px 6px;
+  border-radius: var(--kk-radius-xs);
+}
+
+.item-main {
+  display: flex;
+  align-items: center;
+  gap: var(--kk-space-2);
+  flex: 1;
+}
+
+.item-title {
+  font-size: var(--kk-font-body);
+  font-weight: var(--kk-weight-medium);
+  color: var(--text-primary);
+}
+
+.alias-hint {
+  font-size: var(--kk-font-caption);
+  color: var(--text-secondary);
+}
+
+.item-desc {
+  font-size: var(--kk-font-caption);
+  color: var(--text-tertiary);
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+/* Mention Menu Items */
+.mention-thumb-box {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--kk-radius-xs);
+  overflow: hidden;
+  background: var(--bg-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1px solid var(--border-subtle);
+}
+
+.mention-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mention-thumb-placeholder {
+  font-size: 14px;
+}
+
+.mention-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kk-space-hair);
+  flex: 1;
+}
+
+.mention-row {
+  display: flex;
+  align-items: center;
+  gap: var(--kk-space-2);
+}
+
+/* Slot Selector Quick Pill */
+.slot-selector-quick {
+  display: flex;
+  align-items: center;
+  gap: var(--kk-space-1);
+}
+
+.slot-label {
+  font-size: var(--kk-font-caption);
+  margin-right: var(--kk-space-hair);
+}
+
+.slot-pill {
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-soft);
+  color: var(--text-secondary);
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: var(--kk-radius-xs);
+  cursor: pointer;
+  transition: all var(--motion-fast) var(--motion-ease);
+}
+
+.slot-pill.active {
+  background: var(--bg-accent);
+  color: var(--text-on-accent);
+  border-color: transparent;
+  font-weight: var(--kk-weight-semibold);
+}
+
+/* Slot Badges */
+.slot-badge {
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: var(--kk-radius-xs);
+  font-weight: var(--kk-weight-medium);
+}
+
+.slot-主体 {
+  background: var(--bg-warning);
+  color: var(--text-on-warning);
+}
+
+.slot-风格 {
+  background: var(--bg-accent-soft);
+  color: var(--text-on-accent-soft);
+}
+
+.slot-材质 {
+  background: var(--bg-soft);
+  color: var(--text-primary);
+  border: 1px solid var(--border-control);
+}
+
+.slot-构图 {
+  background: var(--bg-success);
+  color: var(--text-on-success);
+}
+
+.slot-Mask {
+  background: var(--bg-danger-soft);
+  color: var(--text-danger);
+  border: 1px solid var(--bg-danger);
+}
+
+/* Inline Mention Tags in Composer Header */
+.tokenized-mentions-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--kk-space-1);
+  padding-bottom: var(--kk-space-1);
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: var(--kk-space-1);
+}
+
+.inline-mention-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--kk-space-1);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--kk-radius-xs);
+  padding: 2px 6px;
+  font-size: var(--kk-font-caption);
+  color: var(--text-primary);
+  user-select: none;
+}
+
+.inline-mention-pill img {
+  width: 16px;
+  height: 16px;
+  border-radius: var(--kk-radius-xs);
+  object-fit: cover;
+}
+
+.inline-mention-pill-remove {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 0 2px;
+  font-size: 12px;
+  line-height: 1;
+  border-radius: var(--kk-radius-xs);
+}
+
+.inline-mention-pill-remove:hover {
+  color: var(--text-danger);
+  background: var(--bg-danger-soft);
+}
+
+.autocomplete-empty-tip {
+  padding: var(--kk-space-3);
+  font-size: var(--kk-font-caption);
+  color: var(--text-secondary);
+  text-align: center;
+}

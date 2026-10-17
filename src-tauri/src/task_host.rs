@@ -136,27 +136,61 @@ pub struct TaskHost {
     root: PathBuf,
     assets: Arc<AssetRepository>,
     jobs: Mutex<HashMap<String, JobControl>>,
+    journal_lock: Mutex<()>,
+    access: crate::native_repository_lock::RepositoryAccess,
+    snapshots: Option<Arc<crate::creation_storage::SnapshotRepository>>,
 }
 
 impl TaskHost {
     pub fn new(root: PathBuf, assets: Arc<AssetRepository>) -> Result<Self, String> {
+        Self::initialize(
+            root,
+            assets,
+            crate::native_repository_lock::RepositoryAccess::Standalone,
+            None,
+        )
+    }
+
+    pub(crate) fn owned(
+        root: PathBuf,
+        assets: Arc<AssetRepository>,
+        access: crate::native_repository_lock::RepositoryAccess,
+        snapshots: Arc<crate::creation_storage::SnapshotRepository>,
+    ) -> Result<Self, String> {
+        Self::initialize(root, assets, access, Some(snapshots))
+    }
+
+    fn initialize(
+        root: PathBuf,
+        assets: Arc<AssetRepository>,
+        access: crate::native_repository_lock::RepositoryAccess,
+        snapshots: Option<Arc<crate::creation_storage::SnapshotRepository>>,
+    ) -> Result<Self, String> {
         io::directory(&root)?;
         let host = Self {
             root,
             assets,
             jobs: Mutex::new(HashMap::new()),
+            journal_lock: Mutex::new(()),
+            access,
+            snapshots,
         };
         host.recover_submitted()?;
         Ok(host)
     }
 
-    fn lock(&self) -> Result<fs::File, String> {
-        io::lock(&self.root)
+    fn lock(&self) -> Result<crate::native_repository_lock::Transaction<'_>, String> {
+        self.access
+            .begin(&self.journal_lock, || io::lock(&self.root))
     }
     fn path(&self, task_id: &str) -> PathBuf {
         self.root.join(format!("{task_id}.json"))
     }
     fn read_one(&self, task_id: &str) -> Result<Option<JournalRecord>, String> {
+        let _lock = self.lock()?;
+        self.read_one_unlocked(task_id)
+    }
+    fn read_one_unlocked(&self, task_id: &str) -> Result<Option<JournalRecord>, String> {
         let Some(raw) = io::read(&self.path(task_id), 256 * 1024)? else {
             return Ok(None);
         };
@@ -171,6 +205,7 @@ impl TaskHost {
         Ok(Some(record))
     }
     fn write_one_unlocked(&self, record: &JournalRecord) -> Result<(), String> {
+        self.ensure_writable()?;
         validate_record(&record.record)?;
         let raw = serde_json::to_vec(record).map_err(|_| "io: 原生任务记录编码失败".to_string())?;
         if raw.len() > 256 * 1024 {
@@ -191,7 +226,7 @@ impl TaskHost {
     ) -> Result<(), String> {
         let _lock = self.lock()?;
         let mut journal = self
-            .read_one(task_id)?
+            .read_one_unlocked(task_id)?
             .ok_or_else(|| "io: 原生任务记录在结果归档时丢失".to_string())?;
         if journal.fingerprint != fingerprint {
             return Err("conflict: 原生任务身份在结果归档时发生变化".into());
@@ -213,6 +248,13 @@ impl TaskHost {
     }
     fn recover_submitted(&self) -> Result<(), String> {
         let _lock = self.lock()?;
+        if let Err(error) = self.ensure_writable() {
+            return if error.starts_with("readonly:") {
+                Ok(())
+            } else {
+                Err(error)
+            };
+        }
         let entries = fs::read_dir(&self.root).map_err(io::error)?;
         for item in entries {
             let item = item.map_err(io::error)?;
@@ -245,6 +287,13 @@ impl TaskHost {
         Ok(())
     }
 
+    fn ensure_writable(&self) -> Result<(), String> {
+        if let Some(snapshots) = &self.snapshots {
+            snapshots.ensure_writable_in_transaction()?;
+        }
+        Ok(())
+    }
+
     pub async fn submit(
         self: Arc<Self>,
         mut request: TaskHostRequest,
@@ -256,7 +305,8 @@ impl TaskHost {
         let fingerprint = fingerprint(&request)?;
         let capacity_key = connection_capacity_key(&request);
         let _journal_lock = self.lock()?;
-        if let Some(existing) = self.read_one(&request.task_id)? {
+        self.ensure_writable()?;
+        if let Some(existing) = self.read_one_unlocked(&request.task_id)? {
             if existing.record.idempotency_key != request.idempotency_key
                 || existing.fingerprint != fingerprint
             {
@@ -1047,6 +1097,30 @@ fn validate_request(value: &TaskHostRequest) -> Result<(), String> {
     if value.model.is_empty() || value.model.chars().count() > MAX_MODEL {
         return Err("invalid: model".into());
     }
+    // Keep this contract aligned with twelveAiTaskProtocol.ts until durable native receipts exist.
+    if value.kind.as_deref() != Some("text")
+        && [
+            "gemini-3.1-flash-image-preview",
+            "gemini-3-pro-image-preview",
+            "gemini-2.5-flash-image",
+            "gpt-image-2",
+            "gpt-image-2.5-sunburst",
+            "gpt-image-2.5-flare",
+        ]
+        .contains(&value.model.as_str())
+        && reqwest::Url::parse(&value.base_url).is_ok_and(|url| {
+            url.scheme() == "https"
+                && matches!(url.host_str(), Some("cdn.12ai.org" | "api.12ai.org"))
+                && url.port().is_none()
+                && url.username().is_empty()
+                && url.password().is_none()
+                && url.query().is_none()
+                && url.fragment().is_none()
+                && matches!(url.path(), "/" | "/v1" | "/v1/")
+        })
+    {
+        return Err("unsupported: 12AI 异步图片缺少可持久受理回执，已暂停原生生成".into());
+    }
     let needs_key = validate_provider_options(
         &value.base_url,
         value.protocol.as_deref(),
@@ -1261,6 +1335,114 @@ mod tests {
             kind: None,
             concurrency_limit: None,
         }
+    }
+    #[test]
+    fn twelve_ai_async_image_contract_cannot_enter_native_images_endpoint() {
+        for model in [
+            "gemini-3.1-flash-image-preview",
+            "gemini-3-pro-image-preview",
+            "gemini-2.5-flash-image",
+            "gpt-image-2",
+            "gpt-image-2.5-sunburst",
+            "gpt-image-2.5-flare",
+        ] {
+            for base in [
+                "https://api.12ai.org",
+                "https://cdn.12ai.org/v1",
+                "https://api.12ai.org/v1/",
+            ] {
+                let mut value = request("blocked-async");
+                value.base_url = base.into();
+                value.model = model.into();
+                assert!(
+                    validate_request(&value)
+                        .unwrap_err()
+                        .starts_with("unsupported:"),
+                    "accepted {base} {model}"
+                );
+            }
+        }
+        for (base, model) in [
+            ("https://api.12ai.org/v1", "gpt-image-1"),
+            ("https://images.example/v1", "gpt-image-2.5-flare"),
+            ("https://api.12ai.org/v1/custom", "gpt-image-2.5-flare"),
+        ] {
+            let mut value = request("compatible-image");
+            value.base_url = base.into();
+            value.model = model.into();
+            validate_request(&value).unwrap();
+        }
+    }
+    #[tokio::test]
+    async fn twelve_ai_async_submit_creates_no_native_journal() {
+        let fixture = crate::native_root_authority::tests::Fixture::new();
+        let owner = fixture.owner();
+        let mut value = request("blocked-async");
+        value.base_url = "https://api.12ai.org/v1".into();
+        value.model = "gpt-image-2.5-flare".into();
+        assert!(Arc::clone(&owner.task_host)
+            .submit(value)
+            .await
+            .unwrap_err()
+            .starts_with("unsupported:"));
+        assert!(!owner.task_host.path("blocked-async").exists());
+        assert!(owner.task_host.jobs.lock().unwrap().is_empty());
+    }
+
+    #[test]
+    fn readonly_snapshot_blocks_late_journal_write() {
+        let fixture = crate::native_root_authority::tests::Fixture::new();
+        let paths = fixture.paths();
+        let owner = fixture.owner();
+        let host = &owner.task_host;
+        let mut record: JournalRecord = serde_json::from_value(json!({"taskId":"pending","idempotencyKey":"pending-idem","outputIndices":[0],"status":"submitted","assetIds":[],"outputs":[{"index":0,"status":"submitted"}],"updatedAt":1,"fingerprint":"a".repeat(64)})).unwrap();
+        host.write_one(&record).unwrap();
+        let before = fs::read(host.path("pending")).unwrap();
+        let future = json!({"version":3,"revision":1,"projects":[],"activeProjectId":null});
+        fs::write(
+            paths.creation.with_extension("json.bak"),
+            serde_json::to_vec(&future).unwrap(),
+        )
+        .unwrap();
+        record.record.status = "unknown".into();
+        assert!(host
+            .write_one(&record)
+            .unwrap_err()
+            .starts_with("readonly:"));
+        assert_eq!(fs::read(host.path("pending")).unwrap(), before);
+    }
+    #[test]
+    fn owned_authority_asset_transaction_is_usable_by_taskhost() {
+        let fixture = crate::native_root_authority::tests::Fixture::new();
+        let owner = fixture.owner();
+        let host = Arc::clone(&owner.task_host);
+        let bytes = b"isolated TaskHost archive fixture";
+        let metadata = image_output_metadata(&request("owned-archive"), bytes, "image/png", &None);
+        let archived = host.assets.store(STANDARD.encode(bytes), metadata).unwrap();
+        let read = owner
+            .assets
+            .read(archived["assetId"].as_str().unwrap())
+            .unwrap()
+            .unwrap();
+        assert_eq!(STANDARD.decode(read.data_base64).unwrap(), bytes);
+        let record: JournalRecord = serde_json::from_value(json!({"taskId":"owned-archive","idempotencyKey":"owned-idem","outputIndices":[0],"status":"submitted","assetIds":[],"outputs":[{"index":0,"status":"submitted"}],"updatedAt":1,"fingerprint":"a".repeat(64)})).unwrap();
+        host.write_one(&record).unwrap();
+        host.persist_output(
+            "owned-archive",
+            &"a".repeat(64),
+            0,
+            archived["assetId"].as_str().unwrap(),
+        )
+        .unwrap();
+        assert_eq!(
+            host.get("owned-archive").unwrap().unwrap().outputs[0]
+                .asset_id
+                .as_deref(),
+            archived["assetId"].as_str()
+        );
+        assert!(AssetRepository::new(fixture.0.join("assets"))
+            .list()
+            .is_err());
     }
     #[test]
     fn image_output_without_optional_receipt_metadata_can_be_archived() {

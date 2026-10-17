@@ -72,6 +72,18 @@
   background: var(--border-default);
   color: var(--text-primary);
 }
+.asset-tabs button.asset-tab-trash {
+  flex: 0 0 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  color: var(--text-secondary);
+}
+.asset-tabs button.asset-tab-trash[aria-selected="true"] {
+  background: var(--border-default);
+  color: var(--text-primary);
+}
 .asset-search-row {
   display: flex;
   gap: 4px;
@@ -484,7 +496,7 @@
 }
 @media (max-width: 700px) {
   .asset-panel {
-    width: 305px;
+    width: min(560px, calc(100vw - 16px));
   }
   .asset-header {
     left: 24px;
@@ -546,4 +558,41 @@
     width: 32px;
     height: 32px;
   }
+}
+
+.asset-trash-actions {
+  display: flex;
+  gap: var(--kk-space-2);
+  padding: var(--kk-space-1) var(--kk-space-2);
+  justify-content: flex-end;
+  background: var(--kk-bg-surface);
+  border-top: var(--kk-border-width) solid var(--kk-border-subtle);
+  border-radius: 0 0 var(--kk-radius-sm) var(--kk-radius-sm);
+}
+
+.asset-trash-btn {
+  font-size: var(--kk-font-caption);
+  padding: 2px var(--kk-space-2);
+  height: var(--kk-control-h-sm);
+}
+
+.asset-soft-delete-actions {
+  display: flex;
+  gap: var(--kk-space-2);
+  padding: var(--kk-space-1) var(--kk-space-2);
+  justify-content: flex-end;
+  background: var(--kk-bg-surface);
+  border-top: var(--kk-border-width) solid var(--kk-border-subtle);
+  border-radius: 0 0 var(--kk-radius-sm) var(--kk-radius-sm);
+}
+
+.asset-soft-delete-btn {
+  font-size: var(--kk-font-caption);
+  padding: 2px var(--kk-space-2);
+  height: var(--kk-control-h-sm);
+  color: var(--kk-text-secondary);
+}
+
+.asset-soft-delete-btn:hover {
+  color: var(--kk-text-danger);
 }

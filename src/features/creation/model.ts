@@ -75,6 +75,7 @@ export interface CreationTaskOutput {
 export interface CreationAttachment {
   id: string;
   assetId?: string;
+  originalAssetId?: string;
   name: string;
   mime: string;
   size: number;
@@ -82,6 +83,47 @@ export interface CreationAttachment {
   role?: CanvasReferenceSlot;
   /** Data URLs are used only for user selected, non-sensitive local assets. */
   dataUrl?: string;
+}
+
+export interface ChatItemDraft {
+  text?: string;
+  prompt?: string;
+  attachments?: CreationAttachment[];
+  pendingAgent?: string | boolean;
+  modelSelection?: ModelSelection;
+  conversationChannel?: "codex" | "direct" | "google";
+  model?: string;
+  kind?: CanvasItemKind;
+  approvalMode?: "auto" | "ask";
+  privacyMode?: "local_only" | "byok_local" | "platform_backed";
+  outputCount?: number;
+  updatedAt?: number;
+  [k: string]: unknown;
+}
+
+export interface ChatItemMessage {
+  id: string;
+  role: "user" | "assistant" | "system";
+  content: string;
+  createdAt?: number;
+  taskId?: string;
+  [k: string]: unknown;
+}
+
+export interface ChatItem {
+  id: string;
+  name: string;
+  createdAt: number;
+  updatedAt: number;
+  draft: ChatItemDraft;
+  messages: ChatItemMessage[];
+  mainAgent: string;
+  modelAllowlist: string[];
+  agentThreadId?: string;
+  googleConversation?: GoogleConversation | unknown;
+  originChatId?: string;
+  isTemporary?: boolean;
+  [k: string]: unknown;
 }
 
 export interface CreationMessage {
@@ -97,6 +139,8 @@ export interface CreationTask {
   id: string;
   /** Optional canvas node that originated this task submission. */
   sourceItemId?: string;
+  /** Identifies the chat within the project that originated this task submission */
+  originChatId?: string;
   prompt: string;
   model: string;
   kind: CanvasItemKind;
@@ -157,6 +201,11 @@ export interface CreationProject {
   id: string;
   name: string;
   kind: CanvasItemKind;
+  /** Missing on legacy projects; preserve those names as manually chosen. */
+  nameSource?: "auto" | "manual";
+  groupId?: string;
+  /** Soft deletion retains this complete project and every original reference. */
+  trashedAt?: number;
   prompt: string;
   model: string;
   attachments: CreationAttachment[];
@@ -174,31 +223,113 @@ export interface CreationProject {
   favoriteIds: string[];
   likedIds: string[];
   customTags?: string[];
+  // v3 Multi-Chat additions
+  activeChatId?: string;
+  chats?: Record<string, ChatItem>;
   /** Unsubmitted workbench text and attachments survive project switching. */
   composerDraft: CreationDraft;
   createdAt: number;
   updatedAt: number;
 }
 
+/** Strict v3 Project representation where activeChatId and chats are guaranteed */
+export type CreationProjectV3 = CreationProject & {
+  activeChatId: string;
+  chats: Record<string, ChatItem>;
+};
+
 /** Do not remove a project while its provider submission may still be active. */
 export function projectHasUnsettledTasks(project: CreationProject): boolean {
-  return project.tasks.some(
-    (task) =>
-      ["queued", "running", "unknown"].includes(task.status) ||
-      task.submissionState === "submitted" ||
-      task.submissionState === "unknown" ||
-      task.outputs?.some((output) =>
-        ["waiting", "running", "unknown"].includes(output.status),
-      ),
+  return (
+    project.googleConversation?.status === "running" ||
+    project.googleConversation?.status === "unknown" ||
+    project.tasks.some(
+      (task) =>
+        ["queued", "running", "unknown"].includes(task.status) ||
+        task.submissionState === "submitted" ||
+        task.submissionState === "unknown" ||
+        task.outputs?.some((output) =>
+          ["waiting", "running", "unknown"].includes(output.status),
+        ),
+    )
   );
 }
 
-export interface CreationSnapshot {
+export interface CreationSnapshotV2 {
   version: 2;
   revision: number;
   activeProjectId: string | null;
   projects: CreationProject[];
+  projectGroups?: CreationProjectGroup[];
   homeDraft: CreationDraft;
+}
+
+export interface CreationProjectGroup {
+  id: string;
+  name: string;
+  deletedAt?: number;
+}
+
+export interface CreationSnapshotV3 {
+  version: 3;
+  revision: number;
+  activeProjectId: string | null;
+  projects: CreationProject[];
+  projectGroups?: CreationProjectGroup[];
+  homeDraft: CreationDraft;
+}
+
+export type CreationSnapshot = CreationSnapshotV2 | CreationSnapshotV3;
+
+/** Protocol 6 retains the legacy root conversation until ADR-022 is implemented. */
+export function projectChatExecutionBlockReason(
+  project: CreationProject | undefined,
+): string | undefined {
+  if (!project) return;
+  const threads = [
+    project.agentThreadId,
+    ...Object.values(project.chats ?? {}).map((chat) => chat.agentThreadId),
+  ];
+  if (
+    threads.some(
+      (thread) =>
+        thread !== undefined && !/^[A-Za-z0-9_-]{1,160}$/.test(thread),
+    )
+  )
+    return "Agent 线程身份无效，已暂停执行以保留原件。";
+  if (project.chats === null) return "聊天身份不完整，已暂停执行以保留原件。";
+  if (!project.chats) {
+    return project.activeChatId !== undefined
+      ? "聊天身份不完整，已暂停执行以保留原件。"
+      : undefined;
+  }
+  const chats = Object.values(project.chats);
+  if (chats.some((chat) => chat.isTemporary))
+    return "临时聊天隔离尚未完成，当前记录仅供恢复查看。";
+  if (chats.length !== 1)
+    return "多聊天执行隔离尚未完成，当前记录仅供恢复查看。";
+  const chat = project.activeChatId && project.chats[project.activeChatId];
+  if (!chat || chat.id !== project.activeChatId)
+    return "聊天身份不完整，已暂停执行以保留原件。";
+  if (
+    chat.agentThreadId &&
+    project.agentThreadId &&
+    chat.agentThreadId !== project.agentThreadId
+  )
+    return "聊天与原项目的 Agent 线程身份冲突，已暂停执行以保留原件。";
+  return undefined;
+}
+
+export function snapshotWriteBlockReason(
+  snapshot: CreationSnapshot,
+): string | undefined {
+  if (snapshot.version === 3)
+    return "多聊天格式迁移与写入保护尚未完成，当前快照仅供恢复查看。";
+  for (const project of snapshot.projects) {
+    const reason = projectChatExecutionBlockReason(project);
+    if (reason) return reason;
+  }
+  return undefined;
 }
 
 export interface CreationDraft {
@@ -295,6 +426,23 @@ function itemId(project: string): string {
   return `${project}-prompt`;
 }
 
+export function createDefaultChat(
+  id = "chat-default",
+  name = "默认对话",
+): ChatItem {
+  const now = Date.now();
+  return {
+    id,
+    name,
+    createdAt: now,
+    updatedAt: now,
+    draft: { ...emptyDraft() } as ChatItemDraft,
+    messages: [],
+    mainAgent: "codex",
+    modelAllowlist: [],
+  };
+}
+
 export function emptySnapshot(): CreationSnapshot {
   return {
     version: 2,
@@ -320,7 +468,10 @@ export function readCreationSnapshot(): CreationSnapshot {
     if (parsed.version === 1 && Array.isArray(parsed.projects)) {
       return migrateV1(parsed);
     }
-    if (parsed.version !== 2 || !Array.isArray(parsed.projects)) {
+    if (
+      (parsed.version !== 2 && parsed.version !== 3) ||
+      !Array.isArray(parsed.projects)
+    ) {
       return emptySnapshot();
     }
     return normalizeCreationSnapshot(parsed) ?? emptySnapshot();
@@ -345,11 +496,17 @@ export function normalizeCreationSnapshot(
     revision?: unknown;
     activeProjectId?: unknown;
     projects?: unknown;
+    projectGroups?: unknown;
     homeDraft?: unknown;
   };
-  if (candidate.version !== 2 || !Array.isArray(candidate.projects))
+  if (
+    (candidate.version !== 2 && candidate.version !== 3) ||
+    !Array.isArray(candidate.projects)
+  )
     return null;
   if (!candidate.projects.every(isSnapshotProjectRoutingValid)) return null;
+
+  const version = candidate.version as 2 | 3;
   const projects = candidate.projects
     .filter((project): project is CreationProject =>
       Boolean(
@@ -359,22 +516,92 @@ export function normalizeCreationSnapshot(
         Array.isArray((project as { items?: unknown }).items),
       ),
     )
-    .map(normalizeProject);
+    .map((project) => normalizeProject(project, version));
+
+  const projectGroups = candidate.projectGroups;
+  if (
+    projectGroups !== undefined &&
+    (!Array.isArray(projectGroups) ||
+      !projectGroups.every((group): group is CreationProjectGroup =>
+        Boolean(
+          group &&
+          typeof group === "object" &&
+          typeof group.id === "string" &&
+          group.id.length > 0 &&
+          group.id.length <= 160 &&
+          typeof group.name === "string" &&
+          group.name.trim().length > 0 &&
+          group.name.length <= 120 &&
+          (group.deletedAt === undefined ||
+            (Number.isSafeInteger(group.deletedAt) && group.deletedAt >= 0)),
+        ),
+      ))
+  )
+    return null;
+  if (
+    projectGroups &&
+    new Set(projectGroups.map((group) => group.id)).size !==
+      projectGroups.length
+  )
+    return null;
+  if (
+    projects.some(
+      (project) =>
+        project.groupId &&
+        !projectGroups?.some(
+          (group) =>
+            group.id === project.groupId && group.deletedAt === undefined,
+        ),
+    )
+  )
+    return null;
+
+  if (version === 3) {
+    for (const project of projects) {
+      if (
+        !project.activeChatId ||
+        !project.chats ||
+        !project.chats[project.activeChatId]
+      ) {
+        return null;
+      }
+    }
+  }
+
   const activeProjectId =
     typeof candidate.activeProjectId === "string" &&
-    projects.some((project) => project.id === candidate.activeProjectId)
+    projects.some(
+      (project) =>
+        project.id === candidate.activeProjectId &&
+        project.trashedAt === undefined,
+    )
       ? candidate.activeProjectId
       : null;
+
+  const revision =
+    typeof candidate.revision === "number" &&
+    Number.isSafeInteger(candidate.revision) &&
+    candidate.revision >= 0
+      ? candidate.revision
+      : 0;
+
+  if (version === 3) {
+    return {
+      version: 3,
+      revision,
+      activeProjectId,
+      projects,
+      ...(projectGroups === undefined ? {} : { projectGroups }),
+      homeDraft: normalizeDraft(candidate.homeDraft),
+    };
+  }
+
   return {
     version: 2,
-    revision:
-      typeof candidate.revision === "number" &&
-      Number.isSafeInteger(candidate.revision) &&
-      candidate.revision >= 0
-        ? candidate.revision
-        : 0,
+    revision,
     activeProjectId,
     projects,
+    ...(projectGroups === undefined ? {} : { projectGroups }),
     homeDraft: normalizeDraft(candidate.homeDraft),
   };
 }
@@ -712,7 +939,160 @@ function normalizeCanvasItem(
   };
 }
 
-function normalizeProject(value: CreationProject): CreationProject {
+function normalizeChatDraft(rawDraft: unknown): ChatItemDraft {
+  const d =
+    rawDraft && typeof rawDraft === "object"
+      ? (rawDraft as Record<string, unknown>)
+      : {};
+  const text =
+    typeof d.text === "string"
+      ? d.text
+      : typeof d.prompt === "string"
+        ? d.prompt
+        : "";
+  const pendingAgent =
+    typeof d.pendingAgent === "string"
+      ? d.pendingAgent
+      : typeof d.pendingAgent === "boolean"
+        ? d.pendingAgent
+        : undefined;
+  return {
+    ...d,
+    ...normalizeDraft(d),
+    text,
+    pendingAgent,
+  };
+}
+
+function normalizeChatMessages(raw: unknown): ChatItemMessage[] {
+  if (!Array.isArray(raw)) return [];
+  return raw
+    .filter((m): m is Record<string, unknown> =>
+      Boolean(
+        m &&
+        typeof m === "object" &&
+        typeof (m as { id?: unknown }).id === "string" &&
+        typeof (m as { content?: unknown }).content === "string",
+      ),
+    )
+    .map((m) => ({
+      ...m,
+      id: safeText(m.id as string, 160),
+      role:
+        m.role === "assistant"
+          ? "assistant"
+          : m.role === "system"
+            ? "system"
+            : "user",
+      content: (m.content as string).slice(0, 20000),
+      createdAt:
+        typeof m.createdAt === "number" && Number.isSafeInteger(m.createdAt)
+          ? m.createdAt
+          : undefined,
+      taskId:
+        typeof m.taskId === "string" ? safeText(m.taskId, 160) : undefined,
+    }));
+}
+
+export function normalizeChat(
+  candidate: unknown,
+  fallbackId = "chat-default",
+): ChatItem {
+  const c = (
+    candidate && typeof candidate === "object" ? candidate : {}
+  ) as Partial<ChatItem>;
+  const id =
+    typeof c.id === "string" && c.id.trim() ? safeText(c.id, 160) : fallbackId;
+  const name =
+    typeof c.name === "string" && c.name.trim()
+      ? safeText(c.name, 160)
+      : "默认对话";
+  const now = Date.now();
+  const createdAt =
+    typeof c.createdAt === "number" &&
+    Number.isSafeInteger(c.createdAt) &&
+    c.createdAt >= 0
+      ? c.createdAt
+      : now;
+  const updatedAt =
+    typeof c.updatedAt === "number" &&
+    Number.isSafeInteger(c.updatedAt) &&
+    c.updatedAt >= 0
+      ? c.updatedAt
+      : createdAt;
+  const mainAgent =
+    typeof c.mainAgent === "string" && c.mainAgent.trim()
+      ? safeText(c.mainAgent, 60)
+      : "codex";
+
+  const modelAllowlist = Array.isArray(c.modelAllowlist)
+    ? c.modelAllowlist
+        .filter(
+          (m): m is string => typeof m === "string" && m.trim().length > 0,
+        )
+        .map((m) => safeText(m, 120))
+        .slice(0, 64)
+    : [];
+
+  return {
+    ...c,
+    id,
+    name,
+    createdAt,
+    updatedAt,
+    draft: normalizeChatDraft(c.draft),
+    messages: normalizeChatMessages(c.messages),
+    mainAgent,
+    modelAllowlist,
+    agentThreadId:
+      typeof c.agentThreadId === "string" &&
+      /^[A-Za-z0-9_-]{1,160}$/.test(c.agentThreadId)
+        ? c.agentThreadId
+        : undefined,
+    googleConversation: normalizeGoogleConversation(c.googleConversation),
+    originChatId:
+      typeof c.originChatId === "string"
+        ? safeText(c.originChatId, 160)
+        : undefined,
+    isTemporary: Boolean(c.isTemporary),
+  };
+}
+
+function resolveProjectChats(
+  candidate: Record<string, unknown>,
+  version: 2 | 3,
+): { chats?: Record<string, ChatItem>; activeChatId?: string } {
+  let chats: Record<string, ChatItem> | undefined;
+  let activeChatId: string | undefined;
+  if (
+    candidate.chats &&
+    typeof candidate.chats === "object" &&
+    !Array.isArray(candidate.chats)
+  ) {
+    chats = {};
+    for (const [key, chatVal] of Object.entries(candidate.chats)) {
+      chats[key] = normalizeChat(chatVal, key);
+    }
+  } else if (version === 3) {
+    chats = { "chat-default": createDefaultChat() };
+  }
+  if (chats) {
+    if (
+      typeof candidate.activeChatId === "string" &&
+      chats[candidate.activeChatId]
+    ) {
+      activeChatId = candidate.activeChatId;
+    } else {
+      activeChatId = Object.keys(chats)[0] ?? "chat-default";
+    }
+  }
+  return { chats, activeChatId };
+}
+
+function normalizeProject(
+  value: CreationProject | unknown,
+  version: 2 | 3 = 2,
+): CreationProject {
   const candidate = value as unknown as Record<string, unknown>;
   const projectId = safeText(candidate.id, 160);
   const items = Array.isArray(candidate.items)
@@ -724,10 +1104,17 @@ function normalizeProject(value: CreationProject): CreationProject {
   const rawTasks = (
     Array.isArray(candidate.tasks) ? candidate.tasks : []
   ) as Array<Record<string, unknown>>;
+
+  const { chats, activeChatId } = resolveProjectChats(candidate, version);
   return {
     canvas: readProjectCanvas(candidate.canvas, items),
     id: projectId,
     name: safeText(candidate.name, 120, "未命名项目"),
+    nameSource: candidate.nameSource === "auto" ? "auto" : "manual",
+    groupId:
+      typeof candidate.groupId === "string" ? candidate.groupId : undefined,
+    trashedAt:
+      typeof candidate.trashedAt === "number" ? candidate.trashedAt : undefined,
     prompt: safeText(candidate.prompt, 4000),
     model: safeText(candidate.model, 120),
     kind: normalizeKind(candidate.kind),
@@ -777,7 +1164,14 @@ function normalizeProject(value: CreationProject): CreationProject {
                 ? message.createdAt
                 : Date.now(),
           }))
-      : [],
+      : chats && activeChatId && chats[activeChatId]
+        ? chats[activeChatId].messages.map((m) => ({
+            id: safeText(m.id, 160),
+            role: m.role === "system" ? ("system" as const) : ("user" as const),
+            content: m.content.slice(0, 10000),
+            createdAt: m.createdAt ?? Date.now(),
+          }))
+        : [],
     tasks: rawTasks
       .filter((task) =>
         Boolean(
@@ -791,6 +1185,7 @@ function normalizeProject(value: CreationProject): CreationProject {
       .map((task) => ({
         id: safeText(task.id, 160),
         sourceItemId: safeText(task.sourceItemId, 160) || undefined,
+        originChatId: safeText(task.originChatId, 160) || undefined,
         prompt: safeText(task.prompt, 4000),
         model: safeText(task.model, 120),
         kind: normalizeKind(task.kind),
@@ -1045,6 +1440,7 @@ function normalizeProject(value: CreationProject): CreationProject {
           outputCount: 1,
           updatedAt: 0,
         },
+    ...(chats ? { chats, activeChatId } : {}),
     createdAt:
       typeof candidate.createdAt === "number"
         ? candidate.createdAt
@@ -1118,6 +1514,7 @@ export function createProject(input: CreateProjectInput): CreationProject {
     id,
     canvas: createProjectCanvas([item]),
     name: input.prompt.trim().replace(/\s+/g, " ").slice(0, 32) || "未命名项目",
+    nameSource: "auto",
     kind: input.kind,
     prompt: input.prompt,
     model: input.model,
@@ -1139,6 +1536,26 @@ export function createProject(input: CreateProjectInput): CreationProject {
     ...routing,
     providerName: input.providerName,
     providerCredentialRef: input.providerCredentialRef,
+    activeChatId: "chat-default",
+    chats: {
+      "chat-default": {
+        id: "chat-default",
+        name: "默认对话",
+        createdAt: now,
+        updatedAt: now,
+        draft: { ...emptyDraft() } as ChatItemDraft,
+        messages: [
+          {
+            id: `${id}-message`,
+            role: "user",
+            content: input.prompt,
+            createdAt: now,
+          },
+        ],
+        mainAgent: codex ? "codex" : "direct",
+        modelAllowlist: [],
+      },
+    },
     composerDraft: {
       modelSelection: selection,
       providerConnectionId: codex ? undefined : input.providerConnectionId,
@@ -1160,6 +1577,7 @@ export function createTask(project: CreationProject): CreationTask {
   const now = Date.now();
   return {
     id: `${project.id}-task-${now.toString(36)}-${Math.random().toString(36).slice(2, 8)}`,
+    originChatId: project.activeChatId,
     prompt: project.prompt,
     model: project.model,
     kind: project.kind,

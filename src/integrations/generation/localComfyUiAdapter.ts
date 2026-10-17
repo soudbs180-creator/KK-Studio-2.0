@@ -8,17 +8,116 @@ import type {
 } from "./providerAdapter.ts";
 import { ProviderAdapterError } from "./providerAdapter.ts";
 
-interface HistoryEntry {
-  outputs?: Record<
-    string,
-    {
-      images?: Array<{
-        filename?: unknown;
-        subfolder?: unknown;
-        type?: unknown;
-      }>;
+export interface ComfyUiOutputItem {
+  filename?: unknown;
+  subfolder?: unknown;
+  type?: unknown;
+}
+
+export interface ComfyUiNodeOutput {
+  images?: ComfyUiOutputItem[];
+  videos?: ComfyUiOutputItem[];
+  [key: string]: unknown;
+}
+
+export interface ComfyUiHistoryEntry {
+  outputs?: Record<string, ComfyUiNodeOutput>;
+  [key: string]: unknown;
+}
+
+function resolveOutputItem(
+  item: ComfyUiOutputItem,
+  isVideoArray: boolean,
+  providerJobId: string,
+  base: string,
+  index: number,
+): ProviderResult | null {
+  if (typeof item.filename !== "string" || !item.filename) return null;
+  const filename = item.filename;
+  const subfolder = typeof item.subfolder === "string" ? item.subfolder : "";
+  const type = typeof item.type === "string" ? item.type : "output";
+  const params = new URLSearchParams({
+    filename,
+    subfolder,
+    type,
+  });
+  const url = `${base}/view?${params.toString()}`;
+  const lower = filename.toLowerCase();
+
+  if (lower.endsWith(".mp4")) {
+    return {
+      providerJobId,
+      url,
+      mime: "video/mp4",
+      kind: "video",
+      index,
+    };
+  }
+  if (lower.endsWith(".webm")) {
+    return {
+      providerJobId,
+      url,
+      mime: "video/webm",
+      kind: "video",
+      index,
+    };
+  }
+  if (isVideoArray) {
+    return {
+      providerJobId,
+      url,
+      mime: "video/mp4",
+      kind: "video",
+      index,
+    };
+  }
+
+  const mime = lower.endsWith(".webp")
+    ? "image/webp"
+    : lower.endsWith(".jpg") || lower.endsWith(".jpeg")
+      ? "image/jpeg"
+      : "image/png";
+
+  return {
+    providerJobId,
+    url,
+    mime,
+    kind: "image",
+    index,
+  };
+}
+
+export function extractComfyUiOutputs(
+  outputs: Record<string, ComfyUiNodeOutput> | undefined,
+  providerJobId: string,
+  base: string,
+): ProviderResult[] {
+  if (!outputs) return [];
+  const results: ProviderResult[] = [];
+  let index = 0;
+
+  for (const nodeOutput of Object.values(outputs)) {
+    if (Array.isArray(nodeOutput.images)) {
+      for (const item of nodeOutput.images) {
+        const res = resolveOutputItem(item, false, providerJobId, base, index);
+        if (res) {
+          results.push(res);
+          index++;
+        }
+      }
     }
-  >;
+    if (Array.isArray(nodeOutput.videos)) {
+      for (const item of nodeOutput.videos) {
+        const res = resolveOutputItem(item, true, providerJobId, base, index);
+        if (res) {
+          results.push(res);
+          index++;
+        }
+      }
+    }
+  }
+
+  return results;
 }
 
 function baseUrl(connection: ProviderConnection): string {
@@ -125,7 +224,10 @@ export class LocalComfyUiAdapter implements GenerationProviderAdapter {
       },
     );
     if (!response.ok) throw await responseError(response, "ComfyUI 查询失败");
-    const payload = (await response.json()) as Record<string, HistoryEntry>;
+    const payload = (await response.json()) as Record<
+      string,
+      ComfyUiHistoryEntry
+    >;
     const entry = payload[providerJobId];
     return {
       providerJobId,
@@ -135,18 +237,41 @@ export class LocalComfyUiAdapter implements GenerationProviderAdapter {
   }
 
   async cancel(providerJobId: string, signal?: AbortSignal): Promise<void> {
-    const response = await fetch(`${baseUrl(this.connection)}/interrupt`, {
+    // Send targeted /queue delete request specifying the exact prompt_id
+    const queueResponse = await fetch(`${baseUrl(this.connection)}/queue`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ prompt_id: providerJobId }),
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({ delete: [providerJobId] }),
       credentials: "omit",
       redirect: "error",
       signal,
     });
-    if (!response.ok) throw await responseError(response, "ComfyUI 取消失败");
+    if (!queueResponse.ok)
+      throw await responseError(queueResponse, "ComfyUI 队列删除失败");
+
+    // Call /interrupt for the running prompt ID
+    const interruptResponse = await fetch(
+      `${baseUrl(this.connection)}/interrupt`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({ prompt_id: providerJobId }),
+        credentials: "omit",
+        redirect: "error",
+        signal,
+      },
+    );
+    if (!interruptResponse.ok)
+      throw await responseError(interruptResponse, "ComfyUI 中断执行失败");
   }
 
-  async listResults(
+  async pollHistory(
     providerJobId: string,
     signal?: AbortSignal,
   ): Promise<ProviderResult[]> {
@@ -161,25 +286,21 @@ export class LocalComfyUiAdapter implements GenerationProviderAdapter {
     );
     if (!response.ok)
       throw await responseError(response, "ComfyUI 结果查询失败");
-    const payload = (await response.json()) as Record<string, HistoryEntry>;
-    const images = Object.values(payload[providerJobId]?.outputs ?? {}).flatMap(
-      (output) => output.images ?? [],
+    const payload = (await response.json()) as Record<
+      string,
+      ComfyUiHistoryEntry
+    >;
+    return extractComfyUiOutputs(
+      payload[providerJobId]?.outputs,
+      providerJobId,
+      baseUrl(this.connection),
     );
-    return images.flatMap((image, index) => {
-      if (typeof image.filename !== "string") return [];
-      const params = new URLSearchParams({
-        filename: image.filename,
-        subfolder: typeof image.subfolder === "string" ? image.subfolder : "",
-        type: typeof image.type === "string" ? image.type : "output",
-      });
-      return [
-        {
-          providerJobId,
-          url: `${baseUrl(this.connection)}/view?${params.toString()}`,
-          mime: "image/png",
-          index,
-        },
-      ];
-    });
+  }
+
+  async listResults(
+    providerJobId: string,
+    signal?: AbortSignal,
+  ): Promise<ProviderResult[]> {
+    return this.pollHistory(providerJobId, signal);
   }
 }

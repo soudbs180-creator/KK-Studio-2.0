@@ -1,0 +1,231 @@
+{
+  "version": 1,
+  "chat": [
+    {
+      "id": "qwen3.5-9b-q4-k-m",
+      "name": "Qwen3.5-9B Q4_K_M",
+      "repository": "unsloth/Qwen3.5-9B-GGUF",
+      "revision": "3885219b6810b007914f3a7950a8d1b469d598a5",
+      "filename": "Qwen3.5-9B-Q4_K_M.gguf",
+      "mainBytes": 5680522464,
+      "visionBytes": 918166080,
+      "mainSha256": "03b74727a860a56338e042c4420bb3f04b2fec5734175f4cb9fa853daf52b7e8",
+      "visionSha256": "f70dc3509053962b0d0d3ee8a7eacebf5d60aa560cad78254ae8698516ae029f",
+      "contextTokens": 8192,
+      "estimatedRamBytes": 8589934592,
+      "maintainer": "Unsloth",
+      "license": "Apache-2.0",
+      "engine": "llama.cpp",
+      "sourceUrl": "https://huggingface.co/unsloth/Qwen3.5-9B-GGUF/tree/3885219b6810b007914f3a7950a8d1b469d598a5",
+      "artifactBaseUrl": "https://huggingface.co/unsloth/Qwen3.5-9B-GGUF/resolve/3885219b6810b007914f3a7950a8d1b469d598a5",
+      "artifacts": [
+        {
+          "path": "Qwen3.5-9B-Q4_K_M.gguf",
+          "bytes": 5680522464,
+          "sha256": "03b74727a860a56338e042c4420bb3f04b2fec5734175f4cb9fa853daf52b7e8",
+          "role": "model"
+        },
+        {
+          "path": "mmproj-F16.gguf",
+          "bytes": 918166080,
+          "sha256": "f70dc3509053962b0d0d3ee8a7eacebf5d60aa560cad78254ae8698516ae029f",
+          "role": "projector"
+        }
+      ]
+    },
+    {
+      "id": "qwen3.5-4b-q4-k-m",
+      "name": "Qwen3.5-4B Q4_K_M",
+      "repository": "unsloth/Qwen3.5-4B-GGUF",
+      "revision": "e87f176479d0855a907a41277aca2f8ee7a09523",
+      "filename": "Qwen3.5-4B-Q4_K_M.gguf",
+      "mainBytes": 2740937888,
+      "visionBytes": 672423616,
+      "mainSha256": "00fe7986ff5f6b463e62455821146049db6f9313603938a70800d1fb69ef11a4",
+      "visionSha256": "cd88edcf8d031894960bb0c9c5b9b7e1fea6ebee02b9f7ce925a00d12891f864",
+      "contextTokens": 4096,
+      "estimatedRamBytes": 6442450944,
+      "maintainer": "Unsloth",
+      "license": "Apache-2.0",
+      "engine": "llama.cpp",
+      "sourceUrl": "https://huggingface.co/unsloth/Qwen3.5-4B-GGUF/tree/e87f176479d0855a907a41277aca2f8ee7a09523",
+      "artifactBaseUrl": "https://huggingface.co/unsloth/Qwen3.5-4B-GGUF/resolve/e87f176479d0855a907a41277aca2f8ee7a09523",
+      "artifacts": [
+        {
+          "path": "Qwen3.5-4B-Q4_K_M.gguf",
+          "bytes": 2740937888,
+          "sha256": "00fe7986ff5f6b463e62455821146049db6f9313603938a70800d1fb69ef11a4",
+          "role": "model"
+        },
+        {
+          "path": "mmproj-F16.gguf",
+          "bytes": 672423616,
+          "sha256": "cd88edcf8d031894960bb0c9c5b9b7e1fea6ebee02b9f7ce925a00d12891f864",
+          "role": "projector"
+        }
+      ]
+    },
+    {
+      "id": "qwen3.8-27b-ud-q4-k-m",
+      "name": "Qwen3.8-27B UD-Q4_K_M",
+      "repository": "unsloth/Qwen3.8-27B-GGUF",
+      "revision": "4ca720788d1e01f1bff70c033e0d0028fd02e502",
+      "filename": "Qwen3.8-27B-UD-Q4_K_M.gguf",
+      "mainBytes": 16464440224,
+      "visionBytes": 927607488,
+      "mainSha256": "322e194ff79741c7baa497c240f677f54b201b0efab44ca8e50f122b39123482",
+      "visionSha256": "cbb841a9ee0636b2ec172f5bb8df2ea8dfeb01e90fe7c6126581d662a0b4e43e",
+      "contextTokens": 4096,
+      "estimatedRamBytes": 22548578304,
+      "maintainer": "Unsloth",
+      "license": "Apache-2.0",
+      "engine": "llama.cpp",
+      "sourceUrl": "https://huggingface.co/unsloth/Qwen3.8-27B-GGUF/tree/4ca720788d1e01f1bff70c033e0d0028fd02e502",
+      "artifactBaseUrl": "https://huggingface.co/unsloth/Qwen3.8-27B-GGUF/resolve/4ca720788d1e01f1bff70c033e0d0028fd02e502",
+      "artifacts": [
+        {
+          "path": "Qwen3.8-27B-UD-Q4_K_M.gguf",
+          "bytes": 16464440224,
+          "sha256": "322e194ff79741c7baa497c240f677f54b201b0efab44ca8e50f122b39123482",
+          "role": "model"
+        },
+        {
+          "path": "mmproj-F16.gguf",
+          "bytes": 927607488,
+          "sha256": "cbb841a9ee0636b2ec172f5bb8df2ea8dfeb01e90fe7c6126581d662a0b4e43e",
+          "role": "projector"
+        }
+      ]
+    }
+  ],
+  "video": [
+    {
+      "id": "minimax-h3-16g-hifi-fl2va",
+      "name": "MiniMax H3 16G HiFi 文生／首尾帧视频",
+      "maintainer": "l1ngzi (community)",
+      "revision": "190e955f54f0b3ffc68929bc5bcf75ad825201af",
+      "sourceUrl": "https://modelscope.cn/models/l1ngzi/MiniMax-H3-16G-HiFi",
+      "artifactBaseUrl": "https://modelscope.cn/models/l1ngzi/MiniMax-H3-16G-HiFi/resolve/190e955f54f0b3ffc68929bc5bcf75ad825201af",
+      "license": "MiniMax H3 Community License（原模型）；派生包声明待核对",
+      "licenseReview": "required",
+      "engine": "comfyui",
+      "mode": "fl2va",
+      "defaultMode": true,
+      "declaredMinVramBytes": 16000000000,
+      "declaredMinRamBytes": 32000000000,
+      "artifacts": [
+        {
+          "path": "diffusion_models/minimax_h3_fl2va_dit_16g.safetensors",
+          "bytes": 28364846456,
+          "sha256": "9b5a64b30140183fe886c3dd7dd3a6ed1513fb6d04187ee8af43c21a16ece1b6",
+          "role": "model"
+        },
+        {
+          "path": "text_encoders/qwen3vl_text_encoder.safetensors",
+          "bytes": 30552489265,
+          "sha256": "1227805d3cbc93dfa94f59e003e294bd3b7ab2ea7ac283a8e64b54c6b736374f",
+          "role": "text-encoder"
+        },
+        {
+          "path": "vae/minimax_h3_video_vae_fp16.safetensors",
+          "bytes": 5207808496,
+          "sha256": "7c1f131492e7eddacaac9069a61b81bdd39de5cc96561e677c5eab1cdce5e522",
+          "role": "video-vae"
+        },
+        {
+          "path": "vae/minimax_h3_audio_vae_fp32.safetensors",
+          "bytes": 605254808,
+          "sha256": "8e505d95dd1561d47abd43d4238fd40d9bb1ae9e147ed0a4cba778d76ae4db48",
+          "role": "audio-vae"
+        }
+      ],
+      "workflowFormat": "comfy-ui-graph",
+      "workflowConversionRequired": true,
+      "accelerationAcceptance": "unverified",
+      "runtimeAcceptance": "unverified"
+    },
+    {
+      "id": "minimax-h3-16g-hifi-ref2va",
+      "name": "MiniMax H3 16G HiFi 参考视频",
+      "maintainer": "l1ngzi (community)",
+      "revision": "190e955f54f0b3ffc68929bc5bcf75ad825201af",
+      "sourceUrl": "https://modelscope.cn/models/l1ngzi/MiniMax-H3-16G-HiFi",
+      "artifactBaseUrl": "https://modelscope.cn/models/l1ngzi/MiniMax-H3-16G-HiFi/resolve/190e955f54f0b3ffc68929bc5bcf75ad825201af",
+      "license": "MiniMax H3 Community License（原模型）；派生包声明待核对",
+      "licenseReview": "required",
+      "engine": "comfyui",
+      "mode": "ref2va",
+      "defaultMode": false,
+      "declaredMinVramBytes": 16000000000,
+      "declaredMinRamBytes": 32000000000,
+      "artifacts": [
+        {
+          "path": "diffusion_models/minimax_h3_ref2va_dit_16g.safetensors",
+          "bytes": 28403358856,
+          "sha256": "ccc424d726086612fc6d5ac0464ccc4d8ff528f944c4c24c287c45862fadab41",
+          "role": "model"
+        },
+        {
+          "path": "text_encoders/qwen3vl_text_encoder.safetensors",
+          "bytes": 30552489265,
+          "sha256": "1227805d3cbc93dfa94f59e003e294bd3b7ab2ea7ac283a8e64b54c6b736374f",
+          "role": "text-encoder"
+        },
+        {
+          "path": "vae/minimax_h3_video_vae_fp16.safetensors",
+          "bytes": 5207808496,
+          "sha256": "7c1f131492e7eddacaac9069a61b81bdd39de5cc96561e677c5eab1cdce5e522",
+          "role": "video-vae"
+        },
+        {
+          "path": "vae/minimax_h3_audio_vae_fp32.safetensors",
+          "bytes": 605254808,
+          "sha256": "8e505d95dd1561d47abd43d4238fd40d9bb1ae9e147ed0a4cba778d76ae4db48",
+          "role": "audio-vae"
+        }
+      ],
+      "workflowFormat": "comfy-ui-graph",
+      "workflowConversionRequired": true,
+      "accelerationAcceptance": "unverified",
+      "runtimeAcceptance": "unverified"
+    }
+  ],
+  "runtimes": [
+    {
+      "id": "cudart-llama-bin-win-cuda-13.4-x64.zip",
+      "release": "b11429",
+      "revision": "d81235049384534c167caea52b85a694f6103d14",
+      "backend": "cuda-13.4",
+      "archiveRole": "cuda-runtime",
+      "sourceUrl": "https://github.com/ggml-org/llama.cpp/releases/download/b11429/cudart-llama-bin-win-cuda-13.4-x64.zip",
+      "bytes": 423535356,
+      "sha256": "738f8c251ac22b70c3ae6f83a10cf222725df0395246a2cf58f32bdb85fbe668",
+      "license": "MIT; NVIDIA CUDA redistributable license notices",
+      "licenseReview": "required"
+    },
+    {
+      "id": "llama-b11429-bin-win-cpu-x64.zip",
+      "release": "b11429",
+      "revision": "d81235049384534c167caea52b85a694f6103d14",
+      "backend": "cpu",
+      "archiveRole": "server",
+      "sourceUrl": "https://github.com/ggml-org/llama.cpp/releases/download/b11429/llama-b11429-bin-win-cpu-x64.zip",
+      "bytes": 19398918,
+      "sha256": "1283323272b04cd07905816a597a0da810918102de958f4ff6f7bbaa70ed2efe",
+      "license": "MIT",
+      "licenseReview": "declared"
+    },
+    {
+      "id": "llama-b11429-bin-win-cuda-13.4-x64.zip",
+      "release": "b11429",
+      "revision": "d81235049384534c167caea52b85a694f6103d14",
+      "backend": "cuda-13.4",
+      "archiveRole": "server",
+      "sourceUrl": "https://github.com/ggml-org/llama.cpp/releases/download/b11429/llama-b11429-bin-win-cuda-13.4-x64.zip",
+      "bytes": 153089864,
+      "sha256": "76ddc6eff2389570789ed608881efc6977751a722015d8e8c94f302224ff1a3a",
+      "license": "MIT; NVIDIA CUDA redistributable license notices",
+      "licenseReview": "required"
+    }
+  ]
+}

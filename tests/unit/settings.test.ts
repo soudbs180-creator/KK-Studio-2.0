@@ -47,6 +47,7 @@ test("saved preferences restore user choices after reload", () => {
       accent: "default",
       floatingLayout: false,
       removeWatermark: false,
+      historyLimit: 20,
     },
   });
 });

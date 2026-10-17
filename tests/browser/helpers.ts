@@ -6,6 +6,7 @@ import {
 } from "../../src/features/creation/model";
 import { BASE_CANVAS_ITEMS } from "../../src/domain/canvasItems";
 import { createProjectCanvas } from "../../src/domain/projectCanvas";
+import { modelChannels, providerChannel } from "../../src/domain/modelChannels";
 import {
   MODEL_PROVIDER_STORAGE_KEY,
   parseModelProvider,
@@ -20,12 +21,11 @@ export async function selectHomeApiModel(
   page: Page,
   model?: string,
 ): Promise<void> {
-  const query =
-    model ??
-    (await page.evaluate(
-      (key) => JSON.parse(localStorage.getItem(key) ?? "{}").model as string,
-      MODEL_PROVIDER_STORAGE_KEY,
-    ));
+  const profile = await page.evaluate(
+    (key) => JSON.parse(localStorage.getItem(key) ?? "{}"),
+    MODEL_PROVIDER_STORAGE_KEY,
+  );
+  const query = model ?? profile.model;
   if (!query)
     throw new Error("API fixture must declare a model before selecting it");
   await page
@@ -33,6 +33,10 @@ export async function selectHomeApiModel(
     .getByRole("button", { name: "模型", exact: true })
     .click();
   const menu = page.getByRole("menu", { name: "选择模型" });
+  const channel = modelChannels.find(
+    (item) => item.id === providerChannel(profile),
+  )!;
+  await menu.getByRole("tab", { name: channel.label, exact: true }).click();
   await menu.getByRole("searchbox").fill(query);
   const choices = menu.getByRole("menuitemradio");
   await expect(choices).toHaveCount(1);

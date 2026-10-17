@@ -1,5 +1,5 @@
 import CanvasHud from "./canvas/CanvasHud";
-import { useEffect, type CSSProperties } from "react";
+import { useCallback, useEffect, type CSSProperties } from "react";
 import CanvasNavigation from "./canvas/CanvasNavigation";
 import { deleteConnection, restoreConnection } from "../domain/canvasGraph";
 import CanvasNodeLayer from "./canvas/CanvasNodeLayer";
@@ -27,6 +27,7 @@ import { projectCanvasFingerprint } from "../domain/projectCanvas";
 import "../styles/canvas-layers.css";
 import ImageCompareProvider from "../features/compare/ImageCompareProvider";
 import ImageCompareControls from "../features/compare/ImageCompareControls";
+import { useCanvasGestures } from "./canvas/useCanvasGestures";
 
 export default function Canvas({
   projectId,
@@ -115,6 +116,34 @@ export default function Canvas({
     return () => window.removeEventListener("kk:focus-node", locate);
   }, [locateNode]);
 
+  const handleConfigure = useCallback(() => {
+    onOpen?.("settings/providers");
+  }, [onOpen]);
+
+  const handleDeleteConnection = useCallback(
+    (id: string) => {
+      setEdges((current) => {
+        const edge = current.find((edge) => edge.id === id);
+        if (edge) setRemovedEdge(edge);
+        return deleteConnection(current, id);
+      });
+      containerRef.current?.focus({ preventScroll: true });
+    },
+    [setEdges, setRemovedEdge, containerRef],
+  );
+
+  const gestures = useCanvasGestures({
+    rightGesture,
+    controls: {
+      tool: controls.tool,
+      spaceHeld: controls.spaceHeld,
+      startCanvasPan,
+    },
+    addMenu,
+    movePointer,
+    finishPointer,
+  });
+
   return (
     <ImageCompareProvider key={projectId} items={items} active={!covered}>
       <div
@@ -129,39 +158,7 @@ export default function Canvas({
         aria-label="无限画布"
         tabIndex={0}
         onKeyDownCapture={handleKeyDown}
-        onPointerDownCapture={(event) => {
-          if (event.button === 2)
-            rightGesture.current = {
-              x: event.clientX,
-              y: event.clientY,
-              moved: false,
-            };
-          else if (rightGesture.current) rightGesture.current = null;
-        }}
-        onPointerDown={(event) => {
-          startCanvasPan(event);
-        }}
-        onDoubleClick={(event) => {
-          addMenu.openAtPoint(
-            event,
-            controls.tool === "select" && !controls.spaceHeld,
-          );
-        }}
-        onPointerMove={(event) => {
-          const right = rightGesture.current;
-          if (
-            right &&
-            (event.buttons & 2) !== 0 &&
-            Math.hypot(event.clientX - right.x, event.clientY - right.y) > 4
-          )
-            right.moved = true;
-          movePointer(event);
-        }}
-        onPointerUp={(event) => {
-          finishPointer(event);
-        }}
-        onPointerCancel={finishPointer}
-        onLostPointerCapture={finishPointer}
+        {...gestures}
         onWheel={zoomCanvas}
         style={
           {
@@ -184,17 +181,13 @@ export default function Canvas({
           onLocalGenerationSettled={history.settleLocalGeneration}
           likedIds={likedIds}
           onToggleLike={onToggleLike}
-          onConfigure={() => onOpen?.("settings/providers")}
+          onConfigure={handleConfigure}
           addMenu={addMenu}
           edges={edges}
           showConnections={preferences.showConnections}
           onConnect={connect}
           onConnectionNotice={setConnectionNotice}
-          onDeleteConnection={(id) => {
-            setRemovedEdge(edges.find((edge) => edge.id === id) ?? null);
-            setEdges((current) => deleteConnection(current, id));
-            containerRef.current?.focus({ preventScroll: true });
-          }}
+          onDeleteConnection={handleDeleteConnection}
         />
         <ImageCompareControls />
 

@@ -1,9 +1,12 @@
-# KK Studio 2.1.0
+# KK Studio
 
-KK Studio 是以无限画布为中心的多模态 Agent 工作台。本机唯一工程目录为 `D:\kk-studio\KK-Studio-2.0`。2.0.0 是融合基线，当前版本为 2.1.0；当前能力和未完成项以治理账本为准。
+KK Studio 是以无限画布为中心的多模态 Agent 创作工作台。本机唯一工程仓库为 `D:/kk-studio/KK-Studio-2.0`；任务在登记的隔离 worktree 开发。平台版本以[版本源](config/platform-versions.json)为准，当前能力、候选与未完成项见[项目状态](docs/governance/PROJECT_STATE.md)和[任务账本](docs/governance/task-ledger.json)。
 
-2.1.0 源码已通过 [PR #9](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/9) 合入 `main`。桌面 ZIP 和源码 ZIP 仍待构建与验收，通过后放入 `releases/2.1.0/` 供分享。不要直接压缩整个开发目录：`.git` 是历史，`node_modules` 是开发依赖，`src-tauri/target` 是可生成产物，用户项目和恢复归档也不属于分享内容。分享包使用说明见 [RELEASE.md](RELEASE.md)。
+2026-10-17本地审计A–D完成：Desktop/Web2.1.36最终产品source `4699458de1c3437309b7cdc3f019454104c81fce`，完整verify、源码独审、官方重建、隔离Native及两个日常快捷方式正常关闭/重开通过。默认旧聊天资料仍受READ_ONLY保护，9项目原始快照和身份保持；完整迁移/protocol7、真实服务和用户验收继续由原任务承接。149项任务中85DONE、64开放；原148任务不批量结案。主仓main8c/63dirty/index及远端main d95/2.1.34保持，未合入main或发布；见[实际验证](docs/changes/2026-10-17-audit-repair/verification.md)。Mobile2.1.1仍为规划。
 
+分享包只包含已验收白名单内容；Git历史、开发依赖、编译缓存、用户项目和恢复归档不属于分享包。见[发布说明](RELEASE.md)。
+
+- [核心档案分工与治理定位](#核心档案分工与治理定位)
 - [环境要求](#环境要求)
 - [安装步骤](#安装步骤)
 - [使用示例](#使用示例)
@@ -12,6 +15,18 @@ KK Studio 是以无限画布为中心的多模态 Agent 工作台。本机唯一
 - [数据和文件放在哪里](#数据和文件放在哪里)
 - [贡献指南](#贡献指南)
 - [设计和交付依据](#设计和交付依据)
+
+## 核心档案分工与治理定位
+
+项目确立三大顶级治理档案分工。**保持规则先治理好，然后再依靠这个规则来优化代码和 UI**：
+
+| 档案 | 谁来读 | 它的定义 | 职责定位 |
+| --- | --- | --- | --- |
+| [`README.md`](README.md)（本文件） | **人类**（开发者、用户、管理者） | **项目内容** | 项目定位、功能总览、运行环境、安装步骤与使用示例 |
+| [`AGENTS.md`](AGENTS.md) | **编码代理**（Coding Agents） | **如何构建项目** | 技术边界、数据安全、构建验证门禁、SDLC 交付与 Git 规则 |
+| [`DESIGN.md`](DESIGN.md) | **设计代理**（Design Agents / UI Agents） | **项目应该是什么样子和感觉** | 视觉语言、设计令牌（Tokens）、三端响应式与视口双向自适应规范 |
+
+> **规则在先，实现随行**：编码代理必须先遵循 `AGENTS.md`；UI 与新页面开发必须严格遵照 `DESIGN.md`（全面对齐 Google Stitch Specification 标准），禁止任何破坏响应式流式布局或私自硬编码色值的行为。
 
 ## 环境要求
 

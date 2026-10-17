@@ -6,14 +6,16 @@ export default function AccountPopup({
   onOpenSettings,
   popupRef,
 }: {
-  onOpenSettings: (section?: "general" | "updates") => void;
+  onOpenSettings: (
+    section?: "general" | "updates" | "account" | "usage",
+  ) => void;
   popupRef: RefObject<HTMLDivElement>;
 }) {
   return (
     <div
       ref={popupRef}
       className="account-popup"
-      aria-label="个人信息（本地 Prototype）"
+      aria-label="个人信息（本地会话）"
       data-node-id="312:2436"
     >
       <div className="account-identity">
@@ -21,21 +23,18 @@ export default function AccountPopup({
           <BrandLogo variant="app" />
         </span>
         <div>
-          <strong>YYYKK</strong>
-          <p title="本地演示账号 UID，不代表真实账号">
-            UID：308311652306456581
-          </p>
+          <strong>本地使用</strong>
+          <p>未登录 · 账号服务尚未接入</p>
         </div>
       </div>
       <div className="account-popup-actions">
         <button
           type="button"
           className="kk-button kk-button--secondary"
-          disabled
-          title="账号切换暂未接入"
+          onClick={() => onOpenSettings("account")}
         >
           <img src="/design/figma/account-user.svg" alt="" />
-          切换账号
+          个人主页
         </button>
         <button
           type="button"
@@ -47,22 +46,22 @@ export default function AccountPopup({
           退出登录
         </button>
       </div>
-      <div
-        className="account-credit-panel"
-        aria-label="积分与订阅（本地演示数据）"
-      >
+      <div className="account-credit-panel" aria-label="积分与订阅">
         <span className="account-credit-balance-label">余额积分</span>
-        <div
-          className="account-credit-points"
-          title="本地演示余额，不代表真实积分"
-        >
+        <div className="account-credit-points" title="积分服务尚未接入">
           <BrandLogo variant="credit" />
-          <b>1000</b>
+          <b>未报告</b>
         </div>
         <div className="account-subscription-row">
           <span>订阅</span>
         </div>
-        <span className="account-badge">普通用户</span>
+        <button
+          type="button"
+          className="account-badge"
+          onClick={() => onOpenSettings("usage")}
+        >
+          套餐与积分
+        </button>
       </div>
       <div className="account-popup-row account-theme-row">
         <div className="account-popup-row-label">
@@ -90,7 +89,7 @@ export default function AccountPopup({
           onClick={() => onOpenSettings("updates")}
         >
           <img src="/design/figma/account-refresh.svg" alt="" />
-          检测
+          查看
         </button>
       </div>
     </div>

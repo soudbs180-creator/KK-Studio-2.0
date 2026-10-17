@@ -28,6 +28,40 @@ export default defineConfig({
       },
     },
   ],
+  build: {
+    // 明确目标以确保 Tauri WebView2 兼容性并获得最优输出
+    target: "es2020",
+    rollupOptions: {
+      output: {
+        /**
+         * 手动分块策略：
+         * - vendor-react: React 运行时（不常更新，利用浏览器长期缓存）
+         * - vendor-icons: 图标库（体积较大，独立缓存）
+         * - 其余 feature chunks 由 Vite 自动按动态导入分割
+         */
+        manualChunks(id) {
+          if (
+            id.includes("node_modules/react/") ||
+            id.includes("node_modules/react-dom/")
+          ) {
+            return "vendor-react";
+          }
+          if (
+            id.includes("node_modules/lucide-react/") ||
+            id.includes("node_modules/iconsax-react/")
+          ) {
+            return "vendor-icons";
+          }
+          if (id.includes("node_modules/zod/")) {
+            return "vendor-zod";
+          }
+          if (id.includes("node_modules/@tauri-apps/")) {
+            return "vendor-tauri";
+          }
+        },
+      },
+    },
+  },
   server: {
     fs: {
       // Linked dependencies must load without exposing their parent checkout.

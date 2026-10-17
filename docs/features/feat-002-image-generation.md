@@ -2,8 +2,12 @@
 
 - 状态：PARTIAL
 - 领域：creation
-- 最近更新：2026-10-15
+- 最近更新：2026-10-17
 - 关联任务：T5、TASK-PROV-001、TASK-PROV-005、TASK-PROV-006、EXT-PROVIDER、TASK-AGENT-001、TASK-AGENT-004、TASK-AGENT-008、TASK-CODEX-REF-20261015
+
+## 2026-10-17安全修复边界（完整本地verify与源码独审通过）
+
+关联本地安全修复任务：TASK-AUDIT-REPAIR-20261017（有界A–D DONE；完整功能缺口继续由本卡原开放任务承接）；[规格](../changes/2026-10-17-audit-repair/spec.md) / [实际验证](../changes/2026-10-17-audit-repair/verification.md)。同端点不同账号必须沿固定providerConnectionId核对endpoint/credentialRef，缺ID只能接受唯一完整绑定；12AI执行缺宿主持久CAS receipt port时须禁用。内存受理Map不证明跨文档或重启恢复，完整12AI接入仍由原统一任务开放。 候选Desktop/Web2.1.36最终source4699458d完整verify、精确源码独审、官方重建、隔离Native与两日常入口正常关闭重开通过；旧d356真实菜单遮挡失败及所有原失败保留。默认旧聊天资料仍READ_ONLY，9项目raw/identity/shared memory保持；不宣称可编辑、完整迁移/protocol7、真实Provider或完整多聊天/垃圾箱/12AI恢复已完成。本卡成熟度与既有runtimeEvidence保持原范围，详细证据见本轮验证；Hosted/发布/用户验收另列。
 
 ## 用户可见入口
 
@@ -56,3 +60,5 @@ TASK-CODEX-HOME-20261015：新首页默认Codex/ChatGPT图片能力，首页、�
 ## 2026-10-15 Codex 卡片连线参考图（功能通过，交付 PARTIAL）
 
 TASK-CODEX-REF-20261015：Desktop/Web2.1.33已真实通过卡片参考图→Codex内置imagegen→PNG原件归档/唯一result边，以及重载、正常重启和原桌面快捷方式重开；参考42452f4d.../结果6531e6ac...不变、1实际turn/0外部图片请求。定向与dirty预检通过；完整browser771PASS/13FAIL已逐项证明13项PRE-EXISTING FAILURE，fullverify仍FAIL、development及最终SHA正式review/Hosted/PR未完成，交付PARTIAL。本卡继续PARTIAL，其他Provider/任务状态不变；见[规格](../changes/2026-10-15-codex-card-reference/spec.md)与[验证](../changes/2026-10-15-codex-card-reference/verification.md)。
+
+- 2026-10-15：TASK-KK-UNIFIED-20261015 已获用户实施授权，新增范围见 [统一规格](../changes/2026-10-15-kk-unified/spec.md)。本卡既有证据仍限原版本；新范围实现/真实验收尚未完成，不能沿用旧 PASS 关闭。

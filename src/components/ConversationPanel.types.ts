@@ -6,6 +6,7 @@ import type {
 import type { SkillRecord } from "../features/skills/skillRegistry";
 import type { AgentConversationProps } from "./AgentConversationMessages";
 import type { ConversationSend } from "./useConversationSubmit";
+import type { ConversationMessageView } from "./ConversationMessages";
 
 export interface ConversationPanelProps {
   overlay?: boolean;
@@ -24,4 +25,8 @@ export interface ConversationPanelProps {
   skills?: SkillRecord[];
   onApplySkill?: (record: SkillRecord) => string;
   agent?: AgentConversationProps;
+  onSelectChat?: (chatId: string) => void;
+  onCreateChat?: (isTemporary?: boolean) => void;
+  executionDisabledReason?: string;
+  readOnlyMessages?: ConversationMessageView[];
 }

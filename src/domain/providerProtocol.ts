@@ -15,6 +15,7 @@ export interface ProviderProtocolOptions {
   baseUrl: string;
   protocol?: ProviderProtocol;
   authMode?: ProviderAuthMode;
+  kind?: string;
 }
 export const providerProtocol = (
   value: Pick<ProviderProtocolOptions, "protocol">,
@@ -38,12 +39,16 @@ export function isProviderAuthAllowed(value: ProviderProtocolOptions): boolean {
       url.pathname.replace(/\/+$/, "") !== "/openai/v1"
     )
       return false;
+    const isLoopback = ["localhost", "127.0.0.1", "::1"].includes(
+      url.hostname.replace(/^\[|\]$/g, "").toLowerCase(),
+    );
+    const isAllowedLoopbackService =
+      value.kind === "local_comfyui" ||
+      (value.protocol as string) === "local_comfyui" ||
+      ["openai-chat", "ollama"].includes(providerProtocol(value));
     return (
       providerAuthMode(value) !== "none" ||
-      (["localhost", "127.0.0.1", "::1"].includes(
-        url.hostname.replace(/^\[|\]$/g, "").toLowerCase(),
-      ) &&
-        ["openai-chat", "ollama"].includes(providerProtocol(value)))
+      (isLoopback && isAllowedLoopbackService)
     );
   } catch {
     return false;

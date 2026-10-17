@@ -8,7 +8,7 @@ import {
 
 import { selectSettingsSection } from "./helpers";
 
-const pages = ["项目库", "扩展", "ComfyUI 工作流"];
+const pages = ["项目库", "扩展"];
 
 test("sidebar SVG marks remain distinguishable in both themes", async ({
   page,
@@ -19,7 +19,6 @@ test("sidebar SVG marks remain distinguishable in both themes", async ({
     for (const selector of [
       ".sidebar-icon-archive img",
       ".sidebar-icon-skill img",
-      ".sidebar-icon-workflow img",
       ".sidebar .brand [data-brand-logo]",
     ]) {
       const pixels = await page.locator(selector).evaluate(async (element) => {
@@ -52,9 +51,6 @@ test("sidebar SVG marks remain distinguishable in both themes", async ({
 });
 
 async function navigate(page: Page, name: string) {
-  const viewport = page.viewportSize()!;
-  if (viewport.width < 768 && name === "ComfyUI 工作流")
-    await page.setViewportSize({ ...viewport, width: 834 });
   await page
     .locator(".sidebar")
     .getByRole("button", {
@@ -62,8 +58,6 @@ async function navigate(page: Page, name: string) {
       exact: true,
     })
     .click();
-  if (viewport.width < 768 && name === "ComfyUI 工作流")
-    await page.setViewportSize(viewport);
   await expect(page.locator(".catalog-page")).toBeVisible();
   // Narrow navigation is an overlay. Dismiss it through the public Escape
   // interaction before operating the underlying page.
@@ -86,15 +80,15 @@ for (const width of [390, 1920]) {
     for (const theme of ["dark", "light"]) {
       await appearance(page, theme, "default");
       for (const section of [
-        "账号管理",
-        "储存",
+        "个人主页",
+        "套餐与积分",
+        "快捷键",
+        "数据管理",
         "网络",
         "记忆",
         "模型接入",
         "扩展",
-        "Comfy UI",
-        "高级",
-        "软件更新",
+        "安全中心",
       ]) {
         await selectSettingsSection(page, section);
         const content = dialog.locator(".settings-content");
@@ -114,7 +108,7 @@ for (const width of [390, 1920]) {
             await content
               .getByRole("button", { name: "返回接入方式", exact: true })
               .click();
-          await expect(methods.getByRole("button")).toHaveCount(5);
+          await expect(methods.getByRole("button")).toHaveCount(6);
           await methods
             .getByRole("button", { name: "API Key（官方）", exact: true })
             .click();

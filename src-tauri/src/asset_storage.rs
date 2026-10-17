@@ -6,7 +6,7 @@ use std::path::PathBuf;
 use std::sync::Mutex;
 
 #[path = "asset_io.rs"]
-mod io;
+pub(crate) mod io;
 #[cfg(test)]
 #[path = "asset_storage_tests.rs"]
 mod tests;
@@ -23,6 +23,7 @@ pub struct ReadAsset {
 pub struct AssetRepository {
     root: PathBuf,
     lock: Mutex<()>,
+    access: crate::native_repository_lock::RepositoryAccess,
 }
 
 impl AssetRepository {
@@ -30,6 +31,17 @@ impl AssetRepository {
         Self {
             root,
             lock: Mutex::new(()),
+            access: crate::native_repository_lock::RepositoryAccess::Standalone,
+        }
+    }
+    pub(crate) fn owned(
+        root: PathBuf,
+        access: crate::native_repository_lock::RepositoryAccess,
+    ) -> Self {
+        Self {
+            root,
+            lock: Mutex::new(()),
+            access,
         }
     }
     fn prepare(&self) -> Result<fs::File, String> {
@@ -75,8 +87,7 @@ impl AssetRepository {
             return Err(validation::invalid("SHA-256 与原件不匹配"));
         }
         let id = format!("asset-{}", &sha[..24]);
-        let _guard = self.lock.lock().map_err(|_| io::error("素材锁不可用"))?;
-        let _file_lock = self.prepare()?;
+        let _transaction = self.access.begin(&self.lock, || self.prepare())?;
         let stored = if let Some(old) = self.record(&id)? {
             if old["sha256"] != sha {
                 return Err("conflict: 素材 ID 的完整 SHA-256 不匹配".into());
@@ -103,8 +114,7 @@ impl AssetRepository {
     }
     pub fn read(&self, asset_id: &str) -> Result<Option<ReadAsset>, String> {
         validation::asset_id(asset_id)?;
-        let _guard = self.lock.lock().map_err(|_| io::error("素材锁不可用"))?;
-        let _file_lock = self.prepare()?;
+        let _transaction = self.access.begin(&self.lock, || self.prepare())?;
         let Some(metadata) = self.record(asset_id)? else {
             return Ok(None);
         };
@@ -131,8 +141,7 @@ impl AssetRepository {
         limit: usize,
         verify_originals: bool,
     ) -> Result<Vec<Value>, String> {
-        let _guard = self.lock.lock().map_err(|_| io::error("素材锁不可用"))?;
-        let _file_lock = self.prepare()?;
+        let _transaction = self.access.begin(&self.lock, || self.prepare())?;
         let mut entries: Vec<_> = fs::read_dir(self.root.join("records"))
             .map_err(io::error)?
             .collect::<Result<_, _>>()

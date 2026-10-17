@@ -1,0 +1,176 @@
+/* ============================================================================
+ * KK-Studio-2.0 · Agent Circular 6-State Action Button
+ * Adheres strictly to tokens.css and motion.css. Zero raw color literals.
+ * Desktop: 40px diameter, Touch Target: >= 44px, Icon: 20px.
+ * ========================================================================== */
+
+.agent-action-button {
+  --agent-action-size: var(--kk-control-h-xl, 40px);
+  --agent-action-touch-size: 44px;
+
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  min-height: 40px;
+  border-radius: var(--kk-radius-full);
+  padding: 0;
+  margin: 0;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--kk-text-primary);
+  outline: none;
+  user-select: none;
+  cursor: pointer;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  transition:
+    background-color var(--motion-fast, 140ms) ease,
+    border-color var(--motion-fast, 140ms) ease,
+    color var(--motion-fast, 140ms) ease,
+    box-shadow var(--motion-fast, 140ms) ease,
+    transform var(--motion-fast, 140ms) ease;
+}
+
+/* Touch hit target >= 44px on all devices via centered pseudo-element */
+.agent-action-button::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 44px;
+  min-height: 44px;
+  width: max(100%, 44px);
+  height: max(100%, 44px);
+  pointer-events: auto;
+}
+
+.agent-action-button:focus-visible {
+  outline: 2px solid var(--kk-focus-ring);
+  outline-offset: 2px;
+}
+
+/* --- State 1: idle --- */
+.agent-action-button[data-state="idle"]:not(:disabled) {
+  background: var(--kk-button-primary-bg);
+  color: var(--kk-button-primary-text);
+  border-color: transparent;
+}
+
+.agent-action-button[data-state="idle"]:not(:disabled):hover {
+  background: var(--kk-button-primary-hover);
+  transform: scale(1.04);
+}
+
+.agent-action-button[data-state="idle"]:not(:disabled):active {
+  transform: scale(0.96);
+}
+
+.agent-action-button[data-state="idle"]:disabled {
+  background: var(--kk-bg-soft);
+  color: var(--kk-text-secondary);
+  border-color: transparent;
+  opacity: var(--ui-disabled-opacity, 0.45);
+  cursor: not-allowed;
+}
+
+/* --- State 2: executing --- */
+.agent-action-button[data-state="executing"] {
+  background: var(--kk-bg-soft);
+  border-color: var(--kk-border-default);
+  color: var(--kk-text-primary);
+}
+
+.agent-action-button[data-state="executing"]:hover:not(:disabled) {
+  background: var(--kk-neutral-selected);
+  border-color: var(--kk-border-control);
+  color: var(--kk-accent);
+  transform: scale(1.04);
+}
+
+.agent-action-button[data-state="executing"]:active:not(:disabled) {
+  transform: scale(0.96);
+}
+
+/* --- State 3: pausing --- */
+.agent-action-button[data-state="pausing"] {
+  background: var(--kk-bg-soft);
+  border-color: var(--kk-border-subtle);
+  color: var(--kk-warning);
+  cursor: not-allowed;
+  opacity: 0.9;
+}
+
+/* --- State 4: paused --- */
+.agent-action-button[data-state="paused"] {
+  background: var(--kk-bg-soft);
+  border-color: var(--kk-warning);
+  color: var(--kk-warning);
+}
+
+.agent-action-button[data-state="paused"]:hover:not(:disabled) {
+  background: var(--kk-neutral-selected);
+  border-color: var(--kk-warning);
+  transform: scale(1.04);
+}
+
+.agent-action-button[data-state="paused"]:active:not(:disabled) {
+  transform: scale(0.96);
+}
+
+/* --- State 5: resuming --- */
+.agent-action-button[data-state="resuming"] {
+  background: var(--kk-bg-soft);
+  border-color: var(--kk-border-subtle);
+  color: var(--kk-accent);
+  cursor: not-allowed;
+  opacity: 0.9;
+}
+
+/* --- State 6: completed --- */
+.agent-action-button[data-state="completed"] {
+  background: var(--kk-bg-soft);
+  border-color: var(--kk-success);
+  color: var(--kk-success);
+  cursor: default;
+}
+
+/* --- Rotating Spinner / Shimmer --- */
+.agent-action-spinner {
+  display: inline-block;
+  width: var(--kk-icon-glyph-md, 20px);
+  height: var(--kk-icon-glyph-md, 20px);
+  border: 2px solid var(--kk-border-subtle);
+  border-top-color: currentColor;
+  border-radius: var(--kk-radius-full);
+  animation: agent-action-spin 0.8s linear infinite;
+  box-sizing: border-box;
+}
+
+@keyframes agent-action-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .agent-action-spinner {
+    animation: none !important;
+  }
+}
+
+/* --- Toolbar Alignment Integration --- */
+.composer-toolbar .agent-action-button {
+  order: 7;
+}
+
+.composer-toolbar .agent-action-button > img {
+  display: block;
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}

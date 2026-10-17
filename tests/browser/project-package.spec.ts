@@ -36,6 +36,11 @@ async function installNativePackageMock(
         invoke: async (command: string, args: Record<string, unknown> = {}) => {
           state.calls.push({ command, args });
           if (command === "get_storage_root") return "C:/KK-Studio-Test/Data";
+          if (
+            command === "plugin:path|resolve_directory" &&
+            args.directory === 19
+          )
+            return "C:/KK-Studio-Test/Program";
           if (command === "plugin:dialog|save") return null;
           if (command === "plugin:dialog|open") {
             const dialog = args.options as { directory?: boolean };
@@ -65,7 +70,7 @@ async function installNativePackageMock(
 async function openPackageSettings(page: Page) {
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   const dialog = page.getByRole("dialog", { name: "设置", exact: true });
-  await dialog.getByRole("button", { name: "储存", exact: true }).click();
+  await dialog.getByRole("button", { name: "数据管理", exact: true }).click();
   const section = dialog.getByRole("region", { name: "项目包备份与恢复" });
   await expect(section).toBeVisible();
   return section;
@@ -107,6 +112,7 @@ test("Desktop 取消导出文件选择不会调用项目包写入", async ({ pag
   ).toBeEnabled();
   expect((await nativeCalls(page)).map((call) => call.command)).toEqual([
     "get_storage_root",
+    "plugin:path|resolve_directory",
     "plugin:dialog|save",
   ]);
 });
@@ -129,6 +135,7 @@ test("项目包预检失败显示错误且不允许恢复", async ({ page }) => 
   ).toBeEnabled();
   expect((await nativeCalls(page)).map((call) => call.command)).toEqual([
     "get_storage_root",
+    "plugin:path|resolve_directory",
     "plugin:dialog|open",
     "preflight_project_package",
   ]);

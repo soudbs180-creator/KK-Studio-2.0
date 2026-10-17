@@ -183,6 +183,26 @@ test("uses the historical root or first unmaterialized image for old tasks", () 
   );
 });
 
+test("paused queued tasks stay resumable after a refresh", () => {
+  const source = {
+    id: "paused-source",
+    title: "Paused source",
+    description: "",
+    kind: "image" as const,
+  };
+  const paused = task("paused-task", "queued", source.id);
+  paused.error = "任务已暂停，已归档当前结果；恢复只提交剩余输出";
+  const value = project([source], [paused]);
+  const before = snapshot([value]);
+  const recovered = recoverInterruptedTasks(before, 99);
+
+  assert.equal(recovered.revision, before.revision);
+  assert.equal(recovered.projects[0].tasks[0], paused);
+  assert.equal(recovered.projects[0].tasks[0].status, "queued");
+  assert.equal(recovered.projects[0].tasks[0].submissionState, "intent");
+  assert.equal(recovered.projects[0].tasks[0].error, paused.error);
+});
+
 test("queued tasks with an unknown submission boundary stay fenced after restart", () => {
   const source = {
     id: "source",

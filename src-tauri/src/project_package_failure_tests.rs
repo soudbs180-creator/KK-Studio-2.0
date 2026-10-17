@@ -5,6 +5,33 @@ use std::sync::atomic::{AtomicU64, Ordering};
 static NEXT_FIXTURE_ID: AtomicU64 = AtomicU64::new(0);
 
 #[test]
+fn trashed_projects_and_persistent_groups_keep_assets_in_native_packages() {
+    let f = Fixture::new();
+    let mut value = f.snapshot.clone();
+    value["revision"] = json!(2);
+    value["activeProjectId"] = Value::Null;
+    value["projectGroups"] =
+        json!([{"id":"g", "name":"客户"}, {"id":"deleted", "name":"空组", "deletedAt":5}]);
+    value["projects"][0]["groupId"] = json!("g");
+    value["projects"][0]["nameSource"] = json!("manual");
+    value["projects"][0]["trashedAt"] = json!(10);
+    f.snapshots.write(value.clone(), Some(1)).unwrap();
+    let package = f.package();
+    let target = f.root.join("trash-restored");
+    import_package(&package, &target).unwrap();
+    let restored = SnapshotRepository::new(target.join("projects/creation-v2.json"))
+        .read()
+        .unwrap()
+        .snapshot
+        .unwrap();
+    assert_eq!(restored, value);
+    assert!(AssetRepository::new(target.join("assets"))
+        .read(&f.id)
+        .unwrap()
+        .is_some());
+}
+
+#[test]
 fn codex_generated_image_media_dimensions_survive_native_package_round_trip() {
     let f = Fixture::new();
     let mut value = f.snapshot.clone();

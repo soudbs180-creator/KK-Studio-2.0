@@ -18,6 +18,7 @@ export default function ProviderProfileFields({
   onUpdateMany,
   onApiKeyChange,
   onOpenGoogle,
+  scope,
 }: {
   profile: ModelProviderProfile;
   apiKey: string;
@@ -27,10 +28,12 @@ export default function ProviderProfileFields({
   onUpdateMany: (patch: Partial<ModelProviderProfile>) => void;
   onApiKeyChange: (value: string) => void;
   onOpenGoogle: () => void;
+  scope?: "official" | "relay" | "local";
 }) {
   return (
     <>
       <ProviderPresetSelector
+        localOnly={scope === "local"}
         onOpenGoogle={onOpenGoogle}
         onSelect={(preset) =>
           onUpdateMany({

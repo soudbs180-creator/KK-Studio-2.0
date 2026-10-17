@@ -71,6 +71,7 @@ export type CanvasAgentOp =
       nodeId: string;
       mode?: "text" | "image" | "video" | "audio";
       prompt?: string;
+      model?: string;
     };
 
 export interface CanvasAgentSnapshot {
@@ -80,6 +81,12 @@ export interface CanvasAgentSnapshot {
   connections: CanvasConnectionData[];
   selectedNodeIds: string[];
   viewport: CanvasViewportData;
+}
+
+/** null identifies an unchanged legacy project with no chat record. */
+export interface ChatScope {
+  projectId: string;
+  chatId: string | null;
 }
 
 export type AgentPermissionMode = "request" | "automatic" | "full";

@@ -114,6 +114,7 @@ export default function SidebarFolderGroup({
       <button
         className="project-undo"
         hidden={!visible}
+        disabled={!canEditProjects}
         onClick={() => onRestore(folder.id)}
       >
         恢复项目文件夹
@@ -160,6 +161,7 @@ export default function SidebarFolderGroup({
               className="project-title-input"
               value={editTitle}
               aria-label="项目文件夹名称"
+              maxLength={120}
               autoFocus
               onChange={(event) => setEditTitle(event.target.value)}
               onBlur={commitEdit}
@@ -179,7 +181,7 @@ export default function SidebarFolderGroup({
             type="button"
             className="folder-heading-toggle"
             aria-expanded={folder.expanded}
-            title="点击收起/展开文件夹；可把未分组项目拖到这里收纳（会话内 Prototype）"
+            title="点击收起/展开文件夹；可把项目拖到这里收纳并保存"
             onClick={() => onToggle(folder.id)}
             onContextMenu={(event) => {
               event.preventDefault();
@@ -241,6 +243,7 @@ export default function SidebarFolderGroup({
         </button>
         {menuOpen && (
           <SidebarFolderMenu
+            canEdit={canEditProjects}
             menuRef={menuRef}
             pinned={pinned}
             onTogglePinned={() => {
@@ -260,7 +263,7 @@ export default function SidebarFolderGroup({
         <div className="project-nested-entry">
           {folder.children.length === 0 ? (
             <small className="project-folder-empty">
-              临时文件夹（会话内 Prototype）：把未分组项目拖进来即可收纳。
+              文件夹为空，把未分组项目拖进来即可收纳。
             </small>
           ) : (
             folder.children.map((child) => (

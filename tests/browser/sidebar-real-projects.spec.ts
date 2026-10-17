@@ -191,13 +191,28 @@ test("搜索项目分类只列出实际保存的项目并打开所选 ID", async
     .toBe(second.id);
 });
 
-test("项目库未接入的持久文件夹入口明确禁用", async ({ page }) => {
+test("项目库创建的持久文件夹在侧栏和刷新后可见", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "项目库", exact: true }).click();
-  await expect(page.getByRole("button", { name: "新建文件夹" })).toBeDisabled();
-  await expect(
-    page.getByRole("button", { name: "新建文件夹" }),
-  ).toHaveAttribute("title", /侧栏.*会话/);
+  await page.getByRole("button", { name: "新建文件夹", exact: true }).click();
+  await expandSidebar(page);
+  await expect(page.locator(".sidebar .folder-heading-title")).toHaveText(
+    "新建文件夹",
+  );
+  await expect
+    .poll(() =>
+      page.evaluate(
+        (key) =>
+          JSON.parse(localStorage.getItem(key) ?? "{}").projectGroups?.length,
+        CREATION_STORAGE_KEY,
+      ),
+    )
+    .toBe(1);
+  await page.reload();
+  await expandSidebar(page);
+  await expect(page.locator(".sidebar .folder-heading-title")).toHaveText(
+    "新建文件夹",
+  );
 });
 
 test("状态不明的任务保留项目，删除入口说明禁用原因", async ({ page }) => {
@@ -348,12 +363,12 @@ test("会话置顶实际改变项目和文件夹顺序，刷新恢复原顺序",
   await page.reload();
   await expandSidebar(page);
   await expect(rows.first()).toContainText("项目甲");
-  await expect(folders).toHaveCount(0);
+  await expect(folders).toHaveCount(2);
+  await expect(folders.first()).toHaveText("新建文件夹");
+  await expect(folders.nth(1)).toHaveText("新建文件夹 2");
 });
 
-test("删除会话文件夹会把真实项目还给未分组，恢复后重新收纳", async ({
-  page,
-}) => {
+test("删除持久文件夹只解除归属，恢复空组后项目仍在未分组", async ({ page }) => {
   await seedProjects(page);
   const sidebar = page.getByRole("complementary", { name: "工作台侧栏" });
   await sidebar.getByRole("button", { name: "创建项目文件夹" }).click();
@@ -371,5 +386,11 @@ test("删除会话文件夹会把真实项目还给未分组，恢复后重新�
     }),
   ).toBeVisible();
   await sidebar.getByRole("button", { name: "恢复项目文件夹" }).click();
-  await expect(folder.locator(".project-nested-entry")).toContainText("项目乙");
+  await expect(folder.locator(".project-folder-empty")).toBeVisible();
+  await expect(
+    sidebar
+      .locator(".project-groups section")
+      .nth(1)
+      .getByRole("button", { name: "项目乙", exact: true }),
+  ).toBeVisible();
 });

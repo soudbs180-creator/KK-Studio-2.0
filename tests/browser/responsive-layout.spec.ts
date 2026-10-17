@@ -54,6 +54,85 @@ test("phone uses the full content width and centers every navigation icon", asyn
   }
 });
 
+for (const height of [844, 480]) {
+  test(`phone application menu stays inside the viewport at 390x${height}`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height });
+    await page.goto("/");
+    const trigger = page.getByRole("button", {
+      name: "应用功能菜单",
+      exact: true,
+    });
+    await trigger.click();
+    const menu = page.getByRole("menu", { name: "应用功能", exact: true });
+    await expect(menu).toBeVisible();
+    await page.screenshot({
+      path: test.info().outputPath(`phone-app-menu-${height}.png`),
+    });
+    const box = (await menu.boundingBox())!;
+    expect(box.x).toBeGreaterThanOrEqual(0);
+    expect(box.x + box.width).toBeLessThanOrEqual(390);
+    expect(box.y).toBeGreaterThanOrEqual(0);
+    expect(box.y + box.height).toBeLessThanOrEqual(height);
+    for (const item of await menu.getByRole("menuitem").all()) {
+      await item.scrollIntoViewIfNeeded();
+      expect(
+        await item.evaluate((element) => {
+          const bounds = element.getBoundingClientRect();
+          return (
+            bounds.height >= 44 &&
+            element.contains(
+              document.elementFromPoint(
+                bounds.x + bounds.width / 2,
+                bounds.y + bounds.height / 2,
+              ),
+            )
+          );
+        }),
+      ).toBe(true);
+    }
+    await page.keyboard.press("Escape");
+    await expect(menu).toHaveCount(0);
+    await expect(trigger).toBeFocused();
+  });
+
+  test(`phone application menu stays above workspace controls at 390x${height}`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height });
+    await openWorkspace(page);
+    await showCanvasNavigation(page);
+    const trigger = page.getByRole("button", {
+      name: "应用功能菜单",
+      exact: true,
+    });
+    await trigger.click();
+    const menu = page.getByRole("menu", { name: "应用功能", exact: true });
+    await expect(menu).toBeVisible();
+    await page.screenshot({
+      path: test.info().outputPath(`phone-workspace-menu-${height}.png`),
+    });
+    expect(
+      await menu
+        .getByRole("menuitem")
+        .first()
+        .evaluate((element) => {
+          const bounds = element.getBoundingClientRect();
+          return element.contains(
+            document.elementFromPoint(
+              bounds.x + bounds.width / 2,
+              bounds.y + bounds.height / 2,
+            ),
+          );
+        }),
+    ).toBe(true);
+    await page.keyboard.press("Escape");
+    await expect(menu).toHaveCount(0);
+    await expect(trigger).toBeFocused();
+  });
+}
+
 for (const [width, height] of [
   [360, 740],
   [390, 844],
@@ -90,16 +169,11 @@ for (const [width, height] of [
     for (const [name, heading] of [
       ["项目库", "项目库"],
       ["扩展", "扩展"],
-      ["ComfyUI 工作流", "ComfyUI 工作流"],
     ]) {
-      if (width < 768 && name === "ComfyUI 工作流")
-        await page.setViewportSize({ width: 834, height });
       await page
         .getByRole("navigation", { name: "主导航" })
         .getByRole("button", { name, exact: true })
         .click();
-      if (width < 768 && name === "ComfyUI 工作流")
-        await page.setViewportSize({ width, height });
       await expect(
         page.getByRole("heading", { name: heading, exact: true }),
       ).toBeVisible();

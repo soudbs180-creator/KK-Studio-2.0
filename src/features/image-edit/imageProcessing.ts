@@ -2,6 +2,11 @@ import { assertImageDimensions, type MaskDocument } from "./mask.ts";
 import type { EditCrop } from "./regions.ts";
 import { blendMaskedPixels } from "./pixels.ts";
 import { drawMaskAnnotation } from "./maskAnnotation.ts";
+import {
+  calculateAdaptiveResize,
+  detectAlphaTransparency,
+  resolveTargetImageMime,
+} from "../creation/mediaAlphaPreservation.ts";
 export class ImageEditMappingError extends Error {}
 export function makeCanvas(width: number, height: number): HTMLCanvasElement {
   assertImageDimensions(width, height);
@@ -58,11 +63,12 @@ export function cropImage(
   source: HTMLCanvasElement,
   crop: EditCrop,
 ): HTMLCanvasElement {
-  const scale = Math.min(1, 4096 / Math.max(crop.width, crop.height));
-  const canvas = makeCanvas(
-      Math.max(1, Math.round(crop.width * scale)),
-      Math.max(1, Math.round(crop.height * scale)),
-    ),
+  const { width, height } = calculateAdaptiveResize(
+    crop.width,
+    crop.height,
+    4096,
+  );
+  const canvas = makeCanvas(width, height),
     ctx = context2d(canvas);
   const axis = (start: number, length: number, limit: number) => {
     const left = Math.max(0, -start),
@@ -199,3 +205,27 @@ export function composePixels(
   );
   return output;
 }
+
+export function resolveCanvasMime(
+  canvas: HTMLCanvasElement,
+  preferredMime?: string,
+): string {
+  const ctx = context2d(canvas);
+  const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  const hasAlpha = detectAlphaTransparency(imgData.data);
+  return resolveTargetImageMime(hasAlpha, preferredMime);
+}
+
+export function canvasToDataUrl(
+  canvas: HTMLCanvasElement,
+  preferredMime?: string,
+): string {
+  const mime = resolveCanvasMime(canvas, preferredMime);
+  return canvas.toDataURL(mime);
+}
+
+export {
+  calculateAdaptiveResize,
+  detectAlphaTransparency,
+  resolveTargetImageMime,
+} from "../creation/mediaAlphaPreservation.ts";

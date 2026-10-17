@@ -97,6 +97,33 @@ fn snapshot(revision: u64) -> Value {
 }
 
 #[test]
+fn project_lifecycle_metadata_survives_native_storage_and_invalid_references_fail() {
+    let f = Fixture::new();
+    let mut value = snapshot(1);
+    value["activeProjectId"] = Value::Null;
+    value["projectGroups"] = json!([{"id":"g", "name":"客户"}]);
+    value["projects"][0]["groupId"] = json!("g");
+    value["projects"][0]["nameSource"] = json!("manual");
+    value["projects"][0]["trashedAt"] = json!(10);
+    f.repo.write(value.clone(), None).unwrap();
+    assert_eq!(f.repo.read().unwrap().snapshot.unwrap(), value);
+    for (field, bad) in [
+        ("groupId", json!("missing")),
+        ("trashedAt", json!(-1)),
+        ("nameSource", json!("invented")),
+    ] {
+        let mut invalid = value.clone();
+        invalid["revision"] = json!(2);
+        invalid["projects"][0][field] = bad;
+        assert!(f.repo.write(invalid, Some(1)).is_err(), "accepted {field}");
+        assert_eq!(f.repo.read().unwrap().snapshot.unwrap(), value);
+    }
+    let mut duplicate = value.clone();
+    duplicate["projectGroups"] = json!([{"id":"g", "name":"客户"}, {"id":"g", "name":"重复"}]);
+    assert!(validation::validate(&duplicate).is_err());
+}
+
+#[test]
 fn source_item_id_is_optional_bounded_and_history_safe() {
     let mut value = snapshot(1);
     value["projects"][0]["tasks"] = json!([{
@@ -221,7 +248,7 @@ fn corrupt_main_never_replaces_good_backup_on_recovered_write() {
 fn future_main_is_not_hidden_by_older_backup() {
     let f = Fixture::new();
     let mut future = snapshot(9);
-    future["version"] = json!(3);
+    future["version"] = json!(4);
     let raw = f.main(&future);
     f.backup(&snapshot(4));
     assert!(f.repo.read().unwrap_err().starts_with("unsupported:"));
@@ -231,6 +258,64 @@ fn future_main_is_not_hidden_by_older_backup() {
         .unwrap_err()
         .starts_with("unsupported:"));
     assert_eq!(fs::read(&f.repo.path).unwrap(), raw);
+}
+
+#[test]
+fn snapshot_v3_validation_accepts_valid_and_rejects_corrupt() {
+    let mut v3 = snapshot(10);
+    v3["version"] = json!(3);
+    v3["projects"][0]["activeChatId"] = json!("chat-main");
+    v3["projects"][0]["chats"] = json!({
+        "chat-main": {
+            "id": "chat-main",
+            "name": "Main Chat",
+            "createdAt": 1000,
+            "updatedAt": 1000,
+            "draft": {},
+            "messages": [{"id": "m1", "role": "user", "content": "Hello"}],
+            "mainAgent": "codex",
+            "modelAllowlist": ["gpt-4o"]
+        }
+    });
+    assert!(validation::validate(&v3).is_ok());
+
+    // Rejects missing activeChatId in chats
+    let mut bad_active = v3.clone();
+    bad_active["projects"][0]["activeChatId"] = json!("chat-missing");
+    assert!(validation::validate(&bad_active).is_err());
+
+    // Rejects chat key != chat.id
+    let mut bad_key = v3.clone();
+    bad_key["projects"][0]["chats"]["chat-main"]["id"] = json!("different-id");
+    assert!(validation::validate(&bad_key).is_err());
+}
+
+#[test]
+fn legacy_writer_cannot_publish_v3_or_replace_supported_main_with_v3_backup() {
+    let f = Fixture::new();
+    let mut future = snapshot(2);
+    future["version"] = json!(3);
+    future["projects"][0]["activeChatId"] = json!("chat");
+    future["projects"][0]["chats"] = json!({"chat":{"id":"chat","name":"history","messages":[]}});
+    assert!(f
+        .repo
+        .write(future.clone(), None)
+        .unwrap_err()
+        .starts_with("readonly:"));
+    assert!(!f.repo.path.exists());
+    let main = f.main(&snapshot(1));
+    let backup = f.backup(&future);
+    assert!(f.repo.read().unwrap().read_only_reason.is_some());
+    assert!(f
+        .repo
+        .write(snapshot(2), Some(1))
+        .unwrap_err()
+        .starts_with("readonly:"));
+    assert_eq!(fs::read(&f.repo.path).unwrap(), main);
+    assert_eq!(
+        fs::read(f.repo.path.with_extension("json.bak")).unwrap(),
+        backup
+    );
 }
 #[test]
 fn both_corrupt_is_error_and_write_preserves_both() {

@@ -508,6 +508,10 @@
   left: 1px;
   top: 1px;
   transform-origin: 0 0;
+  /* 提示浏览器将画布 stage 提升到合成层，pan/zoom 期间跳过 paint 步骤。
+     contain:layout+style 将重排范围限制在 stage 内部。 */
+  will-change: transform;
+  contain: layout style;
 }
 .canvas-node {
   position: absolute;
@@ -1726,16 +1730,18 @@
   z-index: 1;
 }
 .conversation-panel > header {
-  height: 28px;
+  min-height: 28px;
+  height: auto;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: stretch;
   gap: 8px;
 }
 .conversation-panel strong {
   font-size: var(--ui-font-title);
   margin-right: auto;
 }
-.conversation-panel header button {
+.conversation-header-actions > button {
   color: var(--text-secondary);
   display: grid;
   place-items: center;
@@ -1744,19 +1750,63 @@
   flex: 0 0 var(--ui-control-h-compact);
   border-radius: 8px;
 }
-.conversation-panel header button:last-child {
-  position: static;
-  margin-right: -17px;
-}
-.conversation-panel header button img,
-.conversation-panel header button svg {
+.conversation-header-actions > button img,
+.conversation-header-actions > button svg {
   width: var(--ui-icon-md);
   height: var(--ui-icon-md);
 }
-.conversation-panel header button:hover,
-.conversation-panel header button:focus-visible {
+.conversation-header-actions > button:hover,
+.conversation-header-actions > button:focus-visible {
   color: var(--text-primary);
   background: var(--bg-card-hover);
+}
+.conversation-chat-tabs-wrapper {
+  margin-top: 4px;
+}
+.conversation-chat-tabs button.conversation-chat-tab {
+  all: unset;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  height: 26px;
+  padding: 0 10px;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 12px;
+  cursor: pointer;
+  flex: 0 0 auto;
+  max-width: 140px;
+  white-space: nowrap;
+}
+.conversation-chat-tabs button.conversation-chat-tab.active {
+  background: var(--kk-bg-surface);
+  color: var(--text-primary);
+  border-bottom: 2px solid var(--kk-accent);
+}
+.conversation-chat-tabs button.conversation-chat-tab:hover {
+  background: var(--bg-card-hover, var(--kk-bg-surface));
+  color: var(--text-primary);
+}
+.conversation-chat-tab-add {
+  all: unset;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  border: 1px dashed var(--border-default);
+  color: var(--text-secondary);
+  cursor: pointer;
+  flex: 0 0 auto;
+  font-size: 14px;
+  line-height: 1;
+}
+.conversation-chat-tab-add:hover {
+  color: var(--text-primary);
+  border-color: var(--border-hover, var(--kk-border-control));
 }
 .conversation-messages {
   flex: 1;
@@ -2441,7 +2491,7 @@
   flex: 1 1 auto;
   min-height: 0;
   max-height: none;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 180px), 1fr));
   grid-auto-rows: auto;
   gap: 12px;
   overflow-y: auto;
@@ -2614,9 +2664,15 @@
   height: auto;
 }
 .canvas-node-result.has-reference-composer[data-kind="image"]
-  > .creation-composer {
+  > .creation-composer:not(.canvas-composer-screen) {
   position: relative;
   top: auto;
   margin-top: 10px;
-  z-index: var(--kk-z-sticky);
+  z-index: var(--kk-z-canvas-editor);
+  pointer-events: none;
+}
+.canvas-node-result.has-reference-composer[data-kind="image"]
+  > .creation-composer:not(.canvas-composer-screen)
+  > * {
+  pointer-events: auto;
 }

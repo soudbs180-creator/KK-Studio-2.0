@@ -18,7 +18,7 @@ test("首页没有 API 图片连接时仍可选择账号内置生图，API 目�
     page.getByRole("button", { name: "模型", exact: true }),
   ).toContainText("Codex 内置生图");
   await page.getByRole("button", { name: "模型", exact: true }).click();
-  await menu.getByRole("menuitem", { name: /^API 自定义模型/ }).click();
+  await menu.getByRole("tab", { name: "中转 API", exact: true }).click();
   await expect(menu.getByRole("menuitemradio")).toHaveCount(0);
   await expect(menu).toContainText("暂无模型");
   await expect(
@@ -112,7 +112,7 @@ test("首页模型弹层选择真实 API 图片模型并保存连接身份", asy
   await page.getByRole("button", { name: "关闭设置" }).click();
   await page.getByRole("button", { name: "模型", exact: true }).click();
   const menu = page.getByRole("menu", { name: "选择模型" });
-  await menu.getByRole("button", { name: "切换全部模型", exact: true }).click();
+  await menu.getByRole("tab", { name: "官方 API", exact: true }).click();
   const choice = page
     .getByRole("menu", { name: "选择模型" })
     .getByRole("menuitemradio", { name: /image-test.*星河 API/ });
@@ -267,12 +267,14 @@ test("Figma 483 画布输入与模型菜单采用独立尺寸", async ({ page })
         "changes/2026-09-24-ui-regression/evidence/web-canvas-model-menu-component.png",
       ),
   });
-  const title = (await menu
-    .locator(".kk-model-menu-top > strong")
+  const channels = (await menu
+    .getByRole("tablist", { name: "模型渠道" })
     .boundingBox())!;
   const search = (await menu.getByRole("searchbox").boundingBox())!;
+  const scope = (await menu.locator(".kk-model-scope").boundingBox())!;
+  expect(search.y).toBeGreaterThanOrEqual(channels.y + channels.height);
   expect(
-    Math.abs(title.y + title.height / 2 - search.y - search.height / 2),
+    Math.abs(scope.y + scope.height / 2 - search.y - search.height / 2),
   ).toBeLessThan(1);
 });
 

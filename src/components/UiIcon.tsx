@@ -24,6 +24,9 @@ import {
   Minus,
   Stop,
   Hashtag,
+  Pause,
+  Play,
+  Check,
 } from "iconsax-react";
 import { getUiIconSizeName, normalizeUiIconSize } from "./uiIconSizing";
 
@@ -53,6 +56,10 @@ const ICONS = {
   eyeOff: EyeSlash,
   minimize: Minus,
   maximize: Stop,
+  pause: Pause,
+  play: Play,
+  resume: Play,
+  check: Check,
 };
 export type UiIconName = keyof typeof ICONS;
 

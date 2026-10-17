@@ -4,6 +4,7 @@ import {
   createImportedWorkflow,
   createStarterWorkflow,
   parseComfyWorkflow,
+  writeLocalWorkflows,
 } from "../../src/features/comfyui/workflowRegistry.ts";
 
 test("parses a ComfyUI API prompt and counts nodes", () => {
@@ -14,6 +15,42 @@ test("parses a ComfyUI API prompt and counts nodes", () => {
   assert.equal(result.format, "api");
   assert.equal(result.nodeCount, 2);
   assert.equal(result.workflow["1"].class_type, "LoadImage");
+});
+
+test("workflow persistence fails visibly when storage is unavailable or rejects a write", () => {
+  const previous = Object.getOwnPropertyDescriptor(globalThis, "window");
+  try {
+    Object.defineProperty(globalThis, "window", {
+      configurable: true,
+      value: { localStorage: null },
+    });
+    assert.throws(
+      () => writeLocalWorkflows([createStarterWorkflow()]),
+      /本地存储不可用/,
+    );
+    const old = JSON.stringify([createStarterWorkflow("保留旧工作流")]);
+    Object.defineProperty(globalThis, "window", {
+      configurable: true,
+      value: {
+        localStorage: {
+          getItem: () => old,
+          setItem: () => {
+            throw new Error("quota fixture");
+          },
+        },
+      },
+    });
+    assert.throws(() => writeLocalWorkflows([]), /quota fixture/);
+    assert.equal(
+      (
+        globalThis as unknown as { window: { localStorage: Storage } }
+      ).window.localStorage.getItem("kk-studio.comfyui.workflows.v1"),
+      old,
+    );
+  } finally {
+    if (previous) Object.defineProperty(globalThis, "window", previous);
+    else Reflect.deleteProperty(globalThis, "window");
+  }
 });
 
 test("converts a ComfyUI UI export without executing node data", () => {

@@ -2,10 +2,14 @@
 
 - 状态：PARTIAL
 - 领域：creation
-- 最近更新：2026-10-01
+- 最近更新：2026-10-17
 - 关联任务：T4、BACKEND-CONVERSATION、TASK-AGENT-001、TASK-AGENT-002、TASK-AGENT-003、TASK-AGENT-004、TASK-AGENT-005、TASK-AGENT-008
-- 最近更新：2026-10-01
+- 最近更新：2026-10-17
 - 关联任务：T4、BACKEND-CONVERSATION、TASK-AGENT-001、TASK-AGENT-002、TASK-AGENT-003、TASK-AGENT-007、TASK-AGENT-008
+
+## 2026-10-17安全修复边界（完整本地verify与源码独审通过）
+
+关联本地安全修复任务：TASK-AUDIT-REPAIR-20261017（有界A–D DONE；完整功能缺口继续由本卡原开放任务承接）；[规格](../changes/2026-10-17-audit-repair/spec.md) / [实际验证](../changes/2026-10-17-audit-repair/verification.md)。协议6未具备完整chat scope隔离，新增普通聊天、临时聊天及不支持的多聊天/v3写入须门控并说明原因；保留v2 legacy单聊天。草稿/thread/正文、历史/journal/记忆隔离未全部验收前，不宣称多聊天或临时隐私可用；外部模型授权空数组应拒绝，不混同主Agent自身推理模型。 候选Desktop/Web2.1.36最终source4699458d完整verify、精确源码独审、官方重建、隔离Native与两日常入口正常关闭重开通过；旧d356真实菜单遮挡失败及所有原失败保留。默认旧聊天资料仍READ_ONLY，9项目raw/identity/shared memory保持；不宣称可编辑、完整迁移/protocol7、真实Provider或完整多聊天/垃圾箱/12AI恢复已完成。本卡成熟度与既有runtimeEvidence保持原范围，详细证据见本轮验证；Hosted/发布/用户验收另列。
 
 ## 用户可见入口
 
@@ -60,3 +64,5 @@ TASK-AGENT-007：CodeBuddy CLI 受控短文本委派；后续设计师全链路�
 ## 2026-10-15 首页与来源修复（REVIEW，整体待验）
 
 TASK-CODEX-HOME-20261015：新首页默认Codex/ChatGPT图片能力，首页、聊天、画布沿各自显式Codex/API来源执行；旧API和无selection项目保持legacy路由，局部隐私/草稿/附件及原件保全。输入同排与菜单锚点同步修复。当前进入REVIEW：784浏览器首过及Native单QA包往返/冷开图文通过，但完整npm verify因另一任务占用1421而development未执行/exit1；当前SHA独审与Hosted完整门禁、合并和本机更新待验。见[本轮规格](../changes/2026-10-15-codex-home/spec.md)与[验证](../changes/2026-10-15-codex-home/verification.md)；本卡功能状态保持，不用前置真实账号证据代填新入口或所有外部Provider。
+
+- 2026-10-15：TASK-KK-UNIFIED-20261015 已获用户实施授权，新增范围见 [统一规格](../changes/2026-10-15-kk-unified/spec.md)。本卡既有证据仍限原版本；新范围实现/真实验收尚未完成，不能沿用旧 PASS 关闭。
