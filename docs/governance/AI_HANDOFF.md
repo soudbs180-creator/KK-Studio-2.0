@@ -8,6 +8,10 @@
 
 本文是最短恢复入口，不是任务状态或产品能力的第二事实源。任务状态只读 [`task-ledger.json`](task-ledger.json)；当前项目事实只读 [`PROJECT_STATE.md`](PROJECT_STATE.md)；历史验证只按带日期的 change package、commit、运行模式和 receipt 回读。
 
+## 当前恢复入口：独立手机 UI（2026-10-18）
+
+用户拒绝已上线2.1.37的桌面响应式作为手机版；不要重复旧40项后宣布通过。继续[当前独立手机交付包](../changes/2026-10-17-web-release-receipt/verification.md)，分支fix/TASK-WEB-RELEASE-20261017-mobile-entry基于main503dedbe，独立Mobile来源58df、Web38/Mobile3/Desktop37。已恢复源码和真实本机context，组合/mobile/构建及323测试、真实手机browser9/9与Linux发布回滚14/14通过；精确SHA绑定、Hosted、新正式Release和临时root key最终撤销待完成。现有线上37/previous4a及所有失败证据保留；下一次受管发布只保留新current与37previous，不能动业务数据。下节为37发布过程的历史交接。
+
 ## 当前恢复入口：Web 正式 Release 发布（2026-10-17）
 
 TASK-WEB-RELEASE-20261017 为 IN_PROGRESS；先读[发布验证](../changes/2026-10-17-web-release/verification.md)与[发布审查](../changes/2026-10-17-web-release/review.md)。隔离树 `D:/kk-studio/.worktrees/TASK-WEB-RELEASE-20261017` 承载发布器和治理记录；其他树的未提交改动不进入本次交付。产品固定 source469 / docs bbc8，154 个重建文件逐字节相同。正式 Release 的 released 事件才发布，普通提交、草稿、预发布均不同步；只保留 current 和一个 previous。

@@ -6,7 +6,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 | ID | Title | Status | Display | Priority | Dependencies | Owner | Next action |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| TASK-WEB-RELEASE-20261017 | Web固定版本发布与正式Release自动同步 | IN_PROGRESS | 进行中 | P1 | TASK-AUDIT-REPAIR-20261017 | root | 完成Linux/独立脚本审查、当前托管门禁及正式Release自动发布实测，保留一个旧版并撤销临时root key。 |
+| TASK-WEB-RELEASE-20261017 | 独立手机UI接入与正式Web Release自动同步 | IN_PROGRESS | 进行中 | P1 | TASK-AUDIT-REPAIR-20261017 | root | 完成独立手机UI/browser验收、精确SHA审查与Hosted门禁，正式组合Web上线，核验单份回滚并撤临时root key。 |
 | TASK-AUDIT-REPAIR-20261017 | 审计安全修复、启动恢复与当前治理收敛 | DONE | 已完成 | P1 | none | root | 保留被日常链接引用的任务worktree/EXE及所有恢复证据；root完成最终文档提交后的精确review/正式Delivery和runtime-input不变核对。其余64开放项按原任务继续，尤其旧聊天数据完整迁移/protocol7、统一接入/12AI持久恢复/素材垃圾箱、真实Provider/ComfyUI/GPU/VPS/Mobile/签名及用户验收；不得解除READ_ONLY或批量结案。 |
 | TASK-KK-UNIFIED-20261015 | KK Studio 统一修复与重构 | IN_PROGRESS | 进行中 | P1 | none | root | 原统一scope继续开放；当前后续源码已进入local main@8c36a6b并有63条dirty，已保全为未验收221560a3。当前安全修复由TASK-AUDIT-REPAIR-20261017独占承接；原branch/worktree仅历史来源，不作为当前产品验收或并行写入分配。完整多聊天、12AI持久恢复、Provider/共仓库/账号/同步等仍按原scope另行实施和验收。 |
 | TASK-FIX-PUSH-GUARD-SPACES-001 | 修复 Windows Git pre-push 空格及长路径启动 | PARTIAL | 未完成 | P1 | none | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
@@ -157,24 +157,24 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-VERIFY-DEPS-20261015 | 恢复共享依赖清理事故并核验执行边界 | PARTIAL | 进行中 | P1 | TASK-CODEX-HOME-20261015 | root | 保持防复发子范围PASS与旧事故UNKNOWN分离；不在共享依赖安装或清理。原始字节及影响如无证据不得补写；最终当前提交/托管/交付门禁另验。 |
 | TASK-DESIGN-MD-20261015 | 统一DESIGN设计系统与产品UI收敛 | PARTIAL | 进行中 | P1 | none | root | 关闭基础独审问题，将规则落入设置/模型/聊天/画布/项目/素材等实际页面，按Desktop→Web留同状态证据。 |
 
-## TASK-WEB-RELEASE-20261017 — Web固定版本发布与正式Release自动同步
+## TASK-WEB-RELEASE-20261017 — 独立手机UI接入与正式Web Release自动同步
 
-- Goal: 将kkai.plus以客户端已验收2.1.36为基线修手机菜单并重新验收2.1.37，仅正式Release自动更新，保留一个回滚版本。
-- Scope: 固定已验收基线、手机菜单视口定位及浏览器回归、2.1.37版本元数据、托管门禁、受限静态发布器/可重复清单包/正式Release工作流、备份回滚和生产浏览器证据；保护业务数据、本地dirty与其他服务。
+- Goal: kkai.plus手机尺寸或手机浏览器进入用户已做好的独立聊天UI，宽屏保持桌面；仅正式Release自动更新并保留一个回滚版本。
+- Scope: 保留2.1.37已交付链路并纠正用户拒绝的桌面响应式手机布局：恢复独立mobile/contracts，Web本机创作/可选账号，初始入口分流、/mobile/SPA、组合包和CI；保护原资料与所有dirty工作区。
 - Display status: 进行中
-- Priority: P1 — 线上仍为9月18日旧包，需与已验收客户端对齐并保留回滚与业务数据。
-- Requirement refs: docs/changes/2026-10-17-web-release/spec.md
-- Feature IDs: none
+- Priority: P1 — 用户已明确拒绝桌面缩放布局，需接入已做好的独立手机版并验证实际入口。
+- Requirement refs: docs/changes/2026-10-17-web-release/spec.md, docs/changes/2026-10-17-web-release-receipt/spec.md
+- Feature IDs: FEAT-028
 - Owner role: implementer
-- Acceptance: 固定基线154文件与旧验收dist逐哈希一致；用户后续授权修手机菜单并重验2.1.37，产品差异限该修复与版本元数据; 当前SHA的托管门禁/独立审查与main身份通过后发布；生产手机首页/项目/聊天/设置和真实bundle可核对; 坏包/链接/路径穿越/错误hash被拒绝，健康失败回滚；仅保留current和一个previous且不清理非受管数据; 只正式Release自动部署；普通提交/预发布不触发，专用受限普通用户密钥，不留临时root key
-- Branch: `fix/TASK-WEB-RELEASE-20261017`
+- Acceptance: 已验收Desktop基线不回退；恢复既有原创独立Mobile UI，手机viewport或UA初次进/mobile/，宽屏与显式桌面入口保持; 真实本机context无伪造身份，项目/草稿/原件刷新恢复且不覆盖Desktop资料；独立手机页面/菜单/矮横屏与深链经实际browser核对; 坏包/链接/路径穿越/错误hash被拒绝，健康失败回滚；仅保留current和一个previous且不清理非受管数据; 只正式Release自动部署；普通提交/预发布不触发，专用受限普通用户密钥，不留临时root key
+- Branch: `fix/TASK-WEB-RELEASE-20261017-mobile-entry`
 - Worktree: `D:/kk-studio/.worktrees/TASK-WEB-RELEASE-20261017`
-- Modules: deploy, .github/workflows/web-release.yml, tests/deploy, docs/changes/2026-10-17-web-release, src/styles/responsive.css, tests/browser/responsive-layout.spec.ts, config/platform-versions.json
-- Verification: PARTIAL — 固定bbc8/产品469隔离构建154文件与验收dist逐哈希一致。独立聚合140定向测试通过；发布器独审与Linux31/31通过。PR64的verify因Windows短路径断言失败，测试已修；PR65接续聚合交付上游三个未入main的change package，在本记录绑定其原始verification，不修改原149任务。原服务器122文件字节不变，已安装受限普通账号/单配置备份/缓存及previous资源回退；API/DB/Nginx主PID保持。最终Hosted/main门禁、正式Release/生产手机/回滚与临时root key撤销仍待本轮验收。 后续用户明确授权本次修手机菜单并重新验收，新增两真实浏览器回归先在旧包RED；Desktop/Web版本工具升级2.1.37，Mobile保留2.1.1。同Release重试要求归档可重复，正增加mtime/目录顺序反例。
-- Evidence: [docs/changes/2026-10-17-web-release/intent.md](../../docs/changes/2026-10-17-web-release/intent.md), [docs/changes/2026-10-17-web-release/spec.md](../../docs/changes/2026-10-17-web-release/spec.md), [docs/changes/2026-10-17-web-release/plan.md](../../docs/changes/2026-10-17-web-release/plan.md), [docs/changes/2026-10-17-web-release/verification.md](../../docs/changes/2026-10-17-web-release/verification.md), [docs/changes/2026-10-17-web-release/review.md](../../docs/changes/2026-10-17-web-release/review.md), [docs/changes/2026-10-15-kk-unified/verification.md](../../docs/changes/2026-10-15-kk-unified/verification.md), [docs/changes/2026-10-15-unified-provider-access/verification.md](../../docs/changes/2026-10-15-unified-provider-access/verification.md), [docs/changes/2026-10-17-audit-repair/verification.md](../../docs/changes/2026-10-17-audit-repair/verification.md)
-- Next action: 完成Linux/独立脚本审查、当前托管门禁及正式Release自动发布实测，保留一个旧版并撤销临时root key。
-- Last verified: 2026-10-17
-- Updated: 2026-10-17
+- Modules: deploy, .github/workflows/web-release.yml, tests/deploy, docs/changes/2026-10-17-web-release, src/styles/responsive.css, tests/browser/responsive-layout.spec.ts, config/platform-versions.json, mobile, packages/creation-contracts, .github/workflows/quality.yml, scripts/platform-versions.mjs, docs/changes/2026-10-17-web-release-receipt
+- Verification: PARTIAL — 固定bbc8/产品469隔离构建154文件与验收dist逐哈希一致。独立聚合140定向测试通过；发布器独审与Linux31/31通过。PR64的verify因Windows短路径断言失败，测试已修；PR65接续聚合交付上游三个未入main的change package，在本记录绑定其原始verification，不修改原149任务。原服务器122文件字节不变，已安装受限普通账号/单配置备份/缓存及previous资源回退；API/DB/Nginx主PID保持。最终Hosted/main门禁、正式Release/生产手机/回滚与临时root key撤销仍待本轮验收。 后续用户明确授权本次修手机菜单并重新验收，新增两真实浏览器回归先在旧包RED；Desktop/Web版本工具升级2.1.37，Mobile保留2.1.1。同Release重试要求归档可重复，正增加mtime/目录顺序反例。 2026-10-18勘误：2.1.37 main503dedbe Hosted与正式Web自动部署已成功，旧40项仅桌面响应式，用户拒绝其为手机版。当前从58df恢复282份独立Mobile/contracts原始文件，正实现真实Web local context和/mobile/组合入口；新UI与生产接受未完成，保持PARTIAL。 最终本地Mobile323/323、真实独立手机Edge9/9首试且零外网/API/异常、root完整verify通过（旧插件恢复2flaky另4/4严格目标复验）、增量Node1852PASS20SKIP与真实Linux部署14/14均通过；SDK57路由/启动深链/取消交错/本地图片回调有RED/GREEN与独立复核。正式提交/Hosted/新生产与撤钥仍待执行。
+- Evidence: [docs/changes/2026-10-17-web-release/intent.md](../../docs/changes/2026-10-17-web-release/intent.md), [docs/changes/2026-10-17-web-release/spec.md](../../docs/changes/2026-10-17-web-release/spec.md), [docs/changes/2026-10-17-web-release/plan.md](../../docs/changes/2026-10-17-web-release/plan.md), [docs/changes/2026-10-17-web-release/verification.md](../../docs/changes/2026-10-17-web-release/verification.md), [docs/changes/2026-10-17-web-release/review.md](../../docs/changes/2026-10-17-web-release/review.md), [docs/changes/2026-10-15-kk-unified/verification.md](../../docs/changes/2026-10-15-kk-unified/verification.md), [docs/changes/2026-10-15-unified-provider-access/verification.md](../../docs/changes/2026-10-15-unified-provider-access/verification.md), [docs/changes/2026-10-17-audit-repair/verification.md](../../docs/changes/2026-10-17-audit-repair/verification.md), [docs/changes/2026-10-17-web-release-receipt/intent.md](../../docs/changes/2026-10-17-web-release-receipt/intent.md), [docs/changes/2026-10-17-web-release-receipt/spec.md](../../docs/changes/2026-10-17-web-release-receipt/spec.md), [docs/changes/2026-10-17-web-release-receipt/plan.md](../../docs/changes/2026-10-17-web-release-receipt/plan.md), [docs/changes/2026-10-17-web-release-receipt/verification.md](../../docs/changes/2026-10-17-web-release-receipt/verification.md), [docs/changes/2026-10-17-web-release-receipt/review.md](../../docs/changes/2026-10-17-web-release-receipt/review.md), [docs/changes/2026-10-17-web-release-receipt/release.md](../../docs/changes/2026-10-17-web-release-receipt/release.md)
+- Next action: 完成独立手机UI/browser验收、精确SHA审查与Hosted门禁，正式组合Web上线，核验单份回滚并撤临时root key。
+- Last verified: 2026-10-18
+- Updated: 2026-10-18
 
 ## TASK-AUDIT-REPAIR-20261017 — 审计安全修复、启动恢复与当前治理收敛
 

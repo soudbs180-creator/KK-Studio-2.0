@@ -1,16 +1,20 @@
 # Mobile 适配（FEAT-028）
 
-- 状态：PLANNED
+- 状态：PARTIAL
 - 领域：future
-- 最近更新：2026-10-14
-- 关联任务：T12、TASK-UI-CONSOLIDATE-20261014、TASK-PROTOCOL-CLI-20261014、TASK-222-ACTIONS-20261014、TASK-223-ACTIONS-20261014
+- 最近更新：2026-10-18
+- 关联任务：TASK-WEB-RELEASE-20261017、T12、TASK-UI-CONSOLIDATE-20261014、TASK-PROTOCOL-CLI-20261014、TASK-222-ACTIONS-20261014、TASK-223-ACTIONS-20261014
 
 ## 用户可见入口
 
-- 无原生 Mobile 应用；现有 390px 等窄屏布局是响应式 Web。
+- 当前独立手机 Web 入口为 `/mobile/`，根网址初次按手机 UA 或宽度≤767进入；`/?view=desktop` 访问原桌面资料。
+- 恢复独立 Expo Mobile 原创客户端源码；原生新版本、实体手机与生产账号尚未接受。下文2026-10-14为恢复前历史边界。
 
 ## 代码位置
 
+- 独立入口与聊天：`mobile/src/app/_layout.tsx` → `mobile/src/app/(workspace)/index.tsx` → `mobile/src/screens/ChatScreen.tsx`
+- 独立数据与本机/真实账号上下文：`mobile/src/application`、`mobile/src/storage`；纯版本契约：`packages/creation-contracts`
+- 组合Web与初始分流：`deploy/build-combined-web.mjs`、`deploy/initial-web-entry.js`
 - 响应式样式：`src/styles/responsive.css`、各组件窄屏态
 - 手机网页画布编辑：`src/components/canvas/CanvasComposerShell.tsx`、`src/styles/canvas-composer-screen.css`；分级设置导航：`SettingsPanel.tsx`、`ModelAccessSettings.tsx`、`ProviderPresetSelector.tsx`
 - 原生壳：无
@@ -50,3 +54,9 @@
 本轮只涉及响应式 Web 的屏幕编辑器、分级设置导航和已有固定面板，仍共享按钮、颜色、圆角与间距语义。屏幕命中尺寸修复不证明供应商生成、保存恢复和多端全链路完成；Native Mobile 未实现，真机和安装包未验，状态保持 PLANNED。
 
 既有收敛结果见[历史验证](../changes/2026-10-14-ui-consolidation/verification.md)。当前源码门禁、实际构建和手机网页截图由[2.1.22协议/CLI验证](../changes/2026-10-14-protocol-cli-completion/verification.md)记录；fixture 和浏览器视口不推导 Native Mobile 或真机 PASS。
+
+## 2026-10-18 独立手机 Web 恢复
+
+用户拒绝已上线2.1.37桌面响应式作为手机版，要求此前已做的独立Cherry参考UI。已从58df恢复mobile/contracts原始282文件（独立源码267f04f2），未带入旧Desktop2.1.13。Web候选2.1.38中 `/mobile/` 使用本机真实context，BYOK与项目持久化可用；可选账号不伪造session，Gateway/Comfy先验真实账号。手机与原Desktop Web空间隔离并提供原资料入口，不自动迁移或清空。Mobile源码版本2.1.3不等于新APK/iOS发布。
+
+Mobile323测试、type/lint、组合导出、独立手机browser9/9已通过；精确SHA绑定、Hosted与生产接受继续记入[当前验证](../changes/2026-10-17-web-release-receipt/verification.md)。状态调整为PARTIAL，不推导实体手机、正式身份服务或真实Provider生成完成。T12及其他原任务保持原状态。

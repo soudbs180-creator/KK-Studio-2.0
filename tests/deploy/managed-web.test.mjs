@@ -87,6 +87,7 @@ async function artifact(
   releaseId,
   content = releaseId,
   webVersion = "2.1.36",
+  mobile = false,
 ) {
   const dist = path.join(root, `input-${releaseId}-${content}`);
   await mkdir(path.join(dist, "assets"), { recursive: true });
@@ -99,6 +100,14 @@ async function artifact(
     `console.log(${JSON.stringify(content)})`,
   );
   await writeFile(path.join(dist, "assets/main.css"), "body{display:block}");
+  if (mobile) {
+    await mkdir(path.join(dist, "mobile"));
+    await writeFile(
+      path.join(dist, "mobile/index.html"),
+      '<html><script src="/mobile/main.js"></script><body>Phone</body></html>',
+    );
+    await writeFile(path.join(dist, "mobile/main.js"), "console.log('phone')");
+  }
   const packaged = await packageManagedWeb({
     dist,
     out: path.join(root, `${releaseId}-${content}.tar.gz`),
@@ -581,6 +590,59 @@ test(
       "fourth",
       "third",
     ]);
+  },
+);
+
+test(
+  "stale Mobile entry or bundle rolls back both pointers while valid Mobile and Desktop-only rollback stay supported",
+  linuxOnly,
+  async (t) => {
+    const root = await fixture(t);
+    const a = await artifact(root, "desktop-a", "desktop-a", "2.1.35");
+    const b = await artifact(root, "desktop-b");
+    const c = await artifact(root, "combined", "combined", "2.1.38", true);
+    success(await receive(root, a));
+    success(await receive(root, b));
+    for (const name of ["mobile/index.html", "mobile/main.js"]) {
+      const original = await readFile(path.join(c.fixture, name));
+      await writeFile(path.join(c.fixture, name), "stale mobile response");
+      const failed = await receive(root, c);
+      assert.notEqual(
+        failed.status,
+        0,
+        "Mobile HTTP health must gate activation",
+      );
+      assert.match(failed.stderr, /health hash mismatch/);
+      assert.equal(
+        (await readlink(path.join(root, "current"))).replaceAll("\\", "/"),
+        "releases/desktop-b",
+      );
+      assert.equal(
+        (await readlink(path.join(root, "previous"))).replaceAll("\\", "/"),
+        "releases/desktop-a",
+      );
+      assert.deepEqual(
+        await readFile(
+          path.join(root, "releases/combined/dist/mobile/main.js"),
+        ),
+        await readFile(path.join(c.dist, "mobile/main.js")),
+        "The validated candidate stays intact for a same-archive retry",
+      );
+      await writeFile(path.join(c.fixture, name), original);
+    }
+    success(await receive(root, c));
+    success(
+      controller(
+        root,
+        ["rollback", "combined", "desktop-b"],
+        undefined,
+        b.fixture,
+      ),
+    );
+    assert.equal(
+      (await readlink(path.join(root, "current"))).replaceAll("\\", "/"),
+      "releases/desktop-b",
+    );
   },
 );
 

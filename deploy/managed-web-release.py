@@ -209,11 +209,10 @@ class EntryAssets(HTMLParser):
             self.assets.add(values["href"])
 
 
-def health(base, manifest, fixture=None):
-    files = {record["path"]: record for record in manifest["files"]}
+def entry_assets(base, files, entry):
     parser = EntryAssets()
-    parser.feed((base / "dist/index.html").read_text(encoding="utf-8"))
-    names = {"index.html", "build-info.json"}
+    parser.feed((base / "dist" / entry).read_text(encoding="utf-8"))
+    names = set()
     for asset in parser.assets:
         url = urllib.parse.urlsplit(asset)
         require(not url.scheme and not url.netloc and not url.query and not url.fragment, "Entrypoint asset must be local")
@@ -221,7 +220,19 @@ def health(base, manifest, fixture=None):
         safe_name("dist/" + name)
         require("dist/" + name in files, "Entrypoint asset absent from manifest")
         names.add(name)
+    return names
+
+
+def health(base, manifest, fixture=None):
+    files = {record["path"]: record for record in manifest["files"]}
+    names = entry_assets(base, files, "index.html")
     require(any(name.endswith(".js") for name in names) and any(name.endswith(".css") for name in names), "Missing main JS/CSS")
+    names.update({"index.html", "build-info.json"})
+    if "dist/mobile/index.html" in files:
+        mobile = entry_assets(base, files, "mobile/index.html")
+        require(any(name.endswith(".js") for name in mobile) and
+                all(name.startswith("mobile/") for name in mobile), "Missing or unprefixed Mobile JS")
+        names.update(mobile | {"mobile/index.html"})
     token = uuid.uuid4().hex
     for name in sorted(names):
         record = files["dist/" + name]

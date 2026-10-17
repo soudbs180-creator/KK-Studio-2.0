@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-10-18 独立手机 UI 修正（IN_PROGRESS）
+
+2.1.37 已由 PR65/main `503dedbe` 的 exact-main quality 与正式 Release 自动上线，完整155文件与静态旧版保留已核对；旧四尺寸40项只验证桌面响应式。用户明确拒绝该布局作为手机版，要求原独立 Cherry 参考手机 UI，因此本轮不结案。已恢复58df中的282份 mobile/contracts 原创源码，新增真实 Web 本机 context、可选账号、初次 viewport/手机UA `/mobile/` 分流和组合发布；Web2.1.38、Mobile候选2.1.3、Desktop2.1.37。Mobile323/323测试、type/lint与组合构建已通过，独立手机browser9/9首试、Linux发布/回滚14/14及有界独立复核通过；精确SHA绑定/Hosted及新正式上线仍在执行。数据库、业务服务、原Desktop资料和其他dirty保持；临时root key已安全延期，正确手机UI验收后撤销。详见[当前交付包](changes/2026-10-17-web-release-receipt/verification.md)。
+
 ## 2026-10-17 Web发布与正式Release自动同步（IN_PROGRESS）
 
 用户授权将kkai.plus更新到客户端验收基线，随后明确选择本次一起修手机菜单并重新验收2.1.37，仅在正式Release自动更新、保留一个回滚版本。固定bbc8/产品469原154文件与旧验收dist逐哈希一致，原dirty不纳入；新产品改动限手机菜单定位与版本元数据。VPS旧4a06ea8原122文件保留，受限普通账号/配置备份/no-cache及资源回退已准备，API/PostgreSQL保持；新候选托管、生产手机与正式Release仍在验收。账本150项、原149对象保持，旧Native收据只证明2.1.36。详见[发布验证](changes/2026-10-17-web-release/verification.md)。下节审计的未推送/未发布结论保留其历史时点含义。

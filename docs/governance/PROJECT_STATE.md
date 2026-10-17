@@ -2,25 +2,25 @@
 
 - docId: PROJECT_STATE
 - status: current
-- updatedAt: 2026-10-17
+- updatedAt: 2026-10-18
 - source: `docs/governance/task-ledger.json`
 - supersededBy: null
 
 <!-- DOCUMENT_METADATA_END -->
 <!-- CURRENT_FACTS_BEGIN -->
 
-# 当前项目事实（2026-10-17）
+# 当前项目事实（2026-10-18）
 
-- `snapshotDate`: 2026-10-17
+- `snapshotDate`: 2026-10-18
 - `canonicalRepository`: `D:/kk-studio/KK-Studio-2.0`
 - `canonicalRef`: `origin/main`
-- `canonicalHead`: origin/main仍d95e4c446d3b4ae5419ce0f58c68057ebabc286a，Desktop/Web2.1.34；聚合PR65已推送，2.1.37后续修复在本隔离树重新验证，尚未合入main/正式发布。
+- `canonicalHead`: origin/main `503dedbeda39f133c7f77f88ab66825d156f81cf`（PR65已合入）；Desktop/Web2.1.37。正式v2.1.37自动Web上线成功，但用户拒绝其桌面响应式为独立手机UI。
 - `localMainHead`: 8c36a6b138205613ae1a7c27950b86792da8de1a，领先origin/main49提交；63条原dirty、index/status/staged0保持。最新56872dc7完整性收据PASS，未reset/clean/覆盖。
-- `currentTask`: TASK-WEB-RELEASE-20261017，IN_PROGRESS；隔离树 `D:/kk-studio/.worktrees/TASK-WEB-RELEASE-20261017`，branch `fix/TASK-WEB-RELEASE-20261017`。用户授权更新 kkai.plus、保留一个回滚版本并仅跟随正式 Release 自动更新；只操作网站静态发布，不触碰数据库、上传或原 dirty。当前生产仍为 releases/4a06ea8，尚未完成上线验收。
+- `currentTask`: TASK-WEB-RELEASE-20261017，IN_PROGRESS/PARTIAL；隔离树 `D:/kk-studio/.worktrees/TASK-WEB-RELEASE-20261017`，branch `fix/TASK-WEB-RELEASE-20261017-mobile-entry`。按用户新反馈恢复既有独立Mobile UI、Web本机创作与/mobile/入口，保持正式Release自动部署及单份回滚；当前线上仍v2.1.37，正确手机UI尚未发布接受。
 - `acceptedClientCandidate`: TASK-AUDIT-REPAIR-20261017 的有界本地A–D DONE/PASS，固定文档head bbc8a766、产品source `4699458de1c3437309b7cdc3f019454104c81fce`、tree `a1905e2aa6e11a24b4c62d829dc82a8f0d566972`。新隔离树重建154文件逐hash匹配原dist；后续聊天迁移dirty不纳入发布。221560a3仍仅未验收原始快照。
-- `sourceVersionBoundary`: 当前发布任务候选Desktop/Web2.1.37，Mobile2.1.1规划；以已验收2.1.36为基线，用户随后授权本次修复手机菜单并重新验收。版本源`config/platform-versions.json`。旧Native收据仍只证明2.1.36，源码、本机启动、main集成/正式发布和用户验收分别记录。
+- `sourceVersionBoundary`: 当前候选Desktop2.1.37不变，Web2.1.38、Mobile独立源码2.1.3；Mobile来源267f04f2/58df，仅恢复mobile/contracts，不带入旧Desktop2.1.13。组合Web发布不等于Native新包、正式账号或真实Provider接受。
 - `taskLedger`: 150 records；DONE85、PARTIAL48、TODO12、BLOCKED3、IN_PROGRESS2、REVIEW0，开放65。只新增Web发布任务，原149任务对象保持；旧审计和原统一scope的验收边界不变，不批量结案。
-- `workspaceWorktrees`: 4登记checkout/5本地分支；主仓8c36a6b、本任务产品source4699458d、统一df08748e、taskstate5e2d2ab6；最终文档HEAD由Git/精确收据回读，469不是稍后文档提交的branch tip。[清单](workspace-inventory.json)为2026-10-17T11:18:46.286Z采样，由现有生成器更新，26条目全部deletable=false/destructiveActionsPerformed=false；旧清单另存，候选分类不是清理授权。
+- `workspaceWorktrees`: 当前任务沿用已登记隔离树，从main503dedbe新fix分支；原fix分支和所有失败证据保留。其他原worktree/dirty不纳入本次发布，不执行移动删除。旧workspace-inventory为时间点采样，不据其过时HEAD启动或清理。
 - `preservation`: A core PASS；工程外`D:/KK-Studio-recovery-20260921/audit-repair-20261017-1f00ccc3-1207-4cd3-90e1-bd0192d64d21/final-preservation-receipt.json`，517368文件版本/56336959878 B/6 bundles、两个dirty恢复。外部变化、新增文件、长路径首轮失败与所有旧日志/运行原件保留。
 - `safetyRepairs`: 五P1/垃圾箱误报、原始identity/格式写保护、空授权与精确账号、scope/epoch/记忆/迟到回调、预览重试/标签撤销和交互问题通过有界反例/回归。协议6新/临时聊天、不支持v3/多聊天、无持久receipt的12AI及未接持久垃圾箱保持禁用；不是完成这些能力。
 - `finalVerify`: 469源码完整verify前后CLEAN且exit0；Node1832PASS/14既有SKIP、Agent199PASS/2既有SKIP、产品Edge823首试零fail/retry/flaky/skip、DESIGN41单元/8浏览器、development四步，lint/type/UI/format/build通过。Rust bin213PASS/1硬件ignored+integration41/check/fmt绑定未变Native源。advisory与警告保留。
@@ -30,7 +30,7 @@
 - `remoteWorkBoundary`: 18:08→19:07可比字段69heads/7Draft PR/3active rulesets零漂移，7PR autoMerge=null；旧ref名与新baseSHA不可直接比较，不声称全部字段一致。stable实际严格verify/delivery、approvals0；merge queue及governance/deploy-linux未强制，classic保护GET403为权限边界，未修改settings。
 - `localHook`: 四处无core.hooksPath覆盖，同common pre-push v2；installed/policy/source按LF归一相等，旧v1.bak保持。既有fixture27=22PASS/5Windows平台SKIP/0FAIL本轮未重跑，7相关guard源自a95未变；hook可绕过，不替代Hosted。
 - `reclamationPolicy`: 54份runtime previous、旧clone/worktree/输出/恢复材料仍在，没有删除或移动。所有build输出/依赖物理owned，共享junction/symlink只读。E/F实体整理未执行。
-- `historicalRule`: 下方历史不覆盖本区。37功能成熟度/runtimeEvidence未提升；真实Provider/ComfyUI/GPU、完整多聊天/垃圾箱/12AI恢复、账号/VPS、Mobile、签名与用户验收按原任务保持开放。
+- `historicalRule`: 下方历史不覆盖本区。本轮仅FEAT-028由PLANNED按已恢复独立源码改为PARTIAL；其余36功能与原runtimeEvidence不变；真实Provider/ComfyUI/GPU、完整多聊天/垃圾箱/12AI恢复、账号/VPS、Mobile、签名与用户验收按原任务保持开放。
 
 <!-- CURRENT_FACTS_END -->
 <!-- HISTORICAL_SNAPSHOTS_BEGIN -->
@@ -53,11 +53,11 @@
 - `snapshotDate`: 2026-10-15
 - `canonicalRepository`: `D:/kk-studio/KK-Studio-2.0`
 - `canonicalRef`: `origin/main`
-- `canonicalHead`: d95e4c446d3b4ae5419ce0f58c68057ebabc286a
+- `canonicalHead`: origin/main `503dedbeda39f133c7f77f88ab66825d156f81cf`（PR65已合入）；Desktop/Web2.1.37。正式v2.1.37自动Web上线成功，但用户拒绝其桌面响应式为独立手机UI。
 - `canonicalHeadVerifiedFrom`: 2026-10-15 本任务实际 git fetch origin 和 git log/readback，d95e4c44 父提交492abad4，含PR63。当前托管CI未重新回读，不能继承旧492的检查结果。日常235e7f79/2.1.33未替换。
 - `primaryCheckoutState`: 当前只读核对primary为main@d95e4c44干净，reflog记录21:17:59切换；外部提交56cb1381描述reset/checkout/清理，不是本轮实现者执行或授权。保全目录2026-10-15-main-align-preserve及906047字节patch存在，完整恢复未验。旧51fccfc7分支仍保留。当前实现仅写TASK-KK-UNIFIED隔离树，用户明确其他任务只读。
 - `taskLedger`: 148 records；当前数量 {"IN_PROGRESS":2,"REVIEW":6,"DONE":84,"TODO":12,"PARTIAL":41,"BLOCKED":3}。统一新需求在TASK-KK-UNIFIED-20261015，DESIGN沿用户指定原任务ID登记PARTIAL，其他重复范围沿用原任务和来源；EXT-COMFY已由用户提供目录解除旧阻塞，仍待真实运行。历史对象未被批量结案；TASK-GOV-006原矩阵仍保留。
-- `workspaceWorktrees`: 启动时 approved root内73，本任务在受控预算74/150GiB下新增唯一隔离树TASK-KK-UNIFIED-20261015，未删改其他树。原生成内容实测138129072015字节；本任务初始依赖junction复用，DESIGN后root改专属实体依赖，vendor链接目标只读，后续产物另计。历史全局盘点见原source-manifest。
+- `workspaceWorktrees`: 当前任务沿用已登记隔离树，从main503dedbe新fix分支；原fix分支和所有失败证据保留。其他原worktree/dirty不纳入本次发布，不执行移动删除。旧workspace-inventory为时间点采样，不据其过时HEAD启动或清理。
 - `reclamationPolicy`: generated dependencies/build output may be reclaimed only from a recorded, non-primary worktree after immutable SHA inventory and explicit candidate approval; source changes and evidence paths are protected.
 - `remoteAutoMerge`: 本轮root已GET回读3个active ruleset；stable23866925对main/master/release启用PR、stale-dismiss/threads和strict verify/delivery（Actions15368）、0强制approving、无bypass/merge_queue；允许merge/squash/rebase。main protected=true由ruleset保护；legacy protection.enabled=false不表示未保护。自动helper activation/paused状态尚无本轮证据，不宣称已启用，不改远端配置。
 - `codexCardReferenceCandidate`: REF产品代码已随PR60进入实际main235e；原任务状态仍PARTIAL，历史真实内置生图/参考原件/连线与旧产物重开证据按原SHA有效，不自动升级为当前main全体验收。HOME/REF重试草稿/连接竞态/canvasSource三P2已由当前HOME任务实际RED/GREEN及a85完整回归，Native冷重开38项通过；正常PR/main及真实Provider/日常验收继续。旧verification及失败原件保留。
