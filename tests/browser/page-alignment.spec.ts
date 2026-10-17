@@ -19,6 +19,7 @@ test("current Figma modal shells keep dimensions and settings content origin", a
     "主题",
     "强调色",
     "浮岛布局",
+    "画布历史步数",
     "去除水印",
     "系统托盘",
     "防止系统休眠",
@@ -105,9 +106,10 @@ test("task workbench action does not overlap the tabs and demo status is visible
 test("landing discovery content remains reachable below the desktop fold", async ({
   page,
 }) => {
+  await page.setViewportSize({ width: 1920, height: 900 });
   await page.goto("/");
   const landing = page.locator(".start-page");
-  await landing.hover();
+  await landing.hover({ position: { x: 10, y: 10 } });
   await page.mouse.wheel(0, 700);
   await expect
     .poll(() => landing.evaluate((el) => el.scrollTop))

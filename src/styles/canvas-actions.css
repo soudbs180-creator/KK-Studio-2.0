@@ -180,7 +180,8 @@
     display: none;
   }
 }
-.connection-delete {
+.connection-delete,
+.connection-delete:active:not(:disabled) {
   position: absolute;
   z-index: 5;
   color: var(--ui-cut-foreground);

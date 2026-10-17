@@ -2664,9 +2664,15 @@
   height: auto;
 }
 .canvas-node-result.has-reference-composer[data-kind="image"]
-  > .creation-composer {
+  > .creation-composer:not(.canvas-composer-screen) {
   position: relative;
   top: auto;
   margin-top: 10px;
-  z-index: var(--kk-z-sticky);
+  z-index: var(--kk-z-canvas-editor);
+  pointer-events: none;
+}
+.canvas-node-result.has-reference-composer[data-kind="image"]
+  > .creation-composer:not(.canvas-composer-screen)
+  > * {
+  pointer-events: auto;
 }

@@ -100,6 +100,14 @@ test("设置按内容选择紧凑宽度，切换模型后普通页不保留宽�
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   const panel = page.locator(".settings-panel");
+  await panel.evaluate(async (element) => {
+    await Promise.all(
+      element
+        .closest("dialog")!
+        .getAnimations({ subtree: true })
+        .map((animation) => animation.finished),
+    );
+  });
   const general = (await panel.boundingBox())!;
   expect(general.width).toBeLessThanOrEqual(960);
   expect(Math.round(general.height)).toBe(680);

@@ -59,6 +59,7 @@ export default function AssetCard({
     };
   }, [asset.id, asset.src, asset.sha256, attempt, loadPreview]);
   const retry = () => {
+    if (asset.src) setFailed(false);
     setAttempt((value) => value + 1);
   };
   const src = asset.src || preview;

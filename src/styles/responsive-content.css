@@ -420,9 +420,14 @@
   .catalog-page-header {
     margin-bottom: 16px;
   }
-  .task-workbench,
-  .task-panel {
+  .task-workbench {
     max-height: calc(100dvh - 20px);
+  }
+  .task-panel {
+    max-height: min(
+      calc(100dvh - 20px),
+      var(--task-panel-available-height, calc(100dvh - 20px))
+    );
   }
   .workspace-content .conversation-panel {
     overflow-x: hidden;

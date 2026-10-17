@@ -4,7 +4,10 @@ import {
   AgentApiError,
   createAgentApi,
 } from "../../src/features/agent/agentApi.ts";
-import type { CanvasAgentSnapshot } from "../../src/features/agent/agentTypes.ts";
+import type {
+  AgentConversationState,
+  CanvasAgentSnapshot,
+} from "../../src/features/agent/agentTypes.ts";
 
 /**
  * Agent HTTP 客户端：token 注入、端点路径、错误码。
@@ -40,29 +43,73 @@ const snapshot: CanvasAgentSnapshot = {
   viewport: { x: 0, y: 0, scale: 1 },
 };
 
-test("thread history rejects malformed message text before it reaches the UI", async () => {
-  let messages: unknown;
-  const api = createAgentApi({
-    endpoint: "http://127.0.0.1:17371",
-    token: "synthetic",
-    clientId: "history-validation",
-    fetcher: stubFetch(async () => jsonResponse(200, { ok: true, messages })),
+for (const method of [
+  "newThread",
+  "prepareConversation",
+  "resumeThread",
+  "readThread",
+] as const)
+  test(`${method} rejects malformed history and retains valid message metadata`, async () => {
+    const conversation: AgentConversationState = {
+      revision: 1,
+      conversationId: "conversation-owned",
+      threadId: "owned-thread",
+      status: "ready",
+      mcpStatuses: {},
+    };
+    let messages: unknown;
+    const response = () => ({
+      ok: true,
+      conversation,
+      messages,
+      settledTurnIds: ["turn-1"],
+      extraReceipt: { retained: true },
+    });
+    const api = createAgentApi({
+      endpoint: "http://127.0.0.1:17371",
+      token: "synthetic",
+      clientId: "history-validation",
+      fetcher: stubFetch(async () => jsonResponse(200, response())),
+    });
+    const request = () => {
+      switch (method) {
+        case "newThread":
+          return api.newThread("request");
+        case "prepareConversation":
+          return api.prepareConversation("request", conversation);
+        case "resumeThread":
+          return api.resumeThread("owned-thread", "request");
+        case "readThread":
+          return api.readThread("owned-thread");
+      }
+    };
+    for (messages of [
+      null,
+      {},
+      [null],
+      [{ id: "missing-text", role: "user" }],
+      [{ text: 123 }],
+    ])
+      await assert.rejects(request(), /历史消息格式/);
+    for (messages of [
+      undefined,
+      [],
+      [
+        {
+          id: "one",
+          role: "user",
+          text: "retained",
+          threadId: "owned-thread",
+          turnId: "turn-1",
+          canvasReferences: [
+            { nodeId: "node-1", kind: "image", label: "原件" },
+          ],
+          detail: { kind: "receipt", unknownField: { retained: true } },
+        },
+      ],
+    ])
+      assert.deepEqual(await request(), JSON.parse(JSON.stringify(response())));
   });
-  for (messages of [
-    null,
-    {},
-    [null],
-    [{ id: "missing-text", role: "user" }],
-    [{ text: 123 }],
-  ])
-    await assert.rejects(api.readThread("owned-thread"), /历史消息格式/);
-  for (messages of [
-    undefined,
-    [],
-    [{ id: "one", role: "user", text: "retained" }],
-  ])
-    assert.deepEqual((await api.readThread("owned-thread")).messages, messages);
-});
 
 test("所有请求带 token 与 clientId", async () => {
   const urls: string[] = [];
