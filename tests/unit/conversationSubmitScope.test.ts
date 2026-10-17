@@ -15,6 +15,7 @@ import {
   type CreationSnapshot,
 } from "../../src/features/creation/model.ts";
 import { decodeSnapshot } from "../../src/features/creation/snapshotCodec.ts";
+import { sameJson } from "../../src/features/creation/chatMigration.ts";
 import { updateProjectChatView } from "../../src/features/agent/chatProjectUpdate.ts";
 import {
   appendImageTask,
@@ -52,6 +53,22 @@ function appFunction(name: string): string {
   }
   visit(appAst);
   assert.ok(result, `Missing production App function ${name}`);
+  return result;
+}
+
+function appInitializer(name: string): string {
+  let result: string | undefined;
+  function visit(node: ts.Node) {
+    if (
+      ts.isVariableDeclaration(node) &&
+      ts.isIdentifier(node.name) &&
+      node.name.text === name
+    )
+      result = node.initializer?.getText(appAst);
+    ts.forEachChild(node, visit);
+  }
+  visit(appAst);
+  assert.ok(result, `Missing production App initializer ${name}`);
   return result;
 }
 
@@ -113,6 +130,7 @@ function appDraftHarness(project = projectFixture(), version: 2 | 3 = 3) {
     },
   };
   const context = {
+    sameJson,
     creationRef,
     projectChatView,
     updateProjectChatView,
@@ -392,6 +410,100 @@ test("a captured App draft callback updates its original chat, not a later activ
   assert.equal(h.current().chats!.A.draft.prompt, "A edited");
   assert.equal(h.current().chats!.B.draft.prompt, "B draft");
   assert.equal(h.current().activeChatId, "B");
+});
+
+for (const alias of ["missing", "undefined"] as const) {
+  test(`App clears its original rendered draft after canonical acceptance adds a ${alias} text alias and another chat edit`, () => {
+    const fixture = projectFixture();
+    if (alias === "undefined") fixture.chats!.A.draft.text = undefined;
+    const loadedSnapshot = decodeSnapshot(
+      serializeCreationSnapshot({
+        ...emptySnapshot(),
+        version: 3,
+        projects: [fixture],
+        activeProjectId: fixture.id,
+      }),
+    );
+    const h = appDraftHarness(loadedSnapshot.projects[0]);
+    const original = projectChatView(h.current());
+    const rendered = evaluate(
+      `export const draft = ${appInitializer("conversationDraft")};`,
+      {
+        activeProject: original,
+        selectedChat: original.chats!.A,
+      },
+    ).draft as CreationDraft;
+    const callback = h.callback(original);
+    const appended = appendImageTask(
+      h.current(),
+      { ...rendered, prompt: "A draft" },
+      {
+        id: "fixture-connection",
+        provider: "Fixture",
+        kind: "user_byok",
+        displayName: "Fixture",
+        baseUrl: "https://fixture.invalid/v1",
+        credentialRef: "fixture-ref",
+        capabilities: {
+          modalities: ["image"],
+          operations: ["generate"],
+          async: false,
+        },
+        state: "active",
+        concurrencyLimit: 1,
+      },
+      original.items[0].id,
+    );
+    const queued = updateProjectChatView(appended.project, () => ({
+      ...appended.project,
+      messages: [
+        ...original.messages,
+        {
+          id: "accepted-user",
+          taskId: appended.task.id,
+          role: "user",
+          content: rendered.prompt,
+          createdAt: Date.now(),
+        },
+      ],
+    }));
+    h.creationRef.current.projects[0] = queued;
+    h.switchChat();
+    h.callback(h.current())({
+      ...h.current().composerDraft,
+      prompt: "B edited",
+    });
+    assert.equal(h.current().chats!.A.draft.text, rendered.prompt);
+    callback({ ...rendered, prompt: "" }, rendered);
+    assert.equal(h.current().chats!.A.draft.prompt, "");
+    assert.equal(h.current().chats!.B.draft.prompt, "B edited");
+    assert.equal(h.current().activeChatId, "B");
+  });
+}
+
+test("App cleanup preserves a distinct text edit even when the prompt has not changed", () => {
+  const h = appDraftHarness();
+  const original = h.current();
+  const callback = h.callback(original);
+  h.current().chats!.A.draft = {
+    ...h.current().chats!.A.draft,
+    text: "Independent retained text",
+  };
+  callback({ ...original.composerDraft, prompt: "" }, original.composerDraft);
+  assert.equal(h.current().chats!.A.draft.prompt, "A draft");
+  assert.equal(h.current().chats!.A.draft.text, "Independent retained text");
+});
+
+test("App cleanup accepts an unchanged mirrored text alias before the other draft fields", () => {
+  const h = appDraftHarness();
+  const original = h.current();
+  const callback = h.callback(original);
+  h.current().chats!.A.draft = {
+    text: original.composerDraft.prompt,
+    ...h.current().chats!.A.draft,
+  };
+  callback({ ...original.composerDraft, prompt: "" }, original.composerDraft);
+  assert.equal(h.current().chats!.A.draft.prompt, "");
 });
 
 test("App successful-send cleanup preserves an attachment edit even when prompt and timestamp match", () => {

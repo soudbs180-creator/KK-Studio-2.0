@@ -424,7 +424,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
   }
   async function persistMessages(): Promise<void> {
     const scope = executionScope;
-    if (!scope || getExecutionBlockReason()) return;
+    if (!scope || !currentChatScope() || getExecutionBlockReason()) return;
     try {
       await bridge?.saveAgentMessages?.(state.messages, scope);
     } catch (error) {

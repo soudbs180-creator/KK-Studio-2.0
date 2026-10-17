@@ -24,9 +24,15 @@ async function ownFixtureThread(page: import("@playwright/test").Page) {
   await page.locator(".project-library-card").filter({ hasText: name }).click();
 }
 import { expect, test } from "@playwright/test";
-import { openWorkspace } from "./helpers";
+import { expandSidebar, openWorkspace } from "./helpers";
 import { showCanvasNavigation } from "./helpers";
 import { startAgentServer } from "../helpers/agentServer";
+import {
+  createProject,
+  emptySnapshot,
+} from "../../src/features/creation/model";
+import { BASE_CANVAS_ITEMS } from "../../src/domain/canvasItems";
+import { createProjectCanvas } from "../../src/domain/projectCanvas";
 import {
   ACCENTS,
   contrast,
@@ -332,25 +338,57 @@ test("migrated chat keeps its thread and disables advanced session replacement",
 }) => {
   const server = await startAgentServer("ready");
   try {
-    await openWorkspace(page);
-    await page.evaluate(() => {
-      const key = "kk-studio-next:creation:v1";
-      const snapshot = JSON.parse(localStorage.getItem(key)!);
-      const project = snapshot.projects.find(
-        (item: { id: string }) => item.id === snapshot.activeProjectId,
-      );
-      delete project.chats;
-      delete project.activeChatId;
-      snapshot.revision = Math.max(snapshot.revision, Date.now()) + 1;
-      localStorage.setItem(key, JSON.stringify(snapshot));
+    const legacy = createProject({
+      prompt: "",
+      model: "kk-image-2",
+      kind: "image",
+      attachments: [],
     });
-    await page.reload();
+    legacy.name = "Agent 验证项目";
+    legacy.items = BASE_CANVAS_ITEMS.map((item) => ({ ...item }));
+    legacy.canvas = createProjectCanvas(legacy.items);
+    legacy.messages = [];
+    legacy.agentThreadId = "fixture-thread";
+    legacy.composerDraft.conversationChannel = "codex";
+    delete legacy.chats;
+    delete legacy.activeChatId;
+    const initial = {
+      ...emptySnapshot(),
+      version: 2,
+      revision: Date.now(),
+      activeProjectId: legacy.id,
+      projects: [legacy],
+    };
+    await page.addInitScript((snapshot) => {
+      if (sessionStorage.getItem("legacy-thread-seeded")) return;
+      localStorage.setItem(
+        "kk-studio-next:creation:v1",
+        JSON.stringify(snapshot),
+      );
+      sessionStorage.setItem("legacy-thread-seeded", "yes");
+    }, initial);
+    await page.goto("/");
+    await expandSidebar(page);
     await page.getByRole("button", { name: "项目库", exact: true }).click();
     await page
       .locator(".project-library-card")
       .filter({ hasText: "Agent 验证项目" })
       .click();
-    await ownFixtureThread(page);
+    await expect
+      .poll(() =>
+        page.evaluate(() => {
+          const snapshot = JSON.parse(
+            localStorage.getItem("kk-studio-next:creation:v1")!,
+          );
+          const project = snapshot.projects[0];
+          return {
+            version: snapshot.version,
+            thread: project.chats[project.activeChatId].agentThreadId,
+            rootThread: Object.hasOwn(project, "agentThreadId"),
+          };
+        }),
+      )
+      .toEqual({ version: 3, thread: "fixture-thread", rootThread: false });
     const panel = page.locator(".conversation-panel");
     await panel.getByLabel("执行方式").selectOption("codex");
     await panel.getByRole("button", { name: "连接设置", exact: true }).click();
@@ -649,7 +687,7 @@ test("prompt library searches, previews and appends text without submitting", as
   await expect(page.locator(".start-composer")).toBeVisible();
 });
 
-test("disconnected Agent has its own draft and cannot submit to image creation", async ({
+test("disconnected Agent preserves the canonical draft and cannot submit to image creation", async ({
   page,
 }) => {
   await openWorkspace(page);
@@ -657,6 +695,7 @@ test("disconnected Agent has its own draft and cannot submit to image creation",
   await panel.getByLabel("执行方式").selectOption("direct");
   await panel.getByLabel("对话内容").fill("图片草稿");
   await panel.getByLabel("执行方式").selectOption("codex");
+  await expect(panel.getByLabel("对话内容")).toHaveValue("图片草稿");
   await expect(
     panel.getByText("Codex 主 Agent · 未连接", { exact: true }),
   ).toBeVisible();
@@ -677,8 +716,8 @@ test("disconnected Agent has its own draft and cannot submit to image creation",
   await expect(panel.getByRole("alert")).toContainText("连接");
   await expect(panel.locator(".start-attachment-chip")).toHaveCount(1);
   await panel.getByLabel("执行方式").selectOption("direct");
-  await expect(panel.getByLabel("对话内容")).toHaveValue("图片草稿");
-  await expect(panel.locator(".start-attachment-chip")).toHaveCount(0);
+  await expect(panel.getByLabel("对话内容")).toHaveValue("读取当前画布");
+  await expect(panel.locator(".start-attachment-chip")).toHaveCount(1);
   await panel.getByLabel("执行方式").selectOption("codex");
   await expect(panel.getByLabel("对话内容")).toHaveValue("读取当前画布");
   await expect(panel.locator(".start-attachment-chip")).toContainText(

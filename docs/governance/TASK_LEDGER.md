@@ -6,7 +6,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 | ID | Title | Status | Display | Priority | Dependencies | Owner | Next action |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| TASK-CHAT-MIGRATION-20261017 | 保全旧聊天资料并恢复迁移、编辑与聊天 | IN_PROGRESS | 进行中 | P1 | none | root | 按已接受ADR-022完成原始Value迁移、真实事务屏障与scope7；先在资料副本验证，再当前产物/独审后迁移默认根并验证编辑聊天重开。 |
+| TASK-CHAT-MIGRATION-20261017 | 保全旧聊天资料并恢复迁移、编辑与聊天 | IN_PROGRESS | 进行中 | P1 | none | root | 冻结发送草稿/首页来源边界修复，完整verify及新head独审；官方重建后先资料副本Native迁移，再fresh保全/CAS迁移默认根，验证旧线程真实聊天、离线保存和正常重开。 |
 | TASK-AUDIT-REPAIR-20261017 | 审计安全修复、启动恢复与当前治理收敛 | DONE | 已完成 | P1 | none | root | 保留被日常链接引用的任务worktree/EXE及所有恢复证据；root完成最终文档提交后的精确review/正式Delivery和runtime-input不变核对。其余64开放项按原任务继续，尤其旧聊天数据完整迁移/protocol7、统一接入/12AI持久恢复/素材垃圾箱、真实Provider/ComfyUI/GPU/VPS/Mobile/签名及用户验收；不得解除READ_ONLY或批量结案。 |
 | TASK-KK-UNIFIED-20261015 | KK Studio 统一修复与重构 | IN_PROGRESS | 进行中 | P1 | none | root | 原统一scope继续开放；当前后续源码已进入local main@8c36a6b并有63条dirty，已保全为未验收221560a3。当前安全修复由TASK-AUDIT-REPAIR-20261017独占承接；原branch/worktree仅历史来源，不作为当前产品验收或并行写入分配。完整多聊天、12AI持久恢复、Provider/共仓库/账号/同步等仍按原scope另行实施和验收。 |
 | TASK-FIX-PUSH-GUARD-SPACES-001 | 修复 Windows Git pre-push 空格及长路径启动 | PARTIAL | 未完成 | P1 | none | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
@@ -170,9 +170,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `fix/TASK-CHAT-MIGRATION-20261017`
 - Worktree: `D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017`
 - Modules: src/features/creation, src/App.tsx, src/features/agent, src/features/google, src/features/local-service, src/features/projects, src-tauri/src, vendor/canvas-agent, scripts/agent, docs/changes/2026-10-17-chat-migration
-- Verification: NOT_VERIFIED — 当前只读根因已确证；原9项目v2/revision2226，其中一项目2普通chat。已正常关闭原Native并另存2491文件/259972032B，独立2491枚举与重哈希0 mismatch。迁移/运行实现尚未完成，不能复用旧审计PASS代批。
+- Verification: NOT_VERIFIED — 原9项目v2/revision2226、已有2chat与5root线程已保全；2491文件独立枚举重哈希0 mismatch，5份旧rollout另行保全并二次独立校验。迁移/隔离实现及三P1修复在22352源码双轴独审通过，2.1.37 Rust226+41项PASS/1既有硬件ignore。定向Edge暴露夹具与连接/草稿清理边界，正在修复复验。默认库未迁移，完整当前verify/Native/真实聊天仍待验收。
 - Evidence: [docs/changes/2026-10-17-chat-migration/intent.md](../../docs/changes/2026-10-17-chat-migration/intent.md), [docs/changes/2026-10-17-chat-migration/spec.md](../../docs/changes/2026-10-17-chat-migration/spec.md), [docs/changes/2026-10-17-chat-migration/plan.md](../../docs/changes/2026-10-17-chat-migration/plan.md), [docs/changes/2026-10-17-chat-migration/verification.md](../../docs/changes/2026-10-17-chat-migration/verification.md), [docs/changes/2026-10-17-chat-migration/review.md](../../docs/changes/2026-10-17-chat-migration/review.md)
-- Next action: 按已接受ADR-022完成原始Value迁移、真实事务屏障与scope7；先在资料副本验证，再当前产物/独审后迁移默认根并验证编辑聊天重开。
+- Next action: 冻结发送草稿/首页来源边界修复，完整verify及新head独审；官方重建后先资料副本Native迁移，再fresh保全/CAS迁移默认根，验证旧线程真实聊天、离线保存和正常重开。
 - Last verified: 2026-10-17
 - Updated: 2026-10-17
 

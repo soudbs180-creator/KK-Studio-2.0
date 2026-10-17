@@ -15,8 +15,42 @@ import type {
 } from "../../src/features/agent/agentTypes.ts";
 import { createDesktopAgentLifecycle } from "../../src/features/agent/desktopAgentLifecycle.ts";
 import { clearSentPendingDraft } from "../../src/features/agent/homeAgentRecovery.ts";
-import { createProject } from "../../src/features/creation/model.ts";
+import {
+  createProject,
+  projectChatView,
+  serializeCreationSnapshot,
+  updateActiveChat,
+} from "../../src/features/creation/model.ts";
+import { updateProjectChatView } from "../../src/features/agent/chatProjectUpdate.ts";
 import { createAgentHost } from "../../src/features/agent/agentHost.ts";
+
+test("home settings can connect without persisting synthetic workspace history into a project", async (t) => {
+  const harness = createHarness();
+  let writes = 0;
+  const conn = createAgentConnection({
+    storage: memoryStorage(),
+    eventSourceFactory: harness.eventSourceFactory,
+    fetcher: (async () => connectionReadyResponse()) as typeof fetch,
+  });
+  conn.setBridge(
+    createAgentHost({
+      getProject: () => undefined,
+      commit: () => {
+        writes++;
+      },
+      generate: async () => ({}),
+    }),
+  );
+  t.after(() => conn.disconnect());
+  await conn.connect();
+  assert.equal(
+    conn.getState().status,
+    "connected",
+    conn.getState().error ?? "",
+  );
+  assert.equal(conn.getState().error, null);
+  assert.equal(writes, 0);
+});
 
 test("reconnect persists thinner remote history without losing canonical identities or metadata", async (t) => {
   let project = createProject({
@@ -612,6 +646,8 @@ test("连接恢复：旧发送只能清除自己拥有的持久待发草稿", ()
     kind: "image",
     attachments: [],
   });
+  delete project.chats;
+  delete project.activeChatId;
   project.composerDraft.pendingAgent = true;
   project.composerDraft.prompt = "pending A";
   project.composerDraft.attachments = [
@@ -628,7 +664,16 @@ test("连接恢复：旧发送只能清除自己拥有的持久待发草稿", ()
     ...project,
     composerDraft: { ...sent, prompt: "new durable pending B" },
   };
-  assert.equal(clearSentPendingDraft(newer, sent), newer);
+  const retired = clearSentPendingDraft(newer, sent);
+  assert.equal(retired.composerDraft.pendingAgent, undefined);
+  assert.equal(retired.composerDraft.prompt, "new durable pending B");
+  assert.deepEqual(retired.composerDraft.attachments, sent.attachments);
+  assert.equal(newer.composerDraft.pendingAgent, true);
+  assert.equal(clearSentPendingDraft(newer, undefined), newer);
+  assert.equal(
+    clearSentPendingDraft(newer, { ...sent, pendingAgent: undefined }),
+    newer,
+  );
   const ordinary = {
     ...project,
     composerDraft: { ...sent, pendingAgent: undefined },
@@ -643,6 +688,166 @@ test("连接恢复：旧发送只能清除自己拥有的持久待发草稿", ()
   assert.deepEqual(cleared.composerDraft.attachments, []);
   assert.equal(project.composerDraft.prompt, "pending A");
   assert.equal(project.composerDraft.attachments.length, 1);
+});
+
+test("accepted HOME source retires through canonical chat views without clearing the next input or attachments", () => {
+  let project = createProject({
+    prompt: "original HOME image",
+    model: "",
+    kind: "image",
+    modelSelection: { source: "codex", model: "", kind: "image" },
+    attachments: [],
+  });
+  project = updateActiveChat(project, (chat) => ({
+    ...chat,
+    draft: { ...chat.draft, pendingAgent: true, prompt: "original HOME image" },
+  }));
+  const sent = projectChatView(project).composerDraft;
+  const unchanged = updateProjectChatView(project, (view) =>
+    clearSentPendingDraft(view, sent),
+  );
+  assert.equal(
+    unchanged.chats![unchanged.activeChatId!].draft.pendingAgent,
+    undefined,
+  );
+  assert.equal(unchanged.chats![unchanged.activeChatId!].draft.prompt, "");
+  assert.deepEqual(
+    unchanged.chats![unchanged.activeChatId!].draft.attachments,
+    [],
+  );
+  const nextAttachment = {
+    id: "next-attachment",
+    name: "next.png",
+    mime: "image/png",
+    size: 1,
+  };
+  const next = updateActiveChat(project, (chat) => ({
+    ...chat,
+    draft: {
+      ...chat.draft,
+      prompt: "next canonical input",
+      text: "next canonical input",
+      attachments: [nextAttachment],
+    },
+  }));
+  const accepted = updateProjectChatView(next, (view) =>
+    clearSentPendingDraft(view, sent),
+  );
+  const draft = accepted.chats![accepted.activeChatId!].draft;
+  assert.equal(draft.pendingAgent, undefined);
+  assert.equal(draft.prompt, "next canonical input");
+  assert.deepEqual(draft.attachments, [nextAttachment]);
+  const wire = serializeCreationSnapshot({
+    version: 3,
+    revision: 1,
+    activeProjectId: accepted.id,
+    projects: [accepted],
+    homeDraft: sent,
+  });
+  assert.equal(Object.hasOwn(wire.projects[0], "composerDraft"), false);
+  assert.equal(next.chats![next.activeChatId!].draft.pendingAgent, true);
+  assert.equal(sent.pendingAgent, true);
+});
+
+for (const edited of [false, true])
+  test(`accepted HOME source retires original chat A after selecting B without changing B or ${edited ? "new A input" : "the active selection"}`, () => {
+    let project = createProject({
+      prompt: "HOME request A",
+      model: "",
+      kind: "image",
+      attachments: [],
+    });
+    const originChatId = project.activeChatId!;
+    project = updateActiveChat(project, (chat) => ({
+      ...chat,
+      agentThreadId: "thread-A",
+      draft: { ...chat.draft, pendingAgent: true, prompt: "HOME request A" },
+    }));
+    const sent = projectChatView(project).composerDraft;
+    const originalA = structuredClone(project.chats![originChatId]);
+    if (edited)
+      project = updateActiveChat(project, (chat) => ({
+        ...chat,
+        draft: {
+          ...chat.draft,
+          prompt: "next input A",
+          text: "next input A",
+          model: "next model A",
+          attachments: [
+            { id: "next-A", name: "next-A.png", mime: "image/png", size: 1 },
+          ],
+        },
+      }));
+    const expectedA = structuredClone(project.chats![originChatId].draft);
+    project = projectChatView({
+      ...project,
+      activeChatId: "B",
+      chats: {
+        ...project.chats,
+        B: {
+          ...project.chats![originChatId],
+          id: "B",
+          name: "B",
+          agentThreadId: "thread-B",
+          draft: {
+            ...sent,
+            pendingAgent: true,
+            prompt: "edited B",
+            attachments: [
+              { id: "B", name: "B.png", mime: "image/png", size: 1 },
+            ],
+          },
+          messages: [
+            { id: "B-message", role: "assistant", content: "B retained" },
+          ],
+        },
+      },
+    });
+    const originalB = JSON.stringify(project.chats!.B);
+    const accepted = updateProjectChatView(project, (view) =>
+      clearSentPendingDraft(view, sent, originChatId),
+    );
+    assert.equal(accepted.activeChatId, "B");
+    assert.equal(JSON.stringify(accepted.chats!.B), originalB);
+    const retiredA = accepted.chats![originChatId];
+    assert.equal(retiredA.draft.pendingAgent, undefined);
+    assert.equal(retiredA.agentThreadId, originalA.agentThreadId);
+    assert.deepEqual(retiredA.messages, originalA.messages);
+    assert.equal(retiredA.draft.prompt, edited ? "next input A" : "");
+    assert.deepEqual(
+      retiredA.draft.attachments,
+      edited ? expectedA.attachments : [],
+    );
+    if (edited) assert.equal(retiredA.draft.model, "next model A");
+    const wire = serializeCreationSnapshot({
+      version: 3,
+      revision: 1,
+      activeProjectId: accepted.id,
+      projects: [accepted],
+      homeDraft: sent,
+    });
+    assert.equal(Object.hasOwn(wire.projects[0], "composerDraft"), false);
+    assert.equal(JSON.stringify(wire.projects[0].chats!.B), originalB);
+    assert.equal(project.chats![originChatId].draft.pendingAgent, true);
+  });
+
+test("HOME pending retirement rejects missing chat targets and ambiguous legacy scope", () => {
+  const project = createProject({
+    prompt: "A",
+    model: "",
+    kind: "image",
+    attachments: [],
+  });
+  const sent = { ...project.composerDraft, pendingAgent: true };
+  project.composerDraft = sent;
+  assert.equal(clearSentPendingDraft(project, sent, "missing"), project);
+  assert.equal(clearSentPendingDraft(project, sent, ""), project);
+  const invalid = { ...project, activeChatId: "missing" };
+  assert.equal(clearSentPendingDraft(invalid, sent, "chat-default"), invalid);
+  const deleted = { ...project, chats: {}, activeChatId: undefined };
+  assert.equal(clearSentPendingDraft(deleted, sent, "chat-default"), deleted);
+  const legacy = { ...project, chats: undefined, activeChatId: undefined };
+  assert.equal(clearSentPendingDraft(legacy, sent, "chat-default"), legacy);
 });
 
 const connectionReadyResponse = () =>

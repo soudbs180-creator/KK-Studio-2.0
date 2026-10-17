@@ -532,7 +532,7 @@ async function project(page: Page, modelAllowlist?: string[]) {
     .toEqual(modelAllowlist);
 }
 
-test("Agent 图片上传发送、离线保留、API 草稿隔离与真实视口多选", async ({
+test("同一聊天切换 Agent 保留参考图和输入，发送后清理附件并同步真实视口多选", async ({
   page,
 }) => {
   const agent = await fixture(true);
@@ -558,10 +558,10 @@ test("Agent 图片上传发送、离线保留、API 草稿隔离与真实视口�
     await page.getByLabel("执行方式").selectOption("direct");
     await expect(
       page.getByRole("button", { name: "移除素材 reference.png" }),
-    ).toHaveCount(0);
+    ).toBeVisible();
     await page.getByLabel("对话内容").fill("API 草稿");
     await page.getByLabel("执行方式").selectOption("codex");
-    await expect(page.getByLabel("对话内容")).toHaveValue("");
+    await expect(page.getByLabel("对话内容")).toHaveValue("API 草稿");
     await page.getByLabel("对话内容").fill("请描述附图");
     await page.getByRole("button", { name: "发送消息", exact: true }).click();
     await expect(page.getByRole("alert")).toContainText("连接");
@@ -1159,14 +1159,16 @@ test("卡片 Codex 生图在刷新后归档并恢复来源；切 API 清除旧�
       )
       .toBe(true);
     expect(agent.received.images).toHaveLength(0);
-    await page.getByRole("button", { name: "模型", exact: true }).click();
-    const chatMenu = page.getByRole("menu", { name: "选择模型" });
-    await chatMenu.getByRole("tab", { name: "本地", exact: true }).click();
-    await chatMenu.getByRole("searchbox").fill("image-fixture");
-    await chatMenu
+    await source.focus();
+    await source.press("Enter");
+    await source.getByRole("button", { name: "画布模型", exact: true }).click();
+    const cardMenu = source.getByRole("menu", { name: "选择模型" });
+    await cardMenu.getByRole("tab", { name: "本地", exact: true }).click();
+    await cardMenu.getByRole("searchbox").fill("image-fixture");
+    await cardMenu
       .getByRole("menuitemradio", { name: /image-fixture/ })
       .click();
-    await expect(page.getByLabel("执行方式")).toHaveValue("direct");
+    await expect(page.getByLabel("执行方式")).toHaveValue("codex");
     await expect
       .poll(() =>
         page.evaluate(() => {

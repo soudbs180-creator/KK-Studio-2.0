@@ -40,10 +40,10 @@
       "docs/changes/2026-10-17-chat-migration/verification.md",
       "docs/changes/2026-10-17-chat-migration/review.md"
     ],
-    "verification": "当前只读根因已确证；原9项目v2/revision2226，其中一项目2普通chat。已正常关闭原Native并另存2491文件/259972032B，独立2491枚举与重哈希0 mismatch。迁移/运行实现尚未完成，不能复用旧审计PASS代批。",
+    "verification": "原9项目v2/revision2226、已有2chat与5root线程已保全；2491文件独立枚举重哈希0 mismatch，5份旧rollout另行保全并二次独立校验。迁移/隔离实现及三P1修复在22352源码双轴独审通过，2.1.37 Rust226+41项PASS/1既有硬件ignore。定向Edge暴露夹具与连接/草稿清理边界，正在修复复验。默认库未迁移，完整当前verify/Native/真实聊天仍待验收。",
     "verificationResult": "NOT_VERIFIED",
     "updated": "2026-10-17",
-    "nextAction": "按已接受ADR-022完成原始Value迁移、真实事务屏障与scope7；先在资料副本验证，再当前产物/独审后迁移默认根并验证编辑聊天重开。",
+    "nextAction": "冻结发送草稿/首页来源边界修复，完整verify及新head独审；官方重建后先资料副本Native迁移，再fresh保全/CAS迁移默认根，验证旧线程真实聊天、离线保存和正常重开。",
     "requirementRefs": [
       "docs/changes/2026-10-17-chat-migration/intent.md",
       "docs/architecture/adr/ADR-022-project-chats-and-v3-migration.md",

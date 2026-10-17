@@ -161,6 +161,7 @@ for (const edit of ["other chat", "sending chat"] as const) {
       displayName: "Local scoped fixture",
       model,
       baseUrl: endpoint,
+      credentialRef: "direct-scope-fixture-credential",
       protocol: "openai-chat",
       authMode: "none",
       kind: "user_byok",
@@ -183,6 +184,7 @@ for (const edit of ["other chat", "sending chat"] as const) {
             name: provider.provider,
             model: provider.model,
             baseUrl: provider.baseUrl,
+            connectionId: provider.id,
             protocol: provider.protocol,
             authMode: provider.authMode,
           }),
@@ -201,18 +203,24 @@ for (const edit of ["other chat", "sending chat"] as const) {
     const requests: unknown[] = [];
     await page.route(`${endpoint}/**`, async (route) => {
       requests.push(route.request().postDataJSON());
+      expect(route.request().url()).toBe(`${endpoint}/chat/completions`);
+      expect(route.request().postDataJSON()).toEqual({
+        model,
+        messages: [{ role: "user", content: "Original A request" }],
+        stream: true,
+      });
+      expect(route.request().headers()["authorization"]).toBeUndefined();
+      expect(route.request().headers()["idempotency-key"]).toBeTruthy();
       await route.fulfill({
-        json: {
+        contentType: "text/event-stream",
+        body: `data: ${JSON.stringify({
           choices: [
             {
-              message: {
-                role: "assistant",
-                content: "Original A fixture result",
-              },
+              delta: { content: "Original A fixture result" },
               finish_reason: "stop",
             },
           ],
-        },
+        })}\n\ndata: [DONE]\n\n`,
       });
     });
     await page.goto("/");

@@ -20,3 +20,17 @@ e248正式双轴独审另确认三P1，见[审查](review.md)，分别为远端�
 补充保全：只按快照中5个精确旧thread ID读取对应session文件名与只读SQLite索引，未扫描其他会话正文、未写SQLite；5个原rollout/4051009B全部复制重哈希保全，工程外`legacy-codex-originals-34cefb37-9629-42d7-bf47-f40cfa67de0f` receipt SHA bb0127cba8a5d5d92350e18b2d604cef0483c47c53bca8f16fbd1b3ac79f1d8e。首轮Windows扩展路径前缀校验导致索引预检FAIL（5原文件已复制），归一化同一合法绝对路径后fresh目录重新验证PASS；原失败和文件全部保留。
 
 官方Agent生产运行时已在fresh production npm安装和fresh candidate完成打包，未调用会旋转目录的publish；旧EXE/receipt与两份原runtime共8564文件先复制重哈希到工程外`native-before-build-e2d40ef7-4120-4ff4-9d2c-e381f16d482d`，当前candidate4282文件逐一校验并原位复制（无删除/移动）。此包绑定e248，后续runtime修复会使其过期，必须重打包和正式Native重建。尚未构建或启动新Native，旧默认原主/备/身份三SHA仍保持，原主仓63dirty/index完整性a7d7f99d收据PASS（SHA5afa914de193fec6070983f0d05c3a5bc5a7aa6a551b5b6e13a4264bb30b2efe）。
+
+## 第二冻结候选22352acc（源码复审通过，运行未验收）
+
+独立Spec复审87/87及Session34/34通过，收据`spec-recheck-398c430a-94c3-480c-89e5-e6073fe099eb.json` SHA4a3032831f855af59f4c682966bf1b409f9eaa8cc7d8216f66065b2df4713c3d；Standards独立69/69及原反例复验通过，收据`standards-recheck-f0da9812-ec29-4294-a640-2b76ae3231cd.json` SHAeac3b34eb2fa922fb88c631e6afc974fb9ef0cb7d85df9cfdad879204d60a913。三P1在该提交源码轴均关闭，不代替运行验收。
+
+首次定向生产Edge共77项，67PASS/10FAIL；完整失败和重试保留在run981b8967及`.tmp/chat-migration-20261017/browser-focused-source-1.log`。两项direct夹具缺必要连接身份并误用JSON而非SSE；部分旧断言仍读已退役project-root草稿，或要求同chat三套隐藏草稿，与ADR-022单canonical draft相冲突。修订以不同真实chat验证旧上下文隔离，保留同chat切主Agent输入，以及跨chat附件、origin和保存断言，不恢复双权威或移除格式保护。
+
+另确认真实首页连接回归：无项目时synthetic workspace被误送至canonical历史保存，导致设置连接报“聊天已切换”。真实生产AgentHost的RED后，仅在无实际聊天scope时跳过该保存；真实项目保存错误仍失败关闭。相关77/77单位回归通过。更新夹具并重建后，direct+设置10项中9PASS/1FAIL（run840b6343，日志`browser-direct-settings-2.log`）；另一chat编辑与原任务来源保持，但原A未变草稿清理仍待诊断。新候选未冻结，完整verify及Native尚未重跑；默认资料仍未迁移。
+
+随后原A清理失败定位为排队增加`text=prompt`镜像导致严格签名误判，保留RED并补缺失/undefined别名与实际不同text的边界；新增邻域回归通过。HOME已受理时新输入保留但pending来源残留也已有真实浏览器RED，修复绑定原chat只退役已受理来源，切chat后不改另一chat。3文件阶段浏览器run30751594为34PASS/2FAIL，重试间测试文件有明确变更，只作诊断记录，不作为冻结验收。最终新候选以统一冻结后的运行结果为准。
+
+新2.1.37完整`cargo test --no-default-features`为226PASS/1既有硬件ignored及integration41PASS（`.tmp/chat-migration-20261017/cargo-final-2-1-37.log`）。5份旧rollout的原件/保全副本再次由独立脚本逐对重哈希，0 mismatch；工程外收据`legacy-rollouts-independent-check-e40d16dc-bba1-4d22-9cfc-47af5d4756b8.json` SHA620959e3a9f210579f21059698ce576110bacfb2f4da834ab3c9c535b71dc64e。
+
+统一重建后的47项定向Edge为45PASS/2FAIL（run132d335e，`browser-focused-repair-3.log`）：Direct迟到回执两case、设置、卡片路由及旧线程迁移/离线重开均通过。剩余2项在保存中立即读取弱镜像，改为等待实际pending退役与原chat选择落盘、按冻结原chat ID比较完整草稿后，`browser-codex-persisted-4.log`为8/8首试通过。未增timeout、未放宽原字段断言。该阶段结果只绑定对应工作树文件，下一冻结提交须完整verify及新独审。

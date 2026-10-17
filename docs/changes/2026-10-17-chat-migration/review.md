@@ -23,3 +23,7 @@ Standards收据`.tmp/chat-migration-20261017/standards-review-bb0d4e61-aba6-4a03
 STD01现同时保留远端历史及SSE重发的原稳定ID、附件/assetIds/未知字段；STD02受控恢复相同client/chat与已确证旧thread的running turn新transport epoch，原canvas/turn不改、已受理工具不重放、旧回执拒绝，待审批恢复可见并可操作，中断受理。另修首次连接应先postState后activate的真实HTTP7握手顺序。真实客户端/Session内存路由及邻域158/158、Session34/34、类型/lint/格式通过，浏览器共享夹具改canonical3。
 
 SPEC01移除保存成功前的草稿清空；回调绑定原project/chat且只清未修改的发送草稿，迟到UI状态/输入/审批与内部busy隔离，原queued任务保留originChatId。root相连审查又发现合法Node v2无chat项目的兼容分支被新回调拒绝，追加真实RED3项后保留严格legacy身份与原root草稿CAS，未扩大Node迁移。新34项包含在最终146/146邻域通过，类型/lint/格式通过；2个真实UI延迟回执用例尚待root运行。以上是实现者回归结果，须新提交上的独立双轴复核与运行验收，不回填e248批准。
+
+## 22352acc源码双轴复审：PASS（运行交付仍未验收）
+
+固定head22352accda1c29bbcf7b7aac4408429a4069ef8e、tree e805c2a14cb5a9ef34cdcb40e49a5695be9c6deb；两独立上下文复核增量与base全diff。STD01/STD02/SPEC01源码问题关闭，Spec87+34、Standards69项独立验证通过，收据摘要见[验证记录](verification.md)。此批准仅绑定该提交源码，不包含后续首页连接修复、测试夹具调整、完整浏览器、Native或实际资料迁移；后续新head仍须复审。原e248的CHANGES REQUIRED收据保持原结论。

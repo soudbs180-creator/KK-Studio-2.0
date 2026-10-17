@@ -1,4 +1,5 @@
 import { isLocalProviderUrl } from "./domain/providerUrl";
+import { sameJson } from "./features/creation/chatMigration.ts";
 import React, {
   lazy,
   useEffect,
@@ -41,6 +42,7 @@ import {
   projectChatView,
   emptyDraft,
   snapshotWriteBlockReason,
+  type ChatItemDraft,
   type CreationDraft,
   type CreationProject,
   type CreationTask,
@@ -2746,7 +2748,19 @@ export default function App() {
       const scoped = projectChatView({ ...project, activeChatId: chatId });
       if (
         expected &&
-        JSON.stringify(scoped.composerDraft) !== JSON.stringify(expected)
+        // Acceptance can add the mirrored text alias without editing the draft.
+        !sameJson(
+          {
+            ...scoped.composerDraft,
+            text:
+              (scoped.composerDraft as ChatItemDraft).text ??
+              scoped.composerDraft.prompt,
+          },
+          {
+            ...expected,
+            text: (expected as ChatItemDraft).text ?? expected.prompt,
+          },
+        )
       )
         return project;
       const updated = updateProjectChatView(scoped, (current) => ({
@@ -3468,9 +3482,11 @@ export default function App() {
                             );
                             if (result.ok) {
                               updateProject(projectId, (project) =>
-                                project.activeChatId === chatId
-                                  ? clearSentPendingDraft(project, draftAtSend)
-                                  : project,
+                                clearSentPendingDraft(
+                                  project,
+                                  draftAtSend,
+                                  chatId,
+                                ),
                               );
                             }
                             return result;
