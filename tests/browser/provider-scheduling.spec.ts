@@ -5,6 +5,7 @@ import {
   CREATION_STORAGE_KEY,
   emptySnapshot,
 } from "../../src/features/creation/model";
+import { serializeCreationSnapshot } from "../../src/features/creation/snapshotCodec";
 const endpoint = "https://models.example.test/v1/images/generations";
 const key = "kk-studio-next:provider-connections:v1";
 const pixel =
@@ -292,11 +293,15 @@ test("429冷却先于被阻塞的项目保存且阻止另一项目提交", async
 
 test("部分结果后429在真实保存冲突后仍保留冷却", async ({ page }) => {
   const snapshot = emptySnapshot();
-  snapshot.revision = Date.now();
   snapshot.homeDraft.outputCount = 16;
+  const value = serializeCreationSnapshot({
+    ...snapshot,
+    version: 3,
+    revision: Date.now(),
+  });
   await page.addInitScript(
     ({ key, snapshot }) => localStorage.setItem(key, JSON.stringify(snapshot)),
-    { key: CREATION_STORAGE_KEY, snapshot },
+    { key: CREATION_STORAGE_KEY, snapshot: value },
   );
   let requests = 0;
   await page.route(endpoint, async (route) => {
