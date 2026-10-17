@@ -12,7 +12,7 @@
 
 TASK-WEB-RELEASE-20261017 为 IN_PROGRESS；先读[发布验证](../changes/2026-10-17-web-release/verification.md)与[发布审查](../changes/2026-10-17-web-release/review.md)。隔离树 `D:/kk-studio/.worktrees/TASK-WEB-RELEASE-20261017` 承载发布器和治理记录；其他树的未提交改动不进入本次交付。产品固定 source469 / docs bbc8，154 个重建文件逐字节相同。正式 Release 的 released 事件才发布，普通提交、草稿、预发布均不同步；只保留 current 和一个 previous。
 
-Linux 发布测试 31/31 PASS；原候选 PR64 的 verify 因 Windows 短路径与规范路径的断言比较失败，其他检查通过，尚未合并/部署。正在最小修正测试比较并复核发布器；不能把此处写成线上完成。原本地审计树已出现后续其他任务的未提交改动，原 PID50136 已退出，勿照旧交接启动或清理。手机布局上线验收与临时 root key 删除仍待完成。
+用户后续明确选择本次一起修复手机菜单并重新验收：新候选Desktop/Web2.1.37、Mobile仍2.1.1，产品差异限手机菜单视口定位与版本元数据；新四尺寸40/40本地步骤及两菜单browser回归通过，旧裁切FAIL原件保留。发布包固定元数据以支持同Release重试，控制器安全规则不放宽。原PR64的Rust断言及后续新增fixture的Windows8.3失败均保留，已做真实RED/GREEN修复。当前PR65托管检查/最终main/正式Release/真实域名手机/临时root key撤销仍待完成，不得把本地通过写成线上完成。原本地审计树有后续聊天迁移dirty、原PID50136已退出，勿照旧交接启动或清理。
 
 ## 以下为审计修复本地收口的历史交接（2026-10-17）
 

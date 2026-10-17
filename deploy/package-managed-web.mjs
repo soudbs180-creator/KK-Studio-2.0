@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 import { createHash } from "node:crypto";
 import { spawnSync } from "node:child_process";
-import { createReadStream } from "node:fs";
+import { createReadStream, createWriteStream } from "node:fs";
 import {
+  chmod,
   copyFile,
   lstat,
   mkdir,
@@ -14,7 +15,9 @@ import {
 } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
+import { pipeline } from "node:stream/promises";
 import { fileURLToPath } from "node:url";
+import { createGzip } from "node:zlib";
 
 const ID = /^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$/;
 const SECRET =
@@ -31,6 +34,7 @@ async function copyStatic(source, target, relative = "") {
   if (!info.isDirectory() || info.isSymbolicLink())
     throw new Error("dist must be an ordinary directory");
   await mkdir(target);
+  await chmod(target, 0o755);
   for (const entry of (await readdir(source)).sort()) {
     const name = relative ? `${relative}/${entry}` : entry;
     if (/[\\\u0000-\u001f\u007f]/.test(name) || SECRET.test(name))
@@ -40,8 +44,10 @@ async function copyStatic(source, target, relative = "") {
     const child = await lstat(from);
     if (child.isDirectory() && !child.isSymbolicLink())
       await copyStatic(from, to, name);
-    else if (child.isFile() && child.nlink === 1) await copyFile(from, to);
-    else throw new Error(`Unsupported static entry: ${name}`);
+    else if (child.isFile() && child.nlink === 1) {
+      await copyFile(from, to);
+      await chmod(to, 0o644);
+    } else throw new Error(`Unsupported static entry: ${name}`);
   }
 }
 
@@ -86,6 +92,7 @@ export async function packageManagedWeb({
       path.join(stage, "dist", "build-info.json"),
       `${JSON.stringify(identity)}\n`,
     );
+    await chmod(path.join(stage, "dist", "build-info.json"), 0o644);
     const files = await records(path.join(stage, "dist"));
     if (!files.some((file) => file.path === "dist/index.html"))
       throw new Error("dist must contain index.html");
@@ -94,15 +101,47 @@ export async function packageManagedWeb({
       path.join(stage, "manifest.json"),
       `${JSON.stringify(manifest)}\n`,
     );
+    await chmod(path.join(stage, "manifest.json"), 0o644);
     const archive = path.resolve(out);
     await mkdir(path.dirname(archive), { recursive: true });
+    const uncompressed = path.join(stage, "release.tar");
+    const tarOptions =
+      process.platform === "win32"
+        ? [
+            "--format=gnutar",
+            "--uid=0",
+            "--gid=0",
+            "--uname=root",
+            "--gname=root",
+          ]
+        : [
+            "--format=gnu",
+            "--owner=0",
+            "--group=0",
+            "--numeric-owner",
+            "--sort=name",
+          ];
     const tar = spawnSync(
       process.platform === "win32" ? "tar.exe" : "tar",
-      ["-czf", archive, "-C", stage, "manifest.json", "dist"],
-      { encoding: "utf8" },
+      [
+        "-cf",
+        uncompressed,
+        ...tarOptions,
+        "--mtime=@0",
+        "-C",
+        stage,
+        "manifest.json",
+        "dist",
+      ],
+      { encoding: "utf8", env: { ...process.env, LC_ALL: "C" } },
     );
     if (tar.error || tar.status !== 0)
       throw new Error(`tar failed: ${tar.error?.message ?? tar.stderr}`);
+    await pipeline(
+      createReadStream(uncompressed),
+      createGzip({ level: 9 }),
+      createWriteStream(archive),
+    );
     return { archive, sha256: await digest(archive), manifest };
   } finally {
     await rm(stage, { recursive: true, force: true });

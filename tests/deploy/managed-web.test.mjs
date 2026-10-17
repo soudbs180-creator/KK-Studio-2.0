@@ -4,6 +4,7 @@ import { createHash } from "node:crypto";
 import { once } from "node:events";
 import { existsSync } from "node:fs";
 import {
+  chmod,
   cp,
   link,
   mkdir,
@@ -14,6 +15,7 @@ import {
   readlink,
   rm,
   symlink,
+  utimes,
   writeFile,
 } from "node:fs/promises";
 import { homedir, tmpdir } from "node:os";
@@ -203,6 +205,68 @@ test("managed package records every static byte and public build identity", asyn
   success(await receive(root, packaged, ["--dry-run"]));
   assert.deepEqual(await readdir(path.join(root, "releases")), []);
   assert.equal(existsSync(path.join(root, "current")), false);
+});
+
+test("release retries produce identical archive bytes after metadata changes and a rebuild", async (t) => {
+  const root = await fixture(t);
+  const first = await artifact(root, "repeatable");
+  const identity = {
+    releaseId: "repeatable",
+    sourceCommit,
+    webVersion: "2.1.36",
+  };
+  for (const name of [
+    "index.html",
+    "assets/main.js",
+    "assets/main.css",
+    "assets",
+    "",
+  ]) {
+    await utimes(path.join(first.dist, name), 1234567890, 1234567890);
+  }
+  await chmod(path.join(first.dist, "index.html"), 0o444);
+  await chmod(path.join(first.dist, "assets"), 0o700);
+  const second = await packageManagedWeb({
+    ...identity,
+    dist: first.dist,
+    out: path.join(root, "retry.tar.gz"),
+  });
+  const rebuilt = path.join(root, "rebuilt");
+  await mkdir(path.join(rebuilt, "assets"), { recursive: true });
+  for (const name of ["assets/main.css", "assets/main.js", "index.html"]) {
+    await writeFile(
+      path.join(rebuilt, name),
+      await readFile(path.join(first.dist, name)),
+    );
+  }
+  const third = await packageManagedWeb({
+    ...identity,
+    dist: rebuilt,
+    out: path.join(root, "rebuilt.tar.gz"),
+  });
+  assert.deepEqual(second.manifest, first.manifest);
+  assert.deepEqual(third.manifest, first.manifest);
+  assert.equal(second.sha256, first.sha256);
+  assert.equal(third.sha256, first.sha256);
+  assert.deepEqual(
+    await readFile(second.archive),
+    await readFile(first.archive),
+  );
+  assert.deepEqual(
+    await readFile(third.archive),
+    await readFile(first.archive),
+  );
+  success(await receive(root, second, ["--dry-run"]));
+  if (process.platform !== "win32") {
+    const failed = await receive(root, {
+      ...first,
+      fixture: path.join(root, "missing-health"),
+    });
+    assert.notEqual(failed.status, 0);
+    assert.equal(existsSync(path.join(root, "current")), false);
+    success(await receive(root, { ...second, fixture: first.fixture }));
+    success(await receive(root, { ...third, fixture: first.fixture }));
+  }
 });
 
 test("managed packaging rejects source links and sensitive files", async (t) => {

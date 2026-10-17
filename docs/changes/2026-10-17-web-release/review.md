@@ -10,3 +10,5 @@
 Hosted PR64 暴露 Windows TEMP 8.3 别名与规范路径比较问题。本轮只修 Rust 测试：canonicalize 已存在根目录后比较预期路径，保留未创建配置文件断言，产品实现完全不变；真实 Windows 8.3 RED/GREEN 和 rustfmt 通过，完整 cargo 待新 PR 托管确认。
 
 后续发布测试夹具也以realpath规范化临时目录，保留生产canonical_directory拒绝规则；同一真实Windows8.3环境RED/GREEN通过。手机菜单既有裁切为明确未通过项，不能将核心布局通过写成全手机验收通过；本次未修改已验收产品CSS。
+
+以上为用户补充授权前的阶段记录。用户随后要求本次修菜单并重新验收，新增phone视口定位及仅打开菜单时topbar语义层级修复；旧裁切/新workspace遮挡两轮RED保留，最终四browser回归首过、四尺寸40/40本地通过。新packager固定tar时间/owner/排序、stage权限和gzip流；独立权限/umask扰动重复归档逐字节一致，Linux32/32。最终提交SHA绑定复核、Hosted/main门禁和生产域名仍待执行，不把本地/dirty预审当上线验收。

@@ -159,18 +159,18 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 ## TASK-WEB-RELEASE-20261017 — Web固定版本发布与正式Release自动同步
 
-- Goal: 将kkai.plus发布到客户端已验收2.1.36，手机布局实测一致，并仅在正式Release自动更新，保留一个回滚版本。
-- Scope: 固定已验收产品源码、托管门禁、受限静态发布器/清单/正式Release工作流、备份回滚和生产浏览器证据；保护业务数据、本地dirty与其他服务。
+- Goal: 将kkai.plus以客户端已验收2.1.36为基线修手机菜单并重新验收2.1.37，仅正式Release自动更新，保留一个回滚版本。
+- Scope: 固定已验收基线、手机菜单视口定位及浏览器回归、2.1.37版本元数据、托管门禁、受限静态发布器/可重复清单包/正式Release工作流、备份回滚和生产浏览器证据；保护业务数据、本地dirty与其他服务。
 - Display status: 进行中
 - Priority: P1 — 线上仍为9月18日旧包，需与已验收客户端对齐并保留回滚与业务数据。
 - Requirement refs: docs/changes/2026-10-17-web-release/spec.md
 - Feature IDs: none
 - Owner role: implementer
-- Acceptance: 固定源码隔离构建与客户端验收154文件逐哈希一致，不纳入原dirty; 当前SHA的托管门禁/独立审查与main身份通过后发布；生产手机首页/项目/聊天/设置和真实bundle可核对; 坏包/链接/路径穿越/错误hash被拒绝，健康失败回滚；仅保留current和一个previous且不清理非受管数据; 只正式Release自动部署；普通提交/预发布不触发，专用受限普通用户密钥，不留临时root key
+- Acceptance: 固定基线154文件与旧验收dist逐哈希一致；用户后续授权修手机菜单并重验2.1.37，产品差异限该修复与版本元数据; 当前SHA的托管门禁/独立审查与main身份通过后发布；生产手机首页/项目/聊天/设置和真实bundle可核对; 坏包/链接/路径穿越/错误hash被拒绝，健康失败回滚；仅保留current和一个previous且不清理非受管数据; 只正式Release自动部署；普通提交/预发布不触发，专用受限普通用户密钥，不留临时root key
 - Branch: `fix/TASK-WEB-RELEASE-20261017`
 - Worktree: `D:/kk-studio/.worktrees/TASK-WEB-RELEASE-20261017`
-- Modules: deploy, .github/workflows/web-release.yml, tests/deploy, docs/changes/2026-10-17-web-release
-- Verification: PARTIAL — 固定bbc8/产品469隔离构建154文件与验收dist逐哈希一致。独立聚合140定向测试通过；发布器独审与Linux31/31通过。PR64的verify因Windows短路径断言失败，测试已修；PR65接续聚合交付上游三个未入main的change package，在本记录绑定其原始verification，不修改原149任务。原服务器122文件字节不变，已安装受限普通账号/单配置备份/缓存及previous资源回退；API/DB/Nginx主PID保持。最终Hosted/main门禁、正式Release/生产手机/回滚与临时root key撤销仍待本轮验收。
+- Modules: deploy, .github/workflows/web-release.yml, tests/deploy, docs/changes/2026-10-17-web-release, src/styles/responsive.css, tests/browser/responsive-layout.spec.ts, config/platform-versions.json
+- Verification: PARTIAL — 固定bbc8/产品469隔离构建154文件与验收dist逐哈希一致。独立聚合140定向测试通过；发布器独审与Linux31/31通过。PR64的verify因Windows短路径断言失败，测试已修；PR65接续聚合交付上游三个未入main的change package，在本记录绑定其原始verification，不修改原149任务。原服务器122文件字节不变，已安装受限普通账号/单配置备份/缓存及previous资源回退；API/DB/Nginx主PID保持。最终Hosted/main门禁、正式Release/生产手机/回滚与临时root key撤销仍待本轮验收。 后续用户明确授权本次修手机菜单并重新验收，新增两真实浏览器回归先在旧包RED；Desktop/Web版本工具升级2.1.37，Mobile保留2.1.1。同Release重试要求归档可重复，正增加mtime/目录顺序反例。
 - Evidence: [docs/changes/2026-10-17-web-release/intent.md](../../docs/changes/2026-10-17-web-release/intent.md), [docs/changes/2026-10-17-web-release/spec.md](../../docs/changes/2026-10-17-web-release/spec.md), [docs/changes/2026-10-17-web-release/plan.md](../../docs/changes/2026-10-17-web-release/plan.md), [docs/changes/2026-10-17-web-release/verification.md](../../docs/changes/2026-10-17-web-release/verification.md), [docs/changes/2026-10-17-web-release/review.md](../../docs/changes/2026-10-17-web-release/review.md), [docs/changes/2026-10-15-kk-unified/verification.md](../../docs/changes/2026-10-15-kk-unified/verification.md), [docs/changes/2026-10-15-unified-provider-access/verification.md](../../docs/changes/2026-10-15-unified-provider-access/verification.md), [docs/changes/2026-10-17-audit-repair/verification.md](../../docs/changes/2026-10-17-audit-repair/verification.md)
 - Next action: 完成Linux/独立脚本审查、当前托管门禁及正式Release自动发布实测，保留一个旧版并撤销临时root key。
 - Last verified: 2026-10-17
