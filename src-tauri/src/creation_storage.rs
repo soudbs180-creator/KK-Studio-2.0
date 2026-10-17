@@ -58,7 +58,20 @@ fn write_block_reason(snapshot: &Value) -> Option<&'static str> {
     if snapshot["version"].as_u64()? != 2 {
         return Some("多聊天格式迁移与写入保护尚未完成，当前快照仅供恢复查看。");
     }
+    let invalid_thread = |value: &Value| {
+        value.get("agentThreadId").is_some_and(|thread| {
+            !thread.as_str().is_some_and(|id| {
+                (1..=160).contains(&id.len())
+                    && id
+                        .bytes()
+                        .all(|byte| byte.is_ascii_alphanumeric() || matches!(byte, b'_' | b'-'))
+            })
+        })
+    };
     for project in snapshot["projects"].as_array()? {
+        if invalid_thread(project) {
+            return Some("Agent 线程身份无效，已暂停执行以保留原件。");
+        }
         let Some(chats) = project.get("chats").filter(|value| !value.is_null()) else {
             if project
                 .get("activeChatId")
@@ -86,6 +99,9 @@ fn write_block_reason(snapshot: &Value) -> Option<&'static str> {
         let Some(chat) = chats.get(active).filter(|chat| chat["id"] == active) else {
             return Some("聊天身份不完整，已暂停执行以保留原件。");
         };
+        if invalid_thread(chat) {
+            return Some("Agent 线程身份无效，已暂停执行以保留原件。");
+        }
         if let (Some(thread), Some(legacy)) = (
             chat["agentThreadId"].as_str(),
             project["agentThreadId"].as_str(),

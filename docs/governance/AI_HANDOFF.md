@@ -2,11 +2,21 @@
 
 - docId: AI_HANDOFF
 - status: current
-- updatedAt: 2026-10-16
+- updatedAt: 2026-10-17
 - source: `docs/governance/PROJECT_STATE.md`
 - supersededBy: null
 
 本文是最短恢复入口，不是任务状态或产品能力的第二事实源。任务状态只读 [`task-ledger.json`](task-ledger.json)；当前项目事实只读 [`PROJECT_STATE.md`](PROJECT_STATE.md)；历史验证只按带日期的 change package、commit、运行模式和 receipt 回读。
+
+## 当前恢复入口：审计安全修复（2026-10-17）
+
+先读[本轮intent](../changes/2026-10-17-audit-repair/intent.md)、[spec](../changes/2026-10-17-audit-repair/spec.md)、[plan](../changes/2026-10-17-audit-repair/plan.md)和[实际验证](../changes/2026-10-17-audit-repair/verification.md)。用户已授权A–D，不重复请求形式确认。只写 `fix/TASK-AUDIT-REPAIR-20261017` / `D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017`；起点221560a322107092f66c142c7b911439087019f8是原main8c及63条dirty的未验收快照，主仓/index不动。origin/main仍d95/2.1.34，审计源码2.1.35；本轮已由版本脚本递增Desktop/Web2.1.36，Mobile2.1.1规划不变，HEAD仍221560a3加dirty待冻结。
+
+A保全core及两个dirty隔离恢复通过，工程外final-preservation-receipt.json保留原memory/新增文档/长路径失败；B已取得unit1812PASS/14SKIP、lint exit0但health30/footguns2 advisory、4/4浏览器首过、Rust bin213PASS/1硬件ignored的preflight。完整verify、C官方重建/实际进程/关闭重开及新入口、最终已提交SHA独审仍待，Rust bin不替代Native界面验收。共享依赖目标只读，安装和所有build写入必须物理owned；root独占生成视图/版本/完整验证和Native。26个失效分配已保全历史再unallocated，原task和feature成熟度保留；原统一scope继续开放，旧树只作历史，不能重新并行写共享核心或以旧PASS关闭本次门控。统一接入新包只补需求文档，原intent及八项优先级不动。当前任务IN_PROGRESS/NOT_VERIFIED，Hosted、最终SHA独审、真实Provider及产品/发布验收未发生。
+
+## 以下为2026-10-16及之前的历史交接
+
+原文保留其当时SHA、授权和失败；其中“当前/最新/实施中”均不再是本会话的活动写入分配，恢复必须先以上方当前入口和权威账本核对。
 
 ## 统一整理后的正式执行入口（TASK-GOV-006）
 

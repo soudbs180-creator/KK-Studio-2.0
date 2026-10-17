@@ -4,6 +4,7 @@ import {
   CREATION_STORAGE_KEY,
   createProject,
   emptySnapshot,
+  projectChatExecutionBlockReason,
   type CreationSnapshot,
 } from "../../src/features/creation/model.ts";
 import {
@@ -253,6 +254,115 @@ function indexedFixture(records: Map<string, unknown>) {
     } as unknown as IDBFactory,
   };
 }
+
+test("raw v2 chat identities cannot become writable through normalization", async () => {
+  const originalWindow = globalThis.window;
+  const originalIndexed = globalThis.indexedDB;
+  const project = unsafeSnapshot().projects[0];
+  delete project.chats!.private;
+  project.activeChatId = Object.keys(project.chats!)[0];
+  const valid = {
+    ...emptySnapshot(),
+    projects: [project],
+    activeProjectId: project.id,
+    revision: 1,
+  };
+  const malformed = [
+    { ...project, activeChatId: "missing-chat" },
+    { ...project, activeChatId: undefined },
+    { ...project, chats: undefined },
+    { ...project, chats: [] },
+    { ...project, agentThreadId: "bad/root" },
+    {
+      ...project,
+      agentThreadId: "valid-root",
+      chats: {
+        [project.activeChatId]: {
+          ...project.chats![project.activeChatId],
+          agentThreadId: "bad/thread",
+        },
+      },
+    },
+  ];
+  try {
+    for (const candidate of malformed) {
+      const raw = { ...valid, projects: [candidate] };
+      for (const source of [
+        "snapshot",
+        "backup",
+        "local",
+        "journal",
+        "native",
+      ]) {
+        const records = new Map<string, unknown>([
+          ["snapshot", source === "snapshot" ? raw : valid],
+        ]);
+        if (source === "backup") records.set("backup", raw);
+        const fixture = indexedFixture(records);
+        const local = storage(),
+          journal = storage();
+        if (source === "local")
+          local.values.set(CREATION_STORAGE_KEY, JSON.stringify(raw));
+        if (source === "journal")
+          journal.values.set(
+            `${CREATION_STORAGE_KEY}:pending`,
+            JSON.stringify({ snapshot: raw }),
+          );
+        const commands: string[] = [];
+        globalThis.window = (source === "native"
+          ? {
+              __TAURI_INTERNALS__: {
+                invoke: async (command: string) => {
+                  commands.push(command);
+                  return { status: "loaded", snapshot: raw };
+                },
+              },
+            }
+          : {
+              localStorage: local,
+              sessionStorage: journal,
+            }) as unknown as Window & typeof globalThis;
+        globalThis.indexedDB = fixture.factory;
+        try {
+          const loaded = await loadCreationSnapshot(true);
+          assert.ok(
+            loaded.readOnlyReason,
+            `${source} must retain raw identity protection`,
+          );
+        } catch (error) {
+          assert.match(String(error), /项目|聊天/);
+        }
+        await assert.rejects(
+          persistCreationSnapshotAsync({ ...valid, revision: 2 }),
+        );
+        assert.deepEqual(fixture.writes, []);
+        assert.deepEqual(local.writes, []);
+        assert.deepEqual(journal.writes, []);
+        assert.deepEqual(
+          commands,
+          source === "native" ? ["read_creation_snapshot"] : [],
+        );
+      }
+      assert.ok(projectChatExecutionBlockReason(candidate as typeof project));
+    }
+    const records = new Map<string, unknown>([["snapshot", valid]]);
+    const fixture = indexedFixture(records);
+    globalThis.window = {
+      localStorage: storage(),
+      sessionStorage: storage(),
+    } as unknown as Window & typeof globalThis;
+    globalThis.indexedDB = fixture.factory;
+    await loadCreationSnapshot();
+    records.set("snapshot", { ...valid, projects: [malformed[0]] });
+    await assert.rejects(
+      persistCreationSnapshotAsync({ ...valid, revision: 2 }),
+    );
+    assert.deepEqual(fixture.writes, []);
+  } finally {
+    globalThis.window = originalWindow;
+    globalThis.indexedDB = originalIndexed;
+  }
+});
 
 test("a v3 backup protects the older main and journal, including a concurrent backup change", async () => {
   const originalWindow = globalThis.window;

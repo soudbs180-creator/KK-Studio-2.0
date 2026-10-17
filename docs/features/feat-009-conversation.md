@@ -2,10 +2,14 @@
 
 - 状态：PARTIAL
 - 领域：creation
-- 最近更新：2026-10-01
+- 最近更新：2026-10-17
 - 关联任务：T4、BACKEND-CONVERSATION、TASK-AGENT-001、TASK-AGENT-002、TASK-AGENT-003、TASK-AGENT-004、TASK-AGENT-005、TASK-AGENT-008
-- 最近更新：2026-10-01
+- 最近更新：2026-10-17
 - 关联任务：T4、BACKEND-CONVERSATION、TASK-AGENT-001、TASK-AGENT-002、TASK-AGENT-003、TASK-AGENT-007、TASK-AGENT-008
+
+## 2026-10-17安全修复边界（preflight通过，完整待验）
+
+关联开放任务：TASK-AUDIT-REPAIR-20261017；[规格](../changes/2026-10-17-audit-repair/spec.md) / [实际验证](../changes/2026-10-17-audit-repair/verification.md)。协议6未具备完整chat scope隔离，新增普通聊天、临时聊天及不支持的多聊天/v3写入须门控并说明原因；保留v2 legacy单聊天。草稿/thread/正文、历史/journal/记忆隔离未全部验收前，不宣称多聊天或临时隐私可用；外部模型授权空数组应拒绝，不混同主Agent自身推理模型。 候选Desktop/Web2.1.36已取得unit/lint、4项浏览器及Rust bin的安全preflight；尚未冻结最终head，完整verify、C启动与最终审查未完成，不用旧SHA或定向预检代填；本卡成熟度与既有runtimeEvidence保持原范围。
 
 ## 用户可见入口
 

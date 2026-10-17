@@ -399,7 +399,7 @@ export default function App() {
     saveState === "read_only" && activeProject && selectedChat
       ? {
           ...activeProject.composerDraft,
-          prompt: selectedChat.draft.prompt ?? selectedChat.draft.text ?? "",
+          prompt: selectedChat.draft.text ?? selectedChat.draft.prompt ?? "",
           attachments: selectedChat.draft.attachments ?? [],
           model: selectedChat.draft.model ?? "",
           modelSelection: selectedChat.draft.modelSelection,

@@ -286,6 +286,17 @@ export function projectChatExecutionBlockReason(
   project: CreationProject | undefined,
 ): string | undefined {
   if (!project) return;
+  const threads = [
+    project.agentThreadId,
+    ...Object.values(project.chats ?? {}).map((chat) => chat.agentThreadId),
+  ];
+  if (
+    threads.some(
+      (thread) =>
+        thread !== undefined && !/^[A-Za-z0-9_-]{1,160}$/.test(thread),
+    )
+  )
+    return "Agent 线程身份无效，已暂停执行以保留原件。";
   if (!project.chats) {
     return project.activeChatId
       ? "聊天身份不完整，已暂停执行以保留原件。"

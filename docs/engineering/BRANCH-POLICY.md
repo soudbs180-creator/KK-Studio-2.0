@@ -70,17 +70,16 @@ test(browser): 补充侧栏窄屏关闭优先级回归
 
 - 新任务 worktree 统一落`D:\kk-studio\.worktrees\TASK-ID-slug`（容器级），避免散落到 `C:\Users\Administrator\.codex\worktrees\` 或仓库内部。落点规范是本机实例约定，不是跨设备契约。
 - 历史遗留 worktree 分布在容器级、仓库内、codex 目录三处。清理是独立任务，需先核对分支是否已合并、worktree 是否 dirty，再逐个处理，不批量删除。
-- 创建 worktree 后必须把主仓 `node_modules` 以目录联接（junction）挂到新 worktree 下，否则 `eslint` 不是命令、`typescript` 模块解析失败。junction 可能在重新创建 worktree 后丢失，需重新建立。
+- 创建 worktree 不自动安装依赖。共享 `node_modules` junction/symlink 只可作为明确的只读输入；禁止对共享目标执行 `npm ci`/`npm install` 或任何构建、发布写入。安装或构建前核对根/Agent依赖、dist、Rust target、runtime staging及其他输出的真实路径，写入目标须是本任务独占实体目录；不满足时先准备受控实体目录，不修共享owner。旧依赖事故见 [验证](../changes/2026-10-15-dependency-repair/verification.md)。
 - 同一仓库登记多个 worktree 合法。`git worktree list` 是发现当前实例的唯一准确来源。
-- 所有 git 命令在仓库根 `D:\kk-studio\KK-Studio-2.0` 执行。`D:\kk-studio` 不是 git 仓库，在容器根执行 git 命令会报 `not a git repository`。
+- Git 命令在本次实际登记的 checkout/worktree 根执行，并先核对 root/branch；主仓根是 `D:/kk-studio/KK-Studio-2.0`。`D:/kk-studio` 只是容器，不能作为 Git 根，也不能为方便而从任务树切回主仓写入。
 
 ## 自动合并
 
-- 目标：分支门禁全绿后无需人工再执行合并动作。
-- 当前状态：**仓库内尚无自动合并脚本**。`scripts/governance/` 下只有 `delivery.mjs`、`import-boundaries.mjs`、`ledger.mjs`、`markdown-links.mjs`、`push-policy.mjs`。本文档此前的相关表述已按实际落地情况修正，不得声称自动合并已生效。
-- 固定运行端口（1421 / 1423）的串行验证要求，使「全量verify 后直接合并」无法在并行任务下无条件成立，这是自动合并未落地的主要技术原因。
-- 未来实现时必须满足：默认 dry-run，`--apply` 才执行；依次执行治理、交付、lint、typecheck、test 门禁，任一失败不写入 ref；合并前核对目标分支基线是否前移；本地 squash 合并，不代替 GitHub 侧 PR 与 ruleset。
-- 不因自动合并而降低 [PR 与审核](#pr-与审核) 的四条合并条件。用户产品验收与独立 AI review 不能被脚本代替。
+- 仓库已存在 `scripts/governance/merge-auto.mjs`、merge queue/main guard及 `.github/workflows/auto-merge.yml`。文件存在不表示远端已启用，旧“尚无自动合并脚本”的陈述已撤回。
+- 受控helper仅在实际回读 `AUTO_MERGE_ACTIVATION=enabled`、`AUTO_MERGE_PAUSED=false` 及相应远端保护/队列、当前SHA检查和独立审查满足时才可推进。2026-10-17审计修复未重新确认这些启用条件，不修改远端settings，不宣称自动合并生效。
+- 固定1421/1423的全量运行验证仍须串行，不因存在自动化而并发争用端口；本地测试不能替代Hosted当前SHA检查。
+- 不因自动合并降低[PR与审核](#pr-与审核)的合并条件。具体控制面及未启用边界见[AUTO-MERGE](AUTO-MERGE.md)。
 
 ## 回滚触发条件与执行
 

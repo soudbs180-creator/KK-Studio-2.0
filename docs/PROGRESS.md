@@ -1,5 +1,13 @@
 # 当前进度
 
+## 2026-10-17 审计安全修复与治理同步（IN_PROGRESS / NOT_VERIFIED）
+
+A完整保全core通过：517368文件版本、56336959878 B、6 bundles，两个dirty恢复status/index一致；memory变化、两份新增文档与长路径首轮失败原件保留。主仓main8c/原index/63条dirty未动，仅在fix/TASK-AUDIT-REPAIR-20261017建立未验收221560a3 source snapshot。B安全修复取得preflight：unit1826total/1812PASS/14SKIP/0fail、lint exit0（code-health30及footguns2为advisory）、新增浏览器4/4首过/无retry、Rust bin213PASS/1既有硬件ignored。完整verify、C官方重建/实际启动/正常关闭重开与最终已提交SHA独审仍待；HEAD221560a3加dirty尚未冻结，Rust bin不是原生界面验收。已按版本脚本递增Desktop/Web2.1.35→2.1.36，Mobile2.1.1规划不变，版本不代表交付。
+
+D已保全26条失效worktree分配历史，5个REVIEW、HOME及分支不符的审查改PARTIAL，当前149项/84DONE/65开放；原统一scope继续开放，旧树只作历史。统一接入只补requirements-only四文件，原intent及八优先级原字节保留；四功能卡/registry只补当前限制和新task，成熟度与旧runtimeEvidence不变。生成视图、相关checks、源码修复/完整验证/Native、最终SHA审查与Hosted按实际回执追加，不预填通过。见[本轮计划](changes/2026-10-17-audit-repair/plan.md)与[验证](changes/2026-10-17-audit-repair/verification.md)。
+
+以下各日期段为历史阶段证据，其中“当前/进行中”按其时点理解，不能覆盖本轮入口。
+
 ## 2026-10-16 安装安全复验与真实UI回读（进行中）
 
 独审捕获的硬链接原件损坏/续传空间误拒均已实际RED→GREEN；修复19路径预检通过，fresh integration41/41、Node21/21及原件SHA保全探针通过，真实ZIP/模型推理仍未验。冻结573输入构建成功，新bundle相关25/25及动画/原frame邻域10/10首试通过，36状态审计无document溢出；手机聊天实际settled在viewport内。截图动画中间态与旧seed失败已按真实状态修正，未改frame坐标/容差；顶部实际命中24px，纠正先前32px推断。Native模型能力DTO丢失已修，正常多聊天/Agent又补两项scope隔离，需再重建后验。账号后台正用真SQLite/OPAQUE/OIDC/JWE实现独立控制面，尚未接Desktop/真实邮件；全局DESIGN、执行模型参数、媒体、共仓库及同步继续推进，详见[验证](changes/2026-10-15-kk-unified/verification.md)。

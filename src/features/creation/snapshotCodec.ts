@@ -13,6 +13,7 @@ import {
 } from "../../domain/providerProtocol.ts";
 
 const id = z.string().min(1).max(160);
+const threadId = id.regex(/^[A-Za-z0-9_-]{1,160}$/);
 const number = z.number().finite();
 const kind = z.enum(["image", "video", "audio", "text"]);
 
@@ -125,6 +126,14 @@ const taskSchema = z
 const projectV2Schema = z
   .object({
     id,
+    activeChatId: id.optional(),
+    agentThreadId: threadId.optional(),
+    chats: z
+      .record(
+        z.string(),
+        z.object({ id, agentThreadId: threadId.optional() }).passthrough(),
+      )
+      .optional(),
     providerProtocol: providerProtocolSchema.optional(),
     providerAuthMode: providerAuthModeSchema.optional(),
     items: z.array(item),
@@ -146,7 +155,16 @@ const projectV2Schema = z
     customTags: z.array(z.string().max(40)).max(32).optional(),
   })
   .passthrough()
-  .refine(isCreationProviderRoutingValid, "供应商协议或认证配置无效");
+  .refine(isCreationProviderRoutingValid, "供应商协议或认证配置无效")
+  .refine(
+    (project) =>
+      project.chats
+        ? typeof project.activeChatId === "string" &&
+          Object.hasOwn(project.chats, project.activeChatId) &&
+          Object.entries(project.chats).every(([key, chat]) => chat.id === key)
+        : project.activeChatId === undefined,
+    "聊天身份不完整，禁止通过正常化修复原件",
+  );
 
 const projectV3Schema = z
   .object({

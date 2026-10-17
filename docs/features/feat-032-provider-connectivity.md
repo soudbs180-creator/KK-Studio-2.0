@@ -2,8 +2,12 @@
 
 - 状态：PARTIAL
 - 领域：intelligence
-- 最近更新：2026-10-16
+- 最近更新：2026-10-17
 - 关联任务：TASK-PROV-002（已合入）、TASK-PROV-003/004（PARTIAL）、TASK-UI-CONSOLIDATE-20261014、TASK-PROTOCOL-CLI-20261014、TASK-222-ACTIONS-20261014、TASK-223-ACTIONS-20261014
+
+## 2026-10-17安全修复边界（preflight通过，完整待验）
+
+关联开放任务：TASK-AUDIT-REPAIR-20261017；[规格](../changes/2026-10-17-audit-repair/spec.md) / [实际验证](../changes/2026-10-17-audit-repair/verification.md)。账号身份不可因endpoint相同而替代；生成调用须固定connectionId并核对凭据绑定，空外部模型授权默认拒绝。12AI无持久receipt端口时禁用执行；统一接入需求四补件仅requirements-only，原intent及八优先级保持，不宣称多账号、额度或真实路由已完成。 候选Desktop/Web2.1.36已取得unit/lint、4项浏览器及Rust bin的安全preflight；尚未冻结最终head，完整verify、C启动与最终审查未完成，不用旧SHA或定向预检代填；本卡成熟度与既有runtimeEvidence保持原范围。
 
 ## 用户可见入口
 

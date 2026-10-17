@@ -2,8 +2,12 @@
 
 - 状态：REAL
 - 领域：system
-- 最近更新：2026-10-14
+- 最近更新：2026-10-17
 - 关联任务：T3a、TASK-PERF-ASSETS-001、PERF-001、TASK-222-ACTIONS-20261014、TASK-223-ACTIONS-20261014
+
+## 2026-10-17安全修复边界（preflight通过，完整待验）
+
+关联开放任务：TASK-AUDIT-REPAIR-20261017；[规格](../changes/2026-10-17-audit-repair/spec.md) / [实际验证](../changes/2026-10-17-audit-repair/verification.md)。既有REAL范围仍仅为已验导入、归档、校验、预览、集合和来源追踪。新增垃圾箱局部隐藏不能证明持久软删除，清空隐藏集合不能证明永久删除；需真实App接线、引用检查、持久提交及重挂载/重启证据，当前未接持久垃圾箱时禁用软删除/永久删除操作，4项真实浏览器安全预检包含禁用与归档原件保留；完整持久垃圾箱仍未实现/验收。 候选Desktop/Web2.1.36已取得unit/lint、4项浏览器及Rust bin的安全preflight；尚未冻结最终head，完整verify、C启动与最终审查未完成，不用旧SHA或定向预检代填；本卡成熟度与既有runtimeEvidence保持原范围。
 
 ## 用户可见入口
 

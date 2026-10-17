@@ -47,7 +47,7 @@ test("受保护历史聊天可切换查看，重开仍保留原始快照", async
     ...first,
     id: "second",
     name: "对话 B",
-    draft: { ...first.draft, prompt: "草稿 B" },
+    draft: { text: "草稿 B" },
     messages: [{ id: "b", role: "assistant", content: "历史消息 B" }],
   };
   const raw = JSON.stringify({

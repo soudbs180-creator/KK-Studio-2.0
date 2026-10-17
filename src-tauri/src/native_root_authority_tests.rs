@@ -539,14 +539,53 @@ fn unsupported_chat_snapshots() -> Vec<Value> {
     let mut corrupt_v3 = v3.clone();
     corrupt_v3["projects"][0]["chats"]["chat-main"]["messages"] =
         json!([{"id":"message","role":"user","content":42}]);
-    vec![
+    let mut cases = vec![
         v3,
         multiple,
         temporary,
         invalid_active,
         thread_conflict,
         corrupt_v3,
-    ]
+    ];
+    let mut invalid_legacy_thread = single.clone();
+    invalid_legacy_thread["projects"][0]
+        .as_object_mut()
+        .unwrap()
+        .remove("chats");
+    invalid_legacy_thread["projects"][0]
+        .as_object_mut()
+        .unwrap()
+        .remove("activeChatId");
+    invalid_legacy_thread["projects"][0]["agentThreadId"] = json!("bad/root");
+    cases.push(invalid_legacy_thread);
+    for invalid in [
+        json!("bad/thread"),
+        json!(""),
+        json!("a".repeat(161)),
+        json!("线程"),
+        json!(42),
+        Value::Null,
+    ] {
+        let mut chat_only = single.clone();
+        chat_only["projects"][0]
+            .as_object_mut()
+            .unwrap()
+            .remove("agentThreadId");
+        chat_only["projects"][0]["chats"]["chat-main"]["agentThreadId"] = invalid;
+        cases.push(chat_only);
+    }
+    let mut matching_invalid_threads = single.clone();
+    matching_invalid_threads["projects"][0]["agentThreadId"] = json!("bad/thread");
+    matching_invalid_threads["projects"][0]["chats"]["chat-main"]["agentThreadId"] =
+        json!("bad/thread");
+    cases.push(matching_invalid_threads);
+    let mut missing_active = single;
+    missing_active["projects"][0]
+        .as_object_mut()
+        .unwrap()
+        .remove("activeChatId");
+    cases.push(missing_active);
+    cases
 }
 
 fn submitted_journal() -> Vec<u8> {
@@ -673,5 +712,11 @@ fn legacy_single_chat_keeps_writes_and_submitted_recovery() {
         "unknown"
     );
     legacy["revision"] = json!(2);
-    owner.snapshots.write(legacy, Some(1)).unwrap();
+    owner.snapshots.write(legacy.clone(), Some(1)).unwrap();
+    let longest_valid_thread = format!("A_-{}", "a".repeat(157));
+    legacy["revision"] = json!(3);
+    legacy["projects"][0]["agentThreadId"] = json!(longest_valid_thread);
+    legacy["projects"][0]["chats"]["chat-main"]["agentThreadId"] =
+        legacy["projects"][0]["agentThreadId"].clone();
+    owner.snapshots.write(legacy, Some(2)).unwrap();
 }

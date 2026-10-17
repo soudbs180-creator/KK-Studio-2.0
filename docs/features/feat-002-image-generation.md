@@ -2,8 +2,12 @@
 
 - 状态：PARTIAL
 - 领域：creation
-- 最近更新：2026-10-15
+- 最近更新：2026-10-17
 - 关联任务：T5、TASK-PROV-001、TASK-PROV-005、TASK-PROV-006、EXT-PROVIDER、TASK-AGENT-001、TASK-AGENT-004、TASK-AGENT-008、TASK-CODEX-REF-20261015
+
+## 2026-10-17安全修复边界（preflight通过，完整待验）
+
+关联开放任务：TASK-AUDIT-REPAIR-20261017；[规格](../changes/2026-10-17-audit-repair/spec.md) / [实际验证](../changes/2026-10-17-audit-repair/verification.md)。同端点不同账号必须沿固定providerConnectionId核对endpoint/credentialRef，缺ID只能接受唯一完整绑定；12AI执行缺宿主持久CAS receipt port时须禁用。内存受理Map不证明跨文档或重启恢复，完整12AI接入仍由原统一任务开放。 候选Desktop/Web2.1.36已取得unit/lint、4项浏览器及Rust bin的安全preflight；尚未冻结最终head，完整verify、C启动与最终审查未完成，不用旧SHA或定向预检代填；本卡成熟度与既有runtimeEvidence保持原范围。
 
 ## 用户可见入口
 

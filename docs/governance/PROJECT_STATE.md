@@ -2,12 +2,40 @@
 
 - docId: PROJECT_STATE
 - status: current
-- updatedAt: 2026-10-16
+- updatedAt: 2026-10-17
 - source: `docs/governance/task-ledger.json`
 - supersededBy: null
 
 <!-- DOCUMENT_METADATA_END -->
 <!-- CURRENT_FACTS_BEGIN -->
+
+# 当前项目事实（2026-10-17）
+
+- `snapshotDate`: 2026-10-17
+- `canonicalRepository`: `D:/kk-studio/KK-Studio-2.0`
+- `canonicalRef`: `origin/main`
+- `canonicalHead`: d95e4c446d3b4ae5419ce0f58c68057ebabc286a
+- `canonicalHeadVerifiedFrom`: 2026-10-17审计实际远端回读；Desktop/Web2.1.34。此值是托管基线，不是本地主仓当前HEAD；本轮未以旧CI代填候选Hosted结果。
+- `localMainHead`: 8c36a6b138205613ae1a7c27950b86792da8de1a，本地领先origin/main49提交；保全时另有63条dirty。
+- `primaryCheckoutState`: 主仓main/原index/63条dirty保持，禁止reset/clean/覆盖或直接开发。其原始dirty字节已纳入未验收隔离source snapshot221560a322107092f66c142c7b911439087019f8；该快照不代表修复、可运行或正式交付。
+- `currentTask`: TASK-AUDIT-REPAIR-20261017，IN_PROGRESS / NOT_VERIFIED；唯一写入树 `D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017`，branch `fix/TASK-AUDIT-REPAIR-20261017`。范围、实际命令和剩余验收见[当前计划](../changes/2026-10-17-audit-repair/plan.md)及[验证](../changes/2026-10-17-audit-repair/verification.md)。
+- `sourceVersionBoundary`: 审计源码Desktop/Web2.1.35；本轮已通过版本脚本递增至2.1.36，实际当前值以[版本源](../../config/platform-versions.json)和本轮验证回执为准。Mobile2.1.1规划不变；版本递增不等于安装、发布或用户验收。
+- `taskLedger`: 149 records；DONE84、PARTIAL48、TODO12、BLOCKED3、IN_PROGRESS2、REVIEW0，开放65。26个失效worktree的原branch/worktree/status/verification完整保留在verificationHistory，当前unallocated；5个REVIEW、HOME和branch不符的REVIEW-REMEDIATION改PARTIAL，未批量DONE。目录审计未冒充产品复验刷新原lastVerified；原统一scope继续开放，旧树仅历史来源，安全修复由本任务承接。
+- `workspaceWorktrees`: 审计原有3个登记checkout，无缺失登记；A后新增本任务为4个：主仓8c36a6b、本任务221560a3、统一树df08748e、taskstate5e2d2ab6。没有删除/移动旧树；原73/74数量只属历史时点。
+- `preservation`: A core PASS；工程外 `D:/KK-Studio-recovery-20260921/audit-repair-20261017-1f00ccc3-1207-4cd3-90e1-bd0192d64d21/final-preservation-receipt.json`，517368文件版本/56336959878 B/6 bundles，两个dirty隔离恢复status/index一致。外部memory变化、两份新增文档及长路径首轮恢复失败单列并保留，不宣称其他聊天永久静止。
+- `dailyClientBoundary`: 审计两个日常快捷方式指向已不存在的branch-consolidation目录；主仓2.1.35 EXE与2.1.23 receipt不匹配，审计时未发现产品运行进程。本任务C官方重建/实际启动/关闭重开及入口更新均待新证据，旧EXE/旧截图不证明当前交付。
+- `capabilityBoundary`: 协议6未具备聊天隔离时门控新聊天/临时聊天及不支持的多聊天v3写入，保留v2单聊天；12AI无持久receipt端口时拒绝执行，完整恢复继续开放。当前安全门控已取得unit/lint、4项浏览器与Rust bin的preflight；素材垃圾箱在未接持久功能时禁用操作。完整功能/真实服务和已提交SHA验收仍未完成，不将定向预检写成全通过。既有feature成熟度/runtimeEvidence不变，新范围由开放任务跟踪。
+- `preflightBoundary`: HEAD221560a3加dirty尚待冻结；unit1826total/1812PASS/14SKIP/0fail，lint exit0但health30与footguns2均为advisory，新增浏览器4/4首过无retry，Rust bin214=213PASS/1既有硬件ignored。日志见本轮verification；完整verify、C产物与实际启动/关闭重开、最终SHA独审和Hosted尚待，不能以Rust单测代替Native UI。
+- `remoteWorkBoundary`: 审计回读69个远端分支、7个draft PR；未把本地49提交/dirty、旧PR或历史绿色视为当前组合已交付。远端配置、Hosted/PR/main/post-main、发布/签名、真实Provider和用户验收各自待证。
+- `remoteAutoMerge`: scripts/governance/merge-auto.mjs及受控工作流已存在；activation/paused、required checks和merge queue未在本任务重新回读为可用，保持未验证/不宣称启用，不修改远端settings。
+- `reclamationPolicy`: 源码、历史、证据与恢复材料保护；54份runtime previous目录未直接删除。安装/构建/发布的写入目标必须由本任务独占实体目录承载，共享junction/symlink目标只读。
+- `historicalRule`: 下方HISTORICAL_SNAPSHOTS_BEGIN之后均为带日期历史证据，不能覆盖本区事实；历史FAIL、旧授权和未知边界不改写。
+
+<!-- CURRENT_FACTS_END -->
+<!-- HISTORICAL_SNAPSHOTS_BEGIN -->
+
+## 2026-10-16及之前的原CURRENT_FACTS（历史保留，已由2026-10-17事实替代）
+
 
 2026-10-16 最新增量：8e17cb13全量UI失败修复九文件已精确独审SPEC/QUALITY PASS，相关九组87/87首试、0retry/flaky/skip；侧栏偏移根因是垃圾箱独立行，归入原菜单后五锚点误差0，未放宽原Figma断言。静态/build及Node1508/14既有skip通过，未以此覆盖下文55a0完整verify失败或Native焦点边界。ADR022/023已接受并独审；正常多聊天实现者独占App/快照/聊天/Agent共享核心，本地安装实现者只写独立适配器，root保留main/Cargo/全局tokens/版本及任务文档。两条实现均未冻结/验收，模型B/C实际执行链并行只读核对。详见[当前验证](../changes/2026-10-15-kk-unified/verification.md)。
 
@@ -66,8 +94,7 @@
 - `dailyDataBoundary`: HOME交接九项目新基线，两个新ID恢复副本保留；当前选副本1。勘误：新增reviewComments/stagePlans空数组的是project-mv949az4-zmndcg67，原active project-mu3l43g1-u26lanrs仍全字段exact。副本2画布未验，不再以旧7基线覆盖。auto-connect当前enabled，历史原值UNKNOWN，不能猜恢复。
 - `takeoverEntry`: [唯一正式执行提示词](../changes/2026-10-15-unified-handoff/takeover-context.md)、[归并和合入顺序](../changes/2026-10-15-unified-handoff/resume-order.md)、[矩阵](../changes/2026-10-15-unified-handoff/delivery-matrix.md)。全部批准范围/P0/P1/关键恢复风险及用户验收完成前总目标IN_PROGRESS。
 
-<!-- CURRENT_FACTS_END -->
-<!-- HISTORICAL_SNAPSHOTS_BEGIN -->
+
 
 ## 2026-10-15 2.1.30最终本地快照（历史；当前状态以上方为准）
 

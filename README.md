@@ -1,8 +1,10 @@
-# KK Studio 2.1.0
+# KK Studio
 
-KK Studio 是以无限画布为中心的多模态 Agent 工作台。本机唯一工程目录为 `D:\kk-studio\KK-Studio-2.0`。2.0.0 是融合基线，当前版本为 2.1.0；当前能力和未完成项以治理账本为准。
+KK Studio 是以无限画布为中心的多模态 Agent 创作工作台。本机唯一工程仓库为 `D:/kk-studio/KK-Studio-2.0`；任务在登记的隔离 worktree 开发。平台版本以[版本源](config/platform-versions.json)为准，当前能力、候选与未完成项见[项目状态](docs/governance/PROJECT_STATE.md)和[任务账本](docs/governance/task-ledger.json)。
 
-2.1.0 源码已通过 [PR #9](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/9) 合入 `main`。桌面 ZIP 和源码 ZIP 仍待构建与验收，通过后放入 `releases/2.1.0/` 供分享。不要直接压缩整个开发目录：`.git` 是历史，`node_modules` 是开发依赖，`src-tauri/target` 是可生成产物，用户项目和恢复归档也不属于分享内容。分享包使用说明见 [RELEASE.md](RELEASE.md)。
+2026-10-17审计：远端main d95e4c44为Desktop/Web2.1.34；本地main8c36a6b的2.1.35源码另有未交付改动。安全修复在TASK-AUDIT-REPAIR-20261017隔离候选进行，现已通过版本脚本递增至Desktop/Web2.1.36，当前仅preflight通过，HEAD221560a3加dirty尚待冻结；当前官方构建、日常入口和完整验收见[实际验证](docs/changes/2026-10-17-audit-repair/verification.md)，未完成时保持NOT_VERIFIED。Mobile2.1.1仍为规划，源码版本与历史包不等于正式发布。
+
+分享包只包含已验收白名单内容；Git历史、开发依赖、编译缓存、用户项目和恢复归档不属于分享包。见[发布说明](RELEASE.md)。
 
 - [核心档案分工与治理定位](#核心档案分工与治理定位)
 - [环境要求](#环境要求)

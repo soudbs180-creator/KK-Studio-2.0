@@ -56,10 +56,9 @@ export default function ConversationPanel({
     prompt?: string;
   } | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const agentBusy = Boolean(agent?.sending || agent?.connecting);
   const modelDisabled =
-    Boolean(executionDisabledReason) ||
-    submitting ||
-    Boolean(agent?.sending || agent?.connecting);
+    Boolean(executionDisabledReason) || submitting || agentBusy;
   const draftKey = JSON.stringify([
     project?.id ?? "workspace",
     project?.activeChatId ?? null,
@@ -99,34 +98,23 @@ export default function ConversationPanel({
     if (!onDraftChange || !composerDraft) return;
     onDraftChange({ ...composerDraft, ...patch, updatedAt: Date.now() });
   }
-  function handleSetReference(src: string): void {
-    if (!onDraftChange || !composerDraft) return;
-    const existing = composerDraft.attachments || [];
-    if (existing.some((att) => att.dataUrl === src)) {
-      setStatus("该图片已在参考列表中");
-      return;
-    }
-    updateDraft({
-      attachments: [
-        ...existing.slice(-3),
-        {
-          id: `chat-ref-${Date.now()}`,
-          name: "生成参考图",
-          mime: "image/png",
-          size: 0,
-          role: "主体",
-          dataUrl: src,
-        },
-      ],
-    });
-    setStatus("已设为主体参考图");
+  function changeInput(prompt: string): void {
+    setInput(prompt);
+    updateDraft({ prompt });
   }
-  const { fileInput, addFiles, readingFiles } = useConversationAttachments({
-    draftKey,
-    attachments: composerDraft?.attachments ?? [],
-    onChange: (attachments) => updateDraft({ attachments }),
-    onStatus: setStatus,
-  });
+  const { fileInput, addFiles, readingFiles, setReference } =
+    useConversationAttachments({
+      draftKey,
+      attachments: composerDraft?.attachments ?? [],
+      onChange: (attachments) => updateDraft({ attachments }),
+      onStatus: setStatus,
+    });
+  const handleSetReference =
+    onDraftChange && composerDraft && !executionDisabledReason
+      ? setReference
+      : undefined;
+  const title =
+    project?.name && project.name !== "未命名项目" ? project.name : "KK Studio";
   const directState = getGenerationUiState({
     prompt: input,
     inputValid: !readingFiles,
@@ -159,7 +147,7 @@ export default function ConversationPanel({
         onOpen={onOpen}
         onChannelChange={changeChannel}
         overlay={overlay}
-        codexBusy={Boolean(agent?.sending || agent?.connecting)}
+        codexBusy={agentBusy}
       />
     );
   return (
@@ -171,11 +159,7 @@ export default function ConversationPanel({
     >
       <ConversationResizeHandle />
       <ConversationHeader
-        title={
-          project?.name && project.name !== "未命名项目"
-            ? project.name
-            : "KK Studio"
-        }
+        title={title}
         messageCount={
           agentActive ? (agent?.messages.length ?? 0) : visibleMessages.length
         }
@@ -189,11 +173,7 @@ export default function ConversationPanel({
       {agent && (
         <ConversationChannelSelector
           value={channel}
-          disabled={
-            Boolean(executionDisabledReason) ||
-            agent.sending ||
-            agent.connecting
-          }
+          disabled={Boolean(executionDisabledReason) || agentBusy}
           onChange={changeChannel}
         />
       )}
@@ -225,10 +205,7 @@ export default function ConversationPanel({
         agentConnecting={agentConnecting}
         agentModel={agentModel}
         input={input}
-        onInputChange={(value) => {
-          setInput(value);
-          updateDraft({ prompt: value });
-        }}
+        onInputChange={changeInput}
         onSubmitMessage={submitMessage}
         disabled={
           Boolean(executionDisabledReason) ||
@@ -293,10 +270,7 @@ export default function ConversationPanel({
           updateDraft({ approvalMode: value });
         }}
         voiceEnabled={voiceEnabled && !submitting && !executionDisabledReason}
-        onVoiceChange={(value) => {
-          setInput(value);
-          updateDraft({ prompt: value });
-        }}
+        onVoiceChange={changeInput}
         onVoiceStatus={setStatus}
         voiceSessionKey={draftKey}
       />
