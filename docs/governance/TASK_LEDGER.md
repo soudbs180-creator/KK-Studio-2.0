@@ -6,7 +6,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 | ID | Title | Status | Display | Priority | Dependencies | Owner | Next action |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| TASK-AUDIT-REPAIR-20261017 | 审计安全修复、启动恢复与当前治理收敛 | IN_PROGRESS | 进行中 | P1 | none | root | root最小修复默认只读恢复banner与账号菜单层级、补synthetic实际click回归；冻结新source后完整verify/独审/官方重建/Native及daily正常关闭重开重验，再完成D最终文档检查/提交/正式Delivery，审计保持IN_PROGRESS；不触碰数据/schema/只读门控或原任务范围。 |
+| TASK-AUDIT-REPAIR-20261017 | 审计安全修复、启动恢复与当前治理收敛 | DONE | 已完成 | P1 | none | root | 保留被日常链接引用的任务worktree/EXE及所有恢复证据；root完成最终文档提交后的精确review/正式Delivery和runtime-input不变核对。其余64开放项按原任务继续，尤其旧聊天数据完整迁移/protocol7、统一接入/12AI持久恢复/素材垃圾箱、真实Provider/ComfyUI/GPU/VPS/Mobile/签名及用户验收；不得解除READ_ONLY或批量结案。 |
 | TASK-KK-UNIFIED-20261015 | KK Studio 统一修复与重构 | IN_PROGRESS | 进行中 | P1 | none | root | 原统一scope继续开放；当前后续源码已进入local main@8c36a6b并有63条dirty，已保全为未验收221560a3。当前安全修复由TASK-AUDIT-REPAIR-20261017独占承接；原branch/worktree仅历史来源，不作为当前产品验收或并行写入分配。完整多聊天、12AI持久恢复、Provider/共仓库/账号/同步等仍按原scope另行实施和验收。 |
 | TASK-FIX-PUSH-GUARD-SPACES-001 | 修复 Windows Git pre-push 空格及长路径启动 | PARTIAL | 未完成 | P1 | none | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
 | TASK-WINDOWS-ENTRY-DIAG-002 | 补齐Windows入口子进程失败诊断 | DONE | 已完成 | P2 | TASK-LAUNCH-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
@@ -160,7 +160,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 - Goal: 先完整保全，再隔离修复五个P1与素材垃圾箱误导，验证可信启动并纠正当前任务/版本/规则事实。
 - Scope: 用户授权审计A-D：保全与恢复、协议6未隔离聊天/临时入口和不支持的v3写入门控、空模型授权、精确账号凭据、12AI无持久receipt拒绝、素材垃圾箱、启动/本地防线与治理同步。完整新多聊天/统一接入/12AI持久恢复仍由原任务开放。
-- Display status: 进行中
+- Display status: 已完成
 - Priority: P1 — 当前有聊天/隐私/授权/凭据/付费受理阻断与失效日常入口；先保全和安全修复，不将未验收候选交付。
 - Requirement refs: docs/changes/2026-10-17-audit-repair/intent.md, docs/architecture/adr/ADR-022-project-chats-and-v3-migration.md, ledger:TASK-KK-UNIFIED-20261015, ledger:TASK-CODEX-HOME-20261015, docs/changes/2026-10-15-unified-provider-access/intent.md
 - Feature IDs: FEAT-002, FEAT-009, FEAT-014, FEAT-032
@@ -169,9 +169,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `fix/TASK-AUDIT-REPAIR-20261017`
 - Worktree: `D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017`
 - Modules: src/App.tsx, src/features/agent, src/features/creation, src/integrations/generation, src/components/assets, scripts/windows, scripts/agent, scripts/git, docs/governance, docs/features, docs/engineering/BRANCH-POLICY.md, docs/engineering/LAUNCHER.md, docs/changes/2026-10-17-audit-repair, docs/changes/2026-10-15-unified-provider-access
-- Verification: NOT_VERIFIED — A core保全/两个dirty恢复PASS，原primary63/index/status/staged0保持（e47ec59e回执）。Desktop/Web2.1.36冻结source d356791caf807e26dbfc0cde6f3774b06188b156 tree 090db406613948cd9f6daee53e9a1f8cf1cef9d3；完整npm verify exit0：Node1846=1832PASS14SKIP，Agent201=199PASS2SKIP，产品Edge823首试零fail/retry/flaky/skip，DESIGN41单元+8浏览器、development四步、lint/type/UI/format/build PASS，advisory保留。Native源未变，Rust bin213PASS1既有硬件ignored+integration41/check/fmt PASS；精确源码独审PASS关闭FSR01–06。C官方Native构建/启动重开与日常入口、最终文档SHA审查及正式Delivery尚待实测，整体NOT_VERIFIED；75完整12browser失败/8026中止/RED保留。 d356官方build/隔离Native六检查/两日常链接恢复回读PASS；默认受保护只读资料实际恢复banner遮挡账号菜单查看，C真实FAIL待修，全部旧收据保留。
+- Verification: PASS — 有界本地A–D PASS：A core保全517368版本/56336959878B/6bundles/两个dirty恢复；原primary63/head/index/status/staged0最新56872dc7回执PASS。最终产品source 4699458de1c3437309b7cdc3f019454104c81fce tree a1905e2aa6e11a24b4c62d829dc82a8f0d566972；完整npmverify exit0（Node1832PASS14既有SKIP、Agent199PASS2SKIP、产品Edge823首试零失败/重试/flaky/skip、DESIGN41+8、development四步、lint/type/UI/format/build），精确增量独审PASS；FSR01–06旧阶段关闭。Native五源未变，Rust213PASS1硬件ignored+integration41/check/fmt适用。官方新EXEb6299445/inputa53dee81、隔离Native六检查与真实Desktop/primary两lnk关闭重开PASS，默认9项目raw/identity/shared memory保持，旧聊天数据仍READ_ONLY，不等于可编辑/完整迁移/protocol7；原任务继续开放。D当前文档/生成视图/规则/清单同步，原148对象与37功能成熟度/runtimeEvidence保持，无文件删除/移动。历史失败/中止/反例保留于本包，最终文档HEAD review/Delivery以提交后精确收据裁决；无Hosted/push/merge/付费生成/发布或用户验收。
 - Evidence: [docs/changes/2026-10-17-audit-repair/intent.md](../../docs/changes/2026-10-17-audit-repair/intent.md), [docs/changes/2026-10-17-audit-repair/spec.md](../../docs/changes/2026-10-17-audit-repair/spec.md), [docs/changes/2026-10-17-audit-repair/plan.md](../../docs/changes/2026-10-17-audit-repair/plan.md), [docs/changes/2026-10-17-audit-repair/verification.md](../../docs/changes/2026-10-17-audit-repair/verification.md), [docs/changes/2026-10-17-audit-repair/review.md](../../docs/changes/2026-10-17-audit-repair/review.md), [docs/changes/2026-10-15-unified-provider-access/verification.md](../../docs/changes/2026-10-15-unified-provider-access/verification.md), [docs/changes/2026-10-15-kk-unified/verification.md](../../docs/changes/2026-10-15-kk-unified/verification.md)
-- Next action: root最小修复默认只读恢复banner与账号菜单层级、补synthetic实际click回归；冻结新source后完整verify/独审/官方重建/Native及daily正常关闭重开重验，再完成D最终文档检查/提交/正式Delivery，审计保持IN_PROGRESS；不触碰数据/schema/只读门控或原任务范围。
+- Next action: 保留被日常链接引用的任务worktree/EXE及所有恢复证据；root完成最终文档提交后的精确review/正式Delivery和runtime-input不变核对。其余64开放项按原任务继续，尤其旧聊天数据完整迁移/protocol7、统一接入/12AI持久恢复/素材垃圾箱、真实Provider/ComfyUI/GPU/VPS/Mobile/签名及用户验收；不得解除READ_ONLY或批量结案。
 - Last verified: 2026-10-17
 - Updated: 2026-10-17
 

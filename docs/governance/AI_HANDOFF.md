@@ -8,13 +8,13 @@
 
 本文是最短恢复入口，不是任务状态或产品能力的第二事实源。任务状态只读 [`task-ledger.json`](task-ledger.json)；当前项目事实只读 [`PROJECT_STATE.md`](PROJECT_STATE.md)；历史验证只按带日期的 change package、commit、运行模式和 receipt 回读。
 
-## 当前恢复入口：审计安全修复（2026-10-17）
+## 当前恢复入口：审计修复本地收口（2026-10-17）
 
-先读[本轮计划](../changes/2026-10-17-audit-repair/plan.md)、[实际验证](../changes/2026-10-17-audit-repair/verification.md)和[审查](../changes/2026-10-17-audit-repair/review.md)。A–D已授权，不重复请求形式确认；严禁文件删除/移动。唯一修复树`D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017` / `fix/TASK-AUDIT-REPAIR-20261017`，source `d356791caf807e26dbfc0cde6f3774b06188b156`、tree `090db406613948cd9f6daee53e9a1f8cf1cef9d3`；Desktop/Web2.1.36，Mobile2.1.1规划。原main8c/63dirty/index及origin/main d95保持，221560a3只是未验收原始快照。
+先读[实际验证](../changes/2026-10-17-audit-repair/verification.md)和[独立审查](../changes/2026-10-17-audit-repair/review.md)。TASK-AUDIT-REPAIR-20261017仅本地A–D DONE/PASS；source `4699458de1c3437309b7cdc3f019454104c81fce` / tree `a1905e2aa6e11a24b4c62d829dc82a8f0d566972`，任务树`D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017` / branch `fix/TASK-AUDIT-REPAIR-20261017`，Desktop/Web2.1.36、Mobile2.1.1规划。原main8c/63dirty/index与远端d95保持。
 
-A core/两个dirty恢复PASS。d356完整verify exit0（Node1832/14既有skip、Agent199/2既有skip、产品Edge823首试、DESIGN41+8、development四步），精确源码独审PASS，FSR01–06关闭。Native源未变，Rust213/1既有ignore+integration41/check/fmt通过；d356官方build与隔离Native六检查通过，两个日常链接已恢复；默认只读资料实际验收因恢复banner遮挡账号菜单“查看”FAIL，root已授权本任务修层级与synthetic真实click回归。审计任务IN_PROGRESS/整体NOT_VERIFIED。下一步冻结新source完整verify/独审/重建并重验Native/daily，再完成D最终检查/文档提交后精确补审和正式Delivery；不得把Rust或源码review代替Native/托管验收。75完整12浏览器失败、8026中止及原RED保留。
+469完整verify exit0（Node1832/14既有skip、Agent199/2既有skip、产品Edge823首试、DESIGN41+8、development四步），精确源码独审PASS；Native不变源Rust213/1ignore+integration41通过。官方EXE b6299445/input a53dee81、隔离六检查和两个真实日常lnk正常关闭/重开均PASS，正常默认实例PID50136、无CDP。**默认旧聊天资料仍READ_ONLY，9项目raw/identity/shared memory保持；完整迁移/protocol7未完成，不能为了恢复编辑而解除保护。** 旧75/8026/d356 daily及helper失败、原件备份均保留。
 
-149任务/84DONE/65开放；原148任务身份/验收/依赖/lastVerified和37功能成熟度/runtimeEvidence保持，26失效分配已保全历史。旧清单另存后生成26条目/4worktrees/all deletable=false；v2 hook及远端规则实际边界见当前事实。统一接入补件仅requirements-only、原intent八优先级不变；新/临时聊天、无持久12AI/垃圾箱等未实现能力保持明确禁用。共享依赖只读，所有build目标物理owned；无Hosted/真实Provider/签名/用户验收或发布证据。
+149任务/85DONE/64开放；仅本审计新增DONE，原148对象与37功能成熟度/runtimeEvidence不变，26失效分配历史保留。4worktrees/26条目均不可据分类删除；用户仍禁止删除/移动原文件，E/F未执行。后续先按原任务接续完整多聊天/迁移、统一接入/12AI/持久垃圾箱、真实服务与用户验收；不要批量结案或把本机PASS当Hosted/main/发布。最终文档HEAD独审/正式Delivery由root提交后对应收据裁决；本轮没有push/merge/远端设置变更或付费生成。日常链接引用本任务树，不能清理该树。
 
 ## 以下为2026-10-16及之前的历史交接
 

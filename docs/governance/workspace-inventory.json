@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-17T10:51:44.985Z",
+  "generatedAt": "2026-10-17T11:18:46.286Z",
   "primaryRepository": "D:/kk-studio/KK-Studio-2.0",
   "destructiveActionsPerformed": false,
   "entries": [
@@ -143,7 +143,7 @@
       "kindOnDisk": "directory",
       "bytes": 0,
       "modified": "2026-10-17T09:22:26.874Z",
-      "sha256": "5a38d13667c9ce72987264c0e00fbed44d6be709631cc7c951b51a2917059ae7",
+      "sha256": "1a43068a74c095afd2c1077438c1397b8fbb1d45b3ecadecdcdeedcaa88b652e",
       "shaMode": "top-level-directory-metadata",
       "sizeMode": "filesystem-entry-metadata",
       "gitOwnership": "WORKTREE_CONTAINER"
@@ -223,7 +223,7 @@
       "kindOnDisk": "directory",
       "bytes": 0,
       "modified": "2026-10-15T18:18:04.633Z",
-      "sha256": "fbfdad3ec2176c755739a4be2aa94b2181c6855cb012a970cd850afeba624a4b",
+      "sha256": "96c478131265efbfd99345b7e889952aba82fe116c93ca2a98e365aac0a93624",
       "shaMode": "top-level-directory-metadata",
       "sizeMode": "filesystem-entry-metadata",
       "gitOwnership": "NOT_GIT_ROOT"
@@ -271,7 +271,7 @@
       "kindOnDisk": "directory",
       "bytes": 0,
       "modified": "2026-10-16T12:47:13.704Z",
-      "sha256": "2dac5f044434ea2aaa7398f50c4534d866ad8a52d6015c697d328f9468eb40d2",
+      "sha256": "995aae9f748c07207e51c8f2c238e928bad4844e2a47276c99873a76a462d19e",
       "shaMode": "top-level-directory-metadata",
       "sizeMode": "filesystem-entry-metadata",
       "gitOwnership": "PRIMARY_REPOSITORY"
@@ -381,9 +381,9 @@
       "sensitivity": "REVIEW_REQUIRED",
       "owner": "governance-maintainer",
       "kindOnDisk": "file",
-      "bytes": 5756,
-      "modified": "2026-10-17T09:59:11.849Z",
-      "sha256": "b8b85d8dcd1e605b6f6c3deb232c811afcf04c9ce88fb8e2a59c1930acc8fa9e",
+      "bytes": 6345,
+      "modified": "2026-10-17T11:18:33.469Z",
+      "sha256": "8a2cf122281069be675adf5e8344fa3b43b95cf77b0fae0b917c93386ac5fe50",
       "shaMode": "exact-or-null-over-50MiB",
       "sizeMode": "exact-or-null-over-50MiB",
       "gitOwnership": "NOT_GIT_ROOT"
@@ -429,7 +429,7 @@
     },
     {
       "path": "D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017",
-      "head": "d356791caf807e26dbfc0cde6f3774b06188b156",
+      "head": "4699458de1c3437309b7cdc3f019454104c81fce",
       "branch": "refs/heads/fix/TASK-AUDIT-REPAIR-20261017"
     },
     {

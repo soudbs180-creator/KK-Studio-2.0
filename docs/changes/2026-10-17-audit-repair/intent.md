@@ -1,7 +1,7 @@
 # Intent：审计修复与当前事实收敛
 
 - Task ID：TASK-AUDIT-REPAIR-20261017
-- 状态：READY；任务 IN_PROGRESS，产品及交付验证 NOT_VERIFIED。
+- 状态：IMPLEMENTED；任务DONE/PASS仅有界本地A–D，Hosted/发布/用户验收另列。
 - 日期：2026-10-17（Asia/Shanghai）
 - 请求来源：用户授权执行 2026-10-17 文件、版本、任务、分支与代码审计的 A–D 方案；先保全，再修复、验证启动与同步治理。
 - 用户授权范围：完整保全、隔离修复、相关测试和构建、按实测修复启动入口及本地防线、治理同步；删除、移动、远端配置、合并、发布或付费调用不因本计划自动获授权。
@@ -32,4 +32,4 @@
 
 ## 已知事实与风险
 
-保全core通过，原外部memory变化、新增文档和长路径首轮失败保留。Desktop/Web2.1.36最终source d356791c完整verify与精确源码独审已通过；75的12浏览器失败、8026中止及FSR01–06反例/修复证据仍按原阶段保留。官方Native重建已完成并绑定EXE/input/receipt，d356隔离Native六检查与两个日常链接回读通过，但默认只读资料发现恢复banner遮挡账号菜单“查看”，C验收FAIL待最小层级修复及真实click回归；之后须新source完整verify/独审/重建和Native/daily复验。D最终文档HEAD检查/独审、Hosted和用户验收分列，整体任务IN_PROGRESS/NOT_VERIFIED。
+保全core通过，所有原失败与外部并发变化保留。Desktop/Web2.1.36最终source4699458d完整verify/精确增量独审、官方重建、隔离Native与默认两日常lnk正常关闭重开通过；d356默认只读banner遮挡菜单真实FAIL已修复复验。默认9项目raw/identity/shared memory保持，旧聊天资料仍READ_ONLY，不表示可编辑、完整迁移/protocol7或真实服务完成。本轮有界A–D DONE/PASS，原148任务/37功能成熟度与旧证据不变；删除/移动/E–F、Hosted/main/发布/用户验收没有代填。最终文档HEAD review/正式Delivery以提交后收据裁决。

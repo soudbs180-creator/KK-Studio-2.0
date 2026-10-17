@@ -14,20 +14,22 @@
 - `snapshotDate`: 2026-10-17
 - `canonicalRepository`: `D:/kk-studio/KK-Studio-2.0`
 - `canonicalRef`: `origin/main`
-- `canonicalHead`: d95e4c446d3b4ae5419ce0f58c68057ebabc286a，Desktop/Web2.1.34；本轮只读远端回执，不沿用旧Hosted结果批准新组合。
-- `localMainHead`: 8c36a6b138205613ae1a7c27950b86792da8de1a，领先origin/main49提交；主仓63条原dirty、原index/staged0保持。最新完整性回执e47ec59e-9c30-4595-a7f4-eee9b67148fb为PASS；未reset/clean/覆盖。
-- `currentTask`: TASK-AUDIT-REPAIR-20261017，IN_PROGRESS / NOT_VERIFIED；唯一写入树`D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017`，branch `fix/TASK-AUDIT-REPAIR-20261017`。原始隔离快照221560a3未验收；最终产品source `d356791caf807e26dbfc0cde6f3774b06188b156`、tree `090db406613948cd9f6daee53e9a1f8cf1cef9d3`。
-- `sourceVersionBoundary`: Desktop/Web2.1.36，Mobile2.1.1规划；版本源为`config/platform-versions.json`。源码、Native实际运行、main集成、发布和用户验收分别记录。
-- `taskLedger`: 149 records；DONE84、PARTIAL48、TODO12、BLOCKED3、IN_PROGRESS2、REVIEW0，开放65。26项失效分配原branch/worktree/status/verification保留于verificationHistory；不借目录整理刷新原lastVerified、不批量DONE。原统一scope继续开放。
-- `workspaceWorktrees`: 4个登记checkout/5个本地分支；主仓8c36a6b、本任务d356791c、统一df08748e、taskstate5e2d2ab6。[现有清单](workspace-inventory.json)由只读枚举/哈希生成器更新，26容器条目全部deletable=false；旧清单原件已工程外保全。无文件删除/移动。
-- `preservation`: A core PASS；工程外`D:/KK-Studio-recovery-20260921/audit-repair-20261017-1f00ccc3-1207-4cd3-90e1-bd0192d64d21/final-preservation-receipt.json`，517368文件版本/56336959878 B/6 bundles，两个dirty隔离恢复status/index一致。外部memory变化、新增文件、长路径首轮失败及两轮用户数据备份差异均单列保留。
-- `safetyRepairs`: 五P1及垃圾箱误报通过真实反例/回归；协议6新/临时聊天、不支持的v3/多聊天与12AI无持久receipt执行保持禁用。格式不支持时只读，原始identity损坏时可read_error并保留原件；不是自动修复成可写。草稿/记忆/迟到结果按scope与epoch门控，精确connectionId/凭据绑定、空外部模型授权拒绝；正常v2单聊天保留。
-- `finalVerify`: d356冻结前后CLEAN，完整`npm run verify` exit0：Node1832PASS/14既有SKIP、Agent199PASS/2既有SKIP、产品Edge823首试零fail/retry/flaky/skip、DESIGN41单元/8浏览器、development四步PASS，lint/type/UI/format/build通过。Rust bin213PASS/1既有硬件ignored及integration41PASS绑定未变Native源码，check/fmt通过。警告/advisory不等于已清零。
-- `reviewBoundary`: d356精确源码独审PASS（FSR01–06按其实际阶段复核关闭）；d356官方build与隔离Native六检查、两日常链接回读通过；默认只读资料因恢复banner遮挡账号菜单“查看”实际FAIL，C待最小修复及新source完整verify/独审/重建/Native日常重验；最终文档HEAD独审仍待，详见[本轮验证](../changes/2026-10-17-audit-repair/verification.md)与[审查](../changes/2026-10-17-audit-repair/review.md)。旧75浏览器12FAIL与8026中止不改写。
-- `remoteWorkBoundary`: 只读回执69远端heads、7Draft PR与3active rulesets。远端stable实际严格要求verify/delivery，approvals0；merge queue及governance/deploy-linux未强制，classic保护GET403为权限边界。没有远端配置、push、merge或发布。
-- `localHook`: 共享pre-push从已核验v1按现有升级路径安装v2，旧v1.bak保留；安装/源码按LF归一内容一致，fixture22PASS/5Windows平台SKIP/0FAIL。本地hook可绕过，不替代Hosted门禁。
-- `reclamationPolicy`: 54份runtime previous、历史clone/输出/恢复证据继续保护；全部构建目标及依赖须本任务独占实体目录，共享junction/symlink只读。候选分类不构成删除/移动授权。
-- `historicalRule`: 下方HISTORICAL_SNAPSHOTS_BEGIN之后为带日期历史证据，不能覆盖本区事实。真实Provider/ComfyUI/GPU、完整多聊天/统一接入/持久垃圾箱、VPS/账号、Mobile、签名及用户验收保持各自原边界，37功能成熟度/runtimeEvidence未提升。
+- `canonicalHead`: d95e4c446d3b4ae5419ce0f58c68057ebabc286a，Desktop/Web2.1.34；19:07只读回读仍此SHA，本轮候选未推送/合入main/发布。
+- `localMainHead`: 8c36a6b138205613ae1a7c27950b86792da8de1a，领先origin/main49提交；63条原dirty、index/status/staged0保持。最新56872dc7完整性收据PASS，未reset/clean/覆盖。
+- `currentTask`: TASK-AUDIT-REPAIR-20261017，DONE/PASS仅有界本地A–D；任务树`D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017`，branch `fix/TASK-AUDIT-REPAIR-20261017`。产品source `4699458de1c3437309b7cdc3f019454104c81fce`、tree `a1905e2aa6e11a24b4c62d829dc82a8f0d566972`；221560a3仍仅未验收原始快照。
+- `sourceVersionBoundary`: Desktop/Web2.1.36，Mobile2.1.1规划；版本源`config/platform-versions.json`。源码、本机启动、main集成/正式发布和用户验收分别记录。
+- `taskLedger`: 149 records；DONE85、PARTIAL48、TODO12、BLOCKED3、IN_PROGRESS1、REVIEW0，开放64。仅新增审计任务本地DONE，原148完整对象（含验收/依赖/lastVerified/84DONE）保持；26失效分配、5旧REVIEW/HOME及branch不符任务完整历史仍保留，原统一scope继续开放。
+- `workspaceWorktrees`: 4登记checkout/5本地分支；主仓8c36a6b、本任务产品source4699458d、统一df08748e、taskstate5e2d2ab6；最终文档HEAD由Git/精确收据回读，469不是稍后文档提交的branch tip。[清单](workspace-inventory.json)为2026-10-17T11:18:46.286Z采样，由现有生成器更新，26条目全部deletable=false/destructiveActionsPerformed=false；旧清单另存，候选分类不是清理授权。
+- `preservation`: A core PASS；工程外`D:/KK-Studio-recovery-20260921/audit-repair-20261017-1f00ccc3-1207-4cd3-90e1-bd0192d64d21/final-preservation-receipt.json`，517368文件版本/56336959878 B/6 bundles、两个dirty恢复。外部变化、新增文件、长路径首轮失败与所有旧日志/运行原件保留。
+- `safetyRepairs`: 五P1/垃圾箱误报、原始identity/格式写保护、空授权与精确账号、scope/epoch/记忆/迟到回调、预览重试/标签撤销和交互问题通过有界反例/回归。协议6新/临时聊天、不支持v3/多聊天、无持久receipt的12AI及未接持久垃圾箱保持禁用；不是完成这些能力。
+- `finalVerify`: 469源码完整verify前后CLEAN且exit0；Node1832PASS/14既有SKIP、Agent199PASS/2既有SKIP、产品Edge823首试零fail/retry/flaky/skip、DESIGN41单元/8浏览器、development四步，lint/type/UI/format/build通过。Rust bin213PASS/1硬件ignored+integration41/check/fmt绑定未变Native源。advisory与警告保留。
+- `nativeDelivery`: 官方构建source469/EXE b6299445/input a53dee81；隔离Native六检查、focus/真退出/重开/identity/草稿/loaded资源字节及版本2.1.36均PASS。两个日常lnk先复制保全再原位恢复，默认实际启动关闭重开PASS，留下正常无CDP单实例PID50136。见[完整身份与收据](../changes/2026-10-17-audit-repair/verification.md)。
+- `defaultDataBoundary`: 默认9项目原始快照SHA998e0101、identity14441803与shared memory保持；旧聊天资料仍READ_ONLY保护，未强制迁移或改为可写。启动恢复DONE不等于完整迁移/protocol7/付费Provider验收。
+- `reviewBoundary`: 469增量源码/连接调用链独审PASS；此前FSR01–06按原SHA关闭，菜单遮挡实际RED→GREEN与新Native/daily复验通过。最终文档HEAD独审与正式Delivery按提交后精确收据裁决，不预填Hosted或发布结果。75的12FAIL/8026中止/d356 dailyFAIL/旧helper失败均保留。
+- `remoteWorkBoundary`: 18:08→19:07可比字段69heads/7Draft PR/3active rulesets零漂移，7PR autoMerge=null；旧ref名与新baseSHA不可直接比较，不声称全部字段一致。stable实际严格verify/delivery、approvals0；merge queue及governance/deploy-linux未强制，classic保护GET403为权限边界，未修改settings。
+- `localHook`: 四处无core.hooksPath覆盖，同common pre-push v2；installed/policy/source按LF归一相等，旧v1.bak保持。既有fixture27=22PASS/5Windows平台SKIP/0FAIL本轮未重跑，7相关guard源自a95未变；hook可绕过，不替代Hosted。
+- `reclamationPolicy`: 54份runtime previous、旧clone/worktree/输出/恢复材料仍在，没有删除或移动。所有build输出/依赖物理owned，共享junction/symlink只读。E/F实体整理未执行。
+- `historicalRule`: 下方历史不覆盖本区。37功能成熟度/runtimeEvidence未提升；真实Provider/ComfyUI/GPU、完整多聊天/垃圾箱/12AI恢复、账号/VPS、Mobile、签名与用户验收按原任务保持开放。
 
 <!-- CURRENT_FACTS_END -->
 <!-- HISTORICAL_SNAPSHOTS_BEGIN -->

@@ -136,7 +136,7 @@
     "area": "creation",
     "status": "PARTIAL",
     "card": "docs/features/feat-002-image-generation.md",
-    "summary": "自带 API Key 的浏览器提交门禁 + Desktop 原生 TaskHost；Codex 内置生图已有真实生产归档/恢复证据，BYOK逐家真实出图仍待验收。 本轮d356完整本地verify与源码独审通过，d356隔离Native通过，默认只读资料菜单受遮挡导致C FAIL待修，新source/Native日常重验及最终文档验收仍待；安全边界：同端点账号必须按connectionId固定身份；12AI缺持久receipt端口时禁用执行，完整重启恢复仍开放。",
+    "summary": "自带 API Key 的浏览器提交门禁 + Desktop 原生 TaskHost；Codex 内置生图已有真实生产归档/恢复证据，BYOK逐家真实出图仍待验收。本轮469本地安全修复/完整verify与Native启动重开通过；精确connectionId/凭据绑定及12AI无持久receipt端口禁用，不等于真实逐家Provider或完整重启恢复完成。",
     "entryPoints": ["图片节点生成按钮", "开始页/对话提交", "任务状态与重试"],
     "code": [
       "src/features/creation/imageGeneration.ts",
@@ -421,7 +421,7 @@
     "area": "creation",
     "status": "PARTIAL",
     "card": "docs/features/feat-009-conversation.md",
-    "summary": "KK 默认 Codex 已接通 Web/Windows、Agent 本地图片和显式画布原件引用；其他登录适配、参考图编辑与后台网页仍待办。 协议6未具备chat隔离；本轮d356完整本地verify与源码独审通过，d356隔离Native通过，默认只读资料菜单受遮挡导致C FAIL待修，新source/Native日常重验及最终文档验收仍待；新聊天/临时聊天及不支持的多聊天v3写入不承诺可用，v2单聊天范围保留。",
+    "summary": "KK 默认 Codex 已接通 Web/Windows、Agent 本地图片和显式画布原件引用；其他登录适配、参考图编辑与后台网页仍待办。本轮469本地安全修复/启动恢复通过，默认旧聊天资料仍READ_ONLY；协议6新/临时聊天及不支持的多聊天/v3写入禁用，完整迁移/protocol7仍开放。",
     "entryPoints": ["右侧对话面板 ConversationPanel", "开始页对话入口"],
     "code": [
       "src/components/ConversationPanel.tsx",
@@ -1460,7 +1460,7 @@
     "area": "intelligence",
     "status": "PARTIAL",
     "card": "docs/features/feat-032-provider-connectivity.md",
-    "summary": "多协议接入与四渠道精确型号列表、连接元数据/凭据保留已验；跨中转合并/真实优先级/动态参数/Agent授权仍待。 本轮d356完整本地verify与源码独审通过，d356隔离Native通过，默认只读资料菜单受遮挡导致C FAIL待修，新source/Native日常重验及最终文档验收仍待；安全边界：连接身份不可按同URL替代，空外部模型授权默认拒绝；统一接入完整需求尚未验收。",
+    "summary": "多协议接入与四渠道精确型号列表、连接元数据/凭据保留已验；跨中转合并/真实优先级/动态参数/Agent授权仍待。本轮469本地安全修复/启动恢复通过，连接身份不按同URL替代、空外部授权拒绝；统一接入完整需求与真实服务验收仍开放。",
     "entryPoints": [
       "Agent providers apply/check/apply-claude CLI（App 设置 UI 尚未接入）",
       "设置公共预设目录（UI候选，不表示CLI配置全面接线）"

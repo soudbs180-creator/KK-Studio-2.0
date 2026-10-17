@@ -2,7 +2,7 @@
 
 KK Studio 是以无限画布为中心的多模态 Agent 创作工作台。本机唯一工程仓库为 `D:/kk-studio/KK-Studio-2.0`；任务在登记的隔离 worktree 开发。平台版本以[版本源](config/platform-versions.json)为准，当前能力、候选与未完成项见[项目状态](docs/governance/PROJECT_STATE.md)和[任务账本](docs/governance/task-ledger.json)。
 
-2026-10-17审计修复：远端main d95e4c44仍为Desktop/Web2.1.34；本地main8c36a6b及63条原dirty保持。本轮隔离候选Desktop/Web2.1.36冻结于`d356791caf807e26dbfc0cde6f3774b06188b156`，完整verify通过（Node1832PASS/14既有SKIP、Agent199PASS/2既有SKIP、产品Edge823首过、DESIGN41单元/8浏览器及development四步），精确源码独审通过。d356官方构建与隔离Native六检查已通过，两个日常链接已恢复；默认只读资料实际验收发现恢复banner遮挡账号菜单“查看”（P2），C暂FAIL待修，新source验证/重建与最终审查仍待，整体IN_PROGRESS/NOT_VERIFIED；见[实际验证](docs/changes/2026-10-17-audit-repair/verification.md)。Mobile2.1.1仍为规划，未发布或合入main。
+2026-10-17本地审计A–D完成：Desktop/Web2.1.36最终产品source `4699458de1c3437309b7cdc3f019454104c81fce`，完整verify、源码独审、官方重建、隔离Native及两个日常快捷方式正常关闭/重开通过。默认旧聊天资料仍受READ_ONLY保护，9项目原始快照和身份保持；完整迁移/protocol7、真实服务和用户验收继续由原任务承接。149项任务中85DONE、64开放；原148任务不批量结案。主仓main8c/63dirty/index及远端main d95/2.1.34保持，未合入main或发布；见[实际验证](docs/changes/2026-10-17-audit-repair/verification.md)。Mobile2.1.1仍为规划。
 
 分享包只包含已验收白名单内容；Git历史、开发依赖、编译缓存、用户项目和恢复归档不属于分享包。见[发布说明](RELEASE.md)。
 

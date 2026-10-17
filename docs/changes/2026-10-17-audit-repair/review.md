@@ -1,6 +1,17 @@
 # Review：审计修复与当前事实收敛
 
-## 当前源码审查结论（d356）
+## 当前精确源码审查结论（469）
+
+- 实现者root、独立reviewer `/root/final_source_review`；base `d356791caf807e26dbfc0cde6f3774b06188b156` → head `4699458de1c3437309b7cdc3f019454104c81fce` / tree `a1905e2aa6e11a24b4c62d829dc82a8f0d566972`，review时clean。
+- `.tmp/fresh-review-4699458d.json` SHA `2a3aebba61315f8f4359b4b9f1bab4a93bbdc32ea13c9138d5621d10bf0accd7`：该增量源码/连接调用链/测试与状态文档PASS，未发现新P1/P2；reviewer独立静态/固定Git blob检查，读取root真实RED/GREEN，未冒充自己运行浏览器或C。
+- 条件`.app .sidebar:has(> .account-popup)`仅在账号菜单存在时提升共同stacking context至既有popover token，桌面/收起短手机均保持只读banner和几何；普通click测试保留raw snapshot/reload/只读断言，没有force或隐藏banner。原真实默认资料遮挡失败保留，最终新source完整verify/重建/隔离Native/默认daily实际复验PASS，详见[验证](verification.md)。
+- FSR01–06保留原阶段精确closure，不用469窄增量审查代替全仓安全证明。源码审查发生时完整verify/C尚未结束，receipt原文边界保持；随后root的新完整verify exit0、C六检查与日常两入口启闭有独立实际收据，未改写旧receipt。
+
+C evidence-only独立验收收据`.tmp/c-evidence-only-review-36d1d86a-57ae-475e-9a09-09478b660ef2.json` PASS，SHA `8f0559ebc6d66664b6e025231bf7656033d8b1df24583f87e5b54551f815ae34`；独立核对实际产物/当前进程health、两lnk与旧备份及9项目原始数据，保留READ_ONLY和旧dailyFAIL边界。它不重跑全量，也不替代最终文档HEAD审查。
+
+本轮有界本地A–D DONE/PASS；默认9项目旧聊天资料仍READ_ONLY、原raw/identity/shared memory保持，完整迁移/protocol7及其余原任务继续开放。最终文档HEAD独立补审/正式Delivery由提交后对应收据裁决；未预填Hosted、main合入、发布或用户产品验收。下方旧FAIL/中止及原文全部按其时点解释。
+
+## d356源码审查与当时daily失败（历史）
 
 - 实现者root与独立reviewer `/root/final_source_review`分离；审查最终source `d356791caf807e26dbfc0cde6f3774b06188b156`、tree `090db406613948cd9f6daee53e9a1f8cf1cef9d3`。
 - 最终增量base `8026d65aaea153a89640b32d5eea435755797dfb`；reviewer独立读取六文件及周边ownership分支、重放四份原probe、运行四正式suite共62/62 PASS、tracked source/tests前后CLEAN。精确收据`.tmp/fresh-review-d356791c.json` SHA `da660b32212e6482a2cdff03cf627f71bc44d7aee723b13993424aca8dc1877c`。

@@ -7,7 +7,7 @@
 
 ## 2026-10-17安全修复边界（完整本地verify与源码独审通过）
 
-关联开放任务：TASK-AUDIT-REPAIR-20261017；[规格](../changes/2026-10-17-audit-repair/spec.md) / [实际验证](../changes/2026-10-17-audit-repair/verification.md)。同端点不同账号必须沿固定providerConnectionId核对endpoint/credentialRef，缺ID只能接受唯一完整绑定；12AI执行缺宿主持久CAS receipt port时须禁用。内存受理Map不证明跨文档或重启恢复，完整12AI接入仍由原统一任务开放。 候选Desktop/Web2.1.36冻结source d356791c，完整本地verify已通过（Node1832/14既有skip、Agent199/2既有skip、产品Edge823首试、DESIGN41+8、development四步），精确源码独审关闭FSR01–06；Native源未变，Rust213/1硬件ignored+integration41通过。d356官方build与隔离Native六检查/链接回读通过，默认只读资料因恢复banner遮挡“查看”菜单FAIL，C待最小修复及新source/Native日常重验；最终文档HEAD验收仍待，见本轮验证；真实服务/Hosted/用户验收另列。本卡成熟度与既有runtimeEvidence保持原范围，未将门控当完整能力。
+关联本地安全修复任务：TASK-AUDIT-REPAIR-20261017（有界A–D DONE；完整功能缺口继续由本卡原开放任务承接）；[规格](../changes/2026-10-17-audit-repair/spec.md) / [实际验证](../changes/2026-10-17-audit-repair/verification.md)。同端点不同账号必须沿固定providerConnectionId核对endpoint/credentialRef，缺ID只能接受唯一完整绑定；12AI执行缺宿主持久CAS receipt port时须禁用。内存受理Map不证明跨文档或重启恢复，完整12AI接入仍由原统一任务开放。 候选Desktop/Web2.1.36最终source4699458d完整verify、精确源码独审、官方重建、隔离Native与两日常入口正常关闭重开通过；旧d356真实菜单遮挡失败及所有原失败保留。默认旧聊天资料仍READ_ONLY，9项目raw/identity/shared memory保持；不宣称可编辑、完整迁移/protocol7、真实Provider或完整多聊天/垃圾箱/12AI恢复已完成。本卡成熟度与既有runtimeEvidence保持原范围，详细证据见本轮验证；Hosted/发布/用户验收另列。
 
 ## 用户可见入口
 

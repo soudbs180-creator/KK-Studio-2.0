@@ -1,61 +1,59 @@
 # Verification：审计修复与当前事实收敛
 
-## 当前执行结论（d356验证通过，C默认资料真实FAIL待修）
+## 当前执行结论（469，本轮有界本地A–D DONE/PASS）
 
-- Task ID：TASK-AUDIT-REPAIR-20261017；IN_PROGRESS / 整体NOT_VERIFIED；日期2026-10-17。
-- cwd / branch：`D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017` / `fix/TASK-AUDIT-REPAIR-20261017`。
-- 最终产品source：`d356791caf807e26dbfc0cde6f3774b06188b156`；tree `090db406613948cd9f6daee53e9a1f8cf1cef9d3`。完整verify开始/结束时tracked source/tests均CLEAN；当前仅D文档同步，未提交最终文档HEAD。
-- 原始未验收快照221560a3、主仓main8c及63条dirty/index/staged0保留；远端main仍d95/2.1.34。本候选Desktop/Web2.1.36，Mobile2.1.1仅规划。
-- [Intent](intent.md) / [Spec](spec.md) / [Plan](plan.md) / [Review](review.md)；下方历史preflight、失败和中止按原SHA解释，最终结果不改写历史。
+- 产品source `4699458de1c3437309b7cdc3f019454104c81fce` / tree `a1905e2aa6e11a24b4c62d829dc82a8f0d566972`；branch `fix/TASK-AUDIT-REPAIR-20261017`，cwd `D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017`。完整verify前后CLEAN；最终文档HEAD review/正式Delivery由root提交后精确收据裁决。
+- Desktop/Web2.1.36，Mobile2.1.1规划；原primary main8c/63dirty/index/staged0及远端main d95/2.1.34保持。未删除/移动、push/merge、修改远端设置或付费生成/发布。
+- **默认9项目旧聊天资料仍READ_ONLY；启动恢复完成不等于可编辑、完整迁移/protocol7或真实Provider完成。** 原148任务对象及37功能成熟度/runtimeEvidence保持；仅本轮有界审计DONE，总149项85DONE/64开放。
+- [Intent](intent.md) / [Spec](spec.md) / [Plan](plan.md) / [Review](review.md)；历史FAIL/中止/RED按原SHA保留，未回写为PASS。
 
-| 检查 | 真实结果 | 证据与边界 |
-| --- | --- | --- |
-| AC-A 保全/恢复 | core PASS | `final-preservation-receipt.json`，517368文件版本/56336959878 B/6 bundles、两个dirty恢复；receipt SHA `fed761467e824c5da552f4446a838ed649f9b8b07b2c20132212279aa1ea9ebc`。外部memory变化、新增文档和长路径首轮失败另列保留 |
-| 原primary完整性 | PASS（截至e47回执） | `primary-integrity-e47ec59e-9c30-4595-a7f4-eee9b67148fb.json` SHA `a4d0d6b86910967504186e2d86e5685909f2694725b3fc8c57b5d0541e31dd23`；63原字节、HEAD/index/status/staged0一致；共享Git新增任务refs与已授权hook升级另列，不伪称全部Git元数据无变化 |
-| AC-B 完整`npm run verify` | PASS，exit0 | `.tmp/audit-repair-20261017/verify-d356791c.log` SHA `fcd28a6f57d0feb373f5d4f5216ed1289422b6fb39e97bd22ba8deb7d9f300d4`；完整流水线及尾段均完成 |
-| 根Node单元/deploy | 1846 total = 1832 PASS / 14既有SKIP / 0FAIL | 同完整日志；skip不计作PASS |
-| Agent | 201 total = 199 PASS / 2既有SKIP / 0FAIL | 同完整日志；不是已连接真实模型 |
-| 产品Edge生产preview | 823/823首试PASS，0fail/retry/flaky/skip | 固定1423、生产dist；`index.html`→`src/main.tsx`→`App`→实际组件。包含1920/834/390与矮屏、受保护历史/禁用原因、连接/草稿、空授权、账号、原件/标签撤销、直接src和懒预览重试、按下时44px连线按钮及低缩放编辑器真实命中 |
-| DESIGN/development | 41/41单元、8/8浏览器、development四步PASS | development实际record `96899b5c-428e-4278-a503-523318268878`，含发现/渲染四插件、禁用重载恢复与不安全远端请求拒绝；未调用CDN或真实生成 |
-| lint/type/UI/format/build | PASS | code-health30、footguns2 advisory、DESIGN25 warnings/1info、JS大chunk警告保留；exit0不代表0建议或已做性能验收 |
-| Rust | bin213PASS/1既有硬件ignored；integration41PASS；check/fmt PASS | `.tmp/audit-repair-20261017/cargo-test-source-3.log`、`cargo-check-8026d65a.log`；5个Native源自4368584f后字节未变，经git diff核验绑定d356；不是Native界面/安装验收 |
-| 精确源码独立review | PASS（审查链关闭FSR01–06） | `.tmp/fresh-review-d356791c.json` SHA `da660b32212e6482a2cdff03cf627f71bc44d7aee723b13993424aca8dc1877c`；本次8026→d356六文件独审/四原probe/62正式测试，先前FSR01–04按原阶段收据关闭；不把窄增量review冒充逐文件全仓安全证明 |
-| C官方release构建 | PASS，18:52:15完成 | 官方`ensureDesktopRelease`→`npm run client:build:agent -- --no-bundle`，全新owned runtime 4280文件；receipt与产物身份见下；`reason: current`仅本地新鲜度 |
-| C隔离Native启动/关闭重开 | PASS，六项实际检查 | `test-results/native-authority/4a38a1b2-b78e-4266-ba75-8866fcf5eb2a/native-authority-results.json` SHA `0b4ec3e9cad9ba9ce935967012f1c7488f446489d8f31be7028d194c34412e0f`；owner/epoch、origin拒绝、同PID重复入口及focus、loaded bundle/版本、真退出重开同repo/新epoch/草稿、global memory保持；owned cleanup0 |
-| C两日常链接恢复/回读 | PASS，仅入口元数据范围 | 工程外`daily-entry-5531d96f-b2e6-42ca-8808-fbe9f0c9a190/daily-entry-receipt.json` SHA `2c6afff676fa8c0b421d197779b907f97394378075376d1da9c53da50d1ef2ee`；两个原lnk先复制/哈希/metadata保全，再原位写入本任务新Launcher，args空/cwd本任务，不删除或移动原文件 |
-| C默认资料实际验收 | FAIL，真实P2待修 | 同工程外子目录`daily-native-results.json` SHA `6c0047e94056101cab65f6628ffbc9aa7968dfaa41094bc40e40a6b27166dc1f`；受保护只读恢复banner的“下载原始恢复副本”按钮遮挡account popup“查看”，真实click超时；9项目默认root保持受保护，未编辑/生成。需新source回归/独审/重建/Native与daily重验 |
-| AC-D 最终当前事实/生成视图/Delivery | IN_PROGRESS | 本次D写入后执行相关门禁；最终提交文档HEAD精确补审与正式Delivery待root收口 |
-| Hosted/PR/main/post-main/签名/发布/真实Provider/用户验收 | NOT_VERIFIED / 未执行 | 本轮没有push/merge/远端设置或付费生成；本地A–D验收与这些门禁分列 |
+| 检查 | 实际结果与证据 |
+| --- | --- |
+| AC-A保全/恢复 | core PASS：517368文件版本/56336959878 B/6bundles/两个dirty恢复。`final-preservation-receipt.json` SHA `fed761467e824c5da552f4446a838ed649f9b8b07b2c20132212279aa1ea9ebc`；外部变动/原失败保留 |
+| 原primary最新完整性 | `primary-integrity-56872dc7-05fe-4d5c-aa6f-8fbf6f7a0df2.json` PASS，SHA `0c0fed732b9ad3a79fb990ccf8a9a57dc58e3626c2e8177785fd0ec72138a0e0`；63原文件/head/index/status/staged0一致，授权新增task refs/hook另列 |
+| AC-B完整`npm run verify` | 469 exit0；`.tmp/audit-repair-20261017/verify-final-popup.log` SHA `c073d31a7125f8b7657ace7de321a3f0233db821b2081ef4827179453cf9836c` |
+| Node / Agent | 根1846=1832PASS/14既有SKIP；Agent201=199PASS/2既有SKIP；均0FAIL，skip不计作PASS |
+| 产品浏览器 | Edge production preview1423，823/823首试、0fail/retry/flaky/skip。`index.html`→`src/main.tsx`→`App`/实际组件；桌面/短手机只读banner下账号“查看”真实click也覆盖，未force/隐藏banner |
+| DESIGN/development/静态 | DESIGN单元41/41、浏览器8/8；development四步PASS，record `10937628-beae-4765-929a-ceef9127fd99`。lint/type/UI/format/build PASS；health30/footguns2 advisory、DESIGN25warnings/1info及大chunk警告保留 |
+| Rust | bin213PASS/1既有硬件ignored+integration41PASS，check/fmt PASS；5个Native源自4368584f后未变，原`cargo-test-source-3.log`等绑定该源字节，不冒充本轮重跑或Native界面验收 |
+| 精确增量独审 | 469源码/调用链/状态文档PASS，`.tmp/fresh-review-4699458d.json` SHA `2a3aebba61315f8f4359b4b9f1bab4a93bbdc32ea13c9138d5621d10bf0accd7`；此前FSR01–06保留各自原SHA closure，不当作全仓安全证明 |
+| AC-C官方build | `.tmp/audit-repair-20261017/native-build-popup.json` PASS；旧EXE/receipt/manifest先复制至工程外`native-before-popup-de4dee4e-1e22-4d41-be80-59bc3361047e`。4280个既有Agent运行文件逐个重哈希一致，复用官方client:build路径，避免旧runtime目录轮转 |
+| 隔离Native | 六检查PASS，`test-results/native-authority/721f8a6e-7df3-466e-a337-82770de52795/native-authority-results.json` SHA `70d71ca542d762d291da6ec66acf19956865700ee5d7dda2b345c92a3770b695`；owner/epoch、browser-origin403、同PID重复官方入口且focus=true、版本/资源字节、真退出/重开同repo新epoch/草稿、shared memory保持；ownedcleanup0 |
+| 两日常lnk/默认资料 | 实际Desktop入口打开、正常关闭真退出，再primary-folder入口重开PASS；`daily-entry-5531d96f-b2e6-42ca-8808-fbe9f0c9a190/daily-native-4699458d-results.json` SHA `e83f2352beabc0bef8e88f0f79757891971dfde053b4e4e06452606053dda41d`。留下正常无CDP实例PID50136，实际task EXE/default数据根，live health同repo/新epoch |
+| 默认资料保全 | raw snapshot SHA `998e0101cfd0d13ed660771f04a6668a618a0c6ae9ccf198088ab17e9e616931`、9项目identity `14441803a701117658347fd3bc0c8bc46791e87d0d44f90263f10cb5816d5816`启闭前后相同，shared memory不变；不编辑/迁移/生成 |
+| C证据独立验收 | `.tmp/c-evidence-only-review-36d1d86a-57ae-475e-9a09-09478b660ef2.json` PASS，SHA `8f0559ebc6d66664b6e025231bf7656033d8b1df24583f87e5b54551f815ae34`；独立重算source/tree/EXE/input/receipt/bundle、两helper/lnk原备份hash、当前PID/真实health/newEpoch及9项目raw等于备份；未重跑完整verify，不代替最终文档HEAD review |
+| AC-D当前事实/生成视图 | 本地数据/历史/视图同步；本轮最终schema/文档/版本/Delivery预检见下方收口检查。最终文档HEAD独审及正式Delivery以提交后收据为准 |
+| Hosted/真实服务/发布/用户验收 | NOT_VERIFIED/未执行；真实Provider/ComfyUI/GPU、完整多聊天/垃圾箱/12AI持久恢复、VPS/账号、Mobile及签名保持原任务边界 |
 
-## C当前官方产物身份（build与隔离生命周期通过，日常待验）
+## 当前Native实际身份与数据根
 
-实际EXE：`D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017/src-tauri/target/release/kk-studio.exe`；官方receipt同目录`kk-studio.build-receipt.json`。构建来源source d356/tree090db由独立`.tmp/audit-repair-20261017/native-build-d356791c.json`绑定；官方receipt本身不含Git SHA，不能据其单独宣称来源已绑定。
+实际EXE `D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017/src-tauri/target/release/kk-studio.exe`；官方receipt同目录`kk-studio.build-receipt.json`。source469/treea190由单独build收据绑定，官方receipt本身不含Git SHA。
 
 | 对象 | SHA256/值 |
 | --- | --- |
-| Desktop版本 | 2.1.36 |
-| EXE | `fdba8994524f5495c4151cf4287788cc47cf93f63c9075fdc9f1dbca7f56037a` |
-| runtime input | `6c8ca4d9bf616733fef10a22943091f3b4dd26cf24a0694b54a04e42a50853f4` |
-| 官方receipt | `d853e28873a986bff73578d5d3d10bdd338d969da64a0608030daa662fc09d7f` |
-| 实际Native入口 | `http://tauri.localhost/assets/index-m5X17bE5.js`，loaded HTTP与dist SHA均`ab3811588a783aefe9a384bcc4bed329323661c6d9f7d6e49380132fd73ccb76`；production/src/main.tsx，DOM与Native版本均2.1.36 |
+| Desktop版本 | Native appVersion与软件更新region真实DOM均2.1.36 |
+| EXE | `b62994457928bdec852fb89f8689bcf1050178b6673ad20f5ea5b7033996b99a` |
+| runtime input | `a53dee810301185ca1b282ac159c105198414efe29cd6a8c35705e0e538b0847` |
+| 官方receipt | `d4f00c7260c64b6e6d52ed9b64f4b02804e2bc6c23195b6e0ed10ed62715bb6e` |
+| Native实际bundle | `http://tauri.localhost/assets/index-BlBp6PG3.js`，loaded HTTP与dist同SHA `0d47ae2c4ea790a756b23a69feed28e368383806d64da40a4ffb5dcce15e97af`；production/src/main.tsx |
 
-日常数据备份位于工程外`runtime-userdata-a230f7a8-ebc3-4794-b9ef-81c7179f9c0a`：稳定round-002共2471文件/118目录/217661737 B，逐文件source/target重哈希及membership一致，manifest SHA `0f5ff54f8971d4eb11be077447a33bdac2cf013b2bebba56d0f5a1cfb32ca519`。两轮副本和首轮一个空WebView目录属性差异（原因UNKNOWN）均保留。默认数据启用前仍需核对或补充新变化；本轮不删除/移动任何原文件。
+隔离从`start-kk-studio.bat --background --data-dir <独立UUID/data>`进入，独立WebView2/CODEX_HOME；默认从两个实际lnk进入，args空、无--data-dir，使用原`%APPDATA%/kk-studio`。日常lnk原件/metadata/hash先保全，再原位指向本任务新Launcher；原回读收据`daily-entry-receipt.json` SHA `2c6afff676fa8c0b421d197779b907f97394378075376d1da9c53da50d1ef2ee`，Launcher SHA `68034d0ac1e29266a51d4201515230334d7bc58234eed8033723f18aa1d34fbf`。不能删除仍被日常入口引用的任务树。
 
-隔离实际命令为`start-kk-studio.bat --background --data-dir <本次UUID/data>`，独立profile/CODEX_HOME、Tauri release、`http://tauri.localhost/`；`src/main.tsx`→`App`→`AccountPopup`/`AppUpdateSettings`，软件更新region内版本真实读取。EXE PID17252正常关闭后重开为55320，同repositoryId、新authorityEpoch；重复官方入口仍为17252且focus实际true，草稿字节相等。最终helper `authority-runtime-d356791c-semantic-ui.mjs` SHA `b9f36a9e3f91a6707d75f4bb4f20874d45c4769d52640738b355184c257999dc`，实际log `native-authority-d356791c-semantic-ui.log` exit0。未执行真实生成、未读取或写入用户秘密。
+最终默认启用前fresh保全工程外`runtime-userdata-06d1fb5d-54df-44d9-a69c-5c4900401204`：2483文件/118目录/217801366 B，manifest SHA `967e12fa8a1168bdefd61d0db61d4bca986d22eec65f87c69ed5154baa95d511`、receipt `1fd79db3d7a1073d094125b48f80a278ae32e6222f1a50125cdfdb7922197b65`；独立全量重哈希零差异收据 `e24520ec2470d490cc5667dabb0eb89229aca05cbbe8a20ee5a0904f98a6a493`。此前runtime-userdata-a230/670全部副本及首轮空目录属性差异UNKNOWN保留，不将捕获时点视为永久无并发。
 
-前两原生helper run `e4b494f3-765d-4eb9-890a-9de100cb3722` / `d4113176-2be4-43ad-b215-bde014358187`因旧“检测”按钮/旧`.settings-version-current` selector不再对应实际DOM而FAIL，原helper、日志及截图全部保留。依据实际AccountPopup/AppUpdateSettings改为“查看”与软件更新region/currentVersion的既有语义入口，保留版本/资源字节/identity/草稿断言，不改产品、不重新build；第三次六检查才记PASS。不是删除断言或将前两次写成通过。
+## D事实、规则与清单收口
 
-默认daily首轮失败是实际产品层级缺陷，区别于前两次隔离helper旧selector。root已在A–D范围内决定最小CSS层级修复并补synthetic只读恢复状态的真实点击回归；不修改数据/schema、只读/unsupported-chat门控或用户项目正文。d356完整verify及隔离PASS保留原SHA，新source必须重新完整验证、独审、官方重建及Native/daily复验；未修前整体C仍FAIL/NOT_VERIFIED，不标DONE。
+- 149项：DONE85/PARTIAL48/TODO12/BLOCKED3/IN_PROGRESS1，开放64；仅本轮有界审计新增DONE。原148完整对象（含原84DONE/验收/依赖/lastVerified）与37功能状态/maturity/runtimeEvidence保持不变。26失效分配原文保留于verificationHistory，原统一scope/迁移任务继续开放。
+- 26份最终同步前原文保存在工程外`governance-final-8f864405-abbb-4856-a7a5-f63c922bfe1f`，manifest SHA `824b777f475c07da6a66251308b19cb864ad8bf6530c3d0291814e311d6cec96`；前轮governance-closeout-7a59及旧2026-10-11 inventory原件仍保留。
+- 现生成器于2026-10-17T11:18:46.286Z采样26容器条目/4登记worktrees（本任务head469为产品source，最终docs-only head由Git/收据另读），全部deletable=false/destructiveActionsPerformed=false；目录哈希是顶层元数据指纹，不替代递归备份，MANIFEST_THEN_CLEAN等分类不是删除/移动授权；E/F未执行。
+- Git最终只读收据`.tmp/git-governance-final-audit-514c0695-1fe2-46a5-91bd-2c0f7ce7fcde.json` SHA `9456c19aeb93a6dd87ca2436dee791508ff1636c6da0206c01be013bdcaa1ef3`：18:08→19:07可比字段69heads/7Draft/3rulesets零漂移，7PR autoMerge=null；旧ref名/新base SHA不能直接比较，不声称全部字段相同。stable严格verify/delivery、approvals0；merge queue/governance/deploy-linux未强制、classic保护GET403为权限边界，未改settings。
+- 四checkout无core.hooksPath覆盖，同common pre-push v2，installed/policy/source按LF归一相等；v1.bak SHA72172469仍匹配。既有fixture27=22PASS/5Windows平台SKIP/0FAIL本轮未重跑，7个guard相关源自a95未变；本地hook可绕过、不替代Hosted。
 
-首次恢复快捷方式使用Windows PowerShell5运行无BOM UTF-8脚本，中文路径解码错误，precondition阶段即FAIL；原空备份目录/脚本/日志保留，未写原链接。随后同脚本用PowerShell7成功，实际新Launcher SHA `68034d0ac1e29266a51d4201515230334d7bc58234eed8033723f18aa1d34fbf`、两个原链接目标和workingDirectory均指本任务树。默认启用前新完整用户数据保全子目录`runtime-userdata-670433a3-ac6b-4ef2-b5aa-78415d3011e4`与先前两轮副本均保留；链接恢复不代表默认功能验收通过。
+## D最终本地检查（文档提交前）
 
-## D当前事实、规则与清单
+生成视图/治理149项0问题、功能37项0问题、快照3/0、索引24ADR/0、Markdown128active/0、命令329active/0、平台版本与版本一致性、两个变化JSON的Prettier及diff whitespace通过。版本一致性保留既有Unreleased/changelog漂移警告。Delivery完整性与working-tree归属预检均398路径/0问题，**不是最终已提交HEAD的正式Delivery**。
 
-- 最终同步前26份task/容器文档原字节保存在工程外`governance-closeout-7a59d7c4-efbf-4c4f-a3ce-b41a3e9f06a5`，manifest SHA `b8444379a75de7d1c37129c2945ece18effc6c894d4c86cd24f083abbd7afcba`；旧workspace inventory原字节SHA `c5f25e7b62c38c6a24ca7df2e83a56b5fadebe1b38bd2cdbc6b5247e87b58512`。
-- 现有`npm run workspace:inventory`只枚举/哈希并生成现有JSON：26容器条目、4登记worktrees，全部`deletable:false`、`destructiveActionsPerformed:false`。目录哈希为顶层元数据指纹，不是递归内容备份；`MANIFEST_THEN_CLEAN`等分类不构成删除/移动授权。没有清理目录或归档旧worktree。
-- 当前149任务：DONE84/PARTIAL48/TODO12/BLOCKED3/IN_PROGRESS2/REVIEW0，开放65；本审计保持IN_PROGRESS。原148任务验收/依赖/lastVerified/DONE及37功能成熟度/runtimeEvidence必须保持，最终前后assert与生成视图结果待下方补记。
-- 远端只读回执`.tmp/git-final-7d7d20d9-92f3-4b7e-a1b9-e95a5ab7666b.json` SHA `fde3ca06c4385b34a8eb84c82d34533a1ea395acc58a3ed66ec928c453c0867c`：69heads与原审计一致、7Draft PR均auto_merge=null、3active rulesets无漂移。stable严格要求verify/delivery，approvals0；merge queue/governance/deploy-linux不在实际强制规则中，classic保护GET403为权限边界，不修改设置。
-- 共享pre-push按既有升级路径安装v2，旧v1.bak保留。安装SHA `287f28025933ed96bc5f3c89d52e47b1bdc09f5220cc3036d4bf0a53afebdff1`，与任务源码LF归一内容一致；fixture27=22PASS/5明确Windows平台SKIP/0FAIL。原误用PowerShell字面换行导致比较失败的旧收据保留，新回执勘误；没有push测试或远端写入。
+不变量收据：工程外`governance-final-8f864405-abbb-4856-a7a5-f63c922bfe1f/final-invariants.json` PASS，SHA `da8cafbfef48f6650ab41ce212b00e7d7fcfffcc9b36f83670c961da53c76447`：原148对象完全相等、37功能仅3摘要变化、原intent/历史/两容器完整前缀保留、1306本地链接0失效、19个tracked改动均在docs/README/CHANGELOG。DONE字段守卫首两次拒绝当前成功摘要中的历史英文FAIL及零fail字样；仅改当前成功摘要用语，失败证据留历史、不改门禁，随后149/0。
 
 ## 历史阶段与原始失败（必须保留）
 
@@ -66,7 +64,18 @@
 | a95/436完整流水线 | `verify-source-2.log`浏览器阶段主动中止（源变化/旧bundle），不生成完成计数或PASS |
 | 75cae26f完整verify | `verify-source-final.log` exit1：产品822=810PASS/12FAIL，design/development尾段未运行；独立review CHANGES_REQUIRED，FSR03/04及实际UI/fixture问题随后修复 |
 | 8026d65a完整verify | `verify-8026d65a.log`因独审FSR05/06主动中止，浏览器822计划/末次观察约84；不称完整822结果。独审CHANGES_REQUIRED收据/真实RED均保留 |
-| d356791c最终完整verify | 上表exit0真实结果；不是将旧结果改写为PASS。FSR01–06的RED、修复、formal/实际browser GREEN均保留原日志与收据 |
+| d356791c完整verify/隔离Native | exit0（产品Edge823首试等完整尾段通过）；源码独审/隔离六检查PASS，但默认daily菜单遮挡真实FAIL。原verify-d356791c.log、fresh-review-d356791c.json及daily-native-results.json保留，不以本轮469 PASS回填 |
+| 4699458d最终复验 | 最小条件sidebar popover层级及真实桌面/短手机click回归后，重新完整verify、精确增量独审、官方重建、隔离Native及默认两lnk启闭通过；新收据见上 |
+
+## d356原生/日常失败过程原文（历史，469已完成修复复验）
+
+以下三段只表示当时失败与处理决定；完整旧产物/脚本/日志/截图保留，469最终结果见上。
+
+前两原生helper run `e4b494f3-765d-4eb9-890a-9de100cb3722` / `d4113176-2be4-43ad-b215-bde014358187`因旧“检测”按钮/旧`.settings-version-current` selector不再对应实际DOM而FAIL，原helper、日志及截图全部保留。依据实际AccountPopup/AppUpdateSettings改为“查看”与软件更新region/currentVersion的既有语义入口，保留版本/资源字节/identity/草稿断言，不改产品、不重新build；第三次六检查才记PASS。不是删除断言或将前两次写成通过。
+
+默认daily首轮失败是实际产品层级缺陷，区别于前两次隔离helper旧selector。root已在A–D范围内决定最小CSS层级修复并补synthetic只读恢复状态的真实点击回归；不修改数据/schema、只读/unsupported-chat门控或用户项目正文。d356完整verify及隔离PASS保留原SHA，新source必须重新完整验证、独审、官方重建及Native/daily复验；未修前整体C仍FAIL/NOT_VERIFIED，不标DONE。
+
+首次恢复快捷方式使用Windows PowerShell5运行无BOM UTF-8脚本，中文路径解码错误，precondition阶段即FAIL；原空备份目录/脚本/日志保留，未写原链接。随后同脚本用PowerShell7成功，实际新Launcher SHA `68034d0ac1e29266a51d4201515230334d7bc58234eed8033723f18aa1d34fbf`、两个原链接目标和workingDirectory均指本任务树。默认启用前新完整用户数据保全子目录`runtime-userdata-670433a3-ac6b-4ef2-b5aa-78415d3011e4`与先前两轮副本均保留；链接恢复不代表默认功能验收通过。
 
 ## 以下为最终冻结前preflight历史原文
 

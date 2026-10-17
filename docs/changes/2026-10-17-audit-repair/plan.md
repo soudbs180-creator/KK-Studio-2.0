@@ -1,6 +1,6 @@
 # Plan：审计修复与当前事实收敛
 
-- Task ID：TASK-AUDIT-REPAIR-20261017；状态 IN PROGRESS；2026-10-17。
+- Task ID：TASK-AUDIT-REPAIR-20261017；状态 COMPLETED（有界本地A–D）；2026-10-17。
 - Owner / branch / worktree：root / `fix/TASK-AUDIT-REPAIR-20261017` / `D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017`。
 - [Intent](intent.md) / [Spec](spec.md) / [Verification](verification.md) / [Review](review.md)。
 - 来源快照 `221560a322107092f66c142c7b911439087019f8`；local main `8c36a6b138205613ae1a7c27950b86792da8de1a`；origin/main `d95e4c446d3b4ae5419ce0f58c68057ebabc286a`。原主仓/index/无关任务不写入。
@@ -12,9 +12,9 @@
 | 阶段 | 当前状态 | 操作与验证 |
 | --- | --- | --- |
 | A 保全 | core PASS，原失败保留 | 核对 517368 版本、6 bundles、2 个 dirty 恢复与 source/index 不变；外部新增和变更单列 |
-| B 安全修复 | d356完整verify与源码独审PASS | Node1832/14既有SKIP、Agent199/2既有SKIP、产品Edge823首试、DESIGN41+8、development四步；Rust213/1硬件ignored+integration41绑定不变源；旧失败与FSR01–06修复证据保留 |
-| C 入口与运行 | d356 build/隔离六检查/链接回读PASS；daily FAIL待修 | 默认只读资料恢复banner遮挡账号菜单“查看”（真实P2）；修层级后须新source完整verify/独审/重建及Native/daily重验，不沿用d356 PASS批准新SHA |
-| D 治理同步 | IN_PROGRESS | 保全失效分配历史、刷新当前入口、补需求文档、纠正规则和四功能限制；执行只读 schema/文档/Delivery 检查 |
+| B 安全修复 | 469完整verify与源码独审PASS | Node1832/14既有SKIP、Agent199/2既有SKIP、产品Edge823首试、DESIGN41+8、development四步；Rust213/1硬件ignored+integration41绑定不变源；旧失败与FSR01–06修复证据保留 |
+| C 入口与运行 | 469官方build/隔离六检查/默认两lnk启闭PASS | d356默认资料菜单遮挡真实P2经最小层级与桌面/短手机click回归修复，新source完整verify/独审/重建/Native日常复验通过；默认9项目仍READ_ONLY，原始快照保持 |
+| D 治理同步 | 本地收口 | 149任务仅新增本审计DONE（85DONE/64开放），原148对象与37功能等级/旧证据不变；现有视图/清单生成器更新，规则/链接/版本/Delivery预检，提交后精确HEAD审查与正式Delivery另绑 |
 
 ## 文件归属与串行
 

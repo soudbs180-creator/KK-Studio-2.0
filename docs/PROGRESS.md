@@ -1,10 +1,12 @@
 # 当前进度
 
-## 2026-10-17 审计安全修复与治理同步（IN_PROGRESS / C待验）
+## 2026-10-17 审计安全修复与治理同步（有界本地A–D DONE/PASS）
 
-A保全core通过：517368文件版本、56336959878 B、6 bundles、两个dirty恢复；原main8c/63条dirty及index保持。Desktop/Web2.1.36最终源码`d356791caf807e26dbfc0cde6f3774b06188b156`（tree `090db406613948cd9f6daee53e9a1f8cf1cef9d3`）冻结前后CLEAN，完整`npm run verify` exit0：Node1846=1832PASS/14既有SKIP、Agent201=199PASS/2既有SKIP、产品Edge823/823首试零fail/retry/flaky/skip、DESIGN41单元+8浏览器、development四步PASS；lint/type/UI/format/build通过，advisory/警告保留。Rust源自4368584f后未改，bin213PASS/1既有硬件ignored、integration41PASS，最终check/fmt通过；不是Native界面验收。d356精确独审关闭FSR01–06源代码问题，d356官方build和隔离Native六检查通过，日常链接已保全后恢复；真实默认只读资料发现恢复banner遮挡账号菜单“查看”，C FAIL待修，需新source完整verify/独审/重建与日常复验，整体NOT_VERIFIED。
+最终产品source `4699458de1c3437309b7cdc3f019454104c81fce`、tree `a1905e2aa6e11a24b4c62d829dc82a8f0d566972`，Desktop/Web2.1.36，Mobile2.1.1规划。冻结前后CLEAN的完整`npm run verify` exit0：Node1846=1832PASS/14既有SKIP、Agent201=199PASS/2既有SKIP、产品Edge823/823首试零fail/retry/flaky/skip、DESIGN41单元+8浏览器、development四步，lint/type/UI/format/build通过，警告/advisory保留。469精确增量独审PASS；此前FSR01–06按原SHA关闭。Native五源自436后未变，Rust bin213PASS/1既有硬件ignored+integration41/check/fmt仍按该源身份解释。
 
-D保留26条失效分配历史，149项/84DONE/65开放，原148任务和37功能成熟度/runtimeEvidence不变；本轮审计task保持IN_PROGRESS。现有清单生成器刷新26个容器条目/4个登记worktree，全部deletable=false，旧2026-10-11清单及本轮文档原件另存工程外。7个Draft/69个远端head/3个active rulesets、v2 hook及22PASS/5 Windows平台SKIP按实际收据记录，merge queue与额外required checks未实际强制。75cae26f完整浏览器810PASS/12FAIL、8026中止、各次RED及旧preflight仍在[本轮验证](changes/2026-10-17-audit-repair/verification.md)按原范围保留。统一接入完整scope、真实Provider/Hosted/签名/用户验收保持开放，未删除或移动文件。
+官方EXE b6299445/input a53dee81、隔离Native六检查（含focus、同repo/新epoch/草稿、loaded字节/版本与cleanup0）、默认两个真实lnk正常关闭重开均PASS。默认9项目raw snapshot/identity/shared memory保持，原只读banner遮挡菜单真实FAIL已由条件sidebar popover层级修复并以桌面/短手机普通点击及新Native复验关闭；旧d356完整/隔离PASS、dailyFAIL、75的12browser失败、8026中止和两次旧helper selector失败全部保留。日常恢复成功只代表可信启动和只读保护成立，旧聊天资料仍READ_ONLY；完整迁移/protocol7继续开放。
+
+A保全517368文件版本/56336959878 B/6 bundles/两个dirty恢复，原主仓main8c/63dirty/index/staged0保持；D纠正26失效分配并保留全历史、v2 hook本机核对及远端规则实际差异。本轮新审计任务DONE/PASS，149项合计85DONE/48PARTIAL/12TODO/3BLOCKED/1IN_PROGRESS、64开放；原148任务对象及37功能成熟度/runtimeEvidence保持不变。26容器条目/4worktrees均deletable=false，没有文件删除/移动。未push/merge/改远端或发布；真实Provider/ComfyUI/GPU、完整多聊天/垃圾箱/12AI恢复、VPS/账号、Mobile、签名和用户验收不由本轮代填。最终文档HEAD review/Delivery以提交后收据为准，详见[本轮验证](changes/2026-10-17-audit-repair/verification.md)。
 
 以下各日期段为历史阶段证据，其中“当前/进行中”按其时点理解，不能覆盖本轮入口。
 
