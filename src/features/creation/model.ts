@@ -257,12 +257,21 @@ export function projectHasUnsettledTasks(project: CreationProject): boolean {
   );
 }
 
+export type SidebarSortMode = "manual" | "recent" | "priority";
+
+export interface SidebarPreferences {
+  sortMode: SidebarSortMode;
+  pinnedProjectIds: string[];
+  pinnedGroupIds: string[];
+}
+
 export interface CreationSnapshotV2 {
   version: 2;
   revision: number;
   activeProjectId: string | null;
   projects: CreationProject[];
   projectGroups?: CreationProjectGroup[];
+  sidebarPreferences?: SidebarPreferences;
   homeDraft: CreationDraft;
 }
 
@@ -278,6 +287,7 @@ export interface CreationSnapshotV3 {
   activeProjectId: string | null;
   projects: CreationProject[];
   projectGroups?: CreationProjectGroup[];
+  sidebarPreferences?: SidebarPreferences;
   homeDraft: CreationDraft;
 }
 
@@ -631,6 +641,7 @@ export function normalizeCreationSnapshot(
     activeProjectId?: unknown;
     projects?: unknown;
     projectGroups?: unknown;
+    sidebarPreferences?: unknown;
     homeDraft?: unknown;
   };
   if (
@@ -690,6 +701,13 @@ export function normalizeCreationSnapshot(
   )
     return null;
 
+  const sidebarPreferences = candidate.sidebarPreferences;
+  if (
+    sidebarPreferences !== undefined &&
+    !validSidebarPreferences(sidebarPreferences, projects, projectGroups ?? [])
+  )
+    return null;
+
   if (version === 3) {
     for (const project of projects) {
       if (
@@ -727,6 +745,7 @@ export function normalizeCreationSnapshot(
       activeProjectId,
       projects,
       ...(projectGroups === undefined ? {} : { projectGroups }),
+      ...(sidebarPreferences === undefined ? {} : { sidebarPreferences }),
       homeDraft: normalizeDraft(candidate.homeDraft),
     };
   }
@@ -737,8 +756,45 @@ export function normalizeCreationSnapshot(
     activeProjectId,
     projects,
     ...(projectGroups === undefined ? {} : { projectGroups }),
+    ...(sidebarPreferences === undefined ? {} : { sidebarPreferences }),
     homeDraft: normalizeDraft(candidate.homeDraft),
   };
+}
+
+function validSidebarPreferences(
+  value: unknown,
+  projects: CreationProject[],
+  groups: CreationProjectGroup[],
+): value is SidebarPreferences {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+  const preferences = value as Partial<SidebarPreferences>;
+  if (
+    Object.keys(preferences).some(
+      (key) =>
+        !["sortMode", "pinnedProjectIds", "pinnedGroupIds"].includes(key),
+    ) ||
+    !["manual", "recent", "priority"].includes(preferences.sortMode ?? "")
+  )
+    return false;
+  return (
+    [
+      [preferences.pinnedProjectIds, projects],
+      [preferences.pinnedGroupIds, groups],
+    ] as const
+  ).every(([ids, records]) => {
+    const recordIds = new Set(records.map((record) => record.id));
+    return (
+      Array.isArray(ids) &&
+      new Set(ids).size === ids.length &&
+      ids.every(
+        (id) =>
+          typeof id === "string" &&
+          id.trim().length > 0 &&
+          id.length <= 160 &&
+          recordIds.has(id),
+      )
+    );
+  });
 }
 
 function normalizeDraft(value: unknown): CreationDraft {

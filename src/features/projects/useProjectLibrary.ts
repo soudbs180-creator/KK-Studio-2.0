@@ -103,7 +103,21 @@ export function useProjectLibrary(
   }
   const actions: ProjectLibraryActions = {
     groups: persistence.creation.projectGroups ?? [],
+    sidebarPreferences: persistence.creation.sidebarPreferences ?? {
+      sortMode: "manual",
+      pinnedProjectIds: [],
+      pinnedGroupIds: [],
+    },
     canEdit: canWrite(),
+    onSetSidebarSortMode: (sortMode) => {
+      void change({ type: "set-sidebar-sort", sortMode });
+    },
+    onToggleProjectPin: (id) => {
+      void change({ type: "toggle-project-pin", id });
+    },
+    onToggleGroupPin: (id) => {
+      void change({ type: "toggle-group-pin", id });
+    },
     onRename: (id, name) => {
       void change({ type: "rename-project", id, name });
     },

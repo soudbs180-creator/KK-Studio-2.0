@@ -157,6 +157,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-HOME-LOAD-DRAFT-20261015 | 保护读取期间编辑不覆盖已有首页草稿设置 | PARTIAL | 进行中 | P2 | TASK-CODEX-HOME-20261015 | root | 保留通过的代码子范围与失败证据，随当前组合源码执行完整verify、新Native重建、最终精确独审/Hosted与交付，不重复开发已修复读取合并。 该工作树只作历史承接来源；本轮安全修复见TASK-AUDIT-REPAIR-20261017，未新增活动分配。 |
 | TASK-VERIFY-DEPS-20261015 | 恢复共享依赖清理事故并核验执行边界 | PARTIAL | 进行中 | P1 | TASK-CODEX-HOME-20261015 | root | 保持防复发子范围PASS与旧事故UNKNOWN分离；不在共享依赖安装或清理。原始字节及影响如无证据不得补写；最终当前提交/托管/交付门禁另验。 |
 | TASK-DESIGN-MD-20261015 | 统一DESIGN设计系统与产品UI收敛 | PARTIAL | 进行中 | P1 | none | root | 关闭基础独审问题，将规则落入设置/模型/聊天/画布/项目/素材等实际页面，按Desktop→Web留同状态证据。 |
+| TASK-SIDEBAR-CANVAS-20261018 | 侧栏置顶排序持久化与宽图连线桌面验收 | IN_PROGRESS | 进行中 | P1 | none | root | 先真实RED并最小补全侧栏snapshot/校验/动作/UI/包往返，再真实宽图几何反例与fresh官方Native验收；保留旧失败和父任务边界。 |
 
 ## TASK-LOCAL-GUARDS-20261018 — 修复本地安全边界并核对剩余任务与工作树规则
 
@@ -3029,3 +3030,22 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Next action: 关闭基础独审问题，将规则落入设置/模型/聊天/画布/项目/素材等实际页面，按Desktop→Web留同状态证据。
 - Last verified: 2026-10-15
 - Updated: 2026-10-15
+
+## TASK-SIDEBAR-CANVAS-20261018 — 侧栏置顶排序持久化与宽图连线桌面验收
+
+- Goal: 先完成侧栏偏好持久化，再复证修复宽图几何并完成fresh桌面验收
+- Scope: 现有CreationSnapshot/CAS、sidebar actions、共享result geometry与相应本地回归；不新增存储源或外部能力
+- Display status: 进行中
+- Priority: P1 — 用户明确要求按侧栏持久化→宽图连线→桌面验收推进
+- Requirement refs: ledger:TASK-PROJECT-SIDEBAR-001, ledger:TASK-CANVAS-WIDE-PORT-20261014
+- Feature IDs: FEAT-015, FEAT-023, FEAT-001
+- Owner role: implementation-integrator
+- Acceptance: 项目/组pin及三种sort在Web重载和fresh Native正常启闭后保持，旧资料兼容且失败/CAS/包往返保留原件; 1200x300三缩放×双编辑状态真实连线SVG端点/端口/按钮与DOM几何正确; 完整verify/Rust/官方Native/独审/Delivery通过并同步任务事实，原改动和用户资料保全，无删除移动
+- Branch: `fix/TASK-SIDEBAR-CANVAS-20261018`
+- Worktree: `D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017`
+- Modules: src/features/creation, src/features/projects, src/components/SidebarProjectGroups.tsx, src/components/SidebarProjectHeader.tsx, src/domain/canvasGraph.ts, src-tauri/src/creation_validation.rs, src-tauri/src/project_package_snapshot.rs, tests/unit, tests/browser, tests/desktop
+- Verification: NOT_VERIFIED — 7树110dirty/index/all-ref/raw3已工程外保全，typecheck及42定向基线PASS；实现与新Native验收尚未完成。
+- Evidence: [docs/changes/2026-10-18-sidebar-canvas/intent.md](../../docs/changes/2026-10-18-sidebar-canvas/intent.md), [docs/changes/2026-10-18-sidebar-canvas/spec.md](../../docs/changes/2026-10-18-sidebar-canvas/spec.md), [docs/changes/2026-10-18-sidebar-canvas/plan.md](../../docs/changes/2026-10-18-sidebar-canvas/plan.md), [docs/changes/2026-10-18-sidebar-canvas/verification.md](../../docs/changes/2026-10-18-sidebar-canvas/verification.md), [docs/changes/2026-10-18-sidebar-canvas/review.md](../../docs/changes/2026-10-18-sidebar-canvas/review.md)
+- Next action: 先真实RED并最小补全侧栏snapshot/校验/动作/UI/包往返，再真实宽图几何反例与fresh官方Native验收；保留旧失败和父任务边界。
+- Last verified: 2026-10-18
+- Updated: 2026-10-18

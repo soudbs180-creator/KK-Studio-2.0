@@ -9781,5 +9781,59 @@
       "FEAT-022",
       "FEAT-023"
     ]
+  },
+  {
+    "id": "TASK-SIDEBAR-CANVAS-20261018",
+    "title": "侧栏置顶排序持久化与宽图连线桌面验收",
+    "goal": "先完成侧栏偏好持久化，再复证修复宽图几何并完成fresh桌面验收",
+    "scope": "现有CreationSnapshot/CAS、sidebar actions、共享result geometry与相应本地回归；不新增存储源或外部能力",
+    "acceptance": [
+      "项目/组pin及三种sort在Web重载和fresh Native正常启闭后保持，旧资料兼容且失败/CAS/包往返保留原件",
+      "1200x300三缩放×双编辑状态真实连线SVG端点/端口/按钮与DOM几何正确",
+      "完整verify/Rust/官方Native/独审/Delivery通过并同步任务事实，原改动和用户资料保全，无删除移动"
+    ],
+    "dependencies": [],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "fix/TASK-SIDEBAR-CANVAS-20261018",
+    "worktree": "D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017",
+    "baseSha": "ab2ceef00df6452580b839f29f39747174ad0b68",
+    "status": "IN_PROGRESS",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "priorityRationale": "用户明确要求按侧栏持久化→宽图连线→桌面验收推进",
+    "affectedModules": [
+      "src/features/creation",
+      "src/features/projects",
+      "src/components/SidebarProjectGroups.tsx",
+      "src/components/SidebarProjectHeader.tsx",
+      "src/domain/canvasGraph.ts",
+      "src-tauri/src/creation_validation.rs",
+      "src-tauri/src/project_package_snapshot.rs",
+      "tests/unit",
+      "tests/browser",
+      "tests/desktop"
+    ],
+    "evidence": [
+      "docs/changes/2026-10-18-sidebar-canvas/intent.md",
+      "docs/changes/2026-10-18-sidebar-canvas/spec.md",
+      "docs/changes/2026-10-18-sidebar-canvas/plan.md",
+      "docs/changes/2026-10-18-sidebar-canvas/verification.md",
+      "docs/changes/2026-10-18-sidebar-canvas/review.md"
+    ],
+    "verification": "7树110dirty/index/all-ref/raw3已工程外保全，typecheck及42定向基线PASS；实现与新Native验收尚未完成。",
+    "verificationResult": "NOT_VERIFIED",
+    "updated": "2026-10-18",
+    "lastVerified": "2026-10-18",
+    "nextAction": "先真实RED并最小补全侧栏snapshot/校验/动作/UI/包往返，再真实宽图几何反例与fresh官方Native验收；保留旧失败和父任务边界。",
+    "requirementRefs": [
+      "ledger:TASK-PROJECT-SIDEBAR-001",
+      "ledger:TASK-CANVAS-WIDE-PORT-20261014"
+    ],
+    "featureIds": [
+      "FEAT-015",
+      "FEAT-023",
+      "FEAT-001"
+    ]
   }
 ]

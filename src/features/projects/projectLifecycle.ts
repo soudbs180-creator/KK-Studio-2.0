@@ -2,9 +2,13 @@ import {
   projectHasUnsettledTasks,
   type CreationProjectGroup,
   type CreationSnapshot,
+  type SidebarPreferences,
+  type SidebarSortMode,
 } from "../creation/model.ts";
 
 export type ProjectLifecycleAction =
+  | { type: "set-sidebar-sort"; sortMode: SidebarSortMode }
+  | { type: "toggle-project-pin" | "toggle-group-pin"; id: string }
   | { type: "rename-project"; id: string; name: string }
   | { type: "trash-project" | "restore-project"; id: string }
   | { type: "move-project"; id: string; groupId?: string }
@@ -14,6 +18,10 @@ export type ProjectLifecycleAction =
 
 export interface ProjectLibraryActions {
   groups: CreationProjectGroup[];
+  sidebarPreferences: SidebarPreferences;
+  onSetSidebarSortMode: (sortMode: SidebarSortMode) => void;
+  onToggleProjectPin: (id: string) => void;
+  onToggleGroupPin: (id: string) => void;
   canEdit: boolean;
   onRename: (id: string, name: string) => void;
   onTrash: (id: string) => void;
@@ -35,7 +43,7 @@ function name(value: string): string {
 
 function changeGroup(
   snapshot: CreationSnapshot,
-  action: ProjectLifecycleAction,
+  action: Extract<ProjectLifecycleAction, { id: string }>,
   now: number,
 ): CreationSnapshot {
   const groups = snapshot.projectGroups ?? [];
@@ -71,6 +79,43 @@ export function applyProjectLifecycle(
   now = Date.now(),
 ): CreationSnapshot {
   const groups = snapshot.projectGroups ?? [];
+  if (
+    action.type === "set-sidebar-sort" ||
+    action.type === "toggle-project-pin" ||
+    action.type === "toggle-group-pin"
+  ) {
+    const preferences = snapshot.sidebarPreferences ?? {
+      sortMode: "manual",
+      pinnedProjectIds: [],
+      pinnedGroupIds: [],
+    };
+    if (action.type === "set-sidebar-sort") {
+      if (!["manual", "recent", "priority"].includes(action.sortMode))
+        throw new Error("项目排序方式无效。");
+      return {
+        ...snapshot,
+        sidebarPreferences: { ...preferences, sortMode: action.sortMode },
+      };
+    }
+    const records =
+      action.type === "toggle-project-pin" ? snapshot.projects : groups;
+    if (!records.some((record) => record.id === action.id))
+      throw new Error("项目或分组已不可用，请重新读取。");
+    const key =
+      action.type === "toggle-project-pin"
+        ? "pinnedProjectIds"
+        : "pinnedGroupIds";
+    const ids = preferences[key];
+    return {
+      ...snapshot,
+      sidebarPreferences: {
+        ...preferences,
+        [key]: ids.includes(action.id)
+          ? ids.filter((id) => id !== action.id)
+          : [...ids, action.id],
+      },
+    };
+  }
   if (action.type === "create-group") {
     if (
       !action.id.trim() ||

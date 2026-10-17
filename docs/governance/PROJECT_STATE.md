@@ -11,6 +11,21 @@
 
 # 当前项目事实（2026-10-18）
 
+- `currentTask`: TASK-SIDEBAR-CANVAS-20261018 IN_PROGRESS/NOT_VERIFIED；branch fix/TASK-SIDEBAR-CANVAS-20261018，base ab2ceef00df6452580b839f29f39747174ad0b68，复用D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017，未新建/移动目录。
+- `scope`: 先侧栏pin/sort在现snapshot/CAS持久化，再真实宽图SVG/DOM几何与fresh官方Native；不发模型调用，不扩大为导入合并或新存储。见[Spec](../changes/2026-10-18-sidebar-canvas/spec.md)和[验证](../changes/2026-10-18-sidebar-canvas/verification.md)。
+- `preservation`: 7树110dirty、精确index/diff/status/all-ref bundle及当前raw3复制核验至工程外sidebar-canvas-20261018-69e77b85-6d69-4f51-8602-a6c3236eb6c2，receipt a1fd9341/refsStable=true；原v2/v3、旧失败、主仓和并行树不回退/覆盖。
+- `versions`: 当前实际Native仍2.1.38；本轮共享代码候选递增Desktop/Web2.1.39，Mobile2.1.1不变，未完成新构建与验收。
+- `tasksAndTrees`: 本候选152任务，86DONE/50PARTIAL/11TODO/3BLOCKED/2IN_PROGRESS，开放66；7登记树/14本地分支，approved root5/4不允许新增，现树保留。原两个parent task保持PARTIAL，37功能成熟度/runtimeEvidence不提升。
+- `boundaries`: root独占文档/版本/Git/1421/1423/Native，独立任务限定文件；原main/POC/Web并发资料保全。没有删除/移动、push/merge或发布；Hosted/真实Provider/额度回复/签名和用户验收不由本轮替代。
+
+<!-- CURRENT_FACTS_END -->
+<!-- HISTORICAL_SNAPSHOTS_BEGIN -->
+
+## 2026-10-18 本地安全边界交付时快照（历史，source926/docsab2）
+
+
+# 当前项目事实（2026-10-18）
+
 - `currentTask`: TASK-LOCAL-GUARDS-20261018有界本地DONE/PASS，branch `fix/TASK-LOCAL-GUARDS-20261018`，base e11b87a579a92f89d7d60f9c2f1be15bfb033065，冻结产品source92643d6729caa667a89779cdba7b37eee614f938，物理树仍为`D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017`。最终文档head的补审/Delivery按工程外精确收据裁决，未推送/合并。
 - `sourceVersionBoundary`: Desktop/Web2.1.38已完整本地验证并官方重建，Mobile2.1.1仍规划。EXE SHA1be85bce71ad6afff91c418e4a673abefb74cd1579b059b89ce0380870c4b521，input b400b48363c84b0157bde7cf80044d581317e699180f94b9d386443985c998a0，loaded index-DQjSs-w5.js/SHA23e19332。最终文档只同步事实，不改变已验产品输入。
 - `canonicalRepository`: `D:/kk-studio/KK-Studio-2.0`；本地main8c36a6b1/69dirty，原63项字节/index保护并独立再验。本轮fetch后origin/main f730f1dc32fb2e568dda6d4a52c58b05802d6b6b，Hosted及其他任务远端状态未重新验收；不自动整合并行实现。
@@ -23,8 +38,7 @@
 - `remainingLocal`: 侧栏pin/sort目前useState，持久化未完成；Gateway仍buffered response.json后单帧SSE，真实上游增量流未完成；宽图21/23.333/25%×双状态端口/按钮和10px间距production PASS，连线/同状态Native布局未验。容器coord仅读取主仓旧账本，且git来源claim刷新有丢失风险；该并行工具未接管/改写，不能把看板当本候选全局当前事实。
 - `reclamationPolicy`: 没有文件删除/移动、共享依赖安装、push/merge或发布；54份runtime previous及原件保留。真实Provider/DPAPI/12AI/持久垃圾箱/账号/VPS/Mobile/签名和用户验收按原任务开放。详见[本轮验证](../changes/2026-10-18-local-guards/verification.md)；下方历史只按原时点解释。
 
-<!-- CURRENT_FACTS_END -->
-<!-- HISTORICAL_SNAPSHOTS_BEGIN -->
+
 
 ## 2026-10-17 旧聊天恢复完成时的快照（历史）
 

@@ -97,6 +97,66 @@ fn snapshot(revision: u64) -> Value {
 }
 
 #[test]
+fn sidebar_preferences_round_trip_and_invalid_updates_preserve_original() {
+    for version in [2, 3] {
+        let root = unique_path(
+            &Path::new(env!("CARGO_MANIFEST_DIR"))
+                .parent()
+                .unwrap()
+                .join(".tmp/task-sidebar-canvas-20261018/sidebar-native"),
+            "fixture",
+        );
+        fs::create_dir_all(&root).unwrap();
+        let repo = SnapshotRepository::new(root.join("creation-v2.json"));
+        let mut value = if version == 3 {
+            crate::native_root_authority::migrated_snapshot(&snapshot(1))
+        } else {
+            snapshot(1)
+        };
+        value["activeProjectId"] = Value::Null;
+        value["projectGroups"] = json!([{"id":"g", "name":"Deleted group", "deletedAt":10}]);
+        value["projects"][0]["trashedAt"] = json!(10);
+        value["sidebarPreferences"] =
+            json!({"sortMode":"priority", "pinnedProjectIds":["p1"], "pinnedGroupIds":["g"]});
+        repo.write(value.clone(), None).unwrap();
+        let original = fs::read(&repo.path).unwrap();
+        assert_eq!(
+            SnapshotRepository::new(repo.path.clone())
+                .read()
+                .unwrap()
+                .snapshot
+                .unwrap(),
+            value
+        );
+        let revision = value["revision"].as_u64().unwrap();
+        for bad in [
+            Value::Null,
+            json!([]),
+            json!({}),
+            json!({"sortMode":"alphabetical", "pinnedProjectIds":["p1"], "pinnedGroupIds":["g"]}),
+            json!({"sortMode":"manual", "pinnedProjectIds":"p1", "pinnedGroupIds":[]}),
+            json!({"sortMode":"manual", "pinnedProjectIds":[], "pinnedGroupIds":[1]}),
+            json!({"sortMode":"manual", "pinnedProjectIds":["p1","p1"], "pinnedGroupIds":[]}),
+            json!({"sortMode":"manual", "pinnedProjectIds":[], "pinnedGroupIds":["g","g"]}),
+            json!({"sortMode":"manual", "pinnedProjectIds":["missing"], "pinnedGroupIds":[]}),
+            json!({"sortMode":"manual", "pinnedProjectIds":[], "pinnedGroupIds":["missing"]}),
+            json!({"sortMode":"manual", "pinnedProjectIds":[], "pinnedGroupIds":[], "futureSetting":true}),
+        ] {
+            let mut invalid = value.clone();
+            invalid["revision"] = json!(revision + 1);
+            invalid["sidebarPreferences"] = bad;
+            assert!(repo.write(invalid, Some(revision)).is_err());
+            assert_eq!(fs::read(&repo.path).unwrap(), original);
+        }
+        let mut stale = value.clone();
+        stale["revision"] = json!(revision + 1);
+        stale["sidebarPreferences"]["sortMode"] = json!("recent");
+        assert!(repo.write(stale, Some(revision - 1)).is_err());
+        assert_eq!(fs::read(&repo.path).unwrap(), original);
+    }
+}
+
+#[test]
 fn project_lifecycle_metadata_survives_native_storage_and_invalid_references_fail() {
     let f = Fixture::new();
     let mut value = snapshot(1);

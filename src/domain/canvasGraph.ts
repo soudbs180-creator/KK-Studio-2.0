@@ -19,9 +19,8 @@ function resultCardHeight(item: CanvasCollectionItem): number {
     item.mediaWidth ?? 1,
     item.mediaHeight ?? 1,
   );
-  // Result cards keep 16px inner padding on both sides; size the shell around
-  // the content width so a wide image does not clip the preview.
-  return Math.max(222, 32 + 348 / ratio);
+  // The 380px result body has a 1px border and no inner padding.
+  return 2 + 378 / ratio;
 }
 
 /** Visible card body, excluding labels, upload buttons and the optional composer. */

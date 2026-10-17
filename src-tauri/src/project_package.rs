@@ -1009,6 +1009,50 @@ mod tests {
     }
 
     #[test]
+    fn sidebar_preferences_restore_to_new_root_without_changing_source() {
+        for version in [2, 3] {
+            let source = Path::new(env!("CARGO_MANIFEST_DIR"))
+                .parent()
+                .unwrap()
+                .join(".tmp/task-sidebar-canvas-20261018")
+                .join(format!(
+                    "sidebar-package-{}-{}",
+                    std::process::id(),
+                    nonce()
+                ));
+            fs::create_dir_all(source.join("projects")).unwrap();
+            fs::create_dir_all(source.join("assets")).unwrap();
+            let (snapshots, assets, _, _) = seed(&source);
+            let mut current = snapshots.read().unwrap().snapshot.unwrap();
+            current["revision"] = json!(2);
+            current["activeProjectId"] = Value::Null;
+            current["projects"][0]["trashedAt"] = json!(10);
+            current["projectGroups"] = json!([{"id":"g", "name":"Deleted group", "deletedAt":10}]);
+            current["sidebarPreferences"] =
+                json!({"sortMode":"recent", "pinnedProjectIds":["p1"], "pinnedGroupIds":["g"]});
+            if version == 3 {
+                current = crate::native_root_authority::migrated_snapshot(&current);
+            }
+            snapshots.write(current.clone(), Some(1)).unwrap();
+            let source_snapshot = source.join("projects/creation-v2.json");
+            let source_bytes = fs::read(&source_snapshot).unwrap();
+            let package = source.join("sidebar.kkproject");
+            export_package(&snapshots, &assets, &package).unwrap();
+            preflight_package(&package).unwrap();
+            let restored_root = source.join("restored");
+            import_package(&package, &restored_root).unwrap();
+            let restored = SnapshotRepository::new(restored_root.join("projects/creation-v2.json"));
+            assert_eq!(
+                restored.read().unwrap().snapshot.unwrap()["sidebarPreferences"],
+                current["sidebarPreferences"]
+            );
+            assert_eq!(fs::read(&source_snapshot).unwrap(), source_bytes);
+            assert!(import_package(&package, &restored_root).is_err());
+            assert_eq!(fs::read(&source_snapshot).unwrap(), source_bytes);
+        }
+    }
+
+    #[test]
     fn exports_preflights_and_restores_into_a_fresh_root() {
         let source = fixture_root();
         let (snapshots, assets, asset_id, original) = seed(&source);

@@ -46,7 +46,12 @@ export default function SidebarFolderMenu({
       aria-label="项目组设置"
       onKeyDown={focusMenuItem}
     >
-      <button role="menuitem" onClick={onTogglePinned}>
+      <button
+        role="menuitem"
+        disabled={!canEdit}
+        title={!canEdit ? "项目存储尚未就绪" : undefined}
+        onClick={onTogglePinned}
+      >
         {pinned ? "取消置顶文件夹" : "置顶文件夹"}
       </button>
       <button

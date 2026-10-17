@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-10-18 侧栏持久化、宽图连线与桌面（IN_PROGRESS）
+
+TASK-SIDEBAR-CANVAS-20261018/base ab2ceef0，复用原审计树的新branch；7树110dirty/index/all-ref/raw3已逐字节工程外保全。先以optional快照偏好复用CAS完成置顶/排序，后复证宽图共享anchor与真实DOM偏差、完成fresh官方桌面验收。原2.1.38正常运行；候选2.1.39尚未交付，父任务与功能状态不先提升，见[本轮计划](changes/2026-10-18-sidebar-canvas/plan.md)。
+
 ## 2026-10-18 不依赖额度的本地安全边界（有界本地DONE/PASS）
 
 source92643d67 / Desktop/Web2.1.38，复用原审计实体树、branch fix/TASK-LOCAL-GUARDS-20261018。工作树失败关闭、凭据提交/缓存竞态、真实runner取消/报告故障和Windows大小写环境污染已修复；旧失败与原始资料全部保留。完整verify：Node1942PASS/14既有SKIP、Agent204PASS/2SKIP、Edge826首试零flaky、Design41+8/development4步；Rust226+41、1既有hardware ignore。Standards/Spec精确源码PASS，ENV-001独立复验关闭。官方EXE1be85bce、实际默认两次启动/正常关闭、9项目11聊天21条当前消息及身份/草稿/选择/memory全保持，输入框可编辑。

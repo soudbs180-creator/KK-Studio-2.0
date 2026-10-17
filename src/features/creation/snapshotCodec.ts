@@ -242,12 +242,21 @@ const projectGroupSchema = z
   })
   .strict();
 
+const sidebarPreferencesSchema = z
+  .object({
+    sortMode: z.enum(["manual", "recent", "priority"]),
+    pinnedProjectIds: z.array(id),
+    pinnedGroupIds: z.array(id),
+  })
+  .strict();
+
 const schemaV2 = z.object({
   version: z.literal(2),
   revision: number.int().nonnegative().max(Number.MAX_SAFE_INTEGER),
   activeProjectId: id.nullable(),
   projects: z.array(projectV2Schema),
   projectGroups: z.array(projectGroupSchema).optional(),
+  sidebarPreferences: sidebarPreferencesSchema.optional(),
   homeDraft: draft,
 });
 
@@ -257,6 +266,7 @@ const schemaV3 = z.object({
   activeProjectId: id.nullable(),
   projects: z.array(projectV3Schema),
   projectGroups: z.array(projectGroupSchema).optional(),
+  sidebarPreferences: sidebarPreferencesSchema.optional(),
   homeDraft: draft.or(z.record(z.string(), z.unknown())),
 });
 

@@ -1900,7 +1900,7 @@ dependencies = [
 
 [[package]]
 name = "kk-studio"
-version = "2.1.38"
+version = "2.1.39"
 dependencies = [
  "anyhow",
  "axum",

@@ -8,7 +8,11 @@
 
 本文是最短恢复入口，不是任务状态或产品能力的第二事实源。任务状态只读 [`task-ledger.json`](task-ledger.json)；当前项目事实只读 [`PROJECT_STATE.md`](PROJECT_STATE.md)；历史验证只按带日期的 change package、commit、运行模式和 receipt 回读。
 
-## 当前恢复入口：本地剩余任务安全边界（2026-10-18）
+## 当前恢复入口：侧栏持久化与宽图桌面（2026-10-18）
+
+TASK-SIDEBAR-CANVAS-20261018 IN_PROGRESS/NOT_VERIFIED / fix/TASK-SIDEBAR-CANVAS-20261018；base ab2ceef0，复用原审计物理树，原两个parent保持PARTIAL。先读[Spec](../changes/2026-10-18-sidebar-canvas/spec.md)、[Plan](../changes/2026-10-18-sidebar-canvas/plan.md)、[Verification](../changes/2026-10-18-sidebar-canvas/verification.md)。152项86DONE/66开放，7树14branch/预算5/4拒绝新建；原Native2.1.38仍正常，候选2.1.39新验收待做。7树110dirty及raw3已工程外保全，不重跑旧v2默认迁移，不删移文件/目录，不发新模型请求、不覆盖并行资料。root独占版本/文档/账本/Git/端口/Native，实施者仅改白名单。
+
+## 上轮恢复入口：本地剩余任务安全边界（2026-10-18）
 
 TASK-LOCAL-GUARDS-20261018有界本地DONE/PASS / fix/TASK-LOCAL-GUARDS-20261018，复用原审计物理树，base e11b87a5；source92643d67、Desktop/Web2.1.38已完整本地verify、双轴独审及官方Native验收。先读[验证](../changes/2026-10-18-local-guards/verification.md)和权威PROJECT_STATE；最终文档SHA/Delivery/日常正常启动以工程外精确收据为准。9项目11chat/当前21条消息及v3/同身份保护，未发送新消息，不重跑旧v2默认迁移脚本。
 

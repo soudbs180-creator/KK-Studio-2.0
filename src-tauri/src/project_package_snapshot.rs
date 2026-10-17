@@ -1034,6 +1034,7 @@ pub(super) fn validate(snapshot: &Value) -> Result<(), String> {
             "projects",
             "homeDraft",
             "projectGroups",
+            "sidebarPreferences",
         ],
         &[
             "version",
