@@ -114,7 +114,7 @@ test("平板会话分栏时画布控件左移且标题和输入控件尺寸稳�
   expect(split.sidebarToggle.height).toBe(44);
   expect(split.sidebarToggle.top).toBe(split.navigation.top);
   const headerButtons = await page
-    .locator(".conversation-panel > header > button")
+    .locator(".conversation-header-actions > button")
     .evaluateAll((buttons) =>
       buttons.map((button) => {
         const rect = button.getBoundingClientRect();
@@ -153,7 +153,7 @@ test("平板会话分栏时画布控件左移且标题和输入控件尺寸稳�
   ).toHaveCSS("height", "32px");
   const headerIcons = await page
     .locator(
-      ".conversation-panel > header > button img, .conversation-panel > header > button svg",
+      ".conversation-header-actions > button img, .conversation-header-actions > button svg",
     )
     .evaluateAll((icons) =>
       icons.map((icon) => {

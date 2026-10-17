@@ -216,6 +216,7 @@ test("首页默认账号生图不被旧 image-test 接管，保存后只发一�
     history.push({
       id: "source",
       role: "user",
+      text: String(agent.turns[0].messageText),
       threadId,
       turnId: "home-turn",
       ...(agent.turns[0].messageMetadata as object),
@@ -467,6 +468,7 @@ test("首页失败后手动重试按实际turn来源归档连线且重载不重�
     history.push({
       id: String(turn.messageId),
       role: "user",
+      text: String(turn.messageText),
       threadId,
       turnId,
       ...(turn.messageMetadata as object),

@@ -496,6 +496,8 @@ export default function App() {
     }
   }
   function applyPartnerToHome(instructions: string): string {
+    const blocked = persistence.getWriteBlockReason();
+    if (blocked) return blocked;
     const project = partnerProjectId
       ? creationRef.current.projects.find(
           (item) => item.id === partnerProjectId,
@@ -507,7 +509,10 @@ export default function App() {
     if (project) {
       // The active composer acknowledges its source; inactive Agent drafts
       // cannot receive instructions or redirect them into the API draft.
-      for (const draftKey of [project.id, `google-${project.id}`]) {
+      for (const draftKey of [
+        JSON.stringify([project.id, project.activeChatId ?? null]),
+        `google-${project.id}`,
+      ]) {
         const result = appendToActiveAgentDraft(draftKey, instructions);
         if (result.handled) {
           if (result.applied) setActive("workspace");
@@ -2563,6 +2568,11 @@ export default function App() {
       });
       activeProjectIdRef.current = project.id;
       const transitionToWorkspace = () => {
+        if (
+          creationRef.current.activeProjectId !== project.id ||
+          activePageRef.current !== "landing"
+        )
+          return;
         activePageRef.current = "workspace";
         setActive("workspace");
         setChat(true);
@@ -2572,11 +2582,14 @@ export default function App() {
         typeof document !== "undefined" &&
         "startViewTransition" in document
       ) {
-        (
+        const transition = (
           document as Document & {
-            startViewTransition: (cb: () => void) => void;
+            startViewTransition: (cb: () => void) => {
+              updateCallbackDone: Promise<void>;
+            };
           }
         ).startViewTransition(transitionToWorkspace);
+        await transition.updateCallbackDone;
       } else {
         transitionToWorkspace();
       }
@@ -2921,11 +2934,9 @@ export default function App() {
         return;
       }
       if (active === "workspace" && chat && (!sidebar.narrow || mobileChat)) {
-        if (!sidebar.narrow) {
-          setChat(false);
-          setMobileChat(false);
-          return;
-        }
+        setChat(false);
+        setMobileChat(false);
+        return;
       }
       if (
         !creationRef.current.projects.some(
@@ -3171,6 +3182,11 @@ export default function App() {
                   projectStatus={
                     activeProject && (
                       <div className="project-task-status" aria-live="polite">
+                        {activeProject.name !== "未命名项目" && (
+                          <strong title={activeProject.name}>
+                            {activeProject.name}
+                          </strong>
+                        )}
                         {activeProject.tasks.slice(-1).map((task) => {
                           const retry = taskRetryAvailability(
                             task,

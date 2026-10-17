@@ -193,9 +193,13 @@ export function useCanvasHistory({
     // Pointer renders are previews. A completed gesture commits once; cancel
     // restores its starting snapshot, preserving both the past and the redo.
     if (gestureActive) return;
-    if (canvasHistoryFingerprint(present) === fingerprint) return;
     const history = historyRef.current ?? createCanvasHistory(present, limit);
     history.limit = limit;
+    if (canvasHistoryFingerprint(present) === fingerprint) {
+      historyRef.current = commitCanvasHistory(history, snapshot);
+      presentRef.current = cloneCanvasHistorySnapshot(snapshot);
+      return;
+    }
     if (
       automaticViewport?.current === snapshot.viewport &&
       canvasHistoryFingerprint({ ...snapshot, viewport: present.viewport }) ===
@@ -204,7 +208,10 @@ export function useCanvasHistory({
       // Revealing a selected card is part of that action, rather than a new
       // user pan/zoom. Keep the actual viewport without consuming undo/redo.
       historyRef.current = {
-        ...history,
+        ...commitCanvasHistory(history, {
+          ...snapshot,
+          viewport: present.viewport,
+        }),
         present: cloneCanvasHistorySnapshot(snapshot),
       };
       presentRef.current = cloneCanvasHistorySnapshot(snapshot);

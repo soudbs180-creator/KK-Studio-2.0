@@ -1741,7 +1741,7 @@
   font-size: var(--ui-font-title);
   margin-right: auto;
 }
-.conversation-panel header > div:first-child button {
+.conversation-header-actions > button {
   color: var(--text-secondary);
   display: grid;
   place-items: center;
@@ -1750,17 +1750,13 @@
   flex: 0 0 var(--ui-control-h-compact);
   border-radius: 8px;
 }
-.conversation-panel header > div:first-child button:last-child {
-  position: static;
-  margin-right: -17px;
-}
-.conversation-panel header > div:first-child button img,
-.conversation-panel header > div:first-child button svg {
+.conversation-header-actions > button img,
+.conversation-header-actions > button svg {
   width: var(--ui-icon-md);
   height: var(--ui-icon-md);
 }
-.conversation-panel header > div:first-child button:hover,
-.conversation-panel header > div:first-child button:focus-visible {
+.conversation-header-actions > button:hover,
+.conversation-header-actions > button:focus-visible {
   color: var(--text-primary);
   background: var(--bg-card-hover);
 }

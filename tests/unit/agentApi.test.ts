@@ -40,6 +40,30 @@ const snapshot: CanvasAgentSnapshot = {
   viewport: { x: 0, y: 0, scale: 1 },
 };
 
+test("thread history rejects malformed message text before it reaches the UI", async () => {
+  let messages: unknown;
+  const api = createAgentApi({
+    endpoint: "http://127.0.0.1:17371",
+    token: "synthetic",
+    clientId: "history-validation",
+    fetcher: stubFetch(async () => jsonResponse(200, { ok: true, messages })),
+  });
+  for (messages of [
+    null,
+    {},
+    [null],
+    [{ id: "missing-text", role: "user" }],
+    [{ text: 123 }],
+  ])
+    await assert.rejects(api.readThread("owned-thread"), /历史消息格式/);
+  for (messages of [
+    undefined,
+    [],
+    [{ id: "one", role: "user", text: "retained" }],
+  ])
+    assert.deepEqual((await api.readThread("owned-thread")).messages, messages);
+});
+
 test("所有请求带 token 与 clientId", async () => {
   const urls: string[] = [];
   const fetchImpl = stubFetch(async (url) => {

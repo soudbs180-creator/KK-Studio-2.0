@@ -183,10 +183,22 @@ export function createAgentApi(options: AgentApiClientOptions) {
         `/agent/codex/threads/${encodeURIComponent(threadId)}/resume`,
         { clientId: options.clientId, permissionMode },
       ),
-    readThread: (threadId: string) =>
-      request<AgentThreadResponse>(
+    async readThread(threadId: string) {
+      const history = await request<AgentThreadResponse>(
         `/agent/codex/threads/${encodeURIComponent(threadId)}`,
-      ),
+      );
+      if (
+        history.messages !== undefined &&
+        (!Array.isArray(history.messages) ||
+          history.messages.some(
+            (item) => !item || typeof item.text !== "string",
+          ))
+      )
+        throw new Error(
+          "Agent 历史消息格式无效，未载入该历史，请检查本地服务后重试。",
+        );
+      return history;
+    },
     async generatedImage(threadId: string, itemId: string): Promise<Blob> {
       const response = await fetchImpl(
         endpoint +

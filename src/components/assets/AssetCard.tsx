@@ -33,10 +33,12 @@ export default function AssetCard({
       }
       const current = new AbortController();
       request = current;
-      setFailed(false);
       void loadPreview(asset.id, current.signal)
         .then((src) => {
-          if (!current.signal.aborted) setPreview(src ?? "");
+          if (!current.signal.aborted) {
+            setPreview(src ?? "");
+            setFailed(false);
+          }
         })
         .catch(() => {
           if (!current.signal.aborted) setFailed(true);
@@ -57,7 +59,6 @@ export default function AssetCard({
     };
   }, [asset.id, asset.src, asset.sha256, attempt, loadPreview]);
   const retry = () => {
-    setFailed(false);
     setAttempt((value) => value + 1);
   };
   const src = asset.src || preview;

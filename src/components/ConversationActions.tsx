@@ -222,6 +222,7 @@ export default function ConversationActions({
           state={resolvedState}
           hasDraft={hasContent}
           hasContent={hasContent}
+          debounceMs={resolvedState === "idle" && !onSend ? 0 : undefined}
           disabled={Boolean(
             (submitting && !agentActionState) ||
             (resolvedState === "idle" && submitDisabled),
