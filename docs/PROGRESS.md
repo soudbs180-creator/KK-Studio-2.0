@@ -1,10 +1,10 @@
 # 当前进度
 
-## 2026-10-18 侧栏持久化、宽图连线与桌面（有界本地DONE/PASS）
+## 2026-10-18 侧栏、宽图与桌面最终候选（有界本地DONE/PASS）
 
-产品source793ddaf3 / Desktop-Web2.1.39，optional快照偏好复用现CAS，无新存储或依赖。Web侧栏32与四比例几何24PASS；精确源码完整verify Node1960PASS14skip、Agent204PASS2skip、首次浏览器852项：851常规通过+1flaky、Design41+8/dev4步骤；Rust228PASS1ignore+41集成。官方EXE2164e413/loaded97ca191d，fresh Native四次正常启闭证明pin/unpin/priority、真实创建/改名/垃圾箱恢复/项目库及包往返、宽图六状态；原默认库两周期9项目11聊天21消息及身份/草稿/选择保持。
+source50412d4e / Desktop-Web2.1.39：pin/sort同快照持久化、共享宽图几何和429保存前健康标记已修复；精确完整verify Node1960PASS14skip、Agent204PASS2skip、browser854首试零flaky、Design41+8/dev4。Rust源不变，前冻结228PASS1ignore+41集成绑定相同源码。当前官方EXE e9caebca、loaded 79ae21a2；新fresh四次正常启闭及侧栏/包/宽图六状态PASS，原库两周期9项目/11聊天/22消息及身份/草稿/选择/memory保持。
 
-7树110dirty/index/all-ref/raw3、完整profile2763文件和38产物/所有失败工程外保全，独立hash0差异；main原63项字节/index及现69dirty保护。152任务88DONE/64开放，原侧栏/宽图和本子任务有界技术DONE，37功能状态不提升；3失效旧route完整入历史后改unallocated。7树14branch、预算5/4不提高、不回收。最终精确文档SHA审查/Delivery/私有归档和日常单实例以工程外最终收据裁决；[本轮验证](changes/2026-10-18-sidebar-canvas/verification.md)。没有文件删移、真实生成、push/merge/发布，Hosted/Provider/用户整体验收分开。
+资料完整保全及最新2807文件副本独立逐份hash匹配；main原63字节/index和现69dirty、其他树并发工作保持。152项89DONE/63开放、37功能成熟度不提升；7树14分支/预算5/4，拒绝新增而复用，3失效route完整入历史后unallocated。原793全量852/1flaky、f3b审查拒收、所有RED/夹具失败均保留，当前源码双轴补审通过。最终文档SHA/Delivery/私有归档/日常单实例按工程外收据；[详细验证](changes/2026-10-18-sidebar-canvas/verification.md)。未删移、真实生成、push/merge或发布；真实Provider/Hosted/Mobile/用户整体验收仍开放。
 
 ## 2026-10-18 不依赖额度的本地安全边界（有界本地DONE/PASS）
 

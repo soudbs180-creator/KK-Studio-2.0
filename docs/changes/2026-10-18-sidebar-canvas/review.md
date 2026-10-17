@@ -1,4 +1,16 @@
-# Review：侧栏快照与宽图几何
+# Review：侧栏快照、宽图几何与保存竞态
+
+任务base ab2ceef00df6452580b839f29f39747174ad0b68，当前产品source50412d4e51e07a488bd9ad0e1cee03dd48f58998。最终文档HEAD按工程外双轴独立补审收据裁决，不能将旧审批换SHA。
+
+## 当前源码双轴结论
+
+Spec：原793源码58单测/0findings；3e失败健康标记修复独立20单测/0findings（review-spec-reviewfix-9f3d2061-85b4-485f-bb7c-1a208ecb85e9.json，SHA182dd81fcaf1334e2165cdeeff44abb0ab014713266591e17e269087132e0c07）；3e→504 canonical夹具补审PASS/0findings（review-spec-canonical-519aac9f-d2c4-4be1-9669-b0dd7ba84fbb.json，SHA08d3372a8af85db23bc0be4a49508e8a55515572ffca5859cf48022b778c2825）。
+
+Standards：原STD-ADR-001/P2已由ADR020追加契约关闭；3e产品改动无新阻断，独立15单测通过，但STD-FIXTURE-004/P2要求新普通编辑用例显式V3+serialize（ea100b26收据保留）。504修正公开入口和canonical种子，严格断言及App字节保持，补审PASS/0新问题，P2关闭（review-standards-canonicalfix-02344f9e-d6ae-4506-aca6-4e89e5040ee7.json，SHA402f6fe59dec0e740bf54b381b727f6d2736ee9ae349378ca96af6d49db3c0af）。旧STD-COMMIT-002/P3提交命名偏差为非阻断，保留原SHA，后续中文真实模块scope。
+
+首次f3b事实汇总被SPEC-FINAL-001/P2与STD-EVIDENCE-003/P1拒收，原两份CHANGES REQUIRED保持；当前已纠正852/1flaky事实并修复真实429保存竞态，精确504完整854/0flaky及新EXE/fresh Native/默认原资料两周期均有新证据，详见[验证](verification.md)。这不等于Hosted、发布、人类产品接受或真实Provider完成；精确最终文档补审及Delivery仍以外部最终收据为准。
+
+## 首次793源码审查原记录（历史）
 
 base ab2ceef00df6452580b839f29f39747174ad0b68，产品head793ddaf355e38591cf0da3d66d115b636d68b967；最终文档补审精确SHA以工程外收据为准，不能把旧源码review改名为新HEAD批准。
 

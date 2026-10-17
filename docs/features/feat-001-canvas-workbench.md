@@ -20,7 +20,7 @@
 
 ## 2026-10-18 当前有界本地验证
 
-Desktop/Web2.1.39/source793ddaf3：项目/文件夹pin及manual/recent/priority排序在同CreationSnapshot/CAS持久化，存储未就绪/冲突时真实禁用。Web侧栏32PASS、820窄屏键盘/重载通过；fresh官方Native真实项目/组操作和priority/pin/unpin跨四次正常启闭保持，项目包新root完整往返保留偏好。宽图共享几何按真实主体修复，四比例Web24与fresh Native宽图6状态SVG/DOM/实际拖线/端口和生成按钮命中PASS。首次完整verify852项（1flaky）及原用户库9项目11聊天21消息保全见[本轮验证](../changes/2026-10-18-sidebar-canvas/verification.md)。原任务仅本地技术完成，不提升本功能成熟度/runtimeEvidence；真实Provider/Hosted/发布及用户整体接受另验。
+Desktop/Web2.1.39/source50412d4e：项目/文件夹置顶和manual/recent/priority排序复用同CreationSnapshot/CAS，未就绪或冲突真实禁用。精确完整浏览器854首试PASS/0flaky，包含侧栏及四比例几何回归；fresh当前EXE四次正常启闭验证pin/unpin/priority、真实项目/组操作和新root项目包往返，宽图6状态SVG/DOM/实际拖线/按钮命中通过。原库两周期9项目/11聊天/22消息及身份/草稿/选择保持。验证同时发现并修复429保存前健康标记竞态；原852/1flaky与所有失败保留。[本轮验证](../changes/2026-10-18-sidebar-canvas/verification.md)区分源码、产物、原资料和最终文档收据；本任务只作本地技术关闭，不提升功能成熟度/runtimeEvidence，真实Provider/Hosted/发布和用户整体接受另验。
 
 ## 测试与证据
 

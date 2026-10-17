@@ -5084,7 +5084,7 @@
       "docs/architecture/adr/ADR-020-project-lifecycle-in-creation-snapshot.md",
       "docs/changes/2026-10-18-sidebar-canvas/verification.md"
     ],
-    "verification": "由TASK-SIDEBAR-CANVAS-20261018/source793ddaf3补齐optional同snapshot pin/sort、只读冲突门禁和Native/包校验；production侧栏32PASS/首次全量852项（1flaky）。fresh2.1.39真实UI创建/改名/pin/softtrash/恢复、项目库同ID及组delete/restore通过，非默认priority及pin/unpin在四次正常启闭保持；Web820窄屏键盘通过。原历史路由与验证在verificationHistory；统一仓库、多聊天真实回复和用户整体视觉验收不由此任务代填。",
+    "verification": "source50412d4e / Desktop-Web2.1.39：精确完整verify浏览器854首试通过零flaky、Node1960/Agent204/Design41+8/dev4通过；Rust源码不变，前冻结228及41集成通过、1既存ignore。当前EXE e9caebca，fresh四启闭侧栏pin/unpin/三排序与priority保持、真实项目/组和包往返、宽图6状态通过；原库两周期9项目/11聊天/22消息及身份草稿选择保持。429保存竞态和V3夹具缺口已修复复验，原始失败/拒收保留。最终精确文档/交付/日常收据另验，不代填外部能力。",
     "verificationResult": "PASS",
     "updated": "2026-10-18",
     "requirementRefs": [
@@ -5097,7 +5097,7 @@
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
     "displayStatus": "已完成",
-    "nextAction": "本轮有界本地技术验收完成；真实Provider/Hosted/发布和用户最终产品验收另行，保留全部历史及原件。",
+    "nextAction": "本轮有界本地技术完成；最终文档SHA审查/Delivery/归档/日常还原以工程外收据裁决；真实Provider/Hosted/发布及用户整体验收另行，保留全部资料。",
     "lastVerified": "2026-10-18",
     "ownerRole": "repository-maintainer",
     "verificationHistory": [
@@ -5114,6 +5114,20 @@
         "recordedAt": "2026-10-18",
         "recordBaseSha": "793ddaf355e38591cf0da3d66d115b636d68b967",
         "reason": "完成当前有界验收，原路由与验证全文保留。",
+        "source": "docs/changes/2026-10-18-sidebar-canvas/verification.md"
+      },
+      {
+        "branch": "unallocated",
+        "worktree": "unallocated",
+        "status": "DONE",
+        "displayStatus": "已完成",
+        "verificationResult": "PASS",
+        "verification": "由TASK-SIDEBAR-CANVAS-20261018/source793ddaf3补齐optional同snapshot pin/sort、只读冲突门禁和Native/包校验；production侧栏32PASS/首次全量852项（1flaky）。fresh2.1.39真实UI创建/改名/pin/softtrash/恢复、项目库同ID及组delete/restore通过，非默认priority及pin/unpin在四次正常启闭保持；Web820窄屏键盘通过。原历史路由与验证在verificationHistory；统一仓库、多聊天真实回复和用户整体视觉验收不由此任务代填。",
+        "nextAction": "本轮有界本地技术验收完成；真实Provider/Hosted/发布和用户最终产品验收另行，保留全部历史及原件。",
+        "lastVerified": "2026-10-18",
+        "recordedAt": "2026-10-18",
+        "recordBaseSha": "50412d4e51e07a488bd9ad0e1cee03dd48f58998",
+        "reason": "429保存竞态与V3夹具补修后精确源码全量及新Native复验，旧阶段记录完整保留。",
         "source": "docs/changes/2026-10-18-sidebar-canvas/verification.md"
       }
     ]
@@ -7169,7 +7183,7 @@
       "docs/changes/2026-10-14-agent-canvas-sync/verification.md",
       "docs/changes/2026-10-18-sidebar-canvas/verification.md"
     ],
-    "verification": "source793ddaf3先真实SVG↔DOM6项反例（21%偏13.17749px），共享高度改2+378/ratio。四比例×3缩放×折叠展开production24PASS，精确HEAD首次全量852项（1flaky）；fresh官方2.1.39的1200×300三缩放双状态6PASS，真实拖线持久、SVG起终点/剪线中点/端口/生成按钮命中和10px间距均验。Native包与正常重启保留图关系；无真实生成提交。原始失败/旧端口命中证据均保留。",
+    "verification": "source50412d4e / Desktop-Web2.1.39：精确完整verify浏览器854首试通过零flaky、Node1960/Agent204/Design41+8/dev4通过；Rust源码不变，前冻结228及41集成通过、1既存ignore。当前EXE e9caebca，fresh四启闭侧栏pin/unpin/三排序与priority保持、真实项目/组和包往返、宽图6状态通过；原库两周期9项目/11聊天/22消息及身份草稿选择保持。429保存竞态和V3夹具缺口已修复复验，原始失败/拒收保留。最终精确文档/交付/日常收据另验，不代填外部能力。",
     "verificationResult": "PASS",
     "updated": "2026-10-18",
     "lastVerified": "2026-10-18",
@@ -7180,7 +7194,7 @@
       "derived:full-browser-port-hit-test"
     ],
     "displayStatus": "已完成",
-    "nextAction": "本轮有界本地技术验收完成；真实Provider/Hosted/发布和用户最终产品验收另行，保留全部历史及原件。",
+    "nextAction": "本轮有界本地技术完成；最终文档SHA审查/Delivery/归档/日常还原以工程外收据裁决；真实Provider/Hosted/发布及用户整体验收另行，保留全部资料。",
     "ownerRole": "repository-maintainer",
     "sourceUpdates": [
       {
@@ -7220,6 +7234,20 @@
         "recordedAt": "2026-10-18",
         "recordBaseSha": "793ddaf355e38591cf0da3d66d115b636d68b967",
         "reason": "完成当前有界验收，原路由与验证全文保留。",
+        "source": "docs/changes/2026-10-18-sidebar-canvas/verification.md"
+      },
+      {
+        "branch": "unallocated",
+        "worktree": "unallocated",
+        "status": "DONE",
+        "displayStatus": "已完成",
+        "verificationResult": "PASS",
+        "verification": "source793ddaf3先真实SVG↔DOM6项反例（21%偏13.17749px），共享高度改2+378/ratio。四比例×3缩放×折叠展开production24PASS，精确HEAD首次全量852项（1flaky）；fresh官方2.1.39的1200×300三缩放双状态6PASS，真实拖线持久、SVG起终点/剪线中点/端口/生成按钮命中和10px间距均验。Native包与正常重启保留图关系；无真实生成提交。原始失败/旧端口命中证据均保留。",
+        "nextAction": "本轮有界本地技术验收完成；真实Provider/Hosted/发布和用户最终产品验收另行，保留全部历史及原件。",
+        "lastVerified": "2026-10-18",
+        "recordedAt": "2026-10-18",
+        "recordBaseSha": "50412d4e51e07a488bd9ad0e1cee03dd48f58998",
+        "reason": "429保存竞态与V3夹具补修后精确源码全量及新Native复验，旧阶段记录完整保留。",
         "source": "docs/changes/2026-10-18-sidebar-canvas/verification.md"
       }
     ]
@@ -9883,8 +9911,8 @@
     "branch": "fix/TASK-SIDEBAR-CANVAS-20261018",
     "worktree": "D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017",
     "baseSha": "ab2ceef00df6452580b839f29f39747174ad0b68",
-    "status": "IN_PROGRESS",
-    "displayStatus": "进行中",
+    "status": "DONE",
+    "displayStatus": "已完成",
     "priority": "P1",
     "priorityRationale": "用户明确要求按侧栏持久化→宽图连线→桌面验收推进",
     "affectedModules": [
@@ -9907,11 +9935,11 @@
       "docs/changes/2026-10-18-sidebar-canvas/verification.md",
       "docs/changes/2026-10-18-sidebar-canvas/review.md"
     ],
-    "verification": "侧栏/宽图source793ddaf3有界本地实现和旧39Native已验；首次完整verify852项含1flaky，独审发现真实429健康标记晚于保存/失败终态，当前补修并重新完整验证，最终交付不放行。",
-    "verificationResult": "NOT_VERIFIED",
+    "verification": "source50412d4e / Desktop-Web2.1.39：精确完整verify浏览器854首试通过零flaky、Node1960/Agent204/Design41+8/dev4通过；Rust源码不变，前冻结228及41集成通过、1既存ignore。当前EXE e9caebca，fresh四启闭侧栏pin/unpin/三排序与priority保持、真实项目/组和包往返、宽图6状态通过；原库两周期9项目/11聊天/22消息及身份草稿选择保持。429保存竞态和V3夹具缺口已修复复验，原始失败/拒收保留。最终精确文档/交付/日常收据另验，不代填外部能力。",
+    "verificationResult": "PASS",
     "updated": "2026-10-18",
     "lastVerified": "2026-10-18",
-    "nextAction": "先确定性保存阻塞反例，再修正429/部分成功健康标记时序；重新完整verify/官方Native/最终精确审核，原失败保留。",
+    "nextAction": "本轮有界本地技术完成；最终文档SHA审查/Delivery/归档/日常还原以工程外收据裁决；真实Provider/Hosted/发布及用户整体验收另行，保留全部资料。",
     "requirementRefs": [
       "ledger:TASK-PROJECT-SIDEBAR-001",
       "ledger:TASK-CANVAS-WIDE-PORT-20261014"
@@ -9934,6 +9962,20 @@
         "recordedAt": "2026-10-18",
         "recordBaseSha": "f3b1e41b0bbe3d89bdc86c1063de1dae1f11ee35",
         "reason": "最终事实审核撤回零flaky错误汇总；429持久化前冷却标记存在真实竞态，补修复验。",
+        "source": "docs/changes/2026-10-18-sidebar-canvas/verification.md"
+      },
+      {
+        "branch": "fix/TASK-SIDEBAR-CANVAS-20261018",
+        "worktree": "D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017",
+        "status": "IN_PROGRESS",
+        "displayStatus": "进行中",
+        "verificationResult": "NOT_VERIFIED",
+        "verification": "侧栏/宽图source793ddaf3有界本地实现和旧39Native已验；首次完整verify852项含1flaky，独审发现真实429健康标记晚于保存/失败终态，当前补修并重新完整验证，最终交付不放行。",
+        "nextAction": "先确定性保存阻塞反例，再修正429/部分成功健康标记时序；重新完整verify/官方Native/最终精确审核，原失败保留。",
+        "lastVerified": "2026-10-18",
+        "recordedAt": "2026-10-18",
+        "recordBaseSha": "50412d4e51e07a488bd9ad0e1cee03dd48f58998",
+        "reason": "429保存竞态与V3夹具补修后精确源码全量及新Native复验，旧阶段记录完整保留。",
         "source": "docs/changes/2026-10-18-sidebar-canvas/verification.md"
       }
     ]
