@@ -1015,6 +1015,72 @@ for (const outcome of [
     );
   });
 
+test("App stale HOME prompt callback preserves settings loaded after its render", () => {
+  const creationRef = { current: emptySnapshot() };
+  const stale = { ...creationRef.current.homeDraft, prompt: "new input" };
+  creationRef.current.homeDraft = {
+    ...emptyDraft(),
+    outputCount: 8,
+    privacyMode: "local_only",
+    providerConnectionId: "saved-provider",
+    modelSelection: {
+      source: "api",
+      model: "saved-model",
+      kind: "image",
+      connectionId: "saved-provider",
+    },
+    attachments: [
+      { id: "saved-ref", name: "saved.png", mime: "image/png", size: 1 },
+    ],
+  };
+  const saved = structuredClone(creationRef.current.homeDraft);
+  const loaded = evaluate(`export ${appFunction("updateHomeDraft")}`, {
+    creationRef,
+    commitCreation(next: typeof creationRef.current) {
+      creationRef.current = next;
+    },
+  });
+  const update = loaded.updateHomeDraft as (
+    draft: CreationDraft,
+    changes?: Partial<CreationDraft>,
+  ) => void;
+  update(stale, { prompt: stale.prompt });
+  const actual = creationRef.current.homeDraft;
+  assert.equal(actual.prompt, "new input");
+  assert.equal(actual.outputCount, 8);
+  assert.equal(actual.privacyMode, saved.privacyMode);
+  assert.equal(actual.providerConnectionId, saved.providerConnectionId);
+  assert.deepEqual(actual.modelSelection, saved.modelSelection);
+  assert.deepEqual(actual.attachments, saved.attachments);
+});
+
+test("App HOME update without a patch still replaces the complete draft", () => {
+  const creationRef = { current: emptySnapshot() };
+  creationRef.current.homeDraft = {
+    ...emptyDraft(),
+    prompt: "old input",
+    outputCount: 8,
+    providerConnectionId: "saved-provider",
+    attachments: [
+      { id: "saved-ref", name: "saved.png", mime: "image/png", size: 1 },
+    ],
+  };
+  const loaded = evaluate(`export ${appFunction("updateHomeDraft")}`, {
+    creationRef,
+    commitCreation(next: typeof creationRef.current) {
+      creationRef.current = next;
+    },
+  });
+  (loaded.updateHomeDraft as (draft: CreationDraft) => void)(emptyDraft());
+  assert.equal(creationRef.current.homeDraft.prompt, "");
+  assert.equal(creationRef.current.homeDraft.outputCount, 1);
+  assert.equal(creationRef.current.homeDraft.providerConnectionId, undefined);
+  assert.deepEqual(
+    structuredClone(creationRef.current.homeDraft.attachments),
+    [],
+  );
+});
+
 for (const state of ["saved", "unavailable"] as const)
   test(`App blank project defaults to scoped Codex text and keeps canvas preferences when storage is ${state}`, () => {
     const existing = projectFixture();

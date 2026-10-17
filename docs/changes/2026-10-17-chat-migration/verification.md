@@ -56,3 +56,17 @@ clean d92e1761ab283fd00b712a86ce1358bbab780e61 / tree3b1dd058，Standards新收�
 Agent生产包在d92重新从专属fresh production安装完成，4282文件逐一核验原位复制，旧EXE/receipt/两个runtime共8566文件先保全至`native-before-build-77f4180d-4db2-4f7c-bd4d-dfec24a630ce`；无发布目录旋转。后续只改App/测试、vendor Agent源未变，此包需与最终Native收据共同绑定。Native新EXE尚未构建。
 
 体积预算用同Node24.20.0/zlib默认参数，从固定469原源在fresh隔离fixture重建出相同入口`index-BlBp6PG3.js`（SHA0d47ae2c/701677B/gzip230670B）；d92入口`index-CEpPnlcV.js`（SHA2f49b21d/722752B/gzip237396B），增长6726B，小于16384B预算。首次Windows tar解码历史中文截图路径失败，残留和日志保留，改为只提取实际构建输入的ZIP且路径包含性校验后成功，不影响原仓。收据`.tmp/bundle-baseline-165d2589-31a5-4c93-8baf-19a1b7a9de3d/bundle-budget.json`；最终App改变后另测最终入口，不把该数字冒充新包。
+
+## 第五候选c8406ea0：完整verify退出0，两个flaky继续诊断
+
+clean c8406ea07eb01e71156cd96db356c740031835b1完整`npm run verify`退出0，日志`full-verify-c8406ea0.log`：Node1936=1922PASS/14既有SKIP、Agent206=204PASS/2既有SKIP、lint/type/UI/format/build通过，产品Edge826中824首试通过、2项重试通过；DESIGN41单位与8浏览器、development四步骤通过。产品run84c228c1完整保留，不能称零flaky。
+
+首个flaky为旧首页8张在输入后意外变为可提交，正在核对加载完成与旧render草稿回调；第二个为侧栏Escape取消前读取保护。独立源码对账确认后者seedProjects仍用返回version2的emptySnapshot，在首屏已完成v3/marker2迁移后写入高revision local2，正确触发禁止降级屏障；修fixture为明确canonical3并serialize，不改产品保护、超时或有效取消断言。下一冻结候选重新验收。
+
+当前c840双轴源码收据：Standards `standards-final-recheck-bdc3ef20-c0ef-4fef-b6ad-b126a779c266.json` SHA c130cff2ee148499f007b81e91ff929a50ee4f1175997560d0170e2f0b420d57；Spec `spec-final-944c2ddd-a694-42f2-adfb-ad86fb305779.json` SHA 79317cac761d06e722e51870e7eb92b7515bd0fde094d02df1c30362e2d77dba。仅绑定该源码，不自动批准后续修改。
+
+22:21另存primary69文件与index/diff，原63项逐字节、HEAD及index仍一致；fresh工程外primary-concurrent-0392a06e-53cc-49ad-bd08-c9e0e3bdabe7收据PASS，SHA0097607881977021a4b241630dbfb4c34ccc1b79d2d11e1f70c4362c8f8ce3dd。默认资料仍未迁移。
+
+首页加载交接确认有真实产品竞态：StartComposer传明确patch，但App.updateHomeDraft忽略patch，旧render整份默认草稿可覆盖刚加载的数量、隐私、参考图和模型连接。真实App函数RED为1!==8（home-loaded-draft-red-3e636f6f-5ecd-400e-9b8d-824eb7b3d83e.log），仅在存在patch时基于最新ref合并；无patch的显式整份替换保持。两新增回归及邻域148/148、root实际函数46/46通过。旧首试无trace，不虚称重播了该次准确时序。
+
+生产重建后两份相关浏览器文件关闭重试并各重复3次，60/60首试PASS（two-flaky-repairs-repeat3.log）。侧栏种子明确canonical3、保留所有原断言；迁移防降级屏障未改。下一clean HEAD再跑完整verify，Native/default仍在门禁后执行。

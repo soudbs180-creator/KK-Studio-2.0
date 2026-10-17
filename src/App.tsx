@@ -493,7 +493,11 @@ export default function App() {
   ): void {
     const next = {
       ...creationRef.current,
-      homeDraft: { ...draft, updatedAt: Date.now() },
+      homeDraft: {
+        ...(changes ? creationRef.current.homeDraft : draft),
+        ...changes,
+        updatedAt: Date.now(),
+      },
     };
     commitCreation(next, changes);
   }
