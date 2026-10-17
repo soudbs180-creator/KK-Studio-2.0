@@ -3,6 +3,7 @@ import { isTauri } from "@tauri-apps/api/core";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import {
   emptySnapshot,
+  snapshotWriteBlockReason,
   type CreationAttachment,
   type CreationDraft,
   type CreationSnapshot,
@@ -21,7 +22,13 @@ import {
 } from "./nativeClose";
 
 export type SaveState =
-  "loading" | "saved" | "saving" | "read_error" | "write_error" | "conflict";
+  | "loading"
+  | "saved"
+  | "saving"
+  | "read_error"
+  | "write_error"
+  | "conflict"
+  | "read_only";
 
 type LoadingDraft = {
   base: CreationSnapshot;
@@ -115,6 +122,7 @@ export function useCreationStorage(
     null,
   );
   const ready = useRef(false);
+  const readOnlyReason = useRef<string | undefined>(undefined);
   const dirty = useRef(false);
   const acknowledged = useRef(0);
   const queue = useRef(Promise.resolve());
@@ -132,6 +140,36 @@ export function useCreationStorage(
     next: CreationSnapshot,
     homeDraftChanges?: Partial<CreationDraft>,
   ): void {
+    const blocked = readOnlyReason.current ?? snapshotWriteBlockReason(next);
+    if (blocked) {
+      if (!readOnlyReason.current) setRecoveryDraft(creationRef.current);
+      readOnlyReason.current = blocked;
+      ready.current = false;
+      dirty.current = false;
+      setState("read_only");
+      setMessage(blocked);
+      // Read-only navigation may select existing projects/chats without editing their data.
+      const current = creationRef.current;
+      const viewed = {
+        ...current,
+        activeProjectId: current.projects.some(
+          (project) => project.id === next.activeProjectId,
+        )
+          ? next.activeProjectId
+          : current.activeProjectId,
+        projects: current.projects.map((project) => {
+          const selected = next.projects.find(
+            (candidate) => candidate.id === project.id,
+          )?.activeChatId;
+          return selected && project.chats?.[selected]
+            ? { ...project, activeChatId: selected }
+            : project;
+        }),
+      };
+      creationRef.current = viewed;
+      setCreation(viewed);
+      return;
+    }
     if (loadingDraft.current) {
       if (homeDraftChanges)
         Object.assign(loadingDraft.current.changes, homeDraftChanges);
@@ -192,6 +230,23 @@ export function useCreationStorage(
     try {
       const loaded = await loading;
       if (!loaded || !isCurrentRead(sequence)) return;
+      const blocked =
+        loaded.readOnlyReason ?? snapshotWriteBlockReason(loaded.snapshot);
+      if (blocked) {
+        readOnlyReason.current = blocked;
+        ready.current = false;
+        dirty.current = false;
+        acknowledged.current = loaded.durableRevision ?? 0;
+        loadedOnce.current = true;
+        loadingDraft.current = null;
+        creationRef.current = loaded.snapshot;
+        setRecoveryDraft(loaded.recoveryDraft ?? loaded.snapshot);
+        setCreation(loaded.snapshot);
+        setMessage(blocked);
+        setState("read_only");
+        setLoadEpoch((epoch) => epoch + 1);
+        return;
+      }
       const reconciled = reconcile
         ? await reconcile(loaded.snapshot)
         : loaded.snapshot;
@@ -218,6 +273,7 @@ export function useCreationStorage(
       acknowledged.current = loaded.durableRevision ?? 0;
       loadedOnce.current = true;
       loadingDraft.current = null;
+      readOnlyReason.current = undefined;
       ready.current = true;
       creationRef.current = next;
       dirty.current = next.revision > acknowledged.current;
@@ -379,5 +435,10 @@ export function useCreationStorage(
     retryRead: () => startRead(true),
     retrySave: save,
     flush,
+    getWriteBlockReason: () =>
+      readOnlyReason.current ??
+      (ready.current
+        ? undefined
+        : "项目存储尚未就绪，已暂停执行；请先处理读取或恢复提示。"),
   };
 }

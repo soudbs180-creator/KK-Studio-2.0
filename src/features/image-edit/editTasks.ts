@@ -81,9 +81,10 @@ export async function prepareEditInputs(
     local = active.regions.length > 0;
   const context = {
     originalPrompt:
-      source.imageEditContext?.originalPrompt ?? source.prompt ?? project.prompt,
-    originalAssetId:
-      source.imageEditContext?.originalAssetId ?? source.assetId,
+      source.imageEditContext?.originalPrompt ??
+      source.prompt ??
+      project.prompt,
+    originalAssetId: source.imageEditContext?.originalAssetId ?? source.assetId,
     lastInstruction: source.imageEditContext?.lastInstruction,
     referenceAssetIds:
       source.imageEditContext?.referenceAssetIds ??

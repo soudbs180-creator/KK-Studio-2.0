@@ -24,7 +24,10 @@ export default function ComposerSlashMenu({
 
   if (commands.length === 0) {
     return (
-      <div className="composer-autocomplete-menu slash-menu empty" role="listbox">
+      <div
+        className="composer-autocomplete-menu slash-menu empty"
+        role="listbox"
+      >
         <span className="autocomplete-empty-tip">未找到匹配的斜杠操作</span>
       </div>
     );

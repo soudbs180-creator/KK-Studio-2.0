@@ -1,13 +1,11 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { isProviderAuthAllowed } from "../../src/domain/providerProtocol.ts";
-import type { ProviderConnection } from "../../domain/providerConnections.ts";
-import {
-  createGenerationAdapter,
-  createDefaultTwelveAiPersistence,
-} from "../../src/integrations/generation/providerAdapterFactory.ts";
+import type { ProviderConnection } from "../../src/domain/providerConnections.ts";
+import { createGenerationAdapter } from "../../src/integrations/generation/providerAdapterFactory.ts";
 import {
   TwelveAiTaskAdapter,
+  TwelveAiTaskError,
   type TwelveAiGenerationRequest,
   type TwelveAiSubmissionReceipt,
 } from "../../src/integrations/generation/twelveAiTaskAdapter.ts";
@@ -58,7 +56,8 @@ test("isProviderAuthAllowed permits authMode 'none' for local_comfyui on loopbac
   assert.equal(
     isProviderAuthAllowed({
       baseUrl: "http://127.0.0.1:8188",
-      protocol: "local_comfyui" as unknown as import("../../src/domain/providerProtocol.ts").ProviderProtocol,
+      protocol:
+        "local_comfyui" as unknown as import("../../src/domain/providerProtocol.ts").ProviderProtocol,
       authMode: "none",
     }),
     true,
@@ -152,66 +151,58 @@ test("isProviderAuthAllowed enforces protocol restrictions on loopback addresses
 });
 
 // =============================================================================
-// 2. 12AI Task Adapter Default Persistence Delegate & clean submit execution
+// 2. 12AI requires an explicit host persistence port before submission.
 // =============================================================================
 
-test("createDefaultTwelveAiPersistence correctly tracks claims and updates atomically", async () => {
-  const persistence = createDefaultTwelveAiPersistence("test-conn-1");
-  assert.equal(persistence.connectionId, "test-conn-1");
+const twelveAiConnection: ProviderConnection = {
+  id: "twelve-ai-conn-test",
+  provider: "12AI",
+  kind: "user_byok",
+  displayName: "12AI Managed Test",
+  baseUrl: "https://api.12ai.org/v1",
+  credentialRef: "cred-12ai-valid",
+  capabilities: {
+    modalities: ["image"],
+    operations: ["generate"],
+    maxOutputs: 1,
+    async: true,
+  },
+  state: "active",
+  concurrencyLimit: 2,
+};
 
-  const receipt: TwelveAiSubmissionReceipt = {
-    connectionId: "test-conn-1",
-    idempotencyKey: "intent-key-101",
-    acceptance: "unknown",
-  };
-
-  // First claim should succeed with created: true
-  const claim1 = await persistence.claimSubmission(receipt);
-  assert.deepEqual(claim1, { created: true });
-
-  // Second claim with same key should return created: false and the existing receipt
-  const claim2 = await persistence.claimSubmission({
-    ...receipt,
-    acceptance: "rejected",
+test("factory refuses paid submission without a host persistence port", async () => {
+  let calls = 0;
+  const adapter = createGenerationAdapter(twelveAiConnection, {
+    fetch: async () => {
+      calls++;
+      return Response.json({});
+    },
+    resolveCredential: async () => {
+      calls++;
+      return "synthetic";
+    },
   });
-  assert.equal(claim2.created, false);
-  if (!claim2.created) {
-    assert.equal(claim2.receipt.idempotencyKey, "intent-key-101");
-    assert.equal(claim2.receipt.acceptance, "unknown");
-  }
-
-  // Persisting updated receipt should update stored state
-  await persistence.persistSubmissionReceipt({
-    ...receipt,
-    acceptance: "accepted",
-    providerJobId: "job-101",
-  });
-
-  const claim3 = await persistence.claimSubmission(receipt);
-  assert.equal(claim3.created, false);
-  if (!claim3.created) {
-    assert.equal(claim3.receipt.acceptance, "accepted");
-    assert.equal(claim3.receipt.providerJobId, "job-101");
-  }
+  assert.ok(adapter instanceof TwelveAiTaskAdapter);
+  await assert.rejects(
+    adapter.submit({
+      prompt: "synthetic",
+      model: "gpt-image-2.5-flare",
+      attachments: [],
+      requestedOutputs: 1,
+      idempotencyKey: "intent-without-port",
+      signal: new AbortController().signal,
+    }),
+    (error: unknown) =>
+      error instanceof TwelveAiTaskError &&
+      error.reason === "receipt_persistence_required",
+  );
+  assert.equal(calls, 0);
 });
 
-test("createGenerationAdapter supplies default persistence delegate and submits cleanly", async () => {
-  const connection: ProviderConnection = {
-    id: "twelve-ai-conn-test",
-    provider: "12AI",
-    kind: "user_byok",
-    displayName: "12AI Managed Test",
-    baseUrl: "https://api.12ai.org/v1",
-    credentialRef: "cred-12ai-valid",
-    capabilities: {
-      modalities: ["image"],
-      operations: ["generate"],
-      maxOutputs: 1,
-      async: true,
-    },
-    state: "active",
-    concurrencyLimit: 2,
-  };
+test("createGenerationAdapter uses an explicit persistence port and submits once", async () => {
+  const connection = twelveAiConnection;
+  const receipts = new Map<string, TwelveAiSubmissionReceipt>();
 
   let fetchCalled = false;
   const mockFetch: typeof fetch = async (url, init) => {
@@ -231,9 +222,24 @@ test("createGenerationAdapter supplies default persistence delegate and submits 
   const adapter = createGenerationAdapter(connection, {
     fetch: mockFetch,
     resolveCredential: async () => "test-secret-key-123",
+    submissionPersistence: {
+      connectionId: connection.id,
+      async claimSubmission(receipt) {
+        const existing = receipts.get(receipt.idempotencyKey);
+        if (existing) return { created: false, receipt: { ...existing } };
+        receipts.set(receipt.idempotencyKey, { ...receipt });
+        return { created: true };
+      },
+      async persistSubmissionReceipt(receipt) {
+        receipts.set(receipt.idempotencyKey, { ...receipt });
+      },
+    },
   });
 
-  assert.ok(adapter instanceof TwelveAiTaskAdapter, "Adapter should be TwelveAiTaskAdapter");
+  assert.ok(
+    adapter instanceof TwelveAiTaskAdapter,
+    "Adapter should be TwelveAiTaskAdapter",
+  );
 
   const request: TwelveAiGenerationRequest = {
     prompt: "A scenic mountain",
@@ -244,9 +250,12 @@ test("createGenerationAdapter supplies default persistence delegate and submits 
     signal: new AbortController().signal,
   };
 
-  // adapter.submit should execute cleanly without throwing TwelveAiTaskError("receipt_persistence_required")
   const result = await adapter.submit(request);
-  assert.equal(fetchCalled, true, "Fetch should have been called for task submit");
+  assert.equal(
+    fetchCalled,
+    true,
+    "Fetch should have been called for task submit",
+  );
   assert.equal(result.providerJobId, "task_twelve_12345");
   assert.equal(result.status, "queued");
   assert.equal(result.async, true);
@@ -254,12 +263,16 @@ test("createGenerationAdapter supplies default persistence delegate and submits 
   // Subsequent submit with same intent key returns cached submission without second fetch
   fetchCalled = false;
   const secondResult = await adapter.submit(request);
-  assert.equal(fetchCalled, false, "Second submit with same idempotencyKey should not re-post");
+  assert.equal(
+    fetchCalled,
+    false,
+    "Second submit with same idempotencyKey should not re-post",
+  );
   assert.equal(secondResult.providerJobId, "task_twelve_12345");
 });
 
 // =============================================================================
-// 3. agentConnection: Strict Model Allowlist Strong Validation
+// 3. External generation grants do not constrain Codex's own reasoning model.
 // =============================================================================
 
 function setupTestAgentConnection() {
@@ -356,11 +369,15 @@ test("agentConnection allowlist validation allows allowed models", async () => {
     modelAllowlist: ["gpt-4o", "claude-3-5-sonnet"],
   });
 
-  assert.equal(result.ok, true, `Expected allowed model to succeed, got: ${result.error}`);
+  assert.equal(
+    result.ok,
+    true,
+    `Expected allowed model to succeed, got: ${result.error}`,
+  );
   conn.disconnect();
 });
 
-test("agentConnection allowlist validation rejects unwhitelisted models with strict error", async () => {
+test("external generation allowlist does not block the Codex reasoning model", async () => {
   const { conn, getTurnCalls } = setupTestAgentConnection();
   await conn.connect();
   await new Promise((r) => setImmediate(r));
@@ -371,17 +388,12 @@ test("agentConnection allowlist validation rejects unwhitelisted models with str
     modelAllowlist: ["gpt-4o", "claude-3-5-sonnet"],
   });
 
-  assert.equal(result.ok, false);
-  assert.match(
-    result.error ?? "",
-    /模型 claude-3-opus 不在允许调用的模型白名单中/,
-    "Error message must state model is not in allowlist",
-  );
-  assert.equal(getTurnCalls(), initialTurns, "Must not execute postTurn when model is unwhitelisted");
+  assert.equal(result.ok, true);
+  assert.equal(getTurnCalls(), initialTurns + 1);
   conn.disconnect();
 });
 
-test("agentConnection allowlist validation rejects when modelAllowlist is empty []", async () => {
+test("empty external generation allowlist still allows a Codex reasoning turn", async () => {
   const { conn, getTurnCalls } = setupTestAgentConnection();
   await conn.connect();
   await new Promise((r) => setImmediate(r));
@@ -392,17 +404,12 @@ test("agentConnection allowlist validation rejects when modelAllowlist is empty 
     modelAllowlist: [],
   });
 
-  assert.equal(result.ok, false);
-  assert.match(
-    result.error ?? "",
-    /模型 gpt-4o 不在允许调用的模型白名单中/,
-    "Empty allowlist must reject all models",
-  );
-  assert.equal(getTurnCalls(), initialTurns, "Must not execute postTurn on empty allowlist");
+  assert.equal(result.ok, true);
+  assert.equal(getTurnCalls(), initialTurns + 1);
   conn.disconnect();
 });
 
-test("agentConnection allowlist validation handles selection objects correctly", async () => {
+test("Codex selection remains independent of the external generation allowlist", async () => {
   // Selection with allowed model
   const { conn: allowedConn } = setupTestAgentConnection();
   await allowedConn.connect();
@@ -415,8 +422,8 @@ test("agentConnection allowlist validation handles selection objects correctly",
   assert.equal(allowed.ok, true);
   allowedConn.disconnect();
 
-  // Selection with disallowed model
-  const { conn: disallowedConn } = setupTestAgentConnection();
+  // A Codex selection is not an external generation tool invocation.
+  const { conn: disallowedConn, getTurnCalls } = setupTestAgentConnection();
   await disallowedConn.connect();
   await new Promise((r) => setImmediate(r));
 
@@ -424,8 +431,8 @@ test("agentConnection allowlist validation handles selection objects correctly",
     selection: { source: "codex", model: "gemini-2.0-flash", kind: "text" },
     modelAllowlist: ["gpt-4o"],
   });
-  assert.equal(disallowed.ok, false);
-  assert.match(disallowed.error ?? "", /模型 gemini-2.0-flash 不在允许调用的模型白名单中/);
+  assert.equal(disallowed.ok, true);
+  assert.equal(getTurnCalls(), 1);
   disallowedConn.disconnect();
 });
 
@@ -491,7 +498,11 @@ test("agentHost blocks run_generation when model is not in options.modelAllowlis
     blockedResult.rejected[0].reason,
     /模型 unauthorized-external-tool-v9 不在允许调用的模型白名单中/,
   );
-  assert.equal(generateCalls, 1, "generate must not be called when model is blocked");
+  assert.equal(
+    generateCalls,
+    1,
+    "generate must not be called when model is blocked",
+  );
 });
 
 test("agentHost blocks run_generation when options.modelAllowlist is empty []", async () => {
@@ -535,7 +546,10 @@ test("agentHost blocks run_generation when options.modelAllowlist is empty []", 
 
   assert.equal(result.applied.length, 0);
   assert.equal(result.rejected.length, 1);
-  assert.match(result.rejected[0].reason, /模型 dall-e-3 不在允许调用的模型白名单中/);
+  assert.match(
+    result.rejected[0].reason,
+    /模型 dall-e-3 不在允许调用的模型白名单中/,
+  );
   assert.equal(generateCalls, 0);
 });
 

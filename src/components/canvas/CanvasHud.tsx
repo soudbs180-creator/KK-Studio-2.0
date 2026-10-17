@@ -29,7 +29,9 @@ export default function CanvasHud({
   onViewModeChange?: (mode: "canvas" | "browser") => void;
   children: ReactNode;
 }) {
-  const [internalViewMode, setInternalViewMode] = useState<"canvas" | "browser">("canvas");
+  const [internalViewMode, setInternalViewMode] = useState<
+    "canvas" | "browser"
+  >("canvas");
   const viewMode = controlledViewMode ?? internalViewMode;
 
   const handleModeChange = (mode: "canvas" | "browser") => {
@@ -43,9 +45,7 @@ export default function CanvasHud({
       onPointerDown={(event) => event.stopPropagation()}
       onWheel={(event) => event.stopPropagation()}
     >
-      <div className="canvas-hud-actions">
-        {projectStatus}
-      </div>
+      <div className="canvas-hud-actions">{projectStatus}</div>
       <div className="canvas-hud-right">
         {children}
         <TaskPanel

@@ -66,10 +66,12 @@ export default function ConversationMessages({
           <button
             aria-label="复制消息"
             onClick={() => {
-              void navigator.clipboard.writeText(cleanContent || message.content).then(
-                () => onStatus("已复制消息"),
-                () => onStatus("复制失败，请手动选择文本复制。"),
-              );
+              void navigator.clipboard
+                .writeText(cleanContent || message.content)
+                .then(
+                  () => onStatus("已复制消息"),
+                  () => onStatus("复制失败，请手动选择文本复制。"),
+                );
             }}
           >
             <UiIcon name="copy" size={14} />

@@ -306,7 +306,10 @@ fn validate_v2_messages_and_draft(project: &Value) -> Result<(), String> {
     unique_ids(messages, "messages")?;
     for message in messages {
         if !message["content"].is_string()
-            || !matches!(message["role"].as_str(), Some("user" | "system" | "assistant"))
+            || !matches!(
+                message["role"].as_str(),
+                Some("user" | "system" | "assistant")
+            )
         {
             return Err(corrupt("messages"));
         }
@@ -351,7 +354,10 @@ fn validate_v3_chats(project: &Value) -> Result<(), String> {
                 return Err(corrupt("chat.modelAllowlist 超出长度限制"));
             }
             for model_id in allowlist {
-                if !model_id.as_str().is_some_and(|s| !s.trim().is_empty() && s.chars().count() <= 120) {
+                if !model_id
+                    .as_str()
+                    .is_some_and(|s| !s.trim().is_empty() && s.chars().count() <= 120)
+                {
                     return Err(corrupt("chat.modelAllowlist 条目无效"));
                 }
             }
@@ -364,7 +370,10 @@ fn validate_v3_chats(project: &Value) -> Result<(), String> {
             unique_ids(messages, "chat.messages")?;
             for message in messages {
                 if !message["content"].is_string()
-                    || !matches!(message["role"].as_str(), Some("user" | "assistant" | "system"))
+                    || !matches!(
+                        message["role"].as_str(),
+                        Some("user" | "assistant" | "system")
+                    )
                 {
                     return Err(corrupt("chat.messages"));
                 }

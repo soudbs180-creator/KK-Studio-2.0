@@ -664,7 +664,8 @@
   margin: 0;
 }
 
-.start-composer :is(.start-model-picker > button, .composer-ext-skill > button) {
+.start-composer
+  :is(.start-model-picker > button, .composer-ext-skill > button) {
   box-sizing: border-box;
   height: var(--kk-control-h-md);
   min-height: var(--kk-control-h-md);
@@ -677,13 +678,15 @@
   transition: all 0.16s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.start-composer :is(.start-model-picker > button, .composer-ext-skill > button):hover {
+.start-composer
+  :is(.start-model-picker > button, .composer-ext-skill > button):hover {
   background: var(--neutral-selected);
   border-color: var(--border-default);
   color: var(--text-primary);
 }
 
-.start-composer :is(.start-model-picker > button, .composer-ext-skill > button):active {
+.start-composer
+  :is(.start-model-picker > button, .composer-ext-skill > button):active {
   transform: scale(0.96);
 }
 
@@ -941,7 +944,9 @@
   min-width: 58px;
 }
 
-.conversation-panel .chat-composer :is(.chat-skill-trigger, .chat-plugin-trigger) {
+.conversation-panel
+  .chat-composer
+  :is(.chat-skill-trigger, .chat-plugin-trigger) {
   box-sizing: border-box;
   width: 58px;
   min-width: 58px;
@@ -958,13 +963,17 @@
   transition: all 0.16s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.conversation-panel .chat-composer :is(.chat-skill-trigger, .chat-plugin-trigger):hover {
+.conversation-panel
+  .chat-composer
+  :is(.chat-skill-trigger, .chat-plugin-trigger):hover {
   background: var(--neutral-selected);
   border-color: var(--border-default);
   color: var(--text-primary);
 }
 
-.conversation-panel .chat-composer :is(.chat-skill-trigger, .chat-plugin-trigger):active {
+.conversation-panel
+  .chat-composer
+  :is(.chat-skill-trigger, .chat-plugin-trigger):active {
   transform: scale(0.96);
 }
 
@@ -1244,7 +1253,8 @@
 @keyframes composerFlyToCorner {
   0% {
     opacity: 0.85;
-    transform: translate(calc(50vw - 100% + 140px), calc(-50vh + 180px)) scale(1.18);
+    transform: translate(calc(50vw - 100% + 140px), calc(-50vh + 180px))
+      scale(1.18);
   }
   65% {
     transform: translate(0, -8px) scale(0.97);
@@ -1259,7 +1269,7 @@
 }
 
 .conversation-panel .chat-composer.is-entering-from-home {
-  animation: composerFlyToCorner 0.52s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation: composerFlyToCorner 0.52s cubic-bezier(0.34, 1.56, 0.64, 1)
+    forwards;
   will-change: transform, opacity;
 }
-

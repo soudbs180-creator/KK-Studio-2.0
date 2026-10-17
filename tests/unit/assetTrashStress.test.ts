@@ -39,14 +39,17 @@ function loadTsxModule(filePath: string) {
   return exports;
 }
 
-// Mock implementation mirroring useAssetTrash in src/components/assets/AssetTrashActions.tsx
-function createAssetTrashHarness(initial: {
-  trashedAssets?: Asset[];
-  onRestoreAsset?: (assetId: string) => void;
-  onPermanentlyDeleteAsset?: (assetId: string) => void;
-  onDeleteAsset?: (assetId: string) => void;
-  onAdd?: (assets: Asset[], subject: boolean) => void;
-} = {}) {
+// Legacy reference-model cases below do not exercise production persistence.
+// Actual hook/port/DOM protection is covered by assetTrashPersistence.test.ts and audit-safety.spec.ts.
+function createAssetTrashHarness(
+  initial: {
+    trashedAssets?: Asset[];
+    onRestoreAsset?: (assetId: string) => void;
+    onPermanentlyDeleteAsset?: (assetId: string) => void;
+    onDeleteAsset?: (assetId: string) => void;
+    onAdd?: (assets: Asset[], subject: boolean) => void;
+  } = {},
+) {
   let localTrash: Asset[] = [];
   let message = "";
   const trashedAssets = initial.trashedAssets ?? [];
@@ -117,10 +120,18 @@ const mockAsset2: Asset = {
 };
 
 test("1. DOM selectors and static markup conformance with verify-all-features.mjs", () => {
-  const assetPanelSource = readFileSync(
-    resolve(process.cwd(), "src/components/assets/AssetPanel.tsx"),
-    "utf8",
-  );
+  const assetPanelSource = [
+    "AssetPanel.tsx",
+    "AssetPanelNavigation.tsx",
+    "AssetActions.tsx",
+  ]
+    .map((file) =>
+      readFileSync(
+        resolve(process.cwd(), "src/components/assets", file),
+        "utf8",
+      ),
+    )
+    .join("\n");
 
   // Check data-testid="asset-panel"
   assert.ok(
@@ -148,13 +159,11 @@ test("1. DOM selectors and static markup conformance with verify-all-features.mj
 
   // Check empty state text exact match
   assert.ok(
-    assetPanelSource.includes('tab === "trash" ? "垃圾箱为空"'),
+    assetPanelSource.includes('"垃圾箱为空"'),
     "Empty trash title must be '垃圾箱为空'",
   );
   assert.ok(
-    assetPanelSource.includes(
-      'tab === "trash" ? "已删除的素材会显示在这里，可随时还原。"',
-    ),
+    assetPanelSource.includes('"已删除的素材会显示在这里，可随时还原。"'),
     "Empty trash description must be '已删除的素材会显示在这里，可随时还原。'",
   );
 
@@ -262,7 +271,10 @@ test("4. useAssetTrash soft delete -> restore cycle", () => {
   assert.ok(state.trashedIds.has("asset-2"));
   assert.equal(state.message, "素材已还原");
   assert.deepEqual(restoredItems, ["asset-1"]);
-  assert.deepEqual(addedItems.map((a) => a.id), ["asset-1"]);
+  assert.deepEqual(
+    addedItems.map((a) => a.id),
+    ["asset-1"],
+  );
 
   // Restore mockAsset2
   harness.handleRestore("asset-2");
@@ -271,7 +283,10 @@ test("4. useAssetTrash soft delete -> restore cycle", () => {
   assert.equal(state.trashedIds.size, 0);
   assert.equal(state.message, "素材已还原");
   assert.deepEqual(restoredItems, ["asset-1", "asset-2"]);
-  assert.deepEqual(addedItems.map((a) => a.id), ["asset-1", "asset-2"]);
+  assert.deepEqual(
+    addedItems.map((a) => a.id),
+    ["asset-1", "asset-2"],
+  );
 });
 
 test("5. useAssetTrash permanent delete logic", () => {
@@ -371,7 +386,9 @@ test("8. App.tsx isolation analysis: soft delete without onDeleteAsset vs with o
   harnessA.handleSoftDelete(mockAsset1);
   let stateA = harnessA.getState();
   // Within AssetPanel, source filters by !trashedIds.has(a.id)
-  const visibleCanvasAssetsA = parentAssets.filter((a) => !stateA.trashedIds.has(a.id));
+  const visibleCanvasAssetsA = parentAssets.filter(
+    (a) => !stateA.trashedIds.has(a.id),
+  );
   assert.equal(visibleCanvasAssetsA.length, 1);
   assert.equal(visibleCanvasAssetsA[0].id, "asset-2");
   assert.equal(stateA.activeTrash.length, 1);
@@ -384,8 +401,14 @@ test("8. App.tsx isolation analysis: soft delete without onDeleteAsset vs with o
 
   // Notice: Because parentAssets was not pruned and trashedIds is now empty,
   // visibleCanvasAssetsA would resurface mockAsset1 if parentAssets is unchanged!
-  const visibleAfterPermanentDelete = parentAssets.filter((a) => !stateA.trashedIds.has(a.id));
-  assert.equal(visibleAfterPermanentDelete.length, 2, "Highlighting architecture edge case: item resurfaces if parent doesn't prune assets");
+  const visibleAfterPermanentDelete = parentAssets.filter(
+    (a) => !stateA.trashedIds.has(a.id),
+  );
+  assert.equal(
+    visibleAfterPermanentDelete.length,
+    2,
+    "Highlighting architecture edge case: item resurfaces if parent doesn't prune assets",
+  );
 
   // Case B: When parent DOES provide onDeleteAsset (ideal contract)
   parentAssets = [mockAsset1, mockAsset2];
@@ -421,4 +444,3 @@ test("8. App.tsx isolation analysis: soft delete without onDeleteAsset vs with o
   assert.equal(parentAssets.length, 1);
   assert.equal(parentTrashed.length, 0);
 });
-

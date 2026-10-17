@@ -14,9 +14,12 @@ mod validation;
 pub(crate) use validation::labels;
 
 #[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct ReadResult {
     pub status: String,
     pub snapshot: Option<Value>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub read_only_reason: Option<String>,
 }
 
 pub struct SnapshotRepository {
@@ -49,6 +52,50 @@ fn decode(raw: Vec<u8>) -> Result<Stored, String> {
         .map_err(|_| "corrupt: 项目快照不是有效的 JSON，已保留原文件".to_string())?;
     validation::validate(&value)?;
     Ok(Stored { value, raw })
+}
+
+fn write_block_reason(snapshot: &Value) -> Option<&'static str> {
+    if snapshot["version"].as_u64()? != 2 {
+        return Some("多聊天格式迁移与写入保护尚未完成，当前快照仅供恢复查看。");
+    }
+    for project in snapshot["projects"].as_array()? {
+        let Some(chats) = project.get("chats").filter(|value| !value.is_null()) else {
+            if project
+                .get("activeChatId")
+                .is_some_and(|value| !value.is_null() && value != "")
+            {
+                return Some("聊天身份不完整，已暂停执行以保留原件。");
+            }
+            continue;
+        };
+        let Some(chats) = chats.as_object() else {
+            return Some("聊天身份不完整，已暂停执行以保留原件。");
+        };
+        if chats
+            .values()
+            .any(|chat| chat["isTemporary"].as_bool() == Some(true))
+        {
+            return Some("临时聊天隔离尚未完成，当前记录仅供恢复查看。");
+        }
+        if chats.len() != 1 {
+            return Some("多聊天执行隔离尚未完成，当前记录仅供恢复查看。");
+        }
+        let Some(active) = project["activeChatId"].as_str() else {
+            return Some("聊天身份不完整，已暂停执行以保留原件。");
+        };
+        let Some(chat) = chats.get(active).filter(|chat| chat["id"] == active) else {
+            return Some("聊天身份不完整，已暂停执行以保留原件。");
+        };
+        if let (Some(thread), Some(legacy)) = (
+            chat["agentThreadId"].as_str(),
+            project["agentThreadId"].as_str(),
+        ) {
+            if !thread.is_empty() && !legacy.is_empty() && thread != legacy {
+                return Some("聊天与原项目的 Agent 线程身份冲突，已暂停执行以保留原件。");
+            }
+        }
+    }
+    None
 }
 
 impl SnapshotRepository {
@@ -137,6 +184,9 @@ impl SnapshotRepository {
     pub fn read(&self) -> Result<ReadResult, String> {
         let _transaction = self.access.begin(&self.lock, || self.file_lock())?;
         let current = self.current()?;
+        let read_only_reason = self
+            .current_write_block_reason(&current)?
+            .map(str::to_string);
         Ok(ReadResult {
             status: if current.recovered {
                 "recovered"
@@ -147,13 +197,62 @@ impl SnapshotRepository {
             }
             .to_string(),
             snapshot: current.stored.map(|stored| stored.value),
+            read_only_reason,
         })
+    }
+
+    fn current_write_block_reason(
+        &self,
+        current: &Current,
+    ) -> Result<Option<&'static str>, String> {
+        let mut reason = current
+            .stored
+            .as_ref()
+            .and_then(|stored| write_block_reason(&stored.value));
+        if let Some(raw) = &current.corrupt_main {
+            reason = reason.or_else(|| {
+                serde_json::from_slice::<Value>(raw)
+                    .ok()
+                    .as_ref()
+                    .and_then(write_block_reason)
+            });
+        }
+        if let Some(raw) = read_bytes(&self.path.with_extension("json.bak"))? {
+            match decode(raw.clone()) {
+                Ok(backup) => reason = reason.or_else(|| write_block_reason(&backup.value)),
+                Err(error) if error.starts_with("corrupt:") => {
+                    reason = reason.or_else(|| {
+                        serde_json::from_slice::<Value>(&raw)
+                            .ok()
+                            .as_ref()
+                            .and_then(write_block_reason)
+                    });
+                }
+                Err(error) => return Err(error),
+            }
+        }
+        Ok(reason)
+    }
+
+    // Owned TaskHost and snapshots hold the same root transaction before this check.
+    pub(crate) fn ensure_writable_in_transaction(&self) -> Result<(), String> {
+        let current = self.current()?;
+        if let Some(reason) = self.current_write_block_reason(&current)? {
+            return Err(format!("readonly: {reason}"));
+        }
+        Ok(())
     }
 
     pub fn write(&self, snapshot: Value, expected_revision: Option<u64>) -> Result<(), String> {
         validation::validate(&snapshot)?;
         let _transaction = self.access.begin(&self.lock, || self.file_lock())?;
         let current = self.current()?;
+        if let Some(reason) = self
+            .current_write_block_reason(&current)?
+            .or_else(|| write_block_reason(&snapshot))
+        {
+            return Err(format!("readonly: {reason}"));
+        }
         let revision = current
             .stored
             .as_ref()

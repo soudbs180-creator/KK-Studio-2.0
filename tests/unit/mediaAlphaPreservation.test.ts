@@ -7,7 +7,10 @@ import {
 } from "../../src/features/creation/mediaAlphaPreservation.ts";
 import { resolveImageAttachments } from "../../src/features/creation/resolveAttachments.ts";
 import { imageResultContext } from "../../src/features/image-edit/context.ts";
-import type { CreationAttachment, CreationTask } from "../../src/features/creation/model.ts";
+import type {
+  CreationAttachment,
+  CreationTask,
+} from "../../src/features/creation/model.ts";
 import type { StoredGeneratedAsset } from "../../src/features/creation/assetRepository.ts";
 
 test("resolveTargetImageMime rejects image/jpeg when alpha exists", () => {
@@ -152,10 +155,14 @@ test("detectAlphaTransparency correctly identifies transparent vs opaque buffers
   );
 
   // Test with Uint8ClampedArray (Canvas ImageData representation)
-  const opaqueClamped = new Uint8ClampedArray([255, 255, 255, 255, 10, 20, 30, 255]);
+  const opaqueClamped = new Uint8ClampedArray([
+    255, 255, 255, 255, 10, 20, 30, 255,
+  ]);
   assert.equal(detectAlphaTransparency(opaqueClamped), false);
 
-  const transparentClamped = new Uint8ClampedArray([255, 255, 255, 255, 10, 20, 30, 100]);
+  const transparentClamped = new Uint8ClampedArray([
+    255, 255, 255, 255, 10, 20, 30, 100,
+  ]);
   assert.equal(detectAlphaTransparency(transparentClamped), true);
 });
 
@@ -165,7 +172,8 @@ test("resolveImageAttachments retains originalAssetId and preserves alpha MIME",
 
   const rootAsset: StoredGeneratedAsset = {
     assetId: rootAssetId,
-    preview: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP4z8DwHwAFAAH/iZk9HQAAAABJRU5ErkJggg==",
+    preview:
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP4z8DwHwAFAAH/iZk9HQAAAABJRU5ErkJggg==",
     sha256: "0123456789abcdef01234567".padEnd(64, "0"),
     mime: "image/png",
     tags: ["原图"],
@@ -175,7 +183,8 @@ test("resolveImageAttachments retains originalAssetId and preserves alpha MIME",
   const derivedAsset: StoredGeneratedAsset = {
     assetId: derivedAssetId,
     parentId: rootAssetId, // Chained from root
-    preview: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP4z8DwHwAFAAH/iZk9HQAAAABJRU5ErkJggg==",
+    preview:
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP4z8DwHwAFAAH/iZk9HQAAAABJRU5ErkJggg==",
     sha256: "89abcdef0123456789abcdef".padEnd(64, "0"),
     mime: "image/png",
     tags: ["编辑输出"],
@@ -232,7 +241,15 @@ test("imageResultContext retains root originalAssetId across successive edit tas
       },
     ],
     submissionState: "terminal",
-    outputs: [{ index: 0, status: "succeeded", model: "test-model", assetId: gen1AssetId, createdAt: Date.now() }],
+    outputs: [
+      {
+        index: 0,
+        status: "succeeded",
+        model: "test-model",
+        assetId: gen1AssetId,
+        createdAt: Date.now(),
+      },
+    ],
     createdAt: Date.now(),
   };
 

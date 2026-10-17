@@ -12,6 +12,9 @@ export default function TopBar({
   onNewWindow,
   onNewChat,
   onNewTempChat,
+  newWindowDisabledReason,
+  newChatDisabledReason,
+  newTempChatDisabledReason,
   onUndo,
   onRedo,
 }: {
@@ -21,6 +24,9 @@ export default function TopBar({
   onNewWindow?: () => void;
   onNewChat?: () => void;
   onNewTempChat?: () => void;
+  newWindowDisabledReason?: string;
+  newChatDisabledReason?: string;
+  newTempChatDisabledReason?: string;
   onUndo?: () => void;
   onRedo?: () => void;
 }) {
@@ -52,10 +58,14 @@ export default function TopBar({
     return () => media.removeEventListener("change", change);
   }, [restoreHiddenFocus]);
   useDismissible(menu !== "", navRef, () => setMenu(""), triggerRef);
-  const entries: Record<string, { text: string; action: () => void }[]> = {
+  const entries: Record<
+    string,
+    { text: string; action: () => void; disabledReason?: string }[]
+  > = {
     文件: [
       {
         text: "新建窗口",
+        disabledReason: newWindowDisabledReason,
         action: () =>
           onNewWindow
             ? onNewWindow()
@@ -63,10 +73,18 @@ export default function TopBar({
       },
       {
         text: "新建聊天",
+        disabledReason:
+          newChatDisabledReason ??
+          (!onNewChat ? "多聊天隔离尚未完成，暂不可新建聊天。" : undefined),
         action: () => (onNewChat ? onNewChat() : onOpen("chat")),
       },
       {
         text: "新建临时聊天",
+        disabledReason:
+          newTempChatDisabledReason ??
+          (!onNewTempChat
+            ? "临时聊天的历史与记忆隔离尚未完成，暂不可用。"
+            : undefined),
         action: () => (onNewTempChat ? onNewTempChat() : onOpen("chat")),
       },
       { text: "项目库", action: () => onOpen("projects") },
@@ -136,6 +154,8 @@ export default function TopBar({
                 {items.map((item) => (
                   <button
                     key={item.text}
+                    disabled={Boolean(item.disabledReason)}
+                    title={item.disabledReason}
                     onClick={() => {
                       setMenu("");
                       triggerRef.current?.focus({ preventScroll: true });

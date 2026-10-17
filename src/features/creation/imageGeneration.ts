@@ -8,7 +8,10 @@ import { modelSupportsKind, type CreationAttachment } from "./model.ts";
 import { getSessionApiKey, loadApiKey } from "./providerCredentials.ts";
 import { loadStoredAsset } from "./assetRepository.ts";
 import { resolveImageAttachments } from "./resolveAttachments.ts";
-import { ProviderSubmissionError } from "./providerSubmission.ts";
+import {
+  assertSynchronousProviderSubmission,
+  ProviderSubmissionError,
+} from "./providerSubmission.ts";
 import { readModelCatalogs } from "../models/modelCatalog.ts";
 import { createGenerationAdapter } from "../../integrations/generation/providerAdapterFactory.ts";
 import { readProviderConnections } from "./providerRegistry.ts";
@@ -364,13 +367,39 @@ export async function generateImages(options: {
   )
     throw new Error("编辑蒙版原件缺失或格式无效，本次未发送。");
 
-  // Check if an adapter handles this provider (e.g. 12AI or ComfyUI)
   const connections = readProviderConnections();
-  const matchedConn = connections.find(
-    (c) =>
-      c.id === options.providerConnectionId ||
-      c.baseUrl === baseUrl,
+  const endpointConnections = connections.filter(
+    (connection) =>
+      connection.baseUrl?.replace(/\/$/, "") === baseUrl.replace(/\/$/, ""),
   );
+  let matchedConn: ProviderConnection | undefined;
+  if (options.providerConnectionId !== undefined) {
+    const matches = connections.filter(
+      (connection) => connection.id === options.providerConnectionId,
+    );
+    if (
+      matches.length !== 1 ||
+      !endpointConnections.includes(matches[0]) ||
+      matches[0].credentialRef !== options.credentialRef
+    )
+      throw new ProviderSubmissionError(
+        "原绑定连接已移除或地址、凭据身份已变化，请重新确认连接；本次未提交。",
+      );
+    matchedConn = matches[0];
+  } else {
+    const matches = endpointConnections.filter(
+      (connection) => connection.credentialRef === options.credentialRef,
+    );
+    if (
+      matches.length > 1 ||
+      (!options.credentialRef && endpointConnections.length > 1)
+    )
+      throw new ProviderSubmissionError(
+        "同一地址存在多个账号绑定，请明确选择连接后重试；本次未提交。",
+      );
+    matchedConn = matches[0];
+  }
+  assertSynchronousProviderSubmission(baseUrl, model);
   const candidateConnection: ProviderConnection | undefined =
     matchedConn ??
     (baseUrl
@@ -401,11 +430,7 @@ export async function generateImages(options: {
     ? createGenerationAdapter(candidateConnection)
     : null;
 
-  if (
-    adapter &&
-    (adapter.connection.kind === "local_comfyui" ||
-      twelveAiApiBase(adapter.connection.baseUrl))
-  ) {
+  if (adapter?.connection.kind === "local_comfyui") {
     options.beforeRequest?.();
     options.onRequestStart?.();
     const job = await adapter.submit({
@@ -531,6 +556,7 @@ export async function generateImage(options: {
   attachments: CreationAttachment[];
   signal: AbortSignal;
   providerBaseUrl?: string;
+  providerConnectionId?: string;
   credentialRef?: string;
 }): Promise<string> {
   return (await generateImages({ ...options, count: 1 })).sources[0];

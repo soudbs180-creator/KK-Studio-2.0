@@ -83,6 +83,12 @@ export interface CanvasAgentSnapshot {
   viewport: CanvasViewportData;
 }
 
+/** null identifies an unchanged legacy project with no chat record. */
+export interface ChatScope {
+  projectId: string;
+  chatId: string | null;
+}
+
 export type AgentPermissionMode = "request" | "automatic" | "full";
 
 export type AgentReasoningEffort =

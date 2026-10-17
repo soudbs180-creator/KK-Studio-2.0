@@ -222,8 +222,9 @@ export class MemoryService {
     reply: string,
     sourceThreadId?: string,
     expectedVersion = this.mutationVersion,
+    stillCurrent: () => boolean = () => true,
   ): Promise<number> {
-    if (!this.isEnabled() || !reply) {
+    if (!this.isEnabled() || !reply || !stillCurrent()) {
       return 0;
     }
     const candidates: Array<{ content: string; confidence: number }> = [];
@@ -242,9 +243,13 @@ export class MemoryService {
       return 0;
     }
     return this.enqueueMutation(async () => {
-      if (!this.isEnabled() || expectedVersion !== this.mutationVersion)
-        return 0;
+      const canSave = () =>
+        this.isEnabled() &&
+        expectedVersion === this.mutationVersion &&
+        stillCurrent();
+      if (!canSave()) return 0;
       const store = await this.storage.read();
+      if (!canSave()) return 0;
       const timestamp = this.now().toISOString();
       const existing = new Set(
         store.records.map((record) => record.fingerprint),
@@ -255,6 +260,7 @@ export class MemoryService {
           break;
         }
         const fingerprint = await fingerprintFor(candidate.content);
+        if (!canSave()) return 0;
         if (existing.has(fingerprint)) {
           continue;
         }
@@ -272,11 +278,7 @@ export class MemoryService {
         });
         existing.add(fingerprint);
       }
-      if (
-        additions.length === 0 ||
-        !this.isEnabled() ||
-        expectedVersion !== this.mutationVersion
-      ) {
+      if (additions.length === 0 || !canSave()) {
         return 0;
       }
       await this.storage.write(

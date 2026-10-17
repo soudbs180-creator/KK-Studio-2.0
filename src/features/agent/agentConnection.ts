@@ -16,6 +16,7 @@ import {
   type AgentTurnResponse,
   type AgentThreadResponse,
   type AgentActivityDetail,
+  type ChatScope,
 } from "./agentTypes.ts";
 import {
   AgentApiError,
@@ -57,7 +58,10 @@ import {
   createTurnFreezingController,
   type AgentActionState,
 } from "./agentTurnFreezing.ts";
-export type { AgentActionState, TurnFreezingController } from "./agentTurnFreezing.ts";
+export type {
+  AgentActionState,
+  TurnFreezingController,
+} from "./agentTurnFreezing.ts";
 import {
   codexGenerationPrompt,
   codexReasoningModel,
@@ -69,6 +73,9 @@ export interface AgentOpResult {
   tasks?: Array<{ taskId: string; nodeId: string; status: string }>;
 }
 export interface AgentBridge {
+  getChatScope?(): ChatScope | null;
+  getExecutionBlockReason?(): string | undefined;
+  getModelAllowlist?(): readonly string[] | undefined;
   readAgentThread?(): string | undefined;
   saveAgentThread?(threadId: string, projectId: string): void | Promise<void>;
   knownAgentProjects?(): readonly { projectId: string; threadId?: string }[];
@@ -92,7 +99,7 @@ export interface AgentBridge {
   getSnapshot(): CanvasAgentSnapshot | null;
   applyOps(
     ops: CanvasAgentOp[],
-    context?: { signal: AbortSignal },
+    context?: { signal: AbortSignal; modelAllowlist?: readonly string[] },
   ): AgentOpResult | Promise<AgentOpResult>;
 }
 export type AgentConnectionStatus =
@@ -221,6 +228,8 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
   let bridge: AgentBridge | null = null;
   let epoch = 0;
   let projectId = "";
+  let connectedScopeKey = "";
+  let turnModelAllowlist: readonly string[] | undefined;
   let initializing = false;
   let connectionFlight: { promise: Promise<void>; ready: boolean } | null =
     null;
@@ -240,6 +249,34 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
   const errorText = (error: unknown) =>
     error instanceof Error ? error.message : "Agent 请求失败";
   const currentProject = () => bridge?.getSnapshot()?.projectId ?? "";
+  const currentChatScope = (): ChatScope | null =>
+    bridge?.getChatScope?.() ??
+    (currentProject() ? { projectId: currentProject(), chatId: null } : null);
+  const currentScopeKey = () => {
+    const scope = currentChatScope();
+    return scope ? JSON.stringify([scope.projectId, scope.chatId]) : "";
+  };
+  function getExecutionBlockReason(): string | undefined {
+    return (
+      bridge?.getExecutionBlockReason?.() ??
+      (state.status !== "disconnected" &&
+      currentScopeKey() !== connectedScopeKey
+        ? "项目或聊天已切换，请重新连接；原会话身份已保留。"
+        : undefined)
+    );
+  }
+  function isCurrent(version: number): boolean {
+    if (version !== epoch) return false;
+    if (getExecutionBlockReason()) {
+      syncProject();
+      return false;
+    }
+    return currentScopeKey() === connectedScopeKey;
+  }
+  function syncProject() {
+    if (state.status !== "disconnected" && getExecutionBlockReason())
+      disconnect();
+  }
   const threadKey = () => "kk-agent-thread:" + (projectId || "workspace");
   const preparationKey = () =>
     "kk-agent-preparation:" + (projectId || "workspace");
@@ -264,6 +301,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
     turnFreezing.reset();
     toolController.abort();
     epoch++;
+    turnModelAllowlist = undefined;
     approvals.clear();
     patch({
       connectionRevision: epoch,
@@ -335,6 +373,10 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
     });
   }
   function handle(event: AgentEvent) {
+    if (getExecutionBlockReason()) {
+      syncProject();
+      return;
+    }
     if (
       "threadId" in event &&
       event.threadId &&
@@ -408,9 +450,11 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
           // A new request ID may be a retry of an already accepted operation.
           // Do not execute another write until the previous receipt is confirmed.
           const run = toolQueue.then(async () => {
-            if (version !== epoch || signal.aborted || toolReceiptError) return;
+            if (!isCurrent(version) || signal.aborted || toolReceiptError)
+              return;
             await turnFreezing.awaitUnfrozen();
-            if (version !== epoch || signal.aborted || toolReceiptError) return;
+            if (!isCurrent(version) || signal.aborted || toolReceiptError)
+              return;
             const endStep = turnFreezing.beginStep(event.requestId);
             try {
               await handleTool(event.requestId, event.name, event.input);
@@ -448,7 +492,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
       messages ?? (await activeApi.readThread(threadId)).messages ?? [];
     for (const item of generatedImageItems(history)) {
       const id = generatedImageId(threadId, item.itemId ?? item.id);
-      if (version !== epoch || signal.aborted) return;
+      if (!isCurrent(version) || signal.aborted) return;
       if (
         activeBridge.hasGeneratedImage?.(id) ||
         activeBridge.getSnapshot()?.nodes.some((node) => node.id === id)
@@ -465,7 +509,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
           threadId,
           item.itemId ?? item.id,
         );
-        if (version !== epoch || signal.aborted) return;
+        if (!isCurrent(version) || signal.aborted) return;
         await activeBridge.importGeneratedImage!({
           id,
           blob,
@@ -496,7 +540,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
     } catch (failure) {
       error = errorText(failure) + "；请重新连接以重试归档，勿重复生成。";
     }
-    if (version !== epoch) return;
+    if (!isCurrent(version)) return;
     if (event.status === "completed") error ??= state.error;
     approvals.clear();
     turnFreezing.onTurnComplete(
@@ -539,6 +583,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
   ) {
     const activeApi = api;
     const version = epoch;
+    const signal = toolController.signal;
     if (!activeApi) return;
     try {
       if (currentProject() !== projectId)
@@ -548,9 +593,10 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
       if (!bridge || !Array.isArray(input.ops))
         throw new Error("没有可操作的画布或操作参数无效");
       const result = await bridge.applyOps(input.ops as CanvasAgentOp[], {
-        signal: toolController.signal,
+        signal,
+        modelAllowlist: turnModelAllowlist,
       });
-      if (version !== epoch) return;
+      if (!isCurrent(version)) return;
       // Receipt must report already accepted tasks even if the snapshot upload fails.
       await activeApi
         .postToolResult({
@@ -563,7 +609,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
           },
         })
         .catch(async () => {
-          if (version !== epoch) return;
+          if (!isCurrent(version)) return;
           toolReceiptError =
             "画布操作已执行，但回执未确认。本轮写入已停止；请核对任务记录后重新连接，避免重复生成。";
           toolController.abort();
@@ -572,15 +618,22 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
             .interrupt(state.conversation?.threadId)
             .catch(() => undefined);
         });
+      if (!isCurrent(version) || signal.aborted) return;
       await activeApi.postState(bridge.getSnapshot()).catch(() => undefined);
     } catch (error) {
-      if (version === epoch)
+      if (isCurrent(version))
         await activeApi
           .postToolResult({ requestId, error: errorText(error) })
           .catch(() => undefined);
     }
   }
   function connectShared(newConversation = false): Promise<void> {
+    if (newConversation && currentChatScope()?.chatId != null) {
+      patch({
+        error: "当前聊天的 Agent 线程不可替换；多聊天执行隔离尚未完成。",
+      });
+      return Promise.resolve();
+    }
     if (connectionFlight && (!newConversation || !connectionFlight.ready))
       return connectionFlight.promise;
     let resolve!: () => void;
@@ -615,6 +668,9 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
     stopTransport();
     const version = epoch;
     projectId = currentProject();
+    connectedScopeKey = currentScopeKey();
+    // A resumed turn has no durable external-model grant receipt yet.
+    turnModelAllowlist = currentChatScope()?.chatId != null ? [] : undefined;
     const queuedEvents: AgentEvent[] = [];
     toolQueue = Promise.resolve();
     toolReceiptError = null;
@@ -630,6 +686,8 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
       models: [],
     });
     try {
+      const blocked = getExecutionBlockReason();
+      if (blocked) throw new Error(blocked);
       const endpoint = agentEndpoint(state.endpoint);
       storage.setItem("canvas-agent-url", endpoint);
       controller = new AbortController();
@@ -646,7 +704,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
         throw new Error(
           "本地 Agent 协议不兼容，请使用项目提供的 canvas-agent。",
         );
-      if (version !== epoch) return;
+      if (!isCurrent(version)) return;
       patch({ protocolVersion: config.protocolVersion });
       const hello = await new Promise<Extract<AgentEvent, { kind: "hello" }>>(
         (resolve, reject) => {
@@ -669,7 +727,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
                 options.fetcher,
               );
           source.onmessage = (frame) => {
-            if (version !== epoch) return;
+            if (!isCurrent(version)) return;
             try {
               const event = parseAgentSseEvent(
                 frame.type ?? "message",
@@ -711,11 +769,11 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
               error ?? new Error("本地 Agent 连接已断开，请重连确认会话状态。");
             clearTimeout(timeout);
             reject(failure);
-            if (version === epoch) fail(failure);
+            if (isCurrent(version)) fail(failure);
           };
         },
       );
-      if (version !== epoch) return;
+      if (!isCurrent(version)) return;
       const saved = newConversation
         ? null
         : bridge?.readAgentThread?.() || storage.getItem(threadKey());
@@ -748,13 +806,13 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
           "服务已有其他会话，未创建或替换。请在原项目继续，或明确点击新建 Agent 会话。",
         );
       await activeApi.activate();
-      if (version !== epoch) return;
+      if (!isCurrent(version)) return;
       await activeApi.postState(bridge?.getSnapshot() ?? null);
-      if (version !== epoch) return;
+      if (!isCurrent(version)) return;
       const rememberOwnership = async (
         conversation?: AgentConversationState | null,
       ) => {
-        if (version !== epoch || !conversation?.threadId) return;
+        if (!isCurrent(version) || !conversation?.threadId) return;
         if (!/^[A-Za-z0-9_-]{1,160}$/.test(conversation.threadId))
           throw new Error("Agent 返回了无效会话身份，未保存或接管。");
         // Ownership is a receipt for this operation, not a success badge. Save
@@ -771,7 +829,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
         await rememberOwnership(thread.conversation);
       } else if (saved && saved === remote?.threadId) {
         await rememberOwnership(remote);
-        if (version !== epoch) return;
+        if (!isCurrent(version)) return;
         const retryOwnedPreparation =
           remote.status === "failed" &&
           !hello.busy &&
@@ -811,7 +869,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
           ownedFailedPreparation ? remote.sourceClientId : undefined,
         );
         await rememberOwnership(thread.conversation);
-        if (version !== epoch) return;
+        if (!isCurrent(version)) return;
         if (thread.conversation?.threadId)
           thread = {
             ...thread,
@@ -819,7 +877,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
             conversation: thread.conversation,
           };
       }
-      if (version !== epoch) return;
+      if (!isCurrent(version)) return;
       const conversation = thread.conversation ?? state.conversation;
       if (
         !conversation?.threadId ||
@@ -831,14 +889,14 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
           conversation?.error || "Codex 会话未就绪，请确认 Codex 已登录。",
         );
       const models = await activeApi.models();
-      if (version !== epoch) return;
+      if (!isCurrent(version)) return;
       storage.setItem(threadKey(), conversation.threadId);
       if (thread.settledTurnIds?.length)
         await activeApi.acknowledgeHistory(
           conversation.threadId,
           thread.settledTurnIds,
         );
-      if (version !== epoch) return;
+      if (!isCurrent(version)) return;
       if (saved && saved === remote?.threadId)
         for (const approval of hello.pendingApprovals)
           approvals.set(approval.requestId, approval);
@@ -868,7 +926,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
       // SSE may advance while the history/model reads are in flight. Replay in
       // order after seeding the snapshot, never overwrite it with stale hello.
       for (const event of queuedEvents) {
-        if (version !== epoch) return;
+        if (!isCurrent(version)) return;
         if (
           event.kind === "conversation" &&
           event.conversation.revision < (state.conversation?.revision ?? 0)
@@ -877,12 +935,12 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
         handle(event);
       }
       await refreshUsage();
-      if (version !== epoch) return;
+      if (!isCurrent(version)) return;
       await syncGeneratedImages(thread.messages ?? []);
     } catch (error) {
       if (version === epoch) fail(error);
     } finally {
-      if (version === epoch) {
+      if (isCurrent(version)) {
         initializing = false;
         patch({ preparing: false });
       }
@@ -893,7 +951,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
     const version = epoch;
     try {
       const payload = await api.usage();
-      if (version !== epoch) return;
+      if (!isCurrent(version)) return;
       const usage = parseAgentUsage(payload);
       patch({
         usage,
@@ -901,7 +959,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
         usageCheckedAt: Date.now(),
       });
     } catch {
-      if (version === epoch)
+      if (isCurrent(version))
         patch({ usageError: "暂时无法读取 Codex 额度；已有数据可能过期" });
     }
   }
@@ -924,6 +982,11 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
       modelAllowlist?: string[];
     },
   ): Promise<{ ok: boolean; error?: string; messageId?: string }> {
+    const blocked = getExecutionBlockReason();
+    if (blocked) {
+      disconnect();
+      return { ok: false, error: blocked };
+    }
     if (turnFreezing.isFrozen())
       return { ok: false, error: "会话当前已暂停，请点击继续按钮恢复执行。" };
     if (input?.signal?.aborted) return { ok: false, error: "发送已取消" };
@@ -961,6 +1024,17 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
     }
     const version = epoch;
     const activeApi = api;
+    const allowed =
+      input?.modelAllowlist !== undefined
+        ? input.modelAllowlist
+        : bridge?.getModelAllowlist?.();
+    turnModelAllowlist =
+      allowed === undefined
+        ? undefined
+        : Array.isArray(allowed) &&
+            allowed.every((model) => typeof model === "string")
+          ? [...allowed]
+          : [];
     const messageId = crypto.randomUUID();
     const messageText =
       compiled.cleanPrompt +
@@ -988,7 +1062,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
       const attachments = await (
         options.prepareAttachments ?? prepareAgentAttachments
       )(selectedAttachments, { signal });
-      if (version !== epoch || signal.aborted) throw new Error("发送已取消");
+      if (!isCurrent(version) || signal.aborted) throw new Error("发送已取消");
       const snapshot = bridge?.getSnapshot();
       const canvasReferences = selectedAttachments
         .filter((item) => item.canvasNodeId)
@@ -1003,26 +1077,21 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
           };
         });
       await refreshUsage();
-      if (version !== epoch || signal.aborted) throw new Error("发送已取消");
+      if (!isCurrent(version) || signal.aborted) throw new Error("发送已取消");
       if (!state.usageError && isAgentQuotaExhausted(state.usage))
         throw new Error("Codex 额度已用完，请等待重置。");
       await activeApi.activate();
-      if (version !== epoch || signal.aborted) throw new Error("发送已取消");
+      if (!isCurrent(version) || signal.aborted) throw new Error("发送已取消");
       await activeApi.postState(bridge?.getSnapshot() ?? null);
-      if (version !== epoch || signal.aborted) throw new Error("发送已取消");
+      if (!isCurrent(version) || signal.aborted) throw new Error("发送已取消");
       const memoryInjection =
         input?.memoryMode === "none" || input?.isTemporary
           ? ""
           : await memoryService.buildInjection(text.trim());
-      if (version !== epoch || signal.aborted) throw new Error("发送已取消");
+      if (!isCurrent(version) || signal.aborted) throw new Error("发送已取消");
       const requestedModel = input?.selection
         ? codexReasoningModel(input.selection)
         : (input?.model ?? readAgentModel());
-      if (input?.modelAllowlist !== undefined) {
-        if (!requestedModel || !input.modelAllowlist.includes(requestedModel)) {
-          throw new Error(`模型 ${requestedModel} 不在允许调用的模型白名单中`);
-        }
-      }
       const validationError = input?.validate?.();
       if (validationError) throw new Error(validationError);
       const response = await activeApi.postTurn({
@@ -1059,7 +1128,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
             ? { canvasReferences }
             : undefined,
       });
-      if (version !== epoch)
+      if (!isCurrent(version))
         return { ok: false, error: "连接已变更，请重连确认执行结果。" };
       if (signal.aborted && toolController === turnController)
         await activeApi.interrupt(conversation.threadId);
@@ -1067,7 +1136,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
         handle({ kind: "conversation", conversation: response.state });
       return { ok: true, messageId };
     } catch (error) {
-      if (version === epoch && toolController === turnController) {
+      if (isCurrent(version) && toolController === turnController) {
         if (
           error instanceof AgentApiError &&
           (error.response as AgentTurnResponse).state
@@ -1090,12 +1159,12 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
     if (!api) return { ok: false, error: "Agent 未连接" };
     try {
       await api.interrupt(state.conversation?.threadId);
-      if (version !== epoch)
+      if (!isCurrent(version))
         return { ok: false, error: "连接已变更，请检查当前任务状态。" };
       if (state.sending) patch({ activity: "已请求停止，等待执行结果…" });
       return { ok: true };
     } catch (error) {
-      if (version === epoch) patch({ error: errorText(error) });
+      if (isCurrent(version)) patch({ error: errorText(error) });
       return { ok: false, error: errorText(error) };
     }
   }
@@ -1109,7 +1178,8 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
     signal?: AbortSignal;
     validate?: () => string | undefined;
   }): Promise<string | undefined> {
-    if (turnFreezing.isFrozen()) return "会话当前已暂停，请点击继续按钮恢复执行。";
+    if (turnFreezing.isFrozen())
+      return "会话当前已暂停，请点击继续按钮恢复执行。";
     if (input.signal?.aborted) return "发送已取消";
     if (state.sending) return "Codex 正在执行另一项任务，请等待完成。";
     if (!Number.isInteger(input.count) || input.count < 1 || input.count > 4)
@@ -1142,7 +1212,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
     const requestController = toolController;
     const result = await pending;
     if (!result.ok) {
-      if (version === epoch && requestController === toolController)
+      if (isCurrent(version) && requestController === toolController)
         patch({ canvasNodeId: undefined });
       return result.error;
     }
@@ -1151,24 +1221,30 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
   async function resolveApproval(
     decision: AgentApprovalDecision,
   ): Promise<{ ok: boolean; error?: string }> {
+    const blocked = getExecutionBlockReason();
+    if (blocked) {
+      syncProject();
+      return { ok: false, error: blocked };
+    }
     if (!api || !state.pendingApproval)
       return { ok: false, error: "没有待处理的权限请求" };
     const version = epoch;
     const requestId = state.pendingApproval.requestId;
     try {
       await api.resolveApproval(requestId, decision);
-      if (version !== epoch)
+      if (!isCurrent(version))
         return { ok: false, error: "连接已变更，请检查当前权限请求。" };
       approvals.delete(requestId);
       patch({ pendingApproval: approvals.values().next().value ?? null });
       return { ok: true };
     } catch (error) {
-      if (version === epoch) patch({ error: errorText(error) });
+      if (isCurrent(version)) patch({ error: errorText(error) });
       return { ok: false, error: errorText(error) };
     }
   }
   return {
     getState: () => state,
+    getExecutionBlockReason,
     subscribe(listener: () => void) {
       listeners.add(listener);
       return () => {
@@ -1190,26 +1266,18 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
     turnFreezing,
     setBridge(next: AgentBridge | null) {
       bridge = next;
-      if (state.status === "connected" && currentProject() !== projectId)
-        disconnect();
+      syncProject();
     },
-    syncProject() {
-      if (state.status !== "disconnected" && currentProject() !== projectId)
-        disconnect();
-    },
+    syncProject,
     setPermissionMode(mode: AgentPermissionMode) {
       writePermissionMode(mode);
       patch({});
     },
     pushState() {
-      if (
-        api &&
-        state.status === "connected" &&
-        currentProject() === projectId
-      ) {
+      if (api && state.status === "connected" && !getExecutionBlockReason()) {
         const version = epoch;
         void api.postState(bridge?.getSnapshot() ?? null).catch((error) => {
-          if (version === epoch) fail(error);
+          if (isCurrent(version)) fail(error);
         });
       }
     },

@@ -69,7 +69,9 @@ export class SlashCommandRegistry {
       } else {
         // 别名匹配
         for (const alias of cmd.aliases) {
-          const aliasClean = alias.startsWith("/") ? alias.slice(1).toLowerCase() : alias.toLowerCase();
+          const aliasClean = alias.startsWith("/")
+            ? alias.slice(1).toLowerCase()
+            : alias.toLowerCase();
           if (aliasClean === clean) {
             score = Math.max(score, 90);
           } else if (aliasClean.startsWith(clean)) {
@@ -130,7 +132,8 @@ export const BUILTIN_SLASH_COMMANDS: SlashCommand[] = [
     slash: "/model",
     aliases: ["/m", "/mod", "模型", "切换模型"],
     name: "切换底层模型",
-    description: "快速切换当前项目使用的 AI 生图或推理模型（Codex/FLUX/Gemini）",
+    description:
+      "快速切换当前项目使用的 AI 生图或推理模型（Codex/FLUX/Gemini）",
     icon: "cpu",
     category: "model",
     execute: (ctx) => {
@@ -166,4 +169,6 @@ export const BUILTIN_SLASH_COMMANDS: SlashCommand[] = [
   },
 ];
 
-export const defaultSlashRegistry = new SlashCommandRegistry(BUILTIN_SLASH_COMMANDS);
+export const defaultSlashRegistry = new SlashCommandRegistry(
+  BUILTIN_SLASH_COMMANDS,
+);

@@ -27,7 +27,8 @@ export default function ConversationChatTabs({
       if (event.key === "ArrowRight") {
         nextIndex = (currentIndex + 1) % chatEntries.length;
       } else if (event.key === "ArrowLeft") {
-        nextIndex = (currentIndex - 1 + chatEntries.length) % chatEntries.length;
+        nextIndex =
+          (currentIndex - 1 + chatEntries.length) % chatEntries.length;
       } else if (event.key === "Home") {
         nextIndex = 0;
       } else if (event.key === "End") {
@@ -41,8 +42,7 @@ export default function ConversationChatTabs({
       onSelectChat?.(nextChatId);
 
       const targetButton = tablistRef.current?.children[nextIndex] as
-        | HTMLButtonElement
-        | undefined;
+        HTMLButtonElement | undefined;
       targetButton?.focus();
     },
     [chatEntries, onSelectChat],
@@ -140,7 +140,10 @@ export default function ConversationChatTabs({
       <button
         type="button"
         aria-label="新建对话"
-        title="新建对话"
+        title={
+          onCreateChat ? "新建对话" : "多聊天隔离尚未完成，暂不可新建聊天。"
+        }
+        disabled={!onCreateChat}
         className="conversation-chat-tab-add"
         onClick={() => onCreateChat?.()}
         style={{

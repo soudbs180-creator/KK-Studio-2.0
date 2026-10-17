@@ -1,7 +1,10 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { createAgentConnection } from "../../src/features/agent/agentConnection.ts";
-import { createAgentHost } from "../../src/features/agent/agentHost.ts";
+import {
+  createAgentHost,
+  type AgentHostOptions,
+} from "../../src/features/agent/agentHost.ts";
 import { createProject } from "../../src/features/creation/model.ts";
 import type { CanvasCollectionItem } from "../../src/domain/canvasItems.ts";
 import type { CanvasAgentOp } from "../../src/features/agent/agentTypes.ts";
@@ -87,6 +90,17 @@ function setupTestAgentConnection() {
         { status: 200, headers: { "Content-Type": "application/json" } },
       );
     }
+    if (url.endsWith("/models"))
+      return Response.json({
+        data: [
+          {
+            id: "reasoning-fixture",
+            model: "reasoning-fixture",
+            displayName: "Fixture",
+            isDefault: true,
+          },
+        ],
+      });
     return new Response(
       JSON.stringify({ ok: true, protocolVersion: 6, data: [], messages: [] }),
       { status: 200, headers: { "Content-Type": "application/json" } },
@@ -108,205 +122,237 @@ function setupTestAgentConnection() {
 }
 
 // =============================================================================
-// Suite 1: agentConnection Boundary Adversarial Stress Tests
+// Suite 1: External generation grants belong at the real host boundary.
 // =============================================================================
 
-test("ADV-CONN-1: agentConnection rejects adversarial bypass via empty array [] allowlist across multiple models", async () => {
-  const { conn, getTurnCalls } = setupTestAgentConnection();
-  await conn.connect();
-  await new Promise((r) => setImmediate(r));
-
-  const candidateModels = [
-    "gpt-4o",
-    "claude-3-5-sonnet",
-    "gemini-2.0-flash",
-    "deepseek-r1",
-    "local-model",
-  ];
-
-  for (const model of candidateModels) {
-    const result = await conn.sendMessage(`Test turn for ${model}`, {
-      model,
-      modelAllowlist: [], // Explicitly empty
-    });
-
-    assert.equal(result.ok, false, `Model ${model} must be blocked by empty allowlist []`);
-    assert.match(
-      result.error ?? "",
-      /不在允许调用的模型白名单中/,
-      `Expected allowlist error message for ${model}, got: ${result.error}`,
-    );
-  }
-
-  assert.equal(getTurnCalls(), 0, "No turn must be dispatched when allowlist is empty []");
-  conn.disconnect();
-});
-
-test("ADV-CONN-2: agentConnection rejects adversarial bypass via whitespace variants in model name", async () => {
-  const { conn, getTurnCalls } = setupTestAgentConnection();
-  await conn.connect();
-  await new Promise((r) => setImmediate(r));
-
-  const allowedModel = "gpt-4o";
-  const whitespaceVariants = [
-    " gpt-4o",
-    "gpt-4o ",
-    " gpt-4o ",
-    "\tgpt-4o",
-    "gpt-4o\t",
-    "gpt-4o\n",
-    "gpt-4o\r\n",
-    "gpt-4o\0malicious",
-  ];
-
-  for (const variant of whitespaceVariants) {
-    const result = await conn.sendMessage("Whitespace bypass test", {
-      model: variant,
-      modelAllowlist: [allowedModel],
-    });
-
-    assert.equal(
-      result.ok,
-      false,
-      `Whitespace variant ${JSON.stringify(variant)} must be strictly rejected`,
-    );
-    assert.match(
-      result.error ?? "",
-      /不在允许调用的模型白名单中/,
-      `Variant ${JSON.stringify(variant)} should fail with allowlist error`,
-    );
-  }
-
-  assert.equal(getTurnCalls(), 0, "No turn should execute for any whitespace variant");
-  conn.disconnect();
-});
-
-test("ADV-CONN-3: agentConnection rejects adversarial bypass via casing variants in model name", async () => {
-  const { conn, getTurnCalls } = setupTestAgentConnection();
-  await conn.connect();
-  await new Promise((r) => setImmediate(r));
-
-  const casingVariants = [
-    "GPT-4O",
-    "Gpt-4o",
-    "GPT-4o",
-    "gpt-4O",
-    "GpT-4O",
-  ];
-
-  for (const variant of casingVariants) {
-    const result = await conn.sendMessage("Casing variant test", {
-      model: variant,
-      modelAllowlist: ["gpt-4o"],
-    });
-
-    assert.equal(
-      result.ok,
-      false,
-      `Casing variant ${variant} must not bypass allowlist for gpt-4o`,
-    );
-    assert.match(result.error ?? "", /不在允许调用的模型白名单中/);
-  }
-
-  assert.equal(getTurnCalls(), 0, "No turn should execute for casing variants");
-  conn.disconnect();
-});
-
-test("ADV-CONN-4: agentConnection rejects injected payloads and prototype property models", async () => {
-  const { conn, getTurnCalls } = setupTestAgentConnection();
-  await conn.connect();
-  await new Promise((r) => setImmediate(r));
-
-  const maliciousPayloads = [
-    "__proto__",
-    "constructor",
-    "toString",
-    "valueOf",
-    "hasOwnProperty",
-    "gpt-4o; drop table models;",
-    "gpt-4o && rm -rf /",
-    "<script>alert('xss')</script>",
-    "gpt-4o' OR '1'='1",
-    "",
-  ];
-
-  for (const payload of maliciousPayloads) {
-    const result = await conn.sendMessage("Injection test", {
-      model: payload,
-      modelAllowlist: ["gpt-4o"],
-    });
-
-    assert.equal(
-      result.ok,
-      false,
-      `Payload ${JSON.stringify(payload)} must be rejected`,
-    );
-    assert.match(result.error ?? "", /不在允许调用的模型白名单中/);
-  }
-
-  assert.equal(getTurnCalls(), 0, "No turns dispatched for injection attempts");
-  conn.disconnect();
-});
-
-test("ADV-CONN-5: agentConnection safely blocks when modelAllowlist is null without dispatching", async () => {
-  const { conn, getTurnCalls } = setupTestAgentConnection();
-  await conn.connect();
-  await new Promise((r) => setImmediate(r));
-
-  // Adversarially passing null as modelAllowlist
-  const result = await conn.sendMessage("Null allowlist test", {
-    model: "gpt-4o",
-    modelAllowlist: null as unknown as string[],
+function externalGenerationFixture(
+  modelAllowlist: AgentHostOptions["modelAllowlist"],
+) {
+  let { project } = createTestProjectWithNode("gpt-4o");
+  const generated: string[] = [];
+  const host = createAgentHost({
+    getProject: () => project,
+    commit: (next) => {
+      project = next;
+    },
+    modelAllowlist,
+    generate: async (node) => {
+      generated.push(node.model!);
+      return { taskId: "unexpected-paid-generation" };
+    },
   });
+  return { host, generated, getProject: () => project };
+}
 
-  assert.equal(result.ok, false, "Null allowlist should fail and not permit turn execution");
-  assert.equal(getTurnCalls(), 0, "No turn must be dispatched when allowlist is null");
-  conn.disconnect();
-});
-
-test("ADV-CONN-6: agentConnection enforces allowlist when selection object is adversarially manipulated", async () => {
-  const { conn, getTurnCalls } = setupTestAgentConnection();
-  await conn.connect();
-  await new Promise((r) => setImmediate(r));
-
-  const adversarialSelections = [
-    { source: "codex" as const, model: "unauthorized-claude", kind: "text" as const },
-    { source: "codex" as const, model: "GPT-4O", kind: "text" as const },
-    { source: "codex" as const, model: "gpt-4o ", kind: "text" as const },
-    { source: "codex" as const, model: "gpt-4o\nDROP", kind: "text" as const },
-    { source: "codex" as const, model: "__proto__", kind: "text" as const },
-  ];
-
-  for (const selection of adversarialSelections) {
-    const result = await conn.sendMessage("Selection manipulation", {
-      selection,
-      modelAllowlist: ["gpt-4o"],
-    });
-
-    assert.equal(
-      result.ok,
-      false,
-      `Adversarial selection with model ${selection.model} must be blocked`,
+for (const scenario of [
+  {
+    name: "ADV-CONN-1 migrated: empty grants deny every external model",
+    grant: [],
+    models: [
+      "gpt-4o",
+      "claude-3-5-sonnet",
+      "gemini-2.0-flash",
+      "deepseek-r1",
+      "local-model",
+    ],
+  },
+  {
+    name: "ADV-CONN-2 migrated: whitespace variants cannot acquire external authorization",
+    grant: ["gpt-4o"],
+    models: [
+      " gpt-4o",
+      "gpt-4o ",
+      " gpt-4o ",
+      "\tgpt-4o",
+      "gpt-4o\t",
+      "gpt-4o\n",
+      "gpt-4o\r\n",
+      "gpt-4o\0malicious",
+    ],
+  },
+  {
+    name: "ADV-CONN-3 migrated: casing variants cannot acquire external authorization",
+    grant: ["gpt-4o"],
+    models: ["GPT-4O", "Gpt-4o", "GPT-4o", "gpt-4O", "GpT-4O"],
+  },
+  {
+    name: "ADV-CONN-4 migrated: injected model strings never reach external generation",
+    grant: ["gpt-4o"],
+    models: [
+      "__proto__",
+      "constructor",
+      "toString",
+      "valueOf",
+      "hasOwnProperty",
+      "gpt-4o; drop table models;",
+      "gpt-4o && rm -rf /",
+      "<script>alert('xss')</script>",
+      "gpt-4o' OR '1'='1",
+      "",
+    ],
+  },
+]) {
+  test(scenario.name, async () => {
+    const h = externalGenerationFixture(scenario.grant);
+    const before = structuredClone(h.getProject());
+    for (const model of scenario.models) {
+      const result = await h.host.applyOps([
+        {
+          type: "run_generation",
+          nodeId: "img-adv-node-1",
+          model,
+          prompt: "synthetic adversarial generation",
+        },
+      ]);
+      assert.equal(result.applied.length, 0, JSON.stringify(model));
+      assert.equal(result.rejected.length, 1);
+      assert.match(result.rejected[0].reason, /不在允许调用的模型白名单中/);
+      assert.deepEqual(result.tasks, []);
+    }
+    assert.deepEqual(
+      h.generated,
+      [],
+      "Denied operations must never reach the billable generation boundary",
     );
-    assert.match(result.error ?? "", /不在允许调用的模型白名单中/);
-  }
+    assert.deepEqual(h.getProject(), before);
+  });
+}
 
-  assert.equal(getTurnCalls(), 0, "No turn should execute for adversarial selection objects");
-  conn.disconnect();
+test("ADV-CONN-5 migrated: null and malformed external grants fail closed", async (t) => {
+  for (const scenario of [
+    { layer: "turn", grant: null, model: "gpt-4o" },
+    { layer: "turn", grant: "x", model: "x" },
+    { layer: "turn", grant: [null, "gpt-4o"], model: "gpt-4o" },
+    { layer: "host", grant: null, model: "gpt-4o" },
+    { layer: "host", grant: "x", model: "x" },
+    { layer: "host", grant: [null, "gpt-4o"], model: "gpt-4o" },
+    { layer: "chat", grant: "x", model: "x" },
+    { layer: "chat", grant: [null, "gpt-4o"], model: "gpt-4o" },
+  ]) {
+    await t.test(
+      scenario.layer + ": " + JSON.stringify(scenario.grant),
+      async () => {
+        // These casts model invalid runtime input at the authorization boundary.
+        const h = externalGenerationFixture(
+          scenario.layer === "host"
+            ? (scenario.grant as unknown as string[])
+            : scenario.layer === "chat"
+              ? undefined
+              : [scenario.model],
+        );
+        const project = h.getProject();
+        project.chats![project.activeChatId!].modelAllowlist =
+          (scenario.layer === "chat"
+            ? scenario.grant
+            : [scenario.model]) as unknown as string[];
+        const before = structuredClone(project);
+        const result = await h.host.applyOps(
+          [
+            {
+              type: "run_generation",
+              nodeId: "img-adv-node-1",
+              model: scenario.model,
+              prompt: "synthetic",
+            },
+          ],
+          scenario.layer === "turn"
+            ? {
+                signal: new AbortController().signal,
+                modelAllowlist: scenario.grant as unknown as string[],
+              }
+            : undefined,
+        );
+        assert.equal(result.applied.length, 0);
+        assert.equal(result.rejected.length, 1);
+        assert.match(result.rejected[0].reason, /不在允许调用的模型白名单中/);
+        assert.deepEqual(result.tasks, []);
+        assert.deepEqual(h.generated, []);
+        assert.deepEqual(h.getProject(), before);
+      },
+    );
+  }
 });
 
-test("ADV-CONN-7: agentConnection allows unconstrained access when modelAllowlist is undefined", async () => {
-  const { conn, getTurnCalls } = setupTestAgentConnection();
+test("ADV-CONN-6 migrated: selection model values cannot grant external generation", async () => {
+  const h = externalGenerationFixture(["gpt-4o"]);
+  const selections = [
+    { source: "codex", model: "unauthorized-claude", kind: "text" },
+    { source: "codex", model: "GPT-4O", kind: "text" },
+    { source: "codex", model: "gpt-4o ", kind: "text" },
+    { source: "codex", model: "gpt-4o\nDROP", kind: "text" },
+    { source: "codex", model: "__proto__", kind: "text" },
+  ];
+  for (const selection of selections) {
+    const result = await h.host.applyOps([
+      {
+        type: "run_generation",
+        nodeId: "img-adv-node-1",
+        model: selection.model,
+        prompt: "synthetic selection",
+      },
+    ]);
+    assert.equal(result.applied.length, 0);
+    assert.equal(result.rejected.length, 1);
+    assert.match(result.rejected[0].reason, /不在允许调用的模型白名单中/);
+    assert.deepEqual(result.tasks, []);
+  }
+  assert.deepEqual(h.generated, []);
+});
+
+test("valid Codex reasoning model and selection remain usable with empty or restricted external grants", async () => {
+  for (const modelAllowlist of [[], ["external-image-model"]]) {
+    for (const selection of [
+      undefined,
+      {
+        source: "codex" as const,
+        model: "reasoning-fixture",
+        kind: "text" as const,
+      },
+    ]) {
+      const { conn, getTurnCalls, getPostedTurns } = setupTestAgentConnection();
+      try {
+        await conn.connect();
+        await new Promise((resolve) => setImmediate(resolve));
+        const result = await conn.sendMessage("synthetic reasoning", {
+          model: "reasoning-fixture",
+          selection,
+          modelAllowlist,
+          memoryMode: "none",
+        });
+        assert.equal(result.ok, true);
+        assert.equal(getTurnCalls(), 1);
+        assert.equal(
+          (getPostedTurns()[0] as { model?: string }).model,
+          "reasoning-fixture",
+        );
+      } finally {
+        conn.disconnect();
+      }
+    }
+  }
+});
+
+test("ADV-CONN-7: valid Codex reasoning still works when the external grant is omitted", async () => {
+  const { conn, getTurnCalls, getPostedTurns } = setupTestAgentConnection();
   await conn.connect();
   await new Promise((r) => setImmediate(r));
 
   const result = await conn.sendMessage("Unconstrained request", {
-    model: "any-custom-model-xyz",
+    model: "reasoning-fixture",
     modelAllowlist: undefined,
+    memoryMode: "none",
   });
 
-  assert.equal(result.ok, true, "Undefined allowlist should allow unconstrained operation");
+  assert.equal(
+    result.ok,
+    true,
+    "An omitted external generation grant must not block Codex reasoning",
+  );
   assert.equal(getTurnCalls(), 1, "Exactly 1 turn should execute");
+  assert.equal(
+    (getPostedTurns()[0] as { model?: string }).model,
+    "reasoning-fixture",
+  );
   conn.disconnect();
 });
 
@@ -354,7 +400,12 @@ test("ADV-HOST-1: agentHost blocks run_generation when options.modelAllowlist is
     modelAllowlist: [], // Strictly empty
   });
 
-  const modelsToTest = ["flux-schnell", "dall-e-3", "stable-diffusion-xl", "midjourney"];
+  const modelsToTest = [
+    "flux-schnell",
+    "dall-e-3",
+    "stable-diffusion-xl",
+    "midjourney",
+  ];
   for (const model of modelsToTest) {
     const res = await host.applyOps([
       {
@@ -365,12 +416,24 @@ test("ADV-HOST-1: agentHost blocks run_generation when options.modelAllowlist is
       },
     ]);
 
-    assert.equal(res.applied.length, 0, `Op with model ${model} must not be applied`);
-    assert.equal(res.rejected.length, 1, `Op with model ${model} must be rejected`);
+    assert.equal(
+      res.applied.length,
+      0,
+      `Op with model ${model} must not be applied`,
+    );
+    assert.equal(
+      res.rejected.length,
+      1,
+      `Op with model ${model} must be rejected`,
+    );
     assert.match(res.rejected[0].reason, /不在允许调用的模型白名单中/);
   }
 
-  assert.equal(generateCalls, 0, "options.generate must never be called when allowlist is []");
+  assert.equal(
+    generateCalls,
+    0,
+    "options.generate must never be called when allowlist is []",
+  );
 });
 
 test("ADV-HOST-2: agentHost blocks run_generation with whitespace/case variants against allowlist", async () => {
@@ -412,12 +475,20 @@ test("ADV-HOST-2: agentHost blocks run_generation with whitespace/case variants 
       },
     ]);
 
-    assert.equal(res.applied.length, 0, `Bypass attempt ${JSON.stringify(attempt)} must be rejected`);
+    assert.equal(
+      res.applied.length,
+      0,
+      `Bypass attempt ${JSON.stringify(attempt)} must be rejected`,
+    );
     assert.equal(res.rejected.length, 1);
     assert.match(res.rejected[0].reason, /不在允许调用的模型白名单中/);
   }
 
-  assert.equal(generateCalls, 0, "No generation tool call should be dispatched for variants");
+  assert.equal(
+    generateCalls,
+    0,
+    "No generation tool call should be dispatched for variants",
+  );
 });
 
 test("ADV-HOST-3: agentHost blocks run_generation with prototype properties and injected payloads", async () => {
@@ -460,12 +531,20 @@ test("ADV-HOST-3: agentHost blocks run_generation with prototype properties and 
       },
     ]);
 
-    assert.equal(res.applied.length, 0, `Payload ${JSON.stringify(payload)} must not be applied`);
+    assert.equal(
+      res.applied.length,
+      0,
+      `Payload ${JSON.stringify(payload)} must not be applied`,
+    );
     assert.equal(res.rejected.length, 1);
     assert.match(res.rejected[0].reason, /不在允许调用的模型白名单中/);
   }
 
-  assert.equal(generateCalls, 0, "No generation executed for malicious payloads");
+  assert.equal(
+    generateCalls,
+    0,
+    "No generation executed for malicious payloads",
+  );
 });
 
 test("ADV-HOST-4: agentHost blocks run_generation when model is missing or unwhitelisted on node", async () => {
@@ -497,7 +576,10 @@ test("ADV-HOST-4: agentHost blocks run_generation when model is missing or unwhi
   ]);
   assert.equal(res1.applied.length, 0);
   assert.equal(res1.rejected.length, 1);
-  assert.match(res1.rejected[0].reason, /模型 unauthorized-backdoor-model 不在允许调用的模型白名单中/);
+  assert.match(
+    res1.rejected[0].reason,
+    /模型 unauthorized-backdoor-model 不在允许调用的模型白名单中/,
+  );
 
   // Node has undefined model and op has no model
   const nodeNoModel: CanvasCollectionItem = {
@@ -517,7 +599,10 @@ test("ADV-HOST-4: agentHost blocks run_generation when model is missing or unwhi
   ]);
   assert.equal(res2.applied.length, 0);
   assert.equal(res2.rejected.length, 1);
-  assert.match(res2.rejected[0].reason, /模型 未指定 不在允许调用的模型白名单中/);
+  assert.match(
+    res2.rejected[0].reason,
+    /模型 未指定 不在允许调用的模型白名单中/,
+  );
 
   assert.equal(generateCalls, 0);
 });
@@ -665,7 +750,10 @@ test("ADV-HOST-6: agentHost respects active chat allowlist and blocks unauthoriz
   ]);
   assert.equal(blockedRes.applied.length, 0);
   assert.equal(blockedRes.rejected.length, 1);
-  assert.match(blockedRes.rejected[0].reason, /模型 chat-model-beta 不在允许调用的模型白名单中/);
+  assert.match(
+    blockedRes.rejected[0].reason,
+    /模型 chat-model-beta 不在允许调用的模型白名单中/,
+  );
   assert.equal(generateCalls, 1);
 
   // Case variant on chat allowlist fails
@@ -701,15 +789,25 @@ test("ADV-HOST-7: agentHost strictly blocks arbitrary unauthorized and unrecogni
   const unauthorizedOps = [
     { type: "shell_exec", command: "rm -rf /" } as unknown as CanvasAgentOp,
     { type: "read_file", path: "/etc/passwd" } as unknown as CanvasAgentOp,
-    { type: "eval_script", code: "process.exit(1)" } as unknown as CanvasAgentOp,
-    { type: "network_fetch", url: "http://malicious.com" } as unknown as CanvasAgentOp,
+    {
+      type: "eval_script",
+      code: "process.exit(1)",
+    } as unknown as CanvasAgentOp,
+    {
+      type: "network_fetch",
+      url: "http://malicious.com",
+    } as unknown as CanvasAgentOp,
     { type: "exec_cmd", cmd: "whoami" } as unknown as CanvasAgentOp,
   ];
 
   const res = await host.applyOps(unauthorizedOps);
 
   assert.equal(res.applied.length, 0, "No unauthorized ops must be applied");
-  assert.equal(res.rejected.length, unauthorizedOps.length, "All unauthorized ops must be rejected");
+  assert.equal(
+    res.rejected.length,
+    unauthorizedOps.length,
+    "All unauthorized ops must be rejected",
+  );
   for (const rejected of res.rejected) {
     assert.equal(rejected.reason, "未知操作类型");
   }

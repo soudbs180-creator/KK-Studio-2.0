@@ -7,10 +7,9 @@ import {
   type AgentConnection,
   type EventSourceLike,
 } from "../../src/features/agent/agentConnection.ts";
+import { sendProjectAgentMessage } from "../../src/features/agent/homeAgentRecovery.ts";
 import {
-  sendProjectAgentMessage,
-} from "../../src/features/agent/homeAgentRecovery.ts";
-import {
+  createProject,
   emptyDraft,
   type ChatItem,
   type ChatItemDraft,
@@ -19,6 +18,7 @@ import {
 import { memoryService } from "../../src/features/memory/index.ts";
 import { useMemory } from "../../src/features/memory/useMemory.ts";
 import { agentConnection } from "../../src/features/agent/agentConnection.ts";
+import { createAgentHost } from "../../src/features/agent/agentHost.ts";
 
 // -----------------------------------------------------------------------------
 // Test Helpers & Mock Infrastructure
@@ -27,11 +27,6 @@ import { agentConnection } from "../../src/features/agent/agentConnection.ts";
 interface FakeSource extends EventSourceLike {
   emit(event: { type: string; data: unknown }): void;
   closed: boolean;
-}
-
-interface GlobalWithTempChat {
-  __kkActiveChat?: { isTemporary?: boolean };
-  __kkActiveChatIsTemporary?: boolean;
 }
 
 function createHarness(hello?: unknown) {
@@ -192,8 +187,16 @@ test("ADV-CHALLENGE-01: agentConnection.sendMessage strictly blocks buildInjecti
   });
 
   assert.equal(res.ok, true, `Send failed: ${res.error}`);
-  assert.equal(ingestCount, 0, "ingestMessage must NEVER be called when isTemporary is true");
-  assert.equal(injectionCount, 0, "buildInjection must NEVER be called when isTemporary is true");
+  assert.equal(
+    ingestCount,
+    0,
+    "ingestMessage must NEVER be called when isTemporary is true",
+  );
+  assert.equal(
+    injectionCount,
+    0,
+    "buildInjection must NEVER be called when isTemporary is true",
+  );
   assert.equal(
     postedPrompt.includes("LEAKED_MEMORY_INJECTION_MARKER"),
     false,
@@ -383,7 +386,13 @@ test("ADV-CHALLENGE-03: sendProjectAgentMessage with diverse fake temporary chat
   assert.equal(capturedInputs[6]?.isTemporary, undefined);
 
   // Case 8: Undefined project
-  await sendProjectAgentMessage(fakeConn, undefined, "msg8", undefined, undefined);
+  await sendProjectAgentMessage(
+    fakeConn,
+    undefined,
+    "msg8",
+    undefined,
+    undefined,
+  );
   assert.equal(capturedInputs[7]?.isTemporary, undefined);
 });
 
@@ -424,8 +433,16 @@ test("ADV-CHALLENGE-04: extractWithCodex never calls agentConnection or writes t
   assert.ok(hook1);
 
   await (hook1 as unknown as ReturnType<typeof useMemory>).extractWithCodex();
-  assert.equal(agentSendCalls, 0, "agentConnection.sendMessage must NEVER be called");
-  assert.equal(saveExtractionCalls, 0, "saveCodexExtraction must NEVER be called");
+  assert.equal(
+    agentSendCalls,
+    0,
+    "agentConnection.sendMessage must NEVER be called",
+  );
+  assert.equal(
+    saveExtractionCalls,
+    0,
+    "saveCodexExtraction must NEVER be called",
+  );
   assert.ok(
     feedbacks.some((msg) => msg.includes("临时会话无法提炼长期记忆")),
     "Must output blocking feedback",
@@ -522,7 +539,7 @@ test("ADV-CHALLENGE-05: extractWithCodex blocks adversarial arguments and fake c
   assert.ok(feedbacks.some((msg) => msg.includes("临时会话无法提炼长期记忆")));
 });
 
-test("ADV-CHALLENGE-06: extractWithCodex respects global fallback __kkActiveChat and __kkActiveChatIsTemporary", async (t: TestContext) => {
+test("ADV-CHALLENGE-06: extractWithCodex without options respects the actual temporary chat host", async (t: TestContext) => {
   const feedbacks: string[] = [];
   let agentSendCalls = 0;
   let saveExtractionCalls = 0;
@@ -530,22 +547,32 @@ test("ADV-CHALLENGE-06: extractWithCodex respects global fallback __kkActiveChat
   const originalSend = agentConnection.sendMessage;
   const originalSave = memoryService.saveCodexExtraction;
 
-  agentConnection.sendMessage = async (...args) => {
+  agentConnection.sendMessage = async () => {
     agentSendCalls++;
-    return originalSend.apply(agentConnection, args);
+    return { ok: false, error: "INTENTIONAL_SYNTHETIC_STOP" };
   };
-  memoryService.saveCodexExtraction = async (...args) => {
+  memoryService.saveCodexExtraction = async () => {
     saveExtractionCalls++;
-    return originalSave.apply(memoryService, args);
+    return 0;
   };
-
-  const globalScope = globalThis as GlobalWithTempChat;
+  const project = createProject({
+    kind: "image",
+    prompt: "synthetic temporary host",
+    model: "synthetic-model",
+    attachments: [],
+  });
+  project.chats![project.activeChatId!].isTemporary = true;
+  const host = createAgentHost({
+    getProject: () => project,
+    commit: () => {},
+    generate: async () => ({}),
+  });
+  agentConnection.setBridge(host);
 
   t.after(() => {
     agentConnection.sendMessage = originalSend;
     memoryService.saveCodexExtraction = originalSave;
-    delete globalScope.__kkActiveChat;
-    delete globalScope.__kkActiveChatIsTemporary;
+    agentConnection.setBridge(null);
   });
 
   // Mount hook with no options (like in MemorySettingsSection)
@@ -558,27 +585,12 @@ test("ADV-CHALLENGE-06: extractWithCodex respects global fallback __kkActiveChat
   assert.ok(hook);
   const memoryHook = hook as unknown as ReturnType<typeof useMemory>;
 
-  // Subcase A: Global __kkActiveChat has isTemporary: true
-  globalScope.__kkActiveChat = { isTemporary: true };
-  feedbacks.length = 0;
   await memoryHook.extractWithCodex();
   assert.equal(agentSendCalls, 0);
   assert.equal(saveExtractionCalls, 0);
   assert.ok(
-    feedbacks.some((msg) => msg.includes("临时会话无法提炼长期记忆")),
-    "Should block via __kkActiveChat.isTemporary",
-  );
-
-  // Subcase B: Global __kkActiveChatIsTemporary is true
-  delete globalScope.__kkActiveChat;
-  globalScope.__kkActiveChatIsTemporary = true;
-  feedbacks.length = 0;
-  await memoryHook.extractWithCodex();
-  assert.equal(agentSendCalls, 0);
-  assert.equal(saveExtractionCalls, 0);
-  assert.ok(
-    feedbacks.some((msg) => msg.includes("临时会话无法提炼长期记忆")),
-    "Should block via __kkActiveChatIsTemporary",
+    feedbacks.includes(host.getExecutionBlockReason()!),
+    "The settings hook must honor the real host reason without fabricated globals",
   );
 });
 
@@ -592,12 +604,8 @@ test("ADV-CHALLENGE-07: extractWithCodex dynamically updates when options change
     return originalSend.apply(agentConnection, args);
   };
 
-  const globalScope = globalThis as GlobalWithTempChat;
-
   t.after(() => {
     agentConnection.sendMessage = originalSend;
-    delete globalScope.__kkActiveChat;
-    delete globalScope.__kkActiveChatIsTemporary;
   });
 
   // Mutable options object passed to hook
@@ -695,7 +703,11 @@ test("ADV-CHALLENGE-08: fatal memoryService failure does not affect temporary ch
     isTemporary: true,
   });
 
-  assert.equal(res.ok, true, `Temporary chat should be completely immune to memory service errors: ${res.error}`);
+  assert.equal(
+    res.ok,
+    true,
+    `Temporary chat should be completely immune to memory service errors: ${res.error}`,
+  );
 });
 
 test("ADV-CHALLENGE-09: extractWithCodex does not falsely block regular chats", async (t: TestContext) => {
@@ -726,14 +738,10 @@ test("ADV-CHALLENGE-09: extractWithCodex does not falsely block regular chats", 
     return { ok: false, error: "INTENTIONAL_STOP_AFTER_AGENT_CALLED" };
   };
 
-  const globalScope = globalThis as GlobalWithTempChat;
-
   t.after(() => {
     agentConnection.sendMessage = originalSend;
     agentConnection.getState = originalGetState;
     memoryService.storageMode = originalStorageMode;
-    delete globalScope.__kkActiveChat;
-    delete globalScope.__kkActiveChatIsTemporary;
   });
 
   let hook: ReturnType<typeof useMemory> | null = null;

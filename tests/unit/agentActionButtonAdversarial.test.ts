@@ -15,17 +15,10 @@ import test from "node:test";
 import { runInNewContext } from "node:vm";
 import { createElement, Fragment, type ReactElement } from "react";
 import ts from "typescript";
-import {
-  createTurnFreezingController,
-} from "../../src/features/agent/agentTurnFreezing.ts";
+import { createTurnFreezingController } from "../../src/features/agent/agentTurnFreezing.ts";
 
 export type AgentActionState =
-  | "idle"
-  | "executing"
-  | "pausing"
-  | "paused"
-  | "resuming"
-  | "completed";
+  "idle" | "executing" | "pausing" | "paused" | "resuming" | "completed";
 
 export type AgentActionTransitionEvent =
   | "SEND"
@@ -147,9 +140,13 @@ async function loadTranspiledActionButtonModule(): Promise<TranspiledActionButto
 }
 
 // Helper to find clickable button element
-function findButtonElement(
-  value: unknown,
-): ReactElement<{ onClick?: (e?: unknown) => void; disabled?: boolean; [key: string]: unknown }> | undefined {
+function findButtonElement(value: unknown):
+  | ReactElement<{
+      onClick?: (e?: unknown) => void;
+      disabled?: boolean;
+      [key: string]: unknown;
+    }>
+  | undefined {
   if (Array.isArray(value)) return value.map(findButtonElement).find(Boolean);
   if (value && typeof value === "object" && "props" in value) {
     const el = value as ReactElement<{
@@ -171,20 +168,52 @@ test("ADV-1.1: shouldDebounceClick handles exact boundaries, micro-intervals, an
   const { shouldDebounceClick } = mod;
 
   // 1. Initial click (lastClickTime = 0) must never be debounced
-  assert.equal(shouldDebounceClick(0, 1000, 300), false, "Initial click must not be debounced");
-  assert.equal(shouldDebounceClick(0, 0, 300), false, "Zero timestamp initial click not debounced");
+  assert.equal(
+    shouldDebounceClick(0, 1000, 300),
+    false,
+    "Initial click must not be debounced",
+  );
+  assert.equal(
+    shouldDebounceClick(0, 0, 300),
+    false,
+    "Zero timestamp initial click not debounced",
+  );
 
   // 2. Immediate subsequent clicks (delta = 0) must be debounced
-  assert.equal(shouldDebounceClick(1000, 1000, 300), true, "Identical timestamp must be debounced");
+  assert.equal(
+    shouldDebounceClick(1000, 1000, 300),
+    true,
+    "Identical timestamp must be debounced",
+  );
 
   // 3. Sub-millisecond and rapid intervals (< 300ms)
-  assert.equal(shouldDebounceClick(1000, 1001, 300), true, "1ms delta must be debounced");
-  assert.equal(shouldDebounceClick(1000, 1150, 300), true, "150ms delta must be debounced");
-  assert.equal(shouldDebounceClick(1000, 1299, 300), true, "299ms delta must be debounced");
+  assert.equal(
+    shouldDebounceClick(1000, 1001, 300),
+    true,
+    "1ms delta must be debounced",
+  );
+  assert.equal(
+    shouldDebounceClick(1000, 1150, 300),
+    true,
+    "150ms delta must be debounced",
+  );
+  assert.equal(
+    shouldDebounceClick(1000, 1299, 300),
+    true,
+    "299ms delta must be debounced",
+  );
 
   // 4. Exact boundary (delta = 300ms) must NOT be debounced (allowed)
-  assert.equal(shouldDebounceClick(1000, 1300, 300), false, "Exact 300ms delta must be allowed");
-  assert.equal(shouldDebounceClick(1000, 1301, 300), false, "301ms delta must be allowed");
+  assert.equal(
+    shouldDebounceClick(1000, 1300, 300),
+    false,
+    "Exact 300ms delta must be allowed",
+  );
+  assert.equal(
+    shouldDebounceClick(1000, 1301, 300),
+    false,
+    "301ms delta must be allowed",
+  );
 
   // 5. System clock skew / backward jump (now < lastClickTime)
   // In Javascript: (now - lastClickTime) < 300 evaluates to true for negative values,
@@ -201,8 +230,16 @@ test("ADV-1.1: shouldDebounceClick handles exact boundaries, micro-intervals, an
   );
 
   // 6. Custom debounce intervals
-  assert.equal(shouldDebounceClick(1000, 1050, 50), false, "Exact custom 50ms boundary allowed");
-  assert.equal(shouldDebounceClick(1000, 1049, 50), true, "49ms with custom 50ms debounced");
+  assert.equal(
+    shouldDebounceClick(1000, 1050, 50),
+    false,
+    "Exact custom 50ms boundary allowed",
+  );
+  assert.equal(
+    shouldDebounceClick(1000, 1049, 50),
+    true,
+    "49ms with custom 50ms debounced",
+  );
 });
 
 test("ADV-1.2: 100 rapid click spam on idle state triggers onSend EXACTLY once", async () => {
@@ -229,7 +266,11 @@ test("ADV-1.2: 100 rapid click spam on idle state triggers onSend EXACTLY once",
     if (fired) allowedCount++;
   }
 
-  assert.equal(sendCount, 1, "onSend must fire exactly once across 100 rapid clicks");
+  assert.equal(
+    sendCount,
+    1,
+    "onSend must fire exactly once across 100 rapid clicks",
+  );
   assert.equal(allowedCount, 1, "Only 1 of the 100 clicks must be admitted");
 });
 
@@ -257,20 +298,24 @@ test("ADV-1.3: 100 clicks across multiple debounce windows admit exactly 3 invoc
     if (i === 0) {
       t = baseTime;
     } else if (i < 33) {
-      t = baseTime + (i * 8); // 8ms .. 256ms < 300ms
+      t = baseTime + i * 8; // 8ms .. 256ms < 300ms
     } else if (i === 33) {
       t = baseTime + 305; // New window 2!
     } else if (i < 66) {
-      t = baseTime + 305 + ((i - 33) * 8); // < 605ms
+      t = baseTime + 305 + (i - 33) * 8; // < 605ms
     } else if (i === 66) {
       t = baseTime + 610; // New window 3!
     } else {
-      t = baseTime + 610 + ((i - 66) * 8); // < 910ms
+      t = baseTime + 610 + (i - 66) * 8; // < 910ms
     }
     executeClick(t);
   }
 
-  assert.equal(sendCount, 3, "Exactly 3 distinct send calls must fire across the 3 time windows");
+  assert.equal(
+    sendCount,
+    3,
+    "Exactly 3 distinct send calls must fire across the 3 time windows",
+  );
 });
 
 test("ADV-1.4: 100 rapid clicks on executing state triggers onPause EXACTLY once", async () => {
@@ -289,10 +334,14 @@ test("ADV-1.4: 100 rapid clicks on executing state triggers onPause EXACTLY once
 
   const baseTime = 10_000;
   for (let i = 0; i < 100; i++) {
-    executePauseClick(baseTime + (i * 2)); // 100 clicks in 200ms
+    executePauseClick(baseTime + i * 2); // 100 clicks in 200ms
   }
 
-  assert.equal(pauseCount, 1, "onPause must fire exactly once for 100 rapid clicks in executing state");
+  assert.equal(
+    pauseCount,
+    1,
+    "onPause must fire exactly once for 100 rapid clicks in executing state",
+  );
 });
 
 test("ADV-1.5: 100 rapid clicks on paused state triggers onResume EXACTLY once", async () => {
@@ -311,10 +360,14 @@ test("ADV-1.5: 100 rapid clicks on paused state triggers onResume EXACTLY once",
 
   const baseTime = 20_000;
   for (let i = 0; i < 100; i++) {
-    executeResumeClick(baseTime + (i * 2)); // 100 clicks in 200ms
+    executeResumeClick(baseTime + i * 2); // 100 clicks in 200ms
   }
 
-  assert.equal(resumeCount, 1, "onResume must fire exactly once for 100 rapid clicks in paused state");
+  assert.equal(
+    resumeCount,
+    1,
+    "onResume must fire exactly once for 100 rapid clicks in paused state",
+  );
 });
 
 test("ADV-1.6: 100 continuous spam clicks across a dynamic 6-state transition sequence", async () => {
@@ -330,7 +383,8 @@ test("ADV-1.6: 100 continuous spam clicks across a dynamic 6-state transition se
   // Dispatch click logic mimicking AgentActionButton.handleClick
   const dispatchClick = (currentTime: number) => {
     // Check disabled status
-    const isPausingOrResuming = currentState === "pausing" || currentState === "resuming";
+    const isPausingOrResuming =
+      currentState === "pausing" || currentState === "resuming";
     const isCompleted = currentState === "completed";
     const isButtonDisabled = isPausingOrResuming || isCompleted;
 
@@ -389,7 +443,11 @@ test("ADV-1.6: 100 continuous spam clicks across a dynamic 6-state transition se
   // 5. In resuming (clicks 70..84): disabled, 0 callbacks
   // 6. In completed (clicks 85..94): disabled, 0 callbacks
   assert.equal(resumeCount, 0, "onResume safely debounced during rapid spam");
-  assert.equal(illegalCallbackCount, 45, "Clicks during disabled states must be intercepted");
+  assert.equal(
+    illegalCallbackCount,
+    45,
+    "Clicks during disabled states must be intercepted",
+  );
 });
 
 test("ADV-1.7: Direct synchronous 100-click spam on mounted React component in idle state", async () => {
@@ -544,7 +602,11 @@ test("ADV-2.1: Complete 42-cell Cartesian matrix: 7 valid transitions vs 35 stri
   }
 
   assert.equal(validCount, 7, "Exactly 7 canonical transitions must succeed");
-  assert.equal(noOpCount, 35, "Exactly 35 illegal transitions must be strictly blocked");
+  assert.equal(
+    noOpCount,
+    35,
+    "Exactly 35 illegal transitions must be strictly blocked",
+  );
   assert.equal(validCount + noOpCount, 42, "Full 42-cell matrix verified");
 });
 
@@ -566,15 +628,24 @@ test("ADV-2.2: Adversarial input resilience (unknown events, malformed states, p
 
   for (const ev of strangeEvents) {
     assert.equal(
-      transitionAgentActionState("idle", ev as unknown as AgentActionTransitionEvent),
+      transitionAgentActionState(
+        "idle",
+        ev as unknown as AgentActionTransitionEvent,
+      ),
       "idle",
     );
     assert.equal(
-      transitionAgentActionState("executing", ev as unknown as AgentActionTransitionEvent),
+      transitionAgentActionState(
+        "executing",
+        ev as unknown as AgentActionTransitionEvent,
+      ),
       "executing",
     );
     assert.equal(
-      transitionAgentActionState("paused", ev as unknown as AgentActionTransitionEvent),
+      transitionAgentActionState(
+        "paused",
+        ev as unknown as AgentActionTransitionEvent,
+      ),
       "paused",
     );
   }
@@ -689,7 +760,11 @@ test("ADV-3.1: Transient states (pausing, resuming, completed) disable button & 
   const mod = await loadTranspiledActionButtonModule();
   const AgentActionButton = mod.default;
 
-  const transientStates: AgentActionState[] = ["pausing", "resuming", "completed"];
+  const transientStates: AgentActionState[] = [
+    "pausing",
+    "resuming",
+    "completed",
+  ];
 
   for (const st of transientStates) {
     let clicked = false;
@@ -708,10 +783,18 @@ test("ADV-3.1: Transient states (pausing, resuming, completed) disable button & 
 
     const button = findButtonElement(tree);
     assert.ok(button, `Button must exist for state ${st}`);
-    assert.equal(button.props.disabled, true, `Button must be disabled in state ${st}`);
+    assert.equal(
+      button.props.disabled,
+      true,
+      `Button must be disabled in state ${st}`,
+    );
 
     if (st === "pausing" || st === "resuming") {
-      assert.equal(button.props["aria-busy"], true, `aria-busy must be true for ${st}`);
+      assert.equal(
+        button.props["aria-busy"],
+        true,
+        `aria-busy must be true for ${st}`,
+      );
     }
 
     // Direct invocation of onClick prop must NOT invoke callbacks
@@ -719,7 +802,11 @@ test("ADV-3.1: Transient states (pausing, resuming, completed) disable button & 
       preventDefault: () => {},
       stopPropagation: () => {},
     });
-    assert.equal(clicked, false, `onClick callback must never fire during transient state ${st}`);
+    assert.equal(
+      clicked,
+      false,
+      `onClick callback must never fire during transient state ${st}`,
+    );
   }
 });
 
@@ -796,7 +883,11 @@ test("ADV-3.3: TurnFreezingController: queue unfreezing stampede with 50 waiting
 
   // All 50 workers must unblock cleanly
   const results = await Promise.all(workers);
-  assert.equal(unblockedCount, 50, "All 50 workers must unblock simultaneously upon resume");
+  assert.equal(
+    unblockedCount,
+    50,
+    "All 50 workers must unblock simultaneously upon resume",
+  );
   assert.equal(results.length, 50);
   assert.equal(controller.isExecuting(), true);
   assert.equal(controller.isFrozen(), false);
@@ -882,20 +973,15 @@ test("ADV-4.1: Exported geometry constants strictly adhere to spec standards", a
 });
 
 test("ADV-4.2: CSS rules enforce 40px diameter, circular border-radius, and >=44px touch target", async () => {
-  const cssPath = new URL("../../src/styles/agent-action-button.css", import.meta.url);
+  const cssPath = new URL(
+    "../../src/styles/agent-action-button.css",
+    import.meta.url,
+  );
   const css = await readFile(cssPath, "utf8");
 
   // Visual button diameter
-  assert.match(
-    css,
-    /width:\s*40px;/,
-    "CSS must declare visual width: 40px",
-  );
-  assert.match(
-    css,
-    /height:\s*40px;/,
-    "CSS must declare visual height: 40px",
-  );
+  assert.match(css, /width:\s*40px;/, "CSS must declare visual width: 40px");
+  assert.match(css, /height:\s*40px;/, "CSS must declare visual height: 40px");
   assert.match(
     css,
     /border-radius:\s*var\(--kk-radius-full\);/,

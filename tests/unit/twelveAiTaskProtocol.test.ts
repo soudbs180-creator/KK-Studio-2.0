@@ -87,7 +87,7 @@ test("12AI fresh adapters without durable persistence never read credentials or 
   }
 });
 
-test("12AI factory binds default persistence delegate and allows task recovery and submission", async () => {
+test("12AI factory uses the explicit host port and allows task recovery and submission", async () => {
   const originalFetch = globalThis.fetch;
   let calls = 0;
   setSessionApiKey(
@@ -108,7 +108,9 @@ test("12AI factory binds default persistence delegate and allows task recovery a
     );
   };
   try {
-    const adapter = createGenerationAdapter(connection);
+    const adapter = createGenerationAdapter(connection, {
+      submissionPersistence: persistence(),
+    });
     assert.ok(adapter instanceof TwelveAiTaskAdapter);
     const submitted = await adapter.submit(request());
     assert.equal(submitted.providerJobId, "task_two");

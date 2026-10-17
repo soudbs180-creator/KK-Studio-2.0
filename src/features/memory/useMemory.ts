@@ -13,11 +13,17 @@ const EXTRACT_INSTRUCTION =
 function waitForAssistantReply(
   clientMessageId: string,
   threadId: string,
+  isCurrent: () => boolean,
   timeoutMs = 120_000,
 ): Promise<string | null> {
   return new Promise((resolve) => {
     const start = Date.now();
     const timer = window.setInterval(() => {
+      if (!isCurrent()) {
+        window.clearInterval(timer);
+        resolve(null);
+        return;
+      }
       const state = agentConnection.getState();
       const reply = completedAssistantReply(
         state.messages,
@@ -46,7 +52,7 @@ export interface UseMemoryOptions {
 
 export function useMemory(
   onFeedback: (message: string) => void,
-  options?: UseMemoryOptions | { isTemporary?: boolean } | boolean | null,
+  options?: UseMemoryOptions | boolean | null,
 ) {
   const feedbackRef = useRef(onFeedback);
   feedbackRef.current = onFeedback;
@@ -194,44 +200,58 @@ export function useMemory(
   const extractWithCodex = useCallback(
     async (targetChatOrIsTemp?: { isTemporary?: boolean } | boolean | null) => {
       if (extracting || busy) return;
-      const currentOpt = optionsRef.current;
-      const isTemp =
-        typeof targetChatOrIsTemp === "boolean"
-          ? targetChatOrIsTemp
-          : typeof targetChatOrIsTemp?.isTemporary === "boolean"
-          ? targetChatOrIsTemp.isTemporary
-          : typeof currentOpt === "boolean"
-          ? currentOpt
-          : typeof currentOpt === "object" && currentOpt !== null
-          ? Boolean(
-              (currentOpt as UseMemoryOptions).isTemporary ??
-                (currentOpt as UseMemoryOptions).activeChat?.isTemporary,
-            )
-          : Boolean(
-              (globalThis as { __kkActiveChat?: { isTemporary?: boolean } })
-                .__kkActiveChat?.isTemporary ||
-                (globalThis as { __kkActiveChatIsTemporary?: boolean })
-                  .__kkActiveChatIsTemporary,
-            );
-
-      if (isTemp) {
-        onFeedback("临时会话无法提炼长期记忆，请切换至常规会话。");
+      const blockReason = () => {
+        const currentOpt = optionsRef.current;
+        const isTemp =
+          targetChatOrIsTemp === true ||
+          (typeof targetChatOrIsTemp === "object" &&
+            targetChatOrIsTemp?.isTemporary) ||
+          currentOpt === true ||
+          (typeof currentOpt === "object" &&
+            (currentOpt?.isTemporary || currentOpt?.activeChat?.isTemporary));
+        return (
+          agentConnection.getExecutionBlockReason() ??
+          (isTemp ? "临时会话无法提炼长期记忆，请切换至常规会话。" : undefined)
+        );
+      };
+      const blocked = blockReason();
+      if (blocked) {
+        onFeedback(blocked);
         return;
       }
-      if (agentConnection.getState().status !== "connected") {
+      const beforeState = agentConnection.getState();
+      if (beforeState.status !== "connected") {
         onFeedback("请先连接 Codex 主 Agent，再使用「让 Codex 提炼记忆」。");
         return;
       }
+      const threadId = beforeState.conversation?.threadId;
+      if (!threadId) {
+        onFeedback("Codex 对话尚未就绪，请稍后重试。");
+        return;
+      }
+      const revision = beforeState.connectionRevision;
+      const projectId = agentConnection.getProjectId();
+      const isCurrent = () => {
+        const current = agentConnection.getState();
+        return (
+          current.status === "connected" &&
+          current.connectionRevision === revision &&
+          current.conversation?.threadId === threadId &&
+          agentConnection.getProjectId() === projectId &&
+          !blockReason()
+        );
+      };
+      const checkCurrent = () => {
+        if (isCurrent()) return true;
+        onFeedback("会话已变更，已取消本次记忆提炼。");
+        return false;
+      };
       const expectedVersion = memoryService.getMutationVersion();
       setExtracting(true);
       try {
-        const beforeState = agentConnection.getState();
-        const threadId = beforeState.conversation?.threadId;
-        if (!threadId) {
-          onFeedback("Codex 对话尚未就绪，请稍后重试。");
-          return;
-        }
-        if ((await memoryService.storageMode()) === "shared-readonly") {
+        const storageMode = await memoryService.storageMode();
+        if (!checkCurrent()) return;
+        if (storageMode === "shared-readonly") {
           onFeedback("浏览器共享目录只读，请在桌面端提炼记忆。");
           return;
         }
@@ -239,36 +259,47 @@ export function useMemory(
           memoryMode: "none",
           isTemporary: false,
         });
-      if (!result.ok) {
-        onFeedback(result.error ?? "Codex 提炼失败，请重试。");
-        return;
+        if (!checkCurrent()) return;
+        if (!result.ok) {
+          onFeedback(result.error ?? "Codex 提炼失败，请重试。");
+          return;
+        }
+        if (!result.messageId) {
+          onFeedback("无法识别本次 Codex 提炼请求，请重试。");
+          return;
+        }
+        const reply = await waitForAssistantReply(
+          result.messageId,
+          threadId,
+          isCurrent,
+        );
+        if (!checkCurrent()) return;
+        if (!reply) {
+          onFeedback("Codex 未返回可提炼的内容，请稍后重试。");
+          return;
+        }
+        const added = await memoryService.saveCodexExtraction(
+          reply,
+          threadId,
+          expectedVersion,
+          isCurrent,
+        );
+        if (!checkCurrent()) return;
+        await refresh();
+        if (!checkCurrent()) return;
+        onFeedback(
+          added > 0
+            ? `已提炼并保存 ${added} 条记忆（仅存本地）。`
+            : "本次没有新增记忆（可能已存在或未识别到稳定偏好）。",
+        );
+      } catch {
+        if (checkCurrent()) onFeedback("提炼记忆时发生错误，请重试。");
+      } finally {
+        setExtracting(false);
       }
-      if (!result.messageId) {
-        onFeedback("无法识别本次 Codex 提炼请求，请重试。");
-        return;
-      }
-      const reply = await waitForAssistantReply(result.messageId, threadId);
-      if (!reply) {
-        onFeedback("Codex 未返回可提炼的内容，请稍后重试。");
-        return;
-      }
-      const added = await memoryService.saveCodexExtraction(
-        reply,
-        threadId,
-        expectedVersion,
-      );
-      await refresh();
-      onFeedback(
-        added > 0
-          ? `已提炼并保存 ${added} 条记忆（仅存本地）。`
-          : "本次没有新增记忆（可能已存在或未识别到稳定偏好）。",
-      );
-    } catch {
-      onFeedback("提炼记忆时发生错误，请重试。");
-    } finally {
-      setExtracting(false);
-    }
-  }, [busy, extracting, onFeedback, refresh]);
+    },
+    [busy, extracting, onFeedback, refresh],
+  );
 
   return {
     enabled,

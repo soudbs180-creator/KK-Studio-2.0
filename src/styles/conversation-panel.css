@@ -430,7 +430,8 @@
   display: flex;
   flex-direction: column;
   cursor: pointer;
-  transition: transform var(--motion-fast) var(--motion-ease),
+  transition:
+    transform var(--motion-fast) var(--motion-ease),
     box-shadow var(--motion-fast) var(--motion-ease);
 }
 .chat-image-card:hover {

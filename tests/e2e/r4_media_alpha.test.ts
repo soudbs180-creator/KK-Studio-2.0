@@ -34,11 +34,19 @@ test("R4-T1-01: PNG alpha transparency preservation retains RGBA channels withou
   }
 
   const integrity = verifyAlphaIntegrity(buffer);
-  assert.equal(integrity.hasTransparency, true, "Buffer must contain transparent pixels");
+  assert.equal(
+    integrity.hasTransparency,
+    true,
+    "Buffer must contain transparent pixels",
+  );
   assert.equal(integrity.minAlpha, 0, "Transparent pixels must have alpha = 0");
 
   // Invariant check: corner pixel (0,0) must NOT be converted to opaque black [0, 0, 0, 255]
-  assert.equal(buffer.data[3], 0, "Alpha channel of transparent corner must remain 0");
+  assert.equal(
+    buffer.data[3],
+    0,
+    "Alpha channel of transparent corner must remain 0",
+  );
   assert.notEqual(
     buffer.data[3],
     255,
@@ -51,11 +59,23 @@ test("R4-T1-02: adaptive resizing respects max edge bounds while preserving exac
   const originalHeight = 2000;
   const maxEdge = 2048;
 
-  const result = calculateAdaptiveResize(originalWidth, originalHeight, maxEdge);
+  const result = calculateAdaptiveResize(
+    originalWidth,
+    originalHeight,
+    maxEdge,
+  );
 
   assert.equal(result.width, 2048, "Long edge must be clamped to 2048");
-  assert.equal(result.height, 1024, "Short edge must be proportionally scaled to 1024");
-  assert.equal(result.aspectRatio, 2.0, "Aspect ratio must be preserved exactly");
+  assert.equal(
+    result.height,
+    1024,
+    "Short edge must be proportionally scaled to 1024",
+  );
+  assert.equal(
+    result.aspectRatio,
+    2.0,
+    "Aspect ratio must be preserved exactly",
+  );
   assert.ok(result.scale < 1.0);
 });
 
@@ -88,7 +108,14 @@ test("R4-T1-03: masked alpha compositing blends transparent edges cleanly using 
   mask[9] = 255;
   mask[10] = 255;
 
-  const blended = blendMaskedPixels(original, generated, mask, width, height, 2);
+  const blended = blendMaskedPixels(
+    original,
+    generated,
+    mask,
+    width,
+    height,
+    2,
+  );
   assert.equal(blended.length, original.length);
 
   // Unmasked corners (0,0) must retain original alpha 0
@@ -96,8 +123,15 @@ test("R4-T1-03: masked alpha compositing blends transparent edges cleanly using 
 
   // Center pixel (1,1) -> index 5 has distance=1 with feather=2 (alpha=0.5), blending original 100 and generated 150 to 125
   const centerIdx = 5 * 4;
-  assert.ok(blended[centerIdx + 3] > 0, "Masked center pixel must receive color and alpha");
-  assert.equal(blended[centerIdx], 125, "Feathered pixel must interpolate between original (100) and generated (150)");
+  assert.ok(
+    blended[centerIdx + 3] > 0,
+    "Masked center pixel must receive color and alpha",
+  );
+  assert.equal(
+    blended[centerIdx],
+    125,
+    "Feathered pixel must interpolate between original (100) and generated (150)",
+  );
 });
 
 test("R4-T1-04: pristine uncompressed asset reference (originalAssetId) is preserved in derived image edit tasks", () => {
@@ -170,7 +204,12 @@ test("R4-T2-01: extreme aspect ratio scaling handles panoramic and banner images
 test("R4-T2-02: 100% transparent image canvas preserves full transparency after cropping", () => {
   const width = 10,
     height = 10;
-  const blankBuffer = createPixelBuffer(width, height, { r: 0, g: 0, b: 0, a: 0 });
+  const blankBuffer = createPixelBuffer(width, height, {
+    r: 0,
+    g: 0,
+    b: 0,
+    a: 0,
+  });
 
   // Verify all 100 pixels are 100% transparent
   let totalAlpha = 0;
@@ -185,9 +224,15 @@ test("R4-T2-02: 100% transparent image canvas preserves full transparency after 
 });
 
 test("R4-T2-03: re-deriving edit parameters fetches pristine original bytes preventing generational loss", () => {
-  const assetRepository = new Map<string, { bytes: Buffer; revision: number }>();
+  const assetRepository = new Map<
+    string,
+    { bytes: Buffer; revision: number }
+  >();
   const originalBytes = Buffer.from("RAW_PRISTINE_PNG_UNCOMPRESSED_DATA");
-  assetRepository.set("asset-master-uuid", { bytes: originalBytes, revision: 1 });
+  assetRepository.set("asset-master-uuid", {
+    bytes: originalBytes,
+    revision: 1,
+  });
 
   // First edit with resolution 1024
   const editRound1 = {
@@ -217,7 +262,9 @@ test("R4-T2-04: missing original asset reference raises clear actionable error w
   const loadOriginalAsset = (assetId: string) => {
     const asset = assetRepository.get(assetId);
     if (!asset) {
-      throw new Error(`无法找到原生素材原件（ID: ${assetId}），请从素材库或本地重新导入。`);
+      throw new Error(
+        `无法找到原生素材原件（ID: ${assetId}），请从素材库或本地重新导入。`,
+      );
     }
     return asset;
   };
@@ -251,7 +298,14 @@ test("R4-T2-05: feather gradient boundary transitions smoothly between 0 and 255
     }
   }
 
-  const blended = blendMaskedPixels(original, generated, mask, width, height, 4);
+  const blended = blendMaskedPixels(
+    original,
+    generated,
+    mask,
+    width,
+    height,
+    4,
+  );
 
   // Check the feather boundary at column 4 vs column 5
   // Edge column 4 should have an intermediate gradient between original and generated

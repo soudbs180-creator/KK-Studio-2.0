@@ -286,10 +286,7 @@ test("single connection entry is untouched", () => {
     "Anthropic 官方 · 旗舰模型",
     "Original provider name/detail preserved",
   );
-  assert.equal(
-    result[0].selection?.connectionId,
-    "conn-official-anthropic",
-  );
+  assert.equal(result[0].selection?.connectionId, "conn-official-anthropic");
 });
 
 test("preserves active candidates and handles disabled/quarantined connections", () => {
@@ -363,10 +360,7 @@ test("marks row disabled if all candidate connections are disabled or quarantine
   ];
 
   const [row] = deduplicateRelayEntries(entries);
-  assert.equal(
-    row.disabled,
-    "所有可用连接已隔离或禁用，请检查设置",
-  );
+  assert.equal(row.disabled, "所有可用连接已隔离或禁用，请检查设置");
 });
 
 test("mixed list with multiple models merges duplicates and preserves singles in order", () => {

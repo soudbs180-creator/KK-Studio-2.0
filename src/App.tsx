@@ -35,12 +35,10 @@ import {
   SKILLS_CHANGED_EVENT,
   type SkillRecord,
 } from "./features/skills/skillRegistry";
-import { isTauri } from "@tauri-apps/api/core";
 import {
   createProject,
   emptyDraft,
-  type ChatItem,
-  type ChatItemDraft,
+  snapshotWriteBlockReason,
   type CreationDraft,
   type CreationProject,
   type CreationTask,
@@ -389,6 +387,26 @@ export default function App() {
     ?.tasks.find((task) => task.id === pendingApproval?.taskId);
   const projectLibrary = useProjectLibrary(persistence, () => open("projects"));
   const activeProject = projectLibrary.activeProject;
+  const conversationDisabledReason =
+    snapshotWriteBlockReason(creation) ??
+    (saveState === "saved" || saveState === "saving"
+      ? undefined
+      : "请先处理项目读取或保存提示，当前暂不可编辑或执行。");
+  const selectedChat = activeProject?.activeChatId
+    ? activeProject.chats?.[activeProject.activeChatId]
+    : undefined;
+  const conversationDraft: CreationDraft | undefined =
+    saveState === "read_only" && activeProject && selectedChat
+      ? {
+          ...activeProject.composerDraft,
+          prompt: selectedChat.draft.prompt ?? selectedChat.draft.text ?? "",
+          attachments: selectedChat.draft.attachments ?? [],
+          model: selectedChat.draft.model ?? "",
+          modelSelection: selectedChat.draft.modelSelection,
+          conversationChannel:
+            selectedChat.draft.conversationChannel ?? "direct",
+        }
+      : activeProject?.composerDraft;
   const latestProjectTask = activeProject?.tasks.at(-1);
   const generationProgress = getGenerationProgressLabels({
     task: latestProjectTask,
@@ -599,6 +617,7 @@ export default function App() {
       node: CanvasCollectionItem,
       prompt: string,
       signal?: AbortSignal,
+      validate?: () => string | undefined,
     ) => Promise<{ taskId?: string; error?: string }>
   >(async () => ({ error: "生成入口未就绪" }));
   const agentViewRef = useRef<AgentCanvasBinding | null>(null);
@@ -614,19 +633,22 @@ export default function App() {
             (item) => item.id === activeProjectIdRef.current,
           ),
         getProjects: () => creationRef.current.projects,
+        getExecutionBlockReason: () =>
+          persistence.getWriteBlockReason() ??
+          snapshotWriteBlockReason(creationRef.current),
         flush: () => persistence.flush(),
         commit: (project) => {
           updateProject(project.id, () => project);
           if (activeProjectIdRef.current === project.id)
             replaceCanvasItems(project.items);
         },
-        generate: (node, prompt, signal) =>
-          agentSubmitRef.current(node, prompt, signal),
+        generate: (node, prompt, signal, validate) =>
+          agentSubmitRef.current(node, prompt, signal, validate),
         orchestrator: stageOrchestrator,
       }),
     [stageOrchestrator],
   );
-  agentSubmitRef.current = async (node, prompt, signal) => {
+  agentSubmitRef.current = async (node, prompt, signal, validate) => {
     const project = creationRef.current.projects.find(
       (item) => item.id === activeProjectIdRef.current,
     );
@@ -656,13 +678,18 @@ export default function App() {
       (id) => {
         taskId = id;
       },
+      validate,
     );
     return { taskId, error };
   };
   useEffect(() => {
     agentConnection.syncProject();
     googleAgentConnection.syncProject();
-  }, [creation.activeProjectId]);
+  }, [
+    creation.activeProjectId,
+    activeProject?.activeChatId,
+    conversationDisabledReason,
+  ]);
   useEffect(() => {
     const timer = setTimeout(() => agentConnection.pushState(), 100);
     return () => clearTimeout(timer);
@@ -1488,6 +1515,7 @@ export default function App() {
         attachments: task.attachments,
         signal: controller.signal,
         providerBaseUrl: task.providerBaseUrl,
+        providerConnectionId: task.providerConnectionId,
         credentialRef: task.providerCredentialRef,
         count: pendingIndices.length,
         idempotencyKey: `${task.idempotencyKey}-remaining-${pendingIndices.join("-")}`,
@@ -2156,7 +2184,10 @@ export default function App() {
         }
       | { origin: "canvas"; input: CanvasImageRequest },
     onAccepted?: (taskId: string) => void,
+    validateAcceptance?: () => string | undefined,
   ): Promise<string | undefined> {
+    const initialBlock = validateAcceptance?.();
+    if (initialBlock) return initialBlock;
     if (submitLock.current) return "正在提交图片任务，请稍候。";
     if (!["saved", "saving"].includes(persistence.state))
       return "请先处理项目读取或保存提示，当前未提交生成。";
@@ -2363,6 +2394,8 @@ export default function App() {
         canvasSignature(current, sourceItemId!) !== sourceSignature
       )
         return "节点或参考图在检查期间发生变化，请重新提交；当前内容已保留。";
+      const acceptanceBlock = validateAcceptance?.();
+      if (acceptanceBlock) return acceptanceBlock;
       const base = current ?? createProject(input);
       sourceItemId ??= rootItemId(base) ?? undefined;
       const appended = appendImageTask(
@@ -2421,7 +2454,10 @@ export default function App() {
           setActive("workspace");
           setChat(true);
         };
-        if (typeof document !== "undefined" && "startViewTransition" in document) {
+        if (
+          typeof document !== "undefined" &&
+          "startViewTransition" in document
+        ) {
           (
             document as Document & {
               startViewTransition: (cb: () => void) => void;
@@ -2434,6 +2470,11 @@ export default function App() {
       // The queued task and its stable idempotency key must survive a crash
       // before any provider request is allowed to start.
       await persistence.flush();
+      const afterSaveBlock = validateAcceptance?.();
+      if (afterSaveBlock) {
+        cancelTask(appended.task.id);
+        return afterSaveBlock;
+      }
       if (
         signal?.aborted ||
         (projectId && activeProjectIdRef.current !== projectId)
@@ -2527,7 +2568,10 @@ export default function App() {
         setChat(true);
         replaceCanvasItems(project.items);
       };
-      if (typeof document !== "undefined" && "startViewTransition" in document) {
+      if (
+        typeof document !== "undefined" &&
+        "startViewTransition" in document
+      ) {
         (
           document as Document & {
             startViewTransition: (cb: () => void) => void;
@@ -2550,9 +2594,14 @@ export default function App() {
       if (!ownsProject()) return "项目已切换，当前未发送；原项目草稿仍保留。";
       const currentProject = project;
       const result = await agentConnection.sendMessage(input.prompt.trim(), {
-        selection, outputCount: input.outputCount, attachments,
+        selection,
+        outputCount: input.outputCount,
+        attachments,
         canvasSource: { nodeId: project.items[0].id, kind: "image" },
-        isTemporary: Boolean(currentProject?.activeChatId && currentProject.chats?.[currentProject.activeChatId]?.isTemporary),
+        isTemporary: Boolean(
+          currentProject?.activeChatId &&
+          currentProject.chats?.[currentProject.activeChatId]?.isTemporary,
+        ),
       });
       if (!result.ok) return result.error ?? "发送未确认，草稿仍保留。";
       updateProject(project.id, (current) => ({
@@ -2650,87 +2699,6 @@ export default function App() {
     });
     replaceCanvasItems(updated.items);
   }
-  function handleNewWindow(): void {
-    if (isTauri()) {
-      import("@tauri-apps/api/webviewWindow")
-        .then(({ WebviewWindow }) => {
-          const label = `win-${Date.now()}`;
-          new WebviewWindow(label, { url: "/" });
-        })
-        .catch(() => {
-          window.open(window.location.href, "_blank");
-        });
-    } else {
-      window.open(window.location.href, "_blank");
-    }
-  }
-
-  function handleCreateChat(isTemporary = false): void {
-    const project = activeProject;
-    if (!project) {
-      const newProj = createProject({
-        prompt: "",
-        model: "",
-        kind: "image",
-        attachments: [],
-      });
-      newProj.name = isTemporary ? "临时会话" : "新建项目";
-      const chatId = isTemporary
-        ? `chat-temp-${Date.now()}`
-        : `chat-${Date.now()}`;
-      newProj.chats = {
-        [chatId]: {
-          id: chatId,
-          name: isTemporary ? "临时会话" : "对话 1",
-          createdAt: Date.now(),
-          updatedAt: Date.now(),
-          draft: { ...emptyDraft() } as ChatItemDraft,
-          messages: [],
-          mainAgent: "codex",
-          modelAllowlist: [],
-          isTemporary,
-        },
-      };
-      newProj.activeChatId = chatId;
-      commitCreation({
-        ...creationRef.current,
-        projects: [newProj, ...creationRef.current.projects],
-        activeProjectId: newProj.id,
-      });
-      setActive("workspace");
-      setChat(true);
-      setModal("");
-      return;
-    }
-    const chatId = isTemporary
-      ? `chat-temp-${Date.now()}`
-      : `chat-${Date.now()}`;
-    const nextCount = Object.keys(project.chats || {}).length + 1;
-    const newChat: ChatItem = {
-      id: chatId,
-      name: isTemporary ? "临时会话" : `对话 ${nextCount}`,
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
-      draft: { ...emptyDraft() } as ChatItemDraft,
-      messages: [],
-      mainAgent: "codex",
-      modelAllowlist: [],
-      isTemporary,
-    };
-    updateProject(project.id, (proj) => ({
-      ...proj,
-      chats: {
-        ...(proj.chats || {}),
-        [chatId]: newChat,
-      },
-      activeChatId: chatId,
-      updatedAt: Date.now(),
-    }));
-    setActive("workspace");
-    setChat(true);
-    setModal("");
-  }
-
   function handleSelectChat(chatId: string): void {
     if (!activeProject) return;
     updateProject(activeProject.id, (proj) => ({
@@ -3060,17 +3028,6 @@ export default function App() {
     }
   }
 
-  const [trashedAssets, setTrashedAssets] = useState<Asset[]>([]);
-  function handleRestoreAsset(assetId: string): void {
-    const item = trashedAssets.find((a) => a.id === assetId);
-    if (!item) return;
-    setTrashedAssets((prev) => prev.filter((a) => a.id !== assetId));
-    add([item], item.type === "subject");
-  }
-  function handlePermanentlyDeleteAsset(assetId: string): void {
-    setTrashedAssets((prev) => prev.filter((a) => a.id !== assetId));
-  }
-
   return (
     <div
       className="app"
@@ -3083,9 +3040,9 @@ export default function App() {
         onOpen={open}
         onToggleSidebar={sidebar.toggle}
         onToggleChat={() => open("chat")}
-        onNewWindow={handleNewWindow}
-        onNewChat={() => handleCreateChat(false)}
-        onNewTempChat={() => handleCreateChat(true)}
+        newWindowDisabledReason="多窗口仓库协调尚未完成，暂不可新建窗口。"
+        newChatDisabledReason="多聊天隔离尚未完成，暂不可新建聊天。"
+        newTempChatDisabledReason="临时聊天的历史与记忆隔离尚未完成，暂不可用。"
       />
       <div className="app-body">
         {sidebar.narrow && !sidebar.collapsed && (
@@ -3311,9 +3268,14 @@ export default function App() {
                   overlay={sidebar.narrow && mobileChat && chat}
                   onOpen={open}
                   project={activeProject}
+                  readOnlyMessages={
+                    saveState === "read_only"
+                      ? selectedChat?.messages
+                      : undefined
+                  }
+                  executionDisabledReason={conversationDisabledReason}
                   currentModel={activeProject?.model}
                   onSelectChat={handleSelectChat}
-                  onCreateChat={handleCreateChat}
                   modelOptions={[
                     ...new Set(
                       [
@@ -3326,7 +3288,7 @@ export default function App() {
                   ]}
                   modelConfigured={homeModelConfig.configured}
                   onModelChange={handleProjectModelChange}
-                  composerDraft={activeProject?.composerDraft}
+                  composerDraft={conversationDraft}
                   onDraftChange={handleProjectDraftChange}
                   onSend={activeProject ? handleSendMessage : undefined}
                   onDeleteMessage={
@@ -3558,10 +3520,7 @@ export default function App() {
                 archive={assetArchive}
                 assets={assets}
                 subjects={subjects}
-                trashedAssets={trashedAssets}
                 onAdd={add}
-                onRestoreAsset={handleRestoreAsset}
-                onPermanentlyDeleteAsset={handlePermanentlyDeleteAsset}
               />
             ) : modal === "tasks" ? (
               <TaskWorkbench

@@ -39,11 +39,13 @@ export interface CompiledStructuredPrompt {
 export const CANONICAL_MENTION_REGEX =
   /@\{mention:([^|}]+)\|([^|}]+)\|([^|}]+)\}/gu;
 
-export const LOOSE_MENTION_REGEX =
-  /@([^\s@，,；;[\]]+)(?:\[([^\]]+)\])?/gu;
+export const LOOSE_MENTION_REGEX = /@([^\s@，,；;[\]]+)(?:\[([^\]]+)\])?/gu;
 
 /** Slot 角色详细约束指引，针对多模态与生图模型注入 */
-export const SLOT_CONSTRAINTS: Record<CanvasReferenceSlot, { title: string; constraint: string }> = {
+export const SLOT_CONSTRAINTS: Record<
+  CanvasReferenceSlot,
+  { title: string; constraint: string }
+> = {
   主体: {
     title: "核心主体（外观与身份）",
     constraint:
@@ -127,7 +129,10 @@ export function extractMentionTokens(text: string): ParsedMention[] {
     const name = match[1].trim();
     const rawSlot = match[2]?.trim();
     let slot: CanvasReferenceSlot = "主体";
-    if (rawSlot && CANVAS_REFERENCE_SLOTS.includes(rawSlot as CanvasReferenceSlot)) {
+    if (
+      rawSlot &&
+      CANVAS_REFERENCE_SLOTS.includes(rawSlot as CanvasReferenceSlot)
+    ) {
       slot = rawSlot as CanvasReferenceSlot;
     }
 
@@ -148,7 +153,12 @@ export function extractMentionTokens(text: string): ParsedMention[] {
 export function compileStructuredPrompt(options: {
   prompt: string;
   attachments?: (CreationAttachment | AgentDraftAttachment)[];
-  availableItems?: Array<{ id: string; title: string; assetId?: string; referenceSlot?: CanvasReferenceSlot }>;
+  availableItems?: Array<{
+    id: string;
+    title: string;
+    assetId?: string;
+    referenceSlot?: CanvasReferenceSlot;
+  }>;
 }): CompiledStructuredPrompt {
   const { prompt, attachments = [], availableItems = [] } = options;
   const mentions = extractMentionTokens(prompt);
@@ -248,9 +258,7 @@ export function compileStructuredPrompt(options: {
   // 4. 构建结构化约束前言（Preamble）
   let preamble = "";
   if (references.length > 0) {
-    const preambleLines: string[] = [
-      "【参考素材角色分配与约束清单】：",
-    ];
+    const preambleLines: string[] = ["【参考素材角色分配与约束清单】："];
 
     for (const ref of references) {
       const attInfo = ref.attachmentIndex

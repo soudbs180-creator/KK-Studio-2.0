@@ -19,8 +19,22 @@ import {
 } from "../../domain/providerProtocol.ts";
 
 import type { CreationTask } from "./model.ts";
+import {
+  twelveAiApiBase,
+  twelveAiModelKind,
+} from "../../integrations/generation/twelveAiTaskProtocol.ts";
 
 export class ProviderSubmissionError extends Error {}
+
+export function assertSynchronousProviderSubmission(
+  baseUrl: string | undefined,
+  model: string | undefined,
+): void {
+  if (twelveAiApiBase(baseUrl) && model && twelveAiModelKind(model))
+    throw new ProviderSubmissionError(
+      "12AI 异步生成尚未接入持久受理回执，当前已禁用提交；请先接入宿主持久回执后再试。",
+    );
+}
 export function taskProviderOptions(task: CreationTask) {
   return {
     baseUrl: task.providerBaseUrl,
@@ -119,13 +133,14 @@ export function assertSubmissionConnection(
   binding: SubmissionBinding,
   options: SubmissionOptions = {},
 ): ProviderConnection {
-  const connection = readProviderConnections().find(
+  const matches = readProviderConnections().filter(
     (item) => item.id === binding.id,
   );
-  if (!connection)
+  if (matches.length !== 1)
     throw new ProviderSubmissionError(
-      "原绑定连接已移除或未登记，请重新配置后创建任务；当前内容已保留。",
+      "原绑定连接已移除、未登记或身份重复，请重新确认后创建任务；当前内容已保留。",
     );
+  const connection = matches[0];
   if (
     connection.kind !== "user_byok" ||
     !connection.baseUrl ||
@@ -141,6 +156,10 @@ export function assertSubmissionConnection(
     binding.model ?? connection.model ?? "",
   );
   assertBindingIdentity(connection, binding, selectedModel?.kind);
+  assertSynchronousProviderSubmission(
+    connection.baseUrl,
+    binding.model ?? connection.model,
+  );
   const health =
     options.explicitRetry && connection.state === "degraded"
       ? { ...connection, state: "active" as const }

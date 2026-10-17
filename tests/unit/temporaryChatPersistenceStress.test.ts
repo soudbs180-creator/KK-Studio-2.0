@@ -33,9 +33,7 @@ import {
   type CreationSnapshot,
   type CreationProjectV3,
 } from "../../src/features/creation/model.ts";
-import {
-  decodeSnapshot,
-} from "../../src/features/creation/snapshotCodec.ts";
+import { decodeSnapshot } from "../../src/features/creation/snapshotCodec.ts";
 
 // -----------------------------------------------------------------------------
 // Test Helpers & Mock Storage
@@ -84,7 +82,8 @@ function createProjectV3Fixture(
   activeChatId?: string,
 ): CreationProjectV3 {
   const chatKeys = Object.keys(chats);
-  const resolvedActive = activeChatId ?? (chatKeys.length > 0 ? chatKeys[0] : "chat-default");
+  const resolvedActive =
+    activeChatId ?? (chatKeys.length > 0 ? chatKeys[0] : "chat-default");
 
   return {
     id,
@@ -143,7 +142,14 @@ test("STRESS-01: Multiple Projects - Complex Matrix of Pure-Temp, Pure-Perm, Mix
     const id = `p1-temp-${i}`;
     p1Chats[id] = createChatFixture(id, `P1 Temp ${i}`, true);
   }
-  projects.push(createProjectV3Fixture("proj-1-all-temp", "P1 All Temp", p1Chats, "p1-temp-3"));
+  projects.push(
+    createProjectV3Fixture(
+      "proj-1-all-temp",
+      "P1 All Temp",
+      p1Chats,
+      "p1-temp-3",
+    ),
+  );
 
   // 2. Pure Permanent Project (5 permanent chats)
   const p2Chats: Record<string, ChatItem> = {};
@@ -151,38 +157,91 @@ test("STRESS-01: Multiple Projects - Complex Matrix of Pure-Temp, Pure-Perm, Mix
     const id = `p2-perm-${i}`;
     p2Chats[id] = createChatFixture(id, `P2 Perm ${i}`, false);
   }
-  projects.push(createProjectV3Fixture("proj-2-all-perm", "P2 All Perm", p2Chats, "p2-perm-2"));
+  projects.push(
+    createProjectV3Fixture(
+      "proj-2-all-perm",
+      "P2 All Perm",
+      p2Chats,
+      "p2-perm-2",
+    ),
+  );
 
   // 3. Mixed Project with Active Chat being Temporary
   const p3Chats: Record<string, ChatItem> = {};
   for (let i = 1; i <= 4; i++) {
-    p3Chats[`p3-temp-${i}`] = createChatFixture(`p3-temp-${i}`, `P3 Temp ${i}`, true);
-    p3Chats[`p3-perm-${i}`] = createChatFixture(`p3-perm-${i}`, `P3 Perm ${i}`, false);
+    p3Chats[`p3-temp-${i}`] = createChatFixture(
+      `p3-temp-${i}`,
+      `P3 Temp ${i}`,
+      true,
+    );
+    p3Chats[`p3-perm-${i}`] = createChatFixture(
+      `p3-perm-${i}`,
+      `P3 Perm ${i}`,
+      false,
+    );
   }
-  projects.push(createProjectV3Fixture("proj-3-mixed-temp-active", "P3 Mixed", p3Chats, "p3-temp-1"));
+  projects.push(
+    createProjectV3Fixture(
+      "proj-3-mixed-temp-active",
+      "P3 Mixed",
+      p3Chats,
+      "p3-temp-1",
+    ),
+  );
 
   // 4. Mixed Project with Active Chat being Permanent
   const p4Chats: Record<string, ChatItem> = {};
   for (let i = 1; i <= 3; i++) {
-    p4Chats[`p4-temp-${i}`] = createChatFixture(`p4-temp-${i}`, `P4 Temp ${i}`, true);
-    p4Chats[`p4-perm-${i}`] = createChatFixture(`p4-perm-${i}`, `P4 Perm ${i}`, false);
+    p4Chats[`p4-temp-${i}`] = createChatFixture(
+      `p4-temp-${i}`,
+      `P4 Temp ${i}`,
+      true,
+    );
+    p4Chats[`p4-perm-${i}`] = createChatFixture(
+      `p4-perm-${i}`,
+      `P4 Perm ${i}`,
+      false,
+    );
   }
-  projects.push(createProjectV3Fixture("proj-4-mixed-perm-active", "P4 Mixed", p4Chats, "p4-perm-2"));
+  projects.push(
+    createProjectV3Fixture(
+      "proj-4-mixed-perm-active",
+      "P4 Mixed",
+      p4Chats,
+      "p4-perm-2",
+    ),
+  );
 
   // 5. Single Temporary Chat Project
   const p5Chats: Record<string, ChatItem> = {
     "p5-only-temp": createChatFixture("p5-only-temp", "P5 Only Temp", true),
   };
-  projects.push(createProjectV3Fixture("proj-5-single-temp", "P5 Single Temp", p5Chats, "p5-only-temp"));
+  projects.push(
+    createProjectV3Fixture(
+      "proj-5-single-temp",
+      "P5 Single Temp",
+      p5Chats,
+      "p5-only-temp",
+    ),
+  );
 
   // 6. Single Permanent Chat Project
   const p6Chats: Record<string, ChatItem> = {
     "p6-only-perm": createChatFixture("p6-only-perm", "P6 Only Perm", false),
   };
-  projects.push(createProjectV3Fixture("proj-6-single-perm", "P6 Single Perm", p6Chats, "p6-only-perm"));
+  projects.push(
+    createProjectV3Fixture(
+      "proj-6-single-perm",
+      "P6 Single Perm",
+      p6Chats,
+      "p6-only-perm",
+    ),
+  );
 
   // 7. Empty chats project
-  projects.push(createProjectV3Fixture("proj-7-empty", "P7 Empty", {}, "chat-default"));
+  projects.push(
+    createProjectV3Fixture("proj-7-empty", "P7 Empty", {}, "chat-default"),
+  );
 
   // 8. 20 Alternating Chats Project (10 temp, 10 perm)
   const p8Chats: Record<string, ChatItem> = {};
@@ -191,7 +250,14 @@ test("STRESS-01: Multiple Projects - Complex Matrix of Pure-Temp, Pure-Perm, Mix
     const id = `p8-chat-${i}`;
     p8Chats[id] = createChatFixture(id, `P8 Chat ${i}`, isTemp);
   }
-  projects.push(createProjectV3Fixture("proj-8-alternating", "P8 Alternating", p8Chats, "p8-chat-1"));
+  projects.push(
+    createProjectV3Fixture(
+      "proj-8-alternating",
+      "P8 Alternating",
+      p8Chats,
+      "p8-chat-1",
+    ),
+  );
 
   const snapshot: CreationSnapshot = {
     version: 3,
@@ -210,7 +276,10 @@ test("STRESS-01: Multiple Projects - Complex Matrix of Pure-Temp, Pure-Perm, Mix
   // Proj 1 (was all temp): stripped completely, fallback chat-default generated
   const sP1 = sanitized.projects[0] as CreationProjectV3;
   assert.equal(Object.keys(sP1.chats).length, 1);
-  assert.ok(sP1.chats["chat-default"], "Fallback chat-default should be created");
+  assert.ok(
+    sP1.chats["chat-default"],
+    "Fallback chat-default should be created",
+  );
   assert.equal(sP1.activeChatId, "chat-default");
 
   // Proj 2 (was all perm): all 5 preserved, active unchanged
@@ -222,10 +291,17 @@ test("STRESS-01: Multiple Projects - Complex Matrix of Pure-Temp, Pure-Perm, Mix
   const sP3 = sanitized.projects[2] as CreationProjectV3;
   assert.equal(Object.keys(sP3.chats).length, 4);
   for (let i = 1; i <= 4; i++) {
-    assert.equal(sP3.chats[`p3-temp-${i}`], undefined, `p3-temp-${i} must be stripped`);
+    assert.equal(
+      sP3.chats[`p3-temp-${i}`],
+      undefined,
+      `p3-temp-${i} must be stripped`,
+    );
     assert.ok(sP3.chats[`p3-perm-${i}`], `p3-perm-${i} must be preserved`);
   }
-  assert.ok(sP3.chats[sP3.activeChatId], "Active chat must exist in sanitized chats");
+  assert.ok(
+    sP3.chats[sP3.activeChatId],
+    "Active chat must exist in sanitized chats",
+  );
   assert.equal(sP3.chats[sP3.activeChatId].isTemporary, false);
 
   // Proj 4 (mixed, active was perm): temp stripped (3 left), active preserved
@@ -301,10 +377,15 @@ test("STRESS-02: Deep Snapshot - Massive Message Trees, Nested Metadata, Drafts,
     activeProjectId: "proj-deep",
     homeDraft: { ...emptyDraft(), attachments: [] },
     projects: [
-      createProjectV3Fixture("proj-deep", "Deep Project", {
-        "chat-deep-temp-1": tempChat,
-        "chat-deep-perm-1": permChat,
-      }, "chat-deep-temp-1"),
+      createProjectV3Fixture(
+        "proj-deep",
+        "Deep Project",
+        {
+          "chat-deep-temp-1": tempChat,
+          "chat-deep-perm-1": permChat,
+        },
+        "chat-deep-temp-1",
+      ),
     ],
   };
 
@@ -312,16 +393,48 @@ test("STRESS-02: Deep Snapshot - Massive Message Trees, Nested Metadata, Drafts,
   const serialized = JSON.stringify(sanitized);
 
   // Adversarial Check: NOT A SINGLE temporary secret canary may leak anywhere
-  assert.equal(serialized.includes(CANARY_TEMP_SECRET_1), false, "Chat name secret leaked!");
-  assert.equal(serialized.includes(CANARY_TEMP_SECRET_2), false, "Message content secret leaked!");
-  assert.equal(serialized.includes(CANARY_TEMP_SECRET_3), false, "Draft prompt secret leaked!");
-  assert.equal(serialized.includes(CANARY_TEMP_SECRET_4), false, "Thread ID secret leaked!");
-  assert.equal(serialized.includes("chat-deep-temp-1"), false, "Temporary chat ID leaked!");
+  assert.equal(
+    serialized.includes(CANARY_TEMP_SECRET_1),
+    false,
+    "Chat name secret leaked!",
+  );
+  assert.equal(
+    serialized.includes(CANARY_TEMP_SECRET_2),
+    false,
+    "Message content secret leaked!",
+  );
+  assert.equal(
+    serialized.includes(CANARY_TEMP_SECRET_3),
+    false,
+    "Draft prompt secret leaked!",
+  );
+  assert.equal(
+    serialized.includes(CANARY_TEMP_SECRET_4),
+    false,
+    "Thread ID secret leaked!",
+  );
+  assert.equal(
+    serialized.includes("chat-deep-temp-1"),
+    false,
+    "Temporary chat ID leaked!",
+  );
 
   // Permanent canary secrets MUST be fully preserved
-  assert.equal(serialized.includes(CANARY_PERM_PRESERVE_1), true, "Permanent chat name lost!");
-  assert.equal(serialized.includes(CANARY_PERM_PRESERVE_2), true, "Permanent message content lost!");
-  assert.equal(serialized.includes("chat-deep-perm-1"), true, "Permanent chat ID lost!");
+  assert.equal(
+    serialized.includes(CANARY_PERM_PRESERVE_1),
+    true,
+    "Permanent chat name lost!",
+  );
+  assert.equal(
+    serialized.includes(CANARY_PERM_PRESERVE_2),
+    true,
+    "Permanent message content lost!",
+  );
+  assert.equal(
+    serialized.includes("chat-deep-perm-1"),
+    true,
+    "Permanent chat ID lost!",
+  );
 
   // Active chat ID reassigned to permanent chat
   assert.equal(sanitized.projects[0].activeChatId, "chat-deep-perm-1");
@@ -353,7 +466,9 @@ test("STRESS-03: High Scale & Performance Benchmark - 50 Projects, 1000 Total Ch
       chats[cId] = createChatFixture(cId, `Chat ${p}-${c}`, isTemp, 2);
     }
 
-    projects.push(createProjectV3Fixture(pId, `Project ${p}`, chats, `chat-p${p}-c0`));
+    projects.push(
+      createProjectV3Fixture(pId, `Project ${p}`, chats, `chat-p${p}-c0`),
+    );
   }
 
   assert.equal(totalTempChats, 500);
@@ -383,11 +498,18 @@ test("STRESS-03: High Scale & Performance Benchmark - 50 Projects, 1000 Total Ch
 
     // Verify each chat in sanitized project is strictly non-temporary
     for (const [key, chat] of Object.entries(proj.chats)) {
-      assert.notEqual(chat.isTemporary, true, `Temporary chat ${key} found in project ${p}`);
+      assert.notEqual(
+        chat.isTemporary,
+        true,
+        `Temporary chat ${key} found in project ${p}`,
+      );
     }
 
     // Active chat ID must point to a surviving chat
-    assert.ok(proj.chats[proj.activeChatId], `activeChatId ${proj.activeChatId} must exist`);
+    assert.ok(
+      proj.chats[proj.activeChatId],
+      `activeChatId ${proj.activeChatId} must exist`,
+    );
   }
 
   // Exactly 500 permanent chats should survive
@@ -399,8 +521,18 @@ test("STRESS-03: High Scale & Performance Benchmark - 50 Projects, 1000 Total Ch
 });
 
 test("STRESS-04: In-Memory Immutability - Live Session Temporary Chats Are Not Corrupted by Persistence Sanitize", () => {
-  const originalTempChat = createChatFixture("chat-live-temp", "Live Temporary", true, 5);
-  const originalPermChat = createChatFixture("chat-live-perm", "Live Permanent", false, 5);
+  const originalTempChat = createChatFixture(
+    "chat-live-temp",
+    "Live Temporary",
+    true,
+    5,
+  );
+  const originalPermChat = createChatFixture(
+    "chat-live-perm",
+    "Live Permanent",
+    false,
+    5,
+  );
 
   const snapshot: CreationSnapshot = {
     version: 3,
@@ -409,10 +541,15 @@ test("STRESS-04: In-Memory Immutability - Live Session Temporary Chats Are Not C
     activeProjectId: "proj-live",
     homeDraft: { ...emptyDraft(), attachments: [] },
     projects: [
-      createProjectV3Fixture("proj-live", "Live Project", {
-        "chat-live-temp": originalTempChat,
-        "chat-live-perm": originalPermChat,
-      }, "chat-live-temp"),
+      createProjectV3Fixture(
+        "proj-live",
+        "Live Project",
+        {
+          "chat-live-temp": originalTempChat,
+          "chat-live-perm": originalPermChat,
+        },
+        "chat-live-temp",
+      ),
     ],
   };
 
@@ -420,13 +557,24 @@ test("STRESS-04: In-Memory Immutability - Live Session Temporary Chats Are Not C
 
   // 1. Original snapshot MUST NOT be mutated (live temporary chat must survive in memory)
   const originalProj = snapshot.projects[0] as CreationProjectV3;
-  assert.ok(originalProj.chats["chat-live-temp"], "Original snapshot must retain temporary chat for live typing");
+  assert.ok(
+    originalProj.chats["chat-live-temp"],
+    "Original snapshot must retain temporary chat for live typing",
+  );
   assert.equal(originalProj.chats["chat-live-temp"].messages.length, 5);
-  assert.equal(originalProj.activeChatId, "chat-live-temp", "Original activeChatId must not be changed");
+  assert.equal(
+    originalProj.activeChatId,
+    "chat-live-temp",
+    "Original activeChatId must not be changed",
+  );
 
   // 2. Sanitized snapshot MUST be clean
   const sanitizedProj = sanitized.projects[0] as CreationProjectV3;
-  assert.equal(sanitizedProj.chats["chat-live-temp"], undefined, "Sanitized snapshot must not have temporary chat");
+  assert.equal(
+    sanitizedProj.chats["chat-live-temp"],
+    undefined,
+    "Sanitized snapshot must not have temporary chat",
+  );
   assert.ok(sanitizedProj.chats["chat-live-perm"]);
   assert.equal(sanitizedProj.activeChatId, "chat-live-perm");
 
@@ -475,31 +623,35 @@ test("STRESS-05: Desktop Persistence Pipeline (Tauri IPC) Strips Temporary Chats
       activeProjectId: "proj-ipc",
       homeDraft: { ...emptyDraft(), attachments: [] },
       projects: [
-        createProjectV3Fixture("proj-ipc", "IPC Project", {
-          "ipc-temp-chat": tempChat,
-          "ipc-perm-chat": permChat,
-        }, "ipc-temp-chat"),
+        createProjectV3Fixture(
+          "proj-ipc",
+          "IPC Project",
+          {
+            "ipc-temp-chat": tempChat,
+            "ipc-perm-chat": permChat,
+          },
+          "ipc-temp-chat",
+        ),
       ],
     };
 
-    await persistCreationSnapshotAsync(snapshot);
-
-    assert.ok(interceptedIpcPayload, "Tauri invoke should have received write_creation_snapshot");
-    const ipcSnapshot = interceptedIpcPayload as CreationSnapshot;
-    const project = ipcSnapshot.projects[0] as CreationProjectV3;
-
-    assert.equal(project.chats["ipc-temp-chat"], undefined, "Temporary chat must not be sent over Tauri IPC");
-    assert.ok(project.chats["ipc-perm-chat"], "Permanent chat must be sent over Tauri IPC");
-    assert.equal(project.activeChatId, "ipc-perm-chat");
-
-    const serializedIpc = JSON.stringify(ipcSnapshot);
-    assert.equal(serializedIpc.includes("ipc-temp-chat"), false);
+    const originalBytes = JSON.stringify(snapshot);
+    await assert.rejects(
+      persistCreationSnapshotAsync(snapshot),
+      /仅供恢复查看/,
+    );
+    assert.equal(
+      interceptedIpcPayload,
+      null,
+      "Unsupported snapshots must not be sent over Tauri write IPC",
+    );
+    assert.equal(JSON.stringify(snapshot), originalBytes);
   } finally {
     globalThis.window = originalWindow;
   }
 });
 
-test("STRESS-06: Web Storage Persistence (SessionStorage Sync + Journal + Recovery Draft)", async () => {
+test("STRESS-06: legacy sanitizer fixture recovery is independent of the guarded persistence entry", async () => {
   const originalWindow = globalThis.window;
   const mockSession = new MockMemoryStorage();
   const mockLocal = new MockMemoryStorage();
@@ -510,8 +662,18 @@ test("STRESS-06: Web Storage Persistence (SessionStorage Sync + Journal + Recove
       localStorage: mockLocal,
     } as unknown as Window & typeof globalThis;
 
-    const tempChat = createChatFixture("sess-temp-1", "Session Temp 1", true, 4);
-    const permChat = createChatFixture("sess-perm-1", "Session Perm 1", false, 4);
+    const tempChat = createChatFixture(
+      "sess-temp-1",
+      "Session Temp 1",
+      true,
+      4,
+    );
+    const permChat = createChatFixture(
+      "sess-perm-1",
+      "Session Perm 1",
+      false,
+      4,
+    );
 
     const snapshot: CreationSnapshot = {
       version: 3,
@@ -520,14 +682,19 @@ test("STRESS-06: Web Storage Persistence (SessionStorage Sync + Journal + Recove
       activeProjectId: "proj-sess",
       homeDraft: { ...emptyDraft(), attachments: [] },
       projects: [
-        createProjectV3Fixture("proj-sess", "Session Project", {
-          "sess-temp-1": tempChat,
-          "sess-perm-1": permChat,
-        }, "sess-temp-1"),
+        createProjectV3Fixture(
+          "proj-sess",
+          "Session Project",
+          {
+            "sess-temp-1": tempChat,
+            "sess-perm-1": permChat,
+          },
+          "sess-temp-1",
+        ),
       ],
     };
 
-    // Test sanitizeSnapshotForPersistence directly matches the persistCreationSnapshotSync contract
+    // This tests legacy helper output only; the actual persistence entry rejects v3 snapshots.
     const sanitized = sanitizeSnapshotForPersistence(snapshot);
     const serializedJournal = JSON.stringify({
       baseRevision: 7,
@@ -541,8 +708,15 @@ test("STRESS-06: Web Storage Persistence (SessionStorage Sync + Journal + Recove
     assert.ok(recovered, "Recovery draft should be read from sessionStorage");
     const recoveredProj = recovered.projects[0] as CreationProjectV3;
 
-    assert.equal(recoveredProj.chats["sess-temp-1"], undefined, "Recovered draft must not contain temporary chat");
-    assert.ok(recoveredProj.chats["sess-perm-1"], "Recovered draft must contain permanent chat");
+    assert.equal(
+      recoveredProj.chats["sess-temp-1"],
+      undefined,
+      "Recovered draft must not contain temporary chat",
+    );
+    assert.ok(
+      recoveredProj.chats["sess-perm-1"],
+      "Recovered draft must contain permanent chat",
+    );
     assert.equal(recoveredProj.activeChatId, "sess-perm-1");
   } finally {
     globalThis.window = originalWindow;
@@ -560,7 +734,14 @@ test("STRESS-07: All Projects in Workspace 100% Temporary Chats", () => {
       const cId = `temp-p${p}-c${c}`;
       chats[cId] = createChatFixture(cId, `Temp Chat ${p}-${c}`, true);
     }
-    projects.push(createProjectV3Fixture(pId, `Pure Temp Project ${p}`, chats, `temp-p${p}-c1`));
+    projects.push(
+      createProjectV3Fixture(
+        pId,
+        `Pure Temp Project ${p}`,
+        chats,
+        `temp-p${p}-c1`,
+      ),
+    );
   }
 
   const snapshot: CreationSnapshot = {
@@ -576,8 +757,15 @@ test("STRESS-07: All Projects in Workspace 100% Temporary Chats", () => {
 
   for (let p = 0; p < TOTAL_PURE_TEMP_PROJECTS; p++) {
     const proj = sanitized.projects[p] as CreationProjectV3;
-    assert.equal(Object.keys(proj.chats).length, 1, `Project ${p} must have exactly 1 fallback chat`);
-    assert.ok(proj.chats["chat-default"], `Project ${p} must have chat-default`);
+    assert.equal(
+      Object.keys(proj.chats).length,
+      1,
+      `Project ${p} must have exactly 1 fallback chat`,
+    );
+    assert.ok(
+      proj.chats["chat-default"],
+      `Project ${p} must have chat-default`,
+    );
     assert.equal(proj.activeChatId, "chat-default");
     assert.equal(proj.chats["chat-default"].isTemporary, undefined);
     assert.equal(proj.chats["chat-default"].name, "对话 1");
@@ -591,13 +779,33 @@ test("STRESS-08: Adversarial isTemporary Falsy & Truthy Value Permutations", () 
   const chats: Record<string, ChatItem> = {
     "c-true": createChatFixture("c-true", "True Temp", true),
     "c-bool-true": createChatFixture("c-bool-true", "Bool True", Boolean(true)),
-    "c-truthy-num": createChatFixture("c-truthy-num", "Truthy Num", 1 as unknown as boolean),
-    "c-truthy-str": createChatFixture("c-truthy-str", "Truthy Str", "true" as unknown as boolean),
-    "c-truthy-obj": createChatFixture("c-truthy-obj", "Truthy Obj", {} as unknown as boolean),
+    "c-truthy-num": createChatFixture(
+      "c-truthy-num",
+      "Truthy Num",
+      1 as unknown as boolean,
+    ),
+    "c-truthy-str": createChatFixture(
+      "c-truthy-str",
+      "Truthy Str",
+      "true" as unknown as boolean,
+    ),
+    "c-truthy-obj": createChatFixture(
+      "c-truthy-obj",
+      "Truthy Obj",
+      {} as unknown as boolean,
+    ),
     "c-false": createChatFixture("c-false", "False Perm", false),
     "c-undefined": createChatFixture("c-undefined", "Undef Perm", undefined),
-    "c-falsy-zero": createChatFixture("c-falsy-zero", "Zero Perm", 0 as unknown as boolean),
-    "c-falsy-empty": createChatFixture("c-falsy-empty", "Empty Perm", "" as unknown as boolean),
+    "c-falsy-zero": createChatFixture(
+      "c-falsy-zero",
+      "Zero Perm",
+      0 as unknown as boolean,
+    ),
+    "c-falsy-empty": createChatFixture(
+      "c-falsy-empty",
+      "Empty Perm",
+      "" as unknown as boolean,
+    ),
   };
 
   const snapshot: CreationSnapshot = {
@@ -607,7 +815,12 @@ test("STRESS-08: Adversarial isTemporary Falsy & Truthy Value Permutations", () 
     activeProjectId: "proj-adversarial-flags",
     homeDraft: { ...emptyDraft(), attachments: [] },
     projects: [
-      createProjectV3Fixture("proj-adversarial-flags", "Flag Permutations", chats, "c-false"),
+      createProjectV3Fixture(
+        "proj-adversarial-flags",
+        "Flag Permutations",
+        chats,
+        "c-false",
+      ),
     ],
   };
 
@@ -616,10 +829,26 @@ test("STRESS-08: Adversarial isTemporary Falsy & Truthy Value Permutations", () 
 
   // All truthy variants must be stripped
   assert.equal(sanitizedChats["c-true"], undefined, "c-true must be stripped");
-  assert.equal(sanitizedChats["c-bool-true"], undefined, "c-bool-true must be stripped");
-  assert.equal(sanitizedChats["c-truthy-num"], undefined, "c-truthy-num must be stripped");
-  assert.equal(sanitizedChats["c-truthy-str"], undefined, "c-truthy-str must be stripped");
-  assert.equal(sanitizedChats["c-truthy-obj"], undefined, "c-truthy-obj must be stripped");
+  assert.equal(
+    sanitizedChats["c-bool-true"],
+    undefined,
+    "c-bool-true must be stripped",
+  );
+  assert.equal(
+    sanitizedChats["c-truthy-num"],
+    undefined,
+    "c-truthy-num must be stripped",
+  );
+  assert.equal(
+    sanitizedChats["c-truthy-str"],
+    undefined,
+    "c-truthy-str must be stripped",
+  );
+  assert.equal(
+    sanitizedChats["c-truthy-obj"],
+    undefined,
+    "c-truthy-obj must be stripped",
+  );
 
   // All falsy or omitted variants must be preserved
   assert.ok(sanitizedChats["c-false"], "c-false must be preserved");
@@ -645,9 +874,18 @@ test("STRESS-09: Rapid Autosave / Sequential Concurrency Stress (100 Cycles)", (
       activeProjectId: "proj-rapid",
       homeDraft: { ...emptyDraft(), attachments: [] },
       projects: [
-        createProjectV3Fixture("proj-rapid", "Rapid Autosave", {
-          "chat-perm-anchor": createChatFixture("chat-perm-anchor", "Anchor Perm", false),
-        }, "chat-perm-anchor"),
+        createProjectV3Fixture(
+          "proj-rapid",
+          "Rapid Autosave",
+          {
+            "chat-perm-anchor": createChatFixture(
+              "chat-perm-anchor",
+              "Anchor Perm",
+              false,
+            ),
+          },
+          "chat-perm-anchor",
+        ),
       ],
     };
 
@@ -658,7 +896,13 @@ test("STRESS-09: Rapid Autosave / Sequential Concurrency Stress (100 Cycles)", (
 
       // Add a temporary chat for this cycle
       const tempId = `temp-cycle-${cycle}`;
-      proj.chats[tempId] = createChatFixture(tempId, `Temp ${cycle}`, true, 1, `SECRET-${cycle}`);
+      proj.chats[tempId] = createChatFixture(
+        tempId,
+        `Temp ${cycle}`,
+        true,
+        1,
+        `SECRET-${cycle}`,
+      );
 
       // Even cycles switch active chat to temporary
       if (cycle % 2 === 0) {
@@ -670,18 +914,33 @@ test("STRESS-09: Rapid Autosave / Sequential Concurrency Stress (100 Cycles)", (
       // Add a permanent chat on every 10th cycle
       if (cycle % 10 === 0) {
         const permId = `perm-cycle-${cycle}`;
-        proj.chats[permId] = createChatFixture(permId, `Perm ${cycle}`, false, 1);
+        proj.chats[permId] = createChatFixture(
+          permId,
+          `Perm ${cycle}`,
+          false,
+          1,
+        );
       }
 
       const clean = sanitizeSnapshotForPersistence(baseSnapshot);
       const cleanSerialized = JSON.stringify(clean);
 
       // Verify no temporary chat or secret from ANY cycle exists in the sanitized payload
-      assert.equal(cleanSerialized.includes(tempId), false, `tempId ${tempId} leaked on cycle ${cycle}`);
-      assert.equal(cleanSerialized.includes(`SECRET-${cycle}`), false, `Secret leaked on cycle ${cycle}`);
+      assert.equal(
+        cleanSerialized.includes(tempId),
+        false,
+        `tempId ${tempId} leaked on cycle ${cycle}`,
+      );
+      assert.equal(
+        cleanSerialized.includes(`SECRET-${cycle}`),
+        false,
+        `Secret leaked on cycle ${cycle}`,
+      );
 
       // Verify anchor permanent chat is always present
-      assert.ok((clean.projects[0] as CreationProjectV3).chats["chat-perm-anchor"]);
+      assert.ok(
+        (clean.projects[0] as CreationProjectV3).chats["chat-perm-anchor"],
+      );
     }
   } finally {
     globalThis.window = originalWindow;
@@ -716,7 +975,12 @@ test("STRESS-10: Prototype Pollution & Special Character Chat Key Resistance", (
     activeProjectId: "proj-special",
     homeDraft: { ...emptyDraft(), attachments: [] },
     projects: [
-      createProjectV3Fixture("proj-special", "Special Keys Project", chats, "chat-anchor"),
+      createProjectV3Fixture(
+        "proj-special",
+        "Special Keys Project",
+        chats,
+        "chat-anchor",
+      ),
     ],
   };
 
@@ -724,8 +988,14 @@ test("STRESS-10: Prototype Pollution & Special Character Chat Key Resistance", (
   const sanitizedChats = (sanitized.projects[0] as CreationProjectV3).chats;
 
   // Verify Object prototype was not polluted with isTemporary or new properties
-  assert.equal(Object.hasOwn(Object.prototype, "chat-with-spaces and symbols!@#$%^&*()_+"), false);
-  assert.equal(Object.hasOwn(Object.prototype, "chat-with-unicode-🚀-🎉-中文"), false);
+  assert.equal(
+    Object.hasOwn(Object.prototype, "chat-with-spaces and symbols!@#$%^&*()_+"),
+    false,
+  );
+  assert.equal(
+    Object.hasOwn(Object.prototype, "chat-with-unicode-🚀-🎉-中文"),
+    false,
+  );
 
   // Verify all temporary special keys were stripped from own properties and JSON
   const serializedChats = JSON.stringify(sanitizedChats);

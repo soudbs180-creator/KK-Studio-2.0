@@ -54,7 +54,14 @@ test("R2-U-SCHEMA-01: decodeSnapshot successfully decodes valid v3 snapshot with
             modelAllowlist: ["gpt-4o", "claude-3-5-sonnet"],
           },
         },
-        items: [{ id: "canvas-node-1", title: "Node", description: "", kind: "image" }],
+        items: [
+          {
+            id: "canvas-node-1",
+            title: "Node",
+            description: "",
+            kind: "image",
+          },
+        ],
         tasks: [],
       },
     ],
@@ -88,7 +95,9 @@ test("R2-U-SCHEMA-02: decodeSnapshot rejects snapshot with unsupported versions 
     assert.throws(
       () => decodeSnapshot({ ...baseSnapshot, version: ver }),
       (err: unknown) => {
-        return err instanceof SnapshotStorageError && err.code === "unsupported";
+        return (
+          err instanceof SnapshotStorageError && err.code === "unsupported"
+        );
       },
       `Should reject unsupported version ${ver}`,
     );
@@ -123,7 +132,8 @@ test("R2-U-SCHEMA-03: decodeSnapshot rejects v3 project when activeChatId is mis
   };
   assert.throws(
     () => decodeSnapshot(missingActiveChatId),
-    (err: unknown) => err instanceof SnapshotStorageError && err.code === "corrupt",
+    (err: unknown) =>
+      err instanceof SnapshotStorageError && err.code === "corrupt",
   );
 
   // Mismatched activeChatId
@@ -154,7 +164,8 @@ test("R2-U-SCHEMA-03: decodeSnapshot rejects v3 project when activeChatId is mis
   };
   assert.throws(
     () => decodeSnapshot(mismatchedActiveChatId),
-    (err: unknown) => err instanceof SnapshotStorageError && err.code === "corrupt",
+    (err: unknown) =>
+      err instanceof SnapshotStorageError && err.code === "corrupt",
   );
 });
 
@@ -187,7 +198,8 @@ test("R2-U-SCHEMA-04: decodeSnapshot rejects malformed chat entries (mismatched 
 
   assert.throws(
     () => decodeSnapshot(base),
-    (err: unknown) => err instanceof SnapshotStorageError && err.code === "corrupt",
+    (err: unknown) =>
+      err instanceof SnapshotStorageError && err.code === "corrupt",
   );
 
   // Non-array messages
@@ -196,14 +208,16 @@ test("R2-U-SCHEMA-04: decodeSnapshot rejects malformed chat entries (mismatched 
   nonArrayMessages.projects[0].chats["chat-1"].messages = "not-an-array";
   assert.throws(
     () => decodeSnapshot(nonArrayMessages),
-    (err: unknown) => err instanceof SnapshotStorageError && err.code === "corrupt",
+    (err: unknown) =>
+      err instanceof SnapshotStorageError && err.code === "corrupt",
   );
 });
 
 test("R2-U-SCHEMA-05: parseSnapshot rejects corrupt JSON strings", () => {
   assert.throws(
     () => parseSnapshot("{ version: 3, corrupt "),
-    (err: unknown) => err instanceof SnapshotStorageError && err.code === "corrupt",
+    (err: unknown) =>
+      err instanceof SnapshotStorageError && err.code === "corrupt",
   );
 });
 
@@ -222,16 +236,40 @@ test("R2-U-MIGRATE-01: deterministic migration splits v2 direct, codex, and goog
         id: "proj-legacy",
         name: "Legacy Multi-Channel Project",
         messages: [
-          { id: "msg-dir-1", role: "user" as const, content: "Direct message 1", createdAt: 1000 },
-          { id: "msg-dir-2", role: "assistant" as const, content: "Direct reply", createdAt: 1001 },
+          {
+            id: "msg-dir-1",
+            role: "user" as const,
+            content: "Direct message 1",
+            createdAt: 1000,
+          },
+          {
+            id: "msg-dir-2",
+            role: "assistant" as const,
+            content: "Direct reply",
+            createdAt: 1001,
+          },
         ],
         composerDraft: {
           text: "Unsent direct draft",
         },
         agentThreadId: "thread-codex-abc-123",
         googleConversation: { sessionId: "gemini-session-888" },
-        items: [{ id: "canvas-shared-item", title: "Canvas Asset", description: "", kind: "image" as const }],
-        tasks: [{ id: "task-render-1", prompt: "render", model: "gpt-4o", status: "succeeded" as const }],
+        items: [
+          {
+            id: "canvas-shared-item",
+            title: "Canvas Asset",
+            description: "",
+            kind: "image" as const,
+          },
+        ],
+        tasks: [
+          {
+            id: "task-render-1",
+            prompt: "render",
+            model: "gpt-4o",
+            status: "succeeded" as const,
+          },
+        ],
       },
     ],
   };
@@ -244,9 +282,18 @@ test("R2-U-MIGRATE-01: deterministic migration splits v2 direct, codex, and goog
 
   const proj = v3.projects[0];
   // Deterministic chat segregation
-  assert.ok(proj.chats["legacy-direct"], "Direct history must migrate to legacy-direct");
-  assert.ok(proj.chats["legacy-codex"], "Codex history must migrate to legacy-codex");
-  assert.ok(proj.chats["legacy-google"], "Google conversation must migrate to legacy-google");
+  assert.ok(
+    proj.chats["legacy-direct"],
+    "Direct history must migrate to legacy-direct",
+  );
+  assert.ok(
+    proj.chats["legacy-codex"],
+    "Codex history must migrate to legacy-codex",
+  );
+  assert.ok(
+    proj.chats["legacy-google"],
+    "Google conversation must migrate to legacy-google",
+  );
 
   // Verify data fidelity in legacy-direct
   const directChat = proj.chats["legacy-direct"];
@@ -263,7 +310,9 @@ test("R2-U-MIGRATE-01: deterministic migration splits v2 direct, codex, and goog
   // Verify data fidelity in legacy-google
   const googleChat = proj.chats["legacy-google"];
   assert.equal(googleChat.mainAgent, "google");
-  assert.deepEqual(googleChat.googleConversation, { sessionId: "gemini-session-888" });
+  assert.deepEqual(googleChat.googleConversation, {
+    sessionId: "gemini-session-888",
+  });
 
   // Verify activeChatId priority: legacy-direct > legacy-codex > legacy-google
   assert.equal(proj.activeChatId, "legacy-direct");
@@ -354,7 +403,10 @@ test("R2-U-BARRIER-01: write barrier executes strict 5-step sequence and SHA-256
   });
 
   const barrier = new NonDowngradableWriteBarrier(initialV2Raw);
-  assert.deepEqual(barrier.formatMarker, { formatVersion: 1, minWriterVersion: 1 });
+  assert.deepEqual(barrier.formatMarker, {
+    formatVersion: 1,
+    minWriterVersion: 1,
+  });
 
   const v3Snapshot: CreationSnapshotV3 = {
     version: 3,
@@ -401,7 +453,10 @@ test("R2-U-BARRIER-01: write barrier executes strict 5-step sequence and SHA-256
   assert.equal(mainParsed.revision, 4);
 
   // Step 5: Format marker advanced
-  assert.deepEqual(barrier.formatMarker, { formatVersion: 2, minWriterVersion: 2 });
+  assert.deepEqual(barrier.formatMarker, {
+    formatVersion: 2,
+    minWriterVersion: 2,
+  });
 
   // Verification of step order in transaction log
   const log = barrier.stepLog;
@@ -455,7 +510,9 @@ test("R2-U-BARRIER-02: crash recovery restores v3 main from backup without rolli
   const recovery = barrier.recoverFromCrash();
   assert.equal(recovery.state, "v3_recovered");
 
-  const restoredMain = JSON.parse(barrier.memoryFiles.get("projects/creation-v2.json")!);
+  const restoredMain = JSON.parse(
+    barrier.memoryFiles.get("projects/creation-v2.json")!,
+  );
   assert.equal(restoredMain.version, 3);
   assert.equal(restoredMain.projects[0].name, "Crash Protected");
   assert.equal(barrier.formatMarker.formatVersion, 2);
@@ -495,27 +552,23 @@ test("R2-U-SECURITY-01: snapshot decoding strictly rejects apiKey, accessToken, 
 
   // 1. Root level apiKey
   assert.throws(
-    () => decodeSnapshot({ ...baseV3, apiKey: "sk-live-synthetic-leak-key-12345" }),
+    () =>
+      decodeSnapshot({ ...baseV3, apiKey: "sk-live-synthetic-leak-key-12345" }),
     /凭据|令牌|密钥/,
   );
 
   // 2. Chat draft accessToken
   const leakInChatDraft = JSON.parse(JSON.stringify(baseV3));
-  leakInChatDraft.projects[0].chats["chat-1"].draft.accessToken = "ghp_synthetic_token_12345";
-  assert.throws(
-    () => decodeSnapshot(leakInChatDraft),
-    /凭据|令牌|密钥/,
-  );
+  leakInChatDraft.projects[0].chats["chat-1"].draft.accessToken =
+    "ghp_synthetic_token_12345";
+  assert.throws(() => decodeSnapshot(leakInChatDraft), /凭据|令牌|密钥/);
 
   // 3. Task level secretKey
   const leakInTask = JSON.parse(JSON.stringify(baseV3));
   leakInTask.projects[0].tasks = [
     { id: "task-1", secretKey: "secret-synthetic-token-val" },
   ];
-  assert.throws(
-    () => decodeSnapshot(leakInTask),
-    /凭据|令牌|密钥/,
-  );
+  assert.throws(() => decodeSnapshot(leakInTask), /凭据|令牌|密钥/);
 });
 
 test("R2-U-SECURITY-02: ordinary text containing substring key is not falsely rejected", () => {
@@ -565,11 +618,28 @@ test("R2-U-ISOLATION-01: multi-chat isolates drafts, transcripts, and models whi
     name: "Collaborative Design Project",
     activeChatId: "chat-design",
     items: [
-      { id: "canvas-shape-1", kind: "image", title: "Background", description: "" },
-      { id: "canvas-image-2", kind: "image", title: "Reference Photo", description: "" },
+      {
+        id: "canvas-shape-1",
+        kind: "image",
+        title: "Background",
+        description: "",
+      },
+      {
+        id: "canvas-image-2",
+        kind: "image",
+        title: "Reference Photo",
+        description: "",
+      },
     ],
     tasks: [
-      { id: "task-101", prompt: "p", model: "m", kind: "image" as const, status: "running" as const, originChatId: "chat-design" },
+      {
+        id: "task-101",
+        prompt: "p",
+        model: "m",
+        kind: "image" as const,
+        status: "running" as const,
+        originChatId: "chat-design",
+      },
     ],
     chats: {
       "chat-design": {

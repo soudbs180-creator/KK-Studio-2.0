@@ -2,10 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { isProviderAuthAllowed } from "../../src/domain/providerProtocol.ts";
 import type { ProviderConnection } from "../../src/domain/providerConnections.ts";
-import {
-  createGenerationAdapter,
-  createDefaultTwelveAiPersistence,
-} from "../../src/integrations/generation/providerAdapterFactory.ts";
+import { createGenerationAdapter } from "../../src/integrations/generation/providerAdapterFactory.ts";
 import {
   TwelveAiTaskAdapter,
   TwelveAiTaskError,
@@ -16,6 +13,25 @@ import {
 import { createAgentHost } from "../../src/features/agent/agentHost.ts";
 import { createProject } from "../../src/features/creation/model.ts";
 import type { CanvasCollectionItem } from "../../src/domain/canvasItems.ts";
+
+// Controlled host-port fixture; this Map is not production persistence or restart evidence.
+function receiptPortFixture(
+  connectionId: string,
+): TwelveAiSubmissionPersistence {
+  const receipts = new Map<string, TwelveAiSubmissionReceipt>();
+  return {
+    connectionId,
+    async claimSubmission(receipt) {
+      const existing = receipts.get(receipt.idempotencyKey);
+      if (existing) return { created: false, receipt: { ...existing } };
+      receipts.set(receipt.idempotencyKey, { ...receipt });
+      return { created: true };
+    },
+    async persistSubmissionReceipt(receipt) {
+      receipts.set(receipt.idempotencyKey, { ...receipt });
+    },
+  };
+}
 
 // =============================================================================
 // CHALLENGE SUITE 1: ComfyUI Loopback None-Auth URL Validation Matrix
@@ -40,7 +56,11 @@ test("CHALLENGE 1.1: ComfyUI loopback none-auth accepts standard loopbacks (loca
   for (const url of allowedUrls) {
     // Via kind: "local_comfyui"
     assert.equal(
-      isProviderAuthAllowed({ baseUrl: url, kind: "local_comfyui", authMode: "none" }),
+      isProviderAuthAllowed({
+        baseUrl: url,
+        kind: "local_comfyui",
+        authMode: "none",
+      }),
       true,
       `Should allow loopback URL: ${url} with kind: local_comfyui and authMode: none`,
     );
@@ -49,7 +69,8 @@ test("CHALLENGE 1.1: ComfyUI loopback none-auth accepts standard loopbacks (loca
     assert.equal(
       isProviderAuthAllowed({
         baseUrl: url,
-        protocol: "local_comfyui" as unknown as import("../../src/domain/providerProtocol.ts").ProviderProtocol,
+        protocol:
+          "local_comfyui" as unknown as import("../../src/domain/providerProtocol.ts").ProviderProtocol,
         authMode: "none",
       }),
       true,
@@ -71,7 +92,11 @@ test("CHALLENGE 1.2: ComfyUI loopback none-auth handles uppercase, mixed-case sc
 
   for (const url of caseInsensitiveUrls) {
     assert.equal(
-      isProviderAuthAllowed({ baseUrl: url, kind: "local_comfyui", authMode: "none" }),
+      isProviderAuthAllowed({
+        baseUrl: url,
+        kind: "local_comfyui",
+        authMode: "none",
+      }),
       true,
       `Should allow case-varied URL: ${url}`,
     );
@@ -80,21 +105,25 @@ test("CHALLENGE 1.2: ComfyUI loopback none-auth handles uppercase, mixed-case sc
 
 test("CHALLENGE 1.3: ComfyUI loopback none-auth accepts diverse custom ports and omitted port", () => {
   const customPortUrls = [
-    "http://localhost",          // Default HTTP port 80 implicit
-    "http://localhost:80",       // Explicit port 80
-    "http://localhost:8080",     // Alternate HTTP port
-    "http://localhost:3000",     // Node dev server port
-    "http://localhost:5000",     // Flask port
-    "http://localhost:65535",    // Maximum 16-bit port
-    "http://127.0.0.1",          // 127.0.0.1 with implicit port
-    "http://127.0.0.1:9090",     // Custom port
-    "http://[::1]",              // IPv6 with implicit port
-    "http://[::1]:9999",         // IPv6 with custom port
+    "http://localhost", // Default HTTP port 80 implicit
+    "http://localhost:80", // Explicit port 80
+    "http://localhost:8080", // Alternate HTTP port
+    "http://localhost:3000", // Node dev server port
+    "http://localhost:5000", // Flask port
+    "http://localhost:65535", // Maximum 16-bit port
+    "http://127.0.0.1", // 127.0.0.1 with implicit port
+    "http://127.0.0.1:9090", // Custom port
+    "http://[::1]", // IPv6 with implicit port
+    "http://[::1]:9999", // IPv6 with custom port
   ];
 
   for (const url of customPortUrls) {
     assert.equal(
-      isProviderAuthAllowed({ baseUrl: url, kind: "local_comfyui", authMode: "none" }),
+      isProviderAuthAllowed({
+        baseUrl: url,
+        kind: "local_comfyui",
+        authMode: "none",
+      }),
       true,
       `Should allow loopback with custom port: ${url}`,
     );
@@ -124,18 +153,22 @@ test("CHALLENGE 1.4: ComfyUI loopback none-auth strictly rejects non-loopback IP
     "http://127.0.0.1.nip.io:8188",
     "http://localhost.com:8188",
     // Non-loopback special addresses
-    "http://0.0.0.0:8188",               // INADDR_ANY (not loopback)
-    "http://255.255.255.255:8188",       // Broadcast
+    "http://0.0.0.0:8188", // INADDR_ANY (not loopback)
+    "http://255.255.255.255:8188", // Broadcast
     // Non-loopback IPv6
     "http://[::2]:8188",
-    "http://[fe80::1]:8188",             // IPv6 Link-local
-    "http://[2001:db8::1]:8188",         // IPv6 Documentation prefix
-    "http://[fc00::1]:8188",             // IPv6 Unique local
+    "http://[fe80::1]:8188", // IPv6 Link-local
+    "http://[2001:db8::1]:8188", // IPv6 Documentation prefix
+    "http://[fc00::1]:8188", // IPv6 Unique local
   ];
 
   for (const url of nonLoopbackUrls) {
     assert.equal(
-      isProviderAuthAllowed({ baseUrl: url, kind: "local_comfyui", authMode: "none" }),
+      isProviderAuthAllowed({
+        baseUrl: url,
+        kind: "local_comfyui",
+        authMode: "none",
+      }),
       false,
       `MUST reject non-loopback URL with authMode 'none': ${url}`,
     );
@@ -164,7 +197,11 @@ test("CHALLENGE 1.5: ComfyUI loopback none-auth rejects URL query parameters, ha
 
   for (const url of injectionUrls) {
     assert.equal(
-      isProviderAuthAllowed({ baseUrl: url, kind: "local_comfyui", authMode: "none" }),
+      isProviderAuthAllowed({
+        baseUrl: url,
+        kind: "local_comfyui",
+        authMode: "none",
+      }),
       false,
       `MUST reject injection or malformed URL: ${url}`,
     );
@@ -266,7 +303,11 @@ test("CHALLENGE 2.1: 12AI submit flow executes claims and commits receipts atomi
   const result = await adapter.submit(request);
 
   // 1. Verify exact order of execution: claimSubmission -> networkFetch -> persistSubmissionReceipt
-  assert.deepEqual(callOrder, ["claimSubmission", "networkFetch", "persistSubmissionReceipt"]);
+  assert.deepEqual(callOrder, [
+    "claimSubmission",
+    "networkFetch",
+    "persistSubmissionReceipt",
+  ]);
 
   // 2. Verify claim was for unknown acceptance
   assert.equal(trackedReceipts[0].idempotencyKey, "intent-atomic-order-001");
@@ -283,7 +324,7 @@ test("CHALLENGE 2.1: 12AI submit flow executes claims and commits receipts atomi
   assert.equal(result.status, "queued");
 });
 
-test("CHALLENGE 2.2: Default in-memory persistence retains committed receipts across distinct adapter instances", async () => {
+test("CHALLENGE 2.2: An explicit host port restores accepted receipts across adapter instances", async () => {
   const connectionId = "twelve-ai-cross-instance-test";
   const connection: ProviderConnection = {
     id: connectionId,
@@ -315,10 +356,11 @@ test("CHALLENGE 2.2: Default in-memory persistence retains committed receipts ac
     );
   };
 
-  // Instance 1: Initial submission
+  const persistence = receiptPortFixture(connectionId);
   const adapter1 = createGenerationAdapter(connection, {
     fetch: mockFetch,
     resolveCredential: async () => "token-1",
+    submissionPersistence: persistence,
   });
   assert.ok(adapter1 instanceof TwelveAiTaskAdapter);
 
@@ -335,8 +377,7 @@ test("CHALLENGE 2.2: Default in-memory persistence retains committed receipts ac
   assert.equal(res1.providerJobId, "task_twelve_shared_111");
   assert.equal(fetchCount, 1);
 
-  // Directly check default persistence store
-  const persistence = createDefaultTwelveAiPersistence(connectionId);
+  // The host port retains the accepted identity before another adapter resumes.
   const claimCheck = await persistence.claimSubmission({
     connectionId,
     idempotencyKey: "intent-shared-store-001",
@@ -348,16 +389,21 @@ test("CHALLENGE 2.2: Default in-memory persistence retains committed receipts ac
     assert.equal(claimCheck.receipt.providerJobId, "task_twelve_shared_111");
   }
 
-  // Instance 2: Brand new adapter instance with same connection (simulating app reload or multiple workers)
+  // This checks port injection across instances, not real host restart durability.
   const adapter2 = createGenerationAdapter(connection, {
     fetch: mockFetch,
     resolveCredential: async () => "token-1",
+    submissionPersistence: persistence,
   });
   assert.ok(adapter2 instanceof TwelveAiTaskAdapter);
 
   // Submitting with same idempotencyKey MUST NOT trigger network fetch!
   const res2 = await adapter2.submit(request);
-  assert.equal(fetchCount, 1, "Must NOT make a second network fetch when receipt is already committed");
+  assert.equal(
+    fetchCount,
+    1,
+    "Must NOT make a second network fetch when receipt is already committed",
+  );
   assert.equal(res2.providerJobId, "task_twelve_shared_111");
   assert.equal(res2.async, true);
   assert.equal(res2.status, "queued");
@@ -399,6 +445,7 @@ test("CHALLENGE 2.3: Concurrent submissions with same idempotencyKey are coalesc
   const adapter = createGenerationAdapter(connection, {
     fetch: mockFetch,
     resolveCredential: async () => "token-3",
+    submissionPersistence: receiptPortFixture(connection.id),
   });
   assert.ok(adapter instanceof TwelveAiTaskAdapter);
 
@@ -417,7 +464,11 @@ test("CHALLENGE 2.3: Concurrent submissions with same idempotencyKey are coalesc
     adapter.submit(request),
   ]);
 
-  assert.equal(networkInvocations, 1, "Only one network request must be made for concurrent identical submits");
+  assert.equal(
+    networkInvocations,
+    1,
+    "Only one network request must be made for concurrent identical submits",
+  );
   assert.equal(sub1.providerJobId, "task_twelve_concurrent_888");
   assert.equal(sub2.providerJobId, "task_twelve_concurrent_888");
 });
@@ -451,9 +502,11 @@ test("CHALLENGE 2.4: Terminal remote rejection updates and commits persistence r
     );
   };
 
+  const persistence = receiptPortFixture(connectionId);
   const adapter = createGenerationAdapter(connection, {
     fetch: mockFetch,
     resolveCredential: async () => "token-4",
+    submissionPersistence: persistence,
   });
   assert.ok(adapter instanceof TwelveAiTaskAdapter);
 
@@ -477,7 +530,6 @@ test("CHALLENGE 2.4: Terminal remote rejection updates and commits persistence r
   );
 
   // Check that the persistence store committed acceptance: "rejected"
-  const persistence = createDefaultTwelveAiPersistence(connectionId);
   const claimCheck = await persistence.claimSubmission({
     connectionId,
     idempotencyKey: "intent-rejection-persist-001",
@@ -486,7 +538,11 @@ test("CHALLENGE 2.4: Terminal remote rejection updates and commits persistence r
 
   assert.equal(claimCheck.created, false);
   if (!claimCheck.created) {
-    assert.equal(claimCheck.receipt.acceptance, "rejected", "Terminal rejection must be committed as 'rejected'");
+    assert.equal(
+      claimCheck.receipt.acceptance,
+      "rejected",
+      "Terminal rejection must be committed as 'rejected'",
+    );
   }
 });
 
@@ -553,8 +609,16 @@ test("CHALLENGE 2.5: Pre-aborted signal stops submit immediately without calling
     },
   );
 
-  assert.equal(claimCalled, false, "Must not claim persistence when pre-aborted");
-  assert.equal(fetchCalled, false, "Must not make network request when pre-aborted");
+  assert.equal(
+    claimCalled,
+    false,
+    "Must not claim persistence when pre-aborted",
+  );
+  assert.equal(
+    fetchCalled,
+    false,
+    "Must not make network request when pre-aborted",
+  );
 });
 
 test("CHALLENGE 2.6: Mismatched connectionId in custom persistence is strictly rejected", async () => {
@@ -602,7 +666,10 @@ test("CHALLENGE 2.6: Mismatched connectionId in custom persistence is strictly r
     },
     (err: unknown) => {
       assert.ok(err instanceof TwelveAiTaskError);
-      assert.equal((err as TwelveAiTaskError).reason, "receipt_persistence_required");
+      assert.equal(
+        (err as TwelveAiTaskError).reason,
+        "receipt_persistence_required",
+      );
       return true;
     },
   );
@@ -669,8 +736,15 @@ test("CHALLENGE 3.1: agentHost respects dynamic modelAllowlist function and node
   ]);
   assert.equal(res2.applied.length, 0);
   assert.equal(res2.rejected.length, 1);
-  assert.match(res2.rejected[0].reason, /模型 model-a 不在允许调用的模型白名单中/);
-  assert.equal(generateCount, 1, "generate must not be called when model is forbidden");
+  assert.match(
+    res2.rejected[0].reason,
+    /模型 model-a 不在允许调用的模型白名单中/,
+  );
+  assert.equal(
+    generateCount,
+    1,
+    "generate must not be called when model is forbidden",
+  );
 
   // Providing op.model with model-b should succeed:
   const res3 = await host.applyOps([

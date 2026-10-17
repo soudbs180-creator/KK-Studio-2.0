@@ -36,8 +36,13 @@ export default function ComposerMentionMenu({
 
   if (candidates.length === 0) {
     return (
-      <div className="composer-autocomplete-menu mention-menu empty" role="listbox">
-        <span className="autocomplete-empty-tip">未在当前项目或附件中找到匹配图片</span>
+      <div
+        className="composer-autocomplete-menu mention-menu empty"
+        role="listbox"
+      >
+        <span className="autocomplete-empty-tip">
+          未在当前项目或附件中找到匹配图片
+        </span>
       </div>
     );
   }
@@ -84,7 +89,11 @@ export default function ComposerMentionMenu({
             >
               <div className="mention-thumb-box">
                 {item.preview ? (
-                  <img src={item.preview} alt={item.name} className="mention-thumb" />
+                  <img
+                    src={item.preview}
+                    alt={item.name}
+                    className="mention-thumb"
+                  />
                 ) : (
                   <div className="mention-thumb-placeholder">🖼️</div>
                 )}
@@ -97,7 +106,9 @@ export default function ComposerMentionMenu({
                   </span>
                 </div>
                 <div className="item-desc">
-                  {item.sourceType === "canvas-node" ? "画布卡片" : "已上传附件"}
+                  {item.sourceType === "canvas-node"
+                    ? "画布卡片"
+                    : "已上传附件"}
                 </div>
               </div>
             </button>

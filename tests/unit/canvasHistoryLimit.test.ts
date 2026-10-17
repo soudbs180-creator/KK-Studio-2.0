@@ -16,7 +16,12 @@ import {
 
 function createMockSnapshot(x: number): CanvasHistorySnapshot {
   const items: CanvasCollectionItem[] = [
-    { id: `item-${x}`, kind: "image", title: `图片 ${x}`, description: `demo-${x}` },
+    {
+      id: `item-${x}`,
+      kind: "image",
+      title: `图片 ${x}`,
+      description: `demo-${x}`,
+    },
   ];
   const edges: CanvasConnection[] = [];
   return {
@@ -191,4 +196,3 @@ test("kk:settings-changed event adjusts limit and truncates past stack", () => {
   assert.equal(history.limit, 8);
   assert.equal(history.past.length, 8);
 });
-

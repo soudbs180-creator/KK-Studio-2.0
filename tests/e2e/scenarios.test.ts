@@ -37,7 +37,11 @@ const mockAdapter = (provider: string): ChannelAdapter => ({
     async: true,
     status: "queued",
   }),
-  getStatus: async (id) => ({ providerJobId: id, async: true, status: "succeeded" }),
+  getStatus: async (id) => ({
+    providerJobId: id,
+    async: true,
+    status: "succeeded",
+  }),
   cancel: async () => {},
   listResults: async () => [],
 });
@@ -63,24 +67,42 @@ test("SCENARIO-T3-01 (R1 + R5): pausing action button during ComfyUI video task 
 
   // Assert button state
   assert.equal(button.state, "paused");
-  assert.equal(button.isTurnQueueFrozen, true, "Subsequent turn scheduling must be frozen");
+  assert.equal(
+    button.isTurnQueueFrozen,
+    true,
+    "Subsequent turn scheduling must be frozen",
+  );
 
   // Assert ComfyUI video task continues polling in background
-  assert.equal(button.isRemotePollingActive, true, "Background video polling must NOT be cancelled");
+  assert.equal(
+    button.isRemotePollingActive,
+    true,
+    "Background video polling must NOT be cancelled",
+  );
 
   // Background ComfyUI finishes while turn is paused
   comfyTask.progress = 100;
   comfyTask.status = "succeeded";
   const history: ComfyUiHistoryOutputs = {
     "node-vhs": {
-      videos: [{ filename: "final_render.mp4", subfolder: "renders", type: "output" }],
+      videos: [
+        { filename: "final_render.mp4", subfolder: "renders", type: "output" },
+      ],
     },
   };
-  const parsed = parseComfyUiOutputs(comfyTask.promptId, "http://127.0.0.1:8188", history);
+  const parsed = parseComfyUiOutputs(
+    comfyTask.promptId,
+    "http://127.0.0.1:8188",
+    history,
+  );
 
   assert.equal(parsed.length, 1);
   assert.equal(parsed[0].mime, "video/mp4");
-  assert.equal(button.state, "paused", "Button remains safely in paused state upon background completion");
+  assert.equal(
+    button.state,
+    "paused",
+    "Button remains safely in paused state upon background completion",
+  );
 });
 
 test("SCENARIO-T3-02 (R2 + R3): switching multi-chat tabs isolates deduplicated model selections and allowlists between chats", () => {
@@ -154,15 +176,25 @@ test("SCENARIO-T3-02 (R2 + R3): switching multi-chat tabs isolates deduplicated 
   };
 
   // Chat 1 allowlist check
-  assert.deepEqual(project.chats[project.activeChatId].modelAllowlist, ["gpt-4o"]);
+  assert.deepEqual(project.chats[project.activeChatId].modelAllowlist, [
+    "gpt-4o",
+  ]);
 
   // Switch to Chat 2
   project.activeChatId = "chat-claude";
-  assert.deepEqual(project.chats[project.activeChatId].modelAllowlist, ["claude-3-5-sonnet"]);
+  assert.deepEqual(project.chats[project.activeChatId].modelAllowlist, [
+    "claude-3-5-sonnet",
+  ]);
 
   // Cross-chat isolation check: Chat 1's draft did not overwrite Chat 2's draft
-  assert.equal(project.chats["chat-gpt"].draft.text, "Use GPT-4o for code generation");
-  assert.equal(project.chats["chat-claude"].draft.text, "Use Claude for creative writing");
+  assert.equal(
+    project.chats["chat-gpt"].draft.text,
+    "Use GPT-4o for code generation",
+  );
+  assert.equal(
+    project.chats["chat-claude"].draft.text,
+    "Use Claude for creative writing",
+  );
 });
 
 test("SCENARIO-T3-03 (R2 + R4): multi-chat tabs sharing canvas assets preserve pristine originalAssetId across image edits from different chats", () => {
@@ -253,7 +285,11 @@ test("SCENARIO-T3-05 (R4 + R5): alpha-preserved PNG asset submitted to ComfyUI v
     },
   };
 
-  const parsed = parseComfyUiOutputs("prompt-svd-001", "http://127.0.0.1:8188", history);
+  const parsed = parseComfyUiOutputs(
+    "prompt-svd-001",
+    "http://127.0.0.1:8188",
+    history,
+  );
   assert.equal(parsed.length, 1);
   assert.equal(parsed[0].mime, "video/mp4");
   assert.ok(parsed[0].url.includes("alpha_motion_output.mp4"));
@@ -285,7 +321,12 @@ test("SCENARIO-T4-01 (Complete Creative Studio Lifecycle): project creation -> m
   };
 
   // Step 2: Import alpha PNG logo
-  const logoBuffer = createPixelBuffer(200, 200, { r: 0, g: 255, b: 128, a: 120 });
+  const logoBuffer = createPixelBuffer(200, 200, {
+    r: 0,
+    g: 255,
+    b: 128,
+    a: 120,
+  });
   const logoIntegrity = verifyAlphaIntegrity(logoBuffer);
   assert.equal(logoIntegrity.hasTransparency, true);
 
@@ -340,7 +381,10 @@ test("SCENARIO-T4-01 (Complete Creative Studio Lifecycle): project creation -> m
 
   // User alters draft while paused
   button.setDraft("Render floating neon logo with cinematic lighting");
-  assert.equal(button.draft.text, "Render floating neon logo with cinematic lighting");
+  assert.equal(
+    button.draft.text,
+    "Render floating neon logo with cinematic lighting",
+  );
 
   // User resumes turn
   let autoSent = false;
@@ -403,7 +447,10 @@ test("SCENARIO-T4-02 (Legacy Project Upgrade & Migration Continuity): v2 snapsho
   assert.ok(proj.chats["legacy-direct"]);
   assert.ok(proj.chats["legacy-codex"]);
   assert.equal(proj.chats["legacy-direct"].messages.length, 2);
-  assert.equal(proj.chats["legacy-direct"].draft.text, "Unfinished draft in v2");
+  assert.equal(
+    proj.chats["legacy-direct"].draft.text,
+    "Unfinished draft in v2",
+  );
   assert.equal(proj.chats["legacy-codex"].agentThreadId, "thread-agent-old");
   assert.equal(proj.items?.length, 1);
 });
@@ -448,7 +495,11 @@ test("SCENARIO-T4-03 (ComfyUI Video Generation Lifecycle with Live Tracking & In
     },
   };
 
-  const results = parseComfyUiOutputs(promptId, "http://127.0.0.1:8188", history);
+  const results = parseComfyUiOutputs(
+    promptId,
+    "http://127.0.0.1:8188",
+    history,
+  );
   assert.equal(results.length, 1);
   assert.equal(results[0].mime, "video/mp4");
   assert.ok(results[0].url.includes("cyber_walk_cycle.mp4"));
@@ -463,7 +514,11 @@ test("SCENARIO-T4-04 (Resilient Multi-Relay Model Routing Under Rate Limiting): 
     priority: 100, // Highest tier
     weight: 50,
     baseUrl: "https://alpha.api.com",
-    capabilities: { operations: ["generate"], modalities: ["text"], limits: {} },
+    capabilities: {
+      operations: ["generate"],
+      modalities: ["text"],
+      limits: {},
+    },
     modelMapping: { "gpt-4o": "gpt-4o" },
     timeoutMs: 15000,
   };
@@ -476,12 +531,19 @@ test("SCENARIO-T4-04 (Resilient Multi-Relay Model Routing Under Rate Limiting): 
     priority: 80, // Fallback tier
     weight: 50,
     baseUrl: "https://beta.api.com",
-    capabilities: { operations: ["generate"], modalities: ["text"], limits: {} },
+    capabilities: {
+      operations: ["generate"],
+      modalities: ["text"],
+      limits: {},
+    },
     modelMapping: { "gpt-4o": "gpt-4o" },
     timeoutMs: 15000,
   };
 
-  const registry = createTestChannelRegistry([primaryChannel, secondaryChannel]);
+  const registry = createTestChannelRegistry([
+    primaryChannel,
+    secondaryChannel,
+  ]);
   const candidates = registry.candidates("gpt-4o", "generate");
 
   // Routing attempt 1: Candidate 0 hits 429 rate limit prior to acceptance
@@ -571,6 +633,9 @@ test("SCENARIO-T4-05 (High-Concurrency Stress & Adversarial Boundary Protection)
   // Switch tabs rapidly
   for (let i = 9; i >= 0; i--) {
     project.activeChatId = `chat-${i}`;
-    assert.equal(project.chats[project.activeChatId].draft.text, `Unique Draft for Tab ${i}`);
+    assert.equal(
+      project.chats[project.activeChatId].draft.text,
+      `Unique Draft for Tab ${i}`,
+    );
   }
 });

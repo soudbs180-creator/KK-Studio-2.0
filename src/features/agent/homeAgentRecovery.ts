@@ -50,10 +50,9 @@ export function sendProjectAgentMessage(
         : undefined,
     canvasSource: pendingAgentCanvasSource(project, selection),
     isTemporary: activeChat?.isTemporary,
-    modelAllowlist:
-      activeChat?.modelAllowlist && activeChat.modelAllowlist.length > 0
-        ? activeChat.modelAllowlist
-        : undefined,
+    modelAllowlist: activeChat
+      ? [...(activeChat.modelAllowlist ?? [])]
+      : undefined,
   });
 }
 

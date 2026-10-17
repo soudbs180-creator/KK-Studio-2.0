@@ -2,7 +2,10 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import type { CanvasCollectionItem } from "../../src/domain/canvasItems.ts";
 import type { CanvasConnection } from "../../src/domain/canvasGraph.ts";
-import type { CanvasHistorySnapshot, CanvasHistoryState } from "../../src/domain/canvasHistory.ts";
+import type {
+  CanvasHistorySnapshot,
+  CanvasHistoryState,
+} from "../../src/domain/canvasHistory.ts";
 import {
   commitCanvasHistory,
   createCanvasHistory,
@@ -35,7 +38,10 @@ function createMockSnapshot(id: number | string, x = 0): CanvasHistorySnapshot {
 }
 
 /** Invariant checker ensuring history stack is never unbounded, corrupted, or NaN */
-function assertHistoryInvariants(state: CanvasHistoryState, expectedMaxLimit?: number) {
+function assertHistoryInvariants(
+  state: CanvasHistoryState,
+  expectedMaxLimit?: number,
+) {
   assert.ok(state, "History state must exist");
   assert.ok(typeof state.limit === "number", "Limit must be a number");
   assert.ok(!Number.isNaN(state.limit), "Limit must not be NaN");
@@ -57,15 +63,30 @@ function assertHistoryInvariants(state: CanvasHistoryState, expectedMaxLimit?: n
   for (let i = 0; i < state.past.length; i++) {
     const snap = state.past[i];
     assert.ok(snap, `Past entry at index ${i} must not be null/undefined`);
-    assert.ok(Array.isArray(snap.items), `Past entry ${i} items must be an array`);
-    assert.ok(snap.positions && typeof snap.positions === "object", `Past entry ${i} positions valid`);
-    assert.ok(snap.viewport && typeof snap.viewport === "object", `Past entry ${i} viewport valid`);
+    assert.ok(
+      Array.isArray(snap.items),
+      `Past entry ${i} items must be an array`,
+    );
+    assert.ok(
+      snap.positions && typeof snap.positions === "object",
+      `Past entry ${i} positions valid`,
+    );
+    assert.ok(
+      snap.viewport && typeof snap.viewport === "object",
+      `Past entry ${i} viewport valid`,
+    );
   }
 
   // Present validity
   assert.ok(state.present, "Present snapshot must not be null/undefined");
-  assert.ok(Array.isArray(state.present.items), "Present items must be an array");
-  assert.ok(state.present.positions && typeof state.present.positions === "object", "Present positions valid");
+  assert.ok(
+    Array.isArray(state.present.items),
+    "Present items must be an array",
+  );
+  assert.ok(
+    state.present.positions && typeof state.present.positions === "object",
+    "Present positions valid",
+  );
 
   // Future stack boundedness and validity
   assert.ok(Array.isArray(state.future), "Future must be an array");
@@ -76,9 +97,18 @@ function assertHistoryInvariants(state: CanvasHistoryState, expectedMaxLimit?: n
   for (let i = 0; i < state.future.length; i++) {
     const snap = state.future[i];
     assert.ok(snap, `Future entry at index ${i} must not be null/undefined`);
-    assert.ok(Array.isArray(snap.items), `Future entry ${i} items must be an array`);
-    assert.ok(snap.positions && typeof snap.positions === "object", `Future entry ${i} positions valid`);
-    assert.ok(snap.viewport && typeof snap.viewport === "object", `Future entry ${i} viewport valid`);
+    assert.ok(
+      Array.isArray(snap.items),
+      `Future entry ${i} items must be an array`,
+    );
+    assert.ok(
+      snap.positions && typeof snap.positions === "object",
+      `Future entry ${i} positions valid`,
+    );
+    assert.ok(
+      snap.viewport && typeof snap.viewport === "object",
+      `Future entry ${i} viewport valid`,
+    );
   }
 }
 
@@ -149,11 +179,11 @@ test("CHALLENGE 1: clampHistoryLimit handles exhaustive boundary and extreme val
   assert.equal(clampHistoryLimit("1000"), 100);
 
   // Objects, booleans and arrays
-  assert.equal(clampHistoryLimit(true), 5);   // Number(true) = 1 -> 5
-  assert.equal(clampHistoryLimit(false), 5);  // Number(false) = 0 -> 5
-  assert.equal(clampHistoryLimit({}), 20);    // Number({}) = NaN -> 20
-  assert.equal(clampHistoryLimit([]), 5);     // Number([]) = 0 -> 5
-  assert.equal(clampHistoryLimit([50]), 50);  // Number([50]) = 50
+  assert.equal(clampHistoryLimit(true), 5); // Number(true) = 1 -> 5
+  assert.equal(clampHistoryLimit(false), 5); // Number(false) = 0 -> 5
+  assert.equal(clampHistoryLimit({}), 20); // Number({}) = NaN -> 20
+  assert.equal(clampHistoryLimit([]), 5); // Number([]) = 0 -> 5
+  assert.equal(clampHistoryLimit([50]), 50); // Number([50]) = 50
   assert.equal(clampHistoryLimit([10, 20]), 20); // Number([10, 20]) = NaN -> 20
 });
 
@@ -180,7 +210,29 @@ test("CHALLENGE 3: 1000 Rapid kk:settings-changed events while committing snapsh
   let state = createCanvasHistory(createMockSnapshot("init", 0), 20);
   assertHistoryInvariants(state, 100);
 
-  const testLimits = [-100, -1, 0, 1, 4, 5, 6, 10, 20, 45, 99, 100, 101, 500, 1000, NaN, "50", "-5", "abc", null, undefined];
+  const testLimits = [
+    -100,
+    -1,
+    0,
+    1,
+    4,
+    5,
+    6,
+    10,
+    20,
+    45,
+    99,
+    100,
+    101,
+    500,
+    1000,
+    NaN,
+    "50",
+    "-5",
+    "abc",
+    null,
+    undefined,
+  ];
   let commitCount = 0;
 
   for (let i = 0; i < 1000; i++) {
@@ -197,10 +249,20 @@ test("CHALLENGE 3: 1000 Rapid kk:settings-changed events while committing snapsh
     const commitBatch = (i % 3) + 1;
     for (let c = 0; c < commitBatch; c++) {
       commitCount++;
-      state = commitCanvasHistory(state, createMockSnapshot(`snap-${commitCount}`, commitCount * 10));
+      state = commitCanvasHistory(
+        state,
+        createMockSnapshot(`snap-${commitCount}`, commitCount * 10),
+      );
       assertHistoryInvariants(state, 100);
-      assert.ok(state.past.length <= state.limit, `Past (${state.past.length}) <= Limit (${state.limit})`);
-      assert.equal(state.future.length, 0, "Commit must always clear future stack");
+      assert.ok(
+        state.past.length <= state.limit,
+        `Past (${state.past.length}) <= Limit (${state.limit})`,
+      );
+      assert.equal(
+        state.future.length,
+        0,
+        "Commit must always clear future stack",
+      );
     }
 
     // 4. Interleave undo and redo operations
@@ -292,8 +354,12 @@ test("CHALLENGE 5: TopBar event bridge dispatches correct custom events and hand
   let undoEventsFired = 0;
   let redoEventsFired = 0;
 
-  const undoListener = () => { undoEventsFired++; };
-  const redoListener = () => { redoEventsFired++; };
+  const undoListener = () => {
+    undoEventsFired++;
+  };
+  const redoListener = () => {
+    redoEventsFired++;
+  };
 
   eventTarget.addEventListener("kk:canvas-undo", undoListener);
   eventTarget.addEventListener("kk:canvas-redo", redoListener);
@@ -311,8 +377,12 @@ test("CHALLENGE 5: TopBar event bridge dispatches correct custom events and hand
   // Case A: With explicit props (should bypass CustomEvent)
   let propUndoCalled = false;
   let propRedoCalled = false;
-  triggerUndo(() => { propUndoCalled = true; });
-  triggerRedo(() => { propRedoCalled = true; });
+  triggerUndo(() => {
+    propUndoCalled = true;
+  });
+  triggerRedo(() => {
+    propRedoCalled = true;
+  });
   assert.equal(propUndoCalled, true);
   assert.equal(propRedoCalled, true);
   assert.equal(undoEventsFired, 0);
@@ -345,7 +415,11 @@ test("CHALLENGE 5: TopBar event bridge dispatches correct custom events and hand
   eventTarget.removeEventListener("kk:canvas-undo", undoListener);
   eventTarget.removeEventListener("kk:canvas-redo", redoListener);
   triggerUndo(undefined);
-  assert.equal(undoEventsFired, 1, "Listener was removed, counter should not increase");
+  assert.equal(
+    undoEventsFired,
+    1,
+    "Listener was removed, counter should not increase",
+  );
 });
 
 // ---------------------------------------------------------------------------
@@ -386,13 +460,21 @@ test("CHALLENGE 6: History snapshots are immutable clones and prevent external c
 // ---------------------------------------------------------------------------
 test("CHALLENGE 7: kk:settings-changed handles all dispatch formats safely", () => {
   const parseIncoming = (detail: unknown) => {
-    const obj = typeof detail === "object" && detail !== null ? (detail as Record<string, unknown>) : undefined;
-    const pref = typeof obj?.preferences === "object" && obj?.preferences !== null ? (obj.preferences as Record<string, unknown>) : undefined;
+    const obj =
+      typeof detail === "object" && detail !== null
+        ? (detail as Record<string, unknown>)
+        : undefined;
+    const pref =
+      typeof obj?.preferences === "object" && obj?.preferences !== null
+        ? (obj.preferences as Record<string, unknown>)
+        : undefined;
     const rawLimit =
       obj?.historyLimit ??
       pref?.historyLimit ??
       (typeof detail === "number" ? detail : undefined);
-    return rawLimit !== undefined ? clampHistoryLimit(Number(rawLimit)) : undefined;
+    return rawLimit !== undefined
+      ? clampHistoryLimit(Number(rawLimit))
+      : undefined;
   };
 
   // Format 1: Direct SettingsPreferences { historyLimit: 45, theme: 'dark' }
@@ -446,4 +528,3 @@ test("CHALLENGE 8: 10,000 Snapshot commit stress never leaks memory or exceeds l
   assert.ok(state.past.length <= 100);
   assert.equal(state.present.positions["item-stress-10000"]?.x, 10000);
 });
-

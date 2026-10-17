@@ -140,22 +140,32 @@ try {
   const settingsShot = path.join(evidenceDir, "general-settings-history.png");
   await page.screenshot({ path: settingsShot });
   report.screenshots.push("general-settings-history.png");
-  report.checks.push({ historyLimitDefault: defaultLimit, historyLimitUpdated: updatedLimit });
+  report.checks.push({
+    historyLimitDefault: defaultLimit,
+    historyLimitUpdated: updatedLimit,
+  });
 
   // 关闭设置
-  await settingsModal.getByRole("button", { name: "关闭设置", exact: true }).click();
+  await settingsModal
+    .getByRole("button", { name: "关闭设置", exact: true })
+    .click();
   await expect(settingsModal).toHaveCount(0);
 
   // 4. 打开资产管理，检验垃圾箱视图
   console.log("6. 检验资产管理中的垃圾箱视图...");
   await fileMenuBtn.click();
-  await page.locator(".top-menu .menu-popover").getByRole("button", { name: "资产管理", exact: true }).click();
+  await page
+    .locator(".top-menu .menu-popover")
+    .getByRole("button", { name: "资产管理", exact: true })
+    .click();
   const assetPanel = page.locator("[data-testid='asset-panel']");
   await expect(assetPanel).toBeVisible();
 
-  const tabs = await assetPanel.locator(".asset-tabs button").evaluateAll(
-    (btns) => btns.map((b) => b.getAttribute("aria-label") || b.innerText.trim())
-  );
+  const tabs = await assetPanel
+    .locator(".asset-tabs button")
+    .evaluateAll((btns) =>
+      btns.map((b) => b.getAttribute("aria-label") || b.innerText.trim()),
+    );
   console.log("资产管理 Tabs:", tabs);
   assert(tabs.includes("画布"), "缺少「画布」Tab");
   assert(tabs.includes("资产"), "缺少「资产」Tab");
@@ -163,7 +173,9 @@ try {
 
   // 切换至垃圾箱 Tab
   await assetPanel.locator(".asset-tabs .asset-tab-trash").click();
-  const emptyTrashTitle = await assetPanel.locator(".asset-empty h3").innerText();
+  const emptyTrashTitle = await assetPanel
+    .locator(".asset-empty h3")
+    .innerText();
   const emptyTrashDesc = await assetPanel.locator(".asset-empty p").innerText();
   console.log("垃圾箱状态:", emptyTrashTitle, "-", emptyTrashDesc);
   assert.equal(emptyTrashTitle, "垃圾箱为空");
@@ -180,7 +192,10 @@ try {
   // 5. 检验新建聊天与临时聊天 (Multi-Chat & Temporary Chat)
   console.log("7. 检验多会话与临时会话切换...");
   await fileMenuBtn.click();
-  await page.locator(".top-menu .menu-popover").getByRole("button", { name: "新建聊天", exact: true }).click();
+  await page
+    .locator(".top-menu .menu-popover")
+    .getByRole("button", { name: "新建聊天", exact: true })
+    .click();
 
   // 对话面板展开
   const convPanel = page.locator(".conversation-panel");
@@ -194,7 +209,10 @@ try {
 
   // 再点击 TopBar 的新建临时聊天
   await fileMenuBtn.click();
-  await page.locator(".top-menu .menu-popover").getByRole("button", { name: "新建临时聊天", exact: true }).click();
+  await page
+    .locator(".top-menu .menu-popover")
+    .getByRole("button", { name: "新建临时聊天", exact: true })
+    .click();
 
   const tempTab = page.locator(".conversation-chat-tab.active");
   const tempName = await tempTab.innerText();
@@ -202,23 +220,25 @@ try {
   assert(tempName.includes("临时"), "新建临时聊天应激活带有「临时」标记的会话");
 
   const tabsBoxes = await page.evaluate(() => {
-    return Array.from(document.querySelectorAll('.conversation-chat-tab')).map(el => {
-      const rect = el.getBoundingClientRect();
-      const style = window.getComputedStyle(el);
-      return {
-        text: el.innerText,
-        parent: el.parentElement.tagName + '.' + el.parentElement.className,
-        outerHTML: el.outerHTML,
-        x: rect.x,
-        y: rect.y,
-        w: rect.width,
-        h: rect.height,
-        color: style.color,
-        bg: style.backgroundColor,
-        display: style.display,
-        visible: rect.width > 0 && rect.height > 0
-      };
-    });
+    return Array.from(document.querySelectorAll(".conversation-chat-tab")).map(
+      (el) => {
+        const rect = el.getBoundingClientRect();
+        const style = window.getComputedStyle(el);
+        return {
+          text: el.innerText,
+          parent: el.parentElement.tagName + "." + el.parentElement.className,
+          outerHTML: el.outerHTML,
+          x: rect.x,
+          y: rect.y,
+          w: rect.width,
+          h: rect.height,
+          color: style.color,
+          bg: style.backgroundColor,
+          display: style.display,
+          visible: rect.width > 0 && rect.height > 0,
+        };
+      },
+    );
   });
   console.log("Tabs Boxes:", JSON.stringify(tabsBoxes, null, 2));
 
@@ -246,20 +266,33 @@ try {
   console.log("Mode Box:", modeBox, "Send Box:", sendBox);
   assert(sendBox, "必须存在圆形操作按钮");
   assert(modeBox, "必须存在模式选择菜单");
-  assert(modeBox.x < sendBox.x, "询问模式菜单必须在发送按钮左侧，发送按钮位于最右侧");
+  assert(
+    modeBox.x < sendBox.x,
+    "询问模式菜单必须在发送按钮左侧，发送按钮位于最右侧",
+  );
   const sendState = await sendButton.getAttribute("data-state");
-  assert.equal(sendState, "idle", "空闲状态下主操作按钮必须为 idle（发送状态，非暂停图标）");
+  assert.equal(
+    sendState,
+    "idle",
+    "空闲状态下主操作按钮必须为 idle（发送状态，非暂停图标）",
+  );
 
   // 验证 Canvas HUD 布局：最右侧为「画布 - 浏览器」切换开关，左侧无项目名
   const viewToggle = page.locator(".canvas-view-mode-toggle");
   await expect(viewToggle).toBeVisible();
   const viewBtns = await viewToggle.locator("button").allInnerTexts();
-  assert(viewBtns.includes("画布") && viewBtns.includes("浏览器"), "HUD 右侧必须包含「画布 - 浏览器」视图切换开关");
+  assert(
+    viewBtns.includes("画布") && viewBtns.includes("浏览器"),
+    "HUD 右侧必须包含「画布 - 浏览器」视图切换开关",
+  );
 
   const hudStatus = page.locator(".project-task-status");
   const statusText = await hudStatus.innerText();
   console.log("HUD Status Text:", statusText);
-  assert(!statusText.includes("新建项目"), "状态栏不应包含「新建项目」名称，仅展示状态");
+  assert(
+    !statusText.includes("新建项目"),
+    "状态栏不应包含「新建项目」名称，仅展示状态",
+  );
 
   const multiChatShot = path.join(evidenceDir, "multi-chat-tabs.png");
   await page.screenshot({ path: multiChatShot });
@@ -286,7 +319,9 @@ try {
   if (page) {
     try {
       await page.evaluate(() =>
-        window.__TAURI_INTERNALS__?.invoke("plugin:window|close", { label: "main" }),
+        window.__TAURI_INTERNALS__?.invoke("plugin:window|close", {
+          label: "main",
+        }),
       );
     } catch (_error) {
       // Best-effort window close during teardown
@@ -298,5 +333,13 @@ try {
   }
 }
 
-assert(report.passed, `Desktop 验证未全部通过: ${JSON.stringify(report.errors)}`);
-console.log(JSON.stringify({ passed: true, report: path.join(evidenceDir, "report.json") }));
+assert(
+  report.passed,
+  `Desktop 验证未全部通过: ${JSON.stringify(report.errors)}`,
+);
+console.log(
+  JSON.stringify({
+    passed: true,
+    report: path.join(evidenceDir, "report.json"),
+  }),
+);

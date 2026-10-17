@@ -1,66 +1,57 @@
-import { useState } from "react";
 import type { Asset } from "../../domain/assets";
 
 export interface AssetTrashActionsProps {
   asset: Asset;
   onRestore: (assetId: string) => void;
   onPermanentlyDelete: (assetId: string) => void;
+  disabledReason?: string;
 }
+
+type TrashOperation = (assetId: string) => void | Promise<void>;
 
 export function useAssetTrash({
   trashedAssets = [],
   onRestoreAsset,
   onPermanentlyDeleteAsset,
   onDeleteAsset,
-  onAdd,
   setMessage,
 }: {
   trashedAssets?: Asset[];
-  onRestoreAsset?: (assetId: string) => void;
-  onPermanentlyDeleteAsset?: (assetId: string) => void;
-  onDeleteAsset?: (assetId: string) => void;
-  onAdd: (assets: Asset[], subject: boolean) => void;
-  setMessage: (msg: string) => void;
+  onRestoreAsset?: TrashOperation;
+  onPermanentlyDeleteAsset?: TrashOperation;
+  onDeleteAsset?: TrashOperation;
+  setMessage: (message: string) => void;
 }) {
-  const [localTrash, setLocalTrash] = useState<Asset[]>([]);
-
-  function handleSoftDelete(asset: Asset): void {
-    setLocalTrash((prev) => [...prev.filter((a) => a.id !== asset.id), asset]);
-    onDeleteAsset?.(asset.id);
-    setMessage("素材已移入垃圾箱");
-  }
-
-  function handleRestore(assetId: string): void {
-    const inLocal = localTrash.find((a) => a.id === assetId);
-    setLocalTrash((prev) => prev.filter((a) => a.id !== assetId));
-    onRestoreAsset?.(assetId);
-    if (inLocal && !trashedAssets.some((a) => a.id === assetId)) {
-      onAdd([inLocal], inLocal.type === "subject");
+  const disabledReason =
+    onDeleteAsset && onRestoreAsset && onPermanentlyDeleteAsset
+      ? undefined
+      : "素材垃圾箱尚未接入持久存储，暂不可操作。";
+  async function perform(
+    assetId: string,
+    operation: TrashOperation | undefined,
+    success: string,
+  ): Promise<void> {
+    if (disabledReason || !operation) {
+      setMessage(disabledReason ?? "素材操作暂不可用。");
+      return;
     }
-    setMessage("素材已还原");
+    try {
+      await operation(assetId);
+      setMessage(success);
+    } catch {
+      setMessage("素材操作失败，未确认持久化，请重试。");
+    }
   }
-
-  function handlePermanentDelete(assetId: string): void {
-    setLocalTrash((prev) => prev.filter((a) => a.id !== assetId));
-    onPermanentlyDeleteAsset?.(assetId);
-    setMessage("素材已彻底删除");
-  }
-
-  const trashedIds = new Set([
-    ...trashedAssets.map((a) => a.id),
-    ...localTrash.map((a) => a.id),
-  ]);
-  const activeTrash = [
-    ...trashedAssets,
-    ...localTrash.filter((l) => !trashedAssets.some((t) => t.id === l.id)),
-  ];
-
   return {
-    activeTrash,
-    trashedIds,
-    handleSoftDelete,
-    handleRestore,
-    handlePermanentDelete,
+    activeTrash: trashedAssets,
+    trashedIds: new Set(trashedAssets.map((asset) => asset.id)),
+    disabledReason,
+    handleSoftDelete: (asset: Asset) =>
+      perform(asset.id, onDeleteAsset, "素材已移入垃圾箱"),
+    handleRestore: (assetId: string) =>
+      perform(assetId, onRestoreAsset, "素材已还原"),
+    handlePermanentDelete: (assetId: string) =>
+      perform(assetId, onPermanentlyDeleteAsset, "素材已彻底删除"),
   };
 }
 
@@ -68,12 +59,15 @@ export default function AssetTrashActions({
   asset,
   onRestore,
   onPermanentlyDelete,
+  disabledReason,
 }: AssetTrashActionsProps) {
   return (
     <div className="asset-trash-actions">
       <button
         type="button"
         className="kk-button kk-button--secondary asset-trash-btn"
+        disabled={Boolean(disabledReason)}
+        title={disabledReason}
         onClick={(e) => {
           e.stopPropagation();
           onRestore(asset.id);
@@ -84,6 +78,8 @@ export default function AssetTrashActions({
       <button
         type="button"
         className="kk-button kk-button--danger asset-trash-btn"
+        disabled={Boolean(disabledReason)}
+        title={disabledReason}
         onClick={(e) => {
           e.stopPropagation();
           onPermanentlyDelete(asset.id);
@@ -98,16 +94,19 @@ export default function AssetTrashActions({
 export function AssetSoftDeleteAction({
   asset,
   onDelete,
+  disabledReason,
 }: {
   asset: Asset;
   onDelete: (asset: Asset) => void;
+  disabledReason?: string;
 }) {
   return (
     <div className="asset-soft-delete-actions">
       <button
         type="button"
         className="kk-button kk-button--tertiary asset-soft-delete-btn"
-        title="移入垃圾箱"
+        title={disabledReason ?? "移入垃圾箱"}
+        disabled={Boolean(disabledReason)}
         aria-label={`移入垃圾箱 ${asset.name}`}
         onClick={(e) => {
           e.stopPropagation();

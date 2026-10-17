@@ -289,6 +289,34 @@ fn snapshot_v3_validation_accepts_valid_and_rejects_corrupt() {
     bad_key["projects"][0]["chats"]["chat-main"]["id"] = json!("different-id");
     assert!(validation::validate(&bad_key).is_err());
 }
+
+#[test]
+fn legacy_writer_cannot_publish_v3_or_replace_supported_main_with_v3_backup() {
+    let f = Fixture::new();
+    let mut future = snapshot(2);
+    future["version"] = json!(3);
+    future["projects"][0]["activeChatId"] = json!("chat");
+    future["projects"][0]["chats"] = json!({"chat":{"id":"chat","name":"history","messages":[]}});
+    assert!(f
+        .repo
+        .write(future.clone(), None)
+        .unwrap_err()
+        .starts_with("readonly:"));
+    assert!(!f.repo.path.exists());
+    let main = f.main(&snapshot(1));
+    let backup = f.backup(&future);
+    assert!(f.repo.read().unwrap().read_only_reason.is_some());
+    assert!(f
+        .repo
+        .write(snapshot(2), Some(1))
+        .unwrap_err()
+        .starts_with("readonly:"));
+    assert_eq!(fs::read(&f.repo.path).unwrap(), main);
+    assert_eq!(
+        fs::read(f.repo.path.with_extension("json.bak")).unwrap(),
+        backup
+    );
+}
 #[test]
 fn both_corrupt_is_error_and_write_preserves_both() {
     let f = Fixture::new();

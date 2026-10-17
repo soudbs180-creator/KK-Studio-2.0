@@ -2,6 +2,8 @@ node_modules
 dist
 .tmp
 *.log
+/.verification/
+/.tmp-*
 .DS_Store
 test-results
 *.tsbuildinfo

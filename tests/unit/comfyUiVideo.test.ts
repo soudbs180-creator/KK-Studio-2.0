@@ -235,8 +235,11 @@ test("WebSocket progress message parser calculates exact percentage", () => {
 
 test("targeted cancellation request payload format", async () => {
   const targetPromptId = "targeted-prompt-xyz-12345";
-  const recordedRequests: Array<{ url: string; method: string; body: unknown }> =
-    [];
+  const recordedRequests: Array<{
+    url: string;
+    method: string;
+    body: unknown;
+  }> = [];
 
   const server = await startFakeServer(async (req, res) => {
     const rawBody = await readBody(req);

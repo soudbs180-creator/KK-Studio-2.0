@@ -92,7 +92,9 @@ async function close() {
   if (app && app.exitCode === null) {
     try {
       await page?.evaluate(() =>
-        window.__TAURI_INTERNALS__?.invoke("plugin:window|close", { label: "main" }),
+        window.__TAURI_INTERNALS__?.invoke("plugin:window|close", {
+          label: "main",
+        }),
       );
     } catch {}
     if (app.exitCode === null) {

@@ -224,7 +224,10 @@ export class LocalComfyUiAdapter implements GenerationProviderAdapter {
       },
     );
     if (!response.ok) throw await responseError(response, "ComfyUI 查询失败");
-    const payload = (await response.json()) as Record<string, ComfyUiHistoryEntry>;
+    const payload = (await response.json()) as Record<
+      string,
+      ComfyUiHistoryEntry
+    >;
     const entry = payload[providerJobId];
     return {
       providerJobId,
@@ -283,7 +286,10 @@ export class LocalComfyUiAdapter implements GenerationProviderAdapter {
     );
     if (!response.ok)
       throw await responseError(response, "ComfyUI 结果查询失败");
-    const payload = (await response.json()) as Record<string, ComfyUiHistoryEntry>;
+    const payload = (await response.json()) as Record<
+      string,
+      ComfyUiHistoryEntry
+    >;
     return extractComfyUiOutputs(
       payload[providerJobId]?.outputs,
       providerJobId,

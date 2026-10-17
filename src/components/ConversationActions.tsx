@@ -6,9 +6,7 @@ import ConversationModelPicker from "./ConversationModelPicker";
 import type { CreationDraft } from "../features/creation/model";
 import VoiceInputButton from "./VoiceInputButton";
 import type { SkillRecord } from "../features/skills/skillRegistry";
-import AgentActionButton, {
-  type AgentActionState,
-} from "./AgentActionButton";
+import AgentActionButton, { type AgentActionState } from "./AgentActionButton";
 
 export default function ConversationActions({
   actionsRef,
@@ -91,7 +89,7 @@ export default function ConversationActions({
 }) {
   const hasContent = Boolean(
     input.trim() ||
-      (composerDraft?.attachments && composerDraft.attachments.length > 0),
+    (composerDraft?.attachments && composerDraft.attachments.length > 0),
   );
   const resolvedState: AgentActionState =
     agentActionState ?? (submitting ? "executing" : "idle");
@@ -224,7 +222,10 @@ export default function ConversationActions({
           state={resolvedState}
           hasDraft={hasContent}
           hasContent={hasContent}
-          disabled={Boolean((submitting && !agentActionState) || (resolvedState === "idle" && submitDisabled))}
+          disabled={Boolean(
+            (submitting && !agentActionState) ||
+            (resolvedState === "idle" && submitDisabled),
+          )}
           onSend={onSend}
           onPause={handlePause}
           onResume={handleResume}

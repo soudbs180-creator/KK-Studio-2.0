@@ -23,12 +23,14 @@ import {
 } from "../../src/features/creation/snapshotCodec.ts";
 import { useMemory } from "../../src/features/memory/useMemory.ts";
 import { memoryService } from "../../src/features/memory/index.ts";
-import {
-  createAgentConnection,
-} from "../../src/features/agent/agentConnection.ts";
+import { createAgentConnection } from "../../src/features/agent/agentConnection.ts";
 import { sendProjectAgentMessage } from "../../src/features/agent/homeAgentRecovery.ts";
 
-function createValidChat(id: string, name: string, isTemporary?: boolean): ChatItem {
+function createValidChat(
+  id: string,
+  name: string,
+  isTemporary?: boolean,
+): ChatItem {
   return {
     id,
     name,
@@ -108,8 +110,16 @@ test("R2-ISO-01: sanitizeSnapshotForPersistence removes temporary chats while pr
 
   assert.equal(Object.keys(sanitizedChats).length, 1);
   assert.ok(sanitizedChats["chat-main"], "Regular chat should remain");
-  assert.equal(sanitizedChats["chat-temp-101"], undefined, "Temporary chat 1 must be stripped");
-  assert.equal(sanitizedChats["chat-temp-102"], undefined, "Temporary chat 2 must be stripped");
+  assert.equal(
+    sanitizedChats["chat-temp-101"],
+    undefined,
+    "Temporary chat 1 must be stripped",
+  );
+  assert.equal(
+    sanitizedChats["chat-temp-102"],
+    undefined,
+    "Temporary chat 2 must be stripped",
+  );
   assert.equal(sanitized.projects[0].activeChatId, "chat-main");
 });
 
@@ -160,7 +170,10 @@ test("R2-ISO-03: sanitizeSnapshotForPersistence creates a fallback default chat 
   const sanitizedChats = project.chats;
 
   assert.equal(Object.keys(sanitizedChats).length, 1);
-  assert.ok(sanitizedChats["chat-default"], "A fallback default chat must be generated");
+  assert.ok(
+    sanitizedChats["chat-default"],
+    "A fallback default chat must be generated",
+  );
   assert.equal(sanitizedChats["chat-default"].isTemporary, undefined);
   assert.equal(project.activeChatId, "chat-default");
   assert.equal(sanitizedChats["chat-default"].mainAgent, "codex");
@@ -235,7 +248,11 @@ test("R2-ISO-05: normalizeChat preserves isTemporary boolean flag", () => {
     messages: [{ id: "m1", role: "user", content: "hello" }],
   };
   const normalizedTemp = normalizeChat(tempChatCandidate);
-  assert.equal(normalizedTemp.isTemporary, true, "isTemporary should be true for temporary candidate");
+  assert.equal(
+    normalizedTemp.isTemporary,
+    true,
+    "isTemporary should be true for temporary candidate",
+  );
   assert.equal(normalizedTemp.id, "chat-temp-123");
   assert.equal(normalizedTemp.messages.length, 1);
 
@@ -245,14 +262,22 @@ test("R2-ISO-05: normalizeChat preserves isTemporary boolean flag", () => {
     isTemporary: false,
   };
   const normalizedRegular = normalizeChat(regularChatCandidate);
-  assert.equal(normalizedRegular.isTemporary, false, "isTemporary should be false when set to false");
+  assert.equal(
+    normalizedRegular.isTemporary,
+    false,
+    "isTemporary should be false when set to false",
+  );
 
   const unflaggedChatCandidate = {
     id: "chat-legacy-789",
     name: "传统会话",
   };
   const normalizedUnflagged = normalizeChat(unflaggedChatCandidate);
-  assert.equal(normalizedUnflagged.isTemporary, false, "isTemporary should default to false when omitted");
+  assert.equal(
+    normalizedUnflagged.isTemporary,
+    false,
+    "isTemporary should default to false when omitted",
+  );
 
   const nullCandidate = normalizeChat(null, "chat-fallback");
   assert.equal(nullCandidate.id, "chat-fallback");
@@ -274,7 +299,10 @@ test("R2-ISO-06: chatItemSchema validates isTemporary and decodeSnapshot handles
     modelAllowlist: [],
     isTemporary: true,
   });
-  assert.ok(parsedTemp.success, "chatItemSchema should accept isTemporary: true");
+  assert.ok(
+    parsedTemp.success,
+    "chatItemSchema should accept isTemporary: true",
+  );
   if (parsedTemp.success) {
     assert.equal(parsedTemp.data.isTemporary, true);
   }
@@ -289,7 +317,10 @@ test("R2-ISO-06: chatItemSchema validates isTemporary and decodeSnapshot handles
     modelAllowlist: [],
     isTemporary: false,
   });
-  assert.ok(parsedFalse.success, "chatItemSchema should accept isTemporary: false");
+  assert.ok(
+    parsedFalse.success,
+    "chatItemSchema should accept isTemporary: false",
+  );
   if (parsedFalse.success) {
     assert.equal(parsedFalse.data.isTemporary, false);
   }
@@ -303,7 +334,10 @@ test("R2-ISO-06: chatItemSchema validates isTemporary and decodeSnapshot handles
     mainAgent: "codex",
     modelAllowlist: [],
   });
-  assert.ok(parsedOmitted.success, "chatItemSchema should accept omitted isTemporary");
+  assert.ok(
+    parsedOmitted.success,
+    "chatItemSchema should accept omitted isTemporary",
+  );
 
   // Verify full v3 decodeSnapshot with isTemporary
   const fullV3 = createTestSnapshot([
@@ -337,7 +371,7 @@ test("R2-ISO-06: chatItemSchema validates isTemporary and decodeSnapshot handles
 // 4. Storage persistence strips temporary chats
 // -----------------------------------------------------------------------------
 
-test("R2-ISO-07: persistCreationSnapshotSync strips temporary chats before writing to sessionStorage", async () => {
+test("R2-ISO-07: unsupported temporary snapshots cannot replace the existing recovery journal", async () => {
   const originalWindow = globalThis.window;
   const mockSessionStorage = new MockStorage();
   const mockLocalStorage = new MockStorage();
@@ -379,17 +413,17 @@ test("R2-ISO-07: persistCreationSnapshotSync strips temporary chats before writi
       } as CreationProjectV3,
     ]);
 
-    // Genuinely invoke persistCreationSnapshotSync
-    persistCreationSnapshotSync(snapshot);
-
+    const originalBytes = JSON.stringify(snapshot);
     const journalKey = `${CREATION_STORAGE_KEY}:pending`;
-    const storedRaw = mockSessionStorage.getItem(journalKey);
-    assert.ok(storedRaw, "sessionStorage should receive serialized pending journal from persistCreationSnapshotSync");
-
-    const stored = JSON.parse(storedRaw);
-    assert.equal(stored.snapshot.projects[0].chats?.["chat-temp-sess"], undefined, "Temporary chat must be stripped");
-    assert.ok(stored.snapshot.projects[0].chats?.["chat-norm"], "Normal chat must be preserved");
-    assert.equal(stored.snapshot.projects[0].activeChatId, "chat-norm", "activeChatId must point to preserved chat");
+    const retainedJournal = JSON.stringify({
+      retained: "original recovery bytes",
+    });
+    mockSessionStorage.setItem(journalKey, retainedJournal);
+    persistCreationSnapshotSync(snapshot);
+    assert.equal(mockSessionStorage.getItem(journalKey), retainedJournal);
+    assert.equal(JSON.stringify(snapshot), originalBytes);
+    assert.ok(snapshot.projects[0].chats?.["chat-norm"]);
+    assert.ok(snapshot.projects[0].chats?.["chat-temp-sess"]);
   } finally {
     globalThis.window = originalWindow;
   }
@@ -403,11 +437,7 @@ test("R2-ISO-08: useMemory blocks manual memory extraction when active chat is t
   const feedbacks: string[] = [];
   let capturedHook: ReturnType<typeof useMemory> | null = null;
 
-  function TestHarness({
-    isTemp,
-  }: {
-    isTemp: boolean;
-  }): ReactElement | null {
+  function TestHarness({ isTemp }: { isTemp: boolean }): ReactElement | null {
     capturedHook = useMemory((msg) => feedbacks.push(msg), {
       isTemporary: isTemp,
     });
@@ -418,7 +448,9 @@ test("R2-ISO-08: useMemory blocks manual memory extraction when active chat is t
   renderToStaticMarkup(createElement(TestHarness, { isTemp: true }));
   assert.ok(capturedHook, "Hook must be captured");
 
-  await (capturedHook as unknown as ReturnType<typeof useMemory>).extractWithCodex();
+  await (
+    capturedHook as unknown as ReturnType<typeof useMemory>
+  ).extractWithCodex();
 
   assert.ok(
     feedbacks.some((msg) => msg.includes("临时会话无法提炼长期记忆")),
@@ -441,7 +473,9 @@ test("R2-ISO-09: extractWithCodex respects explicit temporary argument override"
   assert.ok(capturedHook);
 
   // Explicitly call extractWithCodex with a temporary chat
-  await (capturedHook as unknown as ReturnType<typeof useMemory>).extractWithCodex({
+  await (
+    capturedHook as unknown as ReturnType<typeof useMemory>
+  ).extractWithCodex({
     isTemporary: true,
   });
 
@@ -467,14 +501,22 @@ test("R2-ISO-10: agentConnection blocks buildInjection and ingestMessage when is
 
   try {
     const makeConnection = () => {
-      const sources: { onmessage: ((e: { type: string; data: string }) => void) | null; emit(e: { type: string; data: unknown }): void; close(): void }[] = [];
+      const sources: {
+        onmessage: ((e: { type: string; data: string }) => void) | null;
+        emit(e: { type: string; data: unknown }): void;
+        close(): void;
+      }[] = [];
       const eventSourceFactory = () => {
         const source = {
-          onmessage: null as ((e: { type: string; data: string }) => void) | null,
+          onmessage: null as
+            ((e: { type: string; data: string }) => void) | null,
           onerror: null,
           closed: false,
           emit(event: { type: string; data: unknown }) {
-            source.onmessage?.({ type: event.type, data: JSON.stringify(event.data) });
+            source.onmessage?.({
+              type: event.type,
+              data: JSON.stringify(event.data),
+            });
           },
           close() {
             source.closed = true;
@@ -515,13 +557,27 @@ test("R2-ISO-10: agentConnection blocks buildInjection and ingestMessage when is
           if (url.endsWith("/models")) {
             sources[0]?.emit({
               type: "conversation_changed",
-              data: { revision: 1, conversationId: "conv-1", threadId: "thread-1", status: "ready", mcpStatuses: {} },
+              data: {
+                revision: 1,
+                conversationId: "conv-1",
+                threadId: "thread-1",
+                status: "ready",
+                mcpStatuses: {},
+              },
             });
           }
-          return new Response(JSON.stringify({ ok: true, protocolVersion: 6, data: [], messages: [] }), {
-            status: 200,
-            headers: { "Content-Type": "application/json" },
-          });
+          return new Response(
+            JSON.stringify({
+              ok: true,
+              protocolVersion: 6,
+              data: [],
+              messages: [],
+            }),
+            {
+              status: 200,
+              headers: { "Content-Type": "application/json" },
+            },
+          );
         }) as typeof fetch,
       });
 
@@ -533,10 +589,24 @@ test("R2-ISO-10: agentConnection blocks buildInjection and ingestMessage when is
     await tempConn.connect();
     await new Promise((r) => setImmediate(r));
 
-    const tempResult = await tempConn.sendMessage("测试临时消息", { isTemporary: true });
-    assert.equal(tempResult.ok, true, "sendMessage with isTemporary: true should succeed");
-    assert.equal(ingestCount, 0, "ingestMessage must not be called when isTemporary is true");
-    assert.equal(buildCount, 0, "buildInjection must not be called when isTemporary is true");
+    const tempResult = await tempConn.sendMessage("测试临时消息", {
+      isTemporary: true,
+    });
+    assert.equal(
+      tempResult.ok,
+      true,
+      "sendMessage with isTemporary: true should succeed",
+    );
+    assert.equal(
+      ingestCount,
+      0,
+      "ingestMessage must not be called when isTemporary is true",
+    );
+    assert.equal(
+      buildCount,
+      0,
+      "buildInjection must not be called when isTemporary is true",
+    );
     tempConn.disconnect();
 
     // 2. Genuinely verify with sendProjectAgentMessage when project's active chat is temporary
@@ -562,8 +632,16 @@ test("R2-ISO-10: agentConnection blocks buildInjection and ingestMessage when is
       undefined,
     );
     assert.equal(projectResult.ok, true);
-    assert.equal(ingestCount, 0, "sendProjectAgentMessage must block ingestMessage for temporary chat");
-    assert.equal(buildCount, 0, "sendProjectAgentMessage must block buildInjection for temporary chat");
+    assert.equal(
+      ingestCount,
+      0,
+      "sendProjectAgentMessage must block ingestMessage for temporary chat",
+    );
+    assert.equal(
+      buildCount,
+      0,
+      "sendProjectAgentMessage must block buildInjection for temporary chat",
+    );
     projectConn.disconnect();
 
     // 3. Contrast verification: invoke sendMessage with isTemporary: false -> memory is ingested and injected
@@ -571,10 +649,20 @@ test("R2-ISO-10: agentConnection blocks buildInjection and ingestMessage when is
     await normalConn.connect();
     await new Promise((r) => setImmediate(r));
 
-    const normalResult = await normalConn.sendMessage("测试常规消息", { isTemporary: false });
+    const normalResult = await normalConn.sendMessage("测试常规消息", {
+      isTemporary: false,
+    });
     assert.equal(normalResult.ok, true);
-    assert.equal(ingestCount, 1, "ingestMessage must be called when isTemporary is false");
-    assert.equal(buildCount, 1, "buildInjection must be called when isTemporary is false");
+    assert.equal(
+      ingestCount,
+      1,
+      "ingestMessage must be called when isTemporary is false",
+    );
+    assert.equal(
+      buildCount,
+      1,
+      "buildInjection must be called when isTemporary is false",
+    );
     normalConn.disconnect();
   } finally {
     memoryService.ingestMessage = origIngest;
@@ -582,7 +670,7 @@ test("R2-ISO-10: agentConnection blocks buildInjection and ingestMessage when is
   }
 });
 
-test("R2-ISO-11: persistCreationSnapshotAsync genuinely strips temporary chats before writing to storage", async () => {
+test("R2-ISO-11: unsupported temporary snapshots never reach native persistence", async () => {
   const originalWindow = globalThis.window;
   let interceptedSnapshot: CreationSnapshot | null = null;
 
@@ -623,14 +711,19 @@ test("R2-ISO-11: persistCreationSnapshotAsync genuinely strips temporary chats b
       } as CreationProjectV3,
     ]);
 
-    // Genuinely call persistCreationSnapshotAsync
-    await persistCreationSnapshotAsync(snapshot);
-
-    assert.ok(interceptedSnapshot, "Desktop IPC should have received write_creation_snapshot");
-    const writtenProject = (interceptedSnapshot as CreationSnapshot).projects[0] as CreationProjectV3;
-    assert.equal(writtenProject.chats?.["chat-temp-async"], undefined, "Temporary chat must be stripped from async persistent storage");
-    assert.ok(writtenProject.chats?.["chat-norm-async"], "Normal chat must be preserved in async persistent storage");
-    assert.equal(writtenProject.activeChatId, "chat-norm-async", "activeChatId must fall back to preserved regular chat");
+    const originalBytes = JSON.stringify(snapshot);
+    await assert.rejects(
+      persistCreationSnapshotAsync(snapshot),
+      /仅供恢复查看/,
+    );
+    assert.equal(
+      interceptedSnapshot,
+      null,
+      "Unsupported snapshots must never reach write_creation_snapshot",
+    );
+    assert.equal(JSON.stringify(snapshot), originalBytes);
+    assert.ok(snapshot.projects[0].chats?.["chat-norm-async"]);
+    assert.ok(snapshot.projects[0].chats?.["chat-temp-async"]);
   } finally {
     globalThis.window = originalWindow;
   }

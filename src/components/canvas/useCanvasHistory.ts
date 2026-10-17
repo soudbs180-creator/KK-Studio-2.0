@@ -64,7 +64,6 @@ export function getEffectiveLimit(customLimit?: number): number {
   }
 }
 
-
 interface CanvasHistoryOptions {
   items: CanvasCollectionItem[];
   positions: Record<string, Point>;

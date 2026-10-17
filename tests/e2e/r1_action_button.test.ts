@@ -48,28 +48,36 @@ test("R1-T1-01: circular action button completes 6-state cyclic lifecycle transi
   assert.equal(res2.currentState, "pausing");
   assert.equal(machine.state, "pausing");
   assert.equal(pauseCalled, true);
-  assert.equal(machine.isButtonDisabled(), true, "Button must be disabled in pausing state");
+  assert.equal(
+    machine.isButtonDisabled(),
+    true,
+    "Button must be disabled in pausing state",
+  );
 
   // 3. Step completes & turn freezes -> paused
   machine.completeStepAndFreeze();
   assert.equal(machine.state, "paused");
   assert.equal(machine.isTurnQueueFrozen, true);
-  assert.equal(machine.isButtonDisabled(), false, "Button must be enabled in paused state");
+  assert.equal(
+    machine.isButtonDisabled(),
+    false,
+    "Button must be enabled in paused state",
+  );
 
   // 4. Click paused -> resuming
   let resumeCalled = false;
-  const res3 = await machine.handleClick(
-    undefined,
-    undefined,
-    () => {
-      resumeCalled = true;
-    },
-  );
+  const res3 = await machine.handleClick(undefined, undefined, () => {
+    resumeCalled = true;
+  });
   assert.equal(res3.transitioned, true);
   assert.equal(res3.currentState, "resuming");
   assert.equal(machine.state, "resuming");
   assert.equal(resumeCalled, true);
-  assert.equal(machine.isButtonDisabled(), true, "Button must be disabled in resuming state");
+  assert.equal(
+    machine.isButtonDisabled(),
+    true,
+    "Button must be disabled in resuming state",
+  );
 
   // 5. Unfreeze acknowledged -> executing
   machine.acknowledgeUnfreeze();
@@ -90,23 +98,43 @@ test("R1-T1-02: idle state button enablement is gated strictly by non-empty draf
 
   // Empty text, no attachments -> Disabled
   machine.setDraft("", []);
-  assert.equal(machine.isButtonDisabled(), true, "Empty draft must disable button");
+  assert.equal(
+    machine.isButtonDisabled(),
+    true,
+    "Empty draft must disable button",
+  );
 
   // Whitespace only -> Disabled
   machine.setDraft("   \n\t  ", []);
-  assert.equal(machine.isButtonDisabled(), true, "Whitespace-only draft must disable button");
+  assert.equal(
+    machine.isButtonDisabled(),
+    true,
+    "Whitespace-only draft must disable button",
+  );
 
   // Non-empty text -> Enabled
   machine.setDraft("Generate a creative character", []);
-  assert.equal(machine.isButtonDisabled(), false, "Non-empty text must enable button");
+  assert.equal(
+    machine.isButtonDisabled(),
+    false,
+    "Non-empty text must enable button",
+  );
 
   // Empty text but with attachment -> Enabled
   machine.setDraft("", ["asset-image-uuid-001"]);
-  assert.equal(machine.isButtonDisabled(), false, "Attachment without text must enable button");
+  assert.equal(
+    machine.isButtonDisabled(),
+    false,
+    "Attachment without text must enable button",
+  );
 
   // Both text and attachment -> Enabled
   machine.setDraft("Modify this asset", ["asset-image-uuid-001"]);
-  assert.equal(machine.isButtonDisabled(), false, "Text and attachment must enable button");
+  assert.equal(
+    machine.isButtonDisabled(),
+    false,
+    "Text and attachment must enable button",
+  );
 });
 
 test("R1-T1-03: turn freezing controller finishes active atomic step and freezes subsequent turn dispatch", () => {
@@ -130,7 +158,8 @@ test("R1-T1-03: turn freezing controller finishes active atomic step and freezes
 
 test("R1-T1-04: draft input text and attachments are preserved intact during pause and strictly not auto-sent on resume", async () => {
   const machine = new ActionButtonStateMachine("executing");
-  const originalDraftText = "Preserve this draft message without losing characters";
+  const originalDraftText =
+    "Preserve this draft message without losing characters";
   const originalAttachments = ["attachment-ref-1.png", "attachment-ref-2.png"];
   machine.setDraft(originalDraftText, originalAttachments);
 
@@ -155,17 +184,29 @@ test("R1-T1-04: draft input text and attachments are preserved intact during pau
 
   // Invariant: Resuming must strictly NOT trigger send or wipe the draft
   assert.equal(sendFired, false, "Resume must NOT automatically send draft");
-  assert.equal(machine.draft.text, originalDraftText, "Draft text must remain untouched");
+  assert.equal(
+    machine.draft.text,
+    originalDraftText,
+    "Draft text must remain untouched",
+  );
   assert.deepEqual(machine.draft.attachments, originalAttachments);
 });
 
 test("R1-T1-05: action button conforms to visual geometry and design token invariants", () => {
-  assert.equal(ACTION_BUTTON_DIMENSIONS.desktopDiameter, 40, "Desktop diameter must be 40px");
+  assert.equal(
+    ACTION_BUTTON_DIMENSIONS.desktopDiameter,
+    40,
+    "Desktop diameter must be 40px",
+  );
   assert.ok(
     ACTION_BUTTON_DIMENSIONS.touchTargetMin >= 44,
     "Touch target hit boundary must be >= 44px",
   );
-  assert.equal(ACTION_BUTTON_DIMENSIONS.iconSize, 20, "Centered icon dimensions must be 20px");
+  assert.equal(
+    ACTION_BUTTON_DIMENSIONS.iconSize,
+    20,
+    "Centered icon dimensions must be 20px",
+  );
 
   // Component props interface validation
   const mockProps: AgentActionButtonProps = {
@@ -222,28 +263,28 @@ test("R1-T2-02: rapid double-clicks during resuming transition are rejected to p
   let resumeCallCount = 0;
 
   // First click triggers resume
-  const firstClick = await machine.handleClick(
-    undefined,
-    undefined,
-    () => {
-      resumeCallCount++;
-    },
-  );
+  const firstClick = await machine.handleClick(undefined, undefined, () => {
+    resumeCallCount++;
+  });
   assert.equal(firstClick.transitioned, true);
   assert.equal(machine.state, "resuming");
   assert.equal(resumeCallCount, 1);
 
   // Rapid second click during resuming state
-  const secondClick = await machine.handleClick(
-    undefined,
-    undefined,
-    () => {
-      resumeCallCount++;
-    },
+  const secondClick = await machine.handleClick(undefined, undefined, () => {
+    resumeCallCount++;
+  });
+  assert.equal(
+    secondClick.transitioned,
+    false,
+    "Second click must be rejected",
   );
-  assert.equal(secondClick.transitioned, false, "Second click must be rejected");
   assert.equal(machine.state, "resuming");
-  assert.equal(resumeCallCount, 1, "onResume callback must not be invoked twice");
+  assert.equal(
+    resumeCallCount,
+    1,
+    "onResume callback must not be invoked twice",
+  );
 });
 
 test("R1-T2-03: background remote polling for accepted generation jobs persists across paused turn", async () => {
@@ -269,7 +310,9 @@ test("R1-T2-04: modifying draft while in paused state safely retains the edits w
   machine.setDraft("Initial paused draft");
 
   // User edits draft while agent execution is paused
-  machine.setDraft("Updated draft with critical instructions", ["extra-spec.pdf"]);
+  machine.setDraft("Updated draft with critical instructions", [
+    "extra-spec.pdf",
+  ]);
   assert.equal(machine.draft.text, "Updated draft with critical instructions");
   assert.equal(machine.draft.attachments.length, 1);
 

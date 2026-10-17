@@ -1,13 +1,16 @@
 import type { CanvasCollectionItem } from "../../domain/canvasItems.ts";
 import { reconcileProjectCanvas } from "../../domain/projectCanvas.ts";
-import type { CreationProject } from "../creation/model.ts";
+import {
+  projectChatExecutionBlockReason,
+  type CreationProject,
+} from "../creation/model.ts";
 import {
   applyAgentOpsToItems,
   assertCanvasDelivery,
   buildAgentSnapshot,
 } from "./agentCanvas.ts";
 import type { AgentOpResult } from "./agentConnection.ts";
-import type { CanvasAgentOp } from "./agentTypes.ts";
+import type { CanvasAgentOp, ChatScope } from "./agentTypes.ts";
 import { storeGeneratedAsset } from "../creation/assetRepository.ts";
 import { appendImageTaskResults } from "../creation/imageTaskCommand.ts";
 import type { AgentCanvasView } from "./agentCanvasView.ts";
@@ -18,12 +21,14 @@ export interface AgentHostOptions {
   getView?(): AgentCanvasView | null;
   getProject(): CreationProject | undefined;
   getProjects?(): readonly CreationProject[];
+  getExecutionBlockReason?(): string | undefined;
   commit(project: CreationProject): void;
   flush?(): Promise<void>;
   generate(
     node: CanvasCollectionItem,
     prompt: string,
     signal?: AbortSignal,
+    validate?: () => string | undefined,
   ): Promise<{ taskId?: string; error?: string }>;
   /** Stage 编排器：存在时宿主暴露 plan 工具面（A1）。 */
   orchestrator?: StageOrchestrator;
@@ -33,17 +38,64 @@ export interface AgentHostOptions {
 
 /** MCP 请求通过 KK 领域和任务入口落地，不直接持有 Provider 凭据。 */
 export function createAgentHost(options: AgentHostOptions) {
+  const getExecutionBlockReason = () =>
+    options.getExecutionBlockReason?.() ??
+    projectChatExecutionBlockReason(options.getProject());
+  const getChatScope = (): ChatScope | null => {
+    const project = options.getProject();
+    return project
+      ? { projectId: project.id, chatId: project.activeChatId ?? null }
+      : null;
+  };
+  const scopeKey = () => JSON.stringify(getChatScope());
+  const getModelAllowlist = (): string[] | undefined => {
+    const project = options.getProject();
+    const override =
+      typeof options.modelAllowlist === "function"
+        ? options.modelAllowlist()
+        : options.modelAllowlist;
+    const allowed =
+      override !== undefined
+        ? override
+        : project?.chats
+          ? (project.chats[project.activeChatId ?? ""]?.modelAllowlist ?? [])
+          : undefined;
+    return allowed === undefined
+      ? undefined
+      : Array.isArray(allowed) &&
+          allowed.every((model) => typeof model === "string")
+        ? [...allowed]
+        : [];
+  };
+  const assertExecutable = () => {
+    const reason = getExecutionBlockReason();
+    if (reason) throw new Error(reason);
+  };
   return {
+    getChatScope,
+    getExecutionBlockReason,
+    getModelAllowlist,
     readAgentThread() {
-      return options.getProject()?.agentThreadId;
+      if (getExecutionBlockReason()) return;
+      const project = options.getProject();
+      return (
+        project?.agentThreadId ??
+        project?.chats?.[project.activeChatId ?? ""]?.agentThreadId
+      );
     },
     knownAgentProjects() {
-      return (options.getProjects?.() ?? []).map((project) => ({
-        projectId: project.id,
-        threadId: project.agentThreadId,
-      }));
+      if (getExecutionBlockReason()) return [];
+      return (options.getProjects?.() ?? [])
+        .filter((project) => !projectChatExecutionBlockReason(project))
+        .map((project) => ({
+          projectId: project.id,
+          threadId:
+            project.agentThreadId ??
+            project.chats?.[project.activeChatId ?? ""]?.agentThreadId,
+        }));
     },
     async saveAgentThread(threadId: string, projectId: string) {
+      assertExecutable();
       const project = options.getProject();
       if (!project || project.id !== projectId)
         throw new Error("项目已切换，未保存到其他项目。");
@@ -56,12 +108,14 @@ export function createAgentHost(options: AgentHostOptions) {
       await options.flush?.();
     },
     readGoogleConversation() {
+      if (getExecutionBlockReason()) return;
       return options.getProject()?.googleConversation;
     },
     saveGoogleConversation(
       record: import("../../domain/googleConversation.ts").GoogleConversation,
       projectId: string,
     ) {
+      assertExecutable();
       const project = options.getProject();
       if (!project || project.id !== projectId)
         throw new Error("项目已切换，未保存旧会话。");
@@ -84,7 +138,9 @@ export function createAgentHost(options: AgentHostOptions) {
     },
     /** Stage 编排器工具面（A1）；未注入编排器时返回空（不提供计划能力）。 */
     planTools(): PlanTool[] {
-      return options.orchestrator ? options.orchestrator.planTools() : [];
+      return options.orchestrator && !getExecutionBlockReason()
+        ? options.orchestrator.planTools()
+        : [];
     },
     async importGeneratedImage(input: {
       id: string;
@@ -96,6 +152,8 @@ export function createAgentHost(options: AgentHostOptions) {
       model?: string;
       effectiveModel?: string;
     }): Promise<void> {
+      assertExecutable();
+      const boundScope = scopeKey();
       const project = options.getProject();
       if (!project || project.id !== input.projectId || input.signal.aborted)
         throw new Error("项目或连接已变化，未导入旧图片");
@@ -110,6 +168,9 @@ export function createAgentHost(options: AgentHostOptions) {
         reader.onerror = () => reject(reader.error);
         reader.readAsDataURL(input.blob);
       });
+      assertExecutable();
+      if (boundScope !== scopeKey() || input.signal.aborted)
+        throw new Error("项目或聊天已切换，未导入旧图片");
       const imageModel =
         input.effectiveModel?.trim() || input.model?.trim() || "图片模型未报告";
       const executor = input.provider ?? "Codex 内置生图";
@@ -121,7 +182,13 @@ export function createAgentHost(options: AgentHostOptions) {
         signal: input.signal,
       });
       const current = options.getProject();
-      if (!current || current.id !== input.projectId || input.signal.aborted)
+      assertExecutable();
+      if (
+        !current ||
+        current.id !== input.projectId ||
+        boundScope !== scopeKey() ||
+        input.signal.aborted
+      )
         throw new Error("项目已切换，图片已归档但未写入其他画布");
       // 归档期间另一完成通知可能已导入同一图片，提交前再次检查幂等身份。
       if (
@@ -195,11 +262,28 @@ export function createAgentHost(options: AgentHostOptions) {
     },
     async applyOps(
       ops: CanvasAgentOp[],
-      context?: { signal: AbortSignal },
+      context?: { signal: AbortSignal; modelAllowlist?: readonly string[] },
     ): Promise<AgentOpResult> {
       const result: AgentOpResult = { applied: [], rejected: [], tasks: [] };
       const projectId = options.getProject()?.id;
+      const boundScope = scopeKey();
+      const allowedAtStart = getModelAllowlist();
+      const allowedForTurn =
+        context?.modelAllowlist === undefined
+          ? undefined
+          : Array.isArray(context.modelAllowlist) &&
+              context.modelAllowlist.every((model) => typeof model === "string")
+            ? [...context.modelAllowlist]
+            : [];
       for (const op of ops) {
+        const blocked = getExecutionBlockReason();
+        if (blocked || boundScope !== scopeKey()) {
+          result.rejected.push({
+            op,
+            reason: blocked ?? "项目或聊天已切换，未执行旧会话操作",
+          });
+          continue;
+        }
         if (context?.signal.aborted) {
           result.rejected.push({ op, reason: "已取消，未执行操作" });
           continue;
@@ -216,28 +300,6 @@ export function createAgentHost(options: AgentHostOptions) {
             continue;
           }
 
-          const allowlist =
-            typeof options.modelAllowlist === "function"
-              ? options.modelAllowlist()
-              : options.modelAllowlist !== undefined
-                ? options.modelAllowlist
-                : project.activeChatId && project.chats
-                  ? (project.chats[project.activeChatId]?.modelAllowlist?.length
-                      ? project.chats[project.activeChatId].modelAllowlist
-                      : undefined)
-                  : undefined;
-
-          if (allowlist !== undefined) {
-            const requestedModel = op.model ?? node.model;
-            if (!requestedModel || !allowlist.includes(requestedModel)) {
-              result.rejected.push({
-                op,
-                reason: `模型 ${requestedModel || "未指定"} 不在允许调用的模型白名单中`,
-              });
-              continue;
-            }
-          }
-
           if (
             node.plugin ||
             !["image", "text"].includes(op.mode ?? node.kind) ||
@@ -246,6 +308,29 @@ export function createAgentHost(options: AgentHostOptions) {
             result.rejected.push({
               op,
               reason: "此节点的生成模式暂未接入，支持图片和文案节点",
+            });
+            continue;
+          }
+          const requestedModel = op.model ?? node.model;
+          const validate = (): string | undefined => {
+            if (context?.signal.aborted) return "已取消，未受理生成任务";
+            const blocked = getExecutionBlockReason();
+            if (blocked) return blocked;
+            if (boundScope !== scopeKey())
+              return "项目或聊天已切换，未受理生成任务";
+            return [allowedAtStart, allowedForTurn, getModelAllowlist()].some(
+              (allowed) =>
+                allowed !== undefined &&
+                (!requestedModel || !allowed.includes(requestedModel)),
+            )
+              ? `模型 ${requestedModel || "未指定"} 不在允许调用的模型白名单中`
+              : undefined;
+          };
+          const denied = validate();
+          if (denied) {
+            result.rejected.push({
+              op,
+              reason: denied,
             });
             continue;
           }
@@ -269,6 +354,7 @@ export function createAgentHost(options: AgentHostOptions) {
               targetNode,
               prompt,
               context?.signal,
+              validate,
             );
             if (accepted.error || !accepted.taskId)
               throw new Error(accepted.error || "生成任务未受理");

@@ -7,6 +7,7 @@ import { runInNewContext } from "node:vm";
 import ts from "typescript";
 import {
   emptySnapshot,
+  snapshotWriteBlockReason,
   type CreationSnapshot,
 } from "../../src/features/creation/model.ts";
 import {
@@ -24,6 +25,7 @@ type LoadingOptions = {
   readGate?: Promise<void>;
   readError?: Error;
   reconcile?: (snapshot: CreationSnapshot) => Promise<CreationSnapshot>;
+  recover?: (snapshot: CreationSnapshot) => CreationSnapshot;
   waitForLoad?: boolean;
 };
 
@@ -117,7 +119,7 @@ async function harness(
       },
     },
     "./nativeClose": { createNativeCloseHandler, flushCreationBeforeClose },
-    "./model": { emptySnapshot },
+    "./model": { emptySnapshot, snapshotWriteBlockReason },
     "./storage": storage,
     "./snapshotCodec": { storageError },
     "../../domain/projectCanvas": { reconcileProjectCanvas },
@@ -154,7 +156,7 @@ async function harness(
   const render = () => {
     cursor = 0;
     return exports.useCreationStorage!(
-      (snapshot) => snapshot,
+      options.recover ?? ((snapshot) => snapshot),
       options.reconcile,
     );
   };
@@ -1104,6 +1106,46 @@ test("an oversized loading attachment cannot acknowledge a write or erase the du
       oversized.dataUrl,
     );
     await assert.rejects(fixture.render().flush(), /尚未读取成功/);
+  } finally {
+    fixture.dispose();
+  }
+});
+
+test("unsupported snapshots bypass task recovery and reconciliation and cannot be edited or saved", async () => {
+  const original = { ...emptySnapshot(), version: 3 as const, revision: 8 };
+  let recoveries = 0;
+  let reconciliations = 0;
+  const fixture = await harness(false, undefined, {
+    initial: original,
+    waitForLoad: false,
+    recover: (snapshot) => {
+      recoveries++;
+      return snapshot;
+    },
+    reconcile: async (snapshot) => {
+      reconciliations++;
+      return snapshot;
+    },
+  });
+  try {
+    await settle();
+    const hook = fixture.render();
+    assert.equal(hook.state, "read_only");
+    assert.ok(hook.getWriteBlockReason());
+    assert.equal(recoveries, 0);
+    assert.equal(reconciliations, 0);
+    assert.equal(hook.recoveryDraft, original);
+    hook.commitCreation({
+      ...hook.creation,
+      homeDraft: { ...hook.creation.homeDraft, prompt: "must not edit" },
+    });
+    assert.equal(
+      fixture.render().creation.homeDraft.prompt,
+      original.homeDraft.prompt,
+    );
+    await assert.rejects(fixture.render().flush(), /尚未读取成功/);
+    assert.deepEqual(fixture.writes, []);
+    assert.equal(fixture.durable(), original);
   } finally {
     fixture.dispose();
   }
