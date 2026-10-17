@@ -1,8 +1,10 @@
 # 当前进度
 
-## 2026-10-18 不依赖额度的本地安全边界（IN_PROGRESS）
+## 2026-10-18 不依赖额度的本地安全边界（有界本地DONE/PASS）
 
-TASK-LOCAL-GUARDS-20261018复用原审计实体树，当前branch fix/TASK-LOCAL-GUARDS-20261018/base e11b87a5。7树105dirty/index/all-ref bundle已保全，原始用户资料不变；修复工作树检查fail-open和凭据缓存失败发布，补真实runner取消/报告写失败及环境隔离。单项RED/GREEN已保留，候选Desktop/Web2.1.38，完整verify/Native/独审待续；不把本地基础修复当作真实Provider或额度恢复。见[本轮验证](changes/2026-10-18-local-guards/verification.md)。
+source92643d67 / Desktop/Web2.1.38，复用原审计实体树、branch fix/TASK-LOCAL-GUARDS-20261018。工作树失败关闭、凭据提交/缓存竞态、真实runner取消/报告故障和Windows大小写环境污染已修复；旧失败与原始资料全部保留。完整verify：Node1942PASS/14既有SKIP、Agent204PASS/2SKIP、Edge826首试零flaky、Design41+8/development4步；Rust226+41、1既有hardware ignore。Standards/Spec精确源码PASS，ENV-001独立复验关闭。官方EXE1be85bce、实际默认两次启动/正常关闭、9项目11聊天21条当前消息及身份/草稿/选择/memory全保持，输入框可编辑。
+
+7树/13分支、approved root5/4：新增被拦截，现有树保留。5条历史branch→main路由改为unallocated且全历史保留；纠正main/master无共同祖先的错误文字。宽图精确三缩放×双状态端口/按钮命中通过，连线/Native布局仍待验，原任务改PARTIAL。当前151任务86DONE/65开放；功能成熟度未提升，没有发送真实新消息、删除/移动、push/merge或发布。源码与最终文档/Delivery/日常启动的证据边界见[本轮验证](changes/2026-10-18-local-guards/verification.md)。
 
 ## 2026-10-17 旧聊天迁移与编辑恢复（PARTIAL：新回复受额度阻塞）
 

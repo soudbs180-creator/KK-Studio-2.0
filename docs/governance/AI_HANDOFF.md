@@ -10,7 +10,9 @@
 
 ## 当前恢复入口：本地剩余任务安全边界（2026-10-18）
 
-TASK-LOCAL-GUARDS-20261018 / fix/TASK-LOCAL-GUARDS-20261018，物理树仍为原审计目录，base e11b87a5；候选Desktop/Web2.1.38尚未本轮完整交付。先读[计划](../changes/2026-10-18-local-guards/plan.md)、[验证](../changes/2026-10-18-local-guards/verification.md)与权威PROJECT_STATE。三个实施组已限定policy/credentials/testEvidence不相交文件；root独占版本、文档、端口/Native/最终Git。禁止删移现有文件、在共享依赖安装或停止别的任务进程；原chat分支e11和9项目/11chat/v3保留，无真实新消息验收。
+TASK-LOCAL-GUARDS-20261018有界本地DONE/PASS / fix/TASK-LOCAL-GUARDS-20261018，复用原审计物理树，base e11b87a5；source92643d67、Desktop/Web2.1.38已完整本地verify、双轴独审及官方Native验收。先读[验证](../changes/2026-10-18-local-guards/verification.md)和权威PROJECT_STATE；最终文档SHA/Delivery/日常正常启动以工程外精确收据为准。9项目11chat/当前21条消息及v3/同身份保护，未发送新消息，不重跑旧v2默认迁移脚本。
+
+当前151任务86DONE/65开放，7树13分支、approved root5/4拒绝新增；复用现有合法树。原63项主仓字节/index及并行69dirty保留。5历史branch→main路由已改未分配，旧值在verificationHistory；不能在main接着写。下一轮可先做侧栏pin/sort持久化、Gateway真实上游增量流、宽图连线/同状态Native验收。父任务保持PARTIAL；容器coord看板不读取此候选且git来源claim刷新有丢失风险，未接管该并行工具。root仍独占最终文档/Git/端口/Native；禁止删除/移动文件、清理日常lnk引用树、覆盖并发工作、push/merge/发布。
 
 ## 上一阶段：旧聊天迁移与编辑恢复（2026-10-17）
 

@@ -66,7 +66,7 @@ LayeredCredentialStore只在持久写成功后发布缓存；迟到读取和每�
 
 ## 差距与后端化（Wave 3）
 
-- **未接真实上游**：无 DPAPI `SecretProtector` 实现（需 Rust 侧或 PowerShell 桥），无真实凭证，任务保持 `TODO` / `NOT_VERIFIED`
+- **未接真实上游**：无 DPAPI `SecretProtector` 实现（需 Rust 侧或 PowerShell 桥），未验证真实凭证联调，父任务保持 `PARTIAL`、功能仍 `PROTOTYPE`
 - 调度层为纯内存状态，未接 generation-server 的 lease / dead-letter 持久化仓储
 - 未接 sub2api-client（传 `session_id` header；注意 Nginx 需 `underscores_in_headers on;`）
 - `stream: true` 目前是单次 buffered SSE，不是供应商 token 级增量流；后续可在 `ChannelAdapter` 增加可选 stream 方法

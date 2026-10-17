@@ -2,7 +2,7 @@
 
 - 状态：PARTIAL
 - 领域：system
-- 最近更新：2026-10-15
+- 最近更新：2026-10-18
 - 关联任务：T3a、T3b、T9、TASK-DS-002、TASK-PROJECT-SIDEBAR-001
 
 ## 用户可见入口
@@ -13,7 +13,9 @@
 
 - 前端：`src/features/projects/projectPackage.ts`、`nativeProjectPackageAdapter.ts`、`sidebarProjectModel.ts`、`src/features/creation/storage.ts`、`useCreationStorage.ts`、`snapshotCodec.ts`、`src/components/SidebarProjectGroups.tsx`
 - Desktop Rust：`src-tauri/src/project_package.rs`、`project_package_snapshot.rs`、`creation_storage.rs`、`storage_paths.rs`
-- 数据根：`%APPDATA%/kk-studio`（creation-v2 格式）
+- 数据根：`%APPDATA%/kk-studio`（沿用 `creation-v2.json` 文件名，当前已迁移快照 schema 3、repository format 2；旧文件名不代表仍是v2）
+
+当前候选2.1.38实际9项目/11聊天，旧资料已可编辑，完整canonical数据在正常关闭重开后保持；[本轮验证](../changes/2026-10-18-local-guards/verification.md)。侧栏pin/sort仍为会话内useState，持久化未完成；真实新回复仍按聊天迁移任务开放，不据本地恢复提升为REAL。
 
 ## 测试与证据
 
