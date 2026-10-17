@@ -17,8 +17,8 @@
     "branch": "fix/TASK-CHAT-MIGRATION-20261017",
     "worktree": "D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017",
     "baseSha": "bbc8a766740ec94d30171020cf208a6aeb3c87d4",
-    "status": "IN_PROGRESS",
-    "displayStatus": "进行中",
+    "status": "PARTIAL",
+    "displayStatus": "未完成",
     "priority": "P1",
     "priorityRationale": "默认资料只读，需完成真正迁移和执行隔离后恢复用户编辑聊天。",
     "affectedModules": [
@@ -40,10 +40,10 @@
       "docs/changes/2026-10-17-chat-migration/verification.md",
       "docs/changes/2026-10-17-chat-migration/review.md"
     ],
-    "verification": "原9项目v2/revision2226、已有2chat与5root线程已保全；2491文件独立枚举重哈希0 mismatch，5份旧rollout另行保全并二次独立校验。迁移/隔离实现及三P1修复在22352源码双轴独审通过，2.1.37 Rust226+41项PASS/1既有硬件ignore。定向Edge暴露夹具与连接/草稿清理边界，正在修复复验。默认库未迁移，完整当前verify/Native/真实聊天仍待验收。",
+    "verification": "Desktop/Web 2.1.37（Mobile 2.1.1规划），冻结源码89b8291b；默认原9项目已迁移snapshot3、11个独立聊天上下文，repositoryId和原始资料保持；编辑、旧历史持久化及正常关闭重开证据见本轮验证。真实新回复仍未验收：Codex共享周额度100%、ordinaryUsageAllowed=false，发送前拒绝，/turn提交0；预计北京时间2026-10-23 04:08:15重置。未消耗reset、未购买额度或绕过保护。 完整verify Node1924/14skip、Agent204/2skip、Edge826首试零flaky、DESIGN41+8/development四步；Rust226+41/1ignore；双轴源码PASS，官方EXE与loaded bundle绑定89b；副本130检查、默认v3迁移与旧历史/编辑重开收据见verification。所有原件和失败保留。",
     "verificationResult": "NOT_VERIFIED",
     "updated": "2026-10-17",
-    "nextAction": "冻结发送草稿/首页来源边界修复，完整verify及新head独审；官方重建后先资料副本Native迁移，再fresh保全/CAS迁移默认根，验证旧线程真实聊天、离线保存和正常重开。",
+    "nextAction": "账号Codex额度解除后，从当前v3原线程进行一次普通文本受理/回复及持久化重开验收；此前/turn0，无UNKNOWN重放。保留原始v2不可变归档，不回滚、删除或移动；Hosted/PR/main/发布与原统一范围另行验收。",
     "requirementRefs": [
       "docs/changes/2026-10-17-chat-migration/intent.md",
       "docs/architecture/adr/ADR-022-project-chats-and-v3-migration.md",
@@ -199,7 +199,7 @@
     "verificationResult": "PARTIAL",
     "updated": "2026-10-17",
     "displayStatus": "进行中",
-    "nextAction": "原统一scope继续开放；当前后续源码已进入local main@8c36a6b并有63条dirty，已保全为未验收221560a3。当前安全修复由TASK-AUDIT-REPAIR-20261017独占承接；原branch/worktree仅历史来源，不作为当前产品验收或并行写入分配。完整多聊天、12AI持久恢复、Provider/共仓库/账号/同步等仍按原scope另行实施和验收。",
+    "nextAction": "原统一scope继续开放；原main8c及最初63dirty字节/index保全，并发6项后当前69dirty未并入。当前有界恢复由TASK-CHAT-MIGRATION-20261017在原审计实体树承接，2.1.37本地迁移/编辑通过，真实新回复受Codex额度阻塞。旧branch/worktree保留历史来源，不作为活动写入分配。12AI持久恢复、Provider/共仓库/账号/同步等按原scope继续验收。",
     "lastVerified": "2026-10-16",
     "ownerRole": "implementation-integrator",
     "requirementRefs": [

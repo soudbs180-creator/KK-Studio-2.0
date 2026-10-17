@@ -7,9 +7,9 @@
 - 最近更新：2026-10-17
 - 关联任务：T4、BACKEND-CONVERSATION、TASK-AGENT-001、TASK-AGENT-002、TASK-AGENT-003、TASK-AGENT-007、TASK-AGENT-008
 
-## 2026-10-17旧聊天恢复（验证中）
+## 2026-10-17旧聊天恢复（本地验证通过，任务仍PARTIAL）
 
-当前TASK-CHAT-MIGRATION-20261017正实施原始资料无损迁移、canonical聊天编辑/历史与HTTP7作用域。候选Desktop/Web2.1.37；默认资料尚未迁移、实际桌面与聊天验收未完成，状态仍PARTIAL。临时/新窗口及完整新建聊天能力继续由原开放任务承接；本阶段不提升既有成熟度或沿用旧运行证据。见[当前验证](../changes/2026-10-17-chat-migration/verification.md)。
+关联TASK-CHAT-MIGRATION-20261017；Desktop/Web 2.1.37（Mobile 2.1.1规划），冻结源码89b8291b；默认原9项目已迁移snapshot3、11个独立聊天上下文，repositoryId和原始资料保持；编辑、旧历史持久化及正常关闭重开证据见本轮验证。真实新回复仍未验收：Codex共享周额度100%、ordinaryUsageAllowed=false，发送前拒绝，/turn提交0；预计北京时间2026-10-23 04:08:15重置。未消耗reset、未购买额度或绕过保护。 见[当前验证](../changes/2026-10-17-chat-migration/verification.md)。
 
 ## 2026-10-17安全修复边界（历史2.1.36）
 

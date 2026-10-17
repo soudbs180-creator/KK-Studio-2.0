@@ -10,7 +10,7 @@
 
 ## 当前恢复入口：旧聊天迁移与编辑恢复（2026-10-17）
 
-先读[本轮计划](../changes/2026-10-17-chat-migration/plan.md)、[验证](../changes/2026-10-17-chat-migration/verification.md)和权威Project State。当前任务TASK-CHAT-MIGRATION-20261017、branch `fix/TASK-CHAT-MIGRATION-20261017`、复用原审计实体树，Desktop/Web候选2.1.37。原始2491文件独立校验PASS，默认库未迁移；不得以源码定向测试通过宣称旧资料可编辑或聊天已恢复。继续完整验证、独立审查、官方新Native、原库副本迁移后默认库迁移及重开。仍禁止删除/移动原文件，原main/index/dirty与旧审计ref保留；详细结果只以当前验证文档和精确收据为准。
+先读[计划](../changes/2026-10-17-chat-migration/plan.md)、[验证](../changes/2026-10-17-chat-migration/verification.md)和权威Project State。TASK-CHAT-MIGRATION-20261017 PARTIAL/NOT_VERIFIED，branch `fix/TASK-CHAT-MIGRATION-20261017`，实体树仍为原审计worktree；完整verify/Native source89b8291b。Desktop/Web 2.1.37（Mobile 2.1.1规划），冻结源码89b8291b；默认原9项目已迁移snapshot3、11个独立聊天上下文，repositoryId和原始资料保持；编辑、旧历史持久化及正常关闭重开证据见本轮验证。真实新回复仍未验收：Codex共享周额度100%、ordinaryUsageAllowed=false，发送前拒绝，/turn提交0；预计北京时间2026-10-23 04:08:15重置。未消耗reset、未购买额度或绕过保护。 继续时先读当前v3与immutable迁移manifest，不覆盖原库、不重放UNKNOWN、不再执行旧v2默认迁移脚本；额度解除后一次真实文本回复仍待验。原main69dirty/index、5worktrees/8分支及旧审计ref保护，仍禁止删除/移动，日常lnk引用本任务树。详细精确收据见本轮验证；无Hosted/发布成功声明。
 
 ## 前一阶段：审计修复本地收口（2026-10-17，历史）
 

@@ -1,8 +1,8 @@
 # Plan：旧聊天迁移与恢复
 
-- Task ID：TASK-CHAT-MIGRATION-20261017；IN PROGRESS；owner root。
+- Task ID：TASK-CHAT-MIGRATION-20261017；PARTIAL；owner root；真实新回复受外部额度阻塞。
 - [Intent](intent.md)、[Spec](spec.md)、[ADR-022](../../architecture/adr/ADR-022-project-chats-and-v3-migration.md)。
-- base bbc8a766；branch `fix/TASK-CHAT-MIGRATION-20261017`；复用既有审计实体worktree，不移动目录。原main63dirty/index/旧审计ref保护。
+- base bbc8a766；branch `fix/TASK-CHAT-MIGRATION-20261017`；复用既有审计实体worktree，不移动目录。原main最初63dirty字节/index/旧审计ref保护；并发新增6项后当前69dirty，另行保全，不并入本任务。
 - 基线：前次产品469完整verify/Native与最终bbc8文档独审通过；本轮已重读适用规则、规范及实际迁移/Host/Native链。现有Map模拟迁移与v3测试有已证实的错误契约，不作为生产成功证据。
 
 ## 执行顺序和单写入者
@@ -25,3 +25,7 @@
 ## 当前开工证据
 
 原库9项目、v2/revision2226、一个项目两普通chat，5个旧root线程。运行中的已知Native50136已正常关闭，未强制终止。新工程外保全根 `D:/KK-Studio-recovery-20260921/chat-migration-20261017-aec487d8-2c50-4669-b5d1-7f369b670c41`，完整runtime-userdata-0e398bd4-2260-4a0a-9269-013bbefdc84a为2491文件/259972032B；独立重新枚举与重哈希2491/0 mismatch，receipt SHA `071cc099e2d14594d3f4bc8d896a9dbb49e40bc1c3d1bb47e35f9ddd98e4f834`。正文和密钥不进仓库或日志。
+
+## 本轮执行结果
+
+Desktop/Web 2.1.37（Mobile 2.1.1规划），冻结源码89b8291b；默认原9项目已迁移snapshot3、11个独立聊天上下文，repositoryId和原始资料保持；编辑、旧历史持久化及正常关闭重开证据见本轮验证。真实新回复仍未验收：Codex共享周额度100%、ordinaryUsageAllowed=false，发送前拒绝，/turn提交0；预计北京时间2026-10-23 04:08:15重置。未消耗reset、未购买额度或绕过保护。 完整verify、Rust、双轴源码审查、官方Native、副本130及默认资料迁移/历史验收均按[验证](verification.md)的精确收据解释；任务不因本地通过而标DONE。

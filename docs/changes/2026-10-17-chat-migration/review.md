@@ -1,6 +1,6 @@
 # Review：旧聊天迁移与恢复
 
-- Task ID：TASK-CHAT-MIGRATION-20261017；NOT_VERIFIED；base bbc8a766，最终head待冻结。
+- Task ID：TASK-CHAT-MIGRATION-20261017；源码PASS、交付PARTIAL/NOT_VERIFIED；base bbc8a766，完整验证/Native源码head89b8291b。
 - [Intent](intent.md)、[Spec](spec.md)、[Plan](plan.md)、[Verification](verification.md)。
 - 三只读诊断已确认root/chat双权威、未接生产迁移、无损缺口与protocol6可变canvas风险。实现者自检和诊断不算独立验收。
 - 最终由独立上下文reviewer核对真实base/head、原件与候选对账、Native/IDB每步失败、线程所有权/scope、真实产物及实际资料迁移。未知/未来格式仍须失败关闭；不能仅审schema或给Map模拟器PASS。
@@ -35,3 +35,7 @@ SPEC01移除保存成功前的草稿清空；回调绑定原project/chat且只�
 ## d92e1761源码双轴补审：PASS（运行门禁未满足）
 
 两独立上下文绑定d92e1761ab283fd00b712a86ce1358bbab780e61 / tree3b1dd058复核7项增量与原102项hash。原首次HOME probe在751失败、固定d92通过，新稿/附件/model与B完整数据/选择保留；Standards98单位、Spec116单位/原2反例/35静态检查通过。STD-CHAT-03、SPEC-CHAT-02关闭，无新增源码阻断。新收据摘要见[验证](verification.md)。之后完整browser另发现旧fixture/blank入口问题并修复，须下一新head复审；本结论不含后续dirty变更或实际Native迁移。
+
+## 最终89b8291b双轴与交付边界
+
+Standards源码PASS（文档26项计数follow-up已修）、Spec源码PASS，无未关闭代码blocker；完整826浏览器零flaky、官方Native与资料迁移通过。准确收据见[最终验证](verification.md)。真实新回复因账号Codex周额度100%未提交，保持任务PARTIAL/NOT_VERIFIED。首次脚本未记录发送前UI错误而等待超时，后续受控诊断确认当前额度阻断；不据首次报告推断网络已受理。保护逻辑未绕过。最终仅文档提交须精确HEAD复审与Delivery，不冒充新的产品执行。

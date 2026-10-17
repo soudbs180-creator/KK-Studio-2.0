@@ -13,7 +13,7 @@
 | `tests/unit/` | 218 文件 | `node --test` | 领域规则、纯函数、序列化、契约边界 |
 | `tests/deploy/` | 2 文件 | `node --test` | 发布脚本、回滚流程 |
 | `tests/browser/` | 128 文件 | Playwright（Edge） | 真实渲染、交互、布局、视觉回归 |
-| `tests/desktop/` | 20 文件（`.mjs` / `.ps1`） | `node` / `powershell` | Tauri 宿主、安装器、窗口、原生能力 |
+| `tests/desktop/` | 26 文件（20 `.mjs` + 6 `.ps1`） | `node` / `powershell` | Tauri 宿主、安装器、窗口、原生能力 |
 | `tests/local-service/` | 2 文件 | `node` | 本地服务 HTTP 集成与生产冒烟 |
 | `tests/development/` | 1 文件 | `node` | 插件装载等开发态行为 |
 | `tests/helpers/` | `agentServer.ts`、`designSystem.ts` | 被引用 | 共享夹具，禁止含断言 |
@@ -43,7 +43,7 @@
 
 `npm run verify` 是合并前的**主闸门**，串联 lint、typecheck、test、agent:build、test:agent、ui:check、format:check、test:ui、test:design、test:development 共 10 步；Agent 必须真实编译通过，不能只用可执行 TS 测试代替构建。test:design 在产品浏览器之后串行运行，避免占用同一 1423。
 
-它**不包含**：Rust/cargo 检查、`tests/desktop/`（20 个 `.mjs`/`.ps1`）、`tests/local-service/`、`tests/proxy`、`test:gateway`。涉及 Desktop、Rust、本地服务或真实外部服务的改动必须按本文件「桌面与 Rust 测试」与 [DEVELOPMENT](DEVELOPMENT.md) 单独补跑相应检查。
+它**不包含**：Rust/cargo 检查、`tests/desktop/`（26 个文件：20 `.mjs` + 6 `.ps1`）、`tests/local-service/`、`tests/proxy`、`test:gateway`。涉及 Desktop、Rust、本地服务或真实外部服务的改动必须按本文件「桌面与 Rust 测试」与 [DEVELOPMENT](DEVELOPMENT.md) 单独补跑相应检查。
 
 只跑 `npm test` 不构成完整验证；只通过构建也不构成验收。
 

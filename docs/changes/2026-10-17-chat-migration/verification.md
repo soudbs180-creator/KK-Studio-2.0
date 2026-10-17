@@ -1,6 +1,6 @@
 # Verification：旧聊天迁移与恢复
 
-- Task ID：TASK-CHAT-MIGRATION-20261017；IN_PROGRESS / NOT_VERIFIED。
+- Task ID：TASK-CHAT-MIGRATION-20261017；PARTIAL / NOT_VERIFIED（本地迁移与编辑恢复通过；真实新回复受账号额度阻塞）。
 - [Intent](intent.md)、[Spec](spec.md)、[Plan](plan.md)、[Review](review.md)。
 - 用户资料已保全并独立逐文件核验；原始主快照SHA `998e0101cfd0d13ed660771f04a6668a618a0c6ae9ccf198088ab17e9e616931`，原backup SHA `9f5995365be5fd40e8353e449a1e94ed9ed7577496ffc93cf00b9b57667c5f5f`，身份SHA `8db3d8823cb8c4ecfc92458d0ea41ffaa5ba8acf491dd0ffb9f7edd63c2482c0`。
 - 完整2491文件259972032B保全receipt SHA `d01f4fe869c98abafeed22c2579ac556b581fe07f0925f0a1502f23819e5c81e`；独立2491文件0 mismatch receipt SHA `071cc099e2d14594d3f4bc8d896a9dbb49e40bc1c3d1bb47e35f9ddd98e4f834`；路径见[计划](plan.md)。
@@ -74,3 +74,41 @@ clean c8406ea07eb01e71156cd96db356c740031835b1完整`npm run verify`退出0，�
 ## 第六候选09fcd947：完整verify退出0，一处同类fixture继续修复
 
 09fcd9470647916d8cf15e12c2ff99f2bb883f3a完整verify退出0（full-verify-09fcd947.log）：Node1938=1924PASS/14既有SKIP、Agent204PASS/2既有SKIP、产品Edge825首试+1flaky，DESIGN41+8及development四步骤PASS。原两条flaky首试通过；新阶段结果审批失败run34243b06的UI明确提示迁移状态不一致，openPlans仍在page.goto后写高revision v2。完整扫描剩余emptySnapshot调用者，修正stage/task/ui-page三处普通种子为canonical3/serialize；有意的v2迁移、Native旧契约mock、companion和纯SSR兼容场景保留，不解除生产读取保护。三文件重复3次、关闭重试84/84首试PASS（remaining-canonical-fixtures-repeat3.log）。产品源码不再变化，下一clean候选再执行完整门禁。
+
+
+## 最终冻结89b8291b：完整本地验证通过，真实新回复受额度阻塞
+
+当前事实以本节为准；此前“默认未迁移”“新包未构建”等均按各阶段历史理解。固定source `89b8291bf0395b9e78797a3d67652ae5458e5b30` / tree `9d2c7edb`，base `bbc8a766740ec94d30171020cf208a6aeb3c87d4`，branch `fix/TASK-CHAT-MIGRATION-20261017`。最终文档提交只同步治理与证据，产品/配置/测试输入与该冻结候选相同；完整verify和Native验收明确绑定89b，不伪称在后续文档HEAD重复运行。
+
+Desktop/Web 2.1.37（Mobile 2.1.1规划），冻结源码89b8291b；默认原9项目已迁移snapshot3、11个独立聊天上下文，repositoryId和原始资料保持；编辑、旧历史持久化及正常关闭重开证据见本轮验证。真实新回复仍未验收：Codex共享周额度100%、ordinaryUsageAllowed=false，发送前拒绝，/turn提交0；预计北京时间2026-10-23 04:08:15重置。未消耗reset、未购买额度或绕过保护。
+
+### 验证与独立审查
+
+- 完整 `npm run verify` exit0，`full-verify-89b8291b.log`：Node1938=1924PASS/14既有SKIP；Agent206=204PASS/2既有SKIP；产品Edge826首试PASS、0fail/flaky/skip；DESIGN41单位+8浏览器、development四步骤以及lint/type/UI/format/build通过。产品run `c3fc7a10-6efb-4c1e-9880-a5834cfbf296`；外部收据 `full-verify-89b8291b-8ac00bba-ba31-423e-9f9a-ca6d839ef9ab.json` SHA `fc0ed475f83ac63710744249f923b3e3e139ac9a5bd5fc56b42fc26cecd13d73`。此前flaky和失败均保留，无增timeout/retry或放宽格式保护。
+- 同一Rust源2.1.37：226PASS/1既有硬件ignore，integration41PASS；`cargo-final-2-1-37.log`。独立Standards source PASS（overall含文档follow-up）、Spec source PASS/无代码blocker，最终复核修正TESTING Desktop数为26=20mjs+6ps1。收据SHA分别 `ff8eb2edd6e9872c26f161683cc95fa2935cdb5626307e16b74e1d2b57b35802`、`973783d409a3fa3c9a4210ef7bd61049e1f1b5abe28386307eb9e77ecbd680c2`；合并来源收据SHA `99f97420589cf5ba08508a02a10eaa41935c4e6943cbe4b3181448b6fe9f4a4a`。源码批准不冒充聊天回复或Hosted批准。
+- 官方Windows EXE SHA `aa135d3b92af5874e5f381d9ada3c2ed233da30aedfd8b57fcd38d3fbf677373`，输入SHA `8eef2caad381067af58698ed1100043731834d747ea7e7dc93d614fc25c98d5b`。真实WebView加载 `/assets/index-C-A_JAA6.js` SHA `e72d744f4f2b4b17cc02b2be7635392cc02edc8d0b41204bc91d4349f0a889a6`，与dist逐字节相同；Agent生产白名单4282文件逐一校验。入口gzip237433B，相对固定469基线增长6763B，小于16384B预算；预算收据SHA `8a4d0ecb0b71e32adbf6e3f863a1a5d7c46dad695ad932994ee90892e5d88b11`。
+- Native原库副本最终130检查PASS，run `5448557e-ed62-4510-a78b-6edee6a0dde7`，receipt SHA `36d2f4080ec1488fd631939557a178630b64a511a2c1d2644db05881dba74ba4`：9项目/11chat/3任务/18卡、两普通chat编辑切换/关闭重开，11素材文件15661180B全部字节相同。最初retry-parent更新时间、未关闭设置浮层和运行期独占lease EBUSY的三次harness失败原件均保留；只对基线证明的retry parent时间允许本轮有限更新，空lease在正常关闭后校验，未削弱业务字段/锁。
+
+### 实际默认资料迁移、失败诊断与恢复
+
+迁移前即时全量保全 `runtime-userdata-a3b1481c-519f-48e4-afdf-4e0a33dabff5`：2491文件259972032B/122目录；保全receipt SHA `b2d6507a7d0717741101f76e65cbd76d350a8a002f6dcfaef8145914f1cf7f2b`，独立枚举/重哈希收据SHA `bf89b2bc15565e7bb058dccced37af6d29073d6132425565f259d04d32723904`。最初v2主备/身份原字节、5个原rollout和旧EXE/runtime均保留；恢复路径仍在上方工程外根，无原文件删除或移动。
+
+默认迁移run `8de3d500-efdb-412c-b759-1514f77ca79d` 的v3主备、同repositoryId format2/minWriter2、归档/plan/complete及图结构对账通过，但正常文本验收FAIL，完整receipt SHA `c42cf3860f377024487978fc68321c90621c5b8cbb7598d0b198316cb71b3176` 保留。该harness只等待turn/回复，未记录发送前UI错误，180秒超时；后续受控诊断才明确当前quota阻断，不将后验结论当作首次UI实测。没有证据证明首次请求已送达或React崩溃。所选旧线程原rollout本来只有settings记录、0条正文；5个原线程中4个原本为空，1个确有历史，不能将空线程误认作解析丢失。
+
+原权限scalar从迁移前完整WebView副本读取为null（原key不存在），未向原profile回写读取脚本；safe reconcile run `73af38f2-74b2-4074-984f-1d97cfe97bfc` 通过Native expectedRevision CAS仅恢复本轮owned草稿/活动选择及精确权限scalar，所有原/当前消息和其他字段保留，不做整库回滚。后续controlled诊断run `2940e5fa-fed1-4e11-8c5f-6539f5e91d2b` 禁止一切上游turn，明确捕获“Codex额度已用完，请等待重置”，/turn0、DOM app/sidebar/main各1、pageerror0，恢复/正常关闭PASS。两条未提交的本轮探针回显作为证据保留，不当作上游成功；没有自动重放UNKNOWN任务。
+
+独立账户只读查询 `quota-readonly-20261017-151927Z.json` SHA `0750355af7355aaa7db5959ebae04b382e581ecf2e996a9701a6c9ea9d2f02e1` 确认codex primary100%/10080分钟、reset1792699695、ordinaryUsageAllowed=false。发送链 `agentConnection.ts` 先保存user echo，再刷新quota并拒绝，现有2测试和独立6断言通过。没有修改正确额度逻辑、使用reset或支付购买。
+
+历史验收前新增完整v3安全点 `runtime-userdata-3ffd3832-86cd-44e2-ae40-13ad132206d6`：2586文件353697693B/124目录；receipt SHA `b27582160f07eba42703aa6fac3a0e9f6f0c7f81132e3669889f782907f43c18`，独立2586重哈希0 mismatch收据SHA `7d734d934f35e77cf8811fcf4903eac7d7bce4a88d68b0505e7fb0042a5c6585`。最终真实旧历史/草稿/重开验收报告 `test-results/native-default-history-acceptance/5e3517e7-790d-4610-933e-22b3c80cb1ba/native-default-history-acceptance-results.json`，SHA `2f0e8c316e11d142b2ad392405f7ef52701a5f252f20c38c4a257fe5b6901c5a`，完整原返回及原草稿在私有证据留存，不进入仓库正文；所有turn/approval/generation禁止。具体逐项检查以该真实报告为准。
+
+历史验收首轮877ce5e9在草稿编辑和正常重开已PASS后，恢复CAS与尚未完成的自动保存冲突，正确拒绝；finally重复EXCL文件名又产生EEXIST，未恢复测试草稿。FAIL收据SHA `15b9296c7a79f0522f568184c59f6945bdbbf5f74ff4d0b5aefc12d5e6c3aa23` 及原草稿/owned测试草稿/首次CAS输入完整保留。限定恢复run `4acca2f2-2305-40b4-9c13-754c69627903` SHA `198ef7887cd279dd3525cd9d29deddc916d8d84ad0db4b44d99e9c918bb6d296` 通过；仅依据这些精确摘要、等待3次磁盘稳定后用fresh revision CAS恢复测试草稿/选择/权限，所有消息保留。脚本改为每次唯一证据名、证据I/O后重读并重新证明owned字段；仅显式conflict允许至多一次重新核验，不绕过Native保护。
+
+最终5e3517e7：5条原线程均真实request-mode resume并保存稳定3次；1条非空返回16条canonical记录（UI7条非tool和9条执行记录），4条原本为空的远端仍为0，已有两条未提交本轮探针不被远端空历史覆盖。全部5chat在正常关闭重开后离线逐条DOM文本、角色、执行行和完整canonical消息字段一致；草稿普通编辑/关重开/精确恢复通过，原完整草稿/活动选择/权限恢复，3次正常关闭、pageerror0、turn0、剩余Native0。服务返回为其完整turn预算内历史，不将16条解释为原rollout所有事件；原完整rollout始终在不可变归档。
+
+最终主目录补保全 `primary-concurrent-e5b337b4-0f38-4902-94c3-1aad0e0de5f2` SHA `5a35d5efa45fe87554c3c3e47faebb6b641edc2de716928a78e29fdc6005dd69`：69文件1501601B、原63项字节/HEAD/index保持、staged0，6项并发文档路径未回退或并入。原状态漂移失败仍保留。
+
+最终正常关闭后的默认资料另完整保全至 `runtime-userdata-fa666250-21b5-442d-adcd-36fdf4a9c7d1`：2707文件353875715B/124目录；保全收据SHA `037a3f8803d50fb36e8ade9cd1e458297df69e4526e30201a117d7408685ba35`，独立重新枚举并重哈希2707/0 mismatch收据SHA `e3c31d61c02532774ac8f0ca12093c570351890eec2eeb5679f514740dc55c76`。当前可写资料与最初v2原件均有独立安全点。最终文档lint退出0，既有code-health/Windows-footguns advisory保留；没有关闭检查或提升能力状态。
+
+### 剩余边界
+
+本任务保持PARTIAL/NOT_VERIFIED：本地保全、迁移、编辑、历史持久化和运行恢复完成；正常新回复仍需账号解除额度后一次明确受理及回复实测。当前150任务85DONE、49PARTIAL、12TODO、3BLOCKED、1IN_PROGRESS，65开放；未批量关闭旧统一/Provider/12AI/垃圾箱/账号/VPS/Web/Mobile/签名任务，也未提升37功能成熟度或冒填runtimeEvidence。后续从现有v3继续，绝不将旧v2覆盖默认库。无push/merge/远端规则修改或发布；Delivery和最终文档精确HEAD复审以提交后外部收据为准。

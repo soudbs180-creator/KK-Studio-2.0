@@ -11,6 +11,31 @@
 
 # 当前项目事实（2026-10-17）
 
+- `snapshotDate`: 2026-10-17；精确事实与失败详见[迁移验证](../changes/2026-10-17-chat-migration/verification.md)。
+- `canonicalRepository`: `D:/kk-studio/KK-Studio-2.0`；容器根不是Git仓库。
+- `canonicalRef`: `origin/main`（本地tracking ref）。
+- `canonicalHead`: 当前本地tracking 503dedbeda39f133c7f77f88ab66825d156f81cf；此为磁盘只读回读，未fetch/核对该SHA Hosted，不沿用旧d95远端状态。
+- `localMainHead`: 8c36a6b138205613ae1a7c27950b86792da8de1a；原63dirty逐字节和index/staged0保持，并发新增6项后69dirty另行保全。不回退/并入他人改动。
+- `currentTask`: TASK-CHAT-MIGRATION-20261017 PARTIAL/NOT_VERIFIED；branch `fix/TASK-CHAT-MIGRATION-20261017`、base `bbc8a766740ec94d30171020cf208a6aeb3c87d4`、实体树`D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017`，旧审计ref/证据保留。
+- `sourceVersionBoundary`: 冻结source `89b8291bf0395b9e78797a3d67652ae5458e5b30`；Desktop/Web2.1.37，Mobile2.1.1规划。最终文档HEAD仅同步事实，产品/测试输入未改变；完整verify和Native运行明确绑定89b。
+- `taskLedger`: 150 records；DONE85/PARTIAL49/TODO12/BLOCKED3/IN_PROGRESS1，开放65；本地迁移通过不等于真实新回复、原统一任务或整项目DONE。
+- `workspaceWorktrees`: 当前5登记checkout/8本地分支，4个非primary符合默认数量上限；primary8c36、迁移89b829、统一df087、Web-release docs分支503ded、taskstate5e2d2。其他树只读；[清单](workspace-inventory.json)仍是11:18Z历史采样，不能据分类删除。
+- `preservation`: 原v2主备/identity及2491文件259972032B完整保全和独立重哈希PASS；5份旧rollout4051009B及readonly索引已保全。当前v3安全点另存2586文件353697693B/124目录、独立0 mismatch。工程外根`D:/KK-Studio-recovery-20260921/chat-migration-20261017-aec487d8-2c50-4669-b5d1-7f369b670c41`，最初原件及全部失败不覆盖。
+- `defaultDataBoundary`: 原9项目已合法迁移snapshot3/11chat、同repositoryId format2/minWriter2、原件归档/候选/plan/complete完整；旧资料编辑、历史持久和正常重开以[最终真实报告](../changes/2026-10-17-chat-migration/verification.md)为准。不能再用“默认未迁移/READ_ONLY”描述当前，也不能将v2覆盖回库。
+- `finalVerify`: 89b clean完整verify exit0；Node1924PASS/14既有SKIP、Agent204PASS/2既有SKIP、Edge826首试0fail/flaky/skip、DESIGN41+8/development四步；Rust226PASS/1既有ignore+integration41PASS。原失败与警告保留。
+- `nativeDelivery`: 官方2.1.37 EXE aa135d3b/input8eef2caa，loaded bundle e72d744f字节相同；原库副本130检查PASS，默认迁移及历史/编辑重开另有实际收据。日常两个lnk指向本任务Launcher；当前实例/最终启动由最终收据裁决，不保留旧PID50136为当前。
+- `chatExecutionBoundary`: 实际前端明确“Codex额度已用完”，独立只读账号ordinaryUsageAllowed=false、codex周额度100%、预计北京时间2026-10-23 04:08:15重置；/turn提交0，无真实新回复验收，任务PARTIAL。未绕过保护/消费reset/购买额度/自动重放UNKNOWN；两条未提交测试回显保留证据。
+- `reviewBoundary`: 89b Standards/Spec源码PASS、原P1反例修复关闭；源码审查不代替外部回复。最终文档HEAD独审及Delivery按外部精确收据；Hosted/PR/main/发布未执行，其他任务的远端行为不归本任务声明。
+- `localHook`: 原v2 shared pre-push四处按LF归一一致，旧bak保留；hook不替代Hosted，远端规则仅按前次A–D采样历史解释，当前无设置变更。
+- `reclamationPolicy`: 无文件删除/移动，54份runtime previous/历史clone/worktree/恢复资料保留；本任务build依赖为物理owned，日常lnk引用的任务树不得清理。原A保全517368文件版本/56336959878B/6bundles仍按其历史收据解释。
+- `historicalRule`: 下方历史不覆盖本区；37功能成熟度/runtimeEvidence未提升。临时/新窗口、无持久receipt的12AI、未接持久垃圾箱继续禁用；12AI持久恢复/成本/记忆/垃圾箱、真实Provider/Comfy/GPU、Web/VPS/账号/同步、Mobile及签名安装器/用户验收按原任务开放。
+
+<!-- CURRENT_FACTS_END -->
+<!-- HISTORICAL_SNAPSHOTS_BEGIN -->
+
+
+## 2026-10-17 迁移执行前的事实快照（历史，已由上方事实替代）
+
 - `snapshotDate`: 2026-10-17
 - `canonicalRepository`: `D:/kk-studio/KK-Studio-2.0`
 - `canonicalRef`: `origin/main`
@@ -30,9 +55,6 @@
 - `localHook`: 四处无core.hooksPath覆盖，同common pre-push v2；installed/policy/source按LF归一相等，旧v1.bak保持。既有fixture27=22PASS/5Windows平台SKIP/0FAIL本轮未重跑，7相关guard源自a95未变；hook可绕过，不替代Hosted。
 - `reclamationPolicy`: 54份runtime previous、旧clone/worktree/输出/恢复材料仍在，没有删除或移动。所有build输出/依赖物理owned，共享junction/symlink只读。E/F实体整理未执行。
 - `historicalRule`: 下方历史不覆盖本区。37功能成熟度/runtimeEvidence未提升；真实Provider/ComfyUI/GPU、完整多聊天/垃圾箱/12AI恢复、账号/VPS、Mobile、签名与用户验收按原任务保持开放。
-
-<!-- CURRENT_FACTS_END -->
-<!-- HISTORICAL_SNAPSHOTS_BEGIN -->
 
 ## 2026-10-16及之前的原CURRENT_FACTS（历史保留，已由2026-10-17事实替代）
 
