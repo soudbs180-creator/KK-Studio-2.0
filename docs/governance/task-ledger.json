@@ -7142,7 +7142,7 @@
       "docs/changes/2026-10-14-agent-canvas-sync/evidence/final-production-browser-results.json",
       "docs/changes/2026-10-18-gateway-stream/verification.md"
     ],
-    "verification": "source176ec95d当前官方Desktop2.1.40 EXEd8e7/input49ad，真实隔离Native+本地CanvasSession HTTP/SSE，经实际AgentHost/不可变Tauri IPC/DOM/SVG/原生快照验收移动/添加/连线/拖动优先、完整小数位置、unknown不重提及重开恢复。v5冷启前后全JSON含时间/revision相等，显式项目点击精确+1单列，重连全JSON与点击后完整baseline相等；默认七项保护，原v1-v4 FAIL留存。当前原生专项PASS不替代原任务真实Codex端到端及完整用户接受，保留PARTIAL。",
+    "verification": "source176ec95d当前官方Desktop2.1.40 EXEd8e7/input49ad，真实隔离Native+本地CanvasSession HTTP/SSE，经实际AgentHost/不可变Tauri IPC/DOM/SVG/原生快照验收移动/添加/连线/拖动优先、完整小数位置、unknown不重提及重开恢复。v5冷启前后全JSON含时间/revision相等，显式项目点击精确+1单列，重连全JSON与点击后完整baseline相等；默认七项保护，原v1/v2/v4 FAIL与v3有限PASS及完整identity未证均留存。当前原生专项PASS不替代原任务真实Codex端到端及完整用户接受，保留PARTIAL。",
     "verificationResult": "PARTIAL",
     "updated": "2026-10-18",
     "featureIds": [

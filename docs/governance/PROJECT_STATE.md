@@ -16,7 +16,7 @@
 - `nativeArtifact`: 官方当前40 EXEd8e7a2a8/input49ad264e，实际加载index-CFAegoGh.js/CSS逐字匹配，4282源/随包Agent文件相同。上一40与失败40/原39先保全；正常构建更新生成文件，不冒充所有生成文件未替换。
 - `strictCold`: 当前176新包、真正默认库、两个原lnk、无CDP，连续两周期0→1单实例→正常关闭0；11份完整JSON及raw全等，全部时间/revision2698、9项目11聊天22消息与40保护观测保持。独立97项strict/UI/full/build保存证据审核5905104f PASS_SCOPE。旧477 FAIL/940拒收/全部RED保留，不回滚2696或筛字段。
 - `nativeUi`: 当前包默认UI另两轮可见textarea enabled/readOnly=false、0pageerror、完整canonical资料保持；UI重序列化after非raw证明。blockedRequests1目标未记录，不宣称零请求或全网络隔离，未发实际消息；真实新回复未验收。
-- `nativeCanvas`: 当前隔离Native实际手动连接本地CanvasSession/SSE，移动/添加/reference连线、拖动优先、完整小数持久与正常重开/unknown不重提通过。v5报告9903df33：冷启全JSON相等，项目库真实点击精确revision+1独立记录，重连全对象相等；默认七项保护。原v1-v4失败全保留；合成会话/额度不是实际Codex/provider，父Canvas仍PARTIAL。
+- `nativeCanvas`: 当前隔离Native实际手动连接本地CanvasSession/SSE，移动/添加/reference连线、拖动优先、完整小数持久与正常重开/unknown不重提通过。v5报告9903df33：冷启全JSON相等，项目库真实点击精确revision+1独立记录，重连全对象相等；默认七项保护。原v1/v2/v4 FAIL、v3有限PASS及完整identity未证均保留；合成会话/额度不是实际Codex/provider，父Canvas仍PARTIAL。
 - `preservation`: 开工9树141dirty/index/diff/refs与main96并发版本保全；第二树检查点bdb34617/独立保存副本f0894f2c，其他8树HEAD/index/原dirty在两采样间保持；旧63历史比较FAIL不撤改。原完整profile2849份保全/独立6362f7ce保持，新2957份350261316B副本5548b695源/副本及枚举全相等。容器两文档原件先另存43d26f0a，再同步入口，旧章节保留历史。
 - `tasksAndTrees`: 154项91DONE/48PARTIAL/11TODO/3BLOCKED/1IN_PROGRESS，开放63；37功能成熟度不提升。9树18分支/approved root5/4超限拒绝新增、复用现有；Gateway关闭后6条已分配开放route零失配。两外部issue68树owner明确/越界授权UNKNOWN，保留；coord旧ledger及claim风险未接管。
 - `remoteBoundary`: origin/main c248d8178ec1754315559a9e476ac909bb494287仅前次无prune fetch来源，Desktop37/Web38/Mobile3属并行来源；未整合、未做Hosted复验，不回退本候选或据此发布。
