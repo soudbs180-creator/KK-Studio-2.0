@@ -1,8 +1,14 @@
 # 当前进度
 
-## 2026-10-18 12ai 手机端生成和原件保存（IN_PROGRESS）
+## 2026-10-18 12ai 手机端生成和原件保存（REVIEW）
 
-用户授权按官方文档修图片自动保存、文本与视频，并在正式上线后单张图片复验及刷新恢复，保留一个回滚版本。隔离基线 origin/main c248d817；本轮主仓保护基线实际为 clean 的109c6c41，旧69/96 dirty是历史其他时点，不覆盖本轮。图片同步base64、原件阶段错误提示与视频明确模型/持久ID/GET-only恢复/16MiB原件保护已整合；Mobile371全过，根完整verify及组合手机入口9/9通过。Web候选2.1.39、Mobile2.1.4，Desktop源码仍2.1.37；新版本尚未上线，T12/FEAT-028保持开放。用户仅授权图片和文本真实复验，视频不额外消耗额度。详见[本轮交付](changes/2026-10-18-mobile-12ai/verification.md)。
+本次生产收据文档另建[明确后缀五件包](changes/2026-10-18-mobile-12ai-production-receipt/verification.md)绑定同TASK/docs分支：55e仅修改旧包被Delivery实际拒绝（11files/1violation），原FAIL保留，补包不改checker或产品。用户保存Key后，root在正式9d10/140201生产bundle、430×637浏览器仅各一次真实短文本和单图，均1/1 saved并刷新恢复；PNG830495B，Provider字节/两次普通导出SHA64a6af6e一致，文本SHA1fffc1d3一致。刷新Provider0/POST0，旧文本、unknown失败图和原导入原件hash保留。现场实测PASS，独立live证据审核已PASS_WITH_EXPLICIT_SCOPE、无阻断项（27输入；报告JSON SHA59af4671f7618f14b69b3fa5458a3f93051b12d0fdfcfcf8486763771d126ae3）；最终文档head的Delivery/独审/Hosted待提交后执行。
+
+用户授权按官方文档修图片自动保存、文本与视频，并正式上线后单张图片/短文本复验，保留一个回滚版本。图片同步base64、分阶段错误与视频明确模型/持久ID/GET-only恢复/16MiB原件保护已整合；Mobile371全过，c813根完整verify、最终本地组合9/9及b0ef独审通过。PR70正常squash为main9d10，完整tree与b0ef一致；精确main quality39104785098五项/guards39104785090双平台成功，正式Release416299447/managed-web-release39107253299已上线Web2.1.39/Mobile2.1.4，Desktop源码仍2.1.37。公网140201入口SHA cf341da4与本地3d5不同，生产入口9/9通过、current39/唯一previous38终核完成。详见[本轮验证](changes/2026-10-18-mobile-12ai/verification.md)与[发布实录](changes/2026-10-18-mobile-12ai/release.md)。
+
+本轮真实图文现场结果已交回，不再处于待Key阶段；Task保留REVIEW/NOT_VERIFIED，仅当前文档head门禁和正常PR尚待完成；不为自引用head或未来CI循环改写记录。视频仍仅本地fixture保存/播放/导出/刷新PASS、真实视频请求0，不代填上游生成或费用。FEAT-028 PARTIAL、T12 TODO/open，Safari/新原生包等仍未验，用户最终接受不由保存Key回复代填。
+
+canonical初始基线比较FAIL继续保留。07:30/07:31本地main0a49/index7dc72867、4dirty及两读稳定仅为历史观察；08:02只读终核已是main208f97de/index2717ed9d、status clean，四文件bytes/hash也已改变，不能称最终四路径稳定或canonical未变。本任务没有对canonical还原、stage、commit或写文件，不归因操作者，隔离生产9d10不包含这些后续变化。旧release树0cb/index未变仅按较早核对时点记载。详见当前生产verification及工程外protection-final-live-acceptance.json。
 
 首次完整verify在Node阶段1850PASS/2FAIL/20SKIP，因隔离安装ignore-scripts后未先生成Agent dist；补齐既有agent/plugins构建后原失败文件3/3通过，原失败日志保留；整合c81311be完整重跑exit0，根1852PASS/20SKIP、Agent199PASS/2SKIP、浏览器827PASS及设计/开发链通过。没有修改有效断言或产品Agent源码。
 

@@ -10,7 +10,11 @@
 
 ## 当前恢复入口：12ai 手机生成与保存修复（2026-10-18）
 
-TASK-MOBILE-12AI-001正在隔离实施，先读[本轮验证](../changes/2026-10-18-mobile-12ai/verification.md)和[审查](../changes/2026-10-18-mobile-12ai/review.md)。根分支fix/TASK-MOBILE-12AI-001-provider-compat基于origin/main c248d817；图片与视频已整合c81311be，Mobile371、根完整verify、组合入口9/9通过，c813源码独审PASS；新文案/治理/UI证据须最终head补审。Web候选2.1.39/Mobile2.1.4尚未正式发布或真实复验；canonical实际main109c6c41 clean，不修改其分支、暂存区或资料。证据仅新写工程外kkai-12ai-mobile-fix-20261018，旧验收失败与旧发布收据保持。正式Release/唯一previous、单张真实图片与短文本保存刷新验收仍待完成；用户不额外付费测视频，Web Key必须由用户在页面填写，禁止再次添加旧临时root权限。
+TASK-MOBILE-12AI-001保持REVIEW/NOT_VERIFIED，先读[当前生产收据](../changes/2026-10-18-mobile-12ai-production-receipt/verification.md)、[当前文档Review](../changes/2026-10-18-mobile-12ai-production-receipt/review.md)及[发布实录](../changes/2026-10-18-mobile-12ai/release.md)。产品PR70已squash为main9d10/tree611c，与已审b0ef同树；main Hosted及正式Release416299447/部署39107253299成功，Web2.1.39/Mobile2.1.4上线、公网140201/cf341da4入口与生产9项、current39/唯一previous38终核通过，Desktop源码仍2.1.37。旧产品独审冻结，当前docs分支补新五件包修复55e正式Delivery FAIL1；最终head另作正式Delivery/独审/Hosted。
+
+用户已确认保存Key，root一次真实短文本和单图现场实测有界PASS：新任务1/1保存，文本正文恢复，PNG830495B SHA64a6af6e与Provider字节及两次普通导出一致，刷新同task/asset、Provider0/POST0；旧文本、unknown失败图和旧import3748344c散列保持。独立live证据审核已PASS_WITH_EXPLICIT_SCOPE、无阻断项（27输入；报告JSON SHA59af4671f7618f14b69b3fa5458a3f93051b12d0fdfcfcf8486763771d126ae3）。下一步仅正式文档head的Delivery/独审/Hosted和正常PR，不重复付费生成；具体门禁另冻结外部收据和PR。视频仍仅本地fixture，无真实视频调用，FEAT-028 PARTIAL/T12 TODO，Safari/新Native包等仍未验，不能代填用户最终结果接受。旧Windows installer失败与Web成功分开保留。
+
+canonical初始基线比较FAIL继续保留。07:30/07:31本地main0a49/index7dc72867、4dirty及两读稳定仅为历史观察；08:02只读终核已是main208f97de/index2717ed9d、status clean，四文件bytes/hash也已改变，不能称最终四路径稳定或canonical未变。本任务没有对canonical还原、stage、commit或写文件，不归因操作者，隔离生产9d10不包含这些后续变化。旧release树0cb/index未变仅按较早核对时点记载。详见当前生产verification及工程外protection-final-live-acceptance.json。 禁止再次添加旧临时root权限。下节2.1.38仅为历史时点。
 
 ## 当前恢复入口：独立手机 Web 已上线（2026-10-18）
 

@@ -9,7 +9,11 @@
 <!-- DOCUMENT_METADATA_END -->
 <!-- CURRENT_FACTS_BEGIN -->
 
-当前任务 TASK-MOBILE-12AI-001 正按用户明确授权修复12ai手机生成与原件自动保存，并补视频任务查询恢复。隔离候选base c248d817，Web2.1.39/Mobile2.1.4尚未发布，线上仍以真实build-info为准；前次文本真链通过、图片CORS归档失败，不以本地fixture替代生产复验。本轮canonical保护基线已实际前移为clean的main109c6c41，下面8c36/dirty数仅是旧发布时点。当前进度与证据见[本轮验证](../changes/2026-10-18-mobile-12ai/verification.md)和[决策](../architecture/adr/ADR-025-mobile-12ai-originals-and-video-recovery.md)。
+当前任务 TASK-MOBILE-12AI-001 已按授权完成隔离实现、PR70与正式Web发布，真实图文现场实测有界PASS，独立live证据复核已通过，最终文档head门禁待执行，任务REVIEW/NOT_VERIFIED。产品main `9d10af39d0b028a8ddc7f06c594c813ef25b7205` / tree `611cf648ade1d0fb98c5474ae91615f0bbaf1a23`，与已审b0ef完整树相同；main quality39104785098五项/guards39104785090双平台成功，正式Release416299447/部署39107253299通过。公网build-info为Web2.1.39/9d10，独立Mobile2.1.4，Desktop源码仍2.1.37；实际CI/公网entry-140201476199fedafe0abc0ba5b1dfb9.js SHA `cf341da42fd899433c99a4de1089097dbe74d18fa6b2099a9acc2fbb957d9d36`，不沿用Windows本地3d5。生产入口9项通过；current39/唯一previous38、两版validated、exact2与配置/auth/服务前后观察已核对，未执行实际生产降版。最新验收见[生产收据](../changes/2026-10-18-mobile-12ai-production-receipt/verification.md)，发布实录见[Release](../changes/2026-10-18-mobile-12ai/release.md)。
+
+用户保存Key后，root在430×637手机尺寸Web浏览器各一次真实gpt-4.1-mini短文本和gpt-image-2单图，200 SSE stop/[DONE]与b64 PNG1024原件均保存1/1；文本正文SHA1fffc1d3、图片830495B SHA64a6af6e与前后普通导出/刷新一致，同task/asset恢复。完整network无截断/无Fetch暂停，刷新Provider0/POST0、视频请求0。旧文本1/1、旧失败图片unknown0/1、旧import原件3748344c散列保持；最终2项目/2原件/1连接/快照53。视频仍仅本地fixture保存/播放/导出/刷新验证，FEAT-028 PARTIAL/T12 TODO，Safari/Native/真实视频计费未验；旧Windows installer门禁失败不是Web部署失败。独立live证据审核已PASS_WITH_EXPLICIT_SCOPE、无阻断项（27输入；报告JSON SHA59af4671f7618f14b69b3fa5458a3f93051b12d0fdfcfcf8486763771d126ae3）；当前文档head另待独审/Hosted/Delivery，不能把实施者自检或用户填Key回复当文档独审/产品接受。
+
+canonical初始基线比较FAIL继续保留。07:30/07:31本地main0a49/index7dc72867、4dirty及两读稳定仅为历史观察；08:02只读终核已是main208f97de/index2717ed9d、status clean，四文件bytes/hash也已改变，不能称最终四路径稳定或canonical未变。本任务没有对canonical还原、stage、commit或写文件，不归因操作者，隔离生产9d10不包含这些后续变化。旧release树0cb/index未变仅按较早核对时点记载。详见当前生产verification及工程外protection-final-live-acceptance.json。 以下旧发布记录保留原时点。相关决定见[ADR-025](../architecture/adr/ADR-025-mobile-12ai-originals-and-video-recovery.md)。
 
 Issue68专项候选从最新origin/main6b933f4f隔离执行，仅补Native设置保存/关闭测试后置条件和既有延迟回归；真实回执gate13检查通过。无产品、版本或生产改动。当前验证/独审/PR状态见[专项验证](../changes/2026-10-18-issue-68-settings-save/verification.md)。以下发布事实保留其原时点。
 
