@@ -3,15 +3,18 @@
 - 状态：PARTIAL
 - 领域：future
 - 最近更新：2026-10-18
-- 关联任务：TASK-MOBILE-12AI-001、TASK-WEB-RELEASE-20261017、T12、TASK-UI-CONSOLIDATE-20261014、TASK-PROTOCOL-CLI-20261014、TASK-222-ACTIONS-20261014、TASK-223-ACTIONS-20261014
+- 关联任务：TASK-MOBILE-COMPOSER-001、TASK-MOBILE-12AI-001、TASK-WEB-RELEASE-20261017、T12、TASK-UI-CONSOLIDATE-20261014、TASK-PROTOCOL-CLI-20261014、TASK-222-ACTIONS-20261014、TASK-223-ACTIONS-20261014
 
 ## 用户可见入口
 
 - [kkai.plus](https://kkai.plus)初次按手机UA或viewport≤767进入独立[手机Web](https://kkai.plus/mobile/)；宽屏与[显式桌面入口](https://kkai.plus/?view=desktop)保留原Desktop资料访问，使用中resize不强制跳转。
 - Web2.1.39 / Mobile源码2.1.4已正式上线，实际来源main9d10/Release416299447；生产独立入口九项及430×637浏览器各一次真实图片/短文本的保存、导出/刷新现场实测通过，独立live证据复核已通过，当前文档head门禁待提交后执行。旧2.1.38用户实际手机UI确认只按原时点记录，本次不是Safari/Native/所有Provider或用户最终接受。
+- 当前未发布候选Desktop2.1.38/Web2.1.40/Mobile2.1.5：菜单“任务”与历史结果优先，详情为结果→提示词→更多；输入初始六入口、模型名可点，手机与Desktop发送直接圆形同高。PR72未合并、未正式发布，不能把候选UI当现网已验收。
 
 ## 代码位置
 
+- 模型输入交互：`mobile/src/screens/Composer.tsx` → `ComposerInput.tsx` / `ComposerToolbar.tsx` / `ComposerPanels.tsx` → `ModelPicker.tsx` / `mobile/src/ui/Sheet.tsx`；浏览器语音 `mobile/src/ui/useSpeechInput.web.ts`
+- 结果优先呈现：`mobile/src/screens/TasksScreen.tsx` / `TaskDetailScreen.tsx` / `ChatScreen.tsx` → `mobile/src/ui/TaskResults.tsx`；Desktop共享发送 `src/components/UiIcon.tsx` / `AgentActionButton.tsx` / `StartComposer.tsx` 与 `src/styles/composer.css`
 - 独立入口与聊天：`mobile/src/app/_layout.tsx` → `mobile/src/app/(workspace)/index.tsx` → `mobile/src/screens/ChatScreen.tsx`
 - 独立本机/真实账号上下文和数据：`mobile/src/application`、`mobile/src/storage`；纯共享契约：`packages/creation-contracts`
 - 组合Web与初始分流：`deploy/build-combined-web.mjs`、`deploy/initial-web-entry.js`；Expo前缀配置：`mobile/app.config.ts`
@@ -22,6 +25,8 @@
 
 ## 测试与证据
 
+- TASK-MOBILE-COMPOSER-001当前追加范围为结果优先、六入口、共享圆形发送、本机上传/Skill、12ai指定GPT Image参考编辑与运行时尺寸。本地根完整verify exit0：Node1852/20skip、Agent199/2skip、browser832首试+1项5xx flaky（独立零重试复核1PASS）、DESIGN41+8/development4；Mobile433/433/type/lint、冻结v39完整snapshot/backup合成读取/还原、窄屏最终40/40和gzip增4319B预算通过。首轮Mobile32PASS/8FAIL及参数aria-pressed/关闭等待/隐藏路由定位修正保留，小于360px六控件44px同排不折行、390px48px，语音离路由取消与上传A→B→A/账号epoch保护定向10/10。精确head冻结/独审、Hosted/生产PENDING，PR72未合并、未发布。首轮四配置RED和13项焦点GREEN仅为历史范围。见[本次验证](../changes/2026-10-18-mobile-composer/verification.md)。五JPEG非黑与15分8秒恢复补证不代表实体Android后台PASS，整体仍PARTIAL。前图文TASK按PR70/71实际范围有界DONE/PASS，以下旧文档门禁等待措辞按原时点保留。
+
 - 本轮正式生产来源main `9d10af39d0b028a8ddc7f06c594c813ef25b7205` / tag `v2.1.39`；Mobile371与根本地verify、产品独审/同tree晋升、精确main Hosted、正式Web部署及生产入口9项通过，见[本轮验证](../changes/2026-10-18-mobile-12ai/verification.md)与[发布实录](../changes/2026-10-18-mobile-12ai/release.md)。旧2.1.38来源和323项历史记录如下保留，不冒充本次新图文验收。
 - 图片服务/自动归档冷启动、视频服务/应用恢复/UI策略由 `servicesTwelveAiImages.test.ts`、`applicationTwelveAiImageArchive.test.ts`、`servicesTwelveAiVideo.test.ts`、`applicationVideo.test.ts`、`uiVideo.test.ts` 覆盖；视频实际本地bundle的失败/GET恢复、成功样本保存/播放/普通导出/刷新有独立证据，0真实上游视频调用。
 - 正式生产来源main `f730f1dc32fb2e568dda6d4a52c58b05802d6b6b` / tag `v2.1.38`，完整收据见[最终生产验证](../changes/2026-10-18-web-mobile-production-receipt/verification.md)。
@@ -31,6 +36,8 @@
 
 ## 当前能力
 
+- 当前候选已接默认任务/历史图片、视频或文本结果预览、可展开详情与完整输入入口；上传复用本机原件，Skill只预览/明确改草稿，语音由手势启动且不自动发送。官方12ai明确模型参考图使用已校验原件构造multipart编辑，通用端点、文本/视频参考与遮罩仍拒绝；本地隔离browser最终40/40通过，生产、真实参考编辑和实体设备仍未验。
+- 尺寸为本次运行时选择，经提交捕获旧task.imageSize；未发刷新/切类型或模型回自适应。没有新增draft字段、schema/storage身份或backup格式，旧v39完整reader与备份合成兼容通过，沿ADR-025，不把该fixture当现网降版实测。
 - 已恢复原创独立Expo/RN手机UI：以聊天创作为首页，提供胶囊输入框、触控抽屉与独立设置/资料入口；已正式部署并取得实际手机UI接受，不再用根桌面窄屏充当独立手机端。
 - Web默认真实本机context，不伪造AuthSession或身份服务；项目/草稿与Desktop旧资料使用隔离存储，刷新恢复已验。可选账号入口可往返；Gateway/Comfy与账号请求仍要求真实账号上下文。
 - Web凭据仅请求/会话内存保存；没有以明文localStorage保留密钥。本机资料不自动迁移Desktop或上传云端；12ai同步图片base64原件与既有SSE的本轮真实单图/短文本已1/1保存并刷新恢复、旧资料回读保持。视频持久ID/GET-only恢复仅有本地协议/UI/样本验证，不能扩大成上游真实视频能力已接受。
@@ -40,7 +47,7 @@
 
 本轮 [生产收据](../changes/2026-10-18-mobile-12ai-production-receipt/verification.md) 记录用户保存Key后，正式9d10/140201入口的一次真实gpt-4.1-mini文本200 SSE stop/[DONE]及gpt-image-2图片200 b64_json n1成功，task/asset与内容刷新恢复，Provider0/POST0；PNG830495B SHA64a6af6e与Provider字节及两次普通导出一致，旧失败任务/import原件未清除。原CORS失败和55e文档Delivery失败仍按原时点保留；独立live证据复核已PASS_WITH_EXPLICIT_SCOPE/无阻断，最终文档head门禁待完成，任务REVIEW。文本仍为单条输入/SSE；视频只验本地fixture保存/播放/导出/刷新、0真实视频调用，真实视频/费用、新Native包和Safari继续未验，FEAT-028整体PARTIAL不变。
 
-- T12保持开放，FEAT-028保持PARTIAL。独立源码、手机Web运行形态和本机/可选账号边界已实现，不再视为未定稿；新原生包、Safari专项、正式身份服务、真实Provider/Companion及完整手机生成链仍未验。
+- T12保持开放（现有账本TODO不在本任务改动），FEAT-028保持PARTIAL。手机/桌面同功能是目标，当前远程Agent/MCP、新原生包、Safari专项、正式身份/云同步、真实参考编辑和实体后台仍未验；本轮不搭新伴随服务、不凭入口宣称全能力相等。
 - 用户实际手机已确认本轮UI正常；该确认不替代目标运行时一次真实文本生成和一次图片生成、结果回填/原件写入、保存重载双门，也不证明付费、云同步或多端全能力一致。
 - 沿Desktop → Web → Mobile原交付顺序继续核心能力与平台验收。跨端复用继续使用独立`mobile/`和可版本化纯契约，不把Native宿主或Mobile页面混入根Desktop/Web实现。
 

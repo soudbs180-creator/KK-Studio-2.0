@@ -167,7 +167,7 @@ test("平板会话分栏时画布控件左移且标题和输入控件尺寸稳�
   ]);
   const composerIcons = await page
     .locator(
-      ".chat-composer .composer-toolbar > button img:not(.composer-plus-arm), .chat-composer .composer-toolbar > button svg, .chat-composer .chat-model-picker-wrap > button img, .chat-composer .chat-resource-picker > button img, .chat-composer .composer-trailing-actions > button img:not(.composer-plus-arm)",
+      ".chat-composer .composer-toolbar > button img:not(.composer-plus-arm), .chat-composer .composer-toolbar > button svg, .chat-composer .chat-model-picker-wrap > button img, .chat-composer .chat-resource-picker > button img, .chat-composer .composer-trailing-actions > button img:not(.composer-plus-arm), .chat-composer .composer-trailing-actions > button svg",
     )
     .evaluateAll((icons) =>
       icons.map((icon) => {

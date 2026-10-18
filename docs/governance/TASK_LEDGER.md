@@ -6,7 +6,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 | ID | Title | Status | Display | Priority | Dependencies | Owner | Next action |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| TASK-MOBILE-12AI-001 | 12ai手机端图片自动归档与文本视频协议接入 | REVIEW | 进行中 | P1 | TASK-WEB-RELEASE-20261017 | root | 对最终生产收据文档head运行正式Delivery、另一独立上下文审核及Hosted，再正常PR合并；结果另冻外部收据/PR，不为自引用head循环改文档。TASK REVIEW/NOT_VERIFIED、FEAT-028 PARTIAL/T12 TODO；用户最终产品接受、Safari/Native/真实视频未代填，不重复付费生成。 |
+| TASK-MOBILE-COMPOSER-001 | 手机结果优先、完整创作输入与圆形发送 | IN_PROGRESS | 进行中 | P1 | TASK-MOBILE-12AI-001 | root | 冻结本次源码提交，以工程外收据绑定精确SHA最终独审和Hosted/Delivery后正常PR/正式Release；线上回读既有资料和唯一previous。保留flaky与首轮失败，不新增生成调用、不覆盖canonical并发提交。 |
+| TASK-MOBILE-12AI-001 | 12ai手机端图片自动归档与文本视频协议接入 | DONE | 已完成 | P1 | TASK-WEB-RELEASE-20261017 | root | 按已完成PR70/71范围保留发布/原件/回滚收据；模型按钮及后台专项由TASK-MOBILE-COMPOSER-001承接，T12/FEAT-028继续开放。 |
 | TASK-WEB-RELEASE-20261017 | 独立手机UI接入与正式Web Release自动同步 | DONE | 已完成 | P1 | TASK-AUDIT-REPAIR-20261017 | root | 本次Web交付已完成；最终文档PR另按提交HEAD完成独立审查与Hosted/Delivery。Mobile其余能力由T12按原范围继续。 |
 | TASK-AUDIT-REPAIR-20261017 | 审计安全修复、启动恢复与当前治理收敛 | DONE | 已完成 | P1 | none | root | 保留被日常链接引用的任务worktree/EXE及所有恢复证据；root完成最终文档提交后的精确review/正式Delivery和runtime-input不变核对。其余64开放项按原任务继续，尤其旧聊天数据完整迁移/protocol7、统一接入/12AI持久恢复/素材垃圾箱、真实Provider/ComfyUI/GPU/VPS/Mobile/签名及用户验收；不得解除READ_ONLY或批量结案。 |
 | TASK-KK-UNIFIED-20261015 | KK Studio 统一修复与重构 | IN_PROGRESS | 进行中 | P1 | none | root | 原统一scope继续开放；当前后续源码已进入local main@8c36a6b并有63条dirty，已保全为未验收221560a3。当前安全修复由TASK-AUDIT-REPAIR-20261017独占承接；原branch/worktree仅历史来源，不作为当前产品验收或并行写入分配。完整多聊天、12AI持久恢复、Provider/共仓库/账号/同步等仍按原scope另行实施和验收。 |
@@ -159,11 +160,30 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-DESIGN-MD-20261015 | 统一DESIGN设计系统与产品UI收敛 | PARTIAL | 进行中 | P1 | none | root | 关闭基础独审问题，将规则落入设置/模型/聊天/画布/项目/素材等实际页面，按Desktop→Web留同状态证据。 |
 | TASK-ISSUE-68 | 修复原生设置保存后的测试同步缺口 | REVIEW | 未完成 | P1 | none | issue68-specialist | 纯文档head补审并建立draft PR，回读当前Hosted后交现有main协调者；不merge/发布。 |
 
+## TASK-MOBILE-COMPOSER-001 — 手机结果优先、完整创作输入与圆形发送
+
+- Goal: 菜单任务/历史先显示结果，详情分层；手机与桌面同功能语义、六入口可用与圆形发送，补12ai参考编辑/本次尺寸，保护旧资料及单回滚。
+- Scope: 独立Mobile结果页/输入/语音/上传/创作库与明确12ai图片协议、Desktop共享发送源码和无额度验证；尺寸仅运行时并捕获已有task.imageSize，不改draft/schema/storage/backup，不替换日常原生安装器。
+- Display status: 进行中
+- Priority: P1 — 用户安卓Chrome模型按钮无响应，任务列表只露提示词且输入入口不完整，影响手机基本创作；结果/控制与真实协议必须同时验收。
+- Requirement refs: docs/changes/2026-10-18-mobile-composer/intent.md, docs/changes/2026-10-18-mobile-composer/spec.md
+- Feature IDs: FEAT-028
+- Owner role: implementation-integrator
+- Acceptance: 任务及历史先展示图片/视频/文本，详情结果→提示词→更多，unknown/partial/错误/进度与必要恢复动作不隐藏。; 六入口初始可见且模型名可点，发送本身直接圆形同排同高；小于360px六控件44px不折行、390px48px，竖矮/窄/横屏、鼠标/键盘/取消手势有DOM/截图及命中证据。; 上传原件/草稿引用、模型/数量、Skill预览明确应用可刷新恢复，取消不改；尺寸只在本次页面有效，切类型/模型或未发刷新回自适应，提交捕获既有task.imageSize。; 官方12ai精确支持模型的参考图编辑经原件校验并自动归档，非支持场景零提交；本地fixture验证，不消耗真实生成额度，不自动重试未知任务。; 旧v39完整snapshot/backup可读并还原、原件hash/账户身份保持；最终verify/组合browser/精确head独审/Hosted/正式Release与唯一previous回读完成后才放行。; 手机/桌面同功能目标不冒充远程Agent/MCP、新Native、Safari或实体后台已验；FEAT-028 PARTIAL/T12开放。
+- Branch: `fix/TASK-MOBILE-COMPOSER-001-focus`
+- Worktree: `D:/kk-studio/.worktrees/TASK-MOBILE-12AI-001`
+- Modules: mobile/src/screens, mobile/src/ui, mobile/src/application/application.ts, mobile/src/application/types.ts, mobile/src/application/workflow.ts, mobile/src/services/providerClient.ts, mobile/src/services/providerTypes.ts, mobile/src/services/twelveAiProtocol.ts, mobile/tests, tests/mobile-web, src/components/UiIcon.tsx, src/components/AgentActionButton.tsx, src/components/StartComposer.tsx, src/styles/composer.css, tests/browser/composer-round-send.spec.ts, config/platform-versions.json, docs/changes/2026-10-18-mobile-composer, docs/governance, docs/features/feat-028-mobile.md, docs/PROGRESS.md
+- Verification: NOT_VERIFIED — 本地expanded完整verify exit0：Node1852PASS/20skip、Agent199PASS/2skip、根browser832首试+1项provider-scheduling 5xx flaky（独立retries0复核1PASS）、DESIGN41+8/development4；不是833首试全过。Mobile433/433/type/lint、窄屏微修后单测433/433和最终browser run d032d819的40/40、gzip增4319B<16384预算通过。保留首轮Mobile32PASS/8FAIL与aria-pressed/关闭等待/隐藏路由定位修正，320折行改小于360px44px同排；语音离路由取消/上传A→B→A或账号epoch保护定向10/10 RED→GREEN。冻结v39完整snapshot/backup读取预检restore、尺寸/参考结果hash/accountkeys保持，0HTTP，不改draft/schema/storage/backup。dirty源码预检两P1/两P2已闭合、无P0/P1，仅PRECHECK；最终源码冻结/精确head独审/Hosted、PR72合并与Web40正式发布仍PENDING，截图勘误及实体后台未验边界保留。
+- Evidence: [docs/changes/2026-10-18-mobile-composer/intent.md](../../docs/changes/2026-10-18-mobile-composer/intent.md), [docs/changes/2026-10-18-mobile-composer/spec.md](../../docs/changes/2026-10-18-mobile-composer/spec.md), [docs/changes/2026-10-18-mobile-composer/plan.md](../../docs/changes/2026-10-18-mobile-composer/plan.md), [docs/changes/2026-10-18-mobile-composer/verification.md](../../docs/changes/2026-10-18-mobile-composer/verification.md), [docs/changes/2026-10-18-mobile-composer/review.md](../../docs/changes/2026-10-18-mobile-composer/review.md)
+- Next action: 冻结本次源码提交，以工程外收据绑定精确SHA最终独审和Hosted/Delivery后正常PR/正式Release；线上回读既有资料和唯一previous。保留flaky与首轮失败，不新增生成调用、不覆盖canonical并发提交。
+- Last verified: 2026-10-18
+- Updated: 2026-10-18
+
 ## TASK-MOBILE-12AI-001 — 12ai手机端图片自动归档与文本视频协议接入
 
 - Goal: 按12ai官方文档修复图片自动保存，保留文本真实流，补文生视频任务与GET恢复；正式发布后单张图片刷新验收且保留唯一回滚。
 - Scope: 隔离修复Mobile Provider、原件错误提示、文生视频submit/poll/归档/恢复和入口；保留既有数据身份、存储schema和本地主仓，组合Web正式Release发布。
-- Display status: 进行中
+- Display status: 已完成
 - Priority: P1 — 真实图片已生成但自动原件归档失败，阻断用户手机创作闭环。
 - Requirement refs: docs/changes/2026-10-18-mobile-12ai/intent.md, docs/changes/2026-10-18-mobile-12ai/spec.md
 - Feature IDs: FEAT-028
@@ -172,9 +192,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `docs/TASK-MOBILE-12AI-001-production-receipt`
 - Worktree: `D:/kk-studio/.worktrees/TASK-MOBILE-12AI-001`
 - Modules: mobile, config/platform-versions.json, docs/changes/2026-10-18-mobile-12ai, docs/changes/2026-10-18-mobile-12ai-production-receipt, docs/governance, docs/features, docs/PROGRESS.md
-- Verification: NOT_VERIFIED — 产品source9d10正式Web2.1.39/Mobile2.1.4、Hosted、生产入口9项、current39/唯一previous38通过。真实文本/图片各1次POST均自动保存并刷新恢复，PNG830495B前后导出及Provider同SHA64a6af6e、文本SHA1fffc1d3；旧记录/原件保留，刷新及只读补录Provider0/POST0。独立live证据review有界PASS、无blockers，JSON SHA59af4671f7618f14b69b3fa5458a3f93051b12d0fdfcfcf8486763771d126ae3。55e文档Delivery FAIL1保留，现有新五件包，最终文档head门禁待提交后执行。canonical初始保护FAIL，08:02主仓已208f97/clean且四路径有范围外变化，本任务仅只读且未纳入发布。视频仅fixture，真实视频0。
-- Evidence: [docs/changes/2026-10-18-mobile-12ai/intent.md](../../docs/changes/2026-10-18-mobile-12ai/intent.md), [docs/changes/2026-10-18-mobile-12ai/verification.md](../../docs/changes/2026-10-18-mobile-12ai/verification.md), [docs/changes/2026-10-18-mobile-12ai-production-receipt/intent.md](../../docs/changes/2026-10-18-mobile-12ai-production-receipt/intent.md), [docs/changes/2026-10-18-mobile-12ai-production-receipt/verification.md](../../docs/changes/2026-10-18-mobile-12ai-production-receipt/verification.md)
-- Next action: 对最终生产收据文档head运行正式Delivery、另一独立上下文审核及Hosted，再正常PR合并；结果另冻外部收据/PR，不为自引用head循环改文档。TASK REVIEW/NOT_VERIFIED、FEAT-028 PARTIAL/T12 TODO；用户最终产品接受、Safari/Native/真实视频未代填，不重复付费生成。
+- Verification: PASS — 有界图文发布及生产收据完成：PR70产品main9d10/正式Web2.1.39/Mobile2.1.4，真实文本/单图自动保存、原件导出和刷新散列一致；当前d3cb文档head独审及Delivery通过，Hosted quality39110739016五项/guards39110739014两项成功；PR71正常squash至main97ef。现网current39/唯一previous38已核验。本结案仅含PR70/71范围；实体手机后台、Safari、原生新包、真实视频与整体FEAT-028继续由开放任务承接。auto-merge39110735168零jobs异常原因UNKNOWN单列保留，不概括所有工作流绿色。
+- Evidence: [docs/changes/2026-10-18-mobile-12ai/intent.md](../../docs/changes/2026-10-18-mobile-12ai/intent.md), [docs/changes/2026-10-18-mobile-12ai/verification.md](../../docs/changes/2026-10-18-mobile-12ai/verification.md), [docs/changes/2026-10-18-mobile-12ai-production-receipt/intent.md](../../docs/changes/2026-10-18-mobile-12ai-production-receipt/intent.md), [docs/changes/2026-10-18-mobile-12ai-production-receipt/verification.md](../../docs/changes/2026-10-18-mobile-12ai-production-receipt/verification.md), [docs/changes/2026-10-18-mobile-composer/verification.md](../../docs/changes/2026-10-18-mobile-composer/verification.md)
+- Next action: 按已完成PR70/71范围保留发布/原件/回滚收据；模型按钮及后台专项由TASK-MOBILE-COMPOSER-001承接，T12/FEAT-028继续开放。
 - Last verified: 2026-10-18
 - Updated: 2026-10-18
 

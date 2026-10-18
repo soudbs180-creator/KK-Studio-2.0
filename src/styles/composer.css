@@ -143,6 +143,9 @@
   min-width: var(--composer-target);
   margin: 0;
   padding: 0;
+}
+.composer-toolbar
+  :is(.start-add-button, .chat-attachment-trigger, [data-voice-state]) {
   border-radius: var(--ui-radius-control);
   background: transparent;
 }
@@ -156,9 +159,7 @@
     .start-mode-button,
     .start-add-button,
     .chat-attachment-trigger,
-    [data-voice-state],
-    .start-submit-button,
-    .chat-send
+    [data-voice-state]
   ):hover:not(:disabled),
 .composer-toolbar
   :is(
@@ -170,9 +171,7 @@
     .start-mode-button,
     .start-add-button,
     .chat-attachment-trigger,
-    [data-voice-state],
-    .start-submit-button,
-    .chat-send
+    [data-voice-state]
   )[aria-expanded="true"] {
   color: var(--text-primary);
   background: var(--neutral-selected);
@@ -187,9 +186,7 @@
     .start-mode-button,
     .start-add-button,
     .chat-attachment-trigger,
-    [data-voice-state],
-    .start-submit-button,
-    .chat-send
+    [data-voice-state]
   ):active:not(:disabled) {
   background: var(--bg-soft);
 }
@@ -232,6 +229,7 @@
 }
 .composer-toolbar :is(.start-submit-button, .chat-send) {
   order: 7;
+  border-radius: var(--kk-radius-full);
 }
 .composer-toolbar :is(.start-composer-divider, .chat-footer-separator) {
   display: none;
@@ -552,7 +550,7 @@
 
 /*
  * Current Figma composer contracts (483:695 / 483:753 / 407:29265).
- * Keep text actions as capsules and icon actions as 32px rounded squares.
+ * Keep text actions as capsules, icon actions square, and send actions circular.
  * Generation parameters belong to canvas editors.
  */
 .start-composer {
@@ -786,6 +784,17 @@
   height: var(--kk-control-h-md);
   min-height: var(--kk-control-h-md);
   margin-left: 9px;
+  background: var(--kk-button-primary-bg);
+  color: var(--kk-button-primary-text);
+}
+
+.start-composer .start-submit-button:is(:hover, :active):not(:disabled) {
+  background: var(--kk-button-primary-hover);
+}
+
+.start-composer .start-submit-button:disabled {
+  background: var(--kk-bg-soft);
+  color: var(--kk-text-secondary);
 }
 
 .start-composer .start-composer-divider + .start-footer-right {
