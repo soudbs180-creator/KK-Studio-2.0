@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-10-18 统一2.1.41：发布前草稿绘制同步（IN_PROGRESS）
+
+TASK-CANVAS-RELEASE-20261018 的PR73已正常合入main87c9cfbe，统一版本41；尚未tag/发包/部署，Web40上线的另一任务收据已合入，41尚未发布。main五job成功但有1项草稿切换flaky，逐帧复核另确认可编辑输入短暂显示另一聊天草稿，因此先修该资料保护问题再发布。仅将ConversationPanel恢复草稿改在布局阶段完成，保留原持久化断言并新增逐帧RED/GREEN；定向10/10通过，新head完整验证和独审/Hosted待验。当前分支fix/TASK-CANVAS-RELEASE-20261018-draft-race，详情见[验证](changes/2026-10-18-unified-toolbar-release/verification.md)。下方其他任务按各自历史时点保留，不覆盖本段当前发布状态。
+
 ## 2026-10-18 手机结果优先与完整创作输入（IN_PROGRESS / NOT_VERIFIED）
 
 并发PR73已将仓库源码推进三平台2.1.41；本段记录12:49至13:10Z已上线40及其旧资料验收，发布来源内Desktop38/Web40/Mobile5与当前源码候选41分开。新文档以正常merge保留87c9的全部代码/新增任务，不将源码版本当服务器发布证据。
@@ -1242,4 +1246,4 @@ TASK-UI-DETAILS-20261015从最新18e143f修复，Desktop/Web2.1.26产品ab878ffd
 
 ## 2026-10-18 TASK-CANVAS-RELEASE-20261018：统一发布进行中
 
-[当前交付包](changes/2026-10-18-unified-toolbar-release/intent.md)。远端97ef为base，三端目标2.1.41；成熟chat迁移是保留现有v3项目的必要依赖。当前尚未合并/发包/部署，历史2.1.39安装器及网页不作为新版本证据。外部清理中断后恢复到新锁定任务树；后续当前head验证与正式收据另存。
+[当前交付包](changes/2026-10-18-unified-toolbar-release/intent.md)。最初base97ef经主线PR72整合，PR73已合入main87c；main草稿flaky及已证跨聊天绘制帧需先修，目标仍三端2.1.41。当前没有tag/正式包/生产更新，历史39不作新版本证据。外部清理已由用户确认暂停，冷备与原失败保留；最终source和正式收据待实际门禁确定。

@@ -6,7 +6,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 | ID | Title | Status | Display | Priority | Dependencies | Owner | Next action |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| TASK-CANVAS-RELEASE-20261018 | 统一工具栏修复、数据兼容和三端正式发布 | IN_PROGRESS | 进行中 | P1 | none | root-release | 恢复后完成当前树验证、精确head独审、Hosted/Delivery、PR合并、tag安装包与生产Web回读 |
+| TASK-CANVAS-RELEASE-20261018 | 统一工具栏修复、数据兼容和三端正式发布 | IN_PROGRESS | 进行中 | P1 | none | root-release | 完成草稿同步修复当前head完整验证、独审、Hosted/Delivery与正常PR，再等最终main后tag/正式包/生产回读 |
 | TASK-MOBILE-COMPOSER-001 | 手机结果优先、完整创作输入与圆形发送 | IN_PROGRESS | 进行中 | P1 | TASK-MOBILE-12AI-001 | root | 完成新后缀生产收据docs HEAD的检查/Delivery/独审/Hosted和正常PR；仅补用户Android Chrome模型入口/切后台返回+刷新接受，不把旧UI回复或继续当验收，不新耗生成额度。 |
 | TASK-MOBILE-12AI-001 | 12ai手机端图片自动归档与文本视频协议接入 | DONE | 已完成 | P1 | TASK-WEB-RELEASE-20261017 | root | 按已完成PR70/71范围保留发布/原件/回滚收据；模型按钮及后台专项由TASK-MOBILE-COMPOSER-001承接，T12/FEAT-028继续开放。 |
 | TASK-WEB-RELEASE-20261017 | 独立手机UI接入与正式Web Release自动同步 | DONE | 已完成 | P1 | TASK-AUDIT-REPAIR-20261017 | root | 本次Web交付已完成；最终文档PR另按提交HEAD完成独立审查与Hosted/Delivery。Mobile其余能力由T12按原范围继续。 |
@@ -164,19 +164,19 @@ Historical DONE applies only to the linked verification scope. The full-project 
 ## TASK-CANVAS-RELEASE-20261018 — 统一工具栏修复、数据兼容和三端正式发布
 
 - Goal: 合并本次工具栏修复并发布统一2.1.41单一Windows安装包及组合Web，保留项目配置
-- Scope: Canvas工具栏、成熟chat迁移和归档收据兼容、平台版本/下载展示与正式发布证据
+- Scope: Canvas工具栏、成熟chat迁移和归档收据兼容、平台版本/下载展示与正式发布证据、发布前可编辑聊天草稿绘制同步
 - Display status: 进行中
 - Priority: P1 — 工具栏定位与当前用户v3数据兼容阻断统一发布
-- Requirement refs: docs/changes/2026-10-18-unified-toolbar-release/intent.md
+- Requirement refs: docs/changes/2026-10-18-unified-toolbar-release/intent.md, docs/changes/2026-10-18-chat-draft-paint-sync/intent.md
 - Feature IDs: FEAT-009, FEAT-028
 - Owner role: implementer
-- Acceptance: 图片居中且画布允许遮挡，无横向滚动或自动让位; 保留现有项目原件消息归档收据设置和凭据引用; Desktop/Web/Mobile2.1.41同main SHA，Windows含Agent单包; 当前head独审、Hosted/Delivery、正常PR合并与正式产物/生产回读
-- Branch: `fix/TASK-CANVAS-RELEASE-20261018`
+- Acceptance: 图片居中且画布允许遮挡，无横向滚动或自动让位; 保留现有项目原件消息归档收据设置和凭据引用; Desktop/Web/Mobile2.1.41同main SHA，Windows含Agent单包; 当前head独审、Hosted/Delivery、正常PR合并与正式产物/生产回读; 切换聊天时可编辑输入框与当前聊天草稿同帧一致，原迟到回执及持久化保护保留
+- Branch: `fix/TASK-CANVAS-RELEASE-20261018-draft-race`
 - Worktree: `D:/kk-studio/.worktrees/TASK-UNIFIED-RELEASE-20261018`
-- Modules: src/components/canvas, src/runtime, src/domain, src/features/creation, src-tauri, mobile, tests, config/platform-versions.json, docs/changes/2026-10-18-unified-toolbar-release, docs/governance, docs/features, docs/PROGRESS.md
-- Verification: NOT_VERIFIED — 恢复候选中；历史局部结果保留，当前head及正式工件待验
-- Evidence: [docs/changes/2026-10-18-unified-toolbar-release/intent.md](../../docs/changes/2026-10-18-unified-toolbar-release/intent.md), [docs/changes/2026-10-18-unified-toolbar-release/verification.md](../../docs/changes/2026-10-18-unified-toolbar-release/verification.md)
-- Next action: 恢复后完成当前树验证、精确head独审、Hosted/Delivery、PR合并、tag安装包与生产Web回读
+- Modules: src/components/canvas, src/runtime, src/domain, src/features/creation, src-tauri, mobile, tests, config/platform-versions.json, docs/changes/2026-10-18-unified-toolbar-release, docs/governance, docs/features, docs/PROGRESS.md, src/components/ConversationPanel.tsx, docs/changes/2026-10-18-chat-draft-paint-sync
+- Verification: NOT_VERIFIED — 232907ce完整本地verify837首试/零flaky及精确head独审PASS；正常整合b63de227仅文档，产品blob不变；新融合head相关检查/独审/Hosted待验
+- Evidence: [docs/changes/2026-10-18-unified-toolbar-release/intent.md](../../docs/changes/2026-10-18-unified-toolbar-release/intent.md), [docs/changes/2026-10-18-unified-toolbar-release/verification.md](../../docs/changes/2026-10-18-unified-toolbar-release/verification.md), [docs/changes/2026-10-18-chat-draft-paint-sync/verification.md](../../docs/changes/2026-10-18-chat-draft-paint-sync/verification.md)
+- Next action: 完成草稿同步修复当前head完整验证、独审、Hosted/Delivery与正常PR，再等最终main后tag/正式包/生产回读
 - Last verified: 2026-10-18
 - Updated: 2026-10-18
 

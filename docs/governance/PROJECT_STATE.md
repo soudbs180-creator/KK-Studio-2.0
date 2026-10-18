@@ -9,6 +9,8 @@
 <!-- DOCUMENT_METADATA_END -->
 <!-- CURRENT_FACTS_BEGIN -->
 
+当前发布任务TASK-CANVAS-RELEASE-20261018为IN_PROGRESS/NOT_VERIFIED。PR73已正常合入main87c9cfbe；该main质量五job成功但浏览器有1 flaky，逐帧独立复核另证可编辑输入短暂跨聊天错配。当前在同锁定树的fix/TASK-CANVAS-RELEASE-20261018-draft-race修复布局阶段草稿同步，定向RED/GREEN及10/10通过；完整当前head与独审/Hosted待验。三端目标41，tag/正式包/部署均未发生，Web40上线的另一任务收据已合入，41尚未发布。以下旧任务事实按当时时点保留，不覆盖本段；详见[当前验证](../changes/2026-10-18-unified-toolbar-release/verification.md)。
+
 并发主线PR73已合入87c9cfbe0f19555f9998d6b7051760f22f26f67f，源码三端2.1.41；下述40上线收据限定12:49至13:10Z的产品观察，发布来源版本与当前仓库候选分开。docs分支正常merge保留其完整150文件和新增Canvas任务，不替它发布或代填验收。
 
 当前任务TASK-MOBILE-COMPOSER-001保持IN_PROGRESS/NOT_VERIFIED（实体Android接受待补）。产品PR72已正常合并为main `b457d3a05759ca7a2f6a8c4bb62a8ba8aea908ea` / tree `bbcab2a0d5e4a0fe4241b3d3f32d01e6b69b5334`，与独审791e全树一致；全63文件独审及57定向测试PASS。Web2.1.40/Mobile源码2.1.5正式Release416447150与部署39128852497成功，Desktop源码2.1.38；公开build-info/source和CI真实导出cbc0入口一致，旧条件缓存GET也得到新entry。当前文档分支docs/TASK-MOBILE-COMPOSER-001-production-receipt仅记录事实，产品source不随docs HEAD改变。见[当前生产验证](../changes/2026-10-18-mobile-composer-production-receipt/verification.md)。
@@ -699,4 +701,4 @@ TASK-UI-CLASSIFY-20261013 已获用户实施确认：canonical 分类修复在�
 
 ## 2026-10-18 TASK-CANVAS-RELEASE-20261018：统一发布进行中
 
-[当前交付包](../changes/2026-10-18-unified-toolbar-release/intent.md)。远端97ef为base，三端目标2.1.41；成熟chat迁移是保留现有v3项目的必要依赖。当前尚未合并/发包/部署，历史2.1.39安装器及网页不作为新版本证据。外部清理中断后恢复到新锁定任务树；后续当前head验证与正式收据另存。
+[当前交付包](../changes/2026-10-18-unified-toolbar-release/intent.md)。PR73已正常合入main87c，打tag前发现main草稿flaky及已证跨聊天绘制帧，当前先做最小同步修复。三端仍目标41，尚无tag/正式包/生产更新；旧39和旧Native证据保持历史边界。用户已确认暂停外部清理，原资料/冷备保留；最终source按后续main门禁确定。

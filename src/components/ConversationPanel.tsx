@@ -1,5 +1,5 @@
 import { ConversationResizeHandle } from "./ResizeHandle";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useConversationOverlay } from "./useConversationOverlay";
 import useConversationAttachments from "./useConversationAttachments";
 import type { CreationDraft } from "../features/creation/model";
@@ -75,7 +75,7 @@ export default function ConversationPanel({
       onStatus: setStatus,
     });
   const agentActive = Boolean(agent && channel === "codex" && !blocked);
-  useEffect(() => {
+  useLayoutEffect(() => {
     setInput(composerDraft?.prompt ?? "");
     setApprovalMode(composerDraft?.approvalMode ?? "auto");
     setPendingApproval(null);

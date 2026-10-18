@@ -8,6 +8,10 @@
 
 本文是最短恢复入口，不是任务状态或产品能力的第二事实源。任务状态只读 [`task-ledger.json`](task-ledger.json)；当前项目事实只读 [`PROJECT_STATE.md`](PROJECT_STATE.md)；历史验证只按带日期的 change package、commit、运行模式和 receipt 回读。
 
+## 当前恢复入口：统一41发布前草稿同步（2026-10-18）
+
+TASK-CANVAS-RELEASE-20261018仍IN_PROGRESS/NOT_VERIFIED；先读[当前计划](../changes/2026-10-18-unified-toolbar-release/plan.md)和[验证](../changes/2026-10-18-unified-toolbar-release/verification.md)。PR73已正常合入main87c9cfbe，main质量五job绿但完整日志有1草稿flaky，未打tag。4倍CPU逐帧复核确认可编辑草稿短暂显示另一聊天值，当前同锁定树fix/TASK-CANVAS-RELEASE-20261018-draft-race仅将恢复改布局阶段并补逐帧断言；旧RED/新10次GREEN保留，完整新head验证/独审/Hosted尚待。Web40已上线，三端41标签/正式安装包/部署未做，不能提前把87c称最终source。最新真实冷备3952文件、9项目/11聊天/22消息/2归档回执与7原件已校验；不碰keyring或发付费turn。以下旧入口按各自时点保留，不覆盖本段当前发布状态。
+
 ## 当前恢复入口：手机结果优先与完整创作输入（2026-10-18）
 
 当前仓库并发main87c9源码三端41；本恢复入口记录的是此前40实际发布与验收。docs分支正常merge保留PR73全量代码和新增任务，集成后HEAD须新独审/Hosted，旧98ec报告不能批准新断面；不将docs提交或源码41当服务器版本。
@@ -202,4 +206,4 @@ Issue68设置保存同步专项：隔离分支 fix/TASK-ISSUE-68-settings-save�
 
 ## 2026-10-18 TASK-CANVAS-RELEASE-20261018：统一发布进行中
 
-[当前交付包](../changes/2026-10-18-unified-toolbar-release/intent.md)。远端97ef为base，三端目标2.1.41；成熟chat迁移是保留现有v3项目的必要依赖。当前尚未合并/发包/部署，历史2.1.39安装器及网页不作为新版本证据。外部清理中断后恢复到新锁定任务树；后续当前head验证与正式收据另存。
+[当前交付包](../changes/2026-10-18-unified-toolbar-release/intent.md)。PR73已合入main87c，当前先处理main草稿flaky中已证的跨聊天绘制错配；后续正常PR再等最终main门禁，仍无tag/正式包/部署。外部清理由用户确认暂停，原冷备/失败/分支保留，最终来源及正式工件按实际收据记录。
