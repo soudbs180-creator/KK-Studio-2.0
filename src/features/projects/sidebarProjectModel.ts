@@ -1,6 +1,8 @@
 import type { CreationProject } from "../creation/model";
+import type { SidebarSortMode } from "../creation/model";
+export type { SidebarSortMode } from "../creation/model";
 
-/** 项目及分组归属来自 CreationSnapshot；展开和置顶仅影响会话显示。 */
+/** 项目、分组和置顶排序来自 CreationSnapshot；展开仅影响会话显示。 */
 
 /**
  * 项目行左侧缩略图（按内容类型区分，用户 2026-09-24 第四轮口径）：
@@ -33,9 +35,7 @@ export interface SidebarFolderItem {
   children: SidebarProjectItem[];
 }
 
-export type SidebarSortMode = "manual" | "recent" | "priority";
-
-/** 会话置顶先于所选排序；原有顺序沿用快照中的稳定项目顺序。 */
+/** 持久置顶先于所选排序；原有顺序沿用快照中的稳定项目顺序。 */
 export function sortSidebarProjects(
   items: SidebarProjectItem[],
   projects: CreationProject[],
@@ -64,7 +64,7 @@ export function sortSidebarProjects(
   });
 }
 
-/** 将会话文件夹的成员更新为当前快照中的项目，并应用项目与文件夹置顶。 */
+/** 将文件夹的成员更新为当前快照中的项目，并应用项目与文件夹置顶。 */
 export function resolveSidebarFolders(
   folders: SidebarFolderItem[],
   itemsById: ReadonlyMap<string, SidebarProjectItem>,

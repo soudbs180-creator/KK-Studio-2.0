@@ -7,13 +7,15 @@ import { buildCanvasToolRequest, fitAttachmentNodeSize } from "./operations.js";
 import type { ToolName } from "./schemas.js";
 import { compactCanvasState, compactNode, isToolName, nextCanvasX, parseToolInput } from "./tools.js";
 import type { CanvasSnapshot } from "./types.js";
+import { parseChatScope, sameChat, sameScope, type ChatScope } from "./chat-scope.js";
 
-type PendingRequest = { clientId: string; resolve: (value: unknown) => void; reject: (error: Error) => void };
-type TurnAttachment = { clientId: string; id: string; name: string; type: string; size: number; width: number; height: number; dataUrl: string };
+type PendingRequest = { clientId: string; scope?: ChatScope; threadId?: string; turnId?: string; resolve: (value: unknown) => void; reject: (error: Error) => void };
+type TurnAttachment = { clientId: string; scope?: ChatScope; id: string; name: string; type: string; size: number; width: number; height: number; dataUrl: string };
 type ReplayEvent = { type: string; payload: Record<string, unknown> };
 export type CodexState = { busy: boolean; threadId: string; turnId: string };
 export type McpStartupState = "starting" | "ready" | "failed" | "cancelled";
 export type ConversationState = {
+    scope?: ChatScope;
     revision: number;
     conversationId: string;
     threadId: string;
@@ -23,7 +25,7 @@ export type ConversationState = {
     error?: string;
 };
 type McpInventoryItem = { name: string; authStatus?: string };
-export const AGENT_PROTOCOL_VERSION = 6;
+export const AGENT_PROTOCOL_VERSION = 7;
 
 const SITE_TOOLS = new Set<ToolName>([
     "site_navigate",
@@ -41,6 +43,7 @@ const SITE_TOOLS = new Set<ToolName>([
 /** 管理网页画布连接、状态、附件和工具请求。 */
 export class CanvasSession {
     private clients = new Map<string, ServerResponse>();
+    private clientScopes = new Map<string, ChatScope>();
     private clientFocusOrder = new Map<string, number>();
     private pending = new Map<string, PendingRequest>();
     private pendingApprovals = new Map<string, Record<string, unknown>>();
@@ -51,14 +54,22 @@ export class CanvasSession {
     private codexMutationBusy = false;
     private activeClientId = "";
     private boundClientId = "";
+    private boundScope?: ChatScope;
+    private boundCanvas?: CanvasSnapshot;
+    private threadScopes = new Map<string, ChatScope>();
     private focusSequence = 0;
     private codexState: CodexState = { busy: false, threadId: "", turnId: "" };
     private conversationState: ConversationState;
     private conversationInventoryComplete = false;
     private preparedConversationThreadId = "";
 
-    constructor(activeThreadId = "") {
+    constructor(activeThreadId = "", owners: Record<string, ChatScope> = {}, private readonly saveOwners?: (owners: Record<string, ChatScope>) => void) {
+        for (const [threadId, scope] of Object.entries(owners)) {
+            if (!/^[A-Za-z0-9_-]{1,160}$/.test(threadId)) throw new Error("线程归属回执无效，原件已保留。");
+            this.threadScopes.set(threadId, parseChatScope(scope));
+        }
         this.conversationState = {
+            scope: this.threadScopes.get(activeThreadId),
             revision: 1,
             conversationId: activeThreadId || crypto.randomUUID(),
             threadId: activeThreadId,
@@ -69,6 +80,7 @@ export class CanvasSession {
 
     /** 获取当前目标网页的画布状态。 */
     private get canvasState() {
+        if (this.boundScope) return this.boundCanvas || null;
         return this.clients.has(this.targetClientId) ? this.canvasStates.get(this.targetClientId) || null : null;
     }
 
@@ -102,7 +114,7 @@ export class CanvasSession {
     }
 
     /** 原子开始一次新建或恢复对话流程。 */
-    beginConversation(options: { threadId?: string; conversationId?: string; sourceClientId?: string } = {}) {
+    beginConversation(options: { threadId?: string; conversationId?: string; sourceClientId?: string; scope?: ChatScope } = {}) {
         this.conversationInventoryComplete = false;
         this.preparedConversationThreadId = "";
         return this.updateConversation({
@@ -111,6 +123,7 @@ export class CanvasSession {
             status: "preparing",
             mcpStatuses: {},
             sourceClientId: options.sourceClientId,
+            scope: options.scope ?? (options.threadId ? this.threadScopes.get(options.threadId) : undefined),
             error: undefined,
         });
     }
@@ -193,6 +206,41 @@ export class CanvasSession {
         return this.clients.has(clientId);
     }
 
+    assertClientScope(clientId: string, scope: unknown) {
+        const parsed = parseChatScope(scope);
+        if (!this.clients.has(clientId) || !sameScope(this.canvasStates.get(clientId)?.scope, parsed) || (this.clientScopes.has(clientId) && !sameScope(this.clientScopes.get(clientId), parsed))) throw new Error("聊天或连接已切换，请重新连接。");
+        return parsed;
+    }
+
+    claimThread(clientId: string, scope: unknown, threadId: string) {
+        const parsed = this.assertClientScope(clientId, scope);
+        this.recordThreadScope(parsed, threadId);
+    }
+
+    recordThreadScope(scope: ChatScope, threadId: string) {
+        const parsed = parseChatScope(scope);
+        if (!/^[A-Za-z0-9_-]{1,160}$/.test(threadId)) throw new Error("Agent 线程身份无效。");
+        const owner = this.threadScopes.get(threadId);
+        if (owner && !sameChat(owner, parsed)) throw new Error("线程属于其他聊天，未接管。");
+        if (sameScope(owner, parsed)) return;
+        const next = new Map(this.threadScopes).set(threadId, parsed);
+        this.saveOwners?.(Object.fromEntries(next));
+        this.threadScopes = next;
+    }
+
+    assertThreadScope(clientId: string, scope: unknown, threadId: string) {
+        const parsed = this.assertClientScope(clientId, scope);
+        const owner = this.threadScopes.get(threadId);
+        if (!owner || !sameChat(owner, parsed)) throw new Error("线程不属于当前聊天，未读取或执行。");
+        return parsed;
+    }
+
+    assertTurnScope(clientId: string, scope: unknown) {
+        const parsed = this.assertClientScope(clientId, scope);
+        if (this.boundScope && (clientId !== this.boundClientId || !sameScope(this.boundScope, parsed))) throw new Error("运行中的 turn 属于其他聊天或连接。");
+        return parsed;
+    }
+
     /** 读取指定网页上报的画布，避免提炼时受最近焦点或其他标签页影响。 */
     canvasStateForClient(clientId: string) {
         return this.clients.has(clientId) ? this.canvasStates.get(clientId) || null : null;
@@ -213,6 +261,7 @@ export class CanvasSession {
     /** 返回当前 Codex turn 的线程、turn 和发起网页。 */
     get codexEventScope() {
         return {
+            ...(this.boundScope ? { scope: this.boundScope } : {}),
             threadId: this.codexState.threadId,
             turnId: this.codexState.busy ? this.codexState.turnId : "",
             sourceClientId: this.codexState.busy ? this.boundClientId : "",
@@ -272,6 +321,8 @@ export class CanvasSession {
         logger.info("SSE client connected", { clientId, statusOnly });
         res.writeHead(200, { "Content-Type": "text/event-stream", "Cache-Control": "no-cache", Connection: "keep-alive" });
         if (!statusOnly) {
+            const rawScope = url.searchParams.get("scope");
+            if (rawScope) this.clientScopes.set(clientId, parseChatScope(JSON.parse(rawScope)));
             this.clients.set(clientId, res);
             if (!this.clientFocusOrder.has(clientId)) this.clientFocusOrder.set(clientId, 0);
             if (!this.activeClientId) {
@@ -287,6 +338,7 @@ export class CanvasSession {
             logger.info("SSE client disconnected", { clientId, statusOnly });
             if (statusOnly || this.clients.get(clientId) !== res) return;
             this.clients.delete(clientId);
+            this.clientScopes.delete(clientId);
             this.clientFocusOrder.delete(clientId);
             this.canvasStates.delete(clientId);
             this.pending.forEach((item, requestId) => {
@@ -310,8 +362,46 @@ export class CanvasSession {
         const targetClientId = clientId || this.activeClientId;
         if (!targetClientId || !this.clients.has(targetClientId)) return;
         const state = { ...((body && typeof body === "object" && !Array.isArray(body) ? body : {}) as Record<string, unknown>), clientId: targetClientId } as CanvasSnapshot;
+        if (state.scope) {
+            state.scope = parseChatScope(state.scope);
+            const connectedScope = this.clientScopes.get(targetClientId);
+            if (connectedScope && !sameScope(connectedScope, state.scope)) throw new Error("聊天 scope 与连接不一致。");
+            if (state.projectId !== state.scope.projectId) throw new Error("画布与聊天身份不一致。");
+        }
+        const previousOwner = state.threadId ? this.threadScopes.get(state.threadId) : undefined;
+        if (state.scope && state.threadId) this.recordThreadScope(state.scope, state.threadId);
         this.canvasStates.set(targetClientId, state);
+        this.restoreTurnConnection(targetClientId, state, previousOwner);
         logger.debug("Canvas state updated", { clientId: targetClientId, nodes: state.nodes?.length || 0, connections: state.connections?.length || 0 });
+    }
+
+    /** Restore only a proven running turn's transport; its canvas and accepted writes stay frozen. */
+    private restoreTurnConnection(clientId: string, state: CanvasSnapshot, owner?: ChatScope) {
+        const previous = this.boundScope;
+        const scope = state.scope;
+        if (!previous || !scope || sameScope(previous, scope) || !this.codexState.busy || clientId !== this.boundClientId || !state.threadId || state.threadId !== this.codexState.threadId || !owner || !sameChat(owner, previous) || !sameChat(previous, scope) || !sameScope(this.clientScopes.get(clientId), scope)) return;
+        this.boundScope = scope;
+        this.pending.forEach((request, requestId) => {
+            if (request.clientId !== clientId || !sameScope(request.scope, previous)) return;
+            this.pending.delete(requestId);
+            request.reject(new Error("旧连接工具的执行结果未确认，未重放；请先核对原操作状态。"));
+        });
+        this.turnAttachments.forEach(attachment => {
+            if (attachment.clientId === clientId && sameScope(attachment.scope, previous)) attachment.scope = scope;
+        });
+        this.pendingApprovals.forEach((approval, requestId) => {
+            if (String(approval.threadId || approval.thread_id || "") !== state.threadId || (approval.turnId && approval.turnId !== this.codexState.turnId)) return;
+            const restored = { ...approval, scope };
+            this.pendingApprovals.set(requestId, restored);
+            sendEvent(this.clients.get(clientId)!, "codex_approval", restored);
+        });
+        this.codexReplayEvents.forEach((event, key) => {
+            if (!sameScope(event.payload.scope as ChatScope | undefined, previous)) return;
+            const restored = { ...event, payload: { ...event.payload, scope } };
+            this.codexReplayEvents.set(key, restored);
+            sendEvent(this.clients.get(clientId)!, restored.type, restored.payload);
+        });
+        if (this.conversationState.threadId === state.threadId) this.updateConversation({ scope });
     }
 
     /** 将指定网页设为最近激活的工具目标。 */
@@ -323,15 +413,23 @@ export class CanvasSession {
     }
 
     /** 将当前 Agent turn 固定绑定到指定网页。 */
-    bindClient(clientId: string) {
+    bindClient(clientId: string, scope?: ChatScope) {
         if (!this.clients.has(clientId)) throw new Error("当前网页未连接");
+        if (scope) {
+            this.boundScope = this.assertClientScope(clientId, scope);
+            this.boundCanvas = structuredClone(this.canvasStates.get(clientId));
+        }
         this.boundClientId = clientId;
         logger.debug("Canvas client bound to turn", { clientId });
     }
 
     /** 解除当前 Agent turn 的网页绑定。 */
     releaseClient(clientId: string) {
-        if (this.boundClientId === clientId) this.boundClientId = "";
+        if (this.boundClientId === clientId) {
+            this.boundClientId = "";
+            this.boundScope = undefined;
+            this.boundCanvas = undefined;
+        }
         logger.debug("Canvas client released from turn", { clientId });
     }
 
@@ -343,6 +441,7 @@ export class CanvasSession {
             const id = item.id?.trim() || `attachment-${crypto.randomUUID()}`;
             const attachment: TurnAttachment = {
                 clientId,
+                scope: this.boundScope,
                 id,
                 name: item.name?.trim() || `图片 ${index + 1}`,
                 type: item.type?.startsWith("image/") ? item.type : item.dataUrl.match(/^data:([^;]+)/)?.[1] || "image/png",
@@ -364,17 +463,20 @@ export class CanvasSession {
     }
 
     /** 获取属于指定网页 turn 的图片附件。 */
-    getTurnAttachment(clientId: string, attachmentId: string) {
+    getTurnAttachment(clientId: string, attachmentId: string, scope?: ChatScope) {
         const attachment = this.turnAttachments.get(attachmentId);
         if (!attachment) throw new Error(`找不到本轮图片附件：${attachmentId}`);
         if (attachment.clientId !== clientId) throw new Error("图片附件不属于当前 turn 的发起标签页");
+        if (attachment.scope && !sameScope(attachment.scope, scope)) throw new Error("图片附件属于其他聊天或连接。");
         return attachment;
     }
 
     /** 接收网页返回的工具调用结果。 */
-    resolveResult(clientId: string, body: { requestId?: string; error?: string; result?: unknown }) {
+    resolveResult(clientId: string, body: { requestId?: string; scope?: ChatScope; threadId?: string; turnId?: string; error?: string; result?: unknown }) {
         const item = body.requestId ? this.pending.get(body.requestId) : null;
         if (!item || !body.requestId || item.clientId !== clientId) return false;
+        if (item.scope && (!sameScope(item.scope, body.scope) || !sameScope(this.canvasStates.get(clientId)?.scope, item.scope))) return false;
+        if (item.scope && (item.threadId !== body.threadId || item.turnId !== body.turnId)) return false;
         this.pending.delete(body.requestId);
         logger.debug("Canvas tool result received", { clientId, requestId: body.requestId, error: body.error, result: body.result });
         body.error ? item.reject(new Error(body.error)) : item.resolve(body.result);
@@ -388,7 +490,8 @@ export class CanvasSession {
 
     /** 向全部网页广播带线程归属的事件。 */
     emitThread(type: string, threadId: string, payload: Record<string, unknown> = {}) {
-        const data: Record<string, unknown> = { ...payload, threadId };
+        const scope = this.boundScope && threadId === this.codexState.threadId ? this.boundScope : this.threadScopes.get(threadId);
+        const data: Record<string, unknown> = { ...payload, threadId, ...(scope ? { scope } : {}) };
         const replayKey = codexReplayKey(type, data);
         const eventTurnId = String(data.turnId || data.turn_id || "");
         const currentScope = threadId === this.codexState.threadId && (!this.codexState.turnId || !eventTurnId || eventTurnId === this.codexState.turnId);
@@ -462,7 +565,7 @@ export class CanvasSession {
     private async createAttachmentNodes(input: { attachmentIds: string[]; x?: number; y?: number; gap?: number; direction?: "row" | "column" }) {
         const clientId = this.targetClientId;
         if (!this.clients.has(clientId)) throw new Error("当前没有已连接画布");
-        const attachments = input.attachmentIds.map((id) => this.getTurnAttachment(clientId, id));
+        const attachments = input.attachmentIds.map((id) => this.getTurnAttachment(clientId, id, this.boundScope));
         const x = Number(input.x ?? nextCanvasX(this.canvasState));
         const y = Number(input.y ?? 0);
         const gap = Number(input.gap ?? 40);
@@ -491,7 +594,10 @@ export class CanvasSession {
         const clientId = this.targetClientId;
         const client = this.clients.get(clientId);
         if (!client) throw new Error("当前没有已连接画布");
-        sendEvent(client, "tool_call", { requestId, name, input });
+        const scope = this.boundScope ?? this.canvasStates.get(clientId)?.scope;
+        if (scope) this.assertClientScope(clientId, scope);
+        const turn = scope ? { threadId: this.codexState.threadId, turnId: this.codexState.turnId } : {};
+        sendEvent(client, "tool_call", { requestId, name, input, ...turn, ...(scope ? { scope } : {}) });
         logger.debug("Canvas tool request sent", { requestId, name, input, clientId });
         return await new Promise((resolve, reject) => {
             const timer = setTimeout(() => {
@@ -499,7 +605,7 @@ export class CanvasSession {
                 logger.warn("Canvas tool request timed out", { requestId, name, clientId });
                 reject(new Error("画布操作超时"));
             }, 30000);
-            this.pending.set(requestId, { clientId, resolve: (value) => (clearTimeout(timer), resolve(value)), reject: (error) => (clearTimeout(timer), reject(error)) });
+            this.pending.set(requestId, { clientId, scope, ...turn, resolve: (value) => (clearTimeout(timer), resolve(value)), reject: (error) => (clearTimeout(timer), reject(error)) });
         });
     }
 }

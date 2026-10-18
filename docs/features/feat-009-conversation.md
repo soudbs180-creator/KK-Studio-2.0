@@ -3,11 +3,13 @@
 - 状态：PARTIAL
 - 领域：creation
 - 最近更新：2026-10-17
-- 关联任务：T4、BACKEND-CONVERSATION、TASK-AGENT-001、TASK-AGENT-002、TASK-AGENT-003、TASK-AGENT-004、TASK-AGENT-005、TASK-AGENT-008
-- 最近更新：2026-10-17
-- 关联任务：T4、BACKEND-CONVERSATION、TASK-AGENT-001、TASK-AGENT-002、TASK-AGENT-003、TASK-AGENT-007、TASK-AGENT-008
+- 关联任务：T4、BACKEND-CONVERSATION、TASK-AGENT-001、TASK-AGENT-002、TASK-AGENT-003、TASK-AGENT-004、TASK-AGENT-005、TASK-AGENT-007、TASK-AGENT-008、TASK-CHAT-MIGRATION-20261017
 
-## 2026-10-17安全修复边界（完整本地verify与源码独审通过）
+## 2026-10-17旧聊天恢复（本地验证通过，任务仍PARTIAL）
+
+关联TASK-CHAT-MIGRATION-20261017；Desktop/Web 2.1.37（Mobile 2.1.1规划），冻结源码89b8291b；默认原9项目已迁移snapshot3、11个独立聊天上下文，repositoryId和原始资料保持；编辑、旧历史持久化及正常关闭重开证据见本轮验证。真实新回复仍未验收：Codex共享周额度100%、ordinaryUsageAllowed=false，发送前拒绝，/turn提交0；预计北京时间2026-10-23 04:08:15重置。未消耗reset、未购买额度或绕过保护。 见[当前验证](../changes/2026-10-17-chat-migration/verification.md)。
+
+## 2026-10-17安全修复边界（历史2.1.36）
 
 关联本地安全修复任务：TASK-AUDIT-REPAIR-20261017（有界A–D DONE；完整功能缺口继续由本卡原开放任务承接）；[规格](../changes/2026-10-17-audit-repair/spec.md) / [实际验证](../changes/2026-10-17-audit-repair/verification.md)。协议6未具备完整chat scope隔离，新增普通聊天、临时聊天及不支持的多聊天/v3写入须门控并说明原因；保留v2 legacy单聊天。草稿/thread/正文、历史/journal/记忆隔离未全部验收前，不宣称多聊天或临时隐私可用；外部模型授权空数组应拒绝，不混同主Agent自身推理模型。 候选Desktop/Web2.1.36最终source4699458d完整verify、精确源码独审、官方重建、隔离Native与两日常入口正常关闭重开通过；旧d356真实菜单遮挡失败及所有原失败保留。默认旧聊天资料仍READ_ONLY，9项目raw/identity/shared memory保持；不宣称可编辑、完整迁移/protocol7、真实Provider或完整多聊天/垃圾箱/12AI恢复已完成。本卡成熟度与既有runtimeEvidence保持原范围，详细证据见本轮验证；Hosted/发布/用户验收另列。
 
@@ -33,7 +35,7 @@
 - KK 对话默认 Codex：命名 SSE、真实账号模型/额度、项目会话恢复、停止和权限请求已接通；API 来源需显式选择。
 - 已从 KK 输入取得真实回复、MCP 画布操作和内置生图结果。图片进入 KK 自有素材仓库；卡片来源按 thread/turn 元数据持久化。工具回执未知时阻止自动重试。
 - 分级/全部模型菜单、关闭记忆页、返回、页内置顶由 ModelPickerMenu 统一提供。Google API Key 的对话/生图和 Gemini CLI 登录的文字对话已有本地接线与 fixture 浏览器回归；真实账号与 Tauri 仍待验收。豆包/WorkBuddy 仍未接通。
-- 分级/全部模型菜单、关闭记忆页、返回、页内置顶由 ModelPickerMenu 统一提供。Google/豆包/WorkBuddy 适配器保持禁用。
+- 豆包/WorkBuddy未完成的独立适配器保持禁用；Google API/Gemini CLI按上一条的本地接线与外部待验边界解释。
 - 设置 › 网络增加 CodeBuddy CLI 路径、保存和真实连通测试；Codex MCP 增加 `codebuddy_consult`，可受控委派有限短文本。本机已登录 CLI、随包 MCP 与新 Tauri 内 Codex 工具调用和可见回复通过；独立的 WorkBuddy 原生 OAuth、自动高效路由仍未实现，菜单中 WorkBuddy 仍禁用。见 [本轮验证](../changes/2026-09-24-codebuddy-delegation/verification.md)。
 - 新增文本节点（FEAT-008）是单次文本生成，不能作为本面板多轮文本聊天验收。
 
@@ -66,3 +68,7 @@ TASK-AGENT-007：CodeBuddy CLI 受控短文本委派；后续设计师全链路�
 TASK-CODEX-HOME-20261015：新首页默认Codex/ChatGPT图片能力，首页、聊天、画布沿各自显式Codex/API来源执行；旧API和无selection项目保持legacy路由，局部隐私/草稿/附件及原件保全。输入同排与菜单锚点同步修复。当前进入REVIEW：784浏览器首过及Native单QA包往返/冷开图文通过，但完整npm verify因另一任务占用1421而development未执行/exit1；当前SHA独审与Hosted完整门禁、合并和本机更新待验。见[本轮规格](../changes/2026-10-15-codex-home/spec.md)与[验证](../changes/2026-10-15-codex-home/verification.md)；本卡功能状态保持，不用前置真实账号证据代填新入口或所有外部Provider。
 
 - 2026-10-15：TASK-KK-UNIFIED-20261015 已获用户实施授权，新增范围见 [统一规格](../changes/2026-10-15-kk-unified/spec.md)。本卡既有证据仍限原版本；新范围实现/真实验收尚未完成，不能沿用旧 PASS 关闭。
+
+## 2026-10-18 冷启动与相同值保存
+
+当前2.1.40源d5a24d60已修复恢复/Agent同值回放导致的无效时间与revision写入。真实默认库两轮noCDP冷启完整JSON及原始字节相同，全部时间/revision保持；新回执、真实内容变化、flush失败及身份保护保持，见[本轮验证](../changes/2026-10-18-coldstart-local/verification.md)。此有界技术闭环不提升功能成熟度，不代表真实新回复或外部服务验收。

@@ -1,0 +1,71 @@
+# Verification：冷启动严格比较
+
+TASK-COLDSTART-LOCAL-20261018：有界本地 DONE / PASS；source base fe103d2b，branch fix/TASK-COLDSTART-LOCAL-20261018。Desktop/Web原2.1.39，Mobile候选2.1.1不动；已fetch的origin/main c248d817其版本Desktop2.1.37/Web2.1.38/Mobile2.1.3属于并行集成来源，不冒充本候选或Hosted复验。
+
+开工9登记树/16原本地分支（本轮新分支另计），全部141dirty逐份稳定复制/index/diff/status/all-ref bundle及raw checkpoint：D:/KK-Studio-recovery-20260921/sidebar-canvas-20261018-d0cffabe-7380-43be-b482-e280d7be4df4，receipt SHA a9937aa2f4a00c4434187ce346509e94f26248d71ad85f72958497bba6af8df8。原主仓8c HEAD/index保持，但并行从69增96dirty，旧63中已有部分被并行作者改动：历史比较receipt233d4c85保持FAIL，当前96已复制；不恢复/覆盖新版本，不再冒称旧63仍全同。
+
+开工时上轮cold FAIL、四数字差异、actual历史Agent callback UNKNOWN、随后activation全字段一致的收据均原样保留。它们不替代本轮真正冷启动验收。开工实际原Native PID50396/CreationDate1792264675745/EXE e9caebca，无CDP；后续当前资料份数与进程身份须现场重新核对。下方按阶段保留历史验证，最后一节为当前闭环结论；旧阶段的待验、失败和拒收不改写。
+
+## 最小根修复与预审阶段
+
+AgentHost正式RED第二轮5失败/1保护正例通过；同值thread跳过commit，同值消息完整持久化JSON比较，不跳过安全校验和await flush。新增metadata-only变化正例。taskRecovery正式14条RED为6PASS/8FAIL，测试原SHA不变，修复后原24+新14为38/38 PASS，另nativeTaskHost31/31 PASS；收据implementation-verification.json SHA33e7a4e6d76100c24ffbae05d1dcf74239f83c2a1952978cd3023e763f209777。
+
+独立Spec预检拒收COLD-SPEC-001/P1：mergeAgentChatItem对完成态历史补入own turnId:undefined，原JS sameJson仍误判变化，82项旧回归未覆盖。原拒收收据f8ce56da保留。root新增真实merge路径回归先RED（7PASS/1FAIL），双方JSON归一后比较，保留全部实际metadata及错误上报。首次扩展回归112/113的原FAIL来自旧agentConnection断言要求重复保存至少两次；它与新幂等契约冲突。保留旧失败，仅将该断言改为“首次真实变更有commit、第二次相同回放零commit且仍flush”，原身份/内容/metadata断言全部保留并补引用保持。新113/113全部PASS，0skip。不存在通过放宽持久化字段或忽略时间让冷启变绿。
+
+全仓lint/typecheck初检exit0（既有2条advisory未扩scope），最终修正后的完整verify和精确commit双轴补审仍待。Desktop/Web已用官方version:bump递增2.1.40，Mobile2.1.1未变。
+
+## 构建前保全阶段
+
+精确核对原PID50396/CreationDate/原EXE后，复制旧2.1.39 EXE、build receipt、dist、Agent运行时及原数据启闭前critical共4447文件，逐份源/副本SHA一致；随后仅CloseMainWindow正常关闭该实例，0实例后复制完整用户profile。工程外新根D:/KK-Studio-recovery-20260921/coldstart-local-20261018-fff10774-062f-4668-a206-44b6db0aec10，prebuild receipt SHA293758ed11b8a2ca1e4a03a9c75c71a50f0545cef6d8934f621425848c8d6a2c。
+
+完整资料2849文件/350742192B、124目录，source与target逐份hash、前后清单闭合/0差异/0错误，runtime-userdata-b483afe2-d948-49fe-ac24-f9a459942791，receipt SHA0a7c0a5e8d204df9f201f702449b6cd66b0e97ec0048164e0b223a406940104e。仅证明该观察区间，不声明live永久静止；系统凭据库未导出。无删除、移动、force kill或回退用户资料。
+
+## source477完整验证与首次真实冷启FAIL（保留）
+
+source47780f51332d22af42fdfa89dd9e5f5f6d760bb1/treef8c72a2a661b898ce04aaa099f8128c65d85c81c完整npm run verify exit0：Node1982PASS/14既有skip、Agent204PASS/2既有skip、Edge854首试/0fail/flaky/skip（run f9ff64a4-36e9-444b-9de7-47b5d5a1e1a4）、Design41+8、development4。独立Spec源码PASS d340115a、Standards源码PASS e20ebf60；这两份源码结论不替代实际冷启。
+
+官方2.1.40 EXE aa5f7478844e1a9b7c36406357d4afac640fe618ddc4fe60f1a67a1596d84c38/input d06d42fa36963df96305af8699df98b8b5be5d02ab3c550057f722a2e4239be2，4282运行时文件源与随包逐项一致。原lnk、default资料、noCDP的首次真正0→1冷启仍FAIL，不能闭环：完整JSON/raw比较仅projects.1.tasks.0.updatedAt、projects.1.updatedAt、revision2696→2698变化，所有聊天字段和其余数据相等。报告cold-start-strict-68917d21-df9b-4ffc-9520-dbed61cc2ea9/report.json SHA3f90962528efebdf337ed36d6c7aad53d702b8156ac2475f33a54ae6e8f50964，原两份12606061B数据保持；首次失败后正常关闭、remainingNative0，不补写第二周期或成功。独立全1166值复核收据41b30f0e确认同三字段差异，资料副本独立2849份复核6362f7ce通过。
+
+失败EXE/dist/build receipt/当前正常关闭后critical共162文件另存failed-native-40-17cce0fa-bbec-4639-904f-382ed4012a69，receipt3b014bf4e4feb1766ede52f4d3ffbaaeaa6a0bbd721a040b4ac925aaf8fa9ec7；不恢复旧数据。本次残余跨Native journal→retry归并写入正在诊断，Gateway仍只读准备、未实施。
+
+脚本独审另发现P2 COLD-SCRIPT-OWNER-001：旧helper在candidate目标校验前赋owned，极端启动竞争异常时finally可能关闭外来实例。本次实际匹配目标且失败发生在数据比较，不声称风险已发生。保留旧脚本和报告，另建v2先验EXE/参数/hash再赋owned；新增script SHA、immutable逐次hash、跨两周期统一baseline及finally保存。无比较字段排除，尚未实际运行v2。
+
+## Native完整链补修阶段（新全量与cold待验）
+
+实际保存12,606,061B完整快照+2份journal，以原生产decode→Native→retry→recover→serialize纯Node读边界复放，输出与真正冷启FAIL所有JSON字段、时间和revision完全相同；normalization diff0。Native中间阶段先把父任务error/output status改回旧记录并把时间退到1792056384147，retry再还原其原完整语义而刷新当前时间，revision两次+1。三数字差异的机制被保存输入完整证明，报告replay-report.json SHAfe8880e000fd1963e8bfc8e40d67e2cf06a51daf13bddd07fc9e7960b4b8ce8e；历史实际调用栈未instrument，不能声称回溯观测到堆栈。
+
+正式V3新nativeTaskHostNoop测试先8条RED（3PASS/5FAIL），再补opaque及新回执父归并正例共10条，并校准canvas.positions夹具；最终同10条针对保留的旧生产源码副本重新RED为5PASS/5FAIL，修复后全91PASS/0skip。原始装配/夹具失败保留。最小产品修复仅nativeTaskHost.ts：所有record校验、读取、归档和unknown/onlyTaskIds原逻辑运行，完整retry结果后按全部持久化JSON净变化复用task/project/snapshot；validated新回执时间不抵消。真实items/canvas/error/unknown和opaque变化仍保存，未变化对象先引用快捷返回。原Native31+recovery38+新10+imageEdit12共91PASS，type/lint/format通过；总收据final-receipt.json SHA7903d58380925bb7840ffcf1b42b949f21443cbddc9a67ea414a6199b3ae81db。
+
+补修后实际保存快照与两份journals纯Node全链三次复放，所有字段deepEqual且复用原snapshot，revision2696保持；只mock单测的task_host_list输入，无真实IPC/asset/provider/Native调用，不是桌面运行证据。saved-copy-green-report.json绑定Native source SHA55263f1075ecb0d90fd15966acecececfcc740a79c0741920858b1878f497452与test SHAce3a35d7c85d443772a14303cf04b0af9cbf6e1211245a8c5c6d7ee6ed1aee7c。新的完整verify、双轴精确commit补审及官方产物cold仍待。
+
+严格v2脚本当前SHA5241552817f3545678dbc363ac3bf7dff4ef427d032a98da6c90d8bd3a2b9db0，经独立静态补审e2a48096无阻断。已修finalDataUnchanged=false仍可能PASS、最终读异常无法落report两项P2，并把每cycle raw保存提前；旧v2静态拒收a27b3264和原脚本/实测失败均保留。仍采用全部JSON+原始字节比较，尚未运行。
+
+## source940验证与旧格式时间P2拒收（保留）
+
+source9400a9e714ac44bcd81c0841d256796221e4474b完整verify exit0，过程中源55263f10/testce3a35d7/HEAD与clean始终保持，无中途混源：Node1992PASS/14既有skip、Agent204PASS/2既有skip、Edge854首试/0fail/flaky/skip（run6ae36c4e-7506-4a5e-a6b8-d015ff2bc66d）、Design41+8/development4。Spec155定向/source PASS（252d8a19），但Standards CHANGES REQUIRED/e4045ff73872604f729777d39d1063cad5b78471969bd0784bf0c3ded1caf563，COLD-STD-RECEIPT-TIME-004/P2未闭，不能把fullverify通过等同交付，也尚未对940建新Native。
+
+该P2为独立合成真实反例：旧normalizer在原始journal缺失或nonfinite updatedAt时用Date.now兼容降级，新fresh例外却将其当新Native时间；本机clock100→200造成无效revision7→9→11。当前两份保存真实journal均有合法原始时间，原12MB输入三次GREEN仍真实；未声称这个缺时钟反例在用户资料发生。下一最小补修仅区分合法原始时间来源，兼容fallback与所有真实变化保留；先RED再GREEN，并新精确commit/fullverify/官方strict冷启。
+
+P2补修：模块私有WeakSet仅记normalizer收到原始finite时间的对象来源，返回字段及Date.now兼容fallback不变；fresh例外同时检查来源和validated时间，不添加公开字段、schema、IPC或持久化状态。正式新增9例后共19例先RED为13PASS/6FAIL（missing/null/NaN/正负Infinity/string六个双时钟病例），GREEN原91+新增9共100PASS/0skip，type/lint/format通过，root原Native+新Noop50/50再验通过。实际保存完整资料+2journal再次三轮纯复放全部字段/对象/2696保持，仍不替代实际Native。Native SHA3cb95864cecefe408d39ac2e08c1f053c3e1026a70eb35ce8d2924604e1dcebb、Noop SHA9933b9093a64290bbb605efbf5298451db33c0f7a59dedc65a593355aa87c5a2冻结待新commit双轴与完整verify，940的拒收不覆盖。
+
+## source d5 当前闭环：严格冷启、官方产物及独立复核 PASS
+
+冻结产品实现8735ad1306526f8485b3c0947eec0f6c19609d4e，完整验收源d5a24d60b4a9b9b5d0b6cce078f091c10263729c（后者只同步生成账本视图）。精确d5完整npm run verify exit0，前后clean且源不变：Node2001PASS/14既有skip、Agent204PASS/2既有skip、产品Edge854首试/0fail/flaky/skip、Design41+8、development4。完整日志full-verify-d5a24d60.log与exit收据保留于私有证据目录。Rust源不变，前冻结228PASS/1既有ignore及41集成只按相同源码绑定，未伪造本次另跑Rust。
+
+两轴精确d5源码独审均PASS/0新阻断：Spec独跑164定向，收据review-spec-source-d5a24d60-2c4d38fc-6acf-4910-8b64-198391107424.json SHA5a7f8551d45452c8edd6110a46da2830c03f8e078cf311d9ad78519968844ce0；Standards独跑173定向及旧时间反例，收据review-standards-time-origin-d5a24d6-eb0d89b9-f486-42dc-9702-59db8b27926c.json SHA39f0e7ecbe08ebea4b4bbd039ac8e815b321e10d3f6bfa2eab45643ee98acfa4。COLD-SPEC-001与COLD-STD-RECEIPT-TIME-004均在新源关闭，原拒收不撤改。
+
+官方Desktop2.1.40重新构建PASS，EXE SHA41523db804fd5e803dcf98d7c115061de7980f01b7929e2ba12da7150d3b3b53，input SHA0f7a1bf9c1eb08c493bc492fb902869c5d99f4a8eca1fcf0e251cd0755d92cf0。build receipt native-build-f17c88fe-4d0f-476e-8e43-8a34f0315e65.json位于本轮工程外保全根。4282份白名单Agent文件源/随包全部hash相等，无共享依赖安装或Agent重打包。Web2.1.40/Mobile2.1.1仍为本地候选/规划，不是Hosted发布。
+
+真正严格冷启报告D:/KK-Studio-recovery-20260921/coldstart-local-20261018-fff10774-062f-4668-a206-44b6db0aec10/cold-start-strict-990a0c90-333e-4485-931e-a07c768adff4/report.json，SHA c8959b14d8d4183af26029dbe4f8db4e01cf1572df8ca65389e41a657c2cbe21。脚本v2 SHA5241552817f3545678dbc363ac3bf7dff4ef427d032a98da6c90d8bd3a2b9db0。使用两个原快捷方式、真实默认资料、无CDP，连续两轮0→1→第二快捷方式同PID→正常关闭0；共11份原始快照各12,606,061B，完整类型严格JSON与原始字节全部相同，包含全部未知字段、时间和revision2698。统一SHA f7191b8a4a93a4357dbbefeea5492d687e2c313d30cef72c1803eacff027bb31，9项目/11聊天/22消息。基线是旧失败后保留的2698，没有恢复2696或排除失败字段。40项身份/迁移/原候选/共享记忆状态观测保持；memory原本不存在，只证明缺席状态保持，不虚构内容。
+
+独立审核所有11份raw、完整JSON、40项观测、四份存在的保护文件与完整profile副本的回连、两份运行时8564文件及source/build/fullverify身份，101项核验PASS/0finding：strict-coldstart-evidence-recheck-7c6a71a6-c21c-4f4d-9c65-3202f0e52ad8.json SHA724e2a1f14a541dd37abd53cf56e65ddb9eb631fce80dbe5b8bafa26163ca443。
+
+实际默认UI另做两轮正常启闭PASS：test-results/native-coldstart-default/c718d7c1-fbbb-48e4-a6cb-740da87fe329/native-coldstart-default-results.json SHA355d1b19c91a81847b52a95485719d545d900558facbb6d54b337d9abc29a86a；可见textarea enabled/readOnly=false、0pageerror，loaded index-DYalK6JL.js/SHA1019d17ba0575b21d25157d05a7220b85cecded3161adac5f7495189816bfdfe。独立保存证据复核651c2e7c2fc50681287be2c5bbf8997976070d90a256d09d20a766e56d82ef21通过。UI after保存件重新序列化且多一个newline，因此仅支持完整canonicalJSON相等；raw严格字节证明来自前述noCDP冷启。此UI只读harness未发消息/编辑/选择/写IPC，不证明真实新回复；Native内部IPC与CDP附着前网络未完整观测。
+
+当前冷启有界技术闭环DONE/PASS；完整原profile2849份保存副本及独立复核6362f7ce保持，所有RED、真实FAIL、旧EXE和拒收留存。最终文档HEAD独审、Delivery、私有归档和日常入口还原用后续精确收据裁决。后继Gateway仅推进本地增量流子项，父能力与真实Provider/DPAPI/Hosted/签名/Mobile/用户整体验收保持开放；不把本任务DONE扩大为全部项目完成。
+
+终稿00e79文档Standards独审9f762111保留CHANGES_REQUIRED：COLD-STD-ROUTE-COUNT-005/P2，cold关闭后实际开放路由6条而三个入口写7。技术源码与实际冷启结论不撤；后继23d3登记新Gateway路由后当前数回到7，现行入口明确区分这两个时点、冷阶段文字更正6，不修改历史拒收。非阻断STD-COMMIT-002/P3保留，后续采用中文真实模块scope，无amend。新的组合文档head须精确补审；原d5浏览器结构化证据独立确认95a12350/854首试零flaky，不以终稿数字错误改写产品结果。
+
+## 后继source176兼容复验（旧d5闭环保留）
+
+Gateway本地流修复后官方40 EXEd8e7/input49ad再次真实默认无CDP2周期11份raw/完整JSON（含全部时间/revision2698）保持9项目11聊天22消息，独立97项保存证据审核5905104f通过；当前UI两周期可编辑/canonical相等，blockedRequests1目标未记，不宣称全网络隔离。完整source176 Node2055/Agent204/Edge854首试、双轴及Native Canvas分阶段完整数据验收详见[后继验证](../2026-10-18-gateway-stream/verification.md)。原d5、477失败/940拒收和所有RED保持原义，不以旧EXE或旧通过代填新包。

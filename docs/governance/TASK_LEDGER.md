@@ -160,6 +160,11 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-DESIGN-MD-20261015 | 统一DESIGN设计系统与产品UI收敛 | PARTIAL | 进行中 | P1 | none | root | 关闭基础独审问题，将规则落入设置/模型/聊天/画布/项目/素材等实际页面，按Desktop→Web留同状态证据。 |
 | TASK-ISSUE-68 | 修复原生设置保存后的测试同步缺口 | DONE | 已完成 | P1 | none | issue68-specialist | 本专项结项；保留原失败及当前主线证据。TASK-NATIVE-TEARDOWN-20261018在新会话独立调查；发布/部署和总客户端交付不在本次范围。 |
 | TASK-NATIVE-TEARDOWN-20261018 | 查明原生生命周期taskkill清理非零原因 | TODO | 未完成 | P2 | none | unallocated | 在新会话独立认领并只对owned进程调查，先保全错误细节与可重复证据。 |
+| TASK-LOCAL-GUARDS-20261018 | 修复本地安全边界并核对剩余任务与工作树规则 | DONE | 已完成 | P1 | none | root | 本轮有界本地任务完成；原65项开放任务按独立验收继续，优先侧栏pin/sort持久化、真实上游增量流及宽图连线/Native验证；真实新回复仍待额度恢复后验收。最终文档HEAD/Delivery/日常正常启动收据保存在工程外，不把其写成远端发布。 |
+| TASK-CHAT-MIGRATION-20261017 | 保全旧聊天资料并恢复迁移、编辑与聊天 | PARTIAL | 未完成 | P1 | none | root | 账号Codex额度解除后，从当前v3原线程进行一次普通文本受理/回复及持久化重开验收；此前/turn0，无UNKNOWN重放。保留原始v2不可变归档，不回滚、删除或移动；Hosted/PR/main/发布与原统一范围另行验收。 原e11b87a5分支和恢复收据保留；物理树由TASK-LOCAL-GUARDS-20261018复用，额度解除后重新分配，不把旧分支冒充当前checkout。 |
+| TASK-SIDEBAR-CANVAS-20261018 | 侧栏置顶排序持久化与宽图连线桌面验收 | DONE | 已完成 | P1 | none | root | 本轮有界本地技术完成；最终文档SHA审查/Delivery/归档/日常还原以工程外收据裁决；真实Provider/Hosted/发布及用户整体验收另行，保留全部资料。 |
+| TASK-COLDSTART-LOCAL-20261018 | 冷启动无效写入修复与严格数据比较闭环 | DONE | 已完成 | P1 | none | root | 本有界冷启动技术闭环完成；最终文档SHA独审/Delivery/保全归档与日常单实例入口据实收尾。继续本地Gateway增量流和Native Canvas专项，不改变父任务外部验收与功能成熟度。 |
+| TASK-GATEWAY-STREAM-20261018 | Gateway实际增量SSE与取消重试边界 | DONE | 已完成 | P1 | TASK-COLDSTART-LOCAL-20261018 | root | 本地有界子项完成；最终精确文档/Delivery/私有归档/原两个快捷方式由工程外收据裁决。下一P1本地DPAPI protector受控测试及独立成本回执调用路径，不重提UNKNOWN，不消费额度；父Gateway仍PARTIAL。 |
 
 ## TASK-MOBILE-COMPOSER-001 — 修复手机空文字输入模型按钮失焦无响应
 
@@ -3087,5 +3092,100 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Verification: NOT_VERIFIED — 事实：d7359851额外native复验在actual-app-durable-intent-and-restart之后taskkill /PID 52860 /T /F返回非零，原收据9checks/整体未通过、credentialCleanupComplete=true；相同SHA随后串行Native11通过，PR/push及main Hosted亦Native11通过。taskkill具体原因UNKNOWN；本记录不宣称修复或完全消除。
 - Evidence: [docs/changes/2026-10-18-issue-68-settings-save/verification.md](../../docs/changes/2026-10-18-issue-68-settings-save/verification.md), [docs/changes/2026-10-18-issue-68-main-closeout/verification.md](../../docs/changes/2026-10-18-issue-68-main-closeout/verification.md)
 - Next action: 在新会话独立认领并只对owned进程调查，先保全错误细节与可重复证据。
+- Last verified: 2026-10-18
+- Updated: 2026-10-18
+
+## TASK-LOCAL-GUARDS-20261018 — 修复本地安全边界并核对剩余任务与工作树规则
+
+- Goal: 不依赖额度修复工作树检查误放行、凭据缓存失败污染并补测试证据负向验收
+- Scope: worktree-policy、LayeredCredentialStore、testEvidence取消/报告失败及任务事实同步；不扩展Provider或新产品功能
+- Display status: 已完成
+- Priority: P1 — 本地检查误放行与失败凭据状态不依赖额度，应先修复
+- Requirement refs: ledger:TASK-GOV-004, ledger:TASK-AI-GATEWAY-001, ledger:TASK-VERIFY-EVIDENCE-20261015
+- Feature IDs: FEAT-038
+- Owner role: implementation-integrator
+- Acceptance: 工作树Git查询/CLI目标路径/缺失登记失败关闭，正常已有分支仍复用; 凭据持久失败不污染缓存，成功/失败轮换及相邻异步边界回归通过; 真实Playwright取消和reporter写失败非0/中断，旧三类证据字节与哈希保持; 当前源码完整验证、独立审查、Delivery与任务事实同步；保全改动不删除移动
+- Branch: `fix/TASK-LOCAL-GUARDS-20261018`
+- Worktree: `unallocated`
+- Modules: scripts/governance/worktree-policy.mjs, src/features/ai-gateway/credentials.ts, tests/unit/worktreeLifecycle.test.ts, tests/unit/aiGatewayCredentials.test.ts, tests/unit/testEvidence.test.ts, docs/changes/2026-10-18-local-guards
+- Verification: PASS — 本轮有界本地安全修复source92643d67：完整verify exit0，Node1942PASS/14SKIP、Agent204PASS/2SKIP、Edge826首试、Design41+8、development4步；Rust226PASS/1既有ignore+41集成。Standards/Spec精确源码PASS，ENV-001修复关闭。官方2.1.38/EXE1be85bce，实际默认两次正常启动关闭、可编辑、9项目11chat21消息与原身份/迁移/memory全保持；工程外完整2755文件349604007B保全及独立0 mismatch。4组真实CLI门禁和当前分支事实/5失效路由同步。本地交付以最终文档精确补审和Delivery收据裁决，不代表Hosted/Provider/发布。
+- Evidence: [docs/changes/2026-10-18-local-guards/intent.md](../../docs/changes/2026-10-18-local-guards/intent.md), [docs/changes/2026-10-18-local-guards/spec.md](../../docs/changes/2026-10-18-local-guards/spec.md), [docs/changes/2026-10-18-local-guards/plan.md](../../docs/changes/2026-10-18-local-guards/plan.md), [docs/changes/2026-10-18-local-guards/verification.md](../../docs/changes/2026-10-18-local-guards/verification.md), [docs/changes/2026-10-18-local-guards/review.md](../../docs/changes/2026-10-18-local-guards/review.md)
+- Next action: 本轮有界本地任务完成；原65项开放任务按独立验收继续，优先侧栏pin/sort持久化、真实上游增量流及宽图连线/Native验证；真实新回复仍待额度恢复后验收。最终文档HEAD/Delivery/日常正常启动收据保存在工程外，不把其写成远端发布。
+- Last verified: 2026-10-18
+- Updated: 2026-10-18
+
+## TASK-CHAT-MIGRATION-20261017 — 保全旧聊天资料并恢复迁移、编辑与聊天
+
+- Goal: 无损迁移原聊天数据，恢复独立草稿、正文、线程及正常保存重连。
+- Scope: ADR-022已接受的旧通道与现有chat原始Value迁移、Native/IDB不可降级屏障、普通聊天canonical读写与HTTP7执行scope、聊天素材项目包及Node/Native隔离；不扩临时/新窗口/Mobile/额外Provider。
+- Display status: 未完成
+- Priority: P1 — 默认资料只读，需完成真正迁移和执行隔离后恢复用户编辑聊天。
+- Requirement refs: docs/changes/2026-10-17-chat-migration/intent.md, docs/architecture/adr/ADR-022-project-chats-and-v3-migration.md, ledger:TASK-KK-UNIFIED-20261015
+- Feature IDs: FEAT-009, FEAT-014
+- Owner role: implementation-integrator
+- Acceptance: 主备/身份/原资料不可变归档、逐文件SHA与隔离恢复通过，不删除或移动原文件; 迁移后项目/chat/消息/草稿/线程/素材及未知字段保全，失败与future格式保护、重开不丢且不重复迁移; 现有普通聊天独立编辑、离线历史与正常发送/重连，迟到回调和服务执行scope不串chat; 当前源码完整verify/Rust/独审/官方产物、资料副本及默认库迁移/关闭重开通过并同步文档
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: src/features/creation, src/App.tsx, src/features/agent, src/features/google, src/features/local-service, src/features/projects, src-tauri/src, vendor/canvas-agent, scripts/agent, docs/changes/2026-10-17-chat-migration
+- Verification: NOT_VERIFIED — Desktop/Web 2.1.37（Mobile 2.1.1规划），冻结源码89b8291b；默认原9项目已迁移snapshot3、11个独立聊天上下文，repositoryId和原始资料保持；编辑、旧历史持久化及正常关闭重开证据见本轮验证。真实新回复仍未验收：Codex共享周额度100%、ordinaryUsageAllowed=false，发送前拒绝，/turn提交0；预计北京时间2026-10-23 04:08:15重置。未消耗reset、未购买额度或绕过保护。 完整verify Node1924/14skip、Agent204/2skip、Edge826首试零flaky、DESIGN41+8/development四步；Rust226+41/1ignore；双轴源码PASS，官方EXE与loaded bundle绑定89b；副本130检查、默认v3迁移与旧历史/编辑重开收据见verification。所有原件和失败保留。
+- Evidence: [docs/changes/2026-10-17-chat-migration/intent.md](../../docs/changes/2026-10-17-chat-migration/intent.md), [docs/changes/2026-10-17-chat-migration/spec.md](../../docs/changes/2026-10-17-chat-migration/spec.md), [docs/changes/2026-10-17-chat-migration/plan.md](../../docs/changes/2026-10-17-chat-migration/plan.md), [docs/changes/2026-10-17-chat-migration/verification.md](../../docs/changes/2026-10-17-chat-migration/verification.md), [docs/changes/2026-10-17-chat-migration/review.md](../../docs/changes/2026-10-17-chat-migration/review.md)
+- Next action: 账号Codex额度解除后，从当前v3原线程进行一次普通文本受理/回复及持久化重开验收；此前/turn0，无UNKNOWN重放。保留原始v2不可变归档，不回滚、删除或移动；Hosted/PR/main/发布与原统一范围另行验收。 原e11b87a5分支和恢复收据保留；物理树由TASK-LOCAL-GUARDS-20261018复用，额度解除后重新分配，不把旧分支冒充当前checkout。
+- Last verified: 2026-10-17
+- Updated: 2026-10-18
+
+## TASK-SIDEBAR-CANVAS-20261018 — 侧栏置顶排序持久化与宽图连线桌面验收
+
+- Goal: 先完成侧栏偏好持久化，再复证修复宽图几何并完成fresh桌面验收
+- Scope: 现有CreationSnapshot/CAS、sidebar actions、共享result geometry与相应本地回归；不新增存储源或外部能力；独立验收发现429健康标记与保存的真实竞态，在本次修复并复验
+- Display status: 已完成
+- Priority: P1 — 用户明确要求按侧栏持久化→宽图连线→桌面验收推进
+- Requirement refs: ledger:TASK-PROJECT-SIDEBAR-001, ledger:TASK-CANVAS-WIDE-PORT-20261014
+- Feature IDs: FEAT-015, FEAT-023, FEAT-001
+- Owner role: implementation-integrator
+- Acceptance: 项目/组pin及三种sort在Web重载和fresh Native正常启闭后保持，旧资料兼容且失败/CAS/包往返保留原件; 1200x300三缩放×双编辑状态真实连线SVG端点/端口/按钮与DOM几何正确; 完整verify/Rust/官方Native/独审/Delivery通过并同步任务事实，原改动和用户资料保全，无删除移动
+- Branch: `fix/TASK-SIDEBAR-CANVAS-20261018`
+- Worktree: `unallocated`
+- Modules: src/features/creation, src/features/projects, src/components/SidebarProjectGroups.tsx, src/components/SidebarProjectHeader.tsx, src/domain/canvasGraph.ts, src-tauri/src/creation_validation.rs, src-tauri/src/project_package_snapshot.rs, tests/unit, tests/browser, tests/desktop, src/App.tsx
+- Verification: PASS — source50412d4e / Desktop-Web2.1.39：精确完整verify浏览器854首试通过零flaky、Node1960/Agent204/Design41+8/dev4通过；Rust源码不变，前冻结228及41集成通过、1既存ignore。当前EXE e9caebca，fresh四启闭侧栏pin/unpin/三排序与priority保持、真实项目/组和包往返、宽图6状态通过；原库两周期9项目/11聊天/22消息及身份草稿选择保持。429保存竞态和V3夹具缺口已修复复验，原始失败/拒收保留。最终精确文档/交付/日常收据另验，不代填外部能力。
+- Evidence: [docs/changes/2026-10-18-sidebar-canvas/intent.md](../../docs/changes/2026-10-18-sidebar-canvas/intent.md), [docs/changes/2026-10-18-sidebar-canvas/spec.md](../../docs/changes/2026-10-18-sidebar-canvas/spec.md), [docs/changes/2026-10-18-sidebar-canvas/plan.md](../../docs/changes/2026-10-18-sidebar-canvas/plan.md), [docs/changes/2026-10-18-sidebar-canvas/verification.md](../../docs/changes/2026-10-18-sidebar-canvas/verification.md), [docs/changes/2026-10-18-sidebar-canvas/review.md](../../docs/changes/2026-10-18-sidebar-canvas/review.md)
+- Next action: 本轮有界本地技术完成；最终文档SHA审查/Delivery/归档/日常还原以工程外收据裁决；真实Provider/Hosted/发布及用户整体验收另行，保留全部资料。
+- Last verified: 2026-10-18
+- Updated: 2026-10-18
+
+## TASK-COLDSTART-LOCAL-20261018 — 冷启动无效写入修复与严格数据比较闭环
+
+- Goal: 消除语义未变的恢复和重连保存写入，保全原资料并完成真正默认库冷启动严格验收
+- Scope: taskRecovery/AgentHost及Native恢复归并链幂等、相应回归与默认Native取证；不变更数据身份、协议或外部能力
+- Display status: 已完成
+- Priority: P1 — 用户明确优先闭环原冷启严格比较失败，避免无效恢复写入干扰保存和最近排序
+- Requirement refs: ledger:TASK-SIDEBAR-CANVAS-20261018, ledger:TASK-CHAT-MIGRATION-20261017
+- Feature IDs: FEAT-009, FEAT-015, FEAT-023
+- Owner role: implementation-integrator
+- Acceptance: 重复终态恢复及同值Agent保存不刷新时间/revision，真实变化与错误、身份/权限保护保持; 完整工程验证及独立精确源审查通过，当前官方Native真实冷启全部字段严格比较通过; 原改动与资料保全，旧失败不改写，无删移/付费提交/发布，任务事实同步
+- Branch: `fix/TASK-COLDSTART-LOCAL-20261018`
+- Worktree: `unallocated`
+- Modules: src/features/creation/taskRecovery.ts, src/features/creation/nativeTaskHost.ts, src/features/agent/agentHost.ts, tests/unit, tests/desktop, docs
+- Verification: PASS — 精确d5/产品8735、Desktop-Web2.1.40：完整verify Node2001PASS14skip/Agent204PASS2skip/Edge854首试零失败/零flaky/Design41+8/dev4；源码双轴164/173定向PASS。官方EXE41523db8/input0f7a1bf9，真正默认库无CDP两周期原快捷方式0→1单实例→正常关闭0，11份完整JSON及raw全字节严格一致（含全部时间/revision2698/9项目11聊天22消息），40项保护状态保持，独立101项审核724e2a1f PASS。默认UI两周期可编辑标志及canonical资料保持另独审651c2e7c PASS；未发送真实模型。原RED/历史失败/拒收及2849份原profile保留，最终文档/Delivery/归档/日常按精确收据。
+- Evidence: [docs/changes/2026-10-18-coldstart-local/intent.md](../../docs/changes/2026-10-18-coldstart-local/intent.md), [docs/changes/2026-10-18-coldstart-local/spec.md](../../docs/changes/2026-10-18-coldstart-local/spec.md), [docs/changes/2026-10-18-coldstart-local/plan.md](../../docs/changes/2026-10-18-coldstart-local/plan.md), [docs/changes/2026-10-18-coldstart-local/verification.md](../../docs/changes/2026-10-18-coldstart-local/verification.md), [docs/changes/2026-10-18-coldstart-local/review.md](../../docs/changes/2026-10-18-coldstart-local/review.md)
+- Next action: 本有界冷启动技术闭环完成；最终文档SHA独审/Delivery/保全归档与日常单实例入口据实收尾。继续本地Gateway增量流和Native Canvas专项，不改变父任务外部验收与功能成熟度。
+- Last verified: 2026-10-18
+- Updated: 2026-10-18
+
+## TASK-GATEWAY-STREAM-20261018 — Gateway实际增量SSE与取消重试边界
+
+- Goal: 将现有可选注入chat路由从buffered修复为受控验证的真实增量文本流
+- Scope: Ark adapter/Scheduler/chat/HTTP及有限SSE读取和相关本地回归；无默认UI或主入口接入
+- Display status: 已完成
+- Priority: P1 — 冷启闭环后的本地P1剩余项，可用受控HTTP上游证明而不依赖模型额度
+- Requirement refs: ledger:TASK-AI-GATEWAY-001
+- Feature IDs: FEAT-038
+- Owner role: implementation-integrator
+- Acceptance: 真实本地HTTP首段在上游完成前到达，SSE分片/usage/错误终结有界正确; 首段写后不重试，取消传播且不误罚账号，filter不可换号，JSON/图片/异步/鉴权/404兼容; 相关定向及完整verify、精确独审、当前官方产物与资料保护通过；原件保全，无删移或费用调用
+- Branch: `fix/TASK-GATEWAY-STREAM-20261018`
+- Worktree: `unallocated`
+- Modules: src/features/ai-gateway, src/features/generation-server/http.ts, tests/unit, tests/local-service, docs
+- Verification: PASS — source176ec95d：174定向、完整verify Node2055/14skip+Agent204/2skip+Edge854首试零flaky+Design41/8/dev4；源码双轴PASS，deadline P2关闭。当前官方Desktop40 EXEd8e7/input49ad、默认noCDP严格2轮11raw与完整JSON相等/rev2698/9-11-22、UI2轮可编辑及Native Canvas v5三阶段全对象/图/拖动/unknown/默认七项保护通过。原失败保留，真实Provider/DPAPI/Hosted未验，父任务不提升。
+- Evidence: [docs/changes/2026-10-18-gateway-stream/intent.md](../../docs/changes/2026-10-18-gateway-stream/intent.md), [docs/changes/2026-10-18-gateway-stream/spec.md](../../docs/changes/2026-10-18-gateway-stream/spec.md), [docs/changes/2026-10-18-gateway-stream/plan.md](../../docs/changes/2026-10-18-gateway-stream/plan.md), [docs/changes/2026-10-18-gateway-stream/verification.md](../../docs/changes/2026-10-18-gateway-stream/verification.md), [docs/changes/2026-10-18-gateway-stream/review.md](../../docs/changes/2026-10-18-gateway-stream/review.md)
+- Next action: 本地有界子项完成；最终精确文档/Delivery/私有归档/原两个快捷方式由工程外收据裁决。下一P1本地DPAPI protector受控测试及独立成本回执调用路径，不重提UNKNOWN，不消费额度；父Gateway仍PARTIAL。
 - Last verified: 2026-10-18
 - Updated: 2026-10-18

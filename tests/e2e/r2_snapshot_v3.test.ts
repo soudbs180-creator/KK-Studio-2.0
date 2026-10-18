@@ -1,16 +1,15 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { type CreationSnapshotV3, type LegacyV2Snapshot } from "./harness.ts";
+import { validateSnapshotV3 } from "../../src/features/creation/snapshotCodec.ts";
 import {
-  validateSnapshotV3,
   migrateSnapshotV2ToV3,
-  NonDowngradableWriteBarrier,
   sha256Hex,
-  type CreationSnapshotV3,
-  type LegacyV2Snapshot,
-} from "./harness.ts";
+} from "../../src/features/creation/chatMigration.ts";
+import { NonDowngradableWriteBarrier } from "../../src/features/creation/storage.ts";
 
 /* =========================================================================
- * R2: Snapshot v3 & In-Project Multi-Chat Architecture E2E Tests
+ * R2: Snapshot v3 contract tests; production transactions also have IDB and Native suites.
  * ========================================================================= */
 
 // -------------------------------------------------------------------------
@@ -64,7 +63,7 @@ test("R2-T1-01: snapshot v3 schema validates v3 structure with chats dictionary 
   );
 });
 
-test("R2-T1-02: deterministic migration splits legacy v2 codex, direct, and google conversations into separate chats", () => {
+test("R2-T1-02: production migration separates unassigned history from Codex and Google contexts", () => {
   const legacyV2: LegacyV2Snapshot = {
     version: 2,
     revision: 5,
@@ -107,8 +106,8 @@ test("R2-T1-02: deterministic migration splits legacy v2 codex, direct, and goog
     "Codex history must be migrated to legacy-codex",
   );
   assert.ok(
-    proj.chats["legacy-direct"],
-    "Direct history must be migrated to legacy-direct",
+    proj.chats["legacy-history"],
+    "Direct history must be migrated to legacy-history",
   );
   assert.ok(
     proj.chats["legacy-google"],
@@ -117,17 +116,23 @@ test("R2-T1-02: deterministic migration splits legacy v2 codex, direct, and goog
 
   // Content preservation verification
   assert.equal(proj.chats["legacy-codex"].agentThreadId, "thread-codex-xyz");
-  assert.equal(proj.chats["legacy-direct"].messages.length, 2);
+  assert.equal(proj.chats["legacy-history"].messages.length, 2);
   assert.equal(
-    proj.chats["legacy-direct"].messages[0].content,
+    proj.chats["legacy-history"].messages[0].content,
     "Direct conversation message",
   );
-  assert.equal(proj.chats["legacy-direct"].draft.text, "Unsent direct draft");
+  assert.equal(proj.chats["legacy-history"].draft.text, "Unsent direct draft");
 
   // Shared assets preserved
   assert.equal(proj.items?.length, 1);
   assert.equal(proj.tasks?.length, 1);
-  assert.ok(proj.tasks![0].originChatId, "Tasks must receive originChatId");
+  assert.equal(
+    proj.tasks![0].originChatId,
+    undefined,
+    "Unknown task origin must not be invented",
+  );
+  assert.equal(proj.chats["legacy-codex"].messages.length, 0);
+  assert.equal(proj.chats["legacy-history"].requiresReview, true);
 });
 
 test("R2-T1-03: non-downgradable write barrier enforces strict transaction order and format marker advance", () => {

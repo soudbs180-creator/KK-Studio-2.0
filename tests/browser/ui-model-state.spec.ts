@@ -4,11 +4,28 @@ import { openWorkspace } from "./helpers";
 import { PROVIDER_CONNECTIONS_STORAGE_KEY } from "../../src/features/creation/providerRegistry";
 import {
   CREATION_STORAGE_KEY,
+  createDefaultChat,
   type CreationSnapshot,
 } from "../../src/features/creation/model";
 
 const pixel =
   "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=";
+
+function channelChats() {
+  const names = {
+    codex: "Codex 原聊天",
+    direct: "API 原聊天",
+    google: "Google 原聊天",
+  };
+  return Object.fromEntries(
+    (["codex", "direct", "google"] as const).map((channel) => {
+      const chat = createDefaultChat(channel, names[channel]);
+      chat.mainAgent = channel;
+      chat.draft.conversationChannel = channel;
+      return [channel, chat];
+    }),
+  );
+}
 
 test("Codex执行中模型菜单不能绕过执行方式锁", async ({ page }) => {
   const agent = await startAgentServer("idle");
@@ -70,8 +87,10 @@ test("Codex执行中模型菜单不能绕过执行方式锁", async ({ page }) =
   }
 });
 
-test("Codex、Google与API切换保留各自草稿和附件", async ({ page }) => {
-  await openWorkspace(page);
+test("不同聊天保留各自草稿附件，同聊天切执行器保留当前输入", async ({
+  page,
+}) => {
+  await openWorkspace(page, channelChats());
   await expect(page.locator(".chat-composer")).toHaveCount(1);
   const channel = page.getByLabel("执行方式", { exact: true });
   const input = page.getByLabel("对话内容", { exact: true });
@@ -86,7 +105,14 @@ test("Codex、Google与API切换保留各自草稿和附件", async ({ page }) =
     page.getByRole("button", { name: "移除素材 codex-state.png", exact: true }),
   ).toBeVisible();
   await channel.selectOption("google");
+  await expect(input).toHaveValue("Codex未发送草稿");
+  await expect(
+    page.getByRole("button", { name: "移除素材 codex-state.png", exact: true }),
+  ).toBeVisible();
+  await channel.selectOption("codex");
+  await page.getByRole("tab", { name: "Google 原聊天", exact: true }).click();
   await expect(page.locator(".chat-composer")).toHaveCount(1);
+  await expect(input).toHaveValue("");
   await input.fill("Google未发送草稿");
   await files.setInputFiles({
     name: "google-state.png",
@@ -99,10 +125,10 @@ test("Codex、Google与API切换保留各自草稿和附件", async ({ page }) =
       exact: true,
     }),
   ).toBeVisible();
-  await channel.selectOption("direct");
+  await page.getByRole("tab", { name: "API 原聊天", exact: true }).click();
   await expect(page.locator(".chat-composer")).toHaveCount(1);
   await input.fill("API未发送草稿");
-  await channel.selectOption("codex");
+  await page.getByRole("tab", { name: "Codex 原聊天", exact: true }).click();
   await expect(input).toHaveValue("Codex未发送草稿");
   await expect(
     page.getByRole("button", { name: "移除素材 codex-state.png", exact: true }),
@@ -113,7 +139,7 @@ test("Codex、Google与API切换保留各自草稿和附件", async ({ page }) =
       exact: true,
     }),
   ).toHaveCount(0);
-  await channel.selectOption("google");
+  await page.getByRole("tab", { name: "Google 原聊天", exact: true }).click();
   await expect(input).toHaveValue("Google未发送草稿");
   await expect(
     page.getByRole("button", {
@@ -124,7 +150,7 @@ test("Codex、Google与API切换保留各自草稿和附件", async ({ page }) =
   await expect(
     page.getByRole("button", { name: "移除素材 codex-state.png", exact: true }),
   ).toHaveCount(0);
-  await channel.selectOption("direct");
+  await page.getByRole("tab", { name: "API 原聊天", exact: true }).click();
   await expect(input).toHaveValue("API未发送草稿");
   await expect(
     page.locator(".chat-composer .start-attachment-chip"),

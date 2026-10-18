@@ -125,6 +125,17 @@ struct JournalRecord {
     fingerprint: String,
 }
 
+pub(crate) fn validate_journal_bytes(raw: &[u8]) -> Result<(), String> {
+    let record: JournalRecord = serde_json::from_slice(raw)
+        .map_err(|_| "corrupt: 原生任务记录损坏，已保留原文件".to_string())?;
+    validate_record(&record.record)?;
+    if record.fingerprint.len() != 64 || !record.fingerprint.bytes().all(|c| c.is_ascii_hexdigit())
+    {
+        return Err("corrupt: 原生任务记录指纹无效，已保留原文件".into());
+    }
+    Ok(())
+}
+
 #[derive(Clone)]
 struct JobControl {
     cancelled: Arc<AtomicBool>,
@@ -256,6 +267,7 @@ impl TaskHost {
             };
         }
         let entries = fs::read_dir(&self.root).map_err(io::error)?;
+        let mut recoverable = Vec::new();
         for item in entries {
             let item = item.map_err(io::error)?;
             let path = item.path();
@@ -265,18 +277,22 @@ impl TaskHost {
             let Some(raw) = io::read(&path, 256 * 1024)? else {
                 continue;
             };
-            let mut journal: JournalRecord = serde_json::from_slice(&raw)
-                .map_err(|error| format!("corrupt: 原生任务记录损坏，已保留原文件：{error}"))?;
-            validate_record(&journal.record)?;
-            if journal.record.status == "submitted" {
-                journal.record.status = "unknown".into();
-                journal.record.failure = Some(failure(
+            validate_journal_bytes(&raw)?;
+            let value: serde_json::Value = serde_json::from_slice(&raw).map_err(io::error)?;
+            recoverable.push((path, value));
+        }
+        // Validate the whole directory before mutating any submitted receipt.
+        for (path, mut journal) in recoverable {
+            if journal["status"] == "submitted" {
+                journal["status"] = serde_json::json!("unknown");
+                journal["failure"] = serde_json::to_value(failure(
                     "network",
                     0,
                     None,
                     "应用关闭时供应商受理状态不明，请先核对供应商",
-                ));
-                journal.record.updated_at = now_ms();
+                ))
+                .map_err(io::error)?;
+                journal["updatedAt"] = serde_json::json!(now_ms());
                 replace_record(
                     &path,
                     &serde_json::to_vec(&journal)
@@ -1390,7 +1406,7 @@ mod tests {
     }
 
     #[test]
-    fn readonly_snapshot_blocks_late_journal_write() {
+    fn future_snapshot_blocks_late_journal_write() {
         let fixture = crate::native_root_authority::tests::Fixture::new();
         let paths = fixture.paths();
         let owner = fixture.owner();
@@ -1398,7 +1414,7 @@ mod tests {
         let mut record: JournalRecord = serde_json::from_value(json!({"taskId":"pending","idempotencyKey":"pending-idem","outputIndices":[0],"status":"submitted","assetIds":[],"outputs":[{"index":0,"status":"submitted"}],"updatedAt":1,"fingerprint":"a".repeat(64)})).unwrap();
         host.write_one(&record).unwrap();
         let before = fs::read(host.path("pending")).unwrap();
-        let future = json!({"version":3,"revision":1,"projects":[],"activeProjectId":null});
+        let future = json!({"version":99,"revision":1,"projects":[],"activeProjectId":null});
         fs::write(
             paths.creation.with_extension("json.bak"),
             serde_json::to_vec(&future).unwrap(),
@@ -1408,7 +1424,7 @@ mod tests {
         assert!(host
             .write_one(&record)
             .unwrap_err()
-            .starts_with("readonly:"));
+            .starts_with("unsupported:"));
         assert_eq!(fs::read(host.path("pending")).unwrap(), before);
     }
     #[test]

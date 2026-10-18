@@ -1,3 +1,4 @@
+import { sameJson } from "./chatMigration.ts";
 import {
   providerProtocolSchema,
   providerAuthModeSchema,
@@ -103,7 +104,7 @@ export interface ChatItemDraft {
 
 export interface ChatItemMessage {
   id: string;
-  role: "user" | "assistant" | "system";
+  role: "user" | "assistant" | "system" | "tool" | "error";
   content: string;
   createdAt?: number;
   taskId?: string;
@@ -128,9 +129,10 @@ export interface ChatItem {
 
 export interface CreationMessage {
   id: string;
-  role: "user" | "system";
+  role: "user" | "assistant" | "system" | "tool" | "error";
   content: string;
   createdAt: number;
+  [key: string]: unknown;
 }
 
 export interface CreationTask {
@@ -255,12 +257,21 @@ export function projectHasUnsettledTasks(project: CreationProject): boolean {
   );
 }
 
+export type SidebarSortMode = "manual" | "recent" | "priority";
+
+export interface SidebarPreferences {
+  sortMode: SidebarSortMode;
+  pinnedProjectIds: string[];
+  pinnedGroupIds: string[];
+}
+
 export interface CreationSnapshotV2 {
   version: 2;
   revision: number;
   activeProjectId: string | null;
   projects: CreationProject[];
   projectGroups?: CreationProjectGroup[];
+  sidebarPreferences?: SidebarPreferences;
   homeDraft: CreationDraft;
 }
 
@@ -276,60 +287,193 @@ export interface CreationSnapshotV3 {
   activeProjectId: string | null;
   projects: CreationProject[];
   projectGroups?: CreationProjectGroup[];
+  sidebarPreferences?: SidebarPreferences;
   homeDraft: CreationDraft;
 }
 
 export type CreationSnapshot = CreationSnapshotV2 | CreationSnapshotV3;
 
-/** Protocol 6 retains the legacy root conversation until ADR-022 is implemented. */
+/** A persisted chat is the authority; root fields are only an in-memory component view. */
+export function activeChat(
+  project: CreationProject | undefined,
+): ChatItem | undefined {
+  return project?.activeChatId &&
+    project.chats &&
+    Object.hasOwn(project.chats, project.activeChatId)
+    ? project.chats[project.activeChatId]
+    : undefined;
+}
+
+export function projectChatView(project: CreationProject): CreationProject {
+  const chat = activeChat(project);
+  if (!chat) return project;
+  const draft = normalizeDraft(chat.draft);
+  return {
+    ...project,
+    composerDraft: {
+      ...draft,
+      prompt: chat.draft.prompt ?? chat.draft.text ?? "",
+    },
+    messages: chat.messages as CreationMessage[],
+    agentThreadId: chat.agentThreadId,
+    googleConversation: chat.googleConversation as
+      GoogleConversation | undefined,
+  };
+}
+
+export function updateActiveChat(
+  project: CreationProject,
+  update: (chat: ChatItem) => ChatItem,
+): CreationProject {
+  const chat = activeChat(project);
+  if (!chat) throw new Error("聊天身份不完整，未修改项目。");
+  const next = update(chat);
+  if (next.id !== chat.id) throw new Error("不能改变已有聊天身份。");
+  return projectChatView({
+    ...project,
+    chats: { ...project.chats, [chat.id]: next },
+  });
+}
+
+export function hasLegacyChatAuthority(value: unknown): boolean {
+  const snapshot = value as { version?: unknown; projects?: unknown } | null;
+  return (
+    snapshot?.version === 3 &&
+    Array.isArray(snapshot.projects) &&
+    snapshot.projects.some(
+      (project) =>
+        project &&
+        typeof project === "object" &&
+        [
+          "messages",
+          "composerDraft",
+          "agentThreadId",
+          "googleConversation",
+        ].some((key) => Object.hasOwn(project, key)),
+    )
+  );
+}
+
+/** Every supplied root value must be retained by the canonical chat before stripping a view. */
+export function hasProjectChatAuthorityConflict(
+  project: CreationProject,
+): boolean {
+  const fields = [
+    "messages",
+    "composerDraft",
+    "agentThreadId",
+    "googleConversation",
+  ] as const;
+  if (
+    !fields.some(
+      (key) => Object.hasOwn(project, key) && project[key] !== undefined,
+    )
+  )
+    return false;
+  if (!activeChat(project)) return true;
+  const view = projectChatView(project);
+  return fields.some((key) => {
+    if (!Object.hasOwn(project, key) || project[key] === undefined)
+      return false;
+    if (
+      key === "composerDraft" &&
+      project.composerDraft &&
+      typeof project.composerDraft === "object" &&
+      !Array.isArray(project.composerDraft)
+    )
+      return Object.entries(project.composerDraft).some(
+        ([field, value]) =>
+          !sameJson(
+            value,
+            (view.composerDraft as unknown as Record<string, unknown>)[field],
+          ),
+      );
+    return !sameJson(project[key], view[key]);
+  });
+}
+
+/** Strip derived fields only: stale root state must never be copied into a chat here. */
+export function serializeCreationSnapshot(
+  snapshot: CreationSnapshot,
+): CreationSnapshot {
+  if (snapshot.version !== 3) return snapshot;
+  return {
+    ...snapshot,
+    projects: snapshot.projects.map((project) => {
+      if (hasProjectChatAuthorityConflict(project))
+        throw new Error("聊天存在未迁移的旧权威字段，原件未覆盖。");
+      const result = { ...project } as Partial<CreationProject>;
+      delete result.messages;
+      delete result.composerDraft;
+      delete result.agentThreadId;
+      delete result.googleConversation;
+      return result as CreationProject;
+    }),
+  };
+}
+
 export function projectChatExecutionBlockReason(
   project: CreationProject | undefined,
 ): string | undefined {
   if (!project) return;
-  const threads = [
-    project.agentThreadId,
-    ...Object.values(project.chats ?? {}).map((chat) => chat.agentThreadId),
-  ];
   if (
-    threads.some(
-      (thread) =>
-        thread !== undefined && !/^[A-Za-z0-9_-]{1,160}$/.test(thread),
-    )
+    project.agentThreadId !== undefined &&
+    !/^[A-Za-z0-9_-]{1,160}$/.test(project.agentThreadId)
   )
     return "Agent 线程身份无效，已暂停执行以保留原件。";
   if (project.chats === null) return "聊天身份不完整，已暂停执行以保留原件。";
   if (!project.chats) {
-    return project.activeChatId !== undefined
-      ? "聊天身份不完整，已暂停执行以保留原件。"
+    if (project.activeChatId !== undefined)
+      return "聊天身份不完整，已暂停执行以保留原件。";
+    return project.agentThreadId !== undefined &&
+      !/^[A-Za-z0-9_-]{1,160}$/.test(project.agentThreadId)
+      ? "Agent 线程身份无效，已暂停执行以保留原件。"
       : undefined;
   }
-  const chats = Object.values(project.chats);
-  if (chats.some((chat) => chat.isTemporary))
-    return "临时聊天隔离尚未完成，当前记录仅供恢复查看。";
-  if (chats.length !== 1)
-    return "多聊天执行隔离尚未完成，当前记录仅供恢复查看。";
-  const chat = project.activeChatId && project.chats[project.activeChatId];
-  if (!chat || chat.id !== project.activeChatId)
+  if (Array.isArray(project.chats) || typeof project.chats !== "object")
     return "聊天身份不完整，已暂停执行以保留原件。";
+  const chats = Object.values(project.chats);
+  if (chats.some((chat) => !chat || chat.isTemporary))
+    return "临时聊天隔离尚未完成，当前记录仅供恢复查看。";
   if (
-    chat.agentThreadId &&
-    project.agentThreadId &&
-    chat.agentThreadId !== project.agentThreadId
+    !activeChat(project) ||
+    chats.some((chat) => project.chats?.[chat.id] !== chat)
   )
-    return "聊天与原项目的 Agent 线程身份冲突，已暂停执行以保留原件。";
-  return undefined;
+    return "聊天身份不完整，已暂停执行以保留原件。";
+  const threads = chats
+    .map((chat) => chat.agentThreadId)
+    .filter((thread) => thread !== undefined);
+  if (
+    threads.some((thread) => !/^[A-Za-z0-9_-]{1,160}$/.test(thread!)) ||
+    new Set(threads).size !== threads.length
+  )
+    return "Agent 线程身份无效或重复，已暂停执行以保留原件。";
 }
 
 export function snapshotWriteBlockReason(
   snapshot: CreationSnapshot,
 ): string | undefined {
-  if (snapshot.version === 3)
-    return "多聊天格式迁移与写入保护尚未完成，当前快照仅供恢复查看。";
+  if (snapshot.version !== 2 && snapshot.version !== 3)
+    return "项目版本不受支持，已暂停写入以保留原件。";
+  const threads = new Set<string>();
   for (const project of snapshot.projects) {
     const reason = projectChatExecutionBlockReason(project);
     if (reason) return reason;
+    if (snapshot.version === 3 && !activeChat(project))
+      return "聊天身份不完整，已暂停写入以保留原件。";
+    if (
+      snapshot.version === 2 &&
+      project.chats &&
+      Object.keys(project.chats).length !== 1
+    )
+      return "旧多聊天记录尚未迁移，当前快照仅供恢复查看。";
+    for (const chat of Object.values(project.chats ?? {})) {
+      if (!chat.agentThreadId) continue;
+      if (threads.has(chat.agentThreadId))
+        return "Agent 线程归属重复，已暂停写入以保留原件。";
+      threads.add(chat.agentThreadId);
+    }
   }
-  return undefined;
 }
 
 export interface CreationDraft {
@@ -497,6 +641,7 @@ export function normalizeCreationSnapshot(
     activeProjectId?: unknown;
     projects?: unknown;
     projectGroups?: unknown;
+    sidebarPreferences?: unknown;
     homeDraft?: unknown;
   };
   if (
@@ -556,6 +701,13 @@ export function normalizeCreationSnapshot(
   )
     return null;
 
+  const sidebarPreferences = candidate.sidebarPreferences;
+  if (
+    sidebarPreferences !== undefined &&
+    !validSidebarPreferences(sidebarPreferences, projects, projectGroups ?? [])
+  )
+    return null;
+
   if (version === 3) {
     for (const project of projects) {
       if (
@@ -587,11 +739,13 @@ export function normalizeCreationSnapshot(
 
   if (version === 3) {
     return {
+      ...(candidate as Record<string, unknown>),
       version: 3,
       revision,
       activeProjectId,
       projects,
       ...(projectGroups === undefined ? {} : { projectGroups }),
+      ...(sidebarPreferences === undefined ? {} : { sidebarPreferences }),
       homeDraft: normalizeDraft(candidate.homeDraft),
     };
   }
@@ -602,14 +756,52 @@ export function normalizeCreationSnapshot(
     activeProjectId,
     projects,
     ...(projectGroups === undefined ? {} : { projectGroups }),
+    ...(sidebarPreferences === undefined ? {} : { sidebarPreferences }),
     homeDraft: normalizeDraft(candidate.homeDraft),
   };
+}
+
+function validSidebarPreferences(
+  value: unknown,
+  projects: CreationProject[],
+  groups: CreationProjectGroup[],
+): value is SidebarPreferences {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+  const preferences = value as Partial<SidebarPreferences>;
+  if (
+    Object.keys(preferences).some(
+      (key) =>
+        !["sortMode", "pinnedProjectIds", "pinnedGroupIds"].includes(key),
+    ) ||
+    !["manual", "recent", "priority"].includes(preferences.sortMode ?? "")
+  )
+    return false;
+  return (
+    [
+      [preferences.pinnedProjectIds, projects],
+      [preferences.pinnedGroupIds, groups],
+    ] as const
+  ).every(([ids, records]) => {
+    const recordIds = new Set(records.map((record) => record.id));
+    return (
+      Array.isArray(ids) &&
+      new Set(ids).size === ids.length &&
+      ids.every(
+        (id) =>
+          typeof id === "string" &&
+          id.trim().length > 0 &&
+          id.length <= 160 &&
+          recordIds.has(id),
+      )
+    );
+  });
 }
 
 function normalizeDraft(value: unknown): CreationDraft {
   const candidate =
     value && typeof value === "object" ? (value as Partial<CreationDraft>) : {};
   return {
+    ...candidate,
     modelSelection: normalizeModelSelection(candidate.modelSelection),
     conversationChannel:
       candidate.conversationChannel === "codex" ||
@@ -978,13 +1170,10 @@ function normalizeChatMessages(raw: unknown): ChatItemMessage[] {
     .map((m) => ({
       ...m,
       id: safeText(m.id as string, 160),
-      role:
-        m.role === "assistant"
-          ? "assistant"
-          : m.role === "system"
-            ? "system"
-            : "user",
-      content: (m.content as string).slice(0, 20000),
+      role: ["assistant", "system", "tool", "error"].includes(String(m.role))
+        ? (m.role as ChatItemMessage["role"])
+        : "user",
+      content: m.content as string,
       createdAt:
         typeof m.createdAt === "number" && Number.isSafeInteger(m.createdAt)
           ? m.createdAt
@@ -1049,7 +1238,7 @@ export function normalizeChat(
       /^[A-Za-z0-9_-]{1,160}$/.test(c.agentThreadId)
         ? c.agentThreadId
         : undefined,
-    googleConversation: normalizeGoogleConversation(c.googleConversation),
+    googleConversation: c.googleConversation,
     originChatId:
       typeof c.originChatId === "string"
         ? safeText(c.originChatId, 160)
@@ -1090,6 +1279,27 @@ function resolveProjectChats(
 }
 
 function normalizeProject(
+  value: CreationProject | unknown,
+  version: 2 | 3 = 2,
+): CreationProject {
+  const normalized = normalizeProjectFields(value, version);
+  const raw = value as CreationProject;
+  if (version !== 3) return normalized;
+  const merge = <T>(defaults: T[], originals: T[] | undefined): T[] =>
+    defaults.map((entry, index) => ({ ...entry, ...originals?.[index] }));
+  return projectChatView({
+    ...normalized,
+    ...raw,
+    items: merge(normalized.items, raw.items),
+    tasks: merge(normalized.tasks, raw.tasks),
+    chats: structuredClone(raw.chats),
+    activeChatId: raw.activeChatId,
+    createdAt: raw.createdAt ?? 0,
+    updatedAt: raw.updatedAt ?? raw.createdAt ?? 0,
+  });
+}
+
+function normalizeProjectFields(
   value: CreationProject | unknown,
   version: 2 | 3 = 2,
 ): CreationProject {
@@ -1153,12 +1363,14 @@ function normalizeProject(
             ),
           )
           .map((message) => ({
+            ...message,
             id: safeText(message.id, 160),
-            role:
-              message.role === "system"
-                ? ("system" as const)
-                : ("user" as const),
-            content: message.content.slice(0, 10000),
+            role: ["assistant", "system", "tool", "error"].includes(
+              message.role,
+            )
+              ? message.role
+              : ("user" as const),
+            content: message.content,
             createdAt:
               typeof message.createdAt === "number"
                 ? message.createdAt
@@ -1543,7 +1755,20 @@ export function createProject(input: CreateProjectInput): CreationProject {
         name: "默认对话",
         createdAt: now,
         updatedAt: now,
-        draft: { ...emptyDraft() } as ChatItemDraft,
+        draft: {
+          ...emptyDraft(),
+          modelSelection: selection,
+          conversationChannel: codex ? "codex" : "direct",
+          providerConnectionId: codex ? undefined : input.providerConnectionId,
+          model: input.model,
+          kind: input.kind,
+          attachments: input.attachments.map((attachment) => ({
+            ...attachment,
+          })),
+          privacyMode: input.privacyMode ?? "byok_local",
+          outputCount: input.outputCount ?? 1,
+          updatedAt: now,
+        },
         messages: [
           {
             id: `${id}-message`,

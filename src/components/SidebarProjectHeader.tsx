@@ -113,11 +113,14 @@ export default function SidebarProjectHeader({
               key={value}
               type="button"
               role="menuitemradio"
+              disabled={!canEditProjects}
               aria-checked={sortMode === value}
               title={
-                value === "priority"
-                  ? "状态不明、失败和进行中的任务优先"
-                  : undefined
+                !canEditProjects
+                  ? "项目存储尚未就绪"
+                  : value === "priority"
+                    ? "状态不明、失败和进行中的任务优先"
+                    : undefined
               }
               onClick={() => {
                 onSortChange(value);

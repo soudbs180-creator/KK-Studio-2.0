@@ -6,7 +6,7 @@ import {
   type AgentDraftAppendResult,
 } from "./agentDraftActions";
 
-/** Keep live drafts above the channel panels, without adding persistence. */
+/** Share transient UI state; ordinary chat content uses the canonical draft. */
 export function useAgentDraftState() {
   const text = useState<Record<string, string>>({});
   const images = useState<Record<string, AgentDraftAttachment[]>>({});
@@ -15,17 +15,21 @@ export function useAgentDraftState() {
 }
 export type AgentDraftState = ReturnType<typeof useAgentDraftState>;
 
-/** Agent text stays separate from the API draft and is scoped to its project. */
+/** The optional persister keeps every channel in the same scoped canonical draft. */
 export default function useAgentComposerDraft(
   draftKey: string,
   active: boolean,
   draftState: AgentDraftState,
   initialPrompt = "",
+  persist?: (text: string) => void,
 ) {
   const [drafts, setDrafts] = draftState.text;
   const draftsRef = useRef(drafts);
   draftsRef.current = drafts;
+  const promptRef = useRef(initialPrompt);
+  promptRef.current = initialPrompt;
   const update = (text: string) => {
+    persist?.(text);
     draftsRef.current = { ...draftsRef.current, [draftKey]: text };
     setDrafts(draftsRef.current);
   };
@@ -34,7 +38,10 @@ export default function useAgentComposerDraft(
     limit: number,
   ): AgentDraftAppendResult => {
     const text = [
-      (draftsRef.current[draftKey] ?? initialPrompt).trimEnd(),
+      (persist
+        ? initialPrompt
+        : (draftsRef.current[draftKey] ?? initialPrompt)
+      ).trimEnd(),
       instructions,
     ]
       .filter(Boolean)
@@ -68,14 +75,21 @@ export default function useAgentComposerDraft(
     };
     window.addEventListener(AGENT_DRAFT_APPEND_EVENT, append);
     return () => window.removeEventListener(AGENT_DRAFT_APPEND_EVENT, append);
-  }, [active, draftKey]);
-  const clearSentDraft = (key: string, sent: string) => {
-    if ((draftsRef.current[key] ?? initialPrompt) !== sent) return;
+  }, [active, draftKey, initialPrompt, persist]);
+  const clearSentDraft = (key: string, sent: string, persistDraft = true) => {
+    if (
+      (persist
+        ? promptRef.current
+        : (draftsRef.current[key] ?? initialPrompt)) !== sent
+    )
+      return false;
+    if (persistDraft) persist?.("");
     draftsRef.current = { ...draftsRef.current, [key]: "" };
     setDrafts(draftsRef.current);
+    return true;
   };
   return {
-    input: drafts[draftKey] ?? initialPrompt,
+    input: persist ? initialPrompt : (drafts[draftKey] ?? initialPrompt),
     update,
     appendInstructions,
     clearSentDraft,

@@ -42,6 +42,28 @@ test("CodeBuddy config and probe require local token and distinguish saved from 
     "x-canvas-agent-token": "test-codebuddy-token",
   };
 
+  for (const endpoint of ["/canvas/state", "/canvas/result", "/agent/codex/turn"]) {
+    const rejected = await fetch(base + endpoint, { method: "POST", headers, body: "{}" });
+    assert.equal(rejected.status, 409, "protocol 6 callers without chat scope cannot mutate");
+  }
+  const missingScopeEvents = await fetch(base + "/events?clientId=legacy", { headers });
+  assert.equal(missingScopeEvents.status, 409);
+  const scope = { projectId: "project", chatId: "chat-a", epoch: "connection-a" };
+  const events = await fetch(base + "/events?clientId=scope-test&scope=" + encodeURIComponent(JSON.stringify(scope)), { headers });
+  const reader = events.body!.getReader();
+  try {
+    await reader.read();
+    const scopedHeaders = { ...headers, "x-canvas-agent-client": "scope-test", "x-canvas-agent-scope": JSON.stringify(scope) };
+    const state = await fetch(base + "/canvas/state", { method: "POST", headers: scopedHeaders, body: JSON.stringify({ projectId: "project", nodes: [], scope }) });
+    assert.equal(state.status, 200);
+    for (const endpoint of ["/canvas/activate", "/canvas/result", "/agent/codex/turn"]) {
+      const stale = await fetch(base + endpoint, { method: "POST", headers: { ...scopedHeaders, "x-canvas-agent-scope": JSON.stringify({ ...scope, chatId: "chat-b" }) }, body: "{}" });
+      assert.equal(stale.status, 409, "another chat cannot operate through the same SSE client");
+    }
+    const foreign = await fetch(base + "/agent/codex/threads/foreign-thread", { headers: scopedHeaders });
+    assert.equal(foreign.status, 409, "unowned history is rejected before a Codex request");
+  } finally { await reader.cancel(); }
+
   const unauthorized = await fetch(base + "/agent/codebuddy/config");
   assert.equal(unauthorized.status, 401);
   const initial = await fetch(base + "/agent/codebuddy/config", { headers });

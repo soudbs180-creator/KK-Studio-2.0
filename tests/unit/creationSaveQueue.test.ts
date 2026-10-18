@@ -1112,7 +1112,11 @@ test("an oversized loading attachment cannot acknowledge a write or erase the du
 });
 
 test("unsupported snapshots bypass task recovery and reconciliation and cannot be edited or saved", async () => {
-  const original = { ...emptySnapshot(), version: 3 as const, revision: 8 };
+  const original = {
+    ...emptySnapshot(),
+    version: 99,
+    revision: 8,
+  } as unknown as CreationSnapshot;
   let recoveries = 0;
   let reconciliations = 0;
   const fixture = await harness(false, undefined, {

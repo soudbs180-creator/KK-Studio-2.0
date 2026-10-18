@@ -55,9 +55,7 @@ fn decode(raw: Vec<u8>) -> Result<Stored, String> {
 }
 
 fn write_block_reason(snapshot: &Value) -> Option<&'static str> {
-    if snapshot["version"].as_u64()? != 2 {
-        return Some("多聊天格式迁移与写入保护尚未完成，当前快照仅供恢复查看。");
-    }
+    let version = snapshot["version"].as_u64()?;
     let invalid_thread = |value: &Value| {
         value.get("agentThreadId").is_some_and(|thread| {
             !thread.as_str().is_some_and(|id| {
@@ -69,6 +67,18 @@ fn write_block_reason(snapshot: &Value) -> Option<&'static str> {
         })
     };
     for project in snapshot["projects"].as_array()? {
+        if version == 3
+            && [
+                "messages",
+                "composerDraft",
+                "agentThreadId",
+                "googleConversation",
+            ]
+            .iter()
+            .any(|key| project.get(*key).is_some())
+        {
+            return Some("旧聊天活动字段尚未完成迁移，已暂停写入以保留原件。");
+        }
         if invalid_thread(project) {
             return Some("Agent 线程身份无效，已暂停执行以保留原件。");
         }
@@ -87,7 +97,7 @@ fn write_block_reason(snapshot: &Value) -> Option<&'static str> {
         {
             return Some("临时聊天隔离尚未完成，当前记录仅供恢复查看。");
         }
-        if chats.len() != 1 {
+        if chats.is_empty() || (version == 2 && chats.len() != 1) {
             return Some("多聊天执行隔离尚未完成，当前记录仅供恢复查看。");
         }
         let Some(active) = project["activeChatId"].as_str().filter(|id| !id.is_empty()) else {
@@ -96,14 +106,14 @@ fn write_block_reason(snapshot: &Value) -> Option<&'static str> {
         let Some(chat) = chats.get(active).filter(|chat| chat["id"] == active) else {
             return Some("聊天身份不完整，已暂停执行以保留原件。");
         };
-        if invalid_thread(chat) {
+        if chats.values().any(invalid_thread) {
             return Some("Agent 线程身份无效，已暂停执行以保留原件。");
         }
         if let (Some(thread), Some(legacy)) = (
             chat["agentThreadId"].as_str(),
             project["agentThreadId"].as_str(),
         ) {
-            if !thread.is_empty() && !legacy.is_empty() && thread != legacy {
+            if version == 2 && !thread.is_empty() && !legacy.is_empty() && thread != legacy {
                 return Some("聊天与原项目的 Agent 线程身份冲突，已暂停执行以保留原件。");
             }
         }
@@ -232,7 +242,16 @@ impl SnapshotRepository {
         }
         if let Some(raw) = read_bytes(&self.path.with_extension("json.bak"))? {
             match decode(raw.clone()) {
-                Ok(backup) => reason = reason.or_else(|| write_block_reason(&backup.value)),
+                Ok(backup) => {
+                    if current
+                        .stored
+                        .as_ref()
+                        .is_some_and(|stored| stored.value["version"] != backup.value["version"])
+                    {
+                        reason = Some("聊天主备格式不一致，已暂停写入以保留原件。");
+                    }
+                    reason = reason.or_else(|| write_block_reason(&backup.value));
+                }
                 Err(error) if error.starts_with("corrupt:") => {
                     reason = reason.or_else(|| {
                         serde_json::from_slice::<Value>(&raw)
@@ -258,8 +277,23 @@ impl SnapshotRepository {
 
     pub fn write(&self, snapshot: Value, expected_revision: Option<u64>) -> Result<(), String> {
         validation::validate(&snapshot)?;
+        if matches!(
+            self.access,
+            crate::native_repository_lock::RepositoryAccess::Owned(_)
+        ) && snapshot["version"] != 3
+        {
+            return Err("unsupported: Native 仓库只接受聊天 v3，旧格式须先完整迁移".into());
+        }
         let _transaction = self.access.begin(&self.lock, || self.file_lock())?;
         let current = self.current()?;
+        if current
+            .stored
+            .as_ref()
+            .is_some_and(|stored| stored.value["version"] == 3)
+            && snapshot["version"] != 3
+        {
+            return Err("unsupported: 不能把聊天 v3 仓库降级为旧格式".into());
+        }
         if let Some(reason) = self
             .current_write_block_reason(&current)?
             .or_else(|| write_block_reason(&snapshot))
@@ -284,6 +318,9 @@ impl SnapshotRepository {
         let raw = serde_json::to_vec_pretty(&snapshot).map_err(io_error)?;
         let temp = durable_temp(&self.path, &raw)?;
         let result = (|| {
+            if current.stored.is_none() && snapshot["version"] == 3 {
+                atomic_write(&self.path.with_extension("json.bak"), &raw)?;
+            }
             if let Some(raw) = &current.corrupt_main {
                 self.archive("corrupt", raw)?;
             }

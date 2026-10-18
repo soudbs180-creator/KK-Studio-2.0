@@ -4,6 +4,8 @@ import {
   createProject,
   createTask,
   emptySnapshot,
+  projectChatView,
+  serializeCreationSnapshot,
 } from "../../src/features/creation/model";
 import { BASE_CANVAS_ITEMS } from "../../src/domain/canvasItems";
 import { createProjectCanvas } from "../../src/domain/projectCanvas";
@@ -43,12 +45,15 @@ async function seedProjects(page: Page, runningTask = false) {
   ];
   await page.evaluate(({ key, value }) => localStorage.setItem(key, value), {
     key: CREATION_STORAGE_KEY,
-    value: JSON.stringify({
-      ...emptySnapshot(),
-      revision: Date.now(),
-      projects,
-      activeProjectId: first.id,
-    }),
+    value: JSON.stringify(
+      serializeCreationSnapshot({
+        ...emptySnapshot(),
+        version: 3,
+        revision: Date.now(),
+        projects: projects.map(projectChatView),
+        activeProjectId: first.id,
+      }),
+    ),
   });
   await page.reload();
   await expandSidebar(page);
@@ -337,7 +342,12 @@ test("移动到折叠的项目组后目标文件夹自动显示", async ({ page 
   ).toContainText("项目乙");
 });
 
-test("会话置顶实际改变项目和文件夹顺序，刷新恢复原顺序", async ({ page }) => {
+test("项目和文件夹置顶持久化，刷新后保留并能取消置顶", async ({ page }) => {
+  await page.route(/^https?:\/\//, (route) =>
+    new URL(route.request().url()).origin === "http://127.0.0.1:1423"
+      ? route.continue()
+      : route.abort(),
+  );
   await seedProjects(page);
   const sidebar = page.getByRole("complementary", { name: "工作台侧栏" });
   const rows = sidebar.locator(
@@ -362,10 +372,150 @@ test("会话置顶实际改变项目和文件夹顺序，刷新恢复原顺序",
   await expect(folders.first()).toContainText("新建文件夹 2");
   await page.reload();
   await expandSidebar(page);
-  await expect(rows.first()).toContainText("项目甲");
+  await expect(rows.first()).toContainText("项目乙");
   await expect(folders).toHaveCount(2);
+  await expect(folders.first()).toHaveText("新建文件夹 2");
+  await expect(folders.nth(1)).toHaveText("新建文件夹");
+  await sidebar
+    .locator(".project-entry")
+    .filter({ hasText: "项目乙" })
+    .getByRole("button", { name: "取消置顶项目" })
+    .click();
+  const pinnedFolder = sidebar.locator(".project-folder-group").first();
+  await pinnedFolder
+    .locator(".folder-heading-toggle")
+    .click({ button: "right" });
+  await pinnedFolder.getByRole("menuitem", { name: "取消置顶文件夹" }).click();
+  await page.reload();
+  await expandSidebar(page);
+  await expect(rows.first()).toContainText("项目甲");
   await expect(folders.first()).toHaveText("新建文件夹");
-  await expect(folders.nth(1)).toHaveText("新建文件夹 2");
+});
+
+test("三种项目排序持久化，窄屏键盘选择后重载保持", async ({ page }, info) => {
+  await page.route(/^https?:\/\//, (route) =>
+    new URL(route.request().url()).origin === "http://127.0.0.1:1423"
+      ? route.continue()
+      : route.abort(),
+  );
+  await page.setViewportSize({ width: 820, height: 720 });
+  await seedProjects(page, true);
+  const sidebar = page.getByRole("complementary", { name: "工作台侧栏" });
+  const trigger = sidebar.getByRole("button", {
+    name: "项目显示与排序",
+    exact: true,
+  });
+  for (const [mode, label] of [
+    ["priority", "任务状态优先"],
+    ["recent", "最近更新"],
+    ["manual", "项目原有顺序"],
+  ] as const) {
+    await trigger.click();
+    const choice = sidebar.getByRole("menuitemradio", {
+      name: label,
+      exact: true,
+    });
+    await choice.focus();
+    await choice.press("Space");
+    await expect
+      .poll(() =>
+        page.evaluate(
+          (key) =>
+            JSON.parse(localStorage.getItem(key) ?? "{}").sidebarPreferences
+              ?.sortMode,
+          CREATION_STORAGE_KEY,
+        ),
+      )
+      .toBe(mode);
+    const order = await sidebar
+      .locator(".project-group-content .project-link")
+      .allTextContents();
+    if (mode === "priority") expect(order[0]).toBe("项目乙");
+    await page.reload();
+    await expandSidebar(page);
+    await expect(
+      sidebar.locator(".project-group-content .project-link"),
+    ).toHaveText(order);
+    await trigger.click();
+    await expect(
+      sidebar.getByRole("menuitemradio", { name: label }),
+    ).toHaveAttribute("aria-checked", "true");
+    await page.screenshot({
+      path: info.outputPath(`sidebar-sort-${mode}-820.png`),
+    });
+    await page.keyboard.press("Escape");
+  }
+});
+
+test("偏好保存冲突保留原库，项目文件夹置顶及排序入口同步禁用", async ({
+  page,
+}) => {
+  const project = createProject({
+    prompt: "原草稿",
+    model: "image-test",
+    kind: "image",
+    attachments: [],
+  });
+  const snapshot = serializeCreationSnapshot({
+    ...emptySnapshot(),
+    version: 3,
+    revision: 4,
+    activeProjectId: null,
+    projects: [projectChatView({ ...project, name: "保全项目" })],
+    projectGroups: [{ id: "preserved-group", name: "保全文件夹" }],
+  });
+  await page.addInitScript((saved) => {
+    const state = { saved, writes: 0 };
+    Object.assign(window, {
+      sidebarPersistenceProbe: state,
+      __TAURI_INTERNALS__: {
+        invoke: async (command: string) => {
+          if (command === "read_creation_snapshot")
+            return { status: "loaded", snapshot: state.saved };
+          if (command === "credential_get") return null;
+          if (command === "write_creation_snapshot") {
+            state.writes++;
+            throw new Error("conflict: synthetic existing revision");
+          }
+          throw new Error(`Unexpected IPC: ${command}`);
+        },
+      },
+    });
+  }, snapshot);
+  await page.goto("/");
+  await expandSidebar(page);
+  const sidebar = page.getByRole("complementary", { name: "工作台侧栏" });
+  const pin = sidebar.getByRole("button", { name: "置顶项目", exact: true });
+  await expect(pin).toBeEnabled();
+  await pin.click();
+  await expect(page.getByRole("alert")).toContainText("读取保护");
+  await expect(
+    sidebar.getByRole("button", { name: "取消置顶项目", exact: true }),
+  ).toBeDisabled();
+  await sidebar
+    .getByRole("button", { name: "保全文件夹 设置", exact: true })
+    .click();
+  await expect(
+    sidebar.getByRole("menuitem", { name: "置顶文件夹", exact: true }),
+  ).toBeDisabled();
+  await page.keyboard.press("Escape");
+  await sidebar
+    .getByRole("button", { name: "项目显示与排序", exact: true })
+    .click();
+  for (const label of ["项目原有顺序", "最近更新", "任务状态优先"])
+    await expect(
+      sidebar.getByRole("menuitemradio", { name: label }),
+    ).toBeDisabled();
+  const durable = await page.evaluate(
+    () =>
+      (
+        window as unknown as {
+          sidebarPersistenceProbe: { saved: unknown; writes: number };
+        }
+      ).sidebarPersistenceProbe,
+  );
+  expect(durable.saved).toEqual(snapshot);
+  expect(durable.writes).toBe(1);
 });
 
 test("删除持久文件夹只解除归属，恢复空组后项目仍在未分组", async ({ page }) => {

@@ -28,27 +28,36 @@ export default function AgentComposer({
   draftState,
   active,
   composer,
+  onDraftChange,
 }: {
   agent?: AgentConversationProps;
   draftKey: string;
   draftState: AgentDraftState;
   active: boolean;
   composer: ReactElement<ComponentProps<typeof ConversationComposer>>;
+  onDraftChange?: (
+    patch: Partial<import("../features/creation/model").CreationDraft>,
+  ) => void;
 }) {
   const { input, update, appendInstructions, clearSentDraft } =
     useAgentComposerDraft(
       draftKey,
       Boolean(active && agent),
       draftState,
-      composer.props.composerDraft?.pendingAgent
-        ? composer.props.composerDraft.prompt
-        : "",
+      composer.props.composerDraft?.prompt ?? "",
+      onDraftChange ? (prompt) => onDraftChange({ prompt }) : undefined,
     );
   const [imageDrafts, setImageDrafts] = draftState.images;
-  const initialAttachments = composer.props.composerDraft?.pendingAgent
-    ? composer.props.composerDraft.attachments
-    : [];
-  const attachments = imageDrafts[draftKey] ?? initialAttachments;
+  const initialAttachments = composer.props.composerDraft?.attachments ?? [];
+  const attachments = onDraftChange
+    ? initialAttachments
+    : (imageDrafts[draftKey] ?? initialAttachments);
+  const attachmentsRef = useRef(attachments);
+  attachmentsRef.current = attachments;
+  const updateAttachments = (next: AgentDraftAttachment[]) => {
+    onDraftChange?.({ attachments: next });
+    setImageDrafts((current) => ({ ...current, [draftKey]: next }));
+  };
   const [readingCanvas, setReadingCanvas] = useState(false);
   const [importErrors, setImportErrors] = draftState.errors;
   const importError = importErrors[draftKey];
@@ -82,8 +91,7 @@ export default function AgentComposer({
     maxAttachments: MAX_AGENT_ATTACHMENTS,
     strictBatch: true,
     onImportState: setImportError,
-    onChange: (next) =>
-      setImageDrafts((current) => ({ ...current, [draftKey]: next })),
+    onChange: updateAttachments,
     onStatus: setFeedback,
   });
   async function addCanvasImage(id: string) {
@@ -121,10 +129,7 @@ export default function AgentComposer({
         size,
         dataUrl: asset.preview,
       };
-      setImageDrafts((previous) => ({
-        ...previous,
-        [draftKey]: [...(previous[draftKey] ?? initialAttachments), attachment],
-      }));
+      updateAttachments([...attachments, attachment]);
       setFeedback("");
       setImportError(null);
     } catch (error) {
@@ -164,7 +169,15 @@ export default function AgentComposer({
       );
       if (generation.current !== current) return;
       if (result.ok) {
-        clearSentDraft(key, sent);
+        const cleared = clearSentDraft(key, sent, !onDraftChange);
+        if (onDraftChange && cleared)
+          onDraftChange({
+            prompt: "",
+            attachments: attachmentsRef.current.filter(
+              (item) =>
+                !sentAttachments.some((sentItem) => sentItem.id === item.id),
+            ),
+          });
         setImageDrafts((previous) => ({
           ...previous,
           [key]: (previous[key] ?? initialAttachments).filter(
@@ -247,12 +260,7 @@ export default function AgentComposer({
         onSubmitMessage: submit,
         composerDraft: { ...emptyDraft(), attachments },
         onRemoveAttachment: (id) =>
-          setImageDrafts((previous) => ({
-            ...previous,
-            [draftKey]: (previous[draftKey] ?? initialAttachments).filter(
-              (item) => item.id !== id,
-            ),
-          })),
+          updateAttachments(attachments.filter((item) => item.id !== id)),
         fileInput,
         onAddFiles: addFiles,
         disabled: false,

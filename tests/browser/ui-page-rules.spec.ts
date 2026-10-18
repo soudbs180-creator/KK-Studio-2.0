@@ -4,6 +4,8 @@ import {
   CREATION_STORAGE_KEY,
   createTask,
   emptySnapshot,
+  projectChatView,
+  serializeCreationSnapshot,
 } from "../../src/features/creation/model";
 import { stageProject } from "../fixtures/stage-project";
 import { expandSidebar, openSettingsSection } from "./helpers";
@@ -100,12 +102,15 @@ for (const width of [390, 1920]) {
     await page.goto("/");
     await page.evaluate(({ key, value }) => localStorage.setItem(key, value), {
       key: CREATION_STORAGE_KEY,
-      value: JSON.stringify({
-        ...emptySnapshot(),
-        revision: Date.now(),
-        activeProjectId: project.id,
-        projects: [project],
-      }),
+      value: JSON.stringify(
+        serializeCreationSnapshot({
+          ...emptySnapshot(),
+          version: 3,
+          revision: Date.now(),
+          activeProjectId: project.id,
+          projects: [projectChatView(project)],
+        }),
+      ),
     });
     await page.reload();
     if (width >= 768) await expandSidebar(page);

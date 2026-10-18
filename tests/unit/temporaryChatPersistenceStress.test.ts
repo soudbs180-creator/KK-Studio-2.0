@@ -100,10 +100,6 @@ function createProjectV3Fixture(
     ],
     tasks: [],
     attachments: [],
-    composerDraft: {
-      ...emptyDraft(),
-      attachments: [],
-    },
   };
 }
 
@@ -694,7 +690,7 @@ test("STRESS-06: legacy sanitizer fixture recovery is independent of the guarded
       ],
     };
 
-    // This tests legacy helper output only; the actual persistence entry rejects v3 snapshots.
+    // This tests the legacy sanitizer only; production still rejects temporary records.
     const sanitized = sanitizeSnapshotForPersistence(snapshot);
     const serializedJournal = JSON.stringify({
       baseRevision: 7,

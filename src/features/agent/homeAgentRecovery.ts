@@ -1,7 +1,14 @@
-import type { CreationDraft, CreationProject } from "../creation/model";
+import {
+  activeChat,
+  projectChatView,
+  updateActiveChat,
+  type CreationDraft,
+  type CreationProject,
+} from "../creation/model.ts";
 import type { ModelSelection } from "../../domain/modelSelection";
 import type { AgentConnection } from "./agentConnection";
 import type { AgentDraftAttachment } from "./agentAttachments";
+import { sameJson } from "../creation/chatMigration.ts";
 
 /** Apply the same proxy identity before either automatic or HOME connection. */
 export function configureAgentProxy(
@@ -56,20 +63,42 @@ export function sendProjectAgentMessage(
   });
 }
 
-/** Only the pending durable draft owned by this send may be retired. */
+/** Retire the accepted HOME source while preserving any next request already edited. */
 export function clearSentPendingDraft(
   project: CreationProject,
   sent: CreationDraft | undefined,
+  originChatId = project.activeChatId,
 ): CreationProject {
-  if (!project.composerDraft.pendingAgent || project.composerDraft !== sent)
-    return project;
-  return {
-    ...project,
-    composerDraft: {
-      ...project.composerDraft,
-      prompt: "",
-      attachments: [],
-      pendingAgent: undefined,
-    },
+  if (sent?.pendingAgent !== true) return project;
+  const canonical =
+    project.chats !== undefined || project.activeChatId !== undefined;
+  if (canonical) {
+    if (
+      !originChatId ||
+      !project.chats ||
+      Array.isArray(project.chats) ||
+      !activeChat(project) ||
+      !Object.hasOwn(project.chats, originChatId) ||
+      project.chats[originChatId]?.id !== originChatId
+    )
+      return project;
+  } else if (originChatId !== undefined) return project;
+  const scoped = canonical
+    ? projectChatView({ ...project, activeChatId: originChatId })
+    : project;
+  if (scoped.composerDraft.pendingAgent !== true) return project;
+  const draft = {
+    ...scoped.composerDraft,
+    ...(sameJson(scoped.composerDraft, sent)
+      ? { prompt: "", attachments: [] }
+      : {}),
+    pendingAgent: undefined,
   };
+  if (!canonical) return { ...project, composerDraft: draft };
+  const updated = updateActiveChat(scoped, (chat) => ({
+    ...chat,
+    draft: { ...chat.draft, ...draft, text: draft.prompt },
+    updatedAt: Date.now(),
+  }));
+  return projectChatView({ ...updated, activeChatId: project.activeChatId });
 }

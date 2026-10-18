@@ -1,8 +1,10 @@
 import assert from "node:assert/strict";
+import { execFileSync, spawnSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
+import { fileURLToPath } from "node:url";
 import {
   assessGeneratedCandidate,
   assessWorktreeRemoval,
@@ -230,4 +232,137 @@ test("worktree storage accounting includes temporary agent output", () => {
   );
   assert.equal(measureGeneratedBytes(root), 5);
   fs.rmSync(root, { recursive: true, force: true });
+});
+
+test("worktree creation requires a branch before considering detached registrations", () => {
+  for (const requestedBranch of [undefined, "", "  ", "refs/heads/"]) {
+    const result = checkWorktreeCreation({
+      activeWorktrees: [
+        { path: "D:/kk-studio/.worktrees/detached", branch: null },
+      ],
+      generatedBytes: 0,
+      requestedBranch,
+    });
+    assert.equal(result.allowed, false);
+    assert.equal(result.reason, "BRANCH_REQUIRED");
+  }
+});
+
+test("worktree creation refuses a registered branch whose checkout is missing", () => {
+  const result = checkWorktreeCreation({
+    activeWorktrees: [
+      {
+        path: "D:/kk-studio/.worktrees/missing",
+        branch: "refs/heads/codex/TASK-MISSING",
+        exists: false,
+      },
+    ],
+    generatedBytes: 0,
+    requestedBranch: "codex/TASK-MISSING",
+  });
+  assert.equal(result.allowed, false);
+  assert.equal(result.reason, "EXISTING_WORKTREE_MISSING");
+});
+
+test("worktree creation validates an explicit path before reusing a branch", () => {
+  const result = checkWorktreeCreation({
+    policy: loadWorktreePolicy({ allowedRoot: "D:/kk-studio/.worktrees" }),
+    activeWorktrees: [
+      {
+        path: "D:/kk-studio/.worktrees/existing",
+        branch: "codex/TASK-EXISTING",
+        exists: true,
+      },
+    ],
+    generatedBytes: 0,
+    requestedBranch: "codex/TASK-EXISTING",
+    requestedPath: "D:/kk-studio/outside",
+  });
+  assert.equal(result.allowed, false);
+  assert.equal(result.reason, "WORKTREE_PATH_OUTSIDE_ALLOWED_ROOT");
+});
+
+const policyRepositoryRoot = fileURLToPath(new URL("../../", import.meta.url));
+
+function policyCliFixture() {
+  const parent = path.join(
+    policyRepositoryRoot,
+    ".tmp/task-remaining-20261018",
+  );
+  fs.mkdirSync(parent, { recursive: true });
+  return fs.mkdtempSync(path.join(parent, "worktree-policy-fixture-"));
+}
+
+function runPolicyCli(
+  args: string[],
+  cwd = policyRepositoryRoot,
+  env: NodeJS.ProcessEnv = {},
+) {
+  const result = spawnSync(
+    process.execPath,
+    [
+      path.join(policyRepositoryRoot, "scripts/governance/worktree-policy.mjs"),
+      "--check-create",
+      ...args,
+    ],
+    { cwd, encoding: "utf8", env: { ...process.env, ...env } },
+  );
+  assert.ifError(result.error);
+  assert.equal(result.signal, null);
+  return result;
+}
+
+test("worktree policy CLI fails closed outside a Git checkout", () => {
+  const root = policyCliFixture();
+  const result = runPolicyCli(["--branch=codex/TASK-CLI-NO-REPO"], root, {
+    GIT_CEILING_DIRECTORIES: path.dirname(root),
+  });
+  assert.equal(result.status, 1, result.stdout + result.stderr);
+  assert.doesNotMatch(result.stdout, /"allowed": true/);
+  assert.match(result.stderr, /WORKTREE_INVENTORY_UNAVAILABLE/);
+});
+
+test("worktree policy CLI rejects a target outside its configured root", () => {
+  const root = policyCliFixture();
+  const result = runPolicyCli(
+    ["--branch=codex/TASK-CLI-PATH", `--path=${path.join(root, "outside")}`],
+    policyRepositoryRoot,
+    { KK_WORKTREE_ROOT: path.join(root, "allowed") },
+  );
+  assert.equal(result.status, 1, result.stdout + result.stderr);
+  assert.equal(
+    JSON.parse(result.stdout).reason,
+    "WORKTREE_PATH_OUTSIDE_ALLOWED_ROOT",
+  );
+});
+
+test("worktree policy CLI permits a new target within its configured root", () => {
+  const root = policyCliFixture();
+  const result = runPolicyCli(
+    [
+      "--branch=codex/TASK-CLI-PATH",
+      `--path=${path.join(root, "allowed", "new-checkout")}`,
+    ],
+    policyRepositoryRoot,
+    { KK_WORKTREE_ROOT: path.join(root, "allowed") },
+  );
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+  assert.equal(JSON.parse(result.stdout).action, "CREATE_WORKTREE");
+});
+
+test("worktree policy CLI reuses a registered checkout with an exhausted budget", () => {
+  const root = policyCliFixture();
+  const branch = execFileSync("git", ["branch", "--show-current"], {
+    cwd: policyRepositoryRoot,
+    encoding: "utf8",
+  }).trim();
+  assert.notEqual(branch, "");
+  const result = runPolicyCli([`--branch=${branch}`], policyRepositoryRoot, {
+    KK_WORKTREE_ROOT: path.join(root, "allowed"),
+    KK_MAX_GENERATED_BYTES: "0",
+  });
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+  const decision = JSON.parse(result.stdout);
+  assert.equal(decision.action, "REUSE_EXISTING_BRANCH");
+  assert.equal(path.resolve(decision.path), path.resolve(policyRepositoryRoot));
 });

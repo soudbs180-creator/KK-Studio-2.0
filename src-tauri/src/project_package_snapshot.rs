@@ -547,6 +547,10 @@ fn draft(value: &Value) -> Result<(), String> {
         ],
         &[],
     )?;
+    draft_fields(value)
+}
+
+fn draft_fields(value: &Value) -> Result<(), String> {
     texts(value, &[("prompt", usize::MAX), ("model", usize::MAX)])?;
     text(value, "providerConnectionId", 0, 120)?;
     if let Some(selection) = value.get("modelSelection") {
@@ -605,6 +609,10 @@ fn item(value: &Value) -> Result<(), String> {
         ],
         &["id", "title", "description", "kind"],
     )?;
+    item_fields(value)
+}
+
+fn item_fields(value: &Value) -> Result<(), String> {
     text(value, "id", 1, 160)?;
     text(value, "parentAssetId", 1, 160)?;
     crate::creation_storage::labels(value, "tags")?;
@@ -757,6 +765,10 @@ fn task(value: &Value) -> Result<(), String> {
         ],
         &["id", "prompt", "model", "status"],
     )?;
+    task_fields(value)
+}
+
+fn task_fields(value: &Value) -> Result<(), String> {
     text(value, "id", 1, 160)?;
     text(value, "sourceItemId", 1, 160)?;
     text(value, "imageSize", 0, 30)?;
@@ -1008,6 +1020,10 @@ fn canvas(value: &Value) -> Result<(), String> {
 
 pub(super) fn validate(snapshot: &Value) -> Result<(), String> {
     crate::creation_storage::validate_snapshot_value(snapshot)?;
+    if snapshot["version"] == 3 {
+        // v3 retains opaque chat recovery metadata; known media fields are validated below at collection.
+        return validate_v3(snapshot);
+    }
     shape(
         snapshot,
         "snapshot",
@@ -1018,6 +1034,7 @@ pub(super) fn validate(snapshot: &Value) -> Result<(), String> {
             "projects",
             "homeDraft",
             "projectGroups",
+            "sidebarPreferences",
         ],
         &[
             "version",
@@ -1137,6 +1154,41 @@ pub(super) fn validate(snapshot: &Value) -> Result<(), String> {
         }
         if let Some(value) = project.get("canvas") {
             canvas(value)?;
+        }
+    }
+    Ok(())
+}
+
+fn validate_v3(snapshot: &Value) -> Result<(), String> {
+    draft_fields(&snapshot["homeDraft"])?;
+    for project in array(snapshot, "projects")? {
+        texts(project, &[("name", 120), ("prompt", 4000), ("model", 120)])?;
+        routing(project)?;
+        attachments(project)?;
+        for task in array(project, "tasks")? {
+            task_fields(task)?;
+        }
+        for item in array(project, "items")? {
+            item_fields(item)?;
+        }
+        stage_plans(project)?;
+        review_comments(project)?;
+        if let Some(value) = project.get("canvas") {
+            canvas(value)?;
+        }
+        for chat in project["chats"]
+            .as_object()
+            .ok_or_else(|| invalid("chats"))?
+            .values()
+        {
+            text(chat, "name", 0, 120)?;
+            if let Some(draft) = chat.get("draft") {
+                draft_fields(draft)?;
+            }
+            for message in array(chat, "messages")? {
+                text(message, "content", 0, usize::MAX)?;
+                attachments(message)?;
+            }
         }
     }
     Ok(())

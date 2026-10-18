@@ -85,6 +85,7 @@ src/features/local-service/manifest.ts
 src/features/local-service/server.ts
 src/features/local-service/session.ts
 src/features/local-service/store.ts
+src/features/local-service/standaloneRoot.ts
 ```
 
 `src/features/generation-server/**` 同样受此约束。违规信息形如 `browser/shared source cannot import server-only ...`。

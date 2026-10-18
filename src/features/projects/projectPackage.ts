@@ -11,6 +11,7 @@ import {
   assetProvenanceSchema,
   loadStoredAsset,
 } from "../creation/assetRepository.ts";
+import { serializeCreationSnapshot } from "../creation/model.ts";
 import { decodeSnapshot } from "../creation/snapshotCodec.ts";
 
 const ASSET_ID = /^asset-[a-f0-9]{24}$/;
@@ -238,7 +239,13 @@ function validatePortableMedia(snapshot: CreationSnapshot): void {
   attachments(snapshot.homeDraft.attachments);
   for (const project of snapshot.projects) {
     attachments(project.attachments);
-    attachments(project.composerDraft.attachments);
+    if (project.composerDraft) attachments(project.composerDraft.attachments);
+    for (const chat of Object.values(project.chats ?? {})) {
+      attachments(chat.draft.attachments ?? []);
+      for (const message of chat.messages)
+        if (Array.isArray(message.attachments))
+          attachments(message.attachments);
+    }
     project.tasks.forEach((task) => attachments(task.attachments));
     project.items.forEach((item) => {
       media(item.preview);
@@ -273,9 +280,26 @@ function collectProject(ids: Set<string>, project: CreationProject): void {
   project.attachments.forEach((attachment) =>
     collectAttachment(ids, attachment),
   );
-  project.composerDraft.attachments.forEach((attachment) =>
+  project.composerDraft?.attachments.forEach((attachment) =>
     collectAttachment(ids, attachment),
   );
+  for (const chat of Object.values(project.chats ?? {})) {
+    (chat.draft.attachments ?? []).forEach((attachment) =>
+      collectAttachment(ids, attachment),
+    );
+    for (const message of chat.messages) {
+      if (Array.isArray(message.attachments))
+        message.attachments.forEach((attachment) =>
+          collectAttachment(ids, attachment),
+        );
+      for (const assetId of Array.isArray(message.assetIds)
+        ? message.assetIds
+        : []) {
+        checkAssetId(assetId);
+        ids.add(assetId);
+      }
+    }
+  }
   project.tasks.forEach((task) => {
     for (const id of [
       task.imageEdit?.sourceAssetId,
@@ -387,8 +411,11 @@ export async function createProjectPackageManifest(
   manifest: ProjectPackageManifestV1;
   entries: ProjectPackageAssetEntry[];
 }> {
-  const encoded = await encodeSnapshotAssets(snapshot, readAsset);
-  const portableSnapshot = decodeSnapshot(encoded);
+  const encoded = await encodeSnapshotAssets(
+    serializeCreationSnapshot(snapshot),
+    readAsset,
+  );
+  const portableSnapshot = serializeCreationSnapshot(decodeSnapshot(encoded));
   rejectSnapshotLoss(encoded, portableSnapshot);
   validatePortableMedia(portableSnapshot);
   const referenced = collectReferencedAssetIds(portableSnapshot);
@@ -475,6 +502,15 @@ export async function preflightProjectPackage(
   if (!parsed.success)
     throw new ProjectPackageError("corrupt", "项目包清单无效。");
   const manifest = parsed.data as ProjectPackageManifestV1;
+  const expected = await manifestChecksum({
+    kind: manifest.kind,
+    version: manifest.version,
+    exportedAt: manifest.exportedAt,
+    snapshot: manifest.snapshot,
+    assets: manifest.assets,
+  });
+  if (expected !== manifest.checksum)
+    throw new ProjectPackageError("checksum-mismatch", "项目包清单校验失败。");
   let snapshot: CreationSnapshot;
   try {
     snapshot = decodeSnapshot(manifest.snapshot);
@@ -512,15 +548,6 @@ export async function preflightProjectPackage(
         "unreferenced-asset",
         `包中存在未引用素材 ${id}。`,
       );
-  const expected = await manifestChecksum({
-    kind: manifest.kind,
-    version: manifest.version,
-    exportedAt: manifest.exportedAt,
-    snapshot: manifest.snapshot,
-    assets: manifest.assets,
-  });
-  if (expected !== manifest.checksum)
-    throw new ProjectPackageError("checksum-mismatch", "项目包清单校验失败。");
   const entries = new Map<string, Uint8Array>();
   for (const entry of input.entries) {
     const sha = validateEntryPath(entry.path);

@@ -178,7 +178,14 @@ export default function SidebarProjectEntry({
           className="project-pin"
           aria-label={pinned ? "取消置顶项目" : "置顶项目"}
           aria-pressed={pinned}
-          title={pinned ? "取消会话置顶" : "会话内置顶，刷新恢复原顺序"}
+          title={
+            canEditProject
+              ? pinned
+                ? "取消置顶项目"
+                : "置顶项目"
+              : "项目存储尚未就绪"
+          }
+          disabled={!canEditProject}
           onClick={onTogglePin}
         >
           <img

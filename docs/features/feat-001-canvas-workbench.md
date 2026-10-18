@@ -2,7 +2,7 @@
 
 - 状态：REAL
 - 领域：canvas
-- 最近更新：2026-10-14
+- 最近更新：2026-10-18
 - 关联任务：T2、UI-004、TASK-UI-006、TASK-CANVAS-KAWORKAI-001、TASK-UI-011、TASK-222-ACTIONS-20261014、TASK-223-ACTIONS-20261014
 
 ## 用户可见入口
@@ -17,6 +17,10 @@
 - 领域模型：`src/domain/canvasGraph.ts`、`src/domain/canvasItems.ts`、`src/domain/projectCanvas.ts`
 - 持久化：画布随 `src/features/creation/snapshotCodec.ts` 编入项目快照
 - 桌面 Rust：无直接画布命令（节点结果素材经 FEAT-014/015 的原生存储）
+
+## 2026-10-18 当前有界本地验证
+
+Desktop/Web2.1.39/source50412d4e：项目/文件夹置顶和manual/recent/priority排序复用同CreationSnapshot/CAS，未就绪或冲突真实禁用。精确完整浏览器854首试PASS/0flaky，包含侧栏及四比例几何回归；fresh当前EXE四次正常启闭验证pin/unpin/priority、真实项目/组操作和新root项目包往返，宽图6状态SVG/DOM/实际拖线/按钮命中通过。原库两周期9项目/11聊天/22消息及身份/草稿/选择保持。验证同时发现并修复429保存前健康标记竞态；原852/1flaky与所有失败保留。[本轮验证](../changes/2026-10-18-sidebar-canvas/verification.md)区分源码、产物、原资料和最终文档收据；本任务只作本地技术关闭，不提升功能成熟度/runtimeEvidence，真实Provider/Hosted/发布和用户整体接受另验。
 
 ## 测试与证据
 

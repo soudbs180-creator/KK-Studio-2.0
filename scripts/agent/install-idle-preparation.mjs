@@ -35,11 +35,12 @@ const route =
             hasClient: (clientId) => session.hasClient(clientId),
             conversation: () => session.conversationStateSnapshot,
             begin: (clientId) => {
-                session.beginConversation({ sourceClientId: clientId });
+                session.beginConversation({ sourceClientId: clientId, scope: requestScope(req) });
                 setActiveThread("", { emptyThread: true, draftThread: true, sourceClientId: clientId }, true);
             },
             prepare: (clientId, mode) => prepareDraftThread(clientId, mode),
         });
+        if (result.status === 200 && session.conversationStateSnapshot.threadId) session.recordThreadScope(requestScope(req), session.conversationStateSnapshot.threadId);
         res.status(result.status).json(result.body);
     }));
 `.replaceAll("\n", eol);
