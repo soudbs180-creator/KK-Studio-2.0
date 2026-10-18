@@ -1,4 +1,3 @@
-import { isLocalProviderUrl } from "./domain/providerUrl";
 import React, {
   lazy,
   useEffect,
@@ -23,10 +22,6 @@ import ConversationPanel from "./components/ConversationPanel";
 import DeferredPanelBoundary from "./components/DeferredPanelBoundary";
 import Modal from "./components/Modal";
 import TaskExecutionApproval from "./components/TaskExecutionApproval";
-import {
-  requiredApprovalGates,
-  type ApprovalGate,
-} from "./domain/agentWorkflow";
 import StartPage from "./components/StartPage";
 import { ensureTemplates } from "./features/skills/templateSkills";
 import {
@@ -41,9 +36,9 @@ import {
   snapshotWriteBlockReason,
   type CreationDraft,
   type CreationProject,
-  type CreationTask,
-  type CreationTaskOutput,
+  type CreationSnapshot,
   type CreateProjectInput,
+  type ChatItem,
 } from "./features/creation/model";
 import {
   agentConnection,
@@ -69,70 +64,13 @@ import {
 } from "./features/agent/homeAgentRecovery";
 import { prepareAgentAttachments } from "./features/agent/agentAttachments.ts";
 import { codexGenerationPrompt } from "./features/agent/codexGeneration.ts";
-import { assertCanvasDeliveries } from "./features/agent/agentCanvas.ts";
 import {
   createStageOrchestrator,
   type StageOrchestrator,
 } from "./features/agent/orchestrator.ts";
 import type { AgentCanvasBinding } from "./components/canvas/useAgentCanvasView";
-
-function outputsForTask(task: CreationTask): CreationTaskOutput[] {
-  const completed = new Set(
-    task.completedOutputIndices?.length
-      ? task.completedOutputIndices
-      : Array.from(
-          {
-            length: Math.min(task.completedOutputs, task.requestedOutputs),
-          },
-          (_, index) => index,
-        ),
-  );
-  return task.outputs?.length
-    ? task.outputs
-    : Array.from({ length: task.requestedOutputs }, (_, index) => ({
-        index,
-        status: completed.has(index)
-          ? ("succeeded" as const)
-          : ("waiting" as const),
-        model: task.model,
-        provider: task.providerName,
-        createdAt: task.createdAt,
-      }));
-}
-import {
-  generateImages,
-  GenerationProviderError,
-} from "./features/creation/imageGeneration";
-import {
-  storeGeneratedAsset,
-  hashPrompt,
-} from "./features/creation/assetRepository";
-import { readNativeAsset } from "./features/creation/nativeAssetAdapter";
-import {
-  appendImageTask,
-  appendImageTaskResults,
-  assertLiveTextTask,
-  canvasImageAttachments,
-  prepareImageTask,
-  ImageTaskCommandError,
-} from "./features/creation/imageTaskCommand";
-import {
-  CanvasImageCommandContext,
-  type CanvasImageRequest,
-} from "./features/creation/CanvasImageCommand";
-import {
-  prepareEditInputs,
-  composeEditResult,
-  composeNativeEditAsset,
-} from "./features/image-edit/editTasks.ts";
-import { compileEditPrompt } from "./features/image-edit/prompt.ts";
-import { imageResultContext } from "./features/image-edit/context.ts";
-import { ImageEditMappingError } from "./features/image-edit/imageProcessing.ts";
-import { imageRegeneration } from "./features/image-edit/regeneration.ts";
+import { CanvasImageCommandContext } from "./features/creation/CanvasImageCommand";
 import ImageLightbox from "./features/image-edit/ImageLightbox.tsx";
-import { imageCapabilitiesForSelection } from "./features/models/imageModelCapabilities.ts";
-import { generateText } from "./features/creation/textGeneration";
-import { textTaskResult } from "./features/creation/textTaskResult";
 import { useNativeTaskRecovery } from "./features/creation/useNativeTextRecovery";
 import { useCreationStorage } from "./features/creation/useCreationStorage";
 import { useAssetArchive } from "./features/creation/useAssetArchive";
@@ -144,67 +82,18 @@ import {
 } from "./domain/modelProvider";
 import {
   loadProviderConnectionsDurable,
-  markProviderConnectionFailure,
-  markProviderConnectionHealthy,
   persistProviderConnectionsDurable,
   readProviderConnections,
 } from "./features/creation/providerRegistry";
-import {
-  reserveProviderSubmissionAsync,
-  assertSubmissionConnection,
-  type ProviderSubmissionReservation,
-  ProviderSubmissionError,
-  taskProviderOptions,
-  taskSubmissionBinding,
-} from "./features/creation/providerSubmission";
-import { mapWithConcurrency } from "./features/creation/generationQueue";
-import { compileDesignPrompt } from "./features/creation/promptCompiler";
-import {
-  getDisabledReason,
-  getGenerationUiState,
-  getGenerationProgressLabels,
-} from "./domain/uiGovernance";
-
-/** Capacity failure hint: name connections the user can switch to right away. */
-function capacitySwitchHint(currentId: string | undefined): string {
-  const available = readProviderConnections().filter(
-    (connection) =>
-      connection.id !== currentId &&
-      connection.state !== "disabled" &&
-      connection.state !== "quarantined" &&
-      connection.state !== "cooldown",
-  );
-  if (available.length === 0)
-    return "当前没有其他可用连接，请稍后在设置中核对连接或模型。";
-  return `当前可用连接：${available
-    .slice(0, 3)
-    .map((item) => item.displayName || item.provider)
-    .join("、")}${
-    available.length > 3 ? " 等" : ""
-  }；可在设置中切换连接或模型后重试。`;
-}
-
-import {
-  abortedAfterProviderSubmission,
-  canRetryTask,
-  mergeRetryTaskState,
-  markArchiveFailuresUnknown,
-  preserveAcceptedOutputsOnDeliveryFailure,
-  recoverInterruptedTasks,
-  retryBlockedOutputIndices,
-  retryableOutputIndices,
-  submissionMayHaveBeenAccepted,
-} from "./features/creation/taskRecovery";
+import { getGenerationProgressLabels } from "./domain/uiGovernance";
+import { recoverInterruptedTasks } from "./features/creation/taskRecovery";
 import { taskRetryAvailability } from "./features/creation/taskRetryAvailability";
+import { reconcileNativeTasks } from "./features/creation/nativeTaskHost";
 import {
-  cancelNativeTask,
-  getNativeTask,
-  reconcileNativeTasks,
-  submitNativeTask,
-  validateNativeTaskRecord,
-  usesNativeTaskHost,
-  type NativeTaskHostRecord,
-} from "./features/creation/nativeTaskHost";
+  useTaskExecution,
+  rootItemId,
+} from "./features/creation/useTaskExecution.ts";
+import { useImageCommandSubmission } from "./features/creation/useImageCommandSubmission.ts";
 
 import { initialAssets, initialSubjects, type Asset } from "./domain/assets";
 import {
@@ -245,6 +134,266 @@ const ShortcutsPanel = lazy(() => import("./components/ShortcutsPanel"));
 const InfoPanel = lazy(() => import("./components/InfoPanel"));
 const TaskWorkbench = lazy(() => import("./components/TaskWorkbench"));
 
+function validateHomeCodexPreconditions(
+  input: CreateProjectInput,
+  submitLocked: boolean,
+  saveState: string,
+): string | undefined {
+  if (submitLocked) return "正在开始创作，请稍候。";
+  if (!["saved", "saving"].includes(saveState))
+    return "请先处理项目读取或保存提示，当前未提交生成。";
+  if (!input.prompt.trim() || input.prompt.length > 4000)
+    return "请输入 1 至 4,000 字的创作提示词。";
+  if (input.privacyMode && input.privacyMode !== "byok_local")
+    return "当前隐私模式不允许 Codex 账号调用，草稿与参考图已保留。";
+  if (!navigator.onLine) return "当前离线，草稿与参考图已保留。";
+  const state = agentConnection.getState();
+  if (state.sending || state.preparing || state.pendingApproval)
+    return "请先完成或停止当前 Agent 任务，再开始新项目。";
+  return undefined;
+}
+
+function getModalTitle(modal: string): string {
+  switch (modal) {
+    case "search":
+      return "搜索";
+    case "prompts":
+      return "提示词库";
+    case "settings":
+      return "设置";
+    case "assets":
+      return "资产管理";
+    case "shortcuts":
+      return "快捷按键";
+    case "tasks":
+      return "任务列表";
+    default:
+      return "使用说明";
+  }
+}
+
+function resolveConversationDisabledReason(
+  creation: Parameters<typeof snapshotWriteBlockReason>[0],
+  saveState: string,
+): string | undefined {
+  return (
+    snapshotWriteBlockReason(creation) ??
+    (saveState === "saved" || saveState === "saving"
+      ? undefined
+      : "请先处理项目读取或保存提示，当前暂不可编辑或执行。")
+  );
+}
+
+function resolveConversationDraft(
+  saveState: string,
+  activeProject: CreationProject | undefined,
+  selectedChat: ChatItem | undefined,
+): CreationDraft | undefined {
+  if (saveState === "read_only" && activeProject && selectedChat) {
+    return {
+      ...activeProject.composerDraft,
+      prompt: selectedChat.draft.text ?? selectedChat.draft.prompt ?? "",
+      attachments: selectedChat.draft.attachments ?? [],
+      model: selectedChat.draft.model ?? "",
+      modelSelection: selectedChat.draft.modelSelection,
+      conversationChannel:
+        selectedChat.draft.conversationChannel ?? "direct",
+    };
+  }
+  return activeProject?.composerDraft;
+}
+
+function useAppSkills() {
+  const [skillRegistry] = useState(() => {
+    const registry = createSkillRegistry();
+    if (!registry.persistenceWarning) ensureTemplates(registry, false);
+    return registry;
+  });
+  const [, refreshSkills] = useState(0);
+  useEffect(() => {
+    try {
+      if (!skillRegistry.persistenceWarning) ensureTemplates(skillRegistry);
+      skillRegistry.persistPending();
+    } catch (error) {
+      console.warn("[App] Failed to persist pending skills:", error);
+    }
+  }, [skillRegistry]);
+  useEffect(() => {
+    const syncSkills = () => refreshSkills((value) => value + 1);
+    window.addEventListener(SKILLS_CHANGED_EVENT, syncSkills);
+    return () => window.removeEventListener(SKILLS_CHANGED_EVENT, syncSkills);
+  }, []);
+  return skillRegistry;
+}
+
+function useHomeModelConfig() {
+  const [providerVersion, setProviderVersion] = useState(0);
+  useEffect(() => {
+    let active = true;
+    void (async () => {
+      try {
+        const native = await loadProviderConnectionsDurable();
+        if (!active) return;
+        if (native) {
+          setProviderVersion((value) => value + 1);
+        } else {
+          const local = readProviderConnections();
+          if (local.length > 0) {
+            await persistProviderConnectionsDurable(local);
+          }
+        }
+      } catch (error) {
+        console.warn(
+          "[App] Failed to synchronize durable provider connections:",
+          error,
+        );
+      }
+    })();
+    return () => {
+      active = false;
+    };
+  }, []);
+  useEffect(() => {
+    const syncProvider = () => setProviderVersion((value) => value + 1);
+    window.addEventListener("kk:model-provider-changed", syncProvider);
+    return () =>
+      window.removeEventListener("kk:model-provider-changed", syncProvider);
+  }, []);
+  return useMemo(() => {
+    void providerVersion;
+    try {
+      const profile = parseModelProvider(
+        localStorage.getItem(MODEL_PROVIDER_STORAGE_KEY),
+      ).profile;
+      const connection = readProviderConnections().find(
+        (item) =>
+          Boolean(item.model?.trim()) &&
+          item.state !== "disabled" &&
+          item.capabilities.modalities.includes("image"),
+      );
+      const model = profile.model.trim() || connection?.model?.trim() || "";
+      return { model, configured: Boolean(model) };
+    } catch (error) {
+      console.warn("[App] Failed to resolve home model config:", error);
+      return { model: "", configured: false };
+    }
+  }, [providerVersion]);
+}
+
+function useAppAgentState() {
+  const agentPermission = useSyncExternalStore(
+    subscribeAgentPreferences,
+    readPermissionMode,
+  );
+  const agentState = useSyncExternalStore(
+    agentConnection.subscribe,
+    agentConnection.getState,
+  );
+  const desktopAgentState = useSyncExternalStore(
+    desktopAgentLifecycle.subscribe,
+    desktopAgentLifecycle.getState,
+  );
+  return { agentPermission, agentState, desktopAgentState };
+}
+
+function useActiveProjectConversation(
+  creation: Parameters<typeof snapshotWriteBlockReason>[0],
+  saveState: string,
+  activeProject: CreationProject | undefined,
+) {
+  const conversationDisabledReason = resolveConversationDisabledReason(
+    creation,
+    saveState,
+  );
+  const selectedChat = activeProject?.activeChatId
+    ? activeProject.chats?.[activeProject.activeChatId]
+    : undefined;
+  const conversationDraft = resolveConversationDraft(
+    saveState,
+    activeProject,
+    selectedChat,
+  );
+  return { conversationDisabledReason, selectedChat, conversationDraft };
+}
+
+interface AppTaskCoordinationParams {
+  creationRef: React.MutableRefObject<CreationSnapshot>;
+  updateProject: (
+    id: string,
+    update: (project: CreationProject) => CreationProject,
+  ) => void;
+  commitCreation: (snapshot: CreationSnapshot) => void;
+  persistence: {
+    state: ReturnType<typeof useCreationStorage>["state"];
+    flush: () => Promise<void>;
+    loadEpoch?: number;
+  };
+  activeProjectIdRef: React.MutableRefObject<string | null | undefined>;
+  replaceCanvasItems: (
+    action: SetStateAction<CanvasCollectionItem[]>,
+  ) => CanvasCollectionItem[];
+  setAssets: React.Dispatch<SetStateAction<Asset[]>>;
+  homeModelConfig: {
+    model: string;
+    configured: boolean;
+  };
+  saveState: string;
+  onOpenSettingsProviders: () => void;
+  onNavigateToWorkspace: () => void;
+}
+
+function useAppTaskCoordination(params: AppTaskCoordinationParams) {
+  const {
+    creationRef,
+    updateProject,
+    commitCreation,
+    persistence,
+    activeProjectIdRef,
+    replaceCanvasItems,
+    setAssets,
+    homeModelConfig,
+    saveState,
+    onOpenSettingsProviders,
+    onNavigateToWorkspace,
+  } = params;
+
+  const execution = useTaskExecution({
+    creationRef,
+    updateProject,
+    commitCreation,
+    persistence,
+    activeProjectIdRef,
+    replaceCanvasItems,
+    setAssets,
+    openSettingsProviders: onOpenSettingsProviders,
+  });
+
+  useNativeTaskRecovery(
+    creationRef,
+    execution.taskControllers,
+    commitCreation,
+    saveState === "saved" || saveState === "saving",
+  );
+
+  const submission = useImageCommandSubmission({
+    creationRef,
+    activeProjectIdRef,
+    persistence,
+    homeModelConfig,
+    executeTask: execution.executeTask,
+    cancelTask: execution.cancelTask,
+    commitCreation,
+    replaceCanvasItems,
+    onNavigateToWorkspace,
+    onOpenSettingsProviders,
+  });
+
+  return {
+    ...execution,
+    ...submission,
+  };
+}
+
 export default function App() {
   const [active, setActive] = useState("landing");
   const activePageRef = useRef(active);
@@ -275,25 +424,7 @@ export default function App() {
   const [chat, setChat] = useState(true);
   const [mobileChat, setMobileChat] = useState(false);
   const [assets, setAssets] = useState(initialAssets);
-  const [skillRegistry] = useState(() => {
-    const registry = createSkillRegistry();
-    if (!registry.persistenceWarning) ensureTemplates(registry, false);
-    return registry;
-  });
-  const [, refreshSkills] = useState(0);
-  useEffect(() => {
-    try {
-      if (!skillRegistry.persistenceWarning) ensureTemplates(skillRegistry);
-      skillRegistry.persistPending();
-    } catch {
-      // The Skill page will surface a storage error without blocking the shell.
-    }
-  }, [skillRegistry]);
-  useEffect(() => {
-    const syncSkills = () => refreshSkills((value) => value + 1);
-    window.addEventListener(SKILLS_CHANGED_EVENT, syncSkills);
-    return () => window.removeEventListener(SKILLS_CHANGED_EVENT, syncSkills);
-  }, []);
+  const skillRegistry = useAppSkills();
   const assetArchive = useAssetArchive(setAssets);
   const [subjects, setSubjects] = useState(initialSubjects);
   const workflows = useLocalWorkflows();
@@ -305,134 +436,12 @@ export default function App() {
   const saveState = persistence.state;
   const saveStateRef = useRef(saveState);
   saveStateRef.current = saveState;
-  const submitLock = useRef(false);
   const homeCodexStarting = useRef(false);
-  const [providerVersion, setProviderVersion] = useState(0);
-  useEffect(() => {
-    let active = true;
-    void (async () => {
-      try {
-        const native = await loadProviderConnectionsDurable();
-        if (!active) return;
-        if (native) {
-          // Native durable config is authoritative; refresh derived views.
-          setProviderVersion((value) => value + 1);
-        } else {
-          // First desktop run: migrate existing browser metadata untouched.
-          const local = readProviderConnections();
-          if (local.length > 0) {
-            await persistProviderConnectionsDurable(local);
-          }
-        }
-      } catch {
-        // Keep the browser view on native failure; settings surface the error.
-      }
-    })();
-    return () => {
-      active = false;
-    };
-  }, []);
-  const homeModelConfig = useMemo(() => {
-    void providerVersion;
-    try {
-      const profile = parseModelProvider(
-        localStorage.getItem(MODEL_PROVIDER_STORAGE_KEY),
-      ).profile;
-      const connection = readProviderConnections().find(
-        (item) =>
-          Boolean(item.model?.trim()) &&
-          item.state !== "disabled" &&
-          item.capabilities.modalities.includes("image"),
-      );
-      const model = profile.model.trim() || connection?.model?.trim() || "";
-      return { model, configured: Boolean(model) };
-    } catch {
-      return { model: "", configured: false };
-    }
-  }, [providerVersion]);
-  function hasArchivedOutputEvidence(
-    task: Pick<CreationTask, "kind">,
-    output: Pick<CreationTaskOutput, "assetId" | "text" | "status">,
-  ): boolean {
-    if (output.status !== "succeeded") return false;
-    if (task.kind !== "text") return Boolean(output.assetId);
-    return Boolean(
-      output.text?.trim() &&
-      new TextEncoder().encode(output.text).length <= 32768,
-    );
-  }
-  const taskControllers = useRef<Record<string, AbortController>>({});
-  const [savingResultTaskIds, setSavingResultTaskIds] = useState(
-    new Set<string>(),
-  );
-  useEffect(() => setSavingResultTaskIds(new Set()), [persistence.loadEpoch]);
-  useNativeTaskRecovery(
-    creationRef,
-    taskControllers,
-    commitCreation,
-    saveState === "saved" || saveState === "saving",
-  );
-  const nativeTaskRecords = useRef<Record<string, NativeTaskHostRecord>>({});
-  const nativeCancelRequested = useRef(new Set<string>());
-  const pausedTaskIds = useRef(new Set<string>());
-  const [pendingApproval, setPendingApproval] = useState<{
-    projectId: string;
-    taskId: string;
-    gates: ApprovalGate[];
-  } | null>(null);
-  const pendingApprovalRef = useRef(pendingApproval);
-  pendingApprovalRef.current = pendingApproval;
-  const pendingApprovalTask = creation.projects
-    .find((project) => project.id === pendingApproval?.projectId)
-    ?.tasks.find((task) => task.id === pendingApproval?.taskId);
-  const projectLibrary = useProjectLibrary(persistence, () => open("projects"));
-  const activeProject = projectLibrary.activeProject;
-  const conversationDisabledReason =
-    snapshotWriteBlockReason(creation) ??
-    (saveState === "saved" || saveState === "saving"
-      ? undefined
-      : "请先处理项目读取或保存提示，当前暂不可编辑或执行。");
-  const selectedChat = activeProject?.activeChatId
-    ? activeProject.chats?.[activeProject.activeChatId]
-    : undefined;
-  const conversationDraft: CreationDraft | undefined =
-    saveState === "read_only" && activeProject && selectedChat
-      ? {
-          ...activeProject.composerDraft,
-          prompt: selectedChat.draft.text ?? selectedChat.draft.prompt ?? "",
-          attachments: selectedChat.draft.attachments ?? [],
-          model: selectedChat.draft.model ?? "",
-          modelSelection: selectedChat.draft.modelSelection,
-          conversationChannel:
-            selectedChat.draft.conversationChannel ?? "direct",
-        }
-      : activeProject?.composerDraft;
-  const latestProjectTask = activeProject?.tasks.at(-1);
-  const generationProgress = getGenerationProgressLabels({
-    task: latestProjectTask,
-    saveState,
-    resultSaving: savingResultTaskIds.has(latestProjectTask?.id ?? ""),
-  });
-  const [imagePreview, setImagePreview] = useState<{
-    source: CanvasCollectionItem;
-    title: string;
-  }>();
-  useEffect(() => setImagePreview(undefined), [activeProject?.id]);
-
-  const agentPermission = useSyncExternalStore(
-    subscribeAgentPreferences,
-    readPermissionMode,
-  );
-  const agentState = useSyncExternalStore(
-    agentConnection.subscribe,
-    agentConnection.getState,
-  );
-  const desktopAgentState = useSyncExternalStore(
-    desktopAgentLifecycle.subscribe,
-    desktopAgentLifecycle.getState,
-  );
+  const homeModelConfig = useHomeModelConfig();
   const activeProjectIdRef = useRef<string | null>(creation.activeProjectId);
   activeProjectIdRef.current = creation.activeProjectId;
+  const projectLibrary = useProjectLibrary(persistence, () => open("projects"));
+  const activeProject = projectLibrary.activeProject;
   const [canvasItems, setCanvasItems] = useState<CanvasCollectionItem[]>(
     () => activeProject?.items ?? BASE_CANVAS_ITEMS,
   );
@@ -440,24 +449,17 @@ export default function App() {
   canvasItemsRef.current = canvasItems;
   const [favoriteIds, setFavoriteIds] = useState<Set<string>>(() => new Set());
   const [likedIds, setLikedIds] = useState<Set<string>>(() => new Set());
-  function rootItemId(project: CreationProject): string | null {
-    return (
-      project.items.find((item) => item.id === `${project.id}-prompt`)?.id ??
-      project.items.find((item) => item.kind === "image")?.id ??
-      null
-    );
+
+  function replaceCanvasItems(
+    action: SetStateAction<CanvasCollectionItem[]>,
+  ): CanvasCollectionItem[] {
+    const next =
+      typeof action === "function" ? action(canvasItemsRef.current) : action;
+    canvasItemsRef.current = next;
+    setCanvasItems(next);
+    return next;
   }
-  useEffect(() => {
-    replaceCanvasItems(activeProject?.items ?? BASE_CANVAS_ITEMS);
-    setFavoriteIds(new Set(activeProject?.favoriteIds ?? []));
-    setLikedIds(new Set(activeProject?.likedIds ?? []));
-  }, [creation.activeProjectId, persistence.loadEpoch]);
-  useEffect(() => {
-    const syncProvider = () => setProviderVersion((value) => value + 1);
-    window.addEventListener("kk:model-provider-changed", syncProvider);
-    return () =>
-      window.removeEventListener("kk:model-provider-changed", syncProvider);
-  }, []);
+
   function updateProject(
     id: string,
     update: (project: CreationProject) => CreationProject,
@@ -471,6 +473,53 @@ export default function App() {
     };
     commitCreation(next);
   }
+
+  const {
+    cancelTask, pauseTask, resumeTask, retryTask,
+    regenerateImageTask, pendingApproval, pendingApprovalTask,
+    resolveTaskApproval, savingResultTaskIds,
+    canPauseTask, submitImageCommand, submitLock,
+  } = useAppTaskCoordination({
+    creationRef,
+    updateProject,
+    commitCreation,
+    persistence,
+    activeProjectIdRef,
+    replaceCanvasItems,
+    setAssets,
+    homeModelConfig,
+    saveState,
+    onOpenSettingsProviders: () => {
+      setSettingsSection("providers");
+      setModal("settings");
+    },
+    onNavigateToWorkspace: () => {
+      setActive("workspace");
+      setChat(true);
+    },
+  });
+
+  const { conversationDisabledReason, selectedChat, conversationDraft } =
+    useActiveProjectConversation(creation, saveState, activeProject);
+  const latestProjectTask = activeProject?.tasks.at(-1);
+  const generationProgress = getGenerationProgressLabels({
+    task: latestProjectTask,
+    saveState,
+    resultSaving: savingResultTaskIds.has(latestProjectTask?.id ?? ""),
+  });
+  const [imagePreview, setImagePreview] = useState<{
+    source: CanvasCollectionItem;
+    title: string;
+  }>();
+  useEffect(() => setImagePreview(undefined), [activeProject?.id]);
+
+  const { agentPermission, agentState, desktopAgentState } = useAppAgentState();
+
+  useEffect(() => {
+    replaceCanvasItems(activeProject?.items ?? BASE_CANVAS_ITEMS);
+    setFavoriteIds(new Set(activeProject?.favoriteIds ?? []));
+    setLikedIds(new Set(activeProject?.likedIds ?? []));
+  }, [creation.activeProjectId, persistence.loadEpoch]);
 
   function updateHomeDraft(
     draft: CreationDraft,
@@ -491,7 +540,8 @@ export default function App() {
         updatedAt: Date.now(),
       });
       return "Skill 已应用到首页草稿。";
-    } catch {
+    } catch (error) {
+      console.warn("[App] Failed to apply skill to home draft:", error);
       return "应用失败：Skill 指令与当前草稿合计超过 4000 字，原草稿未改变。";
     }
   }
@@ -556,18 +606,10 @@ export default function App() {
         updatedAt: Date.now(),
       }));
       return "Skill 已应用到项目草稿。";
-    } catch {
+    } catch (error) {
+      console.warn("[App] Failed to apply skill to project draft:", error);
       return "应用失败：Skill 指令与当前项目草稿合计超过 4000 字，原草稿未改变。";
     }
-  }
-  function replaceCanvasItems(
-    action: SetStateAction<CanvasCollectionItem[]>,
-  ): CanvasCollectionItem[] {
-    const next =
-      typeof action === "function" ? action(canvasItemsRef.current) : action;
-    canvasItemsRef.current = next;
-    setCanvasItems(next);
-    return next;
   }
   function updateCanvasItems(
     action: SetStateAction<CanvasCollectionItem[]>,
@@ -789,1743 +831,10 @@ export default function App() {
     pluginLoader.setAi(pluginAi);
     void pluginLoader.ensurePluginsLoaded();
   }, []);
-  async function executeTask(
-    projectId: string,
-    taskId: string,
-    initialProject?: CreationProject,
-    explicitRetry = false,
-  ): Promise<void> {
-    const project =
-      initialProject ??
-      creationRef.current.projects.find((item) => item.id === projectId);
-    const task = project?.tasks.find((item) => item.id === taskId);
-    if (!project || !task || taskControllers.current[taskId]) return;
-    if (task.imageEdit) {
-      const live =
-        creationRef.current.projects.find((p) => p.id === projectId) ?? project;
-      if (
-        live.tasks.some(
-          (other) =>
-            other.id !== taskId &&
-            other.imageEdit?.groupId === task.imageEdit?.groupId &&
-            taskControllers.current[other.id],
-        )
-      )
-        return;
-      if (
-        pendingApprovalRef.current &&
-        pendingApprovalRef.current.taskId !== taskId
-      )
-        return;
-    }
-    if (
-      task.status === "unknown" ||
-      task.submissionState === "unknown" ||
-      task.submissionState === "submitted"
-    )
-      return;
-    const missingGates = requiredApprovalGates({
-      privacyMode: task.privacyMode,
-      requestedOutputs: task.requestedOutputs,
-      providerBaseUrl: task.providerBaseUrl,
-    }).filter((gate) => !task.approvedGates?.includes(gate));
-    if (missingGates.length) {
-      pendingApprovalRef.current = { projectId, taskId, gates: missingGates };
-      setPendingApproval({ projectId, taskId, gates: missingGates });
-      updateProject(projectId, (current) => ({
-        ...current,
-        tasks: current.tasks.map((item) =>
-          item.id === taskId
-            ? {
-                ...item,
-                status: "queued",
-                error: "等待人工审批，尚未提交到供应商。",
-              }
-            : item,
-        ),
-      }));
-      return;
-    }
-    const controller = new AbortController();
-    taskControllers.current[taskId] = controller;
-    const setResultSaving = (saving: boolean) => {
-      if (
-        taskControllers.current[taskId] !== controller ||
-        (saving && controller.signal.aborted)
-      )
-        return;
-      setSavingResultTaskIds((current) => {
-        if (current.has(taskId) === saving) return current;
-        const next = new Set(current);
-        if (saving) next.add(taskId);
-        else next.delete(taskId);
-        return next;
-      });
-    };
-    controller.signal.addEventListener("abort", () => setResultSaving(false), {
-      once: true,
-    });
-    let terminalPublished = false;
-    let terminalSaveFailed = false;
-    const flushPublishedResult = async () => {
-      try {
-        await persistence.flush();
-      } catch (error) {
-        terminalSaveFailed = terminalPublished;
-        throw error;
-      }
-    };
-    let outputs = outputsForTask(task);
-    const pendingIndices = outputs
-      .filter((output) => output.status !== "succeeded")
-      .map((output) => output.index);
-    const createdItems: CanvasCollectionItem[] = [];
-    const publishedItems = new Set<string>();
-    const rejectedDeliveryIds = new Set<string>();
-    const archiveFailureIndices = new Set<number>();
-    const mappingFailures = new Map<number, string>();
-    let deliveryErrorMessage: string | undefined;
-    let durableSubmission = false;
-    let providerRequestStarted = false;
-    let nativeSubmissionStarted = false;
-    const publish = (
-      status: CreationTask["status"],
-      error?: string,
-      submissionState?: CreationTask["submissionState"],
-    ): void => {
-      if (taskControllers.current[taskId] !== controller) return;
-      let acceptedResults: CanvasCollectionItem[] = [];
-      updateProject(projectId, (current) => {
-        const pendingResults = createdItems.filter(
-          (item) =>
-            !publishedItems.has(item.id) && !rejectedDeliveryIds.has(item.id),
-        );
-        const withResults = appendImageTaskResults(
-          current,
-          pendingResults,
-          task.sourceItemId ?? rootItemId(current),
-        );
-        acceptedResults = [];
-        for (const result of pendingResults) {
-          try {
-            assertCanvasDeliveries({
-              items: [result],
-              project: withResults,
-              label: "生成产物",
-              requireAssetId: result.kind !== "text",
-            });
-            acceptedResults.push(result);
-          } catch (validationError) {
-            rejectedDeliveryIds.add(result.id);
-            deliveryErrorMessage =
-              validationError instanceof Error
-                ? validationError.message
-                : "生成产物未通过画布交付校验。";
-          }
-        }
-        if (deliveryErrorMessage) {
-          outputs = preserveAcceptedOutputsOnDeliveryFailure(
-            outputs,
-            projectId,
-            taskId,
-            rejectedDeliveryIds,
-            deliveryErrorMessage,
-          );
-        }
-        const publishedStatus = deliveryErrorMessage ? "unknown" : status;
-        terminalPublished =
-          publishedStatus !== "running" && publishedStatus !== "queued";
-        const publishedError = deliveryErrorMessage ?? error;
-        const publishedSubmissionState = deliveryErrorMessage
-          ? ("unknown" as const)
-          : submissionState;
-        const sourceItemId = task.sourceItemId ?? rootItemId(current);
-        const nextProject = appendImageTaskResults(
-          current,
-          acceptedResults,
-          sourceItemId,
-        );
-        const nextTasks = current.tasks.map((item) => {
-          if (item.id === taskId)
-            return {
-              ...item,
-              status: publishedStatus,
-              error: publishedError,
-              submissionState: publishedSubmissionState ?? item.submissionState,
-              submittedAt:
-                publishedSubmissionState === "submitted"
-                  ? (item.submittedAt ?? Date.now())
-                  : item.submittedAt,
-              outputs: [...outputs],
-              completedOutputs: outputs.filter(
-                (output) => output.status === "succeeded",
-              ).length,
-              resultItemId: acceptedResults[0]?.id ?? item.resultItemId,
-              updatedAt: Date.now(),
-            };
-          if (item.id !== task.retryOfTaskId) return item;
-          const merged = mergeRetryTaskState({
-            parent: { ...item, outputs: outputsForTask(item) },
-            retry: {
-              outputs,
-              retryOutputIndices: task.retryOutputIndices,
-              status: publishedStatus,
-              submissionState: publishedSubmissionState,
-              error: publishedError,
-            },
-          });
-          return {
-            ...item,
-            ...merged,
-            updatedAt: Date.now(),
-          };
-        });
-        const sourceTasks = nextTasks.filter(
-          (candidate) =>
-            (candidate.sourceItemId ?? rootItemId(current)) === sourceItemId,
-        );
-        const sourceUncertain = sourceTasks.some(
-          (candidate) =>
-            candidate.status === "unknown" ||
-            candidate.submissionState === "unknown" ||
-            candidate.outputs?.some((output) => output.status === "unknown"),
-        );
-        const sourceRunning = sourceTasks.some(
-          (candidate) =>
-            candidate.status === "queued" ||
-            candidate.status === "running" ||
-            candidate.submissionState === "submitted",
-        );
-        const sourceFailed = sourceTasks.some(
-          (candidate) =>
-            candidate.status === "failed" || candidate.status === "offline",
-        );
-        const sourceGenerationStatus = sourceUncertain
-          ? ("error" as const)
-          : sourceRunning
-            ? ("pending" as const)
-            : sourceFailed
-              ? ("error" as const)
-              : undefined;
-        return {
-          ...nextProject,
-          tasks: nextTasks,
-          items: [
-            ...current.items.map((item) =>
-              item.id === sourceItemId
-                ? {
-                    ...item,
-                    generationStatus: sourceGenerationStatus,
-                  }
-                : item,
-            ),
-            ...acceptedResults.filter(
-              (result) => !current.items.some((item) => item.id === result.id),
-            ),
-          ],
-          updatedAt: Date.now(),
-        };
-      });
-      acceptedResults.forEach((item) => publishedItems.add(item.id));
-      if (activeProjectIdRef.current === projectId) {
-        const latest = creationRef.current.projects.find(
-          (item) => item.id === projectId,
-        );
-        if (latest) replaceCanvasItems(latest.items);
-      }
-    };
-    let reservation: ProviderSubmissionReservation | undefined;
-    const nativeTaskHost = usesNativeTaskHost();
-    const assertTextCurrent = () => {
-      if (
-        task.kind === "text" &&
-        !navigator.onLine &&
-        !isLocalProviderUrl(task.providerBaseUrl ?? "")
-      )
-        throw new Error("当前离线，未提交文本任务；草稿已保留。");
-      if (task.kind === "text")
-        assertLiveTextTask(
-          creationRef.current.projects.find((item) => item.id === projectId),
-          task,
-        );
-    };
-    try {
-      if (!task.providerBaseUrl)
-        throw new Error("历史任务未记录供应商，请从当前输入重新提交。");
-      if (!pendingIndices.length) {
-        publish("succeeded");
-        return;
-      }
-      const compiledPrompt =
-        task.kind === "text" || task.imageEdit || task.imageEditContext
-          ? task.prompt
-          : compileDesignPrompt(task.prompt, {
-              referenceRoles: task.attachments.map(
-                (attachment) => attachment.role,
-              ),
-              referenceCount: task.attachments.length,
-              outputCount: task.requestedOutputs,
-            });
-      const promptHash = await hashPrompt(compiledPrompt);
-      if (controller.signal.aborted) throw new Error("任务已停止。");
-      if (!nativeTaskHost)
-        reservation = await reserveProviderSubmissionAsync(
-          taskSubmissionBinding(task),
-          { explicitRetry: explicitRetry || Boolean(task.retryOfTaskId) },
-        );
-      if (controller.signal.aborted) throw new Error("任务已停止。");
-      assertTextCurrent();
-      outputs = outputs.map((output) =>
-        output.status === "succeeded"
-          ? output
-          : { ...output, status: "running", error: undefined },
-      );
-      // Keep the durable intent in the queued state while this write
-      // completes. A restart here is safe to resume with the same identity.
-      publish("queued", undefined, "intent");
-      // A provider request cannot start until the task intent and stable
-      // idempotency key have reached IndexedDB or the Tauri snapshot.
-      await persistence.flush();
-      if (nativeTaskHost) {
-        if (controller.signal.aborted) throw new Error("任务已停止。");
-        assertTextCurrent();
-        const nativeConnection = assertSubmissionConnection(
-          taskSubmissionBinding(task),
-          {
-            skipCapacity: true,
-            explicitRetry: explicitRetry || Boolean(task.retryOfTaskId),
-          },
-        );
-        const attachments = task.attachments.map((attachment) => {
-          if (!attachment.assetId)
-            throw new Error(
-              "Desktop 参考图尚未归档到原生素材库，当前未提交原生任务。",
-            );
-          return { assetId: attachment.assetId, name: attachment.name };
-        });
-        nativeSubmissionStarted = true;
-        let nativeRecord = await submitNativeTask({
-          imageEditRequired: task.imageEdit
-            ? true
-            : task.imageEditContext
-              ? false
-              : undefined,
-          kind: task.kind === "text" ? "text" : undefined,
-          concurrencyLimit: nativeConnection?.concurrencyLimit,
-          taskId: task.id,
-          idempotencyKey: task.idempotencyKey,
-          baseUrl: task.providerBaseUrl,
-          protocol: task.providerProtocol,
-          authMode: task.providerAuthMode,
-          credentialRef: task.providerCredentialRef ?? "",
-          model: task.model,
-          prompt: compiledPrompt,
-          outputIndices: pendingIndices,
-          attachments,
-          providerName: task.providerName,
-          promptHash,
-          size: task.imageSize,
-          maskAssetId: task.imageEdit?.nativeMask
-            ? task.imageEdit.maskAssetId
-            : undefined,
-        });
-        durableSubmission = true;
-        nativeRecord = validateNativeTaskRecord(
-          nativeRecord,
-          task,
-          pendingIndices,
-        );
-        nativeTaskRecords.current[taskId] = nativeRecord;
-        publish("running", undefined, "submitted");
-        await persistence.flush();
-
-        const applyNativeRecord = async (
-          incoming: NativeTaskHostRecord,
-        ): Promise<NativeTaskHostRecord> => {
-          const record = validateNativeTaskRecord(
-            incoming,
-            task,
-            pendingIndices,
-          );
-          nativeTaskRecords.current[taskId] = record;
-          setResultSaving(
-            record.status !== "unknown" &&
-              record.outputs.some(
-                (output) =>
-                  output.status === "succeeded" &&
-                  outputs.some(
-                    (prior) =>
-                      prior.index === output.index &&
-                      prior.status !== "succeeded",
-                  ),
-              ),
-          );
-          const recordOutputs = new Map(
-            record.outputs.map((output) => [output.index, output]),
-          );
-          for (const output of outputs) {
-            const nativeOutput = recordOutputs.get(output.index);
-            if (!nativeOutput) {
-              if (hasArchivedOutputEvidence(task, output)) continue;
-              if (record.status === "succeeded") {
-                output.status = "unknown";
-                output.error = "原生任务完成但未返回该输出的素材标识。";
-              } else if (record.status === "failed") {
-                output.status = "failed";
-                output.error =
-                  record.failure ?? "原生任务失败但未返回该输出回执。";
-              }
-              continue;
-            }
-            const priorOutput = { ...output };
-            if (
-              nativeOutput.status === "unknown" &&
-              hasArchivedOutputEvidence(task, priorOutput)
-            ) {
-              output.status = "succeeded";
-              output.assetId = priorOutput.assetId;
-              output.text = priorOutput.text;
-              output.error = undefined;
-              continue;
-            }
-            const missingText =
-              task.kind === "text" &&
-              nativeOutput.status === "succeeded" &&
-              !nativeOutput.text?.trim();
-            if (missingText && hasArchivedOutputEvidence(task, priorOutput)) {
-              output.status = "succeeded";
-              output.assetId = priorOutput.assetId;
-              output.text = priorOutput.text;
-              output.error = undefined;
-              continue;
-            }
-            output.status =
-              nativeOutput.status === "pending"
-                ? "running"
-                : missingText
-                  ? "unknown"
-                  : nativeOutput.status;
-            output.assetId = nativeOutput.assetId;
-            output.text = nativeOutput.text ?? priorOutput.text;
-            output.error = nativeOutput.error;
-            if (missingText) {
-              output.error = "原生任务完成但未返回文案正文。";
-              continue;
-            }
-            if (
-              nativeOutput.status === "failed" &&
-              hasArchivedOutputEvidence(task, priorOutput)
-            ) {
-              output.status = "succeeded";
-              output.assetId = priorOutput.assetId;
-              output.text = priorOutput.text;
-              output.error = undefined;
-              continue;
-            }
-            if (
-              task.kind !== "text" &&
-              nativeOutput.status === "succeeded" &&
-              !nativeOutput.assetId
-            ) {
-              if (hasArchivedOutputEvidence(task, priorOutput)) {
-                output.status = "succeeded";
-                output.assetId = priorOutput.assetId;
-                output.text = priorOutput.text;
-                output.error = undefined;
-                continue;
-              }
-              output.status = "unknown";
-              output.error = "原生任务完成但未返回该输出的素材标识。";
-              continue;
-            }
-            if (
-              record.status === "succeeded" &&
-              nativeOutput.status === "pending"
-            ) {
-              if (hasArchivedOutputEvidence(task, priorOutput)) {
-                output.status = "succeeded";
-                output.assetId = priorOutput.assetId;
-                output.text = priorOutput.text;
-                output.error = undefined;
-                continue;
-              }
-              output.status = "unknown";
-              output.error = "原生任务完成但该输出没有终态回执。";
-              continue;
-            }
-            if (
-              record.status === "failed" &&
-              nativeOutput.status === "pending"
-            ) {
-              if (hasArchivedOutputEvidence(task, priorOutput)) {
-                output.status = "succeeded";
-                output.assetId = priorOutput.assetId;
-                output.text = priorOutput.text;
-                output.error = undefined;
-                continue;
-              }
-              output.status = "failed";
-              output.error =
-                record.failure ?? "原生任务失败但该输出没有终态回执。";
-              continue;
-            }
-            if (
-              record.status === "unknown" &&
-              nativeOutput.status === "pending"
-            ) {
-              if (hasArchivedOutputEvidence(task, priorOutput)) {
-                output.status = "succeeded";
-                output.assetId = priorOutput.assetId;
-                output.text = priorOutput.text;
-                output.error = undefined;
-                continue;
-              }
-              output.status = "unknown";
-              output.error =
-                record.failure ?? "原生任务输出回执状态不明，请先核对供应商。";
-              continue;
-            }
-            if (task.kind === "text") {
-              if (nativeOutput.status === "succeeded") {
-                try {
-                  const item = textTaskResult(
-                    projectId,
-                    task,
-                    output.index,
-                    nativeOutput.text ?? "",
-                  );
-                  if (!createdItems.some((existing) => existing.id === item.id))
-                    createdItems.push(item);
-                } catch {
-                  output.status = "unknown";
-                  output.error = "原生文本结果缺失或无效，请先核对任务。";
-                }
-              }
-              continue;
-            }
-            if (nativeOutput.status !== "succeeded" || !nativeOutput.assetId)
-              continue;
-            try {
-              const rawAsset = await readNativeAsset(nativeOutput.assetId);
-              const asset = rawAsset
-                ? await composeNativeEditAsset(
-                    task,
-                    rawAsset,
-                    creationRef.current.projects.find((p) => p.id === projectId)
-                      ?.tasks ?? [],
-                  )
-                : null;
-              if (!asset) throw new Error("原生素材原件尚未找到。");
-              output.assetId = asset.assetId;
-              const id = `${projectId}-${taskId}-result-${output.index + 1}`;
-              const item: CanvasCollectionItem = {
-                id,
-                title: `图片结果 ${output.index + 1}`,
-                description: `${task.model} · 已归档 ${asset.assetId}`,
-                kind: "image",
-                prompt: task.prompt,
-                model: task.model,
-                providerConnectionId: task.providerConnectionId,
-                imageEditDraft: task.imageEdit?.document,
-                imageEditContext: imageResultContext(task, asset.assetId),
-                assetId: asset.assetId,
-                parentAssetId: asset.parentId,
-                preview: asset.preview,
-                generationStatus: "ready",
-                updatedAt: Date.now(),
-                result: {
-                  id,
-                  kind: "image",
-                  title: `图片结果 ${output.index + 1}`,
-                  src: asset.preview,
-                  description: `来自 ${task.providerName ?? "已配置模型"} 的已归档图片结果`,
-                  source: "provider",
-                },
-              };
-              const existing = createdItems.findIndex(
-                (candidate) => candidate.id === id,
-              );
-              if (existing >= 0) createdItems[existing] = item;
-              else createdItems.push(item);
-              setAssets((current) => {
-                if (current.some((entry) => entry.id === asset.assetId))
-                  return current;
-                return [
-                  ...current,
-                  {
-                    id: asset.assetId,
-                    name: `AI 结果 ${current.length + 1}`,
-                    type: "image" as const,
-                    tag: "AI生成",
-                    createdAt: asset.provenance.generatedAt,
-                    src: asset.preview,
-                    isAiGenerated: asset.isAiGenerated ?? true,
-                    provider: asset.provenance.provider,
-                    model: asset.provenance.model,
-                    promptHash: asset.promptHash,
-                    parentId: asset.parentId,
-                    sourceTaskId: asset.sourceJobId,
-                    providerConnectionId: asset.provenance.connectionId,
-                    c2paPresent: asset.provenance.c2paPresent,
-                    synthIdSignal: asset.provenance.synthIdSignal,
-                    originCount: asset.origins?.length ?? 1,
-                    sha256: asset.sha256,
-                    source: asset.source ?? "provider",
-                  },
-                ];
-              });
-            } catch (error) {
-              output.status =
-                error instanceof ImageEditMappingError ? "failed" : "unknown";
-              output.error =
-                error instanceof ImageEditMappingError
-                  ? error.message
-                  : "原生任务已完成，但本地素材原件读取失败。";
-            }
-          }
-          const uncertain =
-            record.status === "unknown" ||
-            outputs.some((output) => output.status === "unknown");
-          const completed = outputs.filter(
-            (output) => output.status === "succeeded",
-          ).length;
-          const terminal =
-            record.status === "succeeded" || record.status === "failed";
-          const completeArchivedEvidence =
-            completed === task.requestedOutputs && terminal;
-          const status = uncertain
-            ? ("unknown" as const)
-            : completeArchivedEvidence
-              ? "succeeded"
-              : record.status === "succeeded"
-                ? completed === task.requestedOutputs
-                  ? "succeeded"
-                  : "partial"
-                : record.status === "failed"
-                  ? completed > 0
-                    ? "partial"
-                    : "failed"
-                  : "running";
-          publish(
-            status,
-            uncertain
-              ? (outputs.find((output) => output.status === "unknown")?.error ??
-                  record.failure ??
-                  "原生任务受理状态不明，请先核对供应商；不会自动重复提交。")
-              : terminal && status === "failed"
-                ? (record.failure ?? "原生任务失败，可检查供应商后重试。")
-                : undefined,
-            uncertain || status === "running"
-              ? uncertain
-                ? "unknown"
-                : "submitted"
-              : "terminal",
-          );
-          await flushPublishedResult();
-          setResultSaving(false);
-          return record;
-        };
-        if (
-          nativeCancelRequested.current.has(taskId) ||
-          controller.signal.aborted
-        ) {
-          nativeCancelRequested.current.add(taskId);
-          await cancelNativeTask(task.id).catch(() => undefined);
-          nativeRecord = (await getNativeTask(task.id)) ?? {
-            ...nativeRecord,
-            status: "unknown",
-            failure:
-              "已请求取消原生任务，供应商最终状态仍需核对；不会普通重试。",
-          };
-          if (nativeRecord.status === "submitted")
-            nativeRecord = {
-              ...nativeRecord,
-              status: "unknown",
-              failure:
-                "已请求取消原生任务，供应商最终状态仍需核对；不会普通重试。",
-            };
-          await applyNativeRecord(nativeRecord);
-          return;
-        }
-        nativeRecord = await applyNativeRecord(nativeRecord);
-        while (nativeRecord.status === "submitted") {
-          if (controller.signal.aborted) {
-            if (nativeCancelRequested.current.has(taskId)) {
-              await applyNativeRecord({
-                ...nativeRecord,
-                status: "unknown",
-                failure:
-                  "已请求取消原生任务，供应商最终状态仍需核对；不会普通重试。",
-              });
-              return;
-            }
-            throw new Error("任务已停止。");
-          }
-          await new Promise((resolve) => window.setTimeout(resolve, 500));
-          nativeRecord = (await getNativeTask(task.id)) ?? {
-            ...nativeRecord,
-            status: "unknown",
-            failure:
-              "Desktop TaskHost 中没有找到原任务记录，请先核对供应商；不会自动重复提交。",
-          };
-          nativeRecord = await applyNativeRecord(nativeRecord);
-        }
-        return;
-      }
-      publish("running", undefined, "submitted");
-      await persistence.flush();
-      durableSubmission = true;
-      if (task.kind === "text") {
-        const text = await generateText({
-          prompt: task.prompt,
-          model: task.model,
-          providerBaseUrl: task.providerBaseUrl,
-          protocol: task.providerProtocol,
-          authMode: task.providerAuthMode,
-          credentialRef: task.providerCredentialRef,
-          idempotencyKey: task.idempotencyKey,
-          signal: controller.signal,
-          beforeRequest: () => {
-            assertTextCurrent();
-            reservation!.assertCurrent();
-          },
-          onRequestStart: () => {
-            providerRequestStarted = true;
-          },
-          onText: (value) => {
-            if (controller.signal.aborted) return;
-            outputs[0] = { ...outputs[0], text: value };
-            publish("running", undefined, "submitted");
-          },
-        });
-        if (controller.signal.aborted) throw new Error("任务已停止。");
-        createdItems.push(
-          textTaskResult(projectId, task, outputs[0].index, text),
-        );
-        outputs[0] = {
-          ...outputs[0],
-          status: "succeeded",
-          text,
-          error: undefined,
-        };
-        publish("succeeded", undefined, "terminal");
-        await flushPublishedResult();
-        if (task.providerConnectionId && reservation?.healthUnchanged())
-          markProviderConnectionHealthy(task.providerConnectionId);
-        return;
-      }
-      const generated = await generateImages({
-        prompt: compiledPrompt,
-        model: task.model,
-        attachments: task.attachments,
-        signal: controller.signal,
-        providerBaseUrl: task.providerBaseUrl,
-        providerConnectionId: task.providerConnectionId,
-        credentialRef: task.providerCredentialRef,
-        count: pendingIndices.length,
-        idempotencyKey: `${task.idempotencyKey}-remaining-${pendingIndices.join("-")}`,
-        size: task.imageSize,
-        maskAssetId: task.imageEdit?.nativeMask
-          ? task.imageEdit.maskAssetId
-          : undefined,
-        beforeRequest: () => reservation!.assertCurrent(),
-        onRequestStart: () => {
-          providerRequestStarted = true;
-        },
-        onChunk: async (sources, offset) => {
-          setResultSaving(true);
-          const archived = await mapWithConcurrency(
-            sources,
-            2,
-            async (source, sourceIndex) => {
-              try {
-                const protectedSource = await composeEditResult(
-                  task,
-                  source,
-                  creationRef.current.projects.find((p) => p.id === projectId)
-                    ?.tasks ?? [],
-                  controller.signal,
-                );
-                return await storeGeneratedAsset({
-                  source: protectedSource,
-                  provider: task.providerName,
-                  model: task.model,
-                  sourceJobId: task.id,
-                  connectionId: task.providerConnectionId,
-                  promptHash,
-                  parentId:
-                    task.imageEdit?.sourceAssetId ??
-                    task.attachments.find((attachment) => attachment.assetId)
-                      ?.assetId,
-                  tags: ["AI生成", task.providerName ?? ""],
-                  signal: controller.signal,
-                });
-              } catch (error) {
-                const target = pendingIndices[offset + sourceIndex];
-                if (target != null) {
-                  if (error instanceof ImageEditMappingError)
-                    mappingFailures.set(target, error.message);
-                  else archiveFailureIndices.add(target);
-                }
-                return null;
-              }
-            },
-          );
-          archived.forEach((asset, index) => {
-            const target = pendingIndices[offset + index];
-            if (!asset || target == null) return;
-            outputs = outputs.map((output) =>
-              output.index === target
-                ? {
-                    ...output,
-                    status: "succeeded",
-                    assetId: asset.assetId,
-                    model: task.model,
-                    provider: task.providerName,
-                    promptHash,
-                    error: undefined,
-                    createdAt: Date.now(),
-                  }
-                : output,
-            );
-            const id = `${projectId}-${taskId}-result-${target + 1}`;
-            createdItems.push({
-              id,
-              title: `图片结果 ${target + 1}`,
-              description: `${task.model} · 已归档 ${asset.assetId}`,
-              kind: "image",
-              prompt: task.prompt,
-              model: task.model,
-              providerConnectionId: task.providerConnectionId,
-              imageEditDraft: task.imageEdit?.document,
-              imageEditContext: imageResultContext(task, asset.assetId),
-              assetId: asset.assetId,
-              parentAssetId: asset.parentId,
-              preview: asset.preview,
-              generationStatus: "ready",
-              updatedAt: Date.now(),
-              result: {
-                id,
-                kind: "image",
-                title: `图片结果 ${target + 1}`,
-                src: asset.preview,
-                description: `来自 ${task.providerName ?? "已配置模型"} 的已归档图片结果`,
-                source: "provider",
-              },
-            });
-          });
-          setAssets((current) => {
-            const seen = new Set(current.map((asset) => asset.id));
-            const additions = archived.flatMap((asset) => {
-              if (!asset) return [];
-              seen.add(asset.assetId);
-              return [
-                {
-                  id: asset.assetId,
-                  name:
-                    current.find((item) => item.id === asset.assetId)?.name ??
-                    `AI 结果 ${seen.size}`,
-                  type: "image" as const,
-                  tag: "AI生成",
-                  createdAt: asset.provenance.generatedAt,
-                  src: asset.preview,
-                  isAiGenerated: asset.isAiGenerated ?? true,
-                  provider: asset.provenance.provider,
-                  model: asset.provenance.model,
-                  promptHash: asset.promptHash,
-                  parentId: asset.parentId,
-                  sourceTaskId: asset.sourceJobId,
-                  providerConnectionId: asset.provenance.connectionId,
-                  c2paPresent: asset.provenance.c2paPresent,
-                  synthIdSignal: asset.provenance.synthIdSignal,
-                  originCount: asset.origins?.length ?? 1,
-                  sha256: asset.sha256,
-                  source: asset.source ?? "provider",
-                },
-              ];
-            });
-            return Array.from(
-              new Map(
-                [...current, ...additions].map((asset) => [asset.id, asset]),
-              ).values(),
-            );
-          });
-          publish("running");
-          setResultSaving(false);
-        },
-      });
-      if (controller.signal.aborted) throw new Error("任务已停止。");
-      outputs = markArchiveFailuresUnknown(
-        outputs,
-        archiveFailureIndices,
-        "供应商结果已返回，但本地素材归档失败；请先核对素材库，不会自动重复提交。",
-      ).map((output) =>
-        output.status === "succeeded" || output.status === "unknown"
-          ? output
-          : {
-              ...output,
-              status:
-                durableSubmission &&
-                generated.failure instanceof GenerationProviderError &&
-                generated.failure.failureClass === "network"
-                  ? "unknown"
-                  : "failed",
-              promptHash,
-              error: mappingFailures.get(output.index) ?? "此项尚未归档。",
-            },
-      );
-      const completed = outputs.filter(
-        (output) => output.status === "succeeded",
-      ).length;
-      const status =
-        completed === task.requestedOutputs
-          ? "succeeded"
-          : completed > 0
-            ? "partial"
-            : "failed";
-      const generatedUncertain =
-        durableSubmission &&
-        generated.failure instanceof GenerationProviderError &&
-        generated.failure.failureClass === "network";
-      const archiveUncertain = outputs.some(
-        (output) =>
-          output.status === "unknown" &&
-          archiveFailureIndices.has(output.index),
-      );
-      const finalStatus =
-        generatedUncertain || archiveUncertain ? ("unknown" as const) : status;
-      publish(
-        finalStatus,
-        archiveUncertain
-          ? "供应商结果已返回，但本地素材归档失败；请先核对素材库，不会自动重复提交。"
-          : generatedUncertain
-            ? "供应商受理状态不明，请先核对供应商；为避免重复扣费，当前不会普通重试。"
-            : status === "succeeded"
-              ? undefined
-              : generated.failure instanceof ProviderSubmissionError
-                ? generated.failure.message
-                : generated.failure instanceof GenerationProviderError &&
-                    generated.failure.failureClass === "rate_limited"
-                  ? `${generated.failure.message} ${capacitySwitchHint(
-                      task.providerConnectionId,
-                    )}`
-                  : (mappingFailures.values().next().value ??
-                    `${completed}/${task.requestedOutputs} 张已归档，可重试未归档结果。`),
-        generatedUncertain || archiveUncertain ? "unknown" : "terminal",
-      );
-      await flushPublishedResult();
-      if (task.providerConnectionId) {
-        const failure = generated.failure;
-        if (
-          failure instanceof GenerationProviderError &&
-          [
-            "rate_limited",
-            "unauthorized",
-            "forbidden",
-            "provider_unavailable",
-            "network",
-          ].includes(failure.failureClass)
-        )
-          markProviderConnectionFailure(
-            task.providerConnectionId,
-            {
-              kind: failure.failureClass as
-                | "rate_limited"
-                | "unauthorized"
-                | "forbidden"
-                | "provider_unavailable"
-                | "network",
-              retryAfterSeconds: failure.retryAfterSeconds,
-            },
-            taskProviderOptions(task),
-          );
-        else if (
-          !failure &&
-          !archiveUncertain &&
-          reservation?.healthUnchanged()
-        )
-          markProviderConnectionHealthy(
-            task.providerConnectionId,
-            taskProviderOptions(task),
-          );
-      }
-    } catch (error) {
-      // A failed project save cannot undo a completed generation receipt.
-      if (terminalSaveFailed) return;
-      const uncertain =
-        abortedAfterProviderSubmission({
-          durableSubmission,
-          providerRequestStarted,
-          nativeTaskHost,
-          aborted: controller.signal.aborted,
-        }) ||
-        (nativeTaskHost &&
-          submissionMayHaveBeenAccepted({
-            durableSubmission,
-            providerRequestStarted,
-            nativeTaskHost,
-            nativeSubmissionStarted,
-          })) ||
-        (durableSubmission &&
-          (providerRequestStarted || nativeTaskHost) &&
-          (error instanceof GenerationProviderError
-            ? error.failureClass === "network"
-            : !(error instanceof ProviderSubmissionError)));
-      const nativeCancelUncertain =
-        nativeTaskHost &&
-        nativeCancelRequested.current.has(taskId) &&
-        Boolean(nativeTaskRecords.current[taskId]);
-      const paused = controller.signal.reason === "paused";
-      const status =
-        uncertain || nativeCancelUncertain
-          ? ("unknown" as const)
-          : paused
-            ? "queued"
-            : controller.signal.aborted
-              ? "cancelled"
-              : !navigator.onLine
-                ? "offline"
-                : "failed";
-      const message =
-        uncertain || nativeCancelUncertain
-          ? "供应商受理状态不明，请先核对供应商；为避免重复扣费，当前不会普通重试。"
-          : paused
-            ? "已暂停；已归档结果保留，恢复只提交剩余输出。"
-            : controller.signal.aborted
-              ? "已取消任务，已归档结果保留。"
-              : error instanceof Error
-                ? error instanceof GenerationProviderError &&
-                  error.failureClass === "rate_limited"
-                  ? `${error.message} ${capacitySwitchHint(
-                      task.providerConnectionId,
-                    )}`
-                  : error.message
-                : "任务失败，请重试。";
-      outputs = outputs.map((output) =>
-        output.status === "succeeded"
-          ? output
-          : {
-              ...output,
-              status:
-                uncertain || nativeCancelUncertain
-                  ? "unknown"
-                  : paused
-                    ? "waiting"
-                    : controller.signal.aborted
-                      ? "cancelled"
-                      : "failed",
-              error: message,
-            },
-      );
-      publish(
-        status,
-        message,
-        uncertain || nativeCancelUncertain
-          ? "unknown"
-          : durableSubmission
-            ? "terminal"
-            : "intent",
-      );
-      await persistence.flush().catch(() => undefined);
-      if (
-        task.providerConnectionId &&
-        reservation &&
-        !controller.signal.aborted &&
-        error instanceof GenerationProviderError &&
-        [
-          "rate_limited",
-          "unauthorized",
-          "forbidden",
-          "provider_unavailable",
-          "network",
-        ].includes(error.failureClass)
-      ) {
-        markProviderConnectionFailure(
-          task.providerConnectionId,
-          {
-            kind: error.failureClass as
-              | "rate_limited"
-              | "unauthorized"
-              | "forbidden"
-              | "provider_unavailable"
-              | "network",
-            retryAfterSeconds: error.retryAfterSeconds,
-          },
-          taskProviderOptions(task),
-        );
-      }
-    } finally {
-      setResultSaving(false);
-      try {
-        await reservation?.release();
-      } catch {
-        // A failed release cannot silently submit another request: the live
-        // browser lock remains held until the task document terminates.
-      }
-      if (taskControllers.current[taskId] === controller)
-        delete taskControllers.current[taskId];
-      if (task.imageEdit && !controller.signal.aborted) {
-        const latest = creationRef.current.projects.find(
-          (p) => p.id === projectId,
-        );
-        const next = latest?.tasks.find(
-          (t) =>
-            t.id !== task.id &&
-            t.imageEdit?.groupId === task.imageEdit?.groupId &&
-            t.status === "queued" &&
-            t.submissionState !== "submitted" &&
-            t.submissionState !== "unknown",
-        );
-        if (next) void executeTask(projectId, next.id);
-      }
-    }
-  }
-  function cancelTask(taskId: string): void {
-    for (const project of creationRef.current.projects) {
-      const groupId = project.tasks.find((t) => t.id === taskId)?.imageEdit
-        ?.groupId;
-      if (groupId)
-        updateProject(project.id, (current) => ({
-          ...current,
-          tasks: current.tasks.map((t) =>
-            t.id !== taskId &&
-            t.imageEdit?.groupId === groupId &&
-            t.status === "queued"
-              ? {
-                  ...t,
-                  status: "cancelled",
-                  submissionState: "terminal",
-                  error: "本轮区域重绘已取消，成功候选保留。",
-                  outputs: t.outputs?.map((o) => ({
-                    ...o,
-                    status: "cancelled",
-                  })),
-                }
-              : t,
-          ),
-        }));
-    }
-    pausedTaskIds.current.delete(taskId);
-    const controller = taskControllers.current[taskId];
-    if (controller) {
-      if (usesNativeTaskHost()) {
-        nativeCancelRequested.current.add(taskId);
-        if (nativeTaskRecords.current[taskId])
-          void cancelNativeTask(taskId).catch(() => undefined);
-      }
-      controller.abort("user");
-      return;
-    }
-    const recovered = creationRef.current.projects
-      .flatMap((project) => project.tasks)
-      .find(
-        (task) =>
-          task.id === taskId &&
-          (task.submissionState === "submitted" ||
-            task.submissionState === "unknown"),
-      );
-    if (usesNativeTaskHost() && recovered) {
-      void cancelNativeTask(taskId).catch(() => undefined);
-      return;
-    }
-    const project = creationRef.current.projects.find((item) =>
-      item.tasks.some((task) => task.id === taskId && task.status === "queued"),
-    );
-    if (!project) return;
-    const sourceItemId =
-      project.tasks.find((task) => task.id === taskId)?.sourceItemId ??
-      rootItemId(project);
-    updateProject(project.id, (current) => ({
-      ...current,
-      items: current.items.map((item) =>
-        item.id === sourceItemId
-          ? { ...item, generationStatus: undefined }
-          : item,
-      ),
-      tasks: current.tasks.map((task) =>
-        task.id === taskId
-          ? {
-              ...task,
-              status: "cancelled",
-              error: "任务已取消，已归档的成功结果保留。",
-              outputs: outputsForTask(task).map((output) =>
-                output.status === "succeeded"
-                  ? output
-                  : { ...output, status: "cancelled" },
-              ),
-              updatedAt: Date.now(),
-            }
-          : task,
-      ),
-    }));
-    if (activeProjectIdRef.current === project.id) {
-      const latest = creationRef.current.projects.find(
-        (item) => item.id === project.id,
-      );
-      if (latest) replaceCanvasItems(latest.items);
-    }
-    if (pendingApproval?.taskId === taskId) setPendingApproval(null);
-  }
-  function resolveTaskApproval(approved: boolean): void {
-    if (!pendingApproval) return;
-    const project = creationRef.current.projects.find(
-      (item) => item.id === pendingApproval.projectId,
-    );
-    if (!project) {
-      setPendingApproval(null);
-      return;
-    }
-    if (
-      !approved &&
-      project.tasks.find((task) => task.id === pendingApproval.taskId)
-        ?.imageEdit
-    ) {
-      pendingApprovalRef.current = null;
-      cancelTask(pendingApproval.taskId);
-      setPendingApproval(null);
-      return;
-    }
-    const nextProject: CreationProject = {
-      ...project,
-      items: approved
-        ? project.items
-        : project.items.map((item) =>
-            item.id ===
-            (project.tasks.find((task) => task.id === pendingApproval.taskId)
-              ?.sourceItemId ?? rootItemId(project))
-              ? { ...item, generationStatus: undefined }
-              : item,
-          ),
-      tasks: project.tasks.map((task) =>
-        task.id === pendingApproval.taskId
-          ? {
-              ...task,
-              approvedGates: approved
-                ? [
-                    ...new Set([
-                      ...(task.approvedGates ?? []),
-                      ...pendingApproval.gates,
-                    ]),
-                  ]
-                : [],
-              status: approved ? "queued" : "cancelled",
-              error: approved ? undefined : "人工审批已取消，未发送远程请求。",
-              outputs: task.outputs?.map((output) => ({
-                ...output,
-                status: approved ? "waiting" : "cancelled",
-              })),
-              updatedAt: Date.now(),
-            }
-          : task,
-      ),
-    };
-    updateProject(project.id, () => nextProject);
-    if (activeProjectIdRef.current === project.id)
-      replaceCanvasItems(nextProject.items);
-    setPendingApproval(null);
-    pendingApprovalRef.current = null;
-    if (approved)
-      void executeTask(project.id, pendingApproval.taskId, nextProject);
-  }
-  function pauseTask(taskId: string): void {
-    pausedTaskIds.current.add(taskId);
-    taskControllers.current[taskId]?.abort("paused");
-  }
-  function resumeTask(taskId: string): void {
-    const project = creationRef.current.projects.find((item) =>
-      item.tasks.some((task) => task.id === taskId),
-    );
-    if (!project || taskControllers.current[taskId]) return;
-    pausedTaskIds.current.delete(taskId);
-    void executeTask(project.id, taskId, project, true);
-  }
-  function regenerateImageTask(projectId: string, taskId: string): void {
-    const project = creationRef.current.projects.find(
-        (p) => p.id === projectId,
-      ),
-      task = project?.tasks.find((t) => t.id === taskId);
-    if (
-      !project ||
-      !task ||
-      task.kind !== "image" ||
-      task.status !== "succeeded" ||
-      project.tasks.some((t) => ["queued", "running"].includes(t.status))
-    )
-      return;
-    const regenerated = imageRegeneration(task),
-      next = {
-        ...project,
-        tasks: [...project.tasks, regenerated],
-        updatedAt: Date.now(),
-      };
-    commitCreation({
-      ...creationRef.current,
-      projects: creationRef.current.projects.map((p) =>
-        p.id === projectId ? next : p,
-      ),
-    });
-    void executeTask(projectId, regenerated.id, next, true);
-  }
-  function retryTask(
-    projectId: string,
-    oldTaskId: string,
-    outputIndex?: number,
-  ): void {
-    const project = creationRef.current.projects.find(
-      (item) => item.id === projectId,
-    );
-    const oldTask = project?.tasks.find((item) => item.id === oldTaskId);
-    if (!project || !oldTask || taskControllers.current[oldTaskId]) return;
-    if (!canRetryTask(oldTask)) return;
-    let rootTask = oldTask;
-    let targetIndices = retryableOutputIndices(
-      oldTask,
-      outputsForTask(oldTask),
-      outputIndex,
-    );
-    const visited = new Set<string>();
-    while (rootTask.retryOfTaskId && !visited.has(rootTask.id)) {
-      visited.add(rootTask.id);
-      const parent = project.tasks.find(
-        (candidate) => candidate.id === rootTask.retryOfTaskId,
-      );
-      if (!parent) break;
-      targetIndices = targetIndices.map(
-        (index) => rootTask.retryOutputIndices?.[index] ?? index,
-      );
-      rootTask = parent;
-    }
-    const rootOutputs = outputsForTask(rootTask);
-    targetIndices = targetIndices.filter((index) =>
-      retryableOutputIndices(rootTask, rootOutputs, index).includes(index),
-    );
-    const busyIndices = new Set(
-      retryBlockedOutputIndices(project.tasks, rootTask.id),
-    );
-    targetIndices = targetIndices.filter((index) => !busyIndices.has(index));
-    if (!targetIndices.length) return;
-    if (!oldTask.providerBaseUrl) {
-      commitCreation({
-        ...creationRef.current,
-        projects: creationRef.current.projects.map((item) =>
-          item.id === projectId
-            ? {
-                ...item,
-                composerDraft: {
-                  ...item.composerDraft,
-                  prompt: oldTask.prompt,
-                  updatedAt: Date.now(),
-                },
-                updatedAt: Date.now(),
-              }
-            : item,
-        ),
-      });
-      setSettingsSection("providers");
-      setModal("settings");
-      return;
-    }
-    const now = Date.now();
-    const retry = {
-      ...oldTask,
-      id: `${projectId}-task-${now.toString(36)}-${Math.random().toString(36).slice(2, 8)}`,
-      status: "queued" as const,
-      error: undefined,
-      resultItemId: undefined,
-      completedOutputs: 0,
-      submissionState: "intent" as const,
-      submittedAt: undefined,
-      requestedOutputs: targetIndices.length,
-      estimatedCostUsd: undefined,
-      outputs: Array.from(
-        {
-          length: targetIndices.length,
-        },
-        (_, index) => ({
-          index,
-          status: "waiting" as const,
-          model: oldTask.model,
-          provider: oldTask.providerName,
-          createdAt: now,
-        }),
-      ),
-      idempotencyKey:
-        oldTask.status === "interrupted" && oldTask.submissionState === "intent"
-          ? oldTask.idempotencyKey
-          : `${projectId}-generation-${now.toString(36)}-retry-${oldTask.attempt + 1}`,
-      batchId: `${oldTask.batchId ?? `${projectId}-batch`}-retry-${oldTask.attempt + 1}`,
-      attempt: oldTask.attempt + 1,
-      approvedGates: [],
-      retryOfTaskId: rootTask.id,
-      retryOutputIndices: targetIndices,
-      createdAt: now,
-      updatedAt: now,
-    };
-    const nextProject = {
-      ...project,
-      tasks: [...project.tasks, retry],
-      items: project.items.map((item) =>
-        item.id === (retry.sourceItemId ?? rootItemId(project))
-          ? { ...item, generationStatus: "pending" as const }
-          : item,
-      ),
-      updatedAt: now,
-    };
-    commitCreation({
-      ...creationRef.current,
-      projects: creationRef.current.projects.map((item) =>
-        item.id === projectId ? nextProject : item,
-      ),
-    });
-    if (activeProjectIdRef.current === projectId)
-      replaceCanvasItems(nextProject.items);
-    void executeTask(projectId, retry.id, nextProject);
-  }
-  async function submitImageCommand(
-    request:
-      | {
-          origin: "home" | "chat" | "agent" | "plugin";
-          input: CreateProjectInput;
-        }
-      | { origin: "canvas"; input: CanvasImageRequest },
-    onAccepted?: (taskId: string) => void,
-    validateAcceptance?: () => string | undefined,
-  ): Promise<string | undefined> {
-    const initialBlock = validateAcceptance?.();
-    if (initialBlock) return initialBlock;
-    if (submitLock.current) return "正在提交图片任务，请稍候。";
-    if (!["saved", "saving"].includes(persistence.state))
-      return "请先处理项目读取或保存提示，当前未提交生成。";
-    const projectId =
-      request.origin === "home" ? undefined : activeProjectIdRef.current;
-    const original = creationRef.current.projects.find(
-      (project) => project.id === projectId,
-    );
-    if (request.origin !== "home" && !original) return "请先新建或打开项目。";
-    const activeTask = original?.tasks.find(
-      (task) => task.status === "queued" || task.status === "running",
-    );
-    const codexCanvas =
-      request.origin === "canvas" &&
-      original?.items.some(
-        (item) =>
-          item.id === request.input.sourceItemId &&
-          item.generationSource === "codex",
-      );
-    const requestModel =
-      request.origin === "canvas" ? request.input.model : request.input.model;
-    let effectivePrompt = request.input.prompt;
-    if (request.origin === "canvas" && request.input.imageEdit) {
-      try {
-        const compiled = compileEditPrompt(
-          effectivePrompt,
-          request.input.imageEdit.document,
-        );
-        if (!effectivePrompt.trim() && compiled.instructions.length)
-          effectivePrompt = "按已确认的区域修改意见编辑图片。";
-      } catch (error) {
-        return error instanceof Error ? error.message : "区域引用无效。";
-      }
-    }
-    const uiState = getGenerationUiState({
-      prompt: effectivePrompt,
-      inputValid: Boolean(effectivePrompt.trim()),
-      modelConfigured:
-        request.origin === "agent" || codexCanvas || homeModelConfig.configured,
-      quotaAvailable: true,
-      online: typeof navigator === "undefined" ? true : navigator.onLine,
-      serviceConfigured:
-        request.origin === "agent" ||
-        codexCanvas ||
-        (homeModelConfig.configured && Boolean(requestModel.trim())),
-      taskStatus: activeTask
-        ? activeTask.status === "queued"
-          ? "queued"
-          : "running"
-        : undefined,
-    });
-    if (uiState !== "ready" && request.origin !== "agent")
-      return getDisabledReason(uiState) ?? "当前任务暂不可提交。";
-    const signal =
-      request.origin === "canvas" ? request.input.signal : undefined;
-    const draftAtStart = creationRef.current.homeDraft;
-    submitLock.current = true;
-    try {
-      let sourceItemId = original
-        ? (rootItemId(original) ?? undefined)
-        : undefined;
-      let input: CreateProjectInput;
-      let editSource: CanvasCollectionItem | undefined;
-      let sourceSignature: string | undefined;
-      const canvasSignature = (project: CreationProject, id: string) =>
-        JSON.stringify({
-          items: project.items.filter(
-            (item) =>
-              item.id === id ||
-              project.canvas.edges.some(
-                (edge) =>
-                  edge.target === id &&
-                  edge.kind !== "result" &&
-                  edge.source === item.id,
-              ),
-          ),
-          edges: project.canvas.edges.filter(
-            (edge) => edge.target === id && edge.kind !== "result",
-          ),
-        });
-      if (request.origin === "canvas") {
-        sourceItemId = request.input.sourceItemId;
-        const source = original!.items.find((item) => item.id === sourceItemId);
-        editSource = source;
-        if (!source || (source.kind !== "image" && source.kind !== "text"))
-          return "来源节点已删除或不支持，当前未提交生成。";
-        sourceSignature = canvasSignature(original!, source.id);
-        if (source.generationSource === "codex") {
-          if (request.input.imageEdit?.document.regions.length)
-            return "Codex 卡片暂不支持局部区域编辑，请选择支持编辑的 API 连接。";
-          const validate = () => {
-            if (signal?.aborted) return "已取消提交，草稿和参考图已保留。";
-            const current = creationRef.current.projects.find(
-              (project) => project.id === projectId,
-            );
-            if (!current || activeProjectIdRef.current !== projectId)
-              return "项目已切换，当前未提交生成。";
-            if (
-              current.tasks.some(
-                (task) => task.status === "queued" || task.status === "running",
-              )
-            )
-              return "已有任务正在执行，当前未重复提交。";
-            if (canvasSignature(current, source.id) !== sourceSignature)
-              return "节点或参考图在检查期间发生变化，请重新提交；当前内容已保留。";
-            return undefined;
-          };
-          const beforeRead = validate();
-          if (beforeRead) return beforeRead;
-          const attachments = await canvasImageAttachments(original!, source);
-          if (source.kind === "text" && attachments.length)
-            return "Codex 文本卡片暂不接收参考图片，请在右侧 Agent 面板提交。";
-          const afterRead = validate();
-          if (afterRead) return afterRead;
-          return agentConnection.generateFromCanvas({
-            nodeId: source.id,
-            prompt: request.input.prompt,
-            model: request.input.model,
-            count: request.input.count,
-            kind: source.kind,
-            attachments: attachments.map((attachment) => ({
-              ...attachment,
-              canvasNodeId: attachment.id,
-            })),
-            signal,
-            validate,
-          });
-        }
-        input = {
-          prompt: request.input.prompt,
-          model: request.input.model,
-          providerConnectionId: source.providerConnectionId,
-          kind: source.kind,
-          attachments:
-            source.kind === "text"
-              ? []
-              : await canvasImageAttachments(original!, source),
-          outputCount: request.input.count,
-          privacyMode: original!.composerDraft.privacyMode,
-          imageSize:
-            source.kind === "text" || source.assetId
-              ? undefined
-              : source.parameters?.imageSize,
-          imageOperation:
-            request.input.imageEdit?.document.regions.length &&
-            imageCapabilitiesForSelection(
-              {
-                source: "api",
-                model: request.input.model,
-                connectionId:
-                  source.providerConnectionId ??
-                  original!.composerDraft.providerConnectionId,
-              },
-              readProviderConnections(),
-            ).operations.inpaint === "supported"
-              ? "inpaint"
-              : undefined,
-        };
-      } else input = structuredClone(request.input);
-      if (signal?.aborted) return "已取消提交，草稿和参考图已保留。";
-      // Connection preflight needs a non-empty prompt. Keep that placeholder
-      // out of the real edit compiler: structured opinions belong to each crop.
-      const connection = await prepareImageTask(
-        { ...input, prompt: effectivePrompt },
-        original,
-      );
-      const editRequest =
-        request.origin === "canvas"
-          ? (request.input.imageEdit ??
-            (editSource?.assetId && editSource.kind === "image"
-              ? { document: { width: 1, height: 1, regions: [] } }
-              : undefined))
-          : undefined;
-      const editInputs =
-        editRequest && editSource && original
-          ? await prepareEditInputs(
-              input,
-              editSource,
-              original,
-              connection,
-              editRequest,
-              signal,
-            )
-          : [input];
-      for (const editInput of editInputs)
-        await prepareImageTask(editInput, original);
-      if (signal?.aborted) return "已取消提交，草稿和参考图已保留。";
-      const current = projectId
-        ? creationRef.current.projects.find(
-            (project) => project.id === projectId,
-          )
-        : undefined;
-      if (projectId && (!current || activeProjectIdRef.current !== projectId))
-        return "项目已切换，当前未提交生成。";
-      if (
-        current?.tasks.some(
-          (task) => task.status === "queued" || task.status === "running",
-        )
-      )
-        return "已有任务正在执行，当前未重复提交。";
-      if (
-        sourceSignature &&
-        current &&
-        canvasSignature(current, sourceItemId!) !== sourceSignature
-      )
-        return "节点或参考图在检查期间发生变化，请重新提交；当前内容已保留。";
-      const acceptanceBlock = validateAcceptance?.();
-      if (acceptanceBlock) return acceptanceBlock;
-      const base = current ?? createProject(input);
-      sourceItemId ??= rootItemId(base) ?? undefined;
-      const appended = appendImageTask(
-        base,
-        editInputs[0],
-        connection,
-        sourceItemId,
-      );
-      let nextProject = appended.project;
-      for (const editInput of editInputs.slice(1))
-        nextProject = appendImageTask(
-          nextProject,
-          editInput,
-          connection,
-          sourceItemId,
-        ).project;
-      if (request.origin === "chat")
-        nextProject = {
-          ...nextProject,
-          prompt: input.prompt,
-          attachments: input.attachments,
-          composerDraft:
-            current!.composerDraft.prompt === input.prompt
-              ? { ...current!.composerDraft, prompt: "", updatedAt: Date.now() }
-              : current!.composerDraft,
-          messages: [
-            ...current!.messages,
-            {
-              id: `${base.id}-message-${appended.task.id}`,
-              role: "user",
-              content: input.prompt,
-              createdAt: Date.now(),
-            },
-          ],
-        };
-      commitCreation({
-        ...creationRef.current,
-        projects: current
-          ? creationRef.current.projects.map((project) =>
-              project.id === projectId ? nextProject : project,
-            )
-          : [nextProject, ...creationRef.current.projects],
-        activeProjectId: current
-          ? creationRef.current.activeProjectId
-          : base.id,
-        homeDraft:
-          request.origin === "home" &&
-          creationRef.current.homeDraft === draftAtStart
-            ? emptyDraft()
-            : creationRef.current.homeDraft,
-      });
-      if (!current || activeProjectIdRef.current === projectId)
-        replaceCanvasItems(nextProject.items);
-      if (!current) {
-        const transitionToWorkspace = () => {
-          setActive("workspace");
-          setChat(true);
-        };
-        if (
-          typeof document !== "undefined" &&
-          "startViewTransition" in document
-        ) {
-          (
-            document as Document & {
-              startViewTransition: (cb: () => void) => void;
-            }
-          ).startViewTransition(transitionToWorkspace);
-        } else {
-          transitionToWorkspace();
-        }
-      }
-      // The queued task and its stable idempotency key must survive a crash
-      // before any provider request is allowed to start.
-      await persistence.flush();
-      const afterSaveBlock = validateAcceptance?.();
-      if (afterSaveBlock) {
-        cancelTask(appended.task.id);
-        return afterSaveBlock;
-      }
-      if (
-        signal?.aborted ||
-        (projectId && activeProjectIdRef.current !== projectId)
-      ) {
-        cancelTask(appended.task.id);
-        return "已取消提交，任务未发送。";
-      }
-      onAccepted?.(appended.task.id);
-      void executeTask(nextProject.id, appended.task.id, nextProject);
-      return undefined;
-    } catch (error) {
-      if (error instanceof ImageTaskCommandError && error.configure) {
-        setSettingsSection("providers");
-        setModal("settings");
-      }
-      return error instanceof Error
-        ? error.message
-        : "无法提交图片任务，当前草稿已保留。";
-    } finally {
-      submitLock.current = false;
-    }
-  }
-  async function handleCreateProject(
+  async function executeHomeCodexProject(
     input: CreateProjectInput,
+    selection: ModelSelection,
   ): Promise<string | undefined> {
-    const selection = homeModelSelection(input);
-    if (selection.source === "api")
-      return submitImageCommand({
-        origin: "home",
-        input: {
-          ...input,
-          model: selection.model,
-          providerConnectionId: selection.connectionId,
-        },
-      });
-    if (submitLock.current) return "正在开始创作，请稍候。";
-    if (!["saved", "saving"].includes(saveStateRef.current))
-      return "请先处理项目读取或保存提示，当前未提交生成。";
-    if (!input.prompt.trim() || input.prompt.length > 4000)
-      return "请输入 1 至 4,000 字的创作提示词。";
-    if (input.privacyMode && input.privacyMode !== "byok_local")
-      return "当前隐私模式不允许 Codex 账号调用，草稿与参考图已保留。";
-    if (!navigator.onLine) return "当前离线，草稿与参考图已保留。";
-    const state = agentConnection.getState();
-    if (state.sending || state.preparing || state.pendingApproval)
-      return "请先完成或停止当前 Agent 任务，再开始新项目。";
     const previousProjectId = creationRef.current.activeProjectId;
     const draftAtStart = creationRef.current.homeDraft;
     const attachments = input.attachments.map((item) => ({ ...item }));
@@ -2638,6 +947,28 @@ export default function App() {
       homeCodexStarting.current = false;
       submitLock.current = false;
     }
+  }
+
+  async function handleCreateProject(
+    input: CreateProjectInput,
+  ): Promise<string | undefined> {
+    const selection = homeModelSelection(input);
+    if (selection.source === "api")
+      return submitImageCommand({
+        origin: "home",
+        input: {
+          ...input,
+          model: selection.model,
+          providerConnectionId: selection.connectionId,
+        },
+      });
+    const error = validateHomeCodexPreconditions(
+      input,
+      submitLock.current,
+      saveStateRef.current,
+    );
+    if (error) return error;
+    return executeHomeCodexProject(input, selection);
   }
   async function handleSendMessage(message: string): Promise<boolean | string> {
     const project = creationRef.current.projects.find(
@@ -2877,8 +1208,8 @@ export default function App() {
       preferences = parseSettings(
         localStorage.getItem(SETTINGS_STORAGE_KEY),
       ).preferences;
-    } catch {
-      // Browser storage can be denied; retain the default theme preferences.
+    } catch (error) {
+      console.warn("[App] Failed to read settings preferences:", error);
       preferences = DEFAULT_SETTINGS;
     }
     const apply = () => {
@@ -2905,21 +1236,68 @@ export default function App() {
       media.removeEventListener("change", apply);
     };
   }, []);
+  function openSkillsView(view: string): void {
+    setPartnerProjectId(
+      active === "workspace" ? creationRef.current.activeProjectId : null,
+    );
+    const requestedView = view.split("/")[1];
+    setExtensionView(
+      requestedView === "partners"
+        ? "partners"
+        : requestedView === "connectors"
+          ? "connectors"
+          : "skills",
+    );
+    setActive("skills");
+    setModal("");
+  }
+
+  function openChatView(): void {
+    if (modal) {
+      setModal("");
+      setChat(true);
+      setMobileChat(sidebar.narrow);
+      return;
+    }
+    if (active === "workspace" && chat && (!sidebar.narrow || mobileChat)) {
+      setChat(false);
+      setMobileChat(false);
+      return;
+    }
+    if (
+      !creationRef.current.projects.some(
+        (project) => project.id === activeProjectIdRef.current,
+      )
+    ) {
+      handleNewBlankProject();
+    } else {
+      setActive("workspace");
+    }
+    setChat(true);
+    setMobileChat(sidebar.narrow);
+    setModal("");
+  }
+
+  function openCollectionView(view: string): void {
+    if (!activeProject) {
+      handleNewBlankProject();
+    } else {
+      setActive("workspace");
+    }
+    if (view === "likes") setLikesOpen(true);
+    else setTagsOpen(true);
+    const id = view === "likes" ? "likes" : "tags";
+    setActiveCollection(id);
+    setCollectionActivation((current) => ({
+      ...current,
+      [id]: current[id] + 1,
+    }));
+    setModal("");
+  }
+
   function open(view: string): void {
     if (view === "skills" || view.startsWith("skills/")) {
-      setPartnerProjectId(
-        active === "workspace" ? creationRef.current.activeProjectId : null,
-      );
-      const requestedView = view.split("/")[1];
-      setExtensionView(
-        requestedView === "partners"
-          ? "partners"
-          : requestedView === "connectors"
-            ? "connectors"
-            : "skills",
-      );
-      setActive("skills");
-      setModal("");
+      openSkillsView(view);
       return;
     }
     if (view === "new-project") {
@@ -2927,53 +1305,20 @@ export default function App() {
       return;
     }
     if (view === "chat") {
-      if (modal) {
-        setModal("");
-        setChat(true);
-        setMobileChat(sidebar.narrow);
-        return;
-      }
-      if (active === "workspace" && chat && (!sidebar.narrow || mobileChat)) {
-        setChat(false);
-        setMobileChat(false);
-        return;
-      }
-      if (
-        !creationRef.current.projects.some(
-          (project) => project.id === activeProjectIdRef.current,
-        )
-      ) {
-        handleNewBlankProject();
-      } else {
-        setActive("workspace");
-      }
-      setChat(true);
-      setMobileChat(sidebar.narrow);
-      setModal("");
+      openChatView();
       return;
     }
     if (["favorites", "tags", "likes"].includes(view)) {
-      if (!activeProject) {
-        handleNewBlankProject();
-      } else setActive("workspace");
-      if (view === "likes") setLikesOpen(true);
-      else setTagsOpen(true);
-      const id = view === "likes" ? "likes" : "tags";
-      setActiveCollection(id);
-      setCollectionActivation((current) => ({
-        ...current,
-        [id]: current[id] + 1,
-      }));
-      setModal("");
+      openCollectionView(view);
       return;
     }
     if (view === "search") {
       setModal(view);
       return;
     }
-    if (view === "comfyui") view = "settings/comfy";
-    if (view === "settings" || view.startsWith("settings/")) {
-      const requestedSection = view.split("/")[1];
+    const target = view === "comfyui" ? "settings/comfy" : view;
+    if (target === "settings" || target.startsWith("settings/")) {
+      const requestedSection = target.split("/")[1];
       setSettingsSection(requestedSection || "general");
       setModal("settings");
       return;
@@ -2987,13 +1332,16 @@ export default function App() {
         "favorites",
         "likes",
         "search",
-      ].includes(view)
+      ].includes(target)
     ) {
-      if (["landing", "workspace", "projects", "skills"].includes(view))
+      if (["landing", "workspace", "projects", "skills"].includes(target)) {
         setMobileChat(false);
-      setActive(view);
+      }
+      setActive(target);
       setModal("");
-    } else setModal(view);
+    } else {
+      setModal(target);
+    }
   }
   function add(items: Asset[], subject: boolean): void {
     (subject ? setSubjects : setAssets)((current) => {
@@ -3335,7 +1683,12 @@ export default function App() {
                           onConnect: (fresh) => {
                             void desktopAgentLifecycle
                               .connect(fresh)
-                              .catch(() => undefined);
+                              .catch((error) => {
+                                console.warn(
+                                  "[App] desktopAgentLifecycle connect failed:",
+                                  error,
+                                );
+                              });
                           },
                           sending: agentState.sending,
                           activity: agentState.activity,
@@ -3451,21 +1804,7 @@ export default function App() {
       )}
       {modal && (
         <Modal
-          title={
-            modal === "search"
-              ? "搜索"
-              : modal === "prompts"
-                ? "提示词库"
-                : modal === "settings"
-                  ? "设置"
-                  : modal === "assets"
-                    ? "资产管理"
-                    : modal === "shortcuts"
-                      ? "快捷按键"
-                      : modal === "tasks"
-                        ? "任务列表"
-                        : "使用说明"
-          }
+          title={getModalTitle(modal)}
           onClose={() => setModal("")}
         >
           <DeferredPanelBoundary key={modal} onClose={() => setModal("")}>
@@ -3591,9 +1930,7 @@ export default function App() {
                 onConfigure={() => open("settings/providers")}
                 onCancelTask={cancelTask}
                 onPauseTask={pauseTask}
-                canPauseTask={(taskId) =>
-                  Boolean(taskControllers.current[taskId])
-                }
+                canPauseTask={canPauseTask}
                 onResumeTask={resumeTask}
                 onRetryTask={(taskId) => {
                   if (activeProject) retryTask(activeProject.id, taskId);
