@@ -2,7 +2,7 @@
 
 - Task ID：TASK-MOBILE-12AI-001；NOT VERIFIED；2026-10-18；交付包角色：current。
 - [Intent](intent.md) / [Spec](spec.md) / [Plan](plan.md) / [Verification](verification.md)。
-- 文档base9d10，前候选55e的独审已暂停；本次新head尚未提交，不伪造独立审核PASS。另一个独立reviewer须核对最终diff与收据。
+- 文档base9d10，前候选55e的独审已暂停；编写本记录时新head尚未提交，最终文档head与门禁以外部收据/PR为准，不伪造独立审核PASS。另一个独立reviewer须核对最终diff与收据。
 
 产品source审核、b0ef补审和9d10同tree晋升仍按[原Review](../2026-10-18-mobile-12ai/review.md)及冻结外部报告解释，不改旧head或签名。本次实施者曾做旧产品review，因此其当前自检不是新文档独审。
 

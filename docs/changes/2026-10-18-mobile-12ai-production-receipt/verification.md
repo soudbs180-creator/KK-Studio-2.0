@@ -2,7 +2,7 @@
 
 - Task ID：TASK-MOBILE-12AI-001；REVIEW / NOT VERIFIED；2026-10-18；交付包角色：current。
 - [Intent](intent.md) / [Spec](spec.md) / [Plan](plan.md) / [Review](review.md)。
-- 文档PR base/正式生产source：`9d10af39d0b028a8ddc7f06c594c813ef25b7205`；产品tree `611cf648ade1d0fb98c5474ae91615f0bbaf1a23`。前一文档候选55e仅是记录来源，不是生产source；新head尚未提交。
+- 文档PR base/正式生产source：`9d10af39d0b028a8ddc7f06c594c813ef25b7205`；产品tree `611cf648ade1d0fb98c5474ae91615f0bbaf1a23`。前一文档候选55e仅是记录来源，不是生产source；编写本记录时新head尚未提交，最终文档head与门禁以外部收据/PR为准。
 
 ## 已有发布与验证
 
