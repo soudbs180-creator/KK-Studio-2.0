@@ -11,6 +11,22 @@
 
 # 当前项目事实（2026-10-18）
 
+- `currentTask`: TASK-COLDSTART-LOCAL-20261018 IN_PROGRESS/NOT_VERIFIED；branch fix/TASK-COLDSTART-LOCAL-20261018，base fe103d2b0ac24da90f5820b8034f6a016a79221b，实体树仍D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017。
+- `sourceVersionBoundary`: 当前源码候选Desktop/Web2.1.40、Mobile2.1.1规划未变；官方新构建、完整verify及实际默认库严格冷启尚未完成。原2.1.39/source50412d4e和EXE e9caebca只是前次产物，不批准当前新源码。
+- `coldFailureBoundary`: 原首次真正cold比较失败保留；差异为legacy任务/聊天/项目时间与revision，内容/身份未发现丢失。随后同实例全字段activation PASS不能替代冷启。taskRecovery终态兄弟结果往返造成净无变化仍写入、AgentHost同值thread/messages更新时间，两路径合成RED已保全；最小修复只跳过相同值commit，完整真实变化/flush失败/身份和权限保护仍验证。
+- `preservation`: 开工9树141dirty/index/diff/refs/raw checkpoint保全PASS，工程外sidebar-canvas-20261018-d0cffabe-7380-43be-b482-e280d7be4df4，receipt a9937aa2。main现96dirty另存233d4c85；原63历史字节比较因已有并发修改FAIL，HEAD/index未变，绝不回退。旧失败、旧v2/v3、资料和产物副本均保留，当前完整资料新副本待正常关闭后取证。
+- `tasksAndTrees`: 当前153项89DONE/48PARTIAL/11TODO/3BLOCKED/2IN_PROGRESS，开放64；37功能成熟度不提升。只读采样9树17分支、approved root5/4，禁止新增而复用现有树。两新增issue68树有独立owner，越界创建授权UNKNOWN，全部保护。已分配开放路由7条零失配；coord仍读主仓旧账本且claim刷新风险未接管。
+- `remoteBoundary`: 本轮fetch无prune后origin/main c248d8178ec1754315559a9e476ac909bb494287；该ref版本Desktop2.1.37/Web2.1.38/Mobile2.1.3，属于并行来源，Hosted与运行未重新验收，不混入或回退本候选。
+- `nextLocal`: 先完成当前全部字段/全部时间/revision严格cold比较，才实施下一项。P1 Gateway实际增量流适合本地合成上游验收；其后Canvas同步当前Native协议专项。父任务保持开放，真实Provider/新回复/Hosted/签名/Mobile与用户整体验收仍未闭环。
+- `boundaries`: 未删除或移动文件、清理树、覆盖并行工作、共享安装依赖、发送模型请求、push/merge或发布。历史验证只按当时源与产物解释，当前结论以[本轮验证](../changes/2026-10-18-coldstart-local/verification.md)及精确收据为准。
+
+<!-- CURRENT_FACTS_END -->
+<!-- HISTORICAL_SNAPSHOTS_BEGIN -->
+
+## 2026-10-18 侧栏与宽图源码504/文档fe交付时快照（历史）
+
+# 当前项目事实（2026-10-18）
+
 - `currentTask`: TASK-SIDEBAR-CANVAS-20261018 有界本地DONE/PASS，branch fix/TASK-SIDEBAR-CANVAS-20261018；base ab2ceef0、产品source50412d4e51e07a488bd9ad0e1cee03dd48f58998，实体树仍D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017。
 - `sourceVersionBoundary`: Desktop/Web2.1.39，Mobile2.1.1规划；精确504完整verify Node1960PASS14skip、Agent204PASS2skip、browser854首试/0flaky、Design41+8/dev4。Rust源未变，前冻结228PASS1ignore+41集成按相同源码绑定。当前EXE e9caebca、input 54171d71、loaded index-BKPyThUX.js/79ae21a2。
 - `nativeAndData`: 新EXE fresh四正常启闭、侧栏pin/unpin/三排序及priority保持、真实项目/组操作/新root包往返与宽图6状态PASS；原默认库两正常启闭，9项目/11聊天/22消息及身份/聊天/草稿/选择/图/memory保持，输入框可编辑。没有harness生成提交或额度reset。
@@ -20,9 +36,6 @@
 - `preservation`: 主工程外根sidebar-canvas-20261018-69e77b85-6d69-4f51-8602-a6c3236eb6c2保留7树原110dirty/index/refs/raw3及v2/v3/旧产物/全部失败。最初2763源副本独立0差异；最新2807文件350182148B完整保全、独立保存副本逐份hash匹配（92c61ff9）。main原63项字节/HEAD/index及现69dirty/并发6路径保护。后续live缓存过期失败如实保留，不声称永远静止。
 - `finalHeadBoundary`: 本轮[验证](../changes/2026-10-18-sidebar-canvas/verification.md)绑定504产品源。最终文档独立双轴补审、Delivery、私有全refs/产物/证据归档、两个真实日常lnk同PID无CDP还原，以工程外最终收据裁决，无收据仍未交付。日常lnk引用本树不可清理。
 - `boundaries`: 未删除/移动文件、回收工作树、覆盖并行改动、push/merge或发布；真实新回复/上游增量/Hosted/签名/安装器/Mobile和用户整体验收仍开放。Native内部IPC未instrument、首CDP前网络不可观测，不作零内部调用声明。
-
-<!-- CURRENT_FACTS_END -->
-<!-- HISTORICAL_SNAPSHOTS_BEGIN -->
 
 ## 2026-10-18 本地安全边界交付时快照（历史，source926/docsab2）
 

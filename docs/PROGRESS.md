@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-10-18 冷启动严格比较核查（IN_PROGRESS）
+
+候选Desktop/Web2.1.40（Mobile2.1.1未变），base fe103d2b。保留原39首次cold FAIL及随后activation PASS；以合成RED确认taskRecovery终态兄弟结果净无变化仍刷时间/revision、AgentHost同值重连保存仍更新时间，最小幂等修复及真实变化/flush失败/身份保护回归已通过，完整verify/独审/新官方Native默认全字段严格冷启待验。开工9树141dirty/index/refs/raw保全PASS，main现96dirty另存；旧63字节历史比较因并发变更FAIL，HEAD/index未变，不回退资料。153项89DONE/64开放、9树17分支/预算5/4，无删除移动。冷启闭环后才按P1推进Gateway本地增量流；[本轮验证](changes/2026-10-18-coldstart-local/verification.md)保留各阶段实际边界。
+
 ## 2026-10-18 侧栏、宽图与桌面最终候选（有界本地DONE/PASS）
 
 source50412d4e / Desktop-Web2.1.39：pin/sort同快照持久化、共享宽图几何和429保存前健康标记已修复；精确完整verify Node1960PASS14skip、Agent204PASS2skip、browser854首试零flaky、Design41+8/dev4。Rust源不变，前冻结228PASS1ignore+41集成绑定相同源码。当前官方EXE e9caebca、loaded 79ae21a2；新fresh四次正常启闭及侧栏/包/宽图六状态PASS，原库两周期9项目/11聊天/22消息及身份/草稿/选择/memory保持。

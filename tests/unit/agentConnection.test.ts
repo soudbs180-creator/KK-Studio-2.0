@@ -52,7 +52,7 @@ test("home settings can connect without persisting synthetic workspace history i
   assert.equal(writes, 0);
 });
 
-test("reconnect persists thinner remote history without losing canonical identities or metadata", async (t) => {
+test("reconnect persists thinner remote history without losing metadata and skips identical replay", async (t) => {
   let project = createProject({
     prompt: "",
     model: "",
@@ -79,6 +79,7 @@ test("reconnect persists thinner remote history without losing canonical identit
     codex: { busy: false },
   });
   let saves = 0;
+  let flushes = 0;
   const conn = createAgentConnection({
     storage: memoryStorage(),
     eventSourceFactory: harness.eventSourceFactory,
@@ -119,11 +120,17 @@ test("reconnect persists thinner remote history without losing canonical identit
         project = next;
         saves++;
       },
+      flush: async () => {
+        flushes++;
+      },
       generate: async () => ({}),
     }),
   );
   t.after(() => conn.disconnect());
   for (let attempt = 0; attempt < 2; attempt++) {
+    const beforeProject = project;
+    const beforeSaves = saves;
+    const beforeFlushes = flushes;
     await conn.connect();
     assert.equal(
       conn.getState().status,
@@ -146,12 +153,15 @@ test("reconnect persists thinner remote history without losing canonical identit
       assert.deepEqual(restored.opaqueMetadata, original.opaqueMetadata);
       assert.equal(restored.content, `restored ${original.role}`);
     }
+    assert.ok(flushes > beforeFlushes, "reconnect waits for pending saves");
+    if (attempt === 0) {
+      assert.ok(saves > beforeSaves, "changed remote history is committed");
+    } else {
+      assert.equal(saves, beforeSaves, "identical replay does not commit");
+      assert.strictEqual(project, beforeProject);
+    }
     conn.disconnect();
   }
-  assert.ok(
-    saves >= 2,
-    "real AgentHost canonical persistence ran on reconnect",
-  );
 });
 
 test("migrated legacy-codex resumes its exact old thread while original empty chats receive separate ownership", async (t) => {

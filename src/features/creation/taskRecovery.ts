@@ -4,6 +4,7 @@ import type {
   CreationTask,
   CreationTaskOutput,
 } from "./model.ts";
+import { sameJson } from "./chatMigration.ts";
 
 const INTERRUPTIBLE_STATUSES = new Set(["queued", "running"]);
 
@@ -475,10 +476,8 @@ export function reconcileRetryTaskParents(
   snapshot: CreationSnapshot,
   now = Date.now(),
 ): CreationSnapshot {
-  let changed = false;
   const projects = snapshot.projects.map((project) => {
     let tasks = project.tasks;
-    let projectChanged = false;
     let passChanged = true;
     let pass = 0;
     while (passChanged && pass++ <= project.tasks.length) {
@@ -629,7 +628,7 @@ export function reconcileRetryTaskParents(
           tasks = tasks.map((task, index) =>
             index === parentIndex ? nextParent : task,
           );
-          changed = projectChanged = passChanged = true;
+          passChanged = true;
           continue;
         }
         const reconciliationRetry =
@@ -667,16 +666,28 @@ export function reconcileRetryTaskParents(
         tasks = tasks.map((task, index) =>
           index === parentIndex ? nextParent : task,
         );
-        changed = projectChanged = passChanged = true;
+        passChanged = true;
       }
     }
+    // Sibling receipts can cancel out; publish only the final persisted change.
+    tasks = tasks.map((task, index) => {
+      const original = project.tasks[index];
+      if (task === original) return original;
+      return sameJson(
+        JSON.parse(JSON.stringify({ ...task, updatedAt: original.updatedAt })),
+        JSON.parse(JSON.stringify(original)),
+      )
+        ? original
+        : task;
+    });
+    if (tasks.every((task, index) => task === project.tasks[index]))
+      tasks = project.tasks;
     const nextItems = reconcileSourceGenerationStatuses({ ...project, tasks });
-    if (nextItems !== project.items) projectChanged = true;
-    return projectChanged
+    return tasks !== project.tasks || nextItems !== project.items
       ? { ...project, tasks, items: nextItems, updatedAt: now }
       : project;
   });
-  return changed
+  return projects.some((project, index) => project !== snapshot.projects[index])
     ? { ...snapshot, projects, revision: snapshot.revision + 1 }
     : snapshot;
 }
@@ -830,11 +841,9 @@ export function recoverInterruptedTasks(
     };
   });
   return reconcileRetryTaskParents(
-    {
-      ...snapshot,
-      revision: interruptedAny ? snapshot.revision + 1 : snapshot.revision,
-      projects,
-    },
+    interruptedAny
+      ? { ...snapshot, revision: snapshot.revision + 1, projects }
+      : snapshot,
     now,
   );
 }

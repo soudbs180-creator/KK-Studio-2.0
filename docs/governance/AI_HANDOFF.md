@@ -8,7 +8,13 @@
 
 本文是最短恢复入口，不是任务状态或产品能力的第二事实源。任务状态只读 [`task-ledger.json`](task-ledger.json)；当前项目事实只读 [`PROJECT_STATE.md`](PROJECT_STATE.md)；历史验证只按带日期的 change package、commit、运行模式和 receipt 回读。
 
-## 当前恢复入口：侧栏持久化与宽图桌面（2026-10-18）
+## 当前恢复入口：冷启动严格比较闭环（2026-10-18）
+
+TASK-COLDSTART-LOCAL-20261018 IN_PROGRESS/NOT_VERIFIED，branch fix/TASK-COLDSTART-LOCAL-20261018，base fe103d2b，同一审计物理树。先读[规格](../changes/2026-10-18-coldstart-local/spec.md)、[计划](../changes/2026-10-18-coldstart-local/plan.md)和[验证](../changes/2026-10-18-coldstart-local/verification.md)。源码候选Desktop/Web2.1.40，Mobile2.1.1未变；尚未以旧39验证代替40。原cold FAIL与后续同实例activation PASS分开保留，需新官方产物真正0→1冷启且完整字段含时间/revision严格相等。
+
+开工9树141dirty及全部refs/index/raw保全PASS；主仓96dirty另存，旧63历史比较因并发变动FAIL，HEAD/index未变，不恢复旧副本覆盖。现153项89DONE/64开放、9树17分支、approved5/4，7已分配开放路由零失配；37功能成熟度不提升。root独占文档/Git/端口/Native，两个源文件分工已冻结待独审，下一Gateway只读准备，冷启未PASS前不实施。全部用户资料与旧证据保全；仍禁止删除/移动、回收、真实生成、push/merge或发布。coord不能作为本候选权威。
+
+## 上轮恢复入口：侧栏持久化与宽图桌面（2026-10-18）
 
 TASK-SIDEBAR-CANVAS-20261018有界本地DONE/PASS / fix/TASK-SIDEBAR-CANVAS-20261018；base ab2ceef0、产品source50412d4e / Desktop-Web2.1.39。先读[验证](../changes/2026-10-18-sidebar-canvas/verification.md)、[审查](../changes/2026-10-18-sidebar-canvas/review.md)和PROJECT_STATE。精确完整854首试/0flaky、fresh新EXE四启闭/侧栏/宽图6状态/包往返、原库两周期9项目/11聊天/22消息与身份/草稿/选择保全通过，429竞态和V3夹具缺口已修复复验。原793的852/1flaky、f3b拒收及全部失败不重写；最终文档精确HEAD/Delivery/私有归档/两个lnk单实例还原按外部收据，不以旧SHA批准新HEAD。
 
