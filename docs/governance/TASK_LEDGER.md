@@ -158,7 +158,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-VERIFY-DEPS-20261015 | 恢复共享依赖清理事故并核验执行边界 | PARTIAL | 进行中 | P1 | TASK-CODEX-HOME-20261015 | root | 保持防复发子范围PASS与旧事故UNKNOWN分离；不在共享依赖安装或清理。原始字节及影响如无证据不得补写；最终当前提交/托管/交付门禁另验。 |
 | TASK-DESIGN-MD-20261015 | 统一DESIGN设计系统与产品UI收敛 | PARTIAL | 进行中 | P1 | none | root | 关闭基础独审问题，将规则落入设置/模型/聊天/画布/项目/素材等实际页面，按Desktop→Web留同状态证据。 |
 | TASK-SIDEBAR-CANVAS-20261018 | 侧栏置顶排序持久化与宽图连线桌面验收 | DONE | 已完成 | P1 | none | root | 本轮有界本地技术完成；最终文档SHA审查/Delivery/归档/日常还原以工程外收据裁决；真实Provider/Hosted/发布及用户整体验收另行，保留全部资料。 |
-| TASK-COLDSTART-LOCAL-20261018 | 冷启动无效写入修复与严格数据比较闭环 | IN_PROGRESS | 进行中 | P1 | none | root | 先RED确认两条无效写入路径，最小修复并保持全部边界，再完整验证/当前产物真实冷启/独审。 |
+| TASK-COLDSTART-LOCAL-20261018 | 冷启动无效写入修复与严格数据比较闭环 | IN_PROGRESS | 进行中 | P1 | none | root | 已保留source477首次真实cold FAIL；Native→retry完整链净变化最小修复及正式RED/正例，再新完整verify/双轴/官方40与全字段strict冷启，不开始依赖其完成的Gateway。 |
 
 ## TASK-LOCAL-GUARDS-20261018 — 修复本地安全边界并核对剩余任务与工作树规则
 
@@ -3054,7 +3054,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 ## TASK-COLDSTART-LOCAL-20261018 — 冷启动无效写入修复与严格数据比较闭环
 
 - Goal: 消除语义未变的恢复和重连保存写入，保全原资料并完成真正默认库冷启动严格验收
-- Scope: taskRecovery/AgentHost幂等、相应回归与默认Native取证；不变更数据身份、协议或外部能力
+- Scope: taskRecovery/AgentHost及Native恢复归并链幂等、相应回归与默认Native取证；不变更数据身份、协议或外部能力
 - Display status: 进行中
 - Priority: P1 — 用户明确优先闭环原冷启严格比较失败，避免无效恢复写入干扰保存和最近排序
 - Requirement refs: ledger:TASK-SIDEBAR-CANVAS-20261018, ledger:TASK-CHAT-MIGRATION-20261017
@@ -3064,8 +3064,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `fix/TASK-COLDSTART-LOCAL-20261018`
 - Worktree: `D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017`
 - Modules: src/features/creation/taskRecovery.ts, src/features/agent/agentHost.ts, tests/unit, tests/desktop, docs
-- Verification: NOT_VERIFIED — 旧cold失败及字段差异已保全，开工9树141dirty稳定保全；新源码与真实冷启严格验收未完成。
+- Verification: NOT_VERIFIED — source477完整verify与源码双轴通过，官方40 EXEaa5f已构建；首次真实冷启仍FAIL任务/项目时间及revision三字段，原件与产物保全，不放宽比较。Native跨函数残余正在诊断，Gateway未实施。
 - Evidence: [docs/changes/2026-10-18-coldstart-local/intent.md](../../docs/changes/2026-10-18-coldstart-local/intent.md), [docs/changes/2026-10-18-coldstart-local/spec.md](../../docs/changes/2026-10-18-coldstart-local/spec.md), [docs/changes/2026-10-18-coldstart-local/plan.md](../../docs/changes/2026-10-18-coldstart-local/plan.md), [docs/changes/2026-10-18-coldstart-local/verification.md](../../docs/changes/2026-10-18-coldstart-local/verification.md), [docs/changes/2026-10-18-coldstart-local/review.md](../../docs/changes/2026-10-18-coldstart-local/review.md)
-- Next action: 先RED确认两条无效写入路径，最小修复并保持全部边界，再完整验证/当前产物真实冷启/独审。
+- Next action: 已保留source477首次真实cold FAIL；Native→retry完整链净变化最小修复及正式RED/正例，再新完整verify/双轴/官方40与全字段strict冷启，不开始依赖其完成的Gateway。
 - Last verified: 2026-10-18
 - Updated: 2026-10-18

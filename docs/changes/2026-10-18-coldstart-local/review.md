@@ -3,3 +3,5 @@
 TASK-COLDSTART-LOCAL-20261018；base fe103d2b0ac24da90f5820b8034f6a016a79221b。不沿用上轮fe103审查批准新代码。边界见[Spec](spec.md)与[Verification](verification.md)。
 
 首轮dirty Standards仅源码预检PASS/54定向；首轮独立Spec CHANGES REQUIRED/COLD-SPEC-001/P1，收据review-spec-dfb1d54c-a5ae-466b-a794-7341f39202d2.json SHA f8ce56da49d6382388f22a99d900426b4e460d4d1934aacf74c3ff5da15482ba完整保留。空字段不落盘却导致同值消息commit的问题已真实RED后修正双方持久化JSON比较。新增真实merge/metadata-only/flush等回归；旧调用者强制重复commit断言与新规格冲突，改为首次变更commit/相同回放不commit且仍flush，身份/metadata原断言保留。扩展113项已PASS，仍需精确新commit双轴补审、完整verify和真正默认冷启，不以dirty预检代替最终审查。
+
+source477完整verify及双轴源码审查均通过，但首次真实cold仍FAIL，仅任务/项目时间和revision+2；这不撤改已发生的源码检查或失败。两实际journals与保存快照精确复放定位Native→retry跨函数往返，另补nativeTaskHost终点净判定及10条正式回归，validated新回执时间和全部真实变化保持。补修仍须新的精确commit双轴、完整verify与官方产物真正strict冷启；未批准当前新代码为DONE。实际失败、pure replay与全部收据见[Verification](verification.md)。

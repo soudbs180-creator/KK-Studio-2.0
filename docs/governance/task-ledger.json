@@ -9984,7 +9984,7 @@
     "id": "TASK-COLDSTART-LOCAL-20261018",
     "title": "冷启动无效写入修复与严格数据比较闭环",
     "goal": "消除语义未变的恢复和重连保存写入，保全原资料并完成真正默认库冷启动严格验收",
-    "scope": "taskRecovery/AgentHost幂等、相应回归与默认Native取证；不变更数据身份、协议或外部能力",
+    "scope": "taskRecovery/AgentHost及Native恢复归并链幂等、相应回归与默认Native取证；不变更数据身份、协议或外部能力",
     "acceptance": [
       "重复终态恢复及同值Agent保存不刷新时间/revision，真实变化与错误、身份/权限保护保持",
       "完整工程验证及独立精确源审查通过，当前官方Native真实冷启全部字段严格比较通过",
@@ -10015,10 +10015,10 @@
       "docs/changes/2026-10-18-coldstart-local/review.md"
     ],
     "lastVerified": "2026-10-18",
-    "verification": "旧cold失败及字段差异已保全，开工9树141dirty稳定保全；新源码与真实冷启严格验收未完成。",
+    "verification": "source477完整verify与源码双轴通过，官方40 EXEaa5f已构建；首次真实冷启仍FAIL任务/项目时间及revision三字段，原件与产物保全，不放宽比较。Native跨函数残余正在诊断，Gateway未实施。",
     "verificationResult": "NOT_VERIFIED",
     "updated": "2026-10-18",
-    "nextAction": "先RED确认两条无效写入路径，最小修复并保持全部边界，再完整验证/当前产物真实冷启/独审。",
+    "nextAction": "已保留source477首次真实cold FAIL；Native→retry完整链净变化最小修复及正式RED/正例，再新完整verify/双轴/官方40与全字段strict冷启，不开始依赖其完成的Gateway。",
     "requirementRefs": [
       "ledger:TASK-SIDEBAR-CANVAS-20261018",
       "ledger:TASK-CHAT-MIGRATION-20261017"

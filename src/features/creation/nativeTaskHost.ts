@@ -17,6 +17,7 @@ import { imageResultContext } from "../image-edit/context.ts";
 import { ImageEditMappingError } from "../image-edit/imageProcessing.ts";
 import { editReceiptReason } from "../image-edit/recovery.ts";
 import { assertSynchronousProviderSubmission } from "./providerSubmission.ts";
+import { sameJson } from "./chatMigration.ts";
 
 /** The request crossing the Desktop TaskHost IPC boundary. It contains no API key. */
 export interface NativeTaskHostRequest {
@@ -350,6 +351,7 @@ export async function reconcileNativeTasks(
   const byIdempotency = new Map(
     records.map((record) => [record.idempotencyKey, record]),
   );
+  const newerNativeReceipts = new Set<CreationTask>();
   let changed = false;
   const projects = await Promise.all(
     snapshot.projects.map(async (project) => {
@@ -363,6 +365,8 @@ export async function reconcileNativeTasks(
           const native = candidate
             ? validateNativeTaskRecord(candidate, task)
             : undefined;
+          if (native && native.updatedAt > task.updatedAt)
+            newerNativeReceipts.add(task);
           const mayHaveBeenSubmitted =
             task.submissionState === "submitted" ||
             task.submissionState === "unknown" ||
@@ -824,9 +828,45 @@ export async function reconcileNativeTasks(
       return { ...project, items, tasks, canvas, updatedAt: Date.now() };
     }),
   );
-  return reconcileRetryTaskParents(
+  const reconciled = reconcileRetryTaskParents(
     changed
       ? { ...snapshot, projects, revision: snapshot.revision + 1 }
       : snapshot,
   );
+  if (reconciled === snapshot) return snapshot;
+  // An older parent receipt can be undone by retry aggregation. Compare the
+  // complete result with the input before publishing only audit-time changes.
+  const finalProjects = reconciled.projects.map((project, projectIndex) => {
+    const original = snapshot.projects[projectIndex];
+    if (project === original) return original;
+    let tasks = project.tasks.map((task, taskIndex) => {
+      const originalTask = original.tasks[taskIndex];
+      if (task === originalTask || newerNativeReceipts.has(originalTask))
+        return task;
+      return sameJson(
+        JSON.parse(
+          JSON.stringify({ ...task, updatedAt: originalTask.updatedAt }),
+        ),
+        JSON.parse(JSON.stringify(originalTask)),
+      )
+        ? originalTask
+        : task;
+    });
+    if (tasks.every((task, index) => task === original.tasks[index]))
+      tasks = original.tasks;
+    const candidate = tasks === project.tasks ? project : { ...project, tasks };
+    return sameJson(
+      JSON.parse(
+        JSON.stringify({ ...candidate, updatedAt: original.updatedAt }),
+      ),
+      JSON.parse(JSON.stringify(original)),
+    )
+      ? original
+      : candidate;
+  });
+  return finalProjects.some(
+    (project, index) => project !== snapshot.projects[index],
+  )
+    ? { ...reconciled, projects: finalProjects }
+    : snapshot;
 }
