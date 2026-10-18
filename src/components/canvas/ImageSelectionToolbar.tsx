@@ -25,15 +25,16 @@ export default function ImageSelectionToolbar({
   children: ReactNode;
 }) {
   const ref = useRef<HTMLDivElement>(null);
+  const [host, setHost] = useState<HTMLElement | null>(null);
   const [position, setPosition] = useState<Position>({
     left: 0,
     top: 0,
-    maxWidth: 0,
+    scale: 1,
     visible: false,
-    revealDelta: 0,
   });
   useLayoutEffect(() => {
     if (!selected) return;
+    setHost(anchor.current?.closest<HTMLElement>(".canvas") ?? null);
     let frame: number;
     let previous: Position | undefined;
     const measure = (): void => {
@@ -61,7 +62,7 @@ export default function ImageSelectionToolbar({
     return () => cancelAnimationFrame(frame);
   }, [anchor, selected]);
   if (!selected) return null;
-  return createPortal(
+  const toolbar = (
     <div
       ref={ref}
       className="image-selection-toolbar"
@@ -71,7 +72,7 @@ export default function ImageSelectionToolbar({
       style={{
         left: position.left,
         top: position.top,
-        maxWidth: position.maxWidth,
+        transform: `scale(${position.scale})`,
         visibility: position.visible ? "visible" : "hidden",
       }}
       onPointerDown={(event) => event.stopPropagation()}
@@ -109,7 +110,7 @@ export default function ImageSelectionToolbar({
       }}
     >
       {children}
-    </div>,
-    document.body,
+    </div>
   );
+  return host ? createPortal(toolbar, host) : toolbar;
 }

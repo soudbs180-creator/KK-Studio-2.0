@@ -1,0 +1,663 @@
+{
+  "cases": [
+    {
+      "name": "existing-chat-independent-root-thread",
+      "input": {
+        "version": 2,
+        "revision": 4,
+        "activeProjectId": "p",
+        "homeDraft": {
+          "extra": "home"
+        },
+        "projectGroups": [],
+        "extra": {
+          "keep": true
+        },
+        "projects": [
+          {
+            "id": "p",
+            "items": [],
+            "createdAt": 10,
+            "updatedAt": 20,
+            "activeChatId": "c",
+            "chats": {
+              "c": {
+                "id": "c",
+                "name": "Existing",
+                "createdAt": 1,
+                "updatedAt": 2,
+                "draft": {
+                  "text": "own",
+                  "setting": "keep"
+                },
+                "messages": [],
+                "mainAgent": "codex",
+                "modelAllowlist": []
+              }
+            },
+            "agentThreadId": "root-thread",
+            "messages": [],
+            "composerDraft": {
+              "prompt": "",
+              "attachments": [],
+              "extra": "prefs"
+            },
+            "extra": {
+              "keep": true
+            },
+            "tasks": [
+              {
+                "id": "t",
+                "prompt": "past",
+                "model": "m",
+                "status": "succeeded"
+              }
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "version": 3,
+        "revision": 5,
+        "activeProjectId": "p",
+        "homeDraft": {
+          "extra": "home"
+        },
+        "projectGroups": [],
+        "extra": {
+          "keep": true
+        },
+        "projects": [
+          {
+            "id": "p",
+            "items": [],
+            "createdAt": 10,
+            "updatedAt": 20,
+            "activeChatId": "c",
+            "chats": {
+              "c": {
+                "id": "c",
+                "name": "Existing",
+                "createdAt": 1,
+                "updatedAt": 2,
+                "draft": {
+                  "text": "own",
+                  "setting": "keep"
+                },
+                "messages": [],
+                "mainAgent": "codex",
+                "modelAllowlist": []
+              },
+              "legacy-codex": {
+                "id": "legacy-codex",
+                "name": "Codex 历史对话",
+                "createdAt": 10,
+                "updatedAt": 20,
+                "draft": {},
+                "messages": [],
+                "mainAgent": "codex",
+                "modelAllowlist": [],
+                "legacySource": "codex",
+                "agentThreadId": "root-thread"
+              }
+            },
+            "extra": {
+              "keep": true
+            },
+            "tasks": [
+              {
+                "id": "t",
+                "prompt": "past",
+                "model": "m",
+                "status": "succeeded"
+              }
+            ],
+            "legacyComposerPreferences": {
+              "prompt": "",
+              "attachments": [],
+              "extra": "prefs"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "unknown-message-and-attachment-preserved",
+      "input": {
+        "version": 2,
+        "revision": 1,
+        "activeProjectId": "p2",
+        "homeDraft": {},
+        "projects": [
+          {
+            "id": "p2",
+            "items": [],
+            "messages": [
+              {
+                "id": "m",
+                "role": "system",
+                "content": "unknown history",
+                "detail": {
+                  "keep": true
+                }
+              }
+            ],
+            "composerDraft": {
+              "prompt": "",
+              "attachments": [
+                {
+                  "id": "a",
+                  "name": "photo",
+                  "mime": "image/png",
+                  "size": 1,
+                  "dataUrl": "data:image/png;base64,AA=="
+                }
+              ],
+              "extra": "draft"
+            },
+            "tasks": [
+              {
+                "id": "t",
+                "prompt": "old",
+                "model": "m",
+                "status": "succeeded"
+              }
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "version": 3,
+        "revision": 2,
+        "activeProjectId": "p2",
+        "homeDraft": {},
+        "projects": [
+          {
+            "id": "p2",
+            "items": [],
+            "tasks": [
+              {
+                "id": "t",
+                "prompt": "old",
+                "model": "m",
+                "status": "succeeded"
+              }
+            ],
+            "activeChatId": "legacy-history",
+            "chats": {
+              "legacy-history": {
+                "id": "legacy-history",
+                "name": "旧消息，来源待核对",
+                "createdAt": 0,
+                "updatedAt": 0,
+                "draft": {
+                  "prompt": "",
+                  "attachments": [
+                    {
+                      "id": "a",
+                      "name": "photo",
+                      "mime": "image/png",
+                      "size": 1,
+                      "dataUrl": "data:image/png;base64,AA=="
+                    }
+                  ],
+                  "extra": "draft"
+                },
+                "messages": [
+                  {
+                    "id": "m",
+                    "role": "system",
+                    "content": "unknown history",
+                    "detail": {
+                      "keep": true
+                    }
+                  }
+                ],
+                "mainAgent": "direct",
+                "modelAllowlist": [],
+                "legacySource": "unknown",
+                "requiresReview": true
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "google-canonical-transcript-and-context",
+      "input": {
+        "version": 2,
+        "revision": 2,
+        "activeProjectId": "p3",
+        "homeDraft": {},
+        "projects": [
+          {
+            "id": "p3",
+            "items": [],
+            "googleConversation": {
+              "id": "g",
+              "identity": "gemini",
+              "status": "ready",
+              "messages": [
+                {
+                  "id": "gm",
+                  "role": "assistant",
+                  "text": "reply",
+                  "imageIds": ["asset-x"],
+                  "detail": {
+                    "keep": true
+                  }
+                }
+              ],
+              "archivedImageIds": []
+            }
+          }
+        ]
+      },
+      "expected": {
+        "version": 3,
+        "revision": 3,
+        "activeProjectId": "p3",
+        "homeDraft": {},
+        "projects": [
+          {
+            "id": "p3",
+            "items": [],
+            "activeChatId": "legacy-google",
+            "chats": {
+              "legacy-google": {
+                "id": "legacy-google",
+                "name": "Google 对话",
+                "createdAt": 0,
+                "updatedAt": 0,
+                "draft": {},
+                "messages": [
+                  {
+                    "id": "gm",
+                    "role": "assistant",
+                    "text": "reply",
+                    "imageIds": ["asset-x"],
+                    "detail": {
+                      "keep": true
+                    },
+                    "content": "reply"
+                  }
+                ],
+                "mainAgent": "google",
+                "modelAllowlist": [],
+                "legacySource": "google",
+                "googleConversation": {
+                  "id": "g",
+                  "identity": "gemini",
+                  "status": "ready",
+                  "archivedImageIds": []
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "message-provenance-not-task-origin-guess",
+      "input": {
+        "version": 2,
+        "revision": 9,
+        "activeProjectId": "p4",
+        "homeDraft": {},
+        "projects": [
+          {
+            "id": "p4",
+            "items": [
+              {
+                "id": "p4-prompt",
+                "title": "seed",
+                "description": "",
+                "kind": "image",
+                "generationSource": "codex",
+                "prompt": "seed"
+              }
+            ],
+            "prompt": "seed",
+            "agentThreadId": "th",
+            "messages": [
+              {
+                "id": "p4-message",
+                "role": "user",
+                "content": "seed"
+              },
+              {
+                "id": "p4-message-t",
+                "role": "user",
+                "content": "render",
+                "taskId": "t"
+              },
+              {
+                "id": "ambiguous",
+                "role": "assistant",
+                "content": "unassigned"
+              }
+            ],
+            "tasks": [
+              {
+                "id": "t",
+                "prompt": "render",
+                "model": "m",
+                "status": "succeeded"
+              }
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "version": 3,
+        "revision": 10,
+        "activeProjectId": "p4",
+        "homeDraft": {},
+        "projects": [
+          {
+            "id": "p4",
+            "items": [
+              {
+                "id": "p4-prompt",
+                "title": "seed",
+                "description": "",
+                "kind": "image",
+                "generationSource": "codex",
+                "prompt": "seed"
+              }
+            ],
+            "prompt": "seed",
+            "tasks": [
+              {
+                "id": "t",
+                "prompt": "render",
+                "model": "m",
+                "status": "succeeded"
+              }
+            ],
+            "activeChatId": "legacy-codex",
+            "chats": {
+              "legacy-codex": {
+                "id": "legacy-codex",
+                "name": "Codex 历史对话",
+                "createdAt": 0,
+                "updatedAt": 0,
+                "draft": {},
+                "messages": [
+                  {
+                    "id": "p4-message",
+                    "role": "user",
+                    "content": "seed"
+                  }
+                ],
+                "mainAgent": "codex",
+                "modelAllowlist": [],
+                "legacySource": "codex",
+                "agentThreadId": "th"
+              },
+              "legacy-direct": {
+                "id": "legacy-direct",
+                "name": "对话记录",
+                "createdAt": 0,
+                "updatedAt": 0,
+                "draft": {},
+                "messages": [
+                  {
+                    "id": "p4-message-t",
+                    "role": "user",
+                    "content": "render",
+                    "taskId": "t"
+                  }
+                ],
+                "mainAgent": "direct",
+                "modelAllowlist": [],
+                "legacySource": "direct"
+              },
+              "legacy-history": {
+                "id": "legacy-history",
+                "name": "旧消息，来源待核对",
+                "createdAt": 0,
+                "updatedAt": 0,
+                "draft": {},
+                "messages": [
+                  {
+                    "id": "ambiguous",
+                    "role": "assistant",
+                    "content": "unassigned"
+                  }
+                ],
+                "mainAgent": "direct",
+                "modelAllowlist": [],
+                "legacySource": "unknown",
+                "requiresReview": true
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "empty-project",
+      "input": {
+        "version": 2,
+        "revision": 0,
+        "activeProjectId": "empty",
+        "homeDraft": {},
+        "projects": [
+          {
+            "id": "empty",
+            "items": []
+          }
+        ]
+      },
+      "expected": {
+        "version": 3,
+        "revision": 1,
+        "activeProjectId": "empty",
+        "homeDraft": {},
+        "projects": [
+          {
+            "id": "empty",
+            "items": [],
+            "activeChatId": "chat-default",
+            "chats": {
+              "chat-default": {
+                "id": "chat-default",
+                "name": "默认对话",
+                "createdAt": 0,
+                "updatedAt": 0,
+                "draft": {},
+                "messages": [],
+                "mainAgent": "codex",
+                "modelAllowlist": []
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "two-nonempty-drafts-remain-visible",
+      "input": {
+        "version": 2,
+        "revision": 5,
+        "activeProjectId": "drafts",
+        "homeDraft": {},
+        "projects": [
+          {
+            "id": "drafts",
+            "items": [],
+            "composerDraft": {
+              "prompt": "first visible",
+              "text": "second visible",
+              "attachments": [],
+              "extra": "keep"
+            }
+          }
+        ]
+      },
+      "expected": {
+        "version": 3,
+        "revision": 6,
+        "activeProjectId": "drafts",
+        "homeDraft": {},
+        "projects": [
+          {
+            "id": "drafts",
+            "items": [],
+            "activeChatId": "legacy-history",
+            "chats": {
+              "legacy-history": {
+                "id": "legacy-history",
+                "name": "旧消息，来源待核对",
+                "createdAt": 0,
+                "updatedAt": 0,
+                "draft": {
+                  "prompt": "first visible",
+                  "text": "second visible",
+                  "attachments": [],
+                  "extra": "keep"
+                },
+                "messages": [],
+                "mainAgent": "direct",
+                "modelAllowlist": [],
+                "legacySource": "unknown",
+                "requiresReview": true
+              },
+              "legacy-draft-recovery": {
+                "id": "legacy-draft-recovery",
+                "name": "恢复草稿",
+                "createdAt": 0,
+                "updatedAt": 0,
+                "draft": {
+                  "prompt": "second visible",
+                  "text": "second visible",
+                  "attachments": [],
+                  "extra": "keep"
+                },
+                "messages": [],
+                "mainAgent": "direct",
+                "modelAllowlist": [],
+                "legacySource": "unknown",
+                "requiresReview": true,
+                "originChatId": "legacy-history"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "known-direct-message-binds-only-its-exact-task-account",
+      "input": {
+        "version": 2,
+        "revision": 1,
+        "activeProjectId": "p5",
+        "homeDraft": {},
+        "projects": [
+          {
+            "id": "p5",
+            "items": [],
+            "messages": [
+              {
+                "id": "p5-message-t1",
+                "role": "user",
+                "content": "known",
+                "taskId": "t1"
+              }
+            ],
+            "tasks": [
+              {
+                "id": "t1",
+                "prompt": "known",
+                "model": "m",
+                "status": "succeeded",
+                "providerConnectionId": "account-one",
+                "providerBaseUrl": "https://one.example/v1",
+                "providerCredentialRef": "credential-one",
+                "providerProtocol": "openai-chat",
+                "providerAuthMode": "api-key"
+              },
+              {
+                "id": "t2",
+                "prompt": "unrelated",
+                "model": "m",
+                "status": "succeeded",
+                "providerConnectionId": "account-two",
+                "providerBaseUrl": "https://two.example/v1",
+                "providerCredentialRef": "credential-two"
+              }
+            ],
+            "providerBaseUrl": "https://two.example/v1",
+            "providerCredentialRef": "credential-two"
+          }
+        ]
+      },
+      "expected": {
+        "version": 3,
+        "revision": 2,
+        "activeProjectId": "p5",
+        "homeDraft": {},
+        "projects": [
+          {
+            "id": "p5",
+            "items": [],
+            "tasks": [
+              {
+                "id": "t1",
+                "prompt": "known",
+                "model": "m",
+                "status": "succeeded",
+                "providerConnectionId": "account-one",
+                "providerBaseUrl": "https://one.example/v1",
+                "providerCredentialRef": "credential-one",
+                "providerProtocol": "openai-chat",
+                "providerAuthMode": "api-key"
+              },
+              {
+                "id": "t2",
+                "prompt": "unrelated",
+                "model": "m",
+                "status": "succeeded",
+                "providerConnectionId": "account-two",
+                "providerBaseUrl": "https://two.example/v1",
+                "providerCredentialRef": "credential-two"
+              }
+            ],
+            "providerBaseUrl": "https://two.example/v1",
+            "providerCredentialRef": "credential-two",
+            "activeChatId": "legacy-direct",
+            "chats": {
+              "legacy-direct": {
+                "id": "legacy-direct",
+                "name": "对话记录",
+                "createdAt": 0,
+                "updatedAt": 0,
+                "draft": {},
+                "messages": [
+                  {
+                    "id": "p5-message-t1",
+                    "role": "user",
+                    "content": "known",
+                    "taskId": "t1"
+                  }
+                ],
+                "mainAgent": "direct",
+                "modelAllowlist": [],
+                "legacySource": "direct",
+                "legacyProviderBinding": {
+                  "providerConnectionId": "account-one",
+                  "providerBaseUrl": "https://one.example/v1",
+                  "providerCredentialRef": "credential-one",
+                  "providerProtocol": "openai-chat",
+                  "providerAuthMode": "api-key"
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1237,3 +1237,7 @@ TASK-UI-DETAILS-20261015从最新18e143f修复，Desktop/Web2.1.26产品ab878ffd
 ## 2026-10-15 PR62合后必需门禁闭环
 
 2026-10-15 11:54:34 UTC独立只读回读actual main492abad48b0695f6117265fba6d29e8ea2a4b9bc；本轮quality38726260549全部success（repo verify/Rust fmt+test/client check+build/WebView2/隔离Native TaskHost/证据上传），双平台guards38726260498与main-health38730589177成功，7个check-runs全success，必需verify/delivery满足。产物11969904183/39602109B未过期，未下载检验内文。非必需auto-merge38726259041 failure/jobs=[]原因UNKNOWN单列。 GDI三项验收独审满足，测试任务DONE；输出证据保护另缺取消/reporter失败两类实测，继续PARTIAL，不把结构性保护冒称运行证据。HOME源码a85及Windows38项通过，正式HOME PR继续。
+
+## 2026-10-18 TASK-CANVAS-RELEASE-20261018：统一发布进行中
+
+[当前交付包](changes/2026-10-18-unified-toolbar-release/intent.md)。远端97ef为base，三端目标2.1.41；成熟chat迁移是保留现有v3项目的必要依赖。当前尚未合并/发包/部署，历史2.1.39安装器及网页不作为新版本证据。外部清理中断后恢复到新锁定任务树；后续当前head验证与正式收据另存。

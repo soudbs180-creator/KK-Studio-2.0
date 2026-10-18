@@ -1,6 +1,9 @@
 import { expect, test, type Page, type Route } from "@playwright/test";
 import { readFileSync } from "node:fs";
-import { waitForConversationPanelSettled } from "./helpers";
+import {
+  waitForConversationPanelSettled,
+  panCanvasToRevealAction,
+} from "./helpers";
 import type { ProviderConnection } from "../../src/domain/providerConnections";
 
 const generationsEndpoint = "https://models.example.test/v1/images/generations";
@@ -286,6 +289,10 @@ test("已归档图片结果使用上方选择工具栏，收藏重绘对比删�
   await expect(
     page.getByRole("region", { name: "图片对比选择" }),
   ).toContainText("1/4");
+  await panCanvasToRevealAction(
+    page,
+    actions.getByRole("button", { name: `预览${result.title}` }),
+  );
   await actions.getByRole("button", { name: `预览${result.title}` }).click();
   await expect(
     page.getByRole("dialog", { name: `预览${result.title}` }),
@@ -294,6 +301,10 @@ test("已归档图片结果使用上方选择工具栏，收藏重绘对比删�
   await expect(
     actions.getByRole("button", { name: `预览${result.title}` }),
   ).toBeFocused();
+  await panCanvasToRevealAction(
+    page,
+    actions.getByRole("button", { name: `重绘${result.title}` }),
+  );
   await actions.getByRole("button", { name: `重绘${result.title}` }).click();
   await expect(
     page.getByRole("dialog", { name: "重绘参考图片" }),
@@ -321,6 +332,10 @@ test("已归档图片结果使用上方选择工具栏，收藏重绘对比删�
     .getByRole("button", { name: "取消", exact: true })
     .click();
   await page.screenshot({ path: testInfo.outputPath("selected-result.png") });
+  await panCanvasToRevealAction(
+    page,
+    actions.getByRole("button", { name: `删除${result.title}` }),
+  );
   await actions.getByRole("button", { name: `删除${result.title}` }).click();
   await expect(node).toHaveCount(0);
   await expect(actions).toHaveCount(0);

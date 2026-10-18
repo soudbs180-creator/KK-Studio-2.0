@@ -29,7 +29,9 @@ function defaultDataDirectory(): string {
   return join(base, "kk-studio", "companion");
 }
 
-function deviceId(root: string): string {
+function deviceId(store: CompanionStore): string {
+  store.assertStandaloneRoot();
+  const root = store.root;
   const path = join(root, "app", "companion.json");
   try {
     const parsed = JSON.parse(readFileSync(path, "utf8")) as {
@@ -38,8 +40,10 @@ function deviceId(root: string): string {
     if (
       typeof parsed.deviceId === "string" &&
       /^[a-z0-9-]{8,120}$/i.test(parsed.deviceId)
-    )
+    ) {
+      store.assertStandaloneRoot();
       return parsed.deviceId;
+    }
   } catch {
     /* First launch or a damaged metadata file gets a fresh identity. */
   }
@@ -48,6 +52,7 @@ function deviceId(root: string): string {
   const metadata = JSON.stringify({ version: 1, deviceId: id });
   // CompanionStore creates the root, but app is not part of the snapshot paths.
   mkdirSync(directory, { recursive: true });
+  store.assertStandaloneRoot();
   writeFileSync(path, metadata, { encoding: "utf8", flag: "w" });
   return id;
 }
@@ -81,46 +86,57 @@ export async function startCompanionService(
 ): Promise<RunningCompanionService> {
   const root = resolve(options.dataDirectory ?? defaultDataDirectory());
   const store = new CompanionStore(root);
-  const pairingCode = randomBytes(18).toString("base64url");
-  const device = deviceId(root);
-  const port =
-    options.port ?? Number(process.env.KK_STUDIO_COMPANION_PORT ?? 4319);
-  if (
-    !Number.isInteger(port) ||
-    port < 0 ||
-    port > 65535 ||
-    (port !== 0 && port < 1024)
-  )
-    throw new Error("KK_STUDIO_COMPANION_PORT must be between 1024 and 65535");
-  const server = createCompanionServer({
-    store,
-    allowedOrigins: options.allowedOrigins ?? originsFromEnvironment(),
-    pairingCode,
-    deviceId: device,
-  });
-  await new Promise<void>((resolveListen, reject) => {
-    const onError = (error: Error) => {
-      server.off("listening", onListening);
-      reject(error);
+  let server: ReturnType<typeof createCompanionServer> | undefined;
+  try {
+    const pairingCode = randomBytes(18).toString("base64url");
+    const device = deviceId(store);
+    const port =
+      options.port ?? Number(process.env.KK_STUDIO_COMPANION_PORT ?? 4319);
+    if (
+      !Number.isInteger(port) ||
+      port < 0 ||
+      port > 65535 ||
+      (port !== 0 && port < 1024)
+    )
+      throw new Error(
+        "KK_STUDIO_COMPANION_PORT must be between 1024 and 65535",
+      );
+    server = createCompanionServer({
+      store,
+      allowedOrigins: options.allowedOrigins ?? originsFromEnvironment(),
+      pairingCode,
+      deviceId: device,
+    });
+    await new Promise<void>((resolveListen, reject) => {
+      const listeningServer = server!;
+      const onError = (error: Error) => {
+        listeningServer.off("listening", onListening);
+        reject(error);
+      };
+      const onListening = () => {
+        listeningServer.off("error", onError);
+        resolveListen();
+      };
+      listeningServer.once("error", onError);
+      listeningServer.once("listening", onListening);
+      listeningServer.listen(port, "127.0.0.1");
+    });
+    store.assertStandaloneRoot();
+    const address = server.address();
+    if (!address || typeof address === "string")
+      throw new Error("本机服务未绑定端口。");
+    return {
+      server,
+      store,
+      pairingCode,
+      port: address.port,
+      deviceId: device,
     };
-    const onListening = () => {
-      server.off("error", onError);
-      resolveListen();
-    };
-    server.once("error", onError);
-    server.once("listening", onListening);
-    server.listen(port, "127.0.0.1");
-  });
-  const address = server.address();
-  if (!address || typeof address === "string")
-    throw new Error("本机服务未绑定端口。");
-  return {
-    server,
-    store,
-    pairingCode,
-    port: address.port,
-    deviceId: device,
-  };
+  } catch (error) {
+    if (server?.listening) server.close();
+    store.close();
+    throw error;
+  }
 }
 
 async function runFromCli(): Promise<void> {

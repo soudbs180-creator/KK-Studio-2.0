@@ -1,5 +1,22 @@
 import { expect, test } from "@playwright/test";
 import { openWorkspace } from "./helpers";
+import { createDefaultChat } from "../../src/features/creation/model";
+
+function channelChats() {
+  const names = {
+    codex: "Codex 原聊天",
+    direct: "API 原聊天",
+    google: "Google 原聊天",
+  };
+  return Object.fromEntries(
+    (["codex", "direct", "google"] as const).map((channel) => {
+      const chat = createDefaultChat(channel, names[channel]);
+      chat.mainAgent = channel;
+      chat.draft.conversationChannel = channel;
+      return [channel, chat];
+    }),
+  );
+}
 
 test("创作区协作伙伴入口打开任务角色而不是账号连接", async ({ page }) => {
   await page.goto("/");
@@ -25,12 +42,12 @@ test("创作区协作伙伴入口打开任务角色而不是账号连接", async
 test("从项目选择协作角色会应用到原项目，保留首页的独立草稿", async ({
   page,
 }) => {
-  await openWorkspace(page);
-  await page.getByLabel("执行方式", { exact: true }).selectOption("direct");
+  await openWorkspace(page, channelChats());
+  await page.getByRole("tab", { name: "API 原聊天", exact: true }).click();
   await page
     .getByRole("textbox", { name: "对话内容", exact: true })
     .fill("项目 API 独立草稿");
-  await page.getByLabel("执行方式", { exact: true }).selectOption("codex");
+  await page.getByRole("tab", { name: "Codex 原聊天", exact: true }).click();
   await page
     .getByRole("textbox", { name: "对话内容", exact: true })
     .fill("项目原有想法");
@@ -70,6 +87,10 @@ test("从项目选择协作角色会应用到原项目，保留首页的独立�
     page.getByRole("textbox", { name: "对话内容", exact: true }),
   ).toHaveValue(/项目原有想法[\s\S]*协作角色：审查伙伴/);
   await page.getByLabel("执行方式", { exact: true }).selectOption("direct");
+  await expect(
+    page.getByRole("textbox", { name: "对话内容", exact: true }),
+  ).toHaveValue(/项目原有想法[\s\S]*协作角色：审查伙伴/);
+  await page.getByRole("tab", { name: "API 原聊天", exact: true }).click();
   await expect(
     page.getByRole("textbox", { name: "对话内容", exact: true }),
   ).toHaveValue("项目 API 独立草稿");
@@ -122,15 +143,15 @@ test("扩展分类分开指令、工具与角色，应用角色保留并恢复�
   await expect(prompt).toHaveValue(/保留原有创作想法[\s\S]*协作角色：审查伙伴/);
 });
 
-test("Google 伙伴角色追加到 Google 草稿，超限拒绝也不污染 API 或 Codex", async ({
+test("Google 聊天伙伴角色追加与超限拒绝不污染其他 API 或 Codex 聊天", async ({
   page,
 }) => {
-  await openWorkspace(page);
-  await page.getByLabel("执行方式", { exact: true }).selectOption("direct");
+  await openWorkspace(page, channelChats());
+  await page.getByRole("tab", { name: "API 原聊天", exact: true }).click();
   await page
     .getByRole("textbox", { name: "对话内容", exact: true })
     .fill("Google 角色不应改动的 API 草稿");
-  await page.getByLabel("执行方式", { exact: true }).selectOption("google");
+  await page.getByRole("tab", { name: "Google 原聊天", exact: true }).click();
   const prompt = page.getByRole("textbox", { name: "对话内容", exact: true });
   await prompt.fill("Google 原有创作想法");
   const catalog = page.getByRole("region", { name: "扩展", exact: true });
@@ -168,18 +189,22 @@ test("Google 伙伴角色追加到 Google 草稿，超限拒绝也不污染 API 
     .click();
   await expect(prompt).toHaveValue(original);
   await page.getByLabel("执行方式", { exact: true }).selectOption("direct");
+  await expect(prompt).toHaveValue(original);
+  await page.getByRole("tab", { name: "API 原聊天", exact: true }).click();
   await expect(prompt).toHaveValue("Google 角色不应改动的 API 草稿");
-  await page.getByLabel("执行方式", { exact: true }).selectOption("codex");
-  await expect(prompt).not.toHaveValue(/协作角色：审查伙伴/);
+  await page.getByRole("tab", { name: "Codex 原聊天", exact: true }).click();
+  await expect(prompt).toHaveValue("");
 });
 
-test("Agent 角色追加超限保留原草稿，也不改动 API 草稿", async ({ page }) => {
-  await openWorkspace(page);
-  await page.getByLabel("执行方式", { exact: true }).selectOption("direct");
+test("Agent 角色追加超限保留原聊天草稿，也不改动 API 聊天", async ({
+  page,
+}) => {
+  await openWorkspace(page, channelChats());
+  await page.getByRole("tab", { name: "API 原聊天", exact: true }).click();
   await page
     .getByRole("textbox", { name: "对话内容", exact: true })
     .fill("API 草稿保留");
-  await page.getByLabel("执行方式", { exact: true }).selectOption("codex");
+  await page.getByRole("tab", { name: "Codex 原聊天", exact: true }).click();
   const original = "a".repeat(3990);
   await page
     .getByRole("textbox", { name: "对话内容", exact: true })
@@ -208,6 +233,10 @@ test("Agent 角色追加超限保留原草稿，也不改动 API 草稿", async 
     page.getByRole("textbox", { name: "对话内容", exact: true }),
   ).toHaveValue(original);
   await page.getByLabel("执行方式", { exact: true }).selectOption("direct");
+  await expect(
+    page.getByRole("textbox", { name: "对话内容", exact: true }),
+  ).toHaveValue(original);
+  await page.getByRole("tab", { name: "API 原聊天", exact: true }).click();
   await expect(
     page.getByRole("textbox", { name: "对话内容", exact: true }),
   ).toHaveValue("API 草稿保留");

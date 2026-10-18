@@ -44,7 +44,7 @@ test("通用开关通过键盘切换、持久化并反映滑块状态", async ({
   ).toHaveAttribute("aria-checked", expected);
 });
 
-test("桌面专属开关和更新开关明确暴露禁用状态", async ({ page }) => {
+test("桌面专属开关明确禁用，官方安装包可下载", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   const dialog = page.getByRole("dialog", { name: "设置" });
@@ -60,9 +60,9 @@ test("桌面专属开关和更新开关明确暴露禁用状态", async ({ page 
 
   const updates = dialog.getByRole("region", { name: "软件更新", exact: true });
   await expect(
-    updates.getByRole("button", { name: "服务未接入", exact: true }),
-  ).toBeDisabled();
-  await expect(updates).toContainText("不表示当前版本已是最新");
+    updates.getByRole("link", { name: "下载 Windows 安装包", exact: true }),
+  ).toHaveAttribute("download", /_x64-setup\.exe$/);
+  await expect(updates).toContainText("安装或更新保留本机项目和配置");
 
   await page.keyboard.press("Escape");
   await expect(

@@ -277,31 +277,44 @@ async fn cancelling_while_waiting_for_headers_does_not_wait_for_network_timeout(
     let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
     let url = format!("http://{}", listener.local_addr().unwrap());
     let flag = Arc::new(AtomicBool::new(false));
-    let accepted = Arc::clone(&flag);
+    let (request_seen, headers_pending) = tokio::sync::oneshot::channel();
     let server = tokio::spawn(async move {
+        // Slow setup must not consume the one-second cancellation budget.
+        tokio::time::sleep(Duration::from_millis(1500)).await;
         let (mut stream, _) = listener.accept().await.unwrap();
         let mut request = [0; 4096];
-        stream.read(&mut request).await.unwrap();
-        accepted.store(true, Ordering::Release);
-        tokio::time::sleep(Duration::from_secs(5)).await;
+        let mut read = 0;
+        while !request[..read].ends_with(b"\r\n\r\n") {
+            assert!(read < request.len(), "fixture request exceeds header limit");
+            let bytes = stream.read(&mut request[read..]).await.unwrap();
+            assert!(bytes > 0, "fixture closed before receiving request headers");
+            read += bytes;
+        }
+        request_seen.send(()).unwrap();
+        std::future::pending::<()>().await;
+        drop(stream);
     });
-    let result = tokio::time::timeout(
-        Duration::from_secs(1),
-        transfer(
-            &directory,
-            &spec(&url, b"x"),
-            flag,
-            &Transport {
-                local_fixture: true,
-            },
-            |_| (),
-        ),
-    )
-    .await
-    .unwrap();
-    assert!(result.unwrap_err().starts_with("cancelled:"));
+    let file = spec(&url, b"x");
+    let transport = Transport {
+        local_fixture: true,
+    };
+    let download = transfer(&directory, &file, Arc::clone(&flag), &transport, |_| ());
+    tokio::pin!(download);
+    // Measure cancellation after the request, independently of connection setup.
+    tokio::select! {
+        result = &mut download => panic!("transfer ended before cancellation: {result:?}"),
+        ready = tokio::time::timeout(Duration::from_secs(10), headers_pending) => {
+            ready.expect("fixture request setup timed out").expect("fixture failed before receiving headers");
+        }
+    }
+    flag.store(true, Ordering::Release);
+    let result = tokio::time::timeout(Duration::from_secs(1), &mut download).await;
     server.abort();
     let _ = server.await;
+    assert!(result
+        .expect("cancellation exceeded one second")
+        .unwrap_err()
+        .starts_with("cancelled:"));
 }
 
 #[tokio::test]

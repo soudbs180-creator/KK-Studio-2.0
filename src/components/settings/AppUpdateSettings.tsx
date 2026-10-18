@@ -1,5 +1,11 @@
-import { appPlatform, appVersion } from "../../runtime/appInfo";
+import {
+  appPlatform,
+  appVersion,
+  windowsInstallerFilename,
+  windowsInstallerUrl,
+} from "../../runtime/appInfo";
 import { SettingRow } from "./SettingsControls";
+import SettingsExternalLink from "./SettingsExternalLink";
 
 export default function AppUpdateSettings() {
   return (
@@ -9,17 +15,16 @@ export default function AppUpdateSettings() {
         title="软件更新"
         description={`${appPlatform()} · 当前版本 ${appVersion}`}
       >
-        <button
-          type="button"
+        <SettingsExternalLink
+          href={windowsInstallerUrl}
           className="settings-action secondary"
-          disabled
-          title="更新与官方客户端下载信息尚未接入"
+          download={windowsInstallerFilename}
         >
-          服务未接入
-        </button>
+          下载 Windows 安装包
+        </SettingsExternalLink>
       </SettingRow>
       <p className="settings-field-help settings-unavailable-note">
-        更新与官方客户端下载信息尚未接入；此处不表示当前版本已是最新。
+        单个安装包含 Windows Agent 运行资源；安装或更新保留本机项目和配置。
       </p>
     </section>
   );

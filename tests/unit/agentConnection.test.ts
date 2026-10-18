@@ -15,7 +15,261 @@ import type {
 } from "../../src/features/agent/agentTypes.ts";
 import { createDesktopAgentLifecycle } from "../../src/features/agent/desktopAgentLifecycle.ts";
 import { clearSentPendingDraft } from "../../src/features/agent/homeAgentRecovery.ts";
-import { createProject } from "../../src/features/creation/model.ts";
+import {
+  createProject,
+  projectChatView,
+  serializeCreationSnapshot,
+  updateActiveChat,
+} from "../../src/features/creation/model.ts";
+import { updateProjectChatView } from "../../src/features/agent/chatProjectUpdate.ts";
+import { createAgentHost } from "../../src/features/agent/agentHost.ts";
+
+test("home settings can connect without persisting synthetic workspace history into a project", async (t) => {
+  const harness = createHarness();
+  let writes = 0;
+  const conn = createAgentConnection({
+    storage: memoryStorage(),
+    eventSourceFactory: harness.eventSourceFactory,
+    fetcher: (async () => connectionReadyResponse()) as typeof fetch,
+  });
+  conn.setBridge(
+    createAgentHost({
+      getProject: () => undefined,
+      commit: () => {
+        writes++;
+      },
+      generate: async () => ({}),
+    }),
+  );
+  t.after(() => conn.disconnect());
+  await conn.connect();
+  assert.equal(
+    conn.getState().status,
+    "connected",
+    conn.getState().error ?? "",
+  );
+  assert.equal(conn.getState().error, null);
+  assert.equal(writes, 0);
+});
+
+test("reconnect persists thinner remote history without losing canonical identities or metadata", async (t) => {
+  let project = createProject({
+    prompt: "",
+    model: "",
+    kind: "text",
+    attachments: [],
+  });
+  const chat = project.chats![project.activeChatId!];
+  chat.mainAgent = "codex";
+  chat.agentThreadId = "thread-1";
+  const roles = ["user", "system", "error", "assistant"] as const;
+  chat.messages = roles.map((role) => ({
+    id: `local-${role}`,
+    clientMessageId: `client-${role}`,
+    threadId: "thread-1",
+    role,
+    content: `saved ${role}`,
+    attachments: [{ id: `attachment-${role}`, assetId: `asset-${role}` }],
+    assetIds: [`asset-${role}`],
+    opaqueMetadata: { source: role, retained: true },
+  }));
+  const originals = structuredClone(chat.messages);
+  const harness = createHarness({
+    conversation: readyConversation().data,
+    codex: { busy: false },
+  });
+  let saves = 0;
+  const conn = createAgentConnection({
+    storage: memoryStorage(),
+    eventSourceFactory: harness.eventSourceFactory,
+    fetcher: (async (input) => {
+      if (new URL(String(input)).pathname.endsWith("/threads/thread-1")) {
+        harness.sources.at(-1)!.emit({
+          type: "chat_message",
+          data: {
+            message: {
+              id: "remote-user",
+              clientMessageId: "client-user",
+              threadId: "thread-1",
+              role: "user",
+              text: "restored user",
+            },
+          },
+        });
+        return jsonResponse(200, {
+          ok: true,
+          conversation: readyConversation().data,
+          messages: roles.map((role) => ({
+            id: role === "user" ? "remote-user" : `local-${role}`,
+            clientMessageId: `client-${role}`,
+            threadId: "thread-1",
+            role,
+            text: `restored ${role}`,
+          })),
+        });
+      }
+      return connectionReadyResponse();
+    }) as typeof fetch,
+  });
+  conn.setBridge(
+    createAgentHost({
+      getProject: () => project,
+      getProjects: () => [project],
+      commit: (next) => {
+        project = next;
+        saves++;
+      },
+      generate: async () => ({}),
+    }),
+  );
+  t.after(() => conn.disconnect());
+  for (let attempt = 0; attempt < 2; attempt++) {
+    await conn.connect();
+    assert.equal(
+      conn.getState().status,
+      "connected",
+      conn.getState().error ?? "",
+    );
+    const saved = project.chats![chat.id].messages;
+    assert.equal(saved.length, originals.length);
+    for (const original of originals) {
+      const restored = saved.find(
+        (message) => message.clientMessageId === original.clientMessageId,
+      )!;
+      assert.equal(
+        restored.id,
+        original.id,
+        `${original.role} keeps its canonical id`,
+      );
+      assert.deepEqual(restored.attachments, original.attachments);
+      assert.deepEqual(restored.assetIds, original.assetIds);
+      assert.deepEqual(restored.opaqueMetadata, original.opaqueMetadata);
+      assert.equal(restored.content, `restored ${original.role}`);
+    }
+    conn.disconnect();
+  }
+  assert.ok(
+    saves >= 2,
+    "real AgentHost canonical persistence ran on reconnect",
+  );
+});
+
+test("migrated legacy-codex resumes its exact old thread while original empty chats receive separate ownership", async (t) => {
+  let project = createProject({
+    prompt: "",
+    model: "",
+    kind: "text",
+    attachments: [],
+  });
+  const empty = project.chats![project.activeChatId!];
+  empty.mainAgent = "codex";
+  project.chats!["legacy-codex"] = {
+    ...empty,
+    id: "legacy-codex",
+    agentThreadId: "thread-legacy",
+    messages: [
+      { id: "offline", role: "assistant", content: "retained offline history" },
+    ],
+  };
+  project.activeChatId = "legacy-codex";
+  project.agentThreadId = "unrelated-root";
+  const storage = memoryStorage();
+  storage.setItem(`kk-agent-thread:${project.id}`, "unrelated-project-cache");
+  const harness = createHarness({
+    conversation: readyConversation({ threadId: "thread-legacy" }).data,
+    codex: { busy: false },
+  });
+  const states: Record<string, unknown>[] = [];
+  const mutations: string[] = [];
+  const conn = createAgentConnection({
+    storage,
+    eventSourceFactory: harness.eventSourceFactory,
+    fetcher: (async (input, init) => {
+      const path = new URL(String(input)).pathname;
+      if (path === "/canvas/state") states.push(JSON.parse(String(init?.body)));
+      if (path.endsWith("/threads/new")) {
+        mutations.push(path);
+        return jsonResponse(200, {
+          ok: true,
+          conversation: readyConversation({ threadId: "thread-empty" }).data,
+          messages: [],
+        });
+      }
+      if (path.endsWith("/threads/thread-legacy"))
+        return jsonResponse(200, {
+          ok: true,
+          conversation: readyConversation({ threadId: "thread-legacy" }).data,
+          messages: [
+            {
+              id: "remote",
+              role: "assistant",
+              text: "restored original thread",
+              threadId: "thread-legacy",
+            },
+          ],
+        });
+      return jsonResponse(200, {
+        ok: true,
+        protocolVersion: 7,
+        data: [],
+        messages: [],
+      });
+    }) as typeof fetch,
+  });
+  conn.setBridge(
+    createAgentHost({
+      getProject: () => project,
+      getProjects: () => [project],
+      commit: (next) => {
+        project = next;
+      },
+      generate: async () => ({}),
+    }),
+  );
+  t.after(() => conn.disconnect());
+  await conn.connect();
+  assert.equal(
+    conn.getState().status,
+    "connected",
+    conn.getState().error ?? "",
+  );
+  assert.equal(conn.getState().conversation?.threadId, "thread-legacy");
+  assert.deepEqual(mutations, []);
+  assert.equal(
+    project.chats!["legacy-codex"].messages.some(
+      (message) => message.content === "retained offline history",
+    ),
+    true,
+  );
+  assert.equal(
+    project.chats!["legacy-codex"].messages.some(
+      (message) => message.content === "restored original thread",
+    ),
+    true,
+  );
+  assert.deepEqual(
+    (states[0].scope as { chatId: string }).chatId,
+    "legacy-codex",
+  );
+  assert.equal(states[0].threadId, "thread-legacy");
+  project = { ...project, activeChatId: empty.id };
+  conn.syncProject();
+  await conn.connect();
+  assert.equal(
+    conn.getState().status,
+    "connected",
+    conn.getState().error ?? "",
+  );
+  assert.equal(project.chats![empty.id].agentThreadId, "thread-empty");
+  assert.equal(project.chats!["legacy-codex"].agentThreadId, "thread-legacy");
+  assert.equal(
+    project.chats![empty.id].messages.some(
+      (message) => message.content === "restored original thread",
+    ),
+    false,
+  );
+  assert.equal(mutations.length, 1);
+});
 
 /**
  * Agent 连接 store：connect 流程、SSE 事件驱动、画布工具回执、权限审批。
@@ -29,6 +283,9 @@ interface FakeSource extends EventSourceLike {
 function createHarness(hello?: unknown) {
   const sources: FakeSource[] = [];
   const eventSourceFactory = (_url: string) => {
+    const scope = JSON.parse(
+      new URL(_url, "http://localhost").searchParams.get("scope") ?? "null",
+    );
     const source: FakeSource = {
       onmessage: null,
       onerror: null,
@@ -36,7 +293,17 @@ function createHarness(hello?: unknown) {
       emit(event) {
         source.onmessage?.({
           type: event.type,
-          data: JSON.stringify(event.data),
+          data: JSON.stringify(
+            event.data && typeof event.data === "object"
+              ? {
+                  scope,
+                  ...(event.type === "tool_call"
+                    ? { threadId: "", turnId: "" }
+                    : {}),
+                  ...event.data,
+                }
+              : event.data,
+          ),
         });
       },
       close() {
@@ -58,6 +325,48 @@ function createHarness(hello?: unknown) {
   };
   return { sources, eventSourceFactory };
 }
+
+test("protocol 7 tool without frozen thread and turn identity never reaches the host", async (t) => {
+  const harness = createHarness({
+    conversation: readyConversation().data,
+    codex: { busy: false },
+  });
+  let scope: unknown;
+  let applied = 0;
+  const conn = createAgentConnection({
+    storage: memoryStorage(),
+    eventSourceFactory: harness.eventSourceFactory,
+    fetcher: (async (_url, init) => {
+      const header = new Headers(init?.headers).get("x-canvas-agent-scope");
+      if (header) scope = JSON.parse(header);
+      return connectionReadyResponse();
+    }) as typeof fetch,
+  });
+  conn.setBridge({
+    getSnapshot: () => snapshot,
+    readAgentThread: () => "thread-1",
+    applyOps: () => {
+      applied++;
+      return { applied: [], rejected: [] };
+    },
+  });
+  t.after(() => conn.disconnect());
+  await conn.connect();
+  assert.equal(conn.getState().status, "connected");
+  harness.sources[0].onmessage?.({
+    type: "tool_call",
+    data: JSON.stringify({
+      scope,
+      requestId: "missing-frozen-identity",
+      name: "canvas_apply_ops",
+      input: { ops: [] },
+    }),
+  });
+  await new Promise<void>(setImmediate);
+  assert.equal(applied, 0);
+  assert.equal(conn.getState().status, "error");
+  assert.match(conn.getState().error ?? "", /线程或 turn 身份/);
+});
 
 test("连接初始化期间的新 SSE 状态、回复和已解决审批不被旧 hello 覆盖", async (t) => {
   const harness = createHarness({
@@ -91,7 +400,7 @@ test("连接初始化期间的新 SSE 状态、回复和已解决审批不被旧
       }
       return jsonResponse(200, {
         ok: true,
-        protocolVersion: 6,
+        protocolVersion: 7,
         data: [],
         messages: [],
       });
@@ -154,7 +463,7 @@ for (const mutation of ["new", "prepare", "resume", "retry-failed"] as const)
         }
         return jsonResponse(200, {
           ok: true,
-          protocolVersion: 6,
+          protocolVersion: 7,
           conversation: remote,
           messages: isMutation ? [{ id: "bad", role: "user", text: 123 }] : [],
           settledTurnIds: isMutation ? ["bad-turn"] : [],
@@ -211,7 +520,7 @@ for (const mutation of ["new", "prepare", "resume", "retry-failed"] as const)
     );
   });
 
-for (const change of ["chat", "temporary"] as const)
+for (const change of ["chat", "temporary", "adapter"] as const)
   for (const history of ["valid", "malformed"] as const)
     test(`late ${history} mutation cannot save ownership after ${change} changes`, async (t) => {
       const storage = memoryStorage();
@@ -220,6 +529,7 @@ for (const change of ["chat", "temporary"] as const)
       const harness = createHarness();
       let chatId = "original-chat";
       let temporary = false;
+      let adapter = "codex";
       let saves = 0;
       const conn = createAgentConnection({
         storage,
@@ -240,6 +550,7 @@ for (const change of ["chat", "temporary"] as const)
       conn.setBridge({
         getSnapshot: () => snapshot,
         getChatScope: () => ({ projectId: snapshot.projectId, chatId }),
+        getExecutionAdapter: () => adapter,
         getExecutionBlockReason: () =>
           temporary ? "临时聊天禁止持久化" : undefined,
         saveAgentThread: () => {
@@ -254,6 +565,7 @@ for (const change of ["chat", "temporary"] as const)
       const connecting = conn.connect();
       await entered.promise;
       if (change === "chat") chatId = "different-chat";
+      else if (change === "adapter") adapter = "google";
       else temporary = true;
       gate.release();
       await connecting;
@@ -334,6 +646,8 @@ test("连接恢复：旧发送只能清除自己拥有的持久待发草稿", ()
     kind: "image",
     attachments: [],
   });
+  delete project.chats;
+  delete project.activeChatId;
   project.composerDraft.pendingAgent = true;
   project.composerDraft.prompt = "pending A";
   project.composerDraft.attachments = [
@@ -350,7 +664,16 @@ test("连接恢复：旧发送只能清除自己拥有的持久待发草稿", ()
     ...project,
     composerDraft: { ...sent, prompt: "new durable pending B" },
   };
-  assert.equal(clearSentPendingDraft(newer, sent), newer);
+  const retired = clearSentPendingDraft(newer, sent);
+  assert.equal(retired.composerDraft.pendingAgent, undefined);
+  assert.equal(retired.composerDraft.prompt, "new durable pending B");
+  assert.deepEqual(retired.composerDraft.attachments, sent.attachments);
+  assert.equal(newer.composerDraft.pendingAgent, true);
+  assert.equal(clearSentPendingDraft(newer, undefined), newer);
+  assert.equal(
+    clearSentPendingDraft(newer, { ...sent, pendingAgent: undefined }),
+    newer,
+  );
   const ordinary = {
     ...project,
     composerDraft: { ...sent, pendingAgent: undefined },
@@ -367,10 +690,170 @@ test("连接恢复：旧发送只能清除自己拥有的持久待发草稿", ()
   assert.equal(project.composerDraft.attachments.length, 1);
 });
 
+test("accepted HOME source retires through canonical chat views without clearing the next input or attachments", () => {
+  let project = createProject({
+    prompt: "original HOME image",
+    model: "",
+    kind: "image",
+    modelSelection: { source: "codex", model: "", kind: "image" },
+    attachments: [],
+  });
+  project = updateActiveChat(project, (chat) => ({
+    ...chat,
+    draft: { ...chat.draft, pendingAgent: true, prompt: "original HOME image" },
+  }));
+  const sent = projectChatView(project).composerDraft;
+  const unchanged = updateProjectChatView(project, (view) =>
+    clearSentPendingDraft(view, sent),
+  );
+  assert.equal(
+    unchanged.chats![unchanged.activeChatId!].draft.pendingAgent,
+    undefined,
+  );
+  assert.equal(unchanged.chats![unchanged.activeChatId!].draft.prompt, "");
+  assert.deepEqual(
+    unchanged.chats![unchanged.activeChatId!].draft.attachments,
+    [],
+  );
+  const nextAttachment = {
+    id: "next-attachment",
+    name: "next.png",
+    mime: "image/png",
+    size: 1,
+  };
+  const next = updateActiveChat(project, (chat) => ({
+    ...chat,
+    draft: {
+      ...chat.draft,
+      prompt: "next canonical input",
+      text: "next canonical input",
+      attachments: [nextAttachment],
+    },
+  }));
+  const accepted = updateProjectChatView(next, (view) =>
+    clearSentPendingDraft(view, sent),
+  );
+  const draft = accepted.chats![accepted.activeChatId!].draft;
+  assert.equal(draft.pendingAgent, undefined);
+  assert.equal(draft.prompt, "next canonical input");
+  assert.deepEqual(draft.attachments, [nextAttachment]);
+  const wire = serializeCreationSnapshot({
+    version: 3,
+    revision: 1,
+    activeProjectId: accepted.id,
+    projects: [accepted],
+    homeDraft: sent,
+  });
+  assert.equal(Object.hasOwn(wire.projects[0], "composerDraft"), false);
+  assert.equal(next.chats![next.activeChatId!].draft.pendingAgent, true);
+  assert.equal(sent.pendingAgent, true);
+});
+
+for (const edited of [false, true])
+  test(`accepted HOME source retires original chat A after selecting B without changing B or ${edited ? "new A input" : "the active selection"}`, () => {
+    let project = createProject({
+      prompt: "HOME request A",
+      model: "",
+      kind: "image",
+      attachments: [],
+    });
+    const originChatId = project.activeChatId!;
+    project = updateActiveChat(project, (chat) => ({
+      ...chat,
+      agentThreadId: "thread-A",
+      draft: { ...chat.draft, pendingAgent: true, prompt: "HOME request A" },
+    }));
+    const sent = projectChatView(project).composerDraft;
+    const originalA = structuredClone(project.chats![originChatId]);
+    if (edited)
+      project = updateActiveChat(project, (chat) => ({
+        ...chat,
+        draft: {
+          ...chat.draft,
+          prompt: "next input A",
+          text: "next input A",
+          model: "next model A",
+          attachments: [
+            { id: "next-A", name: "next-A.png", mime: "image/png", size: 1 },
+          ],
+        },
+      }));
+    const expectedA = structuredClone(project.chats![originChatId].draft);
+    project = projectChatView({
+      ...project,
+      activeChatId: "B",
+      chats: {
+        ...project.chats,
+        B: {
+          ...project.chats![originChatId],
+          id: "B",
+          name: "B",
+          agentThreadId: "thread-B",
+          draft: {
+            ...sent,
+            pendingAgent: true,
+            prompt: "edited B",
+            attachments: [
+              { id: "B", name: "B.png", mime: "image/png", size: 1 },
+            ],
+          },
+          messages: [
+            { id: "B-message", role: "assistant", content: "B retained" },
+          ],
+        },
+      },
+    });
+    const originalB = JSON.stringify(project.chats!.B);
+    const accepted = updateProjectChatView(project, (view) =>
+      clearSentPendingDraft(view, sent, originChatId),
+    );
+    assert.equal(accepted.activeChatId, "B");
+    assert.equal(JSON.stringify(accepted.chats!.B), originalB);
+    const retiredA = accepted.chats![originChatId];
+    assert.equal(retiredA.draft.pendingAgent, undefined);
+    assert.equal(retiredA.agentThreadId, originalA.agentThreadId);
+    assert.deepEqual(retiredA.messages, originalA.messages);
+    assert.equal(retiredA.draft.prompt, edited ? "next input A" : "");
+    assert.deepEqual(
+      retiredA.draft.attachments,
+      edited ? expectedA.attachments : [],
+    );
+    if (edited) assert.equal(retiredA.draft.model, "next model A");
+    const wire = serializeCreationSnapshot({
+      version: 3,
+      revision: 1,
+      activeProjectId: accepted.id,
+      projects: [accepted],
+      homeDraft: sent,
+    });
+    assert.equal(Object.hasOwn(wire.projects[0], "composerDraft"), false);
+    assert.equal(JSON.stringify(wire.projects[0].chats!.B), originalB);
+    assert.equal(project.chats![originChatId].draft.pendingAgent, true);
+  });
+
+test("HOME pending retirement rejects missing chat targets and ambiguous legacy scope", () => {
+  const project = createProject({
+    prompt: "A",
+    model: "",
+    kind: "image",
+    attachments: [],
+  });
+  const sent = { ...project.composerDraft, pendingAgent: true };
+  project.composerDraft = sent;
+  assert.equal(clearSentPendingDraft(project, sent, "missing"), project);
+  assert.equal(clearSentPendingDraft(project, sent, ""), project);
+  const invalid = { ...project, activeChatId: "missing" };
+  assert.equal(clearSentPendingDraft(invalid, sent, "chat-default"), invalid);
+  const deleted = { ...project, chats: {}, activeChatId: undefined };
+  assert.equal(clearSentPendingDraft(deleted, sent, "chat-default"), deleted);
+  const legacy = { ...project, chats: undefined, activeChatId: undefined };
+  assert.equal(clearSentPendingDraft(legacy, sent, "chat-default"), legacy);
+});
+
 const connectionReadyResponse = () =>
   jsonResponse(200, {
     ok: true,
-    protocolVersion: 6,
+    protocolVersion: 7,
     conversation: readyConversation().data,
     data: [],
     messages: [],
@@ -719,7 +1202,7 @@ test("连接恢复：就绪后读取额度期间显式新会话仍执行", async
       if (newThreads)
         return jsonResponse(200, {
           ok: true,
-          protocolVersion: 6,
+          protocolVersion: 7,
           data: [],
           messages: [],
           conversation: readyConversation({ threadId: "thread-new" }).data,
@@ -780,7 +1263,7 @@ test("图片发送冻结附件快照并携带实际图片和名称，不混入�
         turn = JSON.parse(String(init?.body));
       return jsonResponse(200, {
         ok: true,
-        protocolVersion: 6,
+        protocolVersion: 7,
         data: [],
         messages: [],
       });
@@ -832,7 +1315,7 @@ test("附件读取被取消或失败时，不受理一个缺图的 turn", async 
       if (String(input).endsWith("/turn")) posts++;
       return jsonResponse(200, {
         ok: true,
-        protocolVersion: 6,
+        protocolVersion: 7,
         data: [],
         messages: [],
       });
@@ -883,7 +1366,7 @@ test("持久历史与握手重放使用同一 itemId 去重，已完成回复不
       }
       return jsonResponse(200, {
         ok: true,
-        protocolVersion: 6,
+        protocolVersion: 7,
         data: [],
         messages: [
           {
@@ -924,7 +1407,7 @@ test("活动按 thread/turn/item 合并，不串会话或合并另一轮同名�
     fetcher: (async () =>
       jsonResponse(200, {
         ok: true,
-        protocolVersion: 6,
+        protocolVersion: 7,
         conversation: readyConversation().data,
         data: [],
       })) as typeof fetch,
@@ -979,7 +1462,7 @@ test("停止回执未到时保持执行中，明确中断事件才结束未完�
     fetcher: (async () =>
       jsonResponse(200, {
         ok: true,
-        protocolVersion: 6,
+        protocolVersion: 7,
         conversation: readyConversation().data,
         data: [],
       })) as typeof fetch,
@@ -1042,7 +1525,7 @@ test("聚合推理历史的 source item 重放合并原记录，不追加重复�
       }
       return jsonResponse(200, {
         ok: true,
-        protocolVersion: 6,
+        protocolVersion: 7,
         data: [],
         messages: [
           {
@@ -1109,7 +1592,7 @@ test("恢复连接期间的工具明确返回未执行，结束事件取消排�
         receipts.push(JSON.parse(String(init?.body)));
       return jsonResponse(200, {
         ok: true,
-        protocolVersion: 6,
+        protocolVersion: 7,
         data: [],
         messages: [],
       });
@@ -1173,7 +1656,7 @@ test("停止发生在 turn 发出之前时不能继续提交，切换项目后�
       if (url.endsWith("/turn")) turns++;
       return jsonResponse(200, {
         ok: true,
-        protocolVersion: 6,
+        protocolVersion: 7,
         conversation: readyConversation().data,
         data: [],
       });
@@ -1230,10 +1713,10 @@ test("connect 成功：discover → SSE hello → activate → 快照 → thread
       const url = typeof input === "string" ? input : String(input);
       posted.push(url);
       if (url.includes("/config"))
-        return jsonResponse(200, { ok: true, protocolVersion: 6 });
+        return jsonResponse(200, { ok: true, protocolVersion: 7 });
       return jsonResponse(200, {
         ok: true,
-        protocolVersion: 6,
+        protocolVersion: 7,
         conversation: readyConversation().data,
         data: [],
       });
@@ -1284,14 +1767,14 @@ test("sendMessage：先回显用户消息，再提交 turn", async (t: TestConte
     fetcher: (async (input: RequestInfo | URL, init?: RequestInit) => {
       const url = typeof input === "string" ? input : String(input);
       if (url.includes("/config"))
-        return jsonResponse(200, { ok: true, protocolVersion: 6 });
+        return jsonResponse(200, { ok: true, protocolVersion: 7 });
       if (url.includes("/agent/codex/turn")) {
         turnBody = typeof init?.body === "string" ? init.body : undefined;
         return jsonResponse(200, { ok: true, threadId: "thread-1" });
       }
       return jsonResponse(200, {
         ok: true,
-        protocolVersion: 6,
+        protocolVersion: 7,
         conversation: readyConversation().data,
         data: [],
       });
@@ -1334,7 +1817,7 @@ test("Codex 图片选择形成内置生图指令并保持原始用户消息，�
       }
       return jsonResponse(200, {
         ok: true,
-        protocolVersion: 6,
+        protocolVersion: 7,
         conversation: readyConversation().data,
         data: [],
       });
@@ -1400,7 +1883,7 @@ async function canvasGenerationHarness(
       if (url.endsWith("/turn")) turns.push(JSON.parse(String(init?.body)));
       return jsonResponse(200, {
         ok: true,
-        protocolVersion: 6,
+        protocolVersion: 7,
         conversation: readyConversation().data,
         data: [],
       });
@@ -1586,7 +2069,7 @@ for (const { status, secondNodeId } of [
         }
         return jsonResponse(200, {
           ok: true,
-          protocolVersion: 6,
+          protocolVersion: 7,
           conversation: readyConversation().data,
           messages: [],
           data: [],
@@ -1645,13 +2128,13 @@ test("assistant 增量通过 SSE 合并到消息", async (t: TestContext) => {
       if (url.includes("/config"))
         return jsonResponse(200, {
           ok: true,
-          protocolVersion: 6,
+          protocolVersion: 7,
           conversation: readyConversation().data,
           data: [],
         });
       return jsonResponse(200, {
         ok: true,
-        protocolVersion: 6,
+        protocolVersion: 7,
         conversation: readyConversation().data,
         data: [],
       });
@@ -1713,7 +2196,7 @@ test("工具回执等待期间串行写入，回执未知后阻断新 requestId 
       if (String(input).endsWith("/interrupt")) interrupted++;
       return jsonResponse(200, {
         ok: true,
-        protocolVersion: 6,
+        protocolVersion: 7,
         conversation: readyConversation().data,
         data: [],
       });
@@ -1779,14 +2262,14 @@ test("tool_call：canvas_apply_ops 应用并回执 /canvas/result", async (t: Te
       if (url.includes("/config"))
         return jsonResponse(200, {
           ok: true,
-          protocolVersion: 6,
+          protocolVersion: 7,
           conversation: readyConversation().data,
           data: [],
         });
       if (url.includes("/canvas/state")) snapshotPushes += 1;
       return jsonResponse(200, {
         ok: true,
-        protocolVersion: 6,
+        protocolVersion: 7,
         conversation: readyConversation().data,
         data: [],
       });
@@ -1836,7 +2319,7 @@ test("权限审批：approval 事件 → resolveApproval → 清除", async (t: 
       if (url.includes("/config"))
         return jsonResponse(200, {
           ok: true,
-          protocolVersion: 6,
+          protocolVersion: 7,
           conversation: readyConversation().data,
           data: [],
         });
@@ -1845,7 +2328,7 @@ test("权限审批：approval 事件 → resolveApproval → 清除", async (t: 
       }
       return jsonResponse(200, {
         ok: true,
-        protocolVersion: 6,
+        protocolVersion: 7,
         conversation: readyConversation().data,
         data: [],
       });
@@ -1897,7 +2380,7 @@ test("重连读取到的新会话状态优先于启动期间的 hello 快照", a
     fetcher: (async () =>
       jsonResponse(200, {
         ok: true,
-        protocolVersion: 6,
+        protocolVersion: 7,
         conversation: readyConversation({ status: "ready", revision: 2 }).data,
         messages: [],
         data: [],

@@ -656,7 +656,7 @@ test("R2-STRESS-RECOVERY-03: Crash recovery is strictly idempotent across repeat
  * Area 3: Migration Integrity Under Heavy Load (1,000+ Messages & Attachments)
  * ========================================================================= */
 
-test("R2-STRESS-LOAD-01: Deterministic migration of 1,100 messages across direct, codex, and google threads preserves 100% messages and attachments with exact originChatId mapping", () => {
+test("R2-STRESS-LOAD-01: 600 unassigned messages and channel contexts retain every message, attachment and known task origin", () => {
   const directMessageCount = 600;
 
   // 1. Build 600 realistic direct messages
@@ -775,7 +775,7 @@ test("R2-STRESS-LOAD-01: Deterministic migration of 1,100 messages across direct
   const endMigrationTime = performance.now();
   const migrationDurationMs = endMigrationTime - startMigrationTime;
 
-  // Performance invariant: 1,100 messages migrated within 100ms
+  // Performance invariant: all 600 distinct source messages migrate within 100ms
   assert.ok(
     migrationDurationMs < 100,
     `Migration took ${migrationDurationMs.toFixed(2)}ms, exceeding 100ms threshold`,
@@ -788,20 +788,20 @@ test("R2-STRESS-LOAD-01: Deterministic migration of 1,100 messages across direct
 
   const proj = v3.projects[0];
 
-  // Invariant 2: Active chat resolution precedence: legacy-direct > legacy-codex > legacy-google
+  // A nonempty unassigned draft remains the active visible recovery context.
   assert.equal(
     proj.activeChatId,
-    "legacy-direct",
-    "Active chat must resolve to legacy-direct when direct messages/draft exist",
+    "legacy-history",
+    "Active chat must resolve to legacy-history when direct messages/draft exist",
   );
 
   // Invariant 3: Segregation into all 3 legacy channels
-  assert.ok(proj.chats["legacy-direct"], "legacy-direct chat must exist");
+  assert.ok(proj.chats["legacy-history"], "legacy-history chat must exist");
   assert.ok(proj.chats["legacy-codex"], "legacy-codex chat must exist");
   assert.ok(proj.chats["legacy-google"], "legacy-google chat must exist");
 
-  // Invariant 4: 100% Message retention in legacy-direct
-  const directChat = proj.chats["legacy-direct"];
+  // Invariant 4: 100% Message retention in legacy-history
+  const directChat = proj.chats["legacy-history"];
   assert.equal(
     directChat.messages.length,
     directMessageCount,
@@ -834,13 +834,15 @@ test("R2-STRESS-LOAD-01: Deterministic migration of 1,100 messages across direct
     );
   }
 
-  // Invariant 5: legacy-codex filters user/assistant messages and preserves thread ID
+  // Thread identity alone does not establish ownership of any root message.
   const codexChat = proj.chats["legacy-codex"];
   assert.equal(codexChat.agentThreadId, "thread-codex-prod-stream-9999");
-  const expectedCodexMessages = generatedMessages.filter(
-    (m) => m.role === "assistant" || m.role === "user",
+  assert.equal(
+    codexChat.messages.length,
+    0,
+    "Unassigned root messages must never be duplicated into Codex",
   );
-  assert.equal(codexChat.messages.length, expectedCodexMessages.length);
+  assert.equal(directChat.requiresReview, true);
 
   // Invariant 6: legacy-google retains conversation object
   const googleChat = proj.chats["legacy-google"];
@@ -869,7 +871,7 @@ test("R2-STRESS-LOAD-01: Deterministic migration of 1,100 messages across direct
   assert.equal(
     directChat.draft.attachments?.length,
     20,
-    "All 20 draft attachments must be retained in legacy-direct draft",
+    "All 20 draft attachments must be retained in legacy-history draft",
   );
   for (let d = 0; d < 20; d++) {
     assert.equal(
@@ -891,8 +893,8 @@ test("R2-STRESS-LOAD-01: Deterministic migration of 1,100 messages across direct
     } else {
       assert.equal(
         task.originChatId,
-        "legacy-direct",
-        `Task ${t} must be mapped to activeChatId (legacy-direct)`,
+        undefined,
+        `Task ${t} without evidence must retain unknown provenance`,
       );
     }
   }
@@ -915,7 +917,7 @@ test("R2-STRESS-LOAD-01: Deterministic migration of 1,100 messages across direct
   const parsedRoundtrip = parseSnapshot(serialized);
   assert.equal(parsedRoundtrip.version, 3);
   assert.equal(
-    parsedRoundtrip.projects[0].chats["legacy-direct"].messages.length,
+    parsedRoundtrip.projects[0].chats["legacy-history"].messages.length,
     directMessageCount,
   );
 
@@ -983,10 +985,10 @@ test("R2-STRESS-LOAD-02: Multi-project heavy stress load (3 projects, 1,500 tota
   let totalMigratedMessages = 0;
   for (let p = 0; p < 3; p++) {
     const proj = v3.projects[p];
-    assert.equal(proj.activeChatId, "legacy-direct");
-    assert.equal(proj.chats["legacy-direct"].messages.length, 500);
-    totalMigratedMessages += proj.chats["legacy-direct"].messages.length;
-    assert.equal(proj.tasks[0].originChatId, "legacy-direct");
+    assert.equal(proj.activeChatId, "legacy-history");
+    assert.equal(proj.chats["legacy-history"].messages.length, 500);
+    totalMigratedMessages += proj.chats["legacy-history"].messages.length;
+    assert.equal(proj.tasks[0].originChatId, undefined);
   }
 
   assert.equal(
@@ -1174,7 +1176,7 @@ test("R2-STRESS-ORDER-07: Interruption during Step 5 (marker write) is cleanly s
   assert.equal(mainParsed.revision, 71);
 });
 
-test("R2-STRESS-LOAD-04: Pure Codex thread migration (1,000 messages) resolves activeChatId to legacy-codex and assigns originChatId to tasks", () => {
+test("R2-STRESS-LOAD-04: 1,000 unassigned messages stay separate from the preserved Codex thread", () => {
   const codexMessages: Array<{
     id: string;
     role: "user" | "assistant";
@@ -1214,19 +1216,16 @@ test("R2-STRESS-LOAD-04: Pure Codex thread migration (1,000 messages) resolves a
   const v3 = migrateSnapshotV2ToV3(codexLegacyV2);
   const proj = v3.projects[0];
 
-  // Invariant: activeChatId resolves to legacy-codex because direct messages were not marked as direct
-  // Wait, in buildLegacyChats:
-  // if (proj.messages && proj.messages.length > 0) -> hasDirect is also true!
-  // And resolveActiveChatId checks: if (chats["legacy-direct"]) return "legacy-direct";
-  // So when proj.messages is non-empty without pendingAgent, hasDirect is true and hasCodex is true.
-  // Both legacy-direct and legacy-codex exist!
+  // A root thread is not evidence that every project-level message belongs to it.
   assert.ok(proj.chats["legacy-codex"]);
-  assert.ok(proj.chats["legacy-direct"]);
+  assert.ok(proj.chats["legacy-history"]);
   assert.equal(
     proj.chats["legacy-codex"].agentThreadId,
     "thread-pure-codex-8888",
   );
-  assert.equal(proj.chats["legacy-codex"].messages.length, 1000);
+  assert.equal(proj.chats["legacy-codex"].messages.length, 0);
+  assert.deepEqual(proj.chats["legacy-history"].messages, codexMessages);
+  assert.equal(proj.activeChatId, "legacy-codex");
 });
 
 test("R2-STRESS-LOAD-05: Pure Google thread migration (no direct, no codex) resolves activeChatId to legacy-google", () => {
@@ -1261,7 +1260,7 @@ test("R2-STRESS-LOAD-05: Pure Google thread migration (no direct, no codex) reso
   assert.deepEqual(proj.chats["legacy-google"].googleConversation, {
     sessionId: "gemini-clean-session-555",
   });
-  assert.equal(proj.tasks[0].originChatId, "legacy-google");
+  assert.equal(proj.tasks[0].originChatId, undefined);
 });
 
 test("R2-STRESS-LOAD-06: Massive scaling stress test (5,000 messages across 5 projects) verifies zero message loss and sub-200ms processing", () => {
@@ -1326,10 +1325,10 @@ test("R2-STRESS-LOAD-06: Massive scaling stress test (5,000 messages across 5 pr
   let verifiedMessages = 0;
   for (let p = 0; p < projectCount; p++) {
     const proj = v3.projects[p];
-    const directChat = proj.chats["legacy-direct"];
-    assert.ok(directChat, `Project ${p} must have legacy-direct chat`);
+    const directChat = proj.chats["legacy-history"];
+    assert.ok(directChat, `Project ${p} must have legacy-history chat`);
     assert.equal(directChat.messages.length, messagesPerProject);
-    assert.equal(proj.tasks[0].originChatId, "legacy-direct");
+    assert.equal(proj.tasks[0].originChatId, undefined);
 
     // Spot-check first, middle, and last message in each project
     assert.equal(directChat.messages[0].id, `scale-p${p}-m0`);

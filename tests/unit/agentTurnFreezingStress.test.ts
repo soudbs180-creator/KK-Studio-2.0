@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { EventEmitter, once } from "node:events";
 import test from "node:test";
 import {
   createTurnFreezingController,
@@ -561,136 +562,160 @@ test("STRESS-4.1: draft text and attachments remain invariant across 100 rapid p
 // Area 5: Remote Task Background Polling Persistence
 // =========================================================================
 
-test("STRESS-5.1: remote background task polling continues uninterrupted while agent turn is frozen", async () => {
-  const controller = createTurnFreezingController();
-  controller.onTurnStart();
+test(
+  "STRESS-5.1: remote background task polling continues uninterrupted while agent turn is frozen",
+  { timeout: 5_000 },
+  async (t) => {
+    const controller = createTurnFreezingController();
+    controller.onTurnStart();
 
-  // Model a remote ComfyUI / Canvas Proxy background task
-  interface RemoteTask {
-    id: string;
-    status: "submitted" | "processing" | "completed";
-    progressPct: number;
-    resultAssetId?: string;
-  }
-
-  const remoteTask: RemoteTask = {
-    id: "remote-prompt-uuid-99",
-    status: "submitted",
-    progressPct: 0,
-  };
-
-  // Simulate remote server progress advancement over time
-  const remoteServerTimer = setInterval(() => {
-    if (remoteTask.progressPct < 100) {
-      remoteTask.progressPct += 20;
-      remoteTask.status = "processing";
+    // Model a remote ComfyUI / Canvas Proxy background task
+    interface RemoteTask {
+      id: string;
+      status: "submitted" | "processing" | "completed";
+      progressPct: number;
+      resultAssetId?: string;
     }
-    if (remoteTask.progressPct >= 100) {
-      remoteTask.status = "completed";
-      remoteTask.resultAssetId = "generated-canvas-asset-42";
-      clearInterval(remoteServerTimer);
-    }
-  }, 10);
 
-  // Polling loop in client (independent of turn freezing)
-  let pollCount = 0;
-  const pollLog: Array<{ poll: number; pct: number; isFrozen: boolean }> = [];
-  let taskFinishedInClient = false;
+    const remoteTask: RemoteTask = {
+      id: "remote-prompt-uuid-99",
+      status: "submitted",
+      progressPct: 0,
+    };
 
-  const pollInterval = setInterval(() => {
-    pollCount++;
-    pollLog.push({
-      poll: pollCount,
-      pct: remoteTask.progressPct,
-      isFrozen: controller.isFrozen(),
+    // Polling loop in client (independent of turn freezing)
+    let pollCount = 0;
+    const pollLog: Array<{ poll: number; pct: number; isFrozen: boolean }> = [];
+    let taskFinishedInClient = false;
+    const frozenPollsObserved = Promise.withResolvers<void>();
+    const taskDetected = Promise.withResolvers<void>();
+
+    const pollInterval = setInterval(() => {
+      pollCount++;
+      pollLog.push({
+        poll: pollCount,
+        pct: remoteTask.progressPct,
+        isFrozen: controller.isFrozen(),
+      });
+      if (pollLog.filter((poll) => poll.isFrozen).length >= 5)
+        frozenPollsObserved.resolve();
+
+      if (remoteTask.status === "completed") {
+        taskFinishedInClient = true;
+        clearInterval(pollInterval);
+        taskDetected.resolve();
+      }
+    }, 8);
+    t.after(() => {
+      clearInterval(pollInterval);
+      controller.reset();
     });
 
-    if (remoteTask.status === "completed") {
-      taskFinishedInClient = true;
-      clearInterval(pollInterval);
-    }
-  }, 8);
+    // Turn step is active
+    const endStep = controller.beginStep("step-waiting-for-remote");
 
-  // Turn step is active
-  const endStep = controller.beginStep("step-waiting-for-remote");
+    const pausePromise = controller.pause();
+    assert.equal(controller.isPausing(), true);
+    endStep();
+    await pausePromise;
 
-  // Pause turn after 15ms
-  await sleep(15);
-  const pausePromise = controller.pause();
-  endStep();
-  await pausePromise;
-
-  assert.equal(controller.isPaused(), true);
-  assert.equal(controller.isFrozen(), true);
-
-  // Keep turn paused for 120ms while remote task completes in the background (accommodates Windows 15.6ms timer granularity)
-  await sleep(120);
-
-  // Check empirical polling observations during the freeze
-  const pollsWhileFrozen = pollLog.filter((p) => p.isFrozen);
-  assert.ok(
-    pollsWhileFrozen.length >= 5,
-    `Background polling must continue while turn is frozen (observed ${pollsWhileFrozen.length} polls while frozen)`,
-  );
-  assert.equal(
-    taskFinishedInClient,
-    true,
-    "Remote task must complete and be detected during frozen state",
-  );
-  assert.equal(remoteTask.resultAssetId, "generated-canvas-asset-42");
-
-  // Resume turn: agent unfreezes and can consume result immediately
-  await controller.resume();
-  assert.equal(controller.isExecuting(), true);
-
-  // Clean up timers
-  clearInterval(remoteServerTimer);
-  clearInterval(pollInterval);
-});
-
-test("STRESS-5.2: 5 parallel remote tasks poll concurrently across pause/resume cycles without starvation", async () => {
-  const controller = createTurnFreezingController();
-  controller.onTurnStart();
-
-  const TASK_COUNT = 5;
-  const tasks = Array.from({ length: TASK_COUNT }, (_, i) => ({
-    id: `task-${i}`,
-    polls: 0,
-    done: false,
-  }));
-
-  // Each task has an independent polling loop
-  const pollingTimers = tasks.map((task) =>
-    setInterval(() => {
-      task.polls++;
-      if (task.polls >= 10) {
-        task.done = true;
-      }
-    }, 5),
-  );
-
-  // Cycle pause and resume multiple times
-  for (let i = 0; i < 3; i++) {
-    await controller.pause();
+    assert.equal(controller.isPaused(), true);
     assert.equal(controller.isFrozen(), true);
-    await sleep(20);
+
+    // Complete the remote response after observed polls, regardless of timer coalescing.
+    await frozenPollsObserved.promise;
+    remoteTask.progressPct = 100;
+    remoteTask.status = "completed";
+    remoteTask.resultAssetId = "generated-canvas-asset-42";
+    await taskDetected.promise;
+
+    // Check empirical polling observations during the freeze
+    const pollsWhileFrozen = pollLog.filter((p) => p.isFrozen);
+    assert.ok(
+      pollsWhileFrozen.length >= 5,
+      `Background polling must continue while turn is frozen (observed ${pollsWhileFrozen.length} polls while frozen)`,
+    );
+    assert.equal(
+      taskFinishedInClient,
+      true,
+      "Remote task must complete and be detected during frozen state",
+    );
+    assert.equal(remoteTask.resultAssetId, "generated-canvas-asset-42");
+    assert.equal(controller.isPaused(), true);
+
+    // Resume turn: agent unfreezes and can consume result immediately
     await controller.resume();
     assert.equal(controller.isExecuting(), true);
-    await sleep(20);
-  }
+  },
+);
 
-  // Wait until all tasks conclude
-  await sleep(30);
-  pollingTimers.forEach(clearInterval);
+test(
+  "STRESS-5.2: 5 parallel remote tasks poll concurrently across pause/resume cycles without starvation",
+  { timeout: 5_000 },
+  async (t) => {
+    const controller = createTurnFreezingController();
+    controller.onTurnStart();
 
-  for (const task of tasks) {
-    assert.equal(task.done, true, `Task ${task.id} must complete`);
-    assert.ok(
-      task.polls >= 10,
-      `Task ${task.id} must have polled >=10 times (got ${task.polls})`,
+    const TASK_COUNT = 5;
+    const tasks = Array.from({ length: TASK_COUNT }, (_, i) => ({
+      id: `task-${i}`,
+      polls: 0,
+      frozenPolls: 0,
+      executingPolls: 0,
+      done: false,
+      completion: Promise.withResolvers<void>(),
+    }));
+    const pollEvents = new EventEmitter();
+
+    // Each task has an independent polling loop
+    const pollingTimers = tasks.map((task) =>
+      setInterval(() => {
+        task.polls++;
+        if (controller.isFrozen()) task.frozenPolls++;
+        if (controller.isExecuting()) task.executingPolls++;
+        if (task.polls >= 10) {
+          task.done = true;
+          task.completion.resolve();
+        }
+        pollEvents.emit(task.id);
+      }, 5),
     );
-  }
-});
+    t.after(() => {
+      pollingTimers.forEach(clearInterval);
+      controller.reset();
+    });
+
+    // Cycle pause and resume multiple times
+    for (let i = 0; i < 3; i++) {
+      await controller.pause();
+      assert.equal(controller.isFrozen(), true);
+      await Promise.all(tasks.map((task) => once(pollEvents, task.id)));
+      for (const task of tasks)
+        assert.ok(
+          task.frozenPolls >= i + 1,
+          `${task.id} must poll during pause ${i}`,
+        );
+      await controller.resume();
+      assert.equal(controller.isExecuting(), true);
+      await Promise.all(tasks.map((task) => once(pollEvents, task.id)));
+      for (const task of tasks)
+        assert.ok(
+          task.executingPolls >= i + 1,
+          `${task.id} must poll after resume ${i}`,
+        );
+    }
+
+    await Promise.all(tasks.map((task) => task.completion.promise));
+
+    for (const task of tasks) {
+      assert.equal(task.done, true, `Task ${task.id} must complete`);
+      assert.ok(
+        task.polls >= 10,
+        `Task ${task.id} must have polled >=10 times (got ${task.polls})`,
+      );
+    }
+  },
+);
 
 // =========================================================================
 // Additional Adversarial Stress Tests

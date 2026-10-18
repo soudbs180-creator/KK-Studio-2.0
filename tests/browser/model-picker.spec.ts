@@ -167,6 +167,17 @@ test("模型精确版本、参数选择和模糊搜索保留实际厂商 ID", as
   const source = page.getByTestId("canvas-node-image");
   await source.focus();
   await source.press("Enter");
+  await source.getByRole("button", { name: "画布模型", exact: true }).click();
+  const canvasModels = source.getByRole("menu", { name: "选择模型" });
+  await canvasModels
+    .getByRole("tab", { name: "官方 API", exact: true })
+    .click();
+  await canvasModels
+    .getByRole("menuitemradio", { name: /aurora-1-2k-high/ })
+    .click();
+  await expect(
+    source.getByRole("button", { name: "画布模型", exact: true }),
+  ).toHaveAttribute("title", "aurora-1-2k-high");
   await source.getByTitle("使用当前模型声明支持的尺寸").click();
   const params = source.getByLabel("图片参数选项");
   await params
@@ -239,6 +250,7 @@ test("渠道内展示同名 API 图片模型、未知用途原因并保留账号
   const trigger = page.getByRole("button", { name: "模型", exact: true });
   await trigger.click();
   const menu = page.getByRole("menu", { name: "选择模型" });
+  await menu.getByRole("tab", { name: "登录账号", exact: true }).click();
   await expect(menu.getByRole("menuitemradio", { name: /默认/ })).toBeVisible();
   await menu.getByRole("tab", { name: "官方 API", exact: true }).click();
   const enabledImageOptions = menu.getByRole("menuitemradio", {

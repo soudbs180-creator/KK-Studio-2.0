@@ -133,6 +133,7 @@ test("Skill 与 MCP 入口归一到扩展，Agent 连接属于模型接入", asy
 
   // The Agent panel opens model access rather than specialist task roles.
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
+  await page.getByLabel("执行方式", { exact: true }).selectOption("codex");
   await page.getByRole("button", { name: "连接设置", exact: true }).click();
   const models = page
     .getByRole("navigation", { name: "设置分类" })

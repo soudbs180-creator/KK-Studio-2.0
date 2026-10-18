@@ -5,6 +5,36 @@ use std::sync::atomic::{AtomicU64, Ordering};
 static NEXT_FIXTURE_ID: AtomicU64 = AtomicU64::new(0);
 
 #[test]
+fn image_archive_receipts_survive_v2_export_and_v3_restore() {
+    let f = Fixture::new();
+    let mut value = f.snapshot.clone();
+    value["revision"] = json!(2);
+    value["projects"][0]["imageArchiveReceipts"] = json!({
+        (format!("chatgpt-{}", "a".repeat(32))): {
+            "jobId":"original-job", "sha256":f.sha, "assetId":f.id,
+            "chatId":null, "retainedMetadata":{"label":"existing"}
+        }
+    });
+    f.snapshots.write(value.clone(), Some(1)).unwrap();
+    let package = f.package();
+    let target = f.root.join("receipts-restored");
+    import_package(&package, &target).unwrap();
+    let restored = SnapshotRepository::new(target.join("projects/creation-v2.json"))
+        .read()
+        .unwrap()
+        .snapshot
+        .unwrap();
+    assert_eq!(
+        restored,
+        crate::native_root_authority::migrated_snapshot(&value)
+    );
+    assert_eq!(
+        restored["projects"][0]["imageArchiveReceipts"],
+        value["projects"][0]["imageArchiveReceipts"]
+    );
+}
+
+#[test]
 fn trashed_projects_and_persistent_groups_keep_assets_in_native_packages() {
     let f = Fixture::new();
     let mut value = f.snapshot.clone();
@@ -24,7 +54,10 @@ fn trashed_projects_and_persistent_groups_keep_assets_in_native_packages() {
         .unwrap()
         .snapshot
         .unwrap();
-    assert_eq!(restored, value);
+    assert_eq!(
+        restored,
+        crate::native_root_authority::migrated_snapshot(&value)
+    );
     assert!(AssetRepository::new(target.join("assets"))
         .read(&f.id)
         .unwrap()
@@ -63,7 +96,10 @@ fn codex_generated_image_media_dimensions_survive_native_package_round_trip() {
         .unwrap()
         .snapshot
         .unwrap();
-    assert_eq!(restored, value);
+    assert_eq!(
+        restored,
+        crate::native_root_authority::migrated_snapshot(&value)
+    );
     let loaded = AssetRepository::new(target.join("assets"))
         .read(&f.id)
         .unwrap()
@@ -151,7 +187,10 @@ fn account_and_api_model_selections_round_trip_without_rewriting_legacy_projects
             .unwrap()
             .snapshot
             .unwrap();
-        assert_eq!(restored, value);
+        assert_eq!(
+            restored,
+            crate::native_root_authority::migrated_snapshot(&value)
+        );
         assert_eq!(f.source_bytes(), before);
     }
 }
@@ -224,7 +263,10 @@ fn text_protocol_routes_and_plain_outputs_round_trip_through_native_package() {
         .unwrap()
         .snapshot
         .unwrap();
-    assert_eq!(restored, value);
+    assert_eq!(
+        restored,
+        crate::native_root_authority::migrated_snapshot(&value)
+    );
     assert_eq!(f.source_bytes(), before);
 }
 
@@ -419,7 +461,7 @@ fn complete_graph_and_original_survive_independent_repository_reopen() {
             .unwrap()
             .snapshot
             .unwrap(),
-        f.snapshot
+        crate::native_root_authority::migrated_snapshot(&f.snapshot)
     );
     let loaded = AssetRepository::new(target.join("assets"))
         .read(&f.id)
@@ -453,7 +495,10 @@ fn task_submission_states_and_unknown_outputs_round_trip_without_rewrite() {
         .unwrap()
         .snapshot
         .unwrap();
-    assert_eq!(restored, snapshot);
+    assert_eq!(
+        restored,
+        crate::native_root_authority::migrated_snapshot(&snapshot)
+    );
     assert_eq!(
         restored["projects"][0]["tasks"][0]["submissionState"],
         "intent"

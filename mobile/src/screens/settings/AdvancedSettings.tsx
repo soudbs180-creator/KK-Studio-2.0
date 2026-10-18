@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { router } from "expo-router";
 import Constants from "expo-constants";
+import { Platform } from "react-native";
 import { useApplication } from "../../application/AppProvider.tsx";
 import { Action, Card, Label } from "../../ui/primitives.tsx";
 export function AdvancedSettings() {
@@ -46,7 +47,8 @@ export function AdvancedSettings() {
       <Card>
         <Label title>更新</Label>
         <Label>
-          KK Studio {Constants.expoConfig?.version ?? "未报告"} · Mobile
+          KK Studio {Platform.OS === "web" ? "手机网页版" : "手机客户端"} ·
+          当前版本 {Constants.expoConfig?.version ?? "未报告"}
         </Label>
         <Action
           label="检查应用更新"

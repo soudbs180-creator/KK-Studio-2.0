@@ -20,7 +20,10 @@ function setupTestAgentConnection() {
     close(): void;
   }[] = [];
 
-  const eventSourceFactory = () => {
+  const eventSourceFactory = (url: string) => {
+    const scope = JSON.parse(
+      new URL(url, "http://localhost").searchParams.get("scope") ?? "null",
+    );
     const source = {
       onmessage: null as ((e: { type: string; data: string }) => void) | null,
       onerror: null,
@@ -28,7 +31,17 @@ function setupTestAgentConnection() {
       emit(event: { type: string; data: unknown }) {
         source.onmessage?.({
           type: event.type,
-          data: JSON.stringify(event.data),
+          data: JSON.stringify(
+            event.data && typeof event.data === "object"
+              ? {
+                  scope,
+                  ...(event.type === "tool_call"
+                    ? { threadId: "", turnId: "" }
+                    : {}),
+                  ...event.data,
+                }
+              : event.data,
+          ),
         });
       },
       close() {
@@ -102,7 +115,7 @@ function setupTestAgentConnection() {
         ],
       });
     return new Response(
-      JSON.stringify({ ok: true, protocolVersion: 6, data: [], messages: [] }),
+      JSON.stringify({ ok: true, protocolVersion: 7, data: [], messages: [] }),
       { status: 200, headers: { "Content-Type": "application/json" } },
     );
   }) as typeof fetch;

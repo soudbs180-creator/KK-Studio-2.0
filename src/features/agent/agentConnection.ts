@@ -17,6 +17,7 @@ import {
   type AgentThreadResponse,
   type AgentActivityDetail,
   type ChatScope,
+  type AgentExecutionScope,
 } from "./agentTypes.ts";
 import {
   AgentApiError,
@@ -75,11 +76,21 @@ export interface AgentOpResult {
 }
 export interface AgentBridge {
   getChatScope?(): ChatScope | null;
+  getExecutionAdapter?(): string | undefined;
   getExecutionBlockReason?(): string | undefined;
   getModelAllowlist?(): readonly string[] | undefined;
   readAgentThread?(): string | undefined;
   saveAgentThread?(threadId: string, projectId: string): void | Promise<void>;
-  knownAgentProjects?(): readonly { projectId: string; threadId?: string }[];
+  knownAgentProjects?(): readonly {
+    projectId: string;
+    chatId?: string | null;
+    threadId?: string;
+  }[];
+  readAgentMessages?(): AgentChatItem[];
+  saveAgentMessages?(
+    messages: AgentChatItem[],
+    scope: ChatScope,
+  ): void | Promise<void>;
   readGoogleConversation?():
     import("../../domain/googleConversation.ts").GoogleConversation | undefined;
   saveGoogleConversation?(
@@ -197,6 +208,35 @@ run_generation 通过 KK 已配置的 Provider 提交真实任务，返回任务
 用户明确要求 Codex/ChatGPT 内置生图、或选择 Codex 图片入口时，可直接使用内置 imagegen/image_generation 工具，KK 会读取完成事件并将图片归档到画布；这使用 Codex 账号额度，不需要生成 API Key。必须实际调用内置工具，不能用脚本绘图冒充。
 用户主动添加的图片会作为附件传给你；引用画布图片时以所附原件为准。附件导入画布工具尚未接入，其他工具如返回 unsupported，不得声称已执行。不要为实现画布操作修改项目源码。
 `;
+function mergeRetainedMessage(
+  previous: AgentChatItem | undefined,
+  incoming: AgentChatItem,
+): AgentChatItem {
+  return {
+    ...previous,
+    ...mergeAgentChatItem(previous, incoming),
+    id: previous?.id ?? incoming.id,
+  };
+}
+function mergeHistory(
+  saved: AgentChatItem[],
+  remote: AgentChatItem[],
+): AgentChatItem[] {
+  const messages = [...saved];
+  for (const item of remote) {
+    const index = messages.findIndex(
+      (previous) =>
+        previous.id === item.id ||
+        Boolean(
+          item.clientMessageId &&
+          previous.clientMessageId === item.clientMessageId,
+        ),
+    );
+    if (index < 0) messages.push(item);
+    else messages[index] = mergeRetainedMessage(messages[index], item);
+  }
+  return messages;
+}
 export function createAgentConnection(options: AgentConnectionOptions = {}) {
   const turnFreezing = createTurnFreezingController();
   const clientId = options.clientId ?? crypto.randomUUID();
@@ -230,6 +270,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
   let epoch = 0;
   let projectId = "";
   let connectedScopeKey = "";
+  let executionScope: AgentExecutionScope | undefined;
   let turnModelAllowlist: readonly string[] | undefined;
   let initializing = false;
   let connectionFlight: { promise: Promise<void>; ready: boolean } | null =
@@ -260,6 +301,10 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
   function getExecutionBlockReason(): string | undefined {
     return (
       bridge?.getExecutionBlockReason?.() ??
+      (bridge?.getExecutionAdapter?.() &&
+      bridge.getExecutionAdapter() !== "codex"
+        ? "当前聊天未选择 Codex，旧连接已停止。"
+        : undefined) ??
       (state.status !== "disconnected" &&
       currentScopeKey() !== connectedScopeKey
         ? "项目或聊天已切换，请重新连接；原会话身份已保留。"
@@ -278,9 +323,12 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
     if (state.status !== "disconnected" && getExecutionBlockReason())
       disconnect();
   }
-  const threadKey = () => "kk-agent-thread:" + (projectId || "workspace");
-  const preparationKey = () =>
-    "kk-agent-preparation:" + (projectId || "workspace");
+  const scopedKey = () =>
+    currentChatScope()?.chatId != null
+      ? connectedScopeKey
+      : projectId || "workspace";
+  const threadKey = () => "kk-agent-thread:" + scopedKey();
+  const preparationKey = () => "kk-agent-preparation:" + scopedKey();
   function preparationOwners(): string[] {
     try {
       const owners: unknown = JSON.parse(
@@ -324,7 +372,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
     patch({
       status: "disconnected",
       conversation: null,
-      messages: [],
+      messages: bridge?.readAgentMessages?.() ?? [],
       pendingApproval: null,
       sending: false,
       activity: "",
@@ -368,10 +416,26 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
     patch({
       messages: existing
         ? state.messages.map((x) =>
-            x === existing ? mergeAgentChatItem(x, item) : x,
+            x === existing ? mergeRetainedMessage(x, item) : x,
           )
-        : [...state.messages, mergeAgentChatItem(undefined, item)],
+        : [...state.messages, mergeRetainedMessage(undefined, item)],
     });
+    void persistMessages().catch(() => undefined);
+  }
+  async function persistMessages(): Promise<void> {
+    const scope = executionScope;
+    if (!scope || !currentChatScope() || getExecutionBlockReason()) return;
+    try {
+      await bridge?.saveAgentMessages?.(state.messages, scope);
+    } catch (error) {
+      if (executionScope === scope) {
+        toolReceiptError =
+          "聊天记录保存未确认，已暂停后续操作；请先处理保存提示。";
+        toolController.abort();
+        patch({ error: errorText(error) });
+      }
+      throw error;
+    }
   }
   function handle(event: AgentEvent) {
     if (getExecutionBlockReason()) {
@@ -458,7 +522,10 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
               return;
             const endStep = turnFreezing.beginStep(event.requestId);
             try {
-              await handleTool(event.requestId, event.name, event.input);
+              await handleTool(event.requestId, event.name, event.input, {
+                threadId: event.threadId,
+                turnId: event.turnId,
+              });
             } finally {
               endStep();
             }
@@ -575,12 +642,14 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
       }),
     });
     if (error) message({ id: crypto.randomUUID(), role: "error", text: error });
+    void persistMessages().catch(() => undefined);
     void refreshUsage();
   }
   async function handleTool(
     requestId: string,
     name: string,
     input: Record<string, unknown>,
+    turn: { threadId?: string; turnId?: string },
   ) {
     const activeApi = api;
     const version = epoch;
@@ -602,6 +671,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
       await activeApi
         .postToolResult({
           requestId,
+          ...turn,
           result: {
             ok: result.rejected.length === 0,
             applied: result.applied.length,
@@ -624,14 +694,14 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
     } catch (error) {
       if (isCurrent(version))
         await activeApi
-          .postToolResult({ requestId, error: errorText(error) })
+          .postToolResult({ requestId, ...turn, error: errorText(error) })
           .catch(() => undefined);
     }
   }
   function connectShared(newConversation = false): Promise<void> {
     if (newConversation && currentChatScope()?.chatId != null) {
       patch({
-        error: "当前聊天的 Agent 线程不可替换；多聊天执行隔离尚未完成。",
+        error: "当前聊天的 Agent 线程不可替换，请继续当前聊天。",
       });
       return Promise.resolve();
     }
@@ -670,6 +740,14 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
     const version = epoch;
     projectId = currentProject();
     connectedScopeKey = currentScopeKey();
+    const scope = currentChatScope();
+    executionScope = scope
+      ? { ...scope, epoch: crypto.randomUUID() }
+      : {
+          projectId: projectId || "workspace",
+          chatId: null,
+          epoch: crypto.randomUUID(),
+        };
     // A resumed turn has no durable external-model grant receipt yet.
     turnModelAllowlist = currentChatScope()?.chatId != null ? [] : undefined;
     const queuedEvents: AgentEvent[] = [];
@@ -681,7 +759,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
       status: "connecting",
       activity: "正在连接 Codex…",
       error: null,
-      messages: [],
+      messages: bridge?.readAgentMessages?.() ?? [],
       conversation: null,
       sending: false,
       models: [],
@@ -698,10 +776,11 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
         clientId,
         fetcher: options.fetcher,
         signal: controller.signal,
+        scope: executionScope,
       });
       api = activeApi;
       const config = await activeApi.discover();
-      if (!config.ok || config.protocolVersion !== 6)
+      if (!config.ok || config.protocolVersion !== 7)
         throw new Error(
           "本地 Agent 协议不兼容，请使用项目提供的 canvas-agent。",
         );
@@ -719,20 +798,60 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
           };
           source = options.eventSourceFactory
             ? options.eventSourceFactory(
-                endpoint + "/events?clientId=" + encodeURIComponent(clientId),
+                endpoint +
+                  "/events?clientId=" +
+                  encodeURIComponent(clientId) +
+                  "&scope=" +
+                  encodeURIComponent(JSON.stringify(executionScope)),
                 state.token,
               )
             : createAgentEventStream(
-                endpoint + "/events?clientId=" + encodeURIComponent(clientId),
+                endpoint +
+                  "/events?clientId=" +
+                  encodeURIComponent(clientId) +
+                  "&scope=" +
+                  encodeURIComponent(JSON.stringify(executionScope)),
                 state.token,
                 options.fetcher,
               );
           source.onmessage = (frame) => {
             if (!isCurrent(version)) return;
             try {
+              const payload = JSON.parse(frame.data ?? "null");
+              const eventScope = payload?.scope;
+              if (
+                eventScope &&
+                (eventScope.projectId !== executionScope?.projectId ||
+                  eventScope.chatId !== executionScope?.chatId ||
+                  eventScope.epoch !== executionScope?.epoch)
+              )
+                return;
+              if (
+                frame.type === "tool_call" &&
+                (typeof payload?.threadId !== "string" ||
+                  typeof payload?.turnId !== "string")
+              ) {
+                fail(
+                  new Error(
+                    "Agent 工具缺少冻结的线程或 turn 身份，当前未执行。",
+                  ),
+                );
+                return;
+              }
+              if (
+                [
+                  "tool_call",
+                  "chat_message",
+                  "agent_event",
+                  "codex_approval",
+                  "codex_approval_resolved",
+                ].includes(frame.type ?? "message") &&
+                !eventScope
+              )
+                return;
               const event = parseAgentSseEvent(
                 frame.type ?? "message",
-                JSON.parse(frame.data ?? "null"),
+                payload,
               );
               if (!event) return;
               if (event.kind === "hello") {
@@ -746,7 +865,12 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
                   const error =
                     "KK 正在恢复连接，未执行本次画布操作。请在连接完成后确认是否需要重试。";
                   const receipt = activeApi
-                    .postToolResult({ requestId: event.requestId, error })
+                    .postToolResult({
+                      requestId: event.requestId,
+                      threadId: event.threadId,
+                      turnId: event.turnId,
+                      error,
+                    })
                     .then(() => undefined)
                     .catch(() => undefined);
                   handledTools.set(event.requestId, receipt);
@@ -775,10 +899,22 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
         },
       );
       if (!isCurrent(version)) return;
-      const saved = newConversation
+      let saved = newConversation
         ? null
-        : bridge?.readAgentThread?.() || storage.getItem(threadKey());
+        : bridge?.readAgentThread?.() ||
+          (currentChatScope()?.chatId == null
+            ? storage.getItem(threadKey())
+            : null);
       const remote = hello.conversation;
+      if (
+        !saved &&
+        !newConversation &&
+        remote?.threadId &&
+        remote.scope &&
+        remote.scope.projectId === executionScope?.projectId &&
+        remote.scope.chatId === executionScope?.chatId
+      )
+        saved = remote.threadId;
       patch({ conversation: remote ?? null });
       if (
         (hello.busy || hello.pendingApprovals.length > 0) &&
@@ -790,8 +926,9 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
         .filter(
           (owner) =>
             (owner.threadId ||
-              storage.getItem("kk-agent-thread:" + owner.projectId)) ===
-            remote?.threadId,
+              (owner.chatId == null
+                ? storage.getItem("kk-agent-thread:" + owner.projectId)
+                : null)) === remote?.threadId,
         );
       const knownOwner = knownOwners?.length === 1 ? knownOwners[0] : undefined;
       const initializeProject = Boolean(
@@ -799,16 +936,17 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
         !saved &&
         remote?.threadId &&
         knownOwner &&
-        knownOwner.projectId !== projectId &&
+        (knownOwner.projectId !== projectId ||
+          (knownOwner.chatId ?? null) !== currentChatScope()?.chatId) &&
         ["ready", "warning"].includes(remote.status),
       );
       if (!newConversation && !saved && remote?.threadId && !initializeProject)
         throw new Error(
           "服务已有其他会话，未创建或替换。请在原项目继续，或明确点击新建 Agent 会话。",
         );
-      await activeApi.activate();
-      if (!isCurrent(version)) return;
       await activeApi.postState(bridge?.getSnapshot() ?? null);
+      if (!isCurrent(version)) return;
+      await activeApi.activate();
       if (!isCurrent(version)) return;
       const rememberOwnership = async (
         conversation?: AgentConversationState | null,
@@ -926,7 +1064,10 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
         status: "connected",
         activity: "Codex 已就绪",
         conversation,
-        messages: (thread.messages ?? []).map((item) =>
+        messages: mergeHistory(
+          bridge?.readAgentMessages?.() ?? [],
+          thread.messages ?? [],
+        ).map((item) =>
           item.role === "assistant"
             ? {
                 ...item,
@@ -943,6 +1084,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
         pendingApproval: approvals.values().next().value ?? null,
         lastConnectedAt: Date.now(),
       });
+      if (bridge?.saveAgentMessages) await persistMessages();
       initializing = false;
       // SSE may advance while the history/model reads are in flight. Replay in
       // order after seeding the snapshot, never overwrite it with stale hello.
@@ -1080,6 +1222,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
     if (input?.memoryMode !== "none" && !input?.isTemporary)
       void memoryService.ingestMessage(text.trim(), "user");
     try {
+      if (bridge?.saveAgentMessages) await persistMessages();
       const attachments = await (
         options.prepareAttachments ?? prepareAgentAttachments
       )(selectedAttachments, { signal });
@@ -1162,7 +1305,10 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
           error instanceof AgentApiError &&
           (error.response as AgentTurnResponse).state
         )
-          patch({ conversation: (error.response as AgentTurnResponse).state });
+          handle({
+            kind: "conversation",
+            conversation: (error.response as AgentTurnResponse).state!,
+          });
         patch({
           sending: false,
           error: errorText(error),

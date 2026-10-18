@@ -113,6 +113,10 @@ export function createGoogleAgentConnection(options: Options = {}) {
   function getExecutionBlockReason() {
     return (
       bridge?.getExecutionBlockReason?.() ??
+      (bridge?.getExecutionAdapter?.() &&
+      bridge.getExecutionAdapter() !== "google"
+        ? "当前聊天未选择 Google，旧连接已停止。"
+        : undefined) ??
       (connectedScopeKey !== currentScopeKey()
         ? "项目或聊天已切换，请重新连接。"
         : undefined)
@@ -181,6 +185,10 @@ export function createGoogleAgentConnection(options: Options = {}) {
   }
   async function connect(fresh = false) {
     if (state.sending || state.status === "connecting") return;
+    if (fresh && bridge?.getChatScope?.()?.chatId != null) {
+      patch({ error: "当前聊天的会话不能被替换；请继续当前聊天。" });
+      return;
+    }
     syncProject();
     const blocked = getExecutionBlockReason();
     if (blocked) {

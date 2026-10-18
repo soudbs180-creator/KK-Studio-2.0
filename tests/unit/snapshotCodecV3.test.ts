@@ -225,7 +225,7 @@ test("R2-U-SCHEMA-05: parseSnapshot rejects corrupt JSON strings", () => {
  * Tier 2: Deterministic v2 -> v3 Migration
  * ========================================================================= */
 
-test("R2-U-MIGRATE-01: deterministic migration splits v2 direct, codex, and google channels with zero message loss", () => {
+test("R2-U-MIGRATE-01: migration separates unassigned history, Codex and Google without message loss", () => {
   const v2LegacySnapshot: LegacyV2Snapshot = {
     version: 2,
     revision: 7,
@@ -283,8 +283,8 @@ test("R2-U-MIGRATE-01: deterministic migration splits v2 direct, codex, and goog
   const proj = v3.projects[0];
   // Deterministic chat segregation
   assert.ok(
-    proj.chats["legacy-direct"],
-    "Direct history must migrate to legacy-direct",
+    proj.chats["legacy-history"],
+    "Direct history must migrate to legacy-history",
   );
   assert.ok(
     proj.chats["legacy-codex"],
@@ -295,8 +295,8 @@ test("R2-U-MIGRATE-01: deterministic migration splits v2 direct, codex, and goog
     "Google conversation must migrate to legacy-google",
   );
 
-  // Verify data fidelity in legacy-direct
-  const directChat = proj.chats["legacy-direct"];
+  // Verify data fidelity in legacy-history
+  const directChat = proj.chats["legacy-history"];
   assert.equal(directChat.mainAgent, "direct");
   assert.equal(directChat.messages.length, 2);
   assert.equal(directChat.messages[0].content, "Direct message 1");
@@ -314,17 +314,19 @@ test("R2-U-MIGRATE-01: deterministic migration splits v2 direct, codex, and goog
     sessionId: "gemini-session-888",
   });
 
-  // Verify activeChatId priority: legacy-direct > legacy-codex > legacy-google
-  assert.equal(proj.activeChatId, "legacy-direct");
+  // An unassigned nonempty draft remains visible for review, without borrowing a thread.
+  assert.equal(proj.activeChatId, "legacy-history");
 
   // Verify shared project assets are preserved untouched
   assert.equal(proj.items.length, 1);
   assert.equal(proj.items[0].id, "canvas-shared-item");
 
-  // Verify background tasks receive originChatId matching activeChatId
+  // Unknown task provenance remains unknown.
   assert.equal(proj.tasks.length, 1);
   assert.equal(proj.tasks[0].id, "task-render-1");
-  assert.equal(proj.tasks[0].originChatId, "legacy-direct");
+  assert.equal(proj.tasks[0].originChatId, undefined);
+  assert.equal(codexChat.messages.length, 0);
+  assert.equal(directChat.requiresReview, true);
 });
 
 test("R2-U-MIGRATE-02: migration of empty v2 project creates chat-default with clean state", () => {
@@ -353,7 +355,7 @@ test("R2-U-MIGRATE-02: migration of empty v2 project creates chat-default with c
   assert.deepEqual(proj.chats["chat-default"].modelAllowlist, []);
 });
 
-test("R2-U-MIGRATE-03: migration activeChatId resolution respects strict precedence direct -> codex -> google", () => {
+test("R2-U-MIGRATE-03: a single existing legacy context remains the active chat", () => {
   // Case A: Codex only (no direct messages)
   const codexOnly: LegacyV2Snapshot = {
     version: 2,

@@ -1,5 +1,9 @@
 import { expect, test } from "@playwright/test";
-import { openWorkspace, openSettingsSection } from "./helpers";
+import {
+  openWorkspace,
+  openSettingsSection,
+  panCanvasToRevealAction,
+} from "./helpers";
 
 test.use({ hasTouch: true });
 
@@ -94,10 +98,32 @@ for (const theme of ["light", "dark"])
       await expect(
         page.getByRole("menu", { name: "画布缩放比例", exact: true }),
       ).toBeHidden();
-      const preview = page
-        .getByRole("toolbar", { name: /^图片操作：/ })
-        .getByRole("button", { name: "放大查看参考图片", exact: true });
+      const actions = page.getByRole("toolbar", { name: /^图片操作：/ });
+      const preview = actions.getByRole("button", {
+        name: "放大查看参考图片",
+        exact: true,
+      });
       await expect(preview).toBeVisible();
+      await expect(actions).toHaveCSS("overflow-x", "visible");
+      await expect(canvas).toHaveCSS("overflow-x", "clip");
+      await expect
+        .poll(async () => {
+          const bar = (await actions.boundingBox())!;
+          const card = (await node.locator(".image-preview").boundingBox())!;
+          return bar.x + bar.width / 2 - (card.x + card.width / 2);
+        })
+        .toBeCloseTo(0, 0);
+      expect(
+        await actions.evaluate(
+          (element) => element.scrollWidth - element.clientWidth,
+        ),
+      ).toBe(0);
+      const bounds = (await canvas.boundingBox())!;
+      const bar = (await actions.boundingBox())!;
+      expect(
+        bar.x < bounds.x || bar.x + bar.width > bounds.x + bounds.width,
+      ).toBe(true);
+      await panCanvasToRevealAction(page, preview);
       await expect
         .poll(() =>
           preview.evaluate((element) => {
@@ -110,6 +136,13 @@ for (const theme of ["light", "dark"])
           }),
         )
         .toBe(true);
+      await preview.tap();
+      await expect(
+        page.getByRole("dialog", { name: "预览参考图片", exact: true }),
+      ).toBeVisible();
+      await page
+        .getByRole("button", { name: "关闭素材预览", exact: true })
+        .tap();
       expect(
         await node.evaluate((element) => ({
           left: (element as HTMLElement).style.left,

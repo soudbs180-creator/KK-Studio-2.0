@@ -4,16 +4,22 @@ import { useState, type ReactNode } from "react";
 export default function SettingsExternalLink({
   href,
   children,
+  download,
+  className,
 }: {
   href: string;
   children: ReactNode;
+  download?: string;
+  className?: string;
 }) {
   const [error, setError] = useState("");
   return (
     <>
       <a
         href={href}
-        target="_blank"
+        download={download}
+        className={className}
+        target={download ? undefined : "_blank"}
         rel="noreferrer"
         onClick={async (event) => {
           if (!isTauri()) return;

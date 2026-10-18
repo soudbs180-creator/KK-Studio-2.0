@@ -7,6 +7,11 @@ import {
   CREATION_STORAGE_KEY,
   emptySnapshot,
   createProject,
+  createDefaultChat,
+  emptyDraft,
+  projectChatView,
+  serializeCreationSnapshot,
+  type CreationProject,
   type CreationSnapshot,
 } from "../../src/features/creation/model";
 
@@ -48,8 +53,14 @@ async function seed(
       attachments: [],
     });
     project.name = "旧 API 独立项目";
-    project.composerDraft.prompt = "API 未发送草稿";
-    initial.projects = [project];
+    project.chats![project.activeChatId!].name = "旧 API 聊天";
+    project.chats![project.activeChatId!].draft.prompt = "API 未发送草稿";
+    project.chats!.ordinaryCodex = createDefaultChat(
+      "ordinaryCodex",
+      "普通 Codex 聊天",
+    );
+    initial.version = 3;
+    initial.projects = [projectChatView(project)];
   }
   await page.addInitScript(
     ({ endpoint, initial, provider, snapshotKey, profileKey, registryKey }) => {
@@ -70,7 +81,7 @@ async function seed(
     },
     {
       endpoint,
-      initial,
+      initial: serializeCreationSnapshot(initial),
       provider,
       snapshotKey: CREATION_STORAGE_KEY,
       profileKey: MODEL_PROVIDER_STORAGE_KEY,
@@ -84,6 +95,10 @@ async function snapshot(page: Page): Promise<CreationSnapshot> {
     (key) => JSON.parse(localStorage.getItem(key) ?? "{}"),
     CREATION_STORAGE_KEY,
   );
+}
+
+function activeDraft(project: CreationProject) {
+  return project.chats![project.activeChatId!].draft;
 }
 
 async function attachHomeRuntime(page: Page) {
@@ -116,6 +131,11 @@ test("首页默认账号生图不被旧 image-test 接管，保存后只发一�
   const history: unknown[] = [];
   let apiCalls = 0;
   let durableAtTurn: CreationSnapshot | undefined;
+  let releaseFirstTurn!: () => void;
+  const firstTurnGate = new Promise<void>((resolve) => {
+    releaseFirstTurn = resolve;
+  });
+  let firstTurnEntered = false;
   try {
     await seed(page, agent.url);
     await page.route("https://main-gate.example.test/**", async (route) => {
@@ -145,6 +165,8 @@ test("首页默认账号生图不被旧 image-test 接管，保存后只发一�
             };
           }),
       );
+      firstTurnEntered = true;
+      await firstTurnGate;
       await route.continue();
     });
     await page.route(agent.url + "/agent/codex/threads/*", (route) =>
@@ -195,7 +217,17 @@ test("首页默认账号生图不被旧 image-test 接管，保存后只发一�
     await page
       .getByRole("button", { name: "开始创建项目", exact: true })
       .click();
+    await expect.poll(() => firstTurnEntered).toBe(true);
+    await expect(page.getByLabel("对话内容")).toBeEnabled();
+    await page.getByLabel("对话内容").fill("首次发送等待期间的新草稿");
+    releaseFirstTurn();
     await expect.poll(() => agent.turns.length).toBe(1);
+    await expect
+      .poll(async () => {
+        const draft = activeDraft((await snapshot(page)).projects[0]);
+        return { prompt: draft.prompt, pendingAgent: draft.pendingAgent };
+      })
+      .toEqual({ prompt: "首次发送等待期间的新草稿", pendingAgent: undefined });
     expect(durableAtTurn?.projects).toHaveLength(1);
     expect(durableAtTurn?.activeProjectId).toBe(durableAtTurn?.projects[0].id);
     expect(durableAtTurn?.projects[0].tasks).toHaveLength(0);
@@ -256,6 +288,12 @@ test("首页默认账号生图不被旧 image-test 接管，保存后只发一�
     await expandSidebar(page);
     await page.getByRole("button", { name: "项目库", exact: true }).click();
     await page.locator(".project-library-card").first().click();
+    await expect(page.getByLabel("对话内容")).toHaveValue(
+      "首次发送等待期间的新草稿",
+    );
+    await expect(
+      page.getByRole("button", { name: "移除素材 reference.png", exact: true }),
+    ).toBeVisible();
     await expect(
       page.locator('.demo-result-node[data-source="provider"]'),
     ).toHaveCount(1);
@@ -265,6 +303,7 @@ test("首页默认账号生图不被旧 image-test 接管，保存后只发一�
     ).toBe(result?.assetId);
     expect(agent.turns).toHaveLength(1);
   } finally {
+    releaseFirstTurn();
     await agent.close();
   }
 });
@@ -380,11 +419,20 @@ test("首页连接失败后编辑重试清除旧待发草稿并保留下一条�
       "imagegen/image_generation 生成 4 张图片",
     );
     await expect
-      .poll(async () => (await snapshot(page)).projects[0].composerDraft.prompt)
-      .toBe("");
+      .poll(async () => {
+        const draft = activeDraft((await snapshot(page)).projects[0]);
+        return { prompt: draft.prompt, pendingAgent: draft.pendingAgent };
+      })
+      .toEqual({
+        prompt: "正在发送时输入的下一条保留",
+        pendingAgent: undefined,
+      });
     const saved = await snapshot(page);
-    expect(saved.projects[0].composerDraft.attachments).toEqual([]);
-    expect(saved.projects[0].composerDraft.pendingAgent).toBeUndefined();
+    expect(activeDraft(saved.projects[0]).attachments).toMatchObject([
+      { name: "retry.png" },
+    ]);
+    expect(activeDraft(saved.projects[0]).pendingAgent).toBeUndefined();
+    expect(Object.hasOwn(saved.projects[0], "composerDraft")).toBe(false);
     expect(saved.homeDraft).toEqual(failed.homeDraft);
     expect(saved.projects[0].attachments).toEqual(
       failed.projects[0].attachments,
@@ -400,7 +448,9 @@ test("首页连接失败后编辑重试清除旧待发草稿并保留下一条�
     await expandSidebar(page);
     await page.getByRole("button", { name: "项目库", exact: true }).click();
     await page.locator(".project-library-card").first().click();
-    await expect(page.getByLabel("对话内容")).toHaveValue("");
+    await expect(page.getByLabel("对话内容")).toHaveValue(
+      "正在发送时输入的下一条保留",
+    );
     expect(agent.turns).toHaveLength(1);
   } finally {
     releaseTurn();
@@ -591,6 +641,11 @@ test("首页账号生图不把图片意图写入旧项目的普通 Codex 聊天"
       .locator(".project-library-card")
       .filter({ hasText: "旧 API 独立项目" })
       .click();
+    await expect(page.getByLabel("执行方式")).toHaveValue("direct");
+    await expect(page.getByLabel("对话内容")).toHaveValue("API 未发送草稿");
+    await page
+      .getByRole("tab", { name: "普通 Codex 聊天", exact: true })
+      .click();
     await expect(page.getByLabel("执行方式")).toHaveValue("codex");
     await expect(
       page.getByRole("button", { name: "模型", exact: true }),
@@ -608,7 +663,8 @@ test("首页账号生图不把图片意图写入旧项目的普通 Codex 聊天"
       (project) => project.name === "旧 API 独立项目",
     )!;
     expect(old.model).toBe("image-test");
-    expect(old.composerDraft.prompt).toBe("API 未发送草稿");
+    expect(old.chats!["chat-default"].draft.prompt).toBe("API 未发送草稿");
+    expect(Object.hasOwn(old, "composerDraft")).toBe(false);
     expect(old.items[0].generationSource).toBeUndefined();
   } finally {
     await agent.close();
@@ -656,7 +712,7 @@ test("首页非法参考图批次阻止纯文本降级发送，重新选有效�
   }
 });
 
-test("项目 API 切到 Codex 图片和 Google 后可重开，各通道草稿保持隔离", async ({
+test("不同聊天保留各自草稿；同一聊天切换主 Agent 保留输入并可重开", async ({
   page,
 }) => {
   const agent = await startAgentServer("idle");
@@ -672,7 +728,29 @@ test("项目 API 切到 Codex 图片和 Google 后可重开，各通道草稿保
   try {
     await seed(page, agent.url);
     await openSeededProject(page);
-    await page.getByLabel("执行方式").selectOption("direct");
+    const initial = await snapshot(page);
+    const project = initial.projects[0];
+    const apiChat = project.chats![project.activeChatId!];
+    apiChat.name = "API 原聊天";
+    apiChat.mainAgent = "direct";
+    apiChat.draft = { ...emptyDraft(), conversationChannel: "direct" };
+    project.chats!.codex = createDefaultChat("codex", "Codex 原聊天");
+    project.chats!.google = {
+      ...createDefaultChat("google", "Google 原聊天"),
+      mainAgent: "google",
+      draft: { ...emptyDraft(), conversationChannel: "google" },
+    };
+    const seeded = serializeCreationSnapshot({
+      ...initial,
+      revision: Math.max(initial.revision, Date.now()) + 1,
+      projects: [projectChatView(project)],
+    });
+    await page.evaluate(({ key, value }) => localStorage.setItem(key, value), {
+      key: CREATION_STORAGE_KEY,
+      value: JSON.stringify(seeded),
+    });
+    await reopen();
+    await expect(page.getByLabel("执行方式")).toHaveValue("direct");
     await page.getByLabel("对话内容").fill("API 独立输入保留");
     await page.locator('.chat-composer input[type="file"]').setInputFiles({
       name: "api-only.png",
@@ -685,50 +763,67 @@ test("项目 API 切到 Codex 图片和 Google 后可重开，各通道草稿保
     await menu.getByRole("searchbox").fill("image-test");
     await menu.getByRole("menuitemradio", { name: /^image-test/ }).click();
     await expect
-      .poll(async () => (await snapshot(page)).projects[0].composerDraft)
+      .poll(async () => activeDraft((await snapshot(page)).projects[0]))
       .toMatchObject({
         prompt: "API 独立输入保留",
         attachments: [{ name: "api-only.png" }],
         providerConnectionId: provider.id,
         modelSelection: { source: "api", model: "image-test" },
       });
-    const before = (await snapshot(page)).projects[0].composerDraft;
-    await page.getByLabel("执行方式").selectOption("codex");
+    const before = structuredClone(
+      (await snapshot(page)).projects[0].chats![apiChat.id].draft,
+    );
+    await page.getByRole("tab", { name: "Codex 原聊天", exact: true }).click();
+    await expect(page.getByLabel("执行方式")).toHaveValue("codex");
     await expect(page.getByLabel("对话内容")).toHaveValue("");
     await expect(
       page.getByRole("button", { name: "移除素材 api-only.png", exact: true }),
     ).toHaveCount(0);
     await page.getByRole("button", { name: "连接 Codex", exact: true }).click();
     await expect(page.locator(".chat-agent-banner")).toContainText("已连接");
-    await page.getByRole("button", { name: "模型", exact: true }).click();
-    await menu.getByRole("tab", { name: "登录账号", exact: true }).click();
-    await menu.getByRole("searchbox").fill("Codex 内置生图");
-    await menu.getByRole("menuitemradio", { name: /^Codex 内置生图/ }).click();
+    await page.getByLabel("对话内容").fill("同一聊天的可见输入");
     await page.getByLabel("执行方式").selectOption("google");
-    await page.getByLabel("对话内容").fill("Google 独立输入保留");
+    await expect(page.getByLabel("对话内容")).toHaveValue("同一聊天的可见输入");
     await page.getByLabel("执行方式").selectOption("codex");
-    await expect(page.getByLabel("对话内容")).toHaveValue("");
+    await expect(page.getByLabel("对话内容")).toHaveValue("同一聊天的可见输入");
     await expect(
       page.getByRole("button", { name: "模型", exact: true }),
-    ).toContainText("Codex 内置生图");
+    ).toContainText("Codex 账号默认");
+    await page.getByRole("tab", { name: "Google 原聊天", exact: true }).click();
+    await expect(page.getByLabel("执行方式")).toHaveValue("google");
+    await expect(page.getByLabel("对话内容")).toHaveValue("");
+    await page.getByLabel("对话内容").fill("Google 独立输入保留");
     await reopen();
+    await expect(page.getByLabel("执行方式")).toHaveValue("google");
+    await expect(page.getByLabel("对话内容")).toHaveValue(
+      "Google 独立输入保留",
+    );
+    await page.getByRole("tab", { name: "Codex 原聊天", exact: true }).click();
     await expect(page.getByLabel("执行方式")).toHaveValue("codex");
+    await expect(page.getByLabel("对话内容")).toHaveValue("同一聊天的可见输入");
     await expect(
       page.getByRole("button", { name: "模型", exact: true }),
-    ).toContainText("Codex 内置生图");
-    await expect(page.getByLabel("对话内容")).toHaveValue("");
-    await page.getByLabel("执行方式").selectOption("direct");
+    ).toContainText("Codex 账号默认");
+    await page.getByRole("tab", { name: "API 原聊天", exact: true }).click();
+    await expect(page.getByLabel("执行方式")).toHaveValue("direct");
     await expect(page.getByLabel("对话内容")).toHaveValue("API 独立输入保留");
     await expect(
       page.getByRole("button", { name: "移除素材 api-only.png", exact: true }),
     ).toBeVisible();
-    const after = (await snapshot(page)).projects[0].composerDraft;
-    expect(after.prompt).toBe(before.prompt);
-    expect(after.attachments).toEqual(before.attachments);
-    expect(after.providerConnectionId).toBe(before.providerConnectionId);
-    await page.getByLabel("执行方式").selectOption("google");
-    await reopen();
-    await expect(page.getByLabel("执行方式")).toHaveValue("google");
+    await expect
+      .poll(async () => {
+        const saved = (await snapshot(page)).projects[0];
+        return {
+          activeChatId: saved.activeChatId,
+          draft: saved.chats![apiChat.id].draft,
+        };
+      })
+      .toEqual({ activeChatId: apiChat.id, draft: before });
+    const after = (await snapshot(page)).projects[0].chats![apiChat.id].draft;
+    expect(after).toEqual(before);
+    expect(
+      Object.hasOwn((await snapshot(page)).projects[0], "composerDraft"),
+    ).toBe(false);
     expect(agent.turns).toHaveLength(0);
   } finally {
     await agent.close();
