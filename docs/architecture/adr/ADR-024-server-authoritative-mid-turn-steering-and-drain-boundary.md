@@ -1,6 +1,6 @@
 # ADR-024：服务端权威 Mid-turn Steering 与安全 Drain 边界
 
-- 状态：ACCEPTED（设计已采纳，待进入后续实现排期）
+- 状态：ACCEPTED（设计已采纳，待进入后续实现排期；2026-10-17 追加补充条目，见文末）
 - 日期 / Task ID / Owner：2026-10-17 / BACKEND-STEER-001 / root
 - 来源：吸收 Octop commit `ebcdbf9` 及 `steer/coordinator.py` 机制；延续 [ADR-012](ADR-012-taskhost-text-output.md)、[ADR-016](ADR-016-agent-and-provider-recovery.md) 与 [ADR-018](ADR-018-provider-protocol-and-cli-execution.md)。
 
@@ -50,3 +50,56 @@ WebView 渲染层仅根据上述事件更新 UI 指示器与 Composer 状态，�
 1. **单元状态机覆盖**：Rust 单测覆盖 admission/drain/discard/park 四类转移；
 2. **Tool 完整性回归**：在中途 steer 注入测试下，验证 ToolNode 调用的参数必须完整闭合，严禁出现残缺 JSON 进入存储；
 3. **TaskHost 契约兼容**：不增加额外存储库，继续复用 `task_host` 现存的 journal 与 unknown 恢复边界。
+
+---
+
+## 补充条目（2026-10-17）
+
+> 本条目与 Octop commit `ebcdbf9` 的 steer 语义逐项对齐，补齐拒绝原因、HITL 边界、事件集与 UI 契约。不改变上文决策结构；实现仍待排期。
+
+### 1. 拒绝原因枚举（细化 §1 的"结构化拒绝原因"）
+
+| code                | 触发条件                                   | 前端处理                                      |
+| ------------------- | ------------------------------------------ | --------------------------------------------- |
+| `QueueFull`         | 队列已有 3 条                              | 提示"最多排队 3 条"，保留草稿                 |
+| `TooLarge`          | 单条 UTF-8 超过 4 KiB                      | 提示长度上限，保留草稿                        |
+| `PausedForApproval` | 回合处于 `PAUSED_HITL`，且为新提交的 steer | 提示"先处理审批"，提供 `reject_and_steer` 入口 |
+| `StaleTurn`         | `expected_turn_id` 与当前回合不符          | 提示"回合已结束"，重新绑定或丢弃              |
+
+幂等重复 `request_id` **不算拒绝**：返回已排队状态，不产生第二条队列项。
+
+### 2. HITL 语义修订（替换 §3 第 2 段）
+
+原文"暂停期间接收到的新 steering 自动进入 PARKED 状态"与 Octop 实际语义不一致，修订为：
+
+- **暂停之前**已排队的 steer：进入 `PARKED`，30 分钟 TTL；审批完成后 `RESUMED` 并立即 drain；超时转 `DISCARDED` 并推送通知。
+- **暂停期间**新提交的 steer：拒绝 `PausedForApproval`，不 park、不静默接受。
+- 新增 `reject_and_steer` 复合操作：拒绝当前待审批工具调用 + 以新指令开启常规 Turn，作为单一原子动作（一个 IPC，Rust 侧保证两步全有或全无）。
+
+### 3. 事件集补充（§4）
+
+| 事件             | 触发                              | 载荷                                                             |
+| ---------------- | --------------------------------- | ---------------------------------------------------------------- |
+| `steer.removed`  | 用户撤回排队项 / 服务端移除失效项 | `request_id`、`reason`                                           |
+| `queue.snapshot` | 订阅或重连时下发                  | 队列条数、各条 `request_id` + 预览（≤80 字）、`expected_turn_id` |
+
+事件全集：`turn.started/resumed/ended`（3）+ `steer.queued/drained/discarded/removed/rejected`（6）+ `queue.snapshot`（1）。前端禁止本地推测队列状态，重连后以快照为准。
+
+### 4. UI chip 契约（新增 §5）
+
+| 动作   | 触发             | 成功信号        | 失败回退                              |
+| ------ | ---------------- | --------------- | ------------------------------------- |
+| commit | 草稿入队         | `steer.queued`  | `steer.rejected` → 恢复草稿，不丢文本 |
+| recall | 撤回全文到输入框 | `steer.removed` | 显示错误，chip 保留                   |
+| remove | 删除排队项       | `steer.removed` | 显示错误，chip 保留                   |
+
+渲染状态：`draft`（本地）→ `queued`（服务端确认）→ `drained`（转对话记录行）/ `rejected` / `discarded`。禁止前端乐观移除，所有状态迁移以 Rust 事件帧为准。
+
+### 5. 验证与接受条件（补充）
+
+1. `PAUSED_HITL` 期间新 steer 返回 `PausedForApproval`，UI 出现 `reject_and_steer` 入口；
+2. 暂停前已排队 steer 在 `turn.resumed` 后立即 `steer.drained`；
+3. `reject_and_steer` 原子性：断网/崩溃下不出现"只拒绝未提交指令"或相反；
+4. 重连后 `queue.snapshot` 与 Rust 队列逐条一致；
+5. `steer.removed` 后队列计数与 chip 序号同步；
+6. 幂等重复 `request_id` 不产生第二条队列项、不返回拒绝。
