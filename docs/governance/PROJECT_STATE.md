@@ -16,7 +16,7 @@
 - `strictCold`: 真正默认库、原两个lnk、无CDP，连续两轮0→1单实例→正常关闭0；11份完整JSON及raw字节均全相等，全部时间/revision2698保持，9项目11聊天22消息。40项身份/迁移/原候选/记忆状态保持，独立101项审核724e2a1f PASS。旧477实际FAIL和940拒收保留，不回滚2696或屏蔽字段。
 - `nativeUi`: 当前官方40默认资料两轮可见编辑框enabled/readOnly=false、canonical完整资料保持、0pageerror，UI独审651c2e7c PASS。无实际新回复验收；UI重序列化after不冒充raw比较，raw证明另见strictCold。
 - `preservation`: 开工9树141dirty/index/diff/refs/raw保全a9937aa2；main现96dirty另存233d4c85，旧63历史比较因并发变更FAIL且HEAD/index未变，不回退。构建前4447产物与critical复制293758ed，完整资料2849文件350742192B保全0a7c0a5e、独立6362f7ce逐份匹配，旧失败产物另存3b014bf4。全部原件与失败阶段保留。
-- `tasksAndTrees`: 154项90DONE/48PARTIAL/11TODO/3BLOCKED/2IN_PROGRESS，开放64；37功能成熟度不提升。9树18分支/approved root5/4，拒绝新增、复用现有；两issue68外部树owner明确但越界授权UNKNOWN，均保护。7条已分配开放route零失配；coord仍读主仓旧ledger且claim风险未接管。
+- `tasksAndTrees`: 154项90DONE/48PARTIAL/11TODO/3BLOCKED/2IN_PROGRESS，开放64；37功能成熟度不提升。9树18分支/approved root5/4，拒绝新增、复用现有；两issue68外部树owner明确但越界授权UNKNOWN，均保护。当前新增Gateway分配后7条已分配开放route零失配（冷任务00e79关闭时应为6条，原7为统计误写，已勘误）；coord仍读主仓旧ledger且claim风险未接管。
 - `remoteBoundary`: 已fetch无prune的origin/main c248d8178ec1754315559a9e476ac909bb494287，版本Desktop2.1.37/Web2.1.38/Mobile2.1.3属并行来源；未整合、未做Hosted复验，不混入或回退本候选。
 - `nextLocal`: 严格cold已闭环，下一P1 Gateway本地真实增量SSE合成上游子项；Native Canvas当前40协议专项已运行，待独立核验后登记边界。真实Provider/DPAPI/新回复/Hosted/签名/Mobile/用户整体仍开放。
 - `boundaries`: 无文件删除/移动、树回收、覆盖并行工作、共享依赖安装、生成/额度操作、push/merge/发布；旧生成产物先保全后按正常构建更新。Native内部IPC/附着前网络未完整观测。详见[当前验证](../changes/2026-10-18-coldstart-local/verification.md)。

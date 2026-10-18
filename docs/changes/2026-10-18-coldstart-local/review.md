@@ -11,3 +11,5 @@ source940完整verify PASS，Spec源码PASS252d8a19；Standards CHANGES REQUIRED
 ## 当前源码与实际冷启闭环
 
 精确d5源码Spec/Standards均PASS（164/173独立定向），原两个阻断分别有正式RED及新源复核关闭。官方40/完整verify、11份raw严格冷启及40项保护观测独立审核724e2a1f通过；默认只读UI证据另审651c2e7c通过。旧477实际FAIL和940 Standards拒收保持，不能用旧PASS覆盖新阶段。冷启有界技术DONE/PASS，最终文档HEAD/Delivery/私有归档/日常入口还原仍按提交后精确收据。不是Hosted/PR/main/Provider或用户整体验收。详见[当前验证](verification.md)最后一节。
+
+终稿00e79文档Standards独审9f762111保留CHANGES_REQUIRED：COLD-STD-ROUTE-COUNT-005/P2，cold关闭后实际开放路由6条而三个入口写7。技术源码与实际冷启结论不撤；后继23d3登记新Gateway路由后当前数回到7，现行入口明确区分这两个时点、冷阶段文字更正6，不修改历史拒收。非阻断STD-COMMIT-002/P3保留，后续采用中文真实模块scope，无amend。新的组合文档head须精确补审；原d5浏览器结构化证据独立确认95a12350/854首试零flaky，不以终稿数字错误改写产品结果。

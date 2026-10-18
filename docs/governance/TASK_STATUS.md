@@ -14,7 +14,7 @@
 
 TASK-GATEWAY-STREAM-20261018 IN_PROGRESS/NOT_VERIFIED，base00e79、同树fix/TASK-GATEWAY-STREAM-20261018，正式RED→本地增量SSE/取消/重试→新完整verify及双轴，父Gateway/FEAT-038保持PARTIAL/PROTOTYPE。[计划](../changes/2026-10-18-gateway-stream/plan.md)。当前9树18分支/预算5/4，无新增树或删移。
 
-TASK-COLDSTART-LOCAL-20261018有界本地DONE/PASS，精确d5/官方Desktop-Web2.1.40完整verify、源码双轴及真正默认无CDP两周期严格cold全部通过，11份完整JSON/raw相等、全部时间/revision2698保持，9项目11聊天22消息。独立审核724e2a1f与默认UI另审651c2e7c通过；旧FAIL/拒收保留。开工9树141dirty与主仓并发96另存、完整原profile2849份保全。9树17分支/预算5/4、7开放route零失配；下一Gateway本地增量流及当前Native Canvas专项。最终文档/Delivery/日常入口按精确收据。见[当前验证](../changes/2026-10-18-coldstart-local/verification.md)。
+TASK-COLDSTART-LOCAL-20261018有界本地DONE/PASS，精确d5/官方Desktop-Web2.1.40完整verify、源码双轴及真正默认无CDP两周期严格cold全部通过，11份完整JSON/raw相等、全部时间/revision2698保持，9项目11聊天22消息。独立审核724e2a1f与默认UI另审651c2e7c通过；旧FAIL/拒收保留。开工9树141dirty与主仓并发96另存、完整原profile2849份保全。9树17分支/预算5/4、冷任务关闭时6开放route零失配；下一Gateway本地增量流及当前Native Canvas专项。最终文档/Delivery/日常入口按精确收据。见[当前验证](../changes/2026-10-18-coldstart-local/verification.md)。
 
 前轮TASK-SIDEBAR-CANVAS-20261018 有界本地DONE/PASS/source50412d4e，侧栏pin/sort及宽图实际Web/fresh2.1.39 Native已验，原两父任务本地技术验收DONE。3条旧无效路由改unallocated/NOT_VERIFIED并保留完整历史，未伪造其功能完成；7树14分支/预算5/4，全部保留。完整验证、原库9项目11聊天22消息保全及最终精确HEAD/日常启动收据边界见[本轮验证](../changes/2026-10-18-sidebar-canvas/verification.md)。
 
