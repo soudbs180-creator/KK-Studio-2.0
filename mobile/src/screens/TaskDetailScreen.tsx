@@ -37,6 +37,7 @@ export default function TaskDetailScreen() {
   );
   const receipt = project?.executionReceipts?.find((r) => r.taskId === task.id),
     comfy = receipt?.protocol === "comfyui",
+    video = task.kind === "video",
     liveJob = Boolean(
       receipt?.gatewayJobId && !receipt.readOnly && task.status !== "succeeded",
     );
@@ -118,7 +119,26 @@ export default function TaskDetailScreen() {
             />
           </>
         )}
-        {!comfy && (
+        {video && (
+          <Action
+            primary
+            label="查询视频任务 / 恢复原件"
+            busy={busy}
+            disabled={
+              state.busyTaskIds.includes(task.id) ||
+              task.status === "succeeded" ||
+              Boolean(receipt?.readOnly) ||
+              (!receipt?.providerRequestId && !policy.recover)
+            }
+            reason={
+              receipt?.readOnly
+                ? "恢复副本的历史作业只供查看。"
+                : "只 GET 原视频作业与原件，不再次提交生成。刷新后 Key 缺失时，先在原连接重新保存 Key；仅同一原地址可用。"
+            }
+            onPress={() => void run(() => app.recoverTask(task.id))}
+          />
+        )}
+        {!comfy && !video && (
           <Action
             primary={!liveJob}
             label="恢复已收到的原件"

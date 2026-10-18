@@ -13,6 +13,9 @@ import {
   requireAccountContext,
 } from "./types.ts";
 import { submitGateway, reconcileTask } from "./gatewayWorkflow.ts";
+import { submitVideo, recoverVideoTask } from "./videoWorkflow.ts";
+import { isTwelveAiConnection } from "../services/twelveAiProtocol.ts";
+import { videoModelProfile } from "../services/twelveAiVideoModels.ts";
 import {
   archiveReceipt,
   verifyReceipt,
@@ -65,6 +68,14 @@ export async function recoverTask(
 ): Promise<void> {
   const ctx = host.context();
   await host.ensureSession();
+  if (
+    ctx.snapshot.projects.some((p) =>
+      p.tasks.some((t) => t.id === taskId && t.kind === "video"),
+    )
+  ) {
+    await recoverVideoTask(host, taskId);
+    return;
+  }
   if (host.pendingGateways.has(taskId)) {
     await reconcileTask(host, taskId);
     return;
@@ -162,9 +173,27 @@ export async function submit(
       throw new Error("此连接没有可执行的当前类型适配器。");
     if (!captured.prompt.trim() || !captured.model.trim())
       throw new Error("请输入内容并选择模型。");
-    if (captured.kind !== "text" && captured.kind !== "image")
+    if (
+      captured.kind !== "text" &&
+      captured.kind !== "image" &&
+      captured.kind !== "video"
+    )
       throw new Error("当前连接没有可执行的视频或音频适配器。");
-    if (!connection.capabilities[captured.kind])
+    if (
+      captured.kind === "video" &&
+      (!host.deps.video ||
+        !isTwelveAiConnection(connection) ||
+        !videoModelProfile(captured.model))
+    )
+      throw new Error(
+        "此连接或模型尚无已接入的文本生视频协议，请选择受支持的 12ai 模型。",
+      );
+    if (
+      captured.kind === "video" &&
+      (captured.outputCount !== 1 || captured.prompt.length > 5000)
+    )
+      throw new Error("文本生视频每次生成一条，提示词最多 5000 字符。");
+    if (captured.kind !== "video" && !connection.capabilities[captured.kind])
       throw new Error("该连接未启用当前类型端点，请检查连接设置。");
     if (
       !retry &&
@@ -270,6 +299,10 @@ export async function submit(
       prompt: task.prompt,
       attachments: task.attachments,
     };
+    if (task.kind === "video") {
+      await submitVideo(host, ctx, projectId, task, input, controller.signal);
+      return;
+    }
     const client = host.deps.provider(ctx.vault);
     if (connection.protocol === "kk-image-jobs") {
       await submitGateway(

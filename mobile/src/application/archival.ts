@@ -3,11 +3,12 @@ import type {
   CreationTaskOutput,
 } from "@kk-studio/creation-contracts";
 import type { TextReceipt, ImageReceipt } from "../services/providerTypes.ts";
+import type { VideoReceipt } from "../services/twelveAiVideoClient.ts";
 import type { WorkflowHost, AccountContext, PendingArchive } from "./types.ts";
 import { projectRevision } from "./types.ts";
 import { resolveRetryParent } from "./retryArchive.ts";
 export function verifyReceipt(
-  receipt: TextReceipt | ImageReceipt,
+  receipt: TextReceipt | ImageReceipt | VideoReceipt,
   task: CreationTask,
   projectId: string,
 ): void {

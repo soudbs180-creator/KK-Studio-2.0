@@ -10,6 +10,10 @@ import type { MobileRepository } from "../storage/repository.ts";
 import type { CredentialVault } from "../storage/ports.ts";
 import type { createIdentityClient } from "../services/identityClient.ts";
 import type { createProviderClient } from "../services/providerClient.ts";
+import type {
+  createTwelveAiVideoClient,
+  VideoReceipt,
+} from "../services/twelveAiVideoClient.ts";
 import type { createGatewayImageClient } from "../services/gatewayImageClient.ts";
 import type { createComfyUiClient } from "../services/comfyClient.ts";
 import type { AuthSession, MobileUser } from "../services/authTypes.ts";
@@ -54,6 +58,7 @@ export interface ApplicationDependencies {
   vault(accountId: string): CredentialVault;
   identity(baseUrl: string): ReturnType<typeof createIdentityClient>;
   provider(vault: CredentialVault): ReturnType<typeof createProviderClient>;
+  video?(vault: CredentialVault): ReturnType<typeof createTwelveAiVideoClient>;
   gateway?(vault: CredentialVault): ReturnType<typeof createGatewayImageClient>;
   comfy?(vault: CredentialVault): ReturnType<typeof createComfyUiClient>;
   id(): string;
@@ -87,7 +92,7 @@ export interface PendingArchive {
   accountId: string;
   projectId: string;
   task: CreationTask;
-  receipt: TextReceipt | ImageReceipt;
+  receipt: TextReceipt | ImageReceipt | VideoReceipt;
   complete: boolean;
 }
 export interface PendingGateway {

@@ -24,6 +24,18 @@ const messages: Record<string, string> = {
   IMAGE_CAPABILITY_UNAVAILABLE: "此连接没有启用可执行的图片端点。",
   IMAGE_COUNT_UNAVAILABLE: "请求数量超过此连接支持范围，请检查图片数量。",
   IMAGE_SIZE_UNAVAILABLE: "当前端点不支持这个尺寸。",
+  VIDEO_MODEL_UNAVAILABLE:
+    "此连接或模型没有已接入的文本生视频协议，请选择受支持的官方 12ai 模型。",
+  INVALID_VIDEO_INPUT:
+    "视频每次生成一条，提示词最多 5000 字符；输入与原件保留。",
+  VIDEO_ORIGINAL_RETRIEVAL_FAILED:
+    "视频作业回执已保留，原件下载尚未成功。请到任务页只查询恢复，不会再次提交生成。",
+  VIDEO_ASSET_URL_UNAVAILABLE:
+    "视频结果地址不在已接入的安全资源范围，作业回执保留，可到任务页重新查询。",
+  INVALID_VIDEO_BYTES:
+    "视频原件字节校验失败，未标记保存成功。作业回执保留，可到任务页只查询恢复。",
+  VIDEO_MIME_MISMATCH:
+    "视频原件格式与响应不符，作业回执保留，可到任务页只查询恢复。",
   IMAGE_ORIGINAL_RETRIEVAL_FAILED:
     "生成接口已返回，但原图取回失败，尚未自动保存。图片地址可能受跨域限制或已失效；请核对任务，不会自动再次付费生成。",
   SESSION_CHANGED_AFTER_SUBMISSION:
