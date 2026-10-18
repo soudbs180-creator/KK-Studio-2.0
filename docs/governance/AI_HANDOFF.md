@@ -8,7 +8,15 @@
 
 本文是最短恢复入口，不是任务状态或产品能力的第二事实源。任务状态只读 [`task-ledger.json`](task-ledger.json)；当前项目事实只读 [`PROJECT_STATE.md`](PROJECT_STATE.md)；历史验证只按带日期的 change package、commit、运行模式和 receipt 回读。
 
-## 当前恢复入口：12ai 手机生成与保存修复（2026-10-18）
+## 当前恢复入口：手机输入模型焦点修复（2026-10-18）
+
+先读[本次计划](../changes/2026-10-18-mobile-composer/plan.md)与[验证](../changes/2026-10-18-mobile-composer/verification.md)。TASK-MOBILE-COMPOSER-001 IN_PROGRESS/NOT_VERIFIED，base97ef、fix/TASK-MOBILE-COMPOSER-001-focus、原TASK-MOBILE-12AI-001隔离树；root独占产品/测试/版本/浏览器，文档代理单一写本包与登记。实际本地空text失焦红测四项保留，interacting候选新完整浏览器13/13，Mobile371/type/lint由root回传；继续精确head检查/独审和正式Release，不能先写上线40。
+
+不再生成/发现模型，不触碰canonical未提交改动；当前现网39/唯一previous38，新版本上线后目标40/唯一39。后台截图文件实际正常，长停留908.067秒后原件恢复已观测，但network截断且真实hidden事件未证，Android实体后台/Safari/Native仍未验。不要重新增加临时root SSH权限。
+
+原图文TASK已按PR70/71完成范围有界DONE/PASS，当前base97ef就是PR71正常squash结果；其他任务不批量结案。下节保留当时REVIEW/待文档门禁的恢复快照，由本段已核收尾状态替代。
+
+## 历史恢复入口：12ai 手机生成与保存修复（2026-10-18）
 
 TASK-MOBILE-12AI-001保持REVIEW/NOT_VERIFIED，先读[当前生产收据](../changes/2026-10-18-mobile-12ai-production-receipt/verification.md)、[当前文档Review](../changes/2026-10-18-mobile-12ai-production-receipt/review.md)及[发布实录](../changes/2026-10-18-mobile-12ai/release.md)。产品PR70已squash为main9d10/tree611c，与已审b0ef同树；main Hosted及正式Release416299447/部署39107253299成功，Web2.1.39/Mobile2.1.4上线、公网140201/cf341da4入口与生产9项、current39/唯一previous38终核通过，Desktop源码仍2.1.37。旧产品独审冻结，当前docs分支补新五件包修复55e正式Delivery FAIL1；最终head另作正式Delivery/独审/Hosted。
 
@@ -187,6 +195,5 @@ TASK-AGENT-RECOVERY-20261013：[验证](../changes/2026-10-13-agent-recovery/ver
 ## HOME Native中间失败记录（历史时点：2026-10-15 f10）
 
 当前HOME main承接分支f10后修复中。实际重开两次FAIL对应HOME-NATIVE-01：恢复诊断占用私有stdout握手预算，已真实stdio RED/GREEN；保留Rust限制和原connected断言，新冻结全量/官方重建/实际重开与独审仍待。工程外证据home-native-diagnostic-f10c59ff及home-stdio-*.log，daily/用户资料未用作夹具。不要把旧fc完整verify或f10构建当新源码通过。
-
 
 Issue68设置保存同步专项：隔离分支 fix/TASK-ISSUE-68-settings-save，基线main6b933f4f，仅补测试等待。回执和后续验证见[专项验证](../changes/2026-10-18-issue-68-settings-save/verification.md)，以draft PR交原main协调者；不merge/发布，不恢复或清理原树。

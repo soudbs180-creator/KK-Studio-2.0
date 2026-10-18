@@ -142,6 +142,73 @@ for (const profile of [
         path: test.info().outputPath("phone-creation.png"),
       });
     });
+
+    test("empty text composer keeps model and adjacent controls usable after input blur", async ({
+      page,
+    }) => {
+      await page.goto("/mobile/", { waitUntil: "domcontentloaded" });
+      await phoneReady(page);
+      await newCreation(page);
+      const input = page.getByRole("textbox", {
+        name: "创作输入",
+        exact: true,
+      });
+      const model = page.getByRole("button", { name: "选择模型", exact: true });
+      const touch = "hasTouch" in options && options.hasTouch;
+      await expect(model).toHaveCount(0);
+      await input.click();
+      await insideAndTouchable(page, model);
+      if (touch) await model.tap();
+      else await model.click();
+      await expect(page.getByText("连接与模型", { exact: true })).toBeVisible();
+      await expect(
+        page.getByText("还没有连接。", { exact: true }),
+      ).toBeVisible();
+      await page.screenshot({
+        path: test.info().outputPath("empty-composer-model-picker.png"),
+      });
+      await page.getByRole("button", { name: "关闭面板", exact: true }).click();
+      await expect(model).toBeVisible();
+      await expect(input).toHaveValue("");
+      await input.click();
+      const add = page.getByRole("button", { name: "添加到创作", exact: true });
+      if (touch) await add.tap();
+      else await add.click();
+      await expect(page.getByText("添加到创作", { exact: true })).toBeVisible();
+      await page.getByRole("button", { name: "关闭面板", exact: true }).click();
+      await input.click();
+      const expand = page.getByRole("button", {
+        name: "展开输入",
+        exact: true,
+      });
+      if (touch) await expand.tap();
+      else await expand.click();
+      await expect(
+        page.getByRole("button", { name: "收起输入", exact: true }),
+      ).toBeVisible();
+      await model.focus();
+      await model.press("Enter");
+      await expect(page.getByText("连接与模型", { exact: true })).toBeVisible();
+      await page.getByRole("button", { name: "关闭面板", exact: true }).click();
+      await input.fill(
+        "Unsent composer draft survives model selection and reload",
+      );
+      await model.click();
+      await page.getByRole("button", { name: "关闭面板", exact: true }).click();
+      await expect(input).toHaveValue(
+        "Unsent composer draft survives model selection and reload",
+      );
+      await page.reload({ waitUntil: "domcontentloaded" });
+      await expect(input).toHaveValue(
+        "Unsent composer draft survives model selection and reload",
+      );
+      await expect(
+        page.getByRole("button", { name: "发送", exact: true }),
+      ).toBeDisabled();
+      await newCreation(page);
+      await expect(input).toHaveValue("");
+      await expect(model).toHaveCount(0);
+    });
   });
 }
 

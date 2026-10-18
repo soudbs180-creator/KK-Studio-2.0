@@ -1,5 +1,11 @@
 # 当前进度
 
+## 2026-10-18 手机输入模型焦点修复（IN_PROGRESS / NOT_VERIFIED）
+
+TASK-MOBILE-COMPOSER-001承接用户安卓Chrome模型名点击无响应：本地真实浏览器与四配置红测已确认空text失焦卸载工具栏。最小interacting锁存候选已使本地完整手机Web13/13首试通过；Mobile371/type/lint由root回传，精确已提交head独审、Hosted和Web2.1.40/Mobile2.1.5正式发布尚待完成。旧图文TASK仅按PR70/71实际门禁和合并收据有界DONE/PASS，不将Safari/Native/实体手机后台或真实视频结案。见[本次验证](changes/2026-10-18-mobile-composer/verification.md)。
+
+原“后台截图文件全黑”误判已由五JPEG完整字节/像素一致纠正；15分8秒同页停留后刷新原件散列保持，网络有截断且真实hidden事件未证，实体安卓后台仍未验。本轮不新增Provider/生成请求，现网39/唯一38与本轮40候选分开，目标上线后只保留一个previous。以下12ai段落为前任务原时点记录，当前结案以本次新增说明和实际PR71收据为准。
+
 ## 2026-10-18 12ai 手机端生成和原件保存（REVIEW）
 
 本次生产收据文档另建[明确后缀五件包](changes/2026-10-18-mobile-12ai-production-receipt/verification.md)绑定同TASK/docs分支：55e仅修改旧包被Delivery实际拒绝（11files/1violation），原FAIL保留，补包不改checker或产品。用户保存Key后，root在正式9d10/140201生产bundle、430×637浏览器仅各一次真实短文本和单图，均1/1 saved并刷新恢复；PNG830495B，Provider字节/两次普通导出SHA64a6af6e一致，文本SHA1fffc1d3一致。刷新Provider0/POST0，旧文本、unknown失败图和原导入原件hash保留。现场实测PASS，独立live证据审核已PASS_WITH_EXPLICIT_SCOPE、无阻断项（27输入；报告JSON SHA59af4671f7618f14b69b3fa5458a3f93051b12d0fdfcfcf8486763771d126ae3）；最终文档head的Delivery/独审/Hosted待提交后执行。

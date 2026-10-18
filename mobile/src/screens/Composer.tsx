@@ -23,7 +23,7 @@ export function Composer({ project }: { project: MobileProject }) {
     t = useTheme(),
     { busy, run } = useAction();
   const [draft, setDraft] = useState(() => app.getDraft(project.id)),
-    [focused, setFocused] = useState(false),
+    [interacting, setInteracting] = useState(false),
     [expanded, setExpanded] = useState(false),
     [picker, setPicker] = useState(false),
     [panel, setPanel] = useState<"add" | "parameters" | "materials" | null>(
@@ -77,7 +77,7 @@ export function Composer({ project }: { project: MobileProject }) {
         (asset) => !asset.hidden && !asset.deleting,
       ) ?? [],
     active =
-      focused ||
+      interacting ||
       Boolean(draft.prompt) ||
       draft.attachments.length > 0 ||
       draft.kind === "image" ||
@@ -185,8 +185,8 @@ export function Composer({ project }: { project: MobileProject }) {
             }
             value={draft.prompt}
             onChangeText={(prompt) => change({ ...latest.current, prompt })}
-            onFocus={() => setFocused(true)}
-            onBlur={() => setFocused(false)}
+            // Keep toolbar controls mounted as focus moves from the input.
+            onFocus={() => setInteracting(true)}
             placeholderTextColor={t.tertiary}
             selectionColor={t.accent}
             cursorColor={t.accent}
