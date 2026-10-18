@@ -9,6 +9,10 @@
 <!-- DOCUMENT_METADATA_END -->
 <!-- CURRENT_FACTS_BEGIN -->
 
+TASK-CANVAS-RELEASE-20261018保持IN_PROGRESS/NOT_VERIFIED。正式tag前发现真实公开下载阻断：GitHub将资产名空格改为点，既有同类公开点名GET302、%20路径404；只读诊断SHA256 9370ef634e10695a213cd82da7eda748c38ffd104dda6334a9bd7537f7b446c9。当前fix/TASK-CANVAS-RELEASE-20261019-download-asset仅对齐共享公开下载路径与两个既有回归，本地NSIS文件名/receipt、数据根/凭据/storage身份不变。PR78已合入的0cc3b4ed116d71062244e3097285a2b532de8f97/tree4c238f54f6aa688f95128936ada89ec675f2f26c只作中间main，quality39163882467自然继续原生阶段，不取消不重跑；最终source须后续正常PR合并和实际main检查。三端42尚未tag，保持同一未发布候选版本；旧build的href断言RED、新build同用例GREEN1/1，typecheck/lint/代码格式通过；提交后完整verify、精确HEAD独审/Hosted及正式tag/包/默认安装/生产仍待。原cold、seed39和各次失败/UNKNOWN/strictfalse保持。 先读[当前资产名修复](../changes/2026-10-19-release-asset-name/intent.md)与[验证](../changes/2026-10-19-release-asset-name/verification.md)。
+
+安装验收顺序阶段历史记录（仅下段保留原时点，不作为当前来源）：
+
 TASK-CANVAS-RELEASE-20261018保持IN_PROGRESS/NOT_VERIFIED。PR77已正常squash合入main e43c5efaa9e80ad7ee617c852868a20e6093e08a/tree d9c0ee4206fb83bc413696b50356a887d10ad049，完整树等于已独审d965。d965本机与Hosted精确门禁通过，main当前检查仍待终局。官方candidate12146302538全ZIP hash、flat4和4284安装文件验证通过；原隔离安装验收FAIL：新建项目后直接native stop与自动对话prepare竞态。追加同包诊断观察shutdown HTTP409，health由idle转preparing并在4225ms ready，未发送模型turn；该诊断保持FAIL且不重试stop，不抹去原失败。本地dirty修法已用同包完整四轮PASS，4×4284文件/Agent启停强断言/项目保留/正常cleanup，26相关单元及lint/typecheck/format通过；3952原资料文件全等。精确新head独审/Delivery/Hosted待验。只修tests/desktop/installer.mjs验收顺序：纯Agent启停在空库首页先验，再保留全部项目/重装/资源损坏修复/卸载重装覆盖，新增available/running/停止后running=false断言。guard、应用、版本、存储和凭据身份不变；42尚未tag，正式包/默认资料安装/Web-Mobile生产待验，原cold、seed39与所有历史失败保留。 详见本任务currentPackage的计划与验证，以下旧入口保留原时点。
 
 并发主线PR73已合入87c9cfbe0f19555f9998d6b7051760f22f26f67f，源码三端2.1.41；下述40上线收据限定12:49至13:10Z的产品观察，发布来源版本与当前仓库候选分开。docs分支正常merge保留其完整150文件和新增Canvas任务，不替它发布或代填验收。

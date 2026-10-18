@@ -77,7 +77,7 @@ try {
     update.getByRole("link", { name: "下载 Windows 安装包", exact: true }),
   ).toHaveAttribute(
     "href",
-    `https://github.com/soudbs180-creator/KK-Studio-2.0/releases/download/v${versions.desktop}/${encodeURIComponent(`KK Studio_${versions.desktop}_x64-setup.exe`)}`,
+    `https://github.com/soudbs180-creator/KK-Studio-2.0/releases/download/v${versions.desktop}/${encodeURIComponent(`KK.Studio_${versions.desktop}_x64-setup.exe`)}`,
   );
   assert.deepEqual(errors, []);
   const runtime = await page.evaluate(() => ({
