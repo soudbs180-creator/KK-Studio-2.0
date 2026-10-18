@@ -9,6 +9,8 @@
 <!-- DOCUMENT_METADATA_END -->
 <!-- CURRENT_FACTS_BEGIN -->
 
+并发主线PR73已合入87c9cfbe0f19555f9998d6b7051760f22f26f67f，源码三端2.1.41；下述40上线收据限定12:49至13:10Z的产品观察，发布来源版本与当前仓库候选分开。docs分支正常merge保留其完整150文件和新增Canvas任务，不替它发布或代填验收。
+
 当前任务TASK-MOBILE-COMPOSER-001保持IN_PROGRESS/NOT_VERIFIED（实体Android接受待补）。产品PR72已正常合并为main `b457d3a05759ca7a2f6a8c4bb62a8ba8aea908ea` / tree `bbcab2a0d5e4a0fe4241b3d3f32d01e6b69b5334`，与独审791e全树一致；全63文件独审及57定向测试PASS。Web2.1.40/Mobile源码2.1.5正式Release416447150与部署39128852497成功，Desktop源码2.1.38；公开build-info/source和CI真实导出cbc0入口一致，旧条件缓存GET也得到新entry。当前文档分支docs/TASK-MOBILE-COMPOSER-001-production-receipt仅记录事实，产品source不随docs HEAD改变。见[当前生产验证](../changes/2026-10-18-mobile-composer-production-receipt/verification.md)。
 
 main quality39124025635完整attempt2五项、guards39124025636双平台、新health39127523980实际health.ok=true通过；首轮managed-web15秒spawnSync超时与旧health暂停403、零jobs auto-merge异常均保留，准确根因未证，不声称全工作流绿色或自动管理变量恢复。Hosted Mobile当前main artifact独立核40/40首试，无clean元数据字段；本地根verify/Mobile433/窄屏40/40、v39完整snapshot/backup合成兼容与预算见原包。尺寸仅本次提交/旧task.imageSize，无新增draft/schema/storage/backup身份；源63文件内两P1与四P2已关闭。
@@ -694,3 +696,7 @@ TASK-UI-DISMISS-002 修复账号菜单跨窄屏断点、键盘展开后外部点
 ## 2026-10-13 UI 分类执行补充
 
 TASK-UI-CLASSIFY-20261013 已获用户实施确认：canonical 分类修复在隔离任务 worktree 验证后逐文件集成，保留窗口控件和麦克风预存改动。按用户补充移除模型弹层批量/数据项，40 项定向回归和独立补审通过；最终 Web development / preview / Desktop 分别 7/7/14 项通过，Desktop/Web 2.1.14。全量浏览器 492/495，三个既有 UI 失败使任务保持 REVIEW/PARTIAL；实际运行证据以[本轮 verification](../changes/2026-10-13-capability-ui/verification.md)为准，未声称已推送或正式发布。
+
+## 2026-10-18 TASK-CANVAS-RELEASE-20261018：统一发布进行中
+
+[当前交付包](../changes/2026-10-18-unified-toolbar-release/intent.md)。远端97ef为base，三端目标2.1.41；成熟chat迁移是保留现有v3项目的必要依赖。当前尚未合并/发包/部署，历史2.1.39安装器及网页不作为新版本证据。外部清理中断后恢复到新锁定任务树；后续当前head验证与正式收据另存。

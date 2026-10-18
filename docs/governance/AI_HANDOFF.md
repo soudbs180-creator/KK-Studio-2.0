@@ -10,6 +10,8 @@
 
 ## 当前恢复入口：手机结果优先与完整创作输入（2026-10-18）
 
+当前仓库并发main87c9源码三端41；本恢复入口记录的是此前40实际发布与验收。docs分支正常merge保留PR73全量代码和新增任务，集成后HEAD须新独审/Hosted，旧98ec报告不能批准新断面；不将docs提交或源码41当服务器版本。
+
 先读[生产收据](../changes/2026-10-18-mobile-composer-production-receipt/verification.md)、[本次计划](../changes/2026-10-18-mobile-composer-production-receipt/plan.md)和[审查边界](../changes/2026-10-18-mobile-composer-production-receipt/review.md)。TASK-MOBILE-COMPOSER-001 IN_PROGRESS/NOT_VERIFIED；产品PR72已正常合并b457d3a05759ca7a2f6a8c4bb62a8ba8aea908ea/treebbcab2a0d5e4a0fe4241b3d3f32d01e6b69b5334，与正式独审791e同树。Web40/Mobile源码5已由正式Release416447150/部署39128852497上线，Desktop源码38；当前docs分支docs/TASK-MOBILE-COMPOSER-001-production-receipt、基线b457，不把docs HEAD当生产来源。当前main五项attempt2/双guard/newhealth全通过，原attempt1超时/health403/零jobs异常仍保留。
 
 实际线上模型名可点、六圆控件320/390同排、上传/参数/扩展面板可开、菜单任务结果优先和分层详情、旧文本刷新/图片原件SHA/unknown状态均已复核。库存current40/唯一previous39、前后原39manifest/archive与配置/auth/服务观察一致；无新SSH权限、DB迁移或付费生成。新40普通页面停留927.716秒后刷新，图片可见且再次UI导出原件逐字节一致（不等于实体切后台）；实体Android Chrome用户模型入口/切后台返回+刷新接受仍待回执。下一步仅当前docs HEAD本地检查/Delivery/独审/Hosted/正常PR及剩余真机验收，不重发生成/发现模型，不把“继续”或旧38UI正常回复当40接受。
@@ -197,3 +199,7 @@ TASK-AGENT-RECOVERY-20261013：[验证](../changes/2026-10-13-agent-recovery/ver
 当前HOME main承接分支f10后修复中。实际重开两次FAIL对应HOME-NATIVE-01：恢复诊断占用私有stdout握手预算，已真实stdio RED/GREEN；保留Rust限制和原connected断言，新冻结全量/官方重建/实际重开与独审仍待。工程外证据home-native-diagnostic-f10c59ff及home-stdio-*.log，daily/用户资料未用作夹具。不要把旧fc完整verify或f10构建当新源码通过。
 
 Issue68设置保存同步专项：隔离分支 fix/TASK-ISSUE-68-settings-save，基线main6b933f4f，仅补测试等待。回执和后续验证见[专项验证](../changes/2026-10-18-issue-68-settings-save/verification.md)，以draft PR交原main协调者；不merge/发布，不恢复或清理原树。
+
+## 2026-10-18 TASK-CANVAS-RELEASE-20261018：统一发布进行中
+
+[当前交付包](../changes/2026-10-18-unified-toolbar-release/intent.md)。远端97ef为base，三端目标2.1.41；成熟chat迁移是保留现有v3项目的必要依赖。当前尚未合并/发包/部署，历史2.1.39安装器及网页不作为新版本证据。外部清理中断后恢复到新锁定任务树；后续当前head验证与正式收据另存。

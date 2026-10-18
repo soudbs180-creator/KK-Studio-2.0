@@ -241,6 +241,11 @@ function indexedFixture(records: Map<string, unknown>) {
                     writes.push(key);
                     records.set(key, value);
                   },
+                  add: (value: unknown, key: string) => {
+                    assert.equal(records.has(key), false);
+                    writes.push(key);
+                    records.set(key, value);
+                  },
                 }),
               };
               return transaction;
@@ -355,10 +360,14 @@ test("raw v2 chat identities cannot become writable through normalization", asyn
       sessionStorage: storage(),
     } as unknown as Window & typeof globalThis;
     globalThis.indexedDB = fixture.factory;
-    await loadCreationSnapshot();
+    const migrated = await loadCreationSnapshot();
+    fixture.writes.length = 0;
     records.set("snapshot", { ...valid, projects: [malformed[0]] });
     await assert.rejects(
-      persistCreationSnapshotAsync({ ...valid, revision: 2 }),
+      persistCreationSnapshotAsync({
+        ...migrated.snapshot,
+        revision: migrated.snapshot.revision + 1,
+      }),
     );
     assert.deepEqual(fixture.writes, []);
   } finally {
@@ -400,14 +409,19 @@ test("a v3 backup protects the older main and journal, including a concurrent ba
     );
     assert.deepEqual(fixture.writes, []);
     records.set("backup", original);
-    await loadCreationSnapshot();
+    const migrated = await loadCreationSnapshot();
+    const migratedMain = records.get("snapshot");
+    fixture.writes.length = 0;
     records.set("backup", backup);
     await assert.rejects(
-      persistCreationSnapshotAsync({ ...original, revision: 2 }),
+      persistCreationSnapshotAsync({
+        ...migrated.snapshot,
+        revision: migrated.snapshot.revision + 1,
+      }),
       /仅供恢复查看/,
     );
     assert.deepEqual(fixture.writes, []);
-    assert.equal(records.get("snapshot"), original);
+    assert.equal(records.get("snapshot"), migratedMain);
     assert.equal(JSON.stringify(records.get("backup")), backupBytes);
     assert.equal(journal.getItem(key), rawJournal);
   } finally {
@@ -423,7 +437,7 @@ test("future writer markers block changes while supported v2 backups still save"
   const records = new Map<string, unknown>([
     ["snapshot", original],
     ["backup", original],
-    ["formatMarker", { formatVersion: 2, minWriterVersion: 2 }],
+    ["formatMarker", { formatVersion: 99, minWriterVersion: 99 }],
   ]);
   const fixture = indexedFixture(records);
   globalThis.window = {
@@ -438,10 +452,20 @@ test("future writer markers block changes while supported v2 backups still save"
     );
     assert.deepEqual(fixture.writes, []);
     records.delete("formatMarker");
-    assert.equal((await loadCreationSnapshot()).readOnlyReason, undefined);
-    await persistCreationSnapshotAsync({ ...original, revision: 2 });
-    assert.equal((records.get("snapshot") as CreationSnapshot).revision, 2);
-    assert.equal((records.get("backup") as CreationSnapshot).revision, 1);
+    const migrated = await loadCreationSnapshot();
+    assert.equal(migrated.readOnlyReason, undefined);
+    assert.equal(migrated.snapshot.version, 3);
+    await persistCreationSnapshotAsync({
+      ...migrated.snapshot,
+      revision: migrated.snapshot.revision + 1,
+    });
+    assert.equal((records.get("snapshot") as CreationSnapshot).revision, 3);
+    assert.equal((records.get("backup") as CreationSnapshot).version, 3);
+    assert.ok(
+      [...records.keys()].some((key) =>
+        key.startsWith("chat-migration:archive:"),
+      ),
+    );
   } finally {
     globalThis.window = originalWindow;
     globalThis.indexedDB = originalIndexed;

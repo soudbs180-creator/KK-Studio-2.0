@@ -2,6 +2,8 @@
 
 ## 2026-10-18 手机结果优先与完整创作输入（IN_PROGRESS / NOT_VERIFIED）
 
+并发PR73已将仓库源码推进三平台2.1.41；本段记录12:49至13:10Z已上线40及其旧资料验收，发布来源内Desktop38/Web40/Mobile5与当前源码候选41分开。新文档以正常merge保留87c9的全部代码/新增任务，不将源码版本当服务器发布证据。
+
 TASK-MOBILE-COMPOSER-001产品已由[PR72](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/72)正常合并为main `b457d3a05759ca7a2f6a8c4bb62a8ba8aea908ea`，与独审791e全63文件同tree；独立57/57定向复核PASS。main quality39124025635完整attempt2五项、guards双平台及新health通过，正式Release416447150/部署39128852497成功，现网Web2.1.40/Mobile源码2.1.5，Desktop源码2.1.38。菜单任务结果优先、详情结果→提示词→更多、六入口/模型名触控/直接圆形发送已在生产实际320/390宽核对；上传/参数/扩展面板响应、旧文本刷新与图片830495B原件SHA保持。current40/唯一previous39只读终核18项PASS。当前[生产收据](changes/2026-10-18-mobile-composer-production-receipt/verification.md)替代原包PENDING时点；本docs PR不改变生产来源。实体Android接受仍待回复，保持IN_PROGRESS/NOT_VERIFIED。
 
 本地完整verify exit0（Node1852/20skip、Agent199/2skip、browser832首试+1项5xx flaky独立零重试1PASS、DESIGN41+8/development4）、Mobile433/type/lint、最终窄屏40/40、gzip增4319B和旧v39完整snapshot/backup合成兼容均保留[原实现记录](changes/2026-10-18-mobile-composer/verification.md)。main首轮managed-web fixture15秒ETIMEDOUT、仅一次完整重跑、旧health403及零jobs auto-merge异常分别保留，未改断言/timeout或伪造全首试。尺寸不新增draft/schema/storage/backup字段，只有本次提交选项和已有task.imageSize；语音离路由取消、迟到上传epoch保护已复核。指定12ai参考编辑/视频/真实语音未新调用，扩展Skill是本地预览/明确应用，远程Agent/MCP未完成；FEAT-028 PARTIAL/T12开放。
@@ -1237,3 +1239,7 @@ TASK-UI-DETAILS-20261015从最新18e143f修复，Desktop/Web2.1.26产品ab878ffd
 ## 2026-10-15 PR62合后必需门禁闭环
 
 2026-10-15 11:54:34 UTC独立只读回读actual main492abad48b0695f6117265fba6d29e8ea2a4b9bc；本轮quality38726260549全部success（repo verify/Rust fmt+test/client check+build/WebView2/隔离Native TaskHost/证据上传），双平台guards38726260498与main-health38730589177成功，7个check-runs全success，必需verify/delivery满足。产物11969904183/39602109B未过期，未下载检验内文。非必需auto-merge38726259041 failure/jobs=[]原因UNKNOWN单列。 GDI三项验收独审满足，测试任务DONE；输出证据保护另缺取消/reporter失败两类实测，继续PARTIAL，不把结构性保护冒称运行证据。HOME源码a85及Windows38项通过，正式HOME PR继续。
+
+## 2026-10-18 TASK-CANVAS-RELEASE-20261018：统一发布进行中
+
+[当前交付包](changes/2026-10-18-unified-toolbar-release/intent.md)。远端97ef为base，三端目标2.1.41；成熟chat迁移是保留现有v3项目的必要依赖。当前尚未合并/发包/部署，历史2.1.39安装器及网页不作为新版本证据。外部清理中断后恢复到新锁定任务树；后续当前head验证与正式收据另存。

@@ -261,9 +261,11 @@ test("unsupported snapshot format reaches the client and freezes storage without
     "./model": { emptySnapshot, snapshotWriteBlockReason },
     "./snapshotCodec": snapshotCodec,
     "./chatMigration": {
+      migrateSnapshotToV3: forbidden,
       sha256Hex: (data: string) =>
         createHash("sha256").update(data).digest("hex"),
     },
+    "./indexedChatMigration": { commitIndexedChatMigration: forbidden },
   };
   const compiled = ts.transpileModule(
     readFileSync(

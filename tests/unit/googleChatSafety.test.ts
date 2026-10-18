@@ -29,6 +29,9 @@ function fixture(
     model: "image-model",
     attachments: [],
   });
+  project.chats![project.activeChatId!].mainAgent = "google";
+  project.chats![project.activeChatId!].draft.conversationChannel = "google";
+  project.composerDraft.conversationChannel = "google";
   const external = { credentials: 0, models: 0, turns: 0 };
   const host = createAgentHost({
     getProject: () => project,
@@ -76,119 +79,141 @@ function fixture(
   };
 }
 
-for (const kind of ["multiple", "temporary", "thread-conflict"] as const) {
-  test(`Google ${kind} connection never reads credentials or contacts the model service`, async () => {
-    const h = fixture();
-    const project = h.project();
-    if (kind === "multiple")
-      project.chats!.other = {
-        ...project.chats![project.activeChatId!],
-        id: "other",
-      };
-    else if (kind === "temporary")
-      project.chats![project.activeChatId!].isTemporary = true;
-    else {
-      project.agentThreadId = "root-thread";
-      project.chats![project.activeChatId!].agentThreadId = "different-thread";
-    }
-    const before = structuredClone(project);
-    await h.connection.connect();
-    assert.equal(h.connection.getState().status, "disconnected");
-    assert.deepEqual(h.external, { credentials: 0, models: 0, turns: 0 });
-    assert.deepEqual(h.project(), before);
-  });
+for (const kind of [
+  "duplicate-thread",
+  "temporary",
+  "invalid-thread",
+] as const) {
+  test(
+    `Google ${kind} connection never reads credentials or contacts the model service`,
+    { timeout: 5000 },
+    async () => {
+      const h = fixture();
+      const project = h.project();
+      if (kind === "duplicate-thread") {
+        project.chats![project.activeChatId!].agentThreadId = "same-thread";
+        project.chats!.other = {
+          ...project.chats![project.activeChatId!],
+          id: "other",
+          agentThreadId: "same-thread",
+        };
+      } else if (kind === "temporary")
+        project.chats![project.activeChatId!].isTemporary = true;
+      else {
+        project.agentThreadId = "root-thread";
+        project.chats![project.activeChatId!].agentThreadId = "invalid/thread";
+      }
+      const before = structuredClone(project);
+      await h.connection.connect();
+      assert.equal(h.connection.getState().status, "disconnected");
+      assert.deepEqual(h.external, { credentials: 0, models: 0, turns: 0 });
+      assert.deepEqual(h.project(), before);
+    },
+  );
 }
 
-test("Google connection cannot contact models after the chat changes while credentials load", async () => {
-  let release!: (credential: { apiKey: string; identity: string }) => void;
-  const h = fixture({
-    credential: () =>
-      new Promise((resolve) => {
-        release = resolve;
-      }),
-  });
-  const pending = h.connection.connect();
-  h.changeChat();
-  release({ apiKey: "synthetic", identity: "fixture-identity" });
-  await pending;
-  assert.equal(h.external.models, 0);
-  assert.equal(h.project().googleConversation, undefined);
-});
+test(
+  "Google connection cannot contact models after the chat changes while credentials load",
+  { timeout: 5000 },
+  async () => {
+    let release!: (credential: { apiKey: string; identity: string }) => void;
+    const h = fixture({
+      credential: () =>
+        new Promise((resolve) => {
+          release = resolve;
+        }),
+    });
+    const pending = h.connection.connect();
+    h.changeChat();
+    release({ apiKey: "synthetic", identity: "fixture-identity" });
+    await pending;
+    assert.equal(h.external.models, 0);
+    assert.equal(h.project().googleConversation, undefined);
+  },
+);
 
-test("Google send cannot submit after the chat changes during attachment preparation", async () => {
-  let release!: () => void;
-  let entered!: () => void;
-  const preparing = new Promise<void>((resolve) => {
-    entered = resolve;
-  });
-  const pending = new Promise<void>((resolve) => {
-    release = resolve;
-  });
-  const h = fixture({
-    prepare: async () => {
-      entered();
-      await pending;
-      return [];
-    },
-  });
-  await h.connection.connect();
-  const original = structuredClone(h.project().googleConversation);
-  const sending = h.connection.sendMessage("must stay in original chat");
-  await preparing;
-  h.changeChat();
-  release();
-  assert.equal((await sending).ok, false);
-  assert.equal(h.external.turns, 0);
-  assert.deepEqual(h.project().googleConversation, original);
-});
+test(
+  "Google send cannot submit after the chat changes during attachment preparation",
+  { timeout: 5000 },
+  async () => {
+    let release!: () => void;
+    let entered!: () => void;
+    const preparing = new Promise<void>((resolve) => {
+      entered = resolve;
+    });
+    const pending = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    const h = fixture({
+      prepare: async () => {
+        entered();
+        await pending;
+        return [];
+      },
+    });
+    await h.connection.connect();
+    const original = structuredClone(h.project().googleConversation);
+    const sending = h.connection.sendMessage("must stay in original chat");
+    await preparing;
+    h.changeChat();
+    release();
+    assert.equal((await sending).ok, false);
+    assert.equal(h.external.turns, 0);
+    assert.deepEqual(h.project().googleConversation, original);
+  },
+);
 
-test("Google tool approval cannot apply the old chat's operation to a later chat", async () => {
-  let round = 0;
-  const h = fixture({
-    create: async () =>
-      ++round === 1
-        ? {
-            id: "tool-turn",
-            status: "requires_action",
-            text: "",
-            images: [],
-            calls: [
-              {
-                id: "old-chat-write",
-                name: "canvas_apply_ops",
-                arguments: {
-                  ops: [
-                    {
-                      type: "add_node",
-                      id: "late-write",
-                      nodeType: "text",
-                      metadata: { text: "wrong chat" },
-                    },
-                  ],
+test(
+  "Google tool approval cannot apply the old chat's operation to a later chat",
+  { timeout: 5000 },
+  async () => {
+    let round = 0;
+    const h = fixture({
+      create: async () =>
+        ++round === 1
+          ? {
+              id: "tool-turn",
+              status: "requires_action",
+              text: "",
+              images: [],
+              calls: [
+                {
+                  id: "old-chat-write",
+                  name: "canvas_apply_ops",
+                  arguments: {
+                    ops: [
+                      {
+                        type: "add_node",
+                        id: "late-write",
+                        nodeType: "text",
+                        metadata: { text: "wrong chat" },
+                      },
+                    ],
+                  },
                 },
-              },
-            ],
-          }
-        : completed(),
-  });
-  await h.connection.connect();
-  let ready!: () => void;
-  const pendingApproval = new Promise<void>((resolve) => {
-    ready = resolve;
-  });
-  const unsubscribe = h.connection.subscribe(() => {
-    if (h.connection.getState().pendingApproval) ready();
-  });
-  const sending = h.connection.sendMessage("ask before canvas changes");
-  await pendingApproval;
-  h.changeChat();
-  await h.connection.resolveApproval("accept");
-  const result = await sending;
-  unsubscribe();
-  assert.equal(result.ok, false);
-  assert.equal(h.external.turns, 1);
-  assert.equal(
-    h.project().items.some((item) => item.id === "late-write"),
-    false,
-  );
-});
+              ],
+            }
+          : completed(),
+    });
+    await h.connection.connect();
+    let ready!: () => void;
+    const pendingApproval = new Promise<void>((resolve) => {
+      ready = resolve;
+    });
+    const unsubscribe = h.connection.subscribe(() => {
+      if (h.connection.getState().pendingApproval) ready();
+    });
+    const sending = h.connection.sendMessage("ask before canvas changes");
+    await pendingApproval;
+    h.changeChat();
+    await h.connection.resolveApproval("accept");
+    const result = await sending;
+    unsubscribe();
+    assert.equal(result.ok, false);
+    assert.equal(h.external.turns, 1);
+    assert.equal(
+      h.project().items.some((item) => item.id === "late-write"),
+      false,
+    );
+  },
+);

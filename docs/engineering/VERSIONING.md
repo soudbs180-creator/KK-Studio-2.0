@@ -1,5 +1,9 @@
 # 平台版本管理
 
+## 统一产品发布与平台标识
+
+2026-10-18起按本次用户要求，联合正式发布使用相同产品版本，并分别显示“桌面客户端 / 网页版 / 手机网页版”。版本源仍为 config/platform-versions.json；先由既有helper正向递增对齐2.1.41，不回退已发布版本。main当前SHA通过CI后创建不可变tag；Windows随包Agent安装器与组合Web共用该tag及来源SHA，平台构建/部署状态单独记录。相同版本不表示项目自动云同步。
+
 - 状态：现行源码版本规则；发布与上线仍需各端验收。
 - 决策与范围：[ADR-008](../architecture/adr/ADR-008-platform-versions-and-local-first.md)；任务 `TASK-VERSION-001`。
 

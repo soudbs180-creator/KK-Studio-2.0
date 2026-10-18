@@ -2,6 +2,8 @@ import { expect, test, type Page } from "@playwright/test";
 import {
   CREATION_STORAGE_KEY,
   emptySnapshot,
+  projectChatView,
+  serializeCreationSnapshot,
 } from "../../src/features/creation/model";
 import { stageProject } from "../fixtures/stage-project";
 import { expandSidebar } from "./helpers";
@@ -19,12 +21,15 @@ async function openPlans(
   await page.goto("/");
   await page.evaluate(({ key, value }) => localStorage.setItem(key, value), {
     key: CREATION_STORAGE_KEY,
-    value: JSON.stringify({
-      ...emptySnapshot(),
-      revision: Date.now(),
-      activeProjectId: project.id,
-      projects: [project],
-    }),
+    value: JSON.stringify(
+      serializeCreationSnapshot({
+        ...emptySnapshot(),
+        version: 3,
+        revision: Date.now(),
+        activeProjectId: project.id,
+        projects: [projectChatView(project)],
+      }),
+    ),
   });
   await page.reload();
   if ((page.viewportSize()?.width ?? 1920) >= 768) await expandSidebar(page);

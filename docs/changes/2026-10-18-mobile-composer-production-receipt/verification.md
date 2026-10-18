@@ -1,7 +1,9 @@
 # Verification：Web2.1.40生产收据
 
 - Task ID：TASK-MOBILE-COMPOSER-001；交付包角色：current；2026-10-18；任务IN_PROGRESS / NOT_VERIFIED（实体Android接受待补）。
-- [Intent](intent.md) / [Spec](spec.md) / [Plan](plan.md) / [Review](review.md) / [Release](release.md)。产品source `b457d3a05759ca7a2f6a8c4bb62a8ba8aea908ea`；本docs PR base同source，branch `docs/TASK-MOBILE-COMPOSER-001-production-receipt`，不把未来docs HEAD当生产来源。
+- [Intent](intent.md) / [Spec](spec.md) / [Plan](plan.md) / [Review](review.md) / [Release](release.md)。产品source `b457d3a05759ca7a2f6a8c4bb62a8ba8aea908ea`；本docs PR初始base同source，branch `docs/TASK-MOBILE-COMPOSER-001-production-receipt`。PR75创建时main并发推进，正常merge集成base `87c9cfbe0f19555f9998d6b7051760f22f26f67f`，不把docs HEAD当生产来源。
+
+13:12Z并发[PR73](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/73)已将三平台源码推进2.1.41；其150文件及新增Canvas任务完整保留，不属于本docs PR产品改动。下述40发布与验收为12:49至13:10Z真实观察，发布来源内Desktop38/Web40/Mobile5与当前源码三端41分别记录，不据源码候选推断服务器升级。集成仅生成TASK_LEDGER发生冲突，保留双方JSON后重新生成；新base其他153task和36非028feature保持。本PR当前HEAD需重新独审/Hosted，原b457→98ec审查只批准旧断面。
 
 ## 源码、独审与Hosted
 
@@ -42,4 +44,4 @@
 
 当前docs HEAD的本地检查、提交后Delivery/独立审查/Hosted与正常PR收据另冻，不用产品791e批准代填、不为自引用SHA循环改文档。Android Chrome用户接受、真实麦克风、新参考生成/视频、Safari/Native、远程Agent/MCP未验；FEAT-028 PARTIAL/T12开放。
 
-本docs PR本地lint/typecheck/format均exit0，governance153/features37/Markdown129/index25ADR/snapshot3/doccommands160无违规，版本一致性通过但保留既有CHANGELOG落后Desktop38的一项warning；未为清warning改历史Changelog。提交后正式Delivery/独审/Hosted另冻收据。
+合入并发基线前，本docs断面lint/typecheck/format均exit0，governance153/features37/Markdown129/index25ADR/snapshot3/doccommands160无违规；版本一致性通过并保留当时CHANGELOG落后Desktop38的一项warning。87c9正常merge后重新运行lint/typecheck/format均exit0，governance154/features37及相关文档门禁通过；version:consistency仍exit0，保留新基线chat_migration_tests.rs:5的2.1.36兼容测试常量warning与CHANGELOG落后41 warning，未修改并发源码或历史Changelog。13:17:49Z公开build-info复读仍是v2.1.40/b457。集成提交后正式Delivery/新独审/Hosted另冻收据。

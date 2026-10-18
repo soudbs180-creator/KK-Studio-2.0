@@ -8,13 +8,18 @@ use std::fs;
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
 
+#[path = "chat_migration.rs"]
+mod chat_migration;
+
+#[cfg(test)]
+pub(crate) fn migrated_snapshot(snapshot: &Value) -> Value {
+    chat_migration::migrated_snapshot(snapshot).unwrap()
+}
 #[cfg(test)]
 #[path = "native_root_authority_tests.rs"]
 pub(crate) mod tests;
 
 pub(crate) const PROTOCOL_VERSION: u32 = 1;
-const FORMAT_VERSION: u32 = 1;
-const WRITER_VERSION: u32 = 1;
 const MAX_RECORDS: usize = 100_000;
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
@@ -46,8 +51,10 @@ pub(crate) fn read_identity(root: &Path) -> Result<Option<RepositoryIdentity>, S
     let identity: RepositoryIdentity = serde_json::from_slice(&raw)
         .map_err(|_| "corrupt: 仓库身份文件无效，已保留原文件".to_string())?;
     if identity.version != 1
-        || identity.format_version != FORMAT_VERSION
-        || identity.minimum_writer_version != WRITER_VERSION
+        || !matches!(
+            (identity.format_version, identity.minimum_writer_version),
+            (1, 1) | (2, 2)
+        )
     {
         return Err("unsupported: 仓库格式或最低写入版本不受支持".into());
     }
@@ -94,26 +101,9 @@ impl NativeRootAuthority {
                 return Err("corrupt: 项目快照路径类型无效".into());
             }
         }
-        snapshots.read()?;
         admit_asset_records(&paths.assets)?;
-        // No marker is published until both legacy locks and Native format admission succeed.
-        let identity = match identity {
-            Some(identity) => identity,
-            None => {
-                let identity = RepositoryIdentity {
-                    version: 1,
-                    repository_id: random_id()?,
-                    format_version: FORMAT_VERSION,
-                    minimum_writer_version: WRITER_VERSION,
-                };
-                io::atomic_write(
-                    &paths.root.join("app/repository.json"),
-                    &serde_json::to_vec(&identity).map_err(io::error)?,
-                    true,
-                )?;
-                identity
-            }
-        };
+        let identity = chat_migration::upgrade(paths, identity)?;
+        snapshots.read()?;
         io::directory(&paths.assets.join("blobs"))?;
         io::directory(&paths.assets.join("records"))?;
         let task_host = Arc::new(crate::task_host::TaskHost::owned(

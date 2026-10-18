@@ -4,6 +4,8 @@ import {
   createProject,
   createTask,
   emptySnapshot,
+  projectChatView,
+  serializeCreationSnapshot,
   type CreationSnapshot,
 } from "../../src/features/creation/model";
 import { expandSidebar } from "./helpers";
@@ -16,21 +18,48 @@ async function seed(page: Page, pending = false) {
     kind: "image",
     attachments: [],
   });
-  project.composerDraft.prompt = "未发送草稿";
+  project.chats![project.activeChatId!].draft.prompt = "未发送草稿";
+  const active = project.chats![project.activeChatId!];
+  project.chats!["chat-preserved"] = {
+    ...active,
+    id: "chat-preserved",
+    name: "保全的另一聊天",
+    mainAgent: "codex",
+    agentThreadId: "lifecycle-preserved-thread",
+    draft: {
+      ...active.draft,
+      prompt: "另一聊天的未发送草稿",
+      conversationChannel: "codex",
+    },
+    messages: [
+      {
+        id: `${project.id}-preserved-message`,
+        role: "assistant",
+        content: "另一聊天的原始正文",
+        threadId: "lifecycle-preserved-thread",
+        fixtureMetadata: { retained: true },
+      },
+    ],
+  };
   if (pending)
     project.tasks = [
-      { ...createTask(project), status: "unknown", submissionState: "unknown" },
+      {
+        ...createTask(projectChatView(project)),
+        status: "unknown",
+        submissionState: "unknown",
+      },
     ];
   await page.evaluate(
     ({ key, snapshot }) => localStorage.setItem(key, JSON.stringify(snapshot)),
     {
       key: CREATION_STORAGE_KEY,
-      snapshot: {
+      snapshot: serializeCreationSnapshot({
         ...emptySnapshot(),
+        version: 3,
         revision: Date.now(),
-        projects: [project],
+        projects: [projectChatView(project)],
         activeProjectId: project.id,
-      },
+      }),
     },
   );
   await page.reload();
@@ -107,8 +136,20 @@ test("项目库与侧栏共用名称分组和完整垃圾箱，取消删除不�
     .poll(async () => (await snapshot(page)).projects[0].trashedAt)
     .toBeTruthy();
   const trashed = await snapshot(page);
+  expect(trashed.version).toBe(3);
   expect(trashed.activeProjectId).toBeNull();
-  expect(trashed.projects[0].composerDraft.prompt).toBe("未发送草稿");
+  expect(trashed.projects[0].chats![original.activeChatId!].draft.prompt).toBe(
+    "未发送草稿",
+  );
+  expect(trashed.projects[0].chats).toEqual(grouped.chats);
+  expect(trashed.projects[0].activeChatId).toBe(grouped.activeChatId);
+  for (const key of [
+    "messages",
+    "composerDraft",
+    "agentThreadId",
+    "googleConversation",
+  ])
+    expect(Object.hasOwn(trashed.projects[0], key)).toBe(false);
   expect(trashed.projects[0].items).toEqual(grouped.items);
   expect(trashed.projects[0].canvas).toEqual(grouped.canvas);
   await page.reload();
@@ -154,6 +195,10 @@ test("项目库与侧栏共用名称分组和完整垃圾箱，取消删除不�
   await expect(card).toContainText("手动名称");
   expect((await snapshot(page)).projects[0].id).toBe(original.id);
   expect((await snapshot(page)).projects[0].nameSource).toBe("manual");
+  expect((await snapshot(page)).projects[0].chats).toEqual(grouped.chats);
+  expect((await snapshot(page)).projects[0].activeChatId).toBe(
+    grouped.activeChatId,
+  );
 });
 
 for (const [width, height] of [

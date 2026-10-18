@@ -207,16 +207,32 @@ for (const condition of ["quarantined", "removed"] as const) {
     expect(requests).toBe(1);
   });
 }
-test("新建未绑定空项目可以首次使用可用连接", async ({ page }) => {
+test("新建未绑定空项目明确选择可用连接后可以首次提交", async ({ page }) => {
   let requests = 0;
   await page.route(endpoint, async (route) => {
     requests++;
+    expect(route.request().headers().authorization).toBe("Bearer fixture-key");
+    expect(route.request().postDataJSON().model).toBe("image-test");
     await route.fulfill({ json: { data: [{ b64_json: pixel }] } });
   });
   await configure(page);
   await page.getByRole("button", { name: "项目库", exact: true }).click();
   await page.getByRole("button", { name: "新建项目", exact: true }).click();
+  await expect(page.getByLabel("执行方式")).toHaveValue("codex");
+  await page.getByLabel("执行方式").selectOption("direct");
   await page.getByLabel("对话内容").fill("新项目首发");
+  await page.getByRole("button", { name: "发送消息", exact: true }).click();
+  await expect(page.locator(".chat-status")).toContainText("明确选择模型连接");
+  await expect(page.getByLabel("对话内容")).toHaveValue("新项目首发");
+  await expect(page.getByRole("dialog", { name: "人工审批任务" })).toHaveCount(
+    0,
+  );
+  expect(requests).toBe(0);
+  await page.getByRole("button", { name: "模型", exact: true }).click();
+  const menu = page.getByRole("menu", { name: "选择模型" });
+  await menu.getByRole("tab", { name: "官方 API", exact: true }).click();
+  await menu.getByRole("menuitemradio", { name: /image-test/ }).click();
+  await expect(page.getByLabel("对话内容")).toHaveValue("新项目首发");
   await page.getByRole("button", { name: "发送消息", exact: true }).click();
   await approve(page);
   await expect(page.locator(".project-task-succeeded")).toBeVisible();

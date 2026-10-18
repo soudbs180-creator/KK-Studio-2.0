@@ -87,6 +87,10 @@ test("对话空态在消息区垂直居中，语音输入默认关闭且可用",
   await page.getByLabel("执行方式").selectOption("direct");
   const messages = page.locator(".conversation-messages");
   const empty = page.locator(".conversation-empty");
+  await expect(empty).toBeVisible();
+  await expect(
+    messages.getByRole("button", { name: "复制消息", exact: true }),
+  ).toHaveCount(0);
   const messagesBox = (await messages.boundingBox())!;
   const emptyBox = (await empty.boundingBox())!;
   const messagesCenter = messagesBox.y + messagesBox.height / 2;

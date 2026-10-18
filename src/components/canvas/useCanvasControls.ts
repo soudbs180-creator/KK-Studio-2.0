@@ -11,8 +11,7 @@ import { cardLayout, cardSelectionLayout } from "../../domain/canvasGraph";
 import { useCanvasNodeActions } from "./useCanvasNodeActions";
 import { useCanvasView } from "./useCanvasView";
 import { useCanvasViewport } from "./useCanvasViewport";
-import { surfaceScale, toSurfacePoint } from "./canvasSurface";
-import { getImageSelectionPosition } from "./imageSelectionPosition";
+import { toSurfacePoint } from "./canvasSurface";
 import { visibleComposerExtraHeight } from "./composerLayout";
 import { useCanvasPreferences } from "./useCanvasPreferences";
 import type { useCanvasContextMenu } from "./useCanvasContextMenu";
@@ -178,32 +177,8 @@ export function useCanvasControls({
       revealViewport.current.width !== viewport.width ||
       revealViewport.current.height !== viewport.height;
     revealViewport.current = { width: viewport.width, height: viewport.height };
-    const canvas = containerRef.current;
-    const frame = canvas?.querySelector<HTMLElement>(
-      ".canvas-node.is-selected",
-    );
-    const image = frame?.querySelector<HTMLElement>(
-      ".demo-result-node,.image-preview",
-    );
-    const toolbar = document.querySelector<HTMLElement>(
-      ".image-selection-toolbar",
-    );
-    const actionAnchor = item.kind === "image" ? image : frame;
-    const imageActions =
-      canvas && actionAnchor && toolbar
-        ? getImageSelectionPosition(actionAnchor, canvas, toolbar)
-        : undefined;
-    const needsImageActions = Boolean(imageActions?.revealDelta);
-    const minimumTop = imageActions?.revealDelta
-      ? Math.max(
-          70,
-          node.y * transform.scale +
-            transform.y +
-            imageActions.revealDelta / (canvas ? surfaceScale(canvas) : 1),
-        )
-      : 70;
+    const minimumTop = 70;
     if (
-      !needsImageActions &&
       !isNewSelection &&
       !viewportChanged &&
       composerExtraHeight === revealBaselineHeight.current

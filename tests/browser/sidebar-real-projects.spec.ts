@@ -4,6 +4,8 @@ import {
   createProject,
   createTask,
   emptySnapshot,
+  projectChatView,
+  serializeCreationSnapshot,
 } from "../../src/features/creation/model";
 import { BASE_CANVAS_ITEMS } from "../../src/domain/canvasItems";
 import { createProjectCanvas } from "../../src/domain/projectCanvas";
@@ -43,12 +45,15 @@ async function seedProjects(page: Page, runningTask = false) {
   ];
   await page.evaluate(({ key, value }) => localStorage.setItem(key, value), {
     key: CREATION_STORAGE_KEY,
-    value: JSON.stringify({
-      ...emptySnapshot(),
-      revision: Date.now(),
-      projects,
-      activeProjectId: first.id,
-    }),
+    value: JSON.stringify(
+      serializeCreationSnapshot({
+        ...emptySnapshot(),
+        version: 3,
+        revision: Date.now(),
+        projects: projects.map(projectChatView),
+        activeProjectId: first.id,
+      }),
+    ),
   });
   await page.reload();
   await expandSidebar(page);

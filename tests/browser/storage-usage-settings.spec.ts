@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { openSettingsSection, openWorkspace } from "./helpers";
-import { createTask } from "../../src/features/creation/model";
+import { createTask, projectChatView } from "../../src/features/creation/model";
 
 test("部分完成和离线终态不会显示为仍在处理中", async ({ page }) => {
   await openWorkspace(page);
@@ -8,10 +8,16 @@ test("部分完成和离线终态不会显示为仍在处理中", async ({ page 
     JSON.parse(localStorage.getItem("kk-studio-next:creation:v1")!),
   );
   const project = snapshot.projects[0];
+  const view = projectChatView(project);
+  expect(view.activeChatId).toBeTruthy();
   project.tasks = [
-    { ...createTask(project), status: "partial", completedOutputs: 1 },
-    { ...createTask(project), status: "offline" },
+    { ...createTask(view), status: "partial", completedOutputs: 1 },
+    { ...createTask(view), status: "offline" },
   ];
+  expect(project.tasks.map((task) => task.originChatId)).toEqual([
+    view.activeChatId,
+    view.activeChatId,
+  ]);
   snapshot.revision = Date.now() + 1;
   await page.evaluate(
     (value) => localStorage.setItem("kk-studio-next:creation:v1", value),

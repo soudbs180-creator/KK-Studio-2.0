@@ -13,7 +13,11 @@ import {
 } from "node:fs";
 import { randomUUID } from "node:crypto";
 import { join, resolve, sep } from "node:path";
-import type { CreationSnapshot } from "../creation/model.ts";
+import {
+  serializeCreationSnapshot,
+  type CreationSnapshot,
+} from "../creation/model.ts";
+import { assertStandaloneRoot } from "./standaloneRoot.ts";
 import {
   decodeSnapshot,
   parseSnapshot,
@@ -152,6 +156,36 @@ function safeBackupId(id: string): boolean {
   return /^[A-Za-z0-9][A-Za-z0-9._-]*$/.test(id) && id.length <= 180;
 }
 
+function assertCanonicalWireSnapshot(snapshot: unknown): void {
+  if (
+    !snapshot ||
+    typeof snapshot !== "object" ||
+    !("version" in snapshot) ||
+    snapshot.version !== 3
+  )
+    return;
+  const projects = "projects" in snapshot ? snapshot.projects : undefined;
+  if (!Array.isArray(projects)) return;
+  if (
+    projects.some(
+      (project) =>
+        project &&
+        typeof project === "object" &&
+        [
+          "messages",
+          "composerDraft",
+          "agentThreadId",
+          "googleConversation",
+        ].some((key) => Object.hasOwn(project, key)),
+    )
+  )
+    throw new CompanionProtocolError(
+      "SNAPSHOT_UNSUPPORTED",
+      409,
+      "项目包含尚未迁移的旧聊天记录，已暂停操作以保护原件。",
+    );
+}
+
 function isRestorableBackupPath(path: string): boolean {
   return (
     path === "projects/creation-v2.json" ||
@@ -161,6 +195,8 @@ function isRestorableBackupPath(path: string): boolean {
 }
 
 export class CompanionStore {
+  private ownerHandle: number | undefined;
+  private closed = false;
   readonly root: string;
   readonly snapshotPath: string;
   readonly backupPath: string;
@@ -172,6 +208,23 @@ export class CompanionStore {
 
   constructor(root: string) {
     this.root = resolve(root);
+    assertStandaloneRoot(this.root);
+    mkdirSync(this.root, { recursive: true });
+    // Windows shares this standard read/write handle with Native's exclusive owner lock.
+    if (process.platform === "win32") {
+      try {
+        this.ownerHandle = openSync(
+          join(this.root, ".kk-native-owner.lock"),
+          "a+",
+        );
+      } catch {
+        throw new CompanionProtocolError(
+          "IO",
+          409,
+          "仓库正由桌面客户端使用，已停止本机服务初始化。",
+        );
+      }
+    }
     this.snapshotPath = join(this.root, "projects", "creation-v2.json");
     this.backupPath = `${this.snapshotPath}.bak`;
     this.assetsRoot = join(this.root, "assets");
@@ -179,19 +232,53 @@ export class CompanionStore {
     this.assetRecordsRoot = join(this.assetsRoot, "records");
     this.stagingRoot = join(this.root, "staging");
     this.backupsRoot = join(this.root, "backups");
-    for (const path of [
-      this.root,
-      join(this.root, "projects"),
-      this.assetsRoot,
-      this.assetBlobsRoot,
-      this.assetRecordsRoot,
-      this.stagingRoot,
-      this.backupsRoot,
-    ])
-      mkdirSync(path, { recursive: true });
+    try {
+      for (const path of [
+        this.root,
+        join(this.root, "projects"),
+        this.assetsRoot,
+        this.assetBlobsRoot,
+        this.assetRecordsRoot,
+        this.stagingRoot,
+        this.backupsRoot,
+      ]) {
+        this.assertStandaloneRoot();
+        mkdirSync(path, { recursive: true });
+      }
+    } catch (error) {
+      this.close();
+      throw error;
+    }
+  }
+
+  assertStandaloneRoot(): void {
+    if (this.closed)
+      throw new CompanionProtocolError("IO", 409, "本机服务已关闭。");
+    assertStandaloneRoot(this.root);
+  }
+
+  close(): void {
+    if (this.ownerHandle !== undefined) closeSync(this.ownerHandle);
+    this.ownerHandle = undefined;
+    this.closed = true;
+  }
+
+  private writeAtomic(path: string, bytes: Uint8Array | string): void {
+    this.assertStandaloneRoot();
+    writeAtomic(path, bytes);
+  }
+
+  private cleanupStage(path: string): void {
+    try {
+      this.assertStandaloneRoot();
+    } catch {
+      return;
+    } // Retain the prepared stage when repository admission is lost.
+    rmSync(path, { recursive: true, force: true });
   }
 
   readSnapshot(): SnapshotReadResult {
+    this.assertStandaloneRoot();
     const primary = this.readSnapshotFile(this.snapshotPath);
     if (primary)
       return {
@@ -218,10 +305,16 @@ export class CompanionStore {
   }
 
   writeSnapshot(snapshot: unknown, expectedRevision: number | null): void {
+    this.assertStandaloneRoot();
+    assertCanonicalWireSnapshot(snapshot);
     rejectCompanionSecrets(snapshot);
     let parsed: CreationSnapshot;
     try {
-      parsed = decodeSnapshot(snapshot);
+      const decoded = decodeSnapshot(snapshot);
+      parsed =
+        decoded.version === 3
+          ? serializeCreationSnapshot(snapshot as CreationSnapshot)
+          : decoded;
       snapshotPutSchema.parse({ expectedRevision, snapshot: parsed });
     } catch (error) {
       if (error instanceof CompanionProtocolError) throw error;
@@ -239,19 +332,44 @@ export class CompanionStore {
           "项目引用的素材尚未归档。",
         );
     }
-    this.readSnapshotFile(this.backupPath);
+    const backup = this.readSnapshotFile(this.backupPath);
     const current = this.readSnapshot();
+    if (
+      [current.snapshot, backup].some(
+        (stored) => stored && stored.version > parsed.version,
+      )
+    )
+      throw new CompanionProtocolError(
+        "SNAPSHOT_UNSUPPORTED",
+        409,
+        "不能用旧格式覆盖新格式主文件或备份，原件已保留。",
+      );
+    if (current.snapshot?.version === 2 && parsed.version === 3)
+      throw new CompanionProtocolError(
+        "SNAPSHOT_UNSUPPORTED",
+        409,
+        "旧本机服务仓库需要独立迁移，不能直接覆盖升级；原件已保留。",
+      );
     if (current.revision !== expectedRevision)
       throw new CompanionProtocolError("CONFLICT", 409, "项目版本已变化。");
     if (current.revision !== null && parsed.revision <= current.revision)
       throw new CompanionProtocolError("CONFLICT", 409, "项目版本必须递增。");
 
-    if (current.revision !== null && this.validSnapshotFile(this.snapshotPath))
-      writeAtomic(this.backupPath, asBytes(readFileSync(this.snapshotPath)));
-    writeAtomic(this.snapshotPath, canonicalJson(parsed));
+    if (current.revision === null && parsed.version === 3)
+      this.writeAtomic(this.backupPath, canonicalJson(parsed));
+    else if (
+      current.revision !== null &&
+      this.validSnapshotFile(this.snapshotPath)
+    )
+      this.writeAtomic(
+        this.backupPath,
+        asBytes(readFileSync(this.snapshotPath)),
+      );
+    this.writeAtomic(this.snapshotPath, canonicalJson(parsed));
   }
 
   stageAsset(rawMetadata: unknown, bytes: Uint8Array): StagedAsset {
+    this.assertStandaloneRoot();
     let metadata: CompanionAssetMetadata;
     try {
       rejectCompanionSecrets(rawMetadata);
@@ -270,12 +388,13 @@ export class CompanionStore {
     const stageId = randomUUID();
     const stage = join(this.stagingRoot, stageId);
     mkdirSync(stage, { recursive: true });
-    writeAtomic(join(stage, "blob"), bytes);
-    writeAtomic(join(stage, "metadata.json"), canonicalJson(metadata));
+    this.writeAtomic(join(stage, "blob"), bytes);
+    this.writeAtomic(join(stage, "metadata.json"), canonicalJson(metadata));
     return { stageId, metadata };
   }
 
   publishStagedAsset(stageId: string): CompanionAssetMetadata {
+    this.assertStandaloneRoot();
     if (!/^[0-9a-f-]{36}$/i.test(stageId))
       throw new CompanionProtocolError("IO", 500, "素材暂存批次无效。");
     const stage = join(this.stagingRoot, stageId);
@@ -312,7 +431,7 @@ export class CompanionStore {
       const oldBytes = asBytes(readFileSync(targetBlob));
       if (sha256Bytes(oldBytes) !== metadata.sha256)
         throw new CompanionProtocolError("CORRUPT", 500, "素材原件校验失败。");
-    } else writeAtomic(targetBlob, bytes);
+    } else this.writeAtomic(targetBlob, bytes);
 
     let merged = metadata;
     if (existsSync(targetRecord)) {
@@ -365,12 +484,14 @@ export class CompanionStore {
         throw new CompanionProtocolError("CORRUPT", 500, "素材索引校验失败。");
       }
     }
-    writeAtomic(targetRecord, canonicalJson(merged));
-    rmSync(stage, { recursive: true, force: true });
+    this.writeAtomic(targetRecord, canonicalJson(merged));
+    this.assertStandaloneRoot();
+    this.cleanupStage(stage);
     return merged;
   }
 
   listAssets(offset = 0, limit = 100): CompanionAssetMetadata[] {
+    this.assertStandaloneRoot();
     if (!Number.isSafeInteger(offset) || offset < 0)
       throw new CompanionProtocolError(
         "INVALID_REQUEST",
@@ -406,6 +527,8 @@ export class CompanionStore {
     assets: unknown,
     manifestSha256: string,
   ): MigrationPreflightResult {
+    this.assertStandaloneRoot();
+    assertCanonicalWireSnapshot(snapshot);
     try {
       rejectCompanionSecrets(snapshot);
       rejectCompanionSecrets(assets);
@@ -414,7 +537,13 @@ export class CompanionStore {
         assets,
         manifestSha256,
       });
-      const decoded = decodeSnapshot(parsed.snapshot);
+      const validated = decodeSnapshot(parsed.snapshot);
+      const decoded =
+        validated.version === 3
+          ? serializeCreationSnapshot(
+              parsed.snapshot as unknown as CreationSnapshot,
+            )
+          : validated;
       const metadata = parsed.assets.map((entry) =>
         assetMetadataSchema.parse(entry),
       );
@@ -460,6 +589,7 @@ export class CompanionStore {
     preflight: MigrationPreflightResult,
     expectedRevision: number | null,
   ): void {
+    this.assertStandaloneRoot();
     for (const asset of preflight.assets) {
       if (!this.readAsset(asset.assetId))
         throw new CompanionProtocolError(
@@ -472,6 +602,7 @@ export class CompanionStore {
   }
 
   readAsset(assetId: string): StoredAsset | null {
+    this.assertStandaloneRoot();
     const parsedId = assetId.toLowerCase();
     if (!/^asset-[a-f0-9]{24}$/.test(parsedId))
       throw invalidAsset("素材标识无效。");
@@ -499,6 +630,7 @@ export class CompanionStore {
   }
 
   assetBlobPath(assetId: string): string {
+    this.assertStandaloneRoot();
     const asset = this.readAsset(assetId);
     if (!asset)
       throw new CompanionProtocolError("NOT_FOUND", 404, "素材不存在。");
@@ -506,6 +638,7 @@ export class CompanionStore {
   }
 
   createBackup(): CompanionBackup {
+    this.assertStandaloneRoot();
     const snapshot = this.readSnapshot();
     if (!snapshot.snapshot)
       throw new CompanionProtocolError(
@@ -560,13 +693,14 @@ export class CompanionStore {
     for (const entry of entries) {
       const destination = join(directory, entry.path);
       mkdirSync(join(destination, ".."), { recursive: true });
-      writeAtomic(destination, entry.bytes);
+      this.writeAtomic(destination, entry.bytes);
     }
-    writeAtomic(join(directory, "manifest.json"), canonicalJson(manifest));
+    this.writeAtomic(join(directory, "manifest.json"), canonicalJson(manifest));
     return { directory, manifest };
   }
 
   listBackups(): CompanionBackupSummary[] {
+    this.assertStandaloneRoot();
     return readdirSync(this.backupsRoot)
       .filter((id) => safeBackupId(id))
       .sort()
@@ -586,6 +720,7 @@ export class CompanionStore {
   }
 
   restoreBackup(backupId: string): { id: string; revision: number } {
+    this.assertStandaloneRoot();
     if (!safeBackupId(backupId))
       throw new CompanionProtocolError(
         "INVALID_REQUEST",
@@ -642,10 +777,15 @@ export class CompanionStore {
       throw new CompanionProtocolError("CORRUPT", 422, "备份缺少项目快照。");
     let snapshot: CreationSnapshot;
     try {
-      snapshot = decodeSnapshot(
-        JSON.parse(new TextDecoder().decode(snapshotBytes)),
-      );
-    } catch {
+      const value = JSON.parse(new TextDecoder().decode(snapshotBytes));
+      assertCanonicalWireSnapshot(value);
+      const decoded = decodeSnapshot(value);
+      snapshot =
+        decoded.version === 3
+          ? serializeCreationSnapshot(value as CreationSnapshot)
+          : decoded;
+    } catch (error) {
+      if (error instanceof CompanionProtocolError) throw error;
       throw new CompanionProtocolError("CORRUPT", 422, "备份项目快照无效。");
     }
     const records = new Map<string, CompanionAssetMetadata>();
@@ -714,10 +854,12 @@ export class CompanionStore {
       }
     };
     const rollback = (): void => {
+      this.assertStandaloneRoot();
       for (const [path, original] of originals) {
         if (original.kind === "missing")
           rmSync(path, { recursive: true, force: true });
-        else if (original.kind === "file") writeAtomic(path, original.bytes);
+        else if (original.kind === "file")
+          this.writeAtomic(path, original.bytes);
       }
     };
 
@@ -725,7 +867,7 @@ export class CompanionStore {
       mkdirSync(restoreStage, { recursive: true });
       for (const [path, bytes] of entries) {
         const stagedPath = join(restoreStage, path);
-        writeAtomic(stagedPath, bytes);
+        this.writeAtomic(stagedPath, bytes);
         const staged = asBytes(readFileSync(stagedPath));
         if (
           staged.byteLength !== bytes.byteLength ||
@@ -737,15 +879,34 @@ export class CompanionStore {
       capture(this.snapshotPath);
       capture(this.backupPath);
       const current = this.readSnapshotFile(this.snapshotPath);
-      this.readSnapshotFile(this.backupPath);
+      const backup = this.readSnapshotFile(this.backupPath);
+      if (
+        [current, backup].some(
+          (stored) => stored && stored.version > snapshot.version,
+        )
+      )
+        throw new CompanionProtocolError(
+          "SNAPSHOT_UNSUPPORTED",
+          409,
+          "不能恢复旧格式覆盖新格式主文件或备份，原件已保留。",
+        );
+      if (current?.version === 2 && snapshot.version === 3)
+        throw new CompanionProtocolError(
+          "SNAPSHOT_UNSUPPORTED",
+          409,
+          "旧本机服务仓库需要独立迁移，原件已保留。",
+        );
       if (current)
-        writeAtomic(this.backupPath, asBytes(readFileSync(this.snapshotPath)));
+        this.writeAtomic(
+          this.backupPath,
+          asBytes(readFileSync(this.snapshotPath)),
+        );
       try {
         for (const [path, bytes] of entries) {
           if (path === "projects/creation-v2.json") continue;
-          writeAtomic(join(this.root, path), bytes);
+          this.writeAtomic(join(this.root, path), bytes);
         }
-        writeAtomic(this.snapshotPath, canonicalJson(snapshot));
+        this.writeAtomic(this.snapshotPath, canonicalJson(snapshot));
       } catch (error) {
         try {
           rollback();
@@ -759,7 +920,7 @@ export class CompanionStore {
       if (error instanceof CompanionProtocolError) throw error;
       throw new CompanionProtocolError("IO", 500, "备份恢复失败。");
     } finally {
-      rmSync(restoreStage, { recursive: true, force: true });
+      this.cleanupStage(restoreStage);
     }
   }
 
@@ -769,8 +930,16 @@ export class CompanionStore {
 
   private readSnapshotFile(path: string): CreationSnapshot | null | undefined {
     try {
-      return parseSnapshot(readFileSync(path, "utf8"));
+      const raw = readFileSync(path, "utf8");
+      assertCanonicalWireSnapshot(JSON.parse(raw));
+      const decoded = parseSnapshot(raw);
+      // The codec's root projection is an in-memory UI view, not the v3 wire format.
+      return decoded.version === 3
+        ? serializeCreationSnapshot(JSON.parse(raw) as CreationSnapshot)
+        : decoded;
     } catch (error) {
+      if (error instanceof CompanionProtocolError) throw error;
+      if (error instanceof SyntaxError) return null;
       if (error instanceof SnapshotStorageError) {
         if (error.code === "corrupt") return null;
         throw new CompanionProtocolError(

@@ -2,6 +2,77 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { createAgentHost } from "../../src/features/agent/agentHost.ts";
 import { createProject } from "../../src/features/creation/model.ts";
+
+test("canonical chat thread and transcript never borrow the project's stale root", async () => {
+  let project = createProject({
+    kind: "text",
+    prompt: "",
+    model: "",
+    attachments: [],
+  });
+  const first = project.chats![project.activeChatId!];
+  first.agentThreadId = "chat-thread";
+  project.chats!.other = {
+    ...first,
+    id: "other",
+    agentThreadId: "other-thread",
+    messages: [
+      { id: "untouched", role: "assistant", content: "other history" },
+    ],
+  };
+  project.agentThreadId = "stale-root";
+  const host = createAgentHost({
+    getProject: () => project,
+    getProjects: () => [project],
+    commit: (next) => {
+      project = next;
+    },
+    generate: async () => ({}),
+  });
+  assert.equal(host.readAgentThread(), "chat-thread");
+  await host.saveAgentThread("chat-thread-updated", project.id);
+  assert.equal(project.chats![first.id].agentThreadId, "chat-thread-updated");
+  await host.saveAgentMessages(
+    [
+      {
+        id: "answer",
+        role: "assistant",
+        text: "durable answer",
+        threadId: "chat-thread-updated",
+      },
+    ],
+    { projectId: project.id, chatId: first.id },
+  );
+  assert.equal(project.chats![first.id].messages[0].content, "durable answer");
+  assert.equal(project.chats!.other.agentThreadId, "other-thread");
+  assert.equal(project.chats!.other.messages[0].content, "other history");
+  await assert.rejects(
+    host.saveAgentThread("other-thread", project.id),
+    /其他聊天/,
+  );
+  await assert.rejects(
+    host.saveAgentMessages(
+      [
+        {
+          id: "foreign",
+          role: "assistant",
+          text: "foreign",
+          threadId: "other-thread",
+        },
+      ],
+      { projectId: project.id, chatId: first.id },
+    ),
+    /其他聊天/,
+  );
+  assert.equal(project.chats![first.id].agentThreadId, "chat-thread-updated");
+  await assert.rejects(
+    host.saveAgentMessages([{ id: "late", role: "assistant", text: "late" }], {
+      projectId: project.id,
+      chatId: "other",
+    }),
+    /聊天/,
+  );
+});
 function harness() {
   let project = createProject({
     kind: "image",

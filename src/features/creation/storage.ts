@@ -14,6 +14,9 @@ import {
   emptyDraft,
   emptySnapshot,
   snapshotWriteBlockReason,
+  projectChatExecutionBlockReason,
+  serializeCreationSnapshot,
+  hasLegacyChatAuthority,
   type ChatItem,
   type ChatItemDraft,
   type CreationSnapshot,
@@ -24,12 +27,17 @@ import {
   parseSnapshot,
   SnapshotStorageError,
 } from "./snapshotCodec.ts";
-import { sha256Hex } from "./chatMigration.ts";
+import {
+  sha256Hex,
+  migrateSnapshotToV3,
+  type LegacyV2Snapshot,
+} from "./chatMigration.ts";
+import { commitIndexedChatMigration } from "./indexedChatMigration.ts";
 
 export { sha256Hex };
 
 /**
- * Non-Downgradable Write Barrier simulator and execution engine per ADR-022:
+ * Test-only model of the write barrier. Production IDB and Native use real transactions.
  * 1. Read v2 raw bytes -> compute SHA-256
  * 2. Write immutable archive: archive-v2-${sha256}.json
  * 3. Write v3 backup: creation-backup.json (.bak)
@@ -189,6 +197,14 @@ function openDatabase(): Promise<IDBDatabase> {
     request.onerror = () => reject(request.error);
   });
 }
+/** Durable legacy roots are migrated from raw input before a component projection can replace them. */
+function decodeMigrationSource(value: unknown): CreationSnapshot {
+  if (!hasLegacyChatAuthority(value)) return decodeSnapshot(value);
+  const migrated = migrateSnapshotToV3(value as CreationSnapshotV3);
+  const snapshot = decodeSnapshot(migrated);
+  return { ...snapshot, revision: (value as CreationSnapshot).revision };
+}
+
 function backupWriteProtection(
   backup: unknown,
   marker: unknown,
@@ -196,7 +212,7 @@ function backupWriteProtection(
   let recoveryDraft: CreationSnapshot | undefined;
   if (backup != null) {
     try {
-      recoveryDraft = decodeSnapshot(backup);
+      recoveryDraft = decodeMigrationSource(backup);
     } catch {
       return {
         readOnlyReason:
@@ -210,9 +226,15 @@ function backupWriteProtection(
   } | null;
   const readOnlyReason =
     marker != null &&
-    (identity?.formatVersion !== 1 || identity?.minWriterVersion !== 1)
+    (![1, 2].includes(Number(identity?.formatVersion)) ||
+      identity?.minWriterVersion !== identity?.formatVersion)
       ? "仓库写入标记不受当前客户端支持，已暂停写入以保留原件。"
-      : recoveryDraft && snapshotWriteBlockReason(recoveryDraft);
+      : recoveryDraft &&
+        (recoveryDraft.version === 3
+          ? snapshotWriteBlockReason(recoveryDraft)
+          : recoveryDraft.projects
+              .map(projectChatExecutionBlockReason)
+              .find(Boolean));
   return {
     readOnlyReason,
     recoveryDraft: readOnlyReason ? recoveryDraft : undefined,
@@ -265,8 +287,31 @@ async function writeIndexed(snapshot: CreationSnapshot): Promise<void> {
               "unsupported",
               protection.readOnlyReason,
             );
+          if (
+            hasLegacyChatAuthority(read.result) ||
+            hasLegacyChatAuthority(backup.result)
+          )
+            throw new SnapshotStorageError(
+              "unsupported",
+              "旧聊天权威字段尚未迁移，原件未覆盖。",
+            );
           const current =
             read.result == null ? null : decodeSnapshot(read.result);
+          const format = marker.result as
+            { formatVersion?: number } | undefined;
+          const backupVersion = (
+            backup.result as { version?: number } | undefined
+          )?.version;
+          if (
+            (current?.version === 3 || format?.formatVersion === 2) &&
+            (snapshot.version !== 3 ||
+              current?.version !== 3 ||
+              backupVersion !== 3)
+          )
+            throw new SnapshotStorageError(
+              "unsupported",
+              "禁止降级或覆盖不完整的聊天迁移屏障。",
+            );
           const blocked = current && snapshotWriteBlockReason(current);
           if (blocked) throw new SnapshotStorageError("unsupported", blocked);
           if ((current?.revision ?? null) !== expectedRevision)
@@ -280,36 +325,6 @@ async function writeIndexed(snapshot: CreationSnapshot): Promise<void> {
               "项目版本已变化，请重新读取。",
             );
           if (current) {
-            // Write barrier for v2 -> v3
-            if ((current.version as number) === 2 && snapshot.version === 3) {
-              const rawV2 = JSON.stringify(read.result);
-              const sha256 = sha256Hex(rawV2);
-              store.put(
-                {
-                  rawBytes: rawV2,
-                  sha256,
-                  targetFormat: 3,
-                  archivedAt: Date.now(),
-                },
-                `archive-v2-${sha256}`,
-              );
-              store.put(
-                {
-                  formatVersion: 2,
-                  minWriterVersion: 2,
-                  updatedAt: Date.now(),
-                },
-                "formatMarker",
-              );
-              try {
-                localStorage.setItem(
-                  "kk-format-marker",
-                  JSON.stringify({ formatVersion: 2, minWriterVersion: 2 }),
-                );
-              } catch (err) {
-                void err;
-              }
-            }
             // Always write v3 to backup before main
             store.put(
               snapshot.version === 3 ? snapshot : read.result,
@@ -355,7 +370,7 @@ export async function loadCreationSnapshot(
     }>("read_creation_snapshot");
     const decoded =
       result.status === "missing" && result.snapshot === null
-        ? emptySnapshot()
+        ? { ...emptySnapshot(), version: 3 as const }
         : decodeSnapshot(result.snapshot);
     const snapshot = await hydrateSnapshotAssets(decoded, loadStoredAsset);
     const readOnlyReason =
@@ -393,56 +408,146 @@ export async function loadCreationSnapshot(
     }
   }
   const raw = window.localStorage.getItem(CREATION_STORAGE_KEY);
-  const local = raw === null ? null : parseSnapshot(raw);
+  let localValue: unknown = null;
+  if (raw !== null) {
+    try {
+      localValue = JSON.parse(raw);
+    } catch {
+      throw new SnapshotStorageError("corrupt", "项目 JSON 损坏，原件已保留。");
+    }
+  }
+  const local = localValue === null ? null : decodeMigrationSource(localValue);
   const indexedValue = await readIndexed();
   const indexed =
     indexedValue.snapshot === null
       ? null
-      : decodeSnapshot(indexedValue.snapshot);
+      : decodeMigrationSource(indexedValue.snapshot);
   const protection = backupWriteProtection(
     indexedValue.backup,
     indexedValue.marker,
   );
-  expectedRevision = indexed?.revision ?? null;
-  let snapshot = indexed ?? local ?? emptySnapshot();
-  if (local && local.revision > snapshot.revision) snapshot = local;
-  let readOnlyReason =
-    protection.readOnlyReason ||
-    (indexed && snapshotWriteBlockReason(indexed)) ||
-    (local && snapshotWriteBlockReason(local)) ||
-    undefined;
   const journal = window.sessionStorage.getItem(JOURNAL);
-  let recoveryDraft: CreationSnapshot | undefined = protection.recoveryDraft;
+  let pending: { baseRevision?: unknown; snapshot?: unknown } | undefined;
+  let pendingSnapshot: CreationSnapshot | undefined;
   if (journal) {
-    let pending: { baseRevision?: unknown; snapshot?: unknown };
     try {
       pending = JSON.parse(journal);
     } catch {
       throw new SnapshotStorageError("corrupt", "未保存草稿副本损坏，已保留。");
     }
-    const draft = decodeSnapshot(pending.snapshot);
-    readOnlyReason ||= snapshotWriteBlockReason(draft);
-    if (readOnlyReason) recoveryDraft ??= draft;
-    else if (preferDurable) recoveryDraft = draft;
+    pendingSnapshot = decodeMigrationSource(pending?.snapshot);
+  }
+  expectedRevision = indexed?.revision ?? null;
+  let snapshot = indexed ??
+    local ?? { ...emptySnapshot(), version: 3 as const };
+  let rawSnapshot =
+    indexedValue.snapshot ?? (raw === null ? snapshot : JSON.parse(raw));
+  if (local && local.revision > snapshot.revision) {
+    snapshot = local;
+    rawSnapshot = JSON.parse(raw!);
+  }
+  let readOnlyReason = protection.readOnlyReason;
+  // Validate every source before migration, even a lower-revision weak copy.
+  for (const source of [indexed, local, pendingSnapshot]) {
+    if (!source) continue;
+    if (
+      source.projects.some((project) =>
+        Object.values(project.chats ?? {}).some((chat) => chat.isTemporary),
+      )
+    )
+      readOnlyReason ??= "临时聊天隔离尚未完成，原始恢复资料已保留。";
+  }
+  let recoveryDraft = protection.recoveryDraft;
+  if (pendingSnapshot) {
+    if (readOnlyReason || preferDurable) recoveryDraft ??= pendingSnapshot;
     else if (
-      draft.revision >= snapshot.revision &&
-      JSON.stringify(draft) !== JSON.stringify(snapshot)
+      pendingSnapshot.revision >= snapshot.revision &&
+      JSON.stringify(pendingSnapshot) !== JSON.stringify(snapshot)
     ) {
       if (
-        draft.revision === snapshot.revision ||
-        pending.baseRevision !== expectedRevision
+        pendingSnapshot.revision === snapshot.revision ||
+        pending?.baseRevision !== expectedRevision
       )
         throw new SnapshotStorageError(
           "conflict",
           "未保存草稿与另一窗口的项目冲突，原件已保留。",
         );
-      snapshot = draft;
+      snapshot = pendingSnapshot;
+      rawSnapshot = pending!.snapshot;
     }
   }
-  if (preferDurable && journal && !readOnlyReason) {
-    window.sessionStorage.setItem(`${JOURNAL}:recovery`, journal);
-    window.sessionStorage.removeItem(JOURNAL);
+  const marker = indexedValue.marker as { formatVersion?: number } | null;
+  const rawVersion = (rawSnapshot as { version?: unknown }).version;
+  const backupVersion = (indexedValue.backup as { version?: unknown } | null)
+    ?.version;
+  if (marker?.formatVersion === 2 && (rawVersion !== 3 || backupVersion !== 3))
+    readOnlyReason ??= "仓库迁移状态不一致，已保留全部原件并暂停写入。";
+  // A v3 backup beside a legacy main is an unknown interrupted older writer.
+  if (rawVersion === 2 && backupVersion === 3)
+    readOnlyReason ??= "项目备份已升级，旧主文件仅供恢复查看。";
+  if (!hasLegacyChatAuthority(rawSnapshot)) {
+    const legacyRecovery = [
+      indexedValue.backup,
+      localValue,
+      pending?.snapshot,
+    ].find(hasLegacyChatAuthority);
+    if (legacyRecovery) {
+      readOnlyReason ??= "恢复副本仍有未迁移的旧聊天权威，已保留原件。";
+      recoveryDraft ??= decodeMigrationSource(legacyRecovery);
+    }
   }
+  if (
+    !readOnlyReason &&
+    (rawVersion === 2 ||
+      marker?.formatVersion !== 2 ||
+      hasLegacyChatAuthority(rawSnapshot))
+  ) {
+    const candidate = migrateSnapshotToV3(rawSnapshot as LegacyV2Snapshot);
+    const checked = decodeSnapshot(candidate);
+    const blocked = snapshotWriteBlockReason(checked);
+    if (blocked) readOnlyReason = blocked;
+    else {
+      const originals: Record<string, string> = {};
+      if (indexedValue.snapshot !== null)
+        originals.main = JSON.stringify(indexedValue.snapshot);
+      if (indexedValue.backup !== null)
+        originals.backup = JSON.stringify(indexedValue.backup);
+      if (raw !== null) originals.local = raw;
+      if (journal !== null) originals.journal = journal;
+      const db = await openDatabase();
+      try {
+        await commitIndexedChatMigration(
+          db,
+          indexedValue,
+          candidate,
+          originals,
+        );
+      } finally {
+        db.close();
+      }
+      expectedRevision = candidate.revision;
+      snapshot = checked;
+      // Do not consume recovery records. Copies are updated only after commit and only if unchanged.
+      if (window.localStorage.getItem(CREATION_STORAGE_KEY) === raw) {
+        try {
+          window.localStorage.setItem(
+            CREATION_STORAGE_KEY,
+            JSON.stringify(candidate),
+          );
+        } catch {
+          /* The durable transaction already committed. */
+        }
+      }
+      if (journal && window.sessionStorage.getItem(JOURNAL) === journal) {
+        try {
+          window.sessionStorage.setItem(`${JOURNAL}:recovery`, journal);
+        } catch {
+          /* The immutable transaction archive is authoritative. */
+        }
+      }
+    }
+  }
+  readOnlyReason ??= snapshotWriteBlockReason(snapshot);
   writable = !readOnlyReason;
   return {
     snapshot,
@@ -459,7 +564,7 @@ export function pendingRecoveryDraft(): CreationSnapshot | null {
     const raw =
       window.sessionStorage.getItem(JOURNAL) ??
       window.sessionStorage.getItem(`${JOURNAL}:recovery`);
-    return raw ? decodeSnapshot(JSON.parse(raw).snapshot) : null;
+    return raw ? decodeMigrationSource(JSON.parse(raw).snapshot) : null;
   } catch {
     return null;
   }
@@ -468,7 +573,9 @@ export function pendingRecoveryDraft(): CreationSnapshot | null {
 export function persistCreationSnapshotSync(snapshot: CreationSnapshot): void {
   if (snapshotWriteBlockReason(snapshot)) return;
   if (!writable || isDesktop()) return;
-  const cleanSnapshot = sanitizeSnapshotForPersistence(snapshot);
+  const cleanSnapshot = serializeCreationSnapshot(
+    sanitizeSnapshotForPersistence(snapshot),
+  );
   const serialized = JSON.stringify({
     baseRevision: expectedRevision,
     snapshot: cleanSnapshot,
@@ -484,9 +591,10 @@ export function persistCreationSnapshotSync(snapshot: CreationSnapshot): void {
 export function sanitizeSnapshotForPersistence(
   snapshot: CreationSnapshot,
 ): CreationSnapshot {
+  const canonical = serializeCreationSnapshot(snapshot);
   return {
-    ...snapshot,
-    projects: snapshot.projects.map((proj) => {
+    ...canonical,
+    projects: canonical.projects.map((proj) => {
       if (!proj.chats) return proj;
       const sanitizedChats: Record<string, ChatItem> = {};
       let activeChatId = proj.activeChatId;
@@ -530,7 +638,9 @@ export async function persistCreationSnapshotAsync(
       "corrupt",
       "项目尚未读取成功，禁止覆盖原件。",
     );
-  const cleanSnapshot = sanitizeSnapshotForPersistence(snapshot);
+  const cleanSnapshot = serializeCreationSnapshot(
+    sanitizeSnapshotForPersistence(snapshot),
+  );
   const persisted =
     isDesktop() || isCompanionEnabled()
       ? await encodeSnapshotAssets(cleanSnapshot, loadStoredAsset)

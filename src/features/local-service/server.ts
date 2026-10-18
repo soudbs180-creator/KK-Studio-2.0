@@ -114,6 +114,18 @@ function assetPath(path: string): string | null {
 }
 
 export function createCompanionServer(options: CompanionServerOptions): Server {
+  const readStoreBody = async (
+    req: IncomingMessage,
+    limit: number,
+  ): Promise<Buffer> => {
+    const body = await readBody(req, limit);
+    options.store.assertStandaloneRoot();
+    return body;
+  };
+  const reply = (res: ServerResponse, status: number, body: unknown): void => {
+    options.store.assertStandaloneRoot();
+    json(res, status, body);
+  };
   const maxBodyBytes = options.maxBodyBytes ?? MAX_COMPANION_BODY_BYTES;
   const sessions = new CompanionSessionManager(
     options.pairingCode,
@@ -141,12 +153,14 @@ export function createCompanionServer(options: CompanionServerOptions): Server {
         const origin = req.headers.origin;
         if (!isAllowedCompanionOrigin(origin, options.allowedOrigins))
           throw new CompanionProtocolError("ORIGIN_FORBIDDEN", 403);
+        options.store.assertStandaloneRoot();
         if (origin) {
           res.setHeader("Access-Control-Allow-Origin", origin);
           res.setHeader("Access-Control-Allow-Credentials", "true");
           res.setHeader("Vary", "Origin");
         }
         if (req.method === "OPTIONS") {
+          options.store.assertStandaloneRoot();
           res.writeHead(204, {
             "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,OPTIONS",
             "Access-Control-Allow-Headers": "Content-Type, X-KK-Asset-Metadata",
@@ -160,7 +174,7 @@ export function createCompanionServer(options: CompanionServerOptions): Server {
           throw new CompanionProtocolError("INVALID_REQUEST", 400);
 
         if (path === "/health" && req.method === "GET") {
-          json(
+          reply(
             res,
             200,
             healthResponseSchema.parse({
@@ -175,11 +189,11 @@ export function createCompanionServer(options: CompanionServerOptions): Server {
 
         if (path === "/v1/pair" && req.method === "POST") {
           const request = pairRequestSchema.parse(
-            parseJson(await readBody(req, 4096)),
+            parseJson(await readStoreBody(req, 4096)),
           );
           const session = sessions.pair(request.code);
           setSessionCookie(res, session);
-          json(res, 200, {
+          reply(res, 200, {
             protocolVersion: COMPANION_PROTOCOL_VERSION,
             deviceId: options.deviceId,
           });
@@ -191,6 +205,7 @@ export function createCompanionServer(options: CompanionServerOptions): Server {
           throw new CompanionProtocolError("UNAUTHENTICATED", 401);
 
         if (path === "/v1/session" && req.method === "DELETE") {
+          options.store.assertStandaloneRoot();
           sessions.revoke(session);
           clearSessionCookie(res);
           res.writeHead(204, { "Cache-Control": "no-store" });
@@ -199,12 +214,12 @@ export function createCompanionServer(options: CompanionServerOptions): Server {
         }
 
         if (path === "/v1/snapshot" && req.method === "GET") {
-          json(res, 200, options.store.readSnapshot());
+          reply(res, 200, options.store.readSnapshot());
           return;
         }
         if (path === "/v1/snapshot" && req.method === "PUT") {
           const request = snapshotPutSchema.parse(
-            parseJson(await readBody(req, maxBodyBytes)),
+            parseJson(await readStoreBody(req, maxBodyBytes)),
           );
           try {
             options.store.writeSnapshot(
@@ -216,7 +231,7 @@ export function createCompanionServer(options: CompanionServerOptions): Server {
               error instanceof CompanionProtocolError &&
               error.code === "CONFLICT"
             ) {
-              json(res, 409, {
+              reply(res, 409, {
                 error: "CONFLICT",
                 currentRevision: options.store.readSnapshot().revision,
               });
@@ -224,7 +239,7 @@ export function createCompanionServer(options: CompanionServerOptions): Server {
             }
             throw error;
           }
-          json(res, 200, {
+          reply(res, 200, {
             status: "saved",
             revision: request.snapshot.revision,
           });
@@ -234,7 +249,7 @@ export function createCompanionServer(options: CompanionServerOptions): Server {
         if (path === "/v1/assets" && req.method === "GET") {
           const offset = Number(url.searchParams.get("offset") ?? 0);
           const limit = Number(url.searchParams.get("limit") ?? 50);
-          json(res, 200, { assets: options.store.listAssets(offset, limit) });
+          reply(res, 200, { assets: options.store.listAssets(offset, limit) });
           return;
         }
 
@@ -243,6 +258,7 @@ export function createCompanionServer(options: CompanionServerOptions): Server {
           const stored = options.store.readAsset(id);
           if (!stored)
             throw new CompanionProtocolError("NOT_FOUND", 404, "素材不存在。");
+          options.store.assertStandaloneRoot();
           res.writeHead(200, {
             "Content-Type": stored.metadata.mime,
             "Content-Length": stored.bytes.byteLength,
@@ -270,20 +286,20 @@ export function createCompanionServer(options: CompanionServerOptions): Server {
           }
           if (metadata.assetId !== id)
             throw new CompanionProtocolError("INVALID_ASSET", 422);
-          const body = await readBody(req, MAX_COMPANION_ASSET_BYTES);
+          const body = await readStoreBody(req, MAX_COMPANION_ASSET_BYTES);
           const staged = options.store.stageAsset(
             metadata,
             new Uint8Array(body),
           );
           const saved = options.store.publishStagedAsset(staged.stageId);
-          json(res, 201, { metadata: saved });
+          reply(res, 201, { metadata: saved });
           return;
         }
 
         if (path === "/v1/migration/preflight" && req.method === "POST") {
           pruneMigrationReports();
           const request = migrationPreflightSchema.parse(
-            parseJson(await readBody(req, maxBodyBytes)),
+            parseJson(await readStoreBody(req, maxBodyBytes)),
           );
           const report = options.store.preflightImport(
             request.snapshot,
@@ -297,7 +313,7 @@ export function createCompanionServer(options: CompanionServerOptions): Server {
             sessionKey: session ?? "",
           });
           pruneMigrationReports();
-          json(res, 200, {
+          reply(res, 200, {
             status: "ready",
             reportId,
             manifestSha256: report.manifestSha256,
@@ -314,7 +330,7 @@ export function createCompanionServer(options: CompanionServerOptions): Server {
         if (path === "/v1/migration/import" && req.method === "POST") {
           pruneMigrationReports();
           const request = migrationImportSchema.parse(
-            parseJson(await readBody(req, maxBodyBytes)),
+            parseJson(await readStoreBody(req, maxBodyBytes)),
           );
           const saved = migrationReports.get(request.reportId);
           if (!saved || saved.sessionKey !== (session ?? ""))
@@ -339,7 +355,7 @@ export function createCompanionServer(options: CompanionServerOptions): Server {
             request.expectedRevision,
           );
           migrationReports.delete(request.reportId);
-          json(res, 200, {
+          reply(res, 200, {
             status: "imported",
             revision: report.snapshot.revision,
           });
@@ -348,7 +364,7 @@ export function createCompanionServer(options: CompanionServerOptions): Server {
 
         if (path === "/v1/backups/export" && req.method === "POST") {
           const backup = options.store.createBackup();
-          json(res, 200, {
+          reply(res, 200, {
             status: "created",
             backupId: backup.directory.split(/[\\/]/).pop(),
             manifest: backup.manifest,
@@ -357,16 +373,16 @@ export function createCompanionServer(options: CompanionServerOptions): Server {
         }
 
         if (path === "/v1/backups" && req.method === "GET") {
-          json(res, 200, { backups: options.store.listBackups() });
+          reply(res, 200, { backups: options.store.listBackups() });
           return;
         }
 
         if (path === "/v1/backups/restore" && req.method === "POST") {
           const request = backupRestoreSchema.parse(
-            parseJson(await readBody(req, 4096)),
+            parseJson(await readStoreBody(req, 4096)),
           );
           const restored = options.store.restoreBackup(request.backupId);
-          json(res, 200, { status: "restored", ...restored });
+          reply(res, 200, { status: "restored", ...restored });
           return;
         }
 
@@ -381,5 +397,6 @@ export function createCompanionServer(options: CompanionServerOptions): Server {
       }
     })();
   });
+  server.once("close", () => options.store.close());
   return server;
 }

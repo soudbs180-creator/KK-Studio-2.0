@@ -32,6 +32,9 @@ interface FakeSource extends EventSourceLike {
 function createHarness(hello?: unknown) {
   const sources: FakeSource[] = [];
   const eventSourceFactory = (_url: string) => {
+    const scope = JSON.parse(
+      new URL(_url, "http://localhost").searchParams.get("scope") ?? "null",
+    );
     const source: FakeSource = {
       onmessage: null,
       onerror: null,
@@ -39,7 +42,17 @@ function createHarness(hello?: unknown) {
       emit(event) {
         source.onmessage?.({
           type: event.type,
-          data: JSON.stringify(event.data),
+          data: JSON.stringify(
+            event.data && typeof event.data === "object"
+              ? {
+                  scope,
+                  ...(event.type === "tool_call"
+                    ? { threadId: "", turnId: "" }
+                    : {}),
+                  ...event.data,
+                }
+              : event.data,
+          ),
         });
       },
       close() {
@@ -145,14 +158,14 @@ test("ADV-CHALLENGE-01: agentConnection.sendMessage strictly blocks buildInjecti
         postedPrompt = body.prompt;
         return jsonResponse(200, {
           ok: true,
-          protocolVersion: 6,
+          protocolVersion: 7,
           turnId: "turn-1",
           status: "completed",
         });
       }
       return jsonResponse(200, {
         ok: true,
-        protocolVersion: 6,
+        protocolVersion: 7,
         data: [],
         messages: [],
       });
@@ -233,14 +246,14 @@ test("ADV-CHALLENGE-02: agentConnection.sendMessage permits injection & ingestio
         postedPrompt = body.prompt;
         return jsonResponse(200, {
           ok: true,
-          protocolVersion: 6,
+          protocolVersion: 7,
           turnId: "turn-2",
           status: "completed",
         });
       }
       return jsonResponse(200, {
         ok: true,
-        protocolVersion: 6,
+        protocolVersion: 7,
         data: [],
         messages: [],
       });
@@ -666,14 +679,14 @@ test("ADV-CHALLENGE-08: fatal memoryService failure does not affect temporary ch
       if (url.endsWith("/turn")) {
         return jsonResponse(200, {
           ok: true,
-          protocolVersion: 6,
+          protocolVersion: 7,
           turnId: "turn-fail-resilient",
           status: "completed",
         });
       }
       return jsonResponse(200, {
         ok: true,
-        protocolVersion: 6,
+        protocolVersion: 7,
         data: [],
         messages: [],
       });

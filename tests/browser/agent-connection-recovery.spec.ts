@@ -16,6 +16,8 @@ function projectSnapshot() {
     attachments: [],
   });
   project.name = "连接恢复项目";
+  project.chats![project.activeChatId!].mainAgent = "codex";
+  project.chats![project.activeChatId!].draft.conversationChannel = "codex";
   return {
     ...emptySnapshot(),
     activeProjectId: project.id,
@@ -36,6 +38,16 @@ async function nativeFixture(
       projects: snapshot.projects.map((project) => ({
         ...project,
         agentThreadId: "fixture-thread",
+        chats:
+          project.chats && project.activeChatId
+            ? {
+                ...project.chats,
+                [project.activeChatId]: {
+                  ...project.chats[project.activeChatId],
+                  agentThreadId: "fixture-thread",
+                },
+              }
+            : project.chats,
       })),
     };
   await page.addInitScript(

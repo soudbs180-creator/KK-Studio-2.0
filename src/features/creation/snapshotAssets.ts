@@ -50,7 +50,14 @@ async function transformSnapshot(
   await attachments(copy.homeDraft.attachments);
   for (const project of copy.projects) {
     await attachments(project.attachments);
-    await attachments(project.composerDraft.attachments);
+    if (project.composerDraft)
+      await attachments(project.composerDraft.attachments);
+    for (const chat of Object.values(project.chats ?? {})) {
+      await attachments(chat.draft.attachments ?? []);
+      for (const message of chat.messages)
+        if (Array.isArray(message.attachments))
+          await attachments(message.attachments);
+    }
     for (const task of project.tasks) await attachments(task.attachments);
     for (const item of project.items) {
       // An image preview is the archived image itself. Video/audio posters are separate assets.

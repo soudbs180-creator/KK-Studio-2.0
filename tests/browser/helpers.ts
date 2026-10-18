@@ -3,6 +3,9 @@ import {
   CREATION_STORAGE_KEY,
   createProject,
   emptySnapshot,
+  projectChatView,
+  serializeCreationSnapshot,
+  type ChatItem,
 } from "../../src/features/creation/model";
 import { BASE_CANVAS_ITEMS } from "../../src/domain/canvasItems";
 import { createProjectCanvas } from "../../src/domain/projectCanvas";
@@ -12,8 +15,59 @@ import {
   parseModelProvider,
 } from "../../src/domain/modelProvider";
 
-export async function openWorkspace(page: Page): Promise<void> {
-  await openSeededProject(page);
+export async function openWorkspace(
+  page: Page,
+  chats?: Record<string, ChatItem>,
+): Promise<void> {
+  await openSeededProject(page, chats);
+}
+
+/** Reveal a clipped canvas action by panning the view, leaving node data intact. */
+export async function panCanvasToRevealAction(
+  page: Page,
+  action: Locator,
+): Promise<void> {
+  const hit = () =>
+    action.evaluate((element) => {
+      const box = element.getBoundingClientRect();
+      const target = document.elementFromPoint(
+        box.x + box.width / 2,
+        box.y + box.height / 2,
+      );
+      return element === target || Boolean(target && element.contains(target));
+    });
+  if (await hit()) return;
+  const canvas = page.getByTestId("infinite-canvas");
+  const bounds = (await canvas.boundingBox())!;
+  const usableWidth = await canvas.evaluate(
+    (element) =>
+      (parseFloat(
+        (element as HTMLElement).style.getPropertyValue(
+          "--canvas-usable-width",
+        ),
+      ) *
+        element.getBoundingClientRect().width) /
+      (element as HTMLElement).offsetWidth,
+  );
+  const button = (await action.boundingBox())!;
+  const hud = (await page.locator(".canvas-hud").boundingBox())!;
+  const editorShell = page.locator(".canvas-composer-screen");
+  const editor = (await editorShell.count())
+    ? await editorShell.boundingBox()
+    : null;
+  const targetY = editor
+    ? (hud.y + hud.height + editor.y) / 2
+    : hud.y + hud.height + 40;
+  const start = { x: bounds.x + 4, y: bounds.y + bounds.height / 2 };
+  await page.mouse.move(start.x, start.y);
+  await page.mouse.down({ button: "middle" });
+  await page.mouse.move(
+    start.x + bounds.x + usableWidth / 2 - (button.x + button.width / 2),
+    start.y + targetY - (button.y + button.height / 2),
+    { steps: 8 },
+  );
+  await page.mouse.up({ button: "middle" });
+  await expect.poll(hit).toBe(true);
 }
 
 /** API scenarios explicitly choose their fixture; a fresh home stays on Codex. */
@@ -110,7 +164,10 @@ export async function selectSettingsSection(
 }
 
 /** Give Agent tests a real project containing the canonical demo graph. */
-export async function openSeededProject(page: Page): Promise<void> {
+export async function openSeededProject(
+  page: Page,
+  chats?: Record<string, ChatItem>,
+): Promise<void> {
   await page.goto("/");
   const providerRaw = await page.evaluate(
     (key) => localStorage.getItem(key),
@@ -123,6 +180,13 @@ export async function openSeededProject(page: Page): Promise<void> {
     kind: "image",
     attachments: [],
   });
+  base.chats![base.activeChatId!].mainAgent = "codex";
+  base.chats![base.activeChatId!].draft.conversationChannel = "codex";
+  base.chats![base.activeChatId!].messages = [];
+  if (chats) {
+    base.chats = chats;
+    base.activeChatId = Object.keys(chats)[0];
+  }
   const items = BASE_CANVAS_ITEMS.map((item) => ({
     ...item,
     model: item.kind === "image" ? model : item.model,
@@ -134,14 +198,15 @@ export async function openSeededProject(page: Page): Promise<void> {
     canvas: createProjectCanvas(items),
     messages: [],
   };
-  const snapshot = {
+  const snapshot = serializeCreationSnapshot({
     ...emptySnapshot(),
+    version: 3,
     // Home drafts may already have been saved to IndexedDB in this context.
     // The local recovery copy only wins when its revision is newer.
     revision: Date.now(),
     activeProjectId: project.id,
-    projects: [project],
-  };
+    projects: [projectChatView(project)],
+  });
   await page.evaluate(({ key, value }) => localStorage.setItem(key, value), {
     key: CREATION_STORAGE_KEY,
     value: JSON.stringify(snapshot),
