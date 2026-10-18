@@ -33,7 +33,9 @@ import {
   readProviderConnections,
 } from "./providerRegistry.ts";
 import {
+  assertSynchronousProviderSubmission,
   assertSubmissionConnection,
+  ProviderSubmissionError,
   selectSubmissionConnection,
 } from "./providerSubmission.ts";
 
@@ -212,6 +214,7 @@ export async function prepareImageTask(
       localStorage.getItem(MODEL_PROVIDER_STORAGE_KEY),
     ).profile;
     const connection = connectionFromModelProfile(profile);
+    assertSynchronousProviderSubmission(connection.baseUrl, input.model);
     if (
       !(await hasConnectionCredentials({
         ...profile,
@@ -253,14 +256,18 @@ export async function prepareImageTask(
       ),
     );
   }
+  const legacyConnections = readProviderConnections().filter(
+    (item) =>
+      item.baseUrl === project.providerBaseUrl &&
+      item.credentialRef === project.providerCredentialRef,
+  );
+  const previousConnectionId = project.tasks.at(-1)?.providerConnectionId;
+  if (!previousConnectionId && legacyConnections.length > 1)
+    throw new ProviderSubmissionError(
+      "原项目的连接身份存在多个账号绑定，请明确选择连接后重试；本次未提交。",
+    );
   const binding = {
-    id:
-      project.tasks.at(-1)?.providerConnectionId ??
-      readProviderConnections().find(
-        (item) =>
-          item.baseUrl === project.providerBaseUrl &&
-          item.credentialRef === project.providerCredentialRef,
-      )?.id,
+    id: previousConnectionId ?? legacyConnections[0]?.id,
     baseUrl: project.providerBaseUrl,
     credentialRef: project.providerCredentialRef,
     protocol: project.providerProtocol,

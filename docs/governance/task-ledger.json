@@ -1,5 +1,113 @@
 [
   {
+    "id": "TASK-AUDIT-REPAIR-20261017",
+    "title": "审计安全修复、启动恢复与当前治理收敛",
+    "goal": "先完整保全，再隔离修复五个P1与素材垃圾箱误导，验证可信启动并纠正当前任务/版本/规则事实。",
+    "scope": "用户授权审计A-D：保全与恢复、协议6未隔离聊天/临时入口和不支持的v3写入门控、空模型授权、精确账号凭据、12AI无持久receipt拒绝、素材垃圾箱、启动/本地防线与治理同步。完整新多聊天/统一接入/12AI持久恢复仍由原任务开放。",
+    "acceptance": [
+      "原主仓/refs/index/63条dirty及历史证据保全并可隔离恢复，原失败保留",
+      "五个P1与垃圾箱通过真实模块/调用链反例及修复后相关回归；未实现能力明确禁用，不伪报成功",
+      "当前官方启动产物source/版本/receipt/EXE hash/实际路径与进程、正常关闭重开有一致证据后才修日常入口",
+      "失效分配完整保留历史；文档、四功能卡、生成视图、规则与Delivery按真实阶段同步，保持原任务/成熟度/凭据和用户数据身份"
+    ],
+    "dependencies": [],
+    "owner": "root",
+    "ownerRole": "implementer",
+    "branch": "fix/TASK-AUDIT-REPAIR-20261017",
+    "worktree": "D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017",
+    "affectedModules": [
+      "src/App.tsx",
+      "src/features/agent",
+      "src/features/creation",
+      "src/integrations/generation",
+      "src/components/assets",
+      "scripts/windows",
+      "scripts/agent",
+      "scripts/git",
+      "docs/governance",
+      "docs/features",
+      "docs/engineering/BRANCH-POLICY.md",
+      "docs/engineering/LAUNCHER.md",
+      "docs/changes/2026-10-17-audit-repair",
+      "docs/changes/2026-10-15-unified-provider-access"
+    ],
+    "status": "DONE",
+    "displayStatus": "已完成",
+    "priority": "P1",
+    "priorityRationale": "当前有聊天/隐私/授权/凭据/付费受理阻断与失效日常入口；先保全和安全修复，不将未验收候选交付。",
+    "evidence": [
+      "docs/changes/2026-10-17-audit-repair/intent.md",
+      "docs/changes/2026-10-17-audit-repair/spec.md",
+      "docs/changes/2026-10-17-audit-repair/plan.md",
+      "docs/changes/2026-10-17-audit-repair/verification.md",
+      "docs/changes/2026-10-17-audit-repair/review.md",
+      "docs/changes/2026-10-15-unified-provider-access/verification.md",
+      "docs/changes/2026-10-15-kk-unified/verification.md"
+    ],
+    "verification": "有界本地A–D PASS：A core保全517368版本/56336959878B/6bundles/两个dirty恢复；原primary63/head/index/status/staged0最新56872dc7回执PASS。最终产品source 4699458de1c3437309b7cdc3f019454104c81fce tree a1905e2aa6e11a24b4c62d829dc82a8f0d566972；完整npmverify exit0（Node1832PASS14既有SKIP、Agent199PASS2SKIP、产品Edge823首试零失败/重试/flaky/skip、DESIGN41+8、development四步、lint/type/UI/format/build），精确增量独审PASS；FSR01–06旧阶段关闭。Native五源未变，Rust213PASS1硬件ignored+integration41/check/fmt适用。官方新EXEb6299445/inputa53dee81、隔离Native六检查与真实Desktop/primary两lnk关闭重开PASS，默认9项目raw/identity/shared memory保持，旧聊天数据仍READ_ONLY，不等于可编辑/完整迁移/protocol7；原任务继续开放。D当前文档/生成视图/规则/清单同步，原148对象与37功能成熟度/runtimeEvidence保持，无文件删除/移动。历史失败/中止/反例保留于本包，最终文档HEAD review/Delivery以提交后精确收据裁决；无Hosted/push/merge/付费生成/发布或用户验收。",
+    "verificationResult": "PASS",
+    "updated": "2026-10-17",
+    "lastVerified": "2026-10-17",
+    "nextAction": "保留被日常链接引用的任务worktree/EXE及所有恢复证据；root完成最终文档提交后的精确review/正式Delivery和runtime-input不变核对。其余64开放项按原任务继续，尤其旧聊天数据完整迁移/protocol7、统一接入/12AI持久恢复/素材垃圾箱、真实Provider/ComfyUI/GPU/VPS/Mobile/签名及用户验收；不得解除READ_ONLY或批量结案。",
+    "requirementRefs": [
+      "docs/changes/2026-10-17-audit-repair/intent.md",
+      "docs/architecture/adr/ADR-022-project-chats-and-v3-migration.md",
+      "ledger:TASK-KK-UNIFIED-20261015",
+      "ledger:TASK-CODEX-HOME-20261015",
+      "docs/changes/2026-10-15-unified-provider-access/intent.md"
+    ],
+    "featureIds": [
+      "FEAT-002",
+      "FEAT-009",
+      "FEAT-014",
+      "FEAT-032"
+    ],
+    "baseSha": "8c36a6b138205613ae1a7c27950b86792da8de1a",
+    "sourceUpdates": [
+      {
+        "recordedAt": "2026-10-17",
+        "type": "preserved-unaccepted-source-snapshot",
+        "sourceHead": "221560a322107092f66c142c7b911439087019f8",
+        "sourceMain": "8c36a6b138205613ae1a7c27950b86792da8de1a",
+        "originMain": "d95e4c446d3b4ae5419ce0f58c68057ebabc286a",
+        "dirtyEntries": 63,
+        "sourcePackage": "docs/changes/2026-10-15-kk-unified/verification.md",
+        "sourcePackageRole": "Preserved source and bounded safety-repair input only; full unified implementation and original acceptance remain with TASK-KK-UNIFIED-20261015; historical PASS is not inherited.",
+        "preservationReceipt": "D:/KK-Studio-recovery-20260921/audit-repair-20261017-1f00ccc3-1207-4cd3-90e1-bd0192d64d21/final-preservation-receipt.json",
+        "preservationResult": "core PASS; external changes and original failures retained; product NOT_VERIFIED"
+      },
+      {
+        "recordedAt": "2026-10-17",
+        "type": "frozen-source-verified-local-only",
+        "sourceHead": "d356791caf807e26dbfc0cde6f3774b06188b156",
+        "sourceTree": "090db406613948cd9f6daee53e9a1f8cf1cef9d3",
+        "verificationLog": ".tmp/audit-repair-20261017/verify-d356791c.log",
+        "verificationLogSha256": "fcd28a6f57d0feb373f5d4f5216ed1289422b6fb39e97bd22ba8deb7d9f300d4",
+        "sourceReviewReceipt": ".tmp/fresh-review-d356791c.json",
+        "sourceReviewSha256": "da660b32212e6482a2cdff03cf627f71bc44d7aee723b13993424aca8dc1877c",
+        "result": "Full local verify and exact-source review PASS; C Native/daily and final document HEAD pending, overall NOT_VERIFIED. Historical failures retained."
+      },
+      {
+        "recordedAt": "2026-10-17",
+        "type": "bounded-local-audit-completed",
+        "sourceHead": "4699458de1c3437309b7cdc3f019454104c81fce",
+        "sourceTree": "a1905e2aa6e11a24b4c62d829dc82a8f0d566972",
+        "verificationLog": ".tmp/audit-repair-20261017/verify-final-popup.log",
+        "verificationLogSha256": "c073d31a7125f8b7657ace7de321a3f0233db821b2081ef4827179453cf9836c",
+        "sourceReviewReceipt": ".tmp/fresh-review-4699458d.json",
+        "sourceReviewSha256": "2a3aebba61315f8f4359b4b9f1bab4a93bbdc32ea13c9138d5621d10bf0accd7",
+        "nativeBuildReceipt": ".tmp/audit-repair-20261017/native-build-popup.json",
+        "nativeExeSha256": "b62994457928bdec852fb89f8689bcf1050178b6673ad20f5ea5b7033996b99a",
+        "nativeInputSha256": "a53dee810301185ca1b282ac159c105198414efe29cd6a8c35705e0e538b0847",
+        "nativeIsolatedReceipt": "test-results/native-authority/721f8a6e-7df3-466e-a337-82770de52795/native-authority-results.json",
+        "dailyReceipt": "D:/KK-Studio-recovery-20260921/audit-repair-20261017-1f00ccc3-1207-4cd3-90e1-bd0192d64d21/daily-entry-5531d96f-b2e6-42ca-8808-fbe9f0c9a190/daily-native-4699458d-results.json",
+        "dailyReceiptSha256": "e83f2352beabc0bef8e88f0f79757891971dfde053b4e4e06452606053dda41d",
+        "defaultDataBoundary": "9 projects/raw snapshot/identity/shared memory unchanged; existing unsupported chat data remains READ_ONLY. Full migration/protocol7 stays open in original tasks.",
+        "result": "Bounded local A-D PASS only; all original failures retained. Final document HEAD review/Delivery follows commit; Hosted, paid Provider, release and user acceptance are not claimed."
+      }
+    ]
+  },
+  {
     "id": "TASK-KK-UNIFIED-20261015",
     "title": "KK Studio 统一修复与重构",
     "goal": "实施用户批准的统一方案，保留本地数据与身份，按 Desktop→Web 验收真实功能链和交互。",
@@ -34,13 +142,14 @@
     ],
     "verification": "候选Desktop/Web2.1.35，基线d95e4c44。项目生命周期/依赖guard/加载草稿80f6/格式保护6c639/硬件d3e/DESIGN e5e0770/本地包7e06aecb均有精确独审及定向证据，12AI适配器73PASS但生产接线待。Native06acdf9权威204Rust/1ignore及独审通过；设置f32/0ad、模型阶段A28c/f472精确修复独审通过，B/C仍开放。55a0新Native单实例/重开/清理通过，前台focus唯一失败，整轮PARTIAL；原完整verify Node1508/14skip、Agent199/2skip通过，Browser804PASS/7FAIL/0flaky，exit1和未执行尾段保留。8e17九文件修复及精确独审PASS，相关87/87首试、0retry/flaky/skip；原Figma坐标/0.1容差未改、五锚点误差0，静态/build和Node1508/14skip通过。完整verify/新Native未重跑，ADR022/023契约已接受并独审，正常多聊天和独立安装适配实施中。完整真实Provider/共仓库/账号/云恢复/Hosted未验。",
     "verificationResult": "PARTIAL",
-    "updated": "2026-10-16",
+    "updated": "2026-10-17",
     "displayStatus": "进行中",
-    "nextAction": "继续正常多聊天schema/Agent scope和独立本地包安装适配，按冻结源码补迁移/故障/调用方及实际产物证据。随后模型B/C、媒体、共仓库及账号/手动加密备份；全局UI按DESIGN逐页验收，保留前台焦点和最终完整verify/Hosted开放。",
+    "nextAction": "原统一scope继续开放；当前后续源码已进入local main@8c36a6b并有63条dirty，已保全为未验收221560a3。当前安全修复由TASK-AUDIT-REPAIR-20261017独占承接；原branch/worktree仅历史来源，不作为当前产品验收或并行写入分配。完整多聊天、12AI持久恢复、Provider/共仓库/账号/同步等仍按原scope另行实施和验收。",
     "lastVerified": "2026-10-16",
     "ownerRole": "implementation-integrator",
     "requirementRefs": [
-      "docs/changes/2026-10-15-kk-unified/spec.md"
+      "docs/changes/2026-10-15-kk-unified/spec.md",
+      "docs/changes/2026-10-15-unified-provider-access/intent.md"
     ],
     "featureIds": [
       "FEAT-002",
@@ -63,7 +172,19 @@
       "FEAT-032",
       "FEAT-037"
     ],
-    "priorityRationale": "用户明确批准的统一产品修复与重构。"
+    "priorityRationale": "用户明确批准的统一产品修复与重构。",
+    "sourceUpdates": [
+      {
+        "recordedAt": "2026-10-17",
+        "type": "audit-safe-repair-handoff",
+        "sourceMain": "8c36a6b138205613ae1a7c27950b86792da8de1a",
+        "sourceSnapshot": "221560a322107092f66c142c7b911439087019f8",
+        "currentRepairTask": "TASK-AUDIT-REPAIR-20261017",
+        "historicalBranch": "codex/TASK-KK-UNIFIED-20261015",
+        "historicalWorktree": "D:/kk-studio/.worktrees/TASK-KK-UNIFIED-20261015",
+        "verification": "Local main contains later source plus 63 dirty entries captured in an explicitly unaccepted snapshot; old worktree is historical and is not current acceptance evidence."
+      }
+    ]
   },
   {
     "id": "TASK-FIX-PUSH-GUARD-SPACES-001",
@@ -77,8 +198,8 @@
     ],
     "dependencies": [],
     "owner": "root",
-    "branch": "fix/TASK-FIX-PUSH-GUARD-SPACES-001-main-replay",
-    "worktree": "D:/kk-studio/.worktrees/TASK-FIX-PUSH-GUARD-SPACES-001-windows",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       ".githooks/pre-push",
       "scripts/install-git-guards.mjs",
@@ -87,7 +208,7 @@
       "tests/unit/gitPushPolicy.test.ts",
       "docs/changes/2026-10-10-push-guard-spaces"
     ],
-    "status": "REVIEW",
+    "status": "PARTIAL",
     "priority": "P1",
     "evidence": [
       "docs/changes/2026-10-10-push-guard-spaces/verification.md",
@@ -95,18 +216,34 @@
       "docs/changes/2026-10-12-p1-audit-closeout/verification.md",
       "docs/changes/2026-10-12-p1-audit-closeout/evidence/push-guard-pr53-readback.json"
     ],
-    "verification": "PR #53 merged head cc3fad9695827c7545f7b7675870a65347f7358e into merge 1f6cbd37091326a899fa600baba53bf6efd9cf16. Current merge commit check-runs: Windows/Ubuntu hook, verify and deploy-linux SUCCESS; delivery SKIPPED. Merged-SHA independent review receipt and raw Hosted artifact manifest are still absent.",
+    "verification": "2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。",
     "verificationResult": "NOT_VERIFIED",
-    "updated": "2026-10-12",
-    "displayStatus": "进行中",
-    "nextAction": "补 merged-SHA 独立 review receipt、原始 Hosted artifact manifest 及当前 SHA 的 delivery 结果；本任务验收补齐前保持 REVIEW，签名/安装/用户验收仍属独立发布边界。",
+    "updated": "2026-10-17",
+    "displayStatus": "未完成",
+    "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
     "lastVerified": "2026-10-12",
     "ownerRole": "repository-maintainer",
     "requirementRefs": [
       "ledger:TASK-FIX-PUSH-GUARD-SPACES-001"
     ],
     "featureIds": [],
-    "priorityRationale": "Windows 推送门禁的路径与长路径回归，影响主线保护。"
+    "priorityRationale": "Windows 推送门禁的路径与长路径回归，影响主线保护。",
+    "verificationHistory": [
+      {
+        "recordedAt": "2026-10-17",
+        "recordBaseSha": "221560a322107092f66c142c7b911439087019f8",
+        "branch": "fix/TASK-FIX-PUSH-GUARD-SPACES-001-main-replay",
+        "worktree": "D:/kk-studio/.worktrees/TASK-FIX-PUSH-GUARD-SPACES-001-windows",
+        "status": "REVIEW",
+        "displayStatus": "进行中",
+        "verificationResult": "NOT_VERIFIED",
+        "verification": "PR #53 merged head cc3fad9695827c7545f7b7675870a65347f7358e into merge 1f6cbd37091326a899fa600baba53bf6efd9cf16. Current merge commit check-runs: Windows/Ubuntu hook, verify and deploy-linux SUCCESS; delivery SKIPPED. Merged-SHA independent review receipt and raw Hosted artifact manifest are still absent.",
+        "nextAction": "补 merged-SHA 独立 review receipt、原始 Hosted artifact manifest 及当前 SHA 的 delivery 结果；本任务验收补齐前保持 REVIEW，签名/安装/用户验收仍属独立发布边界。",
+        "lastVerified": "2026-10-12",
+        "source": "docs/changes/2026-10-17-audit-repair/verification.md",
+        "reason": "登记的历史worktree目录已不存在"
+      }
+    ]
   },
   {
     "dependencies": [
@@ -1332,8 +1469,8 @@
       "T9"
     ],
     "owner": "root",
-    "branch": "codex/T10-PREP-vps-migration",
-    "worktree": "D:/kk-studio/.worktrees/canvas-compare",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "deploy",
       "tests/deploy",
@@ -1350,8 +1487,8 @@
       "docs/changes/2026-09-28-vps-migration/review.md",
       "deploy/MIGRATION.md"
     ],
-    "verification": "静态包整包 hash、指定离机包恢复与共享锁版本回滚已形成主线准备产物；PR #23 精确 head abe1e99 的 delivery、deploy-linux、verify 与独立复审均 PASS，并已合入 main@45fdc14，合并后 deploy-linux/verify 也 PASS。真实 VPS 离机备份/恢复演练未完成，部署配置、权限和资源限制需实际主机盘点。",
-    "updated": "2026-09-28",
+    "verification": "2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。",
+    "updated": "2026-10-17",
     "verificationResult": "PARTIAL",
     "requirementRefs": [
       "ledger:T10-PREP"
@@ -1359,10 +1496,26 @@
     "featureIds": [],
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
-    "displayStatus": "进行中",
-    "nextAction": "按验收条件完成实现、验证、独立审查和文档同步",
+    "displayStatus": "未完成",
+    "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
     "lastVerified": "2026-09-28",
-    "ownerRole": "repository-maintainer"
+    "ownerRole": "repository-maintainer",
+    "verificationHistory": [
+      {
+        "recordedAt": "2026-10-17",
+        "recordBaseSha": "221560a322107092f66c142c7b911439087019f8",
+        "branch": "codex/T10-PREP-vps-migration",
+        "worktree": "D:/kk-studio/.worktrees/canvas-compare",
+        "status": "PARTIAL",
+        "displayStatus": "进行中",
+        "verificationResult": "PARTIAL",
+        "verification": "静态包整包 hash、指定离机包恢复与共享锁版本回滚已形成主线准备产物；PR #23 精确 head abe1e99 的 delivery、deploy-linux、verify 与独立复审均 PASS，并已合入 main@45fdc14，合并后 deploy-linux/verify 也 PASS。真实 VPS 离机备份/恢复演练未完成，部署配置、权限和资源限制需实际主机盘点。",
+        "nextAction": "按验收条件完成实现、验证、独立审查和文档同步",
+        "lastVerified": "2026-09-28",
+        "source": "docs/changes/2026-10-17-audit-repair/verification.md",
+        "reason": "登记的历史worktree目录已不存在"
+      }
+    ]
   },
   {
     "id": "T10",
@@ -1588,8 +1741,8 @@
       "UI-001"
     ],
     "owner": "root",
-    "branch": "codex/TASK-UI-MAIN-001-alignment",
-    "worktree": "D:/kk-studio-next/.worktrees/TASK-UI-MAIN-001",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/components/canvas/TaskPanel.tsx",
       "src/components/AccountPopup.tsx",
@@ -1600,8 +1753,8 @@
       "docs/changes/2026-09-16-ui-system-audit/audit.md",
       "docs/changes/2026-09-20-ui-main-alignment/verification.md"
     ],
-    "verification": "交互和真实服务说明已在origin/main候选完成整合，定向浏览器回归通过；最终主线同步见TASK-UI-MAIN-001。",
-    "updated": "2026-09-20",
+    "verification": "2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。",
+    "updated": "2026-10-17",
     "verificationResult": "PARTIAL",
     "requirementRefs": [
       "ledger:UI-003"
@@ -1612,10 +1765,26 @@
     ],
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
-    "displayStatus": "进行中",
-    "nextAction": "按验收条件完成实现、验证、独立审查和文档同步",
+    "displayStatus": "未完成",
+    "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
     "lastVerified": "2026-09-20",
-    "ownerRole": "repository-maintainer"
+    "ownerRole": "repository-maintainer",
+    "verificationHistory": [
+      {
+        "recordedAt": "2026-10-17",
+        "recordBaseSha": "221560a322107092f66c142c7b911439087019f8",
+        "branch": "codex/TASK-UI-MAIN-001-alignment",
+        "worktree": "D:/kk-studio-next/.worktrees/TASK-UI-MAIN-001",
+        "status": "PARTIAL",
+        "displayStatus": "进行中",
+        "verificationResult": "PARTIAL",
+        "verification": "交互和真实服务说明已在origin/main候选完成整合，定向浏览器回归通过；最终主线同步见TASK-UI-MAIN-001。",
+        "nextAction": "按验收条件完成实现、验证、独立审查和文档同步",
+        "lastVerified": "2026-09-20",
+        "source": "docs/changes/2026-10-17-audit-repair/verification.md",
+        "reason": "登记的历史worktree目录已不存在"
+      }
+    ]
   },
   {
     "id": "UI-004",
@@ -1633,8 +1802,8 @@
       "TASK-DS-001"
     ],
     "owner": "root",
-    "branch": "codex/TASK-UI-MAIN-001-alignment",
-    "worktree": "D:/kk-studio-next/.worktrees/TASK-UI-MAIN-001",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "Landing",
       "Workspace",
@@ -1650,8 +1819,8 @@
       "docs/changes/2026-09-22-design-system/verification.md",
       "docs/changes/2026-09-22-design-system-pages/verification.md"
     ],
-    "verification": "已取得当前项目库、Skills、ComfyUI目录与设置分区的Web/新版Tauri证据，包含长分类/浅色图标、16色主题矩阵、偏好Skill重启。缺失页面Frame与用户最终视觉验收仍未完成。",
-    "updated": "2026-09-22",
+    "verification": "2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。",
+    "updated": "2026-10-17",
     "verificationResult": "PARTIAL",
     "requirementRefs": [
       "ledger:UI-004"
@@ -1664,10 +1833,26 @@
     ],
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
-    "displayStatus": "进行中",
-    "nextAction": "按验收条件完成实现、验证、独立审查和文档同步",
+    "displayStatus": "未完成",
+    "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
     "lastVerified": "2026-09-22",
-    "ownerRole": "repository-maintainer"
+    "ownerRole": "repository-maintainer",
+    "verificationHistory": [
+      {
+        "recordedAt": "2026-10-17",
+        "recordBaseSha": "221560a322107092f66c142c7b911439087019f8",
+        "branch": "codex/TASK-UI-MAIN-001-alignment",
+        "worktree": "D:/kk-studio-next/.worktrees/TASK-UI-MAIN-001",
+        "status": "PARTIAL",
+        "displayStatus": "进行中",
+        "verificationResult": "PARTIAL",
+        "verification": "已取得当前项目库、Skills、ComfyUI目录与设置分区的Web/新版Tauri证据，包含长分类/浅色图标、16色主题矩阵、偏好Skill重启。缺失页面Frame与用户最终视觉验收仍未完成。",
+        "nextAction": "按验收条件完成实现、验证、独立审查和文档同步",
+        "lastVerified": "2026-09-22",
+        "source": "docs/changes/2026-10-17-audit-repair/verification.md",
+        "reason": "登记的历史worktree目录已不存在"
+      }
+    ]
   },
   {
     "id": "PERF-001",
@@ -2271,8 +2456,8 @@
       "T6"
     ],
     "owner": "root",
-    "branch": "feat/TASK-CAP-001-integrated",
-    "worktree": "D:/kk-studio-next/.worktrees/TASK-CAP-001-INTEGRATED",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/features/skills",
       "src/features/mcp",
@@ -2289,9 +2474,9 @@
       "docs/changes/2026-09-21-local-capabilities/spec.md",
       "docs/changes/2026-09-21-local-capabilities/verification.md"
     ],
-    "verification": "最终 npm run verify 通过：187 Node、193 production browser、UI 127/0、lint/typecheck/format/build；MCP/Catalog 定向 9/9；client:check 与 client:build -- --no-bundle 通过并生成 release exe。MiniMax 仅完成安装包静态审计，桌面控制 RPC 不可用，1421 开发态、Tauri 窗口交互和真实 ComfyUI 提交待后续验收。",
+    "verification": "2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。",
     "verificationResult": "PARTIAL",
-    "updated": "2026-09-21",
+    "updated": "2026-10-17",
     "requirementRefs": [
       "ledger:TASK-CAP-001"
     ],
@@ -2304,10 +2489,26 @@
     ],
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
-    "displayStatus": "进行中",
-    "nextAction": "按验收条件完成实现、验证、独立审查和文档同步",
+    "displayStatus": "未完成",
+    "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
     "lastVerified": "2026-09-21",
-    "ownerRole": "repository-maintainer"
+    "ownerRole": "repository-maintainer",
+    "verificationHistory": [
+      {
+        "recordedAt": "2026-10-17",
+        "recordBaseSha": "221560a322107092f66c142c7b911439087019f8",
+        "branch": "feat/TASK-CAP-001-integrated",
+        "worktree": "D:/kk-studio-next/.worktrees/TASK-CAP-001-INTEGRATED",
+        "status": "PARTIAL",
+        "displayStatus": "进行中",
+        "verificationResult": "PARTIAL",
+        "verification": "最终 npm run verify 通过：187 Node、193 production browser、UI 127/0、lint/typecheck/format/build；MCP/Catalog 定向 9/9；client:check 与 client:build -- --no-bundle 通过并生成 release exe。MiniMax 仅完成安装包静态审计，桌面控制 RPC 不可用，1421 开发态、Tauri 窗口交互和真实 ComfyUI 提交待后续验收。",
+        "nextAction": "按验收条件完成实现、验证、独立审查和文档同步",
+        "lastVerified": "2026-09-21",
+        "source": "docs/changes/2026-10-17-audit-repair/verification.md",
+        "reason": "登记的历史worktree目录已不存在"
+      }
+    ]
   },
   {
     "id": "TASK-MINIMAX-001",
@@ -2325,8 +2526,8 @@
       "TASK-GOV-002"
     ],
     "owner": "root",
-    "branch": "fix/TASK-MINIMAX-001-mcp-registry-limit",
-    "worktree": "D:/kk-studio/.worktrees/TASK-MINIMAX-001-mcp-registry-limit",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/components/SkillsPage.tsx",
       "src/components/SkillEditor.tsx",
@@ -2343,9 +2544,9 @@
       "docs/evidence/minimax-deep-audit-2026-09-21/runtime.json",
       "docs/changes/2026-09-24-mcp-registry-limit/verification.md"
     ],
-    "verification": "2026-09-21 历史 MiniMax 只读审计和 KK Web Skill/Connector/MCP 验证仍按原证据解释；当前修复 MCP 配置超过 50 项会造成下次读取整表失败的问题。新工作树补齐构建前置后本地 371 Node、300 Web 浏览器回归及静态检查通过。完整生成、付费提交、桌面 Tauri release、真实第三方连接器安装、现代协议及独立复审仍未验证，保持 PARTIAL。旧分支 codex/feat/minimax-deep-replica-root 与 D:/kk-studio-next 仅为历史证据位置。",
+    "verification": "2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。",
     "verificationResult": "PARTIAL",
-    "updated": "2026-09-24",
+    "updated": "2026-10-17",
     "requirementRefs": [
       "ledger:TASK-MINIMAX-001"
     ],
@@ -2356,10 +2557,26 @@
     ],
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
-    "displayStatus": "进行中",
-    "nextAction": "按验收条件完成实现、验证、独立审查和文档同步",
+    "displayStatus": "未完成",
+    "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
     "lastVerified": "2026-09-24",
-    "ownerRole": "repository-maintainer"
+    "ownerRole": "repository-maintainer",
+    "verificationHistory": [
+      {
+        "recordedAt": "2026-10-17",
+        "recordBaseSha": "221560a322107092f66c142c7b911439087019f8",
+        "branch": "fix/TASK-MINIMAX-001-mcp-registry-limit",
+        "worktree": "D:/kk-studio/.worktrees/TASK-MINIMAX-001-mcp-registry-limit",
+        "status": "PARTIAL",
+        "displayStatus": "进行中",
+        "verificationResult": "PARTIAL",
+        "verification": "2026-09-21 历史 MiniMax 只读审计和 KK Web Skill/Connector/MCP 验证仍按原证据解释；当前修复 MCP 配置超过 50 项会造成下次读取整表失败的问题。新工作树补齐构建前置后本地 371 Node、300 Web 浏览器回归及静态检查通过。完整生成、付费提交、桌面 Tauri release、真实第三方连接器安装、现代协议及独立复审仍未验证，保持 PARTIAL。旧分支 codex/feat/minimax-deep-replica-root 与 D:/kk-studio-next 仅为历史证据位置。",
+        "nextAction": "按验收条件完成实现、验证、独立审查和文档同步",
+        "lastVerified": "2026-09-24",
+        "source": "docs/changes/2026-10-17-audit-repair/verification.md",
+        "reason": "登记的历史worktree目录已不存在"
+      }
+    ]
   },
   {
     "id": "TASK-MCP-PROTO-001",
@@ -2375,8 +2592,8 @@
       "TASK-CAP-001"
     ],
     "owner": "root",
-    "branch": "codex/TASK-AUDIT-20261003",
-    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/features/mcp/mcpClient.ts",
       "src/components/settings/McpSettings.tsx",
@@ -2395,9 +2612,9 @@
       "tests/unit/mcpClient.test.ts",
       "tests/browser/mcp-settings.spec.ts"
     ],
-    "verification": "本地 modern/legacy 协商、发现、列表/调用、错误分类、认证错误不回退、超时/取消、2 MB 响应、500 工具、32 页/重复游标、凭据边界已通过 25 项 MCP 单测和浏览器握手回归；真实第三方服务器及 Desktop 实机验收仍待外部环境。",
+    "verification": "2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。",
     "verificationResult": "PARTIAL",
-    "updated": "2026-10-03",
+    "updated": "2026-10-17",
     "requirementRefs": [
       "ledger:TASK-MCP-PROTO-001"
     ],
@@ -2406,10 +2623,26 @@
     ],
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
-    "displayStatus": "进行中",
-    "nextAction": "按验收条件完成实现、验证、独立审查和文档同步",
+    "displayStatus": "未完成",
+    "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
     "lastVerified": "2026-10-03",
-    "ownerRole": "repository-maintainer"
+    "ownerRole": "repository-maintainer",
+    "verificationHistory": [
+      {
+        "recordedAt": "2026-10-17",
+        "recordBaseSha": "221560a322107092f66c142c7b911439087019f8",
+        "branch": "codex/TASK-AUDIT-20261003",
+        "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003",
+        "status": "PARTIAL",
+        "displayStatus": "进行中",
+        "verificationResult": "PARTIAL",
+        "verification": "本地 modern/legacy 协商、发现、列表/调用、错误分类、认证错误不回退、超时/取消、2 MB 响应、500 工具、32 页/重复游标、凭据边界已通过 25 项 MCP 单测和浏览器握手回归；真实第三方服务器及 Desktop 实机验收仍待外部环境。",
+        "nextAction": "按验收条件完成实现、验证、独立审查和文档同步",
+        "lastVerified": "2026-10-03",
+        "source": "docs/changes/2026-10-17-audit-repair/verification.md",
+        "reason": "登记的历史worktree目录已不存在"
+      }
+    ]
   },
   {
     "id": "TASK-MCP-REGISTRY-001",
@@ -3163,8 +3396,8 @@
     ],
     "dependencies": [],
     "owner": "root",
-    "branch": "codex/TASK-AGENT-001-remaining-verification",
-    "worktree": "D:/kk-studio/.worktrees/remaining-verification",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/features/agent",
       "src/App.tsx",
@@ -3188,11 +3421,12 @@
       "docs/changes/2026-10-10-remaining-verification/verification.md",
       "docs/changes/2026-10-10-remaining-verification/review.md"
     ],
-    "verification": "当前工作树完整 npm run verify PASS：Node 911（903通过、8跳过）、Agent 172/174（2跳过）、生产浏览器455/455、Vite development插件PASS。真实 Codex/Provider、Desktop、Hosted和Mobile边界仍未完成，保持PARTIAL。",
+    "verification": "2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。",
     "verificationResult": "PARTIAL",
-    "updated": "2026-10-10",
+    "updated": "2026-10-17",
     "requirementRefs": [
-      "ledger:TASK-AGENT-001"
+      "ledger:TASK-AGENT-001",
+      "docs/changes/2026-10-15-unified-provider-access/intent.md"
     ],
     "featureIds": [
       "FEAT-002",
@@ -3203,10 +3437,26 @@
     ],
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
-    "displayStatus": "进行中",
-    "nextAction": "补独立审查并分别完成 Desktop、真实 Provider 和其他登录软件验收",
+    "displayStatus": "未完成",
+    "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
     "lastVerified": "2026-10-10",
-    "ownerRole": "repository-maintainer"
+    "ownerRole": "repository-maintainer",
+    "verificationHistory": [
+      {
+        "recordedAt": "2026-10-17",
+        "recordBaseSha": "221560a322107092f66c142c7b911439087019f8",
+        "branch": "codex/TASK-AGENT-001-remaining-verification",
+        "worktree": "D:/kk-studio/.worktrees/remaining-verification",
+        "status": "PARTIAL",
+        "displayStatus": "进行中",
+        "verificationResult": "PARTIAL",
+        "verification": "当前工作树完整 npm run verify PASS：Node 911（903通过、8跳过）、Agent 172/174（2跳过）、生产浏览器455/455、Vite development插件PASS。真实 Codex/Provider、Desktop、Hosted和Mobile边界仍未完成，保持PARTIAL。",
+        "nextAction": "补独立审查并分别完成 Desktop、真实 Provider 和其他登录软件验收",
+        "lastVerified": "2026-10-10",
+        "source": "docs/changes/2026-10-17-audit-repair/verification.md",
+        "reason": "登记的历史worktree目录已不存在"
+      }
+    ]
   },
   {
     "id": "TASK-AGENT-002",
@@ -3224,8 +3474,8 @@
       "TASK-AGENT-001"
     ],
     "owner": "root",
-    "branch": "fix/TASK-AGENT-002-desktop",
-    "worktree": "C:/Users/Administrator/.codex/worktrees/remaining-verification/KK-Studio-2.0",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src-tauri",
       "src/features/agent",
@@ -3239,9 +3489,9 @@
       "docs/changes/2026-09-22-agent-desktop/remaining.md",
       "docs/changes/2026-09-22-agent-desktop/review.md"
     ],
-    "verification": "Windows Agent 托管子项 PASS：356 Node/270 browser/78 Rust，真实Tauri8项与空会话7项、独立预检与干净npm ci/build通过。Proxy、其他软件/网页并发/非兼容协议及外部真实验收仍待完成；未commit/push。",
+    "verification": "2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。",
     "verificationResult": "PARTIAL",
-    "updated": "2026-09-22",
+    "updated": "2026-10-17",
     "requirementRefs": [
       "ledger:TASK-AGENT-002"
     ],
@@ -3250,10 +3500,26 @@
     ],
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
-    "displayStatus": "进行中",
-    "nextAction": "按验收条件完成实现、验证、独立审查和文档同步",
+    "displayStatus": "未完成",
+    "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
     "lastVerified": "2026-09-22",
-    "ownerRole": "repository-maintainer"
+    "ownerRole": "repository-maintainer",
+    "verificationHistory": [
+      {
+        "recordedAt": "2026-10-17",
+        "recordBaseSha": "221560a322107092f66c142c7b911439087019f8",
+        "branch": "fix/TASK-AGENT-002-desktop",
+        "worktree": "C:/Users/Administrator/.codex/worktrees/remaining-verification/KK-Studio-2.0",
+        "status": "PARTIAL",
+        "displayStatus": "进行中",
+        "verificationResult": "PARTIAL",
+        "verification": "Windows Agent 托管子项 PASS：356 Node/270 browser/78 Rust，真实Tauri8项与空会话7项、独立预检与干净npm ci/build通过。Proxy、其他软件/网页并发/非兼容协议及外部真实验收仍待完成；未commit/push。",
+        "nextAction": "按验收条件完成实现、验证、独立审查和文档同步",
+        "lastVerified": "2026-09-22",
+        "source": "docs/changes/2026-10-17-audit-repair/verification.md",
+        "reason": "登记的历史worktree目录已不存在"
+      }
+    ]
   },
   {
     "id": "TASK-UI-007",
@@ -4127,8 +4393,8 @@
       "BACKEND-PLATFORM"
     ],
     "owner": "root",
-    "branch": "feat/TASK-LOCAL-SERVICE-001-companion",
-    "worktree": "D:/kk-studio/.worktrees/platform-versioning",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/runtime",
       "src/features/creation",
@@ -4150,8 +4416,8 @@
       "docs/changes/2026-10-15-kk-unified/verification.md",
       "docs/changes/2026-10-15-kk-unified/review.md"
     ],
-    "verification": "本机 loopback 服务、HttpOnly 配对、项目/素材服务优先读写、旧 IndexedDB 只读迁移、备份恢复、连接/断线 UI 与 production smoke 已通过本地和真实临时服务验收；真实账号登录、安装/更新、Mobile 和 VPS 生产部署仍未完成，因此产品任务保持 PARTIAL。 2026-10-15统一分支补84c6→6c639未来主/备份格式与IO失败关闭；CF-01主旧版/备份新版覆写实际两RED修复，115相关PASS及精确独审Approved。e01caa99界面2/2首试保留草稿、不写旧数据、不另建IDB。Native与Node格式仍不兼容，统一本机权威实施中，不能直接共目录。",
-    "updated": "2026-10-15",
+    "verification": "2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。",
+    "updated": "2026-10-17",
     "verificationResult": "PARTIAL",
     "requirementRefs": [
       "ledger:TASK-LOCAL-SERVICE-001"
@@ -4161,10 +4427,26 @@
     ],
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
-    "displayStatus": "进行中",
-    "nextAction": "沿统一任务实现Native权威/目录身份/写入协调/显式授权和Web适配，再验证关窗口后台服务与双端共完整仓库。",
+    "displayStatus": "未完成",
+    "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
     "lastVerified": "2026-10-15",
-    "ownerRole": "repository-maintainer"
+    "ownerRole": "repository-maintainer",
+    "verificationHistory": [
+      {
+        "recordedAt": "2026-10-17",
+        "recordBaseSha": "221560a322107092f66c142c7b911439087019f8",
+        "branch": "feat/TASK-LOCAL-SERVICE-001-companion",
+        "worktree": "D:/kk-studio/.worktrees/platform-versioning",
+        "status": "PARTIAL",
+        "displayStatus": "进行中",
+        "verificationResult": "PARTIAL",
+        "verification": "本机 loopback 服务、HttpOnly 配对、项目/素材服务优先读写、旧 IndexedDB 只读迁移、备份恢复、连接/断线 UI 与 production smoke 已通过本地和真实临时服务验收；真实账号登录、安装/更新、Mobile 和 VPS 生产部署仍未完成，因此产品任务保持 PARTIAL。 2026-10-15统一分支补84c6→6c639未来主/备份格式与IO失败关闭；CF-01主旧版/备份新版覆写实际两RED修复，115相关PASS及精确独审Approved。e01caa99界面2/2首试保留草稿、不写旧数据、不另建IDB。Native与Node格式仍不兼容，统一本机权威实施中，不能直接共目录。",
+        "nextAction": "沿统一任务实现Native权威/目录身份/写入协调/显式授权和Web适配，再验证关窗口后台服务与双端共完整仓库。",
+        "lastVerified": "2026-10-15",
+        "source": "docs/changes/2026-10-17-audit-repair/verification.md",
+        "reason": "登记的历史worktree目录已不存在"
+      }
+    ]
   },
   {
     "id": "TASK-CLOSEOUT-2026-09-28",
@@ -4668,8 +4950,8 @@
       "TASK-PROV-002"
     ],
     "owner": "root",
-    "branch": "feat/TASK-PROV-003-provider-wiring-main",
-    "worktree": "D:/kk-studio/.worktrees/TASK-PROV-003-provider-wiring",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "vendor/canvas-agent/src/agent",
       "vendor/canvas-agent/src/index.ts",
@@ -4689,8 +4971,8 @@
       "docs/changes/2026-09-29-project-landing/verification.md",
       "docs/changes/2026-09-29-project-landing/audit.md"
     ],
-    "verification": "Codex Responses/TOML/catalog 指针和 CLI apply/check 已接入集成树；稳定 ID、非法 URL/目录穿越/参数不完整/幂等回归通过。真实 CODEX_HOME 消费对拍与 App UI 尚未完成。",
-    "updated": "2026-09-30",
+    "verification": "2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。",
+    "updated": "2026-10-17",
     "verificationResult": "PARTIAL",
     "requirementRefs": [
       "ledger:TASK-PROV-003"
@@ -4700,10 +4982,26 @@
     ],
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
-    "displayStatus": "进行中",
-    "nextAction": "按验收条件完成实现、验证、独立审查和文档同步",
+    "displayStatus": "未完成",
+    "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
     "lastVerified": "2026-09-30",
-    "ownerRole": "repository-maintainer"
+    "ownerRole": "repository-maintainer",
+    "verificationHistory": [
+      {
+        "recordedAt": "2026-10-17",
+        "recordBaseSha": "221560a322107092f66c142c7b911439087019f8",
+        "branch": "feat/TASK-PROV-003-provider-wiring-main",
+        "worktree": "D:/kk-studio/.worktrees/TASK-PROV-003-provider-wiring",
+        "status": "PARTIAL",
+        "displayStatus": "进行中",
+        "verificationResult": "PARTIAL",
+        "verification": "Codex Responses/TOML/catalog 指针和 CLI apply/check 已接入集成树；稳定 ID、非法 URL/目录穿越/参数不完整/幂等回归通过。真实 CODEX_HOME 消费对拍与 App UI 尚未完成。",
+        "nextAction": "按验收条件完成实现、验证、独立审查和文档同步",
+        "lastVerified": "2026-09-30",
+        "source": "docs/changes/2026-10-17-audit-repair/verification.md",
+        "reason": "登记的历史worktree目录已不存在"
+      }
+    ]
   },
   {
     "id": "TASK-PROV-004",
@@ -4722,8 +5020,8 @@
       "TASK-PROV-003"
     ],
     "owner": "root",
-    "branch": "feat/TASK-PROV-004-claude-landing",
-    "worktree": "D:/kk-studio/.worktrees/TASK-PROV-004-claude-landing",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "vendor/canvas-agent/src/agent",
       "vendor/canvas-agent/package.json",
@@ -4742,8 +5040,8 @@
       "docs/changes/2026-09-29-project-landing/verification.md",
       "docs/changes/2026-09-29-project-landing/audit.md"
     ],
-    "verification": "Claude settings.json 保守合并和 apply-claude 已进入集成树，当前 Agent 回归通过；旧真实目录 dry-run/apply/幂等证据保留。真实 Claude CLI 消费和设置入口未完成。",
-    "updated": "2026-09-30",
+    "verification": "2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。",
+    "updated": "2026-10-17",
     "verificationResult": "PARTIAL",
     "requirementRefs": [
       "ledger:TASK-PROV-004"
@@ -4753,10 +5051,26 @@
     ],
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
-    "displayStatus": "进行中",
-    "nextAction": "按验收条件完成实现、验证、独立审查和文档同步",
+    "displayStatus": "未完成",
+    "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
     "lastVerified": "2026-09-30",
-    "ownerRole": "repository-maintainer"
+    "ownerRole": "repository-maintainer",
+    "verificationHistory": [
+      {
+        "recordedAt": "2026-10-17",
+        "recordBaseSha": "221560a322107092f66c142c7b911439087019f8",
+        "branch": "feat/TASK-PROV-004-claude-landing",
+        "worktree": "D:/kk-studio/.worktrees/TASK-PROV-004-claude-landing",
+        "status": "PARTIAL",
+        "displayStatus": "进行中",
+        "verificationResult": "PARTIAL",
+        "verification": "Claude settings.json 保守合并和 apply-claude 已进入集成树，当前 Agent 回归通过；旧真实目录 dry-run/apply/幂等证据保留。真实 Claude CLI 消费和设置入口未完成。",
+        "nextAction": "按验收条件完成实现、验证、独立审查和文档同步",
+        "lastVerified": "2026-09-30",
+        "source": "docs/changes/2026-10-17-audit-repair/verification.md",
+        "reason": "登记的历史worktree目录已不存在"
+      }
+    ]
   },
   {
     "id": "TASK-AGENT-004",
@@ -4859,8 +5173,8 @@
     ],
     "dependencies": [],
     "owner": "root",
-    "branch": "feat/TASK-MEMORY-001-local-memory",
-    "worktree": "D:/kk-studio/.worktrees/TASK-MEMORY-001",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/features/memory",
       "src/features/agent/agentConnection.ts",
@@ -4879,8 +5193,8 @@
       "docs/changes/2026-09-29-project-landing/verification.md",
       "docs/changes/2026-09-29-project-landing/audit.md"
     ],
-    "verification": "当前 Web 记忆开关/存储/注入单测与 fresh Desktop 私有读写、重启保留及取消/确认删除通过；关闭时不创建记忆文件。真实 Codex 提炼/引用待联调。",
-    "updated": "2026-09-30",
+    "verification": "2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。",
+    "updated": "2026-10-17",
     "verificationResult": "PARTIAL",
     "requirementRefs": [
       "ledger:TASK-MEMORY-001"
@@ -4890,10 +5204,26 @@
     ],
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
-    "displayStatus": "进行中",
-    "nextAction": "按验收条件完成实现、验证、独立审查和文档同步",
+    "displayStatus": "未完成",
+    "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
     "lastVerified": "2026-09-30",
-    "ownerRole": "repository-maintainer"
+    "ownerRole": "repository-maintainer",
+    "verificationHistory": [
+      {
+        "recordedAt": "2026-10-17",
+        "recordBaseSha": "221560a322107092f66c142c7b911439087019f8",
+        "branch": "feat/TASK-MEMORY-001-local-memory",
+        "worktree": "D:/kk-studio/.worktrees/TASK-MEMORY-001",
+        "status": "PARTIAL",
+        "displayStatus": "进行中",
+        "verificationResult": "PARTIAL",
+        "verification": "当前 Web 记忆开关/存储/注入单测与 fresh Desktop 私有读写、重启保留及取消/确认删除通过；关闭时不创建记忆文件。真实 Codex 提炼/引用待联调。",
+        "nextAction": "按验收条件完成实现、验证、独立审查和文档同步",
+        "lastVerified": "2026-09-30",
+        "source": "docs/changes/2026-10-17-audit-repair/verification.md",
+        "reason": "登记的历史worktree目录已不存在"
+      }
+    ]
   },
   {
     "id": "TASK-MEMORY-002",
@@ -4901,8 +5231,8 @@
     "status": "PARTIAL",
     "verificationResult": "PARTIAL",
     "owner": "MainAgent",
-    "branch": "feat/TASK-MEMORY-001-local-memory",
-    "worktree": "D:/kk-studio/.worktrees/TASK-MEMORY-001",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/features/memory",
       "src/components/settings/MemorySettingsSection.tsx",
@@ -4929,13 +5259,13 @@
       "docs/changes/2026-09-29-project-landing/verification.md",
       "docs/changes/2026-09-29-project-landing/audit.md"
     ],
-    "updated": "2026-09-30",
+    "updated": "2026-10-17",
     "dependencies": [
       "TASK-MEMORY-001"
     ],
     "goal": "跨产品共享本地记忆：Codex/豆包/WorkBuddy 读写同一份 ~/.kk-memory/memory.json（本机默认共享），Web 授权目录降级 IndexedDB，旧文件一次性种子迁移；记忆仍不上云，换账号手动清空",
     "scope": "src/features/memory, src/components/settings/MemorySettingsSection.tsx, src-tauri main.rs/storage_paths.rs, docs/MEMORY-CONTRACT.md, AGENTS.md, docs/architecture/DATA-STORAGE.md, docs/features feat-020, docs/changes/2026-09-24-local-memory",
-    "verification": "默认共享契约保留；--data-dir 隔离记忆，启动不迁移，损坏旧文件/锁/备份失败保持原件；fresh Desktop 验证共享文件 hash 未变。豆包/WorkBuddy 与 Web 目录授权仍未联调。",
+    "verification": "2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。",
     "requirementRefs": [
       "ledger:TASK-MEMORY-002"
     ],
@@ -4944,10 +5274,26 @@
     ],
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
-    "displayStatus": "进行中",
-    "nextAction": "按验收条件完成实现、验证、独立审查和文档同步",
+    "displayStatus": "未完成",
+    "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
     "lastVerified": "2026-09-30",
-    "ownerRole": "repository-maintainer"
+    "ownerRole": "repository-maintainer",
+    "verificationHistory": [
+      {
+        "recordedAt": "2026-10-17",
+        "recordBaseSha": "221560a322107092f66c142c7b911439087019f8",
+        "branch": "feat/TASK-MEMORY-001-local-memory",
+        "worktree": "D:/kk-studio/.worktrees/TASK-MEMORY-001",
+        "status": "PARTIAL",
+        "displayStatus": "进行中",
+        "verificationResult": "PARTIAL",
+        "verification": "默认共享契约保留；--data-dir 隔离记忆，启动不迁移，损坏旧文件/锁/备份失败保持原件；fresh Desktop 验证共享文件 hash 未变。豆包/WorkBuddy 与 Web 目录授权仍未联调。",
+        "nextAction": "按验收条件完成实现、验证、独立审查和文档同步",
+        "lastVerified": "2026-09-30",
+        "source": "docs/changes/2026-10-17-audit-repair/verification.md",
+        "reason": "登记的历史worktree目录已不存在"
+      }
+    ]
   },
   {
     "id": "TASK-AGENT-007",
@@ -5504,8 +5850,8 @@
       "TASK-GOV-001"
     ],
     "owner": "root",
-    "branch": "codex/TASK-VERIFY-CONCURRENCY-002-closeout",
-    "worktree": "D:/kk-studio/.worktrees/TASK-VERIFY-CONCURRENCY-002",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "tests/browser",
       "playwright.config.ts"
@@ -5519,18 +5865,34 @@
       "docs/changes/2026-10-10-verify-concurrency-002-closeout/verification.md",
       "docs/changes/2026-10-10-verify-concurrency-002-closeout/review.md"
     ],
-    "verification": "当前 clean source 8090475958f1a0bdd1b4b36ada7f2aba1e4e6264、同一 production dist、固定 preview 1423/retries0 下，workers 1/2/4/8/12 均 447/447 PASS；历史 source105 的 9 个首轮 flaky 原件保留，当前未复现，资源压力仅支持假设。PR #46 已以 squash merge 2b6c0ba10e17b873d5a38d85b2d38fb8848149cc 合并，origin/main 与候选/落地 tree 已回读一致；合并后 run 37983272823 的 verify、deploy-linux、upload-artifact 成功，delivery 按 push 条件跳过。IRV-CONC-002 已关闭；历史根因仍 UNKNOWN，不能称根因修复。",
+    "verification": "2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。",
     "verificationResult": "PARTIAL",
-    "updated": "2026-10-10",
+    "updated": "2026-10-17",
     "requirementRefs": [
       "ledger:TASK-VERIFY-CONCURRENCY-002"
     ],
     "featureIds": [],
     "priorityRationale": "当前治理或验证阻断项",
-    "displayStatus": "进行中",
-    "nextAction": "保留source105的9个首轮flaky原件；当前固定1423、retries=0的并发矩阵仅证明未复现，不宣称根因已修复。若要关闭，补同一exact SHA的Hosted与独立复审；否则保持PARTIAL。",
+    "displayStatus": "未完成",
+    "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
     "lastVerified": "2026-10-09",
-    "ownerRole": "repository-maintainer"
+    "ownerRole": "repository-maintainer",
+    "verificationHistory": [
+      {
+        "recordedAt": "2026-10-17",
+        "recordBaseSha": "221560a322107092f66c142c7b911439087019f8",
+        "branch": "codex/TASK-VERIFY-CONCURRENCY-002-closeout",
+        "worktree": "D:/kk-studio/.worktrees/TASK-VERIFY-CONCURRENCY-002",
+        "status": "PARTIAL",
+        "displayStatus": "进行中",
+        "verificationResult": "PARTIAL",
+        "verification": "当前 clean source 8090475958f1a0bdd1b4b36ada7f2aba1e4e6264、同一 production dist、固定 preview 1423/retries0 下，workers 1/2/4/8/12 均 447/447 PASS；历史 source105 的 9 个首轮 flaky 原件保留，当前未复现，资源压力仅支持假设。PR #46 已以 squash merge 2b6c0ba10e17b873d5a38d85b2d38fb8848149cc 合并，origin/main 与候选/落地 tree 已回读一致；合并后 run 37983272823 的 verify、deploy-linux、upload-artifact 成功，delivery 按 push 条件跳过。IRV-CONC-002 已关闭；历史根因仍 UNKNOWN，不能称根因修复。",
+        "nextAction": "保留source105的9个首轮flaky原件；当前固定1423、retries=0的并发矩阵仅证明未复现，不宣称根因已修复。若要关闭，补同一exact SHA的Hosted与独立复审；否则保持PARTIAL。",
+        "lastVerified": "2026-10-09",
+        "source": "docs/changes/2026-10-17-audit-repair/verification.md",
+        "reason": "登记的历史worktree目录已不存在"
+      }
+    ]
   },
   {
     "id": "TASK-VERIFY-ORIGIN-003",
@@ -5757,9 +6119,10 @@
     ],
     "verification": "本轮复核确认仍按规则保留为高优先级 TODO，尚未实现或验收；不得以 Desktop 本地 API Key 直连证据替代产品化接入。",
     "verificationResult": "NOT_VERIFIED",
-    "updated": "2026-10-12",
+    "updated": "2026-10-17",
     "requirementRefs": [
-      "ledger:TASK-PROV-BYOK-001"
+      "ledger:TASK-PROV-BYOK-001",
+      "docs/changes/2026-10-15-unified-provider-access/intent.md"
     ],
     "featureIds": [],
     "priorityRationale": "开放任务默认待治理排序",
@@ -5818,8 +6181,8 @@
       "TASK-LAUNCH-001"
     ],
     "owner": "root",
-    "branch": "fix/TASK-AGENT-010-provider-entry",
-    "worktree": "D:/kk-studio/.worktrees/TASK-AGENT-010-provider-entry",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "scripts/check-version-consistency.mjs",
       "package.json",
@@ -5841,8 +6204,8 @@
       "docs/changes/2026-10-10-version-coherence/review.md",
       "docs/changes/2026-10-12-p1-audit-closeout/verification.md"
     ],
-    "status": "REVIEW",
-    "verification": "本地版本门禁、嵌套 lock 漂移测试和启动器 fail-closed 证据通过；远端 CI、发布工件和第二环境安装回读待合并候选 SHA 实际验证。",
+    "status": "PARTIAL",
+    "verification": "2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。",
     "verificationResult": "PARTIAL",
     "requirementRefs": [
       "ledger:TASK-AGENT-010"
@@ -5850,11 +6213,27 @@
     "featureIds": [],
     "priority": "P1",
     "priorityRationale": "跨环境启动旧版本会让已合入功能对其他使用者不可见",
-    "displayStatus": "进行中",
-    "nextAction": "先收窄并同步候选到当前 origin/main，再取得 Hosted CI、不可变发布 receipt 和第二环境版本/commit/hash/进程路径回读；当前候选范围过宽，保持 REVIEW。",
+    "displayStatus": "未完成",
+    "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
     "lastVerified": "2026-10-12",
-    "updated": "2026-10-12",
-    "ownerRole": "repository-maintainer"
+    "updated": "2026-10-17",
+    "ownerRole": "repository-maintainer",
+    "verificationHistory": [
+      {
+        "recordedAt": "2026-10-17",
+        "recordBaseSha": "221560a322107092f66c142c7b911439087019f8",
+        "branch": "fix/TASK-AGENT-010-provider-entry",
+        "worktree": "D:/kk-studio/.worktrees/TASK-AGENT-010-provider-entry",
+        "status": "REVIEW",
+        "displayStatus": "进行中",
+        "verificationResult": "PARTIAL",
+        "verification": "本地版本门禁、嵌套 lock 漂移测试和启动器 fail-closed 证据通过；远端 CI、发布工件和第二环境安装回读待合并候选 SHA 实际验证。",
+        "nextAction": "先收窄并同步候选到当前 origin/main，再取得 Hosted CI、不可变发布 receipt 和第二环境版本/commit/hash/进程路径回读；当前候选范围过宽，保持 REVIEW。",
+        "lastVerified": "2026-10-12",
+        "source": "docs/changes/2026-10-17-audit-repair/verification.md",
+        "reason": "登记的历史worktree目录已不存在"
+      }
+    ]
   },
   {
     "dependencies": [],
@@ -5972,9 +6351,9 @@
       "TASK-GOV-003"
     ],
     "owner": "root",
-    "branch": "codex/ui-redesign-20261011",
-    "worktree": "D:/kk-studio/KK-Studio-2.0",
-    "status": "REVIEW",
+    "branch": "unallocated",
+    "worktree": "unallocated",
+    "status": "PARTIAL",
     "priority": "P1",
     "affectedModules": [
       "scripts/governance/doc-index.mjs",
@@ -5988,18 +6367,34 @@
       "docs/changes/2026-10-13-review-remediation/verification.md",
       "docs/changes/2026-10-13-review-remediation/review.md"
     ],
-    "verification": "定向 43/43 通过；snapshot 4/0、governance 124/0、lint/typecheck/npm test/test:agent/ui:check/format/test:ui 构建通过。npm run verify 因 5 个未触及 UI 测试失败退出 1；test:development 无 receipt。最终 head 62d067fd，tree 8b22bede。",
+    "verification": "2026-10-17分配核对：登记路径现为main，而历史审查branch为codex/ui-redesign-20261011，未见本轮活动审查分配；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。",
     "verificationResult": "PARTIAL",
-    "updated": "2026-10-13",
-    "displayStatus": "进行中",
-    "nextAction": "单独修复并验证 5 个 UI 失败项；补齐开发态 receipt 后再评估是否可标记 DONE。",
+    "updated": "2026-10-17",
+    "displayStatus": "未完成",
+    "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
     "lastVerified": "2026-10-13",
     "ownerRole": "repository-maintainer",
     "requirementRefs": [
       "ledger:TASK-REVIEW-REMEDIATION-001"
     ],
     "featureIds": [],
-    "priorityRationale": "治理门禁 fail-open 会让错误 current 入口进入合并候选。"
+    "priorityRationale": "治理门禁 fail-open 会让错误 current 入口进入合并候选。",
+    "verificationHistory": [
+      {
+        "recordedAt": "2026-10-17",
+        "recordBaseSha": "221560a322107092f66c142c7b911439087019f8",
+        "branch": "codex/ui-redesign-20261011",
+        "worktree": "D:/kk-studio/KK-Studio-2.0",
+        "status": "REVIEW",
+        "displayStatus": "进行中",
+        "verificationResult": "PARTIAL",
+        "verification": "定向 43/43 通过；snapshot 4/0、governance 124/0、lint/typecheck/npm test/test:agent/ui:check/format/test:ui 构建通过。npm run verify 因 5 个未触及 UI 测试失败退出 1；test:development 无 receipt。最终 head 62d067fd，tree 8b22bede。",
+        "nextAction": "单独修复并验证 5 个 UI 失败项；补齐开发态 receipt 后再评估是否可标记 DONE。",
+        "lastVerified": "2026-10-13",
+        "source": "docs/changes/2026-10-17-audit-repair/verification.md",
+        "reason": "登记路径现为main，而历史审查branch为codex/ui-redesign-20261011，未见本轮活动审查分配"
+      }
+    ]
   },
   {
     "id": "TASK-UI-CLASSIFY-20261013",
@@ -6013,8 +6408,8 @@
     ],
     "dependencies": [],
     "owner": "root",
-    "branch": "fix/TASK-UI-CLASSIFY-20261013-capability",
-    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/capability-ui-closeout",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/components/settings",
       "src/components/SkillsPage.tsx",
@@ -6022,17 +6417,17 @@
       "src/features/partners",
       "tests/browser"
     ],
-    "status": "REVIEW",
+    "status": "PARTIAL",
     "priority": "P1",
     "evidence": [
       "docs/changes/2026-10-13-capability-ui/verification.md",
       "docs/changes/2026-10-13-capability-ui/review.md"
     ],
-    "verification": "Model popup batch/data removed; targeted model and generation regressions 40/40 PASS; Canonical Web development 7 checks, production preview 7 checks and Desktop 2.1.14 14 checks rebuilt and PASS; Node 1021 pass/14 skipped, Agent 172 pass/2 skipped; browser 492/495, 20 capability cases PASS, 3 pre-existing UI failures remain; independent focused review findings closed",
+    "verification": "2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。",
     "verificationResult": "PARTIAL",
-    "updated": "2026-10-13",
-    "displayStatus": "进行中",
-    "nextAction": "另行处理三个既有 UI 失败并取得用户验收；保留自动分派/OAuth 未接入边界",
+    "updated": "2026-10-17",
+    "displayStatus": "未完成",
+    "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
     "ownerRole": "repository-maintainer",
     "requirementRefs": [
       "ledger:TASK-UI-CLASSIFY-20261013"
@@ -6042,7 +6437,23 @@
       "FEAT-030"
     ],
     "priorityRationale": "多次修改未落到客户端的分类与交互回归",
-    "lastVerified": "2026-10-13"
+    "lastVerified": "2026-10-13",
+    "verificationHistory": [
+      {
+        "recordedAt": "2026-10-17",
+        "recordBaseSha": "221560a322107092f66c142c7b911439087019f8",
+        "branch": "fix/TASK-UI-CLASSIFY-20261013-capability",
+        "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/capability-ui-closeout",
+        "status": "REVIEW",
+        "displayStatus": "进行中",
+        "verificationResult": "PARTIAL",
+        "verification": "Model popup batch/data removed; targeted model and generation regressions 40/40 PASS; Canonical Web development 7 checks, production preview 7 checks and Desktop 2.1.14 14 checks rebuilt and PASS; Node 1021 pass/14 skipped, Agent 172 pass/2 skipped; browser 492/495, 20 capability cases PASS, 3 pre-existing UI failures remain; independent focused review findings closed",
+        "nextAction": "另行处理三个既有 UI 失败并取得用户验收；保留自动分派/OAuth 未接入边界",
+        "lastVerified": "2026-10-13",
+        "source": "docs/changes/2026-10-17-audit-repair/verification.md",
+        "reason": "登记的历史worktree目录已不存在"
+      }
+    ]
   },
   {
     "id": "TASK-AGENT-RECOVERY-20261013",
@@ -6061,8 +6472,8 @@
     ],
     "dependencies": [],
     "owner": "root",
-    "branch": "fix/TASK-AGENT-RECOVERY-20261013",
-    "worktree": "D:/kk-studio/.worktrees/TASK-AGENT-RECOVERY-20261013",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/features/agent",
       "src/features/creation",
@@ -6103,11 +6514,27 @@
       "FEAT-022"
     ],
     "priorityRationale": "修复正常重开/会话恢复自锁与凭据保存误报，保护用户配置和已有会话。",
-    "updated": "2026-10-13",
-    "verification": "2.1.16历史完整门禁/38+6原生证据保留；本轮日常原profile正常close0/reopen自动sameThread/project/API metadata和主动disconnect→close0/reopen暂停通过。真实API当前ref基线missing，实钥保留NOT VERIFIED。实际聊天健康状态染危险色与按钮不一致已复现，2.1.17修复/完整门禁/日常复验进行中。",
-    "displayStatus": "进行中",
-    "nextAction": "完成聊天与凭据状态一致性修复，2.1.17完整门禁和官方日常APP复验，恢复初始连接偏好。",
-    "verificationResult": "PARTIAL"
+    "updated": "2026-10-17",
+    "verification": "2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。",
+    "displayStatus": "未完成",
+    "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
+    "verificationResult": "PARTIAL",
+    "verificationHistory": [
+      {
+        "recordedAt": "2026-10-17",
+        "recordBaseSha": "221560a322107092f66c142c7b911439087019f8",
+        "branch": "fix/TASK-AGENT-RECOVERY-20261013",
+        "worktree": "D:/kk-studio/.worktrees/TASK-AGENT-RECOVERY-20261013",
+        "status": "PARTIAL",
+        "displayStatus": "进行中",
+        "verificationResult": "PARTIAL",
+        "verification": "2.1.16历史完整门禁/38+6原生证据保留；本轮日常原profile正常close0/reopen自动sameThread/project/API metadata和主动disconnect→close0/reopen暂停通过。真实API当前ref基线missing，实钥保留NOT VERIFIED。实际聊天健康状态染危险色与按钮不一致已复现，2.1.17修复/完整门禁/日常复验进行中。",
+        "nextAction": "完成聊天与凭据状态一致性修复，2.1.17完整门禁和官方日常APP复验，恢复初始连接偏好。",
+        "lastVerified": "2026-10-13",
+        "source": "docs/changes/2026-10-17-audit-repair/verification.md",
+        "reason": "登记的历史worktree目录已不存在"
+      }
+    ]
   },
   {
     "id": "TASK-UI-CONSOLIDATE-20261014",
@@ -6125,8 +6552,8 @@
     "dependencies": [],
     "owner": "root",
     "ownerRole": "repository-maintainer",
-    "branch": "codex/TASK-UI-BASELINE-20261014",
-    "worktree": "D:/kk-studio/.worktrees/branch-consolidation-20261011",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/styles",
       "src/components",
@@ -6168,12 +6595,28 @@
     "notes": "已保存2.1.17冻结、2.1.18中间候选与最新2.1.20源f2b0466的恢复输入；当前Desktop/Web2.1.21产品7a463742完成本地UI验证。107树/39一致dirty快照，原index未变；CLI桥4270生产白名单保留用户Node/npm环境。",
     "openQuestions": "产品歧义均已确认；未接协议、Native Mobile、真实CLI/Provider、日常用户资料、安装器/Hosted及用户视觉仍分别开放。",
     "lastVerified": "2026-10-14",
-    "updated": "2026-10-14",
+    "updated": "2026-10-17",
     "priorityRationale": "解决 UI 风格混杂、版本散落和功能入口冲突，同时保留资料与并行成果。",
-    "verification": "7a463742 clean完整verify出口0：Node1142pass/14skip、Agent172pass/2skip、UI236/0、production545首试通过/0flaky/0skip、development5PASS/父目录403。Rust131/131与fmt同源，官方Agent构建和真实Tauri9项PASS、原件/视频坐标/重载/层级/随包桥绝对路径均核对，0e及7a独立source review CLEAR。主入口gzip+9625B<16384；健康50与Windows2项advisory保持，旧失败保留。产物及最终doc-head由工程外当前收据绑定。",
-    "displayStatus": "进行中",
-    "nextAction": "从已验证2.1.21继续未接协议与原生Mobile等开放范围；单独验收真实CLI/Provider、日常资料、用户视觉、安装器和Hosted，保留在途分支与旧flaky原状态。",
-    "verificationResult": "PARTIAL"
+    "verification": "2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。",
+    "displayStatus": "未完成",
+    "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
+    "verificationResult": "PARTIAL",
+    "verificationHistory": [
+      {
+        "recordedAt": "2026-10-17",
+        "recordBaseSha": "221560a322107092f66c142c7b911439087019f8",
+        "branch": "codex/TASK-UI-BASELINE-20261014",
+        "worktree": "D:/kk-studio/.worktrees/branch-consolidation-20261011",
+        "status": "PARTIAL",
+        "displayStatus": "进行中",
+        "verificationResult": "PARTIAL",
+        "verification": "7a463742 clean完整verify出口0：Node1142pass/14skip、Agent172pass/2skip、UI236/0、production545首试通过/0flaky/0skip、development5PASS/父目录403。Rust131/131与fmt同源，官方Agent构建和真实Tauri9项PASS、原件/视频坐标/重载/层级/随包桥绝对路径均核对，0e及7a独立source review CLEAR。主入口gzip+9625B<16384；健康50与Windows2项advisory保持，旧失败保留。产物及最终doc-head由工程外当前收据绑定。",
+        "nextAction": "从已验证2.1.21继续未接协议与原生Mobile等开放范围；单独验收真实CLI/Provider、日常资料、用户视觉、安装器和Hosted，保留在途分支与旧flaky原状态。",
+        "lastVerified": "2026-10-14",
+        "source": "docs/changes/2026-10-17-audit-repair/verification.md",
+        "reason": "登记的历史worktree目录已不存在"
+      }
+    ]
   },
   {
     "id": "TASK-GOV-005",
@@ -6187,8 +6630,8 @@
     ],
     "dependencies": [],
     "owner": "root",
-    "branch": "codex/TASK-GOV-005-publish-main-20261012",
-    "worktree": "D:/kk-studio/.worktrees/pr55-delivery-repair",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "scripts/governance/delivery.mjs",
       "scripts/check-delivery.mjs",
@@ -6203,24 +6646,40 @@
       "tests/browser/unified-image-command.spec.ts",
       "docs/changes/2026-10-12-pr55-historical-integration"
     ],
-    "status": "REVIEW",
+    "status": "PARTIAL",
     "priority": "P1",
     "evidence": [
       "docs/changes/2026-10-12-pr55-historical-integration/verification.md",
       "docs/changes/2026-10-12-pr55-historical-integration/review.md"
     ],
-    "verification": "Hosted 38271663391 at 81226e02 passed desktopAgentRuntime/unit/Agent and delivery; verify stopped at branch-audit Prettier. The 2026-10-13 repair diff passed full local npm run verify (475 browser tests). Final pushed-head independent review and Hosted verify/delivery remain pending; no merge/release claim.",
+    "verification": "2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。",
     "verificationResult": "NOT_VERIFIED",
-    "updated": "2026-10-13",
-    "displayStatus": "进行中",
-    "nextAction": "完成独立 exact-SHA review，fast-forward update PR #55 branch，回读 Hosted verify/delivery；不要直接推送 main。",
+    "updated": "2026-10-17",
+    "displayStatus": "未完成",
+    "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
     "lastVerified": "2026-10-13",
     "ownerRole": "repository-maintainer",
     "requirementRefs": [
       "ledger:TASK-GOV-005"
     ],
     "featureIds": [],
-    "priorityRationale": "一次性历史快照与现行一任务一PR门禁冲突，且 Windows desktopRelease 门禁存在真实路径误判。"
+    "priorityRationale": "一次性历史快照与现行一任务一PR门禁冲突，且 Windows desktopRelease 门禁存在真实路径误判。",
+    "verificationHistory": [
+      {
+        "recordedAt": "2026-10-17",
+        "recordBaseSha": "221560a322107092f66c142c7b911439087019f8",
+        "branch": "codex/TASK-GOV-005-publish-main-20261012",
+        "worktree": "D:/kk-studio/.worktrees/pr55-delivery-repair",
+        "status": "REVIEW",
+        "displayStatus": "进行中",
+        "verificationResult": "NOT_VERIFIED",
+        "verification": "Hosted 38271663391 at 81226e02 passed desktopAgentRuntime/unit/Agent and delivery; verify stopped at branch-audit Prettier. The 2026-10-13 repair diff passed full local npm run verify (475 browser tests). Final pushed-head independent review and Hosted verify/delivery remain pending; no merge/release claim.",
+        "nextAction": "完成独立 exact-SHA review，fast-forward update PR #55 branch，回读 Hosted verify/delivery；不要直接推送 main。",
+        "lastVerified": "2026-10-13",
+        "source": "docs/changes/2026-10-17-audit-repair/verification.md",
+        "reason": "登记的历史worktree目录已不存在"
+      }
+    ]
   },
   {
     "id": "TASK-ENG-001",
@@ -6237,8 +6696,8 @@
     ],
     "dependencies": [],
     "owner": "root",
-    "branch": "feat/TASK-ENG-001-code-health",
-    "worktree": "D:/kk-studio/.worktrees/TASK-ENG-001-code-health",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "scripts/check-code-health.mjs",
       "scripts/check-windows-footguns.mjs",
@@ -6260,25 +6719,41 @@
       "tests/unit/codeHealthPatternAllowance.test.ts",
       "docs/changes/2026-10-12-TASK-ENG-001-code-health"
     ],
-    "status": "REVIEW",
+    "status": "PARTIAL",
     "priority": "P1",
     "evidence": [
       "docs/changes/2026-10-12-TASK-ENG-001-code-health/verification.md",
       "docs/changes/2026-10-12-TASK-ENG-001-code-health/review.md"
     ],
-    "verification": "原始 base 1f6cbd37 与候选 9c849aa 的验证保留为历史。最终复审五项阻断修复工作区：13 项定向回归、lint/typecheck/format/policy sync 通过；1019 项 Node 测试为 1005 pass/14 skipped/0 fail。新提交仍须精确 SHA 的 delivery、独立复审和 Hosted CI 后才能合并。",
+    "verification": "2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。",
     "verificationResult": "NOT_VERIFIED",
-    "updated": "2026-10-12",
+    "updated": "2026-10-17",
     "notes": "PR #56 https://github.com/soudbs180-creator/KK-Studio-2.0/pull/56（未合并）。当前主线承接覆盖全部 workflow action SHA 固定，并在同分支补齐 CODING-STANDARDS.md 两项门禁映射；旧 base 不含相关文件的说明保留为历史。9c849aa 的 Hosted CI 已通过，但最终独立复审发现五项验收阻断；修复在 D:/kk-studio/post-pr55-main-20261013 隔离副本继续，旧 worktree 保留。后续：① advisory→blocking 翻转时机由维护者在存量 burn-down 后决定，翻转前需用真实历史 diff 校准相似度阈值 0.6；② Hermes 功能层另行评估，不在本任务实现。用户已授权合并，但新 HEAD 必须重新通过独立复审与 Hosted CI。",
-    "displayStatus": "进行中",
-    "nextAction": "基于最新 origin/main 完成冲突承接、独立 exact-SHA review 和 Hosted verify；未完成前保持 REVIEW。",
+    "displayStatus": "未完成",
+    "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
     "lastVerified": "2026-10-13",
     "ownerRole": "repository-maintainer",
     "requirementRefs": [
       "ledger:TASK-ENG-001"
     ],
     "featureIds": [],
-    "priorityRationale": "工程治理增量门禁；不改变产品运行时行为。"
+    "priorityRationale": "工程治理增量门禁；不改变产品运行时行为。",
+    "verificationHistory": [
+      {
+        "recordedAt": "2026-10-17",
+        "recordBaseSha": "221560a322107092f66c142c7b911439087019f8",
+        "branch": "feat/TASK-ENG-001-code-health",
+        "worktree": "D:/kk-studio/.worktrees/TASK-ENG-001-code-health",
+        "status": "REVIEW",
+        "displayStatus": "进行中",
+        "verificationResult": "NOT_VERIFIED",
+        "verification": "原始 base 1f6cbd37 与候选 9c849aa 的验证保留为历史。最终复审五项阻断修复工作区：13 项定向回归、lint/typecheck/format/policy sync 通过；1019 项 Node 测试为 1005 pass/14 skipped/0 fail。新提交仍须精确 SHA 的 delivery、独立复审和 Hosted CI 后才能合并。",
+        "nextAction": "基于最新 origin/main 完成冲突承接、独立 exact-SHA review 和 Hosted verify；未完成前保持 REVIEW。",
+        "lastVerified": "2026-10-13",
+        "source": "docs/changes/2026-10-17-audit-repair/verification.md",
+        "reason": "登记的历史worktree目录已不存在"
+      }
+    ]
   },
   {
     "id": "TASK-CCSWITCH-LEARN-20261014",
@@ -6349,8 +6824,8 @@
     ],
     "dependencies": [],
     "owner": "root",
-    "branch": "fix/TASK-CANVAS-SYNC-20261014-agent",
-    "worktree": "D:/kk-studio/.worktrees/TASK-CANVAS-SYNC-20261014",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/components/Canvas.tsx",
       "src/components/canvas",
@@ -6367,9 +6842,9 @@
       "docs/changes/2026-10-14-agent-canvas-sync/evidence/primary-checks.json",
       "docs/changes/2026-10-14-agent-canvas-sync/evidence/final-production-browser-results.json"
     ],
-    "verification": "最终2.1.19共享源及Web专项PASS；Node1089pass/14skip、Agent172pass/2skip、production520/520（0retry/0flaky）、development PASS。Desktop/Tauri2.1.19未验；186非任务SHA不变，3份并发文档更新原件保留，暂存内容不改。",
+    "verification": "2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。",
     "verificationResult": "PARTIAL",
-    "updated": "2026-10-14",
+    "updated": "2026-10-17",
     "featureIds": [
       "FEAT-001",
       "FEAT-009",
@@ -6378,10 +6853,26 @@
     "requirementRefs": [
       "user:agent-canvas-sync-20261014"
     ],
-    "displayStatus": "进行中",
-    "nextAction": "Desktop/Tauri2.1.19复验位置/连线/重载；独立宽图问题另属TASK-CANVAS-WIDE-PORT-20261014",
+    "displayStatus": "未完成",
+    "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
     "lastVerified": "2026-10-14",
-    "ownerRole": "repository-maintainer"
+    "ownerRole": "repository-maintainer",
+    "verificationHistory": [
+      {
+        "recordedAt": "2026-10-17",
+        "recordBaseSha": "221560a322107092f66c142c7b911439087019f8",
+        "branch": "fix/TASK-CANVAS-SYNC-20261014-agent",
+        "worktree": "D:/kk-studio/.worktrees/TASK-CANVAS-SYNC-20261014",
+        "status": "PARTIAL",
+        "displayStatus": "进行中",
+        "verificationResult": "PARTIAL",
+        "verification": "最终2.1.19共享源及Web专项PASS；Node1089pass/14skip、Agent172pass/2skip、production520/520（0retry/0flaky）、development PASS。Desktop/Tauri2.1.19未验；186非任务SHA不变，3份并发文档更新原件保留，暂存内容不改。",
+        "nextAction": "Desktop/Tauri2.1.19复验位置/连线/重载；独立宽图问题另属TASK-CANVAS-WIDE-PORT-20261014",
+        "lastVerified": "2026-10-14",
+        "source": "docs/changes/2026-10-17-audit-repair/verification.md",
+        "reason": "登记的历史worktree目录已不存在"
+      }
+    ]
   },
   {
     "id": "TASK-CANVAS-WIDE-PORT-20261014",
@@ -6394,8 +6885,8 @@
     ],
     "dependencies": [],
     "owner": "root",
-    "branch": "unassigned",
-    "worktree": "unassigned",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/domain/canvasGraph.ts",
       "src/components/canvas/NodeActions.tsx",
@@ -6410,7 +6901,7 @@
     ],
     "verification": "本次同步修复前/后development23.33%同样被composer遮挡；production全量1失败，修复尚未执行。",
     "verificationResult": "FAIL",
-    "updated": "2026-10-14",
+    "updated": "2026-10-17",
     "lastVerified": "2026-10-14",
     "featureIds": [
       "FEAT-001"
@@ -6420,7 +6911,16 @@
     ],
     "displayStatus": "未完成",
     "nextAction": "单独复证production并修正宽图主体几何/端口锚点",
-    "ownerRole": "repository-maintainer"
+    "ownerRole": "repository-maintainer",
+    "sourceUpdates": [
+      {
+        "recordedAt": "2026-10-17",
+        "type": "unallocated-placeholder-normalization",
+        "branch": "unassigned",
+        "worktree": "unassigned",
+        "source": "docs/changes/2026-10-17-audit-repair/verification.md"
+      }
+    ]
   },
   {
     "id": "TASK-AGENT-UX-20261014",
@@ -6901,8 +7401,8 @@
       "TASK-EXPLORER-GDI-20261015"
     ],
     "owner": "root",
-    "branch": "fix/TASK-CODEX-HOME-20261015-main",
-    "worktree": "D:/kk-studio/.worktrees/TASK-GOV-PHASE0",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/App.tsx",
       "src/components/StartPage.tsx",
@@ -6922,7 +7422,7 @@
       "scripts/agent/desktop-entry.mjs",
       "tests/unit/desktopAgentRuntime.test.ts"
     ],
-    "status": "IN_PROGRESS",
+    "status": "PARTIAL",
     "priority": "P1",
     "evidence": [
       "docs/changes/2026-10-15-codex-home/intent.md",
@@ -6937,11 +7437,11 @@
       "docs/changes/2026-10-15-home-recovery-integration/verification.md",
       "docs/changes/2026-10-15-home-recovery-integration/review.md"
     ],
-    "verification": "PR60产品已进入main3a；本轮按统一交接继续三P2，静态定位待运行RED，前置PR62本机测试安全PASS且Hosted中。旧完整verify失败、真实Provider及恢复证据保留于verificationHistory，不代填当前结果。 当前dirty连接46/46、HOME浏览器8项首试PASS；实际两browser RED/同图重复/旧epoch尾部RED均已复现并修复。前置准备/夹具/数量失败保留，加载期独立问题挂TASK-HOME-LOAD-DRAFT-20261015，当前完整冻结验证/Native仍待。 冻结fc76完整verify exit0：Node1342/14skip、Agent199/2skip、Edge785首试0flaky/skip/errors、development5步PASS；906旧文件/备份1812及1333产物/备份2666hash一致，独审SOURCE/LOCAL_VERIFY PASS。PR62正常合main492后仅挑fc76为c180且tree完全一致，旧分支保留。依赖事故发生于完整运行后另记TASK-VERIFY-DEPS-20261015；当前Native/代理及新环境验证待续。 f10官方Native构建成功、Rust167/fmt与编译proxy1首试PASS；真实冷重开两次FAIL，定位HOME-NATIVE-01私有stdout污染。原FAIL/旧产物保留，真实stdio98行RED→启动合同3项GREEN，待新冻结完整门禁/重建原Native断言与独审。 新冻结a85完整verify exit0：Node1343/14skip、Agent199/2skip、Edge785首试、development4（实体依赖不进入linked额外步），独审6198hash一致；官方新EXEf8cbfd5d与inputf94837af/source a85/clean，Rust167及原Native38项/3launch实际PASS，原f10两FAIL不改写。源码差量独审PASS，结果补审和正式HOME PR/Hosted/main待续。 本机Native精确结果独审PASS_LOCAL_NATIVE_STARTUP_RECOVERY_SCOPE，原脚本hash未变、38项证据及新包一致，HOME-NATIVE-01关闭；完整任务仍等PR/main及分别受限的真实验收。",
+    "verification": "2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。",
     "verificationResult": "PARTIAL",
-    "updated": "2026-10-15",
-    "displayStatus": "进行中",
-    "nextAction": "冻结纯文档结果并精确差量复审；正常推送HOME PR，当前Hosted/远端门禁通过后普通合main并验证；随后按已有TODO继续加载期草稿、Canvas等，不代填Provider/daily验收。",
+    "updated": "2026-10-17",
+    "displayStatus": "未完成",
+    "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
     "ownerRole": "implementer",
     "requirementRefs": [
       "ledger:TASK-CODEX-HOME-20261015",
@@ -6965,6 +7465,20 @@
         "verificationResult": "NOT_VERIFIED",
         "verification": "本地分项：full5前置Node1327PASS/14skip、Agent199PASS/2skip及lint/typecheck/format/build通过；原始verify-full-5-browser.json独立回读784unique/784单结果首过/实际retry0/flaky0/skip0/errors0。845源码及测试与full4冻结清单逐项相同。完整npm verify仍exit1：development因另一人类任务长期占用1421而steps=[]，未执行、未杀进程/复用server；当前SHA Hosted须真实完成全部必需门禁。Rust媒体尺寸包30/全量167/fmt/check通过；新EXE8f633...2.1.33/vihgOeA0实际export/preflight/import，canonical project/homeDraft及单QA2items/1generatedID/1370x1148无损，源PNG/importedblob同2596cb...，新导入root冷开图文/Codex默认恢复通过。TaskHost首轮passed=false/9checks与旧EXE隔离重跑11PASS/cleanuptrue分别保留。full1-4、REPL/跨realm观察错误、真实Native旧包失败和所有阶段raw在本task verification原文保留。其他TASK-CODEX-REF docs/entry/status未改，组合来源明确、精确SHA独审/Hosted/PR/main与本机更新/两副本canonical恢复仍待验，不提前DONE。 后续UIalignment临时释放自有1421，development独立串行四stage PASS/exit0，原receipt SHA4b2925...与root独审loader hash一致；sourceHead为cbda dirty、845内容同冻结，full5原整体exit1不改写。产品eeac已提交，实际首页1254x1254新图3848a9...已归档/sourcePending=null，该新图cold reopen仍pending。用户明确授权跨聊天协调统一集成，HOME evidence补REF验证包真实归属，不改REF原branch/entry/docs；此前Delivery归属失败保留，最终文档SHA/独审/Hosted与交付待验。",
         "nextAction": "提交冻结候选后做精确SHA独审；当前Hosted须实际跑完完整verify（含development）/Delivery后才普通合并，随后main验证、实际本机更新及两独立副本canonical恢复/原7保全；保留另一任务原文与状态，最后以实际收据做纯docs closeout。"
+      },
+      {
+        "recordedAt": "2026-10-17",
+        "recordBaseSha": "221560a322107092f66c142c7b911439087019f8",
+        "branch": "fix/TASK-CODEX-HOME-20261015-main",
+        "worktree": "D:/kk-studio/.worktrees/TASK-GOV-PHASE0",
+        "status": "IN_PROGRESS",
+        "displayStatus": "进行中",
+        "verificationResult": "PARTIAL",
+        "verification": "PR60产品已进入main3a；本轮按统一交接继续三P2，静态定位待运行RED，前置PR62本机测试安全PASS且Hosted中。旧完整verify失败、真实Provider及恢复证据保留于verificationHistory，不代填当前结果。 当前dirty连接46/46、HOME浏览器8项首试PASS；实际两browser RED/同图重复/旧epoch尾部RED均已复现并修复。前置准备/夹具/数量失败保留，加载期独立问题挂TASK-HOME-LOAD-DRAFT-20261015，当前完整冻结验证/Native仍待。 冻结fc76完整verify exit0：Node1342/14skip、Agent199/2skip、Edge785首试0flaky/skip/errors、development5步PASS；906旧文件/备份1812及1333产物/备份2666hash一致，独审SOURCE/LOCAL_VERIFY PASS。PR62正常合main492后仅挑fc76为c180且tree完全一致，旧分支保留。依赖事故发生于完整运行后另记TASK-VERIFY-DEPS-20261015；当前Native/代理及新环境验证待续。 f10官方Native构建成功、Rust167/fmt与编译proxy1首试PASS；真实冷重开两次FAIL，定位HOME-NATIVE-01私有stdout污染。原FAIL/旧产物保留，真实stdio98行RED→启动合同3项GREEN，待新冻结完整门禁/重建原Native断言与独审。 新冻结a85完整verify exit0：Node1343/14skip、Agent199/2skip、Edge785首试、development4（实体依赖不进入linked额外步），独审6198hash一致；官方新EXEf8cbfd5d与inputf94837af/source a85/clean，Rust167及原Native38项/3launch实际PASS，原f10两FAIL不改写。源码差量独审PASS，结果补审和正式HOME PR/Hosted/main待续。 本机Native精确结果独审PASS_LOCAL_NATIVE_STARTUP_RECOVERY_SCOPE，原脚本hash未变、38项证据及新包一致，HOME-NATIVE-01关闭；完整任务仍等PR/main及分别受限的真实验收。",
+        "nextAction": "冻结纯文档结果并精确差量复审；正常推送HOME PR，当前Hosted/远端门禁通过后普通合main并验证；随后按已有TODO继续加载期草稿、Canvas等，不代填Provider/daily验收。",
+        "lastVerified": "2026-10-15",
+        "source": "docs/changes/2026-10-17-audit-repair/verification.md",
+        "reason": "登记的历史worktree目录已不存在"
       }
     ],
     "sourceUpdates": [
@@ -6992,8 +7506,8 @@
       "TASK-CODEX-HOME-20261015"
     ],
     "owner": "root",
-    "branch": "fix/TASK-CODEX-REF-20261015",
-    "worktree": "D:/kk-studio/.worktrees/TASK-CODEX-REF-20261015",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/App.tsx",
       "src/features/agent/agentConnection.ts",
@@ -7013,11 +7527,11 @@
       "docs/changes/2026-10-15-codex-card-reference/verification.md",
       "docs/changes/2026-10-15-codex-card-reference/review.md"
     ],
-    "verification": "功能/live PASS，交付PARTIAL：Desktop/Web2.1.33；参考原件42452f4d...经一次真实Codex内置imagegen生成PNG6531e6ac...并归档，1result/1result边/1reference边，外部图片请求0；重载、正常关闭/重建/重启、原桌面快捷方式重开PASS，原件hash不变且重启turn0。最终EXE6353aba3.../inputee1e43be...、reason=current、bundlevihgOeA0。Node1327PASS/14skip、Agent199PASS/2skip、定向45/dirty预检50及browser13/邻域39分别PASS；完整browser784为771PASS13FAIL/0flaky/skip，13项已由任务前源码逐项同断言重现为PRE-EXISTING FAILURE，但fullverify仍FAIL、development未运行。最终SHA正式review/Hosted/PR未完成。 验收后并发漂移边界（2026-10-15T06:48:06Z）：其他任务随后修改无关Rust项目包/vendor/runtime/build输入及dist；native/closeout-source-drift.json最新reason=unverified，当前input627e5b40...，受测inputee1e43be...。此前真实验收/日常重开及EXE6353aba3.../本任务App23a0625a...、agentConnection52a1d8db...仍有效且字节未变，日常PID57824继续运行受测2.1.33；不能宣称最新整个checkout已验收。不继续重建、关闭或覆盖其他作者工作，整体PARTIAL。",
+    "verification": "2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。",
     "verificationResult": "PARTIAL",
-    "updated": "2026-10-15",
+    "updated": "2026-10-17",
     "displayStatus": "未完成",
-    "nextAction": "保留功能/live通过证据，跟进上游13项已证预存失败使mandatory fullverify有效通过；补最终SHA正式review及Hosted/PR门禁，不宣称已集成/发布。",
+    "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
     "ownerRole": "implementer",
     "requirementRefs": [
       "ledger:TASK-CODEX-REF-20261015",
@@ -7028,7 +7542,23 @@
     ],
     "priorityRationale": "用户明确要求产品参考图连线后可直接使用 Codex 内置生图，并实际桌面验证。",
     "lastVerified": "2026-10-15",
-    "baseSha": "cbda65e4389fc807769a8faf7654892415992589"
+    "baseSha": "cbda65e4389fc807769a8faf7654892415992589",
+    "verificationHistory": [
+      {
+        "recordedAt": "2026-10-17",
+        "recordBaseSha": "221560a322107092f66c142c7b911439087019f8",
+        "branch": "fix/TASK-CODEX-REF-20261015",
+        "worktree": "D:/kk-studio/.worktrees/TASK-CODEX-REF-20261015",
+        "status": "PARTIAL",
+        "displayStatus": "未完成",
+        "verificationResult": "PARTIAL",
+        "verification": "功能/live PASS，交付PARTIAL：Desktop/Web2.1.33；参考原件42452f4d...经一次真实Codex内置imagegen生成PNG6531e6ac...并归档，1result/1result边/1reference边，外部图片请求0；重载、正常关闭/重建/重启、原桌面快捷方式重开PASS，原件hash不变且重启turn0。最终EXE6353aba3.../inputee1e43be...、reason=current、bundlevihgOeA0。Node1327PASS/14skip、Agent199PASS/2skip、定向45/dirty预检50及browser13/邻域39分别PASS；完整browser784为771PASS13FAIL/0flaky/skip，13项已由任务前源码逐项同断言重现为PRE-EXISTING FAILURE，但fullverify仍FAIL、development未运行。最终SHA正式review/Hosted/PR未完成。 验收后并发漂移边界（2026-10-15T06:48:06Z）：其他任务随后修改无关Rust项目包/vendor/runtime/build输入及dist；native/closeout-source-drift.json最新reason=unverified，当前input627e5b40...，受测inputee1e43be...。此前真实验收/日常重开及EXE6353aba3.../本任务App23a0625a...、agentConnection52a1d8db...仍有效且字节未变，日常PID57824继续运行受测2.1.33；不能宣称最新整个checkout已验收。不继续重建、关闭或覆盖其他作者工作，整体PARTIAL。",
+        "nextAction": "保留功能/live通过证据，跟进上游13项已证预存失败使mandatory fullverify有效通过；补最终SHA正式review及Hosted/PR门禁，不宣称已集成/发布。",
+        "lastVerified": "2026-10-15",
+        "source": "docs/changes/2026-10-17-audit-repair/verification.md",
+        "reason": "登记的历史worktree目录已不存在"
+      }
+    ]
   },
   {
     "id": "TASK-GOV-006",
@@ -7037,10 +7567,10 @@
     "scope": "本项目安全交接及治理；不发布/改历史/删除/覆盖用户数据，不将本次暂停授权扩为破坏性权限。",
     "owner": "root",
     "ownerRole": "repository-maintainer",
-    "branch": "docs/TASK-GOV-006-unified-handoff",
-    "worktree": "D:/kk-studio/.worktrees/TASK-GOV-PHASE0",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "status": "PARTIAL",
-    "displayStatus": "进行中",
+    "displayStatus": "未完成",
     "priority": "P1",
     "priorityRationale": "统一全部来源与交付链、保护恢复现场并消除并发写入；历史与完整功能验收仍待后续正式会话。",
     "acceptance": [
@@ -7065,11 +7595,11 @@
       "docs/changes/2026-10-15-unified-execution/history-readback.md",
       "docs/changes/2026-10-15-unified-execution/incident.md"
     ],
-    "verification": "8个原活动主会话各发一次安全暂停；重连后8主+4此前active子会话均支持工具回读idle并交接无写入。114登记worktree/113有效原账本+Cherry冲突两侧内存联合192ID，main141缺51只是覆盖差异；所有历史状态/原对象保留，不批量覆盖原141记录。复用原DONE/PASS clean治理树切新分支，旧分支保留。历史/全局枚举存在缺口，产品未新增实现。 正式执行首轮：原提示词与zip指定hash匹配，receipt21/21及zip23/23独核；新12历史目标26页187轮到游标末尾，6接口仍不支持，原主控/全局枚举UNKNOWN保留。fresh治理lint/typecheck与46回归PASS；GDI真实argv16项/2renderers及100页7采样0自有代理通过，仅候选范围。已push1b895ecb并建草稿PR61，未合main或替换客户端。 最终af8精确HEAD完整verify新跑exit0：Node1327/14skip、Agent199/2skip、Edge784首试0flaky/skip、development4步。发现默认test-results清理移除旧development receipt/截图，旧browser已备份；恢复无可校验副本，事件已公开记录并新增自动保护任务。",
+    "verification": "2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。",
     "verificationResult": "PARTIAL",
-    "updated": "2026-10-15",
+    "updated": "2026-10-17",
     "lastVerified": "2026-10-15",
-    "nextAction": "PR61已正常squash为main3a992597，当前fetch核实后，测试安全组合从实际main承接；其余历史接口/产品任务仍开放。",
+    "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
     "requirementRefs": [
       "ledger:TASK-GOV-004",
       "ledger:TASK-PROV-007",
@@ -8731,6 +9261,22 @@
         "acceptance": "原始产物未独审，不继承26f验收计数，不认定MCP CORS已修复。",
         "nextAction": "保持GDI→HOME/REF→Canvas/Responsive→图片压缩→Design→PR58顺序；到PR58依赖时重新读取远端，保留并逐项比较独有成果及GDI重叠，不重启旧会话。"
       }
+    ],
+    "verificationHistory": [
+      {
+        "recordedAt": "2026-10-17",
+        "recordBaseSha": "221560a322107092f66c142c7b911439087019f8",
+        "branch": "docs/TASK-GOV-006-unified-handoff",
+        "worktree": "D:/kk-studio/.worktrees/TASK-GOV-PHASE0",
+        "status": "PARTIAL",
+        "displayStatus": "进行中",
+        "verificationResult": "PARTIAL",
+        "verification": "8个原活动主会话各发一次安全暂停；重连后8主+4此前active子会话均支持工具回读idle并交接无写入。114登记worktree/113有效原账本+Cherry冲突两侧内存联合192ID，main141缺51只是覆盖差异；所有历史状态/原对象保留，不批量覆盖原141记录。复用原DONE/PASS clean治理树切新分支，旧分支保留。历史/全局枚举存在缺口，产品未新增实现。 正式执行首轮：原提示词与zip指定hash匹配，receipt21/21及zip23/23独核；新12历史目标26页187轮到游标末尾，6接口仍不支持，原主控/全局枚举UNKNOWN保留。fresh治理lint/typecheck与46回归PASS；GDI真实argv16项/2renderers及100页7采样0自有代理通过，仅候选范围。已push1b895ecb并建草稿PR61，未合main或替换客户端。 最终af8精确HEAD完整verify新跑exit0：Node1327/14skip、Agent199/2skip、Edge784首试0flaky/skip、development4步。发现默认test-results清理移除旧development receipt/截图，旧browser已备份；恢复无可校验副本，事件已公开记录并新增自动保护任务。",
+        "nextAction": "PR61已正常squash为main3a992597，当前fetch核实后，测试安全组合从实际main承接；其余历史接口/产品任务仍开放。",
+        "lastVerified": "2026-10-15",
+        "source": "docs/changes/2026-10-17-audit-repair/verification.md",
+        "reason": "登记的历史worktree目录已不存在"
+      }
     ]
   },
   {
@@ -8740,10 +9286,10 @@
     "scope": "仅测试输出目录/执行前保护与合成fixture；不删除或迁移其他历史证据/用户数据。",
     "owner": "root",
     "ownerRole": "repository-maintainer",
-    "branch": "fix/TASK-EXPLORER-GDI-20261015-main",
-    "worktree": "D:/kk-studio/.worktrees/TASK-GOV-PHASE0",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "status": "PARTIAL",
-    "displayStatus": "进行中",
+    "displayStatus": "未完成",
     "priority": "P1",
     "priorityRationale": "本轮Playwright默认outputDir清理造成旧开发态原件不可校验；后续测试必须先阻断重复损失。",
     "acceptance": [
@@ -8774,17 +9320,33 @@
       "docs/changes/2026-10-15-test-evidence-isolation/verification.md",
       "docs/changes/2026-10-15-test-evidence-isolation/review.md"
     ],
-    "verification": "真实合成Playwright成功/失败均在基线删除旧receipt而RED；独占run目录实现后定向7/7 GREEN（目录/文件/junction拒绝、旧三类原字节保留、新report/metadata、suite边界）。完整Node1346/1332PASS/14既有skip/0FAIL，lint/typecheck通过；sandbox junction EPERM经平台批准复验。无浏览器页面，版本不递增。原旧回执缺失不伪造恢复；完整verify、最终SHA独审与main集成待GDI安全接入后进行。 独审e5d5dc31提出EVID-01固定截图/P1、EVID-02worker分散/P2；已各先RED再本地GREEN，17文件48截图仅迁移路径，新增截图守卫。补充完整Node/静态与正式复验、实际安全PNG未完成前不代填通过。 补充完整Node1347/1333PASS/14既有skip/0FAIL、lint/typecheck通过；format首报2文件后修正复验通过。真实PNG需GDI安全接入后验证，精确最终独审待续。 精确6374独立源码复验限定PASS，无新阻断；当前a6e组合新增安全真实PNG探针正常/失败两种旧字节均保持，新PNG/report同run，未提交probe范围清楚。 f727完整失败但旧PNG/report/receipt三项hash均保留且441输出已备份；仅缺插件环境补齐后原11失败全部同SHA/原断言通过。SHOT-01已自修复并补7种AST负例，最终新head待审。 最新冻结源码9aa12e92完整verify exit0：Node1348/1334PASS/14skip、Agent201/199PASS/2skip、Edge784首试0fail/flaky/skip、development5步PASS；Windows实际15+1参数、真实PNG成功/主动失败和100页7次0TabProxy通过。454旧文件与备份908项hash一致，879最终产物另存。独审actual main3a→9aa47文件PASS_LOCAL_TEST_SAFETY_SCOPE，SHOT-01/DOC-01关闭；首轮f727失败保留，Hosted/PR/main/产品验收仍未完成。 PR62 exact f9c所有required PR/push verify/delivery及client/native成功，final独审PASS后正常squash main492abad4；已实际fetch/tree与f9c完全相同，合后新main Hosted仍单独等待。 main492新Hosted与合后范围已独立确认成功；取消运行/报告写入失败尚无直接注入证据，不能代填，仍PARTIAL。",
+    "verification": "2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。",
     "verificationResult": "PARTIAL",
-    "updated": "2026-10-15",
+    "updated": "2026-10-17",
     "lastVerified": "2026-10-15",
-    "nextAction": "在独立新目录补Playwright受控取消和reporter写入失败两类真实负向运行，记录非0/中断状态并核对旧回执/PNG hash保持；保留全部旧失败与缺失UNKNOWN，不改当前HOME源码。",
+    "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
     "requirementRefs": [
       "ledger:TASK-GOV-006",
       "docs/changes/2026-10-15-unified-execution/incident.md"
     ],
     "featureIds": [],
-    "baseSha": "3a9925977792a7f948eceda9f54d46fbf6f8b294"
+    "baseSha": "3a9925977792a7f948eceda9f54d46fbf6f8b294",
+    "verificationHistory": [
+      {
+        "recordedAt": "2026-10-17",
+        "recordBaseSha": "221560a322107092f66c142c7b911439087019f8",
+        "branch": "fix/TASK-EXPLORER-GDI-20261015-main",
+        "worktree": "D:/kk-studio/.worktrees/TASK-GOV-PHASE0",
+        "status": "PARTIAL",
+        "displayStatus": "进行中",
+        "verificationResult": "PARTIAL",
+        "verification": "真实合成Playwright成功/失败均在基线删除旧receipt而RED；独占run目录实现后定向7/7 GREEN（目录/文件/junction拒绝、旧三类原字节保留、新report/metadata、suite边界）。完整Node1346/1332PASS/14既有skip/0FAIL，lint/typecheck通过；sandbox junction EPERM经平台批准复验。无浏览器页面，版本不递增。原旧回执缺失不伪造恢复；完整verify、最终SHA独审与main集成待GDI安全接入后进行。 独审e5d5dc31提出EVID-01固定截图/P1、EVID-02worker分散/P2；已各先RED再本地GREEN，17文件48截图仅迁移路径，新增截图守卫。补充完整Node/静态与正式复验、实际安全PNG未完成前不代填通过。 补充完整Node1347/1333PASS/14既有skip/0FAIL、lint/typecheck通过；format首报2文件后修正复验通过。真实PNG需GDI安全接入后验证，精确最终独审待续。 精确6374独立源码复验限定PASS，无新阻断；当前a6e组合新增安全真实PNG探针正常/失败两种旧字节均保持，新PNG/report同run，未提交probe范围清楚。 f727完整失败但旧PNG/report/receipt三项hash均保留且441输出已备份；仅缺插件环境补齐后原11失败全部同SHA/原断言通过。SHOT-01已自修复并补7种AST负例，最终新head待审。 最新冻结源码9aa12e92完整verify exit0：Node1348/1334PASS/14skip、Agent201/199PASS/2skip、Edge784首试0fail/flaky/skip、development5步PASS；Windows实际15+1参数、真实PNG成功/主动失败和100页7次0TabProxy通过。454旧文件与备份908项hash一致，879最终产物另存。独审actual main3a→9aa47文件PASS_LOCAL_TEST_SAFETY_SCOPE，SHOT-01/DOC-01关闭；首轮f727失败保留，Hosted/PR/main/产品验收仍未完成。 PR62 exact f9c所有required PR/push verify/delivery及client/native成功，final独审PASS后正常squash main492abad4；已实际fetch/tree与f9c完全相同，合后新main Hosted仍单独等待。 main492新Hosted与合后范围已独立确认成功；取消运行/报告写入失败尚无直接注入证据，不能代填，仍PARTIAL。",
+        "nextAction": "在独立新目录补Playwright受控取消和reporter写入失败两类真实负向运行，记录非0/中断状态并核对旧回执/PNG hash保持；保留全部旧失败与缺失UNKNOWN，不改当前HOME源码。",
+        "lastVerified": "2026-10-15",
+        "source": "docs/changes/2026-10-17-audit-repair/verification.md",
+        "reason": "登记的历史worktree目录已不存在"
+      }
+    ]
   },
   {
     "id": "TASK-EXPLORER-GDI-20261015",
@@ -8848,7 +9410,7 @@
     "owner": "root",
     "ownerRole": "repository-maintainer",
     "branch": "codex/TASK-KK-UNIFIED-20261015",
-    "worktree": "TASK-KK-UNIFIED-20261015",
+    "worktree": "D:/kk-studio/.worktrees/TASK-KK-UNIFIED-20261015",
     "status": "PARTIAL",
     "displayStatus": "进行中",
     "priority": "P2",
@@ -8873,14 +9435,24 @@
     ],
     "verification": "46e30fb0实现加载期显式字段patch、同队列读取/写入及末端sequence校验；5ddda4fb新增真实生产加载期草稿回归。原6PASS/8RED及后续竞态RED保留，LOAD-01同素材多引用删除反例由80f6按引用ID修复，新增仍按素材去重。27hook/81邻域PASS；独立actual-hook三反例3/3及精确复审Approved。production1423四组23/23首试、0flaky，run d0858bb6-fe82-4aac-9864-a8f64951271b；Native/UI和最终总交付另验。",
     "verificationResult": "PARTIAL",
-    "updated": "2026-10-15",
+    "updated": "2026-10-17",
     "lastVerified": "2026-10-15",
-    "nextAction": "保留通过的代码子范围与失败证据，随当前组合源码执行完整verify、新Native重建、最终精确独审/Hosted与交付，不重复开发已修复读取合并。",
+    "nextAction": "保留通过的代码子范围与失败证据，随当前组合源码执行完整verify、新Native重建、最终精确独审/Hosted与交付，不重复开发已修复读取合并。 该工作树只作历史承接来源；本轮安全修复见TASK-AUDIT-REPAIR-20261017，未新增活动分配。",
     "requirementRefs": [
       "ledger:TASK-CODEX-HOME-20261015"
     ],
     "featureIds": [
       "FEAT-002"
+    ],
+    "sourceUpdates": [
+      {
+        "recordedAt": "2026-10-17",
+        "type": "historical-path-normalization",
+        "branch": "codex/TASK-KK-UNIFIED-20261015",
+        "worktree": "TASK-KK-UNIFIED-20261015",
+        "resolvedWorktree": "D:/kk-studio/.worktrees/TASK-KK-UNIFIED-20261015",
+        "source": "docs/changes/2026-10-17-audit-repair/verification.md"
+      }
     ]
   },
   {

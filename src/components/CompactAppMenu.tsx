@@ -5,7 +5,10 @@ import { useDismissible } from "./useDismissible";
 export default function CompactAppMenu({
   entries,
 }: {
-  entries: Record<string, { text: string; action: () => void }[]>;
+  entries: Record<
+    string,
+    { text: string; action: () => void; disabledReason?: string }[]
+  >;
 }) {
   const [open, setOpen] = useState(false);
   const root = useRef<HTMLDivElement>(null);
@@ -46,6 +49,8 @@ export default function CompactAppMenu({
                 <button
                   key={item.text}
                   role="menuitem"
+                  disabled={Boolean(item.disabledReason)}
+                  title={item.disabledReason}
                   onClick={() => {
                     setOpen(false);
                     trigger.current?.focus({ preventScroll: true });

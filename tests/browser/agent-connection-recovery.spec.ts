@@ -224,12 +224,15 @@ test("desktop restores its owned project and keeps explicit disconnect paused ac
   }
 });
 
-test("desktop rejects an unowned ready session until the user explicitly creates a new conversation", async ({
+test("legacy desktop rejects an unowned ready session until the user explicitly creates a new conversation", async ({
   page,
 }) => {
   const agent = await startAgentServer("ready");
   try {
-    await nativeFixture(page, agent.url, projectSnapshot());
+    const legacy = projectSnapshot();
+    delete legacy.projects[0].chats;
+    delete legacy.projects[0].activeChatId;
+    await nativeFixture(page, agent.url, legacy);
     await page.goto("/");
     const card = await connectionSettings(page);
     await expect(card.getByRole("alert")).toContainText("服务已有其他会话");
@@ -250,6 +253,30 @@ test("desktop rejects an unowned ready session until the user explicitly creates
     expect(agent.requests.some((path) => path.endsWith("/delete"))).toBe(false);
     expect(agent.turns).toHaveLength(0);
     expect(agent.requests).not.toContain("/agent/codex/turn");
+  } finally {
+    await agent.close();
+  }
+});
+
+test("a chat-backed project refuses explicit thread replacement and preserves the unowned session", async ({
+  page,
+}) => {
+  const agent = await startAgentServer("ready");
+  try {
+    await nativeFixture(page, agent.url, projectSnapshot());
+    await page.goto("/");
+    const card = await connectionSettings(page);
+    await expect(card.getByRole("alert")).toContainText("服务已有其他会话");
+    await card.getByText("高级连接选项", { exact: true }).click();
+    await card
+      .getByRole("button", { name: "新建 Agent 会话", exact: true })
+      .click();
+    await expect(card.getByRole("alert")).toContainText("线程不可替换");
+    expect(agent.conversation().threadId).toBe("fixture-thread");
+    expect(agent.requests).not.toContain("/canvas/activate");
+    expect(agent.requests).not.toContain("/agent/codex/threads/new");
+    expect(agent.requests.some((path) => path.endsWith("/delete"))).toBe(false);
+    expect(agent.turns).toHaveLength(0);
   } finally {
     await agent.close();
   }

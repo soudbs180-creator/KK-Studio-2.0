@@ -1,5 +1,9 @@
 import { useCallback } from "react";
-import type { MouseEvent as ReactMouseEvent, MutableRefObject, PointerEvent as ReactPointerEvent } from "react";
+import type {
+  MouseEvent as ReactMouseEvent,
+  MutableRefObject,
+  PointerEvent as ReactPointerEvent,
+} from "react";
 
 interface GestureState {
   x: number;
@@ -15,7 +19,10 @@ interface UseCanvasGesturesProps {
     startCanvasPan: (event: ReactPointerEvent<HTMLDivElement>) => void;
   };
   addMenu: {
-    openAtPoint: (event: ReactMouseEvent<HTMLDivElement>, condition: boolean) => void;
+    openAtPoint: (
+      event: ReactMouseEvent<HTMLDivElement>,
+      condition: boolean,
+    ) => void;
   };
   movePointer: (event: ReactPointerEvent<HTMLDivElement>) => void;
   finishPointer: (event: ReactPointerEvent<HTMLDivElement>) => void;

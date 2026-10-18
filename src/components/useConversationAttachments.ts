@@ -218,5 +218,25 @@ export default function useConversationAttachments({
     });
   }
 
-  return { fileInput, addFiles, readingFiles };
+  function setReference(src: string): void {
+    const existing = attachmentRef.current;
+    if (existing.some((attachment) => attachment.dataUrl === src)) {
+      callbacks.current.onStatus("该图片已在参考列表中");
+      return;
+    }
+    callbacks.current.onChange([
+      ...existing.slice(-3),
+      {
+        id: `chat-ref-${Date.now()}`,
+        name: "生成参考图",
+        mime: "image/png",
+        size: 0,
+        role: "主体",
+        dataUrl: src,
+      },
+    ]);
+    callbacks.current.onStatus("已设为主体参考图");
+  }
+
+  return { fileInput, addFiles, readingFiles, setReference };
 }

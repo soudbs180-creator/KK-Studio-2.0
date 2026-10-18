@@ -78,7 +78,8 @@ export function parseComfyUiProgressMessage(
 
     case "execution_error": {
       const errorMsg =
-        (typeof payload.exception_message === "string" && payload.exception_message) ||
+        (typeof payload.exception_message === "string" &&
+          payload.exception_message) ||
         (typeof payload.message === "string" && payload.message) ||
         (typeof payload.error === "string" && payload.error) ||
         "Execution error";

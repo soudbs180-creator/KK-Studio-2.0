@@ -1,7 +1,10 @@
 import { test, expect, type Page } from "@playwright/test";
 import { createServer, type ServerResponse } from "node:http";
 import { openSeededProject } from "./helpers";
-import type { CreationSnapshot } from "../../src/features/creation/model";
+import {
+  CREATION_STORAGE_KEY,
+  type CreationSnapshot,
+} from "../../src/features/creation/model";
 const productionOrigin = "http://127.0.0.1:1423";
 const png =
   "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=";
@@ -489,8 +492,37 @@ async function fixture(nativeImage = false) {
     },
   };
 }
-async function project(page: Page) {
+async function project(page: Page, modelAllowlist?: string[]) {
   await openSeededProject(page);
+  if (modelAllowlist === undefined) return;
+  await page.evaluate(
+    ({ key, allowed }) => {
+      const snapshot = JSON.parse(localStorage.getItem(key)!);
+      const current = snapshot.projects.find(
+        (item: { id: string }) => item.id === snapshot.activeProjectId,
+      );
+      current.chats[current.activeChatId].modelAllowlist = allowed;
+      snapshot.revision = Math.max(snapshot.revision + 1, Date.now());
+      localStorage.setItem(key, JSON.stringify(snapshot));
+    },
+    { key: CREATION_STORAGE_KEY, allowed: modelAllowlist },
+  );
+  await page.reload();
+  await page.getByRole("button", { name: "项目库", exact: true }).click();
+  await page
+    .locator(".project-library-card")
+    .filter({ hasText: "Agent 验证项目" })
+    .click();
+  await expect(page.getByLabel("执行方式")).toBeAttached();
+  await expect
+    .poll(async () => {
+      const snapshot = await readCanvasSnapshot(page);
+      const current = snapshot.projects.find(
+        (item) => item.id === snapshot.activeProjectId,
+      )!;
+      return current.chats![current.activeChatId!].modelAllowlist;
+    })
+    .toEqual(modelAllowlist);
 }
 
 test("Agent 图片上传发送、离线保留、API 草稿隔离与真实视口多选", async ({
@@ -1144,56 +1176,125 @@ test("卡片 Codex 生图在刷新后归档并恢复来源；切 API 清除旧�
     await agent.close();
   }
 });
-test("KK 输入框 → 命名 SSE → MCP → 已配置图片 API，重复工具只提交一次", async ({
+for (const authorized of [true, false])
+  test(
+    authorized
+      ? "KK 输入框 → 命名 SSE → MCP → 已授权图片 API，重复工具只提交一次"
+      : "Agent 空模型授权拒绝 SSE 外部生成且不提交图片 API",
+    async ({ page }) => {
+      const agent = await fixture();
+      try {
+        await page.addInitScript(
+          (url) => localStorage.setItem("canvas-agent-url", url),
+          agent.url,
+        );
+        await project(page, authorized ? ["image-fixture"] : []);
+        await page.getByRole("button", { name: "模型", exact: true }).click();
+        await page
+          .getByRole("menu")
+          .getByRole("button", { name: "模型接入…", exact: true })
+          .click();
+        await page
+          .getByRole("button", { name: "API Key（官方）", exact: true })
+          .click();
+        await page.getByLabel("接口地址").fill(agent.url + "/v1");
+        await page.getByLabel("API Key", { exact: true }).fill("fixture-key");
+        await page.getByLabel("模型名称").fill("image-fixture");
+        await page
+          .getByRole("button", { name: "保存连接", exact: true })
+          .click();
+        await page
+          .getByRole("button", { name: "关闭设置", exact: true })
+          .click();
+        await page
+          .getByRole("button", { name: "连接 Codex", exact: true })
+          .click();
+        await expect(
+          page.getByText("Codex 主 Agent · 已连接", { exact: true }),
+        ).toBeVisible();
+        await page.getByLabel("对话内容").fill("优化后生成一张图片");
+        await page
+          .getByRole("button", { name: "发送消息", exact: true })
+          .click();
+        if (!authorized) {
+          await expect.poll(() => agent.received.tools.length).toBe(1);
+          expect(JSON.stringify(agent.received.tools[0])).toContain("白名单");
+          expect(agent.received.images).toHaveLength(0);
+          await expect(
+            page.locator('.demo-result-node[data-source="provider"]'),
+          ).toHaveCount(0);
+          return;
+        }
+        await expect(
+          page.locator('.demo-result-node[data-source="provider"]'),
+        ).toHaveCount(1);
+        await expect(page.locator(".chat-agent-item.is-assistant")).toHaveText(
+          "fixture 流式回复",
+        );
+        await expect.poll(() => agent.received.tools.length).toBe(1);
+        expect(agent.received.images).toHaveLength(1);
+        expect(agent.received.images[0].prompt).toContain("优化后的蓝色产品图");
+        expect(JSON.stringify(agent.received.tools)).toContain("taskId");
+        expect(JSON.stringify(agent.received.state)).not.toContain(
+          "fixture-key",
+        );
+        await page.locator(".chat-agent-usage summary").click();
+        await expect(page.locator(".chat-agent-usage")).toContainText("65%");
+        await page.reload();
+        await page.getByRole("button", { name: "项目库", exact: true }).click();
+        await page.locator(".project-library-card").first().click();
+        await page
+          .getByRole("button", { name: "连接 Codex", exact: true })
+          .click();
+        await expect(
+          page.locator(".chat-agent-item.is-assistant"),
+        ).toContainText("fixture 流式回复");
+        expect(agent.received.images).toHaveLength(1);
+      } finally {
+        await agent.close();
+      }
+    },
+  );
+
+test("真实 Agent 表单允许立即发送下一条，执行中重复提交只受理一次", async ({
   page,
 }) => {
-  const agent = await fixture();
+  const agent = await fixture(true);
   try {
     await page.addInitScript(
       (url) => localStorage.setItem("canvas-agent-url", url),
       agent.url,
     );
     await project(page);
-    await page.getByRole("button", { name: "模型", exact: true }).click();
-    await page
-      .getByRole("menu")
-      .getByRole("button", { name: "模型接入…", exact: true })
-      .click();
-    await page
-      .getByRole("button", { name: "API Key（官方）", exact: true })
-      .click();
-    await page.getByLabel("接口地址").fill(agent.url + "/v1");
-    await page.getByLabel("API Key", { exact: true }).fill("fixture-key");
-    await page.getByLabel("模型名称").fill("image-fixture");
-    await page.getByRole("button", { name: "保存连接", exact: true }).click();
-    await page.getByRole("button", { name: "关闭设置", exact: true }).click();
+    await page.clock.setFixedTime(new Date("2026-10-17T00:00:00Z"));
     await page.getByRole("button", { name: "连接 Codex", exact: true }).click();
     await expect(
       page.getByText("Codex 主 Agent · 已连接", { exact: true }),
     ).toBeVisible();
-    await page.getByLabel("对话内容").fill("优化后生成一张图片");
-    await page.getByRole("button", { name: "发送消息", exact: true }).click();
-    await expect(
-      page.locator('.demo-result-node[data-source="provider"]'),
-    ).toHaveCount(1);
-    await expect(page.locator(".chat-agent-item.is-assistant")).toHaveText(
-      "fixture 流式回复",
-    );
-    await expect.poll(() => agent.received.tools.length).toBe(1);
-    expect(agent.received.images).toHaveLength(1);
-    expect(agent.received.images[0].prompt).toContain("优化后的蓝色产品图");
-    expect(JSON.stringify(agent.received.tools)).toContain("taskId");
-    expect(JSON.stringify(agent.received.state)).not.toContain("fixture-key");
-    await page.locator(".chat-agent-usage summary").click();
-    await expect(page.locator(".chat-agent-usage")).toContainText("65%");
-    await page.reload();
-    await page.getByRole("button", { name: "项目库", exact: true }).click();
-    await page.locator(".project-library-card").first().click();
-    await page.getByRole("button", { name: "连接 Codex", exact: true }).click();
-    await expect(page.locator(".chat-agent-item.is-assistant")).toContainText(
-      "fixture 流式回复",
-    );
-    expect(agent.received.images).toHaveLength(1);
+    const input = page.getByLabel("对话内容", { exact: true });
+    const send = page.getByRole("button", { name: "发送消息", exact: true });
+    await input.fill("第一条快速消息");
+    await send.click();
+    await expect.poll(() => agent.received.turns.length).toBe(1);
+    await expect(send).toBeDisabled();
+    await input.fill("任务执行中保留的新草稿");
+    await page.locator(".chat-composer").evaluate((form) => {
+      if (!(form instanceof HTMLFormElement))
+        throw new Error("Composer is not a form");
+      form.requestSubmit();
+      form.requestSubmit();
+    });
+    expect(agent.received.turns).toHaveLength(1);
+    await expect(input).toHaveValue("任务执行中保留的新草稿");
+    agent.emit("agent_event", { type: "turn.completed", status: "completed" });
+    await input.fill("第二条快速消息");
+    await expect(send).toBeEnabled();
+    await send.click();
+    await expect.poll(() => agent.received.turns.length).toBe(2);
+    expect(agent.received.turns.map((turn) => turn.messageText)).toEqual([
+      "第一条快速消息",
+      "第二条快速消息",
+    ]);
   } finally {
     await agent.close();
   }

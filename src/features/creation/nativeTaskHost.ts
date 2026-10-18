@@ -16,6 +16,7 @@ import { composeNativeEditAsset } from "../image-edit/editTasks.ts";
 import { imageResultContext } from "../image-edit/context.ts";
 import { ImageEditMappingError } from "../image-edit/imageProcessing.ts";
 import { editReceiptReason } from "../image-edit/recovery.ts";
+import { assertSynchronousProviderSubmission } from "./providerSubmission.ts";
 
 /** The request crossing the Desktop TaskHost IPC boundary. It contains no API key. */
 export interface NativeTaskHostRequest {
@@ -232,6 +233,7 @@ export async function submitNativeTask(
   request: NativeTaskHostRequest,
 ): Promise<NativeTaskHostRecord> {
   requireNativeTaskHost();
+  assertSynchronousProviderSubmission(request.baseUrl, request.model);
   const record = await invoke<NativeTaskHostRecord>("task_host_submit", {
     request,
   });

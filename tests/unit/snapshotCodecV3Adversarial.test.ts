@@ -18,16 +18,11 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   decodeSnapshot,
-  parseSnapshot,
   validateSnapshotV3,
   rejectSecrets,
   SnapshotStorageError,
 } from "../../src/features/creation/snapshotCodec.ts";
-import type {
-  CreationSnapshotV3,
-  ChatItem,
-  CreationProjectV3,
-} from "../../src/features/creation/model.ts";
+import type { CreationSnapshotV3 } from "../../src/features/creation/model.ts";
 import { NonDowngradableWriteBarrier } from "../../src/features/creation/storage.ts";
 
 function createValidBaseV3(): CreationSnapshotV3 {
@@ -217,11 +212,13 @@ test("ADV-PAYLOAD-03: chats dictionary structural corruption and key mismatches 
 
   for (const badChats of malformedChatsEntries) {
     const snapshot = createValidBaseV3();
-    (snapshot.projects[0] as unknown as Record<string, unknown>).chats = badChats;
+    (snapshot.projects[0] as unknown as Record<string, unknown>).chats =
+      badChats;
 
     assert.throws(
       () => validateSnapshotV3(snapshot),
-      (err: unknown) => err instanceof SnapshotStorageError && err.code === "corrupt",
+      (err: unknown) =>
+        err instanceof SnapshotStorageError && err.code === "corrupt",
       `Must reject malformed chats: ${String(badChats)}`,
     );
   }
@@ -244,13 +241,15 @@ test("ADV-PAYLOAD-03: chats dictionary structural corruption and key mismatches 
 
   assert.throws(
     () => validateSnapshotV3(snapshotMismatchedKey),
-    (err: unknown) => err instanceof SnapshotStorageError && err.code === "corrupt",
+    (err: unknown) =>
+      err instanceof SnapshotStorageError && err.code === "corrupt",
     "Must reject when dictionary key differs from chat.id",
   );
 
   assert.throws(
     () => decodeSnapshot(snapshotMismatchedKey),
-    (err: unknown) => err instanceof SnapshotStorageError && err.code === "corrupt",
+    (err: unknown) =>
+      err instanceof SnapshotStorageError && err.code === "corrupt",
     "decodeSnapshot must reject key mismatch",
   );
 
@@ -259,18 +258,23 @@ test("ADV-PAYLOAD-03: chats dictionary structural corruption and key mismatches 
   const targetChat = baseMalformedChat.projects[0].chats["chat-primary"];
 
   // Non-array messages
-  (targetChat as unknown as Record<string, unknown>).messages = "invalid-messages-string";
+  (targetChat as unknown as Record<string, unknown>).messages =
+    "invalid-messages-string";
   assert.throws(
     () => validateSnapshotV3(baseMalformedChat),
-    (err: unknown) => err instanceof SnapshotStorageError && err.code === "corrupt",
+    (err: unknown) =>
+      err instanceof SnapshotStorageError && err.code === "corrupt",
   );
 
   // Non-array modelAllowlist
   (targetChat as unknown as Record<string, unknown>).messages = [];
-  (targetChat as unknown as Record<string, unknown>).modelAllowlist = { model: "gpt-4o" };
+  (targetChat as unknown as Record<string, unknown>).modelAllowlist = {
+    model: "gpt-4o",
+  };
   assert.throws(
     () => validateSnapshotV3(baseMalformedChat),
-    (err: unknown) => err instanceof SnapshotStorageError && err.code === "corrupt",
+    (err: unknown) =>
+      err instanceof SnapshotStorageError && err.code === "corrupt",
   );
 
   // Non-string mainAgent
@@ -278,7 +282,8 @@ test("ADV-PAYLOAD-03: chats dictionary structural corruption and key mismatches 
   (targetChat as unknown as Record<string, unknown>).mainAgent = 42;
   assert.throws(
     () => validateSnapshotV3(baseMalformedChat),
-    (err: unknown) => err instanceof SnapshotStorageError && err.code === "corrupt",
+    (err: unknown) =>
+      err instanceof SnapshotStorageError && err.code === "corrupt",
   );
 });
 
@@ -292,7 +297,8 @@ test("ADV-PAYLOAD-04: duplicate message, task, and project identifiers are rejec
 
   assert.throws(
     () => decodeSnapshot(dupMsgSnapshot),
-    (err: unknown) => err instanceof SnapshotStorageError && err.code === "corrupt",
+    (err: unknown) =>
+      err instanceof SnapshotStorageError && err.code === "corrupt",
     "Must reject duplicate message IDs in the same chat",
   );
 
@@ -329,16 +335,20 @@ test("ADV-PAYLOAD-04: duplicate message, task, and project identifiers are rejec
 
   assert.throws(
     () => decodeSnapshot(dupTaskSnapshot),
-    (err: unknown) => err instanceof SnapshotStorageError && err.code === "corrupt",
+    (err: unknown) =>
+      err instanceof SnapshotStorageError && err.code === "corrupt",
     "Must reject duplicate task IDs",
   );
 
   // 3. Duplicate project IDs
   const dupProjSnapshot = createValidBaseV3();
-  dupProjSnapshot.projects.push(JSON.parse(JSON.stringify(dupProjSnapshot.projects[0])));
+  dupProjSnapshot.projects.push(
+    JSON.parse(JSON.stringify(dupProjSnapshot.projects[0])),
+  );
   assert.throws(
     () => decodeSnapshot(dupProjSnapshot),
-    (err: unknown) => err instanceof SnapshotStorageError && err.code === "corrupt",
+    (err: unknown) =>
+      err instanceof SnapshotStorageError && err.code === "corrupt",
     "Must reject duplicate project IDs",
   );
 });
@@ -423,14 +433,16 @@ test("ADV-SEC-01: rejectSecrets blocks all sensitive credential keys across nami
     };
     assert.throws(
       () => validateSnapshotV3(snapshotWithRootSecret),
-      (err: unknown) => err instanceof SnapshotStorageError && err.code === "corrupt",
+      (err: unknown) =>
+        err instanceof SnapshotStorageError && err.code === "corrupt",
       `validateSnapshotV3 must reject sensitive key: ${secretKey}`,
     );
 
     // 3. Through decodeSnapshot
     assert.throws(
       () => decodeSnapshot(snapshotWithRootSecret),
-      (err: unknown) => err instanceof SnapshotStorageError && err.code === "corrupt",
+      (err: unknown) =>
+        err instanceof SnapshotStorageError && err.code === "corrupt",
       `decodeSnapshot must reject sensitive key: ${secretKey}`,
     );
   }
@@ -439,8 +451,9 @@ test("ADV-SEC-01: rejectSecrets blocks all sensitive credential keys across nami
 test("ADV-SEC-02: credential injection is blocked across diverse nesting topologies", () => {
   // Location 1: In project tasks
   const leakInTasks = createValidBaseV3();
-  (leakInTasks.projects[0].tasks![0] as unknown as Record<string, unknown>).accessToken =
-    "ghp_synthetic_token_123";
+  (
+    leakInTasks.projects[0].tasks![0] as unknown as Record<string, unknown>
+  ).accessToken = "ghp_synthetic_token_123";
   assert.throws(
     () => decodeSnapshot(leakInTasks),
     /凭据|令牌|密钥/,
@@ -449,8 +462,12 @@ test("ADV-SEC-02: credential injection is blocked across diverse nesting topolog
 
   // Location 2: In chat draft
   const leakInChatDraft = createValidBaseV3();
-  (leakInChatDraft.projects[0].chats["chat-primary"].draft as Record<string, unknown>).apiKey =
-    "sk-synthetic-live-secret";
+  (
+    leakInChatDraft.projects[0].chats["chat-primary"].draft as Record<
+      string,
+      unknown
+    >
+  ).apiKey = "sk-synthetic-live-secret";
   assert.throws(
     () => decodeSnapshot(leakInChatDraft),
     /凭据|令牌|密钥/,
@@ -460,7 +477,10 @@ test("ADV-SEC-02: credential injection is blocked across diverse nesting topolog
   // Location 3: In chat message
   const leakInMessage = createValidBaseV3();
   (
-    leakInMessage.projects[0].chats["chat-primary"].messages[0] as Record<string, unknown>
+    leakInMessage.projects[0].chats["chat-primary"].messages[0] as Record<
+      string,
+      unknown
+    >
   ).authorization = "Bearer synthetic-jwt-token";
   assert.throws(
     () => decodeSnapshot(leakInMessage),
@@ -470,7 +490,9 @@ test("ADV-SEC-02: credential injection is blocked across diverse nesting topolog
 
   // Location 4: In headers / metadata nested inside plugin
   const leakInMetadata = createValidBaseV3();
-  (leakInMetadata.projects[0].items[0] as unknown as Record<string, unknown>).plugin = {
+  (
+    leakInMetadata.projects[0].items[0] as unknown as Record<string, unknown>
+  ).plugin = {
     type: "custom-filter",
     metadata: {
       headers: {
@@ -492,7 +514,9 @@ test("ADV-SEC-02: credential injection is blocked across diverse nesting topolog
     deeplyNested = { child: deeplyNested };
   }
   const leakDeep = createValidBaseV3();
-  (leakDeep.projects[0].items[0] as unknown as Record<string, unknown>).metadata = deeplyNested;
+  (
+    leakDeep.projects[0].items[0] as unknown as Record<string, unknown>
+  ).metadata = deeplyNested;
   assert.throws(
     () => decodeSnapshot(leakDeep),
     /凭据|令牌|密钥/,
@@ -501,10 +525,8 @@ test("ADV-SEC-02: credential injection is blocked across diverse nesting topolog
 
   // Location 6: Array-embedded object with secret
   const leakInArray = createValidBaseV3();
-  (leakInArray.projects[0] as unknown as Record<string, unknown>).customArray = [
-    { safe: 1 },
-    [{ nestedSafe: true }, { clientSecret: "leak-in-array" }],
-  ];
+  (leakInArray.projects[0] as unknown as Record<string, unknown>).customArray =
+    [{ safe: 1 }, [{ nestedSafe: true }, { clientSecret: "leak-in-array" }]];
   assert.throws(
     () => decodeSnapshot(leakInArray),
     /凭据|令牌|密钥/,
@@ -551,7 +573,9 @@ test("ADV-SEC-03: safe ordinary text values containing 'key', 'secret', or 'toke
   );
 
   // Must not throw in decodeSnapshot
-  const decoded = decodeSnapshot(safeTextSnapshot) as unknown as CreationSnapshotV3;
+  const decoded = decodeSnapshot(
+    safeTextSnapshot,
+  ) as unknown as CreationSnapshotV3;
   assert.equal(decoded.projects[0].chats["chat-primary"].name, chat.name);
   assert.equal(decoded.projects[0].chats["chat-primary"].messages.length, 2);
 });
@@ -666,7 +690,10 @@ test("ADV-SCALE-02: multi-chat state isolation guarantees zero draft or transcri
   for (let i = 0; i < totalChats; i++) {
     const currentChat = proj.chats[`chat-iso-${i}`];
     assert.equal(currentChat.draft.text, `Unsent secret draft for room #${i}`);
-    assert.equal(currentChat.messages[0].content, `Transcript strictly private to room ${i}`);
+    assert.equal(
+      currentChat.messages[0].content,
+      `Transcript strictly private to room ${i}`,
+    );
     assert.deepEqual(currentChat.modelAllowlist, [`allowed-for-${i}`]);
 
     // Mutate draft of chat-iso-i
@@ -675,7 +702,10 @@ test("ADV-SCALE-02: multi-chat state isolation guarantees zero draft or transcri
 
   // Verify no mutation affected adjacent chat drafts
   for (let i = 0; i < totalChats; i++) {
-    assert.equal(proj.chats[`chat-iso-${i}`].draft.text, `MUTATED_CONTENT_${i}`);
+    assert.equal(
+      proj.chats[`chat-iso-${i}`].draft.text,
+      `MUTATED_CONTENT_${i}`,
+    );
   }
 
   // Verify shared project canvas items remain untouched and singular
@@ -699,7 +729,10 @@ test("ADV-BARRIER-01: write barrier enforces non-downgradability and tamper dete
   });
 
   const barrier = new NonDowngradableWriteBarrier(initialV2Raw);
-  assert.deepEqual(barrier.formatMarker, { formatVersion: 1, minWriterVersion: 1 });
+  assert.deepEqual(barrier.formatMarker, {
+    formatVersion: 1,
+    minWriterVersion: 1,
+  });
 
   const validV3Candidate: CreationSnapshotV3 = {
     version: 3,
@@ -757,5 +790,8 @@ test("ADV-BARRIER-01: write barrier enforces non-downgradability and tamper dete
     JSON.stringify(validV3Candidate),
   );
   assert.equal(barrier.recoverFromCrash().state, "v3_recovered");
-  assert.deepEqual(barrier.formatMarker, { formatVersion: 2, minWriterVersion: 2 });
+  assert.deepEqual(barrier.formatMarker, {
+    formatVersion: 2,
+    minWriterVersion: 2,
+  });
 });

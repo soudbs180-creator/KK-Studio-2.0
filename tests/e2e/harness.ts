@@ -1,24 +1,15 @@
-import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import {
   ChannelRegistry,
   type ChannelRegistration,
-  type ChannelIndexEntry,
 } from "../../src/features/ai-gateway/channels/registry.ts";
-import { blendMaskedPixels } from "../../src/features/image-edit/pixels.ts";
-import type { CapabilityManifest } from "../../src/domain/providerConnections.ts";
 
 /* -------------------------------------------------------------------------
  * R1: Agent Circular 6-State Action Button & Turn Freezing Contracts
  * ------------------------------------------------------------------------- */
 
 export type AgentActionButtonState =
-  | "idle"
-  | "executing"
-  | "pausing"
-  | "paused"
-  | "resuming"
-  | "completed";
+  "idle" | "executing" | "pausing" | "paused" | "resuming" | "completed";
 
 export interface AgentActionButtonProps {
   state: AgentActionButtonState;
@@ -34,8 +25,8 @@ export interface AgentActionButtonProps {
 
 export interface ButtonDimensions {
   desktopDiameter: number; // 40px
-  touchTargetMin: number;  // 44px
-  iconSize: number;        // 20px
+  touchTargetMin: number; // 44px
+  iconSize: number; // 20px
 }
 
 export const ACTION_BUTTON_DIMENSIONS: ButtonDimensions = {
@@ -47,7 +38,7 @@ export const ACTION_BUTTON_DIMENSIONS: ButtonDimensions = {
 export class ActionButtonStateMachine {
   #state: AgentActionButtonState = "idle";
   #lastClickTime = 0;
-  #debounceMs = 300;
+  #debounceMs = 0;
   #activeStepRunning = false;
   #turnQueueFrozen = false;
   #remotePollingActive = false;
@@ -56,8 +47,12 @@ export class ActionButtonStateMachine {
     attachments: [],
   };
 
-  constructor(initialState: AgentActionButtonState = "idle") {
+  constructor(
+    initialState: AgentActionButtonState = "idle",
+    debounceMs: number = 0,
+  ) {
     this.#state = initialState;
+    this.#debounceMs = debounceMs;
   }
 
   get state(): AgentActionButtonState {
@@ -70,6 +65,10 @@ export class ActionButtonStateMachine {
 
   get isRemotePollingActive(): boolean {
     return this.#remotePollingActive;
+  }
+
+  get isActiveStepRunning(): boolean {
+    return this.#activeStepRunning;
   }
 
   get draft(): { text: string; attachments: string[] } {
@@ -101,17 +100,26 @@ export class ActionButtonStateMachine {
    * User clicks the circular action button.
    * Debounces clicks within debounce window for non-clickable transition states.
    */
-  async handleClick(onSend?: () => void, onPause?: () => void, onResume?: () => void): Promise<{
+  async handleClick(
+    onSend?: () => void,
+    onPause?: () => void,
+    onResume?: () => void,
+  ): Promise<{
     transitioned: boolean;
     previousState: AgentActionButtonState;
     currentState: AgentActionButtonState;
   }> {
     const now = Date.now();
-    const isDebounced = now - this.#lastClickTime < this.#debounceMs;
+    const isDebounced =
+      this.#lastClickTime > 0 && now - this.#lastClickTime < this.#debounceMs;
     const prev = this.#state;
 
-    // Disabled states reject click events
-    if (this.#state === "pausing" || this.#state === "resuming") {
+    // Disabled states reject click events, and debounced clicks are ignored
+    if (
+      this.#state === "pausing" ||
+      this.#state === "resuming" ||
+      isDebounced
+    ) {
       return { transitioned: false, previousState: prev, currentState: prev };
     }
 
@@ -124,27 +132,43 @@ export class ActionButtonStateMachine {
       this.#turnQueueFrozen = false;
       this.#activeStepRunning = true;
       if (onSend) await onSend();
-      return { transitioned: true, previousState: prev, currentState: this.#state };
+      return {
+        transitioned: true,
+        previousState: prev,
+        currentState: this.#state,
+      };
     }
 
     if (this.#state === "executing") {
       this.#lastClickTime = now;
       this.#state = "pausing";
       if (onPause) await onPause();
-      return { transitioned: true, previousState: prev, currentState: this.#state };
+      return {
+        transitioned: true,
+        previousState: prev,
+        currentState: this.#state,
+      };
     }
 
     if (this.#state === "paused") {
       this.#lastClickTime = now;
       this.#state = "resuming";
       if (onResume) await onResume();
-      return { transitioned: true, previousState: prev, currentState: this.#state };
+      return {
+        transitioned: true,
+        previousState: prev,
+        currentState: this.#state,
+      };
     }
 
     if (this.#state === "completed") {
       this.#lastClickTime = now;
       this.#state = "idle";
-      return { transitioned: true, previousState: prev, currentState: this.#state };
+      return {
+        transitioned: true,
+        previousState: prev,
+        currentState: this.#state,
+      };
     }
 
     return { transitioned: false, previousState: prev, currentState: prev };
@@ -274,9 +298,12 @@ export function sha256Hex(content: string | Buffer): string {
 }
 
 /** Reject secrets per ADR-022 and snapshotCodec standards */
-export function rejectSecretsInSnapshot(snapshot: Record<string, unknown>): void {
+export function rejectSecretsInSnapshot(
+  snapshot: Record<string, unknown>,
+): void {
   const serialized = JSON.stringify(snapshot);
-  const secretPattern = /"apiKey"|"api_key"|"accessToken"|"access_token"|"secretKey"|"token"\s*:\s*"[^"]{8,}"/i;
+  const secretPattern =
+    /"apiKey"|"api_key"|"accessToken"|"access_token"|"secretKey"|"token"\s*:\s*"[^"]{8,}"/i;
   if (secretPattern.test(serialized)) {
     throw new Error("项目不能包含密钥或访问令牌。");
   }
@@ -304,7 +331,11 @@ function validateProjectRecord(project: CreationProjectV3): void {
   if (!project.activeChatId || typeof project.activeChatId !== "string") {
     throw new Error(`Project ${project.id} missing activeChatId`);
   }
-  if (!project.chats || typeof project.chats !== "object" || Array.isArray(project.chats)) {
+  if (
+    !project.chats ||
+    typeof project.chats !== "object" ||
+    Array.isArray(project.chats)
+  ) {
     throw new Error(`Project ${project.id} missing chats dictionary`);
   }
   if (!project.chats[project.activeChatId]) {
@@ -326,7 +357,11 @@ export function validateSnapshotV3(snapshot: unknown): CreationSnapshotV3 {
   if (s.version !== 3) {
     throw new Error(`Unsupported snapshot version: ${s.version}, expected 3`);
   }
-  if (typeof s.revision !== "number" || !Number.isFinite(s.revision) || s.revision < 0) {
+  if (
+    typeof s.revision !== "number" ||
+    !Number.isFinite(s.revision) ||
+    s.revision < 0
+  ) {
     throw new Error("Invalid snapshot revision");
   }
   if (!Array.isArray(s.projects)) {
@@ -342,12 +377,19 @@ export function validateSnapshotV3(snapshot: unknown): CreationSnapshotV3 {
   return snapshot as CreationSnapshotV3;
 }
 
-function buildLegacyChats(proj: LegacyV2Project, now: number): Record<string, ChatItem> {
+function buildLegacyChats(
+  proj: LegacyV2Project,
+  now: number,
+): Record<string, ChatItem> {
   const chats: Record<string, ChatItem> = {};
-  const hasCodex = Boolean(proj.agentThreadId || proj.composerDraft?.pendingAgent);
+  const hasCodex = Boolean(
+    proj.agentThreadId || proj.composerDraft?.pendingAgent,
+  );
   const hasDirect = Boolean(
     (proj.messages && proj.messages.length > 0) ||
-    (proj.composerDraft && !proj.composerDraft.pendingAgent && (proj.composerDraft.text || proj.composerDraft.attachments?.length)),
+    (proj.composerDraft &&
+      !proj.composerDraft.pendingAgent &&
+      (proj.composerDraft.text || proj.composerDraft.attachments?.length)),
   );
 
   if (hasCodex) {
@@ -357,7 +399,11 @@ function buildLegacyChats(proj: LegacyV2Project, now: number): Record<string, Ch
       createdAt: now,
       updatedAt: now,
       draft: proj.composerDraft?.pendingAgent ? { ...proj.composerDraft } : {},
-      messages: proj.messages ? proj.messages.filter((m) => m.role === "assistant" || m.role === "user") : [],
+      messages: proj.messages
+        ? proj.messages.filter(
+            (m) => m.role === "assistant" || m.role === "user",
+          )
+        : [],
       mainAgent: "codex",
       modelAllowlist: [],
       agentThreadId: proj.agentThreadId,
@@ -370,7 +416,10 @@ function buildLegacyChats(proj: LegacyV2Project, now: number): Record<string, Ch
       name: "对话记录",
       createdAt: now,
       updatedAt: now,
-      draft: proj.composerDraft && !proj.composerDraft.pendingAgent ? { ...proj.composerDraft } : {},
+      draft:
+        proj.composerDraft && !proj.composerDraft.pendingAgent
+          ? { ...proj.composerDraft }
+          : {},
       messages: proj.messages ? [...proj.messages] : [],
       mainAgent: "direct",
       modelAllowlist: [],
@@ -414,33 +463,41 @@ function resolveActiveChatId(chats: Record<string, ChatItem>): string {
   return "chat-default";
 }
 
-function migrateProjectV2(proj: LegacyV2Project, now: number): CreationProjectV3 {
+function migrateProjectV2(
+  proj: LegacyV2Project,
+  now: number,
+): CreationProjectV3 {
   const chats = buildLegacyChats(proj, now);
   const activeChatId = resolveActiveChatId(chats);
-  const {
-    messages: _m,
-    composerDraft: _d,
-    agentThreadId: _a,
-    googleConversation: _g,
-    ...rest
-  } = proj;
+  const rest = { ...proj };
+  delete (rest as Record<string, unknown>).messages;
+  delete (rest as Record<string, unknown>).composerDraft;
+  delete (rest as Record<string, unknown>).agentThreadId;
+  delete (rest as Record<string, unknown>).googleConversation;
 
   return {
     ...rest,
     name: proj.name || "未命名项目",
     activeChatId,
     chats,
-    tasks: (proj.tasks || []).map((t) => ({ ...t, originChatId: activeChatId })),
+    tasks: (proj.tasks || []).map((t) => ({
+      ...t,
+      originChatId: activeChatId,
+    })),
   };
 }
 
 /**
  * Deterministic legacy v2 -> v3 chat migration algorithm per ADR-022.
  */
-export function migrateSnapshotV2ToV3(v2: LegacyV2Snapshot): CreationSnapshotV3 {
+export function migrateSnapshotV2ToV3(
+  v2: LegacyV2Snapshot,
+): CreationSnapshotV3 {
   rejectSecretsInSnapshot(v2 as unknown as Record<string, unknown>);
   const now = Date.now();
-  const projectsV3: CreationProjectV3[] = v2.projects.map((proj) => migrateProjectV2(proj, now));
+  const projectsV3: CreationProjectV3[] = v2.projects.map((proj) =>
+    migrateProjectV2(proj, now),
+  );
 
   return {
     version: 3,
@@ -577,7 +634,9 @@ export interface DeduplicatedModelEntry {
 /**
  * Deduplicate models across relays into unified rows per R3 specification.
  */
-export function deduplicateRelayModels(entries: ModelMenuEntry[]): DeduplicatedModelEntry[] {
+export function deduplicateRelayModels(
+  entries: ModelMenuEntry[],
+): DeduplicatedModelEntry[] {
   const groups = new Map<string, ModelMenuEntry[]>();
 
   for (const entry of entries) {
@@ -594,7 +653,7 @@ export function deduplicateRelayModels(entries: ModelMenuEntry[]): DeduplicatedM
       (e) => e.state === "disabled" || e.state === "quarantined",
     );
 
-    let badgeLabel = "";
+    let badgeLabel: string;
     if (activeCandidates.length > 1) {
       badgeLabel = `中转 · ${activeCandidates.length} 个可用`;
     } else if (activeCandidates.length === 1) {
@@ -625,13 +684,17 @@ export function deduplicateRelayModels(entries: ModelMenuEntry[]): DeduplicatedM
     });
   }
 
-  return result.sort((a, b) => a.canonicalModelId.localeCompare(b.canonicalModelId));
+  return result.sort((a, b) =>
+    a.canonicalModelId.localeCompare(b.canonicalModelId),
+  );
 }
 
 /**
  * Priority & Weighted Dispatch Resolver using ChannelRegistry.
  */
-export function createTestChannelRegistry(registrations: ChannelRegistration[]): ChannelRegistry {
+export function createTestChannelRegistry(
+  registrations: ChannelRegistration[],
+): ChannelRegistry {
   const registry = new ChannelRegistry();
   const states = new Map<string, "active" | "disabled" | "quarantined">();
   for (const reg of registrations) {
@@ -659,7 +722,11 @@ export interface PixelBuffer {
   data: Uint8ClampedArray;
 }
 
-export function createPixelBuffer(width: number, height: number, fillColor?: RGBAColor): PixelBuffer {
+export function createPixelBuffer(
+  width: number,
+  height: number,
+  fillColor?: RGBAColor,
+): PixelBuffer {
   const data = new Uint8ClampedArray(width * height * 4);
   if (fillColor) {
     for (let i = 0; i < data.length; i += 4) {
@@ -682,13 +749,10 @@ export function verifyAlphaIntegrity(buffer: PixelBuffer): {
   minAlpha: number;
 } {
   let hasTransparency = false;
-  let hasCorruptedBlackMatte = false;
+  const hasCorruptedBlackMatte = false;
   let minAlpha = 255;
 
   for (let i = 0; i < buffer.data.length; i += 4) {
-    const r = buffer.data[i];
-    const g = buffer.data[i + 1];
-    const b = buffer.data[i + 2];
     const a = buffer.data[i + 3];
 
     if (a < minAlpha) minAlpha = a;
@@ -728,7 +792,10 @@ export function calculateAdaptiveResize(
  * Format Adaptation Rule:
  * Images with alpha channel MUST NOT be converted to image/jpeg without explicit background.
  */
-export function resolveTargetImageMime(sourceMime: string, hasAlpha: boolean): string {
+export function resolveTargetImageMime(
+  sourceMime: string,
+  hasAlpha: boolean,
+): string {
   if (hasAlpha) {
     if (sourceMime === "image/jpeg") {
       throw new Error("Alpha channel cannot be preserved in JPEG");
@@ -819,7 +886,8 @@ function detectComfyImageMime(filename: string): string | null {
   if (filename.endsWith(".webm")) return "video/webm";
   if (filename.endsWith(".gif")) return "image/gif";
   if (filename.endsWith(".png")) return "image/png";
-  if (filename.endsWith(".jpg") || filename.endsWith(".jpeg")) return "image/jpeg";
+  if (filename.endsWith(".jpg") || filename.endsWith(".jpeg"))
+    return "image/jpeg";
   if (filename.endsWith(".webp")) return "image/webp";
   return null;
 }
@@ -860,9 +928,30 @@ export function parseComfyUiOutputs(
 
   for (const nodeOutput of Object.values(outputs)) {
     if (!nodeOutput || typeof nodeOutput !== "object") continue;
-    results.push(...parseVideoOutputs(nodeOutput.videos, providerJobId, baseUrl, results.length));
-    results.push(...parseGifOutputs(nodeOutput.gifs, providerJobId, baseUrl, results.length));
-    results.push(...parseImageOutputs(nodeOutput.images, providerJobId, baseUrl, results.length));
+    results.push(
+      ...parseVideoOutputs(
+        nodeOutput.videos,
+        providerJobId,
+        baseUrl,
+        results.length,
+      ),
+    );
+    results.push(
+      ...parseGifOutputs(
+        nodeOutput.gifs,
+        providerJobId,
+        baseUrl,
+        results.length,
+      ),
+    );
+    results.push(
+      ...parseImageOutputs(
+        nodeOutput.images,
+        providerJobId,
+        baseUrl,
+        results.length,
+      ),
+    );
   }
 
   return results;

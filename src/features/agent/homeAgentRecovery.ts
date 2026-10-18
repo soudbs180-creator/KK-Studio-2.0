@@ -36,6 +36,10 @@ export function sendProjectAgentMessage(
   attachments: AgentDraftAttachment[] | undefined,
   selection: ModelSelection | undefined,
 ) {
+  const activeChat =
+    project?.chats && project?.activeChatId
+      ? project.chats[project.activeChatId]
+      : undefined;
   // Codex uses its account reasoning model; never send the project's API model.
   return connection.sendMessage(message, {
     attachments,
@@ -45,6 +49,10 @@ export function sendProjectAgentMessage(
         ? project?.composerDraft.outputCount
         : undefined,
     canvasSource: pendingAgentCanvasSource(project, selection),
+    isTemporary: activeChat?.isTemporary,
+    modelAllowlist: activeChat
+      ? [...(activeChat.modelAllowlist ?? [])]
+      : undefined,
   });
 }
 

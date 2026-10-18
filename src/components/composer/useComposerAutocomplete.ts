@@ -111,7 +111,11 @@ export function useComposerAutocomplete(options: {
       }
 
       if (e.key === "Enter" || e.key === "Tab") {
-        if (count > 0 && current.selectedIndex >= 0 && current.selectedIndex < count) {
+        if (
+          count > 0 &&
+          current.selectedIndex >= 0 &&
+          current.selectedIndex < count
+        ) {
           e.preventDefault();
           e.stopPropagation();
           optionsRef.current.onSelect(current.selectedIndex);

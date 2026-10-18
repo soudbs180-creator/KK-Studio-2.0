@@ -2,12 +2,40 @@
 
 - docId: PROJECT_STATE
 - status: current
-- updatedAt: 2026-10-16
+- updatedAt: 2026-10-17
 - source: `docs/governance/task-ledger.json`
 - supersededBy: null
 
 <!-- DOCUMENT_METADATA_END -->
 <!-- CURRENT_FACTS_BEGIN -->
+
+# 当前项目事实（2026-10-17）
+
+- `snapshotDate`: 2026-10-17
+- `canonicalRepository`: `D:/kk-studio/KK-Studio-2.0`
+- `canonicalRef`: `origin/main`
+- `canonicalHead`: d95e4c446d3b4ae5419ce0f58c68057ebabc286a，Desktop/Web2.1.34；19:07只读回读仍此SHA，本轮候选未推送/合入main/发布。
+- `localMainHead`: 8c36a6b138205613ae1a7c27950b86792da8de1a，领先origin/main49提交；63条原dirty、index/status/staged0保持。最新56872dc7完整性收据PASS，未reset/clean/覆盖。
+- `currentTask`: TASK-AUDIT-REPAIR-20261017，DONE/PASS仅有界本地A–D；任务树`D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017`，branch `fix/TASK-AUDIT-REPAIR-20261017`。产品source `4699458de1c3437309b7cdc3f019454104c81fce`、tree `a1905e2aa6e11a24b4c62d829dc82a8f0d566972`；221560a3仍仅未验收原始快照。
+- `sourceVersionBoundary`: Desktop/Web2.1.36，Mobile2.1.1规划；版本源`config/platform-versions.json`。源码、本机启动、main集成/正式发布和用户验收分别记录。
+- `taskLedger`: 149 records；DONE85、PARTIAL48、TODO12、BLOCKED3、IN_PROGRESS1、REVIEW0，开放64。仅新增审计任务本地DONE，原148完整对象（含验收/依赖/lastVerified/84DONE）保持；26失效分配、5旧REVIEW/HOME及branch不符任务完整历史仍保留，原统一scope继续开放。
+- `workspaceWorktrees`: 4登记checkout/5本地分支；主仓8c36a6b、本任务产品source4699458d、统一df08748e、taskstate5e2d2ab6；最终文档HEAD由Git/精确收据回读，469不是稍后文档提交的branch tip。[清单](workspace-inventory.json)为2026-10-17T11:18:46.286Z采样，由现有生成器更新，26条目全部deletable=false/destructiveActionsPerformed=false；旧清单另存，候选分类不是清理授权。
+- `preservation`: A core PASS；工程外`D:/KK-Studio-recovery-20260921/audit-repair-20261017-1f00ccc3-1207-4cd3-90e1-bd0192d64d21/final-preservation-receipt.json`，517368文件版本/56336959878 B/6 bundles、两个dirty恢复。外部变化、新增文件、长路径首轮失败与所有旧日志/运行原件保留。
+- `safetyRepairs`: 五P1/垃圾箱误报、原始identity/格式写保护、空授权与精确账号、scope/epoch/记忆/迟到回调、预览重试/标签撤销和交互问题通过有界反例/回归。协议6新/临时聊天、不支持v3/多聊天、无持久receipt的12AI及未接持久垃圾箱保持禁用；不是完成这些能力。
+- `finalVerify`: 469源码完整verify前后CLEAN且exit0；Node1832PASS/14既有SKIP、Agent199PASS/2既有SKIP、产品Edge823首试零fail/retry/flaky/skip、DESIGN41单元/8浏览器、development四步，lint/type/UI/format/build通过。Rust bin213PASS/1硬件ignored+integration41/check/fmt绑定未变Native源。advisory与警告保留。
+- `nativeDelivery`: 官方构建source469/EXE b6299445/input a53dee81；隔离Native六检查、focus/真退出/重开/identity/草稿/loaded资源字节及版本2.1.36均PASS。两个日常lnk先复制保全再原位恢复，默认实际启动关闭重开PASS，留下正常无CDP单实例PID50136。见[完整身份与收据](../changes/2026-10-17-audit-repair/verification.md)。
+- `defaultDataBoundary`: 默认9项目原始快照SHA998e0101、identity14441803与shared memory保持；旧聊天资料仍READ_ONLY保护，未强制迁移或改为可写。启动恢复DONE不等于完整迁移/protocol7/付费Provider验收。
+- `reviewBoundary`: 469增量源码/连接调用链独审PASS；此前FSR01–06按原SHA关闭，菜单遮挡实际RED→GREEN与新Native/daily复验通过。最终文档HEAD独审与正式Delivery按提交后精确收据裁决，不预填Hosted或发布结果。75的12FAIL/8026中止/d356 dailyFAIL/旧helper失败均保留。
+- `remoteWorkBoundary`: 18:08→19:07可比字段69heads/7Draft PR/3active rulesets零漂移，7PR autoMerge=null；旧ref名与新baseSHA不可直接比较，不声称全部字段一致。stable实际严格verify/delivery、approvals0；merge queue及governance/deploy-linux未强制，classic保护GET403为权限边界，未修改settings。
+- `localHook`: 四处无core.hooksPath覆盖，同common pre-push v2；installed/policy/source按LF归一相等，旧v1.bak保持。既有fixture27=22PASS/5Windows平台SKIP/0FAIL本轮未重跑，7相关guard源自a95未变；hook可绕过，不替代Hosted。
+- `reclamationPolicy`: 54份runtime previous、旧clone/worktree/输出/恢复材料仍在，没有删除或移动。所有build输出/依赖物理owned，共享junction/symlink只读。E/F实体整理未执行。
+- `historicalRule`: 下方历史不覆盖本区。37功能成熟度/runtimeEvidence未提升；真实Provider/ComfyUI/GPU、完整多聊天/垃圾箱/12AI恢复、账号/VPS、Mobile、签名与用户验收按原任务保持开放。
+
+<!-- CURRENT_FACTS_END -->
+<!-- HISTORICAL_SNAPSHOTS_BEGIN -->
+
+## 2026-10-16及之前的原CURRENT_FACTS（历史保留，已由2026-10-17事实替代）
+
 
 2026-10-16 最新增量：8e17cb13全量UI失败修复九文件已精确独审SPEC/QUALITY PASS，相关九组87/87首试、0retry/flaky/skip；侧栏偏移根因是垃圾箱独立行，归入原菜单后五锚点误差0，未放宽原Figma断言。静态/build及Node1508/14既有skip通过，未以此覆盖下文55a0完整verify失败或Native焦点边界。ADR022/023已接受并独审；正常多聊天实现者独占App/快照/聊天/Agent共享核心，本地安装实现者只写独立适配器，root保留main/Cargo/全局tokens/版本及任务文档。两条实现均未冻结/验收，模型B/C实际执行链并行只读核对。详见[当前验证](../changes/2026-10-15-kk-unified/verification.md)。
 
@@ -66,8 +94,7 @@
 - `dailyDataBoundary`: HOME交接九项目新基线，两个新ID恢复副本保留；当前选副本1。勘误：新增reviewComments/stagePlans空数组的是project-mv949az4-zmndcg67，原active project-mu3l43g1-u26lanrs仍全字段exact。副本2画布未验，不再以旧7基线覆盖。auto-connect当前enabled，历史原值UNKNOWN，不能猜恢复。
 - `takeoverEntry`: [唯一正式执行提示词](../changes/2026-10-15-unified-handoff/takeover-context.md)、[归并和合入顺序](../changes/2026-10-15-unified-handoff/resume-order.md)、[矩阵](../changes/2026-10-15-unified-handoff/delivery-matrix.md)。全部批准范围/P0/P1/关键恢复风险及用户验收完成前总目标IN_PROGRESS。
 
-<!-- CURRENT_FACTS_END -->
-<!-- HISTORICAL_SNAPSHOTS_BEGIN -->
+
 
 ## 2026-10-15 2.1.30最终本地快照（历史；当前状态以上方为准）
 

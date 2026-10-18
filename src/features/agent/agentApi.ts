@@ -24,6 +24,15 @@ export class AgentApiError<T = unknown> extends Error {
   }
 }
 
+export class AgentHistoryError extends Error {
+  readonly conversation?: AgentConversationState;
+  constructor(conversation?: AgentConversationState) {
+    super("Agent 历史消息格式无效，未载入该历史，请检查本地服务后重试。");
+    this.name = "AgentHistoryError";
+    this.conversation = conversation;
+  }
+}
+
 export type AgentApiClientOptions = {
   endpoint: string;
   token: string;
@@ -79,6 +88,16 @@ export function createAgentApi(options: AgentApiClientOptions) {
     if (!response.ok || data.ok === false)
       throw new AgentApiError(response.status, data);
     return data;
+  }
+  async function requestThread(path: string, body?: unknown) {
+    const history = await request<AgentThreadResponse>(path, body);
+    if (
+      history.messages !== undefined &&
+      (!Array.isArray(history.messages) ||
+        history.messages.some((item) => !item || typeof item.text !== "string"))
+    )
+      throw new AgentHistoryError(history.conversation);
+    return history;
   }
   const clientQuery = `?clientId=${encodeURIComponent(options.clientId)}`;
   return {
@@ -149,7 +168,7 @@ export function createAgentApi(options: AgentApiClientOptions) {
       await request("/agent/codex/history/ack", { threadId, turnIds });
     },
     newThread: (permissionMode: AgentPermissionMode) =>
-      request<AgentThreadResponse>("/agent/codex/threads/new", {
+      requestThread("/agent/codex/threads/new", {
         clientId: options.clientId,
         permissionMode,
       }),
@@ -159,16 +178,13 @@ export function createAgentApi(options: AgentApiClientOptions) {
       failedPreparationClientId?: string,
     ) {
       try {
-        return await request<AgentThreadResponse>(
-          "/agent/codex/conversation/prepare",
-          {
-            clientId: options.clientId,
-            permissionMode,
-            expectedConversationId: conversation.conversationId,
-            expectedRevision: conversation.revision,
-            ...(failedPreparationClientId ? { failedPreparationClientId } : {}),
-          },
-        );
+        return await requestThread("/agent/codex/conversation/prepare", {
+          clientId: options.clientId,
+          permissionMode,
+          expectedConversationId: conversation.conversationId,
+          expectedRevision: conversation.revision,
+          ...(failedPreparationClientId ? { failedPreparationClientId } : {}),
+        });
       } catch (error) {
         if (error instanceof AgentApiError && error.status === 404)
           throw new Error(
@@ -179,14 +195,12 @@ export function createAgentApi(options: AgentApiClientOptions) {
       }
     },
     resumeThread: (threadId: string, permissionMode: AgentPermissionMode) =>
-      request<AgentThreadResponse>(
+      requestThread(
         `/agent/codex/threads/${encodeURIComponent(threadId)}/resume`,
         { clientId: options.clientId, permissionMode },
       ),
     readThread: (threadId: string) =>
-      request<AgentThreadResponse>(
-        `/agent/codex/threads/${encodeURIComponent(threadId)}`,
-      ),
+      requestThread(`/agent/codex/threads/${encodeURIComponent(threadId)}`),
     async generatedImage(threadId: string, itemId: string): Promise<Blob> {
       const response = await fetchImpl(
         endpoint +

@@ -81,10 +81,18 @@ describe("structuredPromptCompiler", () => {
 
     // 2. 验证前言中包含 [Ref_1] 和 [Ref_2] 的角色与约束
     assert.ok(result.preamble.includes("【参考素材角色分配与约束清单】："));
-    assert.ok(result.preamble.includes("素材 [Ref_1]（对应附件 1：《原木茶几》）"));
-    assert.ok(result.preamble.includes("角色定位：【主体 · 核心主体（外观与身份）】"));
-    assert.ok(result.preamble.includes("素材 [Ref_2]（对应附件 2：《日光客厅》）"));
-    assert.ok(result.preamble.includes("角色定位：【构图 · 空间透视与摄影机位】"));
+    assert.ok(
+      result.preamble.includes("素材 [Ref_1]（对应附件 1：《原木茶几》）"),
+    );
+    assert.ok(
+      result.preamble.includes("角色定位：【主体 · 核心主体（外观与身份）】"),
+    );
+    assert.ok(
+      result.preamble.includes("素材 [Ref_2]（对应附件 2：《日光客厅》）"),
+    );
+    assert.ok(
+      result.preamble.includes("角色定位：【构图 · 空间透视与摄影机位】"),
+    );
 
     // 3. 验证附件已按 Ref 顺序重新对齐排布，且分配了 role
     assert.equal(result.alignedAttachments.length, 3);

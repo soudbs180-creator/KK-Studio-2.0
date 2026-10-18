@@ -176,6 +176,7 @@ test("appendImageTask binds the source node and preserves the unsubmitted draft"
     sourceItemId,
   );
   assert.equal(appended.task.sourceItemId, sourceItemId);
+  assert.equal(appended.task.originChatId, projectWithDraft.activeChatId);
   assert.equal(appended.task.providerConnectionId, connection.id);
   assert.equal(appended.project.providerBaseUrl, connection.baseUrl);
   assert.equal(appended.project.composerDraft.prompt, "仍要保留的草稿");

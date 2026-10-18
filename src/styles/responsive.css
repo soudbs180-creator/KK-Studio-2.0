@@ -685,3 +685,8 @@
     display: none;
   }
 }
+
+/* Keep the account menu above recovery notices in every sidebar context. */
+.app .sidebar:has(> .account-popup) {
+  z-index: var(--kk-z-popover);
+}

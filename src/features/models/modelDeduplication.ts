@@ -1,4 +1,8 @@
-import type { Entry, RelayCandidate, EntryMetadata } from "./modelMenuEntries.ts";
+import type {
+  Entry,
+  RelayCandidate,
+  EntryMetadata,
+} from "./modelMenuEntries.ts";
 import type { ChannelRegistry } from "../ai-gateway/channels/registry.ts";
 import type { ModelSelection } from "./modelSelection.ts";
 
@@ -76,9 +80,7 @@ function resolveCandidateInfo(
     (entry as unknown as Record<string, unknown>).state === "quarantined"
   ) {
     state = (entry as unknown as Record<string, unknown>).state as
-      | "active"
-      | "disabled"
-      | "quarantined";
+      "active" | "disabled" | "quarantined";
   }
 
   if (typeof meta.connectionName === "string") {
@@ -217,7 +219,7 @@ export function deduplicateRelayEntries(
       (current &&
         current.model === modelId &&
         candidateConnectionIds.includes(current.connectionId ?? "")) ||
-        group.some((e) => e.checked),
+      group.some((e) => e.checked),
     );
 
     const mergedEntry: Entry = {

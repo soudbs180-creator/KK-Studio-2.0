@@ -58,7 +58,10 @@ test("R2-T1-01: snapshot v3 schema validates v3 structure with chats dictionary 
   assert.equal(validated.projects[0].activeChatId, "chat-primary");
   assert.ok(validated.projects[0].chats["chat-primary"]);
   assert.equal(validated.projects[0].chats["chat-primary"].mainAgent, "codex");
-  assert.equal(validated.projects[0].chats["chat-primary"].modelAllowlist.length, 2);
+  assert.equal(
+    validated.projects[0].chats["chat-primary"].modelAllowlist.length,
+    2,
+  );
 });
 
 test("R2-T1-02: deterministic migration splits legacy v2 codex, direct, and google conversations into separate chats", () => {
@@ -73,7 +76,11 @@ test("R2-T1-02: deterministic migration splits legacy v2 codex, direct, and goog
         name: "Legacy Multi-Channel Project",
         // Mixed legacy fields
         messages: [
-          { id: "m-direct-1", role: "user", content: "Direct conversation message" },
+          {
+            id: "m-direct-1",
+            role: "user",
+            content: "Direct conversation message",
+          },
           { id: "m-direct-2", role: "assistant", content: "Direct reply" },
         ],
         composerDraft: {
@@ -95,14 +102,26 @@ test("R2-T1-02: deterministic migration splits legacy v2 codex, direct, and goog
 
   const proj = v3.projects[0];
   // Verify deterministic chat segregation
-  assert.ok(proj.chats["legacy-codex"], "Codex history must be migrated to legacy-codex");
-  assert.ok(proj.chats["legacy-direct"], "Direct history must be migrated to legacy-direct");
-  assert.ok(proj.chats["legacy-google"], "Google history must be migrated to legacy-google");
+  assert.ok(
+    proj.chats["legacy-codex"],
+    "Codex history must be migrated to legacy-codex",
+  );
+  assert.ok(
+    proj.chats["legacy-direct"],
+    "Direct history must be migrated to legacy-direct",
+  );
+  assert.ok(
+    proj.chats["legacy-google"],
+    "Google history must be migrated to legacy-google",
+  );
 
   // Content preservation verification
   assert.equal(proj.chats["legacy-codex"].agentThreadId, "thread-codex-xyz");
   assert.equal(proj.chats["legacy-direct"].messages.length, 2);
-  assert.equal(proj.chats["legacy-direct"].messages[0].content, "Direct conversation message");
+  assert.equal(
+    proj.chats["legacy-direct"].messages[0].content,
+    "Direct conversation message",
+  );
   assert.equal(proj.chats["legacy-direct"].draft.text, "Unsent direct draft");
 
   // Shared assets preserved
@@ -121,7 +140,10 @@ test("R2-T1-03: non-downgradable write barrier enforces strict transaction order
   });
 
   const barrier = new NonDowngradableWriteBarrier(initialV2Raw);
-  assert.deepEqual(barrier.formatMarker, { formatVersion: 1, minWriterVersion: 1 });
+  assert.deepEqual(barrier.formatMarker, {
+    formatVersion: 1,
+    minWriterVersion: 1,
+  });
 
   const v3Candidate: CreationSnapshotV3 = {
     version: 3,
@@ -165,7 +187,10 @@ test("R2-T1-03: non-downgradable write barrier enforces strict transaction order
   assert.equal(mainParsed.version, 3);
 
   // 4. Authority marker advanced to formatVersion=2, minWriterVersion=2
-  assert.deepEqual(barrier.formatMarker, { formatVersion: 2, minWriterVersion: 2 });
+  assert.deepEqual(barrier.formatMarker, {
+    formatVersion: 2,
+    minWriterVersion: 2,
+  });
 
   // 5. Transaction step order log check
   assert.match(barrier.stepLog[0], /^sha256:/);
@@ -180,7 +205,10 @@ test("R2-T1-04: multi-chat architecture isolates drafts, transcripts, and model 
     id: "proj-multi",
     name: "Collaborative Design",
     activeChatId: "chat-design",
-    items: [{ id: "canvas-layer-1", type: "shape" }, { id: "canvas-layer-2", type: "text" }],
+    items: [
+      { id: "canvas-layer-1", type: "shape" },
+      { id: "canvas-layer-2", type: "text" },
+    ],
     tasks: [],
     chats: {
       "chat-design": {
@@ -313,7 +341,9 @@ test("R2-T2-02: crash recovery after v3 backup written restores v3 main without 
   const recovery = barrier.recoverFromCrash();
   assert.equal(recovery.state, "v3_recovered");
 
-  const restoredMain = JSON.parse(barrier.memoryFiles.get("projects/creation-v2.json")!);
+  const restoredMain = JSON.parse(
+    barrier.memoryFiles.get("projects/creation-v2.json")!,
+  );
   assert.equal(restoredMain.version, 3);
   assert.equal(barrier.formatMarker.formatVersion, 2);
 });
@@ -394,7 +424,7 @@ test("R2-T2-04: active tasks maintain originChatId during multi-chat switching w
 });
 
 test("R2-T2-05: rapid concurrent chat creation maintains draft isolation and unique scoped identifiers", () => {
-  const chats: Record<string, any> = {};
+  const chats: Record<string, unknown> = {};
   const chatCount = 10;
 
   for (let i = 0; i < chatCount; i++) {
@@ -415,6 +445,9 @@ test("R2-T2-05: rapid concurrent chat creation maintains draft isolation and uni
 
   // Verify all drafts are distinct and properly indexed
   for (let i = 0; i < chatCount; i++) {
-    assert.equal(chats[`chat-session-${i}`].draft.text, `Draft specific to session ${i}`);
+    assert.equal(
+      chats[`chat-session-${i}`].draft.text,
+      `Draft specific to session ${i}`,
+    );
   }
 });

@@ -65,6 +65,15 @@ test("desktop settings uses the compact frame and phone settings uses layered na
   await page.goto("/");
   await page.getByRole("button", { name: "编辑", exact: true }).click();
   await page.getByRole("button", { name: "设置", exact: true }).click();
+  await page
+    .getByRole("dialog", { name: "设置", exact: true })
+    .evaluate(async (dialog) => {
+      await Promise.all(
+        dialog
+          .getAnimations({ subtree: true })
+          .map((animation) => animation.finished),
+      );
+    });
   const desktopSettings = await rect(page, ".settings-panel");
   expect(desktopSettings).not.toBeNull();
   expect(Math.round(desktopSettings!.width)).toBe(960);

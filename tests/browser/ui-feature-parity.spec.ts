@@ -319,12 +319,29 @@ for (const status of ["idle", "warning"] as const) {
   });
 }
 
-test("connected Agent keeps session replacement advanced and gates active work", async ({
+test("connected legacy Agent keeps session replacement advanced and gates active work", async ({
   page,
 }) => {
   const server = await startAgentServer("ready");
   try {
     await openWorkspace(page);
+    await page.evaluate(() => {
+      const key = "kk-studio-next:creation:v1";
+      const snapshot = JSON.parse(localStorage.getItem(key)!);
+      const project = snapshot.projects.find(
+        (item: { id: string }) => item.id === snapshot.activeProjectId,
+      );
+      delete project.chats;
+      delete project.activeChatId;
+      snapshot.revision = Math.max(snapshot.revision, Date.now()) + 1;
+      localStorage.setItem(key, JSON.stringify(snapshot));
+    });
+    await page.reload();
+    await page.getByRole("button", { name: "项目库", exact: true }).click();
+    await page
+      .locator(".project-library-card")
+      .filter({ hasText: "Agent 验证项目" })
+      .click();
     await ownFixtureThread(page);
     const panel = page.locator(".conversation-panel");
     await panel.getByLabel("执行方式").selectOption("codex");

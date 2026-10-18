@@ -1,7 +1,10 @@
-import { useContext, type CSSProperties, type Dispatch, type SetStateAction } from "react";
 import {
-  type CanvasCollectionItem,
-} from "../../domain/canvasItems";
+  useContext,
+  type CSSProperties,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
+import { type CanvasCollectionItem } from "../../domain/canvasItems";
 import type { CanvasConnection } from "../../domain/canvasGraph";
 import type { useCanvasControls } from "./useCanvasControls";
 import type { useCanvasAddMenu } from "./useCanvasAddMenu";

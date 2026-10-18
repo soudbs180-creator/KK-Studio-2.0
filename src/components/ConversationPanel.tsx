@@ -36,6 +36,10 @@ export default function ConversationPanel({
   skills = [],
   onApplySkill,
   agent,
+  onSelectChat,
+  onCreateChat,
+  executionDisabledReason,
+  readOnlyMessages,
 }: ConversationPanelProps) {
   const panelRef = useConversationOverlay(overlay);
   const agentDraftState = useAgentDraftState();
@@ -52,8 +56,13 @@ export default function ConversationPanel({
     prompt?: string;
   } | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const agentBusy = Boolean(agent?.sending || agent?.connecting);
   const modelDisabled =
-    submitting || Boolean(agent?.sending || agent?.connecting);
+    Boolean(executionDisabledReason) || submitting || agentBusy;
+  const draftKey = JSON.stringify([
+    project?.id ?? "workspace",
+    project?.activeChatId ?? null,
+  ]);
   const { channel, agentSelection, agentModel, changeChannel, selectModel } =
     useConversationSelection({
       projectId: project?.id,
@@ -63,18 +72,17 @@ export default function ConversationPanel({
       onApiModel: onModelChange,
       onStatus: setStatus,
     });
-  const agentActive = Boolean(agent && channel === "codex");
+  const agentActive = Boolean(
+    agent && channel === "codex" && !executionDisabledReason,
+  );
   useEffect(() => {
-    setInput(project?.composerDraft.prompt ?? "");
-    setApprovalMode(project?.composerDraft.approvalMode ?? "auto");
+    setInput(composerDraft?.prompt ?? "");
+    setApprovalMode(composerDraft?.approvalMode ?? "auto");
     setPendingApproval(null);
     setStatus("");
-  }, [
-    project?.id,
-    project?.composerDraft.prompt,
-    project?.composerDraft.approvalMode,
-  ]);
+  }, [draftKey, composerDraft?.prompt, composerDraft?.approvalMode]);
   const visibleMessages =
+    readOnlyMessages ??
     project?.messages ??
     messages.map((content, index) => ({ id: `local-${index}`, content }));
   const deleteMessage =
@@ -86,37 +94,27 @@ export default function ConversationPanel({
       );
     });
   function updateDraft(patch: Partial<CreationDraft>): void {
+    if (executionDisabledReason) return;
     if (!onDraftChange || !composerDraft) return;
     onDraftChange({ ...composerDraft, ...patch, updatedAt: Date.now() });
   }
-  function handleSetReference(src: string): void {
-    if (!onDraftChange || !composerDraft) return;
-    const existing = composerDraft.attachments || [];
-    if (existing.some((att) => att.dataUrl === src)) {
-      setStatus("该图片已在参考列表中");
-      return;
-    }
-    updateDraft({
-      attachments: [
-        ...existing.slice(-3),
-        {
-          id: `chat-ref-${Date.now()}`,
-          name: "生成参考图",
-          mime: "image/png",
-          size: 0,
-          role: "主体",
-          dataUrl: src,
-        },
-      ],
-    });
-    setStatus("已设为主体参考图");
+  function changeInput(prompt: string): void {
+    setInput(prompt);
+    updateDraft({ prompt });
   }
-  const { fileInput, addFiles, readingFiles } = useConversationAttachments({
-    draftKey: project?.id,
-    attachments: composerDraft?.attachments ?? [],
-    onChange: (attachments) => updateDraft({ attachments }),
-    onStatus: setStatus,
-  });
+  const { fileInput, addFiles, readingFiles, setReference } =
+    useConversationAttachments({
+      draftKey,
+      attachments: composerDraft?.attachments ?? [],
+      onChange: (attachments) => updateDraft({ attachments }),
+      onStatus: setStatus,
+    });
+  const handleSetReference =
+    onDraftChange && composerDraft && !executionDisabledReason
+      ? setReference
+      : undefined;
+  const title =
+    project?.name && project.name !== "未命名项目" ? project.name : "KK Studio";
   const directState = getGenerationUiState({
     prompt: input,
     inputValid: !readingFiles,
@@ -134,13 +132,13 @@ export default function ConversationPanel({
     pendingApproval,
     setPendingApproval,
     setStatus,
-    onSend,
+    onSend: executionDisabledReason ? () => executionDisabledReason : onSend,
     onDraftChange,
     composerDraft,
     setInput,
     setMessages,
   });
-  if (channel === "google" && project)
+  if (channel === "google" && project && !executionDisabledReason)
     return (
       <GoogleConversationPanel
         project={project}
@@ -149,7 +147,7 @@ export default function ConversationPanel({
         onOpen={onOpen}
         onChannelChange={changeChannel}
         overlay={overlay}
-        codexBusy={Boolean(agent?.sending || agent?.connecting)}
+        codexBusy={agentBusy}
       />
     );
   return (
@@ -161,21 +159,21 @@ export default function ConversationPanel({
     >
       <ConversationResizeHandle />
       <ConversationHeader
-        title={
-          project?.name && project.name !== "未命名项目"
-            ? project.name
-            : "KK Studio"
-        }
+        title={title}
         messageCount={
           agentActive ? (agent?.messages.length ?? 0) : visibleMessages.length
         }
         onStatus={setStatus}
         onClose={onClose}
+        chats={project?.chats}
+        activeChatId={project?.activeChatId}
+        onSelectChat={onSelectChat}
+        onCreateChat={onCreateChat}
       />
       {agent && (
         <ConversationChannelSelector
           value={channel}
-          disabled={agent.sending || agent.connecting}
+          disabled={Boolean(executionDisabledReason) || agentBusy}
           onChange={changeChannel}
         />
       )}
@@ -186,30 +184,37 @@ export default function ConversationPanel({
         onDelete={deleteMessage}
         onStatus={setStatus}
         onConfigure={() => onOpen("settings/providers")}
-        onConfigureDirect={directState === "service-unconfigured" ? () => onOpen("settings/providers") : undefined}
+        onConfigureDirect={
+          directState === "service-unconfigured"
+            ? () => onOpen("settings/providers")
+            : undefined
+        }
         onPreviewImage={(src, prompt) => setPreviewImage({ src, prompt })}
         onSetReference={handleSetReference}
-        status={status || (!agentActive && input.trim() ? (directDisabledReason ?? "") : "")}
+        status={
+          executionDisabledReason ||
+          status ||
+          (!agentActive && input.trim() ? (directDisabledReason ?? "") : "")
+        }
       />
       <ConversationComposerRegion
         agent={agent}
-        draftKey={project?.id ?? "workspace"}
+        draftKey={draftKey}
         draftState={agentDraftState}
         agentActive={agentActive}
         agentConnecting={agentConnecting}
         agentModel={agentModel}
         input={input}
-        onInputChange={(value) => {
-          setInput(value);
-          updateDraft({ prompt: value });
-        }}
+        onInputChange={changeInput}
         onSubmitMessage={submitMessage}
         disabled={
+          Boolean(executionDisabledReason) ||
           submitting ||
           (agentActive && (agentConnecting || Boolean(agent?.sending)))
         }
         modelDisabled={modelDisabled}
         submitDisabled={
+          Boolean(executionDisabledReason) ||
           submitting ||
           (!agentActive &&
             (!canSubmitGeneration(directState) || readingFiles > 0))
@@ -264,13 +269,10 @@ export default function ConversationPanel({
           setApprovalMode(value);
           updateDraft({ approvalMode: value });
         }}
-        voiceEnabled={voiceEnabled && !submitting}
-        onVoiceChange={(value) => {
-          setInput(value);
-          updateDraft({ prompt: value });
-        }}
+        voiceEnabled={voiceEnabled && !submitting && !executionDisabledReason}
+        onVoiceChange={changeInput}
         onVoiceStatus={setStatus}
-        voiceSessionKey={project?.id ?? "workspace-demo"}
+        voiceSessionKey={draftKey}
       />
       {!agentActive && pendingApproval && (
         <ConversationTaskApproval

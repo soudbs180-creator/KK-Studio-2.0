@@ -181,6 +181,11 @@ test("个人信息弹层提供可读的账户信息和可用的更新入口", as
   await account.click();
   const popup = page.locator(".account-popup");
   await expect(popup).toBeVisible();
+  await popup.evaluate(async (element) => {
+    await Promise.all(
+      element.getAnimations().map((animation) => animation.finished),
+    );
+  });
   const bounds = await popup.boundingBox();
   expect(bounds?.width).toBe(320);
   expect(bounds!.height).toBeGreaterThan(230);

@@ -46,6 +46,7 @@ export default function ConversationHeader({
       >
         <strong>{title}</strong>
         <div
+          className="conversation-header-actions"
           style={{
             display: "flex",
             alignItems: "center",
@@ -54,6 +55,7 @@ export default function ConversationHeader({
         >
           <button
             type="button"
+            className="conversation-header-history-btn"
             aria-label="对话记录"
             onClick={() =>
               onStatus(
@@ -70,7 +72,12 @@ export default function ConversationHeader({
               alt=""
             />
           </button>
-          <button type="button" aria-label="收起对话" onClick={onClose}>
+          <button
+            type="button"
+            className="conversation-header-close-btn"
+            aria-label="收起对话"
+            onClick={onClose}
+          >
             <img
               src="/design/figma/chat-open.svg"
               width="18"

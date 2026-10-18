@@ -5,10 +5,7 @@ import {
   createTestChannelRegistry,
   type ModelMenuEntry,
 } from "./harness.ts";
-import {
-  ChannelRegistry,
-  type ChannelRegistration,
-} from "../../src/features/ai-gateway/channels/registry.ts";
+import type { ChannelRegistration } from "../../src/features/ai-gateway/channels/registry.ts";
 import type { ChannelAdapter } from "../../src/features/ai-gateway/channels/adapter.ts";
 import type { CapabilityManifest } from "../../src/domain/providerConnections.ts";
 
@@ -29,7 +26,11 @@ const mockAdapter = (provider: string): ChannelAdapter => ({
     async: true,
     status: "queued",
   }),
-  getStatus: async (id) => ({ providerJobId: id, async: true, status: "succeeded" }),
+  getStatus: async (id) => ({
+    providerJobId: id,
+    async: true,
+    status: "succeeded",
+  }),
   cancel: async () => {},
   listResults: async () => [],
 });
@@ -88,10 +89,16 @@ test("R3-T1-01: cross-relay deduplication merges identical upstream models into 
 
   const gpt4o = deduplicated.find((m) => m.canonicalModelId === "gpt-4o")!;
   assert.ok(gpt4o);
-  assert.equal(gpt4o.candidateCount, 2, "GPT-4o must have 2 merged candidate connections");
+  assert.equal(
+    gpt4o.candidateCount,
+    2,
+    "GPT-4o must have 2 merged candidate connections",
+  );
   assert.equal(gpt4o.connections.length, 2);
 
-  const claude = deduplicated.find((m) => m.canonicalModelId === "claude-3-5-sonnet")!;
+  const claude = deduplicated.find(
+    (m) => m.canonicalModelId === "claude-3-5-sonnet",
+  )!;
   assert.ok(claude);
   assert.equal(claude.candidateCount, 1);
 });
@@ -383,7 +390,9 @@ test("R3-T2-04: search query matches deduplicated model across canonical id, dis
   const matches = (query: string) =>
     row.canonicalModelId.toLowerCase().includes(query.toLowerCase()) ||
     row.displayName.toLowerCase().includes(query.toLowerCase()) ||
-    row.connections.some((c) => c.connectionName.toLowerCase().includes(query.toLowerCase()));
+    row.connections.some((c) =>
+      c.connectionName.toLowerCase().includes(query.toLowerCase()),
+    );
 
   assert.equal(matches(query1), true);
   assert.equal(matches(query2), true);

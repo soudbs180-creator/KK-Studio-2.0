@@ -2,11 +2,23 @@
 
 - docId: AI_HANDOFF
 - status: current
-- updatedAt: 2026-10-16
+- updatedAt: 2026-10-17
 - source: `docs/governance/PROJECT_STATE.md`
 - supersededBy: null
 
 本文是最短恢复入口，不是任务状态或产品能力的第二事实源。任务状态只读 [`task-ledger.json`](task-ledger.json)；当前项目事实只读 [`PROJECT_STATE.md`](PROJECT_STATE.md)；历史验证只按带日期的 change package、commit、运行模式和 receipt 回读。
+
+## 当前恢复入口：审计修复本地收口（2026-10-17）
+
+先读[实际验证](../changes/2026-10-17-audit-repair/verification.md)和[独立审查](../changes/2026-10-17-audit-repair/review.md)。TASK-AUDIT-REPAIR-20261017仅本地A–D DONE/PASS；source `4699458de1c3437309b7cdc3f019454104c81fce` / tree `a1905e2aa6e11a24b4c62d829dc82a8f0d566972`，任务树`D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017` / branch `fix/TASK-AUDIT-REPAIR-20261017`，Desktop/Web2.1.36、Mobile2.1.1规划。原main8c/63dirty/index与远端d95保持。
+
+469完整verify exit0（Node1832/14既有skip、Agent199/2既有skip、产品Edge823首试、DESIGN41+8、development四步），精确源码独审PASS；Native不变源Rust213/1ignore+integration41通过。官方EXE b6299445/input a53dee81、隔离六检查和两个真实日常lnk正常关闭/重开均PASS，正常默认实例PID50136、无CDP。**默认旧聊天资料仍READ_ONLY，9项目raw/identity/shared memory保持；完整迁移/protocol7未完成，不能为了恢复编辑而解除保护。** 旧75/8026/d356 daily及helper失败、原件备份均保留。
+
+149任务/85DONE/64开放；仅本审计新增DONE，原148对象与37功能成熟度/runtimeEvidence不变，26失效分配历史保留。4worktrees/26条目均不可据分类删除；用户仍禁止删除/移动原文件，E/F未执行。后续先按原任务接续完整多聊天/迁移、统一接入/12AI/持久垃圾箱、真实服务与用户验收；不要批量结案或把本机PASS当Hosted/main/发布。最终文档HEAD独审/正式Delivery由root提交后对应收据裁决；本轮没有push/merge/远端设置变更或付费生成。日常链接引用本任务树，不能清理该树。
+
+## 以下为2026-10-16及之前的历史交接
+
+原文保留其当时SHA、授权和失败；其中“当前/最新/实施中”均不再是本会话的活动写入分配，恢复必须先以上方当前入口和权威账本核对。
 
 ## 统一整理后的正式执行入口（TASK-GOV-006）
 

@@ -5,18 +5,10 @@ import { runInNewContext } from "node:vm";
 import { createElement, Fragment, type ReactElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import ts from "typescript";
-import {
-  createTurnFreezingController,
-  type AgentActionState as RealAgentActionState,
-} from "../../src/features/agent/agentTurnFreezing.ts";
+import { createTurnFreezingController } from "../../src/features/agent/agentTurnFreezing.ts";
 
 export type AgentActionState =
-  | "idle"
-  | "executing"
-  | "pausing"
-  | "paused"
-  | "resuming"
-  | "completed";
+  "idle" | "executing" | "pausing" | "paused" | "resuming" | "completed";
 
 export type AgentActionTransitionEvent =
   | "SEND"
@@ -133,7 +125,9 @@ async function createActionComponentHarness() {
 // Helper to find clickable button element in tree
 function findButton(
   value: unknown,
-): ReactElement<{ onClick?: (e?: unknown) => void; disabled?: boolean }> | undefined {
+):
+  | ReactElement<{ onClick?: (e?: unknown) => void; disabled?: boolean }>
+  | undefined {
   if (Array.isArray(value)) return value.map(findButton).find(Boolean);
   if (value && typeof value === "object" && "props" in value) {
     const element = value as ReactElement<{
@@ -171,7 +165,10 @@ function createMockTurnFreezingController() {
       pollingActive = true;
     },
 
-    executeStep: async <T>(stepId: string, run: () => Promise<T>): Promise<T> => {
+    executeStep: async <T>(
+      stepId: string,
+      run: () => Promise<T>,
+    ): Promise<T> => {
       if (state === "paused") {
         throw new Error(`Cannot execute step ${stepId} while turn is paused`);
       }
@@ -342,7 +339,10 @@ test("T1.5: paused state renders resume glyph and invokes onResume on click", as
 
   assert.doesNotMatch(html, /disabled/);
   assert.match(html, /aria-label="继续执行"|继续/);
-  assert.match(html, /data-icon="(?:play|resume)"|composer-play|composer-resume/);
+  assert.match(
+    html,
+    /data-icon="(?:play|resume)"|composer-play|composer-resume/,
+  );
   assert.doesNotMatch(html, /aria-busy="true"/);
 
   const button = findButton(tree);
@@ -417,16 +417,34 @@ test("T1.8: canonical 6-state transition flow cycle completes in order", async (
 test("T1.9: pure transition function verifies 6-state transitions and guards against invalid jumps", () => {
   // Valid transitions
   assert.equal(transitionAgentActionState("idle", "SEND"), "executing");
-  assert.equal(transitionAgentActionState("executing", "PAUSE_REQUEST"), "pausing");
-  assert.equal(transitionAgentActionState("pausing", "STEP_COMPLETED_PAUSE"), "paused");
-  assert.equal(transitionAgentActionState("paused", "RESUME_REQUEST"), "resuming");
-  assert.equal(transitionAgentActionState("resuming", "STEP_RESUMED"), "executing");
-  assert.equal(transitionAgentActionState("executing", "TASK_COMPLETED"), "completed");
+  assert.equal(
+    transitionAgentActionState("executing", "PAUSE_REQUEST"),
+    "pausing",
+  );
+  assert.equal(
+    transitionAgentActionState("pausing", "STEP_COMPLETED_PAUSE"),
+    "paused",
+  );
+  assert.equal(
+    transitionAgentActionState("paused", "RESUME_REQUEST"),
+    "resuming",
+  );
+  assert.equal(
+    transitionAgentActionState("resuming", "STEP_RESUMED"),
+    "executing",
+  );
+  assert.equal(
+    transitionAgentActionState("executing", "TASK_COMPLETED"),
+    "completed",
+  );
   assert.equal(transitionAgentActionState("completed", "RESET"), "idle");
 
   // Invalid jumps return current state unchanged
   assert.equal(transitionAgentActionState("idle", "PAUSE_REQUEST"), "idle");
-  assert.equal(transitionAgentActionState("pausing", "RESUME_REQUEST"), "pausing");
+  assert.equal(
+    transitionAgentActionState("pausing", "RESUME_REQUEST"),
+    "pausing",
+  );
   assert.equal(transitionAgentActionState("paused", "STEP_RESUMED"), "paused");
   assert.equal(transitionAgentActionState("resuming", "SEND"), "resuming");
 });
@@ -535,11 +553,7 @@ test("T3.2: touch target geometry is >= 44px for touch accessibility", async () 
     "utf8",
   );
   // Must specify touch target hit area of at least 44px
-  assert.match(
-    css,
-    /44px/,
-    "CSS must include 44px touch target specification",
-  );
+  assert.match(css, /44px/, "CSS must include 44px touch target specification");
 });
 
 test("T3.3: icon size is normalized to 20px glyph standard", async () => {
@@ -568,7 +582,6 @@ test("T4.1: pauseTurn allows in-flight active step to resolve completely without
   const controller = createMockTurnFreezingController();
   controller.startExecution();
 
-  let stepResult: string | null = null;
   let stepExecuted = false;
 
   const stepPromise = controller.executeStep("tool-op", async () => {
@@ -583,7 +596,7 @@ test("T4.1: pauseTurn allows in-flight active step to resolve completely without
   assert.equal(controller.isPausing(), true);
 
   // Await step resolution
-  stepResult = await stepPromise;
+  const stepResult = await stepPromise;
   await pausePromise;
 
   assert.equal(stepExecuted, true);
@@ -603,12 +616,9 @@ test("T4.2: turn queue is frozen while paused and subsequent step is held", asyn
   assert.equal(controller.isPaused(), true);
 
   // Attempting to execute next step while paused throws error
-  await assert.rejects(
-    async () => {
-      await controller.executeStep("step-2", async () => "step-2-ok");
-    },
-    /Cannot execute step step-2 while turn is paused/,
-  );
+  await assert.rejects(async () => {
+    await controller.executeStep("step-2", async () => "step-2-ok");
+  }, /Cannot execute step step-2 while turn is paused/);
 });
 
 test("T4.3: remote background task polling remains ACTIVE while turn is frozen", async () => {
@@ -656,7 +666,9 @@ test("T4.4: resumeTurn unfreezes queue and allows subsequent steps to run to com
 });
 
 test("T4.5: real production TurnFreezingController completes step and unblocks queue on resume", async () => {
-  const controller = createTurnFreezingController({ completedResetDelayMs: 50 });
+  const controller = createTurnFreezingController({
+    completedResetDelayMs: 50,
+  });
   assert.equal(controller.getState().state, "idle");
 
   controller.onTurnStart();
@@ -704,7 +716,9 @@ test("T4.5: real production TurnFreezingController completes step and unblocks q
 // ===========================================================================
 
 test("T5.1: input draft is preserved across pause and resume cycles", async () => {
-  const draftHarness = createAgentComposerDraftHarness("Draft before execution");
+  const draftHarness = createAgentComposerDraftHarness(
+    "Draft before execution",
+  );
   const controller = createMockTurnFreezingController();
 
   controller.startExecution();

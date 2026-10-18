@@ -28,17 +28,20 @@ export async function resolveImageAttachments(
       throw new Error("参考素材无法读取，未提交生成，请重新选择图片。");
 
     const mimeMatch = dataUrl.match(/^data:(image\/[a-zA-Z0-9.+-]+);base64,/i);
-    const extractedMime = mimeMatch ? mimeMatch[1] : (asset?.mime ?? attachment.mime);
+    const extractedMime = mimeMatch
+      ? mimeMatch[1]
+      : (asset?.mime ?? attachment.mime);
     const hasAlpha =
       extractedMime.toLowerCase() === "image/png" ||
       extractedMime.toLowerCase() === "image/webp";
-    const targetMime = resolveTargetImageMime(hasAlpha, attachment.mime || extractedMime);
+    const targetMime = resolveTargetImageMime(
+      hasAlpha,
+      attachment.mime || extractedMime,
+    );
 
     // Retain originalAssetId on derived edit tasks to prevent generational compression loss
     const originalAssetId =
-      attachment.originalAssetId ??
-      asset?.parentId ??
-      attachment.assetId;
+      attachment.originalAssetId ?? asset?.parentId ?? attachment.assetId;
 
     resolved.push({
       ...attachment,
@@ -59,6 +62,7 @@ export function prepareAttachmentUpload(
   return {
     ...attachment,
     mime: targetMime,
-    originalAssetId: originalAssetId ?? attachment.originalAssetId ?? attachment.assetId,
+    originalAssetId:
+      originalAssetId ?? attachment.originalAssetId ?? attachment.assetId,
   };
 }

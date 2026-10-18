@@ -172,7 +172,9 @@ export default function ModelPickerMenu({
   const entries: Entry[] =
     channel === "account"
       ? [...defaults, ...codexImage, ...codex]
-      : deduplicateRelayEntries(channelEntries, { current });
+      : channel === "relay"
+        ? deduplicateRelayEntries(channelEntries, { current })
+        : channelEntries;
   const visible = entries.filter(
     (item) =>
       filter === "all" ||

@@ -86,7 +86,7 @@ export function canvasHistoryFingerprint(
 
 export function createCanvasHistory(
   initial: CanvasHistorySnapshot,
-  limit = 80,
+  limit = 20,
 ): CanvasHistoryState {
   return {
     limit: Math.max(1, Math.floor(limit)),
@@ -146,18 +146,48 @@ export function settleCanvasHistoryGeneration(
   };
 }
 
+function synchronizeCanvasHistoryTags(
+  state: CanvasHistoryState,
+  items: CanvasCollectionItem[],
+): CanvasHistoryState {
+  const tags = new Map(items.map((item) => [item.id, item.tags]));
+  const synchronize = (
+    snapshot: CanvasHistorySnapshot,
+  ): CanvasHistorySnapshot => {
+    let changed = false;
+    const items = snapshot.items.map((item) => {
+      if (
+        !tags.has(item.id) ||
+        JSON.stringify(item.tags) === JSON.stringify(tags.get(item.id))
+      )
+        return item;
+      changed = true;
+      return { ...item, tags: tags.get(item.id)?.slice() };
+    });
+    return changed ? { ...snapshot, items } : snapshot;
+  };
+  return {
+    ...state,
+    past: state.past.map(synchronize),
+    present: synchronize(state.present),
+    future: state.future.map(synchronize),
+  };
+}
+
 export function commitCanvasHistory(
   state: CanvasHistoryState,
   next: CanvasHistorySnapshot,
 ): CanvasHistoryState {
   state = settleCanvasHistoryGeneration(state, next.items);
+  // Tags are current user metadata, so canvas Undo/Redo must not roll them back.
+  state = synchronizeCanvasHistoryTags(state, next.items);
   const current = canvasHistoryFingerprint(state.present);
   const incoming = canvasHistoryFingerprint(next);
-  // 指纹相同说明内容未变，不入栈 past，但克隆 present 保证不可变引用。
+  // 指纹相同不入栈，但仍同步不参与撤销的当前数据。
   if (current === incoming) {
     return {
       ...state,
-      present: cloneCanvasHistorySnapshot(state.present),
+      present: cloneCanvasHistorySnapshot(next),
     };
   }
   return {

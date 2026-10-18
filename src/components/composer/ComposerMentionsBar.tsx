@@ -1,7 +1,5 @@
 import React from "react";
-import {
-  CANVAS_REFERENCE_SLOTS,
-} from "../../domain/canvasItems.ts";
+import { CANVAS_REFERENCE_SLOTS } from "../../domain/canvasItems.ts";
 import {
   serializeMentionToken,
   type ParsedMention,
@@ -18,11 +16,18 @@ export function cycleMentionSlot(value: string, token: ParsedMention): string {
   const validSlots = CANVAS_REFERENCE_SLOTS.filter((s) => s !== "Mask");
   const nextSlot = validSlots[(currentIndex + 1) % validSlots.length] || "主体";
   const newToken = serializeMentionToken(token.targetId, token.name, nextSlot);
-  return value.slice(0, token.startIndex) + newToken + value.slice(token.endIndex);
+  return (
+    value.slice(0, token.startIndex) + newToken + value.slice(token.endIndex)
+  );
 }
 
-export function removeMentionToken(value: string, token: ParsedMention): string {
-  return (value.slice(0, token.startIndex) + value.slice(token.endIndex)).trim();
+export function removeMentionToken(
+  value: string,
+  token: ParsedMention,
+): string {
+  return (
+    value.slice(0, token.startIndex) + value.slice(token.endIndex)
+  ).trim();
 }
 
 export default function ComposerMentionsBar({

@@ -2,8 +2,12 @@
 
 - 状态：PARTIAL
 - 领域：intelligence
-- 最近更新：2026-10-16
+- 最近更新：2026-10-17
 - 关联任务：TASK-PROV-002（已合入）、TASK-PROV-003/004（PARTIAL）、TASK-UI-CONSOLIDATE-20261014、TASK-PROTOCOL-CLI-20261014、TASK-222-ACTIONS-20261014、TASK-223-ACTIONS-20261014
+
+## 2026-10-17安全修复边界（完整本地verify与源码独审通过）
+
+关联本地安全修复任务：TASK-AUDIT-REPAIR-20261017（有界A–D DONE；完整功能缺口继续由本卡原开放任务承接）；[规格](../changes/2026-10-17-audit-repair/spec.md) / [实际验证](../changes/2026-10-17-audit-repair/verification.md)。账号身份不可因endpoint相同而替代；生成调用须固定connectionId并核对凭据绑定，空外部模型授权默认拒绝。12AI无持久receipt端口时禁用执行；统一接入需求四补件仅requirements-only，原intent及八优先级保持，不宣称多账号、额度或真实路由已完成。 候选Desktop/Web2.1.36最终source4699458d完整verify、精确源码独审、官方重建、隔离Native与两日常入口正常关闭重开通过；旧d356真实菜单遮挡失败及所有原失败保留。默认旧聊天资料仍READ_ONLY，9项目raw/identity/shared memory保持；不宣称可编辑、完整迁移/protocol7、真实Provider或完整多聊天/垃圾箱/12AI恢复已完成。本卡成熟度与既有runtimeEvidence保持原范围，详细证据见本轮验证；Hosted/发布/用户验收另列。
 
 ## 用户可见入口
 

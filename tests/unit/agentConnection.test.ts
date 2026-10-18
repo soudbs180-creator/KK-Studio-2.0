@@ -117,6 +117,208 @@ function memoryStorage() {
   };
 }
 
+for (const mutation of ["new", "prepare", "resume", "retry-failed"] as const)
+  test(`${mutation} ownership survives malformed mutation history and ordinary reconnect`, async (t) => {
+    const storage = memoryStorage();
+    const created = readyConversation({ threadId: "created-owned" }).data;
+    let remote = readyConversation({
+      threadId:
+        mutation === "resume"
+          ? "other-owned"
+          : mutation === "retry-failed"
+            ? "created-owned"
+            : "",
+      status:
+        mutation === "retry-failed"
+          ? "failed"
+          : mutation === "resume"
+            ? "ready"
+            : "idle",
+    }).data;
+    if (mutation === "resume" || mutation === "retry-failed")
+      storage.setItem("kk-agent-thread:workspace", "created-owned");
+    let mutationCalls = 0;
+    const paths: string[] = [];
+    const conn = createAgentConnection({
+      storage,
+      fetcher: (async (input) => {
+        const path = new URL(String(input)).pathname;
+        paths.push(path);
+        const isMutation =
+          path.endsWith("/threads/new") ||
+          path.endsWith("/conversation/prepare") ||
+          path.endsWith("/resume");
+        if (isMutation) {
+          mutationCalls++;
+          remote = created;
+        }
+        return jsonResponse(200, {
+          ok: true,
+          protocolVersion: 6,
+          conversation: remote,
+          messages: isMutation ? [{ id: "bad", role: "user", text: 123 }] : [],
+          settledTurnIds: isMutation ? ["bad-turn"] : [],
+          data: [],
+        });
+      }) as typeof fetch,
+      eventSourceFactory: () => {
+        const source: FakeSource = {
+          onmessage: null,
+          onerror: null,
+          closed: false,
+          close() {
+            source.closed = true;
+          },
+          emit(event) {
+            source.onmessage?.({
+              type: event.type,
+              data: JSON.stringify(event.data),
+            });
+          },
+        };
+        queueMicrotask(() =>
+          source.emit({
+            type: "hello",
+            data: { codex: { busy: false }, conversation: remote },
+          }),
+        );
+        return source;
+      },
+    });
+    t.after(() => conn.disconnect());
+    await conn.connect(mutation === "new");
+    assert.equal(conn.getState().status, "error");
+    assert.match(conn.getState().error ?? "", /历史消息格式/);
+    assert.deepEqual(conn.getState().messages, []);
+    assert.equal(
+      paths.some((path) => path.endsWith("/history/ack")),
+      false,
+    );
+    assert.equal(storage.getItem("kk-agent-thread:workspace"), "created-owned");
+    await conn.connect();
+    assert.equal(
+      conn.getState().status,
+      "connected",
+      conn.getState().error ?? "",
+    );
+    assert.equal(conn.getState().conversation?.threadId, "created-owned");
+    assert.equal(storage.getItem("kk-agent-thread:workspace"), "created-owned");
+    assert.equal(mutationCalls, 1);
+    assert.deepEqual(conn.getState().messages, []);
+    assert.equal(
+      paths.some((path) => path.endsWith("/history/ack")),
+      false,
+    );
+  });
+
+for (const change of ["chat", "temporary"] as const)
+  for (const history of ["valid", "malformed"] as const)
+    test(`late ${history} mutation cannot save ownership after ${change} changes`, async (t) => {
+      const storage = memoryStorage();
+      const gate = connectionGate();
+      const entered = connectionGate();
+      const harness = createHarness();
+      let chatId = "original-chat";
+      let temporary = false;
+      let saves = 0;
+      const conn = createAgentConnection({
+        storage,
+        eventSourceFactory: harness.eventSourceFactory,
+        fetcher: (async (input) => {
+          if (String(input).endsWith("/conversation/prepare")) {
+            entered.release();
+            await gate.promise;
+            return jsonResponse(200, {
+              ok: true,
+              conversation: readyConversation().data,
+              messages: history === "malformed" ? [{ text: 123 }] : [],
+            });
+          }
+          return connectionReadyResponse();
+        }) as typeof fetch,
+      });
+      conn.setBridge({
+        getSnapshot: () => snapshot,
+        getChatScope: () => ({ projectId: snapshot.projectId, chatId }),
+        getExecutionBlockReason: () =>
+          temporary ? "临时聊天禁止持久化" : undefined,
+        saveAgentThread: () => {
+          saves++;
+        },
+        applyOps: () => ({ applied: [], rejected: [] }),
+      });
+      t.after(() => {
+        gate.release();
+        conn.disconnect();
+      });
+      const connecting = conn.connect();
+      await entered.promise;
+      if (change === "chat") chatId = "different-chat";
+      else temporary = true;
+      gate.release();
+      await connecting;
+      assert.equal(conn.getState().status, "disconnected");
+      assert.equal(
+        storage.getItem(`kk-agent-thread:${snapshot.projectId}`),
+        null,
+      );
+      assert.equal(saves, 0);
+      assert.deepEqual(conn.getState().messages, []);
+    });
+
+for (const history of ["valid", "malformed"] as const)
+  test(`numeric mutation identity is rejected with ${history} history`, async (t) => {
+    const storage = memoryStorage();
+    const harness = createHarness();
+    const conn = createAgentConnection({
+      storage,
+      eventSourceFactory: harness.eventSourceFactory,
+      fetcher: (async (input) => {
+        if (String(input).endsWith("/threads/new"))
+          return jsonResponse(200, {
+            ok: true,
+            conversation: readyConversation({ threadId: 123 }).data,
+            messages: history === "malformed" ? [{ text: 123 }] : [],
+          });
+        return connectionReadyResponse();
+      }) as typeof fetch,
+    });
+    t.after(() => conn.disconnect());
+    await conn.connect(true);
+    assert.equal(conn.getState().status, "error");
+    assert.match(conn.getState().error ?? "", /无效会话身份/);
+    assert.equal(storage.getItem("kk-agent-thread:workspace"), null);
+    assert.deepEqual(conn.getState().messages, []);
+  });
+
+test("malformed GET history cannot replace an existing ownership receipt", async (t) => {
+  const storage = memoryStorage();
+  storage.setItem("kk-agent-thread:workspace", "thread-1");
+  const harness = createHarness({
+    codex: { busy: false },
+    conversation: readyConversation().data,
+  });
+  const conn = createAgentConnection({
+    storage,
+    eventSourceFactory: harness.eventSourceFactory,
+    fetcher: (async (input) =>
+      String(input).endsWith("/threads/thread-1")
+        ? jsonResponse(200, {
+            ok: true,
+            conversation: readyConversation({ threadId: "foreign-thread" })
+              .data,
+            messages: [{ text: 123 }],
+          })
+        : connectionReadyResponse()) as typeof fetch,
+  });
+  t.after(() => conn.disconnect());
+  await conn.connect();
+  assert.equal(conn.getState().status, "error");
+  assert.match(conn.getState().error ?? "", /历史消息格式/);
+  assert.equal(storage.getItem("kk-agent-thread:workspace"), "thread-1");
+  assert.deepEqual(conn.getState().messages, []);
+});
+
 function connectionGate() {
   let release!: () => void;
   const promise = new Promise<void>((resolve) => {

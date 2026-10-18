@@ -38,6 +38,7 @@ import {
 import {
   createProject,
   emptyDraft,
+  snapshotWriteBlockReason,
   type CreationDraft,
   type CreationProject,
   type CreationTask,
@@ -386,6 +387,26 @@ export default function App() {
     ?.tasks.find((task) => task.id === pendingApproval?.taskId);
   const projectLibrary = useProjectLibrary(persistence, () => open("projects"));
   const activeProject = projectLibrary.activeProject;
+  const conversationDisabledReason =
+    snapshotWriteBlockReason(creation) ??
+    (saveState === "saved" || saveState === "saving"
+      ? undefined
+      : "请先处理项目读取或保存提示，当前暂不可编辑或执行。");
+  const selectedChat = activeProject?.activeChatId
+    ? activeProject.chats?.[activeProject.activeChatId]
+    : undefined;
+  const conversationDraft: CreationDraft | undefined =
+    saveState === "read_only" && activeProject && selectedChat
+      ? {
+          ...activeProject.composerDraft,
+          prompt: selectedChat.draft.text ?? selectedChat.draft.prompt ?? "",
+          attachments: selectedChat.draft.attachments ?? [],
+          model: selectedChat.draft.model ?? "",
+          modelSelection: selectedChat.draft.modelSelection,
+          conversationChannel:
+            selectedChat.draft.conversationChannel ?? "direct",
+        }
+      : activeProject?.composerDraft;
   const latestProjectTask = activeProject?.tasks.at(-1);
   const generationProgress = getGenerationProgressLabels({
     task: latestProjectTask,
@@ -475,6 +496,8 @@ export default function App() {
     }
   }
   function applyPartnerToHome(instructions: string): string {
+    const blocked = persistence.getWriteBlockReason();
+    if (blocked) return blocked;
     const project = partnerProjectId
       ? creationRef.current.projects.find(
           (item) => item.id === partnerProjectId,
@@ -486,7 +509,10 @@ export default function App() {
     if (project) {
       // The active composer acknowledges its source; inactive Agent drafts
       // cannot receive instructions or redirect them into the API draft.
-      for (const draftKey of [project.id, `google-${project.id}`]) {
+      for (const draftKey of [
+        JSON.stringify([project.id, project.activeChatId ?? null]),
+        `google-${project.id}`,
+      ]) {
         const result = appendToActiveAgentDraft(draftKey, instructions);
         if (result.handled) {
           if (result.applied) setActive("workspace");
@@ -596,6 +622,7 @@ export default function App() {
       node: CanvasCollectionItem,
       prompt: string,
       signal?: AbortSignal,
+      validate?: () => string | undefined,
     ) => Promise<{ taskId?: string; error?: string }>
   >(async () => ({ error: "生成入口未就绪" }));
   const agentViewRef = useRef<AgentCanvasBinding | null>(null);
@@ -611,19 +638,22 @@ export default function App() {
             (item) => item.id === activeProjectIdRef.current,
           ),
         getProjects: () => creationRef.current.projects,
+        getExecutionBlockReason: () =>
+          persistence.getWriteBlockReason() ??
+          snapshotWriteBlockReason(creationRef.current),
         flush: () => persistence.flush(),
         commit: (project) => {
           updateProject(project.id, () => project);
           if (activeProjectIdRef.current === project.id)
             replaceCanvasItems(project.items);
         },
-        generate: (node, prompt, signal) =>
-          agentSubmitRef.current(node, prompt, signal),
+        generate: (node, prompt, signal, validate) =>
+          agentSubmitRef.current(node, prompt, signal, validate),
         orchestrator: stageOrchestrator,
       }),
     [stageOrchestrator],
   );
-  agentSubmitRef.current = async (node, prompt, signal) => {
+  agentSubmitRef.current = async (node, prompt, signal, validate) => {
     const project = creationRef.current.projects.find(
       (item) => item.id === activeProjectIdRef.current,
     );
@@ -653,13 +683,18 @@ export default function App() {
       (id) => {
         taskId = id;
       },
+      validate,
     );
     return { taskId, error };
   };
   useEffect(() => {
     agentConnection.syncProject();
     googleAgentConnection.syncProject();
-  }, [creation.activeProjectId]);
+  }, [
+    creation.activeProjectId,
+    activeProject?.activeChatId,
+    conversationDisabledReason,
+  ]);
   useEffect(() => {
     const timer = setTimeout(() => agentConnection.pushState(), 100);
     return () => clearTimeout(timer);
@@ -1485,6 +1520,7 @@ export default function App() {
         attachments: task.attachments,
         signal: controller.signal,
         providerBaseUrl: task.providerBaseUrl,
+        providerConnectionId: task.providerConnectionId,
         credentialRef: task.providerCredentialRef,
         count: pendingIndices.length,
         idempotencyKey: `${task.idempotencyKey}-remaining-${pendingIndices.join("-")}`,
@@ -2153,7 +2189,10 @@ export default function App() {
         }
       | { origin: "canvas"; input: CanvasImageRequest },
     onAccepted?: (taskId: string) => void,
+    validateAcceptance?: () => string | undefined,
   ): Promise<string | undefined> {
+    const initialBlock = validateAcceptance?.();
+    if (initialBlock) return initialBlock;
     if (submitLock.current) return "正在提交图片任务，请稍候。";
     if (!["saved", "saving"].includes(persistence.state))
       return "请先处理项目读取或保存提示，当前未提交生成。";
@@ -2360,6 +2399,8 @@ export default function App() {
         canvasSignature(current, sourceItemId!) !== sourceSignature
       )
         return "节点或参考图在检查期间发生变化，请重新提交；当前内容已保留。";
+      const acceptanceBlock = validateAcceptance?.();
+      if (acceptanceBlock) return acceptanceBlock;
       const base = current ?? createProject(input);
       sourceItemId ??= rootItemId(base) ?? undefined;
       const appended = appendImageTask(
@@ -2413,10 +2454,32 @@ export default function App() {
       });
       if (!current || activeProjectIdRef.current === projectId)
         replaceCanvasItems(nextProject.items);
-      if (!current) setActive("workspace");
+      if (!current) {
+        const transitionToWorkspace = () => {
+          setActive("workspace");
+          setChat(true);
+        };
+        if (
+          typeof document !== "undefined" &&
+          "startViewTransition" in document
+        ) {
+          (
+            document as Document & {
+              startViewTransition: (cb: () => void) => void;
+            }
+          ).startViewTransition(transitionToWorkspace);
+        } else {
+          transitionToWorkspace();
+        }
+      }
       // The queued task and its stable idempotency key must survive a crash
       // before any provider request is allowed to start.
       await persistence.flush();
+      const afterSaveBlock = validateAcceptance?.();
+      if (afterSaveBlock) {
+        cancelTask(appended.task.id);
+        return afterSaveBlock;
+      }
       if (
         signal?.aborted ||
         (projectId && activeProjectIdRef.current !== projectId)
@@ -2504,10 +2567,32 @@ export default function App() {
         activeProjectId: project.id,
       });
       activeProjectIdRef.current = project.id;
-      activePageRef.current = "workspace";
-      setActive("workspace");
-      setChat(true);
-      replaceCanvasItems(project.items);
+      const transitionToWorkspace = () => {
+        if (
+          creationRef.current.activeProjectId !== project.id ||
+          activePageRef.current !== "landing"
+        )
+          return;
+        activePageRef.current = "workspace";
+        setActive("workspace");
+        setChat(true);
+        replaceCanvasItems(project.items);
+      };
+      if (
+        typeof document !== "undefined" &&
+        "startViewTransition" in document
+      ) {
+        const transition = (
+          document as Document & {
+            startViewTransition: (cb: () => void) => {
+              updateCallbackDone: Promise<void>;
+            };
+          }
+        ).startViewTransition(transitionToWorkspace);
+        await transition.updateCallbackDone;
+      } else {
+        transitionToWorkspace();
+      }
       agentConnection.syncProject();
       await persistence.flush();
       const ownsProject = () =>
@@ -2520,11 +2605,16 @@ export default function App() {
       );
       await desktopAgentLifecycle.connect();
       if (!ownsProject()) return "项目已切换，当前未发送；原项目草稿仍保留。";
+      const currentProject = project;
       const result = await agentConnection.sendMessage(input.prompt.trim(), {
         selection,
         outputCount: input.outputCount,
         attachments,
         canvasSource: { nodeId: project.items[0].id, kind: "image" },
+        isTemporary: Boolean(
+          currentProject?.activeChatId &&
+          currentProject.chats?.[currentProject.activeChatId]?.isTemporary,
+        ),
       });
       if (!result.ok) return result.error ?? "发送未确认，草稿仍保留。";
       updateProject(project.id, (current) => ({
@@ -2622,13 +2712,45 @@ export default function App() {
     });
     replaceCanvasItems(updated.items);
   }
-  function handleDeleteMessage(messageId: string): void {
+  function handleSelectChat(chatId: string): void {
     if (!activeProject) return;
-    updateProject(activeProject.id, (project) => ({
-      ...project,
-      messages: project.messages.filter((message) => message.id !== messageId),
+    updateProject(activeProject.id, (proj) => ({
+      ...proj,
+      activeChatId: chatId,
       updatedAt: Date.now(),
     }));
+  }
+
+  function handleDeleteMessage(messageId: string): void {
+    if (!activeProject) return;
+    updateProject(activeProject.id, (project) => {
+      const activeChatId = project.activeChatId;
+      if (activeChatId && project.chats && project.chats[activeChatId]) {
+        const chat = project.chats[activeChatId];
+        return {
+          ...project,
+          chats: {
+            ...project.chats,
+            [activeChatId]: {
+              ...chat,
+              messages: chat.messages.filter((m) => m.id !== messageId),
+              updatedAt: Date.now(),
+            },
+          },
+          messages: project.messages.filter(
+            (message) => message.id !== messageId,
+          ),
+          updatedAt: Date.now(),
+        };
+      }
+      return {
+        ...project,
+        messages: project.messages.filter(
+          (message) => message.id !== messageId,
+        ),
+        updatedAt: Date.now(),
+      };
+    });
   }
   function toggleLike(id: string): void {
     if (activeProject) {
@@ -2812,11 +2934,9 @@ export default function App() {
         return;
       }
       if (active === "workspace" && chat && (!sidebar.narrow || mobileChat)) {
-        if (!sidebar.narrow) {
-          setChat(false);
-          setMobileChat(false);
-          return;
-        }
+        setChat(false);
+        setMobileChat(false);
+        return;
       }
       if (
         !creationRef.current.projects.some(
@@ -2918,6 +3038,7 @@ export default function App() {
         }));
     }
   }
+
   return (
     <div
       className="app"
@@ -2930,6 +3051,9 @@ export default function App() {
         onOpen={open}
         onToggleSidebar={sidebar.toggle}
         onToggleChat={() => open("chat")}
+        newWindowDisabledReason="多窗口仓库协调尚未完成，暂不可新建窗口。"
+        newChatDisabledReason="多聊天隔离尚未完成，暂不可新建聊天。"
+        newTempChatDisabledReason="临时聊天的历史与记忆隔离尚未完成，暂不可用。"
       />
       <div className="app-body">
         {sidebar.narrow && !sidebar.collapsed && (
@@ -3160,7 +3284,14 @@ export default function App() {
                   overlay={sidebar.narrow && mobileChat && chat}
                   onOpen={open}
                   project={activeProject}
+                  readOnlyMessages={
+                    saveState === "read_only"
+                      ? selectedChat?.messages
+                      : undefined
+                  }
+                  executionDisabledReason={conversationDisabledReason}
                   currentModel={activeProject?.model}
+                  onSelectChat={handleSelectChat}
                   modelOptions={[
                     ...new Set(
                       [
@@ -3173,7 +3304,7 @@ export default function App() {
                   ]}
                   modelConfigured={homeModelConfig.configured}
                   onModelChange={handleProjectModelChange}
-                  composerDraft={activeProject?.composerDraft}
+                  composerDraft={conversationDraft}
                   onDraftChange={handleProjectDraftChange}
                   onSend={activeProject ? handleSendMessage : undefined}
                   onDeleteMessage={

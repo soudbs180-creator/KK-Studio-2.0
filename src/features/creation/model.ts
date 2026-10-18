@@ -122,6 +122,7 @@ export interface ChatItem {
   agentThreadId?: string;
   googleConversation?: GoogleConversation | unknown;
   originChatId?: string;
+  isTemporary?: boolean;
   [k: string]: unknown;
 }
 
@@ -279,6 +280,58 @@ export interface CreationSnapshotV3 {
 }
 
 export type CreationSnapshot = CreationSnapshotV2 | CreationSnapshotV3;
+
+/** Protocol 6 retains the legacy root conversation until ADR-022 is implemented. */
+export function projectChatExecutionBlockReason(
+  project: CreationProject | undefined,
+): string | undefined {
+  if (!project) return;
+  const threads = [
+    project.agentThreadId,
+    ...Object.values(project.chats ?? {}).map((chat) => chat.agentThreadId),
+  ];
+  if (
+    threads.some(
+      (thread) =>
+        thread !== undefined && !/^[A-Za-z0-9_-]{1,160}$/.test(thread),
+    )
+  )
+    return "Agent 线程身份无效，已暂停执行以保留原件。";
+  if (project.chats === null) return "聊天身份不完整，已暂停执行以保留原件。";
+  if (!project.chats) {
+    return project.activeChatId !== undefined
+      ? "聊天身份不完整，已暂停执行以保留原件。"
+      : undefined;
+  }
+  const chats = Object.values(project.chats);
+  if (chats.some((chat) => chat.isTemporary))
+    return "临时聊天隔离尚未完成，当前记录仅供恢复查看。";
+  if (chats.length !== 1)
+    return "多聊天执行隔离尚未完成，当前记录仅供恢复查看。";
+  const chat = project.activeChatId && project.chats[project.activeChatId];
+  if (!chat || chat.id !== project.activeChatId)
+    return "聊天身份不完整，已暂停执行以保留原件。";
+  if (
+    chat.agentThreadId &&
+    project.agentThreadId &&
+    chat.agentThreadId !== project.agentThreadId
+  )
+    return "聊天与原项目的 Agent 线程身份冲突，已暂停执行以保留原件。";
+  return undefined;
+}
+
+export function snapshotWriteBlockReason(
+  snapshot: CreationSnapshot,
+): string | undefined {
+  if (snapshot.version === 3)
+    return "多聊天格式迁移与写入保护尚未完成，当前快照仅供恢复查看。";
+  for (const project of snapshot.projects) {
+    const reason = projectChatExecutionBlockReason(project);
+    if (reason) return reason;
+  }
+  return undefined;
+}
+
 export interface CreationDraft {
   modelSelection?: ModelSelection;
   conversationChannel?: "codex" | "direct" | "google";
@@ -887,10 +940,24 @@ function normalizeCanvasItem(
 }
 
 function normalizeChatDraft(rawDraft: unknown): ChatItemDraft {
-  const d = rawDraft && typeof rawDraft === "object" ? (rawDraft as Record<string, unknown>) : {};
-  const text = typeof d.text === "string" ? d.text : typeof d.prompt === "string" ? d.prompt : "";
-  const pendingAgent = typeof d.pendingAgent === "string" ? d.pendingAgent : typeof d.pendingAgent === "boolean" ? d.pendingAgent : undefined;
+  const d =
+    rawDraft && typeof rawDraft === "object"
+      ? (rawDraft as Record<string, unknown>)
+      : {};
+  const text =
+    typeof d.text === "string"
+      ? d.text
+      : typeof d.prompt === "string"
+        ? d.prompt
+        : "";
+  const pendingAgent =
+    typeof d.pendingAgent === "string"
+      ? d.pendingAgent
+      : typeof d.pendingAgent === "boolean"
+        ? d.pendingAgent
+        : undefined;
   return {
+    ...d,
     ...normalizeDraft(d),
     text,
     pendingAgent,
@@ -900,30 +967,75 @@ function normalizeChatDraft(rawDraft: unknown): ChatItemDraft {
 function normalizeChatMessages(raw: unknown): ChatItemMessage[] {
   if (!Array.isArray(raw)) return [];
   return raw
-    .filter((m): m is Record<string, unknown> => Boolean(m && typeof m === "object" && typeof (m as { id?: unknown }).id === "string" && typeof (m as { content?: unknown }).content === "string"))
+    .filter((m): m is Record<string, unknown> =>
+      Boolean(
+        m &&
+        typeof m === "object" &&
+        typeof (m as { id?: unknown }).id === "string" &&
+        typeof (m as { content?: unknown }).content === "string",
+      ),
+    )
     .map((m) => ({
+      ...m,
       id: safeText(m.id as string, 160),
-      role: m.role === "assistant" ? "assistant" : m.role === "system" ? "system" : "user",
+      role:
+        m.role === "assistant"
+          ? "assistant"
+          : m.role === "system"
+            ? "system"
+            : "user",
       content: (m.content as string).slice(0, 20000),
-      createdAt: typeof m.createdAt === "number" && Number.isSafeInteger(m.createdAt) ? m.createdAt : undefined,
-      taskId: typeof m.taskId === "string" ? safeText(m.taskId, 160) : undefined,
+      createdAt:
+        typeof m.createdAt === "number" && Number.isSafeInteger(m.createdAt)
+          ? m.createdAt
+          : undefined,
+      taskId:
+        typeof m.taskId === "string" ? safeText(m.taskId, 160) : undefined,
     }));
 }
 
-function normalizeChat(candidate: unknown, fallbackId: string): ChatItem {
-  const c = (candidate && typeof candidate === "object" ? candidate : {}) as Partial<ChatItem>;
-  const id = typeof c.id === "string" && c.id.trim() ? safeText(c.id, 160) : fallbackId;
-  const name = typeof c.name === "string" && c.name.trim() ? safeText(c.name, 160) : "默认对话";
+export function normalizeChat(
+  candidate: unknown,
+  fallbackId = "chat-default",
+): ChatItem {
+  const c = (
+    candidate && typeof candidate === "object" ? candidate : {}
+  ) as Partial<ChatItem>;
+  const id =
+    typeof c.id === "string" && c.id.trim() ? safeText(c.id, 160) : fallbackId;
+  const name =
+    typeof c.name === "string" && c.name.trim()
+      ? safeText(c.name, 160)
+      : "默认对话";
   const now = Date.now();
-  const createdAt = typeof c.createdAt === "number" && Number.isSafeInteger(c.createdAt) && c.createdAt >= 0 ? c.createdAt : now;
-  const updatedAt = typeof c.updatedAt === "number" && Number.isSafeInteger(c.updatedAt) && c.updatedAt >= 0 ? c.updatedAt : createdAt;
-  const mainAgent = typeof c.mainAgent === "string" && c.mainAgent.trim() ? safeText(c.mainAgent, 60) : "codex";
+  const createdAt =
+    typeof c.createdAt === "number" &&
+    Number.isSafeInteger(c.createdAt) &&
+    c.createdAt >= 0
+      ? c.createdAt
+      : now;
+  const updatedAt =
+    typeof c.updatedAt === "number" &&
+    Number.isSafeInteger(c.updatedAt) &&
+    c.updatedAt >= 0
+      ? c.updatedAt
+      : createdAt;
+  const mainAgent =
+    typeof c.mainAgent === "string" && c.mainAgent.trim()
+      ? safeText(c.mainAgent, 60)
+      : "codex";
 
   const modelAllowlist = Array.isArray(c.modelAllowlist)
-    ? c.modelAllowlist.filter((m): m is string => typeof m === "string" && m.trim().length > 0).map((m) => safeText(m, 120)).slice(0, 64)
+    ? c.modelAllowlist
+        .filter(
+          (m): m is string => typeof m === "string" && m.trim().length > 0,
+        )
+        .map((m) => safeText(m, 120))
+        .slice(0, 64)
     : [];
 
   return {
+    ...c,
     id,
     name,
     createdAt,
@@ -932,9 +1044,17 @@ function normalizeChat(candidate: unknown, fallbackId: string): ChatItem {
     messages: normalizeChatMessages(c.messages),
     mainAgent,
     modelAllowlist,
-    agentThreadId: typeof c.agentThreadId === "string" && /^[A-Za-z0-9_-]{1,160}$/.test(c.agentThreadId) ? c.agentThreadId : undefined,
+    agentThreadId:
+      typeof c.agentThreadId === "string" &&
+      /^[A-Za-z0-9_-]{1,160}$/.test(c.agentThreadId)
+        ? c.agentThreadId
+        : undefined,
     googleConversation: normalizeGoogleConversation(c.googleConversation),
-    originChatId: typeof c.originChatId === "string" ? safeText(c.originChatId, 160) : undefined,
+    originChatId:
+      typeof c.originChatId === "string"
+        ? safeText(c.originChatId, 160)
+        : undefined,
+    isTemporary: Boolean(c.isTemporary),
   };
 }
 

@@ -3,12 +3,7 @@ import UiIcon from "./UiIcon";
 import "../styles/agent-action-button.css";
 
 export type AgentActionState =
-  | "idle"
-  | "executing"
-  | "pausing"
-  | "paused"
-  | "resuming"
-  | "completed";
+  "idle" | "executing" | "pausing" | "paused" | "resuming" | "completed";
 
 export type AgentActionTransitionEvent =
   | "SEND"
@@ -168,27 +163,18 @@ export default function AgentActionButton({
         );
       case "executing":
         return (
-          <UiIcon
-            name="pause"
-            size={AGENT_ACTION_BUTTON_GEOMETRY.iconSize}
-          />
+          <UiIcon name="pause" size={AGENT_ACTION_BUTTON_GEOMETRY.iconSize} />
         );
       case "pausing":
       case "resuming":
         return <span className="agent-action-spinner" aria-hidden="true" />;
       case "paused":
         return (
-          <UiIcon
-            name="play"
-            size={AGENT_ACTION_BUTTON_GEOMETRY.iconSize}
-          />
+          <UiIcon name="play" size={AGENT_ACTION_BUTTON_GEOMETRY.iconSize} />
         );
       case "completed":
         return (
-          <UiIcon
-            name="check"
-            size={AGENT_ACTION_BUTTON_GEOMETRY.iconSize}
-          />
+          <UiIcon name="check" size={AGENT_ACTION_BUTTON_GEOMETRY.iconSize} />
         );
     }
   };

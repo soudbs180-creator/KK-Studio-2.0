@@ -1,5 +1,15 @@
 # 当前进度
 
+## 2026-10-17 审计安全修复与治理同步（有界本地A–D DONE/PASS）
+
+最终产品source `4699458de1c3437309b7cdc3f019454104c81fce`、tree `a1905e2aa6e11a24b4c62d829dc82a8f0d566972`，Desktop/Web2.1.36，Mobile2.1.1规划。冻结前后CLEAN的完整`npm run verify` exit0：Node1846=1832PASS/14既有SKIP、Agent201=199PASS/2既有SKIP、产品Edge823/823首试零fail/retry/flaky/skip、DESIGN41单元+8浏览器、development四步，lint/type/UI/format/build通过，警告/advisory保留。469精确增量独审PASS；此前FSR01–06按原SHA关闭。Native五源自436后未变，Rust bin213PASS/1既有硬件ignored+integration41/check/fmt仍按该源身份解释。
+
+官方EXE b6299445/input a53dee81、隔离Native六检查（含focus、同repo/新epoch/草稿、loaded字节/版本与cleanup0）、默认两个真实lnk正常关闭重开均PASS。默认9项目raw snapshot/identity/shared memory保持，原只读banner遮挡菜单真实FAIL已由条件sidebar popover层级修复并以桌面/短手机普通点击及新Native复验关闭；旧d356完整/隔离PASS、dailyFAIL、75的12browser失败、8026中止和两次旧helper selector失败全部保留。日常恢复成功只代表可信启动和只读保护成立，旧聊天资料仍READ_ONLY；完整迁移/protocol7继续开放。
+
+A保全517368文件版本/56336959878 B/6 bundles/两个dirty恢复，原主仓main8c/63dirty/index/staged0保持；D纠正26失效分配并保留全历史、v2 hook本机核对及远端规则实际差异。本轮新审计任务DONE/PASS，149项合计85DONE/48PARTIAL/12TODO/3BLOCKED/1IN_PROGRESS、64开放；原148任务对象及37功能成熟度/runtimeEvidence保持不变。26容器条目/4worktrees均deletable=false，没有文件删除/移动。未push/merge/改远端或发布；真实Provider/ComfyUI/GPU、完整多聊天/垃圾箱/12AI恢复、VPS/账号、Mobile、签名和用户验收不由本轮代填。最终文档HEAD review/Delivery以提交后收据为准，详见[本轮验证](changes/2026-10-17-audit-repair/verification.md)。
+
+以下各日期段为历史阶段证据，其中“当前/进行中”按其时点理解，不能覆盖本轮入口。
+
 ## 2026-10-16 安装安全复验与真实UI回读（进行中）
 
 独审捕获的硬链接原件损坏/续传空间误拒均已实际RED→GREEN；修复19路径预检通过，fresh integration41/41、Node21/21及原件SHA保全探针通过，真实ZIP/模型推理仍未验。冻结573输入构建成功，新bundle相关25/25及动画/原frame邻域10/10首试通过，36状态审计无document溢出；手机聊天实际settled在viewport内。截图动画中间态与旧seed失败已按真实状态修正，未改frame坐标/容差；顶部实际命中24px，纠正先前32px推断。Native模型能力DTO丢失已修，正常多聊天/Agent又补两项scope隔离，需再重建后验。账号后台正用真SQLite/OPAQUE/OIDC/JWE实现独立控制面，尚未接Desktop/真实邮件；全局DESIGN、执行模型参数、媒体、共仓库及同步继续推进，详见[验证](changes/2026-10-15-kk-unified/verification.md)。

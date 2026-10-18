@@ -1,8 +1,6 @@
 import React, { useMemo, useCallback } from "react";
 import ComposerTextarea from "../ComposerTextarea.tsx";
-import {
-  useComposerAutocomplete,
-} from "./useComposerAutocomplete.ts";
+import { useComposerAutocomplete } from "./useComposerAutocomplete.ts";
 import ComposerSlashMenu from "./ComposerSlashMenu.tsx";
 import ComposerMentionMenu, {
   type MentionCandidate,
@@ -234,7 +232,10 @@ export default function TokenizedComposerInput({
   };
 
   return (
-    <div className="tokenized-composer-wrapper" style={{ position: "relative", width: "100%" }}>
+    <div
+      className="tokenized-composer-wrapper"
+      style={{ position: "relative", width: "100%" }}
+    >
       {/* 活跃引用的内联胶囊栏 */}
       <ComposerMentionsBar
         activeTokens={activeTokens}
@@ -280,7 +281,9 @@ export default function TokenizedComposerInput({
           );
         }}
         onKeyDown={handleInputKeyDown}
-        placeholder={placeholder || "描述创作需求；输入 @ 引用参考图，输入 / 快捷操作…"}
+        placeholder={
+          placeholder || "描述创作需求；输入 @ 引用参考图，输入 / 快捷操作…"
+        }
         disabled={disabled}
       />
     </div>

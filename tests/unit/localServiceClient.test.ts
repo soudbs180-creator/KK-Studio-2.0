@@ -4,7 +4,10 @@ import test from "node:test";
 import { readFileSync } from "node:fs";
 import { runInNewContext } from "node:vm";
 import ts from "typescript";
-import { emptySnapshot } from "../../src/features/creation/model.ts";
+import {
+  emptySnapshot,
+  snapshotWriteBlockReason,
+} from "../../src/features/creation/model.ts";
 import * as snapshotCodec from "../../src/features/creation/snapshotCodec.ts";
 import * as connectionModule from "../../src/features/local-service/connection.ts";
 import {
@@ -255,7 +258,7 @@ test("unsupported snapshot format reaches the client and freezes storage without
       ...connectionModule,
       readCompanionConnection: () => readCompanionConnection(storage),
     },
-    "./model": { emptySnapshot },
+    "./model": { emptySnapshot, snapshotWriteBlockReason },
     "./snapshotCodec": snapshotCodec,
     "./chatMigration": {
       sha256Hex: (data: string) =>

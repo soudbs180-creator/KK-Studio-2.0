@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { openWorkspace } from "./helpers";
+import { openWorkspace, showCanvasNavigation } from "./helpers";
 
 test("图片连续拖动不被浏览器原生图片拖放截断，加号始终跟随", async ({
   page,
@@ -154,4 +154,37 @@ test("鼠标能从连线移动到删除按钮，键盘新增后可继续微调�
   const before = await node.getAttribute("style");
   await page.keyboard.press("ArrowRight");
   await expect(node).not.toHaveAttribute("style", before!);
+});
+
+test("手机连线按钮按下时保持44px命中区并能从边缘剪开", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await openWorkspace(page);
+  await showCanvasNavigation(page);
+  await page.getByRole("button", { name: "画布缩放", exact: true }).click();
+  await page.getByRole("menuitem", { name: /^适应视图/ }).click();
+  const edge = page.getByRole("button", {
+    name: "连接 图片创建卡片 → 视频卡片 1",
+    exact: true,
+  });
+  await edge.focus();
+  const cut = page.getByRole("button", {
+    name: "删除连线 图片创建卡片 → 视频卡片 1",
+    exact: true,
+  });
+  await expect(cut).toHaveCSS("opacity", "1");
+  const before = (await cut.boundingBox())!;
+  expect(before.width).toBeCloseTo(44, 1);
+  await page.mouse.move(before.x + 3, before.y + before.height / 2);
+  await page.mouse.down();
+  try {
+    expect(await cut.evaluate((element) => element.matches(":active"))).toBe(
+      true,
+    );
+    await expect(cut).toHaveCSS("width", "44px");
+    await expect(cut).toHaveCSS("height", "44px");
+  } finally {
+    await page.mouse.up();
+  }
+  await expect(edge).toHaveCount(0);
+  await expect(page.getByTestId("canvas-node-video1")).toHaveCount(1);
 });

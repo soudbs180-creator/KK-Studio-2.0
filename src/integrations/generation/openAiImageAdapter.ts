@@ -49,6 +49,7 @@ export class OpenAiImageAdapter implements GenerationProviderAdapter {
       attachments: request.attachments,
       signal: request.signal,
       providerBaseUrl: this.connection.baseUrl,
+      providerConnectionId: this.connection.id,
       credentialRef: this.connection.credentialRef,
       count: request.requestedOutputs,
       idempotencyKey: request.idempotencyKey,

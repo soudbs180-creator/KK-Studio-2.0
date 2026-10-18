@@ -311,6 +311,13 @@ fn valid_main_with_invalid_structure_backup_starts_restarts_and_archives_origina
 }
 
 #[test]
+fn valid_main_with_unversioned_corrupt_backup_keeps_legacy_recovery_and_archiving() {
+    for raw in [b"{}".as_slice(), b"null".as_slice()] {
+        unused_corrupt_backup_retains_identity_until_existing_writer_archives(raw);
+    }
+}
+
+#[test]
 fn corrupt_main_cannot_ignore_invalid_backup() {
     for raw in [
         b"{not json".as_slice(),
@@ -512,4 +519,260 @@ fn taskhost_and_package_readers_use_the_authority_repositories() {
     )
     .unwrap();
     assert!(destination.is_file());
+}
+
+fn unsupported_chat_snapshots() -> Vec<Value> {
+    let mut single = snapshot(1);
+    single["activeProjectId"] = json!("p1");
+    single["projects"] = json!([{"id":"p1","items":[],"tasks":[],"messages":[],"attachments":[],"activeChatId":"chat-main","agentThreadId":"legacy-thread","chats":{"chat-main":{"id":"chat-main","name":"Saved history","messages":[],"agentThreadId":"legacy-thread"}}}]);
+    let mut v3 = single.clone();
+    v3["version"] = json!(3);
+    let mut multiple = single.clone();
+    multiple["projects"][0]["chats"]["chat-other"] =
+        json!({"id":"chat-other","name":"Other","messages":[]});
+    let mut temporary = single.clone();
+    temporary["projects"][0]["chats"]["chat-main"]["isTemporary"] = json!(true);
+    let mut invalid_active = single.clone();
+    invalid_active["projects"][0]["activeChatId"] = json!("missing");
+    let mut thread_conflict = single.clone();
+    thread_conflict["projects"][0]["chats"]["chat-main"]["agentThreadId"] = json!("other-thread");
+    let mut corrupt_v3 = v3.clone();
+    corrupt_v3["projects"][0]["chats"]["chat-main"]["messages"] =
+        json!([{"id":"message","role":"user","content":42}]);
+    let mut cases = vec![
+        v3,
+        multiple,
+        temporary,
+        invalid_active,
+        thread_conflict,
+        corrupt_v3,
+    ];
+    let mut invalid_legacy_thread = single.clone();
+    invalid_legacy_thread["projects"][0]
+        .as_object_mut()
+        .unwrap()
+        .remove("chats");
+    invalid_legacy_thread["projects"][0]
+        .as_object_mut()
+        .unwrap()
+        .remove("activeChatId");
+    invalid_legacy_thread["projects"][0]["agentThreadId"] = json!("bad/root");
+    cases.push(invalid_legacy_thread);
+    for invalid in [
+        json!("bad/thread"),
+        json!(""),
+        json!("a".repeat(161)),
+        json!("线程"),
+        json!(42),
+        Value::Null,
+    ] {
+        let mut chat_only = single.clone();
+        chat_only["projects"][0]
+            .as_object_mut()
+            .unwrap()
+            .remove("agentThreadId");
+        chat_only["projects"][0]["chats"]["chat-main"]["agentThreadId"] = invalid;
+        cases.push(chat_only);
+    }
+    let mut matching_invalid_threads = single.clone();
+    matching_invalid_threads["projects"][0]["agentThreadId"] = json!("bad/thread");
+    matching_invalid_threads["projects"][0]["chats"]["chat-main"]["agentThreadId"] =
+        json!("bad/thread");
+    cases.push(matching_invalid_threads);
+    let mut null_chats_without_active = single.clone();
+    null_chats_without_active["projects"][0]["chats"] = Value::Null;
+    null_chats_without_active["projects"][0]
+        .as_object_mut()
+        .unwrap()
+        .remove("activeChatId");
+    cases.push(null_chats_without_active);
+    for null_chats in [false, true] {
+        for active in [Value::Null, json!("")] {
+            let mut explicit_invalid = single.clone();
+            if null_chats {
+                explicit_invalid["projects"][0]["chats"] = Value::Null;
+            } else {
+                explicit_invalid["projects"][0]
+                    .as_object_mut()
+                    .unwrap()
+                    .remove("chats");
+            }
+            explicit_invalid["projects"][0]["activeChatId"] = active;
+            cases.push(explicit_invalid);
+        }
+    }
+    let mut empty_active_and_chat_id = single.clone();
+    empty_active_and_chat_id["projects"][0]["activeChatId"] = json!("");
+    empty_active_and_chat_id["projects"][0]["chats"] =
+        json!({"":{"id":"","name":"Invalid identity","agentThreadId":"legacy-thread"}});
+    cases.push(empty_active_and_chat_id);
+    let mut missing_active = single;
+    missing_active["projects"][0]
+        .as_object_mut()
+        .unwrap()
+        .remove("activeChatId");
+    cases.push(missing_active);
+    cases
+}
+
+fn submitted_journal() -> Vec<u8> {
+    serde_json::to_vec(&json!({"taskId":"pending","idempotencyKey":"pending-idem","outputIndices":[0],"status":"submitted","assetIds":[],"outputs":[{"index":0,"status":"submitted"}],"updatedAt":1,"fingerprint":"a".repeat(64)})).unwrap()
+}
+
+fn new_task_request() -> crate::task_host::TaskHostRequest {
+    serde_json::from_value(json!({"taskId":"new-task","idempotencyKey":"new-idem","baseUrl":"http://127.0.0.1:1/v1","credentialRef":"fixture","model":"demo","prompt":"do not send","outputIndices":[0]})).unwrap()
+}
+
+#[tokio::test]
+async fn unsupported_chat_main_or_backup_opens_readonly_without_recovery_or_submission() {
+    for unsupported in unsupported_chat_snapshots() {
+        for protected_backup in [false, true] {
+            let f = Fixture::new();
+            let paths = f.paths();
+            let seed = f.owner();
+            let identity = seed.identity.clone();
+            let original = b"original bytes retained by readonly root";
+            let sha = crate::asset_storage::validation::hash(original);
+            let id = format!("asset-{}", &sha[..24]);
+            seed.assets.store(STANDARD.encode(original), json!({"assetId":id,"sha256":sha,"mime":"image/png","tags":[],"isAiGenerated":false,"source":"upload","provenance":{"generatedAt":"2026-10-17T00:00:00.000Z"}})).unwrap();
+            drop(seed);
+            let legacy = snapshot(1);
+            let main = serde_json::to_vec(if protected_backup {
+                &legacy
+            } else {
+                &unsupported
+            })
+            .unwrap();
+            let backup = serde_json::to_vec(if protected_backup {
+                &unsupported
+            } else {
+                &legacy
+            })
+            .unwrap();
+            fs::write(&paths.creation, &main).unwrap();
+            fs::write(paths.creation.with_extension("json.bak"), &backup).unwrap();
+            let journal = paths.tasks.join("native-host/pending.json");
+            let journal_raw = submitted_journal();
+            let journal_hash = crate::asset_storage::validation::hash(&journal_raw);
+            fs::write(&journal, &journal_raw).unwrap();
+            for _ in 0..2 {
+                let owner = f.owner();
+                assert_eq!(owner.identity, identity);
+                assert_eq!(
+                    fs::read(&journal).unwrap(),
+                    journal_raw,
+                    "readonly startup rewrote submitted journal"
+                );
+                assert_eq!(
+                    crate::asset_storage::validation::hash(&fs::read(&journal).unwrap()),
+                    journal_hash
+                );
+                assert_eq!(
+                    owner.task_host.get("pending").unwrap().unwrap().status,
+                    "submitted"
+                );
+                let loaded = serde_json::to_value(owner.snapshots.read().unwrap()).unwrap();
+                assert!(loaded["readOnlyReason"]
+                    .as_str()
+                    .is_some_and(|reason| !reason.is_empty()));
+                assert!(owner
+                    .snapshots
+                    .write(snapshot(2), Some(1))
+                    .unwrap_err()
+                    .starts_with("readonly:"));
+                assert!(Arc::clone(&owner.task_host)
+                    .submit(new_task_request())
+                    .await
+                    .unwrap_err()
+                    .starts_with("readonly:"));
+                assert!(!paths.tasks.join("native-host/new-task.json").exists());
+                assert_eq!(fs::read(&paths.creation).unwrap(), main);
+                assert_eq!(
+                    fs::read(paths.creation.with_extension("json.bak")).unwrap(),
+                    backup
+                );
+                let asset = owner.assets.read(&id).unwrap().unwrap();
+                assert_eq!(STANDARD.decode(asset.data_base64).unwrap(), original);
+            }
+        }
+    }
+}
+
+#[tokio::test]
+async fn snapshot_changed_after_election_blocks_native_task_submission() {
+    let f = Fixture::new();
+    let paths = f.paths();
+    let owner = f.owner();
+    fs::write(
+        &paths.creation,
+        serde_json::to_vec(&unsupported_chat_snapshots()[0]).unwrap(),
+    )
+    .unwrap();
+    assert!(Arc::clone(&owner.task_host)
+        .submit(new_task_request())
+        .await
+        .unwrap_err()
+        .starts_with("readonly:"));
+    assert!(!paths.tasks.join("native-host/new-task.json").exists());
+}
+
+#[test]
+fn legacy_single_chat_keeps_writes_and_submitted_recovery() {
+    let f = Fixture::new();
+    let paths = f.paths();
+    let mut legacy = unsupported_chat_snapshots()[1].clone();
+    legacy["projects"][0]["chats"]
+        .as_object_mut()
+        .unwrap()
+        .remove("chat-other");
+    fs::create_dir(paths.tasks.join("native-host")).unwrap();
+    fs::write(
+        paths.tasks.join("native-host/pending.json"),
+        submitted_journal(),
+    )
+    .unwrap();
+    fs::write(&paths.creation, serde_json::to_vec(&legacy).unwrap()).unwrap();
+    let owner = f.owner();
+    assert!(owner.snapshots.read().unwrap().read_only_reason.is_none());
+    assert_eq!(
+        owner.task_host.get("pending").unwrap().unwrap().status,
+        "unknown"
+    );
+    legacy["revision"] = json!(2);
+    owner.snapshots.write(legacy.clone(), Some(1)).unwrap();
+    let longest_valid_thread = format!("A_-{}", "a".repeat(157));
+    legacy["revision"] = json!(3);
+    legacy["projects"][0]["agentThreadId"] = json!(longest_valid_thread);
+    legacy["projects"][0]["chats"]["chat-main"]["agentThreadId"] =
+        legacy["projects"][0]["agentThreadId"].clone();
+    owner.snapshots.write(legacy.clone(), Some(2)).unwrap();
+    drop(owner);
+    legacy["revision"] = json!(4);
+    legacy["projects"][0]
+        .as_object_mut()
+        .unwrap()
+        .remove("chats");
+    legacy["projects"][0]
+        .as_object_mut()
+        .unwrap()
+        .remove("activeChatId");
+    fs::write(&paths.creation, serde_json::to_vec(&legacy).unwrap()).unwrap();
+    fs::write(
+        paths.tasks.join("native-host/pending.json"),
+        submitted_journal(),
+    )
+    .unwrap();
+    let reopened = f.owner();
+    assert!(reopened
+        .snapshots
+        .read()
+        .unwrap()
+        .read_only_reason
+        .is_none());
+    assert_eq!(
+        reopened.task_host.get("pending").unwrap().unwrap().status,
+        "unknown"
+    );
+    legacy["revision"] = json!(5);
+    reopened.snapshots.write(legacy, Some(4)).unwrap();
 }

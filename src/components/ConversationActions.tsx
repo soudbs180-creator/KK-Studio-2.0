@@ -6,9 +6,7 @@ import ConversationModelPicker from "./ConversationModelPicker";
 import type { CreationDraft } from "../features/creation/model";
 import VoiceInputButton from "./VoiceInputButton";
 import type { SkillRecord } from "../features/skills/skillRegistry";
-import AgentActionButton, {
-  type AgentActionState,
-} from "./AgentActionButton";
+import AgentActionButton, { type AgentActionState } from "./AgentActionButton";
 
 export default function ConversationActions({
   actionsRef,
@@ -16,6 +14,7 @@ export default function ConversationActions({
   onAddFiles,
   composerDraft,
   submitting,
+  submitDisabled,
   attachmentDisabled,
   modelDisabled,
   currentModel,
@@ -53,6 +52,7 @@ export default function ConversationActions({
   onAddFiles: (files: FileList | null) => void;
   composerDraft?: CreationDraft;
   submitting: boolean;
+  submitDisabled?: boolean;
   attachmentDisabled?: boolean;
   modelDisabled?: boolean;
   currentModel?: string;
@@ -89,7 +89,7 @@ export default function ConversationActions({
 }) {
   const hasContent = Boolean(
     input.trim() ||
-      (composerDraft?.attachments && composerDraft.attachments.length > 0),
+    (composerDraft?.attachments && composerDraft.attachments.length > 0),
   );
   const resolvedState: AgentActionState =
     agentActionState ?? (submitting ? "executing" : "idle");
@@ -218,10 +218,15 @@ export default function ConversationActions({
           aria-hidden="true"
         />
         <AgentActionButton
+          className="chat-send"
           state={resolvedState}
           hasDraft={hasContent}
           hasContent={hasContent}
-          disabled={submitting && !agentActionState}
+          debounceMs={resolvedState === "idle" && !onSend ? 0 : undefined}
+          disabled={Boolean(
+            (submitting && !agentActionState) ||
+            (resolvedState === "idle" && submitDisabled),
+          )}
           onSend={onSend}
           onPause={handlePause}
           onResume={handleResume}

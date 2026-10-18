@@ -557,6 +557,7 @@
  */
 .start-composer {
   --composer-target: 32px;
+  view-transition-name: composer-box;
   box-sizing: border-box;
   width: 652px;
   min-height: 170px;
@@ -663,17 +664,37 @@
   margin: 0;
 }
 
-.start-composer .composer-ext-skill > button {
+.start-composer
+  :is(.start-model-picker > button, .composer-ext-skill > button) {
   box-sizing: border-box;
-  width: 58px;
-  min-width: 58px;
   height: var(--kk-control-h-md);
   min-height: var(--kk-control-h-md);
-  padding: 0 5px;
-  gap: 4px;
+  border-radius: var(--ui-radius-pill);
   background: var(--ui-task-selected);
+  border: 1px solid var(--border-control);
+  color: var(--text-secondary);
   font-size: var(--kk-font-caption);
   line-height: var(--kk-line-caption);
+  transition: all 0.16s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.start-composer
+  :is(.start-model-picker > button, .composer-ext-skill > button):hover {
+  background: var(--neutral-selected);
+  border-color: var(--border-default);
+  color: var(--text-primary);
+}
+
+.start-composer
+  :is(.start-model-picker > button, .composer-ext-skill > button):active {
+  transform: scale(0.96);
+}
+
+.start-composer .composer-ext-skill > button {
+  width: 58px;
+  min-width: 58px;
+  padding: 0 5px;
+  gap: 4px;
 }
 
 .start-composer .start-model-picker > button {
@@ -682,6 +703,7 @@
   max-width: 100%;
   justify-content: center;
   padding-inline: var(--kk-space-3);
+  gap: 4px;
 }
 
 .start-composer .start-model-picker > button > img,
@@ -791,6 +813,7 @@
 
 /* The conversation frame has a separate 426x170 Figma contract. */
 .conversation-panel .chat-composer {
+  view-transition-name: composer-box;
   box-sizing: border-box;
   width: 426px;
   max-width: 100%;
@@ -921,8 +944,9 @@
   min-width: 58px;
 }
 
-.conversation-panel .chat-composer .chat-skill-trigger,
-.conversation-panel .chat-composer .chat-plugin-trigger {
+.conversation-panel
+  .chat-composer
+  :is(.chat-skill-trigger, .chat-plugin-trigger) {
   box-sizing: border-box;
   width: 58px;
   min-width: 58px;
@@ -930,9 +954,27 @@
   min-height: var(--kk-control-h-md);
   padding: 0 5px;
   gap: 4px;
+  border-radius: var(--ui-radius-pill);
   background: var(--ui-task-selected);
+  border: 1px solid var(--border-control);
+  color: var(--text-secondary);
   font-size: var(--kk-font-caption);
   line-height: var(--kk-line-caption);
+  transition: all 0.16s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.conversation-panel
+  .chat-composer
+  :is(.chat-skill-trigger, .chat-plugin-trigger):hover {
+  background: var(--neutral-selected);
+  border-color: var(--border-default);
+  color: var(--text-primary);
+}
+
+.conversation-panel
+  .chat-composer
+  :is(.chat-skill-trigger, .chat-plugin-trigger):active {
+  transform: scale(0.96);
 }
 
 .conversation-panel .chat-composer .chat-skill-separator {
@@ -940,31 +982,13 @@
   margin: 0 4px 0 5px;
 }
 
-.conversation-panel .chat-composer [data-voice-state] {
-  order: 7;
-  flex: 0 0 var(--kk-control-h-md);
-  width: var(--kk-control-h-md);
-  min-width: var(--kk-control-h-md);
-  height: var(--kk-control-h-md);
-  min-height: var(--kk-control-h-md);
-  margin-left: auto;
-}
-
-.conversation-panel .chat-composer [data-voice-state] > img {
-  width: 14px;
-  height: 14px;
-}
-
-.conversation-panel .chat-composer .chat-footer-separator-right {
-  order: 8;
-}
-
 .conversation-panel .chat-composer .chat-mode-menu {
-  order: 9;
+  order: 5;
   flex: 0 0 53px;
   width: 53px;
   min-width: 53px;
   height: var(--kk-control-h-md);
+  margin-left: auto;
 }
 
 .conversation-panel .chat-composer .chat-mode-trigger {
@@ -977,7 +1001,26 @@
   line-height: var(--kk-line-caption);
 }
 
-.conversation-panel .chat-composer .chat-send {
+.conversation-panel .chat-composer [data-voice-state] {
+  order: 6;
+  flex: 0 0 var(--kk-control-h-md);
+  width: var(--kk-control-h-md);
+  min-width: var(--kk-control-h-md);
+  height: var(--kk-control-h-md);
+  min-height: var(--kk-control-h-md);
+  margin-left: 0;
+}
+
+.conversation-panel .chat-composer [data-voice-state] > img {
+  width: 14px;
+  height: 14px;
+}
+
+.conversation-panel .chat-composer .chat-footer-separator-right {
+  order: 7;
+}
+
+.conversation-panel .chat-composer :is(.chat-send, .agent-action-button) {
   order: 10;
   margin-left: var(--kk-space-1);
 }
@@ -1199,4 +1242,34 @@
   .conversation-panel .chat-composer .chat-skill-trigger > span {
     display: none;
   }
+}
+
+/* Smooth Spring Physics View Transition for Composer: Home -> bottom-right Canvas */
+::view-transition-group(composer-box) {
+  animation-duration: 0.52s;
+  animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes composerFlyToCorner {
+  0% {
+    opacity: 0.85;
+    transform: translate(calc(50vw - 100% + 140px), calc(-50vh + 180px))
+      scale(1.18);
+  }
+  65% {
+    transform: translate(0, -8px) scale(0.97);
+  }
+  82% {
+    transform: translate(0, 3px) scale(1.01);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+.conversation-panel .chat-composer.is-entering-from-home {
+  animation: composerFlyToCorner 0.52s cubic-bezier(0.34, 1.56, 0.64, 1)
+    forwards;
+  will-change: transform, opacity;
 }

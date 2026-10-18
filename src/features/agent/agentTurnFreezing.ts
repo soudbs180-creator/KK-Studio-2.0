@@ -7,12 +7,7 @@
  */
 
 export type AgentActionState =
-  | "idle"
-  | "executing"
-  | "pausing"
-  | "paused"
-  | "resuming"
-  | "completed";
+  "idle" | "executing" | "pausing" | "paused" | "resuming" | "completed";
 
 export interface TurnFreezingSnapshot {
   readonly state: AgentActionState;

@@ -3,7 +3,6 @@ import {
   normalizeCreationSnapshot,
   isCreationProviderRoutingValid,
   type CreationSnapshot,
-  type CreationSnapshotV2,
   type CreationSnapshotV3,
   type CreationProjectV3,
   type ChatItem,
@@ -14,6 +13,7 @@ import {
 } from "../../domain/providerProtocol.ts";
 
 const id = z.string().min(1).max(160);
+const threadId = id.regex(/^[A-Za-z0-9_-]{1,160}$/);
 const number = z.number().finite();
 const kind = z.enum(["image", "video", "audio", "text"]);
 
@@ -83,7 +83,7 @@ const chatMessageSchema = z
   })
   .passthrough();
 
-const chatItemSchema = z
+export const chatItemSchema = z
   .object({
     id,
     name: z.string(),
@@ -96,6 +96,7 @@ const chatItemSchema = z
     agentThreadId: id.optional(),
     googleConversation: z.unknown().optional(),
     originChatId: id.optional(),
+    isTemporary: z.boolean().optional(),
   })
   .passthrough();
 
@@ -125,6 +126,14 @@ const taskSchema = z
 const projectV2Schema = z
   .object({
     id,
+    activeChatId: id.optional(),
+    agentThreadId: threadId.optional(),
+    chats: z
+      .record(
+        z.string(),
+        z.object({ id, agentThreadId: threadId.optional() }).passthrough(),
+      )
+      .optional(),
     providerProtocol: providerProtocolSchema.optional(),
     providerAuthMode: providerAuthModeSchema.optional(),
     items: z.array(item),
@@ -146,7 +155,16 @@ const projectV2Schema = z
     customTags: z.array(z.string().max(40)).max(32).optional(),
   })
   .passthrough()
-  .refine(isCreationProviderRoutingValid, "供应商协议或认证配置无效");
+  .refine(isCreationProviderRoutingValid, "供应商协议或认证配置无效")
+  .refine(
+    (project) =>
+      project.chats
+        ? typeof project.activeChatId === "string" &&
+          Object.hasOwn(project.chats, project.activeChatId) &&
+          Object.entries(project.chats).every(([key, chat]) => chat.id === key)
+        : project.activeChatId === undefined,
+    "聊天身份不完整，禁止通过正常化修复原件",
+  );
 
 const projectV3Schema = z
   .object({
@@ -271,7 +289,10 @@ export function rejectSecrets(value: unknown): void {
 
 function validateChatRecord(chatId: string, chat: ChatItem): void {
   if (!chat || typeof chat !== "object") {
-    throw new SnapshotStorageError("corrupt", `Chat ${chatId} must be an object`);
+    throw new SnapshotStorageError(
+      "corrupt",
+      `Chat ${chatId} must be an object`,
+    );
   }
   if (chat.id !== chatId) {
     throw new SnapshotStorageError(
@@ -280,13 +301,22 @@ function validateChatRecord(chatId: string, chat: ChatItem): void {
     );
   }
   if (!Array.isArray(chat.messages)) {
-    throw new SnapshotStorageError("corrupt", `Chat ${chatId} messages must be an array`);
+    throw new SnapshotStorageError(
+      "corrupt",
+      `Chat ${chatId} messages must be an array`,
+    );
   }
   if (!Array.isArray(chat.modelAllowlist)) {
-    throw new SnapshotStorageError("corrupt", `Chat ${chatId} modelAllowlist must be an array`);
+    throw new SnapshotStorageError(
+      "corrupt",
+      `Chat ${chatId} modelAllowlist must be an array`,
+    );
   }
   if (typeof chat.mainAgent !== "string") {
-    throw new SnapshotStorageError("corrupt", `Chat ${chatId} mainAgent must be a string`);
+    throw new SnapshotStorageError(
+      "corrupt",
+      `Chat ${chatId} mainAgent must be a string`,
+    );
   }
 }
 
@@ -295,13 +325,26 @@ function validateProjectRecord(project: CreationProjectV3): void {
     throw new SnapshotStorageError("corrupt", "Project must be an object");
   }
   if (!project.id || typeof project.id !== "string") {
-    throw new SnapshotStorageError("corrupt", "Project id is missing or invalid");
+    throw new SnapshotStorageError(
+      "corrupt",
+      "Project id is missing or invalid",
+    );
   }
   if (!project.activeChatId || typeof project.activeChatId !== "string") {
-    throw new SnapshotStorageError("corrupt", `Project ${project.id} missing activeChatId`);
+    throw new SnapshotStorageError(
+      "corrupt",
+      `Project ${project.id} missing activeChatId`,
+    );
   }
-  if (!project.chats || typeof project.chats !== "object" || Array.isArray(project.chats)) {
-    throw new SnapshotStorageError("corrupt", `Project ${project.id} missing chats dictionary`);
+  if (
+    !project.chats ||
+    typeof project.chats !== "object" ||
+    Array.isArray(project.chats)
+  ) {
+    throw new SnapshotStorageError(
+      "corrupt",
+      `Project ${project.id} missing chats dictionary`,
+    );
   }
   if (!project.chats[project.activeChatId]) {
     throw new SnapshotStorageError(
