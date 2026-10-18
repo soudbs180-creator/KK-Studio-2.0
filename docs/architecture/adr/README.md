@@ -75,3 +75,4 @@
 | [ADR-021](ADR-021-native-local-repository-authority.md) | Native统一仓库权威与重复启动 | ACCEPTED；基础已验，Web数据面与后台租约待 |
 | [ADR-022](ADR-022-project-chats-and-v3-migration.md) | 普通多聊天与不可降级快照迁移 | ACCEPTED；实现与验收未完成 |
 | [ADR-023](ADR-023-local-model-installation-and-owned-runtime.md) | 可信本地包安装与自有引擎 | ACCEPTED；实现与验收未完成 |
+| [ADR-024](ADR-024-server-authoritative-mid-turn-steering-and-drain-boundary.md) | 服务端权威 Mid-turn Steering 与安全 Drain 边界 | ACCEPTED；实现待排期 |

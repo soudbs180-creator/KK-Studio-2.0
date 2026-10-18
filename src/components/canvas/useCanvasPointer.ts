@@ -9,6 +9,7 @@ import {
 } from "react";
 import type { Point, ViewTransform } from "./canvasModel";
 import { surfaceScale, toSurfacePoint } from "./canvasSurface";
+import { shadowEventBus } from "../../features/sync/shadowEventBus";
 
 export type CanvasTool = "select" | "hand";
 type SelectionRect = { x: number; y: number; width: number; height: number };
@@ -349,6 +350,22 @@ export function useCanvasPointer({
         else ids.add(drag.nodeId);
       }
       select(ids);
+    } else if (!clicked && drag.kind === "node" && drag.nodeId) {
+      const ids = drag.selection.has(drag.nodeId)
+        ? drag.selection
+        : new Set([drag.nodeId]);
+      for (const id of ids) {
+        const { baseRev, newRev } = shadowEventBus.bumpNodeRevision(id);
+        const position = nodes[id] ?? drag.nodes[id];
+        shadowEventBus.emit({
+          eventType: "canvas.node.moved",
+          targetNodeId: id,
+          actor: "designer",
+          baseRev,
+          newRev,
+          payload: { id, position },
+        });
+      }
     }
     dragRef.current = null;
     setDragging(null);
