@@ -2,3 +2,7 @@
 docs/changes/**/evidence/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 # Immutable reviewed v1 bytes used to verify safe guard upgrades on Windows.
 tests/fixtures/git-guards/** -text
+# Tauri rewrites these files as LF during Windows builds.
+src-tauri/Cargo.toml text eol=lf
+src-tauri/gen/schemas/desktop-schema.json text eol=lf
+src-tauri/gen/schemas/windows-schema.json text eol=lf

@@ -6,6 +6,7 @@ on:
       - "v*.*.*"
   pull_request:
     paths:
+      - ".gitattributes"
       - ".github/workflows/windows-release.yml"
       - "config/**"
       - "package.json"

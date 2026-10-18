@@ -15,6 +15,75 @@ import {
 } from "../../scripts/windows/installer-receipt.mjs";
 
 test(
+  "Windows checkout stays clean when Tauri rewrites identical LF source bytes",
+  { skip: process.platform !== "win32" || process.arch !== "x64" },
+  async (t) => {
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "kk-receipt-eol-"));
+    t.after(async () => {
+      assert.equal(path.dirname(root), path.resolve(os.tmpdir()));
+      await fs.rm(root, { recursive: true, force: true });
+    });
+    const git = (...args: string[]) =>
+      execFileSync("git", args, { cwd: root, stdio: "pipe" }).toString();
+    git("init", "--quiet");
+    git("config", "core.autocrlf", "true");
+    await fs.copyFile(
+      new URL("../../.gitattributes", import.meta.url),
+      path.join(root, ".gitattributes"),
+    );
+    const files = [
+      "src-tauri/Cargo.toml",
+      "src-tauri/gen/schemas/desktop-schema.json",
+      "src-tauri/gen/schemas/windows-schema.json",
+    ];
+    const originals = await Promise.all(
+      files.map(async (file) => {
+        const text = (
+          await fs.readFile(new URL(`../../${file}`, import.meta.url), "utf8")
+        ).replace(/\r\n/g, "\n");
+        await fs.mkdir(path.dirname(path.join(root, file)), {
+          recursive: true,
+        });
+        await fs.writeFile(path.join(root, file), text.replace(/\n/g, "\r\n"));
+        return text;
+      }),
+    );
+    git("add", "--", ".gitattributes", ...files);
+    git(
+      "-c",
+      "user.name=Fixture",
+      "-c",
+      "user.email=fixture@example.invalid",
+      "-c",
+      "commit.gpgsign=false",
+      "commit",
+      "--quiet",
+      "-m",
+      "fixture",
+    );
+    for (const file of files) await fs.unlink(path.join(root, file));
+    git("checkout-index", "-f", "-a", "-u");
+    assert.equal(git("status", "--porcelain", "--untracked-files=normal"), "");
+    for (const [index, file] of files.entries()) {
+      await fs.writeFile(path.join(root, file), originals[index]);
+      assert.equal(git("show", `HEAD:${file}`), originals[index]);
+    }
+    assert.equal(git("status", "--porcelain", "--untracked-files=normal"), "");
+    await fs.appendFile(path.join(root, files[0]), "# actual source change\n");
+    const output = path.join(root, "releases", "installer");
+    await assert.rejects(
+      writeInstallerReceipt({ root, installer: "unused.exe", output }),
+      /Commit source changes before creating[\s\S]* M src-tauri\/Cargo\.toml/,
+    );
+    await assert.rejects(fs.stat(output), { code: "ENOENT" });
+    assert.equal(
+      await fs.readFile(path.join(root, files[0]), "utf8"),
+      `${originals[0]}# actual source change\n`,
+    );
+  },
+);
+
+test(
   "receipt rejects modified and untracked source with paths before writing artifacts",
   { skip: process.platform !== "win32" || process.arch !== "x64" },
   async (t) => {

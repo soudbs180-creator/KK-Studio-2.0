@@ -3,7 +3,7 @@
     "id": "TASK-CANVAS-RELEASE-20261018",
     "title": "统一工具栏修复、数据兼容和三端正式发布",
     "goal": "正常合并工具栏修复及安装器来源修复，发布统一2.1.42单一内置Windows Agent安装包及Web/独立手机Web，保留原项目配置",
-    "scope": "Canvas工具栏、成熟chat迁移和归档收据兼容、平台版本/下载展示与正式发布证据、发布前可编辑聊天草稿绘制同步、Windows干净构建来源诊断、receipt父目录及native失败立即停止、PR候选完整NSIS与receipt门",
+    "scope": "Canvas工具栏、成熟chat迁移和归档收据兼容、平台版本/下载展示与正式发布证据、发布前可编辑聊天草稿绘制同步、Windows干净构建来源诊断、receipt父目录及native失败立即停止、PR候选完整NSIS与receipt门、Tauri重写三路径的显式LF checkout合同",
     "acceptance": [
       "图片居中且画布允许遮挡，无横向滚动或自动让位",
       "保留现有项目原件消息归档收据设置和凭据引用",
@@ -33,6 +33,7 @@
       "src/components/ConversationPanel.tsx",
       "docs/changes/2026-10-18-chat-draft-paint-sync",
       "scripts/windows/installer-receipt.mjs",
+      ".gitattributes",
       ".github/workflows/windows-release.yml",
       "docs/changes/2026-10-19-installer-clean-build"
     ],
@@ -46,11 +47,11 @@
       "docs/changes/2026-10-18-chat-draft-paint-sync/verification.md",
       "docs/changes/2026-10-19-installer-clean-build/verification.md"
     ],
-    "verification": "41正式Windows39142083878 FAIL/artifact0，Agent4282及非可选Codex guard/NSIS成功；writer196因gitstatus非空先失败，具体dirty路径UNKNOWN，rawSHA9ae0f791b31f3c927f61556640ef39a039f6728aae2ffb20460571702c96c7f8。六个本地阶段exit0/gitclean，未复现Hosted dirty；本机原writer缺releases父目录mkdir ENOENT已复现，与CI更早首因分列。统一顺延42已确定，41tag不动、无Release/installed/prod41；新head修复/候选安装器CI及正式交付均NOT_VERIFIED，原cold及失败全部保留；未提交writer/workflow已落status诊断保留拒绝、parent-only mkdir/npm fail-fast和显式PRhead/source-event候选完整NSIS/receipt，tag fresh重建；Win临时Git回归旧RED7/1→新GREEN8/0，断言未写artifact/未还原源码；三端42及两个版本checkPASS，migration2.1.36/CHANGELOG37告警保留。lint/typecheck运行中，新head/候选CI/实际云端dirty仍待验",
+    "verification": "41正式Windows39142083878 FAIL/artifact0，具体dirty路径仍UNKNOWN，tag0f92不动。42候选6772722c本地完整verify PASS：Node1950/20、Agent204/2、browser837首试、Design41+8、Development4；精确head独审PASS。Windows候选39145549689 FAIL/artifact0：npmci后clean，完整NSIS/Agent4282/Codex guard通过；build后Cargo.toml及desktop/windows-schema恰3M，receipt仍拒绝，diffstat空且LF→CRLF警告，rawSHA9423eb50651cda83f852b5e5027626f1a5799fe21c89a8af29a0d9a5d8de4a12。真实三Git blob的autocrlf临时Git复现相同3M，显式三路径text eol=lf后clean；此为可控复现，不是Hosted原字节diff。新增Windows回归旧RED8/1→新GREEN9/0，原modified/untracked拒绝和未写artifact/未还原断言保留。42未tag，修法仍保留parent-only mkdir/native fail-fast/精确PR候选来源与tag fresh重建；新HEAD/fullverify/独审/Hosted候选及正式交付待验，无Release/installed/prod41或42，原cold及失败保持",
     "verificationResult": "NOT_VERIFIED",
     "updated": "2026-10-19",
     "lastVerified": "2026-10-19",
-    "nextAction": "当前工作差异定向8/0、版本42已统一；等待lint/typecheck终局，再冻结新head做完整verify/独审及Hosted候选完整NSIS+receipt，以实际CI具体dirty证据再最小修源。正常PR/main门禁后新42tag fresh重建，再验唯一setup/默认资料保护/工具栏与Web-Mobile生产回读；41tag不动",
+    "nextAction": "冻结三路径LF合同与回归的新head，执行完整verify、独审及Hosted候选完整NSIS/receipt，必须真实clean且receipt通过后正常PR/main门禁；42尚未tag不再递增，41tag不动。再新42tag fresh重建、官方digest/单setup/日常默认资料保护和Agent/工具栏/生产Web-Mobile回读",
     "requirementRefs": [
       "docs/changes/2026-10-18-unified-toolbar-release/intent.md",
       "docs/changes/2026-10-18-chat-draft-paint-sync/intent.md",
