@@ -24,6 +24,8 @@ const messages: Record<string, string> = {
   IMAGE_CAPABILITY_UNAVAILABLE: "此连接没有启用可执行的图片端点。",
   IMAGE_COUNT_UNAVAILABLE: "请求数量超过此连接支持范围，请检查图片数量。",
   IMAGE_SIZE_UNAVAILABLE: "当前端点不支持这个尺寸。",
+  IMAGE_ORIGINAL_RETRIEVAL_FAILED:
+    "生成接口已返回，但原图取回失败，尚未自动保存。图片地址可能受跨域限制或已失效；请核对任务，不会自动再次付费生成。",
   SESSION_CHANGED_AFTER_SUBMISSION:
     "会话已变化。回执保留，重新登录提交账号后再恢复。",
   SUBMISSION_ALREADY_STARTED: "这个请求已启动，请先核对任务，避免重复提交。",
