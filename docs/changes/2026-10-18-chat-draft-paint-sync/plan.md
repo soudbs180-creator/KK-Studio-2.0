@@ -11,3 +11,8 @@
 5. 继续原任务完整发布：最终source的tag、包含Agent的唯一setup、正式安装与资料保护、kkai.plus和独立手机Web回读。未完成前整体NOT_VERIFIED，版本仍2.1.41且无已发布tag可重打。
 
 本包独占写入新目录；root负责旧intent历史角色、单任务ledger及派生和恢复入口。保留其它任务/dirty内容。回滚用正常revert PR，不删用户数据，不更改现有秘密或部署权限；回滚会重新暴露已证草稿P2，不能以回滚替代发布验收。
+
+
+## 正常整合并发主线文档
+
+当前origin/main前移至b63de2271daac1e2941664d76e14998a6dd40a81（手机40生产收据，仅13文档/治理文件）。本分支正常merge保留双方记录；PROJECT_STATE冲突合并发布任务当前入口与手机40真实收据，TASK_LEDGER由合并后的JSON重建。其余153任务逐对象与新main一致，不覆盖手机任务的新证据。产品及测试Git blob与232907ce逐字相同；该head完整verify837首试/零flaky与精确独审为未变产品依据，融合后的lint/Delivery/独审及Hosted仍按新head执行，正式source待正常合入最终main。
