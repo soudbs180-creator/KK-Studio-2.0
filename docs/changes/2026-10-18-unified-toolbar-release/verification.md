@@ -7,3 +7,9 @@
 - 首次 verify 的 Node 1947 PASS/20 SKIP/2 FAIL；两项测试依赖固定 sleep 的假设，经 50ms 定时器合并对照旧版2 FAIL/修复2 PASS，修复单文件16 PASS。全量复验因外部删除依赖中断，不能计作通过。
 - Mobile 先前 typecheck/lint/371 tests PASS；原安装器 v2.1.39 的四轮安装及3911文件零差异仅为历史依据，不代表本次2.1.41工件。
 - 当前恢复树完整 verify、浏览器/Native、当前 head 独审、Hosted、PR 合并、tag 工件与生产部署：待实际结果补外部收据及 PR。未产生真实付费生成调用。
+
+## 恢复树首次全量检查与审查修正
+
+恢复树 lint/typecheck、Node 1949 PASS/20 SKIP、Agent 检查通过；UI 824 PASS、2 FAIL（顶栏仍期待旧“浏览器版”文案，已按用户平台区分要求改为“网页版”），另1插件恢复用例重试后通过，原失败保留。独立审查指出成熟来源携带的三处既有回归断言删除没有本任务依据，现恢复 responsive-layout / settings-navigation / taskhost-lifecycle 原始覆盖，不降低门禁；当前修正后需重跑并按新head审查。
+
+修正后 targeted browser 29/29 PASS（workers=1、retries=0），含恢复的四个手机菜单边界/触控/hit-test用例、设置保存/关闭后操作、顶栏文案和插件恢复。Node完整1969项：1949 PASS/20 SKIP；Agent206项：204 PASS/2 SKIP。后续整条verify和正式发布结果保存在外部收据/PR，避免文档自引用循环。
