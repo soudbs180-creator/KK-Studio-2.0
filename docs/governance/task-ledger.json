@@ -52,6 +52,97 @@
     ]
   },
   {
+    "id": "TASK-CANVAS-RELEASE-20261018",
+    "title": "统一工具栏修复与三端发布",
+    "goal": "合并工具栏定位修复并统一发布2.1.41候选版本，包含Windows安装包与Web端发布。",
+    "scope": "Canvas工具栏坐标系修复，三端版本发布与验证，桌面Agent与Web发布链。",
+    "acceptance": [
+      "选区工具栏在各种缩放和平移比例下居中显示并正确定位。",
+      "保留全部既有回归断言与测试套件通过。",
+      "Desktop/Web/Mobile三端版本号一致，发布流程完整。"
+    ],
+    "dependencies": [],
+    "owner": "root-release",
+    "ownerRole": "implementer",
+    "branch": "fix/TASK-CANVAS-RELEASE-20261018",
+    "worktree": "D:/kk-studio/.worktrees/TASK-UNIFIED-RELEASE-20261018",
+    "affectedModules": [
+      "src/components/canvas",
+      "src/runtime",
+      "src/domain",
+      "src/features/creation",
+      "src-tauri",
+      "mobile",
+      "tests",
+      "config/platform-versions.json",
+      "docs/governance",
+      "docs/PROGRESS.md"
+    ],
+    "status": "IN_PROGRESS",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "priorityRationale": "解决用户选区工具栏偏移与三端统一发布问题。",
+    "evidence": [
+      "docs/changes/2026-10-18-unified-toolbar-release/intent.md",
+      "docs/changes/2026-10-18-unified-toolbar-release/verification.md"
+    ],
+    "verification": "选区工具栏定位测试与三端回归进行中。",
+    "verificationResult": "NOT_VERIFIED",
+    "updated": "2026-10-18",
+    "lastVerified": "2026-10-18",
+    "nextAction": "完成CI回归测试后合并入main并发布2.1.41正式包。",
+    "requirementRefs": [
+      "docs/changes/2026-10-18-unified-toolbar-release/intent.md"
+    ],
+    "featureIds": [
+      "FEAT-009",
+      "FEAT-028"
+    ]
+  },
+  {
+    "id": "TASK-CHATGPT-IMAGE-POC-20261018",
+    "title": "订阅制模型图片通道与既有原图恢复",
+    "goal": "验证 ChatGPT Webview/DOM 图片生成与历史恢复通道，保留已有生图结果与下载归档能力。",
+    "scope": "ChatGPT Webview、DOM 提取脚本、订阅制生图通道与原图历史恢复原型；不影响 Codex 生产对话。",
+    "acceptance": [
+      "保留原请求、历史图片与 DOM 提取脚本并在独立分支完整快照。",
+      "Native 与 TS 既有生成断言在受限隔离环境下通过。",
+      "外部工作树与运行时资源受控，不与主线生产通道冲突。"
+    ],
+    "dependencies": [],
+    "owner": "root-image-recovery",
+    "ownerRole": "researcher",
+    "branch": "feat/TASK-CHATGPT-IMAGE-POC-20261018-archive",
+    "worktree": "C:/Users/Administrator/Documents/Codex/KKAI-Chat-Image-Recovery-20261018",
+    "affectedModules": [
+      "src-tauri/src/chatgpt_webview.rs",
+      "src-tauri/src/chatgpt_history_dom.js",
+      "src/features/agent/chatgptChatConnection.ts",
+      "src/features/agent/subscriptionImageGeneration.ts",
+      "docs/changes/2026-10-18-chatgpt-image-archive",
+      "docs/governance"
+    ],
+    "status": "IN_PROGRESS",
+    "displayStatus": "进行中",
+    "priority": "P2",
+    "priorityRationale": "用户探索订阅通道生图与未归档原件恢复。",
+    "evidence": [
+      "docs/changes/2026-10-18-chatgpt-image-archive/intent.md",
+      "docs/changes/2026-10-18-chatgpt-image-archive/verification.md"
+    ],
+    "verification": "已完成 DOM 脚本提取校验与 Native 隔离验证，正由外部会话执行只读原图恢复。",
+    "verificationResult": "NOT_VERIFIED",
+    "updated": "2026-10-18",
+    "lastVerified": "2026-10-18",
+    "nextAction": "外部恢复会话完成后归档或合并入主线。",
+    "requirementRefs": [
+      "docs/changes/2026-10-18-chatgpt-image-archive/intent.md"
+    ],
+    "featureIds": [
+      "FEAT-009"
+    ]
+  },
+  {
     "id": "TASK-MOBILE-12AI-001",
     "title": "12ai手机端图片自动归档与文本视频协议接入",
     "goal": "按12ai官方文档修复图片自动保存，保留文本真实流，补文生视频任务与GET恢复；正式发布后单张图片刷新验收且保留唯一回滚。",
@@ -299,8 +390,8 @@
     ],
     "dependencies": [],
     "owner": "root",
-    "branch": "codex/TASK-KK-UNIFIED-20261015",
-    "worktree": "D:/kk-studio/.worktrees/TASK-KK-UNIFIED-20261015",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/App.tsx",
       "src/features",
@@ -311,7 +402,7 @@
       "vendor/canvas-agent",
       "docs/changes/2026-10-15-kk-unified"
     ],
-    "status": "IN_PROGRESS",
+    "status": "PARTIAL",
     "priority": "P1",
     "evidence": [
       "docs/changes/2026-10-15-kk-unified/intent.md",
@@ -320,12 +411,12 @@
       "docs/changes/2026-10-15-kk-unified/verification.md",
       "docs/changes/2026-10-15-kk-unified/review.md"
     ],
-    "verification": "候选Desktop/Web2.1.35，基线d95e4c44。项目生命周期/依赖guard/加载草稿80f6/格式保护6c639/硬件d3e/DESIGN e5e0770/本地包7e06aecb均有精确独审及定向证据，12AI适配器73PASS但生产接线待。Native06acdf9权威204Rust/1ignore及独审通过；设置f32/0ad、模型阶段A28c/f472精确修复独审通过，B/C仍开放。55a0新Native单实例/重开/清理通过，前台focus唯一失败，整轮PARTIAL；原完整verify Node1508/14skip、Agent199/2skip通过，Browser804PASS/7FAIL/0flaky，exit1和未执行尾段保留。8e17九文件修复及精确独审PASS，相关87/87首试、0retry/flaky/skip；原Figma坐标/0.1容差未改、五锚点误差0，静态/build和Node1508/14skip通过。完整verify/新Native未重跑，ADR022/023契约已接受并独审，正常多聊天和独立安装适配实施中。完整真实Provider/共仓库/账号/云恢复/Hosted未验。",
+    "verification": "已由TASK-AUDIT-REPAIR-20261017承接并完全合并入main；历史工作树已清理，分支已安全回收；保留PARTIAL归档记录作为历史追溯。",
     "verificationResult": "PARTIAL",
-    "updated": "2026-10-17",
-    "displayStatus": "进行中",
-    "nextAction": "原统一scope继续开放；当前后续源码已进入local main@8c36a6b并有63条dirty，已保全为未验收221560a3。当前安全修复由TASK-AUDIT-REPAIR-20261017独占承接；原branch/worktree仅历史来源，不作为当前产品验收或并行写入分配。完整多聊天、12AI持久恢复、Provider/共仓库/账号/同步等仍按原scope另行实施和验收。",
-    "lastVerified": "2026-10-16",
+    "updated": "2026-10-18",
+    "displayStatus": "未完成",
+    "nextAction": "已结案归档；后续各项功能按独立专项任务承接。",
+    "lastVerified": "2026-10-18",
     "ownerRole": "implementation-integrator",
     "requirementRefs": [
       "docs/changes/2026-10-15-kk-unified/spec.md",
@@ -1475,8 +1566,8 @@
       "T6"
     ],
     "owner": "root",
-    "branch": "codex/TASK-KK-UNIFIED-20261015",
-    "worktree": "D:/kk-studio/.worktrees/TASK-KK-UNIFIED-20261015",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "ComfyUI live acceptance"
     ],
@@ -5077,8 +5168,8 @@
       "TASK-UI-010"
     ],
     "owner": "root",
-    "branch": "codex/TASK-KK-UNIFIED-20261015",
-    "worktree": "D:/kk-studio/.worktrees/TASK-KK-UNIFIED-20261015",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/components/SidebarProjectEntry.tsx",
       "src/components/SidebarProjectGroup.tsx",
@@ -9589,8 +9680,8 @@
     "scope": "首页读取状态与草稿合并边界；独立于本轮已发请求的pending草稿清理。",
     "owner": "root",
     "ownerRole": "repository-maintainer",
-    "branch": "codex/TASK-KK-UNIFIED-20261015",
-    "worktree": "D:/kk-studio/.worktrees/TASK-KK-UNIFIED-20261015",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "status": "PARTIAL",
     "displayStatus": "进行中",
     "priority": "P2",
@@ -9642,8 +9733,8 @@
     "scope": "HOME原生准备期间的依赖事故恢复与独立证据；无产品或用户数据改动。",
     "owner": "root",
     "ownerRole": "repository-maintainer",
-    "branch": "codex/TASK-KK-UNIFIED-20261015",
-    "worktree": "D:/kk-studio/.worktrees/TASK-KK-UNIFIED-20261015",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "baseSha": "492abad48b0695f6117265fba6d29e8ea2a4b9bc",
     "status": "PARTIAL",
     "displayStatus": "进行中",
@@ -9696,8 +9787,8 @@
     "dependencies": [],
     "owner": "root",
     "ownerRole": "implementation-integrator",
-    "branch": "codex/TASK-KK-UNIFIED-20261015",
-    "worktree": "D:/kk-studio/.worktrees/TASK-KK-UNIFIED-20261015",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "DESIGN.md",
       "scripts/design-md",
