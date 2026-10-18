@@ -19,3 +19,9 @@
 be6196ce 的完整 verify exit0：浏览器831/831（无flaky）、Design8/8、Development插件链通过，Mobile371及隔离Metro缓存重建的组合Web9/9通过。实际Tauri第四/五轮有界PASS：fresh41、4282项Agent资源散列及启停健康、9项目/11完整聊天/22消息/1归档记录与活动身份/草稿/配置、6原件Native读回均通过；工具栏中心误差0.3301 CSS px、画布clip且无横向滚动，正常关闭自有进程，原冷备不变。空隔离CODEX_HOME的真实账号连接未验，截图中的Codex app-server错误保留，不将资源健康称为账号对话全链通过。
 
 Hosted PR39121744645 / push39121741571 的应用、Rust和release构建通过，最后Native TaskHost因seedHomeBatch的旧空库fixture仍写v2而失败；新Native正确拒绝未迁移的旧格式。只修当前writer夹具：missing时显式version3并经现有serializeCreationSnapshot写入，不改产品校验器或删除任何断言。修后真实本机client:taskhost:test 11/11 PASS，5次Native启动含崩溃/重启和凭据清理，errors为空；新提交仍须当前head独审和Hosted。原失败日志与本机收据分别保留于外部unified-release-20261018目录。
+
+## 整合当前 main 后的验证与取消下载测试计时修正
+
+b060ed04 正常整合主线 PR72 后，本地完整 verify exit0（浏览器837/837、Design41个Node及8个浏览器、Node1949/20既有SKIP、Agent204/2既有SKIP、Development通过），Mobile433及组合Mobile Web40/40通过。新实际Native41有界PASS，4282文件Agent资源与9项目隔离副本保留、中心误差0.3301 CSS px，TaskHost11/11通过；独立源码与Native收据审查有界PASS。后续组合Web构建改写本机dist，不拿该dist打正式桌面包。
+
+Hosted PR39125274728完整仓库验证通过，但Rust取消下载测试在download_tests.rs:301的1秒外层deadline失败；同head push39125272020的Rust通过。该计时从transfer开始，包含文件准备、client构造、连接和server调度，取消信号直到server读到request才发出；不能据此判定取消响应超过1秒，云端具体慢阶段未有分段证据。修正仅测试：完整request握手与有界10秒fixture准备独立，收到request后发取消，仍必须1秒内返回cancelled，server保持不发响应头并正常abort清理。fixture有意延迟连接1500ms，旧测试稳定FAIL/new握手PASS；临时移除生产header取消分支时新测试仍FAIL。生产代码逐字恢复，无timeout或重试放宽。本地完整Rust269 PASS/1既有ignored、fmt和Markdown检查通过；新head独审与Hosted尚待实际收据，失败原件保留。正式合并/tag/安装包/部署尚待门禁。
