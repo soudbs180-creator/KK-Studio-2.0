@@ -8,7 +8,17 @@
 
 本文是最短恢复入口，不是任务状态或产品能力的第二事实源。任务状态只读 [`task-ledger.json`](task-ledger.json)；当前项目事实只读 [`PROJECT_STATE.md`](PROJECT_STATE.md)；历史验证只按带日期的 change package、commit、运行模式和 receipt 回读。
 
-## 当前恢复入口：12ai 手机生成与保存修复（2026-10-18）
+## 当前恢复入口：手机结果优先与完整创作输入（2026-10-18）
+
+先读[本次计划](../changes/2026-10-18-mobile-composer/plan.md)、[当前规格](../changes/2026-10-18-mobile-composer/spec.md)与[验证](../changes/2026-10-18-mobile-composer/verification.md)。TASK-MOBILE-COMPOSER-001 IN_PROGRESS/NOT_VERIFIED，base97ef、fix/TASK-MOBILE-COMPOSER-001-focus、原TASK-MOBILE-12AI-001隔离树；各代理只写授权独立路径，root串行整合/构建/浏览器，文档单一写入。范围已扩为结果优先、六入口、共享圆形发送、上传/Skill、12ai指定GPT Image参考编辑和运行时尺寸；首轮13项/da0d独审仅PRECHECK_ONLY。本地根完整verify exit0（Node1852/20skip、Agent199/2skip、browser832首试+1项5xx flaky，独立零重试复核1PASS、DESIGN41+8/development4）；Mobile433/type/lint、旧v39完整snapshot/backup合成兼容、窄屏最终40/40及gzip增4319B预算通过。首轮32PASS/8FAIL和各修正、语音/上传epoch10项RED/GREEN保留。小于360px六控件44px同排不折行，390px48px。下一步由root冻结提交并另存精确SHA独审/证据关联，最终Hosted及正式Release仍PENDING，PR72未合并、未发布，不为自引用SHA循环改文档。
+
+候选Desktop2.1.38/Web2.1.40/Mobile2.1.5；尺寸仅当前页面选择，切类型/模型或未发送刷新回自适应，提交写既有task.imageSize，不增加draft持久字段、schema/namespace/backup或新ADR，沿ADR-025。不得恢复已弃用的draft.imageSize方案，它会破坏v39严格读取。手机/电脑同功能是目标，远程Agent/MCP与新Native未验不代填。
+
+不再生成/发现模型，不触碰canonical未提交改动；当前现网39/唯一previous38，新正式Release后目标40/唯一39，期间不额外创建多个备份。后台截图原文件实际正常，长停留908.067秒后原件恢复已观测，但network截断且真实hidden事件未证；实体安卓后台、Safari及用户最终接受仍未验。不要重新增加临时root SSH权限。
+
+原图文TASK已按PR70/71完成范围有界DONE/PASS，当前base97ef就是PR71正常squash结果；其他任务不批量结案。下节保留当时REVIEW/待文档门禁的恢复快照，由本段已核收尾状态替代。
+
+## 历史恢复入口：12ai 手机生成与保存修复（2026-10-18）
 
 TASK-MOBILE-12AI-001保持REVIEW/NOT_VERIFIED，先读[当前生产收据](../changes/2026-10-18-mobile-12ai-production-receipt/verification.md)、[当前文档Review](../changes/2026-10-18-mobile-12ai-production-receipt/review.md)及[发布实录](../changes/2026-10-18-mobile-12ai/release.md)。产品PR70已squash为main9d10/tree611c，与已审b0ef同树；main Hosted及正式Release416299447/部署39107253299成功，Web2.1.39/Mobile2.1.4上线、公网140201/cf341da4入口与生产9项、current39/唯一previous38终核通过，Desktop源码仍2.1.37。旧产品独审冻结，当前docs分支补新五件包修复55e正式Delivery FAIL1；最终head另作正式Delivery/独审/Hosted。
 

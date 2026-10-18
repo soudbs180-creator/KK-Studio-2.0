@@ -29,6 +29,12 @@ export interface GenerationInput {
 export interface ImageInput extends GenerationInput {
   count?: number;
   size?: string;
+  /** Verified local originals are request memory only, never persisted in drafts or tasks. */
+  referenceImages?: {
+    assetId: string;
+    bytes: Uint8Array;
+    mime: ImageOriginal["mime"];
+  }[];
 }
 export interface SubmissionIdentity {
   submissionId: string;

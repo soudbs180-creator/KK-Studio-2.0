@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
 import { useApplication } from "../application/AppProvider.tsx";
 import {
@@ -12,10 +13,12 @@ import {
 import { Status } from "../ui/Status.tsx";
 import { taskActions } from "../ui/policies.ts";
 import { useAction } from "../ui/useAction.ts";
+import { TaskResults } from "../ui/TaskResults.tsx";
 export default function TaskDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>(),
     { app, state } = useApplication(),
-    { busy, run } = useAction();
+    { busy, run } = useAction(),
+    [details, setDetails] = useState(false);
   const entry = app.allTasks().find((t) => t.task.id === id),
     task = entry?.task;
   if (!task)
@@ -47,51 +50,76 @@ export default function TaskDetailScreen() {
       <Content>
         <Card>
           <Status status={task.status} />
-          <Label>{task.prompt}</Label>
-          <Label muted>
-            {task.model} · {task.providerName ?? "连接未报告"}
-          </Label>
           <Label small muted>
             项目：{project?.name} · {task.completedOutputs}/
             {task.requestedOutputs} 已归档
           </Label>
+          <TaskResults task={task} />
+          {Boolean(task.error) && <Label danger>{task.error}</Label>}
           <Label small muted>
-            任务：{task.id}
-            {"\n"}提交身份：{task.idempotencyKey}
-            {"\n"}受理状态：{task.submissionState ?? "未报告"}
-            {"\n"}创建：{new Date(task.createdAt).toLocaleString()}
-            {task.submittedAt
-              ? `\n提交：${new Date(task.submittedAt).toLocaleString()}`
-              : ""}
-            {"\n"}更新：{new Date(task.updatedAt).toLocaleString()}
+            提示词
           </Label>
-          {Boolean(task.error) && <Label>{task.error}</Label>}
-          <Label muted small>
-            供应商未报告实际计费回执。停止连接不代表取消计费或退款。
-          </Label>
-          {receipt && (
-            <Label muted small>
-              {receipt.gatewayJobId
-                ? `作业回执：${receipt.gatewayJobId}`
-                : `Provider 回执：${receipt.providerRequestId ?? "未报告"}`}
-              {receipt.readOnly
-                ? "\n恢复副本的历史回执仅供查看，不能操作旧作业。"
-                : ""}
-            </Label>
-          )}
+          <Label>{task.prompt}</Label>
         </Card>
         <Action
-          label="停止当前请求"
-          disabled={!policy.stop}
-          reason={!policy.stop ? "此设备没有该任务的正在执行请求。" : undefined}
-          onPress={() => {
-            try {
-              app.cancelTask(task.id);
-            } catch (error) {
-              app.report(error);
-            }
-          }}
+          label={details ? "收起详情" : "更多详情"}
+          onPress={() => setDetails(!details)}
         />
+        {details && (
+          <Card>
+            <Label muted>
+              {task.model} · {task.providerName ?? "连接未报告"}
+              {task.imageSize ? ` · ${task.imageSize}` : ""}
+            </Label>
+            <Label small muted>
+              任务：{task.id}
+              {"\n"}提交身份：{task.idempotencyKey}
+              {"\n"}受理状态：{task.submissionState ?? "未报告"}
+              {"\n"}创建：{new Date(task.createdAt).toLocaleString()}
+              {task.submittedAt
+                ? `\n提交：${new Date(task.submittedAt).toLocaleString()}`
+                : ""}
+              {"\n"}更新：{new Date(task.updatedAt).toLocaleString()}
+            </Label>
+            <Label muted small>
+              供应商未报告实际计费回执。停止连接不代表取消计费或退款。
+            </Label>
+            {receipt && (
+              <Label muted small>
+                {receipt.gatewayJobId
+                  ? `作业回执：${receipt.gatewayJobId}`
+                  : `Provider 回执：${receipt.providerRequestId ?? "未报告"}`}
+                {receipt.readOnly
+                  ? "\n恢复副本的历史回执仅供查看，不能操作旧作业。"
+                  : ""}
+              </Label>
+            )}
+            <Label>输出明细</Label>
+            {task.outputs?.map((o) => (
+              <Label key={o.index} small>
+                {o.index + 1} · {o.status}
+                {o.assetId ? ` · ${o.assetId}` : ""}
+                {o.error ? `\n${o.error}` : ""}
+              </Label>
+            ))}
+          </Card>
+        )}
+        {(policy.stop || details) && (
+          <Action
+            label="停止当前请求"
+            disabled={!policy.stop}
+            reason={
+              !policy.stop ? "此设备没有该任务的正在执行请求。" : undefined
+            }
+            onPress={() => {
+              try {
+                app.cancelTask(task.id);
+              } catch (error) {
+                app.report(error);
+              }
+            }}
+          />
+        )}
         {comfy && (
           <Action
             primary
@@ -100,7 +128,7 @@ export default function TaskDetailScreen() {
             reason="工作流使用独立固定回执，只核对原作业，不通过普通生成重试。"
           />
         )}
-        {!comfy && Boolean(receipt?.gatewayJobId) && (
+        {!comfy && Boolean(receipt?.gatewayJobId) && (liveJob || details) && (
           <>
             <Action
               primary={liveJob}
@@ -119,7 +147,7 @@ export default function TaskDetailScreen() {
             />
           </>
         )}
-        {video && (
+        {video && (task.status !== "succeeded" || details) && (
           <Action
             primary
             label="查询视频任务 / 恢复原件"
@@ -138,7 +166,7 @@ export default function TaskDetailScreen() {
             onPress={() => void run(() => app.recoverTask(task.id))}
           />
         )}
-        {!comfy && !video && (
+        {!comfy && !video && (policy.recover || details) && (
           <Action
             primary={!liveJob}
             label="恢复已收到的原件"
@@ -152,7 +180,7 @@ export default function TaskDetailScreen() {
             onPress={() => void run(() => app.recoverTask(task.id))}
           />
         )}
-        {!comfy && (
+        {!comfy && (policy.retryIndices.length > 0 || details) && (
           <Action
             label={`安全重试失败输出${policy.retryIndices.length ? `（${policy.retryIndices.length}）` : ""}`}
             busy={busy}
@@ -179,30 +207,6 @@ export default function TaskDetailScreen() {
             })
           }
         />
-        <Card>
-          <Label>输出</Label>
-          {task.outputs?.map((o) => (
-            <Label key={o.index} small>
-              {o.index + 1} · {o.status}
-              {o.assetId ? ` · ${o.assetId}` : ""}
-              {o.error ? `\n${o.error}` : ""}
-            </Label>
-          ))}
-          {task.outputs
-            ?.filter((o) => o.assetId)
-            .map((o) => (
-              <Action
-                key={o.index}
-                label={`查看原件 ${o.index + 1}`}
-                onPress={() =>
-                  router.push({
-                    pathname: "/materials/[id]",
-                    params: { id: o.assetId! },
-                  })
-                }
-              />
-            ))}
-        </Card>
       </Content>
     </Screen>
   );

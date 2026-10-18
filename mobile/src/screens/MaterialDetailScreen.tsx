@@ -102,7 +102,7 @@ export default function MaterialDetailScreen() {
           label="添加到当前创作草稿"
           busy={busy}
           onPress={() => void run(attach)}
-          reason="当前生成适配器不支持参考输入，草稿会明确提示。"
+          reason="加入后可在创作页选择支持该素材的模型，原件保持不变。"
         />
         {asset.mime.startsWith("image/") && (
           <Action

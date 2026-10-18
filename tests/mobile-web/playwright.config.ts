@@ -27,7 +27,12 @@ const evidence = process.env.KK_MOBILE_WEB_EVIDENCE;
 if (!evidence) throw new Error("Mobile Web worker is missing its evidence run");
 export default defineConfig({
   testDir: ".",
-  testMatch: "entry.spec.ts",
+  testMatch: [
+    "entry.spec.ts",
+    "task-results.spec.ts",
+    "speech-input.spec.ts",
+    "composer-controls.spec.ts",
+  ],
   workers: 1,
   retries: 0,
   timeout: 45_000,

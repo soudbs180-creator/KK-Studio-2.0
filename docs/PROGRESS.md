@@ -1,5 +1,13 @@
 # 当前进度
 
+## 2026-10-18 手机结果优先与完整创作输入（IN_PROGRESS / NOT_VERIFIED）
+
+TASK-MOBILE-COMPOSER-001纳入用户当前明确反馈：默认任务/历史结果优先、详情结果→提示词→更多；手机初始六入口、模型名可点、手机/Desktop共享单一圆形发送；本机上传与Skill预览明确应用、官方12ai指定GPT Image图片参考和本次尺寸。手机/电脑同功能语义为目标，远程Agent/MCP、新Native和Safari/实体后台未验不代填。本地完整verify exit0：Node1852/20skip、Agent199/2skip、根browser832首试+1项5xx flaky（独立零重试复核1PASS）、DESIGN41+8/development4。Mobile433/433/type/lint、旧v39完整snapshot/backup合成兼容与最终窄屏40/40通过，gzip增4319B小于16384B预算。最终head冻结/独审、Hosted与生产仍PENDING；候选Desktop2.1.38/Web2.1.40/Mobile2.1.5，PR72未合并、未发布。见[本次验证](changes/2026-10-18-mobile-composer/verification.md)。
+
+尺寸不新增草稿/schema/storage/backup字段；仅本次运行选择，切类型/模型及未发刷新回自适应，提交捕获既有task.imageSize，沿ADR-025继续兼容旧版本回滚。保留语音路由失焦取消及上传A→B→A/账号epoch保护的RED/GREEN与10项定向通过。首轮新Mobile40项32PASS/8FAIL、修正后40/40和320折行微修后的最终40/40分别留证；小于360px六控件44px同排不折行，390px保留48px。更早四项焦点RED/13项GREEN只属历史范围。旧图文TASK仅按PR70/71实际门禁与合并收据有界DONE/PASS，FEAT-028 PARTIAL、T12仍开放。
+
+原“后台截图文件全黑”误判已由五JPEG完整字节/像素一致纠正；15分8秒同页停留后刷新原件散列保持，网络有截断且真实hidden事件未证，实体安卓后台仍未验。本轮不新增Provider/生成请求，现网39/唯一38与本轮40候选分开，目标上线后只保留一个previous。以下12ai段落为前任务原时点记录，当前结案以本次新增说明和实际PR71收据为准。
+
 ## 2026-10-18 12ai 手机端生成和原件保存（REVIEW）
 
 本次生产收据文档另建[明确后缀五件包](changes/2026-10-18-mobile-12ai-production-receipt/verification.md)绑定同TASK/docs分支：55e仅修改旧包被Delivery实际拒绝（11files/1violation），原FAIL保留，补包不改checker或产品。用户保存Key后，root在正式9d10/140201生产bundle、430×637浏览器仅各一次真实短文本和单图，均1/1 saved并刷新恢复；PNG830495B，Provider字节/两次普通导出SHA64a6af6e一致，文本SHA1fffc1d3一致。刷新Provider0/POST0，旧文本、unknown失败图和原导入原件hash保留。现场实测PASS，独立live证据审核已PASS_WITH_EXPLICIT_SCOPE、无阻断项（27输入；报告JSON SHA59af4671f7618f14b69b3fa5458a3f93051b12d0fdfcfcf8486763771d126ae3）；最终文档head的Delivery/独审/Hosted待提交后执行。

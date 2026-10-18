@@ -131,6 +131,10 @@ export interface ConnectionInput {
   protocol: ProviderConnection["protocol"];
   capabilities: ProviderConnection["capabilities"];
 }
+export interface SubmissionOptions {
+  /** Captured on the task at submit; unfinished drafts keep the legacy schema. */
+  imageSize?: string;
+}
 export function providerConnection(
   metadata: MobileConnectionMetadata,
 ): ProviderConnection {

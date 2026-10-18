@@ -273,7 +273,7 @@ export default function StartComposer({
               disabled={submitDisabled}
               title={disabledReason}
             >
-              <img src="/design/figma/composer-send.svg" alt="" />
+              <UiIcon name="send" />
             </button>
           </div>
         </div>

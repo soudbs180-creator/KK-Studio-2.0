@@ -24,3 +24,21 @@ export function isTwelveAiConnection(connection: {
     /^\/(?:v1\/?)?$/.test(url.pathname)
   );
 }
+
+/** The documented edits route is not inferred for other models or compatible hosts. */
+export function supportsImageReferences(
+  connection: {
+    baseUrl: string;
+    protocol?: string;
+    capabilities?: { image: boolean };
+  },
+  model: string,
+): boolean {
+  return (
+    !!connection.capabilities?.image &&
+    isTwelveAiConnection(connection) &&
+    ["gpt-image-2", "gpt-image-2.5-sunburst", "gpt-image-2.5-flare"].includes(
+      model,
+    )
+  );
+}

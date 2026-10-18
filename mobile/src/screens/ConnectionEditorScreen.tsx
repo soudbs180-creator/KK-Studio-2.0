@@ -16,6 +16,7 @@ import {
 } from "../ui/primitives.tsx";
 import { useAction } from "../ui/useAction.ts";
 import type { ProviderConnection } from "../services/providerTypes.ts";
+import { isTwelveAiConnection } from "../services/twelveAiProtocol.ts";
 export default function ConnectionEditorScreen() {
   const { id } = useLocalSearchParams<{ id: string }>(),
     { app, state } = useApplication(),
@@ -154,7 +155,8 @@ export default function ConnectionEditorScreen() {
             />
           )}
           <Label muted small>
-            兼容适配器支持文字和无参考图生成；12ai 连接还提供指定模型的文生视频。参考图与高级参数仍未接入。
+            兼容适配器支持文字和无参考图生成；官方 12ai 连接的 GPT Image
+            指定模型支持图片参考，另提供指定模型的文生视频。遮罩与高级参数未接入。
           </Label>
         </Card>
         <Action
@@ -173,7 +175,27 @@ export default function ConnectionEditorScreen() {
                   name,
                   baseUrl: url,
                   protocol,
-                  capabilities: { text, image, maxOutputs: image ? count : 1 },
+                  capabilities: {
+                    text,
+                    image,
+                    maxOutputs: image ? count : 1,
+                    ...(existing?.capabilities?.imageSizes
+                      ? { imageSizes: existing.capabilities.imageSizes }
+                      : image &&
+                          isTwelveAiConnection({
+                            baseUrl: url.trim(),
+                            protocol,
+                          })
+                        ? {
+                            imageSizes: [
+                              "auto",
+                              "1248x1248",
+                              "1536x1024",
+                              "1024x1536",
+                            ],
+                          }
+                        : {}),
+                  },
                 },
                 key,
               );

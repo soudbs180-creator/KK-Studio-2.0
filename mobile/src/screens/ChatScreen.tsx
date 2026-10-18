@@ -16,7 +16,7 @@ import { useAction } from "../ui/useAction.ts";
 import { Status } from "../ui/Status.tsx";
 import { PhoneMenu } from "./PhoneMenu.tsx";
 import { Composer } from "./Composer.tsx";
-import { OriginalPreview } from "../ui/OriginalPreview.tsx";
+import { TaskOutput } from "../ui/TaskResults.tsx";
 
 export default function ChatScreen() {
   const { app, state } = useApplication(),
@@ -160,29 +160,7 @@ export default function ChatScreen() {
                       </Row>
                     </View>
                   ) : output.assetId ? (
-                    <View key={output.index} style={{ gap: 8 }}>
-                      {state.snapshot?.assets.find(
-                        (asset) => asset.id === output.assetId,
-                      ) && (
-                        <OriginalPreview
-                          asset={state.snapshot.assets.find(
-                            (asset) => asset.id === output.assetId,
-                          )!}
-                        />
-                      )}
-                      <Action
-                        compact
-                        quiet
-                        icon="image"
-                        label="查看原件"
-                        onPress={() =>
-                          router.push({
-                            pathname: "/materials/[id]",
-                            params: { id: output.assetId! },
-                          })
-                        }
-                      />
-                    </View>
+                    <TaskOutput key={output.index} output={output} />
                   ) : null,
                 )}
                 {Boolean(state.streams[task.id]) &&

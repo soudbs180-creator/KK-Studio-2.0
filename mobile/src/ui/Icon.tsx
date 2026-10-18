@@ -19,7 +19,9 @@ export type IconName =
   | "copy"
   | "share"
   | "check"
-  | "more";
+  | "more"
+  | "extensions"
+  | "microphone";
 
 // Small original line drawings use RN views, avoiding an extra native dependency.
 export function Icon({
@@ -176,6 +178,26 @@ export function Icon({
       break;
     case "check":
       shapes = [line(5, 12, 10, 17, "a"), line(10, 17, 20, 6, "b")];
+      break;
+    case "extensions":
+      shapes = [
+        box(3, 3, 7, 7, 2, "a"),
+        box(14, 3, 7, 7, 2, "b"),
+        box(3, 14, 7, 7, 2, "c"),
+        box(14, 14, 7, 7, 2, "d"),
+      ];
+      break;
+    case "microphone":
+      shapes = [
+        box(9, 2, 6, 12, 3),
+        line(5, 10, 5, 14, "a"),
+        line(5, 14, 9, 18, "b"),
+        line(9, 18, 15, 18, "c"),
+        line(15, 18, 19, 14, "d"),
+        line(19, 14, 19, 10, "e"),
+        line(12, 18, 12, 22, "f"),
+        line(8, 22, 16, 22, "g"),
+      ];
       break;
     case "more":
       shapes = [5, 12, 19].map((x) => (

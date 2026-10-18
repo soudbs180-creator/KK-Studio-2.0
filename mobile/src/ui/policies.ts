@@ -4,7 +4,10 @@ import {
   type CreationDraft,
 } from "@kk-studio/creation-contracts";
 import type { MobileConnectionMetadata } from "../core/mobileModel.ts";
-import { isTwelveAiConnection } from "../services/twelveAiProtocol.ts";
+import {
+  isTwelveAiConnection,
+  supportsImageReferences,
+} from "../services/twelveAiProtocol.ts";
 import { videoModelProfile } from "../services/twelveAiVideoModels.ts";
 export function taskActions(
   task: CreationTask,
@@ -20,12 +23,36 @@ export function taskActions(
 export function composerUnavailable(
   draft: CreationDraft,
   connection?: MobileConnectionMetadata,
+  imageSize?: string,
 ): string | undefined {
   if (!draft.prompt.trim()) return "写下你的想法。";
   if (connection?.protocol === "comfyui")
     return "此连接需在 ComfyUI 工作流页面预检并明确提交。";
-  if (draft.attachments.length)
+  if (
+    draft.attachments.length &&
+    (draft.kind !== "image" ||
+      !connection ||
+      !supportsImageReferences(connection, draft.model))
+  )
     return "此生成适配器尚不支持参考素材，请移除参考后再提交。";
+  if (
+    draft.attachments.some(
+      (attachment) =>
+        !["image/png", "image/jpeg", "image/webp", "image/gif"].includes(
+          attachment.mime,
+        ),
+    )
+  )
+    return "此图片编辑通道仅支持 PNG、JPEG、WebP 或 GIF 图片参考。";
+  if (draft.attachments.some((attachment) => !attachment.assetId))
+    return "请先保存参考图片原件，再提交编辑。";
+  if (
+    imageSize !== undefined &&
+    (draft.kind !== "image" ||
+      !imageSize.trim() ||
+      !connection?.capabilities?.imageSizes?.includes(imageSize))
+  )
+    return "请选择此连接已声明支持的图片尺寸，或使用默认尺寸。";
   if (!connection?.credentialRef) return "请设置有效连接及凭据。";
   if (draft.kind === "video") {
     if (!connection || !isTwelveAiConnection(connection))
