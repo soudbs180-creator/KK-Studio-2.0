@@ -10,21 +10,48 @@ interface RegisteredNode {
 }
 
 const registry = new Map<string, RegisteredNode>();
+const listeners = new Set<() => void>();
+let revision = 0;
+
+export function subscribePluginNodes(listener: () => void): () => void {
+  listeners.add(listener);
+  return () => void listeners.delete(listener);
+}
+
+export function getPluginNodesRevision(): number {
+  return revision;
+}
+
+function notify(): void {
+  revision += 1;
+  listeners.forEach((listener) => listener());
+}
 
 export function registerPluginNodes(
   pluginId: string,
   nodes: PluginNodeDefinition[],
 ): void {
+  let changed = false;
   for (const definition of nodes) {
     if (!definition.type || !definition.Content) continue;
+    const current = registry.get(definition.type);
+    if (current?.pluginId === pluginId && current.definition === definition)
+      continue;
     registry.set(definition.type, { pluginId, definition });
+    changed = true;
   }
+  if (changed) notify();
 }
 
 export function unregisterPluginNodes(pluginId: string): void {
+  let changed = false;
   for (const [type, entry] of registry) {
-    if (entry.pluginId === pluginId) registry.delete(type);
+    if (entry.pluginId === pluginId) {
+      registry.delete(type);
+      changed = true;
+    }
   }
+  if (changed) notify();
 }
 
 export function getPluginNodeDefinition(

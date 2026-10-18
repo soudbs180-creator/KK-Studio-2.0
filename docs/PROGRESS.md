@@ -1,8 +1,8 @@
 # 当前进度
 
-## 2026-10-18 统一2.1.41：发布前草稿绘制同步（IN_PROGRESS）
+## 2026-10-19 统一2.1.42：c341本地通过与Hosted测试清理（IN_PROGRESS / NOT_VERIFIED）
 
-TASK-CANVAS-RELEASE-20261018 的PR73已正常合入main87c9cfbe，统一版本41；尚未tag/发包/部署，Web40上线的另一任务收据已合入，41尚未发布。main五job成功但有1项草稿切换flaky，逐帧复核另确认可编辑输入短暂显示另一聊天草稿，因此先修该资料保护问题再发布。仅将ConversationPanel恢复草稿改在布局阶段完成，保留原持久化断言并新增逐帧RED/GREEN；定向10/10通过，新head完整验证和独审/Hosted待验。当前分支fix/TASK-CANVAS-RELEASE-20261018-draft-race，详情见[验证](changes/2026-10-18-unified-toolbar-release/verification.md)。下方其他任务按各自历史时点保留，不覆盖本段当前发布状态。
+TASK-CANVAS-RELEASE-20261018保持IN_PROGRESS/NOT_VERIFIED；当前已提交c3410fe68f057054a510cd1b506ead80bb5db629/tree0557a6295f0cb5ec05e5018691fd6af9d3187919（parent e7/base0f92）：精确本机fullverify exit0，Node1972=1952PASS/20SKIP、Agent204/2、Browser838首试0retry/flaky、Design41+8/development4；Delivery34/0及有界source独审PASS，PLUGREG-READY-01仅源码阻断已关闭，不等于整轮发布PASS。Hosted PR39151700611在Node阶段1FAIL：自有invalid-help/node.exe清理unlink EBUSY，锁持有者UNKNOWN，失败链未运行后续Agent/browser/Rust，不拿本机结果代填。c341 Windows candidate39151700654已SUCCESS且raw/receipt审计PASS（4284文件），仅候选并非formal，不能解除PR Node失败；push自然终局由唯一watcher补证。42未tag，最终main/tag/正式包/installed/production未完成；旧e7三flakes/strictfalse、41tag及正式失败和所有cold保留。 本次最小测试delta仅tests/unit/agentPackage.test.ts末尾自有sandbox的fs.rm增加maxRetries:5/retryDelay:100及中性Windows executable locks注释（7行），生产packager及全部guard/业务断言不变。独审串行await未发现漏wait证据。受控本机映像锁实测为EPERM，非原CI EBUSY同一持有者证明：默认清理失败、释放后有界重试成功、持锁耗尽仍拒绝；先前预期EBUSY的自检失败日志保留。agentPackage11/11、全Node1972=1952PASS/20SKIP/0FAIL、局部Prettier/ESLint均PASS，仅dirty delta预检；新head/完整门禁仍待。 完整工具栏/单Agent setup/三端/原项目配置保留目标不缩小；Web40、自有seed39、cold1792332721753/b54d及原资料不变，不启动程序或发真实turn。 见[当前验证](changes/2026-10-19-installer-clean-build/verification.md)。下方其他任务按原时点保留。
 
 ## 2026-10-18 手机结果优先与完整创作输入（IN_PROGRESS / NOT_VERIFIED）
 
@@ -1244,6 +1244,8 @@ TASK-UI-DETAILS-20261015从最新18e143f修复，Desktop/Web2.1.26产品ab878ffd
 
 2026-10-15 11:54:34 UTC独立只读回读actual main492abad48b0695f6117265fba6d29e8ea2a4b9bc；本轮quality38726260549全部success（repo verify/Rust fmt+test/client check+build/WebView2/隔离Native TaskHost/证据上传），双平台guards38726260498与main-health38730589177成功，7个check-runs全success，必需verify/delivery满足。产物11969904183/39602109B未过期，未下载检验内文。非必需auto-merge38726259041 failure/jobs=[]原因UNKNOWN单列。 GDI三项验收独审满足，测试任务DONE；输出证据保护另缺取消/reporter失败两类实测，继续PARTIAL，不把结构性保护冒称运行证据。HOME源码a85及Windows38项通过，正式HOME PR继续。
 
-## 2026-10-18 TASK-CANVAS-RELEASE-20261018：统一发布进行中
+## 2026-10-18 TASK-CANVAS-RELEASE-20261018：统一发布历史阶段
+
+本段保留原时点；当前入口见[2026-10-19交付包](changes/2026-10-19-installer-clean-build/intent.md)。
 
 [当前交付包](changes/2026-10-18-unified-toolbar-release/intent.md)。最初base97ef经主线PR72整合，PR73已合入main87c；main草稿flaky及已证跨聊天绘制帧需先修，目标仍三端2.1.41。当前没有tag/正式包/生产更新，历史39不作新版本证据。外部清理已由用户确认暂停，冷备与原失败保留；最终source和正式收据待实际门禁确定。

@@ -2,15 +2,15 @@
 
 - docId: AI_HANDOFF
 - status: current
-- updatedAt: 2026-10-18
+- updatedAt: 2026-10-19
 - source: `docs/governance/PROJECT_STATE.md`
 - supersededBy: null
 
 本文是最短恢复入口，不是任务状态或产品能力的第二事实源。任务状态只读 [`task-ledger.json`](task-ledger.json)；当前项目事实只读 [`PROJECT_STATE.md`](PROJECT_STATE.md)；历史验证只按带日期的 change package、commit、运行模式和 receipt 回读。
 
-## 当前恢复入口：统一41发布前草稿同步（2026-10-18）
+## 当前恢复入口：统一42的c341与清理门禁（2026-10-19）
 
-TASK-CANVAS-RELEASE-20261018仍IN_PROGRESS/NOT_VERIFIED；先读[当前计划](../changes/2026-10-18-unified-toolbar-release/plan.md)和[验证](../changes/2026-10-18-unified-toolbar-release/verification.md)。PR73已正常合入main87c9cfbe，main质量五job绿但完整日志有1草稿flaky，未打tag。4倍CPU逐帧复核确认可编辑草稿短暂显示另一聊天值，当前同锁定树fix/TASK-CANVAS-RELEASE-20261018-draft-race仅将恢复改布局阶段并补逐帧断言；旧RED/新10次GREEN保留，完整新head验证/独审/Hosted尚待。Web40已上线，三端41标签/正式安装包/部署未做，不能提前把87c称最终source。最新真实冷备3952文件、9项目/11聊天/22消息/2归档回执与7原件已校验；不碰keyring或发付费turn。以下旧入口按各自时点保留，不覆盖本段当前发布状态。
+先读[当前计划](../changes/2026-10-19-installer-clean-build/plan.md)、[验证](../changes/2026-10-19-installer-clean-build/verification.md)和账本currentPackage。TASK-CANVAS-RELEASE-20261018保持IN_PROGRESS/NOT_VERIFIED；当前已提交c3410fe68f057054a510cd1b506ead80bb5db629/tree0557a6295f0cb5ec05e5018691fd6af9d3187919（parent e7/base0f92）：精确本机fullverify exit0，Node1972=1952PASS/20SKIP、Agent204/2、Browser838首试0retry/flaky、Design41+8/development4；Delivery34/0及有界source独审PASS，PLUGREG-READY-01仅源码阻断已关闭，不等于整轮发布PASS。Hosted PR39151700611在Node阶段1FAIL：自有invalid-help/node.exe清理unlink EBUSY，锁持有者UNKNOWN，失败链未运行后续Agent/browser/Rust，不拿本机结果代填。c341 Windows candidate39151700654已SUCCESS且raw/receipt审计PASS（4284文件），仅候选并非formal，不能解除PR Node失败；push自然终局由唯一watcher补证。42未tag，最终main/tag/正式包/installed/production未完成；旧e7三flakes/strictfalse、41tag及正式失败和所有cold保留。 本次最小测试delta仅tests/unit/agentPackage.test.ts末尾自有sandbox的fs.rm增加maxRetries:5/retryDelay:100及中性Windows executable locks注释（7行），生产packager及全部guard/业务断言不变。独审串行await未发现漏wait证据。受控本机映像锁实测为EPERM，非原CI EBUSY同一持有者证明：默认清理失败、释放后有界重试成功、持锁耗尽仍拒绝；先前预期EBUSY的自检失败日志保留。agentPackage11/11、全Node1972=1952PASS/20SKIP/0FAIL、局部Prettier/ESLint均PASS，仅dirty delta预检；新head/完整门禁仍待。 完整工具栏/单Agent setup/三端/原项目配置保留目标不缩小；Web40、自有seed39、cold1792332721753/b54d及原资料不变，不启动程序或发真实turn。 以下旧入口按原时点保留。
 
 ## 当前恢复入口：手机结果优先与完整创作输入（2026-10-18）
 

@@ -191,10 +191,15 @@ export async function writeInstallerReceipt({ root, installer, output }) {
     throw new Error("Installer receipts require Windows x64");
   }
   const git = (...args) =>
-    execFileSync("git", args, { cwd: root, encoding: "utf8" }).trim();
-  if (git("status", "--porcelain", "--untracked-files=normal")) {
+    execFileSync("git", args, { cwd: root, encoding: "utf8" }).trimEnd();
+  const sourceChanges = git(
+    "status",
+    "--porcelain",
+    "--untracked-files=normal",
+  );
+  if (sourceChanges) {
     throw new Error(
-      "Commit source changes before creating an installer receipt",
+      `Commit source changes before creating an installer receipt:\n${sourceChanges}`,
     );
   }
   const versions = JSON.parse(

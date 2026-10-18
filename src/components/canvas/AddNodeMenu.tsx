@@ -11,7 +11,11 @@ import { useDismissible } from "../useDismissible";
 import type { CanvasItemKind } from "../../domain/canvasItems";
 import type { AddMenuState } from "./useCanvasAddMenu";
 import { pluginStore } from "../../features/plugins/pluginStore";
-import { listPluginNodeDefinitions } from "../../features/plugins/nodeRegistry";
+import {
+  getPluginNodesRevision,
+  listPluginNodeDefinitions,
+  subscribePluginNodes,
+} from "../../features/plugins/nodeRegistry";
 import "../../styles/node-menu.css";
 
 const ITEMS: {
@@ -70,6 +74,7 @@ export default function AddNodeMenu({
     pluginStore.subscribe,
     pluginStore.getState,
   );
+  useSyncExternalStore(subscribePluginNodes, getPluginNodesRevision);
   const enabledIds = new Set(
     pluginState.plugins
       .filter((record) => record.enabled)
