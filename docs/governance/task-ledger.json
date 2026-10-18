@@ -10002,6 +10002,7 @@
     "priorityRationale": "用户明确优先闭环原冷启严格比较失败，避免无效恢复写入干扰保存和最近排序",
     "affectedModules": [
       "src/features/creation/taskRecovery.ts",
+      "src/features/creation/nativeTaskHost.ts",
       "src/features/agent/agentHost.ts",
       "tests/unit",
       "tests/desktop",

@@ -13,7 +13,10 @@ import {
   reconcileRetryTaskParents,
   recoverInterruptedTasks,
 } from "../../src/features/creation/taskRecovery.ts";
-import { reconcileNativeTasks } from "../../src/features/creation/nativeTaskHost.ts";
+import {
+  listNativeTasks,
+  reconcileNativeTasks,
+} from "../../src/features/creation/nativeTaskHost.ts";
 
 const persisted = (value: CreationSnapshot): CreationSnapshot =>
   JSON.parse(JSON.stringify(serializeCreationSnapshot(value)));
@@ -261,4 +264,83 @@ test("a newer parent receipt is retained even when retry aggregation restores it
     result.projects[0].tasks[0].outputs,
     snapshot.projects[0].tasks[0].outputs,
   );
+});
+
+for (const [label, rawTimestamp] of [
+  ["missing", undefined],
+  ["null", null],
+  ["NaN", Number.NaN],
+  ["positive infinity", Number.POSITIVE_INFINITY],
+  ["negative infinity", Number.NEGATIVE_INFINITY],
+  ["string", "90"],
+] as const) {
+  test(`a ${label} original receipt time cannot manufacture a newer retry aggregate`, async () => {
+    const { snapshot, native } = fixture();
+    if (rawTimestamp === undefined) Reflect.deleteProperty(native, "updatedAt");
+    else Reflect.set(native, "updatedAt", rawTimestamp);
+    const oldNow = Date.now;
+    let clock = 100;
+    Date.now = () => clock;
+    try {
+      const first = (await run(snapshot, [native])).result;
+      clock = 200;
+      const second = (await run(first, [native])).result;
+      assert.deepEqual(persisted(first), persisted(snapshot));
+      assert.deepEqual(persisted(second), persisted(snapshot));
+      assert.equal(first, snapshot);
+      assert.equal(second, snapshot);
+    } finally {
+      Date.now = oldNow;
+    }
+  });
+}
+
+test("a missing receipt time keeps the normalizer's existing clock fallback", async () => {
+  const { native } = fixture();
+  Reflect.deleteProperty(native, "updatedAt");
+  const oldNow = Date.now;
+  Date.now = () => 100;
+  Object.defineProperty(globalThis, "window", {
+    configurable: true,
+    value: {
+      __TAURI_INTERNALS__: {
+        invoke: async (command: string) => {
+          assert.equal(command, "task_host_list");
+          return [native];
+        },
+      },
+    },
+  });
+  try {
+    assert.equal((await listNativeTasks())[0].updatedAt, 100);
+  } finally {
+    Date.now = oldNow;
+    Reflect.deleteProperty(globalThis, "window");
+  }
+});
+
+test("a missing original receipt time does not suppress a real failure update", async () => {
+  const { snapshot, native } = fixture(false);
+  Reflect.deleteProperty(native, "updatedAt");
+  native.failure.message = "synthetic-new-failure";
+  const oldNow = Date.now;
+  Date.now = () => 100;
+  try {
+    const { result } = await run(snapshot, [native]);
+    assert.notEqual(result, snapshot);
+    assert.equal(result.projects[0].tasks[0].error, "synthetic-new-failure");
+    assert.equal(result.projects[0].tasks[0].updatedAt, 100);
+  } finally {
+    Date.now = oldNow;
+  }
+});
+
+test("an invalid receipt time does not suppress identity quarantine", async () => {
+  const { snapshot, native } = fixture(false);
+  Reflect.set(native, "updatedAt", Number.NaN);
+  native.idempotencyKey = "synthetic-foreign-key";
+  const { result } = await run(snapshot, [native]);
+  assert.notEqual(result, snapshot);
+  assert.equal(result.projects[0].tasks[0].status, "unknown");
+  assert.equal(result.projects[0].tasks[0].outputs?.[0].status, "unknown");
 });

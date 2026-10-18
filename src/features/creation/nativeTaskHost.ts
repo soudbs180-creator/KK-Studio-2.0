@@ -65,6 +65,9 @@ export interface NativeTaskHostRecord {
   updatedAt: number;
 }
 
+// A local fallback clock is not evidence of a newer native receipt.
+const recordsWithNativeTimestamp = new WeakSet<NativeTaskHostRecord>();
+
 const DESKTOP_UNAVAILABLE =
   "Desktop TaskHost 尚未接入或不可用（Prototype），本次未发送浏览器 Provider 请求。";
 const INVALID_RECEIPT =
@@ -140,7 +143,11 @@ function normalizeRecord(input: unknown): NativeTaskHostRecord {
         : undefined,
     error: typeof output.error === "string" ? output.error : undefined,
   }));
-  return {
+  const nativeUpdatedAt =
+    typeof value.updatedAt === "number" && Number.isFinite(value.updatedAt)
+      ? value.updatedAt
+      : undefined;
+  const record: NativeTaskHostRecord = {
     imageEditRequired:
       typeof value.imageEditRequired === "boolean"
         ? value.imageEditRequired
@@ -170,11 +177,10 @@ function normalizeRecord(input: unknown): NativeTaskHostRecord {
             typeof (value.failure as { message?: unknown }).message === "string"
           ? (value.failure as { message: string }).message
           : undefined,
-    updatedAt:
-      typeof value.updatedAt === "number" && Number.isFinite(value.updatedAt)
-        ? value.updatedAt
-        : Date.now(),
+    updatedAt: nativeUpdatedAt ?? Date.now(),
   };
+  if (nativeUpdatedAt !== undefined) recordsWithNativeTimestamp.add(record);
+  return record;
 }
 
 /** Quarantine an inconsistent receipt before either live or recovered output is applied. */
@@ -365,7 +371,12 @@ export async function reconcileNativeTasks(
           const native = candidate
             ? validateNativeTaskRecord(candidate, task)
             : undefined;
-          if (native && native.updatedAt > task.updatedAt)
+          if (
+            candidate &&
+            recordsWithNativeTimestamp.has(candidate) &&
+            native &&
+            native.updatedAt > task.updatedAt
+          )
             newerNativeReceipts.add(task);
           const mayHaveBeenSubmitted =
             task.submissionState === "submitted" ||
