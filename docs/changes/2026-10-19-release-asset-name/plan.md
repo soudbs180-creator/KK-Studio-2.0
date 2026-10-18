@@ -11,3 +11,11 @@
 5. 后续外部安装验收采用新的精确 URL 期望版本，原冻结脚本保留；发布说明及正式资产检查同步公开 dot 名，匿名下载器本身已支持点名、无需修改。
 
 不修其他已保留的 flaky 信号，不扩大重试/超时或删除原下载断言。原资料和源代码工作树不做清理。
+
+## 当前 Hosted 终局失败后的有界补充（先计划，后实施）
+
+4c313633 的 push quality39167031850 实际 FAIL，不能沿用本机838首过作为 Hosted 通过。sidebar reduced-motion 首次点击等待超时，retry 一次物理点击后 folder count0；settings390 首次缺少设置按钮，retry通过。两个首试均无页面快照/trace，具体云端原因仍 UNKNOWN。
+
+独立受控 IDB 延迟已证一个测试前提缺口：创建文件夹按钮 loading 时可见、命中但 disabled，原生 mouse.click 不等待 enabled；旧序列一次点击不产生 click 事件，释放读取后原 count 断言仍失败。相同受控条件先等现有 enabled 信号，再保留同坐标一次点击、动画/命中/count/expanded/scroll 断言均通过。这只证明机制，不反推云端当时确实 disabled。
+
+最小修法仅在既有 createFolderOnce 的 visible 后增加 toBeEnabled；不改应用、存储 guard、settings 测试、fixture、timeout 或 retry。此为本次实际失败的测试维护，技术决策在用户已授权发布范围内。先运行现有 sidebar 四项和 settings 三项 workers1/retries0，再提交新 head，做相关检查、完整 verify、精确独审和新的 Hosted；原4c失败及未执行 Design/Rust/Native 如实保留。三端仍同次尚未 tag 的2.1.42。

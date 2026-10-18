@@ -18,3 +18,15 @@
 | Native实际URL | 正式包安装后由外部 `installed-acceptance-42-release-url.mjs` 精确断言dot href；实际NOT_RUN，不借Web回归代填 |
 
 42 标签、正式安装包、默认资料安装和生产交付仍 NOT_VERIFIED。原 35 push 首败/UNKNOWN/nonblocking/strictfalse及 e43 两 flaky、d965候选安装首败与顺序修法实证保持原义。0cc的原主线CI继续自然结束、保存其自身raw；本真实下载修复使其不再是最终tag来源，不取消或重跑它来掩盖信号。见前阶段验证及工程外原始收据。
+
+## 4c 精确门禁与新实际失败（后续事实）
+
+4c313633d88f4e2203292540ef7c83f77ae699af/tree f84dc69d0f80c1039bd5d6a2400142cf27747c63 的源码独审PASS_SOURCE_REVIEW_ONLY（收据SHA256 `6bcf3760a807b5414c1e33b0ef1daddbbdab445b041aaf8c2c51794e6a49fbbf`），完整本机verify自然exit0：Node1952/20SKIP、Agent204/2、Browser838+Design8首试通过、Design单元41、Development4；独立本机收据SHA256 `be1a915a10dcfafa865e9cf4e124d40d6c7b217120e824cd92035046d4895d07`，SSR警告10条保留。该事实补充前表的准备时点，不代后续head。
+
+push quality39167031850实际FAIL：838unique/840attempts，836expected+1unexpected+1flaky；sidebar reduced-motion首次line74点击展开按钮30s超时，retry于createFolderOnce的folder count断言5s收到0；settings390首次helpers141设置按钮点击30s，retry通过。Node1953/19、Agent204/2通过；Design/Rust/Native未执行。raw SHA256 `18a1987580d483b813d56a16557ed960b819d28bb91e3b88573a16bb006acc81`，原失败、strict=false保持，未rerun。PR quality仍自然运行；Windows候选39167333211及双Mobile各自已证通过，不代失败push。
+
+独立下载官方artifact12151741112/verification-evidence（39017880B），完整ZIP SHA256 `9db9932d436f9253f3aacc5e0234d94b30b2d476bf6b61e47197d1ae70d306e2`、467项CRC/安全通过，实际JSON/errors[]与3context保留。两个首试无Page snapshot、trace/失败截图，stdout/stderr为空，不能推断DOM blank。sidebar retry快照为展开侧栏、结束时按钮enabled、folder0、无未就绪告警；**点击瞬间的disabled状态和云端具体首因仍UNKNOWN**。
+
+独立受控对照仅在自有Edge空context、固定1423 production preview、保留的4c dist上延迟creation IDB onsuccess：旧visible-only按钮disabled而命中true，一次physical click只有pointerdown/up无click；释放读取后按钮enabled，但原folder count5s仍0。先等既有enabled状态的变体，在同坐标一次click后原count1/expanded/scrollLeft0均通过，无running动画/pageErrors/外部请求。自有浏览器已关闭、preview以SIGTERM退出，未写source/dist/原profile。报告 `independent-4c-push-triage/sidebar-mechanism-1792359778564/report.json` SHA256 `c81ea4db4bd8ee9ad42d522bdf14a3f617250c9c8a1a0e51bdcbe791d9c2a370`。这是已证测试前提缺口，**不是已证云端根因**。
+
+修正仅createFolderOnce的visible后增加toBeEnabled，保留物理命中/一次点击/所有原动画、count、expanded与scroll断言，不改产品、settings测试、timeout/retry或存储保护。现有sidebar4+settings3 workers1/retries0共7/7首过，日志 `sidebar-enabled-precondition-targeted.log` SHA256 `9666c636fb85687528b4f4ec6ae19356ff7a1afce9c4ca8a1bfb1174ef8cadcf`。本次实际维护的新精确head完整verify、独审、Hosted及正常merge仍待，原4c门禁结果不挪用。

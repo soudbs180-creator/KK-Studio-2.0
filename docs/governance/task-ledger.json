@@ -3,7 +3,7 @@
     "id": "TASK-CANVAS-RELEASE-20261018",
     "title": "统一工具栏修复、数据兼容和三端正式发布",
     "goal": "正常合并工具栏修复及安装器来源修复，发布统一2.1.42单一内置Windows Agent安装包及Web/独立手机Web，保留原项目配置",
-    "scope": "Canvas工具栏、成熟chat迁移和归档收据兼容、平台版本/下载展示与正式发布证据、发布前可编辑聊天草稿绘制同步、Windows干净构建来源诊断、receipt父目录及native失败立即停止、PR候选完整NSIS与receipt门、Tauri重写三路径的显式LF checkout合同、插件迟到注册后的恢复节点与菜单同步重绘、provider测试完成边界及fixture连接诊断、Agent打包单测自有sandbox的有界清理重试、安装验收先于新建项目验证首页Agent启停以避免自动prepare竞态、GitHub公开Release资产空格转点后的实际下载路径对齐",
+    "scope": "Canvas工具栏、成熟chat迁移和归档收据兼容、平台版本/下载展示与正式发布证据、发布前可编辑聊天草稿绘制同步、Windows干净构建来源诊断、receipt父目录及native失败立即停止、PR候选完整NSIS与receipt门、Tauri重写三路径的显式LF checkout合同、插件迟到注册后的恢复节点与菜单同步重绘、provider测试完成边界及fixture连接诊断、Agent打包单测自有sandbox的有界清理重试、安装验收先于新建项目验证首页Agent启停以避免自动prepare竞态、GitHub公开Release资产空格转点后的实际下载路径对齐、侧栏物理点击回归显式等待现有enabled存储写入许可的test-only维护",
     "acceptance": [
       "图片居中且画布允许遮挡，无横向滚动或自动让位",
       "保留现有项目原件消息归档收据设置和凭据引用",
@@ -46,7 +46,8 @@
       "src/runtime/appInfo.ts",
       "tests/browser/platform-version.spec.ts",
       "tests/desktop/platform-version.mjs",
-      "docs/changes/2026-10-19-release-asset-name"
+      "docs/changes/2026-10-19-release-asset-name",
+      "tests/browser/sidebar-rail-interaction.spec.ts"
     ],
     "status": "IN_PROGRESS",
     "displayStatus": "进行中",
@@ -61,11 +62,11 @@
       "docs/changes/2026-10-19-release-asset-name/intent.md",
       "docs/changes/2026-10-19-release-asset-name/verification.md"
     ],
-    "verification": "TASK-CANVAS-RELEASE-20261018保持IN_PROGRESS/NOT_VERIFIED。PR78已正常合入中间main 0cc3b4ed116d71062244e3097285a2b532de8f97/tree 4c238f54f6aa688f95128936ada89ec675f2f26c/parent e43，与approved35整tree相同；其quality39163882467自然继续原生阶段，不取消、不重跑，旧main结果不能代填本轮最终source。正式tag前只读核定新下载阻断：GitHub公开资产名将空格规范化为点，已有公开同类精确点名GET为302、对应%20路径404；诊断SHA9370ef634e10695a213cd82da7eda748c38ffd104dda6334a9bd7537f7b446c9。现有共享链接使用空格编码，须仅对齐公开资产路径及两个既有浏览器/Desktop预期，本地NSIS文件名和receipt不变。当前包release-asset-name承接lifecycle-order；RED/GREEN、相关检查、完整verify、精确HEAD独审/Hosted/正常merge后实际final main仍待。本次三端2.1.42尚未tag，维持同一未发布候选版本，不递增或重打旧tag。原41正式FAIL/artifact0、e7/c341失败、d965候选首FAIL/409诊断与tests-only四轮预检、e43两flaky及35push一flaky/UNKNOWN有界决定均保留原义；原cold/seed39、项目配置/凭据/存储身份不变。42正式工件、默认安装、公开Release和Web/独立手机Web生产均未完成。",
+    "verification": "TASK-CANVAS-RELEASE-20261018保持IN_PROGRESS/NOT_VERIFIED，三端仍为同次尚未tag的2.1.42。下载资产名修复4c313633d88f4e2203292540ef7c83f77ae699af/tree f84dc69d0f80c1039bd5d6a2400142cf27747c63的源码独审和完整本机verify PASS；Hosted push quality39167031850实际FAIL（838 tests/840 attempts：836 passed、1 failed、1 flaky；Node1953 PASS/19 skip、Agent204 PASS/2 skip，Design/Rust/Native未执行），PR/Windows/Mobile各按自身真实收据核对。本机PASS不代填Hosted。独立IDB受控对照证明原visible-only物理点击缺少enabled前提：disabled且命中时只产生pointerdown/up，释放读取后原folder count断言仍FAIL；先等enabled后同坐标一次click/count1/expanded/scroll0 PASS。这只证明机制，云端点击瞬间状态及两个首试缺按钮30s原因仍UNKNOWN，首试无snapshot/trace/errors。现仅在tests/browser/sidebar-rail-interaction.spec.ts的createFolderOnce visible后加一行toBeEnabled；既有sidebar4+settings3在workers1/retries0定向7/7 PASS。原产品、settings、storage guard、timeout/retry及其余断言不变。修改后精确新HEAD完整verify、独审/Delivery/Hosted和正常PR合并仍待，正式tag/包/默认安装/Release/Web及独立手机Web生产仍未完成。 原公开下载阻断诊断9370ef63及RED/GREEN1/1保留，公开资产用点名、本地NSIS/receipt仍为空格名；PR78正常合入的0cc3b4ed116d71062244e3097285a2b532de8f97/tree4c238f54f6aa688f95128936ada89ec675f2f26c仅为历史中间main，其CI自然完成、不取消不重跑，最终source须后续正常merge及新main验证。原41正式FAIL/artifact0、e7/c341失败、d965候选首FAIL/409诊断与tests-only四轮预检、e43两flaky及35push一flaky/UNKNOWN有界决定保持原义；cold/seed39、项目配置、凭据和存储身份不变。",
     "verificationResult": "NOT_VERIFIED",
     "updated": "2026-10-19",
     "lastVerified": "2026-10-19",
-    "nextAction": "先保留旧bundle下载链接回归RED，再最小对齐GitHub公开点名资产并取得同用例GREEN，完成相关及完整verify、精确新HEAD独审/Delivery/Hosted和正常PR合并；最终发布source以随后实际正常合入main/tree为准，0cc仅历史中间main，其CI自然完成且不重跑。新main门禁及首次信号处置后才创建一次42tag、fresh正式Windows，同formal完整四轮、严格cold重查、真实默认资料安装/工具栏/Agent、唯一setup匿名下载和Web/独立手机Web生产回读；原失败、cold和seed39保持。",
+    "nextAction": "一行test-only enabled前提维护及相关7/7已完成；冻结该最小diff并提交后，取得精确新HEAD完整verify、独审/Delivery及新的Hosted终局，保留4c push实际FAIL、所有首试UNKNOWN和未执行阶段。正常PR合并后的实际main/tree及main门禁通过才创建一次42tag、fresh正式Windows，同formal完整四轮、严格cold重查、真实默认资料安装/工具栏/Agent、唯一setup匿名下载和Web/独立手机Web生产回读；原失败、cold和seed39保持。",
     "requirementRefs": [
       "docs/changes/2026-10-18-unified-toolbar-release/intent.md",
       "docs/changes/2026-10-18-chat-draft-paint-sync/intent.md",

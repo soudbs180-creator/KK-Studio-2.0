@@ -12,3 +12,5 @@ NSIS 本地工件仍为 `KK Studio_<version>_x64-setup.exe`，receipt 和 ZIP �
 - AC-4：三端候选仍为未打标签的 2.1.42，最终 Windows 单包与 Web/Mobile 同 main/tag 来源，正式下载匿名逐字节验证。
 
 本修正不增加依赖、网络发现、重试或新安装格式。手机交付是独立 `/mobile/` 网页，功能成熟度和未验真实生成范围不变。
+
+后续测试维护：既有侧栏物理点击先等按钮 visible 和 enabled，再测原命中几何并只点击一次。资料未就绪时的 disabled 及 mutation guard 原样保留，动画、folder count/expanded 和 scroll 原断言不减。受控机制与实际云端根因分开；首试缺按钮的 UNKNOWN、终局失败和未执行阶段不得改写为通过。
