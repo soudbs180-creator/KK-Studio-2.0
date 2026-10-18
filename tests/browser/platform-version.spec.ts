@@ -29,7 +29,7 @@ test("Web account and update UI display the Web platform version", async ({
     name: "下载 Windows 安装包",
     exact: true,
   });
-  const filename = `KK Studio_${versions.desktop}_x64-setup.exe`;
+  const filename = `KK.Studio_${versions.desktop}_x64-setup.exe`;
   const url = `https://github.com/soudbs180-creator/KK-Studio-2.0/releases/download/v${versions.desktop}/${encodeURIComponent(filename)}`;
   await expect(download).toHaveAttribute("href", url);
   await expect(download).toHaveAttribute("download", filename);

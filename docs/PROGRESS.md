@@ -1,6 +1,10 @@
 # 当前进度
 
-## 2026-10-19 统一2.1.42：c341本地通过与Hosted测试清理（IN_PROGRESS / NOT_VERIFIED）
+## 2026-10-19 统一2.1.42：公开下载资产名修复（IN_PROGRESS / NOT_VERIFIED）
+
+TASK-CANVAS-RELEASE-20261018保持IN_PROGRESS/NOT_VERIFIED，三端仍为同次尚未tag的2.1.42。下载资产名修复4c313633d88f4e2203292540ef7c83f77ae699af/tree f84dc69d0f80c1039bd5d6a2400142cf27747c63的源码独审和完整本机verify PASS；Hosted push quality39167031850实际FAIL（838 tests/840 attempts：836 passed、1 failed、1 flaky；Node1953 PASS/19 skip、Agent204 PASS/2 skip，Design/Rust/Native未执行），PR/Windows/Mobile各按自身真实收据核对。本机PASS不代填Hosted。独立IDB受控对照证明原visible-only物理点击缺少enabled前提：disabled且命中时只产生pointerdown/up，释放读取后原folder count断言仍FAIL；先等enabled后同坐标一次click/count1/expanded/scroll0 PASS。这只证明机制，云端点击瞬间状态及两个首试缺按钮30s原因仍UNKNOWN，首试无snapshot/trace/errors。现仅在tests/browser/sidebar-rail-interaction.spec.ts的createFolderOnce visible后加一行toBeEnabled；既有sidebar4+settings3在workers1/retries0定向7/7 PASS。原产品、settings、storage guard、timeout/retry及其余断言不变。修改后精确新HEAD完整verify、独审/Delivery/Hosted和正常PR合并仍待，正式tag/包/默认安装/Release/Web及独立手机Web生产仍未完成。 原公开下载阻断诊断9370ef63及RED/GREEN1/1保留，公开资产用点名、本地NSIS/receipt仍为空格名；PR78正常合入的0cc3b4ed116d71062244e3097285a2b532de8f97/tree4c238f54f6aa688f95128936ada89ec675f2f26c仅为历史中间main，其CI自然完成、不取消不重跑，最终source须后续正常merge及新main验证。原41正式FAIL/artifact0、e7/c341失败、d965候选首FAIL/409诊断与tests-only四轮预检、e43两flaky及35push一flaky/UNKNOWN有界决定保持原义；cold/seed39、项目配置、凭据和存储身份不变。 见[当前交付包](changes/2026-10-19-release-asset-name/intent.md)和[验证](changes/2026-10-19-release-asset-name/verification.md)。
+
+## 历史阶段：安装验收顺序与前期清理（2026-10-19，原记录保留）
 
 TASK-CANVAS-RELEASE-20261018保持IN_PROGRESS/NOT_VERIFIED。PR77已正常squash合入main e43c5efaa9e80ad7ee617c852868a20e6093e08a/tree d9c0ee4206fb83bc413696b50356a887d10ad049，完整树等于已独审d965。d965本机与Hosted精确门禁通过，main当前检查仍待终局。官方candidate12146302538全ZIP hash、flat4和4284安装文件验证通过；原隔离安装验收FAIL：新建项目后直接native stop与自动对话prepare竞态。追加同包诊断观察shutdown HTTP409，health由idle转preparing并在4225ms ready，未发送模型turn；该诊断保持FAIL且不重试stop，不抹去原失败。本地dirty修法已用同包完整四轮PASS，4×4284文件/Agent启停强断言/项目保留/正常cleanup，26相关单元及lint/typecheck/format通过；3952原资料文件全等。精确新head独审/Delivery/Hosted待验。只修tests/desktop/installer.mjs验收顺序：纯Agent启停在空库首页先验，再保留全部项目/重装/资源损坏修复/卸载重装覆盖，新增available/running/停止后running=false断言。guard、应用、版本、存储和凭据身份不变；42尚未tag，正式包/默认资料安装/Web-Mobile生产待验，原cold、seed39与所有历史失败保留。 详见本任务currentPackage的计划与验证，以下旧入口保留原时点。
 

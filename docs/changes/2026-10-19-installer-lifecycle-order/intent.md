@@ -1,7 +1,8 @@
 # Intent：隔离安装验收先验证首页Agent启停
 
 - Task ID：TASK-CANVAS-RELEASE-20261018；日期：2026-10-19；Owner：root-release。
-- 状态：IN_PROGRESS / NOT_VERIFIED；currentPackage：本目录。
+- 状态：IN_PROGRESS / NOT_VERIFIED（本阶段历史记录，整体交付未完成）。
+- 交付包角色：historical；当前恢复入口转至[公开资产名修复](../2026-10-19-release-asset-name/intent.md)，本包原范围、SHA、失败和验证结果保留。
 - branch：`fix/TASK-CANVAS-RELEASE-20261019-installer-lifecycle`；base：e43c5efaa9e80ad7ee617c852868a20e6093e08a/tree d9c0ee4206fb83bc413696b50356a887d10ad049；新head待提交。
 - [Intent](intent.md) / [Spec](spec.md) / [Plan](plan.md) / [Verification](verification.md) / [Review](review.md)。
 
