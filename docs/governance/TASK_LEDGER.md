@@ -127,7 +127,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-VERIFY-CONCURRENCY-002 | 浏览器并发失败原因与隔离复核 | PARTIAL | 未完成 | P1 | TASK-GOV-001 | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
 | TASK-VERIFY-ORIGIN-003 | 浏览器验收端口与服务来源契约一致性 | DONE | 已完成 | P1 | none | root | 保留exact-SHA与独立review收据；Hosted delivery、Windows安装、第二环境、发布和用户验收继续由TASK-AGENT-010及发布门禁承担。 |
 | TASK-DOCS-STRUCT-001 | AI 协作规则文档结构收敛 | DONE | 已完成 | P1 | none | root | 保留当前证据；合并或发布前按本任务原验收范围回读主线，不重新引入 pnpm 锁文件。 |
-| TASK-AI-GATEWAY-001 | 统一多平台 AI 模型接入：凭证、通道契约与豆包 Ark 适配器 | PARTIAL | 进行中 | P1 | none | root | 复用合规登记树重新分配任务并绑定当前SHA，再按原验收推进；禁止据历史路径直接在main施工。 先补本地 upstream ReadableStream/token callback 契约和 Windows DPAPI/Tauri protector 的受控测试；随后才补真实 Ark/Codex 凭据与 Desktop 运行态，外部证据齐全后再转 DONE。 |
+| TASK-AI-GATEWAY-001 | 统一多平台 AI 模型接入：凭证、通道契约与豆包 Ark 适配器 | PARTIAL | 进行中 | P1 | none | root | 当前未分配，复用合法登记树按独立子任务领取Windows DPAPI/Tauri SecretProtector受控实现/测试；再按原验收补默认入口契约与真实凭据/Ark/Codex/运行态，不消费未授权额度或将本地合成流当真实服务。 |
 | TASK-PROV-BYOK-001 | 用户自有 API 产品化接入 | TODO | 未完成 | P1 | TASK-AI-GATEWAY-001 | root | 依赖TASK-AI-GATEWAY-001与Web VPS控制面；先补intent/spec/plan和Desktop/Web/Mobile边界，外部契约稳定前不扩展产品实现。 |
 | TASK-UI-015 | 画布点状/网状背景缩放插值修正 | DONE | 已完成 | P2 | none | root | 保留当前证据；主线回读完成 |
 | TASK-AGENT-010 | 统一版本一致性与跨环境启动新鲜度 | PARTIAL | 未完成 | P1 | TASK-LAUNCH-001 | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
@@ -140,7 +140,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-GOV-005 | PR #55 历史快照合法集成与门禁修复 | PARTIAL | 未完成 | P1 | none | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
 | TASK-ENG-001 | 引入 hermes-agent 工程实践：代码健康棘轮、Windows 不安全模式扫描与 Actions SHA 固定 | PARTIAL | 未完成 | P1 | none | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
 | TASK-CCSWITCH-LEARN-20261014 | 澄清供应商编辑状态并验证跨存储中断恢复 | DONE | 已完成 | P1 | TASK-AGENT-RECOVERY-20261013 | root | 本轮实现与本地验收完成；Hosted、物理断电、收费Provider、实际用户profile及签名发布仍未验证。 |
-| TASK-CANVAS-SYNC-20261014 | 修复 Agent 与已挂载画布图同步 | PARTIAL | 未完成 | P1 | none | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
+| TASK-CANVAS-SYNC-20261014 | 修复 Agent 与已挂载画布图同步 | PARTIAL | 未完成 | P1 | none | root | 本地Native协议/图/拖动/正常重开已验；当前未分配，后继按原验收补真实Codex/实际provider回执与完整用户接受，并核对历史undo/result连线证据；不凭合成对话或额度fixture关闭父任务。 |
 | TASK-CANVAS-WIDE-PORT-20261014 | 宽图结果编辑器遮挡下游按钮 | DONE | 已完成 | P2 | none | root | 本轮有界本地技术完成；最终文档SHA审查/Delivery/归档/日常还原以工程外收据裁决；真实Provider/Hosted/发布及用户整体验收另行，保留全部资料。 |
 | TASK-AGENT-UX-20261014 | Agent 执行过程与生成保存状态提示 | DONE | 已完成 | P2 | none | root | 保留证据并完成日常APP人工验收，真实Provider和发布沿原独立任务推进 |
 | TASK-PROTOCOL-CLI-20261014 | 从2.1.21接通Provider协议和CLI实际执行，优化分端控件 | DONE | 已完成 | P1 | TASK-UI-CONSOLIDATE-20261014 | root | 从2.1.22继续真实供应商与真人CLI登录/安装、签名安装器、日常资料和人工视觉验收；最终产物回读工程外current-release哈希收据。 |
@@ -159,7 +159,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-DESIGN-MD-20261015 | 统一DESIGN设计系统与产品UI收敛 | PARTIAL | 进行中 | P1 | none | root | 关闭基础独审问题，将规则落入设置/模型/聊天/画布/项目/素材等实际页面，按Desktop→Web留同状态证据。 |
 | TASK-SIDEBAR-CANVAS-20261018 | 侧栏置顶排序持久化与宽图连线桌面验收 | DONE | 已完成 | P1 | none | root | 本轮有界本地技术完成；最终文档SHA审查/Delivery/归档/日常还原以工程外收据裁决；真实Provider/Hosted/发布及用户整体验收另行，保留全部资料。 |
 | TASK-COLDSTART-LOCAL-20261018 | 冷启动无效写入修复与严格数据比较闭环 | DONE | 已完成 | P1 | none | root | 本有界冷启动技术闭环完成；最终文档SHA独审/Delivery/保全归档与日常单实例入口据实收尾。继续本地Gateway增量流和Native Canvas专项，不改变父任务外部验收与功能成熟度。 |
-| TASK-GATEWAY-STREAM-20261018 | Gateway实际增量SSE与取消重试边界 | IN_PROGRESS | 进行中 | P1 | TASK-COLDSTART-LOCAL-20261018 | root | 正式测试先RED，最小内部callback/SSE修复，再定向全量/独审/官方当前Desktop与资料保护；父任务外部能力继续开放 |
+| TASK-GATEWAY-STREAM-20261018 | Gateway实际增量SSE与取消重试边界 | DONE | 已完成 | P1 | TASK-COLDSTART-LOCAL-20261018 | root | 本地有界子项完成；最终精确文档/Delivery/私有归档/原两个快捷方式由工程外收据裁决。下一P1本地DPAPI protector受控测试及独立成本回执调用路径，不重提UNKNOWN，不消费额度；父Gateway仍PARTIAL。 |
 
 ## TASK-LOCAL-GUARDS-20261018 — 修复本地安全边界并核对剩余任务与工作树规则
 
@@ -2476,9 +2476,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `unallocated`
 - Worktree: `unallocated`
 - Modules: src/features/ai-gateway/credentials.ts, src/features/ai-gateway/errors.ts, src/features/ai-gateway/channels/adapter.ts, src/features/ai-gateway/channels/registry.ts, src/features/ai-gateway/channels/doubao.ts, src/features/ai-gateway/scheduler.ts, src/features/ai-gateway/chat.ts, src/features/generation-server/http.ts, tests/unit/aiGatewayCredentials.test.ts, tests/unit/aiGatewayChannels.test.ts, tests/unit/aiGatewayScheduler.test.ts, tests/unit/aiGatewayChat.test.ts, tests/unit/aiGatewayChatEndpoint.test.ts, tests/unit/generationServerChatRoute.test.ts, docs/features/feat-038-ai-model-gateway.md, src/domain/modelProvider.ts, src/features/creation/model.ts, src/components/settings/ProviderProfileFields.tsx, tests/unit/modelProvider.test.ts, docs/changes/2026-10-10-doubao-official-channel/, src/features/agent/agentImages.ts, src/features/agent/agentHost.ts, src/features/models/modelMenuEntries.ts, src/features/models/modelPresentation.ts, tests/unit/modelMenuEntries.test.ts, tests/unit/modelPresentation.test.ts
-- Verification: PARTIAL — gateway/Agent/model 本地回归仍通过；当前实现缺少真实 DPAPI protector，Ark 通道在 response.json() 后才产生最终文本，generation-server 只把完整文本包装为单个 SSE delta，尚未实现 upstream token-level stream。真实 Ark/Codex 凭据和 Desktop 运行态仍未验证，保持 PARTIAL。 2026-10-18 source92643d67：LayeredCredentialStore持久成功后发布缓存，失败保旧、迟到读/双层删除及逆序写回归59/59，本轮完整verify通过；当前仅合成凭据构造点，未验证真实DPAPI/Ark。
-- Evidence: [docs/features/feat-038-ai-model-gateway.md](../../docs/features/feat-038-ai-model-gateway.md), [docs/changes/2026-10-10-kk-model-capability/verification.md](../../docs/changes/2026-10-10-kk-model-capability/verification.md), [docs/superpowers/specs/2026-10-10-kk-model-capability-design.md](../../docs/superpowers/specs/2026-10-10-kk-model-capability-design.md), [docs/superpowers/plans/2026-10-10-kk-model-capability.md](../../docs/superpowers/plans/2026-10-10-kk-model-capability.md), [docs/changes/2026-10-09-doubao-integration/verification.md](../../docs/changes/2026-10-09-doubao-integration/verification.md), [docs/changes/2026-10-10-doubao-official-channel/verification.md](../../docs/changes/2026-10-10-doubao-official-channel/verification.md), [docs/changes/2026-10-11-closeout/verification.md](../../docs/changes/2026-10-11-closeout/verification.md), [tests/browser/model-picker.spec.ts](../../tests/browser/model-picker.spec.ts), [docs/changes/2026-10-12-p1-audit-closeout/verification.md](../../docs/changes/2026-10-12-p1-audit-closeout/verification.md)
-- Next action: 复用合规登记树重新分配任务并绑定当前SHA，再按原验收推进；禁止据历史路径直接在main施工。 先补本地 upstream ReadableStream/token callback 契约和 Windows DPAPI/Tauri protector 的受控测试；随后才补真实 Ark/Codex 凭据与 Desktop 运行态，外部证据齐全后再转 DONE。
+- Verification: PARTIAL — source176ec95d本地增量SSE/取消/截止/首write后禁重试/usage/错误隐私由TASK-GATEWAY-STREAM-20261018有界验收；174定向、完整2055/Agent204/Edge854及源码双轴通过。当前Desktop40重建与资料保护通过，但未注入默认main.ts/UI或RustTaskHost，缺真实DPAPI protector/凭据/Provider/VPS/账单去重；父任务仍PARTIAL，FEAT-038 PROTOTYPE。
+- Evidence: [docs/features/feat-038-ai-model-gateway.md](../../docs/features/feat-038-ai-model-gateway.md), [docs/changes/2026-10-10-kk-model-capability/verification.md](../../docs/changes/2026-10-10-kk-model-capability/verification.md), [docs/superpowers/specs/2026-10-10-kk-model-capability-design.md](../../docs/superpowers/specs/2026-10-10-kk-model-capability-design.md), [docs/superpowers/plans/2026-10-10-kk-model-capability.md](../../docs/superpowers/plans/2026-10-10-kk-model-capability.md), [docs/changes/2026-10-09-doubao-integration/verification.md](../../docs/changes/2026-10-09-doubao-integration/verification.md), [docs/changes/2026-10-10-doubao-official-channel/verification.md](../../docs/changes/2026-10-10-doubao-official-channel/verification.md), [docs/changes/2026-10-11-closeout/verification.md](../../docs/changes/2026-10-11-closeout/verification.md), [tests/browser/model-picker.spec.ts](../../tests/browser/model-picker.spec.ts), [docs/changes/2026-10-12-p1-audit-closeout/verification.md](../../docs/changes/2026-10-12-p1-audit-closeout/verification.md), [docs/changes/2026-10-18-gateway-stream/verification.md](../../docs/changes/2026-10-18-gateway-stream/verification.md)
+- Next action: 当前未分配，复用合法登记树按独立子任务领取Windows DPAPI/Tauri SecretProtector受控实现/测试；再按原验收补默认入口契约与真实凭据/Ark/Codex/运行态，不消费未授权额度或将本地合成流当真实服务。
 - Last verified: 2026-10-18
 - Updated: 2026-10-18
 
@@ -2723,11 +2723,11 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `unallocated`
 - Worktree: `unallocated`
 - Modules: src/components/Canvas.tsx, src/components/canvas, src/domain/projectCanvas.ts, tests/browser/agent.spec.ts, tests/unit/projectCanvas.test.ts
-- Verification: PARTIAL — 2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。
-- Evidence: [docs/changes/2026-10-14-agent-canvas-sync/verification.md](../../docs/changes/2026-10-14-agent-canvas-sync/verification.md), [docs/changes/2026-10-14-agent-canvas-sync/review.md](../../docs/changes/2026-10-14-agent-canvas-sync/review.md), [docs/changes/2026-10-14-agent-canvas-sync/evidence/source-manifest.json](../../docs/changes/2026-10-14-agent-canvas-sync/evidence/source-manifest.json), [docs/changes/2026-10-14-agent-canvas-sync/evidence/primary-checks.json](../../docs/changes/2026-10-14-agent-canvas-sync/evidence/primary-checks.json), [docs/changes/2026-10-14-agent-canvas-sync/evidence/final-production-browser-results.json](../../docs/changes/2026-10-14-agent-canvas-sync/evidence/final-production-browser-results.json)
-- Next action: 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。
-- Last verified: 2026-10-14
-- Updated: 2026-10-17
+- Verification: PARTIAL — source176ec95d当前官方Desktop2.1.40 EXEd8e7/input49ad，真实隔离Native+本地CanvasSession HTTP/SSE，经实际AgentHost/不可变Tauri IPC/DOM/SVG/原生快照验收移动/添加/连线/拖动优先、完整小数位置、unknown不重提及重开恢复。v5冷启前后全JSON含时间/revision相等，显式项目点击精确+1单列，重连全JSON与点击后完整baseline相等；默认七项保护，原v1-v4 FAIL留存。当前原生专项PASS不替代原任务真实Codex端到端及完整用户接受，保留PARTIAL。
+- Evidence: [docs/changes/2026-10-14-agent-canvas-sync/verification.md](../../docs/changes/2026-10-14-agent-canvas-sync/verification.md), [docs/changes/2026-10-14-agent-canvas-sync/review.md](../../docs/changes/2026-10-14-agent-canvas-sync/review.md), [docs/changes/2026-10-14-agent-canvas-sync/evidence/source-manifest.json](../../docs/changes/2026-10-14-agent-canvas-sync/evidence/source-manifest.json), [docs/changes/2026-10-14-agent-canvas-sync/evidence/primary-checks.json](../../docs/changes/2026-10-14-agent-canvas-sync/evidence/primary-checks.json), [docs/changes/2026-10-14-agent-canvas-sync/evidence/final-production-browser-results.json](../../docs/changes/2026-10-14-agent-canvas-sync/evidence/final-production-browser-results.json), [docs/changes/2026-10-18-gateway-stream/verification.md](../../docs/changes/2026-10-18-gateway-stream/verification.md)
+- Next action: 本地Native协议/图/拖动/正常重开已验；当前未分配，后继按原验收补真实Codex/实际provider回执与完整用户接受，并核对历史undo/result连线证据；不凭合成对话或额度fixture关闭父任务。
+- Last verified: 2026-10-18
+- Updated: 2026-10-18
 
 ## TASK-CANVAS-WIDE-PORT-20261014 — 宽图结果编辑器遮挡下游按钮
 
@@ -3075,7 +3075,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 - Goal: 将现有可选注入chat路由从buffered修复为受控验证的真实增量文本流
 - Scope: Ark adapter/Scheduler/chat/HTTP及有限SSE读取和相关本地回归；无默认UI或主入口接入
-- Display status: 进行中
+- Display status: 已完成
 - Priority: P1 — 冷启闭环后的本地P1剩余项，可用受控HTTP上游证明而不依赖模型额度
 - Requirement refs: ledger:TASK-AI-GATEWAY-001
 - Feature IDs: FEAT-038
@@ -3084,8 +3084,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `fix/TASK-GATEWAY-STREAM-20261018`
 - Worktree: `D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017`
 - Modules: src/features/ai-gateway, src/features/generation-server/http.ts, tests/unit, tests/local-service, docs
-- Verification: NOT_VERIFIED — 只读生产调用链与ignored合成HTTP预复现12项，10失败及2兼容正例保留；正式新源与完整验收尚待
+- Verification: PASS — source176ec95d：174定向、完整verify Node2055/14skip+Agent204/2skip+Edge854首试零flaky+Design41/8/dev4；源码双轴PASS，deadline P2关闭。当前官方Desktop40 EXEd8e7/input49ad、默认noCDP严格2轮11raw与完整JSON相等/rev2698/9-11-22、UI2轮可编辑及Native Canvas v5三阶段全对象/图/拖动/unknown/默认七项保护通过。原失败保留，真实Provider/DPAPI/Hosted未验，父任务不提升。
 - Evidence: [docs/changes/2026-10-18-gateway-stream/intent.md](../../docs/changes/2026-10-18-gateway-stream/intent.md), [docs/changes/2026-10-18-gateway-stream/spec.md](../../docs/changes/2026-10-18-gateway-stream/spec.md), [docs/changes/2026-10-18-gateway-stream/plan.md](../../docs/changes/2026-10-18-gateway-stream/plan.md), [docs/changes/2026-10-18-gateway-stream/verification.md](../../docs/changes/2026-10-18-gateway-stream/verification.md), [docs/changes/2026-10-18-gateway-stream/review.md](../../docs/changes/2026-10-18-gateway-stream/review.md)
-- Next action: 正式测试先RED，最小内部callback/SSE修复，再定向全量/独审/官方当前Desktop与资料保护；父任务外部能力继续开放
+- Next action: 本地有界子项完成；最终精确文档/Delivery/私有归档/原两个快捷方式由工程外收据裁决。下一P1本地DPAPI protector受控测试及独立成本回执调用路径，不重提UNKNOWN，不消费额度；父Gateway仍PARTIAL。
 - Last verified: 2026-10-18
 - Updated: 2026-10-18

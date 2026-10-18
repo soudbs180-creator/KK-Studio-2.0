@@ -6302,9 +6302,10 @@
       "docs/changes/2026-10-10-doubao-official-channel/verification.md",
       "docs/changes/2026-10-11-closeout/verification.md",
       "tests/browser/model-picker.spec.ts",
-      "docs/changes/2026-10-12-p1-audit-closeout/verification.md"
+      "docs/changes/2026-10-12-p1-audit-closeout/verification.md",
+      "docs/changes/2026-10-18-gateway-stream/verification.md"
     ],
-    "verification": "gateway/Agent/model 本地回归仍通过；当前实现缺少真实 DPAPI protector，Ark 通道在 response.json() 后才产生最终文本，generation-server 只把完整文本包装为单个 SSE delta，尚未实现 upstream token-level stream。真实 Ark/Codex 凭据和 Desktop 运行态仍未验证，保持 PARTIAL。 2026-10-18 source92643d67：LayeredCredentialStore持久成功后发布缓存，失败保旧、迟到读/双层删除及逆序写回归59/59，本轮完整verify通过；当前仅合成凭据构造点，未验证真实DPAPI/Ark。",
+    "verification": "source176ec95d本地增量SSE/取消/截止/首write后禁重试/usage/错误隐私由TASK-GATEWAY-STREAM-20261018有界验收；174定向、完整2055/Agent204/Edge854及源码双轴通过。当前Desktop40重建与资料保护通过，但未注入默认main.ts/UI或RustTaskHost，缺真实DPAPI protector/凭据/Provider/VPS/账单去重；父任务仍PARTIAL，FEAT-038 PROTOTYPE。",
     "verificationResult": "PARTIAL",
     "updated": "2026-10-18",
     "requirementRefs": [
@@ -6315,7 +6316,7 @@
     ],
     "priorityRationale": "调度层填补的是真实能力空洞（既有 generation-server 的 job.connection_id 建单时一次写入、从不重新赋值，根本没有换号能力），但未接真实上游前不产生用户价值。",
     "displayStatus": "进行中",
-    "nextAction": "复用合规登记树重新分配任务并绑定当前SHA，再按原验收推进；禁止据历史路径直接在main施工。 先补本地 upstream ReadableStream/token callback 契约和 Windows DPAPI/Tauri protector 的受控测试；随后才补真实 Ark/Codex 凭据与 Desktop 运行态，外部证据齐全后再转 DONE。",
+    "nextAction": "当前未分配，复用合法登记树按独立子任务领取Windows DPAPI/Tauri SecretProtector受控实现/测试；再按原验收补默认入口契约与真实凭据/Ark/Codex/运行态，不消费未授权额度或将本地合成流当真实服务。",
     "lastVerified": "2026-10-18",
     "ownerRole": "repository-maintainer",
     "verificationHistory": [
@@ -6333,6 +6334,21 @@
         "recordBaseSha": "92643d6729caa667a89779cdba7b37eee614f938",
         "reason": "历史branch已不在本地refs，登记物理路径当前为main；当前改为未分配，完整历史保留。",
         "source": "docs/changes/2026-10-18-local-guards/verification.md"
+      },
+      {
+        "branch": "unallocated",
+        "worktree": "unallocated",
+        "status": "PARTIAL",
+        "displayStatus": "进行中",
+        "verificationResult": "PARTIAL",
+        "verification": "gateway/Agent/model 本地回归仍通过；当前实现缺少真实 DPAPI protector，Ark 通道在 response.json() 后才产生最终文本，generation-server 只把完整文本包装为单个 SSE delta，尚未实现 upstream token-level stream。真实 Ark/Codex 凭据和 Desktop 运行态仍未验证，保持 PARTIAL。 2026-10-18 source92643d67：LayeredCredentialStore持久成功后发布缓存，失败保旧、迟到读/双层删除及逆序写回归59/59，本轮完整verify通过；当前仅合成凭据构造点，未验证真实DPAPI/Ark。",
+        "nextAction": "复用合规登记树重新分配任务并绑定当前SHA，再按原验收推进；禁止据历史路径直接在main施工。 先补本地 upstream ReadableStream/token callback 契约和 Windows DPAPI/Tauri protector 的受控测试；随后才补真实 Ark/Codex 凭据与 Desktop 运行态，外部证据齐全后再转 DONE。",
+        "lastVerified": "2026-10-18",
+        "updated": "2026-10-18",
+        "recordedAt": "2026-10-18",
+        "recordBaseSha": "176ec95dae5fd2792bf5ee94eb5e0a0b1cc2b948",
+        "reason": "当前source176本地证据更新；保留前阶段原义",
+        "source": "docs/changes/2026-10-18-gateway-stream/verification.md"
       }
     ]
   },
@@ -7123,11 +7139,12 @@
       "docs/changes/2026-10-14-agent-canvas-sync/review.md",
       "docs/changes/2026-10-14-agent-canvas-sync/evidence/source-manifest.json",
       "docs/changes/2026-10-14-agent-canvas-sync/evidence/primary-checks.json",
-      "docs/changes/2026-10-14-agent-canvas-sync/evidence/final-production-browser-results.json"
+      "docs/changes/2026-10-14-agent-canvas-sync/evidence/final-production-browser-results.json",
+      "docs/changes/2026-10-18-gateway-stream/verification.md"
     ],
-    "verification": "2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。",
+    "verification": "source176ec95d当前官方Desktop2.1.40 EXEd8e7/input49ad，真实隔离Native+本地CanvasSession HTTP/SSE，经实际AgentHost/不可变Tauri IPC/DOM/SVG/原生快照验收移动/添加/连线/拖动优先、完整小数位置、unknown不重提及重开恢复。v5冷启前后全JSON含时间/revision相等，显式项目点击精确+1单列，重连全JSON与点击后完整baseline相等；默认七项保护，原v1-v4 FAIL留存。当前原生专项PASS不替代原任务真实Codex端到端及完整用户接受，保留PARTIAL。",
     "verificationResult": "PARTIAL",
-    "updated": "2026-10-17",
+    "updated": "2026-10-18",
     "featureIds": [
       "FEAT-001",
       "FEAT-009",
@@ -7137,8 +7154,8 @@
       "user:agent-canvas-sync-20261014"
     ],
     "displayStatus": "未完成",
-    "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
-    "lastVerified": "2026-10-14",
+    "nextAction": "本地Native协议/图/拖动/正常重开已验；当前未分配，后继按原验收补真实Codex/实际provider回执与完整用户接受，并核对历史undo/result连线证据；不凭合成对话或额度fixture关闭父任务。",
+    "lastVerified": "2026-10-18",
     "ownerRole": "repository-maintainer",
     "verificationHistory": [
       {
@@ -7154,6 +7171,21 @@
         "lastVerified": "2026-10-14",
         "source": "docs/changes/2026-10-17-audit-repair/verification.md",
         "reason": "登记的历史worktree目录已不存在"
+      },
+      {
+        "branch": "unallocated",
+        "worktree": "unallocated",
+        "status": "PARTIAL",
+        "displayStatus": "未完成",
+        "verificationResult": "PARTIAL",
+        "verification": "2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。",
+        "nextAction": "当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。",
+        "lastVerified": "2026-10-14",
+        "updated": "2026-10-17",
+        "recordedAt": "2026-10-18",
+        "recordBaseSha": "176ec95dae5fd2792bf5ee94eb5e0a0b1cc2b948",
+        "reason": "当前source176本地证据更新；保留前阶段原义",
+        "source": "docs/changes/2026-10-18-gateway-stream/verification.md"
       }
     ]
   },
@@ -10064,8 +10096,8 @@
     "branch": "fix/TASK-GATEWAY-STREAM-20261018",
     "worktree": "D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017",
     "baseSha": "00e79cf01a7ef787f3c83baeeb46e854d281a2c2",
-    "status": "IN_PROGRESS",
-    "displayStatus": "进行中",
+    "status": "DONE",
+    "displayStatus": "已完成",
     "priority": "P1",
     "priorityRationale": "冷启闭环后的本地P1剩余项，可用受控HTTP上游证明而不依赖模型额度",
     "affectedModules": [
@@ -10082,16 +10114,33 @@
       "docs/changes/2026-10-18-gateway-stream/verification.md",
       "docs/changes/2026-10-18-gateway-stream/review.md"
     ],
-    "verification": "只读生产调用链与ignored合成HTTP预复现12项，10失败及2兼容正例保留；正式新源与完整验收尚待",
-    "verificationResult": "NOT_VERIFIED",
+    "verification": "source176ec95d：174定向、完整verify Node2055/14skip+Agent204/2skip+Edge854首试零flaky+Design41/8/dev4；源码双轴PASS，deadline P2关闭。当前官方Desktop40 EXEd8e7/input49ad、默认noCDP严格2轮11raw与完整JSON相等/rev2698/9-11-22、UI2轮可编辑及Native Canvas v5三阶段全对象/图/拖动/unknown/默认七项保护通过。原失败保留，真实Provider/DPAPI/Hosted未验，父任务不提升。",
+    "verificationResult": "PASS",
     "updated": "2026-10-18",
     "lastVerified": "2026-10-18",
-    "nextAction": "正式测试先RED，最小内部callback/SSE修复，再定向全量/独审/官方当前Desktop与资料保护；父任务外部能力继续开放",
+    "nextAction": "本地有界子项完成；最终精确文档/Delivery/私有归档/原两个快捷方式由工程外收据裁决。下一P1本地DPAPI protector受控测试及独立成本回执调用路径，不重提UNKNOWN，不消费额度；父Gateway仍PARTIAL。",
     "requirementRefs": [
       "ledger:TASK-AI-GATEWAY-001"
     ],
     "featureIds": [
       "FEAT-038"
+    ],
+    "verificationHistory": [
+      {
+        "branch": "fix/TASK-GATEWAY-STREAM-20261018",
+        "worktree": "D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017",
+        "status": "IN_PROGRESS",
+        "displayStatus": "进行中",
+        "verificationResult": "NOT_VERIFIED",
+        "verification": "只读生产调用链与ignored合成HTTP预复现12项，10失败及2兼容正例保留；正式新源与完整验收尚待",
+        "nextAction": "正式测试先RED，最小内部callback/SSE修复，再定向全量/独审/官方当前Desktop与资料保护；父任务外部能力继续开放",
+        "lastVerified": "2026-10-18",
+        "updated": "2026-10-18",
+        "recordedAt": "2026-10-18",
+        "recordBaseSha": "176ec95dae5fd2792bf5ee94eb5e0a0b1cc2b948",
+        "reason": "当前source176本地证据更新；保留前阶段原义",
+        "source": "docs/changes/2026-10-18-gateway-stream/verification.md"
+      }
     ]
   }
 ]

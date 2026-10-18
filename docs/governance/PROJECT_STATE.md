@@ -11,6 +11,26 @@
 
 # 当前项目事实（2026-10-18）
 
+- `currentTask`: TASK-GATEWAY-STREAM-20261018有界本地DONE/PASS，fix/TASK-GATEWAY-STREAM-20261018/base00e79cf0、精确产品/测试source176ec95d；同一审计实体树。冷启动TASK-COLDSTART-LOCAL-20261018有界DONE/PASS，新当前包再验通过；最终文档精确HEAD/Delivery/归档/日常入口按外部收据裁决。
+- `sourceVersionBoundary`: Desktop2.1.40/Web2.1.41本地候选，Mobile2.1.1规划；精确176完整verify Node2055PASS14skip/Agent204PASS2skip/Edge854首试0fail/retry/flaky/skip/errors、Design41+8/dev4；源码双轴PASS，deadline P2已正式RED/修复/独立复验关闭。Rust未变，前冻结228PASS1ignore+41集成仅按相同源码解释。
+- `nativeArtifact`: 官方当前40 EXEd8e7a2a8/input49ad264e，实际加载index-CFAegoGh.js/CSS逐字匹配，4282源/随包Agent文件相同。上一40与失败40/原39先保全；正常构建更新生成文件，不冒充所有生成文件未替换。
+- `strictCold`: 当前176新包、真正默认库、两个原lnk、无CDP，连续两周期0→1单实例→正常关闭0；11份完整JSON及raw全等，全部时间/revision2698、9项目11聊天22消息与40保护观测保持。独立97项strict/UI/full/build保存证据审核5905104f PASS_SCOPE。旧477 FAIL/940拒收/全部RED保留，不回滚2696或筛字段。
+- `nativeUi`: 当前包默认UI另两轮可见textarea enabled/readOnly=false、0pageerror、完整canonical资料保持；UI重序列化after非raw证明。blockedRequests1目标未记录，不宣称零请求或全网络隔离，未发实际消息；真实新回复未验收。
+- `nativeCanvas`: 当前隔离Native实际手动连接本地CanvasSession/SSE，移动/添加/reference连线、拖动优先、完整小数持久与正常重开/unknown不重提通过。v5报告9903df33：冷启全JSON相等，项目库真实点击精确revision+1独立记录，重连全对象相等；默认七项保护。原v1-v4失败全保留；合成会话/额度不是实际Codex/provider，父Canvas仍PARTIAL。
+- `preservation`: 开工9树141dirty/index/diff/refs与main96并发版本保全；第二树检查点bdb34617/独立保存副本f0894f2c，其他8树HEAD/index/原dirty在两采样间保持；旧63历史比较FAIL不撤改。原完整profile2849份保全/独立6362f7ce保持，新2957份350261316B副本5548b695源/副本及枚举全相等。容器两文档原件先另存43d26f0a，再同步入口，旧章节保留历史。
+- `tasksAndTrees`: 154项91DONE/48PARTIAL/11TODO/3BLOCKED/1IN_PROGRESS，开放63；37功能成熟度不提升。9树18分支/approved root5/4超限拒绝新增、复用现有；Gateway关闭后6条已分配开放route零失配。两外部issue68树owner明确/越界授权UNKNOWN，保留；coord旧ledger及claim风险未接管。
+- `remoteBoundary`: origin/main c248d8178ec1754315559a9e476ac909bb494287仅前次无prune fetch来源，Desktop37/Web38/Mobile3属并行来源；未整合、未做Hosted复验，不回退本候选或据此发布。
+- `nextLocal`: P1 Windows DPAPI/Tauri protector受控测试、Provider→task成本回执调用路径先核查并行owner、持久恢复/记忆/垃圾箱按原任务领取。父Gateway PARTIAL/FEAT-038 PROTOTYPE：默认main.ts/UI/RustTaskHost未接本流回调，无持久chat计费去重；真实Provider/Codex新回复/Hosted/签名/Mobile/用户整体仍开放。
+- `boundaries`: 无用户源码/资料删除或移动、树回收、覆盖并行工作、共享依赖安装、进程强停、额度操作、push/merge/发布；生成产物先保全后正常重建。自有Node fixture socket兜底如实记录，Native内部IPC/附着前网络未完整观测。详见[本轮验证](../changes/2026-10-18-gateway-stream/verification.md)。
+
+<!-- CURRENT_FACTS_END -->
+<!-- HISTORICAL_SNAPSHOTS_BEGIN -->
+
+## 2026-10-18 Gateway实施前快照（历史）
+
+
+# 当前项目事实（2026-10-18）
+
 - `currentTask`: TASK-GATEWAY-STREAM-20261018 IN_PROGRESS/NOT_VERIFIED，branch fix/TASK-GATEWAY-STREAM-20261018/base00e79cf0；同一审计实体树复用。前置冷启动TASK-COLDSTART-LOCAL-20261018有界DONE/PASS，最终冷任务文档head00e79独审/Delivery按精确收据。
 - `sourceVersionBoundary`: 当前Gateway仅Web2.1.41候选、Desktop2.1.40/Mobile2.1.1保持；新源144定向通过，全量与当前Desktop官方重建待验。下述为冷启前置Desktop/Web2.1.40已验源：精确d5完整verify Node2001PASS14skip/Agent204PASS2skip/Edge854首试零fail/flaky/Design41+8/dev4，双轴源码独审PASS。官方EXE41523db8/input0f7a1bf9/loaded1019d17b；Rust源不变，前冻结228PASS1ignore+41集成仅按相同源码解释。
 - `strictCold`: 真正默认库、原两个lnk、无CDP，连续两轮0→1单实例→正常关闭0；11份完整JSON及raw字节均全相等，全部时间/revision2698保持，9项目11聊天22消息。40项身份/迁移/原候选/记忆状态保持，独立101项审核724e2a1f PASS。旧477实际FAIL和940拒收保留，不回滚2696或屏蔽字段。
@@ -21,8 +41,7 @@
 - `nextLocal`: 严格cold已闭环，下一P1 Gateway本地真实增量SSE合成上游子项；Native Canvas当前40协议专项已运行，待独立核验后登记边界。真实Provider/DPAPI/新回复/Hosted/签名/Mobile/用户整体仍开放。
 - `boundaries`: 无文件删除/移动、树回收、覆盖并行工作、共享依赖安装、生成/额度操作、push/merge/发布；旧生成产物先保全后按正常构建更新。Native内部IPC/附着前网络未完整观测。详见[当前验证](../changes/2026-10-18-coldstart-local/verification.md)。
 
-<!-- CURRENT_FACTS_END -->
-<!-- HISTORICAL_SNAPSHOTS_BEGIN -->
+
 
 ## 2026-10-18 侧栏与宽图源码504/文档fe交付时快照（历史）
 

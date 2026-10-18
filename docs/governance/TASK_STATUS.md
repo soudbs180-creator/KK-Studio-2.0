@@ -10,9 +10,9 @@
 
 本文是当前任务路由快照，不创建第二份任务状态。任务身份由稳定的 `taskId` 决定；同一任务更新时只更新账本记录的 `updated` 日期，不新增第二条 current 记录。历史 change package 只用于追溯，并按其记录的日期、commit 和证据解释。
 
-当前账本154项：90 `DONE`、2 `IN_PROGRESS`、11 `TODO`、48 `PARTIAL`、3 `BLOCKED`，开放64项。以[task-ledger.json](task-ledger.json)为权威，[TASK_LEDGER.md](TASK_LEDGER.md)为生成视图。
+当前账本154项：91 `DONE`、1 `IN_PROGRESS`、11 `TODO`、48 `PARTIAL`、3 `BLOCKED`，开放63项。以[task-ledger.json](task-ledger.json)为权威，[TASK_LEDGER.md](TASK_LEDGER.md)为生成视图。
 
-TASK-GATEWAY-STREAM-20261018 IN_PROGRESS/NOT_VERIFIED，base00e79、同树fix/TASK-GATEWAY-STREAM-20261018，正式RED→本地增量SSE/取消/重试→新完整verify及双轴，父Gateway/FEAT-038保持PARTIAL/PROTOTYPE。[计划](../changes/2026-10-18-gateway-stream/plan.md)。当前9树18分支/预算5/4，无新增树或删移。
+TASK-GATEWAY-STREAM-20261018有界DONE/PASS，base00e79/source176ec95d、同树fix/TASK-GATEWAY-STREAM-20261018。174定向、完整Node2055/Agent204/Edge854首试、独立双轴及当前官方Desktop40/Web41验收通过，deadline P2已关闭；当前默认strict11raw/全JSON含时间revision2698相同、9项目11聊天22消息，UI2轮可编辑、Native Canvas三阶段完整资料/图/拖动/重开通过。父Gateway PARTIAL/FEAT-038 PROTOTYPE、父Canvas PARTIAL；无真实回复/DPAPI/默认入口/Hosted升级。9树18分支/预算5/4、关闭后6开放route零失配，全部保留，最新2957资料副本逐份保护。[验证](../changes/2026-10-18-gateway-stream/verification.md)。下方冷启和更早数字均为当时历史；最终文档/Delivery/归档/日常入口以精确工程外收据裁决。
 
 TASK-COLDSTART-LOCAL-20261018有界本地DONE/PASS，精确d5/官方Desktop-Web2.1.40完整verify、源码双轴及真正默认无CDP两周期严格cold全部通过，11份完整JSON/raw相等、全部时间/revision2698保持，9项目11聊天22消息。独立审核724e2a1f与默认UI另审651c2e7c通过；旧FAIL/拒收保留。开工9树141dirty与主仓并发96另存、完整原profile2849份保全。9树17分支/预算5/4、冷任务关闭时6开放route零失配；下一Gateway本地增量流及当前Native Canvas专项。最终文档/Delivery/日常入口按精确收据。见[当前验证](../changes/2026-10-18-coldstart-local/verification.md)。
 

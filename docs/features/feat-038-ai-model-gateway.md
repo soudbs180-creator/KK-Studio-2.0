@@ -49,7 +49,7 @@ LayeredCredentialStore只在持久写成功后发布缓存；迟到读取和每�
 - 调度：分优先级档位降级、厂商冷却提示优先于本地退避、粘性会话、连续失败隔离
 - 凭证：配置只存引用，明文由 vault 持有；适配器仅通过 `resolveSecret()` 闭包取用
 - BYOK 预置：设置页仅填充供应商名称和 OpenAI 兼容 base URL，模型 ID 由用户测试连接后选择；不新增凭据存储路径。
-- 文本：`chat` operation 使用独立 `kind:"text"` 结果，Ark 调用官方 `/chat/completions`；`stream:true` 经可选delta回调实际增量发送；stop后继续读usage与DONE才成功，取消向上游传播，首段后不重试。当前仅本地生产HTTP合成上游定向通过，完整与实际服务验收边界见[验证](../changes/2026-10-18-gateway-stream/verification.md)
+- 文本：`chat` operation 使用独立 `kind:"text"` 结果，Ark 调用官方 `/chat/completions`；`stream:true` 经可选delta回调实际增量发送；stop后继续读usage与DONE才成功，取消向上游传播，首段后不重试。当前source176本地生产HTTP合成上游及完整verify/独审通过，真实服务验收边界见[验证](../changes/2026-10-18-gateway-stream/verification.md)
 - 图片：API 图片菜单主文案显示完整模型 ID；Codex 上游未返回图片型号时显示“图片模型未报告”，并把执行器作为次级来源
 - 模型发现：`/v1/models` 只投影启用通道的模型、提供方和能力，过滤 disabled/quarantined，不返回 baseUrl、credentialRef 或 vendor endpoint mapping
 
@@ -88,3 +88,5 @@ LayeredCredentialStore只在持久写成功后发布缓存；迟到读取和每�
 - 2026-10-10（能力闭环增量）：通道增加 `chat` operation 与文本结果联合类型；Ark 接入官方文本端点；网关提供安全 `/v1/models` 和兼容 SSE；图片选择器、Codex 图片归档和资产 provenance 传递 `effectiveModel`，缺失时显示“图片模型未报告”。
 
 - 2026-10-18（增量流子项）：实际本地HTTP首段barrier/取消/真实write(false)/drain、异常终结与usage/私密错误边界定向通过；Web2.1.41候选、Desktop40待重建，父Gateway仍PARTIAL/本卡PROTOTYPE。
+
+- 2026-10-18（source176最终有界验收）：174定向、完整Node2055/Agent204/Edge854首试、精确源码双轴/截止P2复验及当前官方Desktop40与默认资料保护通过；Web41，Native Canvas专项另按合成协议边界。旧阶段待验/拒收保留历史，本卡仍PROTOTYPE、父Gateway PARTIAL。main.ts/defaultUI/RustTaskHost未注入，无DPAPI/真实Provider/Hosted/持久chat计费去重证明。
