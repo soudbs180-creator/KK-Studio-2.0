@@ -9,7 +9,11 @@
 <!-- DOCUMENT_METADATA_END -->
 <!-- CURRENT_FACTS_BEGIN -->
 
-当前任务 TASK-MOBILE-12AI-001 正按用户明确授权修复12ai手机生成与原件自动保存，并补视频任务查询恢复。隔离候选base c248d817，Web2.1.39/Mobile2.1.4尚未发布，线上仍以真实build-info为准；前次文本真链通过、图片CORS归档失败，不以本地fixture替代生产复验。本轮canonical保护基线已实际前移为clean的main109c6c41，下面8c36/dirty数仅是旧发布时点。当前进度与证据见[本轮验证](../changes/2026-10-18-mobile-12ai/verification.md)和[决策](../architecture/adr/ADR-025-mobile-12ai-originals-and-video-recovery.md)。
+当前任务 TASK-MOBILE-12AI-001 已按授权完成隔离实现、PR70与正式Web发布，真实图文复验仍待Key，任务IN_PROGRESS/NOT_VERIFIED。产品main `9d10af39d0b028a8ddc7f06c594c813ef25b7205` / tree `611cf648ade1d0fb98c5474ae91615f0bbaf1a23`，与已审b0ef完整树相同；main quality39104785098五项/guards39104785090双平台成功，正式Release416299447/部署39107253299通过。公网build-info为Web2.1.39/9d10，独立Mobile2.1.4，Desktop源码仍2.1.37；实际CI/公网entry-140201476199fedafe0abc0ba5b1dfb9.js SHA `cf341da42fd899433c99a4de1089097dbe74d18fa6b2099a9acc2fbb957d9d36`，不沿用Windows本地3d5。生产入口9项通过；current39/唯一previous38、两版validated、exact2与配置/auth/服务前后观察已核对，未执行实际生产降版。完整实录见[本轮验证](../changes/2026-10-18-mobile-12ai/verification.md)和[Release](../changes/2026-10-18-mobile-12ai/release.md)。
+
+用户原浏览器旧1项目/1原件/快照28仍可见；本轮新短文本/单图尚未复验，reload清除内存Key后已请用户在原连接补填并自行保存，尚未回复。视频仅本地fixture自动保存/播放/导出/刷新通过，0真实上游视频调用，不声称计费或模型产出验收。FEAT-028仍PARTIAL、T12开放；旧Windows installer的tag/Desktop版本门禁失败保留为原生边界，不是正式Web部署失败。本次生产收据文档head尚待另一独立上下文审核及相应Hosted/Delivery。
+
+canonical本轮初始clean109c6c41/indexe01ff8e9，07:30Z终核本地main0a49/index7dc72867与4条dirty，初始保护比较失败；两次只读head/index/diff/4文件hash稳定，staged diff为空。本轮没有回滚/覆盖/纳入这些并发改动，reflog操作时间不能确定操作者。旧release工作树0cb/indexab7757bb仍clean且与基线相同；生产来源始终是隔离9d10。以下8c36/69dirty与f730/current38等保留旧发布时点，不覆盖本段当前事实。相关决定仍见[ADR-025](../architecture/adr/ADR-025-mobile-12ai-originals-and-video-recovery.md)。
 
 Issue68专项候选从最新origin/main6b933f4f隔离执行，仅补Native设置保存/关闭测试后置条件和既有延迟回归；真实回执gate13检查通过。无产品、版本或生产改动。当前验证/独审/PR状态见[专项验证](../changes/2026-10-18-issue-68-settings-save/verification.md)。以下发布事实保留其原时点。
 

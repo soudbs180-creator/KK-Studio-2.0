@@ -10,7 +10,11 @@
 
 ## 当前恢复入口：12ai 手机生成与保存修复（2026-10-18）
 
-TASK-MOBILE-12AI-001正在隔离实施，先读[本轮验证](../changes/2026-10-18-mobile-12ai/verification.md)和[审查](../changes/2026-10-18-mobile-12ai/review.md)。根分支fix/TASK-MOBILE-12AI-001-provider-compat基于origin/main c248d817；图片与视频已整合c81311be，Mobile371、根完整verify、组合入口9/9通过，c813源码独审PASS；新文案/治理/UI证据须最终head补审。Web候选2.1.39/Mobile2.1.4尚未正式发布或真实复验；canonical实际main109c6c41 clean，不修改其分支、暂存区或资料。证据仅新写工程外kkai-12ai-mobile-fix-20261018，旧验收失败与旧发布收据保持。正式Release/唯一previous、单张真实图片与短文本保存刷新验收仍待完成；用户不额外付费测视频，Web Key必须由用户在页面填写，禁止再次添加旧临时root权限。
+TASK-MOBILE-12AI-001仍IN_PROGRESS/NOT_VERIFIED，先读[本轮验证](../changes/2026-10-18-mobile-12ai/verification.md)、[发布实录](../changes/2026-10-18-mobile-12ai/release.md)和[审查](../changes/2026-10-18-mobile-12ai/review.md)。产品PR70已squash为main9d10/tree611c，与已审b0ef同树；main Hosted及正式Release416299447/部署39107253299成功，Web2.1.39/Mobile2.1.4上线、公网140201/cf341da4入口与生产9项、current39/唯一previous38终核通过，Desktop源码仍2.1.37。旧产品独审冻结，当前docs/TASK-MOBILE-12AI-001-production-receipt分支只记收据，最终文档head另由独立上下文审核。
+
+下一步仅等待用户在已打开的原连接编辑页补填Key并自行保存，再按既有授权一次短文本和一张图片、自动保存/普通导出/刷新同ID/hash验收；当前尚未收到回复，不能预填本轮图文PASS或任务DONE。视频仅本地fixture保存/播放/导出/刷新通过，不额外调用或消费真实视频额度。旧项目、原件和unknown失败任务保持，FEAT-028 PARTIAL/T12开放。旧Windows installer因tag/Desktop版本门禁失败与Web成功分开保留。
+
+canonical初始clean109c后已有并行main0a49/4dirty，保护比较false，两次只读head/index/diff/文件hash稳定；本轮不回滚/覆盖/纳入，reflog不能归因操作者。旧release树0cb/index未变。证据继续保存在工程外kkai-12ai-mobile-fix-20261018，不改旧红测/审查SHA/失败收据；不修改这些并发路径，禁止再次添加旧临时root权限。下节2.1.38恢复段仅代表其历史发布时点。
 
 ## 当前恢复入口：独立手机 Web 已上线（2026-10-18）
 

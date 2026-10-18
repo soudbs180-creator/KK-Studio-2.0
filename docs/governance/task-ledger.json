@@ -33,11 +33,11 @@
       "docs/changes/2026-10-18-mobile-12ai/intent.md",
       "docs/changes/2026-10-18-mobile-12ai/verification.md"
     ],
-    "verification": "整合代码c81311be：Mobile371PASS/0FAIL/0SKIP、type/lint通过；根完整verify exit0，1852根测试/199Agent/827浏览器通过且保留22环境skip；组合手机入口9/9。当前SHA独审、Hosted、正式发布和真实图片/文本刷新验收待完成；用户不授权视频额外付费实测。",
+    "verification": "产品main9d10/tree611c与已审b0ef同树；Mobile371、本地完整verify、main质量39104785098五项及guards39104785090双平台成功。正式Release416299447/部署39107253299上线Web2.1.39/Mobile2.1.4；公网140201/cf341da4、生产入口9项、current39/唯一previous38已核对。本轮真实单图和短文本待用户在原连接补Key并自行保存，仍NOT_VERIFIED；视频仅本地fixture保存/播放/导出/刷新，0真实视频调用。canonical由clean109c变为并行main0a49/4dirty，初始保护比较false，未回滚/覆盖/纳入；新文档head独审/Hosted待后续PR。",
     "verificationResult": "NOT_VERIFIED",
     "updated": "2026-10-18",
     "lastVerified": "2026-10-18",
-    "nextAction": "冻结独审、PR精确head Hosted和main质量门，正式Release上线保留唯一previous，再真实图片和文本自动保存/刷新验收。",
+    "nextAction": "等待用户在原连接填Key并自行保存，再各一次真实短文本和图片自动归档/普通导出/刷新同ID同hash验收；保留旧失败任务与并发主仓改动，本任务IN_PROGRESS、FEAT-028 PARTIAL/T12开放；当前收据文档另作独审/PR。",
     "requirementRefs": [
       "docs/changes/2026-10-18-mobile-12ai/intent.md",
       "docs/changes/2026-10-18-mobile-12ai/spec.md"

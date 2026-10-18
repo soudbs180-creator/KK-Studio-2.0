@@ -2,7 +2,11 @@
 
 ## 2026-10-18 12ai 手机端生成和原件保存（IN_PROGRESS）
 
-用户授权按官方文档修图片自动保存、文本与视频，并在正式上线后单张图片复验及刷新恢复，保留一个回滚版本。隔离基线 origin/main c248d817；本轮主仓保护基线实际为 clean 的109c6c41，旧69/96 dirty是历史其他时点，不覆盖本轮。图片同步base64、原件阶段错误提示与视频明确模型/持久ID/GET-only恢复/16MiB原件保护已整合；Mobile371全过，根完整verify及组合手机入口9/9通过。Web候选2.1.39、Mobile2.1.4，Desktop源码仍2.1.37；新版本尚未上线，T12/FEAT-028保持开放。用户仅授权图片和文本真实复验，视频不额外消耗额度。详见[本轮交付](changes/2026-10-18-mobile-12ai/verification.md)。
+用户授权按官方文档修图片自动保存、文本与视频，并正式上线后单张图片/短文本复验，保留一个回滚版本。图片同步base64、分阶段错误与视频明确模型/持久ID/GET-only恢复/16MiB原件保护已整合；Mobile371全过，c813根完整verify、最终本地组合9/9及b0ef独审通过。PR70正常squash为main9d10，完整tree与b0ef一致；精确main quality39104785098五项/guards39104785090双平台成功，正式Release416299447/managed-web-release39107253299已上线Web2.1.39/Mobile2.1.4，Desktop源码仍2.1.37。公网140201入口SHA cf341da4与本地3d5不同，生产入口9/9通过、current39/唯一previous38终核完成。详见[本轮验证](changes/2026-10-18-mobile-12ai/verification.md)与[发布实录](changes/2026-10-18-mobile-12ai/release.md)。
+
+本轮真实图片/短文本仍NOT VERIFIED：reload清除会话内存Key，已请用户在原连接补填且自行保存，尚未回复；未额外调用视频。视频仅本地fixture保存/播放/导出/刷新PASS，不能代填上游生成。TASK-MOBILE-12AI-001保持IN_PROGRESS、FEAT-028 PARTIAL、T12开放；当前收据文档须另由独立上下文审查。
+
+canonical初始clean109c6c41后出现并行main0a49和4条dirty，protection-after的matchesBefore/checksPassed=false；两次只读head/index/diff/文件hash稳定，本轮未回滚、覆盖或纳入。reflog不能单独归因操作者；旧release树0cb/index保持不变。只发布隔离9d10，不能声称canonical完全未变。旧69/96 dirty仍仅历史其他时点。
 
 首次完整verify在Node阶段1850PASS/2FAIL/20SKIP，因隔离安装ignore-scripts后未先生成Agent dist；补齐既有agent/plugins构建后原失败文件3/3通过，原失败日志保留；整合c81311be完整重跑exit0，根1852PASS/20SKIP、Agent199PASS/2SKIP、浏览器827PASS及设计/开发链通过。没有修改有效断言或产品Agent源码。
 
