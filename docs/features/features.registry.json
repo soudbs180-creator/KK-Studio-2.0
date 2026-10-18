@@ -1343,7 +1343,7 @@
     "area": "future",
     "status": "PARTIAL",
     "card": "docs/features/feat-028-mobile.md",
-    "summary": "正式独立手机Web2.1.39/Mobile2.1.4已上线main9d10，入口9项及current39/唯一previous38通过；12ai真实文本和单图自动保存/导出/刷新有界PASS，独立生产证据复核通过。视频仅本地fixture，未调用真实上游；原生包、Safari和身份等仍未验，T12开放。 空文字模型按钮失焦无响应由TASK-MOBILE-COMPOSER-001修复，Web40/Mobile5候选尚未上线，真机后台仍未验。",
+    "summary": "正式手机Web2.1.40/Mobile源码2.1.5已上线，source b457/Release416447150/部署39128852497与实际cbc0入口一致；PR72同tree独审57及main当前门禁PASS，线上320/390六圆控件/模型名切换/任务结果优先、旧图文刷新恢复及current40/唯一previous39已核。前39真实图文回执保留，本次0生成；40普通停留927.716秒刷新/原件逐字节一致，实体Android接受待补，视频/参考编辑/语音/Safari/新Native/远程AgentMCP仍未验，T12开放。",
     "entryPoints": [
       "kkai.plus 手机初次访问 /mobile/；桌面资料入口 /?view=desktop"
     ],

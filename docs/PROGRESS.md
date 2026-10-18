@@ -2,11 +2,13 @@
 
 ## 2026-10-18 手机结果优先与完整创作输入（IN_PROGRESS / NOT_VERIFIED）
 
-TASK-MOBILE-COMPOSER-001纳入用户当前明确反馈：默认任务/历史结果优先、详情结果→提示词→更多；手机初始六入口、模型名可点、手机/Desktop共享单一圆形发送；本机上传与Skill预览明确应用、官方12ai指定GPT Image图片参考和本次尺寸。手机/电脑同功能语义为目标，远程Agent/MCP、新Native和Safari/实体后台未验不代填。本地完整verify exit0：Node1852/20skip、Agent199/2skip、根browser832首试+1项5xx flaky（独立零重试复核1PASS）、DESIGN41+8/development4。Mobile433/433/type/lint、旧v39完整snapshot/backup合成兼容与最终窄屏40/40通过，gzip增4319B小于16384B预算。最终head冻结/独审、Hosted与生产仍PENDING；候选Desktop2.1.38/Web2.1.40/Mobile2.1.5，PR72未合并、未发布。见[本次验证](changes/2026-10-18-mobile-composer/verification.md)。
+并发PR73已将仓库源码推进三平台2.1.41；本段记录12:49至13:10Z已上线40及其旧资料验收，发布来源内Desktop38/Web40/Mobile5与当前源码候选41分开。新文档以正常merge保留87c9的全部代码/新增任务，不将源码版本当服务器发布证据。
 
-尺寸不新增草稿/schema/storage/backup字段；仅本次运行选择，切类型/模型及未发刷新回自适应，提交捕获既有task.imageSize，沿ADR-025继续兼容旧版本回滚。保留语音路由失焦取消及上传A→B→A/账号epoch保护的RED/GREEN与10项定向通过。首轮新Mobile40项32PASS/8FAIL、修正后40/40和320折行微修后的最终40/40分别留证；小于360px六控件44px同排不折行，390px保留48px。更早四项焦点RED/13项GREEN只属历史范围。旧图文TASK仅按PR70/71实际门禁与合并收据有界DONE/PASS，FEAT-028 PARTIAL、T12仍开放。
+TASK-MOBILE-COMPOSER-001产品已由[PR72](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/72)正常合并为main `b457d3a05759ca7a2f6a8c4bb62a8ba8aea908ea`，与独审791e全63文件同tree；独立57/57定向复核PASS。main quality39124025635完整attempt2五项、guards双平台及新health通过，正式Release416447150/部署39128852497成功，现网Web2.1.40/Mobile源码2.1.5，Desktop源码2.1.38。菜单任务结果优先、详情结果→提示词→更多、六入口/模型名触控/直接圆形发送已在生产实际320/390宽核对；上传/参数/扩展面板响应、旧文本刷新与图片830495B原件SHA保持。current40/唯一previous39只读终核18项PASS。当前[生产收据](changes/2026-10-18-mobile-composer-production-receipt/verification.md)替代原包PENDING时点；本docs PR不改变生产来源。实体Android接受仍待回复，保持IN_PROGRESS/NOT_VERIFIED。
 
-原“后台截图文件全黑”误判已由五JPEG完整字节/像素一致纠正；15分8秒同页停留后刷新原件散列保持，网络有截断且真实hidden事件未证，实体安卓后台仍未验。本轮不新增Provider/生成请求，现网39/唯一38与本轮40候选分开，目标上线后只保留一个previous。以下12ai段落为前任务原时点记录，当前结案以本次新增说明和实际PR71收据为准。
+本地完整verify exit0（Node1852/20skip、Agent199/2skip、browser832首试+1项5xx flaky独立零重试1PASS、DESIGN41+8/development4）、Mobile433/type/lint、最终窄屏40/40、gzip增4319B和旧v39完整snapshot/backup合成兼容均保留[原实现记录](changes/2026-10-18-mobile-composer/verification.md)。main首轮managed-web fixture15秒ETIMEDOUT、仅一次完整重跑、旧health403及零jobs auto-merge异常分别保留，未改断言/timeout或伪造全首试。尺寸不新增draft/schema/storage/backup字段，只有本次提交选项和已有task.imageSize；语音离路由取消、迟到上传epoch保护已复核。指定12ai参考编辑/视频/真实语音未新调用，扩展Skill是本地预览/明确应用，远程Agent/MCP未完成；FEAT-028 PARTIAL/T12开放。
+
+原黑截图五JPEG字节/像素正常，原因不能归为产品CSS；旧39停留15分8秒与网络截断/hidden未证保持原边界，新40普通页面停留927.716秒后刷新，图片可见且再次UI导出原件逐字节一致（不等于实体切后台）。已有图片导出与旧文本/unknown恢复，不新耗生成额度、不操作DB或canonical并发改动、不新建SSH权限。以下12ai段落是前任务原时点记录，不用于代填当前新文档HEAD审查或实体Android验收。
 
 ## 2026-10-18 12ai 手机端生成和原件保存（REVIEW）
 

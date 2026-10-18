@@ -10,13 +10,13 @@
 
 ## 当前恢复入口：手机结果优先与完整创作输入（2026-10-18）
 
-先读[本次计划](../changes/2026-10-18-mobile-composer/plan.md)、[当前规格](../changes/2026-10-18-mobile-composer/spec.md)与[验证](../changes/2026-10-18-mobile-composer/verification.md)。TASK-MOBILE-COMPOSER-001 IN_PROGRESS/NOT_VERIFIED，base97ef、fix/TASK-MOBILE-COMPOSER-001-focus、原TASK-MOBILE-12AI-001隔离树；各代理只写授权独立路径，root串行整合/构建/浏览器，文档单一写入。范围已扩为结果优先、六入口、共享圆形发送、上传/Skill、12ai指定GPT Image参考编辑和运行时尺寸；首轮13项/da0d独审仅PRECHECK_ONLY。本地根完整verify exit0（Node1852/20skip、Agent199/2skip、browser832首试+1项5xx flaky，独立零重试复核1PASS、DESIGN41+8/development4）；Mobile433/type/lint、旧v39完整snapshot/backup合成兼容、窄屏最终40/40及gzip增4319B预算通过。首轮32PASS/8FAIL和各修正、语音/上传epoch10项RED/GREEN保留。小于360px六控件44px同排不折行，390px48px。下一步由root冻结提交并另存精确SHA独审/证据关联，最终Hosted及正式Release仍PENDING，PR72未合并、未发布，不为自引用SHA循环改文档。
+当前仓库并发main87c9源码三端41；本恢复入口记录的是此前40实际发布与验收。docs分支正常merge保留PR73全量代码和新增任务，集成后HEAD须新独审/Hosted，旧98ec报告不能批准新断面；不将docs提交或源码41当服务器版本。
 
-候选Desktop2.1.38/Web2.1.40/Mobile2.1.5；尺寸仅当前页面选择，切类型/模型或未发送刷新回自适应，提交写既有task.imageSize，不增加draft持久字段、schema/namespace/backup或新ADR，沿ADR-025。不得恢复已弃用的draft.imageSize方案，它会破坏v39严格读取。手机/电脑同功能是目标，远程Agent/MCP与新Native未验不代填。
+先读[生产收据](../changes/2026-10-18-mobile-composer-production-receipt/verification.md)、[本次计划](../changes/2026-10-18-mobile-composer-production-receipt/plan.md)和[审查边界](../changes/2026-10-18-mobile-composer-production-receipt/review.md)。TASK-MOBILE-COMPOSER-001 IN_PROGRESS/NOT_VERIFIED；产品PR72已正常合并b457d3a05759ca7a2f6a8c4bb62a8ba8aea908ea/treebbcab2a0d5e4a0fe4241b3d3f32d01e6b69b5334，与正式独审791e同树。Web40/Mobile源码5已由正式Release416447150/部署39128852497上线，Desktop源码38；当前docs分支docs/TASK-MOBILE-COMPOSER-001-production-receipt、基线b457，不把docs HEAD当生产来源。当前main五项attempt2/双guard/newhealth全通过，原attempt1超时/health403/零jobs异常仍保留。
 
-不再生成/发现模型，不触碰canonical未提交改动；当前现网39/唯一previous38，新正式Release后目标40/唯一39，期间不额外创建多个备份。后台截图原文件实际正常，长停留908.067秒后原件恢复已观测，但network截断且真实hidden事件未证；实体安卓后台、Safari及用户最终接受仍未验。不要重新增加临时root SSH权限。
+实际线上模型名可点、六圆控件320/390同排、上传/参数/扩展面板可开、菜单任务结果优先和分层详情、旧文本刷新/图片原件SHA/unknown状态均已复核。库存current40/唯一previous39、前后原39manifest/archive与配置/auth/服务观察一致；无新SSH权限、DB迁移或付费生成。新40普通页面停留927.716秒后刷新，图片可见且再次UI导出原件逐字节一致（不等于实体切后台）；实体Android Chrome用户模型入口/切后台返回+刷新接受仍待回执。下一步仅当前docs HEAD本地检查/Delivery/独审/Hosted/正常PR及剩余真机验收，不重发生成/发现模型，不把“继续”或旧38UI正常回复当40接受。
 
-原图文TASK已按PR70/71完成范围有界DONE/PASS，当前base97ef就是PR71正常squash结果；其他任务不批量结案。下节保留当时REVIEW/待文档门禁的恢复快照，由本段已核收尾状态替代。
+原本地verify/Mobile433/最终窄屏40/40和完整v39snapshot/backup合成兼容保留；尺寸不增draft/schema/storage/backup字段，未发刷新回自适应，提交捕获旧task.imageSize。FEAT-028 PARTIAL/T12开放，Skill仅本地预览/明确应用、远程Agent/MCP/真实语音/视频/新参考生成/Safari/Native未验。canonical只读、不reset/clean/stage其他人工作。原包及下方历史记录不重写为当前成功。
 
 ## 历史恢复入口：12ai 手机生成与保存修复（2026-10-18）
 
