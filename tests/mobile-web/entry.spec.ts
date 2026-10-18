@@ -158,9 +158,48 @@ for (const profile of [
       await expect(model).toHaveCount(0);
       await input.click();
       await insideAndTouchable(page, model);
+      const box = (await model.boundingBox())!;
+      const x = box.x + box.width / 2,
+        y = box.y + box.height / 2;
+      if (touch) {
+        const cdp = await page.context().newCDPSession(page);
+        await cdp.send("Input.dispatchTouchEvent", {
+          type: "touchStart",
+          touchPoints: [{ x, y }],
+        });
+        await cdp.send("Input.dispatchTouchEvent", {
+          type: "touchCancel",
+          touchPoints: [],
+        });
+        await cdp.detach();
+      } else {
+        await page.mouse.move(x, y);
+        await page.mouse.down();
+        await page.mouse.move(0, 0);
+        await page.mouse.up();
+      }
+      await expect(page.getByText("连接与模型", { exact: true })).toHaveCount(
+        0,
+      );
+      await expect(model).toBeVisible();
       if (touch) await model.tap();
       else await model.click();
       await expect(page.getByText("连接与模型", { exact: true })).toBeVisible();
+      const close = page.getByRole("button", { name: "关闭面板", exact: true });
+      await expect
+        .poll(() =>
+          close.evaluate((element) => {
+            for (
+              let node: Element | null = element;
+              node;
+              node = node.parentElement
+            )
+              if (Number(getComputedStyle(node).opacity) !== 1) return false;
+            return true;
+          }),
+        )
+        .toBe(true);
+      await insideAndTouchable(page, close);
       await expect(
         page.getByText("还没有连接。", { exact: true }),
       ).toBeVisible();

@@ -13,4 +13,6 @@
 
 ## 门禁与结论
 
+用户追加媒体优先、六输入入口和直接圆形发送后，da0d独审已冻结为PRECHECK_ONLY（工程外composer-final-review.json SHA7a60498c…）；未批准PR72合并/发布。取消手势和稳定绘制的测试在该head之后补充，短屏旧截图曾在RN Web Modal初始opacity0时过早采集，最终必须等待真实绘制并核对命中/视口；不能用旧短/横屏截图冒充完整可见。新增范围需最终已提交head另一轮正式独审及实际CI/生产验收。
+
 Self-review、独立AI review、正式Delivery、CI、生产入口/库存和用户修复结果接受：本包初建均待新修复head证据，结论NOT_VERIFIED。不伪造GitHub人类approval，不放宽有效门禁。用户已有修复/上线授权，无额外生成/测试额度授权；按正常PR/正式Release及单previous执行，实际部署前不得宣称已上线40。

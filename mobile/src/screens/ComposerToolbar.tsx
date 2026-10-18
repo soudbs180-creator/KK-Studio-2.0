@@ -1,4 +1,4 @@
-import { ActivityIndicator, Pressable, Text, View } from "react-native";
+import { ActivityIndicator, Pressable, View } from "react-native";
 import type { CreationDraft } from "@kk-studio/creation-contracts";
 import { Icon, type IconName } from "../ui/Icon.tsx";
 import { useTheme, touchTarget } from "../ui/theme.tsx";
@@ -9,8 +9,9 @@ export function ComposerToolbar({
   onModel,
   onAdd,
   onParameters,
-  onExpand,
-  expanded,
+  onExtensions,
+  onVoice,
+  voiceState,
   running,
   blocked,
   busy,
@@ -21,66 +22,29 @@ export function ComposerToolbar({
   onModel: () => void;
   onAdd: () => void;
   onParameters: () => void;
-  onExpand: () => void;
-  expanded: boolean;
+  onExtensions: () => void;
+  onVoice: () => void;
+  voiceState: "off" | "starting" | "on" | "stopping";
   running: boolean;
   blocked: boolean;
   busy: boolean;
   onSend: () => void;
 }) {
-  const t = useTheme();
   return (
-    <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
-      <ComposerIcon name="plus" label="添加到创作" onPress={onAdd} />
-      {kind === "image" && (
-        <ComposerIcon name="sliders" label="生成设置" onPress={onParameters} />
-      )}
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel={model ? `当前模型：${model}，选择模型` : "选择模型"}
-        onPress={onModel}
-        style={({ pressed }) => ({
-          minHeight: touchTarget,
-          minWidth: touchTarget,
-          flexShrink: 1,
-          justifyContent: "center",
-          paddingHorizontal: 4,
-          opacity: pressed ? 0.65 : 1,
-        })}
-      >
-        <View
-          style={{
-            backgroundColor: t.selected,
-            borderRadius: 18,
-            paddingVertical: 6,
-            paddingHorizontal: 10,
-            gap: 6,
-            flexDirection: "row",
-            alignItems: "center",
-            maxWidth: "100%",
-          }}
-        >
-          <Icon name={kind === "image" ? "image" : "sparkles"} size={18} />
-          <Text
-            numberOfLines={1}
-            style={{
-              minWidth: 0,
-              flexShrink: 1,
-              color: t.text,
-              fontSize: 14,
-              lineHeight: 20,
-              fontWeight: "600",
-            }}
-          >
-            {model || "选择模型"}
-          </Text>
-        </View>
-      </Pressable>
-      <View style={{ flex: 1 }} />
+    <View style={{ flexDirection: "row", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 4 }}>
+      <ComposerIcon name="plus" label="上传" onPress={onAdd} />
       <ComposerIcon
-        name="more"
-        label={expanded ? "收起输入" : "展开输入"}
-        onPress={onExpand}
+        name={kind === "image" ? "image" : "sparkles"}
+        label={model ? `当前模型：${model}，选择模型` : "选择模型"}
+        onPress={onModel}
+      />
+      <ComposerIcon name="sliders" label="参数选项" onPress={onParameters} />
+      <ComposerIcon name="extensions" label="扩展选择" onPress={onExtensions} />
+      <ComposerIcon
+        name="microphone"
+        label={voiceState === "off" ? "开启语音输入" : "关闭语音输入"}
+        selected={voiceState !== "off"}
+        onPress={onVoice}
       />
       <ComposerIcon
         name={running ? "pause" : "send"}
@@ -100,6 +64,7 @@ export function ComposerIcon({
   disabled = false,
   busy = false,
   solid = false,
+  selected = false,
 }: {
   name: IconName;
   label: string;
@@ -107,43 +72,32 @@ export function ComposerIcon({
   disabled?: boolean;
   busy?: boolean;
   solid?: boolean;
+  selected?: boolean;
 }) {
   const t = useTheme();
   return (
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={label}
-      accessibilityState={{ disabled: disabled || busy, busy }}
+      accessibilityState={{ disabled: disabled || busy, busy, selected }}
+      aria-pressed={selected}
       disabled={disabled || busy}
       onPress={onPress}
       style={({ pressed }) => ({
         width: touchTarget,
         height: touchTarget,
+        borderRadius: touchTarget / 2,
+        backgroundColor: solid || selected ? disabled ? t.tertiary : t.text : t.selected,
         alignItems: "center",
         justifyContent: "center",
         opacity: pressed ? 0.65 : 1,
       })}
     >
-      <View
-        style={{
-          width: 32,
-          height: 32,
-          borderRadius: 16,
-          backgroundColor: solid
-            ? disabled
-              ? t.tertiary
-              : t.text
-            : t.selected,
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
         {busy ? (
-          <ActivityIndicator size="small" color={solid ? t.input : t.text} />
+          <ActivityIndicator size="small" color={solid || selected ? t.input : t.text} />
         ) : (
-          <Icon name={name} size={22} color={solid ? t.input : t.text} />
+          <Icon name={name} size={22} color={solid || selected ? t.input : t.text} />
         )}
-      </View>
     </Pressable>
   );
 }

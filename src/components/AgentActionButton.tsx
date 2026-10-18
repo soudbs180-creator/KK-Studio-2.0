@@ -153,13 +153,7 @@ export default function AgentActionButton({
     switch (state) {
       case "idle":
         return (
-          <img
-            src="/design/figma/composer-send.svg"
-            width={AGENT_ACTION_BUTTON_GEOMETRY.iconSize}
-            height={AGENT_ACTION_BUTTON_GEOMETRY.iconSize}
-            alt=""
-            aria-hidden="true"
-          />
+          <UiIcon name="send" size={AGENT_ACTION_BUTTON_GEOMETRY.iconSize} />
         );
       case "executing":
         return (
