@@ -517,6 +517,12 @@ test("packaging requires the current Codex platform dependency and executable ve
       /Packaged Codex version\/help verification failed/,
     );
   } finally {
-    await fs.rm(sandbox, { recursive: true, force: true });
+    // Allow bounded cleanup retries for Windows executable locks.
+    await fs.rm(sandbox, {
+      recursive: true,
+      force: true,
+      maxRetries: 5,
+      retryDelay: 100,
+    });
   }
 });

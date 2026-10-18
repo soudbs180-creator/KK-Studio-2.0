@@ -4,9 +4,9 @@
 - [Intent](intent.md) / [Plan](plan.md) / [Verification](verification.md) / [Review](review.md)。
 - 实现基线：source0f92/treebed0；正式失败run39142083878。本包覆盖安装器构建及插件恢复显示阻断，不替代既有工具栏、数据保护、草稿同帧和三端发布契约。
 
-## 当前发布阻断：插件迟到激活后的恢复显示
+## 插件恢复显示契约与历史复现
 
-正式独立finding **PLUGREG-READY-01/P2：merge/release blocker**。e7 PR的插件恢复失败现场有四个fallback；原failure trace缺少网络终局，不能把该次失败全部归因于某一请求或宣称是已证环境问题。只读源码及纯内存次序证据确定：registry Map注册/卸载不通知，PluginNode/AddNodeMenu未订阅registry；迟到activation后已存在node/menu可能不重绘。证据为工程外independent-plugin-activation-notification-e7.json；它不复现历史网络或浏览器因果。
+历史独立finding **PLUGREG-READY-01/P2**已由c341有界source独审关闭源码范围；当前Hosted清理门禁仍失败。e7 PR的插件恢复失败现场有四个fallback；原failure trace缺少网络终局，不能把该次失败全部归因于某一请求或宣称是已证环境问题。只读源码及纯内存次序证据确定：registry Map注册/卸载不通知，PluginNode/AddNodeMenu未订阅registry；迟到activation后已存在node/menu可能不重绘。证据为工程外independent-plugin-activation-notification-e7.json；它不复现历史网络或浏览器因果。
 
 1. 恢复项目先出现fallback时，随后真实随包模块activation完成，已有插件node与已打开菜单必须自动重绘，不依赖点击UI、重新打开菜单、额外编辑或延长等待。
 2. 最小共享接口为registry subscribe/revision，register/unregister实际定义变化时emit；PluginNode与AddNodeMenu使用useSyncExternalStore订阅。保留pluginStore.enabled筛选、禁用规则、离线与远程代码保护。
@@ -14,11 +14,13 @@
 4. 确定性回归延迟真实bundled import：先恢复项目并确认fallback，再释放模块并确认import/activation已完成，全程不点击UI；原iframe、完整内容与durable恢复断言应自动通过。最终受控旧RED与最小修复GREEN已实际成立，细节见下；前两版old PASS不算RED，新head门禁仍待。
 5. 既有e7原spec在1920、repeat20/retries0/trace on的20/20 PASS仅为本机观察（plugin-recovery-e7cdf151-repeat20-run.log），不能抵销Hosted失败或称此问题已修复。
 
-当前已审候选e7cdf151b5ca8a3e31744a23e7d4788a049449d4/tree098f72f43a4a3201ad494908b9371b562ee1d5c5：本地完整verify及有界source独审PASS，Windows candidate39147266232 SUCCESS/rawclean、4284文件receipt验证通过；这些仅适用于e7候选，不是最终新head或正式tag产物。e7 Hosted PR保留1flaky、push保留2flaky，原strict clean=false，不能以job绿或本机重复通过抹去。PLUGREG-READY-01/P2已有受控旧RED→本地GREEN，但精确新head审查/门禁仍待，继续阻止merge/release；最终main/tree未定。版本维持2.1.42，42尚未tag；41tag、原失败和全部cold保持。
+当前已提交c3410fe68f057054a510cd1b506ead80bb5db629/tree0557a6295f0cb5ec05e5018691fd6af9d3187919（parent e7/base0f92）：精确本机fullverify exit0，Node1972=1952PASS/20SKIP、Agent204/2、Browser838首试0retry/flaky、Design41+8/development4；Delivery34/0及有界source独审PASS，PLUGREG-READY-01仅源码阻断已关闭，不等于整轮发布PASS。Hosted PR39151700611在Node阶段1FAIL：自有invalid-help/node.exe清理unlink EBUSY，锁持有者UNKNOWN，失败链未运行后续Agent/browser/Rust，不拿本机结果代填。c341 Windows candidate39151700654已SUCCESS且raw/receipt审计PASS（4284文件），仅候选并非formal，不能解除PR Node失败；push自然终局由唯一watcher补证。42未tag，最终main/tag/正式包/installed/production未完成；旧e7三flakes/strictfalse、41tag及正式失败和所有cold保留。
+
+本次最小测试delta仅tests/unit/agentPackage.test.ts末尾自有sandbox的fs.rm增加maxRetries:5/retryDelay:100及中性Windows executable locks注释（7行），生产packager及全部guard/业务断言不变。独审串行await未发现漏wait证据。受控本机映像锁实测为EPERM，非原CI EBUSY同一持有者证明：默认清理失败、释放后有界重试成功、持锁耗尽仍拒绝；先前预期EBUSY的自检失败日志保留。agentPackage11/11、全Node1972=1952PASS/20SKIP/0FAIL、局部Prettier/ESLint均PASS，仅dirty delta预检；新head/完整门禁仍待。
 
 最终受控旧e7 RED已发生：plugin-registry-render-settled-red.log。第二轮activation script gate在discovery完成后阻塞；确认4fallback、已打开菜单、项目已保存，并过2rAF稳定前提后release。真实模块wrapper保留原Content/setup-cleanup，仅加4个activation marker；无postrelease点击UI，原helper在iframe的5s断言失败，browser adb5246e-90c0-4934-9b57-dfc6145aae6e的trace/context保留。前两版old PASS仅因稳定前提不足，均未作为RED，原日志保留。
 
-最小3处产品改动已落：共享registry subscribe+revision，register/unregister实际变化才notify，PluginNode/AddNodeMenu用useSyncExternalStore订阅并保留pluginStore.enabled筛选；未改storage/schema/CSS，不用setError(null)假通知。plugin-registry-render-green.log exit0、1PASS；相同iframe/content断言和原durable equal成立。API+loader/startup关联单测29/29及typecheck PASS，仅为当前本地差异证据；精确新head独审/完整verify/Hosted仍待，PLUGREG-READY-01尚未据此批准merge/release。
+最小3处产品改动已落：共享registry subscribe+revision，register/unregister实际变化才notify，PluginNode/AddNodeMenu用useSyncExternalStore订阅并保留pluginStore.enabled筛选；未改storage/schema/CSS，不用setError(null)假通知。plugin-registry-render-green.log exit0、1PASS；相同iframe/content断言和原durable equal成立。API+loader/startup关联单测29/29及typecheck PASS，属当时未提交预检；后续c341精确fullverify/source独审结果以上方为准，不能代填本次cleanup新head或正式release。
 
 ## 调度完成边界与失败诊断夹具
 
@@ -55,11 +57,11 @@ PR77候选677的Windows run39145549689已真实FAIL/artifact0：npm ci后clean�
 
 ## 验收映射
 
-| Intent AC | 检查                                                                               | 当前状态                                                                    |
-| --------- | ---------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
-| AC-1      | 新精确head干净checkout全bundle+receipt；缺父目录、已有child与hash/source/tree反例  | 677候选FAIL保留；e7 Windows候选PASS；插件修复新head及正式工件待验           |
-| AC-2      | 构建阶段status路径证据；dirty拒绝及native失败不执行后续步骤                        | 677诊断8/0及实际3M失败保留；e7行尾9/0/Windows候选PASS；41具体dirty仍UNKNOWN |
-| AC-3      | 候选完整安装器Hosted/独审、正常PR/main及新版本来源                                 | e7 Windows候选PASS但质量flaky/PLUGREG阻断；正常merge/main和正式发布待验     |
-| AC-4      | 插件迟到激活自动恢复、真实日常installed/Agent及原配置保留、工具栏几何、组合Web回读 | NOT_VERIFIED                                                                |
+| Intent AC | 检查                                                                               | 当前状态                                                                               |
+| --------- | ---------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| AC-1      | 新精确head干净checkout全bundle+receipt；缺父目录、已有child与hash/source/tree反例  | 677候选FAIL保留；e7 Windows候选PASS；插件修复新head及正式工件待验                      |
+| AC-2      | 构建阶段status路径证据；dirty拒绝及native失败不执行后续步骤                        | 677诊断8/0及实际3M失败保留；e7行尾9/0/Windows候选PASS；41具体dirty仍UNKNOWN            |
+| AC-3      | 候选完整安装器Hosted/独审、正常PR/main及新版本来源                                 | c341 Windows候选PASS；PLUGREG源码已关闭，PR Node清理失败；正常merge/main及正式发布待验 |
+| AC-4      | 插件迟到激活自动恢复、真实日常installed/Agent及原配置保留、工具栏几何、组合Web回读 | NOT_VERIFIED                                                                           |
 
 本地clean阶段不排除Hosted独有漂移；缺父目录和级联失败是独立的已证问题，不能据它们补造dirty根因。

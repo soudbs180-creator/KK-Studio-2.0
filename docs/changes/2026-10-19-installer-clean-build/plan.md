@@ -1,18 +1,21 @@
 # Plan：构建来源与插件恢复显示阻断修复
 
 - Task ID：TASK-CANVAS-RELEASE-20261018；日期：2026-10-19；Owner：root-release；状态：IN_PROGRESS / NOT_VERIFIED。
-- branch：`fix/TASK-CANVAS-RELEASE-20261019-installer-provenance`；base0f92/treebed0；当前已审候选e7cdf151/tree098f72f4；插件修复新head待提交，最终main/tree待门禁。
+- branch：`fix/TASK-CANVAS-RELEASE-20261019-installer-provenance`；base0f92/treebed0；当前已提交候选c3410fe6/tree0557a629；cleanup新head待提交，最终main/tree待门禁。
 - [Intent](intent.md) / [Spec](spec.md) / [Verification](verification.md) / [Review](review.md)。
 
-## 当前执行顺序：先关闭PLUGREG-READY-01
+## 当前执行顺序：关闭自有sandbox清理门禁
 
-当前已审候选e7cdf151b5ca8a3e31744a23e7d4788a049449d4/tree098f72f43a4a3201ad494908b9371b562ee1d5c5：本地完整verify及有界source独审PASS，Windows candidate39147266232 SUCCESS/rawclean、4284文件receipt验证通过；这些仅适用于e7候选，不是最终新head或正式tag产物。e7 Hosted PR保留1flaky、push保留2flaky，原strict clean=false，不能以job绿或本机重复通过抹去。PLUGREG-READY-01/P2已有受控旧RED→本地GREEN，但精确新head审查/门禁仍待，继续阻止merge/release；最终main/tree未定。版本维持2.1.42，42尚未tag；41tag、原失败和全部cold保持。
+当前已提交c3410fe68f057054a510cd1b506ead80bb5db629/tree0557a6295f0cb5ec05e5018691fd6af9d3187919（parent e7/base0f92）：精确本机fullverify exit0，Node1972=1952PASS/20SKIP、Agent204/2、Browser838首试0retry/flaky、Design41+8/development4；Delivery34/0及有界source独审PASS，PLUGREG-READY-01仅源码阻断已关闭，不等于整轮发布PASS。Hosted PR39151700611在Node阶段1FAIL：自有invalid-help/node.exe清理unlink EBUSY，锁持有者UNKNOWN，失败链未运行后续Agent/browser/Rust，不拿本机结果代填。c341 Windows candidate39151700654已SUCCESS且raw/receipt审计PASS（4284文件），仅候选并非formal，不能解除PR Node失败；push自然终局由唯一watcher补证。42未tag，最终main/tag/正式包/installed/production未完成；旧e7三flakes/strictfalse、41tag及正式失败和所有cold保留。
 
-1. 保存e7 PR四fallback、PR1flaky/push2flaky及原strict clean=false；原failure trace缺网络终局，当次完整因果保持UNKNOWN。e7本机1920 repeat20/retries0/trace on的20/20只按本机重复证据保留，不视为修复。
-2. 已完成最终稳定受控旧RED：第二轮activation gate、4fallback/打开菜单/已保存/2rAF后release，保留真实Content/setup-cleanup，仅加marker4，不在release后点击UI；原iframe5s断言失败。前两版old PASS不算RED，原日志及adb5246e trace/context保留。
-3. 已落最小3处产品改动：共享registry subscribe+revision，register/unregister实际变化emit；PluginNode和AddNodeMenu用useSyncExternalStore订阅，保持pluginStore.enabled过滤，不改storage/schema/CSS，不用setError(null)伪通知。相同场景GREEN exit0/1PASS、原content/durable equal保持，API+loader/startup单测29/29及typecheck PASS。
-4. 完成本地GREEN后，provider-scheduling两个case只等原activeJobs=0完成边界，ui-feature-parity两个pending旧变体只加脱敏诊断，原断言/try-finally清理不变；不宣称原CI flush/初连根因已证。5场景×5repeat，共25次，2workers/retries0/trace on已终局exit0、25/25首试PASS、0retry/flaky（release-recovery-three-signals-repeat5.log）；仅未提交差异预检，不代填新精确head。随后冻结新head、完整verify、独审、Hosted/Delivery；Windows候选按适用门禁判定，e7不能代填新head。
-5. PR77已转draft；仅在阻断关闭及正常PR/main门禁通过后继续下列正式tag、单setup、真实默认资料安装与三端上线；维持42，不移动41tag，不重置资料/seed。
+本次最小测试delta仅tests/unit/agentPackage.test.ts末尾自有sandbox的fs.rm增加maxRetries:5/retryDelay:100及中性Windows executable locks注释（7行），生产packager及全部guard/业务断言不变。独审串行await未发现漏wait证据。受控本机映像锁实测为EPERM，非原CI EBUSY同一持有者证明：默认清理失败、释放后有界重试成功、持锁耗尽仍拒绝；先前预期EBUSY的自检失败日志保留。agentPackage11/11、全Node1972=1952PASS/20SKIP/0FAIL、局部Prettier/ESLint均PASS，仅dirty delta预检；新head/完整门禁仍待。
+
+1. root已落最小末尾fs.rm清理重试，保留全部guard/assertions和生产packager；11/11及全Node/局部格式lint仅dirty预检。接着提交本次cleanup新head，重做精确head Delivery/独审及所需完整验证/Hosted，不能用c341结果替代。
+2. 保存e7 PR四fallback、PR1flaky/push2flaky及原strict clean=false；原failure trace缺网络终局，当次完整因果保持UNKNOWN。e7本机1920 repeat20/retries0/trace on的20/20只按本机重复证据保留，不视为修复。
+3. 已完成最终稳定受控旧RED：第二轮activation gate、4fallback/打开菜单/已保存/2rAF后release，保留真实Content/setup-cleanup，仅加marker4，不在release后点击UI；原iframe5s断言失败。前两版old PASS不算RED，原日志及adb5246e trace/context保留。
+4. 已落最小3处产品改动：共享registry subscribe+revision，register/unregister实际变化emit；PluginNode和AddNodeMenu用useSyncExternalStore订阅，保持pluginStore.enabled过滤，不改storage/schema/CSS，不用setError(null)伪通知。相同场景GREEN exit0/1PASS、原content/durable equal保持，API+loader/startup单测29/29及typecheck PASS。
+5. 完成本地GREEN后，provider-scheduling两个case只等原activeJobs=0完成边界，ui-feature-parity两个pending旧变体只加脱敏诊断，原断言/try-finally清理不变；不宣称原CI flush/初连根因已证。5场景×5repeat，共25次，2workers/retries0/trace on已终局exit0、25/25首试PASS、0retry/flaky（release-recovery-three-signals-repeat5.log）；仅未提交差异预检，不代填新精确head。随后冻结新head、完整verify、独审、Hosted/Delivery；Windows候选按适用门禁判定，e7不能代填新head。
+6. PR77已转draft；仅在阻断关闭及正常PR/main门禁通过后继续下列正式tag、单setup、真实默认资料安装与三端上线；维持42，不移动41tag，不重置资料/seed。
 
 本地RED/GREEN日志：plugin-registry-render-settled-red.log / plugin-registry-render-green.log；完整证据范围见[Verification](verification.md)。
 

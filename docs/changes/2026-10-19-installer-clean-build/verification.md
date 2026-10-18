@@ -2,28 +2,30 @@
 
 - Task ID：TASK-CANVAS-RELEASE-20261018；日期：2026-10-19，Asia/Shanghai。
 - 状态：IN_PROGRESS / 整体NOT_VERIFIED；本包已落库为current，尚未代表修复精确head通过。
-- branch：`fix/TASK-CANVAS-RELEASE-20261019-installer-provenance`；base0f92/treebed0；当前已审候选e7cdf151/tree098f72f4；插件修复新head、最终main/tree/tag：TODO。
+- branch：`fix/TASK-CANVAS-RELEASE-20261019-installer-provenance`；base0f92/treebed0；当前已提交候选c3410fe6/tree0557a629；cleanup新head、最终main/tree/tag：TODO。
 - [Intent](intent.md) / [Spec](spec.md) / [Plan](plan.md) / [Review](review.md)。
 
-## 当前e7终局与插件恢复阻断
+## 当前c341与Hosted清理失败
 
-当前已审候选e7cdf151b5ca8a3e31744a23e7d4788a049449d4/tree098f72f43a4a3201ad494908b9371b562ee1d5c5：本地完整verify及有界source独审PASS，Windows candidate39147266232 SUCCESS/rawclean、4284文件receipt验证通过；这些仅适用于e7候选，不是最终新head或正式tag产物。e7 Hosted PR保留1flaky、push保留2flaky，原strict clean=false，不能以job绿或本机重复通过抹去。PLUGREG-READY-01/P2已有受控旧RED→本地GREEN，但精确新head审查/门禁仍待，继续阻止merge/release；最终main/tree未定。版本维持2.1.42，42尚未tag；41tag、原失败和全部cold保持。
+当前已提交c3410fe68f057054a510cd1b506ead80bb5db629/tree0557a6295f0cb5ec05e5018691fd6af9d3187919（parent e7/base0f92）：精确本机fullverify exit0，Node1972=1952PASS/20SKIP、Agent204/2、Browser838首试0retry/flaky、Design41+8/development4；Delivery34/0及有界source独审PASS，PLUGREG-READY-01仅源码阻断已关闭，不等于整轮发布PASS。Hosted PR39151700611在Node阶段1FAIL：自有invalid-help/node.exe清理unlink EBUSY，锁持有者UNKNOWN，失败链未运行后续Agent/browser/Rust，不拿本机结果代填。c341 Windows candidate39151700654已SUCCESS且raw/receipt审计PASS（4284文件），仅候选并非formal，不能解除PR Node失败；push自然终局由唯一watcher补证。42未tag，最终main/tag/正式包/installed/production未完成；旧e7三flakes/strictfalse、41tag及正式失败和所有cold保留。
+
+本次最小测试delta仅tests/unit/agentPackage.test.ts末尾自有sandbox的fs.rm增加maxRetries:5/retryDelay:100及中性Windows executable locks注释（7行），生产packager及全部guard/业务断言不变。独审串行await未发现漏wait证据。受控本机映像锁实测为EPERM，非原CI EBUSY同一持有者证明：默认清理失败、释放后有界重试成功、持锁耗尽仍拒绝；先前预期EBUSY的自检失败日志保留。agentPackage11/11、全Node1972=1952PASS/20SKIP/0FAIL、局部Prettier/ESLint均PASS，仅dirty delta预检；新head/完整门禁仍待。
 
 | 检查                                             | 实际结果                                   | 证据与边界                                                                                                                  |
 | ------------------------------------------------ | ------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------- |
 | e7精确本地完整verify及source审查                 | PASS，仅e7范围                             | installer-42-e7cdf151-local-verification.json、independent-source-e7cdf151-review.md/receipt；不代填Hosted或后续新head      |
 | e7 Windows candidate39147266232                  | SUCCESS/rawclean，4284文件receipt验证通过  | hosted-e7cdf151-windows-audit.json及independent-e7cdf151-candidate-gate-addendum；非正式tag产物                             |
 | e7 Hosted PR/push首试                            | PR1flaky、push2flaky；原strict clean=false | hosted-e7cdf151-final-receipt.json及PR/push raw/audit；job成功不等于首试全过                                                |
-| PLUGREG-READY-01/P2                              | 受控旧RED→本地GREEN；新head审查/门禁待验   | 迟到activation可达缺陷已受控重现；原PR四fallback网络终局缺失，当次完整因果仍UNKNOWN                                         |
+| PLUGREG-READY-01/P2                              | CLOSED_SOURCE_AT_C341（仅源码）            | c341独审已关闭源码；原CI网络终局/初连因果仍UNKNOWN，整轮NOT_VERIFIED                                                        |
 | e7本机原spec1920重复                             | repeat20/retries0/trace on，20/20 PASS     | plugin-recovery-e7cdf151-repeat20-run.log；仅本机观察，不抵销CI或称修复                                                     |
 | delayed bundled import因果回归、共享通知修复     | 旧RED失败→GREEN exit0/1PASS，仅本地差异    | plugin-registry-render-settled-red.log / plugin-registry-render-green.log；前两版old PASS不算RED，原content/durable断言保持 |
 | 新head及42正式main/tag/工件/installed/production | TODO / NOT_VERIFIED                        | 保持42未tag，e7候选及旧41资料不得代填                                                                                       |
 
-独立finding PLUGREG-READY-01/P2为merge/release blocker。e7 PR原失败现场有四fallback，原failure trace缺网络终局，当次完整因果UNKNOWN；只读源码及independent-plugin-activation-notification-e7.json确定registry Map注册/卸载无通知、PluginNode/AddNodeMenu未订阅，迟到activation后已有node/menu不自动重绘的可达缺陷。该纯内存次序证据不复现历史浏览器/网络。e7原spec1920 repeat20/retries0/trace on本机20/20 PASS（plugin-recovery-e7cdf151-repeat20-run.log）保留，但不抵销Hosted首试失败、不称已修复。
+历史独立finding PLUGREG-READY-01/P2曾阻断merge/release，现已由c341有界source独审关闭源码范围；整轮发布仍未通过。e7 PR原失败现场有四fallback，原failure trace缺网络终局，当次完整因果UNKNOWN；只读源码及independent-plugin-activation-notification-e7.json确定registry Map注册/卸载无通知、PluginNode/AddNodeMenu未订阅，迟到activation后已有node/menu不自动重绘的可达缺陷。该纯内存次序证据不复现历史浏览器/网络。e7原spec1920 repeat20/retries0/trace on本机20/20 PASS（plugin-recovery-e7cdf151-repeat20-run.log）保留，但不抵销Hosted首试失败、不称已修复。
 
 最终受控旧e7 RED已发生：plugin-registry-render-settled-red.log。第二轮activation script gate在discovery完成后阻塞；确认4fallback、已打开菜单、项目已保存，并过2rAF稳定前提后release。真实模块wrapper保留原Content/setup-cleanup，仅加4个activation marker；无postrelease点击UI，原helper在iframe的5s断言失败，browser adb5246e-90c0-4934-9b57-dfc6145aae6e的trace/context保留。前两版old PASS仅因稳定前提不足，均未作为RED，原日志保留。
 
-最小3处产品改动已落：共享registry subscribe+revision，register/unregister实际变化才notify，PluginNode/AddNodeMenu用useSyncExternalStore订阅并保留pluginStore.enabled筛选；未改storage/schema/CSS，不用setError(null)假通知。plugin-registry-render-green.log exit0、1PASS；相同iframe/content断言和原durable equal成立。API+loader/startup关联单测29/29及typecheck PASS，仅为当前本地差异证据；精确新head独审/完整verify/Hosted仍待，PLUGREG-READY-01尚未据此批准merge/release。
+最小3处产品改动已落：共享registry subscribe+revision，register/unregister实际变化才notify，PluginNode/AddNodeMenu用useSyncExternalStore订阅并保留pluginStore.enabled筛选；未改storage/schema/CSS，不用setError(null)假通知。plugin-registry-render-green.log exit0、1PASS；相同iframe/content断言和原durable equal成立。API+loader/startup关联单测29/29及typecheck PASS，属当时未提交预检；后续c341精确fullverify/source独审结果以上方为准，不能代填本次cleanup新head或正式release。
 
 伴随夹具仅复用provider-scheduling的activeJobs=0完成边界及为两个ui-feature-parity pending旧变体加脱敏网络诊断，原断言/连接逻辑和try/finally清理保持。5场景×5repeat，共25次，2workers/retries0/trace on已终局exit0、25/25首试PASS、0retry/flaky（release-recovery-three-signals-repeat5.log）；仅未提交差异预检，不代填新精确head；原CI flush时序及初连Failedfetch根因仍UNKNOWN。PR77已转draft，42未tag、版本维持42。
 
@@ -33,6 +35,13 @@
 - provider-scheduling的429和5xx两个case在failed可见后先等原activeJobs=0完成边界，再保留cooldown/deadline/degraded/403/requests全部原断言，不加sleep/timeouts。源码链failed publish→await flush→health mark→finally release支持这一完成边界；未完整观测原CI flush时序，不称已证云端根因。
 - ui-feature-parity两个pending旧变体仅附自身origin/method/path/status/requestfailed及server.requests，不采token/query/body；原断言、连接逻辑与try/finally清理保持。原初连Failedfetch rootCauseUNKNOWN，诊断不是修复。
 - 5场景×5repeat，共25次，2workers/retries0/trace on已终局exit0、25/25首试PASS、0retry/flaky（release-recovery-three-signals-repeat5.log）；仅未提交差异预检，不代填新精确head。受控迟到恢复、429 deadline/403、5xx degraded重试、oldinterrupt、oldturn五场景全部通过。随后完整verify、新head独审/Hosted重做；PR77 draft，正式main/tag/工件/installed/production42仍未验。
+
+## c341清理失败的证据边界
+
+- 精确本机回执installer-42-c3410fe6-local-verification.json：raw SHA66f4686abe224b659282f818d4870fc6eef4b879286ee0266b0031f027282657；source独审independent-source-c3410fe6-review-receipt.json SHA1eeaa5471fc603ed41b1c419b091c9120fd161098eb2efa96345f3df0ad33eb7，仅关闭PLUGREG源码范围。
+- Hosted PR Node1972为1952PASS/1FAIL/19SKIP，失败在agentPackage.test.ts:411案例末尾自有invalid-help/node.exe的unlink EBUSY；hosted-c3410fe6-pr-node-failure-excerpt.txt保留。具体锁持有者UNKNOWN，不归因为漏await、AV或CI环境。后续Agent/browser/Rust未运行，不借本机PASS代填。
+- agent-package-cleanup-lock-check-final.log实测EPERM，证明本机受控映像锁下默认失败、释放后bounded成功和持锁耗尽仍拒绝；不证明原CI EBUSY同一持有者。先前自检错误预期EBUSY的FAIL原件保留。
+- agent-package-cleanup-final.log为11/11；agent-package-cleanup-all-unit.log为Node1972/1952PASS/20SKIP/0FAIL；局部Prettier/ESLint PASS。仅未提交cleanup delta预检；新head、全lint/typecheck、独审、Hosted仍待。Windows candidate39151700654的raw/receipt审计已由watcher封存PASS（4284文件），候选不是formal；push终局仍由watcher后补。
 
 ## 安装器阶段历史与已确认事实
 
@@ -80,4 +89,4 @@ PR77候选677的Windows run39145549689已真实FAIL/artifact0：npm ci后clean�
 
 当前cold仍以已封存1792332721753/b54d adapter为最近已核对入口，3952文件、9项目/11聊天/22消息/2归档记录/7资产；执行真实安装前按现有严格precheck重新确认源未变。若源又变，先诊断并封存新cold，不覆盖旧备份或忽略漂移。此处不宣称新冷备或新installed验收发生。
 
-结论：完整统一发布任务继续IN_PROGRESS/NOT_VERIFIED；e7 Windows候选已PASS，但PLUGREG-READY-01/P2阻止merge/release，确定性旧RED→本地GREEN已成立，但修复新head及完整门禁待验。41具体dirty仍UNKNOWN、原strict clean=false及全部失败保留，42未tag。
+结论：完整统一发布任务继续IN_PROGRESS/NOT_VERIFIED；e7 Windows候选已PASS，但PLUGREG源码范围已由c341独审关闭，但c341 Hosted Node清理失败，cleanup新head及完整门禁待验。41具体dirty仍UNKNOWN、原strict clean=false及全部失败保留，42未tag。
