@@ -3063,7 +3063,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Acceptance: 重复终态恢复及同值Agent保存不刷新时间/revision，真实变化与错误、身份/权限保护保持; 完整工程验证及独立精确源审查通过，当前官方Native真实冷启全部字段严格比较通过; 原改动与资料保全，旧失败不改写，无删移/付费提交/发布，任务事实同步
 - Branch: `fix/TASK-COLDSTART-LOCAL-20261018`
 - Worktree: `D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017`
-- Modules: src/features/creation/taskRecovery.ts, src/features/agent/agentHost.ts, tests/unit, tests/desktop, docs
+- Modules: src/features/creation/taskRecovery.ts, src/features/creation/nativeTaskHost.ts, src/features/agent/agentHost.ts, tests/unit, tests/desktop, docs
 - Verification: NOT_VERIFIED — source477完整verify与源码双轴通过，官方40 EXEaa5f已构建；首次真实冷启仍FAIL任务/项目时间及revision三字段，原件与产物保全，不放宽比较。Native跨函数残余正在诊断，Gateway未实施。
 - Evidence: [docs/changes/2026-10-18-coldstart-local/intent.md](../../docs/changes/2026-10-18-coldstart-local/intent.md), [docs/changes/2026-10-18-coldstart-local/spec.md](../../docs/changes/2026-10-18-coldstart-local/spec.md), [docs/changes/2026-10-18-coldstart-local/plan.md](../../docs/changes/2026-10-18-coldstart-local/plan.md), [docs/changes/2026-10-18-coldstart-local/verification.md](../../docs/changes/2026-10-18-coldstart-local/verification.md), [docs/changes/2026-10-18-coldstart-local/review.md](../../docs/changes/2026-10-18-coldstart-local/review.md)
 - Next action: 已保留source477首次真实cold FAIL；Native→retry完整链净变化最小修复及正式RED/正例，再新完整verify/双轴/官方40与全字段strict冷启，不开始依赖其完成的Gateway。
