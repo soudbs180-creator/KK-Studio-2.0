@@ -10,7 +10,10 @@ import {
   DEFAULT_MODEL_PROVIDER,
   MODEL_PROVIDER_STORAGE_KEY,
 } from "../../src/domain/modelProvider.ts";
-import { emptySnapshot } from "../../src/features/creation/model.ts";
+import {
+  emptySnapshot,
+  serializeCreationSnapshot,
+} from "../../src/features/creation/model.ts";
 
 const root = process.cwd();
 const runId = `${Date.now()}-${randomUUID()}`;
@@ -91,11 +94,11 @@ async function snapshot() {
 }
 async function seedHomeBatch() {
   const loaded = await invoke("read_creation_snapshot");
-  const saved = loaded.snapshot ?? emptySnapshot();
+  const saved = loaded.snapshot ?? { ...emptySnapshot(), version: 3 };
   // Batch size belongs to the persisted draft, not the shared model menu.
   await invoke("write_creation_snapshot", {
     expectedRevision: loaded.status === "missing" ? null : saved.revision,
-    snapshot: {
+    snapshot: serializeCreationSnapshot({
       ...saved,
       revision: saved.revision + 1,
       homeDraft: {
@@ -103,7 +106,7 @@ async function seedHomeBatch() {
         outputCount: 4,
         updatedAt: Date.now(),
       },
-    },
+    }),
   });
   await page.reload();
   await expect(page.locator(".app")).toHaveAttribute(

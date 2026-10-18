@@ -13,3 +13,9 @@
 恢复树 lint/typecheck、Node 1949 PASS/20 SKIP、Agent 检查通过；UI 824 PASS、2 FAIL（顶栏仍期待旧“浏览器版”文案，已按用户平台区分要求改为“网页版”），另1插件恢复用例重试后通过，原失败保留。独立审查指出成熟来源携带的三处既有回归断言删除没有本任务依据，现恢复 responsive-layout / settings-navigation / taskhost-lifecycle 原始覆盖，不降低门禁；当前修正后需重跑并按新head审查。
 
 修正后 targeted browser 29/29 PASS（workers=1、retries=0），含恢复的四个手机菜单边界/触控/hit-test用例、设置保存/关闭后操作、顶栏文案和插件恢复。Node完整1969项：1949 PASS/20 SKIP；Agent206项：204 PASS/2 SKIP。后续整条verify和正式发布结果保存在外部收据/PR，避免文档自引用循环。
+
+## 当前源码完整本地验证与 Hosted 夹具修正
+
+be6196ce 的完整 verify exit0：浏览器831/831（无flaky）、Design8/8、Development插件链通过，Mobile371及隔离Metro缓存重建的组合Web9/9通过。实际Tauri第四/五轮有界PASS：fresh41、4282项Agent资源散列及启停健康、9项目/11完整聊天/22消息/1归档记录与活动身份/草稿/配置、6原件Native读回均通过；工具栏中心误差0.3301 CSS px、画布clip且无横向滚动，正常关闭自有进程，原冷备不变。空隔离CODEX_HOME的真实账号连接未验，截图中的Codex app-server错误保留，不将资源健康称为账号对话全链通过。
+
+Hosted PR39121744645 / push39121741571 的应用、Rust和release构建通过，最后Native TaskHost因seedHomeBatch的旧空库fixture仍写v2而失败；新Native正确拒绝未迁移的旧格式。只修当前writer夹具：missing时显式version3并经现有serializeCreationSnapshot写入，不改产品校验器或删除任何断言。修后真实本机client:taskhost:test 11/11 PASS，5次Native启动含崩溃/重启和凭据清理，errors为空；新提交仍须当前head独审和Hosted。原失败日志与本机收据分别保留于外部unified-release-20261018目录。
