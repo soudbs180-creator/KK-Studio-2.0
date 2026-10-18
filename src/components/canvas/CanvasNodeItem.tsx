@@ -21,6 +21,8 @@ import type { useCanvasControls } from "./useCanvasControls";
 import type { useCanvasAddMenu } from "./useCanvasAddMenu";
 import CanvasNodeFrame from "./CanvasNodeFrame";
 import CanvasNodeContent from "./CanvasNodeContent";
+import { invoke, isTauri } from "@tauri-apps/api/core";
+import { shadowEventBus } from "../../features/sync/shadowEventBus";
 import {
   CanvasImageNodeContext,
   CanvasImageCommandContext,
@@ -184,6 +186,100 @@ function CanvasNodeItem({
   const isSelected = controls.selectedNode === item.id;
   const setComposerExtraHeight = controls.setComposerExtraHeight;
   const isGenerationActive = activeLocalResultIds.includes(item.id);
+  const isGenerating = (item.generationStatus as unknown as string) === "generating";
+
+  const handlePreempt = useCallback(
+    (reason: string = "designer_override") => {
+      const taskId =
+        (item as unknown as { taskId?: string; activeTaskId?: string }).taskId ||
+        (item as unknown as { taskId?: string; activeTaskId?: string }).activeTaskId ||
+        "unknown";
+      const baseRev = item.node_rev ?? shadowEventBus.getNodeRevision(item.id) ?? 1;
+
+      // 1. Emit shadow events
+      shadowEventBus.emit({
+        eventType: "agent.task.cancelled",
+        targetNodeId: item.id,
+        actor: "system",
+        baseRev,
+        newRev: baseRev,
+        payload: { taskId, targetNodeId: item.id, reason },
+      });
+
+      const newRev = baseRev + 1;
+      shadowEventBus.setNodeRevision(item.id, newRev);
+      shadowEventBus.emit({
+        eventType: "canvas.node.override",
+        targetNodeId: item.id,
+        actor: "designer",
+        baseRev,
+        newRev,
+        payload: {
+          targetNodeId: item.id,
+          actor: "designer",
+          taskId,
+          overriddenState: "generating",
+          reason,
+        },
+      });
+
+      // 2. Invoke preemption backend if in Tauri
+      if (isTauri()) {
+        invoke("concurrency_preempt_node", {
+          nodeId: item.id,
+          actor: "designer",
+        }).catch(() => {});
+        if (taskId !== "unknown") {
+          invoke("task_host_cancel", { taskId }).catch(() => {});
+        }
+      }
+
+      // 3. Clear generationStatus and restore designer interactive control
+      onItemsChange((current) =>
+        current.map((entry) =>
+          entry.id === item.id
+            ? {
+                ...entry,
+                generationStatus: undefined,
+                node_rev: newRev,
+                updatedAt: Date.now(),
+              }
+            : entry,
+        ),
+      );
+    },
+    [item, onItemsChange],
+  );
+
+  const handleDelete = useCallback(() => {
+    if (isGenerating) {
+      handlePreempt("designer_delete");
+    }
+    onDelete(item.id);
+  }, [isGenerating, handlePreempt, onDelete, item.id]);
+
+  const wrappedControls = useMemo(() => {
+    if (!isGenerating) return controls;
+    return {
+      ...controls,
+      startNodeDrag: (event: React.PointerEvent<HTMLDivElement>, id: string) => {
+        if (id === item.id) {
+          handlePreempt("designer_drag");
+        }
+        controls.startNodeDrag(event, id);
+      },
+      moveNodeWithKeyboard: (
+        event: React.KeyboardEvent<HTMLDivElement>,
+        id: string,
+        onDeleteNode: () => void,
+      ) => {
+        if (id === item.id) {
+          handlePreempt("designer_keyboard_move");
+        }
+        controls.moveNodeWithKeyboard(event, id, onDeleteNode);
+      },
+    };
+  }, [controls, isGenerating, handlePreempt, item.id]);
 
   const editing: NodeEditingProps = useMemo(
     () => ({
@@ -237,14 +333,35 @@ function CanvasNodeItem({
       onAddReferences: (entries) => onAddReferences(item.id, entries),
       onRemoveReference,
       onGenerationState: (phase) => onGenerationState(item.id, phase),
-      onChange: (patch) =>
+      onChange: (patch) => {
+        if (isGenerating) {
+          handlePreempt("designer_update");
+        }
+        const baseRev = item.node_rev ?? shadowEventBus.getNodeRevision(item.id) ?? 1;
+        const newRev = baseRev + 1;
+        shadowEventBus.setNodeRevision(item.id, newRev);
+        shadowEventBus.emit({
+          eventType: "canvas.node.updated",
+          targetNodeId: item.id,
+          actor: "designer",
+          baseRev,
+          newRev,
+          payload: { id: item.id, patch },
+        });
         onItemsChange((current) =>
           current.map((entry) =>
             entry.id === item.id
-              ? { ...entry, ...patch, updatedAt: Date.now() }
+              ? {
+                  ...entry,
+                  ...patch,
+                  generationStatus: isGenerating ? undefined : entry.generationStatus,
+                  node_rev: newRev,
+                  updatedAt: Date.now(),
+                }
               : entry,
           ),
-        ),
+        );
+      },
     }),
     [
       isSelected,
@@ -254,6 +371,8 @@ function CanvasNodeItem({
       liked,
       onToggleLike,
       item,
+      isGenerating,
+      handlePreempt,
       onConfigure,
       setComposerExtraHeight,
       onDemoResults,
@@ -272,7 +391,7 @@ function CanvasNodeItem({
       <CanvasNodeFrame
         item={item}
         hasContent={hasContent}
-        controls={controls}
+        controls={wrappedControls}
         onOpenMenu={addMenu.open}
         menuOpen={addMenu.menu?.parentId === item.id}
         onConnect={onConnect}
@@ -280,11 +399,34 @@ function CanvasNodeItem({
         connectionTarget={connectionTarget}
         liked={liked}
         onLike={() => onToggleLike(item.id)}
-        onDelete={() => onDelete(item.id)}
+        onDelete={handleDelete}
       >
+        {isGenerating && (
+          <div
+            className="pointer-events-none absolute inset-0 z-20 rounded-xl ring-2 ring-amber-500/60 shadow-[0_0_12px_rgba(245,158,11,0.3)] animate-pulse"
+            aria-hidden="true"
+          />
+        )}
+        {isGenerating && (
+          <div className="absolute top-2 right-2 z-30 flex items-center gap-1.5 px-2.5 py-1 bg-amber-500/90 text-white text-xs font-medium rounded-full shadow-md backdrop-blur-sm pointer-events-auto">
+            <span className="w-2 h-2 rounded-full bg-white animate-ping mr-0.5" />
+            <span>正在生成</span>
+            <button
+              type="button"
+              aria-label="中断"
+              className="ml-1 px-1.5 py-0.5 text-[10px] bg-amber-700/80 hover:bg-amber-800 text-white rounded transition-colors cursor-pointer"
+              onClick={(e) => {
+                e.stopPropagation();
+                handlePreempt("designer_interrupt");
+              }}
+            >
+              中断
+            </button>
+          </div>
+        )}
         <CanvasNodeContent
           item={item}
-          onDelete={() => onDelete(item.id)}
+          onDelete={handleDelete}
           editing={editing}
           uploadInput={uploadInput}
           scale={controls.transform.scale}

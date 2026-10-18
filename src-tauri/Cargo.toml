@@ -1,6 +1,6 @@
 [package]
 name = "kk-studio"
-version = "2.1.36"
+version = "2.1.35"
 description = "kk Studio - AI 创作工作台"
 authors = ["kk Studio"]
 license = "MIT"
@@ -30,6 +30,8 @@ zip = { version = "2.4.2", default-features = false, features = ["deflate"] }
 ryu-js = "1.0.3"
 getrandom = "=0.3.4"
 axum = { version = "=0.8.9", default-features = false, features = ["http1", "json", "tokio"] }
+rusqlite = { version = "0.32", features = ["bundled"] }
+uuid = { version = "1", features = ["v4", "serde"] }
 
 [target.'cfg(target_os = "windows")'.dependencies]
 keyring = { version = "3.6.3", default-features = false, features = ["windows-native"] }

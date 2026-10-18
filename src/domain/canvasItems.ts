@@ -43,6 +43,8 @@ export interface PluginItemPayload {
 }
 
 export interface CanvasCollectionItem {
+  /** Monotonic revision number for concurrency control and EventBus synchronization */
+  node_rev?: number;
   imageEditDraft?: MaskDocument;
   imageEditContext?: ImageEditContext;
   imageEditPrompt?: string;

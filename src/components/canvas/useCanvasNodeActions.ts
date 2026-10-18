@@ -15,6 +15,7 @@ import { cardLayout, cardSelectionLayout } from "../../domain/canvasGraph";
 import { MIN_SCALE, type Point, type ViewTransform } from "./canvasModel";
 import { fitRects } from "../../domain/canvasViewport";
 import { visibleComposerExtraHeight } from "./composerLayout";
+import { shadowEventBus } from "../../features/sync/shadowEventBus";
 
 export interface AddNodeOptions {
   parentId?: string;
@@ -74,6 +75,7 @@ export function useCanvasNodeActions({
     const id = newCanvasNodeId(kind);
     const item: CanvasCollectionItem = {
       id,
+      node_rev: 1,
       kind,
       plugin: options.plugin,
       title:
@@ -121,6 +123,15 @@ export function useCanvasNodeActions({
           });
     setNodes((current) => ({ ...current, [id]: position }));
     onItemsChange((current) => [...current, item]);
+    shadowEventBus.setNodeRevision(id, 1);
+    shadowEventBus.emit({
+      eventType: "canvas.node.created",
+      targetNodeId: id,
+      actor: "designer",
+      baseRev: 0,
+      newRev: 1,
+      payload: { item, position },
+    });
     if (options.select !== false) {
       pendingFocus.current = id;
       setSelectedNode(id);
@@ -128,6 +139,18 @@ export function useCanvasNodeActions({
     return id;
   }
   function removeNode(id: string): void {
+    const currentItem = items.find((item) => item.id === id);
+    const baseRev = currentItem?.node_rev ?? shadowEventBus.getNodeRevision(id);
+    const newRev = baseRev + 1;
+    shadowEventBus.setNodeRevision(id, newRev);
+    shadowEventBus.emit({
+      eventType: "canvas.node.deleted",
+      targetNodeId: id,
+      actor: "designer",
+      baseRev,
+      newRev,
+      payload: { id },
+    });
     onItemsChange((current) => current.filter((item) => item.id !== id));
     setNodes((current) =>
       Object.fromEntries(Object.entries(current).filter(([key]) => key !== id)),
