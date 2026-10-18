@@ -1,6 +1,6 @@
 # Intent：统一工具栏修复与三端正式发布
 
-- Task ID：TASK-CANVAS-RELEASE-20261018；2026-10-18；Owner root-release；IN_PROGRESS；交付包角色：current。
+- Task ID：TASK-CANVAS-RELEASE-20261018；2026-10-18；Owner root-release；IN_PROGRESS；交付包角色：historical（PR73 整合时点）；当前补充交付见[草稿绘制同步](../2026-10-18-chat-draft-paint-sync/intent.md)。
 - [Intent](intent.md) / [Spec](spec.md) / [Plan](plan.md) / [Verification](verification.md) / [Review](review.md)。
 - 用户授权：把本次修复提交并合并 main，统一版本重新发包，kkai.plus 和手机网页版同步更新，保留原项目和配置。
 - 实际远端 base 为 97ef182b10c076c81611dea24e0b1c07c127dd49；不采用本地 main 的其他未推送整合。

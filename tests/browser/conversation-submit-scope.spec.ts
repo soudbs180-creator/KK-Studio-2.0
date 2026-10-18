@@ -102,6 +102,29 @@ for (const edit of ["other chat", "sending chat"] as const) {
   test(`delayed direct acceptance preserves the ${edit} draft and origin through real UI and persistence`, async ({
     page,
   }, info) => {
+    const session = await page.context().newCDPSession(page);
+    await session.send("Emulation.setCPUThrottlingRate", { rate: 4 });
+    await page.addInitScript(() => {
+      const mismatches: { chat: string; prompt: string }[] = [];
+      Object.assign(window, { crossChatDraftFrames: mismatches });
+      const inspect = () => {
+        const chat = document
+          .querySelector('[role="tab"][aria-selected="true"]')
+          ?.textContent?.trim();
+        const input = document.querySelector<HTMLTextAreaElement>(
+          'textarea[aria-label="对话内容"]',
+        );
+        if (
+          input &&
+          !input.disabled &&
+          ((chat === "Direct A" && input.value === "Unsent B draft") ||
+            (chat === "Direct B" && input.value === "Original A request"))
+        )
+          mismatches.push({ chat, prompt: input.value });
+        requestAnimationFrame(inspect);
+      };
+      requestAnimationFrame(inspect);
+    });
     const created = createProject({
       prompt: "",
       kind: "text",
@@ -281,6 +304,13 @@ for (const edit of ["other chat", "sending chat"] as const) {
         .toBe("succeeded");
       await expect(input).toHaveValue(unsent);
       await expect(input).toBeEnabled();
+      expect(
+        await page.evaluate(
+          () =>
+            (window as unknown as { crossChatDraftFrames: unknown[] })
+              .crossChatDraftFrames,
+        ),
+      ).toEqual([]);
       expect(requests).toHaveLength(1);
       const saved = (await stored(page)).projects[0];
       expect(saved.tasks[0].originChatId).toBe("A");

@@ -8,6 +8,10 @@
 
 本文是最短恢复入口，不是任务状态或产品能力的第二事实源。任务状态只读 [`task-ledger.json`](task-ledger.json)；当前项目事实只读 [`PROJECT_STATE.md`](PROJECT_STATE.md)；历史验证只按带日期的 change package、commit、运行模式和 receipt 回读。
 
+## 当前恢复入口：统一41发布前草稿同步（2026-10-18）
+
+TASK-CANVAS-RELEASE-20261018仍IN_PROGRESS/NOT_VERIFIED；先读[当前计划](../changes/2026-10-18-unified-toolbar-release/plan.md)和[验证](../changes/2026-10-18-unified-toolbar-release/verification.md)。PR73已正常合入main87c9cfbe，main质量五job绿但完整日志有1草稿flaky，未打tag。4倍CPU逐帧复核确认可编辑草稿短暂显示另一聊天值，当前同锁定树fix/TASK-CANVAS-RELEASE-20261018-draft-race仅将恢复改布局阶段并补逐帧断言；旧RED/新10次GREEN保留，完整新head验证/独审/Hosted尚待。现网39，三端41标签/正式安装包/部署未做，不能提前把87c称最终source。最新真实冷备3952文件、9项目/11聊天/22消息/2归档回执与7原件已校验；不碰keyring或发付费turn。以下旧入口按各自时点保留，不覆盖本段当前发布状态。
+
 ## 当前恢复入口：手机结果优先与完整创作输入（2026-10-18）
 
 先读[本次计划](../changes/2026-10-18-mobile-composer/plan.md)、[当前规格](../changes/2026-10-18-mobile-composer/spec.md)与[验证](../changes/2026-10-18-mobile-composer/verification.md)。TASK-MOBILE-COMPOSER-001 IN_PROGRESS/NOT_VERIFIED，base97ef、fix/TASK-MOBILE-COMPOSER-001-focus、原TASK-MOBILE-12AI-001隔离树；各代理只写授权独立路径，root串行整合/构建/浏览器，文档单一写入。范围已扩为结果优先、六入口、共享圆形发送、上传/Skill、12ai指定GPT Image参考编辑和运行时尺寸；首轮13项/da0d独审仅PRECHECK_ONLY。本地根完整verify exit0（Node1852/20skip、Agent199/2skip、browser832首试+1项5xx flaky，独立零重试复核1PASS、DESIGN41+8/development4）；Mobile433/type/lint、旧v39完整snapshot/backup合成兼容、窄屏最终40/40及gzip增4319B预算通过。首轮32PASS/8FAIL和各修正、语音/上传epoch10项RED/GREEN保留。小于360px六控件44px同排不折行，390px48px。下一步由root冻结提交并另存精确SHA独审/证据关联，最终Hosted及正式Release仍PENDING，PR72未合并、未发布，不为自引用SHA循环改文档。
@@ -202,4 +206,4 @@ Issue68设置保存同步专项：隔离分支 fix/TASK-ISSUE-68-settings-save�
 
 ## 2026-10-18 TASK-CANVAS-RELEASE-20261018：统一发布进行中
 
-[当前交付包](../changes/2026-10-18-unified-toolbar-release/intent.md)。远端97ef为base，三端目标2.1.41；成熟chat迁移是保留现有v3项目的必要依赖。当前尚未合并/发包/部署，历史2.1.39安装器及网页不作为新版本证据。外部清理中断后恢复到新锁定任务树；后续当前head验证与正式收据另存。
+[当前交付包](../changes/2026-10-18-unified-toolbar-release/intent.md)。PR73已合入main87c，当前先处理main草稿flaky中已证的跨聊天绘制错配；后续正常PR再等最终main门禁，仍无tag/正式包/部署。外部清理由用户确认暂停，原冷备/失败/分支保留，最终来源及正式工件按实际收据记录。
