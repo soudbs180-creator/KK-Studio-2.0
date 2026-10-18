@@ -9743,15 +9743,15 @@
     "dependencies": [],
     "owner": "issue68-specialist",
     "ownerRole": "implementation-integrator",
-    "branch": "fix/TASK-ISSUE-68-settings-save",
-    "worktree": "C:/Users/Administrator/Documents/Codex/2026-10-18/task/issue68",
+    "branch": "docs/TASK-ISSUE-68-main-closeout",
+    "worktree": "C:/Users/Administrator/Documents/Codex/2026-10-18/task/issue68-closeout",
     "baseSha": "6b933f4ffd80cdd5ca2d3508678a4562fc2b02d8",
     "affectedModules": [
       "tests/desktop/taskhost-lifecycle.mjs",
       "tests/browser/settings-navigation.spec.ts"
     ],
-    "status": "REVIEW",
-    "displayStatus": "未完成",
+    "status": "DONE",
+    "displayStatus": "已完成",
     "priority": "P1",
     "priorityRationale": "main quality Native生命周期失败，阻断主线质量验收。",
     "evidence": [
@@ -9759,15 +9759,58 @@
       "docs/changes/2026-10-18-issue-68-settings-save/spec.md",
       "docs/changes/2026-10-18-issue-68-settings-save/plan.md",
       "docs/changes/2026-10-18-issue-68-settings-save/verification.md",
-      "docs/changes/2026-10-18-issue-68-settings-save/review.md"
+      "docs/changes/2026-10-18-issue-68-settings-save/review.md",
+      "docs/changes/2026-10-18-issue-68-main-closeout/intent.md",
+      "docs/changes/2026-10-18-issue-68-main-closeout/spec.md",
+      "docs/changes/2026-10-18-issue-68-main-closeout/plan.md",
+      "docs/changes/2026-10-18-issue-68-main-closeout/verification.md",
+      "docs/changes/2026-10-18-issue-68-main-closeout/review.md"
     ],
-    "verification": "最小测试同步修复；真实Native回执gate13/正式生命周期11均PASS且凭据清理完成。完整verify exit0：Node1852/20既有skip、Agent199/2既有skip、Edge827首试0flaky/skip、设计41+8、开发态4步PASS；Rust213/1既有ignored+41通过。原96文件hash一致，原150账本对象未变。实现C1 f7420989独立精确SHA审查PASS/P0P1=0，delivery12files0violations；最终文档head/Hosted/PR另记。",
-    "verificationResult": "PARTIAL",
+    "verification": "PR69已按正常受保护squash合入main c248d8178ec1754315559a9e476ac909bb494287，合并tree与精确已审d7359851候选一致。PRquality39080873624五项、push39080836510适用项及合后main quality39083468213五项均PASS，main guards39083468190双平台PASS；合后verify浏览器827首试、Native11通过。Issue68实际closed/completed。taskkill旧清理异常原因UNKNOWN，独立登记TASK-NATIVE-TEARDOWN-20261018，未删除或宣称修复；不代表总客户端交付。",
+    "verificationResult": "PASS",
     "updated": "2026-10-18",
     "lastVerified": "2026-10-18",
-    "nextAction": "纯文档head补审并建立draft PR，回读当前Hosted后交现有main协调者；不merge/发布。",
+    "nextAction": "本专项结项；保留原失败及当前主线证据。TASK-NATIVE-TEARDOWN-20261018在新会话独立调查；发布/部署和总客户端交付不在本次范围。",
     "requirementRefs": [
       "https://github.com/soudbs180-creator/KK-Studio-2.0/issues/68"
+    ],
+    "featureIds": [],
+    "implementationBranch": "fix/TASK-ISSUE-68-settings-save",
+    "closeoutBaseSha": "c248d8178ec1754315559a9e476ac909bb494287"
+  },
+  {
+    "id": "TASK-NATIVE-TEARDOWN-20261018",
+    "title": "查明原生生命周期taskkill清理非零原因",
+    "goal": "独立调查已保存的owned进程清理异常，不把偶发通过当作根因已关闭。",
+    "scope": "后续新会话只调查测试teardown；本次Issue68文档结项仅登记证据，不实现第二项修复。",
+    "acceptance": [
+      "保留native-head-evidence原失败、同SHA串行通过及凭据清理证据。",
+      "在新隔离会话中捕获taskkill退出码/stdout/stderr及owned进程退出时序，区分环境、进程竞态或产品问题。",
+      "结论有直接证据及回归，不通过吞异常、force或延长超时降低门槛。"
+    ],
+    "dependencies": [],
+    "owner": "unallocated",
+    "ownerRole": "repository-maintainer",
+    "branch": "unallocated",
+    "worktree": "unallocated",
+    "status": "TODO",
+    "displayStatus": "未完成",
+    "priority": "P2",
+    "priorityRationale": "发生于已越过Issue68路径后的测试stop；具体原因及用户影响未证明，保持独立调查。",
+    "affectedModules": [
+      "tests/desktop/taskhost-lifecycle.mjs"
+    ],
+    "evidence": [
+      "docs/changes/2026-10-18-issue-68-settings-save/verification.md",
+      "docs/changes/2026-10-18-issue-68-main-closeout/verification.md"
+    ],
+    "verification": "事实：d7359851额外native复验在actual-app-durable-intent-and-restart之后taskkill /PID 52860 /T /F返回非零，原收据9checks/整体未通过、credentialCleanupComplete=true；相同SHA随后串行Native11通过，PR/push及main Hosted亦Native11通过。taskkill具体原因UNKNOWN；本记录不宣称修复或完全消除。",
+    "verificationResult": "NOT_VERIFIED",
+    "updated": "2026-10-18",
+    "lastVerified": "2026-10-18",
+    "nextAction": "在新会话独立认领并只对owned进程调查，先保全错误细节与可重复证据。",
+    "requirementRefs": [
+      "ledger:TASK-ISSUE-68"
     ],
     "featureIds": []
   }

@@ -11,6 +11,11 @@
 
 当前任务为TASK-MOBILE-COMPOSER-001，IN_PROGRESS/NOT_VERIFIED；base97ef、分支fix/TASK-MOBILE-COMPOSER-001-focus复用原隔离树，不写canonical。空text点模型失焦卸载已真实本地复现；interacting锁存候选本地13项首试通过，修复/已提交head独审、Hosted及Web2.1.40/Mobile2.1.5正式发布仍待完成，Desktop不变。实际现网仍Web39/Mobile4、唯一previous38，不提前写成40已部署。详见[当前验证](../changes/2026-10-18-mobile-composer/verification.md)。
 
+Issue68专项有界结项：PR69已普通受保护squash合入main c248d8178ec1754315559a9e476ac909bb494287，合后quality39083468213五项及guards39083468190成功，verify浏览器827/Native11通过，Issue68 closed/completed。taskkill清理异常另列 TASK-NATIVE-TEARDOWN-20261018（TODO，原因UNKNOWN），既有auto-merge解析失败保留。仅本专项结项，不代表总客户端交付；没有发布/部署/版本变化。见[结项验证](../changes/2026-10-18-issue-68-main-closeout/verification.md)。
+
+以下早先候选与发布事实保留各自原时点含义；Issue68当前专项状态以上段合后结项证据为准。
+
+
 旧TASK-MOBILE-12AI-001仅按PR70产品上线、图文保存恢复与PR71文档收据门禁完成范围DONE/PASS：d3cb quality39110739016五项、guards39110739014两项通过，PR71已squash至97ef；零jobs auto-merge异常原因UNKNOWN另保留。黑截图原JPEG字节/像素并未黑，旧误判更正；15分8秒恢复与网络截断/实体后台未验分别保留。FEAT-028 PARTIAL/T12开放，0新增生成额度；以下12ai段是原时点快照，旧待门禁措辞由本段已核实收尾替代，不代填其他未验能力。
 
 当前任务 TASK-MOBILE-12AI-001 已按授权完成隔离实现、PR70与正式Web发布，真实图文现场实测有界PASS，独立live证据复核已通过，最终文档head门禁待执行，任务REVIEW/NOT_VERIFIED。产品main `9d10af39d0b028a8ddc7f06c594c813ef25b7205` / tree `611cf648ade1d0fb98c5474ae91615f0bbaf1a23`，与已审b0ef完整树相同；main quality39104785098五项/guards39104785090双平台成功，正式Release416299447/部署39107253299通过。公网build-info为Web2.1.39/9d10，独立Mobile2.1.4，Desktop源码仍2.1.37；实际CI/公网entry-140201476199fedafe0abc0ba5b1dfb9.js SHA `cf341da42fd899433c99a4de1089097dbe74d18fa6b2099a9acc2fbb957d9d36`，不沿用Windows本地3d5。生产入口9项通过；current39/唯一previous38、两版validated、exact2与配置/auth/服务前后观察已核对，未执行实际生产降版。最新验收见[生产收据](../changes/2026-10-18-mobile-12ai-production-receipt/verification.md)，发布实录见[Release](../changes/2026-10-18-mobile-12ai/release.md)。

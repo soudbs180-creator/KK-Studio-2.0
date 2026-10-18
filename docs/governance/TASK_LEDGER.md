@@ -158,7 +158,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-HOME-LOAD-DRAFT-20261015 | 保护读取期间编辑不覆盖已有首页草稿设置 | PARTIAL | 进行中 | P2 | TASK-CODEX-HOME-20261015 | root | 保留通过的代码子范围与失败证据，随当前组合源码执行完整verify、新Native重建、最终精确独审/Hosted与交付，不重复开发已修复读取合并。 该工作树只作历史承接来源；本轮安全修复见TASK-AUDIT-REPAIR-20261017，未新增活动分配。 |
 | TASK-VERIFY-DEPS-20261015 | 恢复共享依赖清理事故并核验执行边界 | PARTIAL | 进行中 | P1 | TASK-CODEX-HOME-20261015 | root | 保持防复发子范围PASS与旧事故UNKNOWN分离；不在共享依赖安装或清理。原始字节及影响如无证据不得补写；最终当前提交/托管/交付门禁另验。 |
 | TASK-DESIGN-MD-20261015 | 统一DESIGN设计系统与产品UI收敛 | PARTIAL | 进行中 | P1 | none | root | 关闭基础独审问题，将规则落入设置/模型/聊天/画布/项目/素材等实际页面，按Desktop→Web留同状态证据。 |
-| TASK-ISSUE-68 | 修复原生设置保存后的测试同步缺口 | REVIEW | 未完成 | P1 | none | issue68-specialist | 纯文档head补审并建立draft PR，回读当前Hosted后交现有main协调者；不merge/发布。 |
+| TASK-ISSUE-68 | 修复原生设置保存后的测试同步缺口 | DONE | 已完成 | P1 | none | issue68-specialist | 本专项结项；保留原失败及当前主线证据。TASK-NATIVE-TEARDOWN-20261018在新会话独立调查；发布/部署和总客户端交付不在本次范围。 |
+| TASK-NATIVE-TEARDOWN-20261018 | 查明原生生命周期taskkill清理非零原因 | TODO | 未完成 | P2 | none | unallocated | 在新会话独立认领并只对owned进程调查，先保全错误细节与可重复证据。 |
 
 ## TASK-MOBILE-COMPOSER-001 — 修复手机空文字输入模型按钮失焦无响应
 
@@ -3055,17 +3056,36 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 - Goal: Issue68的Native lifecycle在异步保存后确认成功和设置弹窗消失，正常进入模型菜单。
 - Scope: 仅Native生命周期与既有延迟设置测试及交付记录；不改产品关闭契约、版本或部署。
-- Display status: 未完成
+- Display status: 已完成
 - Priority: P1 — main quality Native生命周期失败，阻断主线质量验收。
 - Requirement refs: https://github.com/soudbs180-creator/KK-Studio-2.0/issues/68
 - Feature IDs: none
 - Owner role: implementation-integrator
 - Acceptance: 保留run39060650077原失败并核对artifact12111469102，确认无其他认领或候选重叠。; 真实Native保存回执延迟时保护关闭，释放后确认保存成功、弹窗消失和模型菜单可达。; 最小测试修复、相关完整验证及已提交SHA独立审查通过后建立关联Issue68的draft PR，交现有main协调者。
-- Branch: `fix/TASK-ISSUE-68-settings-save`
-- Worktree: `C:/Users/Administrator/Documents/Codex/2026-10-18/task/issue68`
+- Branch: `docs/TASK-ISSUE-68-main-closeout`
+- Worktree: `C:/Users/Administrator/Documents/Codex/2026-10-18/task/issue68-closeout`
 - Modules: tests/desktop/taskhost-lifecycle.mjs, tests/browser/settings-navigation.spec.ts
-- Verification: PARTIAL — 最小测试同步修复；真实Native回执gate13/正式生命周期11均PASS且凭据清理完成。完整verify exit0：Node1852/20既有skip、Agent199/2既有skip、Edge827首试0flaky/skip、设计41+8、开发态4步PASS；Rust213/1既有ignored+41通过。原96文件hash一致，原150账本对象未变。实现C1 f7420989独立精确SHA审查PASS/P0P1=0，delivery12files0violations；最终文档head/Hosted/PR另记。
-- Evidence: [docs/changes/2026-10-18-issue-68-settings-save/intent.md](../../docs/changes/2026-10-18-issue-68-settings-save/intent.md), [docs/changes/2026-10-18-issue-68-settings-save/spec.md](../../docs/changes/2026-10-18-issue-68-settings-save/spec.md), [docs/changes/2026-10-18-issue-68-settings-save/plan.md](../../docs/changes/2026-10-18-issue-68-settings-save/plan.md), [docs/changes/2026-10-18-issue-68-settings-save/verification.md](../../docs/changes/2026-10-18-issue-68-settings-save/verification.md), [docs/changes/2026-10-18-issue-68-settings-save/review.md](../../docs/changes/2026-10-18-issue-68-settings-save/review.md)
-- Next action: 纯文档head补审并建立draft PR，回读当前Hosted后交现有main协调者；不merge/发布。
+- Verification: PASS — PR69已按正常受保护squash合入main c248d8178ec1754315559a9e476ac909bb494287，合并tree与精确已审d7359851候选一致。PRquality39080873624五项、push39080836510适用项及合后main quality39083468213五项均PASS，main guards39083468190双平台PASS；合后verify浏览器827首试、Native11通过。Issue68实际closed/completed。taskkill旧清理异常原因UNKNOWN，独立登记TASK-NATIVE-TEARDOWN-20261018，未删除或宣称修复；不代表总客户端交付。
+- Evidence: [docs/changes/2026-10-18-issue-68-settings-save/intent.md](../../docs/changes/2026-10-18-issue-68-settings-save/intent.md), [docs/changes/2026-10-18-issue-68-settings-save/spec.md](../../docs/changes/2026-10-18-issue-68-settings-save/spec.md), [docs/changes/2026-10-18-issue-68-settings-save/plan.md](../../docs/changes/2026-10-18-issue-68-settings-save/plan.md), [docs/changes/2026-10-18-issue-68-settings-save/verification.md](../../docs/changes/2026-10-18-issue-68-settings-save/verification.md), [docs/changes/2026-10-18-issue-68-settings-save/review.md](../../docs/changes/2026-10-18-issue-68-settings-save/review.md), [docs/changes/2026-10-18-issue-68-main-closeout/intent.md](../../docs/changes/2026-10-18-issue-68-main-closeout/intent.md), [docs/changes/2026-10-18-issue-68-main-closeout/spec.md](../../docs/changes/2026-10-18-issue-68-main-closeout/spec.md), [docs/changes/2026-10-18-issue-68-main-closeout/plan.md](../../docs/changes/2026-10-18-issue-68-main-closeout/plan.md), [docs/changes/2026-10-18-issue-68-main-closeout/verification.md](../../docs/changes/2026-10-18-issue-68-main-closeout/verification.md), [docs/changes/2026-10-18-issue-68-main-closeout/review.md](../../docs/changes/2026-10-18-issue-68-main-closeout/review.md)
+- Next action: 本专项结项；保留原失败及当前主线证据。TASK-NATIVE-TEARDOWN-20261018在新会话独立调查；发布/部署和总客户端交付不在本次范围。
+- Last verified: 2026-10-18
+- Updated: 2026-10-18
+
+## TASK-NATIVE-TEARDOWN-20261018 — 查明原生生命周期taskkill清理非零原因
+
+- Goal: 独立调查已保存的owned进程清理异常，不把偶发通过当作根因已关闭。
+- Scope: 后续新会话只调查测试teardown；本次Issue68文档结项仅登记证据，不实现第二项修复。
+- Display status: 未完成
+- Priority: P2 — 发生于已越过Issue68路径后的测试stop；具体原因及用户影响未证明，保持独立调查。
+- Requirement refs: ledger:TASK-ISSUE-68
+- Feature IDs: none
+- Owner role: repository-maintainer
+- Acceptance: 保留native-head-evidence原失败、同SHA串行通过及凭据清理证据。; 在新隔离会话中捕获taskkill退出码/stdout/stderr及owned进程退出时序，区分环境、进程竞态或产品问题。; 结论有直接证据及回归，不通过吞异常、force或延长超时降低门槛。
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: tests/desktop/taskhost-lifecycle.mjs
+- Verification: NOT_VERIFIED — 事实：d7359851额外native复验在actual-app-durable-intent-and-restart之后taskkill /PID 52860 /T /F返回非零，原收据9checks/整体未通过、credentialCleanupComplete=true；相同SHA随后串行Native11通过，PR/push及main Hosted亦Native11通过。taskkill具体原因UNKNOWN；本记录不宣称修复或完全消除。
+- Evidence: [docs/changes/2026-10-18-issue-68-settings-save/verification.md](../../docs/changes/2026-10-18-issue-68-settings-save/verification.md), [docs/changes/2026-10-18-issue-68-main-closeout/verification.md](../../docs/changes/2026-10-18-issue-68-main-closeout/verification.md)
+- Next action: 在新会话独立认领并只对owned进程调查，先保全错误细节与可重复证据。
 - Last verified: 2026-10-18
 - Updated: 2026-10-18

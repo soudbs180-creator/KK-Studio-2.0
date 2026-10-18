@@ -197,3 +197,8 @@ TASK-AGENT-RECOVERY-20261013：[验证](../changes/2026-10-13-agent-recovery/ver
 当前HOME main承接分支f10后修复中。实际重开两次FAIL对应HOME-NATIVE-01：恢复诊断占用私有stdout握手预算，已真实stdio RED/GREEN；保留Rust限制和原connected断言，新冻结全量/官方重建/实际重开与独审仍待。工程外证据home-native-diagnostic-f10c59ff及home-stdio-*.log，daily/用户资料未用作夹具。不要把旧fc完整verify或f10构建当新源码通过。
 
 Issue68设置保存同步专项：隔离分支 fix/TASK-ISSUE-68-settings-save，基线main6b933f4f，仅补测试等待。回执和后续验证见[专项验证](../changes/2026-10-18-issue-68-settings-save/verification.md)，以draft PR交原main协调者；不merge/发布，不恢复或清理原树。
+
+
+Issue68专项有界结项：PR69已普通受保护squash合入main c248d8178ec1754315559a9e476ac909bb494287，合后quality39083468213五项及guards39083468190成功，verify浏览器827/Native11通过，Issue68 closed/completed。taskkill清理异常另列 TASK-NATIVE-TEARDOWN-20261018（TODO，原因UNKNOWN），既有auto-merge解析失败保留。仅本专项结项，不代表总客户端交付；没有发布/部署/版本变化。见[结项验证](../changes/2026-10-18-issue-68-main-closeout/verification.md)。
+
+以下早先候选与发布事实保留各自原时点含义；Issue68当前专项状态以上段合后结项证据为准。
