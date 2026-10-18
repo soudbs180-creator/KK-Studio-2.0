@@ -23,10 +23,8 @@ import {
   MODEL_PROVIDER_STORAGE_KEY,
   parseModelProvider,
 } from "../../src/domain/modelProvider.ts";
-import {
-  appendImageTask,
-  ImageTaskCommandError,
-} from "../../src/features/creation/imageTaskCommand.ts";
+import { appendImageTask } from "../../src/features/creation/imageTaskCommand.ts";
+import type { ProviderConnection } from "../../src/domain/providerConnections.ts";
 import { createSubmissionLogic } from "../../src/features/creation/useImageCommandSubmission.ts";
 import type useConversationSubmit from "../../src/components/useConversationSubmit.ts";
 
@@ -37,7 +35,9 @@ if (typeof navigator !== "undefined") {
       configurable: true,
       writable: true,
     });
-  } catch {}
+  } catch {
+    // Headless environment without navigator
+  }
 }
 
 function deferred<T>() {
@@ -700,7 +700,7 @@ function appSubmissionHarness(prepareGate?: Promise<void>) {
     homeModelConfig: { model: "fixture", configured: true },
     prepareTask: async () => {
       await prepareGate;
-      return connection as any;
+      return connection as unknown as ProviderConnection;
     },
     executeTask: async (
       _projectId: string,

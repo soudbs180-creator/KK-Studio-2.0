@@ -32,7 +32,6 @@ import {
 } from "./features/skills/skillRegistry";
 import {
   createProject,
-  activeChat,
   projectChatView,
   emptyDraft,
   snapshotWriteBlockReason,
