@@ -7,9 +7,9 @@ import {
   type RefObject,
   type SetStateAction,
 } from "react";
-import type { Point, ViewTransform } from "./canvasModel";
-import { surfaceScale, toSurfacePoint } from "./canvasSurface";
-import { shadowEventBus } from "../../features/sync/shadowEventBus";
+import type { Point, ViewTransform } from "./canvasModel.ts";
+import { surfaceScale, toSurfacePoint } from "./canvasSurface.ts";
+import { shadowEventBus } from "../../features/sync/shadowEventBus.ts";
 
 export type CanvasTool = "select" | "hand";
 type SelectionRect = { x: number; y: number; width: number; height: number };
@@ -47,15 +47,136 @@ function snapPoint(point: Point): Point {
     y: Math.round(point.y / CANVAS_SNAP_GRID) * CANVAS_SNAP_GRID,
   };
 }
+export function isDomElement(target: unknown): target is Element {
+  return typeof Element !== "undefined" && target instanceof Element;
+}
+
 export function isInteractiveTarget(target: EventTarget | null): boolean {
   return (
-    target instanceof Element &&
+    isDomElement(target) &&
     Boolean(
       target.closest(
         "button,input,textarea,select,a,video,audio,dialog,[contenteditable='true'],[data-no-node-drag]",
       ),
     )
   );
+}
+
+function updateMarqueeSelection(
+  canvas: HTMLDivElement,
+  clientX: number,
+  clientY: number,
+  drag: Gesture,
+  displayScale: number,
+  setMarquee: Dispatch<SetStateAction<SelectionRect | null>>,
+  setSelectedNode: Dispatch<SetStateAction<string | null>>,
+  setSelectedIds: Dispatch<SetStateAction<Set<string>>>,
+): void {
+  const left = Math.min(clientX, drag.client.x);
+  const top = Math.min(clientY, drag.client.y);
+  const right = Math.max(clientX, drag.client.x);
+  const bottom = Math.max(clientY, drag.client.y);
+  const point = toSurfacePoint(canvas, { x: left, y: top });
+  setMarquee({
+    x: point.x,
+    y: point.y,
+    width: (right - left) / displayScale,
+    height: (bottom - top) / displayScale,
+  });
+  const ids = drag.additive ? new Set(drag.selection) : new Set<string>();
+  const rects = drag.cachedNodeRects;
+  if (rects) {
+    for (const cached of rects) {
+      if (
+        cached.left < right &&
+        cached.right > left &&
+        cached.top < bottom &&
+        cached.bottom > top
+      )
+        ids.add(cached.nodeId);
+    }
+  } else {
+    canvas
+      .querySelectorAll<HTMLElement>("[data-canvas-node]")
+      .forEach((node) => {
+        const card = node.querySelector(
+          ".image-preview,.video-placeholder,.demo-result-node",
+        );
+        const rect = (card ?? node).getBoundingClientRect();
+        if (
+          rect.left < right &&
+          rect.right > left &&
+          rect.top < bottom &&
+          rect.bottom > top &&
+          node.dataset.nodeId
+        )
+          ids.add(node.dataset.nodeId);
+      });
+  }
+  setSelectedNode(null);
+  setSelectedIds(ids);
+}
+
+function safeRequestAnimationFrame(callback: () => void): number {
+  if (typeof requestAnimationFrame === "function") {
+    return requestAnimationFrame(callback);
+  }
+  return setTimeout(callback, 16) as unknown as number;
+}
+
+function safeCancelAnimationFrame(handle: number): void {
+  if (typeof cancelAnimationFrame === "function") {
+    cancelAnimationFrame(handle);
+  } else {
+    clearTimeout(handle);
+  }
+}
+
+export function resolveTargetNodeIds(drag: Gesture): Set<string> {
+  if (drag.nodeId) {
+    return drag.selection.has(drag.nodeId)
+      ? drag.selection
+      : new Set([drag.nodeId]);
+  }
+  return drag.selection;
+}
+
+function emitNodeMoves(
+  drag: Gesture,
+  event: PointerEvent<HTMLDivElement>,
+  nodes: Record<string, Point>,
+  canvas: HTMLDivElement | null,
+): void {
+  const ids = resolveTargetNodeIds(drag);
+  const displayScale = drag.cachedScale ?? (canvas ? surfaceScale(canvas) : 1);
+  const dx = event.clientX - drag.client.x;
+  const dy = event.clientY - drag.client.y;
+  const logicalDx = dx / displayScale;
+  const logicalDy = dy / displayScale;
+
+  for (const id of ids) {
+    const rawPos = drag.nodes[id]
+      ? {
+          x: drag.nodes[id].x + logicalDx / drag.transform.scale,
+          y: drag.nodes[id].y + logicalDy / drag.transform.scale,
+        }
+      : undefined;
+    const position = rawPos
+      ? drag.snap
+        ? snapPoint(rawPos)
+        : rawPos
+      : (nodes[id] ?? drag.nodes[id]);
+    if (!position) continue;
+    const { baseRev, newRev } = shadowEventBus.bumpNodeRevision(id);
+    shadowEventBus.emit({
+      eventType: "canvas.node.moved",
+      targetNodeId: id,
+      actor: "designer",
+      baseRev,
+      newRev,
+      payload: { id, position },
+    });
+  }
 }
 
 export function useCanvasPointer({
@@ -83,20 +204,26 @@ export function useCanvasPointer({
   const [marquee, setMarquee] = useState<SelectionRect | null>(null);
   const [dragging, setDragging] = useState<Gesture["kind"] | null>(null);
   const dragRef = useRef<Gesture | null>(null);
+  const pendingMoveRef = useRef<{ clientX: number; clientY: number } | null>(
+    null,
+  );
+  const rafIdRef = useRef<number | null>(null);
   const selection = selectedNode ? new Set([selectedNode]) : selectedIds;
   function select(ids: Set<string>): void {
     setSelectedIds(ids.size === 1 ? new Set() : ids);
     setSelectedNode(ids.size === 1 ? [...ids][0] : null);
   }
   function cancelGesture(): void {
+    if (rafIdRef.current !== null) {
+      safeCancelAnimationFrame(rafIdRef.current);
+      rafIdRef.current = null;
+    }
+    pendingMoveRef.current = null;
     const drag = dragRef.current;
     if (drag) {
       if (drag.kind === "pan") setTransform(drag.transform);
       if (drag.kind === "node") {
-        const ids =
-          drag.nodeId && !drag.selection.has(drag.nodeId)
-            ? new Set([drag.nodeId])
-            : drag.selection;
+        const ids = resolveTargetNodeIds(drag);
         // Cancel only this gesture; keep external edits to other nodes.
         setNodes((current) => ({
           ...current,
@@ -116,6 +243,7 @@ export function useCanvasPointer({
       drag.captureTarget.releasePointerCapture(drag.pointerId);
   }
   useEffect(() => {
+    if (typeof window === "undefined") return;
     const down = (event: KeyboardEvent): void => {
       if (
         event.defaultPrevented ||
@@ -127,7 +255,7 @@ export function useCanvasPointer({
       )
         return;
       if (
-        event.target instanceof Element &&
+        isDomElement(event.target) &&
         event.target.closest(
           "input,textarea,select,dialog,[contenteditable='true'],[role='menu']",
         )
@@ -159,6 +287,10 @@ export function useCanvasPointer({
     window.addEventListener("keyup", up);
     window.addEventListener("blur", blur);
     return () => {
+      if (rafIdRef.current !== null) {
+        safeCancelAnimationFrame(rafIdRef.current);
+        rafIdRef.current = null;
+      }
       window.removeEventListener("keydown", down);
       window.removeEventListener("keyup", up);
       window.removeEventListener("blur", blur);
@@ -205,7 +337,7 @@ export function useCanvasPointer({
     // Preserve the image's click/double-click target. Its captured pointer
     // events still bubble to the canvas, including drags outside the card.
     const captureTarget =
-      kind === "node" && event.target instanceof Element
+      kind === "node" && isDomElement(event.target)
         ? event.target
         : (containerRef.current ?? undefined);
     const canvas = containerRef.current;
@@ -244,13 +376,13 @@ export function useCanvasPointer({
     event.stopPropagation();
     start(event, nodeId);
   }
-  function movePointer(event: PointerEvent<HTMLDivElement>): void {
+  function applyPendingMove(): void {
     const drag = dragRef.current;
     const canvas = containerRef.current;
-    if (!drag || drag.pointerId !== event.pointerId || !canvas) return;
-    event.preventDefault();
-    const dx = event.clientX - drag.client.x;
-    const dy = event.clientY - drag.client.y;
+    const pending = pendingMoveRef.current;
+    if (!drag || !canvas || !pending) return;
+    const dx = pending.clientX - drag.client.x;
+    const dy = pending.clientY - drag.client.y;
     // 使用拖动开始时缓存的 scale，不再每帧强制 reflow
     const displayScale = drag.cachedScale ?? surfaceScale(canvas);
     const logicalDx = dx / displayScale;
@@ -265,9 +397,7 @@ export function useCanvasPointer({
       return;
     }
     if (drag.kind === "node" && drag.nodeId) {
-      const ids = drag.selection.has(drag.nodeId)
-        ? drag.selection
-        : new Set([drag.nodeId]);
+      const ids = resolveTargetNodeIds(drag);
       setNodes((current) => ({
         ...current,
         ...Object.fromEntries(
@@ -284,60 +414,59 @@ export function useCanvasPointer({
       }));
       return;
     }
-    const left = Math.min(event.clientX, drag.client.x);
-    const top = Math.min(event.clientY, drag.client.y);
-    const right = Math.max(event.clientX, drag.client.x);
-    const bottom = Math.max(event.clientY, drag.client.y);
-    const point = toSurfacePoint(canvas, { x: left, y: top });
-    setMarquee({
-      x: point.x,
-      y: point.y,
-      width: (right - left) / displayScale,
-      height: (bottom - top) / displayScale,
-    });
-    const ids = drag.additive ? new Set(drag.selection) : new Set<string>();
-    // 读缓存 rects，不触发 DOM 查询
-    const rects = drag.cachedNodeRects;
-    if (rects) {
-      for (const cached of rects) {
-        if (
-          cached.left < right &&
-          cached.right > left &&
-          cached.top < bottom &&
-          cached.bottom > top
-        )
-          ids.add(cached.nodeId);
-      }
-    } else {
-      // 降级：无缓存时保持原逻辑
-      canvas
-        .querySelectorAll<HTMLElement>("[data-canvas-node]")
-        .forEach((node) => {
-          const card = node.querySelector(
-            ".image-preview,.video-placeholder,.demo-result-node",
-          );
-          const rect = (card ?? node).getBoundingClientRect();
-          if (
-            rect.left < right &&
-            rect.right > left &&
-            rect.top < bottom &&
-            rect.bottom > top &&
-            node.dataset.nodeId
-          )
-            ids.add(node.dataset.nodeId);
-        });
-    }
-    // Keep composers closed during selection to avoid changing the geometry being measured.
-    setSelectedNode(null);
-    setSelectedIds(ids);
+    updateMarqueeSelection(
+      canvas,
+      pending.clientX,
+      pending.clientY,
+      drag,
+      displayScale,
+      setMarquee,
+      setSelectedNode,
+      setSelectedIds,
+    );
   }
+
+  function movePointer(event: PointerEvent<HTMLDivElement>): void {
+    const drag = dragRef.current;
+    const canvas = containerRef.current;
+    if (!drag || drag.pointerId !== event.pointerId || !canvas) return;
+    event.preventDefault();
+
+    pendingMoveRef.current = {
+      clientX: event.clientX,
+      clientY: event.clientY,
+    };
+
+    if (rafIdRef.current === null) {
+      rafIdRef.current = safeRequestAnimationFrame(() => {
+        rafIdRef.current = null;
+        applyPendingMove();
+      });
+    }
+  }
+
   function finishPointer(event: PointerEvent<HTMLDivElement>): void {
     const drag = dragRef.current;
     if (!drag || drag.pointerId !== event.pointerId) return;
+
+    if (rafIdRef.current !== null) {
+      safeCancelAnimationFrame(rafIdRef.current);
+      rafIdRef.current = null;
+    }
+
     if (event.type !== "pointerup") {
+      pendingMoveRef.current = null;
       cancelGesture();
       return;
     }
+
+    pendingMoveRef.current = {
+      clientX: event.clientX,
+      clientY: event.clientY,
+    };
+    applyPendingMove();
+    pendingMoveRef.current = null;
+
     const clicked =
       Math.hypot(
         event.clientX - drag.client.x,
@@ -351,21 +480,7 @@ export function useCanvasPointer({
       }
       select(ids);
     } else if (!clicked && drag.kind === "node" && drag.nodeId) {
-      const ids = drag.selection.has(drag.nodeId)
-        ? drag.selection
-        : new Set([drag.nodeId]);
-      for (const id of ids) {
-        const { baseRev, newRev } = shadowEventBus.bumpNodeRevision(id);
-        const position = nodes[id] ?? drag.nodes[id];
-        shadowEventBus.emit({
-          eventType: "canvas.node.moved",
-          targetNodeId: id,
-          actor: "designer",
-          baseRev,
-          newRev,
-          payload: { id, position },
-        });
-      }
+      emitNodeMoves(drag, event, nodes, containerRef.current);
     }
     dragRef.current = null;
     setDragging(null);

@@ -1,4 +1,5 @@
 import {
+  useCallback,
   useContext,
   type CSSProperties,
   type Dispatch,
@@ -80,6 +81,14 @@ export default function CanvasNodeLayer({
     onLocalGenerationSettled,
   });
 
+  const handleDeleteNode = useCallback(
+    (id: string) => {
+      markPending(id, "cancelled");
+      controls.removeNode(id);
+    },
+    [markPending, controls.removeNode],
+  );
+
   return (
     <div
       className="canvas-stage"
@@ -101,10 +110,7 @@ export default function CanvasNodeLayer({
           connectionTarget={connectionTarget === item.id}
           onConnect={onConnect}
           onConnectionTargetChange={handleConnectionTargetChange}
-          onDelete={(id) => {
-            markPending(id, "cancelled");
-            controls.removeNode(id);
-          }}
+          onDelete={handleDeleteNode}
           activeLocalResultIds={Object.values(pendingByParent.current).flat()}
           onToggleLike={onToggleLike}
           onConfigure={onConfigure}

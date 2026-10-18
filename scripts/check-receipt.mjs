@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 /**
  * scripts/check-receipt.mjs
  * Static verification gate for PR receipt.json in KK-Studio-2.0.
@@ -21,14 +20,7 @@ const ISO_DATE_PATTERN = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z$/;
 const SEMVER_PATTERN = /^\d+\.\d+\.\d+$/;
 const TASK_ID_PATTERN = /^TASK-[A-Z0-9]+(-[A-Z0-9]+)*$/;
 
-export function validateReceipt(receipt) {
-  const issues = [];
-
-  if (!receipt || typeof receipt !== "object" || Array.isArray(receipt)) {
-    return ["Receipt must be a non-null JSON object."];
-  }
-
-  // 1. Top-level metadata
+function validateMetadata(receipt, issues) {
   if (receipt.schemaVersion !== 1) {
     issues.push(`Invalid schemaVersion: expected 1, got ${receipt.schemaVersion}`);
   }
@@ -47,69 +39,70 @@ export function validateReceipt(receipt) {
   if (!receipt.versions?.desktop || !SEMVER_PATTERN.test(receipt.versions.desktop)) {
     issues.push(`Invalid versions.desktop: ${receipt.versions?.desktop}`);
   }
+}
 
-  // 2. Acceptance Evidence: Shadow Mode Latency
-  const latency = receipt.acceptanceEvidence?.shadowModeLatency;
+function validateShadowModeLatency(latency, issues) {
   if (!latency) {
     issues.push("Missing acceptanceEvidence.shadowModeLatency.");
-  } else {
-    if (typeof latency.sampleCount !== "number" || latency.sampleCount < 100) {
-      issues.push(`shadowModeLatency.sampleCount must be >= 100, got ${latency.sampleCount}`);
-    }
-    if (typeof latency.p95LatencyMs !== "number" || latency.p95LatencyMs >= 5.0) {
-      issues.push(`shadowModeLatency.p95LatencyMs must be < 5.0ms, got ${latency.p95LatencyMs}ms`);
-    }
-    if (typeof latency.averageLatencyMs !== "number" || latency.averageLatencyMs >= 5.0) {
-      issues.push(`shadowModeLatency.averageLatencyMs must be < 5.0ms, got ${latency.averageLatencyMs}ms`);
-    }
-    if (latency.passed !== true) {
-      issues.push("shadowModeLatency.passed must be true.");
-    }
+    return;
   }
+  if (typeof latency.sampleCount !== "number" || latency.sampleCount < 100) {
+    issues.push(`shadowModeLatency.sampleCount must be >= 100, got ${latency.sampleCount}`);
+  }
+  if (typeof latency.p95LatencyMs !== "number" || latency.p95LatencyMs >= 5.0) {
+    issues.push(`shadowModeLatency.p95LatencyMs must be < 5.0ms, got ${latency.p95LatencyMs}ms`);
+  }
+  if (typeof latency.averageLatencyMs !== "number" || latency.averageLatencyMs >= 5.0) {
+    issues.push(`shadowModeLatency.averageLatencyMs must be < 5.0ms, got ${latency.averageLatencyMs}ms`);
+  }
+  if (latency.passed !== true) {
+    issues.push("shadowModeLatency.passed must be true.");
+  }
+}
 
-  // 3. Acceptance Evidence: Replay Consistency
-  const replay = receipt.acceptanceEvidence?.replayConsistency;
+function validateReplayConsistency(replay, issues) {
   if (!replay) {
     issues.push("Missing acceptanceEvidence.replayConsistency.");
-  } else {
-    if (typeof replay.operationsCount !== "number" || replay.operationsCount < 100) {
-      issues.push(`replayConsistency.operationsCount must be >= 100, got ${replay.operationsCount}`);
-    }
-    if (replay.snapshotEquivalence !== 1.0 && replay.snapshotEquivalence !== "100%") {
-      issues.push(`replayConsistency.snapshotEquivalence must be 1.0 (100%), got ${replay.snapshotEquivalence}`);
-    }
-    if (replay.discrepancyCount !== 0) {
-      issues.push(`replayConsistency.discrepancyCount must be 0, got ${replay.discrepancyCount}`);
-    }
-    if (!replay.liveStateHash || !replay.replayedStateHash || replay.liveStateHash !== replay.replayedStateHash) {
-      issues.push(`replayConsistency state hashes mismatch or missing: live=${replay.liveStateHash}, replayed=${replay.replayedStateHash}`);
-    }
-    if (replay.passed !== true) {
-      issues.push("replayConsistency.passed must be true.");
-    }
+    return;
   }
+  if (typeof replay.operationsCount !== "number" || replay.operationsCount < 100) {
+    issues.push(`replayConsistency.operationsCount must be >= 100, got ${replay.operationsCount}`);
+  }
+  if (replay.snapshotEquivalence !== 1.0 && replay.snapshotEquivalence !== "100%") {
+    issues.push(`replayConsistency.snapshotEquivalence must be 1.0 (100%), got ${replay.snapshotEquivalence}`);
+  }
+  if (replay.discrepancyCount !== 0) {
+    issues.push(`replayConsistency.discrepancyCount must be 0, got ${replay.discrepancyCount}`);
+  }
+  if (!replay.liveStateHash || !replay.replayedStateHash || replay.liveStateHash !== replay.replayedStateHash) {
+    issues.push(`replayConsistency state hashes mismatch or missing: live=${replay.liveStateHash}, replayed=${replay.replayedStateHash}`);
+  }
+  if (replay.passed !== true) {
+    issues.push("replayConsistency.passed must be true.");
+  }
+}
 
-  // 4. Acceptance Evidence: Conflict & Preemption
-  const preemption = receipt.acceptanceEvidence?.conflictPreemption;
+function validateConflictPreemption(preemption, issues) {
   if (!preemption) {
     issues.push("Missing acceptanceEvidence.conflictPreemption.");
-  } else {
-    if (preemption.designerPreempted !== true) {
-      issues.push("conflictPreemption.designerPreempted must be true.");
-    }
-    if (preemption.taskCancelledSignal !== true) {
-      issues.push("conflictPreemption.taskCancelledSignal must be true.");
-    }
-    const entries = Array.isArray(preemption.eventLogEntries) ? preemption.eventLogEntries : [];
-    if (!entries.includes("cancelled") || !entries.includes("override")) {
-      issues.push(`conflictPreemption.eventLogEntries must include both 'cancelled' and 'override', got: [${entries.join(", ")}]`);
-    }
-    if (preemption.passed !== true) {
-      issues.push("conflictPreemption.passed must be true.");
-    }
+    return;
   }
+  if (preemption.designerPreempted !== true) {
+    issues.push("conflictPreemption.designerPreempted must be true.");
+  }
+  if (preemption.taskCancelledSignal !== true) {
+    issues.push("conflictPreemption.taskCancelledSignal must be true.");
+  }
+  const entries = Array.isArray(preemption.eventLogEntries) ? preemption.eventLogEntries : [];
+  if (!entries.includes("cancelled") || !entries.includes("override")) {
+    issues.push(`conflictPreemption.eventLogEntries must include both 'cancelled' and 'override', got: [${entries.join(", ")}]`);
+  }
+  if (preemption.passed !== true) {
+    issues.push("conflictPreemption.passed must be true.");
+  }
+}
 
-  // 5. Checks array
+function validateChecksAndErrors(receipt, issues) {
   if (!Array.isArray(receipt.checks) || receipt.checks.length === 0) {
     issues.push("receipt.checks must be a non-empty array of check records.");
   } else {
@@ -120,13 +113,25 @@ export function validateReceipt(receipt) {
     }
   }
 
-  // 6. Errors array and overall passed status
   if (!Array.isArray(receipt.errors) || receipt.errors.length > 0) {
     issues.push(`receipt.errors must be an empty array, found ${receipt.errors?.length ?? 0} errors.`);
   }
   if (receipt.passed !== true) {
     issues.push("receipt.passed must be explicitly true.");
   }
+}
+
+export function validateReceipt(receipt) {
+  if (!receipt || typeof receipt !== "object" || Array.isArray(receipt)) {
+    return ["Receipt must be a non-null JSON object."];
+  }
+
+  const issues = [];
+  validateMetadata(receipt, issues);
+  validateShadowModeLatency(receipt.acceptanceEvidence?.shadowModeLatency, issues);
+  validateReplayConsistency(receipt.acceptanceEvidence?.replayConsistency, issues);
+  validateConflictPreemption(receipt.acceptanceEvidence?.conflictPreemption, issues);
+  validateChecksAndErrors(receipt, issues);
 
   return issues;
 }

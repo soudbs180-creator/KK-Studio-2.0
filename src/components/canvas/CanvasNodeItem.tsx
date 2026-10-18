@@ -5,20 +5,10 @@ import {
   useMemo,
   useRef,
   useState,
-  type Dispatch,
-  type SetStateAction,
 } from "react";
-import type {
-  CanvasCollectionItem,
-  CanvasReference,
-  DemoResult,
-  NodeEditingProps,
-} from "../../domain/canvasItems";
+import type { NodeEditingProps } from "../../domain/canvasItems";
 import { canvasImageReferenceLimit } from "../../features/models/imageModelCapabilities";
 import { readProviderConnections } from "../../features/creation/providerRegistry";
-import type { CanvasConnection } from "../../domain/canvasGraph";
-import type { useCanvasControls } from "./useCanvasControls";
-import type { useCanvasAddMenu } from "./useCanvasAddMenu";
 import CanvasNodeFrame from "./CanvasNodeFrame";
 import CanvasNodeContent from "./CanvasNodeContent";
 import { invoke, isTauri } from "@tauri-apps/api/core";
@@ -28,102 +18,33 @@ import {
   CanvasImageCommandContext,
 } from "../../features/creation/CanvasImageCommand";
 
-type GenerationPhase = Parameters<
-  NonNullable<NodeEditingProps["onGenerationState"]>
->[0];
+import {
+  arePropsEqual,
+  areNodeDataEqual,
+  areReferencesEqual,
+  areSingleReferencesEqual,
+  areGenerationStatesEqual,
+  areSelectionAndMenuEqual,
+  areDragStatesEqual,
+  areGeometryAndPositionEqual,
+  areHandlersEqual,
+  type CanvasNodeItemProps,
+  type GenerationPhase,
+} from "./canvasNodeItemComparator.ts";
 
-interface CanvasNodeItemProps {
-  item: CanvasCollectionItem;
-  controls: ReturnType<typeof useCanvasControls>;
-  addMenu: ReturnType<typeof useCanvasAddMenu>;
-  liked: boolean;
-  connectionTarget: boolean;
-  onConnect: (
-    source: string,
-    target: string,
-    kind?: CanvasConnection["kind"],
-  ) => void;
-  onConnectionTargetChange: (sourceId: string, targetId: string | null) => void;
-  onDelete: (id: string) => void;
-  onToggleLike: (id: string) => void;
-  onConfigure: () => void;
-  onItemsChange: Dispatch<SetStateAction<CanvasCollectionItem[]>>;
-  references: CanvasReference[];
-  onDemoResults: (id: string, results: DemoResult[]) => void;
-  onGenerationStart: (id: string, count: number) => void;
-  onAddReferences: (id: string, references: CanvasReference[]) => void;
-  onRemoveReference: (id: string) => void;
-  onGenerationState: (id: string, phase: GenerationPhase) => void;
-  activeLocalResultIds?: readonly string[];
-}
-
-function arePropsEqual(
-  prev: CanvasNodeItemProps,
-  next: CanvasNodeItemProps,
-): boolean {
-  if (prev.item !== next.item) return false;
-  if (prev.liked !== next.liked) return false;
-  if (prev.connectionTarget !== next.connectionTarget) return false;
-  if (prev.references !== next.references) return false;
-
-  const id = prev.item.id;
-
-  const prevActive = prev.activeLocalResultIds?.includes(id) ?? false;
-  const nextActive = next.activeLocalResultIds?.includes(id) ?? false;
-  if (prevActive !== nextActive) return false;
-
-  const prevMenuOpen = prev.addMenu.menu?.parentId === id;
-  const nextMenuOpen = next.addMenu.menu?.parentId === id;
-  if (prevMenuOpen !== nextMenuOpen) return false;
-
-  const prevSelected = prev.controls.selectedNode === id;
-  const nextSelected = next.controls.selectedNode === id;
-  if (prevSelected !== nextSelected) return false;
-
-  const prevMulti = prev.controls.selectedIds.has(id);
-  const nextMulti = next.controls.selectedIds.has(id);
-  if (prevMulti !== nextMulti) return false;
-
-  const prevDragging =
-    prev.controls.dragging === "node" &&
-    prev.controls.dragRef.current?.nodeId === id;
-  const nextDragging =
-    next.controls.dragging === "node" &&
-    next.controls.dragRef.current?.nodeId === id;
-  if (prevDragging !== nextDragging) return false;
-
-  const prevPos = prev.controls.nodes[id];
-  const nextPos = next.controls.nodes[id];
-  if (prevPos !== nextPos) {
-    if (!prevPos || !nextPos) return false;
-    if (prevPos.x !== nextPos.x || prevPos.y !== nextPos.y) return false;
-  }
-
-  if (
-    prev.item.plugin &&
-    prev.controls.transform.scale !== next.controls.transform.scale
-  ) {
-    return false;
-  }
-
-  if (
-    prev.onConnect !== next.onConnect ||
-    prev.onConnectionTargetChange !== next.onConnectionTargetChange ||
-    prev.onDelete !== next.onDelete ||
-    prev.onToggleLike !== next.onToggleLike ||
-    prev.onConfigure !== next.onConfigure ||
-    prev.onItemsChange !== next.onItemsChange ||
-    prev.onDemoResults !== next.onDemoResults ||
-    prev.onGenerationStart !== next.onGenerationStart ||
-    prev.onAddReferences !== next.onAddReferences ||
-    prev.onRemoveReference !== next.onRemoveReference ||
-    prev.onGenerationState !== next.onGenerationState
-  ) {
-    return false;
-  }
-
-  return true;
-}
+export {
+  arePropsEqual,
+  areNodeDataEqual,
+  areReferencesEqual,
+  areSingleReferencesEqual,
+  areGenerationStatesEqual,
+  areSelectionAndMenuEqual,
+  areDragStatesEqual,
+  areGeometryAndPositionEqual,
+  areHandlersEqual,
+  type CanvasNodeItemProps,
+  type GenerationPhase,
+};
 
 function CanvasNodeItem({
   item,

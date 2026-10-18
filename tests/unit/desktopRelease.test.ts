@@ -560,7 +560,7 @@ test(
     const { root, executable } = fixture(t);
     const checkerReceipt = path.join(root, "freshness-checked.txt");
     const compiler = path.join(
-      process.env.WINDIR ?? "C:\\Windows",
+      process.env.WINDIR ?? "C:/Windows",
       "Microsoft.NET",
       "Framework64",
       "v4.0.30319",

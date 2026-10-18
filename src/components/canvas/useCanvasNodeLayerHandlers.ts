@@ -25,6 +25,8 @@ interface UseCanvasNodeLayerHandlersProps {
   onLocalGenerationSettled: (terminal: CanvasCollectionItem[]) => void;
 }
 
+const EMPTY_REFERENCES: CanvasReference[] = [];
+
 export function useCanvasNodeLayerHandlers({
   items,
   edges,
@@ -187,8 +189,9 @@ export function useCanvasNodeLayerHandlers({
   }
 
   function referencesFor(parentId: string): CanvasReference[] {
-    const targetEdges = referenceEdgesByTarget.get(parentId) ?? [];
-    return targetEdges
+    const targetEdges = referenceEdgesByTarget.get(parentId);
+    if (!targetEdges || targetEdges.length === 0) return EMPTY_REFERENCES;
+    const mapped = targetEdges
       .map((edge) => ({ edge, source: itemById.get(edge.source) }))
       .filter(
         (
@@ -205,6 +208,7 @@ export function useCanvasNodeLayerHandlers({
         preview: source.preview ?? source.result?.poster ?? source.result?.src,
         slot: source.referenceSlot,
       }));
+    return mapped.length === 0 ? EMPTY_REFERENCES : mapped;
   }
 
   function addReferences(
