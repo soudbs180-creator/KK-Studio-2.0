@@ -12,7 +12,7 @@
 
 TASK-GATEWAY-STREAM-20261018有界DONE/PASS，fix/TASK-GATEWAY-STREAM-20261018/base00e79、产品/测试source176ec95d；实体树D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017仍是日常lnk引用，不可清理。先读[验证](../changes/2026-10-18-gateway-stream/verification.md)末节及PROJECT_STATE。Desktop40/Web41/Mobile1规划，完整Node2055/Agent204/Edge854首试、源码双轴、官方EXEd8e7/input49ad及当前默认strict2轮11raw/rev2698/9-11-22通过；默认UI可编辑、Native Canvas v5三阶段全对象/图/拖动/重开通过，原失败与拒收全保留。真实新回复/DPAPI/default入口/Hosted未验，不提升父任务或37功能成熟度。
 
-154项91DONE/63开放，9树18分支/预算5/4，6已分配开放route零失配；主仓和其他并行树不接管。原141dirty/index/refs、完整原2849及最新2957资料副本与旧产物保全，源/副本hash闭合；旧63历史比较FAIL不撤改。下一P1本地DPAPI protector受控测试、成本回执调用路径先核对owner，再按原任务领取持久恢复/记忆/垃圾箱。root独占文档/Git/端口/Native；不删移、reset/clean、强停、额度调用、push/merge/发布；coord非本候选权威。最终文档精确HEAD/Delivery/归档/原两个lnk单实例日常还原由工程外收据确认。
+154项91DONE/63开放，13:02:50采样9树19分支/预算5/4，6已分配开放route零失配；主仓和其他并行树不接管。原141dirty/index/refs、完整原2849及最新2957资料副本与旧产物保全，源/副本hash闭合；旧63历史比较FAIL不撤改。下一P1本地DPAPI protector受控测试、成本回执调用路径先核对owner，再按原任务领取持久恢复/记忆/垃圾箱。root独占文档/Git/端口/Native；不删移、reset/clean、强停、额度调用、push/merge/发布；coord非本候选权威。最终文档精确HEAD/Delivery/归档/原两个lnk单实例日常还原由工程外收据确认。
 
 ## 上轮恢复入口：冷启动严格比较已闭环（2026-10-18）
 

@@ -46,7 +46,7 @@ v5 runner SHAb408fa4ebe7111cd5b0f3647fcb6d116baab3af8b9630d069b0c584d63c79dd8/fi
 
 工程外恢复根D:/KK-Studio-recovery-20260921/coldstart-local-20261018-fff10774-062f-4668-a206-44b6db0aec10。开工9树141dirty、各index/diff/refs/bundle以及main当前96并发文件已保全；第二检查点bdb34617、保存副本重核f0894f2c证明其他8树HEAD/index及141原dirty字节在两采样间保持。旧63历史比较FAIL因先前并发变化，不能用当前96证明旧63未变，也未回退他人修改。完整原profile2849份保全/独立6362f7ce保留；最新正常关闭后2957文件350261316B副本runtime-userdata-28af327a-c476-4971-8e82-a906801d6e46，receipt SHA5548b6952f00ec0ab14519da61adaaa4a6b6054ca362ab9f018f7dbc50f730c1，全部源/副本hash及枚举前后匹配。容器README/REPO-STRUCTURE原件先复制，receipt43d26f0a4f085298b91ee1a468f6134b7a08bab45251eae162ae06ddf3b542ae；旧章节保留作历史。
 
-当前154任务：91DONE/48PARTIAL/11TODO/3BLOCKED/1IN_PROGRESS，开放63；37功能成熟度/runtimeEvidence不提升。关闭本Gateway子项后6条已分配开放route零失配，历史冷任务误写7条的拒收及2b0ae0纠正保留。9登记树18本地分支，approved root5/4仍超限、拒绝新增、复用现有，不放宽规则或回收；两个外部issue68树保留且越界授权UNKNOWN。origin/main c248d817仅前次无prune fetch来源，不混入Mobile3或声称最新Hosted已验。coord读主仓旧账本与claim风险未接管。
+当前154任务：91DONE/48PARTIAL/11TODO/3BLOCKED/1IN_PROGRESS，开放63；37功能成熟度/runtimeEvidence不提升。关闭本Gateway子项后6条已分配开放route零失配，历史冷任务误写7条的拒收及2b0ae0纠正保留。本轮早先采样9登记树18本地分支（最新收尾采样见末节），approved root5/4仍超限、拒绝新增、复用现有，不放宽规则或回收；两个外部issue68树保留且越界授权UNKNOWN。origin/main c248d817仅前次无prune fetch来源，不混入Mobile3或声称最新Hosted已验。coord读主仓旧账本与claim风险未接管。
 
 父Gateway保持PARTIAL/FEAT-038 PROTOTYPE：main.ts未注入chat时404，默认Web直连/Desktop RustTaskHost未接本流回调；幂等键仅转发，无持久chat账单去重。下一不依赖额度的P1是Windows DPAPI/Tauri protector受控边界与回归、Provider→task成本回执调用路径（TASK-TASKSTATE-002，须先核查并行owner）、持久恢复/记忆/垃圾箱按原任务领取；不得据此自动改未分配范围。真实Ark/Codex新回复、VPS/Hosted、签名安装器、Mobile和用户整体仍开放。无用户源码/资料删除或移动、reset/clean/stash/进程强停/额度操作/push/merge/发布；生成产物先保全再正常重建。
 
@@ -57,3 +57,13 @@ af718fd7文档将v3有限PASS并入“v1-v4均FAIL”，Spec独立拒收GATEWAY-
 v5保存证据复核3709642e0b8855c4d7d874d499496e50a3f23af86f0e4bc7a85635b6b3f9a86a通过；审核者参与最初helper准备，该收据宽泛独立性字段已以新addendum1ae84af66ad9a19a7be44711fee99db013884eff1e5457885050a5252b6466de澄清为独立于root的v5修改/实际执行的保存数据重核，不是整个继承helper链的独立作者批准，旧收据不覆盖。另一未编写helper的上下文另核完整数据，按最终外部收据裁决。
 
 最新2957保存副本另独立18008项核验5680d3f1d264cae08e91b28e941a938a89349c0e232ea173351142563a1bf93b：全部大小/hash及source→copy→final链、当前重扫前后metadata匹配，容器两文档原副本匹配。首轮额外聚合metadata稳定性检查FAIL d64627cf原件保留且未定位波动、无内容hash差异；不将该轮改写稳定，新扫描仅证明其当前保存区间，非live永远静止。
+
+## 收尾并发Git采样（2026-10-18 13:02:50，北京时间）
+
+本轮早先18分支/main8c36与96dirty只代表此前采样及已保全历史。收尾重新只读观察9登记worktree/19本地heads：新增feat/TASK-COMMANDBUS-001@3bb27824e3f1521ec9387617167839999e3a1eb6（reflog显示13:00:18创建、13:00:32提交），main并发前移109c6c41167dc091ef57e9e53211c3822a4fe5fc、当前main dirty0。来源/整合/Hosted未审，本任务未操作该main/新ref，也不将其覆盖或合入当前候选；不能把旧96或141未提交文件的“原样保持”延伸为当前live断言。此前两个检查点及全部原dirty副本仍保留。
+
+另新建copy-only全9树检查点D:/KK-Studio-recovery-20260921/coldstart-closeout-checkouts-20261018-11f9e8c6-dd08-4e59-9d06-151d66d3ebad，receipt SHA4c4ea70e85f51cc6b7308a7cb2561ae9ecb2fb24d3d502d70539c30038d99b69；当前45dirty文件、各index/diff/status/raw及all-ref bundle已保存，refs前后稳定、9树各自枚举/字节/索引稳定。approved root仍5/4拒绝新增、开放route6，候选账本154/91DONE/63开放不变。此为带时点采样，后续refs可并发前移，以最终外部收据另采样；不是静止全仓保证。当前任务source176/产品输入49ad/EXEd8e7没有改变。
+
+ref来源按reflog核对：mobile-entry@690d864b是10月17日23:48已存在的旧分支，不是本轮新增；新增第19个为上述COMMANDBUS。初稿同步脚本在容器文档的CAS前置断言失败，未提交的ref名称误判已根据原始reflog修正，失败脚本/log保留。
+
+容器两文档12:56被并发写成旧2.1.35标题且改为动态台账引用；原并发版本再次复制保全，receipt1a83d65d685face825b6388e9cfce8e9cf0ed94c8cc50ce5319f0d8100579d10。仅以CAS核对后修正实际source176/Desktop40/Web41标题、追加时点采样，保留并发正文，不用旧文件整体覆盖。该容器文件无单一写入者保证，最终归档以实际hash保存，不宣称以后永远保持。

@@ -4,7 +4,7 @@
 
 source176ec95d（Desktop40/Web41/Mobile1规划）完成Ark实际本地HTTP增量SSE、取消/截止、首write后禁重试、usage/隐私/异常终结；174定向与完整verify Node2055PASS14skip、Agent204PASS2skip、Edge854首试零fail/retry/flaky、Design41+8/dev4通过；独立源码双轴PASS，原parser/deadline P2正式修复复验，原拒收保留。
 
-上一40/失败包先保全，官方当前EXEd8e7/input49ad重建；真正默认无CDP两周期11raw/全JSON严格相等，全部时间/revision2698与9项目11聊天22消息保持、独立97项核验通过。默认UI2轮可编辑标志与canonical完整资料通过，blockedRequests1目标未记录，不声称全网络禁用或真实新回复。Native Canvas v5实际协议/图/拖动/unknown/重开通过：cold全对象相等，显式项目点击精确+1单列，重连全对象相等；v1/v2/v4真实FAIL、v3有限PASS及完整identity未证均保留，无筛字段。原资料/141dirty/各树index/refs/失败产物及最新2957文件350261316B副本已保全。154项91DONE/63开放、9树18分支/approved5/4、6开放route零失配；无用户源码/资料删移、强停、额度操作、push/merge/发布。父Gateway/Canvas仍PARTIAL、37功能成熟度不提升。下一本地DPAPI受控边界及成本回执调用路径先核owner；[完整验证及证据边界](changes/2026-10-18-gateway-stream/verification.md)。最终文档精确HEAD/Delivery/私有归档/日常入口按工程外收据，不把本地候选说成Hosted发布。
+上一40/失败包先保全，官方当前EXEd8e7/input49ad重建；真正默认无CDP两周期11raw/全JSON严格相等，全部时间/revision2698与9项目11聊天22消息保持、独立97项核验通过。默认UI2轮可编辑标志与canonical完整资料通过，blockedRequests1目标未记录，不声称全网络禁用或真实新回复。Native Canvas v5实际协议/图/拖动/unknown/重开通过：cold全对象相等，显式项目点击精确+1单列，重连全对象相等；v1/v2/v4真实FAIL、v3有限PASS及完整identity未证均保留，无筛字段。原资料/141dirty/各树index/refs/失败产物及最新2957文件350261316B副本已保全。154项91DONE/63开放、13:02:50采样9树19分支/approved5/4、6开放route零失配；无用户源码/资料删移、强停、额度操作、push/merge/发布。父Gateway/Canvas仍PARTIAL、37功能成熟度不提升。下一本地DPAPI受控边界及成本回执调用路径先核owner；[完整验证及证据边界](changes/2026-10-18-gateway-stream/verification.md)。最终文档精确HEAD/Delivery/私有归档/日常入口按工程外收据，不把本地候选说成Hosted发布。
 
 ## 2026-10-18 冷启动严格比较闭环（有界本地DONE/PASS）
 

@@ -18,7 +18,8 @@
 - `nativeUi`: 当前包默认UI另两轮可见textarea enabled/readOnly=false、0pageerror、完整canonical资料保持；UI重序列化after非raw证明。blockedRequests1目标未记录，不宣称零请求或全网络隔离，未发实际消息；真实新回复未验收。
 - `nativeCanvas`: 当前隔离Native实际手动连接本地CanvasSession/SSE，移动/添加/reference连线、拖动优先、完整小数持久与正常重开/unknown不重提通过。v5报告9903df33：冷启全JSON相等，项目库真实点击精确revision+1独立记录，重连全对象相等；默认七项保护。原v1/v2/v4 FAIL、v3有限PASS及完整identity未证均保留；合成会话/额度不是实际Codex/provider，父Canvas仍PARTIAL。
 - `preservation`: 开工9树141dirty/index/diff/refs与main96并发版本保全；第二树检查点bdb34617/独立保存副本f0894f2c，其他8树HEAD/index/原dirty在两采样间保持；旧63历史比较FAIL不撤改。原完整profile2849份保全/独立6362f7ce保持，新2957份350261316B副本5548b695源/副本及枚举全相等。容器两文档原件先另存43d26f0a，再同步入口，旧章节保留历史。
-- `tasksAndTrees`: 154项91DONE/48PARTIAL/11TODO/3BLOCKED/1IN_PROGRESS，开放63；37功能成熟度不提升。9树18分支/approved root5/4超限拒绝新增、复用现有；Gateway关闭后6条已分配开放route零失配。两外部issue68树owner明确/越界授权UNKNOWN，保留；coord旧ledger及claim风险未接管。
+- `tasksAndTrees`: 154项91DONE/48PARTIAL/11TODO/3BLOCKED/1IN_PROGRESS，开放63；37功能成熟度不提升。13:02:50采样9树19分支/approved root5/4超限拒绝新增、复用现有；Gateway关闭后6条已分配开放route零失配。两外部issue68树owner明确/越界授权UNKNOWN，保留；coord旧ledger及claim风险未接管。
+- `concurrentRefs`: 收尾只读采样main前移109c6c41167dc091ef57e9e53211c3822a4fe5fc/main dirty0，新增feat/TASK-COMMANDBUS-001@3bb27824（13:00:18创建）；来源/整合/Hosted未审，不覆盖或合入本候选。全9树当前45dirty/index/diff/raw/refs/bundle另存11f9e8c6检查点，receipt4c4ea70e，保存时各树与refs稳定；旧96/141只按此前快照解释，不冒称当前live仍未变化。
 - `remoteBoundary`: origin/main c248d8178ec1754315559a9e476ac909bb494287仅前次无prune fetch来源，Desktop37/Web38/Mobile3属并行来源；未整合、未做Hosted复验，不回退本候选或据此发布。
 - `nextLocal`: P1 Windows DPAPI/Tauri protector受控测试、Provider→task成本回执调用路径先核查并行owner、持久恢复/记忆/垃圾箱按原任务领取。父Gateway PARTIAL/FEAT-038 PROTOTYPE：默认main.ts/UI/RustTaskHost未接本流回调，无持久chat计费去重；真实Provider/Codex新回复/Hosted/签名/Mobile/用户整体仍开放。
 - `boundaries`: 无用户源码/资料删除或移动、树回收、覆盖并行工作、共享依赖安装、进程强停、额度操作、push/merge/发布；生成产物先保全后正常重建。自有Node fixture socket兜底如实记录，Native内部IPC/附着前网络未完整观测。详见[本轮验证](../changes/2026-10-18-gateway-stream/verification.md)。
