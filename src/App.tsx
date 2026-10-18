@@ -32,6 +32,8 @@ import {
 } from "./features/skills/skillRegistry";
 import {
   createProject,
+  activeChat,
+  projectChatView,
   emptyDraft,
   snapshotWriteBlockReason,
   type CreationDraft,
@@ -39,7 +41,10 @@ import {
   type CreationSnapshot,
   type CreateProjectInput,
   type ChatItem,
+  type ChatItemDraft,
 } from "./features/creation/model";
+import { updateProjectChatView } from "./features/agent/chatProjectUpdate.ts";
+import { sameJson } from "./features/creation/chatMigration.ts";
 import {
   agentConnection,
   readPermissionMode,
@@ -527,7 +532,11 @@ export default function App() {
   ): void {
     const next = {
       ...creationRef.current,
-      homeDraft: { ...draft, updatedAt: Date.now() },
+      homeDraft: {
+        ...(changes ? creationRef.current.homeDraft : draft),
+        ...changes,
+        updatedAt: Date.now(),
+      },
     };
     commitCreation(next, changes);
   }
@@ -861,7 +870,7 @@ export default function App() {
         outputCount: input.outputCount,
       });
       // Keep an unsent Agent draft in the project if connection or send fails.
-      const project = {
+      const project = updateProjectChatView(created, () => ({
         ...created,
         composerDraft: {
           ...created.composerDraft,
@@ -869,7 +878,7 @@ export default function App() {
           pendingAgent: true,
           conversationChannel: "codex" as const,
         },
-      };
+      }));
       commitCreation({
         ...creationRef.current,
         projects: [project, ...creationRef.current.projects],
@@ -926,15 +935,13 @@ export default function App() {
         ),
       });
       if (!result.ok) return result.error ?? "发送未确认，草稿仍保留。";
-      updateProject(project.id, (current) => ({
-        ...current,
-        composerDraft: {
-          ...current.composerDraft,
-          prompt: "",
-          attachments: [],
-          pendingAgent: undefined,
-        },
-      }));
+      updateProject(project.id, (current) =>
+        clearSentPendingDraft(
+          current,
+          project.composerDraft,
+          project.activeChatId,
+        ),
+      );
       if (creationRef.current.homeDraft === draftAtStart)
         updateHomeDraft(emptyDraft());
       await persistence.flush();
@@ -989,13 +996,59 @@ export default function App() {
     });
     return error ?? true;
   }
-  function handleProjectDraftChange(draft: CreationDraft): void {
+  function handleProjectDraftChange(
+    draft: CreationDraft,
+    expected?: CreationDraft,
+  ): void {
     if (!activeProject) return;
-    updateProject(activeProject.id, (project) => ({
-      ...project,
-      composerDraft: { ...draft, updatedAt: Date.now() },
-      updatedAt: Date.now(),
-    }));
+    const projectId = activeProject.id;
+    const chatId = activeProject.activeChatId;
+    const legacy = activeProject.chats === undefined && chatId === undefined;
+    const legacyDraft = activeProject.composerDraft;
+    updateProject(projectId, (project) => {
+      if (legacy) {
+        if (
+          creationRef.current.version !== 2 ||
+          project.chats !== undefined ||
+          project.activeChatId !== undefined ||
+          JSON.stringify(project.composerDraft) !==
+            JSON.stringify(expected ?? legacyDraft)
+        )
+          return project;
+        return {
+          ...project,
+          composerDraft: { ...draft, updatedAt: Date.now() },
+          updatedAt: Date.now(),
+        };
+      }
+      if (!chatId || !project.chats?.[chatId]) return project;
+      const scoped = projectChatView({ ...project, activeChatId: chatId });
+      if (
+        expected &&
+        !sameJson(
+          {
+            ...scoped.composerDraft,
+            text:
+              (scoped.composerDraft as ChatItemDraft).text ??
+              scoped.composerDraft.prompt,
+          },
+          {
+            ...expected,
+            text: (expected as ChatItemDraft).text ?? expected.prompt,
+          },
+        )
+      )
+        return project;
+      const updated = updateProjectChatView(scoped, (current) => ({
+        ...current,
+        composerDraft: { ...draft, updatedAt: Date.now() },
+        updatedAt: Date.now(),
+      }));
+      return projectChatView({
+        ...updated,
+        activeChatId: project.activeChatId,
+      });
+    });
   }
 
   function handleProjectModelChange(
@@ -1003,7 +1056,7 @@ export default function App() {
     selection?: ModelSelection,
   ): void {
     if (!activeProject) return;
-    const updated = {
+    const updated = updateProjectChatView(activeProject, () => ({
       ...activeProject,
       model,
       kind:
@@ -1034,7 +1087,7 @@ export default function App() {
           : item,
       ),
       updatedAt: Date.now(),
-    };
+    }));
     commitCreation({
       ...creationRef.current,
       projects: creationRef.current.projects.map((project) =>
@@ -1152,10 +1205,11 @@ export default function App() {
     const blank = createProject({
       prompt: "",
       model: profile.model || "kk-image-2",
+      modelSelection: { source: "default", model: "", kind: "text" },
       kind: "image",
       attachments: [],
     });
-    const nextProject: CreationProject = {
+    const nextProject: CreationProject = updateProjectChatView(blank, () => ({
       ...blank,
       name: "未命名项目",
       canvas: createProjectCanvas([]),
@@ -1164,7 +1218,7 @@ export default function App() {
       tasks: [],
       favoriteIds: [],
       likedIds: [],
-    };
+    }));
     commitCreation({
       ...creationRef.current,
       projects: [nextProject, ...creationRef.current.projects],

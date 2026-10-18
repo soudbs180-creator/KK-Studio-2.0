@@ -22,6 +22,7 @@ import {
   prepareImageTask,
   ImageTaskCommandError,
 } from "./imageTaskCommand.ts";
+import { updateProjectChatView } from "../agent/chatProjectUpdate.ts";
 import { prepareEditInputs } from "../image-edit/editTasks.ts";
 import { readProviderConnections } from "./providerRegistry.ts";
 import type { ProviderConnection } from "../../domain/providerConnections.ts";
@@ -60,6 +61,7 @@ export interface UseImageCommandSubmissionOptions {
   onNavigateToWorkspace?: () => void;
   onOpenSettingsProviders?: () => void;
   submitLock?: React.MutableRefObject<boolean>;
+  prepareTask?: typeof prepareImageTask;
 }
 
 export interface UseImageCommandSubmissionReturn {
@@ -90,9 +92,9 @@ export function canvasSignature(project: CreationProject, id: string): string {
 }
 
 /**
- * 图片命令提交 Hook：负责跨画布、对话、首页与插件等入口的统一任务生成前置校验、Codex/API 派发与草稿落盘。
+ * 纯逻辑任务提交构造器：可供 Hook 包装或无 UI 上下文时直接调用。
  */
-export function useImageCommandSubmission(
+export function createSubmissionLogic(
   options: UseImageCommandSubmissionOptions,
 ): UseImageCommandSubmissionReturn {
   const {
@@ -106,10 +108,10 @@ export function useImageCommandSubmission(
     replaceCanvasItems,
     onNavigateToWorkspace,
     onOpenSettingsProviders,
+    prepareTask = prepareImageTask,
   } = options;
 
-  const internalLock = useRef(false);
-  const submitLock = options.submitLock ?? internalLock;
+  const submitLock = options.submitLock ?? { current: false };
 
   async function submitImageCommand(
     request: ImageCommandRequest,
@@ -155,6 +157,7 @@ export function useImageCommandSubmission(
         original,
         effectivePrompt,
         signal,
+        prepareTask,
       });
 
       const current = projectId
@@ -212,6 +215,7 @@ export function useImageCommandSubmission(
         activeProjectId: activeProjectIdRef.current ?? undefined,
         cancelTask,
         taskId: appendedTaskId,
+        requestOrigin: request.origin,
       });
       if (postSaveError) return postSaveError;
 
@@ -231,6 +235,19 @@ export function useImageCommandSubmission(
   }
 
   return { submitImageCommand, submitLock };
+}
+
+/**
+ * 图片命令提交 Hook：负责跨画布、对话、首页与插件等入口的统一任务生成前置校验、Codex/API 派发与草稿落盘。
+ */
+export function useImageCommandSubmission(
+  options: UseImageCommandSubmissionOptions,
+): UseImageCommandSubmissionReturn {
+  const internalLock = useRef(false);
+  return createSubmissionLogic({
+    ...options,
+    submitLock: options.submitLock ?? internalLock,
+  });
 }
 
 // ---------------------------------------------------------------------------
@@ -547,14 +564,15 @@ interface EditPlanParams {
   original?: CreationProject;
   effectivePrompt: string;
   signal?: AbortSignal;
+  prepareTask?: typeof prepareImageTask;
 }
 
 async function prepareEditPlan(
   params: EditPlanParams,
 ): Promise<{ connection: ProviderConnection; editInputs: CreateProjectInput[] }> {
-  const { request, input, original, effectivePrompt, signal } = params;
+  const { request, input, original, effectivePrompt, signal, prepareTask = prepareImageTask } = params;
 
-  const connection = await prepareImageTask(
+  const connection = await prepareTask(
     { ...input, prompt: effectivePrompt },
     original,
   );
@@ -585,7 +603,7 @@ async function prepareEditPlan(
       : [input];
 
   for (const editInput of editInputs)
-    await prepareImageTask(editInput, original);
+    await prepareTask(editInput, original);
 
   return { connection, editInputs };
 }
@@ -635,6 +653,9 @@ function validateConsistencyAfterPreflight(
   const acceptanceBlock = validateAcceptance?.();
   if (acceptanceBlock) return acceptanceBlock;
 
+  if (request.origin === "chat" && current?.activeChatId !== original?.activeChatId)
+    return "聊天已切换，未提交；原聊天草稿仍保留。";
+
   return undefined;
 }
 
@@ -682,24 +703,21 @@ function appendTaskSeries(params: AppendTaskParams): {
   }
 
   if (request.origin === "chat") {
-    nextProject = {
+    nextProject = updateProjectChatView(nextProject, () => ({
       ...nextProject,
       prompt: inputPrompt,
       attachments: inputAttachments,
-      composerDraft:
-        current!.composerDraft.prompt === inputPrompt
-          ? { ...current!.composerDraft, prompt: "", updatedAt: Date.now() }
-          : current!.composerDraft,
       messages: [
         ...current!.messages,
         {
           id: `${base.id}-message-${firstAppended.task.id}`,
+          taskId: firstAppended.task.id,
           role: "user",
           content: inputPrompt,
           createdAt: Date.now(),
         },
       ],
-    };
+    }));
   }
 
   return {
@@ -767,6 +785,7 @@ function verifyPostSaveSafety(options: {
   activeProjectId?: string;
   cancelTask: (id: string) => void;
   taskId: string;
+  requestOrigin?: string;
 }): string | undefined {
   const {
     validateAcceptance,
@@ -775,6 +794,7 @@ function verifyPostSaveSafety(options: {
     activeProjectId,
     cancelTask,
     taskId,
+    requestOrigin,
   } = options;
 
   const afterSaveBlock = validateAcceptance?.();
@@ -782,7 +802,10 @@ function verifyPostSaveSafety(options: {
     cancelTask(taskId);
     return afterSaveBlock;
   }
-  if (signal?.aborted || (projectId && activeProjectId !== projectId)) {
+  if (
+    signal?.aborted ||
+    (requestOrigin !== "chat" && projectId && activeProjectId !== projectId)
+  ) {
     cancelTask(taskId);
     return "已取消提交，任务未发送。";
   }

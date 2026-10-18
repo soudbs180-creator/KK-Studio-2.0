@@ -27,7 +27,18 @@ import {
   appendImageTask,
   ImageTaskCommandError,
 } from "../../src/features/creation/imageTaskCommand.ts";
+import { createSubmissionLogic } from "../../src/features/creation/useImageCommandSubmission.ts";
 import type useConversationSubmit from "../../src/components/useConversationSubmit.ts";
+
+if (typeof navigator !== "undefined") {
+  try {
+    Object.defineProperty(navigator, "onLine", {
+      value: true,
+      configurable: true,
+      writable: true,
+    });
+  } catch {}
+}
 
 function deferred<T>() {
   let resolve!: (value: T) => void;
@@ -433,8 +444,10 @@ for (const alias of ["missing", "undefined"] as const) {
     const h = appDraftHarness(loadedSnapshot.projects[0]);
     const original = projectChatView(h.current());
     const rendered = evaluate(
-      `export const draft = ${appInitializer("conversationDraft")};`,
+      `${appFunction("resolveConversationDraft")}
+       export const draft = ${appInitializer("conversationDraft")};`,
       {
+        saveState: "saved",
         activeProject: original,
         selectedChat: original.chats!.A,
       },
@@ -673,7 +686,7 @@ function appSubmissionHarness(prepareGate?: Promise<void>) {
     protocol: "openai-chat",
     authMode: "api-key",
   };
-  const loaded = evaluate(`export ${appFunction("submitImageCommand")}`, {
+  const { submitImageCommand } = createSubmissionLogic({
     creationRef,
     activeProjectIdRef,
     submitLock: { current: false },
@@ -684,26 +697,11 @@ function appSubmissionHarness(prepareGate?: Promise<void>) {
         return flush.promise;
       },
     },
-    projectChatView,
-    updateProjectChatView,
-    appendImageTask,
-    emptyDraft,
-    createProject,
-    prepareImageTask: async () => {
+    homeModelConfig: { model: "fixture", configured: true },
+    prepareTask: async () => {
       await prepareGate;
-      return connection;
+      return connection as any;
     },
-    getGenerationUiState: () => "ready",
-    homeModelConfig: { configured: true },
-    navigator: { onLine: true },
-    structuredClone,
-    ImageTaskCommandError,
-    Error,
-    rootItemId: (project: CreationProject) => project.items[0].id,
-    commitCreation(next: typeof creationRef.current) {
-      creationRef.current = next;
-    },
-    replaceCanvasItems() {},
     executeTask: async (
       _projectId: string,
       _taskId: string,
@@ -712,10 +710,13 @@ function appSubmissionHarness(prepareGate?: Promise<void>) {
       executed.push(project);
     },
     cancelTask: (id: string) => cancelled.push(id),
+    commitCreation(next: typeof creationRef.current) {
+      creationRef.current = next;
+    },
+    replaceCanvasItems() {
+      return [];
+    },
   });
-  const submit = loaded.submitImageCommand as (
-    request: unknown,
-  ) => Promise<string | undefined>;
   return {
     creationRef,
     activeProjectIdRef,
@@ -724,7 +725,7 @@ function appSubmissionHarness(prepareGate?: Promise<void>) {
     executed,
     cancelled,
     submit: () =>
-      submit({
+      submitImageCommand({
         origin: "chat",
         input: { ...initial.composerDraft, prompt: "A draft" },
       }),
@@ -842,7 +843,9 @@ function appHomeSubmissionHarness(accepted: boolean) {
   const submitLock = { current: false };
   const homeCodexStarting = { current: false };
   const loaded = evaluate(
-    `${appFunction("updateProject")}
+    `${appFunction("validateHomeCodexPreconditions")}
+     ${appFunction("executeHomeCodexProject")}
+     ${appFunction("updateProject")}
      ${appFunction("updateHomeDraft")}
      export ${appFunction("handleCreateProject")}`.replaceAll(
       "import.meta.env.VITE_KK_AGENT_PROXY",
