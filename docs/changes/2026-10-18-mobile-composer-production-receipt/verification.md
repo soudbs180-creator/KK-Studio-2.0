@@ -44,4 +44,6 @@
 
 当前docs HEAD的本地检查、提交后Delivery/独立审查/Hosted与正常PR收据另冻，不用产品791e批准代填、不为自引用SHA循环改文档。Android Chrome用户接受、真实麦克风、新参考生成/视频、Safari/Native、远程Agent/MCP未验；FEAT-028 PARTIAL/T12开放。
 
-合入并发基线前，本docs断面lint/typecheck/format均exit0，governance153/features37/Markdown129/index25ADR/snapshot3/doccommands160无违规；版本一致性通过并保留当时CHANGELOG落后Desktop38的一项warning。87c9正常merge后重新运行lint/typecheck/format均exit0，governance154/features37及相关文档门禁通过；version:consistency仍exit0，保留新基线chat_migration_tests.rs:5的2.1.36兼容测试常量warning与CHANGELOG落后41 warning，未修改并发源码或历史Changelog。13:17:49Z公开build-info复读仍是v2.1.40/b457。集成提交后正式Delivery/新独审/Hosted另冻收据。
+合入并发基线前，本docs断面lint/typecheck/format均exit0，governance153/features37/Markdown129/index25ADR/snapshot3/doccommands160无违规；版本一致性通过并保留当时CHANGELOG落后Desktop38的一项warning。87c9正常merge后重新运行lint/typecheck/format均exit0，governance154/features37及相关文档门禁通过；version:consistency仍exit0，保留新基线chat_migration_tests.rs:5的旧版2.1.36兼容writer夹具路径warning与CHANGELOG落后41 warning，未修改并发源码或历史Changelog。13:17:49Z公开build-info复读仍是v2.1.40/b457。集成提交后正式Delivery/新独审/Hosted另冻收据。
+
+新基线lint退出0不代表没有health问题：health:check相对b457扫描101文件，输出22项blocking级度量，但87c9既有ENFORCEMENT为advisory，故退出0；其配置在本PR完全未改。静态度量按继承基线风险记录，本docs不调整阈值/模式或修并发产品源，独立审查另核所有非docs条目与87c9一致。
