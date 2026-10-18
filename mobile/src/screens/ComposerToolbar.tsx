@@ -31,7 +31,15 @@ export function ComposerToolbar({
   onSend: () => void;
 }) {
   return (
-    <View style={{ flexDirection: "row", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 4 }}>
+    <View
+      style={{
+        flexDirection: "row",
+        flexWrap: "wrap",
+        alignItems: "center",
+        justifyContent: "space-between",
+        gap: 4,
+      }}
+    >
       <ComposerIcon name="plus" label="上传" onPress={onAdd} />
       <ComposerIcon
         name={kind === "image" ? "image" : "sparkles"}
@@ -87,17 +95,25 @@ export function ComposerIcon({
         width: touchTarget,
         height: touchTarget,
         borderRadius: touchTarget / 2,
-        backgroundColor: solid || selected ? disabled ? t.tertiary : t.text : t.selected,
+        backgroundColor:
+          solid || selected ? (disabled ? t.tertiary : t.text) : t.selected,
         alignItems: "center",
         justifyContent: "center",
         opacity: pressed ? 0.65 : 1,
       })}
     >
-        {busy ? (
-          <ActivityIndicator size="small" color={solid || selected ? t.input : t.text} />
-        ) : (
-          <Icon name={name} size={22} color={solid || selected ? t.input : t.text} />
-        )}
+      {busy ? (
+        <ActivityIndicator
+          size="small"
+          color={solid || selected ? t.input : t.text}
+        />
+      ) : (
+        <Icon
+          name={name}
+          size={22}
+          color={solid || selected ? t.input : t.text}
+        />
+      )}
     </Pressable>
   );
 }
