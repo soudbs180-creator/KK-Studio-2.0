@@ -155,7 +155,7 @@ for (const profile of [
       });
       const model = page.getByRole("button", { name: "选择模型", exact: true });
       const touch = "hasTouch" in options && options.hasTouch;
-      await expect(model).toHaveCount(0);
+      await expect(model).toHaveCount(1);
       await input.click();
       await insideAndTouchable(page, model);
       const box = (await model.boundingBox())!;
@@ -210,10 +210,10 @@ for (const profile of [
       await expect(model).toBeVisible();
       await expect(input).toHaveValue("");
       await input.click();
-      const add = page.getByRole("button", { name: "添加到创作", exact: true });
+      const add = page.getByRole("button", { name: "上传", exact: true });
       if (touch) await add.tap();
       else await add.click();
-      await expect(page.getByText("添加到创作", { exact: true })).toBeVisible();
+      await expect(page.getByText("上传", { exact: true })).toBeVisible();
       await page.getByRole("button", { name: "关闭面板", exact: true }).click();
       await input.click();
       const expand = page.getByRole("button", {
@@ -246,7 +246,7 @@ for (const profile of [
       ).toBeDisabled();
       await newCreation(page);
       await expect(input).toHaveValue("");
-      await expect(model).toHaveCount(0);
+      await expect(model).toHaveCount(1);
     });
   });
 }

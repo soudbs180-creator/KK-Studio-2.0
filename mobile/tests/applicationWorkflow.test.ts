@@ -10,6 +10,7 @@ import type {
   GenerationInput,
   TextReceipt,
   ImageReceipt,
+  ImageInput,
 } from "../src/services/providerTypes.ts";
 import type { createGatewayImageClient } from "../src/services/gatewayImageClient.ts";
 import type { AuthSession, MeResponse } from "../src/services/authTypes.ts";
@@ -49,7 +50,7 @@ function fixture() {
       text: "A real stored answer",
       finishReason: "stop",
     });
-  let image = (input: GenerationInput): Promise<ImageReceipt> =>
+  let image = (input: ImageInput): Promise<ImageReceipt> =>
     Promise.resolve({
       identity: {
         submissionId: input.submissionId,
@@ -772,5 +773,155 @@ test("production connection setup rejects loopback HTTP and development still re
     /HTTPS_REQUIRED/,
   );
   assert.equal(f.app.getState().snapshot!.connections.length, count);
+  assert.equal(f.requests, 0);
+});
+
+async function imageDraft(f: ReturnType<typeof fixture>, reference = false) {
+  const projectId = await ready(f, "image");
+  const connection = f.app.getState().snapshot!.connections[0];
+  await f.app.saveConnection(
+    {
+      id: connection.id,
+      name: "Documented 12ai",
+      baseUrl: "https://cdn.12ai.org/v1",
+      protocol: "openai-compatible",
+      capabilities: { text: true, image: true, imageSizes: ["1024x1024"] },
+    },
+    "fixture-only-key",
+  );
+  const asset = reference
+    ? await f.app.context().repo.storeOriginal({
+        bytes: png,
+        mime: "image/png",
+        name: "reference.png",
+        provenance: { source: "import", projectId },
+      })
+    : undefined;
+  await f.app.reloadStorage();
+  await f.app.saveDraft(projectId, {
+    ...f.app.getDraft(projectId),
+    model: "gpt-image-2",
+    attachments: asset
+      ? [
+          {
+            id: "reference",
+            assetId: asset.id,
+            name: asset.name,
+            mime: asset.mime,
+            size: asset.size,
+          },
+        ]
+      : [],
+  });
+  return { projectId, asset };
+}
+test("image submission captures declared size and verified original bytes only in request memory", async () => {
+  const f = fixture();
+  const { asset } = await imageDraft(f, true);
+  let sent: ImageInput | undefined;
+  f.setImage(async (input) => {
+    sent = input;
+    const durable = f.app
+      .getState()
+      .snapshot!.projects[0].tasks.find(
+        (task) => task.idempotencyKey === input.submissionId,
+      )!;
+    assert.equal(durable.submissionState, "submitted");
+    assert.equal(durable.imageSize, "1024x1024");
+    assert.equal(durable.attachments[0].assetId, asset!.id);
+    throw new ServiceError("REJECTED_FIXTURE", "terminal");
+  });
+  await f.app.submit({ imageSize: "1024x1024" });
+  assert.equal(sent!.size, "1024x1024");
+  assert.equal(sent!.referenceImages![0].assetId, asset!.id);
+  assert.deepEqual(sent!.referenceImages![0].bytes, png);
+  let project = f.app.getState().snapshot!.projects[0];
+  assert.equal("imageSize" in project.composerDraft, false);
+  assert.equal(project.tasks[0].status, "failed");
+  await f.app.retryTask(project.tasks[0].id);
+  await f.app.reloadStorage();
+  project = f.app.getState().snapshot!.projects[0];
+  assert.equal(project.tasks[1].imageSize, "1024x1024");
+  assert.equal(project.tasks[1].status, "failed");
+  assert.equal(project.tasks[1].attachments[0].assetId, asset!.id);
+  assert.ok(
+    [...f.snapshots.values()].every(
+      (value) =>
+        !value.includes("referenceImages") &&
+        !value.includes("fixture-only-key") &&
+        !value.includes('"bytes"'),
+    ),
+  );
+  assert.deepEqual(await f.app.context().repo.readOriginal(asset!.id), png);
+  assert.equal(f.requests, 2);
+  const repository = f.app.context().repo;
+  const restored = await repository.restore(
+    await repository.backup(project.id),
+  );
+  const recovered = restored.projects.find(
+    (candidate) => candidate.restoredFrom?.projectId === project.id,
+  )!;
+  assert.equal("imageSize" in recovered.composerDraft, false);
+  assert.equal(recovered.tasks[1].imageSize, "1024x1024");
+  assert.deepEqual(
+    await repository.readOriginal(
+      recovered.composerDraft.attachments[0].assetId!,
+    ),
+    png,
+  );
+});
+test("undeclared image size rejects before durable intent or provider dispatch and preserves the draft", async () => {
+  for (const imageSizes of [undefined, ["1536x1024"]]) {
+    const f = fixture();
+    const { projectId } = await imageDraft(f);
+    const connection = f.app.getState().snapshot!.connections[0];
+    await f.app.saveConnection(
+      {
+        id: connection.id,
+        name: connection.name,
+        baseUrl: connection.baseUrl,
+        protocol: "openai-compatible",
+        capabilities: { text: true, image: true, imageSizes },
+      },
+      "",
+    );
+    await assert.rejects(f.app.submit({ imageSize: "1024x1024" }), /尺寸/);
+    assert.equal("imageSize" in f.app.getDraft(projectId), false);
+    assert.equal(f.app.getState().snapshot!.projects[0].tasks.length, 0);
+    assert.equal(f.requests, 0);
+  }
+});
+test("corrupt reference metadata rejects before a paid task and never silently drops input", async () => {
+  const f = fixture();
+  const { projectId } = await imageDraft(f, true);
+  const draft = f.app.getDraft(projectId);
+  await f.app.saveDraft(projectId, {
+    ...draft,
+    attachments: draft.attachments.map((attachment) => ({
+      ...attachment,
+      mime: "image/jpeg",
+    })),
+  });
+  await assert.rejects(f.app.submit(), /参考|原件|MIME/);
+  assert.equal(f.app.getState().snapshot!.projects[0].tasks.length, 0);
+  assert.equal(f.requests, 0);
+});
+test("account change during original read cannot append a task or dispatch captured bytes", async () => {
+  const f = fixture();
+  await imageDraft(f, true);
+  const ctx = f.app.context(),
+    waiting = deferred<void>(),
+    started = deferred<void>();
+  const readOriginal = ctx.repo.readOriginal.bind(ctx.repo);
+  ctx.repo.readOriginal = async (id) => {
+    started.resolve();
+    await waiting.promise;
+    return readOriginal(id);
+  };
+  const pending = f.app.submit();
+  await started.promise;
+  await f.app.logout();
+  waiting.resolve();
+  await assert.rejects(pending, /会话|disposed|closed/i);
   assert.equal(f.requests, 0);
 });

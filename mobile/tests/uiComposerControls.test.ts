@@ -14,7 +14,7 @@ const ports: Record<string, string> = {
   "react/jsx-runtime":
     "export const jsx=(type,props)=>({type,props});export const jsxs=jsx;",
   "react-native":
-    "export const View='View',Text='Text',Pressable='Pressable',ActivityIndicator='ActivityIndicator';",
+    "export const useWindowDimensions=()=>({width:390,height:844});export const View='View',Text='Text',Pressable='Pressable',ActivityIndicator='ActivityIndicator';",
   theme:
     "export const touchTarget=48;export const useTheme=()=>({selected:'surface',text:'ink',input:'input',tertiary:'disabled'});",
   icon: "export const Icon='Icon';",
@@ -151,6 +151,23 @@ test("an empty or blocked draft still allows configuration while only send is di
       f.buttons({ voiceState: "starting" })[4].props.accessibilityLabel,
       "关闭语音输入",
     );
+  } finally {
+    await f.dispose();
+  }
+});
+
+test("speech is visibly unavailable during an operation or storage failure", async () => {
+  const f = await fixture();
+  try {
+    for (const state of [
+      { busy: true },
+      { running: true },
+      { voiceDisabled: true },
+    ]) {
+      const voice = f.buttons(state)[4];
+      assert.equal(voice.props.disabled, true);
+      assert.match(String(voice.props.accessibilityLabel), /暂不可用/);
+    }
   } finally {
     await f.dispose();
   }

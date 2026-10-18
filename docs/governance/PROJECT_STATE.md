@@ -9,7 +9,9 @@
 <!-- DOCUMENT_METADATA_END -->
 <!-- CURRENT_FACTS_BEGIN -->
 
-当前任务为TASK-MOBILE-COMPOSER-001，IN_PROGRESS/NOT_VERIFIED；base97ef、分支fix/TASK-MOBILE-COMPOSER-001-focus复用原隔离树，不写canonical。空text点模型失焦卸载已真实本地复现；interacting锁存候选本地13项首试通过，修复/已提交head独审、Hosted及Web2.1.40/Mobile2.1.5正式发布仍待完成，Desktop不变。实际现网仍Web39/Mobile4、唯一previous38，不提前写成40已部署。详见[当前验证](../changes/2026-10-18-mobile-composer/verification.md)。
+当前任务为TASK-MOBILE-COMPOSER-001，IN_PROGRESS/NOT_VERIFIED；base97ef、分支fix/TASK-MOBILE-COMPOSER-001-focus复用原隔离树，不写canonical。当前范围为菜单任务/历史结果优先、详情结果→提示词→更多、六入口初始可见、手机/Desktop共享圆形发送、本机上传/Skill明确应用、官方12ai指定GPT Image参考编辑与本次运行时尺寸。手机/桌面同功能语义是目标，远程Agent/MCP、新Native、Safari和实体安卓后台未验。候选Desktop2.1.38/Web2.1.40/Mobile2.1.5；PR72未合并、未发布，现网39/Mobile4、唯一previous38只按此前观察，不提前写成40。详见[当前验证](../changes/2026-10-18-mobile-composer/verification.md)。
+
+当前本地根完整verify exit0：Node1852/20skip、Agent199/2skip、根浏览器832首试+1项provider-scheduling 5xx flaky（独立retries0复核1PASS，未宣称根因已修）、DESIGN41+8/development4。Mobile433/433/type/lint、冻结v39完整MobileRepository读取合成snapshot及backup预检/restore、最终窄屏run d032d819的40/40与预算增4319B均通过；首轮Mobile32PASS/8FAIL及语义/关闭/隐藏路由定位修正保留。320px发送折行由小于360px统一44px六控件/gap1/活动区水平padding8修正，390px仍48px；语音失焦取消和上传A→B→A/换账号epoch保护定向10/10。未发送尺寸刷新/切类型/模型回自适应，提交捕获已有task.imageSize，不改draft/schema/storage/backup，ADR-025继续适用。精确head冻结/独审、Hosted、生产来源/唯一previous和用户接受仍PENDING，绑定收据另冻工程外，不重复收费生成。
 
 旧TASK-MOBILE-12AI-001仅按PR70产品上线、图文保存恢复与PR71文档收据门禁完成范围DONE/PASS：d3cb quality39110739016五项、guards39110739014两项通过，PR71已squash至97ef；零jobs auto-merge异常原因UNKNOWN另保留。黑截图原JPEG字节/像素并未黑，旧误判更正；15分8秒恢复与网络截断/实体后台未验分别保留。FEAT-028 PARTIAL/T12开放，0新增生成额度；以下12ai段是原时点快照，旧待门禁措辞由本段已核实收尾替代，不代填其他未验能力。
 

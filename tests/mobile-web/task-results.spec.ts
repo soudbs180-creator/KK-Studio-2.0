@@ -54,12 +54,10 @@ test.beforeEach(async ({ context, page, baseURL }) => {
 test.afterEach(async ({ page }) => {
   const record = traffic.get(page);
   if (!record) return;
-  await test
-    .info()
-    .attach("zero-provider-traffic", {
-      body: JSON.stringify(record, null, 2),
-      contentType: "application/json",
-    });
+  await test.info().attach("zero-provider-traffic", {
+    body: JSON.stringify(record, null, 2),
+    contentType: "application/json",
+  });
   expect(record.blocked, "no Provider or unexpected network attempts").toEqual(
     [],
   );
@@ -427,9 +425,13 @@ for (const height of [844, 480]) {
         await expect(page.getByText(value, { exact: true })).toBeVisible();
       await expect(page.getByText(/输出 2 · 待核对/)).toBeVisible();
       await page.getByRole("button", { name: "查看详情", exact: true }).click();
-      await expect(
-        page.getByText("Known failure remains visible", { exact: true }),
-      ).toBeVisible();
+      await expect(page).toHaveURL(/\/mobile\/tasks\/fixture-partial-task$/);
+      // Expo Router retains the previous list in a hidden navigation screen.
+      const visibleFailure = page
+        .getByText("Known failure remains visible", { exact: true })
+        .filter({ visible: true });
+      await expect(visibleFailure).toHaveCount(1);
+      await expect(visibleFailure).toBeVisible();
       await expect(
         page.getByRole("button", { name: "更多详情", exact: true }),
       ).toBeVisible();
@@ -471,9 +473,12 @@ for (const height of [844, 480]) {
         page.getByRole("button", { name: "查看详情", exact: true }),
       ).toBeVisible();
       await page.getByRole("button", { name: "查看详情", exact: true }).click();
-      await expect(
-        page.getByText(/原件读取、校验或尺寸读取失败/),
-      ).toBeVisible();
+      await expect(page).toHaveURL(/\/mobile\/tasks\/fixture-image-task$/);
+      const visibleOriginalFailure = page
+        .getByText(/原件读取、校验或尺寸读取失败/)
+        .filter({ visible: true });
+      await expect(visibleOriginalFailure).toHaveCount(1);
+      await expect(visibleOriginalFailure).toBeVisible();
       await expect(
         page.getByText("Original image instructions kept below the result", {
           exact: true,

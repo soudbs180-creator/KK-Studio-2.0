@@ -1,7 +1,40 @@
-# Verification：模型入口与后台截图勘误
+# Verification：手机结果、完整输入与后台截图勘误
 
 - Task ID：TASK-MOBILE-COMPOSER-001；IN_PROGRESS / NOT_VERIFIED；2026-10-18；交付包角色：current。
-- [Intent](intent.md) / [Spec](spec.md) / [Plan](plan.md) / [Review](review.md)。base `97ef182b10c076c81611dea24e0b1c07c127dd49`，branch `fix/TASK-MOBILE-COMPOSER-001-focus`。本包建立时有root拥有的测试dirty，尚无已提交修复head，不能出正式独审/上线结论。
+- [Intent](intent.md) / [Spec](spec.md) / [Plan](plan.md) / [Review](review.md)。base `97ef182b10c076c81611dea24e0b1c07c127dd49`，branch `fix/TASK-MOBILE-COMPOSER-001-focus`。当前按追加范围继续整合，最终冻结head、正式独审、Hosted与上线结论仍PENDING。
+
+## 当前追加范围与最终门禁
+
+当前目标已扩为默认任务/历史结果优先、详情结果→提示词→更多详情、聊天视频预览、六入口初始可见、手机与Desktop共享直接圆形发送、本机上传/Skill应用，以及官方12ai指定模型参考图片。首轮焦点修复和下方历史通过不能证明这些新增范围已经验收。当前候选Desktop2.1.38/Web2.1.40/Mobile2.1.5，PR72未合并、未发布；生产39/唯一previous38仅为此前库存观察。
+
+尺寸采用运行时提交选项，未发送尺寸刷新回自适应，提交捕获既有 `task.imageSize`。早先向draft增加imageSize的方案因旧版strict reader失败已弃用，原失败日志 `v39-validator-probe.log` 保留，不伪装通过。当前草稿/shared contract/storage backend/namespace/backup不加字段、不迁移；ADR-025继续适用。
+
+工程外证据根 `D:/kk-studio/.analysis/kkai-mobile-background-20261018`：
+
+- `mobile-suite-final.log`的427/427为追加保护前断面；最终`expanded-mobile-suite-final.log`实际433 tests / 433 PASS / 0 FAIL / 0 SKIP，`expanded-mobile-types-final.log`与`expanded-mobile-lint-final.log`通过、lint零warning。窄屏微修后`mobile-narrow-units-final.log`再核433/433，root于本轮10:50工具收据再核typecheck/lint均exit0、lint零warning；旧MODULE_TYPELESS_PACKAGE_JSON提示保留，未为消除提示改package。
+- `image-parity-transient-red.log`记录4FAIL/23PASS，随后`image-parity-transient-green.log`27/27 PASS；仅本地协议/应用fixture，不是上游真实编辑生成。
+- `image-parity-v39-full-snapshot-backup.log`使用冻结 `97ef182b10c076c81611dea24e0b1c07c127dd49` 的完整旧MobileRepository及所有reader依赖读取当前合成snapshot，并preflight/restore完整backup：旧reader读取、备份还原、原件/参考字节hash及accountkeys均保持，task.imageSize1536x1024保留，draft无新增字段。snapshot SHA `f0f0db5fe909a45a00f1a2f0e137d59ac39e25f7546c05058526fc1e984cadeb`，backup SHA `2e6fcfd3f16ea355764689026eb89fd9bcc6e7220ac478b00d8798d1935b109c`；纯内存fixture/0HTTP，不是现网实际降版演练。
+- 媒体局部回归另在 `D:/kk-studio/.analysis/mobile-task-results-20261018`：真实页面TSX的11个RED及定向44/44 GREEN、当时type/lint记录保留；该局部断面不替代最终组合浏览器/已提交head门禁。
+- root完整verify首轮因`task-results.spec.ts`格式失败，已保留RED并修正格式；`expanded-root-verify-final.log`实际exit0：Node1852PASS/20既有SKIP、Agent199PASS/2既有SKIP，根浏览器833项为832首试PASS加1项provider-scheduling 5xx flaky，DESIGN41单测+8浏览器、development4步通过。该flaky首试在连接状态断言收到active而非degraded，原失败/trace保留，不能用retry抹掉；`scheduling-flaky-recheck.log`独立`--retries 0`复核同case为1PASS，未据此宣称根因已修复或全833首试通过。日志中的既有SSR/颜色环境及advisory提示保留。
+- `composer-route-voice-red.log`为保留聊天路由离开未取消语音的1FAIL/5PASS，修复后`composer-route-voice-green.log`6/6。`composer-upload-route-red.log`与`composer-upload-route-green.log`保留上传A→B→A、换账号及当前上传的真实RED/GREEN，最终同文件10/10，旧原件保留但迟到引用不覆盖新草稿；不新增持久epoch字段。
+- `expanded-mobile-browser.log`首轮run `8dbbf65d-a70f-4c5c-9bfb-3da929cb47c4`为32PASS/8FAIL：三处参数测试误用aria-selected，现统一合法aria-pressed并由实际Action反映selected；一处关闭定位限定当前dialog并等待关闭；四处媒体错误断言同时匹配路由保留的隐藏旧列表，现先核对任务详情URL、仅匹配唯一可见错误。真实状态、unknown/partial/原件损坏、hash不变及零Provider断言未弱化。第二轮`expanded-mobile-browser-final.log` run `46e09fc9-3a3e-4848-aaa9-4ef1b3e49522`为40/40，0unexpected/flaky/skip。
+- 随后视觉回读发现320px发送折行，改为小于360px六控件44px圆形、gap1、活动输入区水平padding8，390px保留48px。最终`expanded-narrow-browser-final.log` run `d032d819-193d-426a-9ea8-98a6cab9b496`于2026-10-18T10:48:11.169Z起，54.786秒，40 expected / 0unexpected / 0flaky / 0skip、全局errors空，涵盖390×844、390×480、320×640、既有横屏/鼠标/键盘、语音迟到取消、上传/Skill/模型数量与尺寸、图片/视频/文本及失败恢复。各隔离fixture网络收据blocked/errors为空，不接真实Provider。metadata sourceHead仍00ac加dirty，实际本地bundle与最终提交SHA另冻结，不能把metadata写成已提交head验收。
+- `expanded-ui-budget-final.json`为最终窄屏产物：`entry-2738a78e3e4672d58fe8cfe3fff4a03b.js` 1661408B、gzip9为436636B、SHA `7dc08841e199314d585b64d0ac9eeb482b0fd793f978d45622997c47ba053bd7`；97ef基线gzip432317B，增加4319B，小于16384B预算，PASS。该值不是线上下载时延或Linux产物承诺。
+- `expanded-precheck-review.json` SHA `56494da945f9071b8ce33bafe9a64f29110cd58c2e31c1d7f51c11ed13e87b6e`为dirty源码预检：P1路由语音/旧上传覆盖、P2 Native取消稳定/忙时语音禁用均已闭合，范围内无P0/P1。仅PRECHECK，最终冻结已提交SHA的独立审查仍PENDING，不把本包代理或实施者自检当正式批准。
+
+本轮保护边界：root以`GIT_OPTIONAL_LOCKS=0`只读回读canonical已为 `a55396ad396552aa75634c79b3f410eb81403e12`、clean、index SHA `caa37a1e5036f63cfed0d3afe1d52b1e73d0cc0cb4dbfdbe506df4ad27b2fa7c`，本地18:44 reflog另有main merge/6dfb/a553并发提交；remote main仍97ef，owned tree仍00ac加本任务dirty。本任务未在canonical执行写操作，不reset或reconcile这些并发提交，不能称canonical起止SHA/index不变。
+
+| 最终检查                                          | 当前证据状态                                        | 仍需完成                                      |
+| ------------------------------------------------- | --------------------------------------------------- | --------------------------------------------- |
+| Mobile单测/type/lint                              | 433/433、type/lint PASS；窄屏后单测433/433          | 绑定最终冻结head及必要受影响复验              |
+| 旧v39完整snapshot/backup读取与还原                | 合成fixture PASS、0HTTP                             | 不能扩写成现网降版或用户资料实测              |
+| 根完整verify及最终组合构建                        | 本地exit0；833 browser含1flaky，独立零重试复核1PASS | 精确源码冻结/来源关联，保留首试失败与既有skip |
+| 结果页、六入口、语音fixture、圆形共享发送浏览器   | 最终窄屏40/40、预算PASS                             | 精确提交与产物另冻工程外；不扩写成真机/生产   |
+| 精确head独审、Delivery/Hosted、PR72               | PENDING                                             | 正常PR，当前未合并                            |
+| 正式Release、线上旧资料/来源与唯一previous        | PENDING                                             | 当前未发布，不重复生成或增加root权限          |
+| 实体安卓Chrome后台/最终产品接受、新Native、Safari | NOT VERIFIED                                        | 不由本地fixture或旧接受回复代填               |
+
+以下为首轮焦点修复、后台取证和前任务收尾的原时点证据，保留真实数字与失败，不覆盖上述当前门禁。
 
 ## 已观察与修复前基线
 
@@ -19,7 +52,7 @@
 - `network-background-sanitized.json` 的截断标记为true：仅对实际捕获记录统计，不声称整个时段完整零请求。诊断期间不点击生成，Provider阻断观察与GET/POST捕获范围另按root最终收据核实。
 - `observed-lifecycle-2s.json` 中真实读取visibility仍visible且events空；CDP frozen/active不冒充真实hidden→visible事件。`debug-cleanup.json`记录恢复active、关闭生命周期采集/网络并撤销临时Provider阻断；Page.disable桥接不支持，限制保留。
 
-## 本次修复与发布门禁
+## 首轮焦点修复的历史验证与门禁
 
 root后续实际执行 `npm run verify` exit0，工程外日志 `composer-root-verify.log`：Node1852PASS/20既有SKIP、Agent199PASS/2既有SKIP、根浏览器827PASS首试、DESIGN41单测与8浏览器、development4步均通过。Mobile371/type/lint和独立手机13项见下；完整验证期间未调用真实Provider。最终补充新项目重挂载的紧凑状态断言后仅重跑受影响手机浏览器套件，结果另冻外部 `composer-mobile-web-final.log`。完整验证后的组合构建再次exit0，实际Windows入口仍为 `entry-43c9dff2cf2d770fa8b08f253d6af2ee.js`；公网/Linux入口须按发布时实际回读，不能沿用该文件名。
 

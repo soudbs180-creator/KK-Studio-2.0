@@ -1,8 +1,10 @@
 # 当前进度
 
-## 2026-10-18 手机输入模型焦点修复（IN_PROGRESS / NOT_VERIFIED）
+## 2026-10-18 手机结果优先与完整创作输入（IN_PROGRESS / NOT_VERIFIED）
 
-TASK-MOBILE-COMPOSER-001承接用户安卓Chrome模型名点击无响应：本地真实浏览器与四配置红测已确认空text失焦卸载工具栏。最小interacting锁存候选已使本地完整手机Web13/13首试通过；Mobile371/type/lint由root回传，精确已提交head独审、Hosted和Web2.1.40/Mobile2.1.5正式发布尚待完成。旧图文TASK仅按PR70/71实际门禁和合并收据有界DONE/PASS，不将Safari/Native/实体手机后台或真实视频结案。见[本次验证](changes/2026-10-18-mobile-composer/verification.md)。
+TASK-MOBILE-COMPOSER-001纳入用户当前明确反馈：默认任务/历史结果优先、详情结果→提示词→更多；手机初始六入口、模型名可点、手机/Desktop共享单一圆形发送；本机上传与Skill预览明确应用、官方12ai指定GPT Image图片参考和本次尺寸。手机/电脑同功能语义为目标，远程Agent/MCP、新Native和Safari/实体后台未验不代填。本地完整verify exit0：Node1852/20skip、Agent199/2skip、根browser832首试+1项5xx flaky（独立零重试复核1PASS）、DESIGN41+8/development4。Mobile433/433/type/lint、旧v39完整snapshot/backup合成兼容与最终窄屏40/40通过，gzip增4319B小于16384B预算。最终head冻结/独审、Hosted与生产仍PENDING；候选Desktop2.1.38/Web2.1.40/Mobile2.1.5，PR72未合并、未发布。见[本次验证](changes/2026-10-18-mobile-composer/verification.md)。
+
+尺寸不新增草稿/schema/storage/backup字段；仅本次运行选择，切类型/模型及未发刷新回自适应，提交捕获既有task.imageSize，沿ADR-025继续兼容旧版本回滚。保留语音路由失焦取消及上传A→B→A/账号epoch保护的RED/GREEN与10项定向通过。首轮新Mobile40项32PASS/8FAIL、修正后40/40和320折行微修后的最终40/40分别留证；小于360px六控件44px同排不折行，390px保留48px。更早四项焦点RED/13项GREEN只属历史范围。旧图文TASK仅按PR70/71实际门禁与合并收据有界DONE/PASS，FEAT-028 PARTIAL、T12仍开放。
 
 原“后台截图文件全黑”误判已由五JPEG完整字节/像素一致纠正；15分8秒同页停留后刷新原件散列保持，网络有截断且真实hidden事件未证，实体安卓后台仍未验。本轮不新增Provider/生成请求，现网39/唯一38与本轮40候选分开，目标上线后只保留一个previous。以下12ai段落为前任务原时点记录，当前结案以本次新增说明和实际PR71收据为准。
 

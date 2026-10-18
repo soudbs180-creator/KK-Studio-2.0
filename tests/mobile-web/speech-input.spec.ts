@@ -2,6 +2,7 @@ import { expect, test, type Page } from "@playwright/test";
 
 type SpeechFixture = {
   count: () => number;
+  aborts: () => number;
   emit: (text: string, stale?: boolean) => void;
   error: (code: string) => void;
   start: () => void;
@@ -56,6 +57,7 @@ async function installSpeech(page: Page, mode = "immediate") {
       continuous = false;
       interimResults = false;
       maxAlternatives = 0;
+      aborted = 0;
       start() {
         this.lateResult = this.onresult;
         if (mode !== "deferred") this.onstart?.();
@@ -64,6 +66,7 @@ async function installSpeech(page: Page, mode = "immediate") {
         this.onend?.();
       }
       abort() {
+        this.aborted++;
         this.onend?.();
       }
       constructor() {
@@ -85,6 +88,8 @@ async function installSpeech(page: Page, mode = "immediate") {
     });
     browser.__kkMobileSpeech = {
       count: () => instances.length,
+      aborts: () =>
+        instances.reduce((total, instance) => total + instance.aborted, 0),
       emit: (text, stale = false) => {
         const current = instances.at(-1)!;
         (stale ? current.lateResult : current.onresult)?.({
@@ -229,4 +234,45 @@ test("recognition end does not automatically restart the microphone", async ({
       (window as SpeechFixtureWindow).__kkMobileSpeech.count(),
     ),
   ).toBe(2);
+});
+
+test("leaving chat through the app menu aborts speech and rejects queued text before returning", async ({
+  page,
+}) => {
+  await installSpeech(page);
+  const input = await openCreation(page);
+  const chatURL = page.url();
+  await input.fill("离开页面也要保留的草稿");
+  await startButton(page).click();
+  await expect(stopButton(page)).toBeVisible();
+  await page.getByRole("button", { name: "打开菜单", exact: true }).click();
+  await page.getByRole("button", { name: "设置", exact: true }).click();
+  await expect(page).toHaveURL(/\/mobile\/settings$/);
+  await expect(
+    page.getByRole("button", { name: "连接账号（可选）", exact: true }),
+  ).toBeVisible();
+  await expect
+    .poll(() =>
+      page.evaluate(() =>
+        (window as SpeechFixtureWindow).__kkMobileSpeech.aborts(),
+      ),
+    )
+    .toBe(1);
+  await page.evaluate(() =>
+    (window as SpeechFixtureWindow).__kkMobileSpeech.emit(
+      "离开后的旧识别文字",
+      true,
+    ),
+  );
+  await page.getByRole("button", { name: "返回", exact: true }).click();
+  await expect(page).toHaveURL(chatURL);
+  await expect(input).toHaveValue("离开页面也要保留的草稿");
+  await startButton(page).click();
+  await expect(stopButton(page)).toBeVisible();
+  expect(
+    await page.evaluate(() =>
+      (window as SpeechFixtureWindow).__kkMobileSpeech.count(),
+    ),
+  ).toBe(2);
+  await expect(input).toHaveValue("离开页面也要保留的草稿");
 });

@@ -6,7 +6,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 | ID | Title | Status | Display | Priority | Dependencies | Owner | Next action |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| TASK-MOBILE-COMPOSER-001 | 修复手机空文字输入模型按钮失焦无响应 | IN_PROGRESS | 进行中 | P1 | TASK-MOBILE-12AI-001 | root | 完成interacting锁存修复、四配置浏览器/草稿/相邻控件回归与完整必要检查，冻结head独审并按正式Release部署，保留唯一previous；禁止再次生成。 |
+| TASK-MOBILE-COMPOSER-001 | 手机结果优先、完整创作输入与圆形发送 | IN_PROGRESS | 进行中 | P1 | TASK-MOBILE-12AI-001 | root | 冻结本次源码提交，以工程外收据绑定精确SHA最终独审和Hosted/Delivery后正常PR/正式Release；线上回读既有资料和唯一previous。保留flaky与首轮失败，不新增生成调用、不覆盖canonical并发提交。 |
 | TASK-MOBILE-12AI-001 | 12ai手机端图片自动归档与文本视频协议接入 | DONE | 已完成 | P1 | TASK-WEB-RELEASE-20261017 | root | 按已完成PR70/71范围保留发布/原件/回滚收据；模型按钮及后台专项由TASK-MOBILE-COMPOSER-001承接，T12/FEAT-028继续开放。 |
 | TASK-WEB-RELEASE-20261017 | 独立手机UI接入与正式Web Release自动同步 | DONE | 已完成 | P1 | TASK-AUDIT-REPAIR-20261017 | root | 本次Web交付已完成；最终文档PR另按提交HEAD完成独立审查与Hosted/Delivery。Mobile其余能力由T12按原范围继续。 |
 | TASK-AUDIT-REPAIR-20261017 | 审计安全修复、启动恢复与当前治理收敛 | DONE | 已完成 | P1 | none | root | 保留被日常链接引用的任务worktree/EXE及所有恢复证据；root完成最终文档提交后的精确review/正式Delivery和runtime-input不变核对。其余64开放项按原任务继续，尤其旧聊天数据完整迁移/protocol7、统一接入/12AI持久恢复/素材垃圾箱、真实Provider/ComfyUI/GPU/VPS/Mobile/签名及用户验收；不得解除READ_ONLY或批量结案。 |
@@ -160,22 +160,22 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-DESIGN-MD-20261015 | 统一DESIGN设计系统与产品UI收敛 | PARTIAL | 进行中 | P1 | none | root | 关闭基础独审问题，将规则落入设置/模型/聊天/画布/项目/素材等实际页面，按Desktop→Web留同状态证据。 |
 | TASK-ISSUE-68 | 修复原生设置保存后的测试同步缺口 | REVIEW | 未完成 | P1 | none | issue68-specialist | 纯文档head补审并建立draft PR，回读当前Hosted后交现有main协调者；不merge/发布。 |
 
-## TASK-MOBILE-COMPOSER-001 — 修复手机空文字输入模型按钮失焦无响应
+## TASK-MOBILE-COMPOSER-001 — 手机结果优先、完整创作输入与圆形发送
 
-- Goal: 空文字草稿聚焦后模型/添加/展开保持可用，保存旧资料与回滚；纠正黑截图误判并真实区分长停留恢复与手机后台证据。
-- Scope: 仅Mobile Composer临时焦点状态、定向浏览器回归、Web/Mobile候选版本和本任务交付；不改Provider/存储/业务数据，不新增生成调用。
+- Goal: 菜单任务/历史先显示结果，详情分层；手机与桌面同功能语义、六入口可用与圆形发送，补12ai参考编辑/本次尺寸，保护旧资料及单回滚。
+- Scope: 独立Mobile结果页/输入/语音/上传/创作库与明确12ai图片协议、Desktop共享发送源码和无额度验证；尺寸仅运行时并捕获已有task.imageSize，不改draft/schema/storage/backup，不替换日常原生安装器。
 - Display status: 进行中
-- Priority: P1 — 用户安卓Chrome点击模型名无反应，空文字失焦使整条工具栏提前卸载，阻断基本选择操作。
+- Priority: P1 — 用户安卓Chrome模型按钮无响应，任务列表只露提示词且输入入口不完整，影响手机基本创作；结果/控制与真实协议必须同时验收。
 - Requirement refs: docs/changes/2026-10-18-mobile-composer/intent.md, docs/changes/2026-10-18-mobile-composer/spec.md
 - Feature IDs: FEAT-028
 - Owner role: implementation-integrator
-- Acceptance: 空text输入focus后一次点模型可打开面板，缺Key/连接不禁用入口；取消触摸/Enter语义保留。; 390×844触摸、390×480矮屏触摸、390×844鼠标和844×390横屏的模型及相邻添加/展开、取消/草稿刷新通过。; 旧任务/正文/原件身份与散列保持；完整捕获与截断网络边界分开，无生成或自动重试。; 精确head独审、Delivery/Hosted和正式Release来源/单previous回读；实体Android后台/Safari/Native未验不代填。
+- Acceptance: 任务及历史先展示图片/视频/文本，详情结果→提示词→更多，unknown/partial/错误/进度与必要恢复动作不隐藏。; 六入口初始可见且模型名可点，发送本身直接圆形同排同高；小于360px六控件44px不折行、390px48px，竖矮/窄/横屏、鼠标/键盘/取消手势有DOM/截图及命中证据。; 上传原件/草稿引用、模型/数量、Skill预览明确应用可刷新恢复，取消不改；尺寸只在本次页面有效，切类型/模型或未发刷新回自适应，提交捕获既有task.imageSize。; 官方12ai精确支持模型的参考图编辑经原件校验并自动归档，非支持场景零提交；本地fixture验证，不消耗真实生成额度，不自动重试未知任务。; 旧v39完整snapshot/backup可读并还原、原件hash/账户身份保持；最终verify/组合browser/精确head独审/Hosted/正式Release与唯一previous回读完成后才放行。; 手机/桌面同功能目标不冒充远程Agent/MCP、新Native、Safari或实体后台已验；FEAT-028 PARTIAL/T12开放。
 - Branch: `fix/TASK-MOBILE-COMPOSER-001-focus`
 - Worktree: `D:/kk-studio/.worktrees/TASK-MOBILE-12AI-001`
-- Modules: mobile/src/screens/Composer.tsx, tests/mobile-web/entry.spec.ts, config/platform-versions.json, docs/changes/2026-10-18-mobile-composer, docs/governance, docs/features, docs/PROGRESS.md
-- Verification: NOT_VERIFIED — 真实本地空text焦点/点击红测run e9da5f53四配置4FAIL保留；interacting候选本地完整mobile-web run60ac86e2为13/13首试、0skip/flaky/errors，CUA390×844模型面板可见，Mobile371/type/lint由root回传通过。五JPEG原字节/像素一致纠正旧黑图判断；908.067秒后原件散列保持，但network截断且无真实hidden事件，实体后台未验。当前已提交head独审/Hosted/生产40待执行。
+- Modules: mobile/src/screens, mobile/src/ui, mobile/src/application/application.ts, mobile/src/application/types.ts, mobile/src/application/workflow.ts, mobile/src/services/providerClient.ts, mobile/src/services/providerTypes.ts, mobile/src/services/twelveAiProtocol.ts, mobile/tests, tests/mobile-web, src/components/UiIcon.tsx, src/components/AgentActionButton.tsx, src/components/StartComposer.tsx, src/styles/composer.css, tests/browser/composer-round-send.spec.ts, config/platform-versions.json, docs/changes/2026-10-18-mobile-composer, docs/governance, docs/features/feat-028-mobile.md, docs/PROGRESS.md
+- Verification: NOT_VERIFIED — 本地expanded完整verify exit0：Node1852PASS/20skip、Agent199PASS/2skip、根browser832首试+1项provider-scheduling 5xx flaky（独立retries0复核1PASS）、DESIGN41+8/development4；不是833首试全过。Mobile433/433/type/lint、窄屏微修后单测433/433和最终browser run d032d819的40/40、gzip增4319B<16384预算通过。保留首轮Mobile32PASS/8FAIL与aria-pressed/关闭等待/隐藏路由定位修正，320折行改小于360px44px同排；语音离路由取消/上传A→B→A或账号epoch保护定向10/10 RED→GREEN。冻结v39完整snapshot/backup读取预检restore、尺寸/参考结果hash/accountkeys保持，0HTTP，不改draft/schema/storage/backup。dirty源码预检两P1/两P2已闭合、无P0/P1，仅PRECHECK；最终源码冻结/精确head独审/Hosted、PR72合并与Web40正式发布仍PENDING，截图勘误及实体后台未验边界保留。
 - Evidence: [docs/changes/2026-10-18-mobile-composer/intent.md](../../docs/changes/2026-10-18-mobile-composer/intent.md), [docs/changes/2026-10-18-mobile-composer/spec.md](../../docs/changes/2026-10-18-mobile-composer/spec.md), [docs/changes/2026-10-18-mobile-composer/plan.md](../../docs/changes/2026-10-18-mobile-composer/plan.md), [docs/changes/2026-10-18-mobile-composer/verification.md](../../docs/changes/2026-10-18-mobile-composer/verification.md), [docs/changes/2026-10-18-mobile-composer/review.md](../../docs/changes/2026-10-18-mobile-composer/review.md)
-- Next action: 完成interacting锁存修复、四配置浏览器/草稿/相邻控件回归与完整必要检查，冻结head独审并按正式Release部署，保留唯一previous；禁止再次生成。
+- Next action: 冻结本次源码提交，以工程外收据绑定精确SHA最终独审和Hosted/Delivery后正常PR/正式Release；线上回读既有资料和唯一previous。保留flaky与首轮失败，不新增生成调用、不覆盖canonical并发提交。
 - Last verified: 2026-10-18
 - Updated: 2026-10-18
 

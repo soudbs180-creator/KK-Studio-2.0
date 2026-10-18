@@ -24,7 +24,10 @@ import {
 } from "./httpClient.ts";
 import { readTextStream } from "./textStream.ts";
 import { decodeBase64, imageMime, MAX_IMAGE_BYTES } from "./imageBytes.ts";
-import { isTwelveAiConnection } from "./twelveAiProtocol.ts";
+import {
+  isTwelveAiConnection,
+  supportsImageReferences,
+} from "./twelveAiProtocol.ts";
 export function createProviderClient(
   options: HttpOptions & { credentials: CredentialReader },
 ) {
@@ -45,7 +48,10 @@ export function createProviderClient(
       throw new ServiceError("PROVIDER_CREDENTIAL_REQUIRED");
     return { authorization: `Bearer ${secret}` };
   }
-  function capture(input: GenerationInput): SubmissionIdentity {
+  function capture(
+    input: GenerationInput,
+    imageReferences = false,
+  ): SubmissionIdentity {
     endpoint(input.connection, "models");
     if (
       !/^[A-Za-z0-9_-]{1,180}$/.test(input.submissionId) ||
@@ -57,7 +63,7 @@ export function createProviderClient(
       !nonempty(input.connection.credentialRef)
     )
       throw new ServiceError("INVALID_GENERATION_INPUT");
-    if (input.attachments?.length)
+    if (input.attachments?.length && !imageReferences)
       throw new ServiceError("REFERENCE_INPUT_UNAVAILABLE");
     return Object.freeze({
       submissionId: input.submissionId,
@@ -89,6 +95,7 @@ export function createProviderClient(
         recoveryReceipt?: ImageReceipt;
       }) => void,
     ) => Promise<T>,
+    imageReferences = false,
   ) {
     const capturedInput = {
       ...input,
@@ -97,7 +104,7 @@ export function createProviderClient(
         capabilities: { ...input.connection.capabilities },
       },
     };
-    const identity = capture(capturedInput);
+    const identity = capture(capturedInput, imageReferences);
     let sent = false;
     // This state must outlive the HTTP action: deadline/abort can win its race.
     let progress: {
@@ -280,9 +287,51 @@ export function createProviderClient(
         count > Math.min(4, input.connection.capabilities.maxOutputs ?? 1)
       )
         throw new ServiceError("IMAGE_COUNT_UNAVAILABLE");
-      if (size && !input.connection.capabilities.imageSizes?.includes(size))
+      if (
+        size !== undefined &&
+        !input.connection.capabilities.imageSizes?.includes(size)
+      )
         throw new ServiceError("IMAGE_SIZE_UNAVAILABLE");
-      const url = endpoint(input.connection, "images/generations");
+      const references = input.referenceImages ?? [];
+      const attachments = input.attachments ?? [];
+      if (
+        references.length !== attachments.length ||
+        (attachments.length &&
+          !supportsImageReferences(input.connection, input.model))
+      )
+        throw new ServiceError("REFERENCE_INPUT_UNAVAILABLE");
+      let body: FormData | undefined;
+      if (attachments.length) {
+        body = new FormData();
+        body.append("model", input.model);
+        body.append("prompt", input.prompt);
+        body.append("n", String(count));
+        if (size !== undefined) body.append("size", size);
+        body.append("response_format", "b64_json");
+        for (const [index, attachment] of attachments.entries()) {
+          const reference = references[index];
+          if (
+            !attachment.assetId ||
+            attachment.dataUrl !== undefined ||
+            attachment.assetId !== reference.assetId ||
+            attachment.mime !== reference.mime ||
+            attachment.size !== reference.bytes.byteLength ||
+            !reference.bytes.byteLength ||
+            reference.bytes.byteLength > MAX_IMAGE_BYTES ||
+            imageMime(reference.bytes) !== reference.mime
+          )
+            throw new ServiceError("INVALID_REFERENCE_ORIGINAL");
+          body.append(
+            "image[]",
+            new Blob([reference.bytes.slice()], { type: reference.mime }),
+            `${attachment.id}.${reference.mime.split("/")[1]}`,
+          );
+        }
+      }
+      const url = endpoint(
+        input.connection,
+        body ? "images/edits" : "images/generations",
+      );
       const preferBase64 = isTwelveAiConnection(input.connection);
       return submit(
         input,
@@ -295,17 +344,20 @@ export function createProviderClient(
           markStarted,
           observe,
         ) => {
+          if (body) delete headers["content-type"];
           markStarted();
           const response = await fetcher(url, {
             method: "POST",
             headers,
-            body: JSON.stringify({
-              model: identity.model,
-              prompt: identity.prompt,
-              n: count,
-              ...(size ? { size } : {}),
-              ...(preferBase64 ? { response_format: "b64_json" } : {}),
-            }),
+            body:
+              body ??
+              JSON.stringify({
+                model: identity.model,
+                prompt: identity.prompt,
+                n: count,
+                ...(size ? { size } : {}),
+                ...(preferBase64 ? { response_format: "b64_json" } : {}),
+              }),
             signal: requestSignal,
             redirect: "error",
             credentials: "omit",
@@ -372,6 +424,7 @@ export function createProviderClient(
             archivalState: "pending",
           };
         },
+        !!body,
       );
     },
   };

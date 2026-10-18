@@ -69,6 +69,7 @@ export default function TaskDetailScreen() {
           <Card>
             <Label muted>
               {task.model} · {task.providerName ?? "连接未报告"}
+              {task.imageSize ? ` · ${task.imageSize}` : ""}
             </Label>
             <Label small muted>
               任务：{task.id}

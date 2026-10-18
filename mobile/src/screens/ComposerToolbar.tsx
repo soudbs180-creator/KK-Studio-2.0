@@ -1,4 +1,9 @@
-import { ActivityIndicator, Pressable, View } from "react-native";
+import {
+  ActivityIndicator,
+  Pressable,
+  View,
+  useWindowDimensions,
+} from "react-native";
 import type { CreationDraft } from "@kk-studio/creation-contracts";
 import { Icon, type IconName } from "../ui/Icon.tsx";
 import { useTheme, touchTarget } from "../ui/theme.tsx";
@@ -12,6 +17,7 @@ export function ComposerToolbar({
   onExtensions,
   onVoice,
   voiceState,
+  voiceDisabled = false,
   running,
   blocked,
   busy,
@@ -25,6 +31,7 @@ export function ComposerToolbar({
   onExtensions: () => void;
   onVoice: () => void;
   voiceState: "off" | "starting" | "on" | "stopping";
+  voiceDisabled?: boolean;
   running: boolean;
   blocked: boolean;
   busy: boolean;
@@ -37,7 +44,7 @@ export function ComposerToolbar({
         flexWrap: "wrap",
         alignItems: "center",
         justifyContent: "space-between",
-        gap: 4,
+        gap: 1,
       }}
     >
       <ComposerIcon name="plus" label="上传" onPress={onAdd} />
@@ -50,7 +57,14 @@ export function ComposerToolbar({
       <ComposerIcon name="extensions" label="扩展选择" onPress={onExtensions} />
       <ComposerIcon
         name="microphone"
-        label={voiceState === "off" ? "开启语音输入" : "关闭语音输入"}
+        label={
+          voiceDisabled || busy || running
+            ? "语音输入暂不可用，请先完成当前操作或处理存储错误"
+            : voiceState === "off"
+              ? "开启语音输入"
+              : "关闭语音输入"
+        }
+        disabled={voiceDisabled || busy || running}
         selected={voiceState !== "off"}
         onPress={onVoice}
       />
@@ -83,6 +97,8 @@ export function ComposerIcon({
   selected?: boolean;
 }) {
   const t = useTheme();
+  const { width } = useWindowDimensions(),
+    size = width < 360 ? 44 : touchTarget;
   return (
     <Pressable
       accessibilityRole="button"
@@ -92,9 +108,9 @@ export function ComposerIcon({
       disabled={disabled || busy}
       onPress={onPress}
       style={({ pressed }) => ({
-        width: touchTarget,
-        height: touchTarget,
-        borderRadius: touchTarget / 2,
+        width: size,
+        height: size,
+        borderRadius: size / 2,
         backgroundColor:
           solid || selected ? (disabled ? t.tertiary : t.text) : t.selected,
         alignItems: "center",

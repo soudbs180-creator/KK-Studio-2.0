@@ -51,6 +51,7 @@ export function Action({
         accessibilityLabel={label}
         accessibilityHint={reason}
         accessibilityState={{ disabled: disabled || busy, busy, selected }}
+        aria-pressed={selected}
         disabled={disabled || busy}
         onPress={onPress}
         style={({ pressed }) => {
