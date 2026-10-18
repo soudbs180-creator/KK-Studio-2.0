@@ -6,7 +6,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 | ID | Title | Status | Display | Priority | Dependencies | Owner | Next action |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| TASK-MOBILE-12AI-001 | 12ai手机端图片自动归档与文本视频协议接入 | IN_PROGRESS | 进行中 | P1 | TASK-WEB-RELEASE-20261017 | root | 图片TDD修复并整合独立视频实现；验证、独审、PR及正式Release后真实图片刷新验收。 |
+| TASK-MOBILE-12AI-001 | 12ai手机端图片自动归档与文本视频协议接入 | IN_PROGRESS | 进行中 | P1 | TASK-WEB-RELEASE-20261017 | root | 冻结独审、PR精确head Hosted和main质量门，正式Release上线保留唯一previous，再真实图片和文本自动保存/刷新验收。 |
 | TASK-WEB-RELEASE-20261017 | 独立手机UI接入与正式Web Release自动同步 | DONE | 已完成 | P1 | TASK-AUDIT-REPAIR-20261017 | root | 本次Web交付已完成；最终文档PR另按提交HEAD完成独立审查与Hosted/Delivery。Mobile其余能力由T12按原范围继续。 |
 | TASK-AUDIT-REPAIR-20261017 | 审计安全修复、启动恢复与当前治理收敛 | DONE | 已完成 | P1 | none | root | 保留被日常链接引用的任务worktree/EXE及所有恢复证据；root完成最终文档提交后的精确review/正式Delivery和runtime-input不变核对。其余64开放项按原任务继续，尤其旧聊天数据完整迁移/protocol7、统一接入/12AI持久恢复/素材垃圾箱、真实Provider/ComfyUI/GPU/VPS/Mobile/签名及用户验收；不得解除READ_ONLY或批量结案。 |
 | TASK-KK-UNIFIED-20261015 | KK Studio 统一修复与重构 | IN_PROGRESS | 进行中 | P1 | none | root | 原统一scope继续开放；当前后续源码已进入local main@8c36a6b并有63条dirty，已保全为未验收221560a3。当前安全修复由TASK-AUDIT-REPAIR-20261017独占承接；原branch/worktree仅历史来源，不作为当前产品验收或并行写入分配。完整多聊天、12AI持久恢复、Provider/共仓库/账号/同步等仍按原scope另行实施和验收。 |
@@ -172,9 +172,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `fix/TASK-MOBILE-12AI-001-provider-compat`
 - Worktree: `D:/kk-studio/.worktrees/TASK-MOBILE-12AI-001`
 - Modules: mobile, config/platform-versions.json, docs/changes/2026-10-18-mobile-12ai, docs/governance, docs/features, docs/PROGRESS.md
-- Verification: NOT_VERIFIED — Mobile基线323PASS/0FAIL/0SKIP；本次新修复与视频、当前SHA独审、Hosted、正式发布和单张真实图片复验正在实施，不能沿用旧版失败或fixtures冒充通过。
+- Verification: NOT_VERIFIED — 整合代码c81311be：Mobile371PASS/0FAIL/0SKIP、type/lint通过；根完整verify exit0，1852根测试/199Agent/827浏览器通过且保留22环境skip；组合手机入口9/9。当前SHA独审、Hosted、正式发布和真实图片/文本刷新验收待完成；用户不授权视频额外付费实测。
 - Evidence: [docs/changes/2026-10-18-mobile-12ai/intent.md](../../docs/changes/2026-10-18-mobile-12ai/intent.md), [docs/changes/2026-10-18-mobile-12ai/verification.md](../../docs/changes/2026-10-18-mobile-12ai/verification.md)
-- Next action: 图片TDD修复并整合独立视频实现；验证、独审、PR及正式Release后真实图片刷新验收。
+- Next action: 冻结独审、PR精确head Hosted和main质量门，正式Release上线保留唯一previous，再真实图片和文本自动保存/刷新验收。
 - Last verified: 2026-10-18
 - Updated: 2026-10-18
 

@@ -33,11 +33,11 @@
       "docs/changes/2026-10-18-mobile-12ai/intent.md",
       "docs/changes/2026-10-18-mobile-12ai/verification.md"
     ],
-    "verification": "Mobile基线323PASS/0FAIL/0SKIP；本次新修复与视频、当前SHA独审、Hosted、正式发布和单张真实图片复验正在实施，不能沿用旧版失败或fixtures冒充通过。",
+    "verification": "整合代码c81311be：Mobile371PASS/0FAIL/0SKIP、type/lint通过；根完整verify exit0，1852根测试/199Agent/827浏览器通过且保留22环境skip；组合手机入口9/9。当前SHA独审、Hosted、正式发布和真实图片/文本刷新验收待完成；用户不授权视频额外付费实测。",
     "verificationResult": "NOT_VERIFIED",
     "updated": "2026-10-18",
     "lastVerified": "2026-10-18",
-    "nextAction": "图片TDD修复并整合独立视频实现；验证、独审、PR及正式Release后真实图片刷新验收。",
+    "nextAction": "冻结独审、PR精确head Hosted和main质量门，正式Release上线保留唯一previous，再真实图片和文本自动保存/刷新验收。",
     "requirementRefs": [
       "docs/changes/2026-10-18-mobile-12ai/intent.md",
       "docs/changes/2026-10-18-mobile-12ai/spec.md"
