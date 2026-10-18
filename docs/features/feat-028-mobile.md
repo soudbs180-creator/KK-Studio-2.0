@@ -3,7 +3,7 @@
 - 状态：PARTIAL
 - 领域：future
 - 最近更新：2026-10-18
-- 关联任务：TASK-MOBILE-12AI-001、TASK-WEB-RELEASE-20261017、T12、TASK-UI-CONSOLIDATE-20261014、TASK-PROTOCOL-CLI-20261014、TASK-222-ACTIONS-20261014、TASK-223-ACTIONS-20261014
+- 关联任务：TASK-MOBILE-COMPOSER-001、TASK-MOBILE-12AI-001、TASK-WEB-RELEASE-20261017、T12、TASK-UI-CONSOLIDATE-20261014、TASK-PROTOCOL-CLI-20261014、TASK-222-ACTIONS-20261014、TASK-223-ACTIONS-20261014
 
 ## 用户可见入口
 
@@ -12,6 +12,7 @@
 
 ## 代码位置
 
+- 模型输入交互：`mobile/src/screens/Composer.tsx` → `ComposerToolbar.tsx` → `ModelPicker.tsx` → `mobile/src/ui/Sheet.tsx`
 - 独立入口与聊天：`mobile/src/app/_layout.tsx` → `mobile/src/app/(workspace)/index.tsx` → `mobile/src/screens/ChatScreen.tsx`
 - 独立本机/真实账号上下文和数据：`mobile/src/application`、`mobile/src/storage`；纯共享契约：`packages/creation-contracts`
 - 组合Web与初始分流：`deploy/build-combined-web.mjs`、`deploy/initial-web-entry.js`；Expo前缀配置：`mobile/app.config.ts`
@@ -21,6 +22,8 @@
 - Expo/React Native的原生目标与配置已有独立源码，本轮未构建、安装或接受新的iOS/Android原生包。
 
 ## 测试与证据
+
+- 新TASK-MOBILE-COMPOSER-001修复空text模型入口失焦卸载；本地四配置红测后13项首试通过，Web2.1.40/Mobile2.1.5仍是未发布候选，当前源码head独审/Hosted/生产验收待续。见[本次验证](../changes/2026-10-18-mobile-composer/verification.md)。五JPEG原文件非黑与15分8秒原件恢复有独立补证，不能把截断网络或冻结模拟当实体Android后台通过，状态仍PARTIAL。原图文TASK按PR70/71实际范围有界DONE/PASS，以下原时点文档门禁等待措辞不作为当前阻断。
 
 - 本轮正式生产来源main `9d10af39d0b028a8ddc7f06c594c813ef25b7205` / tag `v2.1.39`；Mobile371与根本地verify、产品独审/同tree晋升、精确main Hosted、正式Web部署及生产入口9项通过，见[本轮验证](../changes/2026-10-18-mobile-12ai/verification.md)与[发布实录](../changes/2026-10-18-mobile-12ai/release.md)。旧2.1.38来源和323项历史记录如下保留，不冒充本次新图文验收。
 - 图片服务/自动归档冷启动、视频服务/应用恢复/UI策略由 `servicesTwelveAiImages.test.ts`、`applicationTwelveAiImageArchive.test.ts`、`servicesTwelveAiVideo.test.ts`、`applicationVideo.test.ts`、`uiVideo.test.ts` 覆盖；视频实际本地bundle的失败/GET恢复、成功样本保存/播放/普通导出/刷新有独立证据，0真实上游视频调用。

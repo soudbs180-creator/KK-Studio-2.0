@@ -9,6 +9,10 @@
 <!-- DOCUMENT_METADATA_END -->
 <!-- CURRENT_FACTS_BEGIN -->
 
+当前任务为TASK-MOBILE-COMPOSER-001，IN_PROGRESS/NOT_VERIFIED；base97ef、分支fix/TASK-MOBILE-COMPOSER-001-focus复用原隔离树，不写canonical。空text点模型失焦卸载已真实本地复现；interacting锁存候选本地13项首试通过，修复/已提交head独审、Hosted及Web2.1.40/Mobile2.1.5正式发布仍待完成，Desktop不变。实际现网仍Web39/Mobile4、唯一previous38，不提前写成40已部署。详见[当前验证](../changes/2026-10-18-mobile-composer/verification.md)。
+
+旧TASK-MOBILE-12AI-001仅按PR70产品上线、图文保存恢复与PR71文档收据门禁完成范围DONE/PASS：d3cb quality39110739016五项、guards39110739014两项通过，PR71已squash至97ef；零jobs auto-merge异常原因UNKNOWN另保留。黑截图原JPEG字节/像素并未黑，旧误判更正；15分8秒恢复与网络截断/实体后台未验分别保留。FEAT-028 PARTIAL/T12开放，0新增生成额度；以下12ai段是原时点快照，旧待门禁措辞由本段已核实收尾替代，不代填其他未验能力。
+
 当前任务 TASK-MOBILE-12AI-001 已按授权完成隔离实现、PR70与正式Web发布，真实图文现场实测有界PASS，独立live证据复核已通过，最终文档head门禁待执行，任务REVIEW/NOT_VERIFIED。产品main `9d10af39d0b028a8ddc7f06c594c813ef25b7205` / tree `611cf648ade1d0fb98c5474ae91615f0bbaf1a23`，与已审b0ef完整树相同；main quality39104785098五项/guards39104785090双平台成功，正式Release416299447/部署39107253299通过。公网build-info为Web2.1.39/9d10，独立Mobile2.1.4，Desktop源码仍2.1.37；实际CI/公网entry-140201476199fedafe0abc0ba5b1dfb9.js SHA `cf341da42fd899433c99a4de1089097dbe74d18fa6b2099a9acc2fbb957d9d36`，不沿用Windows本地3d5。生产入口9项通过；current39/唯一previous38、两版validated、exact2与配置/auth/服务前后观察已核对，未执行实际生产降版。最新验收见[生产收据](../changes/2026-10-18-mobile-12ai-production-receipt/verification.md)，发布实录见[Release](../changes/2026-10-18-mobile-12ai/release.md)。
 
 用户保存Key后，root在430×637手机尺寸Web浏览器各一次真实gpt-4.1-mini短文本和gpt-image-2单图，200 SSE stop/[DONE]与b64 PNG1024原件均保存1/1；文本正文SHA1fffc1d3、图片830495B SHA64a6af6e与前后普通导出/刷新一致，同task/asset恢复。完整network无截断/无Fetch暂停，刷新Provider0/POST0、视频请求0。旧文本1/1、旧失败图片unknown0/1、旧import原件3748344c散列保持；最终2项目/2原件/1连接/快照53。视频仍仅本地fixture保存/播放/导出/刷新验证，FEAT-028 PARTIAL/T12 TODO，Safari/Native/真实视频计费未验；旧Windows installer门禁失败不是Web部署失败。独立live证据审核已PASS_WITH_EXPLICIT_SCOPE、无阻断项（27输入；报告JSON SHA59af4671f7618f14b69b3fa5458a3f93051b12d0fdfcfcf8486763771d126ae3）；当前文档head另待独审/Hosted/Delivery，不能把实施者自检或用户填Key回复当文档独审/产品接受。
@@ -16,7 +20,6 @@
 canonical初始基线比较FAIL继续保留。07:30/07:31本地main0a49/index7dc72867、4dirty及两读稳定仅为历史观察；08:02只读终核已是main208f97de/index2717ed9d、status clean，四文件bytes/hash也已改变，不能称最终四路径稳定或canonical未变。本任务没有对canonical还原、stage、commit或写文件，不归因操作者，隔离生产9d10不包含这些后续变化。旧release树0cb/index未变仅按较早核对时点记载。详见当前生产verification及工程外protection-final-live-acceptance.json。 以下旧发布记录保留原时点。相关决定见[ADR-025](../architecture/adr/ADR-025-mobile-12ai-originals-and-video-recovery.md)。
 
 Issue68专项候选从最新origin/main6b933f4f隔离执行，仅补Native设置保存/关闭测试后置条件和既有延迟回归；真实回执gate13检查通过。无产品、版本或生产改动。当前验证/独审/PR状态见[专项验证](../changes/2026-10-18-issue-68-settings-save/verification.md)。以下发布事实保留其原时点。
-
 
 # 当前项目事实（2026-10-18）
 
@@ -46,7 +49,6 @@ Issue68专项候选从最新origin/main6b933f4f隔离执行，仅补Native设置
 <!-- HISTORICAL_SNAPSHOTS_BEGIN -->
 
 ## 2026-10-16及之前的原CURRENT_FACTS（历史保留，已由2026-10-17事实替代）
-
 
 2026-10-16 最新增量：8e17cb13全量UI失败修复九文件已精确独审SPEC/QUALITY PASS，相关九组87/87首试、0retry/flaky/skip；侧栏偏移根因是垃圾箱独立行，归入原菜单后五锚点误差0，未放宽原Figma断言。静态/build及Node1508/14既有skip通过，未以此覆盖下文55a0完整verify失败或Native焦点边界。ADR022/023已接受并独审；正常多聊天实现者独占App/快照/聊天/Agent共享核心，本地安装实现者只写独立适配器，root保留main/Cargo/全局tokens/版本及任务文档。两条实现均未冻结/验收，模型B/C实际执行链并行只读核对。详见[当前验证](../changes/2026-10-15-kk-unified/verification.md)。
 
@@ -104,8 +106,6 @@ Issue68专项候选从最新origin/main6b933f4f隔离执行，仅补Native设置
 - `dailyClientAtTakeover`: locked branch-consolidation-20261011 clean/detached235e；实际2.1.33 EXEaeb70dfce5d3e31f76a779986e041ce88ebddb2a5fe9771b0906d70af40371d5、input627e5b402e9bb0cdcc84394f2876be3f179560200ab17acd4240ab6d2787d595，最后PID78612/9441WebView15512。客户端保留打开。本轮未构建/替换daily；普通快捷方式无CDP、恢复副本2画布与main原始Hosted审计未完成。
 - `dailyDataBoundary`: HOME交接九项目新基线，两个新ID恢复副本保留；当前选副本1。勘误：新增reviewComments/stagePlans空数组的是project-mv949az4-zmndcg67，原active project-mu3l43g1-u26lanrs仍全字段exact。副本2画布未验，不再以旧7基线覆盖。auto-connect当前enabled，历史原值UNKNOWN，不能猜恢复。
 - `takeoverEntry`: [唯一正式执行提示词](../changes/2026-10-15-unified-handoff/takeover-context.md)、[归并和合入顺序](../changes/2026-10-15-unified-handoff/resume-order.md)、[矩阵](../changes/2026-10-15-unified-handoff/delivery-matrix.md)。全部批准范围/P0/P1/关键恢复风险及用户验收完成前总目标IN_PROGRESS。
-
-
 
 ## 2026-10-15 2.1.30最终本地快照（历史；当前状态以上方为准）
 
