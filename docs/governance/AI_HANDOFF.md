@@ -8,7 +8,11 @@
 
 本文是最短恢复入口，不是任务状态或产品能力的第二事实源。任务状态只读 [`task-ledger.json`](task-ledger.json)；当前项目事实只读 [`PROJECT_STATE.md`](PROJECT_STATE.md)；历史验证只按带日期的 change package、commit、运行模式和 receipt 回读。
 
-## 当前恢复入口：冷启动严格比较已闭环（2026-10-18）
+## 当前恢复入口：Gateway本地增量流（2026-10-18）
+
+TASK-GATEWAY-STREAM-20261018 IN_PROGRESS/NOT_VERIFIED，branch fix/TASK-GATEWAY-STREAM-20261018/base00e79cf0，复用原审计树。先读[规格](../changes/2026-10-18-gateway-stream/spec.md)、[计划](../changes/2026-10-18-gateway-stream/plan.md)和[验证](../changes/2026-10-18-gateway-stream/verification.md)。154项90DONE/64开放，9树18分支/预算5/4；无真实Provider/额度调用，父Gateway保持PARTIAL。root独占文档/版本/Git/端口/Native，实施者只写窄源/测试，无文件删移。
+
+## 上轮恢复入口：冷启动严格比较已闭环（2026-10-18）
 
 TASK-COLDSTART-LOCAL-20261018有界本地DONE/PASS，产品8735ad13/完整验收源d5a24d60，branch fix/TASK-COLDSTART-LOCAL-20261018/base fe103d2b，同一审计树。先读[当前验证](../changes/2026-10-18-coldstart-local/verification.md)最后一节和PROJECT_STATE。Desktop/Web2.1.40完整verify/源码双轴/官方EXE41523db8通过；真正默认库无CDP两周期11份完整JSON与raw严格相等、全部时间/revision2698保持，9项目11chat22消息，独立724e2a1f通过。只读UI两启闭可编辑标志/完整canonical资料另独审651c2e7c，不声称新回复或全网络禁用。
 

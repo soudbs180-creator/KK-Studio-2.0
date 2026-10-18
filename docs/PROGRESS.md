@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-10-18 Gateway本地增量流（IN_PROGRESS）
+
+冷启已闭环后按P1选择上游增量流，base00e79/同树新branch fix/TASK-GATEWAY-STREAM-20261018；只修可选注入生产调用链与取消重试，使用本地合成HTTP，无模型额度或默认UI接入。正式RED/完整验证与新精确审查待验，154项90DONE/64开放、9树18分支，原资料/改动及失败保留；[本轮计划](changes/2026-10-18-gateway-stream/plan.md)。
+
 ## 2026-10-18 冷启动严格比较闭环（有界本地DONE/PASS）
 
 产品8735ad13/完整验收源d5a24d60、Desktop/Web2.1.40：Agent同值回放、retry兄弟往返及Native完整恢复链净无变化不再刷新时间/revision，合法新回执与全部真实数据变化/flush/身份保护保留。正式RED后修复，独审补入undefined持久化语义和非法原始时间反例均关闭。精确完整verify Node2001PASS14skip、Agent204PASS2skip、Edge854首试零fail/flaky、Design41+8/dev4；源码双轴独立PASS。

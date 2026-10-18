@@ -10045,5 +10045,53 @@
         "source": "docs/changes/2026-10-18-coldstart-local/verification.md"
       }
     ]
+  },
+  {
+    "id": "TASK-GATEWAY-STREAM-20261018",
+    "title": "Gateway实际增量SSE与取消重试边界",
+    "goal": "将现有可选注入chat路由从buffered修复为受控验证的真实增量文本流",
+    "scope": "Ark adapter/Scheduler/chat/HTTP及有限SSE读取和相关本地回归；无默认UI或主入口接入",
+    "acceptance": [
+      "真实本地HTTP首段在上游完成前到达，SSE分片/usage/错误终结有界正确",
+      "首段写后不重试，取消传播且不误罚账号，filter不可换号，JSON/图片/异步/鉴权/404兼容",
+      "相关定向及完整verify、精确独审、当前官方产物与资料保护通过；原件保全，无删移或费用调用"
+    ],
+    "dependencies": [
+      "TASK-COLDSTART-LOCAL-20261018"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "fix/TASK-GATEWAY-STREAM-20261018",
+    "worktree": "D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017",
+    "baseSha": "00e79cf01a7ef787f3c83baeeb46e854d281a2c2",
+    "status": "IN_PROGRESS",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "priorityRationale": "冷启闭环后的本地P1剩余项，可用受控HTTP上游证明而不依赖模型额度",
+    "affectedModules": [
+      "src/features/ai-gateway",
+      "src/features/generation-server/http.ts",
+      "tests/unit",
+      "tests/local-service",
+      "docs"
+    ],
+    "evidence": [
+      "docs/changes/2026-10-18-gateway-stream/intent.md",
+      "docs/changes/2026-10-18-gateway-stream/spec.md",
+      "docs/changes/2026-10-18-gateway-stream/plan.md",
+      "docs/changes/2026-10-18-gateway-stream/verification.md",
+      "docs/changes/2026-10-18-gateway-stream/review.md"
+    ],
+    "verification": "只读生产调用链与ignored合成HTTP预复现12项，10失败及2兼容正例保留；正式新源与完整验收尚待",
+    "verificationResult": "NOT_VERIFIED",
+    "updated": "2026-10-18",
+    "lastVerified": "2026-10-18",
+    "nextAction": "正式测试先RED，最小内部callback/SSE修复，再定向全量/独审/官方当前Desktop与资料保护；父任务外部能力继续开放",
+    "requirementRefs": [
+      "ledger:TASK-AI-GATEWAY-001"
+    ],
+    "featureIds": [
+      "FEAT-038"
+    ]
   }
 ]

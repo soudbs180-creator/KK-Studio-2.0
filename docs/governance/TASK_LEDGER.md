@@ -159,6 +159,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-DESIGN-MD-20261015 | 统一DESIGN设计系统与产品UI收敛 | PARTIAL | 进行中 | P1 | none | root | 关闭基础独审问题，将规则落入设置/模型/聊天/画布/项目/素材等实际页面，按Desktop→Web留同状态证据。 |
 | TASK-SIDEBAR-CANVAS-20261018 | 侧栏置顶排序持久化与宽图连线桌面验收 | DONE | 已完成 | P1 | none | root | 本轮有界本地技术完成；最终文档SHA审查/Delivery/归档/日常还原以工程外收据裁决；真实Provider/Hosted/发布及用户整体验收另行，保留全部资料。 |
 | TASK-COLDSTART-LOCAL-20261018 | 冷启动无效写入修复与严格数据比较闭环 | DONE | 已完成 | P1 | none | root | 本有界冷启动技术闭环完成；最终文档SHA独审/Delivery/保全归档与日常单实例入口据实收尾。继续本地Gateway增量流和Native Canvas专项，不改变父任务外部验收与功能成熟度。 |
+| TASK-GATEWAY-STREAM-20261018 | Gateway实际增量SSE与取消重试边界 | IN_PROGRESS | 进行中 | P1 | TASK-COLDSTART-LOCAL-20261018 | root | 正式测试先RED，最小内部callback/SSE修复，再定向全量/独审/官方当前Desktop与资料保护；父任务外部能力继续开放 |
 
 ## TASK-LOCAL-GUARDS-20261018 — 修复本地安全边界并核对剩余任务与工作树规则
 
@@ -3067,5 +3068,24 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Verification: PASS — 精确d5/产品8735、Desktop-Web2.1.40：完整verify Node2001PASS14skip/Agent204PASS2skip/Edge854首试零失败/零flaky/Design41+8/dev4；源码双轴164/173定向PASS。官方EXE41523db8/input0f7a1bf9，真正默认库无CDP两周期原快捷方式0→1单实例→正常关闭0，11份完整JSON及raw全字节严格一致（含全部时间/revision2698/9项目11聊天22消息），40项保护状态保持，独立101项审核724e2a1f PASS。默认UI两周期可编辑标志及canonical资料保持另独审651c2e7c PASS；未发送真实模型。原RED/历史失败/拒收及2849份原profile保留，最终文档/Delivery/归档/日常按精确收据。
 - Evidence: [docs/changes/2026-10-18-coldstart-local/intent.md](../../docs/changes/2026-10-18-coldstart-local/intent.md), [docs/changes/2026-10-18-coldstart-local/spec.md](../../docs/changes/2026-10-18-coldstart-local/spec.md), [docs/changes/2026-10-18-coldstart-local/plan.md](../../docs/changes/2026-10-18-coldstart-local/plan.md), [docs/changes/2026-10-18-coldstart-local/verification.md](../../docs/changes/2026-10-18-coldstart-local/verification.md), [docs/changes/2026-10-18-coldstart-local/review.md](../../docs/changes/2026-10-18-coldstart-local/review.md)
 - Next action: 本有界冷启动技术闭环完成；最终文档SHA独审/Delivery/保全归档与日常单实例入口据实收尾。继续本地Gateway增量流和Native Canvas专项，不改变父任务外部验收与功能成熟度。
+- Last verified: 2026-10-18
+- Updated: 2026-10-18
+
+## TASK-GATEWAY-STREAM-20261018 — Gateway实际增量SSE与取消重试边界
+
+- Goal: 将现有可选注入chat路由从buffered修复为受控验证的真实增量文本流
+- Scope: Ark adapter/Scheduler/chat/HTTP及有限SSE读取和相关本地回归；无默认UI或主入口接入
+- Display status: 进行中
+- Priority: P1 — 冷启闭环后的本地P1剩余项，可用受控HTTP上游证明而不依赖模型额度
+- Requirement refs: ledger:TASK-AI-GATEWAY-001
+- Feature IDs: FEAT-038
+- Owner role: implementation-integrator
+- Acceptance: 真实本地HTTP首段在上游完成前到达，SSE分片/usage/错误终结有界正确; 首段写后不重试，取消传播且不误罚账号，filter不可换号，JSON/图片/异步/鉴权/404兼容; 相关定向及完整verify、精确独审、当前官方产物与资料保护通过；原件保全，无删移或费用调用
+- Branch: `fix/TASK-GATEWAY-STREAM-20261018`
+- Worktree: `D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017`
+- Modules: src/features/ai-gateway, src/features/generation-server/http.ts, tests/unit, tests/local-service, docs
+- Verification: NOT_VERIFIED — 只读生产调用链与ignored合成HTTP预复现12项，10失败及2兼容正例保留；正式新源与完整验收尚待
+- Evidence: [docs/changes/2026-10-18-gateway-stream/intent.md](../../docs/changes/2026-10-18-gateway-stream/intent.md), [docs/changes/2026-10-18-gateway-stream/spec.md](../../docs/changes/2026-10-18-gateway-stream/spec.md), [docs/changes/2026-10-18-gateway-stream/plan.md](../../docs/changes/2026-10-18-gateway-stream/plan.md), [docs/changes/2026-10-18-gateway-stream/verification.md](../../docs/changes/2026-10-18-gateway-stream/verification.md), [docs/changes/2026-10-18-gateway-stream/review.md](../../docs/changes/2026-10-18-gateway-stream/review.md)
+- Next action: 正式测试先RED，最小内部callback/SSE修复，再定向全量/独审/官方当前Desktop与资料保护；父任务外部能力继续开放
 - Last verified: 2026-10-18
 - Updated: 2026-10-18
