@@ -1,6 +1,6 @@
 # Verification：12ai 手机端生成与原件保存
 
-- Task ID：TASK-MOBILE-12AI-001；IN PROGRESS；2026-10-18；交付包角色 current。
+- Task ID：TASK-MOBILE-12AI-001；IN PROGRESS；2026-10-18；交付包角色 historical（保留原实现/发布执行记录；当前状态以[生产收据](../2026-10-18-mobile-12ai-production-receipt/verification.md)为准）。
 - [Intent](intent.md) / [Spec](spec.md) / [Plan](plan.md)。
 - Base：`c248d8178ec1754315559a9e476ac909bb494287`；原产品审查 head `c81311be3cde3a9f1a3d83a2c2eac504d6d12996`；最终候选 `b0ef662233e6ab4985d319dae6ac077f64a31cb0` 与 squash 后正式来源 `9d10af39d0b028a8ddc7f06c594c813ef25b7205` 的完整 tree 同为 `611cf648ade1d0fb98c5474ae91615f0bbaf1a23`。
 - 当前：Web2.1.39 / Mobile2.1.4 已正式上线，发布与入口检查通过；本轮真实图片和短文本仍 NOT VERIFIED，等待用户在原连接补填 Key 并自行保存。任务保持 IN_PROGRESS；本分支仅记生产收据，文档最终 head 须由另一上下文独审。发布实录见 [Release](release.md)。

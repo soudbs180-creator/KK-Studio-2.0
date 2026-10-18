@@ -8,7 +8,7 @@
 ## 用户可见入口
 
 - [kkai.plus](https://kkai.plus)初次按手机UA或viewport≤767进入独立[手机Web](https://kkai.plus/mobile/)；宽屏与[显式桌面入口](https://kkai.plus/?view=desktop)保留原Desktop资料访问，使用中resize不强制跳转。
-- Web2.1.39 / Mobile源码2.1.4已正式上线，实际来源main9d10/Release416299447；本轮生产独立入口九项通过。旧2.1.38的用户实际手机UI确认只按原时点记录，本轮真实图片/短文本仍待用户补Key验收；Safari、新Native包与真实身份等不由入口检查代填。
+- Web2.1.39 / Mobile源码2.1.4已正式上线，实际来源main9d10/Release416299447；生产独立入口九项及430×637浏览器各一次真实图片/短文本的保存、导出/刷新现场实测通过，独立live证据复核已通过，当前文档head门禁待提交后执行。旧2.1.38用户实际手机UI确认只按原时点记录，本次不是Safari/Native/所有Provider或用户最终接受。
 
 ## 代码位置
 
@@ -33,12 +33,12 @@
 
 - 已恢复原创独立Expo/RN手机UI：以聊天创作为首页，提供胶囊输入框、触控抽屉与独立设置/资料入口；已正式部署并取得实际手机UI接受，不再用根桌面窄屏充当独立手机端。
 - Web默认真实本机context，不伪造AuthSession或身份服务；项目/草稿与Desktop旧资料使用隔离存储，刷新恢复已验。可选账号入口可往返；Gateway/Comfy与账号请求仍要求真实账号上下文。
-- Web凭据仅请求/会话内存保存；没有以明文localStorage保留密钥。本机资料不自动迁移Desktop或上传云端；12ai同步图片返回base64原件与视频持久ID/GET-only恢复已实现，本轮新版本真实图文保存/刷新链仍待补Key验收。
+- Web凭据仅请求/会话内存保存；没有以明文localStorage保留密钥。本机资料不自动迁移Desktop或上传云端；12ai同步图片base64原件与既有SSE的本轮真实单图/短文本已1/1保存并刷新恢复、旧资料回读保持。视频持久ID/GET-only恢复仅有本地协议/UI/样本验证，不能扩大成上游真实视频能力已接受。
 - 只跟随正式Release自动部署，普通提交与预发布不部署；当前受管静态产物为current39和唯一previous38，exact2与两版manifest验证有库存实录；服务/配置/auth前后观察保持，不推断数据库每字节静止。canonical并发改动未纳入隔离发布，不声称其他工作树完全未变。
 
 ## 差距与后端化
 
-本轮 [12ai 修复](../changes/2026-10-18-mobile-12ai/verification.md) 已按用户授权正式上线 Web2.1.39 / Mobile2.1.4。前次文本真生成/保存/刷新成功和图片POST200后CORS归档失败保留原义；图片同步base64与视频持久任务/GET恢复已实现，但本轮新图片和短文本仍NOT VERIFIED。reload清除内存Key后已请用户在原连接补填并自行保存，尚未回复。当前文本仍为单条输入/SSE，不强加可选参数；视频只验本地fixture保存/播放/导出/刷新，不额外消费真实视频额度，真实上游生成/计费、新原生包和Safari继续未验。
+本轮 [生产收据](../changes/2026-10-18-mobile-12ai-production-receipt/verification.md) 记录用户保存Key后，正式9d10/140201入口的一次真实gpt-4.1-mini文本200 SSE stop/[DONE]及gpt-image-2图片200 b64_json n1成功，task/asset与内容刷新恢复，Provider0/POST0；PNG830495B SHA64a6af6e与Provider字节及两次普通导出一致，旧失败任务/import原件未清除。原CORS失败和55e文档Delivery失败仍按原时点保留；独立live证据复核已PASS_WITH_EXPLICIT_SCOPE/无阻断，最终文档head门禁待完成，任务REVIEW。文本仍为单条输入/SSE；视频只验本地fixture保存/播放/导出/刷新、0真实视频调用，真实视频/费用、新Native包和Safari继续未验，FEAT-028整体PARTIAL不变。
 
 - T12保持开放，FEAT-028保持PARTIAL。独立源码、手机Web运行形态和本机/可选账号边界已实现，不再视为未定稿；新原生包、Safari专项、正式身份服务、真实Provider/Companion及完整手机生成链仍未验。
 - 用户实际手机已确认本轮UI正常；该确认不替代目标运行时一次真实文本生成和一次图片生成、结果回填/原件写入、保存重载双门，也不证明付费、云同步或多端全能力一致。

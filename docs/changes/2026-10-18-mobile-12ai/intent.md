@@ -3,7 +3,7 @@
 - Task ID：TASK-MOBILE-12AI-001
 - 状态：READY；2026-10-18；Owner root。
 - 用户原意及授权：按 12ai 官方文档修好手机端图片生成和自动保存，文本、视频也需要；更新上线后重新验收图片和刷新恢复；不影响已有数据、未提交改动，保留一个可回滚备份。当前请求已授权实现、发布和单张图片复验，未授权无界重复收费。
-- 交付包角色：current。[Spec](spec.md) / [Plan](plan.md) / [Verification](verification.md) / [Review](review.md)。
+- 交付包角色：historical（原产品实现与发布记录；当前生产收据交付见[后续Intent](../2026-10-18-mobile-12ai-production-receipt/intent.md)）。[Spec](spec.md) / [Plan](plan.md) / [Verification](verification.md) / [Review](review.md)。
 - 隔离分支：`fix/TASK-MOBILE-12AI-001-provider-compat`；base `c248d8178ec1754315559a9e476ac909bb494287`。主仓本轮新基线为 clean 的 `109c6c41`，不沿用上轮 96 dirty 记录。
 
 ## 事实与范围

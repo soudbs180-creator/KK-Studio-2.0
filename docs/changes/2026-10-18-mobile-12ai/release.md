@@ -1,6 +1,6 @@
 # Release：Web2.1.39 / Mobile2.1.4
 
-- Task：TASK-MOBILE-12AI-001；产品PR70；记录状态：RELEASED（Web发布通过，真实图文验收NOT VERIFIED，任务IN_PROGRESS）。
+- Task：TASK-MOBILE-12AI-001；产品PR70；记录状态：RELEASED（Web发布通过；后续图文现场实测有界PASS，独立复核/最终文档门禁待完，任务暂IN_PROGRESS）。
 - 正式来源main `9d10af39d0b028a8ddc7f06c594c813ef25b7205` / tree `611cf648ade1d0fb98c5474ae91615f0bbaf1a23`；tag `v2.1.39`；Desktop源码仍2.1.37，无新桌面或Native包交付。
 - 用户授权：本轮intent记录已授权修复、正式发布与单张图片/短文本复验；后续明确不额外消耗视频额度。发布授权不等于用户已接受本轮图文结果。
 - 关联：[Intent](intent.md) / [Spec](spec.md) / [Plan](plan.md) / [Verification](verification.md) / [Review](review.md)。工程外证据根为 `D:/kk-studio/.analysis/kkai-12ai-mobile-fix-20261018`。
@@ -29,12 +29,12 @@ tag push另触发旧Windows installer39107203456，在v2.1.39不等于Desktop2.1
 
 nginx/原配置备份/auth SHA、旧临时授权tag0及API/Nginx/PostgreSQL的active/running与PID693/666/673前后观察一致；不声称持续uptime或业务数据库每字节不变。没有新增SSH授权。
 
-canonical不能称为完全未变：初始clean109c/indexe01ff8e9，终核本地main0a49/index7dc72867和4条dirty；两次只读head/index/diff/文件hash稳定，reflog仅说明操作与时间，不能据此归因操作者。改动未回滚、覆盖、暂存或纳入隔离发布；旧release树0cb/indexab7757bb仍clean且与前基线一致。详见verification的保护终核及 `protection-after.json`（checksPassed=false）/`protection-concurrent-local-state.json`。
+canonical初始基线比较FAIL继续保留。07:30/07:31本地main0a49/index7dc72867、4dirty及两读稳定仅为历史观察；08:02只读终核已是main208f97de/index2717ed9d、status clean，四文件bytes/hash也已改变，不能称最终四路径稳定或canonical未变。本任务没有对canonical还原、stage、commit或写文件，不归因操作者，隔离生产9d10不包含这些后续变化。旧release树0cb/index未变仅按较早核对时点记载。详见当前生产verification及工程外protection-final-live-acceptance.json。
 
 ## 仍待验收与文档收尾
 
-本轮真实单图和短文本尚未执行：reload清除原浏览器内存Key，已在原连接编辑页请用户填Key且自行保存，尚未收到回复。下一步只按授权各一次生成、自动保存/普通导出与刷新同ID/hash核对，保留旧项目及unknown失败任务；此前文本成功不是本轮新版本验收。
+此前reload清除内存Key后的等待阶段已结束。用户确认保存Key后，root在当前正式版本各一次真实单图和短文本完成1/1自动保存、普通图片导出/刷新散列一致、正文恢复及旧任务/原件保持；刷新Provider0/POST0，现场结果有界PASS。实际ID/hash、network与独立复核状态见[后续生产收据](../2026-10-18-mobile-12ai-production-receipt/verification.md)。这不改写旧等待/失败时点，独立live证据复核已通过，新文档head门禁待执行，任务REVIEW。
 
-视频仅本地模拟回执/样本的自动保存、播放、导出、刷新PASS，0真实上游视频调用/额度消耗；真实模型生成、计费、Safari、真机、新原生包等未验。FEAT-028仍PARTIAL、T12开放、TASK-MOBILE-12AI-001保持IN_PROGRESS/NOT_VERIFIED。
+视频仅本地模拟回执/样本的自动保存、播放、导出、刷新PASS，0真实上游视频调用/额度消耗；真实模型生成、计费、Safari、真机、新原生包等未验。FEAT-028仍PARTIAL、T12开放、TASK-MOBILE-12AI-001保持REVIEW/NOT_VERIFIED。
 
 本文件由收据实施者整理，未将其自检当独立review。本分支最终文档head仍须另一上下文独审及相应Hosted/Delivery；链接到ledger、PROJECT_STATE、PROGRESS与Handoff的事实保持同一范围。

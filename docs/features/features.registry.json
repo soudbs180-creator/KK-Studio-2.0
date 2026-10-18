@@ -1343,7 +1343,7 @@
     "area": "future",
     "status": "PARTIAL",
     "card": "docs/features/feat-028-mobile.md",
-    "summary": "正式独立手机Web2.1.39/Mobile2.1.4已上线main9d10，生产入口9项及current39/唯一previous38通过；12ai图片base64/视频持久ID与GET恢复已实现，本轮真实图文待用户补Key验收。视频仅本地fixture保存/播放/导出/刷新，未调用真实上游；原生包、Safari和身份等仍未验，T12开放。",
+    "summary": "正式独立手机Web2.1.39/Mobile2.1.4已上线main9d10，入口9项及current39/唯一previous38通过；12ai真实文本和单图自动保存/导出/刷新有界PASS，独立生产证据复核通过。视频仅本地fixture，未调用真实上游；原生包、Safari和身份等仍未验，T12开放。",
     "entryPoints": [
       "kkai.plus 手机初次访问 /mobile/；桌面资料入口 /?view=desktop"
     ],
