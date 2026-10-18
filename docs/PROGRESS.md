@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-10-18 Issue68 原生设置保存同步（专项候选）
+
+从远端 main6b933f4f 创建隔离分支，仅在 Native 测试保存后等待准确成功提示、关闭后确认 dialog 隐藏；既有延迟保存回归补齐关闭和模型菜单路径。真实 native 回执 gate 证明配置/凭据已提交但 UI 待回执时关闭、Escape、遮罩保持保护，释放后13检查通过，正式生命周期11检查通过；CI精确吞点击机制仍为推断。无产品源码、版本或生产改动。完整验证、独审/PR进度见[专项验证](changes/2026-10-18-issue-68-settings-save/verification.md)，交现有main协调者，不merge或发布。
+
 ## 2026-10-18 独立手机 Web 正式交付（有界 DONE/PASS）
 
 正式Release `v2.1.38` 已从main `f730f1dc32fb2e568dda6d4a52c58b05802d6b6b` 自动发布：Web2.1.38、独立Mobile源码2.1.3、Desktop源码2.1.37。根网址初次按手机UA/窄屏进入 `/mobile/`，`/?view=desktop` 保留旧资料入口，使用中resize不强制导航。生产Edge9/9首试、0retry/flaky/skip及9组空blocked/errors记录通过；用户实际手机回复“已显示独立手机 UI，正常”。

@@ -120,6 +120,9 @@ test("待提交凭据事务期间返回、分类、预设和关闭都不能卸�
   await expect(
     dialog.getByRole("button", { name: "关闭设置", exact: true }),
   ).toBeDisabled();
+  await expect(dialog.locator(".provider-status")).not.toContainText(
+    "连接信息已保存。",
+  );
   for (const item of await dialog.locator(".settings-nav-item").all())
     await expect(item).toBeDisabled();
   await expect(dialog.locator(".provider-presets > summary")).toHaveAttribute(
@@ -134,10 +137,19 @@ test("待提交凭据事务期间返回、分类、预设和关闭都不能卸�
     (window as Window & { __releaseSave?: () => void }).__releaseSave?.(),
   );
   await expect(save).toBeEnabled();
+  await expect(dialog.locator(".provider-status")).toContainText(
+    "连接信息已保存。",
+  );
   await expect(
     dialog.getByRole("button", { name: "返回设置分类", exact: true }),
   ).toBeEnabled();
   expect(await page.evaluate(() => JSON.stringify(localStorage))).not.toContain(
     "fixture-navigation-key",
   );
+  await dialog.getByRole("button", { name: "关闭设置", exact: true }).tap();
+  await expect(dialog).toBeHidden();
+  await page.getByRole("button", { name: "模型", exact: true }).tap();
+  await expect(
+    page.getByRole("menu", { name: "选择模型", exact: true }),
+  ).toBeVisible();
 });
