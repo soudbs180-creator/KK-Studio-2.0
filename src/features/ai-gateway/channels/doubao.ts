@@ -140,80 +140,104 @@ export const doubaoAdapter: ChannelAdapter = {
     const secret = await requireSecret(request);
     const endpointId = this.resolveModel(context, input.model);
     if (input.operation === "chat") {
-      const response = await fetch(`${context.baseUrl}/chat/completions`, {
-        method: "POST",
-        headers: authHeaders(secret, request.idempotencyKey),
-        body: JSON.stringify({
-          model: endpointId,
-          messages: [{ role: "user", content: input.prompt }],
-          ...mapChatExtra(input),
-          ...(request.onTextDelta
-            ? { stream: true, stream_options: { include_usage: true } }
-            : {}),
-        }),
-        ...(request.signal ? { signal: request.signal } : {}),
-      });
-      if (!response.ok) {
-        const body = await readJson(response);
-        throw Object.assign(new Error(`Ark chat failed: ${response.status}`), {
-          normalized: normalizeHttpFailure({
-            status: response.status,
-            body,
-            signalText: readErrorEnvelope(body),
-            channelId: context.channelId,
+      const deadline = AbortSignal.timeout(context.timeoutMs);
+      const signal = request.signal
+        ? AbortSignal.any([request.signal, deadline])
+        : deadline;
+      try {
+        const response = await fetch(`${context.baseUrl}/chat/completions`, {
+          method: "POST",
+          headers: authHeaders(secret, request.idempotencyKey),
+          body: JSON.stringify({
+            model: endpointId,
+            messages: [{ role: "user", content: input.prompt }],
+            ...mapChatExtra(input),
+            ...(request.onTextDelta
+              ? { stream: true, stream_options: { include_usage: true } }
+              : {}),
           }),
+          signal,
         });
-      }
-      if (request.onTextDelta)
-        return readChatStream(response, {
-          signal: request.signal,
-          onTextDelta: request.onTextDelta,
-          channelId: context.channelId,
-        });
-      const body = (await readJson(response)) as
-        | {
-            choices?: Array<{ message?: { content?: unknown } }>;
-            usage?: {
-              prompt_tokens?: unknown;
-              completion_tokens?: unknown;
-              total_tokens?: unknown;
-            };
-          }
-        | undefined;
-      const text = body?.choices?.[0]?.message?.content;
-      if (typeof text !== "string" || !text.trim())
-        throw Object.assign(
-          new Error("Ark response contained no assistant text"),
-          {
+        if (!response.ok) {
+          const body = await readJson(response);
+          throw Object.assign(
+            new Error(`Ark chat failed: ${response.status}`),
+            {
+              normalized: normalizeHttpFailure({
+                status: response.status,
+                body,
+                signalText: readErrorEnvelope(body),
+                channelId: context.channelId,
+              }),
+            },
+          );
+        }
+        if (request.onTextDelta)
+          return await readChatStream(response, {
+            signal,
+            onTextDelta: (delta) => request.onTextDelta!(delta, signal),
+            channelId: context.channelId,
+          });
+        const body = (await readJson(response)) as
+          | {
+              choices?: Array<{ message?: { content?: unknown } }>;
+              usage?: {
+                prompt_tokens?: unknown;
+                completion_tokens?: unknown;
+                total_tokens?: unknown;
+              };
+            }
+          | undefined;
+        signal.throwIfAborted();
+        const text = body?.choices?.[0]?.message?.content;
+        if (typeof text !== "string" || !text.trim())
+          throw Object.assign(
+            new Error("Ark response contained no assistant text"),
+            {
+              normalized: {
+                errorClass: "UPSTREAM_ERROR",
+                httpStatus: 502,
+                retryable: true,
+                channelId: context.channelId,
+                detail: "missing assistant content",
+              } satisfies NormalizedError,
+            },
+          );
+        const usage = body?.usage;
+        return {
+          kind: "text",
+          text,
+          ...(usage
+            ? {
+                usage: {
+                  ...(typeof usage.prompt_tokens === "number"
+                    ? { promptTokens: usage.prompt_tokens }
+                    : {}),
+                  ...(typeof usage.completion_tokens === "number"
+                    ? { completionTokens: usage.completion_tokens }
+                    : {}),
+                  ...(typeof usage.total_tokens === "number"
+                    ? { totalTokens: usage.total_tokens }
+                    : {}),
+                },
+              }
+            : {}),
+        };
+      } catch (error) {
+        // A caller cancellation wins even when the attempt deadline also fired.
+        request.signal?.throwIfAborted();
+        if (deadline.aborted)
+          throw Object.assign(new Error("Ark chat attempt timed out"), {
             normalized: {
-              errorClass: "UPSTREAM_ERROR",
-              httpStatus: 502,
+              errorClass: "TIMEOUT",
+              httpStatus: 504,
               retryable: true,
               channelId: context.channelId,
-              detail: "missing assistant content",
+              detail: "Upstream chat attempt timed out",
             } satisfies NormalizedError,
-          },
-        );
-      const usage = body?.usage;
-      return {
-        kind: "text",
-        text,
-        ...(usage
-          ? {
-              usage: {
-                ...(typeof usage.prompt_tokens === "number"
-                  ? { promptTokens: usage.prompt_tokens }
-                  : {}),
-                ...(typeof usage.completion_tokens === "number"
-                  ? { completionTokens: usage.completion_tokens }
-                  : {}),
-                ...(typeof usage.total_tokens === "number"
-                  ? { totalTokens: usage.total_tokens }
-                  : {}),
-              },
-            }
-          : {}),
-      };
+          });
+        throw error;
+      }
     }
     const response = await fetch(`${context.baseUrl}/images/generations`, {
       method: "POST",

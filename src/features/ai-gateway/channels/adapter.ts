@@ -40,7 +40,10 @@ export interface ChannelRequestContext {
   readonly idempotencyKey: string;
   readonly signal?: AbortSignal;
   /** Backpressure-aware delta delivery; final text still belongs to SubmitResult. */
-  readonly onTextDelta?: (delta: string) => void | Promise<void>;
+  readonly onTextDelta?: (
+    delta: string,
+    attemptSignal?: AbortSignal,
+  ) => void | Promise<void>;
   /** Never log this. It resolves the secret for the upstream Authorization header. */
   readonly resolveSecret: () => Promise<string | undefined>;
 }

@@ -223,6 +223,7 @@ export function runChatCompletion(
     readonly onTextDelta?: (
       delta: string,
       channelId: string,
+      attemptSignal?: AbortSignal,
     ) => void | Promise<void>;
     readonly streamStarted?: () => boolean;
   } = {},

@@ -7,3 +7,15 @@ TASK-GATEWAY-STREAM-20261018；base 00e79cf01a7ef787f3c83baeeb46e854d281a2c2。�
 ## 实现期独立预审
 
 冻结reader6ca7e185独立预审9c13a06f（CHANGES_REQUIRED_SCOPE_ONLY）复现两个异常完成P2，原件保留；array delta/message与error-typed DONE/empty error已正式RED后修复，合法usage保旧且未知token不伪造0，HTTP流错误首头前后均避免暴露私密细节。当前新reader27da/HTTP5aa与46新例、144关联回归通过，新精确commit补审尚待。纯内存边界19项只限其原冻结源，不批准主链或后继源码。
+
+## source6df完整验证与独立超时阻断（保留）
+
+6df9772407e9af64469e96841eb4ab0a4e9e9f47冻结前后CLEAN，完整npm run verify exit0：Node2047PASS/14既有skip、Agent204PASS/2既有skip、产品Edge854首试（0失败/flaky）、Design41+8/development4。该真实通过不批准deadline缺口：Standards独立生产doubao.submit+listen(0)上游200SSE heartbeat后停住，context.timeoutMs20，120ms仍pending，仅人工测试cleanup abort才结束。CODING-STANDARDS要求网络调用有timeout+cancel，故新P2须正式RED/最小补修/新精确commit与全量/双轴；本阶段尚未构建6df Native，原完整日志与源码副本保留。
+
+Spec独立定向65+parser29/边界28通过，原两异常完成P2及usage观察已关闭，但不替Standards批准超时；该审核有1个自有fixture socket closeAllConnections兜底（非进程/Native强杀），不宣称全部normal-only。图片chat旧与当前都是拒绝502，只有submitted异步409，规格并列语病更正且有效旧代码/测试不改。
+
+## 超时P2补修冻结（新精确源完整验证待验）
+
+6df Standards拒收收据02e5f54ef2742680e645c66cff6296de05931291c95ccaf91fba0bb5cddaef0d，GW-STD-STREAM-TIMEOUT-006/P2；Spec4760da0b仅限其范围PASS，组合未批准。只在Ark chat网络尝试使用现有context.timeoutMs建立deadline并合并caller signal，caller abort优先原reason；内部超时TIMEOUT/504可重试，HTTP实际首write后仍禁fallback。内部可选attemptSignal经过adapter/scheduler/chat/HTTP，真实drain及最终帧也受截止约束；最终帧已排队而drain中止时只destroy该ServerResponse，避免错误end反冲刷成功DONE，不是进程终止。image/poll/defaultUI/sharedconsumer/原46断言不改。
+
+正式新增8例先RED8失败（头/heartbeat停住、首段前fallback/首段后不重试、awaited callback、真实cork+HWM=1背压、最终成功帧与caller abort优先），GREEN首轮7/8仅fixture自己的观察listener被计为生产残留，原测试与日志保留；按写前observer准确基线比较后8/8通过，生产清理断言保持。最终相关174/174、typecheck/ESLint/Prettier exit0，完整6df9件源码与7新变更文件逐字冻结并hash闭合。新reader27da/原46回归源未改，doubao SHA791e3b3d0e7af3f11c301ed3e4aaed429b2e4b21722827338511a19b0ec51ba9、HTTP9b156a9432f47d5492a8dd02c66845cb1972e06b2fde65d7c9208a7b8552e47b。总收据timeout-preparation-b53f5e1a-9524-41e9-a113-f1193c18cf3f/final-receipt.json SHA69d75c1230d8acefd204fa660e658d5fa7e31e82e7b72d68eda55a5816a674f6位于本轮ignored私有证据目录。新精确commit/完整verify/双轴及官方Native仍待，不用6df旧通过代填。

@@ -40,6 +40,8 @@ type Mode =
   | "pre503"
   | "pre-error"
   | "partial-usage"
+  | "heartbeat"
+  | "pre-timeout"
   | "json";
 
 export function deferred<T = void>() {
@@ -106,7 +108,14 @@ export async function captureWire(response: Response) {
   }
 }
 
-export async function fixture(mode: Mode) {
+export async function fixture(
+  mode: Mode,
+  options: { timeoutMs?: number | { a: number; b: number } } = {},
+) {
+  const timeoutFor = (id: string) =>
+    typeof options.timeoutMs === "number"
+      ? options.timeoutMs
+      : (options.timeoutMs?.[id === "a" ? "a" : "b"] ?? 5000);
   const runDir = path.join(evidence, `run-${randomUUID()}`);
   await fs.mkdir(runDir);
   const firstRequest = deferred(),
@@ -191,6 +200,12 @@ export async function fixture(mode: Mode) {
         "cache-control": "no-cache",
       });
       res.flushHeaders();
+      if (mode === "heartbeat" || (mode === "pre-timeout" && channel === "a")) {
+        res.write(": synthetic heartbeat\r\n\r\n");
+        await releaseFinish.promise;
+        if (!res.destroyed) res.end();
+        return;
+      }
       const frame = (
         delta: Record<string, unknown>,
         finish: string | null = null,
@@ -208,7 +223,7 @@ export async function fixture(mode: Mode) {
         res.end("data: [DONE]\r\n\r\n");
         return;
       }
-      if (mode === "pre503" || mode === "json") {
+      if (mode === "pre503" || mode === "pre-timeout" || mode === "json") {
         frame({ content: answer });
         frame({}, "stop");
         res.end("data: [DONE]\r\n\r\n");
@@ -265,7 +280,7 @@ export async function fixture(mode: Mode) {
       credentialRef: `synthetic-${id}`,
       capabilities,
       modelMapping: { "kk-default": "ep-synthetic-local" },
-      timeoutMs: 5000,
+      timeoutMs: timeoutFor(id),
     })),
     states: new Map(),
   });
@@ -331,7 +346,7 @@ export async function fixture(mode: Mode) {
       baseUrl: `${upstreamUrl}/a`,
       capabilities,
       modelMapping: { "kk-default": "ep-synthetic-local" },
-      timeoutMs: 5000,
+      timeoutMs: timeoutFor("a"),
     },
     request(signal?: AbortSignal, stream = true) {
       return fetch(`${gatewayUrl}/v1/chat/completions`, {

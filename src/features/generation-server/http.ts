@@ -209,7 +209,9 @@ export function createGenerationServer(options: {
           const completionId = newCompletionId();
           const created = Math.floor(Date.now() / 1000);
           let committed = false,
-            streamedText = "";
+            streamedText = "",
+            finalizing = false;
+          let streamSignal = controller.signal;
           const chunk = (choices: unknown, channelId: string) => ({
             id: completionId,
             object: "chat.completion.chunk",
@@ -218,8 +220,18 @@ export function createGenerationServer(options: {
             choices,
             kk_meta: { channelId },
           });
-          const delta = async (text: string, channelId: string) => {
+          const delta = async (
+            text: string,
+            channelId: string,
+            attemptSignal?: AbortSignal,
+          ) => {
             controller.signal.throwIfAborted();
+            if (attemptSignal)
+              streamSignal = AbortSignal.any([
+                controller.signal,
+                attemptSignal,
+              ]);
+            streamSignal.throwIfAborted();
             if (!text) return;
             if (!res.headersSent)
               res.writeHead(200, {
@@ -242,7 +254,7 @@ export function createGenerationServer(options: {
                   channelId,
                 ),
               ),
-              controller.signal,
+              streamSignal,
               () => {
                 committed = true;
               },
@@ -293,10 +305,11 @@ export function createGenerationServer(options: {
                     },
                   })
                 : "";
+              finalizing = true;
               await writeStream(
                 res,
                 finalFrame + usageFrame + "data: [DONE]\n\n",
-                controller.signal,
+                streamSignal,
               );
               res.end();
               return;
@@ -322,6 +335,11 @@ export function createGenerationServer(options: {
             });
           } catch (error) {
             if (controller.signal.aborted || res.destroyed) return;
+            // Do not flush queued success frames after their drain was aborted.
+            if (finalizing) {
+              res.destroy();
+              return;
+            }
             // Adapter failures already carry a classification; anything else is
             // treated as an opaque upstream fault rather than leaking a message.
             const normalized = extractNormalized(error);

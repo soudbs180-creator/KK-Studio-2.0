@@ -41,6 +41,7 @@ export interface DispatchRequest {
   readonly onTextDelta?: (
     delta: string,
     channelId: string,
+    attemptSignal?: AbortSignal,
   ) => void | Promise<void>;
   /** Set by the caller once the first chunk reached the client. */
   readonly streamStarted?: () => boolean;
@@ -337,10 +338,16 @@ export class Scheduler {
       },
       ...(request.onTextDelta
         ? {
-            onTextDelta: async (delta: string) => {
+            onTextDelta: async (delta: string, attemptSignal?: AbortSignal) => {
               request.signal?.throwIfAborted();
-              await request.onTextDelta!(delta, context.channelId);
+              attemptSignal?.throwIfAborted();
+              await request.onTextDelta!(
+                delta,
+                context.channelId,
+                attemptSignal,
+              );
               request.signal?.throwIfAborted();
+              attemptSignal?.throwIfAborted();
             },
           }
         : {}),
