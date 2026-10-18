@@ -154,7 +154,7 @@ export default function ConnectionEditorScreen() {
             />
           )}
           <Label muted small>
-            当前兼容适配器支持文字和无参考图生成，参考图与高级参数仍未接入。
+            兼容适配器支持文字和无参考图生成；12ai 连接还提供指定模型的文生视频。参考图与高级参数仍未接入。
           </Label>
         </Card>
         <Action

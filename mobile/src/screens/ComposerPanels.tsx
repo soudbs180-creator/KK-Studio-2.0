@@ -12,6 +12,7 @@ export function ComposerPanels({
   onAsset,
   maxOutputs,
   onOpen,
+  videoAvailable,
 }: {
   panel: "add" | "parameters" | "materials" | null;
   onClose: () => void;
@@ -21,6 +22,7 @@ export function ComposerPanels({
   onAsset: (asset: MobileAsset) => void;
   maxOutputs: number;
   onOpen: (panel: "parameters" | "materials") => void;
+  videoAvailable: boolean;
 }) {
   return (
     <>
@@ -35,6 +37,24 @@ export function ComposerPanels({
           icon="folder"
           label="引用素材"
           onPress={() => onOpen("materials")}
+        />
+        <Action
+          menu
+          label="切换到视频生成"
+          disabled={!videoAvailable}
+          reason={
+            !videoAvailable
+              ? "请先选择官方 12ai 模型连接。"
+              : "仅文本生视频，每次一条；参考素材与高级编辑尚未接入。"
+          }
+          onPress={() => {
+            onChange((current) => ({
+              ...current,
+              kind: "video",
+              outputCount: 1,
+            }));
+            onClose();
+          }}
         />
         <Action
           menu

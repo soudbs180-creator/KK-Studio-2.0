@@ -5,6 +5,11 @@ import { useApplication } from "../application/AppProvider.tsx";
 import { Action, Field, Label, Row } from "../ui/primitives.tsx";
 import { Sheet } from "../ui/Sheet.tsx";
 import { useAction } from "../ui/useAction.ts";
+import { isTwelveAiConnection } from "../services/twelveAiProtocol.ts";
+import {
+  twelveAiVideoModels,
+  videoModelProfile,
+} from "../services/twelveAiVideoModels.ts";
 export function ModelPicker({
   open,
   onClose,
@@ -27,7 +32,7 @@ export function ModelPicker({
   return (
     <Sheet title="连接与模型" open={open} onClose={onClose}>
       <Label muted small>
-        模型列表来自服务端；列表可达不代表某个模型已验证文本或图片生成。
+        模型列表可达不代表某个模型已验证生成、权限或额度。视频列表为当前已接入的官方协议。
       </Label>
       {state.snapshot?.connections.map((c) => (
         <Action
@@ -64,7 +69,36 @@ export function ModelPicker({
             onChangeText={setSearch}
             autoCapitalize="none"
           />
+          {draft.kind === "video" && isTwelveAiConnection(connection) && (
+            <>
+              <Label muted small>
+                文本生视频 · 固定单条；Grok 需要首帧，当前不支持。
+              </Label>
+              {twelveAiVideoModels
+                .filter((model) =>
+                  model.toLowerCase().includes(search.toLowerCase()),
+                )
+                .map((model) => (
+                  <Action
+                    key={model}
+                    menu
+                    label={`${model} · ${videoModelProfile(model)!.description}`}
+                    selected={
+                      connection.id === draft.providerConnectionId &&
+                      model === draft.model
+                    }
+                    onPress={() => {
+                      onSelect(connection.id, model);
+                      onClose();
+                    }}
+                  />
+                ))}
+            </>
+          )}
           {probe?.models
+            .filter(
+              (m) => draft.kind !== "video" || Boolean(videoModelProfile(m.id)),
+            )
             .filter((m) => m.id.toLowerCase().includes(search.toLowerCase()))
             .map((m) => (
               <Action

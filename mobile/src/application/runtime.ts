@@ -7,6 +7,7 @@ import {
 } from "../storage/platform";
 import { createIdentityClient } from "../services/identityClient.ts";
 import { createProviderClient } from "../services/providerClient.ts";
+import { createTwelveAiVideoClient } from "../services/twelveAiVideoClient.ts";
 import { createGatewayImageClient } from "../services/gatewayImageClient.ts";
 import { createComfyUiClient } from "../services/comfyClient.ts";
 import { createMobileApplication } from "./application.ts";
@@ -35,6 +36,11 @@ export const mobileApplication = createMobileApplication({
   gateway: (vault) =>
     createGatewayImageClient({
       allowLoopbackHttp: __DEV__,
+      credentials: { read: (ref) => vault.get(ref) },
+      fetch: fetch as typeof globalThis.fetch,
+    }),
+  video: (vault) =>
+    createTwelveAiVideoClient({
       credentials: { read: (ref) => vault.get(ref) },
       fetch: fetch as typeof globalThis.fetch,
     }),

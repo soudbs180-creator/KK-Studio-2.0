@@ -24,6 +24,7 @@ import {
 } from "./httpClient.ts";
 import { readTextStream } from "./textStream.ts";
 import { decodeBase64, imageMime, MAX_IMAGE_BYTES } from "./imageBytes.ts";
+import { isTwelveAiConnection } from "./twelveAiProtocol.ts";
 export function createProviderClient(
   options: HttpOptions & { credentials: CredentialReader },
 ) {
@@ -151,13 +152,24 @@ export function createProviderClient(
     signal: AbortSignal,
     index: number,
   ): Promise<ImageOriginal> {
-    const response = await fetcher(url, {
-      headers,
-      signal,
-      redirect: "error",
-      credentials: "omit",
-    });
-    requireOk(response);
+    let response: Response;
+    try {
+      response = await fetcher(url, {
+        headers,
+        signal,
+        redirect: "error",
+        credentials: "omit",
+      });
+    } catch (error) {
+      if (signal.aborted || error instanceof ServiceError) throw error;
+      throw new ServiceError("IMAGE_ORIGINAL_RETRIEVAL_FAILED");
+    }
+    if (!response.ok)
+      throw new ServiceError(
+        "IMAGE_ORIGINAL_RETRIEVAL_FAILED",
+        "unknown",
+        response.status,
+      );
     const bytes = await readBytes(response, MAX_IMAGE_BYTES);
     const mime = imageMime(bytes);
     const claimed = response.headers.get("content-type")?.split(";")[0].trim();
@@ -271,6 +283,7 @@ export function createProviderClient(
       if (size && !input.connection.capabilities.imageSizes?.includes(size))
         throw new ServiceError("IMAGE_SIZE_UNAVAILABLE");
       const url = endpoint(input.connection, "images/generations");
+      const preferBase64 = isTwelveAiConnection(input.connection);
       return submit(
         input,
         signal,
@@ -291,6 +304,7 @@ export function createProviderClient(
               prompt: identity.prompt,
               n: count,
               ...(size ? { size } : {}),
+              ...(preferBase64 ? { response_format: "b64_json" } : {}),
             }),
             signal: requestSignal,
             redirect: "error",

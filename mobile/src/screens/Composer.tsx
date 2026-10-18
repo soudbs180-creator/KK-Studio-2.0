@@ -7,6 +7,8 @@ import { Action, Label } from "../ui/primitives.tsx";
 import { Icon } from "../ui/Icon.tsx";
 import { useTheme } from "../ui/theme.tsx";
 import { composerUnavailable } from "../ui/policies.ts";
+import { isTwelveAiConnection } from "../services/twelveAiProtocol.ts";
+import { videoModelProfile } from "../services/twelveAiVideoModels.ts";
 import { useAction } from "../ui/useAction.ts";
 import { ModelPicker } from "./ModelPicker.tsx";
 import { DraftRecovery } from "./DraftRecovery.tsx";
@@ -78,7 +80,8 @@ export function Composer({ project }: { project: MobileProject }) {
       focused ||
       Boolean(draft.prompt) ||
       draft.attachments.length > 0 ||
-      draft.kind === "image",
+      draft.kind === "image" ||
+      draft.kind === "video",
     blocked = Boolean(unavailable) || Boolean(state.storageError) || busy;
   function openPicker() {
     input.current?.blur();
@@ -233,6 +236,14 @@ export function Composer({ project }: { project: MobileProject }) {
           {unavailable}
         </Label>
       )}
+      {draft.kind === "video" && (
+        <Label muted small style={{ paddingHorizontal: 12 }}>
+          {videoModelProfile(draft.model)?.description ??
+            "请选择已接入的文本生视频模型。"}
+          {"\n"}
+          完成后自动保存原件；停止连接不代表取消或退款。原件下载失败可到任务页只查询恢复。
+        </Label>
+      )}
       <DraftRecovery project={project} draft={draft} />
       <ModelPicker
         open={picker}
@@ -251,6 +262,7 @@ export function Composer({ project }: { project: MobileProject }) {
         assets={assets}
         onAsset={addAsset}
         maxOutputs={Math.min(4, connection?.capabilities?.maxOutputs ?? 1)}
+        videoAvailable={Boolean(connection && isTwelveAiConnection(connection))}
       />
     </View>
   );

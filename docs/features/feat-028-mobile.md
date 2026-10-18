@@ -3,7 +3,7 @@
 - 状态：PARTIAL
 - 领域：future
 - 最近更新：2026-10-18
-- 关联任务：TASK-WEB-RELEASE-20261017、T12、TASK-UI-CONSOLIDATE-20261014、TASK-PROTOCOL-CLI-20261014、TASK-222-ACTIONS-20261014、TASK-223-ACTIONS-20261014
+- 关联任务：TASK-MOBILE-12AI-001、TASK-WEB-RELEASE-20261017、T12、TASK-UI-CONSOLIDATE-20261014、TASK-PROTOCOL-CLI-20261014、TASK-222-ACTIONS-20261014、TASK-223-ACTIONS-20261014
 
 ## 用户可见入口
 
@@ -34,6 +34,8 @@
 - 只跟随正式Release自动部署，普通提交与预发布不部署；受管静态产物保留current38和唯一previous37，不触碰业务数据库或其他工作树。
 
 ## 差距与后端化
+
+本轮 [12ai 修复](../changes/2026-10-18-mobile-12ai/verification.md) 已获用户实现与发布授权：前次真实文本生成/保存/刷新通过，图片 POST200 后原件 URL 因 CORS 未能自动归档。候选 Web2.1.39 / Mobile2.1.4 将图片改为 12ai 同步 base64 原图，并补文生视频持久任务和 GET 恢复；尚未正式发布或完成本次真实图片复验。当前文本仅支持已有单条输入/SSE，不把可选参数未传视为故障。视频真实调用、原生包和 Safari 不由本地 fixture 代填；密钥仍只在 Web 会话内存。
 
 - T12保持开放，FEAT-028保持PARTIAL。独立源码、手机Web运行形态和本机/可选账号边界已实现，不再视为未定稿；新原生包、Safari专项、正式身份服务、真实Provider/Companion及完整手机生成链仍未验。
 - 用户实际手机已确认本轮UI正常；该确认不替代目标运行时一次真实文本生成和一次图片生成、结果回填/原件写入、保存重载双门，也不证明付费、云同步或多端全能力一致。

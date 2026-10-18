@@ -1,5 +1,11 @@
 # 当前进度
 
+## 2026-10-18 12ai 手机端生成和原件保存（IN_PROGRESS）
+
+用户授权按官方文档修图片自动保存、文本与视频，并在正式上线后单张图片复验及刷新恢复，保留一个回滚版本。隔离基线 origin/main c248d817；本轮主仓保护基线实际为 clean 的109c6c41，旧69/96 dirty是历史其他时点，不覆盖本轮。图片同步base64、原件阶段错误提示与视频明确模型/持久ID/GET-only恢复/16MiB原件保护已整合；Mobile371全过，根完整verify及组合手机入口9/9通过。Web候选2.1.39、Mobile2.1.4，Desktop源码仍2.1.37；新版本尚未上线，T12/FEAT-028保持开放。用户仅授权图片和文本真实复验，视频不额外消耗额度。详见[本轮交付](changes/2026-10-18-mobile-12ai/verification.md)。
+
+首次完整verify在Node阶段1850PASS/2FAIL/20SKIP，因隔离安装ignore-scripts后未先生成Agent dist；补齐既有agent/plugins构建后原失败文件3/3通过，原失败日志保留；整合c81311be完整重跑exit0，根1852PASS/20SKIP、Agent199PASS/2SKIP、浏览器827PASS及设计/开发链通过。没有修改有效断言或产品Agent源码。
+
 ## 2026-10-18 Issue68 原生设置保存同步（专项候选）
 
 从远端 main6b933f4f 创建隔离分支，仅在 Native 测试保存后等待准确成功提示、关闭后确认 dialog 隐藏；既有延迟保存回归补齐关闭和模型菜单路径。真实 native 回执 gate 证明配置/凭据已提交但 UI 待回执时关闭、Escape、遮罩保持保护，释放后13检查通过，正式生命周期11检查通过；CI精确吞点击机制仍为推断。无产品源码、版本或生产改动。完整验证、独审/PR进度见[专项验证](changes/2026-10-18-issue-68-settings-save/verification.md)，交现有main协调者，不merge或发布。

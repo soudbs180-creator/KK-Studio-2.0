@@ -8,7 +8,11 @@ export const unavailableMobileAdapters = Object.freeze({
     available: false,
     reason: "尚未接入经过验证的手机可访问 ComfyUI 工作流接口。",
   },
-  video: { available: false, reason: "视频生成接口与结果存档尚未接入。" },
+  video: {
+    available: false,
+    reason:
+      "通用视频适配器尚未接入；官方 12ai 连接可选择已接入的文本生视频模型。",
+  },
   audio: { available: false, reason: "音频生成接口与结果存档尚未接入。" },
   imageEdit: {
     available: false,

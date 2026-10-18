@@ -1,5 +1,52 @@
 [
   {
+    "id": "TASK-MOBILE-12AI-001",
+    "title": "12ai手机端图片自动归档与文本视频协议接入",
+    "goal": "按12ai官方文档修复图片自动保存，保留文本真实流，补文生视频任务与GET恢复；正式发布后单张图片刷新验收且保留唯一回滚。",
+    "scope": "隔离修复Mobile Provider、原件错误提示、文生视频submit/poll/归档/恢复和入口；保留既有数据身份、存储schema和本地主仓，组合Web正式Release发布。",
+    "acceptance": [
+      "12ai同步图片返回经校验原图，自动归档1/1并刷新恢复散列一致；通用端点和现有文本SSE不回归",
+      "视频按明确官方模型文生契约提交一次，持久任务ID后只GET查询和恢复，不假定取消或幂等保证，真实归档原件才成功",
+      "旧版可读快照、Key边界、未知不重发和既有资料均保留；主仓HEAD/index/未提交改动保护有终核",
+      "当前SHA独审与Hosted通过后正式Release上线，回读版本与唯一previous；真实与fixture证据明确分开"
+    ],
+    "dependencies": [
+      "TASK-WEB-RELEASE-20261017"
+    ],
+    "owner": "root",
+    "ownerRole": "implementer",
+    "branch": "fix/TASK-MOBILE-12AI-001-provider-compat",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOBILE-12AI-001",
+    "affectedModules": [
+      "mobile",
+      "config/platform-versions.json",
+      "docs/changes/2026-10-18-mobile-12ai",
+      "docs/governance",
+      "docs/features",
+      "docs/PROGRESS.md"
+    ],
+    "status": "IN_PROGRESS",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "priorityRationale": "真实图片已生成但自动原件归档失败，阻断用户手机创作闭环。",
+    "evidence": [
+      "docs/changes/2026-10-18-mobile-12ai/intent.md",
+      "docs/changes/2026-10-18-mobile-12ai/verification.md"
+    ],
+    "verification": "整合代码c81311be：Mobile371PASS/0FAIL/0SKIP、type/lint通过；根完整verify exit0，1852根测试/199Agent/827浏览器通过且保留22环境skip；组合手机入口9/9。当前SHA独审、Hosted、正式发布和真实图片/文本刷新验收待完成；用户不授权视频额外付费实测。",
+    "verificationResult": "NOT_VERIFIED",
+    "updated": "2026-10-18",
+    "lastVerified": "2026-10-18",
+    "nextAction": "冻结独审、PR精确head Hosted和main质量门，正式Release上线保留唯一previous，再真实图片和文本自动保存/刷新验收。",
+    "requirementRefs": [
+      "docs/changes/2026-10-18-mobile-12ai/intent.md",
+      "docs/changes/2026-10-18-mobile-12ai/spec.md"
+    ],
+    "featureIds": [
+      "FEAT-028"
+    ]
+  },
+  {
     "id": "TASK-WEB-RELEASE-20261017",
     "title": "独立手机UI接入与正式Web Release自动同步",
     "goal": "kkai.plus手机尺寸或手机浏览器进入用户已做好的独立聊天UI，宽屏保持桌面；仅正式Release自动更新并保留一个回滚版本。",

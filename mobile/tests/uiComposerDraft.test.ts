@@ -40,7 +40,7 @@ const ports: Record<string, string> = {
   icon: `export const Icon='Icon';`,
 };
 
-async function composerFixture() {
+async function composerFixture(video = false) {
   const directory = mkdtempSync(join(tmpdir(), "kk-composer-events-"));
   const bundle = join(directory, "composer.mjs");
   await build({
@@ -118,6 +118,10 @@ async function composerFixture() {
           connections: [
             {
               id: "connection",
+              baseUrl: video
+                ? "https://cdn.12ai.org/v1"
+                : "https://example.test/v1",
+              credentialRef: "fixture-ref",
               capabilities: { text: true, image: true, maxOutputs: 4 },
             },
           ],
@@ -209,6 +213,21 @@ test("rapid count and mode callbacks calculate from the newest draft and remain 
     fixture.press("切换到文字对话");
     fixture.press("切换到文字对话");
     assert.equal(fixture.saved().kind, "image");
+  } finally {
+    fixture.dispose();
+  }
+});
+test("switching four images to video keeps newest input and model but captures one output", async () => {
+  const fixture = await composerFixture(true);
+  try {
+    for (let i = 0; i < 4; i++) fixture.press("增加图片数量");
+    fixture.type("Newest video prompt");
+    fixture.select("connection", "sora-2");
+    fixture.press("切换到视频生成");
+    assert.equal(fixture.saved().kind, "video");
+    assert.equal(fixture.saved().outputCount, 1);
+    assert.equal(fixture.saved().prompt, "Newest video prompt");
+    assert.equal(fixture.saved().model, "sora-2");
   } finally {
     fixture.dispose();
   }

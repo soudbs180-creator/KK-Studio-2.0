@@ -8,6 +8,10 @@
 
 本文是最短恢复入口，不是任务状态或产品能力的第二事实源。任务状态只读 [`task-ledger.json`](task-ledger.json)；当前项目事实只读 [`PROJECT_STATE.md`](PROJECT_STATE.md)；历史验证只按带日期的 change package、commit、运行模式和 receipt 回读。
 
+## 当前恢复入口：12ai 手机生成与保存修复（2026-10-18）
+
+TASK-MOBILE-12AI-001正在隔离实施，先读[本轮验证](../changes/2026-10-18-mobile-12ai/verification.md)和[审查](../changes/2026-10-18-mobile-12ai/review.md)。根分支fix/TASK-MOBILE-12AI-001-provider-compat基于origin/main c248d817；图片与视频已整合c81311be，Mobile371、根完整verify、组合入口9/9通过，c813源码独审PASS；新文案/治理/UI证据须最终head补审。Web候选2.1.39/Mobile2.1.4尚未正式发布或真实复验；canonical实际main109c6c41 clean，不修改其分支、暂存区或资料。证据仅新写工程外kkai-12ai-mobile-fix-20261018，旧验收失败与旧发布收据保持。正式Release/唯一previous、单张真实图片与短文本保存刷新验收仍待完成；用户不额外付费测视频，Web Key必须由用户在页面填写，禁止再次添加旧临时root权限。
+
 ## 当前恢复入口：独立手机 Web 已上线（2026-10-18）
 
 TASK-WEB-RELEASE-20261017本次有界DONE/PASS；先读[最终生产验证](../changes/2026-10-18-web-mobile-production-receipt/verification.md)与[审查范围](../changes/2026-10-18-web-mobile-production-receipt/review.md)。产品正式Web2.1.38 / Mobile源码2.1.3 / Desktop源码2.1.37，发布来源main `f730f1dc32fb2e568dda6d4a52c58b05802d6b6b` / tag `v2.1.38`；当前文档分支 `docs/TASK-WEB-RELEASE-20261017-production-receipt`，不把文档HEAD当生产源码。
