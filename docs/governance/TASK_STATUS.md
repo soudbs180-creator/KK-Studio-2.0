@@ -10,9 +10,9 @@
 
 本文是当前任务路由快照，不创建第二份任务状态。任务身份由稳定的 `taskId` 决定；同一任务更新时只更新账本记录的 `updated` 日期，不新增第二条 current 记录。历史 change package 只用于追溯，并按其记录的日期、commit 和证据解释。
 
-当前账本153项：89 `DONE`、2 `IN_PROGRESS`、11 `TODO`、48 `PARTIAL`、3 `BLOCKED`，开放64项。以[task-ledger.json](task-ledger.json)为权威，[TASK_LEDGER.md](TASK_LEDGER.md)为生成视图。
+当前账本153项：90 `DONE`、1 `IN_PROGRESS`、11 `TODO`、48 `PARTIAL`、3 `BLOCKED`，开放63项。以[task-ledger.json](task-ledger.json)为权威，[TASK_LEDGER.md](TASK_LEDGER.md)为生成视图。
 
-TASK-COLDSTART-LOCAL-20261018 IN_PROGRESS/NOT_VERIFIED，先核查真实默认冷启全部字段严格一致。候选Desktop/Web2.1.40尚未完成全量与Native验收；原首次cold FAIL保留，同实例activation PASS不作cold证明。开工9树141dirty保全PASS，main现96dirty另存且不回退并发变动。9树17分支、预算5/4、7分配路由零失配，全部保护。见[当前验证](../changes/2026-10-18-coldstart-local/verification.md)。
+TASK-COLDSTART-LOCAL-20261018有界本地DONE/PASS，精确d5/官方Desktop-Web2.1.40完整verify、源码双轴及真正默认无CDP两周期严格cold全部通过，11份完整JSON/raw相等、全部时间/revision2698保持，9项目11聊天22消息。独立审核724e2a1f与默认UI另审651c2e7c通过；旧FAIL/拒收保留。开工9树141dirty与主仓并发96另存、完整原profile2849份保全。9树17分支/预算5/4、7开放route零失配；下一Gateway本地增量流及当前Native Canvas专项。最终文档/Delivery/日常入口按精确收据。见[当前验证](../changes/2026-10-18-coldstart-local/verification.md)。
 
 前轮TASK-SIDEBAR-CANVAS-20261018 有界本地DONE/PASS/source50412d4e，侧栏pin/sort及宽图实际Web/fresh2.1.39 Native已验，原两父任务本地技术验收DONE。3条旧无效路由改unallocated/NOT_VERIFIED并保留完整历史，未伪造其功能完成；7树14分支/预算5/4，全部保留。完整验证、原库9项目11聊天22消息保全及最终精确HEAD/日常启动收据边界见[本轮验证](../changes/2026-10-18-sidebar-canvas/verification.md)。
 

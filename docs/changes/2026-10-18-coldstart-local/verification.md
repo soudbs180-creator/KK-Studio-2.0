@@ -1,10 +1,10 @@
 # Verification：冷启动严格比较
 
-TASK-COLDSTART-LOCAL-20261018：IN_PROGRESS / NOT_VERIFIED；source base fe103d2b，branch fix/TASK-COLDSTART-LOCAL-20261018。Desktop/Web原2.1.39，Mobile候选2.1.1不动；已fetch的origin/main c248d817其版本Desktop2.1.37/Web2.1.38/Mobile2.1.3属于并行集成来源，不冒充本候选或Hosted复验。
+TASK-COLDSTART-LOCAL-20261018：有界本地 DONE / PASS；source base fe103d2b，branch fix/TASK-COLDSTART-LOCAL-20261018。Desktop/Web原2.1.39，Mobile候选2.1.1不动；已fetch的origin/main c248d817其版本Desktop2.1.37/Web2.1.38/Mobile2.1.3属于并行集成来源，不冒充本候选或Hosted复验。
 
 开工9登记树/16原本地分支（本轮新分支另计），全部141dirty逐份稳定复制/index/diff/status/all-ref bundle及raw checkpoint：D:/KK-Studio-recovery-20260921/sidebar-canvas-20261018-d0cffabe-7380-43be-b482-e280d7be4df4，receipt SHA a9937aa2f4a00c4434187ce346509e94f26248d71ad85f72958497bba6af8df8。原主仓8c HEAD/index保持，但并行从69增96dirty，旧63中已有部分被并行作者改动：历史比较receipt233d4c85保持FAIL，当前96已复制；不恢复/覆盖新版本，不再冒称旧63仍全同。
 
-开工时上轮cold FAIL、四数字差异、actual历史Agent callback UNKNOWN、随后activation全字段一致的收据均原样保留。它们不替代本轮真正冷启动验收。开工实际原Native PID50396/CreationDate1792264675745/EXE e9caebca，无CDP；后续当前资料份数与进程身份须现场重新核对。下方按阶段追加当前验证，不把开工未知改写为通过。
+开工时上轮cold FAIL、四数字差异、actual历史Agent callback UNKNOWN、随后activation全字段一致的收据均原样保留。它们不替代本轮真正冷启动验收。开工实际原Native PID50396/CreationDate1792264675745/EXE e9caebca，无CDP；后续当前资料份数与进程身份须现场重新核对。下方按阶段保留历史验证，最后一节为当前闭环结论；旧阶段的待验、失败和拒收不改写。
 
 ## 最小根修复与预审阶段
 
@@ -47,3 +47,19 @@ source9400a9e714ac44bcd81c0841d256796221e4474b完整verify exit0，过程中源5
 该P2为独立合成真实反例：旧normalizer在原始journal缺失或nonfinite updatedAt时用Date.now兼容降级，新fresh例外却将其当新Native时间；本机clock100→200造成无效revision7→9→11。当前两份保存真实journal均有合法原始时间，原12MB输入三次GREEN仍真实；未声称这个缺时钟反例在用户资料发生。下一最小补修仅区分合法原始时间来源，兼容fallback与所有真实变化保留；先RED再GREEN，并新精确commit/fullverify/官方strict冷启。
 
 P2补修：模块私有WeakSet仅记normalizer收到原始finite时间的对象来源，返回字段及Date.now兼容fallback不变；fresh例外同时检查来源和validated时间，不添加公开字段、schema、IPC或持久化状态。正式新增9例后共19例先RED为13PASS/6FAIL（missing/null/NaN/正负Infinity/string六个双时钟病例），GREEN原91+新增9共100PASS/0skip，type/lint/format通过，root原Native+新Noop50/50再验通过。实际保存完整资料+2journal再次三轮纯复放全部字段/对象/2696保持，仍不替代实际Native。Native SHA3cb95864cecefe408d39ac2e08c1f053c3e1026a70eb35ce8d2924604e1dcebb、Noop SHA9933b9093a64290bbb605efbf5298451db33c0f7a59dedc65a593355aa87c5a2冻结待新commit双轴与完整verify，940的拒收不覆盖。
+
+## source d5 当前闭环：严格冷启、官方产物及独立复核 PASS
+
+冻结产品实现8735ad1306526f8485b3c0947eec0f6c19609d4e，完整验收源d5a24d60b4a9b9b5d0b6cce078f091c10263729c（后者只同步生成账本视图）。精确d5完整npm run verify exit0，前后clean且源不变：Node2001PASS/14既有skip、Agent204PASS/2既有skip、产品Edge854首试/0fail/flaky/skip、Design41+8、development4。完整日志full-verify-d5a24d60.log与exit收据保留于私有证据目录。Rust源不变，前冻结228PASS/1既有ignore及41集成只按相同源码绑定，未伪造本次另跑Rust。
+
+两轴精确d5源码独审均PASS/0新阻断：Spec独跑164定向，收据review-spec-source-d5a24d60-2c4d38fc-6acf-4910-8b64-198391107424.json SHA5a7f8551d45452c8edd6110a46da2830c03f8e078cf311d9ad78519968844ce0；Standards独跑173定向及旧时间反例，收据review-standards-time-origin-d5a24d6-eb0d89b9-f486-42dc-9702-59db8b27926c.json SHA39f0e7ecbe08ebea4b4bbd039ac8e815b321e10d3f6bfa2eab45643ee98acfa4。COLD-SPEC-001与COLD-STD-RECEIPT-TIME-004均在新源关闭，原拒收不撤改。
+
+官方Desktop2.1.40重新构建PASS，EXE SHA41523db804fd5e803dcf98d7c115061de7980f01b7929e2ba12da7150d3b3b53，input SHA0f7a1bf9c1eb08c493bc492fb902869c5d99f4a8eca1fcf0e251cd0755d92cf0。build receipt native-build-f17c88fe-4d0f-476e-8e43-8a34f0315e65.json位于本轮工程外保全根。4282份白名单Agent文件源/随包全部hash相等，无共享依赖安装或Agent重打包。Web2.1.40/Mobile2.1.1仍为本地候选/规划，不是Hosted发布。
+
+真正严格冷启报告D:/KK-Studio-recovery-20260921/coldstart-local-20261018-fff10774-062f-4668-a206-44b6db0aec10/cold-start-strict-990a0c90-333e-4485-931e-a07c768adff4/report.json，SHA c8959b14d8d4183af26029dbe4f8db4e01cf1572df8ca65389e41a657c2cbe21。脚本v2 SHA5241552817f3545678dbc363ac3bf7dff4ef427d032a98da6c90d8bd3a2b9db0。使用两个原快捷方式、真实默认资料、无CDP，连续两轮0→1→第二快捷方式同PID→正常关闭0；共11份原始快照各12,606,061B，完整类型严格JSON与原始字节全部相同，包含全部未知字段、时间和revision2698。统一SHA f7191b8a4a93a4357dbbefeea5492d687e2c313d30cef72c1803eacff027bb31，9项目/11聊天/22消息。基线是旧失败后保留的2698，没有恢复2696或排除失败字段。40项身份/迁移/原候选/共享记忆状态观测保持；memory原本不存在，只证明缺席状态保持，不虚构内容。
+
+独立审核所有11份raw、完整JSON、40项观测、四份存在的保护文件与完整profile副本的回连、两份运行时8564文件及source/build/fullverify身份，101项核验PASS/0finding：strict-coldstart-evidence-recheck-7c6a71a6-c21c-4f4d-9c65-3202f0e52ad8.json SHA724e2a1f14a541dd37abd53cf56e65ddb9eb631fce80dbe5b8bafa26163ca443。
+
+实际默认UI另做两轮正常启闭PASS：test-results/native-coldstart-default/c718d7c1-fbbb-48e4-a6cb-740da87fe329/native-coldstart-default-results.json SHA355d1b19c91a81847b52a95485719d545d900558facbb6d54b337d9abc29a86a；可见textarea enabled/readOnly=false、0pageerror，loaded index-DYalK6JL.js/SHA1019d17ba0575b21d25157d05a7220b85cecded3161adac5f7495189816bfdfe。独立保存证据复核651c2e7c2fc50681287be2c5bbf8997976070d90a256d09d20a766e56d82ef21通过。UI after保存件重新序列化且多一个newline，因此仅支持完整canonicalJSON相等；raw严格字节证明来自前述noCDP冷启。此UI只读harness未发消息/编辑/选择/写IPC，不证明真实新回复；Native内部IPC与CDP附着前网络未完整观测。
+
+当前冷启有界技术闭环DONE/PASS；完整原profile2849份保存副本及独立复核6362f7ce保持，所有RED、真实FAIL、旧EXE和拒收留存。最终文档HEAD独审、Delivery、私有归档和日常入口还原用后续精确收据裁决。后继Gateway仅推进本地增量流子项，父能力与真实Provider/DPAPI/Hosted/签名/Mobile/用户整体验收保持开放；不把本任务DONE扩大为全部项目完成。

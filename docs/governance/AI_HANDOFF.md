@@ -8,11 +8,11 @@
 
 本文是最短恢复入口，不是任务状态或产品能力的第二事实源。任务状态只读 [`task-ledger.json`](task-ledger.json)；当前项目事实只读 [`PROJECT_STATE.md`](PROJECT_STATE.md)；历史验证只按带日期的 change package、commit、运行模式和 receipt 回读。
 
-## 当前恢复入口：冷启动严格比较闭环（2026-10-18）
+## 当前恢复入口：冷启动严格比较已闭环（2026-10-18）
 
-TASK-COLDSTART-LOCAL-20261018 IN_PROGRESS/NOT_VERIFIED，branch fix/TASK-COLDSTART-LOCAL-20261018，base fe103d2b，同一审计物理树。先读[规格](../changes/2026-10-18-coldstart-local/spec.md)、[计划](../changes/2026-10-18-coldstart-local/plan.md)和[验证](../changes/2026-10-18-coldstart-local/verification.md)。源码候选Desktop/Web2.1.40，Mobile2.1.1未变；尚未以旧39验证代替40。原cold FAIL与后续同实例activation PASS分开保留，需新官方产物真正0→1冷启且完整字段含时间/revision严格相等。
+TASK-COLDSTART-LOCAL-20261018有界本地DONE/PASS，产品8735ad13/完整验收源d5a24d60，branch fix/TASK-COLDSTART-LOCAL-20261018/base fe103d2b，同一审计树。先读[当前验证](../changes/2026-10-18-coldstart-local/verification.md)最后一节和PROJECT_STATE。Desktop/Web2.1.40完整verify/源码双轴/官方EXE41523db8通过；真正默认库无CDP两周期11份完整JSON与raw严格相等、全部时间/revision2698保持，9项目11chat22消息，独立724e2a1f通过。只读UI两启闭可编辑标志/完整canonical资料另独审651c2e7c，不声称新回复或全网络禁用。
 
-开工9树141dirty及全部refs/index/raw保全PASS；主仓96dirty另存，旧63历史比较因并发变动FAIL，HEAD/index未变，不恢复旧副本覆盖。现153项89DONE/64开放、9树17分支、approved5/4，7已分配开放路由零失配；37功能成熟度不提升。root独占文档/Git/端口/Native，两个源文件分工已冻结待独审，下一Gateway只读准备，冷启未PASS前不实施。全部用户资料与旧证据保全；仍禁止删除/移动、回收、真实生成、push/merge或发布。coord不能作为本候选权威。
+153项90DONE/63开放，9树17分支/approved5/4，7开放route零失配；37功能成熟度不变。9树原141dirty及refs/index已保全，主仓96另存且并发旧63比较FAIL如实保持，完整资料2849份原副本独立匹配；不回退2696或覆写新资料。旧真实FAIL/拒收/EXE保留。接续Gateway本地增量流专项，Native Canvas当前40实际专项待独立审查后据实登记；最终文档HEAD/Delivery/归档/日常入口按精确收据裁决。root独占文档/Git/端口/Native；不删除/移动、回收、真实生成、push/merge或发布，coord不作本候选权威。
 
 ## 上轮恢复入口：侧栏持久化与宽图桌面（2026-10-18）
 

@@ -46,3 +46,7 @@ Desktop/Web2.1.39/source50412d4e：项目/文件夹置顶和manual/recent/priori
 - 2026-09-30：集成版本当前验证与剩余边界见 [落地验证](../changes/2026-09-29-project-landing/verification.md)。
 
 - 2026-10-15：TASK-KK-UNIFIED-20261015 已获用户实施授权，新增范围见 [统一规格](../changes/2026-10-15-kk-unified/spec.md)。本卡既有证据仍限原版本；新范围实现/真实验收尚未完成，不能沿用旧 PASS 关闭。
+
+## 2026-10-18 冷启动与相同值保存
+
+当前2.1.40源d5a24d60已修复恢复/Agent同值回放导致的无效时间与revision写入。真实默认库两轮noCDP冷启完整JSON及原始字节相同，全部时间/revision保持；新回执、真实内容变化、flush失败及身份保护保持，见[本轮验证](../changes/2026-10-18-coldstart-local/verification.md)。此有界技术闭环不提升功能成熟度，不代表真实新回复或外部服务验收。

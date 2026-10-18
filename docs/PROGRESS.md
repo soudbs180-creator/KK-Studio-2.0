@@ -1,8 +1,10 @@
 # 当前进度
 
-## 2026-10-18 冷启动严格比较核查（IN_PROGRESS）
+## 2026-10-18 冷启动严格比较闭环（有界本地DONE/PASS）
 
-候选Desktop/Web2.1.40（Mobile2.1.1未变），base fe103d2b。保留原39首次cold FAIL及随后activation PASS；以合成RED确认taskRecovery终态兄弟结果净无变化仍刷时间/revision、AgentHost同值重连保存仍更新时间，最小幂等修复及真实变化/flush失败/身份保护回归已通过，完整verify/独审/新官方Native默认全字段严格冷启待验。开工9树141dirty/index/refs/raw保全PASS，main现96dirty另存；旧63字节历史比较因并发变更FAIL，HEAD/index未变，不回退资料。153项89DONE/64开放、9树17分支/预算5/4，无删除移动。冷启闭环后才按P1推进Gateway本地增量流；[本轮验证](changes/2026-10-18-coldstart-local/verification.md)保留各阶段实际边界。
+产品8735ad13/完整验收源d5a24d60、Desktop/Web2.1.40：Agent同值回放、retry兄弟往返及Native完整恢复链净无变化不再刷新时间/revision，合法新回执与全部真实数据变化/flush/身份保护保留。正式RED后修复，独审补入undefined持久化语义和非法原始时间反例均关闭。精确完整verify Node2001PASS14skip、Agent204PASS2skip、Edge854首试零fail/flaky、Design41+8/dev4；源码双轴独立PASS。
+
+官方EXE41523db8/input0f7a1bf9，真正原lnk/默认库/无CDP两周期11份完整JSON及raw全部严格一致，全部时间/revision2698保持、9项目11聊天22消息，40项保护状态保持，独立101项核验724e2a1f通过。默认只读UI另两启闭/可编辑标志/完整canonical资料独审651c2e7c通过；不声称实际新回复。原477真实FAIL、940拒收、所有RED和旧产物保留，完整profile2849份逐份保全并独审；main96dirty并发版本不回退。153项90DONE/63开放、9树17分支/预算5/4，37功能成熟度不提升。后继Gateway本地增量流和Native Canvas专项按独立验收登记；最终文档SHA/Delivery/归档/日常单实例按精确收据，[完整阶段验证](changes/2026-10-18-coldstart-local/verification.md)。无文件删移、生成/额度操作、push/merge/发布。
 
 ## 2026-10-18 侧栏、宽图与桌面最终候选（有界本地DONE/PASS）
 

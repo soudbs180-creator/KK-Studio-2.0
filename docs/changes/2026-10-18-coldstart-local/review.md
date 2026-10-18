@@ -7,3 +7,7 @@ TASK-COLDSTART-LOCAL-20261018；base fe103d2b0ac24da90f5820b8034f6a016a79221b。
 source477完整verify及双轴源码审查均通过，但首次真实cold仍FAIL，仅任务/项目时间和revision+2；这不撤改已发生的源码检查或失败。两实际journals与保存快照精确复放定位Native→retry跨函数往返，另补nativeTaskHost终点净判定及10条正式回归，validated新回执时间和全部真实变化保持。补修仍须新的精确commit双轴、完整verify与官方产物真正strict冷启；未批准当前新代码为DONE。实际失败、pure replay与全部收据见[Verification](verification.md)。
 
 source940完整verify PASS，Spec源码PASS252d8a19；Standards CHANGES REQUIRED/e4045ff7，P2 COLD-STD-RECEIPT-TIME-004为normalizer本机fallback clock被误当原生fresh证据，原拒收保留。已正式RED六个缺失/非法时间双时钟病例后最小私有WeakSet来源修正，返回与兼容/真实数据变化不改，新100定向/root50通过，仍须新精确commit补审/fullverify/官方40与实际cold；不能用940通过日志批准新代码。
+
+## 当前源码与实际冷启闭环
+
+精确d5源码Spec/Standards均PASS（164/173独立定向），原两个阻断分别有正式RED及新源复核关闭。官方40/完整verify、11份raw严格冷启及40项保护观测独立审核724e2a1f通过；默认只读UI证据另审651c2e7c通过。旧477实际FAIL和940 Standards拒收保持，不能用旧PASS覆盖新阶段。冷启有界技术DONE/PASS，最终文档HEAD/Delivery/私有归档/日常入口还原仍按提交后精确收据。不是Hosted/PR/main/Provider或用户整体验收。详见[当前验证](verification.md)最后一节。
