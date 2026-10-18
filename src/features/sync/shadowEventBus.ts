@@ -1,5 +1,12 @@
 import { invoke, isTauri } from "@tauri-apps/api/core";
-import type { AppendEventInput, CanvasEventRecord } from "./eventTypes.ts";
+import type {
+  AppendEventInput,
+  CanvasEventRecord,
+  CheckpointMode,
+  CheckpointResult,
+  PruneOptions,
+  PruneResult,
+} from "./eventTypes.ts";
 
 /**
  * Non-blocking, micro-batched ShadowEventBus client.
@@ -144,6 +151,48 @@ export class ShadowEventBus {
       await invoke("event_bus_append", { events: batch });
     } catch (err) {
       console.warn("[ShadowEventBus] Append failed (non-blocking):", err);
+    }
+  }
+
+  /**
+   * Request an explicit SQLite WAL checkpoint (defaults to TRUNCATE).
+   * Smoothly consolidates the WAL buffer into the main SQLite database and truncates the -wal file.
+   */
+  public async checkpoint(mode?: CheckpointMode): Promise<CheckpointResult | null> {
+    let isDesktop: boolean;
+    try {
+      isDesktop = isTauri();
+    } catch {
+      isDesktop = false;
+    }
+    if (!isDesktop) return null;
+
+    try {
+      return await invoke<CheckpointResult>("event_bus_checkpoint", { mode });
+    } catch (err) {
+      console.warn("[ShadowEventBus] Checkpoint failed:", err);
+      return null;
+    }
+  }
+
+  /**
+   * Prune older historical events based on sequence floor, retain latest N, or timestamp.
+   * Prevents SQLite database from expanding unboundedly over long sessions.
+   */
+  public async prune(options: PruneOptions): Promise<PruneResult | null> {
+    let isDesktop: boolean;
+    try {
+      isDesktop = isTauri();
+    } catch {
+      isDesktop = false;
+    }
+    if (!isDesktop) return null;
+
+    try {
+      return await invoke<PruneResult>("event_bus_prune", { options });
+    } catch (err) {
+      console.warn("[ShadowEventBus] Prune failed:", err);
+      return null;
     }
   }
 

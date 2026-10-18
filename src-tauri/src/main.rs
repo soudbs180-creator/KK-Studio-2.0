@@ -1767,6 +1767,41 @@ async fn event_bus_query(
 }
 
 #[tauri::command(rename_all = "camelCase")]
+async fn event_bus_checkpoint(
+    state: State<'_, AppState>,
+    mode: Option<String>,
+) -> Result<event_bus::CheckpointResult, String> {
+    let checkpoint_mode = match mode.as_deref() {
+        Some("passive") => event_bus::CheckpointMode::Passive,
+        Some("full") => event_bus::CheckpointMode::Full,
+        Some("restart") => event_bus::CheckpointMode::Restart,
+        _ => event_bus::CheckpointMode::Truncate,
+    };
+    let bus = Arc::clone(&state.event_bus);
+    tokio::task::spawn_blocking(move || bus.checkpoint_with_mode(checkpoint_mode))
+        .await
+        .map_err(|e| format!("Checkpoint task error: {e}"))?
+}
+
+#[tauri::command(rename_all = "camelCase")]
+async fn event_bus_prune(
+    state: State<'_, AppState>,
+    options: Option<event_bus::PruneOptions>,
+    before_seq: Option<i64>,
+    retain_latest: Option<usize>,
+) -> Result<event_bus::PruneResult, String> {
+    let opts = options.unwrap_or_else(|| event_bus::PruneOptions {
+        before_seq,
+        retain_latest,
+        ..Default::default()
+    });
+    let bus = Arc::clone(&state.event_bus);
+    tokio::task::spawn_blocking(move || bus.prune(opts))
+        .await
+        .map_err(|e| format!("Prune task error: {e}"))?
+}
+
+#[tauri::command(rename_all = "camelCase")]
 async fn concurrency_lock_node(
     state: State<'_, AppState>,
     node_id: String,
@@ -1881,6 +1916,23 @@ fn main() {
         event_bus::EventBus::open(&paths.root.join("events.db"))
             .expect("KK Studio 无法初始化 EventBus 数据库"),
     );
+    let idle_weak = Arc::downgrade(&event_bus);
+    tauri::async_runtime::spawn(async move {
+        let mut interval = tokio::time::interval(std::time::Duration::from_secs(30));
+        interval.tick().await;
+        loop {
+            interval.tick().await;
+            let Some(bus) = idle_weak.upgrade() else {
+                break;
+            };
+            if bus.pending_appends_count() > 0 {
+                let _ = tokio::task::spawn_blocking(move || {
+                    let _ = bus.checkpoint();
+                })
+                .await;
+            }
+        }
+    });
     let command_bus = Arc::new(command_bus::CommandBus::new());
     let setup_command_bus = Arc::clone(&command_bus);
     let setup_task_host = Arc::clone(&task_host);
@@ -2078,6 +2130,8 @@ fn main() {
             command_bus_dispatch,
             event_bus_append,
             event_bus_query,
+            event_bus_checkpoint,
+            event_bus_prune,
             concurrency_lock_node,
             concurrency_preempt_node,
             concurrency_is_locked,
@@ -2088,6 +2142,9 @@ fn main() {
             if matches!(event, tauri::RunEvent::Exit) {
                 app.state::<agent_runtime::AgentRuntime>().shutdown();
                 app.state::<cli_runtime::CliRuntime>().shutdown();
+                if let Some(state) = app.try_state::<AppState>() {
+                    let _ = state.event_bus.checkpoint();
+                }
                 if let Some(activation) = app
                     .state::<Mutex<Option<native_activation::ActivationServer>>>()
                     .lock()

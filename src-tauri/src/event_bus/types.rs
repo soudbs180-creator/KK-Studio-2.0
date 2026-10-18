@@ -102,3 +102,89 @@ pub struct EventQuery {
     #[serde(default)]
     pub limit: Option<usize>,
 }
+
+/// Checkpoint mode for SQLite WAL maintenance.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum CheckpointMode {
+    Passive,
+    Full,
+    Restart,
+    Truncate,
+}
+
+impl Default for CheckpointMode {
+    fn default() -> Self {
+        Self::Truncate
+    }
+}
+
+/// Result returned from a SQLite WAL checkpoint operation.
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "camelCase")]
+pub struct CheckpointResult {
+    /// True if SQLite could not complete checkpoint due to active concurrent locks.
+    pub busy: bool,
+    /// Total number of frames in the WAL file prior to checkpoint.
+    pub log: i64,
+    /// Total number of frames successfully checkpointed back to main DB.
+    pub checkpointed: i64,
+}
+
+/// Options for pruning historical event logs to prevent SQLite file bloat.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PruneOptions {
+    /// Delete events strictly with seq < before_seq
+    #[serde(default, alias = "before_seq", alias = "beforeSeq")]
+    pub before_seq: Option<i64>,
+    /// Retain at most the newest N events (older events are pruned)
+    #[serde(
+        default,
+        alias = "retain_latest",
+        alias = "retainLatest",
+        alias = "keep_latest",
+        alias = "keepLatest"
+    )]
+    pub retain_latest: Option<usize>,
+    /// Delete events created before timestamp (epoch ms)
+    #[serde(default, alias = "before_timestamp", alias = "beforeTimestamp")]
+    pub before_timestamp: Option<i64>,
+    /// Whether to run PRAGMA wal_checkpoint(TRUNCATE) after pruning to shrink WAL file
+    #[serde(
+        default = "default_checkpoint_after",
+        alias = "checkpoint_after",
+        alias = "checkpointAfter"
+    )]
+    pub checkpoint_after: bool,
+}
+
+fn default_checkpoint_after() -> bool {
+    true
+}
+
+impl Default for PruneOptions {
+    fn default() -> Self {
+        Self {
+            before_seq: None,
+            retain_latest: None,
+            before_timestamp: None,
+            checkpoint_after: true,
+        }
+    }
+}
+
+/// Result of an event log pruning operation.
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "camelCase")]
+pub struct PruneResult {
+    /// Number of event records pruned from the database
+    pub deleted_count: u64,
+    /// Sequence cutoff threshold below which events were deleted (seq < pruned_before_seq)
+    pub pruned_before_seq: i64,
+    /// Total remaining event count in the database
+    pub remaining_count: u64,
+    /// Checkpoint result if checkpoint_after was executed
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub checkpoint: Option<CheckpointResult>,
+}
