@@ -10,7 +10,7 @@
 
 ## 当前恢复入口：统一41发布前草稿同步（2026-10-18）
 
-TASK-CANVAS-RELEASE-20261018仍IN_PROGRESS/NOT_VERIFIED；先读[当前计划](../changes/2026-10-18-unified-toolbar-release/plan.md)和[验证](../changes/2026-10-18-unified-toolbar-release/verification.md)。PR73已正常合入main87c9cfbe，main质量五job绿但完整日志有1草稿flaky，未打tag。4倍CPU逐帧复核确认可编辑草稿短暂显示另一聊天值，当前同锁定树fix/TASK-CANVAS-RELEASE-20261018-draft-race仅将恢复改布局阶段并补逐帧断言；旧RED/新10次GREEN保留，完整新head验证/独审/Hosted尚待。现网39，三端41标签/正式安装包/部署未做，不能提前把87c称最终source。最新真实冷备3952文件、9项目/11聊天/22消息/2归档回执与7原件已校验；不碰keyring或发付费turn。以下旧入口按各自时点保留，不覆盖本段当前发布状态。
+TASK-CANVAS-RELEASE-20261018仍IN_PROGRESS/NOT_VERIFIED；先读[当前计划](../changes/2026-10-18-unified-toolbar-release/plan.md)和[验证](../changes/2026-10-18-unified-toolbar-release/verification.md)。PR73已正常合入main87c9cfbe，main质量五job绿但完整日志有1草稿flaky，未打tag。4倍CPU逐帧复核确认可编辑草稿短暂显示另一聊天值，当前同锁定树fix/TASK-CANVAS-RELEASE-20261018-draft-race仅将恢复改布局阶段并补逐帧断言；旧RED/新10次GREEN保留，完整新head验证/独审/Hosted尚待。Web40已上线，三端41标签/正式安装包/部署未做，不能提前把87c称最终source。最新真实冷备3952文件、9项目/11聊天/22消息/2归档回执与7原件已校验；不碰keyring或发付费turn。以下旧入口按各自时点保留，不覆盖本段当前发布状态。
 
 ## 当前恢复入口：手机结果优先与完整创作输入（2026-10-18）
 
