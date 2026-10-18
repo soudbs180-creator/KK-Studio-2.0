@@ -36,9 +36,11 @@ export interface GenerationInput {
 }
 
 export interface ChannelRequestContext {
-  /** Stable key forwarded upstream so retries cannot double-create work. */
+  /** Stable metadata forwarded upstream; this is not a persisted dedup ledger. */
   readonly idempotencyKey: string;
   readonly signal?: AbortSignal;
+  /** Backpressure-aware delta delivery; final text still belongs to SubmitResult. */
+  readonly onTextDelta?: (delta: string) => void | Promise<void>;
   /** Never log this. It resolves the secret for the upstream Authorization header. */
   readonly resolveSecret: () => Promise<string | undefined>;
 }

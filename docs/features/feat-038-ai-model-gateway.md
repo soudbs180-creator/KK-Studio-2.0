@@ -3,7 +3,7 @@
 - 状态：PROTOTYPE
 - 领域：backend
 - 最近更新：2026-10-18
-- 关联任务：TASK-AI-GATEWAY-001、TASK-LOCAL-GUARDS-20261018
+- 关联任务：TASK-AI-GATEWAY-001、TASK-LOCAL-GUARDS-20261018、TASK-GATEWAY-STREAM-20261018
 
 ## 2026-10-18 本地凭据状态修复
 
@@ -49,7 +49,7 @@ LayeredCredentialStore只在持久写成功后发布缓存；迟到读取和每�
 - 调度：分优先级档位降级、厂商冷却提示优先于本地退避、粘性会话、连续失败隔离
 - 凭证：配置只存引用，明文由 vault 持有；适配器仅通过 `resolveSecret()` 闭包取用
 - BYOK 预置：设置页仅填充供应商名称和 OpenAI 兼容 base URL，模型 ID 由用户测试连接后选择；不新增凭据存储路径。
-- 文本：`chat` operation 使用独立 `kind:"text"` 结果，Ark 调用官方 `/chat/completions`；`stream:true` 以单次 buffered SSE 返回并保留 `[DONE]`
+- 文本：`chat` operation 使用独立 `kind:"text"` 结果，Ark 调用官方 `/chat/completions`；`stream:true` 经可选delta回调实际增量发送；stop后继续读usage与DONE才成功，取消向上游传播，首段后不重试。当前仅本地生产HTTP合成上游定向通过，完整与实际服务验收边界见[验证](../changes/2026-10-18-gateway-stream/verification.md)
 - 图片：API 图片菜单主文案显示完整模型 ID；Codex 上游未返回图片型号时显示“图片模型未报告”，并把执行器作为次级来源
 - 模型发现：`/v1/models` 只投影启用通道的模型、提供方和能力，过滤 disabled/quarantined，不返回 baseUrl、credentialRef 或 vendor endpoint mapping
 
@@ -69,7 +69,7 @@ LayeredCredentialStore只在持久写成功后发布缓存；迟到读取和每�
 - **未接真实上游**：无 DPAPI `SecretProtector` 实现（需 Rust 侧或 PowerShell 桥），未验证真实凭证联调，父任务保持 `PARTIAL`、功能仍 `PROTOTYPE`
 - 调度层为纯内存状态，未接 generation-server 的 lease / dead-letter 持久化仓储
 - 未接 sub2api-client（传 `session_id` header；注意 Nginx 需 `underscores_in_headers on;`）
-- `stream: true` 目前是单次 buffered SSE，不是供应商 token 级增量流；后续可在 `ChannelAdapter` 增加可选 stream 方法
+- `stream:true` 的本地增量生产链已实施并定向验证，真实供应商/代理部署仍未联调；可选callback未接默认Web直连或Desktop RustTaskHost，不据此解锁UI或提升成熟度
 - 异步通道走 `/v1/jobs`，chat 端点遇 `submitted` 返回 409
 
 ## 已知陷阱（重建时踩过）
@@ -86,3 +86,5 @@ LayeredCredentialStore只在持久写成功后发布缓存；迟到读取和每�
 - 2026-10-10：补充真实 HTTP 路由的鉴权、幂等键和未注入依赖的 404 门禁测试；定向测试 49 项全绿，状态仍为 PROTOTYPE（未接真实上游，不可标 DONE）。
 - 2026-10-10（P1 官方通道）：新增豆包（火山方舟）BYOK 预置、doubao 文本/Seedream 图片能力判定、设置页浏览器冒烟和对应交付包；状态仍为 PROTOTYPE，真实方舟联调未完成。
 - 2026-10-10（能力闭环增量）：通道增加 `chat` operation 与文本结果联合类型；Ark 接入官方文本端点；网关提供安全 `/v1/models` 和兼容 SSE；图片选择器、Codex 图片归档和资产 provenance 传递 `effectiveModel`，缺失时显示“图片模型未报告”。
+
+- 2026-10-18（增量流子项）：实际本地HTTP首段barrier/取消/真实write(false)/drain、异常终结与usage/私密错误边界定向通过；Web2.1.41候选、Desktop40待重建，父Gateway仍PARTIAL/本卡PROTOTYPE。

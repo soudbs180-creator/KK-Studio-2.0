@@ -7,3 +7,13 @@ TASK-GATEWAY-STREAM-20261018 IN_PROGRESS/NOT_VERIFIED；base 00e79cf01a7ef787f3c
 开工9树141dirty及96主仓并发副本/index/refs，完整2849份原profile与旧EXE/dist保全沿用[冷启验证](../2026-10-18-coldstart-local/verification.md)，当前实体树clean。最终构建前另存上一40产物/关键数据；不删除、移动或恢复旧资料。
 
 当前接口仅createGenerationServer({chat})可选注入，main.ts未注入时404，默认Web直连与Desktop RustTaskHost链不接网关。版本按真实Web本机服务影响patch41；Desktop40最终重建其全src输入，Mobile1规划不变。父Gateway仍PARTIAL/FEAT-038 PROTOTYPE，真实服务、DPAPI、VPS、Hosted、发布与用户整体未验。
+
+## 冻结实现阶段（完整工程/官方当前产物待验）
+
+正式13例RED为11失败/2兼容正例，原test SHA2caa3b559d0d388601bc7867c31f2b42816e459a51e0fd165e8a516b924f120a、log SHAe00cdaea62d20949d43e1c59e876afc8e568f0b30091a0fb6e940ade19df40d4保留；后增真实Node highWaterMark=1实际write(false)/drain两例与parser24例共39，一轮38PASS/1夹具模式失配保留，按请求stream选择受控上游SSE后39/39通过，原pin/health断言不降级。1500ms只为死锁保护，后改5000ms适应完整套件并发，firstchunk在未释放上游完成barrier前到达的严格oracle不变，不宣称性能指标。
+
+独立冻结parser6ca7e185预审9c13a06f提出两P2：数组delta终结和event:error携DONE会伪成功；旧完整源码/测试cf572280与新RED f2804510均复制保全。新增array message/empty error、usage保旧、HTTP首头前错误私密详情及只传实际报告usage等边界后，真实RED46例39PASS/7FAIL；最小parser/HTTP修正后同46全部GREEN。原边界19项纯内存独立探针通过不代替新精确源补审，原拒收保留。
+
+实施者新46/46与关联11文件144/144（0skip），typecheck/直接ESLint/Prettier全部exit0；日志与完整文件manifest位于.tmp/task-gateway-stream-20261018/implementation-237e70cc-0235-4062-8b2a-e6db04fa8cff。reader SHA27da44ac2bcb7c69f52542bbd07aac0b5776dfeb62b783ac1a65b93c919e593e、HTTP SHA5aa186a241209fc320d59161566045e565a1556c0864f439771da1af47e4c889；独立精确commit/fullverify/当前官方Desktop仍待。测试按职责拆support445行与unit490行，不将断言支持放入helpers；无新增依赖/白名单/共享consumer改动。
+
+官方version:bump仅web2.1.40→2.1.41，desktop2.1.40/mobile2.1.1保持；version:check/consistency exit0，既有Rust迁移用版本fixture与changelog历史版本advisory未扩scope。旧接受40 EXE/dist/build receipt与critical共162文件先复制到工程外accepted-native-40-before-gateway-202018e0-0335-4f8c-bb10-180092f380ec，receipt SHA42135dc922b37c64af2e4fb73adf7aeba3e1c920ac8025e098613716cd2b6399。新源码全部冻结后才重建最终桌面输入。

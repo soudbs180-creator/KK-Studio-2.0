@@ -38,6 +38,10 @@ export interface DispatchRequest {
     credentialRef?: string,
   ) => Promise<string | undefined>;
   readonly signal?: AbortSignal;
+  readonly onTextDelta?: (
+    delta: string,
+    channelId: string,
+  ) => void | Promise<void>;
   /** Set by the caller once the first chunk reached the client. */
   readonly streamStarted?: () => boolean;
 }
@@ -209,6 +213,7 @@ export class Scheduler {
   }
 
   async dispatch(request: DispatchRequest): Promise<DispatchOutcome> {
+    request.signal?.throwIfAborted();
     const candidates = this.#registry.candidates(
       request.model,
       request.operation,
@@ -243,17 +248,20 @@ export class Scheduler {
 
     let lastError: Error | undefined;
     for (let generation = 0; generation < ordered.length; generation += 1) {
+      request.signal?.throwIfAborted();
       const entry = ordered[generation]!;
       if (!this.#health.isAvailable(entry.channelId)) continue;
       const context = this.#registry.contextFor(entry.channelId);
       if (!context) continue;
       try {
         const result = await this.#attempt(entry, context, request);
+        request.signal?.throwIfAborted();
         this.#health.recordSuccess(entry.channelId);
         if (request.sessionId)
           this.#sticky.set(request.sessionId, entry.channelId);
         return { ...result, channelId: entry.channelId };
       } catch (error) {
+        request.signal?.throwIfAborted();
         if (error instanceof ChannelNotApplicable) continue;
         lastError =
           error instanceof Error
@@ -270,6 +278,7 @@ export class Scheduler {
         if (this.#streamStarted(request)) throw lastError;
       }
     }
+    request.signal?.throwIfAborted();
     throw (
       lastError ??
       channelError(noChannelAvailable(`No channel serves ${request.model}`))
@@ -316,10 +325,25 @@ export class Scheduler {
     context: ChannelContext,
     request: DispatchRequest,
   ): Promise<SubmitResult> {
+    request.signal?.throwIfAborted();
     const requestContext: ChannelRequestContext = {
       idempotencyKey: `${request.idempotencyKey}:${context.channelId}`,
       ...(request.signal ? { signal: request.signal } : {}),
-      resolveSecret: () => request.resolveSecret(entry.credentialRef),
+      resolveSecret: async () => {
+        request.signal?.throwIfAborted();
+        const secret = await request.resolveSecret(entry.credentialRef);
+        request.signal?.throwIfAborted();
+        return secret;
+      },
+      ...(request.onTextDelta
+        ? {
+            onTextDelta: async (delta: string) => {
+              request.signal?.throwIfAborted();
+              await request.onTextDelta!(delta, context.channelId);
+              request.signal?.throwIfAborted();
+            },
+          }
+        : {}),
     };
     return entry.adapter.submit(context, request.input, requestContext);
   }

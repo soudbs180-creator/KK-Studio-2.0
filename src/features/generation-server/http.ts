@@ -66,8 +66,47 @@ function json(res: ServerResponse, status: number, value: unknown) {
   });
   res.end(JSON.stringify(value));
 }
-function sse(res: ServerResponse, value: unknown): void {
-  res.write(`data: ${JSON.stringify(value)}\n\n`);
+function sse(value: unknown): string {
+  return `data: ${JSON.stringify(value)}\n\n`;
+}
+async function writeStream(
+  res: ServerResponse,
+  frame: string,
+  signal: AbortSignal,
+  written?: () => void,
+): Promise<void> {
+  signal.throwIfAborted();
+  const accepted = res.write(frame);
+  written?.();
+  if (accepted) return;
+  await new Promise<void>((resolve, reject) => {
+    const cleanup = () => {
+      res.off("drain", drain);
+      res.off("close", closed);
+      res.off("error", failed);
+      signal.removeEventListener("abort", aborted);
+    };
+    const drain = () => {
+      cleanup();
+      resolve();
+    };
+    const failed = (error: Error) => {
+      cleanup();
+      reject(error);
+    };
+    const closed = () =>
+      failed(new DOMException("Stream closed", "AbortError"));
+    const aborted = () => {
+      cleanup();
+      reject(signal.reason);
+    };
+    res.once("drain", drain);
+    res.once("close", closed);
+    res.once("error", failed);
+    signal.addEventListener("abort", aborted, { once: true });
+    if (signal.aborted) aborted();
+    else if (res.destroyed) closed();
+  });
 }
 const controlsSchema = z
   .object({
@@ -153,48 +192,119 @@ export function createGenerationServer(options: {
           // its existing surface, so this only 404s when chat is genuinely absent.
           if (!options.chat) throw new PlatformError("CHAT_NOT_ENABLED", 404);
           const key = req.headers["idempotency-key"];
-          // Required so a client retry cannot bill the same prompt twice.
+          // Forwarded request identity; synchronous chat has no persisted dedup ledger.
           if (typeof key !== "string" || !key.trim())
             throw new PlatformError("IDEMPOTENCY_KEY_REQUIRED");
           const body = parseChatRequest(
             JSON.parse((await readBody(req)).toString("utf8")),
           );
-          try {
-            const completion = await runChatCompletion(
-              options.chat,
-              body,
-              key.trim(),
-            );
-            const completionId = newCompletionId();
-            if (body.stream) {
+          const controller = new AbortController();
+          const abort = () => controller.abort();
+          const closed = () => {
+            if (!res.writableEnded) abort();
+          };
+          req.once("aborted", abort);
+          res.once("close", closed);
+          if (req.aborted || res.destroyed) abort();
+          const completionId = newCompletionId();
+          const created = Math.floor(Date.now() / 1000);
+          let committed = false,
+            streamedText = "";
+          const chunk = (choices: unknown, channelId: string) => ({
+            id: completionId,
+            object: "chat.completion.chunk",
+            created,
+            model: body.model,
+            choices,
+            kk_meta: { channelId },
+          });
+          const delta = async (text: string, channelId: string) => {
+            controller.signal.throwIfAborted();
+            if (!text) return;
+            if (!res.headersSent)
               res.writeHead(200, {
                 "Content-Type": "text/event-stream",
                 "Cache-Control": "no-cache",
                 Connection: "keep-alive",
                 "X-Content-Type-Options": "nosniff",
               });
-              sse(res, {
-                id: completionId,
-                object: "chat.completion.chunk",
-                created: Math.floor(Date.now() / 1000),
-                model: body.model,
-                choices: [
-                  {
-                    index: 0,
-                    delta: { role: "assistant", content: completion.text },
-                    finish_reason: null,
-                  },
-                ],
-                kk_meta: { channelId: completion.channelId },
-              });
-              res.write("data: [DONE]\n\n");
+            await writeStream(
+              res,
+              sse(
+                chunk(
+                  [
+                    {
+                      index: 0,
+                      delta: { role: "assistant", content: text },
+                      finish_reason: null,
+                    },
+                  ],
+                  channelId,
+                ),
+              ),
+              controller.signal,
+              () => {
+                committed = true;
+              },
+            );
+            streamedText += text;
+          };
+          try {
+            const completion = await runChatCompletion(
+              options.chat,
+              body,
+              key.trim(),
+              {
+                signal: controller.signal,
+                ...(body.stream ? { onTextDelta: delta } : {}),
+                streamStarted: () => committed || res.headersSent,
+              },
+            );
+            if (body.stream) {
+              if (!completion.text.trim())
+                throw new Error("Channel returned no text");
+              // Adapters that ignore the optional callback retain buffered compatibility.
+              if (!streamedText)
+                await delta(completion.text, completion.channelId);
+              if (streamedText !== completion.text)
+                throw new Error("Stream text does not match the final result");
+              const finalFrame = sse(
+                chunk(
+                  [{ index: 0, delta: {}, finish_reason: "stop" }],
+                  completion.channelId,
+                ),
+              );
+              const usageFrame = completion.usage
+                ? sse({
+                    ...chunk([], completion.channelId),
+                    usage: {
+                      ...(completion.usage.promptTokens === undefined
+                        ? {}
+                        : { prompt_tokens: completion.usage.promptTokens }),
+                      ...(completion.usage.completionTokens === undefined
+                        ? {}
+                        : {
+                            completion_tokens:
+                              completion.usage.completionTokens,
+                          }),
+                      ...(completion.usage.totalTokens === undefined
+                        ? {}
+                        : { total_tokens: completion.usage.totalTokens }),
+                    },
+                  })
+                : "";
+              await writeStream(
+                res,
+                finalFrame + usageFrame + "data: [DONE]\n\n",
+                controller.signal,
+              );
               res.end();
               return;
             }
             json(res, 200, {
               id: completionId,
               object: "chat.completion",
-              created: Math.floor(Date.now() / 1000),
+              created,
               model: body.model,
               choices: [
                 {
@@ -211,10 +321,29 @@ export function createGenerationServer(options: {
               kk_meta: { channelId: completion.channelId },
             });
           } catch (error) {
+            if (controller.signal.aborted || res.destroyed) return;
             // Adapter failures already carry a classification; anything else is
             // treated as an opaque upstream fault rather than leaking a message.
-            const mapped = toOpenAiError(extractNormalized(error));
-            json(res, mapped.status, mapped.body);
+            const normalized = extractNormalized(error);
+            const mapped = toOpenAiError(
+              body.stream
+                ? { ...normalized, detail: "Upstream chat request failed" }
+                : normalized,
+            );
+            if (!res.headersSent) json(res, mapped.status, mapped.body);
+            else
+              res.end(
+                `event: error\ndata: ${JSON.stringify({
+                  error: {
+                    message: "Upstream stream failed",
+                    type: mapped.body.error.type,
+                    code: mapped.body.error.code,
+                  },
+                })}\n\n`,
+              );
+          } finally {
+            req.off("aborted", abort);
+            res.off("close", closed);
           }
           return;
         }

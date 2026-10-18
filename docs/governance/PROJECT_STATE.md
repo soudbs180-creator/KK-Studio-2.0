@@ -12,7 +12,7 @@
 # 当前项目事实（2026-10-18）
 
 - `currentTask`: TASK-GATEWAY-STREAM-20261018 IN_PROGRESS/NOT_VERIFIED，branch fix/TASK-GATEWAY-STREAM-20261018/base00e79cf0；同一审计实体树复用。前置冷启动TASK-COLDSTART-LOCAL-20261018有界DONE/PASS，最终冷任务文档head00e79独审/Delivery按精确收据。
-- `sourceVersionBoundary`: Desktop/Web2.1.40候选、Mobile2.1.1规划。精确d5完整verify Node2001PASS14skip/Agent204PASS2skip/Edge854首试零fail/flaky/Design41+8/dev4，双轴源码独审PASS。官方EXE41523db8/input0f7a1bf9/loaded1019d17b；Rust源不变，前冻结228PASS1ignore+41集成仅按相同源码解释。
+- `sourceVersionBoundary`: 当前Gateway仅Web2.1.41候选、Desktop2.1.40/Mobile2.1.1保持；新源144定向通过，全量与当前Desktop官方重建待验。下述为冷启前置Desktop/Web2.1.40已验源：精确d5完整verify Node2001PASS14skip/Agent204PASS2skip/Edge854首试零fail/flaky/Design41+8/dev4，双轴源码独审PASS。官方EXE41523db8/input0f7a1bf9/loaded1019d17b；Rust源不变，前冻结228PASS1ignore+41集成仅按相同源码解释。
 - `strictCold`: 真正默认库、原两个lnk、无CDP，连续两轮0→1单实例→正常关闭0；11份完整JSON及raw字节均全相等，全部时间/revision2698保持，9项目11聊天22消息。40项身份/迁移/原候选/记忆状态保持，独立101项审核724e2a1f PASS。旧477实际FAIL和940拒收保留，不回滚2696或屏蔽字段。
 - `nativeUi`: 当前官方40默认资料两轮可见编辑框enabled/readOnly=false、canonical完整资料保持、0pageerror，UI独审651c2e7c PASS。无实际新回复验收；UI重序列化after不冒充raw比较，raw证明另见strictCold。
 - `preservation`: 开工9树141dirty/index/diff/refs/raw保全a9937aa2；main现96dirty另存233d4c85，旧63历史比较因并发变更FAIL且HEAD/index未变，不回退。构建前4447产物与critical复制293758ed，完整资料2849文件350742192B保全0a7c0a5e、独立6362f7ce逐份匹配，旧失败产物另存3b014bf4。全部原件与失败阶段保留。

@@ -18,6 +18,7 @@ import type {
 import { alreadyNormalized, normalizeUnknownFailure } from "./adapter.ts";
 import type { NormalizedError } from "../errors.ts";
 import { normalizeHttpFailure } from "../errors.ts";
+import { readChatStream } from "./chatStream.ts";
 
 export const ARK_BASE_URL = "https://ark.cn-beijing.volces.com/api/v3";
 
@@ -67,7 +68,7 @@ function authHeaders(
 ): Record<string, string> {
   const headers: Record<string, string> = {
     "content-type": "application/json",
-    // Ark honours this to deduplicate retries of the same logical job.
+    // Forward request identity without claiming cross-account billing deduplication.
     "x-idempotency-key": idempotencyKey,
   };
   if (secret) headers.authorization = `Bearer ${secret}`;
@@ -75,7 +76,9 @@ function authHeaders(
 }
 
 async function requireSecret(request: ChannelRequestContext): Promise<string> {
+  request.signal?.throwIfAborted();
   const secret = await request.resolveSecret();
+  request.signal?.throwIfAborted();
   // Missing credentials are a configuration fault, not a transport failure, so
   // this must surface as AUTH_INVALID rather than a generic timeout.
   if (!secret)
@@ -144,6 +147,9 @@ export const doubaoAdapter: ChannelAdapter = {
           model: endpointId,
           messages: [{ role: "user", content: input.prompt }],
           ...mapChatExtra(input),
+          ...(request.onTextDelta
+            ? { stream: true, stream_options: { include_usage: true } }
+            : {}),
         }),
         ...(request.signal ? { signal: request.signal } : {}),
       });
@@ -158,6 +164,12 @@ export const doubaoAdapter: ChannelAdapter = {
           }),
         });
       }
+      if (request.onTextDelta)
+        return readChatStream(response, {
+          signal: request.signal,
+          onTextDelta: request.onTextDelta,
+          channelId: context.channelId,
+        });
       const body = (await readJson(response)) as
         | {
             choices?: Array<{ message?: { content?: unknown } }>;

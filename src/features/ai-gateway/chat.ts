@@ -218,6 +218,14 @@ export function runChatCompletion(
   deps: ChatDeps,
   request: ChatRequest,
   idempotencyKey: string,
+  options: {
+    readonly signal?: AbortSignal;
+    readonly onTextDelta?: (
+      delta: string,
+      channelId: string,
+    ) => void | Promise<void>;
+    readonly streamStarted?: () => boolean;
+  } = {},
 ): Promise<{
   readonly channelId: string;
   readonly text: string;
@@ -235,6 +243,13 @@ export function runChatCompletion(
       idempotencyKey,
       ...(request.session_id ? { sessionId: request.session_id } : {}),
       resolveSecret: deps.resolveSecret,
+      ...(options.signal ? { signal: options.signal } : {}),
+      ...(request.stream && options.onTextDelta
+        ? { onTextDelta: options.onTextDelta }
+        : {}),
+      ...(options.streamStarted
+        ? { streamStarted: options.streamStarted }
+        : {}),
     });
     // An adapter returning `submitted` means the platform works asynchronously;
     // that belongs to /v1/jobs, not to a synchronous chat completion.
