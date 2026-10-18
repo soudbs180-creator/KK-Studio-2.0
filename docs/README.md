@@ -35,6 +35,7 @@
 | [WORKTREE-LIFECYCLE](engineering/WORKTREE-LIFECYCLE.md)     | worktree 创建、登记、回收与落点                        |
 | [AUTO-MERGE](engineering/AUTO-MERGE.md)                     | 自动合并工作流与其未启用边界                           |
 | [ROLLBACK](engineering/ROLLBACK.md)                         | 回滚触发条件与执行                                     |
+| [RELEASE-CHECKLIST](engineering/RELEASE-CHECKLIST.md)       | 桌面发布与升级验证清单、预发布体检、升级三原则         |
 
 > 本表必须完整覆盖 `docs/engineering/` 下的全部 `.md`。新增工程文档必须同步本表，`npm run index:check` 会校验。
 

@@ -129,7 +129,7 @@ export class ShadowEventBus {
     const batch = [...this.queue];
     this.queue = [];
 
-    let isDesktop = false;
+    let isDesktop: boolean;
     try {
       isDesktop = isTauri();
     } catch {

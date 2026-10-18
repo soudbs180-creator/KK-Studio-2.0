@@ -77,9 +77,9 @@ export function runShadowLatencyBenchmark(iterations = 100): {
   }
 
   for (let i = 1; i <= iterations; i++) {
-    let type = "canvas.node.move";
+    let type: string;
     let target = `node-${(i % 15) + 1}`;
-    let payload: Record<string, unknown> = { x: i * 10, y: i * 5 };
+    let payload: Record<string, unknown>;
 
     if (i <= 40) {
       type = "canvas.node.move";

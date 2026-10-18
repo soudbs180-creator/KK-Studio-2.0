@@ -582,7 +582,7 @@ test("STRESS-5.1: remote background task polling continues uninterrupted while a
   // Simulate remote server progress advancement over time
   const remoteServerTimer = setInterval(() => {
     if (remoteTask.progressPct < 100) {
-      remoteTask.progressPct += 20;
+      remoteTask.progressPct += 10;
       remoteTask.status = "processing";
     }
     if (remoteTask.progressPct >= 100) {
@@ -632,7 +632,7 @@ test("STRESS-5.1: remote background task polling continues uninterrupted while a
   // Check empirical polling observations during the freeze
   const pollsWhileFrozen = pollLog.filter((p) => p.isFrozen);
   assert.ok(
-    pollsWhileFrozen.length >= 2,
+    pollsWhileFrozen.length >= 5,
     `Background polling must continue while turn is frozen (observed ${pollsWhileFrozen.length} polls while frozen)`,
   );
   assert.equal(
