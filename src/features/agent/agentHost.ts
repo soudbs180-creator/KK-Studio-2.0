@@ -2,6 +2,8 @@ import type { CanvasCollectionItem } from "../../domain/canvasItems.ts";
 import { reconcileProjectCanvas } from "../../domain/projectCanvas.ts";
 import {
   projectChatExecutionBlockReason,
+  activeChat,
+  updateActiveChat,
   type CreationProject,
 } from "../creation/model.ts";
 import {
@@ -10,7 +12,7 @@ import {
   buildAgentSnapshot,
 } from "./agentCanvas.ts";
 import type { AgentOpResult } from "./agentConnection.ts";
-import type { CanvasAgentOp, ChatScope } from "./agentTypes.ts";
+import type { AgentChatItem, CanvasAgentOp, ChatScope } from "./agentTypes.ts";
 import { storeGeneratedAsset } from "../creation/assetRepository.ts";
 import { appendImageTaskResults } from "../creation/imageTaskCommand.ts";
 import type { AgentCanvasView } from "./agentCanvasView.ts";
@@ -73,33 +75,70 @@ export function createAgentHost(options: AgentHostOptions) {
   };
   return {
     getChatScope,
+    getExecutionAdapter: () => activeChat(options.getProject())?.mainAgent,
     getExecutionBlockReason,
     getModelAllowlist,
     readAgentThread() {
       if (getExecutionBlockReason()) return;
       const project = options.getProject();
-      return (
-        project?.agentThreadId ??
-        project?.chats?.[project.activeChatId ?? ""]?.agentThreadId
-      );
+      return project?.chats
+        ? activeChat(project)?.agentThreadId
+        : project?.agentThreadId;
     },
     knownAgentProjects() {
       if (getExecutionBlockReason()) return [];
       return (options.getProjects?.() ?? [])
         .filter((project) => !projectChatExecutionBlockReason(project))
-        .map((project) => ({
-          projectId: project.id,
-          threadId:
-            project.agentThreadId ??
-            project.chats?.[project.activeChatId ?? ""]?.agentThreadId,
-        }));
+        .flatMap<{
+          projectId: string;
+          chatId: string | null;
+          threadId?: string;
+        }>((project) =>
+          project.chats
+            ? Object.values(project.chats).map((chat) => ({
+                projectId: project.id,
+                chatId: chat.id,
+                threadId: chat.agentThreadId,
+              }))
+            : [
+                {
+                  projectId: project.id,
+                  chatId: null,
+                  threadId: project.agentThreadId,
+                },
+              ],
+        );
     },
     async saveAgentThread(threadId: string, projectId: string) {
       assertExecutable();
       const project = options.getProject();
       if (!project || project.id !== projectId)
         throw new Error("项目已切换，未保存到其他项目。");
-      if (project.agentThreadId !== threadId)
+      if (!/^[A-Za-z0-9_-]{1,160}$/.test(threadId))
+        throw new Error("Agent 线程身份无效，未保存。");
+      if (
+        (options.getProjects?.() ?? [project]).some((candidate) =>
+          candidate.chats
+            ? Object.values(candidate.chats).some(
+                (chat) =>
+                  chat.agentThreadId === threadId &&
+                  (candidate.id !== project.id ||
+                    chat.id !== project.activeChatId),
+              )
+            : candidate.agentThreadId === threadId &&
+              candidate.id !== project.id,
+        )
+      )
+        throw new Error("线程属于其他聊天，未改写当前聊天的归属。");
+      if (project.chats)
+        options.commit(
+          updateActiveChat(project, (chat) => ({
+            ...chat,
+            agentThreadId: threadId,
+            updatedAt: Date.now(),
+          })),
+        );
+      else if (project.agentThreadId !== threadId)
         options.commit({
           ...project,
           agentThreadId: threadId,
@@ -107,9 +146,75 @@ export function createAgentHost(options: AgentHostOptions) {
         });
       await options.flush?.();
     },
+    readAgentMessages(): AgentChatItem[] {
+      const project = options.getProject();
+      return (activeChat(project)?.messages ?? []).map(
+        ({ content, ...message }) =>
+          ({ ...message, text: content }) as AgentChatItem,
+      );
+    },
+    async saveAgentMessages(messages: AgentChatItem[], scope: ChatScope) {
+      assertExecutable();
+      const project = options.getProject();
+      if (
+        !project ||
+        project.id !== scope.projectId ||
+        (project.activeChatId ?? null) !== scope.chatId
+      )
+        throw new Error("聊天已切换，未保存到其他聊天。");
+      if (!project.chats) return;
+      const ownThread = activeChat(project)?.agentThreadId;
+      if (
+        ownThread &&
+        messages.some(
+          (message) => message.threadId && message.threadId !== ownThread,
+        )
+      )
+        throw new Error("历史包含其他聊天的线程，原件已保留。");
+      if (
+        messages.some(
+          (message) =>
+            !message ||
+            typeof message.text !== "string" ||
+            typeof message.id !== "string" ||
+            !message.id ||
+            !["user", "assistant", "system", "tool", "error"].includes(
+              message.role,
+            ),
+        )
+      )
+        throw new Error("聊天历史格式无效，原件已保留。");
+      options.commit(
+        updateActiveChat(project, (chat) => ({
+          ...chat,
+          messages: messages.map(({ text, ...message }) => ({
+            ...message,
+            content: text,
+          })),
+          updatedAt: Date.now(),
+        })),
+      );
+      await options.flush?.();
+    },
     readGoogleConversation() {
       if (getExecutionBlockReason()) return;
-      return options.getProject()?.googleConversation;
+      const project = options.getProject();
+      const chat = activeChat(project);
+      if (!chat) return project?.googleConversation;
+      const context = chat.googleConversation as
+        | import("../../domain/googleConversation.ts").GoogleConversation
+        | undefined;
+      return context
+        ? {
+            ...context,
+            messages: chat.messages
+              .slice(-200)
+              .map(({ content, ...message }) => ({
+                ...message,
+                text: content,
+              })) as typeof context.messages,
+          }
+        : undefined;
     },
     saveGoogleConversation(
       record: import("../../domain/googleConversation.ts").GoogleConversation,
@@ -119,11 +224,33 @@ export function createAgentHost(options: AgentHostOptions) {
       const project = options.getProject();
       if (!project || project.id !== projectId)
         throw new Error("项目已切换，未保存旧会话。");
-      options.commit({
-        ...project,
-        googleConversation: record,
-        updatedAt: Date.now(),
-      });
+      if (project.chats) {
+        const { messages, ...context } = record;
+        options.commit(
+          updateActiveChat(project, (chat) => {
+            const merged = [...chat.messages];
+            for (const { text, ...message } of messages) {
+              const index = merged.findIndex(
+                (previous) => previous.id === message.id,
+              );
+              if (index < 0) merged.push({ ...message, content: text });
+              else
+                merged[index] = { ...merged[index], ...message, content: text };
+            }
+            return {
+              ...chat,
+              googleConversation: context,
+              messages: merged,
+              updatedAt: Date.now(),
+            };
+          }),
+        );
+      } else
+        options.commit({
+          ...project,
+          googleConversation: record,
+          updatedAt: Date.now(),
+        });
     },
     hasGeneratedImage(id: string) {
       const project = options.getProject();
@@ -244,6 +371,9 @@ export function createAgentHost(options: AgentHostOptions) {
         canvas: project.canvas,
         selectedNodeIds: options.getView?.()?.getState().selectedNodeIds,
       });
+      snapshot.threadId = project.chats
+        ? activeChat(project)?.agentThreadId
+        : project.agentThreadId;
       const view = options.getView?.()?.getState();
       if (view) snapshot.viewport = { ...view.viewport };
       for (const node of snapshot.nodes) {

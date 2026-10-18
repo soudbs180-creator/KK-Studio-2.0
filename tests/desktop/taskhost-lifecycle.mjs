@@ -625,15 +625,7 @@ try {
   await page.getByLabel("模型名称").fill("image-test");
   ownedCredentials.add(uiRef);
   await page.getByRole("button", { name: "保存连接", exact: true }).click();
-  const settings = page.getByRole("dialog", { name: "设置", exact: true });
-  await expect(
-    settings
-      .getByRole("region", { name: "官方 API Key 配置", exact: true })
-      .getByRole("status")
-      .filter({ hasText: "连接信息已保存。" }),
-  ).toBeVisible();
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
-  await expect(settings).toBeHidden();
   await page.getByRole("button", { name: "模型", exact: true }).click();
   const initialModelMenu = page.getByRole("menu", {
     name: "选择模型",

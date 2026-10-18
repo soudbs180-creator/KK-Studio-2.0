@@ -3,6 +3,8 @@ import {
   CREATION_STORAGE_KEY,
   createProject,
   emptySnapshot,
+  projectChatView,
+  serializeCreationSnapshot,
 } from "../../src/features/creation/model";
 import { BASE_CANVAS_ITEMS } from "../../src/domain/canvasItems";
 import { createProjectCanvas } from "../../src/domain/projectCanvas";
@@ -54,12 +56,15 @@ export async function seedSidebarFixture(page: Page, textFirst = false) {
   ];
   await page.evaluate(({ key, value }) => localStorage.setItem(key, value), {
     key: CREATION_STORAGE_KEY,
-    value: JSON.stringify({
-      ...emptySnapshot(),
-      revision: Date.now(),
-      activeProjectId: first.id,
-      projects,
-    }),
+    value: JSON.stringify(
+      serializeCreationSnapshot({
+        ...emptySnapshot(),
+        version: 3,
+        revision: Date.now(),
+        activeProjectId: first.id,
+        projects: projects.map(projectChatView),
+      }),
+    ),
   });
   await page.reload();
   await expandSidebar(page);

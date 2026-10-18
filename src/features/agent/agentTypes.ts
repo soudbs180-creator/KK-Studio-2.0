@@ -75,6 +75,8 @@ export type CanvasAgentOp =
     };
 
 export interface CanvasAgentSnapshot {
+  scope?: AgentExecutionScope;
+  threadId?: string;
   projectId: string;
   title: string;
   nodes: CanvasNodeData[];
@@ -87,6 +89,10 @@ export interface CanvasAgentSnapshot {
 export interface ChatScope {
   projectId: string;
   chatId: string | null;
+}
+
+export interface AgentExecutionScope extends ChatScope {
+  epoch: string;
 }
 
 export type AgentPermissionMode = "request" | "automatic" | "full";
@@ -166,6 +172,7 @@ export interface AgentActivityItem {
 }
 
 export interface AgentConversationState {
+  scope?: AgentExecutionScope;
   revision: number;
   conversationId: string;
   threadId: string;
@@ -280,6 +287,8 @@ export type AgentEvent =
   | { kind: "approval_resolved"; requestId: string; decision: string }
   | {
       kind: "tool_call";
+      threadId?: string;
+      turnId?: string;
       requestId: string;
       name: string;
       input: Record<string, unknown>;
@@ -288,6 +297,6 @@ export type AgentEvent =
   | { kind: "workspace"; activeThreadId?: string }
   | { kind: "codex"; busy: boolean };
 
-export const AGENT_PROTOCOL_VERSION = 6;
+export const AGENT_PROTOCOL_VERSION = 7;
 export const AGENT_DEFAULT_URL = "http://127.0.0.1:17371";
 export const AGENT_CONNECT_TIMEOUT_MS = 60000;

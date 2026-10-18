@@ -191,6 +191,10 @@ export function parseAgentSseEvent(
     if (!requestId || !name) return null;
     return {
       kind: "tool_call",
+      ...(typeof payload.threadId === "string"
+        ? { threadId: payload.threadId }
+        : {}),
+      ...(typeof payload.turnId === "string" ? { turnId: payload.turnId } : {}),
       requestId,
       name,
       input: (payload.input ?? {}) as Record<string, unknown>,

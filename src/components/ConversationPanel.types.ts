@@ -20,7 +20,7 @@ export interface ConversationPanelProps {
   onSend?: ConversationSend;
   onDeleteMessage?: (messageId: string) => void;
   composerDraft?: CreationDraft;
-  onDraftChange?: (draft: CreationDraft) => void;
+  onDraftChange?: (draft: CreationDraft, expected?: CreationDraft) => void;
   voiceEnabled?: boolean;
   skills?: SkillRecord[];
   onApplySkill?: (record: SkillRecord) => string;

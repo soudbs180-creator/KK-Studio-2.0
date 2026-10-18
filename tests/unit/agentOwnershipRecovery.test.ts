@@ -3,11 +3,19 @@ import test from "node:test";
 import { createAgentConnection } from "../../src/features/agent/agentConnection.ts";
 import { createAgentHost } from "../../src/features/agent/agentHost.ts";
 import {
-  createProject,
+  createProject as createBaseProject,
   emptySnapshot,
 } from "../../src/features/creation/model.ts";
 import { decodeSnapshot } from "../../src/features/creation/snapshotCodec.ts";
 import { startAgentServer } from "../helpers/agentServer.ts";
+
+function createProject(input: Parameters<typeof createBaseProject>[0]) {
+  const project = createBaseProject(input);
+  project.chats![project.activeChatId!].mainAgent = "codex";
+  project.chats![project.activeChatId!].draft.conversationChannel = "codex";
+  project.composerDraft.conversationChannel = "codex";
+  return project;
+}
 
 function memoryStorage() {
   const values = new Map<string, string>();
@@ -140,6 +148,7 @@ test("a native project ownership record restores its thread when the WebView cac
     }),
     agentThreadId: "fixture-thread",
   };
+  project.chats![project.activeChatId!].agentThreadId = "fixture-thread";
   const host = createAgentHost({
     getProject: () => project,
     commit: (next) => {
@@ -162,7 +171,9 @@ test("a native project ownership record restores its thread when the WebView cac
     conn.getState().error ?? "",
   );
   assert.equal(
-    storage.getItem(`kk-agent-thread:${project.id}`),
+    storage.getItem(
+      `kk-agent-thread:${JSON.stringify([project.id, project.activeChatId])}`,
+    ),
     "fixture-thread",
   );
   assert.equal(
@@ -238,7 +249,7 @@ test("thread identity survives snapshot normalization without connection credent
 
 test("initializing a different known project preserves the original thread for later restoration", async (t) => {
   const server = await startAgentServer("ready");
-  const first = {
+  let first = {
     ...createProject({
       prompt: "",
       kind: "text",
@@ -247,6 +258,7 @@ test("initializing a different known project preserves the original thread for l
     }),
     agentThreadId: "fixture-thread",
   };
+  first.chats![first.activeChatId!].agentThreadId = "fixture-thread";
   let second = createProject({
     prompt: "",
     kind: "text",
@@ -259,7 +271,8 @@ test("initializing a different known project preserves the original thread for l
     getProjects: () => [first, second],
     commit: (next) => {
       active = next;
-      second = next;
+      if (next.id === first.id) first = next as typeof first;
+      else second = next;
     },
     generate: async () => ({}),
   });
@@ -305,8 +318,28 @@ test("ambiguous ownership cannot authorize automatic initialization over an exis
   const host = createAgentHost({
     getProject: () => project,
     getProjects: () => [
-      { ...project, id: "other-a", agentThreadId: "fixture-thread" },
-      { ...project, id: "other-b", agentThreadId: "fixture-thread" },
+      {
+        ...project,
+        id: "other-a",
+        chats: {
+          ...project.chats,
+          [project.activeChatId!]: {
+            ...project.chats![project.activeChatId!],
+            agentThreadId: "fixture-thread",
+          },
+        },
+      },
+      {
+        ...project,
+        id: "other-b",
+        chats: {
+          ...project.chats,
+          [project.activeChatId!]: {
+            ...project.chats![project.activeChatId!],
+            agentThreadId: "fixture-thread",
+          },
+        },
+      },
       project,
     ],
     commit: () => {

@@ -17,7 +17,6 @@ canonical初始基线比较FAIL继续保留。07:30/07:31本地main0a49/index7dc
 
 Issue68专项候选从最新origin/main6b933f4f隔离执行，仅补Native设置保存/关闭测试后置条件和既有延迟回归；真实回执gate13检查通过。无产品、版本或生产改动。当前验证/独审/PR状态见[专项验证](../changes/2026-10-18-issue-68-settings-save/verification.md)。以下发布事实保留其原时点。
 
-
 # 当前项目事实（2026-10-18）
 
 - `snapshotDate`: 2026-10-18
@@ -46,7 +45,6 @@ Issue68专项候选从最新origin/main6b933f4f隔离执行，仅补Native设置
 <!-- HISTORICAL_SNAPSHOTS_BEGIN -->
 
 ## 2026-10-16及之前的原CURRENT_FACTS（历史保留，已由2026-10-17事实替代）
-
 
 2026-10-16 最新增量：8e17cb13全量UI失败修复九文件已精确独审SPEC/QUALITY PASS，相关九组87/87首试、0retry/flaky/skip；侧栏偏移根因是垃圾箱独立行，归入原菜单后五锚点误差0，未放宽原Figma断言。静态/build及Node1508/14既有skip通过，未以此覆盖下文55a0完整verify失败或Native焦点边界。ADR022/023已接受并独审；正常多聊天实现者独占App/快照/聊天/Agent共享核心，本地安装实现者只写独立适配器，root保留main/Cargo/全局tokens/版本及任务文档。两条实现均未冻结/验收，模型B/C实际执行链并行只读核对。详见[当前验证](../changes/2026-10-15-kk-unified/verification.md)。
 
@@ -104,8 +102,6 @@ Issue68专项候选从最新origin/main6b933f4f隔离执行，仅补Native设置
 - `dailyClientAtTakeover`: locked branch-consolidation-20261011 clean/detached235e；实际2.1.33 EXEaeb70dfce5d3e31f76a779986e041ce88ebddb2a5fe9771b0906d70af40371d5、input627e5b402e9bb0cdcc84394f2876be3f179560200ab17acd4240ab6d2787d595，最后PID78612/9441WebView15512。客户端保留打开。本轮未构建/替换daily；普通快捷方式无CDP、恢复副本2画布与main原始Hosted审计未完成。
 - `dailyDataBoundary`: HOME交接九项目新基线，两个新ID恢复副本保留；当前选副本1。勘误：新增reviewComments/stagePlans空数组的是project-mv949az4-zmndcg67，原active project-mu3l43g1-u26lanrs仍全字段exact。副本2画布未验，不再以旧7基线覆盖。auto-connect当前enabled，历史原值UNKNOWN，不能猜恢复。
 - `takeoverEntry`: [唯一正式执行提示词](../changes/2026-10-15-unified-handoff/takeover-context.md)、[归并和合入顺序](../changes/2026-10-15-unified-handoff/resume-order.md)、[矩阵](../changes/2026-10-15-unified-handoff/delivery-matrix.md)。全部批准范围/P0/P1/关键恢复风险及用户验收完成前总目标IN_PROGRESS。
-
-
 
 ## 2026-10-15 2.1.30最终本地快照（历史；当前状态以上方为准）
 
@@ -690,3 +686,7 @@ TASK-UI-DISMISS-002 修复账号菜单跨窄屏断点、键盘展开后外部点
 ## 2026-10-13 UI 分类执行补充
 
 TASK-UI-CLASSIFY-20261013 已获用户实施确认：canonical 分类修复在隔离任务 worktree 验证后逐文件集成，保留窗口控件和麦克风预存改动。按用户补充移除模型弹层批量/数据项，40 项定向回归和独立补审通过；最终 Web development / preview / Desktop 分别 7/7/14 项通过，Desktop/Web 2.1.14。全量浏览器 492/495，三个既有 UI 失败使任务保持 REVIEW/PARTIAL；实际运行证据以[本轮 verification](../changes/2026-10-13-capability-ui/verification.md)为准，未声称已推送或正式发布。
+
+## 2026-10-18 TASK-CANVAS-RELEASE-20261018：统一发布进行中
+
+[当前交付包](../changes/2026-10-18-unified-toolbar-release/intent.md)。远端97ef为base，三端目标2.1.41；成熟chat迁移是保留现有v3项目的必要依赖。当前尚未合并/发包/部署，历史2.1.39安装器及网页不作为新版本证据。外部清理中断后恢复到新锁定任务树；后续当前head验证与正式收据另存。

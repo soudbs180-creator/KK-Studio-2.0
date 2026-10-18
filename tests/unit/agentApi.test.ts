@@ -90,6 +90,9 @@ for (const method of [
       [null],
       [{ id: "missing-text", role: "user" }],
       [{ text: 123 }],
+      [{ text: "missing identity", role: "assistant" }],
+      [{ id: "missing-role", text: "invalid" }],
+      [{ id: "invalid-role", role: "developer", text: "invalid" }],
     ])
       await assert.rejects(request(), (error: unknown) => {
         assert.ok(error instanceof AgentHistoryError);

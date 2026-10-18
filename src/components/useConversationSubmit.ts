@@ -1,4 +1,4 @@
-import type { Dispatch, SetStateAction } from "react";
+import { useEffect, useRef, type Dispatch, type SetStateAction } from "react";
 import type { CreationDraft } from "../features/creation/model";
 
 export type ConversationSend = (
@@ -6,6 +6,9 @@ export type ConversationSend = (
 ) => boolean | string | void | Promise<boolean | string>;
 
 export default function useConversationSubmit(options: {
+  draftKey: string;
+  input: string;
+  getDraftRevision: () => number;
   submitting: boolean;
   setSubmitting: (value: boolean) => void;
   agentActive: boolean;
@@ -14,13 +17,27 @@ export default function useConversationSubmit(options: {
   setPendingApproval: (value: string | null) => void;
   setStatus: (value: string) => void;
   onSend?: ConversationSend;
-  onDraftChange?: (draft: CreationDraft) => void;
+  onDraftChange?: (draft: CreationDraft, expected?: CreationDraft) => void;
   composerDraft?: CreationDraft;
   setInput: (value: string) => void;
   setMessages: Dispatch<SetStateAction<string[]>>;
 }) {
+  const latest = useRef(options);
+  latest.current = options;
+  const scope = useRef({ key: options.draftKey, pending: false });
+  if (scope.current.key !== options.draftKey)
+    scope.current = { key: options.draftKey, pending: false };
+  const renderedScope = scope.current;
+  const mounted = useRef(true);
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
+  const isCurrent = () => mounted.current && scope.current === renderedScope;
   return async function submitMessage(message: string): Promise<void> {
-    if (options.submitting) return;
+    if (!isCurrent() || options.submitting || renderedScope.pending) return;
     if (
       !options.agentActive &&
       options.approvalMode === "ask" &&
@@ -30,10 +47,15 @@ export default function useConversationSubmit(options: {
       options.setStatus("任务准备就绪，确认后才会提交给模型。");
       return;
     }
+    renderedScope.pending = true;
+    const revision = options.getDraftRevision();
+    const sentDraft = options.composerDraft;
+    const sentSignature = JSON.stringify(sentDraft);
     options.setSubmitting(true);
     try {
       const result = options.onSend ? await options.onSend(message) : true;
       if (result === false || typeof result === "string") {
+        if (!isCurrent()) return;
         options.setStatus(
           typeof result === "string"
             ? result
@@ -41,25 +63,33 @@ export default function useConversationSubmit(options: {
         );
         return;
       }
+      const clearVisibleDraft =
+        isCurrent() &&
+        latest.current.getDraftRevision() === revision &&
+        latest.current.input === options.input &&
+        JSON.stringify(latest.current.composerDraft) === sentSignature;
+      if (options.onDraftChange && sentDraft)
+        options.onDraftChange(
+          { ...sentDraft, prompt: "", updatedAt: Date.now() },
+          sentDraft,
+        );
+      if (!isCurrent()) return;
       if (!options.onSend)
         options.setMessages((current) => [...current, message]);
-      options.setInput("");
-      options.setPendingApproval(null);
-      if (options.onDraftChange && options.composerDraft)
-        options.onDraftChange({
-          ...options.composerDraft,
-          prompt: "",
-          updatedAt: Date.now(),
-        });
+      if (clearVisibleDraft) {
+        options.setInput("");
+        options.setPendingApproval(null);
+      }
       options.setStatus(
         options.onSend
           ? "任务已提交，状态会显示在画布顶部。"
           : "内容已记录。连接模型接入后，即可获取 AI 回复。",
       );
     } catch {
-      options.setStatus("提交失败，请检查模型连接后重试。");
+      if (isCurrent()) options.setStatus("提交失败，请检查模型连接后重试。");
     } finally {
-      options.setSubmitting(false);
+      renderedScope.pending = false;
+      if (isCurrent()) options.setSubmitting(false);
     }
   };
 }

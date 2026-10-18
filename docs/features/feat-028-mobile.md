@@ -61,3 +61,7 @@
 用户拒绝2.1.37桌面响应式后，从58df恢复282份mobile/contracts原创源码，未带入旧Desktop2.1.13。本轮main f730 / 正式Release v2.1.38已将独立 `/mobile/` UI、本机context与可选账号边界交付到kkai.plus；生产九项及用户实际手机UI确认通过。Mobile源码2.1.3不等于新APK/iOS发布。
 
 179个current与155个previous文件完整哈希验证、7个入口HTTPS逐哈希核对、单回滚版本及临时授权/私钥清理均有[生产收据](../changes/2026-10-18-web-mobile-production-receipt/verification.md)。上述2026-10-14段为原时点原文，不覆盖当前独立手机Web事实。T12与Mobile整体PARTIAL边界保持；最终文档head的独立审查、Hosted及Delivery另按文档PR执行。
+
+### 2026-10-18 统一版本发布候选
+
+TASK-CANVAS-RELEASE-20261018：平台标识和版本统一2.1.41，Desktop含Agent单一安装器及Web/mobile组合发布待当前SHA验收；现有能力成熟度不据构建结果升级。

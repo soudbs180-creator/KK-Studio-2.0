@@ -7,6 +7,7 @@ import {
 
 async function seedHomeOutputCount(page: Page, outputCount: number) {
   const snapshot = emptySnapshot();
+  snapshot.version = 3;
   snapshot.revision = Date.now();
   snapshot.homeDraft.outputCount = outputCount;
   // Seed the initial domain draft before the next app boot. Later reloads

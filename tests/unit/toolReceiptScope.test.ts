@@ -38,6 +38,8 @@ async function receiptHarness(t: TestContext) {
       attachments: [],
     });
     project.agentThreadId = "fixture-thread";
+    project.chats![project.activeChatId!].agentThreadId = "fixture-thread";
+    project.chats![project.activeChatId!].mainAgent = "codex";
     project.chats![project.activeChatId!].modelAllowlist = ["image-model"];
     return project;
   };
@@ -55,8 +57,22 @@ async function receiptHarness(t: TestContext) {
     onerror: null,
     close() {},
   };
+  let scope: unknown;
   const emit = (type: string, payload: unknown) =>
-    source.onmessage?.({ type, data: JSON.stringify(payload) });
+    source.onmessage?.({
+      type,
+      data: JSON.stringify(
+        payload && typeof payload === "object"
+          ? {
+              scope,
+              ...(type === "tool_call"
+                ? { threadId: "fixture-thread", turnId: "fixture-turn" }
+                : {}),
+              ...payload,
+            }
+          : payload,
+      ),
+    });
   const receiptReceived = deferred();
   const receiptGate = deferred();
   const receipts: ToolReceipt[] = [];
@@ -75,7 +91,10 @@ async function receiptHarness(t: TestContext) {
       setItem: (key, value) => void storage.set(key, value),
       removeItem: (key) => void storage.delete(key),
     },
-    eventSourceFactory: () => {
+    eventSourceFactory: (url) => {
+      scope = JSON.parse(
+        new URL(url, "http://localhost").searchParams.get("scope") ?? "null",
+      );
       queueMicrotask(() =>
         emit("hello", {
           conversation,
@@ -96,7 +115,7 @@ async function receiptHarness(t: TestContext) {
         states.push(JSON.parse(String(init?.body)) as CanvasAgentSnapshot);
       }
       if (path === "/config")
-        return Response.json({ ok: true, protocolVersion: 6 });
+        return Response.json({ ok: true, protocolVersion: 7 });
       if (path === "/agent/codex/models") return Response.json({ data: [] });
       if (path === "/agent/codex/threads/fixture-thread")
         return Response.json({ ok: true, conversation, messages: [] });
@@ -138,6 +157,9 @@ async function receiptHarness(t: TestContext) {
   });
   await receiptReceived.promise;
   const expectedReceipt = {
+    scope,
+    threadId: "fixture-thread",
+    turnId: "fixture-turn",
     requestId: "accepted-tool-request",
     result: {
       ok: true,

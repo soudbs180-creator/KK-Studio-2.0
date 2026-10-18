@@ -188,5 +188,8 @@ TASK-AGENT-RECOVERY-20261013：[验证](../changes/2026-10-13-agent-recovery/ver
 
 当前HOME main承接分支f10后修复中。实际重开两次FAIL对应HOME-NATIVE-01：恢复诊断占用私有stdout握手预算，已真实stdio RED/GREEN；保留Rust限制和原connected断言，新冻结全量/官方重建/实际重开与独审仍待。工程外证据home-native-diagnostic-f10c59ff及home-stdio-*.log，daily/用户资料未用作夹具。不要把旧fc完整verify或f10构建当新源码通过。
 
-
 Issue68设置保存同步专项：隔离分支 fix/TASK-ISSUE-68-settings-save，基线main6b933f4f，仅补测试等待。回执和后续验证见[专项验证](../changes/2026-10-18-issue-68-settings-save/verification.md)，以draft PR交原main协调者；不merge/发布，不恢复或清理原树。
+
+## 2026-10-18 TASK-CANVAS-RELEASE-20261018：统一发布进行中
+
+[当前交付包](../changes/2026-10-18-unified-toolbar-release/intent.md)。远端97ef为base，三端目标2.1.41；成熟chat迁移是保留现有v3项目的必要依赖。当前尚未合并/发包/部署，历史2.1.39安装器及网页不作为新版本证据。外部清理中断后恢复到新锁定任务树；后续当前head验证与正式收据另存。

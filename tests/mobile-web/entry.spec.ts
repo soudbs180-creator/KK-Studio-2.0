@@ -1,4 +1,12 @@
 import { expect, test, type Locator, type Page } from "@playwright/test";
+import { readFileSync } from "node:fs";
+
+const { mobile: mobileVersion } = JSON.parse(
+  readFileSync(
+    new URL("../../config/platform-versions.json", import.meta.url),
+    "utf8",
+  ),
+) as { mobile: string };
 
 const phoneUA =
   "Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Mobile Safari/537.36";
@@ -238,6 +246,11 @@ test.describe("phone browser flows", () => {
     }
     await expect(
       page.getByText("仅此浏览器，无需登录", { exact: false }),
+    ).toBeVisible();
+    await expect(
+      page.getByText(`手机网页版 · 当前版本 ${mobileVersion}`, {
+        exact: false,
+      }),
     ).toBeVisible();
     await page
       .getByRole("button", { name: "连接账号（可选）", exact: true })

@@ -289,6 +289,26 @@ fn collect_references(snapshot: &Value, ids: &mut BTreeSet<String>) -> Result<()
     {
         attachments(project, ids)?;
         attachments(&project["composerDraft"], ids)?;
+        if let Some(chats) = project["chats"].as_object() {
+            for chat in chats.values() {
+                attachments(&chat["draft"], ids)?;
+                for message in chat["messages"].as_array().into_iter().flatten() {
+                    attachments(message, ids)?;
+                    if let Some(assets) = message.get("assetIds") {
+                        for id in assets
+                            .as_array()
+                            .ok_or_else(|| failure("corrupt", "聊天素材引用无效"))?
+                        {
+                            let id = id
+                                .as_str()
+                                .ok_or_else(|| failure("corrupt", "聊天素材引用无效"))?;
+                            asset_id(id)?;
+                            ids.insert(id.into());
+                        }
+                    }
+                }
+            }
+        }
         if let Some(tasks) = project["tasks"].as_array() {
             for task in tasks {
                 edit_references(task, ids)?;
@@ -854,9 +874,14 @@ pub fn import_package(source: &Path, target_root: &Path) -> Result<PackageSummar
             assets.store(STANDARD.encode(bytes), Value::Object(without_size))?;
         }
         let snapshot_path = staging.join("projects").join("creation-v2.json");
-        let snapshots = SnapshotRepository::new(snapshot_path);
+        let snapshots = SnapshotRepository::new(snapshot_path.clone());
         fail_at("import-before-snapshot")?;
-        snapshots.write(package.snapshot.clone(), None)?;
+        // Preserve the verified package payload before startup migrates its authority in this new root.
+        crate::asset_storage::io::atomic_write(
+            &snapshot_path,
+            &serde_json::to_vec(&package.snapshot).map_err(crate::asset_storage::io::error)?,
+            true,
+        )?;
         fail_at("import-before-readback")?;
         let reopened = snapshots
             .read()?
@@ -879,6 +904,11 @@ pub fn import_package(source: &Path, target_root: &Path) -> Result<PackageSummar
                 return Err(failure("asset-hash-mismatch", "恢复后的素材校验失败"));
             }
         }
+        // Admission uses the same Native locks, immutable originals and v3 barrier as normal startup.
+        let paths = crate::storage_paths::AppPaths::initialize_at(&staging)?;
+        let owner = crate::native_root_authority::NativeRootAuthority::elect(&paths)?
+            .ok_or_else(|| failure("busy", "恢复暂存仓库已被占用"))?;
+        drop(owner);
         new_target(&target_root)?;
         fail_at("import-before-publish")?;
         fs::rename(&staging, &target_root).map_err(|_| failure("io", "无法发布恢复目录"))?;
@@ -999,7 +1029,7 @@ mod tests {
         );
         assert_eq!(
             restored.read().unwrap().snapshot.unwrap(),
-            snapshot(&asset_id)
+            crate::native_root_authority::migrated_snapshot(&snapshot(&asset_id))
         );
         let restored_assets = AssetRepository::new(target.join("assets"));
         let record = restored_assets.read(&asset_id).unwrap().unwrap();
@@ -1021,7 +1051,8 @@ mod tests {
         import_package(&package_path, &target).unwrap();
         let restored = SnapshotRepository::new(target.join("projects").join("creation-v2.json"));
         assert_eq!(
-            restored.read().unwrap().snapshot.unwrap()["projects"][0]["agentThreadId"],
+            restored.read().unwrap().snapshot.unwrap()["projects"][0]["chats"]["legacy-codex"]
+                ["agentThreadId"],
             "owned-thread-20261013"
         );
         current["projects"][0]["agentThreadId"] = json!("https://foreign/thread");
@@ -1091,7 +1122,10 @@ mod tests {
         let target = source.join("restored-cost-receipts");
         import_package(&package, &target).unwrap();
         let restored = SnapshotRepository::new(target.join("projects").join("creation-v2.json"));
-        assert_eq!(restored.read().unwrap().snapshot.unwrap(), current);
+        assert_eq!(
+            restored.read().unwrap().snapshot.unwrap(),
+            crate::native_root_authority::migrated_snapshot(&current)
+        );
 
         current["projects"][0]["tasks"][0]["estimatedCostQuote"]["taskId"] = json!("other-task");
         current["revision"] = Value::from(3);
@@ -1131,7 +1165,10 @@ mod tests {
         let target = source.join("restored-mask");
         import_package(&package, &target).unwrap();
         let restored = SnapshotRepository::new(target.join("projects/creation-v2.json"));
-        assert_eq!(restored.read().unwrap().snapshot.unwrap(), current);
+        assert_eq!(
+            restored.read().unwrap().snapshot.unwrap(),
+            crate::native_root_authority::migrated_snapshot(&current)
+        );
         let restored_assets = AssetRepository::new(target.join("assets"));
         for id in exported.asset_ids {
             assert!(restored_assets.read(&id).unwrap().is_some());
@@ -1175,7 +1212,10 @@ mod tests {
         let target = source.join("restored-stage");
         import_package(&package_path, &target).unwrap();
         let restored = SnapshotRepository::new(target.join("projects").join("creation-v2.json"));
-        assert_eq!(restored.read().unwrap().snapshot.unwrap(), current);
+        assert_eq!(
+            restored.read().unwrap().snapshot.unwrap(),
+            crate::native_root_authority::migrated_snapshot(&current)
+        );
         let restored_assets = AssetRepository::new(target.join("assets"));
         let record = restored_assets.read(&asset_id).unwrap().unwrap();
         assert_eq!(STANDARD.decode(record.data_base64).unwrap(), original);
@@ -1294,6 +1334,73 @@ mod tests {
         assert!(error.starts_with("target-not-empty:"));
         assert_eq!(fs::read(&package_path).unwrap(), before);
         assert_eq!(fs::read(target.join("keep.txt")).unwrap(), b"keep");
+        let _ = fs::remove_dir_all(source);
+    }
+
+    #[test]
+    fn v3_chat_only_drafts_messages_and_unknown_metadata_round_trip_with_all_originals() {
+        let source = fixture_root();
+        let (_snapshots, _assets, _, _) = seed(&source);
+        let paths = crate::storage_paths::AppPaths::initialize_at(&source).unwrap();
+        let owner = crate::native_root_authority::NativeRootAuthority::elect(&paths)
+            .unwrap()
+            .unwrap();
+        let mut ids = Vec::new();
+        for index in 0..3 {
+            let bytes = format!("chat-only original {index}").into_bytes();
+            let sha = asset_validation::hash(&bytes);
+            let id = format!("asset-{}", &sha[..24]);
+            owner.assets.store(STANDARD.encode(&bytes), json!({"assetId":id,"sha256":sha,"mime":"image/png","tags":[],"isAiGenerated":false,"source":"upload","provenance":{"generatedAt":"2026-10-17T00:00:00.000Z"}})).unwrap();
+            ids.push((id, bytes));
+        }
+        let mut current = owner.snapshots.read().unwrap().snapshot.unwrap();
+        let revision = current["revision"].as_u64().unwrap();
+        current["revision"] = json!(revision + 1);
+        current["opaqueMetadata"] = json!({"preserve":"top level"});
+        let project = &mut current["projects"][0];
+        project["items"] = json!([]);
+        project["tasks"] = json!([]);
+        project["opaqueMetadata"] = json!({"preserve":"project"});
+        let chat_id = project["activeChatId"].as_str().unwrap().to_string();
+        let chat = &mut project["chats"][&chat_id];
+        chat["opaqueMetadata"] = json!({"preserve":"chat"});
+        chat["draft"] = json!({"prompt":"unsent","extra":"keep","attachments":[{"id":"draft-ref","assetId":ids[0].0,"dataUrl":format!("kk-asset:{}",ids[0].0),"name":"original","mime":"image/png","size":ids[0].1.len()}]});
+        chat["messages"] = json!([{"id":"message","role":"tool","content":"retained offline","itemId":"upstream-item","detail":{"keep":true},"assetIds":[ids[1].0],"attachments":[{"id":"message-ref","assetId":ids[2].0,"dataUrl":format!("kk-asset:{}",ids[2].0),"name":"original","mime":"image/png","size":ids[2].1.len()}]}]);
+        owner
+            .snapshots
+            .write(current.clone(), Some(revision))
+            .unwrap();
+        let package = source.join("chat-v3.kkproject");
+        let summary = export_package(&owner.snapshots, &owner.assets, &package).unwrap();
+        assert_eq!(summary.asset_ids.len(), 3);
+        let target = source.join("chat-v3-restored");
+        import_package(&package, &target).unwrap();
+        let restored = SnapshotRepository::new(target.join("projects/creation-v2.json"));
+        assert_eq!(restored.read().unwrap().snapshot.unwrap(), current);
+        assert_eq!(
+            serde_json::from_slice::<Value>(
+                &fs::read(target.join("projects/creation-v2.json.bak")).unwrap()
+            )
+            .unwrap(),
+            current
+        );
+        let identity = crate::native_root_authority::read_identity(&target)
+            .unwrap()
+            .unwrap();
+        assert_eq!(
+            (identity.format_version, identity.minimum_writer_version),
+            (2, 2)
+        );
+        let assets = AssetRepository::new(target.join("assets"));
+        for (id, bytes) in ids {
+            assert_eq!(
+                STANDARD
+                    .decode(assets.read(&id).unwrap().unwrap().data_base64)
+                    .unwrap(),
+                bytes
+            );
+        }
+        drop(owner);
         let _ = fs::remove_dir_all(source);
     }
 }

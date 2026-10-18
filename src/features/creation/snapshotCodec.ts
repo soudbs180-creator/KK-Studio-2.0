@@ -1,7 +1,9 @@
 import { z } from "zod";
 import {
   normalizeCreationSnapshot,
+  imageArchiveReceiptsSchema,
   isCreationProviderRoutingValid,
+  hasProjectChatAuthorityConflict,
   type CreationSnapshot,
   type CreationSnapshotV3,
   type CreationProjectV3,
@@ -77,7 +79,7 @@ const chatMessageSchema = z
   .object({
     id,
     content: z.string(),
-    role: z.enum(["user", "assistant", "system"]),
+    role: z.enum(["user", "assistant", "system", "tool", "error"]),
     createdAt: number.optional(),
     taskId: id.optional(),
   })
@@ -87,13 +89,13 @@ export const chatItemSchema = z
   .object({
     id,
     name: z.string(),
-    createdAt: number,
-    updatedAt: number,
+    createdAt: number.int().nonnegative().max(Number.MAX_SAFE_INTEGER),
+    updatedAt: number.int().nonnegative().max(Number.MAX_SAFE_INTEGER),
     draft: draft.default({}),
     messages: z.array(chatMessageSchema).default([]),
     mainAgent: z.string().default("codex"),
-    modelAllowlist: z.array(z.string()).default([]),
-    agentThreadId: id.optional(),
+    modelAllowlist: z.array(z.string().min(1).max(120)).max(64).default([]),
+    agentThreadId: threadId.optional(),
     googleConversation: z.unknown().optional(),
     originChatId: id.optional(),
     isTemporary: z.boolean().optional(),
@@ -108,6 +110,33 @@ const taskSchema = z
     providerProtocol: providerProtocolSchema.optional(),
     providerAuthMode: providerAuthModeSchema.optional(),
     originChatId: id.optional(),
+    submissionState: z
+      .enum(["intent", "submitted", "unknown", "terminal"])
+      .optional(),
+    submittedAt: number
+      .int()
+      .nonnegative()
+      .max(Number.MAX_SAFE_INTEGER)
+      .optional(),
+    attachments: z.array(attachment).optional(),
+    outputs: z
+      .array(
+        z
+          .object({
+            status: z
+              .enum([
+                "waiting",
+                "running",
+                "unknown",
+                "succeeded",
+                "failed",
+                "cancelled",
+              ])
+              .optional(),
+          })
+          .passthrough(),
+      )
+      .optional(),
     status: z.enum([
       "queued",
       "running",
@@ -125,6 +154,7 @@ const taskSchema = z
 
 const projectV2Schema = z
   .object({
+    imageArchiveReceipts: imageArchiveReceiptsSchema.optional(),
     id,
     activeChatId: id.optional(),
     agentThreadId: threadId.optional(),
@@ -168,6 +198,7 @@ const projectV2Schema = z
 
 const projectV3Schema = z
   .object({
+    imageArchiveReceipts: imageArchiveReceiptsSchema.optional(),
     id,
     activeChatId: id,
     chats: z.record(z.string(), chatItemSchema),
@@ -184,7 +215,7 @@ const projectV3Schema = z
     // Legacy fields preserved during migration
     messages: z.array(chatMessageSchema).optional(),
     composerDraft: draft.optional(),
-    agentThreadId: id.optional(),
+    agentThreadId: threadId.optional(),
     googleConversation: z.unknown().optional(),
     agentGeneratedImageIds: z.array(z.string()).optional(),
   })
@@ -431,6 +462,15 @@ function decodeSnapshotV3(value: unknown): CreationSnapshot {
       "项目结构不完整，已暂停保存以保护原件。",
     );
   }
+  if (
+    parsed.data.projects.some((project) =>
+      hasProjectChatAuthorityConflict(project as unknown as CreationProjectV3),
+    )
+  )
+    throw new SnapshotStorageError(
+      "corrupt",
+      "聊天存在未迁移的旧权威字段，原件已保留。",
+    );
   unique(parsed.data.projects, "项目");
   unique(parsed.data.projectGroups ?? [], "项目组");
   for (const project of parsed.data.projects) {

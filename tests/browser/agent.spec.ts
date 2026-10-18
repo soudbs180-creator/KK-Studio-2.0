@@ -324,6 +324,7 @@ test("已保存的拖动预览不被 Agent 同节点更新覆盖，松开后可�
 
 async function fixture(nativeImage = false) {
   let stream: ServerResponse | undefined;
+  let scope: unknown;
   const conversation = {
     revision: 1,
     conversationId: "conv-fixture",
@@ -339,12 +340,14 @@ async function fixture(nativeImage = false) {
   } = { turns: [], tools: [], images: [], state: {} };
   const messages: unknown[] = [];
   const emit = (type: string, data: unknown) =>
-    stream?.write(`event: ${type}\r\ndata: ${JSON.stringify(data)}\r\n\r\n`);
+    stream?.write(
+      `event: ${type}\r\ndata: ${JSON.stringify(data && typeof data === "object" ? { scope, ...(type === "tool_call" ? { threadId: conversation.threadId, turnId: "fixture-turn" } : {}), ...data } : data)}\r\n\r\n`,
+    );
   const server = createServer(async (req, res) => {
     res.setHeader("Access-Control-Allow-Origin", productionOrigin);
     res.setHeader(
       "Access-Control-Allow-Headers",
-      "content-type,x-canvas-agent-token,authorization,idempotency-key",
+      "content-type,x-canvas-agent-token,authorization,idempotency-key,x-canvas-agent-client,x-canvas-agent-scope",
     );
     res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
     if (req.method === "OPTIONS") {
@@ -361,6 +364,10 @@ async function fixture(nativeImage = false) {
       return;
     }
     if (path === "/events") {
+      scope = JSON.parse(
+        new URL(req.url!, "http://localhost").searchParams.get("scope") ??
+          "null",
+      );
       stream = res;
       res.writeHead(200, {
         "Content-Type": "text/event-stream",
@@ -371,7 +378,7 @@ async function fixture(nativeImage = false) {
     }
     res.setHeader("Content-Type", "application/json");
     let payload: unknown = { ok: true };
-    if (path === "/config") payload = { ok: true, protocolVersion: 6 };
+    if (path === "/config") payload = { ok: true, protocolVersion: 7 };
     if (path === "/canvas/state") received.state = body;
     if (path.endsWith("/models"))
       payload = {
@@ -525,7 +532,7 @@ async function project(page: Page, modelAllowlist?: string[]) {
     .toEqual(modelAllowlist);
 }
 
-test("Agent 图片上传发送、离线保留、API 草稿隔离与真实视口多选", async ({
+test("同一聊天切换 Agent 保留参考图和输入，发送后清理附件并同步真实视口多选", async ({
   page,
 }) => {
   const agent = await fixture(true);
@@ -551,10 +558,10 @@ test("Agent 图片上传发送、离线保留、API 草稿隔离与真实视口�
     await page.getByLabel("执行方式").selectOption("direct");
     await expect(
       page.getByRole("button", { name: "移除素材 reference.png" }),
-    ).toHaveCount(0);
+    ).toBeVisible();
     await page.getByLabel("对话内容").fill("API 草稿");
     await page.getByLabel("执行方式").selectOption("codex");
-    await expect(page.getByLabel("对话内容")).toHaveValue("");
+    await expect(page.getByLabel("对话内容")).toHaveValue("API 草稿");
     await page.getByLabel("对话内容").fill("请描述附图");
     await page.getByRole("button", { name: "发送消息", exact: true }).click();
     await expect(page.getByRole("alert")).toContainText("连接");
@@ -1152,14 +1159,16 @@ test("卡片 Codex 生图在刷新后归档并恢复来源；切 API 清除旧�
       )
       .toBe(true);
     expect(agent.received.images).toHaveLength(0);
-    await page.getByRole("button", { name: "模型", exact: true }).click();
-    const chatMenu = page.getByRole("menu", { name: "选择模型" });
-    await chatMenu.getByRole("tab", { name: "本地", exact: true }).click();
-    await chatMenu.getByRole("searchbox").fill("image-fixture");
-    await chatMenu
+    await source.focus();
+    await source.press("Enter");
+    await source.getByRole("button", { name: "画布模型", exact: true }).click();
+    const cardMenu = source.getByRole("menu", { name: "选择模型" });
+    await cardMenu.getByRole("tab", { name: "本地", exact: true }).click();
+    await cardMenu.getByRole("searchbox").fill("image-fixture");
+    await cardMenu
       .getByRole("menuitemradio", { name: /image-fixture/ })
       .click();
-    await expect(page.getByLabel("执行方式")).toHaveValue("direct");
+    await expect(page.getByLabel("执行方式")).toHaveValue("codex");
     await expect
       .poll(() =>
         page.evaluate(() => {

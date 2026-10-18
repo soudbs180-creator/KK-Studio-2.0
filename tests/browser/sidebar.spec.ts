@@ -272,6 +272,12 @@ test("手机对话入口建立独立项目，未连接时保留草稿并提供�
     page.getByRole("button", { name: "对话", exact: true }),
   ).toHaveAttribute("aria-current", "page");
   await expect(page.locator(".project-save-state")).toContainText("已保存");
+  await expect(page.getByLabel("执行方式", { exact: true })).toHaveValue(
+    "codex",
+  );
+  await expect(
+    page.getByRole("button", { name: "模型", exact: true }),
+  ).toContainText("Codex 账号默认");
   const input = page.getByLabel("对话内容", { exact: true });
   await input.fill("手机端聊天入口测试");
   await expect(
