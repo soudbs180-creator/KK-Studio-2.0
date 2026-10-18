@@ -1,5 +1,38 @@
 # 当前进度
 
+## 2026-10-18 12ai 手机端生成和原件保存（REVIEW）
+
+本次生产收据文档另建[明确后缀五件包](changes/2026-10-18-mobile-12ai-production-receipt/verification.md)绑定同TASK/docs分支：55e仅修改旧包被Delivery实际拒绝（11files/1violation），原FAIL保留，补包不改checker或产品。用户保存Key后，root在正式9d10/140201生产bundle、430×637浏览器仅各一次真实短文本和单图，均1/1 saved并刷新恢复；PNG830495B，Provider字节/两次普通导出SHA64a6af6e一致，文本SHA1fffc1d3一致。刷新Provider0/POST0，旧文本、unknown失败图和原导入原件hash保留。现场实测PASS，独立live证据审核已PASS_WITH_EXPLICIT_SCOPE、无阻断项（27输入；报告JSON SHA59af4671f7618f14b69b3fa5458a3f93051b12d0fdfcfcf8486763771d126ae3）；最终文档head的Delivery/独审/Hosted待提交后执行。
+
+用户授权按官方文档修图片自动保存、文本与视频，并正式上线后单张图片/短文本复验，保留一个回滚版本。图片同步base64、分阶段错误与视频明确模型/持久ID/GET-only恢复/16MiB原件保护已整合；Mobile371全过，c813根完整verify、最终本地组合9/9及b0ef独审通过。PR70正常squash为main9d10，完整tree与b0ef一致；精确main quality39104785098五项/guards39104785090双平台成功，正式Release416299447/managed-web-release39107253299已上线Web2.1.39/Mobile2.1.4，Desktop源码仍2.1.37。公网140201入口SHA cf341da4与本地3d5不同，生产入口9/9通过、current39/唯一previous38终核完成。详见[本轮验证](changes/2026-10-18-mobile-12ai/verification.md)与[发布实录](changes/2026-10-18-mobile-12ai/release.md)。
+
+本轮真实图文现场结果已交回，不再处于待Key阶段；Task保留REVIEW/NOT_VERIFIED，仅当前文档head门禁和正常PR尚待完成；不为自引用head或未来CI循环改写记录。视频仍仅本地fixture保存/播放/导出/刷新PASS、真实视频请求0，不代填上游生成或费用。FEAT-028 PARTIAL、T12 TODO/open，Safari/新原生包等仍未验，用户最终接受不由保存Key回复代填。
+
+canonical初始基线比较FAIL继续保留。07:30/07:31本地main0a49/index7dc72867、4dirty及两读稳定仅为历史观察；08:02只读终核已是main208f97de/index2717ed9d、status clean，四文件bytes/hash也已改变，不能称最终四路径稳定或canonical未变。本任务没有对canonical还原、stage、commit或写文件，不归因操作者，隔离生产9d10不包含这些后续变化。旧release树0cb/index未变仅按较早核对时点记载。详见当前生产verification及工程外protection-final-live-acceptance.json。
+
+首次完整verify在Node阶段1850PASS/2FAIL/20SKIP，因隔离安装ignore-scripts后未先生成Agent dist；补齐既有agent/plugins构建后原失败文件3/3通过，原失败日志保留；整合c81311be完整重跑exit0，根1852PASS/20SKIP、Agent199PASS/2SKIP、浏览器827PASS及设计/开发链通过。没有修改有效断言或产品Agent源码。
+
+## 2026-10-18 Issue68 原生设置保存同步（专项候选）
+
+从远端 main6b933f4f 创建隔离分支，仅在 Native 测试保存后等待准确成功提示、关闭后确认 dialog 隐藏；既有延迟保存回归补齐关闭和模型菜单路径。真实 native 回执 gate 证明配置/凭据已提交但 UI 待回执时关闭、Escape、遮罩保持保护，释放后13检查通过，正式生命周期11检查通过；CI精确吞点击机制仍为推断。无产品源码、版本或生产改动。完整验证、独审/PR进度见[专项验证](changes/2026-10-18-issue-68-settings-save/verification.md)，交现有main协调者，不merge或发布。
+
+## 2026-10-18 独立手机 Web 正式交付（有界 DONE/PASS）
+
+正式Release `v2.1.38` 已从main `f730f1dc32fb2e568dda6d4a52c58b05802d6b6b` 自动发布：Web2.1.38、独立Mobile源码2.1.3、Desktop源码2.1.37。根网址初次按手机UA/窄屏进入 `/mobile/`，`/?view=desktop` 保留旧资料入口，使用中resize不强制导航。生产Edge9/9首试、0retry/flaky/skip及9组空blocked/errors记录通过；用户实际手机回复“已显示独立手机 UI，正常”。
+
+main Hosted五项与guards、正式部署均success；179个current文件（含23Mobile）及155个previous文件完整核验，撤钥后7个入口资源HTTPS逐哈希匹配。current38/previous37恰好两个受管目录，只有一个回滚版本；旧4a受管版本已回收，原配置单备份保留。API/PG/Nginx保持active且MainPID693/673/666一致。临时root授权实际计数0、原授权逐字节恢复，新临时身份SSH被拒绝；指定隔离测试目录和本机两私钥已清理，受限GitHub自动发布凭据保留。
+
+仅本任务DONE；150任务为86DONE/1IN_PROGRESS/48PARTIAL/12TODO/3BLOCKED、开放64，其他149对象不变。FEAT-028仍PARTIAL、T12开放；Safari专项、原生新包、真实身份与Provider文本/图片/原件闭环继续验收。原main只读观察为69条dirty/staged0，不把并发变化纳入发布或声称所有原文件永久不变。本次产品、Hosted、生产、用户确认与数据保护范围见[最终生产收据](changes/2026-10-18-web-mobile-production-receipt/verification.md)；最终文档head的独立审查与Hosted由文档PR另记。
+
+## 以下为此前阶段历史记录（原文保留）
+
+## 2026-10-18 独立手机 UI 修正（IN_PROGRESS）
+
+2.1.37 已由 PR65/main `503dedbe` 的 exact-main quality 与正式 Release 自动上线，完整155文件与静态旧版保留已核对；旧四尺寸40项只验证桌面响应式。用户明确拒绝该布局作为手机版，要求原独立 Cherry 参考手机 UI，因此本轮不结案。已恢复58df中的282份 mobile/contracts 原创源码，新增真实 Web 本机 context、可选账号、初次 viewport/手机UA `/mobile/` 分流和组合发布；Web2.1.38、Mobile候选2.1.3、Desktop2.1.37。Mobile323/323测试、type/lint与组合构建已通过，独立手机browser9/9首试、Linux发布/回滚14/14及有界独立复核通过；精确SHA绑定/Hosted及新正式上线仍在执行。数据库、业务服务、原Desktop资料和其他dirty保持；临时root key已安全延期，正确手机UI验收后撤销。详见[当前交付包](changes/2026-10-17-web-release-receipt/verification.md)。
+
+## 2026-10-17 Web发布与正式Release自动同步（IN_PROGRESS）
+
+用户授权将kkai.plus更新到客户端验收基线，随后明确选择本次一起修手机菜单并重新验收2.1.37，仅在正式Release自动更新、保留一个回滚版本。固定bbc8/产品469原154文件与旧验收dist逐哈希一致，原dirty不纳入；新产品改动限手机菜单定位与版本元数据。VPS旧4a06ea8原122文件保留，受限普通账号/配置备份/no-cache及资源回退已准备，API/PostgreSQL保持；新候选托管、生产手机与正式Release仍在验收。账本150项、原149对象保持，旧Native收据只证明2.1.36。详见[发布验证](changes/2026-10-17-web-release/verification.md)。下节审计的未推送/未发布结论保留其历史时点含义。
 ## 2026-10-17 审计安全修复与治理同步（有界本地A–D DONE/PASS）
 
 最终产品source `4699458de1c3437309b7cdc3f019454104c81fce`、tree `a1905e2aa6e11a24b4c62d829dc82a8f0d566972`，Desktop/Web2.1.36，Mobile2.1.1规划。冻结前后CLEAN的完整`npm run verify` exit0：Node1846=1832PASS/14既有SKIP、Agent201=199PASS/2既有SKIP、产品Edge823/823首试零fail/retry/flaky/skip、DESIGN41单元+8浏览器、development四步，lint/type/UI/format/build通过，警告/advisory保留。469精确增量独审PASS；此前FSR01–06按原SHA关闭。Native五源自436后未变，Rust bin213PASS/1既有硬件ignored+integration41/check/fmt仍按该源身份解释。

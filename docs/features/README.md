@@ -13,7 +13,7 @@
 | PROTOTYPE | 只有 UI、本地 fixture 或固定演示素材，无真实后端；界面必须显式标注 Prototype |
 | PLANNED | 只有计划/设计，无实现或无 UI |
 
-当前共 **37** 个功能：REAL（真实可用）2、PARTIAL（部分可用）28、PROTOTYPE（仅演示/UI）5、PLANNED（仅计划）2。
+当前共 **37** 个功能：REAL（真实可用）2、PARTIAL（部分可用）29、PROTOTYPE（仅演示/UI）5、PLANNED（仅计划）1。
 
 ## 如何新增一个功能（任何 AI 照此执行）
 
@@ -92,7 +92,7 @@
 | ID | 功能 | 状态 | 卡片 | 关联任务 |
 | --- | --- | --- | --- | --- |
 | FEAT-027 | Astra 研究助手 | PLANNED（仅计划） | [卡片](feat-027-astra.md) | TASK-ASTRA-001, BACKEND-ASTRA-001 |
-| FEAT-028 | Mobile 适配 | PLANNED（仅计划） | [卡片](feat-028-mobile.md) | T12, TASK-UI-CONSOLIDATE-20261014, TASK-PROTOCOL-CLI-20261014, TASK-222-ACTIONS-20261014, TASK-223-ACTIONS-20261014 |
+| FEAT-028 | Mobile 适配 | PARTIAL（部分可用） | [卡片](feat-028-mobile.md) | T12, TASK-MOBILE-12AI-001, TASK-UI-CONSOLIDATE-20261014, TASK-PROTOCOL-CLI-20261014, TASK-222-ACTIONS-20261014, TASK-223-ACTIONS-20261014, TASK-WEB-RELEASE-20261017 |
 
 ## 门禁
 

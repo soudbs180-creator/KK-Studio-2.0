@@ -51,6 +51,7 @@
 | [GENERATION-PLATFORM](architecture/GENERATION-PLATFORM.md) | 生成平台接入                                |
 | [LEGACY-MIGRATION](architecture/LEGACY-MIGRATION.md)       | 旧工程能力 keep/migrate/rebuild/reject 清单 |
 | `architecture/adr/`                                        | 架构决策记录                                |
+| [ADR-025](architecture/adr/ADR-025-mobile-12ai-originals-and-video-recovery.md) | Mobile 12ai 原件与视频查询恢复 |
 
 ## UI 文档
 

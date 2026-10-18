@@ -158,15 +158,23 @@ mod tests {
     fn initialize_creates_canonical_directories_and_paths() {
         let root = TestRoot::new("layout");
         let paths = AppPaths::initialize_at(&root.0).expect("initialize");
+        let canonical_root = dunce::canonicalize(&root.0).expect("canonical test root");
+        assert_eq!(paths.root, canonical_root);
         for directory in DATA_DIRECTORIES {
             assert!(root.path(directory).is_dir(), "missing {directory}");
         }
-        assert_eq!(paths.config, root.path("providers/config.json"));
-        assert_eq!(paths.conversations, root.path("conversations/index.json"));
-        assert_eq!(paths.creation, root.path("projects/creation-v2.json"));
-        assert_eq!(paths.assets, root.path("assets"));
-        assert_eq!(paths.tasks, root.path("tasks"));
-        assert_eq!(paths.memory, root.path("memory/memory.json"));
+        assert_eq!(paths.config, canonical_root.join("providers/config.json"));
+        assert_eq!(
+            paths.conversations,
+            canonical_root.join("conversations/index.json")
+        );
+        assert_eq!(
+            paths.creation,
+            canonical_root.join("projects/creation-v2.json")
+        );
+        assert_eq!(paths.assets, canonical_root.join("assets"));
+        assert_eq!(paths.tasks, canonical_root.join("tasks"));
+        assert_eq!(paths.memory, canonical_root.join("memory/memory.json"));
         assert!(!paths.config.exists());
         assert!(!paths.conversations.exists());
         assert!(!paths.memory.exists());

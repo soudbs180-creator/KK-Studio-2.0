@@ -1,0 +1,107 @@
+name: managed-web-release
+
+on:
+  release:
+    types: [released]
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: managed-web-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: github.event.release.draft == false && github.event.release.prerelease == false
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 24
+      - name: Require a versioned main commit and its completed quality run
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$RELEASE_TAG" =~ ^v([0-9]+\.[0-9]+\.[0-9]+)$ ]] || { echo 'Invalid release tag'; exit 1; }
+          version="${BASH_REMATCH[1]}"
+          source=$(git rev-parse "refs/tags/$RELEASE_TAG^{commit}")
+          git merge-base --is-ancestor "$source" refs/remotes/origin/main
+          test "$source" = "$(git rev-parse HEAD)"
+          test "$version" = "$(node -p 'JSON.parse(require("fs").readFileSync("config/platform-versions.json", "utf8")).web')"
+          quality_ready=false
+          for attempt in {1..90}; do
+            run=$(gh api --method GET "repos/$GITHUB_REPOSITORY/actions/workflows/quality.yml/runs" -f branch=main -f event=push -f head_sha="$source" -f per_page=100 --jq '.workflow_runs | sort_by(.created_at, .run_attempt) | last')
+            if test "$run" != null && test -n "$run"; then
+              test "$(jq -r '.head_sha' <<< "$run")" = "$source"
+              test "$(jq -r '.head_branch' <<< "$run")" = main
+              test "$(jq -r '.event' <<< "$run")" = push
+              case "$(jq -r '.status' <<< "$run")" in
+                completed)
+                  test "$(jq -r '.conclusion' <<< "$run")" = success
+                  quality_ready=true
+                  break
+                  ;;
+                queued|in_progress|pending|requested|waiting) ;;
+                *) echo 'Unexpected quality run state'; exit 1 ;;
+              esac
+            fi
+            if test "$attempt" -lt 90; then sleep 30; fi
+          done
+          test "$quality_ready" = true || { echo 'Matching main quality run did not succeed within 45 minutes'; exit 1; }
+          run_id=$(jq -r '.id' <<< "$run")
+          jobs=$(gh api --paginate "repos/$GITHUB_REPOSITORY/actions/runs/$run_id/jobs?filter=latest&per_page=100" --jq '.jobs[] | {name,status,conclusion}' | jq -s .)
+          jq -e 'all(.[]; .status == "completed" and .conclusion == "success") and ([.[].name] as $names | all(["deploy-linux","delivery","governance","verify","mobile"][]; . as $required | $names | index($required) != null))' <<< "$jobs" >/dev/null
+          printf 'SOURCE_COMMIT=%s\nWEB_VERSION=%s\nRELEASE_ID=%s\n' "$source" "$version" "$RELEASE_TAG" >> "$GITHUB_ENV"
+          printf 'Verified quality run %s for %s\n' "$run_id" "$source"
+      - name: Build the independent Desktop Web and Mobile Web entries
+        run: |
+          npm ci --ignore-scripts
+          npm ci --prefix vendor/canvas-plugins --ignore-scripts --no-audit --no-fund
+          npm ci --prefix mobile --ignore-scripts --no-audit --no-fund
+          npm run plugins:build
+          npm run build
+          node deploy/build-combined-web.mjs
+      - name: Package and validate without activating
+        shell: bash
+        run: |
+          set -euo pipefail
+          archive="$RUNNER_TEMP/managed-web.tar.gz"
+          node deploy/package-managed-web.mjs --dist dist --out "$archive" --release-id "$RELEASE_ID" --source-commit "$SOURCE_COMMIT" --web-version "$WEB_VERSION" > "$RUNNER_TEMP/package.json"
+          checksum=$(jq -r .sha256 "$RUNNER_TEMP/package.json")
+          validation_root=$(mktemp -d /tmp/kk-managed-web-XXXXXXXX)
+          trap 'rm -rf -- "$validation_root"' EXIT
+          python3 deploy/managed-web-release.py --test-root "$validation_root" receive "$RELEASE_ID" "$checksum" --dry-run < "$archive"
+          printf 'ARCHIVE_SHA256=%s\n' "$checksum" >> "$GITHUB_ENV"
+      - name: Stream the verified archive to the restricted deploy account
+        env:
+          DEPLOY_KEY: ${{ secrets.KK_WEB_DEPLOY_KEY }}
+          KNOWN_HOSTS: ${{ secrets.KK_WEB_KNOWN_HOSTS }}
+          DEPLOY_HOST: ${{ secrets.KK_WEB_HOST }}
+          DEPLOY_USER: ${{ secrets.KK_WEB_USER }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$DEPLOY_HOST" =~ ^[a-zA-Z0-9][a-zA-Z0-9.-]*$ ]] || { echo 'Invalid deploy host'; exit 1; }
+          [[ "$DEPLOY_USER" =~ ^[a-z_][a-z0-9_-]*$ && "$DEPLOY_USER" != root ]] || { echo 'Invalid deploy user'; exit 1; }
+          test -n "$DEPLOY_KEY" && test -n "$KNOWN_HOSTS"
+          umask 077
+          key=$(mktemp "$RUNNER_TEMP/kk-web-key-XXXXXXXX")
+          hosts=$(mktemp "$RUNNER_TEMP/kk-web-hosts-XXXXXXXX")
+          trap 'rm -f -- "$key" "$hosts"' EXIT
+          trap 'exit 1' HUP INT TERM
+          printf '%s\n' "$DEPLOY_KEY" > "$key"
+          printf '%s\n' "$KNOWN_HOSTS" > "$hosts"
+          chmod 600 "$key" "$hosts"
+          unset DEPLOY_KEY KNOWN_HOSTS
+          test "$(sha256sum "$RUNNER_TEMP/managed-web.tar.gz" | cut -d ' ' -f 1)" = "$ARCHIVE_SHA256"
+          ssh -T -i "$key" -o IdentitiesOnly=yes -o BatchMode=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile="$hosts" -o ConnectTimeout=20 "$DEPLOY_USER@$DEPLOY_HOST" "receive $RELEASE_ID $ARCHIVE_SHA256" < "$RUNNER_TEMP/managed-web.tar.gz"

@@ -6,6 +6,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 | ID | Title | Status | Display | Priority | Dependencies | Owner | Next action |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| TASK-MOBILE-12AI-001 | 12ai手机端图片自动归档与文本视频协议接入 | REVIEW | 进行中 | P1 | TASK-WEB-RELEASE-20261017 | root | 对最终生产收据文档head运行正式Delivery、另一独立上下文审核及Hosted，再正常PR合并；结果另冻外部收据/PR，不为自引用head循环改文档。TASK REVIEW/NOT_VERIFIED、FEAT-028 PARTIAL/T12 TODO；用户最终产品接受、Safari/Native/真实视频未代填，不重复付费生成。 |
+| TASK-WEB-RELEASE-20261017 | 独立手机UI接入与正式Web Release自动同步 | DONE | 已完成 | P1 | TASK-AUDIT-REPAIR-20261017 | root | 本次Web交付已完成；最终文档PR另按提交HEAD完成独立审查与Hosted/Delivery。Mobile其余能力由T12按原范围继续。 |
 | TASK-AUDIT-REPAIR-20261017 | 审计安全修复、启动恢复与当前治理收敛 | DONE | 已完成 | P1 | none | root | 保留被日常链接引用的任务worktree/EXE及所有恢复证据；root完成最终文档提交后的精确review/正式Delivery和runtime-input不变核对。其余64开放项按原任务继续，尤其旧聊天数据完整迁移/protocol7、统一接入/12AI持久恢复/素材垃圾箱、真实Provider/ComfyUI/GPU/VPS/Mobile/签名及用户验收；不得解除READ_ONLY或批量结案。 |
 | TASK-KK-UNIFIED-20261015 | KK Studio 统一修复与重构 | IN_PROGRESS | 进行中 | P1 | none | root | 原统一scope继续开放；当前后续源码已进入local main@8c36a6b并有63条dirty，已保全为未验收221560a3。当前安全修复由TASK-AUDIT-REPAIR-20261017独占承接；原branch/worktree仅历史来源，不作为当前产品验收或并行写入分配。完整多聊天、12AI持久恢复、Provider/共仓库/账号/同步等仍按原scope另行实施和验收。 |
 | TASK-FIX-PUSH-GUARD-SPACES-001 | 修复 Windows Git pre-push 空格及长路径启动 | PARTIAL | 未完成 | P1 | none | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
@@ -155,6 +157,45 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-HOME-LOAD-DRAFT-20261015 | 保护读取期间编辑不覆盖已有首页草稿设置 | PARTIAL | 进行中 | P2 | TASK-CODEX-HOME-20261015 | root | 保留通过的代码子范围与失败证据，随当前组合源码执行完整verify、新Native重建、最终精确独审/Hosted与交付，不重复开发已修复读取合并。 该工作树只作历史承接来源；本轮安全修复见TASK-AUDIT-REPAIR-20261017，未新增活动分配。 |
 | TASK-VERIFY-DEPS-20261015 | 恢复共享依赖清理事故并核验执行边界 | PARTIAL | 进行中 | P1 | TASK-CODEX-HOME-20261015 | root | 保持防复发子范围PASS与旧事故UNKNOWN分离；不在共享依赖安装或清理。原始字节及影响如无证据不得补写；最终当前提交/托管/交付门禁另验。 |
 | TASK-DESIGN-MD-20261015 | 统一DESIGN设计系统与产品UI收敛 | PARTIAL | 进行中 | P1 | none | root | 关闭基础独审问题，将规则落入设置/模型/聊天/画布/项目/素材等实际页面，按Desktop→Web留同状态证据。 |
+| TASK-ISSUE-68 | 修复原生设置保存后的测试同步缺口 | REVIEW | 未完成 | P1 | none | issue68-specialist | 纯文档head补审并建立draft PR，回读当前Hosted后交现有main协调者；不merge/发布。 |
+
+## TASK-MOBILE-12AI-001 — 12ai手机端图片自动归档与文本视频协议接入
+
+- Goal: 按12ai官方文档修复图片自动保存，保留文本真实流，补文生视频任务与GET恢复；正式发布后单张图片刷新验收且保留唯一回滚。
+- Scope: 隔离修复Mobile Provider、原件错误提示、文生视频submit/poll/归档/恢复和入口；保留既有数据身份、存储schema和本地主仓，组合Web正式Release发布。
+- Display status: 进行中
+- Priority: P1 — 真实图片已生成但自动原件归档失败，阻断用户手机创作闭环。
+- Requirement refs: docs/changes/2026-10-18-mobile-12ai/intent.md, docs/changes/2026-10-18-mobile-12ai/spec.md
+- Feature IDs: FEAT-028
+- Owner role: implementer
+- Acceptance: 12ai同步图片返回经校验原图，自动归档1/1并刷新恢复散列一致；通用端点和现有文本SSE不回归; 视频按明确官方模型文生契约提交一次，持久任务ID后只GET查询和恢复，不假定取消或幂等保证，真实归档原件才成功; 旧版可读快照、Key边界、未知不重发和既有资料均保留；主仓HEAD/index/未提交改动保护有终核; 当前SHA独审与Hosted通过后正式Release上线，回读版本与唯一previous；真实与fixture证据明确分开
+- Branch: `docs/TASK-MOBILE-12AI-001-production-receipt`
+- Worktree: `D:/kk-studio/.worktrees/TASK-MOBILE-12AI-001`
+- Modules: mobile, config/platform-versions.json, docs/changes/2026-10-18-mobile-12ai, docs/changes/2026-10-18-mobile-12ai-production-receipt, docs/governance, docs/features, docs/PROGRESS.md
+- Verification: NOT_VERIFIED — 产品source9d10正式Web2.1.39/Mobile2.1.4、Hosted、生产入口9项、current39/唯一previous38通过。真实文本/图片各1次POST均自动保存并刷新恢复，PNG830495B前后导出及Provider同SHA64a6af6e、文本SHA1fffc1d3；旧记录/原件保留，刷新及只读补录Provider0/POST0。独立live证据review有界PASS、无blockers，JSON SHA59af4671f7618f14b69b3fa5458a3f93051b12d0fdfcfcf8486763771d126ae3。55e文档Delivery FAIL1保留，现有新五件包，最终文档head门禁待提交后执行。canonical初始保护FAIL，08:02主仓已208f97/clean且四路径有范围外变化，本任务仅只读且未纳入发布。视频仅fixture，真实视频0。
+- Evidence: [docs/changes/2026-10-18-mobile-12ai/intent.md](../../docs/changes/2026-10-18-mobile-12ai/intent.md), [docs/changes/2026-10-18-mobile-12ai/verification.md](../../docs/changes/2026-10-18-mobile-12ai/verification.md), [docs/changes/2026-10-18-mobile-12ai-production-receipt/intent.md](../../docs/changes/2026-10-18-mobile-12ai-production-receipt/intent.md), [docs/changes/2026-10-18-mobile-12ai-production-receipt/verification.md](../../docs/changes/2026-10-18-mobile-12ai-production-receipt/verification.md)
+- Next action: 对最终生产收据文档head运行正式Delivery、另一独立上下文审核及Hosted，再正常PR合并；结果另冻外部收据/PR，不为自引用head循环改文档。TASK REVIEW/NOT_VERIFIED、FEAT-028 PARTIAL/T12 TODO；用户最终产品接受、Safari/Native/真实视频未代填，不重复付费生成。
+- Last verified: 2026-10-18
+- Updated: 2026-10-18
+
+## TASK-WEB-RELEASE-20261017 — 独立手机UI接入与正式Web Release自动同步
+
+- Goal: kkai.plus手机尺寸或手机浏览器进入用户已做好的独立聊天UI，宽屏保持桌面；仅正式Release自动更新并保留一个回滚版本。
+- Scope: 保留2.1.37已交付链路并纠正用户拒绝的桌面响应式手机布局：恢复独立mobile/contracts，Web本机创作/可选账号，初始入口分流、/mobile/SPA、组合包和CI；保护原资料与所有dirty工作区。
+- Display status: 已完成
+- Priority: P1 — 独立手机UI已由用户实际手机确认；本次有界Web发布、单份回滚与临时授权清理已有完整收据。
+- Requirement refs: docs/changes/2026-10-17-web-release/spec.md, docs/changes/2026-10-17-web-release-receipt/spec.md, docs/changes/2026-10-18-web-mobile-production-receipt/spec.md
+- Feature IDs: FEAT-028
+- Owner role: implementer
+- Acceptance: 已验收Desktop基线不回退；恢复既有原创独立Mobile UI，手机viewport或UA初次进/mobile/，宽屏与显式桌面入口保持; 真实本机context无伪造身份，项目/草稿/原件刷新恢复且不覆盖Desktop资料；独立手机页面/菜单/矮横屏与深链经实际browser核对; 坏包/链接/路径穿越/错误hash被拒绝，健康失败回滚；仅保留current和一个previous且不清理非受管数据; 只正式Release自动部署；普通提交/预发布不触发，专用受限普通用户密钥，不留临时root key
+- Branch: `docs/TASK-WEB-RELEASE-20261017-production-receipt`
+- Worktree: `D:/kk-studio/.worktrees/TASK-WEB-RELEASE-20261017`
+- Modules: deploy, .github/workflows/web-release.yml, tests/deploy, docs/changes/2026-10-17-web-release, src/styles/responsive.css, tests/browser/responsive-layout.spec.ts, config/platform-versions.json, mobile, packages/creation-contracts, .github/workflows/quality.yml, scripts/platform-versions.mjs, docs/changes/2026-10-17-web-release-receipt, tests/mobile-web, docs/changes/2026-10-18-web-mobile-production-receipt, docs/governance, docs/features, docs/PROGRESS.md
+- Verification: PASS — 正式Web2.1.38 / Mobile源码2.1.3，来源f730f1dc32fb2e568dda6d4a52c58b05802d6b6b，main Hosted五项与guards及正式Release自动部署通过。kkai.plus独立手机生产9/9首试、0重试/波动/跳过，用户实际手机UI确认正常；current179与previous155文件完整哈希及7个入口资源HTTPS逐哈希核对。仅保留38/37两个受管目录，临时root授权已撤、原授权逐字节恢复，本机两私钥已删，业务PID与原dirty工作区保护已核验。文档分支docs/TASK-WEB-RELEASE-20261017-production-receipt；完整范围和证据见docs/changes/2026-10-18-web-mobile-production-receipt/verification.md。
+- Evidence: [docs/changes/2026-10-17-web-release/intent.md](../../docs/changes/2026-10-17-web-release/intent.md), [docs/changes/2026-10-17-web-release/spec.md](../../docs/changes/2026-10-17-web-release/spec.md), [docs/changes/2026-10-17-web-release/plan.md](../../docs/changes/2026-10-17-web-release/plan.md), [docs/changes/2026-10-17-web-release/verification.md](../../docs/changes/2026-10-17-web-release/verification.md), [docs/changes/2026-10-17-web-release/review.md](../../docs/changes/2026-10-17-web-release/review.md), [docs/changes/2026-10-15-kk-unified/verification.md](../../docs/changes/2026-10-15-kk-unified/verification.md), [docs/changes/2026-10-15-unified-provider-access/verification.md](../../docs/changes/2026-10-15-unified-provider-access/verification.md), [docs/changes/2026-10-17-audit-repair/verification.md](../../docs/changes/2026-10-17-audit-repair/verification.md), [docs/changes/2026-10-17-web-release-receipt/intent.md](../../docs/changes/2026-10-17-web-release-receipt/intent.md), [docs/changes/2026-10-17-web-release-receipt/spec.md](../../docs/changes/2026-10-17-web-release-receipt/spec.md), [docs/changes/2026-10-17-web-release-receipt/plan.md](../../docs/changes/2026-10-17-web-release-receipt/plan.md), [docs/changes/2026-10-17-web-release-receipt/verification.md](../../docs/changes/2026-10-17-web-release-receipt/verification.md), [docs/changes/2026-10-17-web-release-receipt/review.md](../../docs/changes/2026-10-17-web-release-receipt/review.md), [docs/changes/2026-10-17-web-release-receipt/release.md](../../docs/changes/2026-10-17-web-release-receipt/release.md), [docs/changes/2026-10-18-web-mobile-production-receipt/intent.md](../../docs/changes/2026-10-18-web-mobile-production-receipt/intent.md), [docs/changes/2026-10-18-web-mobile-production-receipt/spec.md](../../docs/changes/2026-10-18-web-mobile-production-receipt/spec.md), [docs/changes/2026-10-18-web-mobile-production-receipt/plan.md](../../docs/changes/2026-10-18-web-mobile-production-receipt/plan.md), [docs/changes/2026-10-18-web-mobile-production-receipt/verification.md](../../docs/changes/2026-10-18-web-mobile-production-receipt/verification.md), [docs/changes/2026-10-18-web-mobile-production-receipt/review.md](../../docs/changes/2026-10-18-web-mobile-production-receipt/review.md), [docs/changes/2026-10-18-web-mobile-production-receipt/release.md](../../docs/changes/2026-10-18-web-mobile-production-receipt/release.md)
+- Next action: 本次Web交付已完成；最终文档PR另按提交HEAD完成独立审查与Hosted/Delivery。Mobile其余能力由T12按原范围继续。
+- Last verified: 2026-10-18
+- Updated: 2026-10-18
 
 ## TASK-AUDIT-REPAIR-20261017 — 审计安全修复、启动恢复与当前治理收敛
 
@@ -2989,3 +3030,22 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Next action: 关闭基础独审问题，将规则落入设置/模型/聊天/画布/项目/素材等实际页面，按Desktop→Web留同状态证据。
 - Last verified: 2026-10-15
 - Updated: 2026-10-15
+
+## TASK-ISSUE-68 — 修复原生设置保存后的测试同步缺口
+
+- Goal: Issue68的Native lifecycle在异步保存后确认成功和设置弹窗消失，正常进入模型菜单。
+- Scope: 仅Native生命周期与既有延迟设置测试及交付记录；不改产品关闭契约、版本或部署。
+- Display status: 未完成
+- Priority: P1 — main quality Native生命周期失败，阻断主线质量验收。
+- Requirement refs: https://github.com/soudbs180-creator/KK-Studio-2.0/issues/68
+- Feature IDs: none
+- Owner role: implementation-integrator
+- Acceptance: 保留run39060650077原失败并核对artifact12111469102，确认无其他认领或候选重叠。; 真实Native保存回执延迟时保护关闭，释放后确认保存成功、弹窗消失和模型菜单可达。; 最小测试修复、相关完整验证及已提交SHA独立审查通过后建立关联Issue68的draft PR，交现有main协调者。
+- Branch: `fix/TASK-ISSUE-68-settings-save`
+- Worktree: `C:/Users/Administrator/Documents/Codex/2026-10-18/task/issue68`
+- Modules: tests/desktop/taskhost-lifecycle.mjs, tests/browser/settings-navigation.spec.ts
+- Verification: PARTIAL — 最小测试同步修复；真实Native回执gate13/正式生命周期11均PASS且凭据清理完成。完整verify exit0：Node1852/20既有skip、Agent199/2既有skip、Edge827首试0flaky/skip、设计41+8、开发态4步PASS；Rust213/1既有ignored+41通过。原96文件hash一致，原150账本对象未变。实现C1 f7420989独立精确SHA审查PASS/P0P1=0，delivery12files0violations；最终文档head/Hosted/PR另记。
+- Evidence: [docs/changes/2026-10-18-issue-68-settings-save/intent.md](../../docs/changes/2026-10-18-issue-68-settings-save/intent.md), [docs/changes/2026-10-18-issue-68-settings-save/spec.md](../../docs/changes/2026-10-18-issue-68-settings-save/spec.md), [docs/changes/2026-10-18-issue-68-settings-save/plan.md](../../docs/changes/2026-10-18-issue-68-settings-save/plan.md), [docs/changes/2026-10-18-issue-68-settings-save/verification.md](../../docs/changes/2026-10-18-issue-68-settings-save/verification.md), [docs/changes/2026-10-18-issue-68-settings-save/review.md](../../docs/changes/2026-10-18-issue-68-settings-save/review.md)
+- Next action: 纯文档head补审并建立draft PR，回读当前Hosted后交现有main协调者；不merge/发布。
+- Last verified: 2026-10-18
+- Updated: 2026-10-18

@@ -2,13 +2,37 @@
 
 - docId: AI_HANDOFF
 - status: current
-- updatedAt: 2026-10-17
+- updatedAt: 2026-10-18
 - source: `docs/governance/PROJECT_STATE.md`
 - supersededBy: null
 
 本文是最短恢复入口，不是任务状态或产品能力的第二事实源。任务状态只读 [`task-ledger.json`](task-ledger.json)；当前项目事实只读 [`PROJECT_STATE.md`](PROJECT_STATE.md)；历史验证只按带日期的 change package、commit、运行模式和 receipt 回读。
 
-## 当前恢复入口：审计修复本地收口（2026-10-17）
+## 当前恢复入口：12ai 手机生成与保存修复（2026-10-18）
+
+TASK-MOBILE-12AI-001保持REVIEW/NOT_VERIFIED，先读[当前生产收据](../changes/2026-10-18-mobile-12ai-production-receipt/verification.md)、[当前文档Review](../changes/2026-10-18-mobile-12ai-production-receipt/review.md)及[发布实录](../changes/2026-10-18-mobile-12ai/release.md)。产品PR70已squash为main9d10/tree611c，与已审b0ef同树；main Hosted及正式Release416299447/部署39107253299成功，Web2.1.39/Mobile2.1.4上线、公网140201/cf341da4入口与生产9项、current39/唯一previous38终核通过，Desktop源码仍2.1.37。旧产品独审冻结，当前docs分支补新五件包修复55e正式Delivery FAIL1；最终head另作正式Delivery/独审/Hosted。
+
+用户已确认保存Key，root一次真实短文本和单图现场实测有界PASS：新任务1/1保存，文本正文恢复，PNG830495B SHA64a6af6e与Provider字节及两次普通导出一致，刷新同task/asset、Provider0/POST0；旧文本、unknown失败图和旧import3748344c散列保持。独立live证据审核已PASS_WITH_EXPLICIT_SCOPE、无阻断项（27输入；报告JSON SHA59af4671f7618f14b69b3fa5458a3f93051b12d0fdfcfcf8486763771d126ae3）。下一步仅正式文档head的Delivery/独审/Hosted和正常PR，不重复付费生成；具体门禁另冻结外部收据和PR。视频仍仅本地fixture，无真实视频调用，FEAT-028 PARTIAL/T12 TODO，Safari/新Native包等仍未验，不能代填用户最终结果接受。旧Windows installer失败与Web成功分开保留。
+
+canonical初始基线比较FAIL继续保留。07:30/07:31本地main0a49/index7dc72867、4dirty及两读稳定仅为历史观察；08:02只读终核已是main208f97de/index2717ed9d、status clean，四文件bytes/hash也已改变，不能称最终四路径稳定或canonical未变。本任务没有对canonical还原、stage、commit或写文件，不归因操作者，隔离生产9d10不包含这些后续变化。旧release树0cb/index未变仅按较早核对时点记载。详见当前生产verification及工程外protection-final-live-acceptance.json。 禁止再次添加旧临时root权限。下节2.1.38仅为历史时点。
+
+## 当前恢复入口：独立手机 Web 已上线（2026-10-18）
+
+TASK-WEB-RELEASE-20261017本次有界DONE/PASS；先读[最终生产验证](../changes/2026-10-18-web-mobile-production-receipt/verification.md)与[审查范围](../changes/2026-10-18-web-mobile-production-receipt/review.md)。产品正式Web2.1.38 / Mobile源码2.1.3 / Desktop源码2.1.37，发布来源main `f730f1dc32fb2e568dda6d4a52c58b05802d6b6b` / tag `v2.1.38`；当前文档分支 `docs/TASK-WEB-RELEASE-20261017-production-receipt`，不把文档HEAD当生产源码。
+
+kkai.plus已提供独立 `/mobile/` 聊天UI与真实本机context；生产Edge九项首试全过，用户实际手机确认“已显示独立手机 UI，正常”。`/?view=desktop`保留原Desktop资料入口；不因resize重导、不自动迁移或清空旧数据。current38/previous37恰好两目录，179/155文件全量哈希通过，撤钥后7入口HTTPS摘要一致；只跟随正式Release，普通提交/预发布不发布。
+
+临时root key实际已撤并拒绝新连接，原授权逐字节恢复；固定测试目录与本机两私钥已清理，受限自动发布账号/secret保留。不要重新添加临时root授权。原main8c36只读回看69条dirty/staged0，允许并发新增，不声称原63文件永久字节不变。FEAT-028仍PARTIAL，T12开放；Safari专项、Native新包和真实身份/Provider生成闭环继续按原任务验收。最终文档head的独立审查/Hosted/Delivery由本次文档PR另留收据。
+
+以下37发布过程为历史交接，保留当时未发布/进行中的范围，不覆盖上述已完成状态。
+
+## 历史恢复入口：Web 正式 Release 发布（2026-10-17）
+
+TASK-WEB-RELEASE-20261017 为 IN_PROGRESS；先读[发布验证](../changes/2026-10-17-web-release/verification.md)与[发布审查](../changes/2026-10-17-web-release/review.md)。隔离树 `D:/kk-studio/.worktrees/TASK-WEB-RELEASE-20261017` 承载发布器和治理记录；其他树的未提交改动不进入本次交付。产品固定 source469 / docs bbc8，154 个重建文件逐字节相同。正式 Release 的 released 事件才发布，普通提交、草稿、预发布均不同步；只保留 current 和一个 previous。
+
+用户后续明确选择本次一起修复手机菜单并重新验收：新候选Desktop/Web2.1.37、Mobile仍2.1.1，产品差异限手机菜单视口定位与版本元数据；新四尺寸40/40本地步骤及两菜单browser回归通过，旧裁切FAIL原件保留。发布包固定元数据以支持同Release重试，控制器安全规则不放宽。原PR64的Rust断言及后续新增fixture的Windows8.3失败均保留，已做真实RED/GREEN修复。当前PR65托管检查/最终main/正式Release/真实域名手机/临时root key撤销仍待完成，不得把本地通过写成线上完成。原本地审计树有后续聊天迁移dirty、原PID50136已退出，勿照旧交接启动或清理。
+
+## 以下为审计修复本地收口的历史交接（2026-10-17）
 
 先读[实际验证](../changes/2026-10-17-audit-repair/verification.md)和[独立审查](../changes/2026-10-17-audit-repair/review.md)。TASK-AUDIT-REPAIR-20261017仅本地A–D DONE/PASS；source `4699458de1c3437309b7cdc3f019454104c81fce` / tree `a1905e2aa6e11a24b4c62d829dc82a8f0d566972`，任务树`D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017` / branch `fix/TASK-AUDIT-REPAIR-20261017`，Desktop/Web2.1.36、Mobile2.1.1规划。原main8c/63dirty/index与远端d95保持。
 
@@ -163,3 +187,6 @@ TASK-AGENT-RECOVERY-20261013：[验证](../changes/2026-10-13-agent-recovery/ver
 ## HOME Native中间失败记录（历史时点：2026-10-15 f10）
 
 当前HOME main承接分支f10后修复中。实际重开两次FAIL对应HOME-NATIVE-01：恢复诊断占用私有stdout握手预算，已真实stdio RED/GREEN；保留Rust限制和原connected断言，新冻结全量/官方重建/实际重开与独审仍待。工程外证据home-native-diagnostic-f10c59ff及home-stdio-*.log，daily/用户资料未用作夹具。不要把旧fc完整verify或f10构建当新源码通过。
+
+
+Issue68设置保存同步专项：隔离分支 fix/TASK-ISSUE-68-settings-save，基线main6b933f4f，仅补测试等待。回执和后续验证见[专项验证](../changes/2026-10-18-issue-68-settings-save/verification.md)，以draft PR交原main协调者；不merge/发布，不恢复或清理原树。

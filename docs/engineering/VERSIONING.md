@@ -7,7 +7,7 @@
 
 `config/platform-versions.json` 分别保存 `desktop`、`web`、`mobile`。格式固定为 `MAJOR.MINOR.PATCH`，各段是无前导零的十进制非负整数；`2.1.10` 表示第十个补丁，不增加第四段。当前三个平台从 `2.1.1` 起步。`2` 是产品代际，`1` 是较大功能阶段；普通行为修复与小功能默认增加末位。较大功能阶段增加中间位并将末位归零，产品代际改变才增加首位并重置其余两位。
 
-桌面版本同步 `src-tauri/Cargo.toml`、本包在 `src-tauri/Cargo.lock` 的条目、`src-tauri/tauri.conf.json` 及 Tauri 运行态显示。网页版本同步根 `package.json`、`package-lock.json`、根 `VERSION` 兼容元数据与浏览器运行态显示；根 `VERSION` 只代表 Web/仓库兼容版本，不是第三个平台版本源，桌面单独递增时保持 Web 值。Mobile 目前只有规划元数据，没有可安装包，也不以窄屏网页冒充 Mobile 发布。
+桌面版本同步 `src-tauri/Cargo.toml`、本包在 `src-tauri/Cargo.lock` 的条目、`src-tauri/tauri.conf.json` 及 Tauri 运行态显示。网页版本同步根 `package.json`、`package-lock.json`、根 `VERSION` 兼容元数据与浏览器运行态显示；根 `VERSION` 只代表 Web/仓库兼容版本，不是第三个平台版本源，桌面单独递增时保持 Web 值。Mobile 独立工程存在时同步 `mobile/package.json`、相邻lock根版本及 `mobile/app.json`；工程尚不存在的规划fixture仍只校验规划值。独立手机Web构建、原生安装包与实体设备接受分别记录，不能以版本号或网页冒充原生发布。
 
 ## 每项任务自动调配
 

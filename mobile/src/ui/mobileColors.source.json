@@ -1,0 +1,63 @@
+{
+  "reference": {
+    "repository": "https://github.com/CherryHQ/cherry-studio-app",
+    "sha": "24a45b54a4225499488842d09405731bab3cd4be",
+    "tokens": "packages/design-tokens/src/styles/shadcn.css",
+    "screenshot": ".github/images/readme/chat.png",
+    "method": "Independent RN semantic mapping from the pinned mobile reference; no Cherry source components or trademark assets are included. Neutral and green reference colors are converted to sRGB for native use."
+  },
+  "colors": {
+    "light": {
+      "background": "#f5f5f5",
+      "chatBackground": "#f9f9f9",
+      "surface": "#ffffff",
+      "raised": "#ffffff",
+      "pageSurface": "#ffffff",
+      "input": "#ffffff",
+      "selected": "rgba(0, 0, 0, 0.05)",
+      "userBubble": "#ededed",
+      "text": "#171717",
+      "muted": "#4d4d4d",
+      "tertiary": "#7e7e7e",
+      "border": "rgba(0, 0, 0, 0.081)",
+      "controlBorder": "rgba(0, 0, 0, 0.14)",
+      "subtleBorder": "rgba(0, 0, 0, 0.05)",
+      "accent": "#107d32",
+      "accentHover": "#107d32",
+      "accentSoft": "#eefbf0",
+      "onAccent": "#ffffff",
+      "danger": "#ca1736",
+      "dangerBackground": "#fc0035",
+      "success": "#107d32",
+      "warning": "#aa4d00",
+      "focus": "rgba(16, 125, 50, 0.4)",
+      "overlay": "rgba(0, 0, 0, 0.4)"
+    },
+    "dark": {
+      "background": "#000000",
+      "chatBackground": "#000000",
+      "surface": "#1a1a1a",
+      "raised": "#1a1a1a",
+      "pageSurface": "#1a1a1a",
+      "input": "#1a1a1a",
+      "selected": "rgba(255, 255, 255, 0.07)",
+      "userBubble": "#1a1a1a",
+      "text": "#ededed",
+      "muted": "#a0a0a0",
+      "tertiary": "#7e7e7e",
+      "border": "rgba(255, 255, 255, 0.09)",
+      "controlBorder": "rgba(255, 255, 255, 0.14)",
+      "subtleBorder": "rgba(255, 255, 255, 0.07)",
+      "accent": "#00ca50",
+      "accentHover": "#00ca50",
+      "accentSoft": "#092b16",
+      "onAccent": "#000000",
+      "danger": "#ff7382",
+      "dangerBackground": "#f13242",
+      "success": "#00ca50",
+      "warning": "#ff9300",
+      "focus": "rgba(0, 202, 80, 0.4)",
+      "overlay": "rgba(0, 0, 0, 0.4)"
+    }
+  }
+}
