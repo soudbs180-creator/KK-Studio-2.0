@@ -1,8 +1,18 @@
 # 当前进度
 
-## 2026-10-19 统一2.1.42：安装器干净构建来源（IN_PROGRESS / NOT_VERIFIED）
+## 2026-10-19 统一2.1.42：安装器来源与插件恢复显示（IN_PROGRESS / NOT_VERIFIED）
 
-TASK-CANVAS-RELEASE-20261018继续IN_PROGRESS/NOT_VERIFIED，三端42未tag、不再bump，41tag0f92固定且正式构建FAIL/artifact0、具体dirty仍UNKNOWN。6772722c/tree dbf488本地fullverify exit0（Node1950/20、Agent204/2、Browser837首试0flaky、Design41+8、development4）及26文件source有界独审PASS，不能代填Hosted。PR77 Windows候选39145549689实际FAIL/artifact0：npm ci clean、NSIS成功，build后及receipt拒绝报Cargo.toml和desktop/windows-schema.json三M，diffstat空/LF→CRLF警告；raw9423eb50651cda83f852b5e5027626f1a5799fe21c89a8af29a0d9a5d8de4a12。真实临时Git取677三blob、autocrlf=true复现CRLF clean→同blob LF重写3M且diffstat空，显式三path text eol=lf后GREEN；该机制不是Hosted实际内容逐字节diff，不能倒填41。当前已落三path .gitattributes、候选paths及第9个Windows fixture；EOL旧8/1→新9/0，同blob重写clean且Cargo.toml实改仍拒绝/无artifact/未还原，lint/typecheck exit0；新HEAD未知、完整及Hosted验证待验；guard保持，quality由sole watcher观察。原工具栏/单Agent setup/Web/独立Mobile及原资料配置保护目标完整保留，所有cold与失败不动。见[当前验证](changes/2026-10-19-installer-clean-build/verification.md)。下方其他任务按原时点保留。
+TASK-CANVAS-RELEASE-20261018原完整目标保留。当前已审候选e7cdf151b5ca8a3e31744a23e7d4788a049449d4/tree098f72f43a4a3201ad494908b9371b562ee1d5c5：本地完整verify及有界source独审PASS，Windows candidate39147266232 SUCCESS/rawclean、4284文件receipt验证通过；这些仅适用于e7候选，不是最终新head或正式tag产物。e7 Hosted PR保留1flaky、push保留2flaky，原strict clean=false，不能以job绿或本机重复通过抹去。PLUGREG-READY-01/P2已有受控旧RED→本地GREEN，但精确新head审查/门禁仍待，继续阻止merge/release；最终main/tree未定。版本维持2.1.42，42尚未tag；41tag、原失败和全部cold保持。
+
+独立finding PLUGREG-READY-01/P2为merge/release blocker。e7 PR原失败现场有四fallback，原failure trace缺网络终局，当次完整因果UNKNOWN；只读源码及independent-plugin-activation-notification-e7.json确定registry Map注册/卸载无通知、PluginNode/AddNodeMenu未订阅，迟到activation后已有node/menu不自动重绘的可达缺陷。该纯内存次序证据不复现历史浏览器/网络。e7原spec1920 repeat20/retries0/trace on本机20/20 PASS（plugin-recovery-e7cdf151-repeat20-run.log）保留，但不抵销Hosted首试失败、不称已修复。
+
+最终受控旧e7 RED已发生：plugin-registry-render-settled-red.log。第二轮activation script gate在discovery完成后阻塞；确认4fallback、已打开菜单、项目已保存，并过2rAF稳定前提后release。真实模块wrapper保留原Content/setup-cleanup，仅加4个activation marker；无postrelease点击UI，原helper在iframe的5s断言失败，browser adb5246e-90c0-4934-9b57-dfc6145aae6e的trace/context保留。前两版old PASS仅因稳定前提不足，均未作为RED，原日志保留。
+
+最小3处产品改动已落：共享registry subscribe+revision，register/unregister实际变化才notify，PluginNode/AddNodeMenu用useSyncExternalStore订阅并保留pluginStore.enabled筛选；未改storage/schema/CSS，不用setError(null)假通知。plugin-registry-render-green.log exit0、1PASS；相同iframe/content断言和原durable equal成立。API+loader/startup关联单测29/29及typecheck PASS，仅为当前本地差异证据；精确新head独审/完整verify/Hosted仍待，PLUGREG-READY-01尚未据此批准merge/release。
+
+伴随夹具仅复用provider-scheduling的activeJobs=0完成边界及为两个ui-feature-parity pending旧变体加脱敏网络诊断，原断言/连接逻辑和try/finally清理保持。5场景×5repeat，共25次，2workers/retries0/trace on已终局exit0、25/25首试PASS、0retry/flaky（release-recovery-three-signals-repeat5.log）；仅未提交差异预检，不代填新精确head；原CI flush时序及初连Failedfetch根因仍UNKNOWN。PR77已转draft，42未tag、版本维持42。
+
+677 Windows候选39145549689三M/artifact0、临时Git行尾机制及旧8/1→9/0保留；e7候选成功不倒填41未知dirty。旧工具栏/草稿、唯一内置Agent setup、kkai.plus/独立手机Web及原项目/配置保护全部继续验收，正式Release/installed/production42均未发生。见[当前验证](changes/2026-10-19-installer-clean-build/verification.md)。下方其他任务按原时点保留。
 
 ## 2026-10-18 手机结果优先与完整创作输入（IN_PROGRESS / NOT_VERIFIED）
 

@@ -1,11 +1,15 @@
-import { useRef, type ReactNode } from "react";
+import { useRef, useSyncExternalStore, type ReactNode } from "react";
 import CanvasCollectionToolbar from "../canvas/CanvasCollectionToolbar";
 import type {
   CanvasCollectionItem,
   NodeEditingProps,
   PluginItemPayload,
 } from "../../domain/canvasItems";
-import { getPluginNodeDefinition } from "../../features/plugins/nodeRegistry";
+import {
+  getPluginNodeDefinition,
+  getPluginNodesRevision,
+  subscribePluginNodes,
+} from "../../features/plugins/nodeRegistry";
 import { pluginLoader } from "../../features/plugins/pluginLoader";
 import { readPluginTheme } from "../../features/plugins/pluginRuntime";
 import type {
@@ -48,6 +52,7 @@ export default function PluginNode({
   onDelete: () => void;
 }) {
   const anchor = useRef<HTMLDivElement>(null);
+  useSyncExternalStore(subscribePluginNodes, getPluginNodesRevision);
   const toolbarProps = {
     item,
     anchor,

@@ -3,14 +3,15 @@
     "id": "TASK-CANVAS-RELEASE-20261018",
     "title": "统一工具栏修复、数据兼容和三端正式发布",
     "goal": "正常合并工具栏修复及安装器来源修复，发布统一2.1.42单一内置Windows Agent安装包及Web/独立手机Web，保留原项目配置",
-    "scope": "Canvas工具栏、成熟chat迁移和归档收据兼容、平台版本/下载展示与正式发布证据、发布前可编辑聊天草稿绘制同步、Windows干净构建来源诊断、receipt父目录及native失败立即停止、PR候选完整NSIS与receipt门、Tauri重写三路径的显式LF checkout合同",
+    "scope": "Canvas工具栏、成熟chat迁移和归档收据兼容、平台版本/下载展示与正式发布证据、发布前可编辑聊天草稿绘制同步、Windows干净构建来源诊断、receipt父目录及native失败立即停止、PR候选完整NSIS与receipt门、Tauri重写三路径的显式LF checkout合同、插件迟到注册后的恢复节点与菜单同步重绘、provider测试完成边界及fixture连接诊断",
     "acceptance": [
       "图片居中且画布允许遮挡，无横向滚动或自动让位",
       "保留现有项目原件消息归档收据设置和凭据引用",
       "Desktop/Web/Mobile Web2.1.42同main SHA并显示端别，Windows含Agent单setup；41tag与失败原件保留",
       "当前head独审、Hosted/Delivery、正常PR合并与正式产物/生产回读",
       "切换聊天时可编辑输入框与当前聊天草稿同帧一致，原迟到回执及持久化保护保留",
-      "干净checkout完整NSIS及receipt通过、dirty具体路径可诊断且仍拒绝；native失败立即停止，PR候选完整安装器门先于新tag验证"
+      "干净checkout完整NSIS及receipt通过、dirty具体路径可诊断且仍拒绝；native失败立即停止，PR候选完整安装器门先于新tag验证",
+      "恢复项目后插件迟到激活自动更新节点和已打开菜单，原内容不变；注销同步撤回，保留启用筛选"
     ],
     "dependencies": [],
     "owner": "root-release",
@@ -35,7 +36,10 @@
       "scripts/windows/installer-receipt.mjs",
       ".gitattributes",
       ".github/workflows/windows-release.yml",
-      "docs/changes/2026-10-19-installer-clean-build"
+      "docs/changes/2026-10-19-installer-clean-build",
+      "src/features/plugins/nodeRegistry.ts",
+      "src/components/nodes/PluginNode.tsx",
+      "src/components/canvas/AddNodeMenu.tsx"
     ],
     "status": "IN_PROGRESS",
     "displayStatus": "进行中",
@@ -47,11 +51,11 @@
       "docs/changes/2026-10-18-chat-draft-paint-sync/verification.md",
       "docs/changes/2026-10-19-installer-clean-build/verification.md"
     ],
-    "verification": "41正式Windows39142083878 FAIL/artifact0，具体dirty路径仍UNKNOWN，tag0f92不动。42候选6772722c本地完整verify PASS：Node1950/20、Agent204/2、browser837首试、Design41+8、Development4；精确head独审PASS。Windows候选39145549689 FAIL/artifact0：npmci后clean，完整NSIS/Agent4282/Codex guard通过；build后Cargo.toml及desktop/windows-schema恰3M，receipt仍拒绝，diffstat空且LF→CRLF警告，rawSHA9423eb50651cda83f852b5e5027626f1a5799fe21c89a8af29a0d9a5d8de4a12。真实三Git blob的autocrlf临时Git复现相同3M，显式三路径text eol=lf后clean；此为可控复现，不是Hosted原字节diff。新增Windows回归旧RED8/1→新GREEN9/0，原modified/untracked拒绝和未写artifact/未还原断言保留。42未tag，修法仍保留parent-only mkdir/native fail-fast/精确PR候选来源与tag fresh重建；新HEAD/fullverify/独审/Hosted候选及正式交付待验，无Release/installed/prod41或42，原cold及失败保持",
+    "verification": "41tag固定0f92，正式失败39142083878/artifact0及具体dirty UNKNOWN保留。e7cdf151行尾修法本地fullverify/独审PASS，Windows候选39147266232真实clean/receipt4284/artifact12143708401通过；Hosted quality均SUCCESS但PR1flaky/push2flaky，strict首次clean=false原件保持。独审PLUGREG-READY-01/P2阻断恢复重绘；真实受控迟到激活RED在原iframe断言失败，marker4后无UI动作，trace/browser adb5246e保留。未提交最小registry subscribe/revision及两caller修法同断言GREEN，29关联unit与25定向首次重复/typecheck通过；不改storage/schema/CSS。provider fixture改等原activeJobs0完成边界再原断言，Agent只加自身请求诊断，历史初连Failedfetch UNKNOWN不称已修。新head/fullverify/独审/Hosted及实际formal包/installed/生产均待验；三端42尚未tag，所有cold及失败保留",
     "verificationResult": "NOT_VERIFIED",
     "updated": "2026-10-19",
     "lastVerified": "2026-10-19",
-    "nextAction": "冻结三路径LF合同与回归的新head，执行完整verify、独审及Hosted候选完整NSIS/receipt，必须真实clean且receipt通过后正常PR/main门禁；42尚未tag不再递增，41tag不动。再新42tag fresh重建、官方digest/单setup/日常默认资料保护和Agent/工具栏/生产Web-Mobile回读",
+    "nextAction": "冻结插件恢复修法及窄fixture新head，完成当前完整verify/独审/Hosted/完整Windows候选后正常PR/main；PLUGREG阻断须新head证据关闭。42未tag保持42、41tag不动；再实际main质量门→新42tag fresh正式包→默认资料安装/Agent/工具栏→公开单setup匿名核对及Web-Mobile生产回读",
     "requirementRefs": [
       "docs/changes/2026-10-18-unified-toolbar-release/intent.md",
       "docs/changes/2026-10-18-chat-draft-paint-sync/intent.md",

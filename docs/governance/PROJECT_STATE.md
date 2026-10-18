@@ -9,7 +9,7 @@
 <!-- DOCUMENT_METADATA_END -->
 <!-- CURRENT_FACTS_BEGIN -->
 
-TASK-CANVAS-RELEASE-20261018保持IN_PROGRESS/NOT_VERIFIED；当前分支fix/TASK-CANVAS-RELEASE-20261019-installer-provenance、同锁定树，base仍main0f92。42候选6772722c本地完整verify及精确head独审PASS；Windows候选39145549689在完整NSIS成功后因Cargo.toml和desktop/windows-schema三路径dirty拒绝receipt，artifact0，原raw保留。隔离真实Git blob/autocrlf复现同内容LF重写后3M，显式三路径text eol=lf后clean，回归RED8/1→GREEN9/0；不拿模拟代替Hosted字节diff。当前新工作差异仅补源输入换行合同与回归，保留所有dirty拒绝、exclusive子目录和native fail-fast；新head/fullverify/独审及候选完整NSIS/receipt仍待验。三端42未tag，41tag固定0f92且正式失败不改写，41具体dirty仍UNKNOWN。旧main CodeBuddy signal维持UNKNOWN/NON_BLOCKING_DIAGNOSTIC_LIMITATION及strictCleanTagReady=false。无正式Release/installed/prod41或42；Web40现网、原项目配置和所有cold保持，完整工具栏/单Agent包/三端/数据保护目标不缩小。详见[当前验证](../changes/2026-10-19-installer-clean-build/verification.md)。
+TASK-CANVAS-RELEASE-20261018保持IN_PROGRESS/NOT_VERIFIED；分支fix/TASK-CANVAS-RELEASE-20261019-installer-provenance、同锁定树、base仍main0f92。e7cdf151本地fullverify与源码独审PASS，Windows候选39147266232真实clean/receipt4284通过；Hosted quality均SUCCESS但PR1flaky/push2flaky，strict首次clean=false原件保持。PLUGREG-READY-01/P2已阻断发布：注册表无通知，恢复节点/菜单可停在未加载。真实受控迟到激活RED→最小registry subscribe/revision及两caller修法GREEN，29关联unit、25定向重复和typecheck通过，均属未提交预检；新head/fullverify/独审/Hosted待验。provider fixture仅等activeJobs0完成边界再原断言，Agent仅加自身fixture诊断，历史初连Failedfetch根因仍UNKNOWN。三端42未tag，41tag0f92及正式失败/具体dirty UNKNOWN保留。无正式42包/installed/生产验收；Web40现网、原项目配置和所有cold保持，完整工具栏/单Agent包/三端/数据保护目标不缩小。详见[当前验证](../changes/2026-10-19-installer-clean-build/verification.md)。
 
 并发主线PR73已合入87c9cfbe0f19555f9998d6b7051760f22f26f67f，源码三端2.1.41；下述40上线收据限定12:49至13:10Z的产品观察，发布来源版本与当前仓库候选分开。docs分支正常merge保留其完整150文件和新增Canvas任务，不替它发布或代填验收。
 

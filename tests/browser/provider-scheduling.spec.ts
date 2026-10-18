@@ -137,6 +137,9 @@ test("429重试等待deadline且403隔离后不再提交", async ({ page }) => {
   await submit(page);
   await approve(page);
   await expect(page.locator(".project-task-failed")).toBeVisible();
+  await expect
+    .poll(async () => (await connections(page))[0].activeJobs)
+    .toBe(0);
   const cooldown = (await connections(page))[0];
   expect(cooldown.state).toBe("cooldown");
   expect(cooldown.cooldownUntil!).toBeGreaterThan(Date.now() + 3500000);
@@ -253,6 +256,9 @@ test("5xx退化连接仅显式重试恢复并保留原绑定", async ({ page }) 
   await submit(page);
   await approve(page);
   await expect(page.locator(".project-task-failed")).toBeVisible();
+  await expect
+    .poll(async () => (await connections(page))[0].activeJobs)
+    .toBe(0);
   const bound = (await connections(page))[0];
   expect(bound.state).toBe("degraded");
   await page.getByLabel("对话内容").fill("失败后保留");
