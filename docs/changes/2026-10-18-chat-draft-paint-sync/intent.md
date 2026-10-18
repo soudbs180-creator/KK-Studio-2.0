@@ -1,9 +1,11 @@
 # Intent：统一发布前的聊天草稿绘制同步
 
 - Task ID：TASK-CANVAS-RELEASE-20261018；日期：2026-10-18，Asia/Shanghai；Owner：root-release。
-- 状态：IN_PROGRESS / 整体 NOT_VERIFIED；交付包角色：current。
+- 状态：IN_PROGRESS / 整体 NOT_VERIFIED；交付包角色：historical。
 - branch：`fix/TASK-CANVAS-RELEASE-20261018-draft-race`；base：`87c9cfbe0f19555f9998d6b7051760f22f26f67f`；最终 head：待提交及精确门禁。
 - [Spec](spec.md) / [Plan](plan.md) / [Verification](verification.md) / [Review](review.md) / [原实现与历史证据](../2026-10-18-unified-toolbar-release/intent.md)。
+
+当前审查与恢复入口已转至[安装器干净构建交付包](../2026-10-19-installer-clean-build/intent.md)。下文保留本包原SHA/时点及草稿同步证据，不作为本轮42的当前门禁。
 
 ## 用户目标与本次子步骤
 

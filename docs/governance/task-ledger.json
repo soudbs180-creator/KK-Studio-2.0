@@ -2,19 +2,20 @@
   {
     "id": "TASK-CANVAS-RELEASE-20261018",
     "title": "统一工具栏修复、数据兼容和三端正式发布",
-    "goal": "合并本次工具栏修复并发布统一2.1.41单一Windows安装包及组合Web，保留项目配置",
-    "scope": "Canvas工具栏、成熟chat迁移和归档收据兼容、平台版本/下载展示与正式发布证据、发布前可编辑聊天草稿绘制同步",
+    "goal": "正常合并工具栏修复及安装器来源修复，发布统一2.1.42单一内置Windows Agent安装包及Web/独立手机Web，保留原项目配置",
+    "scope": "Canvas工具栏、成熟chat迁移和归档收据兼容、平台版本/下载展示与正式发布证据、发布前可编辑聊天草稿绘制同步、Windows干净构建来源诊断、receipt父目录及native失败立即停止、PR候选完整NSIS与receipt门",
     "acceptance": [
       "图片居中且画布允许遮挡，无横向滚动或自动让位",
       "保留现有项目原件消息归档收据设置和凭据引用",
-      "Desktop/Web/Mobile2.1.41同main SHA，Windows含Agent单包",
+      "Desktop/Web/Mobile Web2.1.42同main SHA并显示端别，Windows含Agent单setup；41tag与失败原件保留",
       "当前head独审、Hosted/Delivery、正常PR合并与正式产物/生产回读",
-      "切换聊天时可编辑输入框与当前聊天草稿同帧一致，原迟到回执及持久化保护保留"
+      "切换聊天时可编辑输入框与当前聊天草稿同帧一致，原迟到回执及持久化保护保留",
+      "干净checkout完整NSIS及receipt通过、dirty具体路径可诊断且仍拒绝；native失败立即停止，PR候选完整安装器门先于新tag验证"
     ],
     "dependencies": [],
     "owner": "root-release",
     "ownerRole": "implementer",
-    "branch": "fix/TASK-CANVAS-RELEASE-20261018-draft-race",
+    "branch": "fix/TASK-CANVAS-RELEASE-20261019-installer-provenance",
     "worktree": "D:/kk-studio/.worktrees/TASK-UNIFIED-RELEASE-20261018",
     "affectedModules": [
       "src/components/canvas",
@@ -30,7 +31,10 @@
       "docs/features",
       "docs/PROGRESS.md",
       "src/components/ConversationPanel.tsx",
-      "docs/changes/2026-10-18-chat-draft-paint-sync"
+      "docs/changes/2026-10-18-chat-draft-paint-sync",
+      "scripts/windows/installer-receipt.mjs",
+      ".github/workflows/windows-release.yml",
+      "docs/changes/2026-10-19-installer-clean-build"
     ],
     "status": "IN_PROGRESS",
     "displayStatus": "进行中",
@@ -39,16 +43,18 @@
     "evidence": [
       "docs/changes/2026-10-18-unified-toolbar-release/intent.md",
       "docs/changes/2026-10-18-unified-toolbar-release/verification.md",
-      "docs/changes/2026-10-18-chat-draft-paint-sync/verification.md"
+      "docs/changes/2026-10-18-chat-draft-paint-sync/verification.md",
+      "docs/changes/2026-10-19-installer-clean-build/verification.md"
     ],
-    "verification": "232907ce完整本地verify837首试/零flaky及精确head独审PASS；正常整合b63de227仅文档，产品blob不变；新融合head相关检查/独审/Hosted待验",
+    "verification": "41正式Windows39142083878 FAIL/artifact0，Agent4282及非可选Codex guard/NSIS成功；writer196因gitstatus非空先失败，具体dirty路径UNKNOWN，rawSHA9ae0f791b31f3c927f61556640ef39a039f6728aae2ffb20460571702c96c7f8。六个本地阶段exit0/gitclean，未复现Hosted dirty；本机原writer缺releases父目录mkdir ENOENT已复现，与CI更早首因分列。统一顺延42已确定，41tag不动、无Release/installed/prod41；新head修复/候选安装器CI及正式交付均NOT_VERIFIED，原cold及失败全部保留；未提交writer/workflow已落status诊断保留拒绝、parent-only mkdir/npm fail-fast和显式PRhead/source-event候选完整NSIS/receipt，tag fresh重建；Win临时Git回归旧RED7/1→新GREEN8/0，断言未写artifact/未还原源码；三端42及两个版本checkPASS，migration2.1.36/CHANGELOG37告警保留。lint/typecheck运行中，新head/候选CI/实际云端dirty仍待验",
     "verificationResult": "NOT_VERIFIED",
-    "updated": "2026-10-18",
-    "lastVerified": "2026-10-18",
-    "nextAction": "完成草稿同步修复当前head完整验证、独审、Hosted/Delivery与正常PR，再等最终main后tag/正式包/生产回读",
+    "updated": "2026-10-19",
+    "lastVerified": "2026-10-19",
+    "nextAction": "当前工作差异定向8/0、版本42已统一；等待lint/typecheck终局，再冻结新head做完整verify/独审及Hosted候选完整NSIS+receipt，以实际CI具体dirty证据再最小修源。正常PR/main门禁后新42tag fresh重建，再验唯一setup/默认资料保护/工具栏与Web-Mobile生产回读；41tag不动",
     "requirementRefs": [
       "docs/changes/2026-10-18-unified-toolbar-release/intent.md",
-      "docs/changes/2026-10-18-chat-draft-paint-sync/intent.md"
+      "docs/changes/2026-10-18-chat-draft-paint-sync/intent.md",
+      "docs/changes/2026-10-19-installer-clean-build/intent.md"
     ],
     "featureIds": [
       "FEAT-009",
@@ -56,8 +62,10 @@
     ],
     "specRefs": [
       "docs/changes/2026-10-18-unified-toolbar-release/spec.md",
-      "docs/changes/2026-10-18-chat-draft-paint-sync/spec.md"
-    ]
+      "docs/changes/2026-10-18-chat-draft-paint-sync/spec.md",
+      "docs/changes/2026-10-19-installer-clean-build/spec.md"
+    ],
+    "currentPackage": "docs/changes/2026-10-19-installer-clean-build"
   },
   {
     "id": "TASK-MOBILE-COMPOSER-001",

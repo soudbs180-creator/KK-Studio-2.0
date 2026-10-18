@@ -4,6 +4,23 @@ on:
   push:
     tags:
       - "v*.*.*"
+  pull_request:
+    paths:
+      - ".github/workflows/windows-release.yml"
+      - "config/**"
+      - "package.json"
+      - "package-lock.json"
+      - "src/**"
+      - "public/**"
+      - "src-tauri/**"
+      - "scripts/windows/**"
+      - "scripts/agent/**"
+      - "scripts/gemini-bridge.mjs"
+      - "vendor/canvas-agent/**"
+      - "vendor/canvas-plugins/**"
+      - "vite.config.ts"
+      - "tsconfig*.json"
+      - "index.html"
 
 permissions:
   contents: read
@@ -12,33 +29,50 @@ jobs:
   installer:
     runs-on: windows-latest
     timeout-minutes: 60
+    env:
+      KK_INSTALLER_SOURCE: ${{ github.event.pull_request.head.sha || github.sha }}
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
-          ref: ${{ github.ref }}
+          ref: ${{ github.event.pull_request.head.sha || github.ref }}
           fetch-depth: 0
           persist-credentials: false
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020  # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 24
           cache: npm
-      - uses: dtolnay/rust-toolchain@e2a55d2ffb04f378e9626c28d38b36d230d1e12f  # stable
+      - uses: dtolnay/rust-toolchain@e2a55d2ffb04f378e9626c28d38b36d230d1e12f # stable
         with:
           toolchain: stable
-      - name: Verify tag and repository versions
+      - name: Verify source and repository versions
         shell: pwsh
         run: |
+          $source = git rev-parse HEAD
+          if ($LASTEXITCODE -ne 0 -or $source -cne $env:KK_INSTALLER_SOURCE) {
+            throw "Checkout does not match the event source"
+          }
+          git log -1 '--format=source=%H tree=%T parents=%P'
           $versions = Get-Content config/platform-versions.json -Raw | ConvertFrom-Json
           $expected = "v$($versions.desktop)"
-          if ($env:GITHUB_REF_NAME -ne $expected) {
+          if ($env:GITHUB_EVENT_NAME -eq 'push' -and $env:GITHUB_REF_NAME -ne $expected) {
             throw "Release tag $env:GITHUB_REF_NAME does not match desktop version $expected"
           }
           npm run version:check
+          if ($LASTEXITCODE -ne 0) { throw "Platform version check failed" }
           npm run version:consistency
+          if ($LASTEXITCODE -ne 0) { throw "Version consistency check failed" }
       - name: Install locked dependencies
-        run: npm ci
-      - name: Build the tagged Windows installer
-        run: npm run client:installer
+        shell: pwsh
+        run: |
+          npm ci
+          if ($LASTEXITCODE -ne 0) { throw "Locked dependency installation failed" }
+          git status --porcelain --untracked-files=normal
+      - name: Build the Windows installer
+        shell: pwsh
+        run: |
+          npm run client:installer
+          if ($LASTEXITCODE -ne 0) { throw "Windows installer build failed" }
+          git status --porcelain --untracked-files=normal
       - name: Write and verify immutable installer receipt
         shell: pwsh
         run: |
@@ -46,14 +80,23 @@ jobs:
             Sort-Object LastWriteTimeUtc -Descending |
             Select-Object -First 1
           if (-not $installer) { throw "Tauri did not produce an NSIS installer" }
-          $output = Join-Path "releases" "installer-$env:GITHUB_SHA"
+          New-Item -ItemType Directory -Path "releases" -Force | Out-Null
+          $output = Join-Path "releases" "installer-$env:KK_INSTALLER_SOURCE"
           npm run client:installer:receipt -- $installer.FullName $output
+          if ($LASTEXITCODE -ne 0) { throw "Installer receipt creation failed" }
           npm run client:installer:verify -- (Join-Path $output "installer-receipt.json")
+          if ($LASTEXITCODE -ne 0) { throw "Installer receipt verification failed" }
           Get-FileHash (Join-Path $output $installer.Name) -Algorithm SHA256 |
             ConvertTo-Json | Out-File (Join-Path $output "installer-sha256.json") -Encoding utf8
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4
+      - name: Inspect source changes
+        if: always()
+        shell: pwsh
+        run: |
+          git status --porcelain --untracked-files=normal
+          git diff --stat
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: kk-studio-windows-${{ github.ref_name }}-${{ github.sha }}
-          path: releases/installer-${{ github.sha }}
+          name: kk-studio-windows-${{ github.event_name == 'pull_request' && 'candidate' || github.ref_name }}-${{ env.KK_INSTALLER_SOURCE }}
+          path: releases/installer-${{ env.KK_INSTALLER_SOURCE }}
           if-no-files-found: error
           retention-days: 90

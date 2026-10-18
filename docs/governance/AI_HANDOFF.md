@@ -2,15 +2,15 @@
 
 - docId: AI_HANDOFF
 - status: current
-- updatedAt: 2026-10-18
+- updatedAt: 2026-10-19
 - source: `docs/governance/PROJECT_STATE.md`
 - supersededBy: null
 
 本文是最短恢复入口，不是任务状态或产品能力的第二事实源。任务状态只读 [`task-ledger.json`](task-ledger.json)；当前项目事实只读 [`PROJECT_STATE.md`](PROJECT_STATE.md)；历史验证只按带日期的 change package、commit、运行模式和 receipt 回读。
 
-## 当前恢复入口：统一41发布前草稿同步（2026-10-18）
+## 当前恢复入口：统一42安装器来源修复（2026-10-19）
 
-TASK-CANVAS-RELEASE-20261018仍IN_PROGRESS/NOT_VERIFIED；先读[当前计划](../changes/2026-10-18-unified-toolbar-release/plan.md)和[验证](../changes/2026-10-18-unified-toolbar-release/verification.md)。PR73已正常合入main87c9cfbe，main质量五job绿但完整日志有1草稿flaky，未打tag。4倍CPU逐帧复核确认可编辑草稿短暂显示另一聊天值，当前同锁定树fix/TASK-CANVAS-RELEASE-20261018-draft-race仅将恢复改布局阶段并补逐帧断言；旧RED/新10次GREEN保留，完整新head验证/独审/Hosted尚待。Web40已上线，三端41标签/正式安装包/部署未做，不能提前把87c称最终source。最新真实冷备3952文件、9项目/11聊天/22消息/2归档回执与7原件已校验；不碰keyring或发付费turn。以下旧入口按各自时点保留，不覆盖本段当前发布状态。
+先读[当前计划](../changes/2026-10-19-installer-clean-build/plan.md)、[验证](../changes/2026-10-19-installer-clean-build/verification.md)和账本currentPackage。TASK-CANVAS-RELEASE-20261018保持IN_PROGRESS/NOT_VERIFIED；当前分支fix/TASK-CANVAS-RELEASE-20261019-installer-provenance、同锁定树，base为main0f92/treebed0。PR76正常合并后main五quality job+guards成功但有1flaky，CodeBuddy根因UNKNOWN且独立有界NON_BLOCKING_DIAGNOSTIC_LIMITATION；原strictCleanTagReady=false不改。正常轻量v2.1.41固定0f92不可移动；正式Windows39142083878已FAIL、artifact0，Agent4282/Codex guard和NSIS成功但receipt先因gitstatus非空失败，具体dirty路径仍UNKNOWN。六阶段本地构建取证均exit0/gitclean，本机另复现缺releases父目录mkdir ENOENT，与正式首因分列。三端已由既有helper统一2.1.42，两版本检查PASS，历史migration2.1.36与CHANGELOG37落后42告警保留。root已落dirty具体status且保留拒绝、parent-only mkdir/native fail-fast、显式PRhead/source-event一致的完整候选NSIS/receipt及candidate命名，tag push仍fresh重建；Win临时Git回归旧RED7/1→新GREEN8/0并断言未写artifact/未还原源码。lint/typecheck运行中，新head/fullverify/Hosted候选及41实际dirty路径仍待验，不称云端dirty已修复。无正式Release、installed或生产41/42验收；Web40现网、原项目配置、所有cold及失败保持，完整工具栏/单Agent包/三端/数据保护目标不缩小。不改凭据或发付费turn；以下旧入口按原时点保留。
 
 ## 当前恢复入口：手机结果优先与完整创作输入（2026-10-18）
 

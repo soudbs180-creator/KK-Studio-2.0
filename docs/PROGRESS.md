@@ -1,8 +1,8 @@
 # 当前进度
 
-## 2026-10-18 统一2.1.41：发布前草稿绘制同步（IN_PROGRESS）
+## 2026-10-19 统一2.1.42：安装器干净构建来源（IN_PROGRESS / NOT_VERIFIED）
 
-TASK-CANVAS-RELEASE-20261018 的PR73已正常合入main87c9cfbe，统一版本41；尚未tag/发包/部署，Web40上线的另一任务收据已合入，41尚未发布。main五job成功但有1项草稿切换flaky，逐帧复核另确认可编辑输入短暂显示另一聊天草稿，因此先修该资料保护问题再发布。仅将ConversationPanel恢复草稿改在布局阶段完成，保留原持久化断言并新增逐帧RED/GREEN；定向10/10通过，新head完整验证和独审/Hosted待验。当前分支fix/TASK-CANVAS-RELEASE-20261018-draft-race，详情见[验证](changes/2026-10-18-unified-toolbar-release/verification.md)。下方其他任务按各自历史时点保留，不覆盖本段当前发布状态。
+TASK-CANVAS-RELEASE-20261018保持IN_PROGRESS/NOT_VERIFIED；当前分支fix/TASK-CANVAS-RELEASE-20261019-installer-provenance、同锁定树，base为main0f92/treebed0。PR76正常合并后main五quality job+guards成功但有1flaky，CodeBuddy根因UNKNOWN且独立有界NON_BLOCKING_DIAGNOSTIC_LIMITATION；原strictCleanTagReady=false不改。正常轻量v2.1.41固定0f92不可移动；正式Windows39142083878已FAIL、artifact0，Agent4282/Codex guard和NSIS成功但receipt先因gitstatus非空失败，具体dirty路径仍UNKNOWN。六阶段本地构建取证均exit0/gitclean，本机另复现缺releases父目录mkdir ENOENT，与正式首因分列。三端已由既有helper统一2.1.42，两版本检查PASS，历史migration2.1.36与CHANGELOG37落后42告警保留。root已落dirty具体status且保留拒绝、parent-only mkdir/native fail-fast、显式PRhead/source-event一致的完整候选NSIS/receipt及candidate命名，tag push仍fresh重建；Win临时Git回归旧RED7/1→新GREEN8/0并断言未写artifact/未还原源码。lint/typecheck运行中，新head/fullverify/Hosted候选及41实际dirty路径仍待验，不称云端dirty已修复。无正式Release、installed或生产41/42验收；Web40现网、原项目配置、所有cold及失败保持，完整工具栏/单Agent包/三端/数据保护目标不缩小。详见[当前验证](changes/2026-10-19-installer-clean-build/verification.md)。下方按各任务原时点保留。
 
 ## 2026-10-18 手机结果优先与完整创作输入（IN_PROGRESS / NOT_VERIFIED）
 
@@ -1244,6 +1244,8 @@ TASK-UI-DETAILS-20261015从最新18e143f修复，Desktop/Web2.1.26产品ab878ffd
 
 2026-10-15 11:54:34 UTC独立只读回读actual main492abad48b0695f6117265fba6d29e8ea2a4b9bc；本轮quality38726260549全部success（repo verify/Rust fmt+test/client check+build/WebView2/隔离Native TaskHost/证据上传），双平台guards38726260498与main-health38730589177成功，7个check-runs全success，必需verify/delivery满足。产物11969904183/39602109B未过期，未下载检验内文。非必需auto-merge38726259041 failure/jobs=[]原因UNKNOWN单列。 GDI三项验收独审满足，测试任务DONE；输出证据保护另缺取消/reporter失败两类实测，继续PARTIAL，不把结构性保护冒称运行证据。HOME源码a85及Windows38项通过，正式HOME PR继续。
 
-## 2026-10-18 TASK-CANVAS-RELEASE-20261018：统一发布进行中
+## 2026-10-18 TASK-CANVAS-RELEASE-20261018：统一发布历史阶段
+
+本段保留原时点；当前入口见[2026-10-19交付包](changes/2026-10-19-installer-clean-build/intent.md)。
 
 [当前交付包](changes/2026-10-18-unified-toolbar-release/intent.md)。最初base97ef经主线PR72整合，PR73已合入main87c；main草稿flaky及已证跨聊天绘制帧需先修，目标仍三端2.1.41。当前没有tag/正式包/生产更新，历史39不作新版本证据。外部清理已由用户确认暂停，冷备与原失败保留；最终source和正式收据待实际门禁确定。

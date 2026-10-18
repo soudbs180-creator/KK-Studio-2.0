@@ -2,14 +2,14 @@
 
 - docId: PROJECT_STATE
 - status: current
-- updatedAt: 2026-10-18
+- updatedAt: 2026-10-19
 - source: `docs/governance/task-ledger.json`
 - supersededBy: null
 
 <!-- DOCUMENT_METADATA_END -->
 <!-- CURRENT_FACTS_BEGIN -->
 
-当前发布任务TASK-CANVAS-RELEASE-20261018为IN_PROGRESS/NOT_VERIFIED。PR73已正常合入main87c9cfbe；该main质量五job成功但浏览器有1 flaky，逐帧独立复核另证可编辑输入短暂跨聊天错配。当前在同锁定树的fix/TASK-CANVAS-RELEASE-20261018-draft-race修复布局阶段草稿同步，定向RED/GREEN及10/10通过；完整当前head与独审/Hosted待验。三端目标41，tag/正式包/部署均未发生，Web40上线的另一任务收据已合入，41尚未发布。以下旧任务事实按当时时点保留，不覆盖本段；详见[当前验证](../changes/2026-10-18-unified-toolbar-release/verification.md)。
+TASK-CANVAS-RELEASE-20261018保持IN_PROGRESS/NOT_VERIFIED；当前分支fix/TASK-CANVAS-RELEASE-20261019-installer-provenance、同锁定树，base为main0f92/treebed0。PR76正常合并后main五quality job+guards成功但有1flaky，CodeBuddy根因UNKNOWN且独立有界NON_BLOCKING_DIAGNOSTIC_LIMITATION；原strictCleanTagReady=false不改。正常轻量v2.1.41固定0f92不可移动；正式Windows39142083878已FAIL、artifact0，Agent4282/Codex guard和NSIS成功但receipt先因gitstatus非空失败，具体dirty路径仍UNKNOWN。六阶段本地构建取证均exit0/gitclean，本机另复现缺releases父目录mkdir ENOENT，与正式首因分列。三端已由既有helper统一2.1.42，两版本检查PASS，历史migration2.1.36与CHANGELOG37落后42告警保留。root已落dirty具体status且保留拒绝、parent-only mkdir/native fail-fast、显式PRhead/source-event一致的完整候选NSIS/receipt及candidate命名，tag push仍fresh重建；Win临时Git回归旧RED7/1→新GREEN8/0并断言未写artifact/未还原源码。lint/typecheck运行中，新head/fullverify/Hosted候选及41实际dirty路径仍待验，不称云端dirty已修复。无正式Release、installed或生产41/42验收；Web40现网、原项目配置、所有cold及失败保持，完整工具栏/单Agent包/三端/数据保护目标不缩小。详见[当前验证](../changes/2026-10-19-installer-clean-build/verification.md)。
 
 并发主线PR73已合入87c9cfbe0f19555f9998d6b7051760f22f26f67f，源码三端2.1.41；下述40上线收据限定12:49至13:10Z的产品观察，发布来源版本与当前仓库候选分开。docs分支正常merge保留其完整150文件和新增Canvas任务，不替它发布或代填验收。
 
@@ -699,6 +699,8 @@ TASK-UI-DISMISS-002 修复账号菜单跨窄屏断点、键盘展开后外部点
 
 TASK-UI-CLASSIFY-20261013 已获用户实施确认：canonical 分类修复在隔离任务 worktree 验证后逐文件集成，保留窗口控件和麦克风预存改动。按用户补充移除模型弹层批量/数据项，40 项定向回归和独立补审通过；最终 Web development / preview / Desktop 分别 7/7/14 项通过，Desktop/Web 2.1.14。全量浏览器 492/495，三个既有 UI 失败使任务保持 REVIEW/PARTIAL；实际运行证据以[本轮 verification](../changes/2026-10-13-capability-ui/verification.md)为准，未声称已推送或正式发布。
 
-## 2026-10-18 TASK-CANVAS-RELEASE-20261018：统一发布进行中
+## 2026-10-18 TASK-CANVAS-RELEASE-20261018：统一发布历史阶段
+
+本段保留原时点；当前入口见[2026-10-19交付包](../changes/2026-10-19-installer-clean-build/intent.md)。
 
 [当前交付包](../changes/2026-10-18-unified-toolbar-release/intent.md)。PR73已正常合入main87c，打tag前发现main草稿flaky及已证跨聊天绘制帧，当前先做最小同步修复。三端仍目标41，尚无tag/正式包/生产更新；旧39和旧Native证据保持历史边界。用户已确认暂停外部清理，原资料/冷备保留；最终source按后续main门禁确定。
