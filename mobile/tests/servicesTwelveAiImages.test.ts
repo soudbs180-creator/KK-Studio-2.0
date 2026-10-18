@@ -152,3 +152,32 @@ test("failed original retrieval keeps acceptance unknown and explains archive fa
   assert.equal(posts, 1);
   assert.equal(originals, 1);
 });
+
+for (const status of [401, 403, 404]) {
+  test(`original HTTP ${status} is an archive failure rather than a rejected generation`, async () => {
+    let posts = 0;
+    const service = createProviderClient({
+      credentials: { read: async () => "fixture-secret-only" },
+      fetch: async (_url, init) => {
+        if (init?.method === "POST") {
+          posts++;
+          return json({ data: [{ url: "https://fileview.site/fixture.png" }] });
+        }
+        return new Response(null, { status });
+      },
+    });
+    await assert.rejects(
+      service.generateImages(input("https://new.12ai.org")),
+      (error) => {
+        assert.ok(error instanceof ServiceError);
+        assert.equal(error.code, "IMAGE_ORIGINAL_RETRIEVAL_FAILED");
+        assert.equal(error.status, status);
+        assert.equal(error.submissionState, "unknown");
+        assert.equal(error.rejectedBeforeAcceptance, false);
+        assert.match(userError(error), /尚未自动保存/);
+        return true;
+      },
+    );
+    assert.equal(posts, 1);
+  });
+}

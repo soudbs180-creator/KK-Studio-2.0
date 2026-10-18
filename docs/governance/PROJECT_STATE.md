@@ -9,6 +9,8 @@
 <!-- DOCUMENT_METADATA_END -->
 <!-- CURRENT_FACTS_BEGIN -->
 
+当前任务 TASK-MOBILE-12AI-001 正按用户明确授权修复12ai手机生成与原件自动保存，并补视频任务查询恢复。隔离候选base c248d817，Web2.1.39/Mobile2.1.4尚未发布，线上仍以真实build-info为准；前次文本真链通过、图片CORS归档失败，不以本地fixture替代生产复验。本轮canonical保护基线已实际前移为clean的main109c6c41，下面8c36/dirty数仅是旧发布时点。当前进度与证据见[本轮验证](../changes/2026-10-18-mobile-12ai/verification.md)和[决策](../architecture/adr/ADR-025-mobile-12ai-originals-and-video-recovery.md)。
+
 Issue68专项候选从最新origin/main6b933f4f隔离执行，仅补Native设置保存/关闭测试后置条件和既有延迟回归；真实回执gate13检查通过。无产品、版本或生产改动。当前验证/独审/PR状态见[专项验证](../changes/2026-10-18-issue-68-settings-save/verification.md)。以下发布事实保留其原时点。
 
 

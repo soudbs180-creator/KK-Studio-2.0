@@ -164,7 +164,12 @@ export function createProviderClient(
       if (signal.aborted || error instanceof ServiceError) throw error;
       throw new ServiceError("IMAGE_ORIGINAL_RETRIEVAL_FAILED");
     }
-    requireOk(response);
+    if (!response.ok)
+      throw new ServiceError(
+        "IMAGE_ORIGINAL_RETRIEVAL_FAILED",
+        "unknown",
+        response.status,
+      );
     const bytes = await readBytes(response, MAX_IMAGE_BYTES);
     const mime = imageMime(bytes);
     const claimed = response.headers.get("content-type")?.split(";")[0].trim();
