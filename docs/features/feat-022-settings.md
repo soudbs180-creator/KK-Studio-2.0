@@ -5,6 +5,7 @@
 - 状态：PARTIAL
 - 领域：system
 - 最近更新：2026-10-19
+- 本轮追加：存储保护大提示可临时收起并重新展开，保护状态和恢复动作保持；最新完整verify exit0、Edge845首试全绿及隔离Native通过。原读取错误原因未确认，精确SHA独审/Hosted和用户接受见本任务验证与外部回执，成熟度仍PARTIAL。
 - 关联任务：TASK-UI-005、TASK-PROV-001、UI-004、TASK-DS-001、TASK-DS-002、TASK-UI-CONSOLIDATE-20261014、TASK-PROTOCOL-CLI-20261014、TASK-222-ACTIONS-20261014、TASK-223-ACTIONS-20261014、TASK-SETTINGS-LATEST-20261015
 
 TASK-SETTINGS-LATEST-20261015本地DONE/PASS：在最新c1fae190 UI上完成2.1.25设置修复，629浏览器首试及实际Web/Tauri、Native配置恢复和独立源码审查通过。当前Desktop入口已指向新版；原配置身份、primary dirty/index保留，旧错误基线与失败证据保留。[当前验证](../changes/2026-10-15-settings-latest-ui/verification.md)。真人Provider/Hosted/签名和用户视觉接受另验，功能继续PARTIAL。

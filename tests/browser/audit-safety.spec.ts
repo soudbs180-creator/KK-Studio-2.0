@@ -1,10 +1,99 @@
 import { expect, test } from "@playwright/test";
+import { readFile } from "node:fs/promises";
 import {
   createProject,
   emptySnapshot,
   CREATION_STORAGE_KEY,
 } from "../../src/features/creation/model";
 import { expandSidebar } from "./helpers";
+
+for (const width of [390, 1920]) {
+  test(`读取保护提示可以关闭并展开，保留草稿和原件 ${width}`, async ({
+    page,
+  }, info) => {
+    await page.setViewportSize({ width, height: width === 390 ? 480 : 900 });
+    const original = '{"version":2,"projects":';
+    await page.addInitScript(
+      ({ key, original }) => localStorage.setItem(key, original),
+      {
+        key: CREATION_STORAGE_KEY,
+        original,
+      },
+    );
+    await page.goto("/");
+    const notice = page.locator(".creation-storage-notice");
+    await expect(notice).toHaveAttribute("role", "alert");
+    await page.getByLabel("创作提示词").fill("当前内存草稿不能丢失");
+    await notice
+      .getByRole("button", { name: "关闭存储提示", exact: true })
+      .click();
+    const expand = notice.getByRole("button", {
+      name: "展开存储提示",
+      exact: true,
+    });
+    await expect(expand).toBeVisible();
+    await expect(expand).toBeFocused();
+    await expect(notice).toHaveAttribute("role", "status");
+    await expect(
+      notice.getByRole("button", { name: "重新读取", exact: true }),
+    ).toHaveCount(0);
+    const box = (await notice.boundingBox())!;
+    expect(box.height).toBeLessThanOrEqual(56);
+    expect(box.width).toBeLessThan(width - 32);
+    expect(
+      await expand.evaluate((element) => {
+        const box = element.getBoundingClientRect();
+        return element.contains(
+          document.elementFromPoint(
+            box.x + box.width / 2,
+            box.y + box.height / 2,
+          ),
+        );
+      }),
+    ).toBe(true);
+    await expect(page.getByLabel("创作提示词")).toHaveValue(
+      "当前内存草稿不能丢失",
+    );
+    expect(
+      await page.evaluate(
+        (key) => localStorage.getItem(key),
+        CREATION_STORAGE_KEY,
+      ),
+    ).toBe(original);
+    await page.screenshot({
+      path: info.outputPath(`storage-notice-collapsed-${width}.png`),
+    });
+    await expand.press("Enter");
+    await expect(notice).toHaveAttribute("role", "alert");
+    const download = page.waitForEvent("download");
+    await notice
+      .getByRole("button", { name: "下载未保存草稿", exact: true })
+      .click();
+    const saved = JSON.parse(
+      await readFile((await (await download).path())!, "utf8"),
+    );
+    expect(saved.homeDraft.prompt).toBe("当前内存草稿不能丢失");
+    await notice.getByRole("button", { name: "重新读取", exact: true }).click();
+    await expect(notice).toHaveAttribute("role", "alert");
+    await expect(
+      notice.getByRole("button", { name: "关闭存储提示", exact: true }),
+    ).toBeVisible();
+    expect(
+      await page.evaluate(
+        (key) => localStorage.getItem(key),
+        CREATION_STORAGE_KEY,
+      ),
+    ).toBe(original);
+    await notice
+      .getByRole("button", { name: "关闭存储提示", exact: true })
+      .click();
+    await page.reload();
+    await expect(notice).toHaveAttribute("role", "alert");
+    await expect(
+      notice.getByRole("button", { name: "关闭存储提示", exact: true }),
+    ).toBeVisible();
+  });
+}
 
 for (const width of [1920, 390]) {
   test(`尚未开放的聊天入口说明原因 ${width}`, async ({ page }, testInfo) => {
@@ -100,6 +189,17 @@ test("受保护历史聊天可切换查看，重开仍保留原始快照", async
   await expect(
     page.getByRole("textbox", { name: "对话内容", exact: true }),
   ).toBeDisabled();
+  await page.getByRole("button", { name: "关闭存储提示", exact: true }).click();
+  await expect(
+    page.getByRole("textbox", { name: "对话内容", exact: true }),
+  ).toBeDisabled();
+  expect(
+    await page.evaluate(
+      (key) => localStorage.getItem(key),
+      CREATION_STORAGE_KEY,
+    ),
+  ).toBe(raw);
+  await page.getByRole("button", { name: "展开存储提示", exact: true }).click();
   await expect(page.locator(".conversation-messages")).toContainText(
     "历史消息 A",
   );

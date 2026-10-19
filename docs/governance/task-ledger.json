@@ -8,6 +8,7 @@
       "仅截图模型/扩展按钮无默认边框，其他形状与状态保持原样",
       "手机四项导航等宽居中悬浮且不遮操作",
       "关键图标内联可见、深浅主题对比度与点击有效",
+      "存储大提示可关闭并重新展开，不解除保护或丢草稿",
       "相关回归和全量门禁按当前SHA验证"
     ],
     "dependencies": [],
@@ -52,9 +53,9 @@
     "openQuestions": "无新增产品语义问题；候选视觉接受与真实Desktop/Hosted另验。",
     "lastVerified": "2026-10-19",
     "updated": "2026-10-19",
-    "verification": "已撤回全局胶囊化/高亮；根1952/20skip、Agent204/2skip、产品Edge843/0retry/flaky/skip、DESIGN41+8及Native隔离UI通过。聚合verify最后development因自有1421预览冲突exit1，停止后该步骤独立PASS；原失败保留。当前SHA独审、Delivery、Hosted和用户接受另验。",
+    "verification": "全局胶囊化/高亮已撤回；存储提示收起保留保护/草稿，17项相关检查通过。最新完整verify exit0：根1952/20skip、Agent204/2skip、Edge845/0retry/flaky/skip、DESIGN41+8、development及Native隔离UI通过，code-health0 blocking。原失败保留；精确SHA独审/Delivery、Hosted和用户接受另记回执。",
     "verificationResult": "NOT_VERIFIED",
-    "nextAction": "提交冻结候选并绑定独审/Delivery与草稿PR，保留当前预览供用户核对；未满足门禁和视觉接受前不合并发布"
+    "nextAction": "提交提示关闭增量至同一PR80，绑定最终SHA独审/Delivery及当前HEAD Hosted；恢复预览供用户核对，未满足门禁和视觉接受前不合并发布"
   },
   {
     "id": "TASK-CANVAS-RELEASE-20261018",

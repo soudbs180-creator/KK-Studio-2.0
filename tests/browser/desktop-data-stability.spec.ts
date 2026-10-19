@@ -251,6 +251,16 @@ test("写入失败重试成功后清除过期错误并保留内容", async ({ pa
   await page.goto("/");
   await page.getByLabel("创作提示词").fill("写盘失败后保留的内容");
   await expect(page.getByRole("alert")).toContainText("保存失败");
+  await page.getByRole("button", { name: "关闭存储提示", exact: true }).click();
+  await expect(page.getByLabel("创作提示词")).toHaveValue(
+    "写盘失败后保留的内容",
+  );
+  expect(
+    await page.evaluate(
+      () => (window as unknown as StorageTestWindow).storageTest.writes,
+    ),
+  ).toBe(1);
+  await page.getByRole("button", { name: "展开存储提示", exact: true }).click();
   await page.getByRole("button", { name: "重试保存", exact: true }).click();
   await expect
     .poll(() =>
@@ -517,6 +527,15 @@ test("两个窗口并发保存时保留先提交的原件和冲突草稿", async
     .toBe("first window saved");
   await second.getByLabel("创作提示词").fill("second window unsaved");
   await expect(second.getByRole("alert")).toContainText(/其他窗口|另一窗口/);
+  await second
+    .getByRole("button", { name: "关闭存储提示", exact: true })
+    .click();
+  await expect(second.getByLabel("创作提示词")).toHaveValue(
+    "second window unsaved",
+  );
+  await second
+    .getByRole("button", { name: "展开存储提示", exact: true })
+    .click();
   expect(
     await page.evaluate(
       () =>

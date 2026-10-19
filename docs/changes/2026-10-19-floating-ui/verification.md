@@ -1,11 +1,28 @@
 # Verification：圆润控件与悬浮导航
 
 - Task ID：TASK-UI-FLOATING-20261019
-- 状态：REVIEW / NOT_VERIFIED（本机分步验证完成；Hosted及用户接受待）
+- 状态：REVIEW / NOT_VERIFIED（本机完整门禁通过；提交SHA独审、Hosted及用户接受分别记录）
 - Base：4610c3339db436147006171aec08aad4cfdfb679
 - Branch：fix/TASK-UI-FLOATING-20261019
 - Worktree：D:/kk-studio/.worktrees/TASK-UI-FLOATING-20261019
 - 工程外证据：D:/kk-studio/output/ui-floating-20261019
+
+## 当前追加：存储提示可关闭（89da7190之后）
+
+用户截图中的大提示没有关闭入口，已补组件内收起/展开按钮；不修改useCreationStorage、storage或snapshotCodec。`storage-notice-red.log` 在390短屏及1920因缺少关闭按钮RED；`storage-notice-green.log` 的17项相关浏览器检查在workers1/retries0全部PASS，覆盖read_error/read_only/write_error/conflict、关闭保持焦点、紧凑入口命中、草稿实际下载、只读输入保持禁用、无额外读写、原始快照不变与刷新重新展开。
+
+当前1421实际已有读取失败的页面，经UI点击关闭后大提示已收起，保留157.25×45.33紧凑“读取保护 · 查看详情”入口，中心命中正确；未点击重读/保存/下载，也未读取或清空真实用户快照。实际失败原因仍UNKNOWN，不能把本次UI修复说成原数据恢复。新状态/消息/恢复草稿变化重新展开，收起状态不持久化。
+
+最终追加证据保存在 `storage-notice/final/`，旧89da7190收据保持历史含义。首轮追加完整verify exit0但code-health提示主组件复杂度28；将原说明/操作块移到同文件无状态Fragment组件后，条件、DOM、回调与顺序均不变，重新冻结并完整验证：
+
+- `final/verify.log` 完整 `npm run verify` exit0：根1952通过/20skip、Agent204通过/2skip、产品Edge845通过/0失败/0retry/flaky/skip、DESIGN41单元+8浏览器、lint/typecheck、UI/格式/生产build和development四插件步骤全部通过；code-health 0 blocking、footguns 0 findings。既有25条孤立token及历史版本advisory仍保留。
+- 产品浏览器run `5e4d2cf3-f60c-4f40-8760-604ba427e12b`，845测试/845次尝试；1423生产preview。1245个源码/测试/配置输入与 `final/frozen-inputs.json` 全等。运行时sourceHead为89da7190加本次冻结增量，不冒称干净新HEAD；实际提交绑定在工程外最终回执。
+- 官方Desktop launcher重建35.38秒，Native实际production `http://tauri.localhost/`、2.1.43、`index-wMdLqvIz.js` / `index-C0PuBcHH.css`，EXE SHA256 `95ef9417a8c470581ac42c1398dbb72602c57d13456bab45742ffb549c61fce0`，receipt输入 `846cd10ca7a12cea6d01c2d2651a4d592eefd184db4a2edffb5a0b034c0097e8`，errors/brokenImages为空。1280×900是真实Native；390宽是CDP共享CSS仿真（Native minWidth1280），不替代实体设备。Native使用隔离资料，未注入真实读取故障；故障关闭路径由浏览器/IPC合成场景及已有1421故障页面验证。
+- 已按PID74580、完整EXE路径及隔离data-dir核对后停止自有Native，未停止用户安装客户端。最终短屏收起图为工程外 `screenshots/storage-notice-collapsed-final-390.png`。
+
+最终SHA独审、Delivery、PR80当前HEAD的Hosted及用户视觉接受另记工程外回执；保持草稿PR，不合并发布。真实读取失败原因仍UNKNOWN，本次只修提示关闭体验。
+
+## 先前UI候选89da7190（历史保留）
 
 已核对根/Agent/插件依赖为本任务实体目录，未复用共享可写目录。初始 typecheck/lint/build 通过。初始 unit 1950通过/20skip/2失败，均为尚未构建随包 Agent 的启动用例；随后 agent:build 成功，desktopAgentRuntime 定向3/3通过。后续完整根单元1952通过/20skip/0失败、Agent204通过/2skip/0失败。
 

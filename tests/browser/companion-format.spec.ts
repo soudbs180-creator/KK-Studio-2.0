@@ -75,6 +75,17 @@ for (const code of ["SNAPSHOT_UNSUPPORTED", "IO"] as const) {
       await expect(notice).toContainText("项目版本较新");
     await page.getByLabel("创作提示词").fill("保留在内存的当前草稿");
     const initialReads = reads;
+    await notice
+      .getByRole("button", { name: "关闭存储提示", exact: true })
+      .click();
+    await expect(page.getByLabel("创作提示词")).toHaveValue(
+      "保留在内存的当前草稿",
+    );
+    expect(reads).toBe(initialReads);
+    expect(writes).toBe(0);
+    await notice
+      .getByRole("button", { name: "展开存储提示", exact: true })
+      .click();
     await notice.getByRole("button", { name: "重新读取", exact: true }).click();
     await expect.poll(() => reads).toBeGreaterThan(initialReads);
     await expect(notice).toContainText("读取保护");

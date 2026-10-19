@@ -10,6 +10,8 @@
 
 ## 当前 UI 恢复入口：圆润控件与悬浮导航（2026-10-19）
 
+PR80在89da7190之后追加“读取保护提示不能关闭”反馈：只改CreationStorageNotice展示状态与样式，保护/草稿不变；17项相关检查、最新完整verify exit0（Edge845首试全绿）及隔离Native通过。新SHA独审/Delivery与Hosted读本任务verification及工程外回执，不能沿用89da旧批准。当前REVIEW/NOT_VERIFIED，用户接受和合并发布待；实际读取失败根因未确认，禁止靠清库或解除写入保护消除提示。
+
 `TASK-UI-FLOATING-20261019` 在 `D:/kk-studio/.worktrees/TASK-UI-FLOATING-20261019`，基线4610c333，Desktop/Web候选2.1.43、独立Mobile仍2.1.42。只读其他活动/锁定工作树，未改 canonical main 或默认资料。先读[规格](../changes/2026-10-19-floating-ui/spec.md)、[验证](../changes/2026-10-19-floating-ui/verification.md)与[审查](../changes/2026-10-19-floating-ui/review.md)；完整门禁、Native及精确SHA独审以本任务新收据为准，不能用旧42收据代填。下方发布/手机任务继续由原任务承接。
 
 ## 发布恢复入口：统一42公开下载资产名修复（2026-10-19）
