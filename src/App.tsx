@@ -61,7 +61,6 @@ import {
 } from "./features/agent/agentConnection.ts";
 import { googleAgentConnection } from "./features/agent/googleAgentConnection.ts";
 import { appendToActiveAgentDraft } from "./features/agent/agentDraftActions";
-
 import { pluginLoader } from "./features/plugins/pluginLoader.ts";
 import {
   injectPluginCss,
@@ -3760,3 +3759,4 @@ import "./styles/image-edit.css";
 import "./styles/image-selection.css";
 import "./styles/canvas-composer-screen.css";
 import "./styles/desktop-titlebar.css";
+import "./styles/control-surfaces.css";

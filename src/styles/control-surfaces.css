@@ -1,0 +1,87 @@
+/* Only the screenshot's composer triggers change; existing shapes stay owned locally. */
+.start-composer
+  :is(.start-model-picker > button, .composer-ext-skill > button) {
+  border-color: transparent;
+}
+.start-composer
+  :is(.start-model-picker > button, .composer-ext-skill > button):is(
+    :hover,
+    :active,
+    :focus-visible,
+    [aria-expanded="true"]
+  ) {
+  border-color: var(--border-default);
+}
+.sidebar-icon {
+  display: inline-grid;
+  place-items: center;
+}
+.sidebar-icon > .ui-icon {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  place-items: center;
+}
+.mobile-project-switch .sidebar-icon {
+  width: var(--kk-icon-glyph-lg);
+  height: var(--kk-icon-glyph-lg);
+}
+
+@media (max-width: 767px) {
+  .app-body {
+    padding-bottom: calc(
+      var(--kk-phone-nav-height) + var(--kk-phone-nav-gap) * 2 +
+        env(safe-area-inset-bottom, 0px)
+    );
+  }
+  .sidebar.is-collapsed {
+    height: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    pointer-events: none;
+  }
+  .sidebar.is-collapsed
+    :is(.sidebar-account, .sidebar-settings, .account-popup, .primary-nav) {
+    pointer-events: auto;
+  }
+  .sidebar.is-collapsed .primary-nav {
+    position: fixed;
+    left: 50%;
+    bottom: calc(var(--kk-phone-nav-gap) + env(safe-area-inset-bottom, 0px));
+    transform: translateX(-50%);
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-columns: none;
+    grid-auto-columns: minmax(0, 1fr);
+    width: min(var(--kk-phone-nav-width), calc(100% - var(--kk-space-4) * 2));
+    height: var(--kk-phone-nav-height);
+    padding: var(--kk-space-1);
+    gap: var(--kk-space-1);
+    border: var(--kk-border-width) solid var(--border-subtle);
+    border-radius: var(--kk-radius-full);
+    background: var(--bg-surface);
+    box-shadow: var(--kk-elevation-3);
+    backdrop-filter: blur(var(--kk-phone-nav-blur)) saturate(150%);
+  }
+  .sidebar.is-collapsed .primary-nav button {
+    height: 100%;
+    min-height: var(--kk-control-h-lg);
+    color: var(--text-secondary);
+  }
+  .sidebar.is-collapsed .primary-nav button[aria-current="page"] {
+    background: var(--neutral-selected);
+    color: var(--text-primary);
+  }
+  @supports (backdrop-filter: blur(0)) {
+    .sidebar.is-collapsed .primary-nav {
+      background: color-mix(in srgb, var(--bg-surface) 85%, transparent);
+    }
+  }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .sidebar.is-collapsed .primary-nav {
+    background: var(--bg-surface);
+    backdrop-filter: none;
+  }
+}

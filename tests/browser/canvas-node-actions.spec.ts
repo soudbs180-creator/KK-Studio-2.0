@@ -1,6 +1,10 @@
 import { expect, test, type Locator, type Page } from "@playwright/test";
 import type { CreationSnapshot } from "../../src/features/creation/model";
-import { openWorkspace, uploadCanvasMedia } from "./helpers";
+import {
+  openWorkspace,
+  panCanvasToRevealAction,
+  uploadCanvasMedia,
+} from "./helpers";
 
 test.use({ hasTouch: true });
 
@@ -190,9 +194,12 @@ for (const deletion of ["toolbar", "keyboard"]) {
       name: "卡片操作：blue-hour-motion.webm",
       exact: true,
     });
-    await toolbar
-      .getByRole("button", { name: "喜欢blue-hour-motion.webm", exact: true })
-      .tap();
+    const like = toolbar.getByRole("button", {
+      name: "喜欢blue-hour-motion.webm",
+      exact: true,
+    });
+    await panCanvasToRevealAction(page, like);
+    await like.tap();
     await toolbar.getByRole("button", { name: "编辑标签", exact: true }).tap();
     const tags = page.getByRole("dialog", { name: "编辑标签", exact: true });
     await tags.getByRole("button", { name: "收藏", exact: true }).tap();

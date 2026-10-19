@@ -66,7 +66,7 @@ test("integration preserves approved runtime tokens and registered dimensions", 
   );
   // A new token baseline requires source review; sync alone cannot approve it.
   const approvedHash =
-    "741f1739101b5cb1d407b65929a9e133d9a363390239a066005d95ee4d5d8138";
+    "d0f3bbdca41643a5d1d3372b18d5930e62d1a8d1c21ffd5f649772be42a1a9d1";
   assert.equal(
     createHash("sha256").update(source.replace(/\r\n/g, "\n")).digest("hex"),
     approvedHash,

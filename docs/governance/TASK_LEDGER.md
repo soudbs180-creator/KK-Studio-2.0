@@ -6,6 +6,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 | ID | Title | Status | Display | Priority | Dependencies | Owner | Next action |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| TASK-UI-FLOATING-20261019 | 修复截图控件、居中悬浮导航与内联图标 | REVIEW | 进行中 | P1 | none | codex | 提交提示关闭增量至同一PR80，绑定最终SHA独审/Delivery及当前HEAD Hosted；恢复预览供用户核对，未满足门禁和视觉接受前不合并发布 |
 | TASK-CANVAS-RELEASE-20261018 | 统一工具栏修复、数据兼容和三端正式发布 | IN_PROGRESS | 进行中 | P1 | none | root-release | 一行test-only enabled前提维护及相关7/7已完成；冻结该最小diff并提交后，取得精确新HEAD完整verify、独审/Delivery及新的Hosted终局，保留4c push实际FAIL、所有首试UNKNOWN和未执行阶段。正常PR合并后的实际main/tree及main门禁通过才创建一次42tag、fresh正式Windows，同formal完整四轮、严格cold重查、真实默认资料安装/工具栏/Agent、唯一setup匿名下载和Web/独立手机Web生产回读；原失败、cold和seed39保持。 |
 | TASK-MOBILE-COMPOSER-001 | 手机结果优先、完整创作输入与圆形发送 | IN_PROGRESS | 进行中 | P1 | TASK-MOBILE-12AI-001 | root | 完成新后缀生产收据docs HEAD的检查/Delivery/独审/Hosted和正常PR；仅补用户Android Chrome模型入口/切后台返回+刷新接受，不把旧UI回复或继续当验收，不新耗生成额度。 |
 | TASK-MOBILE-12AI-001 | 12ai手机端图片自动归档与文本视频协议接入 | DONE | 已完成 | P1 | TASK-WEB-RELEASE-20261017 | root | 按已完成PR70/71范围保留发布/原件/回滚收据；模型按钮及后台专项由TASK-MOBILE-COMPOSER-001承接，T12/FEAT-028继续开放。 |
@@ -160,6 +161,25 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-VERIFY-DEPS-20261015 | 恢复共享依赖清理事故并核验执行边界 | PARTIAL | 进行中 | P1 | TASK-CODEX-HOME-20261015 | root | 保持防复发子范围PASS与旧事故UNKNOWN分离；不在共享依赖安装或清理。原始字节及影响如无证据不得补写；最终当前提交/托管/交付门禁另验。 |
 | TASK-DESIGN-MD-20261015 | 统一DESIGN设计系统与产品UI收敛 | PARTIAL | 进行中 | P1 | none | root | 关闭基础独审问题，将规则落入设置/模型/聊天/画布/项目/素材等实际页面，按Desktop→Web留同状态证据。 |
 | TASK-ISSUE-68 | 修复原生设置保存后的测试同步缺口 | REVIEW | 未完成 | P1 | none | issue68-specialist | 纯文档head补审并建立draft PR，回读当前Hosted后交现有main协调者；不merge/发布。 |
+
+## TASK-UI-FLOATING-20261019 — 修复截图控件、居中悬浮导航与内联图标
+
+- Goal: 修复用户截图中的按钮边框与棱角、底部导航偏左、关键图标破图及相邻响应式可达性
+- Scope: 共享UI控件与导航；不改独立mobile工程、用户数据或模型执行
+- Display status: 进行中
+- Priority: P1 — 用户截图直接显示导航、控件与图标可用性问题
+- Requirement refs: ledger:TASK-UI-FLOATING-20261019
+- Feature IDs: FEAT-022, FEAT-023
+- Owner role: implementer
+- Acceptance: 仅截图模型/扩展按钮无默认边框，其他形状与状态保持原样; 手机四项导航等宽居中悬浮且不遮操作; 关键图标内联可见、深浅主题对比度与点击有效; 存储大提示可关闭并重新展开，不解除保护或丢草稿; 相关回归和全量门禁按当前SHA验证
+- Branch: `fix/TASK-UI-FLOATING-20261019`
+- Worktree: `D:/kk-studio/.worktrees/TASK-UI-FLOATING-20261019`
+- Modules: src/components, src/styles, tests/browser, DESIGN.md, docs/governance, docs/features, docs/changes/2026-10-19-floating-ui
+- Verification: NOT_VERIFIED — 全局胶囊化/高亮已撤回；存储提示收起保留保护/草稿，17项相关检查通过。最新完整verify exit0：根1952/20skip、Agent204/2skip、Edge845/0retry/flaky/skip、DESIGN41+8、development及Native隔离UI通过，code-health0 blocking。原失败保留；精确SHA独审/Delivery、Hosted和用户接受另记回执。
+- Evidence: [docs/changes/2026-10-19-floating-ui/intent.md](../../docs/changes/2026-10-19-floating-ui/intent.md), [docs/changes/2026-10-19-floating-ui/spec.md](../../docs/changes/2026-10-19-floating-ui/spec.md), [docs/changes/2026-10-19-floating-ui/plan.md](../../docs/changes/2026-10-19-floating-ui/plan.md), [docs/changes/2026-10-19-floating-ui/verification.md](../../docs/changes/2026-10-19-floating-ui/verification.md), [docs/changes/2026-10-19-floating-ui/review.md](../../docs/changes/2026-10-19-floating-ui/review.md)
+- Next action: 提交提示关闭增量至同一PR80，绑定最终SHA独审/Delivery及当前HEAD Hosted；恢复预览供用户核对，未满足门禁和视觉接受前不合并发布
+- Last verified: 2026-10-19
+- Updated: 2026-10-19
 
 ## TASK-CANVAS-RELEASE-20261018 — 统一工具栏修复、数据兼容和三端正式发布
 

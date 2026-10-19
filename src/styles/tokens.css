@@ -162,6 +162,10 @@
   --kk-panel-width: 264px;
   --kk-toolbar-height: 50px;
   --kk-topbar-height: 40px;
+  --kk-phone-nav-height: 64px;
+  --kk-phone-nav-width: 360px;
+  --kk-phone-nav-gap: 12px;
+  --kk-phone-nav-blur: 20px;
 
   /* --- 2.6 控件档位 size tier --- */
   --kk-control-h-sm: 24px;

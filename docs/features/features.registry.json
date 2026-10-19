@@ -1103,9 +1103,10 @@
       "TASK-222-ACTIONS-20261014",
       "TASK-223-ACTIONS-20261014",
       "TASK-SETTINGS-LATEST-20261015",
-      "TASK-KK-UNIFIED-20261015"
+      "TASK-KK-UNIFIED-20261015",
+      "TASK-UI-FLOATING-20261019"
     ],
-    "updated": "2026-10-16",
+    "updated": "2026-10-19",
     "platforms": ["web", "desktop"],
     "runtimeEvidence": [
       {
@@ -1182,9 +1183,10 @@
       "TASK-PROJECT-SIDEBAR-001",
       "TASK-UI-013",
       "TASK-UI-CONSOLIDATE-20261014",
-      "TASK-KK-UNIFIED-20261015"
+      "TASK-KK-UNIFIED-20261015",
+      "TASK-UI-FLOATING-20261019"
     ],
-    "updated": "2026-10-15",
+    "updated": "2026-10-19",
     "platforms": ["web", "desktop"],
     "runtimeEvidence": [
       {

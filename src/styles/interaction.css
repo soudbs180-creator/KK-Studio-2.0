@@ -404,3 +404,33 @@
   font-size: var(--ui-font-body);
   line-height: var(--ui-line-height-label);
 }
+.creation-storage-notice:not(.is-collapsed) {
+  padding-right: calc(var(--ui-space-4) + var(--kk-control-h-xl));
+}
+.creation-storage-message {
+  min-width: 0;
+}
+.creation-storage-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: calc(var(--kk-control-h-md) + var(--kk-space-3));
+  min-height: calc(var(--kk-control-h-md) + var(--kk-space-3));
+  padding: 0 var(--kk-space-3);
+  border: 0;
+  border-radius: var(--kk-radius-control);
+  background: transparent;
+  color: var(--text-secondary);
+  font: inherit;
+}
+.creation-storage-notice:not(.is-collapsed) .creation-storage-toggle {
+  position: absolute;
+  top: var(--kk-space-1);
+  right: var(--kk-space-1);
+  padding: 0;
+}
+.creation-storage-notice.is-collapsed {
+  left: auto;
+  right: var(--ui-space-4);
+  padding: 0;
+}

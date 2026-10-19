@@ -44,18 +44,12 @@ test("approved composer and shell geometry stays stable at phone and desktop siz
   await expect(sidebar).toHaveClass(/is-collapsed/);
   await page.waitForTimeout(350);
   expect(Math.round((await sidebar.boundingBox())!.width)).toBe(70);
-  await expect(sidebar.locator(".sidebar-icon-expand img")).toHaveAttribute(
-    "src",
-    /sidebar-expand\.svg$/,
-  );
+  await expect(sidebar.locator(".sidebar-icon-expand svg")).toBeVisible();
   await page.getByRole("button", { name: "展开侧边栏", exact: true }).click();
   await expect(sidebar).not.toHaveClass(/is-collapsed/);
   await page.waitForTimeout(350);
   expect(Math.round((await sidebar.boundingBox())!.width)).toBe(291);
-  await expect(sidebar.locator(".sidebar-icon-toggle img")).toHaveAttribute(
-    "src",
-    /sidebar-collapse\.svg$/,
-  );
+  await expect(sidebar.locator(".sidebar-icon-toggle svg")).toBeVisible();
 });
 
 test("desktop settings uses the compact frame and phone settings uses layered navigation", async ({

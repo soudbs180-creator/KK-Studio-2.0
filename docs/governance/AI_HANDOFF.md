@@ -8,7 +8,13 @@
 
 本文是最短恢复入口，不是任务状态或产品能力的第二事实源。任务状态只读 [`task-ledger.json`](task-ledger.json)；当前项目事实只读 [`PROJECT_STATE.md`](PROJECT_STATE.md)；历史验证只按带日期的 change package、commit、运行模式和 receipt 回读。
 
-## 当前恢复入口：统一42公开下载资产名修复（2026-10-19）
+## 当前 UI 恢复入口：圆润控件与悬浮导航（2026-10-19）
+
+PR80在89da7190之后追加“读取保护提示不能关闭”反馈：只改CreationStorageNotice展示状态与样式，保护/草稿不变；17项相关检查、最新完整verify exit0（Edge845首试全绿）及隔离Native通过。新SHA独审/Delivery与Hosted读本任务verification及工程外回执，不能沿用89da旧批准。当前REVIEW/NOT_VERIFIED，用户接受和合并发布待；实际读取失败根因未确认，禁止靠清库或解除写入保护消除提示。
+
+`TASK-UI-FLOATING-20261019` 在 `D:/kk-studio/.worktrees/TASK-UI-FLOATING-20261019`，基线4610c333，Desktop/Web候选2.1.43、独立Mobile仍2.1.42。只读其他活动/锁定工作树，未改 canonical main 或默认资料。先读[规格](../changes/2026-10-19-floating-ui/spec.md)、[验证](../changes/2026-10-19-floating-ui/verification.md)与[审查](../changes/2026-10-19-floating-ui/review.md)；完整门禁、Native及精确SHA独审以本任务新收据为准，不能用旧42收据代填。下方发布/手机任务继续由原任务承接。
+
+## 发布恢复入口：统一42公开下载资产名修复（2026-10-19）
 
 TASK-CANVAS-RELEASE-20261018保持IN_PROGRESS/NOT_VERIFIED，三端仍为同次尚未tag的2.1.42。下载资产名修复4c313633d88f4e2203292540ef7c83f77ae699af/tree f84dc69d0f80c1039bd5d6a2400142cf27747c63的源码独审和完整本机verify PASS；Hosted push quality39167031850实际FAIL（838 tests/840 attempts：836 passed、1 failed、1 flaky；Node1953 PASS/19 skip、Agent204 PASS/2 skip，Design/Rust/Native未执行），PR/Windows/Mobile各按自身真实收据核对。本机PASS不代填Hosted。独立IDB受控对照证明原visible-only物理点击缺少enabled前提：disabled且命中时只产生pointerdown/up，释放读取后原folder count断言仍FAIL；先等enabled后同坐标一次click/count1/expanded/scroll0 PASS。这只证明机制，云端点击瞬间状态及两个首试缺按钮30s原因仍UNKNOWN，首试无snapshot/trace/errors。现仅在tests/browser/sidebar-rail-interaction.spec.ts的createFolderOnce visible后加一行toBeEnabled；既有sidebar4+settings3在workers1/retries0定向7/7 PASS。原产品、settings、storage guard、timeout/retry及其余断言不变。修改后精确新HEAD完整verify、独审/Delivery/Hosted和正常PR合并仍待，正式tag/包/默认安装/Release/Web及独立手机Web生产仍未完成。 原公开下载阻断诊断9370ef63及RED/GREEN1/1保留，公开资产用点名、本地NSIS/receipt仍为空格名；PR78正常合入的0cc3b4ed116d71062244e3097285a2b532de8f97/tree4c238f54f6aa688f95128936ada89ec675f2f26c仅为历史中间main，其CI自然完成、不取消不重跑，最终source须后续正常merge及新main验证。原41正式FAIL/artifact0、e7/c341失败、d965候选首FAIL/409诊断与tests-only四轮预检、e43两flaky及35push一flaky/UNKNOWN有界决定保持原义；cold/seed39、项目配置、凭据和存储身份不变。 先读[当前计划](../changes/2026-10-19-release-asset-name/plan.md)、[验证](../changes/2026-10-19-release-asset-name/verification.md)和[审查](../changes/2026-10-19-release-asset-name/review.md)；账本currentPackage为唯一任务入口。
 

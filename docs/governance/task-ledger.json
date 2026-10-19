@@ -1,5 +1,63 @@
 [
   {
+    "id": "TASK-UI-FLOATING-20261019",
+    "title": "修复截图控件、居中悬浮导航与内联图标",
+    "goal": "修复用户截图中的按钮边框与棱角、底部导航偏左、关键图标破图及相邻响应式可达性",
+    "scope": "共享UI控件与导航；不改独立mobile工程、用户数据或模型执行",
+    "acceptance": [
+      "仅截图模型/扩展按钮无默认边框，其他形状与状态保持原样",
+      "手机四项导航等宽居中悬浮且不遮操作",
+      "关键图标内联可见、深浅主题对比度与点击有效",
+      "存储大提示可关闭并重新展开，不解除保护或丢草稿",
+      "相关回归和全量门禁按当前SHA验证"
+    ],
+    "dependencies": [],
+    "owner": "codex",
+    "ownerRole": "implementer",
+    "branch": "fix/TASK-UI-FLOATING-20261019",
+    "worktree": "D:/kk-studio/.worktrees/TASK-UI-FLOATING-20261019",
+    "affectedModules": [
+      "src/components",
+      "src/styles",
+      "tests/browser",
+      "DESIGN.md",
+      "docs/governance",
+      "docs/features",
+      "docs/changes/2026-10-19-floating-ui"
+    ],
+    "status": "REVIEW",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "priorityRationale": "用户截图直接显示导航、控件与图标可用性问题",
+    "risk": "medium",
+    "reviewRequired": true,
+    "platforms": [
+      "Desktop",
+      "Web"
+    ],
+    "evidence": [
+      "docs/changes/2026-10-19-floating-ui/intent.md",
+      "docs/changes/2026-10-19-floating-ui/spec.md",
+      "docs/changes/2026-10-19-floating-ui/plan.md",
+      "docs/changes/2026-10-19-floating-ui/verification.md",
+      "docs/changes/2026-10-19-floating-ui/review.md"
+    ],
+    "requirementRefs": [
+      "ledger:TASK-UI-FLOATING-20261019"
+    ],
+    "featureIds": [
+      "FEAT-022",
+      "FEAT-023"
+    ],
+    "notes": "用户已授权实施并明确否决全局胶囊化/高亮；已撤回全局规则。从origin/main承接并保护本地主线独有实现及所有已有工作树。",
+    "openQuestions": "无新增产品语义问题；候选视觉接受与真实Desktop/Hosted另验。",
+    "lastVerified": "2026-10-19",
+    "updated": "2026-10-19",
+    "verification": "全局胶囊化/高亮已撤回；存储提示收起保留保护/草稿，17项相关检查通过。最新完整verify exit0：根1952/20skip、Agent204/2skip、Edge845/0retry/flaky/skip、DESIGN41+8、development及Native隔离UI通过，code-health0 blocking。原失败保留；精确SHA独审/Delivery、Hosted和用户接受另记回执。",
+    "verificationResult": "NOT_VERIFIED",
+    "nextAction": "提交提示关闭增量至同一PR80，绑定最终SHA独审/Delivery及当前HEAD Hosted；恢复预览供用户核对，未满足门禁和视觉接受前不合并发布"
+  },
+  {
     "id": "TASK-CANVAS-RELEASE-20261018",
     "title": "统一工具栏修复、数据兼容和三端正式发布",
     "goal": "正常合并工具栏修复及安装器来源修复，发布统一2.1.42单一内置Windows Agent安装包及Web/独立手机Web，保留原项目配置",

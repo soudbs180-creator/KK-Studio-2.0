@@ -179,7 +179,7 @@ components:
     padding: 4px
 x-kk-studio:
   source: src/styles/tokens.css
-  sha256: 741f1739101b5cb1d407b65929a9e133d9a363390239a066005d95ee4d5d8138
+  sha256: d0f3bbdca41643a5d1d3372b18d5930e62d1a8d1c21ffd5f649772be42a1a9d1
   hashEncoding: utf8-lf
   scopes:
     - selector: :root
@@ -544,6 +544,18 @@ x-kk-studio:
           important: false
         - property: --kk-topbar-height
           value: 40px
+          important: false
+        - property: --kk-phone-nav-height
+          value: 64px
+          important: false
+        - property: --kk-phone-nav-width
+          value: 360px
+          important: false
+        - property: --kk-phone-nav-gap
+          value: 12px
+          important: false
+        - property: --kk-phone-nav-blur
+          value: 20px
           important: false
         - property: --kk-control-h-sm
           value: 24px
@@ -1614,6 +1626,14 @@ explicit task-specific touch targets stay governed by their approved specificati
 Use the registered spacing grid rather than page-local numeric substitutes.
 
 Shape, height, padding, and icon slots stay consistent through all control states.
+Current screenshot feedback only removes default borders from the home model
+and extension triggers. Preserve each control's existing circle, rounded rectangle,
+capsule or card role; do not add global selected borders or capsule overrides.
+Phone navigation is a centered
+floating capsule with four equal targets, safe-area clearance, a readable glass
+surface and an opaque reduced-transparency fallback. The top actions keep their
+own fixed anchors. Navigation glyphs reuse inline UiIcon vectors rather than
+requesting separate image files; brand artwork remains unchanged.
 Loading placeholders preserve target geometry. Reduced motion respects the
 registered motion contract and user preference; animation must not delay semantic
 state or replace a real completion/connection receipt.
