@@ -691,7 +691,7 @@ function appendTaskSeries(params: AppendTaskParams): {
     connection,
     rootSourceId,
   );
-  let nextProject = firstAppended.project;
+  let nextProject: CreationProject = firstAppended.project;
 
   for (const editInput of editInputs.slice(1)) {
     nextProject = appendImageTask(

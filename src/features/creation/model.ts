@@ -476,6 +476,8 @@ export function snapshotWriteBlockReason(
   }
 }
 
+export type ReasoningEffort = "low" | "medium" | "high";
+
 export interface CreationDraft {
   modelSelection?: ModelSelection;
   conversationChannel?: "codex" | "direct" | "google";
@@ -489,6 +491,7 @@ export interface CreationDraft {
   approvalMode: "auto" | "ask";
   privacyMode: "local_only" | "byok_local" | "platform_backed";
   outputCount: number;
+  reasoningEffort?: ReasoningEffort;
   updatedAt: number;
 }
 
@@ -797,6 +800,13 @@ function validSidebarPreferences(
   });
 }
 
+function normalizeReasoningEffort(value: unknown): ReasoningEffort | undefined {
+  if (value === "low" || value === "medium" || value === "high") {
+    return value;
+  }
+  return undefined;
+}
+
 function normalizeDraft(value: unknown): CreationDraft {
   const candidate =
     value && typeof value === "object" ? (value as Partial<CreationDraft>) : {};
@@ -840,6 +850,7 @@ function normalizeDraft(value: unknown): CreationDraft {
       Number.isFinite(candidate.outputCount)
         ? Math.max(1, Math.min(64, Math.floor(candidate.outputCount)))
         : 1,
+    reasoningEffort: normalizeReasoningEffort(candidate.reasoningEffort),
     updatedAt:
       typeof candidate.updatedAt === "number" ? candidate.updatedAt : 0,
   };

@@ -6,6 +6,32 @@ import {
   type ModelSelection,
 } from "../features/models/modelSelection";
 import type { Entry } from "../features/models/modelMenuEntries";
+import {
+  getProbeMetric,
+  getLatencyTierClass,
+} from "../features/models/modelProbeStore";
+
+function renderModelProbeBadge(item: Entry) {
+  const providerId =
+    item.selection?.connectionId ?? item.selection?.source ?? "";
+  const modelId = item.selection?.model ?? item.id;
+  const probe =
+    getProbeMetric(providerId, modelId) ?? getProbeMetric(item.id);
+  if (!probe) return null;
+
+  return (
+    <span
+      className={`kk-model-probe-badge ${getLatencyTierClass(probe.tier)}`}
+      title={`延迟 ${probe.latencyMs}ms${probe.ttftMs ? ` · 首字 ${probe.ttftMs}ms` : ""}`}
+      aria-label={`延迟: ${probe.latencyMs}ms`}
+    >
+      <span className="kk-probe-dot" aria-hidden="true" />
+      <span className="kk-probe-val">
+        {probe.tier === "error" ? "异常" : `${probe.latencyMs}ms`}
+      </span>
+    </span>
+  );
+}
 
 export default function ModelPickerRows({
   ordered,
@@ -120,6 +146,7 @@ export default function ModelPickerRows({
               {item.label}
               {item.page ? " ›" : ""}
             </span>
+            {renderModelProbeBadge(item)}
             <small>
               {fuzzy ? "可能匹配 · " : ""}
               {disabledReason(item) ?? item.detail}

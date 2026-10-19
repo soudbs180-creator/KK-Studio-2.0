@@ -45,6 +45,12 @@
 - 新功能优先按 `src/features/<feature>` 拆分；组件超过 300 行按职责拆分。完整的编码约束（命名、文件规模边界、模块依赖方向、错误处理、门禁映射）见 [`docs/engineering/CODING-STANDARDS.md`](docs/engineering/CODING-STANDARDS.md)。
 - `src/domain` 是纯领域层，不得依赖 React、Tauri、`components`、`features`、`integrations`、`styles` 或 Node 内置模块，由 `scripts/governance/import-boundaries.mjs` 强制。
 - Desktop 与 Web 共用根 `src/` 的领域、功能、Provider、任务和 UI 逻辑；`src-tauri/` 只承载 Desktop 原生壳、IPC、凭据库和本地文件能力。未来 Mobile 必须使用独立顶层 `mobile/` 工程，不得把 Mobile 页面、平台 runtime 或原生依赖放入 `src/` 或 `src-tauri/`；跨端共享必须经过明确抽出的、与平台无关且可版本化的契约或核心包。
+- **禁止重复造轮子与开源复用优先**：凡涉及通用且复杂度高的领域能力（包括但不限于：无限画布底座、手势交互与矩阵变换、贝塞尔曲线连线、节点碰撞检测、SSE/Chunked 流式解析与重试机制、图片框选/局部重绘 Mask 编辑器、Markdown 高级渲染、复杂状态机、断点续传/哈希校验等），**严禁在没有充分调研的情况下从零编写私有实现**。开工前必须优先理解并采用用户提供的参考代码；若无参考代码，AI 必须主动在 GitHub / npm 开源生态中检索 Star 数量高、维护活跃、测试覆盖完善的成熟方案，优先通过依赖引入或适配层（vendor/adapter）接入。仅在确实无合适开源库或存在不可调和协议冲突时，方可自研最小适配并在架构记录（ADR/Spec）中说明必要性。
+- **现代架构分层与修改隔离准则（Clean Architecture & Feature-Sliced Isolation）**：
+  - 严格采用垂直切片架构（Vertical Slice Architecture / FSD）：业务功能完全收敛于 `src/features/<feature>/`，模块间严禁跨层私有引用，对外交互必须经由明确类型化的入口 `index.ts` 暴露。保证修改单个功能时局部收敛，杜绝修改引起的全局破坏与隐式级联依赖。
+  - 纯领域层单向依赖隔离：UI 层与基础设施层（Tauri/网络/本地存储）仅能单向依赖 `src/domain/` 领域模型，领域层保持绝对纯净，杜绝架构反向污染。
+  - 外部参考与依赖适配器模式（Adapter / Facade）：外部参考代码或第三方集成必须通过适配器隔离，防止外部变更对内部产生连锁影响。
+  - 工作区零污染与文件规范落位：仓库根目录严禁存放非受控的临时文件、构建日志（如 `*.log`、`*.bak`、`tmp/`）；临时调试文件统一落入 `.tmp/`（已 gitignore）；外部参考统一归位 `references/`，外部文档归入 `docs/05-references/`，运行日志与测试产物统一归入 `output/logs/` 或特定日期证据目录。
 
 ## 数据与安全
 
@@ -107,3 +113,4 @@
 - 合并前 self-review、lint/typecheck/test/build、相关 regression、文档与验收全部通过；UI/runtime 适用时必须完成上述运行链路门禁。冲突在源分支解决，解决后重新验证。
 - PR 一项逻辑目标，使用 `.github/PULL_REQUEST_TEMPLATE.md`；默认 squash merge，合并后验证最新主线。无 remote/权限时保留可审阅本地提交与 PR 内容并明确 remote gate 未完成。远端保护需实际托管配置，不能把 CI 文件当 ruleset 已启用。
 - DONE = 实现 + 验收 + 相关验证/回归 + 文档同步；未完成写 PARTIAL，未验证写 NOT VERIFIED。结束迭代更新 ledger、Project State、Handoff 和相关规范；相同错误复发必须补自动 guardrail。不要因文件长而机械拆分，按职责边界整理。
+- **工作树与分支严格复用与即时闭环合流（Worktree & Branch Immediate Closure）**：开工前必须先检查现有工作树与分支（`git worktree list` / `git branch`），已有工作树或分支在处理相同/关联任务时必须直接复用，严禁新建重复分支或平行工作树（避免工作树蔓延）。分支任务一旦编码完成并经门禁验证确认无误（lint/typecheck/test/build/UI 验收全部通过），**必须立即执行合并（Merge）并清理/回收该工作树**，严禁让通过验证的分支长期独立游离或滞留工作树。所有子任务/工作树变更全部合流并通过整体门禁后，统一进行完整交付与提交。

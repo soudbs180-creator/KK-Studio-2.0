@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import UiIcon from "./UiIcon";
 import type { CreationDraft } from "../features/creation/model";
+import UsageStatusBar from "./composer/UsageStatusBar";
 import { homeModelSelection } from "../domain/modelSelection";
 import { codexHomeValidation } from "../features/agent/codexGeneration";
 import StartAttachmentList from "./StartAttachmentList";
@@ -277,6 +278,10 @@ export default function StartComposer({
             </button>
           </div>
         </div>
+        <UsageStatusBar
+          draft={draft}
+          onReasoningEffortChange={(effort) => commit({ reasoningEffort: effort })}
+        />
       </form>
       <StartComposerFeedback
         reason={draft.prompt.trim() ? disabledReason : undefined}

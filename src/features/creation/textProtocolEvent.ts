@@ -12,7 +12,7 @@ interface ResponsesState {
 interface AnthropicState {
   started?: boolean;
   blocks: number;
-  active?: { index: number; kind: "text" | "thinking" };
+  active?: { index: number; kind: "text" | "thinking" | "tool_use" };
 }
 export interface TextProtocolState {
   text: string;
@@ -215,14 +215,16 @@ function startBlock(
     blockIndex !== route.blocks
   )
     invalid();
-  let kind: "text" | "thinking";
+  let kind: "text" | "thinking" | "tool_use";
   if (block.type === "text") {
     if (typeof block.text !== "string") invalid();
     state.text += block.text;
     kind = "text";
-  } else if (block.type === "thinking" || block.type === "redacted_thinking")
+  } else if (block.type === "thinking" || block.type === "redacted_thinking") {
     kind = "thinking";
-  else return invalid();
+  } else if (block.type === "tool_use") {
+    kind = "tool_use";
+  } else return invalid();
   route.active = { index: blockIndex, kind };
   route.blocks++;
 }
@@ -245,11 +247,19 @@ function blockDelta(
     typeof delta.text === "string"
   )
     state.text += delta.text;
-  else if (!(
+  else if (
     route.active!.kind === "thinking" &&
     ["thinking_delta", "signature_delta"].includes(String(delta.type))
-  ))
+  ) {
+    // thinking delta accepted
+  } else if (
+    route.active!.kind === "tool_use" &&
+    ["input_json_delta", "input_json"].includes(String(delta.type))
+  ) {
+    // tool_use delta accepted
+  } else {
     invalid();
+  }
 }
 
 function stopMessage(
@@ -265,7 +275,13 @@ function stopMessage(
   )
     invalid();
   if (delta.stop_reason !== undefined && delta.stop_reason !== null) {
-    if (delta.stop_reason !== "end_turn") invalid();
+    if (
+      delta.stop_reason !== "end_turn" &&
+      delta.stop_reason !== "tool_use" &&
+      delta.stop_reason !== "stop_sequence" &&
+      delta.stop_reason !== "max_tokens"
+    )
+      invalid();
     state.endTurn = true;
   }
 }
@@ -321,8 +337,6 @@ function consumeChat(value: Json, state: TextProtocolState) {
   if (
     !choice.delta ||
     typeof choice.delta !== "object" ||
-    delta.tool_calls != null ||
-    delta.function_call != null ||
     delta.refusal != null
   )
     invalid();
@@ -330,7 +344,13 @@ function consumeChat(value: Json, state: TextProtocolState) {
   if (delta.content != null && typeof delta.content !== "string") invalid();
   if (typeof delta.content === "string") state.text += delta.content;
   if (choice.finish_reason !== undefined && choice.finish_reason !== null) {
-    if (choice.finish_reason !== "stop") invalid();
+    if (
+      choice.finish_reason !== "stop" &&
+      choice.finish_reason !== "length" &&
+      choice.finish_reason !== "tool_calls" &&
+      choice.finish_reason !== "function_call"
+    )
+      invalid();
     state.complete = true;
   }
 }

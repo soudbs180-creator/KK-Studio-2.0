@@ -33,12 +33,18 @@ export function parseModelWindow(modelId: string): ContextWindowSpec {
   return { slug, contextWindow };
 }
 
+export function calculateAutoCompactWatermark(contextWindow: number): number {
+  if (!Number.isFinite(contextWindow) || contextWindow <= 0) return 0;
+  const ratio = contextWindow <= 128_000 ? 0.75 : 0.8;
+  return Math.floor(contextWindow * ratio);
+}
+
 export const catalogModelEntrySchema = z.object({
   slug: z.string().min(1).max(120),
   display_name: z.string().min(1).max(120),
   context_window: z.number().int().positive().optional(),
   max_context_window: z.number().int().positive().optional(),
-  auto_compact_token_limit: z.null().optional(),
+  auto_compact_token_limit: z.number().int().positive().nullable().optional(),
   priority: z.number().int().nonnegative().optional(),
 });
 export type CatalogModelEntry = z.infer<typeof catalogModelEntrySchema>;
@@ -47,17 +53,29 @@ export interface CatalogModelInput {
   model: string;
   displayName?: string;
   priority?: number;
+  autoCompactTokenLimit?: number | null;
+  calculateWatermark?: boolean;
 }
 
 export function buildModelCatalog(
   inputs: CatalogModelInput[],
+  options?: { autoCompact?: boolean },
 ): CatalogModelEntry[] {
   return inputs.map((input) => {
     const { slug, contextWindow } = parseModelWindow(input.model);
+    let autoCompact: number | null = null;
+    if (input.autoCompactTokenLimit !== undefined) {
+      autoCompact = input.autoCompactTokenLimit;
+    } else if (
+      (options?.autoCompact || input.calculateWatermark) &&
+      contextWindow !== undefined
+    ) {
+      autoCompact = calculateAutoCompactWatermark(contextWindow);
+    }
     const entry: CatalogModelEntry = {
       slug,
       display_name: input.displayName?.trim().slice(0, 120) || slug,
-      auto_compact_token_limit: null,
+      auto_compact_token_limit: autoCompact,
     };
     if (contextWindow !== undefined) {
       entry.context_window = contextWindow;

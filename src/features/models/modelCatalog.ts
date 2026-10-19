@@ -11,7 +11,63 @@ import {
   parseImageModelCapabilities,
   type ImageModelCapabilities,
 } from "../../domain/imageModelCapabilities.ts";
+import {
+  calculateAutoCompactWatermark,
+  parseModelWindow,
+} from "./modelCatalogWindow.ts";
 export type { ModelKind } from "../../domain/modelSelection.ts";
+
+export interface ModelSpaceProfile {
+  readonly modelId: string;
+  readonly contextWindow: number;
+  readonly maxContextWindow: number;
+  /** Context compression watermark threshold (in tokens). */
+  readonly autoCompactWatermark: number;
+  /** Allowed MCP Server IDs attached to this model. If empty/undefined, all allowed. */
+  readonly mcpServerWhitelist?: readonly string[];
+  /** Allowed MCP Tool names attached to this model. */
+  readonly mcpToolWhitelist?: readonly string[];
+  /** Explicitly disallowed MCP Tools (e.g. deny filesystem tools to image/subagent models). */
+  readonly mcpToolBlacklist?: readonly string[];
+  /** Default reasoning effort setting: "low" | "medium" | "high" | "xhigh". */
+  readonly defaultReasoningEffort?: "low" | "medium" | "high" | "xhigh";
+  /** Default temperature for this model space. */
+  readonly defaultTemperature?: number;
+}
+
+export function createModelSpaceProfile(options: {
+  modelId: string;
+  contextWindow?: number;
+  maxContextWindow?: number;
+  autoCompactWatermark?: number;
+  mcpServerWhitelist?: readonly string[];
+  mcpToolWhitelist?: readonly string[];
+  mcpToolBlacklist?: readonly string[];
+  defaultReasoningEffort?: "low" | "medium" | "high" | "xhigh";
+  defaultTemperature?: number;
+}): ModelSpaceProfile {
+  const { slug, contextWindow: parsedWindow } = parseModelWindow(
+    options.modelId,
+  );
+  const contextWindow = options.contextWindow ?? parsedWindow ?? 128_000;
+  const maxContextWindow = options.maxContextWindow ?? contextWindow;
+  const autoCompactWatermark =
+    options.autoCompactWatermark ??
+    calculateAutoCompactWatermark(contextWindow);
+
+  return {
+    modelId: slug || options.modelId,
+    contextWindow,
+    maxContextWindow,
+    autoCompactWatermark,
+    mcpServerWhitelist: options.mcpServerWhitelist,
+    mcpToolWhitelist: options.mcpToolWhitelist,
+    mcpToolBlacklist: options.mcpToolBlacklist,
+    defaultReasoningEffort: options.defaultReasoningEffort,
+    defaultTemperature: options.defaultTemperature,
+  };
+}
+
 export interface CatalogModel {
   id: string;
   kind: ModelKind;

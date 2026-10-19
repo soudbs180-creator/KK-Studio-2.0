@@ -1273,3 +1273,211 @@
     forwards;
   will-change: transform, opacity;
 }
+
+/* ==========================================================================
+   Composer Usage Status Bar (T-GW-01 / R1)
+   Fixed 24px height status bar for context token usage, cache, tps & reasoning
+   ========================================================================== */
+.composer-usage-status-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-2, 8px);
+  height: 24px;
+  min-height: 24px;
+  max-height: 24px;
+  box-sizing: border-box;
+  overflow: hidden;
+  padding: 0 var(--ui-space-2, 8px);
+  border-top: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.06));
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  line-height: 24px;
+  color: var(--text-tertiary, #94a3b8);
+  user-select: none;
+}
+
+.composer-gauge-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex: 0 1 auto;
+}
+
+.composer-token-progress-bar {
+  width: 80px;
+  height: 4px;
+  background: var(--bg-elevated, rgba(255, 255, 255, 0.1));
+  border-radius: 2px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.composer-token-progress-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.2s ease-out;
+}
+
+.composer-token-progress-bar.status-normal .composer-token-progress-fill {
+  background: var(--kk-accent-muted, #5b82a6);
+}
+
+.composer-token-progress-bar.status-warning .composer-token-progress-fill {
+  background: var(--ui-warning, #d97706);
+}
+
+.composer-token-progress-bar.status-danger .composer-token-progress-fill {
+  background: var(--ui-danger, #ef4444);
+}
+
+.composer-token-text {
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.composer-metrics-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.composer-cache-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 14px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+}
+
+.composer-cache-badge.is-cached {
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.12);
+}
+
+.composer-cache-badge.is-idle {
+  color: var(--text-tertiary, #94a3b8);
+  opacity: 0.5;
+}
+
+.composer-tps-badge {
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-tertiary, #94a3b8);
+  white-space: nowrap;
+}
+
+.composer-reasoning-selector {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 4px;
+  padding: 1px;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.composer-reasoning-selector.is-disabled {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.composer-reasoning-label {
+  font-size: 10px;
+  color: var(--text-tertiary, #94a3b8);
+  padding: 0 4px;
+}
+
+.composer-reasoning-btn {
+  border: 0;
+  background: transparent;
+  color: var(--text-tertiary, #94a3b8);
+  font-size: 10px;
+  line-height: 16px;
+  padding: 0 6px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.composer-reasoning-btn:hover:not(:disabled) {
+  color: var(--text-primary, #f8fafc);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.composer-reasoning-btn.is-active {
+  background: var(--bg-elevated, rgba(255, 255, 255, 0.14));
+  color: var(--text-primary, #f8fafc);
+  font-weight: 500;
+}
+
+/* ==========================================================================
+   Model Latency Probing Badges (T-GW-02 / R1)
+   3-tier status badges: fast (<100ms), moderate (<500ms), slow/error (>=500ms)
+   ========================================================================== */
+.kk-model-probe-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 1px 6px;
+  border-radius: 9999px;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 14px;
+  font-variant-numeric: tabular-nums;
+  vertical-align: middle;
+}
+
+.kk-model-probe-badge .kk-probe-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.kk-model-probe-badge.is-fast {
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.12);
+}
+
+.kk-model-probe-badge.is-fast .kk-probe-dot {
+  background: #10b981;
+}
+
+.kk-model-probe-badge.is-moderate,
+.kk-model-probe-badge.is-medium {
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.12);
+}
+
+.kk-model-probe-badge.is-moderate .kk-probe-dot,
+.kk-model-probe-badge.is-medium .kk-probe-dot {
+  background: #f59e0b;
+}
+
+.kk-model-probe-badge.is-slow {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.12);
+}
+
+.kk-model-probe-badge.is-slow .kk-probe-dot {
+  background: #ef4444;
+}
+
+.kk-model-probe-badge.is-error {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.18);
+}
+
+.kk-model-probe-badge.is-error .kk-probe-dot {
+  background: #ef4444;
+}

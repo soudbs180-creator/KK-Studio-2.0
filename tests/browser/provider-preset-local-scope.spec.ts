@@ -30,10 +30,14 @@ for (const width of [390, 1920]) {
     await expect(
       picker.getByRole("button", { name: "全部", exact: true }),
     ).toHaveAttribute("aria-pressed", "true");
-    await expect(picker.locator(".provider-preset-item")).toHaveCount(2);
+    await expect(picker.locator(".provider-preset-item")).toHaveCount(6);
     await expect(picker.locator(".provider-preset-item strong")).toHaveText([
       "LM Studio",
       "Ollama",
+      "LocalAI",
+      "vLLM",
+      "Jan",
+      "ComfyUI",
     ]);
     await page.getByLabel("提供商", { exact: true }).fill("本地草稿也要保留");
     await method(page, "API Key（官方）");

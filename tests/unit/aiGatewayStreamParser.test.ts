@@ -148,12 +148,6 @@ for (const [name, wire] of [
   ["empty text", stop + done],
   ["malformed JSON", "data: {broken}\n\n" + done],
   ["tool delta", frame({ choices: [{ delta: { tool_calls: [] } }] }) + done],
-  [
-    "length finish",
-    delta("partial") +
-      frame({ choices: [{ delta: {}, finish_reason: "length" }] }) +
-      done,
-  ],
   ["text after stop", delta("first") + stop + delta("late") + done],
   ["non-SSE body", "plain JSON"],
   ["event limit", ":" + "x".repeat(65536) + "\n\n"],
@@ -175,6 +169,16 @@ for (const [name, wire] of [
     assert.equal(source.body!.locked, false);
   });
 }
+
+test("stream parser gracefully accepts length finish without throwing", async () => {
+  const source = response(
+    delta("partial content") +
+      frame({ choices: [{ delta: {}, finish_reason: "length" }] }) +
+      done,
+  );
+  const result = await readChatStream(source, options);
+  assert.equal(result.text, "partial content");
+});
 
 test("stream parser rejects invalid UTF-8", async () => {
   await assert.rejects(
