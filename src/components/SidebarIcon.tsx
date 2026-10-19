@@ -1,24 +1,25 @@
-const ASSETS: Record<string, string> = {
-  add: "/design/figma/sidebar-add.svg",
-  archive: "/design/figma/sidebar-archive.svg",
-  skill: "/design/figma/sidebar-skill.svg",
-  workflow: "/design/figma/sidebar-workflow.svg",
-  chat: "/design/figma/chat-open.svg",
-  assets: "/design/figma/toolbar-assets.svg",
-  tasks: "/design/figma/task-clipboard.svg",
-  search: "/design/figma/sidebar-search-container.svg",
-  // The expanded state uses the filled-left variant from the Figma
-  // "左展开和关闭" component. Keep the public icon name stable for the
-  // sidebar button while selecting the correct state artwork here.
-  toggle: "/design/figma/sidebar-collapse.svg",
-  expand: "/design/figma/sidebar-expand.svg",
-  settings: "/design/figma/sidebar-settings-container.svg",
-};
+import UiIcon, { type UiIconName } from "./UiIcon";
 
-export default function SidebarIcon({ name }: { name: string }) {
+const ICONS = {
+  add: "add",
+  archive: "archive",
+  skill: "extensions",
+  workflow: "workflow",
+  chat: "chat",
+  assets: "folder",
+  tasks: "tasks",
+  search: "search",
+  toggle: "previous",
+  expand: "next",
+  settings: "settings",
+} as const satisfies Record<string, UiIconName>;
+
+export type SidebarIconName = keyof typeof ICONS;
+
+export default function SidebarIcon({ name }: { name: SidebarIconName }) {
   return (
     <span className={`sidebar-icon sidebar-icon-${name}`} aria-hidden="true">
-      <img src={ASSETS[name]} alt="" draggable={false} />
+      <UiIcon name={ICONS[name]} />
     </span>
   );
 }

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useDismissible } from "./useDismissible";
+import UiIcon from "./UiIcon";
 
 /** Compact entry to the same application actions as the desktop menu. */
 export default function CompactAppMenu({
@@ -33,12 +34,7 @@ export default function CompactAppMenu({
         aria-haspopup="menu"
         onClick={() => setOpen(!open)}
       >
-        <img
-          src="/design/figma/project-ellipsis-glyph.svg"
-          width={20}
-          height={20}
-          alt=""
-        />
+        <UiIcon name="more" />
       </button>
       {open && (
         <div className="compact-app-popover" role="menu" aria-label="应用功能">

@@ -1,10 +1,10 @@
-import SidebarIcon from "./SidebarIcon";
+import SidebarIcon, { type SidebarIconName } from "./SidebarIcon";
 
 type NavItem = {
   id: string;
   label: string;
   compact: string;
-  icon: string;
+  icon: SidebarIconName;
   phoneOnly?: boolean;
 };
 

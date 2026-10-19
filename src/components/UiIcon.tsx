@@ -28,6 +28,14 @@ import {
   Pause,
   Play,
   Check,
+  ArchiveBox,
+  ElementPlus,
+  Hierarchy,
+  MessageText,
+  ClipboardText,
+  SearchNormal1,
+  ArrowLeft2,
+  Setting2,
 } from "iconsax-react";
 import { getUiIconSizeName, normalizeUiIconSize } from "./uiIconSizing";
 
@@ -62,6 +70,14 @@ const ICONS = {
   play: Play,
   resume: Play,
   check: Check,
+  archive: ArchiveBox,
+  extensions: ElementPlus,
+  workflow: Hierarchy,
+  chat: MessageText,
+  tasks: ClipboardText,
+  search: SearchNormal1,
+  previous: ArrowLeft2,
+  settings: Setting2,
 };
 export type UiIconName = keyof typeof ICONS;
 

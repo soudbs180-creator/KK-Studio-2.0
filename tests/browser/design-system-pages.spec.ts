@@ -6,7 +6,7 @@ import {
   themeTokens,
 } from "../helpers/designSystem.ts";
 
-import { selectSettingsSection } from "./helpers";
+import { expandSidebar, selectSettingsSection } from "./helpers";
 
 const pages = ["项目库", "扩展"];
 
@@ -14,21 +14,31 @@ test("sidebar SVG marks remain distinguishable in both themes", async ({
   page,
 }) => {
   await page.goto("/");
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await expandSidebar(page);
   for (const theme of ["dark", "light"]) {
     await appearance(page, theme, "default");
     for (const selector of [
-      ".sidebar-icon-archive img",
-      ".sidebar-icon-skill img",
+      ".sidebar .sidebar-icon-archive svg",
+      ".sidebar .sidebar-icon-skill svg",
       ".sidebar .brand [data-brand-logo]",
     ]) {
-      const pixels = await page.locator(selector).evaluate(async (element) => {
-        const img = element as HTMLImageElement;
+      const mark = page.locator(selector);
+      await expect(mark).toBeVisible();
+      const pixels = await mark.evaluate(async (element) => {
+        let img: HTMLImageElement;
+        if (element instanceof SVGElement) {
+          const clone = element.cloneNode(true) as SVGElement;
+          clone.style.color = getComputedStyle(element).color;
+          img = new Image();
+          img.src = `data:image/svg+xml,${encodeURIComponent(new XMLSerializer().serializeToString(clone))}`;
+        } else img = element as HTMLImageElement;
         await img.decode();
         const canvas = document.createElement("canvas");
         canvas.width = img.naturalWidth * 4;
         canvas.height = img.naturalHeight * 4;
         const ctx = canvas.getContext("2d")!;
-        ctx.filter = getComputedStyle(img).filter;
+        ctx.filter = getComputedStyle(element).filter;
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
         const rgba = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
         const counts = new Map<string, number>();
@@ -39,7 +49,7 @@ test("sidebar SVG marks remain distinguishable in both themes", async ({
         }
         return {
           mark: [...counts].sort((a, b) => b[1] - a[1])[0]?.[0],
-          bg: getComputedStyle(img.closest(".sidebar")!).backgroundColor,
+          bg: getComputedStyle(element.closest(".sidebar")!).backgroundColor,
         };
       });
       expect(pixels.mark).toBeTruthy();

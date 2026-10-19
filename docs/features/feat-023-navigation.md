@@ -1,8 +1,10 @@
 # 导航、侧栏与多创作页（FEAT-023）
 
+2026-10-19：TASK-UI-FLOATING-20261019 将手机主导航改为四项等宽居中悬浮、统一关键操作内联图标，并修正1601px技能入口裁切；当前为未发布候选，验证见[本次记录](../changes/2026-10-19-floating-ui/verification.md)。独立Mobile工程未改，成熟度仍PARTIAL。
+
 - 状态：PARTIAL
 - 领域：system
-- 最近更新：2026-10-14
+- 最近更新：2026-10-19
 - 关联任务：TASK-UI-DISMISS-002、UI-004、TASK-UI-006、TASK-PROJECT-SIDEBAR-001、TASK-UI-013、TASK-UI-CONSOLIDATE-20261014
 
 ## 用户可见入口

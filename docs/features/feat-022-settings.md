@@ -1,8 +1,10 @@
 # 设置中心（FEAT-022）
 
+2026-10-19：TASK-UI-FLOATING-20261019 承接截图控件和导航图标；全局胶囊化/高亮已按用户纠正撤回，其他按钮保持原有形状和状态。当前为未发布候选，验证见[本次记录](../changes/2026-10-19-floating-ui/verification.md)。功能成熟度不升级。
+
 - 状态：PARTIAL
 - 领域：system
-- 最近更新：2026-10-16
+- 最近更新：2026-10-19
 - 关联任务：TASK-UI-005、TASK-PROV-001、UI-004、TASK-DS-001、TASK-DS-002、TASK-UI-CONSOLIDATE-20261014、TASK-PROTOCOL-CLI-20261014、TASK-222-ACTIONS-20261014、TASK-223-ACTIONS-20261014、TASK-SETTINGS-LATEST-20261015
 
 TASK-SETTINGS-LATEST-20261015本地DONE/PASS：在最新c1fae190 UI上完成2.1.25设置修复，629浏览器首试及实际Web/Tauri、Native配置恢复和独立源码审查通过。当前Desktop入口已指向新版；原配置身份、primary dirty/index保留，旧错误基线与失败证据保留。[当前验证](../changes/2026-10-15-settings-latest-ui/verification.md)。真人Provider/Hosted/签名和用户视觉接受另验，功能继续PARTIAL。
