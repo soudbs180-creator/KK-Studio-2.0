@@ -74,35 +74,42 @@ test("SCENARIO-T3-01: Transpiler with Account Pool 429 failover", async () => {
     },
   ]);
 
-  const dispatchResult = await pool.dispatchWithHotDrift<OpenAIChatResponse>(async (account) => {
-    if (account.id === "acc-deepseek-1") {
-      throw new Error("HTTP 429: Rate limit exceeded");
-    }
-    return {
-      id: "chatcmpl-failover-success",
-      model: "deepseek-chat",
-      choices: [
-        {
-          index: 0,
-          message: {
-            role: "assistant",
-            content: "Consensus ensures replicas agree on state.",
+  const dispatchResult = await pool.dispatchWithHotDrift<OpenAIChatResponse>(
+    async (account) => {
+      if (account.id === "acc-deepseek-1") {
+        throw new Error("HTTP 429: Rate limit exceeded");
+      }
+      return {
+        id: "chatcmpl-failover-success",
+        model: "deepseek-chat",
+        choices: [
+          {
+            index: 0,
+            message: {
+              role: "assistant",
+              content: "Consensus ensures replicas agree on state.",
+            },
+            finish_reason: "stop",
           },
-          finish_reason: "stop",
-        },
-      ],
-      usage: { prompt_tokens: 12, completion_tokens: 8, total_tokens: 20 },
-    };
-  });
+        ],
+        usage: { prompt_tokens: 12, completion_tokens: 8, total_tokens: 20 },
+      };
+    },
+  );
 
   assert.equal(dispatchResult.drifted, true);
   assert.equal(dispatchResult.finalAccountId, "acc-deepseek-2");
 
   // Transpile response back to Anthropic
-  const anthropicResp = transpileOpenAIResponseToAnthropic(dispatchResult.result);
+  const anthropicResp = transpileOpenAIResponseToAnthropic(
+    dispatchResult.result,
+  );
   assert.equal(anthropicResp.role, "assistant");
   assert.equal(anthropicResp.content[0].type, "text");
-  assert.equal(anthropicResp.content[0].text, "Consensus ensures replicas agree on state.");
+  assert.equal(
+    anthropicResp.content[0].text,
+    "Consensus ensures replicas agree on state.",
+  );
   assert.equal(anthropicResp.stop_reason, "end_turn");
 });
 
@@ -118,18 +125,26 @@ test("SCENARIO-T3-02: UsageStatusBar with ModelSpaceProfile watermark", () => {
 
   // Draft with 40,000 words -> ~50,000 tokens
   const draftText = "word ".repeat(39000);
-  const gauge = calculateContextGauge({ text: draftText, model: profile.modelId }, 512);
+  const gauge = calculateContextGauge(
+    { text: draftText, model: profile.modelId },
+    512,
+  );
 
   assert.ok(gauge.usedTokens > profile.autoCompactTokenLimit);
-  assert.equal(shouldTriggerCompaction(gauge.usedTokens, profile.autoCompactTokenLimit), true);
+  assert.equal(
+    shouldTriggerCompaction(gauge.usedTokens, profile.autoCompactTokenLimit),
+    true,
+  );
   assert.equal(gauge.tier, "warning"); // ~76% usage triggers warning tier
 });
 
 test("SCENARIO-T3-03: ModelPicker probing with Provider Preset discovery", async () => {
   const store = new ModelProbeStore(60000);
-  const presets = [findPresetById("deepseek"), findPresetById("siliconflow"), findPresetById("ollama")].filter(
-    Boolean,
-  );
+  const presets = [
+    findPresetById("deepseek"),
+    findPresetById("siliconflow"),
+    findPresetById("ollama"),
+  ].filter(Boolean);
 
   assert.equal(presets.length, 3);
 
@@ -137,7 +152,8 @@ test("SCENARIO-T3-03: ModelPicker probing with Provider Preset discovery", async
   const metrics = await Promise.all(
     presets.map((p) =>
       store.probe(p!.id, async () => {
-        const fakeLatency = p!.id === "ollama" ? 15 : p!.id === "deepseek" ? 85 : 120;
+        const fakeLatency =
+          p!.id === "ollama" ? 15 : p!.id === "deepseek" ? 85 : 120;
         return { latencyMs: fakeLatency, ok: true };
       }),
     ),
@@ -165,8 +181,12 @@ test("SCENARIO-T3-04: Subagent delegation with Transpiler streaming", async () =
     },
     async (_tools, logFn) => {
       // Simulate OpenAI streaming chunks inside subagent
-      const chunk1 = { choices: [{ delta: { reasoning_content: "Checking site..." } }] };
-      const chunk2 = { choices: [{ delta: { content: "Site status 200 OK." } }] };
+      const chunk1 = {
+        choices: [{ delta: { reasoning_content: "Checking site..." } }],
+      };
+      const chunk2 = {
+        choices: [{ delta: { content: "Site status 200 OK." } }],
+      };
       const chunk3 = { choices: [{ delta: {}, finish_reason: "stop" }] };
 
       const events = [
@@ -180,7 +200,8 @@ test("SCENARIO-T3-04: Subagent delegation with Transpiler streaming", async () =
       }
 
       return {
-        summary: "Stream verified and converted to Anthropic format successfully.",
+        summary:
+          "Stream verified and converted to Anthropic format successfully.",
         tokensUsed: 150,
       };
     },
@@ -193,7 +214,8 @@ test("SCENARIO-T3-04: Subagent delegation with Transpiler streaming", async () =
 });
 
 test("SCENARIO-T3-05: Deeplink import with Account Pool registration", () => {
-  const deeplink = "ccswitch://v1/import?name=Kimi-Relay&endpoint=https%3A%2F%2Fapi.moonshot.cn%2Fv1&apiKey=sk-kimi-secret-1234567890abcdef&model=moonshot-v1-32k";
+  const deeplink =
+    "ccswitch://v1/import?name=Kimi-Relay&endpoint=https%3A%2F%2Fapi.moonshot.cn%2Fv1&apiKey=sk-kimi-secret-1234567890abcdef&model=moonshot-v1-32k";
   const payload = parseCcSwitchDeeplink(deeplink);
 
   assert.equal(payload.name, "Kimi-Relay");
@@ -244,7 +266,10 @@ test("SCENARIO-T3-06: Per-Model Space reasoning effort default with UsageStatusB
 
   assert.equal(draft.reasoningEffort, "high");
 
-  const gauge = calculateContextGauge({ text: draft.prompt, model: draft.model });
+  const gauge = calculateContextGauge({
+    text: draft.prompt,
+    model: draft.model,
+  });
   assert.equal(gauge.maxTokens, 64000);
   assert.equal(gauge.tier, "normal");
 });
@@ -257,7 +282,10 @@ test("SCENARIO-T3-07: Dynamic watermarks triggering Subagent task delegation", a
   };
 
   const currentTokens = 165000;
-  const isOverWatermark = shouldTriggerCompaction(currentTokens, profile.autoCompactTokenLimit);
+  const isOverWatermark = shouldTriggerCompaction(
+    currentTokens,
+    profile.autoCompactTokenLimit,
+  );
   assert.equal(isOverWatermark, true);
 
   // Trigger compaction subagent
@@ -273,7 +301,8 @@ test("SCENARIO-T3-07: Dynamic watermarks triggering Subagent task delegation", a
     async (_tools, logFn) => {
       logFn("Compacting 50,000 tokens of chat turns...");
       return {
-        summary: "Context compacted: Established Hexagonal Core and Account Pool multi-key routing.",
+        summary:
+          "Context compacted: Established Hexagonal Core and Account Pool multi-key routing.",
         tokensUsed: 50000,
       };
     },
@@ -348,7 +377,10 @@ test("SCENARIO-T3-09: Tool Whitelist filtering with Transpiler tool calling", ()
     tools: allowedTools.map((t) => ({
       name: t.name,
       description: `Tool for ${t.name}`,
-      input_schema: { type: "object", properties: { path: { type: "string" } } },
+      input_schema: {
+        type: "object",
+        properties: { path: { type: "string" } },
+      },
     })),
     messages: [{ role: "user", content: "Read index.ts" }],
     max_tokens: 500,

@@ -22,7 +22,9 @@ const TASK_ID_PATTERN = /^TASK-[A-Z0-9]+(-[A-Z0-9]+)*$/;
 
 function validateMetadata(receipt, issues) {
   if (receipt.schemaVersion !== 1) {
-    issues.push(`Invalid schemaVersion: expected 1, got ${receipt.schemaVersion}`);
+    issues.push(
+      `Invalid schemaVersion: expected 1, got ${receipt.schemaVersion}`,
+    );
   }
   if (!receipt.taskId || !TASK_ID_PATTERN.test(receipt.taskId)) {
     issues.push(`Invalid or missing taskId: ${receipt.taskId}`);
@@ -36,7 +38,10 @@ function validateMetadata(receipt, issues) {
   if (!receipt.sourceHead || !SHA40_PATTERN.test(receipt.sourceHead)) {
     issues.push(`Invalid sourceHead Git commit SHA: ${receipt.sourceHead}`);
   }
-  if (!receipt.versions?.desktop || !SEMVER_PATTERN.test(receipt.versions.desktop)) {
+  if (
+    !receipt.versions?.desktop ||
+    !SEMVER_PATTERN.test(receipt.versions.desktop)
+  ) {
     issues.push(`Invalid versions.desktop: ${receipt.versions?.desktop}`);
   }
 }
@@ -47,13 +52,22 @@ function validateShadowModeLatency(latency, issues) {
     return;
   }
   if (typeof latency.sampleCount !== "number" || latency.sampleCount < 100) {
-    issues.push(`shadowModeLatency.sampleCount must be >= 100, got ${latency.sampleCount}`);
+    issues.push(
+      `shadowModeLatency.sampleCount must be >= 100, got ${latency.sampleCount}`,
+    );
   }
   if (typeof latency.p95LatencyMs !== "number" || latency.p95LatencyMs >= 5.0) {
-    issues.push(`shadowModeLatency.p95LatencyMs must be < 5.0ms, got ${latency.p95LatencyMs}ms`);
+    issues.push(
+      `shadowModeLatency.p95LatencyMs must be < 5.0ms, got ${latency.p95LatencyMs}ms`,
+    );
   }
-  if (typeof latency.averageLatencyMs !== "number" || latency.averageLatencyMs >= 5.0) {
-    issues.push(`shadowModeLatency.averageLatencyMs must be < 5.0ms, got ${latency.averageLatencyMs}ms`);
+  if (
+    typeof latency.averageLatencyMs !== "number" ||
+    latency.averageLatencyMs >= 5.0
+  ) {
+    issues.push(
+      `shadowModeLatency.averageLatencyMs must be < 5.0ms, got ${latency.averageLatencyMs}ms`,
+    );
   }
   if (latency.passed !== true) {
     issues.push("shadowModeLatency.passed must be true.");
@@ -65,17 +79,35 @@ function validateReplayConsistency(replay, issues) {
     issues.push("Missing acceptanceEvidence.replayConsistency.");
     return;
   }
-  if (typeof replay.operationsCount !== "number" || replay.operationsCount < 100) {
-    issues.push(`replayConsistency.operationsCount must be >= 100, got ${replay.operationsCount}`);
+  if (
+    typeof replay.operationsCount !== "number" ||
+    replay.operationsCount < 100
+  ) {
+    issues.push(
+      `replayConsistency.operationsCount must be >= 100, got ${replay.operationsCount}`,
+    );
   }
-  if (replay.snapshotEquivalence !== 1.0 && replay.snapshotEquivalence !== "100%") {
-    issues.push(`replayConsistency.snapshotEquivalence must be 1.0 (100%), got ${replay.snapshotEquivalence}`);
+  if (
+    replay.snapshotEquivalence !== 1.0 &&
+    replay.snapshotEquivalence !== "100%"
+  ) {
+    issues.push(
+      `replayConsistency.snapshotEquivalence must be 1.0 (100%), got ${replay.snapshotEquivalence}`,
+    );
   }
   if (replay.discrepancyCount !== 0) {
-    issues.push(`replayConsistency.discrepancyCount must be 0, got ${replay.discrepancyCount}`);
+    issues.push(
+      `replayConsistency.discrepancyCount must be 0, got ${replay.discrepancyCount}`,
+    );
   }
-  if (!replay.liveStateHash || !replay.replayedStateHash || replay.liveStateHash !== replay.replayedStateHash) {
-    issues.push(`replayConsistency state hashes mismatch or missing: live=${replay.liveStateHash}, replayed=${replay.replayedStateHash}`);
+  if (
+    !replay.liveStateHash ||
+    !replay.replayedStateHash ||
+    replay.liveStateHash !== replay.replayedStateHash
+  ) {
+    issues.push(
+      `replayConsistency state hashes mismatch or missing: live=${replay.liveStateHash}, replayed=${replay.replayedStateHash}`,
+    );
   }
   if (replay.passed !== true) {
     issues.push("replayConsistency.passed must be true.");
@@ -93,9 +125,13 @@ function validateConflictPreemption(preemption, issues) {
   if (preemption.taskCancelledSignal !== true) {
     issues.push("conflictPreemption.taskCancelledSignal must be true.");
   }
-  const entries = Array.isArray(preemption.eventLogEntries) ? preemption.eventLogEntries : [];
+  const entries = Array.isArray(preemption.eventLogEntries)
+    ? preemption.eventLogEntries
+    : [];
   if (!entries.includes("cancelled") || !entries.includes("override")) {
-    issues.push(`conflictPreemption.eventLogEntries must include both 'cancelled' and 'override', got: [${entries.join(", ")}]`);
+    issues.push(
+      `conflictPreemption.eventLogEntries must include both 'cancelled' and 'override', got: [${entries.join(", ")}]`,
+    );
   }
   if (preemption.passed !== true) {
     issues.push("conflictPreemption.passed must be true.");
@@ -114,7 +150,9 @@ function validateChecksAndErrors(receipt, issues) {
   }
 
   if (!Array.isArray(receipt.errors) || receipt.errors.length > 0) {
-    issues.push(`receipt.errors must be an empty array, found ${receipt.errors?.length ?? 0} errors.`);
+    issues.push(
+      `receipt.errors must be an empty array, found ${receipt.errors?.length ?? 0} errors.`,
+    );
   }
   if (receipt.passed !== true) {
     issues.push("receipt.passed must be explicitly true.");
@@ -128,9 +166,18 @@ export function validateReceipt(receipt) {
 
   const issues = [];
   validateMetadata(receipt, issues);
-  validateShadowModeLatency(receipt.acceptanceEvidence?.shadowModeLatency, issues);
-  validateReplayConsistency(receipt.acceptanceEvidence?.replayConsistency, issues);
-  validateConflictPreemption(receipt.acceptanceEvidence?.conflictPreemption, issues);
+  validateShadowModeLatency(
+    receipt.acceptanceEvidence?.shadowModeLatency,
+    issues,
+  );
+  validateReplayConsistency(
+    receipt.acceptanceEvidence?.replayConsistency,
+    issues,
+  );
+  validateConflictPreemption(
+    receipt.acceptanceEvidence?.conflictPreemption,
+    issues,
+  );
   validateChecksAndErrors(receipt, issues);
 
   return issues;
@@ -141,7 +188,9 @@ export function runCli(targetPathArg) {
   const resolvedPath = path.resolve(process.cwd(), targetPath);
 
   if (!fs.existsSync(resolvedPath)) {
-    console.error(`[check-receipt] Error: Receipt file not found at: ${resolvedPath}`);
+    console.error(
+      `[check-receipt] Error: Receipt file not found at: ${resolvedPath}`,
+    );
     return 1;
   }
 
@@ -149,13 +198,17 @@ export function runCli(targetPathArg) {
   try {
     content = JSON.parse(fs.readFileSync(resolvedPath, "utf8"));
   } catch (err) {
-    console.error(`[check-receipt] Error: Failed to parse JSON at ${resolvedPath}: ${err.message}`);
+    console.error(
+      `[check-receipt] Error: Failed to parse JSON at ${resolvedPath}: ${err.message}`,
+    );
     return 1;
   }
 
   const issues = validateReceipt(content);
   if (issues.length > 0) {
-    console.error(`[check-receipt] FAILED: ${issues.length} violation(s) found in ${targetPath}:`);
+    console.error(
+      `[check-receipt] FAILED: ${issues.length} violation(s) found in ${targetPath}:`,
+    );
     for (const issue of issues) {
       console.error(`  - ${issue}`);
     }
@@ -163,16 +216,23 @@ export function runCli(targetPathArg) {
   }
 
   const replayEquiv =
-    typeof content.acceptanceEvidence.replayConsistency.snapshotEquivalence === "number"
+    typeof content.acceptanceEvidence.replayConsistency.snapshotEquivalence ===
+    "number"
       ? `${content.acceptanceEvidence.replayConsistency.snapshotEquivalence * 100}%`
       : content.acceptanceEvidence.replayConsistency.snapshotEquivalence;
 
-  console.log(`[check-receipt] SUCCESS: ${targetPath} passed all validation rules.`);
+  console.log(
+    `[check-receipt] SUCCESS: ${targetPath} passed all validation rules.`,
+  );
   console.log(`  - Task: ${content.taskId}`);
   console.log(`  - Commit: ${content.sourceHead}`);
-  console.log(`  - Shadow Write Latency (p95): ${content.acceptanceEvidence.shadowModeLatency.p95LatencyMs}ms (<5ms)`);
+  console.log(
+    `  - Shadow Write Latency (p95): ${content.acceptanceEvidence.shadowModeLatency.p95LatencyMs}ms (<5ms)`,
+  );
   console.log(`  - Replay Consistency: ${replayEquiv} match (0 discrepancies)`);
-  console.log(`  - Designer Preemption: Verified with 'cancelled' & 'override' events`);
+  console.log(
+    `  - Designer Preemption: Verified with 'cancelled' & 'override' events`,
+  );
   return 0;
 }
 

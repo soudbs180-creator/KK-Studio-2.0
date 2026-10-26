@@ -1,6 +1,6 @@
 // Real production Gateway components with only owned synthetic loopback upstreams.
 import assert from "node:assert/strict";
-import { createServer, type Server } from "node:http";
+import { createServer, type Server, type ServerResponse } from "node:http";
 import { randomUUID } from "node:crypto";
 import { EventEmitter, once } from "node:events";
 import fs from "node:fs/promises";
@@ -108,6 +108,54 @@ export async function captureWire(response: Response) {
   }
 }
 
+async function handleNonStreamOrEarlyUpstream(params: {
+  mode: Mode;
+  channel: string;
+  isStream: boolean;
+  answer: string;
+  res: ServerResponse;
+  releaseFinishPromise: Promise<void>;
+}): Promise<boolean> {
+  const { mode, channel, isStream, answer, res, releaseFinishPromise } = params;
+  if (mode === "pre-error" || (mode === "pre503" && channel === "a")) {
+    res.writeHead(503, { "content-type": "application/json" });
+    res.end(
+      JSON.stringify({
+        error: {
+          message:
+            mode === "pre-error"
+              ? canary
+              : "synthetic temporary upstream failure",
+        },
+      }),
+    );
+    return true;
+  }
+  if ((mode === "json" || mode === "pre503") && !isStream) {
+    res.writeHead(200, { "content-type": "application/json" });
+    res.end(
+      JSON.stringify({
+        choices: [{ message: { content: answer } }],
+        usage: { prompt_tokens: 2, completion_tokens: 3, total_tokens: 5 },
+      }),
+    );
+    return true;
+  }
+  if (mode === "hang") {
+    await releaseFinishPromise;
+    if (!res.destroyed) {
+      res.writeHead(200, { "content-type": "application/json" });
+      res.end(
+        JSON.stringify({
+          choices: [{ message: { content: "released synthetic response" } }],
+        }),
+      );
+    }
+    return true;
+  }
+  return false;
+}
+
 export async function fixture(
   mode: Mode,
   options: { timeoutMs?: number | { a: number; b: number } } = {},
@@ -156,45 +204,16 @@ export async function fixture(
       });
       observations.emit("request");
       firstRequest.resolve();
-      if (mode === "pre-error" || (mode === "pre503" && channel === "a")) {
-        res.writeHead(503, { "content-type": "application/json" });
-        res.end(
-          JSON.stringify({
-            error: {
-              message:
-                mode === "pre-error"
-                  ? canary
-                  : "synthetic temporary upstream failure",
-            },
-          }),
-        );
-        return;
-      }
       const answer = mode === "pre503" ? "fallback success" : "json success";
-      if ((mode === "json" || mode === "pre503") && !body.stream) {
-        res.writeHead(200, { "content-type": "application/json" });
-        res.end(
-          JSON.stringify({
-            choices: [{ message: { content: answer } }],
-            usage: { prompt_tokens: 2, completion_tokens: 3, total_tokens: 5 },
-          }),
-        );
-        return;
-      }
-      if (mode === "hang") {
-        await releaseFinish.promise;
-        if (!res.destroyed) {
-          res.writeHead(200, { "content-type": "application/json" });
-          res.end(
-            JSON.stringify({
-              choices: [
-                { message: { content: "released synthetic response" } },
-              ],
-            }),
-          );
-        }
-        return;
-      }
+      const handledEarly = await handleNonStreamOrEarlyUpstream({
+        mode,
+        channel,
+        isStream: body.stream === true,
+        answer,
+        res,
+        releaseFinishPromise: releaseFinish.promise,
+      });
+      if (handledEarly) return;
       res.writeHead(200, {
         "content-type": "text/event-stream",
         "cache-control": "no-cache",
@@ -256,9 +275,11 @@ export async function fixture(
       }
       frame({ content: "好" });
       frame({}, "stop");
-      res.write(
-        `data: ${JSON.stringify({ choices: [], usage: mode === "partial-usage" ? { total_tokens: 5 } : { prompt_tokens: 2, completion_tokens: 3, total_tokens: 5 } })}\r\n\r\n`,
-      );
+      const usage =
+        mode === "partial-usage"
+          ? { total_tokens: 5 }
+          : { prompt_tokens: 2, completion_tokens: 3, total_tokens: 5 };
+      res.write(`data: ${JSON.stringify({ choices: [], usage })}\r\n\r\n`);
       res.end("data: [DONE]\r\n\r\n");
     })().catch(() => {
       events.push("owned-upstream-handler-error");

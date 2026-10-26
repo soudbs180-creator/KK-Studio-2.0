@@ -23,7 +23,10 @@ test("isInteractiveTarget identifies interactive form elements and non-drag elem
         const selectors = selector.split(",").map((s) => s.trim());
         if (selectors.includes(tag.toLowerCase())) return true;
         for (const [k, v] of Object.entries(attrs)) {
-          if (selectors.includes(`[${k}]`) || selectors.includes(`[${k}='${v}']`)) {
+          if (
+            selectors.includes(`[${k}]`) ||
+            selectors.includes(`[${k}='${v}']`)
+          ) {
             return true;
           }
         }
@@ -37,13 +40,22 @@ test("isInteractiveTarget identifies interactive form elements and non-drag elem
     class MockElement {}
     globalThis.Element = MockElement as unknown as typeof Element;
 
-    const btn = Object.setPrototypeOf(mockTarget("button"), MockElement.prototype);
+    const btn = Object.setPrototypeOf(
+      mockTarget("button"),
+      MockElement.prototype,
+    );
     assert.equal(isInteractiveTarget(btn), true);
 
-    const input = Object.setPrototypeOf(mockTarget("input"), MockElement.prototype);
+    const input = Object.setPrototypeOf(
+      mockTarget("input"),
+      MockElement.prototype,
+    );
     assert.equal(isInteractiveTarget(input), true);
 
-    const textarea = Object.setPrototypeOf(mockTarget("textarea"), MockElement.prototype);
+    const textarea = Object.setPrototypeOf(
+      mockTarget("textarea"),
+      MockElement.prototype,
+    );
     assert.equal(isInteractiveTarget(textarea), true);
 
     const noDrag = Object.setPrototypeOf(
@@ -52,7 +64,10 @@ test("isInteractiveTarget identifies interactive form elements and non-drag elem
     );
     assert.equal(isInteractiveTarget(noDrag), true);
 
-    const plainDiv = Object.setPrototypeOf(mockTarget("div"), MockElement.prototype);
+    const plainDiv = Object.setPrototypeOf(
+      mockTarget("div"),
+      MockElement.prototype,
+    );
     assert.equal(isInteractiveTarget(plainDiv), false);
   } finally {
     globalThis.Element = originalElement;
@@ -62,15 +77,36 @@ test("isInteractiveTarget identifies interactive form elements and non-drag elem
 test("resolveTargetNodeIds resolves target ids based on drag state and selection", () => {
   // Single node drag outside selection
   const d1 = { nodeId: "a", selection: new Set(["b", "c"]) };
-  assert.deepEqual([...resolveTargetNodeIds(d1 as unknown as Parameters<typeof resolveTargetNodeIds>[0])], ["a"]);
+  assert.deepEqual(
+    [
+      ...resolveTargetNodeIds(
+        d1 as unknown as Parameters<typeof resolveTargetNodeIds>[0],
+      ),
+    ],
+    ["a"],
+  );
 
   // Multi-node drag with nodeId in selection
   const d2 = { nodeId: "a", selection: new Set(["a", "b"]) };
-  assert.deepEqual([...resolveTargetNodeIds(d2 as unknown as Parameters<typeof resolveTargetNodeIds>[0])], ["a", "b"]);
+  assert.deepEqual(
+    [
+      ...resolveTargetNodeIds(
+        d2 as unknown as Parameters<typeof resolveTargetNodeIds>[0],
+      ),
+    ],
+    ["a", "b"],
+  );
 
   // Gesture with undefined nodeId (e.g. marquee)
   const d3 = { nodeId: undefined, selection: new Set(["x", "y"]) };
-  assert.deepEqual([...resolveTargetNodeIds(d3 as unknown as Parameters<typeof resolveTargetNodeIds>[0])], ["x", "y"]);
+  assert.deepEqual(
+    [
+      ...resolveTargetNodeIds(
+        d3 as unknown as Parameters<typeof resolveTargetNodeIds>[0],
+      ),
+    ],
+    ["x", "y"],
+  );
 });
 
 function createTestHarness(initialNodes = { a: { x: 10, y: 20 } }) {
@@ -90,7 +126,8 @@ function createTestHarness(initialNodes = { a: { x: 10, y: 20 } }) {
       containerRef: { current: fakeCanvas as unknown as HTMLDivElement },
       nodes: currentNodes,
       setNodes: (updater) => {
-        currentNodes = typeof updater === "function" ? updater(currentNodes) : updater;
+        currentNodes =
+          typeof updater === "function" ? updater(currentNodes) : updater;
       },
       transform: { x: 0, y: 0, scale: 1 },
       setTransform: () => {},

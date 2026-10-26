@@ -38,7 +38,9 @@ const defaultReferences: CanvasNodeItemProps["references"] = [];
 const defaultDummyFn = () => {};
 const defaultEmptyArray: string[] = [];
 
-function createMockProps(overrides?: Partial<CanvasNodeItemProps>): CanvasNodeItemProps {
+function createMockProps(
+  overrides?: Partial<CanvasNodeItemProps>,
+): CanvasNodeItemProps {
   const item = overrides?.item ?? defaultItem;
   const id = item.id;
 
@@ -170,7 +172,9 @@ test("areGenerationStatesEqual detects changes in active local result IDs for ta
   assert.equal(areGenerationStatesEqual(prevActive, nextActive), true);
 
   // Other node active does not affect this node
-  const nextOtherActive = createMockProps({ activeLocalResultIds: ["node-999"] });
+  const nextOtherActive = createMockProps({
+    activeLocalResultIds: ["node-999"],
+  });
   assert.equal(areGenerationStatesEqual(base, nextOtherActive), true);
 });
 
@@ -180,15 +184,17 @@ test("areSelectionAndMenuEqual detects menu open, single selection, and multi-se
 
   // Menu open for this node
   const withMenu = createMockProps();
-  (withMenu.addMenu as unknown as { menu: { parentId: string } | null }).menu = {
-    parentId: "node-1",
-  };
+  (withMenu.addMenu as unknown as { menu: { parentId: string } | null }).menu =
+    {
+      parentId: "node-1",
+    };
   assert.equal(areSelectionAndMenuEqual(base, withMenu), false);
 
   // Selected node changed
   const withSelected = createMockProps();
-  (withSelected.controls as unknown as { selectedNode: string | null }).selectedNode =
-    "node-1";
+  (
+    withSelected.controls as unknown as { selectedNode: string | null }
+  ).selectedNode = "node-1";
   assert.equal(areSelectionAndMenuEqual(base, withSelected), false);
 
   // Multi-selected set changed
@@ -228,26 +234,40 @@ test("areGeometryAndPositionEqual detects coordinate changes and plugin scale se
 
   // Position x changed
   const movedX = createMockProps();
-  (movedX.controls as unknown as { nodes: Record<string, { x: number; y: number }> }).nodes = {
+  (
+    movedX.controls as unknown as {
+      nodes: Record<string, { x: number; y: number }>;
+    }
+  ).nodes = {
     "node-1": { x: 105, y: 200 },
   };
   assert.equal(areGeometryAndPositionEqual(base, movedX), false);
 
   // Position y changed
   const movedY = createMockProps();
-  (movedY.controls as unknown as { nodes: Record<string, { x: number; y: number }> }).nodes = {
+  (
+    movedY.controls as unknown as {
+      nodes: Record<string, { x: number; y: number }>;
+    }
+  ).nodes = {
     "node-1": { x: 100, y: 205 },
   };
   assert.equal(areGeometryAndPositionEqual(base, movedY), false);
 
   // Missing node position
   const missingNode = createMockProps();
-  (missingNode.controls as unknown as { nodes: Record<string, unknown> }).nodes = {};
+  (
+    missingNode.controls as unknown as { nodes: Record<string, unknown> }
+  ).nodes = {};
   assert.equal(areGeometryAndPositionEqual(base, missingNode), false);
 
   // Non-plugin node: scale change does NOT invalidate props (saves re-renders on zoom)
   const nonPluginScaled = createMockProps();
-  (nonPluginScaled.controls as unknown as { transform: { x: number; y: number; scale: number } }).transform = {
+  (
+    nonPluginScaled.controls as unknown as {
+      transform: { x: number; y: number; scale: number };
+    }
+  ).transform = {
     x: 0,
     y: 0,
     scale: 1.5,
@@ -257,7 +277,11 @@ test("areGeometryAndPositionEqual detects coordinate changes and plugin scale se
   // Plugin node: scale change DOES invalidate props (plugin node requires scale awareness)
   const pluginBase = createMockProps({ item: createMockItem("node-1", true) });
   const pluginScaled = createMockProps({ item: pluginBase.item });
-  (pluginScaled.controls as unknown as { transform: { x: number; y: number; scale: number } }).transform = {
+  (
+    pluginScaled.controls as unknown as {
+      transform: { x: number; y: number; scale: number };
+    }
+  ).transform = {
     x: 0,
     y: 0,
     scale: 1.5,
@@ -275,7 +299,9 @@ test("areHandlersEqual checks callback references", () => {
   const changedOnDelete = createMockProps({ onDelete: () => {} });
   assert.equal(areHandlersEqual(base, changedOnDelete), false);
 
-  const changedOnGenerationState = createMockProps({ onGenerationState: () => {} });
+  const changedOnGenerationState = createMockProps({
+    onGenerationState: () => {},
+  });
   assert.equal(areHandlersEqual(base, changedOnGenerationState), false);
 });
 
@@ -289,7 +315,11 @@ test("arePropsEqual performs full composite check", () => {
 
   // Fails on position mismatch
   const moved = createMockProps();
-  (moved.controls as unknown as { nodes: Record<string, { x: number; y: number }> }).nodes = {
+  (
+    moved.controls as unknown as {
+      nodes: Record<string, { x: number; y: number }>;
+    }
+  ).nodes = {
     "node-1": { x: 999, y: 888 },
   };
   assert.equal(arePropsEqual(prev, moved), false);

@@ -5,7 +5,10 @@ import {
   canvasHistoryFingerprint,
   type CanvasHistorySnapshot,
 } from "../../src/domain/canvasHistory.ts";
-import type { CanvasCollectionItem, CanvasItemKind } from "../../src/domain/canvasItems.ts";
+import type {
+  CanvasCollectionItem,
+  CanvasItemKind,
+} from "../../src/domain/canvasItems.ts";
 import type { CanvasConnection } from "../../src/domain/canvasGraph.ts";
 import type { Point } from "../../src/domain/canvasViewport.ts";
 
@@ -116,7 +119,8 @@ export function reduceCanvasEvent(
     }
 
     case "canvas.node.unlocked": {
-      const result = payload.result as CanvasCollectionItem["result"] | undefined;
+      const result = payload.result as
+        CanvasCollectionItem["result"] | undefined;
       return {
         ...state,
         items: state.items.map((i) =>
@@ -194,7 +198,10 @@ export function generateDeterministic100Operations(): {
       mediaWidth: 512,
       mediaHeight: 512,
     };
-    const position: Point = { x: (i % 5) * 200, y: Math.floor((i - 1) / 5) * 250 };
+    const position: Point = {
+      x: (i % 5) * 200,
+      y: Math.floor((i - 1) / 5) * 250,
+    };
     events.push({
       seq: seq++,
       eventId: `evt-create-${i}`,
@@ -287,7 +294,11 @@ export function generateDeterministic100Operations(): {
       actor: "agent",
       baseRev,
       newRev,
-      payload: { nodeId: targetId, taskId: `task-gen-${i}`, lockState: "generating" },
+      payload: {
+        nodeId: targetId,
+        taskId: `task-gen-${i}`,
+        lockState: "generating",
+      },
       createdAt: 1700000000000 + seq * 100,
     });
   }
@@ -393,7 +404,10 @@ test("event bus replay achieves 100% snapshot equivalence after 100 continuous c
 
   // 2. Canonicalize and hash Live State using canvasHistoryFingerprint
   const liveFingerprint = canvasHistoryFingerprint(liveFinalState);
-  const liveStateHash = crypto.createHash("sha256").update(liveFingerprint).digest("hex");
+  const liveStateHash = crypto
+    .createHash("sha256")
+    .update(liveFingerprint)
+    .digest("hex");
 
   // 3. Replay from blank state using ONLY the ordered event log
   const initialReplayState = createBlankCanvasSnapshot();
@@ -404,7 +418,10 @@ test("event bus replay achieves 100% snapshot equivalence after 100 continuous c
 
   // 4. Canonicalize and hash Replayed State
   const replayedFingerprint = canvasHistoryFingerprint(replayedState);
-  const replayedStateHash = crypto.createHash("sha256").update(replayedFingerprint).digest("hex");
+  const replayedStateHash = crypto
+    .createHash("sha256")
+    .update(replayedFingerprint)
+    .digest("hex");
 
   // 5. Assertions: 100% equivalence, 0 discrepancies, exact hash match
   assert.equal(replayedStateHash, liveStateHash);
@@ -416,19 +433,29 @@ test("event bus replay achieves 100% snapshot equivalence after 100 continuous c
 
   // Count field-level discrepancies
   let discrepancies = 0;
-  if (replayedState.items.length !== liveFinalState.items.length) discrepancies++;
+  if (replayedState.items.length !== liveFinalState.items.length)
+    discrepancies++;
   for (let i = 0; i < liveFinalState.items.length; i++) {
-    if (JSON.stringify(replayedState.items[i]) !== JSON.stringify(liveFinalState.items[i])) {
+    if (
+      JSON.stringify(replayedState.items[i]) !==
+      JSON.stringify(liveFinalState.items[i])
+    ) {
       discrepancies++;
     }
   }
   for (const key of Object.keys(liveFinalState.positions)) {
-    if (JSON.stringify(replayedState.positions[key]) !== JSON.stringify(liveFinalState.positions[key])) {
+    if (
+      JSON.stringify(replayedState.positions[key]) !==
+      JSON.stringify(liveFinalState.positions[key])
+    ) {
       discrepancies++;
     }
   }
   for (let i = 0; i < liveFinalState.edges.length; i++) {
-    if (JSON.stringify(replayedState.edges[i]) !== JSON.stringify(liveFinalState.edges[i])) {
+    if (
+      JSON.stringify(replayedState.edges[i]) !==
+      JSON.stringify(liveFinalState.edges[i])
+    ) {
       discrepancies++;
     }
   }
@@ -454,7 +481,10 @@ test("event bus replay achieves 100% snapshot equivalence after 100 continuous c
 test("event bus replay handles out-of-order event streams when sorted by monotonic seq", () => {
   const { events, applyToLive } = generateDeterministic100Operations();
   const liveState = applyToLive(createBlankCanvasSnapshot());
-  const liveHash = crypto.createHash("sha256").update(canvasHistoryFingerprint(liveState)).digest("hex");
+  const liveHash = crypto
+    .createHash("sha256")
+    .update(canvasHistoryFingerprint(liveState))
+    .digest("hex");
 
   // Shuffle events deterministically
   const shuffled = [...events].reverse();
@@ -467,7 +497,10 @@ test("event bus replay handles out-of-order event streams when sorted by monoton
     state = reduceCanvasEvent(state, ev);
   }
 
-  const replayedHash = crypto.createHash("sha256").update(canvasHistoryFingerprint(state)).digest("hex");
+  const replayedHash = crypto
+    .createHash("sha256")
+    .update(canvasHistoryFingerprint(state))
+    .digest("hex");
   assert.equal(replayedHash, liveHash);
 });
 
@@ -475,5 +508,8 @@ test("replaying empty event log maintains pristine blank canvas state", () => {
   const blank = createBlankCanvasSnapshot();
   const replayed = [].reduce(reduceCanvasEvent, blank);
   assert.deepStrictEqual(replayed, blank);
-  assert.equal(canvasHistoryFingerprint(replayed), canvasHistoryFingerprint(blank));
+  assert.equal(
+    canvasHistoryFingerprint(replayed),
+    canvasHistoryFingerprint(blank),
+  );
 });

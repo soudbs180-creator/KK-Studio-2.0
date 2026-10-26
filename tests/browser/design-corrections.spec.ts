@@ -22,7 +22,7 @@ test("底栏心形无需选择节点，直接打开独立喜欢面板", async ({
 test("底栏选择菜单切换抓手，拖拽移动视图而不改节点坐标", async ({ page }) => {
   await openWorkspace(page);
   const toggle = page.getByRole("button", {
-    name: "选择画布工具",
+    name: "展开画布工具",
     exact: true,
   });
   await toggle.click();
@@ -78,7 +78,7 @@ test("663px对话入口为图标，帮助先打开原稿两项菜单", async ({ 
 
 test("工具与帮助菜单保持可读尺寸、快捷键三栏及窄屏可用", async ({ page }) => {
   await openWorkspace(page);
-  await page.getByRole("button", { name: "选择画布工具", exact: true }).click();
+  await page.getByRole("button", { name: "展开画布工具", exact: true }).click();
   const tools = page.getByRole("menu", { name: "画布工具选择", exact: true });
   const toolsBox = await tools.boundingBox();
   expect(toolsBox!.width).toBe(196);

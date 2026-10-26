@@ -16,7 +16,12 @@ import {
   canvasSignature,
   validatePreflightGuards,
 } from "../../src/features/creation/useImageCommandSubmission.ts";
-import type { CreationProject, CreationSnapshot, CreationTask, CreationTaskOutput } from "../../src/features/creation/model.ts";
+import type {
+  CreationProject,
+  CreationSnapshot,
+  CreationTask,
+  CreationTaskOutput,
+} from "../../src/features/creation/model.ts";
 import type { CanvasCollectionItem } from "../../src/domain/canvasItems.ts";
 
 test("outputsForTask constructs outputs from completedOutputIndices", () => {
@@ -96,7 +101,10 @@ test("rootItemId finds prompt card or fallback to first image node", () => {
 test("hasArchivedOutputEvidence strictly validates text vs image outputs", () => {
   const imageTask = { kind: "image" as const };
   assert.equal(
-    hasArchivedOutputEvidence(imageTask, { status: "succeeded", assetId: "asset-123" }),
+    hasArchivedOutputEvidence(imageTask, {
+      status: "succeeded",
+      assetId: "asset-123",
+    }),
     true,
   );
   assert.equal(
@@ -104,13 +112,19 @@ test("hasArchivedOutputEvidence strictly validates text vs image outputs", () =>
     false,
   );
   assert.equal(
-    hasArchivedOutputEvidence(imageTask, { status: "running", assetId: "asset-123" }),
+    hasArchivedOutputEvidence(imageTask, {
+      status: "running",
+      assetId: "asset-123",
+    }),
     false,
   );
 
   const textTask = { kind: "text" as const };
   assert.equal(
-    hasArchivedOutputEvidence(textTask, { status: "succeeded", text: "Generated description" }),
+    hasArchivedOutputEvidence(textTask, {
+      status: "succeeded",
+      text: "Generated description",
+    }),
     true,
   );
   assert.equal(
@@ -135,16 +149,18 @@ test("resolveNativeStatus distinguishes terminal success, partial, failed and un
 });
 
 test("resolveNativeErrorMessage returns appropriate error strings based on status", () => {
-  assert.equal(
-    resolveNativeErrorMessage("succeeded", false),
-    undefined,
-  );
+  assert.equal(resolveNativeErrorMessage("succeeded", false), undefined);
   assert.equal(
     resolveNativeErrorMessage("failed", false, "OOM in provider"),
     "OOM in provider",
   );
   assert.equal(
-    resolveNativeErrorMessage("unknown", true, "timeout", "output missing receipt"),
+    resolveNativeErrorMessage(
+      "unknown",
+      true,
+      "timeout",
+      "output missing receipt",
+    ),
     "output missing receipt",
   );
 });
@@ -230,7 +246,10 @@ test("publishTaskOutputState preserves delivery failure across subsequent publis
     } as unknown as CreationSnapshot,
   };
 
-  const updateProject = (id: string, updater: (p: CreationProject) => CreationProject) => {
+  const updateProject = (
+    id: string,
+    updater: (p: CreationProject) => CreationProject,
+  ) => {
     project = updater(project);
     creationRef.current.projects = [project];
   };
@@ -258,7 +277,9 @@ test("publishTaskOutputState preserves delivery failure across subsequent publis
   const rejectedDeliveryIds = new Set<string>();
   const activeProjectIdRef = { current: "proj-delivery" };
   const replaceCanvasItems = (
-    items: CanvasCollectionItem[] | ((curr: CanvasCollectionItem[]) => CanvasCollectionItem[]),
+    items:
+      | CanvasCollectionItem[]
+      | ((curr: CanvasCollectionItem[]) => CanvasCollectionItem[]),
   ) => (typeof items === "function" ? items([]) : items);
 
   // First publish: chunk processing finishes and attempts delivery
@@ -281,9 +302,20 @@ test("publishTaskOutputState preserves delivery failure across subsequent publis
   });
 
   // Verify delivery failed and deliveryErrorRef recorded the error
-  assert.ok(deliveryErrorRef.current, "deliveryErrorRef should record delivery error");
-  assert.equal(project.tasks[0].status, "unknown", "Task status should become unknown on delivery error");
-  assert.equal(outputs[0].status, "unknown", "Output status should become unknown on delivery error");
+  assert.ok(
+    deliveryErrorRef.current,
+    "deliveryErrorRef should record delivery error",
+  );
+  assert.equal(
+    project.tasks[0].status,
+    "unknown",
+    "Task status should become unknown on delivery error",
+  );
+  assert.equal(
+    outputs[0].status,
+    "unknown",
+    "Output status should become unknown on delivery error",
+  );
 
   // Second publish: Generation attempts to call publish("succeeded") with "terminal"
   publishTaskOutputState({
@@ -305,9 +337,21 @@ test("publishTaskOutputState preserves delivery failure across subsequent publis
   });
 
   // CRITICAL VERIFICATION: The second publish must NOT overwrite status with "succeeded"
-  assert.equal(project.tasks[0].status, "unknown", "Status must stay unknown and NOT be overwritten with succeeded");
-  assert.equal(project.tasks[0].submissionState, "unknown", "SubmissionState must stay unknown");
-  assert.equal(project.tasks[0].error, deliveryErrorRef.current, "Error message must be preserved");
+  assert.equal(
+    project.tasks[0].status,
+    "unknown",
+    "Status must stay unknown and NOT be overwritten with succeeded",
+  );
+  assert.equal(
+    project.tasks[0].submissionState,
+    "unknown",
+    "SubmissionState must stay unknown",
+  );
+  assert.equal(
+    project.tasks[0].error,
+    deliveryErrorRef.current,
+    "Error message must be preserved",
+  );
 });
 
 test("canvasSignature deterministically serializes project item and connected edges", () => {
@@ -353,10 +397,7 @@ test("validatePreflightGuards blocks on locked submission or non-saved persisten
     submitLock,
     persistenceState: "read_only",
   });
-  assert.equal(
-    readOnlyError,
-    "请先处理项目读取或保存提示，当前未提交生成。",
-  );
+  assert.equal(readOnlyError, "请先处理项目读取或保存提示，当前未提交生成。");
 
   const passed = validatePreflightGuards({
     submitLock,
@@ -364,4 +405,3 @@ test("validatePreflightGuards blocks on locked submission or non-saved persisten
   });
   assert.equal(passed, undefined);
 });
-

@@ -78,6 +78,24 @@ test("搜索无结果后清空可以恢复所有资产", () => {
   assert.equal(filterAssets(items, defaults).length, 3);
 });
 
+test("资源包、日期范围和时间排序组合筛选", () => {
+  const packed = items.map((asset, index) => ({
+    ...asset,
+    id: `packed-${index}`,
+    resourcePackId: index < 2 ? "pack-a" : "pack-b",
+  }));
+  assert.deepEqual(
+    filterAssets(packed, {
+      ...defaults,
+      resourcePackId: "pack-a",
+      from: "2026-08-01",
+      to: "2026-09-06",
+      sort: "oldest",
+    }).map((asset) => asset.id),
+    ["packed-1", "packed-0"],
+  );
+});
+
 test("生成结果归档为内容寻址资产并不保留供应商 URL", async () => {
   Object.defineProperty(globalThis, "window", {
     configurable: true,

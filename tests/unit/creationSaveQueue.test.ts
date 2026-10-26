@@ -7,6 +7,8 @@ import { runInNewContext } from "node:vm";
 import ts from "typescript";
 import {
   emptySnapshot,
+  createProject,
+  updateActiveChat,
   snapshotWriteBlockReason,
   type CreationSnapshot,
 } from "../../src/features/creation/model.ts";
@@ -14,7 +16,10 @@ import {
   decodeSnapshot,
   storageError,
 } from "../../src/features/creation/snapshotCodec.ts";
-import { reconcileProjectCanvas } from "../../src/domain/projectCanvas.ts";
+import {
+  createProjectCanvas,
+  reconcileProjectCanvas,
+} from "../../src/domain/projectCanvas.ts";
 import {
   createNativeCloseHandler,
   flushCreationBeforeClose,
@@ -38,9 +43,14 @@ async function harness(
 ) {
   const slots: unknown[] = [];
   const effects: (() => void | (() => void))[] = [];
-  const cleanup: (() => void)[] = [];
+  const cleanup = new Map<number, () => void>();
   let cursor = 0;
+  let now = 0;
+  let timerId = 0;
+  const timers = new Map<number, { due: number; run: () => void }>();
   const writes: CreationSnapshot[] = [];
+  const syncWrites: CreationSnapshot[] = [];
+  let reconciliations = 0;
   const loaded = options.initial ?? { ...emptySnapshot(), revision: 1 };
   let stored = loaded;
   let persist: (snapshot: CreationSnapshot) => Promise<void> = async (
@@ -66,11 +76,20 @@ async function harness(
       if (!(index in slots)) slots[index] = { current: initial };
       return slots[index];
     },
-    useEffect(effect: () => void | (() => void)) {
+    useEffect(effect: () => void | (() => void), deps: unknown[]) {
       const index = cursor++;
-      if (!(index in slots)) {
-        slots[index] = true;
-        effects.push(effect);
+      const previous = slots[index] as unknown[] | undefined;
+      if (
+        !previous ||
+        deps.some((value, key) => !Object.is(value, previous[key]))
+      ) {
+        slots[index] = deps;
+        effects.push(() => {
+          cleanup.get(index)?.();
+          const stop = effect();
+          if (stop) cleanup.set(index, stop);
+          else cleanup.delete(index);
+        });
       }
     },
   };
@@ -90,7 +109,9 @@ async function harness(
       decodeSnapshot(snapshot);
       await persist(snapshot);
     },
-    persistCreationSnapshotSync: () => {},
+    persistCreationSnapshotSync: (snapshot: CreationSnapshot) => {
+      syncWrites.push(snapshot);
+    },
     pendingRecoveryDraft: () => null,
   };
   let nativeClose: ReturnType<typeof createNativeCloseHandler> | undefined;
@@ -122,7 +143,14 @@ async function harness(
     "./model": { emptySnapshot, snapshotWriteBlockReason },
     "./storage": storage,
     "./snapshotCodec": { storageError },
-    "../../domain/projectCanvas": { reconcileProjectCanvas },
+    "../../domain/projectCanvas": {
+      reconcileProjectCanvas: (
+        ...args: Parameters<typeof reconcileProjectCanvas>
+      ) => {
+        reconciliations++;
+        return reconcileProjectCanvas(...args);
+      },
+    },
   };
   const exports: {
     useCreationStorage?: typeof import("../../src/features/creation/useCreationStorage.ts").useCreationStorage;
@@ -147,24 +175,26 @@ async function harness(
       return modules[id];
     },
     window: {
-      setTimeout: () => 1,
-      clearTimeout: () => {},
+      setTimeout: (run: () => void, delay: number) => {
+        const id = ++timerId;
+        timers.set(id, { run, due: now + delay });
+        return id;
+      },
+      clearTimeout: (id: number) => timers.delete(id),
       addEventListener: () => {},
       removeEventListener: () => {},
     },
   });
   const render = () => {
     cursor = 0;
-    return exports.useCreationStorage!(
+    const result = exports.useCreationStorage!(
       options.recover ?? ((snapshot) => snapshot),
       options.reconcile,
     );
+    effects.splice(0).forEach((effect) => effect());
+    return result;
   };
   render();
-  effects.forEach((effect) => {
-    const stop = effect();
-    if (stop) cleanup.push(stop);
-  });
   if (options.waitForLoad !== false) {
     await new Promise<void>((resolve) => setImmediate(resolve));
     assert.equal(render().state, "saved");
@@ -172,6 +202,17 @@ async function harness(
   return {
     render,
     writes,
+    syncWrites,
+    reconciliations: () => reconciliations,
+    async advance(milliseconds: number) {
+      now += milliseconds;
+      for (const [id, timer] of timers) {
+        if (timer.due > now) continue;
+        timers.delete(id);
+        timer.run();
+      }
+      await new Promise<void>((resolve) => setImmediate(resolve));
+    },
     durable: () => stored,
     setPersist: (next: typeof persist) => {
       persist = next;
@@ -185,9 +226,179 @@ async function harness(
     },
     destroyed: () => destroyed,
     released: () => released,
-    dispose: () => cleanup.reverse().forEach((stop) => stop()),
+    dispose: () => {
+      [...cleanup.values()].reverse().forEach((stop) => stop());
+      cleanup.clear();
+    },
   };
 }
+
+function manyProjects(): CreationSnapshot {
+  return {
+    ...emptySnapshot(),
+    revision: 7,
+    projects: Array.from({ length: 20 }, (_, index) => {
+      const project = createProject({
+        prompt: "",
+        model: "",
+        kind: "image",
+        attachments: [],
+      });
+      const items = [
+        {
+          id: `image-${index}`,
+          kind: "image" as const,
+          title: "Image",
+          description: "",
+        },
+      ];
+      return {
+        ...project,
+        id: `project-${index}`,
+        items,
+        canvas: createProjectCanvas(items),
+      };
+    }),
+  };
+}
+
+test("autosave waits 180ms after the latest commit and clears its timer on unmount", async () => {
+  const fixture = await harness(false, undefined, { initial: manyProjects() });
+  const commit = (prompt: string) => {
+    const hook = fixture.render();
+    hook.commitCreation({
+      ...hook.creation,
+      homeDraft: { ...hook.creation.homeDraft, prompt },
+    });
+    fixture.render();
+  };
+  commit("first");
+  await fixture.advance(179);
+  assert.equal(fixture.writes.length, 0);
+  commit("latest");
+  await fixture.advance(1);
+  assert.equal(
+    fixture.writes.length,
+    0,
+    "the previous commit timer was cleared",
+  );
+  await fixture.advance(179);
+  assert.equal(fixture.writes.length, 1);
+  assert.equal(fixture.writes[0].homeDraft.prompt, "latest");
+  assert.equal(fixture.writes[0].revision, 9);
+  commit("unmounted");
+  fixture.dispose();
+  await fixture.advance(180);
+  assert.equal(
+    fixture.writes.length,
+    1,
+    "unmount cancels the pending autosave",
+  );
+});
+
+test("100 canvas previews reconcile only the changed project and retain every synchronous recovery draft", async () => {
+  const initial = manyProjects();
+  const fixture = await harness(false, undefined, { initial });
+  for (let step = 1; step <= 100; step++) {
+    const hook = fixture.render();
+    const current = hook.creationRef.current;
+    hook.commitCreation({
+      ...current,
+      projects: current.projects.map((project, index) =>
+        index
+          ? project
+          : {
+              ...project,
+              canvas: {
+                ...project.canvas,
+                positions: { "image-0": { x: step, y: 0 } },
+              },
+            },
+      ),
+    });
+  }
+  const final = fixture.render().creation;
+  assert.equal(final.revision, 107);
+  assert.equal(final.projects[0].canvas.positions["image-0"].x, 100);
+  assert.equal(fixture.syncWrites.length, 100);
+  assert.equal(
+    fixture.syncWrites[49].projects[0].canvas.positions["image-0"].x,
+    50,
+  );
+  assert.equal(fixture.reconciliations(), 100);
+  assert.equal(final.projects[19], initial.projects[19]);
+  await fixture.render().flush();
+  assert.equal(fixture.durable().revision, 107);
+  fixture.dispose();
+});
+
+test("chat-only commits and project reordering retain existing canvas inputs without reconciling", async () => {
+  const initial = manyProjects();
+  const fixture = await harness(false, undefined, { initial });
+  for (let step = 1; step <= 100; step++) {
+    const hook = fixture.render();
+    const current = hook.creationRef.current;
+    hook.commitCreation({
+      ...current,
+      projects: [...current.projects].reverse().map((project) =>
+        project.id === "project-0"
+          ? updateActiveChat(project, (chat) => ({
+              ...chat,
+              draft: { ...chat.draft, prompt: `Draft ${step}` },
+            }))
+          : project,
+      ),
+    });
+  }
+  const final = fixture.render().creation;
+  assert.equal(final.projects[0].canvas, initial.projects[0].canvas);
+  assert.equal(final.projects[19], initial.projects[19]);
+  assert.equal(fixture.syncWrites.length, 100);
+  assert.equal(fixture.reconciliations(), 0);
+  fixture.dispose();
+});
+
+test("changed item and canvas inputs are reconciled and a newly added project is not skipped", async () => {
+  const initial = manyProjects();
+  const fixture = await harness(false, undefined, { initial });
+  let hook = fixture.render();
+  hook.commitCreation({
+    ...hook.creation,
+    projects: hook.creation.projects.map((project, index) =>
+      index ? project : { ...project, items: [] },
+    ),
+  });
+  hook = fixture.render();
+  assert.equal(
+    Object.keys(hook.creation.projects[0].canvas.positions).length,
+    0,
+  );
+  assert.equal(initial.projects[0].canvas.positions["image-0"].x, 82);
+  assert.equal(fixture.reconciliations(), 1);
+  hook.commitCreation({
+    ...hook.creation,
+    projects: [
+      ...hook.creation.projects.map((project, index) =>
+        index === 1
+          ? {
+              ...project,
+              canvas: {
+                ...project.canvas,
+                positions: { "image-1": { x: 9, y: 10 } },
+              },
+            }
+          : project,
+      ),
+      { ...initial.projects[0], id: "added-project" },
+    ],
+  });
+  hook = fixture.render();
+  assert.equal(hook.creation.projects[1].canvas.positions["image-1"].x, 9);
+  assert.equal(hook.creation.projects[20].canvas.positions["image-0"].x, 82);
+  assert.equal(fixture.reconciliations(), 3);
+  assert.equal(fixture.syncWrites.length, 2);
+  fixture.dispose();
+});
 
 test("a queued flush rejects when the preceding native conflict pauses saving and keeps the newer draft", async () => {
   const fixture = await harness();

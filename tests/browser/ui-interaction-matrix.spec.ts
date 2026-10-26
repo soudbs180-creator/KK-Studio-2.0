@@ -24,7 +24,7 @@ for (const width of [390, 768, 1280, 1920]) {
     for (const [label, selector] of [
       ["打开任务列表", ".task-panel"],
       ["添加资源", ".add-node-menu"],
-      ["选择画布工具", ".canvas-tool-menu"],
+      ["展开画布工具", ".canvas-tool-menu"],
       ["帮助与快捷键", ".canvas-help-menu"],
       ["画布缩放", ".canvas-zoom-menu"],
       ["小地图", ".canvas-minimap"],
@@ -36,7 +36,7 @@ for (const width of [390, 768, 1280, 1920]) {
     }
     await page.getByRole("button", { name: "添加资源", exact: true }).click();
     await page
-      .getByRole("button", { name: "选择画布工具", exact: true })
+      .getByRole("button", { name: "展开画布工具", exact: true })
       .click();
     await expect(page.locator(".add-node-menu")).toHaveCount(0);
     await expect(page.locator(".canvas-tool-menu")).toBeVisible();

@@ -7,6 +7,72 @@ import {
   themeTokens,
 } from "../helpers/designSystem.ts";
 
+test("Figma controls retain readable disabled colors and paired compact typography", async ({
+  page,
+}, info) => {
+  await page.goto("/");
+  for (const theme of ["dark", "light"]) {
+    await page
+      .getByRole("combobox", { name: "主题", exact: true })
+      .selectOption(theme);
+    const compact = page.getByRole("button", {
+      name: "次动作示例",
+      exact: true,
+    });
+    await expect(compact).toHaveCSS("font-size", "12px");
+    await expect(compact).toHaveCSS("line-height", "16px");
+    await expect(compact).toHaveCSS("height", "32px");
+    const legacy = page.getByRole("button", {
+      name: "兼容禁用动作示例",
+      exact: true,
+    });
+    await expect(legacy).toHaveCSS("font-size", "12px");
+    await expect(legacy).toHaveCSS("line-height", "16px");
+    await expect(legacy).toHaveCSS("opacity", "1");
+    await expect(legacy).toHaveCSS("pointer-events", "auto");
+    await expect(legacy).toHaveAttribute("title", "未连接服务");
+    const input = page.getByRole("textbox", {
+      name: "输入框示例",
+      exact: true,
+    });
+    await expect(input).toHaveCSS("height", "32px");
+    await expect(input).toHaveCSS("font-size", "12px");
+    await expect(input).toHaveCSS("line-height", "16px");
+    const primary = page.getByRole("button", {
+      name: "主动作示例",
+      exact: true,
+    });
+    await expect(primary).toHaveCSS("font-size", "16px");
+    await expect(primary).toHaveCSS("line-height", "24px");
+    await expect(primary).toHaveCSS("height", "40px");
+    const disabled = page.getByRole("button", {
+      name: "禁用动作示例",
+      exact: true,
+    });
+    await expect(disabled).toHaveCSS("opacity", "1");
+    await expect(disabled).toHaveCSS("border-top-width", "1px");
+    await expect(disabled).toHaveCSS(
+      "color",
+      cssRgb(themeTokens(theme, "default")("--kk-text-tertiary")),
+    );
+    await expect(disabled).toHaveCSS(
+      "background-color",
+      cssRgb(themeTokens(theme, "default")("--kk-bg-card")),
+    );
+    const colors = await disabled.evaluate((element) => {
+      const style = getComputedStyle(element);
+      return { text: style.color, background: style.backgroundColor };
+    });
+    expect(contrast(colors.text, colors.background)).toBeGreaterThanOrEqual(3);
+    if (theme === "light")
+      await expect(primary).toHaveCSS("color", "rgb(242, 242, 242)");
+    await page.screenshot({
+      path: info.outputPath(`controls-${theme}.png`),
+      fullPage: true,
+    });
+  }
+});
+
 test("shared state samples cover default, hover, active, selected, disabled and focus", async ({
   page,
 }, info) => {
@@ -195,7 +261,7 @@ test("preview consumes real themes and accents without touching product storage"
     .getByRole("combobox", { name: "密度", exact: true })
     .selectOption("compact");
   await expect(page.getByTestId("density-sample")).toHaveCSS("padding", "12px");
-  await expect(page.getByTestId("type-body")).toHaveCSS("font-size", "14px");
+  await expect(page.getByTestId("type-body")).toHaveCSS("font-size", "16px");
   await expect(page.getByTestId("spacing-4")).toHaveCSS("width", "16px");
   await expect(page.getByTestId("radius-control")).toHaveCSS(
     "border-radius",
@@ -209,7 +275,7 @@ test("shared controls keep capsule, square, disabled, switch and keyboard contra
 }) => {
   await page.goto("/");
   const primary = page.getByRole("button", { name: "主动作示例", exact: true });
-  await expect(primary).toHaveCSS("border-radius", "999px");
+  await expect(primary).toHaveCSS("border-radius", "1000px");
   const icon = page.getByRole("button", { name: "图标动作示例", exact: true });
   await expect(icon).toHaveCSS("border-radius", "8px");
   const rect = (await icon.boundingBox())!;

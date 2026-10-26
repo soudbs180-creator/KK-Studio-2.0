@@ -123,10 +123,17 @@ const compiledUsageStatusBar = ts.transpileModule(usageStatusBarSource, {
 });
 
 interface ProdUsageStatusBarExports {
-  estimateContextTokens: (text?: string, attachmentCount?: number, baseOverhead?: number) => number;
+  estimateContextTokens: (
+    text?: string,
+    attachmentCount?: number,
+    baseOverhead?: number,
+  ) => number;
   resolveMaxTokens: (modelId?: string) => number;
   formatTokenCount: (n: number) => string;
-  formatUsageProgress: (current: number, max: number) => {
+  formatUsageProgress: (
+    current: number,
+    max: number,
+  ) => {
     percentage: number;
     label: string;
     status: "normal" | "warning" | "danger";
@@ -260,7 +267,11 @@ export function parseModelMaxWindow(modelId: string): number {
 }
 
 export function calculateContextGauge(
-  draft: { text: string; attachments?: Array<{ type: string; tokenOverride?: number }>; model: string },
+  draft: {
+    text: string;
+    attachments?: Array<{ type: string; tokenOverride?: number }>;
+    model: string;
+  },
   systemOverhead = 512,
 ): ContextGaugeResult {
   const textTokens = estimateTokensFromText(draft.text);
@@ -280,7 +291,10 @@ export function calculateContextGauge(
   };
 }
 
-export function computeCacheBadge(cachedTokens = 0, totalTokens = 0): {
+export function computeCacheBadge(
+  cachedTokens = 0,
+  totalTokens = 0,
+): {
   percentage: number;
   active: boolean;
   label: string;
@@ -292,7 +306,10 @@ export function computeCacheBadge(cachedTokens = 0, totalTokens = 0): {
   return { percentage: pct, active: true, label: `⚡ Cached (${pct}%)` };
 }
 
-export function calculateOutputTps(tokenCount: number, elapsedMs: number): {
+export function calculateOutputTps(
+  tokenCount: number,
+  elapsedMs: number,
+): {
   tps: number;
   label: string;
 } {
@@ -347,7 +364,10 @@ export interface ModelProbeMetric {
   error?: string;
 }
 
-export function classifyLatency(latencyMs: number, hasError = false): LatencyTier {
+export function classifyLatency(
+  latencyMs: number,
+  hasError = false,
+): LatencyTier {
   return classifyLatencyTier(latencyMs, hasError);
 }
 
@@ -388,7 +408,12 @@ export class ModelProbeStore {
 
   async probe(
     targetId: string,
-    probeFn: () => Promise<{ latencyMs: number; ttftMs?: number; ok?: boolean; error?: string }>,
+    probeFn: () => Promise<{
+      latencyMs: number;
+      ttftMs?: number;
+      ok?: boolean;
+      error?: string;
+    }>,
   ): Promise<ModelProbeMetric> {
     const existing = this.getMetric(targetId);
     if (existing) return existing;
@@ -402,7 +427,7 @@ export class ModelProbeStore {
         const isError = result.ok === false;
         const metric = recordProbe(targetId, "", result.latencyMs, {
           ttftMs: result.ttftMs,
-          error: isError ? (result.error || "Probe failed") : undefined,
+          error: isError ? result.error || "Probe failed" : undefined,
         });
         const wrapped: ModelProbeMetric = {
           targetId,
@@ -448,16 +473,21 @@ export class ModelProbeStore {
  * ------------------------------------------------------------------------- */
 
 export type ProviderCategory = "官方" | "网关" | "本地";
-export type ProviderWireProtocol = "openai-chat" | "openai-responses" | "anthropic" | "azure-openai" | "ollama";
+export type ProviderWireProtocol =
+  "openai-chat" | "openai-responses" | "anthropic" | "azure-openai" | "ollama";
 export type ProviderAuthMode = "api_key" | "bearer_token" | "none";
 
 export const CATALOG_52_PRESETS = PROVIDER_PRESETS;
 
-export function getPresetsByCategory(category: ProviderPreset["category"]): ProviderPreset[] {
+export function getPresetsByCategory(
+  category: ProviderPreset["category"],
+): ProviderPreset[] {
   return PROVIDER_PRESETS.filter((p) => p.category === category);
 }
 
-export function getPresetsByRegion(region: "domestic" | "international"): ProviderPreset[] {
+export function getPresetsByRegion(
+  region: "domestic" | "international",
+): ProviderPreset[] {
   return PROVIDER_PRESETS.filter((p) => p.region === region);
 }
 
@@ -518,7 +548,10 @@ export type ModelSpaceProfile = ProdModelSpaceProfile;
 export const createModelSpaceProfile = prodCreateModelSpaceProfile;
 export const calculateAutoCompactWatermark = prodCalculateAutoCompactWatermark;
 
-export function shouldTriggerCompaction(usedTokens: number, watermark: number): boolean {
+export function shouldTriggerCompaction(
+  usedTokens: number,
+  watermark: number,
+): boolean {
   return watermark > 0 && usedTokens >= watermark;
 }
 
@@ -538,7 +571,8 @@ export function filterMcpToolsForModel(
   if (typeof target === "object" && target !== null) {
     normalizedTarget = {
       ...target,
-      autoCompactWatermark: target.autoCompactWatermark ?? target.autoCompactTokenLimit ?? 0,
+      autoCompactWatermark:
+        target.autoCompactWatermark ?? target.autoCompactTokenLimit ?? 0,
     };
   }
   const mcpTools: McpTool[] = allTools.map((t) => ({
@@ -555,15 +589,21 @@ export function filterMcpToolsForModel(
  * Feature 8: OpenAI <-> Anthropic Protocol Transpiler
  * ------------------------------------------------------------------------- */
 
-export function transpileAnthropicToOpenAI(req: AnthropicMessagesRequest): OpenAIChatRequest {
+export function transpileAnthropicToOpenAI(
+  req: AnthropicMessagesRequest,
+): OpenAIChatRequest {
   return transpileAnthropicToOpenAiRequest(req);
 }
 
-export function transpileOpenAIToAnthropic(req: OpenAIChatRequest): AnthropicMessagesRequest {
+export function transpileOpenAIToAnthropic(
+  req: OpenAIChatRequest,
+): AnthropicMessagesRequest {
   return transpileOpenAiToAnthropicRequest(req);
 }
 
-export function transpileOpenAIResponseToAnthropic(resp: OpenAIChatResponse): AnthropicMessagesResponse {
+export function transpileOpenAIResponseToAnthropic(
+  resp: OpenAIChatResponse,
+): AnthropicMessagesResponse {
   return transpileOpenAiToAnthropicResponse(resp);
 }
 
@@ -574,7 +614,9 @@ export class OpenAIToAnthropicStreamConverter {
     this.#state = new OpenAiToAnthropicStreamState(defaultModel);
   }
 
-  convertChunk(chunk: OpenAIChatChunk): Array<{ event: string; data: Record<string, unknown> }> {
+  convertChunk(
+    chunk: OpenAIChatChunk,
+  ): Array<{ event: string; data: Record<string, unknown> }> {
     const events = transpileOpenAiChunkToAnthropicEvents(chunk, this.#state);
     return events.map((e) => ({
       event: e.type,
@@ -626,14 +668,13 @@ export class AccountPoolManager {
 
   constructor(accounts: AccountInstance[] = [], circuitCooldownMs = 60000) {
     this.#circuitCooldownMs = circuitCooldownMs;
-    this.#pool = new AccountPool(
-      "e2e-account-pool",
-      [],
-      {
+    this.#pool = new AccountPool("e2e-account-pool", [], {
+      now: () => Date.now() + this.#clockOffset,
+      circuitBreaker: {
+        cooldownMs: circuitCooldownMs,
         now: () => Date.now() + this.#clockOffset,
-        circuitBreaker: { cooldownMs: circuitCooldownMs, now: () => Date.now() + this.#clockOffset },
       },
-    );
+    });
     for (const acc of accounts) {
       this.addAccount(acc);
     }
@@ -732,8 +773,16 @@ export class AccountPoolManager {
   }
 
   async dispatchWithHotDrift<T>(
-    requestFn: (account: AccountInstance, onStreamStart: () => void) => Promise<T>,
-  ): Promise<{ result: T; drifted: boolean; attempts: number; finalAccountId: string }> {
+    requestFn: (
+      account: AccountInstance,
+      onStreamStart: () => void,
+    ) => Promise<T>,
+  ): Promise<{
+    result: T;
+    drifted: boolean;
+    attempts: number;
+    finalAccountId: string;
+  }> {
     let attempts = 0;
     let streamStarted = false;
 
@@ -741,7 +790,9 @@ export class AccountPoolManager {
       attempts++;
       const candidate = this.selectCandidate();
       if (!candidate) {
-        throw new Error("NO_HEALTHY_ACCOUNT_AVAILABLE: All accounts cooling or circuit breaker OPEN");
+        throw new Error(
+          "NO_HEALTHY_ACCOUNT_AVAILABLE: All accounts cooling or circuit breaker OPEN",
+        );
       }
 
       try {
@@ -759,9 +810,12 @@ export class AccountPoolManager {
         const is429 = err instanceof Error && err.message.includes("429");
         if (is429) {
           if (streamStarted) {
-            throw new Error("STREAM_LOCKED_FAILOVER_FORBIDDEN: Cannot hot-drift after first token emitted", {
-              cause: err,
-            });
+            throw new Error(
+              "STREAM_LOCKED_FAILOVER_FORBIDDEN: Cannot hot-drift after first token emitted",
+              {
+                cause: err,
+              },
+            );
           }
           this.record429(candidate.id, 5000);
           continue;
@@ -775,7 +829,9 @@ export class AccountPoolManager {
       }
     }
 
-    throw new Error("RATE_LIMIT_EXHAUSTED: All accounts in pool hit rate limits");
+    throw new Error(
+      "RATE_LIMIT_EXHAUSTED: All accounts in pool hit rate limits",
+    );
   }
 }
 
@@ -796,7 +852,10 @@ export class SubagentExecutionSandbox {
   #allowedTools: string[];
   #isNestedSubagent = false;
 
-  constructor(allowedTools: string[] = ["scrape", "read_file"], isNested = false) {
+  constructor(
+    allowedTools: string[] = ["scrape", "read_file"],
+    isNested = false,
+  ) {
     this.#allowedTools = allowedTools;
     this.#isNestedSubagent = isNested;
     this.#parentContextMessages = []; // Strict isolation
@@ -816,7 +875,10 @@ export class SubagentExecutionSandbox {
 
   async executeTask(
     brief: SubagentTaskBrief,
-    executionWorker: (tools: string[], logFn: (msg: string) => void) => Promise<{
+    executionWorker: (
+      tools: string[],
+      logFn: (msg: string) => void,
+    ) => Promise<{
       summary: string;
       data?: Record<string, unknown>;
       artifacts?: string[];
@@ -824,7 +886,9 @@ export class SubagentExecutionSandbox {
     }>,
   ): Promise<SubagentFoldbackResult> {
     if (this.#isNestedSubagent) {
-      throw new Error("RECURSION_DENIED: Subagent is forbidden from spawning another subagent");
+      throw new Error(
+        "RECURSION_DENIED: Subagent is forbidden from spawning another subagent",
+      );
     }
 
     // Instantiates genuine production SubagentSandbox
@@ -844,16 +908,24 @@ export class SubagentExecutionSandbox {
       this.#intermediateTokens += Math.ceil(msg.length / 4);
     };
 
-    logFn(`[Subagent] Initialized task ${brief.taskId} with goal: ${brief.goal}`);
+    logFn(
+      `[Subagent] Initialized task ${brief.taskId} with goal: ${brief.goal}`,
+    );
 
     try {
-      const { summary, data, artifacts, tokensUsed } = await executionWorker(this.#allowedTools, logFn);
+      const { summary, data, artifacts, tokensUsed } = await executionWorker(
+        this.#allowedTools,
+        logFn,
+      );
       this.#intermediateTokens += tokensUsed;
 
       // Production truncateExecutiveSummary
       const executiveSummary = truncateExecutiveSummary(summary, 300);
       const foldbackTokens = estimateTokensFromText(executiveSummary);
-      const tokensSaved = Math.max(0, this.#intermediateTokens - foldbackTokens);
+      const tokensSaved = Math.max(
+        0,
+        this.#intermediateTokens - foldbackTokens,
+      );
 
       const result = createFoldbackResult({
         taskId: brief.taskId,

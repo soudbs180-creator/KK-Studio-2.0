@@ -23,7 +23,10 @@ const capabilities: CapabilityManifest = {
 
 const FIXED_NOW = 1_700_000_000_000;
 
-function createTestScheduler(registrations: ChannelRegistration[], pools?: Map<string, AccountPool>): Scheduler {
+function createTestScheduler(
+  registrations: ChannelRegistration[],
+  pools?: Map<string, AccountPool>,
+): Scheduler {
   const registry = new ChannelRegistry();
   for (const adapter of new Set(registrations.map((entry) => entry.adapter))) {
     registry.registerAdapter(adapter);
@@ -171,10 +174,18 @@ test("Scheduler 429 Hot-Drift: seamless millisecond-level failover to next crede
           normalized: rateLimitError,
         });
       }
-      return { kind: "inline", assetBase64: "c3VjY2Vzcw==", mime: "text/plain" };
+      return {
+        kind: "inline",
+        assetBase64: "c3VjY2Vzcw==",
+        mime: "text/plain",
+      };
     },
     async poll() {
-      return { status: "succeeded", assetBase64: "c3VjY2Vzcw==", mime: "text/plain" };
+      return {
+        status: "succeeded",
+        assetBase64: "c3VjY2Vzcw==",
+        mime: "text/plain",
+      };
     },
   };
 
@@ -192,10 +203,14 @@ test("Scheduler 429 Hot-Drift: seamless millisecond-level failover to next crede
     timeoutMs: 30000,
   };
 
-  const pool = new AccountPool("pool.multi", [
-    { credentialRef: "key-1", weight: 10 },
-    { credentialRef: "key-2", weight: 10 },
-  ], { now: () => FIXED_NOW, random: () => 0 });
+  const pool = new AccountPool(
+    "pool.multi",
+    [
+      { credentialRef: "key-1", weight: 10 },
+      { credentialRef: "key-2", weight: 10 },
+    ],
+    { now: () => FIXED_NOW, random: () => 0 },
+  );
 
   const pools = new Map<string, AccountPool>([
     ["ch-drift", pool],
@@ -329,7 +344,11 @@ test("Circuit Breaker & Fallback Downgrade Chains: 5xx trips circuit breaker and
       return { kind: "inline", assetBase64: "YmFja3Vw", mime: "text/plain" };
     },
     async poll() {
-      return { status: "succeeded", assetBase64: "YmFja3Vw", mime: "text/plain" };
+      return {
+        status: "succeeded",
+        assetBase64: "YmFja3Vw",
+        mime: "text/plain",
+      };
     },
   };
 
@@ -376,7 +395,11 @@ test("Circuit Breaker & Fallback Downgrade Chains: 5xx trips circuit breaker and
   const result = await scheduler.dispatch({
     model: "flagship-model",
     operation: "generate",
-    input: { model: "flagship-model", prompt: "test downgrade", attachments: [] },
+    input: {
+      model: "flagship-model",
+      prompt: "test downgrade",
+      attachments: [],
+    },
     idempotencyKey: "downgrade-job-1",
     resolveSecret: async () => "dummy-secret",
     streamStarted: () => false,

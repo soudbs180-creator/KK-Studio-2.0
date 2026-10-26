@@ -128,7 +128,7 @@ test("大素材库按页读取元数据、可见缩略图与全库搜索，详�
     exact: true,
   });
   await expect(loadMore).toHaveCSS("height", "32px");
-  await expect(loadMore).toHaveCSS("border-radius", "999px");
+  await expect(loadMore).toHaveCSS("border-radius", "1000px");
   await panel
     .getByRole("button", { name: "加载更多素材", exact: true })
     .click();

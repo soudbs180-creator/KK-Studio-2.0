@@ -36,7 +36,10 @@ const SAMPLE_TOOLS: readonly McpTool[] = [
     name: "bash_exec",
     title: "Bash Execution",
     description: "Execute bash script",
-    inputSchema: { type: "object", properties: { command: { type: "string" } } },
+    inputSchema: {
+      type: "object",
+      properties: { command: { type: "string" } },
+    },
   },
   {
     name: "write_file",
@@ -203,9 +206,15 @@ test("filterMcpToolsForModel: blocks run_bash, shell, eval, terminal, exec for s
     const names = filtered.map((t) => t.name);
 
     // Non-developer tools must be preserved
-    assert.ok(names.includes("web_search"), `${modelId} should keep web_search`);
+    assert.ok(
+      names.includes("web_search"),
+      `${modelId} should keep web_search`,
+    );
     assert.ok(names.includes("read_file"), `${modelId} should keep read_file`);
-    assert.ok(names.includes("image_enhance"), `${modelId} should keep image_enhance`);
+    assert.ok(
+      names.includes("image_enhance"),
+      `${modelId} should keep image_enhance`,
+    );
 
     // Dangerous developer tools must be removed
     const banned = [
@@ -246,7 +255,9 @@ test("parseCcSwitchDeeplink: parses standard CC Switch import deeplinks correctl
 
   // Rejects invalid schemes and paths
   assert.throws(() => parseCcSwitchDeeplink("https://api.deepseek.com"));
-  assert.throws(() => parseCcSwitchDeeplink("ccswitch://v2/import?endpoint=https://x.com"));
+  assert.throws(() =>
+    parseCcSwitchDeeplink("ccswitch://v2/import?endpoint=https://x.com"),
+  );
   assert.throws(() => parseCcSwitchDeeplink("ccswitch://v1/import"));
   assert.throws(() => parseCcSwitchDeeplink(""));
 });

@@ -41,8 +41,10 @@ function createValidReceipt() {
         operationsCount: 100,
         snapshotEquivalence: 1.0,
         discrepancyCount: 0,
-        liveStateHash: "a1b2c3d4e5f60718293a4b5c6d7e8f90a1b2c3d4e5f60718293a4b5c6d7e8f90",
-        replayedStateHash: "a1b2c3d4e5f60718293a4b5c6d7e8f90a1b2c3d4e5f60718293a4b5c6d7e8f90",
+        liveStateHash:
+          "a1b2c3d4e5f60718293a4b5c6d7e8f90a1b2c3d4e5f60718293a4b5c6d7e8f90",
+        replayedStateHash:
+          "a1b2c3d4e5f60718293a4b5c6d7e8f90a1b2c3d4e5f60718293a4b5c6d7e8f90",
         passed: true,
       },
       conflictPreemption: {
@@ -55,7 +57,11 @@ function createValidReceipt() {
     checks: [
       { name: "typecheck", command: "npm run typecheck", passed: true },
       { name: "unit-tests", command: "npm test", passed: true },
-      { name: "cargo-test", command: "cargo test --manifest-path src-tauri/Cargo.toml", passed: true },
+      {
+        name: "cargo-test",
+        command: "cargo test --manifest-path src-tauri/Cargo.toml",
+        passed: true,
+      },
     ],
     errors: [],
     passed: true,
@@ -148,7 +154,9 @@ test("check-receipt rejects shadow mode latency violations", () => {
   // passed !== true
   const r5 = createValidReceipt();
   r5.acceptanceEvidence.shadowModeLatency.passed = false;
-  assert.ok(validateReceipt(r5).some((i) => i.includes("shadowModeLatency.passed")));
+  assert.ok(
+    validateReceipt(r5).some((i) => i.includes("shadowModeLatency.passed")),
+  );
 });
 
 test("check-receipt rejects replay consistency violations", () => {
@@ -175,12 +183,16 @@ test("check-receipt rejects replay consistency violations", () => {
   // Hash mismatch
   const r5 = createValidReceipt();
   r5.acceptanceEvidence.replayConsistency.replayedStateHash = "b".repeat(64);
-  assert.ok(validateReceipt(r5).some((i) => i.includes("state hashes mismatch")));
+  assert.ok(
+    validateReceipt(r5).some((i) => i.includes("state hashes mismatch")),
+  );
 
   // passed !== true
   const r6 = createValidReceipt();
   r6.acceptanceEvidence.replayConsistency.passed = false;
-  assert.ok(validateReceipt(r6).some((i) => i.includes("replayConsistency.passed")));
+  assert.ok(
+    validateReceipt(r6).some((i) => i.includes("replayConsistency.passed")),
+  );
 });
 
 test("check-receipt rejects conflict preemption violations", () => {
@@ -211,7 +223,9 @@ test("check-receipt rejects conflict preemption violations", () => {
   // passed !== true
   const r6 = createValidReceipt();
   r6.acceptanceEvidence.conflictPreemption.passed = false;
-  assert.ok(validateReceipt(r6).some((i) => i.includes("conflictPreemption.passed")));
+  assert.ok(
+    validateReceipt(r6).some((i) => i.includes("conflictPreemption.passed")),
+  );
 });
 
 test("check-receipt rejects checks and errors violations", () => {
@@ -240,13 +254,21 @@ test("runCli executes correctly against valid and invalid receipt files", () => 
   const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "check-receipt-test-"));
   try {
     const validPath = path.join(tmpDir, "valid-receipt.json");
-    fs.writeFileSync(validPath, JSON.stringify(createValidReceipt(), null, 2), "utf8");
+    fs.writeFileSync(
+      validPath,
+      JSON.stringify(createValidReceipt(), null, 2),
+      "utf8",
+    );
     assert.equal(runCli(validPath), 0);
 
     const invalidPath = path.join(tmpDir, "invalid-receipt.json");
     const invalidReceipt = createValidReceipt();
     invalidReceipt.acceptanceEvidence.shadowModeLatency.p95LatencyMs = 6.2;
-    fs.writeFileSync(invalidPath, JSON.stringify(invalidReceipt, null, 2), "utf8");
+    fs.writeFileSync(
+      invalidPath,
+      JSON.stringify(invalidReceipt, null, 2),
+      "utf8",
+    );
     assert.equal(runCli(invalidPath), 1);
 
     const nonExistentPath = path.join(tmpDir, "does-not-exist.json");

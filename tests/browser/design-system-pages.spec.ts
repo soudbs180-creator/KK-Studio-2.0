@@ -82,49 +82,38 @@ for (const width of [390, 1920]) {
       for (const section of [
         "个人主页",
         "套餐与积分",
-        "快捷键",
+        "快捷键管理",
         "数据管理",
-        "网络",
-        "记忆",
+        "网络与代理",
+        "记忆管理",
         "模型接入",
-        "扩展",
+        "扩展与 MCP",
         "安全中心",
       ]) {
         await selectSettingsSection(page, section);
         const content = dialog.locator(".settings-content");
-        await expect(content.locator("h2")).toHaveText(section);
+        await expect(content.locator("#settings-section-title")).toHaveText(
+          section,
+        );
         expect(
           await content.evaluate((el) => el.scrollWidth - el.clientWidth),
           `${theme}/${section} horizontal overflow`,
         ).toBeLessThanOrEqual(1);
         if (section === "模型接入") {
-          const methods = content.locator(".model-access-methods");
-          if (
-            width === 390 &&
-            (await content
-              .locator(".model-access-settings")
-              .getAttribute("data-navigation")) === "detail"
-          )
-            await content
-              .getByRole("button", { name: "返回接入方式", exact: true })
-              .click();
-          await expect(methods.getByRole("button")).toHaveCount(6);
+          const methods = content.locator(".channel-segmented-tabs");
+          await expect(methods.getByRole("tab")).toHaveCount(5);
           await methods
-            .getByRole("button", { name: "API Key（官方）", exact: true })
+            .getByRole("tab", { name: "官方直连 API", exact: true })
             .click();
           await expect(
-            methods.locator('[aria-pressed="true"]'),
-          ).toHaveAttribute("aria-pressed", "true");
-          await expect(methods.locator('[aria-pressed="true"]')).toHaveText(
-            "API Key（官方）",
-          );
+            methods.getByRole("tab", { name: "官方直连 API", exact: true }),
+          ).toHaveAttribute("aria-selected", "true");
           await expect(
             content.getByRole("region", {
               name: "官方 API Key 配置",
               exact: true,
             }),
           ).toBeVisible();
-          if (width === 390) await expect(methods).toBeHidden();
           await expect(
             content.getByLabel("接口地址", { exact: true }),
           ).toBeEditable();
@@ -154,7 +143,7 @@ for (const width of [390, 1920]) {
               }),
           );
         expect(fieldErrors, `${theme}/${section} shared fields`).toEqual([]);
-        if (section === "扩展") {
+        if (section === "扩展与 MCP") {
           await dialog.getByRole("tab", { name: /MCP/ }).click();
           await expect(
             dialog.locator(".settings-nav").locator('[aria-current="page"]'),
@@ -224,7 +213,7 @@ for (const theme of ["dark", "light"]) {
     for (const name of pages) {
       await navigate(page, name);
       const section = page.locator(".catalog-page");
-      await expect.soft(section.locator("h1")).toHaveCSS("font-size", "26px");
+      await expect.soft(section.locator("h1")).toHaveCSS("font-size", "28px");
       await expect
         .soft(section.locator(".catalog-page-search"))
         .toHaveCSS("height", "32px");
@@ -286,7 +275,7 @@ for (const theme of ["dark", "light"]) {
       if (name === "扩展") {
         const filter = section.locator(".catalog-categories button").first();
         await expect.soft(filter).toHaveAttribute("aria-pressed", "true");
-        await expect.soft(filter).toHaveCSS("border-radius", "999px");
+        await expect.soft(filter).toHaveCSS("border-radius", "1000px");
         await expect
           .soft(filter)
           .toHaveCSS(

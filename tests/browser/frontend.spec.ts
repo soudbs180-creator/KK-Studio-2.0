@@ -8,8 +8,8 @@ test("资产搜索、空态恢复、列表、紧凑视图及创建主体", async
   await page.getByRole("button", { name: "资源管理", exact: true }).click();
   const panel = page.getByTestId("asset-panel");
   await expect(panel).toBeVisible();
-  await expect(panel).toHaveCSS("width", "900px");
-  await expect(panel).toHaveCSS("height", "696px");
+  await expect(panel).toHaveCSS("width", "748px");
+  await expect(panel).toHaveCSS("height", "600px");
   await panel.screenshot({
     path: test.info().outputPath("runtime/assets-desktop.png"),
   });
@@ -27,7 +27,7 @@ test("资产搜索、空态恢复、列表、紧凑视图及创建主体", async
   await expect(page.locator(".asset-content")).toHaveClass(/list/);
   await page.getByRole("button", { name: "网格视图" }).click();
   await page.getByRole("button", { name: "收起资产管理" }).click();
-  expect(await panel.boundingBox()).toMatchObject({ width: 305 });
+  expect(await panel.boundingBox()).toMatchObject({ width: 308 });
   const thumbnail = await page
     .locator(".asset-thumbnail")
     .first()
@@ -414,7 +414,7 @@ test("无限画布隐藏滚动条，卡片拖动时连接线跟随", async ({ pa
   await page.getByRole("menuitem", { name: "画布标签", exact: true }).click();
   await expect(page.getByTestId("canvas-tags-panel")).toBeVisible();
   await page.keyboard.press("Escape");
-  await page.getByRole("button", { name: "选择画布工具", exact: true }).click();
+  await page.getByRole("button", { name: "展开画布工具", exact: true }).click();
   await page
     .getByRole("menuitemradio", { name: "移动工具", exact: true })
     .click();

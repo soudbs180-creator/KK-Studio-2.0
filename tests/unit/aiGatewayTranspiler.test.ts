@@ -35,7 +35,10 @@ test("Anthropic -> OpenAI Request: maps system prompt, roles, tools, and thinkin
       {
         role: "assistant",
         content: [
-          { type: "thinking", thinking: "I should check the weather in Tokyo." },
+          {
+            type: "thinking",
+            thinking: "I should check the weather in Tokyo.",
+          },
           {
             type: "tool_use",
             id: "call_tokyo_1",
@@ -81,18 +84,27 @@ test("Anthropic -> OpenAI Request: maps system prompt, roles, tools, and thinkin
 
   // System message
   assert.equal(openAiReq.messages[0]?.role, "system");
-  assert.equal(openAiReq.messages[0]?.content, "You are a helpful coding assistant.");
+  assert.equal(
+    openAiReq.messages[0]?.content,
+    "You are a helpful coding assistant.",
+  );
 
   // Assistant message with reasoning_content and tool_calls
   const assistantMsg = openAiReq.messages.find((m) => m.role === "assistant");
   assert.ok(assistantMsg);
-  assert.equal(assistantMsg.reasoning_content, "I should check the weather in Tokyo.");
+  assert.equal(
+    assistantMsg.reasoning_content,
+    "I should check the weather in Tokyo.",
+  );
   assert.equal(assistantMsg.tool_calls?.length, 1);
   assert.equal(assistantMsg.tool_calls?.[0]?.id, "call_tokyo_1");
   assert.equal(assistantMsg.tool_calls?.[0]?.function.name, "get_weather");
-  assert.deepEqual(JSON.parse(assistantMsg.tool_calls?.[0]?.function.arguments ?? "{}"), {
-    city: "Tokyo",
-  });
+  assert.deepEqual(
+    JSON.parse(assistantMsg.tool_calls?.[0]?.function.arguments ?? "{}"),
+    {
+      city: "Tokyo",
+    },
+  );
 
   // Tool result message
   const toolMsg = openAiReq.messages.find((m) => m.role === "tool");
@@ -121,7 +133,9 @@ test("OpenAI -> Anthropic Request: extracts system, merges turns, maps images an
           { type: "text", text: "Analyze this diagram:" },
           {
             type: "image_url",
-            image_url: { url: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUg==" },
+            image_url: {
+              url: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUg==",
+            },
           },
         ],
       },
@@ -152,7 +166,10 @@ test("OpenAI -> Anthropic Request: extracts system, merges turns, maps images an
         function: {
           name: "inspect_image",
           description: "Inspect image metrics",
-          parameters: { type: "object", properties: { resolution: { type: "string" } } },
+          parameters: {
+            type: "object",
+            properties: { resolution: { type: "string" } },
+          },
         },
       },
     ],
@@ -175,15 +192,24 @@ test("OpenAI -> Anthropic Request: extracts system, merges turns, maps images an
   // Check alternating messages
   assert.equal(anthropicReq.messages.length, 3); // user, assistant, user (with tool_result)
   assert.equal(anthropicReq.messages[0]?.role, "user");
-  const userContent = anthropicReq.messages[0]?.content as Array<{ type: string; [k: string]: unknown }>;
+  const userContent = anthropicReq.messages[0]?.content as Array<{
+    type: string;
+    [k: string]: unknown;
+  }>;
   assert.equal(userContent[0]?.type, "text");
   assert.equal(userContent[1]?.type, "image");
 
   const assistantTurn = anthropicReq.messages[1]!;
   assert.equal(assistantTurn.role, "assistant");
-  const assistantBlocks = assistantTurn.content as Array<{ type: string; [k: string]: unknown }>;
+  const assistantBlocks = assistantTurn.content as Array<{
+    type: string;
+    [k: string]: unknown;
+  }>;
   assert.equal(assistantBlocks[0]?.type, "thinking");
-  assert.equal(assistantBlocks[0]?.thinking, "Checking the image properties...");
+  assert.equal(
+    assistantBlocks[0]?.thinking,
+    "Checking the image properties...",
+  );
   assert.equal(assistantBlocks[1]?.type, "text");
   assert.equal(assistantBlocks[2]?.type, "tool_use");
   assert.equal(assistantBlocks[2]?.name, "inspect_image");
@@ -191,7 +217,10 @@ test("OpenAI -> Anthropic Request: extracts system, merges turns, maps images an
   // Tool result inside follow-up user message
   const finalUserTurn = anthropicReq.messages[2]!;
   assert.equal(finalUserTurn.role, "user");
-  const toolResultBlocks = finalUserTurn.content as Array<{ type: string; [k: string]: unknown }>;
+  const toolResultBlocks = finalUserTurn.content as Array<{
+    type: string;
+    [k: string]: unknown;
+  }>;
   assert.equal(toolResultBlocks[0]?.type, "tool_result");
   assert.equal(toolResultBlocks[0]?.tool_use_id, "call_img_inspect");
 });
@@ -225,9 +254,18 @@ test("Non-streaming Response Bridge: bidirectional mapping of finish reasons and
   const openAiResp = transpileAnthropicToOpenAiResponse(anthropicResp);
   assert.equal(openAiResp.id, "chatcmpl-msg_test_123");
   assert.equal(openAiResp.choices[0]?.finish_reason, "tool_calls");
-  assert.equal(openAiResp.choices[0]?.message.content, "Here is your calculation.");
-  assert.equal(openAiResp.choices[0]?.message.reasoning_content, "Step 1 complete");
-  assert.equal(openAiResp.choices[0]?.message.tool_calls?.[0]?.function.name, "calculate");
+  assert.equal(
+    openAiResp.choices[0]?.message.content,
+    "Here is your calculation.",
+  );
+  assert.equal(
+    openAiResp.choices[0]?.message.reasoning_content,
+    "Step 1 complete",
+  );
+  assert.equal(
+    openAiResp.choices[0]?.message.tool_calls?.[0]?.function.name,
+    "calculate",
+  );
   assert.equal(openAiResp.usage?.prompt_tokens, 45);
   assert.equal(openAiResp.usage?.completion_tokens, 18);
   assert.equal(openAiResp.usage?.prompt_tokens_details?.cached_tokens, 20);
@@ -295,8 +333,18 @@ test("SSE Streaming State Machine: OpenAI Chunks -> Anthropic Events (Thinking, 
 
   const evts1 = transpileOpenAiChunkToAnthropicEvents(chunk1, state);
   assert.ok(evts1.some((e) => e.type === "message_start"));
-  assert.ok(evts1.some((e) => e.type === "content_block_start" && e.content_block.type === "thinking"));
-  assert.ok(evts1.some((e) => e.type === "content_block_delta" && e.delta.type === "thinking_delta"));
+  assert.ok(
+    evts1.some(
+      (e) =>
+        e.type === "content_block_start" && e.content_block.type === "thinking",
+    ),
+  );
+  assert.ok(
+    evts1.some(
+      (e) =>
+        e.type === "content_block_delta" && e.delta.type === "thinking_delta",
+    ),
+  );
 
   // Chunk 2: Text content (closes thinking block)
   const chunk2: OpenAIChatChunk = {
@@ -315,8 +363,17 @@ test("SSE Streaming State Machine: OpenAI Chunks -> Anthropic Events (Thinking, 
 
   const evts2 = transpileOpenAiChunkToAnthropicEvents(chunk2, state);
   assert.ok(evts2.some((e) => e.type === "content_block_stop")); // closed thinking block
-  assert.ok(evts2.some((e) => e.type === "content_block_start" && e.content_block.type === "text"));
-  assert.ok(evts2.some((e) => e.type === "content_block_delta" && e.delta.type === "text_delta"));
+  assert.ok(
+    evts2.some(
+      (e) =>
+        e.type === "content_block_start" && e.content_block.type === "text",
+    ),
+  );
+  assert.ok(
+    evts2.some(
+      (e) => e.type === "content_block_delta" && e.delta.type === "text_delta",
+    ),
+  );
 
   // Chunk 3: Tool call declaration (closes text block, announces tool_use)
   const chunk3: OpenAIChatChunk = {
@@ -344,8 +401,18 @@ test("SSE Streaming State Machine: OpenAI Chunks -> Anthropic Events (Thinking, 
 
   const evts3 = transpileOpenAiChunkToAnthropicEvents(chunk3, state);
   assert.ok(evts3.some((e) => e.type === "content_block_stop")); // closed text block
-  assert.ok(evts3.some((e) => e.type === "content_block_start" && e.content_block.type === "tool_use"));
-  assert.ok(evts3.some((e) => e.type === "content_block_delta" && e.delta.type === "input_json_delta"));
+  assert.ok(
+    evts3.some(
+      (e) =>
+        e.type === "content_block_start" && e.content_block.type === "tool_use",
+    ),
+  );
+  assert.ok(
+    evts3.some(
+      (e) =>
+        e.type === "content_block_delta" && e.delta.type === "input_json_delta",
+    ),
+  );
 
   // Chunk 4: Tool call arguments continuation
   const chunk4: OpenAIChatChunk = {
@@ -370,7 +437,12 @@ test("SSE Streaming State Machine: OpenAI Chunks -> Anthropic Events (Thinking, 
   };
 
   const evts4 = transpileOpenAiChunkToAnthropicEvents(chunk4, state);
-  assert.ok(evts4.some((e) => e.type === "content_block_delta" && e.delta.type === "input_json_delta"));
+  assert.ok(
+    evts4.some(
+      (e) =>
+        e.type === "content_block_delta" && e.delta.type === "input_json_delta",
+    ),
+  );
 
   // Chunk 5: Finish reason
   const chunk5: OpenAIChatChunk = {
@@ -446,7 +518,10 @@ test("SSE Streaming State Machine: Anthropic Events -> OpenAI Chunks", () => {
     },
     state,
   );
-  assert.equal(chunks3[0]?.choices[0]?.delta.tool_calls?.[0]?.function?.name, "calculate");
+  assert.equal(
+    chunks3[0]?.choices[0]?.delta.tool_calls?.[0]?.function?.name,
+    "calculate",
+  );
 
   // Tool use input json delta
   const chunks4 = transpileAnthropicEventToOpenAiChunks(
@@ -486,7 +561,9 @@ test("StreamTranspiler Pipeline: processes wire SSE format line-by-line", () => 
     object: "chat.completion.chunk",
     created: 1700000000,
     model: "gpt-4o",
-    choices: [{ index: 0, delta: { content: "Streaming works!" }, finish_reason: null }],
+    choices: [
+      { index: 0, delta: { content: "Streaming works!" }, finish_reason: null },
+    ],
   });
 
   const line1 = `data: ${wireChunk}`;
@@ -501,7 +578,8 @@ test("StreamTranspiler Pipeline: processes wire SSE format line-by-line", () => 
 
 test("Proxy Transpilation Integration: hooks /v1/messages to OpenAI upstream and back", async () => {
   const { createServer } = await import("node:http");
-  const { createProxyServer } = await import("../../vendor/canvas-proxy/index.js");
+  const { createProxyServer } =
+    await import("../../vendor/canvas-proxy/index.js");
 
   // Upstream OpenAI server
   const upstreamServer = createServer((req, res) => {
@@ -524,7 +602,10 @@ test("Proxy Transpilation Integration: hooks /v1/messages to OpenAI upstream and
           choices: [
             {
               index: 0,
-              message: { role: "assistant", content: "Proxy transpiled correctly!" },
+              message: {
+                role: "assistant",
+                content: "Proxy transpiled correctly!",
+              },
               finish_reason: "stop",
             },
           ],
@@ -749,4 +830,3 @@ test("Creation: consumeTextEvent handles finish_reason === 'length' gracefully",
   assert.equal(state.complete, true);
   assert.equal(state.text, "Partial content truncated by max tokens...");
 });
-

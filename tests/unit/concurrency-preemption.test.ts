@@ -13,10 +13,20 @@ export interface Command {
 }
 
 export type CommandResult =
-  | { success: true; target: string; base_rev: number; new_rev: number; seq: number }
+  | {
+      success: true;
+      target: string;
+      base_rev: number;
+      new_rev: number;
+      seq: number;
+    }
   | {
       success: false;
-      error: "ERR_REV_CONFLICT" | "ERR_NODE_LOCKED" | "ERR_INVALID_COMMAND" | "ERR_TASK_CANCELLED";
+      error:
+        | "ERR_REV_CONFLICT"
+        | "ERR_NODE_LOCKED"
+        | "ERR_INVALID_COMMAND"
+        | "ERR_TASK_CANCELLED";
       current_rev: number;
       message: string;
     };
@@ -56,7 +66,10 @@ export class DualChannelConcurrencyHarness {
   private seqCounter = 0;
   public cancellationSignals: CancellationSignal[] = [];
 
-  public registerNode(id: string, initialData: Record<string, unknown> = {}): NodeState {
+  public registerNode(
+    id: string,
+    initialData: Record<string, unknown> = {},
+  ): NodeState {
     const node: NodeState = {
       id,
       rev: 1,
@@ -118,10 +131,17 @@ export class DualChannelConcurrencyHarness {
         };
         const prevRev = node.rev;
         node.rev += 1;
-        this.appendEvent("node.locked", command.target, command.actor, prevRev, node.rev, {
-          taskId,
-          lockState: "generating",
-        });
+        this.appendEvent(
+          "node.locked",
+          command.target,
+          command.actor,
+          prevRev,
+          node.rev,
+          {
+            taskId,
+            lockState: "generating",
+          },
+        );
         return {
           success: true,
           target: command.target,
@@ -145,9 +165,16 @@ export class DualChannelConcurrencyHarness {
         node.data = { ...node.data, ...command.payload };
         const prevRev = node.rev;
         node.rev += 1;
-        this.appendEvent("node.unlocked", command.target, command.actor, prevRev, node.rev, {
-          result: command.payload.result,
-        });
+        this.appendEvent(
+          "node.unlocked",
+          command.target,
+          command.actor,
+          prevRev,
+          node.rev,
+          {
+            result: command.payload.result,
+          },
+        );
         return {
           success: true,
           target: command.target,
@@ -245,7 +272,14 @@ export class DualChannelConcurrencyHarness {
         }
         const prevRev = node.rev;
         this.nodes.delete(command.target);
-        this.appendEvent("node.deleted", command.target, command.actor, prevRev, prevRev + 1, {});
+        this.appendEvent(
+          "node.deleted",
+          command.target,
+          command.actor,
+          prevRev,
+          prevRev + 1,
+          {},
+        );
         return {
           success: true,
           target: command.target,
@@ -289,7 +323,11 @@ export class DualChannelConcurrencyHarness {
 
 test("designer move interaction preempts active agent task and records cancelled and override events", () => {
   const harness = new DualChannelConcurrencyHarness();
-  harness.registerNode("node-target", { x: 100, y: 100, prompt: "initial sketch" });
+  harness.registerNode("node-target", {
+    x: 100,
+    y: 100,
+    prompt: "initial sketch",
+  });
 
   // 1. Agent locks node for long-running generation
   const lockCmd: Command = {
@@ -375,7 +413,9 @@ test("designer move interaction preempts active agent task and records cancelled
   const acceptanceEvidence = {
     designerPreempted: true,
     taskCancelledSignal: harness.cancellationSignals.length > 0,
-    eventLogEntries: eventTypes.filter((t) => t === "cancelled" || t === "override"),
+    eventLogEntries: eventTypes.filter(
+      (t) => t === "cancelled" || t === "override",
+    ),
     passed: true,
   };
   assert.equal(acceptanceEvidence.designerPreempted, true);
