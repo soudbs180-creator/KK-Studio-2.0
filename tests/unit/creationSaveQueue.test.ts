@@ -360,6 +360,9 @@ test("chat-only commits and project reordering retain existing canvas inputs wit
 
 test("changed item and canvas inputs are reconciled and a newly added project is not skipped", async () => {
   const initial = manyProjects();
+  const initialImagePosition = {
+    ...initial.projects[0].canvas.positions["image-0"],
+  };
   const fixture = await harness(false, undefined, { initial });
   let hook = fixture.render();
   hook.commitCreation({
@@ -373,7 +376,10 @@ test("changed item and canvas inputs are reconciled and a newly added project is
     Object.keys(hook.creation.projects[0].canvas.positions).length,
     0,
   );
-  assert.equal(initial.projects[0].canvas.positions["image-0"].x, 82);
+  assert.deepEqual(
+    initial.projects[0].canvas.positions["image-0"],
+    initialImagePosition,
+  );
   assert.equal(fixture.reconciliations(), 1);
   hook.commitCreation({
     ...hook.creation,
@@ -394,7 +400,10 @@ test("changed item and canvas inputs are reconciled and a newly added project is
   });
   hook = fixture.render();
   assert.equal(hook.creation.projects[1].canvas.positions["image-1"].x, 9);
-  assert.equal(hook.creation.projects[20].canvas.positions["image-0"].x, 82);
+  assert.deepEqual(
+    hook.creation.projects[20].canvas.positions["image-0"],
+    initialImagePosition,
+  );
   assert.equal(fixture.reconciliations(), 3);
   assert.equal(fixture.syncWrites.length, 2);
   fixture.dispose();

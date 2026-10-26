@@ -7,6 +7,10 @@
   padding: var(--kk-space-4);
   overflow: hidden;
 }
+.modal.image-lightbox-modal {
+  width: calc(100vw - 48px);
+  height: calc(var(--image-edit-available-height, 100dvh) - 48px);
+}
 .image-editor,
 .image-lightbox,
 .image-editor-host {

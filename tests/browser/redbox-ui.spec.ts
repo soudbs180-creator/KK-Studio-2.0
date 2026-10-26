@@ -60,7 +60,7 @@ function intersects(
   );
 }
 
-test("主图上传保留同节点编辑器，主体槽预览且操作区不遮挡末槽", async ({
+test("主图上传保留同节点编辑器，展开不改变参考图且操作区不遮挡", async ({
   page,
 }, testInfo) => {
   const node = await addImageNode(page);
@@ -68,8 +68,9 @@ test("主图上传保留同节点编辑器，主体槽预览且操作区不遮�
   await expect(node.getByLabel("图片提示词")).toBeVisible();
 
   await node.getByRole("button", { name: "展开提示词", exact: true }).click();
-  const subject = node.locator('.reference-slot[data-slot="主体"]');
-  const lastSlot = node.locator('.reference-slot[data-slot="Mask"]');
+  const subject = node.locator(".composer-ref-thumb").first();
+  const lastSlot = node.locator(".composer-ref-thumb").last();
+  await expect(node.locator(".reference-slot")).toHaveCount(0);
   await expect(subject.locator("img.reference-thumbnail")).toBeVisible();
   await expect(lastSlot).toBeVisible();
 
@@ -175,7 +176,7 @@ test("紧凑参考图的移除按钮可见、可命中且移除后不残留", as
   });
 });
 
-test("风格参考在收起和展开提示词后保持语义槽位", async ({ page }, testInfo) => {
+test("参考图在收起和展开提示词后保持普通列表", async ({ page }, testInfo) => {
   const node = await addImageNode(page);
   const chooser = page.waitForEvent("filechooser");
   await node.getByRole("button", { name: "添加参考图片", exact: true }).click();
@@ -183,23 +184,16 @@ test("风格参考在收起和展开提示词后保持语义槽位", async ({ pa
   await expect(node.locator(".composer-ref-thumb")).toHaveCount(2);
 
   await node.getByRole("button", { name: "展开提示词", exact: true }).click();
-  await expect(
-    node.locator('.reference-slot[data-slot="主体"] img.reference-thumbnail'),
-  ).toBeVisible();
-  await expect(
-    node.locator('.reference-slot[data-slot="风格"] img.reference-thumbnail'),
-  ).toBeVisible();
+  await expect(node.locator(".reference-slot")).toHaveCount(0);
+  await expect(node.locator(".composer-ref-thumb")).toHaveCount(2);
+  await expect(node.locator(".composer-ref-thumb img").first()).toBeVisible();
   await node.getByRole("button", { name: "收起提示词", exact: true }).click();
   await expect(node.locator(".composer-ref-thumb")).toHaveCount(2);
   await node.getByRole("button", { name: "展开提示词", exact: true }).click();
-  await expect(
-    node.locator('.reference-slot[data-slot="主体"] img.reference-thumbnail'),
-  ).toBeVisible();
-  await expect(
-    node.locator('.reference-slot[data-slot="风格"] img.reference-thumbnail'),
-  ).toBeVisible();
+  await expect(node.locator(".reference-slot")).toHaveCount(0);
+  await expect(node.locator(".composer-ref-thumb")).toHaveCount(2);
   await page.screenshot({
-    path: testInfo.outputPath("style-slot-after-toggle.png"),
+    path: testInfo.outputPath("reference-list-after-toggle.png"),
     animations: "disabled",
   });
 });
