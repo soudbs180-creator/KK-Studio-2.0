@@ -1,6 +1,7 @@
 import type { ModelSelection } from "../../features/models/modelSelection";
 import {
   useEffect,
+  useCallback,
   useLayoutEffect,
   useRef,
   useState,
@@ -19,9 +20,10 @@ import { useLocalGeneration } from "./useLocalGeneration";
 import { GenerationAction, GenerationStatus } from "./GenerationAction";
 import CreationModelPicker from "./CreationModelPicker";
 import ReferenceStrip from "./ReferenceStrip";
+import UiIcon from "../UiIcon";
 import ComposerActions from "./ComposerActions";
 import CanvasComposerShell from "../canvas/CanvasComposerShell";
-import UiIcon from "../UiIcon";
+import "../../styles/reference-composer.css";
 import { useCanvasImageGeneration } from "../../features/creation/CanvasImageCommand";
 import { composerReportedHeight } from "../canvas/composerLayout";
 
@@ -130,10 +132,21 @@ export default function CreationComposer(props: CreationComposerProps) {
     references.filter((r) => r.id).map((r) => r.assetId ?? r.id),
   ).size;
   const selectedModel = props.model ?? (video ? model : imageGeneration.model);
-  const ref = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLDivElement | null>(null);
+  const [element, setElement] = useState<HTMLDivElement | null>(null);
+  const attach = useCallback((node: HTMLDivElement | null) => {
+    ref.current = node;
+    setElement(node);
+  }, []);
   useLayoutEffect(() => {
-    if (selected) onExtraHeightChange(composerReportedHeight(expanded, error));
-  }, [selected, expanded, error, onExtraHeightChange]);
+    if (!selected || !element) return;
+    const report = () =>
+      onExtraHeightChange(composerReportedHeight(element.offsetHeight));
+    report();
+    const observer = new ResizeObserver(report);
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [selected, element, onExtraHeightChange]);
   useEffect(() => {
     if (!selected || busy) setMenu("");
     if (!selected) setExpanded(false);
@@ -147,8 +160,8 @@ export default function CreationComposer(props: CreationComposerProps) {
   const currentPrompt = props.prompt ?? prompt;
   return (
     <CanvasComposerShell
-      ref={ref}
-      className={`creation-composer ${video ? "video-composer" : ""} ${expanded ? "expanded" : ""}`}
+      ref={attach}
+      className={`creation-composer reference-composer ${video ? "video-composer" : ""} ${expanded ? "expanded" : ""}`}
       data-testid={`${kind}-composer`}
       onPointerDown={(e) => e.stopPropagation()}
       onWheel={(e) => e.stopPropagation()}
@@ -168,49 +181,16 @@ export default function CreationComposer(props: CreationComposerProps) {
         expanded={expanded}
         onToggleExpanded={() => setExpanded(!expanded)}
       />
-      {expanded ? (
-        <ReferenceStrip
-          disabled={busy}
-          references={references}
-          referenceCount={incomingReferenceCount}
-          limit={referenceLimit}
-          onAdd={onReference}
-          onRemove={onRemoveReference}
-          onSwapVideoFrames={video ? onSwapReferenceFrames : undefined}
-        />
-      ) : (
-        <div className="composer-refs">
-          {references.map((refItem, i) => (
-            <span className="composer-ref-thumb" key={refItem.id ?? i}>
-              {refItem.preview && <img src={refItem.preview} alt="" />}
-              {refItem.id && onRemoveReference && (
-                <button
-                  type="button"
-                  disabled={busy}
-                  aria-label="移除参考图"
-                  onClick={() => onRemoveReference(refItem.id!)}
-                >
-                  ×
-                </button>
-              )}
-            </span>
-          ))}
-          <button
-            className="composer-ref-add"
-            type="button"
-            aria-label="添加参考图片"
-            disabled={busy || incomingReferenceCount >= referenceLimit}
-            title={
-              referenceLimit === 0
-                ? "当前模型没有可用的参考图位置"
-                : `最多 ${referenceLimit} 张参考图`
-            }
-            onClick={() => onReference()}
-          >
-            <UiIcon name="add" size={16} />
-          </button>
-        </div>
-      )}
+      <ReferenceStrip
+        video={video}
+        disabled={busy}
+        references={references}
+        referenceCount={incomingReferenceCount}
+        limit={referenceLimit}
+        onAdd={onReference}
+        onRemove={onRemoveReference}
+        onSwapVideoFrames={video ? onSwapReferenceFrames : undefined}
+      />
       <textarea
         disabled={busy}
         title={busy ? "生成中暂不能编辑，取消或结束后可继续" : undefined}
@@ -224,6 +204,20 @@ export default function CreationComposer(props: CreationComposerProps) {
         placeholder="描述你想要生成的内容"
       />
       <div className="creation-controls">
+        <button
+          className="composer-ref-add"
+          type="button"
+          aria-label="添加参考图片"
+          disabled={busy || incomingReferenceCount >= referenceLimit}
+          title={
+            referenceLimit === 0
+              ? "当前模型没有可用的参考图位置"
+              : `最多 ${referenceLimit} 张参考图，已添加 ${incomingReferenceCount} 张`
+          }
+          onClick={() => onReference()}
+        >
+          <UiIcon name="add" size={20} />
+        </button>
         <CreationModelPicker
           disabled={busy}
           kind={kind}

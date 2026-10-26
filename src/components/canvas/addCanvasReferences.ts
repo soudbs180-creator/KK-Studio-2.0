@@ -1,7 +1,6 @@
 import { canvasImageReferenceLimit } from "../../features/models/imageModelCapabilities.ts";
 import { readProviderConnections } from "../../features/creation/providerRegistry.ts";
 import {
-  CANVAS_REFERENCE_SLOTS,
   type CanvasCollectionItem,
   type CanvasReference,
 } from "../../domain/canvasItems.ts";
@@ -108,7 +107,6 @@ export function addCanvasReferences({
   );
   if (source.referenceSlot) occupiedSlots.add(source.referenceSlot);
   const rejectedSlots: string[] = [];
-  let slotUnavailable = false;
   let added = 0;
   let capacitySkipped = false;
   const addedIds: string[] = [];
@@ -127,17 +125,8 @@ export function addCanvasReferences({
       rejectedSlots.push(requestedSlot);
       return;
     }
-    const slot =
-      requestedSlot && !occupiedSlots.has(requestedSlot)
-        ? requestedSlot
-        : CANVAS_REFERENCE_SLOTS.find(
-            (value) => value !== "Mask" && !occupiedSlots.has(value),
-          );
-    if (!slot) {
-      slotUnavailable = true;
-      return;
-    }
-    occupiedSlots.add(slot);
+    const slot = requestedSlot;
+    if (slot) occupiedSlots.add(slot);
 
     const baseIndex = existingReferences.length + added;
     let position: Point | undefined;
@@ -202,13 +191,11 @@ export function addCanvasReferences({
         : `当前模型最多接收 ${limit} 张新增参考图，请先移除已有连接。`,
     );
   }
-  if (rejectedSlots.length || slotUnavailable) {
+  if (rejectedSlots.length) {
     onConnectionNotice(
       rejectedSlots.includes("Mask")
         ? "Mask 必须通过图像编辑器绘制，不能上传普通参考图。"
-        : rejectedSlots.length
-          ? `${rejectedSlots.join("、")}槽已有参考图，请先移除后再上传。`
-          : "没有可用的参考图槽位，请先移除已有参考图。",
+        : `${rejectedSlots.join("、")}槽已有参考图，请先移除后再上传。`,
     );
   }
   return addedIds;

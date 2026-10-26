@@ -30,21 +30,27 @@ export function canvasReferencesFor(
   edges: CanvasConnection[],
   parentId: string,
 ): CanvasReference[] {
-  return edges
-    .filter((edge) => edge.target === parentId && edge.kind !== "result")
-    .map((edge) => ({
-      edge,
-      source: items.find((item) => item.id === edge.source),
-    }))
-    .filter(
-      (
-        entry,
-      ): entry is { edge: CanvasConnection; source: CanvasCollectionItem } =>
-        entry.source?.kind === "image" ||
-        entry.source?.kind === "video" ||
-        entry.source?.kind === "audio",
+  return canvasReferencesByTarget(items, edges).get(parentId) ?? [];
+}
+
+/** One metadata path for the canvas index and direct callers. */
+export function canvasReferencesByTarget(
+  items: CanvasCollectionItem[],
+  edges: CanvasConnection[],
+): Map<string, CanvasReference[]> {
+  const itemById = new Map(items.map((item) => [item.id, item]));
+  const grouped = new Map<string, CanvasReference[]>();
+  for (const edge of edges) {
+    if (edge.kind === "result") continue;
+    const source = itemById.get(edge.source);
+    if (
+      source?.kind !== "image" &&
+      source?.kind !== "video" &&
+      source?.kind !== "audio"
     )
-    .map(({ edge, source }) => ({
+      continue;
+    const group = grouped.get(edge.target) ?? [];
+    group.push({
       id: edge.id,
       assetId: source.assetId,
       title: source.title,
@@ -52,7 +58,10 @@ export function canvasReferencesFor(
       kind: source.kind,
       frame: source.referenceFrame,
       slot: source.referenceSlot,
-    }));
+    });
+    grouped.set(edge.target, group);
+  }
+  return grouped;
 }
 
 /** Swap only the two video source nodes; connector ids and edge order stay untouched. */

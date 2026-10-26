@@ -7,7 +7,10 @@ import type {
 import { cardLayout, type CanvasConnection } from "../../domain/canvasGraph";
 import type { useCanvasControls } from "./useCanvasControls";
 import { canConnectTarget } from "./connectionRules";
-import { canvasOccupiedRects } from "./canvasReferences";
+import {
+  canvasOccupiedRects,
+  canvasReferencesByTarget,
+} from "./canvasReferences";
 import type { ModelSelection } from "../../domain/modelSelection";
 import { addCanvasReferences } from "./addCanvasReferences";
 
@@ -191,25 +194,10 @@ export function useCanvasNodeLayerHandlers({
     [nodes, addNode, onConnect, onLocalGenerationSettled],
   );
 
-  const referencesByTarget = useMemo(() => {
-    const itemById = new Map(items.map((item) => [item.id, item]));
-    const grouped = new Map<string, CanvasReference[]>();
-    for (const edge of edges) {
-      if (edge.kind === "result") continue;
-      const source = itemById.get(edge.source);
-      if (source?.kind !== "image") continue;
-      const group = grouped.get(edge.target) ?? [];
-      group.push({
-        id: edge.id,
-        assetId: source.assetId,
-        title: source.title,
-        preview: source.preview ?? source.result?.poster ?? source.result?.src,
-        slot: source.referenceSlot,
-      });
-      grouped.set(edge.target, group);
-    }
-    return grouped;
-  }, [items, edges]);
+  const referencesByTarget = useMemo(
+    () => canvasReferencesByTarget(items, edges),
+    [items, edges],
+  );
 
   const referencesFor = useCallback(
     (parentId: string): CanvasReference[] =>
