@@ -60,7 +60,7 @@ export function ComposerToolbar({
             maxWidth: "100%",
           }}
         >
-          <Icon name={kind === "image" ? "image" : "sparkles"} size={18} />
+          <Icon name={kind === "image" ? "image" : "sparkles"} size={16} />
           <Text
             numberOfLines={1}
             style={{
@@ -109,6 +109,7 @@ export function ComposerIcon({
   solid?: boolean;
 }) {
   const t = useTheme();
+  const graphicSize = touchTarget === 44 ? 28 : 32;
   return (
     <Pressable
       accessibilityRole="button"
@@ -126,9 +127,9 @@ export function ComposerIcon({
     >
       <View
         style={{
-          width: 32,
-          height: 32,
-          borderRadius: 16,
+          width: touchTarget,
+          height: touchTarget,
+          borderRadius: touchTarget / 2,
           backgroundColor: solid
             ? disabled
               ? t.tertiary
@@ -139,9 +140,16 @@ export function ComposerIcon({
         }}
       >
         {busy ? (
-          <ActivityIndicator size="small" color={solid ? t.input : t.text} />
+          <ActivityIndicator
+            size={graphicSize}
+            color={solid ? t.input : t.text}
+          />
         ) : (
-          <Icon name={name} size={22} color={solid ? t.input : t.text} />
+          <Icon
+            name={name}
+            size={graphicSize}
+            color={solid ? t.input : t.text}
+          />
         )}
       </View>
     </Pressable>

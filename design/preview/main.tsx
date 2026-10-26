@@ -161,6 +161,14 @@ function Preview() {
           </button>
           <button
             type="button"
+            className="ui-button"
+            disabled
+            title="未连接服务"
+          >
+            兼容禁用动作示例
+          </button>
+          <button
+            type="button"
             className="kk-button"
             aria-pressed={selected}
             onClick={() => setSelected(!selected)}

@@ -14,8 +14,9 @@
   height: 471px;
 }
 .video-label-icon {
-  width: 15px;
-  height: 11px;
+  width: var(--kk-icon-glyph-sm);
+  height: var(--kk-icon-glyph-sm);
+  object-fit: contain;
 }
 .video-placeholder {
   position: relative;
@@ -167,6 +168,31 @@
   grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 5px;
 }
+.reference-frame-swap {
+  position: absolute;
+  left: 50%;
+  top: 28px;
+  transform: translateX(-50%);
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--kk-radius-full);
+  color: var(--text-secondary);
+  font-size: var(--kk-font-caption);
+}
+.reference-frame-swap span {
+  display: none;
+}
+.reference-frame-swap:hover,
+.reference-frame-swap:focus-visible {
+  color: var(--text-primary);
+  border-color: var(--ui-selected);
+}
 .reference-slot {
   min-width: 0;
   height: 56px;
@@ -288,12 +314,12 @@
   object-fit: contain;
 }
 .voice-button img {
-  width: 12px;
-  height: 16px;
+  width: var(--kk-icon-glyph-sm);
+  height: var(--kk-icon-glyph-sm);
 }
 .generate-arrow {
-  width: 18px;
-  height: 18px;
+  width: var(--kk-icon-glyph-md);
+  height: var(--kk-icon-glyph-md);
 }
 .upload-feedback {
   position: absolute;

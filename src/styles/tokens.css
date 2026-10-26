@@ -39,7 +39,8 @@
 
   /* --- 1.2 字族 / 字重 / 字距 --- */
   --kk-font-sans:
-    "Inter", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+    "Source Han Sans CN VF", "Noto Sans SC", "PingFang SC", "Microsoft YaHei",
+    Inter, system-ui, sans-serif;
   --kk-font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   --kk-weight-regular: 400;
   --kk-weight-medium: 500;
@@ -52,7 +53,7 @@
   --kk-tracking-wide: 0.4px;
 
   /* --- 1.3 间距：组件内专用（4px 基准） --- */
-  --kk-space-hair: 2px; /* 仅图标微调 / 内描边留白 */
+  --kk-space-hair: 4px; /* Figma space-hair；图标光学修正不能另造2px体系 */
   --kk-space-1: 4px;
   --kk-space-2: 8px;
   --kk-space-3: 12px;
@@ -65,31 +66,35 @@
   --kk-radius-xs: 4px; /* checkbox / badge / tooltip / progress */
   --kk-radius-sm: 8px; /* button / chip / tag / 小控件 */
   --kk-radius-control: 8px; /* 所有标准按钮、输入和控件 */
-  --kk-radius-menu: 10px; /* 下拉、二级菜单 */
+  --kk-radius-menu: 12px; /* 下拉、二级菜单 */
   --kk-radius-lg: 16px; /* 仅注册过的嵌套容器 */
   --kk-radius-panel: 20px; /* shell / panel exception */
   --kk-radius-card: 20px; /* card shell exception */
-  --kk-radius-full: 999px; /* 药丸、头像圈 */
+  --kk-radius-full: 1000px; /* Figma radius-full；胶囊仍由实际几何裁切 */
 
   /* --- 1.5 字体角色（Figma 治理页） --- */
   --kk-font-caption: 12px;
-  --kk-font-body: 14px;
-  --kk-font-body-strong: 14px;
+  --kk-font-body: 16px;
+  --kk-font-body-strong: 16px;
   --kk-font-subtitle: 16px;
   --kk-font-title: 20px;
-  --kk-font-display: 26px;
+  --kk-font-display: 28px;
   --kk-line-caption: 16px;
-  --kk-line-body: 20px;
-  --kk-line-body-strong: 20px;
+  --kk-line-body: 24px;
+  --kk-line-body-strong: 24px;
   --kk-line-subtitle: 24px;
   --kk-line-title: 28px;
-  --kk-line-display: 32px;
-  --kk-font-weight-caption: 400;
-  --kk-font-weight-body: 400;
-  --kk-font-weight-body-strong: 600;
-  --kk-font-weight-subtitle: 600;
-  --kk-font-weight-title: 700;
-  --kk-font-weight-display: 700;
+  --kk-line-display: 36px;
+  /* Dark mode compensation is -40 on the real VF wght axis. */
+  --kk-font-weight-caption: 360;
+  --kk-font-weight-body: 360;
+  --kk-font-weight-body-strong: 460;
+  --kk-font-weight-subtitle: 460;
+  --kk-font-weight-title: 660;
+  --kk-font-weight-display: 660;
+  --kk-font-toolbar: var(--kk-font-caption);
+  --kk-line-toolbar: var(--kk-line-caption);
+  --kk-font-weight-toolbar: var(--kk-font-weight-caption);
 
   /* ==========================================================================
      Tier 2 · 语义层 SEMANTIC — 主消费层。主题/密度切换只改这一层。
@@ -106,9 +111,19 @@
   --kk-border-subtle: #292929;
   --kk-bg-input: #1f1f1f;
   --kk-neutral-selected: #2a2a2a;
+  --kk-control-idle-bg: transparent;
+  --kk-control-hover-bg: color-mix(
+    in srgb,
+    var(--kk-text-primary) 4%,
+    transparent
+  );
+  --kk-control-selected-bg: var(--kk-neutral-selected);
+  --kk-control-idle-fg: var(--kk-text-secondary);
+  --kk-control-selected-fg: var(--kk-text-primary);
   --kk-text-primary: #dbdbdb;
   --kk-text-secondary: #a0a0a0;
   --kk-text-tertiary: #9e9e9e;
+  --kk-ink-near-black: #0a0a0a;
   --kk-text-accent: #7fd6b2;
   --kk-text-danger: #ff8585;
   --kk-danger: #b4233c;
@@ -158,16 +173,39 @@
   --kk-layout-gutter-xl: 64px; /* 页面级分割 */
   --kk-container-max-width: 1440px;
   --kk-container-pad: 40px; /* desktop，响应式见文末 */
-  --kk-sidebar-width: 291px;
+  --kk-sidebar-width: 292px;
+  --kk-sidebar-compact-width: 72px;
   --kk-panel-width: 264px;
-  --kk-toolbar-height: 50px;
+  --kk-toolbar-height: 52px;
   --kk-topbar-height: 40px;
+
+  /* Figma mapping contract: toolbar, panel, navigation and card-header sizes. */
+  --kk-canvas-toolbar-h: 44px;
+  --kk-canvas-toolbar-zoom-w: 100px;
+  --kk-canvas-toolbar-tools-width: 254px;
+  --kk-canvas-toolbar-button-h: 44px;
+  --kk-canvas-browser-switch-w: 144px;
+  --kk-control-surface-idle: #1b1b1b;
+  --kk-control-surface-hover: #202020;
+  --kk-control-surface-selected: #252525;
+  --kk-generation-count-trigger-w: 40px;
+  --kk-generation-count-trigger-h: 32px;
+  --kk-generation-count-trigger-touch-w: 52px;
+  --kk-generation-count-trigger-touch-h: 44px;
+  --kk-material-panel-width: 748px;
+  --kk-material-panel-compact-width: 308px;
+  --kk-material-panel-h: 600px;
+  --kk-material-range-row-compact-width: 280px;
+  --kk-material-range-row-expanded-width: 720px;
+  --kk-material-range-row-h: 40px;
+  --kk-card-header-h: 36px;
+  --kk-card-header-action-h: 32px;
 
   /* --- 2.6 控件档位 size tier --- */
   --kk-control-h-sm: 24px;
   --kk-control-h-md: 32px;
   --kk-control-h-lg: 40px;
-  --kk-control-h-xl: 40px;
+  --kk-control-h-xl: 44px;
   --kk-control-px-sm: 12px;
   --kk-control-px-md: 12px;
   --kk-control-px-lg: 16px;
@@ -177,19 +215,35 @@
   --kk-control-gap-lg: 8px;
   --kk-control-gap-xl: 8px;
   --kk-control-font-sm: 12px;
-  --kk-control-font-md: 14px;
-  --kk-control-font-lg: 14px;
-  --kk-control-font-xl: 14px;
+  --kk-control-font-md: 12px;
+  --kk-control-font-lg: 16px;
+  --kk-control-font-xl: 16px;
   --kk-control-icon-sm: 16px;
   --kk-control-icon-md: 20px;
   --kk-control-icon-lg: 24px;
-  --kk-control-icon-xl: 24px;
+  --kk-control-icon-xl: 28px;
+  --kk-icon-glyph-xs: 12px;
   --kk-icon-glyph-sm: 16px;
   --kk-icon-glyph-md: 20px;
   --kk-icon-glyph-lg: 24px;
+  --kk-icon-glyph-xl: 28px;
+  --kk-icon-glyph-xxl: 32px;
+  --kk-icon-stroke-12-regular: 0.75;
+  --kk-icon-stroke-12-medium: 1;
+  --kk-icon-stroke-12-bold: 1.25;
+  --kk-icon-stroke-16-regular: 1;
+  --kk-icon-stroke-16-medium: 1;
+  --kk-icon-stroke-16-bold: 1.25;
+  --kk-icon-stroke-standalone: 1;
   --kk-hit-min: 24px;
   --kk-hit-key: 32px;
   --kk-hit-primary: 40px;
+  --kk-hit-touch: 44px;
+  /* Figma 规范 / 11 (2000:273): 纯图标与图文按钮内部图标槽位契约 */
+  --kk-icon-button-glyph-sm: 16px;
+  --kk-icon-button-glyph-md: 20px;
+  --kk-button-icon-sm: 12px;
+  --kk-button-icon-md: 16px;
 
   /* --- 2.7 强调色：Default --- */
   --kk-accent: #21a673;
@@ -258,9 +312,9 @@
   --kk-task-workbench-height: 760px;
   --kk-task-queue-width: 220px;
   /* Readable task popover from the 2026-10-10 UI review; shared HUD shell. */
-  --kk-task-popover-width: 360px;
+  --kk-task-popover-width: 412px;
   --kk-account-popup-width: 320px;
-  --kk-task-popover-height: 420px;
+  --kk-task-popover-height: 484px;
   --kk-task-popover-min-height: 300px;
   /* 2026-10-15 density feedback: compact settings, wider connection forms. */
   --kk-settings-width: 1120px;
@@ -275,6 +329,39 @@
   --kk-collection-panel-width: 360px;
   --kk-collection-panel-height: 480px;
   --kk-model-capsule-max-width: 260px;
+  /* Figma 01 · UI Mechanics */
+  --kk-motion-stream-duration: 90ms;
+  --kk-motion-stream-stagger: 30ms;
+  --kk-motion-stream-blur: 6px;
+  --kk-motion-collapse: 240ms;
+  --kk-motion-drag-stiffness: 1200;
+  --kk-motion-drag-damping: 80;
+  --kk-motion-confirm-stiffness: 380;
+  --kk-motion-confirm-damping: 18;
+  --kk-motion-copy-hold: 2500ms;
+  --kk-motion-copy-fade: 150ms;
+  --kk-motion-hover-fade: 650ms;
+  --kk-motion-entry-stagger: 60ms;
+  --kk-motion-entry-cap: 240ms;
+  --kk-motion-entry-duration: 240ms;
+  --kk-motion-entry-offset: 8px;
+  /* Figma 规范 / 12 · 状态、动效与骨架屏 (2001:273) */
+  --kk-motion-hover: 120ms;
+  --kk-motion-press: 80ms;
+  --kk-motion-release: 140ms;
+  --kk-motion-press-scale: 0.97;
+  --kk-motion-switch: 280ms;
+  --kk-motion-checkbox-draw: 200ms;
+  --kk-motion-menu-enter: 180ms;
+  --kk-motion-menu-offset: 6px;
+  --kk-motion-drawer: 320ms;
+  --kk-motion-stack-offset-1: 6px;
+  --kk-motion-stack-offset-2: 12px;
+  --kk-motion-spinner: 900ms;
+  --kk-motion-shimmer: 1100ms;
+  --kk-motion-content-fade: 150ms;
+  --kk-motion-locate-scroll: 300ms;
+  --kk-motion-reduced-cap: 100ms;
 }
 
 /* ============================================================================
@@ -291,9 +378,28 @@
   --kk-border-subtle: #dedede;
   --kk-bg-input: #e9e9e9;
   --kk-neutral-selected: #e0e0e0;
+  --kk-control-surface-idle: #f7f7f7;
+  --kk-control-surface-hover: #f2f2f2;
+  --kk-control-surface-selected: #ededed;
+  --kk-control-idle-bg: transparent;
+  --kk-control-hover-bg: color-mix(
+    in srgb,
+    var(--kk-text-primary) 4%,
+    transparent
+  );
+  --kk-control-selected-bg: var(--kk-neutral-selected);
+  --kk-control-idle-fg: var(--kk-text-secondary);
+  --kk-control-selected-fg: var(--kk-text-primary);
   --kk-text-primary: #252525;
   --kk-text-secondary: #626262;
   --kk-text-tertiary: #636363;
+  --kk-ink-near-black: #0a0a0a;
+  --kk-font-weight-caption: 400;
+  --kk-font-weight-body: 400;
+  --kk-font-weight-body-strong: 500;
+  --kk-font-weight-subtitle: 500;
+  --kk-font-weight-title: 700;
+  --kk-font-weight-display: 700;
   --kk-text-accent: #166443;
   --kk-text-danger: #aa263b;
   --kk-danger: #aa263b;
@@ -307,7 +413,7 @@
   --kk-overlay: rgba(237, 237, 237, 0.72);
   --kk-button-primary-bg: #252525;
   --kk-button-primary-hover: #3c3c3c;
-  --kk-button-primary-text: #ffffff;
+  --kk-button-primary-text: #f2f2f2;
   --kk-like-start: #aa263b;
   --kk-like-end: #8f1f37;
   --kk-star-start: #8a590c;
@@ -399,7 +505,7 @@
   --kk-control-h-sm: 24px;
   --kk-control-h-md: 32px;
   --kk-control-h-lg: 40px;
-  --kk-control-h-xl: 40px;
+  --kk-control-h-xl: 44px;
   --kk-control-px-sm: 8px;
   --kk-control-px-md: 8px;
   --kk-control-px-lg: 12px;

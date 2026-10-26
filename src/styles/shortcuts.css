@@ -52,6 +52,23 @@
   font-size: 26px;
   line-height: 1;
   color: var(--text-primary);
+  display: grid;
+  place-items: center;
+  transition: var(--ui-state-transition);
+}
+.shortcuts-close:hover {
+  background: var(--ui-state-hover-bg);
+}
+.shortcuts-close:focus-visible {
+  outline: 2px solid var(--kk-focus-ring);
+  outline-offset: 1px;
+}
+.shortcuts-close:focus:not(:focus-visible) {
+  outline: none;
+}
+.shortcuts-close:active {
+  background: var(--ui-state-pressed-bg);
+  transform: scale(0.98);
 }
 .shortcuts-body {
   display: flex;

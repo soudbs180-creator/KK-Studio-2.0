@@ -35,6 +35,12 @@
   line-height: var(--kk-line-subtitle);
   margin: 0;
 }
+.image-lightbox-body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  gap: var(--kk-space-2);
+}
 .image-editor > header > button,
 .image-lightbox > header > button {
   margin-left: auto;
@@ -121,6 +127,23 @@
   align-items: flex-end;
   gap: var(--kk-space-2);
 }
+.image-edit-input > .model-anchor {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: none;
+  min-width: 0;
+  max-width: var(--kk-image-model-width);
+}
+.image-edit-input > .model-anchor .model-button {
+  min-width: 0;
+  max-width: 100%;
+}
+.image-edit-input > [data-voice-state] {
+  flex: none;
+  min-width: var(--kk-control-h-md);
+  min-height: var(--kk-control-h-md);
+}
 .image-edit-input .composer-textarea {
   flex: 1;
   min-width: 0;
@@ -179,6 +202,13 @@
   gap: var(--kk-space-1);
   max-width: var(--kk-image-model-width);
 }
+.image-edit-selection-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--kk-space-1);
+  flex: none;
+  white-space: nowrap;
+}
 .image-edit-toolbar select,
 .image-region-instruction input {
   background: var(--kk-bg-input);
@@ -223,9 +253,12 @@
 }
 .image-lightbox-strip {
   display: flex;
+  flex-direction: column;
   gap: var(--kk-space-2);
-  overflow-x: auto;
+  overflow-y: auto;
   flex: none;
+  width: var(--kk-image-lightbox-thumb-width);
+  justify-content: center;
 }
 .image-lightbox-strip button {
   flex: none;
@@ -262,5 +295,18 @@
   }
   .image-edit-model > span {
     display: none;
+  }
+  .image-edit-input > .model-anchor {
+    max-width: 7rem;
+  }
+  .image-lightbox-body {
+    flex-direction: column-reverse;
+  }
+  .image-lightbox-strip {
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+    width: auto;
+    justify-content: flex-start;
   }
 }

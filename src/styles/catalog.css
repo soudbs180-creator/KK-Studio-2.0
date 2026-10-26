@@ -51,7 +51,26 @@
   right: 35px;
   width: 24px;
   height: 24px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--ui-radius-control);
   color: var(--text-secondary);
+  transition: var(--ui-state-transition);
+}
+.catalog-close:hover {
+  background: var(--ui-state-hover-bg);
+  color: var(--text-primary);
+}
+.catalog-close:focus-visible {
+  outline: 2px solid var(--kk-focus-ring);
+  outline-offset: 1px;
+}
+.catalog-close:focus:not(:focus-visible) {
+  outline: none;
+}
+.catalog-close:active {
+  background: var(--ui-state-pressed-bg);
+  transform: scale(0.98);
 }
 .catalog-search {
   margin: 50px 44px 32px;
@@ -65,8 +84,8 @@
   gap: var(--kk-space-3);
 }
 .catalog-search > img {
-  width: 15px;
-  height: 15px;
+  width: var(--kk-icon-glyph-sm);
+  height: var(--kk-icon-glyph-sm);
 }
 .catalog-search input {
   min-width: 0;

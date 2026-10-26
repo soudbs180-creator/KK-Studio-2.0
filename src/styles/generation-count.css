@@ -3,22 +3,35 @@
   align-items: center;
   justify-content: center;
   gap: 5px;
-  width: var(--kk-control-h-md);
-  height: var(--kk-control-h-md);
-  color: var(--text-primary);
+  width: var(--kk-generation-count-trigger-w);
+  height: var(--kk-generation-count-trigger-h);
+  color: var(--text-secondary);
+  background: var(--ui-state-idle-bg);
   font-size: var(--ui-font-body);
   border-radius: var(--kk-radius-full);
 }
+.count-trigger:hover {
+  color: var(--text-primary);
+  background: var(--kk-control-surface-hover);
+}
+.count-trigger:active {
+  color: var(--text-primary);
+  background: var(--kk-control-surface-hover);
+}
+.count-trigger[aria-expanded="true"] {
+  color: var(--ui-state-selected-fg);
+  background: var(--kk-control-surface-selected);
+}
 .count-trigger img {
-  width: 8px;
-  height: 8px;
+  width: var(--kk-icon-glyph-xs);
+  height: var(--kk-icon-glyph-xs);
 }
 .generation-count-panel {
   position: absolute;
   z-index: 10;
   pointer-events: none;
   transform: translateY(-100%);
-  bottom: calc(var(--kk-control-h-md) + 8px);
+  bottom: calc(var(--kk-generation-count-trigger-h) + var(--kk-space-2));
   right: 0;
   width: 220px;
   min-height: 92px;
@@ -95,4 +108,16 @@
 .count-stops button[aria-pressed="true"] {
   color: var(--text-primary);
   background: var(--ui-neutral-selected);
+}
+
+@media (pointer: coarse) {
+  .count-trigger {
+    width: var(--kk-generation-count-trigger-touch-w);
+    height: var(--kk-generation-count-trigger-touch-h);
+  }
+  .generation-count-panel {
+    bottom: calc(
+      var(--kk-generation-count-trigger-touch-h) + var(--kk-space-2)
+    );
+  }
 }

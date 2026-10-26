@@ -4,102 +4,112 @@
   right: 0;
   display: flex;
   align-items: center;
-  gap: 9.393px;
+  gap: var(--kk-space-2);
   z-index: 15;
   width: auto;
-  height: 31.109px;
+  height: var(--kk-canvas-toolbar-h);
 }
 .canvas-zoom-trigger,
 .canvas-navigation-tools {
-  height: 31.109px;
-  border: 1.197px solid var(--border-default);
-  border-radius: 15.555px;
-  background: var(--bg-card);
-  color: var(--text-tertiary);
+  box-sizing: border-box;
+  height: var(--kk-canvas-toolbar-h);
+  border: var(--kk-border-width) solid var(--border-default);
+  border-radius: var(--kk-radius-full);
+  background: var(--kk-control-surface-idle);
+  color: var(--text-secondary);
   font-weight: 500;
 }
 .canvas-zoom-trigger {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 4.786px;
-  width: 75.38px;
+  gap: var(--kk-space-1);
+  width: var(--kk-canvas-toolbar-zoom-w);
   flex-shrink: 0;
-  font-size: 13.162px;
+  font-size: var(--kk-font-caption);
 }
 .canvas-zoom-trigger img {
-  width: 10.769px;
-  height: 5.983px;
+  width: var(--kk-icon-glyph-xs);
+  height: var(--kk-icon-glyph-xs);
+  object-fit: contain;
 }
 .canvas-navigation-tools {
   position: relative;
   display: block;
   padding: 0;
-  width: 196.227px;
+  width: var(--kk-canvas-toolbar-tools-width);
 }
 .canvas-navigation-tools button {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  gap: 2.393px;
-  height: 21.537px;
-  border-radius: 4.786px;
-  font-size: 13.162px;
+  gap: var(--kk-space-1);
+  height: var(--kk-canvas-toolbar-button-h);
+  border-radius: var(--kk-radius-xs);
+  font-size: var(--kk-font-caption);
 }
-.canvas-navigation-tools button:hover,
+.canvas-navigation-tools button:hover {
+  color: var(--text-primary);
+  background: var(--kk-control-surface-hover);
+}
+.canvas-navigation-tools button:active {
+  color: var(--text-primary);
+  background: var(--kk-control-surface-hover);
+}
 .canvas-navigation-tools button[aria-pressed="true"] {
-  background: var(--border-default);
+  color: var(--ui-state-selected-fg);
+  background: var(--kk-control-surface-selected);
 }
 .canvas-navigation-tools img {
   object-fit: contain;
 }
 .canvas-arrange img {
-  width: 13.755px;
-  height: 13.755px;
+  width: var(--kk-icon-glyph-sm);
+  height: var(--kk-icon-glyph-sm);
 }
 .canvas-background img {
-  width: 13.162px;
-  height: 13.162px;
+  width: var(--kk-icon-glyph-sm);
+  height: var(--kk-icon-glyph-sm);
 }
 .canvas-lines img {
-  width: 13.162px;
-  height: 14.491px;
+  width: var(--kk-icon-glyph-sm);
+  height: var(--kk-icon-glyph-sm);
 }
 .canvas-map-trigger img {
-  width: 13.162px;
-  height: 13.162px;
+  width: var(--kk-icon-glyph-sm);
+  height: var(--kk-icon-glyph-sm);
 }
 .canvas-arrange {
   position: absolute;
-  top: 4.786px;
-  left: 9.57px;
-  width: 56.236px;
+  top: 1px;
+  left: 8px;
+  width: 56px;
 }
 .canvas-background,
 .canvas-lines {
   position: absolute;
-  top: 4.786px;
-  width: 21.537px;
+  top: 1px;
+  width: 20px;
 }
 .canvas-background {
-  left: 72.99px;
+  left: 76px;
 }
 .canvas-lines {
-  left: 96.92px;
+  left: 100px;
 }
 .canvas-map-trigger {
   position: absolute;
-  top: 4.786px;
-  left: 120.85px;
-  width: 65.808px;
+  top: 1px;
+  left: 124px;
+  width: 64px;
 }
 .canvas-navigation-divider {
   position: absolute;
-  top: 8.38px;
-  left: 69.4px;
+  top: 10px;
+  left: 68px;
   width: 1px;
-  height: 14.358px;
+  height: 16px;
   background: var(--border-default);
   flex-shrink: 0;
   justify-self: center;
@@ -246,5 +256,120 @@
   .canvas-zoom-menu button {
     font-size: var(--ui-font-body);
     height: 28px;
+  }
+}
+
+/* Figma 435:48879: actual buttons share 44px, with 28px pure glyphs. */
+.canvas .canvas-top-right {
+  height: var(--kk-canvas-toolbar-h);
+}
+.canvas .canvas-zoom-trigger {
+  width: var(--kk-canvas-toolbar-zoom-w);
+  font-size: var(--kk-font-body);
+  line-height: var(--kk-line-body);
+  border: 0;
+}
+.canvas .canvas-zoom-trigger img {
+  width: 16px;
+  height: 16px;
+}
+.canvas .canvas-navigation-tools {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: auto;
+  padding: 0;
+  border-radius: var(--kk-radius-control);
+}
+.canvas .canvas-navigation-tools button {
+  position: static;
+  height: 44px;
+  border-radius: var(--kk-radius-full);
+}
+.canvas .canvas-arrange,
+.canvas .canvas-background,
+.canvas .canvas-lines {
+  width: 44px;
+  padding: 0;
+}
+.canvas .canvas-arrange > span:not(.toolbar-icon) {
+  display: none;
+}
+.canvas .canvas-arrange img,
+.canvas .canvas-background img,
+.canvas .canvas-lines img {
+  width: 28px;
+  height: 28px;
+}
+.canvas .canvas-navigation-divider {
+  position: static;
+  height: 24px;
+}
+.canvas .canvas-map-trigger {
+  width: 104px;
+  padding: 0 12px;
+  font-size: var(--kk-font-body);
+  line-height: var(--kk-line-body);
+}
+.canvas .canvas-map-trigger img {
+  width: 16px;
+  height: 16px;
+}
+.canvas .canvas-zoom-menu,
+.canvas .canvas-background-menu {
+  top: calc(100% + 8px);
+  width: min(240px, calc(100vw - 16px));
+}
+
+.canvas .canvas-zoom-trigger .toolbar-icon,
+.canvas .canvas-map-trigger .toolbar-icon {
+  width: 16px;
+  height: 16px;
+}
+.canvas .canvas-navigation-tools .toolbar-icon:not(.toolbar-icon-map) {
+  width: 28px;
+  height: 28px;
+}
+.canvas .canvas-hud-right {
+  max-width: 100%;
+  flex-shrink: 1;
+}
+.canvas .canvas-top-right {
+  max-width: 100%;
+  min-width: 0;
+}
+.canvas .canvas-minimap {
+  width: min(240px, calc(100vw - 16px));
+  height: 182px;
+  padding: 16px;
+  border: 1px solid var(--kk-border-default);
+  border-radius: var(--kk-radius-panel);
+  overflow: auto;
+}
+.canvas .minimap-surface {
+  width: 100%;
+  height: 100%;
+}
+@container canvas-hud (max-width: 760px) {
+  .canvas .canvas-navigation-tools .canvas-map-trigger {
+    width: 44px;
+    padding: 0;
+  }
+  .canvas
+    .canvas-navigation-tools
+    .canvas-map-trigger
+    > span:not(.toolbar-icon) {
+    display: none;
+  }
+  .canvas .canvas-navigation-tools .canvas-map-trigger .toolbar-icon {
+    width: 28px;
+    height: 28px;
+  }
+}
+@container canvas-hud (max-width: 580px) {
+  .canvas .canvas-top-right {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    height: auto;
   }
 }

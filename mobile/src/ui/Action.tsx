@@ -44,6 +44,7 @@ export function Action({
   style?: StyleProp<ViewStyle>;
 }) {
   const t = useTheme();
+  const graphicSize = iconOnly ? (touchTarget === 44 ? 28 : 32) : 16;
   return (
     <View style={[compact || iconOnly ? { flexShrink: 1 } : { gap: 4 }, style]}>
       <Pressable
@@ -78,12 +79,15 @@ export function Action({
         }}
       >
         {busy ? (
-          <ActivityIndicator color={primary ? t.background : t.text} />
+          <ActivityIndicator
+            size={graphicSize}
+            color={primary ? t.background : t.text}
+          />
         ) : icon ? (
           <Icon
             name={icon}
             color={actionAppearance(t, { primary, danger }).foreground}
-            size={22}
+            size={graphicSize}
           />
         ) : null}
         {!iconOnly && (
@@ -99,10 +103,12 @@ export function Action({
             {label}
           </Text>
         )}
-        {selected && !primary && <Icon name="check" size={18} color={t.text} />}
+        {selected && !primary && !iconOnly && (
+          <Icon name="check" size={16} color={t.text} />
+        )}
         {menu && !selected && (
           <View style={{ transform: [{ rotate: "-90deg" }] }}>
-            <Icon name="chevron" size={18} color={t.tertiary} />
+            <Icon name="chevron" size={16} color={t.tertiary} />
           </View>
         )}
       </Pressable>

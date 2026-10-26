@@ -1,6 +1,6 @@
 {
   "name": "@kk-studio/mobile",
-  "version": "2.1.5",
+  "version": "2.1.43",
   "main": "expo-router/entry",
   "dependencies": {
     "@kk-studio/creation-contracts": "file:../packages/creation-contracts",

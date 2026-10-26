@@ -3,7 +3,7 @@
    breakpoints from changing the design geometry before the surface scales. */
 @media (min-width: 1201px) {
   :root {
-    --sidebar-compact-width: 70px;
+    --sidebar-compact-width: var(--kk-sidebar-compact-width);
   }
   /* Menus are portaled to body and therefore sit outside the transformed app.
      Scale their own visual box while retaining client-pixel placement. */
