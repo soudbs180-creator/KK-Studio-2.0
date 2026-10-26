@@ -34,7 +34,7 @@ export default function SidebarGroupHeading({
           <img
             src="/design/figma/project-open-container.svg"
             width="20"
-            height="21"
+            height="20"
             alt=""
           />
         </button>
@@ -48,7 +48,7 @@ export default function SidebarGroupHeading({
           <img
             src="/design/figma/project-add-container.svg"
             width="20"
-            height="21"
+            height="20"
             alt=""
           />
         </button>

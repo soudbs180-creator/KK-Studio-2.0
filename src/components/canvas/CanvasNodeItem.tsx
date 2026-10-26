@@ -63,6 +63,7 @@ function CanvasNodeItem({
   onGenerationStart,
   onAddReferences,
   onRemoveReference,
+  onSwapReferenceFrames,
   onGenerationState,
   activeLocalResultIds = [],
 }: CanvasNodeItemProps) {
@@ -107,15 +108,19 @@ function CanvasNodeItem({
   const isSelected = controls.selectedNode === item.id;
   const setComposerExtraHeight = controls.setComposerExtraHeight;
   const isGenerationActive = activeLocalResultIds.includes(item.id);
-  const isGenerating = (item.generationStatus as unknown as string) === "generating";
+  const isGenerating =
+    (item.generationStatus as unknown as string) === "generating";
 
   const handlePreempt = useCallback(
     (reason: string = "designer_override") => {
       const taskId =
-        (item as unknown as { taskId?: string; activeTaskId?: string }).taskId ||
-        (item as unknown as { taskId?: string; activeTaskId?: string }).activeTaskId ||
+        (item as unknown as { taskId?: string; activeTaskId?: string })
+          .taskId ||
+        (item as unknown as { taskId?: string; activeTaskId?: string })
+          .activeTaskId ||
         "unknown";
-      const baseRev = item.node_rev ?? shadowEventBus.getNodeRevision(item.id) ?? 1;
+      const baseRev =
+        item.node_rev ?? shadowEventBus.getNodeRevision(item.id) ?? 1;
 
       // 1. Emit shadow events
       shadowEventBus.emit({
@@ -183,7 +188,10 @@ function CanvasNodeItem({
     if (!isGenerating) return controls;
     return {
       ...controls,
-      startNodeDrag: (event: React.PointerEvent<HTMLDivElement>, id: string) => {
+      startNodeDrag: (
+        event: React.PointerEvent<HTMLDivElement>,
+        id: string,
+      ) => {
         if (id === item.id) {
           handlePreempt("designer_drag");
         }
@@ -253,12 +261,14 @@ function CanvasNodeItem({
       ),
       onAddReferences: (entries) => onAddReferences(item.id, entries),
       onRemoveReference,
+      onSwapReferenceFrames,
       onGenerationState: (phase) => onGenerationState(item.id, phase),
       onChange: (patch) => {
         if (isGenerating) {
           handlePreempt("designer_update");
         }
-        const baseRev = item.node_rev ?? shadowEventBus.getNodeRevision(item.id) ?? 1;
+        const baseRev =
+          item.node_rev ?? shadowEventBus.getNodeRevision(item.id) ?? 1;
         const newRev = baseRev + 1;
         shadowEventBus.setNodeRevision(item.id, newRev);
         shadowEventBus.emit({
@@ -275,7 +285,9 @@ function CanvasNodeItem({
               ? {
                   ...entry,
                   ...patch,
-                  generationStatus: isGenerating ? undefined : entry.generationStatus,
+                  generationStatus: isGenerating
+                    ? undefined
+                    : entry.generationStatus,
                   node_rev: newRev,
                   updatedAt: Date.now(),
                 }
@@ -303,6 +315,7 @@ function CanvasNodeItem({
       command,
       onAddReferences,
       onRemoveReference,
+      onSwapReferenceFrames,
       onGenerationState,
     ],
   );

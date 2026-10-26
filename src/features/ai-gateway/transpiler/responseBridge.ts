@@ -7,18 +7,18 @@ import type {
   OpenAIToolCall,
 } from "./types.ts";
 
-/**
- * Transpiles an Anthropic /v1/messages response to an OpenAI /v1/chat/completions response.
- */
-export function transpileAnthropicToOpenAiResponse(
-  resp: AnthropicMessagesResponse,
-  originalModel?: string,
-): OpenAIChatResponse {
+function collectAnthropicResponseParts(
+  content: AnthropicContentBlock[] | undefined,
+): {
+  textParts: string[];
+  reasoningParts: string[];
+  toolCalls: OpenAIToolCall[];
+} {
   const textParts: string[] = [];
   const reasoningParts: string[] = [];
   const toolCalls: OpenAIToolCall[] = [];
 
-  for (const block of resp.content || []) {
+  for (const block of content || []) {
     if (block.type === "text") {
       if (block.text) textParts.push(block.text);
     } else if (block.type === "thinking") {
@@ -38,6 +38,30 @@ export function transpileAnthropicToOpenAiResponse(
     }
   }
 
+  return { textParts, reasoningParts, toolCalls };
+}
+
+function mapAnthropicStopReason(
+  stopReason: AnthropicMessagesResponse["stop_reason"],
+  hasToolCalls: boolean,
+): OpenAIChoice["finish_reason"] {
+  if (stopReason === "tool_use") return "tool_calls";
+  if (stopReason === "max_tokens") return "length";
+  if (stopReason === "end_turn") return "stop";
+  if (hasToolCalls) return "tool_calls";
+  return "stop";
+}
+
+/**
+ * Transpiles an Anthropic /v1/messages response to an OpenAI /v1/chat/completions response.
+ */
+export function transpileAnthropicToOpenAiResponse(
+  resp: AnthropicMessagesResponse,
+  originalModel?: string,
+): OpenAIChatResponse {
+  const { textParts, reasoningParts, toolCalls } =
+    collectAnthropicResponseParts(resp.content);
+
   const message: OpenAIChatMessage = {
     role: "assistant",
     content: textParts.length > 0 ? textParts.join("\n\n") : null,
@@ -51,21 +75,13 @@ export function transpileAnthropicToOpenAiResponse(
     message.tool_calls = toolCalls;
   }
 
-  let finishReason: OpenAIChoice["finish_reason"] = "stop";
-  if (resp.stop_reason === "tool_use") {
-    finishReason = "tool_calls";
-  } else if (resp.stop_reason === "max_tokens") {
-    finishReason = "length";
-  } else if (resp.stop_reason === "end_turn") {
-    finishReason = "stop";
-  } else if (toolCalls.length > 0) {
-    finishReason = "tool_calls";
-  }
-
   const choice: OpenAIChoice = {
     index: 0,
     message,
-    finish_reason: finishReason,
+    finish_reason: mapAnthropicStopReason(
+      resp.stop_reason,
+      toolCalls.length > 0,
+    ),
   };
 
   const inputTokens = resp.usage?.input_tokens ?? 0;
@@ -90,6 +106,27 @@ export function transpileAnthropicToOpenAiResponse(
         : {}),
     },
   };
+}
+
+function parseOpenAiToolInput(rawArguments: unknown): Record<string, unknown> {
+  try {
+    return typeof rawArguments === "string" && rawArguments.trim()
+      ? (JSON.parse(rawArguments) as Record<string, unknown>)
+      : {};
+  } catch {
+    return { raw: rawArguments };
+  }
+}
+
+function mapOpenAiFinishReason(
+  finishReason: string | null | undefined,
+  hasToolCalls: boolean,
+): AnthropicMessagesResponse["stop_reason"] {
+  if (finishReason === "tool_calls") return "tool_use";
+  if (finishReason === "length") return "max_tokens";
+  if (finishReason === "stop") return "end_turn";
+  if (hasToolCalls) return "tool_use";
+  return "end_turn";
 }
 
 /**
@@ -118,34 +155,19 @@ export function transpileOpenAiToAnthropicResponse(
 
   if (msg?.tool_calls) {
     for (const tc of msg.tool_calls) {
-      let parsedInput: Record<string, unknown>;
-      try {
-        parsedInput =
-          typeof tc.function.arguments === "string" && tc.function.arguments.trim()
-            ? (JSON.parse(tc.function.arguments) as Record<string, unknown>)
-            : {};
-      } catch {
-        parsedInput = { raw: tc.function.arguments };
-      }
       blocks.push({
         type: "tool_use",
         id: tc.id,
         name: tc.function.name,
-        input: parsedInput,
+        input: parseOpenAiToolInput(tc.function.arguments),
       });
     }
   }
 
-  let stopReason: AnthropicMessagesResponse["stop_reason"] = "end_turn";
-  if (choice?.finish_reason === "tool_calls") {
-    stopReason = "tool_use";
-  } else if (choice?.finish_reason === "length") {
-    stopReason = "max_tokens";
-  } else if (choice?.finish_reason === "stop") {
-    stopReason = "end_turn";
-  } else if (msg?.tool_calls && msg.tool_calls.length > 0) {
-    stopReason = "tool_use";
-  }
+  const stopReason = mapOpenAiFinishReason(
+    choice?.finish_reason,
+    Boolean(msg?.tool_calls && msg.tool_calls.length > 0),
+  );
 
   const promptTokens = resp.usage?.prompt_tokens ?? 0;
   const completionTokens = resp.usage?.completion_tokens ?? 0;

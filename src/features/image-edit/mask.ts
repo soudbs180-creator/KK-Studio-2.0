@@ -2,6 +2,7 @@ import { assertEditShape } from "./schema.ts";
 import type {
   Point,
   MaskRun,
+  MaskRegion,
   MaskDocument,
   Bounds,
 } from "../../domain/imageEdit.ts";
@@ -64,6 +65,31 @@ export function mergeRuns(runs: MaskRun[]): MaskRun[] {
     else merged.push(run);
   }
   return merged;
+}
+
+/** Remove a brush/rectangle selection from an existing mask without widening it. */
+export function subtractRuns(source: MaskRun[], eraser: MaskRun[]): MaskRun[] {
+  const byRow = new Map<number, MaskRun[]>();
+  for (const run of eraser) {
+    const row = byRow.get(run[0]) ?? [];
+    row.push(run);
+    byRow.set(run[0], row);
+  }
+  for (const row of byRow.values()) row.sort((a, b) => a[1] - b[1]);
+  const output: MaskRun[] = [];
+  for (const [y, start, end] of source) {
+    let cursor = start;
+    for (const [, eraseStart, eraseEnd] of byRow.get(y) ?? []) {
+      if (eraseEnd <= cursor) continue;
+      if (eraseStart >= end) break;
+      if (eraseStart > cursor)
+        output.push([y, cursor, Math.min(eraseStart, end)]);
+      cursor = Math.max(cursor, eraseEnd);
+      if (cursor >= end) break;
+    }
+    if (cursor < end) output.push([y, cursor, end]);
+  }
+  return mergeRuns(output);
 }
 export function brushMask(
   width: number,
@@ -182,6 +208,62 @@ export function floodMask(
 export function nextColorLabel(color: string, number: number): string {
   return `${color}-${number <= 26 ? String.fromCharCode(64 + number) : number}`;
 }
+
+function assertColorCounters(counters: unknown): void {
+  if (counters === undefined) return;
+  if (
+    !counters ||
+    typeof counters !== "object" ||
+    Array.isArray(counters) ||
+    Object.keys(counters).length > 200 ||
+    Object.entries(counters).some(
+      ([key, value]) =>
+        key.length > 40 || !Number.isSafeInteger(value) || value < 0,
+    )
+  )
+    throw new Error("色块编号记录无效。");
+}
+
+function assertRegionColorMeta(region: MaskRegion): void {
+  const invalidName =
+    region.colorName !== undefined &&
+    (typeof region.colorName !== "string" || region.colorName.length > 40);
+  const invalidNumber =
+    region.number !== undefined &&
+    (!Number.isSafeInteger(region.number) || region.number <= 0);
+  const invalidAnnotation =
+    region.annotation !== undefined && region.annotation !== "comment";
+  const invalidColor =
+    region.color !== undefined &&
+    (typeof region.color !== "string" ||
+      !/^#[a-f\d]{6}$/i.test(region.color) ||
+      typeof region.colorName !== "string" ||
+      region.colorName.length > 40 ||
+      !Number.isSafeInteger(region.number) ||
+      region.number! <= 0);
+  if (invalidName || invalidNumber || invalidAnnotation || invalidColor)
+    throw new Error("色块标记数据无效。");
+}
+
+function assertRegionRuns(
+  runs: MaskRun[],
+  width: number,
+  height: number,
+): void {
+  for (const run of runs)
+    if (
+      !Array.isArray(run) ||
+      run.length !== 3 ||
+      !run.every(Number.isSafeInteger) ||
+      run[0] < 0 ||
+      run[0] >= height ||
+      run[1] < 0 ||
+      run[2] > width ||
+      run[1] >= run[2]
+    )
+      throw new Error("蒙版坐标无效，原件已保留。");
+}
+
 /** Invalid edit documents must not silently become ordinary generation. */
 export function readMaskDocument(input: unknown): MaskDocument {
   assertEditShape(
@@ -194,18 +276,7 @@ export function readMaskDocument(input: unknown): MaskDocument {
   if (!doc || !Array.isArray(doc.regions))
     throw new Error("编辑蒙版数据损坏，原件已保留。");
   assertImageDimensions(doc.width, doc.height);
-  if (
-    doc.colorCounters !== undefined &&
-    (!doc.colorCounters ||
-      typeof doc.colorCounters !== "object" ||
-      Array.isArray(doc.colorCounters) ||
-      Object.keys(doc.colorCounters).length > 200 ||
-      Object.entries(doc.colorCounters).some(
-        ([key, value]) =>
-          key.length > 40 || !Number.isSafeInteger(value) || value < 0,
-      ))
-  )
-    throw new Error("色块编号记录无效。");
+  assertColorCounters(doc.colorCounters);
   if (doc.regions.length > 200)
     throw new Error("编辑区域超过 200 个，请分批编辑。");
   const ids = new Set<string>();
@@ -213,7 +284,15 @@ export function readMaskDocument(input: unknown): MaskDocument {
   for (const region of doc.regions) {
     assertEditShape(
       region,
-      ["id", "runs", "color", "colorName", "number", "instruction"],
+      [
+        "id",
+        "runs",
+        "color",
+        "colorName",
+        "number",
+        "instruction",
+        "annotation",
+      ],
       ["id", "runs"],
       "编辑区域标识无效。",
     );
@@ -229,39 +308,14 @@ export function readMaskDocument(input: unknown): MaskDocument {
     ids.add(region.id);
     total += region.runs.length;
     if (total > 500000) throw new Error("蒙版过于复杂，请分批编辑。");
-    if (
-      (region.colorName !== undefined &&
-        (typeof region.colorName !== "string" ||
-          region.colorName.length > 40)) ||
-      (region.number !== undefined &&
-        (!Number.isSafeInteger(region.number) || region.number <= 0)) ||
-      (region.color !== undefined &&
-        (typeof region.color !== "string" ||
-          !/^#[a-f\d]{6}$/i.test(region.color) ||
-          typeof region.colorName !== "string" ||
-          region.colorName.length > 40 ||
-          !Number.isSafeInteger(region.number) ||
-          region.number! <= 0))
-    )
-      throw new Error("色块标记数据无效。");
+    assertRegionColorMeta(region);
     if (
       region.instruction !== undefined &&
       (typeof region.instruction !== "string" ||
         region.instruction.length > 2000)
     )
       throw new Error("色块指令数据无效。");
-    for (const run of region.runs)
-      if (
-        !Array.isArray(run) ||
-        run.length !== 3 ||
-        !run.every(Number.isSafeInteger) ||
-        run[0] < 0 ||
-        run[0] >= doc.height ||
-        run[1] < 0 ||
-        run[2] > doc.width ||
-        run[1] >= run[2]
-      )
-        throw new Error("蒙版坐标无效，原件已保留。");
+    assertRegionRuns(region.runs, doc.width, doc.height);
   }
   return structuredClone(doc);
 }

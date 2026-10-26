@@ -56,7 +56,11 @@ export type SubagentTurnHandler = (
   signal?: AbortSignal,
 ) => Promise<{
   content?: string;
-  toolCalls?: Array<{ id: string; name: string; args: Record<string, unknown> }>;
+  toolCalls?: Array<{
+    id: string;
+    name: string;
+    args: Record<string, unknown>;
+  }>;
   done?: boolean;
   finalSummary?: string;
   structuredData?: Record<string, unknown>;
@@ -75,7 +79,8 @@ export class SubagentSandbox {
   readonly brief: SubagentTaskBrief;
   readonly allowedToolNames: Set<string>;
 
-  private _status: "idle" | "running" | "completed" | "failed" | "terminated" = "idle";
+  private _status: "idle" | "running" | "completed" | "failed" | "terminated" =
+    "idle";
   private _history: SubagentTurn[] = [];
   private _tools: Map<string, SubagentToolDefinition> = new Map();
   private _artifacts: Set<string> = new Set();
@@ -100,7 +105,9 @@ export class SubagentSandbox {
 
     // Filter out recursive delegation tools
     this.allowedToolNames = new Set(
-      Array.from(configuredAllowed).filter((name) => !RECURSIVE_DELEGATION_TOOLS.has(name)),
+      Array.from(configuredAllowed).filter(
+        (name) => !RECURSIVE_DELEGATION_TOOLS.has(name),
+      ),
     );
 
     // Register provided tools if allowed
@@ -151,7 +158,10 @@ export class SubagentSandbox {
     }
     if (!this.allowedToolNames.has(tool.name)) {
       // If allowedToolNames was explicitly limited by brief and doesn't have it, reject
-      if (this.brief.allowedTools && !this.brief.allowedTools.includes(tool.name)) {
+      if (
+        this.brief.allowedTools &&
+        !this.brief.allowedTools.includes(tool.name)
+      ) {
         throw new Error(
           `Tool '${tool.name}' is not in the allowed tool whitelist for task ${this.brief.taskId}.`,
         );
@@ -219,7 +229,11 @@ export class SubagentSandbox {
 
   private appendAssistantTurn(
     content?: string,
-    toolCalls?: Array<{ id: string; name: string; args: Record<string, unknown> }>,
+    toolCalls?: Array<{
+      id: string;
+      name: string;
+      args: Record<string, unknown>;
+    }>,
   ): void {
     if (!content && (!toolCalls || toolCalls.length === 0)) {
       return;
@@ -232,12 +246,17 @@ export class SubagentSandbox {
       toolCalls,
     };
     this._history.push(assistantTurn);
-    const chars = (content?.length || 0) + JSON.stringify(toolCalls || "").length;
+    const chars =
+      (content?.length || 0) + JSON.stringify(toolCalls || "").length;
     this._tokensConsumed += Math.max(1, Math.ceil(chars / 4));
   }
 
   private async executeStepTools(
-    toolCalls: Array<{ id: string; name: string; args: Record<string, unknown> }>,
+    toolCalls: Array<{
+      id: string;
+      name: string;
+      args: Record<string, unknown>;
+    }>,
   ): Promise<void> {
     for (const tc of toolCalls) {
       const toolRes = await this.executeTool(tc.name, tc.args);
@@ -245,7 +264,9 @@ export class SubagentSandbox {
         turnIndex: this._history.length,
         timestamp: Date.now(),
         role: "tool",
-        content: toolRes.error ? `Error: ${toolRes.error}` : JSON.stringify(toolRes.output),
+        content: toolRes.error
+          ? `Error: ${toolRes.error}`
+          : JSON.stringify(toolRes.output),
         toolResult: {
           toolCallId: tc.id,
           output: toolRes.output,
@@ -285,6 +306,42 @@ export class SubagentSandbox {
     if (step.toolCalls && step.toolCalls.length > 0) {
       await this.executeStepTools(step.toolCalls);
     }
+  }
+
+  private evaluateTurnOutcome(
+    step: Awaited<ReturnType<SubagentTurnHandler>>,
+    turnCount: number,
+    maxTurns: number,
+  ): {
+    completed: boolean;
+    status?: SubagentStatus;
+    summary?: string;
+    structuredData?: Record<string, unknown>;
+  } {
+    if (step.done) {
+      const summary =
+        step.finalSummary || step.content || "Task completed successfully.";
+      if (!step.content || step.content !== summary) {
+        this.appendAssistantTurn(summary);
+      }
+      return {
+        completed: true,
+        status: "success",
+        summary,
+        structuredData: step.structuredData,
+      };
+    }
+    if (turnCount >= maxTurns) {
+      return {
+        completed: true,
+        status: "partial",
+        summary:
+          step.finalSummary ||
+          `Task partially completed (reached maximum turn limit of ${maxTurns}). ${step.content || ""}`.trim(),
+        structuredData: step.structuredData,
+      };
+    }
+    return { completed: false };
   }
 
   /**
@@ -337,28 +394,18 @@ export class SubagentSandbox {
         if (signal?.aborted) {
           this._status = "terminated";
           outcomeStatus = "failed";
-          failureError = signal.reason?.message || "Execution aborted by caller.";
+          failureError =
+            signal.reason?.message || "Execution aborted by caller.";
           break;
         }
 
         await this.processTurnStep(step);
 
-        if (step.done) {
-          finalSummary = step.finalSummary || step.content || "Task completed successfully.";
-          structuredData = step.structuredData;
-          outcomeStatus = "success";
-          if (!step.content || step.content !== finalSummary) {
-            this.appendAssistantTurn(finalSummary);
-          }
-          break;
-        }
-
-        if (turnCount >= maxTurns) {
-          outcomeStatus = "partial";
-          finalSummary =
-            step.finalSummary ||
-            `Task partially completed (reached maximum turn limit of ${maxTurns}). ${step.content || ""}`.trim();
-          structuredData = step.structuredData;
+        const outcome = this.evaluateTurnOutcome(step, turnCount, maxTurns);
+        if (outcome.completed) {
+          outcomeStatus = outcome.status!;
+          finalSummary = outcome.summary!;
+          structuredData = outcome.structuredData;
           break;
         }
       }
@@ -396,9 +443,13 @@ export class SubagentSandbox {
     structuredData?: Record<string, unknown>;
     error?: string;
   }): SubagentFoldbackResult {
-    const durationMs = (this._endTime || Date.now()) - (this._startTime || Date.now());
+    const durationMs =
+      (this._endTime || Date.now()) - (this._startTime || Date.now());
     const rawTokensEstimate = this.estimateRawIntermediateTokens();
-    const summaryTokens = Math.max(1, Math.ceil(params.executiveSummary.length / 4));
+    const summaryTokens = Math.max(
+      1,
+      Math.ceil(params.executiveSummary.length / 4),
+    );
     const tokensSaved = Math.max(0, rawTokensEstimate - summaryTokens);
 
     return createFoldbackResult({
@@ -451,7 +502,10 @@ export class SubagentSandbox {
         ? ["Constraints:", ...this.brief.constraints.map((c) => `- ${c}`)]
         : []),
       ...(this.brief.expectedSchema
-        ? ["Expected Return Schema:", JSON.stringify(this.brief.expectedSchema, null, 2)]
+        ? [
+            "Expected Return Schema:",
+            JSON.stringify(this.brief.expectedSchema, null, 2),
+          ]
         : []),
       "Anti-Pollution Directive: Your detailed intermediate reasoning and tool outputs remain isolated in your sandbox. Return a clear executive summary (<= 300 words) and structured data.",
     ].join("\n");

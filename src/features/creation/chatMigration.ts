@@ -195,6 +195,8 @@ export function sha256Hex(content: string | Uint8Array): string {
 }
 
 type RawRecord = Record<string, unknown>;
+type LegacyChatSource = "codex" | "direct" | "google" | "unknown";
+
 const record = (value: unknown): RawRecord =>
   value && typeof value === "object" && !Array.isArray(value)
     ? (value as RawRecord)
@@ -253,34 +255,47 @@ function meaningfulDraft(draft: RawRecord): boolean {
   );
 }
 
-/** Source evidence chooses a context; current UI preferences never assign old messages. */
-function migrateProjectV2(proj: LegacyV2Project): CreationProjectV3 {
-  const result = structuredClone(proj) as RawRecord;
-  const thread = (value: unknown) =>
-    typeof value === "string" && /^[A-Za-z0-9_-]{1,160}$/.test(value);
-  if (Object.hasOwn(proj, "agentThreadId") && !thread(proj.agentThreadId))
-    throw new Error("corrupt: 旧 Agent 线程身份无效。");
+function isValidThreadId(value: unknown): boolean {
+  return typeof value === "string" && /^[A-Za-z0-9_-]{1,160}$/.test(value);
+}
+
+function isValidChatsContainer(proj: LegacyV2Project): boolean {
+  if (
+    !proj.chats ||
+    typeof proj.chats !== "object" ||
+    Array.isArray(proj.chats)
+  )
+    return false;
+  if (!Object.keys(proj.chats).length || typeof proj.activeChatId !== "string")
+    return false;
+  return Object.hasOwn(proj.chats, proj.activeChatId);
+}
+
+function validateLegacyChatsField(proj: LegacyV2Project): void {
   if (Object.hasOwn(proj, "chats")) {
-    if (
-      !proj.chats ||
-      typeof proj.chats !== "object" ||
-      Array.isArray(proj.chats) ||
-      !Object.keys(proj.chats).length ||
-      typeof proj.activeChatId !== "string" ||
-      !Object.hasOwn(proj.chats, proj.activeChatId)
-    )
+    if (!isValidChatsContainer(proj))
       throw new Error("corrupt: 旧聊天身份不完整，原件未迁移。");
-    for (const [id, value] of Object.entries(proj.chats)) {
+    for (const [id, value] of Object.entries(proj.chats as RawRecord)) {
       const chat = record(value);
       if (
         chat.id !== id ||
-        (Object.hasOwn(chat, "agentThreadId") && !thread(chat.agentThreadId))
+        (Object.hasOwn(chat, "agentThreadId") &&
+          !isValidThreadId(chat.agentThreadId))
       )
         throw new Error("corrupt: 旧聊天身份无效，原件未迁移。");
     }
   } else if (Object.hasOwn(proj, "activeChatId")) {
     throw new Error("corrupt: 旧聊天身份不完整，原件未迁移。");
   }
+}
+
+function validateLegacyProjectV2(proj: LegacyV2Project): void {
+  if (
+    Object.hasOwn(proj, "agentThreadId") &&
+    !isValidThreadId(proj.agentThreadId)
+  )
+    throw new Error("corrupt: 旧 Agent 线程身份无效。");
+  validateLegacyChatsField(proj);
   for (const key of ["composerDraft", "googleConversation"]) {
     if (
       Object.hasOwn(proj, key) &&
@@ -290,33 +305,41 @@ function migrateProjectV2(proj: LegacyV2Project): CreationProjectV3 {
   }
   if (Object.hasOwn(proj, "messages") && !Array.isArray(proj.messages))
     throw new Error("corrupt: 旧消息无法完整迁移。");
-  const chats = structuredClone(record(proj.chats)) as Record<string, ChatItem>;
-  const createdAt =
-    Number.isSafeInteger(proj.createdAt) && Number(proj.createdAt) >= 0
-      ? Number(proj.createdAt)
-      : 0;
-  const updatedAt =
-    Number.isSafeInteger(proj.updatedAt) && Number(proj.updatedAt) >= 0
-      ? Number(proj.updatedAt)
-      : createdAt;
-  const ids: Partial<
-    Record<"codex" | "direct" | "google" | "unknown", string>
-  > = {};
-  function ensure(source: "codex" | "direct" | "google" | "unknown"): ChatItem {
+}
+
+function safeNonNegativeTimestamp(value: unknown, fallback: number): number {
+  return Number.isSafeInteger(value) && Number(value) >= 0
+    ? Number(value)
+    : fallback;
+}
+
+function allocateChatId(chats: Record<string, ChatItem>, base: string): string {
+  let id = base;
+  let suffix = 2;
+  while (Object.hasOwn(chats, id)) id = `${base}-${suffix++}`;
+  return id;
+}
+
+const LEGACY_CHAT_NAMES: Record<LegacyChatSource, string> = {
+  codex: "Codex 历史对话",
+  direct: "对话记录",
+  google: "Google 对话",
+  unknown: "旧消息，来源待核对",
+};
+
+function createEnsureChat(
+  chats: Record<string, ChatItem>,
+  ids: Partial<Record<LegacyChatSource, string>>,
+  createdAt: number,
+  updatedAt: number,
+): (source: LegacyChatSource) => ChatItem {
+  return (source: LegacyChatSource): ChatItem => {
     if (ids[source]) return chats[ids[source]!];
     const base = source === "unknown" ? "legacy-history" : `legacy-${source}`;
-    let id = base,
-      suffix = 2;
-    while (Object.hasOwn(chats, id)) id = `${base}-${suffix++}`;
-    const names = {
-      codex: "Codex 历史对话",
-      direct: "对话记录",
-      google: "Google 对话",
-      unknown: "旧消息，来源待核对",
-    };
+    const id = allocateChatId(chats, base);
     const chat: ChatItem = {
       id,
-      name: names[source],
+      name: LEGACY_CHAT_NAMES[source],
       createdAt,
       updatedAt,
       draft: {},
@@ -329,63 +352,78 @@ function migrateProjectV2(proj: LegacyV2Project): CreationProjectV3 {
     ids[source] = id;
     chats[id] = chat;
     return chat;
+  };
+}
+
+function normalizeGoogleMessage(value: unknown): ChatItemMessage {
+  const message = structuredClone(record(value));
+  const validRole = ["user", "assistant", "system", "tool", "error"].includes(
+    String(message.role),
+  );
+  const content =
+    typeof message.content === "string"
+      ? message.content
+      : typeof message.text === "string"
+        ? message.text
+        : undefined;
+  if (typeof message.id !== "string" || !validRole || content === undefined)
+    throw new Error("corrupt: Google 历史消息无法完整迁移。");
+  return {
+    ...message,
+    content,
+  } as ChatItemMessage;
+}
+
+function migrateGoogleConversation(
+  google: RawRecord,
+  ensure: (source: LegacyChatSource) => ChatItem,
+): void {
+  if (!Object.keys(google).length) return;
+  const context = structuredClone(google);
+  const messages = context.messages;
+  if (Object.hasOwn(context, "messages") && !Array.isArray(messages))
+    throw new Error("corrupt: Google 历史消息无法完整迁移。");
+  delete context.messages;
+  const chat = ensure("google");
+  chat.googleConversation = context;
+  if (Array.isArray(messages))
+    chat.messages = messages.map(normalizeGoogleMessage);
+}
+
+function classifyDraftSource(draft: RawRecord): LegacyChatSource {
+  if (draft.pendingAgent) return "codex";
+  if (
+    ["codex", "direct", "google"].includes(String(draft.conversationChannel))
+  ) {
+    return draft.conversationChannel as "codex" | "direct" | "google";
   }
-  if (proj.agentThreadId) ensure("codex").agentThreadId = proj.agentThreadId;
-  const google = record(proj.googleConversation);
-  if (Object.keys(google).length) {
-    const context = structuredClone(google);
-    const messages = context.messages;
-    if (Object.hasOwn(context, "messages") && !Array.isArray(messages))
-      throw new Error("corrupt: Google 历史消息无法完整迁移。");
-    delete context.messages;
-    const chat = ensure("google");
-    chat.googleConversation = context;
-    if (Array.isArray(messages))
-      chat.messages = messages.map((value) => {
-        const message = structuredClone(record(value));
-        if (
-          typeof message.id !== "string" ||
-          !["user", "assistant", "system", "tool", "error"].includes(
-            String(message.role),
-          ) ||
-          (typeof message.text !== "string" &&
-            typeof message.content !== "string")
-        )
-          throw new Error("corrupt: Google 历史消息无法完整迁移。");
-        return {
-          ...message,
-          content:
-            typeof message.content === "string"
-              ? message.content
-              : message.text,
-        } as ChatItemMessage;
-      });
-  }
-  const draft = record(proj.composerDraft);
-  let draftSource: "codex" | "direct" | "google" | "unknown" | undefined;
+  return record(draft.modelSelection).source === "api" ? "direct" : "unknown";
+}
+
+function hasDivergentDraftPromptAndText(draft: RawRecord): boolean {
+  return (
+    typeof draft.prompt === "string" &&
+    draft.prompt.length > 0 &&
+    typeof draft.text === "string" &&
+    draft.text.length > 0 &&
+    draft.prompt !== draft.text
+  );
+}
+
+function migrateComposerDraft(
+  draft: RawRecord,
+  result: RawRecord,
+  chats: Record<string, ChatItem>,
+  ensure: (source: LegacyChatSource) => ChatItem,
+  createdAt: number,
+  updatedAt: number,
+): LegacyChatSource | undefined {
   if (meaningfulDraft(draft)) {
-    draftSource = draft.pendingAgent
-      ? "codex"
-      : ["codex", "direct", "google"].includes(
-            String(draft.conversationChannel),
-          )
-        ? (draft.conversationChannel as "codex" | "direct" | "google")
-        : record(draft.modelSelection).source === "api"
-          ? "direct"
-          : "unknown";
+    const draftSource = classifyDraftSource(draft);
     const sourceChat = ensure(draftSource);
     sourceChat.draft = structuredClone(draft);
-    if (
-      typeof draft.prompt === "string" &&
-      draft.prompt &&
-      typeof draft.text === "string" &&
-      draft.text &&
-      draft.prompt !== draft.text
-    ) {
-      const base = "legacy-draft-recovery";
-      let id = base,
-        suffix = 2;
-      while (Object.hasOwn(chats, id)) id = `${base}-${suffix++}`;
+    if (hasDivergentDraftPromptAndText(draft)) {
+      const id = allocateChatId(chats, "legacy-draft-recovery");
       chats[id] = {
         id,
         name: "恢复草稿",
@@ -393,8 +431,8 @@ function migrateProjectV2(proj: LegacyV2Project): CreationProjectV3 {
         updatedAt,
         draft: {
           ...structuredClone(draft),
-          prompt: draft.text,
-          text: draft.text,
+          prompt: draft.text as string,
+          text: draft.text as string,
         },
         messages: [],
         mainAgent: "direct",
@@ -404,7 +442,9 @@ function migrateProjectV2(proj: LegacyV2Project): CreationProjectV3 {
         originChatId: sourceChat.id,
       };
     }
-  } else if (Object.keys(draft).length) {
+    return draftSource;
+  }
+  if (Object.keys(draft).length) {
     if (
       Object.hasOwn(result, "legacyComposerPreferences") &&
       !sameJson(result.legacyComposerPreferences, draft)
@@ -412,6 +452,100 @@ function migrateProjectV2(proj: LegacyV2Project): CreationProjectV3 {
       throw new Error("corrupt: 旧输入偏好保全字段冲突。");
     result.legacyComposerPreferences = structuredClone(draft);
   }
+  return undefined;
+}
+
+function isInitialCodexMessage(
+  proj: LegacyV2Project,
+  draft: RawRecord,
+  message: NonNullable<LegacyV2Project["messages"]>[number],
+): boolean {
+  if (message.id !== `${proj.id}-message` || message.content !== proj.prompt)
+    return false;
+  const rootCard = (proj.items ?? []).some(
+    (item) =>
+      item.id === `${proj.id}-prompt` &&
+      item.generationSource === "codex" &&
+      item.prompt === message.content,
+  );
+  if (rootCard) return true;
+  return Boolean(
+    draft.pendingAgent &&
+    ["codex", "default"].includes(String(record(draft.modelSelection).source)),
+  );
+}
+
+function migrateLegacyMessages(
+  proj: LegacyV2Project,
+  draft: RawRecord,
+  directDraftBinding: RawRecord | undefined,
+  ensure: (source: LegacyChatSource) => ChatItem,
+): void {
+  for (const message of proj.messages ?? []) {
+    const task = (proj.tasks ?? []).find(
+      (candidate) =>
+        message.content === candidate.prompt &&
+        (message.taskId === candidate.id ||
+          message.id === `${proj.id}-message-${candidate.id}`),
+    );
+    const source: LegacyChatSource = task
+      ? "direct"
+      : isInitialCodexMessage(proj, draft, message)
+        ? "codex"
+        : "unknown";
+    const destination = ensure(source);
+    destination.messages.push(structuredClone(message));
+    if (task && !directDraftBinding) {
+      const binding = legacyProviderBinding(record(task));
+      if (binding) destination.legacyProviderBinding = binding;
+    }
+  }
+}
+
+function selectActiveChatId(
+  proj: LegacyV2Project,
+  chats: Record<string, ChatItem>,
+  ids: Partial<Record<LegacyChatSource, string>>,
+  draftSource: LegacyChatSource | undefined,
+): string {
+  const previousActive =
+    typeof proj.activeChatId === "string" &&
+    Object.hasOwn(chats, proj.activeChatId)
+      ? proj.activeChatId
+      : undefined;
+  return (
+    previousActive ??
+    (draftSource && ids[draftSource]) ??
+    ids.codex ??
+    ids.direct ??
+    ids.google ??
+    ids.unknown ??
+    Object.keys(chats).sort()[0]
+  );
+}
+
+/** Source evidence chooses a context; current UI preferences never assign old messages. */
+function migrateProjectV2(proj: LegacyV2Project): CreationProjectV3 {
+  const result = structuredClone(proj) as RawRecord;
+  validateLegacyProjectV2(proj);
+  const chats = structuredClone(record(proj.chats)) as Record<string, ChatItem>;
+  const createdAt = safeNonNegativeTimestamp(proj.createdAt, 0);
+  const updatedAt = safeNonNegativeTimestamp(proj.updatedAt, createdAt);
+  const ids: Partial<Record<LegacyChatSource, string>> = {};
+  const ensure = createEnsureChat(chats, ids, createdAt, updatedAt);
+
+  if (proj.agentThreadId) ensure("codex").agentThreadId = proj.agentThreadId;
+  migrateGoogleConversation(record(proj.googleConversation), ensure);
+
+  const draft = record(proj.composerDraft);
+  const draftSource = migrateComposerDraft(
+    draft,
+    result,
+    chats,
+    ensure,
+    createdAt,
+    updatedAt,
+  );
   const directDraftBinding =
     draftSource === "direct"
       ? legacyProviderBinding({
@@ -423,39 +557,10 @@ function migrateProjectV2(proj: LegacyV2Project): CreationProjectV3 {
       : undefined;
   if (directDraftBinding)
     ensure("direct").legacyProviderBinding = directDraftBinding;
-  for (const message of proj.messages ?? []) {
-    const task = (proj.tasks ?? []).find(
-      (task) =>
-        message.content === task.prompt &&
-        (message.taskId === task.id ||
-          message.id === `${proj.id}-message-${task.id}`),
-    );
-    const rootCard = (proj.items ?? []).some(
-      (item) =>
-        item.id === `${proj.id}-prompt` &&
-        item.generationSource === "codex" &&
-        item.prompt === message.content,
-    );
-    const initialCodex =
-      message.id === `${proj.id}-message` &&
-      message.content === proj.prompt &&
-      (rootCard ||
-        Boolean(
-          draft.pendingAgent &&
-          ["codex", "default"].includes(
-            String(record(draft.modelSelection).source),
-          ),
-        ));
-    const destination = ensure(
-      task ? "direct" : initialCodex ? "codex" : "unknown",
-    );
-    destination.messages.push(structuredClone(message));
-    if (task && !directDraftBinding) {
-      const binding = legacyProviderBinding(record(task));
-      if (binding) destination.legacyProviderBinding = binding;
-    }
-  }
-  if (!Object.keys(chats).length)
+
+  migrateLegacyMessages(proj, draft, directDraftBinding, ensure);
+
+  if (!Object.keys(chats).length) {
     chats["chat-default"] = {
       id: "chat-default",
       name: "默认对话",
@@ -466,25 +571,15 @@ function migrateProjectV2(proj: LegacyV2Project): CreationProjectV3 {
       mainAgent: "codex",
       modelAllowlist: [],
     };
+  }
   const threads = Object.values(chats)
     .map((chat) => chat.agentThreadId)
     .filter((thread) => thread !== undefined);
   if (new Set(threads).size !== threads.length)
     throw new Error("corrupt: Agent 线程归属重复，原件未迁移。");
-  const previousActive =
-    typeof proj.activeChatId === "string" &&
-    Object.hasOwn(chats, proj.activeChatId)
-      ? proj.activeChatId
-      : undefined;
+
   result.chats = chats;
-  result.activeChatId =
-    previousActive ??
-    (draftSource && ids[draftSource]) ??
-    ids.codex ??
-    ids.direct ??
-    ids.google ??
-    ids.unknown ??
-    Object.keys(chats).sort()[0];
+  result.activeChatId = selectActiveChatId(proj, chats, ids, draftSource);
   for (const key of [
     "messages",
     "composerDraft",

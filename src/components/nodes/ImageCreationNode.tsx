@@ -152,7 +152,7 @@ export default function ImageCreationNode({
               aria-label="上传图片"
               onClick={() => uploadInput.current?.click()}
             >
-              <Upload size={16} />
+              <Upload size={16} strokeWidth={1} />
               上传图片
             </button>
           )}

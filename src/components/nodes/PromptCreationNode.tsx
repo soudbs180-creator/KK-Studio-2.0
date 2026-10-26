@@ -72,7 +72,7 @@ export default function PromptCreationNode({
         </header>
         <h3>{item.title}</h3>
         <div className="prompt-creation-placeholder">
-          <UiIcon name={item.kind} size={48} />
+          <UiIcon name={item.kind} size={24} />
           <p>
             {item.kind === "text" && textGeneration.draftText
               ? `正在生成：${textGeneration.draftText.slice(-240)}`

@@ -15,8 +15,7 @@ function renderModelProbeBadge(item: Entry) {
   const providerId =
     item.selection?.connectionId ?? item.selection?.source ?? "";
   const modelId = item.selection?.model ?? item.id;
-  const probe =
-    getProbeMetric(providerId, modelId) ?? getProbeMetric(item.id);
+  const probe = getProbeMetric(providerId, modelId) ?? getProbeMetric(item.id);
   if (!probe) return null;
 
   return (

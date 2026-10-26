@@ -4,6 +4,7 @@ import { appPlatform } from "../runtime/appInfo";
 import { isTauri } from "@tauri-apps/api/core";
 import CompactAppMenu from "./CompactAppMenu";
 import WindowControls from "./WindowControls";
+import UiIcon from "./UiIcon";
 import { useHiddenControlFocus } from "./useHiddenControlFocus";
 export default function TopBar({
   onOpen,
@@ -176,7 +177,7 @@ export default function TopBar({
         title="搜索"
         onClick={() => onOpen("search")}
       >
-        <img src="/design/figma/search.svg" alt="" />
+        <UiIcon name="search" size={28} />
       </button>
       <button
         className="mobile-project-switch"
@@ -184,7 +185,7 @@ export default function TopBar({
         title="切换项目"
         onClick={() => onOpen("projects")}
       >
-        <img src="/design/figma/sidebar-archive.svg" alt="" />
+        <UiIcon name="archive" size={28} />
       </button>
       <button
         className="mobile-settings"
@@ -192,7 +193,7 @@ export default function TopBar({
         title="打开设置"
         onClick={() => onOpen("settings")}
       >
-        <img src="/design/figma/sidebar-settings-container.svg" alt="" />
+        <UiIcon name="settings" size={28} />
       </button>
       {desktop ? (
         <WindowControls />

@@ -27,8 +27,7 @@ export interface OpenAIChatContentPartImage {
 }
 
 export type OpenAIChatContentPart =
-  | OpenAIChatContentPartText
-  | OpenAIChatContentPartImage;
+  OpenAIChatContentPartText | OpenAIChatContentPartImage;
 
 export interface OpenAIFunctionCall {
   name: string;
@@ -242,12 +241,7 @@ export interface AnthropicMessagesResponse {
   role: "assistant";
   content: AnthropicContentBlock[];
   model: string;
-  stop_reason:
-    | "end_turn"
-    | "tool_use"
-    | "max_tokens"
-    | "stop_sequence"
-    | null;
+  stop_reason: "end_turn" | "tool_use" | "max_tokens" | "stop_sequence" | null;
   stop_sequence: string | null;
   usage: AnthropicUsage;
 }
@@ -288,9 +282,7 @@ export interface AnthropicInputJsonDelta {
 }
 
 export type AnthropicDelta =
-  | AnthropicTextDelta
-  | AnthropicThinkingDelta
-  | AnthropicInputJsonDelta;
+  AnthropicTextDelta | AnthropicThinkingDelta | AnthropicInputJsonDelta;
 
 export interface AnthropicStreamEventContentBlockDelta {
   type: "content_block_delta";

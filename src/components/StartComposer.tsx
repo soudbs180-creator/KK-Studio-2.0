@@ -274,13 +274,15 @@ export default function StartComposer({
               disabled={submitDisabled}
               title={disabledReason}
             >
-              <img src="/design/figma/composer-send.svg" alt="" />
+              <UiIcon name="send" size={28} />
             </button>
           </div>
         </div>
         <UsageStatusBar
           draft={draft}
-          onReasoningEffortChange={(effort) => commit({ reasoningEffort: effort })}
+          onReasoningEffortChange={(effort) =>
+            commit({ reasoningEffort: effort })
+          }
         />
       </form>
       <StartComposerFeedback

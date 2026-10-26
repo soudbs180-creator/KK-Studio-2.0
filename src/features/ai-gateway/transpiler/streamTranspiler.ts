@@ -73,7 +73,10 @@ export function createStreamTranspiler(
           if (raw !== "[DONE]") {
             try {
               const chunk = JSON.parse(raw) as OpenAIChatChunk;
-              const events = transpileOpenAiChunkToAnthropicEvents(chunk, state);
+              const events = transpileOpenAiChunkToAnthropicEvents(
+                chunk,
+                state,
+              );
               return events.map(formatAnthropicSse);
             } catch {
               return [];

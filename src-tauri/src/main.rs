@@ -5,9 +5,11 @@
 mod agent_process;
 mod agent_runtime;
 mod asset_storage;
+mod browser_runtime;
 mod cli_runtime;
 mod command_bus;
 mod creation_storage;
+mod ego_browser;
 mod event_bus;
 mod local_hardware;
 mod native_activation;
@@ -2080,6 +2082,10 @@ fn main() {
             agent_runtime::agent_runtime_start,
             agent_runtime::agent_runtime_status,
             agent_runtime::agent_runtime_stop,
+            ego_browser::ego_browser_status,
+            ego_browser::ego_browser_open,
+            browser_runtime::browser_external_status,
+            browser_runtime::browser_external_open,
             credential_set,
             credential_get,
             provider_models_prepare,

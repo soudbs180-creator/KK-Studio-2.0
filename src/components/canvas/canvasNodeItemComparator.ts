@@ -34,6 +34,7 @@ export interface CanvasNodeItemProps {
   onGenerationStart: (id: string, count: number) => void;
   onAddReferences: (id: string, references: CanvasReference[]) => void;
   onRemoveReference: (id: string) => void;
+  onSwapReferenceFrames?: (firstId: string, lastId: string) => void;
   onGenerationState: (id: string, phase: GenerationPhase) => void;
   activeLocalResultIds?: readonly string[];
 }
@@ -49,6 +50,7 @@ export const HANDLER_KEYS = [
   "onGenerationStart",
   "onAddReferences",
   "onRemoveReference",
+  "onSwapReferenceFrames",
   "onGenerationState",
 ] as const;
 
@@ -62,6 +64,8 @@ export function areSingleReferencesEqual(
     a.parentAssetId === b.parentAssetId &&
     a.title === b.title &&
     a.preview === b.preview &&
+    a.kind === b.kind &&
+    a.frame === b.frame &&
     a.slot === b.slot
   );
 }

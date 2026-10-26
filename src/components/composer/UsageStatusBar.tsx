@@ -1,5 +1,8 @@
 import React from "react";
-import type { CreationDraft, ReasoningEffort } from "../../features/creation/model.ts";
+import type {
+  CreationDraft,
+  ReasoningEffort,
+} from "../../features/creation/model.ts";
 import { parseModelWindow } from "../../features/models/modelCatalogWindow.ts";
 
 export interface UsageStatusBarProps {
@@ -114,20 +117,31 @@ export default function UsageStatusBar({
 }: UsageStatusBarProps): React.ReactElement {
   const effectiveModel = draft?.model || draft?.modelSelection?.model || "";
   const effectiveMaxTokens =
-    propMaxTokens !== undefined ? propMaxTokens : resolveMaxTokens(effectiveModel);
+    propMaxTokens !== undefined
+      ? propMaxTokens
+      : resolveMaxTokens(effectiveModel);
 
   const effectiveCurrentTokens =
     propCurrentTokens !== undefined
       ? propCurrentTokens
-      : estimateContextTokens(draft?.prompt ?? "", draft?.attachments?.length ?? 0);
+      : estimateContextTokens(
+          draft?.prompt ?? "",
+          draft?.attachments?.length ?? 0,
+        );
 
-  const progress = formatUsageProgress(effectiveCurrentTokens, effectiveMaxTokens);
+  const progress = formatUsageProgress(
+    effectiveCurrentTokens,
+    effectiveMaxTokens,
+  );
 
   let cachedPct = 0;
   if (propCachedPercentage !== undefined) {
     cachedPct = Math.min(100, Math.max(0, Math.round(propCachedPercentage)));
   } else if (cachedTokens !== undefined && effectiveCurrentTokens > 0) {
-    cachedPct = Math.min(100, Math.max(0, Math.round((cachedTokens / effectiveCurrentTokens) * 100)));
+    cachedPct = Math.min(
+      100,
+      Math.max(0, Math.round((cachedTokens / effectiveCurrentTokens) * 100)),
+    );
   }
 
   const isCached = cachedPct > 0;
@@ -160,17 +174,28 @@ export default function UsageStatusBar({
             style={{ width: `${progress.percentage}%` }}
           />
         </div>
-        <span className="composer-token-text">{progress.label}</span>
+        <span
+          className="composer-token-text kk-tabular-nums"
+          data-numeric="true"
+        >
+          {progress.label}
+        </span>
       </div>
 
       <div className="composer-metrics-group">
         <span
           className={`composer-cache-badge ${isCached ? "is-cached" : "is-idle"}`}
-          title={isCached ? `提示词缓存命中率: ${cachedPct}%` : "未命中提示词缓存"}
+          title={
+            isCached ? `提示词缓存命中率: ${cachedPct}%` : "未命中提示词缓存"
+          }
         >
           ⚡ Cached ({cachedPct}%)
         </span>
-        <span className="composer-tps-badge" title="生成速率">
+        <span
+          className="composer-tps-badge kk-tabular-nums"
+          data-numeric="true"
+          title="生成速率"
+        >
           {tpsText}
         </span>
       </div>

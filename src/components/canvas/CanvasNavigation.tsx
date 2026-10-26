@@ -4,6 +4,7 @@ import type { CanvasCollectionItem } from "../../domain/canvasItems";
 import type { Point, ViewTransform } from "./canvasModel";
 import CanvasZoomMenu from "./CanvasZoomMenu";
 import CanvasMinimap from "./CanvasMinimap";
+import ToolbarIcon from "./ToolbarIcon";
 import "../../styles/canvas-navigation.css";
 
 interface NavigationProps {
@@ -50,11 +51,19 @@ export default function CanvasNavigation({
   }
   useLayoutEffect(() => {
     const menu = ref.current?.querySelector<HTMLElement>(
-      ".canvas-zoom-menu,.canvas-background-menu",
+      ".canvas-zoom-menu,.canvas-background-menu,.canvas-minimap",
     );
-    if (!menu) return;
+    const container = ref.current;
+    if (!menu || !container || !opener.current) return;
     const canvas = menu.closest(".infinite-canvas");
     const update = () => {
+      const trigger = opener.current!.getBoundingClientRect();
+      const root = container.getBoundingClientRect();
+      const left =
+        open === "map" ? trigger.left - 8 - menu.offsetWidth : trigger.left;
+      menu.style.right = "auto";
+      menu.style.left = `${Math.max(8, Math.min(left, window.innerWidth - menu.offsetWidth - 8)) - root.left - container.clientLeft}px`;
+      menu.style.top = `${(open === "map" ? trigger.top : trigger.bottom + 8) - root.top - container.clientTop}px`;
       const gap = parseFloat(getComputedStyle(menu).paddingBottom);
       const bottom = Math.min(
         window.innerHeight,
@@ -100,7 +109,7 @@ export default function CanvasNavigation({
         }}
       >
         <span>{Math.round(transform.scale * 100)}%</span>
-        <img src="/design/figma/nav-chevron.svg" alt="" />
+        <ToolbarIcon name="chevron" />
       </button>
       <div className="canvas-navigation-tools" data-node-id="100:16334">
         <button
@@ -112,7 +121,7 @@ export default function CanvasNavigation({
           aria-label="整理画布"
           title="整理全部卡片并适配视图"
         >
-          <img src="/design/figma/nav-arrange.svg" alt="" />
+          <ToolbarIcon name="arrange" />
           <span>整理</span>
         </button>
         <span className="canvas-navigation-divider" aria-hidden="true" />
@@ -127,13 +136,8 @@ export default function CanvasNavigation({
             setOpen(open === "background" ? null : "background");
           }}
         >
-          <img
-            src={
-              backgroundPattern === "dots"
-                ? "/design/figma/nav-background.svg"
-                : "/design/figma/canvas-dots.svg"
-            }
-            alt=""
+          <ToolbarIcon
+            name={backgroundPattern === "dots" ? "background" : "dots"}
           />
         </button>
         <button
@@ -146,7 +150,7 @@ export default function CanvasNavigation({
           title={showConnections ? "隐藏连线" : "显示连线"}
           aria-pressed={showConnections}
         >
-          <img src="/design/figma/nav-lines.svg" alt="" />
+          <ToolbarIcon name="lines" />
         </button>
         <button
           className="canvas-map-trigger"
@@ -158,7 +162,7 @@ export default function CanvasNavigation({
             setOpen(open === "map" ? null : "map");
           }}
         >
-          <img src="/design/figma/nav-map.svg" alt="" />
+          <ToolbarIcon name="map" />
           <span>小地图</span>
         </button>
       </div>

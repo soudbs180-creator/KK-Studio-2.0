@@ -97,7 +97,7 @@ export default function ConversationComposer({
       data-node-id="407:29310"
       onSubmit={async (e) => {
         e.preventDefault();
-        if (!input.trim() || isSubmitting) return;
+        if (!input.trim() || isSubmitting || disabled || submitDisabled) return;
         if (readingFiles) {
           onStatus("正在读取参考素材，请稍候再提交。");
           return;

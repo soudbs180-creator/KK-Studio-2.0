@@ -213,7 +213,7 @@ export default function LibraryPage({
           ))}
         </div>
         <label className="catalog-page-search">
-          <Search size={17} />
+          <Search size={16} strokeWidth={1} />
           <input
             aria-label={`搜索${meta.title}`}
             value={query}

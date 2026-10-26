@@ -1,5 +1,11 @@
 import type { ModelSelection } from "../../features/models/modelSelection";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type RefObject,
+} from "react";
 import CreationParameterControl from "./CreationParameterControl";
 import CreationSoundButton from "./CreationSoundButton";
 import GenerationCount from "./GenerationCount";
@@ -18,6 +24,45 @@ import CanvasComposerShell from "../canvas/CanvasComposerShell";
 import UiIcon from "../UiIcon";
 import { useCanvasImageGeneration } from "../../features/creation/CanvasImageCommand";
 import { composerReportedHeight } from "../canvas/composerLayout";
+
+function defaultCanvasParameters(video: boolean): CanvasParameters {
+  return {
+    ratio: video ? "自适应" : "1:1",
+    quality: video ? "2K" : "1K",
+    duration: "7",
+    count: "8",
+    soundEnabled: false,
+  };
+}
+
+function resolveMaxGenerationCount(usesCodex: boolean, max?: number): number {
+  return usesCodex ? 4 : Math.min(8, max ?? 8);
+}
+
+function useMenuDismiss(
+  ref: RefObject<HTMLDivElement | null>,
+  menu: string,
+  setMenu: (next: string) => void,
+) {
+  useEffect(() => {
+    if (!menu) return;
+    const dismiss = (event: PointerEvent): void => {
+      // Let a button click finish before a compact menu moves its target.
+      if (!(event.target instanceof Element)) return;
+      if (ref.current?.contains(event.target) && event.target.closest("button"))
+        return;
+      if (
+        !ref.current
+          ?.querySelector(`[data-control='${menu}']`)
+          ?.contains(event.target)
+      )
+        setMenu("");
+    };
+    document.addEventListener("pointerdown", dismiss, true);
+    return () => document.removeEventListener("pointerdown", dismiss, true);
+  }, [menu, ref, setMenu]);
+}
+
 interface CreationComposerProps {
   parameters?: CanvasParameters;
   onParametersChange?: (parameters: CanvasParameters) => void;
@@ -39,60 +84,52 @@ interface CreationComposerProps {
   references?: CanvasReference[];
   referenceLimit?: number;
   onRemoveReference?: (connectionId: string) => void;
+  onSwapReferenceFrames?: (firstId: string, lastId: string) => void;
 }
-export default function CreationComposer({
-  kind,
-  selected,
-  onConfigure,
-  onReference,
-  error,
-  onPromptChange,
-  onExtraHeightChange,
-  onDemoResults,
-  onGenerationStart,
-  onGenerationState,
-  prompt: promptProp,
-  model: modelProp,
-  onModelChange,
-  references = [],
-  referenceLimit = 0,
-  onRemoveReference,
-  parameters,
-  onParametersChange,
-}: CreationComposerProps) {
+export default function CreationComposer(props: CreationComposerProps) {
+  const {
+    kind,
+    selected,
+    onConfigure,
+    onReference,
+    error,
+    onPromptChange,
+    onExtraHeightChange,
+    onDemoResults,
+    onGenerationStart,
+    onGenerationState,
+    onModelChange,
+    references = [],
+    referenceLimit = 0,
+    onRemoveReference,
+    onSwapReferenceFrames,
+    parameters,
+    onParametersChange,
+  } = props;
   const video = kind === "video";
   const label = video ? "视频" : "图片";
   const [prompt, setPrompt] = useState("");
   const [model, setModel] = useState(modelCapabilities(kind)[0].id);
   const [menu, setMenu] = useState("");
-  const [localParameters, setLocalParameters] = useState<CanvasParameters>(
-    () => ({
-      ratio: video ? "自适应" : "1:1",
-      quality: video ? "2K" : "1K",
-      duration: "7",
-      count: "8",
-      soundEnabled: false,
-    }),
+  const [localParameters, setLocalParameters] = useState<CanvasParameters>(() =>
+    defaultCanvasParameters(video),
   );
-  const { count, soundEnabled } = parameters ?? localParameters;
+  const activeParams = parameters ?? localParameters;
+  const { count, soundEnabled } = activeParams;
   function updateParameters(patch: Partial<CanvasParameters>): void {
-    const next = { ...(parameters ?? localParameters), ...patch };
+    const next = { ...activeParams, ...patch };
     setLocalParameters(next);
     onParametersChange?.(next);
   }
   const [expanded, setExpanded] = useState(false);
   const localGeneration = useLocalGeneration(kind, onDemoResults);
-  const imageGeneration = useCanvasImageGeneration({
-    references,
-  });
+  const imageGeneration = useCanvasImageGeneration({ references });
   const generation = video ? localGeneration : imageGeneration;
   const busy = generation.phase === "loading";
   const incomingReferenceCount = new Set(
-    references
-      .filter((reference) => reference.id)
-      .map((reference) => reference.assetId ?? reference.id),
+    references.filter((r) => r.id).map((r) => r.assetId ?? r.id),
   ).size;
-  const selectedModel = modelProp ?? (video ? model : imageGeneration.model);
+  const selectedModel = props.model ?? (video ? model : imageGeneration.model);
   const ref = useRef<HTMLDivElement>(null);
   useLayoutEffect(() => {
     if (selected) onExtraHeightChange(composerReportedHeight(expanded, error));
@@ -105,28 +142,9 @@ export default function CreationComposer({
     if (video && localGeneration.phase !== "idle")
       onGenerationState?.(localGeneration.phase);
   }, [video, localGeneration.phase, onGenerationState]);
-  useEffect(() => {
-    if (!menu) return;
-    const dismiss = (event: PointerEvent): void => {
-      // Let a button click finish before a compact menu moves its target.
-      if (
-        event.target instanceof Element &&
-        ref.current?.contains(event.target) &&
-        event.target.closest("button")
-      )
-        return;
-      if (
-        event.target instanceof Element &&
-        !ref.current
-          ?.querySelector(`[data-control='${menu}']`)
-          ?.contains(event.target)
-      )
-        setMenu("");
-    };
-    document.addEventListener("pointerdown", dismiss, true);
-    return () => document.removeEventListener("pointerdown", dismiss, true);
-  }, [menu]);
+  useMenuDismiss(ref, menu, setMenu);
   if (!selected) return null;
+  const currentPrompt = props.prompt ?? prompt;
   return (
     <CanvasComposerShell
       ref={ref}
@@ -158,18 +176,19 @@ export default function CreationComposer({
           limit={referenceLimit}
           onAdd={onReference}
           onRemove={onRemoveReference}
+          onSwapVideoFrames={video ? onSwapReferenceFrames : undefined}
         />
       ) : (
         <div className="composer-refs">
-          {references.map((ref, i) => (
-            <span className="composer-ref-thumb" key={ref.id ?? i}>
-              {ref.preview ? <img src={ref.preview} alt="" /> : null}
-              {ref.id && onRemoveReference && (
+          {references.map((refItem, i) => (
+            <span className="composer-ref-thumb" key={refItem.id ?? i}>
+              {refItem.preview && <img src={refItem.preview} alt="" />}
+              {refItem.id && onRemoveReference && (
                 <button
                   type="button"
                   disabled={busy}
                   aria-label="移除参考图"
-                  onClick={() => onRemoveReference(ref.id!)}
+                  onClick={() => onRemoveReference(refItem.id!)}
                 >
                   ×
                 </button>
@@ -197,7 +216,7 @@ export default function CreationComposer({
         title={busy ? "生成中暂不能编辑，取消或结束后可继续" : undefined}
         aria-label={`${label}提示词`}
         maxLength={video ? 7500 : 4000}
-        value={promptProp ?? prompt}
+        value={currentPrompt}
         onChange={(e) => {
           setPrompt(e.target.value);
           onPromptChange(e.target.value);
@@ -225,7 +244,7 @@ export default function CreationComposer({
           disabled={busy}
           kind={kind}
           model={selectedModel}
-          parameters={parameters ?? localParameters}
+          parameters={activeParams}
           open={menu === "params"}
           onToggle={() => setMenu(menu === "params" ? "" : "params")}
           onChange={updateParameters}
@@ -240,11 +259,10 @@ export default function CreationComposer({
         />
         <GenerationCount
           disabled={busy}
-          maxCount={
-            imageGeneration.usesCodex
-              ? 4
-              : Math.min(8, imageGeneration.maxGenerationCount ?? 8)
-          }
+          maxCount={resolveMaxGenerationCount(
+            imageGeneration.usesCodex,
+            imageGeneration.maxGenerationCount,
+          )}
           value={count}
           open={menu === "count"}
           onToggle={() => setMenu(menu === "count" ? "" : "count")}
@@ -256,15 +274,9 @@ export default function CreationComposer({
           onRun={() => {
             setMenu("");
             const copies = Number(count);
-            if (video && (promptProp ?? prompt).trim())
-              onGenerationStart?.(copies);
-            if (video) void localGeneration.run(promptProp ?? prompt, copies);
-            else
-              void imageGeneration.run(
-                promptProp ?? prompt,
-                copies,
-                selectedModel,
-              );
+            if (video && currentPrompt.trim()) onGenerationStart?.(copies);
+            if (video) void localGeneration.run(currentPrompt, copies);
+            else void imageGeneration.run(currentPrompt, copies, selectedModel);
           }}
         />
       </div>

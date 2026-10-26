@@ -174,8 +174,8 @@ export default function ConversationActions({
             <img
               className="chat-mode-chevron"
               src="/design/figma/composer-chevron.svg"
-              width="10"
-              height="5"
+              width="12"
+              height="12"
               alt=""
             />
           </button>

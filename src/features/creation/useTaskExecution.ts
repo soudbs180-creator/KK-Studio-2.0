@@ -1,9 +1,4 @@
-import React, {
-  useRef,
-  useState,
-  useEffect,
-  type SetStateAction,
-} from "react";
+import React, { useRef, useState, useEffect, type SetStateAction } from "react";
 import { isLocalProviderUrl } from "../../domain/providerUrl.ts";
 import {
   requiredApprovalGates,
@@ -16,10 +11,7 @@ import type {
   CreationTaskOutput,
 } from "./model.ts";
 import { assertCanvasDeliveries } from "../agent/agentCanvas.ts";
-import {
-  generateImages,
-  GenerationProviderError,
-} from "./imageGeneration.ts";
+import { generateImages, GenerationProviderError } from "./imageGeneration.ts";
 import { storeGeneratedAsset, hashPrompt } from "./assetRepository.ts";
 import {
   appendImageTaskResults,
@@ -123,7 +115,7 @@ export function hasArchivedOutputEvidence(
   if (task.kind !== "text") return Boolean(output.assetId);
   return Boolean(
     output.text?.trim() &&
-      new TextEncoder().encode(output.text).length <= 32768,
+    new TextEncoder().encode(output.text).length <= 32768,
   );
 }
 
@@ -279,7 +271,10 @@ export function useTaskExecution(
       return;
     }
 
-    const handledRecovered = cancelRecoveredNativeTaskIfPresent(taskId, creationRef);
+    const handledRecovered = cancelRecoveredNativeTaskIfPresent(
+      taskId,
+      creationRef,
+    );
     if (handledRecovered) return;
 
     cancelInactiveQueuedTask({
@@ -304,7 +299,8 @@ export function useTaskExecution(
     }
     if (
       !approved &&
-      project.tasks.find((task) => task.id === pendingApproval.taskId)?.imageEdit
+      project.tasks.find((task) => task.id === pendingApproval.taskId)
+        ?.imageEdit
     ) {
       pendingApprovalRef.current = null;
       cancelTask(pendingApproval.taskId);
@@ -624,7 +620,8 @@ export function useTaskExecution(
           setResultSaving,
           publish,
           flushPublishedResult,
-          assertTextCurrent: () => assertTaskCurrent(task, projectId, creationRef),
+          assertTextCurrent: () =>
+            assertTaskCurrent(task, projectId, creationRef),
           nativeTaskRecords,
           nativeCancelRequested,
           creationRef,
@@ -653,7 +650,8 @@ export function useTaskExecution(
           createdItems,
           publish,
           flushPublishedResult,
-          assertTextCurrent: () => assertTaskCurrent(task, projectId, creationRef),
+          assertTextCurrent: () =>
+            assertTaskCurrent(task, projectId, creationRef),
           reservation,
           onStart: () => {
             providerRequestStarted = true;
@@ -898,9 +896,7 @@ function triggerNextChainedImageEditTask(options: {
 }): void {
   const { task, projectId, controller, creationRef, executeTask } = options;
   if (task.imageEdit && !controller.signal.aborted) {
-    const latest = creationRef.current.projects.find(
-      (p) => p.id === projectId,
-    );
+    const latest = creationRef.current.projects.find((p) => p.id === projectId);
     const next = latest?.tasks.find(
       (t) =>
         t.id !== task.id &&
@@ -1698,7 +1694,9 @@ interface ExecutionErrorOptions {
   nativeTaskHost: boolean;
   nativeSubmissionStarted: boolean;
   nativeCancelRequested: React.MutableRefObject<Set<string>>;
-  nativeTaskRecords: React.MutableRefObject<Record<string, NativeTaskHostRecord>>;
+  nativeTaskRecords: React.MutableRefObject<
+    Record<string, NativeTaskHostRecord>
+  >;
   reservation?: ProviderSubmissionReservation;
   publish: (
     status: CreationTask["status"],
@@ -1719,7 +1717,9 @@ function isTaskErrorUncertain(options: {
   error: unknown;
   taskId: string;
   nativeCancelRequested: React.MutableRefObject<Set<string>>;
-  nativeTaskRecords: React.MutableRefObject<Record<string, NativeTaskHostRecord>>;
+  nativeTaskRecords: React.MutableRefObject<
+    Record<string, NativeTaskHostRecord>
+  >;
 }): boolean {
   const {
     durableSubmission,
@@ -1860,14 +1860,13 @@ async function handleExecutionError(
         ? output
         : {
             ...output,
-            status:
-              uncertain
-                ? "unknown"
-                : paused
-                  ? "waiting"
-                  : controller.signal.aborted
-                    ? "cancelled"
-                    : "failed",
+            status: uncertain
+              ? "unknown"
+              : paused
+                ? "waiting"
+                : controller.signal.aborted
+                  ? "cancelled"
+                  : "failed",
             error: message,
           },
     ),

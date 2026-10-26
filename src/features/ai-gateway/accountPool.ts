@@ -90,7 +90,9 @@ export class AccountPool {
 
   constructor(
     poolId: string,
-    initialEntries: (string | Partial<AccountPoolEntry> & { credentialRef: string })[] = [],
+    initialEntries: (
+      string | (Partial<AccountPoolEntry> & { credentialRef: string })
+    )[] = [],
     options: AccountPoolOptions = {},
   ) {
     this.poolId = poolId;
@@ -122,21 +124,31 @@ export class AccountPool {
   }
 
   addCredential(
-    entry: string | Partial<AccountPoolEntry> & { credentialRef: string },
+    entry: string | (Partial<AccountPoolEntry> & { credentialRef: string }),
   ): AccountPoolEntry {
-    const credentialRef = typeof entry === "string" ? entry : entry.credentialRef;
-    const existing = this.#entries.find((e) => e.credentialRef === credentialRef);
+    const credentialRef =
+      typeof entry === "string" ? entry : entry.credentialRef;
+    const existing = this.#entries.find(
+      (e) => e.credentialRef === credentialRef,
+    );
     if (existing) return existing;
 
     const fresh: AccountPoolEntry = {
       id: typeof entry === "object" ? entry.id : undefined,
       credentialRef,
-      weight: typeof entry === "object" && entry.weight !== undefined ? entry.weight : 10,
-      healthScore: typeof entry === "object" && entry.healthScore !== undefined ? entry.healthScore : 100,
+      weight:
+        typeof entry === "object" && entry.weight !== undefined
+          ? entry.weight
+          : 10,
+      healthScore:
+        typeof entry === "object" && entry.healthScore !== undefined
+          ? entry.healthScore
+          : 100,
       consecutive429: 0,
       consecutive5xx: 0,
       cooldownUntil: 0,
-      recentLatencyEwma: typeof entry === "object" ? entry.recentLatencyEwma : undefined,
+      recentLatencyEwma:
+        typeof entry === "object" ? entry.recentLatencyEwma : undefined,
       lastUsedAt: 0,
     };
     this.#entries.push(fresh);
@@ -175,7 +187,8 @@ export class AccountPool {
 
     // Weighted selection proportional to (healthScore * weight)
     const totalWeight = candidates.reduce(
-      (sum, c) => sum + Math.max(c.healthScore, 1) * Math.max(c.weight ?? 10, 1),
+      (sum, c) =>
+        sum + Math.max(c.healthScore, 1) * Math.max(c.weight ?? 10, 1),
       0,
     );
 
@@ -206,7 +219,8 @@ export class AccountPool {
       if (entry.recentLatencyEwma === undefined) {
         entry.recentLatencyEwma = latencyMs;
       } else {
-        entry.recentLatencyEwma = 0.8 * entry.recentLatencyEwma + 0.2 * latencyMs;
+        entry.recentLatencyEwma =
+          0.8 * entry.recentLatencyEwma + 0.2 * latencyMs;
       }
     }
 
@@ -233,7 +247,10 @@ export class AccountPool {
     entry.consecutive429 += 1;
     entry.cooldownUntil = this.#now() + cooldownMs;
     // Penalize score by 20 per 429
-    entry.healthScore = Math.max(0, entry.healthScore - 20 * entry.consecutive429);
+    entry.healthScore = Math.max(
+      0,
+      entry.healthScore - 20 * entry.consecutive429,
+    );
   }
 
   record5xx(credentialRef: string, cooldownMs = 30_000): void {
@@ -242,7 +259,10 @@ export class AccountPool {
       entry.consecutive5xx += 1;
       entry.cooldownUntil = this.#now() + cooldownMs;
       // Penalize score by 25 per 5xx
-      entry.healthScore = Math.max(0, entry.healthScore - 25 * entry.consecutive5xx);
+      entry.healthScore = Math.max(
+        0,
+        entry.healthScore - 25 * entry.consecutive5xx,
+      );
     }
     this.#circuitBreaker.recordFailure(500);
   }

@@ -28,6 +28,9 @@ import "../styles/canvas-layers.css";
 import ImageCompareProvider from "../features/compare/ImageCompareProvider";
 import ImageCompareControls from "../features/compare/ImageCompareControls";
 import { useCanvasGestures } from "./canvas/useCanvasGestures";
+import { useCanvasGroups } from "./canvas/useCanvasGroups";
+import CanvasGroupHud from "./canvas/CanvasGroupHud";
+import { useCanvasReferenceFrames } from "./canvas/useCanvasReferenceFrames";
 
 export default function Canvas({
   projectId,
@@ -57,6 +60,7 @@ export default function Canvas({
     onItemsChange,
     initialCanvas,
   });
+  const groups = useCanvasGroups(initialCanvas);
   useAgentCanvasView(controls, projectId, agentViewRef, onAgentViewChange);
   const {
     addNode,
@@ -99,6 +103,7 @@ export default function Canvas({
     nodes,
     edges,
     transform,
+    groups.groups,
     items,
     onCanvasChange
       ? (canvas) => {
@@ -115,11 +120,6 @@ export default function Canvas({
     window.addEventListener("kk:focus-node", locate);
     return () => window.removeEventListener("kk:focus-node", locate);
   }, [locateNode]);
-
-  const handleConfigure = useCallback(() => {
-    onOpen?.("settings/providers");
-  }, [onOpen]);
-
   const handleDeleteConnection = useCallback(
     (id: string) => {
       setEdges((current) => {
@@ -131,7 +131,14 @@ export default function Canvas({
     },
     [setEdges, setRemovedEdge, containerRef],
   );
-
+  const handleConfigure = useCallback(
+    () => onOpen?.("settings/providers"),
+    [onOpen],
+  );
+  const handleSwapReferenceFrames = useCanvasReferenceFrames(
+    edges,
+    onItemsChange,
+  );
   const gestures = useCanvasGestures({
     rightGesture,
     controls: {
@@ -143,7 +150,6 @@ export default function Canvas({
     movePointer,
     finishPointer,
   });
-
   return (
     <ImageCompareProvider key={projectId} items={items} active={!covered}>
       <div
@@ -188,9 +194,14 @@ export default function Canvas({
           onConnect={connect}
           onConnectionNotice={setConnectionNotice}
           onDeleteConnection={handleDeleteConnection}
+          onSwapReferenceFrames={handleSwapReferenceFrames}
+          groups={groups.groups}
+          collapsedIds={groups.collapsedIds}
+          onToggleGroup={groups.toggleCollapsed}
+          onUpdateGroup={groups.updateGroup}
+          onUngroup={groups.ungroup}
         />
         <ImageCompareControls />
-
         {layersOpen && (
           <CanvasLayersPanel
             items={items}
@@ -200,7 +211,6 @@ export default function Canvas({
             onClose={() => setLayersOpen(false)}
           />
         )}
-
         <CanvasOverlays
           marquee={controls.marquee}
           addMenu={addMenu}
@@ -237,12 +247,13 @@ export default function Canvas({
           projectStatus={projectStatus}
           chatOpen={chatOpen}
           onChat={onOpenChat}
-          onConfigure={() => onOpen?.("settings/providers")}
+          onConfigure={handleConfigure}
           onOpenTasks={onOpenTasks}
           tasks={tasks}
           onCancelTask={onCancelTask}
           onRetryTask={onRetryTask}
         >
+          <CanvasGroupHud controls={controls} groups={groups} items={items} />
           <CanvasNavigation
             transform={transform}
             nodes={nodes}

@@ -20,6 +20,7 @@ import {
   planEditRegions,
   chooseEditSize,
   nativeAnnotationOverhead,
+  type EditCrop,
 } from "./regions.ts";
 import { readMaskDocument, type MaskDocument } from "./mask.ts";
 import { editCapabilityReason, readImageEditSnapshot } from "./snapshot.ts";
@@ -32,9 +33,14 @@ import {
   resolveCanvasMime,
 } from "./imageProcessing.ts";
 
+type ImageModelCapabilities = ReturnType<typeof resolveImageModelCapabilities>;
+type CompiledEditPrompt = ReturnType<typeof compileEditPrompt>;
+
 export interface ImageEditRequest {
   document: MaskDocument;
   references?: CanvasReference[];
+  /** Keep the full image as the model input when the selection-only switch is off. */
+  selectionOnly?: boolean;
 }
 function attachment(
   asset: StoredGeneratedAsset,
@@ -57,6 +63,53 @@ async function original(id: string): Promise<StoredGeneratedAsset> {
     throw new Error("图片原件或参考图缺失，本次未提交，已有内容已保留。");
   return asset;
 }
+
+function resolveEditCapabilityReason(
+  capabilities: ImageModelCapabilities,
+  active: MaskDocument,
+  referenceCount: number,
+  local: boolean,
+  selectionOnly: boolean,
+): string | undefined {
+  if (local) {
+    const overhead =
+      capabilities.operations.inpaint === "supported"
+        ? nativeAnnotationOverhead(active)
+        : 0;
+    return editCapabilityReason(capabilities, 1 + referenceCount + overhead);
+  }
+  if (capabilities.operations.edit === "unsupported")
+    return "当前模型不支持参考图编辑，请切换支持的模型。";
+  const needed =
+    1 + referenceCount + (active.regions.length && !selectionOnly ? 1 : 0);
+  if (
+    capabilities.maxReferences !== undefined &&
+    needed > capabilities.maxReferences
+  )
+    return `当前编辑需要 ${needed} 张图片，超过模型的参考图数量上限。`;
+  return undefined;
+}
+
+async function storeAnnotatedAttachment(
+  decoded: HTMLCanvasElement,
+  active: MaskDocument,
+  crop: EditCrop,
+  parentId: string,
+  signal?: AbortSignal,
+): Promise<CreationAttachment> {
+  const annotated = annotateImage(decoded, active, crop);
+  const annotatedMime = resolveCanvasMime(annotated, "image/png");
+  const annotatedAsset = await storeGeneratedAsset({
+    source: annotated.toDataURL(annotatedMime),
+    sourceKind: "upload",
+    isAiGenerated: false,
+    parentId,
+    tags: ["区域标注"],
+    signal,
+  });
+  return attachment(annotatedAsset, "区域标注图（仅用于定位）", parentId);
+}
+
 /** Exact request images are archived before the existing durable task intent. */
 export async function prepareEditInputs(
   input: CreateProjectInput,
@@ -78,7 +131,8 @@ export async function prepareEditInputs(
   if (!input.prompt.trim() && !compiled.instructions.length)
     throw new Error("请填写修改意见。");
   const capabilities = resolveImageModelCapabilities(connection, input.model),
-    local = active.regions.length > 0;
+    selectionOnly = edit.selectionOnly ?? true,
+    local = selectionOnly && active.regions.length > 0;
   const context = {
     originalPrompt:
       source.imageEditContext?.originalPrompt ??
@@ -115,44 +169,141 @@ export async function prepareEditInputs(
     local,
     instructions: compiled.instructions,
   });
-  const reason = local
-    ? editCapabilityReason(
-        capabilities,
-        1 +
-          references.length +
-          (capabilities.operations.inpaint === "supported"
-            ? nativeAnnotationOverhead(active)
-            : 0),
-      )
-    : capabilities.operations.edit === "unsupported"
-      ? "当前模型不支持参考图编辑，请切换支持的模型。"
-      : undefined;
+  const reason = resolveEditCapabilityReason(
+    capabilities,
+    active,
+    references.length,
+    local,
+    selectionOnly,
+  );
   if (reason) throw new Error(reason);
-  if (!local)
-    return [
-      {
-        ...input,
-        prompt: formatEditPrompt({
-          current: input.prompt,
-          originalPrompt: context.originalPrompt,
-          previous: context.lastInstruction,
-          local: false,
-          instructions: [],
-        }),
-        imageSize: undefined,
-        attachments: [
-          attachment(sourceAsset, "当前编辑原图", context.originalAssetId),
-          ...references,
-        ],
-        imageEditContext: { ...context, lastInstruction: input.prompt },
-      },
-    ];
+  if (!local) {
+    return prepareFullImageEditInputs({
+      input,
+      source,
+      sourceAsset,
+      document,
+      active,
+      compiled,
+      context,
+      references,
+      selectionOnly,
+      signal,
+    });
+  }
+  return prepareLocalEditInputs({
+    input,
+    source,
+    sourceAsset,
+    document,
+    active,
+    compiled,
+    context,
+    references,
+    capabilities,
+    signal,
+  });
+}
+
+async function prepareFullImageEditInputs(params: {
+  input: CreateProjectInput;
+  source: CanvasCollectionItem;
+  sourceAsset: StoredGeneratedAsset;
+  document: MaskDocument;
+  active: MaskDocument;
+  compiled: CompiledEditPrompt;
+  context: NonNullable<CreateProjectInput["imageEditContext"]>;
+  references: CreationAttachment[];
+  selectionOnly: boolean;
+  signal?: AbortSignal;
+}): Promise<CreateProjectInput[]> {
+  const {
+    input,
+    source,
+    sourceAsset,
+    document,
+    active,
+    compiled,
+    context,
+    references,
+    selectionOnly,
+    signal,
+  } = params;
+  const attachments = [
+    attachment(sourceAsset, "当前编辑原图", context.originalAssetId),
+    ...references,
+  ];
+  if (active.regions.length && !selectionOnly) {
+    const decoded = await decodeImage(sourceAsset.preview, signal);
+    if (decoded.width !== document.width || decoded.height !== document.height)
+      throw new Error("原图尺寸已变化，请重新加载编辑区域。");
+    const fullCrop: EditCrop = {
+      x: 0,
+      y: 0,
+      width: document.width,
+      height: document.height,
+      regionIds: active.regions.map((region) => region.id),
+    };
+    attachments.splice(
+      1,
+      0,
+      await storeAnnotatedAttachment(
+        decoded,
+        active,
+        fullCrop,
+        context.originalAssetId ?? source.assetId!,
+        signal,
+      ),
+    );
+  }
+  return [
+    {
+      ...input,
+      prompt: formatEditPrompt({
+        current: input.prompt,
+        originalPrompt: context.originalPrompt,
+        previous: context.lastInstruction,
+        local: false,
+        instructions: compiled.instructions,
+      }),
+      imageSize: undefined,
+      attachments,
+      imageEditContext: { ...context, lastInstruction: input.prompt },
+    },
+  ];
+}
+
+async function prepareLocalEditInputs(params: {
+  input: CreateProjectInput;
+  source: CanvasCollectionItem;
+  sourceAsset: StoredGeneratedAsset;
+  document: MaskDocument;
+  active: MaskDocument;
+  compiled: CompiledEditPrompt;
+  context: NonNullable<CreateProjectInput["imageEditContext"]>;
+  references: CreationAttachment[];
+  capabilities: ImageModelCapabilities;
+  signal?: AbortSignal;
+}): Promise<CreateProjectInput[]> {
+  const {
+    input,
+    source,
+    sourceAsset,
+    document,
+    active,
+    compiled,
+    context,
+    references,
+    capabilities,
+    signal,
+  } = params;
   const decoded = await decodeImage(sourceAsset.preview, signal);
   if (decoded.width !== document.width || decoded.height !== document.height)
     throw new Error("原图尺寸已变化，请重新加载编辑区域。");
   const plan = planEditRegions(active),
     native = capabilities.operations.inpaint === "supported",
     groupId = crypto.randomUUID(),
+    parentId = context.originalAssetId ?? source.assetId!,
     inputs: CreateProjectInput[] = [];
   for (const crop of plan.crops) {
     signal?.throwIfAborted();
@@ -162,7 +313,7 @@ export async function prepareEditInputs(
       source: cropped.toDataURL(cropMime),
       sourceKind: "upload",
       isAiGenerated: false,
-      parentId: context.originalAssetId ?? source.assetId,
+      parentId,
       tags: ["编辑输入"],
       signal,
     });
@@ -188,24 +339,10 @@ export async function prepareEditInputs(
       !native ||
       active.regions.some((r) => crop.regionIds.includes(r.id) && r.color)
     ) {
-      const annotated = annotateImage(decoded, active, crop);
-      const annotatedMime = resolveCanvasMime(annotated, "image/png");
-      const annotatedAsset = await storeGeneratedAsset({
-        source: annotated.toDataURL(annotatedMime),
-        sourceKind: "upload",
-        isAiGenerated: false,
-        parentId: context.originalAssetId ?? source.assetId,
-        tags: ["区域标注"],
-        signal,
-      });
       images.splice(
         1,
         0,
-        attachment(
-          annotatedAsset,
-          "区域标注图（仅用于定位）",
-          context.originalAssetId,
-        ),
+        await storeAnnotatedAttachment(decoded, active, crop, parentId, signal),
       );
     }
     inputs.push({
@@ -227,7 +364,7 @@ export async function prepareEditInputs(
       }),
       imageEditContext: { ...context, lastInstruction: input.prompt },
       imageEdit: {
-        sourceAssetId: source.assetId,
+        sourceAssetId: source.assetId!,
         maskAssetId,
         groupId,
         document: active,

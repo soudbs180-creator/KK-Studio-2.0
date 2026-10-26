@@ -49,7 +49,7 @@ export default function SavedPane({
       <div className={like ? "saved-like-grid" : "saved-prompt-list"}>
         {visible.length === 0 ? (
           <div className="saved-empty">
-            <Icon size={24} />
+            <Icon size={24} strokeWidth={1} />
             <h3>{query ? "没有找到匹配的内容" : `还没有${label}的内容`}</h3>
             <p>
               {query
@@ -80,7 +80,7 @@ export default function SavedPane({
                       alt={item.preview ? item.title : ""}
                     />
                   )}
-                  <Heart size={12} fill="currentColor" />
+                  <Heart size={12} strokeWidth={1} fill="currentColor" />
                 </button>
               )}
               <div className="saved-copy">
@@ -131,7 +131,12 @@ export default function SavedPane({
               ) : (
                 <footer>
                   {!like && (
-                    <Icon className="star-icon" size={12} fill="currentColor" />
+                    <Icon
+                      className="star-icon"
+                      size={12}
+                      strokeWidth={1}
+                      fill="currentColor"
+                    />
                   )}
                   <span>{like ? item.title : ""}</span>
                   <button

@@ -37,6 +37,153 @@ export function isActivityItemType(type: string): boolean {
   return ACTIVITY_ITEM_TYPES.has(type);
 }
 
+function parseAgentSubEvent(data: Record<string, unknown>): AgentEvent | null {
+  const threadId = stringOrUndefined(data.threadId ?? data.thread_id);
+  const turnId = stringOrUndefined(data.turnId ?? data.turn_id);
+  const terminal = data as {
+    type?: string;
+    status?: string;
+    error?: string | { message?: string };
+  };
+  if (terminal.type === "turn.completed") {
+    return {
+      kind: "terminal",
+      threadId,
+      turnId,
+      status: terminal.status || "completed",
+      error:
+        typeof terminal.error === "string"
+          ? terminal.error
+          : terminal.error?.message,
+    };
+  }
+  const payload = data as {
+    turnId?: string;
+    threadId?: string;
+    type?: string;
+    item?: AgentActivityItem & { type?: string };
+  };
+  const item = payload?.item;
+  if (!item?.id || !item.type) return null;
+  const phase = parseItemPhase(payload.type);
+  if (phase === null) return null;
+  if (item.type === "agent_message") {
+    return {
+      kind: "message",
+      item: {
+        id: item.id,
+        itemId: item.id,
+        threadId,
+        turnId,
+        role: "assistant",
+        text: item.text ?? "",
+        detail: { phase, delta: item.delta ?? "" },
+      },
+    };
+  }
+  if (!isActivityItemType(item.type)) return null;
+  return {
+    kind: "activity",
+    threadId,
+    turnId,
+    itemType: item.type,
+    phase,
+    item: {
+      id: item.id,
+      text: item.text,
+      delta: item.delta,
+      command: item.command,
+      cwd: item.cwd,
+      aggregatedOutput: item.aggregatedOutput,
+      exitCode: item.exitCode,
+      status: item.status,
+      success: item.success,
+      error: item.error,
+      summary: item.summary,
+    },
+  };
+}
+
+function parseApprovalSseEvent(
+  type: string,
+  payload: Record<string, unknown>,
+): AgentEvent | null {
+  if (type === "codex_approval") {
+    const requestId = String(payload.requestId || "");
+    if (!requestId) return null;
+    return {
+      kind: "approval",
+      approval: {
+        requestId,
+        method: String(payload.method || "unknown"),
+        threadId: stringOrUndefined(payload.threadId),
+        turnId: stringOrUndefined(payload.turnId),
+        itemId: stringOrUndefined(payload.itemId),
+        reason: stringOrUndefined(payload.reason),
+        command: payload.command,
+        cwd: stringOrUndefined(payload.cwd),
+        permissions: payload.permissions,
+      },
+    };
+  }
+  if (type === "codex_approval_resolved") {
+    const requestId = String(payload.requestId || "");
+    if (!requestId) return null;
+    return {
+      kind: "approval_resolved",
+      requestId,
+      decision: String(payload.decision || "cancel"),
+    };
+  }
+  return null;
+}
+
+function parseControlOrToolSseEvent(
+  type: string,
+  payload: Record<string, unknown>,
+): AgentEvent | null {
+  if (type === "tool_call") {
+    const requestId = String(payload.requestId || "");
+    const name = String(payload.name || "");
+    if (!requestId || !name) return null;
+    return {
+      kind: "tool_call",
+      ...(typeof payload.threadId === "string"
+        ? { threadId: payload.threadId }
+        : {}),
+      ...(typeof payload.turnId === "string" ? { turnId: payload.turnId } : {}),
+      requestId,
+      name,
+      input: (payload.input ?? {}) as Record<string, unknown>,
+    };
+  }
+  if (type === "agent_bootstrap") {
+    const bootstrap = payload as {
+      type?: string;
+      threadId?: string;
+      error?: string;
+    };
+    return {
+      kind: "bootstrap",
+      type: bootstrap?.type || "",
+      threadId: stringOrUndefined(bootstrap?.threadId),
+      error: stringOrUndefined(bootstrap?.error),
+    };
+  }
+  if (type === "workspace_changed") {
+    const workspace = payload as { activeThreadId?: string };
+    return {
+      kind: "workspace",
+      activeThreadId: stringOrUndefined(workspace?.activeThreadId),
+    };
+  }
+  if (type === "codex_state") {
+    const codex = payload as { busy?: boolean };
+    return { kind: "codex", busy: Boolean(codex?.busy) };
+  }
+  return null;
+}
+
 /** 把一条原始 SSE 事件解析为规范事件；无法识别的事件返回 null。 */
 export function parseAgentSseEvent(
   type: string,
@@ -89,142 +236,13 @@ export function parseAgentSseEvent(
     };
   }
   if (type === "agent_event") {
-    const scope = data as Record<string, unknown>;
-    const threadId = stringOrUndefined(scope.threadId ?? scope.thread_id);
-    const turnId = stringOrUndefined(scope.turnId ?? scope.turn_id);
-    const terminal = data as {
-      type?: string;
-      status?: string;
-      error?: string | { message?: string };
-    };
-    if (terminal.type === "turn.completed") {
-      return {
-        kind: "terminal",
-        threadId,
-        turnId,
-        status: terminal.status || "completed",
-        error:
-          typeof terminal.error === "string"
-            ? terminal.error
-            : terminal.error?.message,
-      };
-    }
-    const payload = data as {
-      turnId?: string;
-      threadId?: string;
-      type?: string;
-      item?: AgentActivityItem & { type?: string };
-    };
-    const item = payload?.item;
-    if (!item?.id || !item.type) return null;
-    const phase = parseItemPhase(payload.type);
-    if (phase === null) return null;
-    if (item.type === "agent_message") {
-      return {
-        kind: "message",
-        item: {
-          id: item.id,
-          itemId: item.id,
-          threadId,
-          turnId,
-          role: "assistant",
-          text: item.text ?? "",
-          detail: { phase, delta: item.delta ?? "" },
-        },
-      };
-    }
-    if (!isActivityItemType(item.type)) return null;
-    return {
-      kind: "activity",
-      threadId,
-      turnId,
-      itemType: item.type,
-      phase,
-      item: {
-        id: item.id,
-        text: item.text,
-        delta: item.delta,
-        command: item.command,
-        cwd: item.cwd,
-        aggregatedOutput: item.aggregatedOutput,
-        exitCode: item.exitCode,
-        status: item.status,
-        success: item.success,
-        error: item.error,
-        summary: item.summary,
-      },
-    };
+    return parseAgentSubEvent(data as Record<string, unknown>);
   }
-  if (type === "codex_approval") {
-    const payload = data as Record<string, unknown>;
-    const requestId = String(payload.requestId || "");
-    if (!requestId) return null;
-    return {
-      kind: "approval",
-      approval: {
-        requestId,
-        method: String(payload.method || "unknown"),
-        threadId: stringOrUndefined(payload.threadId),
-        turnId: stringOrUndefined(payload.turnId),
-        itemId: stringOrUndefined(payload.itemId),
-        reason: stringOrUndefined(payload.reason),
-        command: payload.command,
-        cwd: stringOrUndefined(payload.cwd),
-        permissions: payload.permissions,
-      },
-    };
-  }
-  if (type === "codex_approval_resolved") {
-    const payload = data as Record<string, unknown>;
-    const requestId = String(payload.requestId || "");
-    if (!requestId) return null;
-    return {
-      kind: "approval_resolved",
-      requestId,
-      decision: String(payload.decision || "cancel"),
-    };
-  }
-  if (type === "tool_call") {
-    const payload = data as Record<string, unknown>;
-    const requestId = String(payload.requestId || "");
-    const name = String(payload.name || "");
-    if (!requestId || !name) return null;
-    return {
-      kind: "tool_call",
-      ...(typeof payload.threadId === "string"
-        ? { threadId: payload.threadId }
-        : {}),
-      ...(typeof payload.turnId === "string" ? { turnId: payload.turnId } : {}),
-      requestId,
-      name,
-      input: (payload.input ?? {}) as Record<string, unknown>,
-    };
-  }
-  if (type === "agent_bootstrap") {
-    const payload = data as {
-      type?: string;
-      threadId?: string;
-      error?: string;
-    };
-    return {
-      kind: "bootstrap",
-      type: payload?.type || "",
-      threadId: stringOrUndefined(payload?.threadId),
-      error: stringOrUndefined(payload?.error),
-    };
-  }
-  if (type === "workspace_changed") {
-    const payload = data as { activeThreadId?: string };
-    return {
-      kind: "workspace",
-      activeThreadId: stringOrUndefined(payload?.activeThreadId),
-    };
-  }
-  if (type === "codex_state") {
-    const payload = data as { busy?: boolean };
-    return { kind: "codex", busy: Boolean(payload?.busy) };
-  }
-  return null;
+  const record = data as Record<string, unknown>;
+  return (
+    parseApprovalSseEvent(type, record) ??
+    parseControlOrToolSseEvent(type, record)
+  );
 }
 
 export function parseAgentSsePayload(payload: unknown): AgentSseEvent | null {

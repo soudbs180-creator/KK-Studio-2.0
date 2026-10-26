@@ -26,7 +26,7 @@ export default function CompareImageButton({
       onPointerDown={(event) => event.stopPropagation()}
       onClick={() => comparison.toggle(item.id)}
     >
-      <UiIcon name="image" />
+      <UiIcon name="image" size={12} />
       {selected ? "移出对比" : "加入对比"}
     </button>
   );

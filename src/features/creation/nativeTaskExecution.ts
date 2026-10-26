@@ -45,7 +45,9 @@ export interface NativeFlowOptions {
   ) => void;
   flushPublishedResult: () => Promise<void>;
   assertTextCurrent: () => void;
-  nativeTaskRecords: React.MutableRefObject<Record<string, NativeTaskHostRecord>>;
+  nativeTaskRecords: React.MutableRefObject<
+    Record<string, NativeTaskHostRecord>
+  >;
   nativeCancelRequested: React.MutableRefObject<Set<string>>;
   creationRef: React.MutableRefObject<CreationSnapshot>;
   getOutputs: () => CreationTaskOutput[];
@@ -133,11 +135,7 @@ export async function executeNativeFlow(
   ): Promise<NativeTaskHostRecord> => {
     const record = validateNativeTaskRecord(incoming, task, pendingIndices);
     nativeTaskRecords.current[taskId] = record;
-    updateSavingStateOnNativeRecord(
-      record,
-      getOutputs(),
-      setResultSaving,
-    );
+    updateSavingStateOnNativeRecord(record, getOutputs(), setResultSaving);
 
     const recordOutputs = new Map(
       record.outputs.map((output) => [output.index, output]),
@@ -292,7 +290,10 @@ async function handleNativeCancellationOnStart(options: {
   const { taskId, nativeRecord, nativeCancelRequested, applyRecord } = options;
   nativeCancelRequested.current.add(taskId);
   await cancelNativeTask(taskId).catch((err) => {
-    console.warn("[nativeTaskExecution] cancelNativeTask on abort failed:", err);
+    console.warn(
+      "[nativeTaskExecution] cancelNativeTask on abort failed:",
+      err,
+    );
   });
   let record = (await getNativeTask(taskId)) ?? {
     ...nativeRecord,
@@ -316,12 +317,7 @@ async function pollNativeTaskUntilTerminal(options: {
   nativeCancelRequested: React.MutableRefObject<Set<string>>;
   applyRecord: (rec: NativeTaskHostRecord) => Promise<NativeTaskHostRecord>;
 }): Promise<void> {
-  const {
-    taskId,
-    controller,
-    nativeCancelRequested,
-    applyRecord,
-  } = options;
+  const { taskId, controller, nativeCancelRequested, applyRecord } = options;
 
   let current = options.nativeRecord;
   while (current.status === "submitted") {
@@ -408,7 +404,11 @@ function shouldPreserveArchivedEvidence(
     return true;
   if (nativeOutput.status === "failed") return true;
   if (missingText) return true;
-  if (task.kind !== "text" && nativeOutput.status === "succeeded" && !nativeOutput.assetId)
+  if (
+    task.kind !== "text" &&
+    nativeOutput.status === "succeeded" &&
+    !nativeOutput.assetId
+  )
     return true;
   return false;
 }
@@ -434,7 +434,9 @@ export async function processSingleNativeOutput(
     nativeOutput.status === "succeeded" &&
     !nativeOutput.text?.trim();
 
-  if (shouldPreserveArchivedEvidence(task, priorOutput, nativeOutput, missingText)) {
+  if (
+    shouldPreserveArchivedEvidence(task, priorOutput, nativeOutput, missingText)
+  ) {
     output.status = "succeeded";
     output.assetId = priorOutput.assetId;
     output.text = priorOutput.text;
@@ -457,7 +459,11 @@ export async function processSingleNativeOutput(
     return;
   }
 
-  if (task.kind !== "text" && nativeOutput.status === "succeeded" && !nativeOutput.assetId) {
+  if (
+    task.kind !== "text" &&
+    nativeOutput.status === "succeeded" &&
+    !nativeOutput.assetId
+  ) {
     output.status = "unknown";
     output.error = "原生任务完成但未返回该输出的素材标识。";
     return;

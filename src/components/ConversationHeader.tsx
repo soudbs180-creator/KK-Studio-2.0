@@ -67,8 +67,8 @@ export default function ConversationHeader({
           >
             <img
               src="/design/figma/chat-header-history.svg"
-              width="18"
-              height="18"
+              width="20"
+              height="20"
               alt=""
             />
           </button>
@@ -80,8 +80,8 @@ export default function ConversationHeader({
           >
             <img
               src="/design/figma/chat-open.svg"
-              width="18"
-              height="18"
+              width="20"
+              height="20"
               alt=""
             />
           </button>

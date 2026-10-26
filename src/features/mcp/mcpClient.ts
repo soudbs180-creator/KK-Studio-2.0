@@ -913,4 +913,3 @@ export function filterMcpToolsForModel(
     return true;
   });
 }
-

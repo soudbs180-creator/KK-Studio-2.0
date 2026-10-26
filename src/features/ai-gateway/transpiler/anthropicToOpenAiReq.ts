@@ -40,9 +40,10 @@ function parseDataUri(source: AnthropicImageBlock["source"]): string {
   return "";
 }
 
-function formatToolResultContent(
-  block: AnthropicToolResultBlock,
-): { text: string; images: string[] } {
+function formatToolResultContent(block: AnthropicToolResultBlock): {
+  text: string;
+  images: string[];
+} {
   const images: string[] = [];
   if (typeof block.content === "string") {
     return { text: block.content, images };
@@ -199,7 +200,9 @@ function convertAnthropicMessages(
   return out;
 }
 
-function convertAnthropicTools(tools?: AnthropicTool[]): OpenAITool[] | undefined {
+function convertAnthropicTools(
+  tools?: AnthropicTool[],
+): OpenAITool[] | undefined {
   if (!tools || tools.length === 0) return undefined;
   return tools.map((t) => ({
     type: "function",

@@ -377,11 +377,11 @@ function validatePreflight(params: PreflightParams): PreflightResult {
   );
   const codexCanvas = Boolean(
     request.origin === "canvas" &&
-      original?.items.some(
-        (item) =>
-          item.id === request.input.sourceItemId &&
-          item.generationSource === "codex",
-      ),
+    original?.items.some(
+      (item) =>
+        item.id === request.input.sourceItemId &&
+        item.generationSource === "codex",
+    ),
   );
 
   const readinessError = checkSubmissionUiReadiness({
@@ -567,10 +567,18 @@ interface EditPlanParams {
   prepareTask?: typeof prepareImageTask;
 }
 
-async function prepareEditPlan(
-  params: EditPlanParams,
-): Promise<{ connection: ProviderConnection; editInputs: CreateProjectInput[] }> {
-  const { request, input, original, effectivePrompt, signal, prepareTask = prepareImageTask } = params;
+async function prepareEditPlan(params: EditPlanParams): Promise<{
+  connection: ProviderConnection;
+  editInputs: CreateProjectInput[];
+}> {
+  const {
+    request,
+    input,
+    original,
+    effectivePrompt,
+    signal,
+    prepareTask = prepareImageTask,
+  } = params;
 
   const connection = await prepareTask(
     { ...input, prompt: effectivePrompt },
@@ -602,8 +610,7 @@ async function prepareEditPlan(
         )
       : [input];
 
-  for (const editInput of editInputs)
-    await prepareTask(editInput, original);
+  for (const editInput of editInputs) await prepareTask(editInput, original);
 
   return { connection, editInputs };
 }
@@ -653,7 +660,10 @@ function validateConsistencyAfterPreflight(
   const acceptanceBlock = validateAcceptance?.();
   if (acceptanceBlock) return acceptanceBlock;
 
-  if (request.origin === "chat" && current?.activeChatId !== original?.activeChatId)
+  if (
+    request.origin === "chat" &&
+    current?.activeChatId !== original?.activeChatId
+  )
     return "聊天已切换，未提交；原聊天草稿仍保留。";
 
   return undefined;

@@ -175,12 +175,18 @@ export function addCanvasReferences({
       });
     }
 
-    const id = addNode("image", {
+    const id = addNode(reference.kind ?? "image", {
       title: reference.title,
-      description: "上传的参考图片",
+      description:
+        reference.kind === "audio"
+          ? "上传的音频参考"
+          : reference.kind === "video"
+            ? "视频首帧/尾帧参考"
+            : "上传的参考图片",
       preview: reference.preview,
       assetId: reference.assetId,
       referenceSlot: slot,
+      referenceFrame: reference.frame,
       referenceOnly: true,
       select: false,
       position,

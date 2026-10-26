@@ -9,7 +9,7 @@ import {
 import type { AgentConversationProps } from "./AgentConversationMessages";
 import type ConversationComposer from "./ConversationComposer";
 import useConversationAttachments from "./useConversationAttachments";
-import { emptyDraft } from "../features/creation/model";
+import { emptyDraft, type CreationDraft } from "../features/creation/model";
 import { loadStoredAsset } from "../features/creation/assetRepository";
 import {
   MAX_AGENT_ATTACHMENTS,
@@ -20,6 +20,50 @@ import "../styles/agent-panel.css";
 import useAgentComposerDraft, {
   type AgentDraftState,
 } from "../features/agent/useAgentComposerDraft";
+
+function decodeBase64ByteLength(dataUrl: string): number {
+  const encoded = dataUrl.split(",")[1] ?? "";
+  const padding = encoded.endsWith("==") ? 2 : encoded.endsWith("=") ? 1 : 0;
+  return encoded.length * 0.75 - padding;
+}
+
+function AgentReferenceSection({
+  canvasImages,
+  disabled,
+  onSelect,
+}: {
+  canvasImages?: AgentConversationProps["canvasImages"];
+  disabled: boolean;
+  onSelect: (id: string) => void;
+}) {
+  const hasImages = Boolean(canvasImages?.length);
+  return (
+    <section className="agent-reference-region" aria-label="Agent 参考图">
+      <div className="agent-reference-heading">
+        <span>参考图</span>
+        <span>可选 · 最多 6 张 · 单张 8 MiB</span>
+      </div>
+      <div className="agent-reference-picker">
+        <select
+          className="ui-select"
+          aria-label="引用画布图片"
+          value=""
+          disabled={disabled || !hasImages}
+          onChange={(event) => onSelect(event.target.value)}
+        >
+          <option value="">
+            {hasImages ? "引用画布图片…" : "画布暂无已归档图片"}
+          </option>
+          {canvasImages?.map((item) => (
+            <option key={item.id} value={item.id}>
+              {item.title}
+            </option>
+          ))}
+        </select>
+      </div>
+    </section>
+  );
+}
 
 /** Share the composer while isolating Agent text and attachments from API drafts. */
 export default function AgentComposer({
@@ -35,9 +79,7 @@ export default function AgentComposer({
   draftState: AgentDraftState;
   active: boolean;
   composer: ReactElement<ComponentProps<typeof ConversationComposer>>;
-  onDraftChange?: (
-    patch: Partial<import("../features/creation/model").CreationDraft>,
-  ) => void;
+  onDraftChange?: (patch: Partial<CreationDraft>) => void;
 }) {
   const { input, update, appendInstructions, clearSentDraft } =
     useAgentComposerDraft(
@@ -72,12 +114,7 @@ export default function AgentComposer({
     sessionRef.current = session;
     generation.current++;
   }
-  useEffect(
-    () => () => {
-      generation.current++;
-    },
-    [],
-  );
+  useEffect(() => () => void generation.current++, []);
   const sendingRef = useRef<string | null>(null);
   useEffect(() => {
     sendingRef.current = null;
@@ -114,22 +151,21 @@ export default function AgentComposer({
       if (generation.current !== current) return;
       if (!asset || !/^image\/(png|jpeg|webp|gif)$/.test(asset.mime))
         throw new Error("画布图片原件缺失或格式不支持，请重新导入。");
-      const encoded = asset.preview.split(",")[1] ?? "";
-      const size =
-        encoded.length * 0.75 -
-        (encoded.endsWith("==") ? 2 : encoded.endsWith("=") ? 1 : 0);
+      const size = decodeBase64ByteLength(asset.preview);
       if (size > MAX_AGENT_IMAGE_BYTES)
         throw new Error("画布图片超过 8 MiB，请选择较小的原件。");
-      const attachment: AgentDraftAttachment = {
-        id: "canvas-" + crypto.randomUUID(),
-        canvasNodeId: item.id,
-        assetId: item.assetId,
-        name: item.title,
-        mime: asset.mime,
-        size,
-        dataUrl: asset.preview,
-      };
-      updateAttachments([...attachments, attachment]);
+      updateAttachments([
+        ...attachments,
+        {
+          id: "canvas-" + crypto.randomUUID(),
+          canvasNodeId: item.id,
+          assetId: item.assetId,
+          name: item.title,
+          mime: asset.mime,
+          size,
+          dataUrl: asset.preview,
+        },
+      ]);
       setFeedback("");
       setImportError(null);
     } catch (error) {
@@ -170,19 +206,18 @@ export default function AgentComposer({
       if (generation.current !== current) return;
       if (result.ok) {
         const cleared = clearSentDraft(key, sent, !onDraftChange);
+        const sentIds = new Set(sentAttachments.map((item) => item.id));
         if (onDraftChange && cleared)
           onDraftChange({
             prompt: "",
             attachments: attachmentsRef.current.filter(
-              (item) =>
-                !sentAttachments.some((sentItem) => sentItem.id === item.id),
+              (item) => !sentIds.has(item.id),
             ),
           });
         setImageDrafts((previous) => ({
           ...previous,
           [key]: (previous[key] ?? initialAttachments).filter(
-            (item) =>
-              !sentAttachments.some((sentItem) => sentItem.id === item.id),
+            (item) => !sentIds.has(item.id),
           ),
         }));
       } else setFeedback(result.error ?? "发送失败，指令已保留。");
@@ -199,6 +234,11 @@ export default function AgentComposer({
   if (!active || !agent) return composer;
   const visibleFeedback =
     importError || (feedback !== agent.error ? feedback : "");
+  const busyAttachments =
+    agent.sending ||
+    readingCanvas ||
+    Boolean(readingFiles) ||
+    submitting === agent.connectionRevision;
   return (
     <div className="agent-composer-region">
       {(visibleFeedback || importError) && (
@@ -222,37 +262,11 @@ export default function AgentComposer({
           )}
         </div>
       )}
-      <section className="agent-reference-region" aria-label="Agent 参考图">
-        <div className="agent-reference-heading">
-          <span>参考图</span>
-          <span>可选 · 最多 6 张 · 单张 8 MiB</span>
-        </div>
-        <div className="agent-reference-picker">
-          <select
-            className="ui-select"
-            aria-label="引用画布图片"
-            value=""
-            disabled={
-              readingCanvas ||
-              Boolean(readingFiles) ||
-              agent.sending ||
-              !agent.canvasImages?.length
-            }
-            onChange={(event) => void addCanvasImage(event.target.value)}
-          >
-            <option value="">
-              {agent.canvasImages?.length
-                ? "引用画布图片…"
-                : "画布暂无已归档图片"}
-            </option>
-            {agent.canvasImages?.map((item) => (
-              <option key={item.id} value={item.id}>
-                {item.title}
-              </option>
-            ))}
-          </select>
-        </div>
-      </section>
+      <AgentReferenceSection
+        canvasImages={agent.canvasImages}
+        disabled={readingCanvas || Boolean(readingFiles) || agent.sending}
+        onSelect={(id) => void addCanvasImage(id)}
+      />
       {cloneElement(composer, {
         input,
         onInputChange: update,
@@ -265,26 +279,15 @@ export default function AgentComposer({
         onAddFiles: addFiles,
         disabled: false,
         modelDisabled:
-          composer.props.modelDisabled ||
-          agent.connecting ||
-          agent.sending ||
-          submitting === agent.connectionRevision,
-        attachmentDisabled:
-          agent.sending ||
-          readingCanvas ||
-          Boolean(readingFiles) ||
-          submitting === agent.connectionRevision,
+          composer.props.modelDisabled || agent.connecting || busyAttachments,
+        attachmentDisabled: busyAttachments,
         submitDisabled:
           agent.connecting ||
           agent.preparing ||
-          agent.sending ||
           Boolean(importError) ||
-          readingCanvas ||
-          Boolean(readingFiles) ||
-          submitting === agent.connectionRevision,
-        onApplySkill: (record) => {
-          return appendInstructions(record.instructions, 7500).message;
-        },
+          busyAttachments,
+        onApplySkill: (record) =>
+          appendInstructions(record.instructions, 7500).message,
         onVoiceStatus: setFeedback,
         onStatus: setFeedback,
         readingFiles: readingFiles + (readingCanvas ? 1 : 0),

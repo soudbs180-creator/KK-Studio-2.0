@@ -64,8 +64,7 @@ export interface SchedulerOptions {
   readonly quarantineThreshold?: number;
   readonly maxCooldownMs?: number;
   readonly accountPools?:
-    | ReadonlyMap<string, AccountPool>
-    | Record<string, AccountPool>;
+    ReadonlyMap<string, AccountPool> | Record<string, AccountPool>;
 }
 
 interface ChannelHealth {
@@ -266,6 +265,33 @@ export class Scheduler {
       request.model,
       request.operation,
     );
+    const ordered = this.#buildOrderedPlan(request, candidates);
+    const { outcome, lastError } = await this.#tryPrimaryCandidates(
+      ordered,
+      request,
+    );
+    if (outcome) return outcome;
+
+    // Downgrade chain fallback when primary channels fail and no tokens sent
+    if (!this.#streamStarted(request)) {
+      const fallbackOutcome = await this.#tryDowngradeChain(
+        ordered[0],
+        request,
+      );
+      if (fallbackOutcome) return fallbackOutcome;
+    }
+
+    request.signal?.throwIfAborted();
+    throw (
+      lastError ??
+      channelError(noChannelAvailable(`No channel serves ${request.model}`))
+    );
+  }
+
+  #buildOrderedPlan(
+    request: DispatchRequest,
+    candidates: readonly ChannelIndexEntry[],
+  ): ChannelIndexEntry[] {
     const pinnedId = request.sessionId
       ? this.#sticky.get(request.sessionId)
       : undefined;
@@ -293,18 +319,18 @@ export class Scheduler {
         continue;
       ordered.push(attempt);
     }
+    return ordered;
+  }
 
+  async #tryPrimaryCandidates(
+    ordered: readonly ChannelIndexEntry[],
+    request: DispatchRequest,
+  ): Promise<{ outcome?: DispatchOutcome; lastError?: Error }> {
     let lastError: Error | undefined;
     for (let generation = 0; generation < ordered.length; generation += 1) {
       request.signal?.throwIfAborted();
       const entry = ordered[generation]!;
-      if (!this.#health.isAvailable(entry.channelId)) continue;
-      const pool =
-        this.accountPool(entry.channelId) ??
-        this.accountPool(entry.credentialRef);
-      if (pool && !pool.circuitBreaker.canExecute()) {
-        continue;
-      }
+      if (!this.#isCandidateReady(entry)) continue;
       const context = this.#registry.contextFor(entry.channelId);
       if (!context) continue;
       try {
@@ -313,7 +339,7 @@ export class Scheduler {
         this.#health.recordSuccess(entry.channelId);
         if (request.sessionId)
           this.#sticky.set(request.sessionId, entry.channelId);
-        return { ...result, channelId: entry.channelId };
+        return { outcome: { ...result, channelId: entry.channelId } };
       } catch (error) {
         request.signal?.throwIfAborted();
         if (error instanceof ChannelNotApplicable) continue;
@@ -332,60 +358,64 @@ export class Scheduler {
         if (this.#streamStarted(request)) throw lastError;
       }
     }
+    return { lastError };
+  }
 
-    // Downgrade chain fallback when primary channels fail and no tokens sent
-    if (!this.#streamStarted(request)) {
-      const firstEntry = ordered[0];
-      const pool = firstEntry
-        ? (this.accountPool(firstEntry.channelId) ??
-           this.accountPool(firstEntry.credentialRef))
-        : undefined;
+  #isCandidateReady(entry: ChannelIndexEntry): boolean {
+    if (!this.#health.isAvailable(entry.channelId)) return false;
+    const pool =
+      this.accountPool(entry.channelId) ??
+      this.accountPool(entry.credentialRef);
+    return !pool || pool.circuitBreaker.canExecute();
+  }
 
-      if (pool && pool.downgradeChain.length > 0) {
-        for (const fallbackModel of pool.downgradeChain) {
-          request.signal?.throwIfAborted();
-          const fallbackCandidates = this.#registry.candidates(
-            fallbackModel,
-            request.operation,
+  async #tryDowngradeChain(
+    firstEntry: ChannelIndexEntry | undefined,
+    request: DispatchRequest,
+  ): Promise<DispatchOutcome | undefined> {
+    const pool = firstEntry
+      ? (this.accountPool(firstEntry.channelId) ??
+        this.accountPool(firstEntry.credentialRef))
+      : undefined;
+    if (!pool || pool.downgradeChain.length === 0) return undefined;
+
+    for (const fallbackModel of pool.downgradeChain) {
+      request.signal?.throwIfAborted();
+      const fallbackCandidates = this.#registry.candidates(
+        fallbackModel,
+        request.operation,
+      );
+      for (const fallbackEntry of fallbackCandidates) {
+        if (!this.#health.isAvailable(fallbackEntry.channelId)) continue;
+        const fallbackContext = this.#registry.contextFor(
+          fallbackEntry.channelId,
+        );
+        if (!fallbackContext) continue;
+        try {
+          const fallbackResult = await this.#attempt(
+            fallbackEntry,
+            fallbackContext,
+            {
+              ...request,
+              model: fallbackModel,
+              input: {
+                ...request.input,
+                model: fallbackModel,
+              },
+            },
           );
-          for (const fallbackEntry of fallbackCandidates) {
-            if (!this.#health.isAvailable(fallbackEntry.channelId)) continue;
-            const fallbackContext = this.#registry.contextFor(
-              fallbackEntry.channelId,
-            );
-            if (!fallbackContext) continue;
-            try {
-              const fallbackResult = await this.#attempt(
-                fallbackEntry,
-                fallbackContext,
-                {
-                  ...request,
-                  model: fallbackModel,
-                  input: {
-                    ...request.input,
-                    model: fallbackModel,
-                  },
-                },
-              );
-              this.#health.recordSuccess(fallbackEntry.channelId);
-              return {
-                ...fallbackResult,
-                channelId: fallbackEntry.channelId,
-                downgradedFrom: request.model,
-              };
-            } catch {
-              continue;
-            }
-          }
+          this.#health.recordSuccess(fallbackEntry.channelId);
+          return {
+            ...fallbackResult,
+            channelId: fallbackEntry.channelId,
+            downgradedFrom: request.model,
+          };
+        } catch {
+          continue;
         }
       }
     }
-
-    request.signal?.throwIfAborted();
-    throw (
-      lastError ??
-      channelError(noChannelAvailable(`No channel serves ${request.model}`))
-    );
+    return undefined;
   }
 
   /**

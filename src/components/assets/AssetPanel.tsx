@@ -17,6 +17,7 @@ import useAssetCollections from "./useAssetCollections";
 import type { AssetArchiveState } from "../../features/creation/useAssetArchive";
 import useAssetDetail from "./useAssetDetail";
 import AssetActions from "./AssetActions";
+import AssetPanelHeader from "./AssetPanelHeader";
 import AssetTrashActions, {
   AssetSoftDeleteAction,
   useAssetTrash,
@@ -39,6 +40,8 @@ const EMPTY_FILTER: AssetFilter = {
   type: "all",
   tag: "all",
   days: 0,
+  resourcePackId: "all",
+  sort: "newest",
 };
 export default function AssetPanel({
   onClose,
@@ -52,7 +55,7 @@ export default function AssetPanel({
   archive,
 }: AssetPanelProps) {
   const [tab, setTab] = useState<AssetPanelTab>("canvas");
-  const [compact, setCompact] = useState(false);
+  const [compact, setCompact] = useState(true);
   const [view, setView] = useState<"grid" | "list">("grid");
   const [filter, setFilter] = useState(EMPTY_FILTER);
   const [selected, setSelected] = useState("canvas-0");
@@ -103,6 +106,9 @@ export default function AssetPanel({
             ? asset.source === "upload"
             : !asset.src && !asset.sha256),
   );
+  const resourcePacks = Array.from(
+    new Set(source.map((asset) => asset.resourcePackId).filter(Boolean)),
+  ) as string[];
 
   const searchingArchive =
     tab === "canvas" &&
@@ -166,103 +172,107 @@ export default function AssetPanel({
       className={`asset-panel ${compact ? "compact" : ""}`}
       data-testid="asset-panel"
     >
-      <AssetPanelNavigation
+      <AssetPanelHeader
         compact={compact}
-        tab={tab}
-        view={view}
-        filter={filter}
-        sourceFilter={sourceFilter}
-        source={source}
-        selected={selected}
         onClose={onClose}
         onToggleCompact={() => setCompact(!compact)}
-        onTab={switchTab}
-        onView={setView}
-        onFilter={(patch) => setFilter({ ...filter, ...patch })}
-        onSource={setSourceFilter}
-        onOpen={(asset) => {
-          setSelected(asset.id);
-          void openDetail(asset);
-        }}
       />
-      <div className={`asset-content ${view}`}>
-        {detail ? (
-          <AssetDetail
-            backIcon={<UiIcon name="undo" size={16} />}
-            detail={detail}
-            assets={assets}
-            loading={detailLoading}
-            error={detailError}
-            onBack={() => closeDetail()}
-            onRetry={() => void openDetail(detail)}
-            inCollection={collectionIds.has(detail.id)}
-            onToggleCollection={() => toggleCollection(detail.id)}
-          />
-        ) : items.length ? (
-          items.map((asset) => (
-            <div
-              key={asset.id}
-              className="asset-card-wrapper"
-              style={{ display: "flex", flexDirection: "column" }}
-            >
-              <AssetCard
-                asset={asset}
-                selected={selected === asset.id}
-                onSelect={() => setSelected(asset.id)}
-                onOpen={() => void openDetail(asset)}
-                loadPreview={archive?.loadPreview}
+      <div className="asset-panel-body">
+        <AssetPanelNavigation
+          tab={tab}
+          view={view}
+          filter={filter}
+          sourceFilter={sourceFilter}
+          source={source}
+          resourcePacks={resourcePacks}
+          onTab={switchTab}
+          onView={setView}
+          onFilter={(patch) => setFilter({ ...filter, ...patch })}
+          onSource={setSourceFilter}
+        />
+        <div className={`asset-content ${view}`}>
+          {detail ? (
+            <AssetDetail
+              backIcon={<UiIcon name="undo" size={16} />}
+              detail={detail}
+              assets={assets}
+              loading={detailLoading}
+              error={detailError}
+              onBack={() => closeDetail()}
+              onRetry={() => void openDetail(detail)}
+              inCollection={collectionIds.has(detail.id)}
+              onToggleCollection={() => toggleCollection(detail.id)}
+            />
+          ) : items.length ? (
+            items.map((asset) => (
+              <div
+                key={asset.id}
+                className="asset-card-wrapper"
+                style={{ display: "flex", flexDirection: "column" }}
+              >
+                <AssetCard
+                  asset={asset}
+                  selected={selected === asset.id}
+                  onSelect={() => setSelected(asset.id)}
+                  onOpen={() => void openDetail(asset)}
+                  loadPreview={archive?.loadPreview}
+                />
+                {tab === "trash" ? (
+                  <AssetTrashActions
+                    asset={asset}
+                    onRestore={handleRestore}
+                    onPermanentlyDelete={handlePermanentDelete}
+                    disabledReason={disabledReason}
+                  />
+                ) : (
+                  <AssetSoftDeleteAction
+                    asset={asset}
+                    onDelete={handleSoftDelete}
+                    disabledReason={disabledReason}
+                  />
+                )}
+              </div>
+            ))
+          ) : (
+            <div className="asset-empty">
+              <img
+                className="asset-icon"
+                src="/design/figma/search.svg"
+                alt=""
               />
-              {tab === "trash" ? (
-                <AssetTrashActions
-                  asset={asset}
-                  onRestore={handleRestore}
-                  onPermanentlyDelete={handlePermanentDelete}
-                  disabledReason={disabledReason}
-                />
-              ) : (
-                <AssetSoftDeleteAction
-                  asset={asset}
-                  onDelete={handleSoftDelete}
-                  disabledReason={disabledReason}
-                />
+              <h3>
+                {tab === "trash"
+                  ? "垃圾箱为空"
+                  : searchingArchive
+                    ? "正在搜索本地素材库…"
+                    : "没有找到匹配的资产"}
+              </h3>
+              <p>
+                {tab === "trash"
+                  ? (disabledReason ?? "已删除的素材会显示在这里，可随时还原。")
+                  : searchingArchive
+                    ? "正在读取其余素材信息。"
+                    : "试试其他关键词，或清除筛选条件。"}
+              </p>
+              {tab !== "trash" && (
+                <button className="primary-button" onClick={clearFilters}>
+                  清除筛选
+                </button>
               )}
             </div>
-          ))
-        ) : (
-          <div className="asset-empty">
-            <img className="asset-icon" src="/design/figma/search.svg" alt="" />
-            <h3>
-              {tab === "trash"
-                ? "垃圾箱为空"
-                : searchingArchive
-                  ? "正在搜索本地素材库…"
-                  : "没有找到匹配的资产"}
-            </h3>
-            <p>
-              {tab === "trash"
-                ? (disabledReason ?? "已删除的素材会显示在这里，可随时还原。")
-                : searchingArchive
-                  ? "正在读取其余素材信息。"
-                  : "试试其他关键词，或清除筛选条件。"}
-            </p>
-            {tab !== "trash" && (
-              <button className="primary-button" onClick={clearFilters}>
-                清除筛选
-              </button>
-            )}
-          </div>
+          )}
+        </div>
+        {!detail && tab === "canvas" && archive?.hasMore && (
+          <button
+            className="kk-button kk-button--secondary asset-load-more"
+            type="button"
+            disabled={archive.loading}
+            onClick={archive.loadMore}
+          >
+            {archive.loading ? "正在读取…" : "加载更多素材"}
+          </button>
         )}
       </div>
-      {!detail && tab === "canvas" && archive?.hasMore && (
-        <button
-          className="kk-button kk-button--secondary asset-load-more"
-          type="button"
-          disabled={archive.loading}
-          onClick={archive.loadMore}
-        >
-          {archive.loading ? "正在读取…" : "加载更多素材"}
-        </button>
-      )}
       <AssetActions
         showSubjectActions={tab === "assets"}
         busy={busy}
