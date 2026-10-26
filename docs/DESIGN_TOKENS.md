@@ -1,34 +1,61 @@
 # KK Studio 运行时 Token 索引
 
-> 权威设计系统与 Token 规范已全面对齐 **[Google Stitch DESIGN.md Specification](https://stitch.withgoogle.com/docs/design-md/specification)**，完整规范见 [**`DESIGN.md`**](../DESIGN.md)。
+> 设计取值以当前 Figma 的变量、样式和组件为准；来源与规范章节映射见 [UI_INDEX](UI_INDEX.md)。以下数值目标于 2026-10-21 在线核对，运行时迁移情况单独说明。
+
+2026-10-25 控件修订：`--kk-control-font-md/lg/xl` 为12/16/16px；共享32px按钮及单行输入使用12px/16px，40px主按钮使用16px/24px。浅色反色前景按当前 Figma `on-button-primary` 映射为柔白 `#F2F2F2`；禁用与中性弱边界复用既有语义令牌。未新增依赖或替换所有业务页面，见[本次规范](changes/2026-10-25-figma-control-readability/spec.md)。
 
 设计裁决从 [UI_INDEX](UI_INDEX.md) 开始；本页索引当前组件角色，不维护第二份可加载的数值表。[历史 v2 表](archive/ui-history/DESIGN-TOKENS-2026-09-28.md) 保留溯源。
 
-## 唯一数值源
+## Figma 目标与本地映射
+
+当前来源为 `ZiadpErDoFweCjG3uHjkM3` / `91:2`；下表沿用 Figma 章节。已有本地 token 名是实现映射，不因 Figma 命名不同就批量改名。
+
+| 章节与来源                             | 当前设计目标                                                                                                                                                                                                                                                                                                                        | 本地映射与状态                                                                                                                                                           |
+| -------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 01 · 色彩 `546:21`                     | Dark/Light、可切换强调色、独立错误/警告/成功语义、中性主操作                                                                                                                                                                                                                                                                        | `--kk-color-*`、`--kk-accent*`、`--kk-button-primary-*`；详见 [DESIGN-SYSTEM](DESIGN-SYSTEM.md)                                                                          |
+| 02 · 排版 `546:134`                    | Source Han Sans CN VF（思源黑体）；Light 400 / Medium 500 / Bold 700；Caption 12/16、Body 16/24、Body Strong 与 Subtitle 16/24、Title 20/28、Display 28/36；暗色实际 wght 统一减40（400→360、500→460、700→660），浅色保留基准；紧凑按钮 12/16                                                                                       | `--kk-font-sans`、`--kk-font-*`、`--kk-line-*`、`--kk-font-weight-*`；CSS 以主题令牌消费，禁止在组件里直接写主题字重                                                     |
+| 03 · 间距 `546:156`                    | space-hair/1…6：4/4/8/12/16/24/40；layout-gutter-sm/md/lg/xl：20/32/48/64                                                                                                                                                                                                                                                           | `--kk-space-*`、`--kk-layout-gutter-*`；`--kk-space-hair` 已同步为4，不再保留2px微间距                                                                                   |
+| 04 · 圆角 `546:181`                    | xs 4、control 8、menu 12、lg 16、panel 20、Full 胶囊；页面/媒体/分隔可用 0                                                                                                                                                                                                                                                          | `--kk-radius-*`；menu 已同步12，Full 使用1000并按实际胶囊几何验收                                                                                                        |
+| 05 · 层级 `546:184`                    | Flat；Outlined 1px；菜单阴影 0/8/24、Black 16%；模态 0/16/48、Black 24%；遮罩示意 background 72%                                                                                                                                                                                                                                    | 沿用共享 shadow/z-index 角色，具体页面改动时核对状态与命中，不能自行改用更亮底色代替层级                                                                                 |
+| 06 · 图标与控件 `546:187`              | 紧凑图文 12px 字号/12px 图标；标准图文 16px 字号/16px 图标；独立工具 16/20/24；标准图文按钮高 40、字重 500、行高 24、gap 8、左右 padding 16；触控命中区至少 44×44                                                                                                                                                                   | 复用共享控件与 `UiIcon`；旧图标仅 16/20/24 的封闭轴不覆盖新图文规范，标准/紧凑档位须按目标组件映射                                                                       |
+| 07 · 响应式 `597:67456`                | Phone ≤767，Tablet 768–1200，Desktop ≥1201；容器 padding 在 ≤767 为16、768–1199 为24、≥1200 为40；高度≤640为矮屏                                                                                                                                                                                                                    | 布局断点与 padding 断点分开映射；保留内部滚动、主操作可达与状态身份                                                                                                      |
+| 08 · 编号与同步契约 `1510:41557`       | `KK-<归属页>-<领域>-<三位序号>` 永久编号、状态流转与五页职责边界                                                                                                                                                                                                                                                                    | 详见 [UI_INDEX](UI_INDEX.md#31-编号平台归属与同步记录) 与 [2026-10-23 规则与 04 核查](changes/2026-10-23-figma-04-mapping/verification.md)                               |
+| 09 · 视觉与动效细则 `1514:90390`       | R01 工具栏 32px 行对齐；R02 微明度三档（深色 `#1B1B1B → #202020 → #252525`、浅色 `#F7F7F7 → #F2F2F2 → #EDEDED`、禁用 `#000000` 纯黑）；R03–R05 动效时序（120/150/180/220/260ms、hover 衰减 650ms、复制保持 2500ms+150ms、弹簧阻尼）；R06 `tabular-nums` 等宽数字；R11 同心圆角（`R_outer = R_inner + P`）；R12 视觉重心与命中区解耦 | `--kk-control-surface-idle/hover/selected`（Dark/Light 双主题）、`--kk-ink-near-black`、`--kk-motion-*`、`font-variant-numeric: tabular-nums`                            |
+| 10 · 资源、编组与交互语义 `1761:277`   | `1761:281` 资源包/标签/类型/时间筛选；`1761:282` 画布编组（单击展开、双击进入、宫格/水平/垂直/上下游与名字/时间排序）；`1761:283` 媒体参考首尾帧调换与音频紧凑标识；`1761:284` 灯箱 6 缩略图居中与重绘胶囊顺序                                                                                                                      | `AssetFilterControls`、`CanvasGroupToolbar`、`CanvasGroupLayer`、`canvasReferences`、`ImageLightbox`、`EditComposer`                                                     |
+| 11 · 使用场景与本地实现协议 `2000:273` | 六层派生（`01→02→03→04/05→本地`）；97 变量、127 图标、145 `componentKey`（见 `03 / 00B` `2022:41388`）；触控热区 `44×44px`；纯图标按钮 `24/32→16px`、`40/44/48→20px`；图文按钮 `32→12px`、`40/44/48→16px`                                                                                                                           | `--kk-hit-touch`、`--kk-icon-button-glyph-sm/md`、`--kk-button-icon-sm/md`、`UI_INDEX.md`、`UI_RULES.md`                                                                 |
+| 12 · 状态、动效与骨架屏 `2001:273`     | Hover `120ms`、Press `80ms scale(0.97)`、Release `140ms spring`、Switch `280ms`、Checkbox `200ms`、Menu `180ms + 6px`、Drawer `320ms`、Stack 背板 `6px/12px`、Spinner `900ms`、Shimmer `1100ms`、Fade-in `150ms`、Locate `300ms`、Reduced-motion `<=100ms`                                                                          | `--kk-motion-hover/press/release/press-scale/switch/checkbox-draw/menu-enter/menu-offset/drawer/stack-offset-1/2/spinner/shimmer/content-fade/locate-scroll/reduced-cap` |
+
+图标描边来自 `KK / Geometry` 与 `KK / Icon Weight`：12px 的 Regular/Medium/Bold 为 0.75/1/1.25；16px 为 1/1.25/1.5；Standalone · 24 为 1.5。不要按旧图标尺寸轴推测描边。
+
+Figma 共享 Text Styles 已核对 `KK/caption`、`KK/body`、`KK/body-strong`、`KK/subtitle`、`KK/title`、`KK/display`、`KK/字阶/40-Bold`、`KK/字阶/12-Medium`。特殊页面可有已登记样式，需读取其目标节点，不把此表当作任意扩展许可。
+
+## 唯一运行时数值注册处
 
 [tokens.css](../src/styles/tokens.css) 声明全部 --kk-* 语义值；[ui-tokens.css](../src/styles/ui-tokens.css) 仅承接兼容别名，[ui-governance.css](../src/styles/ui-governance.css) 提供共享状态类。tokens.json 是历史导出快照。
 
-根 [DESIGN.md](../DESIGN.md) 的 YAML 是当前 CSS 的生成投影：标准角色、全部声明及作用域、源 SHA-256（UTF-8、LF 规范化，兼容 Windows/Linux 换行）和生成路径归属。运行 `npm run design:sync` 更新、`npm run design:check` 检查漂移；未知 YAML 和人工正文保留，不把投影当作第二数值源。预览与导出见 [UI_SPEC](UI_SPEC.md#designmd-与独立预览)。
+先在 Figma 完成设计并记录变量/样式或组件 node ID 到本地 token 的映射，再更新 CSS。根 [DESIGN.md](../DESIGN.md) 的 YAML 是当前 CSS 的生成投影：标准角色、全部声明及作用域、源 SHA-256（UTF-8、LF 规范化）和生成路径归属。`npm run design:sync` 仅同步 CSS → YAML，`npm run design:check` 仅检查该投影漂移；两者均不读取 Figma，也不证明 Figma 一致性。未知 YAML 和人工正文保留。预览与导出见 [UI_SPEC](UI_SPEC.md#designmd-与独立预览)。
 
-| 角色 | 当前 token 与使用者 |
-| --- | --- |
-| 控件高度 | --kk-control-h-sm/md/lg：24 / 32 / 40；共享按钮和设置控件 |
-| 图标图形 | --kk-icon-glyph-sm/md/lg：16 / 20 / 24；UiIcon |
-| 胶囊动作 | --kk-button-radius 引用 --kk-radius-full；--kk-model-capsule-max-width：260，超出上限的长模型名才省略 |
-| 方形圆角控件 | --kk-radius-control：8；输入、上传及 IconButton |
-| 中性主动作 | --kk-button-primary-bg/hover/text；深浅主题分别配对 |
-| 强调状态 | --kk-accent、--kk-accent-soft、--kk-text-accent；默认绿色、显式其他颜色兼容 |
-| 弱键盘焦点 | --kk-focus-ring-subtle、--kk-focus-width-subtle、--kk-focus-offset-subtle；输入聚焦提示 |
-| 菜单与面板 | --kk-radius-menu、--kk-radius-panel；不复制局部圆角 |
+下表保留**当前实现快照**与使用者，便于迁移；与上表冲突的数值不作为新设计依据。
+
+| 角色               | 当前 token 与使用者                                                                                                                                                                                                                |
+| ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 控件高度           | --kk-control-h-sm/md/lg：24 / 32 / 40；共享按钮和设置控件                                                                                                                                                                          |
+| 图标图形           | --kk-icon-glyph-sm/md/lg：16 / 20 / 24；UiIcon                                                                                                                                                                                     |
+| 胶囊动作           | --kk-button-radius 引用 --kk-radius-full；--kk-model-capsule-max-width：260，超出上限的长模型名才省略                                                                                                                              |
+| 方形圆角控件       | --kk-radius-control：8；输入、上传及 IconButton                                                                                                                                                                                    |
+| 中性主动作         | --kk-button-primary-bg/hover/text；深浅主题分别配对                                                                                                                                                                                |
+| 强调状态           | --kk-accent、--kk-accent-soft、--kk-text-accent；默认绿色、显式其他颜色兼容                                                                                                                                                        |
+| 弱键盘焦点         | --kk-focus-ring-subtle、--kk-focus-width-subtle、--kk-focus-offset-subtle；输入聚焦提示                                                                                                                                            |
+| 菜单与面板         | --kk-radius-menu、--kk-radius-panel；不复制局部圆角                                                                                                                                                                                |
 | 设置外壳与接入导航 | --kk-settings-width（1120）、--kk-settings-compact-width（960）、--kk-settings-height（680）、--kk-settings-nav-width（208）、--kk-settings-method-width（160）；2026-10-15用户密度反馈，SettingsPanel按分类消费，手机分级导航保留 |
-| 手机画布屏幕编辑器 | --kk-canvas-screen-editor-width/bottom/max-height；CanvasComposerShell 与 canvas-composer-screen.css，固定屏幕容器受窗口和安全区限制，节点草稿与动作保持同源 |
-| 屏幕编辑器层级 | --kk-z-canvas-editor：高于 dropdown，低于浮动喜欢/标签面板；编辑器仍在画布 covered/inert 边界内 |
-| 画布菜单层级 | --kk-z-canvas-menu：HUD普通入口及缩放/背景菜单高于屏幕编辑器，低于喜欢/标签面板；入口和展开后使用同一层级，卡片动作避让实际矩形；临时可用高度限制短屏滚动，颜色入口采用32px/8px共享控件 |
-| 喜欢/标签面板 | --kk-collection-panel-width/height：360 / 480；FloatingCollectionPanel，受可视窗口限制、不随画布缩放 |
-| 浮动面板层级 | --kk-z-floating-panel/active：高于画布工具栏、canvas-editor 和 canvas-menu，低于 overlay、modal、popover；活动面板在同类面板之上 |
-| 任务弹层 | --kk-task-popover-width/height/min-height；任务浮层与 HUD |
-| 字体与间距 | --kk-font-*、--kk-line-*、--kk-space-*；文字层级与 4px 间距网格 |
+| 手机画布屏幕编辑器 | --kk-canvas-screen-editor-width/bottom/max-height；CanvasComposerShell 与 canvas-composer-screen.css，固定屏幕容器受窗口和安全区限制，节点草稿与动作保持同源                                                                       |
+| 屏幕编辑器层级     | --kk-z-canvas-editor：高于 dropdown，低于浮动喜欢/标签面板；编辑器仍在画布 covered/inert 边界内                                                                                                                                    |
+| 画布菜单层级       | --kk-z-canvas-menu：HUD普通入口及缩放/背景菜单高于屏幕编辑器，低于喜欢/标签面板；入口和展开后使用同一层级，卡片动作避让实际矩形；临时可用高度限制短屏滚动，颜色入口采用32px/8px共享控件                                            |
+| 喜欢/标签面板      | --kk-collection-panel-width/height：360 / 480；FloatingCollectionPanel，受可视窗口限制、不随画布缩放                                                                                                                               |
+| 浮动面板层级       | --kk-z-floating-panel/active：高于画布工具栏、canvas-editor 和 canvas-menu，低于 overlay、modal、popover；活动面板在同类面板之上                                                                                                   |
+| 任务弹层           | --kk-task-popover-width/height/min-height；任务浮层与 HUD                                                                                                                                                                          |
+| 字体与间距         | --kk-font-_、--kk-line-_、--kk-space-*；文字层级与 4px 间距网格                                                                                                                                                                    |
 
 数值的实际使用者、默认/hover/pressed/selected/disabled/focus 状态须消费同一角色。断点可改变容器、排列和宽度，不复制第二套语义；新几何先注册 token 再使用。交互规则见 [UI_RULES](UI_RULES.md)，颜色与组件用法见 [DESIGN-SYSTEM](DESIGN-SYSTEM.md)。
 
-本轮没有修改在线 Figma 文件；代码和文档不能冒充外部设计同步或用户视觉验收。
+本次更新规范目标与来源映射，未修改运行时 CSS、在线 Figma 或业务页面，不能标为 UI 已迁移或已通过视觉验收。后续迁移先读取对应 Figma 组件/页面，再按 AGENTS.md 执行。

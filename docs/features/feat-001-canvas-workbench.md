@@ -2,8 +2,8 @@
 
 - 状态：REAL
 - 领域：canvas
-- 最近更新：2026-10-18
-- 关联任务：T2、UI-004、TASK-UI-006、TASK-CANVAS-KAWORKAI-001、TASK-UI-011、TASK-222-ACTIONS-20261014、TASK-223-ACTIONS-20261014
+- 最近更新：2026-10-24
+- 关联任务：T2、UI-004、TASK-UI-006、TASK-CANVAS-KAWORKAI-001、TASK-UI-011、TASK-222-ACTIONS-20261014、TASK-223-ACTIONS-20261014、TASK-CANVAS-PERF-20261024
 
 ## 用户可见入口
 
@@ -33,6 +33,8 @@ Desktop/Web2.1.39/source50412d4e：项目/文件夹置顶和manual/recent/priori
 - 证据：`docs/changes/2026-09-20-ui-main-alignment/`、`docs/evidence/2026-09-21-main-close-002/`、`docs/changes/2026-09-29-kaworkai-canvas/`
 
 ## 当前能力
+
+- 2026-10-24 轻量性能批次正在验证：跳过普通手势预览的历史扫描、缓存持久化参照指纹、仅协调图输入变化的项目，并消除保存前重复规范化。预览journal和原有撤销/恢复契约保持；连线局部计算、最终浏览器与独审见[当前验证](../changes/2026-10-24-canvas-performance/verification.md)。不以计数收益代称任意规模帧率或原生安装已验。
 
 - 本轮2.1.23已验证补齐草稿顶部删除、屏幕尺寸上传、320px HUD避让与撤销偏好恢复；不删除归档原件。
 

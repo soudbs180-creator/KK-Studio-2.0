@@ -1,5 +1,33 @@
 # 当前进度
 
+## 2026-10-26 Figma 按钮与弹窗检查点（PARTIAL）
+
+先按01补规则，再修02绘图、03共享母版和04/05设计实例。214按钮、58页签/342按钮、8项目库、18素材库通过本轮自审；87顶部行实际44，窄画布保留同语义图标入口。124处实际修改/恢复通过，113跳转及15取消配置通过；音频仍仅草稿、发送禁用。9张当前PNG校验通过。窄屏素材库完整触控、全场景播放器、独审及本地迁移未完成；未改源码/版本或部署。见[本轮验证](changes/2026-10-25-figma-04-05-rework/verification.md)。
+
+## 2026-10-25 Figma 04/05源继承与场景整理（PARTIAL）
+
+用户复核发现重复工具栏本体、覆盖锁图标与项目库双边框，撤回整体完成判断。原100处验证又遗漏03样例和嵌套引用；现工具栏6母版＋03的24处＋04/05的94处共124处完成间距修改/恢复及最终回读，修正自动宽度、左对齐弹窗、18处示例边界和44px圆形反色按钮六态内嵌底板。98条原型跳转及15个取消层配置保留；项目库改为真实03实例。当前143＋111场景包含16个新增交互样例，其他组合、完整触控/业务路径和本轮独审仍待核查；本地产品未迁移。旧结构扫描保留原时点含义。见[当前验证](changes/2026-10-25-figma-04-05-rework/verification.md)。
+
+## 2026-10-25 Figma 基础控件可读性修复（本地候选）
+
+按用户指定优先修复报告六类问题，先修改并回读 Figma 共享母版，再同步本地控件字号、亮色反色前景和禁用边界。设计预览真实Edge9项、产品页面/画布导航17项首试通过；共享Desktop/Web源码版本2.1.44，Mobile不变。全仓单测开工前已有失败；原生运行、完整合并和发布未验。见[本次验证](changes/2026-10-25-figma-control-readability/verification.md)。
+
+## 2026-10-24 画布轻量性能优化第一批（IN_PROGRESS）
+
+用户授权开始实施性能调研结论。已保全当前 dirty/index，复用本 checkout；基线单元2275通过/0失败/20跳过、typecheck与lint通过。正在按测试先行削减历史预览、项目协调、保存规范化与连线派生的重复工作；保留预览journal、撤销和生成语义，不新增依赖。当前 Figma 已只读核对，无需设计修改；未声称全量视觉同步或帧率收益。见[本批计划](changes/2026-10-24-canvas-performance/plan.md)与[验证](changes/2026-10-24-canvas-performance/verification.md)。
+
+## 2026-10-24 Figma UI 治理与画布编组本地切片（PARTIAL）
+
+按当前 Figma `ZiadpErDoFweCjG3uHjkM3` 的 01–05 页面完成代表性母版修正和回读；本地接入 `CanvasGroup` 持久字段、信息/堆叠收纳、名称/边框色/解组、选区整理、视频首尾帧与音频参考类型、灯箱最多 6 张居中缩略图和任务搜索。`typecheck`、`npm test`（2261/0/20）、lint、ui:check、build 通过。完整 `verify` 被既有格式漂移阻断；全量 Playwright 有环境超时，04/05 同状态验收与 Code Connect 权限仍开放。详见 [本轮变更记录](changes/2026-10-24-figma-ui-governance/verification.md)。
+
+## 2026-10-24 按当前 Figma 同步手机项目库、首页输入区与顶栏（本地 PASS）
+
+实时回读当前 Figma `ZiadpErDoFweCjG3uHjkM3` 的手机首页 `69:1279` 与项目库 `69:1414`：目标为 390×56 顶栏、340×132 首页输入、171×78 两列项目操作卡。Figma 目标已存在，本轮不重复写入 Figma，按节点证据同步本地 `responsive.css`、`responsive-content.css`、`composer.css`、`catalog-pages.css`。开发 1421 与构建预览 1423 均实测通过：390×844 顶栏 56px、首页输入 340.6667×132px、项目库两卡 x=16/203 且 171×78；1440×1000 顶栏 40px、首页输入 652×170px、项目库两卡 616×78。`typecheck`、build、lint、ui:check 与串行重跑的 `npm test`（2260 passed / 20 skipped / 0 failed）通过；首轮并行测试的 readiness 超时已保留并在验证记录中区分。详见[追加验证](changes/2026-10-23-figma-04-mapping/verification.md#2026-10-24-手机页面同步与双视口验收追加记录)；运行回执位于工作区容器 `D:/kk-studio/output/mobile-ui-20261024/receipt.json`。
+
+## 2026-10-21 Figma 设计先行与派生规范
+
+新增 UI 先完成 Figma 设计再修改本地的强制规则，本地仍须读设计规范。当前设计源更新为用户提供的新文件 `ZiadpErDoFweCjG3uHjkM3` / `91:2`，按七章规范、共享 Text Styles 和几何/图标变量更新文档目标及来源映射。旧 CSS 与生成 YAML 保留当前实现身份，未执行产品 UI 迁移；检查、独审与主线整合边界见[验证](changes/2026-10-21-figma-first-rules/verification.md)。
+
 ## 2026-10-18 手机输入模型焦点修复（IN_PROGRESS / NOT_VERIFIED）
 
 TASK-MOBILE-COMPOSER-001承接用户安卓Chrome模型名点击无响应：本地真实浏览器与四配置红测已确认空text失焦卸载工具栏。最小interacting锁存候选已使本地完整手机Web13/13首试通过；Mobile371/type/lint由root回传，精确已提交head独审、Hosted和Web2.1.40/Mobile2.1.5正式发布尚待完成。旧图文TASK仅按PR70/71实际门禁和合并收据有界DONE/PASS，不将Safari/Native/实体手机后台或真实视频结案。见[本次验证](changes/2026-10-18-mobile-composer/verification.md)。
@@ -1148,6 +1176,14 @@ TASK-DS-001、UI-001、UI-004保持PARTIAL：在线Ardot未写入，新样式Tau
 - Playwright 浏览器回归：93/93 通过，覆盖 1920、1440、768、390 视口。
 
 历史过程见 `docs/archive/`，不覆盖当前状态。
+
+## 2026-10-24 剩余 UI 验收收口（定向完成）
+
+- 格式门禁已恢复：`npm run format:check` 通过，`npm run typecheck`、`npm test`（2266/0/20）、`npm run lint`、`npm run ui:check` 和 `npm run build` 均通过；设计检查保留既有 orphan-token warnings。
+- 04/05 定向浏览器验收已绑定预览端口 1423：响应式桌面/手机 20 项、画布导航 7 项、设置布局 2 项、素材性能 6 项、视频上传 2 项、重绘 15 项通过。
+- 资源库补齐资源包→标签→类型→时间筛选、最新/最旧排序和自定义日期；视频首尾帧交换保持连线 ID/顺序，音频不占帧槽。
+- 重绘补齐标注、擦除、评论点、矩形选区、清除、整图/只改选区开关和上传→输入→模型→录音→发送胶囊输入；复用既有 image-edit 蒙版领域逻辑。
+- 全量旧浏览器合同与 Figma Code Connect 仍分别受历史文案用例和 Dev/Full seat 权限边界影响，保持 PARTIAL，不冒称全绿。
 
 ## 2026-09-10 UI runtime diagnosis: verified delivery, partial visual acceptance
 

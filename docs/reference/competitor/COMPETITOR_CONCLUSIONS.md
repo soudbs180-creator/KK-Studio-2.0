@@ -9,6 +9,9 @@
 - Kaworkai 页面观察支持本地画布的可逆历史、快捷键、吸附偏好、图层定位等基础交互取舍；远程 AI 工具、积分、服务端 board API、竞品 CSS 和多人协作没有进入本地实现范围。
 - 未知或外部受理的生成状态必须与普通失败区分；重试和重规划要保留 task identity、revision 和已接受前缀。
 - Provider、ComfyUI、MCP、模型和外部账号行为需要 live 或 host-specific evidence。静态 prompt、配置或页面关键词只能描述契约或研究线索，不能证明运行成功。
+- AI 短剧/视频工作台品类（2026-10-26，`KW07`）静态研究支持：无限画布是品类唯一交互范式（7/7），KK 的 FEAT-001 方向正确；但画布底座自研与品类共识（tldraw/Excalidraw/Vue Flow/xyflow）相反，且违反 KK 自身反重复造轮条款，应评估引入成熟库。证据：`KW07`。
+- 同研究支持：Agent 经 MCP 操作画布是品类共识（5/7 有显式 MCP 或 agent 宿主）；KK 当前只有 MCP 客户端，缺"画布与功能暴露为 MCP 服务端"一侧。Skills 已成独立内容品类（libtv-skills 1.2k★、screen-creative-skills 475★），可对接 FEAT-011。证据：`KW07`。
+- 同研究支持："接入本地 ComfyUI"是该品类二开最热方向（huobao-drama-comfyui 等 6+ 二开仓库），与 FEAT-004/005 的既有缺口一致；Waoowaoo 以 Temporal 做持久任务编排，可作为 FEAT-024 的参照。证据：`KW07`。
 
 ## 集成事实不能改写成研究结论
 

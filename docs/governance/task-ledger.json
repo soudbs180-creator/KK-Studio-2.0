@@ -1,5 +1,203 @@
 [
   {
+    "id": "TASK-FIGMA-PAGES-20261025",
+    "title": "重新核查并整理Figma 04/05页面与状态",
+    "goal": "沿01→02→03→04/05修正源继承、项目库搜索、工具栏和交互错误，消除重复本体与假引用并限定真实能力。",
+    "scope": "按用户2026-10-26继续授权检查Figma 01→02→03→04/05全部结构、共享控件与交互，并同步本地Desktop/Web共享UI及适用Mobile；保持当前真实能力，发布另行验收。",
+    "acceptance": [
+      "全量238场景清点并扫描可见根边界、替换面板、字体和小字，保留逐项覆盖表。",
+      "修复会话结构、工具栏和菜单上下文、44触控、手机滚动和深浅主题；禁用态无假运行反应。",
+      "模型通道和Mobile能力按源码核对，已知误分类、文字覆盖及跨平台原型路径关闭；代表截图及独立上下文审查有据。",
+      "工具栏唯一本体由六个状态组合与页面共同引用，禁止逐态复制与嵌套样式冻结；包含目录和嵌套引用，实际修改公共外观、布局与单态配置验证继承并恢复。"
+    ],
+    "dependencies": [],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "docs/TASK-FIGMA-FIRST-20261021-rules",
+    "worktree": "D:/kk-studio/KK-Studio-2.0",
+    "baseSha": "1fbac26b33bdabaad682ad398f5292360eb9c66a",
+    "affectedModules": [
+      "docs/changes/2026-10-25-figma-04-05-rework",
+      "docs/UI_INDEX.md",
+      "docs/PROGRESS.md",
+      "docs/governance",
+      "src/components",
+      "src/styles",
+      "tests/browser",
+      "tests/unit/uiIcon.test.ts",
+      "DESIGN.md"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "未完成",
+    "priority": "P2",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-25-figma-04-05-rework/intent.md",
+      "docs/changes/2026-10-25-figma-04-05-rework/spec.md",
+      "docs/changes/2026-10-25-figma-04-05-rework/plan.md",
+      "docs/changes/2026-10-25-figma-04-05-rework/verification.md",
+      "docs/changes/2026-10-25-figma-04-05-rework/review.md"
+    ],
+    "verification": "2026-10-26指定设计自审通过，整体PARTIAL。214按钮变体、54业务绘图、58页签/342按钮、8项目库、18素材库、禁用音频及指定菜单/卡片已修。87顶部行实际44且不重叠，4处窄画布用同语义44图标入口。124处间距/图标/箭头尺寸临时修改及恢复后回读通过，正式304×52/间距4/箭头8；113跳转/15取消配置通过，9当前PNG校验通过。完整触控、全场景播放器、独审、本地/原生未验；未改源码或版本。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-26",
+    "lastVerified": "2026-10-26",
+    "nextAction": "先完成共享源与全场景结构核查，再同步本地控件/页面；完整测试、实际运行与当前独审后判定验收，不改变其他任务归属。",
+    "requirementRefs": [
+      "docs/changes/2026-10-25-figma-04-05-rework/intent.md",
+      "docs/changes/2026-10-25-figma-04-05-rework/spec.md"
+    ],
+    "featureIds": []
+  },
+  {
+    "id": "TASK-FIGMA-CONTROLS-20261025",
+    "title": "修复 Figma 六类基础控件问题并同步本地 UI",
+    "goal": "提高亮暗主题按钮与标签可读性，统一共享控件字阶与尺寸展示。",
+    "scope": "Figma 01/03 的前景、透明度、弱边界、尺寸示例、图标标注和短行高；本地共享控件样式及验证。",
+    "acceptance": [
+      "Figma 母版修复后回读指定主题实例及对比度，保留当前人工设计。",
+      "共享32px控件使用12/16字阶，40px主按钮使用16/24，禁用原因可达。",
+      "真实Edge设计预览及产品页面回归通过；全量门禁失败和Desktop边界如实记录。"
+    ],
+    "dependencies": [],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "docs/TASK-FIGMA-FIRST-20261021-rules",
+    "worktree": "D:/kk-studio/KK-Studio-2.0",
+    "baseSha": "1fbac26b33bdabaad682ad398f5292360eb9c66a5",
+    "affectedModules": [
+      "src/styles",
+      "design/preview",
+      "tests/design-md",
+      "tests/unit/designMarkdown.test.ts",
+      "docs/changes/2026-10-25-figma-control-readability"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "未完成",
+    "priority": "P2",
+    "risk": "low",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-25-figma-control-readability/intent.md",
+      "docs/changes/2026-10-25-figma-control-readability/spec.md",
+      "docs/changes/2026-10-25-figma-control-readability/plan.md",
+      "docs/changes/2026-10-25-figma-control-readability/verification.md",
+      "docs/changes/2026-10-25-figma-control-readability/review.md"
+    ],
+    "verification": "Figma指定实例对比度13.09–14.91，禁用5.18–6.50；短行高复查0命中。Edge设计预览9项、产品页面17项首试通过，定向46单测通过；build/ui/format/lint/typecheck通过。完整verify因两项开工前存储单测失败退出1，2288pass/2fail/20skip，原生运行未验。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-25",
+    "lastVerified": "2026-10-25",
+    "nextAction": "在原任务修复两项既有存储单测失败并补Desktop运行证据；保留既有dirty和失败原件，未经全量验收不合并或发布。",
+    "requirementRefs": [
+      "docs/changes/2026-10-25-figma-control-readability/intent.md",
+      "docs/changes/2026-10-25-figma-control-readability/spec.md"
+    ],
+    "featureIds": []
+  },
+  {
+    "id": "TASK-CANVAS-PERF-20261024",
+    "title": "削减画布预览与存储重复工作",
+    "goal": "提高大画布交互资源效率，保持撤销、连线、输入和保存恢复语义。",
+    "scope": "第一批历史预览、持久化指纹、项目协调、重复序列化及连线/派生索引；无新增依赖、视觉或schema变更。",
+    "acceptance": [
+      "100帧普通手势预览不构建历史快照，完成一次Undo、取消保持Redo。",
+      "仅图输入变化的项目重新协调，Web预览journal与CAS/关闭flush不弱化。",
+      "无关连线避免重算，端点/hover/删除行为保持；不宣称所有节点隔离。",
+      "全量test/typecheck/lint及实际浏览器证据、独立审查真实记录。"
+    ],
+    "dependencies": [],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "docs/TASK-FIGMA-FIRST-20261021-rules",
+    "worktree": "D:/kk-studio/KK-Studio-2.0",
+    "baseSha": "1fbac26b33bdabaad682ad398f5292360eb9c66a",
+    "affectedModules": [
+      "src/components/canvas",
+      "src/features/creation",
+      "tests/unit",
+      "tests/browser",
+      "docs/changes/2026-10-24-canvas-performance",
+      "docs/PROGRESS.md"
+    ],
+    "status": "IN_PROGRESS",
+    "displayStatus": "进行中",
+    "priority": "P2",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-24-canvas-performance/intent.md",
+      "docs/changes/2026-10-24-canvas-performance/spec.md",
+      "docs/changes/2026-10-24-canvas-performance/plan.md",
+      "docs/changes/2026-10-24-canvas-performance/verification.md",
+      "docs/changes/2026-10-24-canvas-performance/review.md"
+    ],
+    "verification": "开工基线2275 pass/0 fail/20 skipped，typecheck/lint通过；current Figma只读核对完成。产品与最终验证尚未完成。",
+    "verificationResult": "NOT_VERIFIED",
+    "updated": "2026-10-24",
+    "lastVerified": "2026-10-24",
+    "nextAction": "先完成红绿计数及最小优化，再完整门禁、运行与独审；保留既有dirty/index，禁止混合提交。",
+    "requirementRefs": [
+      "docs/changes/2026-10-24-canvas-performance/intent.md",
+      "docs/changes/2026-10-24-canvas-performance/spec.md"
+    ],
+    "featureIds": [
+      "FEAT-001"
+    ]
+  },
+  {
+    "id": "TASK-FIGMA-FIRST-20261021",
+    "title": "以当前 Figma 为设计真值并强制 UI 设计先行",
+    "goal": "先完成 Figma 设计再修改本地 UI，本地规范按当前 Figma 章节、术语与设计值派生。",
+    "scope": "2026-10-21范围为项目规则与派生文档；2026-10-23用户续作授权Figma编号契约、优先整理04及相应本地规则/映射记录；05页面与本地产品UI尚未落实。",
+    "acceptance": [
+      "AGENTS 明确 Figma 设计前置、已有目标无需重复编辑、失效来源暂停依赖写入。",
+      "登记当前Figma页面与规范来源，优先复用既有身份并建立按钮映射；先完成Figma目标再同步本地，平台差异与未迁移项明确。",
+      "文档及适用检查、独立规则演练结果真实记录，既有暂存与用户改动保持。"
+    ],
+    "dependencies": [],
+    "owner": "root",
+    "ownerRole": "documentation-maintainer",
+    "branch": "docs/TASK-FIGMA-FIRST-20261021-rules",
+    "worktree": "D:/kk-studio/KK-Studio-2.0",
+    "baseSha": "1fbac26b33bdabaad682ad398f5292360eb9c66a",
+    "affectedModules": [
+      "AGENTS.md",
+      "DESIGN.md",
+      "docs",
+      "tests/evals/agent-contract.json"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "未完成",
+    "priority": "P2",
+    "risk": "low",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-21-figma-first-rules/intent.md",
+      "docs/changes/2026-10-21-figma-first-rules/spec.md",
+      "docs/changes/2026-10-21-figma-first-rules/plan.md",
+      "docs/changes/2026-10-21-figma-first-rules/verification.md",
+      "docs/changes/2026-10-21-figma-first-rules/review.md",
+      "docs/changes/2026-10-23-figma-04-mapping/intent.md",
+      "docs/changes/2026-10-23-figma-04-mapping/spec.md",
+      "docs/changes/2026-10-23-figma-04-mapping/plan.md",
+      "docs/changes/2026-10-23-figma-04-mapping/verification.md",
+      "docs/changes/2026-10-23-figma-04-mapping/review.md",
+      "docs/changes/2026-10-23-figma-04-mapping/mapping.json"
+    ],
+    "verification": "2026-10-21历史验证见旧包，完整verify曾停于范围外格式失败。2026-10-23新增Figma规则1510:41557并截图回读；04抽查445实例有母版，162工具栏端点改圆形并核验图标/尺寸/位置/状态目标不漂移；本地2条语义映射覆盖162实例，Markdown/索引/映射检查通过。04组合/尺寸/主题状态仍待修，05及本地产品未同步，未提交合主线。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-23",
+    "lastVerified": "2026-10-23",
+    "nextAction": "先按本次mapping与verification继续04组合母版、尺寸覆盖和主题/状态核验；逐项FIGMA_READY后再同步本地，05单独验收。保留当前dirty工作，不把首批端点修复当作整页或运行验收。",
+    "requirementRefs": [
+      "docs/changes/2026-10-21-figma-first-rules/intent.md",
+      "docs/changes/2026-10-23-figma-04-mapping/intent.md"
+    ],
+    "featureIds": []
+  },
+  {
     "id": "TASK-MOBILE-COMPOSER-001",
     "title": "修复手机空文字输入模型按钮失焦无响应",
     "goal": "空文字草稿聚焦后模型/添加/展开保持可用，保存旧资料与回滚；纠正黑截图误判并真实区分长停留恢复与手机后台证据。",
@@ -15,8 +213,8 @@
     ],
     "owner": "root",
     "ownerRole": "implementation-integrator",
-    "branch": "fix/TASK-MOBILE-COMPOSER-001-focus",
-    "worktree": "D:/kk-studio/.worktrees/TASK-MOBILE-12AI-001",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "baseSha": "97ef182b10c076c81611dea24e0b1c07c127dd49",
     "affectedModules": [
       "mobile/src/screens/Composer.tsx",
@@ -27,7 +225,7 @@
       "docs/features",
       "docs/PROGRESS.md"
     ],
-    "status": "IN_PROGRESS",
+    "status": "PARTIAL",
     "displayStatus": "进行中",
     "priority": "P1",
     "priorityRationale": "用户安卓Chrome点击模型名无反应，空文字失焦使整条工具栏提前卸载，阻断基本选择操作。",
@@ -40,7 +238,7 @@
     ],
     "verification": "真实本地空text焦点/点击红测run e9da5f53四配置4FAIL保留；interacting候选本地完整mobile-web run60ac86e2为13/13首试、0skip/flaky/errors，CUA390×844模型面板可见，Mobile371/type/lint由root回传通过。五JPEG原字节/像素一致纠正旧黑图判断；908.067秒后原件散列保持，但network截断且无真实hidden事件，实体后台未验。当前已提交head独审/Hosted/生产40待执行。",
     "verificationResult": "NOT_VERIFIED",
-    "updated": "2026-10-18",
+    "updated": "2026-10-26",
     "lastVerified": "2026-10-18",
     "nextAction": "完成interacting锁存修复、四配置浏览器/草稿/相邻控件回归与完整必要检查，冻结head独审并按正式Release部署，保留唯一previous；禁止再次生成。",
     "requirementRefs": [
@@ -64,8 +262,8 @@
     "dependencies": [],
     "owner": "root-release",
     "ownerRole": "implementer",
-    "branch": "fix/TASK-CANVAS-RELEASE-20261018",
-    "worktree": "D:/kk-studio/.worktrees/TASK-UNIFIED-RELEASE-20261018",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/components/canvas",
       "src/runtime",
@@ -78,7 +276,7 @@
       "docs/governance",
       "docs/PROGRESS.md"
     ],
-    "status": "IN_PROGRESS",
+    "status": "PARTIAL",
     "displayStatus": "进行中",
     "priority": "P1",
     "priorityRationale": "解决用户选区工具栏偏移与三端统一发布问题。",
@@ -88,7 +286,7 @@
     ],
     "verification": "选区工具栏定位测试与三端回归进行中。",
     "verificationResult": "NOT_VERIFIED",
-    "updated": "2026-10-18",
+    "updated": "2026-10-26",
     "lastVerified": "2026-10-18",
     "nextAction": "完成CI回归测试后合并入main并发布2.1.41正式包。",
     "requirementRefs": [
@@ -112,8 +310,8 @@
     "dependencies": [],
     "owner": "root-image-recovery",
     "ownerRole": "researcher",
-    "branch": "feat/TASK-CHATGPT-IMAGE-POC-20261018-archive",
-    "worktree": "C:/Users/Administrator/Documents/Codex/KKAI-Chat-Image-Recovery-20261018",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src-tauri/src/chatgpt_webview.rs",
       "src-tauri/src/chatgpt_history_dom.js",
@@ -122,8 +320,8 @@
       "docs/changes/2026-10-18-chatgpt-image-archive",
       "docs/governance"
     ],
-    "status": "IN_PROGRESS",
-    "displayStatus": "进行中",
+    "status": "OBSOLETE",
+    "displayStatus": "已完成",
     "priority": "P2",
     "priorityRationale": "用户探索订阅通道生图与未归档原件恢复。",
     "evidence": [
@@ -132,9 +330,9 @@
     ],
     "verification": "已完成 DOM 脚本提取校验与 Native 隔离验证，正由外部会话执行只读原图恢复。",
     "verificationResult": "NOT_VERIFIED",
-    "updated": "2026-10-18",
+    "updated": "2026-10-26",
     "lastVerified": "2026-10-18",
-    "nextAction": "外部恢复会话完成后归档或合并入主线。",
+    "nextAction": "已按2026-10-26架构整顿决定淘汰订阅网页爬虫生图POC（差异补丁已归档至output/branch-archive-20261026），统一走标准API/MCP/受控Browser通道。",
     "requirementRefs": [
       "docs/changes/2026-10-18-chatgpt-image-archive/intent.md"
     ],
@@ -158,8 +356,8 @@
     ],
     "owner": "root",
     "ownerRole": "implementer",
-    "branch": "docs/TASK-MOBILE-12AI-001-production-receipt",
-    "worktree": "D:/kk-studio/.worktrees/TASK-MOBILE-12AI-001",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "mobile",
       "config/platform-versions.json",
@@ -209,8 +407,8 @@
     ],
     "owner": "root",
     "ownerRole": "implementer",
-    "branch": "docs/TASK-WEB-RELEASE-20261017-production-receipt",
-    "worktree": "D:/kk-studio/.worktrees/TASK-WEB-RELEASE-20261017",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "deploy",
       ".github/workflows/web-release.yml",
@@ -284,8 +482,8 @@
     "dependencies": [],
     "owner": "root",
     "ownerRole": "implementer",
-    "branch": "fix/TASK-AUDIT-REPAIR-20261017",
-    "worktree": "D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/App.tsx",
       "src/features/agent",
@@ -541,8 +739,8 @@
       "受控ENOENT/ETIMEDOUT仍真实失败且可区分，正常及no fallback断言保持",
       "本地完整检查和精确source独立审查，当前Hosted/merge/main另凭回执"
     ],
-    "branch": "test/TASK-IMAGE-RETRY-004-current-attempt",
-    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-IMAGE-RETRY-004",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "status": "DONE",
     "verification": "source105已独立源码PASS，入口12/12且实际ENOENT/ETIMEDOUT故障仍失败并分类；原断言和10s限制保持。完整verify出口0但9 flaky原件保留；默认1423补充447/447零重试通过。旧Hosted原因UNKNOWN继续Recovery003；最终docs/当前Hosted/主线另验。",
     "verificationResult": "PASS",
@@ -611,8 +809,8 @@
       "TASK-IMAGE-EDIT-001"
     ],
     "owner": "root",
-    "branch": "test/TASK-IMAGE-RETRY-004-current-attempt",
-    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-IMAGE-RETRY-004",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "tests/browser/image-edit.spec.ts",
       "docs"
@@ -651,8 +849,8 @@
       "TASK-PLUGIN-DEV-001"
     ],
     "owner": "root",
-    "branch": "fix/TASK-PLUGIN-DEV-001-same-origin-modules",
-    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-PLUGIN-DEV-001",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/features/creation/useCreationStorage.ts",
       "src/features/creation/nativeClose.ts",
@@ -697,8 +895,8 @@
       "TASK-PLUGIN-DEV-001"
     ],
     "owner": "root",
-    "branch": "fix/TASK-PLUGIN-DEV-001-same-origin-modules",
-    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-PLUGIN-DEV-001",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "vendor/canvas-plugins/markdown",
       "vendor/canvas-plugins/package-lock.json",
@@ -744,8 +942,8 @@
       "TASK-PLUGIN-DEV-001"
     ],
     "owner": "root",
-    "branch": "fix/TASK-PLUGIN-DEV-001-same-origin-modules",
-    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-PLUGIN-DEV-001",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/features/creation/model.ts",
       "src/features/creation/snapshotCodec.ts",
@@ -792,8 +990,8 @@
       "TASK-MODEL-001"
     ],
     "owner": "root",
-    "branch": "codex/TASK-IMAGE-EDIT-001-unified-mask",
-    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-IMAGE-EDIT-001",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/features/image-edit",
       "src/features/creation",
@@ -889,8 +1087,8 @@
     ],
     "dependencies": [],
     "owner": "root",
-    "branch": "fix/TASK-UI-013-single-row-titlebar",
-    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-UI-013-single-row-titlebar",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/components/TopBar.tsx",
       "src/components/WindowControls.tsx",
@@ -935,8 +1133,8 @@
     ],
     "dependencies": [],
     "owner": "root",
-    "branch": "codex/TASK-LAUNCH-001-quiet-start",
-    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-LAUNCH-001",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "scripts/windows",
       "start-kk-studio.bat",
@@ -979,8 +1177,8 @@
     ],
     "dependencies": [],
     "owner": "root",
-    "branch": "codex/TASK-MODEL-001-capabilities",
-    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-MODEL-001-capabilities",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/domain",
       "src/features/models",
@@ -1027,8 +1225,8 @@
     ],
     "dependencies": [],
     "owner": "root",
-    "branch": "fix/TASK-PLUGIN-DEV-001-same-origin-modules",
-    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-PLUGIN-DEV-001",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/features/plugins/pluginLoader.ts",
       "vite.config.ts",
@@ -1071,8 +1269,8 @@
     ],
     "dependencies": [],
     "owner": "root",
-    "branch": "main",
-    "worktree": "D:/kk-studio-next/.worktrees/TASK-INTEGRATION-001",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "Git",
       "package.json",
@@ -1114,8 +1312,8 @@
       "T0"
     ],
     "owner": "root",
-    "branch": "chore/TASK-GOV-001-engineering-baseline",
-    "worktree": "D:/kk-studio-next/.worktrees/TASK-GOV-001",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "AGENTS.md",
       "docs/governance",
@@ -1160,8 +1358,8 @@
       "TASK-GOV-001"
     ],
     "owner": "root",
-    "branch": "main",
-    "worktree": "D:/kk-studio-next/.worktrees/TASK-INTEGRATION-001",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/domain/providerConnections.ts",
       "src/features/creation/generationQueue.ts",
@@ -1333,8 +1531,8 @@
       "T3a"
     ],
     "owner": "root",
-    "branch": "main",
-    "worktree": "D:/kk-studio-next/.worktrees/TASK-INTEGRATION-001",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/features/projects",
       "src-tauri",
@@ -1385,8 +1583,8 @@
       "TASK-PROV-001"
     ],
     "owner": "root",
-    "branch": "main",
-    "worktree": "D:/kk-studio-next/.worktrees/TASK-INTEGRATION-001",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/App.tsx",
       "src/features/creation",
@@ -1432,8 +1630,8 @@
       "T4"
     ],
     "owner": "root",
-    "branch": "codex/T5-native-lifecycle",
-    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/T5-native-lifecycle",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/features/generation-server",
       "src-tauri",
@@ -1971,8 +2169,8 @@
       "UI-001"
     ],
     "owner": "root",
-    "branch": "codex/TASK-UI-MAIN-001-alignment",
-    "worktree": "D:/kk-studio-next/.worktrees/TASK-UI-MAIN-001",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/components/StartComposer.tsx",
       "src/styles",
@@ -2223,8 +2421,8 @@
       "TASK-GOV-001"
     ],
     "owner": "root",
-    "branch": "main",
-    "worktree": "D:/kk-studio-next/.worktrees/TASK-INTEGRATION-001",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "tests/browser/provider-scheduling.spec.ts"
     ],
@@ -2275,8 +2473,8 @@
       "docs/changes/2026-09-20-gpt-6-astra/branch-rules-audit.md"
     ],
     "verificationResult": "PASS",
-    "branch": "codex/TASK-KK2-main-integration",
-    "worktree": "C:/Users/Administrator/.codex/worktrees/task-astra-001/kk-studio-next",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "verification": "迁移计划、规则审计、目录清理、本地验证和目标仓库 PR 同步均完成；Astra 应用功能本身仍按计划待实施。",
     "updated": "2026-09-20",
     "requirementRefs": [
@@ -2309,8 +2507,8 @@
       "TASK-GOV-001"
     ],
     "owner": "root",
-    "branch": "chore/TASK-KK2-MAIN-SYNC",
-    "worktree": "D:/kk-studio-next/.worktrees/TASK-KK2-MAIN-SYNC",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "Git hosting",
       "repository tree",
@@ -2352,8 +2550,8 @@
       "TASK-GOV-001"
     ],
     "owner": "root",
-    "branch": "codex/TASK-UI-MAIN-001-alignment",
-    "worktree": "D:/kk-studio-next/.worktrees/TASK-UI-MAIN-001",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/components/useDismissible.ts",
       "src/components/Modal.tsx",
@@ -2398,8 +2596,8 @@
       "TASK-KK2-MAIN-SYNC"
     ],
     "owner": "root",
-    "branch": "codex/TASK-UI-MAIN-001-alignment",
-    "worktree": "D:/kk-studio-next/.worktrees/TASK-UI-MAIN-001",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/components",
       "src/styles",
@@ -2441,8 +2639,8 @@
       "TASK-UI-MAIN-001"
     ],
     "owner": "root",
-    "branch": "codex/TASK-UI-MAIN-001-followup",
-    "worktree": "D:/kk-studio-next/.worktrees/TASK-UI-MAIN-001",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/components/Sidebar.tsx",
       "tests/browser/menu-boundaries.spec.ts",
@@ -2476,8 +2674,8 @@
     "id": "TASK-MAIN-CLOSE-002",
     "title": "未完成子任务汇总验收与主线同步",
     "scope": "review, regression stability, governance reconciliation, main parity",
-    "branch": "codex/TASK-MAIN-CLOSE-002",
-    "worktree": "C:/Users/Administrator/.codex/worktrees/task-main-close-002/kk-studio-next",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "owner": "root",
     "affectedModules": [
       "tests/browser",
@@ -2520,8 +2718,8 @@
     "id": "TASK-UI-CLOSE-003",
     "title": "现行Figma页面缺口复核与交互收口",
     "scope": "current Figma source, page interaction and visual evidence",
-    "branch": "codex/TASK-UI-CLOSE-003-figma",
-    "worktree": "C:/Users/Administrator/.codex/worktrees/task-ui-close-003/kk-studio-next",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "owner": "finish_figma_pages",
     "affectedModules": [
       "src/components",
@@ -2563,8 +2761,8 @@
     "id": "TASK-PERF-ASSETS-001",
     "title": "素材列表元数据和原件按需读取",
     "scope": "asset listing, paging, previews and original preservation",
-    "branch": "codex/TASK-PERF-ASSETS-001",
-    "worktree": "C:/Users/Administrator/.codex/worktrees/task-perf-assets-001/kk-studio-next",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "owner": "finish_asset_performance",
     "affectedModules": [
       "src/features/creation",
@@ -2622,8 +2820,8 @@
       "TASK-KK2-MAIN-SYNC"
     ],
     "owner": "root",
-    "branch": "codex/TASK-GOV-002-closeout",
-    "worktree": "D:/kk-studio-next/.worktrees/TASK-GOV-002-CLOSEOUT",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "docs",
       "scripts/governance",
@@ -2672,8 +2870,8 @@
       "TASK-GOV-001"
     ],
     "owner": "root",
-    "branch": "fix/TASK-AUDIT-SEC-001-boundaries",
-    "worktree": "D:/kk-studio-next/.worktrees/TASK-AUDIT-SEC-001",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/App.tsx",
       "src/domain/modelProvider.ts",
@@ -2927,8 +3125,8 @@
     ],
     "dependencies": [],
     "owner": "root",
-    "branch": "codex/TASK-AUDIT-20261003",
-    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/features/mcp/mcpClient.ts",
       "src/components/settings/McpSettings.tsx",
@@ -2972,8 +3170,8 @@
     ],
     "dependencies": [],
     "owner": "root",
-    "branch": "codex/TASK-AUDIT-20261003",
-    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/features/mcp/mcpClient.ts",
       "src/components/settings/McpSettings.tsx",
@@ -3458,8 +3656,8 @@
     ],
     "dependencies": [],
     "owner": "root",
-    "branch": "fix/TASK-DS-001-alignment",
-    "worktree": "C:/Users/Administrator/.codex/worktrees/design-system-alignment/KK-Studio-2.0",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/styles",
       "src/domain/settings.ts",
@@ -3508,8 +3706,8 @@
       "TASK-DS-001"
     ],
     "owner": "root",
-    "branch": "fix/TASK-DS-002-pages",
-    "worktree": "C:/Users/Administrator/.codex/worktrees/design-system-pages/KK-Studio-2.0",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/styles/catalog-pages.css",
       "src/styles/ui-tokens.css",
@@ -3559,8 +3757,8 @@
       "TASK-DS-002"
     ],
     "owner": "root",
-    "branch": "fix/TASK-UI-005-feature-parity",
-    "worktree": "C:/Users/Administrator/.codex/worktrees/ui-feature-parity/KK-Studio-2.0",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/components",
       "src/features/agent",
@@ -3614,8 +3812,8 @@
       "TASK-UI-005"
     ],
     "owner": "root",
-    "branch": "fix/TASK-UI-006-interactions",
-    "worktree": "C:/Users/Administrator/.codex/worktrees/ui-interactions/KK-Studio-2.0",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/components",
       "src/styles",
@@ -3808,8 +4006,8 @@
       "TASK-AGENT-001"
     ],
     "owner": "root",
-    "branch": "fix/TASK-UI-007-responsive",
-    "worktree": "C:/Users/Administrator/.codex/worktrees/ui-responsive/KK-Studio-2.0",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/components",
       "src/styles",
@@ -3854,8 +4052,8 @@
       "TASK-AGENT-002"
     ],
     "owner": "root",
-    "branch": "fix/TASK-UI-008-inputs",
-    "worktree": "C:/Users/Administrator/.codex/worktrees/ui-input-contract/KK-Studio-2.0",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/components",
       "src/styles",
@@ -3900,8 +4098,8 @@
       "TASK-AGENT-002"
     ],
     "owner": "root",
-    "branch": "feat/TASK-AGENT-003-attachments",
-    "worktree": "C:/Users/Administrator/.codex/worktrees/agent-attachments/KK-Studio-2.0",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/features/agent",
       "src/components",
@@ -3942,8 +4140,8 @@
     ],
     "dependencies": [],
     "owner": "root",
-    "branch": "docs/PLUGIN-DESKTOP-001-closeout",
-    "worktree": "D:/kk-studio/.worktrees/platform-versioning",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/features/plugins",
       "src-tauri/tauri.conf.json",
@@ -4056,8 +4254,8 @@
       "REL-2.1.0"
     ],
     "owner": "root",
-    "branch": "docs/TASK-RULES-004-closeout",
-    "worktree": "D:/kk-studio/.worktrees/TASK-RULES-004-closeout",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "AGENTS.md",
       "README.md",
@@ -4166,8 +4364,8 @@
       "TASK-AGENT-001"
     ],
     "owner": "root",
-    "branch": "feat/TASK-ORCH-001-agent-orchestration-closure",
-    "worktree": "D:/kk-studio/.worktrees/TASK-ORCH-001",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/domain/stagePlan.ts",
       "src/features/agent/orchestrator.ts",
@@ -4218,8 +4416,8 @@
       "TASK-ORCH-001"
     ],
     "owner": "root",
-    "branch": "codex/TASK-ORCH-002-stage-workbench",
-    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-ORCH-002-stage-workbench",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/components/TaskWorkbench.tsx",
       "src/components/TaskWorkbenchContent.tsx",
@@ -4466,8 +4664,8 @@
     ],
     "dependencies": [],
     "owner": "root",
-    "branch": "feat/TASK-PROV-002-provider-connectivity",
-    "worktree": "D:/kk-studio/.worktrees/TASK-PROV-002-provider-connectivity",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/features/providers",
       "src/features/models",
@@ -4516,8 +4714,8 @@
     ],
     "dependencies": [],
     "owner": "root",
-    "branch": "codex/TASK-COMPARE-001-canvas-compare",
-    "worktree": "D:/kk-studio/.worktrees/canvas-compare",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/features/compare",
       "src/components/Canvas.tsx",
@@ -4569,8 +4767,8 @@
       "TASK-COMPARE-001"
     ],
     "owner": "root",
-    "branch": "fix/TASK-COMPARE-002-touch-target",
-    "worktree": "D:/kk-studio/.worktrees/compare-ci-fix",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/styles/canvas-compare.css",
       "tests/browser/image-compare.spec.ts",
@@ -4616,8 +4814,8 @@
     ],
     "dependencies": [],
     "owner": "root",
-    "branch": "codex/TASK-VERSION-001-platform-versions",
-    "worktree": "D:/kk-studio/.worktrees/platform-versioning",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "config/platform-versions.json",
       "scripts/platform-versions.mjs",
@@ -4734,8 +4932,8 @@
       "T10-PREP"
     ],
     "owner": "root",
-    "branch": "docs/TASK-CLOSEOUT-2026-09-28",
-    "worktree": "D:/kk-studio/.worktrees/platform-versioning",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "docs/governance",
       "docs/PROGRESS.md",
@@ -4779,8 +4977,8 @@
       "T11"
     ],
     "owner": "root",
-    "branch": "docs/TASK-POSTMERGE-FINAL-2026-09-28",
-    "worktree": "D:/kk-studio/.worktrees/platform-versioning",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "deploy/MIGRATION.md",
       "docs/PROGRESS.md",
@@ -5121,8 +5319,8 @@
       "TASK-AGENT-003"
     ],
     "owner": "root",
-    "branch": "fix/TASK-UI-010-ui-regression",
-    "worktree": "D:/kk-studio/.worktrees/TASK-UI-010-ui-regression",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/components",
       "src/styles",
@@ -5357,8 +5555,8 @@
       "TASK-AGENT-003"
     ],
     "owner": "root",
-    "branch": "feat/TASK-AGENT-004-google-closeout",
-    "worktree": "C:/Users/Administrator/.codex/worktrees/google-closeout/KK-Studio-2.0",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/features/agent",
       "src/components",
@@ -5403,8 +5601,8 @@
       "TASK-AGENT-004"
     ],
     "owner": "root",
-    "branch": "feat/TASK-AGENT-004-google-closeout",
-    "worktree": "C:/Users/Administrator/.codex/worktrees/google-closeout/KK-Studio-2.0",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/features/agent",
       "src/components",
@@ -5582,8 +5780,8 @@
       "TASK-AGENT-001"
     ],
     "owner": "root",
-    "branch": "feat/TASK-AGENT-007-codebuddy-cli",
-    "worktree": "D:/kk-studio/.worktrees/TASK-AGENT-007-codebuddy-cli",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "vendor/canvas-agent/src/agent/codebuddy.ts",
       "vendor/canvas-agent/src/server/http.ts",
@@ -5629,8 +5827,8 @@
     ],
     "dependencies": [],
     "owner": "root",
-    "branch": "codex/T7-desktop-installer",
-    "worktree": "D:/kk-studio/.worktrees/T7-desktop-installer",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src-tauri/tauri.installer.conf.json",
       "scripts/windows/installer-receipt.mjs",
@@ -5680,8 +5878,8 @@
       "TASK-AGENT-001"
     ],
     "owner": "root",
-    "branch": "codex/TASK-AGENT-008-image-transport",
-    "worktree": "D:/kk-studio/.worktrees/TASK-AGENT-008-image-transport",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "vendor/canvas-agent/src/agent/codex-client.ts",
       "vendor/canvas-agent/src/agent/codex-client.test.ts",
@@ -5728,8 +5926,8 @@
       "TASK-ORCH-001"
     ],
     "owner": "root",
-    "branch": "codex/TASK-AUDIT-20261003",
-    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/features/agent/orchestrator.ts",
       "tests/unit/orchestrator.test.ts"
@@ -5776,8 +5974,8 @@
       "TASK-ORCH-REPLAN-001"
     ],
     "owner": "root",
-    "branch": "codex/TASK-AUDIT-20261003",
-    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "docs/governance",
       "docs/features",
@@ -5833,8 +6031,8 @@
       "TASK-AUDIT-20261003"
     ],
     "owner": "root",
-    "branch": "codex/TASK-AUDIT-20261003",
-    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "docs/governance",
       "scripts/check-project-goals.mjs",
@@ -5878,8 +6076,8 @@
       "TASK-GOV-GOALS-001"
     ],
     "owner": "root",
-    "branch": "codex/TASK-AUDIT-20261003",
-    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/components/settings/McpSettings.tsx",
       "src/components/settings/McpServerForm.tsx",
@@ -5927,8 +6125,8 @@
       "TASK-UI-GOV-003"
     ],
     "owner": "root",
-    "branch": "codex/TASK-UI-011-image-selection-actions",
-    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-UI-011-image-selection-actions",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/components/nodes",
       "src/components/canvas",
@@ -5984,8 +6182,8 @@
       "T5"
     ],
     "owner": "root",
-    "branch": "fix/TASK-PROV-005-provider-durable-config",
-    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-PROV-005",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "status": "DONE",
     "evidence": [
       "docs/changes/2026-10-09-provider-durable-config/intent.md",
@@ -6034,8 +6232,8 @@
       "T5"
     ],
     "owner": "root",
-    "branch": "fix/TASK-PROV-006-provider-gates",
-    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-PROV-006",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "status": "DONE",
     "evidence": [
       "docs/changes/2026-10-09-provider-gates/intent.md",
@@ -6085,8 +6283,8 @@
       "T5"
     ],
     "owner": "root",
-    "branch": "fix/TASK-PROV-007-capacity-errors",
-    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-PROV-007",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "status": "DONE",
     "evidence": [
       "docs/changes/2026-10-09-capacity-errors/intent.md",
@@ -7043,8 +7241,8 @@
       "TASK-AGENT-RECOVERY-20261013"
     ],
     "owner": "root",
-    "branch": "fix/TASK-CCSWITCH-LEARN-20261014-status-recovery",
-    "worktree": "D:/kk-studio/.worktrees/TASK-CCSWITCH-LEARN-20261014",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/components/settings",
       "src-tauri/src/provider_transaction_tests.rs",
@@ -7207,8 +7405,8 @@
     ],
     "dependencies": [],
     "owner": "root",
-    "branch": "codex/TASK-AGENT-UX-20261014-execution-delivery",
-    "worktree": "D:/kk-studio/.worktrees/TASK-AGENT-UX-20261014-execution-delivery",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/features/agent",
       "src/components/AgentConversationMessages.tsx",
@@ -7260,8 +7458,8 @@
     ],
     "owner": "root",
     "ownerRole": "repository-maintainer",
-    "branch": "codex/TASK-PROTOCOL-CLI-20261014",
-    "worktree": "D:/kk-studio/.worktrees/branch-consolidation-20261011",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/styles",
       "src/components",
@@ -7323,8 +7521,8 @@
     ],
     "owner": "root",
     "ownerRole": "repository-maintainer",
-    "branch": "codex/TASK-222-ACTIONS-20261014",
-    "worktree": "D:/kk-studio/.worktrees/branch-consolidation-20261011",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "vendor/canvas-agent",
       "scripts/gemini-bridge.mjs",
@@ -7393,8 +7591,8 @@
     ],
     "owner": "root",
     "ownerRole": "repository-maintainer",
-    "branch": "codex/TASK-223-ACTIONS-20261014",
-    "worktree": "D:/kk-studio/.worktrees/branch-consolidation-20261011",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "vendor/canvas-agent",
       "src/features/local-service",
@@ -7463,8 +7661,8 @@
     ],
     "owner": "root",
     "ownerRole": "repository-maintainer",
-    "branch": "fix/TASK-SETTINGS-LATEST-20261015",
-    "worktree": "D:/kk-studio/.worktrees/branch-consolidation-20261011",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/components/settings",
       "src/features/creation",
@@ -7521,8 +7719,8 @@
       "TASK-SETTINGS-LATEST-20261015"
     ],
     "owner": "root",
-    "branch": "fix/TASK-UI-DETAILS-20261015",
-    "worktree": "D:/kk-studio/.worktrees/branch-consolidation-20261011",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/components",
       "src/styles",
@@ -7569,8 +7767,8 @@
       "TASK-UI-DETAILS-20261015"
     ],
     "owner": "root",
-    "branch": "fix/TASK-UI-FULL-20261015",
-    "worktree": "D:/kk-studio/.worktrees/branch-consolidation-20261011",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/components",
       "src/styles",
@@ -9635,8 +9833,8 @@
     ],
     "owner": "root",
     "ownerRole": "repository-maintainer",
-    "branch": "fix/TASK-EXPLORER-GDI-20261015-main",
-    "worktree": "D:/kk-studio/.worktrees/TASK-GOV-PHASE0",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "baseSha": "3a9925977792a7f948eceda9f54d46fbf6f8b294",
     "affectedModules": [
       "scripts/testing/headless-edge-options.mjs",
@@ -9834,8 +10032,8 @@
     "dependencies": [],
     "owner": "issue68-specialist",
     "ownerRole": "implementation-integrator",
-    "branch": "docs/TASK-ISSUE-68-main-closeout",
-    "worktree": "C:/Users/Administrator/Documents/Codex/2026-10-18/task/issue68-closeout",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "baseSha": "6b933f4ffd80cdd5ca2d3508678a4562fc2b02d8",
     "affectedModules": [
       "tests/desktop/taskhost-lifecycle.mjs",

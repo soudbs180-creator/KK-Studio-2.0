@@ -65,6 +65,9 @@
       "tests/unit/canvasGraph.test.ts",
       "tests/unit/projectCanvas.test.ts",
       "tests/unit/canvasHistory.test.ts",
+      "tests/unit/canvasHistoryPreview.test.ts",
+      "tests/unit/canvasPersistencePerformance.test.ts",
+      "tests/browser/canvas-rendering-performance.spec.ts",
       "tests/unit/canvasPreferences.test.ts",
       "tests/browser/ui-interactions.spec.ts",
       "tests/browser/ui-interaction-matrix.spec.ts",
@@ -83,9 +86,10 @@
       "TASK-CANVAS-WIDE-PORT-20261014",
       "TASK-222-ACTIONS-20261014",
       "TASK-223-ACTIONS-20261014",
-      "TASK-CODEX-HOME-20261015"
+      "TASK-CODEX-HOME-20261015",
+      "TASK-CANVAS-PERF-20261024"
     ],
-    "updated": "2026-10-15",
+    "updated": "2026-10-24",
     "platforms": ["web", "desktop"],
     "runtimeEvidence": [
       {
@@ -448,6 +452,17 @@
       "scripts/agent/desktop-entry.mjs",
       "scripts/agent/runtime-package.mjs",
       "src/components/AgentComposer.tsx",
+      "src/components/settings/BrowserBackendSettings.tsx",
+      "src/features/browser/browserTypes.ts",
+      "src/features/browser/browserProviders.ts",
+      "src/features/browser/browserBackend.ts",
+      "src/features/browser/browserPreferences.ts",
+      "src/features/browser/index.ts",
+      "src/integrations/browser/browserRuntime.ts",
+      "src/integrations/browser/egoLiteRuntime.ts",
+      "src/integrations/browser/index.ts",
+      "src-tauri/src/ego_browser.rs",
+      "src-tauri/src/browser_runtime.rs",
       "src/features/agent/agentAttachments.ts",
       "src/features/agent/googleInteractions.ts",
       "src/features/agent/googleAgentConnection.ts",
@@ -498,7 +513,9 @@
       "tests/unit/agentOwnershipRecovery.test.ts",
       "tests/unit/desktopAgentLifecycle.test.ts",
       "tests/browser/agent-connection-recovery.spec.ts",
-      "tests/desktop/agent-startup-recovery.mjs"
+      "tests/desktop/agent-startup-recovery.mjs",
+      "tests/unit/browserBackend.test.ts",
+      "tests/unit/browserPreferences.test.ts"
     ],
     "tasks": [
       "T4",
@@ -519,7 +536,7 @@
       "TASK-AUDIT-REPAIR-20261017",
       "TASK-CHAT-MIGRATION-20261017"
     ],
-    "updated": "2026-10-17",
+    "updated": "2026-10-24",
     "platforms": ["web", "desktop"],
     "runtimeEvidence": [
       {

@@ -1,23 +1,30 @@
 # KK Studio Design System
 
-> 本系统权威标准规范已全面对齐 **[Google Stitch DESIGN.md Specification](https://stitch.withgoogle.com/docs/design-md/specification)**，完整规范见 [**`DESIGN.md`**](../DESIGN.md)。所有后续页面、卡片、组件、断点与自适应规则均严格以此为唯一真实源。
+> 设计真值来自当前 Figma Design System；本文件按其 Color Palette、Elevation & Depth、Icons & Components 章节派生，当前来源与同步流程见 [UI_INDEX](UI_INDEX.md)。设计文档更新不表示运行时已全面迁移。
 
-设计裁决由 [UI_INDEX](UI_INDEX.md) 路由；本文件作为导读，完整规约以 [DESIGN.md](../DESIGN.md) 为准。
+设计裁决由 [UI_INDEX](UI_INDEX.md) 路由；[DESIGN.md](../DESIGN.md) 是派生概览与运行时投影。Google DESIGN.md 只约束交换格式，不定义本项目的颜色、组件和布局。
 
 全局概览与机器生成 token 索引见根 [DESIGN.md](../DESIGN.md)。Mobbin/getdesign 仅提供独立分析参考，不覆盖当前暗色/绿色语义；主题、组件、运行验收仍由本索引的专项文件承载。
 
-## 颜色与主题
+## 01 · 色彩调色板 / Color Palette
 
-语义颜色的唯一数值源是 [tokens.css](../src/styles/tokens.css)。[global.css](../src/styles/global.css) 与 [ui-tokens.css](../src/styles/ui-tokens.css) 承接主题状态和旧名称映射，页面不建立第二套调色板。
+语义颜色从 Figma 变量/样式映射到唯一运行时注册处 [tokens.css](../src/styles/tokens.css)。[global.css](../src/styles/global.css) 与 [ui-tokens.css](../src/styles/ui-tokens.css) 承接主题状态和旧名称映射，页面不建立第二套调色板。
 
 Dark / Light 使用根节点 data-theme；data-accent 与原有偏好身份保持。default 的语义改为绿色，已显式选择的其他颜色保留。普通主要动作在深色主题使用浅色中性表面、浅色主题使用深色中性表面；Primary 是层级而非强调色同义词。状态色同时提供文字/图标，浅色与深色下均核验文字对比。
 
-## 基础组件
+`546:21` 定义默认绿色、蓝、黄、粉、橙、紫、白七组实际配色，默认与绿色同值；焦点随强调色切换，与选中状态分开。错误文字消费 `on-error`，危险填充消费 `error`；普通信息保持中性，不自行定义固定蓝色信息态。主题色和强调色设置独立，错误/警告/成功不随强调色改义。
+
+## 05 · 层级与深度 / Elevation & Depth
+
+`546:184` 按 Flat → Outlined → Floating → Modal 分层：普通内容无额外阴影；分隔描边 1px；菜单阴影 x/y/blur 为 0/8/24、Black 16%；模态为 0/16/48、Black 24%，遮罩示意为 background 72%。页面内容低于非模态浮层，非模态浮层低于遮罩和模态。复用现有层级角色，并验证焦点边界和关闭回焦。
+
+## 06 · 图标与控件 / Icons & Components
 
 - Primary / Secondary / Tertiary / Danger 共用语义尺寸、间距和状态。文字动作使用胶囊、按内容扩展；常规文字完整显示，超出容器上限才省略并保留完整名称。可见文字和图标整体居中。
 - 上传与 IconButton 采用方形圆角命中区；上传是可执行的文件选择动作，加载/失败有反馈。
-- 输入过程去掉明显外圈/发光；键盘 focus-visible 保留弱中性提示。IME、增长高度、语音和附件行为继续复用 [ComposerTextarea](../src/components/ComposerTextarea.tsx)。
+- 输入过程保持克制；键盘 focus-visible 按当前 Figma 焦点角色可见，与选中态分开。IME、增长高度、语音和附件行为继续复用 [ComposerTextarea](../src/components/ComposerTextarea.tsx)。
 - 图标复用 [UiIcon](../src/components/UiIcon.tsx) 或原有 Figma 资产，图形与命中区分开。
+- 字阶、图标/字重配对及尺寸目标见 [DESIGN_TOKENS](DESIGN_TOKENS.md#figma-目标与本地映射)。标准图文按钮为高40、字号16/500、行高24、图标16、描边1.25、gap8、水平padding16；紧凑与触控命中区分别按目标变体核对。
 - 生成入口共用 [uiGovernance](../src/domain/uiGovernance.ts) 的可用性谓词；未配置、离线或无效输入有真实原因。
 - 模型选择按 [当前批准规格](changes/2026-10-15-kk-unified/spec.md) 固定为渠道、搜索筛选、模型三排，不增加供应商下钻；参数随实际执行模型和操作能力显示，推荐默认值，各模型草稿切换保留。生成数量与数据模式仍属于各生成操作，不据此宣称对应实现已完成。
 - 设置按分组导航、列表与详情的密度选择二栏或三栏。窄屏保留完整内容，原生 Mobile 的布局与触控验收独立。
