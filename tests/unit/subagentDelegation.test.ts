@@ -12,9 +12,7 @@ import {
   SubagentSandbox,
   type SubagentToolDefinition,
 } from "../../src/features/agent/delegation/subagentSandbox.ts";
-import {
-  DelegationPipeline,
-} from "../../src/features/agent/delegation/delegationPipeline.ts";
+import { DelegationPipeline } from "../../src/features/agent/delegation/delegationPipeline.ts";
 
 test("truncateExecutiveSummary preserves short text and truncates text exceeding word limit", () => {
   const shortText = "Scraped 3 news articles and extracted key headlines.";
@@ -44,13 +42,19 @@ test("truncateExecutiveSummary clamps unspaced 50,000-character payload to preve
   const unspacedPayload = "A".repeat(50000);
 
   // 1. Enforced with explicit maxChars (1500)
-  const truncatedExplicit = truncateExecutiveSummary(unspacedPayload, 300, 1500);
+  const truncatedExplicit = truncateExecutiveSummary(
+    unspacedPayload,
+    300,
+    1500,
+  );
   assert.ok(
     truncatedExplicit.length <= 1600,
     `Expected length <= 1600, got ${truncatedExplicit.length}`,
   );
   assert.equal(truncatedExplicit.slice(0, 1500), "A".repeat(1500));
-  assert.ok(truncatedExplicit.includes("[summary truncated for context safety]"));
+  assert.ok(
+    truncatedExplicit.includes("[summary truncated for context safety]"),
+  );
 
   // 2. Enforced with default parameters (maxWords = 300, maxChars = 1500)
   const truncatedDefault = truncateExecutiveSummary(unspacedPayload);
@@ -59,10 +63,14 @@ test("truncateExecutiveSummary clamps unspaced 50,000-character payload to preve
     `Expected default length <= 1600, got ${truncatedDefault.length}`,
   );
   assert.equal(truncatedDefault.slice(0, 1500), "A".repeat(1500));
-  assert.ok(truncatedDefault.includes("[summary truncated for context safety]"));
+  assert.ok(
+    truncatedDefault.includes("[summary truncated for context safety]"),
+  );
 
   // 3. Unspaced base64 payload (> 50,000 chars)
-  const base64Data = Buffer.from("subagent_unspaced_raw_token_data".repeat(2000)).toString("base64");
+  const base64Data = Buffer.from(
+    "subagent_unspaced_raw_token_data".repeat(2000),
+  ).toString("base64");
   assert.ok(base64Data.length > 50000);
   const truncatedBase64 = truncateExecutiveSummary(base64Data);
   assert.ok(truncatedBase64.length <= 1600);
@@ -78,7 +86,11 @@ test("truncateExecutiveSummary clamps unspaced 50,000-character payload to preve
   });
   assert.ok(foldback.executiveSummary.length <= 1600);
   assert.equal(foldback.executiveSummary.slice(0, 1500), "A".repeat(1500));
-  assert.ok(foldback.executiveSummary.includes("[summary truncated for context safety]"));
+  assert.ok(
+    foldback.executiveSummary.includes(
+      "[summary truncated for context safety]",
+    ),
+  );
 });
 
 test("isSubagentFoldbackResult validates result schema accurately", () => {
@@ -101,12 +113,27 @@ test("isSubagentFoldbackResult validates result schema accurately", () => {
   // Invalid cases
   assert.equal(isSubagentFoldbackResult(null), false);
   assert.equal(isSubagentFoldbackResult({}), false);
-  assert.equal(isSubagentFoldbackResult({ ...valid, status: "unknown" }), false);
+  assert.equal(
+    isSubagentFoldbackResult({ ...valid, status: "unknown" }),
+    false,
+  );
   assert.equal(isSubagentFoldbackResult({ ...valid, taskId: "" }), false);
-  assert.equal(isSubagentFoldbackResult({ ...valid, executiveSummary: 123 }), false);
-  assert.equal(isSubagentFoldbackResult({ ...valid, structuredData: "not-an-object" }), false);
-  assert.equal(isSubagentFoldbackResult({ ...valid, artifactRefs: "not-an-array" }), false);
-  assert.equal(isSubagentFoldbackResult({ ...valid, tokensConsumed: "invalid" }), false);
+  assert.equal(
+    isSubagentFoldbackResult({ ...valid, executiveSummary: 123 }),
+    false,
+  );
+  assert.equal(
+    isSubagentFoldbackResult({ ...valid, structuredData: "not-an-object" }),
+    false,
+  );
+  assert.equal(
+    isSubagentFoldbackResult({ ...valid, artifactRefs: "not-an-array" }),
+    false,
+  );
+  assert.equal(
+    isSubagentFoldbackResult({ ...valid, tokensConsumed: "invalid" }),
+    false,
+  );
 });
 
 test("createFoldbackResult normalizes and ensures summary truncation", () => {
@@ -123,7 +150,9 @@ test("createFoldbackResult normalizes and ensures summary truncation", () => {
   assert.equal(result.taskId, "task-002");
   assert.equal(result.subagentRole, "analyst");
   assert.equal(result.status, "success");
-  assert.ok(result.executiveSummary.includes("[summary truncated for context safety]"));
+  assert.ok(
+    result.executiveSummary.includes("[summary truncated for context safety]"),
+  );
   assert.deepEqual(result.artifactRefs, ["report.pdf"]);
   assert.equal(result.tokensConsumed, 500);
 });
@@ -153,7 +182,9 @@ test("SubagentSandbox maintains isolated context with zero inheritance of parent
   assert.match(sandbox.history[1].content, /https:\/\/example.com\/data/);
 
   // Ensure no random parent history exists
-  assert.ok(!sandbox.history.some((t) => t.content.includes("previous conversation")));
+  assert.ok(
+    !sandbox.history.some((t) => t.content.includes("previous conversation")),
+  );
 });
 
 test("SubagentSandbox enforces tool whitelist and rejects recursive subagent spawning", async () => {
@@ -178,17 +209,25 @@ test("SubagentSandbox enforces tool whitelist and rejects recursive subagent spa
   const sandbox = new SubagentSandbox(brief, { tools: [testTool] });
 
   // 1. Allowed tool execution succeeds
-  const res = await sandbox.executeTool("fetch_url", { url: "https://example.com" });
+  const res = await sandbox.executeTool("fetch_url", {
+    url: "https://example.com",
+  });
   assert.equal(res.error, undefined);
-  assert.deepEqual(res.output, { html: "<html><body>Hello World</body></html>" });
+  assert.deepEqual(res.output, {
+    html: "<html><body>Hello World</body></html>",
+  });
   assert.equal(executedTools.length, 1);
 
   // 2. Unregistered or unallowed tool is rejected
-  const unallowed = await sandbox.executeTool("canvas_write_node", { id: "node1" });
+  const unallowed = await sandbox.executeTool("canvas_write_node", {
+    id: "node1",
+  });
   assert.ok(unallowed.error?.includes("ToolNotAllowed"));
 
   // 3. Recursive subagent spawning is strictly prohibited
-  const recursive = await sandbox.executeTool("delegate_task", { goal: "recurse" });
+  const recursive = await sandbox.executeTool("delegate_task", {
+    goal: "recurse",
+  });
   assert.ok(recursive.error?.includes("PermissionDenied"));
 
   // 4. Registering a recursive tool directly throws security error
@@ -245,7 +284,10 @@ test("SubagentSandbox runs multi-step turns and records context anti-pollution s
   });
 
   assert.equal(result.status, "success");
-  assert.equal(result.executiveSummary, "Extracted 500 records from the target website.");
+  assert.equal(
+    result.executiveSummary,
+    "Extracted 500 records from the target website.",
+  );
   assert.deepEqual(result.artifactRefs, ["extracted_dataset.json"]);
   assert.equal(result.structuredData?.totalRecords, 500);
 
@@ -356,7 +398,9 @@ test("DelegationPipeline manages presets, dispatching, and aggregated metrics", 
     },
   ];
 
-  const batchResults = await pipeline.dispatchBatch(batchBriefs, undefined, { concurrency: 2 });
+  const batchResults = await pipeline.dispatchBatch(batchBriefs, undefined, {
+    concurrency: 2,
+  });
   assert.equal(batchResults.length, 2);
   assert.equal(batchResults[0].status, "success");
   assert.equal(batchResults[1].status, "success");

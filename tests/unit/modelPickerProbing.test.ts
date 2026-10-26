@@ -120,9 +120,14 @@ test("modelPickerProbing: probeEndpoint TTL 缓存与并发防抖", async () => 
   assert.equal(res2.providerId, "conn-test");
 
   // 缓存期内再次调用（不加 force），复用缓存
-  const cached = await probeEndpoint("conn-test", "https://api.example.com", "m1", {
-    fetcher: mockFetcher,
-  });
+  const cached = await probeEndpoint(
+    "conn-test",
+    "https://api.example.com",
+    "m1",
+    {
+      fetcher: mockFetcher,
+    },
+  );
   assert.equal(fetchCount, 1);
   assert.equal(cached.providerId, "conn-test");
 
@@ -141,9 +146,14 @@ test("modelPickerProbing: probeEndpoint 网络故障归一化为 error 状态", 
     throw new Error("Connection refused");
   }) as unknown as typeof fetch;
 
-  const res = await probeEndpoint("conn-fail", "https://invalid.local", "m-err", {
-    fetcher: failingFetcher,
-  });
+  const res = await probeEndpoint(
+    "conn-fail",
+    "https://invalid.local",
+    "m-err",
+    {
+      fetcher: failingFetcher,
+    },
+  );
 
   assert.equal(res.tier, "error");
   assert.ok(res.error?.includes("Connection refused"));
@@ -188,7 +198,9 @@ test("modelPickerProbing: recordProbe 兼容字符串形式与对象形式的 er
   assert.equal(stringErrMetric.error, "error");
 
   // 对象选项传参
-  const objErrMetric = recordProbe("conn-obj", "m-obj", 25, { error: "HTTP 500 Server Error" });
+  const objErrMetric = recordProbe("conn-obj", "m-obj", 25, {
+    error: "HTTP 500 Server Error",
+  });
   assert.equal(objErrMetric.tier, "error");
   assert.equal(getLatencyTierClass(objErrMetric.tier), "is-error");
   assert.equal(objErrMetric.error, "HTTP 500 Server Error");

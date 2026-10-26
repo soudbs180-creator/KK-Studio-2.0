@@ -73,10 +73,15 @@ export function reduceCanvasEvent(
 
     case "canvas.connection.created":
     case "canvas.edge.created": {
-      const connection = (payload.connection ?? payload.edge ?? payload) as CanvasConnection;
+      const connection = (payload.connection ??
+        payload.edge ??
+        payload) as CanvasConnection;
       return {
         ...state,
-        edges: [...state.edges.filter((e) => e.id !== connection.id), connection],
+        edges: [
+          ...state.edges.filter((e) => e.id !== connection.id),
+          connection,
+        ],
       };
     }
 
@@ -106,7 +111,8 @@ export function reduceCanvasEvent(
     }
 
     case "canvas.node.unlocked": {
-      const result = payload.result as CanvasCollectionItem["result"] | undefined;
+      const result = payload.result as
+        CanvasCollectionItem["result"] | undefined;
       return {
         ...state,
         items: state.items.map((i) =>

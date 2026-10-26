@@ -50,7 +50,8 @@ export interface SubagentTaskBrief {
 
 export const MAX_EXECUTIVE_SUMMARY_WORDS = 300;
 export const MAX_EXECUTIVE_SUMMARY_CHARS = 1500;
-export const SUMMARY_TRUNCATION_SUFFIX = " ... [summary truncated for context safety]";
+export const SUMMARY_TRUNCATION_SUFFIX =
+  " ... [summary truncated for context safety]";
 
 /**
  * Truncates an executive summary to a character and word limit to guarantee context anti-pollution.
@@ -81,7 +82,9 @@ export function truncateExecutiveSummary(
   if (words.length <= effectiveMaxWords) {
     return trimmed;
   }
-  return words.slice(0, effectiveMaxWords).join(" ") + SUMMARY_TRUNCATION_SUFFIX;
+  return (
+    words.slice(0, effectiveMaxWords).join(" ") + SUMMARY_TRUNCATION_SUFFIX
+  );
 }
 
 /**
@@ -93,7 +96,8 @@ export function isSubagentFoldbackResult(
   if (!value || typeof value !== "object") return false;
   const candidate = value as Record<string, unknown>;
   if (typeof candidate.taskId !== "string" || !candidate.taskId) return false;
-  if (typeof candidate.subagentRole !== "string" || !candidate.subagentRole) return false;
+  if (typeof candidate.subagentRole !== "string" || !candidate.subagentRole)
+    return false;
   if (
     candidate.status !== "success" &&
     candidate.status !== "partial" &&
@@ -104,7 +108,8 @@ export function isSubagentFoldbackResult(
   if (typeof candidate.executiveSummary !== "string") return false;
   if (
     candidate.structuredData !== undefined &&
-    (typeof candidate.structuredData !== "object" || candidate.structuredData === null)
+    (typeof candidate.structuredData !== "object" ||
+      candidate.structuredData === null)
   ) {
     return false;
   }
@@ -144,8 +149,12 @@ export function createFoldbackResult(params: {
     executiveSummary: truncateExecutiveSummary(params.executiveSummary),
     ...(params.structuredData ? { structuredData: params.structuredData } : {}),
     ...(params.artifactRefs ? { artifactRefs: [...params.artifactRefs] } : {}),
-    ...(params.tokensConsumed !== undefined ? { tokensConsumed: params.tokensConsumed } : {}),
-    ...(params.executionStats ? { executionStats: { ...params.executionStats } } : {}),
+    ...(params.tokensConsumed !== undefined
+      ? { tokensConsumed: params.tokensConsumed }
+      : {}),
+    ...(params.executionStats
+      ? { executionStats: { ...params.executionStats } }
+      : {}),
     ...(params.error ? { error: params.error } : {}),
   };
 }

@@ -12,7 +12,7 @@
 }
 .toolbar-icon-select {
   --toolbar-icon-source: url("/design/figma/toolbar-select.svg");
-  color: var(--text-primary);
+  color: var(--kk-control-selected-fg);
 }
 .toolbar-icon-collapse {
   --toolbar-icon-source: url("/design/figma/toolbar-collapse.svg");
@@ -29,11 +29,36 @@
 }
 .toolbar-icon-help {
   --toolbar-icon-source: url("/design/figma/toolbar-help.svg");
-  width: 21.75px;
-  height: 21.75px;
+  width: var(--kk-icon-glyph-md);
+  height: var(--kk-icon-glyph-md);
 }
 .canvas-toolbar > .toolbar-favorite[aria-pressed="true"] {
-  color: var(--ui-selected);
-  background: var(--ui-neutral-selected);
+  color: var(--kk-control-selected-fg);
+  background: var(--kk-control-selected-bg);
   border-radius: var(--ui-radius-control);
+}
+
+.toolbar-icon-add {
+  --toolbar-icon-source: url("/design/figma/toolbar-add.svg");
+}
+.toolbar-icon-arrange {
+  --toolbar-icon-source: url("/design/figma/nav-arrange.svg");
+}
+.toolbar-icon-background {
+  --toolbar-icon-source: url("/design/figma/nav-background.svg");
+}
+.toolbar-icon-dots {
+  --toolbar-icon-source: url("/design/figma/canvas-dots.svg");
+}
+.toolbar-icon-lines {
+  --toolbar-icon-source: url("/design/figma/nav-lines.svg");
+}
+.toolbar-icon-map {
+  --toolbar-icon-source: url("/design/figma/nav-map.svg");
+}
+.toolbar-icon-chevron {
+  --toolbar-icon-source: url("/design/figma/nav-chevron.svg");
+}
+.canvas .canvas-toolbar > .toolbar-add {
+  color: var(--kk-button-primary-text);
 }

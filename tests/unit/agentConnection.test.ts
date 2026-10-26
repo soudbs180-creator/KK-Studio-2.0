@@ -1,3 +1,4 @@
+// health: allow FILE_LINES -- comprehensive agent connection contract suite
 import assert from "node:assert/strict";
 import test, { type TestContext } from "node:test";
 import {

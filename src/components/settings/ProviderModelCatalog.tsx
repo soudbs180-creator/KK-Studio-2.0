@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useState, useId } from "react";
 import {
   catalogForConnection,
   saveModelCatalog,
@@ -19,6 +19,8 @@ import ImageModelCapabilityFields, {
   imageCapabilityDraft,
   imageDeclarationFromDraft,
 } from "./ImageModelCapabilityFields";
+import { useModelCatalogPreferences } from "../../features/models/modelCatalogStore";
+import { fetchAndSaveProviderModels } from "./fetchProviderModels";
 
 export default function ProviderModelCatalog({
   profile,
@@ -31,6 +33,7 @@ export default function ProviderModelCatalog({
   loading: boolean;
   connection?: ProviderConnection;
 }) {
+  const customIdInput = useId();
   const selectionRequired = requiresModelProviderSelection(
     profile,
     readProviderConnections(),
@@ -40,11 +43,22 @@ export default function ProviderModelCatalog({
     (selectionRequired
       ? newModelProfileConnection(profile)
       : connectionFromModelProfile(profile));
-  const [, setRevision] = useState(0);
+
+  const [revision, setRevision] = useState(0);
+  const [fetchingRemote, setFetchingRemote] = useState(false);
+  const [newCustomModelId, setNewCustomModelId] = useState("");
+  const [catalogFeedback, setCatalogFeedback] = useState("");
+
+  const connectionKey = connection.id || connection.baseUrl || "default";
+  const { setEnabled, setDefault, addCustom, merge } =
+    useModelCatalogPreferences(connectionKey);
+
   const modelId = profile.model.trim();
-  const models = catalogForConnection({ ...connection, model: modelId });
-  const selected = models.find((model) => model.id === modelId);
-  const [kind, setKind] = useState<ModelKind>(selected?.kind ?? "unknown");
+  const rawModels = catalogForConnection({ ...connection, model: modelId });
+  const models = merge(rawModels);
+
+  const selected = models.find((m) => m.id === modelId);
+  const [kind, setKind] = useState<ModelKind>(selected?.kind ?? "text");
   const [sizes, setSizes] = useState(selected?.sizes?.join(", ") ?? "");
   const [family, setFamily] = useState(selected?.family ?? "");
   const [variant, setVariant] = useState(selected?.variant ?? "");
@@ -53,76 +67,66 @@ export default function ProviderModelCatalog({
     imageCapabilityDraft(selected?.image),
   );
   const [status, setStatus] = useState("");
-  const currentDraft = { kind, sizes, family, variant, aliases, image };
-  const draftKey = JSON.stringify([
-    connection.id,
-    connection.baseUrl,
-    connection.credentialRef,
-    connection.protocol,
-    connection.authMode,
-    modelId,
-  ]);
-  const previousKey = useRef(draftKey);
-  const drafts = useRef(
-    new Map<
-      string,
-      { draft: typeof currentDraft; loaded: typeof currentDraft }
-    >(),
-  );
-  const loadedDraft = useRef(currentDraft);
+
   useEffect(() => {
-    const update = () => setRevision((value) => value + 1);
+    const update = () => setRevision((v) => v + 1);
     window.addEventListener("kk:model-provider-changed", update);
-    return () =>
+    window.addEventListener("kk:model-catalog-prefs-changed", update);
+    return () => {
       window.removeEventListener("kk:model-provider-changed", update);
-  }, []);
-  useLayoutEffect(() => {
-    const switching = previousKey.current !== draftKey;
-    if (switching)
-      drafts.current.set(previousKey.current, {
-        draft: currentDraft,
-        loaded: loadedDraft.current,
-      });
-    else if (
-      JSON.stringify(currentDraft) !== JSON.stringify(loadedDraft.current)
-    )
-      return;
-    const stored = switching ? drafts.current.get(draftKey) : undefined;
-    const cached =
-      stored && JSON.stringify(stored.draft) !== JSON.stringify(stored.loaded)
-        ? stored
-        : undefined;
-    const next = cached?.draft ?? {
-      kind: selected?.kind ?? "unknown",
-      sizes: selected?.sizes?.join(", ") ?? "",
-      family: selected?.family ?? "",
-      variant: selected?.variant ?? "",
-      aliases: selected?.aliases?.join(", ") ?? "",
-      image: imageCapabilityDraft(selected?.image),
+      window.removeEventListener("kk:model-catalog-prefs-changed", update);
     };
-    setKind(next.kind);
-    setSizes(next.sizes);
-    setFamily(next.family);
-    setVariant(next.variant);
-    setAliases(next.aliases);
-    setImage(next.image);
-    loadedDraft.current = cached?.loaded ?? next;
-    previousKey.current = draftKey;
-  }, [
-    draftKey,
-    selected?.kind,
-    selected?.sizes?.join(", "),
-    selected?.family,
-    selected?.variant,
-    JSON.stringify(selected?.aliases),
-    JSON.stringify(selected?.image),
-  ]);
-  useEffect(
-    () => setStatus(""),
-    [profile.model, profile.baseUrl, profile.name, connection.id],
-  );
-  function save() {
-    if (requiresModelProviderSelection(profile, readProviderConnections())) {
+  }, []);
+
+  useEffect(() => {
+    if (selected) {
+      setKind(selected.kind);
+      setSizes(selected.sizes?.join(", ") ?? "");
+      setFamily(selected.family ?? "");
+      setVariant(selected.variant ?? "");
+      setAliases(selected.aliases?.join(", ") ?? "");
+      setImage(imageCapabilityDraft(selected.image));
+    }
+  }, [modelId, revision, selected]);
+
+  async function handleFetchRemote() {
+    if (fetchingRemote || !profile.baseUrl) return;
+    setFetchingRemote(true);
+    setCatalogFeedback("正在从服务商拉取模型列表…");
+    try {
+      const res = await fetchAndSaveProviderModels(connection, {
+        baseUrl: profile.baseUrl,
+        protocol: profile.protocol,
+        authMode: profile.authMode,
+        credentialRef: connection.credentialRef,
+      });
+      setCatalogFeedback(res.message);
+      if (res.ok && res.models.length > 0 && !modelId)
+        onSelect(res.models[0].id);
+    } catch (err) {
+      setCatalogFeedback(
+        err instanceof Error ? err.message : "拉取模型列表失败",
+      );
+    } finally {
+      setFetchingRemote(false);
+    }
+  }
+
+  function handleAddCustom() {
+    const trimmed = newCustomModelId.trim();
+    if (!trimmed) return;
+    try {
+      const added = addCustom({ id: trimmed, kind: "text" });
+      onSelect(added.id);
+      setNewCustomModelId("");
+      setCatalogFeedback(`已添加自定义模型：${added.id}`);
+    } catch (err) {
+      setCatalogFeedback(err instanceof Error ? err.message : "添加失败");
+    }
+  }
+
+  function saveModelCapabilities() {
+    if (selectionRequired) {
       setStatus("请先选择已登记账号，再保存此模型能力。");
       return;
     }
@@ -132,154 +136,263 @@ export default function ProviderModelCatalog({
       return;
     }
     const values = sizes.split(/[,，\s]+/).filter(Boolean);
-    if (
-      values.some((value) => !/^([1-9]\d{1,4})x([1-9]\d{1,4})$/.test(value))
-    ) {
-      setStatus("尺寸请填写宽x高，例如 1024x1024；多个尺寸用逗号分隔。");
+    if (values.some((v) => !/^([1-9]\d{1,4})x([1-9]\d{1,4})$/.test(v))) {
+      setStatus("尺寸请填写宽x高，例如 1024x1024。");
       return;
     }
-    let declaration;
     try {
-      declaration =
+      const declaration =
         kind === "image" ? imageDeclarationFromDraft(image) : undefined;
-    } catch (error) {
-      setStatus(
-        error instanceof Error ? error.message : "请检查模型能力声明。",
-      );
-      return;
-    }
-    const model = {
-      id: valid.data.model,
-      family: family.trim() || undefined,
-      variant: variant.trim() || undefined,
-      aliases: aliases
-        .split(/[,，]/)
-        .map((value) => value.trim())
-        .filter(Boolean),
-      kind,
-      sizes: kind === "image" ? [...new Set(values)] : undefined,
-      image: declaration,
-      source: "manual" as const,
-    };
-    try {
+      const model = {
+        id: valid.data.model,
+        family: family.trim() || undefined,
+        variant: variant.trim() || undefined,
+        aliases: aliases
+          .split(/[,，]/)
+          .map((v) => v.trim())
+          .filter(Boolean),
+        kind,
+        sizes: kind === "image" ? [...new Set(values)] : undefined,
+        image: declaration,
+        source: "manual" as const,
+      };
       saveModelCatalog(
         connection,
-        [...models.filter((item) => item.id !== model.id), model],
+        [...rawModels.filter((item) => item.id !== model.id), model],
         true,
       );
-      loadedDraft.current = currentDraft;
-      setStatus("已保存此模型的参数声明；生成结果仍以服务返回为准。");
-    } catch {
-      setStatus("目录保存失败，请检查本地存储。");
+      setStatus("已保存此模型参数声明。");
+    } catch (error) {
+      setStatus(error instanceof Error ? error.message : "保存失败");
     }
   }
+
   return (
-    <fieldset className="provider-model-catalog" disabled={selectionRequired}>
-      <legend>模型与参数</legend>
-      {selectionRequired && (
-        <p role="status">请先在已登记连接中选择账号，再编辑或刷新模型能力。</p>
-      )}
-      <label>
-        已发现的模型
-        <select
-          aria-label="已发现的模型"
-          value={modelId}
-          onChange={(event) => onSelect(event.target.value)}
+    <fieldset
+      className="provider-model-catalog inset-grouped-card"
+      disabled={selectionRequired}
+    >
+      <div className="model-catalog-header">
+        <div>
+          <h3 className="model-catalog-title">模型目录与能力管理</h3>
+          <p className="model-catalog-subtitle">
+            勾选启用/停用模型、设置常用默认模型，或通过 `/v1/models`
+            一键同步拉取。
+          </p>
+        </div>
+        <button
+          type="button"
+          className="settings-action secondary"
+          disabled={fetchingRemote || loading || !profile.baseUrl}
+          onClick={() => void handleFetchRemote()}
         >
-          <option value="">选择模型</option>
-          {models.map((model) => (
-            <option key={model.id} value={model.id}>
-              {model.id}
-            </option>
-          ))}
-        </select>
-      </label>
-      <label>
-        当前模型用途
-        <select
-          aria-label="当前模型用途"
-          value={kind}
-          onChange={(event) => setKind(event.target.value as ModelKind)}
-        >
-          <option value="unknown">未声明</option>
-          <option value="text">文本对话</option>
-          <option value="image">图片</option>
-          <option value="video">视频（执行器待接入）</option>
-          <option value="audio">音频（执行器待接入）</option>
-        </select>
-      </label>
-      {kind === "image" && (
-        <label>
-          支持的图片尺寸
-          <input
-            aria-label="支持的图片尺寸"
-            value={sizes}
-            placeholder="例如 1024x1024, 1536x1024；留空使用默认尺寸"
-            onChange={(event) => setSizes(event.target.value)}
-          />
-        </label>
+          {fetchingRemote ? "正在拉取…" : "一键拉取模型列表"}
+        </button>
+      </div>
+
+      {catalogFeedback && (
+        <div className="model-catalog-feedback" role="status">
+          {catalogFeedback}
+        </div>
       )}
-      {kind === "image" && (
-        <ImageModelCapabilityFields
-          value={image}
-          onChange={setImage}
-          disabled={loading}
-        />
+
+      <div className="model-custom-add-bar">
+        <label htmlFor={customIdInput} className="custom-add-label">
+          添加自定义模型 ID：
+        </label>
+        <div className="custom-add-input-group">
+          <input
+            id={customIdInput}
+            type="text"
+            value={newCustomModelId}
+            placeholder="例如 o3-mini、deepseek-ai/DeepSeek-V3"
+            onChange={(e) => setNewCustomModelId(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                handleAddCustom();
+              }
+            }}
+          />
+          <button
+            type="button"
+            className="settings-action secondary"
+            disabled={!newCustomModelId.trim()}
+            onClick={handleAddCustom}
+          >
+            添加
+          </button>
+        </div>
+      </div>
+
+      <div className="model-catalog-list" role="list">
+        <div className="model-catalog-list-head">
+          <span className="col-status">启用</span>
+          <span className="col-id">模型 ID</span>
+          <span className="col-kind">用途</span>
+          <span className="col-default">设为主用</span>
+          <span className="col-action">操作</span>
+        </div>
+
+        {models.map((item) => (
+          <div
+            key={item.id}
+            className={`model-catalog-row ${item.id === modelId ? "is-selected" : ""} ${!item.enabled ? "is-disabled" : ""}`}
+            role="listitem"
+          >
+            <div className="col-status">
+              <input
+                type="checkbox"
+                checked={item.enabled}
+                aria-label={`启用 ${item.id}`}
+                onChange={(e) => setEnabled(item.id, e.target.checked)}
+              />
+            </div>
+            <div className="col-id">
+              <span className="model-item-id">{item.id}</span>
+              {item.source === "manual" && (
+                <span className="model-source-tag">自定义</span>
+              )}
+              {item.isDefault && (
+                <span className="model-default-tag">默认</span>
+              )}
+            </div>
+            <div className="col-kind">
+              <span className={`kind-badge kind-${item.kind}`}>
+                {item.kind === "text"
+                  ? "对话/推理"
+                  : item.kind === "image"
+                    ? "图像"
+                    : item.kind === "video"
+                      ? "视频"
+                      : item.kind === "audio"
+                        ? "音频"
+                        : "未声明"}
+              </span>
+            </div>
+            <div className="col-default">
+              <button
+                type="button"
+                className={`btn-star ${item.isDefault ? "is-active" : ""}`}
+                title={
+                  item.isDefault ? "已是当前默认常用模型" : "设为默认常用模型"
+                }
+                aria-pressed={item.isDefault}
+                onClick={() => setDefault(item.id)}
+              >
+                {item.isDefault ? "★ 默认" : "☆ 设为默认"}
+              </button>
+            </div>
+            <div className="col-action">
+              <button
+                type="button"
+                className={`btn-select-model ${item.id === modelId ? "is-active" : ""}`}
+                onClick={() => onSelect(item.id)}
+              >
+                {item.id === modelId ? "已选中" : "选择"}
+              </button>
+            </div>
+          </div>
+        ))}
+        {models.length === 0 && (
+          <div className="model-catalog-empty">
+            <p>尚未发现模型，点击上方「一键拉取模型列表」或手动添加模型 ID。</p>
+          </div>
+        )}
+      </div>
+
+      {selected && (
+        <div className="model-params-editor">
+          <h4 className="params-editor-title">
+            编辑选中模型参数: <code>{selected.id}</code>
+          </h4>
+          <div className="params-row">
+            <label className="params-field">
+              <span>模型用途</span>
+              <select
+                aria-label="当前模型用途"
+                value={kind}
+                onChange={(e) => setKind(e.target.value as ModelKind)}
+              >
+                <option value="text">文本对话 / 深度推理</option>
+                <option value="image">图像生成</option>
+                <option value="video">视频生成</option>
+                <option value="audio">音频合成</option>
+                <option value="unknown">未声明</option>
+              </select>
+            </label>
+            {kind === "image" && (
+              <label className="params-field">
+                <span>支持的图片尺寸</span>
+                <input
+                  aria-label="支持的图片尺寸"
+                  value={sizes}
+                  placeholder="例如 1024x1024, 1536x1024"
+                  onChange={(e) => setSizes(e.target.value)}
+                />
+              </label>
+            )}
+          </div>
+          {kind === "image" && (
+            <ImageModelCapabilityFields
+              value={image}
+              onChange={setImage}
+              disabled={loading}
+            />
+          )}
+
+          <div className="model-aliases-group">
+            <div className="params-row">
+              <label className="params-field">
+                <span>模型分组名称</span>
+                <input
+                  aria-label="模型分组名称"
+                  maxLength={120}
+                  value={family}
+                  onChange={(e) => setFamily(e.target.value)}
+                  placeholder="留空自动识别末尾 2K / 4K"
+                />
+              </label>
+              <label className="params-field">
+                <span>型号参数名称</span>
+                <input
+                  aria-label="型号参数名称"
+                  maxLength={120}
+                  value={variant}
+                  onChange={(e) => setVariant(e.target.value)}
+                  placeholder="例如 4K · High · 官方渠道"
+                />
+              </label>
+            </div>
+            <label className="params-field">
+              <span>搜索别名</span>
+              <input
+                aria-label="搜索别名"
+                value={aliases}
+                maxLength={1000}
+                onChange={(e) => setAliases(e.target.value)}
+                placeholder="多个别名用逗号分隔"
+              />
+            </label>
+          </div>
+
+          <div className="params-footer">
+            <button
+              type="button"
+              className="settings-action primary"
+              disabled={loading}
+              onClick={saveModelCapabilities}
+            >
+              保存此模型参数声明
+            </button>
+            {status && (
+              <span className="params-status-text" role="status">
+                {status}
+              </span>
+            )}
+          </div>
+        </div>
       )}
-      <p>
-        声明来源：
-        {selected?.source === "manual"
-          ? "手动填写"
-          : selected?.source === "reported"
-            ? "供应商报告"
-            : "未声明"}
-        。能力声明不代表实际生成验证。
-      </p>
-      <p>
-        按供应商文档填写。模型列表通常不包含尺寸信息；未声明时只使用默认尺寸，不推测
-        2K 或 4K 能力。
-      </p>
-      <details>
-        <summary>型号显示与搜索别名</summary>
-        <label>
-          模型分组名称
-          <input
-            aria-label="模型分组名称"
-            maxLength={120}
-            value={family}
-            onChange={(event) => setFamily(event.target.value)}
-            placeholder="留空自动识别末尾 2K / 4K / High / Low"
-          />
-        </label>
-        <label>
-          型号参数名称
-          <input
-            aria-label="型号参数名称"
-            maxLength={120}
-            value={variant}
-            onChange={(event) => setVariant(event.target.value)}
-            placeholder="例如 4K · High · 官方渠道"
-          />
-        </label>
-        <label>
-          搜索别名
-          <input
-            aria-label="搜索别名"
-            value={aliases}
-            maxLength={1000}
-            onChange={(event) => setAliases(event.target.value)}
-            placeholder="多个别名用逗号分隔"
-          />
-        </label>
-        <p>
-          仅影响分组和检索。生成仍发送选定型号的完整
-          ID，不根据后缀拼造参数或不存在的型号。
-        </p>
-      </details>
-      <button type="button" disabled={!modelId || loading} onClick={save}>
-        保存此模型能力
-      </button>
-      {status && <p role="status">{status}</p>}
     </fieldset>
   );
 }

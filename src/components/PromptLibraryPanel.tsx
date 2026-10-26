@@ -195,7 +195,7 @@ export default function PromptLibraryPanel({
               ))}
             {!filtered.length && (
               <div className="prompt-library-empty">
-                <UiIcon name="text" size={48} />
+                <UiIcon name="text" size={24} />
                 <h3>{items.length ? "没有匹配的提示词" : "还没有提示词"}</h3>
                 <p>
                   {items.length

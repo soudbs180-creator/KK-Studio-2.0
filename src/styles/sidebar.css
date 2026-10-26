@@ -1,4 +1,4 @@
-/* 170:8473 content; shell boundary x=61 comes from 170:8245, not the 89px group. */
+/* 170:8473 content; the collapsed shell is the 72px Figma rail. */
 .sidebar-icon {
   display: block;
   flex: 0 0 auto;
@@ -79,16 +79,16 @@
     max-height: 26px;
   }
   .sidebar:not(.is-collapsed):not(.is-narrow) .sidebar-icon-archive img {
-    width: 21px;
-    height: 19px;
+    width: var(--kk-icon-glyph-md);
+    height: var(--kk-icon-glyph-md);
   }
   .sidebar:not(.is-collapsed):not(.is-narrow) .sidebar-icon-skill img {
-    width: 21.002px;
-    height: 21px;
+    width: var(--kk-icon-glyph-md);
+    height: var(--kk-icon-glyph-md);
   }
   .sidebar:not(.is-collapsed):not(.is-narrow) .sidebar-icon-workflow img {
-    width: 19.5px;
-    height: 19.5px;
+    width: var(--kk-icon-glyph-md);
+    height: var(--kk-icon-glyph-md);
   }
   .sidebar:not(.is-collapsed):not(.is-narrow) .project-groups {
     padding-top: 40px;
@@ -122,16 +122,16 @@
     padding var(--motion-panel) var(--motion-ease);
 }
 .sidebar-icon-archive {
-  width: 21px;
-  height: 19px;
+  width: var(--kk-icon-glyph-md);
+  height: var(--kk-icon-glyph-md);
 }
 .sidebar-icon-skill {
   width: 20px;
   height: 20px;
 }
 .sidebar-icon-workflow {
-  width: 18px;
-  height: 18px;
+  width: var(--kk-icon-glyph-md);
+  height: var(--kk-icon-glyph-md);
 }
 .sidebar-icon-search {
   width: 26px;
@@ -139,8 +139,8 @@
 }
 .sidebar-icon-toggle,
 .sidebar-icon-expand {
-  width: 21.5px;
-  height: 21.5px;
+  width: var(--kk-icon-glyph-md);
+  height: var(--kk-icon-glyph-md);
 }
 .sidebar-icon-settings {
   width: 20px;
@@ -174,33 +174,33 @@
   flex: 0 0 auto;
 }
 .sidebar-action-ellipsis {
-  width: 11.219px;
-  height: 2.277px;
+  width: var(--kk-icon-glyph-xs);
+  height: var(--kk-icon-glyph-xs);
 }
 .sidebar-action-plus {
-  width: 11px;
-  height: 11px;
+  width: var(--kk-icon-glyph-xs);
+  height: var(--kk-icon-glyph-xs);
 }
 .project-external-glyph {
-  width: 8px;
-  height: 8px;
+  width: var(--kk-icon-glyph-xs);
+  height: var(--kk-icon-glyph-xs);
   margin-left: 1px;
 }
 .project-pin-glyph {
-  width: 6px;
-  height: 11px;
+  width: var(--kk-icon-glyph-xs);
+  height: var(--kk-icon-glyph-xs);
 }
 .project-more-glyph {
-  width: 11.219px;
-  height: 2.277px;
+  width: var(--kk-icon-glyph-xs);
+  height: var(--kk-icon-glyph-xs);
 }
 .project-action-container {
   width: 20px;
   height: 21px;
 }
 .sidebar-heading-chevron {
-  width: 9.5px;
-  height: 5.5px;
+  width: var(--kk-icon-glyph-xs);
+  height: var(--kk-icon-glyph-xs);
   /* 折叠/展开瞬时翻转，避免旋转中间态出现斜向（歪）箭头 */
 }
 [aria-expanded="false"] > .sidebar-heading-chevron {
@@ -230,8 +230,8 @@
 }
 .sidebar .sidebar-toggle > .sidebar-icon-toggle,
 .sidebar .sidebar-toggle > .sidebar-icon-expand {
-  width: 21.5px;
-  height: 21.5px;
+  width: var(--kk-icon-glyph-md);
+  height: var(--kk-icon-glyph-md);
 }
 .sidebar .sidebar-control .sidebar-icon img {
   width: 100%;
@@ -354,7 +354,7 @@
   z-index: 40;
   top: var(--topbar-height);
   bottom: 0;
-  width: min(var(--sidebar-width), calc(100vw - 32px));
+  width: min(var(--kk-sidebar-width), calc(100vw - 32px));
   box-shadow: var(--ui-shadow);
   border-right: 1px solid var(--border-default);
 }
@@ -390,8 +390,7 @@
   }
 }
 
-/* Desktop state contracts from the latest Runtime frames. Narrow-screen
-   drawers retain their existing 61px touch rail as an engineering supplement. */
+/* Desktop state contracts from the latest Runtime frames. */
 @media (min-width: 1201px) {
   .sidebar {
     transition: width var(--motion-sidebar) linear;
@@ -400,7 +399,7 @@
     height: 212px;
     flex: 0 0 212px;
     align-content: start;
-    width: 263px;
+    width: 260px;
     overflow: hidden;
     transition: width var(--motion-sidebar) linear;
   }
@@ -408,14 +407,32 @@
     border: 0;
     color: var(--ui-sidebar-settings-icon);
     white-space: nowrap;
-    width: 263px;
+    width: 260px;
+    height: var(--kk-menu-item-h);
     overflow: hidden;
     transition:
       width var(--motion-sidebar) linear,
-      background-color var(--motion-fast) ease;
+      background-color var(--motion-fast) ease,
+      color var(--motion-fast) ease;
+  }
+  .sidebar .primary-nav button:hover:not([aria-current]) {
+    background: var(--ui-state-hover-bg);
+    color: var(--text-primary);
+  }
+  .sidebar .primary-nav button:focus-visible {
+    outline: 2px solid var(--kk-focus-ring);
+    outline-offset: -2px;
+  }
+  .sidebar .primary-nav button:focus:not(:focus-visible) {
+    outline: none;
+  }
+  .sidebar .primary-nav button:active:not([aria-current]) {
+    background: var(--ui-state-pressed-bg);
   }
   .sidebar .primary-nav button[aria-current] {
-    background: var(--ui-sidebar-control);
+    background: var(--kk-control-surface-selected);
+    color: var(--text-primary);
+    font-weight: 500;
   }
   .sidebar .nav-label {
     animation: none;
@@ -436,7 +453,7 @@
   }
   .sidebar .project-groups-header,
   .sidebar .project-groups > section {
-    width: 263px;
+    width: 260px;
   }
   .sidebar .project-link {
     white-space: nowrap;
@@ -485,11 +502,28 @@
     font-size: var(--kk-font-caption);
     font-weight: 400;
     color: var(--ui-sidebar-settings-icon);
-    background: var(--bg-card);
+    background: transparent;
     border-radius: var(--ui-radius-control);
+    transition: var(--ui-state-transition);
+  }
+  .sidebar .project-link:hover:not(.is-selected) {
+    background: var(--ui-state-hover-bg);
+    color: var(--text-primary);
+  }
+  .sidebar .project-link:focus-visible {
+    outline: 2px solid var(--kk-focus-ring);
+    outline-offset: -1px;
+  }
+  .sidebar .project-link:focus:not(:focus-visible) {
+    outline: none;
+  }
+  .sidebar .project-link:active:not(.is-selected) {
+    background: var(--ui-state-pressed-bg);
   }
   .sidebar .project-link.is-selected {
-    background: var(--ui-sidebar-control);
+    background: var(--kk-control-surface-selected);
+    color: var(--text-primary);
+    font-weight: 500;
   }
   .sidebar:not(.is-collapsed):not(.is-narrow) .project-link {
     font-weight: 400;
@@ -539,10 +573,10 @@
     margin: 0 0 30px;
   }
   .sidebar.is-collapsed .primary-nav {
-    width: 38px;
+    width: 40px;
   }
   .sidebar.is-collapsed .primary-nav button {
-    width: 38px;
+    width: 40px;
     padding: 0 6px;
     justify-content: flex-start;
     gap: 6px;
@@ -554,16 +588,16 @@
     place-items: center;
   }
   .sidebar.is-collapsed .sidebar-icon-archive img {
-    width: 21px;
-    height: 19px;
+    width: var(--kk-icon-glyph-md);
+    height: var(--kk-icon-glyph-md);
   }
   .sidebar.is-collapsed .sidebar-icon-skill img {
-    width: 21.002px;
-    height: 21px;
+    width: var(--kk-icon-glyph-md);
+    height: var(--kk-icon-glyph-md);
   }
   .sidebar.is-collapsed .sidebar-icon-workflow img {
-    width: 19.5px;
-    height: 19.5px;
+    width: var(--kk-icon-glyph-md);
+    height: var(--kk-icon-glyph-md);
   }
   .sidebar.is-collapsed .nav-label {
     display: block;
@@ -631,6 +665,10 @@
 }
 .sidebar .project-folder-group.is-pinned .folder-heading-toggle,
 .sidebar .project-entry.is-pinned .project-link {
+  border-left: 2px solid var(--ui-selected, var(--kk-accent));
+}
+.sidebar .project-folder-group.is-pinned .folder-heading-toggle.is-selected,
+.sidebar .project-entry.is-pinned .project-link.is-selected {
   background: var(--ui-sidebar-control);
 }
 .sidebar .folder-heading-row {

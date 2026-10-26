@@ -51,18 +51,41 @@
   border-radius: var(--kk-button-radius);
   background: var(--kk-bg-card);
   color: var(--kk-text-primary);
-  font: var(--kk-font-weight-body-strong) var(--kk-font-body) /
-    var(--kk-line-body) var(--kk-font-sans);
+  font: var(--kk-font-weight-body-strong) var(--kk-control-font-md) /
+    var(--kk-line-caption) var(--kk-font-sans);
   white-space: nowrap;
   text-align: center;
   transition:
-    background-color 120ms ease,
-    border-color 120ms ease,
-    color 120ms ease;
+    transform var(--kk-motion-release) ease-out,
+    background-color var(--kk-motion-hover) ease-out,
+    border-color var(--kk-motion-hover) ease-out,
+    color var(--kk-motion-hover) ease-out;
+}
+
+.kk-button--sm {
+  min-block-size: var(--kk-control-h-sm);
+  padding: 0 var(--kk-control-px-sm);
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-caption);
+}
+
+.kk-button--md {
+  min-block-size: var(--kk-control-h-md);
+  padding: 0 var(--kk-control-px-md);
+}
+
+.kk-button--lg {
+  min-block-size: var(--kk-control-h-lg);
+  padding: 0 var(--kk-control-px-lg);
+  font-size: var(--kk-control-font-lg);
+  line-height: var(--kk-line-body);
 }
 
 .kk-button--primary {
   min-block-size: var(--kk-button-h-primary);
+  padding: 0 var(--kk-control-px-lg);
+  font-size: var(--kk-control-font-lg);
+  line-height: var(--kk-line-body);
   border-color: transparent;
   background: var(--kk-button-primary-bg);
   color: var(--kk-button-primary-text);
@@ -70,11 +93,19 @@
 
 .kk-button--secondary {
   background: var(--kk-bg-elevated);
+  border-color: var(--kk-border-subtle);
 }
 
 .kk-button--tertiary {
   border-color: transparent;
   background: transparent;
+  color: var(--kk-control-idle-fg);
+}
+
+.kk-button--tertiary:not(:disabled):not([aria-disabled="true"]):hover {
+  border-color: transparent;
+  background: var(--kk-control-hover-bg);
+  color: var(--kk-control-selected-fg);
 }
 
 .kk-button--danger {
@@ -83,41 +114,95 @@
   background: transparent;
 }
 
-.kk-button:not(:disabled):not([aria-disabled="true"]):hover {
+/* 1. Hover State */
+.kk-button:not(:disabled):not([aria-disabled="true"]):not(.is-loading):not(
+    [aria-busy="true"]
+  ):hover {
   border-color: var(--kk-border-default);
   background: var(--kk-bg-elevated);
 }
 
-.kk-button--primary:not(:disabled):not([aria-disabled="true"]):hover {
+.kk-button--primary:not(:disabled):not([aria-disabled="true"]):not(
+    .is-loading
+  ):not([aria-busy="true"]):hover {
   border-color: transparent;
   background: var(--kk-button-primary-hover);
 }
-.kk-button--danger:not(:disabled):hover,
-.kk-button--danger:focus-visible,
-.kk-button--danger:not(:disabled):active {
+
+.kk-button--danger:not(:disabled):not([aria-disabled="true"]):hover {
   border-color: var(--kk-danger);
   color: var(--kk-text-danger);
   background: var(--ui-danger-surface);
 }
 
-.kk-button:not(:disabled):not([aria-disabled="true"]):active,
-.kk-button[aria-pressed="true"] {
-  background: var(--kk-neutral-selected);
-}
-
-.kk-button--primary:not(:disabled):not([aria-disabled="true"]):active {
-  background: var(--kk-button-primary-hover);
-}
-
+/* 2. Focus State (Keyboard only; mouse click resets outline) */
 .kk-button:focus-visible {
   outline: var(--kk-border-width-focus) solid var(--kk-focus-ring);
   outline-offset: var(--kk-space-1);
 }
 
+.kk-button:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* 3. Selected / Active Toggle State */
+.kk-button[aria-selected="true"],
+.kk-button[aria-pressed="true"] {
+  background: var(--kk-neutral-selected);
+  border-color: var(--kk-border-control);
+  color: var(--kk-text-primary);
+}
+
+/* 4. Pressed State */
+.kk-button:not(:disabled):not([aria-disabled="true"]):not(.is-loading):not(
+    [aria-busy="true"]
+  ):active {
+  background: var(--kk-neutral-selected);
+  transform: scale(var(--kk-motion-press-scale));
+}
+
+.kk-button--primary:not(:disabled):not([aria-disabled="true"]):not(
+    .is-loading
+  ):not([aria-busy="true"]):active {
+  background: var(--kk-button-primary-hover);
+  transform: scale(var(--kk-motion-press-scale));
+}
+
+/* 5. Loading State */
+.kk-button.is-loading,
+.kk-button[aria-busy="true"] {
+  cursor: wait;
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+/* 6. Disabled State */
+.kk-button:disabled,
+.kk-button[aria-disabled="true"],
+.ui-button:disabled,
+.ui-button[aria-disabled="true"],
+.primary-button:disabled,
+.primary-button[aria-disabled="true"],
+.ui-icon-button:disabled,
+.ui-icon-button[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 1;
+  background: var(--kk-bg-card);
+  color: var(--kk-text-tertiary);
+  border: var(--kk-border-width) solid var(--kk-border-subtle);
+}
+
 .kk-button:disabled,
 .kk-button[aria-disabled="true"] {
-  cursor: not-allowed;
-  opacity: var(--ui-disabled-opacity);
+  pointer-events: none;
+}
+
+/* 7. Expanded State */
+.kk-button[aria-expanded="true"] {
+  background: var(
+    --ui-state-expanded-bg,
+    color-mix(in srgb, var(--text-primary) 6%, transparent)
+  );
 }
 
 .kk-icon-slot {
@@ -125,11 +210,17 @@
   flex: 0 0 auto;
   place-items: center;
   line-height: 0;
+  vertical-align: -0.125em;
 }
 
 .kk-icon-slot[data-size="sm"] {
   width: var(--kk-icon-glyph-sm);
   height: var(--kk-icon-glyph-sm);
+}
+
+.kk-icon-slot[data-size="xs"] {
+  width: var(--kk-icon-glyph-xs);
+  height: var(--kk-icon-glyph-xs);
 }
 
 .kk-icon-slot[data-size="md"] {
@@ -140,6 +231,33 @@
 .kk-icon-slot[data-size="lg"] {
   width: var(--kk-icon-glyph-lg);
   height: var(--kk-icon-glyph-lg);
+}
+
+.kk-icon-slot[data-size="xl"] {
+  width: var(--kk-icon-glyph-xl);
+  height: var(--kk-icon-glyph-xl);
+}
+
+.kk-icon-slot[data-size="xxl"] {
+  width: var(--kk-icon-glyph-xxl);
+  height: var(--kk-icon-glyph-xxl);
+}
+
+/* Iconsax ships 1.5px Linear paths for every size. Override the presentation
+   attribute at the shared slot so a component cannot mix visual weights. */
+.kk-icon-slot[data-size="sm"] svg * {
+  stroke-width: var(--kk-icon-stroke-12-regular);
+}
+.kk-icon-slot[data-size="xs"] svg * {
+  stroke-width: var(--kk-icon-stroke-12-regular);
+}
+.kk-icon-slot[data-size="md"] svg * {
+  stroke-width: var(--kk-icon-stroke-16-regular);
+}
+.kk-icon-slot[data-size="lg"] svg *,
+.kk-icon-slot[data-size="xl"] svg *,
+.kk-icon-slot[data-size="xxl"] svg * {
+  stroke-width: var(--kk-icon-stroke-standalone);
 }
 
 .kk-icon-hit {
@@ -157,6 +275,11 @@
 .kk-icon-hit[data-hit-size="primary"] {
   min-width: var(--kk-hit-primary);
   min-height: var(--kk-hit-primary);
+}
+
+.kk-icon-hit[data-hit-size="touch"] {
+  min-width: var(--kk-hit-touch);
+  min-height: var(--kk-hit-touch);
 }
 
 .kk-truncate-single {

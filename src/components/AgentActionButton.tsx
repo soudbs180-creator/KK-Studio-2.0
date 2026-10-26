@@ -15,9 +15,9 @@ export type AgentActionTransitionEvent =
   | "RESET";
 
 export const AGENT_ACTION_BUTTON_GEOMETRY = {
-  desktopDiameter: 40,
+  desktopDiameter: 44,
   minTouchTarget: 44,
-  iconSize: 20,
+  iconSize: 28,
 } as const;
 
 export const DEFAULT_DEBOUNCE_MS = 300;
@@ -153,13 +153,7 @@ export default function AgentActionButton({
     switch (state) {
       case "idle":
         return (
-          <img
-            src="/design/figma/composer-send.svg"
-            width={AGENT_ACTION_BUTTON_GEOMETRY.iconSize}
-            height={AGENT_ACTION_BUTTON_GEOMETRY.iconSize}
-            alt=""
-            aria-hidden="true"
-          />
+          <UiIcon name="send" size={AGENT_ACTION_BUTTON_GEOMETRY.iconSize} />
         );
       case "executing":
         return (

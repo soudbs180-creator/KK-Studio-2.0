@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type {
   CanvasReference,
   CanvasCollectionItem,
@@ -48,13 +48,37 @@ export function useCanvasNodeLayerHandlers({
   const currentItems = useRef(items);
   currentItems.current = items;
 
+  const markPending = useCallback(
+    (
+      parentId: string,
+      phase: "loading" | "success" | "error" | "cancelled" | "offline",
+    ): void => {
+      if (phase === "loading" || phase === "success") return;
+      const pending = pendingByParent.current[parentId] ?? [];
+      if (!pending.length) return;
+
+      onLocalGenerationSettled(
+        pending.map((id, generationIndex) => ({
+          id,
+          kind: "video",
+          generationIndex,
+          description: "",
+          generationStatus: "error",
+          title: phase === "cancelled" ? "已取消生成" : "生成失败，请重试",
+        })),
+      );
+      pendingByParent.current[parentId] = [];
+    },
+    [onLocalGenerationSettled],
+  );
+
   useEffect(() => {
     for (const parentId of Object.keys(pendingByParent.current)) {
       if (items.some((item) => item.id === parentId)) continue;
       markPending(parentId, "cancelled");
       delete pendingByParent.current[parentId];
     }
-  }, [items]);
+  }, [items, markPending]);
 
   useEffect(() => {
     if (!pendingResultIds.length || !pendingResultIds.every((id) => nodes[id]))
@@ -80,188 +104,191 @@ export function useCanvasNodeLayerHandlers({
     setPendingReferenceFocus(null);
   }, [pendingReferenceFocus, nodes, items, selectedNode]);
 
-  function reserveGeneratedResults(parentId: string, count: number): void {
-    const parent = nodes[parentId];
-    const source = items.find((item) => item.id === parentId);
-    if (!parent || !source || count < 1) return;
-    const right = parent.x + cardLayout(source).anchor.x + 160;
-    const ids = Array.from({ length: count }, (_, index) => {
-      const id = addNode(source.kind, {
-        parentId,
-        title: `${source.kind === "video" ? "视频" : "图片"}生成中（${index + 1}/${count}）`,
-        prompt: source.prompt,
-        model: source.model,
-        generationStatus: "pending",
-        generationIndex: index,
-        select: false,
-        position: {
-          x: right + (index % 2) * 440,
-          y: parent.y + Math.floor(index / 2) * 430,
-        },
-      });
-      onConnect(parentId, id, "result");
-      return id;
-    });
-    pendingByParent.current[parentId] = ids;
-    setPendingResultIds(ids);
-  }
-
-  function addGeneratedResults(parentId: string, results: DemoResult[]): void {
-    const source = currentItems.current.find((item) => item.id === parentId);
-    if (!source) return;
-    const pending = pendingByParent.current[parentId] ?? [];
-    if (source && pending.length >= results.length) {
-      const terminal: CanvasCollectionItem[] = results.map((result, index) => {
-        const title =
-          results.length === 1 || result.title.includes("（演示")
-            ? result.title
-            : result.title +
-              "（演示 " +
-              (index + 1) +
-              "/" +
-              results.length +
-              "）";
-        return {
-          id: pending[index],
-          kind: result.kind,
+  const reserveGeneratedResults = useCallback(
+    (parentId: string, count: number): void => {
+      const parent = nodes[parentId];
+      const source = currentItems.current.find((item) => item.id === parentId);
+      if (!parent || !source || count < 1) return;
+      const right = parent.x + cardLayout(source).anchor.x + 160;
+      const ids = Array.from({ length: count }, (_, index) => {
+        const id = addNode(source.kind, {
+          parentId,
+          title: `${source.kind === "video" ? "视频" : "图片"}生成中（${index + 1}/${count}）`,
+          prompt: source.prompt,
+          model: source.model,
+          generationStatus: "pending",
           generationIndex: index,
-          result: { ...result, title },
-          title,
-          description: result.description,
-          preview:
-            result.poster ?? (result.kind === "image" ? result.src : undefined),
-          generationStatus: "ready",
-        };
+          select: false,
+          position: {
+            x: right + (index % 2) * 440,
+            y: parent.y + Math.floor(index / 2) * 430,
+          },
+        });
+        onConnect(parentId, id, "result");
+        return id;
       });
-      onLocalGenerationSettled(terminal);
-      pendingByParent.current[parentId] = [];
-      return;
-    }
-    if (!source || !nodes[parentId]) return;
-    const right = nodes[parentId].x + cardLayout(source).anchor.x + 160;
-    const ids = results.map((result, index) => {
-      const id = addNode(result.kind, {
-        parentId,
-        result,
-        title: result.title,
-        prompt: source.prompt,
-        model: source.model,
-        select: false,
-        position: {
-          x: right + (index % 2) * 440,
-          y: nodes[parentId].y + Math.floor(index / 2) * 430,
-        },
+      pendingByParent.current[parentId] = ids;
+      setPendingResultIds(ids);
+    },
+    [nodes, addNode, onConnect],
+  );
+
+  const addGeneratedResults = useCallback(
+    (parentId: string, results: DemoResult[]): void => {
+      const source = currentItems.current.find((item) => item.id === parentId);
+      if (!source) return;
+      const pending = pendingByParent.current[parentId] ?? [];
+      if (source && pending.length >= results.length) {
+        const terminal: CanvasCollectionItem[] = results.map(
+          (result, index) => {
+            const title =
+              results.length === 1 || result.title.includes("（演示")
+                ? result.title
+                : result.title +
+                  "（演示 " +
+                  (index + 1) +
+                  "/" +
+                  results.length +
+                  "）";
+            return {
+              id: pending[index],
+              kind: result.kind,
+              generationIndex: index,
+              result: { ...result, title },
+              title,
+              description: result.description,
+              preview:
+                result.poster ??
+                (result.kind === "image" ? result.src : undefined),
+              generationStatus: "ready",
+            };
+          },
+        );
+        onLocalGenerationSettled(terminal);
+        pendingByParent.current[parentId] = [];
+        return;
+      }
+      if (!source || !nodes[parentId]) return;
+      const right = nodes[parentId].x + cardLayout(source).anchor.x + 160;
+      const ids = results.map((result, index) => {
+        const id = addNode(result.kind, {
+          parentId,
+          result,
+          title: result.title,
+          prompt: source.prompt,
+          model: source.model,
+          select: false,
+          position: {
+            x: right + (index % 2) * 440,
+            y: nodes[parentId].y + Math.floor(index / 2) * 430,
+          },
+        });
+        onConnect(parentId, id, "result");
+        return id;
       });
-      onConnect(parentId, id, "result");
-      return id;
-    });
-    setPendingResultIds(ids);
-  }
+      setPendingResultIds(ids);
+    },
+    [nodes, addNode, onConnect, onLocalGenerationSettled],
+  );
 
-  function markPending(
-    parentId: string,
-    phase: "loading" | "success" | "error" | "cancelled" | "offline",
-  ): void {
-    if (phase === "loading" || phase === "success") return;
-    const pending = pendingByParent.current[parentId] ?? [];
-    if (!pending.length) return;
-
-    onLocalGenerationSettled(
-      pending.map((id, generationIndex) => ({
-        id,
-        kind: "video",
-        generationIndex,
-        description: "",
-        generationStatus: "error",
-        title: phase === "cancelled" ? "已取消生成" : "生成失败，请重试",
-      })),
-    );
-    pendingByParent.current[parentId] = [];
-  }
-
-  const itemById = new Map(items.map((item) => [item.id, item]));
-  const referenceEdgesByTarget = new Map<string, typeof edges>();
-  for (const edge of edges) {
-    if (edge.kind === "result") continue;
-    const group = referenceEdgesByTarget.get(edge.target) ?? [];
-    group.push(edge);
-    referenceEdgesByTarget.set(edge.target, group);
-  }
-
-  function referencesFor(parentId: string): CanvasReference[] {
-    const targetEdges = referenceEdgesByTarget.get(parentId);
-    if (!targetEdges || targetEdges.length === 0) return EMPTY_REFERENCES;
-    const mapped = targetEdges
-      .map((edge) => ({ edge, source: itemById.get(edge.source) }))
-      .filter(
-        (
-          entry,
-        ): entry is {
-          edge: (typeof edges)[number];
-          source: CanvasCollectionItem;
-        } => entry.source?.kind === "image",
-      )
-      .map(({ edge, source }) => ({
+  const referencesByTarget = useMemo(() => {
+    const itemById = new Map(items.map((item) => [item.id, item]));
+    const grouped = new Map<string, CanvasReference[]>();
+    for (const edge of edges) {
+      if (edge.kind === "result") continue;
+      const source = itemById.get(edge.source);
+      if (source?.kind !== "image") continue;
+      const group = grouped.get(edge.target) ?? [];
+      group.push({
         id: edge.id,
         assetId: source.assetId,
         title: source.title,
         preview: source.preview ?? source.result?.poster ?? source.result?.src,
         slot: source.referenceSlot,
-      }));
-    return mapped.length === 0 ? EMPTY_REFERENCES : mapped;
-  }
+      });
+      grouped.set(edge.target, group);
+    }
+    return grouped;
+  }, [items, edges]);
 
-  function addReferences(
-    parentId: string,
-    references: CanvasReference[],
-  ): void {
-    const parent = nodes[parentId];
-    const source = items.find((item) => item.id === parentId);
-    if (!parent || !source) return;
-    const addedIds = addCanvasReferences({
-      parentId,
-      parent,
-      source,
-      references,
-      existingReferences: referencesFor(parentId),
+  const referencesFor = useCallback(
+    (parentId: string): CanvasReference[] =>
+      referencesByTarget.get(parentId) ?? EMPTY_REFERENCES,
+    [referencesByTarget],
+  );
+
+  const addReferences = useCallback(
+    (parentId: string, references: CanvasReference[]): void => {
+      const parent = nodes[parentId];
+      const source = currentItems.current.find((item) => item.id === parentId);
+      if (!parent || !source) return;
+      const addedIds = addCanvasReferences({
+        parentId,
+        parent,
+        source,
+        references,
+        existingReferences: referencesFor(parentId),
+        defaultSelection,
+        addNode,
+        onConnect,
+        onConnectionNotice,
+        occupiedRects: canvasOccupiedRects(currentItems.current, nodes),
+        visibleWorldLeft:
+          (16 - controls.transform.x) / controls.transform.scale,
+        visibleWorldRight:
+          (controls.viewport.width - 16 - controls.transform.x) /
+          controls.transform.scale,
+      });
+      if (addedIds.length)
+        setPendingReferenceFocus({
+          parentId,
+          ids: addedIds,
+          restoreSelection: selectedNode,
+        });
+    },
+    [
+      nodes,
+      referencesFor,
       defaultSelection,
       addNode,
       onConnect,
       onConnectionNotice,
-      occupiedRects: canvasOccupiedRects(items, nodes),
-      visibleWorldLeft: (16 - controls.transform.x) / controls.transform.scale,
-      visibleWorldRight:
-        (controls.viewport.width - 16 - controls.transform.x) /
-        controls.transform.scale,
-    });
-    if (addedIds.length)
-      setPendingReferenceFocus({
-        parentId,
-        ids: addedIds,
-        restoreSelection: selectedNode,
-      });
-  }
+      controls.transform.x,
+      controls.transform.scale,
+      controls.viewport.width,
+      selectedNode,
+    ],
+  );
 
-  const handleConnectionTargetChange = (
-    sourceId: string,
-    targetId: string | null,
-  ) => {
-    setConnectionTarget(
-      targetId &&
-        canConnectTarget(items, edges, sourceId, targetId, defaultSelection)
-        ? targetId
-        : null,
-    );
-  };
+  const handleConnectionTargetChange = useCallback(
+    (sourceId: string, targetId: string | null) => {
+      setConnectionTarget(
+        targetId &&
+          canConnectTarget(
+            currentItems.current,
+            edges,
+            sourceId,
+            targetId,
+            defaultSelection,
+          )
+          ? targetId
+          : null,
+      );
+    },
+    [edges, defaultSelection],
+  );
 
-  const handleGenerationState = (
-    id: string,
-    phase: "loading" | "success" | "error" | "cancelled" | "offline",
-  ) => {
-    if (phase === "error" || phase === "cancelled" || phase === "offline") {
-      markPending(id, phase);
-    }
-  };
+  const handleGenerationState = useCallback(
+    (
+      id: string,
+      phase: "loading" | "success" | "error" | "cancelled" | "offline",
+    ) => {
+      if (phase === "error" || phase === "cancelled" || phase === "offline") {
+        markPending(id, phase);
+      }
+    },
+    [markPending],
+  );
 
   return {
     connectionTarget,

@@ -629,6 +629,89 @@ export function readCreationSnapshot(): CreationSnapshot {
   }
 }
 
+function isCandidateProjectRecord(
+  project: unknown,
+): project is CreationProject {
+  return Boolean(
+    project &&
+    typeof project === "object" &&
+    typeof (project as { id?: unknown }).id === "string" &&
+    Array.isArray((project as { items?: unknown }).items),
+  );
+}
+
+function isCreationProjectGroup(group: unknown): group is CreationProjectGroup {
+  if (!group || typeof group !== "object") return false;
+  const candidate = group as Partial<CreationProjectGroup>;
+  return (
+    typeof candidate.id === "string" &&
+    candidate.id.length > 0 &&
+    candidate.id.length <= 160 &&
+    typeof candidate.name === "string" &&
+    candidate.name.trim().length > 0 &&
+    candidate.name.length <= 120 &&
+    (candidate.deletedAt === undefined ||
+      (Number.isSafeInteger(candidate.deletedAt) && candidate.deletedAt >= 0))
+  );
+}
+
+function areProjectGroupsValid(
+  projectGroups: unknown,
+  projects: CreationProject[],
+): projectGroups is CreationProjectGroup[] | undefined {
+  if (projectGroups !== undefined) {
+    if (
+      !Array.isArray(projectGroups) ||
+      !projectGroups.every(isCreationProjectGroup)
+    )
+      return false;
+    if (
+      new Set(projectGroups.map((group) => group.id)).size !==
+      projectGroups.length
+    )
+      return false;
+  }
+  return !projects.some(
+    (project) =>
+      project.groupId &&
+      !projectGroups?.some(
+        (group) =>
+          group.id === project.groupId && group.deletedAt === undefined,
+      ),
+  );
+}
+
+function areV3ProjectChatsValid(projects: CreationProject[]): boolean {
+  return projects.every((project) =>
+    Boolean(
+      project.activeChatId &&
+      project.chats &&
+      project.chats[project.activeChatId],
+    ),
+  );
+}
+
+function resolveNormalizedActiveProjectId(
+  activeProjectId: unknown,
+  projects: CreationProject[],
+): string | null {
+  return typeof activeProjectId === "string" &&
+    projects.some(
+      (project) =>
+        project.id === activeProjectId && project.trashedAt === undefined,
+    )
+    ? activeProjectId
+    : null;
+}
+
+function resolveNormalizedRevision(revision: unknown): number {
+  return typeof revision === "number" &&
+    Number.isSafeInteger(revision) &&
+    revision >= 0
+    ? revision
+    : 0;
+}
+
 /**
  * Normalizes snapshots at every storage boundary. IndexedDB and Tauri data do
  * not pass through localStorage migration, so accepting a shallow cast there
@@ -649,60 +732,18 @@ export function normalizeCreationSnapshot(
   };
   if (
     (candidate.version !== 2 && candidate.version !== 3) ||
-    !Array.isArray(candidate.projects)
+    !Array.isArray(candidate.projects) ||
+    !candidate.projects.every(isSnapshotProjectRoutingValid)
   )
     return null;
-  if (!candidate.projects.every(isSnapshotProjectRoutingValid)) return null;
 
   const version = candidate.version as 2 | 3;
   const projects = candidate.projects
-    .filter((project): project is CreationProject =>
-      Boolean(
-        project &&
-        typeof project === "object" &&
-        typeof (project as { id?: unknown }).id === "string" &&
-        Array.isArray((project as { items?: unknown }).items),
-      ),
-    )
+    .filter(isCandidateProjectRecord)
     .map((project) => normalizeProject(project, version));
 
   const projectGroups = candidate.projectGroups;
-  if (
-    projectGroups !== undefined &&
-    (!Array.isArray(projectGroups) ||
-      !projectGroups.every((group): group is CreationProjectGroup =>
-        Boolean(
-          group &&
-          typeof group === "object" &&
-          typeof group.id === "string" &&
-          group.id.length > 0 &&
-          group.id.length <= 160 &&
-          typeof group.name === "string" &&
-          group.name.trim().length > 0 &&
-          group.name.length <= 120 &&
-          (group.deletedAt === undefined ||
-            (Number.isSafeInteger(group.deletedAt) && group.deletedAt >= 0)),
-        ),
-      ))
-  )
-    return null;
-  if (
-    projectGroups &&
-    new Set(projectGroups.map((group) => group.id)).size !==
-      projectGroups.length
-  )
-    return null;
-  if (
-    projects.some(
-      (project) =>
-        project.groupId &&
-        !projectGroups?.some(
-          (group) =>
-            group.id === project.groupId && group.deletedAt === undefined,
-        ),
-    )
-  )
-    return null;
+  if (!areProjectGroupsValid(projectGroups, projects)) return null;
 
   const sidebarPreferences = candidate.sidebarPreferences;
   if (
@@ -711,56 +752,32 @@ export function normalizeCreationSnapshot(
   )
     return null;
 
-  if (version === 3) {
-    for (const project of projects) {
-      if (
-        !project.activeChatId ||
-        !project.chats ||
-        !project.chats[project.activeChatId]
-      ) {
-        return null;
-      }
-    }
-  }
+  if (version === 3 && !areV3ProjectChatsValid(projects)) return null;
 
-  const activeProjectId =
-    typeof candidate.activeProjectId === "string" &&
-    projects.some(
-      (project) =>
-        project.id === candidate.activeProjectId &&
-        project.trashedAt === undefined,
-    )
-      ? candidate.activeProjectId
-      : null;
-
-  const revision =
-    typeof candidate.revision === "number" &&
-    Number.isSafeInteger(candidate.revision) &&
-    candidate.revision >= 0
-      ? candidate.revision
-      : 0;
-
-  if (version === 3) {
-    return {
-      ...(candidate as Record<string, unknown>),
-      version: 3,
-      revision,
-      activeProjectId,
-      projects,
-      ...(projectGroups === undefined ? {} : { projectGroups }),
-      ...(sidebarPreferences === undefined ? {} : { sidebarPreferences }),
-      homeDraft: normalizeDraft(candidate.homeDraft),
-    };
-  }
-
-  return {
-    version: 2,
+  const activeProjectId = resolveNormalizedActiveProjectId(
+    candidate.activeProjectId,
+    projects,
+  );
+  const revision = resolveNormalizedRevision(candidate.revision);
+  const common = {
     revision,
     activeProjectId,
     projects,
     ...(projectGroups === undefined ? {} : { projectGroups }),
     ...(sidebarPreferences === undefined ? {} : { sidebarPreferences }),
     homeDraft: normalizeDraft(candidate.homeDraft),
+  };
+
+  if (version === 3) {
+    return {
+      ...(candidate as Record<string, unknown>),
+      version: 3,
+      ...common,
+    };
+  }
+  return {
+    version: 2,
+    ...common,
   };
 }
 
@@ -1013,89 +1030,77 @@ function safeBaseUrl(value: unknown): string | undefined {
   }
 }
 
-function normalizeCanvasItem(
-  value: CanvasCollectionItem,
-): CanvasCollectionItem {
-  const result = value.result;
+function normalizeOptionalSlice(
+  value: unknown,
+  maxLength: number,
+): string | undefined {
+  return typeof value === "string" ? value.slice(0, maxLength) : undefined;
+}
+
+function normalizeMediaDimension(value: unknown): number | undefined {
+  return typeof value === "number" &&
+    Number.isFinite(value) &&
+    value > 1 &&
+    value <= 100_000
+    ? Math.round(value)
+    : undefined;
+}
+
+function normalizeImageSizeLabel(value: unknown): string | undefined {
+  return typeof value === "string" && /^\d{2,5}x\d{2,5}$/.test(value)
+    ? value
+    : undefined;
+}
+
+function normalizeCanvasParameters(
+  parameters: CanvasCollectionItem["parameters"],
+): CanvasCollectionItem["parameters"] {
+  if (!parameters) return undefined;
   return {
-    tags: value.tags === undefined ? undefined : normalizeTags(value.tags),
-    // Plugin content is durable project data, independently editable after a read.
-    plugin:
-      value.plugin === undefined ? undefined : structuredClone(value.plugin),
-    imageEditDraft:
-      value.imageEditDraft === undefined
-        ? undefined
-        : readMaskDocument(value.imageEditDraft),
-    imageEditContext: readImageEditContext(value.imageEditContext),
-    imageEditPrompt:
-      typeof value.imageEditPrompt === "string"
-        ? value.imageEditPrompt.slice(0, 2000)
-        : undefined,
-    imageEditReferenceIds: Array.isArray(value.imageEditReferenceIds)
-      ? value.imageEditReferenceIds
-          .filter(
-            (id): id is string =>
-              typeof id === "string" && /^asset-[a-f0-9]{24}$/.test(id),
-          )
-          .slice(0, 64)
-      : undefined,
-    id: safeText(value.id, 160),
-    providerConnectionId:
-      typeof value.providerConnectionId === "string"
-        ? value.providerConnectionId.slice(0, 120)
-        : undefined,
-    generationSource: value.generationSource === "codex" ? "codex" : undefined,
-    parameters: value.parameters
-      ? {
-          ratio: safeText(value.parameters.ratio, 30, "1:1"),
-          imageSize:
-            typeof value.parameters.imageSize === "string" &&
-            /^\d{2,5}x\d{2,5}$/.test(value.parameters.imageSize)
-              ? value.parameters.imageSize
-              : undefined,
-          quality: safeText(value.parameters.quality, 30, "1K"),
-          duration: safeText(value.parameters.duration, 10, "7"),
-          count: safeText(value.parameters.count, 10, "8"),
-          soundEnabled: value.parameters.soundEnabled === true,
-        }
-      : undefined,
-    title: safeText(value.title, 160),
-    description: safeText(value.description, 500),
-    kind: normalizeKind(value.kind),
-    prompt:
-      typeof value.prompt === "string"
-        ? value.prompt.slice(
-            0,
-            value.kind === "video" || value.kind === "audio" ? 7500 : 4000,
-          )
-        : undefined,
-    model:
-      typeof value.model === "string" ? value.model.slice(0, 120) : undefined,
-    assetId:
-      typeof value.assetId === "string"
-        ? value.assetId.slice(0, 160)
-        : undefined,
-    parentAssetId: safeText(value.parentAssetId, 160) || undefined,
-    preview:
-      typeof value.preview === "string"
-        ? value.preview.slice(0, 16 * 1024 * 1024)
-        : undefined,
-    mediaWidth:
-      typeof value.mediaWidth === "number" &&
-      Number.isFinite(value.mediaWidth) &&
-      value.mediaWidth > 1 &&
-      value.mediaWidth <= 100_000
-        ? Math.round(value.mediaWidth)
-        : undefined,
-    mediaHeight:
-      typeof value.mediaHeight === "number" &&
-      Number.isFinite(value.mediaHeight) &&
-      value.mediaHeight > 1 &&
-      value.mediaHeight <= 100_000
-        ? Math.round(value.mediaHeight)
-        : undefined,
-    updatedAt:
-      typeof value.updatedAt === "number" ? value.updatedAt : undefined,
+    ratio: safeText(parameters.ratio, 30, "1:1"),
+    imageSize: normalizeImageSizeLabel(parameters.imageSize),
+    quality: safeText(parameters.quality, 30, "1K"),
+    duration: safeText(parameters.duration, 10, "7"),
+    count: safeText(parameters.count, 10, "8"),
+    soundEnabled: parameters.soundEnabled === true,
+  };
+}
+
+function normalizeCanvasResult(
+  result: CanvasCollectionItem["result"],
+): CanvasCollectionItem["result"] {
+  if (
+    !result ||
+    typeof result.id !== "string" ||
+    typeof result.title !== "string" ||
+    typeof result.description !== "string" ||
+    (result.source !== "demo" && result.source !== "provider")
+  )
+    return undefined;
+  return {
+    id: result.id.slice(0, 160),
+    kind: normalizeKind(result.kind),
+    title: result.title.slice(0, 160),
+    src: normalizeOptionalSlice(result.src, 16 * 1024 * 1024),
+    poster: normalizeOptionalSlice(result.poster, 16 * 1024 * 1024),
+    text: normalizeOptionalSlice(result.text, 32768),
+    description: result.description.slice(0, 500),
+    source: result.source,
+  };
+}
+
+function normalizeCanvasReferenceFields(
+  value: CanvasCollectionItem,
+): Pick<
+  CanvasCollectionItem,
+  | "referenceMode"
+  | "referenceOnly"
+  | "referenceSlot"
+  | "referenceFrame"
+  | "generationStatus"
+  | "generationIndex"
+> {
+  return {
     referenceMode: value.referenceMode === true ? true : undefined,
     referenceOnly: value.referenceOnly === true ? true : undefined,
     referenceSlot: (CANVAS_REFERENCE_SLOTS as readonly string[]).includes(
@@ -1103,6 +1108,10 @@ function normalizeCanvasItem(
     )
       ? (value.referenceSlot as CanvasCollectionItem["referenceSlot"])
       : undefined,
+    referenceFrame:
+      value.referenceFrame === "first" || value.referenceFrame === "last"
+        ? value.referenceFrame
+        : undefined,
     generationStatus:
       value.generationStatus === "pending" ||
       value.generationStatus === "ready" ||
@@ -1113,32 +1122,59 @@ function normalizeCanvasItem(
       typeof value.generationIndex === "number"
         ? value.generationIndex
         : undefined,
-    result:
-      result &&
-      typeof result.id === "string" &&
-      typeof result.title === "string" &&
-      typeof result.description === "string" &&
-      (result.source === "demo" || result.source === "provider")
-        ? {
-            id: result.id.slice(0, 160),
-            kind: normalizeKind(result.kind),
-            title: result.title.slice(0, 160),
-            src:
-              typeof result.src === "string"
-                ? result.src.slice(0, 16 * 1024 * 1024)
-                : undefined,
-            poster:
-              typeof result.poster === "string"
-                ? result.poster.slice(0, 16 * 1024 * 1024)
-                : undefined,
-            text:
-              typeof result.text === "string"
-                ? result.text.slice(0, 32768)
-                : undefined,
-            description: result.description.slice(0, 500),
-            source: result.source,
-          }
-        : undefined,
+  };
+}
+
+function normalizeImageEditReferences(value: unknown): string[] | undefined {
+  if (!Array.isArray(value)) return undefined;
+  return value
+    .filter(
+      (id): id is string =>
+        typeof id === "string" && /^asset-[a-f0-9]{24}$/.test(id),
+    )
+    .slice(0, 64);
+}
+
+function normalizeCanvasItem(
+  value: CanvasCollectionItem,
+): CanvasCollectionItem {
+  const promptMax =
+    value.kind === "video" || value.kind === "audio" ? 7500 : 4000;
+  return {
+    tags: value.tags === undefined ? undefined : normalizeTags(value.tags),
+    // Plugin content is durable project data, independently editable after a read.
+    plugin:
+      value.plugin === undefined ? undefined : structuredClone(value.plugin),
+    imageEditDraft:
+      value.imageEditDraft === undefined
+        ? undefined
+        : readMaskDocument(value.imageEditDraft),
+    imageEditContext: readImageEditContext(value.imageEditContext),
+    imageEditPrompt: normalizeOptionalSlice(value.imageEditPrompt, 2000),
+    imageEditReferenceIds: normalizeImageEditReferences(
+      value.imageEditReferenceIds,
+    ),
+    id: safeText(value.id, 160),
+    providerConnectionId: normalizeOptionalSlice(
+      value.providerConnectionId,
+      120,
+    ),
+    generationSource: value.generationSource === "codex" ? "codex" : undefined,
+    parameters: normalizeCanvasParameters(value.parameters),
+    title: safeText(value.title, 160),
+    description: safeText(value.description, 500),
+    kind: normalizeKind(value.kind),
+    prompt: normalizeOptionalSlice(value.prompt, promptMax),
+    model: normalizeOptionalSlice(value.model, 120),
+    assetId: normalizeOptionalSlice(value.assetId, 160),
+    parentAssetId: safeText(value.parentAssetId, 160) || undefined,
+    preview: normalizeOptionalSlice(value.preview, 16 * 1024 * 1024),
+    mediaWidth: normalizeMediaDimension(value.mediaWidth),
+    mediaHeight: normalizeMediaDimension(value.mediaHeight),
+    updatedAt:
+      typeof value.updatedAt === "number" ? value.updatedAt : undefined,
+    ...normalizeCanvasReferenceFields(value),
+    result: normalizeCanvasResult(value.result),
   };
 }
 
@@ -1310,6 +1346,322 @@ function normalizeProject(
   });
 }
 
+function isTokenIdentifier(value: unknown): value is string {
+  return typeof value === "string" && /^[A-Za-z0-9_-]{1,160}$/.test(value);
+}
+
+function normalizeProjectMessages(
+  rawMessages: unknown,
+  chats: Record<string, ChatItem> | undefined,
+  activeChatId: string | undefined,
+): CreationMessage[] {
+  if (Array.isArray(rawMessages)) {
+    return rawMessages
+      .filter((message) =>
+        Boolean(
+          message &&
+          typeof message.id === "string" &&
+          typeof message.content === "string",
+        ),
+      )
+      .map((message) => ({
+        ...message,
+        id: safeText(message.id, 160),
+        role: ["assistant", "system", "tool", "error"].includes(message.role)
+          ? message.role
+          : ("user" as const),
+        content: message.content,
+        createdAt:
+          typeof message.createdAt === "number"
+            ? message.createdAt
+            : Date.now(),
+      }));
+  }
+  if (chats && activeChatId && chats[activeChatId]) {
+    return chats[activeChatId].messages.map((m) => ({
+      id: safeText(m.id, 160),
+      role: m.role === "system" ? ("system" as const) : ("user" as const),
+      content: m.content.slice(0, 10000),
+      createdAt: m.createdAt ?? Date.now(),
+    }));
+  }
+  return [];
+}
+
+function resolveNormalizedSubmissionState(
+  task: Record<string, unknown>,
+): CreationSubmissionState {
+  if (
+    task.submissionState === "submitted" ||
+    task.submissionState === "unknown" ||
+    task.submissionState === "terminal"
+  )
+    return task.submissionState;
+  if (task.status === "running") return "submitted";
+  if (task.status === "unknown") return "unknown";
+  if (
+    task.status === "succeeded" ||
+    task.status === "failed" ||
+    task.status === "cancelled" ||
+    task.status === "offline" ||
+    task.status === "partial"
+  )
+    return "terminal";
+  return "intent";
+}
+
+function normalizeTaskOutputEntry(
+  output: unknown,
+  task: Record<string, unknown>,
+): CreationTaskOutput[] {
+  if (!output || typeof output !== "object") return [];
+  const value = output as Record<string, unknown>;
+  const status =
+    value.status === "running" ||
+    value.status === "unknown" ||
+    value.status === "succeeded" ||
+    value.status === "failed" ||
+    value.status === "cancelled"
+      ? value.status
+      : "waiting";
+  const index =
+    typeof value.index === "number" && Number.isSafeInteger(value.index)
+      ? Math.max(0, Math.min(63, value.index))
+      : 0;
+  return [
+    {
+      index,
+      status,
+      assetId: normalizeOptionalSlice(value.assetId, 160),
+      text:
+        typeof value.text === "string" &&
+        new TextEncoder().encode(value.text).length <= 32768
+          ? value.text
+          : undefined,
+      model: safeText(value.model, 120, safeText(task.model, 120)),
+      provider:
+        safeText(value.provider, 80) ||
+        safeText(task.providerName, 80) ||
+        undefined,
+      promptHash: safeText(value.promptHash, 120) || undefined,
+      error: safeText(value.error, 500) || undefined,
+      createdAt:
+        typeof value.createdAt === "number"
+          ? value.createdAt
+          : typeof task.createdAt === "number"
+            ? task.createdAt
+            : Date.now(),
+    },
+  ];
+}
+
+function resolveNormalizedCostUsd(
+  rawReceipt: unknown,
+  rawCostUsd: unknown,
+  taskIdentity: { id: string; idempotencyKey: string },
+  stage: "estimate" | "actual",
+): number | undefined {
+  const receipt = normalizeTaskCostReceipt(rawReceipt, taskIdentity, stage);
+  if (receipt) {
+    return receipt.source === "provider" && receipt.currency === "USD"
+      ? receipt.amount
+      : undefined;
+  }
+  return typeof rawCostUsd === "number" &&
+    Number.isFinite(rawCostUsd) &&
+    rawCostUsd >= 0 &&
+    rawCostUsd <= 1_000_000_000
+    ? rawCostUsd
+    : undefined;
+}
+
+const VALID_APPROVAL_GATES = new Set<ApprovalGate>([
+  "remote_transfer",
+  "high_cost_batch",
+  "overwrite_original",
+  "external_share",
+  "account_or_billing_change",
+]);
+
+function normalizeTaskBounds(
+  task: Record<string, unknown>,
+): Pick<
+  CreationTask,
+  "submittedAt" | "attempt" | "requestedOutputs" | "completedOutputs"
+> {
+  return {
+    submittedAt:
+      typeof task.submittedAt === "number" &&
+      Number.isSafeInteger(task.submittedAt) &&
+      task.submittedAt >= 0
+        ? task.submittedAt
+        : undefined,
+    attempt:
+      typeof task.attempt === "number" && Number.isSafeInteger(task.attempt)
+        ? Math.max(1, Math.min(100, task.attempt))
+        : 1,
+    requestedOutputs:
+      typeof task.requestedOutputs === "number" &&
+      Number.isFinite(task.requestedOutputs)
+        ? Math.max(1, Math.min(64, Math.floor(task.requestedOutputs)))
+        : 1,
+    completedOutputs:
+      typeof task.completedOutputs === "number" &&
+      Number.isFinite(task.completedOutputs)
+        ? Math.max(0, Math.floor(task.completedOutputs))
+        : task.status === "succeeded"
+          ? 1
+          : 0,
+  };
+}
+
+function normalizeTaskCostAndRetryFields(
+  task: Record<string, unknown>,
+  receiptIdentity: { id: string; idempotencyKey: string },
+): Pick<
+  CreationTask,
+  | "estimatedCostUsd"
+  | "actualCostUsd"
+  | "estimatedCostQuote"
+  | "actualCostReceipt"
+  | "approvedGates"
+  | "retryOfTaskId"
+  | "retryOutputIndices"
+> {
+  return {
+    estimatedCostUsd: resolveNormalizedCostUsd(
+      task.estimatedCostQuote,
+      task.estimatedCostUsd,
+      receiptIdentity,
+      "estimate",
+    ),
+    actualCostUsd: resolveNormalizedCostUsd(
+      task.actualCostReceipt,
+      task.actualCostUsd,
+      receiptIdentity,
+      "actual",
+    ),
+    estimatedCostQuote: normalizeTaskCostReceipt(
+      task.estimatedCostQuote,
+      receiptIdentity,
+      "estimate",
+    ),
+    actualCostReceipt: normalizeTaskCostReceipt(
+      task.actualCostReceipt,
+      receiptIdentity,
+      "actual",
+    ),
+    approvedGates: Array.isArray(task.approvedGates)
+      ? task.approvedGates.filter((gate): gate is ApprovalGate =>
+          VALID_APPROVAL_GATES.has(gate as ApprovalGate),
+        )
+      : undefined,
+    retryOfTaskId: safeText(task.retryOfTaskId, 160) || undefined,
+    retryOutputIndices: Array.isArray(task.retryOutputIndices)
+      ? task.retryOutputIndices.filter(
+          (index): index is number =>
+            typeof index === "number" && Number.isSafeInteger(index),
+        )
+      : undefined,
+  };
+}
+
+function normalizeProjectTask(task: Record<string, unknown>): CreationTask {
+  const id = safeText(task.id, 160);
+  const rawIdempotencyKey =
+    typeof task.idempotencyKey === "string" && task.idempotencyKey
+      ? task.idempotencyKey.slice(0, 200)
+      : "";
+  const receiptIdentity = { id, idempotencyKey: rawIdempotencyKey };
+  return {
+    id,
+    sourceItemId: safeText(task.sourceItemId, 160) || undefined,
+    originChatId: safeText(task.originChatId, 160) || undefined,
+    prompt: safeText(task.prompt, 4000),
+    model: safeText(task.model, 120),
+    kind: normalizeKind(task.kind),
+    status: normalizeTaskStatus(task.status),
+    submissionState: resolveNormalizedSubmissionState(task),
+    ...normalizeTaskBounds(task),
+    error: normalizeOptionalSlice(task.error, 500),
+    resultItemId: normalizeOptionalSlice(task.resultItemId, 160),
+    createdAt: typeof task.createdAt === "number" ? task.createdAt : Date.now(),
+    updatedAt: typeof task.updatedAt === "number" ? task.updatedAt : Date.now(),
+    attachments: Array.isArray(task.attachments)
+      ? task.attachments.filter(isAttachment)
+      : [],
+    completedOutputIndices: normalizeCompletedOutputIndices(
+      task.completedOutputIndices,
+    ),
+    idempotencyKey: rawIdempotencyKey || `${id}-attempt-1`,
+    batchId: normalizeOptionalSlice(task.batchId, 160),
+    privacyMode:
+      task.privacyMode === "platform_backed" ||
+      task.privacyMode === "byok_local"
+        ? task.privacyMode
+        : "byok_local",
+    providerCredentialRef: isTokenIdentifier(task.providerCredentialRef)
+      ? task.providerCredentialRef
+      : undefined,
+    providerConnectionId: normalizeOptionalSlice(
+      task.providerConnectionId,
+      160,
+    ),
+    providerBaseUrl: safeBaseUrl(task.providerBaseUrl),
+    ...creationProviderRouting(task),
+    providerName: safeText(task.providerName, 80) || undefined,
+    imageEdit: readImageEditSnapshot(task.imageEdit),
+    imageEditContext: readImageEditContext(task.imageEditContext),
+    imageSize: normalizeImageSizeLabel(task.imageSize),
+    outputs: Array.isArray(task.outputs)
+      ? task.outputs.flatMap((output) => normalizeTaskOutputEntry(output, task))
+      : undefined,
+    ...normalizeTaskCostAndRetryFields(task, receiptIdentity),
+  };
+}
+
+function isCandidateTaskRecord(task: unknown): task is Record<string, unknown> {
+  if (!task || typeof task !== "object") return false;
+  const candidate = task as Record<string, unknown>;
+  return (
+    typeof candidate.id === "string" &&
+    typeof candidate.prompt === "string" &&
+    typeof candidate.model === "string" &&
+    typeof candidate.status === "string"
+  );
+}
+
+function normalizeStringIdList(value: unknown): string[] {
+  if (!Array.isArray(value)) return [];
+  return value
+    .filter((id): id is string => typeof id === "string")
+    .map((id) => id.slice(0, 160));
+}
+
+function normalizeAgentGeneratedImageIds(value: unknown): string[] | undefined {
+  if (!Array.isArray(value)) return undefined;
+  return value
+    .filter((id): id is string => typeof id === "string" && id.length <= 250)
+    .slice(-5000);
+}
+
+function normalizeProjectComposerDraft(
+  candidate: Record<string, unknown>,
+  attachments: CreationAttachment[],
+): CreationDraft {
+  if (candidate.composerDraft) return normalizeDraft(candidate.composerDraft);
+  return {
+    prompt: "",
+    model: safeText(candidate.model, 120),
+    kind: normalizeKind(candidate.kind),
+    attachments,
+    approvalMode: "auto",
+    privacyMode: "byok_local",
+    outputCount: 1,
+    updatedAt: 0,
+  };
+}
+
 function normalizeProjectFields(
   value: CreationProject | unknown,
   version: 2 | 3 = 2,
@@ -1322,9 +1674,7 @@ function normalizeProjectFields(
   const attachments = Array.isArray(candidate.attachments)
     ? candidate.attachments.filter(isAttachment)
     : [];
-  const rawTasks = (
-    Array.isArray(candidate.tasks) ? candidate.tasks : []
-  ) as Array<Record<string, unknown>>;
+  const rawTasks = Array.isArray(candidate.tasks) ? candidate.tasks : [];
 
   const { chats, activeChatId } = resolveProjectChats(candidate, version);
   return {
@@ -1343,326 +1693,29 @@ function normalizeProjectFields(
     providerBaseUrl: safeBaseUrl(candidate.providerBaseUrl),
     ...creationProviderRouting(candidate),
     providerName: safeText(candidate.providerName, 80) || undefined,
-    agentThreadId:
-      typeof candidate.agentThreadId === "string" &&
-      /^[A-Za-z0-9_-]{1,160}$/.test(candidate.agentThreadId)
-        ? candidate.agentThreadId
-        : undefined,
-    agentGeneratedImageIds: Array.isArray(candidate.agentGeneratedImageIds)
-      ? candidate.agentGeneratedImageIds
-          .filter(
-            (id): id is string => typeof id === "string" && id.length <= 250,
-          )
-          .slice(-5000)
+    agentThreadId: isTokenIdentifier(candidate.agentThreadId)
+      ? candidate.agentThreadId
       : undefined,
+    agentGeneratedImageIds: normalizeAgentGeneratedImageIds(
+      candidate.agentGeneratedImageIds,
+    ),
     googleConversation: normalizeGoogleConversation(
       candidate.googleConversation,
     ),
-    providerCredentialRef:
-      typeof candidate.providerCredentialRef === "string" &&
-      /^[A-Za-z0-9_-]{1,160}$/.test(candidate.providerCredentialRef)
-        ? candidate.providerCredentialRef
-        : undefined,
+    providerCredentialRef: isTokenIdentifier(candidate.providerCredentialRef)
+      ? candidate.providerCredentialRef
+      : undefined,
     items,
-    messages: Array.isArray(candidate.messages)
-      ? candidate.messages
-          .filter((message) =>
-            Boolean(
-              message &&
-              typeof message.id === "string" &&
-              typeof message.content === "string",
-            ),
-          )
-          .map((message) => ({
-            ...message,
-            id: safeText(message.id, 160),
-            role: ["assistant", "system", "tool", "error"].includes(
-              message.role,
-            )
-              ? message.role
-              : ("user" as const),
-            content: message.content,
-            createdAt:
-              typeof message.createdAt === "number"
-                ? message.createdAt
-                : Date.now(),
-          }))
-      : chats && activeChatId && chats[activeChatId]
-        ? chats[activeChatId].messages.map((m) => ({
-            id: safeText(m.id, 160),
-            role: m.role === "system" ? ("system" as const) : ("user" as const),
-            content: m.content.slice(0, 10000),
-            createdAt: m.createdAt ?? Date.now(),
-          }))
-        : [],
-    tasks: rawTasks
-      .filter((task) =>
-        Boolean(
-          task &&
-          typeof task.id === "string" &&
-          typeof task.prompt === "string" &&
-          typeof task.model === "string" &&
-          typeof task.status === "string",
-        ),
-      )
-      .map((task) => ({
-        id: safeText(task.id, 160),
-        sourceItemId: safeText(task.sourceItemId, 160) || undefined,
-        originChatId: safeText(task.originChatId, 160) || undefined,
-        prompt: safeText(task.prompt, 4000),
-        model: safeText(task.model, 120),
-        kind: normalizeKind(task.kind),
-        status: normalizeTaskStatus(task.status),
-        submissionState:
-          task.submissionState === "submitted" ||
-          task.submissionState === "unknown" ||
-          task.submissionState === "terminal"
-            ? task.submissionState
-            : task.status === "running"
-              ? "submitted"
-              : task.status === "unknown"
-                ? "unknown"
-                : task.status === "succeeded" ||
-                    task.status === "failed" ||
-                    task.status === "cancelled" ||
-                    task.status === "offline" ||
-                    task.status === "partial"
-                  ? "terminal"
-                  : "intent",
-        submittedAt:
-          typeof task.submittedAt === "number" &&
-          Number.isSafeInteger(task.submittedAt) &&
-          task.submittedAt >= 0
-            ? task.submittedAt
-            : undefined,
-        error:
-          typeof task.error === "string" ? task.error.slice(0, 500) : undefined,
-        resultItemId:
-          typeof task.resultItemId === "string"
-            ? task.resultItemId.slice(0, 160)
-            : undefined,
-        createdAt:
-          typeof task.createdAt === "number" ? task.createdAt : Date.now(),
-        updatedAt:
-          typeof task.updatedAt === "number" ? task.updatedAt : Date.now(),
-        attachments: Array.isArray(task.attachments)
-          ? task.attachments.filter(isAttachment)
-          : [],
-        attempt:
-          typeof task.attempt === "number" && Number.isSafeInteger(task.attempt)
-            ? Math.max(1, Math.min(100, task.attempt))
-            : 1,
-        requestedOutputs:
-          typeof task.requestedOutputs === "number" &&
-          Number.isFinite(task.requestedOutputs)
-            ? Math.max(1, Math.min(64, Math.floor(task.requestedOutputs)))
-            : 1,
-        completedOutputs:
-          typeof task.completedOutputs === "number" &&
-          Number.isFinite(task.completedOutputs)
-            ? Math.max(0, Math.floor(task.completedOutputs))
-            : task.status === "succeeded"
-              ? 1
-              : 0,
-        completedOutputIndices: normalizeCompletedOutputIndices(
-          task.completedOutputIndices,
-        ),
-        idempotencyKey:
-          typeof task.idempotencyKey === "string" && task.idempotencyKey
-            ? task.idempotencyKey.slice(0, 200)
-            : `${safeText(task.id, 160)}-attempt-1`,
-        batchId:
-          typeof task.batchId === "string"
-            ? task.batchId.slice(0, 160)
-            : undefined,
-        privacyMode:
-          task.privacyMode === "platform_backed" ||
-          task.privacyMode === "byok_local"
-            ? task.privacyMode
-            : "byok_local",
-        providerCredentialRef:
-          typeof task.providerCredentialRef === "string" &&
-          /^[A-Za-z0-9_-]{1,160}$/.test(task.providerCredentialRef)
-            ? task.providerCredentialRef
-            : undefined,
-        providerConnectionId:
-          typeof task.providerConnectionId === "string"
-            ? task.providerConnectionId.slice(0, 160)
-            : undefined,
-        providerBaseUrl: safeBaseUrl(task.providerBaseUrl),
-        ...creationProviderRouting(task),
-        providerName: safeText(task.providerName, 80) || undefined,
-        imageEdit: readImageEditSnapshot(task.imageEdit),
-        imageEditContext: readImageEditContext(task.imageEditContext),
-        imageSize:
-          typeof task.imageSize === "string" &&
-          /^\d{2,5}x\d{2,5}$/.test(task.imageSize)
-            ? task.imageSize
-            : undefined,
-        outputs: Array.isArray(task.outputs)
-          ? task.outputs.flatMap((output) => {
-              if (!output || typeof output !== "object") return [];
-              const value = output as Record<string, unknown>;
-              const status =
-                value.status === "running" ||
-                value.status === "unknown" ||
-                value.status === "succeeded" ||
-                value.status === "failed" ||
-                value.status === "cancelled"
-                  ? value.status
-                  : "waiting";
-              const index =
-                typeof value.index === "number" &&
-                Number.isSafeInteger(value.index)
-                  ? Math.max(0, Math.min(63, value.index))
-                  : 0;
-              return [
-                {
-                  index,
-                  status,
-                  assetId:
-                    typeof value.assetId === "string"
-                      ? value.assetId.slice(0, 160)
-                      : undefined,
-                  text:
-                    typeof value.text === "string" &&
-                    new TextEncoder().encode(value.text).length <= 32768
-                      ? value.text
-                      : undefined,
-                  model: safeText(value.model, 120, safeText(task.model, 120)),
-                  provider:
-                    safeText(value.provider, 80) ||
-                    safeText(task.providerName, 80) ||
-                    undefined,
-                  promptHash: safeText(value.promptHash, 120) || undefined,
-                  error: safeText(value.error, 500) || undefined,
-                  createdAt:
-                    typeof value.createdAt === "number"
-                      ? value.createdAt
-                      : typeof task.createdAt === "number"
-                        ? task.createdAt
-                        : Date.now(),
-                },
-              ];
-            })
-          : undefined,
-        estimatedCostUsd: (() => {
-          const quote = normalizeTaskCostReceipt(
-            task.estimatedCostQuote,
-            {
-              id: safeText(task.id, 160),
-              idempotencyKey:
-                typeof task.idempotencyKey === "string" && task.idempotencyKey
-                  ? task.idempotencyKey.slice(0, 200)
-                  : "",
-            },
-            "estimate",
-          );
-          if (quote) {
-            return quote.source === "provider" && quote.currency === "USD"
-              ? quote.amount
-              : undefined;
-          }
-          return typeof task.estimatedCostUsd === "number" &&
-            Number.isFinite(task.estimatedCostUsd) &&
-            task.estimatedCostUsd >= 0 &&
-            task.estimatedCostUsd <= 1_000_000_000
-            ? task.estimatedCostUsd
-            : undefined;
-        })(),
-        actualCostUsd: (() => {
-          const receipt = normalizeTaskCostReceipt(
-            task.actualCostReceipt,
-            {
-              id: safeText(task.id, 160),
-              idempotencyKey:
-                typeof task.idempotencyKey === "string" && task.idempotencyKey
-                  ? task.idempotencyKey.slice(0, 200)
-                  : "",
-            },
-            "actual",
-          );
-          if (receipt) {
-            return receipt.source === "provider" && receipt.currency === "USD"
-              ? receipt.amount
-              : undefined;
-          }
-          return typeof task.actualCostUsd === "number" &&
-            Number.isFinite(task.actualCostUsd) &&
-            task.actualCostUsd >= 0 &&
-            task.actualCostUsd <= 1_000_000_000
-            ? task.actualCostUsd
-            : undefined;
-        })(),
-        estimatedCostQuote: normalizeTaskCostReceipt(
-          task.estimatedCostQuote,
-          {
-            id: safeText(task.id, 160),
-            idempotencyKey:
-              typeof task.idempotencyKey === "string" && task.idempotencyKey
-                ? task.idempotencyKey.slice(0, 200)
-                : "",
-          },
-          "estimate",
-        ),
-        actualCostReceipt: normalizeTaskCostReceipt(
-          task.actualCostReceipt,
-          {
-            id: safeText(task.id, 160),
-            idempotencyKey:
-              typeof task.idempotencyKey === "string" && task.idempotencyKey
-                ? task.idempotencyKey.slice(0, 200)
-                : "",
-          },
-          "actual",
-        ),
-        approvedGates: Array.isArray(task.approvedGates)
-          ? task.approvedGates.filter(
-              (gate): gate is ApprovalGate =>
-                gate === "remote_transfer" ||
-                gate === "high_cost_batch" ||
-                gate === "overwrite_original" ||
-                gate === "external_share" ||
-                gate === "account_or_billing_change",
-            )
-          : undefined,
-        retryOfTaskId: safeText(task.retryOfTaskId, 160) || undefined,
-        retryOutputIndices: Array.isArray(task.retryOutputIndices)
-          ? task.retryOutputIndices.filter(
-              (index): index is number =>
-                typeof index === "number" && Number.isSafeInteger(index),
-            )
-          : undefined,
-      })),
-    stagePlans: normalizeStagePlans(
-      (candidate as unknown as Record<string, unknown>).stagePlans,
-    ).filter((plan) => plan.projectId === projectId),
-    reviewComments: normalizeReviewComments(
-      (candidate as unknown as Record<string, unknown>).reviewComments,
+    messages: normalizeProjectMessages(candidate.messages, chats, activeChatId),
+    tasks: rawTasks.filter(isCandidateTaskRecord).map(normalizeProjectTask),
+    stagePlans: normalizeStagePlans(candidate.stagePlans).filter(
+      (plan) => plan.projectId === projectId,
     ),
-    favoriteIds: Array.isArray(candidate.favoriteIds)
-      ? candidate.favoriteIds
-          .filter((id): id is string => typeof id === "string")
-          .map((id) => id.slice(0, 160))
-      : [],
-    likedIds: Array.isArray(candidate.likedIds)
-      ? candidate.likedIds
-          .filter((id): id is string => typeof id === "string")
-          .map((id) => id.slice(0, 160))
-      : [],
+    reviewComments: normalizeReviewComments(candidate.reviewComments),
+    favoriteIds: normalizeStringIdList(candidate.favoriteIds),
+    likedIds: normalizeStringIdList(candidate.likedIds),
     customTags: normalizeTags(candidate.customTags),
-    composerDraft: candidate.composerDraft
-      ? normalizeDraft(candidate.composerDraft)
-      : {
-          prompt: "",
-          model: safeText(candidate.model, 120),
-          kind: normalizeKind(candidate.kind),
-          attachments,
-          approvalMode: "auto",
-          privacyMode: "byok_local",
-          outputCount: 1,
-          updatedAt: 0,
-        },
+    composerDraft: normalizeProjectComposerDraft(candidate, attachments),
     ...(chats ? { chats, activeChatId } : {}),
     createdAt:
       typeof candidate.createdAt === "number"
@@ -1680,14 +1733,7 @@ function migrateV1(parsed: {
   activeProjectId?: unknown;
 }): CreationSnapshot {
   const projects = (parsed.projects ?? [])
-    .filter((project): project is CreationProject =>
-      Boolean(
-        project &&
-        typeof project === "object" &&
-        typeof (project as { id?: unknown }).id === "string" &&
-        Array.isArray((project as { items?: unknown }).items),
-      ),
-    )
+    .filter(isCandidateProjectRecord)
     .map((project) => normalizeProject(project));
   return {
     version: 2,

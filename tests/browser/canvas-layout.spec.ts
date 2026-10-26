@@ -131,7 +131,7 @@ test("工具菜单互斥并保留键盘焦点，减弱动态不播放动画", as
   await openWorkspace(page);
   await page.getByRole("button", { name: "添加资源", exact: true }).click();
   const toggle = page.getByRole("button", {
-    name: "选择画布工具",
+    name: "展开画布工具",
     exact: true,
   });
   await toggle.focus();

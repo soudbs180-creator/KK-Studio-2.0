@@ -158,7 +158,9 @@ export class ShadowEventBus {
    * Request an explicit SQLite WAL checkpoint (defaults to TRUNCATE).
    * Smoothly consolidates the WAL buffer into the main SQLite database and truncates the -wal file.
    */
-  public async checkpoint(mode?: CheckpointMode): Promise<CheckpointResult | null> {
+  public async checkpoint(
+    mode?: CheckpointMode,
+  ): Promise<CheckpointResult | null> {
     let isDesktop: boolean;
     try {
       isDesktop = isTauri();

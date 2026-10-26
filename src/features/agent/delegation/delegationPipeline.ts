@@ -31,32 +31,54 @@ export const DEFAULT_ROLE_PRESETS: Record<string, SubagentRolePreset> = {
   scraper: {
     role: "scraper",
     defaultTaskType: "scrape",
-    description: "Offload web scraping, document text extraction, and table parsing.",
-    defaultAllowedTools: ["fetch_url", "extract_dom", "parse_table", "read_file_content"],
+    description:
+      "Offload web scraping, document text extraction, and table parsing.",
+    defaultAllowedTools: [
+      "fetch_url",
+      "extract_dom",
+      "parse_table",
+      "read_file_content",
+    ],
     maxTurns: 15,
     timeoutMs: 30000,
   },
   deep_analysis: {
     role: "deep_analysis",
     defaultTaskType: "deep_analysis",
-    description: "Analyze lengthy reference materials, compile metrics, and generate synthesis.",
-    defaultAllowedTools: ["search_index", "compute_metrics", "summarize_section", "compare_diffs"],
+    description:
+      "Analyze lengthy reference materials, compile metrics, and generate synthesis.",
+    defaultAllowedTools: [
+      "search_index",
+      "compute_metrics",
+      "summarize_section",
+      "compare_diffs",
+    ],
     maxTurns: 20,
     timeoutMs: 60000,
   },
   local_image_edit: {
     role: "local_image_edit",
     defaultTaskType: "local_image_edit",
-    description: "Run localized image inpainting, segmentation, and prompt refinement.",
-    defaultAllowedTools: ["segment_mask", "generate_layer_variant", "render_preview"],
+    description:
+      "Run localized image inpainting, segmentation, and prompt refinement.",
+    defaultAllowedTools: [
+      "segment_mask",
+      "generate_layer_variant",
+      "render_preview",
+    ],
     maxTurns: 10,
     timeoutMs: 45000,
   },
   code_verify: {
     role: "code_verify",
     defaultTaskType: "code_verify",
-    description: "Verify isolated code snippets, run syntax checks, and validate logic.",
-    defaultAllowedTools: ["run_isolated_test", "lint_snippet", "typecheck_code"],
+    description:
+      "Verify isolated code snippets, run syntax checks, and validate logic.",
+    defaultAllowedTools: [
+      "run_isolated_test",
+      "lint_snippet",
+      "typecheck_code",
+    ],
     maxTurns: 10,
     timeoutMs: 30000,
   },
@@ -96,7 +118,10 @@ export class DelegationPipeline {
     this._maxConcurrency = options?.defaultMaxConcurrency ?? 5;
 
     // Load presets
-    const initialPresets = { ...DEFAULT_ROLE_PRESETS, ...(options?.presets || {}) };
+    const initialPresets = {
+      ...DEFAULT_ROLE_PRESETS,
+      ...(options?.presets || {}),
+    };
     for (const [key, preset] of Object.entries(initialPresets)) {
       this._presets.set(key, preset);
     }
@@ -161,7 +186,8 @@ export class DelegationPipeline {
     const preset = this._presets.get(brief.subagentRole);
 
     // Merge allowed tools from preset if brief does not specify
-    const allowedToolNames = brief.allowedTools || preset?.defaultAllowedTools || [];
+    const allowedToolNames =
+      brief.allowedTools || preset?.defaultAllowedTools || [];
     const availableTools: SubagentToolDefinition[] = [];
 
     for (const toolName of allowedToolNames) {
@@ -188,7 +214,11 @@ export class DelegationPipeline {
     );
 
     this._sandboxes.set(brief.taskId, sandbox);
-    this.emit({ type: "task_started", taskId: brief.taskId, role: brief.subagentRole });
+    this.emit({
+      type: "task_started",
+      taskId: brief.taskId,
+      role: brief.subagentRole,
+    });
 
     // Link options signal if provided
     if (options?.signal) {
@@ -243,7 +273,10 @@ export class DelegationPipeline {
     customTurnHandler?: SubagentTurnHandler,
     options?: { concurrency?: number; signal?: AbortSignal },
   ): Promise<SubagentFoldbackResult[]> {
-    const concurrency = Math.max(1, options?.concurrency ?? this._maxConcurrency);
+    const concurrency = Math.max(
+      1,
+      options?.concurrency ?? this._maxConcurrency,
+    );
     const results: SubagentFoldbackResult[] = new Array(briefs.length);
     let currentIndex = 0;
 
@@ -258,7 +291,10 @@ export class DelegationPipeline {
       }
     };
 
-    const workers = Array.from({ length: Math.min(concurrency, briefs.length) }, () => worker());
+    const workers = Array.from(
+      { length: Math.min(concurrency, briefs.length) },
+      () => worker(),
+    );
     await Promise.all(workers);
     return results;
   }
@@ -266,7 +302,10 @@ export class DelegationPipeline {
   /**
    * Cancel an actively executing subagent task.
    */
-  cancelTask(taskId: string, reason: string = "Task cancelled by primary agent."): boolean {
+  cancelTask(
+    taskId: string,
+    reason: string = "Task cancelled by primary agent.",
+  ): boolean {
     const controller = this._activeControllers.get(taskId);
     if (controller) {
       controller.abort(new Error(reason));
@@ -337,14 +376,17 @@ export class DelegationPipeline {
       failedTasks: failed,
       totalTokensConsumed: tokensConsumed,
       totalTokensSaved: tokensSaved,
-      averageDurationMs: results.length > 0 ? Math.round(totalDurationMs / results.length) : 0,
+      averageDurationMs:
+        results.length > 0 ? Math.round(totalDurationMs / results.length) : 0,
     };
   }
 
   /**
    * Creates a default turn handler for scenarios where external LLM completion isn't injected.
    */
-  private createDefaultTurnHandler(brief: SubagentTaskBrief): SubagentTurnHandler {
+  private createDefaultTurnHandler(
+    brief: SubagentTaskBrief,
+  ): SubagentTurnHandler {
     return async (history, availableTools) => {
       // If we haven't executed tools yet and tools are available, execute the first matching tool
       if (history.length <= 2 && availableTools.length > 0) {

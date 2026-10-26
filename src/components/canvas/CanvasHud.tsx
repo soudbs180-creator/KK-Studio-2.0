@@ -29,7 +29,9 @@ export default function CanvasHud({
   onViewModeChange?: (mode: "canvas" | "browser") => void;
   children: ReactNode;
 }) {
-  const [internalViewMode, setInternalViewMode] = useState<"canvas" | "browser">("canvas");
+  const [internalViewMode, setInternalViewMode] = useState<
+    "canvas" | "browser"
+  >("canvas");
   const viewMode = controlledViewMode ?? internalViewMode;
 
   const handleModeChange = (mode: "canvas" | "browser") => {
@@ -43,18 +45,7 @@ export default function CanvasHud({
       onPointerDown={(event) => event.stopPropagation()}
       onWheel={(event) => event.stopPropagation()}
     >
-      <div className="canvas-hud-actions">
-        {projectStatus}
-      </div>
-      <div className="canvas-hud-right">
-        {children}
-        <TaskPanel
-          onConfigure={onConfigure}
-          onOpenTasks={onOpenTasks}
-          tasks={tasks}
-          onCancelTask={onCancelTask}
-          onRetryTask={onRetryTask}
-        />
+      <div className="canvas-hud-left">
         <div
           className="canvas-view-mode-toggle"
           role="radiogroup"
@@ -79,6 +70,17 @@ export default function CanvasHud({
             浏览器
           </button>
         </div>
+        <TaskPanel
+          onConfigure={onConfigure}
+          onOpenTasks={onOpenTasks}
+          tasks={tasks}
+          onCancelTask={onCancelTask}
+          onRetryTask={onRetryTask}
+        />
+        <div className="canvas-hud-actions">{projectStatus}</div>
+      </div>
+      <div className="canvas-hud-right">
+        {children}
         <button
           className={`chat-reopen ${chatOpen ? "only-narrow" : ""}`}
           aria-label="打开对话"
@@ -87,8 +89,8 @@ export default function CanvasHud({
         >
           <img
             src="/design/figma/chat-close.svg"
-            width={18}
-            height={18}
+            width={20}
+            height={20}
             alt=""
             draggable={false}
           />

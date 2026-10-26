@@ -12,10 +12,17 @@ import type { UsageStatusBarProps } from "../../src/components/composer/UsageSta
 
 interface UsageStatusBarExports {
   default: (props: UsageStatusBarProps) => React.ReactElement;
-  estimateContextTokens: (text?: string, attachmentCount?: number, baseOverhead?: number) => number;
+  estimateContextTokens: (
+    text?: string,
+    attachmentCount?: number,
+    baseOverhead?: number,
+  ) => number;
   resolveMaxTokens: (modelId?: string) => number;
   formatTokenCount: (n: number) => string;
-  formatUsageProgress: (current: number, max: number) => {
+  formatUsageProgress: (
+    current: number,
+    max: number,
+  ) => {
     percentage: number;
     label: string;
     status: "normal" | "warning" | "danger";

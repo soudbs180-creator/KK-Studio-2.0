@@ -466,6 +466,296 @@ export function mergeRetryTaskState(input: {
   };
 }
 
+function inspectLegacyRetrySlot(
+  child: CreationTask,
+  localIndex: number,
+  rootIndex: number,
+  retrySuccessIndices: number[],
+  childTerminalIndices: Set<number>,
+): boolean {
+  const output = child.outputs?.find(
+    (candidate) => candidate.index === localIndex,
+  );
+  if (output && ["succeeded", "failed", "cancelled"].includes(output.status)) {
+    childTerminalIndices.add(rootIndex);
+    if (output.status === "succeeded") retrySuccessIndices.push(rootIndex);
+    return true;
+  }
+  if (!child.outputs?.length) {
+    if (child.status === "failed" || child.status === "cancelled") {
+      childTerminalIndices.add(rootIndex);
+      return true;
+    }
+    if (child.status === "succeeded" && localIndex < child.completedOutputs) {
+      childTerminalIndices.add(rootIndex);
+      retrySuccessIndices.push(rootIndex);
+      return true;
+    }
+  }
+  return false;
+}
+
+function collectLegacyRetrySlots(child: CreationTask): {
+  retrySuccessIndices: number[];
+  childTerminalIndices: Set<number>;
+  retryReceiptComplete: boolean;
+} {
+  const retryIndices = child.retryOutputIndices ?? [];
+  const retrySuccessIndices: number[] = [];
+  const childTerminalIndices = new Set<number>();
+  let retryReceiptComplete =
+    child.submissionState === "terminal" && retryIndices.length > 0;
+  for (let localIndex = 0; localIndex < retryIndices.length; localIndex++) {
+    const rootIndex = retryIndices[localIndex];
+    if (
+      !inspectLegacyRetrySlot(
+        child,
+        localIndex,
+        rootIndex,
+        retrySuccessIndices,
+        childTerminalIndices,
+      )
+    ) {
+      retryReceiptComplete = false;
+    }
+  }
+  return { retrySuccessIndices, childTerminalIndices, retryReceiptComplete };
+}
+
+function collectLegacyPriorIndices(parent: CreationTask): Set<number> {
+  const priorIndices = new Set(parent.completedOutputIndices ?? []);
+  if (!parent.completedOutputIndices?.length) {
+    const count = Math.min(parent.completedOutputs, parent.requestedOutputs);
+    for (let index = 0; index < count; index++) priorIndices.add(index);
+  }
+  return priorIndices;
+}
+
+function isLegacyChildUncertain(
+  child: CreationTask,
+  retryReceiptComplete: boolean,
+): boolean {
+  return (
+    child.status === "unknown" ||
+    child.submissionState === "unknown" ||
+    child.submissionState === "submitted" ||
+    Boolean(child.outputs?.some((output) => output.status === "unknown")) ||
+    !retryReceiptComplete
+  );
+}
+
+function deriveLegacyParentStatus(
+  parent: CreationTask,
+  uncertainChild: boolean,
+  parentUncertaintyResolved: boolean,
+  nextCompletedOutputs: number,
+): CreationTask["status"] {
+  if (uncertainChild || !parentUncertaintyResolved) return "unknown";
+  if (nextCompletedOutputs >= parent.requestedOutputs) return "succeeded";
+  if (nextCompletedOutputs > 0) return "partial";
+  return parentUncertaintyResolved ? "failed" : parent.status;
+}
+
+function deriveLegacyParentError(options: {
+  parent: CreationTask;
+  child: CreationTask;
+  uncertainChild: boolean;
+  parentUncertaintyResolved: boolean;
+  nextStatus: CreationTask["status"];
+  retrySuccessCount: number;
+  nextCompletedOutputs: number;
+}): string | undefined {
+  if (options.uncertainChild) {
+    return (
+      options.child.error ??
+      "重试任务受理状态不明，请先核对供应商；不会自动重复提交。"
+    );
+  }
+  if (!options.parentUncertaintyResolved) {
+    return (
+      options.parent.error ??
+      "原任务受理状态不明，请先核对供应商；不会自动重复提交。"
+    );
+  }
+  if (options.nextStatus === "succeeded") return undefined;
+  if (options.retrySuccessCount > 0 && options.nextStatus === "partial") {
+    return `${options.nextCompletedOutputs}/${options.parent.requestedOutputs} 张已归档，可重试未归档结果。`;
+  }
+  return options.child.error ?? options.parent.error;
+}
+
+function reconcileLegacyParentTask(
+  parent: CreationTask,
+  child: CreationTask,
+  now: number,
+): CreationTask | null {
+  const { retrySuccessIndices, childTerminalIndices, retryReceiptComplete } =
+    collectLegacyRetrySlots(child);
+  const parentWasUncertain =
+    parent.status === "unknown" || parent.submissionState === "unknown";
+  const uncertainChild = isLegacyChildUncertain(child, retryReceiptComplete);
+  const priorIndices = collectLegacyPriorIndices(parent);
+  const nextIndices = Array.from(
+    new Set([...priorIndices, ...retrySuccessIndices]),
+  ).sort((left, right) => left - right);
+  const nextCompletedOutputs = Math.min(
+    parent.requestedOutputs,
+    Math.max(parent.completedOutputs, nextIndices.length),
+  );
+  const coverageIndices = new Set([...priorIndices, ...childTerminalIndices]);
+  const parentUncertaintyResolved =
+    !parentWasUncertain ||
+    (retryReceiptComplete && coverageIndices.size >= parent.requestedOutputs);
+  const nextStatus = deriveLegacyParentStatus(
+    parent,
+    uncertainChild,
+    parentUncertaintyResolved,
+    nextCompletedOutputs,
+  );
+  const nextSubmissionState =
+    uncertainChild || !parentUncertaintyResolved
+      ? ("unknown" as const)
+      : ["succeeded", "partial", "failed", "cancelled"].includes(nextStatus)
+        ? ("terminal" as const)
+        : parent.submissionState;
+  const nextParent: CreationTask = {
+    ...parent,
+    status: nextStatus,
+    submissionState: nextSubmissionState,
+    completedOutputs: nextCompletedOutputs,
+    completedOutputIndices:
+      parent.completedOutputIndices?.length || retrySuccessIndices.length > 0
+        ? nextIndices
+        : parent.completedOutputIndices,
+    error: deriveLegacyParentError({
+      parent,
+      child,
+      uncertainChild,
+      parentUncertaintyResolved,
+      nextStatus,
+      retrySuccessCount: retrySuccessIndices.length,
+      nextCompletedOutputs,
+    }),
+    updatedAt: now,
+  };
+  const previousComparable = JSON.stringify({
+    status: parent.status,
+    submissionState: parent.submissionState,
+    completedOutputs: parent.completedOutputs,
+    completedOutputIndices: parent.completedOutputIndices,
+    error: parent.error,
+  });
+  const nextComparable = JSON.stringify({
+    status: nextParent.status,
+    submissionState: nextParent.submissionState,
+    completedOutputs: nextParent.completedOutputs,
+    completedOutputIndices: nextParent.completedOutputIndices,
+    error: nextParent.error,
+  });
+  return previousComparable === nextComparable ? null : nextParent;
+}
+
+function reconcileVectorParentTask(
+  parent: CreationTask,
+  child: CreationTask,
+  now: number,
+): CreationTask | null {
+  const reconciliationRetry =
+    child.submissionState === "submitted"
+      ? {
+          ...child,
+          status: "unknown" as const,
+          submissionState: "unknown" as const,
+        }
+      : child;
+  const merged = mergeRetryTaskState({
+    parent: { ...parent, outputs: parent.outputs ?? [] },
+    retry: reconciliationRetry,
+  });
+  const nextParent: CreationTask = {
+    ...parent,
+    ...merged,
+    updatedAt: now,
+  };
+  const previousComparable = JSON.stringify({
+    outputs: parent.outputs ?? [],
+    completedOutputs: parent.completedOutputs,
+    status: parent.status,
+    submissionState: parent.submissionState,
+    error: parent.error,
+  });
+  const nextComparable = JSON.stringify({
+    outputs: nextParent.outputs ?? [],
+    completedOutputs: nextParent.completedOutputs,
+    status: nextParent.status,
+    submissionState: nextParent.submissionState,
+    error: nextParent.error,
+  });
+  return previousComparable === nextComparable ? null : nextParent;
+}
+
+function reconcileSingleChildIntoTasks(
+  tasks: CreationTask[],
+  persistedChild: CreationTask,
+  now: number,
+): CreationTask[] | null {
+  const child =
+    tasks.find((candidate) => candidate.id === persistedChild.id) ??
+    persistedChild;
+  if (!child.retryOfTaskId) return null;
+  const parentIndex = tasks.findIndex(
+    (candidate) => candidate.id === child.retryOfTaskId,
+  );
+  if (parentIndex < 0) return null;
+  const parent = tasks[parentIndex];
+  // Legacy snapshots may retain only a completion count. Keep that
+  // evidence without inventing an output vector; terminal retry receipts
+  // add exact slot identities so a restart cannot submit them again.
+  const nextParent = !parent.outputs?.length
+    ? reconcileLegacyParentTask(parent, child, now)
+    : reconcileVectorParentTask(parent, child, now);
+  if (!nextParent) return null;
+  return tasks.map((task, index) =>
+    index === parentIndex ? nextParent : task,
+  );
+}
+
+function reconcileProjectRetryTasks(
+  project: CreationProject,
+  now: number,
+): CreationProject {
+  let tasks = project.tasks;
+  let passChanged = true;
+  let pass = 0;
+  while (passChanged && pass++ <= project.tasks.length) {
+    passChanged = false;
+    for (const persistedChild of project.tasks) {
+      const updated = reconcileSingleChildIntoTasks(tasks, persistedChild, now);
+      if (updated) {
+        tasks = updated;
+        passChanged = true;
+      }
+    }
+  }
+  // Sibling receipts can cancel out; publish only the final persisted change.
+  tasks = tasks.map((task, index) => {
+    const original = project.tasks[index];
+    if (task === original) return original;
+    return sameJson(
+      JSON.parse(JSON.stringify({ ...task, updatedAt: original.updatedAt })),
+      JSON.parse(JSON.stringify(original)),
+    )
+      ? original
+      : task;
+  });
+  if (tasks.every((task, index) => task === project.tasks[index]))
+    tasks = project.tasks;
+  const nextItems = reconcileSourceGenerationStatuses({ ...project, tasks });
+  return tasks !== project.tasks || nextItems !== project.items
+    ? { ...project, tasks, items: nextItems, updatedAt: now }
+    : project;
+}
+
 /**
  * Reconciles persisted retry children into their source task before the UI
  * offers another retry. This closes the restart window where a child had
@@ -476,217 +766,9 @@ export function reconcileRetryTaskParents(
   snapshot: CreationSnapshot,
   now = Date.now(),
 ): CreationSnapshot {
-  const projects = snapshot.projects.map((project) => {
-    let tasks = project.tasks;
-    let passChanged = true;
-    let pass = 0;
-    while (passChanged && pass++ <= project.tasks.length) {
-      passChanged = false;
-      for (const persistedChild of project.tasks) {
-        const child =
-          tasks.find((candidate) => candidate.id === persistedChild.id) ??
-          persistedChild;
-        if (!child.retryOfTaskId) continue;
-        const parentIndex = tasks.findIndex(
-          (candidate) => candidate.id === child.retryOfTaskId,
-        );
-        if (parentIndex < 0) continue;
-        const parent = tasks[parentIndex];
-        // Legacy snapshots may retain only a completion count. Keep that
-        // evidence without inventing an output vector; terminal retry receipts
-        // add exact slot identities so a restart cannot submit them again.
-        if (!parent.outputs?.length) {
-          const retryIndices = child.retryOutputIndices ?? [];
-          const retrySuccessIndices: number[] = [];
-          const childTerminalIndices = new Set<number>();
-          let retryReceiptComplete =
-            child.submissionState === "terminal" && retryIndices.length > 0;
-          for (
-            let localIndex = 0;
-            localIndex < retryIndices.length;
-            localIndex++
-          ) {
-            const rootIndex = retryIndices[localIndex];
-            const output = child.outputs?.find(
-              (candidate) => candidate.index === localIndex,
-            );
-            if (
-              output &&
-              ["succeeded", "failed", "cancelled"].includes(output.status)
-            ) {
-              childTerminalIndices.add(rootIndex);
-              if (output.status === "succeeded")
-                retrySuccessIndices.push(rootIndex);
-              continue;
-            }
-            if (
-              !child.outputs?.length &&
-              (child.status === "failed" || child.status === "cancelled")
-            ) {
-              childTerminalIndices.add(rootIndex);
-              continue;
-            }
-            if (
-              !child.outputs?.length &&
-              child.status === "succeeded" &&
-              localIndex < child.completedOutputs
-            ) {
-              childTerminalIndices.add(rootIndex);
-              retrySuccessIndices.push(rootIndex);
-              continue;
-            }
-            retryReceiptComplete = false;
-          }
-          const parentWasUncertain =
-            parent.status === "unknown" || parent.submissionState === "unknown";
-          const uncertainChild =
-            child.status === "unknown" ||
-            child.submissionState === "unknown" ||
-            child.submissionState === "submitted" ||
-            child.outputs?.some((output) => output.status === "unknown") ||
-            !retryReceiptComplete;
-          const priorIndices = new Set(parent.completedOutputIndices ?? []);
-          if (!parent.completedOutputIndices?.length)
-            for (
-              let index = 0;
-              index <
-              Math.min(parent.completedOutputs, parent.requestedOutputs);
-              index++
-            )
-              priorIndices.add(index);
-          const nextIndices = Array.from(
-            new Set([...priorIndices, ...retrySuccessIndices]),
-          ).sort((left, right) => left - right);
-          const nextCompletedOutputs = Math.min(
-            parent.requestedOutputs,
-            Math.max(parent.completedOutputs, nextIndices.length),
-          );
-          const coverageIndices = new Set([
-            ...priorIndices,
-            ...childTerminalIndices,
-          ]);
-          const parentUncertaintyResolved =
-            !parentWasUncertain ||
-            (retryReceiptComplete &&
-              coverageIndices.size >= parent.requestedOutputs);
-          const nextStatus =
-            uncertainChild || !parentUncertaintyResolved
-              ? ("unknown" as const)
-              : nextCompletedOutputs >= parent.requestedOutputs
-                ? ("succeeded" as const)
-                : nextCompletedOutputs > 0
-                  ? ("partial" as const)
-                  : parentUncertaintyResolved
-                    ? ("failed" as const)
-                    : parent.status;
-          const nextSubmissionState =
-            uncertainChild || !parentUncertaintyResolved
-              ? ("unknown" as const)
-              : ["succeeded", "partial", "failed", "cancelled"].includes(
-                    nextStatus,
-                  )
-                ? ("terminal" as const)
-                : parent.submissionState;
-          const nextParent: CreationTask = {
-            ...parent,
-            status: nextStatus,
-            submissionState: nextSubmissionState,
-            completedOutputs: nextCompletedOutputs,
-            completedOutputIndices:
-              parent.completedOutputIndices?.length ||
-              retrySuccessIndices.length > 0
-                ? nextIndices
-                : parent.completedOutputIndices,
-            error: uncertainChild
-              ? (child.error ??
-                "重试任务受理状态不明，请先核对供应商；不会自动重复提交。")
-              : !parentUncertaintyResolved
-                ? (parent.error ??
-                  "原任务受理状态不明，请先核对供应商；不会自动重复提交。")
-                : nextStatus === "succeeded"
-                  ? undefined
-                  : retrySuccessIndices.length > 0 && nextStatus === "partial"
-                    ? `${nextCompletedOutputs}/${parent.requestedOutputs} 张已归档，可重试未归档结果。`
-                    : (child.error ?? parent.error),
-            updatedAt: now,
-          };
-          const previousComparable = JSON.stringify({
-            status: parent.status,
-            submissionState: parent.submissionState,
-            completedOutputs: parent.completedOutputs,
-            completedOutputIndices: parent.completedOutputIndices,
-            error: parent.error,
-          });
-          const nextComparable = JSON.stringify({
-            status: nextParent.status,
-            submissionState: nextParent.submissionState,
-            completedOutputs: nextParent.completedOutputs,
-            completedOutputIndices: nextParent.completedOutputIndices,
-            error: nextParent.error,
-          });
-          if (previousComparable === nextComparable) continue;
-          tasks = tasks.map((task, index) =>
-            index === parentIndex ? nextParent : task,
-          );
-          passChanged = true;
-          continue;
-        }
-        const reconciliationRetry =
-          child.submissionState === "submitted"
-            ? {
-                ...child,
-                status: "unknown" as const,
-                submissionState: "unknown" as const,
-              }
-            : child;
-        const merged = mergeRetryTaskState({
-          parent: { ...parent, outputs: parent.outputs ?? [] },
-          retry: reconciliationRetry,
-        });
-        const nextParent: CreationTask = {
-          ...parent,
-          ...merged,
-          updatedAt: now,
-        };
-        const previousComparable = JSON.stringify({
-          outputs: parent.outputs ?? [],
-          completedOutputs: parent.completedOutputs,
-          status: parent.status,
-          submissionState: parent.submissionState,
-          error: parent.error,
-        });
-        const nextComparable = JSON.stringify({
-          outputs: nextParent.outputs ?? [],
-          completedOutputs: nextParent.completedOutputs,
-          status: nextParent.status,
-          submissionState: nextParent.submissionState,
-          error: nextParent.error,
-        });
-        if (previousComparable === nextComparable) continue;
-        tasks = tasks.map((task, index) =>
-          index === parentIndex ? nextParent : task,
-        );
-        passChanged = true;
-      }
-    }
-    // Sibling receipts can cancel out; publish only the final persisted change.
-    tasks = tasks.map((task, index) => {
-      const original = project.tasks[index];
-      if (task === original) return original;
-      return sameJson(
-        JSON.parse(JSON.stringify({ ...task, updatedAt: original.updatedAt })),
-        JSON.parse(JSON.stringify(original)),
-      )
-        ? original
-        : task;
-    });
-    if (tasks.every((task, index) => task === project.tasks[index]))
-      tasks = project.tasks;
-    const nextItems = reconcileSourceGenerationStatuses({ ...project, tasks });
-    return tasks !== project.tasks || nextItems !== project.items
-      ? { ...project, tasks, items: nextItems, updatedAt: now }
-      : project;
-  });
+  const projects = snapshot.projects.map((project) =>
+    reconcileProjectRetryTasks(project, now),
+  );
   return projects.some((project, index) => project !== snapshot.projects[index])
     ? { ...snapshot, projects, revision: snapshot.revision + 1 }
     : snapshot;

@@ -73,7 +73,10 @@ export function recordProbe(
     providerId: providerId.trim(),
     modelId: modelId.trim(),
     latencyMs: Math.round(latencyMs),
-    ttftMs: optionsObj?.ttftMs !== undefined ? Math.round(optionsObj.ttftMs) : undefined,
+    ttftMs:
+      optionsObj?.ttftMs !== undefined
+        ? Math.round(optionsObj.ttftMs)
+        : undefined,
     tier,
     lastChecked: Date.now(),
     error: optionsObj?.error,
@@ -146,13 +149,17 @@ export async function probeEndpoint(
   }
 
   const timeoutMs = options?.timeoutMs ?? PROBE_TIMEOUT_MS;
-  const fetchFn = options?.fetcher ?? (typeof fetch !== "undefined" ? fetch : undefined);
+  const fetchFn =
+    options?.fetcher ?? (typeof fetch !== "undefined" ? fetch : undefined);
 
   const probePromise = (async () => {
-    const startedAt = typeof performance !== "undefined" ? performance.now() : Date.now();
+    const startedAt =
+      typeof performance !== "undefined" ? performance.now() : Date.now();
     try {
       if (!fetchFn) {
-        return recordProbe(providerId, modelId, -1, { error: "No fetch runtime" });
+        return recordProbe(providerId, modelId, -1, {
+          error: "No fetch runtime",
+        });
       }
 
       const controller = new AbortController();
@@ -160,7 +167,9 @@ export async function probeEndpoint(
 
       let response: Response | undefined;
       try {
-        const pingUrl = baseUrl.endsWith("/") ? `${baseUrl}models` : `${baseUrl}/models`;
+        const pingUrl = baseUrl.endsWith("/")
+          ? `${baseUrl}models`
+          : `${baseUrl}/models`;
         response = await fetchFn(pingUrl, {
           method: "HEAD",
           signal: controller.signal,
@@ -169,12 +178,14 @@ export async function probeEndpoint(
         clearTimeout(timer);
       }
 
-      const finishedAt = typeof performance !== "undefined" ? performance.now() : Date.now();
+      const finishedAt =
+        typeof performance !== "undefined" ? performance.now() : Date.now();
       const elapsed = Math.max(1, finishedAt - startedAt);
 
       if (
         response &&
-        (!response.ok || (typeof response.status === "number" && response.status >= 400))
+        (!response.ok ||
+          (typeof response.status === "number" && response.status >= 400))
       ) {
         const status = response.status || 500;
         const statusText = response.statusText ? ` ${response.statusText}` : "";
@@ -185,7 +196,8 @@ export async function probeEndpoint(
 
       return recordProbe(providerId, modelId, elapsed);
     } catch (err) {
-      const finishedAt = typeof performance !== "undefined" ? performance.now() : Date.now();
+      const finishedAt =
+        typeof performance !== "undefined" ? performance.now() : Date.now();
       const elapsed = Math.max(1, finishedAt - startedAt);
       const errMsg = err instanceof Error ? err.message : String(err);
       return recordProbe(providerId, modelId, elapsed, { error: errMsg });

@@ -267,18 +267,28 @@
 }
 .start-chip-row button {
   height: var(--kk-control-h-lg);
-  border: 1px solid var(--border-default);
+  border: 1px solid var(--kk-border-subtle);
   border-radius: var(--kk-radius-full);
   padding: 0 var(--kk-space-4);
+  background: var(--ui-state-idle-bg);
   color: var(--text-secondary);
+  transition: var(--ui-state-transition);
 }
 .start-chip-row button {
   font-size: var(--kk-font-body);
 }
-.start-chip-row button.is-selected {
-  background: var(--bg-card-hover);
+.start-chip-row button:hover:not(.is-selected) {
+  background: var(--ui-state-hover-bg);
+  border-color: var(--kk-border-default);
   color: var(--text-primary);
-  border-color: var(--text-tertiary);
+}
+/* Chosen category: fill + accent border, the same mark used by every other
+   single-choice control in settings and the model picker. */
+.start-chip-row button.is-selected {
+  background: var(--ui-state-selected-bg);
+  color: var(--ui-state-selected-fg);
+  border-color: var(--ui-state-selected-ring);
+  font-weight: 500;
 }
 .start-inspiration-grid {
   display: grid;
@@ -1119,8 +1129,8 @@
     padding: 12px;
   }
   .project-library-actions {
-    grid-template-columns: 1fr;
-    gap: 8px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
   }
   .project-hero-tile {
     width: 62px;
@@ -1146,4 +1156,61 @@
   width: min(420px, calc(100vw - 32px));
   padding: 12px;
   border-radius: 16px;
+}
+
+/* 940:24897 / 2123:42665: category tabs have text and an underline. */
+.catalog-page-tabs {
+  gap: 0;
+  border: 0;
+}
+.catalog-page-tabs button {
+  position: relative;
+  min-width: 96px;
+  height: 40px;
+  padding: 0 12px 8px;
+  border: 0;
+  background: transparent;
+  text-align: center;
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-caption);
+}
+.catalog-page-tabs button[aria-selected="true"] {
+  border: 0;
+  background: transparent;
+}
+.catalog-page-tabs button[aria-selected="true"]::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 4px;
+  border-radius: var(--kk-radius-full);
+  background: var(--kk-text-primary);
+}
+.catalog-page-actions > button {
+  min-height: 44px;
+  font-size: var(--kk-font-body);
+}
+.project-library-action > img {
+  flex: 0 0 24px;
+  width: 24px;
+  height: 24px;
+}
+.project-library-action > span:not(.ui-icon) {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0;
+}
+.project-library-content .catalog-empty {
+  width: 100%;
+  text-align: center;
+}
+.project-library-action:disabled {
+  opacity: 1;
+  color: var(--kk-text-tertiary);
+}
+@media (max-width: 767px) {
+  .catalog-page-tabs button {
+    min-height: 48px;
+  }
 }

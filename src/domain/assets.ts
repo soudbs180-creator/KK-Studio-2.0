@@ -38,9 +38,10 @@ const assetSchema = z
   .object({
     id: z.string().min(1).max(100),
     name: z.string().min(1).max(120),
-    type: z.enum(["image", "video", "subject"]),
+    type: z.enum(["image", "video", "audio", "text", "subject"]),
     tag: z.string().max(40),
     tags: z.array(z.string().max(40)).max(32).optional(),
+    resourcePackId: z.string().min(1).max(160).optional(),
     createdAt: z.iso.datetime(),
   })
   .strict();
@@ -66,6 +67,10 @@ export interface AssetFilter {
   type: string;
   tag: string;
   days: number;
+  resourcePackId?: string;
+  sort?: "newest" | "oldest";
+  from?: string;
+  to?: string;
 }
 export function getAssetTags(asset: Pick<Asset, "tag" | "tags">): string[] {
   return Array.from(
@@ -78,7 +83,7 @@ export function filterAssets(
   now = Date.now(),
 ): Asset[] {
   const query = filter.query.trim().toLocaleLowerCase();
-  return assets.filter((asset) => {
+  const visible = assets.filter((asset) => {
     const age = now - Date.parse(asset.createdAt);
     const tags = getAssetTags(asset);
     const searchable = [
@@ -96,9 +101,24 @@ export function filterAssets(
       searchable.includes(query) &&
       (filter.type === "all" || asset.type === filter.type) &&
       (filter.tag === "all" || tags.includes(filter.tag)) &&
-      (!filter.days || (age >= 0 && age <= filter.days * 86400000))
+      (!filter.resourcePackId ||
+        filter.resourcePackId === "all" ||
+        asset.resourcePackId === filter.resourcePackId) &&
+      (!filter.from ||
+        Date.parse(asset.createdAt) >= Date.parse(filter.from)) &&
+      (!filter.to ||
+        Date.parse(asset.createdAt) < Date.parse(filter.to) + 86400000) &&
+      (!filter.days ||
+        filter.days < 0 ||
+        (age >= 0 && age <= filter.days * 86400000))
     );
   });
+  if (filter.sort)
+    visible.sort((a, b) => {
+      const delta = Date.parse(a.createdAt) - Date.parse(b.createdAt);
+      return filter.sort === "newest" ? -delta : delta;
+    });
+  return visible;
 }
 export function parseResourcePack(raw: string): Asset[] {
   let value: unknown;

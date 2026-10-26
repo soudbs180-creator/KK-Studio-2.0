@@ -112,6 +112,8 @@
 
 每周做一次短观察，每两周做一次路线复盘；忙时可顺延，但要保留日期和原因。竞品材料进入 [`docs/reference/competitor/INDEX.md`](../reference/competitor/INDEX.md) 或对应研究 change package，至少记录：对象、日期、观察模式、来源、证据、静态/运行/账号/费用边界。
 
+已跟踪品类的共识基线、学习优先级（L0–L3）与转化闭环见 [`COMPETITIVE-LEARNING-POLICY.md`](COMPETITIVE-LEARNING-POLICY.md)（2026-10-26 制定，首个跟踪品类为 AI 短剧/视频创作工作台）；该方针是本节的品类化展开，不改变本节的节奏与证据要求。
+
 复盘分三层：
 
 1. **外部事实**：只写可复核的页面、安装包或公开说明。

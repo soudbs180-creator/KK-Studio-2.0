@@ -114,7 +114,11 @@ test("checkSnapshotHeader 放行完整快照头", () => {
     "> 本文不替代权威账本。",
   ].join("\n");
   assert.deepEqual(
-    checkSnapshotHeader(complete, "docs/governance/TASK_STATUS.md"),
+    checkSnapshotHeader(
+      complete,
+      "docs/governance/TASK_STATUS.md",
+      new Date("2026-10-12T00:00:00Z"),
+    ),
     [],
   );
 });

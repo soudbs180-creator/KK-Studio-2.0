@@ -40,10 +40,7 @@
     "conflictPreemption": {
       "designerPreempted": true,
       "taskCancelledSignal": true,
-      "eventLogEntries": [
-        "cancelled",
-        "override"
-      ],
+      "eventLogEntries": ["cancelled", "override"],
       "passed": true
     }
   },

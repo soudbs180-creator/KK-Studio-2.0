@@ -75,6 +75,7 @@ export interface CanvasCollectionItem {
   /** Upload-only reference cards intentionally have no prompt editor. */
   referenceOnly?: boolean;
   referenceSlot?: CanvasReferenceSlot;
+  referenceFrame?: "first" | "last";
   /** A reserved result card is visible while the local demo is loading. */
   generationStatus?: "pending" | "ready" | "error";
   generationIndex?: number;
@@ -138,8 +139,8 @@ export const CANVAS_MODEL_CAPABILITIES: Record<
     {
       id: "minimax-h3",
       name: "MiniMax H3",
-      maxReferences: 1,
-      label: "最多 1 张参考图",
+      maxReferences: 2,
+      label: "首帧与尾帧各 1 张参考图",
     },
   ],
 };
@@ -177,6 +178,10 @@ export interface CanvasReference {
   parentAssetId?: string;
   title: string;
   preview?: string;
+  /** Media subtype used by compact audio and video reference slots. */
+  kind?: CanvasItemKind;
+  /** Video references may occupy the first or last frame slot. */
+  frame?: "first" | "last";
   /** Semantic slot from the five-slot reference workflow. */
   slot?: CanvasReferenceSlot;
 }
@@ -204,6 +209,7 @@ export interface NodeEditingProps {
   referenceLimit?: number;
   onAddReferences?: (references: CanvasReference[]) => void;
   onRemoveReference?: (connectionId: string) => void;
+  onSwapReferenceFrames?: (firstId: string, lastId: string) => void;
 }
 
 export const BASE_CANVAS_ITEMS: CanvasCollectionItem[] = [

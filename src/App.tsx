@@ -200,8 +200,7 @@ function resolveConversationDraft(
       attachments: selectedChat.draft.attachments ?? [],
       model: selectedChat.draft.model ?? "",
       modelSelection: selectedChat.draft.modelSelection,
-      conversationChannel:
-        selectedChat.draft.conversationChannel ?? "direct",
+      conversationChannel: selectedChat.draft.conversationChannel ?? "direct",
     };
   }
   return activeProject?.composerDraft;
@@ -479,10 +478,18 @@ export default function App() {
   }
 
   const {
-    cancelTask, pauseTask, resumeTask, retryTask,
-    regenerateImageTask, pendingApproval, pendingApprovalTask,
-    resolveTaskApproval, savingResultTaskIds,
-    canPauseTask, submitImageCommand, submitLock,
+    cancelTask,
+    pauseTask,
+    resumeTask,
+    retryTask,
+    regenerateImageTask,
+    pendingApproval,
+    pendingApprovalTask,
+    resolveTaskApproval,
+    savingResultTaskIds,
+    canPauseTask,
+    submitImageCommand,
+    submitLock,
   } = useAppTaskCoordination({
     creationRef,
     updateProject,
@@ -1856,10 +1863,7 @@ export default function App() {
         />
       )}
       {modal && (
-        <Modal
-          title={getModalTitle(modal)}
-          onClose={() => setModal("")}
-        >
+        <Modal title={getModalTitle(modal)} onClose={() => setModal("")}>
           <DeferredPanelBoundary key={modal} onClose={() => setModal("")}>
             {modal === "search" ? (
               <CatalogPanel

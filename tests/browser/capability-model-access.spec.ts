@@ -39,6 +39,37 @@ test("Codex 主 Agent 在模型接入，手动字段折叠且状态真实", asyn
   ).toContainText("授权桥接尚未接入");
 });
 
+test("浏览器后端选择器显示四种后端和安全接管提示", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "打开设置", exact: true }).click();
+  const dialog = page.getByRole("dialog", { name: "设置" });
+  await dialog.getByRole("button", { name: "模型接入", exact: true }).click();
+  await dialog.getByRole("tab", { name: "CLI 直连 CLI", exact: true }).click();
+  await dialog
+    .getByRole("button", { name: "Codex CLI / 主 Agent", exact: true })
+    .click();
+  const backend = dialog.locator(".browser-backend-card");
+  const selector = backend.getByLabel("浏览器后端");
+
+  await expect(selector).toHaveValue("internal");
+  await expect(selector.locator("option")).toHaveCount(4);
+  await expect(backend).toContainText(
+    "安全接管：登录、验证码、权限、证书警告和敏感操作会暂停自动化，完成用户确认后才会继续。",
+  );
+  await expect(backend.getByRole("status")).toContainText(
+    "授权：不需要外部授权",
+  );
+
+  await selector.selectOption("ego-lite");
+  await expect(backend.getByRole("status")).toContainText(
+    "当前浏览器版不会启动桌面外部浏览器，请在桌面版检查。",
+  );
+  await expect(page).toHaveTitle(/KK Studio/);
+  expect(
+    await page.evaluate(() => localStorage.getItem("kk-browser-provider")),
+  ).toBe("ego-lite");
+});
+
 test("官方和中转站草稿隔离，切换不保存密钥或发起连接", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();

@@ -45,10 +45,10 @@
   --bg-warning: #e6b96a;
   --text-on-warning: #0a0a0a;
   /* Latest Figma Runtime frames 404:28667 / 410:59708 use a 291px rail. */
-  --sidebar-width: 291px;
+  --sidebar-width: 292px;
   --conversation-width: 470px;
   --topbar-height: 40px;
-  font-family: Inter, "Microsoft YaHei", "PingFang SC", sans-serif;
+  font-family: var(--kk-font-sans);
   font-size: var(--kk-font-body);
   color: var(--text-primary);
   color-scheme: dark;
@@ -237,6 +237,26 @@ body,
   overflow: hidden;
   background: var(--bg-surface);
 }
+body {
+  text-wrap: pretty;
+  font-weight: var(--kk-font-weight-body);
+}
+h1 {
+  font-weight: var(--kk-font-weight-display);
+}
+h2,
+h3 {
+  font-weight: var(--kk-font-weight-title);
+}
+h4,
+h5,
+h6 {
+  font-weight: var(--kk-font-weight-subtitle);
+}
+strong,
+b {
+  font-weight: var(--kk-font-weight-body-strong);
+}
 
 /* DS 1.2: adapt layout to the viewport, never scale readable UI as a bitmap. */
 #root > .app {
@@ -250,6 +270,16 @@ input,
 textarea,
 select {
   font: inherit;
+}
+.kk-tabular-nums,
+[data-numeric="true"] {
+  font-variant-numeric: tabular-nums;
+}
+.kk-inline-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.125em;
 }
 button {
   cursor: pointer;

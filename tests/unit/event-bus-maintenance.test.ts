@@ -1,7 +1,11 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { ShadowEventBus } from "../../src/features/sync/shadowEventBus.ts";
-import type { CheckpointResult, PruneOptions, PruneResult } from "../../src/features/sync/eventTypes.ts";
+import type {
+  CheckpointResult,
+  PruneOptions,
+  PruneResult,
+} from "../../src/features/sync/eventTypes.ts";
 
 test("ShadowEventBus checkpoint and prune API contract in non-tauri environment", async () => {
   const bus = new ShadowEventBus();
@@ -50,7 +54,9 @@ test("ShadowEventBus mock IPC invocation of checkpoint and prune", async () => {
   };
 
   // Test custom wrapper simulating desktop IPC invocation
-  const testCheckpoint = async (mode?: "truncate" | "passive" | "full" | "restart"): Promise<CheckpointResult> => {
+  const testCheckpoint = async (
+    mode?: "truncate" | "passive" | "full" | "restart",
+  ): Promise<CheckpointResult> => {
     return await mockInvoke<CheckpointResult>("event_bus_checkpoint", { mode });
   };
 
@@ -66,7 +72,9 @@ test("ShadowEventBus mock IPC invocation of checkpoint and prune", async () => {
 
   const prune = await testPrune({ retainLatest: 100, checkpointAfter: true });
   assert.strictEqual(invokedCommand, "event_bus_prune");
-  assert.deepStrictEqual(invokedArgs, { options: { retainLatest: 100, checkpointAfter: true } });
+  assert.deepStrictEqual(invokedArgs, {
+    options: { retainLatest: 100, checkpointAfter: true },
+  });
   assert.strictEqual(prune.deletedCount, 50);
   assert.strictEqual(prune.remainingCount, 100);
   assert.strictEqual(prune.checkpoint?.checkpointed, 5);
@@ -77,7 +85,8 @@ test("ShadowEventBus direct method invocation with mocked Tauri environment", as
   let invokedPayload: unknown = null;
 
   const originalWindow = (globalThis as unknown as { window?: unknown }).window;
-  const originalIsTauri = (globalThis as unknown as { isTauri?: unknown }).isTauri;
+  const originalIsTauri = (globalThis as unknown as { isTauri?: unknown })
+    .isTauri;
   try {
     (globalThis as unknown as { isTauri: boolean }).isTauri = true;
     (globalThis as unknown as { window: unknown }).window = {
@@ -108,9 +117,14 @@ test("ShadowEventBus direct method invocation with mocked Tauri environment", as
     assert.deepStrictEqual(invokedPayload, { mode: "truncate" });
     assert.strictEqual(ckpt?.checkpointed, 8);
 
-    const pruneRes = await bus.prune({ retainLatest: 20, checkpointAfter: true });
+    const pruneRes = await bus.prune({
+      retainLatest: 20,
+      checkpointAfter: true,
+    });
     assert.strictEqual(invokedCmd, "event_bus_prune");
-    assert.deepStrictEqual(invokedPayload, { options: { retainLatest: 20, checkpointAfter: true } });
+    assert.deepStrictEqual(invokedPayload, {
+      options: { retainLatest: 20, checkpointAfter: true },
+    });
     assert.strictEqual(pruneRes?.deletedCount, 15);
     assert.strictEqual(pruneRes?.remainingCount, 20);
   } finally {

@@ -78,10 +78,15 @@ test("F01-T1-02: incorporates multimodal image attachment weights (1,024 tokens 
   const oneImage = estimateAttachmentTokens([{ type: "image/png" }]);
   assert.equal(oneImage, 1024);
 
-  const twoImages = estimateAttachmentTokens([{ type: "image/png" }, { type: "image/jpeg" }]);
+  const twoImages = estimateAttachmentTokens([
+    { type: "image/png" },
+    { type: "image/jpeg" },
+  ]);
   assert.equal(twoImages, 2048);
 
-  const customWeight = estimateAttachmentTokens([{ type: "application/pdf", tokenOverride: 800 }]);
+  const customWeight = estimateAttachmentTokens([
+    { type: "application/pdf", tokenOverride: 800 },
+  ]);
   assert.equal(customWeight, 800);
 });
 
@@ -130,7 +135,10 @@ test("F02-T1-01: validates and applies 'low', 'medium', 'high' reasoning effort 
   assert.equal(validateReasoningEffort("medium"), "medium");
   assert.equal(validateReasoningEffort("high"), "high");
 
-  assert.throws(() => validateReasoningEffort("extreme"), /Invalid reasoning effort/);
+  assert.throws(
+    () => validateReasoningEffort("extreme"),
+    /Invalid reasoning effort/,
+  );
   assert.throws(() => validateReasoningEffort(123), /Invalid reasoning effort/);
 });
 
@@ -164,7 +172,11 @@ test("F02-T1-03: immutable draft update retains all draft properties while updat
 test("F02-T1-04: non-reasoning models disable reasoning selector", () => {
   const models = ["gpt-4o", "deepseek-chat", "mistral-large", "gemini-1.5-pro"];
   for (const m of models) {
-    assert.equal(isReasoningModel(m), false, `${m} should not be classified as a reasoning model`);
+    assert.equal(
+      isReasoningModel(m),
+      false,
+      `${m} should not be classified as a reasoning model`,
+    );
   }
 });
 
@@ -270,9 +282,16 @@ test("F03-T1-05: probe failure records error state and tags target with error ti
 // -------------------------------------------------------------------------
 
 test("F04-T1-01: catalog contains at least 52 presets covering domestic, international, and relay providers", () => {
-  assert.ok(CATALOG_52_PRESETS.length >= 52, `Catalog must have >= 52 presets, found ${CATALOG_52_PRESETS.length}`);
+  assert.ok(
+    CATALOG_52_PRESETS.length >= 52,
+    `Catalog must have >= 52 presets, found ${CATALOG_52_PRESETS.length}`,
+  );
   const uniqueIds = new Set(CATALOG_52_PRESETS.map((p) => p.id));
-  assert.equal(uniqueIds.size, CATALOG_52_PRESETS.length, "All preset IDs must be unique");
+  assert.equal(
+    uniqueIds.size,
+    CATALOG_52_PRESETS.length,
+    "All preset IDs must be unique",
+  );
 
   const deepseek = findPresetById("deepseek");
   assert.equal(deepseek?.name, "DeepSeek (深度求索)");
@@ -281,8 +300,13 @@ test("F04-T1-01: catalog contains at least 52 presets covering domestic, interna
 });
 
 test("F04-T1-02: domestic official group contains DeepSeek, Moonshot, SiliconFlow, Zhipu, DashScope, Ark, Hunyuan", () => {
-  const domestic = getPresetsByRegion("domestic").filter((p) => p.category === "官方");
-  assert.ok(domestic.length >= 14, `Domestic official must have >= 14 presets, found ${domestic.length}`);
+  const domestic = getPresetsByRegion("domestic").filter(
+    (p) => p.category === "官方",
+  );
+  assert.ok(
+    domestic.length >= 14,
+    `Domestic official must have >= 14 presets, found ${domestic.length}`,
+  );
 
   const domesticIds = domestic.map((p) => p.id);
   assert.ok(domesticIds.includes("deepseek"));
@@ -290,13 +314,21 @@ test("F04-T1-02: domestic official group contains DeepSeek, Moonshot, SiliconFlo
   assert.ok(domesticIds.includes("siliconflow"));
   assert.ok(domesticIds.includes("zhipu"));
   assert.ok(domesticIds.includes("dashscope"));
-  assert.ok(domesticIds.includes("doubao-ark") || domesticIds.includes("volcengine-ark"));
-  assert.ok(domesticIds.includes("hunyuan") || domesticIds.includes("tencent-hunyuan"));
+  assert.ok(
+    domesticIds.includes("doubao-ark") ||
+      domesticIds.includes("volcengine-ark"),
+  );
+  assert.ok(
+    domesticIds.includes("hunyuan") || domesticIds.includes("tencent-hunyuan"),
+  );
 });
 
 test("F04-T1-03: international official group contains OpenAI, Anthropic, Gemini, Azure, Bedrock, Groq, Mistral", () => {
   const intl = getPresetsByRegion("international");
-  assert.ok(intl.length >= 23, `International official must have >= 23 presets, found ${intl.length}`);
+  assert.ok(
+    intl.length >= 23,
+    `International official must have >= 23 presets, found ${intl.length}`,
+  );
 
   const intlIds = intl.map((p) => p.id);
   assert.ok(intlIds.includes("openai") || intlIds.includes("openai-chat"));
@@ -310,14 +342,20 @@ test("F04-T1-03: international official group contains OpenAI, Anthropic, Gemini
 
 test("F04-T1-04: relay and local groups contain OpenRouter, Sub2API, New API, Ollama, LM Studio, ComfyUI", () => {
   const relays = getPresetsByCategory("网关");
-  assert.ok(relays.length >= 9, `Relay group must have >= 9 presets, found ${relays.length}`);
+  assert.ok(
+    relays.length >= 9,
+    `Relay group must have >= 9 presets, found ${relays.length}`,
+  );
   const relayIds = relays.map((p) => p.id);
   assert.ok(relayIds.includes("openrouter"));
   assert.ok(relayIds.includes("sub2api"));
   assert.ok(relayIds.includes("new-api"));
 
   const locals = getPresetsByCategory("本地");
-  assert.ok(locals.length >= 6, `Local group must have >= 6 presets, found ${locals.length}`);
+  assert.ok(
+    locals.length >= 6,
+    `Local group must have >= 6 presets, found ${locals.length}`,
+  );
   const localIds = locals.map((p) => p.id);
   assert.ok(localIds.includes("ollama"));
   assert.ok(localIds.includes("lm-studio"));
@@ -328,9 +366,25 @@ test("F04-T1-05: each preset specifies valid endpoint URL, wire protocol, and do
   for (const preset of CATALOG_52_PRESETS) {
     assert.ok(preset.id.length > 0);
     assert.ok(preset.name.length > 0);
-    assert.ok(!preset.baseUrl || preset.baseUrl.startsWith("http://") || preset.baseUrl.startsWith("https://"));
-    assert.ok(["openai-chat", "openai-responses", "anthropic", "azure-openai", "ollama"].includes(preset.wireProtocol || "openai-chat"));
-    assert.ok(["api_key", "bearer_token", "none"].includes(preset.authMode || "api_key"));
+    assert.ok(
+      !preset.baseUrl ||
+        preset.baseUrl.startsWith("http://") ||
+        preset.baseUrl.startsWith("https://"),
+    );
+    assert.ok(
+      [
+        "openai-chat",
+        "openai-responses",
+        "anthropic",
+        "azure-openai",
+        "ollama",
+      ].includes(preset.wireProtocol || "openai-chat"),
+    );
+    assert.ok(
+      ["api_key", "bearer_token", "none"].includes(
+        preset.authMode || "api_key",
+      ),
+    );
     assert.ok(preset.website.length > 0);
     assert.ok(preset.docsUrl.length > 0);
   }
@@ -341,7 +395,8 @@ test("F04-T1-05: each preset specifies valid endpoint URL, wire protocol, and do
 // -------------------------------------------------------------------------
 
 test("F05-T1-01: parses CC Switch deeplink format extracting name, endpoint, apiKey, and model", () => {
-  const link = "ccswitch://v1/import?name=DeepSeek-Official&endpoint=https%3A%2F%2Fapi.deepseek.com%2Fv1&apiKey=sk-1234567890abcdef&model=deepseek-chat";
+  const link =
+    "ccswitch://v1/import?name=DeepSeek-Official&endpoint=https%3A%2F%2Fapi.deepseek.com%2Fv1&apiKey=sk-1234567890abcdef&model=deepseek-chat";
   const result = parseCcSwitchDeeplink(link);
 
   assert.equal(result.name, "DeepSeek-Official");
@@ -351,18 +406,23 @@ test("F05-T1-01: parses CC Switch deeplink format extracting name, endpoint, api
 });
 
 test("F05-T1-02: preserves endpoint and homepage URL parameters during deeplink parsing", () => {
-  const link1 = "ccswitch://v1/import?name=Sub2API&endpoint=https%3A%2F%2Fapi.sub2api.com%2Fv1";
+  const link1 =
+    "ccswitch://v1/import?name=Sub2API&endpoint=https%3A%2F%2Fapi.sub2api.com%2Fv1";
   const result1 = parseCcSwitchDeeplink(link1);
   assert.equal(result1.endpoint, "https://api.sub2api.com/v1");
 
-  const link2 = "ccswitch://v1/import?name=Custom&endpoint=https%3A%2F%2Fcustom.ai";
+  const link2 =
+    "ccswitch://v1/import?name=Custom&endpoint=https%3A%2F%2Fcustom.ai";
   const result2 = parseCcSwitchDeeplink(link2);
   assert.equal(result2.endpoint, "https://custom.ai");
 });
 
 test("F05-T1-03: detects raw API keys and secrets via looksLikeSecret (sk-, Bearer, JWT, AWS, Hex)", () => {
   assert.equal(looksLikeSecret("sk-proj-1234567890abcdef12345678"), true);
-  assert.equal(looksLikeSecret("Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.abcdef"), true);
+  assert.equal(
+    looksLikeSecret("Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.abcdef"),
+    true,
+  );
   assert.equal(looksLikeSecret("AKIAIOSFODNN7EXAMPLE"), true);
   assert.equal(looksLikeSecret("0123456789abcdef0123456789abcdef"), true);
 
@@ -394,7 +454,10 @@ test("F05-T1-05: assertNoSecrets prevents plaintext secret leakage during config
     version: 1,
     connections: [{ id: "conn-1", key: "sk-12345678901234567890abcdef" }],
   });
-  assert.throws(() => assertNoSecrets(leakingConfig), /疑似包含密钥或凭据|SECRET_LEAK_DETECTED/);
+  assert.throws(
+    () => assertNoSecrets(leakingConfig),
+    /疑似包含密钥或凭据|SECRET_LEAK_DETECTED/,
+  );
 });
 
 // -------------------------------------------------------------------------
@@ -432,7 +495,10 @@ test("F06-T1-02: filters MCP tools based on model whitelist, excluding unlisted 
 
   const filtered = filterMcpToolsForModel(tools, profile);
   assert.equal(filtered.length, 2);
-  assert.deepEqual(filtered.map((t) => t.name), ["read_file", "write_file"]);
+  assert.deepEqual(
+    filtered.map((t) => t.name),
+    ["read_file", "write_file"],
+  );
 });
 
 test("F06-T1-03: enforces model blacklist, removing dangerous tools (e.g. terminal execution)", () => {
@@ -455,7 +521,11 @@ test("F06-T1-03: enforces model blacklist, removing dangerous tools (e.g. termin
 });
 
 test("F06-T1-04: preserves all tools when space whitelist and blacklist are undefined (passthrough)", () => {
-  const tools: McpToolItem[] = [{ name: "tool1" }, { name: "tool2" }, { name: "tool3" }];
+  const tools: McpToolItem[] = [
+    { name: "tool1" },
+    { name: "tool2" },
+    { name: "tool3" },
+  ];
   const profile: ModelSpaceProfile = {
     modelId: "general-model",
     contextWindow: 128000,
@@ -533,7 +603,10 @@ test("F08-T1-01: transpiles Anthropic request to OpenAI format extracting system
     system: "You are a senior fullstack engineer.",
     messages: [
       { role: "user", content: "How do I implement SSE in Node?" },
-      { role: "assistant", content: "Use ReadableStream or res.write with text/event-stream." },
+      {
+        role: "assistant",
+        content: "Use ReadableStream or res.write with text/event-stream.",
+      },
       { role: "user", content: "Show me an example." },
     ],
     max_tokens: 2048,
@@ -544,7 +617,10 @@ test("F08-T1-01: transpiles Anthropic request to OpenAI format extracting system
   assert.equal(openAiReq.model, "claude-3-7-sonnet");
   assert.equal(openAiReq.messages.length, 4);
   assert.equal(openAiReq.messages[0].role, "system");
-  assert.equal(openAiReq.messages[0].content, "You are a senior fullstack engineer.");
+  assert.equal(
+    openAiReq.messages[0].content,
+    "You are a senior fullstack engineer.",
+  );
   assert.equal(openAiReq.messages[1].role, "user");
   assert.equal(openAiReq.messages[2].role, "assistant");
   assert.equal(openAiReq.messages[3].role, "user");
@@ -559,7 +635,10 @@ test("F08-T1-02: maps Anthropic thinking blocks to OpenAI reasoning_content and 
       {
         role: "assistant",
         content: [
-          { type: "thinking", thinking: "Consider the algorithm complexity O(N log N)" },
+          {
+            type: "thinking",
+            thinking: "Consider the algorithm complexity O(N log N)",
+          },
           { type: "text", text: "The optimal sort is merge sort." },
         ],
       },
@@ -569,15 +648,24 @@ test("F08-T1-02: maps Anthropic thinking blocks to OpenAI reasoning_content and 
 
   const openAiReq = transpileAnthropicToOpenAI(anthropicReq);
   assert.equal(openAiReq.messages.length, 1);
-  assert.equal(openAiReq.messages[0].reasoning_content, "Consider the algorithm complexity O(N log N)");
-  assert.equal(openAiReq.messages[0].content, "The optimal sort is merge sort.");
+  assert.equal(
+    openAiReq.messages[0].reasoning_content,
+    "Consider the algorithm complexity O(N log N)",
+  );
+  assert.equal(
+    openAiReq.messages[0].content,
+    "The optimal sort is merge sort.",
+  );
 
   // Reverse round-trip
   const roundTripAnthropic = transpileOpenAIToAnthropic(openAiReq);
   const blocks = roundTripAnthropic.messages[0].content;
   assert.ok(Array.isArray(blocks));
   assert.equal(blocks[0].type, "thinking");
-  assert.equal(blocks[0].thinking, "Consider the algorithm complexity O(N log N)");
+  assert.equal(
+    blocks[0].thinking,
+    "Consider the algorithm complexity O(N log N)",
+  );
   assert.equal(blocks[1].type, "text");
   assert.equal(blocks[1].text, "The optimal sort is merge sort.");
 });
@@ -589,7 +677,10 @@ test("F08-T1-03: converts Anthropic tool_use and tool_result to OpenAI tool_call
       {
         name: "get_weather",
         description: "Get temperature",
-        input_schema: { type: "object", properties: { location: { type: "string" } } },
+        input_schema: {
+          type: "object",
+          properties: { location: { type: "string" } },
+        },
       },
     ],
     messages: [
@@ -610,7 +701,7 @@ test("F08-T1-03: converts Anthropic tool_use and tool_result to OpenAI tool_call
           {
             type: "tool_result",
             tool_use_id: "call_abc123",
-            content: "{\"temperature\": 22}",
+            content: '{"temperature": 22}',
           },
         ],
       },
@@ -632,7 +723,7 @@ test("F08-T1-03: converts Anthropic tool_use and tool_result to OpenAI tool_call
   const toolMsg = openAiReq.messages[1];
   assert.equal(toolMsg.role, "tool");
   assert.equal(toolMsg.tool_call_id, "call_abc123");
-  assert.equal(toolMsg.content, "{\"temperature\": 22}");
+  assert.equal(toolMsg.content, '{"temperature": 22}');
 });
 
 test("F08-T1-04: transpiles OpenAI non-streaming response to Anthropic message format with usage metrics", () => {
@@ -801,17 +892,22 @@ test("F09-T1-03: 429 rate limit before first token hot-drifts seamlessly to back
     },
   ]);
 
-  const dispatchResult = await pool.dispatchWithHotDrift(async (account, _onStream) => {
-    if (account.id === "acc-primary") {
-      throw new Error("HTTP 429: Too Many Requests (Rate limit exceeded)");
-    }
-    return { status: "ok", content: "Response generated via backup account" };
-  });
+  const dispatchResult = await pool.dispatchWithHotDrift(
+    async (account, _onStream) => {
+      if (account.id === "acc-primary") {
+        throw new Error("HTTP 429: Too Many Requests (Rate limit exceeded)");
+      }
+      return { status: "ok", content: "Response generated via backup account" };
+    },
+  );
 
   assert.equal(dispatchResult.drifted, true);
   assert.equal(dispatchResult.finalAccountId, "acc-backup");
   assert.equal(dispatchResult.attempts, 2);
-  assert.equal(dispatchResult.result.content, "Response generated via backup account");
+  assert.equal(
+    dispatchResult.result.content,
+    "Response generated via backup account",
+  );
 
   // Primary account should now be cooling down with penalized health score
   const primary = pool.accounts.find((a) => a.id === "acc-primary");
@@ -894,7 +990,8 @@ test("F10-T1-01: dispatches subagent task with TaskBrief specifying goal, constr
   const result = await sandbox.executeTask(brief, async (_tools, logFn) => {
     logFn("Fetching DeepSeek pricing table from https://api-docs.deepseek.com");
     return {
-      summary: "Gathered pricing data: DeepSeek $0.14/M tokens, OpenAI $2.50/M tokens, Anthropic $3.00/M tokens.",
+      summary:
+        "Gathered pricing data: DeepSeek $0.14/M tokens, OpenAI $2.50/M tokens, Anthropic $3.00/M tokens.",
       data: { deepseek: 0.14, openai: 2.5, anthropic: 3.0 },
       tokensUsed: 120,
     };
@@ -904,12 +1001,20 @@ test("F10-T1-01: dispatches subagent task with TaskBrief specifying goal, constr
   assert.equal(result.status, "success");
   assert.equal(result.subagentRole, "subagent-scrape");
   assert.ok(result.executiveSummary.includes("DeepSeek $0.14/M tokens"));
-  assert.deepEqual(result.structuredData, { deepseek: 0.14, openai: 2.5, anthropic: 3.0 });
+  assert.deepEqual(result.structuredData, {
+    deepseek: 0.14,
+    openai: 2.5,
+    anthropic: 3.0,
+  });
 });
 
 test("F10-T1-02: subagent runs in clean sandbox without inheriting parent conversation history", async () => {
   const sandbox = new SubagentExecutionSandbox(["read_file"]);
-  assert.equal(sandbox.parentContextMessages.length, 0, "Sandbox must not inherit parent context history");
+  assert.equal(
+    sandbox.parentContextMessages.length,
+    0,
+    "Sandbox must not inherit parent context history",
+  );
 });
 
 test("F10-T1-03: restricts subagent execution to specified allowed tools (e.g. scrape and read_file)", async () => {
@@ -931,7 +1036,10 @@ test("F10-T1-03: restricts subagent execution to specified allowed tools (e.g. s
   );
 
   assert.deepEqual(toolsReceived, ["scrape", "read_file"]);
-  assert.ok(!toolsReceived.includes("modify_canvas"), "Dangerous canvas modify tool must not be exposed");
+  assert.ok(
+    !toolsReceived.includes("modify_canvas"),
+    "Dangerous canvas modify tool must not be exposed",
+  );
 });
 
 test("F10-T1-04: structural foldback produces concise executive summary (<= 300 words) and structured data", async () => {
@@ -949,7 +1057,8 @@ test("F10-T1-04: structural foldback produces concise executive summary (<= 300 
       logFn(`Step ${i}: Reading module ${i}...`);
     }
     return {
-      summary: "Comprehensive analysis concluded that module decoupling is 100% compliant with Hexagonal Core architecture.",
+      summary:
+        "Comprehensive analysis concluded that module decoupling is 100% compliant with Hexagonal Core architecture.",
       tokensUsed: 3500,
     };
   });
@@ -980,5 +1089,8 @@ test("F10-T1-05: calculates tokens saved by folding intermediate exploration int
   });
 
   assert.ok(result.tokensConsumed! >= 4200);
-  assert.ok(result.tokensSaved! > 4000, `Tokens saved should be > 4000, got ${result.tokensSaved}`);
+  assert.ok(
+    result.tokensSaved! > 4000,
+    `Tokens saved should be > 4000, got ${result.tokensSaved}`,
+  );
 });

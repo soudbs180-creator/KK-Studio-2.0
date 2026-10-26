@@ -12,7 +12,9 @@ import type {
   OpenAIToolChoice,
 } from "./types.ts";
 
-function parseImagePart(part: OpenAIChatContentPart): AnthropicImageBlock | null {
+function parseImagePart(
+  part: OpenAIChatContentPart,
+): AnthropicImageBlock | null {
   if (part.type !== "image_url" || !part.image_url?.url) return null;
   const url = part.image_url.url;
   const match = /^data:(image\/[a-zA-Z0-9.+-]+);base64,(.+)$/.exec(url);
@@ -36,6 +38,77 @@ function parseImagePart(part: OpenAIChatContentPart): AnthropicImageBlock | null
   };
 }
 
+function appendContentPartBlock(
+  part: OpenAIChatContentPart,
+  blocks: AnthropicContentBlock[],
+): void {
+  if (part.type === "text") {
+    if (part.text) {
+      blocks.push({
+        type: "text",
+        text: part.text,
+      });
+    }
+  } else if (part.type === "image_url") {
+    const imgBlock = parseImagePart(part);
+    if (imgBlock) blocks.push(imgBlock);
+  }
+}
+
+function appendMainContentBlocks(
+  content: OpenAIChatMessage["content"],
+  blocks: AnthropicContentBlock[],
+): void {
+  if (typeof content === "string" && content) {
+    blocks.push({
+      type: "text",
+      text: content,
+    });
+  } else if (Array.isArray(content)) {
+    for (const part of content) {
+      appendContentPartBlock(part, blocks);
+    }
+  }
+}
+
+function parseToolCallInput(rawArguments: unknown): Record<string, unknown> {
+  try {
+    return typeof rawArguments === "string" && rawArguments.trim()
+      ? (JSON.parse(rawArguments) as Record<string, unknown>)
+      : {};
+  } catch {
+    return { raw: rawArguments };
+  }
+}
+
+function appendToolCallBlocks(
+  toolCalls: NonNullable<OpenAIChatMessage["tool_calls"]>,
+  blocks: AnthropicContentBlock[],
+): void {
+  for (const tc of toolCalls) {
+    blocks.push({
+      type: "tool_use",
+      id: tc.id,
+      name: tc.function.name,
+      input: parseToolCallInput(tc.function.arguments),
+    });
+  }
+}
+
+function createToolResultBlock(msg: OpenAIChatMessage): AnthropicContentBlock {
+  let contentStr = "";
+  if (typeof msg.content === "string") {
+    contentStr = msg.content;
+  } else if (msg.content != null) {
+    contentStr = JSON.stringify(msg.content);
+  }
+  return {
+    type: "tool_result",
+    tool_use_id: msg.tool_call_id || "",
+    content: contentStr,
+  };
+}
+
 function convertOpenAiMessageToAnthropicBlocks(
   msg: OpenAIChatMessage,
 ): AnthropicContentBlock[] {
@@ -51,62 +124,17 @@ function convertOpenAiMessageToAnthropicBlocks(
 
   // 2. Main content (only for non-tool messages; tool message content belongs to tool_result)
   if (msg.role !== "tool") {
-    if (typeof msg.content === "string" && msg.content) {
-      blocks.push({
-        type: "text",
-        text: msg.content,
-      });
-    } else if (Array.isArray(msg.content)) {
-      for (const part of msg.content) {
-        if (part.type === "text") {
-          if (part.text) {
-            blocks.push({
-              type: "text",
-              text: part.text,
-            });
-          }
-        } else if (part.type === "image_url") {
-          const imgBlock = parseImagePart(part);
-          if (imgBlock) blocks.push(imgBlock);
-        }
-      }
-    }
+    appendMainContentBlocks(msg.content, blocks);
   }
 
   // 3. Tool calls (assistant)
   if (msg.role === "assistant" && msg.tool_calls) {
-    for (const tc of msg.tool_calls) {
-      let parsedInput: Record<string, unknown>;
-      try {
-        parsedInput =
-          typeof tc.function.arguments === "string" && tc.function.arguments.trim()
-            ? (JSON.parse(tc.function.arguments) as Record<string, unknown>)
-            : {};
-      } catch {
-        parsedInput = { raw: tc.function.arguments };
-      }
-      blocks.push({
-        type: "tool_use",
-        id: tc.id,
-        name: tc.function.name,
-        input: parsedInput,
-      });
-    }
+    appendToolCallBlocks(msg.tool_calls, blocks);
   }
 
   // 4. Tool result (tool message)
   if (msg.role === "tool") {
-    let contentStr = "";
-    if (typeof msg.content === "string") {
-      contentStr = msg.content;
-    } else if (msg.content != null) {
-      contentStr = JSON.stringify(msg.content);
-    }
-    blocks.push({
-      type: "tool_result",
-      tool_use_id: msg.tool_call_id || "",
-      content: contentStr,
-    });
+    blocks.push(createToolResultBlock(msg));
   }
 
   return blocks;
@@ -174,7 +202,11 @@ function convertOpenAiToolChoice(
   if (choice === "auto") return { type: "auto" };
   if (choice === "required") return { type: "any" };
   if (choice === "none") return { type: "none" };
-  if (typeof choice === "object" && choice.type === "function" && choice.function.name) {
+  if (
+    typeof choice === "object" &&
+    choice.type === "function" &&
+    choice.function.name
+  ) {
     return {
       type: "tool",
       name: choice.function.name,
@@ -183,29 +215,62 @@ function convertOpenAiToolChoice(
   return undefined;
 }
 
+function extractSystemTexts(messages: OpenAIChatMessage[]): string[] {
+  const systemTexts: string[] = [];
+  for (const msg of messages) {
+    if (msg.role !== "system" && msg.role !== "developer") continue;
+    if (typeof msg.content === "string" && msg.content) {
+      systemTexts.push(msg.content);
+    } else if (Array.isArray(msg.content)) {
+      for (const part of msg.content) {
+        if (part.type === "text" && part.text) {
+          systemTexts.push(part.text);
+        }
+      }
+    }
+  }
+  return systemTexts;
+}
+
+function resolveThinkingBudget(
+  effort: NonNullable<OpenAIChatRequest["reasoning_effort"]>,
+): number {
+  if (effort === "low") return 2048;
+  if (effort === "medium") return 8192;
+  if (effort === "high") return 16384;
+  return 4096;
+}
+
+function applyThinkingOptions(
+  req: OpenAIChatRequest,
+  anthropicReq: AnthropicMessagesRequest,
+): void {
+  if (req.reasoning_effort) {
+    anthropicReq.thinking = {
+      type: "enabled",
+      budget_tokens: resolveThinkingBudget(req.reasoning_effort),
+    };
+  }
+
+  if (
+    anthropicReq.thinking &&
+    anthropicReq.thinking.budget_tokens !== undefined &&
+    anthropicReq.thinking.budget_tokens >= (anthropicReq.max_tokens || 4096)
+  ) {
+    anthropicReq.max_tokens = anthropicReq.thinking.budget_tokens + 4096;
+  }
+}
+
 /**
  * Transpiles an OpenAI /v1/chat/completions request to an Anthropic /v1/messages request.
  */
 export function transpileOpenAiToAnthropicRequest(
   req: OpenAIChatRequest,
 ): AnthropicMessagesRequest {
+  const rawMessages = req.messages || [];
   // Extract system messages
-  const systemTexts: string[] = [];
-  for (const msg of req.messages || []) {
-    if (msg.role === "system" || msg.role === "developer") {
-      if (typeof msg.content === "string" && msg.content) {
-        systemTexts.push(msg.content);
-      } else if (Array.isArray(msg.content)) {
-        for (const part of msg.content) {
-          if (part.type === "text" && part.text) {
-            systemTexts.push(part.text);
-          }
-        }
-      }
-    }
-  }
-
-  const messages = assembleAnthropicMessages(req.messages || []);
+  const systemTexts = extractSystemTexts(rawMessages);
+  const messages = assembleAnthropicMessages(rawMessages);
   const maxTokens = req.max_completion_tokens ?? req.max_tokens ?? 4096;
 
   const anthropicReq: AnthropicMessagesRequest = {
@@ -234,28 +299,12 @@ export function transpileOpenAiToAnthropicRequest(
     }
   }
 
-  if (req.reasoning_effort) {
-    let budget = 4096;
-    if (req.reasoning_effort === "low") budget = 2048;
-    else if (req.reasoning_effort === "medium") budget = 8192;
-    else if (req.reasoning_effort === "high") budget = 16384;
-
-    anthropicReq.thinking = {
-      type: "enabled",
-      budget_tokens: budget,
-    };
-  }
-
-  if (
-    anthropicReq.thinking &&
-    anthropicReq.thinking.budget_tokens !== undefined &&
-    anthropicReq.thinking.budget_tokens >= (anthropicReq.max_tokens || 4096)
-  ) {
-    anthropicReq.max_tokens = anthropicReq.thinking.budget_tokens + 4096;
-  }
+  applyThinkingOptions(req, anthropicReq);
 
   if (req.stop) {
-    anthropicReq.stop_sequences = Array.isArray(req.stop) ? req.stop : [req.stop];
+    anthropicReq.stop_sequences = Array.isArray(req.stop)
+      ? req.stop
+      : [req.stop];
   }
 
   return anthropicReq;

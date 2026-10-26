@@ -1,0 +1,740 @@
+{
+  "version": 1,
+  "checkedOn": "2026-10-23",
+  "rule": {
+    "fileKey": "ZiadpErDoFweCjG3uHjkM3",
+    "nodeId": "1510:41557"
+  },
+  "scope": "04 胶囊画布工具栏端点；整体组合仍待修，不允许据此同步整条本地 UI",
+  "items": [
+    {
+      "designId": "KK-04-CANVAS-001",
+      "name": "添加资源",
+      "existingIdentity": {
+        "featureId": "FEAT-001",
+        "component": "CanvasToolbar",
+        "handler": "onAdd",
+        "icon": "ToolbarIcon/add"
+      },
+      "platform": "desktop",
+      "status": "设计待修",
+      "figma": {
+        "fileKey": "ZiadpErDoFweCjG3uHjkM3",
+        "pageId": "2:47",
+        "page": "04 · 桌面页面与交互",
+        "componentSetId": "551:7196",
+        "variantId": "1164:16197",
+        "variant": "尺寸=40, 样式=无底, 状态=默认, 形状=圆形",
+        "canonicalCompositionCandidate": "1190:19862",
+        "instances": [
+          {
+            "nodeId": "655:209005",
+            "sceneNodeId": "9:818"
+          },
+          {
+            "nodeId": "655:209077",
+            "sceneNodeId": "46:750"
+          },
+          {
+            "nodeId": "655:209096",
+            "sceneNodeId": "47:4358"
+          },
+          {
+            "nodeId": "655:211723",
+            "sceneNodeId": "21:2434"
+          },
+          {
+            "nodeId": "655:211741",
+            "sceneNodeId": "402:23352"
+          },
+          {
+            "nodeId": "655:211776",
+            "sceneNodeId": "402:23737"
+          },
+          {
+            "nodeId": "655:211811",
+            "sceneNodeId": "402:24068"
+          },
+          {
+            "nodeId": "655:211846",
+            "sceneNodeId": "402:24455"
+          },
+          {
+            "nodeId": "655:211881",
+            "sceneNodeId": "402:24816"
+          },
+          {
+            "nodeId": "655:211916",
+            "sceneNodeId": "402:25197"
+          },
+          {
+            "nodeId": "655:211951",
+            "sceneNodeId": "402:25556"
+          },
+          {
+            "nodeId": "655:211986",
+            "sceneNodeId": "402:25927"
+          },
+          {
+            "nodeId": "655:212021",
+            "sceneNodeId": "402:26320"
+          },
+          {
+            "nodeId": "655:212056",
+            "sceneNodeId": "402:26675"
+          },
+          {
+            "nodeId": "655:212091",
+            "sceneNodeId": "402:27053"
+          },
+          {
+            "nodeId": "655:212126",
+            "sceneNodeId": "402:27396"
+          },
+          {
+            "nodeId": "655:262521",
+            "sceneNodeId": "406:14248"
+          },
+          {
+            "nodeId": "655:262556",
+            "sceneNodeId": "406:14760"
+          },
+          {
+            "nodeId": "655:262591",
+            "sceneNodeId": "406:15068"
+          },
+          {
+            "nodeId": "655:262626",
+            "sceneNodeId": "406:15376"
+          },
+          {
+            "nodeId": "655:262661",
+            "sceneNodeId": "406:15684"
+          },
+          {
+            "nodeId": "655:262696",
+            "sceneNodeId": "406:15992"
+          },
+          {
+            "nodeId": "655:262731",
+            "sceneNodeId": "406:16300"
+          },
+          {
+            "nodeId": "655:262766",
+            "sceneNodeId": "406:16608"
+          },
+          {
+            "nodeId": "655:262801",
+            "sceneNodeId": "406:16916"
+          },
+          {
+            "nodeId": "655:262836",
+            "sceneNodeId": "406:17224"
+          },
+          {
+            "nodeId": "655:262871",
+            "sceneNodeId": "406:17532"
+          },
+          {
+            "nodeId": "655:262906",
+            "sceneNodeId": "406:17840"
+          },
+          {
+            "nodeId": "655:262941",
+            "sceneNodeId": "406:18148"
+          },
+          {
+            "nodeId": "655:262976",
+            "sceneNodeId": "406:18456"
+          },
+          {
+            "nodeId": "655:263011",
+            "sceneNodeId": "406:18764"
+          },
+          {
+            "nodeId": "655:263046",
+            "sceneNodeId": "406:19072"
+          },
+          {
+            "nodeId": "655:263081",
+            "sceneNodeId": "406:19380"
+          },
+          {
+            "nodeId": "655:263116",
+            "sceneNodeId": "406:19688"
+          },
+          {
+            "nodeId": "655:263151",
+            "sceneNodeId": "406:19996"
+          },
+          {
+            "nodeId": "655:263186",
+            "sceneNodeId": "406:20304"
+          },
+          {
+            "nodeId": "655:263221",
+            "sceneNodeId": "406:20612"
+          },
+          {
+            "nodeId": "655:263256",
+            "sceneNodeId": "406:20920"
+          },
+          {
+            "nodeId": "655:263291",
+            "sceneNodeId": "406:21228"
+          },
+          {
+            "nodeId": "655:263326",
+            "sceneNodeId": "406:21536"
+          },
+          {
+            "nodeId": "655:263361",
+            "sceneNodeId": "406:21844"
+          },
+          {
+            "nodeId": "655:263396",
+            "sceneNodeId": "406:22152"
+          },
+          {
+            "nodeId": "655:263431",
+            "sceneNodeId": "406:22460"
+          },
+          {
+            "nodeId": "655:263466",
+            "sceneNodeId": "406:22768"
+          },
+          {
+            "nodeId": "655:263501",
+            "sceneNodeId": "406:23076"
+          },
+          {
+            "nodeId": "655:263536",
+            "sceneNodeId": "406:23384"
+          },
+          {
+            "nodeId": "655:263571",
+            "sceneNodeId": "406:23692"
+          },
+          {
+            "nodeId": "655:263606",
+            "sceneNodeId": "406:25038"
+          },
+          {
+            "nodeId": "655:263641",
+            "sceneNodeId": "406:25346"
+          },
+          {
+            "nodeId": "655:263676",
+            "sceneNodeId": "406:25654"
+          },
+          {
+            "nodeId": "655:263711",
+            "sceneNodeId": "406:25962"
+          },
+          {
+            "nodeId": "655:263746",
+            "sceneNodeId": "406:26270"
+          },
+          {
+            "nodeId": "655:263781",
+            "sceneNodeId": "406:26578"
+          },
+          {
+            "nodeId": "655:263816",
+            "sceneNodeId": "406:26886"
+          },
+          {
+            "nodeId": "655:263854",
+            "sceneNodeId": "406:27194"
+          },
+          {
+            "nodeId": "655:263889",
+            "sceneNodeId": "406:27541"
+          },
+          {
+            "nodeId": "655:263924",
+            "sceneNodeId": "406:27849"
+          },
+          {
+            "nodeId": "655:263959",
+            "sceneNodeId": "406:28409"
+          },
+          {
+            "nodeId": "655:263994",
+            "sceneNodeId": "406:28717"
+          },
+          {
+            "nodeId": "655:264029",
+            "sceneNodeId": "406:29025"
+          },
+          {
+            "nodeId": "655:264064",
+            "sceneNodeId": "406:40221"
+          },
+          {
+            "nodeId": "655:264099",
+            "sceneNodeId": "406:40529"
+          },
+          {
+            "nodeId": "655:264134",
+            "sceneNodeId": "406:40837"
+          },
+          {
+            "nodeId": "655:264169",
+            "sceneNodeId": "406:41145"
+          },
+          {
+            "nodeId": "655:264204",
+            "sceneNodeId": "406:41453"
+          },
+          {
+            "nodeId": "655:264239",
+            "sceneNodeId": "406:41761"
+          },
+          {
+            "nodeId": "655:264414",
+            "sceneNodeId": "406:42069"
+          },
+          {
+            "nodeId": "655:264449",
+            "sceneNodeId": "406:42377"
+          },
+          {
+            "nodeId": "655:264594",
+            "sceneNodeId": "406:42685"
+          },
+          {
+            "nodeId": "655:264629",
+            "sceneNodeId": "406:42993"
+          },
+          {
+            "nodeId": "655:264664",
+            "sceneNodeId": "406:43301"
+          },
+          {
+            "nodeId": "655:264699",
+            "sceneNodeId": "406:43609"
+          },
+          {
+            "nodeId": "655:264734",
+            "sceneNodeId": "406:43917"
+          },
+          {
+            "nodeId": "655:264769",
+            "sceneNodeId": "406:44225"
+          },
+          {
+            "nodeId": "655:264804",
+            "sceneNodeId": "406:44533"
+          },
+          {
+            "nodeId": "655:264839",
+            "sceneNodeId": "406:44844"
+          },
+          {
+            "nodeId": "655:264874",
+            "sceneNodeId": "406:45152"
+          },
+          {
+            "nodeId": "655:264909",
+            "sceneNodeId": "406:49159"
+          },
+          {
+            "nodeId": "655:264944",
+            "sceneNodeId": "406:49467"
+          },
+          {
+            "nodeId": "655:264979",
+            "sceneNodeId": "406:49775"
+          },
+          {
+            "nodeId": "655:265014",
+            "sceneNodeId": "408:44993"
+          }
+        ]
+      },
+      "local": {
+        "file": "src/components/canvas/CanvasToolbar.tsx",
+        "selector": ".canvas-toolbar .toolbar-add",
+        "accessibleName": "添加资源"
+      },
+      "verifiedAspects": [
+        "圆形变体",
+        "图标内容与尺寸未变",
+        "按钮尺寸坐标未变",
+        "hover/press 目标为圆形"
+      ],
+      "pending": [
+        "旧页面组合与03最新工具栏来源对齐",
+        "打开添加节点与焦点/禁用等适用状态验收",
+        "本地代码同步",
+        "同状态运行核验"
+      ]
+    },
+    {
+      "designId": "KK-04-CANVAS-002",
+      "name": "帮助与快捷键",
+      "existingIdentity": {
+        "featureId": "FEAT-001",
+        "component": "CanvasToolbar",
+        "actionKey": "help",
+        "handler": "toggle",
+        "icon": "ToolbarIcon/help"
+      },
+      "platform": "desktop",
+      "status": "设计待修",
+      "figma": {
+        "fileKey": "ZiadpErDoFweCjG3uHjkM3",
+        "pageId": "2:47",
+        "page": "04 · 桌面页面与交互",
+        "componentSetId": "551:7196",
+        "variantId": "1164:16172",
+        "variant": "尺寸=32, 样式=无底, 状态=默认, 形状=圆形",
+        "canonicalCompositionCandidate": "1190:19862",
+        "instances": [
+          {
+            "nodeId": "655:209011",
+            "sceneNodeId": "9:818"
+          },
+          {
+            "nodeId": "655:209085",
+            "sceneNodeId": "46:750"
+          },
+          {
+            "nodeId": "655:209102",
+            "sceneNodeId": "47:4358"
+          },
+          {
+            "nodeId": "655:211729",
+            "sceneNodeId": "21:2434"
+          },
+          {
+            "nodeId": "655:211747",
+            "sceneNodeId": "402:23352"
+          },
+          {
+            "nodeId": "655:211782",
+            "sceneNodeId": "402:23737"
+          },
+          {
+            "nodeId": "655:211817",
+            "sceneNodeId": "402:24068"
+          },
+          {
+            "nodeId": "655:211852",
+            "sceneNodeId": "402:24455"
+          },
+          {
+            "nodeId": "655:211887",
+            "sceneNodeId": "402:24816"
+          },
+          {
+            "nodeId": "655:211922",
+            "sceneNodeId": "402:25197"
+          },
+          {
+            "nodeId": "655:211957",
+            "sceneNodeId": "402:25556"
+          },
+          {
+            "nodeId": "655:211992",
+            "sceneNodeId": "402:25927"
+          },
+          {
+            "nodeId": "655:212027",
+            "sceneNodeId": "402:26320"
+          },
+          {
+            "nodeId": "655:212062",
+            "sceneNodeId": "402:26675"
+          },
+          {
+            "nodeId": "655:212097",
+            "sceneNodeId": "402:27053"
+          },
+          {
+            "nodeId": "655:212132",
+            "sceneNodeId": "402:27396"
+          },
+          {
+            "nodeId": "655:262527",
+            "sceneNodeId": "406:14248"
+          },
+          {
+            "nodeId": "655:262562",
+            "sceneNodeId": "406:14760"
+          },
+          {
+            "nodeId": "655:262597",
+            "sceneNodeId": "406:15068"
+          },
+          {
+            "nodeId": "655:262632",
+            "sceneNodeId": "406:15376"
+          },
+          {
+            "nodeId": "655:262667",
+            "sceneNodeId": "406:15684"
+          },
+          {
+            "nodeId": "655:262702",
+            "sceneNodeId": "406:15992"
+          },
+          {
+            "nodeId": "655:262737",
+            "sceneNodeId": "406:16300"
+          },
+          {
+            "nodeId": "655:262772",
+            "sceneNodeId": "406:16608"
+          },
+          {
+            "nodeId": "655:262807",
+            "sceneNodeId": "406:16916"
+          },
+          {
+            "nodeId": "655:262842",
+            "sceneNodeId": "406:17224"
+          },
+          {
+            "nodeId": "655:262877",
+            "sceneNodeId": "406:17532"
+          },
+          {
+            "nodeId": "655:262912",
+            "sceneNodeId": "406:17840"
+          },
+          {
+            "nodeId": "655:262947",
+            "sceneNodeId": "406:18148"
+          },
+          {
+            "nodeId": "655:262982",
+            "sceneNodeId": "406:18456"
+          },
+          {
+            "nodeId": "655:263017",
+            "sceneNodeId": "406:18764"
+          },
+          {
+            "nodeId": "655:263052",
+            "sceneNodeId": "406:19072"
+          },
+          {
+            "nodeId": "655:263087",
+            "sceneNodeId": "406:19380"
+          },
+          {
+            "nodeId": "655:263122",
+            "sceneNodeId": "406:19688"
+          },
+          {
+            "nodeId": "655:263157",
+            "sceneNodeId": "406:19996"
+          },
+          {
+            "nodeId": "655:263192",
+            "sceneNodeId": "406:20304"
+          },
+          {
+            "nodeId": "655:263227",
+            "sceneNodeId": "406:20612"
+          },
+          {
+            "nodeId": "655:263262",
+            "sceneNodeId": "406:20920"
+          },
+          {
+            "nodeId": "655:263297",
+            "sceneNodeId": "406:21228"
+          },
+          {
+            "nodeId": "655:263332",
+            "sceneNodeId": "406:21536"
+          },
+          {
+            "nodeId": "655:263367",
+            "sceneNodeId": "406:21844"
+          },
+          {
+            "nodeId": "655:263402",
+            "sceneNodeId": "406:22152"
+          },
+          {
+            "nodeId": "655:263437",
+            "sceneNodeId": "406:22460"
+          },
+          {
+            "nodeId": "655:263472",
+            "sceneNodeId": "406:22768"
+          },
+          {
+            "nodeId": "655:263507",
+            "sceneNodeId": "406:23076"
+          },
+          {
+            "nodeId": "655:263542",
+            "sceneNodeId": "406:23384"
+          },
+          {
+            "nodeId": "655:263577",
+            "sceneNodeId": "406:23692"
+          },
+          {
+            "nodeId": "655:263612",
+            "sceneNodeId": "406:25038"
+          },
+          {
+            "nodeId": "655:263647",
+            "sceneNodeId": "406:25346"
+          },
+          {
+            "nodeId": "655:263682",
+            "sceneNodeId": "406:25654"
+          },
+          {
+            "nodeId": "655:263717",
+            "sceneNodeId": "406:25962"
+          },
+          {
+            "nodeId": "655:263752",
+            "sceneNodeId": "406:26270"
+          },
+          {
+            "nodeId": "655:263787",
+            "sceneNodeId": "406:26578"
+          },
+          {
+            "nodeId": "655:263822",
+            "sceneNodeId": "406:26886"
+          },
+          {
+            "nodeId": "655:263860",
+            "sceneNodeId": "406:27194"
+          },
+          {
+            "nodeId": "655:263895",
+            "sceneNodeId": "406:27541"
+          },
+          {
+            "nodeId": "655:263930",
+            "sceneNodeId": "406:27849"
+          },
+          {
+            "nodeId": "655:263965",
+            "sceneNodeId": "406:28409"
+          },
+          {
+            "nodeId": "655:264000",
+            "sceneNodeId": "406:28717"
+          },
+          {
+            "nodeId": "655:264035",
+            "sceneNodeId": "406:29025"
+          },
+          {
+            "nodeId": "655:264070",
+            "sceneNodeId": "406:40221"
+          },
+          {
+            "nodeId": "655:264105",
+            "sceneNodeId": "406:40529"
+          },
+          {
+            "nodeId": "655:264140",
+            "sceneNodeId": "406:40837"
+          },
+          {
+            "nodeId": "655:264175",
+            "sceneNodeId": "406:41145"
+          },
+          {
+            "nodeId": "655:264210",
+            "sceneNodeId": "406:41453"
+          },
+          {
+            "nodeId": "655:264245",
+            "sceneNodeId": "406:41761"
+          },
+          {
+            "nodeId": "655:264420",
+            "sceneNodeId": "406:42069"
+          },
+          {
+            "nodeId": "655:264455",
+            "sceneNodeId": "406:42377"
+          },
+          {
+            "nodeId": "655:264600",
+            "sceneNodeId": "406:42685"
+          },
+          {
+            "nodeId": "655:264635",
+            "sceneNodeId": "406:42993"
+          },
+          {
+            "nodeId": "655:264670",
+            "sceneNodeId": "406:43301"
+          },
+          {
+            "nodeId": "655:264705",
+            "sceneNodeId": "406:43609"
+          },
+          {
+            "nodeId": "655:264740",
+            "sceneNodeId": "406:43917"
+          },
+          {
+            "nodeId": "655:264775",
+            "sceneNodeId": "406:44225"
+          },
+          {
+            "nodeId": "655:264810",
+            "sceneNodeId": "406:44533"
+          },
+          {
+            "nodeId": "655:264845",
+            "sceneNodeId": "406:44844"
+          },
+          {
+            "nodeId": "655:264880",
+            "sceneNodeId": "406:45152"
+          },
+          {
+            "nodeId": "655:264915",
+            "sceneNodeId": "406:49159"
+          },
+          {
+            "nodeId": "655:264950",
+            "sceneNodeId": "406:49467"
+          },
+          {
+            "nodeId": "655:264985",
+            "sceneNodeId": "406:49775"
+          },
+          {
+            "nodeId": "655:265020",
+            "sceneNodeId": "408:44993"
+          }
+        ]
+      },
+      "local": {
+        "file": "src/components/canvas/CanvasToolbar.tsx",
+        "selector": ".canvas-toolbar .toolbar-help",
+        "accessibleName": "帮助与快捷键"
+      },
+      "verifiedAspects": [
+        "圆形变体",
+        "图标内容与尺寸未变",
+        "按钮尺寸坐标未变",
+        "hover/press 目标为圆形"
+      ],
+      "pending": [
+        "旧页面组合与03最新工具栏来源对齐",
+        "帮助菜单/焦点/键盘返回验收",
+        "本地代码同步",
+        "同状态运行核验"
+      ]
+    }
+  ]
+}

@@ -159,7 +159,7 @@ test("画布工具栏菜单使用可读的控件与菜单尺寸", async ({ page 
   await openWorkspace(page);
   const toolbar = page.getByRole("toolbar", { name: "画布工具" });
   await toolbar
-    .getByRole("button", { name: "选择画布工具", exact: true })
+    .getByRole("button", { name: "展开画布工具", exact: true })
     .click();
   const toolMenu = toolbar.locator(".canvas-tool-menu");
   await expect(toolMenu).toBeVisible();

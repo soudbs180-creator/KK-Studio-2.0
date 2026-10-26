@@ -25,6 +25,12 @@ for (const confirmed of [false, true]) {
         .getByRole("navigation", { name: "设置分类" })
         .getByRole("button", { name: "模型接入", exact: true })
         .click();
+      await page
+        .getByRole("tab", { name: "CLI 直连 CLI", exact: true })
+        .click();
+      await page
+        .getByRole("button", { name: "Codex CLI / 主 Agent", exact: true })
+        .click();
       await page.getByText("高级连接选项", { exact: true }).click();
       await page.getByLabel("Agent 地址", { exact: true }).fill(agent.url);
       await page
@@ -38,7 +44,9 @@ for (const confirmed of [false, true]) {
           .getByRole("dialog", { name: "设置", exact: true })
           .getByRole("button", { name: "已连接", exact: true }),
       ).toBeVisible();
-      await page.getByRole("button", { name: "CLI 账号", exact: true }).click();
+      await page
+        .getByRole("tab", { name: "CLI 直连 CLI", exact: true })
+        .click();
       await page
         .getByRole("button", { name: "CodeBuddy CLI", exact: true })
         .click();

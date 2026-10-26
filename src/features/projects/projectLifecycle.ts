@@ -43,7 +43,10 @@ function name(value: string): string {
 
 function changeGroup(
   snapshot: CreationSnapshot,
-  action: Extract<ProjectLifecycleAction, { id: string }>,
+  action: Extract<
+    ProjectLifecycleAction,
+    { type: "rename-group" | "delete-group" | "restore-group" }
+  >,
   now: number,
 ): CreationSnapshot {
   const groups = snapshot.projectGroups ?? [];
@@ -72,78 +75,92 @@ function changeGroup(
   };
 }
 
-/** Shared snapshot mutation: caller owns CAS persistence and reports save failures. */
-export function applyProjectLifecycle(
+function applySidebarPreferenceAction(
   snapshot: CreationSnapshot,
-  action: ProjectLifecycleAction,
-  now = Date.now(),
-): CreationSnapshot {
-  const groups = snapshot.projectGroups ?? [];
-  if (
-    action.type === "set-sidebar-sort" ||
-    action.type === "toggle-project-pin" ||
-    action.type === "toggle-group-pin"
-  ) {
-    const preferences = snapshot.sidebarPreferences ?? {
-      sortMode: "manual",
-      pinnedProjectIds: [],
-      pinnedGroupIds: [],
-    };
-    if (action.type === "set-sidebar-sort") {
-      if (!["manual", "recent", "priority"].includes(action.sortMode))
-        throw new Error("项目排序方式无效。");
-      return {
-        ...snapshot,
-        sidebarPreferences: { ...preferences, sortMode: action.sortMode },
-      };
+  action: Extract<
+    ProjectLifecycleAction,
+    {
+      type: "set-sidebar-sort" | "toggle-project-pin" | "toggle-group-pin";
     }
-    const records =
-      action.type === "toggle-project-pin" ? snapshot.projects : groups;
-    if (!records.some((record) => record.id === action.id))
-      throw new Error("项目或分组已不可用，请重新读取。");
-    const key =
-      action.type === "toggle-project-pin"
-        ? "pinnedProjectIds"
-        : "pinnedGroupIds";
-    const ids = preferences[key];
+  >,
+  groups: CreationProjectGroup[],
+): CreationSnapshot {
+  const preferences = snapshot.sidebarPreferences ?? {
+    sortMode: "manual",
+    pinnedProjectIds: [],
+    pinnedGroupIds: [],
+  };
+  if (action.type === "set-sidebar-sort") {
+    if (!["manual", "recent", "priority"].includes(action.sortMode))
+      throw new Error("项目排序方式无效。");
     return {
       ...snapshot,
-      sidebarPreferences: {
-        ...preferences,
-        [key]: ids.includes(action.id)
-          ? ids.filter((id) => id !== action.id)
-          : [...ids, action.id],
-      },
+      sidebarPreferences: { ...preferences, sortMode: action.sortMode },
     };
   }
-  if (action.type === "create-group") {
-    if (
-      !action.id.trim() ||
-      action.id.length > 160 ||
-      groups.some((group) => group.id === action.id)
+  const records =
+    action.type === "toggle-project-pin" ? snapshot.projects : groups;
+  if (!records.some((record) => record.id === action.id))
+    throw new Error("项目或分组已不可用，请重新读取。");
+  const key =
+    action.type === "toggle-project-pin"
+      ? "pinnedProjectIds"
+      : "pinnedGroupIds";
+  const ids = preferences[key];
+  return {
+    ...snapshot,
+    sidebarPreferences: {
+      ...preferences,
+      [key]: ids.includes(action.id)
+        ? ids.filter((id) => id !== action.id)
+        : [...ids, action.id],
+    },
+  };
+}
+
+function applyCreateGroupAction(
+  snapshot: CreationSnapshot,
+  action: Extract<ProjectLifecycleAction, { type: "create-group" }>,
+  groups: CreationProjectGroup[],
+  now: number,
+): CreationSnapshot {
+  if (
+    !action.id.trim() ||
+    action.id.length > 160 ||
+    groups.some((group) => group.id === action.id)
+  )
+    throw new Error("项目组身份无效或已存在。");
+  if (
+    action.projectId &&
+    !snapshot.projects.some(
+      (project) =>
+        project.id === action.projectId && project.trashedAt === undefined,
     )
-      throw new Error("项目组身份无效或已存在。");
-    if (
-      action.projectId &&
-      !snapshot.projects.some(
-        (project) =>
-          project.id === action.projectId && project.trashedAt === undefined,
-      )
-    )
-      throw new Error("项目已不可用，请重新读取。");
-    return {
-      ...snapshot,
-      projectGroups: [...groups, { id: action.id, name: name(action.name) }],
-      projects: snapshot.projects.map((project) =>
-        project.id === action.projectId
-          ? { ...project, groupId: action.id, updatedAt: now }
-          : project,
-      ),
-    };
-  }
-  if (["rename-group", "delete-group", "restore-group"].includes(action.type)) {
-    return changeGroup(snapshot, action, now);
-  }
+  )
+    throw new Error("项目已不可用，请重新读取。");
+  return {
+    ...snapshot,
+    projectGroups: [...groups, { id: action.id, name: name(action.name) }],
+    projects: snapshot.projects.map((project) =>
+      project.id === action.projectId
+        ? { ...project, groupId: action.id, updatedAt: now }
+        : project,
+    ),
+  };
+}
+
+function applyProjectAction(
+  snapshot: CreationSnapshot,
+  action: Extract<
+    ProjectLifecycleAction,
+    {
+      type:
+        "rename-project" | "trash-project" | "restore-project" | "move-project";
+    }
+  >,
+  groups: CreationProjectGroup[],
+  now: number,
+): CreationSnapshot {
   const project = snapshot.projects.find((project) => project.id === action.id);
   if (!project) throw new Error("项目已不可用，请重新读取。");
   if (action.type === "trash-project" && projectHasUnsettledTasks(project))
@@ -175,4 +192,27 @@ export function applyProjectLifecycle(
       project.id === action.id ? { ...updated, updatedAt: now } : project,
     ),
   };
+}
+
+/** Shared snapshot mutation: caller owns CAS persistence and reports save failures. */
+export function applyProjectLifecycle(
+  snapshot: CreationSnapshot,
+  action: ProjectLifecycleAction,
+  now = Date.now(),
+): CreationSnapshot {
+  const groups = snapshot.projectGroups ?? [];
+  switch (action.type) {
+    case "set-sidebar-sort":
+    case "toggle-project-pin":
+    case "toggle-group-pin":
+      return applySidebarPreferenceAction(snapshot, action, groups);
+    case "create-group":
+      return applyCreateGroupAction(snapshot, action, groups, now);
+    case "rename-group":
+    case "delete-group":
+    case "restore-group":
+      return changeGroup(snapshot, action, now);
+    default:
+      return applyProjectAction(snapshot, action, groups, now);
+  }
 }

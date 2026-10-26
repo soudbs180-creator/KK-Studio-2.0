@@ -3,31 +3,8 @@ import { SettingsNavigationContext } from "./SettingsNavigationContext";
 import { invoke, isTauri } from "@tauri-apps/api/core";
 import {
   PROVIDER_PRESETS,
-  findProviderPreset,
   type ProviderPreset,
 } from "../../domain/providerPresets";
-
-type PresetBrowserState = {
-  localOnly: boolean;
-  view: "list" | "detail";
-  query: string;
-  category: string;
-  selected: string;
-  feedback: string;
-};
-function initialBrowser(localOnly: boolean): PresetBrowserState {
-  return {
-    localOnly,
-    view: "list",
-    query: "",
-    category: "全部",
-    selected: localOnly
-      ? (PROVIDER_PRESETS.find((item) => item.category === "本地")?.id ??
-        "openai")
-      : "openai",
-    feedback: "",
-  };
-}
 
 export default function ProviderPresetSelector({
   onSelect,
@@ -41,57 +18,76 @@ export default function ProviderPresetSelector({
   const { busy } = useContext(SettingsNavigationContext);
   const policy = useRef({ busy, localOnly });
   policy.current = { busy, localOnly };
-  const disclosure = useRef<HTMLDetailsElement>(null);
-  const [stored, setBrowser] = useState(() => initialBrowser(localOnly));
-  const { view, query, category, selected, feedback } =
-    stored.localOnly === localOnly ? stored : initialBrowser(localOnly);
-  function update(patch: Partial<PresetBrowserState>): void {
-    const scope = policy.current.localOnly;
-    if (scope !== localOnly) return;
-    setBrowser((current) => ({
-      ...(current.localOnly === scope ? current : initialBrowser(scope)),
-      ...patch,
-      localOnly: scope,
-    }));
-  }
-  function scopeAllows(candidate: ProviderPreset): boolean {
-    return (
-      policy.current.localOnly === localOnly &&
-      (!localOnly || candidate.category === "本地")
-    );
-  }
-  async function openLink(event: MouseEvent<HTMLAnchorElement>): Promise<void> {
-    if (!scopeAllows(preset)) {
-      event.preventDefault();
-      return;
+
+  const [query, setQuery] = useState("");
+  const [category, setCategory] = useState("全部");
+  const [feedback, setFeedback] = useState("");
+  const [appliedPresetId, setAppliedPresetId] = useState<string | null>(null);
+
+  const lastLocalOnly = useRef(localOnly);
+  let effectiveCategory = category;
+  let effectiveQuery = query;
+
+  if (localOnly !== lastLocalOnly.current) {
+    lastLocalOnly.current = localOnly;
+    if (localOnly) {
+      if (category !== "全部" && category !== "本地") {
+        effectiveCategory = "全部";
+        setCategory("全部");
+      }
+      effectiveQuery = "";
+      setQuery("");
     }
+  } else if (localOnly && category !== "全部" && category !== "本地") {
+    effectiveCategory = "全部";
+    setCategory("全部");
+  }
+
+  const categories = localOnly
+    ? ["全部", "本地"]
+    : ["全部", "官方", "网关", "本地"];
+
+  async function openLink(
+    event: MouseEvent<HTMLAnchorElement>,
+    url: string,
+  ): Promise<void> {
+    if (policy.current.localOnly) return;
     if (!isTauri()) return;
     event.preventDefault();
-    update({ feedback: "" });
+    setFeedback("");
     try {
-      await invoke("plugin:shell|open", { path: event.currentTarget.href });
+      await invoke("plugin:shell|open", { path: url });
     } catch {
-      update({ feedback: "外部浏览器未能打开，请重试或复制链接到浏览器。" });
+      setFeedback("外部浏览器未能打开，请重试或复制链接到浏览器。");
     }
   }
-  const preset = findProviderPreset(selected)!;
-  const needle = query.trim().toLocaleLowerCase();
+
+  function handleSelect(item: ProviderPreset) {
+    if (policy.current.busy) return;
+    if (policy.current.localOnly && item.category !== "本地") return;
+    if (item.id === "gemini") {
+      onOpenGoogle();
+    } else {
+      onSelect(item);
+      setAppliedPresetId(item.id);
+      if (typeof setTimeout === "function") {
+        setTimeout(() => setAppliedPresetId(null), 2000);
+      }
+    }
+  }
+
+  const needle = effectiveQuery.trim().toLocaleLowerCase();
   const matches = PROVIDER_PRESETS.filter(
     (item) =>
       (!localOnly || item.category === "本地") &&
-      (category === "全部" || item.category === category) &&
-      `${item.label} ${item.protocol} ${item.website}`
+      (effectiveCategory === "全部" || item.category === effectiveCategory) &&
+      `${item.label} ${item.name} ${item.protocol} ${item.website}`
         .toLocaleLowerCase()
         .includes(needle),
   );
+
   return (
-    <details
-      ref={disclosure}
-      className="provider-presets"
-      onToggle={(event) => {
-        if (!event.currentTarget.open) update({ view: "list" });
-      }}
-    >
+    <details className="provider-presets">
       <summary
         aria-disabled={busy}
         title={busy ? "连接操作进行中，完成后可展开预设" : undefined}
@@ -99,168 +95,145 @@ export default function ProviderPresetSelector({
           if (busy) event.preventDefault();
         }}
       >
-        服务商预设与接口文档
+        服务商预设与快速填入
       </summary>
-      <div hidden={view !== "list"}>
-        <label className="settings-field">
-          <span>搜索服务商</span>
-          <input
-            disabled={busy}
-            title={busy ? "连接操作进行中，完成后可切换预设" : undefined}
-            value={query}
-            onChange={(event) => update({ query: event.target.value })}
-            placeholder="名称、协议或网站"
-          />
-        </label>
-        <div
-          className="settings-action-group"
-          role="group"
-          aria-label="服务商分类"
-        >
-          {(localOnly
-            ? ["全部", "本地"]
-            : ["全部", "官方", "网关", "本地"]
-          ).map((value) => (
-            <button
-              type="button"
-              className="settings-action secondary"
-              key={value}
-              disabled={busy}
-              title={busy ? "连接操作进行中，完成后可切换预设" : undefined}
-              aria-pressed={category === value}
-              onClick={() => update({ category: value })}
-            >
-              {value}
-            </button>
-          ))}
-        </div>
-      </div>
-      <div className="provider-preset-layout">
-        <div
-          className="provider-preset-list"
-          hidden={view !== "list"}
-          role="group"
-          aria-label="服务商预设"
-        >
-          {matches.map((item) => (
-            <button
-              type="button"
-              className="provider-preset-item"
-              key={item.id}
-              disabled={busy}
-              title={
-                busy
-                  ? "连接操作进行中，完成后可切换预设"
-                  : item.label + " · " + item.protocol
-              }
-              aria-pressed={selected === item.id}
-              onClick={() => {
-                if (policy.current.busy || !scopeAllows(item)) return;
-                update({ selected: item.id, view: "detail", feedback: "" });
-              }}
-            >
-              <strong>{item.label}</strong>
-              <span>{item.protocol}</span>
-            </button>
-          ))}
-          {!matches.length && (
-            <p role="status">没有匹配的服务商，清除搜索或更换分类。</p>
+      <div className="provider-preset-card-group">
+        <div className="preset-card-group-header">
+          <div className="preset-header-titles">
+            <p className="preset-subtitle">
+              点击任意服务商卡片即可一键自动回填 Base URL、通信协议及默认配置。
+            </p>
+          </div>
+          {feedback && (
+            <span className="preset-feedback" role="alert">
+              {feedback}
+            </span>
           )}
         </div>
-        <section
-          className="provider-preset-detail"
-          hidden={
-            view !== "detail" || (localOnly && preset.category !== "本地")
-          }
-          aria-label="预设详情"
-        >
-          <div className="settings-subpage-header">
-            <button
-              type="button"
-              className="settings-action secondary"
-              disabled={busy}
-              title={busy ? "连接操作进行中，完成后可切换预设" : undefined}
-              onClick={() => {
-                if (!busy) {
-                  update({ view: "list" });
-                  window.requestAnimationFrame(() =>
-                    disclosure.current
-                      ?.querySelector<HTMLButtonElement>(
-                        '.provider-preset-item[aria-pressed="true"]',
-                      )
-                      ?.focus({ preventScroll: true }),
-                  );
-                }
-              }}
-            >
-              返回服务商
-            </button>
-            <h3>{preset.label}</h3>
-          </div>
-          <p>{preset.protocol}</p>
-          <div className="provider-preset-links">
-            <a
-              href={preset.website}
-              target="_blank"
-              rel="noreferrer"
-              onClick={openLink}
-            >
-              官方网站
-            </a>
-            <a
-              href={preset.keyUrl}
-              target="_blank"
-              rel="noreferrer"
-              onClick={openLink}
-            >
-              {preset.keyLabel || "获取密钥"}
-            </a>
-            <a
-              href={preset.docsUrl}
-              target="_blank"
-              rel="noreferrer"
-              onClick={openLink}
-            >
-              接口文档
-            </a>
-          </div>
-          {feedback && <p role="alert">{feedback}</p>}
-          <p>
-            {preset.unavailableReason ||
-              (preset.category === "本地"
-                ? "请先启动本机服务。预设使用本机免密；开启了 Token 认证时，改选 API Key 后填写密钥。"
-                : preset.category === "网关"
-                  ? "接口地址和令牌由你的实例提供。选择后填写实例地址，不会自动请求服务。"
-                  : "使用预设补全名称和接口地址，模型可检测或手动填写。")}
-          </p>
-          <button
-            type="button"
-            className="settings-action"
-            disabled={
-              busy ||
-              (localOnly && preset.category !== "本地") ||
-              (preset.id !== "gemini" && Boolean(preset.unavailableReason))
-            }
-            title={
-              busy
-                ? "连接操作进行中，完成后可使用预设"
-                : preset.unavailableReason
-            }
-            onClick={() => {
-              if (
-                policy.current.busy ||
-                !scopeAllows(preset) ||
-                (preset.id !== "gemini" && preset.unavailableReason)
-              )
-                return;
-              if (preset.id === "gemini") onOpenGoogle();
-              else onSelect(preset);
-              if (disclosure.current) disclosure.current.open = false;
-            }}
+
+        <div className="preset-filter-toolbar">
+          <div
+            className="preset-category-tabs"
+            role="group"
+            aria-label="服务商分类"
           >
-            {preset.id === "gemini" ? "前往 Google 配置" : "使用此预设"}
-          </button>
-        </section>
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                type="button"
+                className={`preset-tab-btn ${effectiveCategory === cat ? "is-active" : ""}`}
+                aria-pressed={effectiveCategory === cat}
+                disabled={busy}
+                onClick={() => setCategory(cat)}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+
+          <div className="preset-search-box">
+            <input
+              type="search"
+              value={effectiveQuery}
+              disabled={busy}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="搜索服务商（如 DeepSeek、12ai、SiliconFlow、llama.cpp、OpenAI…）"
+              aria-label="搜索服务商"
+            />
+          </div>
+        </div>
+
+        <div className="preset-card-grid" role="list">
+          {matches.map((item) => {
+            const isApplied = appliedPresetId === item.id;
+            return (
+              <div
+                key={item.id}
+                className={`preset-item-card provider-preset-item ${isApplied ? "is-applied" : ""}`}
+                role="listitem"
+              >
+                <div className="preset-card-top">
+                  <div className="preset-card-identity">
+                    <span className="preset-card-label">{item.label}</span>
+                    <span className={`preset-badge badge-${item.category}`}>
+                      {item.category}
+                    </span>
+                  </div>
+                  <span className="preset-protocol-tag">{item.protocol}</span>
+                </div>
+
+                <div className="preset-card-meta">
+                  <span className="preset-card-fullname" title={item.name}>
+                    {item.name}
+                  </span>
+                  {item.baseUrl && (
+                    <code className="preset-card-url" title={item.baseUrl}>
+                      {item.baseUrl}
+                    </code>
+                  )}
+                </div>
+
+                {item.recommendedModels &&
+                  item.recommendedModels.length > 0 && (
+                    <div className="preset-recommended-models">
+                      <span className="model-tag-label">推荐:</span>
+                      {item.recommendedModels.slice(0, 2).map((model) => (
+                        <span key={model} className="model-chip" title={model}>
+                          {model.split("/").pop()}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
+                <div className="preset-card-actions">
+                  <button
+                    type="button"
+                    className="preset-apply-btn settings-action"
+                    disabled={busy}
+                    onClick={() => handleSelect(item)}
+                  >
+                    {isApplied
+                      ? "✓ 已填入"
+                      : item.id === "gemini"
+                        ? "前往 Google 配置"
+                        : "一键填入"}
+                  </button>
+
+                  <div className="preset-external-links">
+                    {item.docsUrl && (
+                      <a
+                        href={item.docsUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="preset-link"
+                        onClick={(e) => void openLink(e, item.docsUrl)}
+                      >
+                        文档
+                      </a>
+                    )}
+                    {item.keyUrl && (
+                      <a
+                        href={item.keyUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="preset-link"
+                        onClick={(e) => void openLink(e, item.keyUrl)}
+                      >
+                        {item.keyLabel || "密钥"}
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+
+          {matches.length === 0 && (
+            <div className="preset-empty-state">
+              <p>未找到匹配的服务商，请尝试更换分类或清除搜索关键词。</p>
+            </div>
+          )}
+        </div>
       </div>
     </details>
   );

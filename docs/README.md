@@ -36,6 +36,7 @@
 | [AUTO-MERGE](engineering/AUTO-MERGE.md)                     | 自动合并工作流与其未启用边界                           |
 | [ROLLBACK](engineering/ROLLBACK.md)                         | 回滚触发条件与执行                                     |
 | [RELEASE-CHECKLIST](engineering/RELEASE-CHECKLIST.md)       | 桌面发布与升级验证清单、预发布体检、升级三原则         |
+| [COMPETITIVE-LEARNING-POLICY](engineering/COMPETITIVE-LEARNING-POLICY.md) | 竞品学习与品类跟进方针、共识基线与持续增进机制         |
 
 > 本表必须完整覆盖 `docs/engineering/` 下的全部 `.md`。新增工程文档必须同步本表，`npm run index:check` 会校验。
 
@@ -55,11 +56,11 @@
 
 ## UI 文档
 
-[UI_INDEX.md](UI_INDEX.md) 是 **UI 规范唯一入口**，含现行文件分层表、冲突裁决规则和新增功能改病例。该索引的 §1 表是完整映射，新增 UI 文档须同步它。各文件分工：
+[UI_INDEX.md](UI_INDEX.md) 是 **本地 UI 规范导航入口**，登记当前 Figma 来源、七章规范映射与同步流程。Figma 是设计真值，本地文档从它派生，UI 修改遵循 [AGENTS.md](../AGENTS.md#设计与交互) 的设计先行规则。该索引的 §1 表是完整映射，新增 UI 文档须同步它。各文件分工：
 
 | 文档                              | 承载内容                               |
 | --------------------------------- | -------------------------------------- |
-| [DESIGN.md](../DESIGN.md) | 全局设计概览、专项规则导航与当前 CSS 生成 token 投影 |
+| [DESIGN.md](../DESIGN.md) | Figma 派生概览、专项规则导航与当前 CSS 生成 token 投影 |
 | [UI_RULES](UI_RULES.md)           | 零件规则、交互约束、复用约束           |
 | [UI_ARCHETYPES](UI_ARCHETYPES.md) | 五种页面类型与选型                     |
 | [DESIGN_TOKENS](DESIGN_TOKENS.md) | token 数值索引                         |

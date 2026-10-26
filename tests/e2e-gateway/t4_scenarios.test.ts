@@ -36,40 +36,46 @@ test("SCENARIO-T4-01: Long research session with subagent web scraping and foldb
     taskId: "task-market-research-2026",
     taskType: "scrape",
     goal: "Investigate 2026 Q3 enterprise LLM inference cost benchmarks across 5 providers",
-    constraints: ["Exclude speculative blogs", "Extract official per-token prices"],
+    constraints: [
+      "Exclude speculative blogs",
+      "Extract official per-token prices",
+    ],
     inputs: {
       providers: ["deepseek", "openai", "anthropic", "moonshot", "siliconflow"],
     },
   };
 
-  const foldbackResult = await sandbox.executeTask(brief, async (_tools, logFn) => {
-    // Subagent generates heavy intermediate exploratory logs (thousands of tokens)
-    const rawPages = [
-      "https://platform.openai.com/docs/pricing (15,400 bytes)",
-      "https://api-docs.deepseek.com/pricing (12,800 bytes)",
-      "https://docs.anthropic.com/pricing (18,200 bytes)",
-      "https://platform.moonshot.cn/pricing (9,600 bytes)",
-      "https://cloud.siliconflow.cn/pricing (11,100 bytes)",
-    ];
+  const foldbackResult = await sandbox.executeTask(
+    brief,
+    async (_tools, logFn) => {
+      // Subagent generates heavy intermediate exploratory logs (thousands of tokens)
+      const rawPages = [
+        "https://platform.openai.com/docs/pricing (15,400 bytes)",
+        "https://api-docs.deepseek.com/pricing (12,800 bytes)",
+        "https://docs.anthropic.com/pricing (18,200 bytes)",
+        "https://platform.moonshot.cn/pricing (9,600 bytes)",
+        "https://cloud.siliconflow.cn/pricing (11,100 bytes)",
+      ];
 
-    for (const page of rawPages) {
-      logFn(`Fetched & parsed DOM tree from ${page}`);
-    }
+      for (const page of rawPages) {
+        logFn(`Fetched & parsed DOM tree from ${page}`);
+      }
 
-    return {
-      summary:
-        "Comprehensive 2026 benchmark completed: DeepSeek offers lowest input at $0.14/M; SiliconFlow relays at $0.20/M; Moonshot at $0.40/M; Anthropic Claude 3.7 at $3.00/M; OpenAI GPT-4o at $2.50/M. DeepSeek and SiliconFlow lead cost efficiency.",
-      data: {
-        deepseek: { inputPerMillion: 0.14, outputPerMillion: 0.28 },
-        siliconflow: { inputPerMillion: 0.2, outputPerMillion: 0.4 },
-        moonshot: { inputPerMillion: 0.4, outputPerMillion: 0.8 },
-        openai: { inputPerMillion: 2.5, outputPerMillion: 10.0 },
-        anthropic: { inputPerMillion: 3.0, outputPerMillion: 15.0 },
-      },
-      artifacts: ["artifact-pricing-matrix-2026.json"],
-      tokensUsed: 14800, // Heavy intermediate tokens
-    };
-  });
+      return {
+        summary:
+          "Comprehensive 2026 benchmark completed: DeepSeek offers lowest input at $0.14/M; SiliconFlow relays at $0.20/M; Moonshot at $0.40/M; Anthropic Claude 3.7 at $3.00/M; OpenAI GPT-4o at $2.50/M. DeepSeek and SiliconFlow lead cost efficiency.",
+        data: {
+          deepseek: { inputPerMillion: 0.14, outputPerMillion: 0.28 },
+          siliconflow: { inputPerMillion: 0.2, outputPerMillion: 0.4 },
+          moonshot: { inputPerMillion: 0.4, outputPerMillion: 0.8 },
+          openai: { inputPerMillion: 2.5, outputPerMillion: 10.0 },
+          anthropic: { inputPerMillion: 3.0, outputPerMillion: 15.0 },
+        },
+        artifacts: ["artifact-pricing-matrix-2026.json"],
+        tokensUsed: 14800, // Heavy intermediate tokens
+      };
+    },
+  );
 
   assert.equal(foldbackResult.status, "success");
   assert.equal(foldbackResult.subagentRole, "subagent-scrape");
@@ -82,7 +88,10 @@ test("SCENARIO-T4-01: Long research session with subagent web scraping and foldb
 
   // Main session token count remains completely clean and well below watermark limit
   assert.ok(updatedMainTokens < watermark);
-  const gauge = calculateContextGauge({ text: foldbackResult.executiveSummary, model: "gpt-4o" }, mainSessionTokens);
+  const gauge = calculateContextGauge(
+    { text: foldbackResult.executiveSummary, model: "gpt-4o" },
+    mainSessionTokens,
+  );
   assert.equal(gauge.tier, "normal");
   assert.ok(gauge.percentage < 5); // Under 5% window usage
 });
@@ -143,7 +152,10 @@ test("SCENARIO-T4-02: Multi-turn coding session hitting 429 and hot-drifting acr
   assert.equal(turn2.attempts, 2);
   assert.equal(turn2.finalAccountId, "acc-coder-2");
   assert.equal(turn2Attempts, 2);
-  assert.equal(turn2.result.code, "export function optimizeTree() { return 42; }");
+  assert.equal(
+    turn2.result.code,
+    "export function optimizeTree() { return 42; }",
+  );
 
   // Turn 3: Account 2 continues servicing subsequent requests while Account 1 is in cooldown
   const turn3 = await pool.dispatchWithHotDrift(async (acc) => {
@@ -165,11 +177,20 @@ test("SCENARIO-T4-03: Switching from Claude to DeepSeek via preset and running w
 
   // Session transcript of ~49,500 tokens
   const draftPrompt = "spec ".repeat(38000);
-  const claudeGauge = calculateContextGauge({ text: draftPrompt, model: claudeProfile.modelId }, 2000);
+  const claudeGauge = calculateContextGauge(
+    { text: draftPrompt, model: claudeProfile.modelId },
+    2000,
+  );
 
   // On Claude 200k window, 55k tokens is ~27% (tier: normal)
   assert.equal(claudeGauge.tier, "normal");
-  assert.equal(shouldTriggerCompaction(claudeGauge.usedTokens, claudeProfile.autoCompactTokenLimit), false);
+  assert.equal(
+    shouldTriggerCompaction(
+      claudeGauge.usedTokens,
+      claudeProfile.autoCompactTokenLimit,
+    ),
+    false,
+  );
 
   // Step 2: User switches to DeepSeek-V3 via 52-preset catalog
   const deepseekPreset = findPresetById("deepseek");
@@ -183,11 +204,20 @@ test("SCENARIO-T4-03: Switching from Claude to DeepSeek via preset and running w
   assert.equal(deepseekProfile.autoCompactTokenLimit, 49152);
 
   // Step 3: Gauge recalculates against new 64k model window
-  const deepseekGauge = calculateContextGauge({ text: draftPrompt, model: deepseekProfile.modelId }, 2000);
+  const deepseekGauge = calculateContextGauge(
+    { text: draftPrompt, model: deepseekProfile.modelId },
+    2000,
+  );
 
   // On 64k window, 49.5k tokens is ~76% -> Warning tier & triggers compaction!
   assert.equal(deepseekGauge.tier, "warning");
-  assert.equal(shouldTriggerCompaction(deepseekGauge.usedTokens, deepseekProfile.autoCompactTokenLimit), true);
+  assert.equal(
+    shouldTriggerCompaction(
+      deepseekGauge.usedTokens,
+      deepseekProfile.autoCompactTokenLimit,
+    ),
+    true,
+  );
 
   // Step 4: Transpiler converts Anthropic formatted session history to DeepSeek's OpenAI-compatible wire protocol
   const anthropicHistory: AnthropicMessagesRequest = {
@@ -212,9 +242,21 @@ test("SCENARIO-T4-04: Fast model probing and prompt caching with UsageStatusBar 
 
   // Background probing of 3 candidate channels
   const [fastMetric, moderateMetric, slowMetric] = await Promise.all([
-    probeStore.probe("local-vllm", async () => ({ latencyMs: 22, ttftMs: 65, ok: true })),
-    probeStore.probe("cloud-deepseek", async () => ({ latencyMs: 135, ttftMs: 280, ok: true })),
-    probeStore.probe("overseas-relay", async () => ({ latencyMs: 650, ttftMs: 1400, ok: true })),
+    probeStore.probe("local-vllm", async () => ({
+      latencyMs: 22,
+      ttftMs: 65,
+      ok: true,
+    })),
+    probeStore.probe("cloud-deepseek", async () => ({
+      latencyMs: 135,
+      ttftMs: 280,
+      ok: true,
+    })),
+    probeStore.probe("overseas-relay", async () => ({
+      latencyMs: 650,
+      ttftMs: 1400,
+      ok: true,
+    })),
   ]);
 
   assert.equal(fastMetric.tier, "fast"); // Green pill
@@ -280,7 +322,10 @@ test("SCENARIO-T4-05: Complex tool calling across Anthropic-only client and Open
   // Step 2: Gateway Transpiler translates to OpenAI Chat format
   const gatewayOpenAiReq = transpileAnthropicToOpenAI(clientReq);
   assert.equal(gatewayOpenAiReq.tools?.length, 1);
-  assert.equal(gatewayOpenAiReq.tools?.[0].function.name, "calculate_compound_interest");
+  assert.equal(
+    gatewayOpenAiReq.tools?.[0].function.name,
+    "calculate_compound_interest",
+  );
   assert.equal(gatewayOpenAiReq.tool_choice, "auto");
   assert.equal(gatewayOpenAiReq.messages[0].role, "system");
   assert.equal(gatewayOpenAiReq.messages[1].role, "user");
@@ -300,7 +345,11 @@ test("SCENARIO-T4-05: Complex tool calling across Anthropic-only client and Open
               type: "function",
               function: {
                 name: "calculate_compound_interest",
-                arguments: JSON.stringify({ principal: 10000, rate: 0.07, years: 10 }),
+                arguments: JSON.stringify({
+                  principal: 10000,
+                  rate: 0.07,
+                  years: 10,
+                }),
               },
             },
           ],
@@ -312,13 +361,18 @@ test("SCENARIO-T4-05: Complex tool calling across Anthropic-only client and Open
   };
 
   // Step 4: Transpiler bridges OpenAI response to Anthropic message format
-  const clientAnthropicResp = transpileOpenAIResponseToAnthropic(upstreamOpenAiResp);
+  const clientAnthropicResp =
+    transpileOpenAIResponseToAnthropic(upstreamOpenAiResp);
   assert.equal(clientAnthropicResp.stop_reason, "tool_use");
   assert.equal(clientAnthropicResp.content.length, 1);
   const toolBlock = clientAnthropicResp.content[0];
   assert.equal(toolBlock.type, "tool_use");
   assert.equal(toolBlock.name, "calculate_compound_interest");
-  assert.deepEqual(toolBlock.input, { principal: 10000, rate: 0.07, years: 10 });
+  assert.deepEqual(toolBlock.input, {
+    principal: 10000,
+    rate: 0.07,
+    years: 10,
+  });
 
   // Step 5: Client executes tool and provides tool_result
   const clientFollowUp: AnthropicMessagesRequest = {
@@ -348,7 +402,10 @@ test("SCENARIO-T4-05: Complex tool calling across Anthropic-only client and Open
   const toolResultMsg = finalOpenAiReq.messages[2];
   assert.equal(toolResultMsg.role, "tool");
   assert.equal(toolResultMsg.tool_call_id, "call_interest_calc_1");
-  assert.equal(toolResultMsg.content, JSON.stringify({ futureValue: 19671.51 }));
+  assert.equal(
+    toolResultMsg.content,
+    JSON.stringify({ futureValue: 19671.51 }),
+  );
 
   // Step 6: SSE Stream from upstream is translated back to Anthropic SSE events
   const streamConverter = new OpenAIToAnthropicStreamConverter();

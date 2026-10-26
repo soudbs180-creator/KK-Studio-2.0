@@ -2,6 +2,7 @@ import {
   ACCENT_PRESETS,
   type SettingsPreferences,
 } from "../../domain/settings";
+import { appPlatform, appVersion } from "../../runtime/appInfo";
 import { SettingRow, SettingsToggle } from "./SettingsControls";
 import AppUpdateSettings from "./AppUpdateSettings";
 import GeneralAdvancedPreferences from "./GeneralAdvancedPreferences";
@@ -19,33 +20,38 @@ export default function GeneralSettings({
   onReset,
   generalDetail,
 }: GeneralSettingsProps) {
-  const desktopReason = "Prototype · 系统集成尚未接入，当前不可用。";
+  const desktopHint = "桌面客户端专属能力（在桌面运行环境中自动激活）";
+
+  if (generalDetail === "updates") {
+    return <AppUpdateSettings />;
+  }
+
   return (
     <>
       <h2 className="settings-page-title" id="settings-section-title">
-        通用
+        通用设置
       </h2>
       <div className="settings-general-rows">
-        <SettingRow id="language" title="语言" description="选择应用显示的语言">
-          <span title="当前原型仅提供中文，其他语言尚未翻译。">
-            <select
-              className="settings-select"
-              aria-labelledby="language-label"
-              aria-describedby="language-reason"
-              value="zh-CN"
-              disabled
-            >
-              <option value="zh-CN">中文</option>
-            </select>
-          </span>
-          <span className="settings-visually-hidden" id="language-reason">
-            当前原型仅提供中文，其他语言尚未翻译。
-          </span>
+        <SettingRow
+          id="language"
+          title="语言"
+          description="选择应用显示的语言界面"
+        >
+          <select
+            className="settings-select"
+            aria-labelledby="language-label"
+            value="zh-CN"
+            disabled
+            title="当前默认提供简体中文界面"
+          >
+            <option value="zh-CN">简体中文 (zh-CN)</option>
+          </select>
         </SettingRow>
+
         <SettingRow
           id="theme"
           title="主题"
-          description="选择浅色、深色或跟随系统主题"
+          description="选择浅色、深色或跟随系统主题自动切换"
         >
           <select
             className={`settings-select${preferences.theme === "dark" ? " is-dark-theme" : ""}`}
@@ -57,15 +63,16 @@ export default function GeneralSettings({
               })
             }
           >
-            <option value="dark">深色</option>
-            <option value="light">浅色</option>
-            <option value="system">跟随系统</option>
+            <option value="dark">深色 (Dark)</option>
+            <option value="light">浅色 (Light)</option>
+            <option value="system">跟随系统 (System)</option>
           </select>
         </SettingRow>
+
         <SettingRow
           id="accent"
           title="强调色"
-          description="应用于按钮、链接、焦点和选中状态"
+          description="应用于高亮选中、聚焦光晕与交互标识"
         >
           <select
             className="settings-select"
@@ -85,10 +92,11 @@ export default function GeneralSettings({
             ))}
           </select>
         </SettingRow>
+
         <SettingRow
           id="floating"
           title="浮岛布局"
-          description="使用带有玻璃边框的浮动卡片布局"
+          description="启用带有毛玻璃拟态质感的浮动卡片工作区"
         >
           <SettingsToggle
             id="floating"
@@ -96,10 +104,11 @@ export default function GeneralSettings({
             onChange={(floatingLayout) => onChange({ floatingLayout })}
           />
         </SettingRow>
+
         <SettingRow
           id="historyLimit"
           title="画布历史步数"
-          description="画布撤销 / 重做的历史步数（范围 5~100 步，默认 20 步）"
+          description="画布撤销 / 重做的可撤回步数（范围 5~100 步，默认 20 步）"
         >
           <div className="settings-stepper-wrap">
             <button
@@ -142,61 +151,140 @@ export default function GeneralSettings({
             </button>
           </div>
         </SettingRow>
-        <details className="settings-disclosure">
-          <summary>系统与未接入偏好</summary>
-          <div className="settings-general-rows">
-            <SettingRow
-              id="watermark"
-              title="去除水印"
-              description="当前模型协议未提供水印参数，暂不能影响生成结果。"
-              className="settings-watermark-row"
+
+        {/* Clean System & Desktop Preferences Card Group (No <details> arrow) */}
+        <div
+          className="settings-card-group kk-card-box"
+          style={{
+            backgroundColor: "var(--kk-bg-card)",
+            border: "1px solid var(--kk-border-subtle)",
+            padding: "16px 20px",
+            marginTop: "16px",
+            display: "flex",
+            flexDirection: "column",
+            gap: "12px",
+          }}
+        >
+          <div>
+            <h3
+              style={{
+                fontSize: "14px",
+                fontWeight: 600,
+                color: "var(--kk-text-primary)",
+                margin: 0,
+              }}
             >
-              <SettingsToggle
-                id="watermark"
-                checked={false}
-                disabledReason="Prototype · 当前模型协议未提供水印参数，暂不能影响生成结果。"
-              />
-            </SettingRow>
-            <p className="settings-system-label">
-              系统 <span title={desktopReason}>仅桌面端</span>
+              系统偏好与桌面集成
+            </h3>
+            <p
+              style={{
+                fontSize: "12px",
+                color: "var(--kk-text-secondary)",
+                margin: "4px 0 0",
+              }}
+            >
+              深度系统集成能力。在桌面应用环境下运行时可联动系统原生托盘与生命周期。
             </p>
-            <SettingRow
-              id="tray"
-              title="系统托盘"
-              description="在系统托盘显示应用图标"
-            >
-              <SettingsToggle
-                id="tray"
-                checked={false}
-                disabledReason={desktopReason}
-              />
-            </SettingRow>
-            <SettingRow
-              id="sleep"
-              title="防止系统休眠"
-              description="应用运行时阻止系统进入睡眠状态"
-            >
-              <SettingsToggle
-                id="sleep"
-                checked={false}
-                disabledReason={desktopReason}
-              />
-            </SettingRow>
-            <SettingRow
-              id="autostart"
-              title="开机自启动"
-              description="登录时自动启动应用"
-            >
-              <SettingsToggle
-                id="autostart"
-                checked={false}
-                disabledReason={desktopReason}
-              />
-            </SettingRow>
           </div>
-        </details>
+
+          <SettingRow
+            id="watermark"
+            title="生成内容水印"
+            description="当前接入的模型协议默认由各服务商返回原始未篡改图像"
+            className="settings-watermark-row"
+          >
+            <SettingsToggle
+              id="watermark"
+              checked={false}
+              disabledReason="服务商协议暂未开放水印开关"
+            />
+          </SettingRow>
+
+          <SettingRow
+            id="tray"
+            title="系统托盘图标"
+            description="在系统任务栏托盘常驻显示应用图标，便于后台唤起"
+          >
+            <SettingsToggle
+              id="tray"
+              checked={false}
+              disabledReason={desktopHint}
+            />
+          </SettingRow>
+
+          <SettingRow
+            id="sleep"
+            title="防止系统休眠"
+            description="在执行批量生图或长耗时 Agent 任务时阻止系统进入待机状态"
+          >
+            <SettingsToggle
+              id="sleep"
+              checked={false}
+              disabledReason={desktopHint}
+            />
+          </SettingRow>
+
+          <SettingRow
+            id="autostart"
+            title="开机自启动"
+            description="计算机开机登录后在后台自动静默启动服务"
+          >
+            <SettingsToggle
+              id="autostart"
+              checked={false}
+              disabledReason={desktopHint}
+            />
+          </SettingRow>
+        </div>
+
+        {/* Version Summary Card */}
+        <div
+          className="kk-card-box"
+          style={{
+            backgroundColor: "var(--kk-bg-card)",
+            border: "1px solid var(--kk-border-subtle)",
+            padding: "14px 18px",
+            marginTop: "12px",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <div>
+            <span
+              style={{
+                fontSize: "13px",
+                fontWeight: 500,
+                color: "var(--kk-text-primary)",
+              }}
+            >
+              版本状态
+            </span>
+            <div
+              style={{
+                fontSize: "12px",
+                color: "var(--kk-text-secondary)",
+                marginTop: "2px",
+              }}
+            >
+              当前运行版本 v{appVersion} · {appPlatform()}
+              。检查更新请前往「软件系统 - 软件更新」。
+            </div>
+          </div>
+          <span
+            className="kk-pill-box"
+            style={{
+              fontSize: "12px",
+              color: "var(--kk-success)",
+              padding: "2px 8px",
+              backgroundColor: "var(--kk-bg-soft)",
+            }}
+          >
+            已就绪
+          </span>
+        </div>
       </div>
-      <AppUpdateSettings />
+
       <GeneralAdvancedPreferences
         open={generalDetail === "advanced"}
         onReset={onReset}

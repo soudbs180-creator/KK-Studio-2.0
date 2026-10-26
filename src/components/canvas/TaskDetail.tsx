@@ -49,8 +49,8 @@ export default function TaskDetail({
         <button type="button" aria-label="关闭任务详情" onClick={close}>
           <img
             src="/design/figma/task-close.svg"
-            width={7}
-            height={7}
+            width={12}
+            height={12}
             alt=""
             draggable={false}
           />

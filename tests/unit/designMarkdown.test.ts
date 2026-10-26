@@ -64,9 +64,9 @@ test("integration preserves approved runtime tokens and registered dimensions", 
     path.join(root, "src/styles/tokens.css"),
     "utf8",
   );
-  // A new token baseline requires source review; sync alone cannot approve it.
+  // Current Figma geometry: 2026-10-25-figma-04-05-rework/spec.md.
   const approvedHash =
-    "741f1739101b5cb1d407b65929a9e133d9a363390239a066005d95ee4d5d8138";
+    "477b7584b2c35d7d3e6da381b82e75f10f02cf93aa16f41a0873be914314e92b";
   assert.equal(
     createHash("sha256").update(source.replace(/\r\n/g, "\n")).digest("hex"),
     approvedHash,
@@ -233,7 +233,7 @@ test("portable input and icon controls retain their actual shared control semant
     fs.readFileSync(path.join(root, "src/styles/tokens.css"), "utf8"),
   );
   assert.equal(tokens.components.input.typography, "{typography.body}");
-  assert.equal(tokens.typography.body.fontWeight, 400);
+  assert.equal(tokens.typography.body.fontWeight, 360);
   assert.equal(
     tokens.components["icon-button"].textColor,
     "{colors.on-surface-variant}",

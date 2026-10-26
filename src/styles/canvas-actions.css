@@ -59,8 +59,8 @@
 }
 .node-port-plus {
   display: block;
-  width: 11.75px;
-  height: 11.75px;
+  width: var(--kk-icon-glyph-xs);
+  height: var(--kk-icon-glyph-xs);
   background: currentColor;
   mask: url("/design/figma/node-port-plus.svg") center / contain no-repeat;
 }

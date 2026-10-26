@@ -8,7 +8,7 @@
 | --- | --- | --- | --- |
 | [`README.md`](README.md) | **人类**（开发者、用户） | **项目内容** | 项目定位、功能总览、运行环境、安装步骤与使用示例 |
 | [`AGENTS.md`](AGENTS.md)（本文件） | **编码代理**（Coding Agents） | **如何构建项目** | 技术边界、数据安全、构建验证门禁、SDLC 交付与 Git 规则 |
-| [`DESIGN.md`](DESIGN.md) | **设计代理**（Design Agents / UI Agents） | **项目应该是什么样子和感觉** | 视觉语言、设计令牌（Tokens）、三端响应式与视口双向自适应规范 |
+| [`DESIGN.md`](DESIGN.md) | **设计代理**（Design Agents / UI Agents） | **Figma 设计规范的本地投影** | 从 Figma 派生的设计说明、运行时令牌投影与专项规范导航 |
 
 本文件是全部编码 AI 的**最高规则入口**，定义技术边界、禁止事项与验证要求。本文件与 [`AI_RULES.md`](AI_RULES.md) 的分工：
 
@@ -20,7 +20,7 @@
 
 两者不重复承载同类条目。发现同一规则在两处都出现时，以本文件为准并删除另一处。文档索引与冲突裁决规则见 `docs/README.md`。
 
-> **防新页面违规刚性约束**：所有新建页面、卡片、组件在编码前**必须先读取并严格遵循 [`DESIGN.md`](DESIGN.md)**。严禁私自硬编码孤立色值、固定宽度或忽略矮屏适配，编码代理必须先以 `DESIGN.md` 的规范自检通过后方可提交。
+> **UI 开工入口**：涉及 UI 时，先执行下文「设计与交互」中的 Figma 优先流程，再读 [`DESIGN.md`](DESIGN.md) 与 [`docs/UI_INDEX.md`](docs/UI_INDEX.md) 的本地派生规范；本地文档不能代替读取当前 Figma。
 
 ## 所有 AI 必须先理解意图
 
@@ -62,9 +62,11 @@
 
 ## 设计与交互
 
-- **UI 设计规范唯一入口是根目录 [`DESIGN.md`](DESIGN.md)**（对齐 Google Stitch Specification 标准）。任何 UI、页面、卡片、浮层或组件改动，**编码代理必须先读 `DESIGN.md`，严格遵循其样式规则、Tokens、流式网格自适应与矮屏弹性规范**。细分主题索引见 [`docs/UI_INDEX.md`](docs/UI_INDEX.md)。
-- **防止新页面违规的刚性法则**：所有新页面、新卡片、新控件必须满足以下五项硬约束方可合入：
-  1. **禁止裸写颜色**：所有颜色必须消费 `DESIGN.md` 注册的语义令牌（如 `var(--bg-surface)`、`var(--text-primary)`），严禁直接出现 Hex/RGB 硬编码；
+- **Figma 优先，设计先行**：新增或修改页面、组件、视觉样式、布局、响应式和交互状态时，必须先读取用户指定的当前 Figma Design System 与目标页面，在 Figma 完成相应设计修改并回读确认，再同步本地设计文档、Tokens、共享组件和页面代码。**禁止先改本地 UI，再把结果回填 Figma 作为设计依据。** 若 Figma 已有本次目标设计，记录其来源与「无需修改」依据即可，无需制造重复编辑。纯后端、数据或构建改动且不改变 UI 的任务不适用此设计步骤。
+- **设计真值与本地投影**：Figma 中已确认的变量、样式、组件/变体、页面模板和目标页面是 UI 设计真值；[`DESIGN.md`](DESIGN.md) 与 [`docs/UI_INDEX.md`](docs/UI_INDEX.md) 路由的本地规范是派生文档，仍须阅读。其视觉条目、命名和章节组织从 Figma 规范映射而来；旧本地规范、CSS、截图或 Google DESIGN.md 的交换格式不能反向定义设计。冲突处理、来源登记和同步顺序统一见 [`docs/UI_INDEX.md`](docs/UI_INDEX.md)。
+- **设计前置证据**：首次修改本地 UI 前，在本次 spec/verification 记录 Figma 文件链接、规范与页面 node ID、版本或读取时间、目标状态及设计修改/无需修改的依据。来源失效、无权限或设计未定义时，记录缺口并先解决 Figma 来源/设计，暂停依赖该设计的本地 UI 修改；不得自行套用旧规范，也不得标记为已同步。
+- **工程底线与视觉映射**：下列工程约束持续有效；具体视觉值与布局选择须按当前 Figma 映射。安全、数据、无障碍和运行验证要求不可因设计稿缺失而降低。新页面、新卡片、新控件需满足：
+  1. **禁止裸写颜色**：所有颜色必须消费从 Figma 映射并在本地注册的语义令牌，严禁在页面或组件中直接出现 Hex/RGB 硬编码；
   2. **双向自适应弹性**：页面与卡片容器严禁使用写死固定像素宽度（必须使用 `width: min(100%, ...)`、流式网格 `grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr))` 与 `min-width: 0` 防溢出）；
   3. **矮屏与弹性高度**：所有弹窗与面板必须使用三段式结构（Header + Scrollable Body + Sticky Footer），并响应 `@media (max-height: 640px)`，确保主操作按钮在任何矮屏下始终可见可点；
   4. **触控与桌面双达标**：移动端与平板端所有交互元素触控面积不小于 `44px × 44px`；
@@ -85,12 +87,12 @@
 
 ## UI 运行链路门禁
 
-- UI 改动必须按 `用户 Design System + 页面来源 → Design Tokens → Shared Components → Actual Source → Browser Verification` 执行。
+- UI 改动按上述 Figma 优先流程及 [`docs/UI_SPEC.md`](docs/UI_SPEC.md) 的运行验证链路执行。
 - 报告 UI 完成前，必须记录实际启动命令、浏览器 URL/端口、运行模式（Vite development、Vite preview 或 Tauri release）、当前 route、route 到页面组件的 import 链路，以及同状态浏览器 DOM/截图证据。
 - 代码 diff、Figma 读取或构建通过都不能代替浏览器验证；如果页面没有发生可见变化，必须继续检查端口、旧 build、缓存、重复 app/package 和路由引用，不能标记完成。
 - Web（Vite）与 Desktop（Tauri `frontendDist`）必须分别验证；修改源码后要重新生成实际被加载的 production `dist` 或 release 包。
 - 页面级 CSS 的加载顺序由 `App.tsx` 统一管理；同一 CSS 从组件提前 import 后，再次 import 不会改变顺序。必须以浏览器 style sheet 顺序和 computed style 确认最终生效规则。
-- 默认、hover、active、selected、disabled、focus 必须消费同一套语义 tokens；原稿未定义的状态标记为工程补充。示例内容、真实运行内容与桌面专属控件不得混作同状态验收。
+- 默认、hover、active、selected、disabled、focus 必须消费同一套语义 tokens；原稿未定义的视觉/交互状态先补到 Figma，再映射本地，工程实现补充单独标注。示例内容、真实运行内容与桌面专属控件不得混作同状态验收。
 - 运行 Vite 时必须固定端口 1421（`vite.config.ts` 中设置 `strictPort: true`）；如果 1421 被占用，不得自动切到其他端口渲染。
 - 若启动后页面仍是旧界面，需先确认 `index.html` 与当前进程的 `script/src`（`/src/main.tsx` 或 `/assets/index-*.js`）、`data-runtime-mode`、`data-runtime-entry`，再排除：
   - 旧窗口/旧端口残留

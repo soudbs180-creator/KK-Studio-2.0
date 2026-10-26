@@ -73,7 +73,9 @@ export function runShadowLatencyBenchmark(iterations = 100): {
 
   // Warmup run to avoid JIT compilation skew
   for (let w = 0; w < 20; w++) {
-    pipeline.appendShadowEvent("canvas.warmup", `warmup-${w}`, "system", { warmup: true });
+    pipeline.appendShadowEvent("canvas.warmup", `warmup-${w}`, "system", {
+      warmup: true,
+    });
   }
 
   for (let i = 1; i <= iterations; i++) {
@@ -118,7 +120,10 @@ export function runShadowLatencyBenchmark(iterations = 100): {
   const sorted = [...latencies].sort((a, b) => a - b);
   const sum = sorted.reduce((acc, val) => acc + val, 0);
   const avg = Number((sum / sorted.length).toFixed(4));
-  const p95Index = Math.min(Math.floor(sorted.length * 0.95), sorted.length - 1);
+  const p95Index = Math.min(
+    Math.floor(sorted.length * 0.95),
+    sorted.length - 1,
+  );
   const p95 = Number(sorted[p95Index].toFixed(4));
   const max = Number(sorted[sorted.length - 1].toFixed(4));
 

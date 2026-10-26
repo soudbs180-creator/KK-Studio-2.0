@@ -53,6 +53,71 @@ export interface AgentConversationProps {
   ) => Promise<{ ok: boolean; error?: string }>;
 }
 
+function formatAgentBannerText(agent: AgentConversationProps): string {
+  if (agent.pendingApproval) return "Agent 等待确认…";
+  if (agent.sending) {
+    return agent.activity.includes("已请求停止")
+      ? agent.activity
+      : "Agent 正在执行…";
+  }
+  if (agent.connecting) return `正在连接${agent.displayName ?? "本地 Agent"}…`;
+  const title = agent.displayName ?? "Codex 主 Agent";
+  return agent.connected ? `${title} · 已连接` : `${title} · 未连接`;
+}
+
+function AgentMessageGroup({
+  items,
+  onPreviewImage,
+  onSetReference,
+}: {
+  items: AgentChatItem[];
+  onPreviewImage?: (src: string, prompt?: string) => void;
+  onSetReference?: (src: string) => void;
+}) {
+  const item = items[0];
+  if (item.role === "tool") {
+    return <AgentExecutionProcess items={items} />;
+  }
+  const detail = item.detail as
+    | { kind?: string; status?: string; savedPath?: string; url?: string }
+    | undefined;
+  const mdImageMatch = item.text.match(/!\[(.*?)\]\((.*?)\)/);
+  const imageUrl =
+    detail?.url ||
+    (detail?.kind === "image" && detail?.savedPath?.startsWith("http")
+      ? detail.savedPath
+      : undefined) ||
+    mdImageMatch?.[2];
+  const displayText = mdImageMatch
+    ? item.text.replace(mdImageMatch[0], "").trim()
+    : item.text;
+  const cardStatus =
+    detail?.status === "failed"
+      ? "failed"
+      : detail?.status === "started"
+        ? "pending"
+        : "completed";
+  return (
+    <div className={`chat-agent-item is-${item.role}`}>
+      {displayText ? <span>{displayText}</span> : null}
+      {imageUrl ? (
+        <ChatImageCard
+          src={imageUrl}
+          alt={mdImageMatch?.[1] || "生成的图像"}
+          prompt={displayText}
+          status={cardStatus}
+          onPreview={(src) =>
+            onPreviewImage
+              ? onPreviewImage(src, displayText)
+              : window.open(src, "_blank")
+          }
+          onSetReference={onSetReference}
+        />
+      ) : null}
+    </div>
+  );
+}
+
 /** Agent 会话消息区：横幅、流式消息、工具活动与权限请求。 */
 export default function AgentConversationMessages({
   agent,
@@ -118,17 +183,7 @@ export default function AgentConversationMessages({
         className={`chat-agent-banner${agent.connected ? " is-connected" : ""}`}
         role="status"
       >
-        {pendingApproval
-          ? "Agent 等待确认…"
-          : sending
-            ? agent.activity.includes("已请求停止")
-              ? agent.activity
-              : "Agent 正在执行…"
-            : connecting
-              ? `正在连接${agent.displayName ?? "本地 Agent"}…`
-              : agent.connected
-                ? `${agent.displayName ?? "Codex 主 Agent"} · 已连接`
-                : `${agent.displayName ?? "Codex 主 Agent"} · 未连接`}
+        {formatAgentBannerText(agent)}
         {sending && (
           <button
             type="button"
@@ -200,51 +255,14 @@ export default function AgentConversationMessages({
         </details>
         {connectionBusy && <p>请先停止任务或处理待审批操作，再切换连接。</p>}
       </div>
-      {groups.map((items) => {
-        const item = items[0];
-        if (item.role === "tool") {
-          return <AgentExecutionProcess key={item.id} items={items} />;
-        }
-        const detail = item.detail as
-          | { kind?: string; status?: string; savedPath?: string; url?: string }
-          | undefined;
-        const mdImageMatch = item.text.match(/!\[(.*?)\]\((.*?)\)/);
-        const imageUrl =
-          detail?.url ||
-          (detail?.kind === "image" && detail?.savedPath?.startsWith("http")
-            ? detail.savedPath
-            : undefined) ||
-          mdImageMatch?.[2];
-        const displayText = mdImageMatch
-          ? item.text.replace(mdImageMatch[0], "").trim()
-          : item.text;
-
-        return (
-          <div key={item.id} className={`chat-agent-item is-${item.role}`}>
-            {displayText ? <span>{displayText}</span> : null}
-            {imageUrl ? (
-              <ChatImageCard
-                src={imageUrl}
-                alt={mdImageMatch?.[1] || "生成的图像"}
-                prompt={displayText}
-                status={
-                  detail?.status === "failed"
-                    ? "failed"
-                    : detail?.status === "started"
-                      ? "pending"
-                      : "completed"
-                }
-                onPreview={(src) =>
-                  onPreviewImage
-                    ? onPreviewImage(src, displayText)
-                    : window.open(src, "_blank")
-                }
-                onSetReference={onSetReference}
-              />
-            ) : null}
-          </div>
-        );
-      })}
+      {groups.map((items) => (
+        <AgentMessageGroup
+          key={items[0].id}
+          items={items}
+          onPreviewImage={onPreviewImage}
+          onSetReference={onSetReference}
+        />
+      ))}
       {pendingApproval && (
         <div
           className="chat-approval"

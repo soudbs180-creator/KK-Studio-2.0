@@ -56,10 +56,22 @@
   padding: 0;
   border-radius: var(--kk-radius-control);
   color: var(--text-secondary);
+  transition: var(--ui-state-transition);
 }
 .task-workbench-close:hover {
-  background: var(--bg-card-hover);
+  background: var(--ui-state-hover-bg);
   color: var(--text-primary);
+}
+.task-workbench-close:focus-visible {
+  outline: 2px solid var(--kk-focus-ring);
+  outline-offset: 1px;
+}
+.task-workbench-close:focus:not(:focus-visible) {
+  outline: none;
+}
+.task-workbench-close:active {
+  background: var(--ui-state-pressed-bg);
+  transform: scale(0.98);
 }
 .task-workbench-layout {
   display: grid;

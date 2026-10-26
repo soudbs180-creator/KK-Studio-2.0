@@ -37,6 +37,7 @@ if (typeof navigator !== "undefined") {
     });
   } catch {
     // Headless environment without navigator
+    void 0;
   }
 }
 

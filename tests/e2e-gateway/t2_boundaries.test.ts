@@ -47,11 +47,18 @@ import {
 test("F01-T2-01: token count exceeding 100% of context window triggers critical danger tier and clamps display", () => {
   // Model window 32k = 32,768 tokens. Pass massive text of 40,000 words
   const massiveText = "overflow ".repeat(20000); // 20,000 words -> ~25,000 tokens + 512 overhead
-  const gauge = calculateContextGauge({ text: massiveText, model: "custom-small[32K]" }, 10000);
+  const gauge = calculateContextGauge(
+    { text: massiveText, model: "custom-small[32K]" },
+    10000,
+  );
 
   assert.ok(gauge.usedTokens > 32768, "Used tokens must exceed max window");
   assert.equal(gauge.percentage, 100, "Percentage should be clamped to 100%");
-  assert.equal(gauge.tier, "danger", "Status tier must be danger when overflowing");
+  assert.equal(
+    gauge.tier,
+    "danger",
+    "Status tier must be danger when overflowing",
+  );
 });
 
 test("F01-T2-02: pure CJK ideographic text vs pure ASCII boundaries calculate exact non-zero token partitions", () => {
@@ -68,7 +75,10 @@ test("F01-T2-02: pure CJK ideographic text vs pure ASCII boundaries calculate ex
 });
 
 test("F01-T2-03: zero token prompt with no attachments returns base system overhead without NaN or division by zero", () => {
-  const gauge = calculateContextGauge({ text: "", attachments: [], model: "gpt-4o" }, 512);
+  const gauge = calculateContextGauge(
+    { text: "", attachments: [], model: "gpt-4o" },
+    512,
+  );
 
   assert.equal(gauge.usedTokens, 512);
   assert.ok(!isNaN(gauge.percentage));
@@ -77,10 +87,19 @@ test("F01-T2-03: zero token prompt with no attachments returns base system overh
 });
 
 test("F01-T2-04: extreme context token values format with thousand-separator commas (e.g. 1,048,576)", () => {
-  const gauge = calculateContextGauge({ text: "test", model: "ultra-large[1M]" }, 1048000);
+  const gauge = calculateContextGauge(
+    { text: "test", model: "ultra-large[1M]" },
+    1048000,
+  );
 
-  assert.ok(gauge.displayString.includes("1,000,000"), "Max tokens must be formatted with commas");
-  assert.ok(gauge.displayString.includes("1,048,00"), "Used tokens must be formatted with commas");
+  assert.ok(
+    gauge.displayString.includes("1,000,000"),
+    "Max tokens must be formatted with commas",
+  );
+  assert.ok(
+    gauge.displayString.includes("1,048,00"),
+    "Used tokens must be formatted with commas",
+  );
 });
 
 test("F01-T2-05: elapsed time of 0ms or negative elapsed time handles gracefully without producing Infinity TPS", () => {
@@ -98,21 +117,45 @@ test("F01-T2-05: elapsed time of 0ms or negative elapsed time handles gracefully
 // -------------------------------------------------------------------------
 
 test("F02-T2-01: attempting to set invalid effort string throws typed validation error", () => {
-  assert.throws(() => validateReasoningEffort("ultra"), /Invalid reasoning effort/);
-  assert.throws(() => validateReasoningEffort("none"), /Invalid reasoning effort/);
+  assert.throws(
+    () => validateReasoningEffort("ultra"),
+    /Invalid reasoning effort/,
+  );
+  assert.throws(
+    () => validateReasoningEffort("none"),
+    /Invalid reasoning effort/,
+  );
   assert.throws(() => validateReasoningEffort(""), /Invalid reasoning effort/);
 });
 
 test("F02-T2-02: non-string and null reasoning effort values fail closed", () => {
-  assert.throws(() => validateReasoningEffort(null), /Invalid reasoning effort/);
-  assert.throws(() => validateReasoningEffort(undefined), /Invalid reasoning effort/);
-  assert.throws(() => validateReasoningEffort({ effort: "high" }), /Invalid reasoning effort/);
+  assert.throws(
+    () => validateReasoningEffort(null),
+    /Invalid reasoning effort/,
+  );
+  assert.throws(
+    () => validateReasoningEffort(undefined),
+    /Invalid reasoning effort/,
+  );
+  assert.throws(
+    () => validateReasoningEffort({ effort: "high" }),
+    /Invalid reasoning effort/,
+  );
 });
 
 test("F02-T2-03: case variations (LOW, High, MEDIUM) fail closed without silent normalization", () => {
-  assert.throws(() => validateReasoningEffort("LOW"), /Invalid reasoning effort/);
-  assert.throws(() => validateReasoningEffort("High"), /Invalid reasoning effort/);
-  assert.throws(() => validateReasoningEffort("MEDIUM"), /Invalid reasoning effort/);
+  assert.throws(
+    () => validateReasoningEffort("LOW"),
+    /Invalid reasoning effort/,
+  );
+  assert.throws(
+    () => validateReasoningEffort("High"),
+    /Invalid reasoning effort/,
+  );
+  assert.throws(
+    () => validateReasoningEffort("MEDIUM"),
+    /Invalid reasoning effort/,
+  );
 });
 
 test("F02-T2-04: model ID regex boundary matching (e.g. 'model-solo-1' is not 'o1', 'deepseek-r1-distill' is reasoning)", () => {
@@ -126,7 +169,11 @@ test("F02-T2-04: model ID regex boundary matching (e.g. 'model-solo-1' is not 'o
 });
 
 test("F02-T2-05: switching reasoning effort rapidly across turns maintains immutable isolation between draft snapshots", () => {
-  const baseDraft: CreationDraftLike = { prompt: "Base", model: "o3-mini", reasoningEffort: "low" };
+  const baseDraft: CreationDraftLike = {
+    prompt: "Base",
+    model: "o3-mini",
+    reasoningEffort: "low",
+  };
   const d1 = applyReasoningEffort(baseDraft, "medium");
   const d2 = applyReasoningEffort(d1, "high");
   const d3 = applyReasoningEffort(d2, "low");
@@ -185,7 +232,11 @@ test("F03-T2-05: cache expiration at exact TTL boundary (60,001ms) evicts stale 
   await new Promise((resolve) => setTimeout(resolve, 15));
 
   await store.probe("test-cache", probe);
-  assert.equal(callCount, 2, "Stale cache must be evicted after TTL expiration");
+  assert.equal(
+    callCount,
+    2,
+    "Stale cache must be evicted after TTL expiration",
+  );
 });
 
 // -------------------------------------------------------------------------
@@ -206,12 +257,17 @@ test("F04-T2-02: filter by category or region on empty or invalid criteria retur
 test("F04-T2-03: all preset baseUrl strings are checked for trailing slashes (preserves consistent normalization)", () => {
   for (const preset of CATALOG_52_PRESETS) {
     // Normalization check: baseUrls should not end in double slashes
-    assert.ok(!preset.baseUrl.endsWith("//"), `${preset.id} has trailing double slashes`);
+    assert.ok(
+      !preset.baseUrl.endsWith("//"),
+      `${preset.id} has trailing double slashes`,
+    );
   }
 });
 
 test("F04-T2-04: domestic providers with regional endpoints maintain correct domestic tag", () => {
-  const domesticPresets = CATALOG_52_PRESETS.filter((p) => p.region === "domestic");
+  const domesticPresets = CATALOG_52_PRESETS.filter(
+    (p) => p.region === "domestic",
+  );
   for (const p of domesticPresets) {
     assert.equal(p.region, "domestic");
   }
@@ -221,12 +277,18 @@ test("F04-T2-05: local offline providers (ollama, lm-studio) specify authMode 'n
   const ollama = findPresetById("ollama");
   assert.ok(ollama);
   assert.equal(ollama.authMode, "none");
-  assert.ok(ollama.baseUrl.includes("127.0.0.1") || ollama.baseUrl.includes("localhost"));
+  assert.ok(
+    ollama.baseUrl.includes("127.0.0.1") ||
+      ollama.baseUrl.includes("localhost"),
+  );
 
   const lmStudio = findPresetById("lm-studio");
   assert.ok(lmStudio);
   assert.equal(lmStudio.authMode, "none");
-  assert.ok(lmStudio.baseUrl.includes("127.0.0.1") || lmStudio.baseUrl.includes("localhost"));
+  assert.ok(
+    lmStudio.baseUrl.includes("127.0.0.1") ||
+      lmStudio.baseUrl.includes("localhost"),
+  );
 });
 
 // -------------------------------------------------------------------------
@@ -235,11 +297,17 @@ test("F04-T2-05: local offline providers (ollama, lm-studio) specify authMode 'n
 
 test("F05-T2-01: malformed deeplink protocol (http:// or https:// instead of ccswitch://) throws INVALID_DEEPLINK_PROTOCOL", () => {
   assert.throws(
-    () => parseCcSwitchDeeplink("https://v1/import?name=Test&endpoint=https://api.test.com"),
+    () =>
+      parseCcSwitchDeeplink(
+        "https://v1/import?name=Test&endpoint=https://api.test.com",
+      ),
     /非法 CC Switch Deeplink 协议|INVALID_DEEPLINK_PROTOCOL/,
   );
   assert.throws(
-    () => parseCcSwitchDeeplink("custom://v1/import?name=Test&endpoint=https://api.test.com"),
+    () =>
+      parseCcSwitchDeeplink(
+        "custom://v1/import?name=Test&endpoint=https://api.test.com",
+      ),
     /非法 CC Switch Deeplink 协议|INVALID_DEEPLINK_PROTOCOL/,
   );
 });
@@ -272,22 +340,50 @@ test("F05-T2-04: credentialRef exceeding 160 characters or containing special ch
   assert.throws(() => vault.storeSecret(""), /Cannot store empty secret/);
 
   const over160 = "ref_" + "a".repeat(161);
-  assert.throws(() => assertCredentialRef(over160), /CREDENTIAL_REF_TOO_LONG|CREDENTIAL_REF_IS_SECRET|CREDENTIAL_REF_MALFORMED/);
+  assert.throws(
+    () => assertCredentialRef(over160),
+    /CREDENTIAL_REF_TOO_LONG|CREDENTIAL_REF_IS_SECRET|CREDENTIAL_REF_MALFORMED/,
+  );
 
-  assert.throws(() => assertCredentialRef("ref with spaces"), /CREDENTIAL_REF_MALFORMED|INVALID_CREDENTIAL_REF/);
-  assert.throws(() => assertCredentialRef("ref/with/slashes"), /CREDENTIAL_REF_MALFORMED|INVALID_CREDENTIAL_REF/);
-  assert.throws(() => assertCredentialRef("ref@with#symbols"), /CREDENTIAL_REF_MALFORMED|INVALID_CREDENTIAL_REF/);
+  assert.throws(
+    () => assertCredentialRef("ref with spaces"),
+    /CREDENTIAL_REF_MALFORMED|INVALID_CREDENTIAL_REF/,
+  );
+  assert.throws(
+    () => assertCredentialRef("ref/with/slashes"),
+    /CREDENTIAL_REF_MALFORMED|INVALID_CREDENTIAL_REF/,
+  );
+  assert.throws(
+    () => assertCredentialRef("ref@with#symbols"),
+    /CREDENTIAL_REF_MALFORMED|INVALID_CREDENTIAL_REF/,
+  );
 });
 
 test("F05-T2-05: assertNoSecrets catches adversarial variations of API keys (JWT tokens, Bearer strings, private keys)", () => {
-  const leak1 = JSON.stringify({ token: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.abcdef1234567890abcdef" });
-  assert.throws(() => assertNoSecrets(leak1), /疑似包含密钥或凭据|SECRET_LEAK_DETECTED/);
+  const leak1 = JSON.stringify({
+    token:
+      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.abcdef1234567890abcdef",
+  });
+  assert.throws(
+    () => assertNoSecrets(leak1),
+    /疑似包含密钥或凭据|SECRET_LEAK_DETECTED/,
+  );
 
-  const leak2 = JSON.stringify({ key: "-----BEGIN RSA PRIVATE KEY-----\nMIIEvgIBADANBg..." });
-  assert.throws(() => assertNoSecrets(leak2), /疑似包含密钥或凭据|SECRET_LEAK_DETECTED/);
+  const leak2 = JSON.stringify({
+    key: "-----BEGIN RSA PRIVATE KEY-----\nMIIEvgIBADANBg...",
+  });
+  assert.throws(
+    () => assertNoSecrets(leak2),
+    /疑似包含密钥或凭据|SECRET_LEAK_DETECTED/,
+  );
 
-  const leak3 = JSON.stringify({ key: "sk-ant-api03-1234567890abcdef1234567890abcde" });
-  assert.throws(() => assertNoSecrets(leak3), /疑似包含密钥或凭据|SECRET_LEAK_DETECTED/);
+  const leak3 = JSON.stringify({
+    key: "sk-ant-api03-1234567890abcdef1234567890abcde",
+  });
+  assert.throws(
+    () => assertNoSecrets(leak3),
+    /疑似包含密钥或凭据|SECRET_LEAK_DETECTED/,
+  );
 });
 
 // -------------------------------------------------------------------------
@@ -308,7 +404,10 @@ test("F06-T2-01: empty MCP tool whitelist filters out all tools yielding empty a
 });
 
 test("F06-T2-02: tool present in both whitelist and blacklist is strictly excluded (blacklist takes priority)", () => {
-  const tools: McpToolItem[] = [{ name: "dangerous_tool" }, { name: "safe_tool" }];
+  const tools: McpToolItem[] = [
+    { name: "dangerous_tool" },
+    { name: "safe_tool" },
+  ];
   const profile: ModelSpaceProfile = {
     modelId: "strict-model",
     contextWindow: 32000,
@@ -445,7 +544,10 @@ test("F08-T2-03: Anthropic request with array of system blocks merges them with 
 
   const openAiReq = transpileAnthropicToOpenAI(req);
   assert.equal(openAiReq.messages[0].role, "system");
-  assert.equal(openAiReq.messages[0].content, "Rule 1: Always be concise.\n\nRule 2: Cite sources.");
+  assert.equal(
+    openAiReq.messages[0].content,
+    "Rule 1: Always be concise.\n\nRule 2: Cite sources.",
+  );
 });
 
 test("F08-T2-04: stream converter handles chunks with null content or empty delta choices without crashing", () => {
@@ -469,7 +571,11 @@ test("F08-T2-05: tool call with multiple arguments split across several SSE chun
       {
         delta: {
           tool_calls: [
-            { index: 0, id: "call_multi_chunk", function: { name: "calc", arguments: "{\"x\":" } },
+            {
+              index: 0,
+              id: "call_multi_chunk",
+              function: { name: "calc", arguments: '{"x":' },
+            },
           ],
         },
       },
@@ -482,9 +588,7 @@ test("F08-T2-05: tool call with multiple arguments split across several SSE chun
     choices: [
       {
         delta: {
-          tool_calls: [
-            { index: 0, function: { arguments: " 42}" } },
-          ],
+          tool_calls: [{ index: 0, function: { arguments: " 42}" } }],
         },
       },
     ],
@@ -536,17 +640,14 @@ test("F09-T2-01: stream locked invariant: 429 encountered AFTER first token emit
     },
   ]);
 
-  await assert.rejects(
-    async () => {
-      await pool.dispatchWithHotDrift(async (_account, onStreamStart) => {
-        // First token emitted to client!
-        onStreamStart();
-        // Mid-stream rate limit failure
-        throw new Error("HTTP 429: Rate limit hit mid-stream");
-      });
-    },
-    /STREAM_LOCKED_FAILOVER_FORBIDDEN/,
-  );
+  await assert.rejects(async () => {
+    await pool.dispatchWithHotDrift(async (_account, onStreamStart) => {
+      // First token emitted to client!
+      onStreamStart();
+      // Mid-stream rate limit failure
+      throw new Error("HTTP 429: Rate limit hit mid-stream");
+    });
+  }, /STREAM_LOCKED_FAILOVER_FORBIDDEN/);
 });
 
 test("F09-T2-02: all accounts in pool cooling down throws NO_HEALTHY_ACCOUNT_AVAILABLE", async () => {
@@ -568,12 +669,9 @@ test("F09-T2-02: all accounts in pool cooling down throws NO_HEALTHY_ACCOUNT_AVA
     },
   ]);
 
-  await assert.rejects(
-    async () => {
-      await pool.dispatchWithHotDrift(async () => "done");
-    },
-    /NO_HEALTHY_ACCOUNT_AVAILABLE/,
-  );
+  await assert.rejects(async () => {
+    await pool.dispatchWithHotDrift(async () => "done");
+  }, /NO_HEALTHY_ACCOUNT_AVAILABLE/);
 });
 
 test("F09-T2-03: quarantined account (>= 5 failures) has healthScore 0 and is excluded from dispatch", () => {
@@ -626,17 +724,18 @@ test("F09-T2-04: circuit breaker in OPEN state fast-fails all requests without a
   assert.equal(pool.circuitState, "OPEN");
 
   let networkCallAttempted = false;
-  await assert.rejects(
-    async () => {
-      await pool.dispatchWithHotDrift(async () => {
-        networkCallAttempted = true;
-        return "data";
-      });
-    },
-    /NO_HEALTHY_ACCOUNT_AVAILABLE/,
-  );
+  await assert.rejects(async () => {
+    await pool.dispatchWithHotDrift(async () => {
+      networkCallAttempted = true;
+      return "data";
+    });
+  }, /NO_HEALTHY_ACCOUNT_AVAILABLE/);
 
-  assert.equal(networkCallAttempted, false, "Must not attempt network call when circuit is OPEN");
+  assert.equal(
+    networkCallAttempted,
+    false,
+    "Must not attempt network call when circuit is OPEN",
+  );
 });
 
 test("F09-T2-05: circuit breaker in HALF_OPEN state allows canary request and closes circuit on success", () => {
@@ -690,15 +789,12 @@ test("F10-T2-01: subagent attempting to spawn nested subagent is blocked by anti
     inputs: {},
   };
 
-  await assert.rejects(
-    async () => {
-      await nestedSandbox.executeTask(brief, async () => ({
-        summary: "Should not execute",
-        tokensUsed: 0,
-      }));
-    },
-    /RECURSION_DENIED/,
-  );
+  await assert.rejects(async () => {
+    await nestedSandbox.executeTask(brief, async () => ({
+      summary: "Should not execute",
+      tokensUsed: 0,
+    }));
+  }, /RECURSION_DENIED/);
 });
 
 test("F10-T2-02: worker exception in subagent captures failure status and returns error summary without crashing caller", async () => {
@@ -738,7 +834,10 @@ test("F10-T2-03: executive summary exceeding 300 words is truncated cleanly with
 
   assert.ok(result.executiveSummary.includes("truncated"));
   const wordCount = result.executiveSummary.split(/\s+/).length;
-  assert.ok(wordCount <= 310, `Word count should be truncated near 300 words, got ${wordCount}`);
+  assert.ok(
+    wordCount <= 310,
+    `Word count should be truncated near 300 words, got ${wordCount}`,
+  );
 });
 
 test("F10-T2-04: subagent executing with 0 tokens consumed computes 0 tokens saved without negative values", async () => {

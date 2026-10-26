@@ -16,24 +16,24 @@ test("current Figma modal shells keep dimensions and settings content origin", a
   expect(title.y - panelBox.y).toBe(41);
   expect(await panel.locator(".settings-row h3").allTextContents()).toEqual([
     "语言",
-    "主题",
+    "主题外观",
     "强调色",
     "浮岛布局",
     "画布历史步数",
-    "去除水印",
-    "系统托盘",
+    "生成内容水印",
+    "系统托盘图标",
     "防止系统休眠",
     "开机自启动",
-    "软件更新",
   ]);
   await page.keyboard.press("Escape");
   await page.getByRole("button", { name: "搜索", exact: true }).click();
   await expect(page.locator(".catalog-panel")).toHaveCSS("height", "696px");
   await page.keyboard.press("Escape");
   await page.getByRole("button", { name: "资源管理", exact: true }).click();
-  await expect(page.locator(".asset-panel")).toHaveCSS("height", "696px");
+  await expect(page.locator(".asset-panel")).toHaveCSS("width", "748px");
+  await expect(page.locator(".asset-panel")).toHaveCSS("height", "600px");
   await page.getByRole("button", { name: "收起资产管理", exact: true }).click();
-  await expect(page.locator(".asset-panel")).toHaveCSS("width", "305px");
+  await expect(page.locator(".asset-panel")).toHaveCSS("width", "308px");
   const filters = page.locator(".asset-filters");
   const content = page.locator(".asset-content");
   expect(
@@ -43,20 +43,22 @@ test("current Figma modal shells keep dimensions and settings content origin", a
   await expect(page.locator(".asset-empty")).toBeVisible();
 });
 
-test("unconnected account and memory controls do not advertise working services", async ({
+test("local account and memory controls reflect the current offline state", async ({
   page,
 }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   await page.getByRole("button", { name: "个人主页", exact: true }).click();
-  await expect(page.locator(".settings-content")).toContainText(
-    "未登录 · 本地使用",
-  );
+  await expect(page.locator(".settings-content")).toContainText("本地创作者");
+  await expect(page.locator(".settings-content")).toContainText("本地离线模式");
+  await expect(
+    page.getByRole("button", { name: "连接云端账号", exact: true }),
+  ).toBeVisible();
   await expect(
     page.getByRole("button", { name: "删除账号", exact: true }),
   ).toHaveCount(0);
-  await page.getByRole("button", { name: "网络", exact: true }).click();
-  await page.getByText("独立转发代理", { exact: true }).click();
+  await page.getByRole("button", { name: "网络与代理", exact: true }).click();
+  await page.getByText("独立转发代理 (Local Proxy)", { exact: true }).click();
   await expect(page.locator(".settings-content")).toContainText("独立转发代理");
   await expect(page.locator(".settings-content")).toContainText(
     "npm run proxy",
@@ -65,13 +67,12 @@ test("unconnected account and memory controls do not advertise working services"
     .getByRole("navigation", { name: "设置分类" })
     .getByRole("button", { name: "模型接入", exact: true })
     .click();
+  await page.getByRole("tab", { name: "CLI 直连 CLI", exact: true }).click();
   await expect(
-    page.getByRole("button", { name: "Codex 主 Agent", exact: true }),
+    page.getByRole("button", { name: "Gemini CLI", exact: true }),
   ).toHaveAttribute("aria-pressed", "true");
-  await expect(page.locator(".settings-content")).toContainText(
-    "Codex 主 Agent",
-  );
-  await page.getByRole("button", { name: "记忆", exact: true }).click();
+  await expect(page.locator(".settings-content")).toContainText("Gemini CLI");
+  await page.getByRole("button", { name: "记忆管理", exact: true }).click();
   // 记忆是本地能力，开关不依赖 Codex 连接；未连接时仅"让 Codex 提炼"禁用。
   await expect(page.locator(".settings-content")).toContainText("记忆服务");
   const toggle = page.getByRole("switch", {

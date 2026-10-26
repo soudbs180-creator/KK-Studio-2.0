@@ -13,6 +13,146 @@ class ChatStreamError extends Error {
   }
 }
 
+const DEFAULT_STREAM_FAILURE: NormalizedError = {
+  errorClass: "UPSTREAM_ERROR",
+  httpStatus: 502,
+  retryable: false,
+};
+
+function createStreamFailure(
+  channelId: string,
+  normalized: NormalizedError = DEFAULT_STREAM_FAILURE,
+): ChatStreamError {
+  return new ChatStreamError({
+    ...normalized,
+    channelId,
+    detail:
+      normalized.errorClass === "CONTENT_BLOCKED"
+        ? "Upstream rejected the chat request."
+        : "Upstream chat stream failed or was incomplete.",
+  });
+}
+
+function isEventStreamResponse(response: Response): boolean {
+  if (!response.body) return false;
+  const contentType = response.headers
+    .get("content-type")
+    ?.split(";")[0]
+    ?.trim()
+    .toLowerCase();
+  return contentType === "text/event-stream";
+}
+
+async function abortableWithSignal<T>(
+  signal: AbortSignal | undefined,
+  work: Promise<T>,
+): Promise<T> {
+  if (!signal) return work;
+  if (signal.aborted) {
+    void work.catch(() => undefined);
+    throw signal.reason;
+  }
+  let abort!: () => void;
+  const stopped = new Promise<never>((_resolve, reject) => {
+    abort = () => reject(signal.reason);
+    signal.addEventListener("abort", abort, { once: true });
+  });
+  try {
+    return await Promise.race([work, stopped]);
+  } finally {
+    signal.removeEventListener("abort", abort);
+  }
+}
+
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  return Boolean(value) && typeof value === "object" && !Array.isArray(value);
+}
+
+function checkUpstreamEventError(
+  event: Record<string, unknown>,
+  type: string,
+  channelId: string,
+): void {
+  if (event.error == null && type !== "error") return;
+  const error = event.error ?? event;
+  const status = isPlainObject(error) ? error.status : undefined;
+  throw createStreamFailure(
+    channelId,
+    normalizeHttpFailure({
+      status:
+        typeof status === "number" && status >= 400 && status <= 599
+          ? status
+          : 502,
+      body: error,
+    }),
+  );
+}
+
+function isValidChoice(choice: unknown): boolean {
+  if (!isPlainObject(choice)) return false;
+  if (!isPlainObject(choice.delta)) return false;
+  if (choice.message !== undefined && !isPlainObject(choice.message)) {
+    return false;
+  }
+  return true;
+}
+
+function isContentBlockedChoice(choice: Record<string, unknown>): boolean {
+  const delta = choice.delta as Record<string, unknown> | undefined;
+  return choice.finish_reason === "content_filter" || delta?.refusal != null;
+}
+
+function validateStreamChoices(choices: unknown[], channelId: string): void {
+  if (choices.some((choice) => !isValidChoice(choice))) {
+    throw createStreamFailure(channelId);
+  }
+  if (
+    choices.some((choice) =>
+      isContentBlockedChoice(choice as Record<string, unknown>),
+    )
+  ) {
+    throw createStreamFailure(channelId, {
+      errorClass: "CONTENT_BLOCKED",
+      httpStatus: 400,
+      retryable: false,
+    });
+  }
+}
+
+const USAGE_FIELD_MAP = [
+  ["prompt_tokens", "promptTokens"],
+  ["completion_tokens", "completionTokens"],
+  ["total_tokens", "totalTokens"],
+] as const;
+
+function parseUsageField(
+  value: unknown,
+  channelId: string,
+): number | undefined {
+  if (value === undefined) return undefined;
+  if (typeof value !== "number" || !Number.isSafeInteger(value) || value < 0) {
+    throw createStreamFailure(channelId);
+  }
+  return value;
+}
+
+function mergeStreamUsage(
+  rawUsage: unknown,
+  currentUsage: InlineTextResult["usage"],
+  channelId: string,
+): InlineTextResult["usage"] {
+  if (rawUsage == null) return currentUsage;
+  if (!isPlainObject(rawUsage)) throw createStreamFailure(channelId);
+  const next: NonNullable<InlineTextResult["usage"]> = {};
+  for (const [wire, key] of USAGE_FIELD_MAP) {
+    const count = parseUsageField(rawUsage[wire], channelId);
+    if (count !== undefined) {
+      Object.assign(next, { [key]: count });
+    }
+  }
+  return { ...currentUsage, ...next };
+}
+
 export async function readChatStream(
   response: Response,
   options: {
@@ -21,35 +161,16 @@ export async function readChatStream(
     channelId: string;
   },
 ): Promise<InlineTextResult> {
-  const { signal } = options;
-  const failure = (
-    normalized: NormalizedError = {
-      errorClass: "UPSTREAM_ERROR",
-      httpStatus: 502,
-      retryable: false,
-    },
-  ) =>
-    new ChatStreamError({
-      ...normalized,
-      channelId: options.channelId,
-      detail:
-        normalized.errorClass === "CONTENT_BLOCKED"
-          ? "Upstream rejected the chat request."
-          : "Upstream chat stream failed or was incomplete.",
-    });
-  if (
-    !response.body ||
-    response.headers
-      .get("content-type")
-      ?.split(";")[0]
-      ?.trim()
-      .toLowerCase() !== "text/event-stream"
-  ) {
+  const { signal, channelId } = options;
+  const failure = (normalized?: NormalizedError) =>
+    createStreamFailure(channelId, normalized);
+
+  if (!isEventStreamResponse(response)) {
     await response.body?.cancel().catch(() => undefined);
     signal?.throwIfAborted();
     throw failure();
   }
-  const reader = response.body.getReader();
+  const reader = response.body!.getReader();
   const decoder = new TextDecoder("utf-8", { fatal: true });
   const encoder = new TextEncoder();
   const state: TextProtocolState = {
@@ -69,24 +190,6 @@ export async function readChatStream(
   };
   signal?.addEventListener("abort", abortReader, { once: true });
 
-  async function abortable<T>(work: Promise<T>): Promise<T> {
-    if (!signal) return work;
-    if (signal.aborted) {
-      void work.catch(() => undefined);
-      throw signal.reason;
-    }
-    let abort!: () => void;
-    const stopped = new Promise<never>((_resolve, reject) => {
-      abort = () => reject(signal.reason);
-      signal.addEventListener("abort", abort, { once: true });
-    });
-    try {
-      return await Promise.race([work, stopped]);
-    } finally {
-      signal.removeEventListener("abort", abort);
-    }
-  }
-
   async function dispatch(): Promise<void> {
     const type = eventType;
     eventType = "";
@@ -97,111 +200,63 @@ export async function readChatStream(
     }
     const value = data.join("\n");
     data = [];
-    if (type === "error" && value === "[DONE]") throw failure();
     if (value === "[DONE]") {
-      if (!state.complete || !state.text.trim()) throw failure();
+      if (type === "error" || !state.complete || !state.text.trim()) {
+        throw failure();
+      }
       done = true;
       return;
     }
     const payload: unknown = JSON.parse(value);
-    if (!payload || typeof payload !== "object" || Array.isArray(payload))
-      throw failure();
-    const event = payload as Record<string, unknown>;
-    if (event.error != null || type === "error") {
-      const error = event.error ?? event;
-      const status =
-        error && typeof error === "object"
-          ? (error as Record<string, unknown>).status
-          : undefined;
-      throw failure(
-        normalizeHttpFailure({
-          status:
-            typeof status === "number" && status >= 400 && status <= 599
-              ? status
-              : 502,
-          body: error,
-        }),
-      );
-    }
-    const choices = Array.isArray(event.choices) ? event.choices : [];
-    if (
-      choices.some(
-        (choice) =>
-          !choice ||
-          typeof choice !== "object" ||
-          Array.isArray(choice) ||
-          !choice.delta ||
-          typeof choice.delta !== "object" ||
-          Array.isArray(choice.delta) ||
-          (choice.message !== undefined &&
-            (!choice.message ||
-              typeof choice.message !== "object" ||
-              Array.isArray(choice.message))),
-      )
-    )
-      throw failure();
-    if (
-      choices.some(
-        (choice) =>
-          choice?.finish_reason === "content_filter" ||
-          choice?.delta?.refusal != null,
-      )
-    )
-      throw failure({
-        errorClass: "CONTENT_BLOCKED",
-        httpStatus: 400,
-        retryable: false,
-      });
+    if (!isPlainObject(payload)) throw failure();
+    checkUpstreamEventError(payload, type, channelId);
+
+    const choices = Array.isArray(payload.choices) ? payload.choices : [];
+    validateStreamChoices(choices, channelId);
     // A stop frame is not a complete stream: usage and DONE can follow it.
     if (state.complete && choices.length) throw failure();
+
     const previous = state.text;
     consumeTextEvent(payload, state, "openai-chat");
     if (encoder.encode(state.text).length > 32768) throw failure();
-    if (event.usage != null) {
-      if (typeof event.usage !== "object" || Array.isArray(event.usage))
-        throw failure();
-      const tokens = event.usage as Record<string, unknown>;
-      const next: NonNullable<InlineTextResult["usage"]> = {};
-      for (const [wire, key] of [
-        ["prompt_tokens", "promptTokens"],
-        ["completion_tokens", "completionTokens"],
-        ["total_tokens", "totalTokens"],
-      ] as const) {
-        const count = tokens[wire];
-        if (count === undefined) continue;
-        if (
-          typeof count !== "number" ||
-          !Number.isSafeInteger(count) ||
-          count < 0
-        )
-          throw failure();
-        Object.assign(next, { [key]: count });
-      }
-      usage = { ...usage, ...next };
-    }
+    usage = mergeStreamUsage(payload.usage, usage, channelId);
+
     if (state.text !== previous) {
       signal?.throwIfAborted();
-      await abortable(
+      await abortableWithSignal(
+        signal,
         Promise.resolve(options.onTextDelta(state.text.slice(previous.length))),
       );
       signal?.throwIfAborted();
     }
   }
 
+  async function processLine(line: string): Promise<void> {
+    if (!line) await dispatch();
+    else if (line.startsWith("data:"))
+      data.push(line.slice(5).replace(/^ /, ""));
+    else if (line.startsWith("event:")) eventType = line.slice(6).trim();
+  }
+
+  async function readNextChunk(): Promise<
+    ReadableStreamReadResult<Uint8Array>
+  > {
+    try {
+      return await abortableWithSignal(signal, reader.read());
+    } catch {
+      signal?.throwIfAborted();
+      throw failure({
+        errorClass: "TIMEOUT",
+        httpStatus: 504,
+        retryable: true,
+      });
+    }
+  }
+
   try {
     signal?.throwIfAborted();
     while (!done) {
-      let chunk: ReadableStreamReadResult<Uint8Array>;
-      try {
-        chunk = await abortable(reader.read());
-      } catch {
-        signal?.throwIfAborted();
-        throw failure({
-          errorClass: "TIMEOUT",
-          httpStatus: 504,
-          retryable: true,
-        });
-      }
+      const chunk = await readNextChunk();
       signal?.throwIfAborted();
       if (chunk.done) {
         decoder.decode();
@@ -216,10 +271,7 @@ export async function readChatStream(
         buffer = buffer.slice(newline + 1);
         eventBytes += encoder.encode(line).length + 1;
         if (eventBytes > 65536) throw failure();
-        if (!line) await dispatch();
-        else if (line.startsWith("data:"))
-          data.push(line.slice(5).replace(/^ /, ""));
-        else if (line.startsWith("event:")) eventType = line.slice(6).trim();
+        await processLine(line);
       }
       if (!done && eventBytes + encoder.encode(buffer).length > 65536)
         throw failure();

@@ -18,7 +18,10 @@ interface StatusStyleConfig {
   border: string;
 }
 
-const STATUS_CONFIGS: Record<SubagentFoldbackResult["status"], StatusStyleConfig> = {
+const STATUS_CONFIGS: Record<
+  SubagentFoldbackResult["status"],
+  StatusStyleConfig
+> = {
   success: {
     label: "已完成",
     className: "foldback-status-success",
@@ -57,7 +60,9 @@ const CARD_CONTAINER_STYLE: React.CSSProperties = {
   maxWidth: "100%",
 };
 
-const FoldbackStatusPill: React.FC<{ status: SubagentFoldbackResult["status"] }> = ({ status }) => {
+const FoldbackStatusPill: React.FC<{
+  status: SubagentFoldbackResult["status"];
+}> = ({ status }) => {
   const config = STATUS_CONFIGS[status] || STATUS_CONFIGS.failed;
   return (
     <span
@@ -104,7 +109,11 @@ const FoldbackArtifactList: React.FC<{
         flexWrap: "wrap",
       }}
     >
-      <span style={{ fontSize: "11px", color: "var(--text-tertiary, #94a3b8)" }}>产物:</span>
+      <span
+        style={{ fontSize: "11px", color: "var(--text-tertiary, #94a3b8)" }}
+      >
+        产物:
+      </span>
       {artifacts.map((ref, idx) => (
         <button
           key={`${ref}-${idx}`}
@@ -161,7 +170,9 @@ const FoldbackExpandedDrawer: React.FC<{
         }}
       >
         🔒 <strong>沙箱上下文隔离保护</strong>
-        {stats ? `：已安全归档 ${stats.intermediateTurns} 轮内部工具调用与分析步骤。` : "。"}
+        {stats
+          ? `：已安全归档 ${stats.intermediateTurns} 轮内部工具调用与分析步骤。`
+          : "。"}
       </div>
 
       {hasStructuredData && (
@@ -227,7 +238,9 @@ const FoldbackExpandedDrawer: React.FC<{
           <span>耗时: {stats.durationMs}ms</span>
           <span>执行轮次: {stats.intermediateTurns} 轮</span>
           {stats.rawTokensEstimate !== undefined && (
-            <span>原始文本体量: ~{stats.rawTokensEstimate.toLocaleString()} tokens</span>
+            <span>
+              原始文本体量: ~{stats.rawTokensEstimate.toLocaleString()} tokens
+            </span>
           )}
         </div>
       )}
@@ -243,10 +256,12 @@ export const AgentFoldbackCard: React.FC<AgentFoldbackCardProps> = ({
   onArtifactClick,
   className = "",
 }) => {
-  const [internalExpanded, setInternalExpanded] = useState<boolean>(defaultExpanded);
+  const [internalExpanded, setInternalExpanded] =
+    useState<boolean>(defaultExpanded);
   const contentId = useId();
 
-  const isExpanded = controlledExpanded !== undefined ? controlledExpanded : internalExpanded;
+  const isExpanded =
+    controlledExpanded !== undefined ? controlledExpanded : internalExpanded;
 
   const handleToggle = () => {
     const nextState = !isExpanded;
@@ -257,7 +272,8 @@ export const AgentFoldbackCard: React.FC<AgentFoldbackCardProps> = ({
   };
 
   const stats = result.executionStats;
-  const hasArtifacts = Array.isArray(result.artifactRefs) && result.artifactRefs.length > 0;
+  const hasArtifacts =
+    Array.isArray(result.artifactRefs) && result.artifactRefs.length > 0;
 
   return (
     <div
@@ -279,7 +295,14 @@ export const AgentFoldbackCard: React.FC<AgentFoldbackCardProps> = ({
           flexWrap: "wrap",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            flexWrap: "wrap",
+          }}
+        >
           <FoldbackStatusPill status={result.status} />
           <span
             data-testid="foldback-role-badge"
@@ -351,7 +374,8 @@ export const AgentFoldbackCard: React.FC<AgentFoldbackCardProps> = ({
               alignItems: "center",
               gap: "4px",
               background: "transparent",
-              border: "1px solid var(--border-subtle, rgba(255, 255, 255, 0.15))",
+              border:
+                "1px solid var(--border-subtle, rgba(255, 255, 255, 0.15))",
               borderRadius: "4px",
               color: "var(--text-secondary, #cbd5e1)",
               padding: "2px 8px",
@@ -384,7 +408,14 @@ export const AgentFoldbackCard: React.FC<AgentFoldbackCardProps> = ({
         />
       )}
 
-      {isExpanded && <FoldbackExpandedDrawer contentId={contentId} result={result} />}
+      <div
+        className={`kk-grid-collapse${isExpanded ? " is-open" : ""}`}
+        aria-hidden={!isExpanded}
+      >
+        <div>
+          <FoldbackExpandedDrawer contentId={contentId} result={result} />
+        </div>
+      </div>
     </div>
   );
 };

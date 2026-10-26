@@ -136,7 +136,7 @@ export function Composer({ project }: { project: MobileProject }) {
                   paddingLeft: 10,
                 }}
               >
-                <Icon name="image" size={18} color={t.muted} />
+                <Icon name="image" size={16} color={t.muted} />
                 <Label small numberOfLines={1} style={{ flex: 1 }}>
                   {attachment.name}
                 </Label>

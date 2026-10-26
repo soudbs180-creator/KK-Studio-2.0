@@ -15,22 +15,24 @@ test("设置分类按用途分组，移除独立使用记录与 ComfyUI 入口",
       .getByRole("navigation", { name: "主导航" })
       .getByRole("button", { name: "ComfyUI 工作流", exact: true }),
   ).toHaveCount(0);
-  await openSettingsSection(page, "通用");
+  await openSettingsSection(page, "通用设置");
   const nav = await showSettingsCategories(page);
   await expect(nav.locator(".settings-nav-group-label")).toHaveText([
-    "设置",
-    "功能",
-    "数据与安全",
+    "软件系统",
+    "账号与用量",
+    "核心功能",
+    "安全与数据",
   ]);
   await expect(nav.getByRole("button")).toHaveText([
-    "通用",
+    "通用设置",
+    "快捷键管理",
+    "软件更新",
     "个人主页",
     "套餐与积分",
-    "快捷键",
-    "记忆",
     "模型接入",
-    "扩展",
-    "网络",
+    "记忆管理",
+    "扩展与 MCP",
+    "网络与代理",
     "数据管理",
     "安全中心",
   ]);
@@ -42,7 +44,7 @@ test("设置分类按用途分组，移除独立使用记录与 ComfyUI 入口",
   await expect(page.locator(".settings-content")).toContainText(
     "套餐与积分服务尚未接入",
   );
-  await selectSettingsSection(page, "通用");
+  await selectSettingsSection(page, "通用设置");
   await expect(page.locator(".settings-content")).toContainText("软件更新");
 });
 
@@ -52,23 +54,25 @@ for (const width of [390, 1099, 1920]) {
   }, info) => {
     await page.setViewportSize({ width, height: width === 390 ? 844 : 1080 });
     await page.goto("/");
-    await openSettingsSection(page, "通用");
+    await openSettingsSection(page, "通用设置");
     const panel = page.locator(".settings-panel");
-    await page.getByLabel("主题", { exact: true }).selectOption("light");
-    await selectSettingsSection(page, "快捷键");
+    await page.getByLabel("主题外观", { exact: true }).selectOption("light");
+    await selectSettingsSection(page, "快捷键管理");
     await expect(
-      page.getByRole("tablist", { name: "快捷键分类" }),
+      page.getByRole("heading", { name: "快捷键管理", exact: true }),
     ).toBeVisible();
-    await page.getByRole("tab", { name: "画布", exact: true }).click();
     await expect(
-      page.getByRole("tab", { name: "画布", exact: true }),
-    ).toHaveAttribute("aria-selected", "true");
+      page.getByPlaceholder("搜索快捷键...", { exact: true }),
+    ).toBeVisible();
     await selectSettingsSection(page, "个人主页");
+    await expect(page.locator(".settings-content")).toContainText("本地创作者");
     await expect(page.locator(".settings-content")).toContainText(
-      "未登录 · 本地使用",
+      "本地离线模式",
     );
-    await selectSettingsSection(page, "通用");
-    await expect(page.getByLabel("主题", { exact: true })).toHaveValue("light");
+    await selectSettingsSection(page, "通用设置");
+    await expect(page.getByLabel("主题外观", { exact: true })).toHaveValue(
+      "light",
+    );
     const geometry = await panel.evaluate((element) => {
       const rect = element.getBoundingClientRect();
       const content = element.querySelector(".settings-content")!;
@@ -110,7 +114,9 @@ for (const width of [390, 1099, 1920]) {
 test("本地检测仅点击后执行，网页明确需要本机能力", async ({ page }) => {
   await page.goto("/");
   await openSettingsSection(page, "模型接入");
-  await page.getByRole("button", { name: "本地", exact: true }).click();
+  await page
+    .getByRole("tab", { name: "本地模型 Offline", exact: true })
+    .click();
   const hardware = page.getByRole("region", { name: "电脑配置与本地模型推荐" });
   await expect(
     hardware.getByText("当前网页无法直接检测电脑配置", { exact: false }),
@@ -138,7 +144,9 @@ test("硬件快照建议与本地草稿在连续缩放中保留，不发起安�
   );
   await page.goto("/");
   await openSettingsSection(page, "模型接入");
-  await page.getByRole("button", { name: "本地", exact: true }).click();
+  await page
+    .getByRole("tab", { name: "本地模型 Offline", exact: true })
+    .click();
   await page.evaluate(() => {
     Object.assign(window, {
       isTauri: true,
@@ -270,7 +278,9 @@ test("原工作流可导出，取消删除与保存失败不丢记录", async ({
   );
   await page.goto("/");
   await openSettingsSection(page, "模型接入");
-  await page.getByRole("button", { name: "本地", exact: true }).click();
+  await page
+    .getByRole("tab", { name: "本地模型 Offline", exact: true })
+    .click();
   await page.getByText("ComfyUI 工作流 · 1 个", { exact: true }).click();
   const downloadEvent = page.waitForEvent("download");
   await page
@@ -314,7 +324,9 @@ test("硬件检测失败保留本地草稿并释放导航锁，不显示底层�
 }) => {
   await page.goto("/");
   await openSettingsSection(page, "模型接入");
-  await page.getByRole("button", { name: "本地", exact: true }).click();
+  await page
+    .getByRole("tab", { name: "本地模型 Offline", exact: true })
+    .click();
   await page.getByLabel("提供商", { exact: true }).fill("检测失败也要保留");
   await page.evaluate(() => {
     Object.assign(window, {
@@ -399,7 +411,9 @@ for (const existingChat of [false, true]) {
     );
     await page.goto("/");
     await openSettingsSection(page, "模型接入");
-    await page.getByRole("button", { name: "本地", exact: true }).click();
+    await page
+      .getByRole("tab", { name: "本地模型 Offline", exact: true })
+      .click();
     await expect(page.getByLabel("提供商", { exact: true })).toHaveValue(
       existingChat ? chat.provider : "本地对话服务",
     );

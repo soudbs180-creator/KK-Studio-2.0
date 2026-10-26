@@ -6,24 +6,19 @@ import {
   useSyncExternalStore,
 } from "react";
 import { agentConnection } from "../features/agent/agentConnection";
-import {
-  apiMenuEntries,
-  deduplicateRelayEntries,
-  entry,
-  type Entry,
-} from "../features/models/modelMenuEntries";
-import { searchModels } from "../features/models/modelSearch";
 import { readProviderConnections } from "../features/creation/providerRegistry";
-import { providerChannel, type PickerChannel } from "../domain/modelChannels";
-import type { ModelKind } from "../features/models/modelCatalog";
+import type { ModelKind } from "../domain/modelSelection";
 import {
   readPickerMemory,
   resolvePickerPins,
   writePickerMemory,
   type ModelSelection,
 } from "../features/models/modelSelection";
+import {
+  aggregateCapabilityEntries,
+  type UserCapability,
+} from "../features/models/capabilityAggregation";
 import ModelPickerRows from "./ModelPickerRows";
-import ModelPickerFilters from "./ModelPickerFilters";
 
 export default function ModelPickerMenu({
   scope,
@@ -42,38 +37,39 @@ export default function ModelPickerMenu({
   onConfigure: () => void;
 }) {
   const connections = readProviderConnections();
-  const [memory, setMemory] = useState(() => {
-    const saved = readPickerMemory(scope);
-    const connection = connections.find(
-      (item) => item.id === current?.connectionId,
-    );
-    const legacy = saved.page.startsWith("api")
-      ? providerChannel(
-          connections.find((item) => saved.page === "api/" + item.id) ?? {},
-        )
-      : undefined;
-    return {
-      ...saved,
-      channel:
-        saved.channel ??
-        legacy ??
-        (current?.source === "api"
-          ? providerChannel(connection ?? {})
-          : apiOnly
-            ? "relay"
-            : "account"),
-    };
+  const [capability, setCapability] = useState<UserCapability>(() => {
+    if (
+      kind === "image" ||
+      current?.kind === "image" ||
+      scope === "canvas-image"
+    ) {
+      return "image";
+    }
+    if (
+      kind === "text" ||
+      current?.kind === "text" ||
+      scope === "conversation" ||
+      scope === "canvas-text"
+    ) {
+      return "chat";
+    }
+    const saved = readPickerMemory(scope) as unknown as Record<string, unknown>;
+    if (saved.capability === "chat" || saved.capability === "image") {
+      return saved.capability as UserCapability;
+    }
+    return "chat";
   });
+
+  const [memory, setMemory] = useState(() => readPickerMemory(scope));
   const [query, setQuery] = useState("");
   const menuRef = useRef<HTMLDivElement>(null);
   const [, setRevision] = useState(0);
+
   const agent = useSyncExternalStore(
     agentConnection.subscribe,
     agentConnection.getState,
   );
-  const channel: PickerChannel =
-    apiOnly && memory.channel === "account" ? "relay" : memory.channel;
-  const filter = kind ?? memory.filter ?? "all";
+
   useLayoutEffect(() => {
     const menu = menuRef.current;
     if (!menu || menu.closest(".start-composer, .chat-composer")) return;
@@ -100,6 +96,7 @@ export default function ModelPickerMenu({
       window.removeEventListener("scroll", place, true);
     };
   }, []);
+
   useEffect(() => {
     const listener = () => setRevision((value) => value + 1);
     window.addEventListener("kk:model-provider-changed", listener);
@@ -109,78 +106,25 @@ export default function ModelPickerMenu({
       window.removeEventListener("storage", listener);
     };
   }, []);
+
   useEffect(() => {
-    writePickerMemory(scope, memory);
-  }, [scope, memory]);
-  const codex =
-    !apiOnly && (!kind || kind === "text")
-      ? agent.models.map((model) =>
-          entry(
-            { source: "codex", model: model.model || model.id, kind: "text" },
-            model.displayName || model.model,
-            "Codex · 已登录账号",
-            agent.status !== "connected" ? "请先连接 Codex" : undefined,
-          ),
-        )
-      : [];
-  const imageLabel =
-    current?.source === "codex" && current.kind === "image"
-      ? current.effectiveModel || current.displayName || "图片模型未报告"
-      : "图片模型未报告";
-  const codexImage =
-    !apiOnly && (!kind || kind === "image")
-      ? [
-          entry(
-            {
-              source: "codex",
-              model: "",
-              kind: "image",
-              displayName: imageLabel,
-              effectiveModel:
-                current?.source === "codex" && current.kind === "image"
-                  ? current.effectiveModel
-                  : undefined,
-            },
-            "Codex 内置生图",
-            `ChatGPT 账号 · ${imageLabel}`,
-            scope !== "home" && agent.status !== "connected"
-              ? "请先连接 Codex"
-              : undefined,
-          ),
-        ]
-      : [];
-  const defaults =
-    scope === "conversation" && !apiOnly
-      ? [
-          entry(
-            { source: "default", model: "", kind: "text" },
-            "默认 · Codex 主 Agent",
-            "使用账号默认模型，负责规划与调用工具",
-          ),
-        ]
-      : [];
-  const channelEntries = apiMenuEntries(
-    connections.filter(
-      (connection) =>
-        connection.kind !== "user_oauth_local" &&
-        providerChannel(connection) === channel,
-    ),
+    writePickerMemory(scope, {
+      ...memory,
+      ...({ capability } as Record<string, unknown>),
+    });
+  }, [scope, memory, capability]);
+
+  // Aggregate models by user capability rather than technical channel
+  const entries = aggregateCapabilityEntries({
+    capability,
+    connections,
+    agentModels: apiOnly ? [] : agent.models,
+    agentStatus: apiOnly ? "disconnected" : agent.status,
     current,
-    kind,
-    "",
-  );
-  const entries: Entry[] =
-    channel === "account"
-      ? [...defaults, ...codexImage, ...codex]
-      : channel === "relay"
-        ? deduplicateRelayEntries(channelEntries, { current })
-        : channelEntries;
-  const visible = entries.filter(
-    (item) =>
-      filter === "all" ||
-      item.selection?.kind === filter ||
-      item.selection?.kind === "unknown",
-  );
+    includeAutoRouting: true,
+    query,
+  });
+
   const storedPins = Array.isArray(memory.pins.all)
     ? memory.pins.all
     : [
@@ -193,17 +137,21 @@ export default function ModelPickerMenu({
         ),
       ];
   const pins = resolvePickerPins(entries, storedPins);
-  const ordered = searchModels(
-    visible.map((item) => ({
-      ...item,
-      terms: [...(item.terms ?? []), item.detail ?? ""],
-    })),
-    query,
-  ).sort(
-    (a, b) =>
-      Number(pins.includes(b.item.id)) - Number(pins.includes(a.item.id)) ||
-      a.score - b.score,
-  );
+
+  // Ordering: Auto-Routing first at index 0, then pinned items, then score
+  const ordered = entries
+    .map((item) => ({ item, fuzzy: false }))
+    .sort((a, b) => {
+      if (a.item.metadata?.isAutoRouting) return -1;
+      if (b.item.metadata?.isAutoRouting) return 1;
+
+      const aPinned = pins.includes(a.item.id);
+      const bPinned = pins.includes(b.item.id);
+      if (aPinned !== bPinned) return aPinned ? -1 : 1;
+
+      return 0;
+    });
+
   return (
     <div
       ref={menuRef}
@@ -211,16 +159,69 @@ export default function ModelPickerMenu({
       role="menu"
       aria-label="选择模型"
     >
-      <ModelPickerFilters
-        channel={channel}
-        apiOnly={apiOnly}
-        kind={kind}
-        filter={filter}
-        query={query}
-        onChannel={(channel) => setMemory({ ...memory, channel })}
-        onFilter={(filter) => setMemory({ ...memory, filter })}
-        onQuery={setQuery}
-      />
+      {/* Capability tabs: text only, one selected pill, arrow keys move focus. */}
+      <div
+        className="kk-model-channels kk-model-capability-tabs"
+        role="tablist"
+        aria-label="模型能力分类"
+      >
+        <button
+          type="button"
+          role="tab"
+          aria-selected={capability === "chat"}
+          tabIndex={capability === "chat" ? 0 : -1}
+          onClick={() => setCapability("chat")}
+          onKeyDown={(e) => {
+            if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+              e.preventDefault();
+              setCapability("image");
+            }
+          }}
+          data-capability="chat"
+          className={capability === "chat" ? "is-active" : undefined}
+        >
+          对话 / 推理
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={capability === "image"}
+          tabIndex={capability === "image" ? 0 : -1}
+          onClick={() => setCapability("image")}
+          onKeyDown={(e) => {
+            if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+              e.preventDefault();
+              setCapability("chat");
+            }
+          }}
+          data-capability="image"
+          className={capability === "image" ? "is-active" : undefined}
+        >
+          图像生成
+        </button>
+      </div>
+
+      {/* Model Search Box */}
+      <div className="kk-model-menu-top">
+        <input
+          type="search"
+          className="kk-model-search ui-input"
+          aria-label="搜索模型、推理能力或厂商"
+          placeholder="搜索模型…"
+          maxLength={120}
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+          onKeyDown={(event) => {
+            if (event.key === "Enter") event.preventDefault();
+            if (event.key !== "Escape") event.stopPropagation();
+          }}
+        />
+        <span className="kk-model-scope">
+          {capability === "chat" ? "对话/推理" : "生图"}
+        </span>
+      </div>
+
+      {/* Model Option Rows */}
       <ModelPickerRows
         ordered={ordered}
         current={current}
@@ -229,9 +230,9 @@ export default function ModelPickerMenu({
         emptyMessage={
           query.trim()
             ? "没有匹配模型。请减少关键词，或在模型接入中刷新目录。"
-            : channel === "account"
-              ? "连接 Codex 后读取账号可用模型。"
-              : "暂无模型，请在模型接入中保存连接并刷新模型列表。"
+            : capability === "chat"
+              ? "暂无可用的对话或推理模型，请在模型接入中配置。"
+              : "暂无可用的图像生成模型，请在模型接入中配置。"
         }
         onChoose={(item) => {
           if (item.selection) onSelect(item.selection);
@@ -248,6 +249,8 @@ export default function ModelPickerMenu({
           })
         }
       />
+
+      {/* Footer link to Model Access settings */}
       <button
         type="button"
         className="kk-model-configure"

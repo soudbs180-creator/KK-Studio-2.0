@@ -29,6 +29,7 @@ export interface AddNodeOptions {
   referenceMode?: boolean;
   referenceOnly?: boolean;
   referenceSlot?: CanvasCollectionItem["referenceSlot"];
+  referenceFrame?: CanvasCollectionItem["referenceFrame"];
   assetId?: string;
   generationStatus?: CanvasCollectionItem["generationStatus"];
   generationIndex?: number;
@@ -97,6 +98,7 @@ export function useCanvasNodeActions({
       referenceMode: options.referenceMode,
       referenceOnly: options.referenceOnly,
       referenceSlot: options.referenceSlot,
+      referenceFrame: options.referenceFrame,
       assetId: options.assetId,
       generationStatus: options.generationStatus,
       generationIndex: options.generationIndex,

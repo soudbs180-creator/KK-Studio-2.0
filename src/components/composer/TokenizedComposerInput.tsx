@@ -13,6 +13,12 @@ import {
   defaultSlashRegistry,
   type SlashCommand,
 } from "../../features/commands/slashCommandRegistry.ts";
+import {
+  buildMentionCandidates,
+  shouldSubmit,
+  handleAutocompleteKey,
+  type AvailableNodeCandidate,
+} from "./composerKeyHandlers.ts";
 import type { CanvasReferenceSlot } from "../../domain/canvasItems.ts";
 import {
   extractMentionTokens,
@@ -21,6 +27,8 @@ import {
 } from "../../features/prompts/structuredPromptCompiler.ts";
 import type { CreationAttachment } from "../../features/creation/model.ts";
 import type { AgentDraftAttachment } from "../../features/agent/agentAttachments.ts";
+import type { ModelSelection } from "../../domain/modelSelection.ts";
+import type { UserCapability } from "../../features/models/capabilityAggregation.ts";
 
 export interface TokenizedComposerInputProps {
   value: string;
@@ -29,21 +37,19 @@ export interface TokenizedComposerInputProps {
   disabled?: boolean;
   onKeyDown?: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
   onSubmit?: () => void;
-  availableNodes?: Array<{
-    id: string;
-    title: string;
-    preview?: string;
-    slot?: CanvasReferenceSlot;
-    assetId?: string;
-  }>;
+  submitShortcut?: "enter" | "ctrlEnter";
+  modelSelection?: ModelSelection;
+  capability?: UserCapability;
+  onSelectModel?: (selection: ModelSelection) => void;
+  onCapabilityChange?: (capability: UserCapability) => void;
+  onDispatch?: (payload: {
+    prompt: string;
+    capability: UserCapability;
+    modelSelection?: ModelSelection;
+  }) => void | Promise<void>;
+  availableNodes?: AvailableNodeCandidate[];
   attachments?: (CreationAttachment | AgentDraftAttachment)[];
-  onAddAttachment?: (item: {
-    id: string;
-    name: string;
-    preview?: string;
-    slot?: CanvasReferenceSlot;
-    assetId?: string;
-  }) => void;
+  onAddAttachment?: (item: AvailableNodeCandidate) => void;
   onOpenModal?: (modalId: string) => void;
   setStatus?: (status: string) => void;
   minRows?: number;
@@ -56,12 +62,20 @@ export default function TokenizedComposerInput({
   disabled = false,
   onKeyDown,
   onSubmit,
+  submitShortcut,
+  modelSelection,
+  capability,
+  onSelectModel,
+  onCapabilityChange,
+  onDispatch,
   availableNodes = [],
   attachments = [],
   onAddAttachment,
   onOpenModal,
   setStatus,
 }: TokenizedComposerInputProps) {
+  void onSelectModel;
+  void onCapabilityChange;
   // 1. 解析当前输入框中已有的 Mention Tokens
   const activeTokens = useMemo(() => {
     return extractMentionTokens(value);
@@ -69,36 +83,7 @@ export default function TokenizedComposerInput({
 
   // 2. 聚合所有的提及候选素材（画布节点 + 附件）
   const allCandidates: MentionCandidate[] = useMemo(() => {
-    const list: MentionCandidate[] = [];
-    const seenIds = new Set<string>();
-
-    for (const node of availableNodes) {
-      if (!seenIds.has(node.id)) {
-        seenIds.add(node.id);
-        list.push({
-          id: node.id,
-          name: node.title || "画布图片",
-          preview: node.preview,
-          slot: node.slot || "主体",
-          sourceType: "canvas-node",
-        });
-      }
-    }
-
-    for (const att of attachments) {
-      if (!seenIds.has(att.id)) {
-        seenIds.add(att.id);
-        list.push({
-          id: att.id,
-          name: att.name || "参考附件",
-          preview: att.dataUrl?.startsWith("data:") ? att.dataUrl : undefined,
-          slot: (att.role as CanvasReferenceSlot) || "主体",
-          sourceType: "attachment",
-        });
-      }
-    }
-
-    return list;
+    return buildMentionCandidates(availableNodes, attachments);
   }, [availableNodes, attachments]);
 
   // 3. 准备命令与提及过滤结果
@@ -176,7 +161,7 @@ export default function TokenizedComposerInput({
       // 确保该素材加入附件
       onAddAttachment?.({
         id: candidate.id,
-        name: candidate.name,
+        title: candidate.name,
         preview: candidate.preview,
         slot,
       });
@@ -187,35 +172,49 @@ export default function TokenizedComposerInput({
   // 7. 处理键盘导航
   const handleInputKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (autocomplete.mode !== "none") {
-      if (e.key === "Enter" || e.key === "Tab") {
-        if (autocomplete.mode === "slash") {
-          const selectedCmd = matchedSlashCommands[autocomplete.selectedIndex];
-          if (selectedCmd) {
-            e.preventDefault();
-            handleSelectSlash(selectedCmd);
-            return;
-          }
-        } else if (autocomplete.mode === "mention") {
-          const selectedItem =
-            matchedMentionCandidates[autocomplete.selectedIndex];
-          if (selectedItem) {
-            e.preventDefault();
-            handleSelectMention(selectedItem, selectedItem.slot || "主体");
-            return;
-          }
-        }
-      }
+      const handledKey = handleAutocompleteKey(
+        e,
+        autocomplete.mode,
+        autocomplete.selectedIndex,
+        matchedSlashCommands,
+        matchedMentionCandidates,
+        handleSelectSlash,
+        handleSelectMention,
+      );
+      if (handledKey) return;
 
       const handled = autocomplete.handleKeyDown(e);
       if (handled) return;
     }
 
-    if (e.key === "Enter" && !e.shiftKey) {
-      if (onSubmit) {
+    if (disabled || e.nativeEvent.isComposing) {
+      onKeyDown?.(e);
+      return;
+    }
+
+    const resolvedSubmitShortcut =
+      submitShortcut ??
+      (typeof window !== "undefined"
+        ? ((window.localStorage.getItem("kk:submit-shortcut") as
+            "enter" | "ctrlEnter" | null) ?? "enter")
+        : "enter");
+
+    if (shouldSubmit(e, resolvedSubmitShortcut)) {
+      if (!value.trim()) {
         e.preventDefault();
-        onSubmit();
         return;
       }
+      e.preventDefault();
+      if (onDispatch) {
+        void onDispatch({
+          prompt: value,
+          capability: capability ?? "chat",
+          modelSelection,
+        });
+      } else if (onSubmit) {
+        onSubmit();
+      }
+      return;
     }
 
     onKeyDown?.(e);

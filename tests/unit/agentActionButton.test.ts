@@ -514,7 +514,7 @@ test("T2.2: rapid double-clicks within debounce cooldown only fire once", async 
 // Test Module 3: Geometry & Design Token Compliance
 // ===========================================================================
 
-test("T3.1: button geometry complies with 40px desktop diameter and circular radius", async () => {
+test("T3.1: button geometry complies with 44px desktop diameter and circular radius", async () => {
   const render = await createActionComponentHarness();
   const { html } = render({
     state: "idle",
@@ -524,7 +524,7 @@ test("T3.1: button geometry complies with 40px desktop diameter and circular rad
     onResume: () => {},
   });
 
-  // Must declare circular geometry class or inline style with 40px
+  // Must declare circular geometry class or inline style with 44px
   assert.match(
     html,
     /agent-action-button|chat-send-circular|chat-action-button/,
@@ -537,8 +537,8 @@ test("T3.1: button geometry complies with 40px desktop diameter and circular rad
   );
   assert.match(
     css,
-    /(?:width|height|flex-basis):\s*(?:40px|var\(--kk-control-h-lg\)|var\(--kk-control-h-xl\)|var\(--agent-action-size\))/,
-    "CSS must declare 40px or token dimension",
+    /(?:width|height|flex-basis):\s*(?:44px|var\(--kk-control-h-lg\)|var\(--kk-control-h-xl\)|var\(--agent-action-size\))/,
+    "CSS must declare 44px or token dimension",
   );
   assert.match(
     css,
@@ -556,7 +556,7 @@ test("T3.2: touch target geometry is >= 44px for touch accessibility", async () 
   assert.match(css, /44px/, "CSS must include 44px touch target specification");
 });
 
-test("T3.3: icon size is normalized to 20px glyph standard", async () => {
+test("T3.3: icon size is normalized to 28px glyph standard", async () => {
   const render = await createActionComponentHarness();
   const { html } = render({
     state: "idle",
@@ -566,11 +566,11 @@ test("T3.3: icon size is normalized to 20px glyph standard", async () => {
     onResume: () => {},
   });
 
-  // Verify icon size is 20px
+  // Verify icon size is 28px
   assert.match(
     html,
-    /data-size="20"|width="20"|height="20"|size=\{?20\}?/,
-    "Rendered icon must have 20px geometry",
+    /data-size="28"|width="28"|height="28"|size=\{?28\}?/,
+    "Rendered icon must have 28px geometry",
   );
 });
 

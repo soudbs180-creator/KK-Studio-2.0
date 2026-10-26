@@ -21,7 +21,7 @@
   --ui-sidebar-icon: var(--text-strong);
   --ui-sidebar-settings-icon: #d3d3d3;
   --ui-project-thumbnail: #d98a00;
-  --sidebar-compact-width: 61px;
+  --sidebar-compact-width: var(--kk-sidebar-compact-width);
   --ui-focus: var(--focus-ring);
   --ui-focus-subtle: var(--focus-ring-subtle);
   --ui-disabled-opacity: 0.45;
@@ -38,6 +38,32 @@
   --ui-warning: var(--text-warning);
   --ui-selected: var(--text-accent);
   --ui-neutral-selected: var(--neutral-selected);
+  /* Interaction state scale: the single source every clickable control reads.
+     Idle stays transparent, hover is a faint foreground overlay, pressed is
+     stronger, and selected uses the neutral fill plus an accent marker. Hover
+     and selected deliberately live in different families, so an untouched
+     control can never read as already pressed. */
+  --ui-state-idle-bg: transparent;
+  --ui-state-hover-bg: color-mix(in srgb, var(--text-primary) 4%, transparent);
+  --ui-state-pressed-bg: color-mix(
+    in srgb,
+    var(--text-primary) 13%,
+    transparent
+  );
+  --ui-state-selected-bg: var(--neutral-selected);
+  --ui-state-selected-fg: var(--text-primary);
+  /* Selection carries one accent mark. Fill alone is not enough in the dark
+     surface ladder, where hover and selected land within a few levels. */
+  --ui-state-selected-ring: var(--text-accent);
+  --ui-state-expanded-bg: color-mix(
+    in srgb,
+    var(--text-primary) 6%,
+    transparent
+  );
+  --ui-state-transition:
+    background-color var(--motion-fast) var(--motion-ease),
+    color var(--motion-fast) var(--motion-ease),
+    border-color var(--motion-fast) var(--motion-ease);
   --text-strong: var(--text-primary);
   --ui-control-off: var(--bg-soft);
   --ui-control-thumb-off: var(--text-secondary);
@@ -78,7 +104,7 @@
   --ui-button-padding-block: var(--kk-space-1);
   --ui-button-padding-inline: var(--kk-space-3);
   --ui-control-active: var(--ui-neutral-selected);
-  --ui-icon-xs: var(--kk-icon-glyph-sm);
+  --ui-icon-xs: var(--kk-icon-glyph-xs);
   --ui-icon-sm: var(--kk-icon-glyph-sm);
   --ui-icon-md: var(--kk-icon-glyph-md);
   /* Source-aligned slots used by the shell controls. The slot stays stable
@@ -91,10 +117,10 @@
   --ui-icon-nav: var(--kk-icon-glyph-sm);
   --ui-icon-toolbar: var(--kk-icon-glyph-md);
   --ui-control-h-nav: var(--kk-button-h-standard);
-  --ui-control-h-toolbar: 40px;
-  --ui-control-w-toolbar-toggle: 20px;
-  --ui-control-h-toolbar-help: var(--kk-button-h-standard);
-  --ui-toolbar-h: 50px;
+  --ui-control-h-toolbar: 44px;
+  --ui-control-w-toolbar-toggle: 44px;
+  --ui-control-h-toolbar-help: 44px;
+  --ui-toolbar-h: 52px;
   --ui-control-h-compact: var(--kk-button-h-standard);
   --ui-control-h-standard: var(--kk-button-h-primary);
   --ui-touch-target: var(--kk-hit-primary);
@@ -112,7 +138,7 @@
   --ui-space-6: 40px;
   --ui-radius-panel: var(--kk-radius-panel);
   --ui-radius-menu: var(--kk-radius-menu);
-  --ui-radius-pill: 999px;
+  --ui-radius-pill: 1000px;
   --ui-input-height: var(--ui-button-height);
   --ui-composer-control-height: var(--kk-hit-min);
   --ui-composer-action-size: var(--kk-hit-min);
@@ -171,8 +197,8 @@
   border-radius: var(--ui-radius-control);
   background: var(--bg-card);
   color: var(--ui-text);
-  font-size: var(--ui-font-body);
-  line-height: var(--ui-line-height-body);
+  font-size: var(--kk-control-font-md);
+  line-height: var(--kk-line-caption);
   font-weight: 500;
 }
 .ui-button:not(:disabled):not([aria-disabled="true"]):hover {
@@ -230,8 +256,8 @@
   border-radius: var(--ui-radius-control);
   background: var(--bg-input);
   color: var(--text-primary);
-  font-size: var(--ui-font-body);
-  line-height: var(--ui-line-height-body);
+  font-size: var(--kk-input-font);
+  line-height: var(--kk-line-caption);
 }
 .ui-input::placeholder {
   color: var(--text-tertiary);

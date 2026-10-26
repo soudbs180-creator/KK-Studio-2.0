@@ -11,16 +11,16 @@
   place-items: center;
 }
 .settings-nav-icon > .ui-icon {
-  width: 22px;
-  height: 22px;
+  width: var(--kk-icon-glyph-md);
+  height: var(--kk-icon-glyph-md);
 }
 .settings-close {
   z-index: 5;
 }
 .settings-close img {
   display: block;
-  width: 14px;
-  height: 14px;
+  width: var(--kk-icon-glyph-sm);
+  height: var(--kk-icon-glyph-sm);
   object-fit: contain;
 }
 .conversation-panel > header strong {
@@ -203,7 +203,9 @@
     padding: 24px 16px 32px;
   }
   .start-brand {
-    margin: 4px 0 24px;
+    height: 132px;
+    margin: 4px 0 0;
+    row-gap: 12px;
   }
   .start-brand img {
     width: 48px;

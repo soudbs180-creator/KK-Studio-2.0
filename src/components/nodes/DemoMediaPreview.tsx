@@ -47,7 +47,7 @@ export default function DemoMediaPreview({
       />
     ) : result.kind === "audio" ? (
       <div className="audio-preview">
-        <UiIcon name="audio" size={64} />
+        <UiIcon name="audio" size={24} />
         <audio
           key={retry}
           src={result.src}

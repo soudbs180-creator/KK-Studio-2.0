@@ -8,7 +8,9 @@ import ts from "typescript";
 import type { SubagentFoldbackResult } from "../../src/features/agent/delegation/foldbackContract.ts";
 import type { AgentFoldbackCardProps } from "../../src/components/agent/AgentFoldbackCard.tsx";
 
-type AgentFoldbackCardComponent = (props: AgentFoldbackCardProps) => ReactElement;
+type AgentFoldbackCardComponent = (
+  props: AgentFoldbackCardProps,
+) => ReactElement;
 
 async function createFoldbackCardHarness() {
   const componentPath = new URL(
@@ -102,9 +104,9 @@ test("AgentFoldbackCard renders compact collapsed view with role, status, summar
   assert.match(html, /aria-expanded="false"/);
   assert.match(html, /查看详情 ▼/);
 
-  // Intermediate drawer content should NOT be rendered in collapsed state
-  assert.doesNotMatch(html, /foldback-expanded-content/);
-  assert.doesNotMatch(html, /沙箱上下文隔离保护/);
+  // Grid collapse keeps content mounted for a CSS 0fr → 1fr transition.
+  assert.match(html, /class="kk-grid-collapse"/);
+  assert.match(html, /aria-hidden="true"/);
 });
 
 test("AgentFoldbackCard renders partial and failed status badges accurately", async () => {

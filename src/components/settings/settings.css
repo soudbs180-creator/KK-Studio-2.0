@@ -78,15 +78,18 @@
   line-height: 20px;
   text-align: left;
   white-space: nowrap;
-  transition: all 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: var(--ui-state-transition);
 }
-.settings-nav-item.is-active {
-  background: var(--settings-selected);
-  color: var(--kk-text-primary);
+/* Selected: one signal, the neutral fill plus the accent bar below. */
+.settings-nav-item.is-active,
+.settings-nav-item[aria-current="page"] {
+  background: var(--ui-state-selected-bg);
+  color: var(--ui-state-selected-fg);
   font-weight: 500;
   box-shadow: none;
 }
-.settings-nav-item.is-active::before {
+.settings-nav-item.is-active::before,
+.settings-nav-item[aria-current="page"]::before {
   content: "";
   position: absolute;
   left: 6px;
@@ -94,12 +97,33 @@
   transform: translateY(-50%);
   width: 3px;
   height: 16px;
-  border-radius: 999px;
-  background: var(--kk-text-accent);
+  border-radius: var(--kk-radius-full);
+  background: var(--text-accent);
 }
-.settings-nav-item:hover {
+/* Hover is a faint overlay, never the selected fill: a resting row must not
+   look chosen just because the pointer passed over it. */
+.settings-nav-item:hover:not(.is-active):not([aria-current="page"]):not(
+    :disabled
+  ) {
   color: var(--settings-text);
-  background: var(--settings-selected);
+  background: var(--ui-state-hover-bg);
+}
+.settings-nav-item:focus-visible {
+  outline: 2px solid var(--kk-focus-ring);
+  outline-offset: 1px;
+}
+.settings-nav-item:focus:not(:focus-visible) {
+  outline: none;
+}
+.settings-nav-item:active:not(.is-active):not([aria-current="page"]):not(
+    :disabled
+  ) {
+  background: var(--ui-state-pressed-bg);
+  transform: scale(0.98);
+}
+.settings-nav-item:disabled {
+  opacity: var(--ui-disabled-opacity);
+  cursor: not-allowed;
 }
 .settings-nav-icon {
   display: block;
@@ -133,10 +157,26 @@
   place-items: center;
   border-radius: var(--ui-radius-control);
   color: var(--settings-muted);
+  transition: var(--ui-state-transition);
 }
-.settings-close:hover {
+.settings-close:hover:not(:disabled) {
   color: var(--settings-text);
-  background: var(--settings-selected);
+  background: var(--ui-state-hover-bg);
+}
+.settings-close:focus-visible {
+  outline: 2px solid var(--kk-focus-ring);
+  outline-offset: 1px;
+}
+.settings-close:focus:not(:focus-visible) {
+  outline: none;
+}
+.settings-close:active:not(:disabled) {
+  background: var(--ui-state-pressed-bg);
+  transform: scale(0.98);
+}
+.settings-close:disabled {
+  opacity: var(--ui-disabled-opacity);
+  cursor: not-allowed;
 }
 .settings-general-rows {
   margin-top: var(--kk-space-6);
@@ -205,6 +245,7 @@
   width: auto;
   max-width: 100%;
   min-width: 0;
+  flex-shrink: 0;
   height: var(--kk-control-h-md);
   padding: 0 var(--ui-space-2);
   border: var(--ui-border-width) solid var(--border-control);
@@ -442,7 +483,7 @@
   }
   .settings-ext-tab {
     height: var(--kk-control-h-lg);
-    padding: 0 12px;
+    padding: 0 8px;
   }
   .settings-ext-tab-hint {
     display: none;
@@ -492,7 +533,7 @@
 }
 .settings-key-eye:hover {
   color: var(--settings-text);
-  background: var(--settings-selected);
+  background: var(--ui-state-hover-bg);
 }
 .settings-companion-card {
   display: flex;
@@ -527,7 +568,7 @@
   min-height: 28px;
   padding: 4px 9px;
   border: 1px solid var(--settings-border);
-  border-radius: 999px;
+  border-radius: var(--kk-radius-full);
   color: var(--settings-muted);
   font-size: 12px;
   line-height: 18px;
@@ -1091,6 +1132,40 @@
   display: block;
   padding: 14px 0 4px;
 }
+.browser-backend-card {
+  display: block;
+  width: 100%;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--settings-border);
+}
+.browser-backend-card > p {
+  max-width: 608px;
+}
+.browser-backend-status {
+  margin: 8px 0 0;
+  color: var(--settings-muted);
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-caption);
+}
+.browser-backend-status strong {
+  color: var(--settings-text);
+  font-weight: 500;
+}
+.browser-backend-security {
+  margin: 10px 0 0;
+  padding: 8px 12px;
+  border: 1px solid var(--settings-border);
+  border-radius: var(--ui-radius-control);
+  background: var(--bg-card-hover);
+  color: var(--settings-muted);
+  font-size: var(--kk-font-caption);
+  line-height: 18px;
+}
+.browser-backend-security strong {
+  color: var(--settings-text);
+  font-weight: 500;
+}
 .settings-codebuddy-card {
   margin-top: 18px;
   padding: 16px 0 6px;
@@ -1630,6 +1705,8 @@
   .settings-select {
     height: var(--kk-control-h-lg);
     font-size: var(--kk-font-caption);
+    max-width: none;
+    min-width: 172px;
   }
   .settings-row-control {
     padding-top: 10px;
@@ -1706,14 +1783,35 @@
     grid-column: 2;
   }
 }
+/* Presets sit inside the provider editor card, so this reads as a collapsible
+   divider row instead of a second card. */
 .provider-presets {
-  padding: var(--kk-space-4);
-  border-radius: var(--kk-radius-lg);
-  background: var(--kk-bg-card);
+  padding: var(--kk-space-3) 0;
+  border-top: 1px solid var(--kk-border-subtle);
+  border-bottom: 1px solid var(--kk-border-subtle);
 }
 .provider-presets > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--kk-space-2);
   cursor: pointer;
-  font-weight: var(--kk-weight-semibold);
+  color: var(--kk-text-primary);
+  font-size: 14px;
+  font-weight: 600;
+  list-style: none;
+}
+.provider-presets > summary::-webkit-details-marker {
+  display: none;
+}
+.provider-presets > summary::after {
+  content: "展开";
+  color: var(--kk-text-secondary);
+  font-size: 12px;
+  font-weight: 400;
+}
+.provider-presets[open] > summary::after {
+  content: "收起";
 }
 .provider-presets[open] > summary {
   margin-bottom: var(--kk-space-4);
@@ -1813,7 +1911,9 @@
   font-size: var(--kk-font-body);
   line-height: var(--kk-line-body);
 }
-.provider-presets .provider-preset-item {
+/* Legacy list markup only: the current card grid renders .preset-item-card and
+   must keep its own multi-line layout. */
+.provider-presets .provider-preset-list .provider-preset-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -1823,14 +1923,14 @@
   padding: 0 var(--kk-space-3);
   border-radius: var(--kk-radius-full);
 }
-.provider-preset-item strong {
+.provider-preset-list .provider-preset-item strong {
   min-width: 0;
   font-size: var(--kk-font-body);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.provider-preset-item span {
+.provider-preset-list .provider-preset-item span {
   max-width: 45%;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -2129,4 +2229,741 @@
 .settings-content .shortcuts-panel.is-embedded > footer {
   flex-basis: auto;
   padding: var(--kk-space-3) 0;
+}
+
+/* ==========================================================================
+   Grouped settings cards
+   A flat card with hairline dividers; rows stay quiet until hovered.
+   ========================================================================== */
+.settings-card-group {
+  margin-bottom: var(--kk-space-5);
+}
+.settings-card-group-header {
+  margin: 0 0 var(--kk-space-2) var(--kk-space-3);
+}
+.settings-card-group-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin: 0;
+}
+.settings-card-group-desc {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  margin: 4px 0 0 0;
+  line-height: 16px;
+}
+.settings-card-group-card {
+  background: var(--kk-bg-card);
+  border: 1px solid var(--kk-border-subtle);
+  border-radius: var(--kk-radius-card);
+  overflow: hidden;
+}
+.settings-card-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  min-height: 48px;
+  gap: var(--kk-space-4);
+  transition: var(--ui-state-transition);
+}
+.settings-card-row + .settings-card-row {
+  border-top: 1px solid var(--kk-border-subtle);
+}
+.settings-card-row.is-clickable {
+  cursor: pointer;
+}
+.settings-card-row.is-clickable:hover:not(.is-selected) {
+  background: var(--ui-state-hover-bg);
+}
+.settings-card-row.is-clickable:active {
+  background: var(--ui-state-pressed-bg);
+}
+.settings-card-row.is-selected {
+  background: var(--ui-state-selected-bg);
+}
+.settings-card-row-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.settings-card-row-label-row {
+  display: flex;
+  align-items: center;
+  gap: var(--kk-space-2);
+}
+.settings-card-row-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--kk-text-primary);
+  margin: 0;
+  line-height: 20px;
+}
+.settings-card-row.is-danger .settings-card-row-label {
+  color: var(--ui-danger);
+}
+.settings-card-row-badge {
+  font-size: 11px;
+  line-height: 14px;
+  padding: 1px 6px;
+  border-radius: var(--kk-radius-full);
+  background: var(--bg-card-hover);
+  color: var(--text-secondary);
+}
+.settings-card-row-desc {
+  font-size: 12px;
+  color: var(--kk-text-secondary);
+  margin: 0;
+  line-height: 16px;
+}
+.settings-card-row-control {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--kk-space-2);
+}
+
+/* ==========================================================================
+   Model Access & CCSwitch-Style Navigation (Apple-Grade Clean & Pill Aesthetics)
+   ========================================================================== */
+.model-access-settings.ccswitch-layout {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kk-space-4);
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.model-access-channel-nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kk-space-2);
+  margin-bottom: var(--kk-space-2);
+}
+
+.channel-nav-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.channel-nav-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--kk-text-primary);
+  margin: 0;
+}
+
+.channel-nav-count {
+  font-size: 11px;
+  color: var(--kk-text-secondary);
+}
+
+.channel-segmented-tabs {
+  position: relative;
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  background: var(--kk-bg-surface);
+  border: 1px solid var(--kk-border-subtle);
+  border-radius: var(--kk-radius-full);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.channel-segmented-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.channel-tab-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border: none;
+  background: var(--ui-state-idle-bg);
+  border-radius: var(--kk-radius-full);
+  color: var(--kk-text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: var(--ui-state-transition);
+}
+
+.channel-tab-button:hover:not(:disabled):not(.is-active):not(
+    [aria-selected="true"]
+  ) {
+  color: var(--kk-text-primary);
+  background: var(--ui-state-hover-bg);
+}
+
+.channel-tab-button:focus-visible {
+  outline: 2px solid var(--kk-focus-ring);
+  outline-offset: 1px;
+}
+
+.channel-tab-button:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.channel-tab-button:active:not(:disabled):not(.is-active):not(
+    [aria-selected="true"]
+  ) {
+  background: var(--ui-state-pressed-bg);
+  transform: scale(0.98);
+}
+
+/* Selected tab owns the pill; there is no second sliding layer to drift out
+   of sync with aria-selected and the keyboard focus. */
+.channel-tab-button.is-active,
+.channel-tab-button[aria-selected="true"] {
+  color: var(--ui-state-selected-fg);
+  background: var(--ui-state-selected-bg);
+  box-shadow: inset 0 0 0 1px var(--ui-state-selected-ring);
+  font-weight: 600;
+}
+
+.channel-tab-button:disabled {
+  opacity: var(--ui-disabled-opacity);
+  cursor: not-allowed;
+}
+
+.channel-tab-button .tab-badge {
+  font-size: 10px;
+  line-height: 14px;
+  padding: 1px 6px;
+  border-radius: var(--kk-radius-full);
+  background: var(--bg-card-hover);
+  color: var(--kk-text-accent);
+}
+
+.channel-panel-intro {
+  margin-bottom: var(--kk-space-4);
+  padding-bottom: var(--kk-space-2);
+  border-bottom: 1px solid var(--kk-border-subtle);
+}
+
+.channel-panel-intro .panel-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--kk-text-primary);
+  margin: 0;
+}
+
+.channel-panel-intro .panel-desc {
+  font-size: 12px;
+  color: var(--kk-text-secondary);
+  margin: 4px 0 0 0;
+  line-height: 16px;
+}
+
+.cli-tool-subnav {
+  display: inline-flex;
+  gap: 4px;
+  padding: 3px;
+  background: var(--kk-bg-surface);
+  border: 1px solid var(--kk-border-subtle);
+  border-radius: var(--kk-radius-full);
+  margin-bottom: var(--kk-space-3);
+}
+
+.cli-subtab-btn {
+  border: none;
+  background: var(--ui-state-idle-bg);
+  border-radius: var(--kk-radius-full);
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--kk-text-secondary);
+  cursor: pointer;
+  transition: var(--ui-state-transition);
+}
+
+.cli-subtab-btn:hover:not(.is-active):not(:disabled) {
+  color: var(--kk-text-primary);
+  background: var(--ui-state-hover-bg);
+}
+
+.cli-subtab-btn.is-active,
+.cli-subtab-btn[aria-pressed="true"] {
+  background: var(--ui-state-selected-bg);
+  color: var(--ui-state-selected-fg);
+  box-shadow: inset 0 0 0 1px var(--ui-state-selected-ring);
+  font-weight: 600;
+}
+
+.cli-subtab-btn:disabled {
+  opacity: var(--ui-disabled-opacity);
+  cursor: not-allowed;
+}
+
+/* Small option chips (update channel, usage range). Same three states as every
+   other control: quiet by default, faint on hover, filled only when chosen. */
+.settings-chip {
+  height: var(--kk-control-h-sm);
+  padding: 0 10px;
+  border: 1px solid var(--kk-border-subtle);
+  border-radius: var(--kk-radius-full);
+  background: var(--ui-state-idle-bg);
+  color: var(--kk-text-secondary);
+  font-size: 12px;
+  line-height: var(--kk-line-caption);
+  cursor: pointer;
+  transition: var(--ui-state-transition);
+}
+.settings-chip:hover:not(.is-selected):not(:disabled) {
+  background: var(--ui-state-hover-bg);
+  color: var(--kk-text-primary);
+}
+.settings-chip.is-selected {
+  background: var(--ui-state-selected-bg);
+  border-color: var(--ui-state-selected-ring);
+  color: var(--ui-state-selected-fg);
+  font-weight: 600;
+}
+.settings-chip:disabled {
+  opacity: var(--ui-disabled-opacity);
+  cursor: not-allowed;
+}
+
+/* Radius utilities shared by the settings pages. They live here instead of a
+   runtime <style> node so every shape resolves through the same stylesheet. */
+.kk-card-box {
+  border-radius: var(--kk-radius-card);
+}
+.kk-pill-box {
+  border-radius: var(--kk-radius-full);
+}
+.kk-control-box {
+  border-radius: var(--kk-radius-control);
+}
+.kk-kbd-box {
+  border-radius: var(--kk-radius-xs);
+}
+
+/* ==========================================================================
+   Model access: provider presets and model catalog
+   Flat cards, hairline rows, one filled state per selection.
+   ========================================================================== */
+.inset-grouped-card {
+  padding: var(--kk-space-4);
+  border: 1px solid var(--kk-border-subtle);
+  border-radius: var(--kk-radius-card);
+  background: var(--kk-bg-card);
+}
+.model-access-main-content,
+.channel-panel-view {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kk-space-4);
+  min-width: 0;
+}
+.google-connection-subgroup {
+  margin-top: var(--kk-space-3);
+}
+.tab-label {
+  min-width: 0;
+}
+
+/* Provider presets */
+.provider-preset-card-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kk-space-3);
+}
+.preset-card-group-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--kk-space-3);
+}
+.preset-header-titles {
+  min-width: 0;
+}
+.preset-title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--kk-text-primary);
+}
+.preset-subtitle {
+  margin: 2px 0 0;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--kk-text-secondary);
+}
+.preset-feedback {
+  font-size: 12px;
+  color: var(--ui-warning);
+}
+.preset-filter-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--kk-space-2);
+  flex-wrap: wrap;
+}
+.preset-category-tabs {
+  display: inline-flex;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid var(--kk-border-subtle);
+  border-radius: var(--kk-radius-full);
+  background: var(--kk-bg-surface);
+}
+.preset-tab-btn {
+  height: 26px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: var(--kk-radius-full);
+  background: var(--ui-state-idle-bg);
+  color: var(--kk-text-secondary);
+  font-size: 12px;
+  cursor: pointer;
+  transition: var(--ui-state-transition);
+}
+.preset-tab-btn:hover:not(.is-active):not(:disabled) {
+  background: var(--ui-state-hover-bg);
+  color: var(--kk-text-primary);
+}
+.preset-tab-btn.is-active {
+  background: var(--ui-state-selected-bg);
+  box-shadow: inset 0 0 0 1px var(--ui-state-selected-ring);
+  color: var(--ui-state-selected-fg);
+  font-weight: 600;
+}
+.preset-search-box {
+  flex: 1 1 220px;
+  min-width: 160px;
+}
+.preset-search-box input {
+  width: 100%;
+  height: var(--kk-control-h-md);
+  padding: 0 10px;
+  border: 1px solid var(--kk-border-subtle);
+  border-radius: var(--kk-radius-control);
+  background: var(--kk-bg-input);
+  color: var(--kk-text-primary);
+  font-size: 12px;
+}
+.preset-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: var(--kk-space-2);
+}
+.preset-item-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--kk-border-subtle);
+  border-radius: var(--kk-radius-control);
+  background: var(--kk-bg-surface);
+  transition: var(--ui-state-transition);
+}
+.preset-item-card:hover {
+  border-color: var(--kk-border-default);
+}
+.preset-item-card.is-applied {
+  border-color: var(--ui-state-selected-ring);
+  background: var(--ui-state-selected-bg);
+}
+.preset-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.preset-card-identity {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+.preset-card-label {
+  overflow: hidden;
+  color: var(--kk-text-primary);
+  font-size: 13px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.preset-badge {
+  padding: 0 6px;
+  border-radius: var(--kk-radius-full);
+  background: var(--ui-state-hover-bg);
+  color: var(--kk-text-secondary);
+  font-size: 10px;
+  line-height: 14px;
+}
+.preset-protocol-tag {
+  flex: 0 0 auto;
+  color: var(--kk-text-tertiary);
+  font-size: 10px;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+.preset-card-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.preset-card-fullname {
+  overflow: hidden;
+  color: var(--kk-text-secondary);
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.preset-card-url {
+  overflow: hidden;
+  color: var(--kk-text-tertiary);
+  font-family: var(--kk-font-mono);
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.preset-recommended-models {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+.model-tag-label {
+  color: var(--kk-text-tertiary);
+  font-size: 11px;
+}
+.model-chip {
+  padding: 0 6px;
+  border-radius: var(--kk-radius-full);
+  background: var(--ui-state-hover-bg);
+  color: var(--kk-text-secondary);
+  font-size: 11px;
+  line-height: 16px;
+}
+.preset-card-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 2px;
+}
+.preset-apply-btn {
+  height: 26px;
+  padding: 0 10px;
+  font-size: 12px;
+}
+.preset-external-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.preset-link {
+  color: var(--kk-text-accent);
+  font-size: 12px;
+  text-decoration: none;
+}
+.preset-link:hover {
+  text-decoration: underline;
+}
+.preset-empty-state {
+  grid-column: 1 / -1;
+  padding: 16px;
+  color: var(--kk-text-secondary);
+  font-size: 12px;
+  text-align: center;
+}
+
+/* Model catalog */
+.provider-model-catalog {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kk-space-3);
+  min-width: 0;
+}
+.model-catalog-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--kk-space-3);
+  flex-wrap: wrap;
+}
+.model-catalog-title {
+  margin: 0;
+  color: var(--kk-text-primary);
+  font-size: 14px;
+  font-weight: 600;
+}
+.model-catalog-subtitle {
+  margin: 2px 0 0;
+  color: var(--kk-text-secondary);
+  font-size: 12px;
+  line-height: 16px;
+}
+.model-catalog-feedback {
+  color: var(--kk-text-secondary);
+  font-size: 12px;
+}
+.model-custom-add-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  color: var(--kk-text-secondary);
+  font-size: 12px;
+}
+.custom-add-input-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1 1 240px;
+}
+.custom-add-input-group input {
+  flex: 1;
+  min-width: 0;
+  height: var(--kk-control-h-md);
+  padding: 0 10px;
+  border: 1px solid var(--kk-border-subtle);
+  border-radius: var(--kk-radius-control);
+  background: var(--kk-bg-input);
+  color: var(--kk-text-primary);
+  font-size: 12px;
+}
+.model-catalog-list {
+  overflow: hidden;
+  border: 1px solid var(--kk-border-subtle);
+  border-radius: var(--kk-radius-control);
+}
+.model-catalog-list-head,
+.model-catalog-row {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) 92px 96px 72px;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+}
+.model-catalog-list-head {
+  height: 30px;
+  background: var(--kk-bg-surface);
+  color: var(--kk-text-tertiary);
+  font-size: 12px;
+}
+.model-catalog-row {
+  min-height: 40px;
+  border-top: 1px solid var(--kk-border-subtle);
+  color: var(--kk-text-primary);
+  font-size: 12px;
+  transition: var(--ui-state-transition);
+}
+.model-catalog-row:hover {
+  background: var(--ui-state-hover-bg);
+}
+/* Current model: one fill plus a left accent bar. */
+.model-catalog-row.is-selected {
+  background: var(--ui-state-selected-bg);
+  box-shadow: inset 2px 0 0 var(--kk-text-accent);
+}
+.model-catalog-row.is-disabled .model-item-id {
+  color: var(--kk-text-tertiary);
+  text-decoration: line-through;
+}
+.model-item-id {
+  overflow: hidden;
+  font-family: var(--kk-font-mono);
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.model-source-tag,
+.model-default-tag {
+  margin-left: 6px;
+  padding: 0 5px;
+  border-radius: var(--kk-radius-full);
+  background: var(--ui-state-hover-bg);
+  color: var(--kk-text-secondary);
+  font-size: 10px;
+  line-height: 14px;
+}
+.model-default-tag {
+  color: var(--kk-text-accent);
+}
+.kind-badge {
+  padding: 0 6px;
+  border-radius: var(--kk-radius-full);
+  background: var(--ui-state-hover-bg);
+  color: var(--kk-text-secondary);
+  font-size: 10px;
+  line-height: 16px;
+}
+.btn-star,
+.btn-select-model {
+  height: 24px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: var(--kk-radius-control);
+  background: var(--ui-state-idle-bg);
+  color: var(--kk-text-secondary);
+  font-size: 11px;
+  cursor: pointer;
+  transition: var(--ui-state-transition);
+}
+.btn-star:hover,
+.btn-select-model:hover {
+  background: var(--ui-state-hover-bg);
+  color: var(--kk-text-primary);
+}
+.btn-star.is-active,
+.btn-select-model.is-active {
+  background: var(--ui-state-selected-bg);
+  color: var(--ui-state-selected-fg);
+  font-weight: 600;
+}
+.model-catalog-empty {
+  padding: 16px;
+  color: var(--kk-text-secondary);
+  font-size: 12px;
+  text-align: center;
+}
+.model-params-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--kk-border-subtle);
+  border-radius: var(--kk-radius-control);
+}
+.params-editor-title {
+  margin: 0;
+  color: var(--kk-text-primary);
+  font-size: 12px;
+  font-weight: 600;
+}
+.params-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 8px;
+}
+.params-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: var(--kk-text-secondary);
+  font-size: 11px;
+}
+.params-field input,
+.params-field select {
+  height: var(--kk-control-h-md);
+  padding: 0 8px;
+  border: 1px solid var(--kk-border-subtle);
+  border-radius: var(--kk-radius-control);
+  background: var(--kk-bg-input);
+  color: var(--kk-text-primary);
+  font-size: 12px;
 }

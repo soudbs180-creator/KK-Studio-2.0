@@ -1,8 +1,9 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import type { CanvasCollectionItem } from "../../domain/canvasItems";
 import {
   projectCanvasFingerprint,
   reconcileProjectCanvas,
+  type CanvasGroup,
   type ProjectCanvas,
 } from "../../domain/projectCanvas";
 
@@ -11,19 +12,24 @@ export function useCanvasPersistence(
   positions: ProjectCanvas["positions"],
   edges: ProjectCanvas["edges"],
   viewport: ProjectCanvas["viewport"],
+  groups: CanvasGroup[],
   items: CanvasCollectionItem[],
   onChange: ((canvas: ProjectCanvas) => void) | undefined,
 ): void {
   const onChangeRef = useRef(onChange);
   onChangeRef.current = onChange;
-  const previous = useRef(projectCanvasFingerprint(initialCanvas));
+  const initialFingerprint = useMemo(
+    () => projectCanvasFingerprint(initialCanvas),
+    [initialCanvas],
+  );
+  const previous = useRef(initialFingerprint);
   useEffect(() => {
     const canvas = reconcileProjectCanvas(
-      { version: 1, positions, edges, viewport },
+      { version: 1, positions, edges, viewport, groups },
       items,
     );
     const fingerprint = projectCanvasFingerprint(canvas);
-    if (fingerprint === projectCanvasFingerprint(initialCanvas)) {
+    if (fingerprint === initialFingerprint) {
       previous.current = fingerprint;
       return;
     }
@@ -32,5 +38,13 @@ export function useCanvasPersistence(
       previous.current = fingerprint;
       onChangeRef.current?.(canvas);
     }
-  }, [positions, edges, viewport, items, initialCanvas]);
+  }, [
+    positions,
+    edges,
+    viewport,
+    groups,
+    items,
+    initialCanvas,
+    initialFingerprint,
+  ]);
 }

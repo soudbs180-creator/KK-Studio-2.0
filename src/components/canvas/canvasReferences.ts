@@ -1,9 +1,9 @@
 import type {
   CanvasCollectionItem,
   CanvasReference,
-} from "../../domain/canvasItems";
-import { cardLayout, type CanvasConnection } from "../../domain/canvasGraph";
-import type { Point } from "../../domain/canvasViewport";
+} from "../../domain/canvasItems.ts";
+import { cardLayout, type CanvasConnection } from "../../domain/canvasGraph.ts";
+import type { Point } from "../../domain/canvasViewport.ts";
 
 export function canvasOccupiedRects(
   items: CanvasCollectionItem[],
@@ -40,13 +40,38 @@ export function canvasReferencesFor(
       (
         entry,
       ): entry is { edge: CanvasConnection; source: CanvasCollectionItem } =>
-        entry.source?.kind === "image",
+        entry.source?.kind === "image" ||
+        entry.source?.kind === "video" ||
+        entry.source?.kind === "audio",
     )
     .map(({ edge, source }) => ({
       id: edge.id,
       assetId: source.assetId,
       title: source.title,
       preview: source.preview ?? source.result?.poster ?? source.result?.src,
+      kind: source.kind,
+      frame: source.referenceFrame,
       slot: source.referenceSlot,
     }));
+}
+
+/** Swap only the two video source nodes; connector ids and edge order stay untouched. */
+export function swapReferenceFrames(
+  items: CanvasCollectionItem[],
+  edges: CanvasConnection[],
+  firstReferenceId: string,
+  lastReferenceId: string,
+): CanvasCollectionItem[] {
+  const firstSource = edges.find(
+    (edge) => edge.id === firstReferenceId,
+  )?.source;
+  const lastSource = edges.find((edge) => edge.id === lastReferenceId)?.source;
+  if (!firstSource || !lastSource || firstSource === lastSource) return items;
+  return items.map((item) =>
+    item.id === firstSource
+      ? { ...item, referenceFrame: "last", updatedAt: Date.now() }
+      : item.id === lastSource
+        ? { ...item, referenceFrame: "first", updatedAt: Date.now() }
+        : item,
+  );
 }

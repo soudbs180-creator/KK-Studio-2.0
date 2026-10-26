@@ -4,7 +4,7 @@ import { openSettingsSection } from "./helpers";
 test.use({ hasTouch: true });
 
 async function prepareMcp(page: Page) {
-  await openSettingsSection(page, "扩展");
+  await openSettingsSection(page, "扩展与 MCP");
   const dialog = page.getByRole("dialog", { name: "设置", exact: true });
   await dialog
     .getByRole("tab", { name: /^MCP(?: 工具)?$/, exact: true })
@@ -188,7 +188,7 @@ test("pending MCP tool call blocks plugin mutations and restores them after stop
   expect(calls).toBe(1);
   await dialog.getByRole("button", { name: "关闭设置", exact: true }).click();
   await expect(dialog).toBeHidden();
-  await openSettingsSection(page, "扩展");
+  await openSettingsSection(page, "扩展与 MCP");
   await dialog
     .getByRole("tab", { name: /^MCP(?: 工具)?$/, exact: true })
     .click();

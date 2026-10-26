@@ -5,6 +5,7 @@ import {
   brushMask,
   floodMask,
   maskBounds,
+  subtractRuns,
   nextColorLabel,
   type MaskDocument,
 } from "../../src/features/image-edit/mask.ts";
@@ -18,6 +19,71 @@ import {
   formatEditPrompt,
 } from "../../src/features/image-edit/prompt.ts";
 import { blendMaskedPixels } from "../../src/features/image-edit/pixels.ts";
+import { validateEdit } from "../../src/features/image-edit/validateEdit.ts";
+
+test("擦除笔刷只移除覆盖的蒙版像素并保留剩余区段", () => {
+  assert.deepEqual(
+    subtractRuns(
+      [
+        [2, 1, 10],
+        [3, 2, 8],
+      ],
+      [
+        [2, 4, 7],
+        [3, 0, 3],
+      ],
+    ),
+    [
+      [2, 1, 4],
+      [2, 7, 10],
+      [3, 3, 8],
+    ],
+  );
+});
+
+test("关闭只改选区时要求整图编辑能力并保留区域提示", () => {
+  const source = {
+      id: "image",
+      title: "原图",
+      description: "",
+      kind: "image" as const,
+    },
+    document: MaskDocument = {
+      width: 20,
+      height: 20,
+      regions: [{ id: "area", runs: [[2, 2, 6]] }],
+    },
+    capabilities = {
+      operations: {
+        generate: "supported",
+        edit: "supported",
+        inpaint: "unsupported",
+        outpaint: "unsupported",
+      },
+    } as Parameters<typeof validateEdit>[4];
+  assert.equal(
+    validateEdit(source, document, "改成蓝色", [], capabilities),
+    "",
+  );
+  assert.equal(
+    validateEdit(source, document, "改成蓝色", [], capabilities, false),
+    "",
+  );
+  assert.match(
+    validateEdit(
+      source,
+      document,
+      "改成蓝色",
+      [],
+      {
+        ...capabilities,
+        operations: { ...capabilities.operations, edit: "unsupported" },
+      },
+      false,
+    ),
+    /整图重绘需要模型明确支持/,
+  );
+});
 
 test("continuous edit prompt budgets the total without truncating this round's instructions", () => {
   const current = "改".repeat(2000),

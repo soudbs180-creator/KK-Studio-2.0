@@ -11,6 +11,7 @@ export default function ReferenceStrip({
   limit,
   onAdd,
   onRemove,
+  onSwapVideoFrames,
   disabled = false,
 }: {
   disabled?: boolean;
@@ -19,6 +20,7 @@ export default function ReferenceStrip({
   limit: number;
   onAdd: (slot?: CanvasReference["slot"]) => void;
   onRemove?: (connectionId: string) => void;
+  onSwapVideoFrames?: (firstId: string, lastId: string) => void;
 }) {
   const used = new Set<CanvasReference>();
   const bySlot = CANVAS_REFERENCE_SLOTS.map((slot) => {
@@ -34,6 +36,15 @@ export default function ReferenceStrip({
     if (binding.entry) used.add(binding.entry);
   }
   const overflow = references.filter((reference) => !used.has(reference));
+  const videoFrames = references.filter(
+    (reference) =>
+      reference.kind !== "audio" &&
+      (reference.frame === "first" || reference.frame === "last"),
+  );
+  const firstFrame = videoFrames.find(
+    (reference) => reference.frame === "first",
+  );
+  const lastFrame = videoFrames.find((reference) => reference.frame === "last");
   return (
     <div className="reference-slots" data-testid="reference-slots">
       <div className="reference-slot-grid" role="list" aria-label="参考图槽位">
@@ -47,7 +58,7 @@ export default function ReferenceStrip({
             <span className="reference-slot-label">{slot}</span>
             {entry ? (
               <span className="reference-slot-media">
-                {entry.preview ? (
+                {entry.preview && entry.kind !== "audio" ? (
                   <img
                     className="reference-thumbnail"
                     src={entry.preview}
@@ -56,9 +67,23 @@ export default function ReferenceStrip({
                 ) : (
                   <span
                     className="reference-thumbnail is-pending"
-                    aria-label={`${entry.title}等待图片`}
+                    aria-label={`${entry.title}等待预览`}
                   >
-                    <UiIcon name="image" size={13} />
+                    <UiIcon
+                      name={
+                        entry.kind === "audio"
+                          ? "audio"
+                          : entry.kind === "video"
+                            ? "video"
+                            : "image"
+                      }
+                      size={12}
+                    />
+                  </span>
+                )}
+                {entry.kind === "video" && entry.frame && (
+                  <span className="reference-frame-label">
+                    {entry.frame === "first" ? "首帧" : "尾帧"}
                   </span>
                 )}
                 {entry.id && onRemove && (
@@ -69,7 +94,7 @@ export default function ReferenceStrip({
                     aria-label={`移除${slot}参考图${entry.title}`}
                     onClick={() => onRemove(entry.id!)}
                   >
-                    <UiIcon name="close" size={10} />
+                    <UiIcon name="close" size={12} />
                   </button>
                 )}
               </span>
@@ -96,12 +121,25 @@ export default function ReferenceStrip({
                   if (slot !== "Mask") onAdd(slot);
                 }}
               >
-                <UiIcon name="add" size={14} />
+                <UiIcon name="add" size={12} />
               </button>
             )}
           </div>
         ))}
       </div>
+      {firstFrame?.id && lastFrame?.id && onSwapVideoFrames && (
+        <button
+          className="reference-frame-swap"
+          type="button"
+          disabled={disabled}
+          aria-label="交换视频首尾帧"
+          title="交换首帧与尾帧"
+          onClick={() => onSwapVideoFrames(firstFrame.id!, lastFrame.id!)}
+        >
+          <UiIcon name="swapVertical" size={14} />
+          <span>交换首尾帧</span>
+        </button>
+      )}
       {overflow.length > 0 && (
         <div className="reference-overflow">
           {overflow.map((reference, index) => (
@@ -121,7 +159,7 @@ export default function ReferenceStrip({
         <button
           className="reference-add"
           type="button"
-          aria-label="添加参考图片"
+          aria-label="添加参考素材"
           disabled={disabled || referenceCount >= limit}
           title={
             limit > 0
@@ -130,8 +168,8 @@ export default function ReferenceStrip({
           }
           onClick={() => onAdd()}
         >
-          <UiIcon name="add" size={15} />
-          <span>添加参考图</span>
+          <UiIcon name="add" size={16} />
+          <span>添加参考素材</span>
         </button>
         {limit > 0 && (
           <span className="reference-limit">

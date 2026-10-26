@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "updated": "2026-10-12",
+  "updated": "2026-10-21",
   "scope": "KK Studio 2.0 governance source routing",
   "rule_hierarchy": {
     "description": "This ordered list resolves conflicting instructions or claims. It is separate from domain ownership: a lower-order domain source can still be the only source allowed to state its own kind of fact.",
@@ -185,9 +185,9 @@
         "docs/DESIGN-SYSTEM.md",
         "docs/UI_SPEC.md"
       ],
-      "rule": "UI_INDEX.md routes each UI question to its current owner. Historical UI files are evidence only.",
+      "rule": "UI_INDEX.md identifies the current Figma design source and routes its derived local specifications. Complete or verify the target in Figma before local UI changes; CSS is the runtime registry, not design authority. Historical UI files are evidence only.",
       "owner": "design and frontend maintainers",
-      "lastReviewed": "2026-10-09",
+      "lastReviewed": "2026-10-21",
       "supersedes": ["docs/UI-STANDARDS.md", "docs/UI-ALIGNMENT.md"],
       "nextReview": "when UI source or Figma baseline changes",
       "status": "current_routed"
@@ -355,6 +355,12 @@
     {
       "topic": "ui",
       "authority": "docs/UI_INDEX.md",
+      "designSource": {
+        "fileKey": "ZiadpErDoFweCjG3uHjkM3",
+        "nodeId": "91:2",
+        "url": "https://www.figma.com/design/ZiadpErDoFweCjG3uHjkM3/KK-Studio?node-id=91-2",
+        "readAt": "2026-10-21"
+      },
       "currentSources": [
         "docs/UI_RULES.md",
         "docs/UI_ARCHETYPES.md",
@@ -363,7 +369,7 @@
         "docs/UI_SPEC.md"
       ],
       "owner": "design and frontend maintainers",
-      "lastReviewed": "2026-10-09",
+      "lastReviewed": "2026-10-21",
       "supersedes": ["docs/UI-STANDARDS.md", "docs/UI-ALIGNMENT.md"],
       "nextReview": "when UI source or Figma baseline changes",
       "status": "current_routed"

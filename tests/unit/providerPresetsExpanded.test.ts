@@ -5,8 +5,8 @@ import {
   findProviderPreset,
 } from "../../src/domain/providerPresets.ts";
 
-test("PROVIDER_PRESETS 包含全部 52 个国内外服务商预设，且 ID 严格唯一", () => {
-  assert.equal(PROVIDER_PRESETS.length, 52);
+test("PROVIDER_PRESETS 包含全部 54 个国内外服务商预设，且 ID 严格唯一", () => {
+  assert.equal(PROVIDER_PRESETS.length, 54);
   const ids = new Set<string>();
   for (const preset of PROVIDER_PRESETS) {
     assert.ok(preset.id && preset.id.trim(), "预设必须有非空 id");
@@ -28,16 +28,15 @@ test("分类字段 category 仅限于 官方/网关/本地 三种，且数量分
     );
     categories[preset.category]++;
   }
-  assert.equal(categories["官方"], 37); // 14 国内 + 23 国际
-  assert.equal(categories["网关"], 9);
-  assert.equal(categories["本地"], 6);
+  assert.equal(categories["官方"], 36); // 13 国内 + 23 国际
+  assert.equal(categories["网关"], 11);
+  assert.equal(categories["本地"], 7);
 });
 
-test("国内官方服务商包含 DeepSeek, Kimi, 智谱, 硅基流动, 阿里百炼, 腾讯混元等主流渠道", () => {
+test("国内官方服务商包含 DeepSeek, Kimi, 智谱, 阿里百炼, 腾讯混元等主流渠道", () => {
   const domesticOfficialIds = [
     "deepseek",
     "moonshot",
-    "siliconflow",
     "zhipu",
     "dashscope",
     "doubao-ark",
@@ -96,6 +95,8 @@ test("国际官方服务商包含 OpenAI, Anthropic, Gemini, Bedrock, Mistral, G
 
 test("网关渠道包含 OpenRouter, New API, One API, Sub2API 等", () => {
   const gatewayIds = [
+    "12ai",
+    "siliconflow",
     "openrouter",
     "new-api",
     "one-api",
@@ -114,9 +115,17 @@ test("网关渠道包含 OpenRouter, New API, One API, Sub2API 等", () => {
 });
 
 test("本地离线渠道包含 LM Studio, Ollama, LocalAI, vLLM, Jan, ComfyUI 且为免密访问", () => {
-  const localIds = ["lm-studio", "ollama", "localai", "vllm", "jan", "comfyui"];
+  const localIds = [
+    "lm-studio",
+    "ollama",
+    "llama-cpp",
+    "localai",
+    "vllm",
+    "jan",
+    "comfyui",
+  ];
   const localPresets = PROVIDER_PRESETS.filter((p) => p.category === "本地");
-  assert.equal(localPresets.length, 6);
+  assert.equal(localPresets.length, 7);
   assert.deepEqual(
     localPresets.map((p) => p.id),
     localIds,
@@ -170,4 +179,3 @@ test("DashScope 预设 keyUrl 不含 ?apiKey= 查询参数且全量预设通过�
     }
   }
 });
-

@@ -41,6 +41,12 @@
 
 - Windows 设置 › 网络：启动并连接/停止服务；缺资源或 Web 显示原因。随包执行器和实际资源哈希见 [本轮验证](../changes/2026-09-22-agent-desktop/verification.md)。
 
+## 2026-10-24 浏览器后端适配（MVP，仍为 PARTIAL）
+
+保留 KK Studio 内置 WebView2，并登记 Edge、Chrome、ego lite 三个外部后端。Edge/Chrome 只保证按固定可执行文件白名单打开并标记为“手动浏览”；ego lite 通过本机 `ego-browser` Agent Space 启动。外部打开必须有本次任务授权；登录、验证、验证码、权限、证书/安全警告和敏感操作会进入安全接管状态，完成用户确认后才可恢复。不会保存或输出密码、Cookie、验证码或页面内容。
+
+实现入口：`src/features/browser`、`src/integrations/browser`、`src-tauri/src/ego_browser.rs`、`src-tauri/src/browser_runtime.rs`；设置 › 模型接入 › Codex CLI 已接入浏览器选择器、状态检查、任务授权说明和安全接管提示。设计与边界见 [`2026-10-24-browser-backend-design.md`](../superpowers/specs/2026-10-24-browser-backend-design.md)。
+
 ## 差距与后端化
 
 - BACKEND-CONVERSATION：Web 已接通真实 Codex，Windows 一键生命周期、真实回复、随包MCP与同线程恢复已验收。Agent 图片附件与显式画布引用已接通；内置生图参考图片编辑、其他软件/后台网页适配器仍待完成。
