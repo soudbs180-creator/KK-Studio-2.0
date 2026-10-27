@@ -10433,5 +10433,51 @@
         "source": "docs/changes/2026-10-18-gateway-stream/verification.md"
       }
     ]
+  },
+  {
+    "id": "TASK-MOD-P0",
+    "title": "建立模块化边界与只减不增的架构基线",
+    "goal": "先用可验证门禁保护模块边界，再按已复核规范推进优化",
+    "scope": "P0治理脚本、规则、基线、故障注入、规范与ADR；产品源码零改动",
+    "acceptance": [
+      "新增边界违规和长环被故障注入检出",
+      "候选基线不能相对Git基线扩容",
+      "typecheck/lint/test及适用治理门禁通过",
+      "产品源码和主checkout现有dirty改动保持原样"
+    ],
+    "dependencies": [],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "refactor/TASK-MOD-P0-architecture-baseline",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+    "affectedModules": [
+      "scripts/governance",
+      "scripts/check-governance.mjs",
+      "config/architecture-rules.cjs",
+      "config/architecture-baseline.json",
+      "tests/unit/architectureRules.test.ts",
+      "package.json",
+      "package-lock.json",
+      "docs"
+    ],
+    "status": "REVIEW",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-28-modularity-p0/verification.md"
+    ],
+    "verification": "候选实现：typecheck/lint/build通过，2331单测中2311通过0失败20跳过，含12项架构故障注入；新health阻断为0。完整verify停在18项继承源码格式错误，已逐文件用c2原文证实。产品源码diff为零，主checkout21个dirty文件hash未变。独审与整合未完成。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-28",
+    "lastVerified": "2026-10-28",
+    "nextAction": "独立审核当前P0候选；另卡处理继承格式门禁及113/7主线分叉，保护主checkout dirty；满足合流条件后再推进P1/P2。",
+    "requirementRefs": [
+      "docs/changes/2026-10-28-modularity-p0/intent.md",
+      "docs/changes/2026-10-28-modularity-p0/spec.md"
+    ],
+    "featureIds": []
   }
 ]

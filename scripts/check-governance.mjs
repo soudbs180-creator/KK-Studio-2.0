@@ -4,6 +4,7 @@ import { execFileSync } from "node:child_process";
 import { validateLedger, renderLedger } from "./governance/ledger.mjs";
 import { checkImportBoundaries } from "./governance/import-boundaries.mjs";
 import { checkMemoryContractSync } from "./governance/check-policy-sync.mjs";
+import { checkArchitecture } from "./governance/check-architecture.mjs";
 
 const issues = [];
 const root = process.cwd();
@@ -151,6 +152,19 @@ for (const file of walk("src").filter((name) => /\.tsx?$/.test(name)))
   issues.push(
     ...checkImportBoundaries(file, fs.readFileSync(file, "utf8"), root),
   );
+try {
+  const architecture = await checkArchitecture(root);
+  issues.push(...architecture.issues);
+  architecture.reductions.forEach((message) => console.log(message));
+  console.log(
+    `Architecture: ${Object.entries(architecture.current.rules)
+      .map(([id, entry]) => `${id}=${entry.count}`)
+      .join(", ")}`,
+  );
+} catch (error) {
+  issues.push(`Architecture: ${error.message}`);
+}
+
 // Catch the previous hard-coded output pattern before tests overwrite history.
 for (const file of [...walk("tests/browser"), "playwright.config.ts"])
   if (/\.[cm]?tsx?$/.test(file)) {

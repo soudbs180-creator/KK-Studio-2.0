@@ -10,6 +10,8 @@
 
 ## 当前规范入口
 
+模块化能力架构与边界棘轮的现行入口为[MODULARITY](../architecture/MODULARITY.md)，依赖ADR-026/027；P0实施状态只读账本，不把技术方向已接受等同功能已交付。
+
 | 主题 | 唯一入口 | 约束 |
 | --- | --- | --- |
 | 工程流程与分支 | [`docs/engineering/SDLC.md`](../engineering/SDLC.md)、`BRANCH-POLICY.md`、`REVIEW.md`、`AI-EVALS.md` | 需求、证据、审查和交付顺序 |

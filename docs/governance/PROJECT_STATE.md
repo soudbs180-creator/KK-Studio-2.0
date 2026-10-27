@@ -2,7 +2,7 @@
 
 - docId: PROJECT_STATE
 - status: current
-- updatedAt: 2026-10-26
+- updatedAt: 2026-10-28
 - source: `docs/governance/task-ledger.json`
 - supersededBy: null
 
@@ -28,6 +28,10 @@
 
 <!-- CURRENT_FACTS_END -->
 <!-- HISTORICAL_SNAPSHOTS_BEGIN -->
+
+## 2026-10-28 模块化P0任务树候选
+
+TASK-MOD-P0已按用户提供执行规范与补篇启动；当前实现、验证、独审与合流状态见[本次验证](../changes/2026-10-28-modularity-p0/verification.md)和账本。新架构边界以[MODULARITY](../architecture/MODULARITY.md)为入口，现有任务/资产/Provider/UI不重写。本地c2与远端4610分叉（113/7独有提交），原主checkout的Figma审计改动保持原样；本卡证据不能作为远端主线、安装客户端或发布已更新的证明。
 
 ## 历史快照归档
 

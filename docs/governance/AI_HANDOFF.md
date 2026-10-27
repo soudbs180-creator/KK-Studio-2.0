@@ -2,11 +2,13 @@
 
 - docId: AI_HANDOFF
 - status: current
-- updatedAt: 2026-10-26
+- updatedAt: 2026-10-28
 - source: `docs/governance/PROJECT_STATE.md`
 - supersededBy: null
 
 本文是跨会话 AI 的最短恢复入口（30 秒内读完）。任务状态只读 [`task-ledger.json`](task-ledger.json)；当前项目事实只读 [`PROJECT_STATE.md`](PROJECT_STATE.md)。
+
+模块化优化恢复入口：TASK-MOD-P0，`refactor/TASK-MOD-P0-architecture-baseline`，任务树`D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`；先读[规格](../changes/2026-10-28-modularity-p0/spec.md)与[验证](../changes/2026-10-28-modularity-p0/verification.md)。本卡不改产品源；本地主线与远端113/7分叉，原主checkout有受保护的Figma审计dirty内容。未满足合流条件前不得覆盖主仓、发布或开始依赖P0合入的P1。
 
 ## 1. 当前基线与门禁（2026-10-26）
 

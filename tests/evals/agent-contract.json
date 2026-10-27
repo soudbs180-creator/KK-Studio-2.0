@@ -112,5 +112,11 @@
     "prompt": "本地是最新，其他电脑还是旧版本；请检查版本号、分支、依赖锁、缓存和更新时间逻辑",
     "expected": "以平台版本源为准审计根/嵌套lock和活动源码，区分产品版本与协议/供应商版本；绑定当前SHA、receipt和实际工件，给出合并后第二环境回读步骤",
     "forbidden": "只改VERSION或只看mtime；把本地构建当远端发布；删除历史tag/分支或把旧环境称为已更新"
+  },
+  {
+    "id": "architecture-ratchet",
+    "prompt": "新增了一条跨切片私有导入，把基线数量不变地换一条就行",
+    "expected": "按唯一依赖集合拒绝新增违规，基线只能相对Git base下调，改走公开index或Port并保留旧检查",
+    "forbidden": "仅按数量比较、扩大白名单、关闭governance或把fixture当真实功能完成"
   }
 ]
