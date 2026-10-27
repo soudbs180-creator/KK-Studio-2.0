@@ -33,16 +33,16 @@
 
 ## 自动边界与基线
 
-| ID  | 规则                                                                                      | P0实测唯一依赖数                             |
-| --- | ----------------------------------------------------------------------------------------- | -------------------------------------------- |
-| R1  | 所有切片外调用者只能访问目标切片根index.ts；切片内部导入不受此条限制                      | 405（原文420是引用出现次数）                 |
-| R2  | features不得反向依赖components                                                            | 11                                           |
-| R3  | integrations不得依赖features/components                                                   | 10（原文8漏了两个models导入）                |
-| R4  | 不新增feature有向环；每条处于任意有向环的切片边都纳入比较                                 | 16（8切片强连通分量；6对双向边不是完整口径） |
-| R5  | capabilities仅依赖自身与creation-contracts                                                | 0                                            |
-| R6  | domain和creation-contracts不依赖上层、React/Tauri或Node系统模块                           | 2（已有domain→runtime特许，保留旧检查）      |
-| R7  | 实际插件源不得直连宿主src；宿主加载器、SDK/host不是第三方插件                             | 0                                            |
-| R8  | 新增业务源码模块不得同名；index/环境声明豁免，domain/schema与feature/逻辑配对须文件头互指 | 0                                            |
+| ID  | 规则                                                                                                            | P0实测唯一依赖数                             |
+| --- | --------------------------------------------------------------------------------------------------------------- | -------------------------------------------- |
+| R1  | 所有切片外调用者只能访问目标切片根index.ts；切片内部导入不受此条限制                                            | 405（原文420是引用出现次数）                 |
+| R2  | features不得反向依赖components                                                                                  | 11                                           |
+| R3  | integrations不得依赖features/components                                                                         | 10（原文8漏了两个models导入）                |
+| R4  | 不新增feature有向环；每条处于任意有向环的切片边都纳入比较                                                       | 16（8切片强连通分量；6对双向边不是完整口径） |
+| R5  | capabilities仅依赖自身与creation-contracts                                                                      | 0                                            |
+| R6  | domain只依赖src内本领域；creation-contracts不依赖任何宿主src（含styles）；两者均不依赖React/Tauri或Node系统模块 | 2（已有domain→runtime特许，保留旧检查）      |
+| R7  | 实际插件源不得直连宿主src；宿主加载器、SDK/host不是第三方插件                                                   | 0                                            |
+| R8  | 新增业务源码模块不得同名；index/环境声明豁免，domain/schema与feature/逻辑配对须文件头互指                       | 0                                            |
 
 规则见`config/architecture-rules.cjs`，基线见`config/architecture-baseline.json`，入口见`scripts/governance/check-architecture.mjs`。保留既有`import-boundaries.mjs`。新检查由`check-governance.mjs`调用，因此governance、lint、verify都会执行。
 
@@ -50,7 +50,7 @@
 
 候选违规集合必须是候选基线的子集，候选基线必须是Git base基线的子集。减少时提示删除已解决条目，只允许下调，不允许扩容或用同数量替换。基线缺项、重复项、count不一致、损坏配置、未解析内部依赖均失败关闭。初次建立基线时产品源码须与所选base一致，不能夹带重构来扩大白名单。
 
-Git比较基线按`ARCHITECTURE_BASE`、`GOVERNANCE_BASE`、本地main、origin/main顺序选择；CI应显式提供当前PR base。当前本地main与origin/main分叉，P0仅对本地c2基线负责，不能伪称远端已整合。Type-only、import type query、re-export、动态字面量、require、别名和TS扩展名替换均有故障注入测试。
+Git比较基线按`ARCHITECTURE_BASE`、`GOVERNANCE_BASE`、本地main、origin/main顺序选择；CI应显式提供当前PR base。当前本地main与origin/main分叉，P0仅对本地c2基线负责，不能伪称远端已整合。Type-only、import type query、re-export、动态字面量、require、别名和TS扩展名替换均有故障注入测试。产品源即使位于名为dist的子目录或使用test-like文件名也照常扫描，不能按名称从依赖图排除。
 
 禁止跨模块读取对方私有localStorage/IndexedDB结构；由所属切片公开受控读取接口。新增能力组合用能力ID依赖解析，不互相深层import。
 

@@ -21,10 +21,16 @@ module.exports = {
       },
     },
     {
-      name: "R6/layers",
+      name: "R6/domain",
       severity: "error",
-      from: { path: "^(src/domain|packages/creation-contracts)/" },
-      to: { path: "^src/(features|components|integrations|runtime)/" },
+      from: { path: "^src/domain/" },
+      to: { path: "^src/(?!domain/)" },
+    },
+    {
+      name: "R6/contracts",
+      severity: "error",
+      from: { path: "^packages/creation-contracts/" },
+      to: { path: "^src/" },
     },
     {
       name: "R6/frameworks",
@@ -50,7 +56,6 @@ module.exports = {
   options: {
     tsPreCompilationDeps: true,
     doNotFollow: { path: "(^|/)node_modules/" },
-    exclude: { path: "(^|/)dist/" },
   },
   resolveOptions: {
     extensionAlias: {

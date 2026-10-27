@@ -178,6 +178,30 @@ test("product modules cannot bypass boundaries with a test-like filename", async
   assert.equal((await collectArchitecture(root)).rules.R1.count, 1);
 });
 
+test("product modules cannot bypass boundaries inside a directory named dist", async (t) => {
+  const { root } = fixture(t, {
+    "src/components/view.ts":
+      'export { value } from "../features/b/dist/private.ts";',
+    "src/features/b/dist/private.ts": "export const value = 1;",
+  });
+  assert.equal((await collectArchitecture(root)).rules.R1.count, 1);
+});
+
+test("contracts stay independent of all host src layers including styles", async (t) => {
+  const { root } = fixture(t, {
+    "packages/creation-contracts/ports.ts":
+      'import "../../src/styles/style.css"; export type { Model } from "../../src/domain/model.ts"; export { value } from "../../src/App.tsx";',
+    "src/styles/style.css": "body { margin: 0; }",
+    "src/domain/model.ts": "export type Model = string;",
+    "src/App.tsx": "export const value = 1;",
+  });
+  assert.deepEqual((await collectArchitecture(root)).rules.R6.items, [
+    "packages/creation-contracts/ports.ts => src/App.tsx",
+    "packages/creation-contracts/ports.ts => src/domain/model.ts",
+    "packages/creation-contracts/ports.ts => src/styles/style.css",
+  ]);
+});
+
 test("renamed business modules are checked as new paths for duplicate names", async (t) => {
   const { root, write } = fixture(t, {
     "src/features/a/value.ts": "export const value = 1;",

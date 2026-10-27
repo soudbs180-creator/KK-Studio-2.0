@@ -139,7 +139,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-UI-015 | 画布点状/网状背景缩放插值修正 | DONE | 已完成 | P2 | none | root | 保留当前证据；主线回读完成 |
 | TASK-AGENT-010 | 统一版本一致性与跨环境启动新鲜度 | PARTIAL | 未完成 | P1 | TASK-LAUNCH-001 | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
 | TASK-GOV-003 | 规则体系收敛与文档同步门禁（B1+B2+R+B3-1+B3-2） | PARTIAL | 进行中 | P1 | none | root | 待用户授权后处理 B3-3 TASKSTATE 分支审查；随后按独立批次处理 B4 worktree/二进制、B5 交付包补齐 |
-| TASK-GOV-004 | 未合并分支全量核验、分类与收敛合并 | PARTIAL | 进行中 | P1 | TASK-GOV-003 | root | P2 家族收敛 ×11 → B2 文档类 → B3 小代码 24 → B4 中代码 15 → B5 UI-012 两步（已授权）；每单元快照+门禁+交付包 |
+| TASK-GOV-004 | 未合并分支全量核验、分类与收敛合并 | PARTIAL | 进行中 | P1 | TASK-GOV-003 | root | 2026-10-28实测本地c2与origin/main4610分叉113/7提交，P0不能夹带全部历史整合；先保留双方与主checkout dirty，按原收敛任务核对SHA/PR/冲突，再解除P0合流条件。历史归属与未完成结论保留。 |
 | TASK-REVIEW-REMEDIATION-001 | 修复审查发现的治理生命周期与交付边界问题 | PARTIAL | 未完成 | P1 | TASK-GOV-003 | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
 | TASK-UI-CLASSIFY-20261013 | 模型接入与扩展分类修复并验证三客户端 | PARTIAL | 未完成 | P1 | none | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
 | TASK-AGENT-RECOVERY-20261013 | 桌面 Agent 自动恢复、会话归属与凭据保存 | PARTIAL | 未完成 | P1 | none | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
@@ -171,7 +171,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-SIDEBAR-CANVAS-20261018 | 侧栏置顶排序持久化与宽图连线桌面验收 | DONE | 已完成 | P1 | none | root | 本轮有界本地技术完成；最终文档SHA审查/Delivery/归档/日常还原以工程外收据裁决；真实Provider/Hosted/发布及用户整体验收另行，保留全部资料。 |
 | TASK-COLDSTART-LOCAL-20261018 | 冷启动无效写入修复与严格数据比较闭环 | DONE | 已完成 | P1 | none | root | 本有界冷启动技术闭环完成；最终文档SHA独审/Delivery/保全归档与日常单实例入口据实收尾。继续本地Gateway增量流和Native Canvas专项，不改变父任务外部验收与功能成熟度。 |
 | TASK-GATEWAY-STREAM-20261018 | Gateway实际增量SSE与取消重试边界 | DONE | 已完成 | P1 | TASK-COLDSTART-LOCAL-20261018 | root | 本地有界子项完成；最终精确文档/Delivery/私有归档/原两个快捷方式由工程外收据裁决。下一P1本地DPAPI protector受控测试及独立成本回执调用路径，不重提UNKNOWN，不消费额度；父Gateway仍PARTIAL。 |
-| TASK-MOD-P0 | 建立模块化边界与只减不增的架构基线 | REVIEW | 进行中 | P1 | none | root | 独立审核当前P0候选；另卡处理继承格式门禁及113/7主线分叉，保护主checkout dirty；满足合流条件后再推进P1/P2。 |
+| TASK-MOD-P0 | 建立模块化边界与只减不增的架构基线 | REVIEW | 进行中 | P1 | none | root | 回读修复增量独审；独立TASK-MOD-GATE-FORMAT处理继承格式门禁，复用TASK-GOV-004审计113/7主线分叉；保护主checkout dirty，满足合流条件后再推进P1/P2。 |
+| TASK-MOD-GATE-FORMAT | 独立恢复18项既有源码格式门禁 | TODO | 未完成 | P1 | none | root | 复用合适且不冲突的任务树，先记录语义对照及门禁基线，再独立提交格式修复；不夹带P0或改他人dirty工作。 |
 
 ## TASK-FIGMA-PAGES-20261025 — 重新核查并整理Figma 04/05页面与状态
 
@@ -2717,10 +2718,10 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Worktree: `D:/kk-studio/KK-Studio-2.0`
 - Modules: scripts/governance/branch-audit.mjs, docs/changes/2026-10-12-branch-consolidation
 - Verification: PASS — P0/P1/B1 已完成：main 8915b6ae；分类表 100 行（已完成 27/完成一半 68/未完成 4/无法判定 1）；10 个 PR 集成分支的 11 个任务已加禁合并注释；门禁全绿（npm test 8 失败为已记录环境性既有失败）。P2-P3 家族收敛与 B2-B5 合并待执行。
-- Evidence: [docs/changes/2026-10-12-branch-consolidation/verification.md](../../docs/changes/2026-10-12-branch-consolidation/verification.md), [docs/changes/2026-10-12-branch-consolidation/review.md](../../docs/changes/2026-10-12-branch-consolidation/review.md)
-- Next action: P2 家族收敛 ×11 → B2 文档类 → B3 小代码 24 → B4 中代码 15 → B5 UI-012 两步（已授权）；每单元快照+门禁+交付包
+- Evidence: [docs/changes/2026-10-12-branch-consolidation/verification.md](../../docs/changes/2026-10-12-branch-consolidation/verification.md), [docs/changes/2026-10-12-branch-consolidation/review.md](../../docs/changes/2026-10-12-branch-consolidation/review.md), [docs/changes/2026-10-28-modularity-p0/verification.md](../../docs/changes/2026-10-28-modularity-p0/verification.md)
+- Next action: 2026-10-28实测本地c2与origin/main4610分叉113/7提交，P0不能夹带全部历史整合；先保留双方与主checkout dirty，按原收敛任务核对SHA/PR/冲突，再解除P0合流条件。历史归属与未完成结论保留。
 - Last verified: 2026-10-12
-- Updated: 2026-10-12
+- Updated: 2026-10-28
 
 ## TASK-REVIEW-REMEDIATION-001 — 修复审查发现的治理生命周期与交付边界问题
 
@@ -3324,8 +3325,27 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `refactor/TASK-MOD-P0-architecture-baseline`
 - Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
 - Modules: scripts/governance, scripts/check-governance.mjs, config/architecture-rules.cjs, config/architecture-baseline.json, tests/unit/architectureRules.test.ts, package.json, package-lock.json, docs
-- Verification: PARTIAL — 候选实现：typecheck/lint/build通过，2331单测中2311通过0失败20跳过，含12项架构故障注入；新health阻断为0。完整verify停在18项继承源码格式错误，已逐文件用c2原文证实。产品源码diff为零，主checkout21个dirty文件hash未变。独审与整合未完成。
+- Verification: PARTIAL — 独审发现2项验收漏检，已RED→GREEN修复并补为14项架构回归；最新typecheck/lint及2333测试中2313通过0失败20跳过，exitCode均0，health0blocking。build通过；完整verify仍停在18项继承源码格式错误。产品源diff为空，未合流/发布。
 - Evidence: [docs/changes/2026-10-28-modularity-p0/verification.md](../../docs/changes/2026-10-28-modularity-p0/verification.md)
-- Next action: 独立审核当前P0候选；另卡处理继承格式门禁及113/7主线分叉，保护主checkout dirty；满足合流条件后再推进P1/P2。
+- Next action: 回读修复增量独审；独立TASK-MOD-GATE-FORMAT处理继承格式门禁，复用TASK-GOV-004审计113/7主线分叉；保护主checkout dirty，满足合流条件后再推进P1/P2。
+- Last verified: 2026-10-28
+- Updated: 2026-10-28
+
+## TASK-MOD-GATE-FORMAT — 独立恢复18项既有源码格式门禁
+
+- Goal: 在不改变产品语义和UI的前提下清除已证实的pre-existing format失败
+- Scope: 18个原始源码文件的格式整理，独立于P0边界基线提交；不重构或改视觉
+- Display status: 未完成
+- Priority: P1 — 未记录
+- Requirement refs: docs/changes/2026-10-28-modularity-p0/spec.md
+- Feature IDs: none
+- Owner role: implementation-integrator
+- Acceptance: 18个候选逐个确认格式差异与语法/渲染语义不变; format:check及快速门禁通过; 完整verify通过后按真实base/head审核整合
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: src/components/nodes/ReferenceThumbnail.tsx, src/features, docs
+- Verification: NOT_VERIFIED — PRE-EXISTING FAILURE：18个文件与c2原文相同且同版本Prettier均报格式差异；尚未实施格式修改。
+- Evidence: [docs/changes/2026-10-28-modularity-p0/verification.md](../../docs/changes/2026-10-28-modularity-p0/verification.md)
+- Next action: 复用合适且不冲突的任务树，先记录语义对照及门禁基线，再独立提交格式修复；不夹带P0或改他人dirty工作。
 - Last verified: 2026-10-28
 - Updated: 2026-10-28

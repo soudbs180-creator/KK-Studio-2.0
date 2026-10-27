@@ -19,6 +19,8 @@ npm元数据与安装包确认：MIT，支持Node22/24/26+；仅新增开发依�
 
 旧违规不强迫P0立即搬迁，但不能新增或扩大白名单。减少条目提示维护者下调；未下调的已解决条目仍会被视为存量，故后续修复必须同步基线。检查器本身的规则变更需审查，不能声称其防止有权限的人故意改写门禁。
 
+独审勘误：删除全局dist排除，避免产品目录名称绕过检查；R6对契约包禁止全部宿主src导入（含styles、App、domain），对domain仅允许src内本领域引用并保留两项原runtime存量。这两项均以独立RED→GREEN回归验证，不扩容基线。
+
 ## 验证、恢复与限制
 
 tests/unit/architectureRules.test.ts覆盖合法导入、所有静态导入形式、上层/插件/框架依赖、长环/原SCC新增边、同量替换、基线扩容/损坏、bootstrap产品修改及CLI退出码。产品源不能用test-like文件名逃避扫描，新增路径识别包含重命名。新检查直接接入check-governance，因为lint不经npm governance:check。

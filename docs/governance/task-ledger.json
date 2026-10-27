@@ -6772,14 +6772,15 @@
     ],
     "owner": "root",
     "priority": "P1",
-    "updated": "2026-10-12",
+    "updated": "2026-10-28",
     "affectedModules": [
       "scripts/governance/branch-audit.mjs",
       "docs/changes/2026-10-12-branch-consolidation"
     ],
     "evidence": [
       "docs/changes/2026-10-12-branch-consolidation/verification.md",
-      "docs/changes/2026-10-12-branch-consolidation/review.md"
+      "docs/changes/2026-10-12-branch-consolidation/review.md",
+      "docs/changes/2026-10-28-modularity-p0/verification.md"
     ],
     "id": "TASK-GOV-004",
     "title": "未合并分支全量核验、分类与收敛合并",
@@ -6802,7 +6803,7 @@
     "featureIds": [],
     "priorityRationale": "治理收敛前置：分支不收敛则所有合并冲突面持续扩大",
     "displayStatus": "进行中",
-    "nextAction": "P2 家族收敛 ×11 → B2 文档类 → B3 小代码 24 → B4 中代码 15 → B5 UI-012 两步（已授权）；每单元快照+门禁+交付包",
+    "nextAction": "2026-10-28实测本地c2与origin/main4610分叉113/7提交，P0不能夹带全部历史整合；先保留双方与主checkout dirty，按原收敛任务核对SHA/PR/冲突，再解除P0合流条件。历史归属与未完成结论保留。",
     "lastVerified": "2026-10-12",
     "ownerRole": "repository-maintainer"
   },
@@ -10469,13 +10470,52 @@
     "evidence": [
       "docs/changes/2026-10-28-modularity-p0/verification.md"
     ],
-    "verification": "候选实现：typecheck/lint/build通过，2331单测中2311通过0失败20跳过，含12项架构故障注入；新health阻断为0。完整verify停在18项继承源码格式错误，已逐文件用c2原文证实。产品源码diff为零，主checkout21个dirty文件hash未变。独审与整合未完成。",
+    "verification": "独审发现2项验收漏检，已RED→GREEN修复并补为14项架构回归；最新typecheck/lint及2333测试中2313通过0失败20跳过，exitCode均0，health0blocking。build通过；完整verify仍停在18项继承源码格式错误。产品源diff为空，未合流/发布。",
     "verificationResult": "PARTIAL",
     "updated": "2026-10-28",
     "lastVerified": "2026-10-28",
-    "nextAction": "独立审核当前P0候选；另卡处理继承格式门禁及113/7主线分叉，保护主checkout dirty；满足合流条件后再推进P1/P2。",
+    "nextAction": "回读修复增量独审；独立TASK-MOD-GATE-FORMAT处理继承格式门禁，复用TASK-GOV-004审计113/7主线分叉；保护主checkout dirty，满足合流条件后再推进P1/P2。",
     "requirementRefs": [
       "docs/changes/2026-10-28-modularity-p0/intent.md",
+      "docs/changes/2026-10-28-modularity-p0/spec.md"
+    ],
+    "featureIds": []
+  },
+  {
+    "id": "TASK-MOD-GATE-FORMAT",
+    "title": "独立恢复18项既有源码格式门禁",
+    "goal": "在不改变产品语义和UI的前提下清除已证实的pre-existing format失败",
+    "scope": "18个原始源码文件的格式整理，独立于P0边界基线提交；不重构或改视觉",
+    "acceptance": [
+      "18个候选逐个确认格式差异与语法/渲染语义不变",
+      "format:check及快速门禁通过",
+      "完整verify通过后按真实base/head审核整合"
+    ],
+    "dependencies": [],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "unallocated",
+    "worktree": "unallocated",
+    "baseSha": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+    "affectedModules": [
+      "src/components/nodes/ReferenceThumbnail.tsx",
+      "src/features",
+      "docs"
+    ],
+    "status": "TODO",
+    "displayStatus": "未完成",
+    "priority": "P1",
+    "risk": "low",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-28-modularity-p0/verification.md"
+    ],
+    "verification": "PRE-EXISTING FAILURE：18个文件与c2原文相同且同版本Prettier均报格式差异；尚未实施格式修改。",
+    "verificationResult": "NOT_VERIFIED",
+    "updated": "2026-10-28",
+    "lastVerified": "2026-10-28",
+    "nextAction": "复用合适且不冲突的任务树，先记录语义对照及门禁基线，再独立提交格式修复；不夹带P0或改他人dirty工作。",
+    "requirementRefs": [
       "docs/changes/2026-10-28-modularity-p0/spec.md"
     ],
     "featureIds": []
