@@ -10,6 +10,8 @@
 
 模块化优化恢复入口：TASK-MOD-P0，`refactor/TASK-MOD-P0-architecture-baseline`，任务树`D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`；先读[规格](../changes/2026-10-28-modularity-p0/spec.md)与[验证](../changes/2026-10-28-modularity-p0/verification.md)。本卡不改产品源；本地主线与远端113/7分叉，原主checkout有受保护的Figma审计dirty内容。未满足合流条件前不得覆盖主仓、发布或开始依赖P0合入的P1。
 
+P0源码候选cb869dfe已通过增量独审与精确三门禁（2313通过、0失败、20跳过）；交付仍PARTIAL。下一步独立TASK-MOD-GATE-FORMAT恢复18项继承格式门禁，分叉继续复用TASK-GOV-004；未满足完整verify/合流条件前保留任务树和原证据。
+
 ## 1. 当前基线与门禁（2026-10-26）
 
 - **唯一主仓**：`D:/kk-studio/KK-Studio-2.0`（主线分支 `main`，三端版本 `2.1.45` / `2.1.45` / `2.1.42`）。

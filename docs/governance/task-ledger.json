@@ -10462,19 +10462,19 @@
       "package-lock.json",
       "docs"
     ],
-    "status": "REVIEW",
-    "displayStatus": "进行中",
+    "status": "PARTIAL",
+    "displayStatus": "未完成",
     "priority": "P1",
     "risk": "medium",
     "reviewRequired": true,
     "evidence": [
       "docs/changes/2026-10-28-modularity-p0/verification.md"
     ],
-    "verification": "独审发现2项验收漏检，已RED→GREEN修复并补为14项架构回归；最新typecheck/lint及2333测试中2313通过0失败20跳过，exitCode均0，health0blocking。build通过；完整verify仍停在18项继承源码格式错误。产品源diff为空，未合流/发布。",
+    "verification": "P0源码cb869dfe增量独审通过，2项验收漏检已关闭；干净cb869dfe精确typecheck/lint/npm test均exit0，2333项中2313通过0失败20跳过（含14项架构回归），health0blocking。build通过，delivery结构0违规；完整verify仍被18项继承源码格式阻断。产品源码diff为空，未合流或发布。",
     "verificationResult": "PARTIAL",
     "updated": "2026-10-28",
     "lastVerified": "2026-10-28",
-    "nextAction": "回读修复增量独审；独立TASK-MOD-GATE-FORMAT处理继承格式门禁，复用TASK-GOV-004审计113/7主线分叉；保护主checkout dirty，满足合流条件后再推进P1/P2。",
+    "nextAction": "独立TASK-MOD-GATE-FORMAT恢复18项继承格式门禁；复用TASK-GOV-004核对本地/远端113/7分叉及受保护dirty。P0保留为未整合候选，完整verify与合流条件满足后再推进P1/P2。",
     "requirementRefs": [
       "docs/changes/2026-10-28-modularity-p0/intent.md",
       "docs/changes/2026-10-28-modularity-p0/spec.md"

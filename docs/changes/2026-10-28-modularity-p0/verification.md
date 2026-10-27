@@ -26,6 +26,10 @@
 
 独审发现两项验收缺口后已完成RED→GREEN；修复后重新执行typecheck/lint/npm test，全部exitCode=0（review-typecheck/lint/test.json）。R1–R8基线未扩容。新增规则、测试的格式检查与受影响增量独审另行收尾。
 
+勘误与精确复验：上面的review-_回执绑定修复提交前的dirty候选HEAD ef37b647，不代表精确cb869dfe。已保留原记录，并在干净`cb869dfeae39d669bc6f22eb75818a2c057a9f86`重新执行typecheck/lint/npm test，三个cb869dfe-_.json回执均exitCode=0；单测2333项，2313通过、0失败、20跳过。增量独审已关闭两项P2且无新发现；本地delivery结构校验26文件、0违规，明确不等同Hosted或审核质量证明。治理账本最终回读167项、0违规，索引/Markdown均通过。
+
+当前结论：P0候选实现与源码独审通过，整体交付仍为PARTIAL。产品源码零变更；没有已合流、发布或功能成熟度提升声明。
+
 完整verify尚未跑到产品浏览器、设计浏览器与开发插件运行验证；Desktop安装包、真实Provider、Mobile、Hosted CI和生产发布未验。新增eval只完成确定性结构检查与后续独立上下文复核，不是live模型评估。
 
 本地主线与远端分叉（113/7独有提交），原主checkout有受保护dirty改动，当前也未满足完整verify门禁。因此不能自动覆盖主仓、发布、强行合流或回收未整合任务树；P1/P2产品改造尚未开始。下步先以独立任务解决既有格式门禁与基线整合，保持本卡P0源码范围不变。

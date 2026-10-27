@@ -47,6 +47,6 @@
 ## Task 3：验证与交付
 
 - [x] 已执行typecheck/lint/test、治理、索引、Markdown、本卡格式与构建；完整verify因18项已证明继承的源码格式问题失败，未满足合流门禁。
-- [ ] 独立上下文审核实际diff；修复阻断项并补回归证据。
-- [ ] 核对产品零改动、原主checkout保护清单和当前base/head，形成可审阅提交。
+- [x] 独立上下文审核实际diff；两项验收缺口已RED→GREEN修复并通过cb869dfe增量补审，14项架构回归全过。
+- [x] 核对产品零改动、原主checkout保护清单和当前base/head，保存本地可审阅提交；精确cb869dfe快速门禁均exit0。
 - [ ] 仅在真实合流条件满足时整合/回收；远端分叉和主checkout dirty不得绕过。
