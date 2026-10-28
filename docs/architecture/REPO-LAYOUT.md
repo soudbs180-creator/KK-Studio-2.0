@@ -79,3 +79,5 @@ vendor一级子目录UPSTREAM.md按本文件明确要求允许，其他vendor文
 检查读取工作树内已跟踪和未忽略新文件，强行add的忽略文件仍会被拦截。基线按规则+路径做集合对比，禁止等数换项/扩大图片上限；首次接入从选定Git base树核实原有违规，不能顺手加入新豁免。无法读取配置或base即失败。修复存量后按输出提示移除对应基线项，已移除项不能再加入。
 
 初始候选中IMAGE=271、TYPE=219、NAME=118、LOCATION=32、ROOT=0，共640条规则命中，可能同一文件多次命中；不是640个独立文件，也不是已修复数量。实施、故障注入和整合边界见[ORG-2验证](../changes/2026-10-28-repo-layout-guard/verification.md)。
+
+ORG-5首包候选将62条已迁出的TYPE项移除，TYPE=157、总命中=578，其他类型不变。可用`node scripts/governance/check-evidence-manifest.mjs <manifest.json> <container>`对清单和容器副本实际验证sha256/大小；省略container只做结构检查，输出copiesVerified=false，不代表外部原件可用。先确认副本和新目录恢复，再移除任务树文件；manifest保留原Git对象身份和历史引用。详见[试点验证](../changes/2026-10-28-evidence-pilot/verification.md)。

@@ -1,0 +1,823 @@
+{
+  "version": 1,
+  "taskId": "TASK-ORG-5",
+  "classification": "E2-externalized-log-pilot",
+  "packagePath": "docs/changes/2026-10-08-model-capabilities",
+  "scope": "62 raw log files only; all PNG/JSON and historical conclusions retained",
+  "containerResolution": "Resolve containerRelativePath from the workspace container containing both the canonical checkout and output; a worktree parent is not the container",
+  "recovery": "Verify copies using check-evidence-manifest.mjs and restore only to a new empty directory. Original Git blobs remain at sourceCommit/sourcePath.",
+  "entries": [
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/correction-baseline5b/logs/integrated-client-check.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "0992c4b3ae9757bed5cbef90bc6568298312bb04",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/correction-baseline5b/logs/integrated-client-check.log",
+      "bytes": 1347,
+      "sha256": "956b79e911bbe500d8240d9e19d4f6232754f3e8deda128bc6ea6ff621087545",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-08-model-capabilities/verification.md",
+          "line": 78,
+          "originalTarget": "evidence/correction-baseline5b/logs/integrated-client-check.log"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/correction-baseline5b/logs/integrated-desktop-acceptance.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "f05989612c3906689f85c4d42f5fdbcf072dff21",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/correction-baseline5b/logs/integrated-desktop-acceptance.log",
+      "bytes": 501,
+      "sha256": "ba79666f49b5a477d31c3a2358669f017a62eabdeb0e4a0d323a24576152c6eb",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-08-model-capabilities/verification.md",
+          "line": 78,
+          "originalTarget": "evidence/correction-baseline5b/logs/integrated-desktop-acceptance.log"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/correction-baseline5b/logs/integrated-desktop-build.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "a14cb5d38ae9f3291c8481d8963d65775c645624",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/correction-baseline5b/logs/integrated-desktop-build.log",
+      "bytes": 3978,
+      "sha256": "cf79f4a5af215178df8425b201847b807a80c9cb21594182e7902080ae1afa0e",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-08-model-capabilities/verification.md",
+          "line": 78,
+          "originalTarget": "evidence/correction-baseline5b/logs/integrated-desktop-build.log"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/correction-baseline5b/logs/integrated-ui-check-final.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "68d920fb63479fed0603d7624848848186bf7deb",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/correction-baseline5b/logs/integrated-ui-check-final.log",
+      "bytes": 49,
+      "sha256": "d0634603402bc263d975553caed5b61cac451254c1f961b6b8fb8dc4cf560890",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-08-model-capabilities/verification.md",
+          "line": 74,
+          "originalTarget": "evidence/correction-baseline5b/logs/integrated-ui-check-final.log"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/correction-baseline5b/logs/integrated-ui-check.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "9a9406496d26fd142bfc46842603a478b9d345bd",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/correction-baseline5b/logs/integrated-ui-check.log",
+      "bytes": 196,
+      "sha256": "3aa7b76fe0527eec474bc4fef2ffac1d0ae87c37f288e95957118de5d4f457d8",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/correction-baseline5b/logs/integrated-verify.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "027cbb147c1dbaa485ab7612cf866493870e94e4",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/correction-baseline5b/logs/integrated-verify.log",
+      "bytes": 142721,
+      "sha256": "8870b6cec1d933f47d80b1039c4806f48cf3c8ab137051d387805d8564a23c45",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-08-model-capabilities/verification.md",
+          "line": 76,
+          "originalTarget": "evidence/correction-baseline5b/logs/integrated-verify.log"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/correction-baseline5b/logs/review-green-ui.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "7a883a799a8784c25955321d37c47da88e4e3bf5",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/correction-baseline5b/logs/review-green-ui.log",
+      "bytes": 150,
+      "sha256": "6ca8bcc5521c432d82a00235492872b23d8502cc8f442e331140817b49e4c36d",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/correction-baseline5b/logs/review-green-ui2.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "9bc5231ddc82e4c88a70e560a11a26c8f612be18",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/correction-baseline5b/logs/review-green-ui2.log",
+      "bytes": 1222,
+      "sha256": "10505a46d58af9993afa60eccda8124ec5c6f850bba909074b9adea8748c175a",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-08-model-capabilities/verification.md",
+          "line": 72,
+          "originalTarget": "evidence/correction-baseline5b/logs/review-green-ui2.log"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/correction-baseline5b/logs/review-green-unit.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "0171c556085943faa95a0146e9667e5717c7ba3d",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/correction-baseline5b/logs/review-green-unit.log",
+      "bytes": 2815,
+      "sha256": "30d9d57001107a80a40897dbdb1fbaf7b2e0ea2a2a676339835f4da39992e931",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-08-model-capabilities/verification.md",
+          "line": 72,
+          "originalTarget": "evidence/correction-baseline5b/logs/review-green-unit.log"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/correction-baseline5b/logs/review-red-reference-unit.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "bb431800bf634c7180098432ff75031e299d8b64",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/correction-baseline5b/logs/review-red-reference-unit.log",
+      "bytes": 2531,
+      "sha256": "f64c97bdc4b96589d8090f7bbdeb85e041ee45e9a389c15a9076cbd4913d16ac",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-08-model-capabilities/verification.md",
+          "line": 70,
+          "originalTarget": "evidence/correction-baseline5b/logs/review-red-reference-unit.log"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/correction-baseline5b/logs/review-red-ui.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "22a5be26b944f83f7f7dc5de516072bc7155633f",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/correction-baseline5b/logs/review-red-ui.log",
+      "bytes": 4000,
+      "sha256": "57644133a8b5de18961cfebe6e6dfbfe85c441611abff746f6afe28403bec4ad",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/correction-baseline5b/logs/review-red-ui2.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "688f4484e4fa6cf068f83cb885f352f75aaaea55",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/correction-baseline5b/logs/review-red-ui2.log",
+      "bytes": 4952,
+      "sha256": "9ffca6aec77749c99ada8bc9c3e0c4590c357641dbd356a44bcc33a3673b603c",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/correction-baseline5b/logs/review-red-ui3.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "97f1aed0cebc1677cfdccc60b9e18c1013b0aa22",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/correction-baseline5b/logs/review-red-ui3.log",
+      "bytes": 2377,
+      "sha256": "4054f67899375e42390d98816486284e6a0c2328ed0094ad6c966ec1c9c9000c",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/correction-baseline5b/logs/review-red-ui4.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "d9f07f5f6decf8b4c15826ddf70aacb1c9aa77b5",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/correction-baseline5b/logs/review-red-ui4.log",
+      "bytes": 6678,
+      "sha256": "4edd5d11ccdd5a7e2e0ac0d32276eef1612002c372495e4abd10bdfb6ae0d6bc",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/correction-baseline5b/logs/review-red-ui5.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "805ebd41839daa07da5d901d15fd5339510c8782",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/correction-baseline5b/logs/review-red-ui5.log",
+      "bytes": 2496,
+      "sha256": "623660ac81c29febfb8a4c3bde5448b1ba35413375be9afc83b69f87537e58b9",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/correction-baseline5b/logs/review-red-ui6.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "eb6a40b37111fd0c34f20dca630f6093cc99e599",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/correction-baseline5b/logs/review-red-ui6.log",
+      "bytes": 2364,
+      "sha256": "81821b722baa86c0a29574f097ecffafc434a04f55c54bb4c495d7f820ed01ff",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-08-model-capabilities/verification.md",
+          "line": 70,
+          "originalTarget": "evidence/correction-baseline5b/logs/review-red-ui6.log"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/draft-refresh5dd/logs/draft-refresh-local-gates.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "235eca5530208e88e68bb430d802a0531a800f9a",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/draft-refresh5dd/logs/draft-refresh-local-gates.log",
+      "bytes": 575,
+      "sha256": "67c2b02672a2ec6d4be6a1ef993e56d67628bac15d2287a4366eaeb7e1158f89",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/draft-refresh5dd/logs/draft-refresh-verify.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "1fe40bf3bdf8dcb61c8052ded2b01460f080d558",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/draft-refresh5dd/logs/draft-refresh-verify.log",
+      "bytes": 144947,
+      "sha256": "adc459b8b0ac996590c7f15697ca226cd72b4785cf209bb9d3326ca427209f35",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-08-model-capabilities/verification.md",
+          "line": 116,
+          "originalTarget": "evidence/draft-refresh5dd/logs/draft-refresh-verify.log"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/draft-refresh5dd/logs/first-pr-ci-verify.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "ba95498219c8e41d513587adb9535031a0314ed3",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/draft-refresh5dd/logs/first-pr-ci-verify.log",
+      "bytes": 321775,
+      "sha256": "ffc6e73845fea894fa4501f83de34c5f864caaed2e3a5e68de5baa991b72dc6f",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-08-model-capabilities/verification.md",
+          "line": 110,
+          "originalTarget": "evidence/draft-refresh5dd/logs/first-pr-ci-verify.log"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/draft-refresh5dd/logs/latest-client-check.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "8f6b7b9a47322a352b9d4aa47fa9fedc25b3f5c3",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/draft-refresh5dd/logs/latest-client-check.log",
+      "bytes": 1347,
+      "sha256": "7af0f2b8de3140acc9275cf8ecf18dba7ecf6d479b4b423d1dd73a582d6cc68e",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-08-model-capabilities/verification.md",
+          "line": 118,
+          "originalTarget": "evidence/draft-refresh5dd/logs/latest-client-check.log"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/draft-refresh5dd/logs/latest-desktop-acceptance.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "e3c73cbc8652e027ccc9eda7c48519d2f087a8aa",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/draft-refresh5dd/logs/latest-desktop-acceptance.log",
+      "bytes": 501,
+      "sha256": "07ad3b243cddba615904e2cd72ba9a39a94e00142281f337bcf1561e1464e087",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-08-model-capabilities/verification.md",
+          "line": 118,
+          "originalTarget": "evidence/draft-refresh5dd/logs/latest-desktop-acceptance.log"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/draft-refresh5dd/logs/latest-desktop-build.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "d008869b0c4f7734afe6d0b5b45245b12bb61701",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/draft-refresh5dd/logs/latest-desktop-build.log",
+      "bytes": 3978,
+      "sha256": "5ed2eb942bc934072dd7fa896304e2dba418996665fbc8a4c531860305add727",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-08-model-capabilities/verification.md",
+          "line": 118,
+          "originalTarget": "evidence/draft-refresh5dd/logs/latest-desktop-build.log"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/draft-refresh5dd/logs/latest-development-capability.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "c7c0bd17cee386a29b7ca08a5be40f42a317d2ac",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/draft-refresh5dd/logs/latest-development-capability.log",
+      "bytes": 179,
+      "sha256": "cf2109a27da20ef3209afa661d1d7cfc874676d06fb0725b240507beeb3ac320",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-08-model-capabilities/verification.md",
+          "line": 120,
+          "originalTarget": "evidence/draft-refresh5dd/logs/latest-development-capability.log"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/draft-refresh5dd/logs/review-draft-delivery.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "474d6ca9b4b37064f801853c64d4e32872478bc0",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/draft-refresh5dd/logs/review-draft-delivery.log",
+      "bytes": 288,
+      "sha256": "2b4b20b63b30c6d38b592001756f68c2865525ef09103a8f7fc94a526c62d69d",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-08-model-capabilities/verification.md",
+          "line": 126,
+          "originalTarget": "evidence/draft-refresh5dd/logs/review-draft-delivery.log"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/draft-refresh5dd/logs/review-draft-final-document-gates.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "235eca5530208e88e68bb430d802a0531a800f9a",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/draft-refresh5dd/logs/review-draft-final-document-gates.log",
+      "bytes": 575,
+      "sha256": "67c2b02672a2ec6d4be6a1ef993e56d67628bac15d2287a4366eaeb7e1158f89",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/draft-refresh5dd/logs/review-green-draft-refresh2-1425.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "808fa1e2344187765ed1923aac29b73b754d3db2",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/draft-refresh5dd/logs/review-green-draft-refresh2-1425.log",
+      "bytes": 4703,
+      "sha256": "c9be6419bbaa58a0d6c3e1e0a6540046e543e2654228e27e4ae6ed24ea95191f",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-08-model-capabilities/verification.md",
+          "line": 112,
+          "originalTarget": "evidence/draft-refresh5dd/logs/review-green-draft-refresh2-1425.log"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/draft-refresh5dd/logs/review-green-draft-refresh3-1425.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "145a77fe40beadcdd6de259abe4586fba0047a18",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/draft-refresh5dd/logs/review-green-draft-refresh3-1425.log",
+      "bytes": 5228,
+      "sha256": "2ed6c42d810d2e530d0791c92b90eb75d70bedf57506e37fa5a8d6d0654ade58",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-08-model-capabilities/verification.md",
+          "line": 112,
+          "originalTarget": "evidence/draft-refresh5dd/logs/review-green-draft-refresh3-1425.log"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/draft-refresh5dd/logs/review-red-display-refresh-1425.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "5d3e949662756e7eafe19aabaa718e0274b637c4",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/draft-refresh5dd/logs/review-red-display-refresh-1425.log",
+      "bytes": 2205,
+      "sha256": "6d2009efa45b9bf50d41894a77732a1497814c336a6f83e3f4ec23464250e3f1",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-08-model-capabilities/verification.md",
+          "line": 112,
+          "originalTarget": "evidence/draft-refresh5dd/logs/review-red-display-refresh-1425.log"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/draft-refresh5dd/logs/review-red-draft-refresh-1425.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "b6501e7db08c6a2eeb731d9c29a6655df6cb81d3",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/draft-refresh5dd/logs/review-red-draft-refresh-1425.log",
+      "bytes": 2307,
+      "sha256": "966e8ddb09e8959ba90c32dc6d5aa2d9c4ecb75f72ecd0ed59b5681a2c8e200d",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-08-model-capabilities/verification.md",
+          "line": 112,
+          "originalTarget": "evidence/draft-refresh5dd/logs/review-red-draft-refresh-1425.log"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/draft-refresh5dd/logs/review-red-draft-refresh.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "7a883a799a8784c25955321d37c47da88e4e3bf5",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/draft-refresh5dd/logs/review-red-draft-refresh.log",
+      "bytes": 150,
+      "sha256": "6ca8bcc5521c432d82a00235492872b23d8502cc8f442e331140817b49e4c36d",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-08-model-capabilities/verification.md",
+          "line": 112,
+          "originalTarget": "evidence/draft-refresh5dd/logs/review-red-draft-refresh.log"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/draft-refresh5dd/logs/stale-bundle-draft-refresh-1425.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "833d9db12eeddad4abea7f4c3e69a601122c8dde",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/draft-refresh5dd/logs/stale-bundle-draft-refresh-1425.log",
+      "bytes": 3109,
+      "sha256": "0b677a91010f1d6f63023c3943aa887548ccbb7ab8fcbc174d512bdc6a5cde4f",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-08-model-capabilities/verification.md",
+          "line": 112,
+          "originalTarget": "evidence/draft-refresh5dd/logs/stale-bundle-draft-refresh-1425.log"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/latest-main5dd/logs/latest-client-check.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "7a235d2d04bf67cf6389656b177bf76f002e23dc",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/latest-main5dd/logs/latest-client-check.log",
+      "bytes": 1347,
+      "sha256": "8378d391d9341782299d91f7f5edf6fe95d5bef09826a2a97da363a1f10d6d4f",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-08-model-capabilities/verification.md",
+          "line": 94,
+          "originalTarget": "evidence/latest-main5dd/logs/latest-client-check.log"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/latest-main5dd/logs/latest-desktop-acceptance.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "aaa9e2ef24e896c459442881d956b204697194fa",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/latest-main5dd/logs/latest-desktop-acceptance.log",
+      "bytes": 501,
+      "sha256": "17f88b1ba2d1413afcd0aceab065420e47fc41eb3d4fec15b405174e47a34d23",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-08-model-capabilities/verification.md",
+          "line": 94,
+          "originalTarget": "evidence/latest-main5dd/logs/latest-desktop-acceptance.log"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/latest-main5dd/logs/latest-desktop-build.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "d98442d1aabbb54e4f835df8d1680b8456b66450",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/latest-main5dd/logs/latest-desktop-build.log",
+      "bytes": 3978,
+      "sha256": "d2a34bb9cea25dd6646cc89fb3f64ff0dea198bc0eb2e79ac6f33f47cfff5627",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-08-model-capabilities/verification.md",
+          "line": 94,
+          "originalTarget": "evidence/latest-main5dd/logs/latest-desktop-build.log"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/latest-main5dd/logs/latest-development-capability.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "e5e27e42ea157ec67ec08c36546a1dc21868c461",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/latest-main5dd/logs/latest-development-capability.log",
+      "bytes": 179,
+      "sha256": "09bd5f22036a17fcf4625c6491156a9a4e002029297c3a2d4463ec728b8f7dba",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-08-model-capabilities/verification.md",
+          "line": 96,
+          "originalTarget": "evidence/latest-main5dd/logs/latest-development-capability.log"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/latest-main5dd/logs/latest-document-gates.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "235eca5530208e88e68bb430d802a0531a800f9a",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/latest-main5dd/logs/latest-document-gates.log",
+      "bytes": 575,
+      "sha256": "67c2b02672a2ec6d4be6a1ef993e56d67628bac15d2287a4366eaeb7e1158f89",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/latest-main5dd/logs/latest-verify.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "8be435688df073ef078ad16d2238a81ea89b3bd4",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/latest-main5dd/logs/latest-verify.log",
+      "bytes": 144661,
+      "sha256": "3b3b205328f5c0e1e21ede7c79f70a2c1ca94636c42dd9ec9dbefdc340ddb26f",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-08-model-capabilities/verification.md",
+          "line": 92,
+          "originalTarget": "evidence/latest-main5dd/logs/latest-verify.log"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/latest-main5dd/logs/review-final-delivery.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "0bf63aa9de6e16527f5a2b1d8302e7e6e8b6b08f",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/latest-main5dd/logs/review-final-delivery.log",
+      "bytes": 80,
+      "sha256": "48e10e5e06571c4c7f759ccbc397760c9b6993a6fcbd1ab59f7c331185498be5",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-08-model-capabilities/verification.md",
+          "line": 106,
+          "originalTarget": "evidence/latest-main5dd/logs/review-final-delivery.log"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/latest-main5dd/logs/review-final-document-gates.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "235eca5530208e88e68bb430d802a0531a800f9a",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/latest-main5dd/logs/review-final-document-gates.log",
+      "bytes": 575,
+      "sha256": "67c2b02672a2ec6d4be6a1ef993e56d67628bac15d2287a4366eaeb7e1158f89",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-08-model-capabilities/verification.md",
+          "line": 106,
+          "originalTarget": "evidence/latest-main5dd/logs/review-final-document-gates.log"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/logs/baseline-dev.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "60ca5667b564edcfc4cc45263d4ea3924c537d13",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/logs/baseline-dev.log",
+      "bytes": 133,
+      "sha256": "2dbbb45295815f1f9d71a96b1f924b0d007bb53dd5c965f8e583edae0c3f1cdc",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/logs/baseline-lint.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "13a6f3265f1a4e1dab226905224416d2c8d7cc67",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/logs/baseline-lint.log",
+      "bytes": 512,
+      "sha256": "427ecb578716011e089caa3e4b27629bacadd1cb02f2fe16e548502932bd72d9",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/logs/baseline-tests.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "a7d8f019b00a71b41cc45fee9282393f5fbe8650",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/logs/baseline-tests.log",
+      "bytes": 52035,
+      "sha256": "7b2baab36e1a9db7c3df2675e5e6bd8fe77cb4df30e4808f984859884c8941f9",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/logs/baseline-typecheck.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "edc2493f39c6a56ef46e4bb6f3fe0895f70d6445",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/logs/baseline-typecheck.log",
+      "bytes": 45,
+      "sha256": "2ef97cbe35acf0f14bb025191e751927b3dcfced704ef31511df317ae9880f6e",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/logs/client-check.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "10b8810bfb001e13669d93322adcfafee7cb367a",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/logs/client-check.log",
+      "bytes": 1348,
+      "sha256": "000bf5070fbf5ae23b10339b4952f8f20cddd4f1d35d36b0e6743c304ae99852",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/logs/desktop-acceptance-final.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "d6df96faa2b772bb32efe658010a65b01b2424e4",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/logs/desktop-acceptance-final.log",
+      "bytes": 476,
+      "sha256": "a428fd29d38556cad3d82f258f6020692e9cb47a967faf6fec8e337728a112d1",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-08-model-capabilities/verification.md",
+          "line": 56,
+          "originalTarget": "evidence/logs/desktop-acceptance-final.log"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/logs/desktop-build-final.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "a248a7483c1137c2ac2dab2564aec2a982cbc72e",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/logs/desktop-build-final.log",
+      "bytes": 3978,
+      "sha256": "2642591f71f91aeae6cc5278e9f1138348fd957f4b257ca0b21047872d5f3a16",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-08-model-capabilities/verification.md",
+          "line": 56,
+          "originalTarget": "evidence/logs/desktop-build-final.log"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/logs/development-capability.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "2d750086d31839252a7430b55e16ff1044c90a34",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/logs/development-capability.log",
+      "bytes": 125,
+      "sha256": "adf55ed5d191b452181eaee4cf5dbc207e2d9d52c668955fded69294fc2df865",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/logs/green-catalog.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "5bb79c75ed34164dc39fe6185b00bb4bd8b3fc97",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/logs/green-catalog.log",
+      "bytes": 1312,
+      "sha256": "dc50999c117ec38e2ef61eaca9bbe4c29c92472c445e495164d7af4040e20c19",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/logs/green-default-node.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "8de792d7cede7f72ec81fadceb2121112f4c5dce",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/logs/green-default-node.log",
+      "bytes": 1341,
+      "sha256": "b25332cfb131cada8d0782e0a78b2a1a2e08de26de6fdb0c15e7d506f6d4b23b",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/logs/green-submission.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "cdbd6b58c8ce52fc4507788e298eeeddf3c759e0",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/logs/green-submission.log",
+      "bytes": 2433,
+      "sha256": "50a45f210984b071a239088c52ddeeb35ed86acb3451fc376ac07a8d9c2c3050",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/logs/green-text-retry.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "a81999577f543ad12319e59836a0b080a9eab316",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/logs/green-text-retry.log",
+      "bytes": 2608,
+      "sha256": "3c549dfb060f90b35f5310a2d5c2873d04d7b76daa98423006ae5a30cb2dadb2",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/logs/green-ui3.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "11b0a3670a317bf1fc0c45f57c8a9b8fd95d7774",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/logs/green-ui3.log",
+      "bytes": 2541,
+      "sha256": "d5025aa1c6450dfee309d3b8ffdae218cd3b152d512883badac45de1da6f1ba3",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/logs/red-canvas-behavior.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "e32158fd7fdcb12952c356edb63f0b33ddb007e3",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/logs/red-canvas-behavior.log",
+      "bytes": 2194,
+      "sha256": "01e08814196341a0301209c576eccd5147989beb0a0f57750bd975968ffde01c",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/logs/red-catalog.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "66c46ce715ae0e3e2c3768c8ae5c856858799ae4",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/logs/red-catalog.log",
+      "bytes": 5909,
+      "sha256": "99d42b8ee2dc25206ce082b7a1a5ceda8762ee999688338a9a82c8720e777f67",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/logs/red-default-node.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "54f45bcf4edfbff8bc2b203b5dd79a490caf8d84",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/logs/red-default-node.log",
+      "bytes": 2326,
+      "sha256": "a643d908e0dc0977bdcc260b6a61925a69a8cab114d0d7c68762f930ccfc3d77",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/logs/red-redraw-saved-draft.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "933f13f173a81d41af4c89b4eefb1c3d0ff0601f",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/logs/red-redraw-saved-draft.log",
+      "bytes": 2273,
+      "sha256": "71a259fa0560775b7679982abe88f4c1d09b50c3784a322a596c2e80e346b1a8",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/logs/red-submission.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "4a33ff46bb7650cdef50466ff676b1f4c08df43b",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/logs/red-submission.log",
+      "bytes": 4897,
+      "sha256": "73805abe67f390197d0fc8b9e3985d503bf65823c984ff5f0680d061878f7e60",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/logs/red-text-compat.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "edf4cfe1d6d27fd47e3ef181ab28a7c386b71243",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/logs/red-text-compat.log",
+      "bytes": 3416,
+      "sha256": "eebb5e7a4777b46c9b1c3e9cc301ba5a43fbf1379e2d6f52d8de3785c51cc391",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/logs/verify.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "6678ce8bc02b9c8990b8aa8c051d17eec9529b75",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/logs/verify.log",
+      "bytes": 80308,
+      "sha256": "30fac87842dd7bb35ce4ff981f2a252a3bd80aa1f680ecf401607b54d3d9a8c6",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/logs/verify2.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "38da17bbaca794b4f000f0368b50010d042d1ada",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/logs/verify2.log",
+      "bytes": 82885,
+      "sha256": "0b89c830f9f20aaa6ad65c7fd42da5c5bba8e1daea95cb1aa4c9e2852184b2f5",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/logs/verify3.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "d9ec1add1abfa67cdf6d300eb04843a0d46b57dc",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/logs/verify3.log",
+      "bytes": 148008,
+      "sha256": "8d3867d5037c1d19c518ed3f5707b25d69ec314d6eae3f885f98ab5a06bacb25",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/logs/verify4.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "4403720f6a6480dd6f47392668d6058f816cd29a",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/logs/verify4.log",
+      "bytes": 134456,
+      "sha256": "c083d2abbba389ed3d553ff09a4885e92a1a1a738d62cc6bb3889356044e5a3f",
+      "description": "TASK-MODEL-001 historical raw verification log; failures and accepted AC1-5 evidence preserved without content changes",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-08-model-capabilities/verification.md",
+          "line": 54,
+          "originalTarget": "evidence/logs/verify4.log"
+        }
+      ]
+    }
+  ]
+}

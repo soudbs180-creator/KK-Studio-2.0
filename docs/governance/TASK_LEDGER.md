@@ -178,6 +178,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-ORG-0 | 盘点仓库文件、引用与容器参考资料 | PARTIAL | 未完成 | P2 | none | root | 保留原件，继续核实完整盘点缺口；无证据不迁删。 |
 | TASK-ORG-1 | 建立仓库目录与弃用生命周期规则 | PARTIAL | 未完成 | P2 | TASK-ORG-0 | root | 按当前候选完成整合审查与主线门禁；后续ORG-2防回弹和ORG-5单包试点分别实施，不能用规则候选代替迁移完成。 |
 | TASK-ORG-2 | 新增仓库布局与证据防回弹门禁 | PARTIAL | 未完成 | P2 | TASK-ORG-1, TASK-MOD-P0 | root | 保存当前候选审查/指标及主checkout保护证据；后续按ORG-5单包外置试点继续，不以防回弹代替存量清理。独审与main整合条件满足前保留PARTIAL。 |
+| TASK-ORG-5 | 模型能力历史日志外置首包试点 | PARTIAL | 未完成 | P2 | TASK-ORG-0 | root | 提交当前首包候选和净体积指标；完整verify/独审/main整合及当前运行门禁继续收尾，试点整合审查完成前不推广ORG-6。保留容器副本和恢复目录。 |
 
 ## TASK-FIGMA-PAGES-20261025 — 重新核查并整理Figma 04/05页面与状态
 
@@ -3447,5 +3448,24 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Verification: PARTIAL — B11五组门禁及Git存量基线候选接入治理；9项故障注入通过（含Git/强行add/未跟踪/bootstrap/基线增长/损坏输入），快速typecheck/lint/format通过，单元2342项2322 pass/0 fail/20 skip。640存量规则命中保持，未迁删/未瘦身；当前只有自审，主线与完整verify未完成。
 - Evidence: [docs/changes/2026-10-28-repo-layout-guard/verification.md](../../docs/changes/2026-10-28-repo-layout-guard/verification.md), [docs/changes/2026-10-28-repo-layout-guard/review.md](../../docs/changes/2026-10-28-repo-layout-guard/review.md)
 - Next action: 保存当前候选审查/指标及主checkout保护证据；后续按ORG-5单包外置试点继续，不以防回弹代替存量清理。独审与main整合条件满足前保留PARTIAL。
+- Last verified: 2026-10-28
+- Updated: 2026-10-28
+
+## TASK-ORG-5 — 模型能力历史日志外置首包试点
+
+- Goal: 以可验证manifest和恢复回执替代仓内原始日志
+- Scope: 2026-10-08-model-capabilities内62份log；不改PNG/JSON/产品与历史结论，不自动推广
+- Display status: 未完成
+- Priority: P2 — 未记录
+- Requirement refs: docs/changes/2026-10-28-evidence-pilot/intent.md, docs/changes/2026-10-28-evidence-pilot/spec.md
+- Feature IDs: none
+- Owner role: implementation-integrator
+- Acceptance: 62份源/Git/容器副本sha256和字节一致，manifest可复验; 历史32个Markdown链接转manifest并保留原目的地映射，历史结论不变; 恢复到新空目录全部匹配，TYPE基线只收缩，快速/功能/交付门禁通过
+- Branch: `chore/TASK-ORG-5-evidence-pilot`
+- Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
+- Modules: docs/changes/2026-10-08-model-capabilities, docs/changes/2026-10-28-evidence-pilot, scripts/governance/check-evidence-manifest.mjs, tests/unit/evidenceManifest.test.ts, config/repo-layout-baseline.json, docs/governance
+- Verification: PARTIAL — 单包62日志1357699B已迁出任务树；源/Git/容器及全新目录恢复sha256全匹配，32历史链接转manifest，PNG/JSON/E1保留；全历史Markdown86→86无新增断链，B11基线640→578。校验器3组故障注入、typecheck/lint/format通过，单元2345项2325 pass/0 fail/20 skip，代码健康0问题。主checkout21哈希与4需求原文哈希不变；仅自审，独审/主线/完整verify仍开放。
+- Evidence: [docs/changes/2026-10-28-evidence-pilot/verification.md](../../docs/changes/2026-10-28-evidence-pilot/verification.md), [docs/changes/2026-10-28-evidence-pilot/review.md](../../docs/changes/2026-10-28-evidence-pilot/review.md)
+- Next action: 提交当前首包候选和净体积指标；完整verify/独审/main整合及当前运行门禁继续收尾，试点整合审查完成前不推广ORG-6。保留容器副本和恢复目录。
 - Last verified: 2026-10-28
 - Updated: 2026-10-28

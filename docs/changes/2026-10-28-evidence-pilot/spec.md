@@ -1,0 +1,9 @@
+# 证据与恢复契约
+
+只迁先前copy-verification中已保护性复制的本包62个log，总原始字节1357699。迁移前逐份对比当前任务树、Git源blob和容器副本的大小/sha256；有差异、活跃依赖或不可恢复则停止该项。归档位置相对容器output，不写秘密、不改归档字节。
+
+本包evidence-manifest.json记录原sourcePath/sourceCommit/Git blob/sha256/大小、容器相对路径、用途及原Markdown引用。历史Markdown只把对应链接目的地改为manifest并追加显式迁移说明，原链接文字、结论与数字保留，原目的地记录在manifest可追溯。其余未知/缺失历史链接原样报告，不伪造证据。
+
+既有feature和delivery门禁按文件路径/交付五件套检查，manifest作为真实JSON文件可被引用，无需降低门禁；原验收的verification仍在原位。新增只读SHA验证器支持结构检查与显式container下的完整副本检查；不指定container不能宣称字节验证通过。恢复只复制到新的空验证目录并重算sha256，禁止覆盖主工程。
+
+ORG-2基线只删除已迁出日志对应TYPE项，不加豁免。保留所有本包PNG/JSON/E1及其引用；本试点不涉及图片外置或重验历史视觉。原src/registry/用户数据无变更。主线、独审与完整verify仍开放，首包候选不自动启动ORG-6批量推广。

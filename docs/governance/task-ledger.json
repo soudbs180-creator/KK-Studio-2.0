@@ -10755,5 +10755,51 @@
       "docs/changes/2026-10-28-repo-layout-guard/spec.md"
     ],
     "featureIds": []
+  },
+  {
+    "id": "TASK-ORG-5",
+    "title": "模型能力历史日志外置首包试点",
+    "goal": "以可验证manifest和恢复回执替代仓内原始日志",
+    "scope": "2026-10-08-model-capabilities内62份log；不改PNG/JSON/产品与历史结论，不自动推广",
+    "acceptance": [
+      "62份源/Git/容器副本sha256和字节一致，manifest可复验",
+      "历史32个Markdown链接转manifest并保留原目的地映射，历史结论不变",
+      "恢复到新空目录全部匹配，TYPE基线只收缩，快速/功能/交付门禁通过"
+    ],
+    "dependencies": [
+      "TASK-ORG-0"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "chore/TASK-ORG-5-evidence-pilot",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "93fd8763dee83a60c939d95bc430873cec7ee73e",
+    "affectedModules": [
+      "docs/changes/2026-10-08-model-capabilities",
+      "docs/changes/2026-10-28-evidence-pilot",
+      "scripts/governance/check-evidence-manifest.mjs",
+      "tests/unit/evidenceManifest.test.ts",
+      "config/repo-layout-baseline.json",
+      "docs/governance"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "未完成",
+    "priority": "P2",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-28-evidence-pilot/verification.md",
+      "docs/changes/2026-10-28-evidence-pilot/review.md"
+    ],
+    "verification": "单包62日志1357699B已迁出任务树；源/Git/容器及全新目录恢复sha256全匹配，32历史链接转manifest，PNG/JSON/E1保留；全历史Markdown86→86无新增断链，B11基线640→578。校验器3组故障注入、typecheck/lint/format通过，单元2345项2325 pass/0 fail/20 skip，代码健康0问题。主checkout21哈希与4需求原文哈希不变；仅自审，独审/主线/完整verify仍开放。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-28",
+    "lastVerified": "2026-10-28",
+    "nextAction": "提交当前首包候选和净体积指标；完整verify/独审/main整合及当前运行门禁继续收尾，试点整合审查完成前不推广ORG-6。保留容器副本和恢复目录。",
+    "requirementRefs": [
+      "docs/changes/2026-10-28-evidence-pilot/intent.md",
+      "docs/changes/2026-10-28-evidence-pilot/spec.md"
+    ],
+    "featureIds": []
   }
 ]

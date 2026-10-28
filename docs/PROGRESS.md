@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-10-28 ORG-5 历史日志首包外置（PARTIAL）
+
+模型能力历史包62份日志已从隔离任务树外置，毛量1357699字节；源/Git/容器副本与全新目录恢复均逐份sha256匹配。32个历史链接转清单，结论及原目的地可追溯，PNG/JSON/E1保留；历史断链86→86无新增。B11基线640→578，仅收缩；新增只读SHA校验器，详见[验证](changes/2026-10-28-evidence-pilot/verification.md)。这是首包候选，ORG-6推广、完整verify、独审及main整合仍未完成，主工程未改。
+
 ## 2026-10-28 ORG-2 目录与证据防回弹（PARTIAL）
 
 治理入口已在任务树候选接入根白名单、禁入类型、图片200KiB、测试/文档落位及ASCII命名检查；640条存量规则命中按路径与图片大小只减不增。9项故障注入（含独立Git仓库）通过；typecheck/lint/format通过，全量单元2322 pass/0 fail/20 skip。没有迁出或删除历史证据，实际瘦身仍0；独审、完整verify及main合流仍未完成。见[验证](changes/2026-10-28-repo-layout-guard/verification.md)。
