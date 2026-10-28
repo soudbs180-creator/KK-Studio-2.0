@@ -3358,15 +3358,15 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Scope: 浏览器/开发插件测试入口和夹具；不为旧测试回退当前UI，不降低有效断言，不改变产品能力
 - Display status: 未完成
 - Priority: P1 — 未记录
-- Requirement refs: docs/changes/2026-10-28-browser-gate/intent.md, docs/changes/2026-10-28-browser-gate/spec.md
+- Requirement refs: docs/changes/2026-10-28-browser-gate/intent.md, docs/changes/2026-10-28-browser-gate/spec.md, docs/changes/2026-10-28-agent-browser-navigation/intent.md, docs/changes/2026-10-28-agent-browser-navigation/spec.md
 - Feature IDs: none
 - Owner role: implementation-integrator
 - Acceptance: 旧入口失败先保留RED，映射当前真实分类后相关用例通过; 其余失败区分测试过时与真实缺陷，任何真实UI修改先取得当前Figma依据; 完整verify实际全绿及当前SHA独审后才解除合流阻断
 - Branch: `test/TASK-MOD-GATE-BROWSER`
 - Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
 - Modules: tests/browser, tests/support, tests/development
-- Verification: PARTIAL — 17个测试文件（此前18计数勘误）同步现行入口/字段；定向29项与开发插件4步通过。7eca983c复跑verify前置快速门禁/Agent/UI静态/format/build通过，产品浏览器模型菜单/Agent等仍失败后主动中断，完整verify未通过；仅自审，用户禁止子代理。
-- Evidence: [docs/changes/2026-10-28-browser-gate/verification.md](../../docs/changes/2026-10-28-browser-gate/verification.md)
+- Verification: PARTIAL — 此前17文件与29项定向回归保留；本次继续修复2测试文件中的现行CLI/能力入口，代表2例RED→GREEN，受影响9项0重试全通过。快速三门禁通过，2313 pass/0 fail/20 skip；完整verify/main整合仍未完成，只有作者自审。
+- Evidence: [docs/changes/2026-10-28-browser-gate/verification.md](../../docs/changes/2026-10-28-browser-gate/verification.md), [docs/changes/2026-10-28-agent-browser-navigation/verification.md](../../docs/changes/2026-10-28-agent-browser-navigation/verification.md), [docs/changes/2026-10-28-agent-browser-navigation/review.md](../../docs/changes/2026-10-28-agent-browser-navigation/review.md)
 - Next action: 主代理继续按当前契约定位浏览器剩余失败；完整verify、当前提交审查及main分叉整合完成前保留PARTIAL。P1/ORG/P2按各自依赖与已验证范围推进。
 - Last verified: 2026-10-28
 - Updated: 2026-10-28
@@ -3384,8 +3384,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `docs/TASK-MOD-FOUR-DOC-COVERAGE`
 - Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
 - Modules: docs/architecture/MODULARITY.md, docs/changes/2026-10-28-modularity-p0, docs/governance, docs/README.md, docs/PROGRESS.md
-- Verification: PARTIAL — 主代理重新完整阅读四份原文并建立来源指纹/章节索引和全范围矩阵。仅阅读及追踪已完成，整套实现/验收未完成；先前五项只是优先批次。用户禁止子代理，未宣称独审。
-- Evidence: [docs/changes/2026-10-28-modularity-p0/four-document-coverage.md](../../docs/changes/2026-10-28-modularity-p0/four-document-coverage.md), [docs/changes/2026-10-28-modularity-p0/four-document-sources.json](../../docs/changes/2026-10-28-modularity-p0/four-document-sources.json), [docs/changes/2026-10-28-four-document-coverage/verification.md](../../docs/changes/2026-10-28-four-document-coverage/verification.md), [docs/changes/2026-10-28-four-document-coverage/review.md](../../docs/changes/2026-10-28-four-document-coverage/review.md)
+- Verification: PARTIAL — 四份全文与总清单已核对；继续处理Browser任务，本次9项通过。补查ORG-0目标容器位置：165仓内参考文件对照9份容器文件，原字节/LF均无等价，未迁删。其余P/STD/ORG仍按矩阵逐项待验收；禁止子代理。
+- Evidence: [docs/changes/2026-10-28-modularity-p0/four-document-coverage.md](../../docs/changes/2026-10-28-modularity-p0/four-document-coverage.md), [docs/changes/2026-10-28-modularity-p0/four-document-sources.json](../../docs/changes/2026-10-28-modularity-p0/four-document-sources.json), [docs/changes/2026-10-28-four-document-coverage/verification.md](../../docs/changes/2026-10-28-four-document-coverage/verification.md), [docs/changes/2026-10-28-four-document-coverage/review.md](../../docs/changes/2026-10-28-four-document-coverage/review.md), [docs/changes/2026-10-28-agent-browser-navigation/verification.md](../../docs/changes/2026-10-28-agent-browser-navigation/verification.md)
 - Next action: 后续先读四文档总清单，按P0→P1→P2及ORG试点→推广实施；将现代化/其他P/ORG事项逐项落入对应任务，补完必做项与待决结论后才判整套完成。
 - Last verified: 2026-10-28
 - Updated: 2026-10-28

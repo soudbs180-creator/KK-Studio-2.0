@@ -945,7 +945,12 @@ for (const scenario of ["image", "missing-original", "text"] as const) {
         .getByRole("button", { name: "画布模型", exact: true })
         .click();
       const menu = generator.getByRole("menu", { name: "选择模型" });
-      await menu.getByRole("tab", { name: "登录账号", exact: true }).click();
+      await menu
+        .getByRole("tab", {
+          name: textCard ? "对话 / 推理" : "图像生成",
+          exact: true,
+        })
+        .click();
       await menu
         .getByRole("searchbox")
         .fill(textCard ? "Fixture Codex" : "Codex 内置生图");
