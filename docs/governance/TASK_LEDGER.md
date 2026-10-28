@@ -3377,7 +3377,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Scope: 审计、复核草案、执行规范及现代化/仓库补篇全部需求；保留修订关系和待决边界，按P系列/STD/ORG分别验收，不擅自扩大观察项的实施范围
 - Display status: 未完成
 - Priority: P1 — 未记录
-- Requirement refs: ledger:TASK-MOD-FOUR-DOC-COVERAGE, docs/changes/2026-10-28-modularity-p0/four-document-coverage.md
+- Requirement refs: ledger:TASK-MOD-FOUR-DOC-COVERAGE, docs/changes/2026-10-28-modularity-p0/four-document-coverage.md, docs/changes/2026-10-28-four-document-coverage/intent.md, docs/changes/2026-10-28-four-document-coverage/spec.md
 - Feature IDs: none
 - Owner role: implementation-integrator
 - Acceptance: 四份全文阅读、SHA256/行数/章节索引及需求映射可追溯; P0–P8及P3子项、标准现代化、ORG-0–7和横向验收均有明确状态与剩余; 旧要求的取代/冲突/延后/观察逐项有依据，不静默丢弃; 每项对应代码/验证/审查/主线合流证据后才关闭，总体未验收不得标完成
@@ -3385,7 +3385,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
 - Modules: docs/architecture/MODULARITY.md, docs/changes/2026-10-28-modularity-p0, docs/governance, docs/README.md, docs/PROGRESS.md
 - Verification: PARTIAL — 主代理重新完整阅读四份原文并建立来源指纹/章节索引和全范围矩阵。仅阅读及追踪已完成，整套实现/验收未完成；先前五项只是优先批次。用户禁止子代理，未宣称独审。
-- Evidence: [docs/changes/2026-10-28-modularity-p0/four-document-coverage.md](../../docs/changes/2026-10-28-modularity-p0/four-document-coverage.md), [docs/changes/2026-10-28-modularity-p0/four-document-sources.json](../../docs/changes/2026-10-28-modularity-p0/four-document-sources.json)
+- Evidence: [docs/changes/2026-10-28-modularity-p0/four-document-coverage.md](../../docs/changes/2026-10-28-modularity-p0/four-document-coverage.md), [docs/changes/2026-10-28-modularity-p0/four-document-sources.json](../../docs/changes/2026-10-28-modularity-p0/four-document-sources.json), [docs/changes/2026-10-28-four-document-coverage/verification.md](../../docs/changes/2026-10-28-four-document-coverage/verification.md), [docs/changes/2026-10-28-four-document-coverage/review.md](../../docs/changes/2026-10-28-four-document-coverage/review.md)
 - Next action: 后续先读四文档总清单，按P0→P1→P2及ORG试点→推广实施；将现代化/其他P/ORG事项逐项落入对应任务，补完必做项与待决结论后才判整套完成。
 - Last verified: 2026-10-28
 - Updated: 2026-10-28

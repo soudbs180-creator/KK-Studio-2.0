@@ -10594,7 +10594,9 @@
     "reviewRequired": true,
     "evidence": [
       "docs/changes/2026-10-28-modularity-p0/four-document-coverage.md",
-      "docs/changes/2026-10-28-modularity-p0/four-document-sources.json"
+      "docs/changes/2026-10-28-modularity-p0/four-document-sources.json",
+      "docs/changes/2026-10-28-four-document-coverage/verification.md",
+      "docs/changes/2026-10-28-four-document-coverage/review.md"
     ],
     "verification": "主代理重新完整阅读四份原文并建立来源指纹/章节索引和全范围矩阵。仅阅读及追踪已完成，整套实现/验收未完成；先前五项只是优先批次。用户禁止子代理，未宣称独审。",
     "verificationResult": "PARTIAL",
@@ -10603,7 +10605,9 @@
     "nextAction": "后续先读四文档总清单，按P0→P1→P2及ORG试点→推广实施；将现代化/其他P/ORG事项逐项落入对应任务，补完必做项与待决结论后才判整套完成。",
     "requirementRefs": [
       "ledger:TASK-MOD-FOUR-DOC-COVERAGE",
-      "docs/changes/2026-10-28-modularity-p0/four-document-coverage.md"
+      "docs/changes/2026-10-28-modularity-p0/four-document-coverage.md",
+      "docs/changes/2026-10-28-four-document-coverage/intent.md",
+      "docs/changes/2026-10-28-four-document-coverage/spec.md"
     ],
     "featureIds": []
   }
