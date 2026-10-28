@@ -17,3 +17,17 @@ Web链路为index.html→src/main.tsx→App→Canvas→CanvasHud→TaskPanelPopo
 这里只是working-tree候选检查；最终提交、保护指纹和交付完整性另有回执。没有生成新的Tauri EXE/安装器、没有Hosted/付费调用、没有独立审核或main合流。原主checkout dirty受保护，不更新用户安装客户端；完整verify仍未通过。
 
 最终保护回执protection.json确认原主checkout21个dirty文件及4份需求来源哈希不变。源输入指纹与最终提交另记录到容器，避免把dirty候选的运行错误归属到旧HEAD。所有日志保留原结果，没有将早期governance活动任务分支冲突2项改写为通过；按已经验过但未整合的真实状态将任务转PARTIAL后，最终175任务0违规。
+
+## 保存生命周期与宽屏容器追加验证
+
+base b8acad1c；修改候选未提交时执行，固定1423/真实Edge/production preview、workers=1、retries=0。重新build源码Desktop/Web2.1.47、Mobile2.1.43（hud-width-build.log，exit0，保留large-chunk警告）。
+
+- save-hit-probe.log证实1099保存文案pointer-events:none，而HUD旧取消button落在父容器裁切区外。信息文案命中断言无效；取消裁切另挂TASK-UI-HUD-CANCEL-CLIP，不宣称修好。
+- save-layout-probe.log及save-layout-rules-probe.log：1920视口的canvas可用宽1342px，HUD却0px；sidebar折叠旧高优先级width:auto覆盖现行width，与inline-size容器造成内在宽归零。未用重试/超时规避。
+- 移除两处旧width覆盖后，保存文件6 pass/0 fail（save-lifecycle-width-fixed.log）。补强同宽度reload后，与调度15、任务命中2及邻接7合跑30项：27 pass/3 fail/0 retry（hud-width-adjacent.log，run152e6a38-48db-47c1-9b0c-b732abf4c7f9）。保存6项全部通过，包括390/1099/1920等待归档→1/1完成→同宽度reload恢复；归档失败/快照写失败/原生恢复夹具均通过。
+- 3个失败与本批之前final-adjacent.log同名同症状：390新增卡片右边界383.785>382、缩窄编辑器不能完整进入可操作区、HTML200在旧测试连接入口显示success。均保留原断言，归TASK-MOD-GATE-ADJACENT继续诊断；最后一项存在快速测速/独立目录拉取的新旧契约冲突，尚不据此断言应更改哪条产品路径。
+- 390截图已作者查看：真实任务详情正在生成0/1、取消任务可见可达。整体顶部仍有旧投影拥挤等差异，本卡不宣称全量Figma视觉已同步。读取当前Figma03 655:141110及01 597:67551支持现有宽度和入口规则，无Figma写入。
+
+本追加的当前快速门禁结果、保护指纹与提交另存最终回执。完整verify/当前独审/Tauri运行/main整合尚未完成，P0/ORG不关闭，P1/P2未实施。
+
+当前候选快速门禁：typecheck、lint、format、ui及build均exit0；单元2345项，2325 pass/0 fail/20 skip。保留ui设计25warning/1info、5处历史版本文案及CHANGELOG漂移、large-chunk警告。lint显式GOVERNANCE_BASE=b8acad1c31eef37b1702c30a428bdff966525551，以本卡父候选作增量比较；默认main比较在未合流的P0/ORG bootstrap处仍报2项，不把本卡lint通过当作main整合通过。生成账本视图被格式工具改排引起的1项stale已重新生成，最终178任务0违规。hud-width-candidate.json确认原主checkout21个dirty文件及4份需求来源SHA不变；原始失败日志、JSON与三宽截图均保留。

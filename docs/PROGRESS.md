@@ -1,5 +1,10 @@
 # 当前进度
 
+## 2026-10-28 HUD宽度与保存生命周期（PARTIAL）
+
+移除折叠侧栏两处旧宽度覆盖，修复1920下HUD容器缩成0并误隐藏状态的问题。Desktop/Web源码46→47，Mobile43不变；当前build保存6项（含390/1099/1920归档与同宽度reload）通过。30项邻接27 pass/3既有fail，调度/任务命中继续全过；HUD旧取消裁切另入账，完整verify/独审/原生/main未完成。详见[追加验证](changes/2026-10-28-provider-browser-contract/verification.md)。
+
+
 ## 2026-10-28 调度冷却与任务面板点击修复（PARTIAL）
 
 修复任务关闭伪元素覆盖面板，以及429等健康状态等待项目保存才生效的两个时序。当前Figma01/03只读核对支持自身命中范围，无需改设计；Desktop/Web源码2.1.45→46，Mobile43不变。完整调度15项及390/1920面板点击2项首试全过，真实IDB阻塞/保存冲突保护保留；typecheck/lint/format/ui检查通过，单元2325 pass/0 fail/20 skip。窄屏保存进度仍失败，原生/独审/完整verify及main未完成；见[本卡验证](changes/2026-10-28-provider-browser-contract/verification.md)。

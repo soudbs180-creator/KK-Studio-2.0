@@ -173,7 +173,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-GATEWAY-STREAM-20261018 | Gateway实际增量SSE与取消重试边界 | DONE | 已完成 | P1 | TASK-COLDSTART-LOCAL-20261018 | root | 本地有界子项完成；最终精确文档/Delivery/私有归档/原两个快捷方式由工程外收据裁决。下一P1本地DPAPI protector受控测试及独立成本回执调用路径，不重提UNKNOWN，不消费额度；父Gateway仍PARTIAL。 |
 | TASK-MOD-P0 | 建立模块化边界与只减不增的架构基线 | PARTIAL | 未完成 | P1 | none | root | 18项格式已在独立任务修复；完整verify进一步暴露产品浏览器/开发插件失败。由TASK-MOD-GATE-BROWSER修复后复跑，TASK-GOV-004继续分叉整合；未合流前不提升交付状态。 |
 | TASK-MOD-GATE-FORMAT | 独立恢复18项既有源码格式门禁 | PARTIAL | 未完成 | P1 | none | root | af4c4e2格式源码独审已PASS；继续TASK-MOD-GATE-BROWSER剩余用例，完整verify及主线分叉整合满足后再关闭总体交付。 |
-| TASK-MOD-GATE-BROWSER | 恢复历史浏览器测试与当前设置入口的对应 | PARTIAL | 未完成 | P1 | TASK-MOD-GATE-FORMAT | root | 继续Web保存状态可见/几何失败，保留phase/取消命中/恢复断言；全量浏览器/当前独审/原生/main分叉整合完成前保持PARTIAL。P1/P2及四文档其余需求仍按总清单依赖推进。 |
+| TASK-MOD-GATE-BROWSER | 恢复历史浏览器测试与当前设置入口的对应 | PARTIAL | 未完成 | P1 | TASK-MOD-GATE-FORMAT | root | 先收尾TASK-MOD-GATE-ADJACENT及TASK-UI-HUD-CANCEL-CLIP；完整verify与当前审查/主线分叉整合满足前维持PARTIAL，P1/P2仍未实施。 |
 | TASK-MOD-FOUR-DOC-COVERAGE | 逐项追踪四份整顿原文的完整需求与验收 | PARTIAL | 未完成 | P1 | none | root | 后续先读四文档总清单，按P0→P1→P2及ORG试点→推广实施；将现代化/其他P/ORG事项逐项落入对应任务，补完必做项与待决结论后才判整套完成。 |
 | TASK-ORG-0 | 盘点仓库文件、引用与容器参考资料 | PARTIAL | 未完成 | P2 | none | root | 保留原件，继续核实完整盘点缺口；无证据不迁删。 |
 | TASK-ORG-1 | 建立仓库目录与弃用生命周期规则 | PARTIAL | 未完成 | P2 | TASK-ORG-0 | root | 按当前候选完成整合审查与主线门禁；后续ORG-2防回弹和ORG-5单包试点分别实施，不能用规则候选代替迁移完成。 |
@@ -181,6 +181,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-ORG-5 | 模型能力历史日志外置首包试点 | PARTIAL | 未完成 | P2 | TASK-ORG-0 | root | 提交当前首包候选和净体积指标；完整verify/独审/main整合及当前运行门禁继续收尾，试点整合审查完成前不推广ORG-6。保留容器副本和恢复目录。 |
 | TASK-UI-TASK-PANEL-HITBOX | 修复任务列表关闭按钮伪元素覆盖整个面板 | PARTIAL | 未完成 | P1 | none | root | 跑当前build的调度文件及任务交互回归；未完成原生/独审/主线门禁保持开放。 |
 | TASK-PROV-HEALTH-BEFORE-SAVE | 429等连接健康变更先于阻塞的项目保存生效 | PARTIAL | 未完成 | P1 | none | root | 提交当前候选；继续保存几何失败和全量浏览器门禁，补当前独审/原生及main整合后再关闭交付。 |
+| TASK-UI-HUD-CONTAINER-WIDTH | 修复折叠侧栏令HUD容器宽度归零 | PARTIAL | 未完成 | P1 | none | root | 继续三项邻接失败与HUD旧取消裁切；完整verify/当前独审/原生/main整合完成前保持PARTIAL。 |
+| TASK-UI-HUD-CANCEL-CLIP | 核实并修复旧HUD取消按钮被状态文案裁切 | TODO | 未完成 | P1 | none | root | 依当前Figma补齐旧HUD行为映射，再修产品并真实点击回归。 |
+| TASK-MOD-GATE-ADJACENT | 处理浏览器门禁剩余三项邻接失败 | TODO | 未完成 | P1 | none | root | 分别诊断；UI修改先当前Figma，连接路径先读M3快速测速与独立目录契约，不删测试让门禁假绿。 |
 
 ## TASK-FIGMA-PAGES-20261025 — 重新核查并整理Figma 04/05页面与状态
 
@@ -3371,9 +3374,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `test/TASK-MOD-GATE-BROWSER`
 - Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
 - Modules: tests/browser, tests/support, tests/development
-- Verification: PARTIAL — 此前入口与附件候选保留；本批真实任务卡替换7处旧HUD状态，并补禁用→恢复及自动选连接审批。新暴露关闭透明层/429健康等待项目flush两个真实缺陷已修；完整调度15+命中2=17项0retry通过，保存邻接4 pass/1几何fail。快速门禁2325 pass/0 fail/20 skip，当前仅自审，完整verify/main未完成。
+- Verification: PARTIAL — 保存宽屏容器归零已定位修复，三个宽度生命周期与同宽度reload共6项通过；当前build邻接30项27 pass/3 fail/0retry。调度15/命中2继续全过。HUD旧取消裁切及三项邻接问题分别入账，完整verify/独审/main未完成。
 - Evidence: [docs/changes/2026-10-28-browser-gate/verification.md](../../docs/changes/2026-10-28-browser-gate/verification.md), [docs/changes/2026-10-28-agent-browser-navigation/verification.md](../../docs/changes/2026-10-28-agent-browser-navigation/verification.md), [docs/changes/2026-10-28-agent-browser-navigation/review.md](../../docs/changes/2026-10-28-agent-browser-navigation/review.md), [docs/changes/2026-10-28-api-browser-navigation/verification.md](../../docs/changes/2026-10-28-api-browser-navigation/verification.md), [docs/changes/2026-10-28-api-browser-navigation/review.md](../../docs/changes/2026-10-28-api-browser-navigation/review.md), [docs/changes/2026-10-28-provider-browser-contract/verification.md](../../docs/changes/2026-10-28-provider-browser-contract/verification.md), [docs/changes/2026-10-28-provider-browser-contract/review.md](../../docs/changes/2026-10-28-provider-browser-contract/review.md)
-- Next action: 继续Web保存状态可见/几何失败，保留phase/取消命中/恢复断言；全量浏览器/当前独审/原生/main分叉整合完成前保持PARTIAL。P1/P2及四文档其余需求仍按总清单依赖推进。
+- Next action: 先收尾TASK-MOD-GATE-ADJACENT及TASK-UI-HUD-CANCEL-CLIP；完整verify与当前审查/主线分叉整合满足前维持PARTIAL，P1/P2仍未实施。
 - Last verified: 2026-10-28
 - Updated: 2026-10-28
 
@@ -3507,5 +3510,62 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Verification: PARTIAL — 两例真实IDB阻塞/冲突RED→GREEN；完整调度15项及390/1920面板点击2项共17项0retry通过。快速typecheck/lint/format/ui通过，单元2325 pass/0 fail/20 skip；保存邻接4 pass/1 fail保留几何断言。原21dirty/4需求hash不变，仅自审，原生/独审/完整verify/main未完成。
 - Evidence: [docs/changes/2026-10-28-provider-browser-contract/verification.md](../../docs/changes/2026-10-28-provider-browser-contract/verification.md)
 - Next action: 提交当前候选；继续保存几何失败和全量浏览器门禁，补当前独审/原生及main整合后再关闭交付。
+- Last verified: 2026-10-28
+- Updated: 2026-10-28
+
+## TASK-UI-HUD-CONTAINER-WIDTH — 修复折叠侧栏令HUD容器宽度归零
+
+- Goal: 可用画布宽度决定HUD容器查询，宽屏保存状态不被误隐藏
+- Scope: sidebar旧width覆盖、保存生命周期回归及共享Desktop/Web版本；不扩展UI视觉迁移
+- Display status: 未完成
+- Priority: P1 — 未记录
+- Requirement refs: docs/changes/2026-10-28-provider-browser-contract/intent.md, docs/changes/2026-10-28-provider-browser-contract/spec.md
+- Feature IDs: none
+- Owner role: implementation-integrator
+- Acceptance: 先保留1920下HUD0px的实际computed-style RED; 三个宽度真实任务详情、归档前后与同宽度reload均可验证; 当前build与快速三门禁、作者自审完成后保留原生/独审/主线缺口
+- Branch: `test/TASK-MOD-GATE-BROWSER`
+- Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
+- Modules: src/styles/sidebar.css, tests/browser/generation-save-status.spec.ts, config/platform-versions.json
+- Verification: PARTIAL — 移除两处旧width；保存6项首试全过，邻接共30项27 pass/3既有fail，0retry。源码Desktop/Web2.1.47，未原生/独审/main验收。 当前候选typecheck/lint(GOVERNANCE_BASE=b8acad1c)/format/ui/build通过；单元2325 pass/0 fail/20 skip，主checkout21文件与4份来源hash不变。
+- Evidence: [docs/changes/2026-10-28-provider-browser-contract/verification.md](../../docs/changes/2026-10-28-provider-browser-contract/verification.md)
+- Next action: 继续三项邻接失败与HUD旧取消裁切；完整verify/当前独审/原生/main整合完成前保持PARTIAL。
+- Last verified: 2026-10-28
+- Updated: 2026-10-28
+
+## TASK-UI-HUD-CANCEL-CLIP — 核实并修复旧HUD取消按钮被状态文案裁切
+
+- Goal: 所有保留的可见取消控件应真实可点，不能仅靠详情入口掩盖旧控件失效
+- Scope: 当前Figma入口契约与旧HUD控件映射；不改取消或归档语义
+- Display status: 未完成
+- Priority: P1 — 未记录
+- Requirement refs: docs/changes/2026-10-28-provider-browser-contract/intent.md, docs/changes/2026-10-28-provider-browser-contract/spec.md
+- Feature IDs: none
+- Owner role: implementation-integrator
+- Acceptance: 记录现行Figma是否保留HUD内取消动作及其尺寸规则; 若保留则真实click命中，若退役则有明确设计依据并保留详情入口; 取消后不允许迟到结果或重复提交，补受影响回归
+- Branch: `test/TASK-MOD-GATE-BROWSER`
+- Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
+- Modules: src/App.tsx, src/styles/canvas-hud.css, tests/browser/generation-save-status.spec.ts
+- Verification: FAIL — save-hit-probe.log显示1099取消button x604.265..654.265在running父span x438.265..496.921外并被裁切。详情取消trial通过不能证明旧HUD修复。
+- Evidence: [docs/changes/2026-10-28-provider-browser-contract/verification.md](../../docs/changes/2026-10-28-provider-browser-contract/verification.md)
+- Next action: 依当前Figma补齐旧HUD行为映射，再修产品并真实点击回归。
+- Last verified: 2026-10-28
+- Updated: 2026-10-28
+
+## TASK-MOD-GATE-ADJACENT — 处理浏览器门禁剩余三项邻接失败
+
+- Goal: 新增卡片和缩窄编辑区可操作，连接测试与目录拉取按有效契约校验
+- Scope: 保留interaction-regressions三项原断言；先分清过时前置与真实缺陷
+- Display status: 未完成
+- Priority: P1 — 未记录
+- Requirement refs: docs/changes/2026-10-28-provider-browser-contract/intent.md, docs/changes/2026-10-28-provider-browser-contract/spec.md
+- Feature IDs: none
+- Owner role: implementation-integrator
+- Acceptance: 390新增编辑卡片完整落在可操作画布; 缩窄编辑器可达且坐标和草稿保留; HTML/401/成功三阶段、鉴权及请求数有真实有效覆盖；测试/测速/目录契约冲突有来源结论
+- Branch: `test/TASK-MOD-GATE-BROWSER`
+- Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
+- Modules: tests/browser/interaction-regressions.spec.ts, src/components/canvas, src/components/settings
+- Verification: FAIL — 本批前后均复现3 fail：新增卡右边界383.785>382、缩窄可操作区predicate=false、HTML200连接状态success。原断言未改。
+- Evidence: [docs/changes/2026-10-28-provider-browser-contract/verification.md](../../docs/changes/2026-10-28-provider-browser-contract/verification.md)
+- Next action: 分别诊断；UI修改先当前Figma，连接路径先读M3快速测速与独立目录契约，不删测试让门禁假绿。
 - Last verified: 2026-10-28
 - Updated: 2026-10-28

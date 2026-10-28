@@ -10558,11 +10558,11 @@
       "docs/changes/2026-10-28-provider-browser-contract/verification.md",
       "docs/changes/2026-10-28-provider-browser-contract/review.md"
     ],
-    "verification": "此前入口与附件候选保留；本批真实任务卡替换7处旧HUD状态，并补禁用→恢复及自动选连接审批。新暴露关闭透明层/429健康等待项目flush两个真实缺陷已修；完整调度15+命中2=17项0retry通过，保存邻接4 pass/1几何fail。快速门禁2325 pass/0 fail/20 skip，当前仅自审，完整verify/main未完成。",
+    "verification": "保存宽屏容器归零已定位修复，三个宽度生命周期与同宽度reload共6项通过；当前build邻接30项27 pass/3 fail/0retry。调度15/命中2继续全过。HUD旧取消裁切及三项邻接问题分别入账，完整verify/独审/main未完成。",
     "verificationResult": "PARTIAL",
     "updated": "2026-10-28",
     "lastVerified": "2026-10-28",
-    "nextAction": "继续Web保存状态可见/几何失败，保留phase/取消命中/恢复断言；全量浏览器/当前独审/原生/main分叉整合完成前保持PARTIAL。P1/P2及四文档其余需求仍按总清单依赖推进。",
+    "nextAction": "先收尾TASK-MOD-GATE-ADJACENT及TASK-UI-HUD-CANCEL-CLIP；完整verify与当前审查/主线分叉整合满足前维持PARTIAL，P1/P2仍未实施。",
     "requirementRefs": [
       "docs/changes/2026-10-28-browser-gate/intent.md",
       "docs/changes/2026-10-28-browser-gate/spec.md",
@@ -10882,6 +10882,126 @@
     "lastVerified": "2026-10-28",
     "nextAction": "提交当前候选；继续保存几何失败和全量浏览器门禁，补当前独审/原生及main整合后再关闭交付。",
     "requirementRefs": [
+      "docs/changes/2026-10-28-provider-browser-contract/spec.md"
+    ],
+    "featureIds": []
+  },
+  {
+    "id": "TASK-UI-HUD-CONTAINER-WIDTH",
+    "title": "修复折叠侧栏令HUD容器宽度归零",
+    "goal": "可用画布宽度决定HUD容器查询，宽屏保存状态不被误隐藏",
+    "scope": "sidebar旧width覆盖、保存生命周期回归及共享Desktop/Web版本；不扩展UI视觉迁移",
+    "acceptance": [
+      "先保留1920下HUD0px的实际computed-style RED",
+      "三个宽度真实任务详情、归档前后与同宽度reload均可验证",
+      "当前build与快速三门禁、作者自审完成后保留原生/独审/主线缺口"
+    ],
+    "dependencies": [],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "test/TASK-MOD-GATE-BROWSER",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "b8acad1c31eef37b1702c30a428bdff966525551",
+    "affectedModules": [
+      "src/styles/sidebar.css",
+      "tests/browser/generation-save-status.spec.ts",
+      "config/platform-versions.json"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "未完成",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-28-provider-browser-contract/verification.md"
+    ],
+    "verification": "移除两处旧width；保存6项首试全过，邻接共30项27 pass/3既有fail，0retry。源码Desktop/Web2.1.47，未原生/独审/main验收。 当前候选typecheck/lint(GOVERNANCE_BASE=b8acad1c)/format/ui/build通过；单元2325 pass/0 fail/20 skip，主checkout21文件与4份来源hash不变。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-28",
+    "lastVerified": "2026-10-28",
+    "nextAction": "继续三项邻接失败与HUD旧取消裁切；完整verify/当前独审/原生/main整合完成前保持PARTIAL。",
+    "requirementRefs": [
+      "docs/changes/2026-10-28-provider-browser-contract/intent.md",
+      "docs/changes/2026-10-28-provider-browser-contract/spec.md"
+    ],
+    "featureIds": []
+  },
+  {
+    "id": "TASK-UI-HUD-CANCEL-CLIP",
+    "title": "核实并修复旧HUD取消按钮被状态文案裁切",
+    "goal": "所有保留的可见取消控件应真实可点，不能仅靠详情入口掩盖旧控件失效",
+    "scope": "当前Figma入口契约与旧HUD控件映射；不改取消或归档语义",
+    "acceptance": [
+      "记录现行Figma是否保留HUD内取消动作及其尺寸规则",
+      "若保留则真实click命中，若退役则有明确设计依据并保留详情入口",
+      "取消后不允许迟到结果或重复提交，补受影响回归"
+    ],
+    "dependencies": [],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "test/TASK-MOD-GATE-BROWSER",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "b8acad1c31eef37b1702c30a428bdff966525551",
+    "affectedModules": [
+      "src/App.tsx",
+      "src/styles/canvas-hud.css",
+      "tests/browser/generation-save-status.spec.ts"
+    ],
+    "status": "TODO",
+    "displayStatus": "未完成",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-28-provider-browser-contract/verification.md"
+    ],
+    "verification": "save-hit-probe.log显示1099取消button x604.265..654.265在running父span x438.265..496.921外并被裁切。详情取消trial通过不能证明旧HUD修复。",
+    "verificationResult": "FAIL",
+    "updated": "2026-10-28",
+    "lastVerified": "2026-10-28",
+    "nextAction": "依当前Figma补齐旧HUD行为映射，再修产品并真实点击回归。",
+    "requirementRefs": [
+      "docs/changes/2026-10-28-provider-browser-contract/intent.md",
+      "docs/changes/2026-10-28-provider-browser-contract/spec.md"
+    ],
+    "featureIds": []
+  },
+  {
+    "id": "TASK-MOD-GATE-ADJACENT",
+    "title": "处理浏览器门禁剩余三项邻接失败",
+    "goal": "新增卡片和缩窄编辑区可操作，连接测试与目录拉取按有效契约校验",
+    "scope": "保留interaction-regressions三项原断言；先分清过时前置与真实缺陷",
+    "acceptance": [
+      "390新增编辑卡片完整落在可操作画布",
+      "缩窄编辑器可达且坐标和草稿保留",
+      "HTML/401/成功三阶段、鉴权及请求数有真实有效覆盖；测试/测速/目录契约冲突有来源结论"
+    ],
+    "dependencies": [],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "test/TASK-MOD-GATE-BROWSER",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "b8acad1c31eef37b1702c30a428bdff966525551",
+    "affectedModules": [
+      "tests/browser/interaction-regressions.spec.ts",
+      "src/components/canvas",
+      "src/components/settings"
+    ],
+    "status": "TODO",
+    "displayStatus": "未完成",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-28-provider-browser-contract/verification.md"
+    ],
+    "verification": "本批前后均复现3 fail：新增卡右边界383.785>382、缩窄可操作区predicate=false、HTML200连接状态success。原断言未改。",
+    "verificationResult": "FAIL",
+    "updated": "2026-10-28",
+    "lastVerified": "2026-10-28",
+    "nextAction": "分别诊断；UI修改先当前Figma，连接路径先读M3快速测速与独立目录契约，不删测试让门禁假绿。",
+    "requirementRefs": [
+      "docs/changes/2026-10-28-provider-browser-contract/intent.md",
       "docs/changes/2026-10-28-provider-browser-contract/spec.md"
     ],
     "featureIds": []

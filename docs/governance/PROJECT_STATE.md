@@ -36,3 +36,5 @@ TASK-MOD-P0已按用户提供执行规范与补篇启动；当前实现、验证
 ## 历史快照归档
 
 2026-10-25 及更早的历史阶段快照已完整归档至只读档案 [`docs/archive/PROJECT_STATE_HISTORY_202610.md`](../archive/PROJECT_STATE_HISTORY_202610.md)，不参与当前状态裁决。
+
+2026-10-28后续任务树候选：Desktop/Web源码2.1.47、Mobile2.1.43；HUD宽屏归零修复及保存6项通过，邻接30项27 pass/3 fail，0retry。主线及安装版本未变；完整verify、当前独审与main整合仍未完成，见本轮验证与账本，不将候选版本写成主线版本。

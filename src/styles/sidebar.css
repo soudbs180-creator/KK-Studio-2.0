@@ -277,7 +277,6 @@
 }
 .sidebar.is-collapsed:not(.is-narrow) + .workspace .canvas-hud {
   left: 19px;
-  width: calc(var(--canvas-usable-width, 100%) - 40px);
 }
 .sidebar.is-collapsed .brand {
   margin: 0 0 25px;
@@ -632,7 +631,6 @@
   }
   .sidebar.is-collapsed:not(.is-narrow) + .workspace .canvas-hud {
     left: var(--ui-workspace-task-inset);
-    width: auto;
   }
 }
 
