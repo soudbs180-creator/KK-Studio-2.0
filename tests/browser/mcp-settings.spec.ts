@@ -80,7 +80,7 @@ test("MCP 设置保存 endpoint，完成真实握手并展示 tools/list 返回�
 
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   const dialog = page.getByRole("dialog", { name: "设置" });
-  await dialog.getByRole("button", { name: "扩展", exact: true }).click();
+  await dialog.getByRole("button", { name: "扩展与 MCP", exact: true }).click();
   await dialog.getByRole("tab", { name: "MCP 工具", exact: true }).click();
   await dialog.getByLabel("MCP服务器名称").fill("Browser fixture");
   await dialog.getByLabel("MCP地址").fill("https://mcp.example.test/mcp");
@@ -148,7 +148,7 @@ test("MCP 设置显示并显式恢复旧版超限配置", async ({ page }) => {
   await page.reload();
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   const dialog = page.getByRole("dialog", { name: "设置" });
-  await dialog.getByRole("button", { name: "扩展", exact: true }).click();
+  await dialog.getByRole("button", { name: "扩展与 MCP", exact: true }).click();
   await dialog.getByRole("tab", { name: "MCP 工具", exact: true }).click();
   await expect(dialog.locator(".settings-mcp-error")).toContainText(
     "超过当前 50 项上限",
@@ -178,7 +178,7 @@ test("MCP 设置为损坏配置提供原始导出入口", async ({ page }) => {
   await page.reload();
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   const dialog = page.getByRole("dialog", { name: "设置" });
-  await dialog.getByRole("button", { name: "扩展", exact: true }).click();
+  await dialog.getByRole("button", { name: "扩展与 MCP", exact: true }).click();
   await dialog.getByRole("tab", { name: "MCP 工具", exact: true }).click();
   await expect(
     dialog.getByRole("alert").filter({ hasText: "无法读取" }).first(),
@@ -203,7 +203,7 @@ test("MCP 设置拒绝不安全的远程 HTTP endpoint", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   const dialog = page.getByRole("dialog", { name: "设置" });
-  await dialog.getByRole("button", { name: "扩展", exact: true }).click();
+  await dialog.getByRole("button", { name: "扩展与 MCP", exact: true }).click();
   await dialog.getByRole("tab", { name: "MCP 工具", exact: true }).click();
   await dialog.getByLabel("MCP服务器名称").fill("Unsafe");
   await dialog.getByLabel("MCP地址").fill("http://remote.example.test/mcp");
@@ -269,7 +269,7 @@ test("MCP pending tool calls retain their result, lock navigation, and stop wait
   });
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   const dialog = page.getByRole("dialog", { name: "设置", exact: true });
-  await dialog.getByRole("button", { name: "扩展", exact: true }).click();
+  await dialog.getByRole("button", { name: "扩展与 MCP", exact: true }).click();
   await dialog.getByRole("tab", { name: "MCP 工具", exact: true }).click();
   await dialog.getByLabel("MCP服务器名称").fill("Pending fixture");
   await dialog

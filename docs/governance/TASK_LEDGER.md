@@ -173,7 +173,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-GATEWAY-STREAM-20261018 | Gateway实际增量SSE与取消重试边界 | DONE | 已完成 | P1 | TASK-COLDSTART-LOCAL-20261018 | root | 本地有界子项完成；最终精确文档/Delivery/私有归档/原两个快捷方式由工程外收据裁决。下一P1本地DPAPI protector受控测试及独立成本回执调用路径，不重提UNKNOWN，不消费额度；父Gateway仍PARTIAL。 |
 | TASK-MOD-P0 | 建立模块化边界与只减不增的架构基线 | PARTIAL | 未完成 | P1 | none | root | 18项格式已在独立任务修复；完整verify进一步暴露产品浏览器/开发插件失败。由TASK-MOD-GATE-BROWSER修复后复跑，TASK-GOV-004继续分叉整合；未合流前不提升交付状态。 |
 | TASK-MOD-GATE-FORMAT | 独立恢复18项既有源码格式门禁 | PARTIAL | 未完成 | P1 | none | root | 固定格式提交独审；独立TASK-MOD-GATE-BROWSER处理旧测试入口与实际浏览器失败，之后完整verify及主线整合。 |
-| TASK-MOD-GATE-BROWSER | 恢复历史浏览器测试与当前设置入口的对应 | TODO | 未完成 | P1 | TASK-MOD-GATE-FORMAT | root | 独立任务分支复现代表失败，修复共享测试入口，保留业务断言并继续排查其他真实失败。 |
+| TASK-MOD-GATE-BROWSER | 恢复历史浏览器测试与当前设置入口的对应 | PARTIAL | 未完成 | P1 | TASK-MOD-GATE-FORMAT | root | 当前提交独审；继续核对整套其他历史模型/Agent/UI失败并完成最终全量verify，不用定向通过代替合流。 |
 
 ## TASK-FIGMA-PAGES-20261025 — 重新核查并整理Figma 04/05页面与状态
 
@@ -3357,15 +3357,15 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Scope: 浏览器/开发插件测试入口和夹具；不为旧测试回退当前UI，不降低有效断言，不改变产品能力
 - Display status: 未完成
 - Priority: P1 — 未记录
-- Requirement refs: docs/changes/2026-10-28-modularity-format/intent.md, docs/changes/2026-10-28-modularity-format/spec.md
+- Requirement refs: docs/changes/2026-10-28-browser-gate/intent.md, docs/changes/2026-10-28-browser-gate/spec.md
 - Feature IDs: none
 - Owner role: implementation-integrator
 - Acceptance: 旧入口失败先保留RED，映射当前真实分类后相关用例通过; 其余失败区分测试过时与真实缺陷，任何真实UI修改先取得当前Figma依据; 完整verify实际全绿及当前SHA独审后才解除合流阻断
-- Branch: `unallocated`
-- Worktree: `unallocated`
+- Branch: `test/TASK-MOD-GATE-BROWSER`
+- Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
 - Modules: tests/browser, tests/support, tests/development
-- Verification: NOT_VERIFIED — 本轮产品浏览器与开发插件出现历史设置分类定位失败，原始错误已保留。尚未实施修复。
-- Evidence: [docs/changes/2026-10-28-modularity-format/verification.md](../../docs/changes/2026-10-28-modularity-format/verification.md)
-- Next action: 独立任务分支复现代表失败，修复共享测试入口，保留业务断言并继续排查其他真实失败。
+- Verification: PARTIAL — 18个测试文件同步当前设置分类/引用字段，未改产品源码或降低断言。定向29项0重试全通过，development真实4步PASS；typecheck/lint/npm test通过（2313 pass/0 fail/20 skip）。完整883浏览器和最终verify尚未重跑。
+- Evidence: [docs/changes/2026-10-28-browser-gate/verification.md](../../docs/changes/2026-10-28-browser-gate/verification.md)
+- Next action: 当前提交独审；继续核对整套其他历史模型/Agent/UI失败并完成最终全量verify，不用定向通过代替合流。
 - Last verified: 2026-10-28
 - Updated: 2026-10-28

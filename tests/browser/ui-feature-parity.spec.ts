@@ -649,7 +649,7 @@ test("plugin menu reflects installed canvas plugins and opens their manager", as
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   await page
     .getByRole("navigation", { name: "设置分类" })
-    .getByRole("button", { name: "扩展", exact: true })
+    .getByRole("button", { name: "扩展与 MCP", exact: true })
     .click();
   await page.getByRole("tab", { name: "MCP 工具", exact: true }).click();
   await expect(page.getByRole("heading", { name: "已安装插件" })).toBeVisible();

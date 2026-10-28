@@ -18,7 +18,7 @@ for (const theme of ["light", "dark"])
     }, info) => {
       await page.setViewportSize(viewport);
       await openWorkspace(page);
-      await openSettingsSection(page, "通用");
+      await openSettingsSection(page, "通用设置");
       await page
         .getByRole("combobox", { name: "主题", exact: true })
         .selectOption(theme);

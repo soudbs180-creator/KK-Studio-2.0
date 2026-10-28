@@ -40,7 +40,7 @@ test("插件管理拒绝明文地址并说明远程代码权限", async ({ page 
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   await page
     .getByRole("navigation", { name: "设置分类" })
-    .getByRole("button", { name: "扩展", exact: true })
+    .getByRole("button", { name: "扩展与 MCP", exact: true })
     .click();
   await page.getByRole("tab", { name: /^MCP(?: 工具)?$/, exact: true }).click();
   await expect(
@@ -91,7 +91,7 @@ test("手机延迟插件启用可停止等待并恢复导航，迟到模块不�
   await dialog
     .getByRole("button", { name: "返回设置分类", exact: true })
     .click();
-  await dialog.getByRole("button", { name: "扩展", exact: true }).click();
+  await dialog.getByRole("button", { name: "扩展与 MCP", exact: true }).click();
   await dialog
     .getByRole("tab", { name: /^MCP(?: 工具)?$/, exact: true })
     .click();

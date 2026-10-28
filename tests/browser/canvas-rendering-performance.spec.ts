@@ -321,7 +321,15 @@ test("reference derivations retain identity until their graph inputs change", as
     preview: "preview-v2",
   });
   expect((await references(page)).values).toEqual([
-    { id: "ab", title: "Updated source", preview: "preview-v2" },
+    {
+      id: "ab",
+      assetId: undefined,
+      title: "Updated source",
+      preview: "preview-v2",
+      kind: "image",
+      frame: undefined,
+      slot: undefined,
+    },
   ]);
   await action(page, "addReference");
   expect((await references(page)).values.map((entry) => entry.id)).toEqual([

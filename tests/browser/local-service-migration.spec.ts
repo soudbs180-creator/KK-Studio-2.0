@@ -154,7 +154,9 @@ test("Web 迁移预检/导入不删除旧 IndexedDB", async ({ page }) => {
     await page.reload();
     await page.getByRole("button", { name: "打开设置", exact: true }).click();
     const dialog = page.getByRole("dialog", { name: "设置", exact: true });
-    await dialog.getByRole("button", { name: "网络", exact: true }).click();
+    await dialog
+      .getByRole("button", { name: "网络与代理", exact: true })
+      .click();
     const companion = dialog.getByTestId("companion-settings");
     await companion.getByRole("button", { name: "检查连接" }).click();
     await expect(companion.locator(".settings-companion-status")).toHaveText(

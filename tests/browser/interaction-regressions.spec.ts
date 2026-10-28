@@ -218,6 +218,6 @@ test("配置入口定位到对应设置分类，菜单支持 Escape", async ({ p
   await expect(
     page
       .getByRole("dialog", { name: "设置" })
-      .getByRole("button", { name: "通用", exact: true }),
+      .getByRole("button", { name: "通用设置", exact: true }),
   ).toHaveAttribute("aria-current", "page");
 });

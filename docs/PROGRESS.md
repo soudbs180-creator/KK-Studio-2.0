@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-10-28 浏览器门禁入口修复（局部通过）
+
+18个测试文件同步当前设置分类与CanvasReference完整字段，保留原业务断言，产品源码未改。定向29项与开发插件4步通过，快速门禁2313 pass/0 fail/20 skip；完整verify及main整合仍未完成。见[验证](changes/2026-10-28-browser-gate/verification.md)。
+
 ## 2026-10-28 独立格式门禁收尾（IN_PROGRESS）
 
 按用户授权修复18个历史格式文件，逐个确认转译后JavaScript语法树相同；完整verify及实际合流门禁仍待执行。见[本卡验证](changes/2026-10-28-modularity-format/verification.md)。

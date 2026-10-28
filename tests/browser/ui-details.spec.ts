@@ -119,7 +119,7 @@ test("设置按内容选择紧凑宽度，切换模型后普通页不保留宽�
     path: info.outputPath("settings-models.png"),
     animations: "disabled",
   });
-  await selectSettingsSection(page, "通用");
+  await selectSettingsSection(page, "通用设置");
   expect((await panel.boundingBox())!.width).toBe(general.width);
   await page.screenshot({
     path: info.outputPath("settings-update.png"),

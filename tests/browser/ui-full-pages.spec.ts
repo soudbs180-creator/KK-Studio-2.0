@@ -79,7 +79,7 @@ for (const width of [390, 1099, 1920]) {
           .click();
         root = page.locator(".shortcuts-panel");
       } else if (surface === "plugin-settings") {
-        await openSettingsSection(page, "扩展");
+        await openSettingsSection(page, "扩展与 MCP");
         await page.getByRole("tab", { name: /^MCP/ }).click();
         root = page.getByRole("dialog", { name: "设置", exact: true });
       } else if (surface === "subject" || surface === "asset-detail") {

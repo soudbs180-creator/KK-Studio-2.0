@@ -10536,30 +10536,30 @@
     ],
     "owner": "root",
     "ownerRole": "implementation-integrator",
-    "branch": "unallocated",
-    "worktree": "unallocated",
-    "baseSha": "e35004a03a19b24d691082eade3dbf3e9a531cb5",
+    "branch": "test/TASK-MOD-GATE-BROWSER",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "af4c4e2eadbde0df090ba9e222096dd3d39ad517",
     "affectedModules": [
       "tests/browser",
       "tests/support",
       "tests/development"
     ],
-    "status": "TODO",
+    "status": "PARTIAL",
     "displayStatus": "未完成",
     "priority": "P1",
     "risk": "medium",
     "reviewRequired": true,
     "evidence": [
-      "docs/changes/2026-10-28-modularity-format/verification.md"
+      "docs/changes/2026-10-28-browser-gate/verification.md"
     ],
-    "verification": "本轮产品浏览器与开发插件出现历史设置分类定位失败，原始错误已保留。尚未实施修复。",
-    "verificationResult": "NOT_VERIFIED",
+    "verification": "18个测试文件同步当前设置分类/引用字段，未改产品源码或降低断言。定向29项0重试全通过，development真实4步PASS；typecheck/lint/npm test通过（2313 pass/0 fail/20 skip）。完整883浏览器和最终verify尚未重跑。",
+    "verificationResult": "PARTIAL",
     "updated": "2026-10-28",
     "lastVerified": "2026-10-28",
-    "nextAction": "独立任务分支复现代表失败，修复共享测试入口，保留业务断言并继续排查其他真实失败。",
+    "nextAction": "当前提交独审；继续核对整套其他历史模型/Agent/UI失败并完成最终全量verify，不用定向通过代替合流。",
     "requirementRefs": [
-      "docs/changes/2026-10-28-modularity-format/intent.md",
-      "docs/changes/2026-10-28-modularity-format/spec.md"
+      "docs/changes/2026-10-28-browser-gate/intent.md",
+      "docs/changes/2026-10-28-browser-gate/spec.md"
     ],
     "featureIds": []
   }
