@@ -8,9 +8,9 @@
 
 本文是跨会话 AI 的最短恢复入口（30 秒内读完）。任务状态只读 [`task-ledger.json`](task-ledger.json)；当前项目事实只读 [`PROJECT_STATE.md`](PROJECT_STATE.md)。
 
-模块化优化恢复入口：TASK-MOD-P0，`refactor/TASK-MOD-P0-architecture-baseline`，任务树`D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`；先读[规格](../changes/2026-10-28-modularity-p0/spec.md)与[验证](../changes/2026-10-28-modularity-p0/verification.md)。本卡不改产品源；本地主线与远端113/7分叉，原主checkout有受保护的Figma审计dirty内容。未满足合流条件前不得覆盖主仓、发布或开始依赖P0合入的P1。
+模块化整顿先读[四份原文总清单](../changes/2026-10-28-modularity-p0/four-document-coverage.md)和TASK-MOD-FOUR-DOC-COVERAGE。原始审计/复核草案由执行规范修正，补篇还含STD现代化与ORG-0–7；最近五项只是优先批次。用户禁止子代理，主代理直接执行，不把自审称为独审。
 
-P0源码候选cb869dfe已通过增量独审与精确三门禁（2313通过、0失败、20跳过）；交付仍PARTIAL。下一步独立TASK-MOD-GATE-FORMAT恢复18项继承格式门禁，分叉继续复用TASK-GOV-004；未满足完整verify/合流条件前保留任务树和原证据。
+P0、安全补丁和格式有各自候选与限定独审，均未合流；17个测试文件修复后定向29项通过，完整verify仍有浏览器失败。P1只做前置、ORG只备份校验未迁出、P2未实施，其余P/STD/ORG不得漏报。main与origin/main仍113/7分叉，主checkout21个dirty文件受保护。实现/审查/合流证据必须逐项记录。
 
 ## 1. 当前基线与门禁（2026-10-26）
 

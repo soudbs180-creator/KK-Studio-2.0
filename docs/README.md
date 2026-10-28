@@ -42,6 +42,8 @@
 
 ## 架构文档
 
+本轮完整整顿范围见[四文档需求覆盖与验收总清单](changes/2026-10-28-modularity-p0/four-document-coverage.md)，来源指纹与逐章索引见[四份原文记录](changes/2026-10-28-modularity-p0/four-document-sources.json)。最近五项仅为优先批次，不能代表全部P/STD/ORG范围。
+
 模块化整顿的现行规则见[MODULARITY](architecture/MODULARITY.md)，技术决定见[ADR-026](architecture/adr/ADR-026-modular-capability-architecture.md)与[ADR-027](architecture/adr/ADR-027-architecture-ratchet-and-dependency-cruiser.md)。当前P0实施与未整合边界见[交付验证](changes/2026-10-28-modularity-p0/verification.md)。
 
 `architecture/`：运行时架构、数据存储与数据分级。
