@@ -160,7 +160,7 @@ export function createSubmissionLogic(
         generateFromCanvas: options.generateFromCanvas,
       });
       if (canvasFlow.sourceError) return canvasFlow.sourceError;
-      if (canvasFlow.earlyReturn !== undefined) return canvasFlow.earlyReturn;
+      if (codexCanvas) return canvasFlow.earlyReturn;
 
       const dispatchCapability = await loadInpaintDispatcher(
         options.capabilitiesInpaint,

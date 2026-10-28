@@ -48,7 +48,7 @@
 | P0 | 执行§11/17；复核C4 | R1–R8、历史基线、故障注入、原检查保留、ADR①②、引用核对清单 | 候选完成且原SHA独审通过；完整verify及main合流未完成 |
 | P1 | 执行§4.3/7/17 | capability.ts、ports.ts、公开导出/包版本；合法非法/权限/版本契约回归；五个Port不扩既有语义 | 候选已新增capability.ts及本轮指定Task/Asset/Provider三个Port，包1.1.0，旧wire类型兼容；13契约/独立项目配置与运行探针通过，严格依赖声明的Zod URL限制保留；Storage/Permission另阶段，独审/合流未完成，见[P1验证](../2026-10-28-capability-contract/verification.md) |
 | P1-G | 复核C3；执行§17-P1 | 可选capabilityId、check-features与卡片/账本对应，独立治理提交；ADR③草案 | 未实施，已登记TASK-MOD-P1-G；ADR-028草案已建，不能因契约文件完成而漏掉治理字段/卡片与检查 |
-| P2 | 执行§7/17 | register/unregister/list/resolve/run；inpaint包装现有链路、Port映射、默认关闭；旧新任务/资产/origins/parentId对拍、DOM零差异 | PARTIAL候选已实现注册器与TaskPort.submit接线；双构建数据/溯源/HTTP/DOM同态通过，各14 pass/1原窄屏fail；严格PNG仍有1像素渲染不稳定，原生/独审/main未验，见[P2验证](../2026-10-28-inpaint-capability/verification.md)。Asset/Provider仍由原Runtime承担，P3a全面Port化未完成 |
+| P2 | 执行§7/17 | register/unregister/list/resolve/run；inpaint包装现有链路、Port映射、默认关闭；旧新任务/资产/origins/parentId对拍、DOM零差异 | PARTIAL候选已实现注册器与TaskPort.submit接线；双构建数据/溯源/HTTP/DOM同态通过，各14 pass/1原窄屏fail；严格PNG仍有1像素渲染不稳定，原生/独审/main未验，见[P2验证](../2026-10-28-inpaint-capability/verification.md)。该行描述P2时点；后续P3a已注入原资产AssetPort，见下方逐阶段记录 |
 | P3a | 执行§18 | creation↔image-edit：共享类型下沉、Port/props、纯函数归位；对应R4减少 | 源码候选已实现：契约类型统一、AssetPort注入、共享Context为无feature依赖的runtime；ON经inpaint注册器、OFF兼容。完整图阶段16→15；运行/独审/main仍PARTIAL |
 | P3b | 执行§18 | agent↔creation：任务/资产Port，类型下沉，组装根回调 | 源码候选已实现：Agent回调由装配根注入，聊天/交付纯函数归domain；阶段15→12，原接口/状态不重造；运行/独审/main仍PARTIAL |
 | P3c | 执行§18 | creation↔local-service：StoragePort/快照契约；server-only不进浏览器 | 源码候选已实现：domain纯模型/codec与StoragePort，local-service不反依赖creation；阶段12→10，HTTP重启/备份恢复通过；原生/独审/main仍PARTIAL |
@@ -108,3 +108,5 @@
 2026-10-28追加：保存几何失败定位到折叠侧栏旧width:auto将HUD容器缩成0。候选源码Desktop/Web47；保存6项及同宽reload通过，邻接30项27 pass/3 fail，HUD旧取消裁切另有开放任务。完整verify/P0/ORG/main仍未完成，P1/P2仍未实施；四文档其他行状态与完成条件继续有效。
 
 2026-10-28用户明确启动P1后，本轮仅契约候选按新优先级推进，P0/ORG与父分支门禁未关闭。当前包1.1.0及三个Port有独立安装、类型/运行与根/Mobile回归证据；P1-G、严格依赖声明限制、其余Port与P2/STD/ORG仍分别追踪，不将单一子项称为四文档完成。
+
+2026-10-28 P3最终补验：P3a–e 源码候选：契约包1.3.0、Desktop/Web2.1.49、Mobile2.1.43。完整图R4由16降0，R1由405降367，其余规则无新增；212个迁移函数体AST一致、六份UI JSX结构一致，纯核心/infra/runtime无间接feature依赖。根2354通过/20跳过/0失败，Mobile373与Agent204通过（Agent另2跳过），根/契约/Mobile类型通过；Edge双构建各3/3通过，任务/资产/HTTP/DOM同态且4张PNG SHA完全一致。核心浏览器原9失败保留：8项在父P2错误和位置逐项一致，另1项为P2已有窄屏HUD失败。P2 flag仍默认关闭；独审、Tauri/真实Provider、完整verify和main整合未完成，五阶段分别PARTIAL。P3f、P4–8及STD/ORG等四文档其余任务继续开放。 逐阶段记录见各TASK-MOD-P3A…E变更包，不将五阶段候选等同四文档全部交付。

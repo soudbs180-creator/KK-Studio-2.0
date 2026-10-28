@@ -1,4 +1,5 @@
 import { invoke } from "@tauri-apps/api/core";
+import type { StoragePort } from "../../../packages/creation-contracts/index.ts";
 import { loadStoredAsset } from "./assetRepository.ts";
 import {
   encodeSnapshotAssets,
@@ -134,7 +135,7 @@ const RECORD = "snapshot";
 const JOURNAL = `${CREATION_STORAGE_KEY}:pending`;
 let expectedRevision: number | null = null;
 let writable = false;
-let companionClient: CompanionClient | null = null;
+let companionStorage: StoragePort<CreationSnapshot> | null = null;
 export interface SnapshotLoad {
   snapshot: CreationSnapshot;
   recovered: boolean;
@@ -154,8 +155,14 @@ function isDesktop(): boolean {
 function isCompanionEnabled(): boolean {
   return !isDesktop() && Boolean(readCompanionConnection()?.enabled);
 }
-function getCompanionClient(): CompanionClient {
-  return (companionClient ??= new CompanionClient());
+function getCompanionStorage(): StoragePort<CreationSnapshot> {
+  if (companionStorage) return companionStorage;
+  const client = new CompanionClient();
+  return (companionStorage = {
+    read: () => client.loadCompanionSnapshot(),
+    write: (snapshot, revision) =>
+      client.persistCompanionSnapshot(snapshot, revision),
+  });
 }
 function companionStorageError(error: unknown): SnapshotStorageError {
   if (error instanceof CompanionClientError) {
@@ -386,7 +393,7 @@ async function loadDesktopCreationSnapshot(): Promise<SnapshotLoad> {
 
 async function loadCompanionCreationSnapshot(): Promise<SnapshotLoad> {
   try {
-    const loaded = await getCompanionClient().loadCompanionSnapshot();
+    const loaded = await getCompanionStorage().read();
     const snapshot =
       loaded.status === "missing" && loaded.snapshot === null
         ? emptySnapshot()
@@ -733,7 +740,7 @@ export async function persistCreationSnapshotAsync(
     expectedRevision = persisted.revision;
   } else if (isCompanionEnabled()) {
     try {
-      const result = await getCompanionClient().persistCompanionSnapshot(
+      const result = await getCompanionStorage().write(
         persisted,
         expectedRevision,
       );

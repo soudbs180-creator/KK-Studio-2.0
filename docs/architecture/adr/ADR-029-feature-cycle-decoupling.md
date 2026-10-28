@@ -13,7 +13,7 @@
 | --- | --- |
 | P3a | Task/Draft/Attachment/Input、ImageEditRequest/ModelSelection/CanvasReference归契约包；createImageEditRuntime注入原资产方法。共享Context在runtime，不依赖feature；ON经既有image.inpaint注册器，OFF保留兼容链 |
 | P3b | creation不依赖Agent单例，generateFromCanvas由app/taskPorts注入；聊天投影与交付断言归domain |
-| P3c | 项目类型、纯规范化/迁移/快照codec归domain；local-service消费同一核心与StoragePort。旧window存储I/O留creation，Node服务不进浏览器 |
+| P3c | 项目类型、纯规范化/迁移/快照codec归domain；local-service消费同一核心；creation以StoragePort包装原CompanionClient I/O，SnapshotCodec只做纯编解码。旧window存储I/O留creation，Node服务不进浏览器 |
 | P3d | Provider元数据/凭据/跨窗口锁移到integrations/providers，旧路径导出同一实现；文本流事件解析归domain，解除models→ai-gateway→creation长环 |
 | P3e | memory显式接收MemoryAgentPort；临时会话/线程/项目/revision/只读目录检查保留，迟到完成核对Port身份。回复与附件类型归契约，prompts不反依赖Agent/creation |
 
@@ -30,3 +30,5 @@
 ## 验收
 
 实际R4阶段图16→15→12→10→4→0，R1从405降367，其余规则无新增。baseline只删已解决项，回归包含type-only/动态边。旧数据/导出、根/Mobile/Agent/local-service/浏览器证据分别记录；无环不代替Tauri、真实Provider、独审或合流，见五个阶段verification。
+
+补验：Codex成功回调返回undefined时须结束该路径，不能按“无错误字符串”继续API；已用真实提交构造器先RED后GREEN。双构建Edge各3项通过、4张PNG严格一致；历史9项核心浏览器失败仍开放，独审/原生/完整verify/main未验。

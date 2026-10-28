@@ -105,8 +105,23 @@ export interface ProviderPort {
 }
 
 /** The snapshot owner supplies the exact codec; the storage transport owns no model. */
-export interface StoragePort<Snapshot> {
+export interface SnapshotCodec<Snapshot> {
   decode(value: unknown): Snapshot;
   parse(raw: string): Snapshot;
   serialize(snapshot: Snapshot): Snapshot;
+}
+
+export interface StorageSnapshotRead {
+  status: "missing" | "loaded" | "recovered";
+  snapshot: unknown | null;
+  revision: number | null;
+}
+
+/** Snapshot transport; decoding and revision conflict policy remain with their owners. */
+export interface StoragePort<Snapshot> {
+  read(): Promise<StorageSnapshotRead>;
+  write(
+    snapshot: Snapshot,
+    expectedRevision: number | null,
+  ): Promise<{ revision: number }>;
 }

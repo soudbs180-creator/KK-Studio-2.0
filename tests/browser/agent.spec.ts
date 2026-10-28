@@ -1128,8 +1128,8 @@ test("卡片 Codex 生图在刷新后归档并恢复来源；切 API 清除旧�
     await source.press("Enter");
     await source.getByRole("button", { name: "画布模型", exact: true }).click();
     const menu = source.getByRole("menu", { name: "选择模型" });
-    await menu.getByRole("tab", { name: "登录账号", exact: true }).click();
-    await menu.getByRole("menuitemradio", { name: /图片模型未报告/ }).click();
+    await menu.getByRole("tab", { name: "图像生成", exact: true }).click();
+    await menu.getByRole("menuitemradio", { name: /Codex 内置生图/ }).click();
     await expect(
       source.getByText("图片模型未报告", { exact: true }),
     ).toBeVisible();
@@ -1166,7 +1166,7 @@ test("卡片 Codex 生图在刷新后归档并恢复来源；切 API 清除旧�
     await source.press("Enter");
     await source.getByRole("button", { name: "画布模型", exact: true }).click();
     const cardMenu = source.getByRole("menu", { name: "选择模型" });
-    await cardMenu.getByRole("tab", { name: "本地", exact: true }).click();
+    await cardMenu.getByRole("tab", { name: "图像生成", exact: true }).click();
     await cardMenu.getByRole("searchbox").fill("image-fixture");
     await cardMenu
       .getByRole("menuitemradio", { name: /image-fixture/ })

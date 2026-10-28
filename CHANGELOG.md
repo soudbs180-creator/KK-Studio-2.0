@@ -50,3 +50,5 @@
 - [修复] 收敛输入、菜单、弹层、任务提交、原生 TaskHost 和恢复流程中的已验证问题。
 
 2.1.0 是源码上传候选版本；安装包、真实 Provider/ComfyUI 服务和正式 main 合并仍按各自验收边界执行。
+
+2026-10-28 P3候选补验：真实StoragePort与纯SnapshotCodec分离；修复Codex卡片成功后继续API准备的问题，旧数据/存储身份不变。ON/OFF各3项Edge回归和4张PNG零差异通过，根2354通过；未合入main或正式发布。

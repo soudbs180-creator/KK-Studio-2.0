@@ -188,11 +188,11 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-MOD-P1-G | 将可选capabilityId接入功能治理与卡片对应 | TODO | 未完成 | P1 | TASK-MOD-P1 | root | P1声明验证后单独执行此治理子卡，不因capability.ts/ports.ts完成关闭完整P1要求。 |
 | TASK-MOD-P1-TYPES | 处理Zod纯ES2022严格依赖声明的URL类型限制 | TODO | 未完成 | P2 | TASK-MOD-P1 | root | 按真实严格消费者需求评估上游修复或独立分发；保持失败可见，不扩大当前包配置的证明范围。 |
 | TASK-MOD-P2 | 能力注册表与默认关闭的image.inpaint双路径试点 | PARTIAL | 进行中 | P1 | TASK-MOD-P1 | root | 处理窄屏基线门禁与严格截图稳定性后完成验收；保留默认关闭。P0/ORG/main整合、独审与真实Provider/原生分别验证，不把本候选算整套完成。 |
-| TASK-MOD-P3A | P3a 解除creation-image-edit循环 | PARTIAL | 进行中 | P1 | TASK-MOD-P2 | root | 完成运行回归和失败基线归因，保持P2 flag默认关闭；独审/原生/合流及四文档其余任务继续单列。 |
-| TASK-MOD-P3B | P3b 解除creation-agent循环 | PARTIAL | 进行中 | P1 | TASK-MOD-P3A | root | 完成运行回归和失败基线归因，保持P2 flag默认关闭；独审/原生/合流及四文档其余任务继续单列。 |
-| TASK-MOD-P3C | P3c 解除creation-local-service循环 | PARTIAL | 进行中 | P1 | TASK-MOD-P3B | root | 完成运行回归和失败基线归因，保持P2 flag默认关闭；独审/原生/合流及四文档其余任务继续单列。 |
-| TASK-MOD-P3D | P3d 解除creation-models循环 | PARTIAL | 进行中 | P1 | TASK-MOD-P3C | root | 完成运行回归和失败基线归因，保持P2 flag默认关闭；独审/原生/合流及四文档其余任务继续单列。 |
-| TASK-MOD-P3E | P3e 解除agent-memory-prompts循环 | PARTIAL | 进行中 | P1 | TASK-MOD-P3D | root | 完成运行回归和失败基线归因，保持P2 flag默认关闭；独审/原生/合流及四文档其余任务继续单列。 |
+| TASK-MOD-P3A | P3a 解除creation-image-edit循环 | PARTIAL | 进行中 | P1 | TASK-MOD-P2 | root | 完成独审、原生/真实Provider与完整verify，解决既有浏览器门禁后整合main；P2默认关闭，旧入口保留正式发布周期。 |
+| TASK-MOD-P3B | P3b 解除creation-agent循环 | PARTIAL | 进行中 | P1 | TASK-MOD-P3A | root | 完成独审、原生/真实Provider与完整verify，解决既有浏览器门禁后整合main；P2默认关闭，旧入口保留正式发布周期。 |
+| TASK-MOD-P3C | P3c 解除creation-local-service循环 | PARTIAL | 进行中 | P1 | TASK-MOD-P3B | root | 完成独审、原生/真实Provider与完整verify，解决既有浏览器门禁后整合main；P2默认关闭，旧入口保留正式发布周期。 |
+| TASK-MOD-P3D | P3d 解除creation-models循环 | PARTIAL | 进行中 | P1 | TASK-MOD-P3C | root | 完成独审、原生/真实Provider与完整verify，解决既有浏览器门禁后整合main；P2默认关闭，旧入口保留正式发布周期。 |
+| TASK-MOD-P3E | P3e 解除agent-memory-prompts循环 | PARTIAL | 进行中 | P1 | TASK-MOD-P3D | root | 完成独审、原生/真实Provider与完整verify，解决既有浏览器门禁后整合main；P2默认关闭，旧入口保留正式发布周期。 |
 | TASK-MOD-P3-COMPAT | P3旧导出路径至少一个正式发布周期后退役 | TODO | 未完成 | P1 | TASK-MOD-P3A, TASK-MOD-P3B, TASK-MOD-P3C, TASK-MOD-P3D, TASK-MOD-P3E | root | 等待首次正式发布，记录最早可移除版本；继续保留旧路径同一实现。 |
 
 ## TASK-FIGMA-PAGES-20261025 — 重新核查并整理Figma 04/05页面与状态
@@ -3669,9 +3669,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `refactor/TASK-MOD-P3-feature-cycles`
 - Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
 - Modules: src/features/creation
-- Verification: PARTIAL — 源码解耦已实现，完整R4由16降0，R1由405降367；根/契约/Mobile类型、根2351与Mobile373、Agent204通过（原skip保留）。浏览器40项31通过9失败，正区分父候选旧失败；未做独审/原生/main整合。
+- Verification: PARTIAL — P3a–e 源码候选：契约包1.3.0、Desktop/Web2.1.49、Mobile2.1.43。完整图R4由16降0，R1由405降367，其余规则无新增；212个迁移函数体AST一致、六份UI JSX结构一致，纯核心/infra/runtime无间接feature依赖。根2354通过/20跳过/0失败，Mobile373与Agent204通过（Agent另2跳过），根/契约/Mobile类型通过；Edge双构建各3/3通过，任务/资产/HTTP/DOM同态且4张PNG SHA完全一致。核心浏览器原9失败保留：8项在父P2错误和位置逐项一致，另1项为P2已有窄屏HUD失败。P2 flag仍默认关闭；独审、Tauri/真实Provider、完整verify和main整合未完成，五阶段分别PARTIAL。P3f、P4–8及STD/ORG等四文档其余任务继续开放。
 - Evidence: [docs/changes/2026-10-28-p3a-creation-image-edit/verification.md](../../docs/changes/2026-10-28-p3a-creation-image-edit/verification.md), [docs/changes/2026-10-28-p3a-creation-image-edit/review.md](../../docs/changes/2026-10-28-p3a-creation-image-edit/review.md)
-- Next action: 完成运行回归和失败基线归因，保持P2 flag默认关闭；独审/原生/合流及四文档其余任务继续单列。
+- Next action: 完成独审、原生/真实Provider与完整verify，解决既有浏览器门禁后整合main；P2默认关闭，旧入口保留正式发布周期。
 - Last verified: 2026-10-28
 - Updated: 2026-10-28
 
@@ -3688,9 +3688,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `refactor/TASK-MOD-P3-feature-cycles`
 - Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
 - Modules: src/features/creation, src/features/agent
-- Verification: PARTIAL — 源码解耦已实现，完整R4由16降0，R1由405降367；根/契约/Mobile类型、根2351与Mobile373、Agent204通过（原skip保留）。浏览器40项31通过9失败，正区分父候选旧失败；未做独审/原生/main整合。
+- Verification: PARTIAL — P3a–e 源码候选：契约包1.3.0、Desktop/Web2.1.49、Mobile2.1.43。完整图R4由16降0，R1由405降367，其余规则无新增；212个迁移函数体AST一致、六份UI JSX结构一致，纯核心/infra/runtime无间接feature依赖。根2354通过/20跳过/0失败，Mobile373与Agent204通过（Agent另2跳过），根/契约/Mobile类型通过；Edge双构建各3/3通过，任务/资产/HTTP/DOM同态且4张PNG SHA完全一致。核心浏览器原9失败保留：8项在父P2错误和位置逐项一致，另1项为P2已有窄屏HUD失败。P2 flag仍默认关闭；独审、Tauri/真实Provider、完整verify和main整合未完成，五阶段分别PARTIAL。P3f、P4–8及STD/ORG等四文档其余任务继续开放。
 - Evidence: [docs/changes/2026-10-28-p3b-creation-agent/verification.md](../../docs/changes/2026-10-28-p3b-creation-agent/verification.md), [docs/changes/2026-10-28-p3b-creation-agent/review.md](../../docs/changes/2026-10-28-p3b-creation-agent/review.md)
-- Next action: 完成运行回归和失败基线归因，保持P2 flag默认关闭；独审/原生/合流及四文档其余任务继续单列。
+- Next action: 完成独审、原生/真实Provider与完整verify，解决既有浏览器门禁后整合main；P2默认关闭，旧入口保留正式发布周期。
 - Last verified: 2026-10-28
 - Updated: 2026-10-28
 
@@ -3707,9 +3707,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `refactor/TASK-MOD-P3-feature-cycles`
 - Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
 - Modules: src/features/creation
-- Verification: PARTIAL — 源码解耦已实现，完整R4由16降0，R1由405降367；根/契约/Mobile类型、根2351与Mobile373、Agent204通过（原skip保留）。浏览器40项31通过9失败，正区分父候选旧失败；未做独审/原生/main整合。
+- Verification: PARTIAL — P3a–e 源码候选：契约包1.3.0、Desktop/Web2.1.49、Mobile2.1.43。完整图R4由16降0，R1由405降367，其余规则无新增；212个迁移函数体AST一致、六份UI JSX结构一致，纯核心/infra/runtime无间接feature依赖。根2354通过/20跳过/0失败，Mobile373与Agent204通过（Agent另2跳过），根/契约/Mobile类型通过；Edge双构建各3/3通过，任务/资产/HTTP/DOM同态且4张PNG SHA完全一致。核心浏览器原9失败保留：8项在父P2错误和位置逐项一致，另1项为P2已有窄屏HUD失败。P2 flag仍默认关闭；独审、Tauri/真实Provider、完整verify和main整合未完成，五阶段分别PARTIAL。P3f、P4–8及STD/ORG等四文档其余任务继续开放。
 - Evidence: [docs/changes/2026-10-28-p3c-creation-local-service/verification.md](../../docs/changes/2026-10-28-p3c-creation-local-service/verification.md), [docs/changes/2026-10-28-p3c-creation-local-service/review.md](../../docs/changes/2026-10-28-p3c-creation-local-service/review.md)
-- Next action: 完成运行回归和失败基线归因，保持P2 flag默认关闭；独审/原生/合流及四文档其余任务继续单列。
+- Next action: 完成独审、原生/真实Provider与完整verify，解决既有浏览器门禁后整合main；P2默认关闭，旧入口保留正式发布周期。
 - Last verified: 2026-10-28
 - Updated: 2026-10-28
 
@@ -3726,9 +3726,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `refactor/TASK-MOD-P3-feature-cycles`
 - Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
 - Modules: src/features/creation, src/features/models
-- Verification: PARTIAL — 源码解耦已实现，完整R4由16降0，R1由405降367；根/契约/Mobile类型、根2351与Mobile373、Agent204通过（原skip保留）。浏览器40项31通过9失败，正区分父候选旧失败；未做独审/原生/main整合。
+- Verification: PARTIAL — P3a–e 源码候选：契约包1.3.0、Desktop/Web2.1.49、Mobile2.1.43。完整图R4由16降0，R1由405降367，其余规则无新增；212个迁移函数体AST一致、六份UI JSX结构一致，纯核心/infra/runtime无间接feature依赖。根2354通过/20跳过/0失败，Mobile373与Agent204通过（Agent另2跳过），根/契约/Mobile类型通过；Edge双构建各3/3通过，任务/资产/HTTP/DOM同态且4张PNG SHA完全一致。核心浏览器原9失败保留：8项在父P2错误和位置逐项一致，另1项为P2已有窄屏HUD失败。P2 flag仍默认关闭；独审、Tauri/真实Provider、完整verify和main整合未完成，五阶段分别PARTIAL。P3f、P4–8及STD/ORG等四文档其余任务继续开放。
 - Evidence: [docs/changes/2026-10-28-p3d-creation-models/verification.md](../../docs/changes/2026-10-28-p3d-creation-models/verification.md), [docs/changes/2026-10-28-p3d-creation-models/review.md](../../docs/changes/2026-10-28-p3d-creation-models/review.md)
-- Next action: 完成运行回归和失败基线归因，保持P2 flag默认关闭；独审/原生/合流及四文档其余任务继续单列。
+- Next action: 完成独审、原生/真实Provider与完整verify，解决既有浏览器门禁后整合main；P2默认关闭，旧入口保留正式发布周期。
 - Last verified: 2026-10-28
 - Updated: 2026-10-28
 
@@ -3745,9 +3745,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `refactor/TASK-MOD-P3-feature-cycles`
 - Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
 - Modules: src/features/agent, src/features/memory, src/features/prompts
-- Verification: PARTIAL — 源码解耦已实现，完整R4由16降0，R1由405降367；根/契约/Mobile类型、根2351与Mobile373、Agent204通过（原skip保留）。浏览器40项31通过9失败，正区分父候选旧失败；未做独审/原生/main整合。
+- Verification: PARTIAL — P3a–e 源码候选：契约包1.3.0、Desktop/Web2.1.49、Mobile2.1.43。完整图R4由16降0，R1由405降367，其余规则无新增；212个迁移函数体AST一致、六份UI JSX结构一致，纯核心/infra/runtime无间接feature依赖。根2354通过/20跳过/0失败，Mobile373与Agent204通过（Agent另2跳过），根/契约/Mobile类型通过；Edge双构建各3/3通过，任务/资产/HTTP/DOM同态且4张PNG SHA完全一致。核心浏览器原9失败保留：8项在父P2错误和位置逐项一致，另1项为P2已有窄屏HUD失败。P2 flag仍默认关闭；独审、Tauri/真实Provider、完整verify和main整合未完成，五阶段分别PARTIAL。P3f、P4–8及STD/ORG等四文档其余任务继续开放。
 - Evidence: [docs/changes/2026-10-28-p3e-agent-memory-prompts/verification.md](../../docs/changes/2026-10-28-p3e-agent-memory-prompts/verification.md), [docs/changes/2026-10-28-p3e-agent-memory-prompts/review.md](../../docs/changes/2026-10-28-p3e-agent-memory-prompts/review.md)
-- Next action: 完成运行回归和失败基线归因，保持P2 flag默认关闭；独审/原生/合流及四文档其余任务继续单列。
+- Next action: 完成独审、原生/真实Provider与完整verify，解决既有浏览器门禁后整合main；P2默认关闭，旧入口保留正式发布周期。
 - Last verified: 2026-10-28
 - Updated: 2026-10-28
 

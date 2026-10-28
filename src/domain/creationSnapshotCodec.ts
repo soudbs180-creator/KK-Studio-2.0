@@ -591,4 +591,4 @@ export const creationSnapshotCodec = {
   decode: decodeSnapshot,
   parse: parseSnapshot,
   serialize: serializeCreationSnapshot,
-} satisfies import("../../packages/creation-contracts/ports.ts").StoragePort<CreationSnapshot>;
+} satisfies import("../../packages/creation-contracts/ports.ts").SnapshotCodec<CreationSnapshot>;

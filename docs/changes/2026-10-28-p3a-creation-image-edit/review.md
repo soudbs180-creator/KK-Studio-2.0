@@ -7,3 +7,5 @@
 App仅移动装配参数类型及注入port，JSX结构和CSS源码不变；共享浏览器Context移到无feature依赖的runtime，避免UI barrel提前求值改变CSS顺序。memory只收明确AgentPort且迟到完成检查port身份，prompts只收契约类型。临时会话/旧线程/只读共享目录/跨窗口凭据回归保持。
 
 检查中发现并修正测试接线、同名shim触发R8、TS imports未使用及UI barrel的CSS加载顺序；首次local-service smoke与另一个build并行造成dist EPERM，属于执行失误，已改串行补验，不改产物清理或测试规则。实际未通过/未验证项继续保留，详见verification.md。
+
+最终补验：StoragePort为实际I/O契约，纯编解码另名SnapshotCodec。Codex成功undefined导致落入API的既有错误已RED复现并修正一处分支；成功/拒绝均只提交一次Agent，不准备API。旧测试仅按当前真实菜单修正定位，原业务断言保留。最新ON/OFF各3/3与4张PNG零差异通过；父P2的8项模型能力失败错误和位置逐项相同。独审仍NOT_VERIFIED，详见本卡verification。

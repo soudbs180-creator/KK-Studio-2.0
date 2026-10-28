@@ -8,7 +8,7 @@
 
 本文是跨会话 AI 的最短恢复入口（30 秒内读完）。任务状态只读 [`task-ledger.json`](task-ledger.json)；当前项目事实只读 [`PROJECT_STATE.md`](PROJECT_STATE.md)。
 
-最新2026-10-28 P3a–e源码候选：包1.3、Desktop/Web49、Mobile43，完整R4由16降0，R1由405降367，其他规则无新增。根2352/Mobile373/Agent204通过，212个迁移函数体AST一致、六份UI JSX结构一致、纯核心/infra/runtime无间接feature依赖；CSS与P2 hash相同。浏览器40项31 pass/9 fail正做父版本归因，原生/独审/main未验。保持P2 flag默认关闭，五阶段分别PARTIAL；P3f/P4–8、STD/ORG等总范围仍开放。实现见[ADR-029](../architecture/adr/ADR-029-feature-cycle-decoupling.md)，branch refactor/TASK-MOD-P3-feature-cycles，复用原树，不使用子代理。
+2026-10-28 P3a–e 源码候选：契约包1.3.0、Desktop/Web2.1.49、Mobile2.1.43。完整图R4由16降0，R1由405降367，其余规则无新增；212个迁移函数体AST一致、六份UI JSX结构一致，纯核心/infra/runtime无间接feature依赖。根2354通过/20跳过/0失败，Mobile373与Agent204通过（Agent另2跳过），根/契约/Mobile类型通过；Edge双构建各3/3通过，任务/资产/HTTP/DOM同态且4张PNG SHA完全一致。核心浏览器原9失败保留：8项在父P2错误和位置逐项一致，另1项为P2已有窄屏HUD失败。P2 flag仍默认关闭；独审、Tauri/真实Provider、完整verify和main整合未完成，五阶段分别PARTIAL。P3f、P4–8及STD/ORG等四文档其余任务继续开放。
 
 最新P2候选：feat/TASK-MOD-P2-capability-registry-inpaint在fe99上实现薄注册器与默认关闭image.inpaint接线；包1.2、Desktop/Web48、Mobile43。根2350/Mobile373通过，双构建任务/资产/HTTP/DOM一致，各image-edit14 pass/1原窄屏fail；严格PNG有录音按钮边缘1灰阶像素变化，同路径也复现，仍未通过零差异。P2保持PARTIAL，原生/真实Provider/独审/main未验；见[P2验证](../changes/2026-10-28-inpaint-capability/verification.md)。P1-G、严格依赖声明和四文档其余任务仍开放。下文旧状态保留各时间点含义。
 
@@ -36,3 +36,5 @@ P0、安全补丁和格式有各自候选与限定独审，均未合流；17个�
 ## 3. 历史交接归档
 
 2026-10-25 及更早的阶段交接记录已归档至 [`docs/archive/AI_HANDOFF_HISTORY_202610.md`](../archive/AI_HANDOFF_HISTORY_202610.md)。
+
+P3继续入口：[ADR-029](../architecture/adr/ADR-029-feature-cycle-decoupling.md)及五个阶段verification；当前branch refactor/TASK-MOD-P3-feature-cycles，main与Figma工作树保持原状。

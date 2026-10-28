@@ -665,6 +665,58 @@ for (const transition of [
   });
 }
 
+for (const agentResult of [undefined, "Agent 拒绝提交"]) {
+  test(`Codex canvas submission stops at its injected Agent port on ${agentResult ?? "success"}`, async () => {
+    const project = projectFixture();
+    project.items = [
+      {
+        id: "codex-source",
+        kind: "text",
+        title: "Codex source",
+        generationSource: "codex",
+        updatedAt: 100,
+      },
+    ];
+    const snapshot = { ...emptySnapshot(), projects: [project] };
+    let agentCalls = 0;
+    let apiCalls = 0;
+    const submission = createSubmissionLogic({
+      creationRef: { current: snapshot },
+      activeProjectIdRef: { current: project.id },
+      persistence: { state: "saved", flush: async () => {} },
+      homeModelConfig: { model: "", configured: false },
+      generateFromCanvas: async (input) => {
+        agentCalls++;
+        assert.equal(input.nodeId, "codex-source");
+        assert.equal(input.validate(), undefined);
+        return agentResult;
+      },
+      prepareTask: async () => {
+        apiCalls++;
+        throw new Error("Codex submission must not fall through to API");
+      },
+      executeTask: async () => assert.fail("must not execute an API task"),
+      cancelTask: () => assert.fail("must not cancel an API task"),
+      commitCreation: () => assert.fail("must not create an API task"),
+      replaceCanvasItems: () => [],
+    });
+    const result = await submission.submitImageCommand({
+      origin: "canvas",
+      input: {
+        sourceItemId: "codex-source",
+        prompt: "Write a caption",
+        model: "",
+        count: 1,
+      },
+    });
+    assert.equal(agentCalls, 1);
+    assert.equal(apiCalls, 0);
+    assert.equal(result, agentResult);
+    assert.equal(submission.submitLock.current, false);
+    assert.deepEqual(snapshot.projects[0].tasks, []);
+  });
+}
+
 function appSubmissionHarness(prepareGate?: Promise<void>) {
   const initial = projectFixture();
   const creationRef = {
