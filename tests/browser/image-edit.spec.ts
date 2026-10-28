@@ -1,5 +1,9 @@
 import { expect, test, type Page } from "@playwright/test";
 import { writeFile } from "node:fs/promises";
+import {
+  editArchiveEvidence,
+  editRequestEvidence,
+} from "./inpaintParityEvidence.ts";
 
 async function canvasImageAction(page: Page, name: string) {
   const node = page.locator(".canvas-node-image").first();
@@ -779,9 +783,11 @@ async function archivedPixels(page: Page, assetId: string) {
 for (const native of [true, false])
   test(`${native ? "native PNG mask" : "annotated reference fallback"} sends a square edit and protects every outside pixel`, async ({
     page,
-  }) => {
+  }, info) => {
     await configureEdit(page, native);
     let body: Buffer | undefined;
+    let contentType = "";
+    let requests = 0;
     const output = await page.evaluate(() => {
       const c = document.createElement("canvas");
       c.width = c.height = 32;
@@ -793,7 +799,9 @@ for (const native of [true, false])
     await page.route(
       "https://models.example.test/v1/images/edits",
       async (route) => {
+        requests++;
         body = route.request().postDataBuffer()!;
+        contentType = route.request().headers()["content-type"];
         await route.fulfill({ json: { data: [{ b64_json: output }] } });
       },
     );
@@ -811,7 +819,24 @@ for (const native of [true, false])
     await dialog
       .getByRole("textbox", { name: "重绘指令" })
       .fill("把选区改为红色");
+    await page.evaluate(() => document.fonts.ready);
+    await dialog.locator("textarea").blur();
+    const beforeDom = await dialog.evaluate((element) => element.outerHTML);
+    await dialog.screenshot({
+      path: info.outputPath("inpaint-before.png"),
+      animations: "disabled",
+      caret: "hide",
+    });
+    await dialog.screenshot({
+      path: info.outputPath("inpaint-before-control.png"),
+      animations: "disabled",
+      caret: "hide",
+    });
     await dialog.getByRole("button", { name: "开始重绘", exact: true }).click();
+    await expect(
+      page.getByRole("button", { name: "批准并提交" }),
+    ).toBeVisible();
+    expect(requests).toBe(0);
     await page
       .getByRole("button", { name: "批准并提交" })
       .click({ timeout: 5000 });
@@ -850,6 +875,51 @@ for (const native of [true, false])
       } else if (before.pixels[p * 4] !== after.pixels[p * 4]) changed++;
     }
     expect(changed).toBeGreaterThan(0);
+    expect(requests).toBe(1);
+    await expect(page.locator(".project-save-state")).toContainText("已保存");
+    const dispatches = await page.evaluate(
+      () => performance.getEntriesByName("kk:capability:image.inpaint").length,
+    );
+    expect(dispatches).toBe(
+      process.env.KK_EXPECT_CAPABILITIES_INPAINT === "true" ? 1 : 0,
+    );
+    const project = await activeEditProject(page);
+    const assets = await editArchiveEvidence(page);
+    const afterDom = await dialog.evaluate((element) => element.outerHTML);
+    await dialog.screenshot({
+      path: info.outputPath("inpaint-after.png"),
+      animations: "disabled",
+      caret: "hide",
+    });
+    await dialog.screenshot({
+      path: info.outputPath("inpaint-after-control.png"),
+      animations: "disabled",
+      caret: "hide",
+    });
+    await page.reload();
+    const restored = await activeEditProject(page);
+    expect(restored.tasks).toEqual(project.tasks);
+    expect(await editArchiveEvidence(page)).toEqual(assets);
+    await info.attach("inpaint-parity", {
+      body: Buffer.from(
+        JSON.stringify(
+          {
+            native,
+            dispatches,
+            requests,
+            request: await editRequestEvidence(body!, contentType),
+            project,
+            assets,
+            restored,
+            beforeDom,
+            afterDom,
+          },
+          null,
+          2,
+        ),
+      ),
+      contentType: "application/json",
+    });
   });
 
 test("archived image previews expose the shared lightbox and edit actions", async ({

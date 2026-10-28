@@ -11135,5 +11135,53 @@
       "docs/changes/2026-10-28-capability-contract/spec.md"
     ],
     "featureIds": []
+  },
+  {
+    "id": "TASK-MOD-P2",
+    "title": "能力注册表与默认关闭的image.inpaint双路径试点",
+    "goal": "注册与分发复用原持久任务链，旧入口与算法不变，并以隔离fixture对拍",
+    "scope": "capabilities薄切片、creation派发适配、契约工具/版本、回归与证据；不搬迁算法/改UI或存储key",
+    "acceptance": [
+      "注册/解析/图环/版本/权限/禁用/明确回退正反例通过",
+      "默认关闭回旧路，开启只调用一次原任务链并保持保存/审批/取消边界",
+      "真实双构建对拍任务/资产/关系/HTTP/DOM与PNG；报告原基线失败，不假绿"
+    ],
+    "dependencies": [
+      "TASK-MOD-P1"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "feat/TASK-MOD-P2-capability-registry-inpaint",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "fe99fad9964d01315b859494500b60fa63bd05d6",
+    "affectedModules": [
+      "src/features/capabilities",
+      "src/features/creation/useImageCommandSubmission.ts",
+      "src/features/creation/inpaintCapabilityDispatch.ts",
+      "packages/creation-contracts",
+      "tests/unit",
+      "tests/browser/image-edit.spec.ts"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-28-inpaint-capability/verification.md",
+      "docs/changes/2026-10-28-inpaint-capability/review.md"
+    ],
+    "verification": "薄注册器/默认关闭接线已实现，根2350 pass/20原skip、Mobile373 pass及类型/增量lint/build通过；双构建任务/资产/HTTP/DOM同态，image-edit各14 pass/1原窄屏fail。严格PNG仍有1灰阶像素渲染不稳定（同路径可复现）；独审/原生/main未验。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-28",
+    "lastVerified": "2026-10-28",
+    "nextAction": "处理窄屏基线门禁与严格截图稳定性后完成验收；保留默认关闭。P0/ORG/main整合、独审与真实Provider/原生分别验证，不把本候选算整套完成。",
+    "requirementRefs": [
+      "docs/changes/2026-10-28-inpaint-capability/intent.md",
+      "docs/changes/2026-10-28-inpaint-capability/spec.md"
+    ],
+    "featureIds": [
+      "FEAT-035"
+    ]
   }
 ]

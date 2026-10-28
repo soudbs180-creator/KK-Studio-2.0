@@ -160,3 +160,23 @@ export const capabilityManifestSchema = z
 export type BusinessCapabilityManifest = z.infer<
   typeof capabilityManifestSchema
 >;
+
+/** Version policy shared by the registry without importing another runtime dependency there. */
+export function capabilityVersionMatches(
+  candidate: string,
+  range: string,
+): boolean {
+  return (
+    version.safeParse(candidate).success &&
+    versionRange.safeParse(range).success &&
+    semver.satisfies(candidate, range)
+  );
+}
+export function compareCapabilityVersions(left: string, right: string): number {
+  return semver.compare(version.parse(left), version.parse(right));
+}
+export const capabilityTaskIdSchema = z.string().min(1);
+export const capabilityTaskReferenceSchema = z.strictObject({
+  projectId: z.string().min(1),
+  taskId: capabilityTaskIdSchema,
+});

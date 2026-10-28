@@ -48,7 +48,7 @@
 | P0 | 执行§11/17；复核C4 | R1–R8、历史基线、故障注入、原检查保留、ADR①②、引用核对清单 | 候选完成且原SHA独审通过；完整verify及main合流未完成 |
 | P1 | 执行§4.3/7/17 | capability.ts、ports.ts、公开导出/包版本；合法非法/权限/版本契约回归；五个Port不扩既有语义 | 候选已新增capability.ts及本轮指定Task/Asset/Provider三个Port，包1.1.0，旧wire类型兼容；13契约/独立项目配置与运行探针通过，严格依赖声明的Zod URL限制保留；Storage/Permission另阶段，独审/合流未完成，见[P1验证](../2026-10-28-capability-contract/verification.md) |
 | P1-G | 复核C3；执行§17-P1 | 可选capabilityId、check-features与卡片/账本对应，独立治理提交；ADR③草案 | 未实施，已登记TASK-MOD-P1-G；ADR-028草案已建，不能因契约文件完成而漏掉治理字段/卡片与检查 |
-| P2 | 执行§7/17 | register/unregister/list/resolve/run；inpaint包装现有链路、Port映射、默认关闭；旧新任务/资产/origins/parentId对拍、DOM零差异 | 仅调用链核查；注册表、接线、对拍未实施 |
+| P2 | 执行§7/17 | register/unregister/list/resolve/run；inpaint包装现有链路、Port映射、默认关闭；旧新任务/资产/origins/parentId对拍、DOM零差异 | PARTIAL候选已实现注册器与TaskPort.submit接线；双构建数据/溯源/HTTP/DOM同态通过，各14 pass/1原窄屏fail；严格PNG仍有1像素渲染不稳定，原生/独审/main未验，见[P2验证](../2026-10-28-inpaint-capability/verification.md)。Asset/Provider仍由原Runtime承担，P3a全面Port化未完成 |
 | P3a | 执行§18 | creation↔image-edit：共享类型下沉、Port/props、纯函数归位；对应R4减少 | 未实施，依赖P2 |
 | P3b | 执行§18 | agent↔creation：任务/资产Port，类型下沉，组装根回调 | 未实施 |
 | P3c | 执行§18 | creation↔local-service：StoragePort/快照契约；server-only不进浏览器 | 未实施 |

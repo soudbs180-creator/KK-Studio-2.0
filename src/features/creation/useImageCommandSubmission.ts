@@ -62,6 +62,7 @@ export interface UseImageCommandSubmissionOptions {
   onOpenSettingsProviders?: () => void;
   submitLock?: React.MutableRefObject<boolean>;
   prepareTask?: typeof prepareImageTask;
+  capabilitiesInpaint?: boolean;
 }
 
 export interface UseImageCommandSubmissionReturn {
@@ -148,6 +149,11 @@ export function createSubmissionLogic(
       if (canvasFlow.sourceError) return canvasFlow.sourceError;
       if (canvasFlow.earlyReturn !== undefined) return canvasFlow.earlyReturn;
 
+      const dispatchCapability = await loadInpaintDispatcher(
+        options.capabilitiesInpaint,
+        request,
+      );
+
       const input = await resolveCommandInput(request, original);
       if (signal?.aborted) return "已取消提交，草稿和参考图已保留。";
 
@@ -192,36 +198,52 @@ export function createSubmissionLogic(
         inputAttachments: input.attachments,
       });
 
-      commitAndDeployProjectState({
-        current,
-        nextProject,
-        baseId: base.id,
-        projectId,
-        requestOrigin: request.origin,
-        draftAtStart,
-        creationRef,
-        activeProjectIdRef,
-        commitCreation,
-        replaceCanvasItems,
-        onNavigateToWorkspace,
-      });
+      const submitPrepared = async (): Promise<string | undefined> => {
+        commitAndDeployProjectState({
+          current,
+          nextProject,
+          baseId: base.id,
+          projectId,
+          requestOrigin: request.origin,
+          draftAtStart,
+          creationRef,
+          activeProjectIdRef,
+          commitCreation,
+          replaceCanvasItems,
+          onNavigateToWorkspace,
+        });
 
-      await persistence.flush();
+        await persistence.flush();
 
-      const postSaveError = verifyPostSaveSafety({
-        validateAcceptance,
-        signal,
-        projectId,
-        activeProjectId: activeProjectIdRef.current ?? undefined,
-        cancelTask,
-        taskId: appendedTaskId,
-        requestOrigin: request.origin,
-      });
-      if (postSaveError) return postSaveError;
+        const postSaveError = verifyPostSaveSafety({
+          validateAcceptance,
+          signal,
+          projectId,
+          activeProjectId: activeProjectIdRef.current ?? undefined,
+          cancelTask,
+          taskId: appendedTaskId,
+          requestOrigin: request.origin,
+        });
+        if (postSaveError) return postSaveError;
 
-      onAccepted?.(appendedTaskId);
-      void executeTask(nextProject.id, appendedTaskId, nextProject);
-      return undefined;
+        onAccepted?.(appendedTaskId);
+        void executeTask(nextProject.id, appendedTaskId, nextProject);
+        return undefined;
+      };
+      const preparedTask = nextProject.tasks.find(
+        (task) => task.id === appendedTaskId,
+      )!;
+      if (dispatchCapability && preparedTask.imageEdit) {
+        await dispatchCapability({
+          projectId: nextProject.id,
+          task: preparedTask,
+          adapter:
+            connection.kind === "local_comfyui" ? "comfyui" : "provider-api",
+          submit: submitPrepared,
+        });
+        return undefined;
+      }
+      return await submitPrepared();
     } catch (error) {
       if (error instanceof ImageTaskCommandError && error.configure) {
         onOpenSettingsProviders?.();
@@ -247,12 +269,25 @@ export function useImageCommandSubmission(
   return createSubmissionLogic({
     ...options,
     submitLock: options.submitLock ?? internalLock,
+    capabilitiesInpaint:
+      options.capabilitiesInpaint ??
+      import.meta.env?.VITE_CAPABILITIES_INPAINT === "true",
   });
 }
 
 // ---------------------------------------------------------------------------
 // 细粒度校验与派发子函数（控制函数 CC <= 20）
 // ---------------------------------------------------------------------------
+
+async function loadInpaintDispatcher(
+  enabled: boolean | undefined,
+  request: ImageCommandRequest,
+) {
+  if (!enabled || !request.input.imageEdit?.document.regions.length)
+    return undefined;
+  return (await import("./inpaintCapabilityDispatch.ts"))
+    .dispatchInpaintCapability;
+}
 
 interface PreflightParams {
   request: ImageCommandRequest;

@@ -1,7 +1,7 @@
 # ADR-028：能力声明、Port与单一清单投影（草案）
 
-- 状态：PROPOSED；仅P1声明候选落地，注册表/协议投影与权限执行未实施。
-- 日期 / Task ID / Owner：2026-10-28 / TASK-MOD-P1、TASK-MOD-P1-G / root
+- 状态：PROPOSED；P1声明与P2薄注册器候选落地，协议投影与PermissionPort执行未实施。
+- 日期 / Task ID / Owner：2026-10-28 / TASK-MOD-P1、TASK-MOD-P1-G、TASK-MOD-P2 / root
 - 来源：[P1规格](../../changes/2026-10-28-capability-contract/spec.md)、[ADR-026](ADR-026-modular-capability-architecture.md)。
 
 ## 背景与选择
@@ -21,3 +21,7 @@ Zod4.6.7（MIT）用于声明边界校验；npm官方semver7.8.5（ISC）用于s
 旧供应商Manifest、任务/资产字段及函数保持；新声明默认值不触碰旧数据，未定义第二套任务态。回退新增出口/文件及包依赖，恢复Mobile file-lock记录即可，无用户数据迁移。N/N-1协议适配、弃用周期/移除版本的运行落地仍待各协议卡验证。
 
 源包沿现行ES2022/types=[]/skipLibCheck=true配置验证。额外的严格无宿主依赖声明检查在Zod的URL类型处失败；不增加DOM/Node全局或隐藏此失败，严格消费者目前不支持。独立安装与浏览器bundle证据、既有Mobile回归及后续结果见[P1验证](../../changes/2026-10-28-capability-contract/verification.md)。独立审查、P0/main整合与实际Provider运行未由本卡完成。
+
+## P2候选追加
+
+包1.2.0只补版本工具/任务引用schema。注册器不存任务/资产状态，creation装配原准备任务与TaskPort.submit闭包；Asset/Provider仍归原Runtime。选择此窄边界避免新队列、重复归档/计费和提前搬迁算法；P3a继续负责进一步Port化。构建flag默认关，回退是关闭flag恢复旧调用链，不需要用户数据迁移。明确声明fallback只处理派发前不可用并记录事件，执行错误不触发自动重试。两路径任务/资产/HTTP/DOM对拍通过，严格PNG和窄屏门禁仍开放，详见[P2验证](../../changes/2026-10-28-inpaint-capability/verification.md)。

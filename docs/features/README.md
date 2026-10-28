@@ -45,7 +45,7 @@
 | FEAT-010 | 语音输入 | PARTIAL（部分可用） | [卡片](feat-010-voice-input.md) | TASK-CAP-001 |
 | FEAT-029 | 提示词库 | PARTIAL（部分可用） | [卡片](feat-029-prompt-library.md) | TASK-UI-005, BACKEND-PLATFORM |
 | FEAT-031 | 统一任务态契约 | PARTIAL（部分可用） | [卡片](feat-031-unified-task-state.md) | TASK-TASKSTATE-001, TASK-TASKSTATE-002, BACKEND-MEDIA-001, TASK-KK-UNIFIED-20261015 |
-| FEAT-035 | 图片蒙版编辑 | PARTIAL（部分可用） | [卡片](feat-035-image-mask-editing.md) | TASK-IMAGE-EDIT-001, TASK-IMAGE-EDIT-VERIFY-002 |
+| FEAT-035 | 图片蒙版编辑 | PARTIAL（部分可用） | [卡片](feat-035-image-mask-editing.md) | TASK-IMAGE-EDIT-001, TASK-IMAGE-EDIT-VERIFY-002, TASK-MOD-P2 |
 
 ## 智能能力
 

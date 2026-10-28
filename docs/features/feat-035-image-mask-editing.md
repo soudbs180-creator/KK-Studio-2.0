@@ -2,8 +2,8 @@
 
 - 状态：PARTIAL
 - 领域：creation
-- 最近更新：2026-10-08
-- 关联任务：TASK-IMAGE-EDIT-001、TASK-IMAGE-EDIT-VERIFY-002
+- 最近更新：2026-10-28
+- 关联任务：TASK-IMAGE-EDIT-001、TASK-IMAGE-EDIT-VERIFY-002、TASK-MOD-P2
 
 ## 用户可见入口
 
@@ -14,6 +14,7 @@
 - src/domain/imageEdit.ts：共享数据契约
 - src/features/image-edit：Mask、坐标、区域、上下文、处理和界面
 - src/features/creation：现有任务、模型适配、原件归档和恢复
+- src/features/capabilities：默认关闭的image.inpaint清单/派发；creation/inpaintCapabilityDispatch接回原任务链
 - src-tauri/src/task_host.rs / image_edit_schema.rs：原生传输和包校验
 
 ## 测试与证据
@@ -31,3 +32,5 @@
 真实付费模型效果、任意语义几何/透视位移自动识别、手机键盘与物理触控、用户最终视觉验收尚未完成，归TASK-IMAGE-EDIT-VERIFY-002。当前按比例检查和人工候选复核处理模型映射风险。Mobile原生应用未改；不以fixture或窄屏截图代替真机证据。保留原有生成服务、权限、归档和unknown边界，无新队列或依赖。
 
 - 2026-10-09：承接main1d后的产品27b/driver-eaa保留选中卡片上方操作栏、App灯箱、lazy首屏及单排标题栏；完整445browser/102Rust和同EXE原生Mask/选择/TaskHost/模型/标题栏/首屏通过，当前独立补审。开发插件既有FAIL不归此次完成，真实Provider/几何偏移/物理手机/用户验收仍VERIFY-002，功能继续PARTIAL；[最新组合验收](../changes/2026-10-09-unified-mask-main-integration/verification.md)。
+
+- 2026-10-28 P2候选：VITE_CAPABILITIES_INPAINT默认关闭；开启经薄注册器把原准备任务交回原Runtime，不重复HTTP/归档、不改UI/存储身份。两构建任务/资产/溯源/请求/DOM同态及单次派发、重载恢复通过；完整image-edit各14 pass/1原窄屏fail。严格PNG仍有录音按钮边缘1灰阶像素不稳定，连续同路径采样也复现；未宣称零差异/原生或真实Provider通过。Desktop/Web源码48、Mobile43，未合main，见[P2验证](../changes/2026-10-28-inpaint-capability/verification.md)。

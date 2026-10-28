@@ -14,11 +14,15 @@
       "src/features/image-edit/editTasks.ts",
       "src/components/nodes/ImageRedrawDialog.tsx",
       "src/features/creation/imageTaskCommand.ts",
+      "src/features/capabilities/index.ts",
+      "src/features/creation/inpaintCapabilityDispatch.ts",
       "src-tauri/src/task_host.rs",
       "src-tauri/src/image_edit_schema.rs"
     ],
     "tests": [
       "tests/unit/imageEdit.test.ts",
+      "tests/unit/capabilityRegistry.test.ts",
+      "tests/unit/inpaintCapabilityDispatch.test.ts",
       "tests/unit/imageEditSnapshot.test.ts",
       "tests/unit/imageEditFixtureCredential.test.ts",
       "tests/unit/imageMaskAnnotation.test.ts",
@@ -27,8 +31,12 @@
       "tests/browser/image-edit.spec.ts",
       "tests/desktop/image-edit.mjs"
     ],
-    "tasks": ["TASK-IMAGE-EDIT-001", "TASK-IMAGE-EDIT-VERIFY-002"],
-    "updated": "2026-10-08"
+    "tasks": [
+      "TASK-IMAGE-EDIT-001",
+      "TASK-IMAGE-EDIT-VERIFY-002",
+      "TASK-MOD-P2"
+    ],
+    "updated": "2026-10-28"
   },
   {
     "id": "FEAT-001",

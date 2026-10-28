@@ -1315,3 +1315,7 @@ TASK-UI-DETAILS-20261015从最新18e143f修复，Desktop/Web2.1.26产品ab878ffd
 ## 2026-10-28 ORG-1从未开始推进为候选
 
 建立[REPO-LAYOUT](architecture/REPO-LAYOUT.md)与[DEPRECATIONS](architecture/DEPRECATIONS.md)骨架、索引和ignore临时类型。3正7负配置断言、治理/索引/链接/生命周期与快速三门禁通过（2313 pass/0 fail/20 skip）。没有产品/用户数据改动或证据迁出，受保护21文件不变；只自审、未合流，ORG-0/2/5/6仍分别待验。见[本卡验证](changes/2026-10-28-repo-layout/verification.md)。
+
+## 2026-10-28 P2薄注册器与inpaint候选
+
+复用隔离树，不使用子代理。注册/解析/权限/版本/图环与默认关闭派发已接回原持久任务链，根2350/Mobile373单测通过，双构建任务/资产/溯源/请求/DOM同态。完整image-edit两路径各14 pass/1原窄屏fail；严格PNG仍有1灰阶像素渲染不稳定，故TASK-MOD-P2为PARTIAL。包1.2、Desktop/Web源码48、Mobile43；原生/独审/main未验，不能代替四文档其余任务完成。见[P2验证](changes/2026-10-28-inpaint-capability/verification.md)。

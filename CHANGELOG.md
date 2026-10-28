@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- 本地候选：Desktop/Web2.1.48增加薄能力注册表与默认关闭的image.inpaint派发，保留旧任务/资产/审批链。数据与DOM双路径对拍通过，窄屏既有门禁、严格截图零差异和原生/主线仍未验收；[验证](docs/changes/2026-10-28-inpaint-capability/verification.md)。
+
 ## 2.1.45 - 2026-10-26
 
 - 全面重构设置中心四象限架构、ccswitch 五通道模型接入、Composer 能力优先聚合路由、内置浏览器后端（ego_browser）与画布分组性能，同步最新 Figma 设计系统令牌与 AI 全权自治治理规则。

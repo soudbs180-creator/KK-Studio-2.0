@@ -187,6 +187,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-MOD-P1 | 定义能力声明与Task/Asset/Provider叶契约 | PARTIAL | 未完成 | P1 | TASK-MOD-P0 | root | 处理TASK-MOD-P1-G独立治理子卡、TASK-MOD-P1-TYPES严格声明限制；P2接线前补真实Port adapter编译/图环/兼容选择对拍，独审/主线和P0未关闭。 |
 | TASK-MOD-P1-G | 将可选capabilityId接入功能治理与卡片对应 | TODO | 未完成 | P1 | TASK-MOD-P1 | root | P1声明验证后单独执行此治理子卡，不因capability.ts/ports.ts完成关闭完整P1要求。 |
 | TASK-MOD-P1-TYPES | 处理Zod纯ES2022严格依赖声明的URL类型限制 | TODO | 未完成 | P2 | TASK-MOD-P1 | root | 按真实严格消费者需求评估上游修复或独立分发；保持失败可见，不扩大当前包配置的证明范围。 |
+| TASK-MOD-P2 | 能力注册表与默认关闭的image.inpaint双路径试点 | PARTIAL | 进行中 | P1 | TASK-MOD-P1 | root | 处理窄屏基线门禁与严格截图稳定性后完成验收；保留默认关闭。P0/ORG/main整合、独审与真实Provider/原生分别验证，不把本候选算整套完成。 |
 
 ## TASK-FIGMA-PAGES-20261025 — 重新核查并整理Figma 04/05页面与状态
 
@@ -3627,5 +3628,24 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Verification: FAIL — consumer-strict-final.log保留Zod4.6.7 schemas.d.cts四处TS2304 URL错误，strictExit=2；继承现行包配置exit0，运行探针无URL/process/window仍通过。未做上游/分发修复。
 - Evidence: [docs/changes/2026-10-28-capability-contract/verification.md](../../docs/changes/2026-10-28-capability-contract/verification.md), [docs/changes/2026-10-28-capability-contract/review.md](../../docs/changes/2026-10-28-capability-contract/review.md)
 - Next action: 按真实严格消费者需求评估上游修复或独立分发；保持失败可见，不扩大当前包配置的证明范围。
+- Last verified: 2026-10-28
+- Updated: 2026-10-28
+
+## TASK-MOD-P2 — 能力注册表与默认关闭的image.inpaint双路径试点
+
+- Goal: 注册与分发复用原持久任务链，旧入口与算法不变，并以隔离fixture对拍
+- Scope: capabilities薄切片、creation派发适配、契约工具/版本、回归与证据；不搬迁算法/改UI或存储key
+- Display status: 进行中
+- Priority: P1 — 未记录
+- Requirement refs: docs/changes/2026-10-28-inpaint-capability/intent.md, docs/changes/2026-10-28-inpaint-capability/spec.md
+- Feature IDs: FEAT-035
+- Owner role: implementation-integrator
+- Acceptance: 注册/解析/图环/版本/权限/禁用/明确回退正反例通过; 默认关闭回旧路，开启只调用一次原任务链并保持保存/审批/取消边界; 真实双构建对拍任务/资产/关系/HTTP/DOM与PNG；报告原基线失败，不假绿
+- Branch: `feat/TASK-MOD-P2-capability-registry-inpaint`
+- Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
+- Modules: src/features/capabilities, src/features/creation/useImageCommandSubmission.ts, src/features/creation/inpaintCapabilityDispatch.ts, packages/creation-contracts, tests/unit, tests/browser/image-edit.spec.ts
+- Verification: PARTIAL — 薄注册器/默认关闭接线已实现，根2350 pass/20原skip、Mobile373 pass及类型/增量lint/build通过；双构建任务/资产/HTTP/DOM同态，image-edit各14 pass/1原窄屏fail。严格PNG仍有1灰阶像素渲染不稳定（同路径可复现）；独审/原生/main未验。
+- Evidence: [docs/changes/2026-10-28-inpaint-capability/verification.md](../../docs/changes/2026-10-28-inpaint-capability/verification.md), [docs/changes/2026-10-28-inpaint-capability/review.md](../../docs/changes/2026-10-28-inpaint-capability/review.md)
+- Next action: 处理窄屏基线门禁与严格截图稳定性后完成验收；保留默认关闭。P0/ORG/main整合、独审与真实Provider/原生分别验证，不把本候选算整套完成。
 - Last verified: 2026-10-28
 - Updated: 2026-10-28

@@ -8,6 +8,8 @@
 
 本文是跨会话 AI 的最短恢复入口（30 秒内读完）。任务状态只读 [`task-ledger.json`](task-ledger.json)；当前项目事实只读 [`PROJECT_STATE.md`](PROJECT_STATE.md)。
 
+最新P2候选：feat/TASK-MOD-P2-capability-registry-inpaint在fe99上实现薄注册器与默认关闭image.inpaint接线；包1.2、Desktop/Web48、Mobile43。根2350/Mobile373通过，双构建任务/资产/HTTP/DOM一致，各image-edit14 pass/1原窄屏fail；严格PNG有录音按钮边缘1灰阶像素变化，同路径也复现，仍未通过零差异。P2保持PARTIAL，原生/真实Provider/独审/main未验；见[P2验证](../changes/2026-10-28-inpaint-capability/verification.md)。P1-G、严格依赖声明和四文档其余任务仍开放。下文旧状态保留各时间点含义。
+
 P1最新候选：用户已明确启动，当前feat/TASK-MOD-P1-capability-contract在5240e7b3上增加契约包1.1.0、业务schema和3个Port，未改src/上层逻辑。13契约、根2338及Mobile373项通过；独立项目配置/无宿主全局运行通过，严格依赖声明仍有Zod URL错误（TASK-MOD-P1-TYPES）。P1-G治理、P2运行接线、其他Port与主线/独审尚未完成。旧段落“P1未实施”为此前时间点，不覆盖本追加；入口见[P1验证](../changes/2026-10-28-capability-contract/verification.md)。
 
 模块化整顿先读[四份原文总清单](../changes/2026-10-28-modularity-p0/four-document-coverage.md)和TASK-MOD-FOUR-DOC-COVERAGE。原始审计/复核草案由执行规范修正，补篇还含STD现代化与ORG-0–7；最近五项只是优先批次。用户禁止子代理，主代理直接执行，不把自审称为独审。
