@@ -1,34 +1,36 @@
 import React, { useRef, type SetStateAction } from "react";
-import {
-  type CreateProjectInput,
-  type CreationDraft,
-  type CreationProject,
-  type CreationSnapshot,
-  type CreationTask,
-  createProject,
-  emptyDraft,
-} from "./model.ts";
 import type { CanvasCollectionItem } from "../../domain/canvasItems.ts";
-import type { CanvasImageRequest } from "./CanvasImageCommand.ts";
-import { compileEditPrompt } from "../image-edit/prompt.ts";
-import { imageCapabilitiesForSelection } from "../models/imageModelCapabilities.ts";
+import { updateProjectChatView } from "../../domain/projectChatUpdate.ts";
+import type { ProviderConnection } from "../../domain/providerConnections.ts";
 import {
   getDisabledReason,
   getGenerationUiState,
 } from "../../domain/uiGovernance.ts";
+import { createImageEditRuntime } from "../image-edit/editTasks.ts";
+import { compileEditPrompt } from "../image-edit/prompt.ts";
+import { imageCapabilitiesForSelection } from "../models/imageModelCapabilities.ts";
+import { loadStoredAsset, storeGeneratedAsset } from "./assetRepository.ts";
+import type { CanvasImageRequest } from "./CanvasImageCommand.ts";
 import {
   appendImageTask,
   canvasImageAttachments,
-  prepareImageTask,
   ImageTaskCommandError,
+  prepareImageTask,
 } from "./imageTaskCommand.ts";
-import { updateProjectChatView } from "../agent/chatProjectUpdate.ts";
-import { prepareEditInputs } from "../image-edit/editTasks.ts";
+import {
+  createProject,
+  emptyDraft,
+  type CreateProjectInput,
+  type CreationAttachment,
+  type CreationDraft,
+  type CreationProject,
+  type CreationSnapshot,
+  type CreationTask,
+} from "./model.ts";
 import { readProviderConnections } from "./providerRegistry.ts";
-import type { ProviderConnection } from "../../domain/providerConnections.ts";
-import { agentConnection } from "../agent/agentConnection.ts";
-import { rootItemId } from "./useTaskExecution.ts";
+
 import type { SaveState } from "./useCreationStorage.ts";
+import { rootItemId } from "./useTaskExecution.ts";
 
 export type ImageCommandRequest =
   | {
@@ -63,6 +65,16 @@ export interface UseImageCommandSubmissionOptions {
   submitLock?: React.MutableRefObject<boolean>;
   prepareTask?: typeof prepareImageTask;
   capabilitiesInpaint?: boolean;
+  generateFromCanvas?: (options: {
+    nodeId: string;
+    prompt: string;
+    model: string;
+    count: number;
+    kind: "image" | "text";
+    attachments: Array<CreationAttachment & { canvasNodeId: string }>;
+    signal?: AbortSignal;
+    validate: () => string | undefined;
+  }) => Promise<string | undefined>;
 }
 
 export interface UseImageCommandSubmissionReturn {
@@ -145,6 +157,7 @@ export function createSubmissionLogic(
         signal,
         creationRef,
         activeProjectIdRef,
+        generateFromCanvas: options.generateFromCanvas,
       });
       if (canvasFlow.sourceError) return canvasFlow.sourceError;
       if (canvasFlow.earlyReturn !== undefined) return canvasFlow.earlyReturn;
@@ -441,6 +454,7 @@ async function checkAndHandleCanvasOrigin(options: {
   signal?: AbortSignal;
   creationRef: React.MutableRefObject<CreationSnapshot>;
   activeProjectIdRef: React.MutableRefObject<string | null | undefined>;
+  generateFromCanvas?: UseImageCommandSubmissionOptions["generateFromCanvas"];
 }): Promise<{ earlyReturn?: string | undefined; sourceError?: string }> {
   if (options.request.origin !== "canvas") return {};
   const {
@@ -466,6 +480,7 @@ async function checkAndHandleCanvasOrigin(options: {
       original: original!,
       source,
       sourceSig,
+      generateFromCanvas: options.generateFromCanvas,
       projectId,
       signal,
       creationRef,
@@ -478,6 +493,7 @@ async function checkAndHandleCanvasOrigin(options: {
 }
 
 interface CodexCanvasFlowParams {
+  generateFromCanvas?: UseImageCommandSubmissionOptions["generateFromCanvas"];
   requestInput: CanvasImageRequest;
   original: CreationProject;
   source: CanvasCollectionItem;
@@ -533,7 +549,9 @@ async function submitCodexCanvasFlow(
   const afterRead = validate();
   if (afterRead) return afterRead;
 
-  return agentConnection.generateFromCanvas({
+  if (!params.generateFromCanvas)
+    return "Codex 执行入口不可用，请重新打开项目。";
+  return params.generateFromCanvas({
     nodeId: source.id,
     prompt: requestInput.prompt,
     model: requestInput.model,
@@ -870,3 +888,8 @@ function performWorkspaceTransition(onNavigate?: () => void): void {
     onNavigate?.();
   }
 }
+
+const { prepareEditInputs } = createImageEditRuntime({
+  read: loadStoredAsset,
+  write: storeGeneratedAsset,
+});

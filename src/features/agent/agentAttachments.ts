@@ -1,13 +1,12 @@
-import type { CreationAttachment } from "../creation/model.ts";
+import type { AgentDraftAttachment } from "../../../packages/creation-contracts/index.ts";
 import { loadStoredAsset } from "../creation/assetRepository.ts";
 import type { AgentTurnInput } from "./agentTypes.ts";
+export type { AgentDraftAttachment } from "../../../packages/creation-contracts/index.ts";
 
 export const MAX_AGENT_ATTACHMENTS = 6;
 export const MAX_AGENT_IMAGE_BYTES = 8 * 1024 * 1024;
 export const MAX_AGENT_ATTACHMENT_PAYLOAD = 28 * 1024 * 1024;
-export type AgentDraftAttachment = CreationAttachment & {
-  canvasNodeId?: string;
-};
+
 export type AgentImageAttachment = NonNullable<
   AgentTurnInput["attachments"]
 >[number];

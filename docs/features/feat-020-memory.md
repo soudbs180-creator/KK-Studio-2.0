@@ -52,3 +52,5 @@
 - 2026-09-24：TASK-MEMORY-002 改为本机共享（公共目录 ~/.kk-memory/memory.json，覆盖原隔离语义）；新增 MEMORY-CONTRACT.md 作为后续适配器契约。复核纠正了跨应用已打通的过早表述。
 
 - 2026-09-30：集成版本当前验证与剩余边界见 [落地验证](../changes/2026-09-29-project-landing/verification.md)。
+
+2026-10-28 P3源码解耦候选：TASK-MOD-P3E，完整R4降至0，业务任务/原件/记忆隐私/凭据与旧存储身份保持；未证明原生、真实外部服务或main已更新，功能成熟度不据此升级。[验证TASK-MOD-P3E](../changes/2026-10-28-p3e-agent-memory-prompts/verification.md)。

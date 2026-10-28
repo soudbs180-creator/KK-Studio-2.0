@@ -1,60 +1,64 @@
-import React, { useRef, useState, useEffect, type SetStateAction } from "react";
-import { isLocalProviderUrl } from "../../domain/providerUrl.ts";
+import React, { useEffect, useRef, useState, type SetStateAction } from "react";
 import {
   requiredApprovalGates,
   type ApprovalGate,
 } from "../../domain/agentWorkflow.ts";
+import type { Asset } from "../../domain/assets.ts";
+import { assertCanvasDeliveries } from "../../domain/canvasDelivery.ts";
+import type { CanvasCollectionItem } from "../../domain/canvasItems.ts";
+import { isLocalProviderUrl } from "../../domain/providerUrl.ts";
+import { imageResultContext } from "../image-edit/context.ts";
+import { createImageEditRuntime } from "../image-edit/editTasks.ts";
+import { ImageEditMappingError } from "../image-edit/imageProcessing.ts";
+import { imageRegeneration } from "../image-edit/regeneration.ts";
+import {
+  hashPrompt,
+  loadStoredAsset,
+  storeGeneratedAsset,
+} from "./assetRepository.ts";
+import { mapWithConcurrency } from "./generationQueue.ts";
+import { generateImages, GenerationProviderError } from "./imageGeneration.ts";
+import {
+  appendImageTaskResults,
+  assertLiveTextTask,
+} from "./imageTaskCommand.ts";
 import type {
   CreationProject,
   CreationSnapshot,
   CreationTask,
   CreationTaskOutput,
 } from "./model.ts";
-import { assertCanvasDeliveries } from "../agent/agentCanvas.ts";
-import { generateImages, GenerationProviderError } from "./imageGeneration.ts";
-import { storeGeneratedAsset, hashPrompt } from "./assetRepository.ts";
+import { executeNativeFlow } from "./nativeTaskExecution.ts";
 import {
-  appendImageTaskResults,
-  assertLiveTextTask,
-} from "./imageTaskCommand.ts";
-import { composeEditResult } from "../image-edit/editTasks.ts";
-import { imageResultContext } from "../image-edit/context.ts";
-import { ImageEditMappingError } from "../image-edit/imageProcessing.ts";
-import { imageRegeneration } from "../image-edit/regeneration.ts";
-import { generateText } from "./textGeneration.ts";
-import { textTaskResult } from "./textTaskResult.ts";
+  cancelNativeTask,
+  usesNativeTaskHost,
+  type NativeTaskHostRecord,
+} from "./nativeTaskHost.ts";
+import { compileDesignPrompt } from "./promptCompiler.ts";
 import {
   markProviderConnectionFailure,
   markProviderConnectionHealthy,
   readProviderConnections,
 } from "./providerRegistry.ts";
 import {
-  reserveProviderSubmissionAsync,
-  type ProviderSubmissionReservation,
   ProviderSubmissionError,
+  reserveProviderSubmissionAsync,
   taskProviderOptions,
   taskSubmissionBinding,
+  type ProviderSubmissionReservation,
 } from "./providerSubmission.ts";
-import { mapWithConcurrency } from "./generationQueue.ts";
-import { compileDesignPrompt } from "./promptCompiler.ts";
 import {
   abortedAfterProviderSubmission,
   canRetryTask,
-  mergeRetryTaskState,
   markArchiveFailuresUnknown,
+  mergeRetryTaskState,
   preserveAcceptedOutputsOnDeliveryFailure,
-  retryBlockedOutputIndices,
   retryableOutputIndices,
+  retryBlockedOutputIndices,
   submissionMayHaveBeenAccepted,
 } from "./taskRecovery.ts";
-import {
-  cancelNativeTask,
-  usesNativeTaskHost,
-  type NativeTaskHostRecord,
-} from "./nativeTaskHost.ts";
-import { executeNativeFlow } from "./nativeTaskExecution.ts";
-import type { Asset } from "../../domain/assets.ts";
-import type { CanvasCollectionItem } from "../../domain/canvasItems.ts";
+import { generateText } from "./textGeneration.ts";
+import { textTaskResult } from "./textTaskResult.ts";
 
 export function outputsForTask(task: CreationTask): CreationTaskOutput[] {
   const completed = new Set(
@@ -1908,3 +1912,8 @@ async function handleExecutionError(
     console.warn("[useTaskExecution] flush on error failed:", err);
   });
 }
+
+const { composeEditResult } = createImageEditRuntime({
+  read: loadStoredAsset,
+  write: storeGeneratedAsset,
+});

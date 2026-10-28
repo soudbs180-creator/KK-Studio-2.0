@@ -49,11 +49,11 @@
 | P1 | 执行§4.3/7/17 | capability.ts、ports.ts、公开导出/包版本；合法非法/权限/版本契约回归；五个Port不扩既有语义 | 候选已新增capability.ts及本轮指定Task/Asset/Provider三个Port，包1.1.0，旧wire类型兼容；13契约/独立项目配置与运行探针通过，严格依赖声明的Zod URL限制保留；Storage/Permission另阶段，独审/合流未完成，见[P1验证](../2026-10-28-capability-contract/verification.md) |
 | P1-G | 复核C3；执行§17-P1 | 可选capabilityId、check-features与卡片/账本对应，独立治理提交；ADR③草案 | 未实施，已登记TASK-MOD-P1-G；ADR-028草案已建，不能因契约文件完成而漏掉治理字段/卡片与检查 |
 | P2 | 执行§7/17 | register/unregister/list/resolve/run；inpaint包装现有链路、Port映射、默认关闭；旧新任务/资产/origins/parentId对拍、DOM零差异 | PARTIAL候选已实现注册器与TaskPort.submit接线；双构建数据/溯源/HTTP/DOM同态通过，各14 pass/1原窄屏fail；严格PNG仍有1像素渲染不稳定，原生/独审/main未验，见[P2验证](../2026-10-28-inpaint-capability/verification.md)。Asset/Provider仍由原Runtime承担，P3a全面Port化未完成 |
-| P3a | 执行§18 | creation↔image-edit：共享类型下沉、Port/props、纯函数归位；对应R4减少 | 未实施，依赖P2 |
-| P3b | 执行§18 | agent↔creation：任务/资产Port，类型下沉，组装根回调 | 未实施 |
-| P3c | 执行§18 | creation↔local-service：StoragePort/快照契约；server-only不进浏览器 | 未实施 |
-| P3d | 执行§18 | creation↔models：Provider职责归位，旧路径垫片保留一个发布周期、到期任务 | 未实施 |
-| P3e | 执行§18 | agent↔memory及agent↔prompts两对分别解除；记忆隐私/权限保持 | 未实施；不能只解一对就标整项完成 |
+| P3a | 执行§18 | creation↔image-edit：共享类型下沉、Port/props、纯函数归位；对应R4减少 | 源码候选已实现：契约类型统一、AssetPort注入、共享Context为无feature依赖的runtime；ON经inpaint注册器、OFF兼容。完整图阶段16→15；运行/独审/main仍PARTIAL |
+| P3b | 执行§18 | agent↔creation：任务/资产Port，类型下沉，组装根回调 | 源码候选已实现：Agent回调由装配根注入，聊天/交付纯函数归domain；阶段15→12，原接口/状态不重造；运行/独审/main仍PARTIAL |
+| P3c | 执行§18 | creation↔local-service：StoragePort/快照契约；server-only不进浏览器 | 源码候选已实现：domain纯模型/codec与StoragePort，local-service不反依赖creation；阶段12→10，HTTP重启/备份恢复通过；原生/独审/main仍PARTIAL |
+| P3d | 执行§18 | creation↔models：Provider职责归位，旧路径垫片保留一个发布周期、到期任务 | 源码候选已实现：Provider store/vault/锁归integrations；文本事件纯解析解除长环，阶段10→4；旧路径保留并挂TASK-MOD-P3-COMPAT，未正式发布/合流 |
+| P3e | 执行§18 | agent↔memory及agent↔prompts两对分别解除；记忆隐私/权限保持 | 两对均已实现源码解耦：MemoryAgentPort显式注入，回复/附件类型下沉，prompts无反向feature引用；阶段4→0；不是只解除一对，独审/main仍PARTIAL |
 | P3f | 执行§18；补篇A8 | useCanvasHistory真实实现归位、DOM/交互不变 | 未实施；等待OPT-201设计，防止重复搬迁 |
 | P4 | 执行§17 | skills→plugins→models→agent→creation五个目标切片逐卡收敛深层import；基线下降 | 未实施；generation-server/assets重命名是可选，不强行加入完成条件 |
 | P5 | 执行§9/17；补篇A4/A6 | PermissionPort、清单/受限上下文、越权拒绝、旧插件迁移；与OPT-401同设计 | 未实施；依赖旧插件策略及必要设计证据 |

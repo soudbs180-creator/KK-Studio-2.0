@@ -1,30 +1,31 @@
+import { agentConnection } from "../../src/features/agent/agentConnection.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { createElement, type ReactElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
+import { createAgentConnection } from "../../src/features/agent/agentConnection.ts";
+import { sendProjectAgentMessage } from "../../src/features/agent/homeAgentRecovery.ts";
 import {
-  sanitizeSnapshotForPersistence,
-  persistCreationSnapshotSync,
-  persistCreationSnapshotAsync,
-  loadCreationSnapshot,
-} from "../../src/features/creation/storage.ts";
-import {
-  normalizeChat,
-  emptyDraft,
   CREATION_STORAGE_KEY,
+  emptyDraft,
+  normalizeChat,
   type ChatItem,
   type ChatItemDraft,
-  type CreationSnapshot,
   type CreationProjectV3,
+  type CreationSnapshot,
 } from "../../src/features/creation/model.ts";
 import {
   chatItemSchema,
   decodeSnapshot,
 } from "../../src/features/creation/snapshotCodec.ts";
-import { useMemory } from "../../src/features/memory/useMemory.ts";
+import {
+  loadCreationSnapshot,
+  persistCreationSnapshotAsync,
+  persistCreationSnapshotSync,
+  sanitizeSnapshotForPersistence,
+} from "../../src/features/creation/storage.ts";
 import { memoryService } from "../../src/features/memory/index.ts";
-import { createAgentConnection } from "../../src/features/agent/agentConnection.ts";
-import { sendProjectAgentMessage } from "../../src/features/agent/homeAgentRecovery.ts";
+import { useMemory } from "../../src/features/memory/useMemory.ts";
 
 function createValidChat(
   id: string,
@@ -437,7 +438,7 @@ test("R2-ISO-08: useMemory blocks manual memory extraction when active chat is t
   let capturedHook: ReturnType<typeof useMemory> | null = null;
 
   function TestHarness({ isTemp }: { isTemp: boolean }): ReactElement | null {
-    capturedHook = useMemory((msg) => feedbacks.push(msg), {
+    capturedHook = useMemory((msg) => feedbacks.push(msg), agentConnection, {
       isTemporary: isTemp,
     });
     return null;
@@ -462,7 +463,7 @@ test("R2-ISO-09: extractWithCodex respects explicit temporary argument override"
   let capturedHook: ReturnType<typeof useMemory> | null = null;
 
   function TestHarness(): ReactElement | null {
-    capturedHook = useMemory((msg) => feedbacks.push(msg), {
+    capturedHook = useMemory((msg) => feedbacks.push(msg), agentConnection, {
       isTemporary: false, // Default is regular chat
     });
     return null;

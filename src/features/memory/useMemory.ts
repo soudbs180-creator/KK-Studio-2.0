@@ -2,7 +2,7 @@
  * 记忆设置页 React hook：开关、列表、删除、清空、共享目录授权、手动 Codex 提炼。
  */
 import { useCallback, useEffect, useRef, useState } from "react";
-import { agentConnection } from "../agent/agentConnection.ts";
+import type { MemoryAgentPort } from "../../../packages/creation-contracts/index.ts";
 import { memoryService } from "./index.ts";
 import { completedAssistantReply } from "./reply.ts";
 import type { MemoryStoreFile } from "./types.ts";
@@ -11,6 +11,7 @@ const EXTRACT_INSTRUCTION =
   "请从本次对话中提炼关于用户稳定偏好的 3~5 条事实，每行一条，以「记忆：」开头，不要输出其他内容。";
 
 function waitForAssistantReply(
+  agentConnection: MemoryAgentPort,
   clientMessageId: string,
   threadId: string,
   isCurrent: () => boolean,
@@ -52,12 +53,15 @@ export interface UseMemoryOptions {
 
 export function useMemory(
   onFeedback: (message: string) => void,
+  agentConnection: MemoryAgentPort,
   options?: UseMemoryOptions | boolean | null,
 ) {
   const feedbackRef = useRef(onFeedback);
   feedbackRef.current = onFeedback;
   const optionsRef = useRef(options);
   optionsRef.current = options;
+  const agentRef = useRef(agentConnection);
+  agentRef.current = agentConnection;
   const [enabled, setEnabled] = useState<boolean>(() =>
     memoryService.isEnabled(),
   );
@@ -234,6 +238,7 @@ export function useMemory(
       const isCurrent = () => {
         const current = agentConnection.getState();
         return (
+          agentRef.current === agentConnection &&
           current.status === "connected" &&
           current.connectionRevision === revision &&
           current.conversation?.threadId === threadId &&
@@ -269,6 +274,7 @@ export function useMemory(
           return;
         }
         const reply = await waitForAssistantReply(
+          agentConnection,
           result.messageId,
           threadId,
           isCurrent,
@@ -298,7 +304,7 @@ export function useMemory(
         setExtracting(false);
       }
     },
-    [busy, extracting, onFeedback, refresh],
+    [agentConnection, busy, extracting, onFeedback, refresh],
   );
 
   return {

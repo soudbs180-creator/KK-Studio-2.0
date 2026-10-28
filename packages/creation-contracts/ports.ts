@@ -1,8 +1,8 @@
-import type { CreationTask, CreationAttachment } from "./creation.ts";
+import type { CreationAttachment, CreationTask } from "./creation.ts";
 import type {
   AssetProvenance,
-  StoredAssetMetadata,
   ProviderConnectionIdentity,
+  StoredAssetMetadata,
 } from "./wire.ts";
 
 /** Existing task intent/queue only; approval and idempotency remain owned by the host. */
@@ -102,4 +102,11 @@ export interface ProviderPort {
     provider: ResolvedCapabilityProvider,
     providerJobId: string,
   ): Promise<CapabilityProviderResult[]>;
+}
+
+/** The snapshot owner supplies the exact codec; the storage transport owns no model. */
+export interface StoragePort<Snapshot> {
+  decode(value: unknown): Snapshot;
+  parse(raw: string): Snapshot;
+  serialize(snapshot: Snapshot): Snapshot;
 }

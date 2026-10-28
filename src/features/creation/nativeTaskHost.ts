@@ -1,8 +1,18 @@
 import { invoke } from "@tauri-apps/api/core";
+import {
+  reconcileProjectCanvas,
+  type ProjectCanvas,
+} from "../../domain/projectCanvas.ts";
 import type {
-  ProviderProtocol,
   ProviderAuthMode,
+  ProviderProtocol,
 } from "../../domain/providerProtocol.ts";
+import { imageResultContext } from "../image-edit/context.ts";
+import { createImageEditRuntime } from "../image-edit/editTasks.ts";
+import { ImageEditMappingError } from "../image-edit/imageProcessing.ts";
+import { editReceiptReason } from "../image-edit/recovery.ts";
+import { loadStoredAsset, storeGeneratedAsset } from "./assetRepository.ts";
+import { sameJson } from "./chatMigration.ts";
 import type {
   CreationProject,
   CreationSnapshot,
@@ -10,18 +20,9 @@ import type {
   CreationTaskOutput,
 } from "./model.ts";
 import { readNativeAsset, usesNativeAssets } from "./nativeAssetAdapter.ts";
-import { textTaskResult } from "./textTaskResult.ts";
-import {
-  reconcileProjectCanvas,
-  type ProjectCanvas,
-} from "../../domain/projectCanvas.ts";
-import { reconcileRetryTaskParents } from "./taskRecovery.ts";
-import { composeNativeEditAsset } from "../image-edit/editTasks.ts";
-import { imageResultContext } from "../image-edit/context.ts";
-import { ImageEditMappingError } from "../image-edit/imageProcessing.ts";
-import { editReceiptReason } from "../image-edit/recovery.ts";
 import { assertSynchronousProviderSubmission } from "./providerSubmission.ts";
-import { sameJson } from "./chatMigration.ts";
+import { reconcileRetryTaskParents } from "./taskRecovery.ts";
+import { textTaskResult } from "./textTaskResult.ts";
 
 /** The request crossing the Desktop TaskHost IPC boundary. It contains no API key. */
 export interface NativeTaskHostRequest {
@@ -1161,3 +1162,8 @@ export async function reconcileNativeTasks(
   if (reconciled === snapshot) return snapshot;
   return preserveUnchangedProjects(snapshot, reconciled, newerNativeReceipts);
 }
+
+const { composeNativeEditAsset } = createImageEditRuntime({
+  read: loadStoredAsset,
+  write: storeGeneratedAsset,
+});

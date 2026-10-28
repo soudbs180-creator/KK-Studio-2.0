@@ -1,34 +1,28 @@
 // Public contract entry for feature: creation
-export {
-  CanvasImageCommandContext,
-  CanvasImageNodeContext,
-  useCanvasImageGeneration,
-} from "./CanvasImageCommand.tsx";
-export type { CanvasImageRequest } from "./CanvasImageCommand.tsx";
-export { loadAssetPreview, clearAssetPreviews } from "./assetPreview.ts";
+export { clearAssetPreviews, loadAssetPreview } from "./assetPreview.ts";
 export {
   assetProvenanceSchema,
   authenticatedAssetRoute,
-  loadStoredAsset,
   hashPrompt,
-  storeGeneratedAsset,
   listStoredAssets,
+  loadStoredAsset,
+  storeGeneratedAsset,
 } from "./assetRepository.ts";
 export type {
   AssetProvenance,
-  StoredGeneratedAsset,
   StoredAssetMetadata,
+  StoredGeneratedAsset,
 } from "./assetRepository.ts";
 export {
-  audioVoiceOptions,
+  audioFormatLabel,
   audioFormatOptions,
-  normalizeAudioVoiceValue,
+  audioMimeType,
+  audioSpeedLabel,
+  audioVoiceLabel,
+  audioVoiceOptions,
   normalizeAudioFormatValue,
   normalizeAudioSpeedValue,
-  audioVoiceLabel,
-  audioFormatLabel,
-  audioSpeedLabel,
-  audioMimeType,
+  normalizeAudioVoiceValue,
   requestAudioGeneration,
 } from "./audioGeneration.ts";
 export type {
@@ -36,12 +30,18 @@ export type {
   AudioGenerationOptions,
 } from "./audioGeneration.ts";
 export {
-  rejectSecretsInSnapshot,
-  sha256Hex,
-  sameJson,
-  resolveActiveChatId,
-  migrateSnapshotV2ToV3,
+  CanvasImageCommandContext,
+  CanvasImageNodeContext,
+  useCanvasImageGeneration,
+} from "./CanvasImageCommand.tsx";
+export type { CanvasImageRequest } from "./CanvasImageCommand.tsx";
+export {
   migrateSnapshotToV3,
+  migrateSnapshotV2ToV3,
+  rejectSecretsInSnapshot,
+  resolveActiveChatId,
+  sameJson,
+  sha256Hex,
 } from "./chatMigration.ts";
 export type {
   ChatItem,
@@ -53,46 +53,64 @@ export type {
   LegacyV2Snapshot,
 } from "./chatMigration.ts";
 export {
+  PROVIDER_SAVE_LOCK,
+  withProviderStoreLock,
+} from "./providerCoordination.ts";
+export {
+  ProviderSaveError,
+  clearProviderConnectionKey,
+  providerSaveErrorMessage,
+  restoreProviderConnection,
+  saveProviderConnection,
+} from "./providerSaveRecovery.ts";
+export {
+  credentialId,
+  deleteApiKey,
+  hasApiKey,
+  loadApiKey,
+  saveApiKey,
+} from "./providerCredentials.ts";
+export {
   canStartQueueItem,
-  selectConnection,
-  retryDelayMs,
-  nextBatchStatus,
   mapWithConcurrency,
+  nextBatchStatus,
+  retryDelayMs,
+  selectConnection,
 } from "./generationQueue.ts";
 export type {
-  QueueStatus,
   GenerationQueueItem,
   QueueConnectionHealth,
+  QueueStatus,
 } from "./generationQueue.ts";
 export {
-  getSessionApiKey,
-  setSessionApiKey,
   GenerationProviderError,
-  readProvider,
-  providerError,
-  generateImages,
   generateImage,
+  generateImages,
+  getSessionApiKey,
+  providerError,
   providerModelsEndpoint,
+  readProvider,
+  setSessionApiKey,
 } from "./imageGeneration.ts";
 export type {
-  ProviderFailureClass,
   GeneratedImages,
+  ProviderFailureClass,
 } from "./imageGeneration.ts";
 export {
   ImageTaskCommandError,
-  assertLiveTextTask,
-  validateImageTaskInput,
-  prepareImageTask,
   appendImageTask,
   appendImageTaskResults,
+  assertLiveTextTask,
   canvasImageAttachments,
+  prepareImageTask,
+  validateImageTaskInput,
 } from "./imageTaskCommand.ts";
 export { commitIndexedChatMigration } from "./indexedChatMigration.ts";
 export type { IndexedSnapshotRecords } from "./indexedChatMigration.ts";
 export {
-  resolveTargetImageMime,
   calculateAdaptiveResize,
   detectAlphaTransparency,
+  resolveTargetImageMime,
 } from "./mediaAlphaPreservation.ts";
 export type { AdaptiveDimensions } from "./mediaAlphaPreservation.ts";
 export {
@@ -101,196 +119,178 @@ export {
 } from "./mediaDimensions.ts";
 export type { MediaDimensions } from "./mediaDimensions.ts";
 export {
-  projectHasUnsettledTasks,
-  activeChat,
-  projectChatView,
-  updateActiveChat,
-  hasLegacyChatAuthority,
-  hasProjectChatAuthorityConflict,
-  serializeCreationSnapshot,
-  projectChatExecutionBlockReason,
-  snapshotWriteBlockReason,
   CREATION_STORAGE_KEY,
-  modelSupportsKind,
-  emptyDraft,
+  activeChat,
   createDefaultChat,
-  emptySnapshot,
-  readCreationSnapshot,
-  normalizeCreationSnapshot,
-  isCreationProviderRoutingValid,
-  normalizeChat,
-  persistCreationSnapshot,
   createProject,
   createTask,
+  emptyDraft,
+  emptySnapshot,
+  hasLegacyChatAuthority,
+  hasProjectChatAuthorityConflict,
+  isCreationProviderRoutingValid,
+  modelSupportsKind,
+  normalizeChat,
+  normalizeCreationSnapshot,
+  persistCreationSnapshot,
+  projectChatExecutionBlockReason,
+  projectChatView,
+  projectHasUnsettledTasks,
+  readCreationSnapshot,
+  serializeCreationSnapshot,
+  snapshotWriteBlockReason,
+  updateActiveChat,
 } from "./model.ts";
 export type {
-  CreationTaskStatus,
-  CreationSubmissionState,
-  CreationOutputStatus,
-  CreationTaskOutput,
+  CreateProjectInput,
   CreationAttachment,
+  CreationDraft,
   CreationMessage,
-  CreationTask,
+  CreationOutputStatus,
   CreationProject,
-  SidebarSortMode,
-  SidebarPreferences,
-  CreationSnapshotV2,
   CreationProjectGroup,
   CreationSnapshot,
+  CreationSnapshotV2,
+  CreationSubmissionState,
+  CreationTask,
+  CreationTaskOutput,
+  CreationTaskStatus,
   ReasoningEffort,
-  CreationDraft,
-  CreateProjectInput,
+  SidebarPreferences,
+  SidebarSortMode,
 } from "./model.ts";
 export {
-  usesNativeAssets,
-  storeNativeAsset,
-  readNativeAsset,
   listNativeAssets,
+  readNativeAsset,
+  storeNativeAsset,
+  usesNativeAssets,
 } from "./nativeAssetAdapter.ts";
 export {
-  flushCreationBeforeClose,
   createNativeCloseHandler,
+  flushCreationBeforeClose,
 } from "./nativeClose.ts";
 export {
   executeNativeFlow,
-  publishNativeRecordState,
-  resolveNativeStatus,
-  resolveNativeErrorMessage,
   processSingleNativeOutput,
+  publishNativeRecordState,
+  resolveNativeErrorMessage,
+  resolveNativeStatus,
 } from "./nativeTaskExecution.ts";
 export type { NativeFlowOptions } from "./nativeTaskExecution.ts";
 export {
-  usesNativeTaskHost,
-  nativeTaskHostUnavailableError,
-  validateNativeTaskRecord,
-  submitNativeTask,
+  cancelNativeTask,
   getNativeTask,
   listNativeTasks,
-  cancelNativeTask,
+  nativeTaskHostUnavailableError,
   reconcileNativeTasks,
+  submitNativeTask,
+  usesNativeTaskHost,
+  validateNativeTaskRecord,
 } from "./nativeTaskHost.ts";
 export type {
-  NativeTaskHostRequest,
-  NativeTaskStatus,
-  NativeTaskOutputStatus,
   NativeTaskHostOutput,
   NativeTaskHostRecord,
+  NativeTaskHostRequest,
+  NativeTaskOutputStatus,
+  NativeTaskStatus,
 } from "./nativeTaskHost.ts";
 export { compileDesignPrompt } from "./promptCompiler.ts";
 export type { PromptCompileOptions } from "./promptCompiler.ts";
 export {
-  PROVIDER_SAVE_LOCK,
-  withProviderStoreLock,
-} from "./providerCoordination.ts";
-export {
-  credentialId,
-  loadApiKey,
-  hasApiKey,
-  saveApiKey,
-  deleteApiKey,
-} from "./providerCredentials.ts";
-export {
   PROVIDER_CONNECTIONS_STORAGE_KEY,
-  normalizeProviderConnection,
+  addProviderConnection,
+  connectionFromModelProfile,
+  findModelProfileConnection,
   isDesktopProviderDurable,
   loadProviderConnectionsDurable,
   loadProviderConnectionsDurableSnapshot,
-  persistProviderConnectionsDurable,
-  readProviderConnections,
-  writeProviderConnections,
-  addProviderConnection,
-  mergeProviderConnection,
-  removeProviderConnection,
-  updateProviderConnection,
-  releaseProviderLease,
+  managedConnections,
+  markProviderConnectionFailure,
   markProviderConnectionHealthy,
   markProviderConnectionUnverified,
-  markProviderConnectionFailure,
-  managedConnections,
-  findModelProfileConnection,
+  mergeProviderConnection,
   newModelProfileConnection,
-  connectionFromModelProfile,
+  normalizeProviderConnection,
+  persistProviderConnectionsDurable,
+  readProviderConnections,
+  releaseProviderLease,
+  removeProviderConnection,
+  updateProviderConnection,
+  writeProviderConnections,
 } from "./providerRegistry.ts";
 export {
-  ProviderSaveError,
-  providerSaveErrorMessage,
-  restoreProviderConnection,
-  saveProviderConnection,
-  clearProviderConnectionKey,
-} from "./providerSaveRecovery.ts";
-export {
   ProviderSubmissionError,
-  assertSynchronousProviderSubmission,
-  taskProviderOptions,
-  taskSubmissionBinding,
   assertSubmissionConnection,
-  selectSubmissionConnection,
+  assertSynchronousProviderSubmission,
   reserveProviderSubmission,
   reserveProviderSubmissionAsync,
+  selectSubmissionConnection,
+  taskProviderOptions,
+  taskSubmissionBinding,
 } from "./providerSubmission.ts";
 export type {
-  SubmissionBinding,
   ProviderSubmissionReservation,
+  SubmissionBinding,
 } from "./providerSubmission.ts";
 export {
-  resolveImageAttachments,
   prepareAttachmentUpload,
+  resolveImageAttachments,
 } from "./resolveAttachments.ts";
 export {
-  isAssetReference,
   encodeSnapshotAssets,
   hydrateSnapshotAssets,
+  isAssetReference,
 } from "./snapshotAssets.ts";
 export {
-  chatItemSchema,
   SnapshotStorageError,
-  storageError,
-  rejectSecrets,
-  validateSnapshotV3,
+  chatItemSchema,
   decodeSnapshot,
   parseSnapshot,
+  rejectSecrets,
+  storageError,
+  validateSnapshotV3,
 } from "./snapshotCodec.ts";
 export {
   NonDowngradableWriteBarrier,
   loadCreationSnapshot,
   pendingRecoveryDraft,
+  persistCreationSnapshotAsync,
   persistCreationSnapshotSync,
   sanitizeSnapshotForPersistence,
-  persistCreationSnapshotAsync,
 } from "./storage.ts";
 export type { SnapshotLoad } from "./storage.ts";
 export {
   abortedAfterProviderSubmission,
-  submissionMayHaveBeenAccepted,
   canRetryTask,
-  retryableOutputIndices,
-  preserveAcceptedOutputsOnDeliveryFailure,
   markArchiveFailuresUnknown,
-  retryBlockedOutputIndices,
   mergeRetryTaskState,
+  preserveAcceptedOutputsOnDeliveryFailure,
   reconcileRetryTaskParents,
   recoverInterruptedTasks,
+  retryBlockedOutputIndices,
+  retryableOutputIndices,
+  submissionMayHaveBeenAccepted,
 } from "./taskRecovery.ts";
 export {
   taskOutputsForDisplay,
   taskRetryAvailability,
 } from "./taskRetryAvailability.ts";
 export {
-  normalizeTaskCostReceipt,
   applyTaskCostReceipt,
-  unifiedTaskStatuses,
-  taskStateRank,
-  retryFailedOutputIndices,
   estimateTaskCostUsd,
   formatCostUsd,
+  normalizeTaskCostReceipt,
+  retryFailedOutputIndices,
+  taskStateRank,
+  unifiedTaskStatuses,
 } from "./taskState.ts";
 export type {
-  TaskCostReceiptKind,
-  TaskCostReceiptSource,
   TaskCostReceipt,
   TaskCostReceiptApplyResult,
+  TaskCostReceiptKind,
+  TaskCostReceiptSource,
 } from "./taskState.ts";
-export { readTextStream, generateText } from "./textGeneration.ts";
+export { generateText, readTextStream } from "./textGeneration.ts";
 export { consumeTextEvent } from "./textProtocolEvent.ts";
 export type { TextProtocolState } from "./textProtocolEvent.ts";
 export { textTaskResult } from "./textTaskResult.ts";
@@ -302,10 +302,10 @@ export { useCreationStorage } from "./useCreationStorage.ts";
 export type { SaveState } from "./useCreationStorage.ts";
 export {
   canvasSignature,
+  checkSubmissionUiReadiness,
   createSubmissionLogic,
   useImageCommandSubmission,
   validatePreflightGuards,
-  checkSubmissionUiReadiness,
 } from "./useImageCommandSubmission.ts";
 export type {
   ImageCommandRequest,
@@ -319,12 +319,12 @@ export {
 export { useSpeechInput } from "./useSpeechInput.ts";
 export type { SpeechInputState } from "./useSpeechInput.ts";
 export {
-  outputsForTask,
-  rootItemId,
   capacitySwitchHint,
   hasArchivedOutputEvidence,
-  useTaskExecution,
+  outputsForTask,
   publishTaskOutputState,
+  rootItemId,
+  useTaskExecution,
 } from "./useTaskExecution.ts";
 export type {
   UseTaskExecutionOptions,

@@ -1,3 +1,4 @@
+import { randomUUID } from "node:crypto";
 import {
   closeSync,
   existsSync,
@@ -5,24 +6,25 @@ import {
   lstatSync,
   mkdirSync,
   openSync,
-  readFileSync,
   readdirSync,
+  readFileSync,
   renameSync,
   rmSync,
   writeFileSync,
 } from "node:fs";
-import { randomUUID } from "node:crypto";
 import { join, resolve, sep } from "node:path";
+import type { CreationSnapshot } from "../../domain/creationTypes.ts";
 import {
-  serializeCreationSnapshot,
-  type CreationSnapshot,
-} from "../creation/model.ts";
-import { assertStandaloneRoot } from "./standaloneRoot.ts";
-import {
-  decodeSnapshot,
-  parseSnapshot,
+  creationSnapshotCodec,
   SnapshotStorageError,
-} from "../creation/snapshotCodec.ts";
+} from "../../domain/creationSnapshotCodec.ts";
+import {
+  canonicalJson,
+  createManifest,
+  sha256Bytes,
+  sha256Json,
+  verifyManifestHash,
+} from "./manifest.ts";
 import {
   assetMetadataSchema,
   backupManifestSchema,
@@ -31,16 +33,10 @@ import {
   migrationPreflightSchema,
   rejectCompanionSecrets,
   snapshotPutSchema,
-  type CompanionBackupManifest,
   type CompanionAssetMetadata,
+  type CompanionBackupManifest,
 } from "./protocol.ts";
-import {
-  canonicalJson,
-  createManifest,
-  sha256Bytes,
-  sha256Json,
-  verifyManifestHash,
-} from "./manifest.ts";
+import { assertStandaloneRoot } from "./standaloneRoot.ts";
 
 export type SnapshotReadResult = {
   status: "missing" | "loaded" | "recovered";
@@ -995,3 +991,9 @@ export class CompanionStore {
     }
   }
 }
+
+const {
+  decode: decodeSnapshot,
+  parse: parseSnapshot,
+  serialize: serializeCreationSnapshot,
+} = creationSnapshotCodec;

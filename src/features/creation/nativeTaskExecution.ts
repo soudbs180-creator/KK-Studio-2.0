@@ -1,4 +1,10 @@
 import React, { type SetStateAction } from "react";
+import type { Asset } from "../../domain/assets.ts";
+import type { CanvasCollectionItem } from "../../domain/canvasItems.ts";
+import { imageResultContext } from "../image-edit/context.ts";
+import { createImageEditRuntime } from "../image-edit/editTasks.ts";
+import { ImageEditMappingError } from "../image-edit/imageProcessing.ts";
+import { loadStoredAsset, storeGeneratedAsset } from "./assetRepository.ts";
 import type {
   CreationProject,
   CreationSnapshot,
@@ -6,14 +12,6 @@ import type {
   CreationTaskOutput,
 } from "./model.ts";
 import { readNativeAsset } from "./nativeAssetAdapter.ts";
-import { composeNativeEditAsset } from "../image-edit/editTasks.ts";
-import { imageResultContext } from "../image-edit/context.ts";
-import { ImageEditMappingError } from "../image-edit/imageProcessing.ts";
-import { textTaskResult } from "./textTaskResult.ts";
-import {
-  assertSubmissionConnection,
-  taskSubmissionBinding,
-} from "./providerSubmission.ts";
 import {
   cancelNativeTask,
   getNativeTask,
@@ -22,9 +20,12 @@ import {
   type NativeTaskHostRecord,
   type NativeTaskStatus,
 } from "./nativeTaskHost.ts";
+import {
+  assertSubmissionConnection,
+  taskSubmissionBinding,
+} from "./providerSubmission.ts";
+import { textTaskResult } from "./textTaskResult.ts";
 import { hasArchivedOutputEvidence } from "./useTaskExecution.ts";
-import type { Asset } from "../../domain/assets.ts";
-import type { CanvasCollectionItem } from "../../domain/canvasItems.ts";
 
 export interface NativeFlowOptions {
   task: CreationTask;
@@ -630,3 +631,8 @@ async function saveNativeImageResult(options: {
         : "原生任务已完成，但本地素材原件读取失败。";
   }
 }
+
+const { composeNativeEditAsset } = createImageEditRuntime({
+  read: loadStoredAsset,
+  write: storeGeneratedAsset,
+});

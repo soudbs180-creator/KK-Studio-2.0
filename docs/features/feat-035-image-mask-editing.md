@@ -34,3 +34,5 @@
 - 2026-10-09：承接main1d后的产品27b/driver-eaa保留选中卡片上方操作栏、App灯箱、lazy首屏及单排标题栏；完整445browser/102Rust和同EXE原生Mask/选择/TaskHost/模型/标题栏/首屏通过，当前独立补审。开发插件既有FAIL不归此次完成，真实Provider/几何偏移/物理手机/用户验收仍VERIFY-002，功能继续PARTIAL；[最新组合验收](../changes/2026-10-09-unified-mask-main-integration/verification.md)。
 
 - 2026-10-28 P2候选：VITE_CAPABILITIES_INPAINT默认关闭；开启经薄注册器把原准备任务交回原Runtime，不重复HTTP/归档、不改UI/存储身份。两构建任务/资产/溯源/请求/DOM同态及单次派发、重载恢复通过；完整image-edit各14 pass/1原窄屏fail。严格PNG仍有录音按钮边缘1灰阶像素不稳定，连续同路径采样也复现；未宣称零差异/原生或真实Provider通过。Desktop/Web源码48、Mobile43，未合main，见[P2验证](../changes/2026-10-28-inpaint-capability/verification.md)。
+
+2026-10-28 P3源码解耦候选：TASK-MOD-P3A，完整R4降至0，业务任务/原件/记忆隐私/凭据与旧存储身份保持；未证明原生、真实外部服务或main已更新，功能成熟度不据此升级。[验证TASK-MOD-P3A](../changes/2026-10-28-p3a-creation-image-edit/verification.md)。

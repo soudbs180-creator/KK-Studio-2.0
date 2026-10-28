@@ -1,18 +1,18 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import ComposerTextarea from "../../components/ComposerTextarea.tsx";
-import VoiceInputButton from "../../components/VoiceInputButton.tsx";
-import UiIcon from "../../components/UiIcon.tsx";
-import { readReferenceImages } from "../../components/nodes/referenceUpload.ts";
-import { CanvasImageCommandContext } from "../creation/CanvasImageCommand.tsx";
 import ModelPickerMenu from "../../components/ModelPickerMenu.tsx";
+import UiIcon from "../../components/UiIcon.tsx";
+import VoiceInputButton from "../../components/VoiceInputButton.tsx";
+import { readReferenceImages } from "../../components/nodes/referenceUpload.ts";
 import { useDismissible } from "../../components/useDismissible.ts";
-import { selectedModelLabel } from "../models/modelPresentation.ts";
-import type { ModelSelection } from "../models/modelSelection.ts";
-import { nextColorLabel, type MaskDocument, type MaskRegion } from "./mask.ts";
 import type {
   CanvasCollectionItem,
   CanvasReference,
 } from "../../domain/canvasItems.ts";
+import { selectedModelLabel } from "../models/modelPresentation.ts";
+import type { ModelSelection } from "../models/modelSelection.ts";
+import { CanvasImageCommandContext } from "../../runtime/canvasCommandRuntime.tsx";
+import { nextColorLabel, type MaskDocument, type MaskRegion } from "./mask.ts";
 function tagColor(color: string) {
   return (
     "#" +

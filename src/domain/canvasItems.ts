@@ -1,5 +1,7 @@
+import type { CanvasReference } from "../../packages/creation-contracts/index.ts";
+import type { ImageEditContext, MaskDocument } from "./imageEdit.ts";
 import type { ModelSelection } from "./modelSelection.ts";
-import type { MaskDocument, ImageEditContext } from "./imageEdit.ts";
+export type { CanvasReference } from "../../packages/creation-contracts/index.ts";
 export type CanvasItemKind = "image" | "video" | "audio" | "text";
 
 /** Stable semantic roles shared by upload, preview and canvas connections. */
@@ -170,20 +172,6 @@ export function modelCapabilities(
   return kind === "image" || kind === "video"
     ? CANVAS_MODEL_CAPABILITIES[kind]
     : [];
-}
-
-export interface CanvasReference {
-  id?: string;
-  assetId?: string;
-  parentAssetId?: string;
-  title: string;
-  preview?: string;
-  /** Media subtype used by compact audio and video reference slots. */
-  kind?: CanvasItemKind;
-  /** Video references may occupy the first or last frame slot. */
-  frame?: "first" | "last";
-  /** Semantic slot from the five-slot reference workflow. */
-  slot?: CanvasReferenceSlot;
 }
 
 export interface NodeEditingProps {

@@ -3,38 +3,38 @@ import {
   hasImageReferenceSource,
   uniqueImageReferences,
 } from "../../domain/imageReferences.ts";
+import {
+  MODEL_PROVIDER_STORAGE_KEY,
+  parseModelProvider,
+} from "../../domain/modelProvider.ts";
 import { reconcileProjectCanvas } from "../../domain/projectCanvas.ts";
 import type { ProviderConnection } from "../../domain/providerConnections.ts";
 import {
   protocolBindingMatches,
   providerNeedsKey,
 } from "../../domain/providerProtocol.ts";
-import {
-  MODEL_PROVIDER_STORAGE_KEY,
-  parseModelProvider,
-} from "../../domain/modelProvider.ts";
-import {
-  createTask,
-  modelSupportsKind,
-  type CreateProjectInput,
-  type CreationProject,
-  type CreationAttachment,
-  type CreationTask,
-} from "./model.ts";
+import { catalogForConnection } from "../models/modelCatalog.ts";
 import {
   loadStoredAsset,
   type StoredGeneratedAsset,
 } from "./assetRepository.ts";
 import { hasApiKey } from "./providerCredentials.ts";
-import { catalogForConnection } from "../models/modelCatalog.ts";
+import {
+  createTask,
+  modelSupportsKind,
+  type CreateProjectInput,
+  type CreationAttachment,
+  type CreationProject,
+  type CreationTask,
+} from "./model.ts";
 import {
   addProviderConnection,
   connectionFromModelProfile,
   readProviderConnections,
 } from "./providerRegistry.ts";
 import {
-  assertSynchronousProviderSubmission,
   assertSubmissionConnection,
+  assertSynchronousProviderSubmission,
   ProviderSubmissionError,
   selectSubmissionConnection,
 } from "./providerSubmission.ts";

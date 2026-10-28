@@ -6,7 +6,10 @@
     "status": "PARTIAL",
     "card": "docs/features/feat-035-image-mask-editing.md",
     "summary": "框选、画笔、色块共用原像素Mask、裁剪/请求/保护融合；Web/Desktop保存、重绘和灯箱本地验收通过，真实模型质量与移动真机待验。",
-    "entryPoints": ["图片节点重绘", "图片灯箱重绘"],
+    "entryPoints": [
+      "图片节点重绘",
+      "图片灯箱重绘"
+    ],
     "code": [
       "src/domain/imageEdit.ts",
       "src/features/image-edit/mask.ts",
@@ -34,7 +37,8 @@
     "tasks": [
       "TASK-IMAGE-EDIT-001",
       "TASK-IMAGE-EDIT-VERIFY-002",
-      "TASK-MOD-P2"
+      "TASK-MOD-P2",
+      "TASK-MOD-P3A"
     ],
     "updated": "2026-10-28"
   },
@@ -994,7 +998,9 @@
     "status": "PARTIAL",
     "card": "docs/features/feat-020-memory.md",
     "summary": "KK 本地记忆开关、规则采集和相关片段注入已有实现；Desktop 默认共享，--data-dir 隔离且迁移只在开启后执行。真实 Codex 和跨应用联调待完成。",
-    "entryPoints": ["设置 › 记忆"],
+    "entryPoints": [
+      "设置 › 记忆"
+    ],
     "code": [
       "src/features/memory",
       "src/components/settings/ConnectionSettings.tsx",
@@ -1019,10 +1025,14 @@
       "BACKEND-PLATFORM",
       "T10",
       "TASK-222-ACTIONS-20261014",
-      "TASK-223-ACTIONS-20261014"
+      "TASK-223-ACTIONS-20261014",
+      "TASK-MOD-P3E"
     ],
-    "updated": "2026-10-14",
-    "platforms": ["web", "desktop"],
+    "updated": "2026-10-28",
+    "platforms": [
+      "web",
+      "desktop"
+    ],
     "runtimeEvidence": [
       {
         "platform": "web",
@@ -1474,9 +1484,11 @@
       "TASK-ORCH-003",
       "TASK-CANVAS-001",
       "TASK-UI-CLASSIFY-20261013",
-      "TASK-KK-UNIFIED-20261015"
+      "TASK-KK-UNIFIED-20261015",
+      "TASK-MOD-P3B",
+      "TASK-MOD-P3E"
     ],
-    "updated": "2026-10-15"
+    "updated": "2026-10-28"
   },
   {
     "id": "FEAT-031",
@@ -1599,7 +1611,9 @@
     "status": "PARTIAL",
     "card": "docs/features/feat-037-web-local-service.md",
     "summary": "旧Node本机服务格式/IO保护与Native权威基础已验；两者格式仍不兼容，Web完整共仓库授权/读写/后台生命周期未交付。",
-    "entryPoints": ["设置 → 储存 → 网页本机伴随服务"],
+    "entryPoints": [
+      "设置 → 储存 → 网页本机伴随服务"
+    ],
     "code": [
       "src/features/local-service/main.ts",
       "src/features/local-service/server.ts",
@@ -1626,9 +1640,10 @@
       "TASK-LOCAL-SERVICE-001",
       "TASK-222-ACTIONS-20261014",
       "TASK-223-ACTIONS-20261014",
-      "TASK-KK-UNIFIED-20261015"
+      "TASK-KK-UNIFIED-20261015",
+      "TASK-MOD-P3C"
     ],
-    "updated": "2026-10-16"
+    "updated": "2026-10-28"
   },
   {
     "id": "FEAT-038",
@@ -1663,9 +1678,10 @@
     ],
     "tasks": [
       "TASK-AI-GATEWAY-001",
-      "TASK-LOCAL-GUARDS-20261018"
+      "TASK-LOCAL-GUARDS-20261018",
+      "TASK-MOD-P3D"
     ],
-    "updated": "2026-10-18"
+    "updated": "2026-10-28"
   },
   {
     "id": "FEAT-039",

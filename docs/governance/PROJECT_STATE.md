@@ -42,3 +42,5 @@ TASK-MOD-P0已按用户提供执行规范与补篇启动；当前实现、验证
 2026-10-28 P1任务树候选：包1.1.0的业务声明及三个Port已实现，未接运行；应用源码版本保持Desktop/Web47、Mobile43，build160文件hash不变。根2338与Mobile373测试通过，严格依赖声明存在Zod URL限制；主线/独审及P0未整合。状态详见[P1验证](../changes/2026-10-28-capability-contract/verification.md)，不能以此覆盖main/Hosted事实。
 
 2026-10-28 P2任务树候选：包1.2.0、Desktop/Web源码48、Mobile43；薄注册器与默认关闭image.inpaint接原任务Runtime。根2350/Mobile373通过，双构建任务/资产/HTTP/DOM同态通过；两路径image-edit各14 pass/1原窄屏fail，严格PNG仍有1像素渲染不稳定，保持PARTIAL。原生/独审/main未验，详情见[P2验证](../changes/2026-10-28-inpaint-capability/verification.md)；四文档其他P/STD/ORG及P1-G继续开放。
+
+2026-10-28 P3a–e源码候选：包1.3、Desktop/Web49、Mobile43，完整R4由16降0，R1由405降367，其他规则无新增。根2352/Mobile373/Agent204通过，212个迁移函数体AST一致、六份UI JSX结构一致、纯核心/infra/runtime无间接feature依赖；CSS与P2 hash相同。浏览器40项31 pass/9 fail正做父版本归因，原生/独审/main未验。保持P2 flag默认关闭，五阶段分别PARTIAL；P3f/P4–8、STD/ORG等总范围仍开放。

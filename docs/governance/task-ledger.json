@@ -11183,5 +11183,265 @@
     "featureIds": [
       "FEAT-035"
     ]
+  },
+  {
+    "id": "TASK-MOD-P3A",
+    "title": "P3a 解除creation-image-edit循环",
+    "goal": "契约类型下沉，图片编辑资产Port注入与原调用能力派发保留",
+    "scope": "契约类型下沉，图片编辑资产Port注入与原调用能力派发保留",
+    "acceptance": [
+      "真实依赖集合减少、无新增循环或边界违规",
+      "旧数据/任务/审批/原件行为保持，受影响检查通过"
+    ],
+    "dependencies": [
+      "TASK-MOD-P2"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "refactor/TASK-MOD-P3-feature-cycles",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "6ac48d6ce9c2867e953fe56ebf2f05fd55e475bb",
+    "affectedModules": [
+      "src/features/creation"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-28-p3a-creation-image-edit/verification.md",
+      "docs/changes/2026-10-28-p3a-creation-image-edit/review.md"
+    ],
+    "verification": "源码解耦已实现，完整R4由16降0，R1由405降367；根/契约/Mobile类型、根2351与Mobile373、Agent204通过（原skip保留）。浏览器40项31通过9失败，正区分父候选旧失败；未做独审/原生/main整合。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-28",
+    "lastVerified": "2026-10-28",
+    "nextAction": "完成运行回归和失败基线归因，保持P2 flag默认关闭；独审/原生/合流及四文档其余任务继续单列。",
+    "requirementRefs": [
+      "docs/changes/2026-10-28-p3a-creation-image-edit/intent.md",
+      "docs/changes/2026-10-28-p3a-creation-image-edit/spec.md"
+    ],
+    "featureIds": [
+      "FEAT-035"
+    ]
+  },
+  {
+    "id": "TASK-MOD-P3B",
+    "title": "P3b 解除creation-agent循环",
+    "goal": "Agent回调经装配根注入，聊天与交付纯函数归位",
+    "scope": "Agent回调经装配根注入，聊天与交付纯函数归位",
+    "acceptance": [
+      "真实依赖集合减少、无新增循环或边界违规",
+      "旧数据/任务/审批/原件行为保持，受影响检查通过"
+    ],
+    "dependencies": [
+      "TASK-MOD-P3A"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "refactor/TASK-MOD-P3-feature-cycles",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "6ac48d6ce9c2867e953fe56ebf2f05fd55e475bb",
+    "affectedModules": [
+      "src/features/creation",
+      "src/features/agent"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-28-p3b-creation-agent/verification.md",
+      "docs/changes/2026-10-28-p3b-creation-agent/review.md"
+    ],
+    "verification": "源码解耦已实现，完整R4由16降0，R1由405降367；根/契约/Mobile类型、根2351与Mobile373、Agent204通过（原skip保留）。浏览器40项31通过9失败，正区分父候选旧失败；未做独审/原生/main整合。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-28",
+    "lastVerified": "2026-10-28",
+    "nextAction": "完成运行回归和失败基线归因，保持P2 flag默认关闭；独审/原生/合流及四文档其余任务继续单列。",
+    "requirementRefs": [
+      "docs/changes/2026-10-28-p3b-creation-agent/intent.md",
+      "docs/changes/2026-10-28-p3b-creation-agent/spec.md"
+    ],
+    "featureIds": [
+      "FEAT-030"
+    ]
+  },
+  {
+    "id": "TASK-MOD-P3C",
+    "title": "P3c 解除creation-local-service循环",
+    "goal": "快照纯编解码归领域层，local-service不反向引用creation；原I/O键和迁移策略保持",
+    "scope": "快照纯编解码归领域层，local-service不反向引用creation；原I/O键和迁移策略保持",
+    "acceptance": [
+      "真实依赖集合减少、无新增循环或边界违规",
+      "旧数据/任务/审批/原件行为保持，受影响检查通过"
+    ],
+    "dependencies": [
+      "TASK-MOD-P3B"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "refactor/TASK-MOD-P3-feature-cycles",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "6ac48d6ce9c2867e953fe56ebf2f05fd55e475bb",
+    "affectedModules": [
+      "src/features/creation"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-28-p3c-creation-local-service/verification.md",
+      "docs/changes/2026-10-28-p3c-creation-local-service/review.md"
+    ],
+    "verification": "源码解耦已实现，完整R4由16降0，R1由405降367；根/契约/Mobile类型、根2351与Mobile373、Agent204通过（原skip保留）。浏览器40项31通过9失败，正区分父候选旧失败；未做独审/原生/main整合。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-28",
+    "lastVerified": "2026-10-28",
+    "nextAction": "完成运行回归和失败基线归因，保持P2 flag默认关闭；独审/原生/合流及四文档其余任务继续单列。",
+    "requirementRefs": [
+      "docs/changes/2026-10-28-p3c-creation-local-service/intent.md",
+      "docs/changes/2026-10-28-p3c-creation-local-service/spec.md"
+    ],
+    "featureIds": [
+      "FEAT-037"
+    ]
+  },
+  {
+    "id": "TASK-MOD-P3D",
+    "title": "P3d 解除creation-models循环",
+    "goal": "Provider元数据/凭据/锁实现归integrations，旧creation导出兼容；消除长环上的纯文本协议边",
+    "scope": "Provider元数据/凭据/锁实现归integrations，旧creation导出兼容；消除长环上的纯文本协议边",
+    "acceptance": [
+      "真实依赖集合减少、无新增循环或边界违规",
+      "旧数据/任务/审批/原件行为保持，受影响检查通过"
+    ],
+    "dependencies": [
+      "TASK-MOD-P3C"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "refactor/TASK-MOD-P3-feature-cycles",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "6ac48d6ce9c2867e953fe56ebf2f05fd55e475bb",
+    "affectedModules": [
+      "src/features/creation",
+      "src/features/models"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-28-p3d-creation-models/verification.md",
+      "docs/changes/2026-10-28-p3d-creation-models/review.md"
+    ],
+    "verification": "源码解耦已实现，完整R4由16降0，R1由405降367；根/契约/Mobile类型、根2351与Mobile373、Agent204通过（原skip保留）。浏览器40项31通过9失败，正区分父候选旧失败；未做独审/原生/main整合。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-28",
+    "lastVerified": "2026-10-28",
+    "nextAction": "完成运行回归和失败基线归因，保持P2 flag默认关闭；独审/原生/合流及四文档其余任务继续单列。",
+    "requirementRefs": [
+      "docs/changes/2026-10-28-p3d-creation-models/intent.md",
+      "docs/changes/2026-10-28-p3d-creation-models/spec.md"
+    ],
+    "featureIds": [
+      "FEAT-038"
+    ]
+  },
+  {
+    "id": "TASK-MOD-P3E",
+    "title": "P3e 解除agent-memory-prompts循环",
+    "goal": "记忆提炼装配hook归Agent，回复与附件类型下沉，prompts仅依赖契约",
+    "scope": "记忆提炼装配hook归Agent，回复与附件类型下沉，prompts仅依赖契约",
+    "acceptance": [
+      "真实依赖集合减少、无新增循环或边界违规",
+      "旧数据/任务/审批/原件行为保持，受影响检查通过"
+    ],
+    "dependencies": [
+      "TASK-MOD-P3D"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "refactor/TASK-MOD-P3-feature-cycles",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "6ac48d6ce9c2867e953fe56ebf2f05fd55e475bb",
+    "affectedModules": [
+      "src/features/agent",
+      "src/features/memory",
+      "src/features/prompts"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-28-p3e-agent-memory-prompts/verification.md",
+      "docs/changes/2026-10-28-p3e-agent-memory-prompts/review.md"
+    ],
+    "verification": "源码解耦已实现，完整R4由16降0，R1由405降367；根/契约/Mobile类型、根2351与Mobile373、Agent204通过（原skip保留）。浏览器40项31通过9失败，正区分父候选旧失败；未做独审/原生/main整合。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-28",
+    "lastVerified": "2026-10-28",
+    "nextAction": "完成运行回归和失败基线归因，保持P2 flag默认关闭；独审/原生/合流及四文档其余任务继续单列。",
+    "requirementRefs": [
+      "docs/changes/2026-10-28-p3e-agent-memory-prompts/intent.md",
+      "docs/changes/2026-10-28-p3e-agent-memory-prompts/spec.md"
+    ],
+    "featureIds": [
+      "FEAT-020",
+      "FEAT-030"
+    ]
+  },
+  {
+    "id": "TASK-MOD-P3-COMPAT",
+    "title": "P3旧导出路径至少一个正式发布周期后退役",
+    "goal": "不提前移除纯模型、快照、Provider与画布命令的兼容导出",
+    "scope": "P3 facade引用迁移、版本/正式发布回执及N/N-1兼容，单独退役；不删除用户数据",
+    "acceptance": [
+      "首次包含P3的正式发布及至少一个发布周期有回执",
+      "全部调用方迁移并通过旧数据/原生/托管回归后单独移除"
+    ],
+    "dependencies": [
+      "TASK-MOD-P3A",
+      "TASK-MOD-P3B",
+      "TASK-MOD-P3C",
+      "TASK-MOD-P3D",
+      "TASK-MOD-P3E"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "unallocated",
+    "worktree": "unallocated",
+    "baseSha": "6ac48d6ce9c2867e953fe56ebf2f05fd55e475bb",
+    "affectedModules": [
+      "src/features/creation",
+      "src/features/agent/chatProjectUpdate.ts"
+    ],
+    "status": "TODO",
+    "displayStatus": "未完成",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-28-p3e-agent-memory-prompts/verification.md",
+      "docs/changes/2026-10-28-p3e-agent-memory-prompts/review.md"
+    ],
+    "verification": "P3候选新入口与兼容导出已登记，尚无首次正式发布回执，不允许到期删除。",
+    "verificationResult": "NOT_VERIFIED",
+    "updated": "2026-10-28",
+    "lastVerified": "2026-10-28",
+    "nextAction": "等待首次正式发布，记录最早可移除版本；继续保留旧路径同一实现。",
+    "requirementRefs": [
+      "docs/changes/2026-10-28-p3e-agent-memory-prompts/intent.md",
+      "docs/changes/2026-10-28-p3e-agent-memory-prompts/spec.md"
+    ],
+    "featureIds": []
   }
 ]

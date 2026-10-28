@@ -188,6 +188,12 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-MOD-P1-G | 将可选capabilityId接入功能治理与卡片对应 | TODO | 未完成 | P1 | TASK-MOD-P1 | root | P1声明验证后单独执行此治理子卡，不因capability.ts/ports.ts完成关闭完整P1要求。 |
 | TASK-MOD-P1-TYPES | 处理Zod纯ES2022严格依赖声明的URL类型限制 | TODO | 未完成 | P2 | TASK-MOD-P1 | root | 按真实严格消费者需求评估上游修复或独立分发；保持失败可见，不扩大当前包配置的证明范围。 |
 | TASK-MOD-P2 | 能力注册表与默认关闭的image.inpaint双路径试点 | PARTIAL | 进行中 | P1 | TASK-MOD-P1 | root | 处理窄屏基线门禁与严格截图稳定性后完成验收；保留默认关闭。P0/ORG/main整合、独审与真实Provider/原生分别验证，不把本候选算整套完成。 |
+| TASK-MOD-P3A | P3a 解除creation-image-edit循环 | PARTIAL | 进行中 | P1 | TASK-MOD-P2 | root | 完成运行回归和失败基线归因，保持P2 flag默认关闭；独审/原生/合流及四文档其余任务继续单列。 |
+| TASK-MOD-P3B | P3b 解除creation-agent循环 | PARTIAL | 进行中 | P1 | TASK-MOD-P3A | root | 完成运行回归和失败基线归因，保持P2 flag默认关闭；独审/原生/合流及四文档其余任务继续单列。 |
+| TASK-MOD-P3C | P3c 解除creation-local-service循环 | PARTIAL | 进行中 | P1 | TASK-MOD-P3B | root | 完成运行回归和失败基线归因，保持P2 flag默认关闭；独审/原生/合流及四文档其余任务继续单列。 |
+| TASK-MOD-P3D | P3d 解除creation-models循环 | PARTIAL | 进行中 | P1 | TASK-MOD-P3C | root | 完成运行回归和失败基线归因，保持P2 flag默认关闭；独审/原生/合流及四文档其余任务继续单列。 |
+| TASK-MOD-P3E | P3e 解除agent-memory-prompts循环 | PARTIAL | 进行中 | P1 | TASK-MOD-P3D | root | 完成运行回归和失败基线归因，保持P2 flag默认关闭；独审/原生/合流及四文档其余任务继续单列。 |
+| TASK-MOD-P3-COMPAT | P3旧导出路径至少一个正式发布周期后退役 | TODO | 未完成 | P1 | TASK-MOD-P3A, TASK-MOD-P3B, TASK-MOD-P3C, TASK-MOD-P3D, TASK-MOD-P3E | root | 等待首次正式发布，记录最早可移除版本；继续保留旧路径同一实现。 |
 
 ## TASK-FIGMA-PAGES-20261025 — 重新核查并整理Figma 04/05页面与状态
 
@@ -3647,5 +3653,119 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Verification: PARTIAL — 薄注册器/默认关闭接线已实现，根2350 pass/20原skip、Mobile373 pass及类型/增量lint/build通过；双构建任务/资产/HTTP/DOM同态，image-edit各14 pass/1原窄屏fail。严格PNG仍有1灰阶像素渲染不稳定（同路径可复现）；独审/原生/main未验。
 - Evidence: [docs/changes/2026-10-28-inpaint-capability/verification.md](../../docs/changes/2026-10-28-inpaint-capability/verification.md), [docs/changes/2026-10-28-inpaint-capability/review.md](../../docs/changes/2026-10-28-inpaint-capability/review.md)
 - Next action: 处理窄屏基线门禁与严格截图稳定性后完成验收；保留默认关闭。P0/ORG/main整合、独审与真实Provider/原生分别验证，不把本候选算整套完成。
+- Last verified: 2026-10-28
+- Updated: 2026-10-28
+
+## TASK-MOD-P3A — P3a 解除creation-image-edit循环
+
+- Goal: 契约类型下沉，图片编辑资产Port注入与原调用能力派发保留
+- Scope: 契约类型下沉，图片编辑资产Port注入与原调用能力派发保留
+- Display status: 进行中
+- Priority: P1 — 未记录
+- Requirement refs: docs/changes/2026-10-28-p3a-creation-image-edit/intent.md, docs/changes/2026-10-28-p3a-creation-image-edit/spec.md
+- Feature IDs: FEAT-035
+- Owner role: implementation-integrator
+- Acceptance: 真实依赖集合减少、无新增循环或边界违规; 旧数据/任务/审批/原件行为保持，受影响检查通过
+- Branch: `refactor/TASK-MOD-P3-feature-cycles`
+- Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
+- Modules: src/features/creation
+- Verification: PARTIAL — 源码解耦已实现，完整R4由16降0，R1由405降367；根/契约/Mobile类型、根2351与Mobile373、Agent204通过（原skip保留）。浏览器40项31通过9失败，正区分父候选旧失败；未做独审/原生/main整合。
+- Evidence: [docs/changes/2026-10-28-p3a-creation-image-edit/verification.md](../../docs/changes/2026-10-28-p3a-creation-image-edit/verification.md), [docs/changes/2026-10-28-p3a-creation-image-edit/review.md](../../docs/changes/2026-10-28-p3a-creation-image-edit/review.md)
+- Next action: 完成运行回归和失败基线归因，保持P2 flag默认关闭；独审/原生/合流及四文档其余任务继续单列。
+- Last verified: 2026-10-28
+- Updated: 2026-10-28
+
+## TASK-MOD-P3B — P3b 解除creation-agent循环
+
+- Goal: Agent回调经装配根注入，聊天与交付纯函数归位
+- Scope: Agent回调经装配根注入，聊天与交付纯函数归位
+- Display status: 进行中
+- Priority: P1 — 未记录
+- Requirement refs: docs/changes/2026-10-28-p3b-creation-agent/intent.md, docs/changes/2026-10-28-p3b-creation-agent/spec.md
+- Feature IDs: FEAT-030
+- Owner role: implementation-integrator
+- Acceptance: 真实依赖集合减少、无新增循环或边界违规; 旧数据/任务/审批/原件行为保持，受影响检查通过
+- Branch: `refactor/TASK-MOD-P3-feature-cycles`
+- Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
+- Modules: src/features/creation, src/features/agent
+- Verification: PARTIAL — 源码解耦已实现，完整R4由16降0，R1由405降367；根/契约/Mobile类型、根2351与Mobile373、Agent204通过（原skip保留）。浏览器40项31通过9失败，正区分父候选旧失败；未做独审/原生/main整合。
+- Evidence: [docs/changes/2026-10-28-p3b-creation-agent/verification.md](../../docs/changes/2026-10-28-p3b-creation-agent/verification.md), [docs/changes/2026-10-28-p3b-creation-agent/review.md](../../docs/changes/2026-10-28-p3b-creation-agent/review.md)
+- Next action: 完成运行回归和失败基线归因，保持P2 flag默认关闭；独审/原生/合流及四文档其余任务继续单列。
+- Last verified: 2026-10-28
+- Updated: 2026-10-28
+
+## TASK-MOD-P3C — P3c 解除creation-local-service循环
+
+- Goal: 快照纯编解码归领域层，local-service不反向引用creation；原I/O键和迁移策略保持
+- Scope: 快照纯编解码归领域层，local-service不反向引用creation；原I/O键和迁移策略保持
+- Display status: 进行中
+- Priority: P1 — 未记录
+- Requirement refs: docs/changes/2026-10-28-p3c-creation-local-service/intent.md, docs/changes/2026-10-28-p3c-creation-local-service/spec.md
+- Feature IDs: FEAT-037
+- Owner role: implementation-integrator
+- Acceptance: 真实依赖集合减少、无新增循环或边界违规; 旧数据/任务/审批/原件行为保持，受影响检查通过
+- Branch: `refactor/TASK-MOD-P3-feature-cycles`
+- Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
+- Modules: src/features/creation
+- Verification: PARTIAL — 源码解耦已实现，完整R4由16降0，R1由405降367；根/契约/Mobile类型、根2351与Mobile373、Agent204通过（原skip保留）。浏览器40项31通过9失败，正区分父候选旧失败；未做独审/原生/main整合。
+- Evidence: [docs/changes/2026-10-28-p3c-creation-local-service/verification.md](../../docs/changes/2026-10-28-p3c-creation-local-service/verification.md), [docs/changes/2026-10-28-p3c-creation-local-service/review.md](../../docs/changes/2026-10-28-p3c-creation-local-service/review.md)
+- Next action: 完成运行回归和失败基线归因，保持P2 flag默认关闭；独审/原生/合流及四文档其余任务继续单列。
+- Last verified: 2026-10-28
+- Updated: 2026-10-28
+
+## TASK-MOD-P3D — P3d 解除creation-models循环
+
+- Goal: Provider元数据/凭据/锁实现归integrations，旧creation导出兼容；消除长环上的纯文本协议边
+- Scope: Provider元数据/凭据/锁实现归integrations，旧creation导出兼容；消除长环上的纯文本协议边
+- Display status: 进行中
+- Priority: P1 — 未记录
+- Requirement refs: docs/changes/2026-10-28-p3d-creation-models/intent.md, docs/changes/2026-10-28-p3d-creation-models/spec.md
+- Feature IDs: FEAT-038
+- Owner role: implementation-integrator
+- Acceptance: 真实依赖集合减少、无新增循环或边界违规; 旧数据/任务/审批/原件行为保持，受影响检查通过
+- Branch: `refactor/TASK-MOD-P3-feature-cycles`
+- Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
+- Modules: src/features/creation, src/features/models
+- Verification: PARTIAL — 源码解耦已实现，完整R4由16降0，R1由405降367；根/契约/Mobile类型、根2351与Mobile373、Agent204通过（原skip保留）。浏览器40项31通过9失败，正区分父候选旧失败；未做独审/原生/main整合。
+- Evidence: [docs/changes/2026-10-28-p3d-creation-models/verification.md](../../docs/changes/2026-10-28-p3d-creation-models/verification.md), [docs/changes/2026-10-28-p3d-creation-models/review.md](../../docs/changes/2026-10-28-p3d-creation-models/review.md)
+- Next action: 完成运行回归和失败基线归因，保持P2 flag默认关闭；独审/原生/合流及四文档其余任务继续单列。
+- Last verified: 2026-10-28
+- Updated: 2026-10-28
+
+## TASK-MOD-P3E — P3e 解除agent-memory-prompts循环
+
+- Goal: 记忆提炼装配hook归Agent，回复与附件类型下沉，prompts仅依赖契约
+- Scope: 记忆提炼装配hook归Agent，回复与附件类型下沉，prompts仅依赖契约
+- Display status: 进行中
+- Priority: P1 — 未记录
+- Requirement refs: docs/changes/2026-10-28-p3e-agent-memory-prompts/intent.md, docs/changes/2026-10-28-p3e-agent-memory-prompts/spec.md
+- Feature IDs: FEAT-020, FEAT-030
+- Owner role: implementation-integrator
+- Acceptance: 真实依赖集合减少、无新增循环或边界违规; 旧数据/任务/审批/原件行为保持，受影响检查通过
+- Branch: `refactor/TASK-MOD-P3-feature-cycles`
+- Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
+- Modules: src/features/agent, src/features/memory, src/features/prompts
+- Verification: PARTIAL — 源码解耦已实现，完整R4由16降0，R1由405降367；根/契约/Mobile类型、根2351与Mobile373、Agent204通过（原skip保留）。浏览器40项31通过9失败，正区分父候选旧失败；未做独审/原生/main整合。
+- Evidence: [docs/changes/2026-10-28-p3e-agent-memory-prompts/verification.md](../../docs/changes/2026-10-28-p3e-agent-memory-prompts/verification.md), [docs/changes/2026-10-28-p3e-agent-memory-prompts/review.md](../../docs/changes/2026-10-28-p3e-agent-memory-prompts/review.md)
+- Next action: 完成运行回归和失败基线归因，保持P2 flag默认关闭；独审/原生/合流及四文档其余任务继续单列。
+- Last verified: 2026-10-28
+- Updated: 2026-10-28
+
+## TASK-MOD-P3-COMPAT — P3旧导出路径至少一个正式发布周期后退役
+
+- Goal: 不提前移除纯模型、快照、Provider与画布命令的兼容导出
+- Scope: P3 facade引用迁移、版本/正式发布回执及N/N-1兼容，单独退役；不删除用户数据
+- Display status: 未完成
+- Priority: P1 — 未记录
+- Requirement refs: docs/changes/2026-10-28-p3e-agent-memory-prompts/intent.md, docs/changes/2026-10-28-p3e-agent-memory-prompts/spec.md
+- Feature IDs: none
+- Owner role: implementation-integrator
+- Acceptance: 首次包含P3的正式发布及至少一个发布周期有回执; 全部调用方迁移并通过旧数据/原生/托管回归后单独移除
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: src/features/creation, src/features/agent/chatProjectUpdate.ts
+- Verification: NOT_VERIFIED — P3候选新入口与兼容导出已登记，尚无首次正式发布回执，不允许到期删除。
+- Evidence: [docs/changes/2026-10-28-p3e-agent-memory-prompts/verification.md](../../docs/changes/2026-10-28-p3e-agent-memory-prompts/verification.md), [docs/changes/2026-10-28-p3e-agent-memory-prompts/review.md](../../docs/changes/2026-10-28-p3e-agent-memory-prompts/review.md)
+- Next action: 等待首次正式发布，记录最早可移除版本；继续保留旧路径同一实现。
 - Last verified: 2026-10-28
 - Updated: 2026-10-28

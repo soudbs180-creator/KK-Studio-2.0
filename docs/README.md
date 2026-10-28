@@ -210,3 +210,5 @@
 worktree 落点：`D:\kk-studio\.worktrees\TASK-ID-slug`。新建 worktree 后需把主仓 `node_modules` 以目录联接（junction）挂入，否则 `eslint` 与 `typescript` 解析失败。
 
 P1纯契约与单一清单投影的草案见[ADR-028](architecture/adr/ADR-028-capability-manifest-projections.md)；[P1规格与映射](changes/2026-10-28-capability-contract/spec.md)区分声明候选、运行接线及未验收边界。
+
+P3a–e依赖反转与兼容方案见[ADR-029](architecture/adr/ADR-029-feature-cycle-decoupling.md)；静态无环不代表主线或原生验收完成。

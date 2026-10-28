@@ -1,9 +1,9 @@
-import type { InlineTextResult } from "./adapter.ts";
-import { normalizeHttpFailure, type NormalizedError } from "../errors.ts";
 import {
   consumeTextEvent,
   type TextProtocolState,
-} from "../../creation/textProtocolEvent.ts";
+} from "../../../domain/textProtocolEvents.ts";
+import { normalizeHttpFailure, type NormalizedError } from "../errors.ts";
+import type { InlineTextResult } from "./adapter.ts";
 
 class ChatStreamError extends Error {
   readonly normalized: NormalizedError;

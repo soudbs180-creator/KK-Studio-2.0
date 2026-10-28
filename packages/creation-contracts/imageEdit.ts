@@ -40,3 +40,9 @@ export interface ImageEditSnapshot {
   crop: EditCrop;
   nativeMask: boolean;
 }
+
+export interface ImageEditRequest {
+  document: MaskDocument;
+  references?: import("./canvasReference.ts").CanvasReference[];
+  selectionOnly?: boolean;
+}

@@ -1,4 +1,10 @@
 import { modelProviderSchema } from "../../domain/modelProvider.ts";
+import {
+  buildTextRequest,
+  providerNeedsKey,
+  type ProviderProtocol,
+  type ProviderProtocolOptions,
+} from "../../domain/providerProtocol.ts";
 import { isLocalProviderUrl } from "../../domain/providerUrl.ts";
 import { loadApiKey } from "./providerCredentials.ts";
 import { GenerationProviderError } from "./imageGeneration.ts";
@@ -6,12 +12,6 @@ import {
   consumeTextEvent,
   type TextProtocolState,
 } from "./textProtocolEvent.ts";
-import {
-  buildTextRequest,
-  providerNeedsKey,
-  type ProviderProtocolOptions,
-  type ProviderProtocol,
-} from "../../domain/providerProtocol.ts";
 
 const invalidStream = () =>
   new Error("文本响应不完整或格式无效，请先核对供应商；不会自动重复提交。");

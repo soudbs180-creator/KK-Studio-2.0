@@ -1,5 +1,5 @@
-import type { CreationTask } from "../creation/model.ts";
-import { taskRetryAvailability } from "../creation/taskRetryAvailability.ts";
+import type { CreationTask } from "../../domain/creationTypes.ts";
+import { taskRetryAvailability } from "../../domain/imageTaskRetry.ts";
 
 export default function RegionRetryList({
   tasks,

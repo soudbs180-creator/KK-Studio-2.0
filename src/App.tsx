@@ -1,3 +1,8 @@
+import {
+  canvasPorts,
+  submitPorts,
+  type AppTaskCoordinationParams,
+} from "./app/taskPorts.ts";
 import React, {
   lazy,
   useEffect,
@@ -37,7 +42,6 @@ import {
   snapshotWriteBlockReason,
   type CreationDraft,
   type CreationProject,
-  type CreationSnapshot,
   type CreateProjectInput,
   type ChatItem,
   type ChatItemDraft,
@@ -319,32 +323,6 @@ function useActiveProjectConversation(
   return { conversationDisabledReason, selectedChat, conversationDraft };
 }
 
-interface AppTaskCoordinationParams {
-  creationRef: React.MutableRefObject<CreationSnapshot>;
-  updateProject: (
-    id: string,
-    update: (project: CreationProject) => CreationProject,
-  ) => void;
-  commitCreation: (snapshot: CreationSnapshot) => void;
-  persistence: {
-    state: ReturnType<typeof useCreationStorage>["state"];
-    flush: () => Promise<void>;
-    loadEpoch?: number;
-  };
-  activeProjectIdRef: React.MutableRefObject<string | null | undefined>;
-  replaceCanvasItems: (
-    action: SetStateAction<CanvasCollectionItem[]>,
-  ) => CanvasCollectionItem[];
-  setAssets: React.Dispatch<SetStateAction<Asset[]>>;
-  homeModelConfig: {
-    model: string;
-    configured: boolean;
-  };
-  saveState: string;
-  onOpenSettingsProviders: () => void;
-  onNavigateToWorkspace: () => void;
-}
-
 function useAppTaskCoordination(params: AppTaskCoordinationParams) {
   const {
     creationRef,
@@ -382,7 +360,7 @@ function useAppTaskCoordination(params: AppTaskCoordinationParams) {
     creationRef,
     activeProjectIdRef,
     persistence,
-    homeModelConfig,
+    ...submitPorts(homeModelConfig),
     executeTask: execution.executeTask,
     cancelTask: execution.cancelTask,
     commitCreation,
@@ -1518,7 +1496,7 @@ export default function App() {
             <div className="workspace-content" hidden={active !== "workspace"}>
               <CanvasImageCommandContext.Provider
                 value={{
-                  items: activeProject?.items,
+                  ...canvasPorts(activeProject?.items),
                   updateItemTags,
                   createTag,
                   customTags: activeProject?.customTags ?? [],

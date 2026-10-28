@@ -1,10 +1,10 @@
 import { useContext, useState } from "react";
-import type { CanvasCollectionItem } from "../../domain/canvasItems.ts";
 import Modal from "../../components/Modal.tsx";
+import type { CanvasCollectionItem } from "../../domain/canvasItems.ts";
 import {
   CanvasImageCommandContext,
   CanvasImageNodeContext,
-} from "../creation/CanvasImageCommand.tsx";
+} from "../../runtime/canvasCommandRuntime.tsx";
 import ImageEditor from "./ImageEditor.tsx";
 import ImageLightboxStage from "./ImageLightboxStage.tsx";
 

@@ -2,26 +2,26 @@ import { useContext, useEffect, useState, type KeyboardEvent } from "react";
 import {
   CanvasImageCommandContext,
   useCanvasImageGeneration,
-} from "../creation/CanvasImageCommand.tsx";
-import { loadStoredAsset } from "../creation/assetRepository.ts";
-import RegionRetryList from "./RegionRetryList.tsx";
-import { useImageModelCapabilities } from "../models/useImageModelCapabilities.ts";
+} from "../../runtime/canvasCommandRuntime.tsx";
+
 import { GenerationStatus } from "../../components/nodes/GenerationAction.tsx";
 import type {
   CanvasCollectionItem,
   CanvasReference,
 } from "../../domain/canvasItems.ts";
+import { useImageModelCapabilities } from "../models/useImageModelCapabilities.ts";
+import ImageCanvasLayers from "./ImageCanvasLayers.tsx";
 import {
   maskBounds,
   type MaskDocument,
   type MaskRegion,
   type Point,
 } from "./mask.ts";
-import ImageCanvasLayers from "./ImageCanvasLayers.tsx";
+import RegionRetryList from "./RegionRetryList.tsx";
 import { validateEdit } from "./validateEdit.ts";
 
-import EditToolbar, { EDIT_COLORS } from "./EditToolbar.tsx";
 import EditComposer from "./EditComposer.tsx";
+import EditToolbar, { EDIT_COLORS } from "./EditToolbar.tsx";
 import RegionPromptOverlay from "./RegionPromptOverlay.tsx";
 import { useImageViewport, type ImageTool } from "./useImageViewport.ts";
 import { useMaskDocument } from "./useMaskDocument.ts";
@@ -31,12 +31,13 @@ function useInitialEditReferences(
   source: CanvasCollectionItem,
   onError: (msg: string) => void,
 ) {
+  const command = useContext(CanvasImageCommandContext);
   const [references, setReferences] = useState<CanvasReference[]>([]);
   useEffect(() => {
     const controller = new AbortController();
     void Promise.all(
       (source.imageEditReferenceIds ?? []).map(async (id) => {
-        const asset = await loadStoredAsset(id);
+        const asset = await command?.assets?.read(id);
         if (!asset) throw new Error("草稿参考图原件缺失，请重新导入。");
         return { assetId: id, title: "重绘参考图", preview: asset.preview };
       }),

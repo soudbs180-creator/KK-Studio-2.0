@@ -1,9 +1,11 @@
 import type {
+  ApprovalGate,
   CanvasItemKind,
   CanvasReferenceSlot,
-  ApprovalGate,
 } from "./identity.ts";
-import type { ImageEditSnapshot, ImageEditContext } from "./imageEdit.ts";
+import type { ImageEditContext, ImageEditSnapshot } from "./imageEdit.ts";
+import type { ModelSelection } from "./modelRouting.ts";
+import type { ProviderAuthMode, ProviderProtocol } from "./providerRouting.ts";
 import type { TaskCostReceipt } from "./taskState.ts";
 
 export type CreationTaskStatus =
@@ -40,6 +42,7 @@ export interface CreationTaskOutput {
 export interface CreationAttachment {
   id: string;
   assetId?: string;
+  originalAssetId?: string;
   name: string;
   mime: string;
   size: number;
@@ -55,6 +58,8 @@ export interface CreationTask {
   id: string;
   /** Optional canvas node that originated this task submission. */
   sourceItemId?: string;
+  /** Identifies the chat within the project that originated this task submission */
+  originChatId?: string;
   prompt: string;
   model: string;
   kind: CanvasItemKind;
@@ -88,6 +93,8 @@ export interface CreationTask {
   providerCredentialRef?: string;
   /** Provider routing is captured at submission time; it is not a secret. */
   providerBaseUrl?: string;
+  providerProtocol?: ProviderProtocol;
+  providerAuthMode?: ProviderAuthMode;
   providerName?: string;
   /** Resolved provider size label (e.g. "1024x1024") captured at submission. */
   imageSize?: string;
@@ -104,7 +111,13 @@ export interface CreationTask {
   retryOutputIndices?: number[];
 }
 
+export type ReasoningEffort = "low" | "medium" | "high";
+
 export interface CreationDraft {
+  modelSelection?: ModelSelection;
+  conversationChannel?: "codex" | "direct" | "google";
+  /** Only a new home request may seed the Agent editor from this pending draft. */
+  pendingAgent?: boolean;
   providerConnectionId?: string;
   prompt: string;
   model: string;
@@ -113,5 +126,28 @@ export interface CreationDraft {
   approvalMode: "auto" | "ask";
   privacyMode: "local_only" | "byok_local" | "platform_backed";
   outputCount: number;
+  reasoningEffort?: ReasoningEffort;
   updatedAt: number;
+}
+
+export interface CreateProjectInput {
+  modelSelection?: ModelSelection;
+  /** Preliminary binding check before request crops and masks are archived. */
+  imageOperation?: "inpaint";
+  imageEdit?: ImageEditSnapshot;
+  imageEditContext?: ImageEditContext;
+  providerConnectionId?: string;
+  prompt: string;
+  model: string;
+  kind: CanvasItemKind;
+  attachments: CreationAttachment[];
+  providerBaseUrl?: string;
+  providerProtocol?: ProviderProtocol;
+  providerAuthMode?: ProviderAuthMode;
+  providerName?: string;
+  providerCredentialRef?: string;
+  privacyMode?: "local_only" | "byok_local" | "platform_backed";
+  outputCount?: number;
+  /** Resolved provider size label (e.g. "1024x1024"); undefined sends no size. */
+  imageSize?: string;
 }

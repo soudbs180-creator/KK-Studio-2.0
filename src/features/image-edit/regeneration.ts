@@ -1,4 +1,4 @@
-import type { CreationTask } from "../creation/model.ts";
+import type { CreationTask } from "../../domain/creationTypes.ts";
 /** Explicit regeneration creates a candidate, never repairs or replaces a delivered slot. */
 export function imageRegeneration(
   task: CreationTask,

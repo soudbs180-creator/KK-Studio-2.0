@@ -106,14 +106,22 @@ test("permissions reject undeclared powers, URL scopes and wildcards", () => {
 test("adapter compatibility uses the contract package version rather than the capability version", () => {
   const candidate = inpaint();
   candidate.version = "5.0.0";
-  for (const compat of ["^1.0.0", ">=1.1.0 <2", "1.2.x", "*"])
+  for (const compat of ["^1.0.0", ">=1.1.0 <2", "1.3.x", "*"])
     assert.equal(
       parse({ ...candidate, adapters: [{ ...candidate.adapters[0], compat }] })
         .success,
       true,
       compat,
     );
-  for (const compat of ["^2.0.0", "<1.0.0", "1.1.x", ">=1.3.0", "bad", ""])
+  for (const compat of [
+    "^2.0.0",
+    "<1.0.0",
+    "1.1.x",
+    "1.2.x",
+    ">=1.4.0",
+    "bad",
+    "",
+  ])
     assert.equal(
       parse({ ...candidate, adapters: [{ ...candidate.adapters[0], compat }] })
         .success,

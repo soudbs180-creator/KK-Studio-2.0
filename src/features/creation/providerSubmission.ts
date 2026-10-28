@@ -3,26 +3,26 @@ import {
   type ProviderConnection,
 } from "../../domain/providerConnections.ts";
 import {
+  protocolBindingMatches,
+  providerNeedsKey,
+  supportsProviderImages,
+  type ProviderAuthMode,
+  type ProviderProtocol,
+} from "../../domain/providerProtocol.ts";
+import { resolveImageModelCapabilities } from "../models/imageModelCapabilities.ts";
+import { catalogForConnection } from "../models/modelCatalog.ts";
+import { hasApiKey } from "./providerCredentials.ts";
+import {
   readProviderConnections,
   releaseProviderLease,
   updateProviderConnection,
 } from "./providerRegistry.ts";
-import { hasApiKey } from "./providerCredentials.ts";
-import { catalogForConnection } from "../models/modelCatalog.ts";
-import { resolveImageModelCapabilities } from "../models/imageModelCapabilities.ts";
-import {
-  protocolBindingMatches,
-  providerNeedsKey,
-  supportsProviderImages,
-  type ProviderProtocol,
-  type ProviderAuthMode,
-} from "../../domain/providerProtocol.ts";
 
-import type { CreationTask } from "./model.ts";
 import {
   twelveAiApiBase,
   twelveAiModelKind,
 } from "../../integrations/generation/twelveAiTaskProtocol.ts";
+import type { CreationTask } from "./model.ts";
 
 export class ProviderSubmissionError extends Error {}
 

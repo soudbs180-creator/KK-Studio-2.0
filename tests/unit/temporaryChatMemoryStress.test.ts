@@ -3,10 +3,12 @@ import test, { type TestContext } from "node:test";
 import { createElement, type ReactElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import {
+  agentConnection,
   createAgentConnection,
   type AgentConnection,
   type EventSourceLike,
 } from "../../src/features/agent/agentConnection.ts";
+import { createAgentHost } from "../../src/features/agent/agentHost.ts";
 import { sendProjectAgentMessage } from "../../src/features/agent/homeAgentRecovery.ts";
 import {
   createProject,
@@ -17,8 +19,6 @@ import {
 } from "../../src/features/creation/model.ts";
 import { memoryService } from "../../src/features/memory/index.ts";
 import { useMemory } from "../../src/features/memory/useMemory.ts";
-import { agentConnection } from "../../src/features/agent/agentConnection.ts";
-import { createAgentHost } from "../../src/features/agent/agentHost.ts";
 
 // -----------------------------------------------------------------------------
 // Test Helpers & Mock Infrastructure
@@ -439,7 +439,9 @@ test("ADV-CHALLENGE-04: extractWithCodex never calls agentConnection or writes t
   // Harness 1: Configured via hook options object { isTemporary: true }
   let hook1: ReturnType<typeof useMemory> | null = null;
   function Harness1(): ReactElement | null {
-    hook1 = useMemory((msg) => feedbacks.push(msg), { isTemporary: true });
+    hook1 = useMemory((msg) => feedbacks.push(msg), agentConnection, {
+      isTemporary: true,
+    });
     return null;
   }
   renderToStaticMarkup(createElement(Harness1));
@@ -465,7 +467,7 @@ test("ADV-CHALLENGE-04: extractWithCodex never calls agentConnection or writes t
   feedbacks.length = 0;
   let hook2: ReturnType<typeof useMemory> | null = null;
   function Harness2(): ReactElement | null {
-    hook2 = useMemory((msg) => feedbacks.push(msg), {
+    hook2 = useMemory((msg) => feedbacks.push(msg), agentConnection, {
       activeChat: { isTemporary: true },
     });
     return null;
@@ -482,7 +484,7 @@ test("ADV-CHALLENGE-04: extractWithCodex never calls agentConnection or writes t
   feedbacks.length = 0;
   let hook3: ReturnType<typeof useMemory> | null = null;
   function Harness3(): ReactElement | null {
-    hook3 = useMemory((msg) => feedbacks.push(msg), true);
+    hook3 = useMemory((msg) => feedbacks.push(msg), agentConnection, true);
     return null;
   }
   renderToStaticMarkup(createElement(Harness3));
@@ -519,7 +521,9 @@ test("ADV-CHALLENGE-05: extractWithCodex blocks adversarial arguments and fake c
   let hook: ReturnType<typeof useMemory> | null = null;
   function Harness(): ReactElement | null {
     // Default hook initialized as regular chat
-    hook = useMemory((msg) => feedbacks.push(msg), { isTemporary: false });
+    hook = useMemory((msg) => feedbacks.push(msg), agentConnection, {
+      isTemporary: false,
+    });
     return null;
   }
   renderToStaticMarkup(createElement(Harness));
@@ -591,7 +595,7 @@ test("ADV-CHALLENGE-06: extractWithCodex without options respects the actual tem
   // Mount hook with no options (like in MemorySettingsSection)
   let hook: ReturnType<typeof useMemory> | null = null;
   function Harness(): ReactElement | null {
-    hook = useMemory((msg) => feedbacks.push(msg));
+    hook = useMemory((msg) => feedbacks.push(msg), agentConnection);
     return null;
   }
   renderToStaticMarkup(createElement(Harness));
@@ -626,7 +630,11 @@ test("ADV-CHALLENGE-07: extractWithCodex dynamically updates when options change
   let hookInstance: ReturnType<typeof useMemory> | null = null;
 
   function DynamicHarness(): ReactElement | null {
-    hookInstance = useMemory((msg) => feedbacks.push(msg), dynamicOptions);
+    hookInstance = useMemory(
+      (msg) => feedbacks.push(msg),
+      agentConnection,
+      dynamicOptions,
+    );
     return null;
   }
 
@@ -759,7 +767,9 @@ test("ADV-CHALLENGE-09: extractWithCodex does not falsely block regular chats", 
 
   let hook: ReturnType<typeof useMemory> | null = null;
   function Harness(): ReactElement | null {
-    hook = useMemory((msg) => feedbacks.push(msg), { isTemporary: false });
+    hook = useMemory((msg) => feedbacks.push(msg), agentConnection, {
+      isTemporary: false,
+    });
     return null;
   }
   renderToStaticMarkup(createElement(Harness));
