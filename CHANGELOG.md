@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- 本地安全候选：根与随包Agent升级Zod4.6.7，修复GHSA-mrhx-c7xc-m3w5；Agent两处API兼容调整保持工具数据契约。Desktop/Web源码2.1.46，Mobile2.1.43不变；尚未合流或发布，见[验证](docs/changes/2026-10-28-zod-security/verification.md)。
+
 ## 2.1.45 - 2026-10-26
 
 - 全面重构设置中心四象限架构、ccswitch 五通道模型接入、Composer 能力优先聚合路由、内置浏览器后端（ego_browser）与画布分组性能，同步最新 Figma 设计系统令牌与 AI 全权自治治理规则。

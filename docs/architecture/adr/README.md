@@ -77,4 +77,5 @@
 | [ADR-023](ADR-023-local-model-installation-and-owned-runtime.md) | 可信本地包安装与自有引擎 | ACCEPTED；实现与验收未完成 |
 | [ADR-024](ADR-024-server-authoritative-mid-turn-steering-and-drain-boundary.md) | 服务端权威 Mid-turn Steering 与安全 Drain 边界 | ACCEPTED；实现待排期 |
 | [ADR-025](ADR-025-mobile-12ai-originals-and-video-recovery.md) | Mobile 12ai 原件与视频查询恢复 | ACCEPTED；实现与发布验收进行中 |
+| [ADR-028](ADR-028-zod-security-runtime-upgrade.md) | 根与Agent的Zod安全修复及兼容适配 | ACCEPTED；当前补丁验证另记 |
 

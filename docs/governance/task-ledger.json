@@ -10433,5 +10433,90 @@
         "source": "docs/changes/2026-10-18-gateway-stream/verification.md"
       }
     ]
+  },
+  {
+    "id": "TASK-SEC-ZOD-20261028",
+    "title": "独立升级根Zod4.6.7并验证集合界限安全修复",
+    "goal": "消除根生产依赖的GHSA-mrhx-c7xc-m3w5风险并保持现有schema校验",
+    "scope": "根与随包Agent的Zod运行时/lock、两处Agent兼容适配、安全回归及平台版本镜像；不夹带P0或格式修改",
+    "acceptance": [
+      "根锁定Zod4.6.7且安全回归RED→GREEN",
+      "界内合法/非法校验保持",
+      "快速门禁与build通过，版本一致",
+      "按当前SHA独立审核和真实合流门禁交付"
+    ],
+    "dependencies": [],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "fix/TASK-SEC-ZOD-20261028",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+    "affectedModules": [
+      "package.json",
+      "package-lock.json",
+      "config/platform-versions.json",
+      "VERSION",
+      "src-tauri",
+      "tests/unit/zodCollectionBounds.test.ts",
+      "docs",
+      "vendor/canvas-agent/package.json",
+      "vendor/canvas-agent/package-lock.json",
+      "vendor/canvas-agent/src/canvas/schemas.ts",
+      "vendor/README.md"
+    ],
+    "status": "REVIEW",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "risk": "low",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-28-zod-security/verification.md"
+    ],
+    "verification": "根与随包Agent均4.6.7，原两个版本集合安全回归各RED→GREEN；root typecheck/lint/build通过，2323项2303pass/0fail/20skip，Agent204pass/0fail/2skip。根生产audit0，Agent的Zod公告不再命中，另6项既有审计留独立TODO。独审与合流尚待收尾，产品源码版本非已发布版本。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-28",
+    "lastVerified": "2026-10-28",
+    "nextAction": "完成快速门禁/审计与当前SHA独审；随后独立格式修复与P0整合，不覆盖canonical dirty。",
+    "requirementRefs": [
+      "docs/changes/2026-10-28-zod-security/intent.md"
+    ],
+    "featureIds": []
+  },
+  {
+    "id": "TASK-SEC-AGENT-AUDIT-20261028",
+    "title": "评估Agent其余既有依赖审计项",
+    "goal": "按真实暴露面独立评估Zod之外的既有依赖公告",
+    "scope": "仅评估SDK/body-parser/fast-uri/hono/ip-address/qs审计证据与最小升级方案，不混入Zod补丁",
+    "acceptance": [
+      "逐项核对公告和实际运行暴露",
+      "独立最小修复并通过Agent编译/测试及回归",
+      "保留旧审计记录与回滚"
+    ],
+    "dependencies": [],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "unallocated",
+    "worktree": "unallocated",
+    "affectedModules": [
+      "vendor/canvas-agent",
+      "docs"
+    ],
+    "status": "TODO",
+    "displayStatus": "未完成",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-28-zod-security/verification.md"
+    ],
+    "verification": "本卡Zod修复后Agent审计剩余6项；与修复前相比仅消除Zod，其他包未升级。尚未评估暴露面或实施修复。",
+    "verificationResult": "NOT_VERIFIED",
+    "updated": "2026-10-28",
+    "lastVerified": "2026-10-28",
+    "nextAction": "独立核对公告和运行路径，不使用npm audit fix --force，不夹带工具链大版本升级。",
+    "requirementRefs": [
+      "docs/changes/2026-10-28-zod-security/spec.md"
+    ],
+    "featureIds": []
   }
 ]

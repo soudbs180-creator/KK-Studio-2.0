@@ -171,6 +171,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-SIDEBAR-CANVAS-20261018 | 侧栏置顶排序持久化与宽图连线桌面验收 | DONE | 已完成 | P1 | none | root | 本轮有界本地技术完成；最终文档SHA审查/Delivery/归档/日常还原以工程外收据裁决；真实Provider/Hosted/发布及用户整体验收另行，保留全部资料。 |
 | TASK-COLDSTART-LOCAL-20261018 | 冷启动无效写入修复与严格数据比较闭环 | DONE | 已完成 | P1 | none | root | 本有界冷启动技术闭环完成；最终文档SHA独审/Delivery/保全归档与日常单实例入口据实收尾。继续本地Gateway增量流和Native Canvas专项，不改变父任务外部验收与功能成熟度。 |
 | TASK-GATEWAY-STREAM-20261018 | Gateway实际增量SSE与取消重试边界 | DONE | 已完成 | P1 | TASK-COLDSTART-LOCAL-20261018 | root | 本地有界子项完成；最终精确文档/Delivery/私有归档/原两个快捷方式由工程外收据裁决。下一P1本地DPAPI protector受控测试及独立成本回执调用路径，不重提UNKNOWN，不消费额度；父Gateway仍PARTIAL。 |
+| TASK-SEC-ZOD-20261028 | 独立升级根Zod4.6.7并验证集合界限安全修复 | REVIEW | 进行中 | P1 | none | root | 完成快速门禁/审计与当前SHA独审；随后独立格式修复与P0整合，不覆盖canonical dirty。 |
+| TASK-SEC-AGENT-AUDIT-20261028 | 评估Agent其余既有依赖审计项 | TODO | 未完成 | P1 | none | root | 独立核对公告和运行路径，不使用npm audit fix --force，不夹带工具链大版本升级。 |
 
 ## TASK-FIGMA-PAGES-20261025 — 重新核查并整理Figma 04/05页面与状态
 
@@ -3309,3 +3311,41 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Next action: 本地有界子项完成；最终精确文档/Delivery/私有归档/原两个快捷方式由工程外收据裁决。下一P1本地DPAPI protector受控测试及独立成本回执调用路径，不重提UNKNOWN，不消费额度；父Gateway仍PARTIAL。
 - Last verified: 2026-10-18
 - Updated: 2026-10-18
+
+## TASK-SEC-ZOD-20261028 — 独立升级根Zod4.6.7并验证集合界限安全修复
+
+- Goal: 消除根生产依赖的GHSA-mrhx-c7xc-m3w5风险并保持现有schema校验
+- Scope: 根与随包Agent的Zod运行时/lock、两处Agent兼容适配、安全回归及平台版本镜像；不夹带P0或格式修改
+- Display status: 进行中
+- Priority: P1 — 未记录
+- Requirement refs: docs/changes/2026-10-28-zod-security/intent.md
+- Feature IDs: none
+- Owner role: implementation-integrator
+- Acceptance: 根锁定Zod4.6.7且安全回归RED→GREEN; 界内合法/非法校验保持; 快速门禁与build通过，版本一致; 按当前SHA独立审核和真实合流门禁交付
+- Branch: `fix/TASK-SEC-ZOD-20261028`
+- Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
+- Modules: package.json, package-lock.json, config/platform-versions.json, VERSION, src-tauri, tests/unit/zodCollectionBounds.test.ts, docs, vendor/canvas-agent/package.json, vendor/canvas-agent/package-lock.json, vendor/canvas-agent/src/canvas/schemas.ts, vendor/README.md
+- Verification: PARTIAL — 根与随包Agent均4.6.7，原两个版本集合安全回归各RED→GREEN；root typecheck/lint/build通过，2323项2303pass/0fail/20skip，Agent204pass/0fail/2skip。根生产audit0，Agent的Zod公告不再命中，另6项既有审计留独立TODO。独审与合流尚待收尾，产品源码版本非已发布版本。
+- Evidence: [docs/changes/2026-10-28-zod-security/verification.md](../../docs/changes/2026-10-28-zod-security/verification.md)
+- Next action: 完成快速门禁/审计与当前SHA独审；随后独立格式修复与P0整合，不覆盖canonical dirty。
+- Last verified: 2026-10-28
+- Updated: 2026-10-28
+
+## TASK-SEC-AGENT-AUDIT-20261028 — 评估Agent其余既有依赖审计项
+
+- Goal: 按真实暴露面独立评估Zod之外的既有依赖公告
+- Scope: 仅评估SDK/body-parser/fast-uri/hono/ip-address/qs审计证据与最小升级方案，不混入Zod补丁
+- Display status: 未完成
+- Priority: P1 — 未记录
+- Requirement refs: docs/changes/2026-10-28-zod-security/spec.md
+- Feature IDs: none
+- Owner role: implementation-integrator
+- Acceptance: 逐项核对公告和实际运行暴露; 独立最小修复并通过Agent编译/测试及回归; 保留旧审计记录与回滚
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: vendor/canvas-agent, docs
+- Verification: NOT_VERIFIED — 本卡Zod修复后Agent审计剩余6项；与修复前相比仅消除Zod，其他包未升级。尚未评估暴露面或实施修复。
+- Evidence: [docs/changes/2026-10-28-zod-security/verification.md](../../docs/changes/2026-10-28-zod-security/verification.md)
+- Next action: 独立核对公告和运行路径，不使用npm audit fix --force，不夹带工具链大版本升级。
+- Last verified: 2026-10-28
+- Updated: 2026-10-28

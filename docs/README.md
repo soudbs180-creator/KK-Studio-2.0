@@ -42,6 +42,8 @@
 
 ## 架构文档
 
+Zod运行时安全补丁与Agent兼容决定见[ADR-028](architecture/adr/ADR-028-zod-security-runtime-upgrade.md)。
+
 `architecture/`：运行时架构、数据存储与数据分级。
 
 | 文档                                                       | 承载内容                                    |
