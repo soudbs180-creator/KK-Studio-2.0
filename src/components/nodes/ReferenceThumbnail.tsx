@@ -52,9 +52,7 @@ export default function ReferenceThumbnail({
         type="button"
         className={reference ? "reference-thumb-preview" : "reference-slot-add"}
         aria-label={
-          reference
-            ? `预览参考素材：${reference.title}`
-            : `添加${label}参考图`
+          reference ? `预览参考素材：${reference.title}` : `添加${label}参考图`
         }
         aria-haspopup={reference ? "dialog" : undefined}
         disabled={!reference && (disabled || !!addDisabledReason || !onAdd)}

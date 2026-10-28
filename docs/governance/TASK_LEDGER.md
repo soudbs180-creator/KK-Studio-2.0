@@ -171,8 +171,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-SIDEBAR-CANVAS-20261018 | 侧栏置顶排序持久化与宽图连线桌面验收 | DONE | 已完成 | P1 | none | root | 本轮有界本地技术完成；最终文档SHA审查/Delivery/归档/日常还原以工程外收据裁决；真实Provider/Hosted/发布及用户整体验收另行，保留全部资料。 |
 | TASK-COLDSTART-LOCAL-20261018 | 冷启动无效写入修复与严格数据比较闭环 | DONE | 已完成 | P1 | none | root | 本有界冷启动技术闭环完成；最终文档SHA独审/Delivery/保全归档与日常单实例入口据实收尾。继续本地Gateway增量流和Native Canvas专项，不改变父任务外部验收与功能成熟度。 |
 | TASK-GATEWAY-STREAM-20261018 | Gateway实际增量SSE与取消重试边界 | DONE | 已完成 | P1 | TASK-COLDSTART-LOCAL-20261018 | root | 本地有界子项完成；最终精确文档/Delivery/私有归档/原两个快捷方式由工程外收据裁决。下一P1本地DPAPI protector受控测试及独立成本回执调用路径，不重提UNKNOWN，不消费额度；父Gateway仍PARTIAL。 |
-| TASK-MOD-P0 | 建立模块化边界与只减不增的架构基线 | PARTIAL | 未完成 | P1 | none | root | 独立TASK-MOD-GATE-FORMAT恢复18项继承格式门禁；复用TASK-GOV-004核对本地/远端113/7分叉及受保护dirty。P0保留为未整合候选，完整verify与合流条件满足后再推进P1/P2。 |
-| TASK-MOD-GATE-FORMAT | 独立恢复18项既有源码格式门禁 | TODO | 未完成 | P1 | none | root | 复用合适且不冲突的任务树，先记录语义对照及门禁基线，再独立提交格式修复；不夹带P0或改他人dirty工作。 |
+| TASK-MOD-P0 | 建立模块化边界与只减不增的架构基线 | PARTIAL | 未完成 | P1 | none | root | 18项格式已在独立任务修复；完整verify进一步暴露产品浏览器/开发插件失败。由TASK-MOD-GATE-BROWSER修复后复跑，TASK-GOV-004继续分叉整合；未合流前不提升交付状态。 |
+| TASK-MOD-GATE-FORMAT | 独立恢复18项既有源码格式门禁 | PARTIAL | 未完成 | P1 | none | root | 固定格式提交独审；独立TASK-MOD-GATE-BROWSER处理旧测试入口与实际浏览器失败，之后完整verify及主线整合。 |
+| TASK-MOD-GATE-BROWSER | 恢复历史浏览器测试与当前设置入口的对应 | TODO | 未完成 | P1 | TASK-MOD-GATE-FORMAT | root | 独立任务分支复现代表失败，修复共享测试入口，保留业务断言并继续排查其他真实失败。 |
 
 ## TASK-FIGMA-PAGES-20261025 — 重新核查并整理Figma 04/05页面与状态
 
@@ -3327,7 +3328,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: scripts/governance, scripts/check-governance.mjs, config/architecture-rules.cjs, config/architecture-baseline.json, tests/unit/architectureRules.test.ts, package.json, package-lock.json, docs
 - Verification: PARTIAL — P0源码cb869dfe增量独审通过，2项验收漏检已关闭；干净cb869dfe精确typecheck/lint/npm test均exit0，2333项中2313通过0失败20跳过（含14项架构回归），health0blocking。build通过，delivery结构0违规；完整verify仍被18项继承源码格式阻断。产品源码diff为空，未合流或发布。
 - Evidence: [docs/changes/2026-10-28-modularity-p0/verification.md](../../docs/changes/2026-10-28-modularity-p0/verification.md)
-- Next action: 独立TASK-MOD-GATE-FORMAT恢复18项继承格式门禁；复用TASK-GOV-004核对本地/远端113/7分叉及受保护dirty。P0保留为未整合候选，完整verify与合流条件满足后再推进P1/P2。
+- Next action: 18项格式已在独立任务修复；完整verify进一步暴露产品浏览器/开发插件失败。由TASK-MOD-GATE-BROWSER修复后复跑，TASK-GOV-004继续分叉整合；未合流前不提升交付状态。
 - Last verified: 2026-10-28
 - Updated: 2026-10-28
 
@@ -3337,15 +3338,34 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Scope: 18个原始源码文件的格式整理，独立于P0边界基线提交；不重构或改视觉
 - Display status: 未完成
 - Priority: P1 — 未记录
-- Requirement refs: docs/changes/2026-10-28-modularity-p0/spec.md
+- Requirement refs: docs/changes/2026-10-28-modularity-format/intent.md, docs/changes/2026-10-28-modularity-format/spec.md
 - Feature IDs: none
 - Owner role: implementation-integrator
 - Acceptance: 18个候选逐个确认格式差异与语法/渲染语义不变; format:check及快速门禁通过; 完整verify通过后按真实base/head审核整合
+- Branch: `chore/TASK-MOD-GATE-FORMAT`
+- Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
+- Modules: src/components/nodes/ReferenceThumbnail.tsx, src/features, docs
+- Verification: PARTIAL — 18个历史文件已由Prettier修复，18/18转译JS语法树相同；lint/typecheck/单元2313 pass/0 fail/20 skip、Agent204 pass/2 skip、UI静态及format通过。产品浏览器暴露旧设置入口等失败后主动中断；设计浏览器9 pass；开发插件旧扩展分类失败。完整verify尚未全绿，未合流。
+- Evidence: [docs/changes/2026-10-28-modularity-format/verification.md](../../docs/changes/2026-10-28-modularity-format/verification.md)
+- Next action: 固定格式提交独审；独立TASK-MOD-GATE-BROWSER处理旧测试入口与实际浏览器失败，之后完整verify及主线整合。
+- Last verified: 2026-10-28
+- Updated: 2026-10-28
+
+## TASK-MOD-GATE-BROWSER — 恢复历史浏览器测试与当前设置入口的对应
+
+- Goal: 按当前已实现契约修复过时测试入口并定位完整verify剩余真实失败
+- Scope: 浏览器/开发插件测试入口和夹具；不为旧测试回退当前UI，不降低有效断言，不改变产品能力
+- Display status: 未完成
+- Priority: P1 — 未记录
+- Requirement refs: docs/changes/2026-10-28-modularity-format/intent.md, docs/changes/2026-10-28-modularity-format/spec.md
+- Feature IDs: none
+- Owner role: implementation-integrator
+- Acceptance: 旧入口失败先保留RED，映射当前真实分类后相关用例通过; 其余失败区分测试过时与真实缺陷，任何真实UI修改先取得当前Figma依据; 完整verify实际全绿及当前SHA独审后才解除合流阻断
 - Branch: `unallocated`
 - Worktree: `unallocated`
-- Modules: src/components/nodes/ReferenceThumbnail.tsx, src/features, docs
-- Verification: NOT_VERIFIED — PRE-EXISTING FAILURE：18个文件与c2原文相同且同版本Prettier均报格式差异；尚未实施格式修改。
-- Evidence: [docs/changes/2026-10-28-modularity-p0/verification.md](../../docs/changes/2026-10-28-modularity-p0/verification.md)
-- Next action: 复用合适且不冲突的任务树，先记录语义对照及门禁基线，再独立提交格式修复；不夹带P0或改他人dirty工作。
+- Modules: tests/browser, tests/support, tests/development
+- Verification: NOT_VERIFIED — 本轮产品浏览器与开发插件出现历史设置分类定位失败，原始错误已保留。尚未实施修复。
+- Evidence: [docs/changes/2026-10-28-modularity-format/verification.md](../../docs/changes/2026-10-28-modularity-format/verification.md)
+- Next action: 独立任务分支复现代表失败，修复共享测试入口，保留业务断言并继续排查其他真实失败。
 - Last verified: 2026-10-28
 - Updated: 2026-10-28

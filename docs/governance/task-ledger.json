@@ -10474,7 +10474,7 @@
     "verificationResult": "PARTIAL",
     "updated": "2026-10-28",
     "lastVerified": "2026-10-28",
-    "nextAction": "独立TASK-MOD-GATE-FORMAT恢复18项继承格式门禁；复用TASK-GOV-004核对本地/远端113/7分叉及受保护dirty。P0保留为未整合候选，完整verify与合流条件满足后再推进P1/P2。",
+    "nextAction": "18项格式已在独立任务修复；完整verify进一步暴露产品浏览器/开发插件失败。由TASK-MOD-GATE-BROWSER修复后复跑，TASK-GOV-004继续分叉整合；未合流前不提升交付状态。",
     "requirementRefs": [
       "docs/changes/2026-10-28-modularity-p0/intent.md",
       "docs/changes/2026-10-28-modularity-p0/spec.md"
@@ -10494,29 +10494,72 @@
     "dependencies": [],
     "owner": "root",
     "ownerRole": "implementation-integrator",
-    "branch": "unallocated",
-    "worktree": "unallocated",
-    "baseSha": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+    "branch": "chore/TASK-MOD-GATE-FORMAT",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "e35004a03a19b24d691082eade3dbf3e9a531cb5",
     "affectedModules": [
       "src/components/nodes/ReferenceThumbnail.tsx",
       "src/features",
       "docs"
     ],
-    "status": "TODO",
+    "status": "PARTIAL",
     "displayStatus": "未完成",
     "priority": "P1",
     "risk": "low",
     "reviewRequired": true,
     "evidence": [
-      "docs/changes/2026-10-28-modularity-p0/verification.md"
+      "docs/changes/2026-10-28-modularity-format/verification.md"
     ],
-    "verification": "PRE-EXISTING FAILURE：18个文件与c2原文相同且同版本Prettier均报格式差异；尚未实施格式修改。",
+    "verification": "18个历史文件已由Prettier修复，18/18转译JS语法树相同；lint/typecheck/单元2313 pass/0 fail/20 skip、Agent204 pass/2 skip、UI静态及format通过。产品浏览器暴露旧设置入口等失败后主动中断；设计浏览器9 pass；开发插件旧扩展分类失败。完整verify尚未全绿，未合流。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-28",
+    "lastVerified": "2026-10-28",
+    "nextAction": "固定格式提交独审；独立TASK-MOD-GATE-BROWSER处理旧测试入口与实际浏览器失败，之后完整verify及主线整合。",
+    "requirementRefs": [
+      "docs/changes/2026-10-28-modularity-format/intent.md",
+      "docs/changes/2026-10-28-modularity-format/spec.md"
+    ],
+    "featureIds": []
+  },
+  {
+    "id": "TASK-MOD-GATE-BROWSER",
+    "title": "恢复历史浏览器测试与当前设置入口的对应",
+    "goal": "按当前已实现契约修复过时测试入口并定位完整verify剩余真实失败",
+    "scope": "浏览器/开发插件测试入口和夹具；不为旧测试回退当前UI，不降低有效断言，不改变产品能力",
+    "acceptance": [
+      "旧入口失败先保留RED，映射当前真实分类后相关用例通过",
+      "其余失败区分测试过时与真实缺陷，任何真实UI修改先取得当前Figma依据",
+      "完整verify实际全绿及当前SHA独审后才解除合流阻断"
+    ],
+    "dependencies": [
+      "TASK-MOD-GATE-FORMAT"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "unallocated",
+    "worktree": "unallocated",
+    "baseSha": "e35004a03a19b24d691082eade3dbf3e9a531cb5",
+    "affectedModules": [
+      "tests/browser",
+      "tests/support",
+      "tests/development"
+    ],
+    "status": "TODO",
+    "displayStatus": "未完成",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-28-modularity-format/verification.md"
+    ],
+    "verification": "本轮产品浏览器与开发插件出现历史设置分类定位失败，原始错误已保留。尚未实施修复。",
     "verificationResult": "NOT_VERIFIED",
     "updated": "2026-10-28",
     "lastVerified": "2026-10-28",
-    "nextAction": "复用合适且不冲突的任务树，先记录语义对照及门禁基线，再独立提交格式修复；不夹带P0或改他人dirty工作。",
+    "nextAction": "独立任务分支复现代表失败，修复共享测试入口，保留业务断言并继续排查其他真实失败。",
     "requirementRefs": [
-      "docs/changes/2026-10-28-modularity-p0/spec.md"
+      "docs/changes/2026-10-28-modularity-format/intent.md",
+      "docs/changes/2026-10-28-modularity-format/spec.md"
     ],
     "featureIds": []
   }
