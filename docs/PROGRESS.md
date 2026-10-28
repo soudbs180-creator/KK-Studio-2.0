@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-10-28 ORG-2 目录与证据防回弹（PARTIAL）
+
+治理入口已在任务树候选接入根白名单、禁入类型、图片200KiB、测试/文档落位及ASCII命名检查；640条存量规则命中按路径与图片大小只减不增。9项故障注入（含独立Git仓库）通过；typecheck/lint/format通过，全量单元2322 pass/0 fail/20 skip。没有迁出或删除历史证据，实际瘦身仍0；独审、完整verify及main合流仍未完成。见[验证](changes/2026-10-28-repo-layout-guard/verification.md)。
+
 ## 2026-10-28 API入口与附件连接夹具（PARTIAL）
 
 29个浏览器测试文件同步59处官方直连tab及首页图片能力分类；附件用例经现行UI连接独立本地Agent。最终附件/保存8项7通过1失败，另2项调度失败：窄屏进度隐藏、任务失败标记隐藏、未绑定提示缺失均保留。产品代码未改，不能据此声称完整verify或主线已更新。见[本次验证](changes/2026-10-28-api-browser-navigation/verification.md)；四份原文的整体范围继续按[总清单](changes/2026-10-28-modularity-p0/four-document-coverage.md)追踪。

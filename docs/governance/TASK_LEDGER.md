@@ -177,6 +177,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-MOD-FOUR-DOC-COVERAGE | 逐项追踪四份整顿原文的完整需求与验收 | PARTIAL | 未完成 | P1 | none | root | 后续先读四文档总清单，按P0→P1→P2及ORG试点→推广实施；将现代化/其他P/ORG事项逐项落入对应任务，补完必做项与待决结论后才判整套完成。 |
 | TASK-ORG-0 | 盘点仓库文件、引用与容器参考资料 | PARTIAL | 未完成 | P2 | none | root | 保留原件，继续核实完整盘点缺口；无证据不迁删。 |
 | TASK-ORG-1 | 建立仓库目录与弃用生命周期规则 | PARTIAL | 未完成 | P2 | TASK-ORG-0 | root | 按当前候选完成整合审查与主线门禁；后续ORG-2防回弹和ORG-5单包试点分别实施，不能用规则候选代替迁移完成。 |
+| TASK-ORG-2 | 新增仓库布局与证据防回弹门禁 | PARTIAL | 未完成 | P2 | TASK-ORG-1, TASK-MOD-P0 | root | 保存当前候选审查/指标及主checkout保护证据；后续按ORG-5单包外置试点继续，不以防回弹代替存量清理。独审与main整合条件满足前保留PARTIAL。 |
 
 ## TASK-FIGMA-PAGES-20261025 — 重新核查并整理Figma 04/05页面与状态
 
@@ -3427,5 +3428,24 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Verification: PARTIAL — REPO-LAYOUT/DEPRECATIONS骨架、索引及ignore候选完成；3正7负配置断言、治理171/索引/Markdown137/生命周期均通过。快速typecheck/lint/npm test通过（2313 pass/0 fail/20 skip），无产品改动/迁删，主checkout21哈希不变；仅自审，未合流。
 - Evidence: [docs/changes/2026-10-28-repo-layout/verification.md](../../docs/changes/2026-10-28-repo-layout/verification.md), [docs/changes/2026-10-28-repo-layout/review.md](../../docs/changes/2026-10-28-repo-layout/review.md)
 - Next action: 按当前候选完成整合审查与主线门禁；后续ORG-2防回弹和ORG-5单包试点分别实施，不能用规则候选代替迁移完成。
+- Last verified: 2026-10-28
+- Updated: 2026-10-28
+
+## TASK-ORG-2 — 新增仓库布局与证据防回弹门禁
+
+- Goal: 将补篇B11变为存量只减不增的自动校验
+- Scope: 只读治理脚本/白名单/历史基线/故障注入；不迁删文件、不改产品
+- Display status: 未完成
+- Priority: P2 — 未记录
+- Requirement refs: docs/changes/2026-10-28-repo-layout-guard/intent.md, docs/changes/2026-10-28-repo-layout-guard/spec.md
+- Feature IDs: none
+- Owner role: implementation-integrator
+- Acceptance: 新增根/类型/图片/落位/命名违规被拦截，存量可通过; 历史集合及图片上限不能扩张或等数换项，bootstrap不能掩盖新违规; 接入治理，快速门禁及故障注入有实际回执
+- Branch: `chore/TASK-ORG-2-layout-guard`
+- Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
+- Modules: scripts/governance, scripts/check-governance.mjs, config, tests/unit, docs/architecture/REPO-LAYOUT.md, docs/governance, docs/changes/2026-10-28-repo-layout-guard
+- Verification: PARTIAL — B11五组门禁及Git存量基线候选接入治理；9项故障注入通过（含Git/强行add/未跟踪/bootstrap/基线增长/损坏输入），快速typecheck/lint/format通过，单元2342项2322 pass/0 fail/20 skip。640存量规则命中保持，未迁删/未瘦身；当前只有自审，主线与完整verify未完成。
+- Evidence: [docs/changes/2026-10-28-repo-layout-guard/verification.md](../../docs/changes/2026-10-28-repo-layout-guard/verification.md), [docs/changes/2026-10-28-repo-layout-guard/review.md](../../docs/changes/2026-10-28-repo-layout-guard/review.md)
+- Next action: 保存当前候选审查/指标及主checkout保护证据；后续按ORG-5单包外置试点继续，不以防回弹代替存量清理。独审与main整合条件满足前保留PARTIAL。
 - Last verified: 2026-10-28
 - Updated: 2026-10-28

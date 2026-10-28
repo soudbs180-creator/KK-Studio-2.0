@@ -5,6 +5,7 @@ import { validateLedger, renderLedger } from "./governance/ledger.mjs";
 import { checkImportBoundaries } from "./governance/import-boundaries.mjs";
 import { checkMemoryContractSync } from "./governance/check-policy-sync.mjs";
 import { checkArchitecture } from "./governance/check-architecture.mjs";
+import { checkRepoLayout } from "./governance/check-repo-layout.mjs";
 
 const issues = [];
 const root = process.cwd();
@@ -163,6 +164,16 @@ try {
   );
 } catch (error) {
   issues.push(`Architecture: ${error.message}`);
+}
+
+try {
+  const layout = checkRepoLayout(root, { baseRef: governanceBaseSha });
+  issues.push(...layout.issues);
+  console.log(
+    `Repo layout: ${Object.keys(layout.current).length} existing violations; ${layout.reductions.length} baseline reductions available.`,
+  );
+} catch (error) {
+  issues.push(`Repo layout: ${error.message}`);
 }
 
 // Catch the previous hard-coded output pattern before tests overwrite history.

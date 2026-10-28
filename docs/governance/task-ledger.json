@@ -10707,5 +10707,53 @@
       "docs/changes/2026-10-28-repo-layout/intent.md",
       "docs/changes/2026-10-28-repo-layout/spec.md"
     ]
+  },
+  {
+    "id": "TASK-ORG-2",
+    "title": "新增仓库布局与证据防回弹门禁",
+    "goal": "将补篇B11变为存量只减不增的自动校验",
+    "scope": "只读治理脚本/白名单/历史基线/故障注入；不迁删文件、不改产品",
+    "acceptance": [
+      "新增根/类型/图片/落位/命名违规被拦截，存量可通过",
+      "历史集合及图片上限不能扩张或等数换项，bootstrap不能掩盖新违规",
+      "接入治理，快速门禁及故障注入有实际回执"
+    ],
+    "dependencies": [
+      "TASK-ORG-1",
+      "TASK-MOD-P0"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "chore/TASK-ORG-2-layout-guard",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "61bf4b81ea35969c1c60e9d991ce4dddc9425fc2",
+    "affectedModules": [
+      "scripts/governance",
+      "scripts/check-governance.mjs",
+      "config",
+      "tests/unit",
+      "docs/architecture/REPO-LAYOUT.md",
+      "docs/governance",
+      "docs/changes/2026-10-28-repo-layout-guard"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "未完成",
+    "priority": "P2",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-28-repo-layout-guard/verification.md",
+      "docs/changes/2026-10-28-repo-layout-guard/review.md"
+    ],
+    "verification": "B11五组门禁及Git存量基线候选接入治理；9项故障注入通过（含Git/强行add/未跟踪/bootstrap/基线增长/损坏输入），快速typecheck/lint/format通过，单元2342项2322 pass/0 fail/20 skip。640存量规则命中保持，未迁删/未瘦身；当前只有自审，主线与完整verify未完成。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-28",
+    "lastVerified": "2026-10-28",
+    "nextAction": "保存当前候选审查/指标及主checkout保护证据；后续按ORG-5单包外置试点继续，不以防回弹代替存量清理。独审与main整合条件满足前保留PARTIAL。",
+    "requirementRefs": [
+      "docs/changes/2026-10-28-repo-layout-guard/intent.md",
+      "docs/changes/2026-10-28-repo-layout-guard/spec.md"
+    ],
+    "featureIds": []
   }
 ]
