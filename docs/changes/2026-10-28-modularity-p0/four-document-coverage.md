@@ -46,8 +46,8 @@
 | --- | --- | --- | --- |
 | G-01 | 审计§0–3；执行§1–6 | 九类模块职责、唯一共享设施、垂直切片/公开入口；不改UI/存储key/旧数据身份 | 规则候选已承接；不是全部实现已解耦 |
 | P0 | 执行§11/17；复核C4 | R1–R8、历史基线、故障注入、原检查保留、ADR①②、引用核对清单 | 候选完成且原SHA独审通过；完整verify及main合流未完成 |
-| P1 | 执行§4.3/7/17 | capability.ts、ports.ts、公开导出/包版本；合法非法/权限/版本契约回归；五个Port不扩既有语义 | 仅前置核实；包仍1.0.0。尚缺实现及独立安装/类型验证；既有wire.CapabilityManifest同名须保持兼容 |
-| P1-G | 复核C3；执行§17-P1 | 可选capabilityId、check-features与卡片/账本对应，独立治理提交；ADR③草案 | 未实施；不能因P1两文件完成而漏掉这项 |
+| P1 | 执行§4.3/7/17 | capability.ts、ports.ts、公开导出/包版本；合法非法/权限/版本契约回归；五个Port不扩既有语义 | 候选已新增capability.ts及本轮指定Task/Asset/Provider三个Port，包1.1.0，旧wire类型兼容；13契约/独立项目配置与运行探针通过，严格依赖声明的Zod URL限制保留；Storage/Permission另阶段，独审/合流未完成，见[P1验证](../2026-10-28-capability-contract/verification.md) |
+| P1-G | 复核C3；执行§17-P1 | 可选capabilityId、check-features与卡片/账本对应，独立治理提交；ADR③草案 | 未实施，已登记TASK-MOD-P1-G；ADR-028草案已建，不能因契约文件完成而漏掉治理字段/卡片与检查 |
 | P2 | 执行§7/17 | register/unregister/list/resolve/run；inpaint包装现有链路、Port映射、默认关闭；旧新任务/资产/origins/parentId对拍、DOM零差异 | 仅调用链核查；注册表、接线、对拍未实施 |
 | P3a | 执行§18 | creation↔image-edit：共享类型下沉、Port/props、纯函数归位；对应R4减少 | 未实施，依赖P2 |
 | P3b | 执行§18 | agent↔creation：任务/资产Port，类型下沉，组装根回调 | 未实施 |
@@ -106,3 +106,5 @@
 上段“本次不改产品”描述最初需求追踪卡，不限制后续已授权修复。本轮候选修复任务关闭伪元素越界及429健康等待项目保存的问题，完整调度15项与面板命中2项通过，保存邻接4通过/1几何失败。Desktop/Web源码2.1.46，主线及安装客户端未更新；详见[本轮验证](../2026-10-28-provider-browser-contract/verification.md)。P0完整verify、独审/main整合仍开放，不能启动宣称P1/P2已完成；P1/P2仍未实施，其他矩阵行的交付条件全部继续适用。
 
 2026-10-28追加：保存几何失败定位到折叠侧栏旧width:auto将HUD容器缩成0。候选源码Desktop/Web47；保存6项及同宽reload通过，邻接30项27 pass/3 fail，HUD旧取消裁切另有开放任务。完整verify/P0/ORG/main仍未完成，P1/P2仍未实施；四文档其他行状态与完成条件继续有效。
+
+2026-10-28用户明确启动P1后，本轮仅契约候选按新优先级推进，P0/ORG与父分支门禁未关闭。当前包1.1.0及三个Port有独立安装、类型/运行与根/Mobile回归证据；P1-G、严格依赖声明限制、其余Port与P2/STD/ORG仍分别追踪，不将单一子项称为四文档完成。

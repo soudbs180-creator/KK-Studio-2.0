@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-10-28 P1能力声明与三个Port（PARTIAL）
+
+契约包1.0.0→1.1.0，新增Zod业务能力声明与Task/Asset/Provider纯类型，旧供应商Manifest与任务/资产函数保留。13契约测试通过，根2338 pass/0 fail/20 skip、Mobile373 pass/0 fail；根/包/Mobile类型、lint/格式和build通过，Web产物160文件hash不变。独立安装按原包配置和无URL/process/window运行探针通过；更严格的依赖声明全检仍有Zod URL类型错误，原失败保留。未接运行/改UI/合main，P1-G、其他Port、P0整合和独审仍开放；见[验证](changes/2026-10-28-capability-contract/verification.md)。
+
 ## 2026-10-28 HUD宽度与保存生命周期（PARTIAL）
 
 移除折叠侧栏两处旧宽度覆盖，修复1920下HUD容器缩成0并误隐藏状态的问题。Desktop/Web源码46→47，Mobile43不变；当前build保存6项（含390/1099/1920归档与同宽度reload）通过。30项邻接27 pass/3既有fail，调度/任务命中继续全过；HUD旧取消裁切另入账，完整verify/独审/原生/main未完成。详见[追加验证](changes/2026-10-28-provider-browser-contract/verification.md)。

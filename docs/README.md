@@ -208,3 +208,5 @@
 `D:\kk-studio\` 是容器目录，不是 git 仓库。真正的仓库根是 `D:\kk-studio\KK-Studio-2.0`。容器级结构规范见纯文本路径 `D:\kk-studio\docs\REPO-STRUCTURE.md`，快速上手见 `D:\kk-studio\README.md`。
 
 worktree 落点：`D:\kk-studio\.worktrees\TASK-ID-slug`。新建 worktree 后需把主仓 `node_modules` 以目录联接（junction）挂入，否则 `eslint` 与 `typescript` 解析失败。
+
+P1纯契约与单一清单投影的草案见[ADR-028](architecture/adr/ADR-028-capability-manifest-projections.md)；[P1规格与映射](changes/2026-10-28-capability-contract/spec.md)区分声明候选、运行接线及未验收边界。

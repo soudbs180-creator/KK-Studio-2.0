@@ -1,0 +1,1 @@
+export const CREATION_CONTRACTS_VERSION = "1.1.0";

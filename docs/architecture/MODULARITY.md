@@ -54,7 +54,9 @@ Git比较基线按`ARCHITECTURE_BASE`、`GOVERNANCE_BASE`、本地main、origin/
 
 禁止跨模块读取对方私有localStorage/IndexedDB结构；由所属切片公开受控读取接口。新增能力组合用能力ID依赖解析，不互相深层import。
 
-## Capability与Port契约（P1/P2目标，尚未实现）
+## Capability与Port契约（P1声明候选；P2运行未实现）
+
+P1候选已增加业务capabilityManifestSchema、BusinessCapabilityManifest与TaskPort/AssetPort/ProviderPort，旧wire.CapabilityManifest保留；包1.1.0，未接入口。StoragePort/PermissionPort、运行注册/投影与图环校验仍未实施；纯ES2022上游声明检查的限制见[P1规格](../changes/2026-10-28-capability-contract/spec.md)。
 
 契约只定义已有行为的最小接口，不借Port扩展语义。实现由App装配层注入，P2前须提供“Port→现有函数”对照表。
 

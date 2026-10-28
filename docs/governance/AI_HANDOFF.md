@@ -8,6 +8,8 @@
 
 本文是跨会话 AI 的最短恢复入口（30 秒内读完）。任务状态只读 [`task-ledger.json`](task-ledger.json)；当前项目事实只读 [`PROJECT_STATE.md`](PROJECT_STATE.md)。
 
+P1最新候选：用户已明确启动，当前feat/TASK-MOD-P1-capability-contract在5240e7b3上增加契约包1.1.0、业务schema和3个Port，未改src/上层逻辑。13契约、根2338及Mobile373项通过；独立项目配置/无宿主全局运行通过，严格依赖声明仍有Zod URL错误（TASK-MOD-P1-TYPES）。P1-G治理、P2运行接线、其他Port与主线/独审尚未完成。旧段落“P1未实施”为此前时间点，不覆盖本追加；入口见[P1验证](../changes/2026-10-28-capability-contract/verification.md)。
+
 模块化整顿先读[四份原文总清单](../changes/2026-10-28-modularity-p0/four-document-coverage.md)和TASK-MOD-FOUR-DOC-COVERAGE。原始审计/复核草案由执行规范修正，补篇还含STD现代化与ORG-0–7；最近五项只是优先批次。用户禁止子代理，主代理直接执行，不把自审称为独审。
 
 P0、安全补丁和格式有各自候选与限定独审，均未合流；17个测试文件修复后定向29项通过，完整verify仍有浏览器失败。P1只做前置、ORG只备份校验未迁出、P2未实施，其余P/STD/ORG不得漏报。main与origin/main仍113/7分叉，主checkout21个dirty文件受保护。实现/审查/合流证据必须逐项记录。

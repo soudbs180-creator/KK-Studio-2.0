@@ -80,3 +80,4 @@
 | [ADR-026](ADR-026-modular-capability-architecture.md) | 模块化能力契约与依赖反转 | ACCEPTED；能力实现分阶段推进 |
 | [ADR-027](ADR-027-architecture-ratchet-and-dependency-cruiser.md) | 架构依赖集合棘轮与自动门禁 | ACCEPTED；P0候选验证另记 |
 
+| [ADR-028](ADR-028-capability-manifest-projections.md) | 能力声明、Port与单一清单投影 | PROPOSED；仅声明候选，协议投影待实施 |

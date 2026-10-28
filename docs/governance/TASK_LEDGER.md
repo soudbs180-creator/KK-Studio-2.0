@@ -184,6 +184,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-UI-HUD-CONTAINER-WIDTH | 修复折叠侧栏令HUD容器宽度归零 | PARTIAL | 未完成 | P1 | none | root | 继续三项邻接失败与HUD旧取消裁切；完整verify/当前独审/原生/main整合完成前保持PARTIAL。 |
 | TASK-UI-HUD-CANCEL-CLIP | 核实并修复旧HUD取消按钮被状态文案裁切 | TODO | 未完成 | P1 | none | root | 依当前Figma补齐旧HUD行为映射，再修产品并真实点击回归。 |
 | TASK-MOD-GATE-ADJACENT | 处理浏览器门禁剩余三项邻接失败 | TODO | 未完成 | P1 | none | root | 分别诊断；UI修改先当前Figma，连接路径先读M3快速测速与独立目录契约，不删测试让门禁假绿。 |
+| TASK-MOD-P1 | 定义能力声明与Task/Asset/Provider叶契约 | PARTIAL | 未完成 | P1 | TASK-MOD-P0 | root | 处理TASK-MOD-P1-G独立治理子卡、TASK-MOD-P1-TYPES严格声明限制；P2接线前补真实Port adapter编译/图环/兼容选择对拍，独审/主线和P0未关闭。 |
+| TASK-MOD-P1-G | 将可选capabilityId接入功能治理与卡片对应 | TODO | 未完成 | P1 | TASK-MOD-P1 | root | P1声明验证后单独执行此治理子卡，不因capability.ts/ports.ts完成关闭完整P1要求。 |
+| TASK-MOD-P1-TYPES | 处理Zod纯ES2022严格依赖声明的URL类型限制 | TODO | 未完成 | P2 | TASK-MOD-P1 | root | 按真实严格消费者需求评估上游修复或独立分发；保持失败可见，不扩大当前包配置的证明范围。 |
 
 ## TASK-FIGMA-PAGES-20261025 — 重新核查并整理Figma 04/05页面与状态
 
@@ -3567,5 +3570,62 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Verification: FAIL — 本批前后均复现3 fail：新增卡右边界383.785>382、缩窄可操作区predicate=false、HTML200连接状态success。原断言未改。
 - Evidence: [docs/changes/2026-10-28-provider-browser-contract/verification.md](../../docs/changes/2026-10-28-provider-browser-contract/verification.md)
 - Next action: 分别诊断；UI修改先当前Figma，连接路径先读M3快速测速与独立目录契约，不删测试让门禁假绿。
+- Last verified: 2026-10-28
+- Updated: 2026-10-28
+
+## TASK-MOD-P1 — 定义能力声明与Task/Asset/Provider叶契约
+
+- Goal: 新增纯类型与Zod声明，版本化抽象边界，不接宿主运行逻辑
+- Scope: packages/creation-contracts、契约测试及独立消费者验证；Mobile只同步file依赖元数据；原P1-G/其他Port继续分项追踪
+- Display status: 未完成
+- Priority: P1 — 未记录
+- Requirement refs: docs/changes/2026-10-28-capability-contract/intent.md, docs/changes/2026-10-28-capability-contract/spec.md
+- Feature IDs: none
+- Owner role: implementation-integrator
+- Acceptance: 合法/非法manifest、权限、版本、局部uses与兼容导出验证; TaskPort/AssetPort/ProviderPort只依赖既有叶类型，无DOM/Node/宿主src; 契约包独立安装/类型检查与根快速门禁无新增失败；不冒充P0/P2/main完成
+- Branch: `feat/TASK-MOD-P1-capability-contract`
+- Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
+- Modules: packages/creation-contracts, tests/unit/capabilityContract.test.ts, tests/fixtures/capabilityPorts.ts, mobile/package-lock.json
+- Verification: PARTIAL — 包1.1.0新增业务schema和Task/Asset/Provider类型，旧wire能力类型保留。13契约通过，根2338 pass/0 fail/20 skip、Mobile373 pass/0 fail；类型/lint/格式/build通过，160 Web产物hash相同。独立安装项目配置与无宿主全局运行通过；严格依赖声明4处Zod URL错误保留。未接运行、未独审/合流。
+- Evidence: [docs/changes/2026-10-28-capability-contract/verification.md](../../docs/changes/2026-10-28-capability-contract/verification.md), [docs/changes/2026-10-28-capability-contract/review.md](../../docs/changes/2026-10-28-capability-contract/review.md)
+- Next action: 处理TASK-MOD-P1-G独立治理子卡、TASK-MOD-P1-TYPES严格声明限制；P2接线前补真实Port adapter编译/图环/兼容选择对拍，独审/主线和P0未关闭。
+- Last verified: 2026-10-28
+- Updated: 2026-10-28
+
+## TASK-MOD-P1-G — 将可选capabilityId接入功能治理与卡片对应
+
+- Goal: 独立治理提交实现能力ID与功能卡/账本一致性，不启用运行注册表
+- Scope: features.registry.json可选字段、check-features及对应治理反例；ADR-028按投影方案补完
+- Display status: 未完成
+- Priority: P1 — 未记录
+- Requirement refs: docs/changes/2026-10-28-capability-contract/intent.md, docs/changes/2026-10-28-capability-contract/spec.md
+- Feature IDs: none
+- Owner role: implementation-integrator
+- Acceptance: 先建对应治理卡/任务后变更可选字段，不影响旧条目; 能力ID与现有功能卡和任务引用相符，合法/非法治理反例齐备; 独立提交并明确不接运行入口，投影不复制业务清单
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: docs/features/features.registry.json, scripts/check-features.mjs, tests/unit, docs/architecture/adr/ADR-028-capability-manifest-projections.md
+- Verification: NOT_VERIFIED — 本轮仅建立任务与ADR-028草案；字段和治理检查尚未实现。
+- Evidence: [docs/changes/2026-10-28-capability-contract/verification.md](../../docs/changes/2026-10-28-capability-contract/verification.md), [docs/changes/2026-10-28-capability-contract/review.md](../../docs/changes/2026-10-28-capability-contract/review.md)
+- Next action: P1声明验证后单独执行此治理子卡，不因capability.ts/ports.ts完成关闭完整P1要求。
+- Last verified: 2026-10-28
+- Updated: 2026-10-28
+
+## TASK-MOD-P1-TYPES — 处理Zod纯ES2022严格依赖声明的URL类型限制
+
+- Goal: 不引入DOM或Node环境即可全检契约依赖声明；不把既有skipLibCheck配置当成严格检查通过
+- Scope: 独立消费者strict probe、上游Zod声明或经评审的包分发方案；不全局加DOM、不补假URL类型、不静默修改依赖
+- Display status: 未完成
+- Priority: P2 — 未记录
+- Requirement refs: docs/changes/2026-10-28-capability-contract/intent.md, docs/changes/2026-10-28-capability-contract/spec.md
+- Feature IDs: none
+- Owner role: implementation-integrator
+- Acceptance: skipLibCheck=false、lib=ES2022/types=[]消费者类型检查通过或有明确采用的替代分发契约; 原schema运行和旧类型/函数保持，独立安装/无宿主运行回归通过; 上游修改/依赖或分发变化有版本/许可/兼容依据，不伪称已修
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: packages/creation-contracts, tests/unit/capabilityContract.test.ts
+- Verification: FAIL — consumer-strict-final.log保留Zod4.6.7 schemas.d.cts四处TS2304 URL错误，strictExit=2；继承现行包配置exit0，运行探针无URL/process/window仍通过。未做上游/分发修复。
+- Evidence: [docs/changes/2026-10-28-capability-contract/verification.md](../../docs/changes/2026-10-28-capability-contract/verification.md), [docs/changes/2026-10-28-capability-contract/review.md](../../docs/changes/2026-10-28-capability-contract/review.md)
+- Next action: 按真实严格消费者需求评估上游修复或独立分发；保持失败可见，不扩大当前包配置的证明范围。
 - Last verified: 2026-10-28
 - Updated: 2026-10-28
