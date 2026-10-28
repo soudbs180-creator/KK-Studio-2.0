@@ -540,9 +540,7 @@ test("画布参数不会在重开项目后回到默认值", async ({ page }) => 
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   await page.getByRole("button", { name: "模型接入", exact: true }).click();
-  await page
-    .getByRole("button", { name: "API Key（官方）", exact: true })
-    .click();
+  await page.getByRole("tab", { name: "官方直连 API", exact: true }).click();
   await page.getByLabel("接口地址").fill("https://models.example.test/v1");
   await page.getByLabel("模型名称").fill("image-test");
   await page.getByRole("button", { name: "保存连接", exact: true }).click();

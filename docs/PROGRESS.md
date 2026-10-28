@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-10-28 API入口与附件连接夹具（PARTIAL）
+
+29个浏览器测试文件同步59处官方直连tab及首页图片能力分类；附件用例经现行UI连接独立本地Agent。最终附件/保存8项7通过1失败，另2项调度失败：窄屏进度隐藏、任务失败标记隐藏、未绑定提示缺失均保留。产品代码未改，不能据此声称完整verify或主线已更新。见[本次验证](changes/2026-10-28-api-browser-navigation/verification.md)；四份原文的整体范围继续按[总清单](changes/2026-10-28-modularity-p0/four-document-coverage.md)追踪。
+
 ## 2026-10-28 浏览器门禁入口修复（局部通过）
 
 18个测试文件同步当前设置分类与CanvasReference完整字段，保留原业务断言，产品源码未改。定向29项与开发插件4步通过，快速门禁2313 pass/0 fail/20 skip；完整verify及main整合仍未完成。见[验证](changes/2026-10-28-browser-gate/verification.md)。

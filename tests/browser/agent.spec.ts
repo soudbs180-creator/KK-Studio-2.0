@@ -1112,9 +1112,7 @@ test("卡片 Codex 生图在刷新后归档并恢复来源；切 API 清除旧�
     await page.goto("/");
     await page.getByRole("button", { name: "打开设置", exact: true }).click();
     await page.getByRole("button", { name: "模型接入", exact: true }).click();
-    await page
-      .getByRole("button", { name: "API Key（官方）", exact: true })
-      .click();
+    await page.getByRole("tab", { name: "官方直连 API", exact: true }).click();
     await page.getByLabel("接口地址").fill(agent.url + "/v1");
     await page.getByLabel("API Key", { exact: true }).fill("fixture-key");
     await page.getByLabel("模型名称").fill("image-fixture");
@@ -1209,7 +1207,7 @@ for (const authorized of [true, false])
           .getByRole("button", { name: "模型接入…", exact: true })
           .click();
         await page
-          .getByRole("button", { name: "API Key（官方）", exact: true })
+          .getByRole("tab", { name: "官方直连 API", exact: true })
           .click();
         await page.getByLabel("接口地址").fill(agent.url + "/v1");
         await page.getByLabel("API Key", { exact: true }).fill("fixture-key");

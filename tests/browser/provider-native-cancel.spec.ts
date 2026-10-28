@@ -5,9 +5,7 @@ async function nativeCancellationFixture(page: Page) {
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   const dialog = page.getByRole("dialog", { name: "设置", exact: true });
   await dialog.getByRole("button", { name: "模型接入", exact: true }).click();
-  await dialog
-    .getByRole("button", { name: "API Key（官方）", exact: true })
-    .click();
+  await dialog.getByRole("tab", { name: "官方直连 API", exact: true }).click();
   const form = dialog.getByRole("region", { name: "官方 API Key 配置" });
   await form
     .getByLabel("接口地址", { exact: true })

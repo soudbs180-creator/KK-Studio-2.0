@@ -27,9 +27,7 @@ test("Gemini CLI login mode: configure, connect and chat through the local bridg
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   await page.getByRole("button", { name: "模型接入", exact: true }).click();
-  await page
-    .getByRole("button", { name: "API Key（官方）", exact: true })
-    .click();
+  await page.getByRole("tab", { name: "官方直连 API", exact: true }).click();
   await page.getByRole("button", { name: "CLI 账号", exact: true }).click();
   await page.getByRole("button", { name: "Gemini CLI", exact: true }).click();
   await page.getByRole("button", { name: "保存登录方式", exact: true }).click();

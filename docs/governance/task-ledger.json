@@ -10552,18 +10552,22 @@
     "evidence": [
       "docs/changes/2026-10-28-browser-gate/verification.md",
       "docs/changes/2026-10-28-agent-browser-navigation/verification.md",
-      "docs/changes/2026-10-28-agent-browser-navigation/review.md"
+      "docs/changes/2026-10-28-agent-browser-navigation/review.md",
+      "docs/changes/2026-10-28-api-browser-navigation/verification.md",
+      "docs/changes/2026-10-28-api-browser-navigation/review.md"
     ],
-    "verification": "此前17文件与29项定向回归保留；本次继续修复2测试文件中的现行CLI/能力入口，代表2例RED→GREEN，受影响9项0重试全通过。快速三门禁通过，2313 pass/0 fail/20 skip；完整verify/main整合仍未完成，只有作者自审。",
+    "verification": "保留此前29项/Agent9项证据；本批29测试文件将59处官方入口映射到当前tab，首页选择按图片能力分类；附件夹具经本地HTTP Agent和真实UI建立连接，最终8项7 pass/1 fail（0重试）。额外调度2项均fail，窄屏进度隐藏/失败标记隐藏/未绑定提示缺失仍开放。单元2313 pass/0 fail/20 skip，最终快速门禁见本卡验证；完整verify/main合流及当前独审未完成。",
     "verificationResult": "PARTIAL",
     "updated": "2026-10-28",
     "lastVerified": "2026-10-28",
-    "nextAction": "主代理继续按当前契约定位浏览器剩余失败；完整verify、当前提交审查及main分叉整合完成前保留PARTIAL。P1/ORG/P2按各自依赖与已验证范围推进。",
+    "nextAction": "保留3项代表失败与全部原断言，结合当前Figma和真实契约继续定位；29文件其他用例尚未全量复跑，不由7项通过推断完整浏览器门禁绿。main分叉整合和当前独审仍开放。",
     "requirementRefs": [
       "docs/changes/2026-10-28-browser-gate/intent.md",
       "docs/changes/2026-10-28-browser-gate/spec.md",
       "docs/changes/2026-10-28-agent-browser-navigation/intent.md",
-      "docs/changes/2026-10-28-agent-browser-navigation/spec.md"
+      "docs/changes/2026-10-28-agent-browser-navigation/spec.md",
+      "docs/changes/2026-10-28-api-browser-navigation/intent.md",
+      "docs/changes/2026-10-28-api-browser-navigation/spec.md"
     ],
     "featureIds": []
   },

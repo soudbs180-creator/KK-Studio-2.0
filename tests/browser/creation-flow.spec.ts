@@ -56,9 +56,7 @@ test("未配置 API 时首页仍默认 Codex，打开 API 接入保留草稿", a
     "暂无模型",
   );
   await page.getByRole("button", { name: "模型接入…", exact: true }).click();
-  await page
-    .getByRole("button", { name: "API Key（官方）", exact: true })
-    .click();
+  await page.getByRole("tab", { name: "官方直连 API", exact: true }).click();
   await expect(page.getByLabel("API Key", { exact: true })).toBeVisible();
   await expect(page.getByLabel("创作提示词")).toHaveValue(prompt);
 });
@@ -66,9 +64,7 @@ test("未配置 API 时首页仍默认 Codex，打开 API 接入保留草稿", a
 test("首页权限模式询问可取消确认且输入仍保留", async ({ page }) => {
   await page.getByRole("button", { name: "模型", exact: true }).click();
   await page.getByRole("button", { name: "模型接入…", exact: true }).click();
-  await page
-    .getByRole("button", { name: "API Key（官方）", exact: true })
-    .click();
+  await page.getByRole("tab", { name: "官方直连 API", exact: true }).click();
   await page.getByLabel("接口地址").fill("https://models.example.test/v1");
   await page.getByLabel("API Key", { exact: true }).fill("fixture-key");
   await page.getByLabel("模型名称").fill("image-test");
@@ -130,9 +126,7 @@ test("工作台消息属于当前项目，刷新后项目库可重新打开", as
     .getByRole("menu")
     .getByRole("button", { name: "模型接入…", exact: true })
     .click();
-  await page
-    .getByRole("button", { name: "API Key（官方）", exact: true })
-    .click();
+  await page.getByRole("tab", { name: "官方直连 API", exact: true }).click();
   await page.getByLabel("接口地址").fill("https://models.example.test/v1");
   await page.getByLabel("API Key", { exact: true }).fill("test-key");
   await page.getByLabel("模型名称").fill("image-test");
@@ -210,9 +204,7 @@ test("配置连接后图片任务使用 provider 响应回填结果节点", asyn
     .getByRole("menu")
     .getByRole("button", { name: "模型接入…", exact: true })
     .click();
-  await page
-    .getByRole("button", { name: "API Key（官方）", exact: true })
-    .click();
+  await page.getByRole("tab", { name: "官方直连 API", exact: true }).click();
   await page.getByLabel("接口地址").fill("https://models.example.test/v1");
   await page.getByLabel("API Key", { exact: true }).fill("test-key");
   await page.getByLabel("模型名称").fill("image-test");
@@ -254,9 +246,7 @@ test("批量数量会随请求发送并归档多个 provider 结果", async ({ p
     .getByRole("menu")
     .getByRole("button", { name: "模型接入…", exact: true })
     .click();
-  await page
-    .getByRole("button", { name: "API Key（官方）", exact: true })
-    .click();
+  await page.getByRole("tab", { name: "官方直连 API", exact: true }).click();
   await page.getByLabel("接口地址").fill("https://models.example.test/v1");
   await page.getByLabel("API Key", { exact: true }).fill("test-key");
   await page.getByLabel("模型名称").fill("image-test");
@@ -286,9 +276,7 @@ test("运行中的图片任务可取消并停留在当前项目", async ({ page 
     .getByRole("menu")
     .getByRole("button", { name: "模型接入…", exact: true })
     .click();
-  await page
-    .getByRole("button", { name: "API Key（官方）", exact: true })
-    .click();
+  await page.getByRole("tab", { name: "官方直连 API", exact: true }).click();
   await page.getByLabel("接口地址").fill("https://models.example.test/v1");
   await page.getByLabel("API Key", { exact: true }).fill("test-key");
   await page.getByLabel("模型名称").fill("image-test");

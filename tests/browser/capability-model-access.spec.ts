@@ -74,9 +74,7 @@ test("官方和中转站草稿隔离，切换不保存密钥或发起连接", as
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   await page.getByRole("button", { name: "模型接入", exact: true }).click();
-  await page
-    .getByRole("button", { name: "API Key（官方）", exact: true })
-    .click();
+  await page.getByRole("tab", { name: "官方直连 API", exact: true }).click();
   const profile = page.getByRole("region", { name: "官方 API Key 配置" });
   await profile.getByLabel("提供商", { exact: true }).fill("Official draft");
   await profile
@@ -91,9 +89,7 @@ test("官方和中转站草稿隔离，切换不保存密钥或发起连接", as
   await relay
     .getByLabel("API Key", { exact: true })
     .fill("test-relay-draft-secret");
-  await page
-    .getByRole("button", { name: "API Key（官方）", exact: true })
-    .click();
+  await page.getByRole("tab", { name: "官方直连 API", exact: true }).click();
   await expect(profile.getByLabel("提供商", { exact: true })).toHaveValue(
     "Official draft",
   );
@@ -106,9 +102,7 @@ test("官方和中转站草稿隔离，切换不保存密钥或发起连接", as
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   await page.getByRole("button", { name: "模型接入", exact: true }).click();
-  await page
-    .getByRole("button", { name: "API Key（官方）", exact: true })
-    .click();
+  await page.getByRole("tab", { name: "官方直连 API", exact: true }).click();
   await expect(profile.getByLabel("API Key", { exact: true })).toHaveValue("");
 });
 
@@ -146,9 +140,7 @@ test("选择连接供编辑不会改变已保存的生效账号", async ({ page 
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   const dialog = page.getByRole("dialog", { name: "设置" });
   await dialog.getByRole("button", { name: "模型接入", exact: true }).click();
-  await dialog
-    .getByRole("button", { name: "API Key（官方）", exact: true })
-    .click();
+  await dialog.getByRole("tab", { name: "官方直连 API", exact: true }).click();
   const profile = dialog.getByRole("region", { name: "官方 API Key 配置" });
   const registryBefore = await page.evaluate(
     (key) => localStorage.getItem(key),
@@ -205,9 +197,7 @@ test("获取模型目录不会验证生成能力或改写保存配置", async ({
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   const dialog = page.getByRole("dialog", { name: "设置" });
   await dialog.getByRole("button", { name: "模型接入", exact: true }).click();
-  await dialog
-    .getByRole("button", { name: "API Key（官方）", exact: true })
-    .click();
+  await dialog.getByRole("tab", { name: "官方直连 API", exact: true }).click();
   const profile = dialog.getByRole("region", { name: "官方 API Key 配置" });
   await profile
     .getByLabel("API Key", { exact: true })
@@ -291,9 +281,7 @@ test("官方与中转站切换保留已有连接的 opaque 引用、保存身份
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   const dialog = page.getByRole("dialog", { name: "设置" });
   await dialog.getByRole("button", { name: "模型接入", exact: true }).click();
-  await dialog
-    .getByRole("button", { name: "API Key（官方）", exact: true })
-    .click();
+  await dialog.getByRole("tab", { name: "官方直连 API", exact: true }).click();
   const profile = dialog.getByRole("region", { name: "官方 API Key 配置" });
   await expect(
     profile
@@ -306,9 +294,7 @@ test("官方与中转站切换保留已有连接的 opaque 引用、保存身份
   await dialog
     .getByRole("button", { name: "API Key（中转站）", exact: true })
     .click();
-  await dialog
-    .getByRole("button", { name: "API Key（官方）", exact: true })
-    .click();
+  await dialog.getByRole("tab", { name: "官方直连 API", exact: true }).click();
   await expect(
     profile
       .getByRole("listitem")
@@ -405,7 +391,7 @@ test("同地址同模型多账号重开设置保留所选身份，保存和清�
     await page.getByRole("button", { name: "打开设置", exact: true }).click();
     await dialog.getByRole("button", { name: "模型接入", exact: true }).click();
     await dialog
-      .getByRole("button", { name: "API Key（官方）", exact: true })
+      .getByRole("tab", { name: "官方直连 API", exact: true })
       .click();
   };
   const saveKey = async (value: string) => {
@@ -554,9 +540,7 @@ test("旧配置同地址多账号没有明确身份时，保存测试清除均�
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   const dialog = page.getByRole("dialog", { name: "设置" });
   await dialog.getByRole("button", { name: "模型接入", exact: true }).click();
-  await dialog
-    .getByRole("button", { name: "API Key（官方）", exact: true })
-    .click();
+  await dialog.getByRole("tab", { name: "官方直连 API", exact: true }).click();
   const profile = dialog.getByRole("region", { name: "官方 API Key 配置" });
   const catalogBefore = await page.evaluate(() =>
     localStorage.getItem("kk-studio:model-catalog:v1"),
@@ -644,9 +628,7 @@ test("API 测试锁定切页，取消后离开且迟到目录不覆盖草稿", a
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   const dialog = page.getByRole("dialog", { name: "设置" });
   await dialog.getByRole("button", { name: "模型接入", exact: true }).click();
-  await dialog
-    .getByRole("button", { name: "API Key（官方）", exact: true })
-    .click();
+  await dialog.getByRole("tab", { name: "官方直连 API", exact: true }).click();
   const profile = dialog.getByRole("region", { name: "官方 API Key 配置" });
   await profile
     .getByLabel("接口地址", { exact: true })
@@ -682,9 +664,7 @@ test("API 测试锁定切页，取消后离开且迟到目录不覆盖草稿", a
   }
   await completed;
   await expect.poll(() => aborted).toBe(true);
-  await dialog
-    .getByRole("button", { name: "API Key（官方）", exact: true })
-    .click();
+  await dialog.getByRole("tab", { name: "官方直连 API", exact: true }).click();
   await expect(
     profile.getByText("已取消连接测试。", { exact: true }),
   ).toBeVisible();
@@ -703,9 +683,7 @@ test("原生凭据保存等待期间禁止切换接入方式，完成后恢复�
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   const dialog = page.getByRole("dialog", { name: "设置" });
   await dialog.getByRole("button", { name: "模型接入", exact: true }).click();
-  await dialog
-    .getByRole("button", { name: "API Key（官方）", exact: true })
-    .click();
+  await dialog.getByRole("tab", { name: "官方直连 API", exact: true }).click();
   const profile = dialog.getByRole("region", { name: "官方 API Key 配置" });
   const save = profile.getByRole("button", { name: "保存连接", exact: true });
   // Finish the initial production credential read before installing native IO.

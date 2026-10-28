@@ -9,7 +9,6 @@ import {
 } from "../../src/features/creation/model";
 import { BASE_CANVAS_ITEMS } from "../../src/domain/canvasItems";
 import { createProjectCanvas } from "../../src/domain/projectCanvas";
-import { modelChannels, providerChannel } from "../../src/domain/modelChannels";
 import {
   MODEL_PROVIDER_STORAGE_KEY,
   parseModelProvider,
@@ -39,10 +38,7 @@ export async function selectHomeApiModel(
     .getByRole("button", { name: "模型", exact: true })
     .click();
   const menu = page.getByRole("menu", { name: "选择模型" });
-  const channel = modelChannels.find(
-    (item) => item.id === providerChannel(profile),
-  )!;
-  await menu.getByRole("tab", { name: channel.label, exact: true }).click();
+  await menu.getByRole("tab", { name: "图像生成", exact: true }).click();
   await menu.getByRole("searchbox").fill(query);
   const choices = menu.getByRole("menuitemradio");
   await expect(choices).toHaveCount(1);

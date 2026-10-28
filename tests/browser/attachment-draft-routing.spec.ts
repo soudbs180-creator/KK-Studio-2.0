@@ -1,12 +1,25 @@
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test as base, type Page } from "@playwright/test";
+import { startAgentServer } from "../helpers/agentServer";
 import { MODEL_PROVIDER_STORAGE_KEY } from "../../src/domain/modelProvider";
 import { PROVIDER_CONNECTIONS_STORAGE_KEY } from "../../src/features/creation/providerRegistry";
-import { selectHomeApiModel } from "./helpers";
+import { openSettingsSection, selectHomeApiModel } from "./helpers";
+
+const test = base.extend({
+  page: async ({ page }, use) => {
+    const agent = await startAgentServer("idle");
+    try {
+      await prepare(page, agent.url);
+      await use(page);
+    } finally {
+      await agent.close();
+    }
+  },
+});
 
 const pixel =
   "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=";
 
-async function prepare(page: Page) {
+async function prepare(page: Page, endpoint: string) {
   await page.addInitScript(
     ({ profileKey, registryKey }) => {
       const provider = {
@@ -43,6 +56,22 @@ async function prepare(page: Page) {
     },
   );
   await page.goto("/");
+  await openSettingsSection(page, "模型接入");
+  const dialog = page.getByRole("dialog", { name: "设置", exact: true });
+  await dialog.getByRole("tab", { name: "CLI 直连 CLI", exact: true }).click();
+  await dialog
+    .getByRole("button", { name: "Codex CLI / 主 Agent", exact: true })
+    .click();
+  const card = dialog.locator(".settings-agent-card").filter({
+    has: page.getByRole("heading", { name: /Codex 主 Agent/ }),
+  });
+  await card.getByText("高级连接选项", { exact: true }).click();
+  await card.getByLabel("Agent 地址").fill(endpoint);
+  await card.getByRole("button", { name: "连接 Agent", exact: true }).click();
+  await expect(
+    card.getByRole("button", { name: "已连接", exact: true }),
+  ).toBeDisabled();
+  await dialog.getByRole("button", { name: "关闭设置", exact: true }).click();
 }
 
 async function delayReads(page: Page) {
@@ -65,7 +94,7 @@ async function delayReads(page: Page) {
 async function chooseCodex(page: Page) {
   await page.getByRole("button", { name: "模型", exact: true }).click();
   const menu = page.getByRole("menu", { name: "选择模型" });
-  await menu.getByRole("tab", { name: "登录账号", exact: true }).click();
+  await menu.getByRole("tab", { name: "图像生成", exact: true }).click();
   await menu.getByRole("searchbox").fill("Codex");
   await menu.getByRole("menuitemradio", { name: /^Codex 内置生图/ }).click();
 }
@@ -82,7 +111,6 @@ for (const source of ["codex", "api"] as const) {
   test(`${source} 附件读取期间编辑并切换来源保留当前草稿，合法图片完整添加`, async ({
     page,
   }) => {
-    await prepare(page);
     if (source === "api")
       await selectHomeApiModel(page, "attachment-image-test");
     await page.getByLabel("创作提示词").fill("读取开始前的提示词");
@@ -126,7 +154,6 @@ for (const source of ["codex", "api"] as const) {
 test("读取中切至较小上限的 API 来源明确拒绝超限整批，不截断或改回来源", async ({
   page,
 }) => {
-  await prepare(page);
   await page.getByLabel("创作提示词").fill("读取前");
   await delayReads(page);
   await page.locator('.start-composer input[type="file"]').setInputFiles(
@@ -166,7 +193,6 @@ test("读取中切至较小上限的 API 来源明确拒绝超限整批，不截
 test("询问确认随来源和草稿变化失效，再次创建只确认当前草稿", async ({
   page,
 }) => {
-  await prepare(page);
   await page.getByLabel("创作提示词").fill("旧 Codex 确认草稿");
   await page.getByRole("button", { name: /当前模式：自动/ }).click();
   await page.getByRole("menuitemradio", { name: "询问", exact: true }).click();

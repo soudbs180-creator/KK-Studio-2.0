@@ -21,9 +21,7 @@ for (const width of [390, 1920]) {
       "model-settings",
       info,
     );
-    await page
-      .getByRole("button", { name: "API Key（官方）", exact: true })
-      .click();
+    await page.getByRole("tab", { name: "官方直连 API", exact: true }).click();
     await page
       .getByRole("button", { name: "保存连接", exact: true })
       .scrollIntoViewIfNeeded();

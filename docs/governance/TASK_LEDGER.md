@@ -173,7 +173,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-GATEWAY-STREAM-20261018 | Gateway实际增量SSE与取消重试边界 | DONE | 已完成 | P1 | TASK-COLDSTART-LOCAL-20261018 | root | 本地有界子项完成；最终精确文档/Delivery/私有归档/原两个快捷方式由工程外收据裁决。下一P1本地DPAPI protector受控测试及独立成本回执调用路径，不重提UNKNOWN，不消费额度；父Gateway仍PARTIAL。 |
 | TASK-MOD-P0 | 建立模块化边界与只减不增的架构基线 | PARTIAL | 未完成 | P1 | none | root | 18项格式已在独立任务修复；完整verify进一步暴露产品浏览器/开发插件失败。由TASK-MOD-GATE-BROWSER修复后复跑，TASK-GOV-004继续分叉整合；未合流前不提升交付状态。 |
 | TASK-MOD-GATE-FORMAT | 独立恢复18项既有源码格式门禁 | PARTIAL | 未完成 | P1 | none | root | af4c4e2格式源码独审已PASS；继续TASK-MOD-GATE-BROWSER剩余用例，完整verify及主线分叉整合满足后再关闭总体交付。 |
-| TASK-MOD-GATE-BROWSER | 恢复历史浏览器测试与当前设置入口的对应 | PARTIAL | 未完成 | P1 | TASK-MOD-GATE-FORMAT | root | 主代理继续按当前契约定位浏览器剩余失败；完整verify、当前提交审查及main分叉整合完成前保留PARTIAL。P1/ORG/P2按各自依赖与已验证范围推进。 |
+| TASK-MOD-GATE-BROWSER | 恢复历史浏览器测试与当前设置入口的对应 | PARTIAL | 未完成 | P1 | TASK-MOD-GATE-FORMAT | root | 保留3项代表失败与全部原断言，结合当前Figma和真实契约继续定位；29文件其他用例尚未全量复跑，不由7项通过推断完整浏览器门禁绿。main分叉整合和当前独审仍开放。 |
 | TASK-MOD-FOUR-DOC-COVERAGE | 逐项追踪四份整顿原文的完整需求与验收 | PARTIAL | 未完成 | P1 | none | root | 后续先读四文档总清单，按P0→P1→P2及ORG试点→推广实施；将现代化/其他P/ORG事项逐项落入对应任务，补完必做项与待决结论后才判整套完成。 |
 | TASK-ORG-0 | 盘点仓库文件、引用与容器参考资料 | PARTIAL | 未完成 | P2 | none | root | 保留原件，继续核实完整盘点缺口；无证据不迁删。 |
 | TASK-ORG-1 | 建立仓库目录与弃用生命周期规则 | PARTIAL | 未完成 | P2 | TASK-ORG-0 | root | 按当前候选完成整合审查与主线门禁；后续ORG-2防回弹和ORG-5单包试点分别实施，不能用规则候选代替迁移完成。 |
@@ -3360,16 +3360,16 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Scope: 浏览器/开发插件测试入口和夹具；不为旧测试回退当前UI，不降低有效断言，不改变产品能力
 - Display status: 未完成
 - Priority: P1 — 未记录
-- Requirement refs: docs/changes/2026-10-28-browser-gate/intent.md, docs/changes/2026-10-28-browser-gate/spec.md, docs/changes/2026-10-28-agent-browser-navigation/intent.md, docs/changes/2026-10-28-agent-browser-navigation/spec.md
+- Requirement refs: docs/changes/2026-10-28-browser-gate/intent.md, docs/changes/2026-10-28-browser-gate/spec.md, docs/changes/2026-10-28-agent-browser-navigation/intent.md, docs/changes/2026-10-28-agent-browser-navigation/spec.md, docs/changes/2026-10-28-api-browser-navigation/intent.md, docs/changes/2026-10-28-api-browser-navigation/spec.md
 - Feature IDs: none
 - Owner role: implementation-integrator
 - Acceptance: 旧入口失败先保留RED，映射当前真实分类后相关用例通过; 其余失败区分测试过时与真实缺陷，任何真实UI修改先取得当前Figma依据; 完整verify实际全绿及当前SHA独审后才解除合流阻断
 - Branch: `test/TASK-MOD-GATE-BROWSER`
 - Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
 - Modules: tests/browser, tests/support, tests/development
-- Verification: PARTIAL — 此前17文件与29项定向回归保留；本次继续修复2测试文件中的现行CLI/能力入口，代表2例RED→GREEN，受影响9项0重试全通过。快速三门禁通过，2313 pass/0 fail/20 skip；完整verify/main整合仍未完成，只有作者自审。
-- Evidence: [docs/changes/2026-10-28-browser-gate/verification.md](../../docs/changes/2026-10-28-browser-gate/verification.md), [docs/changes/2026-10-28-agent-browser-navigation/verification.md](../../docs/changes/2026-10-28-agent-browser-navigation/verification.md), [docs/changes/2026-10-28-agent-browser-navigation/review.md](../../docs/changes/2026-10-28-agent-browser-navigation/review.md)
-- Next action: 主代理继续按当前契约定位浏览器剩余失败；完整verify、当前提交审查及main分叉整合完成前保留PARTIAL。P1/ORG/P2按各自依赖与已验证范围推进。
+- Verification: PARTIAL — 保留此前29项/Agent9项证据；本批29测试文件将59处官方入口映射到当前tab，首页选择按图片能力分类；附件夹具经本地HTTP Agent和真实UI建立连接，最终8项7 pass/1 fail（0重试）。额外调度2项均fail，窄屏进度隐藏/失败标记隐藏/未绑定提示缺失仍开放。单元2313 pass/0 fail/20 skip，最终快速门禁见本卡验证；完整verify/main合流及当前独审未完成。
+- Evidence: [docs/changes/2026-10-28-browser-gate/verification.md](../../docs/changes/2026-10-28-browser-gate/verification.md), [docs/changes/2026-10-28-agent-browser-navigation/verification.md](../../docs/changes/2026-10-28-agent-browser-navigation/verification.md), [docs/changes/2026-10-28-agent-browser-navigation/review.md](../../docs/changes/2026-10-28-agent-browser-navigation/review.md), [docs/changes/2026-10-28-api-browser-navigation/verification.md](../../docs/changes/2026-10-28-api-browser-navigation/verification.md), [docs/changes/2026-10-28-api-browser-navigation/review.md](../../docs/changes/2026-10-28-api-browser-navigation/review.md)
+- Next action: 保留3项代表失败与全部原断言，结合当前Figma和真实契约继续定位；29文件其他用例尚未全量复跑，不由7项通过推断完整浏览器门禁绿。main分叉整合和当前独审仍开放。
 - Last verified: 2026-10-28
 - Updated: 2026-10-28
 

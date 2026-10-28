@@ -223,9 +223,7 @@ for (const duplicate of [true, false]) {
 async function settings(page: Page) {
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   await page.getByRole("button", { name: "模型接入", exact: true }).click();
-  await page
-    .getByRole("button", { name: "API Key（官方）", exact: true })
-    .click();
+  await page.getByRole("tab", { name: "官方直连 API", exact: true }).click();
 }
 async function configure(page: Page) {
   await page.goto("/");
