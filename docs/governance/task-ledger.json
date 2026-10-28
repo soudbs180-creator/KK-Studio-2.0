@@ -10514,7 +10514,7 @@
     "verificationResult": "PARTIAL",
     "updated": "2026-10-28",
     "lastVerified": "2026-10-28",
-    "nextAction": "固定格式提交独审；独立TASK-MOD-GATE-BROWSER处理旧测试入口与实际浏览器失败，之后完整verify及主线整合。",
+    "nextAction": "af4c4e2格式源码独审已PASS；继续TASK-MOD-GATE-BROWSER剩余用例，完整verify及主线分叉整合满足后再关闭总体交付。",
     "requirementRefs": [
       "docs/changes/2026-10-28-modularity-format/intent.md",
       "docs/changes/2026-10-28-modularity-format/spec.md"
@@ -10615,5 +10615,93 @@
       "docs/changes/2026-10-28-four-document-coverage/spec.md"
     ],
     "featureIds": []
+  },
+  {
+    "owner": "root",
+    "ownerRole": "repository-maintainer",
+    "branch": "docs/TASK-ORG-1-repo-layout",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "3362398ee4b08239c8796a5df1de49f458e561f3",
+    "status": "PARTIAL",
+    "displayStatus": "未完成",
+    "priority": "P2",
+    "risk": "low",
+    "reviewRequired": true,
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-28",
+    "lastVerified": "2026-10-28",
+    "featureIds": [],
+    "id": "TASK-ORG-0",
+    "title": "盘点仓库文件、引用与容器参考资料",
+    "goal": "为目录治理和安全外置提供可复跑的实物/引用/等价证据",
+    "scope": "跟踪清单、活动与历史引用、门禁/功能依赖、分支树、根候选和参考目录内容对照；不迁删",
+    "acceptance": [
+      "跟踪清单和引用证据可复跑",
+      "目标容器内容逐份hash/diff核对，不按同名推断等价",
+      "仍未知的动态引用、上游身份和存量缺件有明确范围"
+    ],
+    "dependencies": [],
+    "affectedModules": [
+      "docs/reference",
+      "docs/superpowers",
+      "docs/governance",
+      "docs/changes/2026-10-28-repo-layout"
+    ],
+    "evidence": [
+      "docs/changes/2026-10-28-repo-layout/verification.md",
+      "docs/changes/2026-10-28-modularity-p0/inventory.md"
+    ],
+    "verification": "原始跟踪/引用/分支和归档清单保留；本次165份仓内reference/superpowers对照目标容器9文件，原字节和LF hash均无等价，全部保留。上游身份、存量缺件等完整盘点闭环仍待核实。",
+    "nextAction": "保留原件，继续核实完整盘点缺口；无证据不迁删。",
+    "requirementRefs": [
+      "docs/changes/2026-10-28-modularity-p0/four-document-coverage.md"
+    ]
+  },
+  {
+    "owner": "root",
+    "ownerRole": "repository-maintainer",
+    "branch": "docs/TASK-ORG-1-repo-layout",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "3362398ee4b08239c8796a5df1de49f458e561f3",
+    "status": "PARTIAL",
+    "displayStatus": "未完成",
+    "priority": "P2",
+    "risk": "low",
+    "reviewRequired": true,
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-28",
+    "lastVerified": "2026-10-28",
+    "featureIds": [],
+    "id": "TASK-ORG-1",
+    "title": "建立仓库目录与弃用生命周期规则",
+    "goal": "将补篇B1–B8落地为唯一索引内规则，防止规则与迁移状态混淆",
+    "scope": "REPO-LAYOUT、DEPRECATIONS骨架、docs索引、gitignore加固；不执行迁移/删除或启用ORG-2防回弹",
+    "acceptance": [
+      "B1–B8目录/生命周期/vendor规则有明确归属且不复制架构规则",
+      "索引/Markdown/治理通过",
+      "ignore新增临时类型，源码和合法夹具保持可跟踪",
+      "不修改或删除既有证据/用户文件"
+    ],
+    "dependencies": [
+      "TASK-ORG-0"
+    ],
+    "affectedModules": [
+      ".gitignore",
+      "docs/architecture/REPO-LAYOUT.md",
+      "docs/architecture/DEPRECATIONS.md",
+      "docs/README.md",
+      "docs/governance",
+      "docs/changes/2026-10-28-repo-layout"
+    ],
+    "evidence": [
+      "docs/changes/2026-10-28-repo-layout/verification.md",
+      "docs/changes/2026-10-28-repo-layout/review.md"
+    ],
+    "verification": "REPO-LAYOUT/DEPRECATIONS骨架、索引及ignore候选完成；3正7负配置断言、治理171/索引/Markdown137/生命周期均通过。快速typecheck/lint/npm test通过（2313 pass/0 fail/20 skip），无产品改动/迁删，主checkout21哈希不变；仅自审，未合流。",
+    "nextAction": "按当前候选完成整合审查与主线门禁；后续ORG-2防回弹和ORG-5单包试点分别实施，不能用规则候选代替迁移完成。",
+    "requirementRefs": [
+      "docs/changes/2026-10-28-repo-layout/intent.md",
+      "docs/changes/2026-10-28-repo-layout/spec.md"
+    ]
   }
 ]

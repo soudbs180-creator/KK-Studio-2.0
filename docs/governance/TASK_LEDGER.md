@@ -172,9 +172,11 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-COLDSTART-LOCAL-20261018 | 冷启动无效写入修复与严格数据比较闭环 | DONE | 已完成 | P1 | none | root | 本有界冷启动技术闭环完成；最终文档SHA独审/Delivery/保全归档与日常单实例入口据实收尾。继续本地Gateway增量流和Native Canvas专项，不改变父任务外部验收与功能成熟度。 |
 | TASK-GATEWAY-STREAM-20261018 | Gateway实际增量SSE与取消重试边界 | DONE | 已完成 | P1 | TASK-COLDSTART-LOCAL-20261018 | root | 本地有界子项完成；最终精确文档/Delivery/私有归档/原两个快捷方式由工程外收据裁决。下一P1本地DPAPI protector受控测试及独立成本回执调用路径，不重提UNKNOWN，不消费额度；父Gateway仍PARTIAL。 |
 | TASK-MOD-P0 | 建立模块化边界与只减不增的架构基线 | PARTIAL | 未完成 | P1 | none | root | 18项格式已在独立任务修复；完整verify进一步暴露产品浏览器/开发插件失败。由TASK-MOD-GATE-BROWSER修复后复跑，TASK-GOV-004继续分叉整合；未合流前不提升交付状态。 |
-| TASK-MOD-GATE-FORMAT | 独立恢复18项既有源码格式门禁 | PARTIAL | 未完成 | P1 | none | root | 固定格式提交独审；独立TASK-MOD-GATE-BROWSER处理旧测试入口与实际浏览器失败，之后完整verify及主线整合。 |
+| TASK-MOD-GATE-FORMAT | 独立恢复18项既有源码格式门禁 | PARTIAL | 未完成 | P1 | none | root | af4c4e2格式源码独审已PASS；继续TASK-MOD-GATE-BROWSER剩余用例，完整verify及主线分叉整合满足后再关闭总体交付。 |
 | TASK-MOD-GATE-BROWSER | 恢复历史浏览器测试与当前设置入口的对应 | PARTIAL | 未完成 | P1 | TASK-MOD-GATE-FORMAT | root | 主代理继续按当前契约定位浏览器剩余失败；完整verify、当前提交审查及main分叉整合完成前保留PARTIAL。P1/ORG/P2按各自依赖与已验证范围推进。 |
 | TASK-MOD-FOUR-DOC-COVERAGE | 逐项追踪四份整顿原文的完整需求与验收 | PARTIAL | 未完成 | P1 | none | root | 后续先读四文档总清单，按P0→P1→P2及ORG试点→推广实施；将现代化/其他P/ORG事项逐项落入对应任务，补完必做项与待决结论后才判整套完成。 |
+| TASK-ORG-0 | 盘点仓库文件、引用与容器参考资料 | PARTIAL | 未完成 | P2 | none | root | 保留原件，继续核实完整盘点缺口；无证据不迁删。 |
+| TASK-ORG-1 | 建立仓库目录与弃用生命周期规则 | PARTIAL | 未完成 | P2 | TASK-ORG-0 | root | 按当前候选完成整合审查与主线门禁；后续ORG-2防回弹和ORG-5单包试点分别实施，不能用规则候选代替迁移完成。 |
 
 ## TASK-FIGMA-PAGES-20261025 — 重新核查并整理Figma 04/05页面与状态
 
@@ -3348,7 +3350,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/components/nodes/ReferenceThumbnail.tsx, src/features, docs
 - Verification: PARTIAL — 18个历史文件已由Prettier修复，18/18转译JS语法树相同；lint/typecheck/单元2313 pass/0 fail/20 skip、Agent204 pass/2 skip、UI静态及format通过。产品浏览器暴露旧设置入口等失败后主动中断；设计浏览器9 pass；开发插件旧扩展分类失败。完整verify尚未全绿，未合流。
 - Evidence: [docs/changes/2026-10-28-modularity-format/verification.md](../../docs/changes/2026-10-28-modularity-format/verification.md)
-- Next action: 固定格式提交独审；独立TASK-MOD-GATE-BROWSER处理旧测试入口与实际浏览器失败，之后完整verify及主线整合。
+- Next action: af4c4e2格式源码独审已PASS；继续TASK-MOD-GATE-BROWSER剩余用例，完整verify及主线分叉整合满足后再关闭总体交付。
 - Last verified: 2026-10-28
 - Updated: 2026-10-28
 
@@ -3387,5 +3389,43 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Verification: PARTIAL — 四份全文与总清单已核对；继续处理Browser任务，本次9项通过。补查ORG-0目标容器位置：165仓内参考文件对照9份容器文件，原字节/LF均无等价，未迁删。其余P/STD/ORG仍按矩阵逐项待验收；禁止子代理。
 - Evidence: [docs/changes/2026-10-28-modularity-p0/four-document-coverage.md](../../docs/changes/2026-10-28-modularity-p0/four-document-coverage.md), [docs/changes/2026-10-28-modularity-p0/four-document-sources.json](../../docs/changes/2026-10-28-modularity-p0/four-document-sources.json), [docs/changes/2026-10-28-four-document-coverage/verification.md](../../docs/changes/2026-10-28-four-document-coverage/verification.md), [docs/changes/2026-10-28-four-document-coverage/review.md](../../docs/changes/2026-10-28-four-document-coverage/review.md), [docs/changes/2026-10-28-agent-browser-navigation/verification.md](../../docs/changes/2026-10-28-agent-browser-navigation/verification.md)
 - Next action: 后续先读四文档总清单，按P0→P1→P2及ORG试点→推广实施；将现代化/其他P/ORG事项逐项落入对应任务，补完必做项与待决结论后才判整套完成。
+- Last verified: 2026-10-28
+- Updated: 2026-10-28
+
+## TASK-ORG-0 — 盘点仓库文件、引用与容器参考资料
+
+- Goal: 为目录治理和安全外置提供可复跑的实物/引用/等价证据
+- Scope: 跟踪清单、活动与历史引用、门禁/功能依赖、分支树、根候选和参考目录内容对照；不迁删
+- Display status: 未完成
+- Priority: P2 — 未记录
+- Requirement refs: docs/changes/2026-10-28-modularity-p0/four-document-coverage.md
+- Feature IDs: none
+- Owner role: repository-maintainer
+- Acceptance: 跟踪清单和引用证据可复跑; 目标容器内容逐份hash/diff核对，不按同名推断等价; 仍未知的动态引用、上游身份和存量缺件有明确范围
+- Branch: `docs/TASK-ORG-1-repo-layout`
+- Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
+- Modules: docs/reference, docs/superpowers, docs/governance, docs/changes/2026-10-28-repo-layout
+- Verification: PARTIAL — 原始跟踪/引用/分支和归档清单保留；本次165份仓内reference/superpowers对照目标容器9文件，原字节和LF hash均无等价，全部保留。上游身份、存量缺件等完整盘点闭环仍待核实。
+- Evidence: [docs/changes/2026-10-28-repo-layout/verification.md](../../docs/changes/2026-10-28-repo-layout/verification.md), [docs/changes/2026-10-28-modularity-p0/inventory.md](../../docs/changes/2026-10-28-modularity-p0/inventory.md)
+- Next action: 保留原件，继续核实完整盘点缺口；无证据不迁删。
+- Last verified: 2026-10-28
+- Updated: 2026-10-28
+
+## TASK-ORG-1 — 建立仓库目录与弃用生命周期规则
+
+- Goal: 将补篇B1–B8落地为唯一索引内规则，防止规则与迁移状态混淆
+- Scope: REPO-LAYOUT、DEPRECATIONS骨架、docs索引、gitignore加固；不执行迁移/删除或启用ORG-2防回弹
+- Display status: 未完成
+- Priority: P2 — 未记录
+- Requirement refs: docs/changes/2026-10-28-repo-layout/intent.md, docs/changes/2026-10-28-repo-layout/spec.md
+- Feature IDs: none
+- Owner role: repository-maintainer
+- Acceptance: B1–B8目录/生命周期/vendor规则有明确归属且不复制架构规则; 索引/Markdown/治理通过; ignore新增临时类型，源码和合法夹具保持可跟踪; 不修改或删除既有证据/用户文件
+- Branch: `docs/TASK-ORG-1-repo-layout`
+- Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
+- Modules: .gitignore, docs/architecture/REPO-LAYOUT.md, docs/architecture/DEPRECATIONS.md, docs/README.md, docs/governance, docs/changes/2026-10-28-repo-layout
+- Verification: PARTIAL — REPO-LAYOUT/DEPRECATIONS骨架、索引及ignore候选完成；3正7负配置断言、治理171/索引/Markdown137/生命周期均通过。快速typecheck/lint/npm test通过（2313 pass/0 fail/20 skip），无产品改动/迁删，主checkout21哈希不变；仅自审，未合流。
+- Evidence: [docs/changes/2026-10-28-repo-layout/verification.md](../../docs/changes/2026-10-28-repo-layout/verification.md), [docs/changes/2026-10-28-repo-layout/review.md](../../docs/changes/2026-10-28-repo-layout/review.md)
+- Next action: 按当前候选完成整合审查与主线门禁；后续ORG-2防回弹和ORG-5单包试点分别实施，不能用规则候选代替迁移完成。
 - Last verified: 2026-10-28
 - Updated: 2026-10-28

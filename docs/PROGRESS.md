@@ -1286,3 +1286,7 @@ TASK-UI-DETAILS-20261015从最新18e143f修复，Desktop/Web2.1.26产品ab878ffd
 ## 2026-10-28 继续未完成的浏览器门禁与ORG盘点
 
 主代理按四文档矩阵继续执行，未用子代理。修复2份Agent测试的现行CLI/能力分类进入路径，两个代表失败转通过、9项完整相关回归通过；快速三门禁2313 pass/0 fail/20 skip。ORG补查165份参考文件对照指定容器位置9文件，无hash/LF等价，全部保留。见[验证](changes/2026-10-28-agent-browser-navigation/verification.md)；其余P/STD/ORG和最终合流仍未完成。
+
+## 2026-10-28 ORG-1从未开始推进为候选
+
+建立[REPO-LAYOUT](architecture/REPO-LAYOUT.md)与[DEPRECATIONS](architecture/DEPRECATIONS.md)骨架、索引和ignore临时类型。3正7负配置断言、治理/索引/链接/生命周期与快速三门禁通过（2313 pass/0 fail/20 skip）。没有产品/用户数据改动或证据迁出，受保护21文件不变；只自审、未合流，ORG-0/2/5/6仍分别待验。见[本卡验证](changes/2026-10-28-repo-layout/verification.md)。

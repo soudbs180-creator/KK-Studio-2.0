@@ -50,6 +50,8 @@
 
 | 文档                                                       | 承载内容                                    |
 | ---------------------------------------------------------- | ------------------------------------------- |
+| [REPO-LAYOUT](architecture/REPO-LAYOUT.md) | 目录、参考、vendor与文档生命周期规则 |
+| [DEPRECATIONS](architecture/DEPRECATIONS.md) | 弃用/兼容登记与移除证据入口 |
 | [ARCHITECTURE](architecture/ARCHITECTURE.md)               | 进程模型、模块依赖、数据流                  |
 | [DATA-STORAGE](architecture/DATA-STORAGE.md)               | 存储 schema、生命周期、迁移                 |
 | [DATA-CLASSIFICATION](architecture/DATA-CLASSIFICATION.md) | 数据分级与处理约束                          |
