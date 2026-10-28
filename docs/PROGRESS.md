@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-10-28 调度冷却与任务面板点击修复（PARTIAL）
+
+修复任务关闭伪元素覆盖面板，以及429等健康状态等待项目保存才生效的两个时序。当前Figma01/03只读核对支持自身命中范围，无需改设计；Desktop/Web源码2.1.45→46，Mobile43不变。完整调度15项及390/1920面板点击2项首试全过，真实IDB阻塞/保存冲突保护保留；typecheck/lint/format/ui检查通过，单元2325 pass/0 fail/20 skip。窄屏保存进度仍失败，原生/独审/完整verify及main未完成；见[本卡验证](changes/2026-10-28-provider-browser-contract/verification.md)。
+
 ## 2026-10-28 ORG-5 历史日志首包外置（PARTIAL）
 
 模型能力历史包62份日志已从隔离任务树外置，毛量1357699字节；源/Git/容器副本与全新目录恢复均逐份sha256匹配。32个历史链接转清单，结论及原目的地可追溯，PNG/JSON/E1保留；历史断链86→86无新增。B11基线640→578，仅收缩；新增只读SHA校验器，详见[验证](changes/2026-10-28-evidence-pilot/verification.md)。这是首包候选，ORG-6推广、完整verify、独审及main整合仍未完成，主工程未改。

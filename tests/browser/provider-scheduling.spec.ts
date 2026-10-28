@@ -58,6 +58,16 @@ async function workbench(page: Page) {
   await page.getByRole("button", { name: "打开任务列表" }).click();
   await page.getByRole("button", { name: "打开任务工作台" }).click();
 }
+async function expectTaskStatus(page: Page, status: string) {
+  await page.getByRole("button", { name: "打开任务列表", exact: true }).click();
+  const panel = page.getByRole("region", { name: "任务列表", exact: true });
+  const card = panel.getByRole("button", { name: /^查看任务 / }).last();
+  await expect(card).toBeVisible();
+  await expect(card.locator(".task-card-status")).toHaveText(status);
+  await panel
+    .getByRole("button", { name: "关闭任务列表", exact: true })
+    .click();
+}
 type SchedulingFixtureWindow = Window & {
   __providerSchedulingWriteLock?: {
     release: boolean;
@@ -190,7 +200,7 @@ for (const reason of ["quarantined", "capacity"] as const) {
         : { state: "quarantined", activeJobs: 1 },
     );
     await approve(page);
-    await expect(page.locator(".project-task-failed")).toBeVisible();
+    await expectTaskStatus(page, "失败");
     expect(requests).toBe(0);
     expect((await connections(page))[0].activeJobs).toBe(1);
   });
@@ -211,7 +221,7 @@ test("429重试等待deadline且403隔离后不再提交", async ({ page }) => {
   await configure(page);
   await submit(page);
   await approve(page);
-  await expect(page.locator(".project-task-failed")).toBeVisible();
+  await expectTaskStatus(page, "失败");
   const cooldown = (await connections(page))[0];
   expect(cooldown.state).toBe("cooldown");
   expect(cooldown.cooldownUntil!).toBeGreaterThan(Date.now() + 3500000);
@@ -260,7 +270,7 @@ test("429冷却先于被阻塞的项目保存且阻止另一项目提交", async
     await configure(page);
     await submit(page);
     await approve(page);
-    await expect(page.locator(".project-task-failed")).toBeVisible();
+    await expectTaskStatus(page, "失败");
     const connection = (await connections(page))[0];
     expect(connection.state).toBe("cooldown");
     expect(connection.cooldownUntil!).toBeGreaterThan(Date.now() + 3500000);
@@ -331,7 +341,7 @@ test("部分结果后429在真实保存冲突后仍保留冷却", async ({ page 
     await configure(page);
     await submit(page);
     await approve(page);
-    await expect(page.locator(".project-task-partial")).toBeVisible();
+    await expectTaskStatus(page, "10/16 张已完成");
     expect((await connections(page))[0].state).toBe("cooldown");
     expect((await connections(page))[0].activeJobs).toBe(1);
     expect(requests).toBe(2);
@@ -358,7 +368,7 @@ for (const condition of ["quarantined", "removed"] as const) {
     await configure(page);
     await submit(page);
     await approve(page);
-    await expect(page.locator(".project-task-succeeded")).toBeVisible();
+    await expectTaskStatus(page, "已完成");
     await page.evaluate(
       ({ key, condition }) => {
         const [bound] = JSON.parse(
@@ -393,7 +403,7 @@ for (const condition of ["quarantined", "removed"] as const) {
     expect(requests).toBe(1);
   });
 }
-test("新建未绑定空项目明确选择可用连接后可以首次提交", async ({ page }) => {
+test("未绑定空项目向自动选择的合格连接发送前必须审批", async ({ page }) => {
   let requests = 0;
   await page.route(endpoint, async (route) => {
     requests++;
@@ -404,24 +414,51 @@ test("新建未绑定空项目明确选择可用连接后可以首次提交", as
   await configure(page);
   await page.getByRole("button", { name: "项目库", exact: true }).click();
   await page.getByRole("button", { name: "新建项目", exact: true }).click();
+  await page.getByLabel("执行方式").selectOption("direct");
+  await page.getByLabel("对话内容").fill("未绑定项目审批保护");
+  await page.getByRole("button", { name: "发送消息", exact: true }).click();
+  const approval = page.getByRole("dialog", { name: "人工审批任务" });
+  await expect(approval).toContainText("https://models.example.test/v1");
+  await expect(approval).toContainText("image-test");
+  expect(requests).toBe(0);
+  await approve(page);
+  await expectTaskStatus(page, "已完成");
+  expect(requests).toBe(1);
+});
+
+test("新建未绑定空项目无合格连接时保留草稿，恢复并明确选择后首次提交", async ({
+  page,
+}) => {
+  let requests = 0;
+  await page.route(endpoint, async (route) => {
+    requests++;
+    expect(route.request().headers().authorization).toBe("Bearer fixture-key");
+    expect(route.request().postDataJSON().model).toBe("image-test");
+    await route.fulfill({ json: { data: [{ b64_json: pixel }] } });
+  });
+  await configure(page);
+  await change(page, { state: "disabled" });
+  await page.getByRole("button", { name: "项目库", exact: true }).click();
+  await page.getByRole("button", { name: "新建项目", exact: true }).click();
   await expect(page.getByLabel("执行方式")).toHaveValue("codex");
   await page.getByLabel("执行方式").selectOption("direct");
   await page.getByLabel("对话内容").fill("新项目首发");
   await page.getByRole("button", { name: "发送消息", exact: true }).click();
-  await expect(page.locator(".chat-status")).toContainText("明确选择模型连接");
+  await expect(page.locator(".chat-status")).toContainText("连接已禁用");
   await expect(page.getByLabel("对话内容")).toHaveValue("新项目首发");
   await expect(page.getByRole("dialog", { name: "人工审批任务" })).toHaveCount(
     0,
   );
   expect(requests).toBe(0);
+  await change(page, { state: "active" });
   await page.getByRole("button", { name: "模型", exact: true }).click();
   const menu = page.getByRole("menu", { name: "选择模型" });
-  await menu.getByRole("tab", { name: "官方 API", exact: true }).click();
+  await menu.getByRole("tab", { name: "图像生成", exact: true }).click();
   await menu.getByRole("menuitemradio", { name: /image-test/ }).click();
   await expect(page.getByLabel("对话内容")).toHaveValue("新项目首发");
   await page.getByRole("button", { name: "发送消息", exact: true }).click();
   await approve(page);
-  await expect(page.locator(".project-task-succeeded")).toBeVisible();
+  await expectTaskStatus(page, "已完成");
   expect(requests).toBe(1);
 });
 
@@ -438,7 +475,7 @@ test("5xx退化连接仅显式重试恢复并保留原绑定", async ({ page }) 
   await configure(page);
   await submit(page);
   await approve(page);
-  await expect(page.locator(".project-task-failed")).toBeVisible();
+  await expectTaskStatus(page, "失败");
   const bound = (await connections(page))[0];
   expect(bound.state).toBe("degraded");
   await page.getByLabel("对话内容").fill("失败后保留");

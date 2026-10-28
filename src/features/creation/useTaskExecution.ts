@@ -1405,19 +1405,18 @@ async function executeImageFlow(options: ImageFlowOptions): Promise<void> {
     connectionId: task.providerConnectionId,
   });
 
-  publish(
-    status,
-    message,
-    generatedUncertain || archiveUncertain ? "unknown" : "terminal",
-  );
-  await flushPublishedResult();
-
   recordConnectionHealth({
     task,
     failure: generated.failure,
     archiveUncertain,
     reservation,
   });
+  publish(
+    status,
+    message,
+    generatedUncertain || archiveUncertain ? "unknown" : "terminal",
+  );
+  await flushPublishedResult();
 }
 
 async function processChunkBatch(options: {
@@ -1878,10 +1877,6 @@ async function handleExecutionError(
     uncertain ? "unknown" : durableSubmission ? "terminal" : "intent",
   );
 
-  await persistence.flush().catch((err) => {
-    console.warn("[useTaskExecution] flush on error failed:", err);
-  });
-
   if (
     task.providerConnectionId &&
     reservation &&
@@ -1909,4 +1904,7 @@ async function handleExecutionError(
       taskProviderOptions(task),
     );
   }
+  await persistence.flush().catch((err) => {
+    console.warn("[useTaskExecution] flush on error failed:", err);
+  });
 }

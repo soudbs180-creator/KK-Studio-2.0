@@ -173,12 +173,14 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-GATEWAY-STREAM-20261018 | Gateway实际增量SSE与取消重试边界 | DONE | 已完成 | P1 | TASK-COLDSTART-LOCAL-20261018 | root | 本地有界子项完成；最终精确文档/Delivery/私有归档/原两个快捷方式由工程外收据裁决。下一P1本地DPAPI protector受控测试及独立成本回执调用路径，不重提UNKNOWN，不消费额度；父Gateway仍PARTIAL。 |
 | TASK-MOD-P0 | 建立模块化边界与只减不增的架构基线 | PARTIAL | 未完成 | P1 | none | root | 18项格式已在独立任务修复；完整verify进一步暴露产品浏览器/开发插件失败。由TASK-MOD-GATE-BROWSER修复后复跑，TASK-GOV-004继续分叉整合；未合流前不提升交付状态。 |
 | TASK-MOD-GATE-FORMAT | 独立恢复18项既有源码格式门禁 | PARTIAL | 未完成 | P1 | none | root | af4c4e2格式源码独审已PASS；继续TASK-MOD-GATE-BROWSER剩余用例，完整verify及主线分叉整合满足后再关闭总体交付。 |
-| TASK-MOD-GATE-BROWSER | 恢复历史浏览器测试与当前设置入口的对应 | PARTIAL | 未完成 | P1 | TASK-MOD-GATE-FORMAT | root | 保留3项代表失败与全部原断言，结合当前Figma和真实契约继续定位；29文件其他用例尚未全量复跑，不由7项通过推断完整浏览器门禁绿。main分叉整合和当前独审仍开放。 |
+| TASK-MOD-GATE-BROWSER | 恢复历史浏览器测试与当前设置入口的对应 | PARTIAL | 未完成 | P1 | TASK-MOD-GATE-FORMAT | root | 继续Web保存状态可见/几何失败，保留phase/取消命中/恢复断言；全量浏览器/当前独审/原生/main分叉整合完成前保持PARTIAL。P1/P2及四文档其余需求仍按总清单依赖推进。 |
 | TASK-MOD-FOUR-DOC-COVERAGE | 逐项追踪四份整顿原文的完整需求与验收 | PARTIAL | 未完成 | P1 | none | root | 后续先读四文档总清单，按P0→P1→P2及ORG试点→推广实施；将现代化/其他P/ORG事项逐项落入对应任务，补完必做项与待决结论后才判整套完成。 |
 | TASK-ORG-0 | 盘点仓库文件、引用与容器参考资料 | PARTIAL | 未完成 | P2 | none | root | 保留原件，继续核实完整盘点缺口；无证据不迁删。 |
 | TASK-ORG-1 | 建立仓库目录与弃用生命周期规则 | PARTIAL | 未完成 | P2 | TASK-ORG-0 | root | 按当前候选完成整合审查与主线门禁；后续ORG-2防回弹和ORG-5单包试点分别实施，不能用规则候选代替迁移完成。 |
 | TASK-ORG-2 | 新增仓库布局与证据防回弹门禁 | PARTIAL | 未完成 | P2 | TASK-ORG-1, TASK-MOD-P0 | root | 保存当前候选审查/指标及主checkout保护证据；后续按ORG-5单包外置试点继续，不以防回弹代替存量清理。独审与main整合条件满足前保留PARTIAL。 |
 | TASK-ORG-5 | 模型能力历史日志外置首包试点 | PARTIAL | 未完成 | P2 | TASK-ORG-0 | root | 提交当前首包候选和净体积指标；完整verify/独审/main整合及当前运行门禁继续收尾，试点整合审查完成前不推广ORG-6。保留容器副本和恢复目录。 |
+| TASK-UI-TASK-PANEL-HITBOX | 修复任务列表关闭按钮伪元素覆盖整个面板 | PARTIAL | 未完成 | P1 | none | root | 跑当前build的调度文件及任务交互回归；未完成原生/独审/主线门禁保持开放。 |
+| TASK-PROV-HEALTH-BEFORE-SAVE | 429等连接健康变更先于阻塞的项目保存生效 | PARTIAL | 未完成 | P1 | none | root | 提交当前候选；继续保存几何失败和全量浏览器门禁，补当前独审/原生及main整合后再关闭交付。 |
 
 ## TASK-FIGMA-PAGES-20261025 — 重新核查并整理Figma 04/05页面与状态
 
@@ -3362,16 +3364,16 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Scope: 浏览器/开发插件测试入口和夹具；不为旧测试回退当前UI，不降低有效断言，不改变产品能力
 - Display status: 未完成
 - Priority: P1 — 未记录
-- Requirement refs: docs/changes/2026-10-28-browser-gate/intent.md, docs/changes/2026-10-28-browser-gate/spec.md, docs/changes/2026-10-28-agent-browser-navigation/intent.md, docs/changes/2026-10-28-agent-browser-navigation/spec.md, docs/changes/2026-10-28-api-browser-navigation/intent.md, docs/changes/2026-10-28-api-browser-navigation/spec.md
+- Requirement refs: docs/changes/2026-10-28-browser-gate/intent.md, docs/changes/2026-10-28-browser-gate/spec.md, docs/changes/2026-10-28-agent-browser-navigation/intent.md, docs/changes/2026-10-28-agent-browser-navigation/spec.md, docs/changes/2026-10-28-api-browser-navigation/intent.md, docs/changes/2026-10-28-api-browser-navigation/spec.md, docs/changes/2026-10-28-provider-browser-contract/spec.md
 - Feature IDs: none
 - Owner role: implementation-integrator
 - Acceptance: 旧入口失败先保留RED，映射当前真实分类后相关用例通过; 其余失败区分测试过时与真实缺陷，任何真实UI修改先取得当前Figma依据; 完整verify实际全绿及当前SHA独审后才解除合流阻断
 - Branch: `test/TASK-MOD-GATE-BROWSER`
 - Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
 - Modules: tests/browser, tests/support, tests/development
-- Verification: PARTIAL — 保留此前29项/Agent9项证据；本批29测试文件将59处官方入口映射到当前tab，首页选择按图片能力分类；附件夹具经本地HTTP Agent和真实UI建立连接，最终8项7 pass/1 fail（0重试）。额外调度2项均fail，窄屏进度隐藏/失败标记隐藏/未绑定提示缺失仍开放。单元2313 pass/0 fail/20 skip，最终快速门禁见本卡验证；完整verify/main合流及当前独审未完成。
-- Evidence: [docs/changes/2026-10-28-browser-gate/verification.md](../../docs/changes/2026-10-28-browser-gate/verification.md), [docs/changes/2026-10-28-agent-browser-navigation/verification.md](../../docs/changes/2026-10-28-agent-browser-navigation/verification.md), [docs/changes/2026-10-28-agent-browser-navigation/review.md](../../docs/changes/2026-10-28-agent-browser-navigation/review.md), [docs/changes/2026-10-28-api-browser-navigation/verification.md](../../docs/changes/2026-10-28-api-browser-navigation/verification.md), [docs/changes/2026-10-28-api-browser-navigation/review.md](../../docs/changes/2026-10-28-api-browser-navigation/review.md)
-- Next action: 保留3项代表失败与全部原断言，结合当前Figma和真实契约继续定位；29文件其他用例尚未全量复跑，不由7项通过推断完整浏览器门禁绿。main分叉整合和当前独审仍开放。
+- Verification: PARTIAL — 此前入口与附件候选保留；本批真实任务卡替换7处旧HUD状态，并补禁用→恢复及自动选连接审批。新暴露关闭透明层/429健康等待项目flush两个真实缺陷已修；完整调度15+命中2=17项0retry通过，保存邻接4 pass/1几何fail。快速门禁2325 pass/0 fail/20 skip，当前仅自审，完整verify/main未完成。
+- Evidence: [docs/changes/2026-10-28-browser-gate/verification.md](../../docs/changes/2026-10-28-browser-gate/verification.md), [docs/changes/2026-10-28-agent-browser-navigation/verification.md](../../docs/changes/2026-10-28-agent-browser-navigation/verification.md), [docs/changes/2026-10-28-agent-browser-navigation/review.md](../../docs/changes/2026-10-28-agent-browser-navigation/review.md), [docs/changes/2026-10-28-api-browser-navigation/verification.md](../../docs/changes/2026-10-28-api-browser-navigation/verification.md), [docs/changes/2026-10-28-api-browser-navigation/review.md](../../docs/changes/2026-10-28-api-browser-navigation/review.md), [docs/changes/2026-10-28-provider-browser-contract/verification.md](../../docs/changes/2026-10-28-provider-browser-contract/verification.md), [docs/changes/2026-10-28-provider-browser-contract/review.md](../../docs/changes/2026-10-28-provider-browser-contract/review.md)
+- Next action: 继续Web保存状态可见/几何失败，保留phase/取消命中/恢复断言；全量浏览器/当前独审/原生/main分叉整合完成前保持PARTIAL。P1/P2及四文档其余需求仍按总清单依赖推进。
 - Last verified: 2026-10-28
 - Updated: 2026-10-28
 
@@ -3467,5 +3469,43 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Verification: PARTIAL — 单包62日志1357699B已迁出任务树；源/Git/容器及全新目录恢复sha256全匹配，32历史链接转manifest，PNG/JSON/E1保留；全历史Markdown86→86无新增断链，B11基线640→578。校验器3组故障注入、typecheck/lint/format通过，单元2345项2325 pass/0 fail/20 skip，代码健康0问题。主checkout21哈希与4需求原文哈希不变；仅自审，独审/主线/完整verify仍开放。
 - Evidence: [docs/changes/2026-10-28-evidence-pilot/verification.md](../../docs/changes/2026-10-28-evidence-pilot/verification.md), [docs/changes/2026-10-28-evidence-pilot/review.md](../../docs/changes/2026-10-28-evidence-pilot/review.md)
 - Next action: 提交当前首包候选和净体积指标；完整verify/独审/main整合及当前运行门禁继续收尾，试点整合审查完成前不推广ORG-6。保留容器副本和恢复目录。
+- Last verified: 2026-10-28
+- Updated: 2026-10-28
+
+## TASK-UI-TASK-PANEL-HITBOX — 修复任务列表关闭按钮伪元素覆盖整个面板
+
+- Goal: 真实鼠标可操作任务卡和打开任务工作台，关闭按钮只命中自身
+- Scope: canvas-hud.css单一position属性、相关浏览器回归及Desktop/Web源码版本；不改Figma/数据/网络协议/面板视觉
+- Display status: 未完成
+- Priority: P1 — 未记录
+- Requirement refs: docs/changes/2026-10-28-provider-browser-contract/intent.md, docs/changes/2026-10-28-provider-browser-contract/spec.md
+- Feature IDs: none
+- Owner role: implementation-integrator
+- Acceptance: 先复现关闭透明层拦截工作台，修复后真实click通过而非force绕过; 当前Figma01/03有命中范围依据，无需设计修改; 共享Desktop/Web版本、快速门禁及同状态浏览器证据完整，原生未验明确记录
+- Branch: `test/TASK-MOD-GATE-BROWSER`
+- Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
+- Modules: src/styles/canvas-hud.css, tests/browser/provider-scheduling.spec.ts, config/platform-versions.json, docs/changes/2026-10-28-provider-browser-contract
+- Verification: PARTIAL — 真实关闭伪元素覆盖面板的RED已复现；仅恢复relative后390/1920两个命中/工作台/回焦用例及既有入口交互共3项首试通过。Desktop/Web源码2.1.45→46，Mobile43不变；独审/原生/主线及完整verify未完成。
+- Evidence: [docs/changes/2026-10-28-provider-browser-contract/verification.md](../../docs/changes/2026-10-28-provider-browser-contract/verification.md)
+- Next action: 跑当前build的调度文件及任务交互回归；未完成原生/独审/主线门禁保持开放。
+- Last verified: 2026-10-28
+- Updated: 2026-10-28
+
+## TASK-PROV-HEALTH-BEFORE-SAVE — 429等连接健康变更先于阻塞的项目保存生效
+
+- Goal: 项目保存阻塞或冲突不能让已冷却/失效连接仍被另一项目提交
+- Scope: useTaskExecution现有两个健康写入时序及真实IDB/HTTP浏览器回归；不改Provider契约/槽位身份/持久格式
+- Display status: 未完成
+- Priority: P1 — 未记录
+- Requirement refs: docs/changes/2026-10-28-provider-browser-contract/spec.md
+- Feature IDs: none
+- Owner role: implementation-integrator
+- Acceptance: 真实429在项目写事务阻塞时已持久cooldown，另一项目不提交; 10/16部分完成后429在真实保存冲突后仍保留冷却和自身租约释放; 原身份/取消/健康代际保护保留；快速门禁/浏览器有实证
+- Branch: `test/TASK-MOD-GATE-BROWSER`
+- Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
+- Modules: src/features/creation/useTaskExecution.ts, tests/browser/provider-scheduling.spec.ts, config/platform-versions.json, docs/changes/2026-10-28-provider-browser-contract
+- Verification: PARTIAL — 两例真实IDB阻塞/冲突RED→GREEN；完整调度15项及390/1920面板点击2项共17项0retry通过。快速typecheck/lint/format/ui通过，单元2325 pass/0 fail/20 skip；保存邻接4 pass/1 fail保留几何断言。原21dirty/4需求hash不变，仅自审，原生/独审/完整verify/main未完成。
+- Evidence: [docs/changes/2026-10-28-provider-browser-contract/verification.md](../../docs/changes/2026-10-28-provider-browser-contract/verification.md)
+- Next action: 提交当前候选；继续保存几何失败和全量浏览器门禁，补当前独审/原生及main整合后再关闭交付。
 - Last verified: 2026-10-28
 - Updated: 2026-10-28
