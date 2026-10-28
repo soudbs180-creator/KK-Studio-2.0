@@ -1274,3 +1274,7 @@ TASK-UI-DETAILS-20261015从最新18e143f修复，Desktop/Web2.1.26产品ab878ffd
 ## 2026-10-15 PR62合后必需门禁闭环
 
 2026-10-15 11:54:34 UTC独立只读回读actual main492abad48b0695f6117265fba6d29e8ea2a4b9bc；本轮quality38726260549全部success（repo verify/Rust fmt+test/client check+build/WebView2/隔离Native TaskHost/证据上传），双平台guards38726260498与main-health38730589177成功，7个check-runs全success，必需verify/delivery满足。产物11969904183/39602109B未过期，未下载检验内文。非必需auto-merge38726259041 failure/jobs=[]原因UNKNOWN单列。 GDI三项验收独审满足，测试任务DONE；输出证据保护另缺取消/reporter失败两类实测，继续PARTIAL，不把结构性保护冒称运行证据。HOME源码a85及Windows38项通过，正式HOME PR继续。
+
+## 2026-10-28 用户进度核对
+
+安全补丁与18文件格式修复各有候选提交及限定独审PASS，均未合流。17个浏览器/开发测试文件修正后定向29项通过，完整verify复跑仍有模型菜单/Agent等浏览器失败。P1仅前置核查，ORG仅已校验归档副本（预计净64.5%，实际迁出0），P2尚未实施。用户禁止子代理，后续仅主代理直接处理；主checkout21文件原哈希不变。见[当前验证](changes/2026-10-28-browser-gate/verification.md)。

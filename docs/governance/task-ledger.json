@@ -10552,11 +10552,11 @@
     "evidence": [
       "docs/changes/2026-10-28-browser-gate/verification.md"
     ],
-    "verification": "18个测试文件同步当前设置分类/引用字段，未改产品源码或降低断言。定向29项0重试全通过，development真实4步PASS；typecheck/lint/npm test通过（2313 pass/0 fail/20 skip）。完整883浏览器和最终verify尚未重跑。",
+    "verification": "17个测试文件（此前18计数勘误）同步现行入口/字段；定向29项与开发插件4步通过。7eca983c复跑verify前置快速门禁/Agent/UI静态/format/build通过，产品浏览器模型菜单/Agent等仍失败后主动中断，完整verify未通过；仅自审，用户禁止子代理。",
     "verificationResult": "PARTIAL",
     "updated": "2026-10-28",
     "lastVerified": "2026-10-28",
-    "nextAction": "当前提交独审；继续核对整套其他历史模型/Agent/UI失败并完成最终全量verify，不用定向通过代替合流。",
+    "nextAction": "主代理继续按当前契约定位浏览器剩余失败；完整verify、当前提交审查及main分叉整合完成前保留PARTIAL。P1/ORG/P2按各自依赖与已验证范围推进。",
     "requirementRefs": [
       "docs/changes/2026-10-28-browser-gate/intent.md",
       "docs/changes/2026-10-28-browser-gate/spec.md"

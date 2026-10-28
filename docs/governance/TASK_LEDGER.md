@@ -173,7 +173,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-GATEWAY-STREAM-20261018 | Gateway实际增量SSE与取消重试边界 | DONE | 已完成 | P1 | TASK-COLDSTART-LOCAL-20261018 | root | 本地有界子项完成；最终精确文档/Delivery/私有归档/原两个快捷方式由工程外收据裁决。下一P1本地DPAPI protector受控测试及独立成本回执调用路径，不重提UNKNOWN，不消费额度；父Gateway仍PARTIAL。 |
 | TASK-MOD-P0 | 建立模块化边界与只减不增的架构基线 | PARTIAL | 未完成 | P1 | none | root | 18项格式已在独立任务修复；完整verify进一步暴露产品浏览器/开发插件失败。由TASK-MOD-GATE-BROWSER修复后复跑，TASK-GOV-004继续分叉整合；未合流前不提升交付状态。 |
 | TASK-MOD-GATE-FORMAT | 独立恢复18项既有源码格式门禁 | PARTIAL | 未完成 | P1 | none | root | 固定格式提交独审；独立TASK-MOD-GATE-BROWSER处理旧测试入口与实际浏览器失败，之后完整verify及主线整合。 |
-| TASK-MOD-GATE-BROWSER | 恢复历史浏览器测试与当前设置入口的对应 | PARTIAL | 未完成 | P1 | TASK-MOD-GATE-FORMAT | root | 当前提交独审；继续核对整套其他历史模型/Agent/UI失败并完成最终全量verify，不用定向通过代替合流。 |
+| TASK-MOD-GATE-BROWSER | 恢复历史浏览器测试与当前设置入口的对应 | PARTIAL | 未完成 | P1 | TASK-MOD-GATE-FORMAT | root | 主代理继续按当前契约定位浏览器剩余失败；完整verify、当前提交审查及main分叉整合完成前保留PARTIAL。P1/ORG/P2按各自依赖与已验证范围推进。 |
 
 ## TASK-FIGMA-PAGES-20261025 — 重新核查并整理Figma 04/05页面与状态
 
@@ -3364,8 +3364,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `test/TASK-MOD-GATE-BROWSER`
 - Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
 - Modules: tests/browser, tests/support, tests/development
-- Verification: PARTIAL — 18个测试文件同步当前设置分类/引用字段，未改产品源码或降低断言。定向29项0重试全通过，development真实4步PASS；typecheck/lint/npm test通过（2313 pass/0 fail/20 skip）。完整883浏览器和最终verify尚未重跑。
+- Verification: PARTIAL — 17个测试文件（此前18计数勘误）同步现行入口/字段；定向29项与开发插件4步通过。7eca983c复跑verify前置快速门禁/Agent/UI静态/format/build通过，产品浏览器模型菜单/Agent等仍失败后主动中断，完整verify未通过；仅自审，用户禁止子代理。
 - Evidence: [docs/changes/2026-10-28-browser-gate/verification.md](../../docs/changes/2026-10-28-browser-gate/verification.md)
-- Next action: 当前提交独审；继续核对整套其他历史模型/Agent/UI失败并完成最终全量verify，不用定向通过代替合流。
+- Next action: 主代理继续按当前契约定位浏览器剩余失败；完整verify、当前提交审查及main分叉整合完成前保留PARTIAL。P1/ORG/P2按各自依赖与已验证范围推进。
 - Last verified: 2026-10-28
 - Updated: 2026-10-28
