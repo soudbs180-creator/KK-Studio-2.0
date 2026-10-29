@@ -99,7 +99,7 @@ export function createDesktopAgentLifecycle(
         patch({ error: errorText(reason) });
     }
   }
-  function run(newConversation: boolean) {
+  function run(newConversation: boolean, newProjectId?: string) {
     if (flight) return flight;
     guardWork();
     const version = ++epoch;
@@ -125,7 +125,7 @@ export function createDesktopAgentLifecycle(
           throw new Error("当前已连接手动服务，请先断开后再切换。");
         if (!project) return; // Home is service-ready; never adopt an arbitrary thread.
         connection().setCredentials(credentials.endpoint, credentials.token);
-        await connection().connect(newConversation);
+        await connection().connect(newConversation, newProjectId);
         if (version !== epoch) return;
         const result = connection().getState();
         if (result.status === "error")
@@ -140,8 +140,8 @@ export function createDesktopAgentLifecycle(
     })();
     return flight;
   }
-  async function connect(newConversation = false) {
-    if (!desktop()) return connection().connect(newConversation);
+  async function connect(newConversation = false, newProjectId?: string) {
+    if (!desktop()) return connection().connect(newConversation, newProjectId);
     guardWork();
     setAutomatic(true);
     const project = connection().getProjectId();
@@ -160,7 +160,7 @@ export function createDesktopAgentLifecycle(
         return;
       }
     }
-    return run(newConversation);
+    return run(newConversation, newProjectId);
   }
   async function ensure() {
     if (!desktop() || !state.automatic) return;

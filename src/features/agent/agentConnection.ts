@@ -740,11 +740,16 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
           .catch(() => undefined);
     }
   }
-  function connectShared(newConversation = false): Promise<void> {
+  function connectShared(
+    newConversation = false,
+    newProjectId?: string,
+  ): Promise<void> {
     if (
       newConversation &&
       currentChatScope()?.chatId != null &&
-      (!bridge?.readAgentThread || bridge.readAgentThread())
+      (newProjectId !== currentChatScope()?.projectId ||
+        !bridge?.readAgentThread ||
+        bridge.readAgentThread())
     ) {
       patch({
         error: "当前聊天的 Agent 线程不可替换，请继续当前聊天。",

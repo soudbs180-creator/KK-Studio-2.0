@@ -29,3 +29,5 @@ TASK-MOD-CHAT-PROJECTION：原App选择聊天只改activeChatId，persist hook�
 TASK-MOD-HOME-SESSION：真实浏览器发现首页预连接后新项目无法初始化；新建项目显式请求fresh，连接层只允许能读取归属且没有线程的空聊天执行新建，已绑定聊天不可替换，原远端归属/忙碌/审批判断保留。App实际调用和空聊天保护先RED后GREEN；69项定向单元及根2383 pass/20 skip、类型通过。仿真threads/new原来总返回同一个ID，改为逐次独立ID，跨项目保留原隔离断言并增加线程ID不同断言。Desktop/Web55；浏览器、lint及完整门禁以随后外部回执为准，真实GPU与Native启动未验收。
 
 首页原8项浏览器现全部通过（codex-gate-home-unique.log，worker1/retry0）；增量lint以f10147b9为GOVERNANCE_BASE通过。默认origin/main全分支lint仍失败：架构首建基线要求只建基线不改产品，目录首建基线要求匹配其记录的Git base；这两项是实际合流顺序缺口，不改检查或重写历史来伪装通过。完整序列分别记录增量检查与集成阻断。
+
+更正079c候选：全量浏览器发现普通聊天手动fresh的保护被泛化，补RED后要求调用者携带当前新projectId，普通手动、其他项目、已绑定聊天仍拒绝；Native生命周期转发同一身份。84定向/2386根单元通过（20skip），类型/增量lint通过；14项首页与连接保护浏览器全过。首次901项全量运行仅留下前152项输出，无最终退出/完整报告且进程已结束，记INTERRUPTED，不能算全量完成。独立评审获用户授权已启动；P6历史恢复发现另卡修复。

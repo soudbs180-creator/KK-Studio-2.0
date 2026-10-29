@@ -258,7 +258,13 @@ test(
   },
 );
 
-for (const blocked of ["none", "busy", "approval"] as const) {
+for (const blocked of [
+  "none",
+  "busy",
+  "approval",
+  "ordinary",
+  "other-project",
+] as const) {
   test(
     `fresh unbound chat initializes once but preserves remote ${blocked} protection`,
     { timeout: 5000 },
@@ -275,7 +281,14 @@ for (const blocked of ["none", "busy", "approval"] as const) {
         server.emit("codex_approval", { requestId: "pending-fixture" });
       connection.setBridge(h.host);
       connection.setCredentials(server.url, "fixture-token");
-      await connection.connect(true);
+      await connection.connect(
+        true,
+        blocked === "ordinary"
+          ? undefined
+          : blocked === "other-project"
+            ? "different-project"
+            : h.getProject().id,
+      );
       const created = server.requests.filter((path) =>
         path.endsWith("/threads/new"),
       );
@@ -290,7 +303,7 @@ for (const blocked of ["none", "busy", "approval"] as const) {
         );
         assert.equal(h.host.readAgentThread(), "replacement-thread");
       } else {
-        assert.equal(connection.getState().status, "error");
+        assert.ok(connection.getState().error);
         assert.equal(h.host.readAgentThread(), undefined);
         assert.equal(server.conversation().threadId, "fixture-thread");
       }

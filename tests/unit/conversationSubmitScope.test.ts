@@ -909,6 +909,7 @@ function appHomeSubmissionHarness(accepted: boolean) {
   const submitLock = { current: false };
   const homeCodexStarting = { current: false };
   const connectFresh: boolean[] = [];
+  const connectProjectIds: (string | undefined)[] = [];
   const loaded = evaluate(
     `${appFunction("validateHomeCodexPreconditions")}
      ${appFunction("executeHomeCodexProject")}
@@ -958,8 +959,9 @@ function appHomeSubmissionHarness(accepted: boolean) {
       replaceCanvasItems() {},
       persistence: { async flush() {} },
       desktopAgentLifecycle: {
-        async connect(fresh = false) {
+        async connect(fresh = false, newProjectId?: string) {
           connectFresh.push(fresh);
+          connectProjectIds.push(newProjectId);
         },
       },
       configureAgentProxy() {},
@@ -976,6 +978,7 @@ function appHomeSubmissionHarness(accepted: boolean) {
     submitLock,
     homeCodexStarting,
     connectFresh,
+    connectProjectIds,
     submit: () =>
       submit({
         prompt: "HOME original",
@@ -1269,4 +1272,7 @@ test("App home creation explicitly requests a new Agent conversation for the new
   h.release.resolve();
   await pending;
   assert.deepEqual(h.connectFresh, [true]);
+  assert.deepEqual(h.connectProjectIds, [
+    h.creationRef.current.activeProjectId,
+  ]);
 });

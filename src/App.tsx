@@ -510,7 +510,7 @@ export default function App() {
         agentConnection,
         import.meta.env.VITE_KK_AGENT_PROXY === "1",
       );
-      await desktopAgentLifecycle.connect(true);
+      await desktopAgentLifecycle.connect(true, project.id);
       if (!ownsProject()) return "项目已切换，当前未发送；原项目草稿仍保留。";
       const currentProject = project;
       const result = await agentConnection.sendMessage(input.prompt.trim(), {

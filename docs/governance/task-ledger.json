@@ -3,7 +3,7 @@
     "id": "TASK-MOD-HOME-SESSION",
     "title": "首页新项目使用独立Agent会话",
     "goal": "已连接账号切换模型后新建项目，不复用未归属的首页会话",
-    "scope": "新项目显式fresh；仅可读取归属且没有线程的空聊天可初始化，已绑定/未知归属/忙碌/审批保护保留；修正重复线程ID夹具",
+    "scope": "首页显式携带新projectId并只初始化同项目空聊天；普通手动fresh、其他项目、已绑定/未知归属/忙碌/审批保护保留",
     "acceptance": [
       "新建项目显式独立会话，旧会话身份不覆盖",
       "实际App调用回归RED→GREEN",
@@ -23,7 +23,9 @@
       "tests/unit/conversationSubmitScope.test.ts",
       "tests/unit/agentChatSafety.test.ts",
       "tests/helpers/agentServer.ts",
-      "tests/browser/codex-home-routing.spec.ts"
+      "tests/browser/codex-home-routing.spec.ts",
+      "src/features/agent/desktopAgentLifecycle.ts",
+      "tests/unit/desktopAgentLifecycle.test.ts"
     ],
     "status": "PARTIAL",
     "displayStatus": "进行中",
@@ -33,11 +35,11 @@
     "evidence": [
       "docs/changes/2026-10-29-p8-composition/verification.md"
     ],
-    "verification": "App实际调用及安全保护RED→GREEN；69定向/2383根单元通过、20skip，类型和增量lint(f10147b9 base)通过；原8项首页浏览器全过。默认整分支lint仍有首次基线合流顺序阻断，独审/完整序列/main待验。",
+    "verification": "079c泛化fresh在全量浏览器暴露普通聊天保护回归，补RED后以显式newProjectId收窄；84定向、2386根单元/20skip通过，类型/增量lint通过，首页8+连接保护6共14浏览器通过。全量首次运行中断、未获最终exit，不算通过。",
     "verificationResult": "PARTIAL",
     "updated": "2026-10-29",
     "lastVerified": "2026-10-29",
-    "nextAction": "完整序列及独审，按首建基线顺序整合；不绕过默认origin/main门禁",
+    "nextAction": "当前SHA独审；完整门禁和基线/远端冲突分阶段整合",
     "requirementRefs": [
       "docs/changes/2026-10-29-p8-composition/spec.md"
     ],
