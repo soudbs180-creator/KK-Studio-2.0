@@ -6,7 +6,10 @@
     "status": "PARTIAL",
     "card": "docs/features/feat-035-image-mask-editing.md",
     "summary": "框选、画笔、色块共用原像素Mask、裁剪/请求/保护融合；Web/Desktop保存、重绘和灯箱本地验收通过，真实模型质量与移动真机待验。",
-    "entryPoints": ["图片节点重绘", "图片灯箱重绘"],
+    "entryPoints": [
+      "图片节点重绘",
+      "图片灯箱重绘"
+    ],
     "code": [
       "src/domain/imageEdit.ts",
       "src/features/image-edit/mask.ts",
@@ -795,7 +798,7 @@
       "TASK-KK-UNIFIED-20261015",
       "TASK-AUDIT-REPAIR-20261017",
       "TASK-CHAT-MIGRATION-20261017",
-      "TASK-MOD-P7"
+        "TASK-MOD-P7"
     ],
     "updated": "2026-10-17",
     "platforms": ["web", "desktop"],
@@ -1000,7 +1003,9 @@
     "status": "PARTIAL",
     "card": "docs/features/feat-020-memory.md",
     "summary": "KK 本地记忆开关、规则采集和相关片段注入已有实现；Desktop 默认共享，--data-dir 隔离且迁移只在开启后执行。真实 Codex 和跨应用联调待完成。",
-    "entryPoints": ["设置 › 记忆"],
+    "entryPoints": [
+      "设置 › 记忆"
+    ],
     "code": [
       "src/features/memory",
       "src/components/settings/ConnectionSettings.tsx",
@@ -1029,7 +1034,10 @@
       "TASK-MOD-P3E"
     ],
     "updated": "2026-10-28",
-    "platforms": ["web", "desktop"],
+    "platforms": [
+      "web",
+      "desktop"
+    ],
     "runtimeEvidence": [
       {
         "platform": "web",
@@ -1610,7 +1618,9 @@
     "status": "PARTIAL",
     "card": "docs/features/feat-037-web-local-service.md",
     "summary": "旧Node本机服务格式/IO保护与Native权威基础已验；两者格式仍不兼容，Web完整共仓库授权/读写/后台生命周期未交付。",
-    "entryPoints": ["设置 → 储存 → 网页本机伴随服务"],
+    "entryPoints": [
+      "设置 → 储存 → 网页本机伴随服务"
+    ],
     "code": [
       "src/features/local-service/main.ts",
       "src/features/local-service/server.ts",
@@ -1731,15 +1741,21 @@
     "status": "PARTIAL",
     "card": "docs/features/feat-040-outpaint.md",
     "summary": "image.outpaint正在接入标准注册表与显式工作流；未完成真实Provider/原生/独审验收。",
-    "entryPoints": ["现有任务提交程序接口；没有新UI入口"],
-    "code": ["src/features/capabilities/outpaintCapability.ts"],
+    "entryPoints": [
+      "现有任务提交程序接口；没有新UI入口"
+    ],
+    "code": [
+      "src/features/capabilities/outpaintCapability.ts"
+    ],
     "tests": [
       "tests/unit/imageCapabilities.test.ts",
       "tests/unit/imageCapabilityWorkflow.test.ts",
       "tests/unit/imageCapabilitySubmission.test.ts",
       "tests/browser/image-capabilities.spec.ts"
     ],
-    "tasks": ["TASK-MOD-P6-OUTPAINT"],
+    "tasks": [
+      "TASK-MOD-P6-OUTPAINT"
+    ],
     "updated": "2026-10-29"
   },
   {
@@ -1749,15 +1765,21 @@
     "status": "PARTIAL",
     "card": "docs/features/feat-041-upscale.md",
     "summary": "image.upscale正在接入标准注册表与显式工作流；未完成真实Provider/原生/独审验收。",
-    "entryPoints": ["现有任务提交程序接口；没有新UI入口"],
-    "code": ["src/features/capabilities/upscaleCapability.ts"],
+    "entryPoints": [
+      "现有任务提交程序接口；没有新UI入口"
+    ],
+    "code": [
+      "src/features/capabilities/upscaleCapability.ts"
+    ],
     "tests": [
       "tests/unit/imageCapabilities.test.ts",
       "tests/unit/imageCapabilityWorkflow.test.ts",
       "tests/unit/imageCapabilitySubmission.test.ts",
       "tests/browser/image-capabilities.spec.ts"
     ],
-    "tasks": ["TASK-MOD-P6-UPSCALE"],
+    "tasks": [
+      "TASK-MOD-P6-UPSCALE"
+    ],
     "updated": "2026-10-29"
   },
   {
@@ -1767,15 +1789,21 @@
     "status": "PARTIAL",
     "card": "docs/features/feat-042-layer-split.md",
     "summary": "image.layer-split正在接入标准注册表与显式工作流；未完成真实Provider/原生/独审验收。",
-    "entryPoints": ["现有任务提交程序接口；没有新UI入口"],
-    "code": ["src/features/capabilities/layerSplitCapability.ts"],
+    "entryPoints": [
+      "现有任务提交程序接口；没有新UI入口"
+    ],
+    "code": [
+      "src/features/capabilities/layerSplitCapability.ts"
+    ],
     "tests": [
       "tests/unit/imageCapabilities.test.ts",
       "tests/unit/imageCapabilityWorkflow.test.ts",
       "tests/unit/imageCapabilitySubmission.test.ts",
       "tests/browser/image-capabilities.spec.ts"
     ],
-    "tasks": ["TASK-MOD-P6-LAYER-SPLIT"],
+    "tasks": [
+      "TASK-MOD-P6-LAYER-SPLIT"
+    ],
     "updated": "2026-10-29"
   }
 ]

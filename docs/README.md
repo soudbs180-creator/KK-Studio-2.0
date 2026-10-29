@@ -18,24 +18,24 @@
 
 ## 工程文档
 
-| 文档                                                                      | 承载内容                                               |
-| ------------------------------------------------------------------------- | ------------------------------------------------------ |
-| [SDLC](engineering/SDLC.md)                                               | AI 自主开发、风险分级、产物链和维护                    |
-| [DEVELOPMENT-WORKFLOW](engineering/DEVELOPMENT-WORKFLOW.md)               | 任务领取、需求确认、状态流转、开发笔记、验证和竞品节奏 |
-| [CODING-STANDARDS](engineering/CODING-STANDARDS.md)                       | 命名、文件规模边界、模块依赖方向、错误处理、状态管理   |
-| [TESTING](engineering/TESTING.md)                                         | 测试分层、覆盖要求、Playwright 运行契约、证据保存      |
-| [DEVELOPMENT](engineering/DEVELOPMENT.md)                                 | 开发环境、命令与证明范围、UI 三个运行入口              |
-| [BRANCH-POLICY](engineering/BRANCH-POLICY.md)                             | 分支命名、PR、squash 合并、回滚、pre-push 防线         |
-| [REVIEW](engineering/REVIEW.md)                                           | 独立审核身份、必查范围、严重度与阻断条件               |
-| [PROMPTING](engineering/PROMPTING.md)                                     | 用户口语转 engineering brief                           |
-| [AI-EVALS](engineering/AI-EVALS.md)                                       | 规则回归场景与实际强制层的边界                         |
-| [VERSIONING](engineering/VERSIONING.md)                                   | 版本号策略                                             |
-| [LAUNCHER](engineering/LAUNCHER.md)                                       | 启动器行为                                             |
-| [WINDOWS-INSTALLER](engineering/WINDOWS-INSTALLER.md)                     | Windows 安装器                                         |
-| [WORKTREE-LIFECYCLE](engineering/WORKTREE-LIFECYCLE.md)                   | worktree 创建、登记、回收与落点                        |
-| [AUTO-MERGE](engineering/AUTO-MERGE.md)                                   | 自动合并工作流与其未启用边界                           |
-| [ROLLBACK](engineering/ROLLBACK.md)                                       | 回滚触发条件与执行                                     |
-| [RELEASE-CHECKLIST](engineering/RELEASE-CHECKLIST.md)                     | 桌面发布与升级验证清单、预发布体检、升级三原则         |
+| 文档                                                        | 承载内容                                               |
+| ----------------------------------------------------------- | ------------------------------------------------------ |
+| [SDLC](engineering/SDLC.md)                                 | AI 自主开发、风险分级、产物链和维护                    |
+| [DEVELOPMENT-WORKFLOW](engineering/DEVELOPMENT-WORKFLOW.md) | 任务领取、需求确认、状态流转、开发笔记、验证和竞品节奏 |
+| [CODING-STANDARDS](engineering/CODING-STANDARDS.md)         | 命名、文件规模边界、模块依赖方向、错误处理、状态管理   |
+| [TESTING](engineering/TESTING.md)                           | 测试分层、覆盖要求、Playwright 运行契约、证据保存      |
+| [DEVELOPMENT](engineering/DEVELOPMENT.md)                   | 开发环境、命令与证明范围、UI 三个运行入口              |
+| [BRANCH-POLICY](engineering/BRANCH-POLICY.md)               | 分支命名、PR、squash 合并、回滚、pre-push 防线         |
+| [REVIEW](engineering/REVIEW.md)                             | 独立审核身份、必查范围、严重度与阻断条件               |
+| [PROMPTING](engineering/PROMPTING.md)                       | 用户口语转 engineering brief                           |
+| [AI-EVALS](engineering/AI-EVALS.md)                         | 规则回归场景与实际强制层的边界                         |
+| [VERSIONING](engineering/VERSIONING.md)                     | 版本号策略                                             |
+| [LAUNCHER](engineering/LAUNCHER.md)                         | 启动器行为                                             |
+| [WINDOWS-INSTALLER](engineering/WINDOWS-INSTALLER.md)       | Windows 安装器                                         |
+| [WORKTREE-LIFECYCLE](engineering/WORKTREE-LIFECYCLE.md)     | worktree 创建、登记、回收与落点                        |
+| [AUTO-MERGE](engineering/AUTO-MERGE.md)                     | 自动合并工作流与其未启用边界                           |
+| [ROLLBACK](engineering/ROLLBACK.md)                         | 回滚触发条件与执行                                     |
+| [RELEASE-CHECKLIST](engineering/RELEASE-CHECKLIST.md)       | 桌面发布与升级验证清单、预发布体检、升级三原则         |
 | [COMPETITIVE-LEARNING-POLICY](engineering/COMPETITIVE-LEARNING-POLICY.md) | 竞品学习与品类跟进方针、共识基线与持续增进机制         |
 
 > 本表必须完整覆盖 `docs/engineering/` 下的全部 `.md`。新增工程文档必须同步本表，`npm run index:check` 会校验。
@@ -48,31 +48,31 @@
 
 `architecture/`：运行时架构、数据存储与数据分级。
 
-| 文档                                                                            | 承载内容                                    |
-| ------------------------------------------------------------------------------- | ------------------------------------------- |
-| [REPO-LAYOUT](architecture/REPO-LAYOUT.md)                                      | 目录、参考、vendor与文档生命周期规则        |
-| [DEPRECATIONS](architecture/DEPRECATIONS.md)                                    | 弃用/兼容登记与移除证据入口                 |
-| [ARCHITECTURE](architecture/ARCHITECTURE.md)                                    | 进程模型、模块依赖、数据流                  |
-| [DATA-STORAGE](architecture/DATA-STORAGE.md)                                    | 存储 schema、生命周期、迁移                 |
-| [DATA-CLASSIFICATION](architecture/DATA-CLASSIFICATION.md)                      | 数据分级与处理约束                          |
-| [GENERATION-PLATFORM](architecture/GENERATION-PLATFORM.md)                      | 生成平台接入                                |
-| [LEGACY-MIGRATION](architecture/LEGACY-MIGRATION.md)                            | 旧工程能力 keep/migrate/rebuild/reject 清单 |
-| `architecture/adr/`                                                             | 架构决策记录                                |
-| [ADR-025](architecture/adr/ADR-025-mobile-12ai-originals-and-video-recovery.md) | Mobile 12ai 原件与视频查询恢复              |
+| 文档                                                       | 承载内容                                    |
+| ---------------------------------------------------------- | ------------------------------------------- |
+| [REPO-LAYOUT](architecture/REPO-LAYOUT.md) | 目录、参考、vendor与文档生命周期规则 |
+| [DEPRECATIONS](architecture/DEPRECATIONS.md) | 弃用/兼容登记与移除证据入口 |
+| [ARCHITECTURE](architecture/ARCHITECTURE.md)               | 进程模型、模块依赖、数据流                  |
+| [DATA-STORAGE](architecture/DATA-STORAGE.md)               | 存储 schema、生命周期、迁移                 |
+| [DATA-CLASSIFICATION](architecture/DATA-CLASSIFICATION.md) | 数据分级与处理约束                          |
+| [GENERATION-PLATFORM](architecture/GENERATION-PLATFORM.md) | 生成平台接入                                |
+| [LEGACY-MIGRATION](architecture/LEGACY-MIGRATION.md)       | 旧工程能力 keep/migrate/rebuild/reject 清单 |
+| `architecture/adr/`                                        | 架构决策记录                                |
+| [ADR-025](architecture/adr/ADR-025-mobile-12ai-originals-and-video-recovery.md) | Mobile 12ai 原件与视频查询恢复 |
 
 ## UI 文档
 
 [UI_INDEX.md](UI_INDEX.md) 是 **本地 UI 规范导航入口**，登记当前 Figma 来源、七章规范映射与同步流程。Figma 是设计真值，本地文档从它派生，UI 修改遵循 [AGENTS.md](../AGENTS.md#设计与交互) 的设计先行规则。该索引的 §1 表是完整映射，新增 UI 文档须同步它。各文件分工：
 
-| 文档                              | 承载内容                                               |
-| --------------------------------- | ------------------------------------------------------ |
-| [DESIGN.md](../DESIGN.md)         | Figma 派生概览、专项规则导航与当前 CSS 生成 token 投影 |
-| [UI_RULES](UI_RULES.md)           | 零件规则、交互约束、复用约束                           |
-| [UI_ARCHETYPES](UI_ARCHETYPES.md) | 五种页面类型与选型                                     |
-| [DESIGN_TOKENS](DESIGN_TOKENS.md) | token 数值索引                                         |
-| [DESIGN-SYSTEM](DESIGN-SYSTEM.md) | 颜色与基础组件                                         |
-| [UI_SPEC](UI_SPEC.md)             | UI 运行与验证规范                                      |
-| [FRONTEND-SPEC](FRONTEND-SPEC.md) | 前端工程基线：技术栈、弹窗、供应商连接                 |
+| 文档                              | 承载内容                               |
+| --------------------------------- | -------------------------------------- |
+| [DESIGN.md](../DESIGN.md) | Figma 派生概览、专项规则导航与当前 CSS 生成 token 投影 |
+| [UI_RULES](UI_RULES.md)           | 零件规则、交互约束、复用约束           |
+| [UI_ARCHETYPES](UI_ARCHETYPES.md) | 五种页面类型与选型                     |
+| [DESIGN_TOKENS](DESIGN_TOKENS.md) | token 数值索引                         |
+| [DESIGN-SYSTEM](DESIGN-SYSTEM.md) | 颜色与基础组件                         |
+| [UI_SPEC](UI_SPEC.md)             | UI 运行与验证规范                      |
+| [FRONTEND-SPEC](FRONTEND-SPEC.md) | 前端工程基线：技术栈、弹窗、供应商连接 |
 
 `UI-STANDARDS.md` 与 `UI-ALIGNMENT.md` 已合并，保留为重定向存根，**不承载现行规则，也不要更新它们**；二者同样登记在 `UI_INDEX.md` §1.3。历史正文在 `archive/ui-history/`。
 
@@ -104,15 +104,15 @@
 
 本轮既有按钮续修入口：[TASK-223 intent](changes/2026-10-14-action-usability-223/intent.md)、[spec](changes/2026-10-14-action-usability-223/spec.md)、[plan](changes/2026-10-14-action-usability-223/plan.md)、[verification](changes/2026-10-14-action-usability-223/verification.md)、[review](changes/2026-10-14-action-usability-223/review.md)。任务状态仍回读账本，索引不新增验收结论。
 
-| 目录           | 职责                                                                                                            |
-| -------------- | --------------------------------------------------------------------------------------------------------------- |
-| `changes/`     | 一次可审计的交付包：`intent` / `spec` / `plan` / `verification` / `review`                                      |
-| `features/`    | 功能卡与注册表看板，功能状态的唯一来源                                                                          |
-| `templates/`   | 交付包与功能卡模板                                                                                              |
-| `reference/`   | Figma、截图与外部参考索引                                                                                       |
-| `evidence/`    | 已审历史证据保留；新运行日志/截图/报告先放容器 output/<task>/，只把经审阅的最小摘要或稳定回归夹具纳入仓库       |
-| `archive/`     | 只读历史材料，不作为当前状态                                                                                    |
-| `superpowers/` | 历史技能沉淀与过程稿（与 `archive/` 分工：`archive/` 存被取代的文档，`superpowers/` 存技能/计划过程稿），均只读 |
+| 目录           | 职责                                                                                                                            |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| `changes/`     | 一次可审计的交付包：`intent` / `spec` / `plan` / `verification` / `review`                                                      |
+| `features/`    | 功能卡与注册表看板，功能状态的唯一来源                                                                                          |
+| `templates/`   | 交付包与功能卡模板                                                                                                              |
+| `reference/`   | Figma、截图与外部参考索引                                                                                                       |
+| `evidence/` | 已审历史证据保留；新运行日志/截图/报告先放容器 output/<task>/，只把经审阅的最小摘要或稳定回归夹具纳入仓库 |
+| `archive/`     | 只读历史材料，不作为当前状态                                                                                                    |
+| `superpowers/` | 历史技能沉淀与过程稿（与 `archive/` 分工：`archive/` 存被取代的文档，`superpowers/` 存技能/计划过程稿），均只读                 |
 
 ## 顶层文档
 
@@ -126,26 +126,26 @@
 
 ## 容器层与产物区（仓库外，无版本管理）
 
-| 位置                              | 职责                                                                               | 入口                                        |
-| --------------------------------- | ---------------------------------------------------------------------------------- | ------------------------------------------- |
-| `D:/kk-studio/`（容器）           | 非 git 仓库；worktree 唯一合法落点 `.worktrees/`                                   | 容器上手：`D:/kk-studio/README.md`          |
-| `D:/kk-studio/docs/`              | 容器级文档：竞品/审计/方案/架构参考/API 契约（**不承载现行规范**）                 | 容器文档索引：`D:/kk-studio/docs/README.md` |
-| `D:/kk-studio/output/`            | 任务运行输出、交付物与恢复包；恢复原件按 receipt/hash 保护，任务状态仍回读仓库账本 | 任务输出入口与收据                          |
-| `D:/kk-studio/.verification/`     | 任务验收留存，一任务一目录                                                         | 结构调整方案 B2 建索引                      |
-| `D:/kk-studio/.workbuddy/memory/` | AI 本地记忆（上下文辅助，非事实源；冲突以仓库文档为准）                            | 见下方「本地记忆机制」                      |
+| 位置                              | 职责                                                               | 入口                                        |
+| --------------------------------- | ------------------------------------------------------------------ | ------------------------------------------- |
+| `D:/kk-studio/`（容器）           | 非 git 仓库；worktree 唯一合法落点 `.worktrees/`                   | 容器上手：`D:/kk-studio/README.md`          |
+| `D:/kk-studio/docs/`              | 容器级文档：竞品/审计/方案/架构参考/API 契约（**不承载现行规范**） | 容器文档索引：`D:/kk-studio/docs/README.md` |
+| `D:/kk-studio/output/` | 任务运行输出、交付物与恢复包；恢复原件按 receipt/hash 保护，任务状态仍回读仓库账本 | 任务输出入口与收据 |
+| `D:/kk-studio/.verification/`     | 任务验收留存，一任务一目录                                         | 结构调整方案 B2 建索引                      |
+| `D:/kk-studio/.workbuddy/memory/` | AI 本地记忆（上下文辅助，非事实源；冲突以仓库文档为准）            | 见下方「本地记忆机制」                      |
 
 ## 源码、数据与文档的落点
 
-| 内容                 | 唯一落点与边界                                                                                    |
-| -------------------- | ------------------------------------------------------------------------------------------------- |
-| Desktop/Web 共享源码 | src/ 的现有 domain、features、components、runtime、styles；就近组织，按职责拆分                   |
-| Desktop 原生壳       | src-tauri/；IPC、文件和凭据能力不搬进浏览器领域层                                                 |
-| Native Mobile        | 后续独立 mobile/ 工程；当前窄屏是响应式 Web，不复制桌面几何                                       |
-| 静态设计与 demo      | public/design/figma、public/fixtures/demo；保留版本化来源，不把真实生成原件混入 fixtures          |
-| 构建与依赖缓存       | dist、node_modules、target、vendor 构建输出默认留在产物区；已版本化宿主 schema 仍按其输入契约审阅 |
-| 用户项目、原件和凭据 | 原数据根与系统凭据库；仓库、文档、测试报告不保存秘密或生产用户快照                                |
-| 当前规则与状态       | 本索引路由到主题唯一承载文件；功能看注册表，任务看账本，生成视图不手改                            |
-| 任务证据与恢复       | output/<task>/ 保留运行模式、SHA、hash、恢复清单；历史证据不重写成新 PASS                         |
+| 内容 | 唯一落点与边界 |
+| --- | --- |
+| Desktop/Web 共享源码 | src/ 的现有 domain、features、components、runtime、styles；就近组织，按职责拆分 |
+| Desktop 原生壳 | src-tauri/；IPC、文件和凭据能力不搬进浏览器领域层 |
+| Native Mobile | 后续独立 mobile/ 工程；当前窄屏是响应式 Web，不复制桌面几何 |
+| 静态设计与 demo | public/design/figma、public/fixtures/demo；保留版本化来源，不把真实生成原件混入 fixtures |
+| 构建与依赖缓存 | dist、node_modules、target、vendor 构建输出默认留在产物区；已版本化宿主 schema 仍按其输入契约审阅 |
+| 用户项目、原件和凭据 | 原数据根与系统凭据库；仓库、文档、测试报告不保存秘密或生产用户快照 |
+| 当前规则与状态 | 本索引路由到主题唯一承载文件；功能看注册表，任务看账本，生成视图不手改 |
+| 任务证据与恢复 | output/<task>/ 保留运行模式、SHA、hash、恢复清单；历史证据不重写成新 PASS |
 
 新规则改对应承载文件和索引，不另建“统一规范副本”；交付包只记录本任务的意图、约束、实际变更与证据，不复制整套规范。历史目录和用户资料的删除/移动是独立授权与恢复流程。
 
