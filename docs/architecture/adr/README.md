@@ -81,3 +81,5 @@
 | [ADR-027](ADR-027-architecture-ratchet-and-dependency-cruiser.md) | 架构依赖集合棘轮与自动门禁 | ACCEPTED；P0候选验证另记 |
 
 | [ADR-028](ADR-028-capability-manifest-projections.md) | 能力声明、Port与单一清单投影 | PROPOSED；仅声明候选，协议投影待实施 |
+
+| [ADR-032](ADR-032-independent-image-capabilities-and-lineage.md) | 独立图片能力与资产溯源 | ACCEPTED；源码候选，真实运行与主线待验 |

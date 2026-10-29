@@ -57,8 +57,8 @@
 | P3f | 执行§18；补篇A8 | useCanvasHistory真实实现归位、DOM/交互不变 | 未实施；等待OPT-201设计，防止重复搬迁 |
 | P4 | 执行§17 | skills→plugins→models→agent→creation五个目标切片逐卡收敛深层import；基线下降 | 源码候选R1全量367→0，R3 10→0、R4保持0；六卡与ADR-030分别留证，独审/原生/完整verify/main未验。generation-server/assets可选重命名未做 |
 | P5 | 执行§9/17；补篇A4/A6 | PermissionPort、清单/受限上下文、越权拒绝、旧插件迁移；与OPT-401同设计 | 部分：OPEN-3选legacy兼容，清单/PermissionPort/受限RPC/验包与Web实验T1已接线；生产门关闭。授权Figma、原生/逃逸面、T0/T2/T3与独审未完，见ADR-031 |
-| P6 | 执行§7.4/17 | 分别核实outpaint/upscale/layer-split，确无则每项建卡、适配器/对拍/取消恢复回退；真实回执才REAL | 未实施/实现现状仍需核实；不能只有inpaint就标能力清单完成 |
-| P7 | 执行§8/17 | 先验证既有溯源覆盖；只补必要可选字段，旧项目/包/快照兼容回归 | 未实施；禁止重造已有溯源字段 |
+| P6 | 执行§7.4/17 | 每项独立Manifest/适配器/关闭升级回退、原队列、取消恢复与真实回执 | 三卡分别PARTIAL：源代码+ComfyUI工作流+HTTP/Edge预检通过；GPU/API/Native/生产UI/独审/main未完成，共享变更独立HOST卡，见ADR-032 |
+| P7 | 执行§8/17 | 已有溯源覆盖与可选兼容、旧项目/导出包/快照 | PARTIAL：既有字段足够，修复不同父/Provider及导入Origins丢失，三端同规则与旧快照回归通过；原生GUI/独审/main待验 |
 | P8 | 执行§17 | App仅抽装配hook，JSX/样式不动，DOM/截图同态 | 未实施 |
 | G-02 | 执行§10/13/15/16/附录B；复核§3.5–3.8 | 记忆作用域/隐私；每模块卡13项、回退、版本/兼容、故障/取消/恢复及受影响范围 | 约束已写入架构候选；模块卡全量补齐、逐能力验收尚未完成 |
 
@@ -112,3 +112,6 @@
 2026-10-28 P3最终补验：P3a–e 源码候选：契约包1.3.0、Desktop/Web2.1.49、Mobile2.1.43。完整图R4由16降0，R1由405降367，其余规则无新增；212个迁移函数体AST一致、六份UI JSX结构一致，纯核心/infra/runtime无间接feature依赖。根2354通过/20跳过/0失败，Mobile373与Agent204通过（Agent另2跳过），根/契约/Mobile类型通过；Edge双构建各3/3通过，任务/资产/HTTP/DOM同态且4张PNG SHA完全一致。核心浏览器原9失败保留：8项在父P2错误和位置逐项一致，另1项为P2已有窄屏HUD失败。P2 flag仍默认关闭；独审、Tauri/真实Provider、完整verify和main整合未完成，五阶段分别PARTIAL。P3f、P4–8及STD/ORG等四文档其余任务继续开放。 逐阶段记录见各TASK-MOD-P3A…E变更包，不将五阶段候选等同四文档全部交付。
 
 2026-10-29更新：P4全量R1=0、R3=0、R4=0（六张分目标卡）；P5契约1.4、权限/验包/RPC和Web实验T1已实现，生产门默认关闭，legacy兼容有宿主权限。完整交付仍PARTIAL，其他P/STD/ORG不因本次推进自动完成；取舍与限制见ADR-030/031及本次七份变更包。
+
+
+2026-10-29 P6/P7任务树候选：Desktop/Web2.1.51、契约1.5.0、Mobile2.1.43。独立扩图/修复/分层Manifest+ComfyUI工作流经原队列保存、执行、归档和重载；独立禁用与1.1实际执行/回退1.0通过。P7规范化原有PromptHash/ParentId/Origins，保留同字节不同父/Provider及导入来源，TS/Rust同规则。根2372 pass/20 skip、Mobile373、Agent204 pass/2 skip、Rust资产18、生产Edge17项通过；运行限制/源码构建hash见[共享验证](../2026-10-29-p6-image-host/verification.md)。三项能力和P7均PARTIAL，真实GPU/API、Desktop原生/GUI、独审、完整verify/main未完成，无生产UI新增。P2/P5生产门状态不变；原9个核心浏览器失败/1像素差异未归零，四原文其余任务不因本次推进自动完成。

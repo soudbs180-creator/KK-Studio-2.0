@@ -11759,5 +11759,226 @@
     "featureIds": [
       "FEAT-013"
     ]
+  },
+  {
+    "id": "TASK-MOD-P6-HOST",
+    "title": "图片能力任务接线",
+    "goal": "图片能力任务接线",
+    "scope": "独立Manifest与执行器通过现有CapabilityRegistry/TaskPort；显式ComfyUI工作流/原件绑定，不猜API端点、不新增任务队列/素材仓库；API适配接口保留，未配置不可用。",
+    "acceptance": [
+      "独立契约/执行与版本回退",
+      "原件与既有任务/持久化身份保持",
+      "本卡限定回归及快速三门禁有实际证据"
+    ],
+    "dependencies": [
+      "TASK-MOD-P4-CREATION"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "refactor/TASK-MOD-P3-feature-cycles",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "972adc011e040b6db76284de1daea42d8b2167cb",
+    "affectedModules": [
+      "src/features/capabilities",
+      "src/features/creation"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-29-p6-image-host/verification.md",
+      "docs/changes/2026-10-29-p6-image-host/review.md"
+    ],
+    "verification": "本地候选根2372 pass/20 skip、类型通过；Edge17项、Rust资产18、Mobile373、Agent204通过；本卡仍PARTIAL，真实服务/Native/独审/main待验。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-29",
+    "lastVerified": "2026-10-29",
+    "nextAction": "接入并验收Desktop原生TaskHost及真实工作流/Provider；保持四原文与其他P/STD/ORG开放任务，不把fixture作为REAL。",
+    "requirementRefs": [
+      "docs/changes/2026-10-29-p6-image-host/intent.md",
+      "docs/changes/2026-10-29-p6-image-host/spec.md"
+    ],
+    "featureIds": [
+      "FEAT-035"
+    ]
+  },
+  {
+    "id": "TASK-MOD-P6-OUTPAINT",
+    "title": "扩图",
+    "goal": "扩图",
+    "scope": "独立Manifest与执行器通过现有CapabilityRegistry/TaskPort；显式ComfyUI工作流/原件绑定，不猜API端点、不新增任务队列/素材仓库；API适配接口保留，未配置不可用。",
+    "acceptance": [
+      "独立契约/执行与版本回退",
+      "原件与既有任务/持久化身份保持",
+      "本卡限定回归及快速三门禁有实际证据"
+    ],
+    "dependencies": [
+      "TASK-MOD-P6-HOST"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "refactor/TASK-MOD-P3-feature-cycles",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "972adc011e040b6db76284de1daea42d8b2167cb",
+    "affectedModules": [
+      "src/features/capabilities",
+      "src/features/creation"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-29-p6-outpaint/verification.md",
+      "docs/changes/2026-10-29-p6-outpaint/review.md"
+    ],
+    "verification": "本地候选根2372 pass/20 skip、类型通过；Edge17项、Rust资产18、Mobile373、Agent204通过；本卡仍PARTIAL，真实服务/Native/独审/main待验。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-29",
+    "lastVerified": "2026-10-29",
+    "nextAction": "接入并验收Desktop原生TaskHost及真实工作流/Provider；保持四原文与其他P/STD/ORG开放任务，不把fixture作为REAL。",
+    "requirementRefs": [
+      "docs/changes/2026-10-29-p6-outpaint/intent.md",
+      "docs/changes/2026-10-29-p6-outpaint/spec.md"
+    ],
+    "featureIds": [
+      "FEAT-040"
+    ]
+  },
+  {
+    "id": "TASK-MOD-P6-UPSCALE",
+    "title": "高清修复",
+    "goal": "高清修复",
+    "scope": "独立Manifest与执行器通过现有CapabilityRegistry/TaskPort；显式ComfyUI工作流/原件绑定，不猜API端点、不新增任务队列/素材仓库；API适配接口保留，未配置不可用。",
+    "acceptance": [
+      "独立契约/执行与版本回退",
+      "原件与既有任务/持久化身份保持",
+      "本卡限定回归及快速三门禁有实际证据"
+    ],
+    "dependencies": [
+      "TASK-MOD-P6-OUTPAINT"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "refactor/TASK-MOD-P3-feature-cycles",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "972adc011e040b6db76284de1daea42d8b2167cb",
+    "affectedModules": [
+      "src/features/capabilities",
+      "src/features/creation"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-29-p6-upscale/verification.md",
+      "docs/changes/2026-10-29-p6-upscale/review.md"
+    ],
+    "verification": "本地候选根2372 pass/20 skip、类型通过；Edge17项、Rust资产18、Mobile373、Agent204通过；本卡仍PARTIAL，真实服务/Native/独审/main待验。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-29",
+    "lastVerified": "2026-10-29",
+    "nextAction": "接入并验收Desktop原生TaskHost及真实工作流/Provider；保持四原文与其他P/STD/ORG开放任务，不把fixture作为REAL。",
+    "requirementRefs": [
+      "docs/changes/2026-10-29-p6-upscale/intent.md",
+      "docs/changes/2026-10-29-p6-upscale/spec.md"
+    ],
+    "featureIds": [
+      "FEAT-041"
+    ]
+  },
+  {
+    "id": "TASK-MOD-P6-LAYER-SPLIT",
+    "title": "图层拆分",
+    "goal": "图层拆分",
+    "scope": "独立Manifest与执行器通过现有CapabilityRegistry/TaskPort；显式ComfyUI工作流/原件绑定，不猜API端点、不新增任务队列/素材仓库；API适配接口保留，未配置不可用。",
+    "acceptance": [
+      "独立契约/执行与版本回退",
+      "原件与既有任务/持久化身份保持",
+      "本卡限定回归及快速三门禁有实际证据"
+    ],
+    "dependencies": [
+      "TASK-MOD-P6-UPSCALE"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "refactor/TASK-MOD-P3-feature-cycles",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "972adc011e040b6db76284de1daea42d8b2167cb",
+    "affectedModules": [
+      "src/features/capabilities",
+      "src/features/creation"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-29-p6-layer-split/verification.md",
+      "docs/changes/2026-10-29-p6-layer-split/review.md"
+    ],
+    "verification": "本地候选根2372 pass/20 skip、类型通过；Edge17项、Rust资产18、Mobile373、Agent204通过；本卡仍PARTIAL，真实服务/Native/独审/main待验。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-29",
+    "lastVerified": "2026-10-29",
+    "nextAction": "接入并验收Desktop原生TaskHost及真实工作流/Provider；保持四原文与其他P/STD/ORG开放任务，不把fixture作为REAL。",
+    "requirementRefs": [
+      "docs/changes/2026-10-29-p6-layer-split/intent.md",
+      "docs/changes/2026-10-29-p6-layer-split/spec.md"
+    ],
+    "featureIds": [
+      "FEAT-042"
+    ]
+  },
+  {
+    "id": "TASK-MOD-P7",
+    "title": "资产溯源对齐",
+    "goal": "资产溯源对齐",
+    "scope": "统一PromptHash/ParentId/Origins的写入和去重；旧字段可选，读时不回写，不改变资产字节ID/原件与快照格式。",
+    "acceptance": [
+      "独立契约/执行与版本回退",
+      "原件与既有任务/持久化身份保持",
+      "本卡限定回归及快速三门禁有实际证据"
+    ],
+    "dependencies": [
+      "TASK-MOD-P6-LAYER-SPLIT"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "refactor/TASK-MOD-P3-feature-cycles",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "972adc011e040b6db76284de1daea42d8b2167cb",
+    "affectedModules": [
+      "src/features/creation",
+      "src/features/local-service",
+      "src-tauri"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-29-p7-asset-lineage/verification.md",
+      "docs/changes/2026-10-29-p7-asset-lineage/review.md"
+    ],
+    "verification": "本地候选根2372 pass/20 skip、类型通过；Edge17项、Rust资产18、Mobile373、Agent204通过；本卡仍PARTIAL，真实服务/Native/独审/main待验。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-29",
+    "lastVerified": "2026-10-29",
+    "nextAction": "完成原生GUI跨端溯源验收、独审和main合流；旧记录不回写。",
+    "requirementRefs": [
+      "docs/changes/2026-10-29-p7-asset-lineage/intent.md",
+      "docs/changes/2026-10-29-p7-asset-lineage/spec.md"
+    ],
+    "featureIds": [
+      "FEAT-014"
+    ]
   }
 ]

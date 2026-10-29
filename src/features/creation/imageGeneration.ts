@@ -313,6 +313,8 @@ export interface GeneratedImages {
 }
 
 export async function generateImages(options: {
+  imageCapability?: import("../../../packages/creation-contracts/index.ts").ImageCapabilitySpec;
+  capabilityOutputIndices?: number[];
   maskAssetId?: string;
   prompt: string;
   model: string;
@@ -429,58 +431,17 @@ export async function generateImages(options: {
   const adapter = candidateConnection
     ? createGenerationAdapter(candidateConnection, { generateImages })
     : null;
+  if (options.imageCapability && candidateConnection?.kind !== "local_comfyui")
+    throw new Error("图片能力适配器或原绑定已变更，当前未发送。");
 
   if (adapter?.connection.kind === "local_comfyui") {
-    options.beforeRequest?.();
-    options.onRequestStart?.();
-    const job = await adapter.submit({
-      prompt: options.prompt,
-      model,
+    return generateComfyImages(
+      adapter,
+      options,
       attachments,
-      requestedOutputs: requestedCount,
-      idempotencyKey: options.idempotencyKey ?? `job-${Date.now()}`,
-      signal: options.signal,
-    });
-    let currentJob = job;
-    while (currentJob.status === "queued" || currentJob.status === "running") {
-      if (options.signal.aborted) {
-        await adapter
-          .cancel(currentJob.providerJobId, options.signal)
-          .catch(() => {});
-        throw new GenerationProviderError("已取消任务。", {
-          failureClass: "cancelled",
-          retryable: false,
-        });
-      }
-      await new Promise((resolve) => setTimeout(resolve, 800));
-      currentJob = await adapter.getStatus(
-        currentJob.providerJobId,
-        options.signal,
-      );
-    }
-    if (currentJob.status === "failed") {
-      throw new GenerationProviderError("生成任务失败。", {
-        failureClass: "provider_unavailable",
-        retryable: true,
-      });
-    }
-    const outputs = await adapter.listResults(
-      currentJob.providerJobId,
-      options.signal,
+      model,
+      requestedCount,
     );
-    const sources = outputs
-      .map(
-        (out) =>
-          out.url ||
-          (out.b64Json
-            ? `data:${out.mime || "image/png"};base64,${out.b64Json}`
-            : ""),
-      )
-      .filter(Boolean);
-    if (options.onChunk && sources.length) {
-      await options.onChunk(sources, 0);
-    }
-    return { sources };
   }
 
   const sessionApiKey = await loadApiKey(baseUrl, options.credentialRef);
@@ -564,4 +525,78 @@ export async function generateImage(options: {
 
 export function providerModelsEndpoint(): string {
   return getModelsEndpoint(readProvider().baseUrl);
+}
+
+async function generateComfyImages(
+  adapter: import("../../integrations/generation/providerAdapter.ts").GenerationProviderAdapter,
+  options: Parameters<typeof generateImages>[0],
+  attachments: CreationAttachment[],
+  model: string,
+  requestedCount: number,
+): Promise<GeneratedImages> {
+  const executionSignal = options.imageCapability
+    ? AbortSignal.any([options.signal, AbortSignal.timeout(180_000)])
+    : options.signal;
+  options.beforeRequest?.();
+  const job = await adapter.submit({
+    beforeSubmit: () => {
+      options.beforeRequest?.();
+      options.onRequestStart?.();
+    },
+    imageCapability: options.imageCapability,
+    prompt: options.prompt,
+    model,
+    attachments,
+    requestedOutputs: requestedCount,
+    idempotencyKey: options.idempotencyKey ?? `job-${Date.now()}`,
+    signal: executionSignal,
+  });
+  let currentJob = job;
+  try {
+    while (currentJob.status === "queued" || currentJob.status === "running") {
+      executionSignal.throwIfAborted();
+      await new Promise((resolve) => setTimeout(resolve, 800));
+      currentJob = await adapter.getStatus(
+        currentJob.providerJobId,
+        executionSignal,
+      );
+    }
+  } catch (error) {
+    if (executionSignal.aborted)
+      await adapter.cancel(currentJob.providerJobId).catch(() => {});
+    throw error;
+  }
+  if (currentJob.status === "failed") {
+    throw new GenerationProviderError("生成任务失败。", {
+      failureClass: "provider_unavailable",
+      retryable: true,
+    });
+  }
+  const outputs = await adapter.listResults(
+    currentJob.providerJobId,
+    executionSignal,
+  );
+  const selectedOutputs = options.imageCapability
+    ? (options.capabilityOutputIndices ?? outputs.map((_, i) => i)).map(
+        (index) => {
+          const result = outputs[index];
+          if (!result)
+            throw new Error("能力结果输出槽位缺失，未发布错误来源。");
+          return result;
+        },
+      )
+    : outputs;
+  const sources = selectedOutputs
+    .map(
+      (out) =>
+        out.url ||
+        (out.b64Json
+          ? `data:${out.mime || "image/png"};base64,${out.b64Json}`
+          : ""),
+    )
+    .filter(Boolean);
+  if (options.onChunk && sources.length) {
+    await options.onChunk(sources, 0);
+  }
+  return { sources };
 }

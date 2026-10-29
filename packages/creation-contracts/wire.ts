@@ -63,11 +63,6 @@ export interface StoredAssetMetadata {
   parentId?: string;
   isAiGenerated?: boolean;
   source?: "provider" | "upload";
-  origins?: Array<{
-    sourceJobId?: string;
-    promptHash?: string;
-    parentId?: string;
-    provenance: AssetProvenance;
-  }>;
+  origins?: import("./assetLineage.ts").AssetOrigin[];
   provenance: AssetProvenance;
 }

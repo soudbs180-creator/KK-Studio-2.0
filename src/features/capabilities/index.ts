@@ -15,3 +15,19 @@ export {
   inpaintCapabilityManifest,
   executeInpaintCapability,
 } from "./inpaintCapability.ts";
+
+export {
+  outpaintCapabilityManifest,
+  executeOutpaintCapability,
+} from "./outpaintCapability.ts";
+
+export {
+  upscaleCapabilityManifest,
+  executeUpscaleCapability,
+} from "./upscaleCapability.ts";
+
+export {
+  layerSplitCapabilityManifest,
+  executeLayerSplitCapability,
+} from "./layerSplitCapability.ts";
+export { createImageCapabilityRegistry } from "./imageCapabilityRegistry.ts";

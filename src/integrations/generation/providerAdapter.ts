@@ -5,12 +5,14 @@ import type {
 import type { CreationAttachment } from "../../../packages/creation-contracts/index.ts";
 
 export interface GenerationRequest {
+  imageCapability?: import("../../../packages/creation-contracts/index.ts").ImageCapabilitySpec;
   prompt: string;
   model: string;
   attachments: CreationAttachment[];
   requestedOutputs: number;
   idempotencyKey: string;
   signal: AbortSignal;
+  beforeSubmit?: () => void;
   /** ComfyUI workflow JSON is supplied by the workflow editor, never inferred from a prompt. */
   workflow?: Record<string, unknown>;
 }

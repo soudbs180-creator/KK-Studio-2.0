@@ -201,6 +201,11 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-MOD-P4-CREATION | creation公开入口 | PARTIAL | 进行中 | P1 | TASK-MOD-P4-AGENT | root | 解决已开放浏览器门禁，完成独审/原生与完整verify后按实际主线条件合流；原兼容出口保留一个发布周期。 |
 | TASK-MOD-P4-REMAINING | 其余切片公开入口 | PARTIAL | 进行中 | P1 | TASK-MOD-P4-CREATION | root | 解决已开放浏览器门禁，完成独审/原生与完整verify后按实际主线条件合流；原兼容出口保留一个发布周期。 |
 | TASK-MOD-P5 | 插件清单、权限与分级隔离 | PARTIAL | 进行中 | P1 | TASK-MOD-P4-REMAINING | root | P5生产门保持关闭；补原生/跨浏览器/更多逃逸面/独审与Figma授权，再推进T0/T2/T3和其他贡献。 |
+| TASK-MOD-P6-HOST | 图片能力任务接线 | PARTIAL | 进行中 | P1 | TASK-MOD-P4-CREATION | root | 接入并验收Desktop原生TaskHost及真实工作流/Provider；保持四原文与其他P/STD/ORG开放任务，不把fixture作为REAL。 |
+| TASK-MOD-P6-OUTPAINT | 扩图 | PARTIAL | 进行中 | P1 | TASK-MOD-P6-HOST | root | 接入并验收Desktop原生TaskHost及真实工作流/Provider；保持四原文与其他P/STD/ORG开放任务，不把fixture作为REAL。 |
+| TASK-MOD-P6-UPSCALE | 高清修复 | PARTIAL | 进行中 | P1 | TASK-MOD-P6-OUTPAINT | root | 接入并验收Desktop原生TaskHost及真实工作流/Provider；保持四原文与其他P/STD/ORG开放任务，不把fixture作为REAL。 |
+| TASK-MOD-P6-LAYER-SPLIT | 图层拆分 | PARTIAL | 进行中 | P1 | TASK-MOD-P6-UPSCALE | root | 接入并验收Desktop原生TaskHost及真实工作流/Provider；保持四原文与其他P/STD/ORG开放任务，不把fixture作为REAL。 |
+| TASK-MOD-P7 | 资产溯源对齐 | PARTIAL | 进行中 | P1 | TASK-MOD-P6-LAYER-SPLIT | root | 完成原生GUI跨端溯源验收、独审和main合流；旧记录不回写。 |
 
 ## TASK-FIGMA-PAGES-20261025 — 重新核查并整理Figma 04/05页面与状态
 
@@ -3907,5 +3912,100 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Verification: PARTIAL — P5部分完成：契约包1.4.0新增清单/JSON Schema/RPC与PermissionPort；包目录、版本/平台、逐文件SHA、权限交集、身份、消息上限/超时/重放/撤销和更新失败保护已接线。真实Edge实验T1与安装器→React→当前Context链通过；生产新包执行门默认关闭，legacy保持宿主兼容。Desktop IPC、WebRTC/其他逃逸面、独立安全审查、授权Figma/UI、T0/T2/T3与其他贡献未完成，不能称为生产插件沙箱。
 - Evidence: [docs/changes/2026-10-29-p5-plugin-permissions/verification.md](../../docs/changes/2026-10-29-p5-plugin-permissions/verification.md), [docs/changes/2026-10-29-p5-plugin-permissions/review.md](../../docs/changes/2026-10-29-p5-plugin-permissions/review.md)
 - Next action: P5生产门保持关闭；补原生/跨浏览器/更多逃逸面/独审与Figma授权，再推进T0/T2/T3和其他贡献。
+- Last verified: 2026-10-29
+- Updated: 2026-10-29
+
+## TASK-MOD-P6-HOST — 图片能力任务接线
+
+- Goal: 图片能力任务接线
+- Scope: 独立Manifest与执行器通过现有CapabilityRegistry/TaskPort；显式ComfyUI工作流/原件绑定，不猜API端点、不新增任务队列/素材仓库；API适配接口保留，未配置不可用。
+- Display status: 进行中
+- Priority: P1 — 未记录
+- Requirement refs: docs/changes/2026-10-29-p6-image-host/intent.md, docs/changes/2026-10-29-p6-image-host/spec.md
+- Feature IDs: FEAT-035
+- Owner role: implementation-integrator
+- Acceptance: 独立契约/执行与版本回退; 原件与既有任务/持久化身份保持; 本卡限定回归及快速三门禁有实际证据
+- Branch: `refactor/TASK-MOD-P3-feature-cycles`
+- Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
+- Modules: src/features/capabilities, src/features/creation
+- Verification: PARTIAL — 本地候选根2372 pass/20 skip、类型通过；Edge17项、Rust资产18、Mobile373、Agent204通过；本卡仍PARTIAL，真实服务/Native/独审/main待验。
+- Evidence: [docs/changes/2026-10-29-p6-image-host/verification.md](../../docs/changes/2026-10-29-p6-image-host/verification.md), [docs/changes/2026-10-29-p6-image-host/review.md](../../docs/changes/2026-10-29-p6-image-host/review.md)
+- Next action: 接入并验收Desktop原生TaskHost及真实工作流/Provider；保持四原文与其他P/STD/ORG开放任务，不把fixture作为REAL。
+- Last verified: 2026-10-29
+- Updated: 2026-10-29
+
+## TASK-MOD-P6-OUTPAINT — 扩图
+
+- Goal: 扩图
+- Scope: 独立Manifest与执行器通过现有CapabilityRegistry/TaskPort；显式ComfyUI工作流/原件绑定，不猜API端点、不新增任务队列/素材仓库；API适配接口保留，未配置不可用。
+- Display status: 进行中
+- Priority: P1 — 未记录
+- Requirement refs: docs/changes/2026-10-29-p6-outpaint/intent.md, docs/changes/2026-10-29-p6-outpaint/spec.md
+- Feature IDs: FEAT-040
+- Owner role: implementation-integrator
+- Acceptance: 独立契约/执行与版本回退; 原件与既有任务/持久化身份保持; 本卡限定回归及快速三门禁有实际证据
+- Branch: `refactor/TASK-MOD-P3-feature-cycles`
+- Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
+- Modules: src/features/capabilities, src/features/creation
+- Verification: PARTIAL — 本地候选根2372 pass/20 skip、类型通过；Edge17项、Rust资产18、Mobile373、Agent204通过；本卡仍PARTIAL，真实服务/Native/独审/main待验。
+- Evidence: [docs/changes/2026-10-29-p6-outpaint/verification.md](../../docs/changes/2026-10-29-p6-outpaint/verification.md), [docs/changes/2026-10-29-p6-outpaint/review.md](../../docs/changes/2026-10-29-p6-outpaint/review.md)
+- Next action: 接入并验收Desktop原生TaskHost及真实工作流/Provider；保持四原文与其他P/STD/ORG开放任务，不把fixture作为REAL。
+- Last verified: 2026-10-29
+- Updated: 2026-10-29
+
+## TASK-MOD-P6-UPSCALE — 高清修复
+
+- Goal: 高清修复
+- Scope: 独立Manifest与执行器通过现有CapabilityRegistry/TaskPort；显式ComfyUI工作流/原件绑定，不猜API端点、不新增任务队列/素材仓库；API适配接口保留，未配置不可用。
+- Display status: 进行中
+- Priority: P1 — 未记录
+- Requirement refs: docs/changes/2026-10-29-p6-upscale/intent.md, docs/changes/2026-10-29-p6-upscale/spec.md
+- Feature IDs: FEAT-041
+- Owner role: implementation-integrator
+- Acceptance: 独立契约/执行与版本回退; 原件与既有任务/持久化身份保持; 本卡限定回归及快速三门禁有实际证据
+- Branch: `refactor/TASK-MOD-P3-feature-cycles`
+- Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
+- Modules: src/features/capabilities, src/features/creation
+- Verification: PARTIAL — 本地候选根2372 pass/20 skip、类型通过；Edge17项、Rust资产18、Mobile373、Agent204通过；本卡仍PARTIAL，真实服务/Native/独审/main待验。
+- Evidence: [docs/changes/2026-10-29-p6-upscale/verification.md](../../docs/changes/2026-10-29-p6-upscale/verification.md), [docs/changes/2026-10-29-p6-upscale/review.md](../../docs/changes/2026-10-29-p6-upscale/review.md)
+- Next action: 接入并验收Desktop原生TaskHost及真实工作流/Provider；保持四原文与其他P/STD/ORG开放任务，不把fixture作为REAL。
+- Last verified: 2026-10-29
+- Updated: 2026-10-29
+
+## TASK-MOD-P6-LAYER-SPLIT — 图层拆分
+
+- Goal: 图层拆分
+- Scope: 独立Manifest与执行器通过现有CapabilityRegistry/TaskPort；显式ComfyUI工作流/原件绑定，不猜API端点、不新增任务队列/素材仓库；API适配接口保留，未配置不可用。
+- Display status: 进行中
+- Priority: P1 — 未记录
+- Requirement refs: docs/changes/2026-10-29-p6-layer-split/intent.md, docs/changes/2026-10-29-p6-layer-split/spec.md
+- Feature IDs: FEAT-042
+- Owner role: implementation-integrator
+- Acceptance: 独立契约/执行与版本回退; 原件与既有任务/持久化身份保持; 本卡限定回归及快速三门禁有实际证据
+- Branch: `refactor/TASK-MOD-P3-feature-cycles`
+- Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
+- Modules: src/features/capabilities, src/features/creation
+- Verification: PARTIAL — 本地候选根2372 pass/20 skip、类型通过；Edge17项、Rust资产18、Mobile373、Agent204通过；本卡仍PARTIAL，真实服务/Native/独审/main待验。
+- Evidence: [docs/changes/2026-10-29-p6-layer-split/verification.md](../../docs/changes/2026-10-29-p6-layer-split/verification.md), [docs/changes/2026-10-29-p6-layer-split/review.md](../../docs/changes/2026-10-29-p6-layer-split/review.md)
+- Next action: 接入并验收Desktop原生TaskHost及真实工作流/Provider；保持四原文与其他P/STD/ORG开放任务，不把fixture作为REAL。
+- Last verified: 2026-10-29
+- Updated: 2026-10-29
+
+## TASK-MOD-P7 — 资产溯源对齐
+
+- Goal: 资产溯源对齐
+- Scope: 统一PromptHash/ParentId/Origins的写入和去重；旧字段可选，读时不回写，不改变资产字节ID/原件与快照格式。
+- Display status: 进行中
+- Priority: P1 — 未记录
+- Requirement refs: docs/changes/2026-10-29-p7-asset-lineage/intent.md, docs/changes/2026-10-29-p7-asset-lineage/spec.md
+- Feature IDs: FEAT-014
+- Owner role: implementation-integrator
+- Acceptance: 独立契约/执行与版本回退; 原件与既有任务/持久化身份保持; 本卡限定回归及快速三门禁有实际证据
+- Branch: `refactor/TASK-MOD-P3-feature-cycles`
+- Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
+- Modules: src/features/creation, src/features/local-service, src-tauri
+- Verification: PARTIAL — 本地候选根2372 pass/20 skip、类型通过；Edge17项、Rust资产18、Mobile373、Agent204通过；本卡仍PARTIAL，真实服务/Native/独审/main待验。
+- Evidence: [docs/changes/2026-10-29-p7-asset-lineage/verification.md](../../docs/changes/2026-10-29-p7-asset-lineage/verification.md), [docs/changes/2026-10-29-p7-asset-lineage/review.md](../../docs/changes/2026-10-29-p7-asset-lineage/review.md)
+- Next action: 完成原生GUI跨端溯源验收、独审和main合流；旧记录不回写。
 - Last verified: 2026-10-29
 - Updated: 2026-10-29

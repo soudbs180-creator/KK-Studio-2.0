@@ -1,3 +1,4 @@
+import { mergeAssetOrigins } from "../../../packages/creation-contracts/index.ts";
 import { z } from "zod";
 import {
   usesNativeAssets,
@@ -110,32 +111,7 @@ async function persistBlob(
           transaction.abort();
           return;
         }
-        const origins = [
-          ...(old.origins ?? [
-            {
-              sourceJobId: old.sourceJobId,
-              promptHash: old.promptHash,
-              parentId: old.parentId,
-              provenance: old.provenance,
-            },
-          ]),
-          {
-            sourceJobId: metadata.sourceJobId,
-            promptHash: metadata.promptHash,
-            parentId: metadata.parentId,
-            provenance: metadata.provenance,
-          },
-        ];
-        const unique = origins
-          .filter(
-            (origin, index) =>
-              origins.findIndex(
-                (entry) =>
-                  entry.sourceJobId === origin.sourceJobId &&
-                  entry.promptHash === origin.promptHash,
-              ) === index,
-          )
-          .slice(-200);
+        const unique = mergeAssetOrigins(old, metadata);
         // Content deduplication never erases prior AI provenance when those bytes are uploaded again.
         const canonical =
           old.isAiGenerated !== false

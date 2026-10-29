@@ -7,6 +7,7 @@ import type {
   SubmittedGenerationJob,
 } from "./providerAdapter.ts";
 import { ProviderAdapterError } from "./providerAdapter.ts";
+import { prepareComfyImageCapability } from "./comfyImageCapability.ts";
 
 export interface ComfyUiOutputItem {
   filename?: unknown;
@@ -163,6 +164,7 @@ async function responseError(
 
 /** Local ComfyUI HTTP adapter. It requires a workflow produced by the workflow editor. */
 export class LocalComfyUiAdapter implements GenerationProviderAdapter {
+  private readonly capabilityOutputs = new Map<string, string[]>();
   readonly connection: ProviderConnection;
 
   constructor(connection: ProviderConnection) {
@@ -183,8 +185,14 @@ export class LocalComfyUiAdapter implements GenerationProviderAdapter {
   }
 
   async submit(request: GenerationRequest): Promise<SubmittedGenerationJob> {
-    if (!request.workflow)
+    const prepared = request.imageCapability
+      ? await prepareComfyImageCapability(baseUrl(this.connection), request)
+      : undefined;
+    const workflow = prepared?.workflow ?? request.workflow;
+    if (!workflow)
       throw new Error("请先在 ComfyUI 工作流编辑器中提供可执行工作流。");
+    request.signal.throwIfAborted();
+    request.beforeSubmit?.();
     const response = await fetch(`${baseUrl(this.connection)}/prompt`, {
       method: "POST",
       headers: {
@@ -192,7 +200,7 @@ export class LocalComfyUiAdapter implements GenerationProviderAdapter {
         Accept: "application/json",
       },
       body: JSON.stringify({
-        prompt: request.workflow,
+        prompt: workflow,
         client_id: request.idempotencyKey,
       }),
       credentials: "omit",
@@ -203,6 +211,8 @@ export class LocalComfyUiAdapter implements GenerationProviderAdapter {
     const payload = (await response.json()) as { prompt_id?: unknown };
     if (typeof payload.prompt_id !== "string" || !payload.prompt_id)
       throw new Error("ComfyUI 没有返回任务标识。");
+    if (prepared)
+      this.capabilityOutputs.set(payload.prompt_id, prepared.outputNodeIds);
     return {
       providerJobId: payload.prompt_id,
       async: true,
@@ -232,11 +242,43 @@ export class LocalComfyUiAdapter implements GenerationProviderAdapter {
     return {
       providerJobId,
       async: true,
-      status: entry?.outputs ? "succeeded" : "running",
+      status:
+        (entry?.status as { status_str?: string } | undefined)?.status_str ===
+        "error"
+          ? "failed"
+          : entry?.outputs
+            ? "succeeded"
+            : "running",
     };
   }
 
   async cancel(providerJobId: string, signal?: AbortSignal): Promise<void> {
+    if (this.capabilityOutputs.has(providerJobId)) {
+      // Older servers may ignore prompt_id on /interrupt and stop someone else's job.
+      const response = await fetch(
+        `${baseUrl(this.connection)}/api/jobs/${encodeURIComponent(providerJobId)}/cancel`,
+        {
+          method: "POST",
+          credentials: "omit",
+          redirect: "error",
+          signal: signal ?? AbortSignal.timeout(10_000),
+        },
+      );
+      if (response.ok) return;
+      if (response.status !== 404 && response.status !== 405)
+        throw await responseError(response, "ComfyUI 定向取消失败");
+      await fetch(`${baseUrl(this.connection)}/queue`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ delete: [providerJobId] }),
+        credentials: "omit",
+        redirect: "error",
+        signal: signal ?? AbortSignal.timeout(10_000),
+      });
+      throw new Error(
+        "当前 ComfyUI 不支持定向中断；已请求移除排队项，运行中的任务请在 ComfyUI 中确认。",
+      );
+    }
     // Send targeted /queue delete request specifying the exact prompt_id
     const queueResponse = await fetch(`${baseUrl(this.connection)}/queue`, {
       method: "POST",
@@ -290,11 +332,29 @@ export class LocalComfyUiAdapter implements GenerationProviderAdapter {
       string,
       ComfyUiHistoryEntry
     >;
-    return extractComfyUiOutputs(
-      payload[providerJobId]?.outputs,
-      providerJobId,
-      baseUrl(this.connection),
-    );
+    const all = payload[providerJobId]?.outputs;
+    const selected = this.capabilityOutputs.get(providerJobId);
+    const results = selected
+      ? selected
+          .flatMap((id) => {
+            const items = extractComfyUiOutputs(
+              { [id]: all?.[id] ?? {} },
+              providerJobId,
+              baseUrl(this.connection),
+            );
+            if (items.length !== 1)
+              throw new Error("每个能力结果节点必须恰好返回一张图片。");
+            return items;
+          })
+          .map((result, index) => ({ ...result, index }))
+      : extractComfyUiOutputs(all, providerJobId, baseUrl(this.connection));
+    if (
+      selected &&
+      (results.length !== selected.length ||
+        results.some((r) => r.kind !== "image"))
+    )
+      throw new Error("能力结果数量或类型不匹配，不能把预览当成最终结果。");
+    return results;
   }
 
   async listResults(

@@ -1,4 +1,5 @@
 import type { CanvasCollectionItem } from "../../domain/canvasItems.ts";
+import { assertImageCapabilityConnection } from "./imageCapabilitySubmission.ts";
 import {
   hasImageReferenceSource,
   uniqueImageReferences,
@@ -90,7 +91,7 @@ export function validateImageTaskInput(input: CreateProjectInput): void {
     throw new ImageTaskCommandError(
       "平台额度模式仍为 Prototype；当前不会上传素材或扣费。",
     );
-  if (input.privacyMode === "local_only")
+  if (input.privacyMode === "local_only" && !input.imageCapability)
     throw new ImageTaskCommandError(
       "仅本地模式需要可执行的 ComfyUI 工作流；此入口尚未接入，请使用 BYOK 本地模式。",
     );
@@ -174,41 +175,9 @@ export async function prepareImageTask(
       );
   } else validateImageTaskInput(input);
   if (input.providerConnectionId) {
-    const selected = readProviderConnections().find(
-      (item) => item.id === input.providerConnectionId,
-    );
-    if (
-      !selected ||
-      !catalogForConnection(selected).some((model) => model.id === input.model)
-    )
-      throw new ImageTaskCommandError(
-        "选择的供应商或模型已移除，请重新选择。",
-        true,
-      );
-    const binding = {
-      id: selected.id,
-      baseUrl: selected.baseUrl,
-      credentialRef: selected.credentialRef,
-      protocol: selected.protocol,
-      authMode: selected.authMode,
-      referenceCount: input.attachments.length,
-      operation:
-        input.imageEdit?.nativeMask || input.imageOperation === "inpaint"
-          ? ("inpaint" as const)
-          : undefined,
-      localEdit: Boolean(input.imageEdit),
-      outputCount: input.outputCount ?? 1,
-      kind: input.kind === "text" ? ("text" as const) : ("image" as const),
-      model: input.model,
-    };
-    assertSubmissionConnection(binding);
-    if (!(await hasConnectionCredentials(selected)))
-      throw new ImageTaskCommandError(
-        "选择的连接缺少密钥，请配置后重试。",
-        true,
-      );
-    return withValidSize(input, assertSubmissionConnection(binding));
+    return prepareSelectedImageConnection(input);
   }
+
   if (!project) {
     const profile = parseModelProvider(
       localStorage.getItem(MODEL_PROVIDER_STORAGE_KEY),
@@ -324,6 +293,7 @@ export function appendImageTask(
     providerConnectionId: connection.id,
     imageSize: input.imageSize,
     imageEdit: input.imageEdit,
+    imageCapability: input.imageCapability,
     imageEditContext: input.imageEditContext,
   };
   return {
@@ -411,4 +381,43 @@ export async function canvasImageAttachments(
     });
   }
   return attachments;
+}
+
+async function prepareSelectedImageConnection(
+  input: CreateProjectInput,
+): Promise<ProviderConnection> {
+  const selected = readProviderConnections().find(
+    (item) => item.id === input.providerConnectionId,
+  );
+  if (
+    !selected ||
+    !catalogForConnection(selected).some((model) => model.id === input.model)
+  )
+    throw new ImageTaskCommandError(
+      "选择的供应商或模型已移除，请重新选择。",
+      true,
+    );
+  const binding = {
+    imageCapability: input.imageCapability,
+    id: selected.id,
+    baseUrl: selected.baseUrl,
+    credentialRef: selected.credentialRef,
+    protocol: selected.protocol,
+    authMode: selected.authMode,
+    referenceCount: input.attachments.length,
+    operation:
+      input.imageEdit?.nativeMask || input.imageOperation === "inpaint"
+        ? ("inpaint" as const)
+        : undefined,
+    localEdit: Boolean(input.imageEdit),
+    outputCount: input.outputCount ?? 1,
+    kind: input.kind === "text" ? ("text" as const) : ("image" as const),
+    model: input.model,
+  };
+  assertSubmissionConnection(binding);
+  if (input.imageCapability)
+    return assertImageCapabilityConnection(selected, binding);
+  if (!(await hasConnectionCredentials(selected)))
+    throw new ImageTaskCommandError("选择的连接缺少密钥，请配置后重试。", true);
+  return withValidSize(input, assertSubmissionConnection(binding));
 }

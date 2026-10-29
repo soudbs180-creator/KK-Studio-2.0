@@ -575,6 +575,7 @@ export function useTaskExecution(
     const nativeTaskHost = usesNativeTaskHost();
 
     try {
+      assertImageCapabilityHost(task, nativeTaskHost);
       if (!task.providerBaseUrl)
         throw new Error("历史任务未记录供应商，请从当前输入重新提交。");
       if (!pendingIndices.length) {
@@ -582,7 +583,10 @@ export function useTaskExecution(
         return;
       }
       const compiledPrompt =
-        task.kind === "text" || task.imageEdit || task.imageEditContext
+        task.kind === "text" ||
+        task.imageEdit ||
+        task.imageEditContext ||
+        task.imageCapability
           ? task.prompt
           : compileDesignPrompt(task.prompt, {
               referenceRoles: task.attachments.map(
@@ -1319,6 +1323,8 @@ async function executeImageFlow(options: ImageFlowOptions): Promise<void> {
   } = options;
 
   const generated = await generateImages({
+    imageCapability: task.imageCapability,
+    capabilityOutputIndices: pendingIndices,
     prompt: compiledPrompt,
     model: task.model,
     attachments: task.attachments,
@@ -1483,6 +1489,7 @@ async function processChunkBatch(options: {
           connectionId: task.providerConnectionId,
           promptHash,
           parentId:
+            task.imageCapability?.sourceAssetId ??
             task.imageEdit?.sourceAssetId ??
             task.attachments.find((attachment) => attachment.assetId)?.assetId,
           tags: ["AI生成", task.providerName ?? ""],
@@ -1917,3 +1924,11 @@ const { composeEditResult } = createImageEditRuntime({
   read: loadStoredAsset,
   write: storeGeneratedAsset,
 });
+
+function assertImageCapabilityHost(
+  task: CreationTask,
+  nativeTaskHost: boolean,
+): void {
+  if (task.imageCapability && nativeTaskHost)
+    throw new Error("此图片能力尚未接入原生TaskHost，当前未提交。");
+}

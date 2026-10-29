@@ -28,6 +28,7 @@ import {
   type GoogleConversation,
 } from "./googleConversation.ts";
 import { readMaskDocument } from "./imageEditMask.ts";
+import { imageCapabilitySchema } from "../../packages/creation-contracts/index.ts";
 import {
   readImageEditContext,
   readImageEditSnapshot,
@@ -1272,6 +1273,10 @@ function normalizeProjectTask(task: Record<string, unknown>): CreationTask {
     ...creationProviderRouting(task),
     providerName: safeText(task.providerName, 80) || undefined,
     imageEdit: readImageEditSnapshot(task.imageEdit),
+    imageCapability:
+      task.imageCapability === undefined
+        ? undefined
+        : imageCapabilitySchema.parse(task.imageCapability),
     imageEditContext: readImageEditContext(task.imageEditContext),
     imageSize: normalizeImageSizeLabel(task.imageSize),
     outputs: Array.isArray(task.outputs)

@@ -1,3 +1,4 @@
+import { mergeAssetOrigins } from "../../../packages/creation-contracts/index.ts";
 import { randomUUID } from "node:crypto";
 import {
   closeSync,
@@ -582,31 +583,10 @@ export class CompanionStore {
           generatedAt:
             metadata.provenance?.generatedAt ?? new Date().toISOString(),
         };
-        const origins = [
-          ...(old.origins ?? [
-            {
-              sourceJobId: old.sourceJobId,
-              promptHash: old.promptHash,
-              parentId: old.parentId,
-              provenance: oldProvenance,
-            },
-          ]),
-          {
-            sourceJobId: metadata.sourceJobId,
-            promptHash: metadata.promptHash,
-            parentId: metadata.parentId,
-            provenance: newProvenance,
-          },
-        ]
-          .filter(
-            (entry, index, all) =>
-              all.findIndex(
-                (candidate) =>
-                  candidate.sourceJobId === entry.sourceJobId &&
-                  candidate.promptHash === entry.promptHash,
-              ) === index,
-          )
-          .slice(-200);
+        const origins = mergeAssetOrigins(
+          { ...old, provenance: oldProvenance },
+          { ...metadata, provenance: newProvenance },
+        );
         merged = {
           ...metadata,
           ...canonical,

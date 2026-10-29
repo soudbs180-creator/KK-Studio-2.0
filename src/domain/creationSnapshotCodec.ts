@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { imageCapabilitySchema } from "../../packages/creation-contracts/index.ts";
 import {
   hasProjectChatAuthorityConflict,
   isCreationProviderRoutingValid,
@@ -105,6 +106,7 @@ export const chatItemSchema = z
 const taskSchema = z
   .object({
     id,
+    imageCapability: imageCapabilitySchema.optional(),
     prompt: z.string(),
     model: z.string(),
     providerProtocol: providerProtocolSchema.optional(),

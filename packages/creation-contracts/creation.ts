@@ -53,6 +53,7 @@ export interface CreationAttachment {
 }
 
 export interface CreationTask {
+  imageCapability?: import("./imageCapability.ts").ImageCapabilitySpec;
   imageEdit?: ImageEditSnapshot;
   imageEditContext?: ImageEditContext;
   id: string;
@@ -131,6 +132,7 @@ export interface CreationDraft {
 }
 
 export interface CreateProjectInput {
+  imageCapability?: import("./imageCapability.ts").ImageCapabilitySpec;
   modelSelection?: ModelSelection;
   /** Preliminary binding check before request crops and masks are archived. */
   imageOperation?: "inpaint";

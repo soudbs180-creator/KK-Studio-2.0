@@ -234,17 +234,29 @@ fn origin(value: &Value) -> Value {
     Value::Object(result)
 }
 pub fn merge(old: &Value, incoming: &Value) -> Value {
-    let mut origins = old
-        .get("origins")
-        .and_then(Value::as_array)
-        .cloned()
-        .unwrap_or_else(|| vec![origin(old)]);
+    let mut origins = vec![origin(old)];
+    for value in [old, incoming] {
+        if let Some(entries) = value.get("origins").and_then(Value::as_array) {
+            origins.extend(entries.iter().cloned());
+        }
+    }
     origins.push(origin(incoming));
     let mut unique: Vec<Value> = Vec::new();
     for entry in origins {
         if !unique.iter().any(|item| {
             item.get("sourceJobId") == entry.get("sourceJobId")
                 && item.get("promptHash") == entry.get("promptHash")
+                && item.get("parentId") == entry.get("parentId")
+                && [
+                    "provider",
+                    "model",
+                    "providerRequestId",
+                    "connectionId",
+                    "c2paPresent",
+                    "synthIdSignal",
+                ]
+                .iter()
+                .all(|field| item["provenance"].get(field) == entry["provenance"].get(field))
         }) {
             unique.push(entry);
         }

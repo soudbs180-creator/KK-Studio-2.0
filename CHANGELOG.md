@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- 本地候选Desktop/Web2.1.51、契约1.5.0：独立扩图、高清修复、图层拆分Manifest接原队列与显式ComfyUI工作流；三端Origins合并保留不同父/Provider来源。未增加UI入口，原生与真实GPU待验；[ADR-032](docs/architecture/adr/ADR-032-independent-image-capabilities-and-lineage.md)。
+
 - 本地候选：Desktop/Web2.1.49完成P3a–e源码依赖反转，R4循环边16→0，统一契约1.3及原资产/Agent/存储Port，Provider旧路径保留；运行/独审/原生/main验收继续按[ADR-029](docs/architecture/adr/ADR-029-feature-cycle-decoupling.md)跟踪。
 
 - 本地候选：Desktop/Web2.1.48增加薄能力注册表与默认关闭的image.inpaint派发，保留旧任务/资产/审批链。数据与DOM双路径对拍通过，窄屏既有门禁、严格截图零差异和原生/主线仍未验收；[验证](docs/changes/2026-10-28-inpaint-capability/verification.md)。

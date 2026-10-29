@@ -1,4 +1,7 @@
 import React, { useRef, type SetStateAction } from "react";
+import { isTauri } from "@tauri-apps/api/core";
+import type { ImageCapabilityId } from "../../../packages/creation-contracts/index.ts";
+import { prepareImageCapabilityInput } from "./imageCapabilitySubmission.ts";
 import type { CanvasCollectionItem } from "../../domain/canvasItems.ts";
 import { updateProjectChatView } from "../../domain/projectChatUpdate.ts";
 import type { ProviderConnection } from "../../domain/providerConnections.ts";
@@ -65,6 +68,7 @@ export interface UseImageCommandSubmissionOptions {
   submitLock?: React.MutableRefObject<boolean>;
   prepareTask?: typeof prepareImageTask;
   capabilitiesInpaint?: boolean;
+  imageCapabilities?: Partial<Record<ImageCapabilityId, boolean>>;
   generateFromCanvas?: (options: {
     nodeId: string;
     prompt: string;
@@ -167,7 +171,14 @@ export function createSubmissionLogic(
         request,
       );
 
-      const input = await resolveCommandInput(request, original);
+      const resolved = await resolveCommandInput(request, original);
+      const input = resolved.imageCapability
+        ? await prepareImageCapabilityInput(
+            resolved,
+            loadStoredAsset,
+            isTauri() ? "desktop" : "web",
+          )
+        : resolved;
       if (signal?.aborted) return "已取消提交，草稿和参考图已保留。";
 
       const { connection, editInputs } = await prepareEditPlan({
@@ -243,20 +254,14 @@ export function createSubmissionLogic(
         void executeTask(nextProject.id, appendedTaskId, nextProject);
         return undefined;
       };
-      const preparedTask = nextProject.tasks.find(
-        (task) => task.id === appendedTaskId,
-      )!;
-      if (dispatchCapability && preparedTask.imageEdit) {
-        await dispatchCapability({
-          projectId: nextProject.id,
-          task: preparedTask,
-          adapter:
-            connection.kind === "local_comfyui" ? "comfyui" : "provider-api",
-          submit: submitPrepared,
-        });
-        return undefined;
-      }
-      return await submitPrepared();
+      return await dispatchPreparedImageTask(
+        nextProject,
+        appendedTaskId,
+        submitPrepared,
+        dispatchCapability,
+        connection.kind,
+        options.imageCapabilities,
+      );
     } catch (error) {
       if (error instanceof ImageTaskCommandError && error.configure) {
         onOpenSettingsProviders?.();
@@ -893,3 +898,38 @@ const { prepareEditInputs } = createImageEditRuntime({
   read: loadStoredAsset,
   write: storeGeneratedAsset,
 });
+
+async function dispatchPreparedImageTask(
+  nextProject: CreationProject,
+  appendedTaskId: string,
+  submitPrepared: () => Promise<string | undefined>,
+  dispatchCapability: Awaited<ReturnType<typeof loadInpaintDispatcher>>,
+  connectionKind: ProviderConnection["kind"],
+  imageCapabilities: UseImageCommandSubmissionOptions["imageCapabilities"],
+): Promise<string | undefined> {
+  const projectId = nextProject.id;
+  const preparedTask = nextProject.tasks.find(
+    (task) => task.id === appendedTaskId,
+  )!;
+  if (preparedTask.imageCapability) {
+    const { dispatchImageCapability } =
+      await import("./imageCapabilityDispatch.ts");
+    await dispatchImageCapability({
+      projectId: projectId,
+      task: preparedTask,
+      submit: submitPrepared,
+      enabled: imageCapabilities,
+    });
+    return undefined;
+  }
+  if (dispatchCapability && preparedTask.imageEdit) {
+    await dispatchCapability({
+      projectId: projectId,
+      task: preparedTask,
+      adapter: connectionKind === "local_comfyui" ? "comfyui" : "provider-api",
+      submit: submitPrepared,
+    });
+    return undefined;
+  }
+  return await submitPrepared();
+}

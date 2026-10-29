@@ -48,3 +48,5 @@
 - 2026-09-21：创建卡片，状态 REAL（性能增强另见 PERF-001）。
 
 - 2026-10-15：TASK-KK-UNIFIED-20261015 已获用户实施授权，新增范围见 [统一规格](../changes/2026-10-15-kk-unified/spec.md)。本卡既有证据仍限原版本；新范围实现/真实验收尚未完成，不能沿用旧 PASS 关闭。
+
+P7候选：同字节不同parent/Provider来源及导入Origins统一合并，旧读不回写；原生资产存储回归通过，完整运行验收另见[P7](../changes/2026-10-29-p7-asset-lineage/verification.md)，不扩大本卡既有REAL范围。
