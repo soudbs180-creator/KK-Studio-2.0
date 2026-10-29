@@ -1,5 +1,45 @@
 [
   {
+    "id": "TASK-MOD-CHAT-PROJECTION",
+    "title": "切换聊天同步组件派生视图",
+    "goal": "切换聊天后编辑框和执行方式来自所选聊天，保存原聊天草稿",
+    "scope": "App handleSelectChat与原会话回归，纯派生视图修复不改持久schema",
+    "acceptance": [
+      "实际App选择回调立即投影所选聊天",
+      "原聊天数据不改、API与Codex草稿隔离",
+      "单元RED→GREEN及原浏览器断言通过"
+    ],
+    "dependencies": [
+      "TASK-MOD-P8"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "refactor/TASK-MOD-P3-feature-cycles",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "0b675ec7",
+    "affectedModules": [
+      "src/App.tsx",
+      "tests/unit/conversationSubmitScope.test.ts"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "未完成",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-29-p8-composition/verification.md"
+    ],
+    "verification": "真实App回调RED（A draft未切B）→GREEN；会话49/49、根2379 pass/20 skip，类型/lint通过；两项原聊天切换浏览器恢复，首页预连接归属问题另卡处理。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-29",
+    "lastVerified": "2026-10-29",
+    "nextAction": "当前独审/完整verify/main；首页新项目显式独立会话另卡修复",
+    "requirementRefs": [
+      "docs/changes/2026-10-29-p8-composition/spec.md"
+    ],
+    "featureIds": []
+  },
+  {
     "id": "TASK-MOD-P8",
     "title": "App装配hook瘦身与主线合流核验",
     "goal": "不改变JSX/样式/用户数据语义，迁移装配责任并完成适用合流门",

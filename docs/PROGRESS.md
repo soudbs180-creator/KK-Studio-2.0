@@ -1336,3 +1336,6 @@ TASK-UI-DETAILS-20261015从最新18e143f修复，Desktop/Web2.1.26产品ab878ffd
 
 
 2026-10-29 P8源码候选：Desktop/Web53，Mobile43/契约1.5不变；七组装配迁入src/app，App2002→1546，35函数/主JSX/28 CSS入口及产物内容hash不变。固定输入软件Edge四组DOM/PNG同态；硬件渲染差异与真实GPU/最终Native不据此关闭。主仓21文件与索引清单/patch已保全，4路径重叠；P8前后均复现Codex四失败，完整verify、当前独审与main/远端整合仍开放。详见[验证](changes/2026-10-29-p8-composition/verification.md)；其他P/STD/ORG不自动完成。
+
+
+2026-10-29门禁修复候选Desktop/Web54：TASK-MOD-CHAT-PROJECTION让实际聊天选择回调使用原projectChatView，立即刷新所选聊天草稿/执行方式/消息，其他聊天不变。49会话/根2379通过，原切换聊天两项恢复；首页预连接Agent的会话归属拒绝仍需修复，完整verify/独审/main继续开放。见[验证](changes/2026-10-29-p8-composition/verification.md)。

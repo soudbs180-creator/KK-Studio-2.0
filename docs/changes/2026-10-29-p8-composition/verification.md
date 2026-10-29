@@ -21,3 +21,7 @@ P8改动前已复现codex-home-routing四失败，改动后同四位置失败；
 主仓21份dirty文件已逐字节复制并核SHA，保留原patch、索引对象清单；与分支重叠4路径为docs/README.md、governance两账本文件和package.json。主仓保全与fetch结果见primary-preservation/及merge-preflight.json。origin/main与本地main仍分叉，不能把本地快进条件称为远端已合并。
 
 当前检查与最终head/hash以工程外最终回执为准；P0–P7/STD/ORG原开放项、P6.1参数面板/Figma实例/真实GPU不自动关闭。
+
+## 合流门修复（P8之后单独提交）
+
+TASK-MOD-CHAT-PROJECTION：原App选择聊天只改activeChatId，persist hook不自动重建派生composerDraft/messages，导致界面仍显示上个聊天。实际App回调新增回归先RED（A draft而非B draft），再使用既有projectChatView投影；保持原聊天/持久schema不变，49项会话回归通过。此为P8后的有意行为修复，不修改/冒充原P8的35函数同态证据。候选Desktop/Web54；最终浏览器和全门禁另记。

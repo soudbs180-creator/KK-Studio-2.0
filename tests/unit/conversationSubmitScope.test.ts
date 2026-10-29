@@ -1224,3 +1224,34 @@ for (const state of ["saved", "unavailable"] as const)
       existingBytes,
     );
   });
+
+test("App selecting a chat immediately projects its draft, execution channel and messages", () => {
+  let current = projectFixture();
+  current.chats!.B.draft.conversationChannel = "codex";
+  current.chats!.B.draft.modelSelection = {
+    source: "codex",
+    model: "",
+    kind: "text",
+  };
+  current.chats!.B.messages = [
+    { id: "B-message", role: "user", content: "B message", createdAt: 1 },
+  ];
+  const originalA = JSON.stringify(current.chats!.A);
+  const loaded = evaluate(`export ${appFunction("handleSelectChat")}`, {
+    activeProject: current,
+    projectChatView,
+    updateProject(
+      id: string,
+      update: (project: CreationProject) => CreationProject,
+    ) {
+      assert.equal(id, current.id);
+      current = update(current);
+    },
+  });
+  (loaded.handleSelectChat as (id: string) => void)("B");
+  assert.equal(current.activeChatId, "B");
+  assert.equal(current.composerDraft.prompt, "B draft");
+  assert.equal(current.composerDraft.conversationChannel, "codex");
+  assert.equal(current.messages[0].content, "B message");
+  assert.equal(JSON.stringify(current.chats!.A), originalA);
+});

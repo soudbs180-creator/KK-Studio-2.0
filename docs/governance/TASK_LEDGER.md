@@ -6,6 +6,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 | ID | Title | Status | Display | Priority | Dependencies | Owner | Next action |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| TASK-MOD-CHAT-PROJECTION | 切换聊天同步组件派生视图 | PARTIAL | 未完成 | P1 | TASK-MOD-P8 | root | 当前独审/完整verify/main；首页新项目显式独立会话另卡修复 |
 | TASK-MOD-P8 | App装配hook瘦身与主线合流核验 | PARTIAL | 未完成 | P1 | TASK-MOD-P6-1 | root | 独立评审与完整门禁；分开修复旧路由/聊天投影缺陷后再受控合流 |
 | TASK-FIGMA-PAGES-20261025 | 重新核查并整理Figma 04/05页面与状态 | PARTIAL | 未完成 | P2 | none | root | 先完成共享源与全场景结构核查，再同步本地控件/页面；完整测试、实际运行与当前独审后判定验收，不改变其他任务归属。 |
 | TASK-FIGMA-CONTROLS-20261025 | 修复 Figma 六类基础控件问题并同步本地 UI | PARTIAL | 未完成 | P2 | none | root | 在原任务修复两项既有存储单测失败并补Desktop运行证据；保留既有dirty和失败原件，未经全量验收不合并或发布。 |
@@ -208,6 +209,25 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-MOD-P6-LAYER-SPLIT | 图层拆分 | PARTIAL | 进行中 | P1 | TASK-MOD-P6-UPSCALE | root | 接入并验收Desktop原生TaskHost及真实工作流/Provider；保持四原文与其他P/STD/ORG开放任务，不把fixture作为REAL。 |
 | TASK-MOD-P7 | 资产溯源对齐 | PARTIAL | 进行中 | P1 | TASK-MOD-P6-LAYER-SPLIT | root | 完成原生GUI跨端溯源验收、独审和main合流；旧记录不回写。 |
 | TASK-MOD-P6-1 | ComfyUI本地托管与画布双态工作流卡片 | PARTIAL | 未完成 | P1 | TASK-MOD-P6-HOST | root | 完成浏览器/命令行回归；真实GPU、完整编辑器鼠标/参数面板及独审/main仍开放，用户已要求不控制桌面 |
+
+## TASK-MOD-CHAT-PROJECTION — 切换聊天同步组件派生视图
+
+- Goal: 切换聊天后编辑框和执行方式来自所选聊天，保存原聊天草稿
+- Scope: App handleSelectChat与原会话回归，纯派生视图修复不改持久schema
+- Display status: 未完成
+- Priority: P1 — 未记录
+- Requirement refs: docs/changes/2026-10-29-p8-composition/spec.md
+- Feature IDs: none
+- Owner role: implementation-integrator
+- Acceptance: 实际App选择回调立即投影所选聊天; 原聊天数据不改、API与Codex草稿隔离; 单元RED→GREEN及原浏览器断言通过
+- Branch: `refactor/TASK-MOD-P3-feature-cycles`
+- Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
+- Modules: src/App.tsx, tests/unit/conversationSubmitScope.test.ts
+- Verification: PARTIAL — 真实App回调RED（A draft未切B）→GREEN；会话49/49、根2379 pass/20 skip，类型/lint通过；两项原聊天切换浏览器恢复，首页预连接归属问题另卡处理。
+- Evidence: [docs/changes/2026-10-29-p8-composition/verification.md](../../docs/changes/2026-10-29-p8-composition/verification.md)
+- Next action: 当前独审/完整verify/main；首页新项目显式独立会话另卡修复
+- Last verified: 2026-10-29
+- Updated: 2026-10-29
 
 ## TASK-MOD-P8 — App装配hook瘦身与主线合流核验
 

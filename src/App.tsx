@@ -687,11 +687,13 @@ export default function App() {
   }
   function handleSelectChat(chatId: string): void {
     if (!activeProject) return;
-    updateProject(activeProject.id, (proj) => ({
-      ...proj,
-      activeChatId: chatId,
-      updatedAt: Date.now(),
-    }));
+    updateProject(activeProject.id, (proj) =>
+      projectChatView({
+        ...proj,
+        activeChatId: chatId,
+        updatedAt: Date.now(),
+      }),
+    );
   }
 
   function handleDeleteMessage(messageId: string): void {
