@@ -1345,3 +1345,5 @@ App瘦身已提交0b675ec7，聊天派生投影修复f10147b9；新项目空聊�
 Desktop/Web56：逐任务与分页history恢复旧结果，可选删除标记避免历史重放复活。根2391通过/20skip、类型/增量lint、Rust白名单和实际Canvas夹具通过；当前SHA独审补审及完整verify/main仍待验，真实GPU未运行。
 
 2026-10-29交付门续修：78beb7a9获授权只读独审限定代码PASS，后续SHA须补审；PR81仍draft，main未合。完整浏览器停在447/901（339通过/108失败，无退出码），不得称全绿。根显式声明契约semver依赖/类型，隔离干净安装及两端类型通过；补契约源码桌面构建指纹和协议类型命名。产品版本仍Desktop/Web56、Mobile43；默认baseline/Hosted及全套浏览器继续修复，真实GPU/最终Native未验。主仓Figma审计保全及四文档其他开放任务不关闭。见[验证](changes/2026-10-29-p8-composition/verification.md)。
+
+2026-10-29聊天交付修复候选：Desktop/Web2.1.57，Mobile43。文本成功结果按原聊天归属回写；断开连接时只读恢复本地聊天历史，保留切换后草稿、其他聊天和已删除请求。75项定向RED→GREEN；当前SHA完整检查/补审另记，PR81仍draft/main未合，339/108的部分浏览器结果不冒充完整901。见[验证](changes/2026-10-29-p8-composition/verification.md)。

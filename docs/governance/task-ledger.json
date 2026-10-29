@@ -1,5 +1,47 @@
 [
   {
+    "id": "TASK-MOD-CHAT-DELIVERY",
+    "title": "成功文本回写原聊天并只读恢复离线历史",
+    "goal": "真实浏览器已受理结果与离线消息按原聊天可见且不串草稿",
+    "scope": "复用领域reply函数与disconnected store投影；无UI/协议或持久化schema变化",
+    "acceptance": [
+      "已验收文本只回原聊天，重复一次、缺聊天/请求不恢复已删数据",
+      "离线首开及A/B切换只读显示本地历史，home无其他项目消息",
+      "RED→GREEN及快速/原浏览器断言和当前SHA独审"
+    ],
+    "dependencies": [
+      "TASK-MOD-CHAT-PROJECTION"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "refactor/TASK-MOD-P3-feature-cycles",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "4c3d6691c035f3e27d6781d30bc4c7e2e38f79c5",
+    "affectedModules": [
+      "src/features/creation/useTaskExecution.ts",
+      "src/features/agent/agentConnection.ts",
+      "tests/unit/taskDecouplingGovernance.test.ts",
+      "tests/unit/agentConnection.test.ts"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-29-p8-composition/verification.md"
+    ],
+    "verification": "两真实缺陷先RED，复用现有领域reply/Agent host同步后75项定向通过；根快速、浏览器与新SHA独审进行中，main未合。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-29",
+    "lastVerified": "2026-10-29",
+    "nextAction": "完成原浏览器两文件、快速三门禁、当前SHA独审和main整合",
+    "requirementRefs": [
+      "docs/changes/2026-10-29-p8-composition/spec.md"
+    ],
+    "featureIds": []
+  },
+  {
     "id": "TASK-MOD-COMFY-RECOVERY",
     "title": "恢复超窗口Comfy产物并保留结果删除意图",
     "goal": "关闭项目后超过100条历史仍能归档，已删除结果不自动复活",

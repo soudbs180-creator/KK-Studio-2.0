@@ -43,3 +43,9 @@ full-gates-56-final：默认verify因初建baseline顺序不匹配失败；Agent
 桌面指纹回归：只改契约TS原先不变、链接源不拒绝，实际仓库新增两项测试先RED，补受控输入后27通过/1原符号链接权限跳过；新junction断言实际执行通过。覆盖现有/新增/删除TS、清单与schema、忽略安装/日志。transpiler协议类型仅重命名，未弱化R8检查，公开出口不变。类型、增量lint、全单元及构建的最终退出见contract-fix-*日志；默认origin/main首建baseline和远端分叉仍单列，不能用增量lint替代。
 
 交付续修实际检查：根类型0、Mobile类型0、增量lint0（base78beb7a9）、全根2397通过/20跳过/0失败、production build0、diff --check0；桌面新指纹两条断言均实际执行。仍不代表默认全分支verify通过。
+
+## 2.1.57 聊天交付修复
+
+TASK-MOD-CHAT-DELIVERY：publishTaskOutputState从已验收的text结果调用领域appendChatTaskReply；原聊天明确按originChatId，重放只更新同一reply ID，缺少聊天/用户请求时不恢复已删数据。Agent syncProject在disconnected时只读当前聊天本地消息，解决离线历史首次打开/切换不可见；不改JSX/CSS/设计、不请求网络、不写项目。五种publisher归属/缺失/删除与重复测试、实际host离线切换测试均先RED；修复后75项定向全过。Desktop/Web56→57、Mobile43不变；全量根、类型/增量lint/build与现有浏览器断言的实际日志为chat-delivery-*，最终结果后补。
+
+重试补充：独审指出retry任务无对应新请求，新增retry与删除原request后retry的RED，回复改用retryOfTaskId根身份；最终77项定向/根2405通过、20跳过、0失败，根类型0、增量lint0、生产构建0。中间chat-delivery-unit保留1项重试RED，最终chat-delivery-final-unit为替代结果，不覆盖旧失败。

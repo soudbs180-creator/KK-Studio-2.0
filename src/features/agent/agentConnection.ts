@@ -364,6 +364,8 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
   function syncProject() {
     if (state.status !== "disconnected" && getExecutionBlockReason())
       disconnect();
+    else if (state.status === "disconnected")
+      patch({ messages: bridge?.readAgentMessages?.() ?? [] });
   }
   const scopedKey = () =>
     currentChatScope()?.chatId != null

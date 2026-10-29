@@ -7,6 +7,7 @@ import type { Asset } from "../../domain/assets.ts";
 import { assertCanvasDeliveries } from "../../domain/canvasDelivery.ts";
 import type { CanvasCollectionItem } from "../../domain/canvasItems.ts";
 import { isLocalProviderUrl } from "../../domain/providerUrl.ts";
+import { appendChatTaskReply } from "../../domain/projectChatUpdate.ts";
 import { imageResultContext } from "../image-edit/index.ts";
 import { createImageEditRuntime } from "../image-edit/index.ts";
 import { ImageEditMappingError } from "../image-edit/index.ts";
@@ -1110,6 +1111,16 @@ export function publishTaskOutputState(options: PublishStateOptions): boolean {
       acceptedResults,
       sourceItemId,
     );
+    const textResult = acceptedResults[0]?.result;
+    const withReply =
+      task.kind === "text" && textResult?.kind === "text"
+        ? appendChatTaskReply(
+            nextProject,
+            task.retryOfTaskId ?? taskId,
+            task.originChatId,
+            textResult.text ?? "",
+          )
+        : nextProject;
     const nextTasks = current.tasks.map((item) => {
       if (item.id === taskId) {
         return {
@@ -1176,7 +1187,7 @@ export function publishTaskOutputState(options: PublishStateOptions): boolean {
           : undefined;
 
     return {
-      ...nextProject,
+      ...withReply,
       tasks: nextTasks,
       items: [
         ...current.items.map((item) =>

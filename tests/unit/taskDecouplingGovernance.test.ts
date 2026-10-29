@@ -23,6 +23,122 @@ import type {
   CreationTaskOutput,
 } from "../../src/features/creation/model.ts";
 import type { CanvasCollectionItem } from "../../src/domain/canvasItems.ts";
+import {
+  createProject,
+  emptySnapshot,
+  projectChatView,
+} from "../../src/features/creation/model.ts";
+import { textTaskResult } from "../../src/features/creation/textTaskResult.ts";
+
+for (const destination of [
+  "origin",
+  "active",
+  "missing origin",
+  "deleted chat",
+  "deleted request",
+  "retry",
+  "retry deleted request",
+] as const) {
+  test(`validated text delivery retains its ${destination} chat scope and publishes once`, () => {
+    let project = createProject({
+      prompt: "",
+      kind: "text",
+      model: "fixture",
+      attachments: [],
+    });
+    const origin = project.chats![project.activeChatId!];
+    origin.draft.prompt = "edited A draft";
+    origin.messages = [
+      {
+        id: "request",
+        role: "user",
+        content: "A request",
+        taskId: "reply-task",
+      },
+    ];
+    project.chats!.other = {
+      ...origin,
+      id: "other",
+      draft: { prompt: "unsent B draft" },
+      messages: [],
+    };
+    project.activeChatId = destination === "active" ? origin.id : "other";
+    if (destination === "deleted chat") delete project.chats![origin.id];
+    if (destination.endsWith("deleted request")) origin.messages = [];
+    project = projectChatView(project);
+    const other = JSON.stringify(project.chats!.other);
+    const task: CreationTask = {
+      id: destination.startsWith("retry") ? "retry-attempt" : "reply-task",
+      retryOfTaskId: destination.startsWith("retry") ? "reply-task" : undefined,
+      kind: "text",
+      model: "fixture",
+      prompt: "A request",
+      originChatId: destination === "missing origin" ? undefined : origin.id,
+      requestedOutputs: 1,
+      completedOutputs: 0,
+      status: "running",
+      createdAt: 1,
+      updatedAt: 1,
+      attempt: 1,
+      attachments: [],
+    };
+    project.tasks = task.retryOfTaskId
+      ? [
+          {
+            ...task,
+            id: task.retryOfTaskId,
+            retryOfTaskId: undefined,
+            status: "failed",
+          },
+          task,
+        ]
+      : [task];
+    const createdItems = [textTaskResult(project.id, task, 0, "A reply")];
+    const creationRef = {
+      current: { ...emptySnapshot(), projects: [project] },
+    };
+    const publishedItems = new Set<string>();
+    const publish = () =>
+      publishTaskOutputState({
+        projectId: project.id,
+        taskId: task.id,
+        task,
+        status: "succeeded",
+        outputs: [{ index: 0, status: "succeeded", text: "A reply" }],
+        createdItems,
+        publishedItems,
+        rejectedDeliveryIds: new Set(),
+        creationRef,
+        activeProjectIdRef: { current: project.id },
+        updateProject: (_id, update) => {
+          project = update(project);
+          creationRef.current.projects = [project];
+        },
+        replaceCanvasItems: () => project.items,
+      });
+    publish();
+    publish();
+    const shouldReply =
+      destination === "origin" ||
+      destination === "active" ||
+      destination === "retry";
+    assert.equal(
+      project.chats![origin.id]?.messages.filter(
+        (message) => message.content === "A reply",
+      ).length ?? 0,
+      shouldReply ? 1 : 0,
+    );
+    assert.equal(JSON.stringify(project.chats!.other), other);
+    assert.equal(
+      project.composerDraft.prompt,
+      destination === "active" ? "edited A draft" : "unsent B draft",
+    );
+    assert.equal(
+      project.items.filter((item) => item.id === createdItems[0].id).length,
+      1,
+    );
+  });
+}
 
 test("outputsForTask constructs outputs from completedOutputIndices", () => {
   const task: CreationTask = {

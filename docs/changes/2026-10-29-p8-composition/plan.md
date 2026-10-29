@@ -39,3 +39,9 @@ effect依赖与稳定ref捕获；React StrictMode卸载/重挂；只读加载/�
 本次只修交付底座：根清单显式声明契约已使用的semver7.8.5及其类型7.8.0；补桌面指纹遗漏的契约TS/受控清单，同时排除本地安装与日志、保留链接拒绝；transpiler的types.ts按实际OpenAI/Anthropic协议职责更名protocolTypes.ts并同步全部内部引用，公开index出口不变。不改产品UI/协议/数据，不扩展依赖能力；构建/安装准备按VERSIONING不递增产品版本。
 
 验证：隔离干净npm ci根/Mobile及双方类型检查；指纹先RED后GREEN，修改/新增/删除/安装噪声/链接边界；快速三门禁和构建；新提交SHA只读补审。原全量浏览器流程停在447/901，无最终退出，按INTERRUPTED保留证据；108失败需要分类修复，不把339项通过当整体验收。
+
+## TASK-MOD-CHAT-DELIVERY（2.1.57）
+
+完整浏览器真实失败续修：已成功且通过画布校验的文本结果复用appendChatTaskReply，按task.originChatId回到原聊天；无原聊天/已删请求不新造聊天，不改当前草稿，不重复回复。另修离线首次打开/切换聊天时，disconnected Agent store尚未投影本地消息：syncProject只读桥接消息，不发网络、不写项目、不改变连接状态；已连接链仍沿用原epoch/归属保护。这是数据状态修复，无JSX/CSS/交互设计变化，无需修改Figma。
+
+真实publisher新增五种归属/删除/重复回归，Agent实际host新增离线A→B→home只读回归，先RED后GREEN。桌面/Web实际行为变化，按VERSIONING递增56→57，Mobile43不变。75项定向通过；快速三门禁、构建和原两文件浏览器随后取证；未解决的旧界面/菜单前置及治理分支顺序另留开放。
