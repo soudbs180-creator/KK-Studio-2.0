@@ -18,6 +18,8 @@ import { visibleComposerExtraHeight } from "./composerLayout";
 import { shadowEventBus } from "../../features/sync/index.ts";
 
 export interface AddNodeOptions {
+  id?: string;
+  comfyWorkflow?: CanvasCollectionItem["comfyWorkflow"];
   parentId?: string;
   result?: DemoResult;
   title?: string;
@@ -73,10 +75,11 @@ export function useCanvasNodeActions({
   });
 
   function addNode(kind: CanvasItemKind, options: AddNodeOptions = {}): string {
-    const id = newCanvasNodeId(kind);
+    const id = options.id ?? newCanvasNodeId(kind);
     const item: CanvasCollectionItem = {
       id,
       node_rev: 1,
+      comfyWorkflow: options.comfyWorkflow,
       kind,
       plugin: options.plugin,
       title:

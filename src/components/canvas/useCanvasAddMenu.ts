@@ -88,6 +88,20 @@ export function useCanvasAddMenu(
     if (menu.parentId) connect(menu.parentId, id);
     setMenu(null);
   }
+  function chooseWorkflow(): void {
+    if (!menu) return;
+    const id = add("text", {
+      parentId: menu.parentId,
+      position: menu.world
+        ? { x: menu.world.x, y: menu.world.y - 134 }
+        : undefined,
+      comfyWorkflow: {},
+      title: "ComfyUI 工作流",
+      description: "本地 ComfyUI 工作流",
+    });
+    if (menu.parentId) connect(menu.parentId, id);
+    setMenu(null);
+  }
   function openAtPoint(
     event: MouseEvent<HTMLDivElement>,
     enabled: boolean,
@@ -106,5 +120,13 @@ export function useCanvasAddMenu(
       atPoint: true,
     });
   }
-  return { menu, open, dismiss, choose, choosePlugin, openAtPoint };
+  return {
+    menu,
+    open,
+    dismiss,
+    choose,
+    choosePlugin,
+    chooseWorkflow,
+    openAtPoint,
+  };
 }

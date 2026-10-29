@@ -1,6 +1,7 @@
 import type { CanvasReference } from "../../packages/creation-contracts/index.ts";
 import type { ImageEditContext, MaskDocument } from "./imageEdit.ts";
 import type { ModelSelection } from "./modelSelection.ts";
+import type { ComfyWorkflowCardState } from "./comfyWorkflow.ts";
 export type { CanvasReference } from "../../packages/creation-contracts/index.ts";
 export type CanvasItemKind = "image" | "video" | "audio" | "text";
 
@@ -45,6 +46,7 @@ export interface PluginItemPayload {
 }
 
 export interface CanvasCollectionItem {
+  comfyWorkflow?: ComfyWorkflowCardState;
   /** Monotonic revision number for concurrency control and EventBus synchronization */
   node_rev?: number;
   imageEditDraft?: MaskDocument;

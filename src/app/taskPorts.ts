@@ -14,9 +14,13 @@ import { agentConnection } from "../features/agent/index.ts";
 import { loadStoredAsset } from "../features/creation/index.ts";
 
 /** App composition owns the concrete services; feature code only receives these ports. */
-export function canvasPorts(items: CanvasCollectionItem[] | undefined) {
+export function canvasPorts(
+  items: CanvasCollectionItem[] | undefined,
+  flush?: () => Promise<void>,
+) {
   return {
     items,
+    flush,
     assets: { read: loadStoredAsset },
     agent: agentConnection,
     modelCapabilities: (selection: ModelSelection) =>

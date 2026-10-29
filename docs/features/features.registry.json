@@ -289,7 +289,7 @@
     "area": "creation",
     "status": "PARTIAL",
     "card": "docs/features/feat-004-comfyui.md",
-    "summary": "本地 ComfyUI 适配器与 Rust 命令已写，但前端未接 invoke 桥、未接图片任务命令，当前不能真正出图。",
+    "summary": "画布双态ComfyUI卡片、原生隐藏托管、WS/历史归档连线已接；隔离夹具通过，真实GPU及完整交付待验。",
     "entryPoints": ["设置 › ComfyUI 连接", "图片节点（规划中的本地后端）"],
     "code": [
       "src/integrations/generation/localComfyUiAdapter.ts",
@@ -297,8 +297,8 @@
       "src-tauri/src/main.rs"
     ],
     "tests": ["tests/unit/generationServerProvider.test.ts"],
-    "tasks": ["T6", "EXT-COMFY", "TASK-KK-UNIFIED-20261015"],
-    "updated": "2026-10-15",
+    "tasks": ["T6", "EXT-COMFY", "TASK-KK-UNIFIED-20261015", "TASK-MOD-P6-1"],
+    "updated": "2026-10-29",
     "platforms": ["web", "desktop"]
   },
   {
@@ -321,8 +321,8 @@
       "tests/browser/catalog-pages.spec.ts",
       "tests/browser/design-system-pages.spec.ts"
     ],
-    "tasks": ["T6", "TASK-CAP-001", "TASK-DS-002", "TASK-KK-UNIFIED-20261015"],
-    "updated": "2026-10-16",
+    "tasks": ["T6", "TASK-CAP-001", "TASK-DS-002", "TASK-KK-UNIFIED-20261015", "TASK-MOD-P6-1"],
+    "updated": "2026-10-29",
     "platforms": ["web", "desktop"],
     "runtimeEvidence": [
       {

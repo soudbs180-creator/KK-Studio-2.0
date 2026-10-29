@@ -1,3 +1,4 @@
+import { comfyWorkflowCardSchema } from "./comfyWorkflow.ts";
 import { normalizeTaskCostReceipt } from "../../packages/creation-contracts/taskState.ts";
 import type { ApprovalGate } from "./agentWorkflow";
 import { isAssetReference } from "./assetReference.ts";
@@ -803,6 +804,10 @@ function normalizeCanvasItem(
   const promptMax =
     value.kind === "video" || value.kind === "audio" ? 7500 : 4000;
   return {
+    comfyWorkflow:
+      value.comfyWorkflow === undefined
+        ? undefined
+        : comfyWorkflowCardSchema.parse(value.comfyWorkflow),
     tags: value.tags === undefined ? undefined : normalizeTags(value.tags),
     // Plugin content is durable project data, independently editable after a read.
     plugin:

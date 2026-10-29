@@ -50,11 +50,13 @@ export default function AddNodeMenu({
   menu,
   onChoose,
   onChoosePlugin,
+  onChooseWorkflow,
   onDismiss,
 }: {
   menu: AddMenuState;
   onChoose: (kind: CanvasItemKind) => void;
   onChoosePlugin?: (type: string) => void;
+  onChooseWorkflow?: () => void;
   onDismiss: (restoreFocus?: boolean) => void;
 }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -117,6 +119,14 @@ export default function AddNodeMenu({
       document.removeEventListener("focusin", outside, true);
     };
   }, [menu.trigger, menu.atPoint, onDismiss]);
+  const choices = ITEMS.map((item) => ({
+    ...item,
+    choose: item.kind
+      ? () => onChoose(item.kind!)
+      : item.key === "workflow"
+        ? onChooseWorkflow
+        : undefined,
+  }));
   return createPortal(
     <div
       ref={ref}
@@ -156,20 +166,20 @@ export default function AddNodeMenu({
     >
       <p className="add-node-title">添加节点</p>
       <div className="add-node-items">
-        {ITEMS.map((item) => (
+        {choices.map((item) => (
           <button
             key={item.key}
             role="menuitem"
             aria-label={item.label}
             aria-description={
-              item.reason ??
+              (item.choose ? undefined : item.reason) ??
               (item.key === "video"
                 ? "创建视频节点；当前仅支持本地演示素材，API未连接"
                 : undefined)
             }
-            disabled={!item.kind}
+            disabled={!item.choose}
             title={
-              item.reason ??
+              (item.choose ? undefined : item.reason) ??
               (item.key === "video"
                 ? "创建视频节点；当前仅支持本地演示素材，API未连接"
                 : undefined)
@@ -203,15 +213,15 @@ export default function AddNodeMenu({
                 event.pointerType !== "touch" ||
                 tap?.key !== item.key ||
                 tap.id !== event.pointerId ||
-                !item.kind
+                !item.choose
               )
                 return;
               // Captured touch drags may suppress the following compatibility click.
               event.preventDefault();
-              onChoose(item.kind);
+              item.choose?.();
             }}
             onClick={() => {
-              if (item.kind) onChoose(item.kind);
+              item.choose?.();
             }}
           >
             <span className="add-node-icon-box">

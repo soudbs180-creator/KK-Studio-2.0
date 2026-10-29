@@ -11980,5 +11980,50 @@
     "featureIds": [
       "FEAT-014"
     ]
+  },
+  {
+    "id": "TASK-MOD-P6-1",
+    "title": "ComfyUI本地托管与画布双态工作流卡片",
+    "goal": "按P6.1归档原生工作流产物并自动落图连线",
+    "scope": "原生隐藏进程与既有画布/资产Port接线",
+    "acceptance": [
+      "目录扫描、隐藏启动、健康与仅回收自有进程",
+      "双态卡片、原生编辑器进入/返回与离线引导",
+      "WS/历史归属校验、AssetPort原件归档、持久化图片节点与结果连线",
+      "真实ComfyUI/GPU及最终运行、审核和合流分别验收"
+    ],
+    "dependencies": [
+      "TASK-MOD-P6-HOST"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "refactor/TASK-MOD-P3-feature-cycles",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "6648e434f1a2b3d041b6a767f74831eacf9e7773",
+    "affectedModules": [
+      "src-tauri",
+      "src/features/comfyui",
+      "src/components/canvas"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "未完成",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-29-p6-1-comfy-canvas/verification.md"
+    ],
+    "verification": "类型/lint/UI规范/格式/官方构建通过；根2378 pass/20 skip，Rust271 pass/1 ignored，Edge18 pass/0retry。中间Native夹具双client/原件SHA/重开/停止通过，最终Native与真实GPU/独审/main未验。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-29",
+    "lastVerified": "2026-10-29",
+    "nextAction": "完成浏览器/命令行回归；真实GPU、完整编辑器鼠标/参数面板及独审/main仍开放，用户已要求不控制桌面",
+    "requirementRefs": [
+      "docs/changes/2026-10-29-p6-1-comfy-canvas/spec.md"
+    ],
+    "featureIds": [
+      "FEAT-004",
+      "FEAT-005"
+    ]
   }
 ]

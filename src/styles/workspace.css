@@ -1,3 +1,4 @@
+@import "./comfy-workflow.css";
 .app {
   display: flex;
   flex-direction: column;

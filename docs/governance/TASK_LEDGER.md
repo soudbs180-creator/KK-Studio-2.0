@@ -206,6 +206,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-MOD-P6-UPSCALE | 高清修复 | PARTIAL | 进行中 | P1 | TASK-MOD-P6-OUTPAINT | root | 接入并验收Desktop原生TaskHost及真实工作流/Provider；保持四原文与其他P/STD/ORG开放任务，不把fixture作为REAL。 |
 | TASK-MOD-P6-LAYER-SPLIT | 图层拆分 | PARTIAL | 进行中 | P1 | TASK-MOD-P6-UPSCALE | root | 接入并验收Desktop原生TaskHost及真实工作流/Provider；保持四原文与其他P/STD/ORG开放任务，不把fixture作为REAL。 |
 | TASK-MOD-P7 | 资产溯源对齐 | PARTIAL | 进行中 | P1 | TASK-MOD-P6-LAYER-SPLIT | root | 完成原生GUI跨端溯源验收、独审和main合流；旧记录不回写。 |
+| TASK-MOD-P6-1 | ComfyUI本地托管与画布双态工作流卡片 | PARTIAL | 未完成 | P1 | TASK-MOD-P6-HOST | root | 完成浏览器/命令行回归；真实GPU、完整编辑器鼠标/参数面板及独审/main仍开放，用户已要求不控制桌面 |
 
 ## TASK-FIGMA-PAGES-20261025 — 重新核查并整理Figma 04/05页面与状态
 
@@ -4007,5 +4008,24 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Verification: PARTIAL — 本地候选根2372 pass/20 skip、类型通过；Edge17项、Rust资产18、Mobile373、Agent204通过；本卡仍PARTIAL，真实服务/Native/独审/main待验。
 - Evidence: [docs/changes/2026-10-29-p7-asset-lineage/verification.md](../../docs/changes/2026-10-29-p7-asset-lineage/verification.md), [docs/changes/2026-10-29-p7-asset-lineage/review.md](../../docs/changes/2026-10-29-p7-asset-lineage/review.md)
 - Next action: 完成原生GUI跨端溯源验收、独审和main合流；旧记录不回写。
+- Last verified: 2026-10-29
+- Updated: 2026-10-29
+
+## TASK-MOD-P6-1 — ComfyUI本地托管与画布双态工作流卡片
+
+- Goal: 按P6.1归档原生工作流产物并自动落图连线
+- Scope: 原生隐藏进程与既有画布/资产Port接线
+- Display status: 未完成
+- Priority: P1 — 未记录
+- Requirement refs: docs/changes/2026-10-29-p6-1-comfy-canvas/spec.md
+- Feature IDs: FEAT-004, FEAT-005
+- Owner role: implementation-integrator
+- Acceptance: 目录扫描、隐藏启动、健康与仅回收自有进程; 双态卡片、原生编辑器进入/返回与离线引导; WS/历史归属校验、AssetPort原件归档、持久化图片节点与结果连线; 真实ComfyUI/GPU及最终运行、审核和合流分别验收
+- Branch: `refactor/TASK-MOD-P3-feature-cycles`
+- Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
+- Modules: src-tauri, src/features/comfyui, src/components/canvas
+- Verification: PARTIAL — 类型/lint/UI规范/格式/官方构建通过；根2378 pass/20 skip，Rust271 pass/1 ignored，Edge18 pass/0retry。中间Native夹具双client/原件SHA/重开/停止通过，最终Native与真实GPU/独审/main未验。
+- Evidence: [docs/changes/2026-10-29-p6-1-comfy-canvas/verification.md](../../docs/changes/2026-10-29-p6-1-comfy-canvas/verification.md)
+- Next action: 完成浏览器/命令行回归；真实GPU、完整编辑器鼠标/参数面板及独审/main仍开放，用户已要求不控制桌面
 - Last verified: 2026-10-29
 - Updated: 2026-10-29

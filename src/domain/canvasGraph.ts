@@ -30,6 +30,7 @@ export function cardVisualBounds(item: CanvasCollectionItem): {
   width: number;
   height: number;
 } {
+  if (item.comfyWorkflow) return { x: 0, y: 0, width: 380, height: 268 };
   if (item.plugin)
     return {
       x: 0,
@@ -79,6 +80,8 @@ export function cardLayout(item: CanvasCollectionItem): {
     x: visual.x + visual.width,
     y: visual.y + visual.height / 2,
   };
+  if (item.comfyWorkflow)
+    return { width: 380, height: 268, left: 0, collapsedHeight: 268, anchor };
   if (item.plugin)
     return {
       width: visual.width,

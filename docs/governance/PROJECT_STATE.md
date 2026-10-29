@@ -51,3 +51,6 @@ TASK-MOD-P0已按用户提供执行规范与补篇启动；当前实现、验证
 
 
 2026-10-29 P6/P7任务树候选：Desktop/Web2.1.51、契约1.5.0、Mobile2.1.43。独立扩图/修复/分层Manifest+ComfyUI工作流经原队列保存、执行、归档和重载；独立禁用与1.1实际执行/回退1.0通过。P7规范化原有PromptHash/ParentId/Origins，保留同字节不同父/Provider及导入来源，TS/Rust同规则。根2372 pass/20 skip、Mobile373、Agent204 pass/2 skip、Rust资产18、生产Edge17项通过；运行限制/源码构建hash见[共享验证](../changes/2026-10-29-p6-image-host/verification.md)。三项能力和P7均PARTIAL，真实GPU/API、Desktop原生/GUI、独审、完整verify/main未完成，无生产UI新增。P2/P5生产门状态不变；原9个核心浏览器失败/1像素差异未归零，四原文其余任务不因本次推进自动完成。
+
+
+2026-10-29 P6.1候选：Desktop/Web2.1.52（Mobile43/契约1.5.0不变）；本机ComfyUI扫描、隐藏托管与双态工作流卡片已接，归属WS/history经AssetPort归档并落图连线。修正代理502、Windows Python别名子进程泄漏及画布边未持久化；隔离Native夹具双client/原件SHA/结果边/重开/停止通过，原生编辑器为键盘提交，鼠标未验收。真实GPU/完整编辑器、卡片参数面板、Figma04/05、独审、完整verify/main仍未完成，PARTIAL；用户要求停止桌面控制，后续浏览器与命令行。P6.2–4及P7原候选不回退，四原文其余项不自动关闭；见[本轮验证](../changes/2026-10-29-p6-1-comfy-canvas/verification.md)。

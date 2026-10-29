@@ -7,6 +7,8 @@ mod agent_runtime;
 mod asset_storage;
 mod browser_runtime;
 mod cli_runtime;
+mod comfy_runtime;
+mod comfy_transport;
 mod command_bus;
 mod creation_storage;
 mod ego_browser;
@@ -2060,6 +2062,7 @@ fn main() {
                 .join("agent"),
         ))
         .manage(provider_model_requests::ModelRequests::default())
+        .manage(comfy_runtime::ComfyRuntime::default())
         .manage(AppState {
             providers: Arc::new(provider_config::ProviderConfigRepository::new(
                 config_path.with_file_name("connections.json"),
@@ -2128,6 +2131,11 @@ fn main() {
             comfyui_queue_prompt,
             comfyui_get_history,
             comfyui_scan_directory,
+            comfy_runtime::comfyui_start_process,
+            comfy_runtime::comfyui_stop_process,
+            comfy_runtime::comfyui_process_status,
+            comfy_transport::comfyui_http_json,
+            comfy_transport::comfyui_read_output,
             task_host_submit,
             task_host_read,
             task_host_get,

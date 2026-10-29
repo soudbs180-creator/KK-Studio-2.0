@@ -36,8 +36,8 @@
 | --- | --- | --- | --- | --- |
 | FEAT-002 | BYOK 图片生成与持久任务宿主 | PARTIAL（部分可用） | [卡片](feat-002-image-generation.md) | T5, TASK-PROV-001, EXT-PROVIDER, TASK-AGENT-001, TASK-AGENT-004, TASK-AGENT-008, TASK-PROV-005, TASK-PROV-006, TASK-CODEX-HOME-20261015, TASK-CODEX-REF-20261015, TASK-KK-UNIFIED-20261015, TASK-AUDIT-REPAIR-20261017 |
 | FEAT-003 | 图片比例与清晰度参数 | PARTIAL（部分可用） | [卡片](feat-003-image-parameters.md) | BACKEND-IMAGE-PARAMS, TASK-AGENT-001, TASK-MODEL-001, TASK-KK-UNIFIED-20261015 |
-| FEAT-004 | ComfyUI 本地出图链 | PARTIAL（部分可用） | [卡片](feat-004-comfyui.md) | T6, EXT-COMFY, TASK-KK-UNIFIED-20261015 |
-| FEAT-005 | ComfyUI 工作流库（本地管理） | PARTIAL（部分可用） | [卡片](feat-005-comfyui-workflows.md) | T6, TASK-CAP-001, TASK-DS-002, TASK-KK-UNIFIED-20261015 |
+| FEAT-004 | ComfyUI 本地出图链 | PARTIAL（部分可用） | [卡片](feat-004-comfyui.md) | T6, EXT-COMFY, TASK-KK-UNIFIED-20261015, TASK-MOD-P6-1 |
+| FEAT-005 | ComfyUI 工作流库（本地管理） | PARTIAL（部分可用） | [卡片](feat-005-comfyui-workflows.md) | T6, TASK-CAP-001, TASK-DS-002, TASK-KK-UNIFIED-20261015, TASK-MOD-P6-1 |
 | FEAT-006 | 视频生成节点 | PROTOTYPE（仅演示/UI） | [卡片](feat-006-video-generation.md) | BACKEND-MEDIA-001, TASK-MINIMAX-001, EXT-PROVIDER, TASK-KK-UNIFIED-20261015 |
 | FEAT-007 | 音频生成节点 | PARTIAL（部分可用） | [卡片](feat-007-audio-generation.md) | BACKEND-MEDIA-001, EXT-PROVIDER, TASK-UI-005 |
 | FEAT-008 | 文本创作节点 | PARTIAL（部分可用） | [卡片](feat-008-text-node.md) | BACKEND-TEXT-NODE, TASK-UI-005, T5, TASK-PROV-006, EXT-PROVIDER, TASK-KK-UNIFIED-20261015 |

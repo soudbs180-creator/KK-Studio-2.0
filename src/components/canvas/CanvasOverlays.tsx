@@ -1,3 +1,4 @@
+import { useComfyCanvasHost } from "./ComfyWorkflowCanvasHost.tsx";
 import CanvasMarquee from "./CanvasMarquee";
 import AddNodeMenu from "./AddNodeMenu";
 import CanvasContextMenu, {
@@ -50,6 +51,7 @@ export default function CanvasOverlays({
   connectionNotice,
   onDismissConnectionNotice,
 }: CanvasOverlaysProps) {
+  const comfy = useComfyCanvasHost();
   return (
     <>
       <CanvasMarquee rect={marquee} />
@@ -57,6 +59,9 @@ export default function CanvasOverlays({
         <AddNodeMenu
           menu={addMenu.menu}
           onChoose={addMenu.choose}
+          onChooseWorkflow={
+            comfy?.runtime.desktop ? addMenu.chooseWorkflow : undefined
+          }
           onChoosePlugin={addMenu.choosePlugin}
           onDismiss={addMenu.dismiss}
         />

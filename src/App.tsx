@@ -1490,7 +1490,7 @@ export default function App() {
             <div className="workspace-content" hidden={active !== "workspace"}>
               <CanvasImageCommandContext.Provider
                 value={{
-                  ...canvasPorts(activeProject?.items),
+                  ...canvasPorts(activeProject?.items, persistence.flush),
                   updateItemTags,
                   createTag,
                   customTags: activeProject?.customTags ?? [],

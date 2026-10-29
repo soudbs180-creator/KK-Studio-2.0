@@ -218,3 +218,5 @@ P3a–e依赖反转与兼容方案见[ADR-029](architecture/adr/ADR-029-feature-
 插件权限与实验隔离见[ADR-031](architecture/adr/ADR-031-plugin-permissions-and-sandbox.md)。
 
 独立图片能力与三端资产溯源见[ADR-032](architecture/adr/ADR-032-independent-image-capabilities-and-lineage.md)。
+
+ComfyUI双态画布卡片与本机托管见[ADR-033](architecture/adr/ADR-033-comfy-canvas-runtime.md)。

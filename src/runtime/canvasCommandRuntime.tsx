@@ -32,6 +32,7 @@ export interface CanvasImageRequest {
   signal: AbortSignal;
 }
 export const CanvasImageCommandContext = createContext<{
+  flush?: () => Promise<void>;
   assets?: Pick<AssetPort, "read">;
   modelCapabilities?: (selection: ModelSelection) => CanvasModelCapabilities;
   agent?: {

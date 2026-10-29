@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- 本地候选Desktop/Web2.1.52：ComfyUI本机隐藏托管、双态工作流卡片、原件归档与自动连线；修复本地代理及Python别名进程归属。隔离夹具通过，真实GPU/鼠标与正式交付未验；[ADR-033](docs/architecture/adr/ADR-033-comfy-canvas-runtime.md)。
+
 - 本地候选Desktop/Web2.1.51、契约1.5.0：独立扩图、高清修复、图层拆分Manifest接原队列与显式ComfyUI工作流；三端Origins合并保留不同父/Provider来源。未增加UI入口，原生与真实GPU待验；[ADR-032](docs/architecture/adr/ADR-032-independent-image-capabilities-and-lineage.md)。
 
 - 本地候选：Desktop/Web2.1.49完成P3a–e源码依赖反转，R4循环边16→0，统一契约1.3及原资产/Agent/存储Port，Provider旧路径保留；运行/独审/原生/main验收继续按[ADR-029](docs/architecture/adr/ADR-029-feature-cycle-decoupling.md)跟踪。
