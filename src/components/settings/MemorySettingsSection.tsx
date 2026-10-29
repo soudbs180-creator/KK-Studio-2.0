@@ -8,8 +8,8 @@ import { agentConnection } from "../../features/agent/index.ts";
  * 换账号/换人时用户手动清空。
  */
 import { isTauri } from "@tauri-apps/api/core";
-import { MEMORY_CONTENT_MAX_LENGTH } from "../../features/memory/types.ts";
-import { useMemory } from "../../features/memory/useMemory.ts";
+import { MEMORY_CONTENT_MAX_LENGTH } from "../../features/memory/index.ts";
+import { useMemory } from "../../features/memory/index.ts";
 import { confirmAction } from "../../runtime/confirmAction";
 
 const TYPE_LABELS: Record<string, string> = {

@@ -14,7 +14,7 @@ import AssetPanelNavigation, {
   type AssetPanelTab,
 } from "./AssetPanelNavigation";
 import useAssetCollections from "./useAssetCollections";
-import type { AssetArchiveState } from "../../features/creation/useAssetArchive";
+import type { AssetArchiveState } from "../../features/creation/index.ts";
 import useAssetDetail from "./useAssetDetail";
 import AssetActions from "./AssetActions";
 import AssetPanelHeader from "./AssetPanelHeader";

@@ -38,7 +38,9 @@
       "TASK-IMAGE-EDIT-001",
       "TASK-IMAGE-EDIT-VERIFY-002",
       "TASK-MOD-P2",
-      "TASK-MOD-P3A"
+      "TASK-MOD-P3A",
+      "TASK-MOD-P4-CREATION",
+      "TASK-MOD-P4-REMAINING"
     ],
     "updated": "2026-10-28"
   },
@@ -629,7 +631,7 @@
       "tests/browser/design-system-pages.spec.ts",
       "tests/browser/capability-extensions.spec.ts"
     ],
-    "tasks": ["TASK-CAP-001", "TASK-DS-002"],
+    "tasks": ["TASK-CAP-001", "TASK-DS-002", "TASK-MOD-P4-SKILLS"],
     "updated": "2026-10-13",
     "platforms": ["web", "desktop"],
     "runtimeEvidence": [
@@ -715,7 +717,7 @@
     "area": "intelligence",
     "status": "PARTIAL",
     "card": "docs/features/feat-013-connectors.md",
-    "summary": "四种随包插件在固定1421开发、Web生产和fresh Tauri可创建、编辑、离线渲染并完整恢复；立即关闭耐久保存、写入失败留窗及坏数据主备保护已验证，CSP仍self。连接器统一入口、ctx.ai真实管线及远程Desktop插件仍未完成。",
+    "summary": "四种随包插件在固定1421开发、Web生产和fresh Tauri可创建、编辑、离线渲染并完整恢复；立即关闭耐久保存、写入失败留窗及坏数据主备保护已验证，CSP仍self。连接器统一入口、ctx.ai真实管线及远程Desktop插件仍未完成。 P5清单/验包/权限与受限RPC已接线，实验Web T1生产门默认关闭；legacy仍有宿主权限，原生与独立安全审查未完成。",
     "entryPoints": ["技能页内连接器目录 ConnectorCatalog"],
     "code": [
       "src/components/ConnectorCatalog.tsx",
@@ -745,7 +747,9 @@
       "TASK-PLUGIN-DEV-001",
       "TASK-PLUGIN-RECOVERY-001",
       "TASK-PLUGIN-MARKDOWN-001",
-      "TASK-DESKTOP-FLUSH-001"
+      "TASK-DESKTOP-FLUSH-001",
+      "TASK-MOD-P4-PLUGINS",
+      "TASK-MOD-P5"
     ],
     "updated": "2026-10-09",
     "platforms": ["web", "desktop"],
@@ -1486,7 +1490,9 @@
       "TASK-UI-CLASSIFY-20261013",
       "TASK-KK-UNIFIED-20261015",
       "TASK-MOD-P3B",
-      "TASK-MOD-P3E"
+      "TASK-MOD-P3E",
+      "TASK-MOD-P4-AGENT",
+      "TASK-MOD-P4-REMAINING"
     ],
     "updated": "2026-10-28"
   },
@@ -1679,7 +1685,8 @@
     "tasks": [
       "TASK-AI-GATEWAY-001",
       "TASK-LOCAL-GUARDS-20261018",
-      "TASK-MOD-P3D"
+      "TASK-MOD-P3D",
+      "TASK-MOD-P4-MODELS"
     ],
     "updated": "2026-10-28"
   },

@@ -9,4 +9,9 @@ test("the complete feature graph has no cycle after P3a through P3e", async () =
     [],
     "type-only, dynamic and transitive feature cycles must all stay absent",
   );
+  assert.deepEqual(
+    current.rules.R1.items,
+    [],
+    "all feature imports use public entries",
+  );
 });

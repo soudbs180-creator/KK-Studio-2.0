@@ -1,5 +1,5 @@
 import { useCallback, useRef } from "react";
-import type { ChatItem } from "../features/creation/model.ts";
+import type { ChatItem } from "../features/creation/index.ts";
 
 export interface ConversationChatTabsProps {
   chats: Record<string, ChatItem>;

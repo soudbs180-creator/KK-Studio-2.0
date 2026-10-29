@@ -3,7 +3,7 @@ import {
   createImportedWorkflow,
   parseComfyWorkflow,
   type WorkflowRecord,
-} from "../features/comfyui/workflowRegistry";
+} from "../features/comfyui/index.ts";
 
 export function downloadWorkflow(workflow: WorkflowRecord): void {
   const blob = new Blob([JSON.stringify(workflow.workflow, null, 2)], {

@@ -4,7 +4,7 @@ import { cardVisualBounds } from "../../domain/canvasGraph";
 import type { Point, ViewTransform } from "../../domain/canvasViewport";
 import type { AddNodeOptions } from "./useCanvasNodeActions";
 import { toSurfacePoint } from "./canvasSurface";
-import { getPluginNodeDefinition } from "../../features/plugins/nodeRegistry";
+import { getPluginNodeDefinition } from "../../features/plugins/index.ts";
 
 export interface AddMenuRequest {
   client: Point;

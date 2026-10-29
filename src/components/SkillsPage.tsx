@@ -6,14 +6,14 @@ import {
   serializeSkill,
   type SkillRecord,
   type SkillRegistry,
-} from "../features/skills/skillRegistry";
+} from "../features/skills/index.ts";
 import SkillEditor from "./SkillEditor";
 import ConnectorCatalog from "./ConnectorCatalog";
 import SkillCollection from "./SkillCollection";
 import SkillPageControls, { type ExtensionView } from "./SkillPageControls";
-import PartnerRoles from "../features/partners/PartnerRoles";
-import { ensureTemplates } from "../features/skills/templateSkills";
-export { ensureTemplates } from "../features/skills/templateSkills";
+import { PartnerRoles as PartnerRoles } from "../features/partners/index.ts";
+import { ensureTemplates } from "../features/skills/index.ts";
+export { ensureTemplates } from "../features/skills/index.ts";
 
 const OFFICIAL_SKILLS = [
   ["3D 动画短片", "根据故事创意完成角色、场景、镜头规划与视频整合。"],

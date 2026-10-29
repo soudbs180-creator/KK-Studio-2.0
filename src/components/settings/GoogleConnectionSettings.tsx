@@ -1,24 +1,24 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
-import { loadApiKey } from "../../features/creation/providerCredentials";
+import { loadApiKey } from "../../features/creation/index.ts";
 import {
   createGoogleInteractions,
   GOOGLE_API_BASE,
-} from "../../features/agent/googleInteractions";
+} from "../../features/agent/index.ts";
 import {
   GOOGLE_CREDENTIAL_REF,
   getGoogleCredential,
   readGoogleCliPreference,
   saveGoogleApiKeyConnection,
   writeGoogleCliPreference,
-} from "../../features/agent/googleAgentConfig";
-import { googleAgentConnection } from "../../features/agent/googleAgentConnection";
+} from "../../features/agent/index.ts";
+import { googleAgentConnection } from "../../features/agent/index.ts";
 import {
   geminiCliStatus,
   geminiCliStatusMessage,
   type GeminiCliStatus,
   GEMINI_BRIDGE_DEFAULT_URL,
   normalizeGeminiBridgeUrl,
-} from "../../features/agent/geminiCliAdapter";
+} from "../../features/agent/index.ts";
 import GoogleConnectionActions from "./GoogleConnectionActions";
 import {
   GoogleCliSetup,
@@ -28,7 +28,7 @@ import {
 import useSettingsBusy from "./useSettingsBusy";
 import { useProviderCredentialState } from "./useProviderCredentialState";
 import ProviderCredentialStatus from "./ProviderCredentialStatus";
-import { providerSaveErrorMessage } from "../../features/creation/providerSaveRecovery";
+import { providerSaveErrorMessage } from "../../features/creation/index.ts";
 export default function GoogleConnectionSettings({
   onFeedback,
   mode = "all",

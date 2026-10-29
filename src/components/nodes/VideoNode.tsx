@@ -13,7 +13,7 @@ import {
 import {
   loadStoredAsset,
   storeGeneratedAsset,
-} from "../../features/creation/assetRepository";
+} from "../../features/creation/index.ts";
 
 const MAX_VIDEO_BYTES = 100 * 1024 * 1024;
 const VIDEO_MIME_TYPES = ["video/mp4", "video/webm"];

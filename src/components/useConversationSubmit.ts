@@ -1,5 +1,5 @@
 import { useEffect, useRef, type Dispatch, type SetStateAction } from "react";
-import type { CreationDraft } from "../features/creation/model";
+import type { CreationDraft } from "../features/creation/index.ts";
 
 export type ConversationSend = (
   message: string,

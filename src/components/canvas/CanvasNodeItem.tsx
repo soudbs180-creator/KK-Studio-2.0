@@ -7,16 +7,16 @@ import {
   useState,
 } from "react";
 import type { NodeEditingProps } from "../../domain/canvasItems";
-import { canvasImageReferenceLimit } from "../../features/models/imageModelCapabilities";
-import { readProviderConnections } from "../../features/creation/providerRegistry";
+import { canvasImageReferenceLimit } from "../../features/models/index.ts";
+import { readProviderConnections } from "../../features/creation/index.ts";
 import CanvasNodeFrame from "./CanvasNodeFrame";
 import CanvasNodeContent from "./CanvasNodeContent";
 import { invoke, isTauri } from "@tauri-apps/api/core";
-import { shadowEventBus } from "../../features/sync/shadowEventBus";
+import { shadowEventBus } from "../../features/sync/index.ts";
 import {
   CanvasImageNodeContext,
   CanvasImageCommandContext,
-} from "../../features/creation/CanvasImageCommand";
+} from "../../features/creation/index.ts";
 
 import {
   arePropsEqual,

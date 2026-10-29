@@ -1,7 +1,7 @@
 import type { MutableRefObject } from "react";
 import { isTauri } from "@tauri-apps/api/core";
 import { isLocalProviderUrl } from "../../domain/providerUrl.ts";
-import { loadApiKey } from "../../features/creation/providerCredentials.ts";
+import { loadApiKey } from "../../features/creation/index.ts";
 import {
   providerNeedsKey,
   providerHeaders,
@@ -11,8 +11,8 @@ import {
 } from "../../domain/providerProtocol.ts";
 import { getModelsEndpoint } from "../../domain/modelProvider.ts";
 import { checkModelProvider } from "../../integrations/modelProvider.ts";
-import { saveModelCatalog } from "../../features/models/modelCatalog.ts";
-import { readProviderConnections } from "../../features/creation/providerRegistry.ts";
+import { saveModelCatalog } from "../../features/models/index.ts";
+import { readProviderConnections } from "../../features/creation/index.ts";
 import type { ModelProviderProfile } from "../../domain/modelProvider.ts";
 import type { ProviderConnection } from "../../domain/providerConnections.ts";
 import {

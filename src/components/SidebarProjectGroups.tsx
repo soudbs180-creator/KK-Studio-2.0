@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import type { RefObject } from "react";
-import type { CreationProject } from "../features/creation/model";
-import type { ProjectLibraryActions } from "../features/projects/projectLifecycle";
+import type { CreationProject } from "../features/creation/index.ts";
+import type { ProjectLibraryActions } from "../features/projects/index.ts";
 import {
   resolveSidebarFolders,
   sidebarProjectItem,
   sortSidebarProjects,
-} from "../features/projects/sidebarProjectModel";
+} from "../features/projects/index.ts";
 import SidebarProjectSections from "./SidebarProjectSections";
 import SidebarProjectHeader from "./SidebarProjectHeader";
 import SidebarProjectEntry from "./SidebarProjectEntry";

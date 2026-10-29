@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { open, save } from "@tauri-apps/plugin-dialog";
-import { usesNativeAssets } from "../creation/nativeAssetAdapter";
-import type { SaveState } from "../creation/useCreationStorage";
+import { usesNativeAssets } from "../creation/index.ts";
+import type { SaveState } from "../creation/index.ts";
 import {
   exportNativeProjectPackage,
   importNativeProjectPackage,

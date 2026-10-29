@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import type { ShortcutDefinition } from "../../features/settings/shortcutsRegistry";
+import type { ShortcutDefinition } from "../../features/settings/index.ts";
 import {
   getShortcuts,
   resetShortcut,
   resetToDefaults,
   updateShortcut,
-} from "../../features/settings/shortcutsRegistry";
+} from "../../features/settings/index.ts";
 import KeystrokeRecorder from "./KeystrokeRecorder";
 
 const SCOPE_TITLES: Record<string, { title: string; desc: string }> = {

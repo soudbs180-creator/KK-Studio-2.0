@@ -1,4 +1,4 @@
-import type { ModelSelection } from "../../features/models/modelSelection";
+import type { ModelSelection } from "../../features/models/index.ts";
 import {
   useEffect,
   useCallback,
@@ -24,7 +24,7 @@ import UiIcon from "../UiIcon";
 import ComposerActions from "./ComposerActions";
 import CanvasComposerShell from "../canvas/CanvasComposerShell";
 import "../../styles/reference-composer.css";
-import { useCanvasImageGeneration } from "../../features/creation/CanvasImageCommand";
+import { useCanvasImageGeneration } from "../../features/creation/index.ts";
 import { composerReportedHeight } from "../canvas/composerLayout";
 
 function defaultCanvasParameters(video: boolean): CanvasParameters {

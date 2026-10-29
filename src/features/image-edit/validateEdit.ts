@@ -3,7 +3,7 @@ import type {
   CanvasReference,
 } from "../../domain/canvasItems.ts";
 import type { MaskDocument } from "./mask.ts";
-import type { ResolvedImageModelCapabilities } from "../models/imageModelCapabilities.ts";
+import type { ResolvedImageModelCapabilities } from "../models/index.ts";
 import { compileEditPrompt, formatEditPrompt } from "./prompt.ts";
 import { editCapabilityReason } from "./snapshot.ts";
 import { nativeAnnotationOverhead } from "./regions.ts";

@@ -15,7 +15,7 @@ import { cardLayout, cardSelectionLayout } from "../../domain/canvasGraph";
 import { MIN_SCALE, type Point, type ViewTransform } from "./canvasModel";
 import { fitRects } from "../../domain/canvasViewport";
 import { visibleComposerExtraHeight } from "./composerLayout";
-import { shadowEventBus } from "../../features/sync/shadowEventBus";
+import { shadowEventBus } from "../../features/sync/index.ts";
 
 export interface AddNodeOptions {
   parentId?: string;

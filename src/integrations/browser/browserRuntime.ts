@@ -5,7 +5,7 @@ import {
   type BrowserOpenResult,
   type BrowserProviderId,
   type BrowserRuntime,
-} from "../../features/browser/browserTypes.ts";
+} from "../../domain/browserContracts.ts";
 import { inspectEgoLite, openEgoLite } from "./egoLiteRuntime.ts";
 
 const externalInspectionSchema = z.object({

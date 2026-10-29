@@ -3,7 +3,7 @@ import { CANVAS_REFERENCE_SLOTS } from "../../domain/canvasItems.ts";
 import {
   serializeMentionToken,
   type ParsedMention,
-} from "../../features/prompts/structuredPromptCompiler.ts";
+} from "../../features/prompts/index.ts";
 
 export interface ComposerMentionsBarProps {
   activeTokens: ParsedMention[];

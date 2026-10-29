@@ -1,7 +1,4 @@
-import type {
-  SkillRecord,
-  SkillRegistry,
-} from "../features/skills/skillRegistry";
+import type { SkillRecord, SkillRegistry } from "../features/skills/index.ts";
 
 export default function SkillRecordCard({
   record,

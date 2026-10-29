@@ -25,3 +25,5 @@ P3d候选已实现Provider旧路径兼容导出；其余旧插件策略、协议
 | creation/CanvasImageCommand、agent/chatProjectUpdate、image-edit/mask/schema与snapshot纯解析出口 | runtime共享Context、domain纯函数 | TASK-MOD-P3-COMPAT / root | 同上，保持单一Context/函数/类身份 |
 
 Desktop/Web2.1.49和契约1.3.0仍是源码候选，没有正式发布/到期回执；详细取舍见[ADR-029](adr/ADR-029-feature-cycle-decoupling.md)。
+
+P4新增单向兼容出口：browserBackend/browserProviders/browserTypes与modelCatalog/modelCatalogWindow；替代见ADR-030，同样由TASK-MOD-P3-COMPAT追踪，至少保留一个正式发布周期。P5 legacy SDK仍兼容且具有宿主权限，没有移除日期或正式发布回执。

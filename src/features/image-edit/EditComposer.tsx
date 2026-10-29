@@ -9,8 +9,8 @@ import type {
   CanvasCollectionItem,
   CanvasReference,
 } from "../../domain/canvasItems.ts";
-import { selectedModelLabel } from "../models/modelPresentation.ts";
-import type { ModelSelection } from "../models/modelSelection.ts";
+import { selectedModelLabel } from "../models/index.ts";
+import type { ModelSelection } from "../models/index.ts";
 import { CanvasImageCommandContext } from "../../runtime/canvasCommandRuntime.tsx";
 import { nextColorLabel, type MaskDocument, type MaskRegion } from "./mask.ts";
 function tagColor(color: string) {

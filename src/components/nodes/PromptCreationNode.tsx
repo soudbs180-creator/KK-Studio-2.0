@@ -10,7 +10,7 @@ import type {
 import { CANVAS_KIND_LABELS } from "../../domain/canvasItems";
 import { useLocalGeneration } from "./useLocalGeneration";
 import { GenerationAction, GenerationStatus } from "./GenerationAction";
-import { useCanvasImageGeneration } from "../../features/creation/CanvasImageCommand";
+import { useCanvasImageGeneration } from "../../features/creation/index.ts";
 
 const TEXT_MODES = [
   {

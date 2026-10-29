@@ -7,10 +7,10 @@ import type { Asset } from "../../domain/assets.ts";
 import { assertCanvasDeliveries } from "../../domain/canvasDelivery.ts";
 import type { CanvasCollectionItem } from "../../domain/canvasItems.ts";
 import { isLocalProviderUrl } from "../../domain/providerUrl.ts";
-import { imageResultContext } from "../image-edit/context.ts";
-import { createImageEditRuntime } from "../image-edit/editTasks.ts";
-import { ImageEditMappingError } from "../image-edit/imageProcessing.ts";
-import { imageRegeneration } from "../image-edit/regeneration.ts";
+import { imageResultContext } from "../image-edit/index.ts";
+import { createImageEditRuntime } from "../image-edit/index.ts";
+import { ImageEditMappingError } from "../image-edit/index.ts";
+import { imageRegeneration } from "../image-edit/index.ts";
 import {
   hashPrompt,
   loadStoredAsset,

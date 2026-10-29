@@ -14,3 +14,7 @@ export type * from "./modelRouting.ts";
 export * from "./providerRouting.ts";
 
 export type * from "./agentMessages.ts";
+export * from "./pluginManifest.ts";
+export { containsCredentialText } from "./securityText.ts";
+
+export * from "./pluginRpcContract.ts";

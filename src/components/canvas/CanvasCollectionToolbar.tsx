@@ -1,7 +1,7 @@
 import { useContext, type ReactNode, type RefObject } from "react";
 import type { CanvasCollectionItem } from "../../domain/canvasItems";
 import { effectiveTags } from "../../domain/collectionTags";
-import { CanvasImageCommandContext } from "../../features/creation/CanvasImageCommand";
+import { CanvasImageCommandContext } from "../../features/creation/index.ts";
 import ImageSelectionToolbar from "./ImageSelectionToolbar";
 import TagEditor from "../TagEditor";
 import UiIcon from "../UiIcon";

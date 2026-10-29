@@ -1,5 +1,5 @@
-import { canvasImageReferenceLimit } from "../../features/models/imageModelCapabilities.ts";
-import { readProviderConnections } from "../../features/creation/providerRegistry.ts";
+import { canvasImageReferenceLimit } from "../../features/models/index.ts";
+import { readProviderConnections } from "../../features/creation/index.ts";
 import {
   type CanvasCollectionItem,
   type CanvasReference,

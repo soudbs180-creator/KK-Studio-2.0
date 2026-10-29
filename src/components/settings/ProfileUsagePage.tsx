@@ -4,7 +4,7 @@ import type {
   DailyUsageSummary,
   TokenUsageRecord,
   UsageKpis,
-} from "../../features/usage/tokenUsageStore";
+} from "../../features/usage/index.ts";
 import {
   clearUsageRecords,
   getDailySummaries,
@@ -12,7 +12,7 @@ import {
   getUsageKpis,
   getUsageRecords,
   seedSampleUsageIfEmpty,
-} from "../../features/usage/tokenUsageStore";
+} from "../../features/usage/index.ts";
 
 const MODEL_COLORS = [
   "var(--kk-accent)",

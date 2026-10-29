@@ -12,7 +12,7 @@ import ComposerMentionsBar, {
 import {
   defaultSlashRegistry,
   type SlashCommand,
-} from "../../features/commands/slashCommandRegistry.ts";
+} from "../../features/commands/index.ts";
 import {
   buildMentionCandidates,
   shouldSubmit,
@@ -24,11 +24,11 @@ import {
   extractMentionTokens,
   serializeMentionToken,
   type ParsedMention,
-} from "../../features/prompts/structuredPromptCompiler.ts";
-import type { CreationAttachment } from "../../features/creation/model.ts";
-import type { AgentDraftAttachment } from "../../features/agent/agentAttachments.ts";
+} from "../../features/prompts/index.ts";
+import type { CreationAttachment } from "../../features/creation/index.ts";
+import type { AgentDraftAttachment } from "../../features/agent/index.ts";
 import type { ModelSelection } from "../../domain/modelSelection.ts";
-import type { UserCapability } from "../../features/models/capabilityAggregation.ts";
+import type { UserCapability } from "../../features/models/index.ts";
 
 export interface TokenizedComposerInputProps {
   value: string;

@@ -4,8 +4,8 @@ import {
   stagePlanProgress,
   type StageStatus,
 } from "../domain/stagePlan";
-import type { CreationProject } from "../features/creation/model";
-import type { StageDecisionInput } from "../features/agent/orchestrator";
+import type { CreationProject } from "../features/creation/index.ts";
+import type { StageDecisionInput } from "../features/agent/index.ts";
 import StagePlanDetail from "./StagePlanDetail";
 
 export const stageStatusLabels: Record<StageStatus, string> = {

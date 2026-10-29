@@ -1,6 +1,6 @@
-import type { CreationProject } from "../creation/model";
-import type { SidebarSortMode } from "../creation/model";
-export type { SidebarSortMode } from "../creation/model";
+import type { CreationProject } from "../creation/index.ts";
+import type { SidebarSortMode } from "../creation/index.ts";
+export type { SidebarSortMode } from "../creation/index.ts";
 
 /** 项目、分组和置顶排序来自 CreationSnapshot；展开仅影响会话显示。 */
 

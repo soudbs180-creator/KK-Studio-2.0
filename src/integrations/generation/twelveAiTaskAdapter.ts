@@ -2,7 +2,7 @@ import {
   providerConnectionSchema,
   type ProviderConnection,
 } from "../../domain/providerConnections.ts";
-import { loadApiKey } from "../../features/creation/providerCredentials.ts";
+import { loadApiKey } from "../providers/credentialVault.ts";
 import {
   ProviderAdapterError,
   type GenerationProviderAdapter,

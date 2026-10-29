@@ -1,11 +1,11 @@
 import ComposerExtensionsMenu from "./ComposerExtensionsMenu";
 import UiIcon from "./UiIcon";
-import type { ModelSelection } from "../features/models/modelSelection";
+import type { ModelSelection } from "../features/models/index.ts";
 import type { RefObject, ReactNode } from "react";
 import ConversationModelPicker from "./ConversationModelPicker";
-import type { CreationDraft } from "../features/creation/model";
+import type { CreationDraft } from "../features/creation/index.ts";
 import VoiceInputButton from "./VoiceInputButton";
-import type { SkillRecord } from "../features/skills/skillRegistry";
+import type { SkillRecord } from "../features/skills/index.ts";
 import AgentActionButton, { type AgentActionState } from "./AgentActionButton";
 
 export default function ConversationActions({

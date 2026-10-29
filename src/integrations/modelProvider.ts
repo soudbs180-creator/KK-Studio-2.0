@@ -3,7 +3,7 @@ import type { ProviderProtocolOptions } from "../domain/providerProtocol.ts";
 import {
   parseCatalogModels,
   type CatalogModel,
-} from "../features/models/modelCatalog.ts";
+} from "./providers/modelCatalogRepository.ts";
 import { discoverProviderModels } from "./providerModelDiscovery.ts";
 
 export async function checkModelProvider(

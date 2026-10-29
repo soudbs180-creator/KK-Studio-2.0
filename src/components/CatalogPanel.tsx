@@ -4,7 +4,7 @@ import {
   type CanvasCollectionItem,
 } from "../domain/canvasItems";
 import { getAssetTags, type Asset } from "../domain/assets";
-import type { CreationProject } from "../features/creation/model";
+import type { CreationProject } from "../features/creation/index.ts";
 import UiIcon from "./UiIcon";
 
 const TABS = ["全部", "画布卡片", "项目", "已加载资源"];

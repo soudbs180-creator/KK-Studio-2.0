@@ -5,19 +5,19 @@ import {
   useState,
   useSyncExternalStore,
 } from "react";
-import { agentConnection } from "../features/agent/agentConnection";
-import { readProviderConnections } from "../features/creation/providerRegistry";
+import { agentConnection } from "../features/agent/index.ts";
+import { readProviderConnections } from "../features/creation/index.ts";
 import type { ModelKind } from "../domain/modelSelection";
 import {
   readPickerMemory,
   resolvePickerPins,
   writePickerMemory,
   type ModelSelection,
-} from "../features/models/modelSelection";
+} from "../features/models/index.ts";
 import {
   aggregateCapabilityEntries,
   type UserCapability,
-} from "../features/models/capabilityAggregation";
+} from "../features/models/index.ts";
 import ModelPickerRows from "./ModelPickerRows";
 
 export default function ModelPickerMenu({

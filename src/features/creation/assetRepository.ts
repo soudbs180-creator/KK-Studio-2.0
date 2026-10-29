@@ -5,8 +5,8 @@ import {
   readNativeAsset,
   listNativeAssets,
 } from "./nativeAssetAdapter.ts";
-import { CompanionClient } from "../local-service/client.ts";
-import { readCompanionConnection } from "../local-service/connection.ts";
+import { CompanionClient } from "../local-service/index.ts";
+import { readCompanionConnection } from "../local-service/index.ts";
 
 export const assetProvenanceSchema = z.object({
   provider: z.string().max(80).optional(),

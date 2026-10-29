@@ -9,7 +9,7 @@ import {
 } from "react";
 import type { Point, ViewTransform } from "./canvasModel.ts";
 import { surfaceScale, toSurfacePoint } from "./canvasSurface.ts";
-import { shadowEventBus } from "../../features/sync/shadowEventBus.ts";
+import { shadowEventBus } from "../../features/sync/index.ts";
 
 export type CanvasTool = "select" | "hand";
 type SelectionRect = { x: number; y: number; width: number; height: number };

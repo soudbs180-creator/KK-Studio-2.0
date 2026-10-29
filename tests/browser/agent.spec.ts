@@ -1153,14 +1153,15 @@ test("卡片 Codex 生图在刷新后归档并恢复来源；切 API 清除旧�
           const projects = JSON.parse(
             localStorage.getItem("kk-studio-next:creation:v1") || "{}",
           ).projects;
-          return projects?.[0]?.canvas.edges.some(
-            (edge: { source: string; target: string }) =>
-              edge.source === "image" &&
-              edge.target === "codex-thread-fixture-native-image",
-          );
+          return projects?.[0]?.canvas.edges;
         }),
       )
-      .toBe(true);
+      .toContainEqual(
+        expect.objectContaining({
+          source: "image",
+          target: "codex-thread-fixture-native-image",
+        }),
+      );
     expect(agent.received.images).toHaveLength(0);
     await source.focus();
     await source.press("Enter");

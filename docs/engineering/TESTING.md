@@ -30,6 +30,8 @@
 
 ## 运行命令
 
+根单元入口预加载 `tests/support/public-entry-loader.mjs`：公开切片出口也导出UI，使用已安装TypeScript编译TSX并解析既有无后缀相对导入。仅Node单测忽略CSS模块执行；实际样式、顺序和DOM继续由生产Edge检查，不把该loader用于产品构建。Mobile和随包Agent保留各自运行器。
+
 | 命令 | 覆盖 |
 | --- | --- |
 | `npm test` | `tests/unit/*.test.ts` + `tests/deploy/*.test.mjs` |

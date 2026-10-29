@@ -18,8 +18,8 @@ import CanvasCollectionsPanels from "./components/CanvasCollectionsPanels";
 import { effectiveTags, splitCollectionTags } from "./domain/collectionTags";
 import { normalizeTags } from "./domain/assets";
 import Sidebar from "./components/Sidebar";
-import { useProjectLibrary } from "./features/projects/useProjectLibrary";
-import type { ModelSelection } from "./features/models/modelSelection";
+import { useProjectLibrary } from "./features/projects/index.ts";
+import type { ModelSelection } from "./features/models/index.ts";
 import { homeModelSelection } from "./domain/modelSelection";
 import { useSidebarLayout } from "./components/useSidebarLayout";
 import Canvas from "./components/Canvas";
@@ -28,13 +28,13 @@ import DeferredPanelBoundary from "./components/DeferredPanelBoundary";
 import Modal from "./components/Modal";
 import TaskExecutionApproval from "./components/TaskExecutionApproval";
 import StartPage from "./components/StartPage";
-import { ensureTemplates } from "./features/skills/templateSkills";
+import { ensureTemplates } from "./features/skills/index.ts";
 import {
   createSkillRegistry,
   applySkillInstructions,
   SKILLS_CHANGED_EVENT,
   type SkillRecord,
-} from "./features/skills/skillRegistry";
+} from "./features/skills/index.ts";
 import {
   createProject,
   projectChatView,
@@ -45,43 +45,40 @@ import {
   type CreateProjectInput,
   type ChatItem,
   type ChatItemDraft,
-} from "./features/creation/model";
-import { updateProjectChatView } from "./features/agent/chatProjectUpdate.ts";
-import { sameJson } from "./features/creation/chatMigration.ts";
+} from "./features/creation/index.ts";
+import { updateProjectChatView } from "./features/agent/index.ts";
+import { sameJson } from "./features/creation/index.ts";
 import {
   agentConnection,
   readPermissionMode,
   subscribeAgentPreferences,
   type AgentBridge,
-} from "./features/agent/agentConnection.ts";
-import { googleAgentConnection } from "./features/agent/googleAgentConnection.ts";
-import { appendToActiveAgentDraft } from "./features/agent/agentDraftActions";
+} from "./features/agent/index.ts";
+import { googleAgentConnection } from "./features/agent/index.ts";
+import { appendToActiveAgentDraft } from "./features/agent/index.ts";
 
-import { pluginLoader } from "./features/plugins/pluginLoader.ts";
-import {
-  injectPluginCss,
-  setPluginRuntime,
-} from "./features/plugins/pluginRuntime.ts";
-import type { PluginAi } from "./features/plugins/pluginTypes.ts";
-import { createAgentHost } from "./features/agent/agentHost.ts";
-import { desktopAgentLifecycle } from "./features/agent/desktopAgentLifecycle.ts";
+import { pluginLoader } from "./features/plugins/index.ts";
+import { injectPluginCss, setPluginRuntime } from "./features/plugins/index.ts";
+import type { PluginAi } from "./features/plugins/index.ts";
+import { createAgentHost } from "./features/agent/index.ts";
+import { desktopAgentLifecycle } from "./features/agent/index.ts";
 import {
   clearSentPendingDraft,
   configureAgentProxy,
   sendProjectAgentMessage,
-} from "./features/agent/homeAgentRecovery";
-import { prepareAgentAttachments } from "./features/agent/agentAttachments.ts";
-import { codexGenerationPrompt } from "./features/agent/codexGeneration.ts";
+} from "./features/agent/index.ts";
+import { prepareAgentAttachments } from "./features/agent/index.ts";
+import { codexGenerationPrompt } from "./features/agent/index.ts";
 import {
   createStageOrchestrator,
   type StageOrchestrator,
-} from "./features/agent/orchestrator.ts";
+} from "./features/agent/index.ts";
 import type { AgentCanvasBinding } from "./components/canvas/useAgentCanvasView";
-import { CanvasImageCommandContext } from "./features/creation/CanvasImageCommand";
-import ImageLightbox from "./features/image-edit/ImageLightbox.tsx";
-import { useNativeTaskRecovery } from "./features/creation/useNativeTextRecovery";
-import { useCreationStorage } from "./features/creation/useCreationStorage";
-import { useAssetArchive } from "./features/creation/useAssetArchive";
+import { CanvasImageCommandContext } from "./features/creation/index.ts";
+import { ImageLightbox as ImageLightbox } from "./features/image-edit/index.ts";
+import { useNativeTaskRecovery } from "./features/creation/index.ts";
+import { useCreationStorage } from "./features/creation/index.ts";
+import { useAssetArchive } from "./features/creation/index.ts";
 import CreationStorageNotice from "./components/CreationStorageNotice";
 import { createProjectCanvas } from "./domain/projectCanvas";
 import {
@@ -92,16 +89,13 @@ import {
   loadProviderConnectionsDurable,
   persistProviderConnectionsDurable,
   readProviderConnections,
-} from "./features/creation/providerRegistry";
+} from "./features/creation/index.ts";
 import { getGenerationProgressLabels } from "./domain/uiGovernance";
-import { recoverInterruptedTasks } from "./features/creation/taskRecovery";
-import { taskRetryAvailability } from "./features/creation/taskRetryAvailability";
-import { reconcileNativeTasks } from "./features/creation/nativeTaskHost";
-import {
-  useTaskExecution,
-  rootItemId,
-} from "./features/creation/useTaskExecution.ts";
-import { useImageCommandSubmission } from "./features/creation/useImageCommandSubmission.ts";
+import { recoverInterruptedTasks } from "./features/creation/index.ts";
+import { taskRetryAvailability } from "./features/creation/index.ts";
+import { reconcileNativeTasks } from "./features/creation/index.ts";
+import { useTaskExecution, rootItemId } from "./features/creation/index.ts";
+import { useImageCommandSubmission } from "./features/creation/index.ts";
 
 import { initialAssets, initialSubjects, type Asset } from "./domain/assets";
 import {
@@ -114,7 +108,7 @@ import {
   DEFAULT_SETTINGS,
   type SettingsPreferences,
 } from "./domain/settings";
-import { useLocalWorkflows } from "./features/comfyui/useLocalWorkflows";
+import { useLocalWorkflows } from "./features/comfyui/index.ts";
 // App owns lazy panel styles before the final screen overrides.
 import "./components/assets/assets.css";
 import "./components/settings/plugin-manager.css";

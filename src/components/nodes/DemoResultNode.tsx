@@ -1,5 +1,5 @@
 import { useContext, useRef, useState } from "react";
-import { CanvasImageCommandContext } from "../../features/creation/CanvasImageCommand.tsx";
+import { CanvasImageCommandContext } from "../../features/creation/index.ts";
 import {
   CANVAS_KIND_LABELS,
   type CanvasCollectionItem,

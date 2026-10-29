@@ -1,3 +1,4 @@
+import { featureEntryMocks } from "../support/featureEntryMocks.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
@@ -94,8 +95,9 @@ async function harness() {
       exports,
       window,
       require: (id: string) => {
-        assert(id in modules, `Unexpected dependency: ${id}`);
-        return modules[id];
+        const allModules = featureEntryMocks(modules);
+        assert(id in allModules, `Unexpected dependency: ${id}`);
+        return allModules[id];
       },
     },
   );

@@ -7,10 +7,10 @@ import type {
   ProviderAuthMode,
   ProviderProtocol,
 } from "../../domain/providerProtocol.ts";
-import { imageResultContext } from "../image-edit/context.ts";
-import { createImageEditRuntime } from "../image-edit/editTasks.ts";
-import { ImageEditMappingError } from "../image-edit/imageProcessing.ts";
-import { editReceiptReason } from "../image-edit/recovery.ts";
+import { imageResultContext } from "../image-edit/index.ts";
+import { createImageEditRuntime } from "../image-edit/index.ts";
+import { ImageEditMappingError } from "../image-edit/index.ts";
+import { editReceiptReason } from "../image-edit/index.ts";
 import { loadStoredAsset, storeGeneratedAsset } from "./assetRepository.ts";
 import { sameJson } from "./chatMigration.ts";
 import type {

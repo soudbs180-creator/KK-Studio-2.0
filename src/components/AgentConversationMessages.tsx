@@ -3,12 +3,12 @@ import type {
   AgentChatItem,
   AgentPermissionMode,
   AgentConversationState,
-} from "../features/agent/agentTypes.ts";
+} from "../features/agent/index.ts";
 import { useEffect, useRef, useState } from "react";
 import AgentUsageStatus from "./AgentUsageStatus";
 import AgentExecutionProcess from "./AgentExecutionProcess";
-import type { AgentUsageWindow } from "../features/agent/agentUsage";
-import type { AgentDraftAttachment } from "../features/agent/agentAttachments";
+import type { AgentUsageWindow } from "../features/agent/index.ts";
+import type { AgentDraftAttachment } from "../features/agent/index.ts";
 import type { CanvasCollectionItem } from "../domain/canvasItems";
 import type { ModelSelection } from "../domain/modelSelection";
 import ChatImageCard from "./chat/ChatImageCard.tsx";

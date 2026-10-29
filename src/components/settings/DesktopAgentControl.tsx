@@ -1,7 +1,7 @@
 import { useEffect, useSyncExternalStore } from "react";
 import { isTauri } from "@tauri-apps/api/core";
-import { agentConnection } from "../../features/agent/agentConnection.ts";
-import { desktopAgentLifecycle } from "../../features/agent/desktopAgentLifecycle.ts";
+import { agentConnection } from "../../features/agent/index.ts";
+import { desktopAgentLifecycle } from "../../features/agent/index.ts";
 
 export default function DesktopAgentControl({
   onFeedback,

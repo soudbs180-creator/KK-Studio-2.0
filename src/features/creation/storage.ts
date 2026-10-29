@@ -8,8 +8,8 @@ import {
 import {
   CompanionClient,
   CompanionClientError,
-} from "../local-service/client.ts";
-import { readCompanionConnection } from "../local-service/connection.ts";
+} from "../local-service/index.ts";
+import { readCompanionConnection } from "../local-service/index.ts";
 import {
   CREATION_STORAGE_KEY,
   emptyDraft,

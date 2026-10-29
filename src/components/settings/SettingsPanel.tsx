@@ -26,9 +26,9 @@ import {
   updateSettingsBusyOwners,
 } from "./SettingsNavigationContext";
 import type { ExtensionsTab } from "./ExtensionsSettings";
-import type { SaveState } from "../../features/creation/useCreationStorage";
-import type { CreationProject } from "../../features/creation/model";
-import type { SkillRegistry } from "../../features/skills/skillRegistry";
+import type { SaveState } from "../../features/creation/index.ts";
+import type { CreationProject } from "../../features/creation/index.ts";
+import type { SkillRegistry } from "../../features/skills/index.ts";
 import type { LocalWorkflowAccess } from "./LocalWorkflowSettings";
 import "./settings.css";
 

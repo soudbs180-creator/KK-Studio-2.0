@@ -6,9 +6,9 @@ import {
   getDisabledReason,
   getGenerationUiState,
 } from "../../domain/uiGovernance.ts";
-import { createImageEditRuntime } from "../image-edit/editTasks.ts";
-import { compileEditPrompt } from "../image-edit/prompt.ts";
-import { imageCapabilitiesForSelection } from "../models/imageModelCapabilities.ts";
+import { createImageEditRuntime } from "../image-edit/index.ts";
+import { compileEditPrompt } from "../image-edit/index.ts";
+import { imageCapabilitiesForSelection } from "../models/index.ts";
 import { loadStoredAsset, storeGeneratedAsset } from "./assetRepository.ts";
 import type { CanvasImageRequest } from "./CanvasImageCommand.ts";
 import {

@@ -12,7 +12,7 @@ import {
   McpServerRegistry,
   type McpServerConfig,
   type McpTool,
-} from "../../features/mcp/mcpClient";
+} from "../../features/mcp/index.ts";
 import McpServerForm from "./McpServerForm";
 import McpServerList, { type McpConnectionState } from "./McpServerList";
 import McpOverflowNotice from "./McpOverflowNotice";

@@ -1,4 +1,5 @@
 import type { CreationAttachment, CreationTask } from "./creation.ts";
+import type { CapabilityPermission } from "./capability.ts";
 import type {
   AssetProvenance,
   ProviderConnectionIdentity,
@@ -124,4 +125,11 @@ export interface StoragePort<Snapshot> {
     snapshot: Snapshot,
     expectedRevision: number | null,
   ): Promise<{ revision: number }>;
+}
+
+export interface PermissionPort {
+  check(request: {
+    subjectId: string;
+    permission: CapabilityPermission;
+  }): { allowed: true } | { allowed: false; reason: string };
 }

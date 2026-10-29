@@ -1,15 +1,15 @@
 import { useLayoutEffect, useRef, useState } from "react";
-import type { ModelKind } from "../features/models/modelCatalog";
-import { GOOGLE_CONNECTION_ID } from "../features/agent/googleAgentConfig";
+import type { ModelKind } from "../features/models/index.ts";
+import { GOOGLE_CONNECTION_ID } from "../features/agent/index.ts";
 import {
   modelSelectionId,
   type ModelSelection,
-} from "../features/models/modelSelection";
-import type { Entry } from "../features/models/modelMenuEntries";
+} from "../features/models/index.ts";
+import type { Entry } from "../features/models/index.ts";
 import {
   getProbeMetric,
   getLatencyTierClass,
-} from "../features/models/modelProbeStore";
+} from "../features/models/index.ts";
 
 function renderModelProbeBadge(item: Entry) {
   const providerId =

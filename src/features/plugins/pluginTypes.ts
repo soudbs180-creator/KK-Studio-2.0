@@ -61,7 +61,7 @@ export interface PluginTheme {
 }
 
 /** 与 Agent 同级的画布操作指令（复用 agentTypes.CanvasAgentOp）。 */
-export type { CanvasAgentOp as PluginAgentOp } from "../agent/agentTypes.ts";
+export type { CanvasAgentOp as PluginAgentOp } from "../agent/index.ts";
 
 export interface PluginStorage {
   get: <T = unknown>(key: string) => Promise<T | null>;
@@ -83,7 +83,7 @@ export interface PluginNodeContext {
   getConnections: () => PluginConnection[];
   getUpstream: () => PluginNodeData[];
   getDownstream: () => PluginNodeData[];
-  applyOps: (ops: import("../agent/agentTypes.ts").CanvasAgentOp[]) => void;
+  applyOps: (ops: import("../agent/index.ts").CanvasAgentOp[]) => void;
   emit: (event: string, payload?: unknown) => void;
   on: (event: string, handler: (payload: unknown) => void) => () => void;
   /** 宿主生成能力（模型/密钥由宿主注入）。 */
@@ -177,4 +177,8 @@ export interface InstalledPlugin {
   enabled: boolean;
   official?: boolean;
   local?: boolean;
+  manifest?: import("../../../packages/creation-contracts/index.ts").PluginManifest;
+  packageFiles?: Record<string, string>;
+  grantedPermissions?: import("../../../packages/creation-contracts/index.ts").CapabilityPermission[];
+  previousVersion?: Omit<InstalledPlugin, "previousVersion">;
 }

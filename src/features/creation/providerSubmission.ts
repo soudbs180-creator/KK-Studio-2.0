@@ -9,8 +9,8 @@ import {
   type ProviderAuthMode,
   type ProviderProtocol,
 } from "../../domain/providerProtocol.ts";
-import { resolveImageModelCapabilities } from "../models/imageModelCapabilities.ts";
-import { catalogForConnection } from "../models/modelCatalog.ts";
+import { resolveImageModelCapabilities } from "../models/index.ts";
+import { catalogForConnection } from "../models/index.ts";
 import { hasApiKey } from "./providerCredentials.ts";
 import {
   readProviderConnections,

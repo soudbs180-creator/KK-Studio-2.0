@@ -5,7 +5,7 @@ import {
 import {
   getProbeMetric,
   getLatencyTierClass,
-} from "../../features/models/modelProbeStore";
+} from "../../features/models/index.ts";
 
 function renderConnectionProbeBadge(connectionId: string) {
   const probe = getProbeMetric(connectionId);

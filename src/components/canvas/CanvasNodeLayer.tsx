@@ -13,7 +13,7 @@ import type { useCanvasControls } from "./useCanvasControls";
 import type { useCanvasAddMenu } from "./useCanvasAddMenu";
 import CanvasNodeItem from "./CanvasNodeItem";
 import CanvasConnections from "./CanvasConnections";
-import { CanvasImageCommandContext } from "../../features/creation/CanvasImageCommand";
+import { CanvasImageCommandContext } from "../../features/creation/index.ts";
 import type { ModelSelection } from "../../domain/modelSelection";
 import { useCanvasNodeLayerHandlers } from "./useCanvasNodeLayerHandlers";
 import CanvasGroupLayer from "./CanvasGroupLayer";

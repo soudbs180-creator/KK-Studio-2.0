@@ -55,8 +55,8 @@ async function loadUsageStatusBarModule(): Promise<UsageStatusBarExports> {
     module: { exports },
     require: (name: string) => {
       if (name in modules) return modules[name];
-      if (name.includes("modelCatalogWindow")) return modelCatalogWindow;
-      if (name.includes("model")) return creationModel;
+      if (name.endsWith("/models/index.ts")) return modelCatalogWindow;
+      if (name.endsWith("/creation/index.ts")) return creationModel;
       throw new Error(`Unexpected dependency in UsageStatusBar: ${name}`);
     },
   });

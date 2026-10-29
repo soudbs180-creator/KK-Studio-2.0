@@ -1,11 +1,11 @@
 import { isTauri } from "@tauri-apps/api/core";
 import { isLocalProviderUrl } from "../../domain/providerUrl.ts";
 import { checkModelProvider } from "../../integrations/modelProvider.ts";
-import { loadApiKey } from "../../features/creation/providerCredentials.ts";
+import { loadApiKey } from "../../features/creation/index.ts";
 import {
   saveModelCatalog,
   type CatalogModel,
-} from "../../features/models/modelCatalog.ts";
+} from "../../features/models/index.ts";
 import {
   providerNeedsKey,
   providerHeaders,

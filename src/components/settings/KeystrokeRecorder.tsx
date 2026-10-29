@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import type { ShortcutScope } from "../../features/settings/shortcutsRegistry";
+import type { ShortcutScope } from "../../features/settings/index.ts";
 import {
   checkConflict,
   normalizeKey,
   normalizeKeys,
-} from "../../features/settings/shortcutsRegistry";
+} from "../../features/settings/index.ts";
 
 interface KeystrokeRecorderProps {
   shortcutId: string;

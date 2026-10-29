@@ -1,9 +1,9 @@
 import type React from "react";
-import type { SlashCommand } from "../../features/commands/slashCommandRegistry.ts";
+import type { SlashCommand } from "../../features/commands/index.ts";
 import type { MentionCandidate } from "./ComposerMentionMenu.tsx";
 import type { CanvasReferenceSlot } from "../../domain/canvasItems.ts";
-import type { CreationAttachment } from "../../features/creation/model.ts";
-import type { AgentDraftAttachment } from "../../features/agent/agentAttachments.ts";
+import type { CreationAttachment } from "../../features/creation/index.ts";
+import type { AgentDraftAttachment } from "../../features/agent/index.ts";
 
 export interface AvailableNodeCandidate {
   id: string;

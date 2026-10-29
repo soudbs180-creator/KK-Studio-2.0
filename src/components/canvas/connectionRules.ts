@@ -1,8 +1,8 @@
 import { type CanvasCollectionItem } from "../../domain/canvasItems.ts";
 import type { CanvasConnection } from "../../domain/canvasGraph";
-import { canvasImageTotalReferenceLimit } from "../../features/models/imageModelCapabilities.ts";
+import { canvasImageTotalReferenceLimit } from "../../features/models/index.ts";
 import { imageReferenceCount } from "../../domain/imageReferences.ts";
-import { readProviderConnections } from "../../features/creation/providerRegistry.ts";
+import { readProviderConnections } from "../../features/creation/index.ts";
 import type { ModelSelection } from "../../domain/modelSelection.ts";
 
 /** Whether a hovered card can accept the edge that a pointer drag would make. */

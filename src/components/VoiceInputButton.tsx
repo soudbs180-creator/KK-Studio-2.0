@@ -1,4 +1,4 @@
-import { useSpeechInput } from "../features/creation/useSpeechInput";
+import { useSpeechInput } from "../features/creation/index.ts";
 
 export default function VoiceInputButton({
   value,

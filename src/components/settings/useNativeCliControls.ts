@@ -14,8 +14,8 @@ import {
   type CliInspection,
   type CliBridge,
 } from "../../integrations/nativeCli";
-import { readGoogleCliPreference } from "../../features/agent/googleAgentConfig";
-import { normalizeGeminiBridgeUrl } from "../../features/agent/geminiCliAdapter";
+import { readGoogleCliPreference } from "../../features/agent/index.ts";
+import { normalizeGeminiBridgeUrl } from "../../features/agent/index.ts";
 import useSettingsBusy from "./useSettingsBusy";
 
 type Action =

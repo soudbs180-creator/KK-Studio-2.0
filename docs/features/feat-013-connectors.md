@@ -44,3 +44,11 @@
 ## TASK-UI-005 更新
 
 首页与图片对话的插件菜单读取实际启用插件；管理入口定位 settings/plugins，MCP 工具单独管理。连接器目录原有 Prototype 与画布插件不是相同实现。 见 [核对与验证](../changes/2026-09-22-ui-feature-parity/verification.md)。
+
+2026-10-29 plugins公开入口进行中；[TASK-MOD-P4-PLUGINS验证](../changes/2026-10-29-p4-plugins/verification.md)。既有产品成熟度不因架构重构自动升级。
+
+2026-10-29 插件清单、权限与分级隔离进行中；[TASK-MOD-P5验证](../changes/2026-10-29-p5-plugin-permissions/verification.md)。既有产品成熟度不因架构重构自动升级。
+
+P5当前边界：新包清单、完整性与权限交集由宿主校验；Web T1仅实验验证，生产门默认关闭；旧JS/随包插件按legacy兼容并有宿主权限。授权界面、原生IPC/更多逃逸面与独审尚未完成，见[ADR-031](../architecture/adr/ADR-031-plugin-permissions-and-sandbox.md)。
+
+候选作者契约：[kk-plugin.json定义](../../packages/creation-contracts/pluginManifest.ts)、[生成JSON Schema](../../packages/creation-contracts/plugin-manifest.schema.json)、[RPC真源](../../packages/creation-contracts/pluginRpcContract.ts)。新包apiVersion为1，未声明/未授权即无权限，宿主授予字段不能由guest消息代填；实验guest通过`KKPlugin.request`访问受限方法，T0/T2/T3和其他贡献当前明确不可用。

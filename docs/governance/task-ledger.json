@@ -11443,5 +11443,321 @@
       "docs/changes/2026-10-28-p3e-agent-memory-prompts/spec.md"
     ],
     "featureIds": []
+  },
+  {
+    "id": "TASK-MOD-P4-SKILLS",
+    "title": "skills公开入口",
+    "goal": "skills公开入口",
+    "scope": "只收敛跨切片导入与公开导出；不改算法、UI结构/CSS、存储身份；保持type-only、默认导出和动态入口的符号身份。",
+    "acceptance": [
+      "公开入口与权限边界符合本卡spec",
+      "不丢旧数据、不改变生成/审批/存储身份",
+      "相关门禁和运行回归有实际证据"
+    ],
+    "dependencies": [
+      "TASK-MOD-P3E"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "refactor/TASK-MOD-P3-feature-cycles",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "cf73c8425b359035e99da5f8a5db5b0db7697080",
+    "affectedModules": [
+      "src/features/skills"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-29-p4-skills/verification.md",
+      "docs/changes/2026-10-29-p4-skills/review.md"
+    ],
+    "verification": "P4源码收敛完成：367条唯一深层依赖边降0，285条属于指定五切片、其余82条亦清零；381条导入/再导出语句按顺序改写。R3由10降0，R4保持0，其余基线不新增。25个迁移纯函数AST一致，五份既有UI结构一致，最终CSS与P3完全同字节。根最终2363通过/0失败/20跳过（P4单独阶段2355通过），Mobile373与Agent204通过。限定浏览器、体积及退出码见最终回执；独审/原生/完整verify/main尚未完成，保持PARTIAL。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-29",
+    "lastVerified": "2026-10-29",
+    "nextAction": "解决已开放浏览器门禁，完成独审/原生与完整verify后按实际主线条件合流；原兼容出口保留一个发布周期。",
+    "requirementRefs": [
+      "docs/changes/2026-10-29-p4-skills/intent.md",
+      "docs/changes/2026-10-29-p4-skills/spec.md"
+    ],
+    "featureIds": [
+      "FEAT-011"
+    ]
+  },
+  {
+    "id": "TASK-MOD-P4-PLUGINS",
+    "title": "plugins公开入口",
+    "goal": "plugins公开入口",
+    "scope": "只收敛跨切片导入与公开导出；不改算法、UI结构/CSS、存储身份；保持type-only、默认导出和动态入口的符号身份。",
+    "acceptance": [
+      "公开入口与权限边界符合本卡spec",
+      "不丢旧数据、不改变生成/审批/存储身份",
+      "相关门禁和运行回归有实际证据"
+    ],
+    "dependencies": [
+      "TASK-MOD-P4-SKILLS"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "refactor/TASK-MOD-P3-feature-cycles",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "cf73c8425b359035e99da5f8a5db5b0db7697080",
+    "affectedModules": [
+      "src/features/plugins"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-29-p4-plugins/verification.md",
+      "docs/changes/2026-10-29-p4-plugins/review.md"
+    ],
+    "verification": "P4源码收敛完成：367条唯一深层依赖边降0，285条属于指定五切片、其余82条亦清零；381条导入/再导出语句按顺序改写。R3由10降0，R4保持0，其余基线不新增。25个迁移纯函数AST一致，五份既有UI结构一致，最终CSS与P3完全同字节。根最终2363通过/0失败/20跳过（P4单独阶段2355通过），Mobile373与Agent204通过。限定浏览器、体积及退出码见最终回执；独审/原生/完整verify/main尚未完成，保持PARTIAL。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-29",
+    "lastVerified": "2026-10-29",
+    "nextAction": "解决已开放浏览器门禁，完成独审/原生与完整verify后按实际主线条件合流；原兼容出口保留一个发布周期。",
+    "requirementRefs": [
+      "docs/changes/2026-10-29-p4-plugins/intent.md",
+      "docs/changes/2026-10-29-p4-plugins/spec.md"
+    ],
+    "featureIds": [
+      "FEAT-013"
+    ]
+  },
+  {
+    "id": "TASK-MOD-P4-MODELS",
+    "title": "models公开入口",
+    "goal": "models公开入口",
+    "scope": "只收敛跨切片导入与公开导出；不改算法、UI结构/CSS、存储身份；保持type-only、默认导出和动态入口的符号身份。",
+    "acceptance": [
+      "公开入口与权限边界符合本卡spec",
+      "不丢旧数据、不改变生成/审批/存储身份",
+      "相关门禁和运行回归有实际证据"
+    ],
+    "dependencies": [
+      "TASK-MOD-P4-PLUGINS"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "refactor/TASK-MOD-P3-feature-cycles",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "cf73c8425b359035e99da5f8a5db5b0db7697080",
+    "affectedModules": [
+      "src/features/models"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-29-p4-models/verification.md",
+      "docs/changes/2026-10-29-p4-models/review.md"
+    ],
+    "verification": "P4源码收敛完成：367条唯一深层依赖边降0，285条属于指定五切片、其余82条亦清零；381条导入/再导出语句按顺序改写。R3由10降0，R4保持0，其余基线不新增。25个迁移纯函数AST一致，五份既有UI结构一致，最终CSS与P3完全同字节。根最终2363通过/0失败/20跳过（P4单独阶段2355通过），Mobile373与Agent204通过。限定浏览器、体积及退出码见最终回执；独审/原生/完整verify/main尚未完成，保持PARTIAL。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-29",
+    "lastVerified": "2026-10-29",
+    "nextAction": "解决已开放浏览器门禁，完成独审/原生与完整verify后按实际主线条件合流；原兼容出口保留一个发布周期。",
+    "requirementRefs": [
+      "docs/changes/2026-10-29-p4-models/intent.md",
+      "docs/changes/2026-10-29-p4-models/spec.md"
+    ],
+    "featureIds": [
+      "FEAT-038"
+    ]
+  },
+  {
+    "id": "TASK-MOD-P4-AGENT",
+    "title": "agent公开入口",
+    "goal": "agent公开入口",
+    "scope": "只收敛跨切片导入与公开导出；不改算法、UI结构/CSS、存储身份；保持type-only、默认导出和动态入口的符号身份。",
+    "acceptance": [
+      "公开入口与权限边界符合本卡spec",
+      "不丢旧数据、不改变生成/审批/存储身份",
+      "相关门禁和运行回归有实际证据"
+    ],
+    "dependencies": [
+      "TASK-MOD-P4-MODELS"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "refactor/TASK-MOD-P3-feature-cycles",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "cf73c8425b359035e99da5f8a5db5b0db7697080",
+    "affectedModules": [
+      "src/features/agent"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-29-p4-agent/verification.md",
+      "docs/changes/2026-10-29-p4-agent/review.md"
+    ],
+    "verification": "P4源码收敛完成：367条唯一深层依赖边降0，285条属于指定五切片、其余82条亦清零；381条导入/再导出语句按顺序改写。R3由10降0，R4保持0，其余基线不新增。25个迁移纯函数AST一致，五份既有UI结构一致，最终CSS与P3完全同字节。根最终2363通过/0失败/20跳过（P4单独阶段2355通过），Mobile373与Agent204通过。限定浏览器、体积及退出码见最终回执；独审/原生/完整verify/main尚未完成，保持PARTIAL。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-29",
+    "lastVerified": "2026-10-29",
+    "nextAction": "解决已开放浏览器门禁，完成独审/原生与完整verify后按实际主线条件合流；原兼容出口保留一个发布周期。",
+    "requirementRefs": [
+      "docs/changes/2026-10-29-p4-agent/intent.md",
+      "docs/changes/2026-10-29-p4-agent/spec.md"
+    ],
+    "featureIds": [
+      "FEAT-030"
+    ]
+  },
+  {
+    "id": "TASK-MOD-P4-CREATION",
+    "title": "creation公开入口",
+    "goal": "creation公开入口",
+    "scope": "只收敛跨切片导入与公开导出；不改算法、UI结构/CSS、存储身份；保持type-only、默认导出和动态入口的符号身份。",
+    "acceptance": [
+      "公开入口与权限边界符合本卡spec",
+      "不丢旧数据、不改变生成/审批/存储身份",
+      "相关门禁和运行回归有实际证据"
+    ],
+    "dependencies": [
+      "TASK-MOD-P4-AGENT"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "refactor/TASK-MOD-P3-feature-cycles",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "cf73c8425b359035e99da5f8a5db5b0db7697080",
+    "affectedModules": [
+      "src/features/creation"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-29-p4-creation/verification.md",
+      "docs/changes/2026-10-29-p4-creation/review.md"
+    ],
+    "verification": "P4源码收敛完成：367条唯一深层依赖边降0，285条属于指定五切片、其余82条亦清零；381条导入/再导出语句按顺序改写。R3由10降0，R4保持0，其余基线不新增。25个迁移纯函数AST一致，五份既有UI结构一致，最终CSS与P3完全同字节。根最终2363通过/0失败/20跳过（P4单独阶段2355通过），Mobile373与Agent204通过。限定浏览器、体积及退出码见最终回执；独审/原生/完整verify/main尚未完成，保持PARTIAL。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-29",
+    "lastVerified": "2026-10-29",
+    "nextAction": "解决已开放浏览器门禁，完成独审/原生与完整verify后按实际主线条件合流；原兼容出口保留一个发布周期。",
+    "requirementRefs": [
+      "docs/changes/2026-10-29-p4-creation/intent.md",
+      "docs/changes/2026-10-29-p4-creation/spec.md"
+    ],
+    "featureIds": [
+      "FEAT-035"
+    ]
+  },
+  {
+    "id": "TASK-MOD-P4-REMAINING",
+    "title": "其余切片公开入口",
+    "goal": "其余切片公开入口",
+    "scope": "只收敛跨切片导入与公开导出；不改算法、UI结构/CSS、存储身份；保持type-only、默认导出和动态入口的符号身份。",
+    "acceptance": [
+      "公开入口与权限边界符合本卡spec",
+      "不丢旧数据、不改变生成/审批/存储身份",
+      "相关门禁和运行回归有实际证据"
+    ],
+    "dependencies": [
+      "TASK-MOD-P4-CREATION"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "refactor/TASK-MOD-P3-feature-cycles",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "cf73c8425b359035e99da5f8a5db5b0db7697080",
+    "affectedModules": [
+      "src/features/image-edit",
+      "src/features/comfyui",
+      "src/features/projects",
+      "src/features/compare",
+      "src/features/prompts",
+      "src/features/partners",
+      "src/features/sync",
+      "src/features/commands",
+      "src/features/browser",
+      "src/features/local-service",
+      "src/features/settings",
+      "src/features/mcp",
+      "src/features/memory",
+      "src/features/usage",
+      "src/features/ai-gateway"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-29-p4-remaining/verification.md",
+      "docs/changes/2026-10-29-p4-remaining/review.md"
+    ],
+    "verification": "P4源码收敛完成：367条唯一深层依赖边降0，285条属于指定五切片、其余82条亦清零；381条导入/再导出语句按顺序改写。R3由10降0，R4保持0，其余基线不新增。25个迁移纯函数AST一致，五份既有UI结构一致，最终CSS与P3完全同字节。根最终2363通过/0失败/20跳过（P4单独阶段2355通过），Mobile373与Agent204通过。限定浏览器、体积及退出码见最终回执；独审/原生/完整verify/main尚未完成，保持PARTIAL。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-29",
+    "lastVerified": "2026-10-29",
+    "nextAction": "解决已开放浏览器门禁，完成独审/原生与完整verify后按实际主线条件合流；原兼容出口保留一个发布周期。",
+    "requirementRefs": [
+      "docs/changes/2026-10-29-p4-remaining/intent.md",
+      "docs/changes/2026-10-29-p4-remaining/spec.md"
+    ],
+    "featureIds": [
+      "FEAT-035",
+      "FEAT-030"
+    ]
+  },
+  {
+    "id": "TASK-MOD-P5",
+    "title": "插件清单、权限与分级隔离",
+    "goal": "插件清单、权限与分级隔离",
+    "scope": "沿OPT-401同一kk-plugin.json设计，加入PermissionPort、默认拒绝的受限RPC和分级运行时；OPEN-3采用补篇A的legacy兼容，旧插件原样加载并明确其仍在宿主realm。新UI授权提示等待Figma设计，当前仅后端与诊断日志，不自动给第三方新增权限。",
+    "acceptance": [
+      "公开入口与权限边界符合本卡spec",
+      "不丢旧数据、不改变生成/审批/存储身份",
+      "相关门禁和运行回归有实际证据"
+    ],
+    "dependencies": [
+      "TASK-MOD-P4-REMAINING"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "refactor/TASK-MOD-P3-feature-cycles",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "cf73c8425b359035e99da5f8a5db5b0db7697080",
+    "affectedModules": [
+      "src/features/plugins"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-29-p5-plugin-permissions/verification.md",
+      "docs/changes/2026-10-29-p5-plugin-permissions/review.md"
+    ],
+    "verification": "P5部分完成：契约包1.4.0新增清单/JSON Schema/RPC与PermissionPort；包目录、版本/平台、逐文件SHA、权限交集、身份、消息上限/超时/重放/撤销和更新失败保护已接线。真实Edge实验T1与安装器→React→当前Context链通过；生产新包执行门默认关闭，legacy保持宿主兼容。Desktop IPC、WebRTC/其他逃逸面、独立安全审查、授权Figma/UI、T0/T2/T3与其他贡献未完成，不能称为生产插件沙箱。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-29",
+    "lastVerified": "2026-10-29",
+    "nextAction": "P5生产门保持关闭；补原生/跨浏览器/更多逃逸面/独审与Figma授权，再推进T0/T2/T3和其他贡献。",
+    "requirementRefs": [
+      "docs/changes/2026-10-29-p5-plugin-permissions/intent.md",
+      "docs/changes/2026-10-29-p5-plugin-permissions/spec.md"
+    ],
+    "featureIds": [
+      "FEAT-013"
+    ]
   }
 ]

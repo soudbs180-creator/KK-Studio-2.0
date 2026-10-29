@@ -194,6 +194,13 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-MOD-P3D | P3d 解除creation-models循环 | PARTIAL | 进行中 | P1 | TASK-MOD-P3C | root | 完成独审、原生/真实Provider与完整verify，解决既有浏览器门禁后整合main；P2默认关闭，旧入口保留正式发布周期。 |
 | TASK-MOD-P3E | P3e 解除agent-memory-prompts循环 | PARTIAL | 进行中 | P1 | TASK-MOD-P3D | root | 完成独审、原生/真实Provider与完整verify，解决既有浏览器门禁后整合main；P2默认关闭，旧入口保留正式发布周期。 |
 | TASK-MOD-P3-COMPAT | P3旧导出路径至少一个正式发布周期后退役 | TODO | 未完成 | P1 | TASK-MOD-P3A, TASK-MOD-P3B, TASK-MOD-P3C, TASK-MOD-P3D, TASK-MOD-P3E | root | 等待首次正式发布，记录最早可移除版本；继续保留旧路径同一实现。 |
+| TASK-MOD-P4-SKILLS | skills公开入口 | PARTIAL | 进行中 | P1 | TASK-MOD-P3E | root | 解决已开放浏览器门禁，完成独审/原生与完整verify后按实际主线条件合流；原兼容出口保留一个发布周期。 |
+| TASK-MOD-P4-PLUGINS | plugins公开入口 | PARTIAL | 进行中 | P1 | TASK-MOD-P4-SKILLS | root | 解决已开放浏览器门禁，完成独审/原生与完整verify后按实际主线条件合流；原兼容出口保留一个发布周期。 |
+| TASK-MOD-P4-MODELS | models公开入口 | PARTIAL | 进行中 | P1 | TASK-MOD-P4-PLUGINS | root | 解决已开放浏览器门禁，完成独审/原生与完整verify后按实际主线条件合流；原兼容出口保留一个发布周期。 |
+| TASK-MOD-P4-AGENT | agent公开入口 | PARTIAL | 进行中 | P1 | TASK-MOD-P4-MODELS | root | 解决已开放浏览器门禁，完成独审/原生与完整verify后按实际主线条件合流；原兼容出口保留一个发布周期。 |
+| TASK-MOD-P4-CREATION | creation公开入口 | PARTIAL | 进行中 | P1 | TASK-MOD-P4-AGENT | root | 解决已开放浏览器门禁，完成独审/原生与完整verify后按实际主线条件合流；原兼容出口保留一个发布周期。 |
+| TASK-MOD-P4-REMAINING | 其余切片公开入口 | PARTIAL | 进行中 | P1 | TASK-MOD-P4-CREATION | root | 解决已开放浏览器门禁，完成独审/原生与完整verify后按实际主线条件合流；原兼容出口保留一个发布周期。 |
+| TASK-MOD-P5 | 插件清单、权限与分级隔离 | PARTIAL | 进行中 | P1 | TASK-MOD-P4-REMAINING | root | P5生产门保持关闭；补原生/跨浏览器/更多逃逸面/独审与Figma授权，再推进T0/T2/T3和其他贡献。 |
 
 ## TASK-FIGMA-PAGES-20261025 — 重新核查并整理Figma 04/05页面与状态
 
@@ -3769,3 +3776,136 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Next action: 等待首次正式发布，记录最早可移除版本；继续保留旧路径同一实现。
 - Last verified: 2026-10-28
 - Updated: 2026-10-28
+
+## TASK-MOD-P4-SKILLS — skills公开入口
+
+- Goal: skills公开入口
+- Scope: 只收敛跨切片导入与公开导出；不改算法、UI结构/CSS、存储身份；保持type-only、默认导出和动态入口的符号身份。
+- Display status: 进行中
+- Priority: P1 — 未记录
+- Requirement refs: docs/changes/2026-10-29-p4-skills/intent.md, docs/changes/2026-10-29-p4-skills/spec.md
+- Feature IDs: FEAT-011
+- Owner role: implementation-integrator
+- Acceptance: 公开入口与权限边界符合本卡spec; 不丢旧数据、不改变生成/审批/存储身份; 相关门禁和运行回归有实际证据
+- Branch: `refactor/TASK-MOD-P3-feature-cycles`
+- Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
+- Modules: src/features/skills
+- Verification: PARTIAL — P4源码收敛完成：367条唯一深层依赖边降0，285条属于指定五切片、其余82条亦清零；381条导入/再导出语句按顺序改写。R3由10降0，R4保持0，其余基线不新增。25个迁移纯函数AST一致，五份既有UI结构一致，最终CSS与P3完全同字节。根最终2363通过/0失败/20跳过（P4单独阶段2355通过），Mobile373与Agent204通过。限定浏览器、体积及退出码见最终回执；独审/原生/完整verify/main尚未完成，保持PARTIAL。
+- Evidence: [docs/changes/2026-10-29-p4-skills/verification.md](../../docs/changes/2026-10-29-p4-skills/verification.md), [docs/changes/2026-10-29-p4-skills/review.md](../../docs/changes/2026-10-29-p4-skills/review.md)
+- Next action: 解决已开放浏览器门禁，完成独审/原生与完整verify后按实际主线条件合流；原兼容出口保留一个发布周期。
+- Last verified: 2026-10-29
+- Updated: 2026-10-29
+
+## TASK-MOD-P4-PLUGINS — plugins公开入口
+
+- Goal: plugins公开入口
+- Scope: 只收敛跨切片导入与公开导出；不改算法、UI结构/CSS、存储身份；保持type-only、默认导出和动态入口的符号身份。
+- Display status: 进行中
+- Priority: P1 — 未记录
+- Requirement refs: docs/changes/2026-10-29-p4-plugins/intent.md, docs/changes/2026-10-29-p4-plugins/spec.md
+- Feature IDs: FEAT-013
+- Owner role: implementation-integrator
+- Acceptance: 公开入口与权限边界符合本卡spec; 不丢旧数据、不改变生成/审批/存储身份; 相关门禁和运行回归有实际证据
+- Branch: `refactor/TASK-MOD-P3-feature-cycles`
+- Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
+- Modules: src/features/plugins
+- Verification: PARTIAL — P4源码收敛完成：367条唯一深层依赖边降0，285条属于指定五切片、其余82条亦清零；381条导入/再导出语句按顺序改写。R3由10降0，R4保持0，其余基线不新增。25个迁移纯函数AST一致，五份既有UI结构一致，最终CSS与P3完全同字节。根最终2363通过/0失败/20跳过（P4单独阶段2355通过），Mobile373与Agent204通过。限定浏览器、体积及退出码见最终回执；独审/原生/完整verify/main尚未完成，保持PARTIAL。
+- Evidence: [docs/changes/2026-10-29-p4-plugins/verification.md](../../docs/changes/2026-10-29-p4-plugins/verification.md), [docs/changes/2026-10-29-p4-plugins/review.md](../../docs/changes/2026-10-29-p4-plugins/review.md)
+- Next action: 解决已开放浏览器门禁，完成独审/原生与完整verify后按实际主线条件合流；原兼容出口保留一个发布周期。
+- Last verified: 2026-10-29
+- Updated: 2026-10-29
+
+## TASK-MOD-P4-MODELS — models公开入口
+
+- Goal: models公开入口
+- Scope: 只收敛跨切片导入与公开导出；不改算法、UI结构/CSS、存储身份；保持type-only、默认导出和动态入口的符号身份。
+- Display status: 进行中
+- Priority: P1 — 未记录
+- Requirement refs: docs/changes/2026-10-29-p4-models/intent.md, docs/changes/2026-10-29-p4-models/spec.md
+- Feature IDs: FEAT-038
+- Owner role: implementation-integrator
+- Acceptance: 公开入口与权限边界符合本卡spec; 不丢旧数据、不改变生成/审批/存储身份; 相关门禁和运行回归有实际证据
+- Branch: `refactor/TASK-MOD-P3-feature-cycles`
+- Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
+- Modules: src/features/models
+- Verification: PARTIAL — P4源码收敛完成：367条唯一深层依赖边降0，285条属于指定五切片、其余82条亦清零；381条导入/再导出语句按顺序改写。R3由10降0，R4保持0，其余基线不新增。25个迁移纯函数AST一致，五份既有UI结构一致，最终CSS与P3完全同字节。根最终2363通过/0失败/20跳过（P4单独阶段2355通过），Mobile373与Agent204通过。限定浏览器、体积及退出码见最终回执；独审/原生/完整verify/main尚未完成，保持PARTIAL。
+- Evidence: [docs/changes/2026-10-29-p4-models/verification.md](../../docs/changes/2026-10-29-p4-models/verification.md), [docs/changes/2026-10-29-p4-models/review.md](../../docs/changes/2026-10-29-p4-models/review.md)
+- Next action: 解决已开放浏览器门禁，完成独审/原生与完整verify后按实际主线条件合流；原兼容出口保留一个发布周期。
+- Last verified: 2026-10-29
+- Updated: 2026-10-29
+
+## TASK-MOD-P4-AGENT — agent公开入口
+
+- Goal: agent公开入口
+- Scope: 只收敛跨切片导入与公开导出；不改算法、UI结构/CSS、存储身份；保持type-only、默认导出和动态入口的符号身份。
+- Display status: 进行中
+- Priority: P1 — 未记录
+- Requirement refs: docs/changes/2026-10-29-p4-agent/intent.md, docs/changes/2026-10-29-p4-agent/spec.md
+- Feature IDs: FEAT-030
+- Owner role: implementation-integrator
+- Acceptance: 公开入口与权限边界符合本卡spec; 不丢旧数据、不改变生成/审批/存储身份; 相关门禁和运行回归有实际证据
+- Branch: `refactor/TASK-MOD-P3-feature-cycles`
+- Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
+- Modules: src/features/agent
+- Verification: PARTIAL — P4源码收敛完成：367条唯一深层依赖边降0，285条属于指定五切片、其余82条亦清零；381条导入/再导出语句按顺序改写。R3由10降0，R4保持0，其余基线不新增。25个迁移纯函数AST一致，五份既有UI结构一致，最终CSS与P3完全同字节。根最终2363通过/0失败/20跳过（P4单独阶段2355通过），Mobile373与Agent204通过。限定浏览器、体积及退出码见最终回执；独审/原生/完整verify/main尚未完成，保持PARTIAL。
+- Evidence: [docs/changes/2026-10-29-p4-agent/verification.md](../../docs/changes/2026-10-29-p4-agent/verification.md), [docs/changes/2026-10-29-p4-agent/review.md](../../docs/changes/2026-10-29-p4-agent/review.md)
+- Next action: 解决已开放浏览器门禁，完成独审/原生与完整verify后按实际主线条件合流；原兼容出口保留一个发布周期。
+- Last verified: 2026-10-29
+- Updated: 2026-10-29
+
+## TASK-MOD-P4-CREATION — creation公开入口
+
+- Goal: creation公开入口
+- Scope: 只收敛跨切片导入与公开导出；不改算法、UI结构/CSS、存储身份；保持type-only、默认导出和动态入口的符号身份。
+- Display status: 进行中
+- Priority: P1 — 未记录
+- Requirement refs: docs/changes/2026-10-29-p4-creation/intent.md, docs/changes/2026-10-29-p4-creation/spec.md
+- Feature IDs: FEAT-035
+- Owner role: implementation-integrator
+- Acceptance: 公开入口与权限边界符合本卡spec; 不丢旧数据、不改变生成/审批/存储身份; 相关门禁和运行回归有实际证据
+- Branch: `refactor/TASK-MOD-P3-feature-cycles`
+- Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
+- Modules: src/features/creation
+- Verification: PARTIAL — P4源码收敛完成：367条唯一深层依赖边降0，285条属于指定五切片、其余82条亦清零；381条导入/再导出语句按顺序改写。R3由10降0，R4保持0，其余基线不新增。25个迁移纯函数AST一致，五份既有UI结构一致，最终CSS与P3完全同字节。根最终2363通过/0失败/20跳过（P4单独阶段2355通过），Mobile373与Agent204通过。限定浏览器、体积及退出码见最终回执；独审/原生/完整verify/main尚未完成，保持PARTIAL。
+- Evidence: [docs/changes/2026-10-29-p4-creation/verification.md](../../docs/changes/2026-10-29-p4-creation/verification.md), [docs/changes/2026-10-29-p4-creation/review.md](../../docs/changes/2026-10-29-p4-creation/review.md)
+- Next action: 解决已开放浏览器门禁，完成独审/原生与完整verify后按实际主线条件合流；原兼容出口保留一个发布周期。
+- Last verified: 2026-10-29
+- Updated: 2026-10-29
+
+## TASK-MOD-P4-REMAINING — 其余切片公开入口
+
+- Goal: 其余切片公开入口
+- Scope: 只收敛跨切片导入与公开导出；不改算法、UI结构/CSS、存储身份；保持type-only、默认导出和动态入口的符号身份。
+- Display status: 进行中
+- Priority: P1 — 未记录
+- Requirement refs: docs/changes/2026-10-29-p4-remaining/intent.md, docs/changes/2026-10-29-p4-remaining/spec.md
+- Feature IDs: FEAT-035, FEAT-030
+- Owner role: implementation-integrator
+- Acceptance: 公开入口与权限边界符合本卡spec; 不丢旧数据、不改变生成/审批/存储身份; 相关门禁和运行回归有实际证据
+- Branch: `refactor/TASK-MOD-P3-feature-cycles`
+- Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
+- Modules: src/features/image-edit, src/features/comfyui, src/features/projects, src/features/compare, src/features/prompts, src/features/partners, src/features/sync, src/features/commands, src/features/browser, src/features/local-service, src/features/settings, src/features/mcp, src/features/memory, src/features/usage, src/features/ai-gateway
+- Verification: PARTIAL — P4源码收敛完成：367条唯一深层依赖边降0，285条属于指定五切片、其余82条亦清零；381条导入/再导出语句按顺序改写。R3由10降0，R4保持0，其余基线不新增。25个迁移纯函数AST一致，五份既有UI结构一致，最终CSS与P3完全同字节。根最终2363通过/0失败/20跳过（P4单独阶段2355通过），Mobile373与Agent204通过。限定浏览器、体积及退出码见最终回执；独审/原生/完整verify/main尚未完成，保持PARTIAL。
+- Evidence: [docs/changes/2026-10-29-p4-remaining/verification.md](../../docs/changes/2026-10-29-p4-remaining/verification.md), [docs/changes/2026-10-29-p4-remaining/review.md](../../docs/changes/2026-10-29-p4-remaining/review.md)
+- Next action: 解决已开放浏览器门禁，完成独审/原生与完整verify后按实际主线条件合流；原兼容出口保留一个发布周期。
+- Last verified: 2026-10-29
+- Updated: 2026-10-29
+
+## TASK-MOD-P5 — 插件清单、权限与分级隔离
+
+- Goal: 插件清单、权限与分级隔离
+- Scope: 沿OPT-401同一kk-plugin.json设计，加入PermissionPort、默认拒绝的受限RPC和分级运行时；OPEN-3采用补篇A的legacy兼容，旧插件原样加载并明确其仍在宿主realm。新UI授权提示等待Figma设计，当前仅后端与诊断日志，不自动给第三方新增权限。
+- Display status: 进行中
+- Priority: P1 — 未记录
+- Requirement refs: docs/changes/2026-10-29-p5-plugin-permissions/intent.md, docs/changes/2026-10-29-p5-plugin-permissions/spec.md
+- Feature IDs: FEAT-013
+- Owner role: implementation-integrator
+- Acceptance: 公开入口与权限边界符合本卡spec; 不丢旧数据、不改变生成/审批/存储身份; 相关门禁和运行回归有实际证据
+- Branch: `refactor/TASK-MOD-P3-feature-cycles`
+- Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
+- Modules: src/features/plugins
+- Verification: PARTIAL — P5部分完成：契约包1.4.0新增清单/JSON Schema/RPC与PermissionPort；包目录、版本/平台、逐文件SHA、权限交集、身份、消息上限/超时/重放/撤销和更新失败保护已接线。真实Edge实验T1与安装器→React→当前Context链通过；生产新包执行门默认关闭，legacy保持宿主兼容。Desktop IPC、WebRTC/其他逃逸面、独立安全审查、授权Figma/UI、T0/T2/T3与其他贡献未完成，不能称为生产插件沙箱。
+- Evidence: [docs/changes/2026-10-29-p5-plugin-permissions/verification.md](../../docs/changes/2026-10-29-p5-plugin-permissions/verification.md), [docs/changes/2026-10-29-p5-plugin-permissions/review.md](../../docs/changes/2026-10-29-p5-plugin-permissions/review.md)
+- Next action: P5生产门保持关闭；补原生/跨浏览器/更多逃逸面/独审与Figma授权，再推进T0/T2/T3和其他贡献。
+- Last verified: 2026-10-29
+- Updated: 2026-10-29

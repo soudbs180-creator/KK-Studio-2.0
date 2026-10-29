@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState } from "react";
 import { useDismissible } from "../useDismissible";
-import type { CreationTask } from "../../features/creation/model";
+import type { CreationTask } from "../../features/creation/index.ts";
 import {
   TaskPanelPopover,
   tasksForFilter,

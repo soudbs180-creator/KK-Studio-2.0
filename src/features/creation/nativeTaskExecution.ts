@@ -1,9 +1,9 @@
 import React, { type SetStateAction } from "react";
 import type { Asset } from "../../domain/assets.ts";
 import type { CanvasCollectionItem } from "../../domain/canvasItems.ts";
-import { imageResultContext } from "../image-edit/context.ts";
-import { createImageEditRuntime } from "../image-edit/editTasks.ts";
-import { ImageEditMappingError } from "../image-edit/imageProcessing.ts";
+import { imageResultContext } from "../image-edit/index.ts";
+import { createImageEditRuntime } from "../image-edit/index.ts";
+import { ImageEditMappingError } from "../image-edit/index.ts";
 import { loadStoredAsset, storeGeneratedAsset } from "./assetRepository.ts";
 import type {
   CreationProject,

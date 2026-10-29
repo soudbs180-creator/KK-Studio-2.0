@@ -7,7 +7,7 @@ import {
   SIDEBAR_PROJECT_DRAG_TYPE,
   SIDEBAR_PROJECT_TITLE_TYPE,
   type SidebarFolderItem,
-} from "../features/projects/sidebarProjectModel";
+} from "../features/projects/index.ts";
 
 /**
  * 侧栏"项目"区内的项目文件夹行（第一层级容器）。

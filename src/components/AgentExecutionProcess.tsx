@@ -1,8 +1,8 @@
 import type {
   AgentActivityDetail,
   AgentChatItem,
-} from "../features/agent/agentTypes";
-import { agentActivityState } from "../features/agent/agentEvents";
+} from "../features/agent/index.ts";
+import { agentActivityState } from "../features/agent/index.ts";
 
 /** 只展示现有消息活动；折叠状态由原生 details 管理。 */
 export default function AgentExecutionProcess({

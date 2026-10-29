@@ -171,6 +171,35 @@ const twelveAiConnection: ProviderConnection = {
   concurrencyLimit: 2,
 };
 
+test("OpenAI adapter requires the host generator and preserves one submission", async () => {
+  const connection = {
+    ...twelveAiConnection,
+    provider: "OpenAI",
+    baseUrl: "https://api.openai.com/v1",
+  };
+  assert.equal(createGenerationAdapter(connection), null);
+  let calls = 0;
+  const adapter = createGenerationAdapter(connection, {
+    generateImages: async (request) => {
+      calls++;
+      assert.equal(request.providerConnectionId, connection.id);
+      assert.equal(request.idempotencyKey, "host-port-once");
+      return { sources: ["https://fixture.invalid/result.png"] };
+    },
+  });
+  assert.ok(adapter);
+  const job = await adapter.submit({
+    prompt: "fixture",
+    model: "fixture",
+    attachments: [],
+    requestedOutputs: 1,
+    idempotencyKey: "host-port-once",
+    signal: new AbortController().signal,
+  });
+  assert.equal(calls, 1);
+  assert.equal((await adapter.listResults(job.providerJobId)).length, 1);
+});
+
 test("factory refuses paid submission without a host persistence port", async () => {
   let calls = 0;
   const adapter = createGenerationAdapter(twelveAiConnection, {

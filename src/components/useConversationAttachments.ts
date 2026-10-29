@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import type { CreationAttachment } from "../features/creation/model";
-import { storeGeneratedAsset } from "../features/creation/assetRepository";
+import type { CreationAttachment } from "../features/creation/index.ts";
+import { storeGeneratedAsset } from "../features/creation/index.ts";
 import { readAttachmentBatch } from "./readAttachmentBatch";
 
 export const ACCEPTED_IMAGE_TYPES = [

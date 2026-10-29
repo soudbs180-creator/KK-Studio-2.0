@@ -6,7 +6,7 @@ import type {
 } from "../../domain/creationTypes.ts";
 import type { ProviderConnection } from "../../domain/providerConnections.ts";
 
-import { resolveImageModelCapabilities } from "../models/imageModelCapabilities.ts";
+import { resolveImageModelCapabilities } from "../models/index.ts";
 import {
   annotateImage,
   composePixels,

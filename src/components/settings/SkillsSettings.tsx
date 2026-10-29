@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import {
   SKILLS_CHANGED_EVENT,
   type SkillRegistry,
-} from "../../features/skills/skillRegistry";
+} from "../../features/skills/index.ts";
 
 export default function SkillsSettings({
   registry,

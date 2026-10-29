@@ -1,7 +1,7 @@
 import {
   googleAgentConnection,
   type GoogleAgentState,
-} from "../features/agent/googleAgentConnection";
+} from "../features/agent/index.ts";
 export default function GoogleAgentControls({
   state,
 }: {

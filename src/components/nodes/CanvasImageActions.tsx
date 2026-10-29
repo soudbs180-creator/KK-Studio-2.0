@@ -1,12 +1,12 @@
 import { useContext, useState, type RefObject } from "react";
-import { CanvasImageCommandContext } from "../../features/creation/CanvasImageCommand";
+import { CanvasImageCommandContext } from "../../features/creation/index.ts";
 import { effectiveTags } from "../../domain/collectionTags";
 import TagEditor from "../TagEditor";
 import type {
   CanvasCollectionItem,
   CanvasReference,
 } from "../../domain/canvasItems";
-import CompareImageButton from "../../features/compare/CompareImageButton";
+import { CompareImageButton as CompareImageButton } from "../../features/compare/index.ts";
 import UiIcon from "../UiIcon";
 import ImageSelectionToolbar from "../canvas/ImageSelectionToolbar";
 import ImageRedrawDialog from "./ImageRedrawDialog";

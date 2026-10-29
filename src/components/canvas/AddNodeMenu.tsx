@@ -10,8 +10,8 @@ import { createPortal } from "react-dom";
 import { useDismissible } from "../useDismissible";
 import type { CanvasItemKind } from "../../domain/canvasItems";
 import type { AddMenuState } from "./useCanvasAddMenu";
-import { pluginStore } from "../../features/plugins/pluginStore";
-import { listPluginNodeDefinitions } from "../../features/plugins/nodeRegistry";
+import { pluginStore } from "../../features/plugins/index.ts";
+import { listPluginNodeDefinitions } from "../../features/plugins/index.ts";
 import "../../styles/node-menu.css";
 
 const ITEMS: {

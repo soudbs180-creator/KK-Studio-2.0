@@ -6,7 +6,7 @@ export {
   readImageEditContext,
   readImageEditSnapshot,
 } from "../../domain/imageEditSnapshot.ts";
-import type { ResolvedImageModelCapabilities } from "../models/imageModelCapabilities.ts";
+import type { ResolvedImageModelCapabilities } from "../models/index.ts";
 export function editCapabilityReason(
   capabilities: Pick<
     ResolvedImageModelCapabilities,

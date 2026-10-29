@@ -4,7 +4,7 @@ import {
   type CreationSnapshot,
   type SidebarPreferences,
   type SidebarSortMode,
-} from "../creation/model.ts";
+} from "../creation/index.ts";
 
 export type ProjectLifecycleAction =
   | { type: "set-sidebar-sort"; sortMode: SidebarSortMode }

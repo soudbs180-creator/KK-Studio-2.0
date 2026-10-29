@@ -92,3 +92,5 @@ LayeredCredentialStore只在持久写成功后发布缓存；迟到读取和每�
 - 2026-10-18（source176最终有界验收）：174定向、完整Node2055/Agent204/Edge854首试、精确源码双轴/截止P2复验及当前官方Desktop40与默认资料保护通过；Web41，Native Canvas专项另按合成协议边界。旧阶段待验/拒收保留历史，本卡仍PROTOTYPE、父Gateway PARTIAL。main.ts/defaultUI/RustTaskHost未注入，无DPAPI/真实Provider/Hosted/持久chat计费去重证明。
 
 2026-10-28 P3源码解耦候选：TASK-MOD-P3D，完整R4降至0，业务任务/原件/记忆隐私/凭据与旧存储身份保持；未证明原生、真实外部服务或main已更新，功能成熟度不据此升级。[验证TASK-MOD-P3D](../changes/2026-10-28-p3d-creation-models/verification.md)。
+
+2026-10-29 models公开入口进行中；[TASK-MOD-P4-MODELS验证](../changes/2026-10-29-p4-models/verification.md)。既有产品成熟度不因架构重构自动升级。

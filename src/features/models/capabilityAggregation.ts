@@ -4,11 +4,8 @@ import {
   supportsOperation,
   type ChannelRegistry,
   type ChannelIndexEntry,
-} from "../ai-gateway/channels/registry.ts";
-import type {
-  Scheduler,
-  ChannelHealthTracker,
-} from "../ai-gateway/scheduler.ts";
+} from "../ai-gateway/index.ts";
+import type { Scheduler, ChannelHealthTracker } from "../ai-gateway/index.ts";
 import type { ProviderConnection } from "../../domain/providerConnections.ts";
 import { modelSelectionId } from "./modelSelection.ts";
 import { catalogForConnection, type ModelCatalog } from "./modelCatalog.ts";

@@ -203,11 +203,12 @@ async function harness(options: Options = {}) {
           if (name.includes("api/core")) return { isTauri: () => true };
           if (name.includes("useSettingsBusy"))
             return { default: (busy: boolean) => busyValues.push(busy) };
-          if (name.includes("googleAgentConfig"))
+          if (name.endsWith("/agent/index.ts"))
             return {
               readGoogleCliPreference: () => ({
                 bridgeUrl: "http://127.0.0.1:1424",
               }),
+              normalizeGeminiBridgeUrl: (url: string) => url,
             };
           if (name.includes("geminiCliAdapter"))
             return { normalizeGeminiBridgeUrl: (url: string) => url };

@@ -6,8 +6,8 @@ import {
   useSyncExternalStore,
 } from "react";
 import { useSettingsNavigationBusy } from "./useSettingsBusy";
-import { agentConnection } from "../../features/agent/agentConnection";
-import { desktopAgentLifecycle } from "../../features/agent/desktopAgentLifecycle";
+import { agentConnection } from "../../features/agent/index.ts";
+import { desktopAgentLifecycle } from "../../features/agent/index.ts";
 import AgentConnectionSettings from "./AgentConnectionSettings";
 import ModelAccessApiPanel from "./ModelAccessApiPanel";
 import GoogleConnectionSettings from "./GoogleConnectionSettings";

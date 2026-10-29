@@ -3,12 +3,12 @@ import {
   catalogForConnection,
   saveModelCatalog,
   type ModelKind,
-} from "../../features/models/modelCatalog";
+} from "../../features/models/index.ts";
 import {
   connectionFromModelProfile,
   newModelProfileConnection,
   readProviderConnections,
-} from "../../features/creation/providerRegistry";
+} from "../../features/creation/index.ts";
 import { requiresModelProviderSelection } from "./modelProviderSettingsState";
 import type { ProviderConnection } from "../../domain/providerConnections";
 import {
@@ -19,7 +19,7 @@ import ImageModelCapabilityFields, {
   imageCapabilityDraft,
   imageDeclarationFromDraft,
 } from "./ImageModelCapabilityFields";
-import { useModelCatalogPreferences } from "../../features/models/modelCatalogStore";
+import { useModelCatalogPreferences } from "../../features/models/index.ts";
 import { fetchAndSaveProviderModels } from "./fetchProviderModels";
 
 export default function ProviderModelCatalog({

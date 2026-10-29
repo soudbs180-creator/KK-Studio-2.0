@@ -1,10 +1,10 @@
 import { useContext, useState } from "react";
 import { SettingsNavigationContext } from "./SettingsNavigationContext";
-import type { SkillRegistry } from "../../features/skills/skillRegistry";
+import type { SkillRegistry } from "../../features/skills/index.ts";
 import McpSettings from "./McpSettings";
 import PluginManagerSettings from "./PluginManagerSettings";
 import SkillsSettings from "./SkillsSettings";
-import PartnerRoles from "../../features/partners/PartnerRoles";
+import { PartnerRoles as PartnerRoles } from "../../features/partners/index.ts";
 
 export type ExtensionsTab = "plugins" | "skills" | "partners";
 

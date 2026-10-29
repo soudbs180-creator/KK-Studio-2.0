@@ -10,14 +10,14 @@ import type { PrivateAssetStore } from "./assets.ts";
 import type { PersistentGenerationWorker } from "./worker.ts";
 import { PlatformError, rejectSecrets, type ArchivedAsset } from "./types.ts";
 import { receiveWebhook } from "./webhook.ts";
-import type { ChatDeps } from "../ai-gateway/chat.ts";
+import type { ChatDeps } from "../ai-gateway/index.ts";
 import {
   newCompletionId,
   parseChatRequest,
   runChatCompletion,
   toOpenAiError,
-} from "../ai-gateway/chat.ts";
-import { extractNormalized } from "../ai-gateway/scheduler.ts";
+} from "../ai-gateway/index.ts";
+import { extractNormalized } from "../ai-gateway/index.ts";
 
 export interface Principal {
   ownerId: string;

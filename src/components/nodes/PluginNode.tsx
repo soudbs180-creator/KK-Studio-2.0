@@ -5,14 +5,14 @@ import type {
   NodeEditingProps,
   PluginItemPayload,
 } from "../../domain/canvasItems";
-import { getPluginNodeDefinition } from "../../features/plugins/nodeRegistry";
-import { pluginLoader } from "../../features/plugins/pluginLoader";
-import { readPluginTheme } from "../../features/plugins/pluginRuntime";
+import { getPluginNodeDefinition } from "../../features/plugins/index.ts";
+import { pluginLoader } from "../../features/plugins/index.ts";
+import { readPluginTheme } from "../../features/plugins/index.ts";
 import type {
   PluginConnection,
   PluginNodeContext,
   PluginNodeData,
-} from "../../features/plugins/pluginTypes";
+} from "../../features/plugins/index.ts";
 import "../../styles/plugin-nodes.css";
 
 function pluginStorage(pluginId: string) {

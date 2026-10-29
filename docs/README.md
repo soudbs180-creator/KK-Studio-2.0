@@ -212,3 +212,7 @@ worktree 落点：`D:\kk-studio\.worktrees\TASK-ID-slug`。新建 worktree 后�
 P1纯契约与单一清单投影的草案见[ADR-028](architecture/adr/ADR-028-capability-manifest-projections.md)；[P1规格与映射](changes/2026-10-28-capability-contract/spec.md)区分声明候选、运行接线及未验收边界。
 
 P3a–e依赖反转与兼容方案见[ADR-029](architecture/adr/ADR-029-feature-cycle-decoupling.md)；静态无环不代表主线或原生验收完成。
+
+公开切片与宿主端口见[ADR-030](architecture/adr/ADR-030-public-feature-entries.md)。
+
+插件权限与实验隔离见[ADR-031](architecture/adr/ADR-031-plugin-permissions-and-sandbox.md)。

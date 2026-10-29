@@ -13,11 +13,11 @@ import {
 import { type CanvasCollectionItem } from "../../domain/canvasItems";
 import { reconcileCanvasConnections } from "../../domain/canvasConnections";
 import { mergeCanvasEdges } from "../../domain/projectCanvas";
-import { canvasImageReferenceLimit } from "../../features/models/imageModelCapabilities";
-import { readProviderConnections } from "../../features/creation/providerRegistry";
-import { CanvasImageCommandContext } from "../../features/creation/CanvasImageCommand";
+import { canvasImageReferenceLimit } from "../../features/models/index.ts";
+import { readProviderConnections } from "../../features/creation/index.ts";
+import { CanvasImageCommandContext } from "../../features/creation/index.ts";
 import { canConnectTarget } from "./connectionRules";
-import { shadowEventBus } from "../../features/sync/shadowEventBus";
+import { shadowEventBus } from "../../features/sync/index.ts";
 
 export function useCanvasConnections(
   items: CanvasCollectionItem[],

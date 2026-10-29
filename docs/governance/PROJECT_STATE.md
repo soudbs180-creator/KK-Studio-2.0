@@ -2,7 +2,7 @@
 
 - docId: PROJECT_STATE
 - status: current
-- updatedAt: 2026-10-28
+- updatedAt: 2026-10-29
 - source: `docs/governance/task-ledger.json`
 - supersededBy: null
 
@@ -44,3 +44,7 @@ TASK-MOD-P0已按用户提供执行规范与补篇启动；当前实现、验证
 2026-10-28 P2任务树候选：包1.2.0、Desktop/Web源码48、Mobile43；薄注册器与默认关闭image.inpaint接原任务Runtime。根2350/Mobile373通过，双构建任务/资产/HTTP/DOM同态通过；两路径image-edit各14 pass/1原窄屏fail，严格PNG仍有1像素渲染不稳定，保持PARTIAL。原生/独审/main未验，详情见[P2验证](../changes/2026-10-28-inpaint-capability/verification.md)；四文档其他P/STD/ORG及P1-G继续开放。
 
 2026-10-28 P3a–e 源码候选：契约包1.3.0、Desktop/Web2.1.49、Mobile2.1.43。完整图R4由16降0，R1由405降367，其余规则无新增；212个迁移函数体AST一致、六份UI JSX结构一致，纯核心/infra/runtime无间接feature依赖。根2354通过/20跳过/0失败，Mobile373与Agent204通过（Agent另2跳过），根/契约/Mobile类型通过；Edge双构建各3/3通过，任务/资产/HTTP/DOM同态且4张PNG SHA完全一致。核心浏览器原9失败保留：8项在父P2错误和位置逐项一致，另1项为P2已有窄屏HUD失败。P2 flag仍默认关闭；独审、Tauri/真实Provider、完整verify和main整合未完成，五阶段分别PARTIAL。P3f、P4–8及STD/ORG等四文档其余任务继续开放。
+
+2026-10-29最新候选：P4源码收敛完成：367条唯一深层依赖边降0，285条属于指定五切片、其余82条亦清零；381条导入/再导出语句按顺序改写。R3由10降0，R4保持0，其余基线不新增。25个迁移纯函数AST一致，五份既有UI结构一致，最终CSS与P3完全同字节。根最终2363通过/0失败/20跳过（P4单独阶段2355通过），Mobile373与Agent204通过。限定浏览器、体积及退出码见最终回执；独审/原生/完整verify/main尚未完成，保持PARTIAL。 P5部分完成：契约包1.4.0新增清单/JSON Schema/RPC与PermissionPort；包目录、版本/平台、逐文件SHA、权限交集、身份、消息上限/超时/重放/撤销和更新失败保护已接线。真实Edge实验T1与安装器→React→当前Context链通过；生产新包执行门默认关闭，legacy保持宿主兼容。Desktop IPC、WebRTC/其他逃逸面、独立安全审查、授权Figma/UI、T0/T2/T3与其他贡献未完成，不能称为生产插件沙箱。 当前Desktop/Web2.1.50、Mobile2.1.43；主仓与Figma树未修改，当前复用P3任务分支。
+
+最终限制更新：任务/资产/HTTP/DOM同态，CSS字节相同；严格PNG有1像素/1灰阶差异仍未通过。P5生产门默认关闭，Web实验不能替代原生、跨浏览器与独审。

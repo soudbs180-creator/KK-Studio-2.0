@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { appVersion } from "../../runtime/appInfo.ts";
-import type { ModelSpaceProfile } from "../models/modelCatalog.ts";
+import type { ModelSpaceProfile } from "../models/index.ts";
 
 const LEGACY_MCP_PROTOCOL_VERSION = "2025-11-25";
 const MODERN_MCP_PROTOCOL_VERSION = "2026-07-28";

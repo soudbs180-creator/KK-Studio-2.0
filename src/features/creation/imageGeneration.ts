@@ -7,7 +7,7 @@ import {
 import type { ProviderConnection } from "../../domain/providerConnections.ts";
 import { createGenerationAdapter } from "../../integrations/generation/providerAdapterFactory.ts";
 import { twelveAiApiBase } from "../../integrations/generation/twelveAiTaskProtocol.ts";
-import { readModelCatalogs } from "../models/modelCatalog.ts";
+import { readModelCatalogs } from "../models/index.ts";
 import { loadStoredAsset } from "./assetRepository.ts";
 import { getSessionApiKey, loadApiKey } from "./providerCredentials.ts";
 import { modelSupportsKind, type CreationAttachment } from "./model.ts";
@@ -427,7 +427,7 @@ export async function generateImages(options: {
         }
       : undefined);
   const adapter = candidateConnection
-    ? createGenerationAdapter(candidateConnection)
+    ? createGenerationAdapter(candidateConnection, { generateImages })
     : null;
 
   if (adapter?.connection.kind === "local_comfyui") {

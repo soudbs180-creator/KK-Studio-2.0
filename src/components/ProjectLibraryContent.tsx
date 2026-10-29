@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import type { CreationProject } from "../features/creation/model";
-import type { ProjectLibraryActions } from "../features/projects/projectLifecycle";
-import { sidebarProjectItem } from "../features/projects/sidebarProjectModel";
+import type { CreationProject } from "../features/creation/index.ts";
+import type { ProjectLibraryActions } from "../features/projects/index.ts";
+import { sidebarProjectItem } from "../features/projects/index.ts";
 import SidebarProjectEntry from "./SidebarProjectEntry";
 
 export default function ProjectLibraryContent({

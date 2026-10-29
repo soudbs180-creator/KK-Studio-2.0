@@ -13,7 +13,7 @@ import {
   protocolBindingMatches,
   providerNeedsKey,
 } from "../../domain/providerProtocol.ts";
-import { catalogForConnection } from "../models/modelCatalog.ts";
+import { catalogForConnection } from "../models/index.ts";
 import {
   loadStoredAsset,
   type StoredGeneratedAsset,

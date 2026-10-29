@@ -2,9 +2,9 @@ import { useContext, useRef } from "react";
 import { useDismissible } from "../useDismissible";
 import BrandLogo from "../BrandLogo";
 import ModelPickerMenu from "../ModelPickerMenu";
-import { selectedModelLabel } from "../../features/models/modelPresentation";
-import { CanvasImageNodeContext } from "../../features/creation/CanvasImageCommand";
-import type { ModelSelection } from "../../features/models/modelSelection";
+import { selectedModelLabel } from "../../features/models/index.ts";
+import { CanvasImageNodeContext } from "../../features/creation/index.ts";
+import type { ModelSelection } from "../../features/models/index.ts";
 export default function CreationModelPicker({
   kind,
   value,

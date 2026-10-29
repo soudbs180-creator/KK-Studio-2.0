@@ -1,9 +1,9 @@
-import { credentialId, loadApiKey } from "../creation/providerCredentials.ts";
-import { readProviderConnections } from "../creation/providerRegistry.ts";
+import { credentialId, loadApiKey } from "../creation/index.ts";
+import { readProviderConnections } from "../creation/index.ts";
 import {
   restoreProviderConnection,
   saveProviderConnection,
-} from "../creation/providerSaveRecovery.ts";
+} from "../creation/index.ts";
 import type { ProviderConnection } from "../../domain/providerConnections.ts";
 import { GOOGLE_API_BASE, GOOGLE_IMAGE_MODEL } from "./googleInteractions.ts";
 import { GEMINI_BRIDGE_DEFAULT_URL } from "./geminiCliAdapter.ts";

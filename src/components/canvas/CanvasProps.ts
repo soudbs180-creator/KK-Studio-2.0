@@ -6,7 +6,7 @@ import type {
 } from "react";
 import type { CanvasCollectionItem } from "../../domain/canvasItems";
 import type { ProjectCanvas } from "../../domain/projectCanvas";
-import type { CreationTask } from "../../features/creation/model";
+import type { CreationTask } from "../../features/creation/index.ts";
 import type { AgentCanvasBinding } from "./useAgentCanvasView";
 
 /** Canvas host inputs, including the project-scoped Agent controller. */

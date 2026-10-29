@@ -68,7 +68,7 @@ import {
   codexGenerationPrompt,
   codexReasoningModel,
 } from "./codexGeneration.ts";
-import { compileStructuredPrompt } from "../prompts/structuredPromptCompiler.ts";
+import { compileStructuredPrompt } from "../prompts/index.ts";
 export interface AgentOpResult {
   applied: CanvasAgentOp[];
   rejected: Array<{ op: CanvasAgentOp; reason: string }>;

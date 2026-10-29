@@ -3,8 +3,8 @@ import type {
   RelayCandidate,
   EntryMetadata,
 } from "./modelMenuEntries.ts";
-import type { ChannelRegistry } from "../ai-gateway/channels/registry.ts";
-import type { Scheduler } from "../ai-gateway/scheduler.ts";
+import type { ChannelRegistry } from "../ai-gateway/index.ts";
+import type { Scheduler } from "../ai-gateway/index.ts";
 import type { ModelSelection } from "./modelSelection.ts";
 
 export type { RelayCandidate, EntryMetadata };

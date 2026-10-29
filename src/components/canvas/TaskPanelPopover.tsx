@@ -10,7 +10,7 @@ import UiIcon from "../UiIcon";
 import type {
   CreationTask,
   CreationTaskStatus,
-} from "../../features/creation/model";
+} from "../../features/creation/index.ts";
 
 export type TaskFilter = "全部" | "执行中" | "未完成" | "失败";
 

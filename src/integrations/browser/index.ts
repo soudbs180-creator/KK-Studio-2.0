@@ -1,8 +1,8 @@
-import { createBrowserBackend } from "../../features/browser/browserBackend.ts";
+import { createBrowserBackend } from "../../domain/browserSession.ts";
 import type {
   BrowserBackend,
   BrowserProviderId,
-} from "../../features/browser/browserTypes.ts";
+} from "../../domain/browserContracts.ts";
 
 export { nativeBrowserRuntime } from "./browserRuntime.ts";
 export { inspectEgoLite, openEgoLite } from "./egoLiteRuntime.ts";

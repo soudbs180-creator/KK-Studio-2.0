@@ -1,7 +1,10 @@
 import type { ProviderConnection } from "../../domain/providerConnections.ts";
 import { GeminiApiAdapter } from "./geminiApiAdapter.ts";
 import { LocalComfyUiAdapter } from "./localComfyUiAdapter.ts";
-import { OpenAiImageAdapter } from "./openAiImageAdapter.ts";
+import {
+  OpenAiImageAdapter,
+  type OpenAiImageGenerator,
+} from "./openAiImageAdapter.ts";
 import {
   TwelveAiTaskAdapter,
   type TwelveAiTaskAdapterOptions,
@@ -15,7 +18,9 @@ import type { GenerationProviderAdapter } from "./providerAdapter.ts";
  */
 export function createGenerationAdapter(
   connection: ProviderConnection,
-  options?: TwelveAiTaskAdapterOptions,
+  options?: TwelveAiTaskAdapterOptions & {
+    generateImages?: OpenAiImageGenerator;
+  },
 ): GenerationProviderAdapter | null {
   if (connection.state === "disabled" || connection.state === "quarantined")
     return null;
@@ -33,6 +38,8 @@ export function createGenerationAdapter(
   if (provider.includes("gemini") || provider.includes("generativelanguage"))
     return new GeminiApiAdapter(connection);
   if (connection.capabilities.modalities.includes("image"))
-    return new OpenAiImageAdapter(connection);
+    return options?.generateImages
+      ? new OpenAiImageAdapter(connection, options.generateImages)
+      : null;
   return null;
 }

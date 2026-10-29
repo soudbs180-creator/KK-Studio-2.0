@@ -1,5 +1,5 @@
 import type { CanvasReference } from "../../domain/canvasItems";
-import { storeGeneratedAsset } from "../../features/creation/assetRepository.ts";
+import { storeGeneratedAsset } from "../../features/creation/index.ts";
 
 export async function readReferenceMedia(
   files: File[],

@@ -12,7 +12,7 @@
  */
 
 import { z } from "zod";
-import type { CreationProject } from "../creation/model.ts";
+import type { CreationProject } from "../creation/index.ts";
 import {
   StagePlanError,
   casAdvanceStage,

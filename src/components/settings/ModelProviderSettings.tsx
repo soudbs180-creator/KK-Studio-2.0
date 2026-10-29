@@ -1,17 +1,17 @@
 import { useRef, useState } from "react";
 import { testProviderConnection } from "./testProviderConnection";
-import { credentialId } from "../../features/creation/providerCredentials";
+import { credentialId } from "../../features/creation/index.ts";
 import {
   clearProviderConnectionKey,
   providerSaveErrorMessage,
   saveProviderConnection,
-} from "../../features/creation/providerSaveRecovery";
+} from "../../features/creation/index.ts";
 import ProviderConnectionStatus from "./ProviderConnectionStatus";
 import ProviderConnectionList from "./ProviderConnectionList";
 import ProviderProfileFields from "./ProviderProfileFields";
 import ProviderSettingsActions from "./ProviderSettingsActions";
 import ProviderModelCatalog from "./ProviderModelCatalog";
-import { readProviderConnections } from "../../features/creation/providerRegistry";
+import { readProviderConnections } from "../../features/creation/index.ts";
 import type { ProviderConnection } from "../../domain/providerConnections";
 import { providerNeedsKey } from "../../domain/providerProtocol.ts";
 import { useProviderCredentialState } from "./useProviderCredentialState";

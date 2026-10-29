@@ -9,7 +9,7 @@ import type {
   CanvasCollectionItem,
   CanvasReference,
 } from "../../domain/canvasItems.ts";
-import { useImageModelCapabilities } from "../models/useImageModelCapabilities.ts";
+import { useImageModelCapabilities } from "../models/index.ts";
 import ImageCanvasLayers from "./ImageCanvasLayers.tsx";
 import {
   maskBounds,

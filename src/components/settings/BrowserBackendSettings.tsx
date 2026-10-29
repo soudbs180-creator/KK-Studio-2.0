@@ -3,15 +3,15 @@ import { isTauri } from "@tauri-apps/api/core";
 import {
   getBrowserProvider,
   listBrowserProviders,
-} from "../../features/browser/browserProviders.ts";
+} from "../../features/browser/index.ts";
 import {
   readBrowserProvider,
   writeBrowserProvider,
-} from "../../features/browser/browserPreferences.ts";
+} from "../../features/browser/index.ts";
 import type {
   BrowserInspection,
   BrowserProviderId,
-} from "../../features/browser/browserTypes.ts";
+} from "../../features/browser/index.ts";
 import { nativeBrowserRuntime } from "../../integrations/browser/browserRuntime.ts";
 
 export default function BrowserBackendSettings({

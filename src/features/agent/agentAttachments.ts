@@ -1,5 +1,5 @@
 import type { AgentDraftAttachment } from "../../../packages/creation-contracts/index.ts";
-import { loadStoredAsset } from "../creation/assetRepository.ts";
+import { loadStoredAsset } from "../creation/index.ts";
 import type { AgentTurnInput } from "./agentTypes.ts";
 export type { AgentDraftAttachment } from "../../../packages/creation-contracts/index.ts";
 

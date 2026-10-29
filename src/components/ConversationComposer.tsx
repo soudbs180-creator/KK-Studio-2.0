@@ -10,9 +10,9 @@ import ComposerTextarea from "./ComposerTextarea";
 import ConversationActions from "./ConversationActions";
 import ModelVariantControl from "./ModelVariantControl";
 import { useComposerMenus } from "./useComposerMenus";
-import type { CreationDraft } from "../features/creation/model";
-import type { ModelSelection } from "../features/models/modelSelection";
-import type { SkillRecord } from "../features/skills/skillRegistry";
+import type { CreationDraft } from "../features/creation/index.ts";
+import type { ModelSelection } from "../features/models/index.ts";
+import type { SkillRecord } from "../features/skills/index.ts";
 
 export default function ConversationComposer({
   input,

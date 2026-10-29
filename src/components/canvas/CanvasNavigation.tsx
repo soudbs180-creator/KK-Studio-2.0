@@ -6,6 +6,7 @@ import CanvasZoomMenu from "./CanvasZoomMenu";
 import CanvasMinimap from "./CanvasMinimap";
 import ToolbarIcon from "./ToolbarIcon";
 import "../../styles/canvas-navigation.css";
+import "../../styles/local-generation.css";
 
 interface NavigationProps {
   transform: ViewTransform;

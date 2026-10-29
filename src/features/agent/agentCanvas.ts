@@ -17,7 +17,7 @@ import { cardLayout } from "../../domain/canvasGraph.ts";
 import type { CanvasCollectionItem } from "../../domain/canvasItems.ts";
 import type { Point } from "../../domain/canvasViewport.ts";
 import type { ProjectCanvas } from "../../domain/projectCanvas.ts";
-import type { CreationProject } from "../creation/model.ts";
+import type { CreationProject } from "../creation/index.ts";
 import type {
   CanvasAgentOp,
   CanvasAgentSnapshot,

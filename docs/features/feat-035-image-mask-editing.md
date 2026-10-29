@@ -36,3 +36,7 @@
 - 2026-10-28 P2候选：VITE_CAPABILITIES_INPAINT默认关闭；开启经薄注册器把原准备任务交回原Runtime，不重复HTTP/归档、不改UI/存储身份。两构建任务/资产/溯源/请求/DOM同态及单次派发、重载恢复通过；完整image-edit各14 pass/1原窄屏fail。严格PNG仍有录音按钮边缘1灰阶像素不稳定，连续同路径采样也复现；未宣称零差异/原生或真实Provider通过。Desktop/Web源码48、Mobile43，未合main，见[P2验证](../changes/2026-10-28-inpaint-capability/verification.md)。
 
 2026-10-28 P3源码解耦候选：TASK-MOD-P3A，完整R4降至0，业务任务/原件/记忆隐私/凭据与旧存储身份保持；未证明原生、真实外部服务或main已更新，功能成熟度不据此升级。[验证TASK-MOD-P3A](../changes/2026-10-28-p3a-creation-image-edit/verification.md)。
+
+2026-10-29 creation公开入口进行中；[TASK-MOD-P4-CREATION验证](../changes/2026-10-29-p4-creation/verification.md)。既有产品成熟度不因架构重构自动升级。
+
+2026-10-29 其余切片公开入口进行中；[TASK-MOD-P4-REMAINING验证](../changes/2026-10-29-p4-remaining/verification.md)。既有产品成熟度不因架构重构自动升级。

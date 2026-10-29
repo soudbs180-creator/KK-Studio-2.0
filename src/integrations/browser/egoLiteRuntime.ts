@@ -3,7 +3,7 @@ import { z } from "zod";
 import type {
   BrowserInspection,
   BrowserOpenResult,
-} from "../../features/browser/browserTypes.ts";
+} from "../../domain/browserContracts.ts";
 
 const statusSchema = z.object({
   available: z.boolean(),

@@ -5,7 +5,7 @@ import {
   SIDEBAR_PROJECT_DRAG_TYPE,
   SIDEBAR_PROJECT_TITLE_TYPE,
   type SidebarProjectVisual,
-} from "../features/projects/sidebarProjectModel";
+} from "../features/projects/index.ts";
 
 function ProjectThumb({ visual }: { visual?: SidebarProjectVisual }) {
   if (!visual) return <span className="project-yellow" />;

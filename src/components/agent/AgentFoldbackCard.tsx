@@ -1,5 +1,5 @@
 import React, { useState, useId } from "react";
-import type { SubagentFoldbackResult } from "../../features/agent/delegation/foldbackContract.ts";
+import type { SubagentFoldbackResult } from "../../features/agent/index.ts";
 
 export interface AgentFoldbackCardProps {
   result: SubagentFoldbackResult;

@@ -1,8 +1,8 @@
 import { useEffect, useRef, type RefObject } from "react";
 import { useDismissible } from "../useDismissible";
 import type { PrototypeTask } from "./TaskPanelPopover";
-import type { CreationTask } from "../../features/creation/model";
-import { taskRetryAvailability } from "../../features/creation/taskRetryAvailability";
+import type { CreationTask } from "../../features/creation/index.ts";
+import { taskRetryAvailability } from "../../features/creation/index.ts";
 
 export default function TaskDetail({
   selectedTask,

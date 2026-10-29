@@ -11,8 +11,8 @@ import {
   CompanionClient,
   companionConnectionState,
   type CompanionConnectionState,
-} from "../../features/local-service/client.ts";
-import { readCompanionConnection } from "../../features/local-service/connection.ts";
+} from "../../features/local-service/index.ts";
+import { readCompanionConnection } from "../../features/local-service/index.ts";
 import CompanionMigrationActions from "./CompanionMigrationActions.tsx";
 
 const DEFAULT_ENDPOINT = "http://127.0.0.1:4319";

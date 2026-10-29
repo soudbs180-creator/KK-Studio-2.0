@@ -1,4 +1,4 @@
-import type { ChatItem } from "../features/creation/model.ts";
+import type { ChatItem } from "../features/creation/index.ts";
 import ConversationChatTabs from "./ConversationChatTabs.tsx";
 
 export interface ConversationHeaderProps {

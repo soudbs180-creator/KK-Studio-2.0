@@ -5,7 +5,7 @@ import {
   activeChat,
   updateActiveChat,
   type CreationProject,
-} from "../creation/model.ts";
+} from "../creation/index.ts";
 import {
   applyAgentOpsToItems,
   assertCanvasDelivery,
@@ -13,12 +13,12 @@ import {
 } from "./agentCanvas.ts";
 import type { AgentOpResult } from "./agentConnection.ts";
 import type { AgentChatItem, CanvasAgentOp, ChatScope } from "./agentTypes.ts";
-import { storeGeneratedAsset } from "../creation/assetRepository.ts";
-import { appendImageTaskResults } from "../creation/imageTaskCommand.ts";
+import { storeGeneratedAsset } from "../creation/index.ts";
+import { appendImageTaskResults } from "../creation/index.ts";
 import type { AgentCanvasView } from "./agentCanvasView.ts";
 import type { PlanTool, StageOrchestrator } from "./orchestrator.ts";
 import type { StagePlan } from "../../domain/stagePlan.ts";
-import { sameJson } from "../creation/chatMigration.ts";
+import { sameJson } from "../creation/index.ts";
 
 export interface AgentHostOptions {
   getView?(): AgentCanvasView | null;

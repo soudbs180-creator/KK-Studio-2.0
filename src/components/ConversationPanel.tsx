@@ -2,7 +2,7 @@ import { ConversationResizeHandle } from "./ResizeHandle";
 import { useEffect, useRef, useState } from "react";
 import { useConversationOverlay } from "./useConversationOverlay";
 import useConversationAttachments from "./useConversationAttachments";
-import type { CreationDraft } from "../features/creation/model";
+import type { CreationDraft } from "../features/creation/index.ts";
 import type { ConversationPanelProps } from "./ConversationPanel.types";
 import ConversationMessageFeed from "./ConversationMessageFeed";
 import ConversationChannelSelector from "./ConversationChannelSelector";
@@ -12,7 +12,7 @@ import ConversationComposerRegion from "./ConversationComposerRegion";
 import GoogleConversationPanel from "./GoogleConversationPanel";
 import ChatImageLightbox from "./chat/ChatImageLightbox.tsx";
 import useConversationSubmit from "./useConversationSubmit";
-import { useAgentDraftState } from "../features/agent/useAgentComposerDraft";
+import { useAgentDraftState } from "../features/agent/index.ts";
 import useConversationSelection from "./useConversationSelection";
 import {
   canSubmitGeneration,

@@ -45,3 +45,9 @@ export type {
   DispatchOutcome,
   SchedulerOptions,
 } from "./scheduler.ts";
+
+export { ChannelRegistry } from "./channels/registry.ts";
+
+export { supportsOperation } from "./channels/registry.ts";
+
+export type { ChannelIndexEntry } from "./channels/registry.ts";

@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import type { ReviewComment } from "../domain/reviewWorkflow";
-import type { CreationProject } from "../features/creation/model";
+import type { CreationProject } from "../features/creation/index.ts";
 import { requiredApprovalGates } from "../domain/agentWorkflow";
 import TaskWorkbenchContent, {
   outputsFor,

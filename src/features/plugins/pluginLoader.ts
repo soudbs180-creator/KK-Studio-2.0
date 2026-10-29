@@ -9,7 +9,11 @@
  */
 
 import { getPluginRuntime, injectPluginCss } from "./pluginRuntime.ts";
-import { registerPluginNodes, unregisterPluginNodes } from "./nodeRegistry.ts";
+import {
+  registerPluginNodes,
+  unregisterPluginNodes,
+  listPluginNodeDefinitions,
+} from "./nodeRegistry.ts";
 import {
   pluginStore,
   type PluginStorage,
@@ -21,9 +25,16 @@ import type {
   PluginAi,
   PluginRuntime,
 } from "./pluginTypes.ts";
-import type { AgentBridge } from "../agent/agentConnection.ts";
+import type { AgentBridge } from "../agent/index.ts";
 import { appVersion } from "../../runtime/appInfo.ts";
 import { createLogger } from "../../runtime/logger.ts";
+import { isTauri } from "@tauri-apps/api/core";
+import {
+  permissionSchema,
+  type CapabilityPermission,
+  type PluginManifest,
+} from "../../../packages/creation-contracts/index.ts";
+import { fetchPluginPackage, verifyPluginPackage } from "./pluginPackage.ts";
 
 // 插件域诊断日志：替代散落的 console 调用，失败可定位、可导出。
 const pluginLog = createLogger("plugins");
@@ -66,6 +77,8 @@ function createDefaultBus(): PluginEventBus {
 }
 
 export interface PluginLoaderOptions {
+  /** Test/preview opt-in only; production stays closed until the isolation review passes. */
+  enableSandboxPackages?: boolean;
   fetcher?: typeof fetch;
   /** 测试注入：替代源码求值的 blob URL import()。 */
   importModule?: (
@@ -146,6 +159,44 @@ export function createPluginLoader(options: PluginLoaderOptions = {}) {
   const bus = options.bus ?? createDefaultBus();
   const loadedPlugins = new Map<string, LoadedPluginState>();
   let loaded = false;
+  async function evaluateInstalled(
+    record: InstalledPlugin,
+    moduleUrl?: string,
+    signal?: AbortSignal,
+  ): Promise<CanvasPlugin> {
+    if (record.manifest !== undefined || record.packageFiles !== undefined) {
+      const pkg = await verifyPluginPackage(
+        record.manifest,
+        record.packageFiles ?? {},
+        {
+          version: appVersion,
+          platform: isTauri() ? "desktop" : "web",
+        },
+      );
+      signal?.throwIfAborted();
+      if (
+        pkg.manifest.id !== record.id ||
+        pkg.manifest.version !== record.version
+      )
+        throw new Error("插件包身份与已安装记录不一致。");
+      const grants = permissionSchema
+        .array()
+        .max(64)
+        .parse(record.grantedPermissions ?? []);
+      if (options.enableSandboxPackages !== true)
+        throw new Error("插件沙箱仍在验证中，当前未执行插件代码。");
+      const { createPackagePlugin } = await import("./pluginPackageRuntime.ts");
+      signal?.throwIfAborted();
+      const plugin: CanvasPlugin = createPackagePlugin(pkg, {
+        enabled: options.enableSandboxPackages === true,
+        platform: isTauri() ? "desktop" : "web",
+        grants,
+        active: () => loadedPlugins.get(record.id)?.plugin === plugin,
+      });
+      return plugin;
+    }
+    return evaluatePluginSource(record.source, moduleUrl, signal);
+  }
   let bridge: AgentBridge | null = null;
   let ai: PluginAi = {
     generateImage: () => Promise.reject(new Error("插件生成能力未接线")),
@@ -233,6 +284,9 @@ export function createPluginLoader(options: PluginLoaderOptions = {}) {
         ? exported(runtime ?? getPluginRuntime())
         : exported;
     assertPlugin(plugin);
+    pluginLog.warn("旧插件按legacy兼容运行，仍具有宿主权限", {
+      pluginId: plugin.id,
+    });
     return plugin;
   }
 
@@ -322,9 +376,12 @@ export function createPluginLoader(options: PluginLoaderOptions = {}) {
       enabled?: boolean;
       expectedId?: string;
       signal?: AbortSignal;
+      grantedPermissions?: readonly CapabilityPermission[];
     },
   ): Promise<CanvasPlugin> {
     assertSecureRemotePluginUrl(url);
+    if (new URL(url).pathname.endsWith("/kk-plugin.json"))
+      return installPackageFromUrl(url, opts);
     const source = await fetchPluginSource(
       opts?.bustCache ? withCacheBust(url) : url,
       true,
@@ -365,10 +422,111 @@ export function createPluginLoader(options: PluginLoaderOptions = {}) {
     return plugin;
   }
 
+  function existingPackage(
+    manifest: PluginManifest,
+    expectedId: string | undefined,
+    started: InstalledPlugin | undefined,
+  ): InstalledPlugin | undefined {
+    if (expectedId && expectedId !== manifest.id)
+      throw new Error("更新包的插件身份不一致，原插件保留。");
+    const existing = store.getState().plugins.find((p) => p.id === manifest.id);
+    if (expectedId && existing !== started)
+      throw new Error("插件已变更，当前更新已取消。");
+    if (existing && !expectedId)
+      throw new Error("插件ID已安装，不覆盖既有插件。");
+    if (
+      listPluginNodeDefinitions().some(
+        (entry) =>
+          entry.pluginId !== manifest.id &&
+          manifest.contributes.nodes.some(
+            (node) => node.type === entry.definition.type,
+          ),
+      )
+    )
+      throw new Error("插件节点ID冲突，保留原插件。");
+    return existing;
+  }
+
+  async function installPackageFromUrl(
+    url: string,
+    opts?: {
+      expectedId?: string;
+      enabled?: boolean;
+      signal?: AbortSignal;
+      grantedPermissions?: readonly CapabilityPermission[];
+    },
+  ): Promise<CanvasPlugin> {
+    const started = opts?.expectedId
+      ? store.getState().plugins.find((p) => p.id === opts.expectedId)
+      : undefined;
+    if (opts?.expectedId && !started)
+      throw new Error("插件已卸载，当前未更新。");
+    const downloaded = await waitForPluginLoad(
+      (signal) => fetchPluginPackage(url, fetcher, signal),
+      opts?.signal,
+    );
+    const pkg = await verifyPluginPackage(
+      downloaded.manifest,
+      downloaded.files,
+      {
+        version: appVersion,
+        platform: isTauri() ? "desktop" : "web",
+      },
+    );
+    opts?.signal?.throwIfAborted();
+    const existing = existingPackage(pkg.manifest, opts?.expectedId, started);
+    const grants = permissionSchema
+      .array()
+      .max(64)
+      .parse(opts?.grantedPermissions ?? existing?.grantedPermissions ?? []);
+    if (
+      grants.some(
+        (permission) => !pkg.manifest.permissions.includes(permission),
+      )
+    )
+      throw new Error("授权权限未在插件清单声明，请重新确认权限。");
+    const backup = existing ? { ...existing } : undefined;
+    if (backup) delete backup.previousVersion;
+    const record: InstalledPlugin = {
+      id: pkg.manifest.id,
+      name: pkg.manifest.name,
+      version: pkg.manifest.version,
+      url,
+      source: JSON.stringify(pkg.manifest),
+      enabled: opts?.enabled ?? true,
+      manifest: pkg.manifest,
+      packageFiles: pkg.files,
+      grantedPermissions: grants,
+      previousVersion: backup,
+    };
+    const plugin = await evaluateInstalled(record, undefined, opts?.signal);
+    opts?.signal?.throwIfAborted();
+    if (store.getState().plugins.find((p) => p.id === record.id) !== existing)
+      throw new Error("插件状态已变更，当前安装已取消。");
+    const previous = loadedPlugins.get(plugin.id)?.plugin;
+    try {
+      opts?.signal?.throwIfAborted();
+      deactivatePlugin(plugin.id);
+      if (record.enabled) activatePlugin(plugin);
+      store.upsert(record);
+    } catch (error) {
+      deactivatePlugin(plugin.id);
+      if (previous) activatePlugin(previous);
+      throw error;
+    }
+    return plugin;
+  }
+
   async function updatePlugin(
     record: InstalledPlugin,
     signal?: AbortSignal,
   ): Promise<CanvasPlugin> {
+    if (record.manifest)
+      return installPackageFromUrl(record.url, {
+        expectedId: record.id,
+        enabled: record.enabled,
+        signal,
+      });
     return installFromUrl(record.url, {
       official: record.official,
       bustCache: true,
@@ -394,7 +552,11 @@ export function createPluginLoader(options: PluginLoaderOptions = {}) {
     const source = moduleUrl
       ? await fetchPluginSource(moduleUrl, false, signal)
       : record.source;
-    const plugin = await evaluatePluginSource(source, moduleUrl, signal);
+    const plugin = await evaluateInstalled(
+      { ...record, source },
+      moduleUrl,
+      signal,
+    );
     signal?.throwIfAborted();
     if (plugin.id !== record.id)
       throw new Error("插件身份不一致，原启停状态保留。");
@@ -486,7 +648,10 @@ export function createPluginLoader(options: PluginLoaderOptions = {}) {
           const source = moduleUrl
             ? await fetchPluginSource(moduleUrl)
             : record.source;
-          const plugin = await evaluatePluginSource(source, moduleUrl);
+          const plugin = await evaluateInstalled(
+            { ...record, source },
+            moduleUrl,
+          );
           const current = store
             .getState()
             .plugins.find((item) => item.id === record.id);
@@ -496,6 +661,10 @@ export function createPluginLoader(options: PluginLoaderOptions = {}) {
           activatePlugin(plugin);
         } catch (error) {
           pluginLog.error("插件加载失败", { pluginId: record.id, error });
+          if (record.manifest)
+            store.setError(
+              "插件包未执行：安全运行时尚未通过验收或包验证失败。",
+            );
         }
       }),
     );
@@ -520,6 +689,7 @@ export function createPluginLoader(options: PluginLoaderOptions = {}) {
   return {
     ensurePluginsLoaded,
     installFromUrl,
+    installPackageFromUrl,
     updatePlugin,
     setPluginEnabled,
     uninstallPlugin,

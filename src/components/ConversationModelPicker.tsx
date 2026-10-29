@@ -1,5 +1,5 @@
 import ModelPickerMenu from "./ModelPickerMenu";
-import type { ModelSelection } from "../features/models/modelSelection";
+import type { ModelSelection } from "../features/models/index.ts";
 export default function ConversationModelPicker({
   currentModel,
   disabled = false,

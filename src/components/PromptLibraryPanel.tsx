@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { promptLibrary, type Prompt } from "../features/prompts/promptLibrary";
+import { promptLibrary, type Prompt } from "../features/prompts/index.ts";
 import UiIcon from "./UiIcon";
 
 const PAGE_SIZE = 12;

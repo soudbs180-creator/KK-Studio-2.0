@@ -1,13 +1,13 @@
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { isTauri } from "@tauri-apps/api/core";
-import { agentConnection } from "../../features/agent/agentConnection.ts";
+import { agentConnection } from "../../features/agent/index.ts";
 import {
   readPermissionMode,
   writePermissionMode,
   subscribeAgentPreferences,
-} from "../../features/agent/agentConnection.ts";
-import type { AgentPermissionMode } from "../../features/agent/agentTypes.ts";
-import { desktopAgentLifecycle } from "../../features/agent/desktopAgentLifecycle.ts";
+} from "../../features/agent/index.ts";
+import type { AgentPermissionMode } from "../../features/agent/index.ts";
+import { desktopAgentLifecycle } from "../../features/agent/index.ts";
 import DesktopAgentControl from "./DesktopAgentControl.tsx";
 import BrowserBackendSettings from "./BrowserBackendSettings.tsx";
 

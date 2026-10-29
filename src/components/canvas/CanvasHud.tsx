@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from "react";
 import TaskPanel from "./TaskPanel";
-import type { CreationTask } from "../../features/creation/model";
+import type { CreationTask } from "../../features/creation/index.ts";
 import "../../styles/canvas-hud.css";
 
 /** Screen-space controls wrap together when the usable canvas becomes narrow. */

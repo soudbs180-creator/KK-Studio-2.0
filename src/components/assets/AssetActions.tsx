@@ -1,6 +1,6 @@
 import UiIcon from "../UiIcon";
 import type { RefObject } from "react";
-import type { AssetArchiveState } from "../../features/creation/useAssetArchive";
+import type { AssetArchiveState } from "../../features/creation/index.ts";
 
 interface AssetActionsProps {
   showSubjectActions: boolean;

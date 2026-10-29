@@ -2,8 +2,8 @@ import React from "react";
 import type {
   CreationDraft,
   ReasoningEffort,
-} from "../../features/creation/model.ts";
-import { parseModelWindow } from "../../features/models/modelCatalogWindow.ts";
+} from "../../features/creation/index.ts";
+import { parseModelWindow } from "../../features/models/index.ts";
 
 export interface UsageStatusBarProps {
   currentTokens?: number;

@@ -6,7 +6,7 @@ import {
   type CSSProperties,
   type RefObject,
 } from "react";
-import { CanvasImageCommandContext } from "../../features/creation/CanvasImageCommand.tsx";
+import { CanvasImageCommandContext } from "../../features/creation/index.ts";
 import { Upload } from "lucide-react";
 import CreationComposer from "./CreationComposer";
 import type {
@@ -18,7 +18,7 @@ import DemoMediaPreview from "./DemoMediaPreview";
 import { readReferenceImages } from "./referenceUpload";
 import CanvasImageActions from "./CanvasImageActions";
 import { useCanvasMediaContent } from "../canvas/useCanvasMediaContent";
-import { readImageDimensions } from "../../features/creation/mediaDimensions";
+import { readImageDimensions } from "../../features/creation/index.ts";
 import { aspectRatioForDimensions } from "../../domain/mediaDimensions";
 
 export default function ImageCreationNode({

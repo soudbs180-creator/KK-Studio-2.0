@@ -2,7 +2,7 @@ import type {
   CapabilityManifest,
   ProviderConnection,
 } from "../../domain/providerConnections.ts";
-import type { CreationAttachment } from "../../features/creation/model.ts";
+import type { CreationAttachment } from "../../../packages/creation-contracts/index.ts";
 
 export interface GenerationRequest {
   prompt: string;

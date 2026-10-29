@@ -1,5 +1,5 @@
 import { useLayoutEffect, useState } from "react";
-import type { CreationDraft } from "../features/creation/model";
+import type { CreationDraft } from "../features/creation/index.ts";
 import {
   codexSelectionLabel,
   type ModelSelection,
@@ -8,9 +8,9 @@ import {
   readAgentModel,
   writeAgentModel,
   safeStorage,
-} from "../features/agent/agentConnection";
-import { codexReasoningModel } from "../features/agent/codexGeneration";
-import { restoreConversationSelection } from "../features/agent/conversationSelection";
+} from "../features/agent/index.ts";
+import { codexReasoningModel } from "../features/agent/index.ts";
+import { restoreConversationSelection } from "../features/agent/index.ts";
 
 export default function useConversationSelection({
   projectId,

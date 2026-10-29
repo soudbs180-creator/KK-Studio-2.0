@@ -1,6 +1,6 @@
 import UsageSettings from "./UsageSettings";
-import type { CreationProject } from "../../features/creation/model";
-import type { SaveState } from "../../features/creation/useCreationStorage";
+import type { CreationProject } from "../../features/creation/index.ts";
+import type { SaveState } from "../../features/creation/index.ts";
 
 export default function PlansSettings({
   projects,

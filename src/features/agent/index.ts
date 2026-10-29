@@ -210,3 +210,5 @@ export type {
 export { default as UseAgentComposerDraft } from "./useAgentComposerDraft.ts";
 export { useAgentDraftState } from "./useAgentComposerDraft.ts";
 export type { AgentDraftState } from "./useAgentComposerDraft.ts";
+
+export type { SubagentFoldbackResult } from "./delegation/foldbackContract.ts";

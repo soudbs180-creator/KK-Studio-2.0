@@ -9,17 +9,18 @@ import {
 import type { AgentConversationProps } from "./AgentConversationMessages";
 import type ConversationComposer from "./ConversationComposer";
 import useConversationAttachments from "./useConversationAttachments";
-import { emptyDraft, type CreationDraft } from "../features/creation/model";
-import { loadStoredAsset } from "../features/creation/assetRepository";
+import { emptyDraft, type CreationDraft } from "../features/creation/index.ts";
+import { loadStoredAsset } from "../features/creation/index.ts";
 import {
   MAX_AGENT_ATTACHMENTS,
   MAX_AGENT_IMAGE_BYTES,
   type AgentDraftAttachment,
-} from "../features/agent/agentAttachments";
+} from "../features/agent/index.ts";
 import "../styles/agent-panel.css";
-import useAgentComposerDraft, {
+import {
+  UseAgentComposerDraft as useAgentComposerDraft,
   type AgentDraftState,
-} from "../features/agent/useAgentComposerDraft";
+} from "../features/agent/index.ts";
 
 function decodeBase64ByteLength(dataUrl: string): number {
   const encoded = dataUrl.split(",")[1] ?? "";
