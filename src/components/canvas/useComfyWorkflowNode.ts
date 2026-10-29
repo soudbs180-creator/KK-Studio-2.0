@@ -61,6 +61,7 @@ export function useComfyWorkflowNode(
     const stop = watchWorkflow({
       clientId,
       runtime: host.runtime,
+      pendingSubmission: () => latest.current.item.comfyWorkflow?.submission,
       progress: (text) => {
         if (active) setMessage(text);
       },

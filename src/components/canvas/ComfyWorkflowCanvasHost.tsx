@@ -144,7 +144,13 @@ export default function ComfyWorkflowCanvasHost({
         return createWorkflowDelivery({
           clientId: `kk-comfy-${projectId}-${sourceId}`,
           isCurrent: current,
-          hasOutput: (id) => latest.current.items.some((i) => i.id === id),
+          hasOutput: (id) =>
+            latest.current.items.some((i) => i.id === id) ||
+            Boolean(
+              latest.current.items
+                .find((i) => i.id === sourceId)
+                ?.comfyWorkflow?.dismissedOutputIds?.includes(id),
+            ),
           readOutput: runtime.readOutput,
           assets: { write: storeGeneratedAsset },
           applyOps,

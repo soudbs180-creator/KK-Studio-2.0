@@ -28,6 +28,14 @@ fn client() -> Result<reqwest::Client, String> {
 }
 fn valid_path(path: &str) -> bool {
     matches!(path, "/system_stats" | "/history?max_items=100" | "/prompt")
+        || path
+            .strip_prefix("/history?max_items=100&offset=")
+            .is_some_and(|offset| {
+                !offset.is_empty()
+                    && offset.len() <= 7
+                    && offset.bytes().all(|b| b.is_ascii_digit())
+                    && offset.parse::<u32>().is_ok_and(|value| value <= 1_000_000)
+            })
         || path.strip_prefix("/history/").is_some_and(|id| {
             !id.is_empty()
                 && id.len() <= 160
@@ -134,10 +142,16 @@ mod tests {
             "/interrupt",
             "/history/../config",
             "/view?filename=secret",
+            "/history?max_items=100&offset=-1",
+            "/history?max_items=100&offset=1000001",
+            "/history?max_items=100&offset=0&extra=1",
+            "/history?max_items=100&offset=",
         ] {
             assert!(!valid_path(path));
         }
         assert!(valid_path("/history/prompt-1"));
+        assert!(valid_path("/history?max_items=100&offset=0"));
+        assert!(valid_path("/history?max_items=100&offset=1000000"));
         let mut file = OutputFile {
             filename: "result.png".into(),
             subfolder: "job".into(),

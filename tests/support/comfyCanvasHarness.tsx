@@ -87,6 +87,9 @@ export async function mount() {
       });
     },
   };
+  async function flush() {
+    localStorage.setItem("comfy-fixture-durable", JSON.stringify(persisted));
+  }
   function Harness() {
     const [items, setItems] = useState(persisted.items);
     const [canvas, setCanvas] = useState(persisted.canvas);
@@ -102,12 +105,7 @@ export async function mount() {
         onToggleLike={() => {}}
         onOpenChat={() => {}}
         comfyRuntime={runtime}
-        onFlush={async () => {
-          localStorage.setItem(
-            "comfy-fixture-durable",
-            JSON.stringify(persisted),
-          );
-        }}
+        onFlush={flush}
       />
     );
   }
@@ -116,8 +114,14 @@ export async function mount() {
   element.style.cssText = "position:fixed;inset:0;z-index:50;";
   document.body.append(element);
   const root = createRoot(element);
+  let mountId = 0;
   root.render(<Harness />);
   return {
+    flush,
+    reopen() {
+      persisted = JSON.parse(localStorage.getItem("comfy-fixture-durable")!);
+      root.render(<Harness key={++mountId} />);
+    },
     state: () => structuredClone(persisted),
     durable: () => JSON.parse(localStorage.getItem("comfy-fixture-durable")!),
     reload: () =>

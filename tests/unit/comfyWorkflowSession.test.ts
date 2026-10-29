@@ -1,11 +1,115 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { setImmediate } from "node:timers/promises";
 import * as comfy from "../../src/features/comfyui/index.ts";
 import {
   createProject,
   emptySnapshot,
   normalizeCreationSnapshot,
 } from "../../src/domain/creationModel.ts";
+
+for (const recovery of [
+  "known",
+  "unknown",
+  "failed",
+  "foreign",
+  "invalid",
+] as const) {
+  test(`workflow reopening recovers ${recovery} history beyond the latest 100`, async (t) => {
+    const originalSocket = globalThis.WebSocket;
+    globalThis.WebSocket = class {
+      close() {}
+    } as unknown as typeof WebSocket;
+    t.after(() => {
+      globalThis.WebSocket = originalSocket;
+    });
+    t.mock.timers.enable({ apis: ["setInterval"] });
+    const requests: string[] = [],
+      delivered: string[] = [],
+      failed: string[] = [];
+    const recent = Object.fromEntries(
+      Array.from({ length: 100 }, (_, i) => [
+        `other-${i}`,
+        { prompt: [i, `other-${i}`, {}, { client_id: "other" }] },
+      ]),
+    );
+    const old = {
+      old: {
+        prompt: [
+          0,
+          "old",
+          {},
+          {
+            client_id: recovery === "foreign" ? "other" : "card-host",
+            kk_submission_id: "saved-key",
+          },
+        ],
+        status: { status_str: recovery === "failed" ? "error" : "success" },
+        outputs:
+          recovery === "failed"
+            ? {}
+            : { "3": { images: [{ filename: "old.png", type: "output" }] } },
+      },
+    };
+    const stop = comfy.watchWorkflow({
+      clientId: "card",
+      pendingSubmission: () => ({
+        key: "saved-key",
+        promptId:
+          recovery === "unknown"
+            ? undefined
+            : recovery === "invalid"
+              ? "../config"
+              : "old",
+      }),
+      runtime: {
+        ...comfy.nativeComfyRuntime,
+        async json(path) {
+          requests.push(path);
+          return path === "/history/old" ||
+            (recovery === "unknown" &&
+              path === "/history?max_items=100&offset=100")
+            ? old
+            : recent;
+        },
+      },
+      progress() {},
+      async deliver(output) {
+        delivered.push(output.promptId);
+      },
+      failed: (id) => {
+        failed.push(id);
+      },
+    });
+    t.after(stop);
+    await setImmediate();
+    if (recovery === "unknown") {
+      t.mock.timers.tick(2000);
+      await setImmediate();
+    }
+    if (recovery === "invalid") {
+      assert(!requests.some((path) => path.includes("..")));
+      return;
+    }
+    assert(
+      requests.includes(
+        recovery === "unknown"
+          ? "/history?max_items=100&offset=100"
+          : "/history/old",
+      ),
+    );
+    assert.deepEqual(
+      delivered,
+      recovery === "failed" || recovery === "foreign" ? [] : ["old"],
+    );
+    assert.deepEqual(failed, recovery === "failed" ? ["old"] : []);
+    const count = requests.length;
+    stop();
+    t.mock.timers.tick(2000);
+    await setImmediate();
+    assert.equal(requests.length, count);
+  });
+}
 
 test("Comfy workflow output capture checks history client ownership, output type and safe path", () => {
   const parse = (comfy as Record<string, unknown>).workflowOutputs as (

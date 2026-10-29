@@ -27,3 +27,7 @@ Figma先读取01与03，再新增四个隔离03组件，全部语义token与44px
 - [ComfyUI官方前端api.ts](https://github.com/Comfy-Org/ComfyUI_frontend/blob/main/src/scripts/api.ts)：window.name与queue client_id；协议核对2026-10-29。
 - [Tauri Capabilities](https://v2.tauri.app/security/capabilities/)及[Runtime Authority](https://v2.tauri.app/security/runtime-authority/)；实际拒绝以本轮隔离Native回执为准。
 - [本轮验证](../../changes/2026-10-29-p6-1-comfy-canvas/verification.md)。真实GPU、用户已安装客户端、独审、完整verify/main仍未验收；2026-10-29用户要求停止桌面控制，后续验证采用浏览器/命令行。
+
+## 2026-10-29恢复修正
+
+原100条窗口限制由逐任务ID优先查询与每轮100条分页回溯修复；固定loopback的白名单只追加严格数字offset，响应上限不变。卡片增加可选dismissedOutputIds保存删除意图，缺省兼容旧快照；删除同时记录，历史轮询不得重新插入。服务已淘汰/清空的历史不保证恢复，不自动重发。具体规格/验证见原P6.1交付包。

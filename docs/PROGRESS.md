@@ -1339,3 +1339,7 @@ TASK-UI-DETAILS-20261015从最新18e143f修复，Desktop/Web2.1.26产品ab878ffd
 ## 2026-10-29 P8合流门会话修复（PARTIAL）
 
 App瘦身已提交0b675ec7，聊天派生投影修复f10147b9；新项目空聊天独立会话与仿真唯一线程ID验证中（Desktop/Web55）。根2383 pass/20 skip不代表完整verify通过；main、独立review、真实GPU仍开放，详见[P8验证](changes/2026-10-29-p8-composition/verification.md)。
+
+## 2026-10-29 P6恢复修复候选（PARTIAL）
+
+Desktop/Web56：逐任务与分页history恢复旧结果，可选删除标记避免历史重放复活。根2391通过/20skip、类型/增量lint、Rust白名单和实际Canvas夹具通过；当前SHA独审补审及完整verify/main仍待验，真实GPU未运行。

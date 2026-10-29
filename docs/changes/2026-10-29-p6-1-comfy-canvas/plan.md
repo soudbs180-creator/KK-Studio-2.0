@@ -22,3 +22,10 @@ For agentic workers: superpowers:executing-plans；用户禁止子代理。
 - [ ] 真实GPU、参数面板、Figma页面实例、独审、完整verify与main交付继续开放。
 
 源码自检新增：扫描/中文路径、明确拒绝重试及unknown受理key恢复；保留iframe编辑状态。CanvasSurfaceFrame承接原DOM/背景样式，避免新卡片接线使Canvas超组件边界；未放宽UI门禁。最终参数面板、Native鼠标/真实GPU、Figma实例、独审与main未验收。
+
+## TASK-MOD-COMFY-RECOVERY
+
+- [x] 只读独审复现超过历史窗口及删除复活。
+- [x] 监听回归RED后补定向/分页查询，严格白名单测试。
+- [x] 实际删除浏览器RED后增加持久删除标记并复验。
+- [ ] 快速全门、当前SHA独审补审/完整序列与main。

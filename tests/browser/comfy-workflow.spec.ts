@@ -183,8 +183,41 @@ test("P6.1 fixture: choose root, open/return native frame, archive output once a
   const next = afterAdd.items.find(
     (i) => i.comfyWorkflow && i.id !== "comfy-card",
   );
-  expect(afterAdd.canvas.edges).toContainEqual(
-    expect.objectContaining({ source: "comfy-card", target: next!.id }),
+  await expect
+    .poll(
+      async () =>
+        (await page.evaluate(() => window.comfyHarness.state())).canvas.edges,
+    )
+    .toContainEqual(
+      expect.objectContaining({ source: "comfy-card", target: next!.id }),
+    );
+  const resultId = output.id;
+  const node = host.getByTestId(`canvas-node-${resultId}`);
+  await node.focus();
+  await node.press("Delete");
+  await expect(node).toHaveCount(0);
+  const beforeDeleteReplay = polls;
+  await expect.poll(() => polls).toBeGreaterThan(beforeDeleteReplay);
+  expect(
+    (await page.evaluate(() => window.comfyHarness.state())).items.some(
+      (item) => item.id === resultId,
+    ),
+  ).toBe(false);
+  await page.evaluate(() => window.comfyHarness.flush());
+  const restored = await page.evaluate(
+    () => window.comfyHarness.reload().projects[0],
   );
+  expect(
+    restored.items.find((item) => item.id === "comfy-card")?.comfyWorkflow
+      ?.dismissedOutputIds,
+  ).toContain(resultId);
+  await page.evaluate(() => window.comfyHarness.reopen());
+  const beforeReopenReplay = polls;
+  await expect.poll(() => polls).toBeGreaterThan(beforeReopenReplay);
+  expect(
+    (await page.evaluate(() => window.comfyHarness.state())).items.some(
+      (item) => item.id === resultId,
+    ),
+  ).toBe(false);
   await page.evaluate(() => window.comfyHarness.close());
 });

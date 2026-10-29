@@ -6,6 +6,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 | ID | Title | Status | Display | Priority | Dependencies | Owner | Next action |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| TASK-MOD-COMFY-RECOVERY | 恢复超窗口Comfy产物并保留结果删除意图 | PARTIAL | 进行中 | P1 | TASK-MOD-P6-1 | root | 当前SHA补审；完整门禁和首建baseline/远端分叉整合 |
 | TASK-MOD-HOME-SESSION | 首页新项目使用独立Agent会话 | PARTIAL | 进行中 | P1 | TASK-MOD-CHAT-PROJECTION | root | 当前SHA独审；完整门禁和基线/远端冲突分阶段整合 |
 | TASK-MOD-CHAT-PROJECTION | 切换聊天同步组件派生视图 | PARTIAL | 未完成 | P1 | TASK-MOD-P8 | root | 当前独审/完整verify/main；首页新项目显式独立会话另卡修复 |
 | TASK-MOD-P8 | App装配hook瘦身与主线合流核验 | PARTIAL | 未完成 | P1 | TASK-MOD-P6-1 | root | 独立评审与完整门禁；分开修复旧路由/聊天投影缺陷后再受控合流 |
@@ -210,6 +211,25 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-MOD-P6-LAYER-SPLIT | 图层拆分 | PARTIAL | 进行中 | P1 | TASK-MOD-P6-UPSCALE | root | 接入并验收Desktop原生TaskHost及真实工作流/Provider；保持四原文与其他P/STD/ORG开放任务，不把fixture作为REAL。 |
 | TASK-MOD-P7 | 资产溯源对齐 | PARTIAL | 进行中 | P1 | TASK-MOD-P6-LAYER-SPLIT | root | 完成原生GUI跨端溯源验收、独审和main合流；旧记录不回写。 |
 | TASK-MOD-P6-1 | ComfyUI本地托管与画布双态工作流卡片 | PARTIAL | 未完成 | P1 | TASK-MOD-P6-HOST | root | 完成浏览器/命令行回归；真实GPU、完整编辑器鼠标/参数面板及独审/main仍开放，用户已要求不控制桌面 |
+
+## TASK-MOD-COMFY-RECOVERY — 恢复超窗口Comfy产物并保留结果删除意图
+
+- Goal: 关闭项目后超过100条历史仍能归档，已删除结果不自动复活
+- Scope: 原history监听定向查询及分页回溯、严格本机白名单、可选卡片删除标记；不重发推理或更改UI
+- Display status: 进行中
+- Priority: P1 — 未记录
+- Requirement refs: docs/changes/2026-10-29-p6-1-comfy-canvas/spec.md
+- Feature IDs: none
+- Owner role: implementation-integrator
+- Acceptance: 持久promptId先按ID补收，unknown与editor使用分页回溯并检查client归属; 卡片删除结果后轮询与重开不复活，旧快照兼容; RED→GREEN及快速/浏览器/Rust检查，修复后独立补审
+- Branch: `refactor/TASK-MOD-P3-feature-cycles`
+- Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
+- Modules: src/features/comfyui/workflowSession.ts, src/components/canvas/useComfyWorkflowNode.ts, src/components/canvas/useCanvasNodeActions.ts, src/components/canvas/ComfyWorkflowCanvasHost.tsx, src/domain/comfyWorkflow.ts, src-tauri/src/comfy_transport.rs, tests/unit/comfyWorkflowSession.test.ts, tests/browser/comfy-workflow.spec.ts, tests/support/comfyCanvasHarness.tsx
+- Verification: PARTIAL — 历史恢复11项回归（已知ID/多页unknown/失败/外部归属/非法ID/卸载）通过；真实Canvas删除重放RED后GREEN，显式flush及重开保持删除；根2391 pass/20skip、类型/增量lint通过，Rust白名单1通过。待当前SHA补审、完整序列与main。
+- Evidence: [docs/changes/2026-10-29-p6-1-comfy-canvas/verification.md](../../docs/changes/2026-10-29-p6-1-comfy-canvas/verification.md)
+- Next action: 当前SHA补审；完整门禁和首建baseline/远端分叉整合
+- Last verified: 2026-10-29
+- Updated: 2026-10-29
 
 ## TASK-MOD-HOME-SESSION — 首页新项目使用独立Agent会话
 
