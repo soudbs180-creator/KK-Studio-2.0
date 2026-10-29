@@ -1,5 +1,46 @@
 [
   {
+    "id": "TASK-MOD-P8",
+    "title": "App装配hook瘦身与主线合流核验",
+    "goal": "不改变JSX/样式/用户数据语义，迁移装配责任并完成适用合流门",
+    "scope": "src/App.tsx、src/app、相关回归和交付；合流保全主仓dirty",
+    "acceptance": [
+      "七组装配迁移，闭包/effect/JSX/样式同态",
+      "快速门禁、完整verify与当前独审逐项有证据",
+      "适用门满足后才合main，主仓dirty不丢失"
+    ],
+    "dependencies": [
+      "TASK-MOD-P6-1"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "refactor/TASK-MOD-P3-feature-cycles",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "792759611c60f698366b755f94198071c6c65c27",
+    "affectedModules": [
+      "src/App.tsx",
+      "src/app",
+      "tests"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "未完成",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-29-p8-composition/verification.md"
+    ],
+    "verification": "七组hook候选已实现：App2002→1546；35原函数/12桥语句/2effect/主JSX/CSS顺序不变；固定输入软件Edge四组DOM/PNG均0差异。根2378 pass/20 skip，48会话回归全保留。完整verify/当前独审/main未完成。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-29",
+    "lastVerified": "2026-10-29",
+    "nextAction": "独立评审与完整门禁；分开修复旧路由/聊天投影缺陷后再受控合流",
+    "requirementRefs": [
+      "docs/changes/2026-10-29-p8-composition/spec.md"
+    ],
+    "featureIds": []
+  },
+  {
     "id": "TASK-FIGMA-PAGES-20261025",
     "title": "重新核查并整理Figma 04/05页面与状态",
     "goal": "沿01→02→03→04/05修正源继承、项目库搜索、工具栏和交互错误，消除重复本体与假引用并限定真实能力。",

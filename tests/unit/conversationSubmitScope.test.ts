@@ -62,14 +62,26 @@ const appAst = ts.createSourceFile(
   true,
   ts.ScriptKind.TSX,
 );
+const conversationSource = await readFile(
+  new URL("../../src/app/useActiveProjectConversation.ts", import.meta.url),
+  "utf8",
+);
+const conversationAst = ts.createSourceFile(
+  "useActiveProjectConversation.ts",
+  conversationSource,
+  ts.ScriptTarget.Latest,
+  true,
+  ts.ScriptKind.TS,
+);
 function appFunction(name: string): string {
   let result: string | undefined;
   function visit(node: ts.Node) {
     if (ts.isFunctionDeclaration(node) && node.name?.text === name)
-      result = node.getText(appAst);
+      result = node.getText(node.getSourceFile());
     ts.forEachChild(node, visit);
   }
   visit(appAst);
+  visit(conversationAst);
   assert.ok(result, `Missing production App function ${name}`);
   return result;
 }
@@ -82,10 +94,11 @@ function appInitializer(name: string): string {
       ts.isIdentifier(node.name) &&
       node.name.text === name
     )
-      result = node.initializer?.getText(appAst);
+      result = node.initializer?.getText(node.getSourceFile());
     ts.forEachChild(node, visit);
   }
   visit(appAst);
+  visit(conversationAst);
   assert.ok(result, `Missing production App initializer ${name}`);
   return result;
 }

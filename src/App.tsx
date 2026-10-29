@@ -1,25 +1,18 @@
-import {
-  canvasPorts,
-  submitPorts,
-  type AppTaskCoordinationParams,
-} from "./app/taskPorts.ts";
-import React, {
-  lazy,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  useSyncExternalStore,
-  type SetStateAction,
-} from "react";
-import { appVersion } from "./runtime/appInfo";
+import { canvasPorts } from "./app/taskPorts.ts";
+import { lazy, useEffect, useRef, useState, type SetStateAction } from "react";
+import "./runtime/appInfo";
 import TopBar from "./components/TopBar";
 import CanvasCollectionsPanels from "./components/CanvasCollectionsPanels";
 import { effectiveTags, splitCollectionTags } from "./domain/collectionTags";
-import { normalizeTags } from "./domain/assets";
+import {
+  normalizeTags,
+  initialAssets,
+  initialSubjects,
+  type Asset,
+} from "./domain/assets";
 import Sidebar from "./components/Sidebar";
 import { useProjectLibrary } from "./features/projects/index.ts";
-import type { ModelSelection } from "./features/models/index.ts";
+import { type ModelSelection } from "./features/models/index.ts";
 import { homeModelSelection } from "./domain/modelSelection";
 import { useSidebarLayout } from "./components/useSidebarLayout";
 import Canvas from "./components/Canvas";
@@ -28,88 +21,54 @@ import DeferredPanelBoundary from "./components/DeferredPanelBoundary";
 import Modal from "./components/Modal";
 import TaskExecutionApproval from "./components/TaskExecutionApproval";
 import StartPage from "./components/StartPage";
-import { ensureTemplates } from "./features/skills/index.ts";
 import {
-  createSkillRegistry,
   applySkillInstructions,
-  SKILLS_CHANGED_EVENT,
   type SkillRecord,
 } from "./features/skills/index.ts";
 import {
   createProject,
   projectChatView,
   emptyDraft,
-  snapshotWriteBlockReason,
   type CreationDraft,
   type CreationProject,
   type CreateProjectInput,
-  type ChatItem,
   type ChatItemDraft,
+  sameJson,
+  CanvasImageCommandContext,
+  useCreationStorage,
+  useAssetArchive,
+  readProviderConnections,
+  recoverInterruptedTasks,
+  taskRetryAvailability,
+  reconcileNativeTasks,
+  rootItemId,
 } from "./features/creation/index.ts";
-import { updateProjectChatView } from "./features/agent/index.ts";
-import { sameJson } from "./features/creation/index.ts";
 import {
+  updateProjectChatView,
   agentConnection,
-  readPermissionMode,
-  subscribeAgentPreferences,
-  type AgentBridge,
-} from "./features/agent/index.ts";
-import { googleAgentConnection } from "./features/agent/index.ts";
-import { appendToActiveAgentDraft } from "./features/agent/index.ts";
-
-import { pluginLoader } from "./features/plugins/index.ts";
-import { injectPluginCss, setPluginRuntime } from "./features/plugins/index.ts";
-import type { PluginAi } from "./features/plugins/index.ts";
-import { createAgentHost } from "./features/agent/index.ts";
-import { desktopAgentLifecycle } from "./features/agent/index.ts";
-import {
+  appendToActiveAgentDraft,
+  desktopAgentLifecycle,
   clearSentPendingDraft,
   configureAgentProxy,
   sendProjectAgentMessage,
+  prepareAgentAttachments,
+  codexGenerationPrompt,
 } from "./features/agent/index.ts";
-import { prepareAgentAttachments } from "./features/agent/index.ts";
-import { codexGenerationPrompt } from "./features/agent/index.ts";
-import {
-  createStageOrchestrator,
-  type StageOrchestrator,
-} from "./features/agent/index.ts";
-import type { AgentCanvasBinding } from "./components/canvas/useAgentCanvasView";
-import { CanvasImageCommandContext } from "./features/creation/index.ts";
+import "./features/plugins/index.ts";
 import { ImageLightbox as ImageLightbox } from "./features/image-edit/index.ts";
-import { useNativeTaskRecovery } from "./features/creation/index.ts";
-import { useCreationStorage } from "./features/creation/index.ts";
-import { useAssetArchive } from "./features/creation/index.ts";
 import CreationStorageNotice from "./components/CreationStorageNotice";
 import { createProjectCanvas } from "./domain/projectCanvas";
 import {
   parseModelProvider,
   MODEL_PROVIDER_STORAGE_KEY,
 } from "./domain/modelProvider";
-import {
-  loadProviderConnectionsDurable,
-  persistProviderConnectionsDurable,
-  readProviderConnections,
-} from "./features/creation/index.ts";
 import { getGenerationProgressLabels } from "./domain/uiGovernance";
-import { recoverInterruptedTasks } from "./features/creation/index.ts";
-import { taskRetryAvailability } from "./features/creation/index.ts";
-import { reconcileNativeTasks } from "./features/creation/index.ts";
-import { useTaskExecution, rootItemId } from "./features/creation/index.ts";
-import { useImageCommandSubmission } from "./features/creation/index.ts";
-
-import { initialAssets, initialSubjects, type Asset } from "./domain/assets";
 import {
   BASE_CANVAS_ITEMS,
   type CanvasCollectionItem,
 } from "./domain/canvasItems";
-import {
-  SETTINGS_STORAGE_KEY,
-  parseSettings,
-  DEFAULT_SETTINGS,
-  type SettingsPreferences,
-} from "./domain/settings";
+import "./domain/settings";
 import { useLocalWorkflows } from "./features/comfyui/index.ts";
-// App owns lazy panel styles before the final screen overrides.
 import "./components/assets/assets.css";
 import "./components/settings/plugin-manager.css";
 import "./components/settings/settings.css";
@@ -119,10 +78,36 @@ import "./styles/sidebar.css";
 import "./styles/account-popup.css";
 import "./styles/catalog-pages.css";
 import "./styles/extensions.css";
-// Keep Figma-scoped conversation geometry after the legacy workspace rules.
 import "./styles/conversation-panel.css";
 import "./styles/model-picker.css";
 import "./styles/design-surface.css";
+import "./styles/interaction.css";
+import "./styles/motion.css";
+import "./styles/catalog.css";
+import "./styles/task-workbench.css";
+import "./styles/stage-workbench.css";
+import "./styles/feature-parity.css";
+import "./styles/responsive.css";
+import "./styles/responsive-content.css";
+import "./styles/composer.css";
+import "./styles/tokenized-composer.css";
+import "./styles/page-templates.css";
+import "./styles/canvas-compare.css";
+import "./styles/image-edit.css";
+import "./styles/image-selection.css";
+import "./styles/canvas-composer-screen.css";
+import "./styles/desktop-titlebar.css";
+import { useActiveProjectConversation } from "./app/useActiveProjectConversation.ts";
+import { useAppAgentBridge } from "./app/useAppAgentBridge.ts";
+import { useAppAgentState } from "./app/useAppAgentState.ts";
+import { useAppSettings } from "./app/useAppSettings.ts";
+import { useAppSkills } from "./app/useAppSkills.ts";
+import { useAppTaskCoordination } from "./app/useAppTaskCoordination.ts";
+import { useHomeModelConfig } from "./app/useHomeModelConfig.ts";
+
+// App owns lazy panel styles before the final screen overrides.
+
+// Keep Figma-scoped conversation geometry after the legacy workspace rules.
 
 const PromptLibraryPanel = lazy(
   () => import("./components/PromptLibraryPanel"),
@@ -172,201 +157,6 @@ function getModalTitle(modal: string): string {
     default:
       return "使用说明";
   }
-}
-
-function resolveConversationDisabledReason(
-  creation: Parameters<typeof snapshotWriteBlockReason>[0],
-  saveState: string,
-): string | undefined {
-  return (
-    snapshotWriteBlockReason(creation) ??
-    (saveState === "saved" || saveState === "saving"
-      ? undefined
-      : "请先处理项目读取或保存提示，当前暂不可编辑或执行。")
-  );
-}
-
-function resolveConversationDraft(
-  saveState: string,
-  activeProject: CreationProject | undefined,
-  selectedChat: ChatItem | undefined,
-): CreationDraft | undefined {
-  if (saveState === "read_only" && activeProject && selectedChat) {
-    return {
-      ...activeProject.composerDraft,
-      prompt: selectedChat.draft.text ?? selectedChat.draft.prompt ?? "",
-      attachments: selectedChat.draft.attachments ?? [],
-      model: selectedChat.draft.model ?? "",
-      modelSelection: selectedChat.draft.modelSelection,
-      conversationChannel: selectedChat.draft.conversationChannel ?? "direct",
-    };
-  }
-  return activeProject?.composerDraft;
-}
-
-function useAppSkills() {
-  const [skillRegistry] = useState(() => {
-    const registry = createSkillRegistry();
-    if (!registry.persistenceWarning) ensureTemplates(registry, false);
-    return registry;
-  });
-  const [, refreshSkills] = useState(0);
-  useEffect(() => {
-    try {
-      if (!skillRegistry.persistenceWarning) ensureTemplates(skillRegistry);
-      skillRegistry.persistPending();
-    } catch (error) {
-      console.warn("[App] Failed to persist pending skills:", error);
-    }
-  }, [skillRegistry]);
-  useEffect(() => {
-    const syncSkills = () => refreshSkills((value) => value + 1);
-    window.addEventListener(SKILLS_CHANGED_EVENT, syncSkills);
-    return () => window.removeEventListener(SKILLS_CHANGED_EVENT, syncSkills);
-  }, []);
-  return skillRegistry;
-}
-
-function useHomeModelConfig() {
-  const [providerVersion, setProviderVersion] = useState(0);
-  useEffect(() => {
-    let active = true;
-    void (async () => {
-      try {
-        const native = await loadProviderConnectionsDurable();
-        if (!active) return;
-        if (native) {
-          setProviderVersion((value) => value + 1);
-        } else {
-          const local = readProviderConnections();
-          if (local.length > 0) {
-            await persistProviderConnectionsDurable(local);
-          }
-        }
-      } catch (error) {
-        console.warn(
-          "[App] Failed to synchronize durable provider connections:",
-          error,
-        );
-      }
-    })();
-    return () => {
-      active = false;
-    };
-  }, []);
-  useEffect(() => {
-    const syncProvider = () => setProviderVersion((value) => value + 1);
-    window.addEventListener("kk:model-provider-changed", syncProvider);
-    return () =>
-      window.removeEventListener("kk:model-provider-changed", syncProvider);
-  }, []);
-  return useMemo(() => {
-    void providerVersion;
-    try {
-      const profile = parseModelProvider(
-        localStorage.getItem(MODEL_PROVIDER_STORAGE_KEY),
-      ).profile;
-      const connection = readProviderConnections().find(
-        (item) =>
-          Boolean(item.model?.trim()) &&
-          item.state !== "disabled" &&
-          item.capabilities.modalities.includes("image"),
-      );
-      const model = profile.model.trim() || connection?.model?.trim() || "";
-      return { model, configured: Boolean(model) };
-    } catch (error) {
-      console.warn("[App] Failed to resolve home model config:", error);
-      return { model: "", configured: false };
-    }
-  }, [providerVersion]);
-}
-
-function useAppAgentState() {
-  const agentPermission = useSyncExternalStore(
-    subscribeAgentPreferences,
-    readPermissionMode,
-  );
-  const agentState = useSyncExternalStore(
-    agentConnection.subscribe,
-    agentConnection.getState,
-  );
-  const desktopAgentState = useSyncExternalStore(
-    desktopAgentLifecycle.subscribe,
-    desktopAgentLifecycle.getState,
-  );
-  return { agentPermission, agentState, desktopAgentState };
-}
-
-function useActiveProjectConversation(
-  creation: Parameters<typeof snapshotWriteBlockReason>[0],
-  saveState: string,
-  activeProject: CreationProject | undefined,
-) {
-  const conversationDisabledReason = resolveConversationDisabledReason(
-    creation,
-    saveState,
-  );
-  const selectedChat = activeProject?.activeChatId
-    ? activeProject.chats?.[activeProject.activeChatId]
-    : undefined;
-  const conversationDraft = resolveConversationDraft(
-    saveState,
-    activeProject,
-    selectedChat,
-  );
-  return { conversationDisabledReason, selectedChat, conversationDraft };
-}
-
-function useAppTaskCoordination(params: AppTaskCoordinationParams) {
-  const {
-    creationRef,
-    updateProject,
-    commitCreation,
-    persistence,
-    activeProjectIdRef,
-    replaceCanvasItems,
-    setAssets,
-    homeModelConfig,
-    saveState,
-    onOpenSettingsProviders,
-    onNavigateToWorkspace,
-  } = params;
-
-  const execution = useTaskExecution({
-    creationRef,
-    updateProject,
-    commitCreation,
-    persistence,
-    activeProjectIdRef,
-    replaceCanvasItems,
-    setAssets,
-    openSettingsProviders: onOpenSettingsProviders,
-  });
-
-  useNativeTaskRecovery(
-    creationRef,
-    execution.taskControllers,
-    commitCreation,
-    saveState === "saved" || saveState === "saving",
-  );
-
-  const submission = useImageCommandSubmission({
-    creationRef,
-    activeProjectIdRef,
-    persistence,
-    ...submitPorts(homeModelConfig),
-    executeTask: execution.executeTask,
-    cancelTask: execution.cancelTask,
-    commitCreation,
-    replaceCanvasItems,
-    onNavigateToWorkspace,
-    onOpenSettingsProviders,
-  });
-
-  return {
-    ...execution,
-    ...submission,
-  };
 }
 
 export default function App() {
@@ -625,199 +415,20 @@ export default function App() {
     );
   }
 
-  const stageOrchestrator = useMemo<StageOrchestrator>(
-    () =>
-      createStageOrchestrator({
-        getProject: () =>
-          creationRef.current.projects.find(
-            (project) => project.id === activeProjectIdRef.current,
-          ),
-        commit: (project) => {
-          if (
-            saveStateRef.current !== "saved" &&
-            saveStateRef.current !== "saving"
-          )
-            throw new Error("项目尚未保存成功，请先处理项目恢复提示。");
-          updateProject(project.id, () => project);
-          if (activeProjectIdRef.current === project.id)
-            replaceCanvasItems(project.items);
-        },
-      }),
-    [],
-  );
-
-  const agentSubmitRef = useRef<
-    (
-      node: CanvasCollectionItem,
-      prompt: string,
-      signal?: AbortSignal,
-      validate?: () => string | undefined,
-    ) => Promise<{ taskId?: string; error?: string }>
-  >(async () => ({ error: "生成入口未就绪" }));
-  const agentViewRef = useRef<AgentCanvasBinding | null>(null);
-  const agentCanvasBridge = useMemo<AgentBridge>(
-    () =>
-      createAgentHost({
-        getView: () =>
-          agentViewRef.current?.projectId === activeProjectIdRef.current
-            ? agentViewRef.current.view
-            : null,
-        getProject: () =>
-          creationRef.current.projects.find(
-            (item) => item.id === activeProjectIdRef.current,
-          ),
-        getProjects: () => creationRef.current.projects,
-        getExecutionBlockReason: () =>
-          persistence.getWriteBlockReason() ??
-          snapshotWriteBlockReason(creationRef.current),
-        flush: () => persistence.flush(),
-        commit: (project) => {
-          updateProject(project.id, () => project);
-          if (activeProjectIdRef.current === project.id)
-            replaceCanvasItems(project.items);
-        },
-        generate: (node, prompt, signal, validate) =>
-          agentSubmitRef.current(node, prompt, signal, validate),
-        orchestrator: stageOrchestrator,
-      }),
-    [stageOrchestrator],
-  );
-  agentSubmitRef.current = async (node, prompt, signal, validate) => {
-    const project = creationRef.current.projects.find(
-      (item) => item.id === activeProjectIdRef.current,
-    );
-    const model =
-      node.model ||
-      (node.kind === "text"
-        ? readProviderConnections().find(
-            (connection) =>
-              connection.capabilities.modalities.includes("text") &&
-              (!project?.providerCredentialRef ||
-                connection.credentialRef === project.providerCredentialRef),
-          )?.model
-        : project?.model);
-    if (!model) return { error: "请先在设置中配置对应的生成模型。" };
-    let taskId: string | undefined;
-    const error = await submitImageCommand(
-      {
-        origin: "canvas",
-        input: {
-          sourceItemId: node.id,
-          prompt,
-          model,
-          count: 1,
-          signal: signal ?? new AbortController().signal,
-        },
-      },
-      (id) => {
-        taskId = id;
-      },
-      validate,
-    );
-    return { taskId, error };
-  };
-  useEffect(() => {
-    agentConnection.syncProject();
-    googleAgentConnection.syncProject();
-  }, [
-    creation.activeProjectId,
-    activeProject?.activeChatId,
-    conversationDisabledReason,
-  ]);
-  useEffect(() => {
-    const timer = setTimeout(() => agentConnection.pushState(), 100);
-    return () => clearTimeout(timer);
-  }, [activeProject]);
-  const pluginAi: PluginAi = {
-    async generateImage(prompt, options) {
-      const project = creationRef.current.projects.find(
-        (item) => item.id === activeProjectIdRef.current,
-      );
-      if (!project) throw new Error("请先新建或打开项目后再使用插件生成。");
-      const message = await submitImageCommand({
-        origin: "plugin",
-        input: {
-          prompt,
-          model: options?.model ?? project.model,
-          kind: "image",
-          attachments: [],
-          privacyMode: project?.composerDraft.privacyMode,
-          outputCount: 1,
-        },
-      });
-      if (message) throw new Error(message);
-      return { images: [] };
-    },
-    async generateVideo(prompt, options) {
-      const project = creationRef.current.projects.find(
-        (item) => item.id === activeProjectIdRef.current,
-      );
-      if (!project) throw new Error("请先新建或打开项目后再使用插件生成。");
-      const message = await submitImageCommand({
-        origin: "plugin",
-        input: {
-          prompt,
-          model: options?.model ?? project.model,
-          kind: "video",
-          attachments: [],
-          privacyMode: project?.composerDraft.privacyMode,
-          outputCount: 1,
-        },
-      });
-      if (message) throw new Error(message);
-      return { url: "", mimeType: "video/mp4" };
-    },
-    generateText() {
-      return Promise.reject(new Error("插件文本生成请通过对话面板执行"));
-    },
-  };
-  useEffect(() => {
-    agentConnection.setBridge(agentCanvasBridge);
-    googleAgentConnection.setBridge(agentCanvasBridge);
-    pluginLoader.setBridge(agentCanvasBridge);
-    return () => {
-      agentConnection.setBridge(null);
-      googleAgentConnection.setBridge(null);
-      pluginLoader.setBridge(null);
-    };
-  }, [agentCanvasBridge]);
-  useEffect(() => {
-    if (
-      !homeCodexStarting.current &&
-      (saveState === "saved" || saveState === "saving")
-    )
-      void desktopAgentLifecycle.ensure();
-  }, [
-    creation.activeProjectId,
-    persistence.loadEpoch,
+  const { agentViewRef, stageOrchestrator } = useAppAgentBridge({
+    creationRef,
+    activeProjectIdRef,
+    updateProject,
+    replaceCanvasItems,
     saveState,
-    agentCanvasBridge,
-    desktopAgentState.pending,
-  ]);
-  useEffect(() => {
-    if (
-      creation.activeProjectId &&
-      configureAgentProxy(
-        agentConnection,
-        import.meta.env.VITE_KK_AGENT_PROXY === "1",
-      )
-    ) {
-      void agentConnection.connect();
-    }
-  }, [creation.activeProjectId]);
-  useEffect(() => {
-    setPluginRuntime({
-      React: React as typeof import("react"),
-      jsx: React.createElement,
-      Fragment: React.Fragment,
-      version: appVersion,
-      emit: pluginLoader.getBus().emit,
-      on: pluginLoader.getBus().on,
-      injectCSS: injectPluginCss,
-    });
-    pluginLoader.setAi(pluginAi);
-    void pluginLoader.ensurePluginsLoaded();
-  }, []);
+    persistence,
+    saveStateRef,
+    homeCodexStarting,
+    activeProject,
+    conversationDisabledReason,
+    desktopAgentState,
+    submitImageCommand,
+  });
   async function executeHomeCodexProject(
     input: CreateProjectInput,
     selection: ModelSelection,
@@ -1217,57 +828,7 @@ export default function App() {
     setActive("workspace");
     setModal("");
   }
-  useEffect(() => {
-    const shortcut = (event: KeyboardEvent): void => {
-      if (event.isComposing || event.defaultPrevented) return;
-      if ((event.ctrlKey || event.metaKey) && event.key === ",") {
-        event.preventDefault();
-        setSettingsSection("general");
-        setModal("settings");
-      }
-      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") {
-        event.preventDefault();
-        setModal("search");
-      }
-    };
-    window.addEventListener("keydown", shortcut);
-    return () => window.removeEventListener("keydown", shortcut);
-  }, []);
-  useEffect(() => {
-    const media = matchMedia("(prefers-color-scheme: dark)");
-    let preferences: SettingsPreferences = DEFAULT_SETTINGS;
-    try {
-      preferences = parseSettings(
-        localStorage.getItem(SETTINGS_STORAGE_KEY),
-      ).preferences;
-    } catch (error) {
-      console.warn("[App] Failed to read settings preferences:", error);
-      preferences = DEFAULT_SETTINGS;
-    }
-    const apply = () => {
-      document.documentElement.dataset.accent = preferences.accent;
-      document.documentElement.dataset.theme =
-        preferences.theme === "system"
-          ? media.matches
-            ? "dark"
-            : "light"
-          : preferences.theme;
-      document.documentElement.dataset.floatingLayout = String(
-        preferences.floatingLayout,
-      );
-    };
-    const listener = (event: Event) => {
-      preferences = (event as CustomEvent<SettingsPreferences>).detail;
-      apply();
-    };
-    apply();
-    window.addEventListener("kk:settings-changed", listener);
-    media.addEventListener("change", apply);
-    return () => {
-      window.removeEventListener("kk:settings-changed", listener);
-      media.removeEventListener("change", apply);
-    };
-  }, []);
+  useAppSettings(setSettingsSection, setModal);
   function openSkillsView(view: string): void {
     setPartnerProjectId(
       active === "workspace" ? creationRef.current.activeProjectId : null,
@@ -1981,22 +1542,5 @@ export default function App() {
     </div>
   );
 }
-import "./styles/interaction.css";
-import "./styles/motion.css";
 
-import "./styles/catalog.css";
-import "./styles/task-workbench.css";
-import "./styles/stage-workbench.css";
-
-import "./styles/feature-parity.css";
 // Screen layout is the final owner; imports in components execute earlier.
-import "./styles/responsive.css";
-import "./styles/responsive-content.css";
-import "./styles/composer.css";
-import "./styles/tokenized-composer.css";
-import "./styles/page-templates.css";
-import "./styles/canvas-compare.css";
-import "./styles/image-edit.css";
-import "./styles/image-selection.css";
-import "./styles/canvas-composer-screen.css";
-import "./styles/desktop-titlebar.css";
