@@ -31,3 +31,15 @@ TASK-MOD-HOME-SESSION：真实浏览器发现首页预连接后新项目无法�
 首页原8项浏览器现全部通过（codex-gate-home-unique.log，worker1/retry0）；增量lint以f10147b9为GOVERNANCE_BASE通过。默认origin/main全分支lint仍失败：架构首建基线要求只建基线不改产品，目录首建基线要求匹配其记录的Git base；这两项是实际合流顺序缺口，不改检查或重写历史来伪装通过。完整序列分别记录增量检查与集成阻断。
 
 更正079c候选：全量浏览器发现普通聊天手动fresh的保护被泛化，补RED后要求调用者携带当前新projectId，普通手动、其他项目、已绑定聊天仍拒绝；Native生命周期转发同一身份。84定向/2386根单元通过（20skip），类型/增量lint通过；14项首页与连接保护浏览器全过。首次901项全量运行仅留下前152项输出，无最终退出/完整报告且进程已结束，记INTERRUPTED，不能算全量完成。独立评审获用户授权已启动；P6历史恢复发现另卡修复。
+
+## 2026-10-29 交付门续修与中断勘误
+
+78beb7a9只读独立评审已PASS（base c2a0228a），IR-P8-01/IR-P6-01/IR-P6-02均经修复补审关闭；该结论只涵盖代码范围，不替代CI、完整verify、原生或真实GPU。原回执为工程外independent-review-78beb7.md。
+
+full-gates-56-final：默认verify因初建baseline顺序不匹配失败；Agent构建、204通过/2跳过、UI规范和格式通过。浏览器序列在447/901后无运行进程、无退出码/最终报告，记录INTERRUPTED：339通过、108失败；design/development/native阶段未执行。原日志与逐项失败保留，不能称完整全绿。部分失败来自旧设置/模型菜单前置，另有消息回写和窄屏几何等真实待核验项。
+
+根消费契约TS的干净安装原先出现TS7016，不能依赖packages/creation-contracts私有node_modules掩盖。隔离目录只改根semver7.8.5/@types7.8.0，根npm ci、Mobile npm ci、根/Mobile类型检查均0，且无私有契约安装或新file链接；见clean-contract-consumer/preflight-final.json与candidate-root-*。实际根清单/锁随后采用同一最小改动，Mobile锁已有相同声明，无需重写。
+
+桌面指纹回归：只改契约TS原先不变、链接源不拒绝，实际仓库新增两项测试先RED，补受控输入后27通过/1原符号链接权限跳过；新junction断言实际执行通过。覆盖现有/新增/删除TS、清单与schema、忽略安装/日志。transpiler协议类型仅重命名，未弱化R8检查，公开出口不变。类型、增量lint、全单元及构建的最终退出见contract-fix-*日志；默认origin/main首建baseline和远端分叉仍单列，不能用增量lint替代。
+
+交付续修实际检查：根类型0、Mobile类型0、增量lint0（base78beb7a9）、全根2397通过/20跳过/0失败、production build0、diff --check0；桌面新指纹两条断言均实际执行。仍不代表默认全分支verify通过。

@@ -1,4 +1,4 @@
-import type { AnthropicStreamEvent, OpenAIChatChunk } from "./types.ts";
+import type { AnthropicStreamEvent, OpenAIChatChunk } from "./protocolTypes.ts";
 
 export class AnthropicToOpenAiStreamState {
   responseId = "";

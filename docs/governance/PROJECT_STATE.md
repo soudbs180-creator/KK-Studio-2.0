@@ -57,3 +57,5 @@ TASK-MOD-P0已按用户提供执行规范与补篇启动；当前实现、验证
 
 
 2026-10-29 P8源码候选：Desktop/Web53，Mobile43/契约1.5不变；七组装配迁入src/app，App2002→1546，35函数/主JSX/28 CSS入口及产物内容hash不变。固定输入软件Edge四组DOM/PNG同态；硬件渲染差异与真实GPU/最终Native不据此关闭。主仓21文件与索引清单/patch已保全，4路径重叠；P8前后均复现Codex四失败，完整verify、当前独审与main/远端整合仍开放。详见[验证](../changes/2026-10-29-p8-composition/verification.md)；其他P/STD/ORG不自动完成。
+
+2026-10-29交付门续修：78beb7a9获授权只读独审限定代码PASS，后续SHA须补审；PR81仍draft，main未合。完整浏览器停在447/901（339通过/108失败，无退出码），不得称全绿。根显式声明契约semver依赖/类型，隔离干净安装及两端类型通过；补契约源码桌面构建指纹和协议类型命名。产品版本仍Desktop/Web56、Mobile43；默认baseline/Hosted及全套浏览器继续修复，真实GPU/最终Native未验。主仓Figma审计保全及四文档其他开放任务不关闭。见[验证](../changes/2026-10-29-p8-composition/verification.md)。

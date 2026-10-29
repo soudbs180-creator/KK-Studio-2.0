@@ -58,3 +58,5 @@ P3继续入口：[ADR-029](../architecture/adr/ADR-029-feature-cycle-decoupling.
 P8七组hook迁出0b675ec7；会话选择派生投影修复f10147b9。Desktop/Web55空聊天fresh初始化仍在门禁核验，保护既有线程/忙碌/审批；夹具新建线程改独立ID，不能用重复ID掩盖跨项目保护。主仓21份未提交文件保全，main尚未合流。完整门禁、独立上下文review、当前Native和真实GPU均不得提前标完成。见[验证](../changes/2026-10-29-p8-composition/verification.md)。
 
 2026-10-29补充：HOME-SESSION收窄许可7280dc3a已独立84项复验关闭IR-P8-01。COMFY-RECOVERY（Desktop/Web56）候选修复IR-P6-01/02，根2391/20skip及类型/增量lint、Rust1/Canvas浏览器通过，等待提交SHA补审。完整901首跑中断不得称通过；默认origin/main治理和113/7分叉仍需解决。主仓21文件再次逐SHA确认未变，四重叠路径三方预演均有冲突，未写main。
+
+2026-10-29交付门续修：78beb7a9获授权只读独审限定代码PASS，后续SHA须补审；PR81仍draft，main未合。完整浏览器停在447/901（339通过/108失败，无退出码），不得称全绿。根显式声明契约semver依赖/类型，隔离干净安装及两端类型通过；补契约源码桌面构建指纹和协议类型命名。产品版本仍Desktop/Web56、Mobile43；默认baseline/Hosted及全套浏览器继续修复，真实GPU/最终Native未验。主仓Figma审计保全及四文档其他开放任务不关闭。见[验证](../changes/2026-10-29-p8-composition/verification.md)。

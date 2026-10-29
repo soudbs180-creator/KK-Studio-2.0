@@ -1,4 +1,4 @@
-import type { AnthropicStreamEvent, OpenAIChatChunk } from "./types.ts";
+import type { AnthropicStreamEvent, OpenAIChatChunk } from "./protocolTypes.ts";
 
 interface ToolTracking {
   readonly blockIndex: number;

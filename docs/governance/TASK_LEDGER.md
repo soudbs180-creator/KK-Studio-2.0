@@ -9,7 +9,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-MOD-COMFY-RECOVERY | 恢复超窗口Comfy产物并保留结果删除意图 | PARTIAL | 进行中 | P1 | TASK-MOD-P6-1 | root | 当前SHA补审；完整门禁和首建baseline/远端分叉整合 |
 | TASK-MOD-HOME-SESSION | 首页新项目使用独立Agent会话 | PARTIAL | 进行中 | P1 | TASK-MOD-CHAT-PROJECTION | root | 当前SHA独审；完整门禁和基线/远端冲突分阶段整合 |
 | TASK-MOD-CHAT-PROJECTION | 切换聊天同步组件派生视图 | PARTIAL | 未完成 | P1 | TASK-MOD-P8 | root | 当前独审/完整verify/main；首页新项目显式独立会话另卡修复 |
-| TASK-MOD-P8 | App装配hook瘦身与主线合流核验 | PARTIAL | 未完成 | P1 | TASK-MOD-P6-1 | root | 独立评审与完整门禁；分开修复旧路由/聊天投影缺陷后再受控合流 |
+| TASK-MOD-P8 | App装配hook瘦身与主线合流核验 | PARTIAL | 未完成 | P1 | TASK-MOD-P6-1 | root | 按当前SHA完成交付修复补审、处理浏览器失败与首建baseline/远端冲突；保全主仓审计改动后满足门禁再合流 |
 | TASK-FIGMA-PAGES-20261025 | 重新核查并整理Figma 04/05页面与状态 | PARTIAL | 未完成 | P2 | none | root | 先完成共享源与全场景结构核查，再同步本地控件/页面；完整测试、实际运行与当前独审后判定验收，不改变其他任务归属。 |
 | TASK-FIGMA-CONTROLS-20261025 | 修复 Figma 六类基础控件问题并同步本地 UI | PARTIAL | 未完成 | P2 | none | root | 在原任务修复两项既有存储单测失败并补Desktop运行证据；保留既有dirty和失败原件，未经全量验收不合并或发布。 |
 | TASK-CANVAS-PERF-20261024 | 削减画布预览与存储重复工作 | IN_PROGRESS | 进行中 | P2 | none | root | 先完成红绿计数及最小优化，再完整门禁、运行与独审；保留既有dirty/index，禁止混合提交。 |
@@ -225,7 +225,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `refactor/TASK-MOD-P3-feature-cycles`
 - Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
 - Modules: src/features/comfyui/workflowSession.ts, src/components/canvas/useComfyWorkflowNode.ts, src/components/canvas/useCanvasNodeActions.ts, src/components/canvas/ComfyWorkflowCanvasHost.tsx, src/domain/comfyWorkflow.ts, src-tauri/src/comfy_transport.rs, tests/unit/comfyWorkflowSession.test.ts, tests/browser/comfy-workflow.spec.ts, tests/support/comfyCanvasHarness.tsx, src/App.tsx, src/domain/canvasItems.ts, src/features/agent/agentCanvas.ts, tests/unit/conversationSubmitScope.test.ts, tests/unit/agentCanvas.test.ts, src/domain/creationModel.ts
-- Verification: PARTIAL — 独审07d6发现可编辑说明仍会绕过删除；补真实Agent改说明→删除RED后，新增稳定comfyWorkflowSourceId，旧快照/Agent编辑前从旧说明承接。81定向、根2395pass/20skip、类型/增量lint/build/Comfy浏览器通过。完整901为补该修复中止，待新SHA补审/重跑及main。
+- Verification: PARTIAL — 独审07d6发现可编辑说明仍会绕过删除；补真实Agent改说明→删除RED后，新增稳定comfyWorkflowSourceId，旧快照/Agent编辑前从旧说明承接。81定向、根2395pass/20skip、类型/增量lint/build/Comfy浏览器通过。完整901为补该修复中止，待新SHA补审/重跑及main。 78beb7a9独审81项复验关闭IR-P6-02，限定代码PASS；全套浏览器中断与main未完成，不升级总体状态。
 - Evidence: [docs/changes/2026-10-29-p6-1-comfy-canvas/verification.md](../../docs/changes/2026-10-29-p6-1-comfy-canvas/verification.md)
 - Next action: 当前SHA补审；完整门禁和首建baseline/远端分叉整合
 - Last verified: 2026-10-29
@@ -282,9 +282,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `refactor/TASK-MOD-P3-feature-cycles`
 - Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
 - Modules: src/App.tsx, src/app, tests
-- Verification: PARTIAL — 七组hook候选已实现：App2002→1546；35原函数/12桥语句/2effect/主JSX/CSS顺序不变；固定输入软件Edge四组DOM/PNG均0差异。根2378 pass/20 skip，48会话回归全保留。完整verify/当前独审/main未完成。
+- Verification: PARTIAL — 78beb7a9限定代码独审PASS；PR81 draft、main未合。全浏览器中断447/901：339通过108失败，无最终退出。交付续修显式根semver/类型、契约构建指纹、协议类型命名；隔离干净安装与两端类型通过，当前提交快速检查/补审另记。默认baseline/Hosted、完整浏览器与远端分叉未闭环。
 - Evidence: [docs/changes/2026-10-29-p8-composition/verification.md](../../docs/changes/2026-10-29-p8-composition/verification.md)
-- Next action: 独立评审与完整门禁；分开修复旧路由/聊天投影缺陷后再受控合流
+- Next action: 按当前SHA完成交付修复补审、处理浏览器失败与首建baseline/远端冲突；保全主仓审计改动后满足门禁再合流
 - Last verified: 2026-10-29
 - Updated: 2026-10-29
 

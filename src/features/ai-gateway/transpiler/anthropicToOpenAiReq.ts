@@ -12,7 +12,7 @@ import type {
   OpenAIChatRequest,
   OpenAITool,
   OpenAIToolChoice,
-} from "./types.ts";
+} from "./protocolTypes.ts";
 
 function extractSystemText(
   system: string | AnthropicTextBlock[] | undefined,

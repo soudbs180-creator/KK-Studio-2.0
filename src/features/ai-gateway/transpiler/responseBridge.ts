@@ -5,7 +5,7 @@ import type {
   OpenAIChatResponse,
   OpenAIChoice,
   OpenAIToolCall,
-} from "./types.ts";
+} from "./protocolTypes.ts";
 
 function collectAnthropicResponseParts(
   content: AnthropicContentBlock[] | undefined,

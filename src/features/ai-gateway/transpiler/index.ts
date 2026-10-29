@@ -10,9 +10,9 @@ import type {
   OpenAIChatRequest,
   OpenAIChatResponse,
   TranspileOptions,
-} from "./types.ts";
+} from "./protocolTypes.ts";
 
-export * from "./types.ts";
+export * from "./protocolTypes.ts";
 export {
   transpileAnthropicToOpenAiRequest,
   transpileAnthropicToOpenAiRequest as transpileAnthropicToOpenAiReq,

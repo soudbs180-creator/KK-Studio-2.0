@@ -10,7 +10,7 @@ import type {
   AnthropicStreamEvent,
   OpenAIChatChunk,
   TranspileOptions,
-} from "./types.ts";
+} from "./protocolTypes.ts";
 
 export interface StreamTranspiler {
   processLine(line: string): string[];

@@ -42,7 +42,7 @@
     "evidence": [
       "docs/changes/2026-10-29-p6-1-comfy-canvas/verification.md"
     ],
-    "verification": "独审07d6发现可编辑说明仍会绕过删除；补真实Agent改说明→删除RED后，新增稳定comfyWorkflowSourceId，旧快照/Agent编辑前从旧说明承接。81定向、根2395pass/20skip、类型/增量lint/build/Comfy浏览器通过。完整901为补该修复中止，待新SHA补审/重跑及main。",
+    "verification": "独审07d6发现可编辑说明仍会绕过删除；补真实Agent改说明→删除RED后，新增稳定comfyWorkflowSourceId，旧快照/Agent编辑前从旧说明承接。81定向、根2395pass/20skip、类型/增量lint/build/Comfy浏览器通过。完整901为补该修复中止，待新SHA补审/重跑及main。 78beb7a9独审81项复验关闭IR-P6-02，限定代码PASS；全套浏览器中断与main未完成，不升级总体状态。",
     "verificationResult": "PARTIAL",
     "updated": "2026-10-29",
     "lastVerified": "2026-10-29",
@@ -169,11 +169,11 @@
     "evidence": [
       "docs/changes/2026-10-29-p8-composition/verification.md"
     ],
-    "verification": "七组hook候选已实现：App2002→1546；35原函数/12桥语句/2effect/主JSX/CSS顺序不变；固定输入软件Edge四组DOM/PNG均0差异。根2378 pass/20 skip，48会话回归全保留。完整verify/当前独审/main未完成。",
+    "verification": "78beb7a9限定代码独审PASS；PR81 draft、main未合。全浏览器中断447/901：339通过108失败，无最终退出。交付续修显式根semver/类型、契约构建指纹、协议类型命名；隔离干净安装与两端类型通过，当前提交快速检查/补审另记。默认baseline/Hosted、完整浏览器与远端分叉未闭环。",
     "verificationResult": "PARTIAL",
     "updated": "2026-10-29",
     "lastVerified": "2026-10-29",
-    "nextAction": "独立评审与完整门禁；分开修复旧路由/聊天投影缺陷后再受控合流",
+    "nextAction": "按当前SHA完成交付修复补审、处理浏览器失败与首建baseline/远端冲突；保全主仓审计改动后满足门禁再合流",
     "requirementRefs": [
       "docs/changes/2026-10-29-p8-composition/spec.md"
     ],

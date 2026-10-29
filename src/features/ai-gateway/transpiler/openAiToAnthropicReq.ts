@@ -10,7 +10,7 @@ import type {
   OpenAIChatRequest,
   OpenAITool,
   OpenAIToolChoice,
-} from "./types.ts";
+} from "./protocolTypes.ts";
 
 function parseImagePart(
   part: OpenAIChatContentPart,
