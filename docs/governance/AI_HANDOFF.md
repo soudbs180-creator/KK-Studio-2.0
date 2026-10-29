@@ -64,3 +64,5 @@ P8七组hook迁出0b675ec7；会话选择派生投影修复f10147b9。Desktop/We
 2026-10-29聊天交付修复候选：Desktop/Web2.1.57，Mobile43。文本成功结果按原聊天归属回写；断开连接时只读恢复本地聊天历史，保留切换后草稿、其他聊天和已删除请求。75项定向RED→GREEN；当前SHA完整检查/补审另记，PR81仍draft/main未合，339/108的部分浏览器结果不冒充完整901。见[验证](../changes/2026-10-29-p8-composition/verification.md)。
 
 2026-10-29续修：cc8e5f7c聊天交付获正式独审PASS，根2405通过/20跳过、原浏览器3/3、design9/9、开发插件与官方57桌面构建通过；未运行GUI/GPU。新58候选修目录通知覆盖未保存能力草稿，原浏览器RED→GREEN；同一保存按钮locator更新，原持久断言保留。独立目录解析/取消/归属缺陷及测速文案/JSON规格冲突仍开放；默认origin/main verify3项、远端冲突和901全套继续阻断合流。主仓21份审计原件未改。见[验证](../changes/2026-10-29-p8-composition/verification.md)。
+
+58最终UI门补充：412行边界失败已按真实职责提取ModelDisplayFields、父组件387行，AST及UI门通过，类型/增量lint/根2405通过。当前最终源码、review、浏览器、桌面哈希及主仓保护以工程外final-receipt-58.json为准；未合main，目录安全与默认基线继续开放。

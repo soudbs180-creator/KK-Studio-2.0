@@ -19,7 +19,8 @@
     "baseSha": "cc8e5f7c5cd012f7ec3cb741576e064970124f10",
     "affectedModules": [
       "src/components/settings/ProviderModelCatalog.tsx",
-      "tests/browser/model-capabilities.spec.ts"
+      "tests/browser/model-capabilities.spec.ts",
+      "src/components/settings/ModelDisplayFields.tsx"
     ],
     "status": "PARTIAL",
     "displayStatus": "进行中",
@@ -29,7 +30,7 @@
     "evidence": [
       "docs/changes/2026-10-29-p8-composition/verification.md"
     ],
-    "verification": "原供应商通知回归supported→unknown真实RED；内容签名修复、保存locator对齐后原浏览器全部断言GREEN，未放宽断言。快速检查和新SHA独审进行中，main未合。",
+    "verification": "同通知/默认/启停保草稿及真实元数据同步增强browser通过，原保存断言保留；455cbb6d独审PASS。最终UI门412行失败后纯提取ModelDisplayFields，父387行，AST/类型/增量lint/UI门通过，根2405pass20skip0fail。最终SHA补审/浏览器/Native以本卡回执为准；完整默认门/main未合。",
     "verificationResult": "PARTIAL",
     "updated": "2026-10-29",
     "lastVerified": "2026-10-29",

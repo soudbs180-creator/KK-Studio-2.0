@@ -61,3 +61,5 @@ TASK-MOD-MODEL-DRAFT：现有浏览器供应商通知测试在已保存元数据
 独审下一簇诊断仅为待修证据：M3规格要求独立目录拉取；fetchProviderModels当前宽松解析丢image/unknown元数据、接受{}；独立入口缺生命周期取消及写前归属保护。不得把这些缺陷转成新成功预期；测速入口文案/JSON契约冲突需当前Figma对位。该簇继续开放，不以本次草稿修复称全部模型测试已绿。
 
 MODEL-DRAFT补充复核：整对象签名仍因enabled/isDefault偏好变化重置草稿，独审预检指出后补真实默认/启停RED。签名现仅账号/模型及实际回填的kind/sizes/family/variant/aliases/image；增强浏览器包含默认/启停/原保存及真实元数据false/3更新，1/1通过。最终根2405通过/20跳过/0失败、类型0、增量lint0、production build0（model-draft-final-*）；Hosted cc8e5f7c Mobile与deploy-linux success，verify同3项基线失败，非全套通过。
+
+455cbb6d MODEL-DRAFT获得正式只读增量PASS，偏好丢草稿问题关闭。随后最终UI门真实失败：ProviderModelCatalog412行超过400（final-58-ui.log/exit1保留）；仅将型号显示分组三个受控输入原样提取ModelDisplayFields，父组件387行，未放宽边界。源码属性/标签/限制/回调AST一致（model-fields-jsx-proof-v2.log；最初printer受缩进影响的失败保留），ui:check0、类型0、增量lint0、根2405通过/20跳过/0失败；重新构建及四浏览器/当前SHA补审与桌面构建以最终回执为准。旧455构建不冒称提取后构建。

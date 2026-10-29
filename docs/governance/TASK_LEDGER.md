@@ -226,8 +226,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Acceptance: 未保存的能力与数量不被相同元数据通知重置; 原保存及持久能力断言保留，真实元数据变化仍同步; 原失败RED→GREEN、快速检查与当前SHA独审
 - Branch: `refactor/TASK-MOD-P3-feature-cycles`
 - Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
-- Modules: src/components/settings/ProviderModelCatalog.tsx, tests/browser/model-capabilities.spec.ts
-- Verification: PARTIAL — 原供应商通知回归supported→unknown真实RED；内容签名修复、保存locator对齐后原浏览器全部断言GREEN，未放宽断言。快速检查和新SHA独审进行中，main未合。
+- Modules: src/components/settings/ProviderModelCatalog.tsx, tests/browser/model-capabilities.spec.ts, src/components/settings/ModelDisplayFields.tsx
+- Verification: PARTIAL — 同通知/默认/启停保草稿及真实元数据同步增强browser通过，原保存断言保留；455cbb6d独审PASS。最终UI门412行失败后纯提取ModelDisplayFields，父387行，AST/类型/增量lint/UI门通过，根2405pass20skip0fail。最终SHA补审/浏览器/Native以本卡回执为准；完整默认门/main未合。
 - Evidence: [docs/changes/2026-10-29-p8-composition/verification.md](../../docs/changes/2026-10-29-p8-composition/verification.md)
 - Next action: 完成当前SHA快速门/独审；独立目录解析/取消/归属及测速文案冲突另项修复，不修改有效安全断言
 - Last verified: 2026-10-29
