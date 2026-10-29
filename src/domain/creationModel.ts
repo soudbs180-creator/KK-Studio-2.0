@@ -4,7 +4,7 @@ import type { ApprovalGate } from "./agentWorkflow";
 import { isAssetReference } from "./assetReference.ts";
 import { normalizeTags } from "./assets.ts";
 import type { CanvasCollectionItem, CanvasItemKind } from "./canvasItems";
-import { CANVAS_REFERENCE_SLOTS } from "./canvasItems.ts";
+import { CANVAS_REFERENCE_SLOTS, comfyOutputSourceId } from "./canvasItems.ts";
 import { sameJson } from "./chatMigrationCore.ts";
 import type {
   ChatItem,
@@ -808,6 +808,7 @@ function normalizeCanvasItem(
       value.comfyWorkflow === undefined
         ? undefined
         : comfyWorkflowCardSchema.parse(value.comfyWorkflow),
+    comfyWorkflowSourceId: comfyOutputSourceId(value),
     tags: value.tags === undefined ? undefined : normalizeTags(value.tags),
     // Plugin content is durable project data, independently editable after a read.
     plugin:

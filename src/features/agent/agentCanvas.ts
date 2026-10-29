@@ -16,6 +16,7 @@ export {
 import { cardLayout } from "../../domain/canvasGraph.ts";
 import {
   removeCanvasItems,
+  comfyOutputSourceId,
   type CanvasCollectionItem,
 } from "../../domain/canvasItems.ts";
 import type { Point } from "../../domain/canvasViewport.ts";
@@ -258,6 +259,8 @@ export function applyAgentOpsToItems(
           if (item.id !== op.id) return item;
           found = true;
           const next: CanvasCollectionItem = { ...item };
+          const comfySource = comfyOutputSourceId(item);
+          if (comfySource) next.comfyWorkflowSourceId = comfySource;
           if (typeof metadata.prompt === "string")
             next.prompt = metadata.prompt;
           if (typeof metadata.model === "string") next.model = metadata.model;

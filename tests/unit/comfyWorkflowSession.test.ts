@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { setImmediate } from "node:timers/promises";
 import * as comfy from "../../src/features/comfyui/index.ts";
+import { createProjectCanvas } from "../../src/domain/projectCanvas.ts";
 import {
   createProject,
   emptySnapshot,
@@ -240,6 +241,44 @@ test("workflow card metadata remains optional in old projects and round-trips su
       .projects[0].items[0].comfyWorkflow,
     undefined,
   );
+});
+
+test("legacy Comfy output source upgrades before captions change and malformed optional metadata stays safe", () => {
+  const project = createProject({
+    kind: "image",
+    prompt: "fixture",
+    model: "fixture",
+    attachments: [],
+  });
+  project.items = [
+    {
+      id: "comfy-output-" + "a".repeat(24),
+      kind: "image",
+      title: "legacy",
+      description: "ComfyUI · source-card",
+    },
+  ];
+  project.canvas = createProjectCanvas(project.items);
+  const upgraded = normalizeCreationSnapshot({
+    ...emptySnapshot(),
+    projects: [project],
+  }).projects[0];
+  assert.equal(upgraded.items[0].comfyWorkflowSourceId, "source-card");
+  upgraded.items[0].description = "edited caption";
+  const restored = normalizeCreationSnapshot({
+    ...emptySnapshot(),
+    projects: [upgraded],
+  }).projects[0];
+  assert.equal(restored.items[0].comfyWorkflowSourceId, "source-card");
+  Object.assign(project.items[0], {
+    description: "No legacy source marker",
+    comfyWorkflowSourceId: { invalid: true },
+  });
+  const malformed = normalizeCreationSnapshot({
+    ...emptySnapshot(),
+    projects: [project],
+  }).projects[0];
+  assert.equal(malformed.items[0].comfyWorkflowSourceId, undefined);
 });
 
 test("only a failed job from this card may release its submitted marker", () => {

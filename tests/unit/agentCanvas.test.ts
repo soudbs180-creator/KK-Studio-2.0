@@ -61,6 +61,32 @@ test("Agent bulk deletion preserves Comfy output dismissals while leaving other 
   assert.equal(items[0].comfyWorkflow?.dismissedOutputIds, undefined);
 });
 
+test("renaming a legacy Comfy result cannot erase its source identity before deletion", () => {
+  const id = "comfy-output-" + "b".repeat(24);
+  const items: CanvasCollectionItem[] = [
+    {
+      id: "card",
+      title: "Comfy",
+      kind: "text",
+      description: "",
+      comfyWorkflow: {},
+    },
+    { id, title: "result", kind: "image", description: "ComfyUI · card" },
+  ];
+  const renamed = applyAgentOpsToItems(items, [
+    {
+      type: "update_node",
+      id,
+      metadata: { description: "User edited caption" },
+    },
+  ]);
+  assert.equal(renamed.items[1].description, "User edited caption");
+  const result = applyAgentOpsToItems(renamed.items, [
+    { type: "delete_node", id },
+  ]);
+  assert.deepEqual(result.items[0].comfyWorkflow?.dismissedOutputIds, [id]);
+});
+
 test("buildAgentSnapshot 生成节点/连线/视口", () => {
   const canvas = createProjectCanvas(baseItems);
   const snapshot = buildAgentSnapshot(baseItems, {

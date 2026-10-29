@@ -31,7 +31,8 @@
       "src/domain/canvasItems.ts",
       "src/features/agent/agentCanvas.ts",
       "tests/unit/conversationSubmitScope.test.ts",
-      "tests/unit/agentCanvas.test.ts"
+      "tests/unit/agentCanvas.test.ts",
+      "src/domain/creationModel.ts"
     ],
     "status": "PARTIAL",
     "displayStatus": "进行中",
@@ -41,7 +42,7 @@
     "evidence": [
       "docs/changes/2026-10-29-p6-1-comfy-canvas/verification.md"
     ],
-    "verification": "独审c0ff确认IR-P6-01关闭，发现预览/App和Agent删除漏标记；实际App回调/Agent批量删除RED→统一removeCanvasItems GREEN。根2393pass/20skip、类型/增量lint/build通过，首页/保护/Comfy共15浏览器通过。待当前SHA补审、完整序列/main。",
+    "verification": "独审07d6发现可编辑说明仍会绕过删除；补真实Agent改说明→删除RED后，新增稳定comfyWorkflowSourceId，旧快照/Agent编辑前从旧说明承接。81定向、根2395pass/20skip、类型/增量lint/build/Comfy浏览器通过。完整901为补该修复中止，待新SHA补审/重跑及main。",
     "verificationResult": "PARTIAL",
     "updated": "2026-10-29",
     "lastVerified": "2026-10-29",

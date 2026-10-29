@@ -53,3 +53,5 @@
 候选检查：根2391 pass/0 fail/20 skip，类型与增量lint（7280 base）通过；Rust comfy_transport::tests 1/1通过；历史11项通过；实际Canvas浏览器在删除后再次轮询、显式flush/标准化重载、卸载重挂后轮询均不复活，原目录/双态编辑/原件/连线断言保留。普通下游新增边是异步发布，保留原containEqual断言改为等待实际边就绪，无重试/容差。证据browser-comfy-recovery.log、tests-comfy-recovery.log、types-comfy-recovery.log、lint-comfy-recovery.log与comfy-transport-final.log。
 
 独立c0ff补审：IR-P6-01关闭；IR-P6-02发现预览/App删除遗漏，并联查Agent批量删除。新增实际App deleteItem源码回调及Agent bulk回归，先RED（缺dismiss标记）后共享领域removeCanvasItems GREEN，三个删除入口同逻辑，其他卡片及原输入不改。根2393 pass/20skip、类型/增量lint/build、15项首页/连接保护/Comfy浏览器全过。删除回归及最终候选补审另绑定SHA，不将c0ff评审冒充新SHA。
+
+07d6补审发现可编辑description不能承担稳定来源身份，保留IR-P6-02 OPEN并新增真实Agent update_node→delete_node RED。补可选comfyWorkflowSourceId、新产物写入、旧快照加载/Agent编辑前承接，81定向/根2395 pass20skip/类型与增量lint/build、Comfy浏览器全部通过。旧/缺省/非法可选元数据有回归；测试中曾因不匹配canvas位置导致夹具失败，修正有效画布输入后GREEN，未放宽原数据校验。07d6全量运行已为新修复明确中止，自有runner及子进程清单保留，不能算通过。新SHA待补审/完整门禁。

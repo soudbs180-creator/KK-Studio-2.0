@@ -5,6 +5,20 @@ import type { ComfyWorkflowCardState } from "./comfyWorkflow.ts";
 export type { CanvasReference } from "../../packages/creation-contracts/index.ts";
 export type CanvasItemKind = "image" | "video" | "audio" | "text";
 
+export function comfyOutputSourceId(
+  item: CanvasCollectionItem,
+): string | undefined {
+  if (!/^comfy-output-[a-f0-9]{24}$/.test(item.id)) return;
+  const source =
+    typeof item.comfyWorkflowSourceId === "string"
+      ? item.comfyWorkflowSourceId
+      : typeof item.description === "string" &&
+          item.description.startsWith("ComfyUI · ")
+        ? item.description.slice("ComfyUI · ".length)
+        : undefined;
+  return source && source.length <= 160 ? source : undefined;
+}
+
 export function removeCanvasItems(
   items: CanvasCollectionItem[],
   removedIds: Iterable<string>,
@@ -18,7 +32,7 @@ export function removeCanvasItems(
     .map((item) => {
       if (!item.comfyWorkflow) return item;
       const dismissed = outputs
-        .filter((output) => output.description === `ComfyUI · ${item.id}`)
+        .filter((output) => comfyOutputSourceId(output) === item.id)
         .map((output) => output.id);
       return dismissed.length
         ? {
@@ -79,6 +93,7 @@ export interface PluginItemPayload {
 
 export interface CanvasCollectionItem {
   comfyWorkflow?: ComfyWorkflowCardState;
+  comfyWorkflowSourceId?: string;
   /** Monotonic revision number for concurrency control and EventBus synchronization */
   node_rev?: number;
   imageEditDraft?: MaskDocument;

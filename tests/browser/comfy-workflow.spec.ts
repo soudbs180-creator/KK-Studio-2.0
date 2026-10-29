@@ -126,6 +126,7 @@ test("P6.1 fixture: choose root, open/return native frame, archive output once a
   ]);
   const output = state.items.find((i) => i.kind === "image")!;
   expect(output.assetId).toMatch(/^asset-/);
+  expect(output.comfyWorkflowSourceId).toBe("comfy-card");
   expect(output.preview).toBe(`data:image/png;base64,${png}`);
   await info.attach("persisted-before-reload", {
     body: JSON.stringify(

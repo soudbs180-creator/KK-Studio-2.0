@@ -21,6 +21,7 @@ import { shadowEventBus } from "../../features/sync/index.ts";
 export interface AddNodeOptions {
   id?: string;
   comfyWorkflow?: CanvasCollectionItem["comfyWorkflow"];
+  comfyWorkflowSourceId?: string;
   parentId?: string;
   result?: DemoResult;
   title?: string;
@@ -81,6 +82,7 @@ export function useCanvasNodeActions({
       id,
       node_rev: 1,
       comfyWorkflow: options.comfyWorkflow,
+      comfyWorkflowSourceId: options.comfyWorkflowSourceId,
       kind,
       plugin: options.plugin,
       title:

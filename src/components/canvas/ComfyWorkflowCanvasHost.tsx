@@ -112,6 +112,7 @@ export default function ComfyWorkflowCanvasHost({
           flushSync(() => {
             state.controls.addNode("image", {
               id,
+              comfyWorkflowSourceId: sourceId,
               assetId: asset.assetId,
               title: output.filename,
               description: `ComfyUI · ${sourceId}`,
