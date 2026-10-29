@@ -5,6 +5,38 @@ import type { ComfyWorkflowCardState } from "./comfyWorkflow.ts";
 export type { CanvasReference } from "../../packages/creation-contracts/index.ts";
 export type CanvasItemKind = "image" | "video" | "audio" | "text";
 
+export function removeCanvasItems(
+  items: CanvasCollectionItem[],
+  removedIds: Iterable<string>,
+): CanvasCollectionItem[] {
+  const ids = new Set(removedIds);
+  const outputs = items.filter(
+    (item) => ids.has(item.id) && /^comfy-output-[a-f0-9]{24}$/.test(item.id),
+  );
+  return items
+    .filter((item) => !ids.has(item.id))
+    .map((item) => {
+      if (!item.comfyWorkflow) return item;
+      const dismissed = outputs
+        .filter((output) => output.description === `ComfyUI · ${item.id}`)
+        .map((output) => output.id);
+      return dismissed.length
+        ? {
+            ...item,
+            comfyWorkflow: {
+              ...item.comfyWorkflow,
+              dismissedOutputIds: [
+                ...new Set([
+                  ...(item.comfyWorkflow.dismissedOutputIds ?? []),
+                  ...dismissed,
+                ]),
+              ],
+            },
+          }
+        : item;
+    });
+}
+
 /** Stable semantic roles shared by upload, preview and canvas connections. */
 export const CANVAS_REFERENCE_SLOTS = [
   "主体",

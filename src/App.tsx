@@ -65,6 +65,7 @@ import {
 import { getGenerationProgressLabels } from "./domain/uiGovernance";
 import {
   BASE_CANVAS_ITEMS,
+  removeCanvasItems,
   type CanvasCollectionItem,
 } from "./domain/canvasItems";
 import "./domain/settings";
@@ -1066,7 +1067,7 @@ export default function App() {
                     ),
                   deleteItem: (id) =>
                     updateCanvasItems((current) =>
-                      current.filter((item) => item.id !== id),
+                      removeCanvasItems(current, [id]),
                     ),
                   retryTask: (id) => {
                     if (activeProject) retryTask(activeProject.id, id);

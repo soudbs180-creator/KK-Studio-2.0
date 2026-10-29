@@ -224,8 +224,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Acceptance: 持久promptId先按ID补收，unknown与editor使用分页回溯并检查client归属; 卡片删除结果后轮询与重开不复活，旧快照兼容; RED→GREEN及快速/浏览器/Rust检查，修复后独立补审
 - Branch: `refactor/TASK-MOD-P3-feature-cycles`
 - Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
-- Modules: src/features/comfyui/workflowSession.ts, src/components/canvas/useComfyWorkflowNode.ts, src/components/canvas/useCanvasNodeActions.ts, src/components/canvas/ComfyWorkflowCanvasHost.tsx, src/domain/comfyWorkflow.ts, src-tauri/src/comfy_transport.rs, tests/unit/comfyWorkflowSession.test.ts, tests/browser/comfy-workflow.spec.ts, tests/support/comfyCanvasHarness.tsx
-- Verification: PARTIAL — 历史恢复11项回归（已知ID/多页unknown/失败/外部归属/非法ID/卸载）通过；真实Canvas删除重放RED后GREEN，显式flush及重开保持删除；根2391 pass/20skip、类型/增量lint通过，Rust白名单1通过。待当前SHA补审、完整序列与main。
+- Modules: src/features/comfyui/workflowSession.ts, src/components/canvas/useComfyWorkflowNode.ts, src/components/canvas/useCanvasNodeActions.ts, src/components/canvas/ComfyWorkflowCanvasHost.tsx, src/domain/comfyWorkflow.ts, src-tauri/src/comfy_transport.rs, tests/unit/comfyWorkflowSession.test.ts, tests/browser/comfy-workflow.spec.ts, tests/support/comfyCanvasHarness.tsx, src/App.tsx, src/domain/canvasItems.ts, src/features/agent/agentCanvas.ts, tests/unit/conversationSubmitScope.test.ts, tests/unit/agentCanvas.test.ts
+- Verification: PARTIAL — 独审c0ff确认IR-P6-01关闭，发现预览/App和Agent删除漏标记；实际App回调/Agent批量删除RED→统一removeCanvasItems GREEN。根2393pass/20skip、类型/增量lint/build通过，首页/保护/Comfy共15浏览器通过。待当前SHA补审、完整序列/main。
 - Evidence: [docs/changes/2026-10-29-p6-1-comfy-canvas/verification.md](../../docs/changes/2026-10-29-p6-1-comfy-canvas/verification.md)
 - Next action: 当前SHA补审；完整门禁和首建baseline/远端分叉整合
 - Last verified: 2026-10-29

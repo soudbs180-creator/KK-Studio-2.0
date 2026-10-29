@@ -3,6 +3,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { runInNewContext } from "node:vm";
 import ts from "typescript";
+import * as canvasItems from "../../src/domain/canvasItems.ts";
 import {
   createProject,
   emptyDraft,
@@ -1275,4 +1276,39 @@ test("App home creation explicitly requests a new Agent conversation for the new
   assert.deepEqual(h.connectProjectIds, [
     h.creationRef.current.activeProjectId,
   ]);
+});
+
+test("App preview deletion preserves the Comfy output dismissal in the original card", () => {
+  const id = "comfy-output-" + "a".repeat(24);
+  let items = [
+    {
+      id: "card",
+      title: "Comfy",
+      kind: "text",
+      description: "",
+      comfyWorkflow: {},
+    },
+    { id, title: "output", kind: "image", description: "ComfyUI · card" },
+  ] as canvasItems.CanvasCollectionItem[];
+  let callback: ts.Node | undefined;
+  function visit(node: ts.Node) {
+    if (
+      ts.isPropertyAssignment(node) &&
+      node.name.getText(appAst) === "deleteItem"
+    )
+      callback = node.initializer;
+    ts.forEachChild(node, visit);
+  }
+  visit(appAst);
+  assert(callback);
+  const loaded = evaluate(`export const remove = ${callback.getText(appAst)}`, {
+    removeCanvasItems: (canvasItems as Record<string, unknown>)
+      .removeCanvasItems,
+    updateCanvasItems(update: (value: typeof items) => typeof items) {
+      items = update(items);
+    },
+  });
+  (loaded.remove as (id: string) => void)(id);
+  assert(!items.some((item) => item.id === id));
+  assert.deepEqual(items[0].comfyWorkflow?.dismissedOutputIds, [id]);
 });

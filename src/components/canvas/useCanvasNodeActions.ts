@@ -7,6 +7,7 @@ import {
 import { newCanvasNodeId } from "../../domain/projectCanvas";
 import {
   CANVAS_KIND_LABELS,
+  removeCanvasItems,
   type CanvasCollectionItem,
   type CanvasItemKind,
   type DemoResult,
@@ -156,29 +157,7 @@ export function useCanvasNodeActions({
       newRev,
       payload: { id },
     });
-    onItemsChange((current) => {
-      const removed = current.find((item) => item.id === id);
-      return current
-        .filter((item) => item.id !== id)
-        .map((item) =>
-          /^comfy-output-[a-f0-9]{24}$/.test(id) &&
-          item.comfyWorkflow &&
-          removed?.description === `ComfyUI · ${item.id}`
-            ? {
-                ...item,
-                comfyWorkflow: {
-                  ...item.comfyWorkflow,
-                  dismissedOutputIds: [
-                    ...new Set([
-                      ...(item.comfyWorkflow.dismissedOutputIds ?? []),
-                      id,
-                    ]),
-                  ],
-                },
-              }
-            : item,
-        );
-    });
+    onItemsChange((current) => removeCanvasItems(current, [id]));
     setNodes((current) =>
       Object.fromEntries(Object.entries(current).filter(([key]) => key !== id)),
     );

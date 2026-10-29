@@ -14,7 +14,10 @@ export {
  */
 
 import { cardLayout } from "../../domain/canvasGraph.ts";
-import type { CanvasCollectionItem } from "../../domain/canvasItems.ts";
+import {
+  removeCanvasItems,
+  type CanvasCollectionItem,
+} from "../../domain/canvasItems.ts";
 import type { Point } from "../../domain/canvasViewport.ts";
 import type { ProjectCanvas } from "../../domain/projectCanvas.ts";
 import type { CreationProject } from "../creation/index.ts";
@@ -315,7 +318,7 @@ export function applyAgentOpsToItems(
           break;
         }
         const before = nextItems.length;
-        nextItems = nextItems.filter((item) => !ids.has(item.id));
+        nextItems = removeCanvasItems(nextItems, ids);
         if (nextItems.length !== before) applied.push(op);
         else rejected.push({ op, reason: "节点不存在" });
         break;

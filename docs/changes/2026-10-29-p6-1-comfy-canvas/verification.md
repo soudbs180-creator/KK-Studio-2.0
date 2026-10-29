@@ -51,3 +51,5 @@
 独立审查base c2a0228a→079c5351发现IR-P6-01(P1，最近100条漏收)及IR-P6-02(P2，删除复活)。先保留RED：comfy-history-red.log与comfy-deletion-confirmed-red.log；删除用7280原两文件临时运行，finally恢复候选，实际得到删除后true。恢复11项单元通过、真实Canvas浏览器夹具删除/序列化恢复通过，Native白名单定向测试另记。历史HTTP协议依据2026-10-29核对[上游server.py](https://github.com/comfyanonymous/ComfyUI/blob/master/server.py)及[execution.py](https://github.com/comfyanonymous/ComfyUI/blob/master/execution.py)的offset/逐任务接口。证据统一D:/kk-studio/output/p8-integration-2026-10-29。最终快速/补审及SHA以随后回执为准，非真实GPU验收。
 
 候选检查：根2391 pass/0 fail/20 skip，类型与增量lint（7280 base）通过；Rust comfy_transport::tests 1/1通过；历史11项通过；实际Canvas浏览器在删除后再次轮询、显式flush/标准化重载、卸载重挂后轮询均不复活，原目录/双态编辑/原件/连线断言保留。普通下游新增边是异步发布，保留原containEqual断言改为等待实际边就绪，无重试/容差。证据browser-comfy-recovery.log、tests-comfy-recovery.log、types-comfy-recovery.log、lint-comfy-recovery.log与comfy-transport-final.log。
+
+独立c0ff补审：IR-P6-01关闭；IR-P6-02发现预览/App删除遗漏，并联查Agent批量删除。新增实际App deleteItem源码回调及Agent bulk回归，先RED（缺dismiss标记）后共享领域removeCanvasItems GREEN，三个删除入口同逻辑，其他卡片及原输入不改。根2393 pass/20skip、类型/增量lint/build、15项首页/连接保护/Comfy浏览器全过。删除回归及最终候选补审另绑定SHA，不将c0ff评审冒充新SHA。
