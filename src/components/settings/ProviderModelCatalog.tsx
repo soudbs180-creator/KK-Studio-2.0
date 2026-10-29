@@ -1,4 +1,4 @@
-import { useEffect, useState, useId } from "react";
+import { useEffect, useState, useId, useRef } from "react";
 import {
   catalogForConnection,
   saveModelCatalog,
@@ -58,6 +58,17 @@ export default function ProviderModelCatalog({
   const models = merge(rawModels);
 
   const selected = models.find((m) => m.id === modelId);
+  const selectedSignature = JSON.stringify([
+    connectionKey,
+    modelId,
+    selected?.kind,
+    selected?.sizes,
+    selected?.family,
+    selected?.variant,
+    selected?.aliases,
+    selected?.image,
+  ]);
+  const loadedSelection = useRef("");
   const [kind, setKind] = useState<ModelKind>(selected?.kind ?? "text");
   const [sizes, setSizes] = useState(selected?.sizes?.join(", ") ?? "");
   const [family, setFamily] = useState(selected?.family ?? "");
@@ -79,6 +90,9 @@ export default function ProviderModelCatalog({
   }, []);
 
   useEffect(() => {
+    // Catalog reads return fresh objects even when saved metadata is unchanged.
+    if (loadedSelection.current === selectedSignature) return;
+    loadedSelection.current = selectedSignature;
     if (selected) {
       setKind(selected.kind);
       setSizes(selected.sizes?.join(", ") ?? "");
@@ -87,7 +101,7 @@ export default function ProviderModelCatalog({
       setAliases(selected.aliases?.join(", ") ?? "");
       setImage(imageCapabilityDraft(selected.image));
     }
-  }, [modelId, revision, selected]);
+  }, [modelId, revision, selected, selectedSignature]);
 
   async function handleFetchRemote() {
     if (fetchingRemote || !profile.baseUrl) return;

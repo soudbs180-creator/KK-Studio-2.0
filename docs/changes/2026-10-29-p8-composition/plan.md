@@ -45,3 +45,9 @@ effect依赖与稳定ref捕获；React StrictMode卸载/重挂；只读加载/�
 完整浏览器真实失败续修：已成功且通过画布校验的文本结果复用appendChatTaskReply，按task.originChatId回到原聊天；无原聊天/已删请求不新造聊天，不改当前草稿，不重复回复。另修离线首次打开/切换聊天时，disconnected Agent store尚未投影本地消息：syncProject只读桥接消息，不发网络、不写项目、不改变连接状态；已连接链仍沿用原epoch/归属保护。这是数据状态修复，无JSX/CSS/交互设计变化，无需修改Figma。
 
 真实publisher新增五种归属/删除/重复回归，Agent实际host新增离线A→B→home只读回归，先RED后GREEN。桌面/Web实际行为变化，按VERSIONING递增56→57，Mobile43不变。75项定向通过；快速三门禁、构建和原两文件浏览器随后取证；未解决的旧界面/菜单前置及治理分支顺序另留开放。
+
+## TASK-MOD-MODEL-DRAFT（2.1.58）
+
+模型目录每次读取生成新对象，依赖对象身份的effect会将未保存草稿重置。以当前账号/模型/已保存元数据内容签名判断是否需重载，内容不变的通知不回写表单；真实切换或元数据变化仍同步。仅数据同步条件变化，无JSX/CSS/设计或新交互；保存locator按同一现行操作“保存此模型参数声明”更名，保留所有持久内容断言。浏览器先在supported→unknown真实RED，修复后原草稿和保存断言GREEN；中间旧按钮定位失败保留。
+
+目录拉取另有开放缺陷，暂不改旧目录触发测试：M3规格明确测速/目录分开，但按钮仍承诺刷新且FRONTEND-SPEC保留JSON验证条款；须先核当前Figma。独立目录解析把image/unknown改text、接受{}空列表，缺取消/迟到/目标归属复核；下一步复用现有checkModelProvider严格发现链，保留原安全断言，不以放宽测试关闭。没有合流或启用新增能力。

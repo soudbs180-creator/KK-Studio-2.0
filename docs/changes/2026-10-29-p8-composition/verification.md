@@ -49,3 +49,15 @@ full-gates-56-final：默认verify因初建baseline顺序不匹配失败；Agent
 TASK-MOD-CHAT-DELIVERY：publishTaskOutputState从已验收的text结果调用领域appendChatTaskReply；原聊天明确按originChatId，重放只更新同一reply ID，缺少聊天/用户请求时不恢复已删数据。Agent syncProject在disconnected时只读当前聊天本地消息，解决离线历史首次打开/切换不可见；不改JSX/CSS/设计、不请求网络、不写项目。五种publisher归属/缺失/删除与重复测试、实际host离线切换测试均先RED；修复后75项定向全过。Desktop/Web56→57、Mobile43不变；全量根、类型/增量lint/build与现有浏览器断言的实际日志为chat-delivery-*，最终结果后补。
 
 重试补充：独审指出retry任务无对应新请求，新增retry与删除原request后retry的RED，回复改用retryOfTaskId根身份；最终77项定向/根2405通过、20跳过、0失败，根类型0、增量lint0、生产构建0。中间chat-delivery-unit保留1项重试RED，最终chat-delivery-final-unit为替代结果，不覆盖旧失败。
+
+## 2.1.57补验与2.1.58草稿修复
+
+cc8e5f7c独立只读补审正式PASS，IR-CHAT-01/02关闭，77定向复验及额外内存断言确认已连接同范围远端消息和拒绝交付不受影响。原聊天浏览器3/3通过（worker1/retry0）；格式0、design9/9与开发插件四步验收通过，官方2.1.57桌面EXE构建0（未启动/安装，不能算GUI验收）。主仓21份原件和HEAD再次校验不变。
+
+默认origin/main verify仍失败3项：架构初建必须无产品改动、基线commit匹配、目录基线commit匹配；R1/R3/R4/R5/R7/R8均0，R2=11/R6=2，未弱化门禁。增量lint不能替代该默认门。PR81仍draft，远端分叉/冲突与完整浏览器未闭环。
+
+TASK-MOD-MODEL-DRAFT：现有浏览器供应商通知测试在已保存元数据对象重建后supported变unknown，真实RED；内容签名守卫修复后原通知/草稿/保存断言全部通过（model-draft-browser-green-final.log）。中间第一次修复已过草稿断言却在旧“保存此模型能力”locator失败；改为现行同一按钮“保存此模型参数声明”，未删断言、未放宽时间或像素容差。Desktop/Web57→58，Mobile43不变；后续快速检查/构建/当前SHA审查另记。
+
+独审下一簇诊断仅为待修证据：M3规格要求独立目录拉取；fetchProviderModels当前宽松解析丢image/unknown元数据、接受{}；独立入口缺生命周期取消及写前归属保护。不得把这些缺陷转成新成功预期；测速入口文案/JSON契约冲突需当前Figma对位。该簇继续开放，不以本次草稿修复称全部模型测试已绿。
+
+MODEL-DRAFT补充复核：整对象签名仍因enabled/isDefault偏好变化重置草稿，独审预检指出后补真实默认/启停RED。签名现仅账号/模型及实际回填的kind/sizes/family/variant/aliases/image；增强浏览器包含默认/启停/原保存及真实元数据false/3更新，1/1通过。最终根2405通过/20跳过/0失败、类型0、增量lint0、production build0（model-draft-final-*）；Hosted cc8e5f7c Mobile与deploy-linux success，verify同3项基线失败，非全套通过。

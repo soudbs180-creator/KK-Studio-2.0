@@ -6,7 +6,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 | ID | Title | Status | Display | Priority | Dependencies | Owner | Next action |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| TASK-MOD-CHAT-DELIVERY | 成功文本回写原聊天并只读恢复离线历史 | PARTIAL | 进行中 | P1 | TASK-MOD-CHAT-PROJECTION | root | 完成原浏览器两文件、快速三门禁、当前SHA独审和main整合 |
+| TASK-MOD-MODEL-DRAFT | 目录通知保留未保存模型能力草稿 | PARTIAL | 进行中 | P1 | TASK-MOD-P8 | root | 完成当前SHA快速门/独审；独立目录解析/取消/归属及测速文案冲突另项修复，不修改有效安全断言 |
+| TASK-MOD-CHAT-DELIVERY | 成功文本回写原聊天并只读恢复离线历史 | PARTIAL | 进行中 | P1 | TASK-MOD-CHAT-PROJECTION | root | 完成默认治理与远端整合，当前完整组合验收后合main |
 | TASK-MOD-COMFY-RECOVERY | 恢复超窗口Comfy产物并保留结果删除意图 | PARTIAL | 进行中 | P1 | TASK-MOD-P6-1 | root | 当前SHA补审；完整门禁和首建baseline/远端分叉整合 |
 | TASK-MOD-HOME-SESSION | 首页新项目使用独立Agent会话 | PARTIAL | 进行中 | P1 | TASK-MOD-CHAT-PROJECTION | root | 当前SHA独审；完整门禁和基线/远端冲突分阶段整合 |
 | TASK-MOD-CHAT-PROJECTION | 切换聊天同步组件派生视图 | PARTIAL | 未完成 | P1 | TASK-MOD-P8 | root | 当前独审/完整verify/main；首页新项目显式独立会话另卡修复 |
@@ -213,6 +214,25 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-MOD-P7 | 资产溯源对齐 | PARTIAL | 进行中 | P1 | TASK-MOD-P6-LAYER-SPLIT | root | 完成原生GUI跨端溯源验收、独审和main合流；旧记录不回写。 |
 | TASK-MOD-P6-1 | ComfyUI本地托管与画布双态工作流卡片 | PARTIAL | 未完成 | P1 | TASK-MOD-P6-HOST | root | 完成浏览器/命令行回归；真实GPU、完整编辑器鼠标/参数面板及独审/main仍开放，用户已要求不控制桌面 |
 
+## TASK-MOD-MODEL-DRAFT — 目录通知保留未保存模型能力草稿
+
+- Goal: 元数据未变不覆盖用户表单，真实切换仍同步
+- Scope: ProviderModelCatalog只修数据同步条件；保存按钮locator更名，无JSX/CSS/设计变化
+- Display status: 进行中
+- Priority: P1 — 未记录
+- Requirement refs: docs/changes/2026-10-29-p8-composition/spec.md
+- Feature IDs: none
+- Owner role: implementation-integrator
+- Acceptance: 未保存的能力与数量不被相同元数据通知重置; 原保存及持久能力断言保留，真实元数据变化仍同步; 原失败RED→GREEN、快速检查与当前SHA独审
+- Branch: `refactor/TASK-MOD-P3-feature-cycles`
+- Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
+- Modules: src/components/settings/ProviderModelCatalog.tsx, tests/browser/model-capabilities.spec.ts
+- Verification: PARTIAL — 原供应商通知回归supported→unknown真实RED；内容签名修复、保存locator对齐后原浏览器全部断言GREEN，未放宽断言。快速检查和新SHA独审进行中，main未合。
+- Evidence: [docs/changes/2026-10-29-p8-composition/verification.md](../../docs/changes/2026-10-29-p8-composition/verification.md)
+- Next action: 完成当前SHA快速门/独审；独立目录解析/取消/归属及测速文案冲突另项修复，不修改有效安全断言
+- Last verified: 2026-10-29
+- Updated: 2026-10-29
+
 ## TASK-MOD-CHAT-DELIVERY — 成功文本回写原聊天并只读恢复离线历史
 
 - Goal: 真实浏览器已受理结果与离线消息按原聊天可见且不串草稿
@@ -226,9 +246,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `refactor/TASK-MOD-P3-feature-cycles`
 - Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
 - Modules: src/features/creation/useTaskExecution.ts, src/features/agent/agentConnection.ts, tests/unit/taskDecouplingGovernance.test.ts, tests/unit/agentConnection.test.ts
-- Verification: PARTIAL — 两真实缺陷先RED，复用现有领域reply/Agent host同步后75项定向通过；根快速、浏览器与新SHA独审进行中，main未合。
+- Verification: PARTIAL — cc8e5f7c正式独审PASS，IR-CHAT-01/02关闭；77定向独立复验，根2405pass20skip0fail、types/增量lint/build通过，原浏览器3/3、design9/9及开发插件/官方57桌面构建通过。默认治理/完整浏览器/main未合，仍PARTIAL。
 - Evidence: [docs/changes/2026-10-29-p8-composition/verification.md](../../docs/changes/2026-10-29-p8-composition/verification.md)
-- Next action: 完成原浏览器两文件、快速三门禁、当前SHA独审和main整合
+- Next action: 完成默认治理与远端整合，当前完整组合验收后合main
 - Last verified: 2026-10-29
 - Updated: 2026-10-29
 
@@ -302,7 +322,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `refactor/TASK-MOD-P3-feature-cycles`
 - Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
 - Modules: src/App.tsx, src/app, tests
-- Verification: PARTIAL — 78beb7a9限定代码独审PASS；PR81 draft、main未合。全浏览器中断447/901：339通过108失败，无最终退出。交付续修显式根semver/类型、契约构建指纹、协议类型命名；隔离干净安装与两端类型通过，当前提交快速检查/补审另记。默认baseline/Hosted、完整浏览器与远端分叉未闭环。
+- Verification: PARTIAL — 78beb7a9限定代码独审PASS；PR81 draft、main未合。全浏览器中断447/901：339通过108失败，无最终退出。交付续修显式根semver/类型、契约构建指纹、协议类型命名；隔离干净安装与两端类型通过，当前提交快速检查/补审另记。默认baseline/Hosted、完整浏览器与远端分叉未闭环。 交付底座4c3d6691、聊天cc8e5f7c已获限定增量独审PASS；2405根/三聊天浏览器/design/开发插件/57桌面构建通过；新58草稿修复及目录安全待续，默认门未绿。
 - Evidence: [docs/changes/2026-10-29-p8-composition/verification.md](../../docs/changes/2026-10-29-p8-composition/verification.md)
 - Next action: 按当前SHA完成交付修复补审、处理浏览器失败与首建baseline/远端冲突；保全主仓审计改动后满足门禁再合流
 - Last verified: 2026-10-29
