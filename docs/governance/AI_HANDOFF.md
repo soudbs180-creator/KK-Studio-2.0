@@ -45,14 +45,14 @@ P3继续入口：[ADR-029](../architecture/adr/ADR-029-feature-cycle-decoupling.
 
 最终限制更新：任务/资产/HTTP/DOM同态，CSS字节相同；严格PNG有1像素/1灰阶差异仍未通过。P5生产门默认关闭，Web实验不能替代原生、跨浏览器与独审。
 
-
 2026-10-29 P6/P7任务树候选：Desktop/Web2.1.51、契约1.5.0、Mobile2.1.43。独立扩图/修复/分层Manifest+ComfyUI工作流经原队列保存、执行、归档和重载；独立禁用与1.1实际执行/回退1.0通过。P7规范化原有PromptHash/ParentId/Origins，保留同字节不同父/Provider及导入来源，TS/Rust同规则。根2372 pass/20 skip、Mobile373、Agent204 pass/2 skip、Rust资产18、生产Edge17项通过；运行限制/源码构建hash见[共享验证](../changes/2026-10-29-p6-image-host/verification.md)。三项能力和P7均PARTIAL，真实GPU/API、Desktop原生/GUI、独审、完整verify/main未完成，无生产UI新增。P2/P5生产门状态不变；原9个核心浏览器失败/1像素差异未归零，四原文其余任务不因本次推进自动完成。
-
 
 2026-10-29 P6.1候选：Desktop/Web2.1.52（Mobile43/契约1.5.0不变）；本机ComfyUI扫描、隐藏托管与双态工作流卡片已接，归属WS/history经AssetPort归档并落图连线。修正代理502、Windows Python别名子进程泄漏及画布边未持久化；隔离Native夹具双client/原件SHA/结果边/重开/停止通过，原生编辑器为键盘提交，鼠标未验收。真实GPU/完整编辑器、卡片参数面板、Figma04/05、独审、完整verify/main仍未完成，PARTIAL；用户要求停止桌面控制，后续浏览器与命令行。P6.2–4及P7原候选不回退，四原文其余项不自动关闭；见[本轮验证](../changes/2026-10-29-p6-1-comfy-canvas/verification.md)。
 
-
 2026-10-29 P8源码候选：Desktop/Web53，Mobile43/契约1.5不变；七组装配迁入src/app，App2002→1546，35函数/主JSX/28 CSS入口及产物内容hash不变。固定输入软件Edge四组DOM/PNG同态；硬件渲染差异与真实GPU/最终Native不据此关闭。主仓21文件与索引清单/patch已保全，4路径重叠；P8前后均复现Codex四失败，完整verify、当前独审与main/远端整合仍开放。详见[验证](../changes/2026-10-29-p8-composition/verification.md)；其他P/STD/ORG不自动完成。
 
-
 2026-10-29门禁修复候选Desktop/Web54：TASK-MOD-CHAT-PROJECTION让实际聊天选择回调使用原projectChatView，立即刷新所选聊天草稿/执行方式/消息，其他聊天不变。49会话/根2379通过，原切换聊天两项恢复；首页预连接Agent的会话归属拒绝仍需修复，完整verify/独审/main继续开放。见[验证](../changes/2026-10-29-p8-composition/verification.md)。
+
+### 2026-10-29 P8合流候选补充
+
+P8七组hook迁出0b675ec7；会话选择派生投影修复f10147b9。Desktop/Web55空聊天fresh初始化仍在门禁核验，保护既有线程/忙碌/审批；夹具新建线程改独立ID，不能用重复ID掩盖跨项目保护。主仓21份未提交文件保全，main尚未合流。完整门禁、独立上下文review、当前Native和真实GPU均不得提前标完成。见[验证](../changes/2026-10-29-p8-composition/verification.md)。

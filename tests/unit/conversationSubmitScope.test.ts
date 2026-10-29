@@ -908,6 +908,7 @@ function appHomeSubmissionHarness(accepted: boolean) {
   const calls: { message: string; options: Record<string, unknown> }[] = [];
   const submitLock = { current: false };
   const homeCodexStarting = { current: false };
+  const connectFresh: boolean[] = [];
   const loaded = evaluate(
     `${appFunction("validateHomeCodexPreconditions")}
      ${appFunction("executeHomeCodexProject")}
@@ -956,7 +957,11 @@ function appHomeSubmissionHarness(accepted: boolean) {
       setChat() {},
       replaceCanvasItems() {},
       persistence: { async flush() {} },
-      desktopAgentLifecycle: { async connect() {} },
+      desktopAgentLifecycle: {
+        async connect(fresh = false) {
+          connectFresh.push(fresh);
+        },
+      },
       configureAgentProxy() {},
     },
   );
@@ -970,6 +975,7 @@ function appHomeSubmissionHarness(accepted: boolean) {
     calls,
     submitLock,
     homeCodexStarting,
+    connectFresh,
     submit: () =>
       submit({
         prompt: "HOME original",
@@ -1254,4 +1260,13 @@ test("App selecting a chat immediately projects its draft, execution channel and
   assert.equal(current.composerDraft.conversationChannel, "codex");
   assert.equal(current.messages[0].content, "B message");
   assert.equal(JSON.stringify(current.chats!.A), originalA);
+});
+
+test("App home creation explicitly requests a new Agent conversation for the new project", async () => {
+  const h = appHomeSubmissionHarness(true);
+  const pending = h.submit();
+  await h.entered.promise;
+  h.release.resolve();
+  await pending;
+  assert.deepEqual(h.connectFresh, [true]);
 });

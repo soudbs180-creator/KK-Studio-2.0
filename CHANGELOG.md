@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- 本地候选Desktop/Web2.1.55：修复聊天切换的草稿/执行方式投影，以及首页已连接后新建项目的独立会话初始化；已绑定聊天、忙碌与审批保护保留。测试夹具新建线程采用不同ID，完整合流门仍在核验。
+
 - 本地候选Desktop/Web2.1.53：P8迁出七组App装配hook，保留主JSX/原样式求值顺序；既有门禁缺口、独审和主线合流继续核验，见[P8验证](docs/changes/2026-10-29-p8-composition/verification.md)。
 
 - 本地候选Desktop/Web2.1.52：ComfyUI本机隐藏托管、双态工作流卡片、原件归档与自动连线；修复本地代理及Python别名进程归属。隔离夹具通过，真实GPU/鼠标与正式交付未验；[ADR-033](docs/architecture/adr/ADR-033-comfy-canvas-runtime.md)。

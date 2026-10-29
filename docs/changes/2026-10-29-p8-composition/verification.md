@@ -25,3 +25,7 @@ P8改动前已复现codex-home-routing四失败，改动后同四位置失败；
 ## 合流门修复（P8之后单独提交）
 
 TASK-MOD-CHAT-PROJECTION：原App选择聊天只改activeChatId，persist hook不自动重建派生composerDraft/messages，导致界面仍显示上个聊天。实际App回调新增回归先RED（A draft而非B draft），再使用既有projectChatView投影；保持原聊天/持久schema不变，49项会话回归通过。此为P8后的有意行为修复，不修改/冒充原P8的35函数同态证据。候选Desktop/Web54；最终浏览器和全门禁另记。
+
+TASK-MOD-HOME-SESSION：真实浏览器发现首页预连接后新项目无法初始化；新建项目显式请求fresh，连接层只允许能读取归属且没有线程的空聊天执行新建，已绑定聊天不可替换，原远端归属/忙碌/审批判断保留。App实际调用和空聊天保护先RED后GREEN；69项定向单元及根2383 pass/20 skip、类型通过。仿真threads/new原来总返回同一个ID，改为逐次独立ID，跨项目保留原隔离断言并增加线程ID不同断言。Desktop/Web55；浏览器、lint及完整门禁以随后外部回执为准，真实GPU与Native启动未验收。
+
+首页原8项浏览器现全部通过（codex-gate-home-unique.log，worker1/retry0）；增量lint以f10147b9为GOVERNANCE_BASE通过。默认origin/main全分支lint仍失败：架构首建基线要求只建基线不改产品，目录首建基线要求匹配其记录的Git base；这两项是实际合流顺序缺口，不改检查或重写历史来伪装通过。完整序列分别记录增量检查与集成阻断。

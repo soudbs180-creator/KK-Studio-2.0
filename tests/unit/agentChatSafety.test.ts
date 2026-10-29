@@ -258,6 +258,46 @@ test(
   },
 );
 
+for (const blocked of ["none", "busy", "approval"] as const) {
+  test(
+    `fresh unbound chat initializes once but preserves remote ${blocked} protection`,
+    { timeout: 5000 },
+    async (t) => {
+      const server = await startAgentServer();
+      const h = hostFixture();
+      const connection = createAgentConnection({ storage: memoryStorage() });
+      t.after(async () => {
+        connection.disconnect();
+        await server.close();
+      });
+      if (blocked === "busy") server.emit("codex_state", { busy: true });
+      if (blocked === "approval")
+        server.emit("codex_approval", { requestId: "pending-fixture" });
+      connection.setBridge(h.host);
+      connection.setCredentials(server.url, "fixture-token");
+      await connection.connect(true);
+      const created = server.requests.filter((path) =>
+        path.endsWith("/threads/new"),
+      );
+      assert.equal(created.length, blocked === "none" ? 1 : 0);
+      if (blocked === "none") {
+        assert.equal(h.host.readAgentThread(), "replacement-thread");
+        await connection.connect(true);
+        assert.equal(
+          server.requests.filter((path) => path.endsWith("/threads/new"))
+            .length,
+          1,
+        );
+        assert.equal(h.host.readAgentThread(), "replacement-thread");
+      } else {
+        assert.equal(connection.getState().status, "error");
+        assert.equal(h.host.readAgentThread(), undefined);
+        assert.equal(server.conversation().threadId, "fixture-thread");
+      }
+    },
+  );
+}
+
 test(
   "empty external-model authorization permits the Codex reasoning model and forbids replacing its chat thread",
   { timeout: 5000 },

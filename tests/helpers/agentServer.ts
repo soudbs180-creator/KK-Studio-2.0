@@ -29,6 +29,7 @@ export async function startAgentServer(
   const pendingApprovals = new Map<string, unknown>();
   const authentication: { urlToken: boolean; headerPresent: boolean }[] = [];
   let failAction = false;
+  let newThreads = 0;
   let busyOverride: boolean | undefined;
   let conversation: AgentConversationState = {
     revision: 1,
@@ -186,11 +187,15 @@ export async function startAgentServer(
       return;
     }
     if (url.pathname === "/agent/codex/threads/new") {
-      // Match upstream's unconditional replacement; the UI must never use this.
+      // Match upstream mutation; bound chats and busy/approval states must reject it.
+      newThreads++;
       conversation = {
         ...conversation,
         revision: conversation.revision + 1,
-        threadId: "replacement-thread",
+        threadId:
+          newThreads === 1
+            ? "replacement-thread"
+            : `replacement-thread-${newThreads}`,
         status: "ready",
       };
       emit("conversation_changed", conversation);
