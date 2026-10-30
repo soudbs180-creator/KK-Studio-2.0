@@ -708,3 +708,5 @@ TASK-UI-CLASSIFY-20261013 已获用户实施确认：canonical 分类修复在�
 本段保留原时点；当前入口见[2026-10-19交付包](../changes/2026-10-19-installer-clean-build/intent.md)。
 
 [当前交付包](../changes/2026-10-18-unified-toolbar-release/intent.md)。PR73已正常合入main87c，打tag前发现main草稿flaky及已证跨聊天绘制帧，当前先做最小同步修复。三端仍目标41，尚无tag/正式包/生产更新；旧39和旧Native证据保持历史边界。用户已确认暂停外部清理，原资料/冷备保留；最终source按后续main门禁确定。
+
+2026-10-30：TASK-MOD-GATE-BOOTSTRAP 复用原P0分支/工作树，从origin/main4610c333建立无产品源码变更的首建基线；P3 f074d4de已推送保留（含真实H3双路径首帧回流及ORG6）。本候选R1=376/R4=14是origin实测，不代表P3回退；主仓21份审计原件/HEAD未改，原P0提交已归档且仍为P3祖先。完整门/独审/Hosted/合流待验。见[前置验证](../changes/2026-10-30-origin-baseline-bootstrap/verification.md)。

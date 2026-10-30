@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "rootFiles": [
+    ".gitattributes",
+    ".gitignore",
+    ".nvmrc",
+    ".prettierrc.json",
+    "AGENTS.md",
+    "AI_RULES.md",
+    "CHANGELOG.md",
+    "CLAUDE.md",
+    "CONTRIBUTING.md",
+    "DESIGN.md",
+    "GEMINI.md",
+    "README.md",
+    "RELEASE.md",
+    "TEST_INFRA.md",
+    "TEST_READY.md",
+    "VERSION",
+    "eslint.config.mjs",
+    "index.html",
+    "package-lock.json",
+    "package.json",
+    "playwright.config.ts",
+    "receipt.json",
+    "start-kk-studio.bat",
+    "tsconfig.json",
+    "verify-kk-studio.cmd",
+    "vite.config.ts"
+  ]
+}

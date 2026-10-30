@@ -6,6 +6,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 | ID | Title | Status | Display | Priority | Dependencies | Owner | Next action |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| TASK-MOD-GATE-BOOTSTRAP | 主线原生首建架构与目录基线 | PARTIAL | 进行中 | P0 | none | root | 完成838浏览器及verify后续、固定SHA独审/Delivery/Hosted再正常PR squash；P3后续整体另验 |
 | TASK-CANVAS-RELEASE-20261018 | 统一工具栏修复、数据兼容和三端正式发布 | IN_PROGRESS | 进行中 | P1 | none | root-release | 一行test-only enabled前提维护及相关7/7已完成；冻结该最小diff并提交后，取得精确新HEAD完整verify、独审/Delivery及新的Hosted终局，保留4c push实际FAIL、所有首试UNKNOWN和未执行阶段。正常PR合并后的实际main/tree及main门禁通过才创建一次42tag、fresh正式Windows，同formal完整四轮、严格cold重查、真实默认资料安装/工具栏/Agent、唯一setup匿名下载和Web/独立手机Web生产回读；原失败、cold和seed39保持。 |
 | TASK-MOBILE-COMPOSER-001 | 手机结果优先、完整创作输入与圆形发送 | IN_PROGRESS | 进行中 | P1 | TASK-MOBILE-12AI-001 | root | 完成新后缀生产收据docs HEAD的检查/Delivery/独审/Hosted和正常PR；仅补用户Android Chrome模型入口/切后台返回+刷新接受，不把旧UI回复或继续当验收，不新耗生成额度。 |
 | TASK-MOBILE-12AI-001 | 12ai手机端图片自动归档与文本视频协议接入 | DONE | 已完成 | P1 | TASK-WEB-RELEASE-20261017 | root | 按已完成PR70/71范围保留发布/原件/回滚收据；模型按钮及后台专项由TASK-MOBILE-COMPOSER-001承接，T12/FEAT-028继续开放。 |
@@ -160,6 +161,25 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-VERIFY-DEPS-20261015 | 恢复共享依赖清理事故并核验执行边界 | PARTIAL | 进行中 | P1 | TASK-CODEX-HOME-20261015 | root | 保持防复发子范围PASS与旧事故UNKNOWN分离；不在共享依赖安装或清理。原始字节及影响如无证据不得补写；最终当前提交/托管/交付门禁另验。 |
 | TASK-DESIGN-MD-20261015 | 统一DESIGN设计系统与产品UI收敛 | PARTIAL | 进行中 | P1 | none | root | 关闭基础独审问题，将规则落入设置/模型/聊天/画布/项目/素材等实际页面，按Desktop→Web留同状态证据。 |
 | TASK-ISSUE-68 | 修复原生设置保存后的测试同步缺口 | REVIEW | 未完成 | P1 | none | issue68-specialist | 纯文档head补审并建立draft PR，回读当前Hosted后交现有main协调者；不merge/发布。 |
+
+## TASK-MOD-GATE-BOOTSTRAP — 主线原生首建架构与目录基线
+
+- Goal: 合法完成origin/main无产品源码变更bootstrap，为P3整批正常PR合流建立基础
+- Scope: 既有架构/布局检查器规则和回归、开发依赖、真实origin基线、治理入口、五件套与台账
+- Display status: 进行中
+- Priority: P0 — 工具栏定位与当前用户v3数据兼容阻断统一发布
+- Requirement refs: user:主线合流, AGENTS.md, docs/engineering/BRANCH-POLICY.md
+- Feature IDs: none
+- Owner role: implementer
+- Acceptance: src/packages/vendor/canvas-plugins和三端版本与origin/main不变; 两份baseline指向真实origin base并与实际扫描一致，原棘轮不放宽; 快速门/完整verify/当前SHA独审/Hosted/Delivery成功后正常PR squash
+- Branch: `refactor/TASK-MOD-P0-architecture-baseline`
+- Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
+- Modules: config, scripts/governance, scripts/check-governance.mjs, tests/unit/architectureRules.test.ts, tests/unit/repoLayoutRules.test.ts, package.json, package-lock.json, docs/governance, docs/changes/2026-10-30-origin-baseline-bootstrap
+- Verification: PARTIAL — origin产品/版本未改；两份真实baseline已接棘轮，默认lint/typecheck0；根1975pass20skip、Agent204pass2skip、针对41/41。完整verify的838浏览器正在跑，尚无最终退出码/独审/Hosted/合流。
+- Evidence: [docs/changes/2026-10-30-origin-baseline-bootstrap/verification.md](../../docs/changes/2026-10-30-origin-baseline-bootstrap/verification.md)
+- Next action: 完成838浏览器及verify后续、固定SHA独审/Delivery/Hosted再正常PR squash；P3后续整体另验
+- Last verified: 2026-10-30
+- Updated: 2026-10-30
 
 ## TASK-CANVAS-RELEASE-20261018 — 统一工具栏修复、数据兼容和三端正式发布
 

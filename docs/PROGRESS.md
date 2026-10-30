@@ -1253,3 +1253,5 @@ TASK-UI-DETAILS-20261015从最新18e143f修复，Desktop/Web2.1.26产品ab878ffd
 本段保留原时点；当前入口见[2026-10-19交付包](changes/2026-10-19-installer-clean-build/intent.md)。
 
 [当前交付包](changes/2026-10-18-unified-toolbar-release/intent.md)。最初base97ef经主线PR72整合，PR73已合入main87c；main草稿flaky及已证跨聊天绘制帧需先修，目标仍三端2.1.41。当前没有tag/正式包/生产更新，历史39不作新版本证据。外部清理已由用户确认暂停，冷备与原失败保留；最终source和正式收据待实际门禁确定。
+
+2026-10-30：TASK-MOD-GATE-BOOTSTRAP 复用原P0分支/工作树，从origin/main4610c333建立无产品源码变更的首建基线；P3 f074d4de已推送保留（含真实H3双路径首帧回流及ORG6）。本候选R1=376/R4=14是origin实测，不代表P3回退；主仓21份审计原件/HEAD未改，原P0提交已归档且仍为P3祖先。完整门/独审/Hosted/合流待验。见[前置验证](changes/2026-10-30-origin-baseline-bootstrap/verification.md)。

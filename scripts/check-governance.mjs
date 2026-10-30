@@ -4,6 +4,8 @@ import { execFileSync } from "node:child_process";
 import { validateLedger, renderLedger } from "./governance/ledger.mjs";
 import { checkImportBoundaries } from "./governance/import-boundaries.mjs";
 import { checkMemoryContractSync } from "./governance/check-policy-sync.mjs";
+import { checkArchitecture } from "./governance/check-architecture.mjs";
+import { checkRepoLayout } from "./governance/check-repo-layout.mjs";
 
 const issues = [];
 const root = process.cwd();
@@ -151,6 +153,30 @@ for (const file of walk("src").filter((name) => /\.tsx?$/.test(name)))
   issues.push(
     ...checkImportBoundaries(file, fs.readFileSync(file, "utf8"), root),
   );
+try {
+  const architecture = await checkArchitecture(root, {
+    baseRef: governanceBaseSha,
+  });
+  issues.push(...architecture.issues);
+  architecture.reductions.forEach((message) => console.log(message));
+  console.log(
+    `Architecture: ${Object.entries(architecture.current.rules)
+      .map(([id, entry]) => `${id}=${entry.count}`)
+      .join(", ")}`,
+  );
+} catch (error) {
+  issues.push(`Architecture: ${error.message}`);
+}
+try {
+  const layout = checkRepoLayout(root, { baseRef: governanceBaseSha });
+  issues.push(...layout.issues);
+  console.log(
+    `Repo layout: ${Object.keys(layout.current).length} existing violations; ${layout.reductions.length} baseline reductions available.`,
+  );
+} catch (error) {
+  issues.push(`Repo layout: ${error.message}`);
+}
+
 // Catch the previous hard-coded output pattern before tests overwrite history.
 for (const file of [...walk("tests/browser"), "playwright.config.ts"])
   if (/\.[cm]?tsx?$/.test(file)) {
