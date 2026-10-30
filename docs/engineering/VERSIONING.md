@@ -1,5 +1,9 @@
 # 平台版本管理
 
+## 统一产品发布与平台标识
+
+2026-10-18起按本次用户要求，联合正式发布使用相同产品版本，并分别显示“桌面客户端 / 网页版 / 手机网页版”。版本源仍为 config/platform-versions.json；由既有helper正向递增对齐，不回退已发布版本。main当前SHA通过CI后创建不可变tag；Windows随包Agent安装器与组合Web共用该tag及来源SHA，平台构建/部署状态单独记录。已创建tag的构建失败时保留该tag及失败，新source修改走新版本。相同版本不表示项目自动云同步。
+
 - 状态：现行源码版本规则；发布与上线仍需各端验收。
 - 决策与范围：[ADR-008](../architecture/adr/ADR-008-platform-versions-and-local-first.md)；任务 `TASK-VERSION-001`。
 
@@ -48,4 +52,4 @@ npm run version:consistency
 
 推荐的跨环境更新顺序是：`fetch` → 核对目标 commit/tag 与分支 → 干净 checkout → `npm ci` → 运行两个版本门禁 → 构建 → 生成并校验 receipt → 发布不可变工件 → 目标环境安装后回读版本、commit/hash 和实际进程路径。任一步失败都保留旧版本并报告失败原因，不能静默回退到旧包继续运行。
 
-仓库的 `.github/workflows/windows-release.yml` 只响应不可变 `vMAJOR.MINOR.PATCH` tag。它先确认 tag 与 `config/platform-versions.json` 的 Desktop 版本相等，再从该 tag 的干净 checkout 安装锁定依赖、构建 NSIS 安装器、生成 receipt，并把 `installer-<commit>` 上传为带 SHA 的 CI 工件。工件生成后可用 `npm run client:installer:verify` 校验安装器；安装到目标环境后再用 `npm run client:installed:verify` 校验已安装文件。workflow 尚未在本轮远端 tag 上执行，不能把本地检查当成发布成功。
+仓库的 `.github/workflows/windows-release.yml` 对相关 PR 先构建绑定实际 PR head 的 `candidate` 安装器；正式工件只响应不可变 `vMAJOR.MINOR.PATCH` tag。所有构建均校验实际 checkout 与事件 source、运行版本门禁；正式 tag 还必须与 `config/platform-versions.json` 的 Desktop 版本相等。随后从干净 checkout 安装锁定依赖、构建 NSIS、生成 receipt，并把 `installer-<commit>` 上传为带 SHA 的 CI 工件。PR 候选不能代替正式 tag 的重建。工件生成后可用 `npm run client:installer:verify` 校验安装器；安装到目标环境后再用 `npm run client:installed:verify` 校验已安装文件。2.1.41 tag 的正式构建失败记录保留，接续版本以对应 change verification 和真实工件/安装/生产回执为准，不能把本地检查当成发布成功。

@@ -2,6 +2,8 @@ import { Image } from "react-native";
 import { useTheme } from "./theme.tsx";
 
 const sources = {
+  microphone: require("../../assets/figma-icons/microphone.png"),
+  extensions: require("../../assets/figma-icons/extensions.png"),
   menu: require("../../assets/figma-icons/menu.png"),
   plus: require("../../assets/figma-icons/plus.png"),
   newChat: require("../../assets/figma-icons/newChat.png"),

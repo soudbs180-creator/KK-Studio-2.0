@@ -33,6 +33,7 @@ import {
   Archive,
   Settings,
   ArrowUp,
+  Clock,
 } from "lucide-react";
 import { getUiIconSizeName, normalizeUiIconSize } from "./uiIconSizing";
 
@@ -72,6 +73,7 @@ const ICONS = {
   archive: Archive,
   settings: Settings,
   send: ArrowUp,
+  clock: Clock,
 };
 export type UiIconName = keyof typeof ICONS;
 

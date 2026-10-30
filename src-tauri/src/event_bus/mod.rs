@@ -18,7 +18,9 @@ mod tests {
     fn test_event_bus_open_in_memory_and_pragmas() {
         let bus = EventBus::open_in_memory().expect("in-memory db open failed");
         // Verify node revision starts at 0
-        let rev = bus.get_node_revision("node-unknown").expect("get_node_revision failed");
+        let rev = bus
+            .get_node_revision("node-unknown")
+            .expect("get_node_revision failed");
         assert_eq!(rev, 0);
 
         let seq = bus.get_latest_seq().expect("get_latest_seq failed");
@@ -150,19 +152,25 @@ mod tests {
         assert_eq!(all.len(), 10);
 
         // Query by target
-        let even = bus.query_events(Some("node-even"), None, None).expect("query even");
+        let even = bus
+            .query_events(Some("node-even"), None, None)
+            .expect("query even");
         assert_eq!(even.len(), 5);
         for e in even {
             assert_eq!(e.target_node_id, "node-even");
         }
 
         // Query with since_seq
-        let since_seq_7 = bus.query_events(None, Some(7), None).expect("query since 7");
+        let since_seq_7 = bus
+            .query_events(None, Some(7), None)
+            .expect("query since 7");
         assert_eq!(since_seq_7.len(), 4); // 7, 8, 9, 10
         assert_eq!(since_seq_7[0].seq, 7);
 
         // Query with limit
-        let limited = bus.query_events(None, None, Some(3)).expect("query limit 3");
+        let limited = bus
+            .query_events(None, None, Some(3))
+            .expect("query limit 3");
         assert_eq!(limited.len(), 3);
         assert_eq!(limited[0].seq, 1);
         assert_eq!(limited[2].seq, 3);
@@ -170,7 +178,8 @@ mod tests {
 
     #[test]
     fn test_sub_5ms_append_latency_guarantee() {
-        let db_path = std::env::temp_dir().join(format!("bench_events_{}.db", uuid::Uuid::new_v4()));
+        let db_path =
+            std::env::temp_dir().join(format!("bench_events_{}.db", uuid::Uuid::new_v4()));
         let bus = EventBus::open(&db_path).expect("open file db");
 
         let iterations = 100;
@@ -598,7 +607,10 @@ mod tests {
             })
             .expect("prune");
 
-        assert_eq!(res.deleted_count, 0, "No events should be deleted when total <= retain_latest");
+        assert_eq!(
+            res.deleted_count, 0,
+            "No events should be deleted when total <= retain_latest"
+        );
         assert_eq!(res.remaining_count, 5);
     }
 
@@ -642,7 +654,10 @@ mod tests {
 
         let remaining = bus.query_events(None, None, None).expect("query");
         let has_node_2 = remaining.iter().any(|e| e.target_node_id == "node-2");
-        assert!(has_node_2, "Event with created_at 2000 must NOT be deleted when pruning before 1800");
+        assert!(
+            has_node_2,
+            "Event with created_at 2000 must NOT be deleted when pruning before 1800"
+        );
     }
 
     #[test]
@@ -673,7 +688,10 @@ mod tests {
 
         // Even though events table is empty, monotonic latest seq must NOT reset to 0!
         let seq = bus.get_latest_seq().expect("seq after prune");
-        assert_eq!(seq, 5, "Latest seq must preserve watermark even after all events are pruned");
+        assert_eq!(
+            seq, 5,
+            "Latest seq must preserve watermark even after all events are pruned"
+        );
 
         // Next appended event must be seq 6
         let next_evt = bus

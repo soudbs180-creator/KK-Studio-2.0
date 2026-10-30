@@ -19,8 +19,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-FIGMA-CONTROLS-20261025 | 修复 Figma 六类基础控件问题并同步本地 UI | PARTIAL | 未完成 | P2 | none | root | 在原任务修复两项既有存储单测失败并补Desktop运行证据；保留既有dirty和失败原件，未经全量验收不合并或发布。 |
 | TASK-CANVAS-PERF-20261024 | 削减画布预览与存储重复工作 | IN_PROGRESS | 进行中 | P2 | none | root | 先完成红绿计数及最小优化，再完整门禁、运行与独审；保留既有dirty/index，禁止混合提交。 |
 | TASK-FIGMA-FIRST-20261021 | 以当前 Figma 为设计真值并强制 UI 设计先行 | PARTIAL | 未完成 | P2 | none | root | 先按本次mapping与verification继续04组合母版、尺寸覆盖和主题/状态核验；逐项FIGMA_READY后再同步本地，05单独验收。保留当前dirty工作，不把首批端点修复当作整页或运行验收。 |
-| TASK-MOBILE-COMPOSER-001 | 修复手机空文字输入模型按钮失焦无响应 | PARTIAL | 进行中 | P1 | TASK-MOBILE-12AI-001 | root | 完成interacting锁存修复、四配置浏览器/草稿/相邻控件回归与完整必要检查，冻结head独审并按正式Release部署，保留唯一previous；禁止再次生成。 |
-| TASK-CANVAS-RELEASE-20261018 | 统一工具栏修复与三端发布 | PARTIAL | 进行中 | P1 | none | root-release | 完成CI回归测试后合并入main并发布2.1.41正式包。 |
+| TASK-MOBILE-COMPOSER-001 | 修复手机空文字输入模型按钮失焦无响应 | PARTIAL | 进行中 | P1 | TASK-MOBILE-12AI-001 | root | 合流后按当前候选重新验证相关功能；正式发布和实体手机接受仍待。远端原后续要求：完成新后缀生产收据docs HEAD的检查/Delivery/独审/Hosted和正常PR；仅补用户Android Chrome模型入口/切后台返回+刷新接受，不把旧UI回复或继续当验收，不新耗生成额度。 |
+| TASK-CANVAS-RELEASE-20261018 | 统一工具栏修复与三端发布 | PARTIAL | 进行中 | P1 | none | root-release | 合流后按当前候选重新验证相关功能；正式发布和实体手机接受仍待。远端原后续要求：一行test-only enabled前提维护及相关7/7已完成；冻结该最小diff并提交后，取得精确新HEAD完整verify、独审/Delivery及新的Hosted终局，保留4c push实际FAIL、所有首试UNKNOWN和未执行阶段。正常PR合并后的实际main/tree及main门禁通过才创建一次42tag、fresh正式Windows，同formal完整四轮、严格cold重查、真实默认资料安装/工具栏/Agent、唯一setup匿名下载和Web/独立手机Web生产回读；原失败、cold和seed39保持。 |
 | TASK-CHATGPT-IMAGE-POC-20261018 | 订阅制模型图片通道与既有原图恢复 | OBSOLETE | 已完成 | P2 | none | root-image-recovery | 已按2026-10-26架构整顿决定淘汰订阅网页爬虫生图POC（差异补丁已归档至output/branch-archive-20261026），统一走标准API/MCP/受控Browser通道。 |
 | TASK-MOBILE-12AI-001 | 12ai手机端图片自动归档与文本视频协议接入 | DONE | 已完成 | P1 | TASK-WEB-RELEASE-20261017 | root | 按已完成PR70/71范围保留发布/原件/回滚收据；模型按钮及后台专项由TASK-MOBILE-COMPOSER-001承接，T12/FEAT-028继续开放。 |
 | TASK-WEB-RELEASE-20261017 | 独立手机UI接入与正式Web Release自动同步 | DONE | 已完成 | P1 | TASK-AUDIT-REPAIR-20261017 | root | 本次Web交付已完成；最终文档PR另按提交HEAD完成独立审查与Hosted/Delivery。Mobile其余能力由T12按原范围继续。 |
@@ -216,6 +216,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-MOD-P6-LAYER-SPLIT | 图层拆分 | PARTIAL | 进行中 | P1 | TASK-MOD-P6-UPSCALE | root | 接入并验收Desktop原生TaskHost及真实工作流/Provider；保持四原文与其他P/STD/ORG开放任务，不把fixture作为REAL。 |
 | TASK-MOD-P7 | 资产溯源对齐 | PARTIAL | 进行中 | P1 | TASK-MOD-P6-LAYER-SPLIT | root | 完成原生GUI跨端溯源验收、独审和main合流；旧记录不回写。 |
 | TASK-MOD-P6-1 | ComfyUI本地托管与画布双态工作流卡片 | PARTIAL | 未完成 | P1 | TASK-MOD-P6-HOST | root | 完成浏览器/命令行回归；真实GPU、完整编辑器鼠标/参数面板及独审/main仍开放，用户已要求不控制桌面 |
+| TASK-MOD-GATE-BOOTSTRAP | 主线原生首建架构与目录基线 | REVIEW | 进行中 | P0 | none | root | 固定提交独立只读评审、Delivery与Hosted门禁后正常PR squash；回到P3解决组合冲突和整体门禁 |
 
 ## TASK-COMFY-PHYSICAL-20261030 — 本机ComfyUI真实显卡出图验收
 
@@ -473,15 +474,17 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Requirement refs: docs/changes/2026-10-18-mobile-composer/intent.md, docs/changes/2026-10-18-mobile-composer/spec.md
 - Feature IDs: FEAT-028
 - Owner role: implementation-integrator
-- Acceptance: 空text输入focus后一次点模型可打开面板，缺Key/连接不禁用入口；取消触摸/Enter语义保留。; 390×844触摸、390×480矮屏触摸、390×844鼠标和844×390横屏的模型及相邻添加/展开、取消/草稿刷新通过。; 旧任务/正文/原件身份与散列保持；完整捕获与截断网络边界分开，无生成或自动重试。; 精确head独审、Delivery/Hosted和正式Release来源/单previous回读；实体Android后台/Safari/Native未验不代填。
+- Acceptance: 空text输入focus后一次点模型可打开面板，缺Key/连接不禁用入口；取消触摸/Enter语义保留。; 390×844触摸、390×480矮屏触摸、390×844鼠标和844×390横屏的模型及相邻添加/展开、取消/草稿刷新通过。; 旧任务/正文/原件身份与散列保持；完整捕获与截断网络边界分开，无生成或自动重试。; 精确head独审、Delivery/Hosted和正式Release来源/单previous回读；实体Android后台/Safari/Native未验不代填。; 任务及历史先展示图片/视频/文本，详情结果→提示词→更多，unknown/partial/错误/进度与必要恢复动作不隐藏。; 六入口初始可见且模型名可点，发送本身直接圆形同排同高；小于360px六控件44px不折行、390px48px，竖矮/窄/横屏、鼠标/键盘/取消手势有DOM/截图及命中证据。; 上传原件/草稿引用、模型/数量、Skill预览明确应用可刷新恢复，取消不改；尺寸只在本次页面有效，切类型/模型或未发刷新回自适应，提交捕获既有task.imageSize。; 官方12ai精确支持模型的参考图编辑经原件校验并自动归档，非支持场景零提交；本地fixture验证，不消耗真实生成额度，不自动重试未知任务。; 旧v39完整snapshot/backup可读并还原、原件hash/账户身份保持；最终verify/组合browser/精确head独审/Hosted/正式Release与唯一previous回读完成后才放行。; 手机/桌面同功能目标不冒充远程Agent/MCP、新Native、Safari或实体后台已验；FEAT-028 PARTIAL/T12开放。
 - Branch: `unallocated`
 - Worktree: `unallocated`
-- Modules: mobile/src/screens/Composer.tsx, tests/mobile-web/entry.spec.ts, config/platform-versions.json, docs/changes/2026-10-18-mobile-composer, docs/governance, docs/features, docs/PROGRESS.md
+- Modules: mobile/src/screens/Composer.tsx, tests/mobile-web/entry.spec.ts, config/platform-versions.json, docs/changes/2026-10-18-mobile-composer, docs/governance, docs/features, docs/PROGRESS.md, mobile/src/screens, mobile/src/ui, mobile/src/application/application.ts, mobile/src/application/types.ts, mobile/src/application/workflow.ts, mobile/src/services/providerClient.ts, mobile/src/services/providerTypes.ts, mobile/src/services/twelveAiProtocol.ts, mobile/tests, tests/mobile-web, src/components/UiIcon.tsx, src/components/AgentActionButton.tsx, src/components/StartComposer.tsx, src/styles/composer.css, tests/browser/composer-round-send.spec.ts, docs/features/feat-028-mobile.md, docs/changes/2026-10-18-mobile-composer-production-receipt
 - Verification: NOT_VERIFIED — 真实本地空text焦点/点击红测run e9da5f53四配置4FAIL保留；interacting候选本地完整mobile-web run60ac86e2为13/13首试、0skip/flaky/errors，CUA390×844模型面板可见，Mobile371/type/lint由root回传通过。五JPEG原字节/像素一致纠正旧黑图判断；908.067秒后原件散列保持，但network截断且无真实hidden事件，实体后台未验。当前已提交head独审/Hosted/生产40待执行。
-- Evidence: [docs/changes/2026-10-18-mobile-composer/intent.md](../../docs/changes/2026-10-18-mobile-composer/intent.md), [docs/changes/2026-10-18-mobile-composer/spec.md](../../docs/changes/2026-10-18-mobile-composer/spec.md), [docs/changes/2026-10-18-mobile-composer/plan.md](../../docs/changes/2026-10-18-mobile-composer/plan.md), [docs/changes/2026-10-18-mobile-composer/verification.md](../../docs/changes/2026-10-18-mobile-composer/verification.md), [docs/changes/2026-10-18-mobile-composer/review.md](../../docs/changes/2026-10-18-mobile-composer/review.md)
-- Next action: 完成interacting锁存修复、四配置浏览器/草稿/相邻控件回归与完整必要检查，冻结head独审并按正式Release部署，保留唯一previous；禁止再次生成。
+
+保留的 origin/main4610 同任务历史回执（不是本合并候选验收）：产品PR72正常squash b457/treebbcab与正式独审791e同树；全63文件独审/57定向测试PASS。main quality39124025635完整attempt2五项、guards39124025636双平台、新health39127523980实际health.ok=true均PASS；原attempt1 managed-web15秒spawnSync超时、旧health暂停403、零jobs异常UNKNOWN保留，准确根因未证。正式Release416447150/v2.1.40/Web部署39128852497成功，公开build-info/CI手机cbc0入口同源。Hosted main Mobile40/40首试/retry0；本地433/完整verify/窄屏40/40与旧v39完整snapshot/backup合成兼容及预算沿原包。线上实际320/390六控件44/48圆形同排、模型名打开picker，上传/参数/扩展面板可开；任务结果优先、详情结果→提示词→更多，旧文本刷新/图片830495B SHA64a6af6e与unknown0/1不变。只读库存current40/唯一previous39、前39manifest/archive与配置/auth/PID观察保持，独立18项PASS。40普通停留927.716秒后刷新图片可见/再次UI导出逐字节一致，完整捕获范围Provider0/POST0且临时调试已清理、实体Android接受待补；0新增真实生成，不改schema/storage/DB/权限，不写canonical。当前docs HEAD另需Delivery/独审/Hosted/正常PR；FEAT028 PARTIAL/T12开放。
+- Evidence: [docs/changes/2026-10-18-mobile-composer/intent.md](../../docs/changes/2026-10-18-mobile-composer/intent.md), [docs/changes/2026-10-18-mobile-composer/spec.md](../../docs/changes/2026-10-18-mobile-composer/spec.md), [docs/changes/2026-10-18-mobile-composer/plan.md](../../docs/changes/2026-10-18-mobile-composer/plan.md), [docs/changes/2026-10-18-mobile-composer/verification.md](../../docs/changes/2026-10-18-mobile-composer/verification.md), [docs/changes/2026-10-18-mobile-composer/review.md](../../docs/changes/2026-10-18-mobile-composer/review.md), [docs/changes/2026-10-18-mobile-composer-production-receipt/intent.md](../../docs/changes/2026-10-18-mobile-composer-production-receipt/intent.md), [docs/changes/2026-10-18-mobile-composer-production-receipt/spec.md](../../docs/changes/2026-10-18-mobile-composer-production-receipt/spec.md), [docs/changes/2026-10-18-mobile-composer-production-receipt/plan.md](../../docs/changes/2026-10-18-mobile-composer-production-receipt/plan.md), [docs/changes/2026-10-18-mobile-composer-production-receipt/verification.md](../../docs/changes/2026-10-18-mobile-composer-production-receipt/verification.md), [docs/changes/2026-10-18-mobile-composer-production-receipt/review.md](../../docs/changes/2026-10-18-mobile-composer-production-receipt/review.md), [docs/changes/2026-10-18-mobile-composer-production-receipt/release.md](../../docs/changes/2026-10-18-mobile-composer-production-receipt/release.md)
+- Next action: 合流后按当前候选重新验证相关功能；正式发布和实体手机接受仍待。远端原后续要求：完成新后缀生产收据docs HEAD的检查/Delivery/独审/Hosted和正常PR；仅补用户Android Chrome模型入口/切后台返回+刷新接受，不把旧UI回复或继续当验收，不新耗生成额度。
 - Last verified: 2026-10-18
-- Updated: 2026-10-26
+- Updated: 2026-10-30
 
 ## TASK-CANVAS-RELEASE-20261018 — 统一工具栏修复与三端发布
 
@@ -489,18 +492,20 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Scope: Canvas工具栏坐标系修复，三端版本发布与验证，桌面Agent与Web发布链。
 - Display status: 进行中
 - Priority: P1 — 解决用户选区工具栏偏移与三端统一发布问题。
-- Requirement refs: docs/changes/2026-10-18-unified-toolbar-release/intent.md
+- Requirement refs: docs/changes/2026-10-18-unified-toolbar-release/intent.md, docs/changes/2026-10-18-chat-draft-paint-sync/intent.md, docs/changes/2026-10-19-installer-clean-build/intent.md, docs/changes/2026-10-19-installer-lifecycle-order/intent.md, docs/changes/2026-10-19-release-asset-name/intent.md
 - Feature IDs: FEAT-009, FEAT-028
 - Owner role: implementer
-- Acceptance: 选区工具栏在各种缩放和平移比例下居中显示并正确定位。; 保留全部既有回归断言与测试套件通过。; Desktop/Web/Mobile三端版本号一致，发布流程完整。
+- Acceptance: 选区工具栏在各种缩放和平移比例下居中显示并正确定位。; 保留全部既有回归断言与测试套件通过。; Desktop/Web/Mobile三端版本号一致，发布流程完整。; 图片居中且画布允许遮挡，无横向滚动或自动让位; 保留现有项目原件消息归档收据设置和凭据引用; Desktop/Web/Mobile Web2.1.42同main SHA并显示端别，Windows含Agent单setup；41tag与失败原件保留; 当前head独审、Hosted/Delivery、正常PR合并与正式产物/生产回读; 切换聊天时可编辑输入框与当前聊天草稿同帧一致，原迟到回执及持久化保护保留; 干净checkout完整NSIS及receipt通过、dirty具体路径可诊断且仍拒绝；native失败立即停止，PR候选完整安装器门先于新tag验证; 恢复项目后插件迟到激活自动更新节点和已打开菜单，原内容不变；注销同步撤回，保留启用筛选
 - Branch: `unallocated`
 - Worktree: `unallocated`
-- Modules: src/components/canvas, src/runtime, src/domain, src/features/creation, src-tauri, mobile, tests, config/platform-versions.json, docs/governance, docs/PROGRESS.md
+- Modules: src/components/canvas, src/runtime, src/domain, src/features/creation, src-tauri, mobile, tests, config/platform-versions.json, docs/governance, docs/PROGRESS.md, docs/changes/2026-10-18-unified-toolbar-release, docs/features, src/components/ConversationPanel.tsx, docs/changes/2026-10-18-chat-draft-paint-sync, scripts/windows/installer-receipt.mjs, .gitattributes, .github/workflows/windows-release.yml, docs/changes/2026-10-19-installer-clean-build, src/features/plugins/nodeRegistry.ts, src/components/nodes/PluginNode.tsx, src/components/canvas/AddNodeMenu.tsx, tests/unit/agentPackage.test.ts, tests/desktop/installer.mjs, docs/changes/2026-10-19-installer-lifecycle-order, src/runtime/appInfo.ts, tests/browser/platform-version.spec.ts, tests/desktop/platform-version.mjs, docs/changes/2026-10-19-release-asset-name, tests/browser/sidebar-rail-interaction.spec.ts
 - Verification: NOT_VERIFIED — 选区工具栏定位测试与三端回归进行中。
-- Evidence: [docs/changes/2026-10-18-unified-toolbar-release/intent.md](../../docs/changes/2026-10-18-unified-toolbar-release/intent.md), [docs/changes/2026-10-18-unified-toolbar-release/verification.md](../../docs/changes/2026-10-18-unified-toolbar-release/verification.md)
-- Next action: 完成CI回归测试后合并入main并发布2.1.41正式包。
+
+保留的 origin/main4610 同任务历史回执（不是本合并候选验收）：TASK-CANVAS-RELEASE-20261018保持IN_PROGRESS/NOT_VERIFIED，三端仍为同次尚未tag的2.1.42。下载资产名修复4c313633d88f4e2203292540ef7c83f77ae699af/tree f84dc69d0f80c1039bd5d6a2400142cf27747c63的源码独审和完整本机verify PASS；Hosted push quality39167031850实际FAIL（838 tests/840 attempts：836 passed、1 failed、1 flaky；Node1953 PASS/19 skip、Agent204 PASS/2 skip，Design/Rust/Native未执行），PR/Windows/Mobile各按自身真实收据核对。本机PASS不代填Hosted。独立IDB受控对照证明原visible-only物理点击缺少enabled前提：disabled且命中时只产生pointerdown/up，释放读取后原folder count断言仍FAIL；先等enabled后同坐标一次click/count1/expanded/scroll0 PASS。这只证明机制，云端点击瞬间状态及两个首试缺按钮30s原因仍UNKNOWN，首试无snapshot/trace/errors。现仅在tests/browser/sidebar-rail-interaction.spec.ts的createFolderOnce visible后加一行toBeEnabled；既有sidebar4+settings3在workers1/retries0定向7/7 PASS。原产品、settings、storage guard、timeout/retry及其余断言不变。修改后精确新HEAD完整verify、独审/Delivery/Hosted和正常PR合并仍待，正式tag/包/默认安装/Release/Web及独立手机Web生产仍未完成。 原公开下载阻断诊断9370ef63及RED/GREEN1/1保留，公开资产用点名、本地NSIS/receipt仍为空格名；PR78正常合入的0cc3b4ed116d71062244e3097285a2b532de8f97/tree4c238f54f6aa688f95128936ada89ec675f2f26c仅为历史中间main，其CI自然完成、不取消不重跑，最终source须后续正常merge及新main验证。原41正式FAIL/artifact0、e7/c341失败、d965候选首FAIL/409诊断与tests-only四轮预检、e43两flaky及35push一flaky/UNKNOWN有界决定保持原义；cold/seed39、项目配置、凭据和存储身份不变。
+- Evidence: [docs/changes/2026-10-18-unified-toolbar-release/intent.md](../../docs/changes/2026-10-18-unified-toolbar-release/intent.md), [docs/changes/2026-10-18-unified-toolbar-release/verification.md](../../docs/changes/2026-10-18-unified-toolbar-release/verification.md), [docs/changes/2026-10-18-chat-draft-paint-sync/verification.md](../../docs/changes/2026-10-18-chat-draft-paint-sync/verification.md), [docs/changes/2026-10-19-installer-clean-build/verification.md](../../docs/changes/2026-10-19-installer-clean-build/verification.md), [docs/changes/2026-10-19-installer-lifecycle-order/verification.md](../../docs/changes/2026-10-19-installer-lifecycle-order/verification.md), [docs/changes/2026-10-19-release-asset-name/intent.md](../../docs/changes/2026-10-19-release-asset-name/intent.md), [docs/changes/2026-10-19-release-asset-name/verification.md](../../docs/changes/2026-10-19-release-asset-name/verification.md)
+- Next action: 合流后按当前候选重新验证相关功能；正式发布和实体手机接受仍待。远端原后续要求：一行test-only enabled前提维护及相关7/7已完成；冻结该最小diff并提交后，取得精确新HEAD完整verify、独审/Delivery及新的Hosted终局，保留4c push实际FAIL、所有首试UNKNOWN和未执行阶段。正常PR合并后的实际main/tree及main门禁通过才创建一次42tag、fresh正式Windows，同formal完整四轮、严格cold重查、真实默认资料安装/工具栏/Agent、唯一setup匿名下载和Web/独立手机Web生产回读；原失败、cold和seed39保持。
 - Last verified: 2026-10-18
-- Updated: 2026-10-26
+- Updated: 2026-10-30
 
 ## TASK-CHATGPT-IMAGE-POC-20261018 — 订阅制模型图片通道与既有原图恢复
 
@@ -4209,3 +4214,22 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Next action: 完成浏览器/命令行回归；真实GPU、完整编辑器鼠标/参数面板及独审/main仍开放，用户已要求不控制桌面
 - Last verified: 2026-10-29
 - Updated: 2026-10-29
+
+## TASK-MOD-GATE-BOOTSTRAP — 主线原生首建架构与目录基线
+
+- Goal: 合法完成origin/main无产品源码变更bootstrap，为P3整批正常PR合流建立基础
+- Scope: 既有架构/布局检查器规则和回归、开发依赖、真实origin基线、治理入口、五件套与台账
+- Display status: 进行中
+- Priority: P0 — 工具栏定位与当前用户v3数据兼容阻断统一发布
+- Requirement refs: user:主线合流, AGENTS.md, docs/engineering/BRANCH-POLICY.md
+- Feature IDs: none
+- Owner role: implementer
+- Acceptance: src/packages/vendor/canvas-plugins和三端版本与origin/main不变; 两份baseline指向真实origin base并与实际扫描一致，原棘轮不放宽; 快速门/完整verify/当前SHA独审/Hosted/Delivery成功后正常PR squash
+- Branch: `refactor/TASK-MOD-P0-architecture-baseline`
+- Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
+- Modules: config, scripts/governance, scripts/check-governance.mjs, tests/unit/architectureRules.test.ts, tests/unit/repoLayoutRules.test.ts, package.json, package-lock.json, docs/governance, docs/changes/2026-10-30-origin-baseline-bootstrap
+- Verification: PARTIAL — 本地完整verify退出0：根1975pass20skip、Agent204pass2skip、Edge生产838pass0skip0flaky、design8及开发四步骤通过；产品/版本与origin4610不变，两份baseline精确实扫。浏览器metadata4610对应dirty治理候选，开发metadata75775f3c，原报告不重写，474附件外置SHA通过。正式独审/Delivery/当前SHA Hosted/合流待完成。
+- Evidence: [docs/changes/2026-10-30-origin-baseline-bootstrap/verification.md](../../docs/changes/2026-10-30-origin-baseline-bootstrap/verification.md)
+- Next action: 固定提交独立只读评审、Delivery与Hosted门禁后正常PR squash；回到P3解决组合冲突和整体门禁
+- Last verified: 2026-10-30
+- Updated: 2026-10-30

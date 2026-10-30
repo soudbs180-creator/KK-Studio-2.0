@@ -4,7 +4,11 @@ import {
   type CreationDraft,
 } from "@kk-studio/creation-contracts";
 import { ServiceError } from "../services/httpClient.ts";
-import type { WorkflowHost, PendingArchive } from "./types.ts";
+import type {
+  WorkflowHost,
+  PendingArchive,
+  SubmissionOptions,
+} from "./types.ts";
 import {
   providerConnection,
   projectRevision,
@@ -14,7 +18,12 @@ import {
 } from "./types.ts";
 import { submitGateway, reconcileTask } from "./gatewayWorkflow.ts";
 import { submitVideo, recoverVideoTask } from "./videoWorkflow.ts";
-import { isTwelveAiConnection } from "../services/twelveAiProtocol.ts";
+import {
+  isTwelveAiConnection,
+  supportsImageReferences,
+} from "../services/twelveAiProtocol.ts";
+import { imageMime, MAX_IMAGE_BYTES } from "../services/imageBytes.ts";
+import type { ImageInput } from "../services/providerTypes.ts";
 import { videoModelProfile } from "../services/twelveAiVideoModels.ts";
 import {
   archiveReceipt,
@@ -27,6 +36,7 @@ function taskFromDraft(
   draft: CreationDraft,
   retry?: CreationTask,
   indices?: number[],
+  imageSize?: string,
 ): CreationTask {
   const now = host.deps.now(),
     id = host.deps.id();
@@ -47,6 +57,7 @@ function taskFromDraft(
     completedOutputs: 0,
     privacyMode: draft.privacyMode,
     providerConnectionId: draft.providerConnectionId,
+    ...(imageSize !== undefined ? { imageSize } : {}),
     outputs: Array.from(
       {
         length:
@@ -89,7 +100,9 @@ export async function recoverTask(
 export async function submit(
   host: WorkflowHost,
   retryTaskId?: string,
+  options: SubmissionOptions = {},
 ): Promise<void> {
+  const requestedImageSize = options.imageSize;
   const ctx = host.context(),
     projectId = ctx.snapshot.activeProjectId;
   if (!projectId) throw new Error("先创建或打开项目。");
@@ -107,6 +120,7 @@ export async function submit(
     const retry = retryTaskId
       ? project.tasks.find((t) => t.id === retryTaskId)
       : undefined;
+    const imageSize = retry ? retry.imageSize : requestedImageSize;
     let indices: number[] | undefined;
     if (retryTaskId) {
       if (!retry) throw new Error("重试任务不存在。");
@@ -196,6 +210,15 @@ export async function submit(
     if (captured.kind !== "video" && !connection.capabilities[captured.kind])
       throw new Error("该连接未启用当前类型端点，请检查连接设置。");
     if (
+      imageSize !== undefined &&
+      (captured.kind !== "image" ||
+        !imageSize.trim() ||
+        !connection.capabilities.imageSizes?.includes(imageSize))
+    )
+      throw new Error(
+        "图片尺寸未在此连接声明支持，请选择支持的尺寸或默认尺寸。",
+      );
+    if (
       !retry &&
       project.tasks.some(
         (t) =>
@@ -209,14 +232,46 @@ export async function submit(
       throw new Error(
         "同一输入已有未完成或受理不明任务，请先核对任务，不能重复生成。",
       );
-    for (const attachment of captured.attachments)
-      await ctx.repo.readOriginal(attachment.assetId!);
-    if (captured.attachments.length)
+    if (
+      captured.attachments.length &&
+      (captured.kind !== "image" ||
+        !supportsImageReferences(connection, captured.model))
+    )
       throw new Error(
         "当前生成适配器尚不支持参考素材。请移除参考后生成；不会静默忽略。",
       );
+    const referenceImages: NonNullable<ImageInput["referenceImages"]> = [];
+    for (const attachment of captured.attachments) {
+      if (
+        !["image/png", "image/jpeg", "image/webp", "image/gif"].includes(
+          attachment.mime,
+        )
+      )
+        throw new Error(
+          "此图片编辑通道仅支持 PNG、JPEG、WebP 或 GIF 图片参考。",
+        );
+      const asset = ctx.snapshot.assets.find(
+        (asset) => asset.id === attachment.assetId,
+      );
+      if (
+        !asset ||
+        asset.mime !== attachment.mime ||
+        asset.size !== attachment.size
+      )
+        throw new Error("参考素材与已保存原件的 MIME 或大小不一致。");
+      const bytes = await ctx.repo.readOriginal(asset.id);
+      if (!host.valid(ctx)) throw new Error("会话已变化，参考图提交已停止。");
+      const mime = imageMime(bytes);
+      if (
+        mime !== attachment.mime ||
+        bytes.byteLength !== attachment.size ||
+        bytes.byteLength > MAX_IMAGE_BYTES
+      )
+        throw new Error("参考图片原件的 MIME 或大小无效。");
+      referenceImages.push({ assetId: asset.id, bytes, mime });
+    }
     task = {
-      ...taskFromDraft(host, captured, retry, indices),
+      ...taskFromDraft(host, captured, retry, indices, imageSize),
       providerCredentialRef: connection.credentialRef,
       providerBaseUrl: connection.baseUrl,
       providerName: metadata.name,
@@ -327,7 +382,12 @@ export async function submit(
             controller.signal,
           )
         : await client.generateImages(
-            { ...input, count: task.requestedOutputs, size: task.imageSize },
+            {
+              ...input,
+              count: task.requestedOutputs,
+              size: task.imageSize,
+              referenceImages,
+            },
             controller.signal,
           );
     verifyReceipt(receipt, task, projectId);

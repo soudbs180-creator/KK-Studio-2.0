@@ -1,6 +1,8 @@
 // Public contract entry for feature: plugins
 export {
   registerPluginNodes,
+  getPluginNodesRevision,
+  subscribePluginNodes,
   unregisterPluginNodes,
   getPluginNodeDefinition,
   listPluginNodeDefinitions,

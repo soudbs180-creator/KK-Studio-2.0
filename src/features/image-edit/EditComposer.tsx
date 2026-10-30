@@ -2,7 +2,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import ComposerTextarea from "../../components/ComposerTextarea.tsx";
 import ModelPickerMenu from "../../components/ModelPickerMenu.tsx";
 import UiIcon from "../../components/UiIcon.tsx";
-import VoiceInputButton from "../../components/VoiceInputButton.tsx";
+import { VoiceInputButton } from "../speech/index.ts";
 import { readReferenceImages } from "../../components/nodes/referenceUpload.ts";
 import { useDismissible } from "../../components/useDismissible.ts";
 import type {

@@ -27,6 +27,7 @@ import {
 } from "./features/skills/index.ts";
 import {
   createProject,
+  activeChat,
   projectChatView,
   emptyDraft,
   type CreationDraft,
@@ -41,7 +42,6 @@ import {
   recoverInterruptedTasks,
   taskRetryAvailability,
   reconcileNativeTasks,
-  rootItemId,
 } from "./features/creation/index.ts";
 import {
   updateProjectChatView,
@@ -168,6 +168,7 @@ export default function App() {
     "skills" | "connectors" | "partners"
   >("skills");
   const [partnerProjectId, setPartnerProjectId] = useState<string | null>(null);
+  const [partnerChatId, setPartnerChatId] = useState<string | null>(null);
   const [workspaceVisited, setWorkspaceVisited] = useState(false);
   useEffect(() => {
     if (active === "workspace") setWorkspaceVisited(true);
@@ -207,7 +208,9 @@ export default function App() {
   const activeProjectIdRef = useRef<string | null>(creation.activeProjectId);
   activeProjectIdRef.current = creation.activeProjectId;
   const projectLibrary = useProjectLibrary(persistence, () => open("projects"));
-  const activeProject = projectLibrary.activeProject;
+  const activeProject = projectLibrary.activeProject
+    ? projectChatView(projectLibrary.activeProject)
+    : undefined;
   const [canvasItems, setCanvasItems] = useState<CanvasCollectionItem[]>(
     () => activeProject?.items ?? BASE_CANVAS_ITEMS,
   );
@@ -234,7 +237,7 @@ export default function App() {
     const next = {
       ...current,
       projects: current.projects.map((project) =>
-        project.id === id ? update(project) : project,
+        project.id === id ? updateProjectChatView(project, update) : project,
       ),
     };
     commitCreation(next);
@@ -334,12 +337,13 @@ export default function App() {
     if (partnerProjectId && !project) return "原项目已不可用，未修改草稿。";
     if (project && creationRef.current.activeProjectId !== project.id)
       return "原项目已不是当前项目，未修改草稿。";
+    if (project && (project.activeChatId ?? null) !== partnerChatId)
+      return "聊天已切换，未把角色应用到其他聊天。";
     if (project) {
       // The active composer acknowledges its source; inactive Agent drafts
       // cannot receive instructions or redirect them into the API draft.
       for (const draftKey of [
         JSON.stringify([project.id, project.activeChatId ?? null]),
-        `google-${project.id}`,
       ]) {
         const result = appendToActiveAgentDraft(draftKey, instructions);
         if (result.handled) {
@@ -572,16 +576,52 @@ export default function App() {
       (project) => project.id === activeProjectIdRef.current,
     );
     if (!project) return false;
+    const draft = projectChatView(project).composerDraft;
+    let connectionId =
+      draft.providerConnectionId ??
+      (draft.modelSelection?.source === "api"
+        ? draft.modelSelection.connectionId
+        : undefined);
+    if (project.chats && !connectionId) {
+      const binding = activeChat(project)?.legacyProviderBinding as
+        | {
+            providerBaseUrl?: string;
+            providerCredentialRef?: string;
+            providerProtocol?: string;
+            providerAuthMode?: string;
+            providerConnectionId?: string;
+          }
+        | undefined;
+      const matching =
+        binding &&
+        typeof binding.providerBaseUrl === "string" &&
+        typeof binding.providerCredentialRef === "string"
+          ? readProviderConnections().filter(
+              (connection) =>
+                connection.baseUrl === binding.providerBaseUrl &&
+                connection.credentialRef === binding.providerCredentialRef &&
+                (!binding.providerConnectionId ||
+                  connection.id === binding.providerConnectionId) &&
+                (!binding.providerProtocol ||
+                  connection.protocol === binding.providerProtocol) &&
+                (!binding.providerAuthMode ||
+                  connection.authMode === binding.providerAuthMode),
+            )
+          : [];
+      if (matching.length !== 1)
+        return "请为当前聊天明确选择模型连接；不会借用其他聊天的账号，草稿仍保留。";
+      connectionId = matching[0].id;
+    }
     const error = await submitImageCommand({
       origin: "chat",
       input: {
         prompt: message,
-        model: project.model,
-        providerConnectionId: project.composerDraft.providerConnectionId,
-        kind: project.kind,
-        attachments: project.composerDraft.attachments,
-        privacyMode: project.composerDraft.privacyMode,
-        outputCount: project.composerDraft.outputCount,
+        model: draft.model || project.model,
+        providerConnectionId: connectionId,
+        kind: draft.kind,
+        attachments: draft.attachments,
+        privacyMode: draft.privacyMode,
+        outputCount: draft.outputCount,
       },
     });
     return error ?? true;
@@ -648,34 +688,19 @@ export default function App() {
     if (!activeProject) return;
     const updated = updateProjectChatView(activeProject, () => ({
       ...activeProject,
-      model,
-      kind:
-        selection?.kind === "text" || selection?.kind === "image"
-          ? selection.kind
-          : activeProject.kind,
       composerDraft: {
         ...activeProject.composerDraft,
         model,
+        kind:
+          selection?.kind === "text" || selection?.kind === "image"
+            ? selection.kind
+            : activeProject.composerDraft.kind,
         modelSelection: selection ?? { source: "api", model },
         conversationChannel: "direct" as const,
         pendingAgent: undefined,
         providerConnectionId: selection?.connectionId,
         updatedAt: Date.now(),
       },
-      items: activeProject.items.map((item) =>
-        item.id === rootItemId(activeProject)
-          ? {
-              ...item,
-              model,
-              providerConnectionId: selection?.connectionId,
-              generationSource: undefined,
-              parameters: item.parameters
-                ? { ...item.parameters, imageSize: undefined }
-                : undefined,
-              description: `${model} · 待执行`,
-            }
-          : item,
-      ),
       updatedAt: Date.now(),
     }));
     commitCreation({
@@ -833,6 +858,13 @@ export default function App() {
   }
   useAppSettings(setSettingsSection, setModal);
   function openSkillsView(view: string): void {
+    setPartnerChatId(
+      active === "workspace"
+        ? (creationRef.current.projects.find(
+            (project) => project.id === creationRef.current.activeProjectId,
+          )?.activeChatId ?? null)
+        : null,
+    );
     setPartnerProjectId(
       active === "workspace" ? creationRef.current.activeProjectId : null,
     );
@@ -1228,18 +1260,16 @@ export default function App() {
                   overlay={sidebar.narrow && mobileChat && chat}
                   onOpen={open}
                   project={activeProject}
-                  readOnlyMessages={
-                    saveState === "read_only"
-                      ? selectedChat?.messages
-                      : undefined
-                  }
+                  readOnlyMessages={selectedChat?.messages}
                   executionDisabledReason={conversationDisabledReason}
-                  currentModel={activeProject?.model}
+                  currentModel={
+                    conversationDraft?.model ?? activeProject?.model
+                  }
                   onSelectChat={handleSelectChat}
                   modelOptions={[
                     ...new Set(
                       [
-                        activeProject?.model,
+                        conversationDraft?.model ?? activeProject?.model,
                         parseModelProvider(
                           localStorage.getItem(MODEL_PROVIDER_STORAGE_KEY),
                         ).profile.model,
@@ -1287,8 +1317,20 @@ export default function App() {
                               });
                           },
                           sending: agentState.sending,
+                          freshDisabledReason: activeProject.chats
+                            ? "当前聊天的线程不能被替换；请继续当前聊天。"
+                            : undefined,
                           activity: agentState.activity,
-                          messages: agentState.messages,
+                          messages:
+                            agentState.status === "disconnected" ||
+                            agentState.status === "error"
+                              ? (selectedChat?.messages ?? []).map(
+                                  ({ content, ...message }) => ({
+                                    ...message,
+                                    text: content,
+                                  }),
+                                )
+                              : agentState.messages,
                           pendingApproval: agentState.pendingApproval,
                           permissionMode: agentPermission,
                           onPermissionModeChange: (mode) =>
@@ -1298,10 +1340,19 @@ export default function App() {
                           ),
                           onSend: async (message, attachments, selection) => {
                             const projectId = activeProject.id;
+                            const chatId = activeProject.activeChatId;
                             const currentProject =
                               creationRef.current.projects.find(
                                 (project) => project.id === projectId,
                               );
+                            if (
+                              currentProject?.activeChatId !== chatId ||
+                              creationRef.current.activeProjectId !== projectId
+                            )
+                              return {
+                                ok: false,
+                                error: "聊天已切换，未发送；原草稿仍保留。",
+                              };
                             const draftAtSend = currentProject?.composerDraft;
                             const result = await sendProjectAgentMessage(
                               agentConnection,
@@ -1312,7 +1363,11 @@ export default function App() {
                             );
                             if (result.ok) {
                               updateProject(projectId, (project) =>
-                                clearSentPendingDraft(project, draftAtSend),
+                                clearSentPendingDraft(
+                                  project,
+                                  draftAtSend,
+                                  chatId,
+                                ),
                               );
                             }
                             return result;

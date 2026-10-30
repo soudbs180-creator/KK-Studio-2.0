@@ -154,6 +154,7 @@ export function useAppAgentBridge({
   }, [
     creation.activeProjectId,
     activeProject?.activeChatId,
+    activeProject?.chats?.[activeProject.activeChatId ?? ""]?.mainAgent,
     conversationDisabledReason,
   ]);
   useEffect(() => {

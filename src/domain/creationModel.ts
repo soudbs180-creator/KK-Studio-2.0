@@ -1,4 +1,5 @@
 import { comfyWorkflowCardSchema } from "./comfyWorkflow.ts";
+import { imageArchiveReceiptsSchema } from "./imageArchiveReceipts.ts";
 import { normalizeTaskCostReceipt } from "../../packages/creation-contracts/taskState.ts";
 import type { ApprovalGate } from "./agentWorkflow";
 import { isAssetReference } from "./assetReference.ts";
@@ -44,6 +45,7 @@ import {
 import { normalizeReviewComments } from "./reviewWorkflow.ts";
 import { normalizeStagePlans } from "./stagePlan.ts";
 export type * from "./creationTypes.ts";
+export { imageArchiveReceiptsSchema } from "./imageArchiveReceipts.ts";
 
 /** Durable boundary for a provider submission. Unknown must be reviewed before retry. */
 
@@ -1350,6 +1352,13 @@ function normalizeProjectFields(
 
   const { chats, activeChatId } = resolveProjectChats(candidate, version);
   return {
+    ...(candidate.imageArchiveReceipts === undefined
+      ? {}
+      : {
+          imageArchiveReceipts: imageArchiveReceiptsSchema.parse(
+            candidate.imageArchiveReceipts,
+          ),
+        }),
     canvas: readProjectCanvas(candidate.canvas, items),
     id: projectId,
     name: safeText(candidate.name, 120, "未命名项目"),

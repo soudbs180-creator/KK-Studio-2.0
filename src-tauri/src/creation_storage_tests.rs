@@ -157,6 +157,39 @@ fn sidebar_preferences_round_trip_and_invalid_updates_preserve_original() {
 }
 
 #[test]
+fn archive_receipts_survive_storage_and_bad_identities_never_replace_originals() {
+    for version in [2, 3] {
+        let f = Fixture::new();
+        let hash = "e".repeat(64);
+        let key = format!("chatgpt-{}", "a".repeat(32));
+        let mut value = snapshot(1);
+        value["projects"][0]["imageArchiveReceipts"] = json!({
+            (key.clone()): {"jobId":"original-job", "sha256":hash,
+                "assetId":format!("asset-{}", &hash[..24]), "chatId":null,
+                "retainedMetadata":{"label":"existing"}}
+        });
+        if version == 3 {
+            value = crate::native_root_authority::migrated_snapshot(&value);
+        }
+        f.repo.write(value.clone(), None).unwrap();
+        let original = fs::read(&f.repo.path).unwrap();
+        assert_eq!(f.repo.read().unwrap().snapshot.unwrap(), value);
+        for (field, invalid) in [
+            ("assetId", json!("asset-mismatch")),
+            ("jobId", json!("")),
+            ("sha256", json!("E".repeat(64))),
+            ("chatId", json!("")),
+        ] {
+            let mut bad = value.clone();
+            bad["revision"] = json!(2);
+            bad["projects"][0]["imageArchiveReceipts"][&key][field] = invalid;
+            assert!(f.repo.write(bad, Some(1)).is_err());
+            assert_eq!(fs::read(&f.repo.path).unwrap(), original);
+        }
+    }
+}
+
+#[test]
 fn project_lifecycle_metadata_survives_native_storage_and_invalid_references_fail() {
     let f = Fixture::new();
     let mut value = snapshot(1);

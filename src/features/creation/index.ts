@@ -316,8 +316,8 @@ export {
   useNativeTaskRecovery,
   useNativeTextRecovery,
 } from "./useNativeTextRecovery.ts";
-export { useSpeechInput } from "./useSpeechInput.ts";
-export type { SpeechInputState } from "./useSpeechInput.ts";
+export { useSpeechInput } from "../speech/index.ts";
+export type { SpeechInputState } from "../speech/index.ts";
 export {
   capacitySwitchHint,
   hasArchivedOutputEvidence,

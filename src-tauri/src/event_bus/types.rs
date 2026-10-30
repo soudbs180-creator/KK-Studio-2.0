@@ -32,7 +32,11 @@ pub struct EventRecord {
     /// Structured payload for this event
     pub payload: serde_json::Value,
     /// Optional idempotency key for deduplication
-    #[serde(default, skip_serializing_if = "Option::is_none", alias = "idempotency_key")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        alias = "idempotency_key"
+    )]
     pub idempotency_key: Option<String>,
     /// Creation timestamp in milliseconds (epoch)
     #[serde(alias = "created_at", alias = "timestamp")]

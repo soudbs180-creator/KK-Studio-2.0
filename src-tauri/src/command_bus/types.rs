@@ -46,7 +46,11 @@ pub struct Command {
     #[serde(default, skip_serializing_if = "Option::is_none", alias = "batchId")]
     pub batch_id: Option<String>,
     /// Optional idempotency key to prevent duplicate command processing
-    #[serde(default, skip_serializing_if = "Option::is_none", alias = "idempotencyKey")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        alias = "idempotencyKey"
+    )]
     pub idempotency_key: Option<String>,
 }
 

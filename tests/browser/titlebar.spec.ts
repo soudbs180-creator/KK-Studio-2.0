@@ -17,7 +17,7 @@ for (const width of [390, 1099, 1920]) {
       await expect(page.locator(".menu-popover")).toBeVisible();
       await page.keyboard.press("Escape");
       await expect(menu).toBeFocused();
-      await expect(page.locator(".preview-label")).toHaveText("浏览器版");
+      await expect(page.locator(".preview-label")).toHaveText("网页版");
     } else {
       await expect(
         page.getByRole("button", { name: "切换项目", exact: true }),

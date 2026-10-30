@@ -14,6 +14,7 @@ import {
   type PendingArchive,
   type PendingGateway,
   type SignedInContext,
+  type SubmissionOptions,
 } from "./types.ts";
 import type { AuthSession } from "../services/authTypes.ts";
 import { submit, recoverTask } from "./workflow.ts";
@@ -679,8 +680,9 @@ export class MobileApplication {
   probeConnection(id: string): Promise<void> {
     return probeConnection(this, id);
   }
-  submit(): Promise<void> {
-    return this.ownedWorkflow(() => submit(this));
+  submit(options: SubmissionOptions = {}): Promise<void> {
+    const captured = { imageSize: options.imageSize };
+    return this.ownedWorkflow(() => submit(this, undefined, captured));
   }
   retryTask(id: string): Promise<void> {
     return this.ownedWorkflow(() => submit(this, id));

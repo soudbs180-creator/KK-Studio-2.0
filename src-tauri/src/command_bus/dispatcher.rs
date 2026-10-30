@@ -2,9 +2,7 @@ use std::collections::HashMap;
 use std::sync::atomic::{AtomicU64, Ordering};
 use std::sync::{Arc, RwLock};
 
-use super::types::{
-    Actor, Command, CommandDispatchError, CommandResult, LockState,
-};
+use super::types::{Actor, Command, CommandDispatchError, CommandResult, LockState};
 
 /// Preemption hook signature: (target_node_id, cancelled_task_id)
 pub type PreemptionHook = Box<dyn Fn(&str, &str) + Send + Sync + 'static>;
@@ -526,7 +524,8 @@ mod tests {
         });
 
         // Agent acquires generating lock
-        bus.acquire_lock(target, "task-long-run-42", Actor::Agent).unwrap();
+        bus.acquire_lock(target, "task-long-run-42", Actor::Agent)
+            .unwrap();
         assert!(bus.is_locked(target));
 
         // Another agent tries to dispatch: rejected with ERR_NODE_LOCKED

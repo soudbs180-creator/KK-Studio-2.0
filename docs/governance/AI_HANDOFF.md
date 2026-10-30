@@ -2,9 +2,12 @@
 
 - docId: AI_HANDOFF
 - status: current
-- updatedAt: 2026-10-29
+- updatedAt: 2026-10-30
 - source: `docs/governance/PROJECT_STATE.md`
 - supersededBy: null
+
+2026-10-30 当前合流进行中：P3 f074d4de 正在整合首建基线候选5f78d187及origin/main4610的实际差异，尚未形成已验证合并提交。代码/测试冲突保留双方有效功能；本轮当前完整门禁、独审、Hosted及主线合流均待。历史H3/ORG6证据仍只覆盖其原SHA与范围，主仓21份审计改动保持保护。
+
 
 本文是跨会话 AI 的最短恢复入口（30 秒内读完）。任务状态只读 [`task-ledger.json`](task-ledger.json)；当前项目事实只读 [`PROJECT_STATE.md`](PROJECT_STATE.md)。
 
@@ -70,3 +73,38 @@ P8七组hook迁出0b675ec7；会话选择派生投影修复f10147b9。Desktop/We
 2026-10-30交付推进：新备份主仓21份Figma审计原件，未stash/覆盖，main仍c2a0228a；远端68冲突及默认CI基线3失败继续阻断squash/回收。ORG6在任务树迁1200份E2，60清单/新目录恢复/66关键图保留/30活跃文件保留，净减159410793B（62.8149%），历史断链86→86、布局基线578→88；根2405通过/20跳过及类型/增量lint通过。真实Comfy改先用已有H3视频模型，隔离运行依赖准备中；图片仍未验。当前SHA审查/完整门/main仍开放，其他四文档任务不关闭。见[验证](../changes/2026-10-30-main-physical-org6/verification.md)。
 
 2026-10-30新增实测：Desktop/Web2.1.59，真实RTX5080/H3的host快速生成和原生editor运行均产出视频；首帧AssetPort原件SHA一致、图片节点/result边及保存重开通过。只读代码补审d6d592e4 PASS，类型/增量lint0、根2406pass20skip0fail；不是图片checkpoint/视频资产/Hub自动安装启动验收。ORG6只在任务树迁1200份，固定Git blob净减159391121B。主仓21原件保持，68冲突/首建基线门/全套浏览器/main仍开放。 见[真实回执](../changes/2026-10-30-main-physical-org6/verification.md)。
+
+
+## 合流保留的远端增量事实（历史来源 origin/main4610）
+
+以下为远端既有记录，保留其时间与失败边界；不代表2026-10-30候选已发布或通过验收。
+
+## 当前恢复入口：统一42公开下载资产名修复（2026-10-19）
+
+TASK-CANVAS-RELEASE-20261018保持IN_PROGRESS/NOT_VERIFIED，三端仍为同次尚未tag的2.1.42。下载资产名修复4c313633d88f4e2203292540ef7c83f77ae699af/tree f84dc69d0f80c1039bd5d6a2400142cf27747c63的源码独审和完整本机verify PASS；Hosted push quality39167031850实际FAIL（838 tests/840 attempts：836 passed、1 failed、1 flaky；Node1953 PASS/19 skip、Agent204 PASS/2 skip，Design/Rust/Native未执行），PR/Windows/Mobile各按自身真实收据核对。本机PASS不代填Hosted。独立IDB受控对照证明原visible-only物理点击缺少enabled前提：disabled且命中时只产生pointerdown/up，释放读取后原folder count断言仍FAIL；先等enabled后同坐标一次click/count1/expanded/scroll0 PASS。这只证明机制，云端点击瞬间状态及两个首试缺按钮30s原因仍UNKNOWN，首试无snapshot/trace/errors。现仅在tests/browser/sidebar-rail-interaction.spec.ts的createFolderOnce visible后加一行toBeEnabled；既有sidebar4+settings3在workers1/retries0定向7/7 PASS。原产品、settings、storage guard、timeout/retry及其余断言不变。修改后精确新HEAD完整verify、独审/Delivery/Hosted和正常PR合并仍待，正式tag/包/默认安装/Release/Web及独立手机Web生产仍未完成。 原公开下载阻断诊断9370ef63及RED/GREEN1/1保留，公开资产用点名、本地NSIS/receipt仍为空格名；PR78正常合入的0cc3b4ed116d71062244e3097285a2b532de8f97/tree4c238f54f6aa688f95128936ada89ec675f2f26c仅为历史中间main，其CI自然完成、不取消不重跑，最终source须后续正常merge及新main验证。原41正式FAIL/artifact0、e7/c341失败、d965候选首FAIL/409诊断与tests-only四轮预检、e43两flaky及35push一flaky/UNKNOWN有界决定保持原义；cold/seed39、项目配置、凭据和存储身份不变。 先读[当前计划](../changes/2026-10-19-release-asset-name/plan.md)、[验证](../changes/2026-10-19-release-asset-name/verification.md)和[审查](../changes/2026-10-19-release-asset-name/review.md)；账本currentPackage为唯一任务入口。
+
+## 历史恢复入口：安装验收顺序与前期清理门禁（2026-10-19，保留原时点）
+
+TASK-CANVAS-RELEASE-20261018保持IN_PROGRESS/NOT_VERIFIED。PR77已正常squash合入main e43c5efaa9e80ad7ee617c852868a20e6093e08a/tree d9c0ee4206fb83bc413696b50356a887d10ad049，完整树等于已独审d965。d965本机与Hosted精确门禁通过，main当前检查仍待终局。官方candidate12146302538全ZIP hash、flat4和4284安装文件验证通过；原隔离安装验收FAIL：新建项目后直接native stop与自动对话prepare竞态。追加同包诊断观察shutdown HTTP409，health由idle转preparing并在4225ms ready，未发送模型turn；该诊断保持FAIL且不重试stop，不抹去原失败。本地dirty修法已用同包完整四轮PASS，4×4284文件/Agent启停强断言/项目保留/正常cleanup，26相关单元及lint/typecheck/format通过；3952原资料文件全等。精确新head独审/Delivery/Hosted待验。只修tests/desktop/installer.mjs验收顺序：纯Agent启停在空库首页先验，再保留全部项目/重装/资源损坏修复/卸载重装覆盖，新增available/running/停止后running=false断言。guard、应用、版本、存储和凭据身份不变；42尚未tag，正式包/默认资料安装/Web-Mobile生产待验，原cold、seed39与所有历史失败保留。 详见本任务currentPackage的计划与验证，以下旧入口保留原时点。
+
+## 当前恢复入口：手机结果优先与完整创作输入（2026-10-18）
+
+当前仓库并发main87c9源码三端41；本恢复入口记录的是此前40实际发布与验收。docs分支正常merge保留PR73全量代码和新增任务，集成后HEAD须新独审/Hosted，旧98ec报告不能批准新断面；不将docs提交或源码41当服务器版本。
+
+先读[生产收据](../changes/2026-10-18-mobile-composer-production-receipt/verification.md)、[本次计划](../changes/2026-10-18-mobile-composer-production-receipt/plan.md)和[审查边界](../changes/2026-10-18-mobile-composer-production-receipt/review.md)。TASK-MOBILE-COMPOSER-001 IN_PROGRESS/NOT_VERIFIED；产品PR72已正常合并b457d3a05759ca7a2f6a8c4bb62a8ba8aea908ea/treebbcab2a0d5e4a0fe4241b3d3f32d01e6b69b5334，与正式独审791e同树。Web40/Mobile源码5已由正式Release416447150/部署39128852497上线，Desktop源码38；当前docs分支docs/TASK-MOBILE-COMPOSER-001-production-receipt、基线b457，不把docs HEAD当生产来源。当前main五项attempt2/双guard/newhealth全通过，原attempt1超时/health403/零jobs异常仍保留。
+
+实际线上模型名可点、六圆控件320/390同排、上传/参数/扩展面板可开、菜单任务结果优先和分层详情、旧文本刷新/图片原件SHA/unknown状态均已复核。库存current40/唯一previous39、前后原39manifest/archive与配置/auth/服务观察一致；无新SSH权限、DB迁移或付费生成。新40普通页面停留927.716秒后刷新，图片可见且再次UI导出原件逐字节一致（不等于实体切后台）；实体Android Chrome用户模型入口/切后台返回+刷新接受仍待回执。下一步仅当前docs HEAD本地检查/Delivery/独审/Hosted/正常PR及剩余真机验收，不重发生成/发现模型，不把“继续”或旧38UI正常回复当40接受。
+
+原本地verify/Mobile433/最终窄屏40/40和完整v39snapshot/backup合成兼容保留；尺寸不增draft/schema/storage/backup字段，未发刷新回自适应，提交捕获旧task.imageSize。FEAT-028 PARTIAL/T12开放，Skill仅本地预览/明确应用、远程Agent/MCP/真实语音/视频/新参考生成/Safari/Native未验。canonical只读、不reset/clean/stage其他人工作。原包及下方历史记录不重写为当前成功。
+
+## 历史恢复入口：12ai 手机生成与保存修复（2026-10-18）
+
+Issue68设置保存同步专项：隔离分支 fix/TASK-ISSUE-68-settings-save，基线main6b933f4f，仅补测试等待。回执和后续验证见[专项验证](../changes/2026-10-18-issue-68-settings-save/verification.md)，以draft PR交原main协调者；不merge/发布，不恢复或清理原树。
+
+## 2026-10-18 TASK-CANVAS-RELEASE-20261018：统一发布进行中
+
+[当前交付包](../changes/2026-10-18-unified-toolbar-release/intent.md)。PR73已合入main87c，当前先处理main草稿flaky中已证的跨聊天绘制错配；后续正常PR再等最终main门禁，仍无tag/正式包/部署。外部清理由用户确认暂停，原冷备/失败/分支保留，最终来源及正式工件按实际收据记录。
+
+2026-10-30：TASK-MOD-GATE-BOOTSTRAP 复用原P0分支/工作树，从origin/main4610c333建立无产品源码变更的首建基线；P3 f074d4de已推送保留（含真实H3双路径首帧回流及ORG6）。本候选R1=376/R4=14是origin实测，不代表P3回退；主仓21份审计原件/HEAD未改，原P0提交已归档且仍为P3祖先。完整门/独审/Hosted/合流待验。见[前置验证](../changes/2026-10-30-origin-baseline-bootstrap/verification.md)。
+
+2026-10-30前置复验：origin无产品变更bootstrap本地完整verify0，根1975pass20skip/Agent204pass2skip/浏览器838pass0flaky/design8/开发四步通过；原metadata与dirty运行边界、474附件外置SHA记录在[验证](../changes/2026-10-30-origin-baseline-bootstrap/verification.md)。正式当前SHA独审/Hosted/Delivery/合流仍待验，P3 f074d4de成果保留。

@@ -446,10 +446,34 @@ test("migrated chat keeps its thread and disables advanced session replacement",
 for (const action of ["interrupt", "turn"] as const) {
   test(`a pending old ${action} cannot lock the reconnected Agent UI`, async ({
     page,
-  }) => {
+  }, info) => {
     const server = await startAgentServer(
       action === "interrupt" ? "running" : "ready",
     );
+    const network: Array<{
+      method: string;
+      path: string;
+      status?: number;
+      failure?: string;
+    }> = [];
+    page.on("requestfailed", (request) => {
+      const url = new URL(request.url());
+      if (url.origin === server.url)
+        network.push({
+          method: request.method(),
+          path: url.pathname,
+          failure: request.failure()?.errorText,
+        });
+    });
+    page.on("response", (response) => {
+      const url = new URL(response.url());
+      if (url.origin === server.url)
+        network.push({
+          method: response.request().method(),
+          path: url.pathname,
+          status: response.status(),
+        });
+    });
     let release!: () => void;
     const pending = new Promise<void>((resolve) => {
       release = resolve;
@@ -548,8 +572,20 @@ for (const action of ["interrupt", "turn"] as const) {
         }),
       ).toBeEnabled();
     } finally {
-      release();
-      await server.close();
+      try {
+        await info.attach("fixture-agent-network", {
+          body: JSON.stringify({
+            network,
+            serverRequests: server.requests,
+            intercepted,
+            settled,
+          }),
+          contentType: "application/json",
+        });
+      } finally {
+        release();
+        await server.close();
+      }
     }
   });
 }

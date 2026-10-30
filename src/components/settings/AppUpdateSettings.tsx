@@ -1,2 +1,2 @@
 export { default } from "./AppUpdatePage";
-export * from "./AppUpdatePage";
+export type { UpdateState } from "./AppUpdatePage";

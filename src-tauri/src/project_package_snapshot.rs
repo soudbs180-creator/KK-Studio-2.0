@@ -1078,6 +1078,7 @@ pub(super) fn validate(snapshot: &Value) -> Result<(), String> {
                 "providerCredentialRef",
                 "agentThreadId",
                 "agentGeneratedImageIds",
+                "imageArchiveReceipts",
                 "items",
                 "messages",
                 "tasks",

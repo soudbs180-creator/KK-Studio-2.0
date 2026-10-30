@@ -128,6 +128,20 @@
       "sourceName": "Icon/Lucide/导航与界面/ellipsis",
       "width": 24,
       "height": 24
+    },
+    {
+      "name": "microphone",
+      "nodeId": "372:1089",
+      "sourceName": "Icon/Lucide/媒介类型与播放/mic",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "name": "extensions",
+      "nodeId": "372:1172",
+      "sourceName": "Icon/Lucide/模型与扩展/puzzle",
+      "width": 24,
+      "height": 24
     }
   ]
 }

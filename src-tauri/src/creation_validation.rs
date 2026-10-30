@@ -314,10 +314,53 @@ pub fn validate(value: &Value) -> Result<(), String> {
     Ok(())
 }
 
+fn image_archive_receipts(project: &Value) -> Result<(), String> {
+    let Some(value) = project.get("imageArchiveReceipts") else {
+        return Ok(());
+    };
+    let receipts = object(value, "imageArchiveReceipts")?;
+    let lower_hex = |value: &str| {
+        value
+            .bytes()
+            .all(|byte| byte.is_ascii_digit() || (b'a'..=b'f').contains(&byte))
+    };
+    if receipts.len() > 10000 {
+        return Err(corrupt("imageArchiveReceipts"));
+    }
+    for (key, receipt) in receipts {
+        object(receipt, "imageArchiveReceipts")?;
+        let valid_key = key
+            .strip_prefix("chatgpt-")
+            .is_some_and(|hash| hash.len() == 32 && lower_hex(hash));
+        let valid_job = receipt["jobId"].as_str().is_some_and(|job| {
+            (1..=120).contains(&job.len())
+                && job
+                    .bytes()
+                    .all(|byte| byte.is_ascii_alphanumeric() || matches!(byte, b'_' | b'-'))
+        });
+        let valid_hash = receipt["sha256"].as_str().is_some_and(|hash| {
+            hash.len() == 64
+                && lower_hex(hash)
+                && receipt["assetId"].as_str() == Some(format!("asset-{}", &hash[..24]).as_str())
+        });
+        let valid_chat = receipt.get("chatId").is_some_and(|chat| {
+            chat.is_null()
+                || chat
+                    .as_str()
+                    .is_some_and(|id| !id.is_empty() && id.encode_utf16().count() <= 160)
+        });
+        if !(valid_key && valid_job && valid_hash && valid_chat) {
+            return Err(corrupt("imageArchiveReceipts"));
+        }
+    }
+    Ok(())
+}
+
 fn validate_project(project: &Value, version: u64) -> Result<(), String> {
     object(project, "project")?;
     id(&project["id"], "project.id")?;
     labels(project, "customTags")?;
+    image_archive_receipts(project)?;
     provider_routing(project)?;
     optional_strings(project, &["name", "prompt", "model", "kind"])?;
     attachments(project)?;

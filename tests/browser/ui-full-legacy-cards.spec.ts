@@ -14,7 +14,11 @@ import {
   type CreationTask,
 } from "../../src/features/creation/model";
 import { decodeSnapshot } from "../../src/features/creation/snapshotCodec";
-import { expandSidebar, openWorkspace } from "./helpers";
+import {
+  expandSidebar,
+  openWorkspace,
+  panCanvasToRevealAction,
+} from "./helpers";
 
 const projectName = "旧卡片动作夹具";
 const legacyStates = [
@@ -204,9 +208,20 @@ for (const width of [390, 1099, 1920]) {
         ).toHaveCount(0);
       }
       if (kind === "image" && hasContent) {
+        await panCanvasToRevealAction(
+          page,
+          toolbar.getByRole("button", {
+            name: `喜欢${item.title}`,
+            exact: true,
+          }),
+        );
         await toolbar
           .getByRole("button", { name: `喜欢${item.title}`, exact: true })
           .click();
+        await panCanvasToRevealAction(
+          page,
+          toolbar.getByRole("button", { name: "编辑标签", exact: true }),
+        );
         await toolbar
           .getByRole("button", { name: "编辑标签", exact: true })
           .click();
@@ -248,11 +263,18 @@ for (const width of [390, 1099, 1920]) {
         path: info.outputPath(`${kind}-${state}-${width}.png`),
         animations: "disabled",
       });
-      if (hasContent)
+      if (hasContent) {
+        await panCanvasToRevealAction(
+          page,
+          toolbar.getByRole("button", {
+            name: `删除${item.title}`,
+            exact: true,
+          }),
+        );
         await toolbar
           .getByRole("button", { name: `删除${item.title}`, exact: true })
           .click();
-      else {
+      } else {
         await node.focus();
         await node.press("Shift+F10");
         const menu = page.getByRole("menu", {

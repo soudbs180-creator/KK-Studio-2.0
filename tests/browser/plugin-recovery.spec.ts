@@ -70,6 +70,99 @@ for (const width of [390, 1099, 1920]) {
   });
 }
 
+test("恢复卡片与打开的添加菜单随迟到插件激活自动更新", async ({
+  page,
+}, info) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "项目库", exact: true }).click();
+  await page.getByRole("button", { name: "新建项目", exact: true }).click();
+  await addAndEditBundledPlugins(page);
+  await expect
+    .poll(async () =>
+      (await readDurable(page))?.projects[0]?.items.map(
+        (item) => item.plugin?.metadata?.content,
+      ),
+    )
+    .toEqual(bundledPlugins.map((plugin) => plugin.content));
+  const original = (await readDurable(page)).projects[0].items;
+  let release!: () => void;
+  const pending = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  const imports = new Map<string, number>();
+  await page.route("**/plugins/*.js*", async (route) => {
+    const url = new URL(route.request().url());
+    if (
+      route.request().resourceType() !== "script" ||
+      url.searchParams.has("fixture-original")
+    ) {
+      await route.continue();
+      return;
+    }
+    const count = (imports.get(url.pathname) ?? 0) + 1;
+    imports.set(url.pathname, count);
+    if (count === 1) {
+      await route.continue();
+      return;
+    }
+    await pending;
+    url.searchParams.set("fixture-original", "1");
+    await route.fulfill({
+      contentType: "text/javascript",
+      body: `import plugin from ${JSON.stringify(url.href)};
+        export default { ...plugin, setup(ctx) {
+          const cleanup = plugin.setup?.(ctx);
+          const root = document.documentElement;
+          const active = JSON.parse(root.dataset.fixtureActivePlugins || "[]");
+          root.dataset.fixtureActivePlugins = JSON.stringify([...active, plugin.id]);
+          return cleanup;
+        }};`,
+    });
+  });
+  try {
+    await page.evaluate(() => {
+      localStorage.removeItem("kk-studio-next:creation:v1");
+      sessionStorage.removeItem("kk-studio-next:creation:v1:pending");
+    });
+    await page.reload();
+    await page.getByRole("button", { name: "项目库", exact: true }).click();
+    await page.locator(".project-library-card").click();
+    await expect(page.locator(".plugin-node-missing")).toHaveCount(4);
+    await page.getByRole("button", { name: "添加资源", exact: true }).click();
+    const menu = page.locator(".add-node-menu");
+    await expect(menu).toBeVisible();
+    await expect(page.locator(".project-save-state")).toHaveText("已保存");
+    await page.evaluate(
+      () =>
+        new Promise<void>((resolve) =>
+          requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+        ),
+    );
+    release();
+    // setup and registration finish in one synchronous activation call.
+    await expect
+      .poll(() =>
+        page.evaluate(
+          () =>
+            JSON.parse(
+              document.documentElement.dataset.fixtureActivePlugins || "[]",
+            ).length,
+        ),
+      )
+      .toBe(4);
+    await expectBundledPluginContents(page);
+    for (const plugin of bundledPlugins) {
+      await expect(
+        menu.getByRole("menuitem", { name: plugin.title, exact: true }),
+      ).toBeVisible();
+    }
+    expect((await readDurable(page)).projects[0].items).toEqual(original);
+    await page.screenshot({ path: info.outputPath("plugins-late-loaded.png") });
+  } finally {
+    release();
+  }
+});
+
 test("损坏插件读取和重试不会覆盖IndexedDB原件及备份", async ({ page }) => {
   await page.goto("/");
   await expect(

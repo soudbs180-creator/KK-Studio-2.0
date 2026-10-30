@@ -44,13 +44,13 @@ test("通用开关通过键盘切换、持久化并反映滑块状态", async ({
   ).toHaveAttribute("aria-checked", expected);
 });
 
-test("桌面专属开关和更新开关明确暴露禁用状态", async ({ page }) => {
+test("桌面专属开关明确禁用，官方安装包可下载", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   const dialog = page.getByRole("dialog", { name: "设置" });
 
-  await dialog.getByText("系统偏好与桌面集成", { exact: true }).click();
-  for (const name of ["开机自启动", "系统托盘图标", "防止系统休眠"]) {
+  await dialog.getByText("系统与未接入偏好", { exact: true }).click();
+  for (const name of ["开机自启动", "系统托盘", "防止系统休眠"]) {
     const toggle = dialog.getByRole("switch", { name });
     await expect(toggle).toBeDisabled();
     await expect(toggle).toHaveAttribute("aria-checked", "false");
@@ -58,15 +58,11 @@ test("桌面专属开关和更新开关明确暴露禁用状态", async ({ page 
     await expect(toggle).toHaveCSS("opacity", "0.45");
   }
 
-  await dialog.getByRole("button", { name: "软件更新", exact: true }).click();
-  const updates = dialog.locator(".settings-content");
+  const updates = dialog.getByRole("region", { name: "软件更新", exact: true });
   await expect(
-    updates.getByRole("heading", { name: "软件更新", exact: true }),
-  ).toBeVisible();
-  await expect(
-    updates.getByRole("button", { name: "检查更新", exact: true }),
-  ).toBeEnabled();
-  await expect(updates).toContainText("当前版本运行稳定");
+    updates.getByRole("link", { name: "下载 Windows 安装包", exact: true }),
+  ).toHaveAttribute("download", /_x64-setup\.exe$/);
+  await expect(updates).toContainText("安装或更新保留本机项目和配置");
 
   await page.keyboard.press("Escape");
   await expect(

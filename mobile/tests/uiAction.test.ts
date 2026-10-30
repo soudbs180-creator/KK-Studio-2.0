@@ -55,6 +55,7 @@ for (const [touchTarget, graphic] of [
             Text: "Text",
             Pressable: "Pressable",
             ActivityIndicator: "Spinner",
+            useWindowDimensions: () => ({ width: 390 }),
           };
         if (name === "./theme.tsx" || name === "../ui/theme.tsx")
           return { touchTarget, useTheme: () => theme };
@@ -100,11 +101,17 @@ for (const [touchTarget, graphic] of [
       label: "添加",
       onPress() {},
     });
-    const plate = composer.props.children as Element;
-    const plateStyle = plate.props.style as Record<string, unknown>;
+    assert.equal(composer.type, "Pressable");
+    const plateStyle = (
+      composer.props.style as (state: {
+        pressed: boolean;
+      }) => Record<string, unknown>
+    )({ pressed: false });
     assert.equal(plateStyle.width, touchTarget);
     assert.equal(plateStyle.height, touchTarget);
     assert.equal(plateStyle.borderRadius, touchTarget / 2);
-    assert.equal((plate.props.children as Element).props.size, graphic);
+    const composerIcon = composer.props.children as Element;
+    assert.equal(composerIcon.type, "Icon");
+    assert.equal(composerIcon.props.size, graphic);
   });
 }

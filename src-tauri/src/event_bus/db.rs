@@ -1,7 +1,7 @@
+use rusqlite::{params, Connection, OptionalExtension};
 use std::path::Path;
 use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::{Mutex, MutexGuard};
-use rusqlite::{params, Connection, OptionalExtension};
 
 use super::types::{
     AppendEventInput, CheckpointMode, CheckpointResult, EventRecord, NodeRevisionRecord,
@@ -245,9 +245,7 @@ impl EventBus {
             .prepare_cached("SELECT COALESCE(MAX(last_seq), 0) FROM node_revisions")
             .map_err(|e| format!("SQLite prepare error: {e}"))?;
 
-        let rev_seq: i64 = rev_stmt
-            .query_row([], |row| row.get(0))
-            .unwrap_or(0);
+        let rev_seq: i64 = rev_stmt.query_row([], |row| row.get(0)).unwrap_or(0);
 
         if rev_seq > 0 {
             return Ok(rev_seq);
@@ -362,7 +360,8 @@ impl EventBus {
                 let existing = check_stmt
                     .query_row(params![idem], |row| {
                         let payload_str: String = row.get(9)?;
-                        let payload = serde_json::from_str(&payload_str).unwrap_or(serde_json::Value::Null);
+                        let payload =
+                            serde_json::from_str(&payload_str).unwrap_or(serde_json::Value::Null);
                         let base_rev_i64: i64 = row.get(7)?;
                         let new_rev_i64: i64 = row.get(8)?;
                         Ok(EventRecord {
@@ -472,12 +471,7 @@ impl EventBus {
                 .map_err(|e| format!("SQLite prepare error: {e}"))?;
 
             upsert_stmt
-                .execute(params![
-                    target_node_id,
-                    new_rev as i64,
-                    seq,
-                    now_ms,
-                ])
+                .execute(params![target_node_id, new_rev as i64, seq, now_ms,])
                 .map_err(|e| format!("Failed to upsert node_revisions: {e}"))?;
         }
 
@@ -615,7 +609,8 @@ impl EventBus {
             // 1. Calculate retention limit boundary (if retain_latest is specified)
             // If retain_latest is K and total_count <= K, retention boundary is 0 (NOTHING may be deleted).
             // If total_count > K, retention boundary is seq_at_offset + 1 (can delete seq < seq_at_offset + 1).
-            let retention_boundary: Option<i64> = if let Some(retain_latest) = options.retain_latest {
+            let retention_boundary: Option<i64> = if let Some(retain_latest) = options.retain_latest
+            {
                 if total_count <= retain_latest as u64 {
                     Some(0)
                 } else {
@@ -648,9 +643,7 @@ impl EventBus {
             if let Some(before_timestamp) = options.before_timestamp {
                 // Find the first event with created_at >= before_timestamp to avoid deleting out-of-order events
                 let mut min_stmt = tx
-                    .prepare_cached(
-                        "SELECT MIN(seq) FROM events WHERE created_at >= ?1",
-                    )
+                    .prepare_cached("SELECT MIN(seq) FROM events WHERE created_at >= ?1")
                     .map_err(|e| format!("SQLite prepare error: {e}"))?;
 
                 let min_kept_seq: Option<i64> = min_stmt
@@ -666,7 +659,9 @@ impl EventBus {
                 } else if total_count > 0 {
                     // All existing events have created_at < before_timestamp
                     let max_seq: i64 = tx
-                        .query_row("SELECT COALESCE(MAX(seq), 0) FROM events", [], |row| row.get(0))
+                        .query_row("SELECT COALESCE(MAX(seq), 0) FROM events", [], |row| {
+                            row.get(0)
+                        })
                         .map_err(|e| format!("SQLite query error: {e}"))?;
                     if max_seq > 0 {
                         candidates.push(max_seq + 1);
@@ -690,7 +685,8 @@ impl EventBus {
 
             let deleted = if final_cutoff > 0 {
                 tx.execute("DELETE FROM events WHERE seq < ?1", params![final_cutoff])
-                    .map_err(|e| format!("Failed to delete pruned events: {e}"))? as u64
+                    .map_err(|e| format!("Failed to delete pruned events: {e}"))?
+                    as u64
             } else {
                 0
             };

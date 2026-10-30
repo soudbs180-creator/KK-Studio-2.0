@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { imageCapabilitySchema } from "../../packages/creation-contracts/index.ts";
+import { imageArchiveReceiptsSchema } from "./imageArchiveReceipts.ts";
 import {
   hasProjectChatAuthorityConflict,
   isCreationProviderRoutingValid,
@@ -156,6 +157,7 @@ const taskSchema = z
 
 const projectV2Schema = z
   .object({
+    imageArchiveReceipts: imageArchiveReceiptsSchema.optional(),
     id,
     activeChatId: id.optional(),
     agentThreadId: threadId.optional(),
@@ -199,6 +201,7 @@ const projectV2Schema = z
 
 const projectV3Schema = z
   .object({
+    imageArchiveReceipts: imageArchiveReceiptsSchema.optional(),
     id,
     activeChatId: id,
     chats: z.record(z.string(), chatItemSchema),

@@ -207,3 +207,51 @@ export async function showCanvasNavigation(page: Page): Promise<void> {
   }
   await expect(page.getByRole("group", { name: "画布导航" })).toBeVisible();
 }
+
+/** Reveal a clipped canvas action by panning the view, leaving node data intact. */
+export async function panCanvasToRevealAction(
+  page: Page,
+  action: Locator,
+): Promise<void> {
+  const hit = () =>
+    action.evaluate((element) => {
+      const box = element.getBoundingClientRect();
+      const target = document.elementFromPoint(
+        box.x + box.width / 2,
+        box.y + box.height / 2,
+      );
+      return element === target || Boolean(target && element.contains(target));
+    });
+  if (await hit()) return;
+  const canvas = page.getByTestId("infinite-canvas");
+  const bounds = (await canvas.boundingBox())!;
+  const usableWidth = await canvas.evaluate(
+    (element) =>
+      (parseFloat(
+        (element as HTMLElement).style.getPropertyValue(
+          "--canvas-usable-width",
+        ),
+      ) *
+        element.getBoundingClientRect().width) /
+      (element as HTMLElement).offsetWidth,
+  );
+  const button = (await action.boundingBox())!;
+  const hud = (await page.locator(".canvas-hud").boundingBox())!;
+  const editorShell = page.locator(".canvas-composer-screen");
+  const editor = (await editorShell.count())
+    ? await editorShell.boundingBox()
+    : null;
+  const targetY = editor
+    ? (hud.y + hud.height + editor.y) / 2
+    : hud.y + hud.height + 40;
+  const start = { x: bounds.x + 4, y: bounds.y + bounds.height / 2 };
+  await page.mouse.move(start.x, start.y);
+  await page.mouse.down({ button: "middle" });
+  await page.mouse.move(
+    start.x + bounds.x + usableWidth / 2 - (button.x + button.width / 2),
+    start.y + targetY - (button.y + button.height / 2),
+    { steps: 8 },
+  );
+  await page.mouse.up({ button: "middle" });
+  await expect.poll(hit).toBe(true);
+}

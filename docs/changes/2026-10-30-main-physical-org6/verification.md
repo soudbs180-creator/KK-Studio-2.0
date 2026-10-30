@@ -33,3 +33,16 @@ REAL 仅指本次 H3 视频与首帧图片回流。Comfy 使用任务拥有的�
 ## 真实H3验收准备
 
 用户确认仅下载视频模型，改先验真实视频链路；图片模型及图片出图保持未验，不因视频成功就自动升级。安装位置为用户Hub目录，已有四个H3视频工作流与对应模型文件。现有Hub venv缺torch；任务独占临时venv按现有ComfyUI requirements安装运行依赖，不改Hub环境或权重。CUDA版本/实际执行、产物和软件落点以随后回执为准，不以安装成功充当生成。
+
+
+## 2026-10-30 严格首建门已合主线，整批合流仍待验
+
+前置 PR #82 的 head 5f78d187 经正式独审和 Hosted quality41001056224 五项、git-guards41001056218、windows-release41001056208 全部成功，已正常 squash 成 origin/main `9b1038a75a62d0fc6fc9c23d6866711138493ab7`；与前置 head 的完整 tree 无差异。未发布正式 tag/安装包，也未写本机 dirty main。该前置不代表 P3/P6/ORG6 整体已合并。
+
+在 P3 f074d4de 整合前置5f78的实际71冲突路径，全部三方 blob 已保存在外部 merge-inputs/index-stages.json；合并后的 ledger 保留211项、功能40项，原两份重复任务的历史生产回执及失败边界均保留，TASK-MOBILE-12AI-001 原有有界 DONE 保持。旧 TASK_STATUS 内已提交的两组冲突标记修复并保留双方历史，当前数字由账本重算。
+
+组合快速门第一轮 typecheck 发现缺少 clock 别名，lint 发现已失去调用的 rootItemId，均修复；第一次全单元 2413 pass/2 fail/20 skip。语音移入 creation 后引入 creation↔image-edit 循环，已将 hook/按钮原样迁入已有 FEAT-010 对应的独立 speech 切片并改全部调用；creation 公开 hook 保留兼容重导出，没有增加豁免或重复文件。架构最终 R1=0/R3=0/R4=0/R8=0，R2=10/R6=2 为保留的主线存量。远端重连旧用例与本地更强的同场景用例重复：旧 saves>=2 要求重连重复写入，与P8幂等合同冲突；保留本地全部身份/附件/元数据断言、首次变更确实提交、重复重放零提交及等待flush断言，未改产品迎合旧计数。定向58/58、全单元第二轮2414 pass/20 skip/0 fail，根typecheck和lint exit0。lint 的 code-health 仍为主线 advisory，有既有 agentCanvas 复杂度和原样迁移的语音清理 catch 提示，未改开关。Unreleased 已记 Desktop/Web59→60、Mobile43→44，未切正式发布记录。
+
+UI采用本 spec 的当前 Figma，软件更新页删除全部模拟计时器/虚构版本/带宽/SHA与安装成功，真实 updater 缺失时明确禁用，保留实际构建版本和官方发行链接；新增浏览器回归等待执行。Mobile类型/lint通过，首轮435项中433通过、2项旧控件 harness 缺 useWindowDimensions（尚未验证真实控件）失败；适配夹具到远端已有单层 Pressable 后保留尺寸/圆角/图标断言，实际浏览器与全门待验。10份格式修复及 cargo fmt 后续复验另记；原失败日志不覆盖。
+
+独立预检发现合并遗漏的 P1：App 内联 Agent onSend 未冻结聊天身份。实际 callback AST 三用例先复现旧回调错发/错清理，再原样恢复远端发送前项目/聊天检查与原 chatId 清理，54项相关回归通过。同步保留远端聊天投影、离线历史、聊天模型显示与禁替换线程合同；Mobile夹具适配后435/435通过。该预检为 CHANGES REQUIRED，修复后的正式精确SHA独审尚未完成；reviewer会话报workspace out of credits，不伪称通过。

@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-10-28",
-  "commit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+  "generatedAt": "2026-10-30",
+  "commit": "4610c3339db436147006171aec08aad4cfdfb679",
   "rules": {
     "R1": {
       "count": 0,
       "items": []
     },
     "R2": {
-      "count": 11,
+      "count": 10,
       "items": [
         "src/features/canvas/useCanvasHistory.ts => src/components/canvas/useCanvasHistory.ts",
         "src/features/compare/CompareImageButton.tsx => src/components/UiIcon.tsx",
@@ -15,7 +15,6 @@
         "src/features/image-edit/EditComposer.tsx => src/components/ComposerTextarea.tsx",
         "src/features/image-edit/EditComposer.tsx => src/components/ModelPickerMenu.tsx",
         "src/features/image-edit/EditComposer.tsx => src/components/UiIcon.tsx",
-        "src/features/image-edit/EditComposer.tsx => src/components/VoiceInputButton.tsx",
         "src/features/image-edit/EditComposer.tsx => src/components/nodes/referenceUpload.ts",
         "src/features/image-edit/EditComposer.tsx => src/components/useDismissible.ts",
         "src/features/image-edit/ImageEditor.tsx => src/components/nodes/GenerationAction.tsx",

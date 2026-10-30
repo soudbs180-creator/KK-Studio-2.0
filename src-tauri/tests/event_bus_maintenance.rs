@@ -50,7 +50,9 @@ fn test_maintenance_wal_checkpoint_and_truncation_cycle() {
     assert!(wal_size_2 > 0);
 
     // Another checkpoint truncate
-    let ckpt2 = bus.checkpoint_with_mode(CheckpointMode::Truncate).expect("checkpoint 2");
+    let ckpt2 = bus
+        .checkpoint_with_mode(CheckpointMode::Truncate)
+        .expect("checkpoint 2");
     assert!(!ckpt2.busy);
     let wal_size_after_2 = std::fs::metadata(&wal_path).map(|m| m.len()).unwrap_or(0);
     assert_eq!(wal_size_after_2, 0);
@@ -194,7 +196,10 @@ fn test_maintenance_deep_prune_and_retention_invariants() {
     let revs_after = bus.get_all_revisions().expect("revs after");
     assert_eq!(revs_after.len(), 10);
     for r in &revs_after {
-        assert_eq!(r.current_rev, 10, "Node revision must be preserved after pruning");
+        assert_eq!(
+            r.current_rev, 10,
+            "Node revision must be preserved after pruning"
+        );
     }
 
     // Prune again with retain 25 -> 0 deleted, 25 remaining

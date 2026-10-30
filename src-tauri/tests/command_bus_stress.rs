@@ -1,7 +1,9 @@
 #[path = "../src/command_bus/mod.rs"]
 mod command_bus;
 
-use command_bus::{Actor, Command, CommandBus, ERR_INVALID_COMMAND, ERR_NODE_LOCKED, ERR_REV_CONFLICT};
+use command_bus::{
+    Actor, Command, CommandBus, ERR_INVALID_COMMAND, ERR_NODE_LOCKED, ERR_REV_CONFLICT,
+};
 use serde_json::json;
 use std::collections::HashSet;
 use std::sync::{Arc, Mutex};
@@ -272,7 +274,8 @@ fn test_stress_lock_table_preemption_hook_ordering() {
     });
 
     // Acquire lock
-    bus.acquire_lock(target, "task-agent-999", Actor::Agent).unwrap();
+    bus.acquire_lock(target, "task-agent-999", Actor::Agent)
+        .unwrap();
     assert!(bus.is_locked(target));
 
     // Agent attempts dispatch -> ERR_NODE_LOCKED
@@ -368,7 +371,10 @@ fn test_stress_concurrent_identical_idempotency_key() {
 
     let mut results = Vec::new();
     for h in handles {
-        let res = h.join().expect("thread join").expect("dispatch should succeed");
+        let res = h
+            .join()
+            .expect("thread join")
+            .expect("dispatch should succeed");
         results.push(res);
     }
 
@@ -391,7 +397,8 @@ fn test_stress_preemption_hook_reentrancy() {
         let _ = bus_clone.is_locked(tgt);
     });
 
-    bus.acquire_lock(target, "task-agent-deadlock-check", Actor::Agent).unwrap();
+    bus.acquire_lock(target, "task-agent-deadlock-check", Actor::Agent)
+        .unwrap();
 
     let (sender, receiver) = std::sync::mpsc::channel();
     let bus_for_thread = Arc::clone(&bus);
@@ -413,7 +420,10 @@ fn test_stress_preemption_hook_reentrancy() {
     // Wait with a 2-second timeout to catch the deadlock
     match receiver.recv_timeout(std::time::Duration::from_millis(1500)) {
         Ok(res) => {
-            println!("Reentrancy test completed without deadlock: {:?}", res.is_ok());
+            println!(
+                "Reentrancy test completed without deadlock: {:?}",
+                res.is_ok()
+            );
             assert!(res.is_ok());
         }
         Err(std::sync::mpsc::RecvTimeoutError::Timeout) => {
@@ -422,5 +432,3 @@ fn test_stress_preemption_hook_reentrancy() {
         Err(err) => panic!("Channel error: {:?}", err),
     }
 }
-
-

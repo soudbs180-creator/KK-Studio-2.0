@@ -240,6 +240,41 @@ try {
   });
   await install();
   await launch("installed");
+  // Verify idle runtime ownership before a new project starts Codex preparation.
+  await page.getByRole("button", { name: "打开设置", exact: true }).click();
+  await page
+    .getByRole("navigation", { name: "设置分类" })
+    .getByRole("button", { name: "模型接入", exact: true })
+    .click();
+  await page.getByText("高级连接选项", { exact: true }).click();
+  const service = page.getByRole("region", { name: "桌面 Agent 服务" });
+  await expect(service).toContainText("服务运行中");
+  await expect(
+    service.getByRole("button", { name: "停止服务", exact: true }),
+  ).toBeEnabled();
+  const agent = await page.evaluate(async () => {
+    await window.__TAURI_INTERNALS__.invoke("agent_runtime_start");
+    const status = await window.__TAURI_INTERNALS__.invoke(
+      "agent_runtime_status",
+    );
+    await window.__TAURI_INTERNALS__.invoke("agent_runtime_stop");
+    const stopped = await window.__TAURI_INTERNALS__.invoke(
+      "agent_runtime_status",
+    );
+    return { ...status, stoppedRunning: stopped.running };
+  });
+  assert.equal(agent.available, true);
+  assert.equal(agent.running, true);
+  assert.equal(agent.healthy, true);
+  assert.equal(agent.stoppedRunning, false);
+  report.checks.push({
+    action: "bundled-agent",
+    available: agent.available,
+    running: agent.running,
+    healthy: agent.healthy,
+    stoppedRunning: agent.stoppedRunning,
+  });
+  await page.getByRole("button", { name: "关闭设置", exact: true }).click();
   const expand = page.getByRole("button", { name: "展开侧边栏", exact: true });
   if (await expand.isVisible()) await expand.click();
   await page
@@ -249,16 +284,6 @@ try {
   await name.fill(projectName);
   await name.press("Enter");
   await expectProject();
-  const agent = await page.evaluate(async () => {
-    await window.__TAURI_INTERNALS__.invoke("agent_runtime_start");
-    const status = await window.__TAURI_INTERNALS__.invoke(
-      "agent_runtime_status",
-    );
-    await window.__TAURI_INTERNALS__.invoke("agent_runtime_stop");
-    return status;
-  });
-  assert.equal(agent.healthy, true);
-  report.checks.push({ action: "bundled-agent", healthy: agent.healthy });
   await close();
   await install();
   await launch("reinstalled");

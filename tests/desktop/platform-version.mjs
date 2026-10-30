@@ -67,10 +67,17 @@ try {
   );
   await page.getByRole("button", { name: "个人信息", exact: true }).click();
   const popup = page.locator(".account-popup");
-  await expect(popup).toContainText(`版本更新 v${versions.desktop}`);
-  await popup.getByRole("button", { name: "检测", exact: true }).click();
-  await expect(page.locator(".settings-version-current")).toHaveText(
-    `当前版本 ${versions.desktop}`,
+  await expect(popup).toContainText(`桌面客户端 · v${versions.desktop}`);
+  await popup.getByRole("button", { name: "查看", exact: true }).click();
+  const update = page.getByRole("region", { name: "软件更新", exact: true });
+  await expect(update).toContainText(
+    `桌面客户端 · 当前版本 ${versions.desktop}`,
+  );
+  await expect(
+    update.getByRole("link", { name: "下载 Windows 安装包", exact: true }),
+  ).toHaveAttribute(
+    "href",
+    `https://github.com/soudbs180-creator/KK-Studio-2.0/releases/download/v${versions.desktop}/${encodeURIComponent(`KK.Studio_${versions.desktop}_x64-setup.exe`)}`,
   );
   assert.deepEqual(errors, []);
   const runtime = await page.evaluate(() => ({

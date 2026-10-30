@@ -221,7 +221,10 @@ test("429重试等待deadline且403隔离后不再提交", async ({ page }) => {
   await configure(page);
   await submit(page);
   await approve(page);
-  await expectTaskStatus(page, "失败");
+  await expect(page.locator(".project-task-failed")).toBeVisible();
+  await expect
+    .poll(async () => (await connections(page))[0].activeJobs)
+    .toBe(0);
   const cooldown = (await connections(page))[0];
   expect(cooldown.state).toBe("cooldown");
   expect(cooldown.cooldownUntil!).toBeGreaterThan(Date.now() + 3500000);
@@ -475,7 +478,10 @@ test("5xx退化连接仅显式重试恢复并保留原绑定", async ({ page }) 
   await configure(page);
   await submit(page);
   await approve(page);
-  await expectTaskStatus(page, "失败");
+  await expect(page.locator(".project-task-failed")).toBeVisible();
+  await expect
+    .poll(async () => (await connections(page))[0].activeJobs)
+    .toBe(0);
   const bound = (await connections(page))[0];
   expect(bound.state).toBe("degraded");
   await page.getByLabel("对话内容").fill("失败后保留");
@@ -490,4 +496,36 @@ test("5xx退化连接仅显式重试恢复并保留原绑定", async ({ page }) 
     .toBe("active");
   expect((await connections(page))[0].id).toBe(bound.id);
   expect(requests).toBe(2);
+});
+
+test("新建未绑定空项目明确选择可用连接后可以首次提交", async ({ page }) => {
+  let requests = 0;
+  await page.route(endpoint, async (route) => {
+    requests++;
+    expect(route.request().headers().authorization).toBe("Bearer fixture-key");
+    expect(route.request().postDataJSON().model).toBe("image-test");
+    await route.fulfill({ json: { data: [{ b64_json: pixel }] } });
+  });
+  await configure(page);
+  await page.getByRole("button", { name: "项目库", exact: true }).click();
+  await page.getByRole("button", { name: "新建项目", exact: true }).click();
+  await expect(page.getByLabel("执行方式")).toHaveValue("codex");
+  await page.getByLabel("执行方式").selectOption("direct");
+  await page.getByLabel("对话内容").fill("新项目首发");
+  await page.getByRole("button", { name: "发送消息", exact: true }).click();
+  await expect(page.locator(".chat-status")).toContainText("明确选择模型连接");
+  await expect(page.getByLabel("对话内容")).toHaveValue("新项目首发");
+  await expect(page.getByRole("dialog", { name: "人工审批任务" })).toHaveCount(
+    0,
+  );
+  expect(requests).toBe(0);
+  await page.getByRole("button", { name: "模型", exact: true }).click();
+  const menu = page.getByRole("menu", { name: "选择模型" });
+  await menu.getByRole("tab", { name: "官方 API", exact: true }).click();
+  await menu.getByRole("menuitemradio", { name: /image-test/ }).click();
+  await expect(page.getByLabel("对话内容")).toHaveValue("新项目首发");
+  await page.getByRole("button", { name: "发送消息", exact: true }).click();
+  await approve(page);
+  await expect(page.locator(".project-task-succeeded")).toBeVisible();
+  expect(requests).toBe(1);
 });

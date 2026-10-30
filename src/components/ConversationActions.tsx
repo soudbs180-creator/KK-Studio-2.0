@@ -4,7 +4,7 @@ import type { ModelSelection } from "../features/models/index.ts";
 import type { RefObject, ReactNode } from "react";
 import ConversationModelPicker from "./ConversationModelPicker";
 import type { CreationDraft } from "../features/creation/index.ts";
-import VoiceInputButton from "./VoiceInputButton";
+import { VoiceInputButton } from "../features/speech/index.ts";
 import type { SkillRecord } from "../features/skills/index.ts";
 import AgentActionButton, { type AgentActionState } from "./AgentActionButton";
 

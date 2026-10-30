@@ -1735,7 +1735,10 @@ async fn command_bus_dispatch(
     state: State<'_, AppState>,
     command: command_bus::Command,
 ) -> Result<command_bus::CommandResult, String> {
-    state.command_bus.dispatch(command).map_err(|e| e.to_string())
+    state
+        .command_bus
+        .dispatch(command)
+        .map_err(|e| e.to_string())
 }
 
 #[tauri::command(rename_all = "camelCase")]
@@ -2270,7 +2273,8 @@ mod tests {
             }
         });
 
-        bus.acquire_lock(target, task_id, crate::command_bus::Actor::Agent).unwrap();
+        bus.acquire_lock(target, task_id, crate::command_bus::Actor::Agent)
+            .unwrap();
         assert!(bus.is_locked(target));
 
         // Designer dispatches command on locked node
@@ -2285,10 +2289,11 @@ mod tests {
             idempotency_key: None,
         };
 
-        let res = bus.dispatch(designer_cmd).expect("designer dispatch must succeed");
+        let res = bus
+            .dispatch(designer_cmd)
+            .expect("designer dispatch must succeed");
         assert!(res.success);
         assert!(!bus.is_locked(target));
         assert!(hook_fired.load(Ordering::SeqCst));
     }
 }
-

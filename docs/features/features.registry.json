@@ -104,7 +104,10 @@
       "TASK-CANVAS-PERF-20261024"
     ],
     "updated": "2026-10-24",
-    "platforms": ["web", "desktop"],
+    "platforms": [
+      "web",
+      "desktop"
+    ],
     "runtimeEvidence": [
       {
         "platform": "web",
@@ -155,7 +158,11 @@
     "status": "PARTIAL",
     "card": "docs/features/feat-002-image-generation.md",
     "summary": "自带 API Key 的浏览器提交门禁 + Desktop 原生 TaskHost；Codex 内置生图已有真实生产归档/恢复证据，BYOK逐家真实出图仍待验收。本轮469本地安全修复/完整verify与Native启动重开通过；精确connectionId/凭据绑定及12AI无持久receipt端口禁用，不等于真实逐家Provider或完整重启恢复完成。",
-    "entryPoints": ["图片节点生成按钮", "开始页/对话提交", "任务状态与重试"],
+    "entryPoints": [
+      "图片节点生成按钮",
+      "开始页/对话提交",
+      "任务状态与重试"
+    ],
     "code": [
       "src/features/creation/imageGeneration.ts",
       "src/features/creation/imageTaskCommand.ts",
@@ -200,7 +207,10 @@
       "TASK-AUDIT-REPAIR-20261017"
     ],
     "updated": "2026-10-17",
-    "platforms": ["web", "desktop"],
+    "platforms": [
+      "web",
+      "desktop"
+    ],
     "runtimeEvidence": [
       {
         "platform": "web",
@@ -267,7 +277,10 @@
       "TASK-KK-UNIFIED-20261015"
     ],
     "updated": "2026-10-15",
-    "platforms": ["web", "desktop"],
+    "platforms": [
+      "web",
+      "desktop"
+    ],
     "runtimeEvidence": [
       {
         "platform": "web",
@@ -290,16 +303,29 @@
     "status": "PARTIAL",
     "card": "docs/features/feat-004-comfyui.md",
     "summary": "画布双态ComfyUI卡片、原生隐藏托管、WS/历史归档连线已接；隔离夹具通过，真实GPU及完整交付待验。",
-    "entryPoints": ["设置 › ComfyUI 连接", "图片节点（规划中的本地后端）"],
+    "entryPoints": [
+      "设置 › ComfyUI 连接",
+      "图片节点（规划中的本地后端）"
+    ],
     "code": [
       "src/integrations/generation/localComfyUiAdapter.ts",
       "src/integrations/generation/providerAdapterFactory.ts",
       "src-tauri/src/main.rs"
     ],
-    "tests": ["tests/unit/generationServerProvider.test.ts"],
-    "tasks": ["T6", "EXT-COMFY", "TASK-KK-UNIFIED-20261015", "TASK-MOD-P6-1"],
+    "tests": [
+      "tests/unit/generationServerProvider.test.ts"
+    ],
+    "tasks": [
+      "T6",
+      "EXT-COMFY",
+      "TASK-KK-UNIFIED-20261015",
+      "TASK-MOD-P6-1"
+    ],
     "updated": "2026-10-29",
-    "platforms": ["web", "desktop"]
+    "platforms": [
+      "web",
+      "desktop"
+    ]
   },
   {
     "id": "FEAT-005",
@@ -308,7 +334,10 @@
     "status": "PARTIAL",
     "card": "docs/features/feat-005-comfyui-workflows.md",
     "summary": "ComfyUI工作流迁入模型接入/本地，保留ID与存储key；导入导出/删除写入ACK及失败保全已验，实际执行链未接通。",
-    "entryPoints": ["素材/工作流库 LibraryPage", "工作流导入按钮"],
+    "entryPoints": [
+      "素材/工作流库 LibraryPage",
+      "工作流导入按钮"
+    ],
     "code": [
       "src/features/comfyui/workflowRegistry.ts",
       "src/components/LibraryPage.tsx",
@@ -321,9 +350,18 @@
       "tests/browser/catalog-pages.spec.ts",
       "tests/browser/design-system-pages.spec.ts"
     ],
-    "tasks": ["T6", "TASK-CAP-001", "TASK-DS-002", "TASK-KK-UNIFIED-20261015", "TASK-MOD-P6-1"],
+    "tasks": [
+      "T6",
+      "TASK-CAP-001",
+      "TASK-DS-002",
+      "TASK-KK-UNIFIED-20261015",
+      "TASK-MOD-P6-1"
+    ],
     "updated": "2026-10-29",
-    "platforms": ["web", "desktop"],
+    "platforms": [
+      "web",
+      "desktop"
+    ],
     "runtimeEvidence": [
       {
         "platform": "web",
@@ -342,14 +380,19 @@
     "status": "PROTOTYPE",
     "card": "docs/features/feat-006-video-generation.md",
     "summary": "视频节点（标注 MiniMax H3）当前只回放固定本地演示素材，提示词/参数不改变结果，无供应商提交链。",
-    "entryPoints": ["添加节点 › 视频", "VideoNode"],
+    "entryPoints": [
+      "添加节点 › 视频",
+      "VideoNode"
+    ],
     "code": [
       "src/components/nodes/VideoNode.tsx",
       "src/components/nodes/useLocalGeneration.ts",
       "src/domain/demoMedia.ts",
       "src/domain/localGeneration.ts"
     ],
-    "tests": ["tests/browser/demo-results.spec.ts"],
+    "tests": [
+      "tests/browser/demo-results.spec.ts"
+    ],
     "tasks": [
       "BACKEND-MEDIA-001",
       "TASK-MINIMAX-001",
@@ -357,7 +400,10 @@
       "TASK-KK-UNIFIED-20261015"
     ],
     "updated": "2026-10-15",
-    "platforms": ["web", "desktop"]
+    "platforms": [
+      "web",
+      "desktop"
+    ]
   },
   {
     "id": "FEAT-007",
@@ -366,7 +412,10 @@
     "status": "PARTIAL",
     "card": "docs/features/feat-007-audio-generation.md",
     "summary": "音频节点仍回放本地演示素材；OpenAI 兼容 TTS 请求构造、音频选项规范化与代理拼接（vendor 移植 audioGeneration.ts）已可用。",
-    "entryPoints": ["添加节点 › 音频", "PromptCreationNode"],
+    "entryPoints": [
+      "添加节点 › 音频",
+      "PromptCreationNode"
+    ],
     "code": [
       "src/components/nodes/PromptCreationNode.tsx",
       "src/components/nodes/useLocalGeneration.ts",
@@ -378,9 +427,16 @@
       "tests/unit/audioGeneration.test.ts",
       "tests/browser/ui-feature-parity.spec.ts"
     ],
-    "tasks": ["BACKEND-MEDIA-001", "EXT-PROVIDER", "TASK-UI-005"],
+    "tasks": [
+      "BACKEND-MEDIA-001",
+      "EXT-PROVIDER",
+      "TASK-UI-005"
+    ],
     "updated": "2026-09-22",
-    "platforms": ["web", "desktop"]
+    "platforms": [
+      "web",
+      "desktop"
+    ]
   },
   {
     "id": "FEAT-008",
@@ -389,7 +445,10 @@
     "status": "PARTIAL",
     "card": "docs/features/feat-008-text-node.md",
     "summary": "文本节点复用 BYOK/TaskHost：流式、取消、离线、编辑、重载、实际进程异常退出恢复与原生容量已通过双端 fixture；真实 Provider/health 统一仍待验收。",
-    "entryPoints": ["添加节点 › 文本", "PromptCreationNode"],
+    "entryPoints": [
+      "添加节点 › 文本",
+      "PromptCreationNode"
+    ],
     "code": [
       "src/components/nodes/PromptCreationNode.tsx",
       "src/components/nodes/useLocalGeneration.ts",
@@ -417,7 +476,10 @@
       "TASK-KK-UNIFIED-20261015"
     ],
     "updated": "2026-10-15",
-    "platforms": ["web", "desktop"],
+    "platforms": [
+      "web",
+      "desktop"
+    ],
     "runtimeEvidence": [
       {
         "platform": "web",
@@ -440,7 +502,10 @@
     "status": "PARTIAL",
     "card": "docs/features/feat-009-conversation.md",
     "summary": "KK默认Codex已有Web/Windows执行链；2.1.37本地snapshot3/HTTP7迁移、canonical聊天读写、原线程历史持久与重开恢复通过，实际默认9项目11上下文已可写。当前真实新回复因Codex周额度100%未提交，保持PARTIAL；临时/新窗口、完整新聊天及原开放功能不扩大验收。",
-    "entryPoints": ["右侧对话面板 ConversationPanel", "开始页对话入口"],
+    "entryPoints": [
+      "右侧对话面板 ConversationPanel",
+      "开始页对话入口"
+    ],
     "code": [
       "src/components/ConversationPanel.tsx",
       "src/components/ConversationActions.tsx",
@@ -551,7 +616,10 @@
       "TASK-CHAT-MIGRATION-20261017"
     ],
     "updated": "2026-10-24",
-    "platforms": ["web", "desktop"],
+    "platforms": [
+      "web",
+      "desktop"
+    ],
     "runtimeEvidence": [
       {
         "platform": "web",
@@ -598,15 +666,25 @@
     "status": "PARTIAL",
     "card": "docs/features/feat-010-voice-input.md",
     "summary": "基于浏览器 Web Speech API 的真实语音转文字，浏览器回归通过；Desktop WebView2 可用性未验证。",
-    "entryPoints": ["输入框麦克风按钮 VoiceInputButton"],
-    "code": [
-      "src/features/creation/useSpeechInput.ts",
-      "src/components/VoiceInputButton.tsx"
+    "entryPoints": [
+      "输入框麦克风按钮 VoiceInputButton"
     ],
-    "tests": ["tests/browser/composer-voice.spec.ts"],
-    "tasks": ["TASK-CAP-001"],
+    "code": [
+      "src/features/speech/index.ts",
+      "src/features/speech/useSpeechInput.ts",
+      "src/features/speech/VoiceInputButton.tsx"
+    ],
+    "tests": [
+      "tests/browser/composer-voice.spec.ts"
+    ],
+    "tasks": [
+      "TASK-CAP-001"
+    ],
     "updated": "2026-09-21",
-    "platforms": ["web", "desktop"]
+    "platforms": [
+      "web",
+      "desktop"
+    ]
   },
   {
     "id": "FEAT-011",
@@ -631,9 +709,16 @@
       "tests/browser/design-system-pages.spec.ts",
       "tests/browser/capability-extensions.spec.ts"
     ],
-    "tasks": ["TASK-CAP-001", "TASK-DS-002", "TASK-MOD-P4-SKILLS"],
+    "tasks": [
+      "TASK-CAP-001",
+      "TASK-DS-002",
+      "TASK-MOD-P4-SKILLS"
+    ],
     "updated": "2026-10-13",
-    "platforms": ["web", "desktop"],
+    "platforms": [
+      "web",
+      "desktop"
+    ],
     "runtimeEvidence": [
       {
         "platform": "web",
@@ -652,7 +737,10 @@
     "status": "PARTIAL",
     "card": "docs/features/feat-012-mcp.md",
     "summary": "通用 MCP 手动连接保留；KK 画布自动工具新增真实单/多/空选择和视口控制。通用第三方自动调用仍待独立验收。",
-    "entryPoints": ["设置 › MCP 服务器 McpSettings", "McpServerCard"],
+    "entryPoints": [
+      "设置 › MCP 服务器 McpSettings",
+      "McpServerCard"
+    ],
     "code": [
       "src/features/mcp/mcpClient.ts",
       "src/components/settings/McpSettings.tsx",
@@ -687,7 +775,10 @@
       "TASK-223-ACTIONS-20261014"
     ],
     "updated": "2026-10-14",
-    "platforms": ["web", "desktop"],
+    "platforms": [
+      "web",
+      "desktop"
+    ],
     "runtimeEvidence": [
       {
         "platform": "web",
@@ -718,7 +809,9 @@
     "status": "PARTIAL",
     "card": "docs/features/feat-013-connectors.md",
     "summary": "四种随包插件在固定1421开发、Web生产和fresh Tauri可创建、编辑、离线渲染并完整恢复；立即关闭耐久保存、写入失败留窗及坏数据主备保护已验证，CSP仍self。连接器统一入口、ctx.ai真实管线及远程Desktop插件仍未完成。 P5清单/验包/权限与受限RPC已接线，实验Web T1生产门默认关闭；legacy仍有宿主权限，原生与独立安全审查未完成。",
-    "entryPoints": ["技能页内连接器目录 ConnectorCatalog"],
+    "entryPoints": [
+      "技能页内连接器目录 ConnectorCatalog"
+    ],
     "code": [
       "src/components/ConnectorCatalog.tsx",
       "src/features/plugins/pluginLoader.ts",
@@ -752,7 +845,10 @@
       "TASK-MOD-P5"
     ],
     "updated": "2026-10-09",
-    "platforms": ["web", "desktop"],
+    "platforms": [
+      "web",
+      "desktop"
+    ],
     "runtimeEvidence": [
       {
         "platform": "web",
@@ -771,7 +867,10 @@
     "status": "REAL",
     "card": "docs/features/feat-014-assets.md",
     "summary": "素材导入、归档、校验、预览、集合与来源追踪；Desktop 走 Rust 原生素材存储（含完整性校验）。 既有REAL仅限已验导入/归档/预览等范围；当前未接持久垃圾箱时禁用软删除/永久删除，完整持久化仍待实现验收。",
-    "entryPoints": ["素材面板 AssetPanel", "素材详情/筛选/创建主体"],
+    "entryPoints": [
+      "素材面板 AssetPanel",
+      "素材详情/筛选/创建主体"
+    ],
     "code": [
       "src/components/assets",
       "src/features/creation/assetRepository.ts",
@@ -798,10 +897,13 @@
       "TASK-KK-UNIFIED-20261015",
       "TASK-AUDIT-REPAIR-20261017",
       "TASK-CHAT-MIGRATION-20261017",
-        "TASK-MOD-P7"
+      "TASK-MOD-P7"
     ],
     "updated": "2026-10-17",
-    "platforms": ["web", "desktop"],
+    "platforms": [
+      "web",
+      "desktop"
+    ],
     "runtimeEvidence": [
       {
         "platform": "web",
@@ -861,7 +963,10 @@
       "TASK-KK-UNIFIED-20261015"
     ],
     "updated": "2026-10-15",
-    "platforms": ["web", "desktop"],
+    "platforms": [
+      "web",
+      "desktop"
+    ],
     "runtimeEvidence": [
       {
         "platform": "web",
@@ -923,7 +1028,10 @@
       "TASK-AGENT-UX-20261014"
     ],
     "updated": "2026-10-14",
-    "platforms": ["web", "desktop"],
+    "platforms": [
+      "web",
+      "desktop"
+    ],
     "runtimeEvidence": [
       {
         "platform": "web",
@@ -942,15 +1050,25 @@
     "status": "PROTOTYPE",
     "card": "docs/features/feat-017-account.md",
     "summary": "账号弹窗与连接设置中的 UID/登录态为本地写死演示，无认证服务、会话或用户体系。",
-    "entryPoints": ["右上角账号 AccountPopup", "设置 › 连接 › 账号"],
+    "entryPoints": [
+      "右上角账号 AccountPopup",
+      "设置 › 连接 › 账号"
+    ],
     "code": [
       "src/components/AccountPopup.tsx",
       "src/components/settings/ConnectionSettings.tsx"
     ],
     "tests": [],
-    "tasks": ["BACKEND-PLATFORM", "T10", "TASK-KK-UNIFIED-20261015"],
+    "tasks": [
+      "BACKEND-PLATFORM",
+      "T10",
+      "TASK-KK-UNIFIED-20261015"
+    ],
     "updated": "2026-10-15",
-    "platforms": ["web", "desktop"]
+    "platforms": [
+      "web",
+      "desktop"
+    ]
   },
   {
     "id": "FEAT-018",
@@ -973,9 +1091,16 @@
       "tests/browser/task-intent.spec.ts",
       "tests/unit/generationServer.test.ts"
     ],
-    "tasks": ["BACKEND-PLATFORM", "T10", "TASK-KK-UNIFIED-20261015"],
+    "tasks": [
+      "BACKEND-PLATFORM",
+      "T10",
+      "TASK-KK-UNIFIED-20261015"
+    ],
     "updated": "2026-10-15",
-    "platforms": ["web", "desktop"]
+    "platforms": [
+      "web",
+      "desktop"
+    ]
   },
   {
     "id": "FEAT-019",
@@ -984,17 +1109,30 @@
     "status": "PARTIAL",
     "card": "docs/features/feat-019-cloud-sync.md",
     "summary": "项目/素材仍以本机持久化为主；WebDAV 云端同步服务层（vendor 移植：目录自动创建、上传/下载 manifest、Basic 认证、连接测试）已就绪，UI 接线与账号同步待排期。",
-    "entryPoints": ["信息面板说明", "CatalogTutorial 云端条目"],
+    "entryPoints": [
+      "信息面板说明",
+      "CatalogTutorial 云端条目"
+    ],
     "code": [
       "src/components/InfoPanel.tsx",
       "src/components/CatalogTutorial.tsx",
       "docs/architecture/DATA-STORAGE.md",
       "src/features/sync/webdav.ts"
     ],
-    "tests": ["tests/unit/webdavSync.test.ts"],
-    "tasks": ["BACKEND-PLATFORM", "T10", "T9", "TASK-KK-UNIFIED-20261015"],
+    "tests": [
+      "tests/unit/webdavSync.test.ts"
+    ],
+    "tasks": [
+      "BACKEND-PLATFORM",
+      "T10",
+      "T9",
+      "TASK-KK-UNIFIED-20261015"
+    ],
     "updated": "2026-10-15",
-    "platforms": ["web", "desktop"]
+    "platforms": [
+      "web",
+      "desktop"
+    ]
   },
   {
     "id": "FEAT-020",
@@ -1068,15 +1206,25 @@
     "status": "PARTIAL",
     "card": "docs/features/feat-021-proxy.md",
     "summary": "本地转发代理（vendor/canvas-proxy：零依赖 CORS 转发、SSE 透传）已移植并可在设置 › 网络查看启动命令与地址；应用级代理设置与一键启停待接。",
-    "entryPoints": ["设置 › 连接 › 网络代理"],
-    "code": ["src/components/settings/ConnectionSettings.tsx"],
+    "entryPoints": [
+      "设置 › 连接 › 网络代理"
+    ],
+    "code": [
+      "src/components/settings/ConnectionSettings.tsx"
+    ],
     "tests": [
       "tests/unit/proxyForward.test.ts",
       "tests/browser/ui-feature-parity.spec.ts"
     ],
-    "tasks": ["BACKEND-PLATFORM", "TASK-UI-005"],
+    "tasks": [
+      "BACKEND-PLATFORM",
+      "TASK-UI-005"
+    ],
     "updated": "2026-09-22",
-    "platforms": ["web", "desktop"]
+    "platforms": [
+      "web",
+      "desktop"
+    ]
   },
   {
     "id": "FEAT-022",
@@ -1085,7 +1233,10 @@
     "status": "PARTIAL",
     "card": "docs/features/feat-022-settings.md",
     "summary": "三组十页设置、旧深链和配置身份保留；分类/响应式/本地推荐/保存保护经精确独审，账号/同步/目录操作按实际支持状态开放。",
-    "entryPoints": ["侧栏设置 SettingsPanel", "各设置分区"],
+    "entryPoints": [
+      "侧栏设置 SettingsPanel",
+      "各设置分区"
+    ],
     "code": [
       "src/components/settings",
       "src/features/creation/providerRegistry.ts",
@@ -1148,7 +1299,10 @@
       "TASK-KK-UNIFIED-20261015"
     ],
     "updated": "2026-10-16",
-    "platforms": ["web", "desktop"],
+    "platforms": [
+      "web",
+      "desktop"
+    ],
     "runtimeEvidence": [
       {
         "platform": "web",
@@ -1195,7 +1349,11 @@
     "status": "PARTIAL",
     "card": "docs/features/feat-023-navigation.md",
     "summary": "同一快照驱动项目列表、持久分组/成员、共享菜单与软删除恢复；搜索/喜欢/标签保持。置顶/排序、多聊天及新Native UI继续开放。",
-    "entryPoints": ["左侧栏 Sidebar", "独立搜索（Ctrl/⌘+K）", "项目分组"],
+    "entryPoints": [
+      "左侧栏 Sidebar",
+      "独立搜索（Ctrl/⌘+K）",
+      "项目分组"
+    ],
     "code": [
       "src/components/Sidebar.tsx",
       "src/components/SidebarProjectEntry.tsx",
@@ -1227,7 +1385,10 @@
       "TASK-KK-UNIFIED-20261015"
     ],
     "updated": "2026-10-15",
-    "platforms": ["web", "desktop"],
+    "platforms": [
+      "web",
+      "desktop"
+    ],
     "runtimeEvidence": [
       {
         "platform": "web",
@@ -1283,9 +1444,14 @@
       "tests/unit/generationServerRuntime.test.ts",
       "tests/unit/generationServerWebhook.test.ts"
     ],
-    "tasks": ["T5", "T8"],
+    "tasks": [
+      "T5",
+      "T8"
+    ],
     "updated": "2026-09-21",
-    "platforms": ["service"]
+    "platforms": [
+      "service"
+    ]
   },
   {
     "id": "FEAT-025",
@@ -1294,17 +1460,28 @@
     "status": "PROTOTYPE",
     "card": "docs/features/feat-025-demo-media.md",
     "summary": "视频/音频节点仍使用固定本地演示素材；文本已切换到FEAT-008任务链，历史demo资源仅保留旧项目兼容。",
-    "entryPoints": ["视频/音频/文本节点的“生成/演示”动作"],
+    "entryPoints": [
+      "视频/音频/文本节点的“生成/演示”动作"
+    ],
     "code": [
       "src/components/nodes/useLocalGeneration.ts",
       "src/domain/demoMedia.ts",
       "src/domain/localGeneration.ts",
       "public/fixtures/demo"
     ],
-    "tests": ["tests/browser/demo-results.spec.ts"],
-    "tasks": ["UI-003", "BACKEND-MEDIA-001", "BACKEND-TEXT-NODE"],
+    "tests": [
+      "tests/browser/demo-results.spec.ts"
+    ],
+    "tasks": [
+      "UI-003",
+      "BACKEND-MEDIA-001",
+      "BACKEND-TEXT-NODE"
+    ],
     "updated": "2026-09-21",
-    "platforms": ["web", "desktop"]
+    "platforms": [
+      "web",
+      "desktop"
+    ]
   },
   {
     "id": "FEAT-026",
@@ -1353,7 +1530,9 @@
       "TASK-KK-UNIFIED-20261015"
     ],
     "updated": "2026-10-16",
-    "platforms": ["desktop"],
+    "platforms": [
+      "desktop"
+    ],
     "runtimeEvidence": [
       {
         "platform": "desktop",
@@ -1372,12 +1551,22 @@
     "status": "PLANNED",
     "card": "docs/features/feat-027-astra.md",
     "summary": "仅有计划与 Git 同步（TASK-ASTRA-001 完成的是计划），src/scripts/Rust 零代码、无 UI。",
-    "entryPoints": ["无（未实现）"],
-    "code": ["docs/changes/2026-09-20-gpt-6-astra"],
+    "entryPoints": [
+      "无（未实现）"
+    ],
+    "code": [
+      "docs/changes/2026-09-20-gpt-6-astra"
+    ],
     "tests": [],
-    "tasks": ["TASK-ASTRA-001", "BACKEND-ASTRA-001"],
+    "tasks": [
+      "TASK-ASTRA-001",
+      "BACKEND-ASTRA-001"
+    ],
     "updated": "2026-09-21",
-    "platforms": ["web", "desktop"]
+    "platforms": [
+      "web",
+      "desktop"
+    ]
   },
   {
     "id": "FEAT-028",
@@ -1385,7 +1574,7 @@
     "area": "future",
     "status": "PARTIAL",
     "card": "docs/features/feat-028-mobile.md",
-    "summary": "正式独立手机Web2.1.39/Mobile2.1.4已上线main9d10，入口9项及current39/唯一previous38通过；12ai真实文本和单图自动保存/导出/刷新有界PASS，独立生产证据复核通过。视频仅本地fixture，未调用真实上游；原生包、Safari和身份等仍未验，T12开放。 空文字模型按钮失焦无响应由TASK-MOBILE-COMPOSER-001修复，Web40/Mobile5候选尚未上线，真机后台仍未验。",
+    "summary": "2026-10-30合流候选尚未发布，独立Mobile功能重新回归；2026-10-18远端生产回执保留：正式手机Web2.1.40/Mobile源码2.1.5已上线，source b457/Release416447150/部署39128852497与实际cbc0入口一致；PR72同tree独审57及main当前门禁PASS，线上320/390六圆控件/模型名切换/任务结果优先、旧图文刷新恢复及current40/唯一previous39已核。前39真实图文回执保留，本次0生成；40普通停留927.716秒刷新/原件逐字节一致，实体Android接受待补，视频/参考编辑/语音/Safari/新Native/远程AgentMCP仍未验，T12开放。",
     "entryPoints": [
       "kkai.plus 手机初次访问 /mobile/；桌面资料入口 /?view=desktop"
     ],
@@ -1426,7 +1615,7 @@
       "TASK-223-ACTIONS-20261014",
       "TASK-WEB-RELEASE-20261017"
     ],
-    "updated": "2026-10-18"
+    "updated": "2026-10-30"
   },
   {
     "id": "FEAT-029",
@@ -1435,7 +1624,9 @@
     "status": "PARTIAL",
     "card": "docs/features/feat-029-prompt-library.md",
     "summary": "提示词来源解析/缓存与浏览、搜索、预览、取消、应用到草稿已接；真实远端目录与账号同步仍待验收。",
-    "entryPoints": ["首页/图片对话：提示词库"],
+    "entryPoints": [
+      "首页/图片对话：提示词库"
+    ],
     "code": [
       "src/features/prompts/promptLibrary.ts",
       "src/components/PromptLibraryPanel.tsx"
@@ -1444,9 +1635,15 @@
       "tests/unit/promptLibrary.test.ts",
       "tests/browser/ui-feature-parity.spec.ts"
     ],
-    "tasks": ["TASK-UI-005", "BACKEND-PLATFORM"],
+    "tasks": [
+      "TASK-UI-005",
+      "BACKEND-PLATFORM"
+    ],
     "updated": "2026-09-22",
-    "platforms": ["web", "desktop"]
+    "platforms": [
+      "web",
+      "desktop"
+    ]
   },
   {
     "id": "FEAT-030",
@@ -1504,7 +1701,10 @@
     "status": "PARTIAL",
     "card": "docs/features/feat-031-unified-task-state.md",
     "summary": "图片/文本共用9态任务契约：幂等、未知状态防重、失败子项重试、原生回执一致性校验；无供应商报价时成本保持未知，视频/音频链路仍待接入。",
-    "entryPoints": ["任务工作台队列与批量矩阵", "任务审批成本估算显示"],
+    "entryPoints": [
+      "任务工作台队列与批量矩阵",
+      "任务审批成本估算显示"
+    ],
     "code": [
       "src/features/creation/taskState.ts",
       "src/features/creation/model.ts",
@@ -1577,7 +1777,10 @@
     "status": "PARTIAL",
     "card": "docs/features/feat-036-image-compare.md",
     "summary": "画布2–4张并排和两图滑块可用，当前窄屏/production Web/fresh Tauri 复验通过；选择会话态，用户最终视觉确认由UI-004保留。",
-    "entryPoints": ["图片卡片加入对比", "画布对比选择条"],
+    "entryPoints": [
+      "图片卡片加入对比",
+      "画布对比选择条"
+    ],
     "code": [
       "src/features/compare/imageCompare.ts",
       "src/features/compare/ImageCompareProvider.tsx",
@@ -1589,9 +1792,16 @@
       "tests/browser/image-compare.spec.ts",
       "tests/desktop/image-compare.mjs"
     ],
-    "tasks": ["TASK-COMPARE-001", "TASK-COMPARE-002", "UI-004"],
+    "tasks": [
+      "TASK-COMPARE-001",
+      "TASK-COMPARE-002",
+      "UI-004"
+    ],
     "updated": "2026-09-30",
-    "platforms": ["web", "desktop"],
+    "platforms": [
+      "web",
+      "desktop"
+    ],
     "runtimeEvidence": [
       {
         "platform": "web",
@@ -1732,7 +1942,10 @@
       "TASK-223-ACTIONS-20261014"
     ],
     "updated": "2026-10-14",
-    "platforms": ["web", "desktop"]
+    "platforms": [
+      "web",
+      "desktop"
+    ]
   },
   {
     "id": "FEAT-040",

@@ -9,6 +9,7 @@ import type {
 } from "../../packages/creation-contracts/index.ts";
 import type { CanvasCollectionItem } from "./canvasItems.ts";
 import type { GoogleConversation } from "./googleConversation.ts";
+import type { ImageArchiveReceipts } from "./imageArchiveReceipts.ts";
 import type { ProjectCanvas } from "./projectCanvas.ts";
 import type { ReviewComment } from "./reviewWorkflow.ts";
 import type { StagePlan } from "./stagePlan.ts";
@@ -74,6 +75,7 @@ export interface CreationMessage {
 }
 
 export interface CreationProject {
+  imageArchiveReceipts?: ImageArchiveReceipts;
   /** Non-secret Codex ownership; survives native snapshot/WebView recovery. */
   agentThreadId?: string;
   googleConversation?: GoogleConversation;

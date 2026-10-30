@@ -6,6 +6,7 @@ async function createFolderOnce(page: Page): Promise<void> {
     exact: true,
   });
   await expect(create).toBeVisible();
+  await expect(create).toBeEnabled();
   const point = await create.evaluate((button) => {
     const rect = button.getBoundingClientRect();
     const x = rect.x + rect.width / 2;

@@ -123,13 +123,17 @@ async function expectAboveImage(page: Page, node: Locator): Promise<void> {
       );
     })
     .toBe(true);
-  const canvas = await page.getByTestId("infinite-canvas").boundingBox();
   const actions = (await toolbar(page).boundingBox())!;
-  expect(actions.x).toBeGreaterThanOrEqual(canvas!.x);
-  const chat = await page.locator(".conversation-panel").boundingBox();
-  expect(actions.x + actions.width).toBeLessThanOrEqual(
-    chat && chat.width > 0 ? chat.x : canvas!.x + canvas!.width,
-  );
+  const card = (await node.locator(".image-preview").boundingBox())!;
+  expect(actions.x + actions.width / 2).toBeCloseTo(card.x + card.width / 2, 0);
+  await expect(toolbar(page)).toHaveCSS("overflow-x", "visible");
+  expect(
+    await toolbar(page).evaluate((element) => ({
+      inCanvas: Boolean(element.closest(".canvas")),
+      inStage: Boolean(element.closest(".canvas-stage")),
+      overflow: element.scrollWidth - element.clientWidth,
+    })),
+  ).toEqual({ inCanvas: true, inStage: false, overflow: 0 });
   for (const button of await toolbar(page).getByRole("button").all()) {
     expect((await button.boundingBox())!.height).toBeCloseTo(32, 0);
     await expect(button).toHaveCSS("font-size", "14px");
@@ -295,7 +299,7 @@ for (const width of [390, 1099, 1920]) {
 }
 
 for (const width of [390, 1099, 1920]) {
-  test(`图片选择工具栏在 ${width} 屏幕内可触达且保持标准尺寸`, async ({
+  test(`图片选择工具栏在 ${width} 保持卡片居中且无横向滚动`, async ({
     page,
   }, testInfo) => {
     await page.setViewportSize({ width, height: width === 390 ? 844 : 1080 });
@@ -340,3 +344,34 @@ for (const width of [390, 1099, 1920]) {
     });
   });
 }
+
+test("工具栏随图片进入HUD和会话遮挡区，不避让或横向滚动", async ({
+  page,
+}, testInfo) => {
+  await openWorkspace(page);
+  const node = page.getByTestId("canvas-node-image");
+  await uploadImage(node);
+  await selectImage(page, node);
+  const canvas = (await page.getByTestId("infinite-canvas").boundingBox())!;
+  const chat = (await page.locator(".conversation-panel").boundingBox())!;
+  const card = (await node.locator(".image-preview").boundingBox())!;
+  const delta = chat.x + 40 - (card.x + card.width / 2);
+  await page.mouse.move(canvas.x + 24, canvas.y + 500);
+  await page.mouse.down({ button: "middle" });
+  await page.mouse.move(canvas.x + 24 + delta, canvas.y + 500, { steps: 8 });
+  await page.mouse.up({ button: "middle" });
+  await expectAboveImage(page, node);
+  expect(
+    await toolbar(page).evaluate((element) => {
+      const box = element.getBoundingClientRect();
+      const hit = document.elementFromPoint(
+        box.x + box.width / 2,
+        box.y + box.height / 2,
+      );
+      return Boolean(hit?.closest(".conversation-panel"));
+    }),
+  ).toBe(true);
+  await page.screenshot({
+    path: testInfo.outputPath("toolbar-covered-by-chat.png"),
+  });
+});

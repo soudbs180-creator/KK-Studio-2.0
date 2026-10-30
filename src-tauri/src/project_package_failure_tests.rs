@@ -5,6 +5,36 @@ use std::sync::atomic::{AtomicU64, Ordering};
 static NEXT_FIXTURE_ID: AtomicU64 = AtomicU64::new(0);
 
 #[test]
+fn image_archive_receipts_survive_v2_export_and_v3_restore() {
+    let f = Fixture::new();
+    let mut value = f.snapshot.clone();
+    value["revision"] = json!(2);
+    value["projects"][0]["imageArchiveReceipts"] = json!({
+        (format!("chatgpt-{}", "a".repeat(32))): {
+            "jobId":"original-job", "sha256":f.sha, "assetId":f.id,
+            "chatId":null, "retainedMetadata":{"label":"existing"}
+        }
+    });
+    f.snapshots.write(value.clone(), Some(1)).unwrap();
+    let package = f.package();
+    let target = f.root.join("receipts-restored");
+    import_package(&package, &target).unwrap();
+    let restored = SnapshotRepository::new(target.join("projects/creation-v2.json"))
+        .read()
+        .unwrap()
+        .snapshot
+        .unwrap();
+    assert_eq!(
+        restored,
+        crate::native_root_authority::migrated_snapshot(&value)
+    );
+    assert_eq!(
+        restored["projects"][0]["imageArchiveReceipts"],
+        value["projects"][0]["imageArchiveReceipts"]
+    );
+}
+
+#[test]
 fn trashed_projects_and_persistent_groups_keep_assets_in_native_packages() {
     let f = Fixture::new();
     let mut value = f.snapshot.clone();

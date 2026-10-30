@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "commit": "61bf4b81ea35969c1c60e9d991ce4dddc9425fc2",
+  "commit": "4610c3339db436147006171aec08aad4cfdfb679",
   "violations": {
     "IMAGE:docs/changes/2026-09-21-text-and-rule-audit/text-desktop-runtime.png": 277438,
     "IMAGE:docs/changes/2026-09-22-agent-desktop/evidence/desktop-agent-connected.png": 270967,
@@ -90,5 +90,6 @@
     "TYPE:docs/changes/2026-09-30-desktop-installer/evidence/candidate-verify.log": 0,
     "TYPE:docs/evidence/frame-accuracy-2026-09-11/collapse-interaction.webm": 0,
     "TYPE:public/fixtures/demo/blue-hour-motion.webm": 0
-  }
+  },
+  "generatedAt": "2026-10-30"
 }

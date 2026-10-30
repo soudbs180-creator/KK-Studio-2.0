@@ -10,7 +10,7 @@ import useConversationAttachments from "./useConversationAttachments";
 import ComposerExtensionsMenu from "./ComposerExtensionsMenu";
 import StartModelPicker from "./StartModelPicker";
 import { StartComposerFeedback, StartModePicker } from "./StartComposerModes";
-import VoiceInputButton from "./VoiceInputButton";
+import { VoiceInputButton } from "../features/speech/index.ts";
 import { useComposerMenus } from "./useComposerMenus";
 import type { SkillRecord } from "../features/skills/index.ts";
 import {

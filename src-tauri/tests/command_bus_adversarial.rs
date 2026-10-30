@@ -2,8 +2,7 @@
 mod command_bus;
 
 use command_bus::{
-    Actor, Command, CommandBus, LockState,
-    ERR_INVALID_COMMAND, ERR_NODE_LOCKED, ERR_REV_CONFLICT,
+    Actor, Command, CommandBus, LockState, ERR_INVALID_COMMAND, ERR_NODE_LOCKED, ERR_REV_CONFLICT,
 };
 use serde_json::json;
 use std::sync::{Arc, Mutex};
@@ -69,7 +68,9 @@ fn test_brand_new_node_agent_base_rev_matching_and_mismatch() {
         batch_id: None,
         idempotency_key: None,
     };
-    let res = bus.dispatch(agent_cmd_ok).expect("Agent with base_rev 0 on brand new node must succeed");
+    let res = bus
+        .dispatch(agent_cmd_ok)
+        .expect("Agent with base_rev 0 on brand new node must succeed");
     assert_eq!(res.new_rev, 1);
     assert_eq!(bus.get_revision(target_agent), 1);
 
@@ -88,7 +89,9 @@ fn test_brand_new_node_agent_base_rev_matching_and_mismatch() {
         idempotency_key: None,
     };
 
-    let err = bus.dispatch(agent_cmd_fail).expect_err("Agent with base_rev 1 on brand new node must fail");
+    let err = bus
+        .dispatch(agent_cmd_fail)
+        .expect_err("Agent with base_rev 1 on brand new node must fail");
     assert_eq!(err.code, ERR_REV_CONFLICT);
     assert_eq!(err.current_rev, 0);
     assert_eq!(
@@ -179,7 +182,9 @@ fn test_designer_preemption_on_stale_base_rev() {
         idempotency_key: None,
     };
 
-    let res = bus.dispatch(designer_stale).expect("Designer must succeed even with stale base_rev");
+    let res = bus
+        .dispatch(designer_stale)
+        .expect("Designer must succeed even with stale base_rev");
     assert!(res.success);
     assert_eq!(res.base_rev, 0);
     assert_eq!(res.new_rev, 6, "Revision must increment from 5 to 6");
@@ -197,7 +202,9 @@ fn test_designer_preemption_on_stale_base_rev() {
         idempotency_key: None,
     };
 
-    let res2 = bus.dispatch(designer_future).expect("Designer must succeed with any base_rev");
+    let res2 = bus
+        .dispatch(designer_future)
+        .expect("Designer must succeed with any base_rev");
     assert!(res2.success);
     assert_eq!(res2.new_rev, 7);
     assert_eq!(bus.get_revision(target), 7);
@@ -221,7 +228,11 @@ fn test_designer_preemption_clears_generating_lock_and_invokes_hook() {
     assert!(bus.is_locked(target));
     let lock_state = bus.get_lock_state(target);
     match lock_state {
-        LockState::Generating { ref task_id, actor, started_at } => {
+        LockState::Generating {
+            ref task_id,
+            actor,
+            started_at,
+        } => {
             assert_eq!(task_id, "agent-task-long-generation-99");
             assert_eq!(actor, Actor::Agent);
             assert!(started_at > 0);
@@ -255,7 +266,9 @@ fn test_designer_preemption_clears_generating_lock_and_invokes_hook() {
         batch_id: None,
         idempotency_key: None,
     };
-    let res = bus.dispatch(designer_cmd).expect("Designer must preempt and succeed");
+    let res = bus
+        .dispatch(designer_cmd)
+        .expect("Designer must preempt and succeed");
     assert!(res.success);
     assert_eq!(res.new_rev, 1);
 
@@ -285,7 +298,10 @@ fn test_payload_varieties_serde_and_dispatch() {
         ("payload-bool-false", json!(false)),
         ("payload-null", serde_json::Value::Null),
         ("payload-empty-array", json!([])),
-        ("payload-mixed-array", json!([1, "two", null, true, { "sub": "val" }, [4, 5]])),
+        (
+            "payload-mixed-array",
+            json!([1, "two", null, true, { "sub": "val" }, [4, 5]]),
+        ),
         ("payload-empty-obj", json!({})),
         (
             "payload-deep-obj",
@@ -327,13 +343,16 @@ fn test_payload_varieties_serde_and_dispatch() {
 
         // Test serde roundtrip
         let serialized = serde_json::to_string(&cmd).expect("Command must serialize");
-        let deserialized: Command = serde_json::from_str(&serialized).expect("Command must deserialize");
+        let deserialized: Command =
+            serde_json::from_str(&serialized).expect("Command must deserialize");
         assert_eq!(cmd.payload, deserialized.payload);
         assert_eq!(cmd.id, deserialized.id);
         assert_eq!(cmd.actor, deserialized.actor);
 
         // Dispatch through bus
-        let res = bus.dispatch(deserialized).expect("Dispatch with payload variety must succeed");
+        let res = bus
+            .dispatch(deserialized)
+            .expect("Dispatch with payload variety must succeed");
         assert!(res.success);
         assert_eq!(res.new_rev, 1);
         assert_eq!(bus.get_revision(target), 1);
@@ -361,7 +380,9 @@ fn test_validation_empty_command_id() {
             idempotency_key: None,
         };
 
-        let err = bus.dispatch(cmd).expect_err("Empty or whitespace ID must be rejected");
+        let err = bus
+            .dispatch(cmd)
+            .expect_err("Empty or whitespace ID must be rejected");
         assert_eq!(err.code, ERR_INVALID_COMMAND);
         assert!(err.message.contains("Command 'id' cannot be empty"));
         assert_eq!(bus.get_revision("valid-target"), 0);
@@ -385,7 +406,9 @@ fn test_validation_empty_target() {
             idempotency_key: None,
         };
 
-        let err = bus.dispatch(cmd).expect_err("Empty or whitespace target must be rejected");
+        let err = bus
+            .dispatch(cmd)
+            .expect_err("Empty or whitespace target must be rejected");
         assert_eq!(err.code, ERR_INVALID_COMMAND);
         assert!(err.message.contains("Command 'target' cannot be empty"));
     }
@@ -408,7 +431,9 @@ fn test_validation_empty_type() {
             idempotency_key: None,
         };
 
-        let err = bus.dispatch(cmd).expect_err("Empty or whitespace type must be rejected");
+        let err = bus
+            .dispatch(cmd)
+            .expect_err("Empty or whitespace type must be rejected");
         assert_eq!(err.code, ERR_INVALID_COMMAND);
         assert!(err.message.contains("Command 'type' cannot be empty"));
         assert_eq!(bus.get_revision("node-target-1"), 0);

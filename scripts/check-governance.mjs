@@ -154,7 +154,9 @@ for (const file of walk("src").filter((name) => /\.tsx?$/.test(name)))
     ...checkImportBoundaries(file, fs.readFileSync(file, "utf8"), root),
   );
 try {
-  const architecture = await checkArchitecture(root);
+  const architecture = await checkArchitecture(root, {
+    baseRef: governanceBaseSha,
+  });
   issues.push(...architecture.issues);
   architecture.reductions.forEach((message) => console.log(message));
   console.log(
@@ -165,7 +167,6 @@ try {
 } catch (error) {
   issues.push(`Architecture: ${error.message}`);
 }
-
 try {
   const layout = checkRepoLayout(root, { baseRef: governanceBaseSha });
   issues.push(...layout.issues);
