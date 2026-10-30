@@ -154,9 +154,12 @@ test("Comfy mixed video history only publishes supported image files", () => {
           animated: [true],
         },
         "first-frame": {
-          images: ["frame.PNG", "photo.jpeg", "preview.webp", "animation.gif"].map(
-            (filename) => ({ filename, type: "output" }),
-          ),
+          images: [
+            "frame.PNG",
+            "photo.jpeg",
+            "preview.webp",
+            "animation.gif",
+          ].map((filename) => ({ filename, type: "output" })),
         },
       },
     },
