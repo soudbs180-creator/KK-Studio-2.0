@@ -27,8 +27,13 @@
 ## Web 与 Desktop 运行态
 
 - Web：`npm run verify` 使用 production preview `http://127.0.0.1:1423/`；`src/main.tsx → App.tsx → Canvas.tsx → ImageCompareControls / ImageCompareDialog`。实际 bundle `index-BbnuwBUI.js`、`index-ClRZ_rbO.css`。390px 新版[浏览器截图](evidence/compare-390.png)已目视核对；原测试仍逐个测量按钮高度不少于 44px，确认对话框位于屏幕内并以 CDP 拖动滑块。无真实 Provider。
-- Desktop：`src-tauri/target/release/kk-studio.exe --data-dir <隔离绝对目录>`，独立 WebView2 profile，URL `http://tauri.localhost/`、production、`src/main.tsx`，加载同一个 `index-BbnuwBUI.js` 和 `index-ClRZ_rbO.css`。exe SHA-256 为 `cec00d2ea936d6b93ca7d9c40edcefad028b45cf9e77bbfcec21c0377f3bb2db`；[GUI 截图](evidence/compare-desktop.png)和[运行元数据](evidence/desktop-acceptance.json)已核对。真实安装 MSI/NSIS、物理触屏、真实 Provider 与用户最终视觉确认未发生。
+- Desktop：`src-tauri/target/release/kk-studio.exe --data-dir <隔离绝对目录>`，独立 WebView2 profile，URL `http://tauri.localhost/`、production、`src/main.tsx`，加载同一个 `index-BbnuwBUI.js` 和 `index-ClRZ_rbO.css`。exe SHA-256 为 `cec00d2ea936d6b93ca7d9c40edcefad028b45cf9e77bbfcec21c0377f3bb2db`；[GUI 截图](evidence-manifest.json)和[运行元数据](evidence/desktop-acceptance.json)已核对。真实安装 MSI/NSIS、物理触屏、真实 Provider 与用户最终视觉确认未发生。
 
 ## 未验收
 
 物理手机、真实 Provider 和用户最终视觉确认；与本次 CSS 修复无关的任务继续按账本状态。
+
+
+## 2026-10-30 历史原始证据外置说明
+
+本次ORG-6将历史E2截图/原始日志/录屏外置到容器output；原引用现指向[2026-09-28-compare-ci-fix manifest](evidence-manifest.json)。原始sourcePath、commit/blob、sha256、大小与原链接目的地逐项可查；原图片嵌入改为同文字的清单链接。原结论、失败、时间和数字未重写，不代表当前功能重新验收或main已合流。E1摘要、JSON、关键图及活跃运行资料仍留仓；恢复仅写新空目录并复核字节。

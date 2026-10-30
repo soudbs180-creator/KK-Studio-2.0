@@ -1,5 +1,128 @@
 [
   {
+    "id": "TASK-COMFY-PHYSICAL-20261030",
+    "title": "本机ComfyUI真实显卡出图验收",
+    "goal": "本机ComfyUI真实显卡出图验收",
+    "scope": "用户确认改先真实H3视频；复用已有权重与软件工作流、归档/画布验收，图片模型未下载不假称已验",
+    "acceptance": [
+      "本包spec对应阶段验收与可复核证据",
+      "用户原件/历史失败记录与检查保持",
+      "当前SHA审查/门禁与主线/发布边界分开"
+    ],
+    "dependencies": [
+      "TASK-MOD-P8"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "refactor/TASK-MOD-P3-feature-cycles",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "be730617ace5013295b85a22133259b32ad6ffec",
+    "affectedModules": [
+      "docs/changes",
+      "docs/governance"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-30-main-physical-org6/verification.md"
+    ],
+    "verification": "RTX5080/16303MiB驱动610.88实查；用户Hub有H3模型/4工作流，Hub venv无torch，隔离venv已安装CUDA版Torch，Comfy requirements准备中。尚无真实生成，保持PARTIAL。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-30",
+    "lastVerified": "2026-10-30",
+    "nextAction": "完成隔离Comfy实际CUDA启动与H3工作流执行及软件产物链；图片另待模型验收",
+    "requirementRefs": [
+      "docs/changes/2026-10-30-main-physical-org6/intent.md",
+      "docs/changes/2026-10-30-main-physical-org6/spec.md"
+    ],
+    "featureIds": []
+  },
+  {
+    "id": "TASK-ORG-6",
+    "title": "推广历史E2证据外置",
+    "goal": "推广历史E2证据外置",
+    "scope": "已准备E2逐包复核/恢复/manifest/引用与布局基线，E1和JSON保留",
+    "acceptance": [
+      "本包spec对应阶段验收与可复核证据",
+      "用户原件/历史失败记录与检查保持",
+      "当前SHA审查/门禁与主线/发布边界分开"
+    ],
+    "dependencies": [
+      "TASK-ORG-5"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "refactor/TASK-MOD-P3-feature-cycles",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "be730617ace5013295b85a22133259b32ad6ffec",
+    "affectedModules": [
+      "docs/changes",
+      "docs/governance"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-30-main-physical-org6/verification.md"
+    ],
+    "verification": "任务树迁1200份E2/160288854B，60包清单、22历史文档87引用；新目录恢复1200/1200，源/Git/副本SHA一致，66关键图和30活跃文件保留，断链86→86。净减159410793B/62.8149%，非Git历史/主线减量；基线578→88只减490条。类型/增量lint0，根2405pass20skip0fail，当前SHA独审/main未合。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-30",
+    "lastVerified": "2026-10-30",
+    "nextAction": "当前已提交SHA独立审查；完整主线门禁/合流后完成ORG6交付，其余保留文件不盲迁",
+    "requirementRefs": [
+      "docs/changes/2026-10-30-main-physical-org6/intent.md",
+      "docs/changes/2026-10-30-main-physical-org6/spec.md"
+    ],
+    "featureIds": []
+  },
+  {
+    "id": "TASK-DELIVERY-MAIN-20261030",
+    "title": "主线squash与保护审计改动后回收",
+    "goal": "主线squash与保护审计改动后回收",
+    "scope": "当前分支远端整合/门禁、main合流和本任务树回收",
+    "acceptance": [
+      "本包spec对应阶段验收与可复核证据",
+      "用户原件/历史失败记录与检查保持",
+      "当前SHA审查/门禁与主线/发布边界分开"
+    ],
+    "dependencies": [
+      "TASK-MOD-P8"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "refactor/TASK-MOD-P3-feature-cycles",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "be730617ace5013295b85a22133259b32ad6ffec",
+    "affectedModules": [
+      "docs/changes",
+      "docs/governance"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-30-main-physical-org6/verification.md"
+    ],
+    "verification": "2026-10-30重新备份21审计文件，68冲突及CI基线3失败仍开放；GPU已查询，Comfy用户路径待验；ORG6准备按spec复核。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-30",
+    "lastVerified": "2026-10-30",
+    "nextAction": "依本包plan执行；具体阶段未完成不得升级整体状态",
+    "requirementRefs": [
+      "docs/changes/2026-10-30-main-physical-org6/intent.md",
+      "docs/changes/2026-10-30-main-physical-org6/spec.md"
+    ],
+    "featureIds": []
+  },
+  {
     "id": "TASK-MOD-MODEL-DRAFT",
     "title": "目录通知保留未保存模型能力草稿",
     "goal": "元数据未变不覆盖用户表单，真实切换仍同步",

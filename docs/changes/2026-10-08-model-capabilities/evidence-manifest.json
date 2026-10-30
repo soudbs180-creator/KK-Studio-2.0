@@ -3,9 +3,9 @@
   "taskId": "TASK-ORG-5",
   "classification": "E2-externalized-log-pilot",
   "packagePath": "docs/changes/2026-10-08-model-capabilities",
-  "scope": "62 raw log files only; all PNG/JSON and historical conclusions retained",
-  "containerResolution": "Resolve containerRelativePath from the workspace container containing both the canonical checkout and output; a worktree parent is not the container",
-  "recovery": "Verify copies using check-evidence-manifest.mjs and restore only to a new empty directory. Original Git blobs remain at sourceCommit/sourcePath.",
+  "scope": "Historical E2 files externalized by validated batches; E1 summaries, JSON, key screenshots and active inputs retained.",
+  "containerResolution": "Resolve containerRelativePath from the workspace container containing the canonical checkout and output.",
+  "recovery": "Verify with scripts/governance/check-evidence-manifest.mjs <manifest> <container>; restore only to a new empty directory. Original Git sourceCommit/sourcePath remains recoverable.",
   "entries": [
     {
       "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/correction-baseline5b/logs/integrated-client-check.log",
@@ -818,6 +818,359 @@
           "originalTarget": "evidence/logs/verify4.log"
         }
       ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/baseline-dev.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "1a4405ad35f9d75c4445e1f5455f7b07efed1b5b",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/baseline-dev.png",
+      "bytes": 88121,
+      "sha256": "8c6c01d5e33264f07db62230c2930e4b48cefbf4ad8ffcef901bcafbef4be7b1",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/capabilities-settings-1099.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "e87721665e7d96a34e1fb080d656aeb234b026d0",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/capabilities-settings-1099.png",
+      "bytes": 68546,
+      "sha256": "72d2c150361b6738680ce2779e989d557e7b315522e067c2932c0235e7ee7545",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-08-model-capabilities/verification.md",
+          "line": 58,
+          "originalTarget": "evidence/capabilities-settings-1099.png",
+          "referenceKind": "link"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/capabilities-settings-1920.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "00202b02e3a5b73cb8ae962b871d7b5fda310871",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/capabilities-settings-1920.png",
+      "bytes": 184824,
+      "sha256": "99b99d9c8c7b32c9e3e26b4124e0980eb565053e6d248caa694304ac82cc2560",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-08-model-capabilities/verification.md",
+          "line": 58,
+          "originalTarget": "evidence/capabilities-settings-1920.png",
+          "referenceKind": "link"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/capabilities-settings-390.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "be7af076980ecd137556557c32d2f62413743e84",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/capabilities-settings-390.png",
+      "bytes": 48903,
+      "sha256": "9f7a25a12b7a803b32ab2bea3f67254dbdd7eeaf32af3cc7d5f85665b4af57e1",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-08-model-capabilities/verification.md",
+          "line": 58,
+          "originalTarget": "evidence/capabilities-settings-390.png",
+          "referenceKind": "link"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/correction-baseline5b/capabilities-settings-1099.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "74d34bf78f103732e0ee10f635279d4d75afc264",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/correction-baseline5b/capabilities-settings-1099.png",
+      "bytes": 68828,
+      "sha256": "c719743c3137e54dfdba1c8a1e1fa11ffd3ce132bebd7e99f1534ef4bcd26b3c",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/correction-baseline5b/capabilities-settings-1920.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "38daa69bcfa8c8d53ed1a5c589ca3282f48e1c4b",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/correction-baseline5b/capabilities-settings-1920.png",
+      "bytes": 184981,
+      "sha256": "0efb3fdb0d4ba631790c4b644b4c2355c378168fb1616cd72a13d2d328ab2ab7",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/correction-baseline5b/capabilities-settings-390.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "943de8c24870a6f50761ef9d5471ce8ba903b4be",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/correction-baseline5b/capabilities-settings-390.png",
+      "bytes": 48879,
+      "sha256": "0d1c536b99263a0ea74de325f52a2b282b96273e689ac672dbd610ec997e3f2c",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/development-settings.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "8602138490cb05a1731a733bbe21f6234320e3db",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/development-settings.png",
+      "bytes": 216653,
+      "sha256": "fe76f66160220d5fce449e8df55b1272e25f7eaa3e47d114b53d47087268e1bb",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/draft-refresh5dd/capabilities-settings-1099.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "21922320ae8687ec7d2b7de71624c9c054f336d7",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/draft-refresh5dd/capabilities-settings-1099.png",
+      "bytes": 69010,
+      "sha256": "3b69856e3fef7be4aeb2c21aa0380c8bad7b7482d9a98d8037b3ffff7d16b78e",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-08-model-capabilities/verification.md",
+          "line": 120,
+          "originalTarget": "evidence/draft-refresh5dd/capabilities-settings-1099.png",
+          "referenceKind": "link"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/draft-refresh5dd/capabilities-settings-1920.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "429314f5bfb7c1fdc85777e2924355fe354f7561",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/draft-refresh5dd/capabilities-settings-1920.png",
+      "bytes": 184895,
+      "sha256": "fb67ac0f6193f9843b3dd6fab7fe03a515cbb434d2b8ac2d6737defb45c3b225",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-08-model-capabilities/verification.md",
+          "line": 120,
+          "originalTarget": "evidence/draft-refresh5dd/capabilities-settings-1920.png",
+          "referenceKind": "link"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/draft-refresh5dd/capabilities-settings-390.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "5e18a07447bbb175a5457ae2efd0cd0c3390c435",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/draft-refresh5dd/capabilities-settings-390.png",
+      "bytes": 48859,
+      "sha256": "254fbce8de2d65710061fe543c1515b869af8551dcacea1bd63ec4d339de3eab",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-08-model-capabilities/verification.md",
+          "line": 120,
+          "originalTarget": "evidence/draft-refresh5dd/capabilities-settings-390.png",
+          "referenceKind": "link"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/draft-refresh5dd/development-settings.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "8602138490cb05a1731a733bbe21f6234320e3db",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/draft-refresh5dd/development-settings.png",
+      "bytes": 216653,
+      "sha256": "fe76f66160220d5fce449e8df55b1272e25f7eaa3e47d114b53d47087268e1bb",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/draft-refresh5dd/parameters-native.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "919870ba9551de6b0f1e40a689fe102c14d2a570",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/draft-refresh5dd/parameters-native.png",
+      "bytes": 163364,
+      "sha256": "944452897c17bdcd0ea697967c063cc4aa2c72e5524c51416666e3ac7d27448d",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-08-model-capabilities/verification.md",
+          "line": 120,
+          "originalTarget": "evidence/draft-refresh5dd/parameters-native.png",
+          "referenceKind": "link"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/draft-refresh5dd/redraw-disabled-native.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "f1eeb1a03d1e282db6f4b4085b56e464acde2d28",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/draft-refresh5dd/redraw-disabled-native.png",
+      "bytes": 504277,
+      "sha256": "cb456a781de8b6663ed59d491cf21c9df3f43e5703ab20344f5469cd7521bb59",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/draft-refresh5dd/settings-native.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "4a0e0b6605eda1b62bfa31298d904fc59955a5b0",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/draft-refresh5dd/settings-native.png",
+      "bytes": 384669,
+      "sha256": "3d28651b15ea0c5bbd966857afb722eb5f8328bbdf41d9de08a71e80b967ef05",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/latest-main5dd/capabilities-settings-1099.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "e87721665e7d96a34e1fb080d656aeb234b026d0",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/latest-main5dd/capabilities-settings-1099.png",
+      "bytes": 68546,
+      "sha256": "72d2c150361b6738680ce2779e989d557e7b315522e067c2932c0235e7ee7545",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-08-model-capabilities/verification.md",
+          "line": 96,
+          "originalTarget": "evidence/latest-main5dd/capabilities-settings-1099.png",
+          "referenceKind": "link"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/latest-main5dd/capabilities-settings-1920.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "0e1f2c81bccc7ff0763d2ae30713f566cbfa93e3",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/latest-main5dd/capabilities-settings-1920.png",
+      "bytes": 184996,
+      "sha256": "213ffc0f52fa9266b53870148da38ab96f4715160feb720ec18a18023d6fff33",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-08-model-capabilities/verification.md",
+          "line": 96,
+          "originalTarget": "evidence/latest-main5dd/capabilities-settings-1920.png",
+          "referenceKind": "link"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/latest-main5dd/development-settings.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "8602138490cb05a1731a733bbe21f6234320e3db",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/latest-main5dd/development-settings.png",
+      "bytes": 216653,
+      "sha256": "fe76f66160220d5fce449e8df55b1272e25f7eaa3e47d114b53d47087268e1bb",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/latest-main5dd/parameters-native.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "0bf41e0b525989353148fd9f448561c5c296a561",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/latest-main5dd/parameters-native.png",
+      "bytes": 163242,
+      "sha256": "4c9ad16ef4b2dc1a85357597295592f58517cbdcb6c144c9ee3ad9382fced283",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-08-model-capabilities/verification.md",
+          "line": 94,
+          "originalTarget": "evidence/latest-main5dd/parameters-native.png",
+          "referenceKind": "link"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/latest-main5dd/redraw-disabled-native.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "1e4dace77e364dc7cf782bd7d8cde3198db250b9",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/latest-main5dd/redraw-disabled-native.png",
+      "bytes": 504790,
+      "sha256": "9a9ec897fc8cb5597b508df054e12283e20083eaa723a1a946e3f9bdacbe5b9f",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-08-model-capabilities/verification.md",
+          "line": 94,
+          "originalTarget": "evidence/latest-main5dd/redraw-disabled-native.png",
+          "referenceKind": "link"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/latest-main5dd/settings-native.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "4a0e0b6605eda1b62bfa31298d904fc59955a5b0",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/latest-main5dd/settings-native.png",
+      "bytes": 384669,
+      "sha256": "3d28651b15ea0c5bbd966857afb722eb5f8328bbdf41d9de08a71e80b967ef05",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-08-model-capabilities/verification.md",
+          "line": 94,
+          "originalTarget": "evidence/latest-main5dd/settings-native.png",
+          "referenceKind": "link"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/parameters-native.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "0bf41e0b525989353148fd9f448561c5c296a561",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/parameters-native.png",
+      "bytes": 163242,
+      "sha256": "4c9ad16ef4b2dc1a85357597295592f58517cbdcb6c144c9ee3ad9382fced283",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-08-model-capabilities/verification.md",
+          "line": 58,
+          "originalTarget": "evidence/parameters-native.png",
+          "referenceKind": "link"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/redraw-disabled-native.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "1e4dace77e364dc7cf782bd7d8cde3198db250b9",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/redraw-disabled-native.png",
+      "bytes": 504790,
+      "sha256": "9a9ec897fc8cb5597b508df054e12283e20083eaa723a1a946e3f9bdacbe5b9f",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-08-model-capabilities/verification.md",
+          "line": 58,
+          "originalTarget": "evidence/redraw-disabled-native.png",
+          "referenceKind": "link"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-model-capabilities/evidence/settings-native.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "4a0e0b6605eda1b62bfa31298d904fc59955a5b0",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-model-capabilities/evidence/settings-native.png",
+      "bytes": 384669,
+      "sha256": "3d28651b15ea0c5bbd966857afb722eb5f8328bbdf41d9de08a71e80b967ef05",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-08-model-capabilities/verification.md",
+          "line": 58,
+          "originalTarget": "evidence/settings-native.png",
+          "referenceKind": "link"
+        }
+      ]
+    }
+  ],
+  "previousScope": "62 raw log files only; all PNG/JSON and historical conclusions retained",
+  "batches": [
+    {
+      "taskId": "TASK-ORG-6",
+      "date": "2026-10-30",
+      "candidateBase": "be730617ace5013295b85a22133259b32ad6ffec"
     }
   ]
 }

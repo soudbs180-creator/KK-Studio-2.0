@@ -1,0 +1,1088 @@
+{
+  "version": 1,
+  "taskId": "TASK-ORG-6",
+  "classification": "E2-externalized-historical-evidence",
+  "packagePath": "docs/changes/2026-09-22-ui-interactions",
+  "entries": [
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/green/dots-20.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "b4523c2ec6fa513495a458d39537f6195ac761c8",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/green/dots-20.png",
+      "bytes": 108179,
+      "sha256": "68ad4ffb89eec307110c9522a2f1f3da3b3e102a6db9c44cc5e53daa51969b85",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/green/grid-20.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "94edabb7053599d8da1d660879d9dcc416bc85f3",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/green/grid-20.png",
+      "bytes": 128722,
+      "sha256": "51f1a5fffce332a02f005f2c2df3daa8855c29fd17a563c2df4901b1cb183ea1",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/green/workspace-status.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "9da365b219f384e5485ab988c9697aa6dc3264b5",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/green/workspace-status.png",
+      "bytes": 81128,
+      "sha256": "7b1d8e952e7cb839a7fdcfb3a337ad43dbed4924045e99bb5869a439d2c7d22d",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/red/dots-20.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "9bf1ff3b02b9203db714a4b75e8f5a40b1a03cbd",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/red/dots-20.png",
+      "bytes": 276820,
+      "sha256": "74a0c6284b186de4b4197b0171d1b0650956af90d8aebda7f373c16c62681a23",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/red/grid-20.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "432b24837c024abaf54ad1be213919adb983ee56",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/red/grid-20.png",
+      "bytes": 66953,
+      "sha256": "9d87687522c1e6b98bfe9ebad160a11f0f0956a9cbf05871975aacd497b14a55",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/red/workspace-status.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "f4e4ee9109982f6f80d750799cae5ac6307931dd",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/red/workspace-status.png",
+      "bytes": 80415,
+      "sha256": "10870315d8dd8077e9ed458e78e526ad84bb7bedc243eb4adebf4b4598f3b3d2",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-corrections/help-menu.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "d36e8df28b2717a58fbf6dea89aafada6fc355b6",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-corrections/help-menu.png",
+      "bytes": 2489,
+      "sha256": "8e17f246537a318b111efa63fe01cdef4e23d30a7c6746b74b8e0a2e326c1d98",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-corrections/shortcuts-390.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "34e5b7428ae14f1622de96ca978deb0be95d0b96",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-corrections/shortcuts-390.png",
+      "bytes": 27907,
+      "sha256": "e281b9884cee1d9dceaa6828618836b30cb6193d9b16346a2f1e4408281edbf4",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-corrections/shortcuts-全局.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "36e76d46abc53a3fc7e354055ce1e3cca91f616c",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-corrections/shortcuts-全局.png",
+      "bytes": 24749,
+      "sha256": "edcc704b0f470cbe334a266fc9ddd6d4f333e7a55bfab7edf06f819d272dd4ba",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-corrections/shortcuts-文件.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "fa3a378ed7baa433f4d03ff02c3f165f2d206332",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-corrections/shortcuts-文件.png",
+      "bytes": 23296,
+      "sha256": "717e6e57a2b28ba4183ff687078398b7b894049dd8c9bbc102b3201000c04b3a",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-corrections/shortcuts-画布.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "6e93fab15c7267e1a92c62c3d6c68712aa2ff6fb",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-corrections/shortcuts-画布.png",
+      "bytes": 39841,
+      "sha256": "dfcb5cef91c7b95fe78cd2d7f68de54949d3f9589712bd1fdc70008e80b467f8",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-corrections/tool-menu.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "87fbf9ec4d92bf084cb8d868ace92cb401ece644",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-corrections/tool-menu.png",
+      "bytes": 1332,
+      "sha256": "49a6b4b26ab109ebeefdeed1524b44c03b379cd91a0780c8ccb7c118b2febf87",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-dark-all-8-p-069ff-s-fields-switches-and-focus/dark-white-provider.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "ff206adde0257662f3b61f12b5c35dde16a307c6",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-dark-all-8-p-069ff-s-fields-switches-and-focus/dark-white-provider.png",
+      "bytes": 239204,
+      "sha256": "0745f0706c67d0bd0ad932b8ac874d73bd69c46f956b5e47485683d82083a1a0",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-dark-asset-p-08c75-aired-colors-in-all-presets/dark-assets.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "63c844c24d8271a69700d1720cab267b607aa455",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-dark-asset-p-08c75-aired-colors-in-all-presets/dark-assets.png",
+      "bytes": 112607,
+      "sha256": "a9fefaf3fb44068ad4948c06e89260b4807dde39a205353e530be20da6a9aba0",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-dark-asset-p-08c75-aired-colors-in-all-presets/dark-plugins.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "d0ae21d2317d17bdfc5102a0ec5d52696fdd8f54",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-dark-asset-p-08c75-aired-colors-in-all-presets/dark-plugins.png",
+      "bytes": 151881,
+      "sha256": "e45b22ccd619ba1987ad7311e9d6a5f5f87d338d28bc40758ffe863ee2bc44be",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-light-all-8--0247b-s-fields-switches-and-focus/light-white-provider.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "c1d007781a49ecc99a190e827d9644e9b1818efb",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-light-all-8--0247b-s-fields-switches-and-focus/light-white-provider.png",
+      "bytes": 240148,
+      "sha256": "5045c6959b0928c046ba9365f39215a6fa3a7193f5260dc1d01a7cc7f81a7728",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-light-asset--f8dfe-aired-colors-in-all-presets/light-assets.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "15e550c92ce3715ac7438dd74f3ca624301ccdbb",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-light-asset--f8dfe-aired-colors-in-all-presets/light-assets.png",
+      "bytes": 156051,
+      "sha256": "45c33ac69da01cea4dc2360d169ec765295acd5629e5bae63627173f7696a9fd",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-light-asset--f8dfe-aired-colors-in-all-presets/light-plugins.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "faa02ae614724c613e351c651e7f6bce107a5d29",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-light-asset--f8dfe-aired-colors-in-all-presets/light-plugins.png",
+      "bytes": 196191,
+      "sha256": "9dadb631ec92be4363fcceb5adb30d5bf730c5b502e91b4eab5c01eea99f5b8c",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-pages-Skill--0e6c3-ve-cancel-and-focus-at-1920/skill-editor-1920.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "0c53b5b096b9f9baa842c8c2b40c84651b7d97a1",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-pages-Skill--0e6c3-ve-cancel-and-focus-at-1920/skill-editor-1920.png",
+      "bytes": 249120,
+      "sha256": "b163be047217043ba1617494e21b5c1f925cc94639be5a3ea8448977de3440d7",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-pages-Skill--fb664-ave-cancel-and-focus-at-390/skill-editor-390.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "c965b12a9efbbd0355463b315ecf38a6f018e11a",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-pages-Skill--fb664-ave-cancel-and-focus-at-390/skill-editor-390.png",
+      "bytes": 39994,
+      "sha256": "f63f0c2173e3555d58898f06e258a0746daa68823668c94fa238c3079f1d3487",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-pages-catalo-30507-ons-remain-reachable-at-390/390-ComfyUI 工作流.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "fd76dc61e1fab730613fbec67edc82f10faa2bdb",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-pages-catalo-30507-ons-remain-reachable-at-390/390-ComfyUI 工作流.png",
+      "bytes": 46660,
+      "sha256": "eb10d1665b157a3a61c5a93da92f9eae1f556b8df9fce7a8cbfbd87f69b8e4ef",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-pages-catalo-30507-ons-remain-reachable-at-390/390-Skill.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "07f36070b6b75e269af3d4f18a32c694b1040eef",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-pages-catalo-30507-ons-remain-reachable-at-390/390-Skill.png",
+      "bytes": 151308,
+      "sha256": "4570e37d561988ca6ea3eb0535421284a75266d7edfd6546e28204caa43d61c3",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-pages-catalo-30507-ons-remain-reachable-at-390/390-项目库.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "7dd665b70ceb060ce73e60bd77c4c95a151f7627",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-pages-catalo-30507-ons-remain-reachable-at-390/390-项目库.png",
+      "bytes": 33993,
+      "sha256": "dc1a09c62bf83c8dc03c423483bb3e86ef27bd56e86098d98c83c0ef8e2396ae",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-pages-catalo-6bc00-ns-remain-reachable-at-1920/1920-ComfyUI 工作流.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "ef668a4778c5e0cf292b47661ebfae051a32b9ae",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-pages-catalo-6bc00-ns-remain-reachable-at-1920/1920-ComfyUI 工作流.png",
+      "bytes": 185917,
+      "sha256": "01ad5512f6832ff4935f581298f01c36e6a6e31f2973cfb78658c8f80c81dea2",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-pages-catalo-6bc00-ns-remain-reachable-at-1920/1920-Skill.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "43609ca8345375b169063be8e8d41e2c6e32c609",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-pages-catalo-6bc00-ns-remain-reachable-at-1920/1920-Skill.png",
+      "bytes": 425464,
+      "sha256": "9998c638d33a31b8562dbd14781ca42d0bdc74833961c630d1eb96244eaf1817",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-pages-catalo-6bc00-ns-remain-reachable-at-1920/1920-项目库.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "e22c44e4ccb908471a9844f0927bbea4f970413d",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-pages-catalo-6bc00-ns-remain-reachable-at-1920/1920-项目库.png",
+      "bytes": 57782,
+      "sha256": "4984642edcc9f04c42e6e28b59a8f9589f1fe872f0adbc9dc55fb67037058c46",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-pages-catalo-e3703-ons-remain-reachable-at-768/768-ComfyUI 工作流.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "cc62cddcf614394e6a30ba837e168f7c725bf7b2",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-pages-catalo-e3703-ons-remain-reachable-at-768/768-ComfyUI 工作流.png",
+      "bytes": 82155,
+      "sha256": "a01f179bb8aa75b0df4990889198e76f22579483391689ccc9e87b8a7836efbb",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-pages-catalo-e3703-ons-remain-reachable-at-768/768-Skill.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "897a15d4787e6d68f0425ff5341cf99bd5f6006d",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-pages-catalo-e3703-ons-remain-reachable-at-768/768-Skill.png",
+      "bytes": 238276,
+      "sha256": "ef55de93d179e1a19c2134a88ee27d1dc8af84bdcd0b253eb37725a0a86a159d",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-pages-catalo-e3703-ons-remain-reachable-at-768/768-项目库.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "c94039829c027d7c968f118e984a3bc9fcd744ec",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-pages-catalo-e3703-ons-remain-reachable-at-768/768-项目库.png",
+      "bytes": 37182,
+      "sha256": "7cf448c155844e5c533cc9d8cf664469b7e4d0436a3303d92ad7ff8431c61cc9",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-pages-dark-c-0b6d2-es-and-all-accent-consumers/dark-ComfyUI 工作流.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "013a8cc972a16bf2bbc0d3030e551af0488546d8",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-pages-dark-c-0b6d2-es-and-all-accent-consumers/dark-ComfyUI 工作流.png",
+      "bytes": 185880,
+      "sha256": "135fa9d963f698cedd401f6f8cf47334471ebb48353ab5b58ecc769f80611b05",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-pages-dark-c-0b6d2-es-and-all-accent-consumers/dark-Skill.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "bc79082f01bdae9ff9b2978988c1e9bd0c491d17",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-pages-dark-c-0b6d2-es-and-all-accent-consumers/dark-Skill.png",
+      "bytes": 425629,
+      "sha256": "962b1650d3ca0ed8b1d922a34bfeb81b581f84019f7a5853cb96d50a6602eb44",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-pages-dark-c-0b6d2-es-and-all-accent-consumers/dark-项目库.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "0574c5d84fa5f8844c87d4cd7219ed9e3bb62af8",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-pages-dark-c-0b6d2-es-and-all-accent-consumers/dark-项目库.png",
+      "bytes": 57787,
+      "sha256": "3000b272e5ca77e52c91f03d63cee5f2750c73188cf1d278930b8ec1e564cdf9",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-pages-light--34f9f-es-and-all-accent-consumers/light-ComfyUI 工作流.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "9c65dd06bf520672138e44156ad2f04f1abb1578",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-pages-light--34f9f-es-and-all-accent-consumers/light-ComfyUI 工作流.png",
+      "bytes": 184718,
+      "sha256": "acc7df2752778444dcbf4a1e048a10c9b4be2e892021a693b9287e387ab7a423",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-pages-light--34f9f-es-and-all-accent-consumers/light-Skill.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "270b6ea71df2e5db8a0f3b4f4125fefee3c6afce",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-pages-light--34f9f-es-and-all-accent-consumers/light-Skill.png",
+      "bytes": 427472,
+      "sha256": "daad2c9328d344595d3ca333fdd6ce99399eb8bab908d48e7d4b59b0868568c2",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-pages-light--34f9f-es-and-all-accent-consumers/light-项目库.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "28c985f4060f17da46524b195b2987c717648130",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-pages-light--34f9f-es-and-all-accent-consumers/light-项目库.png",
+      "bytes": 57679,
+      "sha256": "2421fe593f9c1ffe867564e8a2a8f5048eae307362eaded55c2f791ad20eace7",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-pages-settin-0a27b-d-reachable-content-at-1920/settings-plugins-dark-1920.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "c64e95410f9af78e6a815867eff3fb5307533350",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-pages-settin-0a27b-d-reachable-content-at-1920/settings-plugins-dark-1920.png",
+      "bytes": 250330,
+      "sha256": "59216b3d376f168f52fc1071e9c6dbcdda2af789c5c60894d81026dfb490e541",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-pages-settin-0a27b-d-reachable-content-at-1920/settings-plugins-light-1920.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "2e8e7767e2958485efa0c51137cb3bd0794170ae",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-pages-settin-0a27b-d-reachable-content-at-1920/settings-plugins-light-1920.png",
+      "bytes": 252251,
+      "sha256": "fa75b3b8f38acb0ea0008a8d0071ba5b299f076d5dc712dc7ede0e19b476c6a4",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-pages-settin-85919-nd-reachable-content-at-390/settings-plugins-dark-390.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "31030b8f54fe187a16a8f5bb78244fdd5c1d2a47",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-pages-settin-85919-nd-reachable-content-at-390/settings-plugins-dark-390.png",
+      "bytes": 43399,
+      "sha256": "d6b573b44ba6691b051e5cab9ece18ed35ac82f23503b124bc61a460ce52c526",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-pages-settin-85919-nd-reachable-content-at-390/settings-plugins-light-390.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "64a94fb504c3ef597d5463e3cb6c7d55b8e8734c",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-pages-settin-85919-nd-reachable-content-at-390/settings-plugins-light-390.png",
+      "bytes": 43440,
+      "sha256": "3c9d292fcb7f4890a9a0c98767859984df3e14baf3d444ee6653abd86028848f",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-settings-des-990b1-em-remains-usable-at-1920px/settings-1920.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "d6ee449dac12b1af7f4030d1f712e20c68d236a8",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-settings-des-990b1-em-remains-usable-at-1920px/settings-1920.png",
+      "bytes": 237310,
+      "sha256": "fcd848a7daafff494468eba8b16429a7ccf00d179f68f19c76a47078c9639318",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-settings-design-system-remains-usable-at-390px/settings-390.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "37783565532ccee8052180b5ad35a765cb11197a",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-settings-design-system-remains-usable-at-390px/settings-390.png",
+      "bytes": 37708,
+      "sha256": "45a882ae53cce9a03dc2f6c8ed8d55b07248af5196815fbf95ad3ef4bcd3dd54",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-settings-design-system-remains-usable-at-768px/settings-768.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "eb09356fa3f3290a434fffc7df8c94f36a0e9fd3",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/design-system-settings-design-system-remains-usable-at-768px/settings-768.png",
+      "bytes": 50107,
+      "sha256": "734037ecd3384f6f4751a3a3939235051fb88ac4c8c453edae4c732fafe1488d",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-feature-parity-Agent-co-5fbfc-or-feedback-and-no-fallback/agent-1920.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "840f993acf7945992b2e38a2238c0d94dda653be",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-feature-parity-Agent-co-5fbfc-or-feedback-and-no-fallback/agent-1920.png",
+      "bytes": 85268,
+      "sha256": "e7b08451706da81b4622326d784df726a92be056eb364aa9b920742a9c83b61c",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-feature-parity-Agent-co-5fbfc-or-feedback-and-no-fallback/agent-390.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "a386c40be906b778a32de542d4de59d7907d6a5e",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-feature-parity-Agent-co-5fbfc-or-feedback-and-no-fallback/agent-390.png",
+      "bytes": 40946,
+      "sha256": "b2dc1acae7cf487e59a5e96660ff8a731e37965fa36f221e1b91dd6771712da3",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-feature-parity-Agent-co-5fbfc-or-feedback-and-no-fallback/agent-768.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "cad198905c75ac0f48d2ce887286aa6e0fb69543",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-feature-parity-Agent-co-5fbfc-or-feedback-and-no-fallback/agent-768.png",
+      "bytes": 52447,
+      "sha256": "ede14b5aacea80b321160ae1ce8078a9879524ed0d7a5114b165fe06bcbe6f29",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-feature-parity-Agent-co-5fbfc-or-feedback-and-no-fallback/agent-running.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "482477b29cc25f3afe709a24bc420ba4b347a4e6",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-feature-parity-Agent-co-5fbfc-or-feedback-and-no-fallback/agent-running.png",
+      "bytes": 84137,
+      "sha256": "146c6d81deb6a75c655789c760fe39f6f18118f907828e5ea567e0cbfee56c4d",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-feature-parity-Agent-id-0d931-as-an-accurate-usable-entry/agent-idle.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "6a6f04496bf5e0f4c99840d286694bc9aa5a5c18",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-feature-parity-Agent-id-0d931-as-an-accurate-usable-entry/agent-idle.png",
+      "bytes": 93464,
+      "sha256": "bd50bad7ec759265d3278408e24506e5255873c63a16350ee99812d8a147f924",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-feature-parity-Agent-wa-b5c79-as-an-accurate-usable-entry/agent-warning.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "fb288ccf16992b369c16f556222e9274c5b66d3d",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-feature-parity-Agent-wa-b5c79-as-an-accurate-usable-entry/agent-warning.png",
+      "bytes": 91918,
+      "sha256": "7b78ddbedc88a28fea7317cab14db15bdae3df22d48e7559d080a0e382ecc202",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-feature-parity-prompt-l-1e3bb-ext-errors-and-focus-at-768/prompt-768-dark.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "5cc6b048adee0e52b640f33ed7a0ebb376a91918",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-feature-parity-prompt-l-1e3bb-ext-errors-and-focus-at-768/prompt-768-dark.png",
+      "bytes": 81947,
+      "sha256": "0755ffe76241e55dacf84c3f8cec4556989f42a689179c87c05746695fb8b94d",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-feature-parity-prompt-l-1e3bb-ext-errors-and-focus-at-768/prompt-768-light.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "460a12d07b999eab73c781bcb939c3ff514c162c",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-feature-parity-prompt-l-1e3bb-ext-errors-and-focus-at-768/prompt-768-light.png",
+      "bytes": 83401,
+      "sha256": "ad2898271120eba852729ec093189258716c733b3145acf4379a292c833e722f",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-feature-parity-prompt-l-7c029-ext-errors-and-focus-at-390/prompt-390-dark.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "e9cc7f705a38e19e1c59aef04abd1e88ecb4f450",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-feature-parity-prompt-l-7c029-ext-errors-and-focus-at-390/prompt-390-dark.png",
+      "bytes": 44670,
+      "sha256": "cc815b550480c4c358a3d852c24831cd38d3a18340367f27c62ce457f46f149b",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-feature-parity-prompt-l-7c029-ext-errors-and-focus-at-390/prompt-390-light.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "06c08701f84fbae43c424a2fbf5fdf353b8db29c",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-feature-parity-prompt-l-7c029-ext-errors-and-focus-at-390/prompt-390-light.png",
+      "bytes": 45438,
+      "sha256": "d246e8a9adbf4b02ddbfff2e5407ce99dc30d84306410e4b71b2cb9e794bcf05",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-feature-parity-prompt-l-a5938-xt-errors-and-focus-at-1920/prompt-1920-dark.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "8dc8ddfe4bb82e93ae4853f3653662602b8bc927",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-feature-parity-prompt-l-a5938-xt-errors-and-focus-at-1920/prompt-1920-dark.png",
+      "bytes": 159453,
+      "sha256": "c8a13d415398197ec15e21c3490125f0812487b425b0a5b80554f39839f7accc",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-feature-parity-prompt-l-a5938-xt-errors-and-focus-at-1920/prompt-1920-light.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "836925e604c36b936d140748cf45380205eddd6c",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-feature-parity-prompt-l-a5938-xt-errors-and-focus-at-1920/prompt-1920-light.png",
+      "bytes": 162220,
+      "sha256": "b50c379f64393a6ef7b8215b7fa08391f2cdea60a403b5d45d51f9db72a2bef8",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-interaction-matrix-HUD--0f27b-bar-and-chat-folding-at-768/dark-folded.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "dcda2fc3645e1dd852905ba5b43298251db832fb",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-interaction-matrix-HUD--0f27b-bar-and-chat-folding-at-768/dark-folded.png",
+      "bytes": 36193,
+      "sha256": "3fbe80d98460b32e21d77032bcf82806366dd81f2fa9ac53a7a745720bdffa59",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-interaction-matrix-HUD--0f27b-bar-and-chat-folding-at-768/dark-open.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "12bfbb513f7c9c39f4f1d1fac65593ee10567f55",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-interaction-matrix-HUD--0f27b-bar-and-chat-folding-at-768/dark-open.png",
+      "bytes": 36207,
+      "sha256": "a71c37dc1e2253de9c6e83a385a2e74fd23ec438411e68c3314e1f446df1bb60",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-interaction-matrix-HUD--0f27b-bar-and-chat-folding-at-768/light-folded.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "f72e443e56cc1f7b622f3e73ac088c5d75645429",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-interaction-matrix-HUD--0f27b-bar-and-chat-folding-at-768/light-folded.png",
+      "bytes": 36857,
+      "sha256": "bc21e686497852d106de1327c63b3178d31738c6ac2a562d89066b8de1e68d77",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-interaction-matrix-HUD--0f27b-bar-and-chat-folding-at-768/light-open.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "45ebfe6806ea11309287ceada242887314add71e",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-interaction-matrix-HUD--0f27b-bar-and-chat-folding-at-768/light-open.png",
+      "bytes": 36857,
+      "sha256": "6844e88a3917be0bbfda1242b3d5b9d7c529d251ea06ff03f1331b7137fc11a1",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-interaction-matrix-HUD--1b981-ar-and-chat-folding-at-1920/dark-folded.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "e92a16d86d4237980f55f9a87a1b1cf61b2cb190",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-interaction-matrix-HUD--1b981-ar-and-chat-folding-at-1920/dark-folded.png",
+      "bytes": 72756,
+      "sha256": "0c6f33d1e1e68e09365d3755354579e1bd7c15635f0490008cc646f276ba6fef",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-interaction-matrix-HUD--1b981-ar-and-chat-folding-at-1920/dark-open.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "229e13e9220531319f1d17ec147517e77a896d80",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-interaction-matrix-HUD--1b981-ar-and-chat-folding-at-1920/dark-open.png",
+      "bytes": 85736,
+      "sha256": "a9e8e531fa61795b736ffcd43164f6bb7438ca8341721253bc92a84daa1bdf34",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-interaction-matrix-HUD--1b981-ar-and-chat-folding-at-1920/light-folded.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "d58b8fff9136ce3e1333263b495734ba74dfbdb6",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-interaction-matrix-HUD--1b981-ar-and-chat-folding-at-1920/light-folded.png",
+      "bytes": 73519,
+      "sha256": "388791e802007b795c4df6aa70a5fbad563287180a676414b69221d36fe670fb",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-interaction-matrix-HUD--1b981-ar-and-chat-folding-at-1920/light-open.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "2968cb581d79f66e09b19d2e9bb483ea5fe4c46b",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-interaction-matrix-HUD--1b981-ar-and-chat-folding-at-1920/light-open.png",
+      "bytes": 86472,
+      "sha256": "981889156ff0e5bb00a6945d054fc2211978ecb484c5613086491a4df65ee34c",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-interaction-matrix-HUD--50521-ar-and-chat-folding-at-1280/dark-folded.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "fdc1c2a7b217233d56dfc5445cad32c1c340e474",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-interaction-matrix-HUD--50521-ar-and-chat-folding-at-1280/dark-folded.png",
+      "bytes": 58184,
+      "sha256": "e364865283b11d8c5a4573d4e0e08cd8625e4ea5b9a1c2d9ab4c5d8cfa745abf",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-interaction-matrix-HUD--50521-ar-and-chat-folding-at-1280/dark-open.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "2a08847f2644bf788d5250bd674a764cd4626139",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-interaction-matrix-HUD--50521-ar-and-chat-folding-at-1280/dark-open.png",
+      "bytes": 66532,
+      "sha256": "32e2cf045b2a002cf33a6eccb3822de2837a6618c6971b332873567ed5a5bebe",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-interaction-matrix-HUD--50521-ar-and-chat-folding-at-1280/light-folded.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "12b7cf166a19dfad3e04b7534c71d450acbcfc59",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-interaction-matrix-HUD--50521-ar-and-chat-folding-at-1280/light-folded.png",
+      "bytes": 61993,
+      "sha256": "298f224549ac9a34a6fba867d33238730d25a4d745f0826628c26242ae668c2c",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-interaction-matrix-HUD--50521-ar-and-chat-folding-at-1280/light-open.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "666f3b8f1e19b5b556a21ca9a32aa354d29de6db",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-interaction-matrix-HUD--50521-ar-and-chat-folding-at-1280/light-open.png",
+      "bytes": 70013,
+      "sha256": "c9d61e69e9c3c3b21efb56165bc6d2ffe10a706b574d33eaa20795654c910eef",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-interaction-matrix-HUD--df16b-bar-and-chat-folding-at-390/dark-folded.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "3201af6856018e8538c835c6a8c7c7d6c562c5a2",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-interaction-matrix-HUD--df16b-bar-and-chat-folding-at-390/dark-folded.png",
+      "bytes": 25392,
+      "sha256": "b477facd11d090bce35f5259d504dd17d695f012eee0b1162befc97ca6a2bfb3",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-interaction-matrix-HUD--df16b-bar-and-chat-folding-at-390/dark-open.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "db6247e916efd3e25c92c4afca703669f2bafe72",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-interaction-matrix-HUD--df16b-bar-and-chat-folding-at-390/dark-open.png",
+      "bytes": 25392,
+      "sha256": "65790f7059f06eabecb3e7a27156085c65cf5da4ae7a8b1553d7fa699dde300c",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-interaction-matrix-HUD--df16b-bar-and-chat-folding-at-390/light-folded.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "f9b5d8890dab953b3ef5613a9a880f841cb18104",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-interaction-matrix-HUD--df16b-bar-and-chat-folding-at-390/light-folded.png",
+      "bytes": 25480,
+      "sha256": "e23b5c4fd56143a89cf5ed6ba563fac3c9d0beda2d3da28dd3c4adff7c5835f4",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-interaction-matrix-HUD--df16b-bar-and-chat-folding-at-390/light-open.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "835393c47371e72ecaef788a682496df1abe5961",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-interaction-matrix-HUD--df16b-bar-and-chat-folding-at-390/light-open.png",
+      "bytes": 25476,
+      "sha256": "17ab00bcf48591c0de80dc34155f33d769c75156b27ef27797530af54caaadd5",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-interactions-minimum-zo-3fc7a--separated-and-grid-visible/dots-20.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "b4523c2ec6fa513495a458d39537f6195ac761c8",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-interactions-minimum-zo-3fc7a--separated-and-grid-visible/dots-20.png",
+      "bytes": 108179,
+      "sha256": "68ad4ffb89eec307110c9522a2f1f3da3b3e102a6db9c44cc5e53daa51969b85",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-interactions-minimum-zo-3fc7a--separated-and-grid-visible/grid-20.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "befe0f331e4a414d6f98e0a15514ff6b763a5bb0",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-interactions-minimum-zo-3fc7a--separated-and-grid-visible/grid-20.png",
+      "bytes": 128764,
+      "sha256": "e58b5da347a772aee64e08a066c81280a163b3c791c75b2f33dd7581cde39688",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-interactions-project-st-c9c2b-try-do-not-cover-each-other/workspace-status.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "9da365b219f384e5485ab988c9697aa6dc3264b5",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-accepted/ui-interactions-project-st-c9c2b-try-do-not-cover-each-other/workspace-status.png",
+      "bytes": 81128,
+      "sha256": "7b1d8e952e7cb839a7fdcfb3a337ad43dbed4924045e99bb5869a439d2c7d22d",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-final/ui-interaction-matrix-HUD--0f27b-bar-and-chat-folding-at-768/dark-folded.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "dcda2fc3645e1dd852905ba5b43298251db832fb",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-final/ui-interaction-matrix-HUD--0f27b-bar-and-chat-folding-at-768/dark-folded.png",
+      "bytes": 36193,
+      "sha256": "3fbe80d98460b32e21d77032bcf82806366dd81f2fa9ac53a7a745720bdffa59",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-final/ui-interaction-matrix-HUD--0f27b-bar-and-chat-folding-at-768/dark-open.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "d49cbc96ff33196c52693caeeec4b49068d20d89",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-final/ui-interaction-matrix-HUD--0f27b-bar-and-chat-folding-at-768/dark-open.png",
+      "bytes": 36244,
+      "sha256": "24f81b64e08a77834d55d9a76c6ae557f464ca9ae023e07ecef0fd68a927bd95",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-final/ui-interaction-matrix-HUD--0f27b-bar-and-chat-folding-at-768/light-folded.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "f72e443e56cc1f7b622f3e73ac088c5d75645429",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-final/ui-interaction-matrix-HUD--0f27b-bar-and-chat-folding-at-768/light-folded.png",
+      "bytes": 36857,
+      "sha256": "bc21e686497852d106de1327c63b3178d31738c6ac2a562d89066b8de1e68d77",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-final/ui-interaction-matrix-HUD--0f27b-bar-and-chat-folding-at-768/light-open.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "45ebfe6806ea11309287ceada242887314add71e",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-final/ui-interaction-matrix-HUD--0f27b-bar-and-chat-folding-at-768/light-open.png",
+      "bytes": 36857,
+      "sha256": "6844e88a3917be0bbfda1242b3d5b9d7c529d251ea06ff03f1331b7137fc11a1",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-final/ui-interaction-matrix-HUD--1b981-ar-and-chat-folding-at-1920/dark-folded.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "e92a16d86d4237980f55f9a87a1b1cf61b2cb190",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-final/ui-interaction-matrix-HUD--1b981-ar-and-chat-folding-at-1920/dark-folded.png",
+      "bytes": 72756,
+      "sha256": "0c6f33d1e1e68e09365d3755354579e1bd7c15635f0490008cc646f276ba6fef",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-final/ui-interaction-matrix-HUD--1b981-ar-and-chat-folding-at-1920/dark-open.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "229e13e9220531319f1d17ec147517e77a896d80",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-final/ui-interaction-matrix-HUD--1b981-ar-and-chat-folding-at-1920/dark-open.png",
+      "bytes": 85736,
+      "sha256": "a9e8e531fa61795b736ffcd43164f6bb7438ca8341721253bc92a84daa1bdf34",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-final/ui-interaction-matrix-HUD--1b981-ar-and-chat-folding-at-1920/light-folded.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "d58b8fff9136ce3e1333263b495734ba74dfbdb6",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-final/ui-interaction-matrix-HUD--1b981-ar-and-chat-folding-at-1920/light-folded.png",
+      "bytes": 73519,
+      "sha256": "388791e802007b795c4df6aa70a5fbad563287180a676414b69221d36fe670fb",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-final/ui-interaction-matrix-HUD--1b981-ar-and-chat-folding-at-1920/light-open.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "2968cb581d79f66e09b19d2e9bb483ea5fe4c46b",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-final/ui-interaction-matrix-HUD--1b981-ar-and-chat-folding-at-1920/light-open.png",
+      "bytes": 86472,
+      "sha256": "981889156ff0e5bb00a6945d054fc2211978ecb484c5613086491a4df65ee34c",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-final/ui-interaction-matrix-HUD--50521-ar-and-chat-folding-at-1280/dark-folded.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "fdc1c2a7b217233d56dfc5445cad32c1c340e474",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-final/ui-interaction-matrix-HUD--50521-ar-and-chat-folding-at-1280/dark-folded.png",
+      "bytes": 58184,
+      "sha256": "e364865283b11d8c5a4573d4e0e08cd8625e4ea5b9a1c2d9ab4c5d8cfa745abf",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-final/ui-interaction-matrix-HUD--50521-ar-and-chat-folding-at-1280/dark-open.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "1058f9a49874f88cb3cabc9373efc71b3f6ee38e",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-final/ui-interaction-matrix-HUD--50521-ar-and-chat-folding-at-1280/dark-open.png",
+      "bytes": 66572,
+      "sha256": "27fbb2ec500fb20b7af4fee198167372f63affbe091646c8614c4e0007fbd65f",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-final/ui-interaction-matrix-HUD--50521-ar-and-chat-folding-at-1280/light-folded.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "12b7cf166a19dfad3e04b7534c71d450acbcfc59",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-final/ui-interaction-matrix-HUD--50521-ar-and-chat-folding-at-1280/light-folded.png",
+      "bytes": 61993,
+      "sha256": "298f224549ac9a34a6fba867d33238730d25a4d745f0826628c26242ae668c2c",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-final/ui-interaction-matrix-HUD--50521-ar-and-chat-folding-at-1280/light-open.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "666f3b8f1e19b5b556a21ca9a32aa354d29de6db",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-final/ui-interaction-matrix-HUD--50521-ar-and-chat-folding-at-1280/light-open.png",
+      "bytes": 70013,
+      "sha256": "c9d61e69e9c3c3b21efb56165bc6d2ffe10a706b574d33eaa20795654c910eef",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-final/ui-interaction-matrix-HUD--df16b-bar-and-chat-folding-at-390/dark-folded.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "3201af6856018e8538c835c6a8c7c7d6c562c5a2",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-final/ui-interaction-matrix-HUD--df16b-bar-and-chat-folding-at-390/dark-folded.png",
+      "bytes": 25392,
+      "sha256": "b477facd11d090bce35f5259d504dd17d695f012eee0b1162befc97ca6a2bfb3",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-final/ui-interaction-matrix-HUD--df16b-bar-and-chat-folding-at-390/dark-open.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "e984a3eee9e922788ff8ae9390da322bf41709bb",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-final/ui-interaction-matrix-HUD--df16b-bar-and-chat-folding-at-390/dark-open.png",
+      "bytes": 25435,
+      "sha256": "c15a46516c02f08295163c6d2e71f649a9348a0b651a21f8010a8fc813e767a2",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-final/ui-interaction-matrix-HUD--df16b-bar-and-chat-folding-at-390/light-folded.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "f9b5d8890dab953b3ef5613a9a880f841cb18104",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-final/ui-interaction-matrix-HUD--df16b-bar-and-chat-folding-at-390/light-folded.png",
+      "bytes": 25480,
+      "sha256": "e23b5c4fd56143a89cf5ed6ba563fac3c9d0beda2d3da28dd3c4adff7c5835f4",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-final/ui-interaction-matrix-HUD--df16b-bar-and-chat-folding-at-390/light-open.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "835393c47371e72ecaef788a682496df1abe5961",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-final/ui-interaction-matrix-HUD--df16b-bar-and-chat-folding-at-390/light-open.png",
+      "bytes": 25476,
+      "sha256": "17ab00bcf48591c0de80dc34155f33d769c75156b27ef27797530af54caaadd5",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-focused/ui-interaction-matrix-HUD--0f27b-bar-and-chat-folding-at-768/dark-folded.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "dcda2fc3645e1dd852905ba5b43298251db832fb",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-focused/ui-interaction-matrix-HUD--0f27b-bar-and-chat-folding-at-768/dark-folded.png",
+      "bytes": 36193,
+      "sha256": "3fbe80d98460b32e21d77032bcf82806366dd81f2fa9ac53a7a745720bdffa59",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-focused/ui-interaction-matrix-HUD--0f27b-bar-and-chat-folding-at-768/dark-open.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "d49cbc96ff33196c52693caeeec4b49068d20d89",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-focused/ui-interaction-matrix-HUD--0f27b-bar-and-chat-folding-at-768/dark-open.png",
+      "bytes": 36244,
+      "sha256": "24f81b64e08a77834d55d9a76c6ae557f464ca9ae023e07ecef0fd68a927bd95",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-focused/ui-interaction-matrix-HUD--0f27b-bar-and-chat-folding-at-768/light-folded.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "f72e443e56cc1f7b622f3e73ac088c5d75645429",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-focused/ui-interaction-matrix-HUD--0f27b-bar-and-chat-folding-at-768/light-folded.png",
+      "bytes": 36857,
+      "sha256": "bc21e686497852d106de1327c63b3178d31738c6ac2a562d89066b8de1e68d77",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-focused/ui-interaction-matrix-HUD--0f27b-bar-and-chat-folding-at-768/light-open.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "45ebfe6806ea11309287ceada242887314add71e",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-focused/ui-interaction-matrix-HUD--0f27b-bar-and-chat-folding-at-768/light-open.png",
+      "bytes": 36857,
+      "sha256": "6844e88a3917be0bbfda1242b3d5b9d7c529d251ea06ff03f1331b7137fc11a1",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-focused/ui-interaction-matrix-HUD--1b981-ar-and-chat-folding-at-1920/dark-folded.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "e92a16d86d4237980f55f9a87a1b1cf61b2cb190",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-focused/ui-interaction-matrix-HUD--1b981-ar-and-chat-folding-at-1920/dark-folded.png",
+      "bytes": 72756,
+      "sha256": "0c6f33d1e1e68e09365d3755354579e1bd7c15635f0490008cc646f276ba6fef",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-focused/ui-interaction-matrix-HUD--1b981-ar-and-chat-folding-at-1920/dark-open.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "229e13e9220531319f1d17ec147517e77a896d80",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-focused/ui-interaction-matrix-HUD--1b981-ar-and-chat-folding-at-1920/dark-open.png",
+      "bytes": 85736,
+      "sha256": "a9e8e531fa61795b736ffcd43164f6bb7438ca8341721253bc92a84daa1bdf34",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-focused/ui-interaction-matrix-HUD--1b981-ar-and-chat-folding-at-1920/light-folded.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "d58b8fff9136ce3e1333263b495734ba74dfbdb6",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-focused/ui-interaction-matrix-HUD--1b981-ar-and-chat-folding-at-1920/light-folded.png",
+      "bytes": 73519,
+      "sha256": "388791e802007b795c4df6aa70a5fbad563287180a676414b69221d36fe670fb",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-focused/ui-interaction-matrix-HUD--1b981-ar-and-chat-folding-at-1920/light-open.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "2968cb581d79f66e09b19d2e9bb483ea5fe4c46b",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-focused/ui-interaction-matrix-HUD--1b981-ar-and-chat-folding-at-1920/light-open.png",
+      "bytes": 86472,
+      "sha256": "981889156ff0e5bb00a6945d054fc2211978ecb484c5613086491a4df65ee34c",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-focused/ui-interaction-matrix-HUD--50521-ar-and-chat-folding-at-1280/dark-folded.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "fdc1c2a7b217233d56dfc5445cad32c1c340e474",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-focused/ui-interaction-matrix-HUD--50521-ar-and-chat-folding-at-1280/dark-folded.png",
+      "bytes": 58184,
+      "sha256": "e364865283b11d8c5a4573d4e0e08cd8625e4ea5b9a1c2d9ab4c5d8cfa745abf",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-focused/ui-interaction-matrix-HUD--50521-ar-and-chat-folding-at-1280/dark-open.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "1058f9a49874f88cb3cabc9373efc71b3f6ee38e",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-focused/ui-interaction-matrix-HUD--50521-ar-and-chat-folding-at-1280/dark-open.png",
+      "bytes": 66572,
+      "sha256": "27fbb2ec500fb20b7af4fee198167372f63affbe091646c8614c4e0007fbd65f",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-focused/ui-interaction-matrix-HUD--50521-ar-and-chat-folding-at-1280/light-folded.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "12b7cf166a19dfad3e04b7534c71d450acbcfc59",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-focused/ui-interaction-matrix-HUD--50521-ar-and-chat-folding-at-1280/light-folded.png",
+      "bytes": 61993,
+      "sha256": "298f224549ac9a34a6fba867d33238730d25a4d745f0826628c26242ae668c2c",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-focused/ui-interaction-matrix-HUD--50521-ar-and-chat-folding-at-1280/light-open.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "666f3b8f1e19b5b556a21ca9a32aa354d29de6db",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-focused/ui-interaction-matrix-HUD--50521-ar-and-chat-folding-at-1280/light-open.png",
+      "bytes": 70013,
+      "sha256": "c9d61e69e9c3c3b21efb56165bc6d2ffe10a706b574d33eaa20795654c910eef",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-focused/ui-interaction-matrix-HUD--df16b-bar-and-chat-folding-at-390/dark-folded.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "f867c932d7d5b77c6413eedd197dcf842f69a24b",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-focused/ui-interaction-matrix-HUD--df16b-bar-and-chat-folding-at-390/dark-folded.png",
+      "bytes": 25279,
+      "sha256": "1ed415a708199da3fec1cab239a8d5fa10c50a726a3ec0f7b35bc9ab0e39ba4e",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-focused/ui-interaction-matrix-HUD--df16b-bar-and-chat-folding-at-390/light-folded.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "21558bbb96d795afbdd6c3f1b381c53b7f37743a",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-focused/ui-interaction-matrix-HUD--df16b-bar-and-chat-folding-at-390/light-folded.png",
+      "bytes": 25368,
+      "sha256": "1fee7fcbb55cc9df9ae2626ee8e775dcb637f5cac0305efffc99bdd947a20b24",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-focused/ui-interaction-matrix-HUD--df16b-bar-and-chat-folding-at-390/light-open.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "3f123a47de28692c1c7a28ea10e391d1a712e903",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-focused/ui-interaction-matrix-HUD--df16b-bar-and-chat-folding-at-390/light-open.png",
+      "bytes": 25363,
+      "sha256": "3df0fae7c157bfba04bafa8a962b0dbc3797cd7dead6b690d49a3d5f73af64dd",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-focused/ui-interactions-minimum-zo-3fc7a--separated-and-grid-visible/dots-20.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "b4523c2ec6fa513495a458d39537f6195ac761c8",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-focused/ui-interactions-minimum-zo-3fc7a--separated-and-grid-visible/dots-20.png",
+      "bytes": 108179,
+      "sha256": "68ad4ffb89eec307110c9522a2f1f3da3b3e102a6db9c44cc5e53daa51969b85",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-focused/ui-interactions-minimum-zo-3fc7a--separated-and-grid-visible/grid-20.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "94edabb7053599d8da1d660879d9dcc416bc85f3",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-focused/ui-interactions-minimum-zo-3fc7a--separated-and-grid-visible/grid-20.png",
+      "bytes": 128722,
+      "sha256": "51f1a5fffce332a02f005f2c2df3daa8855c29fd17a563c2df4901b1cb183ea1",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-interactions/evidence/web-focused/ui-interactions-project-st-c9c2b-try-do-not-cover-each-other/workspace-status.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "9da365b219f384e5485ab988c9697aa6dc3264b5",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-interactions/evidence/web-focused/ui-interactions-project-st-c9c2b-try-do-not-cover-each-other/workspace-status.png",
+      "bytes": 81128,
+      "sha256": "7b1d8e952e7cb839a7fdcfb3a337ad43dbed4924045e99bb5869a439d2c7d22d",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    }
+  ],
+  "scope": "Historical E2 files externalized by validated batches; E1 summaries, JSON, key screenshots and active inputs retained.",
+  "containerResolution": "Resolve containerRelativePath from the workspace container containing the canonical checkout and output.",
+  "recovery": "Verify with scripts/governance/check-evidence-manifest.mjs <manifest> <container>; restore only to a new empty directory. Original Git sourceCommit/sourcePath remains recoverable.",
+  "batches": [
+    {
+      "taskId": "TASK-ORG-6",
+      "date": "2026-10-30",
+      "candidateBase": "be730617ace5013295b85a22133259b32ad6ffec"
+    }
+  ]
+}

@@ -81,3 +81,5 @@ vendor一级子目录UPSTREAM.md按本文件明确要求允许，其他vendor文
 初始候选中IMAGE=271、TYPE=219、NAME=118、LOCATION=32、ROOT=0，共640条规则命中，可能同一文件多次命中；不是640个独立文件，也不是已修复数量。实施、故障注入和整合边界见[ORG-2验证](../changes/2026-10-28-repo-layout-guard/verification.md)。
 
 ORG-5首包候选将62条已迁出的TYPE项移除，TYPE=157、总命中=578，其他类型不变。可用`node scripts/governance/check-evidence-manifest.mjs <manifest.json> <container>`对清单和容器副本实际验证sha256/大小；省略container只做结构检查，输出copiesVerified=false，不代表外部原件可用。先确认副本和新目录恢复，再移除任务树文件；manifest保留原Git对象身份和历史引用。详见[试点验证](../changes/2026-10-28-evidence-pilot/verification.md)。
+
+2026-10-30 ORG-6任务树首批推广：在原62日志试点之外，再迁1200份E2、保留66张E1图与30份活跃引用文件；60包清单/新目录恢复校验完成，历史断链86→86。精确移除490个已解决基线项，578→88，来源及门禁保持；含元数据后跟踪工作树净减159410793B（62.8149%），不是Git历史缩小，也不是主线已合。验收见[本轮结果](../changes/2026-10-30-main-physical-org6/verification.md)。

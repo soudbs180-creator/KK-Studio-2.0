@@ -6,6 +6,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 | ID | Title | Status | Display | Priority | Dependencies | Owner | Next action |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| TASK-COMFY-PHYSICAL-20261030 | 本机ComfyUI真实显卡出图验收 | PARTIAL | 进行中 | P1 | TASK-MOD-P8 | root | 完成隔离Comfy实际CUDA启动与H3工作流执行及软件产物链；图片另待模型验收 |
+| TASK-ORG-6 | 推广历史E2证据外置 | PARTIAL | 进行中 | P1 | TASK-ORG-5 | root | 当前已提交SHA独立审查；完整主线门禁/合流后完成ORG6交付，其余保留文件不盲迁 |
+| TASK-DELIVERY-MAIN-20261030 | 主线squash与保护审计改动后回收 | PARTIAL | 进行中 | P1 | TASK-MOD-P8 | root | 依本包plan执行；具体阶段未完成不得升级整体状态 |
 | TASK-MOD-MODEL-DRAFT | 目录通知保留未保存模型能力草稿 | PARTIAL | 进行中 | P1 | TASK-MOD-P8 | root | 完成当前SHA快速门/独审；独立目录解析/取消/归属及测速文案冲突另项修复，不修改有效安全断言 |
 | TASK-MOD-CHAT-DELIVERY | 成功文本回写原聊天并只读恢复离线历史 | PARTIAL | 进行中 | P1 | TASK-MOD-CHAT-PROJECTION | root | 完成默认治理与远端整合，当前完整组合验收后合main |
 | TASK-MOD-COMFY-RECOVERY | 恢复超窗口Comfy产物并保留结果删除意图 | PARTIAL | 进行中 | P1 | TASK-MOD-P6-1 | root | 当前SHA补审；完整门禁和首建baseline/远端分叉整合 |
@@ -213,6 +216,63 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-MOD-P6-LAYER-SPLIT | 图层拆分 | PARTIAL | 进行中 | P1 | TASK-MOD-P6-UPSCALE | root | 接入并验收Desktop原生TaskHost及真实工作流/Provider；保持四原文与其他P/STD/ORG开放任务，不把fixture作为REAL。 |
 | TASK-MOD-P7 | 资产溯源对齐 | PARTIAL | 进行中 | P1 | TASK-MOD-P6-LAYER-SPLIT | root | 完成原生GUI跨端溯源验收、独审和main合流；旧记录不回写。 |
 | TASK-MOD-P6-1 | ComfyUI本地托管与画布双态工作流卡片 | PARTIAL | 未完成 | P1 | TASK-MOD-P6-HOST | root | 完成浏览器/命令行回归；真实GPU、完整编辑器鼠标/参数面板及独审/main仍开放，用户已要求不控制桌面 |
+
+## TASK-COMFY-PHYSICAL-20261030 — 本机ComfyUI真实显卡出图验收
+
+- Goal: 本机ComfyUI真实显卡出图验收
+- Scope: 用户确认改先真实H3视频；复用已有权重与软件工作流、归档/画布验收，图片模型未下载不假称已验
+- Display status: 进行中
+- Priority: P1 — 未记录
+- Requirement refs: docs/changes/2026-10-30-main-physical-org6/intent.md, docs/changes/2026-10-30-main-physical-org6/spec.md
+- Feature IDs: none
+- Owner role: implementation-integrator
+- Acceptance: 本包spec对应阶段验收与可复核证据; 用户原件/历史失败记录与检查保持; 当前SHA审查/门禁与主线/发布边界分开
+- Branch: `refactor/TASK-MOD-P3-feature-cycles`
+- Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
+- Modules: docs/changes, docs/governance
+- Verification: PARTIAL — RTX5080/16303MiB驱动610.88实查；用户Hub有H3模型/4工作流，Hub venv无torch，隔离venv已安装CUDA版Torch，Comfy requirements准备中。尚无真实生成，保持PARTIAL。
+- Evidence: [docs/changes/2026-10-30-main-physical-org6/verification.md](../../docs/changes/2026-10-30-main-physical-org6/verification.md)
+- Next action: 完成隔离Comfy实际CUDA启动与H3工作流执行及软件产物链；图片另待模型验收
+- Last verified: 2026-10-30
+- Updated: 2026-10-30
+
+## TASK-ORG-6 — 推广历史E2证据外置
+
+- Goal: 推广历史E2证据外置
+- Scope: 已准备E2逐包复核/恢复/manifest/引用与布局基线，E1和JSON保留
+- Display status: 进行中
+- Priority: P1 — 未记录
+- Requirement refs: docs/changes/2026-10-30-main-physical-org6/intent.md, docs/changes/2026-10-30-main-physical-org6/spec.md
+- Feature IDs: none
+- Owner role: implementation-integrator
+- Acceptance: 本包spec对应阶段验收与可复核证据; 用户原件/历史失败记录与检查保持; 当前SHA审查/门禁与主线/发布边界分开
+- Branch: `refactor/TASK-MOD-P3-feature-cycles`
+- Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
+- Modules: docs/changes, docs/governance
+- Verification: PARTIAL — 任务树迁1200份E2/160288854B，60包清单、22历史文档87引用；新目录恢复1200/1200，源/Git/副本SHA一致，66关键图和30活跃文件保留，断链86→86。净减159410793B/62.8149%，非Git历史/主线减量；基线578→88只减490条。类型/增量lint0，根2405pass20skip0fail，当前SHA独审/main未合。
+- Evidence: [docs/changes/2026-10-30-main-physical-org6/verification.md](../../docs/changes/2026-10-30-main-physical-org6/verification.md)
+- Next action: 当前已提交SHA独立审查；完整主线门禁/合流后完成ORG6交付，其余保留文件不盲迁
+- Last verified: 2026-10-30
+- Updated: 2026-10-30
+
+## TASK-DELIVERY-MAIN-20261030 — 主线squash与保护审计改动后回收
+
+- Goal: 主线squash与保护审计改动后回收
+- Scope: 当前分支远端整合/门禁、main合流和本任务树回收
+- Display status: 进行中
+- Priority: P1 — 未记录
+- Requirement refs: docs/changes/2026-10-30-main-physical-org6/intent.md, docs/changes/2026-10-30-main-physical-org6/spec.md
+- Feature IDs: none
+- Owner role: implementation-integrator
+- Acceptance: 本包spec对应阶段验收与可复核证据; 用户原件/历史失败记录与检查保持; 当前SHA审查/门禁与主线/发布边界分开
+- Branch: `refactor/TASK-MOD-P3-feature-cycles`
+- Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
+- Modules: docs/changes, docs/governance
+- Verification: PARTIAL — 2026-10-30重新备份21审计文件，68冲突及CI基线3失败仍开放；GPU已查询，Comfy用户路径待验；ORG6准备按spec复核。
+- Evidence: [docs/changes/2026-10-30-main-physical-org6/verification.md](../../docs/changes/2026-10-30-main-physical-org6/verification.md)
+- Next action: 依本包plan执行；具体阶段未完成不得升级整体状态
+- Last verified: 2026-10-30
+- Updated: 2026-10-30
 
 ## TASK-MOD-MODEL-DRAFT — 目录通知保留未保存模型能力草稿
 

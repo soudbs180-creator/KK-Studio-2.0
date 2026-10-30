@@ -55,7 +55,7 @@ Desktop/Web 源码版本 2.1.4/2.1.5；Mobile 规划版本仍 2.1.1。`client:ch
 
 最后源码 [Tauri build](evidence-manifest.json) 和 [隔离运行](evidence-manifest.json) 退出 0，EXE SHA256 `6577c1831c9a1f691a71ee3e68da32bc59084f922534d498ac644a5ee1effb22`；实际加载 `/assets/index-Bvt1L0MZ.js`、`/assets/index-Dajq2fwF.css`，JS 字节与当前 dist 相符。完整 [native runtime](evidence/desktop-acceptance.json)、[Web runtime 1920](evidence/capabilities-runtime-1920.json)、[browser summary](evidence/browser-summary.json) 和 [源码指纹](evidence/source-fingerprint.json) 绑定这次 dirty 实现；随后提交未改产品源码。独立上下文 review 待绑定提交 SHA。
 
-截图：[Web 390](evidence/capabilities-settings-390.png)、[1099](evidence/capabilities-settings-1099.png)、[1920](evidence/capabilities-settings-1920.png)、[native 设置](evidence/settings-native.png)、[native 参数](evidence/parameters-native.png)、[native 重绘禁用](evidence/redraw-disabled-native.png)。[development runtime](evidence/development-runtime.json) 与 [main 开发失败](evidence/baseline-dev.json) 分开保留，不把遮罩后局部通过变为开发插件通过。
+截图：[Web 390](evidence-manifest.json)、[1099](evidence-manifest.json)、[1920](evidence-manifest.json)、[native 设置](evidence-manifest.json)、[native 参数](evidence-manifest.json)、[native 重绘禁用](evidence-manifest.json)。[development runtime](evidence/development-runtime.json) 与 [main 开发失败](evidence/baseline-dev.json) 分开保留，不把遮罩后局部通过变为开发插件通过。
 
 正式证据放本包 evidence；完整运行日志和浏览器 JSON 记录退出结果/原平台 skips。全量命令使用 Node 24.21.0/npm 12.1.1；独立诊断/原生验收脚本使用现有 Node 24.19.0，浏览器为本机 Edge/WebView2。既有 large-chunk 与 Rust dead-code warning 未屏蔽。
 
@@ -91,9 +91,9 @@ full verify 完成后的 fetch 发现 main 已更新至 5dd6e6dd（阶段计划�
 
 [完整verify](evidence-manifest.json)退出0：Node723/731、8个原skip；Agent172/174、2个原skip；Edge406/406，unexpected=0/flaky=0；lint/typecheck/UI198/0/format/build和治理/功能/Markdown门禁全部通过。[browser summary](evidence/latest-main5dd/browser-summary.json)绑定这次运行时间与577ed3ee源码基准。没有重复利用上一轮394项结果。
 
-[client:check](evidence-manifest.json)、[最终Tauri build](evidence-manifest.json)、[原生运行](evidence-manifest.json)均退出0。EXE SHA256为`0af389bf09a5810c5d5ee57f7dcb07b884d237cefda7d3f38563eb699853951c`，实际加载index-ByBcWj1e.js/index-C6I0Rp3I.css，JS字节与本树dist一致。原生声明恢复、数量/零参考图、禁用重绘、保留原件/tasks=0/pageerrors=[]有[完整runtime](evidence/latest-main5dd/desktop-acceptance.json)及[设置](evidence/latest-main5dd/settings-native.png)、[参数](evidence/latest-main5dd/parameters-native.png)、[重绘](evidence/latest-main5dd/redraw-disabled-native.png)截图；输出在独立run目录，没有覆盖首轮。5项既有Rust warning和Vite large-chunk提示保留。
+[client:check](evidence-manifest.json)、[最终Tauri build](evidence-manifest.json)、[原生运行](evidence-manifest.json)均退出0。EXE SHA256为`0af389bf09a5810c5d5ee57f7dcb07b884d237cefda7d3f38563eb699853951c`，实际加载index-ByBcWj1e.js/index-C6I0Rp3I.css，JS字节与本树dist一致。原生声明恢复、数量/零参考图、禁用重绘、保留原件/tasks=0/pageerrors=[]有[完整runtime](evidence/latest-main5dd/desktop-acceptance.json)及[设置](evidence-manifest.json)、[参数](evidence-manifest.json)、[重绘](evidence-manifest.json)截图；输出在独立run目录，没有覆盖首轮。5项既有Rust warning和Vite large-chunk提示保留。
 
-Web [390](evidence/latest-main5dd/capabilities-settings-390.png)、[1099](evidence/latest-main5dd/capabilities-settings-1099.png)、[1920](evidence/latest-main5dd/capabilities-settings-1920.png)与各runtime JSON来自这次严格1423 preview。根/独立review抽查同状态截图，不把工程补充字段冒充新增Figma设计。Development严格1421再次[运行](evidence-manifest.json)：既有插件遮罩仍存在，记录后按官方Esc操作退出，真实能力字段/持久化局部通过；[runtime](evidence/latest-main5dd/development-runtime.json)明确pluginLoading=PRE-EXISTING FAILURE。
+Web [390](evidence/latest-main5dd/capabilities-settings-390.png)、[1099](evidence-manifest.json)、[1920](evidence-manifest.json)与各runtime JSON来自这次严格1423 preview。根/独立review抽查同状态截图，不把工程补充字段冒充新增Figma设计。Development严格1421再次[运行](evidence-manifest.json)：既有插件遮罩仍存在，记录后按官方Esc操作退出，真实能力字段/持久化局部通过；[runtime](evidence/latest-main5dd/development-runtime.json)明确pluginLoading=PRE-EXISTING FAILURE。
 
 当前[源码指纹](evidence/latest-main5dd/source-fingerprint.json)为`8e58bd273069b7f578f52943107f1d648a75593060d55f59cc698267fa1f2373`，包含前端、原生源码/manifest、版本源与npm锁；正式实现提交后独立复核需重算匹配。后续仅文档/收据变化时复验文档门禁并补审新head，产品源码或构建输入变化则重新生成相应产物。独立修正关闭、draft PR/Hosted检查、用户产品验收及实际发布按事实追加，当前不预写PASS。
 
@@ -117,7 +117,7 @@ Web [390](evidence/latest-main5dd/capabilities-settings-390.png)、[1099](eviden
 
 [clientcheck](evidence-manifest.json)、[fresh Tauri build](evidence-manifest.json)、[隔离native验收](evidence-manifest.json)均退出0。EXE SHA256为db354e2bbd14f5891a5c1b6e3b5584e2f3576c0525b4aa86f50ebed0be4351c5；实际index-D7y589oD.js/index-C6I0Rp3I.css，JS SHA256为8c39cd503fd883c447769915c20cf1c952e10fd3bb1134015b352c491e227829；[native runtime](evidence/draft-refresh5dd/desktop-acceptance.json)确认与dist字节一致、隔离数据根/profile、errors=[]。原生本轮新增受控provider通知后四个未保存字段保持断言，再保存并重载、限制数量/零参考图、禁用重绘、原图归档和tasks=0。
 
-Web同状态证据来自本轮严格1423：[390设置](evidence/draft-refresh5dd/capabilities-settings-390.png)、[1099设置](evidence/draft-refresh5dd/capabilities-settings-1099.png)、[1920设置](evidence/draft-refresh5dd/capabilities-settings-1920.png)、[1920 runtime](evidence/draft-refresh5dd/capabilities-runtime-1920.json)。根上下文目视抽查390设置与[native参数](evidence/draft-refresh5dd/parameters-native.png)；全部实际DOM/截图来自当前bundle。Development严格1421的[本轮日志](evidence-manifest.json)和[runtime](evidence/draft-refresh5dd/development-runtime.json)记录相同通知后字段保持与真实持久化局部PASS；既有public插件遮罩仍FAIL，记录后Esc，仅局部验收，不改称整套开发模式通过。
+Web同状态证据来自本轮严格1423：[390设置](evidence-manifest.json)、[1099设置](evidence-manifest.json)、[1920设置](evidence-manifest.json)、[1920 runtime](evidence/draft-refresh5dd/capabilities-runtime-1920.json)。根上下文目视抽查390设置与[native参数](evidence-manifest.json)；全部实际DOM/截图来自当前bundle。Development严格1421的[本轮日志](evidence-manifest.json)和[runtime](evidence/draft-refresh5dd/development-runtime.json)记录相同通知后字段保持与真实持久化局部PASS；既有public插件遮罩仍FAIL，记录后Esc，仅局部验收，不改称整套开发模式通过。
 
 本轮[源码指纹](evidence/draft-refresh5dd/source-fingerprint.json)为2ebaab3d83bcf31fa33dbd94f8ee817b20baf5f1bf8661447beb64a5ac44735a、389文件（UTF8/LF归一），编译输入在全部检查期间固定。5项既有Rust warning与large-chunk提示保留。新提交正式独立审查、MC-002/MC-003关闭及当前SHA Hosted结果待完成；不以历史PASS或重试替代。
 
@@ -131,3 +131,8 @@ Web同状态证据来自本轮严格1423：[390设置](evidence/draft-refresh5dd
 ## 2026-10-28 原始日志外置查找说明
 
 本包62份原始日志已按ORG-5迁至容器output，原始字节、sha256、Git源及原链接目的地逐项记于[evidence manifest](evidence-manifest.json)。上文32个日志链接现指向该清单，链接文字、历史结论、失败记录与数字保持原意；清单中的sourcePath/references.originalTarget保留原身份。PNG、JSON回执及交付文档仍留仓。迁出仅发生于当前候选任务树，尚未主线整合；本说明不是历史验收或当前Hosted状态的新结论。
+
+
+## 2026-10-30 历史原始证据外置说明
+
+本次ORG-6将历史E2截图/原始日志/录屏外置到容器output；原引用现指向[2026-10-08-model-capabilities manifest](evidence-manifest.json)。原始sourcePath、commit/blob、sha256、大小与原链接目的地逐项可查；原图片嵌入改为同文字的清单链接。原结论、失败、时间和数字未重写，不代表当前功能重新验收或main已合流。E1摘要、JSON、关键图及活跃运行资料仍留仓；恢复仅写新空目录并复核字节。

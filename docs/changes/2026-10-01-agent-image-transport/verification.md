@@ -35,7 +35,7 @@
 
 | AC | 观察结果 | 证据 | 结果 |
 | --- | --- | --- | --- |
-| AC-1 | KK composer 真实 gpt-6-astra 调用内置生图；完成元数据 620 字符，无 result；图片自动成为 ready 节点/owned asset，连接保持 | [真实图片](evidence/native-image.png)、[运行摘要](evidence/native-summary.json) | PASS Desktop |
+| AC-1 | KK composer 真实 gpt-6-astra 调用内置生图；完成元数据 620 字符，无 result；图片自动成为 ready 节点/owned asset，连接保持 | [真实图片](evidence-manifest.json)、[运行摘要](evidence/native-summary.json) | PASS Desktop |
 | AC-2 | 读取原生 asset_read、重连、关闭后重启、再次启动服务/重连，原件 SHA256 86307db43bb5aea73f2f3b543b36366e8dafa3d8766c54a92a3978bfc687b7b6 一致；节点/标记均一份 | [快照](evidence/native-snapshot.json)、[重启截图](evidence/native-restarted.png) | PASS Desktop |
 | AC-3 | 两次请求 57/809、16/768，附加恒为752；前缀/指令各一次，附件/记忆0；同一线程回复 KK_CHAT_OK，重连/重启用户泡泡仍57/16，无固定规则露出 | [请求与恢复](evidence/native-summary.json) | PASS Desktop；Web 共享逻辑回归 |
 
@@ -46,3 +46,8 @@
 本地实现与 AC-1–3 PASS，独立精确 SHA 审查和托管推广另记实际结果；没有提前声称合并。豆包最新 doctor 仍 COMPOSER_NOT_FOUND / doubao-region-ban、hasEditor=false，Cookie 存在不证明登录有效，见[当前状态](evidence/doubao-status.json)。旧额度失败保留，新账号 Codex 成功不代替豆包验收，豆包 CLI 输出自动回画布尚未接入。Mobile、签名、正式安装/发布和其他 Provider 未验证，功能卡仍 PARTIAL。
 
 独立审查实现 head 3c63f1e 为 PASS，无 P0/P1/P2 或合并阻断；P3 AGIMG-DOC-001 指出 spec 的待验收和 verification 的当前 dirty 表述过期，本次终稿已据真实运行证据纠正。审查辅助 fixture 曾因误解素材记录包装和种子节点退出1，修正审查断言后6/6复验，通过范围/限制见 review；没有修改产品或运行证据。新增文档 head 仍需独立补审及托管检查，最终以 PR 精确 head 回读为准。
+
+
+## 2026-10-30 历史原始证据外置说明
+
+本次ORG-6将历史E2截图/原始日志/录屏外置到容器output；原引用现指向[2026-10-01-agent-image-transport manifest](evidence-manifest.json)。原始sourcePath、commit/blob、sha256、大小与原链接目的地逐项可查；原图片嵌入改为同文字的清单链接。原结论、失败、时间和数字未重写，不代表当前功能重新验收或main已合流。E1摘要、JSON、关键图及活跃运行资料仍留仓；恢复仅写新空目录并复核字节。

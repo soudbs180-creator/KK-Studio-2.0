@@ -25,7 +25,7 @@ Task: TASK-CCSWITCH-LEARN-20261014
 - 同 revision 两个子进程真实并发，仅一个胜者；失败者为 conflict，vault 恰好写一次，最终 metadata 与胜者凭据对应。新 cfg(test) gate 只隔离其它顶层测试，未串行化两个 contender。
 - Desktop 用本任务唯一合成凭据和独立 data/profile/CODEX_HOME。原生 revision 2 已提交新模型但 cache 仍旧时，强杀并回收自有进程；两次重启恢复相同 connectionId/credentialRef/模型/profile，系统凭据保留。主配置、备份及页面缓存五轮扫描不含秘密，最后仅清理值匹配的本任务引用。
 - 原生回执拦截和 foreign credential probe 隔离在打开设置前安装并自检；Tauri 受保护 invoke 不被改写。目录成功使用合成 `/models` 响应，不请求真实供应商；配置与生成验证标记保持原样。
-- [目录成功截图](evidence/synthetic-model-directory.png)、[正在编辑截图](evidence/normal-save-editing-label.png)、[第二次重启模型](evidence/cache-publication-crash-restart-2-model.png) 已分别滚动目标到视口并检查完整可见，root 与独立 reviewer 实际查看。
+- [目录成功截图](evidence/synthetic-model-directory.png)、[正在编辑截图](evidence-manifest.json)、[第二次重启模型](evidence-manifest.json) 已分别滚动目标到视口并检查完整可见，root 与独立 reviewer 实际查看。
 
 候选 2.1.18 EXE SHA256 `fb0b0de59a0de989fc0c199961482c7122337c46d7c80f981e77830843973fe7`，input `7c95b83ecffa2e028096f794b808b120d3844e88729696224cd93f1119fbebaa`，driver `583714d1876929393d73de3cb81c88fed78aa76763a85461f4bfe239546e2c01`，官方 helper `reason=current`。可见证据 raw sourceHead 为执行时 `3080a89f`；driver 当时尚未提交，其实际哈希与随后 `19decc93` 完全一致，生产输入未变。保留原始报告，不改写 sourceHead。
 
@@ -46,3 +46,8 @@ Task: TASK-CCSWITCH-LEARN-20261014
 收尾时另一任务推进 Agent/画布同步与共享 Desktop/Web 2.1.19。覆盖保护拒绝整文件回写；保留其源码、版本和其它任务记录，仅合并本任务状态与文档。本任务12个生产/test/driver文件仍与 `19decc93` 完全同哈希，原 index/HEAD 保留。新主目录 input 为 `e66f66e8041f28d545dc71febca6858310f3df36bc21ca949a3fb9c225ac348e` 时，2.1.18 EXE 对当前 2.1.19 返回 `reason=unverified`。上面的 current 和原生验收只属于当时 2.1.18 快照，不能作为最新组合树的桌面验收；本任务不替代并行任务的 2.1.19 验收。
 
 metadata/vault 两个中间阶段使用文件 fixture，不是实际系统 vault 的崩溃原子性证明；物理断电、收费 Provider、Hosted、签名安装及实际用户 profile/凭据验收不在本次证明范围。
+
+
+## 2026-10-30 历史原始证据外置说明
+
+本次ORG-6将历史E2截图/原始日志/录屏外置到容器output；原引用现指向[2026-10-14-ccswitch-status-recovery manifest](evidence-manifest.json)。原始sourcePath、commit/blob、sha256、大小与原链接目的地逐项可查；原图片嵌入改为同文字的清单链接。原结论、失败、时间和数字未重写，不代表当前功能重新验收或main已合流。E1摘要、JSON、关键图及活跃运行资料仍留仓；恢复仅写新空目录并复核字节。

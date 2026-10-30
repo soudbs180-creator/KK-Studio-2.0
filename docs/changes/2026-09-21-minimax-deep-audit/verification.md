@@ -25,7 +25,7 @@ Playwright/Edge exercised the real page without triggering generation:
 2. `自定义连接器` opened MCP settings. Saving `http://remote.example.test/mcp` returned the visible HTTPS validation error `远程 MCP 必须使用 HTTPS；HTTP 仅允许本机地址。`; pressing Escape closed the settings overlay.
 3. `新建本地 Skill` opened one editor dialog. Pressing Escape closed it (`before=1`, `after=0`).
 4. Skill settings `停用` updated the shared registry event; returning to `开始创作` hid `镜头规划助手` from the Skill picker and showed `Skill 已停用`.
-5. Evidence screenshots are [connector-detail.png](../../evidence/minimax-deep-audit-2026-09-21/connector-detail.png) and [skills-after-escape.png](../../evidence/minimax-deep-audit-2026-09-21/skills-after-escape.png). Machine-readable route and result data are in [runtime.json](../../evidence/minimax-deep-audit-2026-09-21/runtime.json).
+5. Evidence screenshots are [connector-detail.png](../../evidence/minimax-deep-audit-2026-09-21/evidence-manifest.json) and [skills-after-escape.png](../../evidence/minimax-deep-audit-2026-09-21/skills-after-escape.png). Machine-readable route and result data are in [runtime.json](../../evidence/minimax-deep-audit-2026-09-21/runtime.json).
 6. The focused Playwright regression after the fresh build passed 10 tests: 8 catalog flows and 2 MCP flows.
 
 ## MiniMax audit evidence
@@ -35,3 +35,8 @@ The installed app at `C:\Users\Administrator\AppData\Local\Programs\MiniMax Desi
 ## Scope limits
 
 This is a Web development verification. Tauri `tauri.localhost` release was not rebuilt or launched for this candidate, and no real cloud provider, paid MiniMax generation, third-party connector install, OAuth, or external service authorization was performed. The task therefore remains `PARTIAL` in the ledger. The current screenshots are behavior evidence from the real Web candidate; they do not establish full Figma parity for newly added Skill/Connector frames.
+
+
+## 2026-10-30 历史原始证据外置说明
+
+本次ORG-6将历史E2截图/原始日志/录屏外置到容器output；原引用现指向[minimax-deep-audit-2026-09-21 manifest](../../evidence/minimax-deep-audit-2026-09-21/evidence-manifest.json)。原始sourcePath、commit/blob、sha256、大小与原链接目的地逐项可查；原图片嵌入改为同文字的清单链接。原结论、失败、时间和数字未重写，不代表当前功能重新验收或main已合流。E1摘要、JSON、关键图及活跃运行资料仍留仓；恢复仅写新空目录并复核字节。

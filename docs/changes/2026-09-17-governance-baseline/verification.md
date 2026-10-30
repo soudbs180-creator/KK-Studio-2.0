@@ -47,10 +47,15 @@
 - Development：`npm run dev -- --host 127.0.0.1 --port 1421 --strictPort`，实际 `http://127.0.0.1:1421/`、development、`/src/main.tsx`。验证打开设置、主题保存刷新恢复、Escape关闭，console/page errors=0。
 - Preview：上述干净 checkout 的 `npm run verify` 通过 Playwright 自建 strictPort 1423 preview，运行139项实际Edge浏览器测试。
 - Desktop：`npm run client:build -- --no-bundle` 后启动本任务的 `src-tauri/target/release/kk-studio.exe --data-dir <绝对隔离目录>`，同时指定独立 `WEBVIEW2_USER_DATA_FOLDER`。先用 IPC `get_storage_root` 断言隔离根，再验证上述设置交互；实际 `http://tauri.localhost/`、production、`index-Bsm9uCZD.js`，console/page errors=0。最终正常 CloseMainWindow 退出，仅操作本轮创建的 PID。
-- [开发端 DOM](../../evidence/governance-2026-09-17/dev-runtime.json)、[桌面 DOM](../../evidence/governance-2026-09-17/native-runtime.json)、[桌面退出](../../evidence/governance-2026-09-17/native-close.json)、[开发设置截图](../../evidence/governance-2026-09-17/dev-settings.png)、[桌面设置截图](../../evidence/governance-2026-09-17/native-settings.png)。截图等待动画结束；这是运行证据，不是实时Figma设计验收。
+- [开发端 DOM](../../evidence/governance-2026-09-17/dev-runtime.json)、[桌面 DOM](../../evidence/governance-2026-09-17/native-runtime.json)、[桌面退出](../../evidence/governance-2026-09-17/native-close.json)、[开发设置截图](../../evidence/governance-2026-09-17/dev-settings.png)、[桌面设置截图](../../evidence/governance-2026-09-17/evidence-manifest.json)。截图等待动画结束；这是运行证据，不是实时Figma设计验收。
 
 ## 整合与后续
 
 原工作区保持原状态。没有remote，不伪造PR或merge；本轮范围提交为987c908，最后补交文档和证据不改变被验证的产品/测试源。待审PR内容已写入pr.md，主线整合仍属T0/EXT-GIT。
 
 子代理早期容量失败，后续 repo_audit 只读复核成功：指出 DONE 可接受失败、active 隔离冲突、Node bare/index 导入绕过、浏览器持久化文档冲突及贡献门禁不一致；已修复并补治理/AST边界回归（最终7/7）。路径规范化用例先复现失败，再修复通过；代理复核未发现本次范围内剩余可行动问题。剩余产品实现/外部条件以docs/governance/task-ledger.json为权威。
+
+
+## 2026-10-30 历史原始证据外置说明
+
+本次ORG-6将历史E2截图/原始日志/录屏外置到容器output；原引用现指向[governance-2026-09-17 manifest](../../evidence/governance-2026-09-17/evidence-manifest.json)。原始sourcePath、commit/blob、sha256、大小与原链接目的地逐项可查；原图片嵌入改为同文字的清单链接。原结论、失败、时间和数字未重写，不代表当前功能重新验收或main已合流。E1摘要、JSON、关键图及活跃运行资料仍留仓；恢复仅写新空目录并复核字节。

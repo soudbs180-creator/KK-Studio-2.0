@@ -1,0 +1,668 @@
+{
+  "version": 1,
+  "taskId": "TASK-ORG-6",
+  "classification": "E2-externalized-historical-evidence",
+  "packagePath": "docs/changes/2026-09-24-ui-regression",
+  "entries": [
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/architecture/1440-assets.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "3a7620de0b53566ab687ae566e6629b17ba05b33",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/architecture/1440-assets.png",
+      "bytes": 118004,
+      "sha256": "eb9e473dbbfef5f04690dfaf673d77fb3692033b28ac30cef105d188dbad3d1d",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/architecture/1440-canvas-chat.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "53fd44d022322c26ee39f30439500929c9133d04",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/architecture/1440-canvas-chat.png",
+      "bytes": 72381,
+      "sha256": "ff9b78e5aabb848be1a83909f009de4c33d2e9cecb6894be3f1c5533862aa00b",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/architecture/1440-canvas.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "c4e69497d0ecc4a638e25d5cd07ba67b2fffd3fc",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/architecture/1440-canvas.png",
+      "bytes": 71024,
+      "sha256": "62513ecdfefd4cf29ee098e6be24eb78e445fc6c2c3ca73677c371daf9a38ffd",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/architecture/1440-comfyui.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "d2e04a4abb762d53924878cff1f6633012bab4f8",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/architecture/1440-comfyui.png",
+      "bytes": 148110,
+      "sha256": "03692f07a81c0e28cff6731d65f7bc04741101c7619f3abc41919f33daf8cc4a",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/architecture/1440-home.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "281d68e831568308b6089b36b8681752eece7061",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/architecture/1440-home.png",
+      "bytes": 212024,
+      "sha256": "bb340b37cce0ae54a7e073faaaf169f887f4743120aaf183d7c63124fa2882bb",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/architecture/1440-projects.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "1fe704c87efc658ab853d878678123be1184b31c",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/architecture/1440-projects.png",
+      "bytes": 46422,
+      "sha256": "e6400028ed27a209da990949ca93aa8fe18fa8e8b91983832d7d7c09ad93a7ac",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/architecture/1440-prompts.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "014aab4b80c05a179e65195c62da5a731707a0dc",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/architecture/1440-prompts.png",
+      "bytes": 124566,
+      "sha256": "bb6b8dd8d818238b63754ecea60a7b1ca57506f60c92cf8dc192df8f08d66f5f",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/architecture/1440-search.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "56c156cb268463a7ec45109cc222617d9d5992cc",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/architecture/1440-search.png",
+      "bytes": 86372,
+      "sha256": "40cf59f29abe87ecce6efec514c960266e3b41b69c972ee42b99cf6f6835d23d",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/architecture/1440-settings-account.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "284f775263f5f05005fb3e435295eca535b15039",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/architecture/1440-settings-account.png",
+      "bytes": 117859,
+      "sha256": "b67db1f5afdeedd7c4ec059e4a8b0f25d8fc2c8bc6d5360e7849a60fd3e2926c",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/architecture/1440-settings-advanced.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "b3c457f46fdab87e515496dd57e4692d8654b545",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/architecture/1440-settings-advanced.png",
+      "bytes": 117760,
+      "sha256": "b27f5f2eb8e93ac75438c112989b3a6414a8efe45a8bac050db827ae87c83511",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/architecture/1440-settings-comfyui.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "b8d425588f226739618439e7c723fcce5e8d1000",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/architecture/1440-settings-comfyui.png",
+      "bytes": 110368,
+      "sha256": "da7b401827269e29839fb37a675359ae267f13f75943b0f04fb36cdab86be4bd",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/architecture/1440-settings-extensions.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "644dd8e1be38b9b1bc2ad7a2733a0c24a366fe90",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/architecture/1440-settings-extensions.png",
+      "bytes": 152968,
+      "sha256": "a17dd47168b533f4b913dabb8e16620d1832fd8bab6ee0df9f65598060341902",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/architecture/1440-settings-general.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "c672f04bf80bd2e0dc61c7986912dd59850153b1",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/architecture/1440-settings-general.png",
+      "bytes": 133315,
+      "sha256": "4d398e1abb6acabbcd8bb4b5d76ade68c03979396991e6668c6e3a6ef345da69",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/architecture/1440-settings-memory.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "0c6a7722620899ca048b3a762c3f1fd68f03f567",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/architecture/1440-settings-memory.png",
+      "bytes": 114416,
+      "sha256": "cc741cfbe2e99b43b195f626a74442d26ab0b925c8f805ca2b26820b0dc75575",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/architecture/1440-settings-models.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "0fa6f070c282051591be444a0ed2e0f370ac94f1",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/architecture/1440-settings-models.png",
+      "bytes": 140954,
+      "sha256": "a458c8c2965cc7cfd5b098ecc6c52778a8a629c311358e32152f7015f0cc0576",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/architecture/1440-settings-network.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "c9cf2e1ad51aae5a4ae0f347a8c9783bd029cd72",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/architecture/1440-settings-network.png",
+      "bytes": 119475,
+      "sha256": "6fc1cfb043e37c56f11bc8ab3bce1e2fdce4368aa30c30843d2e1248ef1dc237",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/architecture/1440-settings-storage.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "6e229266e4e9aa2f0145be3be31241352ab90b73",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/architecture/1440-settings-storage.png",
+      "bytes": 130541,
+      "sha256": "df8dbe752b2b4e1808bef087206cf0f661b2d4868008f9375fc0bbe07d2c50f7",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/architecture/1440-settings-updates.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "f931b7684de0c2565be461b6e3b8d21c2000f431",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/architecture/1440-settings-updates.png",
+      "bytes": 125357,
+      "sha256": "a69d97d6a0c460b18c9eafea9bb01d348ea30071ab74fcf0bb0674b318d80e56",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/architecture/1440-skills.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "59b0aef3f526be6df945f992ea210b8a98fe7079",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/architecture/1440-skills.png",
+      "bytes": 177912,
+      "sha256": "68915535d77d936f9e512c4701e1658baff4c7d0ba8b59668b9657ef9f2aa7bd",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/architecture/1440-task-workbench.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "1547cc7409abe2ce3f1f780c45f56ae4ebd6f43f",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/architecture/1440-task-workbench.png",
+      "bytes": 73666,
+      "sha256": "ad0173dc6b50ac3405f0e60c0bc062b3898fc774bcf068d15bed175b885b4200",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/architecture/1440-tasks.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "80b8fc78e015da17e00aa5f76e68ec0920a65029",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/architecture/1440-tasks.png",
+      "bytes": 77597,
+      "sha256": "562f191ec828e9483fb2e04781b21eb8485bc106f3eddf80aefe00152bbb9d1e",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/architecture/390-assets.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "dcd0e8b303e948cab2fbbab7c557075bafd487c6",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/architecture/390-assets.png",
+      "bytes": 39575,
+      "sha256": "3a865cfa1b8db3dcdc5028055b88798ef8b07e86b3e4087f32c1e809103dc9bd",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/architecture/390-canvas-chat.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "a6a447c53e537f973bd05fcfb4cb8266ebff9523",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/architecture/390-canvas-chat.png",
+      "bytes": 39065,
+      "sha256": "c83726ea53bfbc88fb3fa54b08fd78e839884320c00ffbc2d081cc8be494aed9",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/architecture/390-canvas.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "6a2a55adcfceb806e8983140383c446ce2e971c9",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/architecture/390-canvas.png",
+      "bytes": 18720,
+      "sha256": "2684315d8b86402d45fbb3c283b8966c810bbab8244ea8885e7a0c4bff089109",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/architecture/390-comfyui.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "d9aa75482e3fd18b980af7e6d080f5a6219f3e4d",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/architecture/390-comfyui.png",
+      "bytes": 43785,
+      "sha256": "659b45f7be0f42278a98f690c5a7cde13bc76d00aa1f12815edcd597117efe93",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/architecture/390-home.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "ebd17c5c4b956b8385a77e2317537c6d256e1921",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/architecture/390-home.png",
+      "bytes": 69245,
+      "sha256": "ef2172eb64b76235696f784fbdd1847ddb43fa3ce6393e769dabd51f39a38d95",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/architecture/390-projects.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "8e89651b372fbcfe866ce7797dc9281bf99c8ca3",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/architecture/390-projects.png",
+      "bytes": 27716,
+      "sha256": "5f73505ab5c2590b4a50c396ed67830dc087f3429c630bf4c9f9dfb60e5a64ff",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/architecture/390-prompts.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "bcdde62de4a714290fe28b54b68a592a609ee4e7",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/architecture/390-prompts.png",
+      "bytes": 48269,
+      "sha256": "5ea219d545469559df0191bf4c1e962d8722a2183e8cd0db551fbca1d0f208f5",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/architecture/390-search.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "bb1ac5d7aaca1f97e13577d0452f3492b6b7df73",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/architecture/390-search.png",
+      "bytes": 41635,
+      "sha256": "40ca2a0bf9b24854caae9f8e2f3533cb5000d536c5a27a90db5c03c0c5d4b7d4",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/architecture/390-settings-account.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "03039a0a6d0e077dfdabed922925bf28c380331a",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/architecture/390-settings-account.png",
+      "bytes": 30445,
+      "sha256": "892c8925fcc7f90a0dbf61506fdf3bb208370aeb10a7ff0d3524b9cea2ce7d12",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/architecture/390-settings-advanced.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "71b345eb24147d52c4ef767301c82ebed28d1ffb",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/architecture/390-settings-advanced.png",
+      "bytes": 30715,
+      "sha256": "8b27826b023b6404120e6d59c9f02370dc2306a0a5b03a453a71ea43ff9abce1",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/architecture/390-settings-comfyui.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "3ef4e3e690766d02d1a8ec214aba2ff5ac69c9bc",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/architecture/390-settings-comfyui.png",
+      "bytes": 24310,
+      "sha256": "1db66118bf03991144b9a76f7875a06aaec877352ce1796456cf2d4358fa1f3b",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/architecture/390-settings-extensions.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "8f7955ec6cdd44af507b9567d2fc67eddc76f87b",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/architecture/390-settings-extensions.png",
+      "bytes": 58451,
+      "sha256": "d9325f0756cdc71438e02e03e1bb65cf2f1064e86d7627cf19c7b1e9d3f2d614",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/architecture/390-settings-general.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "7fca8a08e8ce52cd1c9f40d9ec5c431a61d4c1fd",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/architecture/390-settings-general.png",
+      "bytes": 37398,
+      "sha256": "59088accda0e385405035fcede81b2b0186e4021cca85814538669cc403a4ff8",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/architecture/390-settings-memory.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "f313393061a958df8655594d1e2055bcfd9132be",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/architecture/390-settings-memory.png",
+      "bytes": 27341,
+      "sha256": "ee870c4001eeb2b0532f202e65b0d84ffd14f48f899328bf574d19674ec959b1",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/architecture/390-settings-models.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "83ea4fdb4ee6bf445c9f982ebd15570e91ea1b9c",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/architecture/390-settings-models.png",
+      "bytes": 43587,
+      "sha256": "fa1a24af04353bcf8d99fa6f94b9750df3eaaa079cf3d1b48a7b430a574909da",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/architecture/390-settings-network.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "4c9f244730d428fd19a1acd3cc27fc05aafcecff",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/architecture/390-settings-network.png",
+      "bytes": 33158,
+      "sha256": "00552a90c64bcfd65552e019d2b0a2f8aa1bbff9b4c47d8c2c5c3621c3fae859",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/architecture/390-settings-storage.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "bd555a578c3f63ef0ae6cb2653eddd6361731447",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/architecture/390-settings-storage.png",
+      "bytes": 41941,
+      "sha256": "557f93e4d4fd2c03d97a2bf34a21586a77e25aeb678639aa6fc45ffe3eee5d44",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/architecture/390-settings-updates.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "443afbb98aca0d1dfd1c2d594c37fba58736a35a",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/architecture/390-settings-updates.png",
+      "bytes": 37696,
+      "sha256": "8ce29bd7ae75423f6d0af7f7a7cd04fead11571251b590e5729ef6190a68871c",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/architecture/390-skills.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "f997b7003647b2732a3832611fec7803ba212473",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/architecture/390-skills.png",
+      "bytes": 159187,
+      "sha256": "2f2659b42f985cb5416d80e396e3d453c4004e156be77dde408e7a1caa492359",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/architecture/390-tasks.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "777989fc565cd94b88068986c4d77e7feed90e31",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/architecture/390-tasks.png",
+      "bytes": 23975,
+      "sha256": "39e795d105d00203be34fcca1eebd35a83239052baa05d028c32012d8ae90e94",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/build-desktop-review-fixes.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "c9846457f359e737ff2b3e76e59f53dc18ab41b4",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/build-desktop-review-fixes.log",
+      "bytes": 4476,
+      "sha256": "e717db49ae8852a9ad4248c2607b4f9b2c492f56ea984ec89a431d8b6854817e",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/desktop-empty-projects.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "8c4b50f9e4461d498b9f3bb4aa812a70f19425c5",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/desktop-empty-projects.png",
+      "bytes": 50968,
+      "sha256": "ce85ae6a8553a963b6734b5be3d47e06f57fed26c5c666c3171de6fae09cc8a0",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/desktop-home.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "1736e07dc86f99d36149a3bdea7a75e9d6869c1b",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/desktop-home.png",
+      "bytes": 460664,
+      "sha256": "bdb2b9e7eed65f2276b8fb8c9f2f9e05eafd8fe37ace969136087998305f9225",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/desktop-native-blank-canvas.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "ebabb20d30e9f02cc6a61dad14c4c88db5de321e",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/desktop-native-blank-canvas.png",
+      "bytes": 128368,
+      "sha256": "1bc15023056aeef0a357c6b9bdfe7eadd106169d5e57e47a9250cbfe4e3b9f19",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/desktop-native-empty-projects.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "52c6a37f4613fe9f95ef7e8ecb867d85e9f03eed",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/desktop-native-empty-projects.png",
+      "bytes": 81230,
+      "sha256": "54ab3f787bedebb34c9cd9e5d4e15409d6d94ee30fdc4a1d1665071d8984b34c",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/desktop-native-home.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "c4557b987de344d45aee03f6b03d7d766258319c",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/desktop-native-home.png",
+      "bytes": 980008,
+      "sha256": "fd2827c9a54ce29a90f850af7685086f7aefcb2864b492d9e4157fc33d42ad3a",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/desktop-native-partners.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "35da3b29ccbf4f0a82356acd9e0c9745d9536ad2",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/desktop-native-partners.png",
+      "bytes": 492425,
+      "sha256": "dc78d53e6aad781001563c6d2a199d80b43789017a7b394a63a39da3fbebc971",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/desktop-settings.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "67c389566fdaa702720aa5e6551622f501e1478f",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/desktop-settings.png",
+      "bytes": 237528,
+      "sha256": "7261784a4b580daa350c0b8b2936b97a80adb8964c6431d98603aca57f07df5b",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/figma-canvas-composer.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "783d22e113ea767c059bc9b31b9d734013f7084a",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/figma-canvas-composer.png",
+      "bytes": 9084,
+      "sha256": "2df8c2115668e99d643cd8ed8081691fd157370df91f7849d59239c1e94c2e57",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/figma-home-desktop.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "ac72294cf61ac0991538646daca23271f4f3ae6c",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/figma-home-desktop.png",
+      "bytes": 6652,
+      "sha256": "00f8cee271841ac23009f7468dc3fc6c1c4c5171c852531b99e5c85f1c1250ee",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/figma-home-phone.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "83fee657b13dc961322454516b4f8807a60382dc",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/figma-home-phone.png",
+      "bytes": 6118,
+      "sha256": "6e16e9776fcc8f3939648092ea0d696c2155bce27239d246d5cd324803d91234",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/figma-model-picker.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "85ea4786a629f90ca4ca1f92d08e0b7493cae9d1",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/figma-model-picker.png",
+      "bytes": 14455,
+      "sha256": "e2dbdb8e8de48a1d025bd6d5eb72e7beb8110fbb95fb0748ecc7641d511bb719",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/phone-home.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "abd04a6e0b6dec8ba3dffe9d1793d16766dd1cb5",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/phone-home.png",
+      "bytes": 43616,
+      "sha256": "654f443fd3e3805973f900322b829953e3b1fd477d0078c762f1f23a8adb02a8",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/phone-partners.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "772fdf951ef364461f07668c0a3c2c255df31314",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/phone-partners.png",
+      "bytes": 58645,
+      "sha256": "c26d1c6cb2822c792784ead7fc64a070c408045086356e6d8429ff467f643bb1",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/verify-review-fixes-final.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "53b15192af2cb5d04b77fe557fd98948676b1590",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/verify-review-fixes-final.log",
+      "bytes": 77688,
+      "sha256": "f5e5578bbe3ddf9fa30dfda9195e24d2f22b866deb4f847af6084afe6392152c",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/verify-review-fixes.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "f222972ad2e2c0b4d7c1652a6a0168733bfc9078",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/verify-review-fixes.log",
+      "bytes": 32060,
+      "sha256": "e011d51ad7a815db9cd36148683a14914e80a91069fe40f32db54b50e89b4a2c",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/web-canvas-882.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "db3c78690a4a4206533b82a9dd26bddde984da57",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/web-canvas-882.png",
+      "bytes": 26328,
+      "sha256": "50e619fbbf7d26f23b56cb46a29dd9a34928077bf7354c669c9368cb5c70a512",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/web-canvas-composer-1280.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "1ed04ba5cd846fc59bec8368b458d0482896ee43",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/web-canvas-composer-1280.png",
+      "bytes": 127980,
+      "sha256": "3e3e46d53c781914f915e9d12b9794d71f46759aab61d4ab70bc010d5a8a9c47",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/web-chat-882.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "9c8286a83484000ca8a6683f3e499c861b1df8a1",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/web-chat-882.png",
+      "bytes": 43890,
+      "sha256": "b546f26724a8d13a2428c22d4994417b89a17d378bfe07ad833a2597ce3afb30",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/web-home-390.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "d79b961793cebfc310e9bb0a7c568e6172c0be03",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/web-home-390.png",
+      "bytes": 75916,
+      "sha256": "4f348227d8732461f5615be8635381f01c3766e29d7702f63813f3daf18b5cbf",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/web-home-882.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "0b38997cf4b268796ef6375323e48b1ad89cf371",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/web-home-882.png",
+      "bytes": 86136,
+      "sha256": "c810c4720cf592ded22cb3f0675528f982538bfcb65efdd0102885098e34de50",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/web-model-picker-1280.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "9c42f88220dfe2258af8bc37ce681c9be27360b3",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/web-model-picker-1280.png",
+      "bytes": 264246,
+      "sha256": "dbf983d7dc11c6687b87cada36173d8ed4270b4e4f2f99688d89dfd91083eb84",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/web-model-picker-882.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "88a413d33124d00b879c6839119ef0fb95083eed",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/web-model-picker-882.png",
+      "bytes": 92906,
+      "sha256": "2e27abcb3e0510feb8fadd2eda9aa372f668491a70507833928aaa9e710afbfc",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-24-ui-regression/evidence/web-search-882.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "3471c35601e3090771324c153196c2cbfc4f9132",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-24-ui-regression/evidence/web-search-882.png",
+      "bytes": 21144,
+      "sha256": "e08670401407766e01700e753f3b7bc191a9101d2c957aa81629bdeadba99358",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    }
+  ],
+  "scope": "Historical E2 files externalized by validated batches; E1 summaries, JSON, key screenshots and active inputs retained.",
+  "containerResolution": "Resolve containerRelativePath from the workspace container containing the canonical checkout and output.",
+  "recovery": "Verify with scripts/governance/check-evidence-manifest.mjs <manifest> <container>; restore only to a new empty directory. Original Git sourceCommit/sourcePath remains recoverable.",
+  "batches": [
+    {
+      "taskId": "TASK-ORG-6",
+      "date": "2026-10-30",
+      "candidateBase": "be730617ace5013295b85a22133259b32ad6ffec"
+    }
+  ]
+}

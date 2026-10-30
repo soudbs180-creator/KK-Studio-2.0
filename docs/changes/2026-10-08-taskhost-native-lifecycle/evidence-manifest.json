@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "taskId": "TASK-ORG-6",
+  "classification": "E2-externalized-historical-evidence",
+  "packagePath": "docs/changes/2026-10-08-taskhost-native-lifecycle",
+  "entries": [
+    {
+      "sourcePath": "docs/changes/2026-10-08-taskhost-native-lifecycle/evidence/native-final-success.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "61109d965d7514c42d84bae7065c7f4af1ce8a98",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-taskhost-native-lifecycle/evidence/native-final-success.png",
+      "bytes": 443529,
+      "sha256": "516bb16c746a357f12be2d1be6a3a060fa7ecd4618e056b9cd0ee0be66e2931c",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-taskhost-native-lifecycle/evidence/native-final-unknown.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "b0b112a556e69635e1e683bf6af75debd574e6e5",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-taskhost-native-lifecycle/evidence/native-final-unknown.png",
+      "bytes": 240362,
+      "sha256": "009736605b7bb75d4b447bbee2cd5ab7ff1294234b467d03bb78d7ce77f26f45",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-08-taskhost-native-lifecycle/verification.md",
+          "line": 41,
+          "originalTarget": "evidence/native-final-unknown.png",
+          "referenceKind": "link"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-taskhost-native-lifecycle/evidence/native-ui-success.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "2618c96c21187e01362d46bcb1828828b0ee74aa",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-taskhost-native-lifecycle/evidence/native-ui-success.png",
+      "bytes": 444112,
+      "sha256": "712c1466e83e1cb57f53a22165fee7e8d56d5c9d66eaa8a1954cfc6af0cf4add",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-taskhost-native-lifecycle/evidence/native-unknown-recovery.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "6dbd9ff88bce47616189150112a2116df381ed2b",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-taskhost-native-lifecycle/evidence/native-unknown-recovery.png",
+      "bytes": 241495,
+      "sha256": "91702b89f0b900db631f76bd758045b69834a68a3d1166e77ec289946ad3ac87",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-08-taskhost-native-lifecycle/verification.md",
+          "line": 27,
+          "originalTarget": "evidence/native-unknown-recovery.png",
+          "referenceKind": "link"
+        }
+      ]
+    }
+  ],
+  "scope": "Historical E2 files externalized by validated batches; E1 summaries, JSON, key screenshots and active inputs retained.",
+  "containerResolution": "Resolve containerRelativePath from the workspace container containing the canonical checkout and output.",
+  "recovery": "Verify with scripts/governance/check-evidence-manifest.mjs <manifest> <container>; restore only to a new empty directory. Original Git sourceCommit/sourcePath remains recoverable.",
+  "batches": [
+    {
+      "taskId": "TASK-ORG-6",
+      "date": "2026-10-30",
+      "candidateBase": "be730617ace5013295b85a22133259b32ad6ffec"
+    }
+  ]
+}

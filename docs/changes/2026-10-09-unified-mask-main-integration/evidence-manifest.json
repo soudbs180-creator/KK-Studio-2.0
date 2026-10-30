@@ -1,0 +1,408 @@
+{
+  "version": 1,
+  "taskId": "TASK-ORG-6",
+  "classification": "E2-externalized-historical-evidence",
+  "packagePath": "docs/changes/2026-10-09-unified-mask-main-integration",
+  "entries": [
+    {
+      "sourcePath": "docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/failed-runtime/development-eaa0886-1791480035787/home-390.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "009b5f1c2d4ad0a29f0ec7c5769e1d01984e3325",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/failed-runtime/development-eaa0886-1791480035787/home-390.png",
+      "bytes": 77095,
+      "sha256": "4ddac6a1487d9a3c6e3306e38f0ac15a6ace0d7d599f5b0c9a9c65e66eb2ca1c",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/native-mask/lightbox-native.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "74cf225e860bfb396e09ed07f87fbce6248aba51",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/native-mask/lightbox-native.png",
+      "bytes": 70132,
+      "sha256": "084d9c953b15eea729e0f20fabc1d3a9dfa447e0e514bc31c4fc652a5c3fbc34",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/native-model/parameters-native.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "e2adbb97a86341e03bd2e643a47010708a94ac8b",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/native-model/parameters-native.png",
+      "bytes": 97506,
+      "sha256": "64fd6ba7dd8015d4faff8506461a6854f6ff1bd02aa96cd63483cde7eb0f7295",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/native-model/redraw-disabled-native.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "7a59481424ec9fb27dbff94f8f8e09998083fc4d",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/native-model/redraw-disabled-native.png",
+      "bytes": 1406540,
+      "sha256": "2119aa3c30a10c5952ec492365a9a0aed61a0a650b458626b07963bb310c4bd6",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/native-model/settings-native.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "39dca35011ffa05d2caa0453ead003000369517c",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/native-model/settings-native.png",
+      "bytes": 216910,
+      "sha256": "7134cab6c020a6f764b3adbbdee43b631c60694fb94edcccd88e548fcd08c037",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/native-selection/asset-actions.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "6258a855ded081be8aaf333a1070cbc3a907b01d",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/native-selection/asset-actions.png",
+      "bytes": 118973,
+      "sha256": "106be8350b12d019f3052f20f13b96b64157ed695b0471daf6ee41bed6695267",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/native-selection/asset-library.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "98d786ec238321d70d1b16c6ad0570a2dc3a1e73",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/native-selection/asset-library.png",
+      "bytes": 212381,
+      "sha256": "1a5779f003eff0f6320fda94f052d9b52aaae3370b730f6df92450bf4ffc0595",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/native-selection/google-cli.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "d51652c9f838ff1acdb53af569ff48ea839e6b35",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/native-selection/google-cli.png",
+      "bytes": 167223,
+      "sha256": "5279629e7929de7d3277fc681a06b3574982fe87772adf9e50a14f7aa5f9856c",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/native-selection/model-actions.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "0032922047bbc551a66c042fe599c002f81a5d8d",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/native-selection/model-actions.png",
+      "bytes": 163162,
+      "sha256": "5f19f088e99b41bda603787940585e0a75d52c255113f6ef76eced5eecdff41a",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/native-selection/model-settings.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "6cd8035e485f4a20389b9596ea943a6b8b049340",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/native-selection/model-settings.png",
+      "bytes": 150553,
+      "sha256": "87869d6ea39bbc9895aeaf8fd95896bb64cb90171c6e249bf649712c5446a4db",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/native-selection/selected-reference.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "e737218e970aa038c45f67c5e1859b15d3ce2743",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/native-selection/selected-reference.png",
+      "bytes": 236000,
+      "sha256": "914679733566a279d0541b9b732d5f420c86607c08584dce11f2cdaafab63a84",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/native-selection/workbench-export.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "758ff3a8c19acefdfe1980a509c3fcc7d90a0876",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/native-selection/workbench-export.png",
+      "bytes": 152651,
+      "sha256": "14381e6b326980e1f39de6dea34d69edf8729cccdfe089edf6171a480c30bed8",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/native-selection/workbench-generate.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "4a50ef0ff1d110fc9765f16c2f317a3b94ee4ef1",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/native-selection/workbench-generate.png",
+      "bytes": 132553,
+      "sha256": "a65fae88bddff99cfd990886fea2b2aefc5b0a2dc4a823e168768c8b654318fb",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/native-selection/workbench-plan.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "dba1c9f5674f9f63c5e4fdf9a4be4c527f6878ab",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/native-selection/workbench-plan.png",
+      "bytes": 138660,
+      "sha256": "14f575b720f52d50bfe72ec69df3951cb3504c8b23c3631df67f1c034a6b2d78",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/native-selection/workbench-prompt.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "aa754c40a726770ca157c7ad92623fc96bf481f6",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/native-selection/workbench-prompt.png",
+      "bytes": 125100,
+      "sha256": "83b689a5ea8388f1319cbefaa71c8afa06b3eae08fb76b5e47241aaa3b6b76d3",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/native-selection/workbench-queue.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "234d59942ab3f38d8415fac95cfd1c2963d524ba",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/native-selection/workbench-queue.png",
+      "bytes": 129929,
+      "sha256": "62e233fa60f391742eb7f5990e594d7f7c4496389afa49bb89c3bfeab5f50115",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/native-selection/workbench-review.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "710b120d78dd00b1646a7d80cbe6cf322b4df61f",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/native-selection/workbench-review.png",
+      "bytes": 164917,
+      "sha256": "46de0edf3a3964adea56d80234ad85ce440ea230b924082f556ed85bcf3270b3",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/native-startup/home-1920.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "ebaa154af37453b332a3710da83d06ca2f71291d",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/native-startup/home-1920.png",
+      "bytes": 449853,
+      "sha256": "a6e4edc2887311beed02c0c426adec0c3edad8d02158329f4f6cdbd33def3849",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/native-startup/settings-1920.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "62d42fa72b3ee48632dacefb96df30ecaf6076f7",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/native-startup/settings-1920.png",
+      "bytes": 384539,
+      "sha256": "594c89b012b218a72fe282e2885ecd086966866545c780652de743144f6ecb29",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/native-taskhost/native-ui-success.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "3309bc567ef3e1dfb1fa0833f37705f53d33ef05",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/native-taskhost/native-ui-success.png",
+      "bytes": 221520,
+      "sha256": "a41c9f477337beb6bb07cfee8464541dedb2c11d52ced0e5174d6a8c272ca724",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/native-taskhost/native-unknown-recovery.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "f87ee5859b4ed3ad1a516ff040090b9069f61e0a",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/native-taskhost/native-unknown-recovery.png",
+      "bytes": 152438,
+      "sha256": "0e8cd56d554ccaca49ae034c5f7250c2a0e95d534a9941e3f85a34b0a83b9c23",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/native-titlebar/initial.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "ebaa154af37453b332a3710da83d06ca2f71291d",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/native-titlebar/initial.png",
+      "bytes": 449853,
+      "sha256": "a6e4edc2887311beed02c0c426adec0c3edad8d02158329f4f6cdbd33def3849",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/native-titlebar/single-row.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "ebaa154af37453b332a3710da83d06ca2f71291d",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/native-titlebar/single-row.png",
+      "bytes": 449853,
+      "sha256": "a6e4edc2887311beed02c0c426adec0c3edad8d02158329f4f6cdbd33def3849",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/native-titlebar/titlebar.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "b533f4d6e6fd98ecc2c213ee19d6d9483a2cce8f",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/native-titlebar/titlebar.png",
+      "bytes": 3655,
+      "sha256": "de22ab5c362d38b8bf949079fea219f760794f6059e5b95a480508e26037383e",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/web-development/home-1099.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "5d72156ea94300572dcb968d58d6e7acbcb93d7c",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/web-development/home-1099.png",
+      "bytes": 155454,
+      "sha256": "551d1381c71b6a34fed178286e668856e97c39c240995f038a0ad04f7d6b27f1",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/web-development/home-1920.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "d0554ddeec12e050a6b6a77cacadb7fb1b30b81b",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/web-development/home-1920.png",
+      "bytes": 450181,
+      "sha256": "4d74c186af936c9ebb8e36ce96b36ca6c2a2d113d1d40eb91b0eb6f5688e13fa",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/web-development/home-390.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "8f0bec1379ef1faae56f1a8bb97f6228b1560668",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/web-development/home-390.png",
+      "bytes": 82015,
+      "sha256": "b5b9583ca15e4878b34e87b6600acb0c3b3da2b2888ebb3c906a5acc95c13f40",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/web-development/known-plugin-error-1099.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "045637cc4d62123d502dd1d51b5a5e098af975bf",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/web-development/known-plugin-error-1099.png",
+      "bytes": 152277,
+      "sha256": "04a7acf29f49ae7434baf0f222376e615adf88d90429ea59d73df48e98d5d59a",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/web-development/known-plugin-error-1920.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "d75f7c3acb8793ad8f8ff66adfc84c6a8f2ee771",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/web-development/known-plugin-error-1920.png",
+      "bytes": 362654,
+      "sha256": "6ae6d5b13571692ef5d8bf0206ccd7937f7b7a0e77cff414552a3d85ce9432be",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/web-development/known-plugin-error-390.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "009b5f1c2d4ad0a29f0ec7c5769e1d01984e3325",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/web-development/known-plugin-error-390.png",
+      "bytes": 77095,
+      "sha256": "4ddac6a1487d9a3c6e3306e38f0ac15a6ace0d7d599f5b0c9a9c65e66eb2ca1c",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/web-development/settings-1099.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "fa869a5ebb4a952239edda0c9fb2f2afcc2313b6",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/web-development/settings-1099.png",
+      "bytes": 181177,
+      "sha256": "d93d4d7d1cfd01bff535040cb69ef9059e7f22f6050f2df5d62474c6e82f6f36",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/web-development/settings-1920.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "2bb86b8878826402980971d558ab60cf2bc697fc",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/web-development/settings-1920.png",
+      "bytes": 467623,
+      "sha256": "57265e7d15bc586f1b74b4c0f27bf231dcb995e83dccd29c42b5a671d3273ed3",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/web-development/settings-390.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "2013e3860159c6257c3c752a30fae73163969baf",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/web-development/settings-390.png",
+      "bytes": 40905,
+      "sha256": "2f00fc12c6deac3e0157bb30bf2f14815b010a95e12b6470e28dc95e032fce54",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/web-production/home-1099.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "5d72156ea94300572dcb968d58d6e7acbcb93d7c",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/web-production/home-1099.png",
+      "bytes": 155454,
+      "sha256": "551d1381c71b6a34fed178286e668856e97c39c240995f038a0ad04f7d6b27f1",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/web-production/home-1920.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "d0554ddeec12e050a6b6a77cacadb7fb1b30b81b",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/web-production/home-1920.png",
+      "bytes": 450181,
+      "sha256": "4d74c186af936c9ebb8e36ce96b36ca6c2a2d113d1d40eb91b0eb6f5688e13fa",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/web-production/home-390.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "8f0bec1379ef1faae56f1a8bb97f6228b1560668",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/web-production/home-390.png",
+      "bytes": 82015,
+      "sha256": "b5b9583ca15e4878b34e87b6600acb0c3b3da2b2888ebb3c906a5acc95c13f40",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/web-production/settings-1099.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "d905f29ec7a256874179865a2e39ecb1f82b1a47",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/web-production/settings-1099.png",
+      "bytes": 208890,
+      "sha256": "c25986e29a15402e51d730875bf91a48b9daa26935531395123b13d1ccfa6746",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/web-production/settings-1920.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "de96f281306fbe6f0c50641a6cc54227ea1ca95c",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/web-production/settings-1920.png",
+      "bytes": 513830,
+      "sha256": "a86ed267f1ac054af162fffdbc6a1a91edf6300f14c8261cc13c86b3dec9ed65",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/web-production/settings-390.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "d1c4192da3d65e1825c9b84790e10f8097ef3f94",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-unified-mask-main-integration/evidence/current-eaa0886/runtime/web-production/settings-390.png",
+      "bytes": 117890,
+      "sha256": "c25ea8b22b475ebf8b5293f09d1dd6995b6f9ff74dedb4dfc4e3667c4e7f11a5",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    }
+  ],
+  "scope": "Historical E2 files externalized by validated batches; E1 summaries, JSON, key screenshots and active inputs retained.",
+  "containerResolution": "Resolve containerRelativePath from the workspace container containing the canonical checkout and output.",
+  "recovery": "Verify with scripts/governance/check-evidence-manifest.mjs <manifest> <container>; restore only to a new empty directory. Original Git sourceCommit/sourcePath remains recoverable.",
+  "batches": [
+    {
+      "taskId": "TASK-ORG-6",
+      "date": "2026-10-30",
+      "candidateBase": "be730617ace5013295b85a22133259b32ad6ffec"
+    }
+  ]
+}

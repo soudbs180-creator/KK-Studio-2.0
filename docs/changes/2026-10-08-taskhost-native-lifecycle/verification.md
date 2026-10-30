@@ -24,7 +24,7 @@
 | 原生构建              | `client:build:agent -- --no-bundle` 与 CI 同款 `client:build -- --no-bundle` 均通过                                                                                         |
 | 实际原生运行          | `npm run client:taskhost:test`：[十组 PASS](evidence/native-ci-equivalent.json)，5 次实际进程启动、errors=[]、合成凭据 cleanup=true                                         |
 | AC-1/2                | UI intent/native journal 在 POST 前落盘；重放、WebView reload、同数据根异常重启只有一次 POST；改变同身份请求被拒绝                                                          |
-| AC-3/4                | 响应头/响应体/下载中取消分别实测 14/15/128ms；unknown 保守受理；归档原件 hash/身份保持；[恢复 UI](evidence/native-unknown-recovery.png)为 1 success + 3 unknown，无普通重试 |
+| AC-3/4                | 响应头/响应体/下载中取消分别实测 14/15/128ms；unknown 保守受理；归档原件 hash/身份保持；[恢复 UI](evidence-manifest.json)为 1 success + 3 unknown，无普通重试 |
 | AC-5                  | WebView reload 后文本容量仍占用；满载在 journal/POST 前被拒；取消后新任务成功；异常终止后的流式草稿保留 unknown                                                             |
 | AC-6                  | 本机完整回归通过；当前 committed SHA 审查、PR 当前头 CI、主线推广分别记录，不从本机证据推断                                                                                 |
 
@@ -38,7 +38,7 @@ PR #35 已 squash 合入 main@5dd6e6dddaf00cf2d5c14ae02ef5974c72238232，源提�
 
 独立上下文 `/root/continuation_review` 对 5b0eb6a → b58854c0 正式结论 CHANGES REQUIRED。T5-REVIEW-001（P2 安全验收阻断）：凭据已存在的断言可把原值写入失败异常；两处改为布尔检查，新增真实 OS 合成凭据冲突用例，原值保留，异常及其 JSON 均无秘密。T5-REVIEW-002（P2 AC-4 阻断）：unknown 批次静态“单项可重试”及 failed 按钮误导；[实际原生 RED](evidence/red-retry-caption.json)和[真实 Web 混合输出 RED](evidence/browser-red-retry-gate.txt)复现。BatchMatrix 共用 retryableOutputIndices，未归档输出不预先承诺重试，已确认 partial 的安全重试仍覆盖。另将新增文档定向格式化，保留原审查范围与结论，不直接改写旧 SHA。
 
-[最新原生收据](evidence/native-final-retry-gate.json)十一组 PASS；当前 Desktop 2.1.6 / Web 2.1.7 / Mobile 规划 2.1.1，sourceHead 为 fa9da162，九个实际源文件 hash 及 EXE/bundle hash 绑定返修实现。五次实际进程启动、errors=[]、cleanup=true；[实际恢复 UI](evidence/native-final-unknown.png)不再显示可重试提示。后续提交须逐项核对这些源文件 hash，不能将旧 baseline HEAD 当作新提交运行结果。
+[最新原生收据](evidence/native-final-retry-gate.json)十一组 PASS；当前 Desktop 2.1.6 / Web 2.1.7 / Mobile 规划 2.1.1，sourceHead 为 fa9da162，九个实际源文件 hash 及 EXE/bundle hash 绑定返修实现。五次实际进程启动、errors=[]、cleanup=true；[实际恢复 UI](evidence-manifest.json)不再显示可重试提示。后续提交须逐项核对这些源文件 hash，不能将旧 baseline HEAD 当作新提交运行结果。
 
 Web 新增回归通过真实供应商响应制造 1 success + 1 unknown + 2 failed，确认 header、错误文案和按钮均不宣称可普通重试；同时保留普通 partial 的单项重试。初次浏览器返修运行 7/8 通过，最后一项 page.goto 遇到生产 dist 正被并行 native build 重写；这是验证调度错误，保留工程外 browser-green-retry-gate.txt，后续构建与浏览器运行串行，不降低断言或启用额外重试。
 
@@ -95,3 +95,8 @@ PR #36 已合入 main@1af0357b088df79dc51e9b309ef310a500722cf8，[合并后 CI](
 [main78cea37合并后37773335548](evidence/pr37-main-ci.json) verify/deploy-linux SUCCESS；delivery在push事件预期skip。PR37原生[原始收据](evidence/hosted-04260ad-receipt.json) sourceHead为7849310fc8049ed90cfbda2c0c23091e19d8d250，actions/checkout默认PR merge ref；不是042的伪造收据。[完整核验](evidence/hosted-04260ad-integrity.json)证明其parents为base1af+candidate042、完整tree与042/landing78一致，9/9源hash、11组/5次真实elevated/CDP/Runtime154启动及完整ZIP SHA均匹配。四次exit1发生在owned cleanup请求之后，不能称为自行崩溃。本机not-recorded权限字段不据此改写为true。
 
 T5 DONE，PROV005/006独立TODO。UI7d组合另有423browser/97Rust/fresh UI13+TaskHost11+模型能力及独立/HostedPASS；两个任务原生收据与源码版本分别绑定。
+
+
+## 2026-10-30 历史原始证据外置说明
+
+本次ORG-6将历史E2截图/原始日志/录屏外置到容器output；原引用现指向[2026-10-08-taskhost-native-lifecycle manifest](evidence-manifest.json)。原始sourcePath、commit/blob、sha256、大小与原链接目的地逐项可查；原图片嵌入改为同文字的清单链接。原结论、失败、时间和数字未重写，不代表当前功能重新验收或main已合流。E1摘要、JSON、关键图及活跃运行资料仍留仓；恢复仅写新空目录并复核字节。

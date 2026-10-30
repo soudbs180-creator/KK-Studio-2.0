@@ -50,9 +50,14 @@ Web production preview实际命令 node node_modules/vite/bin/vite.js preview --
 
 - Desktop：运行本树 `src-tauri/target/release/kk-studio.exe --data-dir <独立测试目录>`，独立 WebView profile / CDP 9363；真实 `get_storage_root` 与指定目录相同。没有使用真实用户项目或凭据。
 - route `/`；`data-runtime-mode=production`、`data-runtime-entry=src/main.tsx`；JS `index-DNpbFtYK.js`，CSS `index-CsTE5i3I.css`。EXE SHA256 `1b153f93ca49de59b56a635923576d69117a963befca9d28d5ee11ada458c6e8`；[源码/产物指纹](evidence/source-hashes.json)。
-- AC-1：原生 decorations=false，TopBar 1920×40；品牌/菜单/控制中心线均 y=20，右侧控制 120×40。截图：[单排标题栏](evidence/titlebar.png)。
+- AC-1：原生 decorations=false，TopBar 1920×40；品牌/菜单/控制中心线均 y=20，右侧控制 120×40。截图：[单排标题栏](evidence-manifest.json)。
 - AC-2：文件菜单能打开、Escape 关闭回焦；实际 OS 鼠标拖动从 `(0,0)` 移至 `(80,60)`；按钮与 drag region 双击最大化/还原通过，resize 后标签同步；最小化 native 状态=true，恢复后=false，关闭后进程退出码 0；`is_resizable=true`。失败初始化保留设置入口由既有 3 项 desktop-agent 断言覆盖。
 - AC-3：production preview `http://127.0.0.1:1423/` 411 项通过，其中新增 390/1099/1920 三项导航回归；development 实际启动 `node node_modules/vite/bin/vite.js --host 127.0.0.1 --port 1421 --strictPort`，入口 `/src/main.tsx`，三档 DOM/CSS 顺序在开发态收据。
 - `App.tsx` 在所有页面 CSS 末端加载 desktop-titlebar.css；computed height=40px、颜色/文字/图标消费语义 token。当前用户截图决定合排；窗口控制属于工程补充，未声称重新验收 Figma 所有页面。
 - Desktop 2.1.6→2.1.7，Web 2.1.7 保持、Mobile 规划 2.1.1 保持；全部新增行为由 isTauri / desktop-titlebar 限定。
 - 当前原生证据是 Windows core release 的标题栏，未打包 Agent resources 或安装器；macOS/Linux 原生与正式发布不在本地验收结论内。既有 Rust dead-code、Vite chunk 和 npm install-scripts 提示保留，不通过关闭门禁消除它们。
+
+
+## 2026-10-30 历史原始证据外置说明
+
+本次ORG-6将历史E2截图/原始日志/录屏外置到容器output；原引用现指向[2026-10-08-single-row-titlebar manifest](evidence-manifest.json)。原始sourcePath、commit/blob、sha256、大小与原链接目的地逐项可查；原图片嵌入改为同文字的清单链接。原结论、失败、时间和数字未重写，不代表当前功能重新验收或main已合流。E1摘要、JSON、关键图及活跃运行资料仍留仓；恢复仅写新空目录并复核字节。
