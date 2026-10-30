@@ -8,7 +8,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | TASK-COMFY-PHYSICAL-20261030 | 本机ComfyUI真实显卡出图验收 | PARTIAL | 进行中 | P1 | TASK-MOD-P8 | root | 保持PARTIAL：图片checkpoint/P6图像能力、视频资产、Hub安装/自动启动和整体交付各自验收；继续主线冲突与合法bootstrap |
 | TASK-ORG-6 | 推广历史E2证据外置 | PARTIAL | 进行中 | P1 | TASK-ORG-5 | root | 当前已提交SHA独立审查；完整主线门禁/合流后完成ORG6交付，其余保留文件不盲迁 |
-| TASK-DELIVERY-MAIN-20261030 | 主线squash与保护审计改动后回收 | PARTIAL | 进行中 | P1 | TASK-MOD-P8 | root | 依本包plan执行；具体阶段未完成不得升级整体状态 |
+| TASK-DELIVERY-MAIN-20261030 | 主线squash与保护审计改动后回收 | PARTIAL | 进行中 | P1 | TASK-MOD-P8 | root | 逐项核实并修复227个全套浏览器失败、Agent运行目录EPERM；重跑受影响门禁与完整verify/当前Desktop产物和精确SHA独审/Hosted后，正常squash PR81并安全回收本任务树；四文档开放项不自动关闭。 |
 | TASK-MOD-MODEL-DRAFT | 目录通知保留未保存模型能力草稿 | PARTIAL | 进行中 | P1 | TASK-MOD-P8 | root | 完成当前SHA快速门/独审；独立目录解析/取消/归属及测速文案冲突另项修复，不修改有效安全断言 |
 | TASK-MOD-CHAT-DELIVERY | 成功文本回写原聊天并只读恢复离线历史 | PARTIAL | 进行中 | P1 | TASK-MOD-CHAT-PROJECTION | root | 完成默认治理与远端整合，当前完整组合验收后合main |
 | TASK-MOD-COMFY-RECOVERY | 恢复超窗口Comfy产物并保留结果删除意图 | PARTIAL | 进行中 | P1 | TASK-MOD-P6-1 | root | 当前SHA补审；完整门禁和首建baseline/远端分叉整合 |
@@ -269,9 +269,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `refactor/TASK-MOD-P3-feature-cycles`
 - Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
 - Modules: docs/changes, docs/governance
-- Verification: PARTIAL — 2026-10-30重新备份21审计文件，68冲突及CI基线3失败仍开放；GPU已查询，Comfy用户路径待验；ORG6准备按spec复核。
+- Verification: NOT_VERIFIED — 前置PR82已正常squash main9b1038a7，P3已承接实际main且71冲突消除。组合f448限定独审141PASS，两项聊天隔离P1修复；根2441/20skip、Mobile435、Rust384/1ignore、type/lint通过。完整Web911项684PASS/227FAIL/0flaky；当前修复定向9PASS。Windows运行目录发布EPERM阻断，Hosted/正式当前EXE/整体合流未完，main21原件SHA0差异。
 - Evidence: [docs/changes/2026-10-30-main-physical-org6/verification.md](../../docs/changes/2026-10-30-main-physical-org6/verification.md)
-- Next action: 依本包plan执行；具体阶段未完成不得升级整体状态
+- Next action: 逐项核实并修复227个全套浏览器失败、Agent运行目录EPERM；重跑受影响门禁与完整verify/当前Desktop产物和精确SHA独审/Hosted后，正常squash PR81并安全回收本任务树；四文档开放项不自动关闭。
 - Last verified: 2026-10-30
 - Updated: 2026-10-30
 

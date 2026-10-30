@@ -111,11 +111,11 @@
     "evidence": [
       "docs/changes/2026-10-30-main-physical-org6/verification.md"
     ],
-    "verification": "2026-10-30重新备份21审计文件，68冲突及CI基线3失败仍开放；GPU已查询，Comfy用户路径待验；ORG6准备按spec复核。",
-    "verificationResult": "PARTIAL",
+    "verification": "前置PR82已正常squash main9b1038a7，P3已承接实际main且71冲突消除。组合f448限定独审141PASS，两项聊天隔离P1修复；根2441/20skip、Mobile435、Rust384/1ignore、type/lint通过。完整Web911项684PASS/227FAIL/0flaky；当前修复定向9PASS。Windows运行目录发布EPERM阻断，Hosted/正式当前EXE/整体合流未完，main21原件SHA0差异。",
+    "verificationResult": "NOT_VERIFIED",
     "updated": "2026-10-30",
     "lastVerified": "2026-10-30",
-    "nextAction": "依本包plan执行；具体阶段未完成不得升级整体状态",
+    "nextAction": "逐项核实并修复227个全套浏览器失败、Agent运行目录EPERM；重跑受影响门禁与完整verify/当前Desktop产物和精确SHA独审/Hosted后，正常squash PR81并安全回收本任务树；四文档开放项不自动关闭。",
     "requirementRefs": [
       "docs/changes/2026-10-30-main-physical-org6/intent.md",
       "docs/changes/2026-10-30-main-physical-org6/spec.md"

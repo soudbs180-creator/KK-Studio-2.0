@@ -53,3 +53,12 @@ UI采用本 spec 的当前 Figma，软件更新页删除全部模拟计时器/�
 根全单元当前2417通过/20跳过/0失败，Agent204通过/2跳过；Rust --no-default-features --locked 五组273+25+19+26+41=384通过/1忽略，包含归档回执及现有隔离/故障覆盖；本地服务重启/backup恢复通过。完整verify浏览器阶段已发现布局/窄屏可达性等失败，原运行继续记录，不能称全绿。历史交付缺件3包已补入口并明确原研究/草案DRAFT、旧审核NOT VERIFIED；未加历史豁免或补造旧审核。Delivery结构复核0违规，不等于功能验收完成。主仓HEAD仍c2a0228a，21原件SHA重核0差异。
 
 第二项正式独审发现 IR-MERGE-02/P1：已抽取的聊天投影仍按旧draft channel恢复，遗漏主线mainAgent权威。作者已将远端所有canonical聊天按mainAgent投影原样移入hook，75项相关回归通过（新增24种渠道/存储状态/草稿别名组合），保留只读和草稿保护。当前根类型通过；正式修复复核待验。更新页截图还发现继承settings-field-help负margin导致文本重叠，已仅在该页去掉负margin、沿当前Figma字阶修正并补宽窄屏不重叠断言，浏览器复验待当前全套运行释放1423后进行。未把5485构建的全套结果算作新源码结果。
+
+
+## 本轮收据（2026-10-30，整批仍 PARTIAL）
+
+5485a4a9 构建的完整 Edge browser run b1f211e2：911用例，684通过、227失败、0跳过、0flaky，1138次尝试，15分钟；verify exit1，后续design/development未执行，不称全绿。原JSON/全部产物外置副本逐份SHA验证，清单 output/main-physical-org6-2026-10-30/merge-browser-evidence-manifest.json。失败含菜单定位/旧布局断言及可达性，需逐项核实，不能统称过时测试或全部环境问题。
+
+随后 f4484119 产品源码的独立生产构建（index-DfSDbPqq.js）在1423重跑：app-update-honesty、conversation-submit-scope、generation-save-status共9/9首试通过，workers1/retries0；run b0fccc17、实际Desktop Web窄屏390/1099/1920保存恢复与迟到回执均有验证。更新页1920/390截图已目视确认无原文案重叠；这只是Web生产模式，不替代当前Tauri。测试后仅增加了分宽截图路径，产品源码未再变化。最新根2441通过/20跳过，根type/lint均0。
+
+正式限定独审 base9b1038a7→headf4484119 PASS：IR-MERGE-01/02均关闭，独立141项通过，其余已审组合未发现新增P0/P1/P2。该结论不覆盖完整verify/当前产物/整批完成。Hosted f448质量41010826324仍待，guards41010826352成功；Windows41010826289构建失败：Agent运行目录发布 rename EPERM，已有有限重试仍失败，原日志完整保留为hosted-windows-f4484119.log，不扩大重试或假称环境偶发。原生cargo check通过，正式当前EXE/安装和Hosted终局仍待。GitHub连接器更新PR正文遭403 Resource not accessible by integration，代码已正常push，未绕过访问控制。

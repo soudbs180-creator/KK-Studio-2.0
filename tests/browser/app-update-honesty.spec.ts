@@ -46,9 +46,9 @@ test("未接入 updater 时旧偏好不能伪造检查或安装成功", async ({
     expect(titleBox).not.toBeNull();
     expect(copyBox).not.toBeNull();
     expect(copyBox!.y).toBeGreaterThanOrEqual(titleBox!.y + titleBox!.height);
+    await page.screenshot({
+      path: testInfo.outputPath(`app-update-unavailable-${width}.png`),
+      fullPage: true,
+    });
   }
-  await page.screenshot({
-    path: testInfo.outputPath("app-update-unavailable.png"),
-    fullPage: true,
-  });
 });
