@@ -25,18 +25,18 @@
       "docs/governance",
       "docs/changes/2026-10-30-origin-baseline-bootstrap"
     ],
-    "status": "PARTIAL",
+    "status": "REVIEW",
     "displayStatus": "进行中",
     "priority": "P0",
     "priorityRationale": "工具栏定位与当前用户v3数据兼容阻断统一发布",
     "evidence": [
       "docs/changes/2026-10-30-origin-baseline-bootstrap/verification.md"
     ],
-    "verification": "origin产品/版本未改；两份真实baseline已接棘轮，默认lint/typecheck0；根1975pass20skip、Agent204pass2skip、针对41/41。完整verify的838浏览器正在跑，尚无最终退出码/独审/Hosted/合流。",
+    "verification": "本地完整verify退出0：根1975pass20skip、Agent204pass2skip、Edge生产838pass0skip0flaky、design8及开发四步骤通过；产品/版本与origin4610不变，两份baseline精确实扫。浏览器metadata4610对应dirty治理候选，开发metadata75775f3c，原报告不重写，474附件外置SHA通过。正式独审/Delivery/当前SHA Hosted/合流待完成。",
     "verificationResult": "PARTIAL",
     "updated": "2026-10-30",
     "lastVerified": "2026-10-30",
-    "nextAction": "完成838浏览器及verify后续、固定SHA独审/Delivery/Hosted再正常PR squash；P3后续整体另验",
+    "nextAction": "固定提交独立只读评审、Delivery与Hosted门禁后正常PR squash；回到P3解决组合冲突和整体门禁",
     "requirementRefs": [
       "user:主线合流",
       "AGENTS.md",

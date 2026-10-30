@@ -213,3 +213,5 @@ Issue68设置保存同步专项：隔离分支 fix/TASK-ISSUE-68-settings-save�
 [当前交付包](../changes/2026-10-18-unified-toolbar-release/intent.md)。PR73已合入main87c，当前先处理main草稿flaky中已证的跨聊天绘制错配；后续正常PR再等最终main门禁，仍无tag/正式包/部署。外部清理由用户确认暂停，原冷备/失败/分支保留，最终来源及正式工件按实际收据记录。
 
 2026-10-30：TASK-MOD-GATE-BOOTSTRAP 复用原P0分支/工作树，从origin/main4610c333建立无产品源码变更的首建基线；P3 f074d4de已推送保留（含真实H3双路径首帧回流及ORG6）。本候选R1=376/R4=14是origin实测，不代表P3回退；主仓21份审计原件/HEAD未改，原P0提交已归档且仍为P3祖先。完整门/独审/Hosted/合流待验。见[前置验证](../changes/2026-10-30-origin-baseline-bootstrap/verification.md)。
+
+2026-10-30前置复验：origin无产品变更bootstrap本地完整verify0，根1975pass20skip/Agent204pass2skip/浏览器838pass0flaky/design8/开发四步通过；原metadata与dirty运行边界、474附件外置SHA记录在[验证](../changes/2026-10-30-origin-baseline-bootstrap/verification.md)。正式当前SHA独审/Hosted/Delivery/合流仍待验，P3 f074d4de成果保留。
