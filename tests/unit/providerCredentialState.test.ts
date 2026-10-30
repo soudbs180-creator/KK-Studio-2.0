@@ -1,3 +1,4 @@
+import { featureEntryMocks } from "../support/featureEntryMocks.ts";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
@@ -72,8 +73,9 @@ async function harness(
   runInNewContext(compiled, {
     exports,
     require: (name: string) => {
-      assert(name in modules, `Unexpected dependency: ${name}`);
-      return modules[name];
+      const allModules = featureEntryMocks(modules);
+      assert(name in allModules, `Unexpected dependency: ${name}`);
+      return allModules[name];
     },
     setTimeout,
     clearTimeout,

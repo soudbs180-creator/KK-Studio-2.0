@@ -1,0 +1,152 @@
+{
+  "version": 1,
+  "taskId": "TASK-ORG-6",
+  "classification": "E2-externalized-historical-evidence",
+  "packagePath": "docs/evidence/release-2026-09-09",
+  "entries": [
+    {
+      "sourcePath": "docs/evidence/release-2026-09-09/ui-final-landing.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "c87f88c08b2aa23b143f6c8e362485e1c1b43333",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/release-2026-09-09/ui-final-landing.png",
+      "bytes": 360093,
+      "sha256": "7e110a11e7cf305836d74421fb9517e73d2f2ed5d0e117f2438ca63198d711e0",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/release-2026-09-09/ui-final-skills.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "ba7f40ddf6d70290a5616a92eecc607b45b4a214",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/release-2026-09-09/ui-final-skills.png",
+      "bytes": 742314,
+      "sha256": "f3aac9f24610e8e93a355f5bdf5253f4b91c0805e403e93adb3d3110be1003d9",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/release-2026-09-09/ui-final-updates.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "6c42fbb4cd6c79795b71f95f6c26d93a0bc61219",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/release-2026-09-09/ui-final-updates.png",
+      "bytes": 754836,
+      "sha256": "651c97abd763622464fe8270ec88e6631304c08749af5aab20fd484dc1f51867",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/release-2026-09-09/ui-geometry-1071.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "4aad50a07d021034bec59ac202e9d86b9a129d7a",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/release-2026-09-09/ui-geometry-1071.png",
+      "bytes": 66564,
+      "sha256": "7abb927ff2c44e0f20f6b30bd34c844b9f1072a5edd3aced1ad911568d8ed751",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": [
+        {
+          "document": "docs/archive/progress-before-consolidation-2026-09-09.md",
+          "line": 22,
+          "originalTarget": "../evidence/release-2026-09-09/ui-geometry-1071.png",
+          "referenceKind": "link"
+        },
+        {
+          "document": "docs/archive/progress-before-consolidation-latest.md",
+          "line": 22,
+          "originalTarget": "../evidence/release-2026-09-09/ui-geometry-1071.png",
+          "referenceKind": "link"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/evidence/release-2026-09-09/ui-geometry-1115-closed.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "f2ae0b35f5fa12dfcf2d79077ff4de775147a34d",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/release-2026-09-09/ui-geometry-1115-closed.png",
+      "bytes": 45546,
+      "sha256": "c1996c30167c3d4e52e8445f23bc527c80eb661885b0d8b87761453235a04cd5",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": [
+        {
+          "document": "docs/archive/progress-before-consolidation-2026-09-09.md",
+          "line": 9,
+          "originalTarget": "../evidence/release-2026-09-09/ui-geometry-1115-closed.png",
+          "referenceKind": "link"
+        },
+        {
+          "document": "docs/archive/progress-before-consolidation-latest.md",
+          "line": 9,
+          "originalTarget": "../evidence/release-2026-09-09/ui-geometry-1115-closed.png",
+          "referenceKind": "link"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/evidence/release-2026-09-09/ui-geometry-1115.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "bb18eccaf1cdec81e740642fda7c6d12e156eec9",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/release-2026-09-09/ui-geometry-1115.png",
+      "bytes": 64483,
+      "sha256": "c8bd8841f0d83421c92cff80e5f1b48b399bf63678a5b38d2ab8bfa703b39e3d",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": [
+        {
+          "document": "docs/archive/progress-before-consolidation-2026-09-09.md",
+          "line": 9,
+          "originalTarget": "../evidence/release-2026-09-09/ui-geometry-1115.png",
+          "referenceKind": "link"
+        },
+        {
+          "document": "docs/archive/progress-before-consolidation-2026-09-09.md",
+          "line": 16,
+          "originalTarget": "../evidence/release-2026-09-09/ui-geometry-1115.png",
+          "referenceKind": "link"
+        },
+        {
+          "document": "docs/archive/progress-before-consolidation-latest.md",
+          "line": 9,
+          "originalTarget": "../evidence/release-2026-09-09/ui-geometry-1115.png",
+          "referenceKind": "link"
+        },
+        {
+          "document": "docs/archive/progress-before-consolidation-latest.md",
+          "line": 16,
+          "originalTarget": "../evidence/release-2026-09-09/ui-geometry-1115.png",
+          "referenceKind": "link"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/evidence/release-2026-09-09/ui-geometry-1440.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "035778672308e5e773fd2906f3af62571e84ef1c",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/release-2026-09-09/ui-geometry-1440.png",
+      "bytes": 74481,
+      "sha256": "7c283c2c138608fd8aacddce749b61f9f1d8c30fab351afe90fdd0d9221542f5",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": [
+        {
+          "document": "docs/archive/progress-before-consolidation-2026-09-09.md",
+          "line": 22,
+          "originalTarget": "../evidence/release-2026-09-09/ui-geometry-1440.png",
+          "referenceKind": "link"
+        },
+        {
+          "document": "docs/archive/progress-before-consolidation-latest.md",
+          "line": 22,
+          "originalTarget": "../evidence/release-2026-09-09/ui-geometry-1440.png",
+          "referenceKind": "link"
+        }
+      ]
+    }
+  ],
+  "scope": "Historical E2 files externalized by validated batches; E1 summaries, JSON, key screenshots and active inputs retained.",
+  "containerResolution": "Resolve containerRelativePath from the workspace container containing the canonical checkout and output.",
+  "recovery": "Verify with scripts/governance/check-evidence-manifest.mjs <manifest> <container>; restore only to a new empty directory. Original Git sourceCommit/sourcePath remains recoverable.",
+  "batches": [
+    {
+      "taskId": "TASK-ORG-6",
+      "date": "2026-10-30",
+      "candidateBase": "be730617ace5013295b85a22133259b32ad6ffec"
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { detectLocalHardware } from "../../features/models/localHardware";
+import { detectLocalHardware } from "../../features/models/index.ts";
 import {
   recommendLocalModels,
   type LocalHardwareReport,

@@ -36,11 +36,6 @@ for (const [label, value] of [
   ["empty", "data: [DONE]\n\n"],
   ["error", event("部分") + 'data: {"error":{"message":"private-secret"}}\n\n'],
   ["limit", event("x".repeat(32769)) + "data: [DONE]\n\n"],
-  [
-    "length finish",
-    event("部分") +
-      'data: {"choices":[{"delta":{},"finish_reason":"length"}]}\n\n',
-  ],
 ] as const)
   test(`text stream rejects ${label} without leaking response body`, async () => {
     await assert.rejects(
@@ -52,6 +47,20 @@ for (const [label, value] of [
         error instanceof Error && !error.message.includes("private-secret"),
     );
   });
+test("text stream gracefully accepts length finish without throwing", async () => {
+  const text = await readTextStream(
+    response(
+      encode.encode(
+        event("部分") +
+          'data: {"choices":[{"delta":{},"finish_reason":"length"}]}\n\n' +
+          "data: [DONE]\n\n",
+      ),
+      1024,
+    ),
+    new AbortController().signal,
+  );
+  assert.equal(text, "部分");
+});
 test("text stream abort cancels a stalled read", async () => {
   let cancelled = false;
   const abort = new AbortController();

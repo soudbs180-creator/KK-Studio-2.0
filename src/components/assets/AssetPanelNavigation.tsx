@@ -9,63 +9,40 @@ import AssetFilterControls from "./AssetFilterControls";
 export type AssetPanelTab = "canvas" | "assets" | "trash";
 
 interface AssetPanelNavigationProps {
-  compact: boolean;
   tab: AssetPanelTab;
   view: "grid" | "list";
   filter: AssetFilter;
   sourceFilter: string;
   source: Asset[];
-  selected: string;
-  onClose: () => void;
-  onToggleCompact: () => void;
+  resourcePacks?: string[];
   onTab: (tab: AssetPanelTab) => void;
   onView: (view: "grid" | "list") => void;
   onFilter: (patch: Partial<AssetFilter>) => void;
   onSource: (source: string) => void;
-  onOpen: (asset: Asset) => void;
 }
 
-const Icon = ({ name }: { name: string }) => (
-  <img
+const Icon = ({ name }: { name: "asset-grid" | "asset-list" | "search" }) => (
+  <span
     className="asset-icon"
-    src={`/design/figma/${name === "asset-grid" ? "asset-list" : name === "asset-list" ? "asset-grid" : name}.svg`}
-    alt=""
+    style={{ maskImage: `url("/design/figma/${name}.svg")` }}
+    aria-hidden="true"
   />
 );
 
 export default function AssetPanelNavigation({
-  compact,
   tab,
   view,
   filter,
   sourceFilter,
   source,
-  selected,
-  onClose,
-  onToggleCompact,
+  resourcePacks,
   onTab,
   onView,
   onFilter,
   onSource,
-  onOpen,
 }: AssetPanelNavigationProps) {
   return (
     <>
-      <header className="asset-header">
-        <span>资产管理</span>
-        <div className="asset-window-actions">
-          <button
-            aria-label={compact ? "展开资产管理" : "收起资产管理"}
-            onClick={onToggleCompact}
-          >
-            <Icon name={compact ? "expand" : "collapse"} />
-          </button>
-          <button aria-label="关闭资产管理" onClick={onClose}>
-            <UiIcon name="close" size={20} />
-          </button>
-        </div>
-      </header>
-      <h2 className="asset-title">KK工作流画布</h2>
       <div className="asset-tabs" role="tablist" aria-label="资源范围">
         {(["canvas", "assets"] as const).map((value) => (
           <button
@@ -85,7 +62,7 @@ export default function AssetPanelNavigation({
           aria-selected={tab === "trash"}
           onClick={() => onTab("trash")}
         >
-          <UiIcon name="delete" size={16} />
+          <UiIcon name="delete" size={28} />
         </button>
       </div>
       <div className="asset-search-row">
@@ -118,22 +95,11 @@ export default function AssetPanelNavigation({
       <AssetFilterControls
         filter={filter}
         tags={Array.from(new Set(source.flatMap(getAssetTags)))}
+        resourcePacks={resourcePacks}
         sourceFilter={sourceFilter}
         onFilter={onFilter}
         onSource={onSource}
       />
-      <nav className="asset-file-nav" aria-label="文件列表">
-        {source.slice(0, 4).map((asset) => (
-          <button
-            key={asset.id}
-            aria-pressed={selected === asset.id}
-            onClick={() => onOpen(asset)}
-          >
-            <span className="file-square" />
-            {asset.name}
-          </button>
-        ))}
-      </nav>
     </>
   );
 }

@@ -1,11 +1,11 @@
 import { useEffect, useRef, type Dispatch, type SetStateAction } from "react";
-import type { CreationDraft } from "../features/creation/model";
+import type { CreationDraft } from "../features/creation/index.ts";
 
 export type ConversationSend = (
   message: string,
 ) => boolean | string | void | Promise<boolean | string>;
 
-export default function useConversationSubmit(options: {
+interface UseConversationSubmitOptions {
   draftKey: string;
   input: string;
   getDraftRevision: () => number;
@@ -21,7 +21,43 @@ export default function useConversationSubmit(options: {
   composerDraft?: CreationDraft;
   setInput: (value: string) => void;
   setMessages: Dispatch<SetStateAction<string[]>>;
-}) {
+}
+
+function finishSubmitSuccess(
+  options: UseConversationSubmitOptions,
+  latest: UseConversationSubmitOptions,
+  message: string,
+  revision: number,
+  sentDraft: CreationDraft | undefined,
+  sentSignature: string,
+  isCurrent: () => boolean,
+): void {
+  const clearVisibleDraft =
+    isCurrent() &&
+    latest.getDraftRevision() === revision &&
+    latest.input === options.input &&
+    JSON.stringify(latest.composerDraft) === sentSignature;
+  if (options.onDraftChange && sentDraft)
+    options.onDraftChange(
+      { ...sentDraft, prompt: "", updatedAt: Date.now() },
+      sentDraft,
+    );
+  if (!isCurrent()) return;
+  if (!options.onSend) options.setMessages((current) => [...current, message]);
+  if (clearVisibleDraft) {
+    options.setInput("");
+    options.setPendingApproval(null);
+  }
+  options.setStatus(
+    options.onSend
+      ? "任务已提交，状态会显示在画布顶部。"
+      : "内容已记录。连接模型接入后，即可获取 AI 回复。",
+  );
+}
+
+export default function useConversationSubmit(
+  options: UseConversationSubmitOptions,
+) {
   const latest = useRef(options);
   latest.current = options;
   const scope = useRef({ key: options.draftKey, pending: false });
@@ -63,27 +99,14 @@ export default function useConversationSubmit(options: {
         );
         return;
       }
-      const clearVisibleDraft =
-        isCurrent() &&
-        latest.current.getDraftRevision() === revision &&
-        latest.current.input === options.input &&
-        JSON.stringify(latest.current.composerDraft) === sentSignature;
-      if (options.onDraftChange && sentDraft)
-        options.onDraftChange(
-          { ...sentDraft, prompt: "", updatedAt: Date.now() },
-          sentDraft,
-        );
-      if (!isCurrent()) return;
-      if (!options.onSend)
-        options.setMessages((current) => [...current, message]);
-      if (clearVisibleDraft) {
-        options.setInput("");
-        options.setPendingApproval(null);
-      }
-      options.setStatus(
-        options.onSend
-          ? "任务已提交，状态会显示在画布顶部。"
-          : "内容已记录。连接模型接入后，即可获取 AI 回复。",
+      finishSubmitSuccess(
+        options,
+        latest.current,
+        message,
+        revision,
+        sentDraft,
+        sentSignature,
+        isCurrent,
       );
     } catch {
       if (isCurrent()) options.setStatus("提交失败，请检查模型连接后重试。");

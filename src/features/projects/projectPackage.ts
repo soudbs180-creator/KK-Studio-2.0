@@ -3,16 +3,13 @@ import type {
   CreationAttachment,
   CreationProject,
   CreationSnapshot,
-} from "../creation/model.ts";
-import type { StoredGeneratedAsset } from "../creation/assetRepository.ts";
-import { isAssetReference } from "../creation/snapshotAssets.ts";
-import { encodeSnapshotAssets } from "../creation/snapshotAssets.ts";
-import {
-  assetProvenanceSchema,
-  loadStoredAsset,
-} from "../creation/assetRepository.ts";
-import { serializeCreationSnapshot } from "../creation/model.ts";
-import { decodeSnapshot } from "../creation/snapshotCodec.ts";
+} from "../creation/index.ts";
+import type { StoredGeneratedAsset } from "../creation/index.ts";
+import { isAssetReference } from "../creation/index.ts";
+import { encodeSnapshotAssets } from "../creation/index.ts";
+import { assetProvenanceSchema, loadStoredAsset } from "../creation/index.ts";
+import { serializeCreationSnapshot } from "../creation/index.ts";
+import { decodeSnapshot } from "../creation/index.ts";
 
 const ASSET_ID = /^asset-[a-f0-9]{24}$/;
 const SHA256 = /^[a-f0-9]{64}$/;

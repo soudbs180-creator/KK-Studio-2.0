@@ -96,9 +96,7 @@ test("首页模型弹层选择真实 API 图片模型并保存连接身份", asy
     .getByRole("menu", { name: "选择模型" })
     .getByRole("button", { name: "模型接入…", exact: true })
     .click();
-  await page
-    .getByRole("button", { name: "API Key（官方）", exact: true })
-    .click();
+  await page.getByRole("tab", { name: "官方直连 API", exact: true }).click();
   await page.getByLabel("提供商", { exact: true }).fill("星河 API");
   await page.getByLabel("接口地址").fill("https://models.example.test/v1");
   await page.getByLabel("API Key", { exact: true }).fill("fixture-key");

@@ -75,4 +75,11 @@
 | [ADR-021](ADR-021-native-local-repository-authority.md) | Native统一仓库权威与重复启动 | ACCEPTED；基础已验，Web数据面与后台租约待 |
 | [ADR-022](ADR-022-project-chats-and-v3-migration.md) | 普通多聊天与不可降级快照迁移 | ACCEPTED；实现与验收未完成 |
 | [ADR-023](ADR-023-local-model-installation-and-owned-runtime.md) | 可信本地包安装与自有引擎 | ACCEPTED；实现与验收未完成 |
+| [ADR-024](ADR-024-server-authoritative-mid-turn-steering-and-drain-boundary.md) | 服务端权威 Mid-turn Steering 与安全 Drain 边界 | ACCEPTED；实现待排期 |
 | [ADR-025](ADR-025-mobile-12ai-originals-and-video-recovery.md) | Mobile 12ai 原件与视频查询恢复 | ACCEPTED；实现与发布验收进行中 |
+| [ADR-026](ADR-026-modular-capability-architecture.md) | 模块化能力契约与依赖反转 | ACCEPTED；能力实现分阶段推进 |
+| [ADR-027](ADR-027-architecture-ratchet-and-dependency-cruiser.md) | 架构依赖集合棘轮与自动门禁 | ACCEPTED；P0候选验证另记 |
+
+| [ADR-028](ADR-028-capability-manifest-projections.md) | 能力声明、Port与单一清单投影 | PROPOSED；仅声明候选，协议投影待实施 |
+
+| [ADR-032](ADR-032-independent-image-capabilities-and-lineage.md) | 独立图片能力与资产溯源 | ACCEPTED；源码候选，真实运行与主线待验 |

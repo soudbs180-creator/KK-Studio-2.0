@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
-import type { CreationProject } from "../features/creation/model";
-import type { ProjectLibraryActions } from "../features/projects/projectLifecycle";
-import { sidebarProjectItem } from "../features/projects/sidebarProjectModel";
+import type { CreationProject } from "../features/creation/index.ts";
+import type { ProjectLibraryActions } from "../features/projects/index.ts";
+import { sidebarProjectItem } from "../features/projects/index.ts";
 import SidebarProjectEntry from "./SidebarProjectEntry";
-import UiIcon from "./UiIcon";
 
 export default function ProjectLibraryContent({
   projects,
@@ -56,7 +55,12 @@ export default function ProjectLibraryContent({
               title={!actions?.canEdit ? "项目存储尚未就绪" : undefined}
               onClick={() => actions?.onCreateGroup()}
             >
-              <UiIcon name="folderAdd" size={20} />
+              <img
+                src="/design/figma/library-folder-add.svg"
+                width={24}
+                height={24}
+                alt=""
+              />
               <span>
                 <strong>新建文件夹</strong>
                 <small>持久保存项目分组</small>
@@ -69,7 +73,12 @@ export default function ProjectLibraryContent({
               disabled
               title="文件上传将在本地资源服务接入后可用"
             >
-              <UiIcon name="upload" size={20} />
+              <img
+                src="/design/figma/library-upload.svg"
+                width={24}
+                height={24}
+                alt=""
+              />
               <span>
                 <strong>上传文件</strong>
                 <small>支持批量上传</small>

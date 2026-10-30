@@ -10,9 +10,9 @@ import ComposerTextarea from "./ComposerTextarea";
 import ConversationActions from "./ConversationActions";
 import ModelVariantControl from "./ModelVariantControl";
 import { useComposerMenus } from "./useComposerMenus";
-import type { CreationDraft } from "../features/creation/model";
-import type { ModelSelection } from "../features/models/modelSelection";
-import type { SkillRecord } from "../features/skills/skillRegistry";
+import type { CreationDraft } from "../features/creation/index.ts";
+import type { ModelSelection } from "../features/models/index.ts";
+import type { SkillRecord } from "../features/skills/index.ts";
 
 export default function ConversationComposer({
   input,
@@ -97,7 +97,7 @@ export default function ConversationComposer({
       data-node-id="407:29310"
       onSubmit={async (e) => {
         e.preventDefault();
-        if (!input.trim() || isSubmitting) return;
+        if (!input.trim() || isSubmitting || disabled || submitDisabled) return;
         if (readingFiles) {
           onStatus("正在读取参考素材，请稍候再提交。");
           return;

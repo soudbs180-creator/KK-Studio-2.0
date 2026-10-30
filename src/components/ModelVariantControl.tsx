@@ -1,11 +1,8 @@
 import { useEffect, useState } from "react";
 import type { ModelSelection } from "../domain/modelSelection";
-import { readProviderConnections } from "../features/creation/providerRegistry";
-import { catalogForConnection } from "../features/models/modelCatalog";
-import {
-  groupCatalogModels,
-  modelDisplay,
-} from "../features/models/modelFamilies";
+import { readProviderConnections } from "../features/creation/index.ts";
+import { catalogForConnection } from "../features/models/index.ts";
+import { groupCatalogModels, modelDisplay } from "../features/models/index.ts";
 
 export default function ModelVariantControl({
   selection,

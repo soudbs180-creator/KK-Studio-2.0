@@ -1,12 +1,12 @@
 import { useContext, useState, type RefObject } from "react";
-import { CanvasImageCommandContext } from "../../features/creation/CanvasImageCommand";
+import { CanvasImageCommandContext } from "../../features/creation/index.ts";
 import { effectiveTags } from "../../domain/collectionTags";
 import TagEditor from "../TagEditor";
 import type {
   CanvasCollectionItem,
   CanvasReference,
 } from "../../domain/canvasItems";
-import CompareImageButton from "../../features/compare/CompareImageButton";
+import { CompareImageButton as CompareImageButton } from "../../features/compare/index.ts";
 import UiIcon from "../UiIcon";
 import ImageSelectionToolbar from "../canvas/ImageSelectionToolbar";
 import ImageRedrawDialog from "./ImageRedrawDialog";
@@ -67,7 +67,7 @@ export default function CanvasImageActions({
           aria-description={previewReason}
           onClick={onPreview}
         >
-          <UiIcon name="preview" />
+          <UiIcon name="preview" size={12} />
           预览
         </button>
         <button
@@ -79,7 +79,7 @@ export default function CanvasImageActions({
           aria-description={redrawReason}
           onClick={() => setRedrawOpen(true)}
         >
-          <UiIcon name="undo" />
+          <UiIcon name="undo" size={12} />
           重绘
         </button>
         <CompareImageButton
@@ -89,12 +89,12 @@ export default function CanvasImageActions({
         {onLike && (
           <button
             type="button"
-            className="kk-button kk-button--tertiary"
+            className="kk-button kk-button--tertiary like-action"
             aria-label={liked ? `取消喜欢${item.title}` : `喜欢${item.title}`}
             aria-pressed={liked}
             onClick={onLike}
           >
-            <UiIcon name="favorite" />
+            <UiIcon name="favorite" size={12} />
             {liked ? "已喜欢" : "喜欢"}
           </button>
         )}
@@ -118,7 +118,7 @@ export default function CanvasImageActions({
             title="移除画布卡片，归档原件保留"
             onClick={onDelete}
           >
-            <UiIcon name="delete" />
+            <UiIcon name="delete" size={12} />
             删除
           </button>
         )}

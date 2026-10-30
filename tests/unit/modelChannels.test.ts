@@ -1,6 +1,10 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { providerChannel } from "../../src/domain/modelChannels.ts";
+import {
+  providerChannel,
+  providerChannelSchema,
+  modelChannels,
+} from "../../src/domain/modelChannels.ts";
 import { modelProviderSchema } from "../../src/domain/modelProvider.ts";
 import { providerConnectionSchema } from "../../src/domain/providerConnections.ts";
 import { newModelProfileConnection } from "../../src/features/creation/providerRegistry.ts";
@@ -84,4 +88,40 @@ test("channel and bounded priority survive profile and connection validation", (
       false,
     );
   }
+});
+
+test("5-channel model access architecture covers official, relay, oauth, cli, local", () => {
+  const channels = ["official", "relay", "oauth", "cli", "local"] as const;
+  for (const ch of channels) {
+    assert.equal(providerChannelSchema.safeParse(ch).success, true);
+  }
+  assert.equal(providerChannelSchema.safeParse("unknown").success, false);
+  assert.equal(providerChannelSchema.safeParse("").success, false);
+
+  assert.equal(modelChannels.length, 5);
+  for (const ch of channels) {
+    const entry = modelChannels.find((m: { id: string }) => m.id === ch);
+    assert.ok(entry, `Channel ${ch} should be present in modelChannels`);
+    assert.ok(entry.label, `Channel ${ch} should have a non-empty label`);
+  }
+
+  // SiliconFlow re-categorized as relay
+  assert.equal(
+    providerChannel({ baseUrl: "https://api.siliconflow.cn/v1" }),
+    "relay",
+  );
+  // 12ai as relay
+  assert.equal(
+    providerChannel({ baseUrl: "https://api.12ai.com/v1" }),
+    "relay",
+  );
+  // llama.cpp as local
+  assert.equal(
+    providerChannel({ baseUrl: "http://127.0.0.1:8080/v1" }),
+    "local",
+  );
+  // Explicit oauth & cli channels
+  assert.equal(providerChannel({ channel: "oauth" }), "oauth");
+  assert.equal(providerChannel({ channel: "cli" }), "cli");
+  assert.equal(providerChannel({ channel: "account" }), "oauth");
 });

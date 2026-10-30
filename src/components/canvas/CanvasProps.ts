@@ -6,12 +6,14 @@ import type {
 } from "react";
 import type { CanvasCollectionItem } from "../../domain/canvasItems";
 import type { ProjectCanvas } from "../../domain/projectCanvas";
-import type { CreationTask } from "../../features/creation/model";
+import type { CreationTask } from "../../features/creation/index.ts";
 import type { AgentCanvasBinding } from "./useAgentCanvasView";
 
 /** Canvas host inputs, including the project-scoped Agent controller. */
 export interface CanvasProps {
   projectId?: string;
+  comfyRuntime?: import("../../features/comfyui/index.ts").ComfyRuntimePort;
+  onFlush?: () => Promise<void>;
   agentViewRef?: MutableRefObject<AgentCanvasBinding | null>;
   onAgentViewChange?: () => void;
   projectStatus?: ReactNode;

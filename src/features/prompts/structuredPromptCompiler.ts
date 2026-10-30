@@ -1,9 +1,11 @@
+import type {
+  AgentDraftAttachment,
+  CreationAttachment,
+} from "../../../packages/creation-contracts/index.ts";
 import {
   CANVAS_REFERENCE_SLOTS,
   type CanvasReferenceSlot,
 } from "../../domain/canvasItems.ts";
-import type { CreationAttachment } from "../creation/model.ts";
-import type { AgentDraftAttachment } from "../agent/agentAttachments.ts";
 
 export interface ParsedMention {
   raw: string;

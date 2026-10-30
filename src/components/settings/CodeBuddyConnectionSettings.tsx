@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
-import { createAgentApi } from "../../features/agent/agentApi.ts";
-import { agentConnection } from "../../features/agent/agentConnection.ts";
+import { createAgentApi } from "../../features/agent/index.ts";
+import { agentConnection } from "../../features/agent/index.ts";
 import { confirmAction } from "../../runtime/confirmAction";
 import useSettingsBusy from "./useSettingsBusy";
 

@@ -61,6 +61,39 @@ fn project_groups(value: &Value, projects: &[Value]) -> Result<(), String> {
     }
     Ok(())
 }
+fn sidebar_preferences(value: &Value, project_ids: &HashSet<&str>) -> Result<(), String> {
+    let Some(preferences) = value.get("sidebarPreferences") else {
+        return Ok(());
+    };
+    let fields = object(preferences, "sidebarPreferences")?;
+    if fields
+        .keys()
+        .any(|key| !["sortMode", "pinnedProjectIds", "pinnedGroupIds"].contains(&key.as_str()))
+        || !preferences["sortMode"]
+            .as_str()
+            .is_some_and(|mode| ["manual", "recent", "priority"].contains(&mode))
+    {
+        return Err(corrupt("sidebarPreferences"));
+    }
+    let groups = optional_arrays(value, "projectGroups")?;
+    let group_ids = unique_ids(groups, "projectGroups")?;
+    for (field, allowed_ids) in [
+        ("pinnedProjectIds", project_ids),
+        ("pinnedGroupIds", &group_ids),
+    ] {
+        let mut seen = HashSet::new();
+        for entry in array(&preferences[field], field)? {
+            let entry = id(entry, field)?;
+            if entry.encode_utf16().count() > 160
+                || !seen.insert(entry)
+                || !allowed_ids.contains(entry)
+            {
+                return Err(corrupt(field));
+            }
+        }
+    }
+    Ok(())
+}
 fn optional_strings(value: &Value, fields: &[&str]) -> Result<(), String> {
     for field in fields {
         if value.get(field).is_some_and(|v| !v.is_string()) {
@@ -251,6 +284,7 @@ pub fn validate(value: &Value) -> Result<(), String> {
     let projects = array(&value["projects"], "projects")?;
     let project_ids = unique_ids(projects, "projects")?;
     project_groups(value, projects)?;
+    sidebar_preferences(value, &project_ids)?;
     match value.get("activeProjectId") {
         Some(Value::Null) => (),
         Some(Value::String(active)) if project_ids.contains(active.as_str()) => (),

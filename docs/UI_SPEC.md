@@ -27,11 +27,13 @@
 固定链路：
 
 ```
-用户 Design System + 页面来源 → 语义 Tokens → 共享组件 → 实际源码 → 浏览器验证
+当前 Figma 规范与页面 → 在 Figma 完成或核实目标设计 → 回读并登记来源 → 本地派生规范与语义 Tokens → 共享组件 → 实际源码 → 同状态浏览器验证
 ```
 
-"代码已修改""测试已通过""Figma 已读取"**都不是视觉完成的证据**。完成记录必须能回答：
+首次修改本地 UI 前须满足 [AGENTS.md 的设计前置证据](../AGENTS.md#设计与交互)。"代码已修改""测试已通过""Figma 已读取"**都不是视觉完成的证据**。完成记录必须能回答：
 
+- 本次 Figma 规范与页面链接、node ID、版本或读取时间、主题/视口/状态，以及先完成的设计修改或无需修改的依据；
+- 对应变量/Text Style/组件变体到本地文档、token 和共享组件的映射及未迁移差异；
 - 浏览器访问的 URL 和端口；
 - 它是 development / preview / Tauri 哪种运行模式；
 - 当前 route；
@@ -58,10 +60,10 @@
 
 ## 4. 设计读取与对照
 
-每次视觉修改读取用户本次指定的设计来源。页面几何 / 图层 / 变量仍需对应的在线节点上下文；
+每次视觉修改读取 [UI_INDEX](UI_INDEX.md#当前-figma-来源状态) 登记的当前 Figma 及本次目标节点。设计有变更时先修改 Figma 并回读，再开始本地实现；已有目标设计时记录无需修改的依据。页面几何 / 图层 / 变量仍需对应的在线节点上下文；
 **PDF 无法证明的属性明确标"未知"**。记录 frame 尺寸、层级、Auto Layout、padding、gap、尺寸、字体、行高、颜色、边框、圆角与状态。
 
-对照顺序是 **Figma（或 Ardot）→ 当前源代码 → 当前浏览器实际效果**，三者必须使用同一状态和视口。
+对照顺序是 **当前 Figma → 本地派生规范/映射 → 当前源代码 → 当前浏览器实际效果**，使用同一状态和视口。来源缺失、无权限或目标状态未定义时，按 AGENTS.md 暂停依赖该设计的本地 UI 修改，不能从代码反推设计后再补 Figma。
 
 ---
 
@@ -78,7 +80,7 @@
 | 圆角、控件高度、图标 | `ui-tokens.css` 尺寸层级、`UiIcon.tsx`、Figma 导出资产；工具栏复用 `ToolbarIcon.tsx` | 区分可见图形、图标槽位和命中区域 |
 | Panel、Sidebar、Toolbar | `ConversationPanel.tsx` / `Sidebar.tsx` / `CanvasToolbar.tsx`；布局复用 `useSidebarLayout`、`useCanvasViewport` | 展开/收起、窄屏及有无聊天面板用同状态矩形验证 |
 | Modal、Dropdown | `Modal.tsx` 与 `useDismissible.ts`；添加节点复用 `AddNodeMenu.tsx` | Escape、外部点击、键盘移动、关闭回焦和 disabled 原因 |
-| Button、Input | 共享 `.ui-button` 与原生 button/input/textarea；设置复用 `SettingsControls.tsx` | 普通按钮默认 32px，紧凑/标准/Figma 专项尺寸分别消费对应层级，不全局强制相同高度 |
+| Button、Input | 共享 `.ui-button` 与原生 button/input/textarea；设置复用 `SettingsControls.tsx` | 按当前 Figma 母版/变体核对，标准图文按钮40px；本地旧32px默认不覆盖设计 |
 | Tabs、Selected | 现有 tablist/tab 及 `aria-selected`；可切换分类使用真实状态与 `aria-pressed` | 点击后的可见 selected 必须与状态一致 |
 | Tooltip | 复用原生 `title`，图标同时提供可访问名称 | 原生提示外观由浏览器控制，不能报告为自定义 tooltip 已还原 |
 
@@ -122,7 +124,7 @@
 
 ## DESIGN.md 与独立预览
 
-根 [DESIGN.md](../DESIGN.md) 提供全局设计概览、专项规范链接和由当前 tokens.css 生成的 YAML。UI_INDEX 继续路由各主题唯一承载文件；CSS 仍是唯一数值源。
+根 [DESIGN.md](../DESIGN.md) 提供 Figma 派生设计概览、专项规范链接和由当前 tokens.css 生成的 YAML。Figma 决定设计值，CSS 是唯一运行时注册处；YAML 展示现有实现与源 hash，可能含尚未迁移的旧值。`design:sync` 不读取或修改 Figma，`design:check` 只验证 CSS 投影一致性。
 
 | 命令 | 用途 |
 | --- | --- |

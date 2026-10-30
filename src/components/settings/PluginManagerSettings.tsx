@@ -8,8 +8,8 @@ import {
 } from "react";
 import { SettingsNavigationContext } from "./SettingsNavigationContext";
 import { useSettingsNavigationBusy } from "./useSettingsBusy";
-import { pluginLoader } from "../../features/plugins/pluginLoader";
-import { pluginStore } from "../../features/plugins/pluginStore";
+import { pluginLoader } from "../../features/plugins/index.ts";
+import { pluginStore } from "../../features/plugins/index.ts";
 import { confirmAction } from "../../runtime/confirmAction";
 import "./plugin-manager.css";
 

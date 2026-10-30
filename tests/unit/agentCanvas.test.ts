@@ -32,6 +32,61 @@ const baseItems: CanvasCollectionItem[] = [
   { id: "video1", title: "视频卡片 1", description: "图转视频", kind: "video" },
 ];
 
+test("Agent bulk deletion preserves Comfy output dismissals while leaving other cards intact", () => {
+  const id = "comfy-output-" + "a".repeat(24);
+  const items: CanvasCollectionItem[] = [
+    {
+      id: "card",
+      title: "Comfy",
+      kind: "text",
+      description: "",
+      comfyWorkflow: {},
+    },
+    {
+      id: "other-card",
+      title: "Other",
+      kind: "text",
+      description: "",
+      comfyWorkflow: {},
+    },
+    { id, title: "result", kind: "image", description: "ComfyUI · card" },
+    ...baseItems,
+  ];
+  const result = applyAgentOpsToItems(items, [
+    { type: "delete_node", ids: [id, "image"] },
+  ]);
+  assert(!result.items.some((item) => item.id === id || item.id === "image"));
+  assert.deepEqual(result.items[0].comfyWorkflow?.dismissedOutputIds, [id]);
+  assert.deepEqual(result.items[1], items[1]);
+  assert.equal(items[0].comfyWorkflow?.dismissedOutputIds, undefined);
+});
+
+test("renaming a legacy Comfy result cannot erase its source identity before deletion", () => {
+  const id = "comfy-output-" + "b".repeat(24);
+  const items: CanvasCollectionItem[] = [
+    {
+      id: "card",
+      title: "Comfy",
+      kind: "text",
+      description: "",
+      comfyWorkflow: {},
+    },
+    { id, title: "result", kind: "image", description: "ComfyUI · card" },
+  ];
+  const renamed = applyAgentOpsToItems(items, [
+    {
+      type: "update_node",
+      id,
+      metadata: { description: "User edited caption" },
+    },
+  ]);
+  assert.equal(renamed.items[1].description, "User edited caption");
+  const result = applyAgentOpsToItems(renamed.items, [
+    { type: "delete_node", id },
+  ]);
+  assert.deepEqual(result.items[0].comfyWorkflow?.dismissedOutputIds, [id]);
+});
+
 test("buildAgentSnapshot 生成节点/连线/视口", () => {
   const canvas = createProjectCanvas(baseItems);
   const snapshot = buildAgentSnapshot(baseItems, {

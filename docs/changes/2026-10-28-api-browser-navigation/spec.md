@@ -1,0 +1,7 @@
+# 现行契约与范围
+
+现行ModelAccessSettings的官方直连为带API标记的tab，旧API Key（官方）按钮已不存在。StartModelPicker以kind=image打开ModelPickerMenu，首页API图片夹具应进入图像生成分类，再按原精确模型搜索和唯一候选断言选择。全部selectHomeApiModel调用点已读，均为图片夹具；不能给文本调用猜测模态。
+
+搜索并同步tests/browser内明确旧官方入口的getByRole调用，不全局替换普通字符串或放宽locator。附件草稿用例的Codex生图选择同属图像生成分类。原保存/归档/失败保护/调度断言全部保留，不skip、不加timeout/retry、不把未跑过的调用方标通过。
+
+附件切换回Codex必须先满足当前产品的Agent已连接前置条件。复用tests/helpers/agentServer的idle HTTP夹具，经当前设置中的CLI入口、地址和连接按钮建立连接并断言已连接；每个用例结束均关闭自己的服务，不强行点击禁用项，不调用外部CLI或模型。

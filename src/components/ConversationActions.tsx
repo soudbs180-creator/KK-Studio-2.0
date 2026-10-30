@@ -1,11 +1,11 @@
 import ComposerExtensionsMenu from "./ComposerExtensionsMenu";
 import UiIcon from "./UiIcon";
-import type { ModelSelection } from "../features/models/modelSelection";
+import type { ModelSelection } from "../features/models/index.ts";
 import type { RefObject, ReactNode } from "react";
 import ConversationModelPicker from "./ConversationModelPicker";
-import type { CreationDraft } from "../features/creation/model";
-import VoiceInputButton from "./VoiceInputButton";
-import type { SkillRecord } from "../features/skills/skillRegistry";
+import type { CreationDraft } from "../features/creation/index.ts";
+import { VoiceInputButton } from "../features/speech/index.ts";
+import type { SkillRecord } from "../features/skills/index.ts";
 import AgentActionButton, { type AgentActionState } from "./AgentActionButton";
 
 export default function ConversationActions({
@@ -174,8 +174,8 @@ export default function ConversationActions({
             <img
               className="chat-mode-chevron"
               src="/design/figma/composer-chevron.svg"
-              width="10"
-              height="5"
+              width="12"
+              height="12"
               alt=""
             />
           </button>

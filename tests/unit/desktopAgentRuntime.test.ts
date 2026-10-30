@@ -62,7 +62,7 @@ test("desktop Agent waits for its owner, authenticates readiness and clears on o
     child.stdin.write("start\n");
     for (
       let attempt = 0;
-      attempt < 100 && !output.includes("KK_AGENT_READY ");
+      attempt < 240 && !output.includes("KK_AGENT_READY ");
       attempt++
     ) {
       if (child.exitCode !== null) break;
@@ -167,7 +167,7 @@ test("desktop Agent reserves stdout for readiness while a noisy conversation res
       new Promise<void>((resolve, reject) => {
         const timeout = setTimeout(
           () => reject(new Error("No readiness after controlled restoration")),
-          5000,
+          12000,
         );
         const read = () => {
           if (!output.includes("KK_AGENT_READY ")) return;

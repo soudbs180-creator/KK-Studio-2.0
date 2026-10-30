@@ -7,9 +7,7 @@ test("Gemini 预设进入专用 Google 配置，已有通用连接草稿保留",
   await page.goto("/");
   await openSettingsSection(page, "模型接入");
   const dialog = page.getByRole("dialog", { name: "设置", exact: true });
-  await dialog
-    .getByRole("button", { name: "API Key（官方）", exact: true })
-    .click();
+  await dialog.getByRole("tab", { name: "官方直连 API", exact: true }).click();
   await dialog.getByLabel("提供商", { exact: true }).fill("保留的供应商草稿");
   await dialog.getByText("服务商预设与接口文档", { exact: true }).click();
   await dialog

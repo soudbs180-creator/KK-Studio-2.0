@@ -4,6 +4,7 @@ import {
   containsMask,
   floodMask,
   rectangleMask,
+  subtractRuns,
   type MaskDocument,
   type MaskRegion,
   type Point,
@@ -76,10 +77,57 @@ export function useMaskDrawing({
     }
     ctx.globalAlpha = 1;
   }
+  function commentAt(point: Point) {
+    const size = Math.max(8, Math.min(32, Math.round(brushWidth / 2))),
+      x = Math.max(
+        0,
+        Math.min(document.width - size, Math.floor(point.x - size / 2)),
+      ),
+      y = Math.max(
+        0,
+        Math.min(document.height - size, Math.floor(point.y - size / 2)),
+      ),
+      palette = EDIT_COLORS[0],
+      markerName = "评论",
+      number =
+        Math.max(
+          document.colorCounters?.[markerName] ?? 0,
+          ...document.regions
+            .filter((r) => r.colorName === markerName)
+            .map((r) => r.number ?? 0),
+        ) + 1,
+      region = {
+        id: crypto.randomUUID(),
+        runs: rectangleMask(
+          document.width,
+          document.height,
+          { x, y },
+          {
+            x: x + size,
+            y: y + size,
+          },
+        ),
+        color: palette.color,
+        colorName: markerName,
+        number,
+        instruction: "",
+        annotation: "comment" as const,
+      };
+    commit({
+      ...document,
+      colorCounters: { ...document.colorCounters, [markerName]: number },
+      regions: [...document.regions, region],
+    });
+    onRegion(region);
+  }
   function colorAt(point: Point) {
     if (disabled) return;
-    if (document.regions.length >= 200) {
+    if (tool !== "erase" && document.regions.length >= 200) {
       onError("已有 200 个区域，请分批编辑。");
+      return;
+    }
+    if (tool === "comment") {
+      commentAt(point);
       return;
     }
     if (tool === "color") {
@@ -136,7 +184,7 @@ export function useMaskDrawing({
   }
   function start(point: Point) {
     if (disabled) return;
-    if (tool === "color") {
+    if (tool === "color" || tool === "comment") {
       points.current = [point];
       return;
     }
@@ -144,7 +192,7 @@ export function useMaskDrawing({
   }
   function move(point: Point) {
     if (!points.current.length || disabled) return;
-    if (tool === "color") return;
+    if (tool === "color" || tool === "comment") return;
     if (points.current.length >= 4096) {
       cancel();
       onError("笔画过长，请分段绘制；已有编辑区域已保留。");
@@ -155,7 +203,7 @@ export function useMaskDrawing({
   }
   function end() {
     if (!points.current.length || disabled) return;
-    if (tool === "color") {
+    if (tool === "color" || tool === "comment") {
       colorAt(points.current[0]);
       cancel();
       return;
@@ -175,11 +223,22 @@ export function useMaskDrawing({
               points.current,
               brushWidth,
             );
-      if (runs.length)
-        commit({
-          ...document,
-          regions: [...document.regions, { id: crypto.randomUUID(), runs }],
-        });
+      if (runs.length) {
+        if (tool === "erase") {
+          const regions = document.regions
+            .map((region) => ({
+              ...region,
+              runs: subtractRuns(region.runs, runs),
+            }))
+            .filter((region) => region.runs.length);
+          if (JSON.stringify(regions) !== JSON.stringify(document.regions))
+            commit({ ...document, regions });
+        } else
+          commit({
+            ...document,
+            regions: [...document.regions, { id: crypto.randomUUID(), runs }],
+          });
+      }
     } catch (reason) {
       onError(reason instanceof Error ? reason.message : "区域保存失败。");
     }

@@ -1,4 +1,13 @@
 import { z } from "zod";
+import type { CreationSnapshot } from "../../domain/creationModel.ts";
+import {
+  clearCompanionConnection,
+  normalizeCompanionEndpoint,
+  readCompanionConnection,
+  readCompanionConnectionRevision,
+  writeCompanionConnection,
+  type CompanionConnection,
+} from "./connection.ts";
 import {
   assetMetadataSchema,
   backupManifestSchema,
@@ -6,18 +15,9 @@ import {
   healthResponseSchema,
   migrationImportSchema,
   migrationPreflightSchema,
-  type CompanionErrorCode,
   type CompanionAssetMetadata,
+  type CompanionErrorCode,
 } from "./protocol.ts";
-import {
-  clearCompanionConnection,
-  readCompanionConnectionRevision,
-  normalizeCompanionEndpoint,
-  readCompanionConnection,
-  writeCompanionConnection,
-  type CompanionConnection,
-} from "./connection.ts";
-import type { CreationSnapshot } from "../creation/model.ts";
 
 export type CompanionConnectionState =
   | "unconfigured"

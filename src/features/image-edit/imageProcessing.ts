@@ -1,12 +1,12 @@
-import { assertImageDimensions, type MaskDocument } from "./mask.ts";
-import type { EditCrop } from "./regions.ts";
-import { blendMaskedPixels } from "./pixels.ts";
-import { drawMaskAnnotation } from "./maskAnnotation.ts";
 import {
   calculateAdaptiveResize,
   detectAlphaTransparency,
   resolveTargetImageMime,
-} from "../creation/mediaAlphaPreservation.ts";
+} from "../../domain/mediaAlpha.ts";
+import { assertImageDimensions, type MaskDocument } from "./mask.ts";
+import { drawMaskAnnotation } from "./maskAnnotation.ts";
+import { blendMaskedPixels } from "./pixels.ts";
+import type { EditCrop } from "./regions.ts";
 export class ImageEditMappingError extends Error {}
 export function makeCanvas(width: number, height: number): HTMLCanvasElement {
   assertImageDimensions(width, height);
@@ -228,4 +228,4 @@ export {
   calculateAdaptiveResize,
   detectAlphaTransparency,
   resolveTargetImageMime,
-} from "../creation/mediaAlphaPreservation.ts";
+} from "../../domain/mediaAlpha.ts";

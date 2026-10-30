@@ -19,9 +19,8 @@ function resultCardHeight(item: CanvasCollectionItem): number {
     item.mediaWidth ?? 1,
     item.mediaHeight ?? 1,
   );
-  // Result cards keep 16px inner padding on both sides; size the shell around
-  // the content width so a wide image does not clip the preview.
-  return Math.max(222, 32 + 348 / ratio);
+  // The 380px result body has a 1px border and no inner padding.
+  return 2 + 378 / ratio;
 }
 
 /** Visible card body, excluding labels, upload buttons and the optional composer. */
@@ -31,6 +30,7 @@ export function cardVisualBounds(item: CanvasCollectionItem): {
   width: number;
   height: number;
 } {
+  if (item.comfyWorkflow) return { x: 0, y: 0, width: 380, height: 268 };
   if (item.plugin)
     return {
       x: 0,
@@ -80,6 +80,8 @@ export function cardLayout(item: CanvasCollectionItem): {
     x: visual.x + visual.width,
     y: visual.y + visual.height / 2,
   };
+  if (item.comfyWorkflow)
+    return { width: 380, height: 268, left: 0, collapsedHeight: 268, anchor };
   if (item.plugin)
     return {
       width: visual.width,
@@ -106,9 +108,9 @@ export function cardLayout(item: CanvasCollectionItem): {
       (item.kind === "image" || item.kind === "video"),
     );
     return {
-      width: hasReferenceComposer ? 590 : 380,
-      height: hasReferenceComposer ? visual.height + 247 : visual.height,
-      left: hasReferenceComposer ? -105 : 0,
+      width: hasReferenceComposer ? 652 : 380,
+      height: hasReferenceComposer ? visual.height + 172 : visual.height,
+      left: hasReferenceComposer ? (visual.width - 652) / 2 : 0,
       collapsedHeight: visual.height,
       anchor,
     };
@@ -123,9 +125,9 @@ export function cardLayout(item: CanvasCollectionItem): {
     };
   if (item.kind === "image")
     return {
-      width: 590,
-      height: visual.y + visual.height + 247,
-      left: 0,
+      width: 652,
+      height: visual.y + visual.height + 172,
+      left: visual.x + (visual.width - 652) / 2,
       collapsedHeight: visual.y + visual.height,
       anchor,
     };
@@ -150,9 +152,8 @@ export function cardSelectionLayout(
     !item.result &&
     !(item.generationStatus && item.generationIndex !== undefined)
   ) {
-    // The 370px video body has a 590px editor extending 110px to its left.
-    // Reserve the full 234 + 237px editor height without changing body/anchors.
-    return { ...layout, width: 590, height: 471, left: -110 };
+    // Reserve the shared 652×156 editor plus its 16px media gap.
+    return { ...layout, width: 652, height: 396, left: -141 };
   }
   return layout;
 }

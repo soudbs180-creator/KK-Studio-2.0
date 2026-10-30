@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
-import type { CreationProject } from "../features/creation/model";
-import { googleAgentConnection } from "../features/agent/googleAgentConnection";
-import { readGoogleCliPreference } from "../features/agent/googleAgentConfig";
-import type { AgentDraftState } from "../features/agent/useAgentComposerDraft";
+import type { CreationProject } from "../features/creation/index.ts";
+import { googleAgentConnection } from "../features/agent/index.ts";
+import { readGoogleCliPreference } from "../features/agent/index.ts";
+import type { AgentDraftState } from "../features/agent/index.ts";
 import AgentConversationMessages, {
   type AgentConversationProps,
 } from "./AgentConversationMessages";
@@ -33,7 +33,7 @@ export default function GoogleConversationPanel({
   overlay?: boolean;
   codexBusy: boolean;
   onDraftChange: (
-    patch: Partial<import("../features/creation/model").CreationDraft>,
+    patch: Partial<import("../features/creation/index.ts").CreationDraft>,
   ) => void;
   onSelectChat?: (chatId: string) => void;
 }) {

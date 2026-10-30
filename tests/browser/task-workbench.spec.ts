@@ -33,9 +33,7 @@ async function configure(page: Page, outputCount = 4) {
     .getByRole("menu")
     .getByRole("button", { name: "模型接入…", exact: true })
     .click();
-  await page
-    .getByRole("button", { name: "API Key（官方）", exact: true })
-    .click();
+  await page.getByRole("tab", { name: "官方直连 API", exact: true }).click();
   await page.getByLabel("接口地址").fill("https://models.example.test/v1");
   await page.getByLabel("API Key", { exact: true }).fill("fixture-key");
   await page.getByLabel("模型名称").fill("image-test");
@@ -509,7 +507,7 @@ test("提交后暂停进入受理状态不明并保留已归档结果", async ({
   finish?.();
 });
 
-test("指定风格参考槽可上传并移除，展开按钮仍可点击", async ({ page }) => {
+test("展开只增加输入空间，参考图仍逐个上传和移除", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "项目库", exact: true }).click();
   await page.getByRole("button", { name: "新建项目", exact: true }).click();
@@ -518,22 +516,16 @@ test("指定风格参考槽可上传并移除，展开按钮仍可点击", async
   await page.locator(".image-preview").click();
   await page.getByRole("button", { name: "展开提示词", exact: true }).click();
   const chooser = page.waitForEvent("filechooser");
-  await page.getByRole("button", { name: "添加风格参考图" }).click();
+  await page.getByRole("button", { name: "添加参考图片", exact: true }).click();
   await (await chooser).setFiles("public/fixtures/demo/blue-hour.png");
-  await expect(
-    page.locator('.reference-slot[data-slot="风格"] img'),
-  ).toBeVisible();
-  await expect(
-    page.locator('.reference-slot[data-slot="主体"] img'),
-  ).toHaveCount(0);
+  await expect(page.locator(".composer-ref-thumb img")).toBeVisible();
+  await expect(page.locator(".reference-slot")).toHaveCount(0);
   await page.getByRole("button", { name: "收起提示词", exact: true }).click();
   await expect(page.getByTestId("image-composer")).not.toHaveClass(/expanded/);
   await page.getByRole("button", { name: "展开提示词", exact: true }).click();
   await expect(page.getByTestId("image-composer")).toHaveClass(/expanded/);
-  await page.getByRole("button", { name: /移除风格参考图/ }).click();
-  await expect(
-    page.locator('.reference-slot[data-slot="风格"] img'),
-  ).toHaveCount(0);
+  await page.getByRole("button", { name: "移除参考图", exact: true }).click();
+  await expect(page.locator(".composer-ref-thumb")).toHaveCount(0);
 });
 
 test("16 项批次在归档 10 项后暂停，剩余受理状态进入未知", async ({ page }) => {

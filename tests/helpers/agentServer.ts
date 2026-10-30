@@ -1,6 +1,19 @@
-import { createServer, type ServerResponse } from "node:http";
+import {
+  createServer,
+  type IncomingMessage,
+  type ServerResponse,
+} from "node:http";
 import type { AgentConversationState } from "../../src/features/agent/agentTypes.ts";
 import { prepareIdleConversation } from "../../scripts/agent/prepareIdleConversation.ts";
+
+async function readJsonBody(
+  request: IncomingMessage,
+): Promise<Record<string, unknown>> {
+  const chunks = [];
+  for await (const chunk of request) chunks.push(chunk);
+  const text = Buffer.concat(chunks).toString();
+  return text ? JSON.parse(text) : {};
+}
 
 /** Loopback protocol fixture; no CLI, account or paid Provider is invoked. */
 export async function startAgentServer(
@@ -16,6 +29,7 @@ export async function startAgentServer(
   const pendingApprovals = new Map<string, unknown>();
   const authentication: { urlToken: boolean; headerPresent: boolean }[] = [];
   let failAction = false;
+  let newThreads = 0;
   let busyOverride: boolean | undefined;
   let conversation: AgentConversationState = {
     revision: 1,
@@ -43,6 +57,89 @@ export async function startAgentServer(
         `event: ${type}\ndata: ${JSON.stringify(data && typeof data === "object" ? { scope: streamScopes.get(stream), ...(type === "tool_call" ? { threadId: conversation.threadId, turnId: "fixture-turn" } : {}), ...data } : data)}\n\n`,
       );
   };
+  const handleEventsRequest = (url: URL, response: ServerResponse) => {
+    response.writeHead(200, {
+      "Content-Type": "text/event-stream",
+      "Cache-Control": "no-cache",
+    });
+    streams.add(response);
+    streamScopes.set(
+      response,
+      JSON.parse(url.searchParams.get("scope") ?? "null"),
+    );
+    const clientId = url.searchParams.get("clientId") ?? "";
+    clients.add(clientId);
+    response.on("close", () => {
+      streams.delete(response);
+      streamScopes.delete(response);
+      clients.delete(clientId);
+    });
+    response.write(
+      `event: hello\ndata: ${JSON.stringify({ ok: true, protocolVersion: 7, clientId, conversation, workspace: { activeThreadId: conversation.threadId }, codex: { busy: busyOverride ?? conversation.status === "running" }, pendingApprovals: [...pendingApprovals.values()] })}\n\n`,
+    );
+  };
+  const handlePrepareRequest = async (
+    body: Record<string, unknown>,
+    response: ServerResponse,
+  ) => {
+    if (!safePreparation) {
+      response.writeHead(404).end(JSON.stringify({ error: "not found" }));
+      return;
+    }
+    // The same guarded handler is installed in vendor under codexMutation.
+    const result = await prepareIdleConversation(body, {
+      hasClient: (id) => clients.has(id),
+      conversation: () => conversation,
+      begin: (clientId) => {
+        conversation = {
+          ...conversation,
+          revision: conversation.revision + 1,
+          status: "preparing",
+          sourceClientId: clientId,
+        };
+        emit("conversation_changed", conversation);
+      },
+      prepare: async () => {
+        conversation = {
+          ...conversation,
+          revision: conversation.revision + 1,
+          status: "ready",
+          threadId: "fixture-thread",
+        };
+        emit("conversation_changed", conversation);
+      },
+    });
+    response.writeHead(result.status).end(JSON.stringify(result.body));
+  };
+  const handleTurnRequest = (
+    body: Record<string, unknown>,
+    response: ServerResponse,
+  ) => {
+    if (
+      !["ready", "warning"].includes(conversation.status) ||
+      !clients.has(String(body.clientId ?? ""))
+    ) {
+      response.writeHead(409).end(JSON.stringify({ error: "会话尚未就绪" }));
+      return;
+    }
+    turns.push(body);
+    conversation = { ...conversation, status: "running" };
+    response.end(
+      JSON.stringify({
+        ok: true,
+        threadId: conversation.threadId,
+        state: { ...conversation, status: "running" },
+      }),
+    );
+    emit("chat_message", {
+      message: {
+        id: "user-echo",
+        role: "user",
+        text: body.messageText,
+        clientMessageId: body.messageId,
+      },
+    });
+  };
   const server = createServer(async (request, response) => {
     response.setHeader("Access-Control-Allow-Origin", "*");
     response.setHeader(
@@ -62,31 +159,10 @@ export async function startAgentServer(
         headerPresent: Boolean(request.headers["x-canvas-agent-token"]),
       });
     if (url.pathname === "/events") {
-      response.writeHead(200, {
-        "Content-Type": "text/event-stream",
-        "Cache-Control": "no-cache",
-      });
-      streams.add(response);
-      streamScopes.set(
-        response,
-        JSON.parse(url.searchParams.get("scope") ?? "null"),
-      );
-      const clientId = url.searchParams.get("clientId") ?? "";
-      clients.add(clientId);
-      response.on("close", () => {
-        streams.delete(response);
-        streamScopes.delete(response);
-        clients.delete(clientId);
-      });
-      response.write(
-        `event: hello\ndata: ${JSON.stringify({ ok: true, protocolVersion: 7, clientId, conversation, workspace: { activeThreadId: conversation.threadId }, codex: { busy: busyOverride ?? conversation.status === "running" }, pendingApprovals: [...pendingApprovals.values()] })}\n\n`,
-      );
+      handleEventsRequest(url, response);
       return;
     }
-    const chunks = [];
-    for await (const chunk of request) chunks.push(chunk);
-    const text = Buffer.concat(chunks).toString();
-    const body = text ? JSON.parse(text) : {};
+    const body = await readJsonBody(request);
     response.setHeader("Content-Type", "application/json");
     if (url.pathname === "/config") {
       response.end(JSON.stringify({ ok: true, protocolVersion: 7 }));
@@ -107,42 +183,19 @@ export async function startAgentServer(
       return;
     }
     if (url.pathname === "/agent/codex/conversation/prepare") {
-      if (!safePreparation) {
-        response.writeHead(404).end(JSON.stringify({ error: "not found" }));
-        return;
-      }
-      // The same guarded handler is installed in vendor under codexMutation.
-      const result = await prepareIdleConversation(body, {
-        hasClient: (id) => clients.has(id),
-        conversation: () => conversation,
-        begin: (clientId) => {
-          conversation = {
-            ...conversation,
-            revision: conversation.revision + 1,
-            status: "preparing",
-            sourceClientId: clientId,
-          };
-          emit("conversation_changed", conversation);
-        },
-        prepare: async () => {
-          conversation = {
-            ...conversation,
-            revision: conversation.revision + 1,
-            status: "ready",
-            threadId: "fixture-thread",
-          };
-          emit("conversation_changed", conversation);
-        },
-      });
-      response.writeHead(result.status).end(JSON.stringify(result.body));
+      await handlePrepareRequest(body, response);
       return;
     }
     if (url.pathname === "/agent/codex/threads/new") {
-      // Match upstream's unconditional replacement; the UI must never use this.
+      // Match upstream mutation; bound chats and busy/approval states must reject it.
+      newThreads++;
       conversation = {
         ...conversation,
         revision: conversation.revision + 1,
-        threadId: "replacement-thread",
+        threadId:
+          newThreads === 1
+            ? "replacement-thread"
+            : `replacement-thread-${newThreads}`,
         status: "ready",
       };
       emit("conversation_changed", conversation);
@@ -164,30 +217,7 @@ export async function startAgentServer(
       return;
     }
     if (url.pathname === "/agent/codex/turn") {
-      if (
-        !["ready", "warning"].includes(conversation.status) ||
-        !clients.has(body.clientId)
-      ) {
-        response.writeHead(409).end(JSON.stringify({ error: "会话尚未就绪" }));
-        return;
-      }
-      turns.push(body);
-      conversation = { ...conversation, status: "running" };
-      response.end(
-        JSON.stringify({
-          ok: true,
-          threadId: conversation.threadId,
-          state: { ...conversation, status: "running" },
-        }),
-      );
-      emit("chat_message", {
-        message: {
-          id: "user-echo",
-          role: "user",
-          text: body.messageText,
-          clientMessageId: body.messageId,
-        },
-      });
+      handleTurnRequest(body, response);
       return;
     }
     if (

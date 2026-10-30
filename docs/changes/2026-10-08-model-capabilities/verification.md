@@ -51,11 +51,11 @@ Desktop/Web 源码版本 2.1.4/2.1.5；Mobile 规划版本仍 2.1.1。`client:ch
 
 ## 全量与交付
 
-`npm run verify` 原配置最终运行 [verify4.log](evidence/logs/verify4.log) 退出 0：Node 645/653（8 个既有 skip）、Agent 172/174（2 个既有 skip）、Edge browser 381/381；lint/typecheck/UI191/0/format/build 与治理/功能/Markdown 检查全部通过，无最终 browser flaky。没有为通过而修改图片比较或本机服务测试。
+`npm run verify` 原配置最终运行 [verify4.log](evidence-manifest.json) 退出 0：Node 645/653（8 个既有 skip）、Agent 172/174（2 个既有 skip）、Edge browser 381/381；lint/typecheck/UI191/0/format/build 与治理/功能/Markdown 检查全部通过，无最终 browser flaky。没有为通过而修改图片比较或本机服务测试。
 
-最后源码 [Tauri build](evidence/logs/desktop-build-final.log) 和 [隔离运行](evidence/logs/desktop-acceptance-final.log) 退出 0，EXE SHA256 `6577c1831c9a1f691a71ee3e68da32bc59084f922534d498ac644a5ee1effb22`；实际加载 `/assets/index-Bvt1L0MZ.js`、`/assets/index-Dajq2fwF.css`，JS 字节与当前 dist 相符。完整 [native runtime](evidence/desktop-acceptance.json)、[Web runtime 1920](evidence/capabilities-runtime-1920.json)、[browser summary](evidence/browser-summary.json) 和 [源码指纹](evidence/source-fingerprint.json) 绑定这次 dirty 实现；随后提交未改产品源码。独立上下文 review 待绑定提交 SHA。
+最后源码 [Tauri build](evidence-manifest.json) 和 [隔离运行](evidence-manifest.json) 退出 0，EXE SHA256 `6577c1831c9a1f691a71ee3e68da32bc59084f922534d498ac644a5ee1effb22`；实际加载 `/assets/index-Bvt1L0MZ.js`、`/assets/index-Dajq2fwF.css`，JS 字节与当前 dist 相符。完整 [native runtime](evidence/desktop-acceptance.json)、[Web runtime 1920](evidence/capabilities-runtime-1920.json)、[browser summary](evidence/browser-summary.json) 和 [源码指纹](evidence/source-fingerprint.json) 绑定这次 dirty 实现；随后提交未改产品源码。独立上下文 review 待绑定提交 SHA。
 
-截图：[Web 390](evidence/capabilities-settings-390.png)、[1099](evidence/capabilities-settings-1099.png)、[1920](evidence/capabilities-settings-1920.png)、[native 设置](evidence/settings-native.png)、[native 参数](evidence/parameters-native.png)、[native 重绘禁用](evidence/redraw-disabled-native.png)。[development runtime](evidence/development-runtime.json) 与 [main 开发失败](evidence/baseline-dev.json) 分开保留，不把遮罩后局部通过变为开发插件通过。
+截图：[Web 390](evidence-manifest.json)、[1099](evidence-manifest.json)、[1920](evidence-manifest.json)、[native 设置](evidence-manifest.json)、[native 参数](evidence-manifest.json)、[native 重绘禁用](evidence-manifest.json)。[development runtime](evidence/development-runtime.json) 与 [main 开发失败](evidence/baseline-dev.json) 分开保留，不把遮罩后局部通过变为开发插件通过。
 
 正式证据放本包 evidence；完整运行日志和浏览器 JSON 记录退出结果/原平台 skips。全量命令使用 Node 24.21.0/npm 12.1.1；独立诊断/原生验收脚本使用现有 Node 24.19.0，浏览器为本机 Edge/WebView2。既有 large-chunk 与 Rust dead-code warning 未屏蔽。
 
@@ -67,15 +67,15 @@ Desktop/Web 源码版本 2.1.4/2.1.5；Mobile 规划版本仍 2.1.1。`client:ch
 
 首轮实现提交 0d20696e 的独立审查为 CHANGES REQUIRED：MC-001（P2）要求参考图 UI 与真实归档附件去重一致，详见 review。当前分支先合并 origin/main@5b0eb6a341335c6bcdefcadf59be3ae4c2e4cdb3，再修正该 finding；这一轮的证据不会替换原 21d/0d 记录。
 
-[图边 RED](evidence/correction-baseline5b/logs/review-red-reference-unit.log) 13 pass / 1 fail，真实断言为同一归档原件应允许连线而被误拒；[稳定 UI RED](evidence/correction-baseline5b/logs/review-red-ui6.log) 复现不同素材超限时重绘仍 enabled。此前 UI 准备失败涉及 upload-only 节点、卸载保存、动态 first 定位与未知模型，日志 ui1–5 保留，没有把准备失败当产品 RED，也没有删掉超限断言。
+[图边 RED](evidence-manifest.json) 13 pass / 1 fail，真实断言为同一归档原件应允许连线而被误拒；[稳定 UI RED](evidence-manifest.json) 复现不同素材超限时重绘仍 enabled。此前 UI 准备失败涉及 upload-only 节点、卸载保存、动态 first 定位与未知模型，日志 ui1–5 保留，没有把准备失败当产品 RED，也没有删掉超限断言。
 
-纯函数统一源图存在判断和 assetId 去重；普通生成和重绘消费完整参考图，实际连线与 hover permission 共用校验。missing/unarchived/non-image 引用保留 fail-closed，补了共享 assetId 非图片与悬空引用保护。定向 [单测 GREEN](evidence/correction-baseline5b/logs/review-green-unit.log) 28/28；[六项 UI 诊断](evidence/correction-baseline5b/logs/review-green-ui2.log) 6/6、无 retry。该次诊断用了 1425，只代表本文件 fixture；不能替代 1423 全量验收。
+纯函数统一源图存在判断和 assetId 去重；普通生成和重绘消费完整参考图，实际连线与 hover permission 共用校验。missing/unarchived/non-image 引用保留 fail-closed，补了共享 assetId 非图片与悬空引用保护。定向 [单测 GREEN](evidence-manifest.json) 28/28；[六项 UI 诊断](evidence-manifest.json) 6/6、无 retry。该次诊断用了 1425，只代表本文件 fixture；不能替代 1423 全量验收。
 
-修正增加控件计数后 UI check 暴露 CreationComposer 303 行；移除本修正向模型选择器传入的无消费计数参数，保持原组件和职责，没有修改行数门禁。最终 [UI check](evidence/correction-baseline5b/logs/integrated-ui-check-final.log) 196/0。
+修正增加控件计数后 UI check 暴露 CreationComposer 303 行；移除本修正向模型选择器传入的无消费计数参数，保持原组件和职责，没有修改行数门禁。最终 [UI check](evidence-manifest.json) 196/0。
 
-标准 1423 端口此前由另一份不同 bundle 的 preview 使用；没有终止它。自然释放后 [完整 verify](evidence/correction-baseline5b/logs/integrated-verify.log) 退出 0：Node 717/725（原 8 skip）、Agent 172/174（原 2 skip）、Edge 394/394、0 flaky；lint/typecheck/format/build/governance/features/Markdown 均通过。[浏览器摘要](evidence/correction-baseline5b/browser-summary.json)、[Web 1920](evidence/correction-baseline5b/capabilities-runtime-1920.json)、[源码指纹](evidence/correction-baseline5b/source-fingerprint.json) 属于此轮 dirty 修正候选。指纹为 16e62a55a239c24e48b9abe0b62d5ed4e170ba94103c1b764e6cb28d080f8026。
+标准 1423 端口此前由另一份不同 bundle 的 preview 使用；没有终止它。自然释放后 [完整 verify](evidence-manifest.json) 退出 0：Node 717/725（原 8 skip）、Agent 172/174（原 2 skip）、Edge 394/394、0 flaky；lint/typecheck/format/build/governance/features/Markdown 均通过。[浏览器摘要](evidence/correction-baseline5b/browser-summary.json)、[Web 1920](evidence/correction-baseline5b/capabilities-runtime-1920.json)、[源码指纹](evidence/correction-baseline5b/source-fingerprint.json) 属于此轮 dirty 修正候选。指纹为 16e62a55a239c24e48b9abe0b62d5ed4e170ba94103c1b764e6cb28d080f8026。
 
-本轮 [client:check](evidence/correction-baseline5b/logs/integrated-client-check.log) 退出 0。第一次 [Tauri build](evidence/correction-baseline5b/logs/integrated-desktop-build.log)/[运行](evidence/correction-baseline5b/logs/integrated-desktop-acceptance.log) 也退出 0，EXE 86f1ac471ed2a53864d7dbbc060eccea5738ebacf4e347e8169da3c032dd17bd；随后删除无消费 prop，因此该 native 产物不是最终候选，需要重建。报告输出现使用独立 run 目录，旧报告不覆盖。
+本轮 [client:check](evidence-manifest.json) 退出 0。第一次 [Tauri build](evidence-manifest.json)/[运行](evidence-manifest.json) 也退出 0，EXE 86f1ac471ed2a53864d7dbbc060eccea5738ebacf4e347e8169da3c032dd17bd；随后删除无消费 prop，因此该 native 产物不是最终候选，需要重建。报告输出现使用独立 run 目录，旧报告不覆盖。
 
 full verify 完成后的 fetch 发现 main 已更新至 5dd6e6dd（阶段计划、保存恢复和版本元数据）。这是 App/shared storage 的真实变更，不能沿用上述 5b 验收；将整合后重新验证 Web/Tauri，并对精确新 base/head 独立复核。Desktop/Web 的最终 patch 需在最新主线基础上递增。
 
@@ -89,11 +89,11 @@ full verify 完成后的 fetch 发现 main 已更新至 5dd6e6dd（阶段计划�
 
 最新main@5dd6e6dddaf00cf2d5c14ae02ef5974c72238232（PR #35）涉及共享App、阶段审批和保存确认；逐项核对后合并为577ed3ee，三个进度文档只发生首段插入冲突，两边记录均保留。任务源码版本在最新主线基础上递增为Desktop2.1.6/Web2.1.7，Mobile规划2.1.1。主checkout现在main@5dd6e6dd且clean，由其它已授权主线工作前移；本任务仅写候选。原main未前移等旧句属于早期快照。
 
-[完整verify](evidence/latest-main5dd/logs/latest-verify.log)退出0：Node723/731、8个原skip；Agent172/174、2个原skip；Edge406/406，unexpected=0/flaky=0；lint/typecheck/UI198/0/format/build和治理/功能/Markdown门禁全部通过。[browser summary](evidence/latest-main5dd/browser-summary.json)绑定这次运行时间与577ed3ee源码基准。没有重复利用上一轮394项结果。
+[完整verify](evidence-manifest.json)退出0：Node723/731、8个原skip；Agent172/174、2个原skip；Edge406/406，unexpected=0/flaky=0；lint/typecheck/UI198/0/format/build和治理/功能/Markdown门禁全部通过。[browser summary](evidence/latest-main5dd/browser-summary.json)绑定这次运行时间与577ed3ee源码基准。没有重复利用上一轮394项结果。
 
-[client:check](evidence/latest-main5dd/logs/latest-client-check.log)、[最终Tauri build](evidence/latest-main5dd/logs/latest-desktop-build.log)、[原生运行](evidence/latest-main5dd/logs/latest-desktop-acceptance.log)均退出0。EXE SHA256为`0af389bf09a5810c5d5ee57f7dcb07b884d237cefda7d3f38563eb699853951c`，实际加载index-ByBcWj1e.js/index-C6I0Rp3I.css，JS字节与本树dist一致。原生声明恢复、数量/零参考图、禁用重绘、保留原件/tasks=0/pageerrors=[]有[完整runtime](evidence/latest-main5dd/desktop-acceptance.json)及[设置](evidence/latest-main5dd/settings-native.png)、[参数](evidence/latest-main5dd/parameters-native.png)、[重绘](evidence/latest-main5dd/redraw-disabled-native.png)截图；输出在独立run目录，没有覆盖首轮。5项既有Rust warning和Vite large-chunk提示保留。
+[client:check](evidence-manifest.json)、[最终Tauri build](evidence-manifest.json)、[原生运行](evidence-manifest.json)均退出0。EXE SHA256为`0af389bf09a5810c5d5ee57f7dcb07b884d237cefda7d3f38563eb699853951c`，实际加载index-ByBcWj1e.js/index-C6I0Rp3I.css，JS字节与本树dist一致。原生声明恢复、数量/零参考图、禁用重绘、保留原件/tasks=0/pageerrors=[]有[完整runtime](evidence/latest-main5dd/desktop-acceptance.json)及[设置](evidence-manifest.json)、[参数](evidence-manifest.json)、[重绘](evidence-manifest.json)截图；输出在独立run目录，没有覆盖首轮。5项既有Rust warning和Vite large-chunk提示保留。
 
-Web [390](evidence/latest-main5dd/capabilities-settings-390.png)、[1099](evidence/latest-main5dd/capabilities-settings-1099.png)、[1920](evidence/latest-main5dd/capabilities-settings-1920.png)与各runtime JSON来自这次严格1423 preview。根/独立review抽查同状态截图，不把工程补充字段冒充新增Figma设计。Development严格1421再次[运行](evidence/latest-main5dd/logs/latest-development-capability.log)：既有插件遮罩仍存在，记录后按官方Esc操作退出，真实能力字段/持久化局部通过；[runtime](evidence/latest-main5dd/development-runtime.json)明确pluginLoading=PRE-EXISTING FAILURE。
+Web [390](evidence/latest-main5dd/capabilities-settings-390.png)、[1099](evidence-manifest.json)、[1920](evidence-manifest.json)与各runtime JSON来自这次严格1423 preview。根/独立review抽查同状态截图，不把工程补充字段冒充新增Figma设计。Development严格1421再次[运行](evidence-manifest.json)：既有插件遮罩仍存在，记录后按官方Esc操作退出，真实能力字段/持久化局部通过；[runtime](evidence/latest-main5dd/development-runtime.json)明确pluginLoading=PRE-EXISTING FAILURE。
 
 当前[源码指纹](evidence/latest-main5dd/source-fingerprint.json)为`8e58bd273069b7f578f52943107f1d648a75593060d55f59cc698267fa1f2373`，包含前端、原生源码/manifest、版本源与npm锁；正式实现提交后独立复核需重算匹配。后续仅文档/收据变化时复验文档门禁并补审新head，产品源码或构建输入变化则重新生成相应产物。独立修正关闭、draft PR/Hosted检查、用户产品验收及实际发布按事实追加，当前不预写PASS。
 
@@ -103,26 +103,36 @@ Web [390](evidence/latest-main5dd/capabilities-settings-390.png)、[1099](eviden
 
 公开目标已只读核对为soudbs180-creator/KK-Studio-2.0、public、default main，当前Git凭据有push权限；凭据只经既有credential manager在内存交给GitHub，未写入目录或日志。计划仅fast-forward推本任务分支，不推main、不自审批、不合并/部署。待上传证据来自隔离fixture/profile，API地址为example.test、测试key为fixture占位，未包含真实供应商凭据；GitHub辅助脚本及认证数据位于被ignore的.tmp，不加入提交。首次自动审核拒绝及后续用户授权记录保持原文，不以替换接口规避拒绝。
 
-最终文档收口门禁的原始输出见[lint与文档检查](evidence/latest-main5dd/logs/review-final-document-gates.log)和[delivery结构检查](evidence/latest-main5dd/logs/review-final-delivery.log)。仅文档变化没有复用成产品源码复验；最终HEAD增量审查及Hosted检查以PR收据记录。
+最终文档收口门禁的原始输出见[lint与文档检查](evidence-manifest.json)和[delivery结构检查](evidence-manifest.json)。仅文档变化没有复用成产品源码复验；最终HEAD增量审查及Hosted检查以PR收据记录。
 
 ## 首轮Hosted的非零flaky与新增受控RED
 
-原draft PR#36 head2797687c，两轮workflow结论success；PR run37742566288的verify job113196446265原始记录为405pass+1flaky，本任务“不同素材超限禁用重绘”首次enabled，retry通过。97项Rust测试与客户端/release构建成功。记录：[原始job日志](evidence/draft-refresh5dd/logs/first-pr-ci-verify.log)、[browser JSON](evidence/draft-refresh5dd/logs/first-ci-browser-results.json)、[局部error-context](evidence/draft-refresh5dd/logs/first-ci-error-context.txt)。后者不含原图/目录现场，原flaky唯一根因UNKNOWN。
+原draft PR#36 head2797687c，两轮workflow结论success；PR run37742566288的verify job113196446265原始记录为405pass+1flaky，本任务“不同素材超限禁用重绘”首次enabled，retry通过。97项Rust测试与客户端/release构建成功。记录：[原始job日志](evidence-manifest.json)、[browser JSON](evidence/draft-refresh5dd/logs/first-ci-browser-results.json)、[局部error-context](evidence/draft-refresh5dd/logs/first-ci-error-context.txt)。后者不含原图/目录现场，原flaky唯一根因UNKNOWN。
 
-新增“无变化通知保留草稿”在旧production真实RED，edit由supported变unknown；[1423首尝试](evidence/draft-refresh5dd/logs/review-red-draft-refresh.log)因外部端口占用未运行，不当RED。真实[1425定向RED](evidence/draft-refresh5dd/logs/review-red-draft-refresh-1425.log)不替代全量标准端口验收。修后一次未重新build的[旧bundle尝试](evidence/draft-refresh5dd/logs/stale-bundle-draft-refresh-1425.log)仍失败，明确不是GREEN；重建后[7例×4次定向](evidence/draft-refresh5dd/logs/review-green-draft-refresh2-1425.log)28pass、retries=0。独立预审识别显示字段依赖遗漏，[显示刷新RED](evidence/draft-refresh5dd/logs/review-red-display-refresh-1425.log)保留；补齐依赖后重建production，[最终8例×4次定向](evidence/draft-refresh5dd/logs/review-green-draft-refresh3-1425.log)32pass、retries=0；它只证明定向范围，完整1423与native见下一节。
+新增“无变化通知保留草稿”在旧production真实RED，edit由supported变unknown；[1423首尝试](evidence-manifest.json)因外部端口占用未运行，不当RED。真实[1425定向RED](evidence-manifest.json)不替代全量标准端口验收。修后一次未重新build的[旧bundle尝试](evidence-manifest.json)仍失败，明确不是GREEN；重建后[7例×4次定向](evidence-manifest.json)28pass、retries=0。独立预审识别显示字段依赖遗漏，[显示刷新RED](evidence-manifest.json)保留；补齐依赖后重建production，[最终8例×4次定向](evidence-manifest.json)32pass、retries=0；它只证明定向范围，完整1423与native见下一节。
 
 ## 草稿刷新修正的最新本地验收（16:27，独立审查待完成）
 
-[完整verify](evidence/draft-refresh5dd/logs/draft-refresh-verify.log)退出0：root723/731、8个原skip；Agent172/174、2个原skip；browser408/408，unexpected=0/flaky=0/skipped=0；UI198/0，lint/typecheck/format/build及治理/功能/Markdown门禁通过。[browser summary](evidence/draft-refresh5dd/browser-summary.json)记录2026-10-08T08:23:10Z起、标准1423、dirty候选尚未提交；不是首轮Hosted结果。
+[完整verify](evidence-manifest.json)退出0：root723/731、8个原skip；Agent172/174、2个原skip；browser408/408，unexpected=0/flaky=0/skipped=0；UI198/0，lint/typecheck/format/build及治理/功能/Markdown门禁通过。[browser summary](evidence/draft-refresh5dd/browser-summary.json)记录2026-10-08T08:23:10Z起、标准1423、dirty候选尚未提交；不是首轮Hosted结果。
 
-[clientcheck](evidence/draft-refresh5dd/logs/latest-client-check.log)、[fresh Tauri build](evidence/draft-refresh5dd/logs/latest-desktop-build.log)、[隔离native验收](evidence/draft-refresh5dd/logs/latest-desktop-acceptance.log)均退出0。EXE SHA256为db354e2bbd14f5891a5c1b6e3b5584e2f3576c0525b4aa86f50ebed0be4351c5；实际index-D7y589oD.js/index-C6I0Rp3I.css，JS SHA256为8c39cd503fd883c447769915c20cf1c952e10fd3bb1134015b352c491e227829；[native runtime](evidence/draft-refresh5dd/desktop-acceptance.json)确认与dist字节一致、隔离数据根/profile、errors=[]。原生本轮新增受控provider通知后四个未保存字段保持断言，再保存并重载、限制数量/零参考图、禁用重绘、原图归档和tasks=0。
+[clientcheck](evidence-manifest.json)、[fresh Tauri build](evidence-manifest.json)、[隔离native验收](evidence-manifest.json)均退出0。EXE SHA256为db354e2bbd14f5891a5c1b6e3b5584e2f3576c0525b4aa86f50ebed0be4351c5；实际index-D7y589oD.js/index-C6I0Rp3I.css，JS SHA256为8c39cd503fd883c447769915c20cf1c952e10fd3bb1134015b352c491e227829；[native runtime](evidence/draft-refresh5dd/desktop-acceptance.json)确认与dist字节一致、隔离数据根/profile、errors=[]。原生本轮新增受控provider通知后四个未保存字段保持断言，再保存并重载、限制数量/零参考图、禁用重绘、原图归档和tasks=0。
 
-Web同状态证据来自本轮严格1423：[390设置](evidence/draft-refresh5dd/capabilities-settings-390.png)、[1099设置](evidence/draft-refresh5dd/capabilities-settings-1099.png)、[1920设置](evidence/draft-refresh5dd/capabilities-settings-1920.png)、[1920 runtime](evidence/draft-refresh5dd/capabilities-runtime-1920.json)。根上下文目视抽查390设置与[native参数](evidence/draft-refresh5dd/parameters-native.png)；全部实际DOM/截图来自当前bundle。Development严格1421的[本轮日志](evidence/draft-refresh5dd/logs/latest-development-capability.log)和[runtime](evidence/draft-refresh5dd/development-runtime.json)记录相同通知后字段保持与真实持久化局部PASS；既有public插件遮罩仍FAIL，记录后Esc，仅局部验收，不改称整套开发模式通过。
+Web同状态证据来自本轮严格1423：[390设置](evidence-manifest.json)、[1099设置](evidence-manifest.json)、[1920设置](evidence-manifest.json)、[1920 runtime](evidence/draft-refresh5dd/capabilities-runtime-1920.json)。根上下文目视抽查390设置与[native参数](evidence-manifest.json)；全部实际DOM/截图来自当前bundle。Development严格1421的[本轮日志](evidence-manifest.json)和[runtime](evidence/draft-refresh5dd/development-runtime.json)记录相同通知后字段保持与真实持久化局部PASS；既有public插件遮罩仍FAIL，记录后Esc，仅局部验收，不改称整套开发模式通过。
 
 本轮[源码指纹](evidence/draft-refresh5dd/source-fingerprint.json)为2ebaab3d83bcf31fa33dbd94f8ee817b20baf5f1bf8661447beb64a5ac44735a、389文件（UTF8/LF归一），编译输入在全部检查期间固定。5项既有Rust warning与large-chunk提示保留。新提交正式独立审查、MC-002/MC-003关闭及当前SHA Hosted结果待完成；不以历史PASS或重试替代。
 
 ## 独立复核与交付边界
 
-16:31对实际base5dd6e6dd..head71ddb625正式技术补审PASS，MC-002/MC-003关闭，MC-001保持关闭，无新增finding。独立87/87单测、389源码/产物hash匹配，完整收据见[review](review.md)和[review-product.json](evidence/draft-refresh5dd/review-product.json)。[该技术HEAD delivery结构门禁](evidence/draft-refresh5dd/logs/review-draft-delivery.log)退出0，162文件、0违规；结构检查不代替审查质量。
+16:31对实际base5dd6e6dd..head71ddb625正式技术补审PASS，MC-002/MC-003关闭，MC-001保持关闭，无新增finding。独立87/87单测、389源码/产物hash匹配，完整收据见[review](review.md)和[review-product.json](evidence/draft-refresh5dd/review-product.json)。[该技术HEAD delivery结构门禁](evidence-manifest.json)退出0，162文件、0违规；结构检查不代替审查质量。
 
 本地AC完成与线上交付分别记账：最终文档HEAD仍需只读补审，推送后回读新SHA Hosted verify/delivery及浏览器原始结果，不能沿用2797687c的success。最终精确HEAD、补审结论及当前Hosted结果记录于draft PR#36描述与本地忽略的交付收据，避免通过不断回填自己的commit SHA制造循环。未合并发布；真实Provider等后续边界保留。
+
+
+## 2026-10-28 原始日志外置查找说明
+
+本包62份原始日志已按ORG-5迁至容器output，原始字节、sha256、Git源及原链接目的地逐项记于[evidence manifest](evidence-manifest.json)。上文32个日志链接现指向该清单，链接文字、历史结论、失败记录与数字保持原意；清单中的sourcePath/references.originalTarget保留原身份。PNG、JSON回执及交付文档仍留仓。迁出仅发生于当前候选任务树，尚未主线整合；本说明不是历史验收或当前Hosted状态的新结论。
+
+
+## 2026-10-30 历史原始证据外置说明
+
+本次ORG-6将历史E2截图/原始日志/录屏外置到容器output；原引用现指向[2026-10-08-model-capabilities manifest](evidence-manifest.json)。原始sourcePath、commit/blob、sha256、大小与原链接目的地逐项可查；原图片嵌入改为同文字的清单链接。原结论、失败、时间和数字未重写，不代表当前功能重新验收或main已合流。E1摘要、JSON、关键图及活跃运行资料仍留仓；恢复仅写新空目录并复核字节。

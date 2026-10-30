@@ -1,4 +1,4 @@
-import type { SkillRecord } from "../features/skills/skillRegistry";
+import type { SkillRecord } from "../features/skills/index.ts";
 import ComposerPluginSummary from "./ComposerPluginSummary";
 
 export default function StartResourcePopover({

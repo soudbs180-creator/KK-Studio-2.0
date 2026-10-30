@@ -1,64 +1,678 @@
 [
   {
-    "id": "TASK-MOD-GATE-BOOTSTRAP",
-    "title": "主线原生首建架构与目录基线",
-    "goal": "合法完成origin/main无产品源码变更bootstrap，为P3整批正常PR合流建立基础",
-    "scope": "既有架构/布局检查器规则和回归、开发依赖、真实origin基线、治理入口、五件套与台账",
+    "id": "TASK-COMFY-PHYSICAL-20261030",
+    "title": "本机ComfyUI真实显卡出图验收",
+    "goal": "本机ComfyUI真实显卡出图验收",
+    "scope": "用户确认改先真实H3视频；复用已有权重与软件工作流、归档/画布验收，图片模型未下载不假称已验",
     "acceptance": [
-      "src/packages/vendor/canvas-plugins和三端版本与origin/main不变",
-      "两份baseline指向真实origin base并与实际扫描一致，原棘轮不放宽",
-      "快速门/完整verify/当前SHA独审/Hosted/Delivery成功后正常PR squash"
+      "本包spec对应阶段验收与可复核证据",
+      "用户原件/历史失败记录与检查保持",
+      "当前SHA审查/门禁与主线/发布边界分开"
     ],
-    "dependencies": [],
+    "dependencies": [
+      "TASK-MOD-P8"
+    ],
     "owner": "root",
-    "ownerRole": "implementer",
-    "branch": "refactor/TASK-MOD-P0-architecture-baseline",
+    "ownerRole": "implementation-integrator",
+    "branch": "refactor/TASK-MOD-P3-feature-cycles",
     "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "be730617ace5013295b85a22133259b32ad6ffec",
     "affectedModules": [
-      "config",
-      "scripts/governance",
-      "scripts/check-governance.mjs",
-      "tests/unit/architectureRules.test.ts",
-      "tests/unit/repoLayoutRules.test.ts",
-      "package.json",
-      "package-lock.json",
-      "docs/governance",
-      "docs/changes/2026-10-30-origin-baseline-bootstrap"
+      "docs/changes",
+      "docs/governance"
     ],
-    "status": "REVIEW",
+    "status": "PARTIAL",
     "displayStatus": "进行中",
-    "priority": "P0",
-    "priorityRationale": "工具栏定位与当前用户v3数据兼容阻断统一发布",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
     "evidence": [
-      "docs/changes/2026-10-30-origin-baseline-bootstrap/verification.md"
+      "docs/changes/2026-10-30-main-physical-org6/verification.md"
     ],
-    "verification": "本地完整verify退出0：根1975pass20skip、Agent204pass2skip、Edge生产838pass0skip0flaky、design8及开发四步骤通过；产品/版本与origin4610不变，两份baseline精确实扫。浏览器metadata4610对应dirty治理候选，开发metadata75775f3c，原报告不重写，474附件外置SHA通过。正式独审/Delivery/当前SHA Hosted/合流待完成。",
+    "verification": "2.1.59/d6d592e4实际RTX5080/H3 host及原生editor运行success；各512x512/124帧/24fps带音轨，首帧AssetPort SHA相同、result边/两个节点及重开通过。混合输出修复13/13独测、根2406pass20skip、类型/增量lint0、代码独审PASS。仅H3及首帧REAL；不是图片checkpoint/视频资产/Hub自动安装启动/已安装版本验收。回执在output/main-physical-org6-2026-10-30/physical-final-artifact-receipt.json。",
     "verificationResult": "PARTIAL",
     "updated": "2026-10-30",
     "lastVerified": "2026-10-30",
-    "nextAction": "固定提交独立只读评审、Delivery与Hosted门禁后正常PR squash；回到P3解决组合冲突和整体门禁",
+    "nextAction": "保持PARTIAL：图片checkpoint/P6图像能力、视频资产、Hub安装/自动启动和整体交付各自验收；继续主线冲突与合法bootstrap",
     "requirementRefs": [
-      "user:主线合流",
+      "docs/changes/2026-10-30-main-physical-org6/intent.md",
+      "docs/changes/2026-10-30-main-physical-org6/spec.md"
+    ],
+    "featureIds": []
+  },
+  {
+    "id": "TASK-ORG-6",
+    "title": "推广历史E2证据外置",
+    "goal": "推广历史E2证据外置",
+    "scope": "已准备E2逐包复核/恢复/manifest/引用与布局基线，E1和JSON保留",
+    "acceptance": [
+      "本包spec对应阶段验收与可复核证据",
+      "用户原件/历史失败记录与检查保持",
+      "当前SHA审查/门禁与主线/发布边界分开"
+    ],
+    "dependencies": [
+      "TASK-ORG-5"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "refactor/TASK-MOD-P3-feature-cycles",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "be730617ace5013295b85a22133259b32ad6ffec",
+    "affectedModules": [
+      "docs/changes",
+      "docs/governance"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-30-main-physical-org6/verification.md"
+    ],
+    "verification": "任务树迁1200份E2/160288854B，60包清单、22历史文档87引用；新目录恢复1200/1200，源/Git/副本SHA一致，66关键图和30活跃文件保留，断链86→86。净减159410793B/62.8149%，非Git历史/主线减量；基线578→88只减490条。类型/增量lint0，根2405pass20skip0fail，当前SHA独审/main未合。 当前9a23709a只读独立审查正式PASS；固定SHA Git blob净减159391121B，与工作树口径分列。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-30",
+    "lastVerified": "2026-10-30",
+    "nextAction": "当前已提交SHA独立审查；完整主线门禁/合流后完成ORG6交付，其余保留文件不盲迁",
+    "requirementRefs": [
+      "docs/changes/2026-10-30-main-physical-org6/intent.md",
+      "docs/changes/2026-10-30-main-physical-org6/spec.md"
+    ],
+    "featureIds": []
+  },
+  {
+    "id": "TASK-DELIVERY-MAIN-20261030",
+    "title": "主线squash与保护审计改动后回收",
+    "goal": "主线squash与保护审计改动后回收",
+    "scope": "当前分支远端整合/门禁、main合流和本任务树回收",
+    "acceptance": [
+      "本包spec对应阶段验收与可复核证据",
+      "用户原件/历史失败记录与检查保持",
+      "当前SHA审查/门禁与主线/发布边界分开"
+    ],
+    "dependencies": [
+      "TASK-MOD-P8"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "refactor/TASK-MOD-P3-feature-cycles",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "be730617ace5013295b85a22133259b32ad6ffec",
+    "affectedModules": [
+      "docs/changes",
+      "docs/governance"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-30-main-physical-org6/verification.md"
+    ],
+    "verification": "前置PR82已正常squash main9b1038a7，P3已承接实际main且71冲突消除。组合f448限定独审141PASS，两项聊天隔离P1修复；根2441/20skip、Mobile435、Rust384/1ignore、type/lint通过。完整Web911项684PASS/227FAIL/0flaky；当前修复定向9PASS。Windows运行目录发布EPERM阻断，Hosted/正式当前EXE/整体合流未完，main21原件SHA0差异。",
+    "verificationResult": "NOT_VERIFIED",
+    "updated": "2026-10-30",
+    "lastVerified": "2026-10-30",
+    "nextAction": "逐项核实并修复227个全套浏览器失败、Agent运行目录EPERM；重跑受影响门禁与完整verify/当前Desktop产物和精确SHA独审/Hosted后，正常squash PR81并安全回收本任务树；四文档开放项不自动关闭。",
+    "requirementRefs": [
+      "docs/changes/2026-10-30-main-physical-org6/intent.md",
+      "docs/changes/2026-10-30-main-physical-org6/spec.md"
+    ],
+    "featureIds": []
+  },
+  {
+    "id": "TASK-MOD-MODEL-DRAFT",
+    "title": "目录通知保留未保存模型能力草稿",
+    "goal": "元数据未变不覆盖用户表单，真实切换仍同步",
+    "scope": "ProviderModelCatalog只修数据同步条件；保存按钮locator更名，无JSX/CSS/设计变化",
+    "acceptance": [
+      "未保存的能力与数量不被相同元数据通知重置",
+      "原保存及持久能力断言保留，真实元数据变化仍同步",
+      "原失败RED→GREEN、快速检查与当前SHA独审"
+    ],
+    "dependencies": [
+      "TASK-MOD-P8"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "refactor/TASK-MOD-P3-feature-cycles",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "cc8e5f7c5cd012f7ec3cb741576e064970124f10",
+    "affectedModules": [
+      "src/components/settings/ProviderModelCatalog.tsx",
+      "tests/browser/model-capabilities.spec.ts",
+      "src/components/settings/ModelDisplayFields.tsx"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-29-p8-composition/verification.md"
+    ],
+    "verification": "同通知/默认/启停保草稿及真实元数据同步增强browser通过，原保存断言保留；455cbb6d独审PASS。最终UI门412行失败后纯提取ModelDisplayFields，父387行，AST/类型/增量lint/UI门通过，根2405pass20skip0fail。最终SHA补审/浏览器/Native以本卡回执为准；完整默认门/main未合。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-29",
+    "lastVerified": "2026-10-29",
+    "nextAction": "完成当前SHA快速门/独审；独立目录解析/取消/归属及测速文案冲突另项修复，不修改有效安全断言",
+    "requirementRefs": [
+      "docs/changes/2026-10-29-p8-composition/spec.md"
+    ],
+    "featureIds": []
+  },
+  {
+    "id": "TASK-MOD-CHAT-DELIVERY",
+    "title": "成功文本回写原聊天并只读恢复离线历史",
+    "goal": "真实浏览器已受理结果与离线消息按原聊天可见且不串草稿",
+    "scope": "复用领域reply函数与disconnected store投影；无UI/协议或持久化schema变化",
+    "acceptance": [
+      "已验收文本只回原聊天，重复一次、缺聊天/请求不恢复已删数据",
+      "离线首开及A/B切换只读显示本地历史，home无其他项目消息",
+      "RED→GREEN及快速/原浏览器断言和当前SHA独审"
+    ],
+    "dependencies": [
+      "TASK-MOD-CHAT-PROJECTION"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "refactor/TASK-MOD-P3-feature-cycles",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "4c3d6691c035f3e27d6781d30bc4c7e2e38f79c5",
+    "affectedModules": [
+      "src/features/creation/useTaskExecution.ts",
+      "src/features/agent/agentConnection.ts",
+      "tests/unit/taskDecouplingGovernance.test.ts",
+      "tests/unit/agentConnection.test.ts"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-29-p8-composition/verification.md"
+    ],
+    "verification": "cc8e5f7c正式独审PASS，IR-CHAT-01/02关闭；77定向独立复验，根2405pass20skip0fail、types/增量lint/build通过，原浏览器3/3、design9/9及开发插件/官方57桌面构建通过。默认治理/完整浏览器/main未合，仍PARTIAL。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-29",
+    "lastVerified": "2026-10-29",
+    "nextAction": "完成默认治理与远端整合，当前完整组合验收后合main",
+    "requirementRefs": [
+      "docs/changes/2026-10-29-p8-composition/spec.md"
+    ],
+    "featureIds": []
+  },
+  {
+    "id": "TASK-MOD-COMFY-RECOVERY",
+    "title": "恢复超窗口Comfy产物并保留结果删除意图",
+    "goal": "关闭项目后超过100条历史仍能归档，已删除结果不自动复活",
+    "scope": "原history监听定向查询及分页回溯、严格本机白名单、可选卡片删除标记；不重发推理或更改UI",
+    "acceptance": [
+      "持久promptId先按ID补收，unknown与editor使用分页回溯并检查client归属",
+      "卡片删除结果后轮询与重开不复活，旧快照兼容",
+      "RED→GREEN及快速/浏览器/Rust检查，修复后独立补审"
+    ],
+    "dependencies": [
+      "TASK-MOD-P6-1"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "refactor/TASK-MOD-P3-feature-cycles",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "7280dc3a812a6bf5b98e44e2ed131f4530c37908",
+    "affectedModules": [
+      "src/features/comfyui/workflowSession.ts",
+      "src/components/canvas/useComfyWorkflowNode.ts",
+      "src/components/canvas/useCanvasNodeActions.ts",
+      "src/components/canvas/ComfyWorkflowCanvasHost.tsx",
+      "src/domain/comfyWorkflow.ts",
+      "src-tauri/src/comfy_transport.rs",
+      "tests/unit/comfyWorkflowSession.test.ts",
+      "tests/browser/comfy-workflow.spec.ts",
+      "tests/support/comfyCanvasHarness.tsx",
+      "src/App.tsx",
+      "src/domain/canvasItems.ts",
+      "src/features/agent/agentCanvas.ts",
+      "tests/unit/conversationSubmitScope.test.ts",
+      "tests/unit/agentCanvas.test.ts",
+      "src/domain/creationModel.ts"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-29-p6-1-comfy-canvas/verification.md"
+    ],
+    "verification": "独审07d6发现可编辑说明仍会绕过删除；补真实Agent改说明→删除RED后，新增稳定comfyWorkflowSourceId，旧快照/Agent编辑前从旧说明承接。81定向、根2395pass/20skip、类型/增量lint/build/Comfy浏览器通过。完整901为补该修复中止，待新SHA补审/重跑及main。 78beb7a9独审81项复验关闭IR-P6-02，限定代码PASS；全套浏览器中断与main未完成，不升级总体状态。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-29",
+    "lastVerified": "2026-10-29",
+    "nextAction": "当前SHA补审；完整门禁和首建baseline/远端分叉整合",
+    "requirementRefs": [
+      "docs/changes/2026-10-29-p6-1-comfy-canvas/spec.md"
+    ],
+    "featureIds": []
+  },
+  {
+    "id": "TASK-MOD-HOME-SESSION",
+    "title": "首页新项目使用独立Agent会话",
+    "goal": "已连接账号切换模型后新建项目，不复用未归属的首页会话",
+    "scope": "首页显式携带新projectId并只初始化同项目空聊天；普通手动fresh、其他项目、已绑定/未知归属/忙碌/审批保护保留",
+    "acceptance": [
+      "新建项目显式独立会话，旧会话身份不覆盖",
+      "实际App调用回归RED→GREEN",
+      "首页切模型后只发一次turn、原件/草稿/归档断言全部保持"
+    ],
+    "dependencies": [
+      "TASK-MOD-CHAT-PROJECTION"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "refactor/TASK-MOD-P3-feature-cycles",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "f10147b9617bd82be7aae1b687f50fca317565c6",
+    "affectedModules": [
+      "src/App.tsx",
+      "src/features/agent/agentConnection.ts",
+      "tests/unit/conversationSubmitScope.test.ts",
+      "tests/unit/agentChatSafety.test.ts",
+      "tests/helpers/agentServer.ts",
+      "tests/browser/codex-home-routing.spec.ts",
+      "src/features/agent/desktopAgentLifecycle.ts",
+      "tests/unit/desktopAgentLifecycle.test.ts"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-29-p8-composition/verification.md"
+    ],
+    "verification": "079c泛化fresh在全量浏览器暴露普通聊天保护回归，补RED后以显式newProjectId收窄；84定向、2386根单元/20skip通过，类型/增量lint通过，首页8+连接保护6共14浏览器通过。全量首次运行中断、未获最终exit，不算通过。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-29",
+    "lastVerified": "2026-10-29",
+    "nextAction": "当前SHA独审；完整门禁和基线/远端冲突分阶段整合",
+    "requirementRefs": [
+      "docs/changes/2026-10-29-p8-composition/spec.md"
+    ],
+    "featureIds": []
+  },
+  {
+    "id": "TASK-MOD-CHAT-PROJECTION",
+    "title": "切换聊天同步组件派生视图",
+    "goal": "切换聊天后编辑框和执行方式来自所选聊天，保存原聊天草稿",
+    "scope": "App handleSelectChat与原会话回归，纯派生视图修复不改持久schema",
+    "acceptance": [
+      "实际App选择回调立即投影所选聊天",
+      "原聊天数据不改、API与Codex草稿隔离",
+      "单元RED→GREEN及原浏览器断言通过"
+    ],
+    "dependencies": [
+      "TASK-MOD-P8"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "refactor/TASK-MOD-P3-feature-cycles",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "0b675ec7",
+    "affectedModules": [
+      "src/App.tsx",
+      "tests/unit/conversationSubmitScope.test.ts"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "未完成",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-29-p8-composition/verification.md"
+    ],
+    "verification": "真实App回调RED（A draft未切B）→GREEN；会话49/49、根2379 pass/20 skip，类型/lint通过；两项原聊天切换浏览器恢复，首页预连接归属问题另卡处理。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-29",
+    "lastVerified": "2026-10-29",
+    "nextAction": "当前独审/完整verify/main；首页新项目显式独立会话另卡修复",
+    "requirementRefs": [
+      "docs/changes/2026-10-29-p8-composition/spec.md"
+    ],
+    "featureIds": []
+  },
+  {
+    "id": "TASK-MOD-P8",
+    "title": "App装配hook瘦身与主线合流核验",
+    "goal": "不改变JSX/样式/用户数据语义，迁移装配责任并完成适用合流门",
+    "scope": "src/App.tsx、src/app、相关回归和交付；合流保全主仓dirty",
+    "acceptance": [
+      "七组装配迁移，闭包/effect/JSX/样式同态",
+      "快速门禁、完整verify与当前独审逐项有证据",
+      "适用门满足后才合main，主仓dirty不丢失"
+    ],
+    "dependencies": [
+      "TASK-MOD-P6-1"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "refactor/TASK-MOD-P3-feature-cycles",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "792759611c60f698366b755f94198071c6c65c27",
+    "affectedModules": [
+      "src/App.tsx",
+      "src/app",
+      "tests"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "未完成",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-29-p8-composition/verification.md"
+    ],
+    "verification": "78beb7a9限定代码独审PASS；PR81 draft、main未合。全浏览器中断447/901：339通过108失败，无最终退出。交付续修显式根semver/类型、契约构建指纹、协议类型命名；隔离干净安装与两端类型通过，当前提交快速检查/补审另记。默认baseline/Hosted、完整浏览器与远端分叉未闭环。 交付底座4c3d6691、聊天cc8e5f7c已获限定增量独审PASS；2405根/三聊天浏览器/design/开发插件/57桌面构建通过；新58草稿修复及目录安全待续，默认门未绿。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-29",
+    "lastVerified": "2026-10-29",
+    "nextAction": "按当前SHA完成交付修复补审、处理浏览器失败与首建baseline/远端冲突；保全主仓审计改动后满足门禁再合流",
+    "requirementRefs": [
+      "docs/changes/2026-10-29-p8-composition/spec.md"
+    ],
+    "featureIds": []
+  },
+  {
+    "id": "TASK-FIGMA-PAGES-20261025",
+    "title": "重新核查并整理Figma 04/05页面与状态",
+    "goal": "沿01→02→03→04/05修正源继承、项目库搜索、工具栏和交互错误，消除重复本体与假引用并限定真实能力。",
+    "scope": "按用户2026-10-26继续授权检查Figma 01→02→03→04/05全部结构、共享控件与交互，并同步本地Desktop/Web共享UI及适用Mobile；保持当前真实能力，发布另行验收。",
+    "acceptance": [
+      "全量238场景清点并扫描可见根边界、替换面板、字体和小字，保留逐项覆盖表。",
+      "修复会话结构、工具栏和菜单上下文、44触控、手机滚动和深浅主题；禁用态无假运行反应。",
+      "模型通道和Mobile能力按源码核对，已知误分类、文字覆盖及跨平台原型路径关闭；代表截图及独立上下文审查有据。",
+      "工具栏唯一本体由六个状态组合与页面共同引用，禁止逐态复制与嵌套样式冻结；包含目录和嵌套引用，实际修改公共外观、布局与单态配置验证继承并恢复。"
+    ],
+    "dependencies": [],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "docs/TASK-FIGMA-FIRST-20261021-rules",
+    "worktree": "D:/kk-studio/KK-Studio-2.0",
+    "baseSha": "1fbac26b33bdabaad682ad398f5292360eb9c66a",
+    "affectedModules": [
+      "docs/changes/2026-10-25-figma-04-05-rework",
+      "docs/UI_INDEX.md",
+      "docs/PROGRESS.md",
+      "docs/governance",
+      "src/components",
+      "src/styles",
+      "tests/browser",
+      "tests/unit/uiIcon.test.ts",
+      "DESIGN.md"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "未完成",
+    "priority": "P2",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-25-figma-04-05-rework/intent.md",
+      "docs/changes/2026-10-25-figma-04-05-rework/spec.md",
+      "docs/changes/2026-10-25-figma-04-05-rework/plan.md",
+      "docs/changes/2026-10-25-figma-04-05-rework/verification.md",
+      "docs/changes/2026-10-25-figma-04-05-rework/review.md"
+    ],
+    "verification": "2026-10-26指定设计自审通过，整体PARTIAL。214按钮变体、54业务绘图、58页签/342按钮、8项目库、18素材库、禁用音频及指定菜单/卡片已修。87顶部行实际44且不重叠，4处窄画布用同语义44图标入口。124处间距/图标/箭头尺寸临时修改及恢复后回读通过，正式304×52/间距4/箭头8；113跳转/15取消配置通过，9当前PNG校验通过。完整触控、全场景播放器、独审、本地/原生未验；未改源码或版本。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-26",
+    "lastVerified": "2026-10-26",
+    "nextAction": "先完成共享源与全场景结构核查，再同步本地控件/页面；完整测试、实际运行与当前独审后判定验收，不改变其他任务归属。",
+    "requirementRefs": [
+      "docs/changes/2026-10-25-figma-04-05-rework/intent.md",
+      "docs/changes/2026-10-25-figma-04-05-rework/spec.md"
+    ],
+    "featureIds": []
+  },
+  {
+    "id": "TASK-FIGMA-CONTROLS-20261025",
+    "title": "修复 Figma 六类基础控件问题并同步本地 UI",
+    "goal": "提高亮暗主题按钮与标签可读性，统一共享控件字阶与尺寸展示。",
+    "scope": "Figma 01/03 的前景、透明度、弱边界、尺寸示例、图标标注和短行高；本地共享控件样式及验证。",
+    "acceptance": [
+      "Figma 母版修复后回读指定主题实例及对比度，保留当前人工设计。",
+      "共享32px控件使用12/16字阶，40px主按钮使用16/24，禁用原因可达。",
+      "真实Edge设计预览及产品页面回归通过；全量门禁失败和Desktop边界如实记录。"
+    ],
+    "dependencies": [],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "docs/TASK-FIGMA-FIRST-20261021-rules",
+    "worktree": "D:/kk-studio/KK-Studio-2.0",
+    "baseSha": "1fbac26b33bdabaad682ad398f5292360eb9c66a5",
+    "affectedModules": [
+      "src/styles",
+      "design/preview",
+      "tests/design-md",
+      "tests/unit/designMarkdown.test.ts",
+      "docs/changes/2026-10-25-figma-control-readability"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "未完成",
+    "priority": "P2",
+    "risk": "low",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-25-figma-control-readability/intent.md",
+      "docs/changes/2026-10-25-figma-control-readability/spec.md",
+      "docs/changes/2026-10-25-figma-control-readability/plan.md",
+      "docs/changes/2026-10-25-figma-control-readability/verification.md",
+      "docs/changes/2026-10-25-figma-control-readability/review.md"
+    ],
+    "verification": "Figma指定实例对比度13.09–14.91，禁用5.18–6.50；短行高复查0命中。Edge设计预览9项、产品页面17项首试通过，定向46单测通过；build/ui/format/lint/typecheck通过。完整verify因两项开工前存储单测失败退出1，2288pass/2fail/20skip，原生运行未验。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-25",
+    "lastVerified": "2026-10-25",
+    "nextAction": "在原任务修复两项既有存储单测失败并补Desktop运行证据；保留既有dirty和失败原件，未经全量验收不合并或发布。",
+    "requirementRefs": [
+      "docs/changes/2026-10-25-figma-control-readability/intent.md",
+      "docs/changes/2026-10-25-figma-control-readability/spec.md"
+    ],
+    "featureIds": []
+  },
+  {
+    "id": "TASK-CANVAS-PERF-20261024",
+    "title": "削减画布预览与存储重复工作",
+    "goal": "提高大画布交互资源效率，保持撤销、连线、输入和保存恢复语义。",
+    "scope": "第一批历史预览、持久化指纹、项目协调、重复序列化及连线/派生索引；无新增依赖、视觉或schema变更。",
+    "acceptance": [
+      "100帧普通手势预览不构建历史快照，完成一次Undo、取消保持Redo。",
+      "仅图输入变化的项目重新协调，Web预览journal与CAS/关闭flush不弱化。",
+      "无关连线避免重算，端点/hover/删除行为保持；不宣称所有节点隔离。",
+      "全量test/typecheck/lint及实际浏览器证据、独立审查真实记录。"
+    ],
+    "dependencies": [],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "docs/TASK-FIGMA-FIRST-20261021-rules",
+    "worktree": "D:/kk-studio/KK-Studio-2.0",
+    "baseSha": "1fbac26b33bdabaad682ad398f5292360eb9c66a",
+    "affectedModules": [
+      "src/components/canvas",
+      "src/features/creation",
+      "tests/unit",
+      "tests/browser",
+      "docs/changes/2026-10-24-canvas-performance",
+      "docs/PROGRESS.md"
+    ],
+    "status": "IN_PROGRESS",
+    "displayStatus": "进行中",
+    "priority": "P2",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-24-canvas-performance/intent.md",
+      "docs/changes/2026-10-24-canvas-performance/spec.md",
+      "docs/changes/2026-10-24-canvas-performance/plan.md",
+      "docs/changes/2026-10-24-canvas-performance/verification.md",
+      "docs/changes/2026-10-24-canvas-performance/review.md"
+    ],
+    "verification": "开工基线2275 pass/0 fail/20 skipped，typecheck/lint通过；current Figma只读核对完成。产品与最终验证尚未完成。",
+    "verificationResult": "NOT_VERIFIED",
+    "updated": "2026-10-24",
+    "lastVerified": "2026-10-24",
+    "nextAction": "先完成红绿计数及最小优化，再完整门禁、运行与独审；保留既有dirty/index，禁止混合提交。",
+    "requirementRefs": [
+      "docs/changes/2026-10-24-canvas-performance/intent.md",
+      "docs/changes/2026-10-24-canvas-performance/spec.md"
+    ],
+    "featureIds": [
+      "FEAT-001"
+    ]
+  },
+  {
+    "id": "TASK-FIGMA-FIRST-20261021",
+    "title": "以当前 Figma 为设计真值并强制 UI 设计先行",
+    "goal": "先完成 Figma 设计再修改本地 UI，本地规范按当前 Figma 章节、术语与设计值派生。",
+    "scope": "2026-10-21范围为项目规则与派生文档；2026-10-23用户续作授权Figma编号契约、优先整理04及相应本地规则/映射记录；05页面与本地产品UI尚未落实。",
+    "acceptance": [
+      "AGENTS 明确 Figma 设计前置、已有目标无需重复编辑、失效来源暂停依赖写入。",
+      "登记当前Figma页面与规范来源，优先复用既有身份并建立按钮映射；先完成Figma目标再同步本地，平台差异与未迁移项明确。",
+      "文档及适用检查、独立规则演练结果真实记录，既有暂存与用户改动保持。"
+    ],
+    "dependencies": [],
+    "owner": "root",
+    "ownerRole": "documentation-maintainer",
+    "branch": "docs/TASK-FIGMA-FIRST-20261021-rules",
+    "worktree": "D:/kk-studio/KK-Studio-2.0",
+    "baseSha": "1fbac26b33bdabaad682ad398f5292360eb9c66a",
+    "affectedModules": [
       "AGENTS.md",
-      "docs/engineering/BRANCH-POLICY.md"
+      "DESIGN.md",
+      "docs",
+      "tests/evals/agent-contract.json"
     ],
-    "featureIds": [],
-    "specRefs": [
-      "docs/changes/2026-10-18-unified-toolbar-release/spec.md",
-      "docs/changes/2026-10-18-chat-draft-paint-sync/spec.md",
-      "docs/changes/2026-10-19-installer-clean-build/spec.md",
-      "docs/changes/2026-10-19-installer-lifecycle-order/spec.md",
-      "docs/changes/2026-10-19-release-asset-name/spec.md"
+    "status": "PARTIAL",
+    "displayStatus": "未完成",
+    "priority": "P2",
+    "risk": "low",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-21-figma-first-rules/intent.md",
+      "docs/changes/2026-10-21-figma-first-rules/spec.md",
+      "docs/changes/2026-10-21-figma-first-rules/plan.md",
+      "docs/changes/2026-10-21-figma-first-rules/verification.md",
+      "docs/changes/2026-10-21-figma-first-rules/review.md",
+      "docs/changes/2026-10-23-figma-04-mapping/intent.md",
+      "docs/changes/2026-10-23-figma-04-mapping/spec.md",
+      "docs/changes/2026-10-23-figma-04-mapping/plan.md",
+      "docs/changes/2026-10-23-figma-04-mapping/verification.md",
+      "docs/changes/2026-10-23-figma-04-mapping/review.md",
+      "docs/changes/2026-10-23-figma-04-mapping/mapping.json"
     ],
-    "currentPackage": "docs/changes/2026-10-19-release-asset-name",
-    "blocker": ""
+    "verification": "2026-10-21历史验证见旧包，完整verify曾停于范围外格式失败。2026-10-23新增Figma规则1510:41557并截图回读；04抽查445实例有母版，162工具栏端点改圆形并核验图标/尺寸/位置/状态目标不漂移；本地2条语义映射覆盖162实例，Markdown/索引/映射检查通过。04组合/尺寸/主题状态仍待修，05及本地产品未同步，未提交合主线。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-23",
+    "lastVerified": "2026-10-23",
+    "nextAction": "先按本次mapping与verification继续04组合母版、尺寸覆盖和主题/状态核验；逐项FIGMA_READY后再同步本地，05单独验收。保留当前dirty工作，不把首批端点修复当作整页或运行验收。",
+    "requirementRefs": [
+      "docs/changes/2026-10-21-figma-first-rules/intent.md",
+      "docs/changes/2026-10-23-figma-04-mapping/intent.md"
+    ],
+    "featureIds": []
+  },
+  {
+    "id": "TASK-MOBILE-COMPOSER-001",
+    "title": "修复手机空文字输入模型按钮失焦无响应",
+    "goal": "空文字草稿聚焦后模型/添加/展开保持可用，保存旧资料与回滚；纠正黑截图误判并真实区分长停留恢复与手机后台证据。",
+    "scope": "仅Mobile Composer临时焦点状态、定向浏览器回归、Web/Mobile候选版本和本任务交付；不改Provider/存储/业务数据，不新增生成调用。",
+    "acceptance": [
+      "空text输入focus后一次点模型可打开面板，缺Key/连接不禁用入口；取消触摸/Enter语义保留。",
+      "390×844触摸、390×480矮屏触摸、390×844鼠标和844×390横屏的模型及相邻添加/展开、取消/草稿刷新通过。",
+      "旧任务/正文/原件身份与散列保持；完整捕获与截断网络边界分开，无生成或自动重试。",
+      "精确head独审、Delivery/Hosted和正式Release来源/单previous回读；实体Android后台/Safari/Native未验不代填。",
+      "任务及历史先展示图片/视频/文本，详情结果→提示词→更多，unknown/partial/错误/进度与必要恢复动作不隐藏。",
+      "六入口初始可见且模型名可点，发送本身直接圆形同排同高；小于360px六控件44px不折行、390px48px，竖矮/窄/横屏、鼠标/键盘/取消手势有DOM/截图及命中证据。",
+      "上传原件/草稿引用、模型/数量、Skill预览明确应用可刷新恢复，取消不改；尺寸只在本次页面有效，切类型/模型或未发刷新回自适应，提交捕获既有task.imageSize。",
+      "官方12ai精确支持模型的参考图编辑经原件校验并自动归档，非支持场景零提交；本地fixture验证，不消耗真实生成额度，不自动重试未知任务。",
+      "旧v39完整snapshot/backup可读并还原、原件hash/账户身份保持；最终verify/组合browser/精确head独审/Hosted/正式Release与唯一previous回读完成后才放行。",
+      "手机/桌面同功能目标不冒充远程Agent/MCP、新Native、Safari或实体后台已验；FEAT-028 PARTIAL/T12开放。"
+    ],
+    "dependencies": [
+      "TASK-MOBILE-12AI-001"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "unallocated",
+    "worktree": "unallocated",
+    "baseSha": "97ef182b10c076c81611dea24e0b1c07c127dd49",
+    "affectedModules": [
+      "mobile/src/screens/Composer.tsx",
+      "tests/mobile-web/entry.spec.ts",
+      "config/platform-versions.json",
+      "docs/changes/2026-10-18-mobile-composer",
+      "docs/governance",
+      "docs/features",
+      "docs/PROGRESS.md",
+      "mobile/src/screens",
+      "mobile/src/ui",
+      "mobile/src/application/application.ts",
+      "mobile/src/application/types.ts",
+      "mobile/src/application/workflow.ts",
+      "mobile/src/services/providerClient.ts",
+      "mobile/src/services/providerTypes.ts",
+      "mobile/src/services/twelveAiProtocol.ts",
+      "mobile/tests",
+      "tests/mobile-web",
+      "src/components/UiIcon.tsx",
+      "src/components/AgentActionButton.tsx",
+      "src/components/StartComposer.tsx",
+      "src/styles/composer.css",
+      "tests/browser/composer-round-send.spec.ts",
+      "docs/features/feat-028-mobile.md",
+      "docs/changes/2026-10-18-mobile-composer-production-receipt"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "priorityRationale": "用户安卓Chrome点击模型名无反应，空文字失焦使整条工具栏提前卸载，阻断基本选择操作。",
+    "evidence": [
+      "docs/changes/2026-10-18-mobile-composer/intent.md",
+      "docs/changes/2026-10-18-mobile-composer/spec.md",
+      "docs/changes/2026-10-18-mobile-composer/plan.md",
+      "docs/changes/2026-10-18-mobile-composer/verification.md",
+      "docs/changes/2026-10-18-mobile-composer/review.md",
+      "docs/changes/2026-10-18-mobile-composer-production-receipt/intent.md",
+      "docs/changes/2026-10-18-mobile-composer-production-receipt/spec.md",
+      "docs/changes/2026-10-18-mobile-composer-production-receipt/plan.md",
+      "docs/changes/2026-10-18-mobile-composer-production-receipt/verification.md",
+      "docs/changes/2026-10-18-mobile-composer-production-receipt/review.md",
+      "docs/changes/2026-10-18-mobile-composer-production-receipt/release.md"
+    ],
+    "verification": "真实本地空text焦点/点击红测run e9da5f53四配置4FAIL保留；interacting候选本地完整mobile-web run60ac86e2为13/13首试、0skip/flaky/errors，CUA390×844模型面板可见，Mobile371/type/lint由root回传通过。五JPEG原字节/像素一致纠正旧黑图判断；908.067秒后原件散列保持，但network截断且无真实hidden事件，实体后台未验。当前已提交head独审/Hosted/生产40待执行。\n\n保留的 origin/main4610 同任务历史回执（不是本合并候选验收）：产品PR72正常squash b457/treebbcab与正式独审791e同树；全63文件独审/57定向测试PASS。main quality39124025635完整attempt2五项、guards39124025636双平台、新health39127523980实际health.ok=true均PASS；原attempt1 managed-web15秒spawnSync超时、旧health暂停403、零jobs异常UNKNOWN保留，准确根因未证。正式Release416447150/v2.1.40/Web部署39128852497成功，公开build-info/CI手机cbc0入口同源。Hosted main Mobile40/40首试/retry0；本地433/完整verify/窄屏40/40与旧v39完整snapshot/backup合成兼容及预算沿原包。线上实际320/390六控件44/48圆形同排、模型名打开picker，上传/参数/扩展面板可开；任务结果优先、详情结果→提示词→更多，旧文本刷新/图片830495B SHA64a6af6e与unknown0/1不变。只读库存current40/唯一previous39、前39manifest/archive与配置/auth/PID观察保持，独立18项PASS。40普通停留927.716秒后刷新图片可见/再次UI导出逐字节一致，完整捕获范围Provider0/POST0且临时调试已清理、实体Android接受待补；0新增真实生成，不改schema/storage/DB/权限，不写canonical。当前docs HEAD另需Delivery/独审/Hosted/正常PR；FEAT028 PARTIAL/T12开放。",
+    "verificationResult": "NOT_VERIFIED",
+    "updated": "2026-10-30",
+    "lastVerified": "2026-10-18",
+    "nextAction": "合流后按当前候选重新验证相关功能；正式发布和实体手机接受仍待。远端原后续要求：完成新后缀生产收据docs HEAD的检查/Delivery/独审/Hosted和正常PR；仅补用户Android Chrome模型入口/切后台返回+刷新接受，不把旧UI回复或继续当验收，不新耗生成额度。",
+    "requirementRefs": [
+      "docs/changes/2026-10-18-mobile-composer/intent.md",
+      "docs/changes/2026-10-18-mobile-composer/spec.md"
+    ],
+    "featureIds": [
+      "FEAT-028"
+    ]
   },
   {
     "id": "TASK-CANVAS-RELEASE-20261018",
-    "title": "统一工具栏修复、数据兼容和三端正式发布",
-    "goal": "正常合并工具栏修复及安装器来源修复，发布统一2.1.42单一内置Windows Agent安装包及Web/独立手机Web，保留原项目配置",
-    "scope": "Canvas工具栏、成熟chat迁移和归档收据兼容、平台版本/下载展示与正式发布证据、发布前可编辑聊天草稿绘制同步、Windows干净构建来源诊断、receipt父目录及native失败立即停止、PR候选完整NSIS与receipt门、Tauri重写三路径的显式LF checkout合同、插件迟到注册后的恢复节点与菜单同步重绘、provider测试完成边界及fixture连接诊断、Agent打包单测自有sandbox的有界清理重试、安装验收先于新建项目验证首页Agent启停以避免自动prepare竞态、GitHub公开Release资产空格转点后的实际下载路径对齐、侧栏物理点击回归显式等待现有enabled存储写入许可的test-only维护",
+    "title": "统一工具栏修复与三端发布",
+    "goal": "合并工具栏定位修复并统一发布2.1.41候选版本，包含Windows安装包与Web端发布。",
+    "scope": "Canvas工具栏坐标系修复，三端版本发布与验证，桌面Agent与Web发布链。",
     "acceptance": [
+      "选区工具栏在各种缩放和平移比例下居中显示并正确定位。",
+      "保留全部既有回归断言与测试套件通过。",
+      "Desktop/Web/Mobile三端版本号一致，发布流程完整。",
       "图片居中且画布允许遮挡，无横向滚动或自动让位",
       "保留现有项目原件消息归档收据设置和凭据引用",
       "Desktop/Web/Mobile Web2.1.42同main SHA并显示端别，Windows含Agent单setup；41tag与失败原件保留",
@@ -70,8 +684,8 @@
     "dependencies": [],
     "owner": "root-release",
     "ownerRole": "implementer",
-    "branch": "fix/TASK-CANVAS-RELEASE-20261019-download-asset",
-    "worktree": "D:/kk-studio/.worktrees/TASK-UNIFIED-RELEASE-20261018",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/components/canvas",
       "src/runtime",
@@ -81,10 +695,10 @@
       "mobile",
       "tests",
       "config/platform-versions.json",
-      "docs/changes/2026-10-18-unified-toolbar-release",
       "docs/governance",
-      "docs/features",
       "docs/PROGRESS.md",
+      "docs/changes/2026-10-18-unified-toolbar-release",
+      "docs/features",
       "src/components/ConversationPanel.tsx",
       "docs/changes/2026-10-18-chat-draft-paint-sync",
       "scripts/windows/installer-receipt.mjs",
@@ -103,10 +717,10 @@
       "docs/changes/2026-10-19-release-asset-name",
       "tests/browser/sidebar-rail-interaction.spec.ts"
     ],
-    "status": "IN_PROGRESS",
+    "status": "PARTIAL",
     "displayStatus": "进行中",
     "priority": "P1",
-    "priorityRationale": "工具栏定位与当前用户v3数据兼容阻断统一发布",
+    "priorityRationale": "解决用户选区工具栏偏移与三端统一发布问题。",
     "evidence": [
       "docs/changes/2026-10-18-unified-toolbar-release/intent.md",
       "docs/changes/2026-10-18-unified-toolbar-release/verification.md",
@@ -116,11 +730,11 @@
       "docs/changes/2026-10-19-release-asset-name/intent.md",
       "docs/changes/2026-10-19-release-asset-name/verification.md"
     ],
-    "verification": "TASK-CANVAS-RELEASE-20261018保持IN_PROGRESS/NOT_VERIFIED，三端仍为同次尚未tag的2.1.42。下载资产名修复4c313633d88f4e2203292540ef7c83f77ae699af/tree f84dc69d0f80c1039bd5d6a2400142cf27747c63的源码独审和完整本机verify PASS；Hosted push quality39167031850实际FAIL（838 tests/840 attempts：836 passed、1 failed、1 flaky；Node1953 PASS/19 skip、Agent204 PASS/2 skip，Design/Rust/Native未执行），PR/Windows/Mobile各按自身真实收据核对。本机PASS不代填Hosted。独立IDB受控对照证明原visible-only物理点击缺少enabled前提：disabled且命中时只产生pointerdown/up，释放读取后原folder count断言仍FAIL；先等enabled后同坐标一次click/count1/expanded/scroll0 PASS。这只证明机制，云端点击瞬间状态及两个首试缺按钮30s原因仍UNKNOWN，首试无snapshot/trace/errors。现仅在tests/browser/sidebar-rail-interaction.spec.ts的createFolderOnce visible后加一行toBeEnabled；既有sidebar4+settings3在workers1/retries0定向7/7 PASS。原产品、settings、storage guard、timeout/retry及其余断言不变。修改后精确新HEAD完整verify、独审/Delivery/Hosted和正常PR合并仍待，正式tag/包/默认安装/Release/Web及独立手机Web生产仍未完成。 原公开下载阻断诊断9370ef63及RED/GREEN1/1保留，公开资产用点名、本地NSIS/receipt仍为空格名；PR78正常合入的0cc3b4ed116d71062244e3097285a2b532de8f97/tree4c238f54f6aa688f95128936ada89ec675f2f26c仅为历史中间main，其CI自然完成、不取消不重跑，最终source须后续正常merge及新main验证。原41正式FAIL/artifact0、e7/c341失败、d965候选首FAIL/409诊断与tests-only四轮预检、e43两flaky及35push一flaky/UNKNOWN有界决定保持原义；cold/seed39、项目配置、凭据和存储身份不变。",
+    "verification": "选区工具栏定位测试与三端回归进行中。\n\n保留的 origin/main4610 同任务历史回执（不是本合并候选验收）：TASK-CANVAS-RELEASE-20261018保持IN_PROGRESS/NOT_VERIFIED，三端仍为同次尚未tag的2.1.42。下载资产名修复4c313633d88f4e2203292540ef7c83f77ae699af/tree f84dc69d0f80c1039bd5d6a2400142cf27747c63的源码独审和完整本机verify PASS；Hosted push quality39167031850实际FAIL（838 tests/840 attempts：836 passed、1 failed、1 flaky；Node1953 PASS/19 skip、Agent204 PASS/2 skip，Design/Rust/Native未执行），PR/Windows/Mobile各按自身真实收据核对。本机PASS不代填Hosted。独立IDB受控对照证明原visible-only物理点击缺少enabled前提：disabled且命中时只产生pointerdown/up，释放读取后原folder count断言仍FAIL；先等enabled后同坐标一次click/count1/expanded/scroll0 PASS。这只证明机制，云端点击瞬间状态及两个首试缺按钮30s原因仍UNKNOWN，首试无snapshot/trace/errors。现仅在tests/browser/sidebar-rail-interaction.spec.ts的createFolderOnce visible后加一行toBeEnabled；既有sidebar4+settings3在workers1/retries0定向7/7 PASS。原产品、settings、storage guard、timeout/retry及其余断言不变。修改后精确新HEAD完整verify、独审/Delivery/Hosted和正常PR合并仍待，正式tag/包/默认安装/Release/Web及独立手机Web生产仍未完成。 原公开下载阻断诊断9370ef63及RED/GREEN1/1保留，公开资产用点名、本地NSIS/receipt仍为空格名；PR78正常合入的0cc3b4ed116d71062244e3097285a2b532de8f97/tree4c238f54f6aa688f95128936ada89ec675f2f26c仅为历史中间main，其CI自然完成、不取消不重跑，最终source须后续正常merge及新main验证。原41正式FAIL/artifact0、e7/c341失败、d965候选首FAIL/409诊断与tests-only四轮预检、e43两flaky及35push一flaky/UNKNOWN有界决定保持原义；cold/seed39、项目配置、凭据和存储身份不变。",
     "verificationResult": "NOT_VERIFIED",
-    "updated": "2026-10-19",
-    "lastVerified": "2026-10-19",
-    "nextAction": "一行test-only enabled前提维护及相关7/7已完成；冻结该最小diff并提交后，取得精确新HEAD完整verify、独审/Delivery及新的Hosted终局，保留4c push实际FAIL、所有首试UNKNOWN和未执行阶段。正常PR合并后的实际main/tree及main门禁通过才创建一次42tag、fresh正式Windows，同formal完整四轮、严格cold重查、真实默认资料安装/工具栏/Agent、唯一setup匿名下载和Web/独立手机Web生产回读；原失败、cold和seed39保持。",
+    "updated": "2026-10-30",
+    "lastVerified": "2026-10-18",
+    "nextAction": "合流后按当前候选重新验证相关功能；正式发布和实体手机接受仍待。远端原后续要求：一行test-only enabled前提维护及相关7/7已完成；冻结该最小diff并提交后，取得精确新HEAD完整verify、独审/Delivery及新的Hosted终局，保留4c push实际FAIL、所有首试UNKNOWN和未执行阶段。正常PR合并后的实际main/tree及main门禁通过才创建一次42tag、fresh正式Windows，同formal完整四轮、严格cold重查、真实默认资料安装/工具栏/Agent、唯一setup匿名下载和Web/独立手机Web生产回读；原失败、cold和seed39保持。",
     "requirementRefs": [
       "docs/changes/2026-10-18-unified-toolbar-release/intent.md",
       "docs/changes/2026-10-18-chat-draft-paint-sync/intent.md",
@@ -142,77 +756,46 @@
     "currentPackage": "docs/changes/2026-10-19-release-asset-name"
   },
   {
-    "id": "TASK-MOBILE-COMPOSER-001",
-    "title": "手机结果优先、完整创作输入与圆形发送",
-    "goal": "菜单任务/历史先显示结果，详情分层；手机与桌面同功能语义、六入口可用与圆形发送，补12ai参考编辑/本次尺寸，保护旧资料及单回滚。",
-    "scope": "独立Mobile结果页/输入/语音/上传/创作库与明确12ai图片协议、Desktop共享发送源码和无额度验证；尺寸仅运行时并捕获已有task.imageSize，不改draft/schema/storage/backup，不替换日常原生安装器。",
+    "id": "TASK-CHATGPT-IMAGE-POC-20261018",
+    "title": "订阅制模型图片通道与既有原图恢复",
+    "goal": "验证 ChatGPT Webview/DOM 图片生成与历史恢复通道，保留已有生图结果与下载归档能力。",
+    "scope": "ChatGPT Webview、DOM 提取脚本、订阅制生图通道与原图历史恢复原型；不影响 Codex 生产对话。",
     "acceptance": [
-      "任务及历史先展示图片/视频/文本，详情结果→提示词→更多，unknown/partial/错误/进度与必要恢复动作不隐藏。",
-      "六入口初始可见且模型名可点，发送本身直接圆形同排同高；小于360px六控件44px不折行、390px48px，竖矮/窄/横屏、鼠标/键盘/取消手势有DOM/截图及命中证据。",
-      "上传原件/草稿引用、模型/数量、Skill预览明确应用可刷新恢复，取消不改；尺寸只在本次页面有效，切类型/模型或未发刷新回自适应，提交捕获既有task.imageSize。",
-      "官方12ai精确支持模型的参考图编辑经原件校验并自动归档，非支持场景零提交；本地fixture验证，不消耗真实生成额度，不自动重试未知任务。",
-      "旧v39完整snapshot/backup可读并还原、原件hash/账户身份保持；最终verify/组合browser/精确head独审/Hosted/正式Release与唯一previous回读完成后才放行。",
-      "手机/桌面同功能目标不冒充远程Agent/MCP、新Native、Safari或实体后台已验；FEAT-028 PARTIAL/T12开放。"
+      "保留原请求、历史图片与 DOM 提取脚本并在独立分支完整快照。",
+      "Native 与 TS 既有生成断言在受限隔离环境下通过。",
+      "外部工作树与运行时资源受控，不与主线生产通道冲突。"
     ],
-    "dependencies": [
-      "TASK-MOBILE-12AI-001"
-    ],
-    "owner": "root",
-    "ownerRole": "implementation-integrator",
-    "branch": "docs/TASK-MOBILE-COMPOSER-001-production-receipt",
-    "worktree": "D:/kk-studio/.worktrees/TASK-MOBILE-12AI-001",
-    "baseSha": "97ef182b10c076c81611dea24e0b1c07c127dd49",
+    "dependencies": [],
+    "owner": "root-image-recovery",
+    "ownerRole": "researcher",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
-      "mobile/src/screens",
-      "mobile/src/ui",
-      "mobile/src/application/application.ts",
-      "mobile/src/application/types.ts",
-      "mobile/src/application/workflow.ts",
-      "mobile/src/services/providerClient.ts",
-      "mobile/src/services/providerTypes.ts",
-      "mobile/src/services/twelveAiProtocol.ts",
-      "mobile/tests",
-      "tests/mobile-web",
-      "src/components/UiIcon.tsx",
-      "src/components/AgentActionButton.tsx",
-      "src/components/StartComposer.tsx",
-      "src/styles/composer.css",
-      "tests/browser/composer-round-send.spec.ts",
-      "config/platform-versions.json",
-      "docs/changes/2026-10-18-mobile-composer",
-      "docs/governance",
-      "docs/features/feat-028-mobile.md",
-      "docs/PROGRESS.md",
-      "docs/changes/2026-10-18-mobile-composer-production-receipt"
+      "src-tauri/src/chatgpt_webview.rs",
+      "src-tauri/src/chatgpt_history_dom.js",
+      "src/features/agent/chatgptChatConnection.ts",
+      "src/features/agent/subscriptionImageGeneration.ts",
+      "docs/changes/2026-10-18-chatgpt-image-archive",
+      "docs/governance"
     ],
-    "status": "IN_PROGRESS",
-    "displayStatus": "进行中",
-    "priority": "P1",
-    "priorityRationale": "用户安卓Chrome模型按钮无响应，任务列表只露提示词且输入入口不完整，影响手机基本创作；结果/控制与真实协议必须同时验收。",
+    "status": "OBSOLETE",
+    "displayStatus": "已完成",
+    "priority": "P2",
+    "priorityRationale": "用户探索订阅通道生图与未归档原件恢复。",
     "evidence": [
-      "docs/changes/2026-10-18-mobile-composer/intent.md",
-      "docs/changes/2026-10-18-mobile-composer/spec.md",
-      "docs/changes/2026-10-18-mobile-composer/plan.md",
-      "docs/changes/2026-10-18-mobile-composer/verification.md",
-      "docs/changes/2026-10-18-mobile-composer/review.md",
-      "docs/changes/2026-10-18-mobile-composer-production-receipt/intent.md",
-      "docs/changes/2026-10-18-mobile-composer-production-receipt/spec.md",
-      "docs/changes/2026-10-18-mobile-composer-production-receipt/plan.md",
-      "docs/changes/2026-10-18-mobile-composer-production-receipt/verification.md",
-      "docs/changes/2026-10-18-mobile-composer-production-receipt/review.md",
-      "docs/changes/2026-10-18-mobile-composer-production-receipt/release.md"
+      "docs/changes/2026-10-18-chatgpt-image-archive/intent.md",
+      "docs/changes/2026-10-18-chatgpt-image-archive/verification.md"
     ],
-    "verification": "产品PR72正常squash b457/treebbcab与正式独审791e同树；全63文件独审/57定向测试PASS。main quality39124025635完整attempt2五项、guards39124025636双平台、新health39127523980实际health.ok=true均PASS；原attempt1 managed-web15秒spawnSync超时、旧health暂停403、零jobs异常UNKNOWN保留，准确根因未证。正式Release416447150/v2.1.40/Web部署39128852497成功，公开build-info/CI手机cbc0入口同源。Hosted main Mobile40/40首试/retry0；本地433/完整verify/窄屏40/40与旧v39完整snapshot/backup合成兼容及预算沿原包。线上实际320/390六控件44/48圆形同排、模型名打开picker，上传/参数/扩展面板可开；任务结果优先、详情结果→提示词→更多，旧文本刷新/图片830495B SHA64a6af6e与unknown0/1不变。只读库存current40/唯一previous39、前39manifest/archive与配置/auth/PID观察保持，独立18项PASS。40普通停留927.716秒后刷新图片可见/再次UI导出逐字节一致，完整捕获范围Provider0/POST0且临时调试已清理、实体Android接受待补；0新增真实生成，不改schema/storage/DB/权限，不写canonical。当前docs HEAD另需Delivery/独审/Hosted/正常PR；FEAT028 PARTIAL/T12开放。",
+    "verification": "已完成 DOM 脚本提取校验与 Native 隔离验证，正由外部会话执行只读原图恢复。",
     "verificationResult": "NOT_VERIFIED",
-    "updated": "2026-10-18",
+    "updated": "2026-10-26",
     "lastVerified": "2026-10-18",
-    "nextAction": "完成新后缀生产收据docs HEAD的检查/Delivery/独审/Hosted和正常PR；仅补用户Android Chrome模型入口/切后台返回+刷新接受，不把旧UI回复或继续当验收，不新耗生成额度。",
+    "nextAction": "已按2026-10-26架构整顿决定淘汰订阅网页爬虫生图POC（差异补丁已归档至output/branch-archive-20261026），统一走标准API/MCP/受控Browser通道。",
     "requirementRefs": [
-      "docs/changes/2026-10-18-mobile-composer/intent.md",
-      "docs/changes/2026-10-18-mobile-composer/spec.md"
+      "docs/changes/2026-10-18-chatgpt-image-archive/intent.md"
     ],
     "featureIds": [
-      "FEAT-028"
+      "FEAT-009"
     ]
   },
   {
@@ -231,8 +814,8 @@
     ],
     "owner": "root",
     "ownerRole": "implementer",
-    "branch": "docs/TASK-MOBILE-12AI-001-production-receipt",
-    "worktree": "D:/kk-studio/.worktrees/TASK-MOBILE-12AI-001",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "mobile",
       "config/platform-versions.json",
@@ -282,8 +865,8 @@
     ],
     "owner": "root",
     "ownerRole": "implementer",
-    "branch": "docs/TASK-WEB-RELEASE-20261017-production-receipt",
-    "worktree": "D:/kk-studio/.worktrees/TASK-WEB-RELEASE-20261017",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "deploy",
       ".github/workflows/web-release.yml",
@@ -357,8 +940,8 @@
     "dependencies": [],
     "owner": "root",
     "ownerRole": "implementer",
-    "branch": "fix/TASK-AUDIT-REPAIR-20261017",
-    "worktree": "D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/App.tsx",
       "src/features/agent",
@@ -463,8 +1046,8 @@
     ],
     "dependencies": [],
     "owner": "root",
-    "branch": "codex/TASK-KK-UNIFIED-20261015",
-    "worktree": "D:/kk-studio/.worktrees/TASK-KK-UNIFIED-20261015",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/App.tsx",
       "src/features",
@@ -475,7 +1058,7 @@
       "vendor/canvas-agent",
       "docs/changes/2026-10-15-kk-unified"
     ],
-    "status": "IN_PROGRESS",
+    "status": "PARTIAL",
     "priority": "P1",
     "evidence": [
       "docs/changes/2026-10-15-kk-unified/intent.md",
@@ -484,12 +1067,12 @@
       "docs/changes/2026-10-15-kk-unified/verification.md",
       "docs/changes/2026-10-15-kk-unified/review.md"
     ],
-    "verification": "候选Desktop/Web2.1.35，基线d95e4c44。项目生命周期/依赖guard/加载草稿80f6/格式保护6c639/硬件d3e/DESIGN e5e0770/本地包7e06aecb均有精确独审及定向证据，12AI适配器73PASS但生产接线待。Native06acdf9权威204Rust/1ignore及独审通过；设置f32/0ad、模型阶段A28c/f472精确修复独审通过，B/C仍开放。55a0新Native单实例/重开/清理通过，前台focus唯一失败，整轮PARTIAL；原完整verify Node1508/14skip、Agent199/2skip通过，Browser804PASS/7FAIL/0flaky，exit1和未执行尾段保留。8e17九文件修复及精确独审PASS，相关87/87首试、0retry/flaky/skip；原Figma坐标/0.1容差未改、五锚点误差0，静态/build和Node1508/14skip通过。完整verify/新Native未重跑，ADR022/023契约已接受并独审，正常多聊天和独立安装适配实施中。完整真实Provider/共仓库/账号/云恢复/Hosted未验。",
+    "verification": "已由TASK-AUDIT-REPAIR-20261017承接并完全合并入main；历史工作树已清理，分支已安全回收；保留PARTIAL归档记录作为历史追溯。",
     "verificationResult": "PARTIAL",
-    "updated": "2026-10-17",
-    "displayStatus": "进行中",
-    "nextAction": "原统一scope继续开放；当前后续源码已进入local main@8c36a6b并有63条dirty，已保全为未验收221560a3。当前安全修复由TASK-AUDIT-REPAIR-20261017独占承接；原branch/worktree仅历史来源，不作为当前产品验收或并行写入分配。完整多聊天、12AI持久恢复、Provider/共仓库/账号/同步等仍按原scope另行实施和验收。",
-    "lastVerified": "2026-10-16",
+    "updated": "2026-10-18",
+    "displayStatus": "未完成",
+    "nextAction": "已结案归档；后续各项功能按独立专项任务承接。",
+    "lastVerified": "2026-10-18",
     "ownerRole": "implementation-integrator",
     "requirementRefs": [
       "docs/changes/2026-10-15-kk-unified/spec.md",
@@ -614,8 +1197,8 @@
       "受控ENOENT/ETIMEDOUT仍真实失败且可区分，正常及no fallback断言保持",
       "本地完整检查和精确source独立审查，当前Hosted/merge/main另凭回执"
     ],
-    "branch": "test/TASK-IMAGE-RETRY-004-current-attempt",
-    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-IMAGE-RETRY-004",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "status": "DONE",
     "verification": "source105已独立源码PASS，入口12/12且实际ENOENT/ETIMEDOUT故障仍失败并分类；原断言和10s限制保持。完整verify出口0但9 flaky原件保留；默认1423补充447/447零重试通过。旧Hosted原因UNKNOWN继续Recovery003；最终docs/当前Hosted/主线另验。",
     "verificationResult": "PASS",
@@ -684,8 +1267,8 @@
       "TASK-IMAGE-EDIT-001"
     ],
     "owner": "root",
-    "branch": "test/TASK-IMAGE-RETRY-004-current-attempt",
-    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-IMAGE-RETRY-004",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "tests/browser/image-edit.spec.ts",
       "docs"
@@ -724,8 +1307,8 @@
       "TASK-PLUGIN-DEV-001"
     ],
     "owner": "root",
-    "branch": "fix/TASK-PLUGIN-DEV-001-same-origin-modules",
-    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-PLUGIN-DEV-001",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/features/creation/useCreationStorage.ts",
       "src/features/creation/nativeClose.ts",
@@ -770,8 +1353,8 @@
       "TASK-PLUGIN-DEV-001"
     ],
     "owner": "root",
-    "branch": "fix/TASK-PLUGIN-DEV-001-same-origin-modules",
-    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-PLUGIN-DEV-001",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "vendor/canvas-plugins/markdown",
       "vendor/canvas-plugins/package-lock.json",
@@ -817,8 +1400,8 @@
       "TASK-PLUGIN-DEV-001"
     ],
     "owner": "root",
-    "branch": "fix/TASK-PLUGIN-DEV-001-same-origin-modules",
-    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-PLUGIN-DEV-001",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/features/creation/model.ts",
       "src/features/creation/snapshotCodec.ts",
@@ -865,8 +1448,8 @@
       "TASK-MODEL-001"
     ],
     "owner": "root",
-    "branch": "codex/TASK-IMAGE-EDIT-001-unified-mask",
-    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-IMAGE-EDIT-001",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/features/image-edit",
       "src/features/creation",
@@ -962,8 +1545,8 @@
     ],
     "dependencies": [],
     "owner": "root",
-    "branch": "fix/TASK-UI-013-single-row-titlebar",
-    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-UI-013-single-row-titlebar",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/components/TopBar.tsx",
       "src/components/WindowControls.tsx",
@@ -1008,8 +1591,8 @@
     ],
     "dependencies": [],
     "owner": "root",
-    "branch": "codex/TASK-LAUNCH-001-quiet-start",
-    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-LAUNCH-001",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "scripts/windows",
       "start-kk-studio.bat",
@@ -1052,8 +1635,8 @@
     ],
     "dependencies": [],
     "owner": "root",
-    "branch": "codex/TASK-MODEL-001-capabilities",
-    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-MODEL-001-capabilities",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/domain",
       "src/features/models",
@@ -1100,8 +1683,8 @@
     ],
     "dependencies": [],
     "owner": "root",
-    "branch": "fix/TASK-PLUGIN-DEV-001-same-origin-modules",
-    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-PLUGIN-DEV-001",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/features/plugins/pluginLoader.ts",
       "vite.config.ts",
@@ -1144,8 +1727,8 @@
     ],
     "dependencies": [],
     "owner": "root",
-    "branch": "main",
-    "worktree": "D:/kk-studio-next/.worktrees/TASK-INTEGRATION-001",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "Git",
       "package.json",
@@ -1187,8 +1770,8 @@
       "T0"
     ],
     "owner": "root",
-    "branch": "chore/TASK-GOV-001-engineering-baseline",
-    "worktree": "D:/kk-studio-next/.worktrees/TASK-GOV-001",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "AGENTS.md",
       "docs/governance",
@@ -1233,8 +1816,8 @@
       "TASK-GOV-001"
     ],
     "owner": "root",
-    "branch": "main",
-    "worktree": "D:/kk-studio-next/.worktrees/TASK-INTEGRATION-001",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/domain/providerConnections.ts",
       "src/features/creation/generationQueue.ts",
@@ -1406,8 +1989,8 @@
       "T3a"
     ],
     "owner": "root",
-    "branch": "main",
-    "worktree": "D:/kk-studio-next/.worktrees/TASK-INTEGRATION-001",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/features/projects",
       "src-tauri",
@@ -1458,8 +2041,8 @@
       "TASK-PROV-001"
     ],
     "owner": "root",
-    "branch": "main",
-    "worktree": "D:/kk-studio-next/.worktrees/TASK-INTEGRATION-001",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/App.tsx",
       "src/features/creation",
@@ -1505,8 +2088,8 @@
       "T4"
     ],
     "owner": "root",
-    "branch": "codex/T5-native-lifecycle",
-    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/T5-native-lifecycle",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/features/generation-server",
       "src-tauri",
@@ -1639,8 +2222,8 @@
       "T6"
     ],
     "owner": "root",
-    "branch": "codex/TASK-KK-UNIFIED-20261015",
-    "worktree": "D:/kk-studio/.worktrees/TASK-KK-UNIFIED-20261015",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "ComfyUI live acceptance"
     ],
@@ -2044,8 +2627,8 @@
       "UI-001"
     ],
     "owner": "root",
-    "branch": "codex/TASK-UI-MAIN-001-alignment",
-    "worktree": "D:/kk-studio-next/.worktrees/TASK-UI-MAIN-001",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/components/StartComposer.tsx",
       "src/styles",
@@ -2296,8 +2879,8 @@
       "TASK-GOV-001"
     ],
     "owner": "root",
-    "branch": "main",
-    "worktree": "D:/kk-studio-next/.worktrees/TASK-INTEGRATION-001",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "tests/browser/provider-scheduling.spec.ts"
     ],
@@ -2348,8 +2931,8 @@
       "docs/changes/2026-09-20-gpt-6-astra/branch-rules-audit.md"
     ],
     "verificationResult": "PASS",
-    "branch": "codex/TASK-KK2-main-integration",
-    "worktree": "C:/Users/Administrator/.codex/worktrees/task-astra-001/kk-studio-next",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "verification": "迁移计划、规则审计、目录清理、本地验证和目标仓库 PR 同步均完成；Astra 应用功能本身仍按计划待实施。",
     "updated": "2026-09-20",
     "requirementRefs": [
@@ -2382,8 +2965,8 @@
       "TASK-GOV-001"
     ],
     "owner": "root",
-    "branch": "chore/TASK-KK2-MAIN-SYNC",
-    "worktree": "D:/kk-studio-next/.worktrees/TASK-KK2-MAIN-SYNC",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "Git hosting",
       "repository tree",
@@ -2425,8 +3008,8 @@
       "TASK-GOV-001"
     ],
     "owner": "root",
-    "branch": "codex/TASK-UI-MAIN-001-alignment",
-    "worktree": "D:/kk-studio-next/.worktrees/TASK-UI-MAIN-001",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/components/useDismissible.ts",
       "src/components/Modal.tsx",
@@ -2471,8 +3054,8 @@
       "TASK-KK2-MAIN-SYNC"
     ],
     "owner": "root",
-    "branch": "codex/TASK-UI-MAIN-001-alignment",
-    "worktree": "D:/kk-studio-next/.worktrees/TASK-UI-MAIN-001",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/components",
       "src/styles",
@@ -2514,8 +3097,8 @@
       "TASK-UI-MAIN-001"
     ],
     "owner": "root",
-    "branch": "codex/TASK-UI-MAIN-001-followup",
-    "worktree": "D:/kk-studio-next/.worktrees/TASK-UI-MAIN-001",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/components/Sidebar.tsx",
       "tests/browser/menu-boundaries.spec.ts",
@@ -2549,8 +3132,8 @@
     "id": "TASK-MAIN-CLOSE-002",
     "title": "未完成子任务汇总验收与主线同步",
     "scope": "review, regression stability, governance reconciliation, main parity",
-    "branch": "codex/TASK-MAIN-CLOSE-002",
-    "worktree": "C:/Users/Administrator/.codex/worktrees/task-main-close-002/kk-studio-next",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "owner": "root",
     "affectedModules": [
       "tests/browser",
@@ -2593,8 +3176,8 @@
     "id": "TASK-UI-CLOSE-003",
     "title": "现行Figma页面缺口复核与交互收口",
     "scope": "current Figma source, page interaction and visual evidence",
-    "branch": "codex/TASK-UI-CLOSE-003-figma",
-    "worktree": "C:/Users/Administrator/.codex/worktrees/task-ui-close-003/kk-studio-next",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "owner": "finish_figma_pages",
     "affectedModules": [
       "src/components",
@@ -2636,8 +3219,8 @@
     "id": "TASK-PERF-ASSETS-001",
     "title": "素材列表元数据和原件按需读取",
     "scope": "asset listing, paging, previews and original preservation",
-    "branch": "codex/TASK-PERF-ASSETS-001",
-    "worktree": "C:/Users/Administrator/.codex/worktrees/task-perf-assets-001/kk-studio-next",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "owner": "finish_asset_performance",
     "affectedModules": [
       "src/features/creation",
@@ -2695,8 +3278,8 @@
       "TASK-KK2-MAIN-SYNC"
     ],
     "owner": "root",
-    "branch": "codex/TASK-GOV-002-closeout",
-    "worktree": "D:/kk-studio-next/.worktrees/TASK-GOV-002-CLOSEOUT",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "docs",
       "scripts/governance",
@@ -2745,8 +3328,8 @@
       "TASK-GOV-001"
     ],
     "owner": "root",
-    "branch": "fix/TASK-AUDIT-SEC-001-boundaries",
-    "worktree": "D:/kk-studio-next/.worktrees/TASK-AUDIT-SEC-001",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/App.tsx",
       "src/domain/modelProvider.ts",
@@ -3000,8 +3583,8 @@
     ],
     "dependencies": [],
     "owner": "root",
-    "branch": "codex/TASK-AUDIT-20261003",
-    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/features/mcp/mcpClient.ts",
       "src/components/settings/McpSettings.tsx",
@@ -3045,8 +3628,8 @@
     ],
     "dependencies": [],
     "owner": "root",
-    "branch": "codex/TASK-AUDIT-20261003",
-    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/features/mcp/mcpClient.ts",
       "src/components/settings/McpSettings.tsx",
@@ -3531,8 +4114,8 @@
     ],
     "dependencies": [],
     "owner": "root",
-    "branch": "fix/TASK-DS-001-alignment",
-    "worktree": "C:/Users/Administrator/.codex/worktrees/design-system-alignment/KK-Studio-2.0",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/styles",
       "src/domain/settings.ts",
@@ -3581,8 +4164,8 @@
       "TASK-DS-001"
     ],
     "owner": "root",
-    "branch": "fix/TASK-DS-002-pages",
-    "worktree": "C:/Users/Administrator/.codex/worktrees/design-system-pages/KK-Studio-2.0",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/styles/catalog-pages.css",
       "src/styles/ui-tokens.css",
@@ -3632,8 +4215,8 @@
       "TASK-DS-002"
     ],
     "owner": "root",
-    "branch": "fix/TASK-UI-005-feature-parity",
-    "worktree": "C:/Users/Administrator/.codex/worktrees/ui-feature-parity/KK-Studio-2.0",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/components",
       "src/features/agent",
@@ -3687,8 +4270,8 @@
       "TASK-UI-005"
     ],
     "owner": "root",
-    "branch": "fix/TASK-UI-006-interactions",
-    "worktree": "C:/Users/Administrator/.codex/worktrees/ui-interactions/KK-Studio-2.0",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/components",
       "src/styles",
@@ -3881,8 +4464,8 @@
       "TASK-AGENT-001"
     ],
     "owner": "root",
-    "branch": "fix/TASK-UI-007-responsive",
-    "worktree": "C:/Users/Administrator/.codex/worktrees/ui-responsive/KK-Studio-2.0",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/components",
       "src/styles",
@@ -3927,8 +4510,8 @@
       "TASK-AGENT-002"
     ],
     "owner": "root",
-    "branch": "fix/TASK-UI-008-inputs",
-    "worktree": "C:/Users/Administrator/.codex/worktrees/ui-input-contract/KK-Studio-2.0",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/components",
       "src/styles",
@@ -3973,8 +4556,8 @@
       "TASK-AGENT-002"
     ],
     "owner": "root",
-    "branch": "feat/TASK-AGENT-003-attachments",
-    "worktree": "C:/Users/Administrator/.codex/worktrees/agent-attachments/KK-Studio-2.0",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/features/agent",
       "src/components",
@@ -4015,8 +4598,8 @@
     ],
     "dependencies": [],
     "owner": "root",
-    "branch": "docs/PLUGIN-DESKTOP-001-closeout",
-    "worktree": "D:/kk-studio/.worktrees/platform-versioning",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/features/plugins",
       "src-tauri/tauri.conf.json",
@@ -4129,8 +4712,8 @@
       "REL-2.1.0"
     ],
     "owner": "root",
-    "branch": "docs/TASK-RULES-004-closeout",
-    "worktree": "D:/kk-studio/.worktrees/TASK-RULES-004-closeout",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "AGENTS.md",
       "README.md",
@@ -4239,8 +4822,8 @@
       "TASK-AGENT-001"
     ],
     "owner": "root",
-    "branch": "feat/TASK-ORCH-001-agent-orchestration-closure",
-    "worktree": "D:/kk-studio/.worktrees/TASK-ORCH-001",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/domain/stagePlan.ts",
       "src/features/agent/orchestrator.ts",
@@ -4291,8 +4874,8 @@
       "TASK-ORCH-001"
     ],
     "owner": "root",
-    "branch": "codex/TASK-ORCH-002-stage-workbench",
-    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-ORCH-002-stage-workbench",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/components/TaskWorkbench.tsx",
       "src/components/TaskWorkbenchContent.tsx",
@@ -4539,8 +5122,8 @@
     ],
     "dependencies": [],
     "owner": "root",
-    "branch": "feat/TASK-PROV-002-provider-connectivity",
-    "worktree": "D:/kk-studio/.worktrees/TASK-PROV-002-provider-connectivity",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/features/providers",
       "src/features/models",
@@ -4589,8 +5172,8 @@
     ],
     "dependencies": [],
     "owner": "root",
-    "branch": "codex/TASK-COMPARE-001-canvas-compare",
-    "worktree": "D:/kk-studio/.worktrees/canvas-compare",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/features/compare",
       "src/components/Canvas.tsx",
@@ -4642,8 +5225,8 @@
       "TASK-COMPARE-001"
     ],
     "owner": "root",
-    "branch": "fix/TASK-COMPARE-002-touch-target",
-    "worktree": "D:/kk-studio/.worktrees/compare-ci-fix",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/styles/canvas-compare.css",
       "tests/browser/image-compare.spec.ts",
@@ -4689,8 +5272,8 @@
     ],
     "dependencies": [],
     "owner": "root",
-    "branch": "codex/TASK-VERSION-001-platform-versions",
-    "worktree": "D:/kk-studio/.worktrees/platform-versioning",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "config/platform-versions.json",
       "scripts/platform-versions.mjs",
@@ -4807,8 +5390,8 @@
       "T10-PREP"
     ],
     "owner": "root",
-    "branch": "docs/TASK-CLOSEOUT-2026-09-28",
-    "worktree": "D:/kk-studio/.worktrees/platform-versioning",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "docs/governance",
       "docs/PROGRESS.md",
@@ -4852,8 +5435,8 @@
       "T11"
     ],
     "owner": "root",
-    "branch": "docs/TASK-POSTMERGE-FINAL-2026-09-28",
-    "worktree": "D:/kk-studio/.worktrees/platform-versioning",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "deploy/MIGRATION.md",
       "docs/PROGRESS.md",
@@ -5194,8 +5777,8 @@
       "TASK-AGENT-003"
     ],
     "owner": "root",
-    "branch": "fix/TASK-UI-010-ui-regression",
-    "worktree": "D:/kk-studio/.worktrees/TASK-UI-010-ui-regression",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/components",
       "src/styles",
@@ -5241,8 +5824,8 @@
       "TASK-UI-010"
     ],
     "owner": "root",
-    "branch": "codex/TASK-KK-UNIFIED-20261015",
-    "worktree": "D:/kk-studio/.worktrees/TASK-KK-UNIFIED-20261015",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/components/SidebarProjectEntry.tsx",
       "src/components/SidebarProjectGroup.tsx",
@@ -5430,8 +6013,8 @@
       "TASK-AGENT-003"
     ],
     "owner": "root",
-    "branch": "feat/TASK-AGENT-004-google-closeout",
-    "worktree": "C:/Users/Administrator/.codex/worktrees/google-closeout/KK-Studio-2.0",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/features/agent",
       "src/components",
@@ -5476,8 +6059,8 @@
       "TASK-AGENT-004"
     ],
     "owner": "root",
-    "branch": "feat/TASK-AGENT-004-google-closeout",
-    "worktree": "C:/Users/Administrator/.codex/worktrees/google-closeout/KK-Studio-2.0",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/features/agent",
       "src/components",
@@ -5655,8 +6238,8 @@
       "TASK-AGENT-001"
     ],
     "owner": "root",
-    "branch": "feat/TASK-AGENT-007-codebuddy-cli",
-    "worktree": "D:/kk-studio/.worktrees/TASK-AGENT-007-codebuddy-cli",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "vendor/canvas-agent/src/agent/codebuddy.ts",
       "vendor/canvas-agent/src/server/http.ts",
@@ -5702,8 +6285,8 @@
     ],
     "dependencies": [],
     "owner": "root",
-    "branch": "codex/T7-desktop-installer",
-    "worktree": "D:/kk-studio/.worktrees/T7-desktop-installer",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src-tauri/tauri.installer.conf.json",
       "scripts/windows/installer-receipt.mjs",
@@ -5753,8 +6336,8 @@
       "TASK-AGENT-001"
     ],
     "owner": "root",
-    "branch": "codex/TASK-AGENT-008-image-transport",
-    "worktree": "D:/kk-studio/.worktrees/TASK-AGENT-008-image-transport",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "vendor/canvas-agent/src/agent/codex-client.ts",
       "vendor/canvas-agent/src/agent/codex-client.test.ts",
@@ -5801,8 +6384,8 @@
       "TASK-ORCH-001"
     ],
     "owner": "root",
-    "branch": "codex/TASK-AUDIT-20261003",
-    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/features/agent/orchestrator.ts",
       "tests/unit/orchestrator.test.ts"
@@ -5849,8 +6432,8 @@
       "TASK-ORCH-REPLAN-001"
     ],
     "owner": "root",
-    "branch": "codex/TASK-AUDIT-20261003",
-    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "docs/governance",
       "docs/features",
@@ -5906,8 +6489,8 @@
       "TASK-AUDIT-20261003"
     ],
     "owner": "root",
-    "branch": "codex/TASK-AUDIT-20261003",
-    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "docs/governance",
       "scripts/check-project-goals.mjs",
@@ -5951,8 +6534,8 @@
       "TASK-GOV-GOALS-001"
     ],
     "owner": "root",
-    "branch": "codex/TASK-AUDIT-20261003",
-    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/components/settings/McpSettings.tsx",
       "src/components/settings/McpServerForm.tsx",
@@ -6000,8 +6583,8 @@
       "TASK-UI-GOV-003"
     ],
     "owner": "root",
-    "branch": "codex/TASK-UI-011-image-selection-actions",
-    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-UI-011-image-selection-actions",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/components/nodes",
       "src/components/canvas",
@@ -6057,8 +6640,8 @@
       "T5"
     ],
     "owner": "root",
-    "branch": "fix/TASK-PROV-005-provider-durable-config",
-    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-PROV-005",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "status": "DONE",
     "evidence": [
       "docs/changes/2026-10-09-provider-durable-config/intent.md",
@@ -6107,8 +6690,8 @@
       "T5"
     ],
     "owner": "root",
-    "branch": "fix/TASK-PROV-006-provider-gates",
-    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-PROV-006",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "status": "DONE",
     "evidence": [
       "docs/changes/2026-10-09-provider-gates/intent.md",
@@ -6158,8 +6741,8 @@
       "T5"
     ],
     "owner": "root",
-    "branch": "fix/TASK-PROV-007-capacity-errors",
-    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-PROV-007",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "status": "DONE",
     "evidence": [
       "docs/changes/2026-10-09-capacity-errors/intent.md",
@@ -6647,14 +7230,15 @@
     ],
     "owner": "root",
     "priority": "P1",
-    "updated": "2026-10-12",
+    "updated": "2026-10-28",
     "affectedModules": [
       "scripts/governance/branch-audit.mjs",
       "docs/changes/2026-10-12-branch-consolidation"
     ],
     "evidence": [
       "docs/changes/2026-10-12-branch-consolidation/verification.md",
-      "docs/changes/2026-10-12-branch-consolidation/review.md"
+      "docs/changes/2026-10-12-branch-consolidation/review.md",
+      "docs/changes/2026-10-28-modularity-p0/verification.md"
     ],
     "id": "TASK-GOV-004",
     "title": "未合并分支全量核验、分类与收敛合并",
@@ -6677,7 +7261,7 @@
     "featureIds": [],
     "priorityRationale": "治理收敛前置：分支不收敛则所有合并冲突面持续扩大",
     "displayStatus": "进行中",
-    "nextAction": "P2 家族收敛 ×11 → B2 文档类 → B3 小代码 24 → B4 中代码 15 → B5 UI-012 两步（已授权）；每单元快照+门禁+交付包",
+    "nextAction": "2026-10-28实测本地c2与origin/main4610分叉113/7提交，P0不能夹带全部历史整合；先保留双方与主checkout dirty，按原收敛任务核对SHA/PR/冲突，再解除P0合流条件。历史归属与未完成结论保留。",
     "lastVerified": "2026-10-12",
     "ownerRole": "repository-maintainer"
   },
@@ -7116,8 +7700,8 @@
       "TASK-AGENT-RECOVERY-20261013"
     ],
     "owner": "root",
-    "branch": "fix/TASK-CCSWITCH-LEARN-20261014-status-recovery",
-    "worktree": "D:/kk-studio/.worktrees/TASK-CCSWITCH-LEARN-20261014",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/components/settings",
       "src-tauri/src/provider_transaction_tests.rs",
@@ -7280,8 +7864,8 @@
     ],
     "dependencies": [],
     "owner": "root",
-    "branch": "codex/TASK-AGENT-UX-20261014-execution-delivery",
-    "worktree": "D:/kk-studio/.worktrees/TASK-AGENT-UX-20261014-execution-delivery",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/features/agent",
       "src/components/AgentConversationMessages.tsx",
@@ -7333,8 +7917,8 @@
     ],
     "owner": "root",
     "ownerRole": "repository-maintainer",
-    "branch": "codex/TASK-PROTOCOL-CLI-20261014",
-    "worktree": "D:/kk-studio/.worktrees/branch-consolidation-20261011",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/styles",
       "src/components",
@@ -7396,8 +7980,8 @@
     ],
     "owner": "root",
     "ownerRole": "repository-maintainer",
-    "branch": "codex/TASK-222-ACTIONS-20261014",
-    "worktree": "D:/kk-studio/.worktrees/branch-consolidation-20261011",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "vendor/canvas-agent",
       "scripts/gemini-bridge.mjs",
@@ -7466,8 +8050,8 @@
     ],
     "owner": "root",
     "ownerRole": "repository-maintainer",
-    "branch": "codex/TASK-223-ACTIONS-20261014",
-    "worktree": "D:/kk-studio/.worktrees/branch-consolidation-20261011",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "vendor/canvas-agent",
       "src/features/local-service",
@@ -7536,8 +8120,8 @@
     ],
     "owner": "root",
     "ownerRole": "repository-maintainer",
-    "branch": "fix/TASK-SETTINGS-LATEST-20261015",
-    "worktree": "D:/kk-studio/.worktrees/branch-consolidation-20261011",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/components/settings",
       "src/features/creation",
@@ -7594,8 +8178,8 @@
       "TASK-SETTINGS-LATEST-20261015"
     ],
     "owner": "root",
-    "branch": "fix/TASK-UI-DETAILS-20261015",
-    "worktree": "D:/kk-studio/.worktrees/branch-consolidation-20261011",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/components",
       "src/styles",
@@ -7642,8 +8226,8 @@
       "TASK-UI-DETAILS-20261015"
     ],
     "owner": "root",
-    "branch": "fix/TASK-UI-FULL-20261015",
-    "worktree": "D:/kk-studio/.worktrees/branch-consolidation-20261011",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/components",
       "src/styles",
@@ -9708,8 +10292,8 @@
     ],
     "owner": "root",
     "ownerRole": "repository-maintainer",
-    "branch": "fix/TASK-EXPLORER-GDI-20261015-main",
-    "worktree": "D:/kk-studio/.worktrees/TASK-GOV-PHASE0",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "baseSha": "3a9925977792a7f948eceda9f54d46fbf6f8b294",
     "affectedModules": [
       "scripts/testing/headless-edge-options.mjs",
@@ -9753,8 +10337,8 @@
     "scope": "首页读取状态与草稿合并边界；独立于本轮已发请求的pending草稿清理。",
     "owner": "root",
     "ownerRole": "repository-maintainer",
-    "branch": "codex/TASK-KK-UNIFIED-20261015",
-    "worktree": "D:/kk-studio/.worktrees/TASK-KK-UNIFIED-20261015",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "status": "PARTIAL",
     "displayStatus": "进行中",
     "priority": "P2",
@@ -9806,8 +10390,8 @@
     "scope": "HOME原生准备期间的依赖事故恢复与独立证据；无产品或用户数据改动。",
     "owner": "root",
     "ownerRole": "repository-maintainer",
-    "branch": "codex/TASK-KK-UNIFIED-20261015",
-    "worktree": "D:/kk-studio/.worktrees/TASK-KK-UNIFIED-20261015",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "baseSha": "492abad48b0695f6117265fba6d29e8ea2a4b9bc",
     "status": "PARTIAL",
     "displayStatus": "进行中",
@@ -9860,8 +10444,8 @@
     "dependencies": [],
     "owner": "root",
     "ownerRole": "implementation-integrator",
-    "branch": "codex/TASK-KK-UNIFIED-20261015",
-    "worktree": "D:/kk-studio/.worktrees/TASK-KK-UNIFIED-20261015",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "DESIGN.md",
       "scripts/design-md",
@@ -9907,15 +10491,15 @@
     "dependencies": [],
     "owner": "issue68-specialist",
     "ownerRole": "implementation-integrator",
-    "branch": "fix/TASK-ISSUE-68-settings-save",
-    "worktree": "C:/Users/Administrator/Documents/Codex/2026-10-18/task/issue68",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "baseSha": "6b933f4ffd80cdd5ca2d3508678a4562fc2b02d8",
     "affectedModules": [
       "tests/desktop/taskhost-lifecycle.mjs",
       "tests/browser/settings-navigation.spec.ts"
     ],
-    "status": "REVIEW",
-    "displayStatus": "未完成",
+    "status": "DONE",
+    "displayStatus": "已完成",
     "priority": "P1",
     "priorityRationale": "main quality Native生命周期失败，阻断主线质量验收。",
     "evidence": [
@@ -9923,16 +10507,2035 @@
       "docs/changes/2026-10-18-issue-68-settings-save/spec.md",
       "docs/changes/2026-10-18-issue-68-settings-save/plan.md",
       "docs/changes/2026-10-18-issue-68-settings-save/verification.md",
-      "docs/changes/2026-10-18-issue-68-settings-save/review.md"
+      "docs/changes/2026-10-18-issue-68-settings-save/review.md",
+      "docs/changes/2026-10-18-issue-68-main-closeout/intent.md",
+      "docs/changes/2026-10-18-issue-68-main-closeout/spec.md",
+      "docs/changes/2026-10-18-issue-68-main-closeout/plan.md",
+      "docs/changes/2026-10-18-issue-68-main-closeout/verification.md",
+      "docs/changes/2026-10-18-issue-68-main-closeout/review.md"
     ],
-    "verification": "最小测试同步修复；真实Native回执gate13/正式生命周期11均PASS且凭据清理完成。完整verify exit0：Node1852/20既有skip、Agent199/2既有skip、Edge827首试0flaky/skip、设计41+8、开发态4步PASS；Rust213/1既有ignored+41通过。原96文件hash一致，原150账本对象未变。实现C1 f7420989独立精确SHA审查PASS/P0P1=0，delivery12files0violations；最终文档head/Hosted/PR另记。",
-    "verificationResult": "PARTIAL",
+    "verification": "PR69已按正常受保护squash合入main c248d8178ec1754315559a9e476ac909bb494287，合并tree与精确已审d7359851候选一致。PRquality39080873624五项、push39080836510适用项及合后main quality39083468213五项均PASS，main guards39083468190双平台PASS；合后verify浏览器827首试、Native11通过。Issue68实际closed/completed。taskkill旧清理异常原因UNKNOWN，独立登记TASK-NATIVE-TEARDOWN-20261018，未删除或宣称修复；不代表总客户端交付。",
+    "verificationResult": "PASS",
     "updated": "2026-10-18",
     "lastVerified": "2026-10-18",
-    "nextAction": "纯文档head补审并建立draft PR，回读当前Hosted后交现有main协调者；不merge/发布。",
+    "nextAction": "本专项结项；保留原失败及当前主线证据。TASK-NATIVE-TEARDOWN-20261018在新会话独立调查；发布/部署和总客户端交付不在本次范围。",
     "requirementRefs": [
       "https://github.com/soudbs180-creator/KK-Studio-2.0/issues/68"
     ],
+    "featureIds": [],
+    "implementationBranch": "fix/TASK-ISSUE-68-settings-save",
+    "closeoutBaseSha": "c248d8178ec1754315559a9e476ac909bb494287"
+  },
+  {
+    "id": "TASK-NATIVE-TEARDOWN-20261018",
+    "title": "查明原生生命周期taskkill清理非零原因",
+    "goal": "独立调查已保存的owned进程清理异常，不把偶发通过当作根因已关闭。",
+    "scope": "后续新会话只调查测试teardown；本次Issue68文档结项仅登记证据，不实现第二项修复。",
+    "acceptance": [
+      "保留native-head-evidence原失败、同SHA串行通过及凭据清理证据。",
+      "在新隔离会话中捕获taskkill退出码/stdout/stderr及owned进程退出时序，区分环境、进程竞态或产品问题。",
+      "结论有直接证据及回归，不通过吞异常、force或延长超时降低门槛。"
+    ],
+    "dependencies": [],
+    "owner": "unallocated",
+    "ownerRole": "repository-maintainer",
+    "branch": "unallocated",
+    "worktree": "unallocated",
+    "status": "TODO",
+    "displayStatus": "未完成",
+    "priority": "P2",
+    "priorityRationale": "发生于已越过Issue68路径后的测试stop；具体原因及用户影响未证明，保持独立调查。",
+    "affectedModules": [
+      "tests/desktop/taskhost-lifecycle.mjs"
+    ],
+    "evidence": [
+      "docs/changes/2026-10-18-issue-68-settings-save/verification.md",
+      "docs/changes/2026-10-18-issue-68-main-closeout/verification.md"
+    ],
+    "verification": "事实：d7359851额外native复验在actual-app-durable-intent-and-restart之后taskkill /PID 52860 /T /F返回非零，原收据9checks/整体未通过、credentialCleanupComplete=true；相同SHA随后串行Native11通过，PR/push及main Hosted亦Native11通过。taskkill具体原因UNKNOWN；本记录不宣称修复或完全消除。",
+    "verificationResult": "NOT_VERIFIED",
+    "updated": "2026-10-18",
+    "lastVerified": "2026-10-18",
+    "nextAction": "在新会话独立认领并只对owned进程调查，先保全错误细节与可重复证据。",
+    "requirementRefs": [
+      "ledger:TASK-ISSUE-68"
+    ],
     "featureIds": []
+  },
+  {
+    "id": "TASK-LOCAL-GUARDS-20261018",
+    "title": "修复本地安全边界并核对剩余任务与工作树规则",
+    "goal": "不依赖额度修复工作树检查误放行、凭据缓存失败污染并补测试证据负向验收",
+    "scope": "worktree-policy、LayeredCredentialStore、testEvidence取消/报告失败及任务事实同步；不扩展Provider或新产品功能",
+    "acceptance": [
+      "工作树Git查询/CLI目标路径/缺失登记失败关闭，正常已有分支仍复用",
+      "凭据持久失败不污染缓存，成功/失败轮换及相邻异步边界回归通过",
+      "真实Playwright取消和reporter写失败非0/中断，旧三类证据字节与哈希保持",
+      "当前源码完整验证、独立审查、Delivery与任务事实同步；保全改动不删除移动"
+    ],
+    "dependencies": [],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "fix/TASK-LOCAL-GUARDS-20261018",
+    "worktree": "unallocated",
+    "baseSha": "e11b87a579a92f89d7d60f9c2f1be15bfb033065",
+    "status": "DONE",
+    "displayStatus": "已完成",
+    "priority": "P1",
+    "priorityRationale": "本地检查误放行与失败凭据状态不依赖额度，应先修复",
+    "affectedModules": [
+      "scripts/governance/worktree-policy.mjs",
+      "src/features/ai-gateway/credentials.ts",
+      "tests/unit/worktreeLifecycle.test.ts",
+      "tests/unit/aiGatewayCredentials.test.ts",
+      "tests/unit/testEvidence.test.ts",
+      "docs/changes/2026-10-18-local-guards"
+    ],
+    "evidence": [
+      "docs/changes/2026-10-18-local-guards/intent.md",
+      "docs/changes/2026-10-18-local-guards/spec.md",
+      "docs/changes/2026-10-18-local-guards/plan.md",
+      "docs/changes/2026-10-18-local-guards/verification.md",
+      "docs/changes/2026-10-18-local-guards/review.md"
+    ],
+    "verification": "本轮有界本地安全修复source92643d67：完整verify exit0，Node1942PASS/14SKIP、Agent204PASS/2SKIP、Edge826首试、Design41+8、development4步；Rust226PASS/1既有ignore+41集成。Standards/Spec精确源码PASS，ENV-001修复关闭。官方2.1.38/EXE1be85bce，实际默认两次正常启动关闭、可编辑、9项目11chat21消息与原身份/迁移/memory全保持；工程外完整2755文件349604007B保全及独立0 mismatch。4组真实CLI门禁和当前分支事实/5失效路由同步。本地交付以最终文档精确补审和Delivery收据裁决，不代表Hosted/Provider/发布。",
+    "verificationResult": "PASS",
+    "updated": "2026-10-18",
+    "lastVerified": "2026-10-18",
+    "nextAction": "本轮有界本地任务完成；原65项开放任务按独立验收继续，优先侧栏pin/sort持久化、真实上游增量流及宽图连线/Native验证；真实新回复仍待额度恢复后验收。最终文档HEAD/Delivery/日常正常启动收据保存在工程外，不把其写成远端发布。",
+    "requirementRefs": [
+      "ledger:TASK-GOV-004",
+      "ledger:TASK-AI-GATEWAY-001",
+      "ledger:TASK-VERIFY-EVIDENCE-20261015"
+    ],
+    "featureIds": [
+      "FEAT-038"
+    ]
+  },
+  {
+    "id": "TASK-CHAT-MIGRATION-20261017",
+    "lastVerified": "2026-10-17",
+    "title": "保全旧聊天资料并恢复迁移、编辑与聊天",
+    "goal": "无损迁移原聊天数据，恢复独立草稿、正文、线程及正常保存重连。",
+    "scope": "ADR-022已接受的旧通道与现有chat原始Value迁移、Native/IDB不可降级屏障、普通聊天canonical读写与HTTP7执行scope、聊天素材项目包及Node/Native隔离；不扩临时/新窗口/Mobile/额外Provider。",
+    "acceptance": [
+      "主备/身份/原资料不可变归档、逐文件SHA与隔离恢复通过，不删除或移动原文件",
+      "迁移后项目/chat/消息/草稿/线程/素材及未知字段保全，失败与future格式保护、重开不丢且不重复迁移",
+      "现有普通聊天独立编辑、离线历史与正常发送/重连，迟到回调和服务执行scope不串chat",
+      "当前源码完整verify/Rust/独审/官方产物、资料副本及默认库迁移/关闭重开通过并同步文档"
+    ],
+    "dependencies": [],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "unallocated",
+    "worktree": "unallocated",
+    "baseSha": "bbc8a766740ec94d30171020cf208a6aeb3c87d4",
+    "status": "PARTIAL",
+    "displayStatus": "未完成",
+    "priority": "P1",
+    "priorityRationale": "默认资料只读，需完成真正迁移和执行隔离后恢复用户编辑聊天。",
+    "affectedModules": [
+      "src/features/creation",
+      "src/App.tsx",
+      "src/features/agent",
+      "src/features/google",
+      "src/features/local-service",
+      "src/features/projects",
+      "src-tauri/src",
+      "vendor/canvas-agent",
+      "scripts/agent",
+      "docs/changes/2026-10-17-chat-migration"
+    ],
+    "evidence": [
+      "docs/changes/2026-10-17-chat-migration/intent.md",
+      "docs/changes/2026-10-17-chat-migration/spec.md",
+      "docs/changes/2026-10-17-chat-migration/plan.md",
+      "docs/changes/2026-10-17-chat-migration/verification.md",
+      "docs/changes/2026-10-17-chat-migration/review.md"
+    ],
+    "verification": "Desktop/Web 2.1.37（Mobile 2.1.1规划），冻结源码89b8291b；默认原9项目已迁移snapshot3、11个独立聊天上下文，repositoryId和原始资料保持；编辑、旧历史持久化及正常关闭重开证据见本轮验证。真实新回复仍未验收：Codex共享周额度100%、ordinaryUsageAllowed=false，发送前拒绝，/turn提交0；预计北京时间2026-10-23 04:08:15重置。未消耗reset、未购买额度或绕过保护。 完整verify Node1924/14skip、Agent204/2skip、Edge826首试零flaky、DESIGN41+8/development四步；Rust226+41/1ignore；双轴源码PASS，官方EXE与loaded bundle绑定89b；副本130检查、默认v3迁移与旧历史/编辑重开收据见verification。所有原件和失败保留。",
+    "verificationResult": "NOT_VERIFIED",
+    "updated": "2026-10-18",
+    "nextAction": "账号Codex额度解除后，从当前v3原线程进行一次普通文本受理/回复及持久化重开验收；此前/turn0，无UNKNOWN重放。保留原始v2不可变归档，不回滚、删除或移动；Hosted/PR/main/发布与原统一范围另行验收。 原e11b87a5分支和恢复收据保留；物理树由TASK-LOCAL-GUARDS-20261018复用，额度解除后重新分配，不把旧分支冒充当前checkout。",
+    "requirementRefs": [
+      "docs/changes/2026-10-17-chat-migration/intent.md",
+      "docs/architecture/adr/ADR-022-project-chats-and-v3-migration.md",
+      "ledger:TASK-KK-UNIFIED-20261015"
+    ],
+    "featureIds": [
+      "FEAT-009",
+      "FEAT-014"
+    ],
+    "sourceUpdates": [
+      {
+        "recordedAt": "2026-10-18",
+        "type": "physical-tree-reused-for-local-guards",
+        "branch": "fix/TASK-CHAT-MIGRATION-20261017",
+        "worktree": "D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017",
+        "sourceHead": "e11b87a579a92f89d7d60f9c2f1be15bfb033065",
+        "source": "docs/changes/2026-10-18-local-guards/verification.md"
+      }
+    ]
+  },
+  {
+    "id": "TASK-SIDEBAR-CANVAS-20261018",
+    "title": "侧栏置顶排序持久化与宽图连线桌面验收",
+    "goal": "先完成侧栏偏好持久化，再复证修复宽图几何并完成fresh桌面验收",
+    "scope": "现有CreationSnapshot/CAS、sidebar actions、共享result geometry与相应本地回归；不新增存储源或外部能力；独立验收发现429健康标记与保存的真实竞态，在本次修复并复验",
+    "acceptance": [
+      "项目/组pin及三种sort在Web重载和fresh Native正常启闭后保持，旧资料兼容且失败/CAS/包往返保留原件",
+      "1200x300三缩放×双编辑状态真实连线SVG端点/端口/按钮与DOM几何正确",
+      "完整verify/Rust/官方Native/独审/Delivery通过并同步任务事实，原改动和用户资料保全，无删除移动"
+    ],
+    "dependencies": [],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "fix/TASK-SIDEBAR-CANVAS-20261018",
+    "worktree": "unallocated",
+    "baseSha": "ab2ceef00df6452580b839f29f39747174ad0b68",
+    "status": "DONE",
+    "displayStatus": "已完成",
+    "priority": "P1",
+    "priorityRationale": "用户明确要求按侧栏持久化→宽图连线→桌面验收推进",
+    "affectedModules": [
+      "src/features/creation",
+      "src/features/projects",
+      "src/components/SidebarProjectGroups.tsx",
+      "src/components/SidebarProjectHeader.tsx",
+      "src/domain/canvasGraph.ts",
+      "src-tauri/src/creation_validation.rs",
+      "src-tauri/src/project_package_snapshot.rs",
+      "tests/unit",
+      "tests/browser",
+      "tests/desktop",
+      "src/App.tsx"
+    ],
+    "evidence": [
+      "docs/changes/2026-10-18-sidebar-canvas/intent.md",
+      "docs/changes/2026-10-18-sidebar-canvas/spec.md",
+      "docs/changes/2026-10-18-sidebar-canvas/plan.md",
+      "docs/changes/2026-10-18-sidebar-canvas/verification.md",
+      "docs/changes/2026-10-18-sidebar-canvas/review.md"
+    ],
+    "verification": "source50412d4e / Desktop-Web2.1.39：精确完整verify浏览器854首试通过零flaky、Node1960/Agent204/Design41+8/dev4通过；Rust源码不变，前冻结228及41集成通过、1既存ignore。当前EXE e9caebca，fresh四启闭侧栏pin/unpin/三排序与priority保持、真实项目/组和包往返、宽图6状态通过；原库两周期9项目/11聊天/22消息及身份草稿选择保持。429保存竞态和V3夹具缺口已修复复验，原始失败/拒收保留。最终精确文档/交付/日常收据另验，不代填外部能力。",
+    "verificationResult": "PASS",
+    "updated": "2026-10-18",
+    "lastVerified": "2026-10-18",
+    "nextAction": "本轮有界本地技术完成；最终文档SHA审查/Delivery/归档/日常还原以工程外收据裁决；真实Provider/Hosted/发布及用户整体验收另行，保留全部资料。",
+    "requirementRefs": [
+      "ledger:TASK-PROJECT-SIDEBAR-001",
+      "ledger:TASK-CANVAS-WIDE-PORT-20261014"
+    ],
+    "featureIds": [
+      "FEAT-015",
+      "FEAT-023",
+      "FEAT-001"
+    ],
+    "verificationHistory": [
+      {
+        "branch": "fix/TASK-SIDEBAR-CANVAS-20261018",
+        "worktree": "D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017",
+        "status": "DONE",
+        "displayStatus": "已完成",
+        "verificationResult": "PASS",
+        "verification": "source793ddaf3 / Desktop/Web2.1.39：完整verify Node1960PASS14skip、Agent204PASS2skip、首次浏览器852项：851常规通过+1flaky、Design41+8/dev4步；Rust228PASS1ignore+41集成。Web pin/sort32与几何24PASS，fresh官方Native四次正常启闭验证pin/unpin/priority、真实新项目/组和trash恢复、新root包往返及宽图6状态；原库2周期9项目11chat21消息/身份草稿选择保全。全量工程外保全，无文件删移或生成提交；最终精确文档补审/Delivery/日常启动按工程外收据裁决。",
+        "nextAction": "本轮有界本地技术验收完成；真实Provider/Hosted/发布和用户最终产品验收另行，保留全部历史及原件。",
+        "lastVerified": "2026-10-18",
+        "recordedAt": "2026-10-18",
+        "recordBaseSha": "f3b1e41b0bbe3d89bdc86c1063de1dae1f11ee35",
+        "reason": "最终事实审核撤回零flaky错误汇总；429持久化前冷却标记存在真实竞态，补修复验。",
+        "source": "docs/changes/2026-10-18-sidebar-canvas/verification.md"
+      },
+      {
+        "branch": "fix/TASK-SIDEBAR-CANVAS-20261018",
+        "worktree": "D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017",
+        "status": "IN_PROGRESS",
+        "displayStatus": "进行中",
+        "verificationResult": "NOT_VERIFIED",
+        "verification": "侧栏/宽图source793ddaf3有界本地实现和旧39Native已验；首次完整verify852项含1flaky，独审发现真实429健康标记晚于保存/失败终态，当前补修并重新完整验证，最终交付不放行。",
+        "nextAction": "先确定性保存阻塞反例，再修正429/部分成功健康标记时序；重新完整verify/官方Native/最终精确审核，原失败保留。",
+        "lastVerified": "2026-10-18",
+        "recordedAt": "2026-10-18",
+        "recordBaseSha": "50412d4e51e07a488bd9ad0e1cee03dd48f58998",
+        "reason": "429保存竞态与V3夹具补修后精确源码全量及新Native复验，旧阶段记录完整保留。",
+        "source": "docs/changes/2026-10-18-sidebar-canvas/verification.md"
+      }
+    ]
+  },
+  {
+    "id": "TASK-COLDSTART-LOCAL-20261018",
+    "title": "冷启动无效写入修复与严格数据比较闭环",
+    "goal": "消除语义未变的恢复和重连保存写入，保全原资料并完成真正默认库冷启动严格验收",
+    "scope": "taskRecovery/AgentHost及Native恢复归并链幂等、相应回归与默认Native取证；不变更数据身份、协议或外部能力",
+    "acceptance": [
+      "重复终态恢复及同值Agent保存不刷新时间/revision，真实变化与错误、身份/权限保护保持",
+      "完整工程验证及独立精确源审查通过，当前官方Native真实冷启全部字段严格比较通过",
+      "原改动与资料保全，旧失败不改写，无删移/付费提交/发布，任务事实同步"
+    ],
+    "dependencies": [],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "fix/TASK-COLDSTART-LOCAL-20261018",
+    "worktree": "unallocated",
+    "baseSha": "fe103d2b0ac24da90f5820b8034f6a016a79221b",
+    "status": "DONE",
+    "displayStatus": "已完成",
+    "priority": "P1",
+    "priorityRationale": "用户明确优先闭环原冷启严格比较失败，避免无效恢复写入干扰保存和最近排序",
+    "affectedModules": [
+      "src/features/creation/taskRecovery.ts",
+      "src/features/creation/nativeTaskHost.ts",
+      "src/features/agent/agentHost.ts",
+      "tests/unit",
+      "tests/desktop",
+      "docs"
+    ],
+    "evidence": [
+      "docs/changes/2026-10-18-coldstart-local/intent.md",
+      "docs/changes/2026-10-18-coldstart-local/spec.md",
+      "docs/changes/2026-10-18-coldstart-local/plan.md",
+      "docs/changes/2026-10-18-coldstart-local/verification.md",
+      "docs/changes/2026-10-18-coldstart-local/review.md"
+    ],
+    "lastVerified": "2026-10-18",
+    "verification": "精确d5/产品8735、Desktop-Web2.1.40：完整verify Node2001PASS14skip/Agent204PASS2skip/Edge854首试零失败/零flaky/Design41+8/dev4；源码双轴164/173定向PASS。官方EXE41523db8/input0f7a1bf9，真正默认库无CDP两周期原快捷方式0→1单实例→正常关闭0，11份完整JSON及raw全字节严格一致（含全部时间/revision2698/9项目11聊天22消息），40项保护状态保持，独立101项审核724e2a1f PASS。默认UI两周期可编辑标志及canonical资料保持另独审651c2e7c PASS；未发送真实模型。原RED/历史失败/拒收及2849份原profile保留，最终文档/Delivery/归档/日常按精确收据。",
+    "verificationResult": "PASS",
+    "updated": "2026-10-18",
+    "nextAction": "本有界冷启动技术闭环完成；最终文档SHA独审/Delivery/保全归档与日常单实例入口据实收尾。继续本地Gateway增量流和Native Canvas专项，不改变父任务外部验收与功能成熟度。",
+    "requirementRefs": [
+      "ledger:TASK-SIDEBAR-CANVAS-20261018",
+      "ledger:TASK-CHAT-MIGRATION-20261017"
+    ],
+    "featureIds": [
+      "FEAT-009",
+      "FEAT-015",
+      "FEAT-023"
+    ],
+    "verificationHistory": [
+      {
+        "status": "IN_PROGRESS",
+        "displayStatus": "进行中",
+        "verificationResult": "NOT_VERIFIED",
+        "verification": "source477完整verify与源码双轴通过，官方40 EXEaa5f已构建；首次真实冷启仍FAIL任务/项目时间及revision三字段，原件与产物保全，不放宽比较。Native跨函数残余正在诊断，Gateway未实施。",
+        "nextAction": "已保留source477首次真实cold FAIL；Native→retry完整链净变化最小修复及正式RED/正例，再新完整verify/双轴/官方40与全字段strict冷启，不开始依赖其完成的Gateway。",
+        "lastVerified": "2026-10-18",
+        "branch": "fix/TASK-COLDSTART-LOCAL-20261018",
+        "worktree": "D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017",
+        "recordedAt": "2026-10-18",
+        "recordBaseSha": "d5a24d60b4a9b9b5d0b6cce078f091c10263729c",
+        "reason": "原477实际FAIL及940拒收经独立复核修复，d5完整verify/官方40/严格冷启通过",
+        "source": "docs/changes/2026-10-18-coldstart-local/verification.md"
+      }
+    ]
+  },
+  {
+    "id": "TASK-GATEWAY-STREAM-20261018",
+    "title": "Gateway实际增量SSE与取消重试边界",
+    "goal": "将现有可选注入chat路由从buffered修复为受控验证的真实增量文本流",
+    "scope": "Ark adapter/Scheduler/chat/HTTP及有限SSE读取和相关本地回归；无默认UI或主入口接入",
+    "acceptance": [
+      "真实本地HTTP首段在上游完成前到达，SSE分片/usage/错误终结有界正确",
+      "首段写后不重试，取消传播且不误罚账号，filter不可换号，JSON/图片/异步/鉴权/404兼容",
+      "相关定向及完整verify、精确独审、当前官方产物与资料保护通过；原件保全，无删移或费用调用"
+    ],
+    "dependencies": [
+      "TASK-COLDSTART-LOCAL-20261018"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "fix/TASK-GATEWAY-STREAM-20261018",
+    "worktree": "unallocated",
+    "baseSha": "00e79cf01a7ef787f3c83baeeb46e854d281a2c2",
+    "status": "DONE",
+    "displayStatus": "已完成",
+    "priority": "P1",
+    "priorityRationale": "冷启闭环后的本地P1剩余项，可用受控HTTP上游证明而不依赖模型额度",
+    "affectedModules": [
+      "src/features/ai-gateway",
+      "src/features/generation-server/http.ts",
+      "tests/unit",
+      "tests/local-service",
+      "docs"
+    ],
+    "evidence": [
+      "docs/changes/2026-10-18-gateway-stream/intent.md",
+      "docs/changes/2026-10-18-gateway-stream/spec.md",
+      "docs/changes/2026-10-18-gateway-stream/plan.md",
+      "docs/changes/2026-10-18-gateway-stream/verification.md",
+      "docs/changes/2026-10-18-gateway-stream/review.md"
+    ],
+    "verification": "source176ec95d：174定向、完整verify Node2055/14skip+Agent204/2skip+Edge854首试零flaky+Design41/8/dev4；源码双轴PASS，deadline P2关闭。当前官方Desktop40 EXEd8e7/input49ad、默认noCDP严格2轮11raw与完整JSON相等/rev2698/9-11-22、UI2轮可编辑及Native Canvas v5三阶段全对象/图/拖动/unknown/默认七项保护通过。原失败保留，真实Provider/DPAPI/Hosted未验，父任务不提升。",
+    "verificationResult": "PASS",
+    "updated": "2026-10-18",
+    "lastVerified": "2026-10-18",
+    "nextAction": "本地有界子项完成；最终精确文档/Delivery/私有归档/原两个快捷方式由工程外收据裁决。下一P1本地DPAPI protector受控测试及独立成本回执调用路径，不重提UNKNOWN，不消费额度；父Gateway仍PARTIAL。",
+    "requirementRefs": [
+      "ledger:TASK-AI-GATEWAY-001"
+    ],
+    "featureIds": [
+      "FEAT-038"
+    ],
+    "verificationHistory": [
+      {
+        "branch": "fix/TASK-GATEWAY-STREAM-20261018",
+        "worktree": "D:/kk-studio/.worktrees/TASK-AUDIT-REPAIR-20261017",
+        "status": "IN_PROGRESS",
+        "displayStatus": "进行中",
+        "verificationResult": "NOT_VERIFIED",
+        "verification": "只读生产调用链与ignored合成HTTP预复现12项，10失败及2兼容正例保留；正式新源与完整验收尚待",
+        "nextAction": "正式测试先RED，最小内部callback/SSE修复，再定向全量/独审/官方当前Desktop与资料保护；父任务外部能力继续开放",
+        "lastVerified": "2026-10-18",
+        "updated": "2026-10-18",
+        "recordedAt": "2026-10-18",
+        "recordBaseSha": "176ec95dae5fd2792bf5ee94eb5e0a0b1cc2b948",
+        "reason": "当前source176本地证据更新；保留前阶段原义",
+        "source": "docs/changes/2026-10-18-gateway-stream/verification.md"
+      }
+    ]
+  },
+  {
+    "id": "TASK-MOD-P0",
+    "title": "建立模块化边界与只减不增的架构基线",
+    "goal": "先用可验证门禁保护模块边界，再按已复核规范推进优化",
+    "scope": "P0治理脚本、规则、基线、故障注入、规范与ADR；产品源码零改动",
+    "acceptance": [
+      "新增边界违规和长环被故障注入检出",
+      "候选基线不能相对Git基线扩容",
+      "typecheck/lint/test及适用治理门禁通过",
+      "产品源码和主checkout现有dirty改动保持原样"
+    ],
+    "dependencies": [],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "refactor/TASK-MOD-P0-architecture-baseline",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+    "affectedModules": [
+      "scripts/governance",
+      "scripts/check-governance.mjs",
+      "config/architecture-rules.cjs",
+      "config/architecture-baseline.json",
+      "tests/unit/architectureRules.test.ts",
+      "package.json",
+      "package-lock.json",
+      "docs"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "未完成",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-28-modularity-p0/verification.md"
+    ],
+    "verification": "P0源码cb869dfe增量独审通过，2项验收漏检已关闭；干净cb869dfe精确typecheck/lint/npm test均exit0，2333项中2313通过0失败20跳过（含14项架构回归），health0blocking。build通过，delivery结构0违规；完整verify仍被18项继承源码格式阻断。产品源码diff为空，未合流或发布。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-28",
+    "lastVerified": "2026-10-28",
+    "nextAction": "18项格式已在独立任务修复；完整verify进一步暴露产品浏览器/开发插件失败。由TASK-MOD-GATE-BROWSER修复后复跑，TASK-GOV-004继续分叉整合；未合流前不提升交付状态。",
+    "requirementRefs": [
+      "docs/changes/2026-10-28-modularity-p0/intent.md",
+      "docs/changes/2026-10-28-modularity-p0/spec.md"
+    ],
+    "featureIds": []
+  },
+  {
+    "id": "TASK-MOD-GATE-FORMAT",
+    "title": "独立恢复18项既有源码格式门禁",
+    "goal": "在不改变产品语义和UI的前提下清除已证实的pre-existing format失败",
+    "scope": "18个原始源码文件的格式整理，独立于P0边界基线提交；不重构或改视觉",
+    "acceptance": [
+      "18个候选逐个确认格式差异与语法/渲染语义不变",
+      "format:check及快速门禁通过",
+      "完整verify通过后按真实base/head审核整合"
+    ],
+    "dependencies": [],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "chore/TASK-MOD-GATE-FORMAT",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "e35004a03a19b24d691082eade3dbf3e9a531cb5",
+    "affectedModules": [
+      "src/components/nodes/ReferenceThumbnail.tsx",
+      "src/features",
+      "docs"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "未完成",
+    "priority": "P1",
+    "risk": "low",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-28-modularity-format/verification.md"
+    ],
+    "verification": "18个历史文件已由Prettier修复，18/18转译JS语法树相同；lint/typecheck/单元2313 pass/0 fail/20 skip、Agent204 pass/2 skip、UI静态及format通过。产品浏览器暴露旧设置入口等失败后主动中断；设计浏览器9 pass；开发插件旧扩展分类失败。完整verify尚未全绿，未合流。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-28",
+    "lastVerified": "2026-10-28",
+    "nextAction": "af4c4e2格式源码独审已PASS；继续TASK-MOD-GATE-BROWSER剩余用例，完整verify及主线分叉整合满足后再关闭总体交付。",
+    "requirementRefs": [
+      "docs/changes/2026-10-28-modularity-format/intent.md",
+      "docs/changes/2026-10-28-modularity-format/spec.md"
+    ],
+    "featureIds": []
+  },
+  {
+    "id": "TASK-MOD-GATE-BROWSER",
+    "title": "恢复历史浏览器测试与当前设置入口的对应",
+    "goal": "按当前已实现契约修复过时测试入口并定位完整verify剩余真实失败",
+    "scope": "浏览器/开发插件测试入口和夹具；不为旧测试回退当前UI，不降低有效断言，不改变产品能力",
+    "acceptance": [
+      "旧入口失败先保留RED，映射当前真实分类后相关用例通过",
+      "其余失败区分测试过时与真实缺陷，任何真实UI修改先取得当前Figma依据",
+      "完整verify实际全绿及当前SHA独审后才解除合流阻断"
+    ],
+    "dependencies": [
+      "TASK-MOD-GATE-FORMAT"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "test/TASK-MOD-GATE-BROWSER",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "af4c4e2eadbde0df090ba9e222096dd3d39ad517",
+    "affectedModules": [
+      "tests/browser",
+      "tests/support",
+      "tests/development"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "未完成",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-28-browser-gate/verification.md",
+      "docs/changes/2026-10-28-agent-browser-navigation/verification.md",
+      "docs/changes/2026-10-28-agent-browser-navigation/review.md",
+      "docs/changes/2026-10-28-api-browser-navigation/verification.md",
+      "docs/changes/2026-10-28-api-browser-navigation/review.md",
+      "docs/changes/2026-10-28-provider-browser-contract/verification.md",
+      "docs/changes/2026-10-28-provider-browser-contract/review.md"
+    ],
+    "verification": "保存宽屏容器归零已定位修复，三个宽度生命周期与同宽度reload共6项通过；当前build邻接30项27 pass/3 fail/0retry。调度15/命中2继续全过。HUD旧取消裁切及三项邻接问题分别入账，完整verify/独审/main未完成。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-28",
+    "lastVerified": "2026-10-28",
+    "nextAction": "先收尾TASK-MOD-GATE-ADJACENT及TASK-UI-HUD-CANCEL-CLIP；完整verify与当前审查/主线分叉整合满足前维持PARTIAL，P1/P2仍未实施。",
+    "requirementRefs": [
+      "docs/changes/2026-10-28-browser-gate/intent.md",
+      "docs/changes/2026-10-28-browser-gate/spec.md",
+      "docs/changes/2026-10-28-agent-browser-navigation/intent.md",
+      "docs/changes/2026-10-28-agent-browser-navigation/spec.md",
+      "docs/changes/2026-10-28-api-browser-navigation/intent.md",
+      "docs/changes/2026-10-28-api-browser-navigation/spec.md",
+      "docs/changes/2026-10-28-provider-browser-contract/spec.md"
+    ],
+    "featureIds": []
+  },
+  {
+    "id": "TASK-MOD-FOUR-DOC-COVERAGE",
+    "title": "逐项追踪四份整顿原文的完整需求与验收",
+    "goal": "四份原文全部阅读并统一追溯，禁止用近期五项或单一文档完成代表整套交付完成",
+    "scope": "审计、复核草案、执行规范及现代化/仓库补篇全部需求；保留修订关系和待决边界，按P系列/STD/ORG分别验收，不擅自扩大观察项的实施范围",
+    "acceptance": [
+      "四份全文阅读、SHA256/行数/章节索引及需求映射可追溯",
+      "P0–P8及P3子项、标准现代化、ORG-0–7和横向验收均有明确状态与剩余",
+      "旧要求的取代/冲突/延后/观察逐项有依据，不静默丢弃",
+      "每项对应代码/验证/审查/主线合流证据后才关闭，总体未验收不得标完成"
+    ],
+    "dependencies": [],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "docs/TASK-MOD-FOUR-DOC-COVERAGE",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "59a8fd51a31b202b419badd5c7aeb6c077c1c8ad",
+    "affectedModules": [
+      "docs/architecture/MODULARITY.md",
+      "docs/changes/2026-10-28-modularity-p0",
+      "docs/governance",
+      "docs/README.md",
+      "docs/PROGRESS.md"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "未完成",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-28-modularity-p0/four-document-coverage.md",
+      "docs/changes/2026-10-28-modularity-p0/four-document-sources.json",
+      "docs/changes/2026-10-28-four-document-coverage/verification.md",
+      "docs/changes/2026-10-28-four-document-coverage/review.md",
+      "docs/changes/2026-10-28-agent-browser-navigation/verification.md"
+    ],
+    "verification": "四份全文与总清单已核对；继续处理Browser任务，本次9项通过。补查ORG-0目标容器位置：165仓内参考文件对照9份容器文件，原字节/LF均无等价，未迁删。其余P/STD/ORG仍按矩阵逐项待验收；禁止子代理。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-28",
+    "lastVerified": "2026-10-28",
+    "nextAction": "后续先读四文档总清单，按P0→P1→P2及ORG试点→推广实施；将现代化/其他P/ORG事项逐项落入对应任务，补完必做项与待决结论后才判整套完成。",
+    "requirementRefs": [
+      "ledger:TASK-MOD-FOUR-DOC-COVERAGE",
+      "docs/changes/2026-10-28-modularity-p0/four-document-coverage.md",
+      "docs/changes/2026-10-28-four-document-coverage/intent.md",
+      "docs/changes/2026-10-28-four-document-coverage/spec.md"
+    ],
+    "featureIds": []
+  },
+  {
+    "owner": "root",
+    "ownerRole": "repository-maintainer",
+    "branch": "docs/TASK-ORG-1-repo-layout",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "3362398ee4b08239c8796a5df1de49f458e561f3",
+    "status": "PARTIAL",
+    "displayStatus": "未完成",
+    "priority": "P2",
+    "risk": "low",
+    "reviewRequired": true,
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-28",
+    "lastVerified": "2026-10-28",
+    "featureIds": [],
+    "id": "TASK-ORG-0",
+    "title": "盘点仓库文件、引用与容器参考资料",
+    "goal": "为目录治理和安全外置提供可复跑的实物/引用/等价证据",
+    "scope": "跟踪清单、活动与历史引用、门禁/功能依赖、分支树、根候选和参考目录内容对照；不迁删",
+    "acceptance": [
+      "跟踪清单和引用证据可复跑",
+      "目标容器内容逐份hash/diff核对，不按同名推断等价",
+      "仍未知的动态引用、上游身份和存量缺件有明确范围"
+    ],
+    "dependencies": [],
+    "affectedModules": [
+      "docs/reference",
+      "docs/superpowers",
+      "docs/governance",
+      "docs/changes/2026-10-28-repo-layout"
+    ],
+    "evidence": [
+      "docs/changes/2026-10-28-repo-layout/verification.md",
+      "docs/changes/2026-10-28-modularity-p0/inventory.md"
+    ],
+    "verification": "原始跟踪/引用/分支和归档清单保留；本次165份仓内reference/superpowers对照目标容器9文件，原字节和LF hash均无等价，全部保留。上游身份、存量缺件等完整盘点闭环仍待核实。",
+    "nextAction": "保留原件，继续核实完整盘点缺口；无证据不迁删。",
+    "requirementRefs": [
+      "docs/changes/2026-10-28-modularity-p0/four-document-coverage.md"
+    ]
+  },
+  {
+    "owner": "root",
+    "ownerRole": "repository-maintainer",
+    "branch": "docs/TASK-ORG-1-repo-layout",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "3362398ee4b08239c8796a5df1de49f458e561f3",
+    "status": "PARTIAL",
+    "displayStatus": "未完成",
+    "priority": "P2",
+    "risk": "low",
+    "reviewRequired": true,
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-28",
+    "lastVerified": "2026-10-28",
+    "featureIds": [],
+    "id": "TASK-ORG-1",
+    "title": "建立仓库目录与弃用生命周期规则",
+    "goal": "将补篇B1–B8落地为唯一索引内规则，防止规则与迁移状态混淆",
+    "scope": "REPO-LAYOUT、DEPRECATIONS骨架、docs索引、gitignore加固；不执行迁移/删除或启用ORG-2防回弹",
+    "acceptance": [
+      "B1–B8目录/生命周期/vendor规则有明确归属且不复制架构规则",
+      "索引/Markdown/治理通过",
+      "ignore新增临时类型，源码和合法夹具保持可跟踪",
+      "不修改或删除既有证据/用户文件"
+    ],
+    "dependencies": [
+      "TASK-ORG-0"
+    ],
+    "affectedModules": [
+      ".gitignore",
+      "docs/architecture/REPO-LAYOUT.md",
+      "docs/architecture/DEPRECATIONS.md",
+      "docs/README.md",
+      "docs/governance",
+      "docs/changes/2026-10-28-repo-layout"
+    ],
+    "evidence": [
+      "docs/changes/2026-10-28-repo-layout/verification.md",
+      "docs/changes/2026-10-28-repo-layout/review.md"
+    ],
+    "verification": "REPO-LAYOUT/DEPRECATIONS骨架、索引及ignore候选完成；3正7负配置断言、治理171/索引/Markdown137/生命周期均通过。快速typecheck/lint/npm test通过（2313 pass/0 fail/20 skip），无产品改动/迁删，主checkout21哈希不变；仅自审，未合流。",
+    "nextAction": "按当前候选完成整合审查与主线门禁；后续ORG-2防回弹和ORG-5单包试点分别实施，不能用规则候选代替迁移完成。",
+    "requirementRefs": [
+      "docs/changes/2026-10-28-repo-layout/intent.md",
+      "docs/changes/2026-10-28-repo-layout/spec.md"
+    ]
+  },
+  {
+    "id": "TASK-ORG-2",
+    "title": "新增仓库布局与证据防回弹门禁",
+    "goal": "将补篇B11变为存量只减不增的自动校验",
+    "scope": "只读治理脚本/白名单/历史基线/故障注入；不迁删文件、不改产品",
+    "acceptance": [
+      "新增根/类型/图片/落位/命名违规被拦截，存量可通过",
+      "历史集合及图片上限不能扩张或等数换项，bootstrap不能掩盖新违规",
+      "接入治理，快速门禁及故障注入有实际回执"
+    ],
+    "dependencies": [
+      "TASK-ORG-1",
+      "TASK-MOD-P0"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "chore/TASK-ORG-2-layout-guard",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "61bf4b81ea35969c1c60e9d991ce4dddc9425fc2",
+    "affectedModules": [
+      "scripts/governance",
+      "scripts/check-governance.mjs",
+      "config",
+      "tests/unit",
+      "docs/architecture/REPO-LAYOUT.md",
+      "docs/governance",
+      "docs/changes/2026-10-28-repo-layout-guard"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "未完成",
+    "priority": "P2",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-28-repo-layout-guard/verification.md",
+      "docs/changes/2026-10-28-repo-layout-guard/review.md"
+    ],
+    "verification": "B11五组门禁及Git存量基线候选接入治理；9项故障注入通过（含Git/强行add/未跟踪/bootstrap/基线增长/损坏输入），快速typecheck/lint/format通过，单元2342项2322 pass/0 fail/20 skip。640存量规则命中保持，未迁删/未瘦身；当前只有自审，主线与完整verify未完成。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-28",
+    "lastVerified": "2026-10-28",
+    "nextAction": "保存当前候选审查/指标及主checkout保护证据；后续按ORG-5单包外置试点继续，不以防回弹代替存量清理。独审与main整合条件满足前保留PARTIAL。",
+    "requirementRefs": [
+      "docs/changes/2026-10-28-repo-layout-guard/intent.md",
+      "docs/changes/2026-10-28-repo-layout-guard/spec.md"
+    ],
+    "featureIds": []
+  },
+  {
+    "id": "TASK-ORG-5",
+    "title": "模型能力历史日志外置首包试点",
+    "goal": "以可验证manifest和恢复回执替代仓内原始日志",
+    "scope": "2026-10-08-model-capabilities内62份log；不改PNG/JSON/产品与历史结论，不自动推广",
+    "acceptance": [
+      "62份源/Git/容器副本sha256和字节一致，manifest可复验",
+      "历史32个Markdown链接转manifest并保留原目的地映射，历史结论不变",
+      "恢复到新空目录全部匹配，TYPE基线只收缩，快速/功能/交付门禁通过"
+    ],
+    "dependencies": [
+      "TASK-ORG-0"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "chore/TASK-ORG-5-evidence-pilot",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "93fd8763dee83a60c939d95bc430873cec7ee73e",
+    "affectedModules": [
+      "docs/changes/2026-10-08-model-capabilities",
+      "docs/changes/2026-10-28-evidence-pilot",
+      "scripts/governance/check-evidence-manifest.mjs",
+      "tests/unit/evidenceManifest.test.ts",
+      "config/repo-layout-baseline.json",
+      "docs/governance"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "未完成",
+    "priority": "P2",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-28-evidence-pilot/verification.md",
+      "docs/changes/2026-10-28-evidence-pilot/review.md"
+    ],
+    "verification": "单包62日志1357699B已迁出任务树；源/Git/容器及全新目录恢复sha256全匹配，32历史链接转manifest，PNG/JSON/E1保留；全历史Markdown86→86无新增断链，B11基线640→578。校验器3组故障注入、typecheck/lint/format通过，单元2345项2325 pass/0 fail/20 skip，代码健康0问题。主checkout21哈希与4需求原文哈希不变；仅自审，独审/主线/完整verify仍开放。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-28",
+    "lastVerified": "2026-10-28",
+    "nextAction": "提交当前首包候选和净体积指标；完整verify/独审/main整合及当前运行门禁继续收尾，试点整合审查完成前不推广ORG-6。保留容器副本和恢复目录。",
+    "requirementRefs": [
+      "docs/changes/2026-10-28-evidence-pilot/intent.md",
+      "docs/changes/2026-10-28-evidence-pilot/spec.md"
+    ],
+    "featureIds": []
+  },
+  {
+    "id": "TASK-UI-TASK-PANEL-HITBOX",
+    "title": "修复任务列表关闭按钮伪元素覆盖整个面板",
+    "goal": "真实鼠标可操作任务卡和打开任务工作台，关闭按钮只命中自身",
+    "scope": "canvas-hud.css单一position属性、相关浏览器回归及Desktop/Web源码版本；不改Figma/数据/网络协议/面板视觉",
+    "acceptance": [
+      "先复现关闭透明层拦截工作台，修复后真实click通过而非force绕过",
+      "当前Figma01/03有命中范围依据，无需设计修改",
+      "共享Desktop/Web版本、快速门禁及同状态浏览器证据完整，原生未验明确记录"
+    ],
+    "dependencies": [],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "test/TASK-MOD-GATE-BROWSER",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "bf2e2b6f948f10e936a45e58e397bdf0a284a9ad",
+    "affectedModules": [
+      "src/styles/canvas-hud.css",
+      "tests/browser/provider-scheduling.spec.ts",
+      "config/platform-versions.json",
+      "docs/changes/2026-10-28-provider-browser-contract"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "未完成",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-28-provider-browser-contract/verification.md"
+    ],
+    "verification": "真实关闭伪元素覆盖面板的RED已复现；仅恢复relative后390/1920两个命中/工作台/回焦用例及既有入口交互共3项首试通过。Desktop/Web源码2.1.45→46，Mobile43不变；独审/原生/主线及完整verify未完成。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-28",
+    "lastVerified": "2026-10-28",
+    "nextAction": "跑当前build的调度文件及任务交互回归；未完成原生/独审/主线门禁保持开放。",
+    "requirementRefs": [
+      "docs/changes/2026-10-28-provider-browser-contract/intent.md",
+      "docs/changes/2026-10-28-provider-browser-contract/spec.md"
+    ],
+    "featureIds": []
+  },
+  {
+    "id": "TASK-PROV-HEALTH-BEFORE-SAVE",
+    "title": "429等连接健康变更先于阻塞的项目保存生效",
+    "goal": "项目保存阻塞或冲突不能让已冷却/失效连接仍被另一项目提交",
+    "scope": "useTaskExecution现有两个健康写入时序及真实IDB/HTTP浏览器回归；不改Provider契约/槽位身份/持久格式",
+    "acceptance": [
+      "真实429在项目写事务阻塞时已持久cooldown，另一项目不提交",
+      "10/16部分完成后429在真实保存冲突后仍保留冷却和自身租约释放",
+      "原身份/取消/健康代际保护保留；快速门禁/浏览器有实证"
+    ],
+    "dependencies": [],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "test/TASK-MOD-GATE-BROWSER",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "bf2e2b6f948f10e936a45e58e397bdf0a284a9ad",
+    "affectedModules": [
+      "src/features/creation/useTaskExecution.ts",
+      "tests/browser/provider-scheduling.spec.ts",
+      "config/platform-versions.json",
+      "docs/changes/2026-10-28-provider-browser-contract"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "未完成",
+    "priority": "P1",
+    "risk": "high",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-28-provider-browser-contract/verification.md"
+    ],
+    "verification": "两例真实IDB阻塞/冲突RED→GREEN；完整调度15项及390/1920面板点击2项共17项0retry通过。快速typecheck/lint/format/ui通过，单元2325 pass/0 fail/20 skip；保存邻接4 pass/1 fail保留几何断言。原21dirty/4需求hash不变，仅自审，原生/独审/完整verify/main未完成。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-28",
+    "lastVerified": "2026-10-28",
+    "nextAction": "提交当前候选；继续保存几何失败和全量浏览器门禁，补当前独审/原生及main整合后再关闭交付。",
+    "requirementRefs": [
+      "docs/changes/2026-10-28-provider-browser-contract/spec.md"
+    ],
+    "featureIds": []
+  },
+  {
+    "id": "TASK-UI-HUD-CONTAINER-WIDTH",
+    "title": "修复折叠侧栏令HUD容器宽度归零",
+    "goal": "可用画布宽度决定HUD容器查询，宽屏保存状态不被误隐藏",
+    "scope": "sidebar旧width覆盖、保存生命周期回归及共享Desktop/Web版本；不扩展UI视觉迁移",
+    "acceptance": [
+      "先保留1920下HUD0px的实际computed-style RED",
+      "三个宽度真实任务详情、归档前后与同宽度reload均可验证",
+      "当前build与快速三门禁、作者自审完成后保留原生/独审/主线缺口"
+    ],
+    "dependencies": [],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "test/TASK-MOD-GATE-BROWSER",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "b8acad1c31eef37b1702c30a428bdff966525551",
+    "affectedModules": [
+      "src/styles/sidebar.css",
+      "tests/browser/generation-save-status.spec.ts",
+      "config/platform-versions.json"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "未完成",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-28-provider-browser-contract/verification.md"
+    ],
+    "verification": "移除两处旧width；保存6项首试全过，邻接共30项27 pass/3既有fail，0retry。源码Desktop/Web2.1.47，未原生/独审/main验收。 当前候选typecheck/lint(GOVERNANCE_BASE=b8acad1c)/format/ui/build通过；单元2325 pass/0 fail/20 skip，主checkout21文件与4份来源hash不变。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-28",
+    "lastVerified": "2026-10-28",
+    "nextAction": "继续三项邻接失败与HUD旧取消裁切；完整verify/当前独审/原生/main整合完成前保持PARTIAL。",
+    "requirementRefs": [
+      "docs/changes/2026-10-28-provider-browser-contract/intent.md",
+      "docs/changes/2026-10-28-provider-browser-contract/spec.md"
+    ],
+    "featureIds": []
+  },
+  {
+    "id": "TASK-UI-HUD-CANCEL-CLIP",
+    "title": "核实并修复旧HUD取消按钮被状态文案裁切",
+    "goal": "所有保留的可见取消控件应真实可点，不能仅靠详情入口掩盖旧控件失效",
+    "scope": "当前Figma入口契约与旧HUD控件映射；不改取消或归档语义",
+    "acceptance": [
+      "记录现行Figma是否保留HUD内取消动作及其尺寸规则",
+      "若保留则真实click命中，若退役则有明确设计依据并保留详情入口",
+      "取消后不允许迟到结果或重复提交，补受影响回归"
+    ],
+    "dependencies": [],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "test/TASK-MOD-GATE-BROWSER",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "b8acad1c31eef37b1702c30a428bdff966525551",
+    "affectedModules": [
+      "src/App.tsx",
+      "src/styles/canvas-hud.css",
+      "tests/browser/generation-save-status.spec.ts"
+    ],
+    "status": "TODO",
+    "displayStatus": "未完成",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-28-provider-browser-contract/verification.md"
+    ],
+    "verification": "save-hit-probe.log显示1099取消button x604.265..654.265在running父span x438.265..496.921外并被裁切。详情取消trial通过不能证明旧HUD修复。",
+    "verificationResult": "FAIL",
+    "updated": "2026-10-28",
+    "lastVerified": "2026-10-28",
+    "nextAction": "依当前Figma补齐旧HUD行为映射，再修产品并真实点击回归。",
+    "requirementRefs": [
+      "docs/changes/2026-10-28-provider-browser-contract/intent.md",
+      "docs/changes/2026-10-28-provider-browser-contract/spec.md"
+    ],
+    "featureIds": []
+  },
+  {
+    "id": "TASK-MOD-GATE-ADJACENT",
+    "title": "处理浏览器门禁剩余三项邻接失败",
+    "goal": "新增卡片和缩窄编辑区可操作，连接测试与目录拉取按有效契约校验",
+    "scope": "保留interaction-regressions三项原断言；先分清过时前置与真实缺陷",
+    "acceptance": [
+      "390新增编辑卡片完整落在可操作画布",
+      "缩窄编辑器可达且坐标和草稿保留",
+      "HTML/401/成功三阶段、鉴权及请求数有真实有效覆盖；测试/测速/目录契约冲突有来源结论"
+    ],
+    "dependencies": [],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "test/TASK-MOD-GATE-BROWSER",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "b8acad1c31eef37b1702c30a428bdff966525551",
+    "affectedModules": [
+      "tests/browser/interaction-regressions.spec.ts",
+      "src/components/canvas",
+      "src/components/settings"
+    ],
+    "status": "TODO",
+    "displayStatus": "未完成",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-28-provider-browser-contract/verification.md"
+    ],
+    "verification": "本批前后均复现3 fail：新增卡右边界383.785>382、缩窄可操作区predicate=false、HTML200连接状态success。原断言未改。",
+    "verificationResult": "FAIL",
+    "updated": "2026-10-28",
+    "lastVerified": "2026-10-28",
+    "nextAction": "分别诊断；UI修改先当前Figma，连接路径先读M3快速测速与独立目录契约，不删测试让门禁假绿。",
+    "requirementRefs": [
+      "docs/changes/2026-10-28-provider-browser-contract/intent.md",
+      "docs/changes/2026-10-28-provider-browser-contract/spec.md"
+    ],
+    "featureIds": []
+  },
+  {
+    "id": "TASK-MOD-P1",
+    "title": "定义能力声明与Task/Asset/Provider叶契约",
+    "goal": "新增纯类型与Zod声明，版本化抽象边界，不接宿主运行逻辑",
+    "scope": "packages/creation-contracts、契约测试及独立消费者验证；Mobile只同步file依赖元数据；原P1-G/其他Port继续分项追踪",
+    "acceptance": [
+      "合法/非法manifest、权限、版本、局部uses与兼容导出验证",
+      "TaskPort/AssetPort/ProviderPort只依赖既有叶类型，无DOM/Node/宿主src",
+      "契约包独立安装/类型检查与根快速门禁无新增失败；不冒充P0/P2/main完成"
+    ],
+    "dependencies": [
+      "TASK-MOD-P0"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "feat/TASK-MOD-P1-capability-contract",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "5240e7b3dd17e33a5ec749d2e62ec18ca3c53dbf",
+    "affectedModules": [
+      "packages/creation-contracts",
+      "tests/unit/capabilityContract.test.ts",
+      "tests/fixtures/capabilityPorts.ts",
+      "mobile/package-lock.json"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "未完成",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-28-capability-contract/verification.md",
+      "docs/changes/2026-10-28-capability-contract/review.md"
+    ],
+    "verification": "包1.1.0新增业务schema和Task/Asset/Provider类型，旧wire能力类型保留。13契约通过，根2338 pass/0 fail/20 skip、Mobile373 pass/0 fail；类型/lint/格式/build通过，160 Web产物hash相同。独立安装项目配置与无宿主全局运行通过；严格依赖声明4处Zod URL错误保留。未接运行、未独审/合流。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-28",
+    "lastVerified": "2026-10-28",
+    "nextAction": "处理TASK-MOD-P1-G独立治理子卡、TASK-MOD-P1-TYPES严格声明限制；P2接线前补真实Port adapter编译/图环/兼容选择对拍，独审/主线和P0未关闭。",
+    "requirementRefs": [
+      "docs/changes/2026-10-28-capability-contract/intent.md",
+      "docs/changes/2026-10-28-capability-contract/spec.md"
+    ],
+    "featureIds": []
+  },
+  {
+    "id": "TASK-MOD-P1-G",
+    "title": "将可选capabilityId接入功能治理与卡片对应",
+    "goal": "独立治理提交实现能力ID与功能卡/账本一致性，不启用运行注册表",
+    "scope": "features.registry.json可选字段、check-features及对应治理反例；ADR-028按投影方案补完",
+    "acceptance": [
+      "先建对应治理卡/任务后变更可选字段，不影响旧条目",
+      "能力ID与现有功能卡和任务引用相符，合法/非法治理反例齐备",
+      "独立提交并明确不接运行入口，投影不复制业务清单"
+    ],
+    "dependencies": [
+      "TASK-MOD-P1"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "unallocated",
+    "worktree": "unallocated",
+    "baseSha": "5240e7b3dd17e33a5ec749d2e62ec18ca3c53dbf",
+    "affectedModules": [
+      "docs/features/features.registry.json",
+      "scripts/check-features.mjs",
+      "tests/unit",
+      "docs/architecture/adr/ADR-028-capability-manifest-projections.md"
+    ],
+    "status": "TODO",
+    "displayStatus": "未完成",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-28-capability-contract/verification.md",
+      "docs/changes/2026-10-28-capability-contract/review.md"
+    ],
+    "verification": "本轮仅建立任务与ADR-028草案；字段和治理检查尚未实现。",
+    "verificationResult": "NOT_VERIFIED",
+    "updated": "2026-10-28",
+    "lastVerified": "2026-10-28",
+    "nextAction": "P1声明验证后单独执行此治理子卡，不因capability.ts/ports.ts完成关闭完整P1要求。",
+    "requirementRefs": [
+      "docs/changes/2026-10-28-capability-contract/intent.md",
+      "docs/changes/2026-10-28-capability-contract/spec.md"
+    ],
+    "featureIds": []
+  },
+  {
+    "id": "TASK-MOD-P1-TYPES",
+    "title": "处理Zod纯ES2022严格依赖声明的URL类型限制",
+    "goal": "不引入DOM或Node环境即可全检契约依赖声明；不把既有skipLibCheck配置当成严格检查通过",
+    "scope": "独立消费者strict probe、上游Zod声明或经评审的包分发方案；不全局加DOM、不补假URL类型、不静默修改依赖",
+    "acceptance": [
+      "skipLibCheck=false、lib=ES2022/types=[]消费者类型检查通过或有明确采用的替代分发契约",
+      "原schema运行和旧类型/函数保持，独立安装/无宿主运行回归通过",
+      "上游修改/依赖或分发变化有版本/许可/兼容依据，不伪称已修"
+    ],
+    "dependencies": [
+      "TASK-MOD-P1"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "unallocated",
+    "worktree": "unallocated",
+    "baseSha": "5240e7b3dd17e33a5ec749d2e62ec18ca3c53dbf",
+    "affectedModules": [
+      "packages/creation-contracts",
+      "tests/unit/capabilityContract.test.ts"
+    ],
+    "status": "TODO",
+    "displayStatus": "未完成",
+    "priority": "P2",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-28-capability-contract/verification.md",
+      "docs/changes/2026-10-28-capability-contract/review.md"
+    ],
+    "verification": "consumer-strict-final.log保留Zod4.6.7 schemas.d.cts四处TS2304 URL错误，strictExit=2；继承现行包配置exit0，运行探针无URL/process/window仍通过。未做上游/分发修复。",
+    "verificationResult": "FAIL",
+    "updated": "2026-10-28",
+    "lastVerified": "2026-10-28",
+    "nextAction": "按真实严格消费者需求评估上游修复或独立分发；保持失败可见，不扩大当前包配置的证明范围。",
+    "requirementRefs": [
+      "docs/changes/2026-10-28-capability-contract/intent.md",
+      "docs/changes/2026-10-28-capability-contract/spec.md"
+    ],
+    "featureIds": []
+  },
+  {
+    "id": "TASK-MOD-P2",
+    "title": "能力注册表与默认关闭的image.inpaint双路径试点",
+    "goal": "注册与分发复用原持久任务链，旧入口与算法不变，并以隔离fixture对拍",
+    "scope": "capabilities薄切片、creation派发适配、契约工具/版本、回归与证据；不搬迁算法/改UI或存储key",
+    "acceptance": [
+      "注册/解析/图环/版本/权限/禁用/明确回退正反例通过",
+      "默认关闭回旧路，开启只调用一次原任务链并保持保存/审批/取消边界",
+      "真实双构建对拍任务/资产/关系/HTTP/DOM与PNG；报告原基线失败，不假绿"
+    ],
+    "dependencies": [
+      "TASK-MOD-P1"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "feat/TASK-MOD-P2-capability-registry-inpaint",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "fe99fad9964d01315b859494500b60fa63bd05d6",
+    "affectedModules": [
+      "src/features/capabilities",
+      "src/features/creation/useImageCommandSubmission.ts",
+      "src/features/creation/inpaintCapabilityDispatch.ts",
+      "packages/creation-contracts",
+      "tests/unit",
+      "tests/browser/image-edit.spec.ts"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-28-inpaint-capability/verification.md",
+      "docs/changes/2026-10-28-inpaint-capability/review.md"
+    ],
+    "verification": "薄注册器/默认关闭接线已实现，根2350 pass/20原skip、Mobile373 pass及类型/增量lint/build通过；双构建任务/资产/HTTP/DOM同态，image-edit各14 pass/1原窄屏fail。严格PNG仍有1灰阶像素渲染不稳定（同路径可复现）；独审/原生/main未验。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-28",
+    "lastVerified": "2026-10-28",
+    "nextAction": "处理窄屏基线门禁与严格截图稳定性后完成验收；保留默认关闭。P0/ORG/main整合、独审与真实Provider/原生分别验证，不把本候选算整套完成。",
+    "requirementRefs": [
+      "docs/changes/2026-10-28-inpaint-capability/intent.md",
+      "docs/changes/2026-10-28-inpaint-capability/spec.md"
+    ],
+    "featureIds": [
+      "FEAT-035"
+    ]
+  },
+  {
+    "id": "TASK-MOD-P3A",
+    "title": "P3a 解除creation-image-edit循环",
+    "goal": "契约类型下沉，图片编辑资产Port注入与原调用能力派发保留",
+    "scope": "契约类型下沉，图片编辑资产Port注入与原调用能力派发保留",
+    "acceptance": [
+      "真实依赖集合减少、无新增循环或边界违规",
+      "旧数据/任务/审批/原件行为保持，受影响检查通过"
+    ],
+    "dependencies": [
+      "TASK-MOD-P2"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "refactor/TASK-MOD-P3-feature-cycles",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "6ac48d6ce9c2867e953fe56ebf2f05fd55e475bb",
+    "affectedModules": [
+      "src/features/creation"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-28-p3a-creation-image-edit/verification.md",
+      "docs/changes/2026-10-28-p3a-creation-image-edit/review.md"
+    ],
+    "verification": "P3a–e 源码候选：契约包1.3.0、Desktop/Web2.1.49、Mobile2.1.43。完整图R4由16降0，R1由405降367，其余规则无新增；212个迁移函数体AST一致、六份UI JSX结构一致，纯核心/infra/runtime无间接feature依赖。根2354通过/20跳过/0失败，Mobile373与Agent204通过（Agent另2跳过），根/契约/Mobile类型通过；Edge双构建各3/3通过，任务/资产/HTTP/DOM同态且4张PNG SHA完全一致。核心浏览器原9失败保留：8项在父P2错误和位置逐项一致，另1项为P2已有窄屏HUD失败。P2 flag仍默认关闭；独审、Tauri/真实Provider、完整verify和main整合未完成，五阶段分别PARTIAL。P3f、P4–8及STD/ORG等四文档其余任务继续开放。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-28",
+    "lastVerified": "2026-10-28",
+    "nextAction": "完成独审、原生/真实Provider与完整verify，解决既有浏览器门禁后整合main；P2默认关闭，旧入口保留正式发布周期。",
+    "requirementRefs": [
+      "docs/changes/2026-10-28-p3a-creation-image-edit/intent.md",
+      "docs/changes/2026-10-28-p3a-creation-image-edit/spec.md"
+    ],
+    "featureIds": [
+      "FEAT-035"
+    ]
+  },
+  {
+    "id": "TASK-MOD-P3B",
+    "title": "P3b 解除creation-agent循环",
+    "goal": "Agent回调经装配根注入，聊天与交付纯函数归位",
+    "scope": "Agent回调经装配根注入，聊天与交付纯函数归位",
+    "acceptance": [
+      "真实依赖集合减少、无新增循环或边界违规",
+      "旧数据/任务/审批/原件行为保持，受影响检查通过"
+    ],
+    "dependencies": [
+      "TASK-MOD-P3A"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "refactor/TASK-MOD-P3-feature-cycles",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "6ac48d6ce9c2867e953fe56ebf2f05fd55e475bb",
+    "affectedModules": [
+      "src/features/creation",
+      "src/features/agent"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-28-p3b-creation-agent/verification.md",
+      "docs/changes/2026-10-28-p3b-creation-agent/review.md"
+    ],
+    "verification": "P3a–e 源码候选：契约包1.3.0、Desktop/Web2.1.49、Mobile2.1.43。完整图R4由16降0，R1由405降367，其余规则无新增；212个迁移函数体AST一致、六份UI JSX结构一致，纯核心/infra/runtime无间接feature依赖。根2354通过/20跳过/0失败，Mobile373与Agent204通过（Agent另2跳过），根/契约/Mobile类型通过；Edge双构建各3/3通过，任务/资产/HTTP/DOM同态且4张PNG SHA完全一致。核心浏览器原9失败保留：8项在父P2错误和位置逐项一致，另1项为P2已有窄屏HUD失败。P2 flag仍默认关闭；独审、Tauri/真实Provider、完整verify和main整合未完成，五阶段分别PARTIAL。P3f、P4–8及STD/ORG等四文档其余任务继续开放。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-28",
+    "lastVerified": "2026-10-28",
+    "nextAction": "完成独审、原生/真实Provider与完整verify，解决既有浏览器门禁后整合main；P2默认关闭，旧入口保留正式发布周期。",
+    "requirementRefs": [
+      "docs/changes/2026-10-28-p3b-creation-agent/intent.md",
+      "docs/changes/2026-10-28-p3b-creation-agent/spec.md"
+    ],
+    "featureIds": [
+      "FEAT-030"
+    ]
+  },
+  {
+    "id": "TASK-MOD-P3C",
+    "title": "P3c 解除creation-local-service循环",
+    "goal": "快照纯编解码归领域层，local-service不反向引用creation；原I/O键和迁移策略保持",
+    "scope": "快照纯编解码归领域层，local-service不反向引用creation；原I/O键和迁移策略保持",
+    "acceptance": [
+      "真实依赖集合减少、无新增循环或边界违规",
+      "旧数据/任务/审批/原件行为保持，受影响检查通过"
+    ],
+    "dependencies": [
+      "TASK-MOD-P3B"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "refactor/TASK-MOD-P3-feature-cycles",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "6ac48d6ce9c2867e953fe56ebf2f05fd55e475bb",
+    "affectedModules": [
+      "src/features/creation"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-28-p3c-creation-local-service/verification.md",
+      "docs/changes/2026-10-28-p3c-creation-local-service/review.md"
+    ],
+    "verification": "P3a–e 源码候选：契约包1.3.0、Desktop/Web2.1.49、Mobile2.1.43。完整图R4由16降0，R1由405降367，其余规则无新增；212个迁移函数体AST一致、六份UI JSX结构一致，纯核心/infra/runtime无间接feature依赖。根2354通过/20跳过/0失败，Mobile373与Agent204通过（Agent另2跳过），根/契约/Mobile类型通过；Edge双构建各3/3通过，任务/资产/HTTP/DOM同态且4张PNG SHA完全一致。核心浏览器原9失败保留：8项在父P2错误和位置逐项一致，另1项为P2已有窄屏HUD失败。P2 flag仍默认关闭；独审、Tauri/真实Provider、完整verify和main整合未完成，五阶段分别PARTIAL。P3f、P4–8及STD/ORG等四文档其余任务继续开放。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-28",
+    "lastVerified": "2026-10-28",
+    "nextAction": "完成独审、原生/真实Provider与完整verify，解决既有浏览器门禁后整合main；P2默认关闭，旧入口保留正式发布周期。",
+    "requirementRefs": [
+      "docs/changes/2026-10-28-p3c-creation-local-service/intent.md",
+      "docs/changes/2026-10-28-p3c-creation-local-service/spec.md"
+    ],
+    "featureIds": [
+      "FEAT-037"
+    ]
+  },
+  {
+    "id": "TASK-MOD-P3D",
+    "title": "P3d 解除creation-models循环",
+    "goal": "Provider元数据/凭据/锁实现归integrations，旧creation导出兼容；消除长环上的纯文本协议边",
+    "scope": "Provider元数据/凭据/锁实现归integrations，旧creation导出兼容；消除长环上的纯文本协议边",
+    "acceptance": [
+      "真实依赖集合减少、无新增循环或边界违规",
+      "旧数据/任务/审批/原件行为保持，受影响检查通过"
+    ],
+    "dependencies": [
+      "TASK-MOD-P3C"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "refactor/TASK-MOD-P3-feature-cycles",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "6ac48d6ce9c2867e953fe56ebf2f05fd55e475bb",
+    "affectedModules": [
+      "src/features/creation",
+      "src/features/models"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-28-p3d-creation-models/verification.md",
+      "docs/changes/2026-10-28-p3d-creation-models/review.md"
+    ],
+    "verification": "P3a–e 源码候选：契约包1.3.0、Desktop/Web2.1.49、Mobile2.1.43。完整图R4由16降0，R1由405降367，其余规则无新增；212个迁移函数体AST一致、六份UI JSX结构一致，纯核心/infra/runtime无间接feature依赖。根2354通过/20跳过/0失败，Mobile373与Agent204通过（Agent另2跳过），根/契约/Mobile类型通过；Edge双构建各3/3通过，任务/资产/HTTP/DOM同态且4张PNG SHA完全一致。核心浏览器原9失败保留：8项在父P2错误和位置逐项一致，另1项为P2已有窄屏HUD失败。P2 flag仍默认关闭；独审、Tauri/真实Provider、完整verify和main整合未完成，五阶段分别PARTIAL。P3f、P4–8及STD/ORG等四文档其余任务继续开放。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-28",
+    "lastVerified": "2026-10-28",
+    "nextAction": "完成独审、原生/真实Provider与完整verify，解决既有浏览器门禁后整合main；P2默认关闭，旧入口保留正式发布周期。",
+    "requirementRefs": [
+      "docs/changes/2026-10-28-p3d-creation-models/intent.md",
+      "docs/changes/2026-10-28-p3d-creation-models/spec.md"
+    ],
+    "featureIds": [
+      "FEAT-038"
+    ]
+  },
+  {
+    "id": "TASK-MOD-P3E",
+    "title": "P3e 解除agent-memory-prompts循环",
+    "goal": "记忆提炼装配hook归Agent，回复与附件类型下沉，prompts仅依赖契约",
+    "scope": "记忆提炼装配hook归Agent，回复与附件类型下沉，prompts仅依赖契约",
+    "acceptance": [
+      "真实依赖集合减少、无新增循环或边界违规",
+      "旧数据/任务/审批/原件行为保持，受影响检查通过"
+    ],
+    "dependencies": [
+      "TASK-MOD-P3D"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "refactor/TASK-MOD-P3-feature-cycles",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "6ac48d6ce9c2867e953fe56ebf2f05fd55e475bb",
+    "affectedModules": [
+      "src/features/agent",
+      "src/features/memory",
+      "src/features/prompts"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-28-p3e-agent-memory-prompts/verification.md",
+      "docs/changes/2026-10-28-p3e-agent-memory-prompts/review.md"
+    ],
+    "verification": "P3a–e 源码候选：契约包1.3.0、Desktop/Web2.1.49、Mobile2.1.43。完整图R4由16降0，R1由405降367，其余规则无新增；212个迁移函数体AST一致、六份UI JSX结构一致，纯核心/infra/runtime无间接feature依赖。根2354通过/20跳过/0失败，Mobile373与Agent204通过（Agent另2跳过），根/契约/Mobile类型通过；Edge双构建各3/3通过，任务/资产/HTTP/DOM同态且4张PNG SHA完全一致。核心浏览器原9失败保留：8项在父P2错误和位置逐项一致，另1项为P2已有窄屏HUD失败。P2 flag仍默认关闭；独审、Tauri/真实Provider、完整verify和main整合未完成，五阶段分别PARTIAL。P3f、P4–8及STD/ORG等四文档其余任务继续开放。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-28",
+    "lastVerified": "2026-10-28",
+    "nextAction": "完成独审、原生/真实Provider与完整verify，解决既有浏览器门禁后整合main；P2默认关闭，旧入口保留正式发布周期。",
+    "requirementRefs": [
+      "docs/changes/2026-10-28-p3e-agent-memory-prompts/intent.md",
+      "docs/changes/2026-10-28-p3e-agent-memory-prompts/spec.md"
+    ],
+    "featureIds": [
+      "FEAT-020",
+      "FEAT-030"
+    ]
+  },
+  {
+    "id": "TASK-MOD-P3-COMPAT",
+    "title": "P3旧导出路径至少一个正式发布周期后退役",
+    "goal": "不提前移除纯模型、快照、Provider与画布命令的兼容导出",
+    "scope": "P3 facade引用迁移、版本/正式发布回执及N/N-1兼容，单独退役；不删除用户数据",
+    "acceptance": [
+      "首次包含P3的正式发布及至少一个发布周期有回执",
+      "全部调用方迁移并通过旧数据/原生/托管回归后单独移除"
+    ],
+    "dependencies": [
+      "TASK-MOD-P3A",
+      "TASK-MOD-P3B",
+      "TASK-MOD-P3C",
+      "TASK-MOD-P3D",
+      "TASK-MOD-P3E"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "unallocated",
+    "worktree": "unallocated",
+    "baseSha": "6ac48d6ce9c2867e953fe56ebf2f05fd55e475bb",
+    "affectedModules": [
+      "src/features/creation",
+      "src/features/agent/chatProjectUpdate.ts"
+    ],
+    "status": "TODO",
+    "displayStatus": "未完成",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-28-p3e-agent-memory-prompts/verification.md",
+      "docs/changes/2026-10-28-p3e-agent-memory-prompts/review.md"
+    ],
+    "verification": "P3候选新入口与兼容导出已登记，尚无首次正式发布回执，不允许到期删除。",
+    "verificationResult": "NOT_VERIFIED",
+    "updated": "2026-10-28",
+    "lastVerified": "2026-10-28",
+    "nextAction": "等待首次正式发布，记录最早可移除版本；继续保留旧路径同一实现。",
+    "requirementRefs": [
+      "docs/changes/2026-10-28-p3e-agent-memory-prompts/intent.md",
+      "docs/changes/2026-10-28-p3e-agent-memory-prompts/spec.md"
+    ],
+    "featureIds": []
+  },
+  {
+    "id": "TASK-MOD-P4-SKILLS",
+    "title": "skills公开入口",
+    "goal": "skills公开入口",
+    "scope": "只收敛跨切片导入与公开导出；不改算法、UI结构/CSS、存储身份；保持type-only、默认导出和动态入口的符号身份。",
+    "acceptance": [
+      "公开入口与权限边界符合本卡spec",
+      "不丢旧数据、不改变生成/审批/存储身份",
+      "相关门禁和运行回归有实际证据"
+    ],
+    "dependencies": [
+      "TASK-MOD-P3E"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "refactor/TASK-MOD-P3-feature-cycles",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "cf73c8425b359035e99da5f8a5db5b0db7697080",
+    "affectedModules": [
+      "src/features/skills"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-29-p4-skills/verification.md",
+      "docs/changes/2026-10-29-p4-skills/review.md"
+    ],
+    "verification": "P4源码收敛完成：367条唯一深层依赖边降0，285条属于指定五切片、其余82条亦清零；381条导入/再导出语句按顺序改写。R3由10降0，R4保持0，其余基线不新增。25个迁移纯函数AST一致，五份既有UI结构一致，最终CSS与P3完全同字节。根最终2363通过/0失败/20跳过（P4单独阶段2355通过），Mobile373与Agent204通过。限定浏览器、体积及退出码见最终回执；独审/原生/完整verify/main尚未完成，保持PARTIAL。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-29",
+    "lastVerified": "2026-10-29",
+    "nextAction": "解决已开放浏览器门禁，完成独审/原生与完整verify后按实际主线条件合流；原兼容出口保留一个发布周期。",
+    "requirementRefs": [
+      "docs/changes/2026-10-29-p4-skills/intent.md",
+      "docs/changes/2026-10-29-p4-skills/spec.md"
+    ],
+    "featureIds": [
+      "FEAT-011"
+    ]
+  },
+  {
+    "id": "TASK-MOD-P4-PLUGINS",
+    "title": "plugins公开入口",
+    "goal": "plugins公开入口",
+    "scope": "只收敛跨切片导入与公开导出；不改算法、UI结构/CSS、存储身份；保持type-only、默认导出和动态入口的符号身份。",
+    "acceptance": [
+      "公开入口与权限边界符合本卡spec",
+      "不丢旧数据、不改变生成/审批/存储身份",
+      "相关门禁和运行回归有实际证据"
+    ],
+    "dependencies": [
+      "TASK-MOD-P4-SKILLS"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "refactor/TASK-MOD-P3-feature-cycles",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "cf73c8425b359035e99da5f8a5db5b0db7697080",
+    "affectedModules": [
+      "src/features/plugins"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-29-p4-plugins/verification.md",
+      "docs/changes/2026-10-29-p4-plugins/review.md"
+    ],
+    "verification": "P4源码收敛完成：367条唯一深层依赖边降0，285条属于指定五切片、其余82条亦清零；381条导入/再导出语句按顺序改写。R3由10降0，R4保持0，其余基线不新增。25个迁移纯函数AST一致，五份既有UI结构一致，最终CSS与P3完全同字节。根最终2363通过/0失败/20跳过（P4单独阶段2355通过），Mobile373与Agent204通过。限定浏览器、体积及退出码见最终回执；独审/原生/完整verify/main尚未完成，保持PARTIAL。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-29",
+    "lastVerified": "2026-10-29",
+    "nextAction": "解决已开放浏览器门禁，完成独审/原生与完整verify后按实际主线条件合流；原兼容出口保留一个发布周期。",
+    "requirementRefs": [
+      "docs/changes/2026-10-29-p4-plugins/intent.md",
+      "docs/changes/2026-10-29-p4-plugins/spec.md"
+    ],
+    "featureIds": [
+      "FEAT-013"
+    ]
+  },
+  {
+    "id": "TASK-MOD-P4-MODELS",
+    "title": "models公开入口",
+    "goal": "models公开入口",
+    "scope": "只收敛跨切片导入与公开导出；不改算法、UI结构/CSS、存储身份；保持type-only、默认导出和动态入口的符号身份。",
+    "acceptance": [
+      "公开入口与权限边界符合本卡spec",
+      "不丢旧数据、不改变生成/审批/存储身份",
+      "相关门禁和运行回归有实际证据"
+    ],
+    "dependencies": [
+      "TASK-MOD-P4-PLUGINS"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "refactor/TASK-MOD-P3-feature-cycles",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "cf73c8425b359035e99da5f8a5db5b0db7697080",
+    "affectedModules": [
+      "src/features/models"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-29-p4-models/verification.md",
+      "docs/changes/2026-10-29-p4-models/review.md"
+    ],
+    "verification": "P4源码收敛完成：367条唯一深层依赖边降0，285条属于指定五切片、其余82条亦清零；381条导入/再导出语句按顺序改写。R3由10降0，R4保持0，其余基线不新增。25个迁移纯函数AST一致，五份既有UI结构一致，最终CSS与P3完全同字节。根最终2363通过/0失败/20跳过（P4单独阶段2355通过），Mobile373与Agent204通过。限定浏览器、体积及退出码见最终回执；独审/原生/完整verify/main尚未完成，保持PARTIAL。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-29",
+    "lastVerified": "2026-10-29",
+    "nextAction": "解决已开放浏览器门禁，完成独审/原生与完整verify后按实际主线条件合流；原兼容出口保留一个发布周期。",
+    "requirementRefs": [
+      "docs/changes/2026-10-29-p4-models/intent.md",
+      "docs/changes/2026-10-29-p4-models/spec.md"
+    ],
+    "featureIds": [
+      "FEAT-038"
+    ]
+  },
+  {
+    "id": "TASK-MOD-P4-AGENT",
+    "title": "agent公开入口",
+    "goal": "agent公开入口",
+    "scope": "只收敛跨切片导入与公开导出；不改算法、UI结构/CSS、存储身份；保持type-only、默认导出和动态入口的符号身份。",
+    "acceptance": [
+      "公开入口与权限边界符合本卡spec",
+      "不丢旧数据、不改变生成/审批/存储身份",
+      "相关门禁和运行回归有实际证据"
+    ],
+    "dependencies": [
+      "TASK-MOD-P4-MODELS"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "refactor/TASK-MOD-P3-feature-cycles",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "cf73c8425b359035e99da5f8a5db5b0db7697080",
+    "affectedModules": [
+      "src/features/agent"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-29-p4-agent/verification.md",
+      "docs/changes/2026-10-29-p4-agent/review.md"
+    ],
+    "verification": "P4源码收敛完成：367条唯一深层依赖边降0，285条属于指定五切片、其余82条亦清零；381条导入/再导出语句按顺序改写。R3由10降0，R4保持0，其余基线不新增。25个迁移纯函数AST一致，五份既有UI结构一致，最终CSS与P3完全同字节。根最终2363通过/0失败/20跳过（P4单独阶段2355通过），Mobile373与Agent204通过。限定浏览器、体积及退出码见最终回执；独审/原生/完整verify/main尚未完成，保持PARTIAL。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-29",
+    "lastVerified": "2026-10-29",
+    "nextAction": "解决已开放浏览器门禁，完成独审/原生与完整verify后按实际主线条件合流；原兼容出口保留一个发布周期。",
+    "requirementRefs": [
+      "docs/changes/2026-10-29-p4-agent/intent.md",
+      "docs/changes/2026-10-29-p4-agent/spec.md"
+    ],
+    "featureIds": [
+      "FEAT-030"
+    ]
+  },
+  {
+    "id": "TASK-MOD-P4-CREATION",
+    "title": "creation公开入口",
+    "goal": "creation公开入口",
+    "scope": "只收敛跨切片导入与公开导出；不改算法、UI结构/CSS、存储身份；保持type-only、默认导出和动态入口的符号身份。",
+    "acceptance": [
+      "公开入口与权限边界符合本卡spec",
+      "不丢旧数据、不改变生成/审批/存储身份",
+      "相关门禁和运行回归有实际证据"
+    ],
+    "dependencies": [
+      "TASK-MOD-P4-AGENT"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "refactor/TASK-MOD-P3-feature-cycles",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "cf73c8425b359035e99da5f8a5db5b0db7697080",
+    "affectedModules": [
+      "src/features/creation"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-29-p4-creation/verification.md",
+      "docs/changes/2026-10-29-p4-creation/review.md"
+    ],
+    "verification": "P4源码收敛完成：367条唯一深层依赖边降0，285条属于指定五切片、其余82条亦清零；381条导入/再导出语句按顺序改写。R3由10降0，R4保持0，其余基线不新增。25个迁移纯函数AST一致，五份既有UI结构一致，最终CSS与P3完全同字节。根最终2363通过/0失败/20跳过（P4单独阶段2355通过），Mobile373与Agent204通过。限定浏览器、体积及退出码见最终回执；独审/原生/完整verify/main尚未完成，保持PARTIAL。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-29",
+    "lastVerified": "2026-10-29",
+    "nextAction": "解决已开放浏览器门禁，完成独审/原生与完整verify后按实际主线条件合流；原兼容出口保留一个发布周期。",
+    "requirementRefs": [
+      "docs/changes/2026-10-29-p4-creation/intent.md",
+      "docs/changes/2026-10-29-p4-creation/spec.md"
+    ],
+    "featureIds": [
+      "FEAT-035"
+    ]
+  },
+  {
+    "id": "TASK-MOD-P4-REMAINING",
+    "title": "其余切片公开入口",
+    "goal": "其余切片公开入口",
+    "scope": "只收敛跨切片导入与公开导出；不改算法、UI结构/CSS、存储身份；保持type-only、默认导出和动态入口的符号身份。",
+    "acceptance": [
+      "公开入口与权限边界符合本卡spec",
+      "不丢旧数据、不改变生成/审批/存储身份",
+      "相关门禁和运行回归有实际证据"
+    ],
+    "dependencies": [
+      "TASK-MOD-P4-CREATION"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "refactor/TASK-MOD-P3-feature-cycles",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "cf73c8425b359035e99da5f8a5db5b0db7697080",
+    "affectedModules": [
+      "src/features/image-edit",
+      "src/features/comfyui",
+      "src/features/projects",
+      "src/features/compare",
+      "src/features/prompts",
+      "src/features/partners",
+      "src/features/sync",
+      "src/features/commands",
+      "src/features/browser",
+      "src/features/local-service",
+      "src/features/settings",
+      "src/features/mcp",
+      "src/features/memory",
+      "src/features/usage",
+      "src/features/ai-gateway"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-29-p4-remaining/verification.md",
+      "docs/changes/2026-10-29-p4-remaining/review.md"
+    ],
+    "verification": "P4源码收敛完成：367条唯一深层依赖边降0，285条属于指定五切片、其余82条亦清零；381条导入/再导出语句按顺序改写。R3由10降0，R4保持0，其余基线不新增。25个迁移纯函数AST一致，五份既有UI结构一致，最终CSS与P3完全同字节。根最终2363通过/0失败/20跳过（P4单独阶段2355通过），Mobile373与Agent204通过。限定浏览器、体积及退出码见最终回执；独审/原生/完整verify/main尚未完成，保持PARTIAL。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-29",
+    "lastVerified": "2026-10-29",
+    "nextAction": "解决已开放浏览器门禁，完成独审/原生与完整verify后按实际主线条件合流；原兼容出口保留一个发布周期。",
+    "requirementRefs": [
+      "docs/changes/2026-10-29-p4-remaining/intent.md",
+      "docs/changes/2026-10-29-p4-remaining/spec.md"
+    ],
+    "featureIds": [
+      "FEAT-035",
+      "FEAT-030"
+    ]
+  },
+  {
+    "id": "TASK-MOD-P5",
+    "title": "插件清单、权限与分级隔离",
+    "goal": "插件清单、权限与分级隔离",
+    "scope": "沿OPT-401同一kk-plugin.json设计，加入PermissionPort、默认拒绝的受限RPC和分级运行时；OPEN-3采用补篇A的legacy兼容，旧插件原样加载并明确其仍在宿主realm。新UI授权提示等待Figma设计，当前仅后端与诊断日志，不自动给第三方新增权限。",
+    "acceptance": [
+      "公开入口与权限边界符合本卡spec",
+      "不丢旧数据、不改变生成/审批/存储身份",
+      "相关门禁和运行回归有实际证据"
+    ],
+    "dependencies": [
+      "TASK-MOD-P4-REMAINING"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "refactor/TASK-MOD-P3-feature-cycles",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "cf73c8425b359035e99da5f8a5db5b0db7697080",
+    "affectedModules": [
+      "src/features/plugins"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-29-p5-plugin-permissions/verification.md",
+      "docs/changes/2026-10-29-p5-plugin-permissions/review.md"
+    ],
+    "verification": "P5部分完成：契约包1.4.0新增清单/JSON Schema/RPC与PermissionPort；包目录、版本/平台、逐文件SHA、权限交集、身份、消息上限/超时/重放/撤销和更新失败保护已接线。真实Edge实验T1与安装器→React→当前Context链通过；生产新包执行门默认关闭，legacy保持宿主兼容。Desktop IPC、WebRTC/其他逃逸面、独立安全审查、授权Figma/UI、T0/T2/T3与其他贡献未完成，不能称为生产插件沙箱。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-29",
+    "lastVerified": "2026-10-29",
+    "nextAction": "P5生产门保持关闭；补原生/跨浏览器/更多逃逸面/独审与Figma授权，再推进T0/T2/T3和其他贡献。",
+    "requirementRefs": [
+      "docs/changes/2026-10-29-p5-plugin-permissions/intent.md",
+      "docs/changes/2026-10-29-p5-plugin-permissions/spec.md"
+    ],
+    "featureIds": [
+      "FEAT-013"
+    ]
+  },
+  {
+    "id": "TASK-MOD-P6-HOST",
+    "title": "图片能力任务接线",
+    "goal": "图片能力任务接线",
+    "scope": "独立Manifest与执行器通过现有CapabilityRegistry/TaskPort；显式ComfyUI工作流/原件绑定，不猜API端点、不新增任务队列/素材仓库；API适配接口保留，未配置不可用。",
+    "acceptance": [
+      "独立契约/执行与版本回退",
+      "原件与既有任务/持久化身份保持",
+      "本卡限定回归及快速三门禁有实际证据"
+    ],
+    "dependencies": [
+      "TASK-MOD-P4-CREATION"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "refactor/TASK-MOD-P3-feature-cycles",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "972adc011e040b6db76284de1daea42d8b2167cb",
+    "affectedModules": [
+      "src/features/capabilities",
+      "src/features/creation"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-29-p6-image-host/verification.md",
+      "docs/changes/2026-10-29-p6-image-host/review.md"
+    ],
+    "verification": "本地候选根2372 pass/20 skip、类型通过；Edge17项、Rust资产18、Mobile373、Agent204通过；本卡仍PARTIAL，真实服务/Native/独审/main待验。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-29",
+    "lastVerified": "2026-10-29",
+    "nextAction": "接入并验收Desktop原生TaskHost及真实工作流/Provider；保持四原文与其他P/STD/ORG开放任务，不把fixture作为REAL。",
+    "requirementRefs": [
+      "docs/changes/2026-10-29-p6-image-host/intent.md",
+      "docs/changes/2026-10-29-p6-image-host/spec.md"
+    ],
+    "featureIds": [
+      "FEAT-035"
+    ]
+  },
+  {
+    "id": "TASK-MOD-P6-OUTPAINT",
+    "title": "扩图",
+    "goal": "扩图",
+    "scope": "独立Manifest与执行器通过现有CapabilityRegistry/TaskPort；显式ComfyUI工作流/原件绑定，不猜API端点、不新增任务队列/素材仓库；API适配接口保留，未配置不可用。",
+    "acceptance": [
+      "独立契约/执行与版本回退",
+      "原件与既有任务/持久化身份保持",
+      "本卡限定回归及快速三门禁有实际证据"
+    ],
+    "dependencies": [
+      "TASK-MOD-P6-HOST"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "refactor/TASK-MOD-P3-feature-cycles",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "972adc011e040b6db76284de1daea42d8b2167cb",
+    "affectedModules": [
+      "src/features/capabilities",
+      "src/features/creation"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-29-p6-outpaint/verification.md",
+      "docs/changes/2026-10-29-p6-outpaint/review.md"
+    ],
+    "verification": "本地候选根2372 pass/20 skip、类型通过；Edge17项、Rust资产18、Mobile373、Agent204通过；本卡仍PARTIAL，真实服务/Native/独审/main待验。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-29",
+    "lastVerified": "2026-10-29",
+    "nextAction": "接入并验收Desktop原生TaskHost及真实工作流/Provider；保持四原文与其他P/STD/ORG开放任务，不把fixture作为REAL。",
+    "requirementRefs": [
+      "docs/changes/2026-10-29-p6-outpaint/intent.md",
+      "docs/changes/2026-10-29-p6-outpaint/spec.md"
+    ],
+    "featureIds": [
+      "FEAT-040"
+    ]
+  },
+  {
+    "id": "TASK-MOD-P6-UPSCALE",
+    "title": "高清修复",
+    "goal": "高清修复",
+    "scope": "独立Manifest与执行器通过现有CapabilityRegistry/TaskPort；显式ComfyUI工作流/原件绑定，不猜API端点、不新增任务队列/素材仓库；API适配接口保留，未配置不可用。",
+    "acceptance": [
+      "独立契约/执行与版本回退",
+      "原件与既有任务/持久化身份保持",
+      "本卡限定回归及快速三门禁有实际证据"
+    ],
+    "dependencies": [
+      "TASK-MOD-P6-OUTPAINT"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "refactor/TASK-MOD-P3-feature-cycles",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "972adc011e040b6db76284de1daea42d8b2167cb",
+    "affectedModules": [
+      "src/features/capabilities",
+      "src/features/creation"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-29-p6-upscale/verification.md",
+      "docs/changes/2026-10-29-p6-upscale/review.md"
+    ],
+    "verification": "本地候选根2372 pass/20 skip、类型通过；Edge17项、Rust资产18、Mobile373、Agent204通过；本卡仍PARTIAL，真实服务/Native/独审/main待验。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-29",
+    "lastVerified": "2026-10-29",
+    "nextAction": "接入并验收Desktop原生TaskHost及真实工作流/Provider；保持四原文与其他P/STD/ORG开放任务，不把fixture作为REAL。",
+    "requirementRefs": [
+      "docs/changes/2026-10-29-p6-upscale/intent.md",
+      "docs/changes/2026-10-29-p6-upscale/spec.md"
+    ],
+    "featureIds": [
+      "FEAT-041"
+    ]
+  },
+  {
+    "id": "TASK-MOD-P6-LAYER-SPLIT",
+    "title": "图层拆分",
+    "goal": "图层拆分",
+    "scope": "独立Manifest与执行器通过现有CapabilityRegistry/TaskPort；显式ComfyUI工作流/原件绑定，不猜API端点、不新增任务队列/素材仓库；API适配接口保留，未配置不可用。",
+    "acceptance": [
+      "独立契约/执行与版本回退",
+      "原件与既有任务/持久化身份保持",
+      "本卡限定回归及快速三门禁有实际证据"
+    ],
+    "dependencies": [
+      "TASK-MOD-P6-UPSCALE"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "refactor/TASK-MOD-P3-feature-cycles",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "972adc011e040b6db76284de1daea42d8b2167cb",
+    "affectedModules": [
+      "src/features/capabilities",
+      "src/features/creation"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-29-p6-layer-split/verification.md",
+      "docs/changes/2026-10-29-p6-layer-split/review.md"
+    ],
+    "verification": "本地候选根2372 pass/20 skip、类型通过；Edge17项、Rust资产18、Mobile373、Agent204通过；本卡仍PARTIAL，真实服务/Native/独审/main待验。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-29",
+    "lastVerified": "2026-10-29",
+    "nextAction": "接入并验收Desktop原生TaskHost及真实工作流/Provider；保持四原文与其他P/STD/ORG开放任务，不把fixture作为REAL。",
+    "requirementRefs": [
+      "docs/changes/2026-10-29-p6-layer-split/intent.md",
+      "docs/changes/2026-10-29-p6-layer-split/spec.md"
+    ],
+    "featureIds": [
+      "FEAT-042"
+    ]
+  },
+  {
+    "id": "TASK-MOD-P7",
+    "title": "资产溯源对齐",
+    "goal": "资产溯源对齐",
+    "scope": "统一PromptHash/ParentId/Origins的写入和去重；旧字段可选，读时不回写，不改变资产字节ID/原件与快照格式。",
+    "acceptance": [
+      "独立契约/执行与版本回退",
+      "原件与既有任务/持久化身份保持",
+      "本卡限定回归及快速三门禁有实际证据"
+    ],
+    "dependencies": [
+      "TASK-MOD-P6-LAYER-SPLIT"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "refactor/TASK-MOD-P3-feature-cycles",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "972adc011e040b6db76284de1daea42d8b2167cb",
+    "affectedModules": [
+      "src/features/creation",
+      "src/features/local-service",
+      "src-tauri"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-29-p7-asset-lineage/verification.md",
+      "docs/changes/2026-10-29-p7-asset-lineage/review.md"
+    ],
+    "verification": "本地候选根2372 pass/20 skip、类型通过；Edge17项、Rust资产18、Mobile373、Agent204通过；本卡仍PARTIAL，真实服务/Native/独审/main待验。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-29",
+    "lastVerified": "2026-10-29",
+    "nextAction": "完成原生GUI跨端溯源验收、独审和main合流；旧记录不回写。",
+    "requirementRefs": [
+      "docs/changes/2026-10-29-p7-asset-lineage/intent.md",
+      "docs/changes/2026-10-29-p7-asset-lineage/spec.md"
+    ],
+    "featureIds": [
+      "FEAT-014"
+    ]
+  },
+  {
+    "id": "TASK-MOD-P6-1",
+    "title": "ComfyUI本地托管与画布双态工作流卡片",
+    "goal": "按P6.1归档原生工作流产物并自动落图连线",
+    "scope": "原生隐藏进程与既有画布/资产Port接线",
+    "acceptance": [
+      "目录扫描、隐藏启动、健康与仅回收自有进程",
+      "双态卡片、原生编辑器进入/返回与离线引导",
+      "WS/历史归属校验、AssetPort原件归档、持久化图片节点与结果连线",
+      "真实ComfyUI/GPU及最终运行、审核和合流分别验收"
+    ],
+    "dependencies": [
+      "TASK-MOD-P6-HOST"
+    ],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "refactor/TASK-MOD-P3-feature-cycles",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "baseSha": "6648e434f1a2b3d041b6a767f74831eacf9e7773",
+    "affectedModules": [
+      "src-tauri",
+      "src/features/comfyui",
+      "src/components/canvas"
+    ],
+    "status": "PARTIAL",
+    "displayStatus": "未完成",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-10-29-p6-1-comfy-canvas/verification.md"
+    ],
+    "verification": "类型/lint/UI规范/格式/官方构建通过；根2378 pass/20 skip，Rust271 pass/1 ignored，Edge18 pass/0retry。中间Native夹具双client/原件SHA/重开/停止通过，最终Native与真实GPU/独审/main未验。 2026-10-30追加：2.1.59/d6d592e4真实H3 host/editor视频及首帧AssetPort/结果边/保存重开通过，见本轮main-physical-org6验证；不覆盖图片checkpoint/Hub根自动启动/已安装客户端。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-29",
+    "lastVerified": "2026-10-29",
+    "nextAction": "完成浏览器/命令行回归；真实GPU、完整编辑器鼠标/参数面板及独审/main仍开放，用户已要求不控制桌面",
+    "requirementRefs": [
+      "docs/changes/2026-10-29-p6-1-comfy-canvas/spec.md"
+    ],
+    "featureIds": [
+      "FEAT-004",
+      "FEAT-005"
+    ]
+  },
+  {
+    "id": "TASK-MOD-GATE-BOOTSTRAP",
+    "title": "主线原生首建架构与目录基线",
+    "goal": "合法完成origin/main无产品源码变更bootstrap，为P3整批正常PR合流建立基础",
+    "scope": "既有架构/布局检查器规则和回归、开发依赖、真实origin基线、治理入口、五件套与台账",
+    "acceptance": [
+      "src/packages/vendor/canvas-plugins和三端版本与origin/main不变",
+      "两份baseline指向真实origin base并与实际扫描一致，原棘轮不放宽",
+      "快速门/完整verify/当前SHA独审/Hosted/Delivery成功后正常PR squash"
+    ],
+    "dependencies": [],
+    "owner": "root",
+    "ownerRole": "implementer",
+    "branch": "refactor/TASK-MOD-P0-architecture-baseline",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "affectedModules": [
+      "config",
+      "scripts/governance",
+      "scripts/check-governance.mjs",
+      "tests/unit/architectureRules.test.ts",
+      "tests/unit/repoLayoutRules.test.ts",
+      "package.json",
+      "package-lock.json",
+      "docs/governance",
+      "docs/changes/2026-10-30-origin-baseline-bootstrap"
+    ],
+    "status": "REVIEW",
+    "displayStatus": "进行中",
+    "priority": "P0",
+    "priorityRationale": "工具栏定位与当前用户v3数据兼容阻断统一发布",
+    "evidence": [
+      "docs/changes/2026-10-30-origin-baseline-bootstrap/verification.md"
+    ],
+    "verification": "本地完整verify退出0：根1975pass20skip、Agent204pass2skip、Edge生产838pass0skip0flaky、design8及开发四步骤通过；产品/版本与origin4610不变，两份baseline精确实扫。浏览器metadata4610对应dirty治理候选，开发metadata75775f3c，原报告不重写，474附件外置SHA通过。正式独审/Delivery/当前SHA Hosted/合流待完成。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-30",
+    "lastVerified": "2026-10-30",
+    "nextAction": "固定提交独立只读评审、Delivery与Hosted门禁后正常PR squash；回到P3解决组合冲突和整体门禁",
+    "requirementRefs": [
+      "user:主线合流",
+      "AGENTS.md",
+      "docs/engineering/BRANCH-POLICY.md"
+    ],
+    "featureIds": [],
+    "specRefs": [
+      "docs/changes/2026-10-18-unified-toolbar-release/spec.md",
+      "docs/changes/2026-10-18-chat-draft-paint-sync/spec.md",
+      "docs/changes/2026-10-19-installer-clean-build/spec.md",
+      "docs/changes/2026-10-19-installer-lifecycle-order/spec.md",
+      "docs/changes/2026-10-19-release-asset-name/spec.md"
+    ],
+    "currentPackage": "docs/changes/2026-10-19-release-asset-name",
+    "blocker": ""
   }
 ]

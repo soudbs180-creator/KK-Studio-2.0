@@ -5,7 +5,7 @@ import {
   type MutableRefObject,
 } from "react";
 import { flushSync } from "react-dom";
-import type { AgentCanvasView } from "../../features/agent/agentCanvasView";
+import type { AgentCanvasView } from "../../features/agent/index.ts";
 import type { useCanvasControls } from "./useCanvasControls";
 
 export type AgentCanvasBinding = { projectId: string; view: AgentCanvasView };

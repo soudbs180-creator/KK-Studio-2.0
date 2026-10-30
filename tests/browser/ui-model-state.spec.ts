@@ -226,9 +226,7 @@ test("API后台任务保留提交型号，新草稿与选型可编辑", async ({
     await openWorkspace(page);
     await page.getByRole("button", { name: "打开设置", exact: true }).click();
     await page.getByRole("button", { name: "模型接入", exact: true }).click();
-    await page
-      .getByRole("button", { name: "API Key（官方）", exact: true })
-      .click();
+    await page.getByRole("tab", { name: "官方直连 API", exact: true }).click();
     await page.getByLabel("提供商", { exact: true }).fill("State Variants");
     await page.getByLabel("接口地址").fill("https://state-variants.example/v1");
     await page.getByLabel("API Key", { exact: true }).fill("fixture-state-key");

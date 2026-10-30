@@ -1,4 +1,4 @@
-import type { AgentUsageWindow } from "../features/agent/agentUsage";
+import type { AgentUsageWindow } from "../features/agent/index.ts";
 export default function AgentUsageStatus({
   windows,
   error,

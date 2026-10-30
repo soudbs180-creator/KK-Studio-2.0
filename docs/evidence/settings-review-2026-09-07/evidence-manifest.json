@@ -1,0 +1,88 @@
+{
+  "version": 1,
+  "taskId": "TASK-ORG-6",
+  "classification": "E2-externalized-historical-evidence",
+  "packagePath": "docs/evidence/settings-review-2026-09-07",
+  "entries": [
+    {
+      "sourcePath": "docs/evidence/settings-review-2026-09-07/after-dark.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "647f46f4abe116067f4c4f14e4d2680012248e46",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/settings-review-2026-09-07/after-dark.png",
+      "bytes": 43282,
+      "sha256": "d84e8837eb271dd1f4bdb182fb147ff0d857cd22b8d4598498e57dfbfc772dbd",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/settings-review-2026-09-07/before-dark.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "7410cd4ba851e4eb98beb325f2289e9a377a27f5",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/settings-review-2026-09-07/before-dark.png",
+      "bytes": 43201,
+      "sha256": "f0a1ca67c4e36e72253d889c0cb7a5fbb5716de2c7ab6bc852d202ce3a145c0c",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/settings-review-2026-09-07/before-light.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "69aff11d0df9067ec5036ade14bdada8195c823b",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/settings-review-2026-09-07/before-light.png",
+      "bytes": 42516,
+      "sha256": "d70663b05911f32496b86991deccf705effdaf1c44abf9acc6db812532b45468",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/settings-review-2026-09-07/settings-1440.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "6714dd801772cbcaf9cc97fc15dab74997f1091c",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/settings-review-2026-09-07/settings-1440.png",
+      "bytes": 43289,
+      "sha256": "b625cee8acc271a69bdc616105db034cc6aa07c5e77ce20e463b1cd6572d16eb",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/settings-review-2026-09-07/settings-1920.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "647f46f4abe116067f4c4f14e4d2680012248e46",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/settings-review-2026-09-07/settings-1920.png",
+      "bytes": 43282,
+      "sha256": "d84e8837eb271dd1f4bdb182fb147ff0d857cd22b8d4598498e57dfbfc772dbd",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/settings-review-2026-09-07/settings-390.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "b4636ce31d5e19c26c752ff202fca13df0c660a8",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/settings-review-2026-09-07/settings-390.png",
+      "bytes": 25398,
+      "sha256": "3440dd29ebf347239bd65853cb510fe50529b79f27a8119791c5dba264c87fd0",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/settings-review-2026-09-07/settings-768.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "a2f0527ccf569b24ee73f1c16cb2ff3f176c4671",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/settings-review-2026-09-07/settings-768.png",
+      "bytes": 30520,
+      "sha256": "00e90b571ea6256bf91bf883aad6c476c61626573bab7d744619eddecd4e2441",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    }
+  ],
+  "scope": "Historical E2 files externalized by validated batches; E1 summaries, JSON, key screenshots and active inputs retained.",
+  "containerResolution": "Resolve containerRelativePath from the workspace container containing the canonical checkout and output.",
+  "recovery": "Verify with scripts/governance/check-evidence-manifest.mjs <manifest> <container>; restore only to a new empty directory. Original Git sourceCommit/sourcePath remains recoverable.",
+  "batches": [
+    {
+      "taskId": "TASK-ORG-6",
+      "date": "2026-10-30",
+      "candidateBase": "be730617ace5013295b85a22133259b32ad6ffec"
+    }
+  ]
+}

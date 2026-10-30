@@ -1,0 +1,98 @@
+.comfy-workflow-node {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 268px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--kk-space-4);
+  padding: var(--kk-space-5);
+  border: 1px solid var(--kk-border-default);
+  border-radius: var(--kk-radius-panel);
+  background: var(--kk-bg-card);
+  color: var(--kk-text-primary);
+  font-family: var(--kk-font-sans);
+}
+.comfy-workflow-node strong {
+  font-size: var(--kk-font-body);
+  line-height: 24px;
+  font-weight: var(--kk-font-weight-subtitle);
+}
+.comfy-workflow-node p {
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--kk-text-secondary);
+  font-size: var(--kk-font-caption);
+  line-height: 16px;
+}
+.comfy-workflow-picker {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: var(--kk-font-caption);
+  color: var(--kk-text-secondary);
+}
+.comfy-workflow-picker select {
+  min-width: 0;
+  flex: 1;
+  min-height: 44px;
+  background: var(--kk-bg-card);
+  color: inherit;
+  border: 0;
+  font: inherit;
+  text-overflow: ellipsis;
+}
+.comfy-workflow-actions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: var(--kk-space-2);
+}
+.comfy-workflow-actions .kk-button,
+.comfy-workflow-editor .kk-button {
+  min-height: 44px;
+  padding-inline: var(--kk-space-4);
+  border-radius: var(--kk-radius-full);
+  font-size: var(--kk-font-body);
+  line-height: 24px;
+}
+.comfy-workflow-editor {
+  box-sizing: border-box;
+  position: fixed;
+  inset: 0;
+  margin: 0;
+  max-width: none;
+  max-height: none;
+  width: 100%;
+  height: 100%;
+  padding: var(--kk-space-4);
+  border: 0;
+  background: var(--kk-bg-card);
+  color: var(--kk-text-primary);
+}
+.comfy-workflow-editor[open] {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kk-space-2);
+}
+.comfy-workflow-editor header {
+  flex: none;
+}
+.comfy-workflow-editor iframe {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  border: 0;
+}
+
+.comfy-workflow-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kk-space-4);
+}
+.comfy-workflow-meta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kk-space-2);
+}

@@ -1,4 +1,4 @@
-import type { CreationDraft } from "../features/creation/model";
+import type { CreationDraft } from "../features/creation/index.ts";
 
 export function StartModePicker({
   draft,

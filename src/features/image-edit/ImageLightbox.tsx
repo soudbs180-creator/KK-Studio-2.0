@@ -1,10 +1,10 @@
 import { useContext, useState } from "react";
-import type { CanvasCollectionItem } from "../../domain/canvasItems.ts";
 import Modal from "../../components/Modal.tsx";
+import type { CanvasCollectionItem } from "../../domain/canvasItems.ts";
 import {
   CanvasImageCommandContext,
   CanvasImageNodeContext,
-} from "../creation/CanvasImageCommand.tsx";
+} from "../../runtime/canvasCommandRuntime.tsx";
 import ImageEditor from "./ImageEditor.tsx";
 import ImageLightboxStage from "./ImageLightboxStage.tsx";
 
@@ -52,12 +52,21 @@ export default function ImageLightbox({
     }
   }
   const references = new Set(current.imageEditContext?.referenceAssetIds ?? []),
-    related = items.filter(
+    allRelated = items.filter(
       (item) =>
         item.kind === "image" &&
         item.assetId &&
         (relatedIds.has(item.id) || references.has(item.assetId)),
     );
+  const currentRelatedIndex = Math.max(
+    0,
+    allRelated.findIndex((item) => item.id === current.id),
+  );
+  const relatedStart = Math.max(
+    0,
+    Math.min(currentRelatedIndex - 2, allRelated.length - 6),
+  );
+  const related = allRelated.slice(relatedStart, relatedStart + 6);
   const height = useAvailableImageHeight();
   function select(next: string) {
     setId(next);
@@ -101,35 +110,37 @@ export default function ImageLightbox({
                   关闭
                 </button>
               </header>
-              <ImageLightboxStage
-                key={current.assetId}
-                source={current}
-                onDimensions={setDimensions}
-                onSwitch={(delta) => {
-                  const index = related.findIndex(
-                      (item) => item.id === current.id,
-                    ),
-                    next = related[index + delta];
-                  if (next) select(next.id);
-                }}
-              />
-              {related.length > 1 && (
-                <nav className="image-lightbox-strip" aria-label="相关图片">
-                  {related.map((item) => (
-                    <button
-                      key={item.id}
-                      aria-label={`查看${item.title}`}
-                      aria-current={item.id === current.id}
-                      onClick={() => select(item.id)}
-                    >
-                      <img
-                        src={item.preview ?? item.result?.src}
-                        alt={item.title}
-                      />
-                    </button>
-                  ))}
-                </nav>
-              )}
+              <div className="image-lightbox-body">
+                {related.length > 1 && (
+                  <nav className="image-lightbox-strip" aria-label="相关图片">
+                    {related.map((item) => (
+                      <button
+                        key={item.id}
+                        aria-label={`查看${item.title}`}
+                        aria-current={item.id === current.id}
+                        onClick={() => select(item.id)}
+                      >
+                        <img
+                          src={item.preview ?? item.result?.src}
+                          alt={item.title}
+                        />
+                      </button>
+                    ))}
+                  </nav>
+                )}
+                <ImageLightboxStage
+                  key={current.assetId}
+                  source={current}
+                  onDimensions={setDimensions}
+                  onSwitch={(delta) => {
+                    const index = related.findIndex(
+                        (item) => item.id === current.id,
+                      ),
+                      next = related[index + delta];
+                    if (next) select(next.id);
+                  }}
+                />
+              </div>
               <footer>
                 <div className="image-lightbox-info">
                   {current.model ?? "本地原件"} · {current.description}

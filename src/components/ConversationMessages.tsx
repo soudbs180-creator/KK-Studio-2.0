@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import BrandLogo from "./BrandLogo";
 import UiIcon from "./UiIcon";
 import ChatImageCard from "./chat/ChatImageCard.tsx";
@@ -22,6 +23,15 @@ export default function ConversationMessages({
   onPreviewImage?: (src: string, prompt?: string) => void;
   onSetReference?: (src: string) => void;
 }) {
+  const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null);
+  const copyTimer = useRef<number | undefined>(undefined);
+  useEffect(
+    () => () => {
+      if (copyTimer.current !== undefined)
+        window.clearTimeout(copyTimer.current);
+    },
+    [],
+  );
   if (!messages.length)
     return (
       <div className="conversation-empty">
@@ -64,17 +74,40 @@ export default function ConversationMessages({
         ) : null}
         <div className="message-actions">
           <button
-            aria-label="复制消息"
+            className={
+              copiedMessageId === message.id
+                ? "message-copy is-confirmed"
+                : "message-copy"
+            }
+            aria-label={
+              copiedMessageId === message.id ? "已复制消息" : "复制消息"
+            }
+            aria-live="polite"
             onClick={() => {
               void navigator.clipboard
                 .writeText(cleanContent || message.content)
                 .then(
-                  () => onStatus("已复制消息"),
+                  () => {
+                    setCopiedMessageId(message.id);
+                    onStatus("已复制消息");
+                    if (copyTimer.current !== undefined)
+                      window.clearTimeout(copyTimer.current);
+                    copyTimer.current = window.setTimeout(
+                      () =>
+                        setCopiedMessageId((current) =>
+                          current === message.id ? null : current,
+                        ),
+                      2500 + 150,
+                    );
+                  },
                   () => onStatus("复制失败，请手动选择文本复制。"),
                 );
             }}
           >
-            <UiIcon name="copy" size={14} />
+            <UiIcon
+              name={copiedMessageId === message.id ? "check" : "copy"}
+              size={12}
+            />
           </button>
           <button
             aria-label="删除消息"
@@ -82,7 +115,7 @@ export default function ConversationMessages({
             disabled={!onDelete}
             title={onDelete ? undefined : "本地对话消息由当前面板管理"}
           >
-            <UiIcon name="delete" size={14} />
+            <UiIcon name="delete" size={12} />
           </button>
         </div>
       </div>

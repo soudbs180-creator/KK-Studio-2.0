@@ -123,9 +123,7 @@ async function openApi(page: Page) {
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   await page.getByRole("button", { name: "模型接入", exact: true }).click();
-  await page
-    .getByRole("button", { name: "API Key（官方）", exact: true })
-    .click();
+  await page.getByRole("tab", { name: "官方直连 API", exact: true }).click();
   return page.getByRole("region", { name: "官方 API Key 配置" });
 }
 

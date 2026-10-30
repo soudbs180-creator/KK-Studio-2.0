@@ -25,7 +25,12 @@ See [before-geometry.json](before-geometry.json) for machine-readable rectangles
 
 ## Captures
 
-- [before-1920x1080-fresh.png](before-1920x1080-fresh.png)
-- [before-1115x698-fresh.png](before-1115x698-fresh.png)
-- [before-collapsed-closed-1920.png](before-collapsed-closed-1920.png)
+- [before-1920x1080-fresh.png](evidence-manifest.json)
+- [before-1115x698-fresh.png](evidence-manifest.json)
+- [before-collapsed-closed-1920.png](evidence-manifest.json)
 - [before-geometry.json](before-geometry.json)
+
+
+## 2026-10-30 历史原始证据外置说明
+
+本次ORG-6将历史E2截图/原始日志/录屏外置到容器output；原引用现指向[strict-figma-2026-09-09 manifest](evidence-manifest.json)。原始sourcePath、commit/blob、sha256、大小与原链接目的地逐项可查；原图片嵌入改为同文字的清单链接。原结论、失败、时间和数字未重写，不代表当前功能重新验收或main已合流。E1摘要、JSON、关键图及活跃运行资料仍留仓；恢复仅写新空目录并复核字节。

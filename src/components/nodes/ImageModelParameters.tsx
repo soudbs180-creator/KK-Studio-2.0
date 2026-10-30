@@ -2,11 +2,11 @@ import { useContext } from "react";
 import {
   CanvasImageNodeContext,
   CanvasImageCommandContext,
-} from "../../features/creation/CanvasImageCommand";
+} from "../../features/creation/index.ts";
 import ModelVariantControl from "../ModelVariantControl";
 import type { ModelSelection } from "../../domain/modelSelection";
-import { useImageModelCapabilities } from "../../features/models/useImageModelCapabilities";
-import { imageSizeOptions } from "../../features/models/modelCatalog";
+import { useImageModelCapabilities } from "../../features/models/index.ts";
+import { imageSizeOptions } from "../../features/models/index.ts";
 export default function ImageModelParameters({
   model,
   size,

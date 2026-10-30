@@ -255,7 +255,9 @@
   .sidebar.is-collapsed .sidebar-search {
     display: none;
   }
-  :root {
+  :root,
+  :root[data-theme],
+  :root[data-accent] {
     --topbar-height: calc(56px + env(safe-area-inset-top, 0px));
     --sidebar-compact-width: 0px;
   }
@@ -284,11 +286,6 @@
     height: 44px;
     flex: 0 0 44px;
   }
-  .topbar .mobile-search img {
-    width: 20px;
-    height: 20px;
-    display: block;
-  }
   .topbar .mobile-project-switch {
     position: fixed;
     top: calc(6px + env(safe-area-inset-top, 0px));
@@ -297,7 +294,7 @@
     height: 44px;
     display: grid;
     place-items: center;
-    border-radius: var(--ui-radius-control);
+    border-radius: var(--kk-radius-full);
     z-index: 43;
   }
   .topbar .mobile-settings {
@@ -308,20 +305,8 @@
     height: 44px;
     display: grid;
     place-items: center;
-    border-radius: var(--ui-radius-control);
+    border-radius: var(--kk-radius-full);
     z-index: 43;
-  }
-  .topbar .mobile-project-switch img {
-    display: block;
-    width: 22px;
-    height: 20px;
-    object-fit: contain;
-  }
-  .topbar .mobile-settings img {
-    display: block;
-    width: 22px;
-    height: 22px;
-    object-fit: contain;
   }
   .compact-app-menu {
     display: block;
@@ -330,15 +315,14 @@
     right: 158px;
   }
   .compact-app-trigger {
-    width: var(--kk-control-h-lg);
-    height: var(--kk-control-h-lg);
+    width: var(--kk-control-h-xl);
+    height: var(--kk-control-h-xl);
     display: grid;
     place-items: center;
-    border-radius: var(--ui-radius-control);
+    border-radius: var(--kk-radius-full);
   }
-  .compact-app-trigger img {
-    display: block;
-    object-fit: contain;
+  .topbar .mobile-search {
+    border-radius: var(--kk-radius-full);
   }
   .sidebar.is-narrow:not(.is-collapsed) .sidebar-search {
     display: grid;
@@ -485,10 +469,12 @@
   .sidebar.is-collapsed .sidebar-account .logo {
     display: grid;
     place-items: center;
+    width: 28px;
+    height: 28px;
   }
   .sidebar.is-collapsed .sidebar-account .logo img {
-    width: 30px;
-    height: 30px;
+    width: 28px;
+    height: 28px;
   }
   .sidebar.is-collapsed .account-popup {
     position: fixed;
@@ -626,6 +612,11 @@
     justify-self: end;
     width: auto;
   }
+  .canvas-hud .canvas-view-mode-toggle {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    justify-self: end;
+  }
   .canvas-navigation-tools .canvas-arrange,
   .canvas-navigation-tools .canvas-map-trigger,
   .canvas-navigation-tools button {
@@ -643,8 +634,8 @@
     gap: 0;
   }
   .canvas-navigation-tools img {
-    width: 18px;
-    height: 18px;
+    width: var(--kk-icon-glyph-sm);
+    height: var(--kk-icon-glyph-sm);
   }
   .canvas-zoom-menu,
   .canvas-background-menu {

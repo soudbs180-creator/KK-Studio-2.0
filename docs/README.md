@@ -35,15 +35,23 @@
 | [WORKTREE-LIFECYCLE](engineering/WORKTREE-LIFECYCLE.md)     | worktree 创建、登记、回收与落点                        |
 | [AUTO-MERGE](engineering/AUTO-MERGE.md)                     | 自动合并工作流与其未启用边界                           |
 | [ROLLBACK](engineering/ROLLBACK.md)                         | 回滚触发条件与执行                                     |
+| [RELEASE-CHECKLIST](engineering/RELEASE-CHECKLIST.md)       | 桌面发布与升级验证清单、预发布体检、升级三原则         |
+| [COMPETITIVE-LEARNING-POLICY](engineering/COMPETITIVE-LEARNING-POLICY.md) | 竞品学习与品类跟进方针、共识基线与持续增进机制         |
 
 > 本表必须完整覆盖 `docs/engineering/` 下的全部 `.md`。新增工程文档必须同步本表，`npm run index:check` 会校验。
 
 ## 架构文档
 
+本轮完整整顿范围见[四文档需求覆盖与验收总清单](changes/2026-10-28-modularity-p0/four-document-coverage.md)，来源指纹与逐章索引见[四份原文记录](changes/2026-10-28-modularity-p0/four-document-sources.json)。最近五项仅为优先批次，不能代表全部P/STD/ORG范围。
+
+模块化整顿的现行规则见[MODULARITY](architecture/MODULARITY.md)，技术决定见[ADR-026](architecture/adr/ADR-026-modular-capability-architecture.md)与[ADR-027](architecture/adr/ADR-027-architecture-ratchet-and-dependency-cruiser.md)。当前P0实施与未整合边界见[交付验证](changes/2026-10-28-modularity-p0/verification.md)。
+
 `architecture/`：运行时架构、数据存储与数据分级。
 
 | 文档                                                       | 承载内容                                    |
 | ---------------------------------------------------------- | ------------------------------------------- |
+| [REPO-LAYOUT](architecture/REPO-LAYOUT.md) | 目录、参考、vendor与文档生命周期规则 |
+| [DEPRECATIONS](architecture/DEPRECATIONS.md) | 弃用/兼容登记与移除证据入口 |
 | [ARCHITECTURE](architecture/ARCHITECTURE.md)               | 进程模型、模块依赖、数据流                  |
 | [DATA-STORAGE](architecture/DATA-STORAGE.md)               | 存储 schema、生命周期、迁移                 |
 | [DATA-CLASSIFICATION](architecture/DATA-CLASSIFICATION.md) | 数据分级与处理约束                          |
@@ -54,11 +62,11 @@
 
 ## UI 文档
 
-[UI_INDEX.md](UI_INDEX.md) 是 **UI 规范唯一入口**，含现行文件分层表、冲突裁决规则和新增功能改病例。该索引的 §1 表是完整映射，新增 UI 文档须同步它。各文件分工：
+[UI_INDEX.md](UI_INDEX.md) 是 **本地 UI 规范导航入口**，登记当前 Figma 来源、七章规范映射与同步流程。Figma 是设计真值，本地文档从它派生，UI 修改遵循 [AGENTS.md](../AGENTS.md#设计与交互) 的设计先行规则。该索引的 §1 表是完整映射，新增 UI 文档须同步它。各文件分工：
 
 | 文档                              | 承载内容                               |
 | --------------------------------- | -------------------------------------- |
-| [DESIGN.md](../DESIGN.md) | 全局设计概览、专项规则导航与当前 CSS 生成 token 投影 |
+| [DESIGN.md](../DESIGN.md) | Figma 派生概览、专项规则导航与当前 CSS 生成 token 投影 |
 | [UI_RULES](UI_RULES.md)           | 零件规则、交互约束、复用约束           |
 | [UI_ARCHETYPES](UI_ARCHETYPES.md) | 五种页面类型与选型                     |
 | [DESIGN_TOKENS](DESIGN_TOKENS.md) | token 数值索引                         |
@@ -200,3 +208,15 @@
 `D:\kk-studio\` 是容器目录，不是 git 仓库。真正的仓库根是 `D:\kk-studio\KK-Studio-2.0`。容器级结构规范见纯文本路径 `D:\kk-studio\docs\REPO-STRUCTURE.md`，快速上手见 `D:\kk-studio\README.md`。
 
 worktree 落点：`D:\kk-studio\.worktrees\TASK-ID-slug`。新建 worktree 后需把主仓 `node_modules` 以目录联接（junction）挂入，否则 `eslint` 与 `typescript` 解析失败。
+
+P1纯契约与单一清单投影的草案见[ADR-028](architecture/adr/ADR-028-capability-manifest-projections.md)；[P1规格与映射](changes/2026-10-28-capability-contract/spec.md)区分声明候选、运行接线及未验收边界。
+
+P3a–e依赖反转与兼容方案见[ADR-029](architecture/adr/ADR-029-feature-cycle-decoupling.md)；静态无环不代表主线或原生验收完成。
+
+公开切片与宿主端口见[ADR-030](architecture/adr/ADR-030-public-feature-entries.md)。
+
+插件权限与实验隔离见[ADR-031](architecture/adr/ADR-031-plugin-permissions-and-sandbox.md)。
+
+独立图片能力与三端资产溯源见[ADR-032](architecture/adr/ADR-032-independent-image-capabilities-and-lineage.md)。
+
+ComfyUI双态画布卡片与本机托管见[ADR-033](architecture/adr/ADR-033-comfy-canvas-runtime.md)。

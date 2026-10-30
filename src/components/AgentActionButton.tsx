@@ -15,9 +15,9 @@ export type AgentActionTransitionEvent =
   | "RESET";
 
 export const AGENT_ACTION_BUTTON_GEOMETRY = {
-  desktopDiameter: 40,
+  desktopDiameter: 44,
   minTouchTarget: 44,
-  iconSize: 20,
+  iconSize: 28,
 } as const;
 
 export const DEFAULT_DEBOUNCE_MS = 300;

@@ -81,7 +81,7 @@ test("按需页面下载等待时可以关闭且迟到内容不会重新弹出",
   await expect(
     page
       .getByRole("navigation", { name: "设置分类" })
-      .getByRole("button", { name: "通用", exact: true }),
+      .getByRole("button", { name: "通用设置", exact: true }),
   ).toBeFocused();
   await page.keyboard.press("Escape");
   await expect(
@@ -111,7 +111,7 @@ test("按需页面等待完成后保持弹窗内焦点并可返回触发按钮",
   await expect(
     page
       .getByRole("navigation", { name: "设置分类" })
-      .getByRole("button", { name: "通用", exact: true }),
+      .getByRole("button", { name: "通用设置", exact: true }),
   ).toBeFocused();
   await page.keyboard.press("Escape");
   await expect(trigger).toBeFocused();

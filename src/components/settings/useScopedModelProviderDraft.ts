@@ -5,12 +5,12 @@ import {
   type Dispatch,
   type SetStateAction,
 } from "react";
-import { credentialId } from "../../features/creation/providerCredentials";
+import { credentialId } from "../../features/creation/index.ts";
 import type { ModelProviderProfile } from "../../domain/modelProvider";
 import {
   findModelProfileConnection,
   readProviderConnections,
-} from "../../features/creation/providerRegistry";
+} from "../../features/creation/index.ts";
 import {
   readModelProviderProfile,
   requiresModelProviderSelection,

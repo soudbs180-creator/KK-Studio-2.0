@@ -1,5 +1,4 @@
 import type { useLocalGeneration } from "./useLocalGeneration";
-import "../../styles/local-generation.css";
 import BrandLogo from "../BrandLogo";
 
 type Generation = Pick<

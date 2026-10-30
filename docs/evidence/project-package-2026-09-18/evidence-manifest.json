@@ -1,0 +1,68 @@
+{
+  "version": 1,
+  "taskId": "TASK-ORG-6",
+  "classification": "E2-externalized-historical-evidence",
+  "packagePath": "docs/evidence/project-package-2026-09-18",
+  "entries": [
+    {
+      "sourcePath": "docs/evidence/project-package-2026-09-18/development-1440.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "d87975cb581b602bc041e2466753ca3f36074816",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/project-package-2026-09-18/development-1440.png",
+      "bytes": 85315,
+      "sha256": "6ef1627b7225244bfcb6a4fb27ab0b28bd52aa42d1ca56c3e47d7abf3222d0a4",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/project-package-2026-09-18/development-390.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "501212e94c9d2faa021b91871406efea228fbc4b",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/project-package-2026-09-18/development-390.png",
+      "bytes": 46563,
+      "sha256": "3da8743ef2559ff2b7d5971ff48d1a0a1b1a5dc9c50e1962eebf6ecfb2d5eab2",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/project-package-2026-09-18/native-settings.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "d8c4fd86ffb01f239e1ec98eacbf382423394513",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/project-package-2026-09-18/native-settings.png",
+      "bytes": 410690,
+      "sha256": "71c2f67f1224c7cba2453fc8d5f79e3e51435dbc296791922acb70f720eb36c5",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/project-package-2026-09-18/production-1440.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "d87975cb581b602bc041e2466753ca3f36074816",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/project-package-2026-09-18/production-1440.png",
+      "bytes": 85315,
+      "sha256": "6ef1627b7225244bfcb6a4fb27ab0b28bd52aa42d1ca56c3e47d7abf3222d0a4",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/project-package-2026-09-18/restored-fresh-webview.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "3022efec1aa4f8db7545db2764cc79e1cd110bb1",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/project-package-2026-09-18/restored-fresh-webview.png",
+      "bytes": 216086,
+      "sha256": "d01070329f40a6fd0a6860553af0d652debb07da679aebfab41b03e08fb03940",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    }
+  ],
+  "scope": "Historical E2 files externalized by validated batches; E1 summaries, JSON, key screenshots and active inputs retained.",
+  "containerResolution": "Resolve containerRelativePath from the workspace container containing the canonical checkout and output.",
+  "recovery": "Verify with scripts/governance/check-evidence-manifest.mjs <manifest> <container>; restore only to a new empty directory. Original Git sourceCommit/sourcePath remains recoverable.",
+  "batches": [
+    {
+      "taskId": "TASK-ORG-6",
+      "date": "2026-10-30",
+      "candidateBase": "be730617ace5013295b85a22133259b32ad6ffec"
+    }
+  ]
+}

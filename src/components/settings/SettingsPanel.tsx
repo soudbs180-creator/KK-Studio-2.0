@@ -8,8 +8,14 @@ import {
 } from "../../domain/settings";
 import type { SettingsPreferences } from "../../domain/settings";
 import GeneralSettings from "./GeneralSettings";
+import AppUpdatePage from "./AppUpdatePage";
+import ProfileUsagePage from "./ProfileUsagePage";
+import ShortcutsManagementPage from "./ShortcutsManagementPage";
 import SettingsSections from "./SettingsSections";
-import type { SettingsSection } from "./SettingsSectionData";
+import type {
+  SettingsSection,
+  SettingsSectionItem,
+} from "./SettingsSectionData";
 import {
   SETTINGS_NAV_GROUPS,
   resolveSettingsRoute,
@@ -19,11 +25,10 @@ import {
   useSettingsNavigationLock,
   updateSettingsBusyOwners,
 } from "./SettingsNavigationContext";
-import type { SettingsSectionItem } from "./SettingsSectionData";
 import type { ExtensionsTab } from "./ExtensionsSettings";
-import type { SaveState } from "../../features/creation/useCreationStorage";
-import type { CreationProject } from "../../features/creation/model";
-import type { SkillRegistry } from "../../features/skills/skillRegistry";
+import type { SaveState } from "../../features/creation/index.ts";
+import type { CreationProject } from "../../features/creation/index.ts";
+import type { SkillRegistry } from "../../features/skills/index.ts";
 import type { LocalWorkflowAccess } from "./LocalWorkflowSettings";
 import "./settings.css";
 
@@ -82,16 +87,7 @@ export default function SettingsPanel({
     setBusyOwners((current) => updateSettingsBusyOwners(current, next, owner));
   }, []);
   useSettingsNavigationLock(panelRef, busy);
-  useLayoutEffect(() => {
-    if (!window.matchMedia("(max-width: 767px)").matches) return;
-    const target =
-      navigation === "categories"
-        ? panelRef.current?.querySelector<HTMLElement>('[aria-current="page"]')
-        : panelRef.current?.querySelector<HTMLElement>(".settings-content");
-    if (navigation === "categories")
-      target?.scrollIntoView({ block: "nearest" });
-    target?.focus({ preventScroll: true });
-  }, [navigation]);
+
   const [initial] = useState(readInitialSettings);
   const [preferences, setPreferences] = useState(initial.preferences);
   const [resolved] = useState(() => resolveSettingsRoute(initialSection));
@@ -106,6 +102,17 @@ export default function SettingsPanel({
     message: initial.message,
     error: initial.error,
   });
+
+  useLayoutEffect(() => {
+    if (!window.matchMedia("(max-width: 767px)").matches) return;
+    const target =
+      navigation === "categories"
+        ? panelRef.current?.querySelector<HTMLElement>('[aria-current="page"]')
+        : panelRef.current?.querySelector<HTMLElement>(".settings-content");
+    if (navigation === "categories")
+      target?.scrollIntoView({ block: "nearest" });
+    target?.focus({ preventScroll: true });
+  }, [navigation]);
 
   function updatePreferences(
     patch: Partial<SettingsPreferences>,
@@ -173,6 +180,7 @@ export default function SettingsPanel({
                 {group.items.map((item: SettingsSectionItem) => (
                   <button
                     key={item.id}
+                    data-section-id={item.id}
                     type="button"
                     className={`settings-nav-item${section === item.id ? " is-active" : ""}`}
                     aria-current={section === item.id ? "page" : undefined}
@@ -203,6 +211,7 @@ export default function SettingsPanel({
             ))}
           </nav>
         </aside>
+
         <main
           className="settings-content"
           aria-labelledby="settings-section-title"
@@ -221,9 +230,16 @@ export default function SettingsPanel({
               }
             />
           )}
+          {section === "updates" && <AppUpdatePage />}
+          {section === "shortcuts" && <ShortcutsManagementPage />}
+          {section === "account" && <ProfileUsagePage />}
           {[
             ...(modelsMounted ? ["providers" as const] : []),
-            ...(section !== "general" && section !== "providers"
+            ...(section !== "general" &&
+            section !== "providers" &&
+            section !== "updates" &&
+            section !== "shortcuts" &&
+            section !== "account"
               ? [section]
               : []),
           ].map((item) => (
@@ -243,9 +259,10 @@ export default function SettingsPanel({
             />
           ))}
         </main>
+
         <button
           type="button"
-          className="settings-close"
+          className="settings-close kk-control-box"
           aria-label="关闭设置"
           disabled={busy}
           title={busy ? "连接操作进行中，完成后可关闭" : undefined}
@@ -255,11 +272,12 @@ export default function SettingsPanel({
         >
           <img
             src="/design/figma/settings-close.svg"
-            width="14"
-            height="14"
+            width="16"
+            height="16"
             alt=""
           />
         </button>
+
         {feedback.message && (
           <div
             className={`settings-feedback${feedback.error ? " is-error" : ""}`}
@@ -271,7 +289,7 @@ export default function SettingsPanel({
               aria-label="收起设置提示"
               onClick={() => setFeedback({ message: "", error: false })}
             >
-              <X size={15} />
+              <X size={16} strokeWidth={1} />
             </button>
           </div>
         )}

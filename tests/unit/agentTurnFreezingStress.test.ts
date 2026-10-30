@@ -1,5 +1,4 @@
 import assert from "node:assert/strict";
-import { EventEmitter, once } from "node:events";
 import test from "node:test";
 import {
   createTurnFreezingController,
@@ -874,3 +873,5 @@ test("STRESS-4.2: complex multi-line unicode draft with binary payload preserved
   // Invariant check: Draft must remain identically equal byte-for-byte
   assert.equal(JSON.stringify(complexDraft), snapshot);
 });
+
+import { EventEmitter, once } from "node:events";

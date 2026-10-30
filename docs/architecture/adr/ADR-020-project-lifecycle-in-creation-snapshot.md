@@ -35,3 +35,13 @@ CreationSnapshot version 2 是项目、画布、任务及草稿的既有持久�
 ## 验证和接受条件
 
 纯函数及 codec 验证旧项目、手动名称、分组删除/恢复、项目软删除/恢复和未完成任务保护；Native 保存与项目包真实往返验证元数据和垃圾箱原件。浏览器检查两处操作、菜单点击不打开项目、刷新后分组/名称/垃圾箱不丢。实际 Native、独立审查与当前提交测试后才能标记相应实现完成；总任务仍有后续阶段。
+
+## 2026-10-18 扩展：同一快照的侧栏偏好
+
+Task TASK-SIDEBAR-CANVAS-20261018 / root；ACCEPTED、本地实现已验、未发布。上文version2与“未来多聊天”为2026-10-15决策时的历史背景；当前原库已为canonical snapshot3、repository format2，保留原creation-v2.json文件名与身份，不再次执行旧迁移。
+
+置顶与排序属于本地项目库视图偏好，采用可选sidebarPreferences（sortMode=manual/recent/priority、pinnedProjectIds、pinnedGroupIds），随现CreationSnapshot V2/V3和revision/CAS保存，不另设localStorage权威或数据库。原有手动顺序仍沿快照数组；本轮未新增自由拖动重排。旧快照缺字段只在UI采用manual/空pin，不为填默认值重写资料。
+
+TS normalize/codec、Native及项目包均拒绝未知偏好键、非法/重复ID和悬空引用；引用闭包包括trash/deleted记录，软删和恢复保留pin。快照其他opaque恢复字段保持原样。useProjectLibrary现生命周期动作/commit/flush为唯一写入口，存储未就绪或冲突时禁用修改；写失败保留待保存状态和原件，不假报saved。
+
+项目包只支持完整恢复到新的隔离root，保留原ID/偏好，不提供合并/remap或覆盖当前库。现有安全/原子保存边界、数据根、密钥引用和repository能力协商不变；不能推导任意旧客户端可混写。验证覆盖旧缺字段、V2/V3、非法引用、opaque、失败/CAS、软删恢复及真实Native新root包往返；Web重载与fresh官方Native正常重启均证明pin/sort保持。精确证据见[本轮验证](../../changes/2026-10-18-sidebar-canvas/verification.md)。

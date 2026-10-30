@@ -2,6 +2,7 @@
    Canvas node editors and ordinary fields have separate contracts. */
 .composer-surface {
   --composer-target: 32px;
+  --composer-glyph: 20px;
   --composer-font: var(--ui-font-label);
   --composer-line: 20px;
   --composer-min-lines: 3;
@@ -79,6 +80,22 @@
   min-width: 0;
   flex: 0 0 auto;
 }
+.composer-toolbar
+  :is(.start-add-button, .chat-attachment-trigger, [data-voice-state]) {
+  border-radius: var(--kk-radius-full);
+}
+.composer-toolbar :is(.start-add-button, .chat-attachment-trigger) .ui-icon,
+.composer-toolbar [data-voice-state] > img {
+  width: var(--composer-glyph);
+  height: var(--composer-glyph);
+}
+.composer-toolbar
+  :is(.start-add-button, .chat-attachment-trigger)
+  .ui-icon
+  svg {
+  width: 100%;
+  height: 100%;
+}
 .composer-trailing-actions {
   display: flex;
   flex: 0 0 auto;
@@ -121,7 +138,7 @@
   gap: var(--ui-space-1);
   padding: 0 var(--ui-space-2);
   border-radius: var(--ui-radius-pill);
-  background: var(--bg-elevated);
+  background: var(--ui-state-idle-bg);
   color: var(--text-secondary);
   font-size: var(--ui-font-body);
   line-height: var(--ui-line-height-body);
@@ -143,10 +160,7 @@
   min-width: var(--composer-target);
   margin: 0;
   padding: 0;
-}
-.composer-toolbar
-  :is(.start-add-button, .chat-attachment-trigger, [data-voice-state]) {
-  border-radius: var(--ui-radius-control);
+  border-radius: var(--kk-radius-full);
   background: transparent;
 }
 .composer-toolbar
@@ -159,8 +173,15 @@
     .start-mode-button,
     .start-add-button,
     .chat-attachment-trigger,
-    [data-voice-state]
-  ):hover:not(:disabled),
+    [data-voice-state],
+    .start-submit-button,
+    .chat-send
+  ):hover:not(:disabled) {
+  color: var(--text-primary);
+  background: var(--ui-state-hover-bg);
+}
+/* Only an opened menu or an explicit selection may read as "on". Hover is a
+   lighter overlay so the resting control keeps its quiet default look. */
 .composer-toolbar
   :is(
     .start-tool-button,
@@ -171,10 +192,13 @@
     .start-mode-button,
     .start-add-button,
     .chat-attachment-trigger,
-    [data-voice-state]
+    [data-voice-state],
+    .start-submit-button,
+    .chat-send
   )[aria-expanded="true"] {
-  color: var(--text-primary);
-  background: var(--neutral-selected);
+  color: var(--ui-state-selected-fg);
+  background: var(--ui-state-selected-bg);
+  box-shadow: inset 0 0 0 1px var(--ui-state-selected-ring);
 }
 .composer-toolbar
   :is(
@@ -186,9 +210,51 @@
     .start-mode-button,
     .start-add-button,
     .chat-attachment-trigger,
-    [data-voice-state]
+    [data-voice-state],
+    .start-submit-button,
+    .chat-send
   ):active:not(:disabled) {
-  background: var(--bg-soft);
+  background: var(--ui-state-pressed-bg);
+}
+.composer-toolbar
+  :is(
+    .start-tool-button,
+    .chat-model-picker,
+    .chat-skill-trigger,
+    .chat-plugin-trigger,
+    .chat-mode-trigger,
+    .start-mode-button,
+    .start-add-button,
+    .chat-attachment-trigger,
+    [data-voice-state],
+    .start-submit-button,
+    .chat-send
+  ):disabled {
+  background: var(--ui-state-idle-bg);
+  opacity: var(--ui-disabled-opacity);
+}
+/* Chat composer capsules share the start composer's quiet resting outline,
+   so the same control looks the same in both composers. */
+.composer-toolbar :is(.chat-model-picker, .chat-mode-trigger) {
+  box-sizing: border-box;
+  border: 1px solid var(--kk-border-subtle);
+  background: var(--ui-state-idle-bg);
+  color: var(--text-secondary);
+  transition: var(--ui-state-transition);
+}
+.composer-toolbar
+  :is(.chat-model-picker, .chat-mode-trigger):hover:not(
+    [aria-expanded="true"]
+  ) {
+  background: var(--ui-state-hover-bg);
+  border-color: var(--kk-border-default);
+  color: var(--text-primary);
+}
+.composer-toolbar
+  :is(.chat-model-picker, .chat-mode-trigger)[aria-expanded="true"] {
+  background: var(--ui-state-selected-bg);
+  border-color: var(--ui-state-selected-ring);
+  color: var(--ui-state-selected-fg);
 }
 .composer-toolbar :is(.start-model-picker, .chat-model-picker-wrap) {
   order: 2;
@@ -229,7 +295,6 @@
 }
 .composer-toolbar :is(.start-submit-button, .chat-send) {
   order: 7;
-  border-radius: var(--kk-radius-full);
 }
 .composer-toolbar :is(.start-composer-divider, .chat-footer-separator) {
   display: none;
@@ -257,9 +322,9 @@
 }
 .composer-toolbar :is(.start-mode-button, .chat-mode-trigger) > img {
   display: block;
-  flex: 0 0 10px;
-  width: 10px;
-  height: 6px;
+  flex: 0 0 var(--kk-icon-glyph-xs);
+  width: var(--kk-icon-glyph-xs);
+  height: var(--kk-icon-glyph-xs);
   object-fit: contain;
 }
 .composer-surface .start-attachment-row {
@@ -352,6 +417,7 @@
 @media (max-width: 1200px) {
   .composer-surface {
     --composer-target: 44px;
+    --composer-glyph: 28px;
     --composer-font: var(--ui-font-title);
     --composer-line: 24px;
   }
@@ -454,8 +520,8 @@
   background: transparent;
 }
 .composer-ext-group .composer-ext > button > img {
-  width: 14px;
-  height: 14px;
+  width: var(--kk-icon-glyph-sm);
+  height: var(--kk-icon-glyph-sm);
 }
 @media (max-width: 1200px) {
   /* The touch/tablet home input follows Figma 483:753. Keep the
@@ -471,9 +537,9 @@
     padding: 0 4px;
   }
   .start-composer .start-model-picker > button > img {
-    flex-basis: 13px;
-    width: 13px;
-    height: 14px;
+    flex-basis: var(--kk-icon-glyph-sm);
+    width: var(--kk-icon-glyph-sm);
+    height: var(--kk-icon-glyph-sm);
   }
   .composer-toolbar .composer-ext-group {
     grid-area: 1 / 4 / 2 / 6;
@@ -549,21 +615,21 @@
 }
 
 /*
- * Current Figma composer contracts (483:695 / 483:753 / 407:29265).
- * Keep text actions as capsules, icon actions square, and send actions circular.
+ * Current Figma 619:3412 / 733:73115: 32px desktop tools, 44px touch tools and send.
  * Generation parameters belong to canvas editors.
  */
 .start-composer {
-  --composer-target: 32px;
   view-transition-name: composer-box;
   box-sizing: border-box;
   width: 652px;
-  min-height: 170px;
+  min-height: 156px;
   height: auto;
   max-width: calc(100% - 32px);
   margin-inline: auto;
-  padding: 13px 13px 11px 12px;
-  gap: 0;
+  padding: calc(12px - var(--kk-border-width));
+  gap: 8px;
+  container-type: inline-size;
+  container-name: start-composer;
   border: 1px solid transparent;
   border-radius: 20px;
   background: var(--bg-input);
@@ -573,12 +639,14 @@
   box-sizing: border-box;
   flex: 0 0 auto;
   width: 400px;
-  height: 64px;
-  min-height: 64px;
+  height: 80px;
+  min-height: 80px;
+  font-size: var(--kk-font-body);
+  line-height: var(--kk-line-body);
   max-height: calc(var(--composer-line) * var(--composer-max-lines));
 }
 
-/* Attachments are an optional second state; preserve the Figma 170px empty
+/* Attachments are an optional second state; preserve the Figma 156px empty
    state while allowing the real file chips to push the footer down. */
 .start-composer:has(.start-attachment-row) {
   height: auto;
@@ -597,10 +665,10 @@
 .start-composer .start-composer-footer {
   display: flex;
   align-items: center;
-  width: 625px;
+  width: 100%;
   max-width: none;
   height: auto;
-  min-height: var(--kk-control-h-md);
+  min-height: var(--composer-target);
   margin-top: auto;
   gap: var(--kk-space-1);
 }
@@ -610,7 +678,7 @@
   display: flex;
   align-items: center;
   height: auto;
-  min-height: var(--kk-control-h-md);
+  min-height: var(--composer-target);
   gap: var(--kk-space-1);
 }
 
@@ -629,10 +697,10 @@
 
 .start-composer .start-add-button {
   order: initial;
-  flex: 0 0 var(--kk-control-h-md);
-  width: var(--kk-control-h-md);
-  min-width: var(--kk-control-h-md);
-  height: var(--kk-control-h-md);
+  flex: 0 0 var(--composer-target);
+  width: var(--composer-target);
+  min-width: var(--composer-target);
+  height: var(--composer-target);
 }
 .start-composer .start-add-button > img,
 .start-composer .start-submit-button > img {
@@ -645,7 +713,7 @@
   width: 58px;
   min-width: 58px;
   max-width: 58px;
-  height: var(--kk-control-h-md);
+  height: var(--composer-target);
 }
 
 .start-composer .start-model-picker {
@@ -663,29 +731,53 @@
 }
 
 .start-composer
-  :is(.start-model-picker > button, .composer-ext-skill > button) {
+  :is(
+    .start-model-picker > button,
+    .composer-ext-skill > button,
+    .start-mode-button
+  ) {
   box-sizing: border-box;
-  height: var(--kk-control-h-md);
-  min-height: var(--kk-control-h-md);
+  height: var(--composer-target);
+  min-height: var(--composer-target);
   border-radius: var(--ui-radius-pill);
-  background: var(--ui-task-selected);
-  border: 1px solid var(--border-control);
+  background: var(--ui-state-idle-bg);
+  border: 1px solid var(--kk-border-subtle);
   color: var(--text-secondary);
   font-size: var(--kk-font-caption);
   line-height: var(--kk-line-caption);
-  transition: all 0.16s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: var(--ui-state-transition);
 }
 
 .start-composer
-  :is(.start-model-picker > button, .composer-ext-skill > button):hover {
-  background: var(--neutral-selected);
-  border-color: var(--border-default);
+  :is(
+    .start-model-picker > button,
+    .composer-ext-skill > button,
+    .start-mode-button
+  ):hover:not([aria-expanded="true"]) {
+  background: var(--ui-state-hover-bg);
+  border-color: var(--kk-border-default);
   color: var(--text-primary);
 }
 
+/* An opened picker is the only state allowed to look "chosen". */
 .start-composer
-  :is(.start-model-picker > button, .composer-ext-skill > button):active {
-  transform: scale(0.96);
+  :is(
+    .start-model-picker > button,
+    .composer-ext-skill > button,
+    .start-mode-button
+  )[aria-expanded="true"] {
+  background: var(--ui-state-selected-bg);
+  border-color: var(--ui-state-selected-ring);
+  color: var(--ui-state-selected-fg);
+}
+
+.start-composer
+  :is(
+    .start-model-picker > button,
+    .composer-ext-skill > button,
+    .start-mode-button
+  ):active {
+  background: var(--ui-state-pressed-bg);
 }
 
 .start-composer .composer-ext-skill > button {
@@ -735,11 +827,11 @@
 
 .start-composer .start-footer-right [data-voice-state] {
   order: initial;
-  flex: 0 0 var(--kk-control-h-md);
-  width: var(--kk-control-h-md);
-  min-width: var(--kk-control-h-md);
-  height: var(--kk-control-h-md);
-  min-height: var(--kk-control-h-md);
+  flex: 0 0 var(--composer-target);
+  width: var(--composer-target);
+  min-width: var(--composer-target);
+  height: var(--composer-target);
+  min-height: var(--composer-target);
   margin-left: 0;
 }
 
@@ -748,8 +840,8 @@
 }
 
 .start-composer .start-footer-right [data-voice-state] > img {
-  width: 14px;
-  height: 14px;
+  width: var(--composer-glyph);
+  height: var(--composer-glyph);
 }
 
 .start-composer .start-mode-picker {
@@ -758,43 +850,32 @@
   width: 53px;
   max-width: 53px;
   min-width: 53px;
-  height: var(--kk-control-h-md);
+  height: var(--composer-target);
 }
 
 .start-composer .start-mode-button {
   width: 53px;
   min-width: 53px;
-  height: var(--kk-control-h-md);
-  min-height: var(--kk-control-h-md);
+  height: var(--composer-target);
+  min-height: var(--composer-target);
   padding: 0 4px;
   font-size: var(--kk-font-caption);
   line-height: var(--kk-line-caption);
 }
 
 .start-composer .start-mode-button > img {
-  width: 8px;
-  height: 5px;
+  width: var(--kk-icon-glyph-xs);
+  height: var(--kk-icon-glyph-xs);
 }
 
 .start-composer .start-submit-button {
   order: initial;
-  flex: 0 0 var(--kk-control-h-md);
-  width: var(--kk-control-h-md);
-  min-width: var(--kk-control-h-md);
-  height: var(--kk-control-h-md);
-  min-height: var(--kk-control-h-md);
+  flex: 0 0 var(--composer-target);
+  width: var(--composer-target);
+  min-width: var(--composer-target);
+  height: var(--composer-target);
+  min-height: var(--composer-target);
   margin-left: 9px;
-  background: var(--kk-button-primary-bg);
-  color: var(--kk-button-primary-text);
-}
-
-.start-composer .start-submit-button:is(:hover, :active):not(:disabled) {
-  background: var(--kk-button-primary-hover);
-}
-
-.start-composer .start-submit-button:disabled {
-  background: var(--kk-bg-soft);
-  color: var(--kk-text-secondary);
 }
 
 .start-composer .start-composer-divider + .start-footer-right {
@@ -862,18 +943,18 @@
   align-items: center;
   width: 100%;
   height: auto;
-  min-height: var(--kk-control-h-md);
+  min-height: var(--composer-target);
   margin-top: auto;
   gap: var(--kk-space-1);
 }
 
 .conversation-panel .chat-composer .chat-attachment-trigger,
 .conversation-panel .chat-composer .chat-send {
-  flex: 0 0 var(--kk-control-h-md);
-  width: var(--kk-control-h-md);
-  min-width: var(--kk-control-h-md);
-  height: var(--kk-control-h-md);
-  min-height: var(--kk-control-h-md);
+  flex: 0 0 var(--composer-target);
+  width: var(--composer-target);
+  min-width: var(--composer-target);
+  height: var(--composer-target);
+  min-height: var(--composer-target);
 }
 
 .conversation-panel .chat-composer .chat-attachment-trigger {
@@ -886,7 +967,7 @@
   width: fit-content;
   min-width: 0;
   max-width: min(var(--kk-model-capsule-max-width), 100%);
-  height: var(--kk-control-h-md);
+  height: var(--composer-target);
   margin-left: 5px;
 }
 
@@ -894,8 +975,8 @@
   width: auto;
   max-width: 100%;
   min-width: 0;
-  height: var(--kk-control-h-md);
-  min-height: var(--kk-control-h-md);
+  height: var(--composer-target);
+  min-height: var(--composer-target);
   padding: 0 var(--kk-space-2);
   gap: 4px;
   background: var(--ui-task-selected);
@@ -936,7 +1017,7 @@
 
 .conversation-panel .chat-composer .chat-skill-picker,
 .conversation-panel .chat-composer .chat-plugin-picker {
-  height: var(--kk-control-h-md);
+  height: var(--composer-target);
 }
 
 .conversation-panel .chat-composer .chat-skill-picker {
@@ -959,31 +1040,41 @@
   box-sizing: border-box;
   width: 58px;
   min-width: 58px;
-  height: var(--kk-control-h-md);
-  min-height: var(--kk-control-h-md);
+  height: var(--composer-target);
+  min-height: var(--composer-target);
   padding: 0 5px;
   gap: 4px;
   border-radius: var(--ui-radius-pill);
-  background: var(--ui-task-selected);
-  border: 1px solid var(--border-control);
+  background: var(--ui-state-idle-bg);
+  border: 1px solid var(--kk-border-subtle);
   color: var(--text-secondary);
   font-size: var(--kk-font-caption);
   line-height: var(--kk-line-caption);
-  transition: all 0.16s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: var(--ui-state-transition);
 }
 
 .conversation-panel
   .chat-composer
-  :is(.chat-skill-trigger, .chat-plugin-trigger):hover {
-  background: var(--neutral-selected);
-  border-color: var(--border-default);
+  :is(.chat-skill-trigger, .chat-plugin-trigger):hover:not(
+    [aria-expanded="true"]
+  ) {
+  background: var(--ui-state-hover-bg);
+  border-color: var(--kk-border-default);
   color: var(--text-primary);
 }
 
 .conversation-panel
   .chat-composer
+  :is(.chat-skill-trigger, .chat-plugin-trigger)[aria-expanded="true"] {
+  background: var(--ui-state-selected-bg);
+  border-color: var(--ui-state-selected-ring);
+  color: var(--ui-state-selected-fg);
+}
+
+.conversation-panel
+  .chat-composer
   :is(.chat-skill-trigger, .chat-plugin-trigger):active {
-  transform: scale(0.96);
+  background: var(--ui-state-pressed-bg);
 }
 
 .conversation-panel .chat-composer .chat-skill-separator {
@@ -996,15 +1087,15 @@
   flex: 0 0 53px;
   width: 53px;
   min-width: 53px;
-  height: var(--kk-control-h-md);
+  height: var(--composer-target);
   margin-left: auto;
 }
 
 .conversation-panel .chat-composer .chat-mode-trigger {
   width: 53px;
   min-width: 53px;
-  height: var(--kk-control-h-md);
-  min-height: var(--kk-control-h-md);
+  height: var(--composer-target);
+  min-height: var(--composer-target);
   padding: 0 4px;
   font-size: var(--kk-font-caption);
   line-height: var(--kk-line-caption);
@@ -1012,17 +1103,17 @@
 
 .conversation-panel .chat-composer [data-voice-state] {
   order: 6;
-  flex: 0 0 var(--kk-control-h-md);
-  width: var(--kk-control-h-md);
-  min-width: var(--kk-control-h-md);
-  height: var(--kk-control-h-md);
-  min-height: var(--kk-control-h-md);
+  flex: 0 0 var(--composer-target);
+  width: var(--composer-target);
+  min-width: var(--composer-target);
+  height: var(--composer-target);
+  min-height: var(--composer-target);
   margin-left: 0;
 }
 
 .conversation-panel .chat-composer [data-voice-state] > img {
-  width: 14px;
-  height: 14px;
+  width: var(--kk-icon-glyph-sm);
+  height: var(--kk-icon-glyph-sm);
 }
 
 .conversation-panel .chat-composer .chat-footer-separator-right {
@@ -1038,7 +1129,13 @@
   .start-composer {
     width: 100%;
     max-width: 100%;
+    height: 170px;
+    min-height: 170px;
     padding: 12px 13px 12px;
+  }
+
+  .start-composer .composer-usage-status-bar {
+    display: none;
   }
 
   .start-composer .start-composer-footer {
@@ -1200,10 +1297,10 @@
 
   .start-composer .composer-ext-skill,
   .start-composer .composer-ext-skill > button {
-    flex-basis: var(--kk-control-h-md);
-    width: var(--kk-control-h-md);
-    min-width: var(--kk-control-h-md);
-    max-width: var(--kk-control-h-md);
+    flex-basis: var(--composer-target);
+    width: var(--composer-target);
+    min-width: var(--composer-target);
+    max-width: var(--composer-target);
     border-radius: var(--kk-radius-control);
   }
 
@@ -1241,10 +1338,10 @@
 
   .conversation-panel .chat-composer .chat-skill-picker,
   .conversation-panel .chat-composer .chat-skill-trigger {
-    flex-basis: var(--kk-control-h-md);
-    width: var(--kk-control-h-md);
-    min-width: var(--kk-control-h-md);
-    max-width: var(--kk-control-h-md);
+    flex-basis: var(--composer-target);
+    width: var(--composer-target);
+    min-width: var(--composer-target);
+    max-width: var(--composer-target);
     border-radius: var(--kk-radius-control);
   }
 
@@ -1281,4 +1378,280 @@
   animation: composerFlyToCorner 0.52s cubic-bezier(0.34, 1.56, 0.64, 1)
     forwards;
   will-change: transform, opacity;
+}
+
+/* ==========================================================================
+   Composer Usage Status Bar (T-GW-01 / R1)
+   Fixed 24px height status bar for context token usage, cache, tps & reasoning
+   ========================================================================== */
+.composer-usage-status-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-2, 8px);
+  height: 24px;
+  min-height: 24px;
+  max-height: 24px;
+  box-sizing: border-box;
+  overflow: hidden;
+  padding: 0 var(--ui-space-2, 8px);
+  border-top: 1px solid var(--kk-border-subtle);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  line-height: 24px;
+  color: var(--kk-text-secondary);
+  user-select: none;
+}
+
+.composer-gauge-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex: 0 1 auto;
+}
+
+.composer-token-progress-bar {
+  width: 80px;
+  height: 4px;
+  background: var(--bg-elevated);
+  border-radius: 2px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.composer-token-progress-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.2s ease-out;
+}
+
+.composer-token-progress-bar.status-normal .composer-token-progress-fill {
+  background: var(--kk-accent-muted, var(--text-tertiary));
+}
+
+.composer-token-progress-bar.status-warning .composer-token-progress-fill {
+  background: var(--ui-warning);
+}
+
+.composer-token-progress-bar.status-danger .composer-token-progress-fill {
+  background: var(--ui-danger);
+}
+
+.composer-token-text {
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.composer-metrics-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.composer-cache-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 14px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+}
+
+.composer-cache-badge.is-cached {
+  color: var(--ui-success);
+  background: color-mix(in srgb, var(--ui-success) 12%, transparent);
+}
+
+.composer-cache-badge.is-idle {
+  color: var(--text-tertiary);
+  opacity: 0.5;
+}
+
+.composer-tps-badge {
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+}
+
+.composer-reasoning-selector {
+  display: inline-flex;
+  align-items: center;
+  background: var(--bg-card);
+  border-radius: 4px;
+  padding: 1px;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.composer-reasoning-selector.is-disabled {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.composer-reasoning-label {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  padding: 0 4px;
+}
+
+.composer-reasoning-btn {
+  border: 0;
+  background: var(--ui-state-idle-bg);
+  color: var(--text-tertiary);
+  font-size: 10px;
+  line-height: 16px;
+  padding: 0 6px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: var(--ui-state-transition);
+}
+
+.composer-reasoning-btn:hover:not(:disabled) {
+  color: var(--text-primary);
+  background: var(--ui-state-hover-bg);
+}
+
+.composer-reasoning-btn.is-active {
+  background: var(--ui-state-selected-bg);
+  color: var(--ui-state-selected-fg);
+  font-weight: 500;
+}
+
+/* ==========================================================================
+   Model Latency Probing Badges (T-GW-02 / R1)
+   3-tier status badges: fast (<100ms), moderate (<500ms), slow/error (>=500ms)
+   ========================================================================== */
+.kk-model-probe-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 1px 6px;
+  border-radius: var(--kk-radius-full);
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 14px;
+  font-variant-numeric: tabular-nums;
+  vertical-align: middle;
+}
+
+.kk-model-probe-badge .kk-probe-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.kk-model-probe-badge.is-fast {
+  color: var(--ui-success);
+  background: color-mix(in srgb, var(--ui-success) 12%, transparent);
+}
+
+.kk-model-probe-badge.is-fast .kk-probe-dot {
+  background: var(--ui-success);
+}
+
+.kk-model-probe-badge.is-moderate,
+.kk-model-probe-badge.is-medium {
+  color: var(--ui-warning);
+  background: color-mix(in srgb, var(--ui-warning) 12%, transparent);
+}
+
+.kk-model-probe-badge.is-moderate .kk-probe-dot,
+.kk-model-probe-badge.is-medium .kk-probe-dot {
+  background: var(--ui-warning);
+}
+
+.kk-model-probe-badge.is-slow {
+  color: var(--ui-danger);
+  background: color-mix(in srgb, var(--ui-danger) 12%, transparent);
+}
+
+.kk-model-probe-badge.is-slow .kk-probe-dot {
+  background: var(--ui-danger);
+}
+
+.kk-model-probe-badge.is-error {
+  color: var(--ui-danger);
+  background: color-mix(in srgb, var(--ui-danger) 18%, transparent);
+}
+
+.kk-model-probe-badge.is-error .kk-probe-dot {
+  background: var(--ui-danger);
+}
+
+/* Current primary and touch geometry: 619:3412 / 733:73115. */
+.start-composer .composer-usage-status-bar {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 12px;
+  right: 12px;
+  width: auto;
+  margin: 0;
+}
+@media (min-width: 768px) {
+  .start-composer {
+    margin-bottom: 32px;
+  }
+}
+.composer-surface .composer-toolbar :is(.start-submit-button, .chat-send) {
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: var(--kk-radius-full);
+}
+.start-composer .start-submit-button {
+  background: var(--kk-text-primary);
+  color: var(--kk-bg-app);
+}
+.start-composer .start-submit-button:disabled {
+  background: var(--kk-text-tertiary);
+}
+@media (max-width: 1200px) {
+  .start-composer .start-add-button,
+  .start-composer .start-footer-right [data-voice-state] {
+    border-radius: var(--kk-radius-full);
+  }
+}
+@media (max-width: 767px) {
+  .start-composer {
+    height: auto;
+    min-height: 132px;
+    padding: calc(12px - var(--kk-border-width));
+  }
+  .start-composer > .composer-textarea {
+    height: 56px;
+    min-height: 56px;
+  }
+  .start-composer .start-model-picker {
+    min-width: 60px;
+  }
+  .start-composer .start-mode-picker,
+  .start-composer .start-mode-button {
+    flex-basis: 52px;
+    width: 52px;
+    min-width: 52px;
+    max-width: 52px;
+  }
+  .start-composer .composer-ext-skill > button > img {
+    width: var(--composer-glyph);
+    height: var(--composer-glyph);
+    flex-basis: var(--composer-glyph);
+  }
+}
+@container start-composer (max-width: 308px) {
+  .start-composer .start-composer-footer {
+    flex-wrap: wrap;
+    row-gap: 8px;
+  }
 }

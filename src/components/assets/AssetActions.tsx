@@ -1,6 +1,6 @@
 import UiIcon from "../UiIcon";
 import type { RefObject } from "react";
-import type { AssetArchiveState } from "../../features/creation/useAssetArchive";
+import type { AssetArchiveState } from "../../features/creation/index.ts";
 
 interface AssetActionsProps {
   showSubjectActions: boolean;
@@ -26,7 +26,7 @@ export default function AssetActions({
       {showSubjectActions && (
         <div className="asset-bottom-actions">
           <button className="kk-button kk-button--primary" onClick={onCreate}>
-            <UiIcon name="add" size={14} />
+            <UiIcon name="add" size={12} />
             创建主体
           </button>
           <button
@@ -34,7 +34,7 @@ export default function AssetActions({
             disabled={busy}
             onClick={() => input.current?.click()}
           >
-            <UiIcon name="upload" size={14} />
+            <UiIcon name="upload" size={12} />
             {busy ? "正在导入" : "导入资源包"}
           </button>
         </div>

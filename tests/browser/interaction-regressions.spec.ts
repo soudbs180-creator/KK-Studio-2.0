@@ -109,9 +109,7 @@ test("模型测试拒绝 HTML 假成功并可从 HTTP 错误恢复", async ({ pa
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   await page.getByRole("button", { name: "模型接入", exact: true }).click();
-  await page
-    .getByRole("button", { name: "API Key（官方）", exact: true })
-    .click();
+  await page.getByRole("tab", { name: "官方直连 API", exact: true }).click();
   await page.getByLabel("接口地址").fill("https://models.example.test/v1");
   await page.getByLabel("API Key", { exact: true }).fill("fixture-models-key");
   await page
@@ -158,9 +156,7 @@ test("取消、编辑配置与离线状态不会留下过期的连接成功提�
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   await page.getByRole("button", { name: "模型接入", exact: true }).click();
-  await page
-    .getByRole("button", { name: "API Key（官方）", exact: true })
-    .click();
+  await page.getByRole("tab", { name: "官方直连 API", exact: true }).click();
   await page.getByLabel("接口地址").fill("https://models.example.test/v1");
   await page
     .getByLabel("API Key", { exact: true })
@@ -205,9 +201,7 @@ test("配置入口定位到对应设置分类，菜单支持 Escape", async ({ p
     .click();
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   await page.getByRole("button", { name: "模型接入", exact: true }).click();
-  await page
-    .getByRole("button", { name: "API Key（官方）", exact: true })
-    .click();
+  await page.getByRole("tab", { name: "官方直连 API", exact: true }).click();
   await expect(page.getByLabel("接口地址")).toBeVisible();
   await page.keyboard.press("Escape");
   await page
@@ -218,6 +212,6 @@ test("配置入口定位到对应设置分类，菜单支持 Escape", async ({ p
   await expect(
     page
       .getByRole("dialog", { name: "设置" })
-      .getByRole("button", { name: "通用", exact: true }),
+      .getByRole("button", { name: "通用设置", exact: true }),
   ).toHaveAttribute("aria-current", "page");
 });

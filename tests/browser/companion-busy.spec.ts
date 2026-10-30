@@ -111,7 +111,7 @@ async function fixture(page: Page) {
     });
   });
   await page.goto("/");
-  await openSettingsSection(page, "网络");
+  await openSettingsSection(page, "网络与代理");
   const dialog = page.getByRole("dialog", { name: "设置", exact: true });
   const companion = dialog.getByTestId("companion-settings");
   await expect(companion.locator(".settings-companion-status")).toHaveText(
@@ -144,7 +144,7 @@ async function assertLocked(dialog: Locator) {
   ).toBeDisabled();
   await expect(
     dialog.getByRole("button", {
-      name: "通用",
+      name: "通用设置",
       exact: true,
       includeHidden: true,
     }),

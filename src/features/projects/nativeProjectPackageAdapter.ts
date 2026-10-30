@@ -1,5 +1,5 @@
 import { invoke } from "@tauri-apps/api/core";
-import { usesNativeAssets } from "../creation/nativeAssetAdapter.ts";
+import { usesNativeAssets } from "../creation/index.ts";
 
 export type ProjectPackageOperationState =
   | "checking"

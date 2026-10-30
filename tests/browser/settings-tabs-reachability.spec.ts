@@ -5,7 +5,7 @@ for (const width of [320, 390, 1920]) {
   test(`扩展分类文字与命中区完整 ${width}`, async ({ page }) => {
     await page.setViewportSize({ width, height: width === 1920 ? 1080 : 480 });
     await page.goto("/");
-    await openSettingsSection(page, "扩展");
+    await openSettingsSection(page, "扩展与 MCP");
     const dialog = page.getByRole("dialog", { name: "设置", exact: true });
     const tabs = dialog.getByRole("tablist", { name: "Skill、MCP 与协作伙伴" });
     const bounds = await tabs.boundingBox();

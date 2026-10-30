@@ -18,7 +18,7 @@ export default function InfoPanel({
           aria-label="关闭"
           onClick={onClose}
         >
-          <X size={20} />
+          <X size={20} strokeWidth={1} />
         </button>
       </header>
       {view === "tasks" ? (

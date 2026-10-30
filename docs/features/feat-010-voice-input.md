@@ -11,8 +11,8 @@
 
 ## 代码位置
 
-- `src/features/creation/useSpeechInput.ts`：浏览器 Web Speech API（SpeechRecognition / webkitSpeechRecognition），含 start/stop/error/超时状态机
-- UI：`src/components/VoiceInputButton.tsx`，接入 StartComposer / ConversationActions
+- `src/features/speech/useSpeechInput.ts`（creation 公开入口保留重导出）：浏览器 Web Speech API（SpeechRecognition / webkitSpeechRecognition），含 start/stop/error/超时状态机
+- UI：`src/features/speech/VoiceInputButton.tsx`，接入 StartComposer / ConversationActions
 
 ## 测试与证据
 
@@ -30,3 +30,5 @@
 ## 变更记录
 
 - 2026-09-21：创建卡片，状态 PARTIAL（Web 真实，Desktop 未验证）。
+
+2026-10-30 合流：语音 hook 与按钮原样归入 speech 独立切片，creation/image-edit 共用公开入口，避免重建双向循环；能力状态和 WebView2 未验边界保持。

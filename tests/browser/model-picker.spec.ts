@@ -36,9 +36,7 @@ test("模型精确版本、参数选择和模糊搜索保留实际厂商 ID", as
   await openSeededProject(page);
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   await page.getByRole("button", { name: "模型接入", exact: true }).click();
-  await page
-    .getByRole("button", { name: "API Key（官方）", exact: true })
-    .click();
+  await page.getByRole("tab", { name: "官方直连 API", exact: true }).click();
   await page.getByLabel("提供商", { exact: true }).fill("星河 API");
   await page.getByLabel("接口地址").fill("https://variants.example/v1");
   await page.getByLabel("API Key", { exact: true }).fill("fixture-key");
@@ -226,9 +224,7 @@ test("渠道内展示同名 API 图片模型、未知用途原因并保留账号
     .getByRole("menu")
     .getByRole("button", { name: "模型接入…", exact: true })
     .click();
-  await page
-    .getByRole("button", { name: "API Key（官方）", exact: true })
-    .click();
+  await page.getByRole("tab", { name: "官方直连 API", exact: true }).click();
   for (const name of ["A", "B"]) {
     await page.getByLabel("提供商", { exact: true }).fill(name);
     await page
@@ -359,9 +355,7 @@ test("视频和音频模型明确保持禁用并可键盘阅读原因", async ({
     .getByRole("menu", { name: "选择模型" })
     .getByRole("button", { name: "模型接入…", exact: true })
     .click();
-  await page
-    .getByRole("button", { name: "API Key（官方）", exact: true })
-    .click();
+  await page.getByRole("tab", { name: "官方直连 API", exact: true }).click();
   await page.getByLabel("提供商", { exact: true }).fill("Media API");
   await page.getByLabel("接口地址").fill("https://media.example/v1");
   await page.getByLabel("API Key", { exact: true }).fill("fixture-media");

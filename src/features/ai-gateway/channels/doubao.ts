@@ -18,6 +18,7 @@ import type {
 import { alreadyNormalized, normalizeUnknownFailure } from "./adapter.ts";
 import type { NormalizedError } from "../errors.ts";
 import { normalizeHttpFailure } from "../errors.ts";
+import { readChatStream } from "./chatStream.ts";
 
 export const ARK_BASE_URL = "https://ark.cn-beijing.volces.com/api/v3";
 
@@ -67,7 +68,7 @@ function authHeaders(
 ): Record<string, string> {
   const headers: Record<string, string> = {
     "content-type": "application/json",
-    // Ark honours this to deduplicate retries of the same logical job.
+    // Forward request identity without claiming cross-account billing deduplication.
     "x-idempotency-key": idempotencyKey,
   };
   if (secret) headers.authorization = `Bearer ${secret}`;
@@ -75,7 +76,9 @@ function authHeaders(
 }
 
 async function requireSecret(request: ChannelRequestContext): Promise<string> {
+  request.signal?.throwIfAborted();
   const secret = await request.resolveSecret();
+  request.signal?.throwIfAborted();
   // Missing credentials are a configuration fault, not a transport failure, so
   // this must surface as AUTH_INVALID rather than a generic timeout.
   if (!secret)
@@ -137,71 +140,104 @@ export const doubaoAdapter: ChannelAdapter = {
     const secret = await requireSecret(request);
     const endpointId = this.resolveModel(context, input.model);
     if (input.operation === "chat") {
-      const response = await fetch(`${context.baseUrl}/chat/completions`, {
-        method: "POST",
-        headers: authHeaders(secret, request.idempotencyKey),
-        body: JSON.stringify({
-          model: endpointId,
-          messages: [{ role: "user", content: input.prompt }],
-          ...mapChatExtra(input),
-        }),
-        ...(request.signal ? { signal: request.signal } : {}),
-      });
-      if (!response.ok) {
-        const body = await readJson(response);
-        throw Object.assign(new Error(`Ark chat failed: ${response.status}`), {
-          normalized: normalizeHttpFailure({
-            status: response.status,
-            body,
-            signalText: readErrorEnvelope(body),
-            channelId: context.channelId,
+      const deadline = AbortSignal.timeout(context.timeoutMs);
+      const signal = request.signal
+        ? AbortSignal.any([request.signal, deadline])
+        : deadline;
+      try {
+        const response = await fetch(`${context.baseUrl}/chat/completions`, {
+          method: "POST",
+          headers: authHeaders(secret, request.idempotencyKey),
+          body: JSON.stringify({
+            model: endpointId,
+            messages: [{ role: "user", content: input.prompt }],
+            ...mapChatExtra(input),
+            ...(request.onTextDelta
+              ? { stream: true, stream_options: { include_usage: true } }
+              : {}),
           }),
+          signal,
         });
-      }
-      const body = (await readJson(response)) as
-        | {
-            choices?: Array<{ message?: { content?: unknown } }>;
-            usage?: {
-              prompt_tokens?: unknown;
-              completion_tokens?: unknown;
-              total_tokens?: unknown;
-            };
-          }
-        | undefined;
-      const text = body?.choices?.[0]?.message?.content;
-      if (typeof text !== "string" || !text.trim())
-        throw Object.assign(
-          new Error("Ark response contained no assistant text"),
-          {
+        if (!response.ok) {
+          const body = await readJson(response);
+          throw Object.assign(
+            new Error(`Ark chat failed: ${response.status}`),
+            {
+              normalized: normalizeHttpFailure({
+                status: response.status,
+                body,
+                signalText: readErrorEnvelope(body),
+                channelId: context.channelId,
+              }),
+            },
+          );
+        }
+        if (request.onTextDelta)
+          return await readChatStream(response, {
+            signal,
+            onTextDelta: (delta) => request.onTextDelta!(delta, signal),
+            channelId: context.channelId,
+          });
+        const body = (await readJson(response)) as
+          | {
+              choices?: Array<{ message?: { content?: unknown } }>;
+              usage?: {
+                prompt_tokens?: unknown;
+                completion_tokens?: unknown;
+                total_tokens?: unknown;
+              };
+            }
+          | undefined;
+        signal.throwIfAborted();
+        const text = body?.choices?.[0]?.message?.content;
+        if (typeof text !== "string" || !text.trim())
+          throw Object.assign(
+            new Error("Ark response contained no assistant text"),
+            {
+              normalized: {
+                errorClass: "UPSTREAM_ERROR",
+                httpStatus: 502,
+                retryable: true,
+                channelId: context.channelId,
+                detail: "missing assistant content",
+              } satisfies NormalizedError,
+            },
+          );
+        const usage = body?.usage;
+        return {
+          kind: "text",
+          text,
+          ...(usage
+            ? {
+                usage: {
+                  ...(typeof usage.prompt_tokens === "number"
+                    ? { promptTokens: usage.prompt_tokens }
+                    : {}),
+                  ...(typeof usage.completion_tokens === "number"
+                    ? { completionTokens: usage.completion_tokens }
+                    : {}),
+                  ...(typeof usage.total_tokens === "number"
+                    ? { totalTokens: usage.total_tokens }
+                    : {}),
+                },
+              }
+            : {}),
+        };
+      } catch (error) {
+        // A caller cancellation wins even when the attempt deadline also fired.
+        request.signal?.throwIfAborted();
+        if (deadline.aborted)
+          throw Object.assign(new Error("Ark chat attempt timed out"), {
             normalized: {
-              errorClass: "UPSTREAM_ERROR",
-              httpStatus: 502,
+              errorClass: "TIMEOUT",
+              httpStatus: 504,
               retryable: true,
               channelId: context.channelId,
-              detail: "missing assistant content",
+              detail: "Upstream chat attempt timed out",
             } satisfies NormalizedError,
-          },
-        );
-      const usage = body?.usage;
-      return {
-        kind: "text",
-        text,
-        ...(usage
-          ? {
-              usage: {
-                ...(typeof usage.prompt_tokens === "number"
-                  ? { promptTokens: usage.prompt_tokens }
-                  : {}),
-                ...(typeof usage.completion_tokens === "number"
-                  ? { completionTokens: usage.completion_tokens }
-                  : {}),
-                ...(typeof usage.total_tokens === "number"
-                  ? { totalTokens: usage.total_tokens }
-                  : {}),
-              },
-            }
-          : {}),
-      };
+          });
+        throw error;
+      }
     }
     const response = await fetch(`${context.baseUrl}/images/generations`, {
       method: "POST",

@@ -10,10 +10,10 @@
 
 | 目录 | 数量 | 运行器 | 证明什么 |
 | --- | --- | --- | --- |
-| `tests/unit/` | 173 文件 | `node --test` | 领域规则、纯函数、序列化、契约边界 |
+| `tests/unit/` | 218 文件 | `node --test` | 领域规则、纯函数、序列化、契约边界 |
 | `tests/deploy/` | 2 文件 | `node --test` | 发布脚本、回滚流程 |
-| `tests/browser/` | 120 文件 | Playwright（Edge） | 真实渲染、交互、布局、视觉回归 |
-| `tests/desktop/` | 24 文件（`.mjs` / `.ps1`） | `node` / `powershell` | Tauri 宿主、安装器、窗口、原生能力 |
+| `tests/browser/` | 128 文件 | Playwright（Edge） | 真实渲染、交互、布局、视觉回归 |
+| `tests/desktop/` | 26 文件（20 `.mjs` + 6 `.ps1`） | `node` / `powershell` | Tauri 宿主、安装器、窗口、原生能力 |
 | `tests/local-service/` | 2 文件 | `node` | 本地服务 HTTP 集成与生产冒烟 |
 | `tests/development/` | 1 文件 | `node` | 插件装载等开发态行为 |
 | `tests/helpers/` | `agentServer.ts`、`designSystem.ts` | 被引用 | 共享夹具，禁止含断言 |
@@ -30,6 +30,8 @@
 
 ## 运行命令
 
+根单元入口预加载 `tests/support/public-entry-loader.mjs`：公开切片出口也导出UI，使用已安装TypeScript编译TSX并解析既有无后缀相对导入。仅Node单测忽略CSS模块执行；实际样式、顺序和DOM继续由生产Edge检查，不把该loader用于产品构建。Mobile和随包Agent保留各自运行器。
+
 | 命令 | 覆盖 |
 | --- | --- |
 | `npm test` | `tests/unit/*.test.ts` + `tests/deploy/*.test.mjs` |
@@ -43,7 +45,7 @@
 
 `npm run verify` 是合并前的**主闸门**，串联 lint、typecheck、test、agent:build、test:agent、ui:check、format:check、test:ui、test:design、test:development 共 10 步；Agent 必须真实编译通过，不能只用可执行 TS 测试代替构建。test:design 在产品浏览器之后串行运行，避免占用同一 1423。
 
-它**不包含**：Rust/cargo 检查、`tests/desktop/`（24 个 `.mjs`/`.ps1`）、`tests/local-service/`、`tests/proxy`、`test:gateway`。涉及 Desktop、Rust、本地服务或真实外部服务的改动必须按本文件「桌面与 Rust 测试」与 [DEVELOPMENT](DEVELOPMENT.md) 单独补跑相应检查。
+它**不包含**：Rust/cargo 检查、`tests/desktop/`（26 个文件：20 `.mjs` + 6 `.ps1`）、`tests/local-service/`、`tests/proxy`、`test:gateway`。涉及 Desktop、Rust、本地服务或真实外部服务的改动必须按本文件「桌面与 Rust 测试」与 [DEVELOPMENT](DEVELOPMENT.md) 单独补跑相应检查。
 
 只跑 `npm test` 不构成完整验证；只通过构建也不构成验收。
 
@@ -104,6 +106,7 @@
 ### 隔离要求
 
 - 测试之间不共享可变状态；每个测试自建自清 fixture。
+- 普通浏览器编辑场景使用明确version3并经serializeCreationSnapshot处理的canonical种子；page.goto后不得把emptySnapshot默认的v2写回已迁移的仓库。仅专门验证旧格式迁移/兼容的场景保留v2，不能清空IDB或标记绕过降级保护。
 - 固定夹具放 `tests/fixtures/`，修改夹具内容必须重跑受影响测试并更新证据，不允许「改了夹具沿用旧结论」。
 - 测试不得写生产目录。禁止把运行产物、日志、截图直接写进 `docs/`。
 - 需要清理输出目录时使用独立临时目录（如 `.tmp/pw-out-default`），不要清空被其他任务共用的 `test-results/`。

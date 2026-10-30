@@ -26,6 +26,7 @@ import type {
 } from "./channels/registry.ts";
 import type { NormalizedError } from "./errors.ts";
 import { noChannelAvailable } from "./errors.ts";
+import { AccountPool } from "./accountPool.ts";
 
 export interface DispatchRequest {
   readonly model: string;
@@ -38,6 +39,11 @@ export interface DispatchRequest {
     credentialRef?: string,
   ) => Promise<string | undefined>;
   readonly signal?: AbortSignal;
+  readonly onTextDelta?: (
+    delta: string,
+    channelId: string,
+    attemptSignal?: AbortSignal,
+  ) => void | Promise<void>;
   /** Set by the caller once the first chunk reached the client. */
   readonly streamStarted?: () => boolean;
 }
@@ -46,7 +52,10 @@ export interface DispatchRequest {
  * `SubmitResult` is a union, so this must be a type alias: an interface would
  * flatten it and both the `kind` discriminant and `assetBase64` would vanish.
  */
-export type DispatchOutcome = SubmitResult & { readonly channelId: string };
+export type DispatchOutcome = SubmitResult & {
+  readonly channelId: string;
+  readonly downgradedFrom?: string;
+};
 
 export interface SchedulerOptions {
   readonly random?: () => number;
@@ -54,12 +63,15 @@ export interface SchedulerOptions {
   /** Consecutive failures before an account is quarantined outright. */
   readonly quarantineThreshold?: number;
   readonly maxCooldownMs?: number;
+  readonly accountPools?:
+    ReadonlyMap<string, AccountPool> | Record<string, AccountPool>;
 }
 
 interface ChannelHealth {
   consecutiveFailures: number;
   cooldownUntil: number;
   quarantined: boolean;
+  healthScore?: number;
 }
 
 const DEFAULT_QUARANTINE_THRESHOLD = 5;
@@ -90,6 +102,7 @@ export class ChannelHealthTracker {
       consecutiveFailures: 0,
       cooldownUntil: 0,
       quarantined: false,
+      healthScore: 100,
     };
     this.#health.set(channelId, fresh);
     return fresh;
@@ -106,11 +119,14 @@ export class ChannelHealthTracker {
     const state = this.state(channelId);
     state.consecutiveFailures = 0;
     state.cooldownUntil = 0;
+    state.healthScore = Math.min(100, (state.healthScore ?? 100) + 5);
   }
 
   recordFailure(channelId: string, error: NormalizedError): void {
     const state = this.state(channelId);
     state.consecutiveFailures += 1;
+    const penalty = error.errorClass === "RATE_LIMITED" ? 20 : 25;
+    state.healthScore = Math.max(0, (state.healthScore ?? 100) - penalty);
     const backoff = Math.min(
       2 ** state.consecutiveFailures * 1000,
       this.#maxCooldownMs,
@@ -121,6 +137,10 @@ export class ChannelHealthTracker {
     const cooldown = error.cooldownMs ?? backoff;
     state.cooldownUntil = this.#now() + cooldown;
     if (state.consecutiveFailures >= this.#threshold) state.quarantined = true;
+  }
+
+  healthScore(channelId: string): number {
+    return this.state(channelId).healthScore ?? 100;
   }
 
   /** Clears quarantine after an operator or a successful probe re-enables it. */
@@ -172,12 +192,43 @@ export class Scheduler {
   readonly #registry: ChannelRegistry;
   readonly #health: ChannelHealthTracker;
   readonly #random: () => number;
+  readonly #now: () => number;
   readonly #sticky = new Map<string, string>();
+  readonly #accountPools = new Map<string, AccountPool>();
 
   constructor(registry: ChannelRegistry, options: SchedulerOptions = {}) {
     this.#registry = registry;
     this.#health = new ChannelHealthTracker(options);
     this.#random = options.random ?? Math.random;
+    this.#now = options.now ?? Date.now;
+
+    if (options.accountPools) {
+      if (options.accountPools instanceof Map) {
+        for (const [key, pool] of options.accountPools) {
+          this.#accountPools.set(key, pool);
+        }
+      } else {
+        for (const [key, pool] of Object.entries(options.accountPools)) {
+          this.#accountPools.set(key, pool);
+        }
+      }
+    }
+  }
+
+  registerAccountPool(
+    keyOrPool: string | AccountPool,
+    maybePool?: AccountPool,
+  ): void {
+    if (typeof keyOrPool === "string" && maybePool) {
+      this.#accountPools.set(keyOrPool, maybePool);
+    } else if (typeof keyOrPool !== "string") {
+      this.#accountPools.set(keyOrPool.poolId, keyOrPool);
+    }
+  }
+
+  accountPool(key?: string): AccountPool | undefined {
+    if (!key) return undefined;
+    return this.#accountPools.get(key);
   }
 
   health(): ChannelHealthTracker {
@@ -209,10 +260,38 @@ export class Scheduler {
   }
 
   async dispatch(request: DispatchRequest): Promise<DispatchOutcome> {
+    request.signal?.throwIfAborted();
     const candidates = this.#registry.candidates(
       request.model,
       request.operation,
     );
+    const ordered = this.#buildOrderedPlan(request, candidates);
+    const { outcome, lastError } = await this.#tryPrimaryCandidates(
+      ordered,
+      request,
+    );
+    if (outcome) return outcome;
+
+    // Downgrade chain fallback when primary channels fail and no tokens sent
+    if (!this.#streamStarted(request)) {
+      const fallbackOutcome = await this.#tryDowngradeChain(
+        ordered[0],
+        request,
+      );
+      if (fallbackOutcome) return fallbackOutcome;
+    }
+
+    request.signal?.throwIfAborted();
+    throw (
+      lastError ??
+      channelError(noChannelAvailable(`No channel serves ${request.model}`))
+    );
+  }
+
+  #buildOrderedPlan(
+    request: DispatchRequest,
+    candidates: readonly ChannelIndexEntry[],
+  ): ChannelIndexEntry[] {
     const pinnedId = request.sessionId
       ? this.#sticky.get(request.sessionId)
       : undefined;
@@ -240,20 +319,29 @@ export class Scheduler {
         continue;
       ordered.push(attempt);
     }
+    return ordered;
+  }
 
+  async #tryPrimaryCandidates(
+    ordered: readonly ChannelIndexEntry[],
+    request: DispatchRequest,
+  ): Promise<{ outcome?: DispatchOutcome; lastError?: Error }> {
     let lastError: Error | undefined;
     for (let generation = 0; generation < ordered.length; generation += 1) {
+      request.signal?.throwIfAborted();
       const entry = ordered[generation]!;
-      if (!this.#health.isAvailable(entry.channelId)) continue;
+      if (!this.#isCandidateReady(entry)) continue;
       const context = this.#registry.contextFor(entry.channelId);
       if (!context) continue;
       try {
         const result = await this.#attempt(entry, context, request);
+        request.signal?.throwIfAborted();
         this.#health.recordSuccess(entry.channelId);
         if (request.sessionId)
           this.#sticky.set(request.sessionId, entry.channelId);
-        return { ...result, channelId: entry.channelId };
+        return { outcome: { ...result, channelId: entry.channelId } };
       } catch (error) {
+        request.signal?.throwIfAborted();
         if (error instanceof ChannelNotApplicable) continue;
         lastError =
           error instanceof Error
@@ -270,10 +358,64 @@ export class Scheduler {
         if (this.#streamStarted(request)) throw lastError;
       }
     }
-    throw (
-      lastError ??
-      channelError(noChannelAvailable(`No channel serves ${request.model}`))
-    );
+    return { lastError };
+  }
+
+  #isCandidateReady(entry: ChannelIndexEntry): boolean {
+    if (!this.#health.isAvailable(entry.channelId)) return false;
+    const pool =
+      this.accountPool(entry.channelId) ??
+      this.accountPool(entry.credentialRef);
+    return !pool || pool.circuitBreaker.canExecute();
+  }
+
+  async #tryDowngradeChain(
+    firstEntry: ChannelIndexEntry | undefined,
+    request: DispatchRequest,
+  ): Promise<DispatchOutcome | undefined> {
+    const pool = firstEntry
+      ? (this.accountPool(firstEntry.channelId) ??
+        this.accountPool(firstEntry.credentialRef))
+      : undefined;
+    if (!pool || pool.downgradeChain.length === 0) return undefined;
+
+    for (const fallbackModel of pool.downgradeChain) {
+      request.signal?.throwIfAborted();
+      const fallbackCandidates = this.#registry.candidates(
+        fallbackModel,
+        request.operation,
+      );
+      for (const fallbackEntry of fallbackCandidates) {
+        if (!this.#health.isAvailable(fallbackEntry.channelId)) continue;
+        const fallbackContext = this.#registry.contextFor(
+          fallbackEntry.channelId,
+        );
+        if (!fallbackContext) continue;
+        try {
+          const fallbackResult = await this.#attempt(
+            fallbackEntry,
+            fallbackContext,
+            {
+              ...request,
+              model: fallbackModel,
+              input: {
+                ...request.input,
+                model: fallbackModel,
+              },
+            },
+          );
+          this.#health.recordSuccess(fallbackEntry.channelId);
+          return {
+            ...fallbackResult,
+            channelId: fallbackEntry.channelId,
+            downgradedFrom: request.model,
+          };
+        } catch {
+          continue;
+        }
+      }
+    }
+    return undefined;
   }
 
   /**
@@ -316,10 +458,93 @@ export class Scheduler {
     context: ChannelContext,
     request: DispatchRequest,
   ): Promise<SubmitResult> {
+    const pool =
+      this.accountPool(entry.channelId) ??
+      this.accountPool(entry.credentialRef);
+
+    if (!pool || pool.entries().length <= 1) {
+      return this.#attemptWithCredential(
+        entry,
+        context,
+        request,
+        entry.credentialRef,
+      );
+    }
+
+    const triedRefs = new Set<string>();
+    while (true) {
+      request.signal?.throwIfAborted();
+      const poolEntry = pool.pickNext(triedRefs);
+      const credRef = poolEntry?.credentialRef ?? entry.credentialRef;
+      if (credRef) triedRefs.add(credRef);
+
+      const startTime = this.#now();
+      try {
+        const result = await this.#attemptWithCredential(
+          entry,
+          context,
+          request,
+          credRef,
+        );
+        if (credRef) pool.recordSuccess(credRef, this.#now() - startTime);
+        return result;
+      } catch (error) {
+        request.signal?.throwIfAborted();
+        const normalized = extractNormalized(error);
+        if (
+          normalized.errorClass === "RATE_LIMITED" ||
+          normalized.httpStatus === 429
+        ) {
+          if (credRef) pool.record429(credRef, normalized.cooldownMs ?? 15_000);
+          // Seamless 429 hot-drift before first token
+          if (!this.#streamStarted(request)) {
+            const nextCandidate = pool.pickNext(triedRefs);
+            if (nextCandidate) {
+              continue;
+            }
+          }
+        } else if (
+          normalized.httpStatus !== undefined &&
+          normalized.httpStatus >= 500
+        ) {
+          if (credRef) pool.record5xx(credRef, normalized.cooldownMs ?? 30_000);
+        }
+        throw error;
+      }
+    }
+  }
+
+  async #attemptWithCredential(
+    entry: ChannelIndexEntry,
+    context: ChannelContext,
+    request: DispatchRequest,
+    credentialRef?: string,
+  ): Promise<SubmitResult> {
+    request.signal?.throwIfAborted();
     const requestContext: ChannelRequestContext = {
       idempotencyKey: `${request.idempotencyKey}:${context.channelId}`,
       ...(request.signal ? { signal: request.signal } : {}),
-      resolveSecret: () => request.resolveSecret(entry.credentialRef),
+      resolveSecret: async () => {
+        request.signal?.throwIfAborted();
+        const secret = await request.resolveSecret(credentialRef);
+        request.signal?.throwIfAborted();
+        return secret;
+      },
+      ...(request.onTextDelta
+        ? {
+            onTextDelta: async (delta: string, attemptSignal?: AbortSignal) => {
+              request.signal?.throwIfAborted();
+              attemptSignal?.throwIfAborted();
+              await request.onTextDelta!(
+                delta,
+                context.channelId,
+                attemptSignal,
+              );
+              request.signal?.throwIfAborted();
+              attemptSignal?.throwIfAborted();
+            },
+          }
+        : {}),
     };
     return entry.adapter.submit(context, request.input, requestContext);
   }

@@ -4,6 +4,7 @@ import { mkdtempSync, readFileSync, readdirSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { chromium } from "@playwright/test";
+import { headlessEdgeLaunchOptions } from "../../scripts/testing/headless-edge-options.mjs";
 import { startCompanionService } from "../../src/features/local-service/main.ts";
 
 const root = process.cwd();
@@ -107,7 +108,7 @@ async function openSettings(page) {
   await page.reload();
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   const dialog = page.getByRole("dialog", { name: "设置", exact: true });
-  await dialog.getByRole("button", { name: "储存", exact: true }).click();
+  await dialog.getByRole("button", { name: "网络与代理", exact: true }).click();
   return dialog.getByTestId("companion-settings");
 }
 
@@ -160,7 +161,11 @@ try {
   );
   await waitForPreview();
   service = await startService();
-  browser = await chromium.launch({ headless: true });
+  browser = await chromium.launch({
+    channel: "msedge",
+    headless: true,
+    ...headlessEdgeLaunchOptions,
+  });
   const context = await browser.newContext({
     viewport: { width: 1440, height: 900 },
   });

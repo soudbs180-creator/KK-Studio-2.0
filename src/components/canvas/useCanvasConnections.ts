@@ -13,10 +13,11 @@ import {
 import { type CanvasCollectionItem } from "../../domain/canvasItems";
 import { reconcileCanvasConnections } from "../../domain/canvasConnections";
 import { mergeCanvasEdges } from "../../domain/projectCanvas";
-import { canvasImageReferenceLimit } from "../../features/models/imageModelCapabilities";
-import { readProviderConnections } from "../../features/creation/providerRegistry";
-import { CanvasImageCommandContext } from "../../features/creation/CanvasImageCommand";
+import { canvasImageReferenceLimit } from "../../features/models/index.ts";
+import { readProviderConnections } from "../../features/creation/index.ts";
+import { CanvasImageCommandContext } from "../../features/creation/index.ts";
 import { canConnectTarget } from "./connectionRules";
+import { shadowEventBus } from "../../features/sync/index.ts";
 
 export function useCanvasConnections(
   items: CanvasCollectionItem[],
@@ -89,6 +90,14 @@ export function useCanvasConnections(
           ? current
           : [...current, nextEdge],
       );
+      shadowEventBus.emit({
+        eventType: "canvas.edge.created",
+        targetNodeId: target,
+        actor: "designer",
+        baseRev: 0,
+        newRev: 0,
+        payload: { edge: nextEdge, connection: nextEdge },
+      });
       return;
     }
     const sourceItem = items.find((item) => item.id === source);
@@ -168,6 +177,14 @@ export function useCanvasConnections(
         return current;
       return [...current, nextEdge];
     });
+    shadowEventBus.emit({
+      eventType: "canvas.edge.created",
+      targetNodeId: target,
+      actor: "designer",
+      baseRev: 0,
+      newRev: 0,
+      payload: { edge: nextEdge, connection: nextEdge },
+    });
     if (sourceItem?.result && sourceItem.kind === "image") {
       onItemsChange((current) =>
         current.map((item) =>
@@ -175,6 +192,22 @@ export function useCanvasConnections(
         ),
       );
     }
+  }
+
+  function deleteConnection(connectionId: string): void {
+    const edge = edgesRef.current.find((e) => e.id === connectionId);
+    if (!edge) return;
+    setRemovedEdge(edge);
+    setEdges((current) => current.filter((e) => e.id !== connectionId));
+    edgesRef.current = edgesRef.current.filter((e) => e.id !== connectionId);
+    shadowEventBus.emit({
+      eventType: "canvas.edge.deleted",
+      targetNodeId: edge.target,
+      actor: "designer",
+      baseRev: 0,
+      newRev: 0,
+      payload: { id: connectionId, connectionId, edge },
+    });
   }
 
   useEffect(() => {
@@ -189,6 +222,7 @@ export function useCanvasConnections(
 
   return {
     connect,
+    deleteConnection,
     edges,
     setEdges,
     removedEdge,

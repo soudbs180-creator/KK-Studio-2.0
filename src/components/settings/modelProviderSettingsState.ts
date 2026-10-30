@@ -3,7 +3,7 @@ import { protocolBindingMatches } from "../../domain/providerProtocol.ts";
 import {
   findModelProfileConnection,
   newModelProfileConnection,
-} from "../../features/creation/providerRegistry.ts";
+} from "../../features/creation/index.ts";
 import {
   DEFAULT_MODEL_PROVIDER,
   MODEL_PROVIDER_STORAGE_KEY,

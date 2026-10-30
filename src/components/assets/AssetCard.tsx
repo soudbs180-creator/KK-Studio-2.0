@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import type { Asset } from "../../domain/assets";
-import type { AssetArchiveState } from "../../features/creation/useAssetArchive";
+import type { AssetArchiveState } from "../../features/creation/index.ts";
 
 export default function AssetCard({
   asset,

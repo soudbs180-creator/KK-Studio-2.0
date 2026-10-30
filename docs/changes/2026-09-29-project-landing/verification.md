@@ -13,7 +13,7 @@
 
 | 检查 | 实际命令/范围 | 结果 |
 | --- | --- | --- |
-| 完整门禁 | `npm run verify` | PASS：根623/631（8平台跳过）、Agent169/171（2平台跳过）、浏览器377/377，0fail/0flaky/0skip；lint/version/typecheck/UI/format/build、治理90/0及功能34/0均通过；[日志](evidence/history-fix/verify.log)、[浏览器结果](evidence/history-fix/browser-results.json) |
+| 完整门禁 | `npm run verify` | PASS：根623/631（8平台跳过）、Agent169/171（2平台跳过）、浏览器377/377，0fail/0flaky/0skip；lint/version/typecheck/UI/format/build、治理90/0及功能34/0均通过；[日志](evidence-manifest.json)、[浏览器结果](evidence/history-fix/browser-results.json) |
 | 画布返修 | history/pointer/connection-drag/canvas-actions；workers=2、retries=0 | 24/24 PASS；新增6项修复前全部失败，含90帧单次拖动、之前历史、相连删除三轮恢复/重做、取消保留redo |
 | 启动新鲜度 | `node --test tests/unit/desktopRelease.test.ts` | 12/12 PASS；新增7项修复前失败；当前实际exe检查reason=current；过期重建采用含Agent的命令 |
 | Desktop 重建 | `npm run client:build:agent -- --no-bundle` | PASS；重新生成Agent runtime、Web dist和嵌入前端的exe；5个Rust dead_code warning保留 |
@@ -22,7 +22,7 @@
 
 当前exe SHA-256 **`fda10f06689d0d993fa6b3d856d808b88ee8947185abbe8d88f9bb8677fc19a7`**；Web/嵌入均为 `index-DBl3l-J0.js`（`a2f2ffda4fdfbd63b3c775ac4933051c1a07b34e68e15a4a7a1b51ace24af57c`），CSS `index-Dajq2fwF.css`（`315e74abc31a372ae27ca3733606d8f68cca91fa856847486430b2b1ebb5e557`）。Agent manifest仍为`42e20b6a8a22574b8a5f99192198d5c5575332e528b0dce8776d974c3e0ff818`，4277个生产文件逐一校验hash/size。合并后再次刷新主线产物及分享包，最终身份写入收据。
 
-当前代表截图：[Desktop390](evidence/history-fix/desktop/home-390.png)、[Desktop1920](evidence/history-fix/desktop/home-1920.png)、[图层](evidence/history-fix/desktop/canvas-layers.png)；Web同状态位于本目录evidence/history-fix/web。再次查看移动与桌面截图，当前CSS与前候选一致，未发现遮挡/重叠；最终用户视觉偏好仍未代填。
+当前代表截图：[Desktop390](evidence-manifest.json)、[Desktop1920](evidence-manifest.json)、[图层](evidence-manifest.json)；Web同状态位于本目录evidence/history-fix/web。再次查看移动与桌面截图，当前CSS与前候选一致，未发现遮挡/重叠；最终用户视觉偏好仍未代填。
 
 保留RED/初修/完整GREEN日志，真实Desktop初次扩展测试使用的固定右键坐标碰到已平移的节点，因此测试改为在实际DOM寻找空白命中点；未放宽菜单/数据断言。delivery初检19项结构违规已经补录文件和绑定导入包，提交后必须真实重跑；正式独立复审、精确head托管verify/delivery及main推广仍是合并门禁。
 
@@ -68,7 +68,7 @@ Windows 根测试与 Agent 的 POSIX 专属跳过分别为 8 和 2；沿用平�
 - 未配置直接生成时阻断提交，保留草稿并提供模型设置入口；断线 Codex 保留连接错误与草稿。批量数量/数据模式在模型菜单可达，没有丢失既有功能。
 - 同状态对照：保留历史 homepage/frame 证据，并检查本轮 home-390/home-1920；历史数据示例与当前空库的内容差别不计作视觉回退。人工技术检查未发现当前视口遮挡或重叠；用户最终美观偏好仍未记录。
 
-代表截图：[Desktop 390](evidence/desktop/home-390.png)、[Desktop 1920](evidence/desktop/home-1920.png)、[真实项目与图层](evidence/desktop/canvas-layers.png)、[隔离记忆设置](evidence/desktop/memory-isolated.png)。Web 同状态截图在 evidence/web。
+代表截图：[Desktop 390](evidence/desktop/home-390.png)、[Desktop 1920](evidence-manifest.json)、[真实项目与图层](evidence-manifest.json)、[隔离记忆设置](evidence-manifest.json)。Web 同状态截图在 evidence/web。
 
 ## 失败与修复记录
 
@@ -85,9 +85,14 @@ Web PASS，当前 Windows Tauri release 受影响路径 PASS；Mobile 原生 NOT
 
 ## 托管 Windows 路径预期返修
 
-- 初次 [PR31 Hosted run](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/36689037732) 的 head 是 5818418；delivery/deploy-linux PASS，verify 在 Agent 的两项 CodeBuddy 测试失败，尚未进入 browser/Rust/client。失败摘要：[Hosted 原始节选](evidence/ci-path-fix/hosted-failure-excerpt.log)。原完整下载日志 SHA b105cfb8ceed41d56a9d509bfee1ae2a8b01ac2d559aa5f529d121986df138e1 保留工程外。
+- 初次 [PR31 Hosted run](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/36689037732) 的 head 是 5818418；delivery/deploy-linux PASS，verify 在 Agent 的两项 CodeBuddy 测试失败，尚未进入 browser/Rust/client。失败摘要：[Hosted 原始节选](evidence-manifest.json)。原完整下载日志 SHA b105cfb8ceed41d56a9d509bfee1ae2a8b01ac2d559aa5f529d121986df138e1 保留工程外。
 - 原因：CI TEMP 的 RUNNER~1 是文件系统别名，既有实现返回 realpath 的 runneradmin 路径；错误在两项测试期待原始别名，路径安全实现无需修改。
-- 本地先将两个测试的 TEMP/TMP 指向工程外新建 junction 别名，按同样的 canonical path 行为重现 6/8 PASS、2 FAIL（退出1）：[RED](evidence/ci-path-fix/red.log)。不是短文件名实机模拟，也不是其它依赖/模块加载失败。
-- 两项测试改用实际文件 realpath 作为预期；同一 junction 环境 8/8 PASS（退出0）：[GREEN](evidence/ci-path-fix/green.log)。完整 Agent 169/171 PASS、2 原平台 skip、0 FAIL（退出0）：[Agent](evidence/ci-path-fix/agent-tests.log)。全部 UNC/本机目标、隔离、HTTP token、取消/超时断言保留，未改产品或 CI。
+- 本地先将两个测试的 TEMP/TMP 指向工程外新建 junction 别名，按同样的 canonical path 行为重现 6/8 PASS、2 FAIL（退出1）：[RED](evidence-manifest.json)。不是短文件名实机模拟，也不是其它依赖/模块加载失败。
+- 两项测试改用实际文件 realpath 作为预期；同一 junction 环境 8/8 PASS（退出0）：[GREEN](evidence-manifest.json)。完整 Agent 169/171 PASS、2 原平台 skip、0 FAIL（退出0）：[Agent](evidence-manifest.json)。全部 UNC/本机目标、隔离、HTTP token、取消/超时断言保留，未改产品或 CI。
 - Git 日志显示副本只规范换行/行末空白；外部原日志 SHA 与显示 SHA 在 [来源记录](evidence/ci-path-fix/log-sources.json)。第一次尝试直接 node --test 运行 TS 的模块加载失败仍在工程外保留，未冒充本轮 RED。
 - 上述是测试返修证据，旧 377 Web/原生与 5818418 独立 PASS 保留原范围；下一提交的补审、Hosted 当前结果、主线和分享包仍由 PR31/交付收据确认。
+
+
+## 2026-10-30 历史原始证据外置说明
+
+本次ORG-6将历史E2截图/原始日志/录屏外置到容器output；原引用现指向[2026-09-29-project-landing manifest](evidence-manifest.json)。原始sourcePath、commit/blob、sha256、大小与原链接目的地逐项可查；原图片嵌入改为同文字的清单链接。原结论、失败、时间和数字未重写，不代表当前功能重新验收或main已合流。E1摘要、JSON、关键图及活跃运行资料仍留仓；恢复仅写新空目录并复核字节。

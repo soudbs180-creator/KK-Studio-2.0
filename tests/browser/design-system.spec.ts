@@ -45,7 +45,9 @@ for (const theme of ["dark", "light"]) {
     const results = [];
     for (const accent of ACCENTS) {
       const expected = themeTokens(theme, accent);
-      await dialog.getByRole("button", { name: "通用", exact: true }).click();
+      await dialog
+        .getByRole("button", { name: "通用设置", exact: true })
+        .click();
       await dialog.getByLabel("主题", { exact: true }).selectOption(theme);
       const select = dialog.getByLabel("强调色", { exact: true });
       await select.selectOption(accent);
@@ -82,7 +84,7 @@ for (const theme of ["dark", "light"]) {
         .getByRole("button", { name: "模型接入", exact: true })
         .click();
       await page
-        .getByRole("button", { name: "API Key（官方）", exact: true })
+        .getByRole("tab", { name: "官方直连 API", exact: true })
         .click();
       const save = dialog.getByRole("button", {
         name: "保存连接",
@@ -264,7 +266,7 @@ for (const theme of ["dark", "light"]) {
     await page.getByRole("button", { name: "打开设置", exact: true }).click();
     await page
       .getByRole("dialog", { name: "设置" })
-      .getByRole("button", { name: "扩展", exact: true })
+      .getByRole("button", { name: "扩展与 MCP", exact: true })
       .click();
     await page
       .getByRole("dialog", { name: "设置" })

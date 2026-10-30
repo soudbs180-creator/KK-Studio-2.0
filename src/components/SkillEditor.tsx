@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { SkillRecord } from "../features/skills/skillRegistry";
+import type { SkillRecord } from "../features/skills/index.ts";
 import Modal from "./Modal";
 
 export default function SkillEditor({

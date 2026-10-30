@@ -19,9 +19,7 @@ async function submit(page: Page) {
     .getByRole("menu")
     .getByRole("button", { name: "模型接入…", exact: true })
     .click();
-  await page
-    .getByRole("button", { name: "API Key（官方）", exact: true })
-    .click();
+  await page.getByRole("tab", { name: "官方直连 API", exact: true }).click();
   await page.getByLabel("接口地址").fill("https://models.example.test/v1");
   await page.getByLabel("API Key", { exact: true }).fill("fixture-key");
   await page.getByLabel("模型名称").fill("image-test");
@@ -33,98 +31,97 @@ async function submit(page: Page) {
   await page.getByRole("button", { name: "批准并提交" }).click();
 }
 
-test("Web returned image stays saving until archival, then survives reload", async ({
-  page,
-}, testInfo) => {
-  let release!: () => void;
-  const pending = new Promise<void>((resolve) => {
-    release = resolve;
-  });
-  await page.route(endpoint, (route) =>
-    route.fulfill({ json: { data: [{ url: resultUrl }] } }),
-  );
-  await page.route(resultUrl, async (route) => {
-    await pending;
-    await route.fulfill({
-      contentType: "image/png",
-      body: Buffer.from(pixel, "base64"),
+for (const width of [390, 1099, 1920]) {
+  test(`Web returned image stays saving until archival, then survives reload ${width}`, async ({
+    page,
+  }, testInfo) => {
+    let release!: () => void;
+    const pending = new Promise<void>((resolve) => {
+      release = resolve;
     });
-  });
-  await submit(page);
-  const progress = page.locator(".project-task-running");
-  await expect(progress).toContainText("结果已返回");
-  await expect(page.locator(".project-save-state")).not.toContainText("已保存");
-  for (const width of [390, 1099, 1920]) {
+    await page.route(endpoint, (route) =>
+      route.fulfill({ json: { data: [{ url: resultUrl }] } }),
+    );
+    await page.route(resultUrl, async (route) => {
+      await pending;
+      await route.fulfill({
+        contentType: "image/png",
+        body: Buffer.from(pixel, "base64"),
+      });
+    });
+    await submit(page);
+    const progress = page.locator(".project-task-running");
+    await expect(progress).toContainText("结果已返回");
+    await expect(page.locator(".project-save-state")).not.toContainText(
+      "已保存",
+    );
     await page.setViewportSize({ width, height: 1080 });
-    if (width === 1099) {
-      await page.getByRole("button", { name: "打开对话", exact: true }).click();
-      await expect(page.locator(".workspace")).toHaveClass(/chat-mobile/);
-    }
-    await expect(page.locator(".canvas-hud")).toBeVisible();
-    await expect(progress).toBeVisible();
-    await expect
-      .poll(async () => {
-        const box = await page.locator(".project-task-status").boundingBox();
-        return box ? box.x + box.width : Infinity;
-      })
-      .toBeLessThanOrEqual(width);
-    const bounds = await page.locator(".project-task-status").boundingBox();
+    await page
+      .getByRole("button", { name: "打开任务列表", exact: true })
+      .click();
+    const taskPanel = page.getByRole("region", {
+      name: "任务列表",
+      exact: true,
+    });
+    await taskPanel.getByRole("button", { name: /^查看任务 / }).click();
+    const detail = page.getByRole("dialog", { name: "任务详情", exact: true });
+    await expect(detail).toContainText("正在生成中");
+    await expect(detail).toContainText("0/1 输出");
+    const cancel = detail.getByRole("button", {
+      name: "取消任务",
+      exact: true,
+    });
+    await cancel.click({ trial: true });
+    const bounds = await detail.boundingBox();
     expect(bounds).not.toBeNull();
     expect(bounds!.x).toBeGreaterThanOrEqual(0);
     expect(bounds!.x + bounds!.width).toBeLessThanOrEqual(width);
-    const informationHit = await page
-      .locator(".project-save-state")
-      .evaluate((element) => {
-        const rect = element.getBoundingClientRect();
-        const target = document.elementFromPoint(
-          rect.x + rect.width / 2,
-          rect.y + rect.height / 2,
-        );
-        return {
-          found: Boolean(target),
-          blockedByHud: Boolean(target?.closest(".canvas-hud")),
-        };
-      });
-    expect(informationHit).toEqual({ found: true, blockedByHud: false });
-    const cancelHit = await progress
-      .getByRole("button", { name: "取消", exact: true })
-      .evaluate((button) => {
-        const rect = button.getBoundingClientRect();
-        return button.contains(
-          document.elementFromPoint(
-            rect.x + rect.width / 2,
-            rect.y + rect.height / 2,
-          ),
-        );
-      });
-    expect(cancelHit).toBe(true);
+    await expect(
+      page.locator('.demo-result-node[data-source="provider"]'),
+    ).toHaveCount(0);
     await page.screenshot({ path: testInfo.outputPath(`saving-${width}.png`) });
-    if (width === 1099) {
-      await page.getByRole("button", { name: "收起对话", exact: true }).click();
-      await expect(page.locator(".workspace")).not.toHaveClass(/chat-mobile/);
-    }
-  }
-  release();
-  await expect(page.locator(".project-task-succeeded")).toContainText(
-    "结果已保存到本机",
-  );
-  await expect(page.locator(".project-save-state")).toHaveText("已保存");
-  await expect(
-    page.locator('.demo-result-node[data-source="provider"]'),
-  ).toHaveCount(1);
-  await page.reload();
-  await page.getByRole("button", { name: "项目库", exact: true }).click();
-  await page
-    .locator(".project-library-card")
-    .filter({ hasText: "生成保存状态 fixture" })
-    .click();
-  await expect(page.locator(".project-task-succeeded")).toContainText(
-    "结果已保存到本机",
-  );
-  await expect(
-    page.locator('.demo-result-node[data-source="provider"]'),
-  ).toHaveCount(1);
-});
+    release();
+    await expect(detail).toContainText("已完成");
+    await expect(detail).toContainText("1/1 输出");
+    await expect(cancel).toHaveCount(0);
+    await detail
+      .getByRole("button", { name: "关闭任务详情", exact: true })
+      .click();
+    await taskPanel
+      .getByRole("button", { name: "关闭任务列表", exact: true })
+      .click();
+    await expect(
+      page.locator('.demo-result-node[data-source="provider"]'),
+    ).toHaveCount(1);
+    // The HUD status is collapsed on narrow canvases; verify its precise save
+    // labels on the wide canvas, and visible task state at every width.
+    await page.setViewportSize({ width: 1920, height: 1080 });
+    await expect(page.locator(".project-task-succeeded")).toBeVisible();
+    const hudBounds = await page.locator(".canvas-hud").boundingBox();
+    expect(hudBounds!.width).toBeGreaterThan(0);
+    expect(hudBounds!.x + hudBounds!.width).toBeLessThanOrEqual(1920);
+    await expect(page.locator(".project-task-succeeded")).toContainText(
+      "结果已保存到本机",
+    );
+    await expect(page.locator(".project-save-state")).toHaveText("已保存");
+    await page.setViewportSize({ width, height: 1080 });
+    await page.reload();
+    await page.getByRole("button", { name: "项目库", exact: true }).click();
+    await page
+      .locator(".project-library-card")
+      .filter({ hasText: "生成保存状态 fixture" })
+      .click();
+    await page
+      .getByRole("button", { name: "打开任务列表", exact: true })
+      .click();
+    await taskPanel.getByRole("button", { name: /^查看任务 / }).click();
+    await expect(detail).toContainText("已完成");
+    await expect(detail).toContainText("1/1 输出");
+    await expect(
+      page.locator('.demo-result-node[data-source="provider"]'),
+    ).toHaveCount(1);
+  });
+}
 
 test("Web archival failure exposes its reason and does not offer an ordinary retry", async ({
   page,

@@ -7,6 +7,7 @@ import {
 import { newCanvasNodeId } from "../../domain/projectCanvas";
 import {
   CANVAS_KIND_LABELS,
+  removeCanvasItems,
   type CanvasCollectionItem,
   type CanvasItemKind,
   type DemoResult,
@@ -15,8 +16,12 @@ import { cardLayout, cardSelectionLayout } from "../../domain/canvasGraph";
 import { MIN_SCALE, type Point, type ViewTransform } from "./canvasModel";
 import { fitRects } from "../../domain/canvasViewport";
 import { visibleComposerExtraHeight } from "./composerLayout";
+import { shadowEventBus } from "../../features/sync/index.ts";
 
 export interface AddNodeOptions {
+  id?: string;
+  comfyWorkflow?: CanvasCollectionItem["comfyWorkflow"];
+  comfyWorkflowSourceId?: string;
   parentId?: string;
   result?: DemoResult;
   title?: string;
@@ -28,6 +33,7 @@ export interface AddNodeOptions {
   referenceMode?: boolean;
   referenceOnly?: boolean;
   referenceSlot?: CanvasCollectionItem["referenceSlot"];
+  referenceFrame?: CanvasCollectionItem["referenceFrame"];
   assetId?: string;
   generationStatus?: CanvasCollectionItem["generationStatus"];
   generationIndex?: number;
@@ -71,9 +77,12 @@ export function useCanvasNodeActions({
   });
 
   function addNode(kind: CanvasItemKind, options: AddNodeOptions = {}): string {
-    const id = newCanvasNodeId(kind);
+    const id = options.id ?? newCanvasNodeId(kind);
     const item: CanvasCollectionItem = {
       id,
+      node_rev: 1,
+      comfyWorkflow: options.comfyWorkflow,
+      comfyWorkflowSourceId: options.comfyWorkflowSourceId,
       kind,
       plugin: options.plugin,
       title:
@@ -95,6 +104,7 @@ export function useCanvasNodeActions({
       referenceMode: options.referenceMode,
       referenceOnly: options.referenceOnly,
       referenceSlot: options.referenceSlot,
+      referenceFrame: options.referenceFrame,
       assetId: options.assetId,
       generationStatus: options.generationStatus,
       generationIndex: options.generationIndex,
@@ -121,6 +131,15 @@ export function useCanvasNodeActions({
           });
     setNodes((current) => ({ ...current, [id]: position }));
     onItemsChange((current) => [...current, item]);
+    shadowEventBus.setNodeRevision(id, 1);
+    shadowEventBus.emit({
+      eventType: "canvas.node.created",
+      targetNodeId: id,
+      actor: "designer",
+      baseRev: 0,
+      newRev: 1,
+      payload: { item, position },
+    });
     if (options.select !== false) {
       pendingFocus.current = id;
       setSelectedNode(id);
@@ -128,7 +147,19 @@ export function useCanvasNodeActions({
     return id;
   }
   function removeNode(id: string): void {
-    onItemsChange((current) => current.filter((item) => item.id !== id));
+    const currentItem = items.find((item) => item.id === id);
+    const baseRev = currentItem?.node_rev ?? shadowEventBus.getNodeRevision(id);
+    const newRev = baseRev + 1;
+    shadowEventBus.setNodeRevision(id, newRev);
+    shadowEventBus.emit({
+      eventType: "canvas.node.deleted",
+      targetNodeId: id,
+      actor: "designer",
+      baseRev,
+      newRev,
+      payload: { id },
+    });
+    onItemsChange((current) => removeCanvasItems(current, [id]));
     setNodes((current) =>
       Object.fromEntries(Object.entries(current).filter(([key]) => key !== id)),
     );

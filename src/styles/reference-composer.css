@@ -1,0 +1,365 @@
+/* Figma 619:3428: 652/358px inputs with a 72px shared reference row. */
+.reference-composer.creation-composer {
+  top: calc(74px + var(--media-height, 400px));
+  left: -32px;
+  width: 652px;
+  height: auto;
+  min-height: 156px;
+  padding: 12px;
+  border: 0;
+  box-shadow: inset 0 0 0 1px var(--border-default);
+  border-radius: var(--kk-radius-panel);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.reference-composer.video-composer {
+  top: 240px;
+  left: -141px;
+}
+.reference-composer > .reference-strip:empty {
+  display: none;
+}
+.reference-strip:has(.reference-scroll) {
+  min-width: 0;
+}
+.reference-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: thin;
+  overscroll-behavior-x: contain;
+  padding: 0;
+  max-width: calc(100% - 40px);
+}
+.reference-frame-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: max-content;
+  min-height: 72px;
+}
+.reference-thumb {
+  position: relative;
+  display: block;
+  flex: 0 0 72px;
+  width: 72px;
+  height: 72px;
+  min-height: 72px;
+  border-radius: var(--kk-radius-lg);
+  background: var(--bg-input);
+}
+.reference-thumb[data-ratio="16:9"] {
+  flex-basis: 128px;
+  width: 128px;
+}
+.reference-thumb > .reference-thumb-preview,
+.reference-thumb > .reference-slot-add {
+  position: relative;
+  inset: auto;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  min-height: 72px;
+  padding: 0;
+  border: 0;
+  box-shadow: inset 0 0 0 1px var(--border-default);
+  border-radius: inherit;
+  background: transparent;
+  overflow: hidden;
+  opacity: 1;
+}
+.reference-thumb .reference-thumbnail,
+.reference-preview-popover .reference-thumbnail,
+.reference-fullscreen .reference-thumbnail {
+  position: static;
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  object-fit: cover;
+}
+.reference-thumb .reference-slot-label {
+  position: absolute;
+  inset: auto 0 0;
+  height: 20px;
+  margin: 0;
+  background: color-mix(in srgb, var(--bg-elevated) 72%, transparent);
+  color: var(--text-primary);
+  font-size: var(--kk-font-caption);
+  line-height: 20px;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.reference-thumb.is-empty .reference-slot-label {
+  background: transparent;
+  color: var(--text-secondary);
+}
+.reference-thumb > .reference-remove {
+  position: absolute;
+  inset: 0 0 auto auto;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  min-height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--kk-radius-full);
+  background: var(--kk-overlay);
+  color: var(--text-primary);
+  opacity: 0;
+}
+.reference-thumb:hover > .reference-remove,
+.reference-thumb:focus-within > .reference-remove {
+  opacity: 1;
+}
+.reference-strip .reference-frame-swap {
+  position: static;
+  display: grid;
+  place-items: center;
+  flex: 0 0 32px;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--kk-radius-full);
+  background: transparent;
+  color: var(--text-secondary);
+  transform: none;
+}
+.reference-composer.creation-composer > textarea {
+  position: static;
+  flex: 0 0 auto;
+  width: 100%;
+  height: 80px;
+  min-height: 80px;
+  padding: 0 40px 0 0;
+  resize: none;
+  font-size: var(--kk-font-body);
+  line-height: var(--kk-line-body);
+}
+.reference-composer.creation-composer.expanded > textarea {
+  height: 200px;
+}
+.reference-composer > .creation-composer-actions {
+  top: 12px;
+  right: 12px;
+}
+.reference-composer > .creation-controls {
+  position: static;
+  flex: 0 0 auto;
+  height: 44px;
+  min-width: 0;
+  gap: 8px;
+}
+.reference-composer .creation-controls > .composer-ref-add {
+  position: static;
+  display: grid;
+  place-items: center;
+  flex: 0 0 32px;
+  width: 32px;
+  height: 32px;
+  min-height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--kk-radius-full);
+  background: transparent;
+  color: var(--text-secondary);
+}
+.reference-frame-swap:hover:not(:disabled),
+.reference-thumb-preview:hover,
+.reference-slot-add:hover:not(:disabled),
+.composer-ref-add:hover:not(:disabled) {
+  color: var(--text-primary);
+  background: var(--bg-elevated);
+}
+.reference-composer [data-control="params"] {
+  min-width: 0;
+  flex-shrink: 1;
+}
+.reference-composer .param-button {
+  max-width: 100%;
+  overflow: hidden;
+}
+.reference-composer .video-param-summary {
+  overflow: hidden;
+}
+.reference-composer > .generation-feedback,
+.reference-composer > .local-generation-status {
+  position: static;
+  margin: 0;
+}
+.reference-preview-popover {
+  position: fixed;
+  inset: auto;
+  margin: 0;
+  padding: 12px;
+  width: 320px;
+  border: 0;
+  border-radius: var(--kk-radius-menu);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  box-shadow:
+    inset 0 0 0 1px var(--border-default),
+    var(--ui-shadow);
+  overflow: hidden;
+}
+.reference-preview-popover:popover-open {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.reference-preview-media {
+  width: 100%;
+  height: 168px;
+}
+.reference-preview-media .reference-thumbnail {
+  object-fit: contain;
+}
+.reference-preview-popover > p {
+  margin: 0;
+  height: 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--kk-font-caption);
+  line-height: 20px;
+}
+.reference-preview-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 32px;
+}
+.reference-preview-actions > button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--kk-radius-full);
+}
+.reference-preview-actions > button:nth-child(2) {
+  flex: 1;
+}
+.reference-locate-glyph {
+  width: 20px;
+  height: 20px;
+  background: currentColor;
+  mask: url("/design/figma/reference-return-to-content.svg") center / contain
+    no-repeat;
+}
+.reference-media-placeholder {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 4px;
+  color: var(--text-secondary);
+  font-size: var(--kk-font-caption);
+  line-height: 16px;
+}
+.reference-fullscreen {
+  width: calc(100vw - 48px);
+  height: calc(100dvh - 48px);
+  max-width: none;
+  max-height: none;
+  flex-direction: column;
+  padding: 12px;
+}
+.reference-fullscreen[open] {
+  display: flex;
+}
+.reference-fullscreen > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.reference-fullscreen > header > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.reference-fullscreen > header > button {
+  display: grid;
+  place-items: center;
+  flex: 0 0 32px;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--kk-radius-full);
+}
+.reference-fullscreen-media {
+  flex: 1;
+  min-height: 0;
+  margin-top: 8px;
+}
+.reference-fullscreen-media .reference-thumbnail {
+  object-fit: contain;
+}
+.canvas-node-result.has-reference-composer[data-kind="image"]
+  > .reference-composer:not(.canvas-composer-screen) {
+  left: -136px;
+  margin-top: 16px;
+}
+.reference-composer.creation-composer.canvas-composer-screen {
+  left: 50%;
+  top: auto;
+  width: min(358px, calc(100vw - 32px));
+  padding: 12px;
+  gap: 8px;
+  min-height: 132px;
+}
+.reference-composer.canvas-composer-screen > textarea {
+  height: 56px;
+  min-height: 56px;
+}
+.reference-composer.canvas-composer-screen.expanded > textarea {
+  height: 200px;
+}
+.reference-composer.canvas-composer-screen > .creation-composer-actions {
+  position: absolute;
+}
+.reference-composer.canvas-composer-screen > .creation-controls {
+  flex-wrap: wrap;
+  height: auto;
+}
+.reference-composer.canvas-composer-screen .model-button {
+  max-width: 140px;
+}
+@media (pointer: coarse) {
+  .reference-thumb > .reference-remove {
+    width: 44px;
+    height: 44px;
+    opacity: 1;
+  }
+  .reference-thumb > .reference-remove svg {
+    width: 28px;
+    height: 28px;
+  }
+  .reference-strip .reference-frame-swap {
+    flex-basis: 44px;
+    width: 44px;
+    height: 44px;
+  }
+  .reference-composer .creation-controls > .composer-ref-add {
+    flex-basis: 44px;
+    width: 44px;
+    height: 44px;
+  }
+  .reference-composer .creation-controls > .composer-ref-add svg {
+    width: 28px;
+    height: 28px;
+  }
+}

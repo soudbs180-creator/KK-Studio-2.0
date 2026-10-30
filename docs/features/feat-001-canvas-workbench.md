@@ -2,8 +2,8 @@
 
 - 状态：REAL
 - 领域：canvas
-- 最近更新：2026-10-14
-- 关联任务：T2、UI-004、TASK-UI-006、TASK-CANVAS-KAWORKAI-001、TASK-UI-011、TASK-222-ACTIONS-20261014、TASK-223-ACTIONS-20261014
+- 最近更新：2026-10-24
+- 关联任务：T2、UI-004、TASK-UI-006、TASK-CANVAS-KAWORKAI-001、TASK-UI-011、TASK-222-ACTIONS-20261014、TASK-223-ACTIONS-20261014、TASK-CANVAS-PERF-20261024
 
 ## 用户可见入口
 
@@ -18,6 +18,10 @@
 - 持久化：画布随 `src/features/creation/snapshotCodec.ts` 编入项目快照
 - 桌面 Rust：无直接画布命令（节点结果素材经 FEAT-014/015 的原生存储）
 
+## 2026-10-18 当前有界本地验证
+
+Desktop/Web2.1.39/source50412d4e：项目/文件夹置顶和manual/recent/priority排序复用同CreationSnapshot/CAS，未就绪或冲突真实禁用。精确完整浏览器854首试PASS/0flaky，包含侧栏及四比例几何回归；fresh当前EXE四次正常启闭验证pin/unpin/priority、真实项目/组操作和新root项目包往返，宽图6状态SVG/DOM/实际拖线/按钮命中通过。原库两周期9项目/11聊天/22消息及身份/草稿/选择保持。验证同时发现并修复429保存前健康标记竞态；原852/1flaky与所有失败保留。[本轮验证](../changes/2026-10-18-sidebar-canvas/verification.md)区分源码、产物、原资料和最终文档收据；本任务只作本地技术关闭，不提升功能成熟度/runtimeEvidence，真实Provider/Hosted/发布和用户整体接受另验。
+
 ## 测试与证据
 
 - 2.1.24本地验证（TASK-223，本任务DONE/PASS；功能主状态保持）：背景样式/颜色、短屏菜单、L/G弹层边界及取消/删除/撤销已按现有链路验证；隐藏loading等待卡在成功/取消后Redo恢复终态，手机确认布局与原坐标保留；最终产品58b5c07f与完整验证、官方/便携回执见[本轮验证](../changes/2026-10-14-action-usability-223/verification.md)。
@@ -29,6 +33,8 @@
 - 证据：`docs/changes/2026-09-20-ui-main-alignment/`、`docs/evidence/2026-09-21-main-close-002/`、`docs/changes/2026-09-29-kaworkai-canvas/`
 
 ## 当前能力
+
+- 2026-10-24 轻量性能批次正在验证：跳过普通手势预览的历史扫描、缓存持久化参照指纹、仅协调图输入变化的项目，并消除保存前重复规范化。预览journal和原有撤销/恢复契约保持；连线局部计算、最终浏览器与独审见[当前验证](../changes/2026-10-24-canvas-performance/verification.md)。不以计数收益代称任意规模帧率或原生安装已验。
 
 - 本轮2.1.23已验证补齐草稿顶部删除、屏幕尺寸上传、320px HUD避让与撤销偏好恢复；不删除归档原件。
 

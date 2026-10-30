@@ -8,13 +8,11 @@
 ## 用户可见入口
 
 - [kkai.plus](https://kkai.plus)初次按手机UA或viewport≤767进入独立[手机Web](https://kkai.plus/mobile/)；宽屏与[显式桌面入口](https://kkai.plus/?view=desktop)保留原Desktop资料访问，使用中resize不强制跳转。
-- 当前Web2.1.40 / Mobile源码2.1.5正式上线，产品main b457/Release416447150/Web部署39128852497同源；Desktop源码2.1.38。本轮不新生成，前次39真实图文保存回执和本次旧图文恢复分别记录。详见[当前生产收据](../changes/2026-10-18-mobile-composer-production-receipt/verification.md)。
-- PR72已正常合并并正式发布：菜单任务/历史结果优先，详情结果→提示词→更多；六入口、模型名可点、直接圆形发送。线上实际320/390宽UI及旧资料恢复已复核，实体Android Chrome接受仍待回执；不把旧38用户回复当40验收。
+- Web2.1.39 / Mobile源码2.1.4已正式上线，实际来源main9d10/Release416299447；生产独立入口九项及430×637浏览器各一次真实图片/短文本的保存、导出/刷新现场实测通过，独立live证据复核已通过，当前文档head门禁待提交后执行。旧2.1.38用户实际手机UI确认只按原时点记录，本次不是Safari/Native/所有Provider或用户最终接受。
 
 ## 代码位置
 
-- 模型输入交互：`mobile/src/screens/Composer.tsx` → `ComposerInput.tsx` / `ComposerToolbar.tsx` / `ComposerPanels.tsx` → `ModelPicker.tsx` / `mobile/src/ui/Sheet.tsx`；浏览器语音 `mobile/src/ui/useSpeechInput.web.ts`
-- 结果优先呈现：`mobile/src/screens/TasksScreen.tsx` / `TaskDetailScreen.tsx` / `ChatScreen.tsx` → `mobile/src/ui/TaskResults.tsx`；Desktop共享发送 `src/components/UiIcon.tsx` / `AgentActionButton.tsx` / `StartComposer.tsx` 与 `src/styles/composer.css`
+- 模型输入交互：`mobile/src/screens/Composer.tsx` → `ComposerToolbar.tsx` → `ModelPicker.tsx` → `mobile/src/ui/Sheet.tsx`
 - 独立入口与聊天：`mobile/src/app/_layout.tsx` → `mobile/src/app/(workspace)/index.tsx` → `mobile/src/screens/ChatScreen.tsx`
 - 独立本机/真实账号上下文和数据：`mobile/src/application`、`mobile/src/storage`；纯共享契约：`packages/creation-contracts`
 - 组合Web与初始分流：`deploy/build-combined-web.mjs`、`deploy/initial-web-entry.js`；Expo前缀配置：`mobile/app.config.ts`
@@ -25,7 +23,7 @@
 
 ## 测试与证据
 
-- TASK-MOBILE-COMPOSER-001产品已审791e与合并b457同tree，全63文件独审/57定向测试PASS；main quality39124025635完整attempt2五项、双平台guards及新health通过，正式Web部署39128852497成功。Hosted实际main Mobile artifact40/40首试/retry0；本地Mobile433、根verify/窄屏40/40、v39完整snapshot/backup合成兼容与预算保留[原验证](../changes/2026-10-18-mobile-composer/verification.md)，原32/8失败、根5xx flaky、main首轮managed-web15秒超时、health403和零jobs异常不抹去。当前[生产验证](../changes/2026-10-18-mobile-composer-production-receipt/verification.md)记录真实entry、线上320/390六控件44/48圆形同排、模型名picker/面板响应、任务结果优先、旧图文/unknown及current40/唯一previous39。新40普通页面停留927.716秒后刷新，图片可见且再次UI导出原件逐字节一致（不等于实体切后台），实体后台未验；以下39/38与旧文档PENDING均按历史时点保留。
+- 新TASK-MOBILE-COMPOSER-001修复空text模型入口失焦卸载；本地四配置红测后13项首试通过，Web2.1.40/Mobile2.1.5仍是未发布候选，当前源码head独审/Hosted/生产验收待续。见[本次验证](../changes/2026-10-18-mobile-composer/verification.md)。五JPEG原文件非黑与15分8秒原件恢复有独立补证，不能把截断网络或冻结模拟当实体Android后台通过，状态仍PARTIAL。原图文TASK按PR70/71实际范围有界DONE/PASS，以下原时点文档门禁等待措辞不作为当前阻断。
 
 - 本轮正式生产来源main `9d10af39d0b028a8ddc7f06c594c813ef25b7205` / tag `v2.1.39`；Mobile371与根本地verify、产品独审/同tree晋升、精确main Hosted、正式Web部署及生产入口9项通过，见[本轮验证](../changes/2026-10-18-mobile-12ai/verification.md)与[发布实录](../changes/2026-10-18-mobile-12ai/release.md)。旧2.1.38来源和323项历史记录如下保留，不冒充本次新图文验收。
 - 图片服务/自动归档冷启动、视频服务/应用恢复/UI策略由 `servicesTwelveAiImages.test.ts`、`applicationTwelveAiImageArchive.test.ts`、`servicesTwelveAiVideo.test.ts`、`applicationVideo.test.ts`、`uiVideo.test.ts` 覆盖；视频实际本地bundle的失败/GET恢复、成功样本保存/播放/普通导出/刷新有独立证据，0真实上游视频调用。
@@ -36,19 +34,17 @@
 
 ## 当前能力
 
-- 当前正式40已接默认任务/历史图片、视频或文本结果预览、可展开详情与完整输入；上传复用原件，Skill只预览/明确改草稿，语音手势启动不自动发。官方12ai指定模型参考图走原件校验/multipart编辑，通用端点/文本视频参考/遮罩仍拒绝；fixture最终40/40，线上实际旧图片/文本展示及恢复已验，新真实参考编辑/视频/语音不额外耗额度、仍未验。
-- 尺寸为本次运行时选择，经提交捕获旧task.imageSize；未发刷新/切类型或模型回自适应。没有新增draft字段、schema/storage身份或backup格式，旧v39完整reader与备份合成兼容通过，沿ADR-025，不把该fixture当现网降版实测。
-- 已恢复原创独立Expo/RN手机UI：以聊天创作为首页，提供胶囊输入框、触控抽屉与独立设置/资料入口；v2.1.38已取得用户实际手机UI接受，属于历史确认，40接受仍待回执；独立手机端不以根桌面窄屏代替。
+- 已恢复原创独立Expo/RN手机UI：以聊天创作为首页，提供胶囊输入框、触控抽屉与独立设置/资料入口；已正式部署并取得实际手机UI接受，不再用根桌面窄屏充当独立手机端。
 - Web默认真实本机context，不伪造AuthSession或身份服务；项目/草稿与Desktop旧资料使用隔离存储，刷新恢复已验。可选账号入口可往返；Gateway/Comfy与账号请求仍要求真实账号上下文。
-- Web凭据仅请求/会话内存保存；没有以明文localStorage保留密钥。本机资料不自动迁移Desktop或上传云端；前39生产的12ai同步图片base64原件与SSE真实单图/短文本已1/1保存并刷新恢复，本次40只核旧资料回读。视频持久ID/GET-only恢复仅有本地协议/UI/样本验证，不能扩大成上游真实视频能力已接受。
-- 只跟随正式Release自动部署，普通提交与预发布不部署；当前current40/唯一previous39，exact2/两版validated与原39manifest/archive保持有只读库存及独立18项复核；配置/auth/服务两次观察一致，不推断DB每字节静止。canonical并发变化不纳入隔离发布，不声称其他工作树恒定。
+- Web凭据仅请求/会话内存保存；没有以明文localStorage保留密钥。本机资料不自动迁移Desktop或上传云端；12ai同步图片base64原件与既有SSE的本轮真实单图/短文本已1/1保存并刷新恢复、旧资料回读保持。视频持久ID/GET-only恢复仅有本地协议/UI/样本验证，不能扩大成上游真实视频能力已接受。
+- 只跟随正式Release自动部署，普通提交与预发布不部署；当前受管静态产物为current39和唯一previous38，exact2与两版manifest验证有库存实录；服务/配置/auth前后观察保持，不推断数据库每字节静止。canonical并发改动未纳入隔离发布，不声称其他工作树完全未变。
 
 ## 差距与后端化
 
-当前[40生产收据](../changes/2026-10-18-mobile-composer-production-receipt/verification.md)记录正式发布与线上UI/旧资料恢复，实体Android Chrome验收待回复；本任务保持IN_PROGRESS/NOT_VERIFIED。以下是[前39生产实测](../changes/2026-10-18-mobile-12ai-production-receipt/verification.md)的历史范围：用户保存Key后各一次真实gpt-4.1-mini文本与gpt-image-2图片1/1保存及刷新恢复，PNG830495B/SHA64a6af6e与Provider/两次UI导出一致，旧unknown/import保留；独立live审核通过、PR71文档门禁已完成。不新增生成，不把fixture视频、参考编辑、麦克风、Safari或新Native称为已验收。FEAT-028 PARTIAL/T12开放。
+本轮 [生产收据](../changes/2026-10-18-mobile-12ai-production-receipt/verification.md) 记录用户保存Key后，正式9d10/140201入口的一次真实gpt-4.1-mini文本200 SSE stop/[DONE]及gpt-image-2图片200 b64_json n1成功，task/asset与内容刷新恢复，Provider0/POST0；PNG830495B SHA64a6af6e与Provider字节及两次普通导出一致，旧失败任务/import原件未清除。原CORS失败和55e文档Delivery失败仍按原时点保留；独立live证据复核已PASS_WITH_EXPLICIT_SCOPE/无阻断，最终文档head门禁待完成，任务REVIEW。文本仍为单条输入/SSE；视频只验本地fixture保存/播放/导出/刷新、0真实视频调用，真实视频/费用、新Native包和Safari继续未验，FEAT-028整体PARTIAL不变。
 
-- T12保持开放（现有账本TODO不在本任务改动），FEAT-028保持PARTIAL。手机/桌面同功能是目标，当前远程Agent/MCP、新原生包、Safari专项、正式身份/云同步、真实参考编辑和实体后台仍未验；本轮不搭新伴随服务、不凭入口宣称全能力相等。
-- 用户实际手机在v2.1.38确认独立UI正常；该历史确认不替代40实体Android接受、目标运行时图文生成/原件写入/重载双门，也不证明云同步或多端全能力一致。
+- T12保持开放，FEAT-028保持PARTIAL。独立源码、手机Web运行形态和本机/可选账号边界已实现，不再视为未定稿；新原生包、Safari专项、正式身份服务、真实Provider/Companion及完整手机生成链仍未验。
+- 用户实际手机已确认本轮UI正常；该确认不替代目标运行时一次真实文本生成和一次图片生成、结果回填/原件写入、保存重载双门，也不证明付费、云同步或多端全能力一致。
 - 沿Desktop → Web → Mobile原交付顺序继续核心能力与平台验收。跨端复用继续使用独立`mobile/`和可版本化纯契约，不把Native宿主或Mobile页面混入根Desktop/Web实现。
 
 ## 变更记录
@@ -68,6 +64,31 @@
 用户拒绝2.1.37桌面响应式后，从58df恢复282份mobile/contracts原创源码，未带入旧Desktop2.1.13。本轮main f730 / 正式Release v2.1.38已将独立 `/mobile/` UI、本机context与可选账号边界交付到kkai.plus；生产九项及用户实际手机UI确认通过。Mobile源码2.1.3不等于新APK/iOS发布。
 
 179个current与155个previous文件完整哈希验证、7个入口HTTPS逐哈希核对、单回滚版本及临时授权/私钥清理均有[生产收据](../changes/2026-10-18-web-mobile-production-receipt/verification.md)。上述2026-10-14段为原时点原文，不覆盖当前独立手机Web事实。T12与Mobile整体PARTIAL边界保持；最终文档head的独立审查、Hosted及Delivery另按文档PR执行。
+
+
+## 合流保留的远端增量事实（历史来源 origin/main4610）
+
+以下为远端既有记录，保留其时间与失败边界；不代表2026-10-30候选已发布或通过验收。
+
+- 当前Web2.1.40 / Mobile源码2.1.5正式上线，产品main b457/Release416447150/Web部署39128852497同源；Desktop源码2.1.38。本轮不新生成，前次39真实图文保存回执和本次旧图文恢复分别记录。详见[当前生产收据](../changes/2026-10-18-mobile-composer-production-receipt/verification.md)。
+- PR72已正常合并并正式发布：菜单任务/历史结果优先，详情结果→提示词→更多；六入口、模型名可点、直接圆形发送。线上实际320/390宽UI及旧资料恢复已复核，实体Android Chrome接受仍待回执；不把旧38用户回复当40验收。
+
+- 模型输入交互：`mobile/src/screens/Composer.tsx` → `ComposerInput.tsx` / `ComposerToolbar.tsx` / `ComposerPanels.tsx` → `ModelPicker.tsx` / `mobile/src/ui/Sheet.tsx`；浏览器语音 `mobile/src/ui/useSpeechInput.web.ts`
+- 结果优先呈现：`mobile/src/screens/TasksScreen.tsx` / `TaskDetailScreen.tsx` / `ChatScreen.tsx` → `mobile/src/ui/TaskResults.tsx`；Desktop共享发送 `src/components/UiIcon.tsx` / `AgentActionButton.tsx` / `StartComposer.tsx` 与 `src/styles/composer.css`
+
+- TASK-MOBILE-COMPOSER-001产品已审791e与合并b457同tree，全63文件独审/57定向测试PASS；main quality39124025635完整attempt2五项、双平台guards及新health通过，正式Web部署39128852497成功。Hosted实际main Mobile artifact40/40首试/retry0；本地Mobile433、根verify/窄屏40/40、v39完整snapshot/backup合成兼容与预算保留[原验证](../changes/2026-10-18-mobile-composer/verification.md)，原32/8失败、根5xx flaky、main首轮managed-web15秒超时、health403和零jobs异常不抹去。当前[生产验证](../changes/2026-10-18-mobile-composer-production-receipt/verification.md)记录真实entry、线上320/390六控件44/48圆形同排、模型名picker/面板响应、任务结果优先、旧图文/unknown及current40/唯一previous39。新40普通页面停留927.716秒后刷新，图片可见且再次UI导出原件逐字节一致（不等于实体切后台），实体后台未验；以下39/38与旧文档PENDING均按历史时点保留。
+
+- 当前正式40已接默认任务/历史图片、视频或文本结果预览、可展开详情与完整输入；上传复用原件，Skill只预览/明确改草稿，语音手势启动不自动发。官方12ai指定模型参考图走原件校验/multipart编辑，通用端点/文本视频参考/遮罩仍拒绝；fixture最终40/40，线上实际旧图片/文本展示及恢复已验，新真实参考编辑/视频/语音不额外耗额度、仍未验。
+- 尺寸为本次运行时选择，经提交捕获旧task.imageSize；未发刷新/切类型或模型回自适应。没有新增draft字段、schema/storage身份或backup格式，旧v39完整reader与备份合成兼容通过，沿ADR-025，不把该fixture当现网降版实测。
+- 已恢复原创独立Expo/RN手机UI：以聊天创作为首页，提供胶囊输入框、触控抽屉与独立设置/资料入口；v2.1.38已取得用户实际手机UI接受，属于历史确认，40接受仍待回执；独立手机端不以根桌面窄屏代替。
+
+- Web凭据仅请求/会话内存保存；没有以明文localStorage保留密钥。本机资料不自动迁移Desktop或上传云端；前39生产的12ai同步图片base64原件与SSE真实单图/短文本已1/1保存并刷新恢复，本次40只核旧资料回读。视频持久ID/GET-only恢复仅有本地协议/UI/样本验证，不能扩大成上游真实视频能力已接受。
+- 只跟随正式Release自动部署，普通提交与预发布不部署；当前current40/唯一previous39，exact2/两版validated与原39manifest/archive保持有只读库存及独立18项复核；配置/auth/服务两次观察一致，不推断DB每字节静止。canonical并发变化不纳入隔离发布，不声称其他工作树恒定。
+
+当前[40生产收据](../changes/2026-10-18-mobile-composer-production-receipt/verification.md)记录正式发布与线上UI/旧资料恢复，实体Android Chrome验收待回复；本任务保持IN_PROGRESS/NOT_VERIFIED。以下是[前39生产实测](../changes/2026-10-18-mobile-12ai-production-receipt/verification.md)的历史范围：用户保存Key后各一次真实gpt-4.1-mini文本与gpt-image-2图片1/1保存及刷新恢复，PNG830495B/SHA64a6af6e与Provider/两次UI导出一致，旧unknown/import保留；独立live审核通过、PR71文档门禁已完成。不新增生成，不把fixture视频、参考编辑、麦克风、Safari或新Native称为已验收。FEAT-028 PARTIAL/T12开放。
+
+- T12保持开放（现有账本TODO不在本任务改动），FEAT-028保持PARTIAL。手机/桌面同功能是目标，当前远程Agent/MCP、新原生包、Safari专项、正式身份/云同步、真实参考编辑和实体后台仍未验；本轮不搭新伴随服务、不凭入口宣称全能力相等。
+- 用户实际手机在v2.1.38确认独立UI正常；该历史确认不替代40实体Android接受、目标运行时图文生成/原件写入/重载双门，也不证明云同步或多端全能力一致。
 
 ### 2026-10-18 统一版本发布候选
 

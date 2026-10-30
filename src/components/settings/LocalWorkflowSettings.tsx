@@ -2,7 +2,7 @@ import { useState } from "react";
 import WorkflowImportButton, {
   downloadWorkflow,
 } from "../WorkflowImportButton";
-import type { WorkflowRecord } from "../../features/comfyui/workflowRegistry";
+import type { WorkflowRecord } from "../../features/comfyui/index.ts";
 
 export interface LocalWorkflowAccess {
   records: readonly WorkflowRecord[];

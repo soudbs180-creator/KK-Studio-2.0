@@ -1,0 +1,69 @@
+{
+  "version": 1,
+  "taskId": "TASK-ORG-6",
+  "classification": "E2-externalized-historical-evidence",
+  "packagePath": "docs/evidence/navigation-review-2026-09-07",
+  "entries": [
+    {
+      "sourcePath": "docs/evidence/navigation-review-2026-09-07/navigation-before.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "466fbcc18d9076532fabd57016fc3caf158e0e9d",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/navigation-review-2026-09-07/navigation-before.png",
+      "bytes": 6618,
+      "sha256": "f34af6c1c75de59f407e4307fe570b626c3d98725495b7024380bb4fa7c84563",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": [
+        {
+          "document": "docs/evidence/navigation-review-2026-09-07/review.md",
+          "line": 32,
+          "originalTarget": "navigation-before.png",
+          "referenceKind": "link"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/evidence/navigation-review-2026-09-07/navigation-chat-spacing.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "a570ef059d0a8aa22422faeb9e5bf0a74108acab",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/navigation-review-2026-09-07/navigation-chat-spacing.png",
+      "bytes": 11717,
+      "sha256": "e1a5c588c089d9421f973dbde9e71543db800d04873bc8415a49a068d9d48e15",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": [
+        {
+          "document": "docs/evidence/navigation-review-2026-09-07/review.md",
+          "line": 32,
+          "originalTarget": "navigation-chat-spacing.png",
+          "referenceKind": "link"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/evidence/navigation-review-2026-09-07/workspace-1920-same-state.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "a74146c9ba94f9d5c69b4b196116a15da06c9f78",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/navigation-review-2026-09-07/workspace-1920-same-state.png",
+      "bytes": 75674,
+      "sha256": "30cb090c21a4b2bd0bf402c97a595845113f4887ce555dadb1d18b0354ee4092",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": [
+        {
+          "document": "docs/evidence/navigation-review-2026-09-07/review.md",
+          "line": 32,
+          "originalTarget": "workspace-1920-same-state.png",
+          "referenceKind": "link"
+        }
+      ]
+    }
+  ],
+  "scope": "Historical E2 files externalized by validated batches; E1 summaries, JSON, key screenshots and active inputs retained.",
+  "containerResolution": "Resolve containerRelativePath from the workspace container containing the canonical checkout and output.",
+  "recovery": "Verify with scripts/governance/check-evidence-manifest.mjs <manifest> <container>; restore only to a new empty directory. Original Git sourceCommit/sourcePath remains recoverable.",
+  "batches": [
+    {
+      "taskId": "TASK-ORG-6",
+      "date": "2026-10-30",
+      "candidateBase": "be730617ace5013295b85a22133259b32ad6ffec"
+    }
+  ]
+}

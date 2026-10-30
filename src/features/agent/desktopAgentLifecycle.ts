@@ -50,7 +50,7 @@ export function createDesktopAgentLifecycle(
     isDesktop?: () => boolean;
   } = {},
 ) {
-  const connection = options.connection ?? agentConnection;
+  const connection = () => options.connection ?? agentConnection;
   const runtime = options.runtime ?? nativeRuntime;
   const storage = options.storage ?? preferences;
   const desktop = options.isDesktop ?? isTauri;
@@ -72,7 +72,7 @@ export function createDesktopAgentLifecycle(
   const errorText = (reason: unknown) =>
     reason instanceof Error ? reason.message : String(reason);
   function guardWork() {
-    const current = connection.getState();
+    const current = connection().getState();
     if (current.sending || current.preparing || current.pendingApproval)
       throw new Error("请先处理正在运行的任务或待确认审批，再改变连接。");
   }
@@ -99,12 +99,12 @@ export function createDesktopAgentLifecycle(
         patch({ error: errorText(reason) });
     }
   }
-  function run(newConversation: boolean) {
+  function run(newConversation: boolean, newProjectId?: string) {
     if (flight) return flight;
     guardWork();
     const version = ++epoch;
-    const project = connection.getProjectId();
-    const connectionRevision = connection.getState().connectionRevision;
+    const project = connection().getProjectId();
+    const connectionRevision = connection().getState().connectionRevision;
     attemptedProject = project;
     patch({ pending: true, error: null });
     flight = (async () => {
@@ -114,8 +114,9 @@ export function createDesktopAgentLifecycle(
         const runtimeResult = await runtime.status();
         if (version === epoch && revision === runtimeRevision)
           patch({ runtime: runtimeResult });
-        if (version !== epoch || project !== connection.getProjectId()) return;
-        const current = connection.getState();
+        if (version !== epoch || project !== connection().getProjectId())
+          return;
+        const current = connection().getState();
         if (connectionRevision !== current.connectionRevision) return; // A manual/external connection won while startup was pending.
         if (
           current.status === "connected" &&
@@ -123,10 +124,10 @@ export function createDesktopAgentLifecycle(
         )
           throw new Error("当前已连接手动服务，请先断开后再切换。");
         if (!project) return; // Home is service-ready; never adopt an arbitrary thread.
-        connection.setCredentials(credentials.endpoint, credentials.token);
-        await connection.connect(newConversation);
+        connection().setCredentials(credentials.endpoint, credentials.token);
+        await connection().connect(newConversation, newProjectId);
         if (version !== epoch) return;
-        const result = connection.getState();
+        const result = connection().getState();
         if (result.status === "error")
           throw new Error(result.error ?? "Agent 连接未完成。");
       } catch (reason) {
@@ -139,19 +140,19 @@ export function createDesktopAgentLifecycle(
     })();
     return flight;
   }
-  async function connect(newConversation = false) {
-    if (!desktop()) return connection.connect(newConversation);
+  async function connect(newConversation = false, newProjectId?: string) {
+    if (!desktop()) return connection().connect(newConversation, newProjectId);
     guardWork();
     setAutomatic(true);
-    const project = connection.getProjectId();
+    const project = connection().getProjectId();
     const version = epoch;
-    const connectionRevision = connection.getState().connectionRevision;
+    const connectionRevision = connection().getState().connectionRevision;
     if (flight && attemptedProject !== project) {
       await flight;
       if (
-        project !== connection.getProjectId() ||
+        project !== connection().getProjectId() ||
         !state.automatic ||
-        connectionRevision !== connection.getState().connectionRevision
+        connectionRevision !== connection().getState().connectionRevision
       )
         return;
       if (version !== epoch) {
@@ -159,13 +160,13 @@ export function createDesktopAgentLifecycle(
         return;
       }
     }
-    return run(newConversation);
+    return run(newConversation, newProjectId);
   }
   async function ensure() {
     if (!desktop() || !state.automatic) return;
     if (flight) return flight.catch(() => undefined);
-    if (connection.getState().status === "connected") return;
-    const project = connection.getProjectId();
+    if (connection().getState().status === "connected") return;
+    const project = connection().getProjectId();
     if (attemptedProject === project) return;
     try {
       await run(false);
@@ -178,7 +179,7 @@ export function createDesktopAgentLifecycle(
     epoch++;
     patch({ error: null });
     setAutomatic(false);
-    connection.disconnect();
+    connection().disconnect();
   }
   async function stop() {
     guardWork();
@@ -188,8 +189,8 @@ export function createDesktopAgentLifecycle(
     patch({ pending: true, error: null });
     try {
       await runtime.stop();
-      if (connection.getState().endpoint === state.runtime?.endpoint)
-        connection.disconnect();
+      if (connection().getState().endpoint === state.runtime?.endpoint)
+        connection().disconnect();
       await refresh();
     } catch (reason) {
       patch({ error: errorText(reason) });

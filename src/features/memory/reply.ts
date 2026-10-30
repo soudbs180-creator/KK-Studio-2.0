@@ -1,4 +1,4 @@
-import type { AgentChatItem } from "../agent/agentTypes.ts";
+import type { AgentChatItem } from "../../../packages/creation-contracts/index.ts";
 
 /** Only accept a completed reply from the new Codex turn in the same thread. */
 export function completedAssistantReply(

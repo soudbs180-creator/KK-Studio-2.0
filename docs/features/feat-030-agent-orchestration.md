@@ -83,3 +83,9 @@
 本轮扩展页新增七种协作角色职责模板：可检索、查看、复制或应用到保留原内容的草稿，执行模型在任务菜单选择。角色自动分派到不同模型尚未接入；不提升编排能力状态，见[分类修复](../changes/2026-10-13-capability-ui/spec.md)。
 
 - 2026-10-15：TASK-KK-UNIFIED-20261015 已获用户实施授权，新增范围见 [统一规格](../changes/2026-10-15-kk-unified/spec.md)。本卡既有证据仍限原版本；新范围实现/真实验收尚未完成，不能沿用旧 PASS 关闭。
+
+2026-10-28 P3源码解耦候选：TASK-MOD-P3B、TASK-MOD-P3E，完整R4降至0，业务任务/原件/记忆隐私/凭据与旧存储身份保持；未证明原生、真实外部服务或main已更新，功能成熟度不据此升级。[验证TASK-MOD-P3B](../changes/2026-10-28-p3b-creation-agent/verification.md) / [验证TASK-MOD-P3E](../changes/2026-10-28-p3e-agent-memory-prompts/verification.md)。
+
+2026-10-29 agent公开入口进行中；[TASK-MOD-P4-AGENT验证](../changes/2026-10-29-p4-agent/verification.md)。既有产品成熟度不因架构重构自动升级。
+
+2026-10-29 其余切片公开入口进行中；[TASK-MOD-P4-REMAINING验证](../changes/2026-10-29-p4-remaining/verification.md)。既有产品成熟度不因架构重构自动升级。

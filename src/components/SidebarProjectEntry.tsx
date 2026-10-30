@@ -5,7 +5,28 @@ import {
   SIDEBAR_PROJECT_DRAG_TYPE,
   SIDEBAR_PROJECT_TITLE_TYPE,
   type SidebarProjectVisual,
-} from "../features/projects/sidebarProjectModel";
+} from "../features/projects/index.ts";
+
+function ProjectThumb({ visual }: { visual?: SidebarProjectVisual }) {
+  if (!visual) return <span className="project-yellow" />;
+  return (
+    <span
+      className={`project-thumb project-thumb-${visual.kind}`}
+      style={visual.kind !== "image" ? { background: visual.color } : undefined}
+    >
+      {visual.kind === "image" && (
+        <img className="project-thumb-image-src" src={visual.src} alt="" />
+      )}
+      {visual.kind === "chat" && (
+        <img
+          className="project-thumb-chat-icon"
+          src="/design/figma/project-chat-glyph.svg"
+          alt=""
+        />
+      )}
+    </span>
+  );
+}
 
 /**
  * 侧栏项目行（未分组项目、文件夹二级项目通用）。
@@ -75,7 +96,6 @@ export default function SidebarProjectEntry({
   useEffect(() => {
     if (!visible) {
       setMenuOpen(false);
-
       setEditing(false);
     }
   }, [visible]);
@@ -98,6 +118,7 @@ export default function SidebarProjectEntry({
     if (next) onRename?.(next);
     setEditing(false);
   }
+  const pinLabel = pinned ? "取消置顶项目" : "置顶项目";
   return (
     <div
       ref={root}
@@ -143,42 +164,17 @@ export default function SidebarProjectEntry({
             onNavigate("workspace");
           }}
         >
-          {visual ? (
-            <span
-              className={`project-thumb project-thumb-${visual.kind}`}
-              style={
-                visual.kind !== "image"
-                  ? { background: visual.color }
-                  : undefined
-              }
-            >
-              {visual.kind === "image" && (
-                <img
-                  className="project-thumb-image-src"
-                  src={visual.src}
-                  alt=""
-                />
-              )}
-              {visual.kind === "chat" && (
-                <img
-                  className="project-thumb-chat-icon"
-                  src="/design/figma/project-chat-glyph.svg"
-                  alt=""
-                />
-              )}
-            </span>
-          ) : (
-            <span className="project-yellow" />
-          )}
+          <ProjectThumb visual={visual} />
           <span>{title}</span>
         </button>
       )}
       {onTogglePin && !trashed && (
         <button
           className="project-pin"
-          aria-label={pinned ? "取消置顶项目" : "置顶项目"}
+          aria-label={pinLabel}
           aria-pressed={pinned}
-          title={pinned ? "取消会话置顶" : "会话内置顶，刷新恢复原顺序"}
+          title={canEditProject ? pinLabel : "项目存储尚未就绪"}
+          disabled={!canEditProject}
           onClick={onTogglePin}
         >
           <img

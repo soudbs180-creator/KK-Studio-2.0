@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import "../../styles/generation-count.css";
 
-const COUNTS = ["1", "2", "4", "6", "8"];
+const COUNTS = ["1", "2", "4", "8"];
 
 interface GenerationCountProps {
   disabled?: boolean;
@@ -38,7 +38,9 @@ export default function GenerationCount({
         onClick={onToggle}
       >
         <img src="/design/figma/count-x.svg" alt="" />
-        <span>{value}</span>
+        <span className="kk-tabular-nums" data-numeric="true">
+          {value}
+        </span>
       </button>
       {open && !disabled && (
         <div
@@ -47,7 +49,11 @@ export default function GenerationCount({
           aria-label="生成数量选项"
         >
           <span className="count-heading">生成数量</span>
-          <span className="count-current" aria-hidden="true">
+          <span
+            className="count-current kk-tabular-nums"
+            data-numeric="true"
+            aria-hidden="true"
+          >
             ×{value}
           </span>
           <input

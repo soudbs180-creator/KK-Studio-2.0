@@ -7,9 +7,14 @@ dist
 .DS_Store
 test-results
 *.tsbuildinfo
+*.orig
+*.tmp
+/output/
 src-tauri/target/
 .vite/
 .worktrees/
+/.superpowers/
+/.agents/
 .env
 .env.*
 !.env.example
@@ -24,6 +29,7 @@ src-tauri/target/
 /pnpm-workspace.yaml
 /*.lnk
 /KK Studio Launcher.exe
+*.bak
 /*.lnk.before-ui-runtime-*.bak
 /start-kk-studio.bat.before-ui-runtime-*.bak
 

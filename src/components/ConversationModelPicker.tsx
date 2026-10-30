@@ -1,5 +1,5 @@
 import ModelPickerMenu from "./ModelPickerMenu";
-import type { ModelSelection } from "../features/models/modelSelection";
+import type { ModelSelection } from "../features/models/index.ts";
 export default function ConversationModelPicker({
   currentModel,
   disabled = false,
@@ -32,8 +32,8 @@ export default function ConversationModelPicker({
       >
         <img
           src="/design/figma/composer-package.svg"
-          width="12.5"
-          height="13.85"
+          width="16"
+          height="16"
           alt=""
         />
         <span className="chat-model-name">{currentModel || "主 Agent"}</span>

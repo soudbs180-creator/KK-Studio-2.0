@@ -1,11 +1,13 @@
 import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import { existsSync } from "node:fs";
 import {
   mkdtemp,
   mkdir,
   readFile,
   readdir,
+  stat,
   symlink,
   writeFile,
 } from "node:fs/promises";
@@ -13,6 +15,7 @@ import os from "node:os";
 import path from "node:path";
 import test from "node:test";
 import { pathToFileURL } from "node:url";
+import { isDeepStrictEqual } from "node:util";
 import ts from "typescript";
 import { allocateTestEvidenceRun } from "../../scripts/testing/test-evidence.mjs";
 
@@ -24,8 +27,18 @@ const sourceHead = execFileSync("git", ["rev-parse", "HEAD"], {
   windowsHide: true,
 }).trim();
 
-for (const failure of [false, true]) {
-  test(`a ${failure ? "failed" : "successful"} Playwright run preserves historical receipts, screenshots and reports`, async () => {
+for (const [scenario, expectedExit] of [
+  ["successful", 0],
+  ["failed", 1],
+  ["cancelled", 130],
+  ["reporter-failed", 1],
+  ["polluted-parent", 0],
+  ["mixed-case-parent", 0],
+] as const) {
+  test(`a ${scenario} Playwright run preserves historical receipts, screenshots and reports`, async () => {
+    const failure = scenario === "failed";
+    const cancelled = scenario === "cancelled";
+    const reporterFailed = scenario === "reporter-failed";
     const fixture = await mkdtemp(path.join(os.tmpdir(), "kk-evidence-"));
     const historical = path.join(
       fixture,
@@ -41,17 +54,60 @@ for (const failure of [false, true]) {
       ],
     ];
     for (const [file, contents] of originals) await writeFile(file, contents);
+    // Keep the fixture's absolute Playwright import independent of its parent package.
+    await writeFile(path.join(fixture, "package.json"), '{"type":"commonjs"}');
     await writeFile(
       path.join(fixture, "probe.spec.ts"),
       `import { test } from ${JSON.stringify(testModule)};\n` +
-        `import { writeFileSync } from "node:fs";\n` +
-        `test("local synthetic probe", ({}, info) => { writeFileSync(info.outputPath("probe.txt"), "current artifact"); ${failure ? 'throw new Error("synthetic expected failure")' : ""} });\n`,
+        `import { mkdirSync, writeFileSync } from "node:fs";\n` +
+        `import path from "node:path";\n` +
+        `test("local synthetic probe", async ({}, info) => { writeFileSync(info.outputPath("probe.txt"), "current artifact"); ${failure ? 'throw new Error("synthetic expected failure");' : ""} ${reporterFailed ? 'mkdirSync(path.join(info.project.outputDir, "..", "browser-results.json"));' : ""} ${cancelled ? 'console.log("KK_EVIDENCE_CANCEL_READY"); await new Promise(resolve => setTimeout(resolve, 60000));' : ""} });\n`,
     );
+    const cancelReporter = path.join(fixture, "cancel-reporter.mjs");
+    // Inject the runner's SIGINT event without sending an OS signal.
+    if (cancelled)
+      await writeFile(
+        cancelReporter,
+        `import { writeFileSync } from "node:fs";\n` +
+          `export default class { cancelled = false; onStdOut(chunk) { if (!this.cancelled && String(chunk).includes("KK_EVIDENCE_CANCEL_READY")) this.cancelled = process.emit("SIGINT"); } onEnd(result) { writeFileSync(${JSON.stringify(path.join(fixture, "cancel-status.json"))}, JSON.stringify({status: result.status, injected: this.cancelled})); } }\n`,
+      );
     await writeFile(
       path.join(fixture, "fixture.config.mjs"),
       `import config from ${JSON.stringify(configUrl.href)};\n` +
-        `export default {...config, testDir: ${JSON.stringify(fixture)}, testMatch: "probe.spec.ts", webServer: undefined, workers: 1, retries: 0};\n`,
+        `export default {...config, testDir: ${JSON.stringify(fixture)}, testMatch: "probe.spec.ts", webServer: undefined, workers: 1, retries: 0, ${cancelled ? `reporter: [...config.reporter, [${JSON.stringify(cancelReporter)}]],` : ""}};\n`,
     );
+    const processEnvironment = { ...process.env };
+    const parentEnvironment = {
+      ...processEnvironment,
+      ...(scenario === "polluted-parent"
+        ? {
+            PLAYWRIGHT_JSON_OUTPUT_FILE: originals[2][0],
+            KK_BROWSER_EVIDENCE_RUN: historical,
+            TEST_WORKER_INDEX: "99",
+            KK_TEST_PORT: "1437",
+          }
+        : {}),
+      ...(scenario === "mixed-case-parent"
+        ? {
+            playwright_json_output_file: originals[2][0],
+            kK_bRoWsEr_EvIdEnCe_RuN: historical,
+            tEsT_wOrKeR_iNdEx: "99",
+            kK_tEsT_pOrT: "1423",
+          }
+        : {}),
+    };
+    const parentSnapshot = { ...parentEnvironment };
+    const childEnvironment: NodeJS.ProcessEnv = { ...parentEnvironment };
+    for (const key of Object.keys(childEnvironment))
+      if (
+        [
+          "PLAYWRIGHT_JSON_OUTPUT_FILE",
+          "KK_BROWSER_EVIDENCE_RUN",
+          "TEST_WORKER_INDEX",
+          "KK_TEST_PORT",
+        ].includes(key.toUpperCase())
+      )
+        delete childEnvironment[key];
     const result = spawnSync(
       process.execPath,
       [
@@ -62,29 +118,59 @@ for (const failure of [false, true]) {
       ],
       {
         cwd: fixture,
+        env: childEnvironment,
         encoding: "utf8",
         windowsHide: true,
         timeout: 30_000,
       },
     );
+    await writeFile(path.join(fixture, "stdout.log"), result.stdout ?? "");
+    await writeFile(path.join(fixture, "stderr.log"), result.stderr ?? "");
+    await writeFile(
+      path.join(fixture, "run-result.json"),
+      JSON.stringify({
+        scenario,
+        sourceHead,
+        status: result.status,
+        signal: result.signal,
+        error: result.error?.message,
+      }),
+    );
+    console.log(`Retained ${scenario} evidence: ${fixture}`);
+    assert(
+      isDeepStrictEqual({ ...process.env }, processEnvironment),
+      "The parent process environment must stay unchanged",
+    );
+    assert(
+      isDeepStrictEqual(parentEnvironment, parentSnapshot),
+      "Preparing the child environment must not mutate its parent",
+    );
     assert.equal(result.error, undefined);
-    assert.equal(result.status, failure ? 1 : 0, result.stdout + result.stderr);
+    assert.equal(result.status, expectedExit, result.stdout + result.stderr);
     if (failure) assert.match(result.stdout, /synthetic expected failure/);
+    const sha256 = (bytes: Uint8Array | string) =>
+      createHash("sha256").update(bytes).digest("hex");
+    const oldFiles = [];
     for (const [file, contents] of originals) {
       assert(existsSync(file), `Historical evidence was deleted: ${file}`);
-      assert.equal(await readFile(file, "utf8"), contents);
+      const bytes = await readFile(file);
+      assert.deepEqual(bytes, Buffer.from(contents));
+      assert.equal(sha256(bytes), sha256(contents));
+      oldFiles.push({
+        file,
+        beforeSha256: sha256(contents),
+        afterSha256: sha256(bytes),
+      });
     }
     const runsRoot = path.join(fixture, "test-results/browser");
-    const reports = (await readdir(runsRoot))
-      .map((run) => path.join(runsRoot, run, "browser-results.json"))
-      .filter((file) => existsSync(file));
-    assert.equal(reports.length, 1);
+    const runs = await readdir(runsRoot);
     assert.equal(
-      (await readdir(runsRoot)).length,
+      runs.length,
       1,
       "Workers must share the runner's evidence directory",
     );
-    const artifacts = path.join(path.dirname(reports[0]), "artifacts");
+    const reportFile = path.join(runsRoot, runs[0], "browser-results.json");
+    const artifacts = path.join(runsRoot, runs[0], "artifacts");
     assert(
       existsSync(artifacts),
       "Worker artifacts must stay with the JSON report",
@@ -97,10 +183,33 @@ for (const failure of [false, true]) {
       await readFile(path.join(artifacts, probe), "utf8"),
       "current artifact",
     );
-    const report = JSON.parse(await readFile(reports[0], "utf8"));
-    assert.equal(report.stats.expected, failure ? 0 : 1);
-    assert.equal(report.stats.unexpected, failure ? 1 : 0);
-    assert.equal(report.config.metadata.sourceHead, sourceHead);
+    if (reporterFailed) {
+      assert((await stat(reportFile)).isDirectory());
+      assert.match(result.stdout + result.stderr, /EISDIR|EPERM/);
+      assert((result.stdout + result.stderr).includes(reportFile));
+      assert.match(result.stdout, /1 passed/);
+    } else {
+      const report = JSON.parse(await readFile(reportFile, "utf8"));
+      assert.equal(report.stats.expected, failure || cancelled ? 0 : 1);
+      assert.equal(report.stats.unexpected, failure ? 1 : 0);
+      assert.equal(report.config.metadata.sourceHead, sourceHead);
+      if (cancelled) {
+        assert.equal(
+          report.suites[0].specs[0].tests[0].results[0].status,
+          "interrupted",
+        );
+        assert.deepEqual(
+          JSON.parse(
+            await readFile(path.join(fixture, "cancel-status.json"), "utf8"),
+          ),
+          { status: "interrupted", injected: true },
+        );
+      }
+    }
+    await writeFile(
+      path.join(fixture, "preservation.json"),
+      JSON.stringify({ scenario, sourceHead, oldFiles, reportFile, artifacts }),
+    );
   });
 }
 

@@ -1,0 +1,147 @@
+{
+  "fileKey": "ZiadpErDoFweCjG3uHjkM3",
+  "pageId": "91:4",
+  "exportScale": 8,
+  "icons": [
+    {
+      "name": "menu",
+      "nodeId": "372:1137",
+      "sourceName": "Icon/Lucide/导航与界面/panel-left-open",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "name": "plus",
+      "nodeId": "372:1168",
+      "sourceName": "Icon/Lucide/编辑与操作/plus",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "name": "newChat",
+      "nodeId": "529:37",
+      "sourceName": "Icon/Lucide/对话与帮助/message-square-plus",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "name": "back",
+      "nodeId": "529:33",
+      "sourceName": "Icon/Lucide/导航与界面/arrow-left",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "name": "chevron",
+      "nodeId": "372:891",
+      "sourceName": "Icon/Lucide/导航与界面/chevron-down",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "name": "close",
+      "nodeId": "372:1292",
+      "sourceName": "Icon/Lucide/编辑与操作/x",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "name": "send",
+      "nodeId": "372:844",
+      "sourceName": "Icon/Lucide/导航与界面/arrow-up",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "name": "pause",
+      "nodeId": "372:1147",
+      "sourceName": "Icon/Lucide/媒介类型与播放/pause",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "name": "image",
+      "nodeId": "372:1035",
+      "sourceName": "Icon/Lucide/媒介类型与播放/image",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "name": "folder",
+      "nodeId": "372:983",
+      "sourceName": "Icon/Lucide/文件与资源/folder",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "name": "search",
+      "nodeId": "372:1193",
+      "sourceName": "Icon/Lucide/编辑与操作/search",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "name": "sliders",
+      "nodeId": "372:1205",
+      "sourceName": "Icon/Lucide/账户与设置/sliders-horizontal",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "name": "sparkles",
+      "nodeId": "529:42",
+      "sourceName": "Icon/Lucide/媒介类型与播放/sparkles",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "name": "clock",
+      "nodeId": "529:49",
+      "sourceName": "Icon/Lucide/媒介类型与播放/clock",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "name": "copy",
+      "nodeId": "372:924",
+      "sourceName": "Icon/Lucide/编辑与操作/copy",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "name": "share",
+      "nodeId": "372:1266",
+      "sourceName": "Icon/Lucide/文件与资源/upload",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "name": "check",
+      "nodeId": "372:888",
+      "sourceName": "Icon/Lucide/编辑与操作/check",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "name": "more",
+      "nodeId": "372:950",
+      "sourceName": "Icon/Lucide/导航与界面/ellipsis",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "name": "microphone",
+      "nodeId": "372:1089",
+      "sourceName": "Icon/Lucide/媒介类型与播放/mic",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "name": "extensions",
+      "nodeId": "372:1172",
+      "sourceName": "Icon/Lucide/模型与扩展/puzzle",
+      "width": 24,
+      "height": 24
+    }
+  ]
+}

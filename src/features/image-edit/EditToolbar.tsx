@@ -116,9 +116,11 @@ export default function EditToolbar({
       {(
         [
           ["browse", "浏览图片"],
-          ["rectangle", "框选区域"],
-          ["brush", "画笔区域"],
-          ["color", "色块区域"],
+          ["rectangle", "矩形选区"],
+          ["brush", "标注"],
+          ["erase", "擦除"],
+          ["comment", "添加评论"],
+          ["color", "取色标注"],
         ] as const
       ).map(([value, label]) => (
         <button
@@ -126,6 +128,7 @@ export default function EditToolbar({
           type="button"
           className="ui-button"
           aria-label={label}
+          title={label}
           aria-pressed={tool === value}
           disabled={disabled}
           onClick={() => onTool(value)}
@@ -183,12 +186,12 @@ export default function EditToolbar({
       <button
         type="button"
         className="ui-button"
-        aria-label="清空编辑区域"
-        title={!hasRegions ? "没有需要清空的编辑区域" : "清空全部区域，可撤销"}
+        aria-label="清除"
+        title={!hasRegions ? "没有需要清除的编辑区域" : "清除全部区域，可撤销"}
         disabled={!hasRegions || disabled}
         onClick={onClear}
       >
-        清空
+        清除
       </button>
       <button
         type="button"

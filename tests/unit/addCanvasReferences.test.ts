@@ -6,6 +6,32 @@ import type {
 } from "../../src/domain/canvasItems.ts";
 import { addCanvasReferences } from "../../src/components/canvas/addCanvasReferences.ts";
 
+test("普通上传不自动分配主体或风格，帧角色仍保留", () => {
+  const source = {
+    id: "target",
+    title: "视频",
+    description: "",
+    kind: "video",
+  } as CanvasCollectionItem;
+  const added: CanvasCollectionItem[] = [];
+  addCanvasReferences({
+    parentId: source.id,
+    parent: { x: 0, y: 0 },
+    source,
+    references: [{ title: "首帧.png", kind: "image", frame: "first" }],
+    existingReferences: [],
+    addNode: (_kind, item) => {
+      added.push({ id: "reference", ...item } as CanvasCollectionItem);
+      return "reference";
+    },
+    onConnect: () => undefined,
+    onConnectionNotice: () => undefined,
+  });
+  assert.equal(added.length, 1);
+  assert.equal(added[0].referenceSlot, undefined);
+  assert.equal(added[0].referenceFrame, "first");
+});
+
 test("canvas batch upload skips rejected slots and fills later valid capacity", () => {
   const source = {
     id: "target",
@@ -119,5 +145,6 @@ test("canvas reference placement preserves negative visible world coordinates", 
     onConnectionNotice: () => undefined,
   });
 
-  assert.equal(added[0]?.position.x, -1122);
+  // The 652px editor extends 32px left of the image node; keep a 32px card gap.
+  assert.equal(added[0]?.position.x, -500 - 32 - 590 - 32);
 });

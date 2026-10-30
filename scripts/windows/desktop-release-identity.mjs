@@ -18,6 +18,7 @@ export const RELEASE_RECEIPT = path.join(
 
 export const RELEASE_INPUTS = [
   "src",
+  path.join("packages", "creation-contracts"),
   "public",
   "dist",
   "index.html",
@@ -121,6 +122,18 @@ function appendInputEntries(projectRoot, relativePath, entries) {
 
   entries.push(`directory\0${normalized}`);
   for (const entry of fs.readdirSync(absolutePath).sort()) {
+    if (
+      normalized === "packages/creation-contracts" &&
+      !entry.endsWith(".ts") &&
+      ![
+        "package.json",
+        "package-lock.json",
+        "plugin-manifest.schema.json",
+        "tsconfig.json",
+      ].includes(entry)
+    ) {
+      continue;
+    }
     appendInputEntries(projectRoot, path.join(relativePath, entry), entries);
   }
 }

@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "taskId": "TASK-ORG-6",
+  "classification": "E2-externalized-historical-evidence",
+  "packagePath": "docs/changes/2026-09-28-compare-ci-fix",
+  "entries": [
+    {
+      "sourcePath": "docs/changes/2026-09-28-compare-ci-fix/evidence/compare-desktop.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "179c508c76dbbf43a15d874882d127e6a2a79dae",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-28-compare-ci-fix/evidence/compare-desktop.png",
+      "bytes": 780940,
+      "sha256": "8b2c966fc82ec0720c9827bca96ea9e133dc1c10f47fd47fce674a5069f37d60",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": [
+        {
+          "document": "docs/changes/2026-09-28-compare-ci-fix/verification.md",
+          "line": 30,
+          "originalTarget": "evidence/compare-desktop.png",
+          "referenceKind": "link"
+        }
+      ]
+    }
+  ],
+  "scope": "Historical E2 files externalized by validated batches; E1 summaries, JSON, key screenshots and active inputs retained.",
+  "containerResolution": "Resolve containerRelativePath from the workspace container containing the canonical checkout and output.",
+  "recovery": "Verify with scripts/governance/check-evidence-manifest.mjs <manifest> <container>; restore only to a new empty directory. Original Git sourceCommit/sourcePath remains recoverable.",
+  "batches": [
+    {
+      "taskId": "TASK-ORG-6",
+      "date": "2026-10-30",
+      "candidateBase": "be730617ace5013295b85a22133259b32ad6ffec"
+    }
+  ]
+}

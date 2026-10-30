@@ -1,8 +1,8 @@
-import { modelSearchTerms, modelDisplay } from "./modelFamilies.ts";
-import { searchModels } from "./modelSearch.ts";
+import type { readProviderConnections } from "../../integrations/providers/providerStore.ts";
 import { catalogForConnection, type ModelKind } from "./modelCatalog.ts";
+import { modelDisplay, modelSearchTerms } from "./modelFamilies.ts";
+import { searchModels } from "./modelSearch.ts";
 import { modelSelectionId, type ModelSelection } from "./modelSelection.ts";
-import type { readProviderConnections } from "../creation/providerRegistry.ts";
 export interface RelayCandidate {
   connectionId: string;
   connectionName?: string;

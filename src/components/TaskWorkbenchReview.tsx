@@ -1,5 +1,5 @@
 import type { ApprovalGate } from "../domain/agentWorkflow";
-import type { CreationTask } from "../features/creation/model";
+import type { CreationTask } from "../features/creation/index.ts";
 
 const GATE_LABELS: Record<ApprovalGate, string> = {
   remote_transfer: "远程传输",

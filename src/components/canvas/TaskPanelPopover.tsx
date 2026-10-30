@@ -1,14 +1,16 @@
 import {
   useLayoutEffect,
   useRef,
+  useState,
   type Dispatch,
   type SetStateAction,
 } from "react";
 import TaskDetail from "./TaskDetail";
+import UiIcon from "../UiIcon";
 import type {
   CreationTask,
   CreationTaskStatus,
-} from "../../features/creation/model";
+} from "../../features/creation/index.ts";
 
 export type TaskFilter = "全部" | "执行中" | "未完成" | "失败";
 
@@ -72,10 +74,19 @@ export function TaskPanelPopover({
 }) {
   const detailTrigger = useRef<HTMLButtonElement | null>(null);
   const panelRef = useRef<HTMLElement>(null);
+  const [query, setQuery] = useState("");
   useLayoutEffect(() => {
     const panel = panelRef.current;
     if (!panel) return;
     const update = () => {
+      const container = panel.parentElement;
+      const trigger =
+        container?.querySelector<HTMLButtonElement>(".task-button");
+      if (!container || !trigger) return;
+      const anchor = trigger.getBoundingClientRect();
+      const origin = container.getBoundingClientRect();
+      panel.style.top = `${anchor.bottom - origin.top - container.clientTop + 8}px`;
+      panel.style.left = `${Math.max(8, Math.min(anchor.left, window.innerWidth - panel.offsetWidth - 8)) - origin.left - container.clientLeft}px`;
       const gap = parseFloat(getComputedStyle(panel).paddingBottom);
       const available = Math.max(
         0,
@@ -96,6 +107,26 @@ export function TaskPanelPopover({
       window.removeEventListener("resize", update);
     };
   }, []);
+  const normalizedQuery = query.trim().toLocaleLowerCase();
+  const searchedTasks = normalizedQuery
+    ? visibleTasks.filter((task) => {
+        const searchable = [
+          task.id,
+          task.status,
+          task.statusLabel,
+          task.date,
+          task.duration,
+          task.task?.prompt,
+          task.task?.model,
+          task.task?.kind,
+          task.task?.providerName,
+        ]
+          .filter(Boolean)
+          .join(" ")
+          .toLocaleLowerCase();
+        return searchable.includes(normalizedQuery);
+      })
+    : visibleTasks;
   return (
     <section
       ref={panelRef}
@@ -118,15 +149,20 @@ export function TaskPanelPopover({
           aria-label="关闭任务列表"
           onClick={onDismiss}
         >
-          <img
-            src="/design/figma/task-close.svg"
-            width={7}
-            height={7}
-            alt=""
-            draggable={false}
-          />
+          <UiIcon name="close" size={20} />
         </button>
       </div>
+      <label className="task-panel-search" data-node-id="1763:367">
+        <span className="sr-only">搜索任务</span>
+        <input
+          type="search"
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+          placeholder="搜索任务"
+          aria-label="搜索任务"
+          spellCheck={false}
+        />
+      </label>
       <div
         className="task-panel-tabs"
         data-node-id="398:25690"
@@ -147,13 +183,13 @@ export function TaskPanelPopover({
           </button>
         ))}
       </div>
-      {visibleTasks.length > 0 ? (
+      {searchedTasks.length > 0 ? (
         <div
           className="task-grid"
           data-node-id="398:25593"
           data-name="如果有生成出来的图片展示"
         >
-          {visibleTasks.map((task) => (
+          {searchedTasks.map((task) => (
             <button
               key={task.id}
               type="button"
@@ -204,7 +240,7 @@ export function TaskPanelPopover({
         </div>
       ) : (
         <div className="task-filter-empty" role="status">
-          暂无{tab}任务
+          {normalizedQuery ? "没有匹配的任务" : `暂无${tab}任务`}
         </div>
       )}
       {selectedTask && (

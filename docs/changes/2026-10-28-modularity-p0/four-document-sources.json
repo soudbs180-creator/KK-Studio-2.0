@@ -1,0 +1,748 @@
+{
+  "schemaVersion": 1,
+  "readAt": "2026-10-28T03:01:22.693Z",
+  "sourceDirectoryId": "ce87a6c0-3893-44ac-a478-19a693f30412",
+  "readBy": "primary agent; no subagents",
+  "interpretation": "Execution spec supersedes conflicting earlier drafts; supplement adds requirements; coverage IDs track acceptance separately from reading.",
+  "sources": [
+    {
+      "name": "architecture_audit.md",
+      "bytes": 14571,
+      "sha256": "1049b0348dfa9a9f49f4900fc31e8af5950df93bf71bcf94f2d75f945266c9b9",
+      "lineCount": 171,
+      "readRange": "first line through last line",
+      "coverageIds": [
+        "G-01",
+        "P0",
+        "P1",
+        "P2",
+        "P3a",
+        "P3b",
+        "P3c",
+        "P3d",
+        "P3e",
+        "P3f",
+        "P4",
+        "P5",
+        "P6",
+        "P7",
+        "P8",
+        "G-02"
+      ],
+      "headings": [
+        {
+          "line": 1,
+          "title": "# KK Studio 模块化架构审计（只读，未改任何仓库文件）"
+        },
+        {
+          "line": 6,
+          "title": "## 0. 先说结论"
+        },
+        {
+          "line": 12,
+          "title": "## 1. 现有模块与实际依赖（FACT）"
+        },
+        {
+          "line": 45,
+          "title": "## 2. 违反边界、重复与过度耦合"
+        },
+        {
+          "line": 47,
+          "title": "### 2.1 边界违反（按严重度）"
+        },
+        {
+          "line": 59,
+          "title": "### 2.2 能力契约现状"
+        },
+        {
+          "line": 71,
+          "title": "### 2.3 重复或平行实现（FACT：同名文件）"
+        },
+        {
+          "line": 87,
+          "title": "## 3. 共享与独立的划分"
+        },
+        {
+          "line": 104,
+          "title": "## 4. 建议的接口与注册机制"
+        },
+        {
+          "line": 129,
+          "title": "## 5. 架构自动化检查（可先于任何重构上线）"
+        },
+        {
+          "line": 140,
+          "title": "## 6. 渐进迁移顺序"
+        },
+        {
+          "line": 158,
+          "title": "## 7. 风险与替代方案"
+        },
+        {
+          "line": 165,
+          "title": "## 8. 待你确认"
+        }
+      ]
+    },
+    {
+      "name": "modularity_review_and_spec.md",
+      "bytes": 13411,
+      "sha256": "0c97b52557ca365747885dfa3eb683b9cc6671fea34f5ec7032ee9161092eb7f",
+      "lineCount": 142,
+      "readRange": "first line through last line",
+      "coverageIds": [
+        "G-01",
+        "P0",
+        "P1",
+        "P1-G",
+        "P2",
+        "G-02",
+        "ORG-0",
+        "ORG-1",
+        "ORG-2",
+        "ORG-3",
+        "ORG-4",
+        "ORG-5",
+        "ORG-6"
+      ],
+      "headings": [
+        {
+          "line": 1,
+          "title": "# 复核结论与《整顿执行规范》草案（只读，未改仓库）"
+        },
+        {
+          "line": 3,
+          "title": "## 一、对上一份审计的复核"
+        },
+        {
+          "line": 7,
+          "title": "### 1.1 发现的冲突与错误"
+        },
+        {
+          "line": 16,
+          "title": "### 1.2 与既有治理的符合性核对"
+        },
+        {
+          "line": 26,
+          "title": "## 二、现状事实（支撑下文规范）"
+        },
+        {
+          "line": 35,
+          "title": "## 三、整顿执行规范（草案，确认后写入 `docs/architecture/MODULARITY.md`）"
+        },
+        {
+          "line": 37,
+          "title": "### 3.1 目录落位（每类内容只有一个归属）"
+        },
+        {
+          "line": 56,
+          "title": "### 3.2 命名与区分规则"
+        },
+        {
+          "line": 67,
+          "title": "### 3.3 模块分类与依赖方向"
+        },
+        {
+          "line": 90,
+          "title": "### 3.4 旧文件与无关内容处理"
+        },
+        {
+          "line": 97,
+          "title": "### 3.5 文档规则"
+        },
+        {
+          "line": 105,
+          "title": "### 3.6 轻量化路线（不影响运行）"
+        },
+        {
+          "line": 113,
+          "title": "### 3.7 可替换性与\"改一处不波及全局\""
+        },
+        {
+          "line": 121,
+          "title": "### 3.8 验证制度"
+        },
+        {
+          "line": 134,
+          "title": "## 四、仍需你拍板的点"
+        },
+        {
+          "line": 140,
+          "title": "## 五、未验证项"
+        }
+      ]
+    },
+    {
+      "name": "modularity_execution_spec.md",
+      "bytes": 43274,
+      "sha256": "14850919e7aad353f4724528f2628b8177656f02412c1777e8342f5dee81b605",
+      "lineCount": 534,
+      "readRange": "first line through last line",
+      "coverageIds": [
+        "G-01",
+        "G-02",
+        "P0",
+        "P1",
+        "P1-G",
+        "P2",
+        "P3a",
+        "P3b",
+        "P3c",
+        "P3d",
+        "P3e",
+        "P3f",
+        "P4",
+        "P5",
+        "P6",
+        "P7",
+        "P8"
+      ],
+      "headings": [
+        {
+          "line": 1,
+          "title": "# KK Studio 模块化整顿 · 执行规范（给执行 AI 的唯一入口）"
+        },
+        {
+          "line": 10,
+          "title": "## 0. 如何使用本文"
+        },
+        {
+          "line": 12,
+          "title": "### 0.1 执行前必读（顺序）"
+        },
+        {
+          "line": 18,
+          "title": "### 0.2 证据标注"
+        },
+        {
+          "line": 21,
+          "title": "### 0.3 相对前两份文档的更正（执行者须知）"
+        },
+        {
+          "line": 34,
+          "title": "## 1. 目标、非目标与不变量"
+        },
+        {
+          "line": 36,
+          "title": "### 1.1 目标"
+        },
+        {
+          "line": 39,
+          "title": "### 1.2 非目标（执行中禁止）"
+        },
+        {
+          "line": 46,
+          "title": "### 1.3 不变量（每个 PR 都必须成立，评审逐条勾）"
+        },
+        {
+          "line": 55,
+          "title": "## 2. 术语"
+        },
+        {
+          "line": 69,
+          "title": "## 3. 基线事实（FACT，快照 `main@c2a0228a`，2026-10-27）"
+        },
+        {
+          "line": 73,
+          "title": "### 3.1 规模"
+        },
+        {
+          "line": 76,
+          "title": "### 3.2 命名现状"
+        },
+        {
+          "line": 79,
+          "title": "### 3.3 依赖现状"
+        },
+        {
+          "line": 85,
+          "title": "### 3.4 同名文件逐对判定（FACT，已读源码）"
+        },
+        {
+          "line": 96,
+          "title": "### 3.5 其他事实"
+        },
+        {
+          "line": 105,
+          "title": "### 3.6 UNKNOWN（执行前先核实）"
+        },
+        {
+          "line": 113,
+          "title": "## 4. 分层、模块分类与依赖规则"
+        },
+        {
+          "line": 115,
+          "title": "### 4.1 模块职责分类（对应你的九类）"
+        },
+        {
+          "line": 128,
+          "title": "### 4.2 依赖方向（硬规则）"
+        },
+        {
+          "line": 145,
+          "title": "### 4.3 Port 定义（放契约包，纯类型）"
+        },
+        {
+          "line": 158,
+          "title": "## 5. 目录与落位"
+        },
+        {
+          "line": 160,
+          "title": "### 5.1 仓库内"
+        },
+        {
+          "line": 179,
+          "title": "### 5.2 容器 `D:/kk-studio/`（仓库外，沿用 AGENTS 四象限）"
+        },
+        {
+          "line": 182,
+          "title": "### 5.3 新增文件位置约定（P0/P1 会创建）"
+        },
+        {
+          "line": 193,
+          "title": "## 6. 命名规则"
+        },
+        {
+          "line": 216,
+          "title": "## 7. 能力（Capability）契约"
+        },
+        {
+          "line": 218,
+          "title": "### 7.1 Manifest（放 `packages/creation-contracts/capability.ts`，zod，示意）"
+        },
+        {
+          "line": 255,
+          "title": "### 7.2 注册表 API（`features/capabilities/index.ts`）"
+        },
+        {
+          "line": 261,
+          "title": "### 7.3 适配器要求"
+        },
+        {
+          "line": 264,
+          "title": "### 7.4 初始能力清单（P2/P6）"
+        },
+        {
+          "line": 271,
+          "title": "### 7.5 版本与兼容"
+        },
+        {
+          "line": 277,
+          "title": "## 8. 任务与资产协议"
+        },
+        {
+          "line": 286,
+          "title": "## 9. 插件权限模型"
+        },
+        {
+          "line": 288,
+          "title": "### 9.1 现状（FACT）"
+        },
+        {
+          "line": 291,
+          "title": "### 9.2 目标"
+        },
+        {
+          "line": 296,
+          "title": "### 9.3 兼容策略（OPEN-3）"
+        },
+        {
+          "line": 303,
+          "title": "## 10. 记忆"
+        },
+        {
+          "line": 308,
+          "title": "## 11. 架构自动化检查"
+        },
+        {
+          "line": 310,
+          "title": "### 11.1 工具与接入"
+        },
+        {
+          "line": 314,
+          "title": "### 11.2 规则"
+        },
+        {
+          "line": 333,
+          "title": "### 11.3 验证检查本身（防假绿）"
+        },
+        {
+          "line": 338,
+          "title": "## 12. 旧文件与无关内容处理"
+        },
+        {
+          "line": 340,
+          "title": "### 12.1 判定标准（满足任一即\"候选\"，**候选≠可删**）"
+        },
+        {
+          "line": 344,
+          "title": "### 12.2 流程"
+        },
+        {
+          "line": 347,
+          "title": "### 12.3 当前候选与核实结果（FACT）"
+        },
+        {
+          "line": 360,
+          "title": "## 13. 文档规范"
+        },
+        {
+          "line": 362,
+          "title": "### 13.1 层级与单一事实源"
+        },
+        {
+          "line": 365,
+          "title": "### 13.2 模块卡（每个能力/切片一张；沿用 `feat-*.md` 并加固定小节）"
+        },
+        {
+          "line": 368,
+          "title": "### 13.3 每个任务的变更记录"
+        },
+        {
+          "line": 371,
+          "title": "### 13.4 ADR"
+        },
+        {
+          "line": 376,
+          "title": "## 14. 轻量化"
+        },
+        {
+          "line": 391,
+          "title": "## 15. 可替换性与影响隔离"
+        },
+        {
+          "line": 401,
+          "title": "## 16. 验证矩阵"
+        },
+        {
+          "line": 416,
+          "title": "## 17. 任务卡（按序执行；每卡独立 worktree 分支、独立 PR）"
+        },
+        {
+          "line": 420,
+          "title": "### P0 · 治理基线（无产品代码改动）"
+        },
+        {
+          "line": 427,
+          "title": "### P1 · 能力契约包（不接入任何入口）"
+        },
+        {
+          "line": 435,
+          "title": "### P2 · 注册表 + 试点 `image.inpaint`"
+        },
+        {
+          "line": 443,
+          "title": "### P3 · 解循环（每对一张子卡，P3a→P3f 顺序见 §18）"
+        },
+        {
+          "line": 448,
+          "title": "### P4 · 收敛深层 import（R1）"
+        },
+        {
+          "line": 453,
+          "title": "### P5 · 插件权限"
+        },
+        {
+          "line": 458,
+          "title": "### P6 · 新能力逐个落地（`image.outpaint` → `image.upscale` → `image.layer-split`，按 §3.6 核实结果裁剪）"
+        },
+        {
+          "line": 463,
+          "title": "### P7 · 资产溯源规范化"
+        },
+        {
+          "line": 466,
+          "title": "### P8 · `App.tsx` 装配瘦身"
+        },
+        {
+          "line": 469,
+          "title": "### 并行规则"
+        },
+        {
+          "line": 474,
+          "title": "## 18. 循环依赖解环方案（FACT：具体引用文件，源自 `scratch/cycles.cjs`）"
+        },
+        {
+          "line": 478,
+          "title": "### P3a · `creation ↔ image-edit`"
+        },
+        {
+          "line": 484,
+          "title": "### P3b · `agent ↔ creation`"
+        },
+        {
+          "line": 489,
+          "title": "### P3c · `creation ↔ local-service`"
+        },
+        {
+          "line": 493,
+          "title": "### P3d · `creation ↔ models`"
+        },
+        {
+          "line": 497,
+          "title": "### P3e · `agent ↔ memory`、`agent ↔ prompts`"
+        },
+        {
+          "line": 501,
+          "title": "### P3f · 方向反了的实现（`features/canvas/useCanvasHistory`）"
+        },
+        {
+          "line": 506,
+          "title": "## 19. 全局禁止与停止条件"
+        },
+        {
+          "line": 516,
+          "title": "## 20. 待用户决定"
+        },
+        {
+          "line": 528,
+          "title": "## 附录 A · 复现命令"
+        },
+        {
+          "line": 533,
+          "title": "## 附录 B · 评审清单（每个 PR 描述必须逐项回答）"
+        }
+      ]
+    },
+    {
+      "name": "standards_and_repo_organization.md",
+      "bytes": 39648,
+      "sha256": "b909137eb177691014465cb50dd76fde8320f1f29c1d667cbccf71945e52dcfd",
+      "lineCount": 433,
+      "readRange": "first line through last line",
+      "coverageIds": [
+        "SEC-ZOD",
+        "STD-01",
+        "STD-02",
+        "STD-03",
+        "STD-04",
+        "STD-05",
+        "STD-06",
+        "STD-07",
+        "STD-08",
+        "STD-09",
+        "STD-10",
+        "STD-11",
+        "ORG-0",
+        "ORG-1",
+        "ORG-2",
+        "ORG-3",
+        "ORG-4",
+        "ORG-5",
+        "ORG-6",
+        "ORG-7",
+        "ORG-X"
+      ],
+      "headings": [
+        {
+          "line": 1,
+          "title": "# KK Studio 整顿执行规范 · 补篇：标准现代化 + 仓库整理手册"
+        },
+        {
+          "line": 9,
+          "title": "## 0. 本文新发现的关键事实（先看这里）"
+        },
+        {
+          "line": 25,
+          "title": "# 第一部分 · 标准现代化方向"
+        },
+        {
+          "line": 27,
+          "title": "## A0 总原则"
+        },
+        {
+          "line": 36,
+          "title": "## A1 标准清单与判定"
+        },
+        {
+          "line": 54,
+          "title": "## A2 \"一份 Manifest，多种投影\"架构"
+        },
+        {
+          "line": 74,
+          "title": "## A3 版本与弃用策略（所有协议/契约通用）"
+        },
+        {
+          "line": 81,
+          "title": "## A4 插件新一代标准"
+        },
+        {
+          "line": 83,
+          "title": "### A4.1 分级运行时（按风险选择，**不是每个插件都要最重的隔离**）"
+        },
+        {
+          "line": 99,
+          "title": "### A4.2 标准插件清单 `kk-plugin.json`（示意；定稿以 ADR 为准，schema 放契约包）"
+        },
+        {
+          "line": 132,
+          "title": "### A4.3 生命周期与冲突处理"
+        },
+        {
+          "line": 139,
+          "title": "### A4.4 与路线图的关系"
+        },
+        {
+          "line": 142,
+          "title": "## A5 Skills / Agent 生态兼容"
+        },
+        {
+          "line": 147,
+          "title": "## A6 安全基线（与标准联动）"
+        },
+        {
+          "line": 154,
+          "title": "## A7 依赖与技术栈\"升到最新\"的评估方法"
+        },
+        {
+          "line": 174,
+          "title": "## A8 与现有路线图（OPT-*）的对齐表"
+        },
+        {
+          "line": 188,
+          "title": "## A9 本部分需要的新增文档与账本任务（方向）"
+        },
+        {
+          "line": 193,
+          "title": "# 第二部分 · 仓库整理手册"
+        },
+        {
+          "line": 195,
+          "title": "## B0 目标与原则"
+        },
+        {
+          "line": 204,
+          "title": "## B1 目标目录树（带职责说明；\"现状\"为 FACT）"
+        },
+        {
+          "line": 233,
+          "title": "## B2 各目录的\"放什么 / 不放什么 / 现状 / 动作\""
+        },
+        {
+          "line": 235,
+          "title": "### B2.1 仓库根"
+        },
+        {
+          "line": 240,
+          "title": "### B2.2 容器 `D:/kk-studio/`（仓库外）"
+        },
+        {
+          "line": 243,
+          "title": "### B2.3 `docs/`：见 §B8（单独展开）。"
+        },
+        {
+          "line": 245,
+          "title": "### B2.4 `vendor/`"
+        },
+        {
+          "line": 249,
+          "title": "### B2.5 `scripts/`"
+        },
+        {
+          "line": 253,
+          "title": "### B2.6 `tests/`"
+        },
+        {
+          "line": 257,
+          "title": "### B2.7 `public/`、`design/`"
+        },
+        {
+          "line": 260,
+          "title": "### B2.8 `mobile/`、`src-tauri/`、`packages/`、`deploy/`、`config/`"
+        },
+        {
+          "line": 263,
+          "title": "## B3 新文件落位决策表（\"我要加一个 X，放哪？\"）"
+        },
+        {
+          "line": 288,
+          "title": "## B4 命名规范补充（文档与目录）"
+        },
+        {
+          "line": 293,
+          "title": "## B5 如何区分\"现行 / 遗留 / 归档 / 参考 / 生成物\""
+        },
+        {
+          "line": 307,
+          "title": "## B6 旧文件与遗留处理"
+        },
+        {
+          "line": 309,
+          "title": "### B6.1 决策树"
+        },
+        {
+          "line": 317,
+          "title": "### B6.2 引用检索清单（缺一不可）"
+        },
+        {
+          "line": 319,
+          "title": "### B6.3 `vendor/` 政策"
+        },
+        {
+          "line": 326,
+          "title": "## B7 其余整理规则"
+        },
+        {
+          "line": 332,
+          "title": "## B8 文档整理手册"
+        },
+        {
+          "line": 334,
+          "title": "### B8.1 目标结构"
+        },
+        {
+          "line": 348,
+          "title": "### B8.2 编写规范"
+        },
+        {
+          "line": 355,
+          "title": "### B8.3 退役流程"
+        },
+        {
+          "line": 358,
+          "title": "## B9 轻量化与证据治理（数据驱动）"
+        },
+        {
+          "line": 360,
+          "title": "### B9.1 实测数据（FACT）"
+        },
+        {
+          "line": 370,
+          "title": "### B9.2 证据分级策略（建议，OPEN-2 待你确认）"
+        },
+        {
+          "line": 379,
+          "title": "### B9.3 防回弹（新增门禁，§B11）"
+        },
+        {
+          "line": 382,
+          "title": "### B9.4 其他轻量化项"
+        },
+        {
+          "line": 385,
+          "title": "### B9.5 关于 `.git` 体积的诚实说明（INFERENCE）"
+        },
+        {
+          "line": 388,
+          "title": "## B10 分支与工作树卫生"
+        },
+        {
+          "line": 392,
+          "title": "## B11 新增治理检查（方向，接入 `governance:check`）"
+        },
+        {
+          "line": 404,
+          "title": "## B12 ORG 任务卡（仓库整理，与主规范 P 系列并行但互不触同文件）"
+        },
+        {
+          "line": 419,
+          "title": "## B13 衡量\"整理成功\"的指标（写入 PR 与 Project State）"
+        },
+        {
+          "line": 424,
+          "title": "## 附：与主规范的衔接与新增待决项"
+        }
+      ]
+    }
+  ]
+}

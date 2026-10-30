@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type {
   Dispatch,
   KeyboardEvent as ReactKeyboardEvent,
@@ -127,10 +127,6 @@ export function useCanvasHistory({
   const historyRef = useRef<CanvasHistoryState | null>(null);
   const presentRef = useRef<CanvasHistorySnapshot | null>(null);
   const applyingFingerprint = useRef<string | null>(null);
-  const snapshot = useMemo(
-    () => snapshotOf(items, positions, edges, viewport),
-    [edges, items, positions, viewport],
-  );
 
   useEffect(() => {
     if (typeof customLimit === "number" && customLimit > 0) {
@@ -174,8 +170,11 @@ export function useCanvasHistory({
   }, []);
 
   useEffect(() => {
-    const fingerprint = canvasHistoryFingerprint(snapshot);
     const present = presentRef.current;
+    // Skip preview scans; initialization and undo/redo acknowledgements still run.
+    if (present && gestureActive && !applyingFingerprint.current) return;
+    const snapshot = snapshotOf(items, positions, edges, viewport);
+    const fingerprint = canvasHistoryFingerprint(snapshot);
     if (!present) {
       presentRef.current = cloneCanvasHistorySnapshot(snapshot);
       historyRef.current = createCanvasHistory(snapshot, limit);
@@ -190,9 +189,6 @@ export function useCanvasHistory({
       }
       return;
     }
-    // Pointer renders are previews. A completed gesture commits once; cancel
-    // restores its starting snapshot, preserving both the past and the redo.
-    if (gestureActive) return;
     const history = historyRef.current ?? createCanvasHistory(present, limit);
     history.limit = limit;
     if (canvasHistoryFingerprint(present) === fingerprint) {
@@ -221,7 +217,15 @@ export function useCanvasHistory({
     historyRef.current = commitCanvasHistory(history, snapshot);
     presentRef.current = cloneCanvasHistorySnapshot(snapshot);
     setRevision((value) => value + 1);
-  }, [automaticViewport, gestureActive, limit, snapshot]);
+  }, [
+    automaticViewport,
+    edges,
+    gestureActive,
+    items,
+    limit,
+    positions,
+    viewport,
+  ]);
 
   const apply = useCallback(
     (next: CanvasHistorySnapshot): void => {

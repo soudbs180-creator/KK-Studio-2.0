@@ -55,12 +55,47 @@
   flex-shrink: 0;
 }
 
+.canvas-group-toolbar {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 44px;
+  padding: 4px 6px;
+  border: 1px solid var(--border-default);
+  border-radius: var(--kk-radius-full);
+  background: var(--bg-elevated);
+  box-shadow: 0 10px 24px var(--kk-shadow-color-strong);
+}
+.canvas-group-toolbar button {
+  min-height: 32px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: var(--kk-radius-full);
+  background: transparent;
+  color: var(--text-primary);
+}
+.canvas-group-toolbar button:hover,
+.canvas-group-toolbar button:focus-visible {
+  background: var(--kk-control-hover-bg);
+}
+.canvas-group-toolbar button[aria-pressed="true"] {
+  background: var(--kk-control-surface-selected);
+  color: var(--text-primary);
+}
+
 .canvas-hud .task-list-wrapper,
 .canvas-hud .demo-library-trigger,
 .canvas-hud .canvas-top-right {
   position: relative;
   inset: auto;
   flex-shrink: 0;
+}
+.canvas-hud .task-list-wrapper {
+  pointer-events: none;
+}
+.canvas-hud .task-list-wrapper > .task-button,
+.canvas-hud .task-list-wrapper .task-panel {
+  pointer-events: auto;
 }
 .canvas-hud .task-button {
   width: 93px;
@@ -88,12 +123,13 @@
 .canvas-view-mode-toggle {
   display: inline-flex;
   align-items: center;
-  height: 30px;
+  width: var(--kk-canvas-browser-switch-w);
+  height: var(--kk-canvas-toolbar-h);
   padding: 2px;
   border-radius: var(--ui-radius-pill);
-  background: var(--bg-surface);
+  background: var(--kk-control-surface-idle);
   border: 1px solid var(--border-control);
-  box-shadow: var(--ui-shadow);
+  box-shadow: none;
   gap: 2px;
   flex-shrink: 0;
 }
@@ -102,7 +138,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: 24px;
+  flex: 1 1 0;
+  height: var(--kk-canvas-toolbar-button-h);
   padding: 0 10px;
   border-radius: var(--ui-radius-pill);
   border: none;
@@ -117,14 +154,13 @@
 
 .canvas-view-mode-btn:hover:not(.active) {
   color: var(--text-primary);
-  background: var(--bg-card-hover);
+  background: var(--kk-control-surface-hover);
 }
 
 .canvas-view-mode-btn.active {
-  background: var(--bg-card);
+  background: var(--kk-control-surface-selected);
   color: var(--text-primary);
   font-weight: 500;
-  box-shadow: var(--ui-shadow);
 }
 
 .canvas-view-mode-btn:active {
@@ -267,8 +303,12 @@
     gap: 8px;
   }
   .canvas-hud-right {
+    flex: 1 1 100%;
+    width: 100%;
+    min-width: 0;
     max-width: 100%;
     flex-shrink: 1;
+    margin-left: 0;
     flex-wrap: wrap;
     justify-content: flex-end;
   }
@@ -317,13 +357,6 @@
     position: absolute;
     inset: -7px;
   }
-  .canvas.has-chat .canvas-hud-right {
-    /* The navigation capsule remains usable while chat is open. Keep its
-       right edge clear of the current conversation rail, including resizes. */
-    margin-right: calc(
-      var(--conversation-width-user, var(--conversation-width)) - 12px
-    );
-  }
   .canvas .canvas-toolbar {
     left: calc(100% - var(--ui-workspace-toolbar-right-center));
     margin-left: 0;
@@ -334,8 +367,8 @@
     position: absolute;
     left: 50%;
     top: 50%;
-    width: 21.5px;
-    height: 21.5px;
+    width: var(--kk-icon-glyph-md);
+    height: var(--kk-icon-glyph-md);
     transform: translate(-50%, -50%);
   }
 }
@@ -444,4 +477,191 @@
   padding: 0 12px;
   border-radius: var(--kk-radius-full);
   font-size: var(--ui-font-caption);
+}
+
+/* Current Figma 655:141110: one 44px row within the usable canvas. */
+.canvas .canvas-hud {
+  top: 28px;
+  left: 28px;
+  right: auto;
+  width: calc(var(--canvas-usable-width, 100%) - 56px);
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  container-type: inline-size;
+  container-name: canvas-hud;
+}
+.canvas-hud-left,
+.canvas .canvas-hud-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex-shrink: 0;
+}
+.canvas .canvas-hud-right {
+  margin: 0 0 0 auto;
+  width: auto;
+  flex: 0 0 auto;
+}
+.canvas .canvas-hud-actions {
+  min-width: 0;
+  max-width: 160px;
+  flex-shrink: 1;
+}
+.canvas .canvas-hud .project-task-status {
+  height: 44px;
+  padding: 0 12px;
+  align-items: center;
+  flex-wrap: nowrap;
+  overflow: hidden;
+  border: 1px solid var(--kk-border-default);
+  border-radius: var(--kk-radius-full);
+  background: var(--kk-bg-input);
+}
+.canvas .canvas-hud .project-task-status > * {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.canvas .canvas-hud .task-button,
+.canvas .canvas-hud .chat-reopen {
+  height: 44px;
+  min-height: 44px;
+  margin: 0;
+  border-radius: var(--kk-radius-full);
+}
+.canvas .canvas-hud .task-button {
+  width: 120px;
+  min-width: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: var(--kk-font-body);
+  line-height: var(--kk-line-body);
+}
+.canvas .canvas-hud .chat-reopen {
+  width: 44px;
+  min-width: 44px;
+  flex-basis: 44px;
+}
+.canvas .canvas-hud .chat-reopen::before {
+  content: none;
+}
+.canvas .canvas-hud .chat-reopen img {
+  position: static;
+  transform: none;
+  width: 28px;
+  height: 28px;
+}
+.canvas .canvas-view-mode-toggle {
+  width: 144px;
+  height: 44px;
+  padding: 0;
+  gap: 0;
+  border: 0;
+}
+.canvas .canvas-view-mode-btn {
+  height: 44px;
+  font-size: var(--kk-font-body);
+  line-height: var(--kk-line-body);
+}
+@container canvas-hud (max-width: 760px) {
+  .canvas .canvas-hud .task-button {
+    width: 44px;
+    min-width: 44px;
+  }
+  .canvas .canvas-hud .task-button > span,
+  .canvas .canvas-map-trigger > span:not(.toolbar-icon) {
+    display: none;
+  }
+  .canvas .canvas-hud .task-button-icon {
+    width: 28px;
+    height: 28px;
+  }
+  .canvas .canvas-map-trigger {
+    width: 44px;
+    padding: 0;
+  }
+  .canvas .canvas-map-trigger img {
+    width: 28px;
+    height: 28px;
+  }
+  .canvas .canvas-hud-actions {
+    max-width: 68px;
+  }
+}
+@container canvas-hud (max-width: 580px) {
+  .canvas-hud-left {
+    max-width: 100%;
+  }
+  .canvas .canvas-hud-actions {
+    display: none;
+  }
+}
+
+.canvas-hud .task-panel {
+  padding: 12px 16px;
+  border-radius: var(--kk-radius-lg);
+}
+.canvas-hud .task-panel-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 36px;
+  min-height: 36px;
+}
+.canvas-hud .task-panel-close {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border-radius: var(--kk-radius-full);
+}
+
+.canvas-hud .task-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.canvas-hud .task-panel-heading {
+  color: var(--kk-text-primary);
+  font-size: var(--kk-font-body);
+  line-height: var(--kk-line-body);
+  flex-shrink: 0;
+}
+.canvas-hud .task-panel-search,
+.canvas-hud .task-panel-tabs {
+  flex-shrink: 0;
+}
+.canvas-hud .task-grid,
+.canvas-hud .task-empty {
+  flex: 1;
+  min-height: 0;
+}
+.canvas-hud .task-panel-tabs {
+  gap: 0;
+  height: 40px;
+  margin: 0;
+}
+.canvas-hud .task-tab {
+  position: relative;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+}
+.canvas-hud .task-tab.active::before {
+  inset: auto 0 0;
+  height: 4px;
+  border-radius: var(--kk-radius-full);
+  background: var(--kk-text-primary);
+}
+.canvas-hud .task-workbench-link {
+  position: static;
+  flex-shrink: 0;
+  width: 100%;
+  margin: 0;
 }

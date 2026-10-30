@@ -6,8 +6,8 @@ import {
   emptyDraft,
   type CreateProjectInput,
   type CreationDraft,
-} from "../features/creation/model";
-import type { SkillRecord } from "../features/skills/skillRegistry";
+} from "../features/creation/index.ts";
+import type { SkillRecord } from "../features/skills/index.ts";
 const INSPIRATIONS = [
   {
     id: "blue-hour",

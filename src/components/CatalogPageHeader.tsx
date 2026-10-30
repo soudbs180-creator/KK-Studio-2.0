@@ -3,7 +3,7 @@ import UiIcon from "./UiIcon";
 import {
   createStarterWorkflow,
   type WorkflowRecord,
-} from "../features/comfyui/workflowRegistry";
+} from "../features/comfyui/index.ts";
 
 export type CatalogHeaderMeta = {
   title: string;

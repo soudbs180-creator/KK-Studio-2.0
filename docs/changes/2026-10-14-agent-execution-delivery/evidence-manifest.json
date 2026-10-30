@@ -1,0 +1,120 @@
+{
+  "version": 1,
+  "taskId": "TASK-ORG-6",
+  "classification": "E2-externalized-historical-evidence",
+  "packagePath": "docs/changes/2026-10-14-agent-execution-delivery",
+  "entries": [
+    {
+      "sourcePath": "docs/changes/2026-10-14-agent-execution-delivery/evidence/canonical-native-running.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "8de21aa348fcfaf3a5c13e0fb8369c6b236aaaba",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-14-agent-execution-delivery/evidence/canonical-native-running.png",
+      "bytes": 151296,
+      "sha256": "db1eb71053685f5c8b8356a3a310f87729053808ef93ab8d2cb6e6c955a90339",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-14-agent-execution-delivery/verification.md",
+          "line": 55,
+          "originalTarget": "evidence/canonical-native-running.png",
+          "referenceKind": "link"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-14-agent-execution-delivery/evidence/combined-full-verify-failed.log.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "4392761c968eead58a6e221dbbc1acfa9d278ab4",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-14-agent-execution-delivery/evidence/combined-full-verify-failed.log.gz",
+      "bytes": 68775,
+      "sha256": "810626fefcfd3bc5b4b55e250c7fcf846e7d0c3cc5b753bf804f03fd5de9539e",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-14-agent-execution-delivery/verification.md",
+          "line": 35,
+          "originalTarget": "evidence/combined-full-verify-failed.log.gz",
+          "referenceKind": "link"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-14-agent-execution-delivery/evidence/final-checks-port-occupied.log.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "aa1cd3d9f7a266b3131dc650856f546e9aba83a5",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-14-agent-execution-delivery/evidence/final-checks-port-occupied.log.gz",
+      "bytes": 47419,
+      "sha256": "1c781120972bed2dd1d5943667fddd5da92e7a4bb722930c78442a8acc4645d4",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-14-agent-execution-delivery/verification.md",
+          "line": 33,
+          "originalTarget": "evidence/final-checks-port-occupied.log.gz",
+          "referenceKind": "link"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-14-agent-execution-delivery/evidence/initial-full-verify-failed.log.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "73a9373f8f9dee8a9ace7a1149b7f147d5ca99fd",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-14-agent-execution-delivery/evidence/initial-full-verify-failed.log.gz",
+      "bytes": 70678,
+      "sha256": "5dfedb7ffe917f3c6511e82c9e7da12dfae5b55f459284c5b4e53b1cc7386816",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-14-agent-execution-delivery/verification.md",
+          "line": 35,
+          "originalTarget": "evidence/initial-full-verify-failed.log.gz",
+          "referenceKind": "link"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-14-agent-execution-delivery/evidence/native-collapsed.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "bab9203389dc66f81aba3a3f20251f93d39b5559",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-14-agent-execution-delivery/evidence/native-collapsed.png",
+      "bytes": 130524,
+      "sha256": "1dd7909567d4f53e511bb9bf3ffba16dc0ccb4a1c9ee4e5bd4bde0cb3a2468ac",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-14-agent-execution-delivery/verification.md",
+          "line": 45,
+          "originalTarget": "evidence/native-collapsed.png",
+          "referenceKind": "link"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-14-agent-execution-delivery/evidence/production-browser.log.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "b3ae14b9f9444548517f430f9a4ce879980a1007",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-14-agent-execution-delivery/evidence/production-browser.log.gz",
+      "bytes": 21406,
+      "sha256": "3de7ffacf7cd92342b49ddf237b30556b2f789047a83fcf0c13be811f3ed32ca",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-14-agent-execution-delivery/verification.md",
+          "line": 33,
+          "originalTarget": "evidence/production-browser.log.gz",
+          "referenceKind": "link"
+        }
+      ]
+    }
+  ],
+  "scope": "Historical E2 files externalized by validated batches; E1 summaries, JSON, key screenshots and active inputs retained.",
+  "containerResolution": "Resolve containerRelativePath from the workspace container containing the canonical checkout and output.",
+  "recovery": "Verify with scripts/governance/check-evidence-manifest.mjs <manifest> <container>; restore only to a new empty directory. Original Git sourceCommit/sourcePath remains recoverable.",
+  "batches": [
+    {
+      "taskId": "TASK-ORG-6",
+      "date": "2026-10-30",
+      "candidateBase": "be730617ace5013295b85a22133259b32ad6ffec"
+    }
+  ]
+}

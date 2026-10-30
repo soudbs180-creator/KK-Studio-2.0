@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "taskId": "TASK-ORG-6",
+  "classification": "E2-externalized-historical-evidence",
+  "packagePath": "docs/evidence/native-assets-2026-09-18",
+  "entries": [
+    {
+      "sourcePath": "docs/evidence/native-assets-2026-09-18/missing-original-protection.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "3fae0f7d47a715219fce77519dfb40ec907292fc",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/native-assets-2026-09-18/missing-original-protection.png",
+      "bytes": 1094417,
+      "sha256": "44b2fb173d4247febd3e02a2501542899ab8234c9aa83e22d4cf8452099ed70d",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/native-assets-2026-09-18/restored-before-tamper.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "31db0a53cdebe8a79b6d94749539207ec71ec6e8",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/native-assets-2026-09-18/restored-before-tamper.png",
+      "bytes": 1039210,
+      "sha256": "1d6d20431edf450ecdfb7fa46d648a5de8e0369c2911cb49e76720eb2689e12f",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    }
+  ],
+  "scope": "Historical E2 files externalized by validated batches; E1 summaries, JSON, key screenshots and active inputs retained.",
+  "containerResolution": "Resolve containerRelativePath from the workspace container containing the canonical checkout and output.",
+  "recovery": "Verify with scripts/governance/check-evidence-manifest.mjs <manifest> <container>; restore only to a new empty directory. Original Git sourceCommit/sourcePath remains recoverable.",
+  "batches": [
+    {
+      "taskId": "TASK-ORG-6",
+      "date": "2026-10-30",
+      "candidateBase": "be730617ace5013295b85a22133259b32ad6ffec"
+    }
+  ]
+}

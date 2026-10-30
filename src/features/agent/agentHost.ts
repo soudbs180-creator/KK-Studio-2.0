@@ -5,7 +5,7 @@ import {
   activeChat,
   updateActiveChat,
   type CreationProject,
-} from "../creation/model.ts";
+} from "../creation/index.ts";
 import {
   applyAgentOpsToItems,
   assertCanvasDelivery,
@@ -13,11 +13,12 @@ import {
 } from "./agentCanvas.ts";
 import type { AgentOpResult } from "./agentConnection.ts";
 import type { AgentChatItem, CanvasAgentOp, ChatScope } from "./agentTypes.ts";
-import { storeGeneratedAsset } from "../creation/assetRepository.ts";
-import { appendImageTaskResults } from "../creation/imageTaskCommand.ts";
+import { storeGeneratedAsset } from "../creation/index.ts";
+import { appendImageTaskResults } from "../creation/index.ts";
 import type { AgentCanvasView } from "./agentCanvasView.ts";
 import type { PlanTool, StageOrchestrator } from "./orchestrator.ts";
 import type { StagePlan } from "../../domain/stagePlan.ts";
+import { sameJson } from "../creation/index.ts";
 
 export interface AgentHostOptions {
   getView?(): AgentCanvasView | null;
@@ -130,15 +131,16 @@ export function createAgentHost(options: AgentHostOptions) {
         )
       )
         throw new Error("线程属于其他聊天，未改写当前聊天的归属。");
-      if (project.chats)
-        options.commit(
-          updateActiveChat(project, (chat) => ({
-            ...chat,
-            agentThreadId: threadId,
-            updatedAt: Date.now(),
-          })),
-        );
-      else if (project.agentThreadId !== threadId)
+      if (project.chats) {
+        if (activeChat(project)?.agentThreadId !== threadId)
+          options.commit(
+            updateActiveChat(project, (chat) => ({
+              ...chat,
+              agentThreadId: threadId,
+              updatedAt: Date.now(),
+            })),
+          );
+      } else if (project.agentThreadId !== threadId)
         options.commit({
           ...project,
           agentThreadId: threadId,
@@ -184,16 +186,23 @@ export function createAgentHost(options: AgentHostOptions) {
         )
       )
         throw new Error("聊天历史格式无效，原件已保留。");
-      options.commit(
-        updateActiveChat(project, (chat) => ({
-          ...chat,
-          messages: messages.map(({ text, ...message }) => ({
-            ...message,
-            content: text,
+      const nextMessages = messages.map(({ text, ...message }) => ({
+        ...message,
+        content: text,
+      }));
+      if (
+        !sameJson(
+          JSON.parse(JSON.stringify(activeChat(project)?.messages ?? null)),
+          JSON.parse(JSON.stringify(nextMessages)),
+        )
+      )
+        options.commit(
+          updateActiveChat(project, (chat) => ({
+            ...chat,
+            messages: nextMessages,
+            updatedAt: Date.now(),
           })),
-          updatedAt: Date.now(),
-        })),
-      );
+        );
       await options.flush?.();
     },
     readGoogleConversation() {

@@ -1,17 +1,18 @@
 import { useRef, useState } from "react";
 import UiIcon from "./UiIcon";
-import type { CreationDraft } from "../features/creation/model";
+import type { CreationDraft } from "../features/creation/index.ts";
+import UsageStatusBar from "./composer/UsageStatusBar";
 import { homeModelSelection } from "../domain/modelSelection";
-import { codexHomeValidation } from "../features/agent/codexGeneration";
+import { codexHomeValidation } from "../features/agent/index.ts";
 import StartAttachmentList from "./StartAttachmentList";
 import ComposerTextarea from "./ComposerTextarea";
 import useConversationAttachments from "./useConversationAttachments";
 import ComposerExtensionsMenu from "./ComposerExtensionsMenu";
 import StartModelPicker from "./StartModelPicker";
 import { StartComposerFeedback, StartModePicker } from "./StartComposerModes";
-import VoiceInputButton from "./VoiceInputButton";
+import { VoiceInputButton } from "../features/speech/index.ts";
 import { useComposerMenus } from "./useComposerMenus";
-import type { SkillRecord } from "../features/skills/skillRegistry";
+import type { SkillRecord } from "../features/skills/index.ts";
 import {
   canSubmitGeneration,
   getDisabledReason,
@@ -273,10 +274,16 @@ export default function StartComposer({
               disabled={submitDisabled}
               title={disabledReason}
             >
-              <UiIcon name="send" />
+              <UiIcon name="send" size={28} />
             </button>
           </div>
         </div>
+        <UsageStatusBar
+          draft={draft}
+          onReasoningEffortChange={(effort) =>
+            commit({ reasoningEffort: effort })
+          }
+        />
       </form>
       <StartComposerFeedback
         reason={draft.prompt.trim() ? disabledReason : undefined}

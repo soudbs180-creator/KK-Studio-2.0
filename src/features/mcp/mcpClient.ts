@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { appVersion } from "../../runtime/appInfo.ts";
+import type { ModelSpaceProfile } from "../models/index.ts";
 
 const LEGACY_MCP_PROTOCOL_VERSION = "2025-11-25";
 const MODERN_MCP_PROTOCOL_VERSION = "2026-07-28";
@@ -818,4 +819,97 @@ export class McpServerRegistry {
       return this.list();
     });
   }
+}
+
+export interface ModelToolFilterContext {
+  readonly modelId?: string;
+  readonly modelKind?: string;
+  readonly modelFamily?: string;
+  readonly space?: ModelSpaceProfile;
+}
+
+/**
+ * Filter MCP tools for a specific model or model space profile.
+ * Isolates tool schemas to prevent prompt dilution and tool hallucination:
+ * - Respects model space profile whitelists and blacklists.
+ * - Restricts image models (e.g. FLUX, SD, Midjourney, DALL-E) from receiving developer/system tools (bash, terminal, exec, file manipulation).
+ */
+export function filterMcpToolsForModel(
+  allTools: readonly McpTool[],
+  target?: ModelSpaceProfile | ModelToolFilterContext | string,
+): McpTool[] {
+  if (!target) return [...allTools];
+
+  const space: ModelSpaceProfile | undefined =
+    typeof target === "object" &&
+    "modelId" in target &&
+    "autoCompactWatermark" in target
+      ? (target as ModelSpaceProfile)
+      : typeof target === "object" && "space" in target
+        ? target.space
+        : undefined;
+
+  const modelId: string =
+    typeof target === "string"
+      ? target
+      : typeof target === "object" &&
+          "modelId" in target &&
+          typeof target.modelId === "string"
+        ? target.modelId
+        : "";
+
+  const modelKind: string | undefined =
+    typeof target === "object" &&
+    "modelKind" in target &&
+    typeof target.modelKind === "string"
+      ? target.modelKind
+      : undefined;
+
+  const modelFamily: string | undefined =
+    typeof target === "object" &&
+    "modelFamily" in target &&
+    typeof target.modelFamily === "string"
+      ? target.modelFamily
+      : undefined;
+
+  return allTools.filter((tool) => {
+    const name = tool.name;
+
+    // 1. Blacklist check
+    if (space?.mcpToolBlacklist?.includes(name)) {
+      return false;
+    }
+
+    // 2. Whitelist check
+    if (space?.mcpToolWhitelist && space.mcpToolWhitelist.length > 0) {
+      if (!space.mcpToolWhitelist.includes(name)) {
+        return false;
+      }
+    }
+
+    // 3. Image model isolation: image-focused models should not receive filesystem, bash, code execution tools
+    const isImageModel =
+      modelKind === "image" ||
+      /image|flux|diffusion|dall-?e|midjourney|ideogram|sdxl|stabilityai|cogview|imagen/i.test(
+        modelFamily || "",
+      ) ||
+      /image|flux|diffusion|dall-?e|midjourney|ideogram|sdxl|stabilityai|cogview|imagen/i.test(
+        modelId,
+      );
+
+    if (isImageModel) {
+      if (
+        /^(?:bash|exec|terminal|shell|write_file|delete_file|edit_file|run_command|git_)/i.test(
+          name,
+        ) ||
+        /(?:^|[_-])(?:run_bash|shell|eval|terminal|exec|write_file|delete_file|edit_file)(?:[_-]|$)/i.test(
+          name,
+        )
+      ) {
+        return false;
+      }
+    }
+
+    return true;
+  });
 }

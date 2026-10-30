@@ -4,16 +4,16 @@ import type {
   CreationProject,
   CreationTask,
   CreationTaskOutput,
-} from "../features/creation/model";
+} from "../features/creation/index.ts";
 import TaskWorkbenchExport from "./TaskWorkbenchExport";
 import BatchMatrix from "./BatchMatrix";
 import TaskWorkbenchReview from "./TaskWorkbenchReview";
 import TaskWorkbenchStages, {
   type StagePlanActions,
 } from "./TaskWorkbenchStages";
-import { formatCostUsd } from "../features/creation/taskState";
-import { taskRetryAvailability } from "../features/creation/taskRetryAvailability";
-export { taskOutputsForDisplay as outputsFor } from "../features/creation/taskRetryAvailability";
+import { formatCostUsd } from "../features/creation/index.ts";
+import { taskRetryAvailability } from "../features/creation/index.ts";
+export { taskOutputsForDisplay as outputsFor } from "../features/creation/index.ts";
 
 export type WorkbenchTab =
   "queue" | "prompt" | "generate" | "review" | "export" | "plan";

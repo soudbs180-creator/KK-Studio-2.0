@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { CreationTask } from "../features/creation/model";
+import type { CreationTask } from "../features/creation/index.ts";
 import type { ReviewComment, ReviewRegion } from "../domain/reviewWorkflow";
 import type { AgentRole } from "../domain/agentWorkflow";
 import CommentRegion from "./CommentRegion";

@@ -1,17 +1,18 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import ComposerTextarea from "../../components/ComposerTextarea.tsx";
-import UiIcon from "../../components/UiIcon.tsx";
-import { readReferenceImages } from "../../components/nodes/referenceUpload.ts";
-import { CanvasImageCommandContext } from "../creation/CanvasImageCommand.tsx";
 import ModelPickerMenu from "../../components/ModelPickerMenu.tsx";
+import UiIcon from "../../components/UiIcon.tsx";
+import { VoiceInputButton } from "../speech/index.ts";
+import { readReferenceImages } from "../../components/nodes/referenceUpload.ts";
 import { useDismissible } from "../../components/useDismissible.ts";
-import { selectedModelLabel } from "../models/modelPresentation.ts";
-import type { ModelSelection } from "../models/modelSelection.ts";
-import { nextColorLabel, type MaskDocument, type MaskRegion } from "./mask.ts";
 import type {
   CanvasCollectionItem,
   CanvasReference,
 } from "../../domain/canvasItems.ts";
+import { selectedModelLabel } from "../models/index.ts";
+import type { ModelSelection } from "../models/index.ts";
+import { CanvasImageCommandContext } from "../../runtime/canvasCommandRuntime.tsx";
+import { nextColorLabel, type MaskDocument, type MaskRegion } from "./mask.ts";
 function tagColor(color: string) {
   return (
     "#" +
@@ -34,6 +35,8 @@ export default function EditComposer({
   references,
   onReferences,
   onRegion,
+  selectionOnly,
+  onSelectionOnly,
   onSend,
   disabled,
   loading,
@@ -47,6 +50,8 @@ export default function EditComposer({
   references: CanvasReference[];
   onReferences: (refs: CanvasReference[]) => void;
   onRegion: (region: MaskRegion) => void;
+  selectionOnly: boolean;
+  onSelectionOnly: (value: boolean) => void;
   onSend: () => void;
   disabled: boolean;
   loading: boolean;
@@ -85,6 +90,52 @@ export default function EditComposer({
     modelBoundary,
     () => setModelOpen(false),
     modelTrigger,
+  );
+  const modelControl = (
+    <div className="control-anchor model-anchor" ref={modelBoundary}>
+      <button
+        type="button"
+        ref={modelTrigger}
+        className="model-button"
+        aria-label="重绘模型"
+        aria-haspopup="menu"
+        aria-expanded={modelOpen && !modelLocked}
+        disabled={modelLocked}
+        title={
+          source.generationSource === "codex"
+            ? "Codex 来源重绘沿用当前模型"
+            : loading
+              ? "生成中暂不能修改模型"
+              : currentModel.model
+        }
+        onClick={() => setModelOpen(!modelOpen)}
+      >
+        <span className="model-name">
+          {selectedModelLabel(currentModel, currentModel.model || "未选择模型")}
+        </span>
+      </button>
+      {modelOpen && !modelLocked && (
+        <ModelPickerMenu
+          scope="canvas-image"
+          kind="image"
+          apiOnly
+          current={currentModel}
+          onSelect={(choice) => {
+            if (choice.source !== "api") return;
+            command?.updateItem?.(source.id, {
+              model: choice.model,
+              providerConnectionId: choice.connectionId,
+              generationSource: undefined,
+            });
+            setModelOpen(false);
+          }}
+          onConfigure={() => {
+            setModelOpen(false);
+            command?.configure?.();
+          }}
+        />
+      )}
+    </div>
   );
   return (
     <div className="image-edit-composer">
@@ -203,6 +254,16 @@ export default function EditComposer({
             }
           }}
         />
+        {modelControl}
+        <VoiceInputButton
+          value={prompt}
+          onChange={onPrompt}
+          onStatus={onError}
+          enabled={!loading}
+          sessionKey={`image-edit:${source.id}`}
+          maxLength={2000}
+          className="ui-button"
+        />
         <button
           type="button"
           className={loading ? "ui-button" : "primary-button"}
@@ -214,56 +275,19 @@ export default function EditComposer({
         </button>
       </div>
       <div className="image-edit-model">
-        <div className="control-anchor model-anchor" ref={modelBoundary}>
-          <button
-            type="button"
-            ref={modelTrigger}
-            className="model-button"
-            aria-label="重绘模型"
-            aria-haspopup="menu"
-            aria-expanded={modelOpen && !modelLocked}
-            disabled={modelLocked}
-            title={
-              source.generationSource === "codex"
-                ? "Codex 来源重绘沿用当前模型"
-                : loading
-                  ? "生成中暂不能修改模型"
-                  : currentModel.model
-            }
-            onClick={() => setModelOpen(!modelOpen)}
-          >
-            <span className="model-name">
-              {selectedModelLabel(
-                currentModel,
-                currentModel.model || "未选择模型",
-              )}
-            </span>
-          </button>
-          {modelOpen && !modelLocked && (
-            <ModelPickerMenu
-              scope="canvas-image"
-              kind="image"
-              apiOnly
-              current={currentModel}
-              onSelect={(choice) => {
-                if (choice.source !== "api") return;
-                command?.updateItem?.(source.id, {
-                  model: choice.model,
-                  providerConnectionId: choice.connectionId,
-                  generationSource: undefined,
-                });
-                setModelOpen(false);
-              }}
-              onConfigure={() => {
-                setModelOpen(false);
-                command?.configure?.();
-              }}
-            />
-          )}
-        </div>
         <span>
           Enter 发送 · Shift+Enter 换行{uploading ? " · 正在归档参考图…" : ""}
         </span>
+        <label className="image-edit-selection-toggle">
+          <input
+            type="checkbox"
+            aria-label="只改选区"
+            checked={selectionOnly}
+            disabled={loading}
+            onChange={(event) => onSelectionOnly(event.target.checked)}
+          />
+          只改选区
+        </label>
       </div>
     </div>
   );

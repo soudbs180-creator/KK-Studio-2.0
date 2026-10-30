@@ -1,3 +1,9 @@
+import type { AgentChatItem } from "../../../packages/creation-contracts/index.ts";
+export type {
+  AgentCanvasReference,
+  AgentChatItem,
+  AgentChatRole,
+} from "../../../packages/creation-contracts/index.ts";
 /**
  * 本地 Agent（canvas-agent）协议类型。
  *
@@ -112,31 +118,6 @@ export interface AgentApprovalRequest {
   command?: unknown;
   cwd?: string;
   permissions?: unknown;
-}
-
-export type AgentChatRole = "user" | "assistant" | "system" | "tool" | "error";
-
-export interface AgentCanvasReference {
-  nodeId: string;
-  label: string;
-  title: string;
-  kind: "image" | "video" | "audio" | "text";
-  text?: string;
-}
-
-export interface AgentChatItem {
-  id: string;
-  itemId?: string;
-  clientMessageId?: string;
-  threadId?: string;
-  turnId?: string;
-  role: AgentChatRole;
-  title?: string;
-  text: string;
-  detail?: unknown;
-  canvasReferences?: AgentCanvasReference[];
-  /** 工具/推理活动：key 为活动 id，value 为展示文本。 */
-  activityItems?: Record<string, string>;
 }
 
 /** 已有历史 detail 的实时活动补充；不另建任务或持久化契约。 */

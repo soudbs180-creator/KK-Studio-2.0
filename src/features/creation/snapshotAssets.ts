@@ -1,12 +1,11 @@
 import type { CreationAttachment, CreationSnapshot } from "./model.ts";
 import type { StoredGeneratedAsset } from "./assetRepository.ts";
+import { isAssetReference } from "../../domain/assetReference.ts";
+export { isAssetReference } from "../../domain/assetReference.ts";
 
 type ReadAsset = (id: string) => Promise<StoredGeneratedAsset | null>;
 const PREFIX = "kk-asset:";
 const ID = /^asset-[a-f0-9]{24}$/;
-export function isAssetReference(value: string): boolean {
-  return value.startsWith(PREFIX) && ID.test(value.slice(PREFIX.length));
-}
 
 /** Only media fields are transformed: user text, demo paths and unrelated posters stay intact. */
 async function transformSnapshot(

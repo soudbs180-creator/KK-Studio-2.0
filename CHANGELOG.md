@@ -2,6 +2,44 @@
 
 ## Unreleased
 
+- 合流候选 Desktop/Web 2.1.60、Mobile 2.1.44：保留远端聊天隔离、插件订阅、归档回执校验与 Mobile 已有功能，沿用当前 Figma 图标；更新页明确未接入 updater，不再模拟检查/下载成功。当前组合尚未通过完整门禁或发布。
+
+- 本地候选 Desktop/Web 2.1.59：修复 ComfyUI 混合视频/图片输出中 MP4 阻断首帧图片归档的问题；支持的图片格式、路径/MIME/大小校验保持。真实 H3 的卡片快速生成与内嵌编辑器运行均完成视频生成、首帧归档、连线及保存重开；不代表图片 checkpoint、视频资产或主线交付已验收。
+
+- 本地候选Desktop/Web2.1.58：供应商通知与重复读取不再覆盖未保存的模型能力草稿；账号/模型或保存元数据实际变化仍同步。未合流/未发布。
+
+- 本地候选Desktop/Web2.1.57：修复直连文本结果未写回原聊天及离线聊天历史未显示；保留其他聊天草稿/消息、删除意图和既有连接保护。未合流/未发布。
+
+- 本地候选Desktop/Web2.1.56：ComfyUI按任务ID及分页历史恢复旧产物，保留用户删除结果的意图；归属校验和不自动重发保持，真实GPU与最终合流待验。
+
+- 本地候选Desktop/Web2.1.55：修复聊天切换的草稿/执行方式投影，以及首页已连接后新建项目的独立会话初始化；已绑定聊天、忙碌与审批保护保留。测试夹具新建线程采用不同ID，完整合流门仍在核验。
+
+- 本地候选Desktop/Web2.1.53：P8迁出七组App装配hook，保留主JSX/原样式求值顺序；既有门禁缺口、独审和主线合流继续核验，见[P8验证](docs/changes/2026-10-29-p8-composition/verification.md)。
+
+- 本地候选Desktop/Web2.1.52：ComfyUI本机隐藏托管、双态工作流卡片、原件归档与自动连线；修复本地代理及Python别名进程归属。隔离夹具通过，真实GPU/鼠标与正式交付未验；[ADR-033](docs/architecture/adr/ADR-033-comfy-canvas-runtime.md)。
+
+- 本地候选Desktop/Web2.1.51、契约1.5.0：独立扩图、高清修复、图层拆分Manifest接原队列与显式ComfyUI工作流；三端Origins合并保留不同父/Provider来源。未增加UI入口，原生与真实GPU待验；[ADR-032](docs/architecture/adr/ADR-032-independent-image-capabilities-and-lineage.md)。
+
+- 本地候选：Desktop/Web2.1.49完成P3a–e源码依赖反转，R4循环边16→0，统一契约1.3及原资产/Agent/存储Port，Provider旧路径保留；运行/独审/原生/main验收继续按[ADR-029](docs/architecture/adr/ADR-029-feature-cycle-decoupling.md)跟踪。
+
+- 本地候选：Desktop/Web2.1.48增加薄能力注册表与默认关闭的image.inpaint派发，保留旧任务/资产/审批链。数据与DOM双路径对拍通过，窄屏既有门禁、严格截图零差异和原生/主线仍未验收；[验证](docs/changes/2026-10-28-inpaint-capability/verification.md)。
+
+## 2.1.45 - 2026-10-26
+
+- 全面重构设置中心四象限架构、ccswitch 五通道模型接入、Composer 能力优先聚合路由、内置浏览器后端（ego_browser）与画布分组性能，同步最新 Figma 设计系统令牌与 AI 全权自治治理规则。
+
+## 2.1.44 - 2026-10-25
+
+- 本地候选：按当前 Figma 修正共享控件紧凑字阶、亮色反色前景及禁用可读性；Figma 母版同步对比度、弱边界、尺寸展示与标注。未发布；全仓既有失败与运行边界见[验证](docs/changes/2026-10-25-figma-control-readability/verification.md)。
+
+## 2.1.43 - 2026-10-25
+
+- [本地候选2.1.43，TASK-CANVAS-PERF-20261024] 减少画布拖动历史扫描、未变项目协调和重复保存规范化，缓存单边几何及参考派生；同步恢复日志、撤销和数据身份保持。无新增运行依赖；完整UI/Native/发布边界见[本轮验证](docs/changes/2026-10-24-canvas-performance/verification.md)。
+
+- [本地修复2.1.38] 工作树Git查询/路径检查失败关闭，凭据持久提交和迟到缓存保护，真实runner取消/报告故障及Windows大小写环境隔离；source92643d67完整本地验证、官方Native两次正常启闭/旧资料保护通过。规则祖先事实与5旧任务路由同步；Hosted/真实新回复/发布仍未验，见[验证](docs/changes/2026-10-18-local-guards/verification.md)。
+
+- [历史2.1.37，本地恢复通过/新回复未验] 旧聊天按原始数据迁移为独立可编辑上下文，归档主备与身份后发布格式屏障；普通聊天正文、草稿、线程和迟到回执按聊天隔离。实际桌面迁移、旧历史及编辑重开已在该版本通过，真实新回复仍未验，见[验证](docs/changes/2026-10-17-chat-migration/verification.md)。
+
 - [治理] 2026-10-17：保留失效任务分配的完整历史并纠正当前路由，补齐统一接入需求文档，明确共享依赖只读、独占实体构建及自动合并未验证启用边界。
 - [本地修复完成] TASK-AUDIT-REPAIR-20261017：Desktop/Web2.1.36 source4699458d完整verify（产品Edge823首试）、源码独审、官方EXE、隔离Native和日常两入口正常关闭重开通过；关闭默认只读恢复banner遮挡账号菜单的实际缺陷，保留原数据保护。A保全和D规则/任务同步完成，本轮有界本地审计DONE/PASS；原148任务与37功能等级/旧证据不批量关闭或提高，默认旧资料READ_ONLY及完整迁移/真实服务/Hosted/发布/用户验收边界见[验证](docs/changes/2026-10-17-audit-repair/verification.md)。
 
@@ -30,3 +68,7 @@
 - [修复] 收敛输入、菜单、弹层、任务提交、原生 TaskHost 和恢复流程中的已验证问题。
 
 2.1.0 是源码上传候选版本；安装包、真实 Provider/ComfyUI 服务和正式 main 合并仍按各自验收边界执行。
+
+2026-10-28 P3候选补验：真实StoragePort与纯SnapshotCodec分离；修复Codex卡片成功后继续API准备的问题，旧数据/存储身份不变。ON/OFF各3项Edge回归和4张PNG零差异通过，根2354通过；未合入main或正式发布。
+
+2026-10-29候选：P4公开出口收敛至R1=0，真实基础设施归位至R3=0且R4保持0；P5契约1.4补清单、验包、权限与受限RPC，Web隔离为默认关闭的实验实现，旧插件兼容。Desktop/Web2.1.50，未发布或合入main。

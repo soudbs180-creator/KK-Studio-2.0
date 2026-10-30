@@ -1,26 +1,81 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, type KeyboardEvent } from "react";
 import {
   CanvasImageCommandContext,
   useCanvasImageGeneration,
-} from "../creation/CanvasImageCommand.tsx";
-import { loadStoredAsset } from "../creation/assetRepository.ts";
-import RegionRetryList from "./RegionRetryList.tsx";
-import { useImageModelCapabilities } from "../models/useImageModelCapabilities.ts";
+} from "../../runtime/canvasCommandRuntime.tsx";
+
 import { GenerationStatus } from "../../components/nodes/GenerationAction.tsx";
 import type {
   CanvasCollectionItem,
   CanvasReference,
 } from "../../domain/canvasItems.ts";
-import { maskBounds, type MaskRegion, type Point } from "./mask.ts";
+import { useImageModelCapabilities } from "../models/index.ts";
 import ImageCanvasLayers from "./ImageCanvasLayers.tsx";
+import {
+  maskBounds,
+  type MaskDocument,
+  type MaskRegion,
+  type Point,
+} from "./mask.ts";
+import RegionRetryList from "./RegionRetryList.tsx";
 import { validateEdit } from "./validateEdit.ts";
 
-import EditToolbar, { EDIT_COLORS } from "./EditToolbar.tsx";
 import EditComposer from "./EditComposer.tsx";
+import EditToolbar, { EDIT_COLORS } from "./EditToolbar.tsx";
 import RegionPromptOverlay from "./RegionPromptOverlay.tsx";
 import { useImageViewport, type ImageTool } from "./useImageViewport.ts";
 import { useMaskDocument } from "./useMaskDocument.ts";
 import { useMaskDrawing } from "./useMaskDrawing.ts";
+
+function useInitialEditReferences(
+  source: CanvasCollectionItem,
+  onError: (msg: string) => void,
+) {
+  const command = useContext(CanvasImageCommandContext);
+  const [references, setReferences] = useState<CanvasReference[]>([]);
+  useEffect(() => {
+    const controller = new AbortController();
+    void Promise.all(
+      (source.imageEditReferenceIds ?? []).map(async (id) => {
+        const asset = await command?.assets?.read(id);
+        if (!asset) throw new Error("草稿参考图原件缺失，请重新导入。");
+        return { assetId: id, title: "重绘参考图", preview: asset.preview };
+      }),
+    )
+      .then((refs) => {
+        if (!controller.signal.aborted) setReferences(refs);
+      })
+      .catch((error: unknown) => {
+        if (!controller.signal.aborted)
+          onError(error instanceof Error ? error.message : "参考图无法读取。");
+      });
+    return () => controller.abort();
+  }, [source.assetId]);
+  return [references, setReferences] as const;
+}
+
+function handleEditorKeyDown(
+  e: KeyboardEvent<HTMLDivElement>,
+  loading: boolean,
+  onHistory: (action: "undo" | "redo") => void,
+): void {
+  if (
+    (e.ctrlKey || e.metaKey) &&
+    e.key.toLowerCase() === "z" &&
+    !(e.target instanceof HTMLInputElement) &&
+    !(e.target instanceof HTMLTextAreaElement)
+  ) {
+    e.preventDefault();
+    if (!loading) onHistory(e.shiftKey ? "redo" : "undo");
+  }
+}
+
+function hasEditInstruction(document: MaskDocument, prompt: string): boolean {
+  return (
+    Boolean(prompt.trim()) ||
+    document.regions.some((r) => Boolean(r.instruction?.trim()))
+  );
+}
 
 export default function ImageEditor({
   source,
@@ -37,8 +92,12 @@ export default function ImageEditor({
   const [tool, setTool] = useState<ImageTool>("browse"),
     [brushWidth, setBrushWidth] = useState(32),
     [color, setColor] = useState(EDIT_COLORS[0].color),
+    [selectionOnly, setSelectionOnly] = useState(true),
     [prompt, setPrompt] = useState(source.imageEditPrompt ?? ""),
-    [references, setReferences] = useState<CanvasReference[]>([]),
+    [references, setReferences] = useInitialEditReferences(
+      source,
+      mask.setError,
+    ),
     [active, setActive] = useState<string>(),
     [hover, setHover] = useState<Point>();
   const capabilities = useImageModelCapabilities({
@@ -46,14 +105,14 @@ export default function ImageEditor({
     model: source.model ?? command?.model ?? "",
     connectionId: source.providerConnectionId ?? command?.providerConnectionId,
   });
+  const inpaintSupported =
+    selectionOnly &&
+    Boolean(document.regions.length) &&
+    capabilities.operations.inpaint === "supported";
   const generation = useCanvasImageGeneration({
       references: incoming,
       outputCount: 1,
-      operation:
-        document.regions.length &&
-        capabilities.operations.inpaint === "supported"
-          ? "inpaint"
-          : undefined,
+      operation: inpaintSupported ? "inpaint" : undefined,
     }),
     loading = generation.phase === "loading";
   function selectRegion(region: MaskRegion) {
@@ -82,62 +141,33 @@ export default function ImageEditor({
     tool,
     ...drawing,
   });
-  useEffect(() => {
-    const controller = new AbortController();
-    void Promise.all(
-      (source.imageEditReferenceIds ?? []).map(async (id) => {
-        const asset = await loadStoredAsset(id);
-        if (!asset) throw new Error("草稿参考图原件缺失，请重新导入。");
-        return { assetId: id, title: "重绘参考图", preview: asset.preview };
-      }),
-    )
-      .then((refs) => {
-        if (!controller.signal.aborted) setReferences(refs);
-      })
-      .catch((error: unknown) => {
-        if (!controller.signal.aborted)
-          mask.setError(
-            error instanceof Error ? error.message : "参考图无法读取。",
-          );
-      });
-    return () => controller.abort();
-  }, [source.assetId]);
   const validation = validateEdit(
     source,
     document,
     prompt,
     [...incoming, ...references],
     capabilities,
+    selectionOnly,
   );
   const canSend =
       mask.ready &&
       !loading &&
       generation.available &&
       !validation &&
-      (Boolean(prompt.trim()) ||
-        document.regions.some((r) => r.instruction?.trim())),
+      hasEditInstruction(document, prompt),
     region = document.regions.find((r) => r.id === active);
   function send() {
     if (canSend)
       void generation.run(prompt, 1, generation.model, {
         document,
         references,
+        selectionOnly,
       });
   }
   return (
     <div
       className="image-editor"
-      onKeyDown={(e) => {
-        if (
-          (e.ctrlKey || e.metaKey) &&
-          e.key.toLowerCase() === "z" &&
-          !(e.target instanceof HTMLInputElement) &&
-          !(e.target instanceof HTMLTextAreaElement)
-        ) {
-          e.preventDefault();
-          if (!loading) mask.history(e.shiftKey ? "redo" : "undo");
-        }
-      }}
+      onKeyDown={(e) => handleEditorKeyDown(e, loading, mask.history)}
     >
       <header>
         <h2>重绘参考图片</h2>
@@ -248,6 +278,8 @@ export default function ImageEditor({
           });
         }}
         onRegion={selectRegion}
+        selectionOnly={selectionOnly}
+        onSelectionOnly={setSelectionOnly}
         onSend={send}
         disabled={!canSend}
         loading={loading}

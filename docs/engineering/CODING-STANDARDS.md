@@ -8,6 +8,8 @@
 
 ## 门禁映射
 
+模块化边界R1–R8及Git基线棘轮统一定义在[MODULARITY](../architecture/MODULARITY.md)。`npm run governance:check`经既有治理入口执行新检查；lint/verify的直接治理调用同样覆盖，原domain/server-only检查保留。当前任务树的落地与验收边界见[验证](../changes/2026-10-28-modularity-p0/verification.md)。
+
 当前已承接 `npm run health:check` 与 `npm run footguns:check`，并接入 lint。两者基于主线配置的独立开关运行，当前 advisory；执行输出不能冒充 blocking 已启用。函数/文件规模棘轮、差异范围、静态例外和 Windows 模式规则见 [DEVELOPMENT](DEVELOPMENT.md#代码健康棘轮与-windows-不安全模式扫描)。不为本轮 UI 改动放宽阈值或补白名单。Actions 固定到主线已审 SHA；同步其输入契约。
 
 写代码前先确认要满足哪条门禁。以下命令都在仓库根执行，全部已并入 `npm run lint` 或 `npm run verify`。
@@ -85,6 +87,7 @@ src/features/local-service/manifest.ts
 src/features/local-service/server.ts
 src/features/local-service/session.ts
 src/features/local-service/store.ts
+src/features/local-service/standaloneRoot.ts
 ```
 
 `src/features/generation-server/**` 同样受此约束。违规信息形如 `browser/shared source cannot import server-only ...`。

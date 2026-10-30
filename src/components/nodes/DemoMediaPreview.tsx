@@ -3,7 +3,7 @@ import type {
   DemoResult,
   CanvasCollectionItem,
 } from "../../domain/canvasItems";
-import ImageLightbox from "../../features/image-edit/ImageLightbox.tsx";
+import { ImageLightbox as ImageLightbox } from "../../features/image-edit/index.ts";
 import Modal from "../Modal";
 import UiIcon from "../UiIcon";
 
@@ -47,7 +47,7 @@ export default function DemoMediaPreview({
       />
     ) : result.kind === "audio" ? (
       <div className="audio-preview">
-        <UiIcon name="audio" size={64} />
+        <UiIcon name="audio" size={24} />
         <audio
           key={retry}
           src={result.src}

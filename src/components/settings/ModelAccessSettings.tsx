@@ -6,8 +6,8 @@ import {
   useSyncExternalStore,
 } from "react";
 import { useSettingsNavigationBusy } from "./useSettingsBusy";
-import { agentConnection } from "../../features/agent/agentConnection";
-import { desktopAgentLifecycle } from "../../features/agent/desktopAgentLifecycle";
+import { agentConnection } from "../../features/agent/index.ts";
+import { desktopAgentLifecycle } from "../../features/agent/index.ts";
 import AgentConnectionSettings from "./AgentConnectionSettings";
 import ModelAccessApiPanel from "./ModelAccessApiPanel";
 import GoogleConnectionSettings from "./GoogleConnectionSettings";
@@ -16,21 +16,51 @@ import OAuthAccessPanel from "./OAuthAccessPanel";
 import NativeCliControls from "./NativeCliControls";
 import type { LocalWorkflowAccess } from "./LocalWorkflowSettings";
 
-const METHODS = [
-  ["codex", "Codex 主 Agent"],
-  ["official", "API Key（官方）"],
-  ["relay", "API Key（中转站）"],
-  ["cli", "CLI 账号"],
-  ["oauth", "OAuth"],
-  ["local", "本地"],
+export const CHANNELS = [
+  {
+    id: "official",
+    label: "官方直连",
+    badge: "API",
+    title: "官方 API 直连 (Official API)",
+    desc: "直接调用 OpenAI、Anthropic Claude、Google Gemini、DeepSeek 原生官方开发者 API。",
+  },
+  {
+    id: "relay",
+    label: "中转路由",
+    badge: "Gateway",
+    title: "API 供应商路由 / 中转站 (Relay)",
+    desc: "接入 12ai、SiliconFlow、OpenRouter 或自有 New API / One API 聚合网关。",
+  },
+  {
+    id: "oauth",
+    label: "账号授权",
+    badge: "OAuth",
+    title: "账号授权 (OAuth / Web Authorization)",
+    desc: "通过官方网页或应用授权直接接入账号会话，享受官方会员配额。",
+  },
+  {
+    id: "cli",
+    label: "CLI 直连",
+    badge: "CLI",
+    title: "CLI 直连 (Native CLI Runtimes)",
+    desc: "无缝桥接本机已登录的官方命令行开发环境（Codex、Gemini、CodeBuddy）。",
+  },
+  {
+    id: "local",
+    label: "本地模型",
+    badge: "Offline",
+    title: "本地模型 (Local Runtimes & ComfyUI)",
+    desc: "完全在本地计算机运行的开源模型引擎，数据隐私安全，零网络调用。",
+  },
 ] as const;
-type Method = (typeof METHODS)[number][0];
 
-/** Connections belong here; specialist task roles belong to extensions. */
+export type ChannelId = (typeof CHANNELS)[number]["id"];
+export type Method = ChannelId | "codex";
+
 export default function ModelAccessSettings({
   onFeedback,
   active = true,
-  initialMethod = "codex",
+  initialMethod = "official",
   workflows,
 }: {
   onFeedback: (message: string) => void;
@@ -39,9 +69,13 @@ export default function ModelAccessSettings({
   workflows: LocalWorkflowAccess;
 }) {
   const setBusy = useSettingsNavigationBusy();
-  const [navigation, setNavigation] = useState<"methods" | "detail">(
-    initialMethod === "local" ? "detail" : "methods",
+  const [currentChannel, setCurrentChannel] = useState<ChannelId>(
+    initialMethod === "codex" ? "cli" : initialMethod,
   );
+  const [cliTool, setCliTool] = useState<"codex" | "gemini" | "codebuddy">(
+    initialMethod === "codex" ? "codex" : "gemini",
+  );
+
   const agent = useSyncExternalStore(
     agentConnection.subscribe,
     agentConnection.getState,
@@ -50,15 +84,15 @@ export default function ModelAccessSettings({
     desktopAgentLifecycle.subscribe,
     desktopAgentLifecycle.getState,
   );
-  const [method, setMethod] = useState<Method>(initialMethod);
+
   const [apiSaving, setApiSaving] = useState(false);
   const [googleBusy, setGoogleBusy] = useState(false);
   const [codeBuddyBusy, setCodeBuddyBusy] = useState(false);
   const [codexCliBusy, setCodexCliBusy] = useState(false);
   const [nativeCliBusy, setNativeCliBusy] = useState(false);
-  const [cliTool, setCliTool] = useState<"gemini" | "codebuddy">("gemini");
   const [codeBuddyMounted, setCodeBuddyMounted] = useState(false);
   const [focusGoogle, setFocusGoogle] = useState(false);
+
   const busy =
     apiSaving ||
     googleBusy ||
@@ -67,154 +101,179 @@ export default function ModelAccessSettings({
     nativeCliBusy ||
     agent.status === "connecting" ||
     lifecycle.pending;
+
   useLayoutEffect(() => setBusy(active && busy), [active, busy, setBusy]);
-  const accessRef = useRef<HTMLDivElement>(null);
-  useLayoutEffect(() => {
-    if (
-      navigation !== "methods" ||
-      !window.matchMedia("(max-width: 767px)").matches
-    )
-      return;
-    accessRef.current
-      ?.querySelector<HTMLButtonElement>(
-        '.model-access-methods [aria-pressed="true"]',
-      )
-      ?.focus({ preventScroll: true });
-  }, [navigation]);
+
   const googlePanel = useRef<HTMLElement>(null);
   useEffect(() => {
-    if (!focusGoogle || method !== "official") return;
+    if (!focusGoogle || currentChannel !== "official") return;
     googlePanel.current?.scrollIntoView({ block: "nearest" });
     googlePanel.current
       ?.querySelector<HTMLInputElement>("#google-key")
       ?.focus({ preventScroll: true });
     setFocusGoogle(false);
-  }, [focusGoogle, method]);
+  }, [focusGoogle, currentChannel]);
+
+  const channelInfo = CHANNELS.find((c) => c.id === currentChannel)!;
+
   return (
-    <div
-      ref={accessRef}
-      className="model-access-settings"
-      data-navigation={navigation}
-    >
-      <div className="model-access-back">
-        <button
-          type="button"
-          className="settings-action secondary"
-          disabled={busy}
-          title={busy ? "连接操作进行中，完成后可返回" : undefined}
-          onClick={() => {
-            if (!busy) setNavigation("methods");
-          }}
-        >
-          返回接入方式
-        </button>
-        <strong>{METHODS.find(([id]) => id === method)?.[1]}</strong>
-      </div>
-      <div className="model-access-methods" role="group" aria-label="接入方式">
-        {METHODS.map(([id, label]) => (
-          <button
-            key={id}
-            type="button"
-            className="settings-action secondary"
-            aria-pressed={method === id}
-            disabled={busy}
-            aria-controls={`model-access-${id === "official" || id === "relay" || id === "local" ? "api" : id}`}
-            onClick={() => {
-              if (busy) return;
-              setMethod(id);
-              setNavigation("detail");
-            }}
-          >
-            {label}
-          </button>
-        ))}
-      </div>
-      <section
-        id="model-access-codex"
-        hidden={method !== "codex"}
-        aria-label="Codex 主 Agent 接入"
-      >
-        <AgentConnectionSettings onFeedback={onFeedback} />
-        <NativeCliControls
-          tool="codex"
-          active={active && method === "codex"}
-          onBusyChange={setCodexCliBusy}
-        />
-      </section>
-      <ModelAccessApiPanel
-        method={method}
-        active={active}
-        workflows={workflows}
-        onBusyChange={setApiSaving}
-        onOpenGoogle={() => {
-          if (busy) return;
-          setNavigation("detail");
-          setMethod("official");
-          setFocusGoogle(true);
-        }}
-        onFeedback={onFeedback}
-      />
-      <section
-        id="model-access-cli"
-        hidden={method !== "cli"}
-        aria-label="CLI 账号配置"
-      >
+    <div className="model-access-settings ccswitch-layout">
+      <nav className="model-access-channel-nav" aria-label="模型接入渠道导航">
+        <div className="channel-nav-header">
+          <h2 className="channel-nav-title">模型接入渠道</h2>
+          <span className="channel-nav-count">5 大核心渠道</span>
+        </div>
         <div
-          className="settings-action-group"
-          role="group"
-          aria-label="CLI 工具"
+          className="channel-segmented-tabs"
+          role="tablist"
+          aria-label="5 大模型接入渠道"
         >
-          {(["gemini", "codebuddy"] as const).map((tool) => (
+          {CHANNELS.map((ch) => (
             <button
+              key={ch.id}
               type="button"
-              className="settings-action secondary"
-              key={tool}
-              aria-pressed={cliTool === tool}
+              role="tab"
+              data-channel={ch.id}
+              aria-selected={currentChannel === ch.id}
+              aria-controls={`channel-panel-${ch.id}`}
               disabled={busy}
+              className={`channel-tab-button ${currentChannel === ch.id ? "is-active" : ""}`}
               onClick={() => {
-                setCliTool(tool);
-                if (tool === "codebuddy") setCodeBuddyMounted(true);
+                if (!busy) setCurrentChannel(ch.id);
               }}
             >
-              {tool === "gemini" ? "Gemini CLI" : "CodeBuddy CLI"}
+              <span className="tab-label">{ch.label}</span>
+              <span className="tab-badge">{ch.badge}</span>
             </button>
           ))}
         </div>
-        {codeBuddyMounted && (
-          <div hidden={cliTool !== "codebuddy"}>
-            <CodeBuddyConnectionSettings
+      </nav>
+
+      <main className="model-access-main-content">
+        <div className="channel-panel-intro">
+          <h3 className="panel-title">{channelInfo.title}</h3>
+          <p className="panel-desc">{channelInfo.desc}</p>
+        </div>
+
+        {/* 1. Official, 2. Relay, 5. Local */}
+        {["official", "relay", "local"].includes(currentChannel) && (
+          <section
+            id={`channel-panel-${currentChannel}`}
+            role="tabpanel"
+            className="channel-panel-view"
+          >
+            <ModelAccessApiPanel
+              method={currentChannel}
+              active={active}
+              workflows={workflows}
+              onBusyChange={setApiSaving}
+              onOpenGoogle={() => {
+                if (!busy) setFocusGoogle(true);
+              }}
               onFeedback={onFeedback}
-              onBusyChange={setCodeBuddyBusy}
             />
-          </div>
+            {currentChannel === "official" && (
+              <section
+                ref={googlePanel}
+                className="google-connection-subgroup inset-grouped-card"
+                aria-label="Google API"
+              >
+                <GoogleConnectionSettings
+                  mode="api-key"
+                  active={active && currentChannel === "official"}
+                  onBusyChange={setGoogleBusy}
+                  onFeedback={onFeedback}
+                />
+              </section>
+            )}
+          </section>
         )}
-        <NativeCliControls
-          tool={cliTool}
-          active={active && method === "cli"}
-          onBusyChange={setNativeCliBusy}
-        />
-      </section>
-      <section
-        ref={googlePanel}
-        hidden={
-          method !== "official" && !(method === "cli" && cliTool === "gemini")
-        }
-        aria-label="Google 账号接入"
-      >
-        <GoogleConnectionSettings
-          mode={method === "cli" ? "cli" : "api-key"}
-          active={
-            active &&
-            (method === "official" ||
-              (method === "cli" && cliTool === "gemini"))
-          }
-          onBusyChange={setGoogleBusy}
-          onFeedback={onFeedback}
-        />
-      </section>
-      <div id="model-access-oauth" hidden={method !== "oauth"}>
-        <OAuthAccessPanel hidden={method !== "oauth"} />
-      </div>
+
+        {/* 3. OAuth */}
+        {currentChannel === "oauth" && (
+          <section
+            id="channel-panel-oauth"
+            role="tabpanel"
+            className="channel-panel-view"
+          >
+            <OAuthAccessPanel hidden={false} />
+          </section>
+        )}
+
+        {/* 4. CLI */}
+        {currentChannel === "cli" && (
+          <section
+            id="channel-panel-cli"
+            role="tabpanel"
+            className="channel-panel-view"
+          >
+            <div
+              className="cli-tool-subnav"
+              role="group"
+              aria-label="CLI 运行工具"
+            >
+              {[
+                { id: "codex", label: "Codex CLI / 主 Agent" },
+                { id: "gemini", label: "Gemini CLI" },
+                { id: "codebuddy", label: "CodeBuddy CLI" },
+              ].map((tool) => (
+                <button
+                  key={tool.id}
+                  type="button"
+                  className={`cli-subtab-btn ${cliTool === tool.id ? "is-active" : ""}`}
+                  aria-pressed={cliTool === tool.id}
+                  disabled={busy}
+                  onClick={() => {
+                    setCliTool(tool.id as "codex" | "gemini" | "codebuddy");
+                    if (tool.id === "codebuddy") setCodeBuddyMounted(true);
+                  }}
+                >
+                  {tool.label}
+                </button>
+              ))}
+            </div>
+
+            {cliTool === "codex" && (
+              <div className="cli-tool-panel">
+                <AgentConnectionSettings onFeedback={onFeedback} />
+                <NativeCliControls
+                  tool="codex"
+                  active={active}
+                  onBusyChange={setCodexCliBusy}
+                />
+              </div>
+            )}
+            {cliTool === "gemini" && (
+              <div className="cli-tool-panel">
+                <GoogleConnectionSettings
+                  mode="cli"
+                  active={active}
+                  onBusyChange={setGoogleBusy}
+                  onFeedback={onFeedback}
+                />
+                <NativeCliControls
+                  tool="gemini"
+                  active={active}
+                  onBusyChange={setNativeCliBusy}
+                />
+              </div>
+            )}
+            {cliTool === "codebuddy" && codeBuddyMounted && (
+              <div className="cli-tool-panel">
+                <CodeBuddyConnectionSettings
+                  onFeedback={onFeedback}
+                  onBusyChange={setCodeBuddyBusy}
+                />
+                <NativeCliControls
+                  tool="codebuddy"
+                  active={active}
+                  onBusyChange={setNativeCliBusy}
+                />
+              </div>
+            )}
+          </section>
+        )}
+      </main>
     </div>
   );
 }

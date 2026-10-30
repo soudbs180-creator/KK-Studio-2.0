@@ -1,7 +1,7 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { SettingsNavigationContext } from "./SettingsNavigationContext";
 import { useSettingsNavigationBusy } from "./useSettingsBusy";
-import type { McpServerConfig, McpTool } from "../../features/mcp/mcpClient";
+import type { McpServerConfig, McpTool } from "../../features/mcp/index.ts";
 
 export default function McpServerCard({
   server,

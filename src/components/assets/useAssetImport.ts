@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { parseResourcePack, type Asset } from "../../domain/assets";
-import { storeGeneratedAsset } from "../../features/creation/assetRepository";
+import { storeGeneratedAsset } from "../../features/creation/index.ts";
 export default function useAssetImport(onImported: (assets: Asset[]) => void) {
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
@@ -35,6 +35,7 @@ export default function useAssetImport(onImported: (assets: Asset[]) => void) {
             ...parseResourcePack(await file.text()).map((a) => ({
               ...a,
               id: crypto.randomUUID(),
+              resourcePackId: file.name.replace(/\.json$/i, ""),
             })),
           );
         } else {

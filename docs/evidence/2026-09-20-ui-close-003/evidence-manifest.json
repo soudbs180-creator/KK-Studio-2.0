@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "taskId": "TASK-ORG-6",
+  "classification": "E2-externalized-historical-evidence",
+  "packagePath": "docs/evidence/2026-09-20-ui-close-003",
+  "entries": [
+    {
+      "sourcePath": "docs/evidence/2026-09-20-ui-close-003/development-shortcuts-narrow.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "854e63500440b32397fc51f1f48ffe8fe9eb92f5",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/2026-09-20-ui-close-003/development-shortcuts-narrow.png",
+      "bytes": 27951,
+      "sha256": "9f2c78a7d18135f32d9609ceed69b823216358ff8389b19d1d8298b7be20f087",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/2026-09-20-ui-close-003/preview-shortcuts-narrow.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "854e63500440b32397fc51f1f48ffe8fe9eb92f5",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/2026-09-20-ui-close-003/preview-shortcuts-narrow.png",
+      "bytes": 27951,
+      "sha256": "9f2c78a7d18135f32d9609ceed69b823216358ff8389b19d1d8298b7be20f087",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/2026-09-20-ui-close-003/preview-shortcuts.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "36e76d46abc53a3fc7e354055ce1e3cca91f616c",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/2026-09-20-ui-close-003/preview-shortcuts.png",
+      "bytes": 24749,
+      "sha256": "edcc704b0f470cbe334a266fc9ddd6d4f333e7a55bfab7edf06f819d272dd4ba",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    }
+  ],
+  "scope": "Historical E2 files externalized by validated batches; E1 summaries, JSON, key screenshots and active inputs retained.",
+  "containerResolution": "Resolve containerRelativePath from the workspace container containing the canonical checkout and output.",
+  "recovery": "Verify with scripts/governance/check-evidence-manifest.mjs <manifest> <container>; restore only to a new empty directory. Original Git sourceCommit/sourcePath remains recoverable.",
+  "batches": [
+    {
+      "taskId": "TASK-ORG-6",
+      "date": "2026-10-30",
+      "candidateBase": "be730617ace5013295b85a22133259b32ad6ffec"
+    }
+  ]
+}

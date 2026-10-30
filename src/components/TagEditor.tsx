@@ -155,7 +155,7 @@ export default function TagEditor({
           setOpen((value) => !value);
         }}
       >
-        <UiIcon name="tag" size={compact ? 15 : 17} />
+        <UiIcon name="tag" size={16} />
         {!compact && <span>标签</span>}
       </button>
       {open &&
@@ -178,7 +178,7 @@ export default function TagEditor({
               <header>
                 <strong>标签</strong>
                 <button type="button" aria-label="关闭标签编辑" onClick={close}>
-                  <UiIcon name="close" size={15} />
+                  <UiIcon name="close" size={16} />
                 </button>
               </header>
               <div className="tag-editor-options">
@@ -217,7 +217,7 @@ export default function TagEditor({
                   aria-label="添加标签"
                   disabled={!draft.trim()}
                 >
-                  <UiIcon name="add" size={15} />
+                  <UiIcon name="add" size={16} />
                 </button>
               </form>
               {status && (

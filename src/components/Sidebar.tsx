@@ -6,8 +6,8 @@ import SidebarIcon from "./SidebarIcon";
 import SidebarNavigation from "./SidebarNavigation";
 import BrandLogo from "./BrandLogo";
 import { useHiddenControlFocus } from "./useHiddenControlFocus";
-import type { CreationProject } from "../features/creation/model";
-import type { ProjectLibraryActions } from "../features/projects/projectLifecycle";
+import type { CreationProject } from "../features/creation/index.ts";
+import type { ProjectLibraryActions } from "../features/projects/index.ts";
 
 export default function Sidebar({
   active,

@@ -1,0 +1,83 @@
+{
+  "$schema": "./schemas/receipt.schema.json",
+  "schemaVersion": 1,
+  "taskId": "TASK-COMMANDBUS-001",
+  "title": "Rust Tauri CommandBus and SQLite WAL EventBus Implementation",
+  "startedAt": "2026-10-17T19:00:00.000Z",
+  "completedAt": "2026-10-17T20:15:00.000Z",
+  "sourceHead": "8c36a6b138205613ae1a7c27950b86792da8de1a",
+  "workingTree": {
+    "clean": false,
+    "untrackedFiles": 25
+  },
+  "environment": {
+    "node": "v24.20.0",
+    "cargo": "cargo 1.97.1 (c980f4866 2026-06-30)",
+    "rustc": "rustc 1.97.1 (8bab26f4f 2026-07-14)",
+    "platform": "windows-x64"
+  },
+  "versions": {
+    "desktop": "2.1.35",
+    "web": "2.1.35"
+  },
+  "acceptanceEvidence": {
+    "shadowModeLatency": {
+      "sampleCount": 100,
+      "maxLatencyMs": 0.3659,
+      "p95LatencyMs": 0.001,
+      "averageLatencyMs": 0.0041,
+      "thresholdMs": 5.0,
+      "passed": true
+    },
+    "replayConsistency": {
+      "operationsCount": 100,
+      "snapshotEquivalence": 1.0,
+      "discrepancyCount": 0,
+      "liveStateHash": "24872fc18b45d9a31b2f9441d1361de9baf2e30cc70dd78293511cc0a2b74845",
+      "replayedStateHash": "24872fc18b45d9a31b2f9441d1361de9baf2e30cc70dd78293511cc0a2b74845",
+      "passed": true
+    },
+    "conflictPreemption": {
+      "designerPreempted": true,
+      "taskCancelledSignal": true,
+      "eventLogEntries": ["cancelled", "override"],
+      "passed": true
+    }
+  },
+  "checks": [
+    {
+      "name": "typecheck",
+      "command": "npm run typecheck",
+      "passed": true
+    },
+    {
+      "name": "unit-tests",
+      "command": "node --test tests/unit/check-receipt.test.ts tests/unit/event-bus-replay.test.ts tests/unit/concurrency-preemption.test.ts tests/unit/shadow-mode-latency.test.ts",
+      "passed": true
+    },
+    {
+      "name": "cargo-test",
+      "command": "cargo test --manifest-path src-tauri/Cargo.toml --bin kk-studio",
+      "passed": true
+    },
+    {
+      "name": "cargo-test-stress",
+      "command": "cargo test --manifest-path src-tauri/Cargo.toml --test command_bus_stress",
+      "passed": true
+    },
+    {
+      "name": "shadow-mode-latency-gate",
+      "passed": true
+    },
+    {
+      "name": "replay-consistency-gate",
+      "passed": true
+    },
+    {
+      "name": "conflict-preemption-gate",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "passed": true
+}

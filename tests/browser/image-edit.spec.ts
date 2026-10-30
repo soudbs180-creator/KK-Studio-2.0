@@ -1,5 +1,9 @@
 import { expect, test, type Page } from "@playwright/test";
 import { writeFile } from "node:fs/promises";
+import {
+  editArchiveEvidence,
+  editRequestEvidence,
+} from "./inpaintParityEvidence.ts";
 
 async function canvasImageAction(page: Page, name: string) {
   const node = page.locator(".canvas-node-image").first();
@@ -44,7 +48,7 @@ async function editUiEvidence(page: Page, file: string) {
     ),
     clear: [
       ...document.querySelectorAll<HTMLButtonElement>(
-        '.image-edit-toolbar button[aria-label="清空编辑区域"]',
+        '.image-edit-toolbar button[aria-label="清除"]',
       ),
     ].map((b) => ({
       disabled: b.disabled,
@@ -85,7 +89,7 @@ async function rectangles(
   dialog: ReturnType<Page["locator"]>,
   count: number,
 ) {
-  await dialog.getByRole("button", { name: "框选区域", exact: true }).click();
+  await dialog.getByRole("button", { name: "矩形选区", exact: true }).click();
   const image = (await dialog.locator("canvas.image-original").boundingBox())!;
   for (let i = 0; i < count; i++) {
     const x = (
@@ -145,6 +149,36 @@ test("declining the first crop approval cancels every queued crop and preserves 
   await expect(dialog.getByTestId("edit-region-count")).toHaveText(
     "2 个编辑区域",
   );
+});
+
+test("重绘胶囊输入保持上传、输入、模型、录音、发送顺序并可切换整图", async ({
+  page,
+}) => {
+  await configureEdit(page, true);
+  const dialog = await editor(page, true);
+  const input = dialog.locator(".image-edit-input");
+  await expect(
+    input.getByRole("button", { name: "上传重绘参考图" }),
+  ).toBeVisible();
+  await expect(input.getByRole("textbox", { name: "重绘指令" })).toBeVisible();
+  await expect(input.getByRole("button", { name: "重绘模型" })).toBeVisible();
+  await expect(input.locator("[data-voice-state]")).toHaveCount(1);
+  await expect(input.getByRole("button", { name: "开始重绘" })).toBeVisible();
+  const controlOrder = await input
+    .locator("button, textarea")
+    .evaluateAll((elements) =>
+      elements.map((element) => element.getAttribute("aria-label")),
+    );
+  expect(controlOrder.slice(0, 3)).toEqual([
+    "上传重绘参考图",
+    "重绘指令",
+    "重绘模型",
+  ]);
+  expect(controlOrder.at(-1)).toBe("开始重绘");
+  const selectionOnly = dialog.getByLabel("只改选区", { exact: true });
+  await expect(selectionOnly).toBeChecked();
+  await selectionOnly.uncheck();
+  await expect(selectionOnly).not.toBeChecked();
 });
 
 test("three crops retain partial success, allow a region retry and keep the original and unrelated pixels", async ({
@@ -306,7 +340,7 @@ test("confirmed color instructions send with an empty composer and native union 
     },
   );
   const dialog = await editor(page, true);
-  await dialog.getByRole("button", { name: "色块区域", exact: true }).click();
+  await dialog.getByRole("button", { name: "取色标注", exact: true }).click();
   for (const [x, y, instruction] of [
     [50, 40, "改成水流"],
     [71, 29, "改为金属"],
@@ -399,13 +433,13 @@ test("saved mixed masks can be cleared, undone and redone before whole-image edi
   await configureEdit(page, false);
   const dialog = await editor(page, true);
   await rectangles(page, dialog, 1);
-  await dialog.getByRole("button", { name: "画笔区域", exact: true }).click();
+  await dialog.getByRole("button", { name: "标注", exact: true }).click();
   let box = (await dialog.locator("canvas.image-original").boundingBox())!;
   await page.mouse.move(box.x + box.width * 0.5, box.y + box.height * 0.65);
   await page.mouse.down();
   await page.mouse.move(box.x + box.width * 0.6, box.y + box.height * 0.65);
   await page.mouse.up();
-  await dialog.getByRole("button", { name: "色块区域", exact: true }).click();
+  await dialog.getByRole("button", { name: "取色标注", exact: true }).click();
   box = (await dialog.locator("canvas.image-original").boundingBox())!;
   await page.mouse.click(box.x + box.width * 0.5, box.y + box.height * 0.5);
   await dialog
@@ -433,7 +467,7 @@ test("saved mixed masks can be cleared, undone and redone before whole-image edi
     dialog.getByRole("button", { name: "撤销编辑", exact: true }),
   ).toBeDisabled();
   const clear = dialog.getByRole("button", {
-    name: "清空编辑区域",
+    name: "清除",
     exact: true,
   });
   await expect(clear).toBeVisible();
@@ -519,7 +553,7 @@ for (const count of [2, 4])
   }, info) => {
     await configureEdit(page, true);
     const dialog = await editor(page, true, true);
-    await dialog.getByRole("button", { name: "色块区域", exact: true }).click();
+    await dialog.getByRole("button", { name: "取色标注", exact: true }).click();
     const instructions = Array.from(
       { length: count },
       (_, i) => `唯一意见${i}：${"保持质感".repeat(136)}`,
@@ -598,11 +632,11 @@ test("unified image tools keep original coordinates across zoom, reset and undo/
 }, info) => {
   const dialog = await editor(page);
   await expect(
-    dialog.getByRole("button", { name: "框选区域", exact: true }),
+    dialog.getByRole("button", { name: "矩形选区", exact: true }),
   ).toBeVisible();
   const viewport = dialog.getByRole("region", { name: "图片编辑画布" });
   await expect(viewport.locator("canvas.image-original")).toBeVisible();
-  await dialog.getByRole("button", { name: "框选区域", exact: true }).click();
+  await dialog.getByRole("button", { name: "矩形选区", exact: true }).click();
   const box = (await viewport.boundingBox())!;
   await page.mouse.move(box.x + box.width * 0.4, box.y + box.height * 0.4);
   await page.mouse.down();
@@ -677,9 +711,7 @@ async function configureEdit(page: Page, native: boolean) {
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   await page.getByRole("button", { name: "模型接入", exact: true }).click();
-  await page
-    .getByRole("button", { name: "API Key（官方）", exact: true })
-    .click();
+  await page.getByRole("tab", { name: "官方直连 API", exact: true }).click();
   await page.getByLabel("接口地址").fill("https://models.example.test/v1");
   await page.getByLabel("API Key", { exact: true }).fill("fixture-key");
   await page.getByLabel("模型名称").fill("image-test");
@@ -751,9 +783,11 @@ async function archivedPixels(page: Page, assetId: string) {
 for (const native of [true, false])
   test(`${native ? "native PNG mask" : "annotated reference fallback"} sends a square edit and protects every outside pixel`, async ({
     page,
-  }) => {
+  }, info) => {
     await configureEdit(page, native);
     let body: Buffer | undefined;
+    let contentType = "";
+    let requests = 0;
     const output = await page.evaluate(() => {
       const c = document.createElement("canvas");
       c.width = c.height = 32;
@@ -765,13 +799,15 @@ for (const native of [true, false])
     await page.route(
       "https://models.example.test/v1/images/edits",
       async (route) => {
+        requests++;
         body = route.request().postDataBuffer()!;
+        contentType = route.request().headers()["content-type"];
         await route.fulfill({ json: { data: [{ b64_json: output }] } });
       },
     );
     const dialog = await editor(page, true);
     const viewport = dialog.getByRole("region", { name: "图片编辑画布" });
-    await dialog.getByRole("button", { name: "框选区域", exact: true }).click();
+    await dialog.getByRole("button", { name: "矩形选区", exact: true }).click();
     const box = (await viewport.boundingBox())!;
     await page.mouse.move(box.x + box.width * 0.43, box.y + box.height * 0.43);
     await page.mouse.down();
@@ -783,7 +819,24 @@ for (const native of [true, false])
     await dialog
       .getByRole("textbox", { name: "重绘指令" })
       .fill("把选区改为红色");
+    await page.evaluate(() => document.fonts.ready);
+    await dialog.locator("textarea").blur();
+    const beforeDom = await dialog.evaluate((element) => element.outerHTML);
+    await dialog.screenshot({
+      path: info.outputPath("inpaint-before.png"),
+      animations: "disabled",
+      caret: "hide",
+    });
+    await dialog.screenshot({
+      path: info.outputPath("inpaint-before-control.png"),
+      animations: "disabled",
+      caret: "hide",
+    });
     await dialog.getByRole("button", { name: "开始重绘", exact: true }).click();
+    await expect(
+      page.getByRole("button", { name: "批准并提交" }),
+    ).toBeVisible();
+    expect(requests).toBe(0);
     await page
       .getByRole("button", { name: "批准并提交" })
       .click({ timeout: 5000 });
@@ -822,6 +875,51 @@ for (const native of [true, false])
       } else if (before.pixels[p * 4] !== after.pixels[p * 4]) changed++;
     }
     expect(changed).toBeGreaterThan(0);
+    expect(requests).toBe(1);
+    await expect(page.locator(".project-save-state")).toContainText("已保存");
+    const dispatches = await page.evaluate(
+      () => performance.getEntriesByName("kk:capability:image.inpaint").length,
+    );
+    expect(dispatches).toBe(
+      process.env.KK_EXPECT_CAPABILITIES_INPAINT === "true" ? 1 : 0,
+    );
+    const project = await activeEditProject(page);
+    const assets = await editArchiveEvidence(page);
+    const afterDom = await dialog.evaluate((element) => element.outerHTML);
+    await dialog.screenshot({
+      path: info.outputPath("inpaint-after.png"),
+      animations: "disabled",
+      caret: "hide",
+    });
+    await dialog.screenshot({
+      path: info.outputPath("inpaint-after-control.png"),
+      animations: "disabled",
+      caret: "hide",
+    });
+    await page.reload();
+    const restored = await activeEditProject(page);
+    expect(restored.tasks).toEqual(project.tasks);
+    expect(await editArchiveEvidence(page)).toEqual(assets);
+    await info.attach("inpaint-parity", {
+      body: Buffer.from(
+        JSON.stringify(
+          {
+            native,
+            dispatches,
+            requests,
+            request: await editRequestEvidence(body!, contentType),
+            project,
+            assets,
+            restored,
+            beforeDom,
+            afterDom,
+          },
+          null,
+          2,
+        ),
+      ),
+      contentType: "application/json",
+    });
   });
 
 test("archived image previews expose the shared lightbox and edit actions", async ({
@@ -838,7 +936,7 @@ test("archived image previews expose the shared lightbox and edit actions", asyn
     .getByRole("button", { name: "重绘当前图片", exact: true })
     .click();
   await expect(
-    page.getByRole("button", { name: "框选区域", exact: true }),
+    page.getByRole("button", { name: "矩形选区", exact: true }),
   ).toBeVisible();
 });
 for (const color of [false, true])
@@ -849,7 +947,7 @@ for (const color of [false, true])
     const dialog = await editor(page, true);
     await dialog
       .getByRole("button", {
-        name: color ? "色块区域" : "画笔区域",
+        name: color ? "取色标注" : "标注",
         exact: true,
       })
       .click();
@@ -890,7 +988,7 @@ test("narrow image editor keeps its draggable toolbar within the canvas and pers
   await page.setViewportSize({ width: 390, height: 844 });
   const dialog = await editor(page);
   const viewport = dialog.getByRole("region", { name: "图片编辑画布" });
-  await dialog.getByRole("button", { name: "框选区域", exact: true }).click();
+  await dialog.getByRole("button", { name: "矩形选区", exact: true }).click();
   const image = (await dialog.locator("canvas.image-original").boundingBox())!;
   await page.mouse.move(
     image.x + image.width * 0.3,

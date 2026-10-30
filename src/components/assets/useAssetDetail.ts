@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import type { Asset } from "../../domain/assets";
-import { loadStoredAsset } from "../../features/creation/assetRepository";
+import { loadStoredAsset } from "../../features/creation/index.ts";
 
 export default function useAssetDetail() {
   const [detail, setDetail] = useState<Asset | null>(null);

@@ -1,6 +1,6 @@
 # 规范基线
 
-更新：2026-10-09。本文是现行规范的入口，不复制各模块的完整规则。冲突路由和领域事实归属见 [`AUTHORITY_MAP.md`](AUTHORITY_MAP.md)。项目级目标和平台交付门禁见 [`PROJECT_GOALS.md`](PROJECT_GOALS.md) 与 [`ADR-011`](../architecture/adr/ADR-011-platform-delivery-gates-and-vps-control-plane.md)。
+更新：2026-10-21。本文是现行规范的入口，不复制各模块的完整规则。冲突路由和领域事实归属见 [`AUTHORITY_MAP.md`](AUTHORITY_MAP.md)。项目级目标和平台交付门禁见 [`PROJECT_GOALS.md`](PROJECT_GOALS.md) 与 [`ADR-011`](../architecture/adr/ADR-011-platform-delivery-gates-and-vps-control-plane.md)。
 
 ## 规则解释顺序
 
@@ -10,11 +10,13 @@
 
 ## 当前规范入口
 
+模块化能力架构与边界棘轮的现行入口为[MODULARITY](../architecture/MODULARITY.md)，依赖ADR-026/027；P0实施状态只读账本，不把技术方向已接受等同功能已交付。
+
 | 主题 | 唯一入口 | 约束 |
 | --- | --- | --- |
 | 工程流程与分支 | [`docs/engineering/SDLC.md`](../engineering/SDLC.md)、`BRANCH-POLICY.md`、`REVIEW.md`、`AI-EVALS.md` | 需求、证据、审查和交付顺序 |
 | 架构与模块 | [`docs/architecture/ARCHITECTURE.md`](../architecture/ARCHITECTURE.md)、[`DATA-STORAGE.md`](../architecture/DATA-STORAGE.md)、`GENERATION-PLATFORM.md` | 模块边界、数据根、凭据和生成状态 |
-| UI | [`docs/UI_INDEX.md`](../UI_INDEX.md) | 由索引路由到 `UI_RULES.md`、`UI_ARCHETYPES.md`、`DESIGN_TOKENS.md`、`DESIGN-SYSTEM.md`、`UI_SPEC.md`；历史 UI 文件只作证据 |
+| UI | [`docs/UI_INDEX.md`](../UI_INDEX.md) | 当前 Figma 是设计真值；索引登记来源并路由本地派生规范，先完成 Figma 设计再修改本地 UI；历史 UI 文件只作证据 |
 | 记忆 | [`docs/MEMORY-CONTRACT.md`](../MEMORY-CONTRACT.md) 与 [`docs/MEMORY-GOVERNANCE.md`](../MEMORY-GOVERNANCE.md) | 共享文件、注入、隐私、失败保护和同步门禁 |
 | 产品目标 | [`PROJECT_GOALS.md`](PROJECT_GOALS.md) | 用户路径和项目级验收矩阵 |
 | 功能能力 | [`docs/features/features.registry.json`](../features/features.registry.json) 与 `feat-*.md` | REAL/PARTIAL/PROTOTYPE/PLANNED；README 为生成文件 |

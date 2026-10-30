@@ -37,7 +37,7 @@ export default function CreationParameterControl({
         aria-expanded={open}
         onClick={onToggle}
       >
-        {!video && <UiIcon name="image" size={11} />}
+        {!video && <UiIcon name="image" size={12} />}
         {video ? (
           <span className="video-param-summary">
             <span>全能参考</span>

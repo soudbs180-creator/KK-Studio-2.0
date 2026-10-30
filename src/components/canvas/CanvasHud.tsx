@@ -1,6 +1,6 @@
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import TaskPanel from "./TaskPanel";
-import type { CreationTask } from "../../features/creation/model";
+import type { CreationTask } from "../../features/creation/index.ts";
 import "../../styles/canvas-hud.css";
 
 /** Screen-space controls wrap together when the usable canvas becomes narrow. */
@@ -13,6 +13,8 @@ export default function CanvasHud({
   tasks,
   onCancelTask,
   onRetryTask,
+  viewMode: controlledViewMode,
+  onViewModeChange,
   children,
 }: {
   projectStatus?: ReactNode;
@@ -23,15 +25,51 @@ export default function CanvasHud({
   tasks?: CreationTask[];
   onCancelTask?: (taskId: string) => void;
   onRetryTask?: (taskId: string) => void;
+  viewMode?: "canvas" | "browser";
+  onViewModeChange?: (mode: "canvas" | "browser") => void;
   children: ReactNode;
 }) {
+  const [internalViewMode, setInternalViewMode] = useState<
+    "canvas" | "browser"
+  >("canvas");
+  const viewMode = controlledViewMode ?? internalViewMode;
+
+  const handleModeChange = (mode: "canvas" | "browser") => {
+    setInternalViewMode(mode);
+    onViewModeChange?.(mode);
+  };
+
   return (
     <div
       className="canvas-hud"
       onPointerDown={(event) => event.stopPropagation()}
       onWheel={(event) => event.stopPropagation()}
     >
-      <div className="canvas-hud-actions">
+      <div className="canvas-hud-left">
+        <div
+          className="canvas-view-mode-toggle"
+          role="radiogroup"
+          aria-label="视图切换"
+        >
+          <button
+            type="button"
+            role="radio"
+            aria-checked={viewMode === "canvas"}
+            className={`canvas-view-mode-btn ${viewMode === "canvas" ? "active" : ""}`}
+            onClick={() => handleModeChange("canvas")}
+          >
+            画布
+          </button>
+          <button
+            type="button"
+            role="radio"
+            aria-checked={viewMode === "browser"}
+            className={`canvas-view-mode-btn ${viewMode === "browser" ? "active" : ""}`}
+            onClick={() => handleModeChange("browser")}
+          >
+            浏览器
+          </button>
+        </div>
         <TaskPanel
           onConfigure={onConfigure}
           onOpenTasks={onOpenTasks}
@@ -39,7 +77,7 @@ export default function CanvasHud({
           onCancelTask={onCancelTask}
           onRetryTask={onRetryTask}
         />
-        {projectStatus}
+        <div className="canvas-hud-actions">{projectStatus}</div>
       </div>
       <div className="canvas-hud-right">
         {children}
@@ -51,8 +89,8 @@ export default function CanvasHud({
         >
           <img
             src="/design/figma/chat-close.svg"
-            width={18}
-            height={18}
+            width={20}
+            height={20}
             alt=""
             draggable={false}
           />

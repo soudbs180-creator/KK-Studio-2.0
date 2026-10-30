@@ -142,7 +142,7 @@ test("untrusted reports reject invalid, overflow, NaN and inconsistent resources
     },
     {
       ...hardware(),
-      disks: [{ drive: "C:\\private", totalBytes: GiB, freeBytes: 0 }],
+      disks: [{ drive: "C:/private", totalBytes: GiB, freeBytes: 0 }],
     },
     {
       ...hardware(),

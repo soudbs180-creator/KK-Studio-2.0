@@ -6,7 +6,7 @@ import {
   type StagePlan,
   type StageWorkItemStatus,
 } from "../domain/stagePlan";
-import type { StageDecisionInput } from "../features/agent/orchestrator";
+import type { StageDecisionInput } from "../features/agent/index.ts";
 
 const workStatusLabels: Record<StageWorkItemStatus, string> = {
   queued: "待执行",

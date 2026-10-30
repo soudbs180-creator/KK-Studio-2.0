@@ -5,8 +5,14 @@
 mod agent_process;
 mod agent_runtime;
 mod asset_storage;
+mod browser_runtime;
 mod cli_runtime;
+mod comfy_runtime;
+mod comfy_transport;
+mod command_bus;
 mod creation_storage;
+mod ego_browser;
+mod event_bus;
 mod local_hardware;
 mod native_activation;
 mod native_repository_lock;
@@ -147,6 +153,8 @@ struct AppState {
     providers: Arc<provider_config::ProviderConfigRepository>,
     assets: Arc<asset_storage::AssetRepository>,
     task_host: Arc<task_host::TaskHost>,
+    command_bus: Arc<command_bus::CommandBus>,
+    event_bus: Arc<event_bus::EventBus>,
     restored_roots: Mutex<std::collections::HashSet<PathBuf>>,
 }
 
@@ -1721,6 +1729,169 @@ fn task_host_cancel(
 ) -> Result<Option<task_host::JobRecord>, String> {
     state.task_host.cancel(&task_id)
 }
+
+#[tauri::command(rename_all = "camelCase")]
+async fn command_bus_dispatch(
+    state: State<'_, AppState>,
+    command: command_bus::Command,
+) -> Result<command_bus::CommandResult, String> {
+    state
+        .command_bus
+        .dispatch(command)
+        .map_err(|e| e.to_string())
+}
+
+#[tauri::command(rename_all = "camelCase")]
+async fn event_bus_append(
+    state: State<'_, AppState>,
+    events: Option<Vec<event_bus::AppendEventInput>>,
+    event: Option<event_bus::AppendEventInput>,
+) -> Result<Vec<event_bus::EventRecord>, String> {
+    if let Some(list) = events {
+        state.event_bus.append_events_batch(list)
+    } else if let Some(single) = event {
+        let record = state.event_bus.append_event(single)?;
+        Ok(vec![record])
+    } else {
+        Ok(Vec::new())
+    }
+}
+
+#[tauri::command(rename_all = "camelCase")]
+async fn event_bus_query(
+    state: State<'_, AppState>,
+    target: Option<String>,
+    target_node_id: Option<String>,
+    since_seq: Option<i64>,
+    from_seq: Option<i64>,
+    limit: Option<usize>,
+) -> Result<Vec<event_bus::EventRecord>, String> {
+    let resolved_target = target.or(target_node_id);
+    let resolved_since = since_seq.or(from_seq);
+    state
+        .event_bus
+        .query_events(resolved_target.as_deref(), resolved_since, limit)
+}
+
+#[tauri::command(rename_all = "camelCase")]
+async fn event_bus_checkpoint(
+    state: State<'_, AppState>,
+    mode: Option<String>,
+) -> Result<event_bus::CheckpointResult, String> {
+    let checkpoint_mode = match mode.as_deref() {
+        Some("passive") => event_bus::CheckpointMode::Passive,
+        Some("full") => event_bus::CheckpointMode::Full,
+        Some("restart") => event_bus::CheckpointMode::Restart,
+        _ => event_bus::CheckpointMode::Truncate,
+    };
+    let bus = Arc::clone(&state.event_bus);
+    tokio::task::spawn_blocking(move || bus.checkpoint_with_mode(checkpoint_mode))
+        .await
+        .map_err(|e| format!("Checkpoint task error: {e}"))?
+}
+
+#[tauri::command(rename_all = "camelCase")]
+async fn event_bus_prune(
+    state: State<'_, AppState>,
+    options: Option<event_bus::PruneOptions>,
+    before_seq: Option<i64>,
+    retain_latest: Option<usize>,
+) -> Result<event_bus::PruneResult, String> {
+    let opts = options.unwrap_or_else(|| event_bus::PruneOptions {
+        before_seq,
+        retain_latest,
+        ..Default::default()
+    });
+    let bus = Arc::clone(&state.event_bus);
+    tokio::task::spawn_blocking(move || bus.prune(opts))
+        .await
+        .map_err(|e| format!("Prune task error: {e}"))?
+}
+
+#[tauri::command(rename_all = "camelCase")]
+async fn concurrency_lock_node(
+    state: State<'_, AppState>,
+    node_id: String,
+    task_id: String,
+    actor: Option<String>,
+) -> Result<bool, String> {
+    let resolved_actor = match actor.as_deref() {
+        Some("designer") | Some("user") => command_bus::Actor::Designer,
+        Some("system") => command_bus::Actor::System,
+        _ => command_bus::Actor::Agent,
+    };
+    state
+        .command_bus
+        .acquire_lock(&node_id, &task_id, resolved_actor)
+        .map_err(|e| e.to_string())?;
+    Ok(true)
+}
+
+#[tauri::command(rename_all = "camelCase")]
+async fn concurrency_preempt_node(
+    app: AppHandle,
+    state: State<'_, AppState>,
+    node_id: String,
+    actor: Option<String>,
+) -> Result<bool, String> {
+    let resolved_actor = actor.unwrap_or_else(|| "designer".to_string());
+    let lock_state = state.command_bus.get_lock_state(&node_id);
+    let preempted_task_id = match lock_state {
+        command_bus::LockState::Generating { ref task_id, .. } => Some(task_id.clone()),
+        _ => None,
+    };
+
+    state.command_bus.release_lock(&node_id);
+
+    let effective_task_id = preempted_task_id.unwrap_or_default();
+    if !effective_task_id.is_empty() {
+        let _ = state.task_host.cancel(&effective_task_id);
+        let _ = state.event_bus.append_event(event_bus::AppendEventInput {
+            event_type: "agent.task.cancelled".to_string(),
+            target_node_id: node_id.clone(),
+            actor: Some("system".to_string()),
+            payload: Some(serde_json::json!({
+                "taskId": effective_task_id,
+                "targetNodeId": node_id,
+                "reason": "designer_override",
+            })),
+            ..Default::default()
+        });
+    }
+
+    let _ = state.event_bus.append_event(event_bus::AppendEventInput {
+        event_type: "canvas.node.override".to_string(),
+        target_node_id: node_id.clone(),
+        actor: Some(resolved_actor.clone()),
+        payload: Some(serde_json::json!({
+            "targetNodeId": node_id,
+            "actor": resolved_actor,
+            "taskId": effective_task_id,
+            "overriddenState": "generating",
+        })),
+        ..Default::default()
+    });
+
+    let _ = app.emit(
+        "task.cancelled",
+        serde_json::json!({
+            "taskId": effective_task_id,
+            "nodeId": node_id,
+            "actor": resolved_actor,
+        }),
+    );
+
+    Ok(true)
+}
+
+#[tauri::command(rename_all = "camelCase")]
+async fn concurrency_is_locked(
+    state: State<'_, AppState>,
+    node_id: String,
+) -> Result<bool, String> {
+    Ok(state.command_bus.is_locked(&node_id))
+}
+
 // ========== 主函数 ==========
 
 fn main() {
@@ -1748,6 +1919,31 @@ fn main() {
     let assets = Arc::clone(&authority.assets);
     // Legacy memory is validated and migrated only when enabled memory is first read.
     let task_host = Arc::clone(&authority.task_host);
+    let event_bus = Arc::new(
+        event_bus::EventBus::open(&paths.root.join("events.db"))
+            .expect("KK Studio 无法初始化 EventBus 数据库"),
+    );
+    let idle_weak = Arc::downgrade(&event_bus);
+    tauri::async_runtime::spawn(async move {
+        let mut interval = tokio::time::interval(std::time::Duration::from_secs(30));
+        interval.tick().await;
+        loop {
+            interval.tick().await;
+            let Some(bus) = idle_weak.upgrade() else {
+                break;
+            };
+            if bus.pending_appends_count() > 0 {
+                let _ = tokio::task::spawn_blocking(move || {
+                    let _ = bus.checkpoint();
+                })
+                .await;
+            }
+        }
+    });
+    let command_bus = Arc::new(command_bus::CommandBus::new());
+    let setup_command_bus = Arc::clone(&command_bus);
+    let setup_task_host = Arc::clone(&task_host);
+    let setup_event_bus = Arc::clone(&event_bus);
     let activation = tauri::async_runtime::block_on(native_activation::ActivationServer::start(
         Arc::clone(&authority),
     ))
@@ -1817,6 +2013,45 @@ fn main() {
                     .recv_timeout(std::time::Duration::from_secs(2))
                     .map_err(|_| "io: 窗口激活超时".to_string())?
             }))?;
+
+            let preemption_app = app.handle().clone();
+            let preemption_task_host = Arc::clone(&setup_task_host);
+            let preemption_event_bus = Arc::clone(&setup_event_bus);
+            setup_command_bus.set_preemption_hook(move |target, task_id| {
+                let _ = preemption_task_host.cancel(task_id);
+                let _ = preemption_event_bus.append_event(event_bus::AppendEventInput {
+                    event_type: "agent.task.cancelled".to_string(),
+                    target_node_id: target.to_string(),
+                    actor: Some("system".to_string()),
+                    payload: Some(serde_json::json!({
+                        "taskId": task_id,
+                        "targetNodeId": target,
+                        "reason": "designer_override",
+                    })),
+                    ..Default::default()
+                });
+                let _ = preemption_event_bus.append_event(event_bus::AppendEventInput {
+                    event_type: "canvas.node.override".to_string(),
+                    target_node_id: target.to_string(),
+                    actor: Some("designer".to_string()),
+                    payload: Some(serde_json::json!({
+                        "targetNodeId": target,
+                        "actor": "designer",
+                        "taskId": task_id,
+                        "overriddenState": "generating",
+                    })),
+                    ..Default::default()
+                });
+                let _ = preemption_app.emit(
+                    "task.cancelled",
+                    serde_json::json!({
+                        "taskId": task_id,
+                        "nodeId": target,
+                        "actor": "designer",
+                    }),
+                );
+            });
+
             Ok(())
         })
         .manage(Mutex::new(Some(activation)))
@@ -1830,6 +2065,7 @@ fn main() {
                 .join("agent"),
         ))
         .manage(provider_model_requests::ModelRequests::default())
+        .manage(comfy_runtime::ComfyRuntime::default())
         .manage(AppState {
             providers: Arc::new(provider_config::ProviderConfigRepository::new(
                 config_path.with_file_name("connections.json"),
@@ -1842,6 +2078,8 @@ fn main() {
             creation: Arc::clone(&authority.snapshots),
             assets,
             task_host,
+            command_bus,
+            event_bus,
             restored_roots: Mutex::new(std::collections::HashSet::new()),
         })
         .invoke_handler(tauri::generate_handler![
@@ -1850,6 +2088,10 @@ fn main() {
             agent_runtime::agent_runtime_start,
             agent_runtime::agent_runtime_status,
             agent_runtime::agent_runtime_stop,
+            ego_browser::ego_browser_status,
+            ego_browser::ego_browser_open,
+            browser_runtime::browser_external_status,
+            browser_runtime::browser_external_open,
             credential_set,
             credential_get,
             provider_models_prepare,
@@ -1892,11 +2134,24 @@ fn main() {
             comfyui_queue_prompt,
             comfyui_get_history,
             comfyui_scan_directory,
+            comfy_runtime::comfyui_start_process,
+            comfy_runtime::comfyui_stop_process,
+            comfy_runtime::comfyui_process_status,
+            comfy_transport::comfyui_http_json,
+            comfy_transport::comfyui_read_output,
             task_host_submit,
             task_host_read,
             task_host_get,
             task_host_list,
             task_host_cancel,
+            command_bus_dispatch,
+            event_bus_append,
+            event_bus_query,
+            event_bus_checkpoint,
+            event_bus_prune,
+            concurrency_lock_node,
+            concurrency_preempt_node,
+            concurrency_is_locked,
         ])
         .build(tauri::generate_context!())
         .expect("error while building kk Studio application")
@@ -1904,6 +2159,9 @@ fn main() {
             if matches!(event, tauri::RunEvent::Exit) {
                 app.state::<agent_runtime::AgentRuntime>().shutdown();
                 app.state::<cli_runtime::CliRuntime>().shutdown();
+                if let Some(state) = app.try_state::<AppState>() {
+                    let _ = state.event_bus.checkpoint();
+                }
                 if let Some(activation) = app
                     .state::<Mutex<Option<native_activation::ActivationServer>>>()
                     .lock()
@@ -1973,5 +2231,69 @@ mod tests {
         assert!(!result.contains("private-provider-token"));
         assert!(!result.contains("unsupported-protocol"));
         assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_concurrency_lock_and_preemption_lifecycle() {
+        let bus = crate::command_bus::CommandBus::new();
+        let target = "node-preempt-test-1";
+        let task_id = "agent-task-99";
+
+        assert!(!bus.is_locked(target));
+
+        // Acquire lock
+        bus.acquire_lock(target, task_id, crate::command_bus::Actor::Agent)
+            .expect("lock acquire should succeed");
+        assert!(bus.is_locked(target));
+
+        // Second acquire fails
+        let second_err = bus
+            .acquire_lock(target, "another-task", crate::command_bus::Actor::Agent)
+            .expect_err("second agent lock should fail");
+        assert_eq!(second_err.code, "ERR_NODE_LOCKED");
+
+        // Release lock
+        bus.release_lock(target);
+        assert!(!bus.is_locked(target));
+    }
+
+    #[test]
+    fn test_preemption_hook_fires_and_records_cancellation() {
+        use std::sync::atomic::{AtomicBool, Ordering};
+
+        let bus = std::sync::Arc::new(crate::command_bus::CommandBus::new());
+        let target = "node-preempt-hook-test";
+        let task_id = "agent-task-hook-42";
+        let hook_fired = std::sync::Arc::new(AtomicBool::new(false));
+
+        let hook_fired_clone = std::sync::Arc::clone(&hook_fired);
+        bus.set_preemption_hook(move |t, tid| {
+            if t == "node-preempt-hook-test" && tid == "agent-task-hook-42" {
+                hook_fired_clone.store(true, Ordering::SeqCst);
+            }
+        });
+
+        bus.acquire_lock(target, task_id, crate::command_bus::Actor::Agent)
+            .unwrap();
+        assert!(bus.is_locked(target));
+
+        // Designer dispatches command on locked node
+        let designer_cmd = crate::command_bus::Command {
+            id: "cmd-designer-move".to_string(),
+            r#type: "canvas.node.move".to_string(),
+            target: target.to_string(),
+            payload: serde_json::json!({ "x": 100, "y": 200 }),
+            actor: crate::command_bus::Actor::Designer,
+            base_rev: 0,
+            batch_id: None,
+            idempotency_key: None,
+        };
+
+        let res = bus
+            .dispatch(designer_cmd)
+            .expect("designer dispatch must succeed");
+        assert!(res.success);
+        assert!(!bus.is_locked(target));
+        assert!(hook_fired.load(Ordering::SeqCst));
     }
 }

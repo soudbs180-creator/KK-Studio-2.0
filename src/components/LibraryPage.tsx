@@ -1,10 +1,10 @@
 import { useMemo, useState } from "react";
 import { Search } from "lucide-react";
 import CatalogPageBody from "./CatalogPageBody";
-import type { CreationProject } from "../features/creation/model";
-import type { ProjectLibraryActions } from "../features/projects/projectLifecycle";
+import type { CreationProject } from "../features/creation/index.ts";
+import type { ProjectLibraryActions } from "../features/projects/index.ts";
 import CatalogTutorial from "./CatalogTutorial";
-import { type WorkflowRecord } from "../features/comfyui/workflowRegistry";
+import { type WorkflowRecord } from "../features/comfyui/index.ts";
 import { downloadWorkflow } from "./WorkflowImportButton";
 import { selectPageTemplate } from "../domain/pageTemplates";
 import CatalogPageHeader from "./CatalogPageHeader";
@@ -213,7 +213,7 @@ export default function LibraryPage({
           ))}
         </div>
         <label className="catalog-page-search">
-          <Search size={17} />
+          <Search size={16} strokeWidth={1} />
           <input
             aria-label={`搜索${meta.title}`}
             value={query}

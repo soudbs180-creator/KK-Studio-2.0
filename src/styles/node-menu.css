@@ -106,8 +106,8 @@
 .add-node-icon.plugin {
   mask: none;
   background: none;
-  width: 22px;
-  height: 22px;
+  width: var(--kk-icon-glyph-md);
+  height: var(--kk-icon-glyph-md);
   font-size: 20px;
   line-height: 22px;
   text-align: center;

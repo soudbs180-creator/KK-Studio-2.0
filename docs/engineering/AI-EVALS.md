@@ -24,3 +24,5 @@
 2026-10-10 新增 `desktop-source-refresh` 场景，覆盖“客户端启动后仍是旧包”的入口、checkout、依赖、内容指纹、EXE 收据和运行进程闭环；`governance:check`、启动器单测和真实启动器回归已执行。没有调用外部模型做语义 benchmark，本场景的多模型语义评估记为 NOT RUN。
 
 2026-10-10 新增 `version-coherence-audit` 场景，覆盖平台版本源、根/嵌套 lock、协议/供应商版本分层、SHA/receipt 工件和第二环境回读；结构门禁可验证场景登记，语义 benchmark 仍为 NOT RUN。
+
+2026-10-21 新增 `figma-first-ui`、`figma-source-unavailable`、`figma-derived-docs`，覆盖设计先行、已存在目标设计无需重复编辑、失效来源停住依赖工作、本地规范从 Figma 派生及 CSS 投影不等于 Figma 同步。结构检查与独立规则演练分别记录；未运行 live 模型 benchmark，不推断模型遵守率。

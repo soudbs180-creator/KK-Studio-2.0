@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import ToolbarIcon from "./ToolbarIcon";
 import type { CanvasTool } from "./useCanvasPointer";
 import { useDismissible } from "../useDismissible";
@@ -22,6 +22,24 @@ export default function CanvasToolbar({
   const toolbarRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement | null>(null);
   useDismissible(popup !== null, toolbarRef, () => setPopup(null), triggerRef);
+  useLayoutEffect(() => {
+    if (!popup) return;
+    const menu =
+      toolbarRef.current?.querySelector<HTMLElement>("[role='menu']");
+    const trigger = triggerRef.current;
+    const toolbar = toolbarRef.current;
+    if (!menu || !trigger || !toolbar) return;
+    const position = () => {
+      const anchor = trigger.getBoundingClientRect();
+      const root = toolbar.getBoundingClientRect();
+      menu.style.left = `${Math.max(8 - root.left, Math.min(anchor.left - root.left, window.innerWidth - 8 - menu.offsetWidth - root.left)) - toolbar.clientLeft}px`;
+      menu.style.bottom = `${root.bottom - toolbar.clientTop - anchor.top + 8}px`;
+      menu.style.maxHeight = `${Math.max(44, anchor.top - 16)}px`;
+    };
+    position();
+    window.addEventListener("resize", position);
+    return () => window.removeEventListener("resize", position);
+  }, [popup]);
   useEffect(() => {
     if (popup)
       toolbarRef.current
@@ -95,15 +113,27 @@ export default function CanvasToolbar({
         className="toolbar-current-tool"
         aria-label="选择画布工具"
         title={tool === "hand" ? "小手工具（按住空格拖拽）" : "移动工具"}
-        aria-haspopup="menu"
-        aria-expanded={popup === "tool"}
-        onClick={(event) => toggle("tool", event.currentTarget)}
+        aria-pressed="true"
+        onClick={() => {
+          setPopup(null);
+          onToolChange(tool);
+        }}
       >
         {tool === "select" ? (
           <ToolbarIcon name="select" />
         ) : (
           <span className="tool-hand-current" aria-hidden="true" />
         )}
+      </button>
+      <button
+        className="toolbar-toggle"
+        aria-label="展开画布工具"
+        title="选择移动或小手工具"
+        aria-haspopup="menu"
+        aria-expanded={popup === "tool"}
+        onClick={(event) => toggle("tool", event.currentTarget)}
+      >
+        <ToolbarIcon name="collapse" />
       </button>
       {popup === "tool" && (
         <div className="canvas-tool-menu" role="menu" aria-label="画布工具选择">

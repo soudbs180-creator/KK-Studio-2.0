@@ -19,7 +19,7 @@
 - 基线 `origin/main@76339c9`，复核前分支 `55e93a1`；本轮修补在该分支后续提交。Windows 11、Node 24.19.0。
 - `npm run verify`：退出码 0；lint / governance（63 tasks、0 violations）/ features（29、0）/ Markdown（82、0）/ typecheck / UI 标准（160、0）/ format / build 均通过；Node 单测 **413/413**，Playwright **309/309**（Vite production preview）。完整日志在本机 `D:/kk-studio/.tmp/memory-verify-20260924-reviewfix.log`，不提交生成日志。
 - `cargo test --manifest-path src-tauri/Cargo.toml`：**90/90**，包括首次写入、重复替换、损坏文件写保护、失败备份保护、过期版本写入拒绝和并发写入互斥。
-- 实际页面：`npm run test:ui` 从新构建 `dist` 启动 `http://127.0.0.1:1423/`，route `/`，`src/main.tsx → App.tsx → SettingsPanel.tsx → SettingsSections.tsx → ConnectionSettings.tsx → MemorySettingsSection.tsx`。浏览器 DOM 验证了开关、共享状态、错误态、清空确认和 390 px 可达性。截图：[启用态](evidence/memory-enabled-web.png)、[列表空态](evidence/memory-list-web.png)、[390 px](evidence/memory-enabled-390.png)。这是 Web 预览证据，不代表 Tauri release。
+- 实际页面：`npm run test:ui` 从新构建 `dist` 启动 `http://127.0.0.1:1423/`，route `/`，`src/main.tsx → App.tsx → SettingsPanel.tsx → SettingsSections.tsx → ConnectionSettings.tsx → MemorySettingsSection.tsx`。浏览器 DOM 验证了开关、共享状态、错误态、清空确认和 390 px 可达性。截图：[启用态](evidence-manifest.json)、[列表空态](evidence-manifest.json)、[390 px](evidence/memory-enabled-390.png)。这是 Web 预览证据，不代表 Tauri release。
 - 未验证：用户真实 Codex 对话中的记忆引用、系统目录 File System Access 用户授权、Desktop 打包运行、豆包/WorkBuddy 原生客户端共享、Web 与 Desktop 同时写同一目录。完整文件只在本机存储；选中片段进入当前模型请求。
 
 - Task ID：TASK-MEMORY-001 / TASK-MEMORY-002
@@ -68,3 +68,8 @@
 1. **豆包侧实际注入**：契约（MEMORY-CONTRACT.md）已建立，Doubao Work 环境中的 Agent 可按契约读取共享文件；本会话即作为豆包侧 Agent 遵循该契约（读取/参考在对话中生效），但"豆包 App 原生对话自动注入"不在本仓库代码可控制范围。
 2. **Web FSA 授权流**：浏览器测试覆盖 UI 渲染与降级逻辑；`showDirectoryPicker` 用户手势授权需人工在真实浏览器中体验一次。
 3. **真实 Codex 会话记忆引用**：注入块格式与检索已由单测覆盖，模型实际引用需用户开启记忆后体验确认。
+
+
+## 2026-10-30 历史原始证据外置说明
+
+本次ORG-6将历史E2截图/原始日志/录屏外置到容器output；原引用现指向[2026-09-24-local-memory manifest](evidence-manifest.json)。原始sourcePath、commit/blob、sha256、大小与原链接目的地逐项可查；原图片嵌入改为同文字的清单链接。原结论、失败、时间和数字未重写，不代表当前功能重新验收或main已合流。E1摘要、JSON、关键图及活跃运行资料仍留仓；恢复仅写新空目录并复核字节。

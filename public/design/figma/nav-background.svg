@@ -1,7 +1,7 @@
-<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="13.1616" height="13.1616" viewBox="0 0 13.1616 13.1616" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g id="icon-grid2-x2">
-<path id="&#232;&#183;&#175;&#229;&#190;&#132; 19" d="M6.58079 0.598253V12.5633" stroke="#707070" stroke-width="1.19651" stroke-linecap="round" stroke-linejoin="round"/>
-<path id="&#232;&#183;&#175;&#229;&#190;&#132; 20" d="M0.598261 6.58078H6.58079H12.5633" stroke="#707070" stroke-width="1.19651" stroke-linecap="round" stroke-linejoin="round"/>
-<path id="&#231;&#159;&#169;&#229;&#189;&#162; 15" d="M11.2339 0.598264H1.9277C1.19347 0.598264 0.598253 1.19348 0.598253 1.92772V11.2339C0.598253 11.9681 1.19347 12.5633 1.9277 12.5633H11.2339C11.9681 12.5633 12.5633 11.9681 12.5633 11.2339V1.92772C12.5633 1.19348 11.9681 0.598264 11.2339 0.598264Z" stroke="#707070" stroke-width="1.19651" stroke-linecap="round" stroke-linejoin="round"/>
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Glyph/grid-2x2">
+<path id="Vector" d="M5.83333 3.5H22.1667C23.4553 3.5 24.5 4.54467 24.5 5.83333V22.1667C24.5 23.4553 23.4553 24.5 22.1667 24.5H5.83333C4.54467 24.5 3.5 23.4553 3.5 22.1667V5.83333C3.5 4.54467 4.54467 3.5 5.83333 3.5Z" stroke-width="1.16667" stroke-linecap="round" stroke-linejoin="round" stroke="#A0A0A0"/>
+<path id="Vector_2" d="M3.5 14H24.5" stroke-width="1.16667" stroke-linecap="round" stroke-linejoin="round" stroke="#A0A0A0"/>
+<path id="Vector_3" d="M14 3.5V24.5" stroke-width="1.16667" stroke-linecap="round" stroke-linejoin="round" stroke="#A0A0A0"/>
 </g>
 </svg>

@@ -35,22 +35,42 @@
   height: var(--kk-control-h-lg);
   padding: 0 12px;
   border-radius: var(--ui-radius-control);
-  font-size: var(--ui-font-label);
-  font-weight: 500;
-  line-height: 1;
-  color: var(--text-primary);
+  font-size: var(--kk-font-caption);
+  font-weight: var(--kk-font-weight-toolbar);
+  line-height: var(--kk-line-toolbar);
+  color: var(--kk-control-idle-fg);
   text-align: left;
 }
-.canvas-tool-menu > button[aria-checked="true"],
-.canvas-tool-menu > button:hover,
+.canvas-tool-menu > button:hover:not([aria-checked="true"]),
 .canvas-save-menu > button:hover,
 .canvas-help-menu > button:hover {
-  background: var(--ui-neutral-selected);
+  background: var(--ui-state-hover-bg);
+}
+.canvas-tool-menu > button:focus-visible,
+.canvas-save-menu > button:focus-visible,
+.canvas-help-menu > button:focus-visible {
+  outline: 2px solid var(--kk-focus-ring);
+  outline-offset: -1px;
+}
+.canvas-tool-menu > button:focus:not(:focus-visible),
+.canvas-save-menu > button:focus:not(:focus-visible),
+.canvas-help-menu > button:focus:not(:focus-visible) {
+  outline: none;
+}
+.canvas-tool-menu > button:active,
+.canvas-save-menu > button:active,
+.canvas-help-menu > button:active {
+  background: var(--ui-state-pressed-bg);
+}
+.canvas-tool-menu > button[aria-checked="true"] {
+  background: var(--kk-control-selected-bg);
+  color: var(--kk-control-selected-fg);
+  font-weight: var(--kk-font-weight-toolbar);
 }
 .canvas-tool-menu .tool-menu-check,
 .canvas-tool-menu .tool-menu-icon {
-  width: 18px;
-  height: 18px;
+  width: var(--kk-icon-glyph-sm);
+  height: var(--kk-icon-glyph-sm);
   flex: none;
   position: static;
 }
@@ -74,8 +94,8 @@
   position: static;
 }
 .canvas-help-menu .help-menu-next {
-  width: 8px;
-  height: 12px;
+  width: var(--kk-icon-glyph-xs);
+  height: var(--kk-icon-glyph-xs);
   flex: none;
   position: static;
 }
@@ -107,8 +127,8 @@
   height: var(--ui-control-h-toolbar);
 }
 .tool-hand-current {
-  width: 18px;
-  height: 18px;
+  width: var(--kk-icon-glyph-md);
+  height: var(--kk-icon-glyph-md);
   background: var(--ui-tool-active);
   mask: url("/design/figma/tool-hand.svg") center / contain no-repeat;
 }
@@ -144,20 +164,23 @@
 /* Figma toolbar/Default (410:74830): preserve the 244x50 source geometry.
    This component stylesheet intentionally owns the final overrides so shared
    workspace layout rules cannot introduce a one-pixel drift or reorder gap. */
+.canvas-hud .canvas-toolbar,
 .canvas-toolbar {
-  width: 244px !important;
-  padding: 4px !important;
+  width: 244px;
+  padding: 4px;
 }
+.canvas-hud .canvas-toolbar > .toolbar-current-tool + .toolbar-toggle,
 .canvas-toolbar > .toolbar-current-tool + .toolbar-toggle {
-  margin-left: 0 !important;
+  margin-left: 0;
 }
+.canvas-hud .canvas-toolbar .toolbar-divider,
 .canvas-toolbar .toolbar-divider {
   position: relative;
-  width: 0 !important;
-  height: 20px !important;
-  flex: 0 0 0 !important;
+  width: 0;
+  height: 20px;
+  flex: 0 0 0;
   align-self: center;
-  background: transparent !important;
+  background: transparent;
 }
 .canvas-toolbar .toolbar-divider::before {
   content: "";
@@ -202,4 +225,92 @@
   border: 1px solid var(--ui-selected);
   border-radius: 6px;
   background: color-mix(in srgb, var(--ui-selected) 8%, transparent);
+}
+
+/* Figma 2149:42515 owns all six actions and their shared geometry. */
+.canvas .canvas-toolbar {
+  left: calc(var(--canvas-usable-width, 100%) / 2);
+  bottom: 16px;
+  width: max-content;
+  height: 52px;
+  max-width: calc(100% - 16px);
+  padding: 3px;
+  gap: 4px;
+  border-radius: var(--kk-radius-full);
+  background: var(--kk-bg-surface);
+}
+.canvas .canvas-toolbar > button {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  place-items: center;
+  flex: 0 0 44px;
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  padding: 0;
+  border-radius: var(--kk-radius-full);
+  color: var(--kk-control-idle-fg);
+  background: transparent;
+}
+.canvas .canvas-toolbar > button::before {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  z-index: -1;
+  border-radius: inherit;
+}
+.canvas .canvas-toolbar > .toolbar-add::before {
+  background: var(--kk-button-primary-bg);
+}
+.canvas .canvas-toolbar > .toolbar-toggle::before {
+  border: 1px solid var(--kk-border-default);
+  background: var(--kk-control-surface-idle);
+}
+.canvas .canvas-toolbar > button:not(.toolbar-add):hover::before,
+.canvas
+  .canvas-toolbar
+  > button:not(.toolbar-add)[aria-expanded="true"]::before {
+  background: var(--kk-control-hover-bg);
+}
+.canvas .canvas-toolbar > button:focus-visible {
+  outline: 2px solid var(--kk-focus-ring);
+  outline-offset: -2px;
+}
+.canvas .canvas-toolbar > .toolbar-current-tool + .toolbar-toggle {
+  margin-left: -4px;
+}
+.canvas .canvas-toolbar .toolbar-divider {
+  position: relative;
+  flex: 0 0 4px;
+  width: 4px;
+  height: 20px;
+  margin: 0;
+  background: transparent;
+}
+.canvas .canvas-toolbar .toolbar-divider::before {
+  content: "";
+  position: absolute;
+  left: 1.5px;
+  top: 0;
+  width: 1px;
+  height: 20px;
+  background: var(--kk-border-default);
+}
+.canvas .canvas-toolbar .toolbar-icon,
+.canvas .canvas-toolbar .toolbar-icon-add,
+.canvas .canvas-toolbar .tool-hand-current {
+  width: var(--kk-icon-glyph-xl);
+  height: var(--kk-icon-glyph-xl);
+}
+.canvas .canvas-toolbar .toolbar-icon-collapse {
+  width: 8px;
+  height: 8px;
+}
+.canvas-tool-menu,
+.canvas-help-menu,
+.canvas-save-menu {
+  right: auto;
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }

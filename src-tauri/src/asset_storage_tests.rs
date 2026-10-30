@@ -173,6 +173,26 @@ fn duplicate_upload_keeps_ai_provenance_and_merges_tags_and_origins() {
 }
 
 #[test]
+fn identical_job_and_prompt_keep_distinct_parents_and_imported_origins() {
+    let fixture = Fixture::new();
+    let bytes = b"lineage-fixture";
+    let mut first = metadata(bytes, "same-job");
+    first["parentId"] = json!("asset-111111111111111111111111");
+    fixture.save(bytes, first.clone());
+    let mut incoming = metadata(bytes, "same-job");
+    incoming["parentId"] = json!("asset-222222222222222222222222");
+    incoming["origins"] = json!([{
+        "sourceJobId": "imported", "parentId": "asset-333333333333333333333333",
+        "provenance": incoming["provenance"].clone()
+    }]);
+    let merged = fixture.save(bytes, incoming.clone());
+    assert_eq!(merged["origins"].as_array().unwrap().len(), 3);
+    assert_eq!(merged["parentId"], first["parentId"]);
+    let repeated = fixture.save(bytes, incoming);
+    assert_eq!(repeated["origins"].as_array().unwrap().len(), 3);
+}
+
+#[test]
 fn ai_metadata_promotes_previous_upload_and_retains_first_ai_afterward() {
     let f = Fixture::new();
     let mut upload = metadata(BYTES, "upload");

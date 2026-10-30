@@ -1,3 +1,4 @@
+import { agentConnection } from "../../features/agent/index.ts";
 /**
  * 设置 › 连接 › 记忆：本地长期记忆管理（本机共享）。
  *
@@ -6,9 +7,9 @@
  * 尚未接入该契约，不能仅凭已登录状态宣称已共享。
  * 换账号/换人时用户手动清空。
  */
-import { useMemory } from "../../features/memory/useMemory.ts";
-import { MEMORY_CONTENT_MAX_LENGTH } from "../../features/memory/types.ts";
 import { isTauri } from "@tauri-apps/api/core";
+import { MEMORY_CONTENT_MAX_LENGTH } from "../../features/memory/index.ts";
+import { useMemory } from "../../features/memory/index.ts";
 import { confirmAction } from "../../runtime/confirmAction";
 
 const TYPE_LABELS: Record<string, string> = {
@@ -60,7 +61,7 @@ export default function MemorySettingsSection({
     leaveSharedDirectory,
     extractWithCodex,
     refresh,
-  } = useMemory(onFeedback);
+  } = useMemory(onFeedback, agentConnection);
 
   const records = store?.records ?? [];
   const sharedReadOnly = mode === "shared-readonly";

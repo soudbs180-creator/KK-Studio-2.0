@@ -1,6 +1,55 @@
+import type { CanvasReference } from "../../packages/creation-contracts/index.ts";
+import type { ImageEditContext, MaskDocument } from "./imageEdit.ts";
 import type { ModelSelection } from "./modelSelection.ts";
-import type { MaskDocument, ImageEditContext } from "./imageEdit.ts";
+import type { ComfyWorkflowCardState } from "./comfyWorkflow.ts";
+export type { CanvasReference } from "../../packages/creation-contracts/index.ts";
 export type CanvasItemKind = "image" | "video" | "audio" | "text";
+
+export function comfyOutputSourceId(
+  item: CanvasCollectionItem,
+): string | undefined {
+  if (!/^comfy-output-[a-f0-9]{24}$/.test(item.id)) return;
+  const source =
+    typeof item.comfyWorkflowSourceId === "string"
+      ? item.comfyWorkflowSourceId
+      : typeof item.description === "string" &&
+          item.description.startsWith("ComfyUI · ")
+        ? item.description.slice("ComfyUI · ".length)
+        : undefined;
+  return source && source.length <= 160 ? source : undefined;
+}
+
+export function removeCanvasItems(
+  items: CanvasCollectionItem[],
+  removedIds: Iterable<string>,
+): CanvasCollectionItem[] {
+  const ids = new Set(removedIds);
+  const outputs = items.filter(
+    (item) => ids.has(item.id) && /^comfy-output-[a-f0-9]{24}$/.test(item.id),
+  );
+  return items
+    .filter((item) => !ids.has(item.id))
+    .map((item) => {
+      if (!item.comfyWorkflow) return item;
+      const dismissed = outputs
+        .filter((output) => comfyOutputSourceId(output) === item.id)
+        .map((output) => output.id);
+      return dismissed.length
+        ? {
+            ...item,
+            comfyWorkflow: {
+              ...item.comfyWorkflow,
+              dismissedOutputIds: [
+                ...new Set([
+                  ...(item.comfyWorkflow.dismissedOutputIds ?? []),
+                  ...dismissed,
+                ]),
+              ],
+            },
+          }
+        : item;
+    });
+}
 
 /** Stable semantic roles shared by upload, preview and canvas connections. */
 export const CANVAS_REFERENCE_SLOTS = [
@@ -43,6 +92,10 @@ export interface PluginItemPayload {
 }
 
 export interface CanvasCollectionItem {
+  comfyWorkflow?: ComfyWorkflowCardState;
+  comfyWorkflowSourceId?: string;
+  /** Monotonic revision number for concurrency control and EventBus synchronization */
+  node_rev?: number;
   imageEditDraft?: MaskDocument;
   imageEditContext?: ImageEditContext;
   imageEditPrompt?: string;
@@ -73,6 +126,7 @@ export interface CanvasCollectionItem {
   /** Upload-only reference cards intentionally have no prompt editor. */
   referenceOnly?: boolean;
   referenceSlot?: CanvasReferenceSlot;
+  referenceFrame?: "first" | "last";
   /** A reserved result card is visible while the local demo is loading. */
   generationStatus?: "pending" | "ready" | "error";
   generationIndex?: number;
@@ -136,8 +190,8 @@ export const CANVAS_MODEL_CAPABILITIES: Record<
     {
       id: "minimax-h3",
       name: "MiniMax H3",
-      maxReferences: 1,
-      label: "最多 1 张参考图",
+      maxReferences: 2,
+      label: "首帧与尾帧各 1 张参考图",
     },
   ],
 };
@@ -169,16 +223,6 @@ export function modelCapabilities(
     : [];
 }
 
-export interface CanvasReference {
-  id?: string;
-  assetId?: string;
-  parentAssetId?: string;
-  title: string;
-  preview?: string;
-  /** Semantic slot from the five-slot reference workflow. */
-  slot?: CanvasReferenceSlot;
-}
-
 export interface NodeEditingProps {
   selected: boolean;
   /** Transient rendered-content state; never persisted in the project. */
@@ -202,6 +246,7 @@ export interface NodeEditingProps {
   referenceLimit?: number;
   onAddReferences?: (references: CanvasReference[]) => void;
   onRemoveReference?: (connectionId: string) => void;
+  onSwapReferenceFrames?: (firstId: string, lastId: string) => void;
 }
 
 export const BASE_CANVAS_ITEMS: CanvasCollectionItem[] = [

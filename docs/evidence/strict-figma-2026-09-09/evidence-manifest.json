@@ -1,0 +1,229 @@
+{
+  "version": 1,
+  "taskId": "TASK-ORG-6",
+  "classification": "E2-externalized-historical-evidence",
+  "packagePath": "docs/evidence/strict-figma-2026-09-09",
+  "entries": [
+    {
+      "sourcePath": "docs/evidence/strict-figma-2026-09-09/before-1115-canvas.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "bdd90e0f54e7aba2a516d9eba399c6e187427e04",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/strict-figma-2026-09-09/before-1115-canvas.png",
+      "bytes": 42656,
+      "sha256": "d727941d195c2fa7cfa5a07c498ff3f2a9c7fb342d57bc95b5a211b92b5136f1",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/strict-figma-2026-09-09/before-1115.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "7b8e19a059f14b51d233bf1ea68e3a44d9e0662c",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/strict-figma-2026-09-09/before-1115.png",
+      "bytes": 59969,
+      "sha256": "1c8d49d00e67bfce58fff3af13dc319bb3ef85c8b09e72b5617ced0bbbfa6323",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/strict-figma-2026-09-09/before-1115x698-collapsed-fresh.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "7c883a3556835fec9cb62c462e9bf8651a111d15",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/strict-figma-2026-09-09/before-1115x698-collapsed-fresh.png",
+      "bytes": 34015,
+      "sha256": "fa523c24d89812db290e48806be6dc0ed41e3d20ffd2236910641f2ca3ac02e2",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/strict-figma-2026-09-09/before-1115x698-fresh.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "4cce257128235b366a90ef6dccad502c35dfb8ca",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/strict-figma-2026-09-09/before-1115x698-fresh.png",
+      "bytes": 42811,
+      "sha256": "c5642c405765ebf41fa5b3df93e899c9c991728d9a8dbc874007dabb5679ec7e",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": [
+        {
+          "document": "docs/evidence/strict-figma-2026-09-09/before-diff-report.md",
+          "line": 29,
+          "originalTarget": "before-1115x698-fresh.png",
+          "referenceKind": "link"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/evidence/strict-figma-2026-09-09/before-1920-canvas.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "573e47c8b2f58906ba61bfa3a321696201246699",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/strict-figma-2026-09-09/before-1920-canvas.png",
+      "bytes": 75113,
+      "sha256": "4d446ac2cc040f0cffc0ac51463a464352aa19fe73d1507a66dd348b26b022f4",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/strict-figma-2026-09-09/before-1920.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "f233967761d8b4b5222f813e55e6494416b803da",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/strict-figma-2026-09-09/before-1920.png",
+      "bytes": 358998,
+      "sha256": "47cd0eaa58deb5534d0b5e615a4dea04f5aa883e83677daaef74dc8f189fc7b1",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/strict-figma-2026-09-09/before-1920x1080-collapsed-fresh.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "8dfa55edbcb62269e3115a44934b66d84963dc9a",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/strict-figma-2026-09-09/before-1920x1080-collapsed-fresh.png",
+      "bytes": 64829,
+      "sha256": "b0d991d9d6a79058b6950992b2675aa47b9230f801afc1a49203c0fac15d7847",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/strict-figma-2026-09-09/before-1920x1080-fresh.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "a5ef604ce10485d506db446e0ef38c62f797dbac",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/strict-figma-2026-09-09/before-1920x1080-fresh.png",
+      "bytes": 75546,
+      "sha256": "a05196ea2a070745e0cb3a9e90c8345c42097479dfad19bba6b8ebfe709e67ed",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": [
+        {
+          "document": "docs/evidence/strict-figma-2026-09-09/before-diff-report.md",
+          "line": 28,
+          "originalTarget": "before-1920x1080-fresh.png",
+          "referenceKind": "link"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/evidence/strict-figma-2026-09-09/before-account-popup.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "00aff367df9bfd1861577f49a5540b99c549ba2d",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/strict-figma-2026-09-09/before-account-popup.png",
+      "bytes": 374448,
+      "sha256": "ae362d36b4dbc9041945c2c1a2ac9d6af091dbe1db548059565618a35d8190a5",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/strict-figma-2026-09-09/before-collapsed-closed-1920.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "7bffdcb2d5ab4ba690ddaf2770b29708170c278a",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/strict-figma-2026-09-09/before-collapsed-closed-1920.png",
+      "bytes": 43977,
+      "sha256": "73f676df901aafd386d2020bb2ba9ea172c813e0603fa5557de7e0e99a01e602",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": [
+        {
+          "document": "docs/evidence/strict-figma-2026-09-09/before-diff-report.md",
+          "line": 30,
+          "originalTarget": "before-collapsed-closed-1920.png",
+          "referenceKind": "link"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/evidence/strict-figma-2026-09-09/figma-collapsed.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "956f5b8e8449ff68cbd436b2477837023bc4a59f",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/strict-figma-2026-09-09/figma-collapsed.png",
+      "bytes": 42921,
+      "sha256": "14f4bab8ce4f5dd6854bbdc7dc1de2352ebd7e4161bdd533065d0a9d8ba2261b",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/strict-figma-2026-09-09/figma-empty.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "a6d270caefaf2f2bc45d786f1aa28900cd6c35aa",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/strict-figma-2026-09-09/figma-empty.png",
+      "bytes": 113193,
+      "sha256": "f5f439d9f96ce17f78c4dcd4da62c5e77d0b21cb750691771c070912c0fba854",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/strict-figma-2026-09-09/figma-expanded.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "82f965ba4c32cfe327974331a4dbdfa579242332",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/strict-figma-2026-09-09/figma-expanded.png",
+      "bytes": 226291,
+      "sha256": "bcbf03bbb878e1f6f80d7cdde0256b6235cc9674fd24d9006fe6101e6c5ec8c5",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/strict-figma-2026-09-09/sidebar-account-1920.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "1aabee896796a61d33e07a69f6e1fccc5abae388",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/strict-figma-2026-09-09/sidebar-account-1920.png",
+      "bytes": 358828,
+      "sha256": "cf222e7ce03f995cbac49367a844edf9c9f98ce6e26c9bd83cd67b7394cc1df7",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/strict-figma-2026-09-09/sidebar-current-1920.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "71337cf138b8e2cc4701f28490c76c1e724c408f",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/strict-figma-2026-09-09/sidebar-current-1920.png",
+      "bytes": 358758,
+      "sha256": "a6d6fa76fc9ace03931b46d8745f9873a6662fa0b6904bd8d6bb84df0a48e0cf",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/strict-figma-2026-09-09/sidebar-current.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "7b8e19a059f14b51d233bf1ea68e3a44d9e0662c",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/strict-figma-2026-09-09/sidebar-current.png",
+      "bytes": 59969,
+      "sha256": "1c8d49d00e67bfce58fff3af13dc319bb3ef85c8b09e72b5617ced0bbbfa6323",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/strict-figma-2026-09-09/toolbar-current.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "a5ef604ce10485d506db446e0ef38c62f797dbac",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/strict-figma-2026-09-09/toolbar-current.png",
+      "bytes": 75546,
+      "sha256": "a05196ea2a070745e0cb3a9e90c8345c42097479dfad19bba6b8ebfe709e67ed",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/strict-figma-2026-09-09/toolbar-menu-help.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "b212559c1e92950af4bbf71954a9020809df5e35",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/strict-figma-2026-09-09/toolbar-menu-help.png",
+      "bytes": 77520,
+      "sha256": "11e3544917b0ec0766a03e1159bf514f5b2ec999f1411aca8273d5bc5a048749",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/strict-figma-2026-09-09/toolbar-menu-tool.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "9c816293f33f63c82b7f6b21ce14e93c2ead060c",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/strict-figma-2026-09-09/toolbar-menu-tool.png",
+      "bytes": 76755,
+      "sha256": "69b968237a16b4536d032174cbe138f3136559f3958244f5ddc6a5c859395a82",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    }
+  ],
+  "scope": "Historical E2 files externalized by validated batches; E1 summaries, JSON, key screenshots and active inputs retained.",
+  "containerResolution": "Resolve containerRelativePath from the workspace container containing the canonical checkout and output.",
+  "recovery": "Verify with scripts/governance/check-evidence-manifest.mjs <manifest> <container>; restore only to a new empty directory. Original Git sourceCommit/sourcePath remains recoverable.",
+  "batches": [
+    {
+      "taskId": "TASK-ORG-6",
+      "date": "2026-10-30",
+      "candidateBase": "be730617ace5013295b85a22133259b32ad6ffec"
+    }
+  ]
+}

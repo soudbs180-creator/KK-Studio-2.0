@@ -31,3 +31,5 @@ export type { MemoryStorage } from "./storage.ts";
 export const memoryService = new MemoryService({
   storage: createMemoryStorage(),
 });
+
+export { useMemory } from "./useMemory.ts";

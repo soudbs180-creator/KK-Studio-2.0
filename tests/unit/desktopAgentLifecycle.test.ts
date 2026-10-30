@@ -101,6 +101,30 @@ test("startup waits for a project and only prepares the local service on home", 
   assert.equal(h.server.turns.length, 0);
 });
 
+test("native home submission forwards the explicit new project identity to its empty chat", async (t) => {
+  const h = await harness(t);
+  let thread: string | undefined;
+  h.connection.setBridge({
+    ...projectBridge("fresh-project"),
+    getChatScope: () => ({
+      projectId: "fresh-project",
+      chatId: "chat-default",
+    }),
+    readAgentThread: () => thread,
+    saveAgentThread: async (id) => {
+      thread = id;
+    },
+  });
+  await h.lifecycle.connect(true, "fresh-project");
+  assert.equal(h.connection.getState().status, "connected");
+  assert.equal(thread, "replacement-thread");
+  assert.equal(
+    h.server.requests.filter((path) => path.endsWith("/threads/new")).length,
+    1,
+  );
+  assert.equal(h.server.turns.length, 0);
+});
+
 test("startup coalesces service/connection attempts and restores native ownership without a turn", async (t) => {
   const h = await harness(t);
   await Promise.all([h.lifecycle.ensure(), h.lifecycle.ensure()]);

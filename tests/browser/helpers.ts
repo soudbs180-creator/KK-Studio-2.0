@@ -9,7 +9,6 @@ import {
 } from "../../src/features/creation/model";
 import { BASE_CANVAS_ITEMS } from "../../src/domain/canvasItems";
 import { createProjectCanvas } from "../../src/domain/projectCanvas";
-import { modelChannels, providerChannel } from "../../src/domain/modelChannels";
 import {
   MODEL_PROVIDER_STORAGE_KEY,
   parseModelProvider,
@@ -20,54 +19,6 @@ export async function openWorkspace(
   chats?: Record<string, ChatItem>,
 ): Promise<void> {
   await openSeededProject(page, chats);
-}
-
-/** Reveal a clipped canvas action by panning the view, leaving node data intact. */
-export async function panCanvasToRevealAction(
-  page: Page,
-  action: Locator,
-): Promise<void> {
-  const hit = () =>
-    action.evaluate((element) => {
-      const box = element.getBoundingClientRect();
-      const target = document.elementFromPoint(
-        box.x + box.width / 2,
-        box.y + box.height / 2,
-      );
-      return element === target || Boolean(target && element.contains(target));
-    });
-  if (await hit()) return;
-  const canvas = page.getByTestId("infinite-canvas");
-  const bounds = (await canvas.boundingBox())!;
-  const usableWidth = await canvas.evaluate(
-    (element) =>
-      (parseFloat(
-        (element as HTMLElement).style.getPropertyValue(
-          "--canvas-usable-width",
-        ),
-      ) *
-        element.getBoundingClientRect().width) /
-      (element as HTMLElement).offsetWidth,
-  );
-  const button = (await action.boundingBox())!;
-  const hud = (await page.locator(".canvas-hud").boundingBox())!;
-  const editorShell = page.locator(".canvas-composer-screen");
-  const editor = (await editorShell.count())
-    ? await editorShell.boundingBox()
-    : null;
-  const targetY = editor
-    ? (hud.y + hud.height + editor.y) / 2
-    : hud.y + hud.height + 40;
-  const start = { x: bounds.x + 4, y: bounds.y + bounds.height / 2 };
-  await page.mouse.move(start.x, start.y);
-  await page.mouse.down({ button: "middle" });
-  await page.mouse.move(
-    start.x + bounds.x + usableWidth / 2 - (button.x + button.width / 2),
-    start.y + targetY - (button.y + button.height / 2),
-    { steps: 8 },
-  );
-  await page.mouse.up({ button: "middle" });
-  await expect.poll(hit).toBe(true);
 }
 
 /** API scenarios explicitly choose their fixture; a fresh home stays on Codex. */
@@ -87,10 +38,7 @@ export async function selectHomeApiModel(
     .getByRole("button", { name: "模型", exact: true })
     .click();
   const menu = page.getByRole("menu", { name: "选择模型" });
-  const channel = modelChannels.find(
-    (item) => item.id === providerChannel(profile),
-  )!;
-  await menu.getByRole("tab", { name: channel.label, exact: true }).click();
+  await menu.getByRole("tab", { name: "图像生成", exact: true }).click();
   await menu.getByRole("searchbox").fill(query);
   const choices = menu.getByRole("menuitemradio");
   await expect(choices).toHaveCount(1);
@@ -258,4 +206,52 @@ export async function showCanvasNavigation(page: Page): Promise<void> {
     await page.getByRole("button", { name: "收起对话", exact: true }).click();
   }
   await expect(page.getByRole("group", { name: "画布导航" })).toBeVisible();
+}
+
+/** Reveal a clipped canvas action by panning the view, leaving node data intact. */
+export async function panCanvasToRevealAction(
+  page: Page,
+  action: Locator,
+): Promise<void> {
+  const hit = () =>
+    action.evaluate((element) => {
+      const box = element.getBoundingClientRect();
+      const target = document.elementFromPoint(
+        box.x + box.width / 2,
+        box.y + box.height / 2,
+      );
+      return element === target || Boolean(target && element.contains(target));
+    });
+  if (await hit()) return;
+  const canvas = page.getByTestId("infinite-canvas");
+  const bounds = (await canvas.boundingBox())!;
+  const usableWidth = await canvas.evaluate(
+    (element) =>
+      (parseFloat(
+        (element as HTMLElement).style.getPropertyValue(
+          "--canvas-usable-width",
+        ),
+      ) *
+        element.getBoundingClientRect().width) /
+      (element as HTMLElement).offsetWidth,
+  );
+  const button = (await action.boundingBox())!;
+  const hud = (await page.locator(".canvas-hud").boundingBox())!;
+  const editorShell = page.locator(".canvas-composer-screen");
+  const editor = (await editorShell.count())
+    ? await editorShell.boundingBox()
+    : null;
+  const targetY = editor
+    ? (hud.y + hud.height + editor.y) / 2
+    : hud.y + hud.height + 40;
+  const start = { x: bounds.x + 4, y: bounds.y + bounds.height / 2 };
+  await page.mouse.move(start.x, start.y);
+  await page.mouse.down({ button: "middle" });
+  await page.mouse.move(
+    start.x + bounds.x + usableWidth / 2 - (button.x + button.width / 2),
+    start.y + targetY - (button.y + button.height / 2),
+    { steps: 8 },
+  );
+  await page.mouse.up({ button: "middle" });
+  await expect.poll(hit).toBe(true);
 }

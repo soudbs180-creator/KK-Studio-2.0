@@ -945,7 +945,12 @@ for (const scenario of ["image", "missing-original", "text"] as const) {
         .getByRole("button", { name: "画布模型", exact: true })
         .click();
       const menu = generator.getByRole("menu", { name: "选择模型" });
-      await menu.getByRole("tab", { name: "登录账号", exact: true }).click();
+      await menu
+        .getByRole("tab", {
+          name: textCard ? "对话 / 推理" : "图像生成",
+          exact: true,
+        })
+        .click();
       await menu
         .getByRole("searchbox")
         .fill(textCard ? "Fixture Codex" : "Codex 内置生图");
@@ -1107,9 +1112,7 @@ test("卡片 Codex 生图在刷新后归档并恢复来源；切 API 清除旧�
     await page.goto("/");
     await page.getByRole("button", { name: "打开设置", exact: true }).click();
     await page.getByRole("button", { name: "模型接入", exact: true }).click();
-    await page
-      .getByRole("button", { name: "API Key（官方）", exact: true })
-      .click();
+    await page.getByRole("tab", { name: "官方直连 API", exact: true }).click();
     await page.getByLabel("接口地址").fill(agent.url + "/v1");
     await page.getByLabel("API Key", { exact: true }).fill("fixture-key");
     await page.getByLabel("模型名称").fill("image-fixture");
@@ -1125,8 +1128,8 @@ test("卡片 Codex 生图在刷新后归档并恢复来源；切 API 清除旧�
     await source.press("Enter");
     await source.getByRole("button", { name: "画布模型", exact: true }).click();
     const menu = source.getByRole("menu", { name: "选择模型" });
-    await menu.getByRole("tab", { name: "登录账号", exact: true }).click();
-    await menu.getByRole("menuitemradio", { name: /图片模型未报告/ }).click();
+    await menu.getByRole("tab", { name: "图像生成", exact: true }).click();
+    await menu.getByRole("menuitemradio", { name: /Codex 内置生图/ }).click();
     await expect(
       source.getByText("图片模型未报告", { exact: true }),
     ).toBeVisible();
@@ -1150,20 +1153,21 @@ test("卡片 Codex 生图在刷新后归档并恢复来源；切 API 清除旧�
           const projects = JSON.parse(
             localStorage.getItem("kk-studio-next:creation:v1") || "{}",
           ).projects;
-          return projects?.[0]?.canvas.edges.some(
-            (edge: { source: string; target: string }) =>
-              edge.source === "image" &&
-              edge.target === "codex-thread-fixture-native-image",
-          );
+          return projects?.[0]?.canvas.edges;
         }),
       )
-      .toBe(true);
+      .toContainEqual(
+        expect.objectContaining({
+          source: "image",
+          target: "codex-thread-fixture-native-image",
+        }),
+      );
     expect(agent.received.images).toHaveLength(0);
     await source.focus();
     await source.press("Enter");
     await source.getByRole("button", { name: "画布模型", exact: true }).click();
     const cardMenu = source.getByRole("menu", { name: "选择模型" });
-    await cardMenu.getByRole("tab", { name: "本地", exact: true }).click();
+    await cardMenu.getByRole("tab", { name: "图像生成", exact: true }).click();
     await cardMenu.getByRole("searchbox").fill("image-fixture");
     await cardMenu
       .getByRole("menuitemradio", { name: /image-fixture/ })
@@ -1204,7 +1208,7 @@ for (const authorized of [true, false])
           .getByRole("button", { name: "模型接入…", exact: true })
           .click();
         await page
-          .getByRole("button", { name: "API Key（官方）", exact: true })
+          .getByRole("tab", { name: "官方直连 API", exact: true })
           .click();
         await page.getByLabel("接口地址").fill(agent.url + "/v1");
         await page.getByLabel("API Key", { exact: true }).fill("fixture-key");

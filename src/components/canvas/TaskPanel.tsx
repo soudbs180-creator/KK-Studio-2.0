@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState } from "react";
 import { useDismissible } from "../useDismissible";
-import type { CreationTask } from "../../features/creation/model";
+import type { CreationTask } from "../../features/creation/index.ts";
 import {
   TaskPanelPopover,
   tasksForFilter,
@@ -104,8 +104,8 @@ export default function TaskPanel({
         <img
           className="task-button-icon"
           src="/design/figma/task-clipboard.svg"
-          width={14}
-          height={14}
+          width={16}
+          height={16}
           alt=""
           draggable={false}
         />

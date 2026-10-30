@@ -1,6 +1,6 @@
 import type { ApprovalGate } from "../domain/agentWorkflow";
-import type { CreationTask } from "../features/creation/model";
-import { formatCostUsd } from "../features/creation/taskState";
+import type { CreationTask } from "../features/creation/index.ts";
+import { formatCostUsd } from "../features/creation/index.ts";
 import Modal from "./Modal";
 
 export default function TaskExecutionApproval({

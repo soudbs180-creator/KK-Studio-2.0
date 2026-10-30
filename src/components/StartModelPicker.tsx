@@ -2,7 +2,7 @@ import {
   codexSelectionLabel,
   type ModelSelection,
 } from "../domain/modelSelection";
-import { selectedModelLabel } from "../features/models/modelPresentation";
+import { selectedModelLabel } from "../features/models/index.ts";
 import ModelPickerMenu from "./ModelPickerMenu";
 
 export default function StartModelPicker({

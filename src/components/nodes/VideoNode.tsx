@@ -6,11 +6,14 @@ import type {
   CanvasReference,
   NodeEditingProps,
 } from "../../domain/canvasItems";
-import { readReferenceImages } from "./referenceUpload";
+import {
+  assignVideoReferenceFrames,
+  readReferenceImages,
+} from "./referenceUpload";
 import {
   loadStoredAsset,
   storeGeneratedAsset,
-} from "../../features/creation/assetRepository";
+} from "../../features/creation/index.ts";
 
 const MAX_VIDEO_BYTES = 100 * 1024 * 1024;
 const VIDEO_MIME_TYPES = ["video/mp4", "video/webm"];
@@ -34,6 +37,7 @@ export default function VideoNode({
   referenceLimit,
   onAddReferences,
   onRemoveReference,
+  onSwapReferenceFrames,
   uploadInput,
 }: NodeEditingProps & {
   item: CanvasCollectionItem;
@@ -214,13 +218,17 @@ export default function VideoNode({
         hidden
         multiple
         type="file"
-        accept="image/png,image/jpeg,image/webp,image/gif"
+        accept="image/png,image/jpeg,image/webp,image/gif,video/mp4,video/webm,audio/mpeg,audio/wav,audio/ogg"
         onChange={(event) => {
           const files = [...(event.target.files ?? [])];
           event.target.value = "";
           if (!files.length || !onAddReferences) return;
           void readReferenceImages(files, referenceSlot.current)
-            .then(onAddReferences)
+            .then((entries) =>
+              onAddReferences(
+                assignVideoReferenceFrames(entries, references ?? []),
+              ),
+            )
             .catch((reason: unknown) =>
               setError(
                 reason instanceof Error
@@ -264,6 +272,7 @@ export default function VideoNode({
         onPromptChange={(prompt) => onChange({ prompt })}
         onExtraHeightChange={onExtraHeightChange}
         onRemoveReference={onRemoveReference}
+        onSwapReferenceFrames={onSwapReferenceFrames}
       />
     </div>
   );
