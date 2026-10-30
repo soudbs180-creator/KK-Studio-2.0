@@ -6,7 +6,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 | ID | Title | Status | Display | Priority | Dependencies | Owner | Next action |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| TASK-COMFY-PHYSICAL-20261030 | 本机ComfyUI真实显卡出图验收 | PARTIAL | 进行中 | P1 | TASK-MOD-P8 | root | 2.1.59正式重建复测H3视频+首帧AssetPort/连线/持久化；Hub容器自动启动和图片checkpoint仍待验 |
+| TASK-COMFY-PHYSICAL-20261030 | 本机ComfyUI真实显卡出图验收 | PARTIAL | 进行中 | P1 | TASK-MOD-P8 | root | 保持PARTIAL：图片checkpoint/P6图像能力、视频资产、Hub安装/自动启动和整体交付各自验收；继续主线冲突与合法bootstrap |
 | TASK-ORG-6 | 推广历史E2证据外置 | PARTIAL | 进行中 | P1 | TASK-ORG-5 | root | 当前已提交SHA独立审查；完整主线门禁/合流后完成ORG6交付，其余保留文件不盲迁 |
 | TASK-DELIVERY-MAIN-20261030 | 主线squash与保护审计改动后回收 | PARTIAL | 进行中 | P1 | TASK-MOD-P8 | root | 依本包plan执行；具体阶段未完成不得升级整体状态 |
 | TASK-MOD-MODEL-DRAFT | 目录通知保留未保存模型能力草稿 | PARTIAL | 进行中 | P1 | TASK-MOD-P8 | root | 完成当前SHA快速门/独审；独立目录解析/取消/归属及测速文案冲突另项修复，不修改有效安全断言 |
@@ -230,9 +230,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `refactor/TASK-MOD-P3-feature-cycles`
 - Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
 - Modules: docs/changes, docs/governance
-- Verification: PARTIAL — 真实H3两次成功产生视频/首帧；2.1.58 UI建卡/iframe/快速生成已实测，混合images内MP4阻断首帧归档，180秒断言失败原件保留。新增回归真实红后13/13绿，2.1.59修复候选待全门/独审/重建复测；非图片checkpoint或视频资产验收。
+- Verification: PARTIAL — 2.1.59/d6d592e4实际RTX5080/H3 host及原生editor运行success；各512x512/124帧/24fps带音轨，首帧AssetPort SHA相同、result边/两个节点及重开通过。混合输出修复13/13独测、根2406pass20skip、类型/增量lint0、代码独审PASS。仅H3及首帧REAL；不是图片checkpoint/视频资产/Hub自动安装启动/已安装版本验收。回执在output/main-physical-org6-2026-10-30/physical-final-artifact-receipt.json。
 - Evidence: [docs/changes/2026-10-30-main-physical-org6/verification.md](../../docs/changes/2026-10-30-main-physical-org6/verification.md)
-- Next action: 2.1.59正式重建复测H3视频+首帧AssetPort/连线/持久化；Hub容器自动启动和图片checkpoint仍待验
+- Next action: 保持PARTIAL：图片checkpoint/P6图像能力、视频资产、Hub安装/自动启动和整体交付各自验收；继续主线冲突与合法bootstrap
 - Last verified: 2026-10-30
 - Updated: 2026-10-30
 
@@ -4204,7 +4204,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `refactor/TASK-MOD-P3-feature-cycles`
 - Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
 - Modules: src-tauri, src/features/comfyui, src/components/canvas
-- Verification: PARTIAL — 类型/lint/UI规范/格式/官方构建通过；根2378 pass/20 skip，Rust271 pass/1 ignored，Edge18 pass/0retry。中间Native夹具双client/原件SHA/重开/停止通过，最终Native与真实GPU/独审/main未验。
+- Verification: PARTIAL — 类型/lint/UI规范/格式/官方构建通过；根2378 pass/20 skip，Rust271 pass/1 ignored，Edge18 pass/0retry。中间Native夹具双client/原件SHA/重开/停止通过，最终Native与真实GPU/独审/main未验。 2026-10-30追加：2.1.59/d6d592e4真实H3 host/editor视频及首帧AssetPort/结果边/保存重开通过，见本轮main-physical-org6验证；不覆盖图片checkpoint/Hub根自动启动/已安装客户端。
 - Evidence: [docs/changes/2026-10-29-p6-1-comfy-canvas/verification.md](../../docs/changes/2026-10-29-p6-1-comfy-canvas/verification.md)
 - Next action: 完成浏览器/命令行回归；真实GPU、完整编辑器鼠标/参数面板及独审/main仍开放，用户已要求不控制桌面
 - Last verified: 2026-10-29

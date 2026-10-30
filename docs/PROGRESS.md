@@ -1351,3 +1351,5 @@ Desktop/Web56：逐任务与分页history恢复旧结果，可选删除标记避
 2026-10-29续修：cc8e5f7c聊天交付获正式独审PASS，根2405通过/20跳过、原浏览器3/3、design9/9、开发插件与官方57桌面构建通过；未运行GUI/GPU。新58候选修目录通知覆盖未保存能力草稿，原浏览器RED→GREEN；同一保存按钮locator更新，原持久断言保留。独立目录解析/取消/归属缺陷及测速文案/JSON规格冲突仍开放；默认origin/main verify3项、远端冲突和901全套继续阻断合流。主仓21份审计原件未改。见[验证](changes/2026-10-29-p8-composition/verification.md)。
 
 2026-10-30交付推进：新备份主仓21份Figma审计原件，未stash/覆盖，main仍c2a0228a；远端68冲突及默认CI基线3失败继续阻断squash/回收。ORG6在任务树迁1200份E2，60清单/新目录恢复/66关键图保留/30活跃文件保留，净减159410793B（62.8149%），历史断链86→86、布局基线578→88；根2405通过/20跳过及类型/增量lint通过。真实Comfy改先用已有H3视频模型，隔离运行依赖准备中；图片仍未验。当前SHA审查/完整门/main仍开放，其他四文档任务不关闭。见[验证](changes/2026-10-30-main-physical-org6/verification.md)。
+
+2026-10-30新增实测：Desktop/Web2.1.59，真实RTX5080/H3的host快速生成和原生editor运行均产出视频；首帧AssetPort原件SHA一致、图片节点/result边及保存重开通过。只读代码补审d6d592e4 PASS，类型/增量lint0、根2406pass20skip0fail；不是图片checkpoint/视频资产/Hub自动安装启动验收。ORG6只在任务树迁1200份，固定Git blob净减159391121B。主仓21原件保持，68冲突/首建基线门/全套浏览器/main仍开放。 见[真实回执](changes/2026-10-30-main-physical-org6/verification.md)。

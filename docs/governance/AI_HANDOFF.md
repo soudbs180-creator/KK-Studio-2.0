@@ -68,3 +68,5 @@ P8七组hook迁出0b675ec7；会话选择派生投影修复f10147b9。Desktop/We
 58最终UI门补充：412行边界失败已按真实职责提取ModelDisplayFields、父组件387行，AST及UI门通过，类型/增量lint/根2405通过。当前最终源码、review、浏览器、桌面哈希及主仓保护以工程外final-receipt-58.json为准；未合main，目录安全与默认基线继续开放。
 
 2026-10-30交付推进：新备份主仓21份Figma审计原件，未stash/覆盖，main仍c2a0228a；远端68冲突及默认CI基线3失败继续阻断squash/回收。ORG6在任务树迁1200份E2，60清单/新目录恢复/66关键图保留/30活跃文件保留，净减159410793B（62.8149%），历史断链86→86、布局基线578→88；根2405通过/20跳过及类型/增量lint通过。真实Comfy改先用已有H3视频模型，隔离运行依赖准备中；图片仍未验。当前SHA审查/完整门/main仍开放，其他四文档任务不关闭。见[验证](../changes/2026-10-30-main-physical-org6/verification.md)。
+
+2026-10-30新增实测：Desktop/Web2.1.59，真实RTX5080/H3的host快速生成和原生editor运行均产出视频；首帧AssetPort原件SHA一致、图片节点/result边及保存重开通过。只读代码补审d6d592e4 PASS，类型/增量lint0、根2406pass20skip0fail；不是图片checkpoint/视频资产/Hub自动安装启动验收。ORG6只在任务树迁1200份，固定Git blob净减159391121B。主仓21原件保持，68冲突/首建基线门/全套浏览器/main仍开放。 见[真实回执](../changes/2026-10-30-main-physical-org6/verification.md)。

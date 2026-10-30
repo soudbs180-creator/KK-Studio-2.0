@@ -29,11 +29,11 @@
     "evidence": [
       "docs/changes/2026-10-30-main-physical-org6/verification.md"
     ],
-    "verification": "真实H3两次成功产生视频/首帧；2.1.58 UI建卡/iframe/快速生成已实测，混合images内MP4阻断首帧归档，180秒断言失败原件保留。新增回归真实红后13/13绿，2.1.59修复候选待全门/独审/重建复测；非图片checkpoint或视频资产验收。",
+    "verification": "2.1.59/d6d592e4实际RTX5080/H3 host及原生editor运行success；各512x512/124帧/24fps带音轨，首帧AssetPort SHA相同、result边/两个节点及重开通过。混合输出修复13/13独测、根2406pass20skip、类型/增量lint0、代码独审PASS。仅H3及首帧REAL；不是图片checkpoint/视频资产/Hub自动安装启动/已安装版本验收。回执在output/main-physical-org6-2026-10-30/physical-final-artifact-receipt.json。",
     "verificationResult": "PARTIAL",
     "updated": "2026-10-30",
     "lastVerified": "2026-10-30",
-    "nextAction": "2.1.59正式重建复测H3视频+首帧AssetPort/连线/持久化；Hub容器自动启动和图片checkpoint仍待验",
+    "nextAction": "保持PARTIAL：图片checkpoint/P6图像能力、视频资产、Hub安装/自动启动和整体交付各自验收；继续主线冲突与合法bootstrap",
     "requirementRefs": [
       "docs/changes/2026-10-30-main-physical-org6/intent.md",
       "docs/changes/2026-10-30-main-physical-org6/spec.md"
@@ -12399,7 +12399,7 @@
     "evidence": [
       "docs/changes/2026-10-29-p6-1-comfy-canvas/verification.md"
     ],
-    "verification": "类型/lint/UI规范/格式/官方构建通过；根2378 pass/20 skip，Rust271 pass/1 ignored，Edge18 pass/0retry。中间Native夹具双client/原件SHA/重开/停止通过，最终Native与真实GPU/独审/main未验。",
+    "verification": "类型/lint/UI规范/格式/官方构建通过；根2378 pass/20 skip，Rust271 pass/1 ignored，Edge18 pass/0retry。中间Native夹具双client/原件SHA/重开/停止通过，最终Native与真实GPU/独审/main未验。 2026-10-30追加：2.1.59/d6d592e4真实H3 host/editor视频及首帧AssetPort/结果边/保存重开通过，见本轮main-physical-org6验证；不覆盖图片checkpoint/Hub根自动启动/已安装客户端。",
     "verificationResult": "PARTIAL",
     "updated": "2026-10-29",
     "lastVerified": "2026-10-29",
