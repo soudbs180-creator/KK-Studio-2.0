@@ -18,18 +18,23 @@ function resolveConversationDisabledReason(
 }
 
 function resolveConversationDraft(
-  saveState: string,
+  _saveState: string,
   activeProject: CreationProject | undefined,
   selectedChat: ChatItem | undefined,
 ): CreationDraft | undefined {
-  if (saveState === "read_only" && activeProject && selectedChat) {
+  if (activeProject && selectedChat) {
     return {
       ...activeProject.composerDraft,
-      prompt: selectedChat.draft.text ?? selectedChat.draft.prompt ?? "",
+      prompt: selectedChat.draft.prompt ?? selectedChat.draft.text ?? "",
       attachments: selectedChat.draft.attachments ?? [],
       model: selectedChat.draft.model ?? "",
       modelSelection: selectedChat.draft.modelSelection,
-      conversationChannel: selectedChat.draft.conversationChannel ?? "direct",
+      conversationChannel:
+        selectedChat.mainAgent === "codex"
+          ? "codex"
+          : selectedChat.mainAgent === "google"
+            ? "google"
+            : "direct",
     };
   }
   return activeProject?.composerDraft;

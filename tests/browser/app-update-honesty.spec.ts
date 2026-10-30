@@ -37,6 +37,16 @@ test("未接入 updater 时旧偏好不能伪造检查或安装成功", async ({
   );
   await expect(update).not.toContainText("当前已是最新版本");
   await expect(update).not.toContainText("更新包已校验就绪");
+  for (const width of [1920, 390]) {
+    await page.setViewportSize({ width, height: 844 });
+    const label = update.locator("#automatic-downloads-label");
+    const description = update.locator("#automatic-downloads-description");
+    const titleBox = await label.boundingBox();
+    const copyBox = await description.boundingBox();
+    expect(titleBox).not.toBeNull();
+    expect(copyBox).not.toBeNull();
+    expect(copyBox!.y).toBeGreaterThanOrEqual(titleBox!.y + titleBox!.height);
+  }
   await page.screenshot({
     path: testInfo.outputPath("app-update-unavailable.png"),
     fullPage: true,
