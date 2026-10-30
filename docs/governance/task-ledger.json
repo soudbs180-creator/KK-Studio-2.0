@@ -29,11 +29,11 @@
     "evidence": [
       "docs/changes/2026-10-30-main-physical-org6/verification.md"
     ],
-    "verification": "RTX5080/16303MiB驱动610.88实查；用户Hub有H3模型/4工作流，Hub venv无torch，隔离venv已安装CUDA版Torch，Comfy requirements准备中。尚无真实生成，保持PARTIAL。",
+    "verification": "真实H3两次成功产生视频/首帧；2.1.58 UI建卡/iframe/快速生成已实测，混合images内MP4阻断首帧归档，180秒断言失败原件保留。新增回归真实红后13/13绿，2.1.59修复候选待全门/独审/重建复测；非图片checkpoint或视频资产验收。",
     "verificationResult": "PARTIAL",
     "updated": "2026-10-30",
     "lastVerified": "2026-10-30",
-    "nextAction": "完成隔离Comfy实际CUDA启动与H3工作流执行及软件产物链；图片另待模型验收",
+    "nextAction": "2.1.59正式重建复测H3视频+首帧AssetPort/连线/持久化；Hub容器自动启动和图片checkpoint仍待验",
     "requirementRefs": [
       "docs/changes/2026-10-30-main-physical-org6/intent.md",
       "docs/changes/2026-10-30-main-physical-org6/spec.md"
@@ -70,7 +70,7 @@
     "evidence": [
       "docs/changes/2026-10-30-main-physical-org6/verification.md"
     ],
-    "verification": "任务树迁1200份E2/160288854B，60包清单、22历史文档87引用；新目录恢复1200/1200，源/Git/副本SHA一致，66关键图和30活跃文件保留，断链86→86。净减159410793B/62.8149%，非Git历史/主线减量；基线578→88只减490条。类型/增量lint0，根2405pass20skip0fail，当前SHA独审/main未合。",
+    "verification": "任务树迁1200份E2/160288854B，60包清单、22历史文档87引用；新目录恢复1200/1200，源/Git/副本SHA一致，66关键图和30活跃文件保留，断链86→86。净减159410793B/62.8149%，非Git历史/主线减量；基线578→88只减490条。类型/增量lint0，根2405pass20skip0fail，当前SHA独审/main未合。 当前9a23709a只读独立审查正式PASS；固定SHA Git blob净减159391121B，与工作树口径分列。",
     "verificationResult": "PARTIAL",
     "updated": "2026-10-30",
     "lastVerified": "2026-10-30",

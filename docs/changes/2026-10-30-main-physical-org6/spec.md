@@ -5,3 +5,5 @@
 真实Comfy：只使用用户指定本机安装/已有模型，不下载大模型或计费API。通过正式软件连接/启动与工作流卡片，观察真实CUDA出图、WS/history归属、AssetPort原件SHA、图片节点/结果边及保存重开。只回收本任务启动的进程。无安装/模型/驱动或链路失败如实保留PARTIAL；一次成功不批量升级整个P6/其它功能为REAL。
 
 ORG6：只迁已准备的E2文件；每份重新核当前工作树/Git blob/容器副本sha256与大小，重新审计活跃引用；66张E1关键图、全部MD/JSON、当前/活跃资料保留。恢复到全新目录并验字节后才迁出。每包沿用version1 evidence-manifest，保留原commit/blob/path/引用。历史Markdown仅修复目的地并加说明，原结论/失败/数字不变；不删除有效测试或放宽门禁。tracked/工作树净字节量分别报告；不改写Git历史，不承诺.git缩小或硬凑70%。
+
+真实 H3 验收补充：使用现有视频权重，512×512、124 帧、4 步做链路冒烟，另用 ImageFromBatch/SaveImage 导出首帧；不将此作为质量基准或图片 checkpoint 验收。SaveVideo 可在 history 的 images 中返回 MP4，现有图片归档仅选择 PNG/JPEG/WebP；仍先校验安全路径，原生传输继续校验 MIME/大小。视频与静态图混合输出不得使静态图归档中断；不扩展视频资产/画布契约。影响共享 Desktop/Web 运行行为，版本 2.1.58→2.1.59，Mobile 保持 2.1.43；纯数据筛选无 UI/视觉变化。

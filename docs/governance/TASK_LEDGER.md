@@ -6,7 +6,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 | ID | Title | Status | Display | Priority | Dependencies | Owner | Next action |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| TASK-COMFY-PHYSICAL-20261030 | 本机ComfyUI真实显卡出图验收 | PARTIAL | 进行中 | P1 | TASK-MOD-P8 | root | 完成隔离Comfy实际CUDA启动与H3工作流执行及软件产物链；图片另待模型验收 |
+| TASK-COMFY-PHYSICAL-20261030 | 本机ComfyUI真实显卡出图验收 | PARTIAL | 进行中 | P1 | TASK-MOD-P8 | root | 2.1.59正式重建复测H3视频+首帧AssetPort/连线/持久化；Hub容器自动启动和图片checkpoint仍待验 |
 | TASK-ORG-6 | 推广历史E2证据外置 | PARTIAL | 进行中 | P1 | TASK-ORG-5 | root | 当前已提交SHA独立审查；完整主线门禁/合流后完成ORG6交付，其余保留文件不盲迁 |
 | TASK-DELIVERY-MAIN-20261030 | 主线squash与保护审计改动后回收 | PARTIAL | 进行中 | P1 | TASK-MOD-P8 | root | 依本包plan执行；具体阶段未完成不得升级整体状态 |
 | TASK-MOD-MODEL-DRAFT | 目录通知保留未保存模型能力草稿 | PARTIAL | 进行中 | P1 | TASK-MOD-P8 | root | 完成当前SHA快速门/独审；独立目录解析/取消/归属及测速文案冲突另项修复，不修改有效安全断言 |
@@ -230,9 +230,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `refactor/TASK-MOD-P3-feature-cycles`
 - Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
 - Modules: docs/changes, docs/governance
-- Verification: PARTIAL — RTX5080/16303MiB驱动610.88实查；用户Hub有H3模型/4工作流，Hub venv无torch，隔离venv已安装CUDA版Torch，Comfy requirements准备中。尚无真实生成，保持PARTIAL。
+- Verification: PARTIAL — 真实H3两次成功产生视频/首帧；2.1.58 UI建卡/iframe/快速生成已实测，混合images内MP4阻断首帧归档，180秒断言失败原件保留。新增回归真实红后13/13绿，2.1.59修复候选待全门/独审/重建复测；非图片checkpoint或视频资产验收。
 - Evidence: [docs/changes/2026-10-30-main-physical-org6/verification.md](../../docs/changes/2026-10-30-main-physical-org6/verification.md)
-- Next action: 完成隔离Comfy实际CUDA启动与H3工作流执行及软件产物链；图片另待模型验收
+- Next action: 2.1.59正式重建复测H3视频+首帧AssetPort/连线/持久化；Hub容器自动启动和图片checkpoint仍待验
 - Last verified: 2026-10-30
 - Updated: 2026-10-30
 
@@ -249,7 +249,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `refactor/TASK-MOD-P3-feature-cycles`
 - Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
 - Modules: docs/changes, docs/governance
-- Verification: PARTIAL — 任务树迁1200份E2/160288854B，60包清单、22历史文档87引用；新目录恢复1200/1200，源/Git/副本SHA一致，66关键图和30活跃文件保留，断链86→86。净减159410793B/62.8149%，非Git历史/主线减量；基线578→88只减490条。类型/增量lint0，根2405pass20skip0fail，当前SHA独审/main未合。
+- Verification: PARTIAL — 任务树迁1200份E2/160288854B，60包清单、22历史文档87引用；新目录恢复1200/1200，源/Git/副本SHA一致，66关键图和30活跃文件保留，断链86→86。净减159410793B/62.8149%，非Git历史/主线减量；基线578→88只减490条。类型/增量lint0，根2405pass20skip0fail，当前SHA独审/main未合。 当前9a23709a只读独立审查正式PASS；固定SHA Git blob净减159391121B，与工作树口径分列。
 - Evidence: [docs/changes/2026-10-30-main-physical-org6/verification.md](../../docs/changes/2026-10-30-main-physical-org6/verification.md)
 - Next action: 当前已提交SHA独立审查；完整主线门禁/合流后完成ORG6交付，其余保留文件不盲迁
 - Last verified: 2026-10-30

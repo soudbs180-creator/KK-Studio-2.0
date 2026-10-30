@@ -144,6 +144,31 @@ test("Comfy workflow output capture checks history client ownership, output type
   assert.throws(() => parse(bad, ["card-editor"]));
 });
 
+test("Comfy mixed video history only publishes supported image files", () => {
+  const history = {
+    h3: {
+      prompt: [0, "h3", {}, { client_id: "card-host" }],
+      outputs: {
+        "92": {
+          images: [{ filename: "h3.mp4", subfolder: "video", type: "output" }],
+          animated: [true],
+        },
+        "first-frame": {
+          images: ["frame.PNG", "photo.jpeg", "preview.webp", "animation.gif"].map(
+            (filename) => ({ filename, type: "output" }),
+          ),
+        },
+      },
+    },
+  };
+  assert.deepEqual(
+    comfy.workflowOutputs(history, ["card-host"]).map((file) => file.filename),
+    ["frame.PNG", "photo.jpeg", "preview.webp"],
+  );
+  history.h3.outputs["92"].images[0].filename = "../secret.mp4";
+  assert.throws(() => comfy.workflowOutputs(history, ["card-host"]));
+});
+
 test("Comfy output delivery writes the original asset before applyOps and is idempotent across replay", async () => {
   const factory = (comfy as Record<string, unknown>).createWorkflowDelivery as (
     options: unknown,

@@ -1,5 +1,11 @@
 # 实际结果
 
+## 真实 H3 首次运行与缺陷复现
+
+用户确认仅已有视频权重后，使用独立验收 venv（CUDA Torch 2.14.1+cu130，pip check 通过），未修改 Hub 原 venv、权重或原工作流。实际 ComfyUI 0.34.1 / RTX 5080 成功运行 H3：首轮 prompt 8961955b-439e-4ef0-a52c-d87d4a333afa 输出 MP4/PNG、日志 41.54 秒；再次通过正式 2.1.58 客户端 UI 导入、建卡、进入真实 iframe/返回、快速生成，prompt edd94f83-4caa-4ff4-979e-edd956ac5d73 的 history 为 success/completed，耗时约 70 秒。原件位于外部证据目录的 comfy-output/kk-physical-20261030；这两次均非仿真。
+
+2.1.58 的真实回流未通过：SaveVideo 的 images 含 MP4，数字节点 92 会被 JS 先枚举，图片读取因 MIME 拒绝使后续首帧归档中断。原断言等候 180 秒失败，日志、history、未完成快照保留，不把 GPU 生成成功当资产/画布成功。新增混合输出回归真实红（MP4/GIF 被解析）后最小修复绿（13/13），危险路径仍拒绝；早先一次错误测试命令缺少 tsx 的失败另存，不计作行为 RED。2.1.59 当前源码待完整快速门、独审、正式重建及物理复测。
+
 当前PARTIAL。新备份21文件，main与其原件未改；默认及renormalize只读merge-tree均68冲突路径。RTX5080显存16303MiB、驱动610.88实际查询；Comfy路径由用户提供，尚未真实执行。原CI首建基线3项失败不是已通过。
 
 日志、备份、逐包manifest/恢复和准确指标归容器output/main-physical-org6-2026-10-30。ORG6/真实出图/合流分别补证，历史2405单测与旧截图不能代替本轮验收。

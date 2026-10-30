@@ -48,9 +48,12 @@ export function workflowOutputs(
       if (!Array.isArray(images)) continue;
       for (const image of images) {
         if (object(image).type !== "output") continue;
+        const output = file.parse(image);
+        // SaveVideo also publishes under images; the asset port here accepts still images.
+        if (!/\.(png|jpe?g|webp)$/i.test(output.filename)) continue;
         const key = object(prompt[3]).kk_submission_id;
         result.push({
-          ...file.parse(image),
+          ...output,
           promptId,
           nodeId,
           ...(typeof key === "string" && key.length <= 128
