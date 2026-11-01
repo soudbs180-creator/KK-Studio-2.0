@@ -15,6 +15,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-MOD-HOME-SESSION | 首页新项目使用独立Agent会话 | PARTIAL | 进行中 | P1 | TASK-MOD-CHAT-PROJECTION | root | 当前SHA独审；完整门禁和基线/远端冲突分阶段整合 |
 | TASK-MOD-CHAT-PROJECTION | 切换聊天同步组件派生视图 | PARTIAL | 未完成 | P1 | TASK-MOD-P8 | root | 当前独审/完整verify/main；首页新项目显式独立会话另卡修复 |
 | TASK-MOD-P8 | App装配hook瘦身与主线合流核验 | PARTIAL | 未完成 | P1 | TASK-MOD-P6-1 | root | 按当前SHA完成交付修复补审、处理浏览器失败与首建baseline/远端冲突；保全主仓审计改动后满足门禁再合流 |
+| TASK-FIGMA-PARITY-AUDIT-20261027 | 建立 Figma↔本地分层差异审计基建与像素门禁 | PARTIAL | 未完成 | P1 | none | root | 等待用户在连接器管理页点「信任」并完成 Figma OAuth（或提供 FIGMA_TOKEN），随后以现行 file key ZiadpErDoFweCjG3uHjkM3 拉取首个真实快照，由真实快照派生 figma-rects.json 跑通 L3 几何层，并从现行文件导出参考图登记进 design/preview/baselines/ 启用 L4 门禁，最后产出首份真实差异审计报告。 |
 | TASK-FIGMA-PAGES-20261025 | 重新核查并整理Figma 04/05页面与状态 | PARTIAL | 未完成 | P2 | none | root | 先完成共享源与全场景结构核查，再同步本地控件/页面；完整测试、实际运行与当前独审后判定验收，不改变其他任务归属。 |
 | TASK-FIGMA-CONTROLS-20261025 | 修复 Figma 六类基础控件问题并同步本地 UI | PARTIAL | 未完成 | P2 | none | root | 在原任务修复两项既有存储单测失败并补Desktop运行证据；保留既有dirty和失败原件，未经全量验收不合并或发布。 |
 | TASK-CANVAS-PERF-20261024 | 削减画布预览与存储重复工作 | IN_PROGRESS | 进行中 | P2 | none | root | 先完成红绿计数及最小优化，再完整门禁、运行与独审；保留既有dirty/index，禁止混合提交。 |
@@ -388,6 +389,26 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Next action: 按当前SHA完成交付修复补审、处理浏览器失败与首建baseline/远端冲突；保全主仓审计改动后满足门禁再合流
 - Last verified: 2026-10-29
 - Updated: 2026-10-29
+
+## TASK-FIGMA-PARITY-AUDIT-20261027 — 建立 Figma↔本地分层差异审计基建与像素门禁
+
+- Goal: 把「能否百分百复刻 Figma」拆成可验收的分层判定：L1 结构 / L2 令牌 / L3 几何确定性比对，L4 像素以有界差异门禁表达；提供可复跑的审计工具、像素门禁与首份差异报告能力。
+- Scope: 做——scripts/figma-audit/ 审计工具链（快照拉取、四层比对、像素比对、报告渲染）、tests/design-md/pixel-parity.spec.ts 像素门禁、design/preview/baselines 基线登记约定、docs/reference/figma-pixel-calibration 容差标定记录、文档登记（docs/README.md、docs/UI_SPEC.md §4.1、docs/engineering/DEVELOPMENT.md）。不做——不修改任何产品 UI 源码，不改动 DESIGN.md 与 tokens.css 契约值，不宣称 L4 逐点像素相等。
+- Display status: 未完成
+- Priority: P1 — 未记录
+- Requirement refs: docs/changes/2026-10-27-figma-parity-audit/intent.md
+- Feature IDs: none
+- Owner role: implementation-integrator
+- Acceptance: L1–L3 三层比对可复跑：令牌层比对 DESIGN.md↔tokens.css 并检测 global.css 别名体系分歧；几何层比对 Figma 节点↔DOM 矩形（容差 0.5px）；结构层比对组件清单与变体键。; L4 像素门禁以 Figma 导出图为基准，按 maxDiffPixelRatio 容差判定，未登记基线的状态按跳过而非通过处理。; 像素比对不引入新依赖，复用 Playwright 内置 pngjs；差异图可用于区分渲染噪声与结构性错位。; 审计器具备可证伪能力：注入已知令牌漂移与几何偏差必须被检出，撤销后必须归零。; 新增代码通过 typecheck、lint、health:check，且不引入新的测试失败。
+- Branch: `main`
+- Worktree: `D:/kk-studio/KK-Studio-2.0`
+- Modules: scripts/figma-audit, tests/design-md, tests/unit/figmaAudit.test.ts, design/preview, docs/changes/2026-10-27-figma-parity-audit, docs/UI_SPEC.md, docs/README.md, docs/engineering/DEVELOPMENT.md, package.json
+- Verification: PARTIAL — 2026-10-27 工具链落地并自测通过。typecheck 零报错；新文件 lint 零 error 零 warning；health:check 0 blocking；npm test 2338 项中 20 项失败与改动前基线完全一致（git stash 对比确认零新增失败），新增 19 项单测全过；markdown/index/governance/features 门禁均 0 violations。检出能力双向验证通过：令牌漂移、几何偏差、别名分歧三项注入均被检出且撤销后归零。像素层实测历史数据差异率展开态 22.406%、收纳态 16.844%，差异形态为点阵背景相位差，结构性元素轮廓对齐，据此确认严格逐点相等不可达成。
+- Evidence: [docs/changes/2026-10-27-figma-parity-audit/intent.md](../../docs/changes/2026-10-27-figma-parity-audit/intent.md), [scripts/figma-audit/README.md](../../scripts/figma-audit/README.md), [docs/reference/figma-pixel-calibration/README.md](../../docs/reference/figma-pixel-calibration/README.md), [design/preview/baselines/README.md](../../design/preview/baselines/README.md)
+- Next action: 等待用户在连接器管理页点「信任」并完成 Figma OAuth（或提供 FIGMA_TOKEN），随后以现行 file key ZiadpErDoFweCjG3uHjkM3 拉取首个真实快照，由真实快照派生 figma-rects.json 跑通 L3 几何层，并从现行文件导出参考图登记进 design/preview/baselines/ 启用 L4 门禁，最后产出首份真实差异审计报告。
+- Last verified: 2026-10-27
+- Updated: 2026-10-27
+
 
 ## TASK-FIGMA-PAGES-20261025 — 重新核查并整理Figma 04/05页面与状态
 
