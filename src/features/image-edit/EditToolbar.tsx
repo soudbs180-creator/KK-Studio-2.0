@@ -174,10 +174,12 @@ export default function EditToolbar({
         </select>
       )}
       {onCapability &&
-        (Object.entries(imageCapabilityActionLabels) as [
-          ImageCapabilityId,
-          string,
-        ][]).map(([id, label]) => (
+        (
+          Object.entries(imageCapabilityActionLabels) as [
+            ImageCapabilityId,
+            string,
+          ][]
+        ).map(([id, label]) => (
           <button
             key={id}
             type="button"

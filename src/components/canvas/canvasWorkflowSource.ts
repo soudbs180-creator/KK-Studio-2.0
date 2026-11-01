@@ -9,5 +9,7 @@ export function resolveWorkflowSource(
 ): CanvasCollectionItem | undefined {
   if (item.kind !== "image") return undefined;
   const sourceId = item.comfyWorkflowSourceId ?? comfyOutputSourceId(item);
-  return sourceId ? items.find((candidate) => candidate.id === sourceId) : undefined;
+  return sourceId
+    ? items.find((candidate) => candidate.id === sourceId)
+    : undefined;
 }

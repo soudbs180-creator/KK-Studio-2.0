@@ -21,6 +21,18 @@ test("workflow source resolver returns the stable source card", () => {
   assert.equal(resolveWorkflowSource(output, [workflow, output]), workflow);
 });
 
+test("workflow source resolver falls back to the legacy description source", () => {
+  const legacyOutput = {
+    ...output,
+    comfyWorkflowSourceId: undefined,
+    description: "ComfyUI · workflow-card",
+  };
+  assert.equal(
+    resolveWorkflowSource(legacyOutput, [workflow, legacyOutput]),
+    workflow,
+  );
+});
+
 test("workflow source resolver returns undefined when the source card is gone", () => {
   assert.equal(resolveWorkflowSource(output, [output]), undefined);
 });

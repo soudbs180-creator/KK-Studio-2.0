@@ -62,7 +62,7 @@
 
 ## UI 文档
 
-Figma ↔ 本地的**分层差异审计**由 [`scripts/figma-audit/`](../scripts/figma-audit/README.md) 承载，覆盖 L1 结构 / L2 令牌 / L3 几何 / L4 像素四层；命令入口见 [DEVELOPMENT](engineering/DEVELOPMENT.md) 的设计审计小节。L1–L3 为确定性比对，L4 以有界差异判定。
+Figma ↔ 本地的**分层差异审计**由 [`scripts/figma-audit/`](reference/figma-audit.md) 承载，覆盖 L1 结构 / L2 令牌 / L3 几何 / L4 像素四层；命令入口见 [DEVELOPMENT](engineering/DEVELOPMENT.md) 的设计审计小节。L1–L3 为确定性比对，L4 以有界差异判定。
 
 [UI_INDEX.md](UI_INDEX.md) 是 **本地 UI 规范导航入口**，登记当前 Figma 来源、七章规范映射与同步流程。Figma 是设计真值，本地文档从它派生，UI 修改遵循 [AGENTS.md](../AGENTS.md#设计与交互) 的设计先行规则。该索引的 §1 表是完整映射，新增 UI 文档须同步它。各文件分工：
 

@@ -67,7 +67,7 @@
 
 ### 4.1 分层差异审计
 
-上述对照顺序已由 [`scripts/figma-audit/`](../scripts/figma-audit/README.md) 工具化，分四层判定：
+上述对照顺序已由 [`scripts/figma-audit/`](reference/figma-audit.md) 工具化，分四层判定：
 
 | 层      | 比对内容                   | 判定标准                                   |
 | ------- | -------------------------- | ------------------------------------------ |

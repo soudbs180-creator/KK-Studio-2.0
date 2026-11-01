@@ -421,9 +421,9 @@
     "reviewRequired": false,
     "evidence": [
       "docs/changes/2026-10-27-figma-parity-audit/intent.md",
-      "scripts/figma-audit/README.md",
+      "docs/reference/figma-audit.md",
       "docs/reference/figma-pixel-calibration/README.md",
-      "design/preview/baselines/README.md"
+      "docs/reference/figma-pixel-baselines.md"
     ],
     "verification": "2026-10-27 工具链落地并自测通过。typecheck 零报错；新文件 lint 零 error 零 warning；health:check 0 blocking；npm test 2338 项中 20 项失败与改动前基线完全一致（git stash 对比确认零新增失败），新增 19 项单测全过；markdown/index/governance/features 门禁均 0 violations。检出能力双向验证通过：令牌漂移、几何偏差、别名分歧三项注入均被检出且撤销后归零。像素层实测历史数据差异率展开态 22.406%、收纳态 16.844%，差异形态为点阵背景相位差，结构性元素轮廓对齐，据此确认严格逐点相等不可达成。",
     "verificationResult": "PARTIAL",

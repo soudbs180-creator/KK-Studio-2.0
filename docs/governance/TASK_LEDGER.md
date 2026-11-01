@@ -404,11 +404,10 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Worktree: `D:/kk-studio/KK-Studio-2.0`
 - Modules: scripts/figma-audit, tests/design-md, tests/unit/figmaAudit.test.ts, design/preview, docs/changes/2026-10-27-figma-parity-audit, docs/UI_SPEC.md, docs/README.md, docs/engineering/DEVELOPMENT.md, package.json
 - Verification: PARTIAL — 2026-10-27 工具链落地并自测通过。typecheck 零报错；新文件 lint 零 error 零 warning；health:check 0 blocking；npm test 2338 项中 20 项失败与改动前基线完全一致（git stash 对比确认零新增失败），新增 19 项单测全过；markdown/index/governance/features 门禁均 0 violations。检出能力双向验证通过：令牌漂移、几何偏差、别名分歧三项注入均被检出且撤销后归零。像素层实测历史数据差异率展开态 22.406%、收纳态 16.844%，差异形态为点阵背景相位差，结构性元素轮廓对齐，据此确认严格逐点相等不可达成。
-- Evidence: [docs/changes/2026-10-27-figma-parity-audit/intent.md](../../docs/changes/2026-10-27-figma-parity-audit/intent.md), [scripts/figma-audit/README.md](../../scripts/figma-audit/README.md), [docs/reference/figma-pixel-calibration/README.md](../../docs/reference/figma-pixel-calibration/README.md), [design/preview/baselines/README.md](../../design/preview/baselines/README.md)
+- Evidence: [docs/changes/2026-10-27-figma-parity-audit/intent.md](../../docs/changes/2026-10-27-figma-parity-audit/intent.md), [docs/reference/figma-audit.md](../../docs/reference/figma-audit.md), [docs/reference/figma-pixel-calibration/README.md](../../docs/reference/figma-pixel-calibration/README.md), [docs/reference/figma-pixel-baselines.md](../../docs/reference/figma-pixel-baselines.md)
 - Next action: 等待用户在连接器管理页点「信任」并完成 Figma OAuth（或提供 FIGMA_TOKEN），随后以现行 file key ZiadpErDoFweCjG3uHjkM3 拉取首个真实快照，由真实快照派生 figma-rects.json 跑通 L3 几何层，并从现行文件导出参考图登记进 design/preview/baselines/ 启用 L4 门禁，最后产出首份真实差异审计报告。
 - Last verified: 2026-10-27
 - Updated: 2026-10-27
-
 
 ## TASK-FIGMA-PAGES-20261025 — 重新核查并整理Figma 04/05页面与状态
 

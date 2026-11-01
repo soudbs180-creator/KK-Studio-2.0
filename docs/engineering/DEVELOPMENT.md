@@ -43,7 +43,7 @@ npm ci
 
 ### 设计审计
 
-Figma 与本地实现的差异审计由 `scripts/figma-audit/` 承载，详见其 [README](../../scripts/figma-audit/README.md)。要点：`npm run figma:audit:pull` 需要 `FIGMA_TOKEN` 环境变量（令牌不落盘）；L1–L3 为确定性比对，L4 因渲染管线差异采用有界差异判定，不存在逐点像素相等的物理前提；未登记像素基线的状态按跳过处理，不得据此宣称通过。
+Figma 与本地实现的差异审计由 `scripts/figma-audit/` 承载，详见其 [README](../reference/figma-audit.md)。要点：`npm run figma:audit:pull` 需要 `FIGMA_TOKEN` 环境变量（令牌不落盘）；L1–L3 为确定性比对，L4 因渲染管线差异采用有界差异判定，不存在逐点像素相等的物理前提；未登记像素基线的状态按跳过处理，不得据此宣称通过。
 
 ## 代码健康棘轮与 Windows 不安全模式扫描
 
