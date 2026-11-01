@@ -14,7 +14,7 @@
 | --- | --- |
 | `npm run typecheck` | 通过 |
 | `tests/unit/imageCapabilityActions.test.ts` + `tests/unit/imageCapabilitySubmission.test.ts` | 5 passed |
-| `tests/unit/canvasWorkflowSource.test.ts` | 2 passed |
+| `tests/unit/canvasWorkflowSource.test.ts` | 3 passed |
 | `tests/browser/image-edit.spec.ts -g "image capability actions"` | 1 passed |
 | `tests/browser/comfy-workflow.spec.ts -g "P6.1 fixture"` | 1 passed；包含来源属性定位和来源卡片选中断言 |
 
