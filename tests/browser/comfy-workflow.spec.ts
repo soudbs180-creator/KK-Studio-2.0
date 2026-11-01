@@ -91,6 +91,19 @@ test("P6.1 fixture: choose root, open/return native frame, archive output once a
   });
   const host = page.locator("#comfy-harness");
   await expect(host.getByTestId("comfy-workflow-node")).toBeVisible();
+  await expect(
+    host.getByRole("button", { name: "未安装？获取 ComfyUI", exact: true }),
+  ).toBeVisible();
+  await host
+    .getByRole("button", { name: "未安装？获取 ComfyUI", exact: true })
+    .click();
+  const guide = host.getByRole("region", { name: "ComfyUI 安装指南" });
+  await expect(guide).toBeVisible();
+  await expect(
+    guide.getByRole("link", { name: "打开 ComfyUI 官方下载页" }),
+  ).toHaveAttribute("href", "https://comfy.org/download/");
+  await expect(guide).toContainText("下载 Desktop 或 Portable");
+  await expect(guide).toContainText("选择包含 models 文件夹的目录");
   await host.getByRole("button", { name: "选择目录", exact: true }).click();
   await expect(
     host.getByRole("button", { name: "进入工作流", exact: true }),

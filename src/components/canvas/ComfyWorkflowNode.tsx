@@ -14,7 +14,8 @@ export default function ComfyWorkflowNode({
   editing: NodeEditingProps;
 }) {
   const state = useComfyWorkflowNode(item, editing),
-    [open, setOpen] = useState<boolean>();
+    [open, setOpen] = useState<boolean>(),
+    [guideOpen, setGuideOpen] = useState(false);
   const desktop = Boolean(state.host?.runtime.desktop);
   return (
     <article
@@ -73,15 +74,48 @@ export default function ComfyWorkflowNode({
           快速生成
         </button>
         {!state.status.ready && (
-          <button
-            className="kk-button kk-button--secondary"
-            disabled={!desktop || state.working || state.status.owned}
-            onClick={() => void state.chooseDirectory()}
-          >
-            选择目录
-          </button>
+          <>
+            <button
+              className="kk-button kk-button--secondary"
+              disabled={!desktop || state.working || state.status.owned}
+              onClick={() => void state.chooseDirectory()}
+            >
+              选择目录
+            </button>
+            {desktop && (
+              <button
+                className="kk-button kk-button--secondary"
+                type="button"
+                aria-expanded={guideOpen}
+                onClick={() => setGuideOpen((value) => !value)}
+              >
+                未安装？获取 ComfyUI
+              </button>
+            )}
+          </>
         )}
       </div>
+      {guideOpen && !state.status.ready && desktop && (
+        <aside
+          className="comfy-workflow-guide"
+          role="region"
+          aria-label="ComfyUI 安装指南"
+        >
+          <strong>Not installed? Get ComfyUI</strong>
+          <a
+            href="https://comfy.org/download/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            打开 ComfyUI 官方下载页
+          </a>
+          <ol>
+            <li>下载 Desktop 或 Portable，并完成首次启动。</li>
+            <li>把模型放进 ComfyUI 的 models 文件夹。</li>
+            <li>回到这里，选择包含 models 文件夹的目录。</li>
+          </ol>
+        </aside>
+      )}
       {!desktop && <p>请在桌面客户端连接本地 ComfyUI</p>}
       {open !== undefined && (
         <ComfyWorkflowEditor

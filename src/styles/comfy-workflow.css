@@ -96,3 +96,25 @@
   flex-direction: column;
   gap: var(--kk-space-2);
 }
+.comfy-workflow-guide {
+  display: grid;
+  gap: var(--kk-space-2);
+  padding: var(--kk-space-3);
+  border: 1px solid var(--kk-border-subtle);
+  border-radius: var(--kk-radius-card);
+  background: var(--kk-bg-subtle);
+  color: var(--kk-text-secondary);
+  font-size: var(--kk-font-caption);
+  line-height: 18px;
+}
+.comfy-workflow-guide strong {
+  color: var(--kk-text-primary);
+}
+.comfy-workflow-guide a {
+  color: var(--kk-text-link);
+  overflow-wrap: anywhere;
+}
+.comfy-workflow-guide ol {
+  margin: 0;
+  padding-inline-start: var(--kk-space-5);
+}
