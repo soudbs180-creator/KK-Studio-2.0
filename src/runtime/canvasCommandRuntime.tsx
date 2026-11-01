@@ -11,6 +11,7 @@ import type {
   AssetPort,
   CreationTask,
   ImageEditRequest,
+  ImageCapabilitySpec,
 } from "../../packages/creation-contracts/index.ts";
 import type {
   CanvasCollectionItem,
@@ -30,6 +31,7 @@ export interface CanvasImageRequest {
   model: string;
   count: number;
   signal: AbortSignal;
+  imageCapability?: ImageCapabilitySpec;
 }
 export const CanvasImageCommandContext = createContext<{
   flush?: () => Promise<void>;
@@ -199,6 +201,7 @@ export function useCanvasImageGeneration({
     count: number,
     model: string,
     imageEdit?: ImageEditRequest,
+    imageCapability?: ImageCapabilitySpec,
   ) {
     if (!command || !item || request.current || loading || disabledReason)
       return;
@@ -214,6 +217,7 @@ export function useCanvasImageGeneration({
         count,
         signal: controller.signal,
         imageEdit,
+        imageCapability,
       });
       if (mounted.current && failure) setError(failure);
     } catch {

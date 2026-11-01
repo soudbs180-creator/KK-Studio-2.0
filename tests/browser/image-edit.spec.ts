@@ -426,6 +426,18 @@ async function editor(page: Page, configured = false, separateColors = false) {
   return page.getByRole("dialog", { name: "重绘参考图片" });
 }
 
+test("image capability actions stay visible but require an explicit workflow", async ({
+  page,
+}) => {
+  const dialog = await editor(page);
+  for (const label of ["扩图", "高清修复", "图层拆分"]) {
+    const button = dialog.getByRole("button", { name: label, exact: true });
+    await expect(button).toBeVisible();
+    await expect(button).toBeDisabled();
+    await expect(button).toHaveAttribute("title", /ComfyUI 工作流/);
+  }
+});
+
 test("saved mixed masks can be cleared, undone and redone before whole-image editing", async ({
   page,
 }, info) => {

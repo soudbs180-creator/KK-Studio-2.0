@@ -1548,6 +1548,9 @@ async function processChunkBatch(options: {
       providerConnectionId: task.providerConnectionId,
       imageEditDraft: task.imageEdit?.document,
       imageEditContext: imageResultContext(task, asset.assetId),
+      imageCapability: task.imageCapability
+        ? { ...task.imageCapability, sourceAssetId: asset.assetId }
+        : undefined,
       assetId: asset.assetId,
       parentAssetId: asset.parentId,
       preview: asset.preview,

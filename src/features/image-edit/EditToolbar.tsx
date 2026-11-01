@@ -1,6 +1,8 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import type { ImageTool } from "./useImageViewport.ts";
 import { EDIT_COLORS } from "./palette.ts";
+import type { ImageCapabilityId } from "../../../packages/creation-contracts/index.ts";
+import { imageCapabilityActionLabels } from "./imageCapabilityActions.ts";
 export { EDIT_COLORS } from "./palette.ts";
 export default function EditToolbar({
   tool,
@@ -17,6 +19,9 @@ export default function EditToolbar({
   onClear,
   hasRegions,
   disabled,
+  onCapability,
+  capabilityDisabled,
+  capabilityDisabledReason,
 }: {
   tool: ImageTool;
   onTool: (tool: ImageTool) => void;
@@ -32,6 +37,9 @@ export default function EditToolbar({
   onClear: () => void;
   hasRegions: boolean;
   disabled: boolean;
+  onCapability?: (id: ImageCapabilityId) => void;
+  capabilityDisabled?: (id: ImageCapabilityId) => boolean;
+  capabilityDisabledReason?: (id: ImageCapabilityId) => string | undefined;
 }) {
   const ref = useRef<HTMLDivElement>(null),
     drag = useRef<{ x: number; y: number; left: number; top: number } | null>(
@@ -165,6 +173,23 @@ export default function EditToolbar({
           ))}
         </select>
       )}
+      {onCapability &&
+        (Object.entries(imageCapabilityActionLabels) as [
+          ImageCapabilityId,
+          string,
+        ][]).map(([id, label]) => (
+          <button
+            key={id}
+            type="button"
+            className="ui-button"
+            aria-label={label}
+            title={capabilityDisabledReason?.(id) ?? label}
+            disabled={disabled || capabilityDisabled?.(id) === true}
+            onClick={() => onCapability(id)}
+          >
+            {label}
+          </button>
+        ))}
       <button
         type="button"
         className="ui-button"

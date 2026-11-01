@@ -607,6 +607,7 @@ async function resolveCommandInput(
     kind: source.kind,
     attachments,
     outputCount: request.input.count,
+    imageCapability: request.input.imageCapability,
     privacyMode: original!.composerDraft.privacyMode,
     imageSize:
       source.kind === "text" || source.assetId

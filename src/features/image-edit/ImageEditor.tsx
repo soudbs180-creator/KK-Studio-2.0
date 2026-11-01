@@ -22,6 +22,11 @@ import { validateEdit } from "./validateEdit.ts";
 
 import EditComposer from "./EditComposer.tsx";
 import EditToolbar, { EDIT_COLORS } from "./EditToolbar.tsx";
+import {
+  imageCapabilityAction,
+  imageCapabilityActionLabels,
+} from "./imageCapabilityActions.ts";
+import type { ImageCapabilityId } from "../../../packages/creation-contracts/index.ts";
 import RegionPromptOverlay from "./RegionPromptOverlay.tsx";
 import { useImageViewport, type ImageTool } from "./useImageViewport.ts";
 import { useMaskDocument } from "./useMaskDocument.ts";
@@ -164,6 +169,28 @@ export default function ImageEditor({
         selectionOnly,
       });
   }
+  function capabilityState(id: ImageCapabilityId) {
+    return imageCapabilityAction(source, id);
+  }
+  function runCapability(id: ImageCapabilityId) {
+    const action = capabilityState(id);
+    if (action.error || !action.spec || !action.outputCount) {
+      mask.setError(
+        action.error ??
+          `无法运行${imageCapabilityActionLabels[id]}，请检查工作流配置。`,
+      );
+      return;
+    }
+    drawing.cancel();
+    mask.setError("");
+    void generation.run(
+      prompt || `按已配置工作流执行${imageCapabilityActionLabels[id]}。`,
+      action.outputCount,
+      generation.model,
+      undefined,
+      action.spec,
+    );
+  }
   return (
     <div
       className="image-editor"
@@ -249,6 +276,9 @@ export default function ImageEditor({
           }}
           onReset={viewport.reset}
           disabled={loading || !mask.ready}
+          onCapability={runCapability}
+          capabilityDisabled={(id) => Boolean(capabilityState(id).error)}
+          capabilityDisabledReason={(id) => capabilityState(id).error}
         />
         <RegionPromptOverlay
           region={region}
