@@ -1,7 +1,7 @@
 # Plan：主线接管与 P6 live 测试基线收口
 
 - Task ID：TASK-DELIVERY-MAIN-20261030
-- 状态：IN PROGRESS
+- 状态：IMPLEMENTED
 - 日期：2026-11-01
 - Intent / Spec / ADR：`intent.md`、`spec.md`、ADR-033
 - Owner / branch / worktree：root / `fix/TASK-HANDOFF-TAKEOVER-20261101` / `D:/kk-studio/.worktrees/TASK-HANDOFF-TAKEOVER-20261101`

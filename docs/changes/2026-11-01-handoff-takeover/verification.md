@@ -1,11 +1,11 @@
 # Verification：主线接管与 P6 live 测试基线收口
 
 - Task ID：TASK-DELIVERY-MAIN-20261030
-- 记录状态：IN PROGRESS
+- 记录状态：FINAL
 - 执行时间与时区：2026-11-01，Asia/Shanghai（客户端时间）
 - Intent / Spec / Plan / AC：本目录 `intent.md`、`spec.md`、`plan.md`；AC-1..AC-4
 - cwd / branch：`D:/kk-studio/.worktrees/TASK-HANDOFF-TAKEOVER-20261101` / `fix/TASK-HANDOFF-TAKEOVER-20261101`
-- 被验证 base SHA / head SHA / tree SHA：base `b93b4e7f347f9a01b28b4055668a5412af489303`；head same before commit；tree final SHA 待提交后补写
+- 被验证 base SHA / head SHA / tree SHA：base `b93b4e7f347f9a01b28b4055668a5412af489303`；实现提交 `b2a13816ec05a7594ec8b6b17729620de601a9e6`；本次文档追加提交后需重新读取 head
 - dirty 状态及 patch/文件指纹：Figma snapshot `D:/kk-studio/output/figma-pages-takeover-2026-11-01/`; 73 files，committed diff SHA `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`、working diff SHA `e2521f082d70f9ecabe1dc8d514049f4bda7e65f5d942d7473ce164df04814bf`、files manifest SHA `a8d95083bd9b4ddca8ae8f9ab99e103f5af7f3bc96185fc1d342cb79a11800f4`
 - Node/npm/Rust/浏览器/OS/工具版本：Node 24.20.0、npm 10.x、Windows；完整版本由命令回执补录
 - 规则版本或 commit：当前仓库 `AGENTS.md`、`AI_RULES.md`、`b93b4e7f`
@@ -21,13 +21,17 @@
 | `npm run lint` | 2026-11-01 | 0 | PASS WITH ADVISORY | terminal | changelog drift、code-health advisory 保留 |
 | `npm test` 初次 | 2026-11-01 | 1 | PRE-EXISTING SETUP FAILURE | terminal | 缺少未跟踪 Agent dist，2 runtime tests fail |
 | `npm run agent:build` | 2026-11-01 | 0 | PASS | terminal | 生成任务树 dist |
+| `npm run test:agent` | 2026-11-01 | 0 | PASS | terminal | 206 pass / 2 skip / 0 fail |
 | `node --import ./tests/support/public-entry-loader.mjs --test tests/unit/desktopAgentRuntime.test.ts` | 2026-11-01 | 0 | PASS | terminal | 3/3 targeted after build |
+| `npm test` final | 2026-11-01 | 0 | PASS | terminal | 2485 tests: 2465 pass / 20 skip / 0 fail |
 | `npm run build` | 2026-11-01 | 0 | PASS | task `dist/` | Vite production bundle |
 | `npx playwright test tests/browser/p6-live-comfy.spec.ts --list` | 2026-11-01 | 0 | PASS | terminal | 1 test listed |
 | focused P6 test with live flag absent | 2026-11-01 | 0 | PASS (1 skipped) | Playwright evidence run | no external ComfyUI access |
 | focused P6 test with `KK_RUN_LIVE_COMFY=1`, `KK_COMFY_URL=http://127.0.0.1:1` | 2026-11-01 | 1 | EXPECTED FAIL-CLOSED | Playwright error context | clear endpoint preflight error; no Canvas mount or external write |
 | `npm run ui:check` | 2026-11-01 | 1 | PRE-EXISTING FAILURE | terminal | `Canvas.tsx` 307 lines; `comfy-workflow.css` has 2 undefined token warnings |
 | `npm run format:check` | 2026-11-01 | 1 → 0 | PASS AFTER FOCUSED FORMAT | terminal | only the two new live test files needed Prettier |
+| `npm run governance:check` | 2026-11-01 | 0 | PASS | terminal | 212 tasks / 0 violations |
+| `npm run delivery:check -- --base b93b4e7f... --head b2a13816... --branch fix/TASK-HANDOFF-TAKEOVER-20261101` | 2026-11-01 | 0 | PASS | terminal | 13 files / 0 violations |
 
 ## 验收覆盖
 
@@ -36,7 +40,7 @@
 | AC-1 | Git/Figma | 快照可回读 | 73 paths + diff/status/SHA generated | `output/figma-pages-takeover-2026-11-01/manifest.json` | PASS |
 | AC-2 | Web default | no live network | test skipped with flag absent | focused Playwright result | PASS |
 | AC-3 | Web opt-in | real endpoint/checkpoint preflight | code implemented; no authorized checkpoint run | `tests/browser/p6-live-comfy.spec.ts` | NOT VERIFIED |
-| AC-4 | Governance | current ownership and delivery checks | ledger updated; generated checks pending final run | this package | IN PROGRESS |
+| AC-4 | Governance | current ownership and delivery checks | ledger updated; governance and delivery checks pass | this package | PASS |
 
 ## UI / 运行态证据
 
@@ -72,6 +76,6 @@
 - 实现：PARTIAL（接管阶段实现完成，产品总交付未完成）
 - 验证：PARTIAL
 - 产品能力：P6 H3 视频/首帧既有证据仍按原任务；本阶段新增 live image 证据未建立。
-- 独立 review：提交后补录当前 head SHA。
+- 独立 review：当前实现提交 `b2a13816ec05a7594ec8b6b17729620de601a9e6` 已准备复核；本次文档追加提交后需按新 head 复审。
 - 用户产品验收和发布授权：未发生。
 - 未关闭风险：TASK-MOD-P6-1、TASK-COMFY-PHYSICAL-20261030、TASK-MOD-P6-HOST/OUTPAINT/UPSCALE/LAYER-SPLIT、TASK-MOD-P7、TASK-MOD-P1-G、TASK-FIGMA-PARITY-AUDIT-20261027、TASK-DELIVERY-MAIN-20261030。
