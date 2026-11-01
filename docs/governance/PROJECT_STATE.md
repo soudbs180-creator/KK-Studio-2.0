@@ -2,7 +2,7 @@
 
 - docId: PROJECT_STATE
 - status: current
-- updatedAt: 2026-10-30
+- updatedAt: 2026-11-01
 - source: `docs/governance/task-ledger.json`
 - supersededBy: null
 
@@ -11,6 +11,8 @@
 
 <!-- DOCUMENT_METADATA_END -->
 <!-- CURRENT_FACTS_BEGIN -->
+
+2026-11-01 接管基线已建立：本地 `main@b93b4e7f` 与 `origin/main@9b1038a7` 分叉事实分开记录；Figma 任务树的 73 个路径、working-tree diff 和 SHA 已保存到 `D:/kk-studio/output/figma-pages-takeover-2026-11-01/`。P6 live ComfyUI 浏览器测试默认跳过，显式启用时要求 endpoint 与 checkpoint 预检；不触碰外部进程或模型。当前证据只覆盖本地接管与定向检查，真实图片 GPU、Figma OAuth/L3/L4、Desktop/Hosted/发布仍未验证。
 
 # 当前项目事实（2026-10-26）
 

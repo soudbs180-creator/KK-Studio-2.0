@@ -14,8 +14,8 @@
     ],
     "owner": "root",
     "ownerRole": "implementation-integrator",
-    "branch": "refactor/TASK-MOD-P3-feature-cycles",
-    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "branch": "fix/TASK-HANDOFF-TAKEOVER-20261101",
+    "worktree": "D:/kk-studio/.worktrees/TASK-HANDOFF-TAKEOVER-20261101",
     "baseSha": "be730617ace5013295b85a22133259b32ad6ffec",
     "affectedModules": [
       "docs/changes",
@@ -27,12 +27,13 @@
     "risk": "medium",
     "reviewRequired": true,
     "evidence": [
-      "docs/changes/2026-10-30-main-physical-org6/verification.md"
+      "docs/changes/2026-10-30-main-physical-org6/verification.md",
+      "docs/changes/2026-11-01-handoff-takeover/verification.md"
     ],
-    "verification": "2.1.59/d6d592e4实际RTX5080/H3 host及原生editor运行success；各512x512/124帧/24fps带音轨，首帧AssetPort SHA相同、result边/两个节点及重开通过。混合输出修复13/13独测、根2406pass20skip、类型/增量lint0、代码独审PASS。仅H3及首帧REAL；不是图片checkpoint/视频资产/Hub自动安装启动/已安装版本验收。回执在output/main-physical-org6-2026-10-30/physical-final-artifact-receipt.json。",
+    "verification": "2.1.59/d6d592e4实际RTX5080/H3 host及原生editor运行success；各512x512/124帧/24fps带音轨，首帧AssetPort SHA相同、result边/两个节点及重开通过。混合输出修复13/13独测、根2406pass20skip、类型/增量lint0、代码独审PASS。仅H3及首帧REAL；不是图片checkpoint/视频资产/Hub自动安装启动/已安装版本验收。回执在output/main-physical-org6-2026-10-30/physical-final-artifact-receipt.json。 2026-11-01 handoff takeover: current branch/worktree corrected; default-skipped external ComfyUI live test and local baseline are recorded in the new verification package; REAL/DONE remains unchanged.",
     "verificationResult": "PARTIAL",
-    "updated": "2026-10-30",
-    "lastVerified": "2026-10-30",
+    "updated": "2026-11-01",
+    "lastVerified": "2026-11-01",
     "nextAction": "保持PARTIAL：图片checkpoint/P6图像能力、视频资产、Hub安装/自动启动和整体交付各自验收；继续主线冲突与合法bootstrap",
     "requirementRefs": [
       "docs/changes/2026-10-30-main-physical-org6/intent.md",
@@ -96,8 +97,8 @@
     ],
     "owner": "root",
     "ownerRole": "implementation-integrator",
-    "branch": "refactor/TASK-MOD-P3-feature-cycles",
-    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "branch": "fix/TASK-HANDOFF-TAKEOVER-20261101",
+    "worktree": "D:/kk-studio/.worktrees/TASK-HANDOFF-TAKEOVER-20261101",
     "baseSha": "be730617ace5013295b85a22133259b32ad6ffec",
     "affectedModules": [
       "docs/changes",
@@ -109,12 +110,13 @@
     "risk": "medium",
     "reviewRequired": true,
     "evidence": [
-      "docs/changes/2026-10-30-main-physical-org6/verification.md"
+      "docs/changes/2026-10-30-main-physical-org6/verification.md",
+      "docs/changes/2026-11-01-handoff-takeover/verification.md"
     ],
-    "verification": "前置PR82已正常squash main9b1038a7，P3已承接实际main且71冲突消除。组合f448限定独审141PASS，两项聊天隔离P1修复；根2441/20skip、Mobile435、Rust384/1ignore、type/lint通过。完整Web911项684PASS/227FAIL/0flaky；当前修复定向9PASS。Windows运行目录发布EPERM阻断，Hosted/正式当前EXE/整体合流未完，main21原件SHA0差异。",
+    "verification": "前置PR82已正常squash main9b1038a7，P3已承接实际main且71冲突消除。组合f448限定独审141PASS，两项聊天隔离P1修复；根2441/20skip、Mobile435、Rust384/1ignore、type/lint通过。完整Web911项684PASS/227FAIL/0flaky；当前修复定向9PASS。Windows运行目录发布EPERM阻断，Hosted/正式当前EXE/整体合流未完，main21原件SHA0差异。 2026-11-01 handoff takeover: current branch/worktree corrected; default-skipped external ComfyUI live test and local baseline are recorded in the new verification package; REAL/DONE remains unchanged.",
     "verificationResult": "NOT_VERIFIED",
-    "updated": "2026-10-30",
-    "lastVerified": "2026-10-30",
+    "updated": "2026-11-01",
+    "lastVerified": "2026-11-01",
     "nextAction": "逐项核实并修复227个全套浏览器失败、Agent运行目录EPERM；重跑受影响门禁与完整verify/当前Desktop产物和精确SHA独审/Hosted后，正常squash PR81并安全回收本任务树；四文档开放项不自动关闭。",
     "requirementRefs": [
       "docs/changes/2026-10-30-main-physical-org6/intent.md",
@@ -220,8 +222,8 @@
     ],
     "owner": "root",
     "ownerRole": "implementation-integrator",
-    "branch": "refactor/TASK-MOD-P3-feature-cycles",
-    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "branch": "fix/TASK-HANDOFF-TAKEOVER-20261101",
+    "worktree": "D:/kk-studio/.worktrees/TASK-HANDOFF-TAKEOVER-20261101",
     "baseSha": "7280dc3a812a6bf5b98e44e2ed131f4530c37908",
     "affectedModules": [
       "src/features/comfyui/workflowSession.ts",
@@ -246,12 +248,13 @@
     "risk": "medium",
     "reviewRequired": true,
     "evidence": [
-      "docs/changes/2026-10-29-p6-1-comfy-canvas/verification.md"
+      "docs/changes/2026-10-29-p6-1-comfy-canvas/verification.md",
+      "docs/changes/2026-11-01-handoff-takeover/verification.md"
     ],
-    "verification": "独审07d6发现可编辑说明仍会绕过删除；补真实Agent改说明→删除RED后，新增稳定comfyWorkflowSourceId，旧快照/Agent编辑前从旧说明承接。81定向、根2395pass/20skip、类型/增量lint/build/Comfy浏览器通过。完整901为补该修复中止，待新SHA补审/重跑及main。 78beb7a9独审81项复验关闭IR-P6-02，限定代码PASS；全套浏览器中断与main未完成，不升级总体状态。",
+    "verification": "独审07d6发现可编辑说明仍会绕过删除；补真实Agent改说明→删除RED后，新增稳定comfyWorkflowSourceId，旧快照/Agent编辑前从旧说明承接。81定向、根2395pass/20skip、类型/增量lint/build/Comfy浏览器通过。完整901为补该修复中止，待新SHA补审/重跑及main。 78beb7a9独审81项复验关闭IR-P6-02，限定代码PASS；全套浏览器中断与main未完成，不升级总体状态。 2026-11-01 handoff takeover: current branch/worktree corrected; default-skipped external ComfyUI live test and local baseline are recorded in the new verification package; REAL/DONE remains unchanged.",
     "verificationResult": "PARTIAL",
-    "updated": "2026-10-29",
-    "lastVerified": "2026-10-29",
+    "updated": "2026-11-01",
+    "lastVerified": "2026-11-01",
     "nextAction": "当前SHA补审；完整门禁和首建baseline/远端分叉整合",
     "requirementRefs": [
       "docs/changes/2026-10-29-p6-1-comfy-canvas/spec.md"
@@ -11573,8 +11576,8 @@
     ],
     "owner": "root",
     "ownerRole": "implementation-integrator",
-    "branch": "unallocated",
-    "worktree": "unallocated",
+    "branch": "fix/TASK-HANDOFF-TAKEOVER-20261101",
+    "worktree": "D:/kk-studio/.worktrees/TASK-HANDOFF-TAKEOVER-20261101",
     "baseSha": "5240e7b3dd17e33a5ec749d2e62ec18ca3c53dbf",
     "affectedModules": [
       "docs/features/features.registry.json",
@@ -11589,12 +11592,13 @@
     "reviewRequired": true,
     "evidence": [
       "docs/changes/2026-10-28-capability-contract/verification.md",
-      "docs/changes/2026-10-28-capability-contract/review.md"
+      "docs/changes/2026-10-28-capability-contract/review.md",
+      "docs/changes/2026-11-01-handoff-takeover/verification.md"
     ],
-    "verification": "本轮仅建立任务与ADR-028草案；字段和治理检查尚未实现。",
+    "verification": "本轮仅建立任务与ADR-028草案；字段和治理检查尚未实现。 2026-11-01 handoff takeover: current branch/worktree corrected; default-skipped external ComfyUI live test and local baseline are recorded in the new verification package; REAL/DONE remains unchanged.",
     "verificationResult": "NOT_VERIFIED",
-    "updated": "2026-10-28",
-    "lastVerified": "2026-10-28",
+    "updated": "2026-11-01",
+    "lastVerified": "2026-11-01",
     "nextAction": "P1声明验证后单独执行此治理子卡，不因capability.ts/ports.ts完成关闭完整P1要求。",
     "requirementRefs": [
       "docs/changes/2026-10-28-capability-contract/intent.md",
@@ -12283,8 +12287,8 @@
     ],
     "owner": "root",
     "ownerRole": "implementation-integrator",
-    "branch": "refactor/TASK-MOD-P3-feature-cycles",
-    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "branch": "fix/TASK-HANDOFF-TAKEOVER-20261101",
+    "worktree": "D:/kk-studio/.worktrees/TASK-HANDOFF-TAKEOVER-20261101",
     "baseSha": "972adc011e040b6db76284de1daea42d8b2167cb",
     "affectedModules": [
       "src/features/capabilities",
@@ -12297,12 +12301,13 @@
     "reviewRequired": true,
     "evidence": [
       "docs/changes/2026-10-29-p6-image-host/verification.md",
-      "docs/changes/2026-10-29-p6-image-host/review.md"
+      "docs/changes/2026-10-29-p6-image-host/review.md",
+      "docs/changes/2026-11-01-handoff-takeover/verification.md"
     ],
-    "verification": "本地候选根2372 pass/20 skip、类型通过；Edge17项、Rust资产18、Mobile373、Agent204通过；本卡仍PARTIAL，真实服务/Native/独审/main待验。",
+    "verification": "本地候选根2372 pass/20 skip、类型通过；Edge17项、Rust资产18、Mobile373、Agent204通过；本卡仍PARTIAL，真实服务/Native/独审/main待验。 2026-11-01 handoff takeover: current branch/worktree corrected; default-skipped external ComfyUI live test and local baseline are recorded in the new verification package; REAL/DONE remains unchanged.",
     "verificationResult": "PARTIAL",
-    "updated": "2026-10-29",
-    "lastVerified": "2026-10-29",
+    "updated": "2026-11-01",
+    "lastVerified": "2026-11-01",
     "nextAction": "接入并验收Desktop原生TaskHost及真实工作流/Provider；保持四原文与其他P/STD/ORG开放任务，不把fixture作为REAL。",
     "requirementRefs": [
       "docs/changes/2026-10-29-p6-image-host/intent.md",
@@ -12327,8 +12332,8 @@
     ],
     "owner": "root",
     "ownerRole": "implementation-integrator",
-    "branch": "refactor/TASK-MOD-P3-feature-cycles",
-    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "branch": "fix/TASK-HANDOFF-TAKEOVER-20261101",
+    "worktree": "D:/kk-studio/.worktrees/TASK-HANDOFF-TAKEOVER-20261101",
     "baseSha": "972adc011e040b6db76284de1daea42d8b2167cb",
     "affectedModules": [
       "src/features/capabilities",
@@ -12341,12 +12346,13 @@
     "reviewRequired": true,
     "evidence": [
       "docs/changes/2026-10-29-p6-outpaint/verification.md",
-      "docs/changes/2026-10-29-p6-outpaint/review.md"
+      "docs/changes/2026-10-29-p6-outpaint/review.md",
+      "docs/changes/2026-11-01-handoff-takeover/verification.md"
     ],
-    "verification": "本地候选根2372 pass/20 skip、类型通过；Edge17项、Rust资产18、Mobile373、Agent204通过；本卡仍PARTIAL，真实服务/Native/独审/main待验。",
+    "verification": "本地候选根2372 pass/20 skip、类型通过；Edge17项、Rust资产18、Mobile373、Agent204通过；本卡仍PARTIAL，真实服务/Native/独审/main待验。 2026-11-01 handoff takeover: current branch/worktree corrected; default-skipped external ComfyUI live test and local baseline are recorded in the new verification package; REAL/DONE remains unchanged.",
     "verificationResult": "PARTIAL",
-    "updated": "2026-10-29",
-    "lastVerified": "2026-10-29",
+    "updated": "2026-11-01",
+    "lastVerified": "2026-11-01",
     "nextAction": "接入并验收Desktop原生TaskHost及真实工作流/Provider；保持四原文与其他P/STD/ORG开放任务，不把fixture作为REAL。",
     "requirementRefs": [
       "docs/changes/2026-10-29-p6-outpaint/intent.md",
@@ -12371,8 +12377,8 @@
     ],
     "owner": "root",
     "ownerRole": "implementation-integrator",
-    "branch": "refactor/TASK-MOD-P3-feature-cycles",
-    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "branch": "fix/TASK-HANDOFF-TAKEOVER-20261101",
+    "worktree": "D:/kk-studio/.worktrees/TASK-HANDOFF-TAKEOVER-20261101",
     "baseSha": "972adc011e040b6db76284de1daea42d8b2167cb",
     "affectedModules": [
       "src/features/capabilities",
@@ -12385,12 +12391,13 @@
     "reviewRequired": true,
     "evidence": [
       "docs/changes/2026-10-29-p6-upscale/verification.md",
-      "docs/changes/2026-10-29-p6-upscale/review.md"
+      "docs/changes/2026-10-29-p6-upscale/review.md",
+      "docs/changes/2026-11-01-handoff-takeover/verification.md"
     ],
-    "verification": "本地候选根2372 pass/20 skip、类型通过；Edge17项、Rust资产18、Mobile373、Agent204通过；本卡仍PARTIAL，真实服务/Native/独审/main待验。",
+    "verification": "本地候选根2372 pass/20 skip、类型通过；Edge17项、Rust资产18、Mobile373、Agent204通过；本卡仍PARTIAL，真实服务/Native/独审/main待验。 2026-11-01 handoff takeover: current branch/worktree corrected; default-skipped external ComfyUI live test and local baseline are recorded in the new verification package; REAL/DONE remains unchanged.",
     "verificationResult": "PARTIAL",
-    "updated": "2026-10-29",
-    "lastVerified": "2026-10-29",
+    "updated": "2026-11-01",
+    "lastVerified": "2026-11-01",
     "nextAction": "接入并验收Desktop原生TaskHost及真实工作流/Provider；保持四原文与其他P/STD/ORG开放任务，不把fixture作为REAL。",
     "requirementRefs": [
       "docs/changes/2026-10-29-p6-upscale/intent.md",
@@ -12415,8 +12422,8 @@
     ],
     "owner": "root",
     "ownerRole": "implementation-integrator",
-    "branch": "refactor/TASK-MOD-P3-feature-cycles",
-    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "branch": "fix/TASK-HANDOFF-TAKEOVER-20261101",
+    "worktree": "D:/kk-studio/.worktrees/TASK-HANDOFF-TAKEOVER-20261101",
     "baseSha": "972adc011e040b6db76284de1daea42d8b2167cb",
     "affectedModules": [
       "src/features/capabilities",
@@ -12429,12 +12436,13 @@
     "reviewRequired": true,
     "evidence": [
       "docs/changes/2026-10-29-p6-layer-split/verification.md",
-      "docs/changes/2026-10-29-p6-layer-split/review.md"
+      "docs/changes/2026-10-29-p6-layer-split/review.md",
+      "docs/changes/2026-11-01-handoff-takeover/verification.md"
     ],
-    "verification": "本地候选根2372 pass/20 skip、类型通过；Edge17项、Rust资产18、Mobile373、Agent204通过；本卡仍PARTIAL，真实服务/Native/独审/main待验。",
+    "verification": "本地候选根2372 pass/20 skip、类型通过；Edge17项、Rust资产18、Mobile373、Agent204通过；本卡仍PARTIAL，真实服务/Native/独审/main待验。 2026-11-01 handoff takeover: current branch/worktree corrected; default-skipped external ComfyUI live test and local baseline are recorded in the new verification package; REAL/DONE remains unchanged.",
     "verificationResult": "PARTIAL",
-    "updated": "2026-10-29",
-    "lastVerified": "2026-10-29",
+    "updated": "2026-11-01",
+    "lastVerified": "2026-11-01",
     "nextAction": "接入并验收Desktop原生TaskHost及真实工作流/Provider；保持四原文与其他P/STD/ORG开放任务，不把fixture作为REAL。",
     "requirementRefs": [
       "docs/changes/2026-10-29-p6-layer-split/intent.md",
@@ -12459,8 +12467,8 @@
     ],
     "owner": "root",
     "ownerRole": "implementation-integrator",
-    "branch": "refactor/TASK-MOD-P3-feature-cycles",
-    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "branch": "fix/TASK-HANDOFF-TAKEOVER-20261101",
+    "worktree": "D:/kk-studio/.worktrees/TASK-HANDOFF-TAKEOVER-20261101",
     "baseSha": "972adc011e040b6db76284de1daea42d8b2167cb",
     "affectedModules": [
       "src/features/creation",
@@ -12474,12 +12482,13 @@
     "reviewRequired": true,
     "evidence": [
       "docs/changes/2026-10-29-p7-asset-lineage/verification.md",
-      "docs/changes/2026-10-29-p7-asset-lineage/review.md"
+      "docs/changes/2026-10-29-p7-asset-lineage/review.md",
+      "docs/changes/2026-11-01-handoff-takeover/verification.md"
     ],
-    "verification": "本地候选根2372 pass/20 skip、类型通过；Edge17项、Rust资产18、Mobile373、Agent204通过；本卡仍PARTIAL，真实服务/Native/独审/main待验。",
+    "verification": "本地候选根2372 pass/20 skip、类型通过；Edge17项、Rust资产18、Mobile373、Agent204通过；本卡仍PARTIAL，真实服务/Native/独审/main待验。 2026-11-01 handoff takeover: current branch/worktree corrected; default-skipped external ComfyUI live test and local baseline are recorded in the new verification package; REAL/DONE remains unchanged.",
     "verificationResult": "PARTIAL",
-    "updated": "2026-10-29",
-    "lastVerified": "2026-10-29",
+    "updated": "2026-11-01",
+    "lastVerified": "2026-11-01",
     "nextAction": "完成原生GUI跨端溯源验收、独审和main合流；旧记录不回写。",
     "requirementRefs": [
       "docs/changes/2026-10-29-p7-asset-lineage/intent.md",
@@ -12505,8 +12514,8 @@
     ],
     "owner": "root",
     "ownerRole": "implementation-integrator",
-    "branch": "refactor/TASK-MOD-P3-feature-cycles",
-    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "branch": "fix/TASK-HANDOFF-TAKEOVER-20261101",
+    "worktree": "D:/kk-studio/.worktrees/TASK-HANDOFF-TAKEOVER-20261101",
     "baseSha": "6648e434f1a2b3d041b6a767f74831eacf9e7773",
     "affectedModules": [
       "src-tauri",
@@ -12519,12 +12528,13 @@
     "risk": "medium",
     "reviewRequired": true,
     "evidence": [
-      "docs/changes/2026-10-29-p6-1-comfy-canvas/verification.md"
+      "docs/changes/2026-10-29-p6-1-comfy-canvas/verification.md",
+      "docs/changes/2026-11-01-handoff-takeover/verification.md"
     ],
-    "verification": "类型/lint/UI规范/格式/官方构建通过；根2378 pass/20 skip，Rust271 pass/1 ignored，Edge18 pass/0retry。中间Native夹具双client/原件SHA/重开/停止通过，最终Native与真实GPU/独审/main未验。 2026-10-30追加：2.1.59/d6d592e4真实H3 host/editor视频及首帧AssetPort/结果边/保存重开通过，见本轮main-physical-org6验证；不覆盖图片checkpoint/Hub根自动启动/已安装客户端。",
+    "verification": "类型/lint/UI规范/格式/官方构建通过；根2378 pass/20 skip，Rust271 pass/1 ignored，Edge18 pass/0retry。中间Native夹具双client/原件SHA/重开/停止通过，最终Native与真实GPU/独审/main未验。 2026-10-30追加：2.1.59/d6d592e4真实H3 host/editor视频及首帧AssetPort/结果边/保存重开通过，见本轮main-physical-org6验证；不覆盖图片checkpoint/Hub根自动启动/已安装客户端。 2026-11-01 handoff takeover: current branch/worktree corrected; default-skipped external ComfyUI live test and local baseline are recorded in the new verification package; REAL/DONE remains unchanged.",
     "verificationResult": "PARTIAL",
-    "updated": "2026-10-29",
-    "lastVerified": "2026-10-29",
+    "updated": "2026-11-01",
+    "lastVerified": "2026-11-01",
     "nextAction": "完成浏览器/命令行回归；真实GPU、完整编辑器鼠标/参数面板及独审/main仍开放，用户已要求不控制桌面",
     "requirementRefs": [
       "docs/changes/2026-10-29-p6-1-comfy-canvas/spec.md"
@@ -12547,8 +12557,8 @@
     "dependencies": [],
     "owner": "root",
     "ownerRole": "implementer",
-    "branch": "refactor/TASK-MOD-P0-architecture-baseline",
-    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "branch": "fix/TASK-HANDOFF-TAKEOVER-20261101",
+    "worktree": "D:/kk-studio/.worktrees/TASK-HANDOFF-TAKEOVER-20261101",
     "affectedModules": [
       "config",
       "scripts/governance",
@@ -12565,12 +12575,13 @@
     "priority": "P0",
     "priorityRationale": "工具栏定位与当前用户v3数据兼容阻断统一发布",
     "evidence": [
-      "docs/changes/2026-10-30-origin-baseline-bootstrap/verification.md"
+      "docs/changes/2026-10-30-origin-baseline-bootstrap/verification.md",
+      "docs/changes/2026-11-01-handoff-takeover/verification.md"
     ],
-    "verification": "本地完整verify退出0：根1975pass20skip、Agent204pass2skip、Edge生产838pass0skip0flaky、design8及开发四步骤通过；产品/版本与origin4610不变，两份baseline精确实扫。浏览器metadata4610对应dirty治理候选，开发metadata75775f3c，原报告不重写，474附件外置SHA通过。正式独审/Delivery/当前SHA Hosted/合流待完成。",
+    "verification": "本地完整verify退出0：根1975pass20skip、Agent204pass2skip、Edge生产838pass0skip0flaky、design8及开发四步骤通过；产品/版本与origin4610不变，两份baseline精确实扫。浏览器metadata4610对应dirty治理候选，开发metadata75775f3c，原报告不重写，474附件外置SHA通过。正式独审/Delivery/当前SHA Hosted/合流待完成。 2026-11-01 handoff takeover: current branch/worktree corrected; default-skipped external ComfyUI live test and local baseline are recorded in the new verification package; REAL/DONE remains unchanged.",
     "verificationResult": "PARTIAL",
-    "updated": "2026-10-30",
-    "lastVerified": "2026-10-30",
+    "updated": "2026-11-01",
+    "lastVerified": "2026-11-01",
     "nextAction": "固定提交独立只读评审、Delivery与Hosted门禁后正常PR squash；回到P3解决组合冲突和整体门禁",
     "requirementRefs": [
       "user:主线合流",

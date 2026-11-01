@@ -1,5 +1,7 @@
 # 当前进度
 
+2026-11-01 接管基线：在独立 `fix/TASK-HANDOFF-TAKEOVER-20261101` worktree 记录本地 main `b93b4e7f`、origin/main `9b1038a7` 与 Figma worktree 的 73 路径快照；P6 live ComfyUI 测试已改为默认跳过并要求显式 endpoint/checkpoint 预检，临时 `.tmp.tsx` 已正式化。typecheck/lint/build、Agent runtime 定向3/3和默认跳过浏览器测试通过；真实图片 checkpoint、Figma OAuth、full verify、Hosted、Desktop安装与发布仍未验证。见[接管验证](changes/2026-11-01-handoff-takeover/verification.md)。
+
 2026-10-30 当前合流进行中：P3 f074d4de 正在整合首建基线候选5f78d187及origin/main4610的实际差异，尚未形成已验证合并提交。代码/测试冲突保留双方有效功能；本轮当前完整门禁、独审、Hosted及主线合流均待。历史H3/ORG6证据仍只覆盖其原SHA与范围，主仓21份审计改动保持保护。
 
 ## 2026-10-28 P1能力声明与三个Port（PARTIAL）
