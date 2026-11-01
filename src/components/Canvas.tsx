@@ -1,7 +1,7 @@
 import ComfyWorkflowCanvasHost from "./canvas/ComfyWorkflowCanvasHost.tsx";
 import CanvasSurface from "./canvas/CanvasSurfaceFrame.tsx";
 import CanvasHud from "./canvas/CanvasHud";
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import CanvasNavigation from "./canvas/CanvasNavigation";
 import { deleteConnection, restoreConnection } from "../domain/canvasGraph";
 import CanvasNodeLayer from "./canvas/CanvasNodeLayer";
@@ -29,6 +29,7 @@ import { useCanvasGroups } from "./canvas/useCanvasGroups";
 import CanvasGroupHud from "./canvas/CanvasGroupHud";
 import { useCanvasReferenceFrames } from "./canvas/useCanvasReferenceFrames";
 import { comfyOutputSourceId } from "../domain/canvasItems.ts";
+import { useCanvasWorkflowSourceFocus } from "./canvas/canvasWorkflowSource.ts";
 
 export default function Canvas({
   projectId,
@@ -74,6 +75,7 @@ export default function Canvas({
     startCanvasPan,
     transform,
   } = controls;
+  useCanvasWorkflowSourceFocus(locateNode);
   const {
     connect,
     edges,
@@ -112,12 +114,6 @@ export default function Canvas({
       : undefined,
   );
   const addMenu = useCanvasAddMenu(containerRef, transform, addNode, connect);
-  useEffect(() => {
-    const locate = (event: Event): void =>
-      locateNode((event as CustomEvent<string>).detail);
-    window.addEventListener("kk:focus-node", locate);
-    return () => window.removeEventListener("kk:focus-node", locate);
-  }, [locateNode]);
   const handleDeleteConnection = useCallback(
     (id: string) => {
       setEdges((current) => {

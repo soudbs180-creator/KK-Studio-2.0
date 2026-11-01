@@ -100,6 +100,9 @@ test("P6.1 fixture: choose root, open/return native frame, archive output once a
   const guide = host.getByRole("region", { name: "ComfyUI 安装指南" });
   await expect(guide).toBeVisible();
   await expect(
+    guide.getByText("未安装？获取 ComfyUI", { exact: true }),
+  ).toBeVisible();
+  await expect(
     guide.getByRole("link", { name: "打开 ComfyUI 官方下载页" }),
   ).toHaveAttribute("href", "https://comfy.org/download/");
   await expect(guide).toContainText("下载 Desktop 或 Portable");

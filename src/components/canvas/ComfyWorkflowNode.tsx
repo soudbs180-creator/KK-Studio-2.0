@@ -101,7 +101,7 @@ export default function ComfyWorkflowNode({
           role="region"
           aria-label="ComfyUI 安装指南"
         >
-          <strong>Not installed? Get ComfyUI</strong>
+          <strong>未安装？获取 ComfyUI</strong>
           <a
             href="https://comfy.org/download/"
             target="_blank"
