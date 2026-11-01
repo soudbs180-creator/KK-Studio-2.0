@@ -5,7 +5,7 @@
 - 执行时间与时区：2026-11-01，Asia/Shanghai（客户端时间）
 - Intent / Spec / Plan / AC：本目录 `intent.md`、`spec.md`、`plan.md`；AC-1..AC-4
 - cwd / branch：`D:/kk-studio/.worktrees/TASK-HANDOFF-TAKEOVER-20261101` / `fix/TASK-HANDOFF-TAKEOVER-20261101`
-- 被验证 base SHA / head SHA / tree SHA：base `b93b4e7f347f9a01b28b4055668a5412af489303`；当前 head 待 W0 修复提交后补录
+- 被验证 base SHA / head SHA / tree SHA：base `b93b4e7f347f9a01b28b4055668a5412af489303`；W0 reviewed code head `c50ba15efb98fbceeef840d5e7f5748000c48cef`
 - dirty 状态及 patch/文件指纹：Figma snapshot `D:/kk-studio/output/figma-pages-takeover-2026-11-01/`; 73 files，committed diff SHA `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`、working diff SHA `e2521f082d70f9ecabe1dc8d514049f4bda7e65f5d942d7473ce164df04814bf`、files manifest SHA `a8d95083bd9b4ddca8ae8f9ab99e103f5af7f3bc96185fc1d342cb79a11800f4`
 - Node/npm/Rust/浏览器/OS/工具版本：Node 24.20.0、npm 10.x、Windows；完整版本由命令回执补录
 - 规则版本或 commit：当前仓库 `AGENTS.md`、`AI_RULES.md`、`b93b4e7f`
@@ -77,6 +77,6 @@
 - 实现：PARTIAL（接管阶段实现完成，产品总交付未完成）
 - 验证：PARTIAL
 - 产品能力：P6 H3 视频/首帧既有证据仍按原任务；本阶段新增 live image 证据未建立。
-- 独立 review：W0 修复提交后重新绑定当前 head；上一轮 reviewer 的 Canvas 发现已修复，等待最终独立复审。
+- 独立 review：W0 独立只读复审 PASS，范围 `b93b4e7f..c50ba15e`；docs-only verdict record follows this code head。
 - 用户产品验收和发布授权：未发生。
 - 未关闭风险：TASK-MOD-P6-1、TASK-COMFY-PHYSICAL-20261030、TASK-MOD-P6-HOST/OUTPAINT/UPSCALE/LAYER-SPLIT、TASK-MOD-P7、TASK-MOD-P1-G、TASK-FIGMA-PARITY-AUDIT-20261027、TASK-DELIVERY-MAIN-20261030。
