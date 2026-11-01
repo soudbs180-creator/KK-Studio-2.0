@@ -157,3 +157,62 @@
   font-size: var(--ui-font-body);
   text-align: center;
 }
+.canvas-property-panel {
+  position: absolute;
+  z-index: 24;
+  top: 72px;
+  right: 16px;
+  display: grid;
+  width: min(282px, calc(100% - 32px));
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid var(--border-default);
+  border-radius: var(--ui-radius-panel);
+  background: color-mix(in srgb, var(--bg-card) 94%, transparent);
+  box-shadow: 0 16px 40px var(--kk-shadow-color-strong);
+  backdrop-filter: blur(18px);
+}
+.canvas-property-panel header {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+.canvas-property-panel header strong,
+.canvas-property-panel header span,
+.canvas-property-row > span,
+.canvas-property-row p {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.canvas-property-panel header strong {
+  color: var(--text-primary);
+  font-size: var(--ui-font-label);
+}
+.canvas-property-panel header span,
+.canvas-property-row > span,
+.canvas-property-row p {
+  color: var(--text-tertiary);
+  font-size: var(--ui-font-caption);
+}
+.canvas-property-row {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+.canvas-property-row button {
+  min-height: 44px;
+  overflow: hidden;
+  padding: 8px 10px;
+  border: 1px solid var(--border-default);
+  border-radius: var(--ui-radius-control);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.canvas-property-row button:hover,
+.canvas-property-row button:focus-visible {
+  background: var(--ui-neutral-selected);
+}

@@ -141,6 +141,16 @@ test("P6.1 fixture: choose root, open/return native frame, archive output once a
   expect(output.assetId).toMatch(/^asset-/);
   expect(output.comfyWorkflowSourceId).toBe("comfy-card");
   expect(output.preview).toBe(`data:image/png;base64,${png}`);
+  await host.getByTestId(`canvas-node-${output.id}`).click();
+  const properties = host.getByRole("region", { name: "节点属性" });
+  await expect(properties).toBeVisible();
+  await expect(properties).toContainText("[Workflow Source]");
+  await properties
+    .getByRole("button", { name: "定位工作流来源 ComfyUI 工作流" })
+    .click();
+  await expect(host.getByTestId("canvas-node-comfy-card")).toHaveClass(
+    /is-selected/,
+  );
   await info.attach("persisted-before-reload", {
     body: JSON.stringify(
       await page.evaluate(() => window.comfyHarness.durable()),

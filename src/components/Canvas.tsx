@@ -13,6 +13,7 @@ import { useCanvasControls } from "./canvas/useCanvasControls";
 import { surfaceScale } from "./canvas/canvasSurface";
 import CanvasOverlays from "./canvas/CanvasOverlays";
 import CanvasLayersPanel from "./canvas/CanvasLayersPanel";
+import CanvasPropertyPanel from "./canvas/CanvasPropertyPanel";
 import { useCanvasConnections } from "./canvas/useCanvasConnections";
 import { useCanvasPersistence } from "./canvas/useCanvasPersistence";
 import { useCanvasWorkbenchState } from "./canvas/useCanvasWorkbenchState";
@@ -135,6 +136,7 @@ export default function Canvas({
     edges,
     onItemsChange,
   );
+  const selectedItem = items.find((item) => item.id === controls.selectedNode);
   const gestures = useCanvasGestures({
     rightGesture,
     controls: {
@@ -201,6 +203,14 @@ export default function Canvas({
               onSelect={controls.setSelectedNode}
               onLocate={locateNode}
               onClose={() => setLayersOpen(false)}
+            />
+          )}
+          {selectedItem?.kind === "image" && selectedItem.comfyWorkflowSourceId && (
+            <CanvasPropertyPanel
+              item={selectedItem}
+              items={items}
+              onSelect={controls.setSelectedNode}
+              onLocate={locateNode}
             />
           )}
           <CanvasOverlays
