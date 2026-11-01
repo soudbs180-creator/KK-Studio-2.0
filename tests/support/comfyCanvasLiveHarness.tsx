@@ -110,7 +110,7 @@ export async function mount() {
       ready = false;
     },
     status: async () => ({
-      pid: ready ? 123 : null,
+      pid: null,
       owned: false,
       ready,
       root: ready ? "external-ComfyUI" : null,
