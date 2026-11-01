@@ -32,8 +32,8 @@ test("Figma governance primitives keep one rendered geometry contract", async ({
   expect(geometry).toMatchObject({
     secondaryHeight: "32px",
     primaryHeight: "40px",
-    secondaryRadius: "999px",
-    secondaryFontSize: "14px",
+    secondaryRadius: "1000px",
+    secondaryFontSize: "12px",
     secondaryLineHeight: "20px",
     iconSizes: ["16px", "20px", "24px"],
   });

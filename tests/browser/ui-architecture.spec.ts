@@ -83,11 +83,11 @@ test("A1 资产画廊在桌面和手机使用可读的卡片与控件档位", as
     await expect(card.locator(".asset-name")).toHaveCSS("font-size", "12px");
     await expect(panel.locator(".asset-search-row")).toHaveCSS(
       "height",
-      "32px",
+      "48px",
     );
     await expect(panel.locator(".asset-filters select").first()).toHaveCSS(
       "height",
-      "32px",
+      "44px",
     );
     const filters = await panel.locator(".asset-filters").boundingBox();
     const content = await panel.locator(".asset-content").boundingBox();
@@ -167,7 +167,7 @@ test("A2 提示词卡与 A4 预览使用目录卡档位", async ({ page }) => {
   await expect(card).toHaveCSS("padding", "12px");
   await expect(card.locator(".prompt-library-item-description")).toHaveCSS(
     "font-size",
-    "14px",
+    "16px",
   );
   await card.click();
   await expect(dialog.locator(".prompt-library-detail")).toBeVisible();

@@ -2361,7 +2361,7 @@
 }
 
 .channel-nav-count {
-  font-size: 11px;
+  font-size: var(--kk-font-caption);
   color: var(--kk-text-secondary);
 }
 
@@ -2436,8 +2436,8 @@
 }
 
 .channel-tab-button .tab-badge {
-  font-size: 10px;
-  line-height: 14px;
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-caption);
   padding: 1px 6px;
   border-radius: var(--kk-radius-full);
   background: var(--bg-card-hover);

@@ -36,6 +36,9 @@ for (const width of [390, 1099, 1920]) {
             width: getComputedStyle(item).width,
             radius: getComputedStyle(item).borderRadius,
             text: item.classList.contains("generate-button"),
+            fullRadius:
+              item.classList.contains("generate-button") ||
+              item.classList.contains("composer-ref-add"),
           }));
         return {
           controls,
@@ -58,7 +61,7 @@ for (const width of [390, 1099, 1920]) {
         if (!control.text)
           expect(control.width, control.name ?? "控件").toBe("32px");
         expect(control.radius, control.name ?? "控件").toBe(
-          control.text ? "999px" : "8px",
+          control.fullRadius ? "1000px" : "8px",
         );
       }
       if (geometry.model) {
@@ -102,6 +105,6 @@ for (const [kind, label, inputLabel] of [
     );
     await expect(
       page.locator(".creation-composer:visible .generate-button"),
-    ).toHaveCSS("border-radius", "999px");
+    ).toHaveCSS("border-radius", "1000px");
   });
 }

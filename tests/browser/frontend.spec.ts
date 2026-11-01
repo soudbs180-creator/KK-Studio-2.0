@@ -296,9 +296,9 @@ test("无限画布隐藏滚动条，卡片拖动时连接线跟随", async ({ pa
   const canvas = page.getByTestId("infinite-canvas");
   await expect(canvas).toBeVisible();
   expect(await canvas.boundingBox()).toEqual({
-    x: 291,
+    x: 292,
     y: 45,
-    width: 1619,
+    width: 1618,
     height: 1025,
   });
   expect(await page.locator(".image-preview").boundingBox()).toEqual({

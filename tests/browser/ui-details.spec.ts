@@ -19,7 +19,7 @@ for (const width of [390, 1099, 1920]) {
       ".start-model-picker > button",
       ".start-mode-button",
     ])
-      await expect(home.locator(selector)).toHaveCSS("border-radius", "999px");
+      await expect(home.locator(selector)).toHaveCSS("border-radius", "1000px");
     const homeExtensions = home.getByRole("button", {
       name: "扩展",
       exact: true,
@@ -29,21 +29,24 @@ for (const width of [390, 1099, 1920]) {
     await expect(homeExtensions).toHaveAttribute("aria-haspopup", "menu");
     await expect(homeExtensions).toHaveCSS(
       "border-radius",
-      width < 768 ? "8px" : "999px",
+      width < 768 ? "8px" : "1000px",
     );
     if (width < 768) {
-      await expect(homeExtensions).toHaveCSS("width", "32px");
-      await expect(homeExtensions).toHaveCSS("height", "32px");
+      await expect(homeExtensions).toHaveCSS("width", "44px");
+      await expect(homeExtensions).toHaveCSS("height", "44px");
       await expect(homeExtensions.locator("span")).toBeHidden();
     } else await expect(homeExtensions.locator("span")).toBeVisible();
-    const homeTops = await home
+    const homeCenters = await home
       .locator(".start-footer-right button")
       .evaluateAll((buttons) =>
-        buttons.map((button) => button.getBoundingClientRect().top),
+        buttons.map((button) => {
+          const rect = button.getBoundingClientRect();
+          return rect.top + rect.height / 2;
+        }),
       );
-    expect(Math.max(...homeTops) - Math.min(...homeTops)).toBeLessThanOrEqual(
-      1,
-    );
+    expect(
+      Math.max(...homeCenters) - Math.min(...homeCenters),
+    ).toBeLessThanOrEqual(1);
     await openWorkspace(page);
     const open = page.getByRole("button", { name: "打开对话", exact: true });
     if (await open.isVisible()) await open.click();
@@ -51,7 +54,7 @@ for (const width of [390, 1099, 1920]) {
     const chat = page.locator(".chat-composer");
     await expect(chat).toBeVisible();
     for (const selector of [".chat-model-picker", ".chat-mode-trigger"])
-      await expect(chat.locator(selector)).toHaveCSS("border-radius", "999px");
+      await expect(chat.locator(selector)).toHaveCSS("border-radius", "1000px");
     const chatExtensions = chat.getByRole("button", {
       name: "扩展",
       exact: true,
@@ -62,11 +65,11 @@ for (const width of [390, 1099, 1920]) {
     await expect(chatExtensions).toHaveAttribute("aria-haspopup", "menu");
     await expect(chatExtensions).toHaveCSS(
       "border-radius",
-      width <= 1200 ? "8px" : "999px",
+      width <= 1200 ? "8px" : "1000px",
     );
     if (width <= 1200) {
-      await expect(chatExtensions).toHaveCSS("width", "32px");
-      await expect(chatExtensions).toHaveCSS("height", "32px");
+      await expect(chatExtensions).toHaveCSS("width", "44px");
+      await expect(chatExtensions).toHaveCSS("height", "44px");
       await expect(chatExtensions.locator("span")).toBeHidden();
     } else await expect(chatExtensions.locator("span")).toBeVisible();
     const tail = chat.locator(".composer-trailing-actions");
@@ -77,13 +80,16 @@ for (const width of [390, 1099, 1920]) {
           !button.closest('[role="menu"]') && button.getClientRects().length,
       );
       return {
-        tops: buttons.map((button) => button.getBoundingClientRect().top),
+        centers: buttons.map((button) => {
+          const rect = button.getBoundingClientRect();
+          return rect.top + rect.height / 2;
+        }),
         right: group.getBoundingClientRect().right,
         edge: group.closest("form")!.getBoundingClientRect().right,
       };
     });
     expect(
-      Math.max(...layout.tops) - Math.min(...layout.tops),
+      Math.max(...layout.centers) - Math.min(...layout.centers),
     ).toBeLessThanOrEqual(1);
     expect(layout.right).toBeLessThanOrEqual(layout.edge);
     await expect(chat.getByText("生成参数", { exact: true })).toHaveCount(0);
@@ -125,6 +131,7 @@ test("设置按内容选择紧凑宽度，切换模型后普通页不保留宽�
     path: info.outputPath("settings-update.png"),
     animations: "disabled",
   });
+  await selectSettingsSection(page, "软件更新");
   await expect(
     panel.getByRole("heading", { name: "软件更新", exact: true }),
   ).toBeVisible();

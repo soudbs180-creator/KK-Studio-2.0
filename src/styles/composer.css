@@ -1439,7 +1439,7 @@
 }
 
 .composer-token-text {
-  font-size: 11px;
+  font-size: var(--kk-font-caption);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
   overflow: hidden;
@@ -1456,7 +1456,7 @@
 .composer-cache-badge {
   display: inline-flex;
   align-items: center;
-  font-size: 10px;
+  font-size: var(--kk-font-caption);
   font-weight: 500;
   line-height: 14px;
   padding: 1px 6px;
@@ -1475,7 +1475,7 @@
 }
 
 .composer-tps-badge {
-  font-size: 11px;
+  font-size: var(--kk-font-caption);
   font-variant-numeric: tabular-nums;
   color: var(--text-tertiary);
   white-space: nowrap;
@@ -1497,7 +1497,7 @@
 }
 
 .composer-reasoning-label {
-  font-size: 10px;
+  font-size: var(--kk-font-caption);
   color: var(--text-tertiary);
   padding: 0 4px;
 }
@@ -1506,7 +1506,7 @@
   border: 0;
   background: var(--ui-state-idle-bg);
   color: var(--text-tertiary);
-  font-size: 10px;
+  font-size: var(--kk-font-caption);
   line-height: 16px;
   padding: 0 6px;
   border-radius: 3px;

@@ -77,6 +77,6 @@
 - 实现：PARTIAL（接管阶段实现完成，产品总交付未完成）
 - 验证：PARTIAL
 - 产品能力：P6 H3 视频/首帧既有证据仍按原任务；本阶段新增 live image 证据未建立。
-- 独立 review：W0 独立只读复审 PASS，范围 `b93b4e7f..c50ba15e`；docs-only verdict record follows this code head。
+- 独立 review：fresh W0 独立只读复审 PASS，范围 `b93b4e7f..56e8b9f2`；56e8b9f2 仅为 docs-only 收据提交，代码 reviewed head 仍为 c50ba15e。
 - 用户产品验收和发布授权：未发生。
 - 未关闭风险：TASK-MOD-P6-1、TASK-COMFY-PHYSICAL-20261030、TASK-MOD-P6-HOST/OUTPAINT/UPSCALE/LAYER-SPLIT、TASK-MOD-P7、TASK-MOD-P1-G、TASK-FIGMA-PARITY-AUDIT-20261027、TASK-DELIVERY-MAIN-20261030。

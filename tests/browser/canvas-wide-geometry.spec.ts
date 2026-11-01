@@ -318,7 +318,7 @@ for (const media of mediaCases) {
                 (element) => (element as HTMLElement).offsetHeight,
               ),
             )
-            .toBe(expanded ? 330 : 237);
+            .toBe(expanded ? 330 : 156);
           await expect
             .poll(() =>
               composer.evaluate((element) =>

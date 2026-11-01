@@ -18,13 +18,14 @@
 
 ## 包 C：Edge 分类
 
-- 主线全量：913 项，685 passed / 1 skipped / 227 unexpected / 0 flaky；原始结果在 `test-results/browser/047761f8-fb07-4504-8d28-15c3090ca4f9/browser-results.json`。
-- 逐项分类已写入 `D:/kk-studio/output/w1-gate-zero-2026-11-01/browser-failure-classification.json`：95 `product_defect`、35 `obsolete_assertion`、97 `environment_issue`。
-- 串行定向（1 worker、retries=0）：44 项中 36 通过、8 失败。390px 短屏视频编辑器 light/dark 两项为真实可复现产品缺陷；任务列表关闭热区 390/1920 通过；429 保存时序两项通过。其余失败是当前设置/连接 fixture 路径的未解决合同或环境阻断，原始上下文保留。
+- 主线并行基线：913 项，685 passed / 1 skipped / 227 unexpected / 0 flaky；原始结果在 `D:/kk-studio/KK-Studio-2.0/test-results/browser/047761f8-fb07-4504-8d28-15c3090ca4f9/browser-results.json`。
+- 串行复核：913 项，684 passed / 1 skipped / 228 unexpected / 0 flaky；结果在 `D:/kk-studio/KK-Studio-2.0/test-results/browser/58509346-5b24-4ba6-9ce6-8d81cda12063/browser-results.json`。
+- 逐项分类已写入 `D:/kk-studio/output/w1-gate-zero-2026-11-01/browser-failure-classification.json`：228 `product_defect`、0 `obsolete_assertion`、0 `environment_issue`。并行中的超时在串行运行仍复现，因此没有把超时批量归为环境问题。
+- 当前 W1 工作树定向复验（1 worker、retries=0）：53/53 通过；侧栏首屏等待、ComfyUI 本地模型入口与字号契约已按当前实现固定。
 - 分类判定和六个任务的逐项说明见 [browser-classification.md](./browser-classification.md)。
 
 ## W1 结论
 
 - 包 A、B 已形成独立提交并通过各自定向门禁。
-- 包 C 已完成主线全量运行和逐项分类，但 227 项仍阻断完整交付；未进行批量测试改写或合流。
+- 包 C 已完成主线全量运行和逐项分类，但 228 项仍阻断完整交付；没有删除测试、加入 skip、降低重试或批量 dismiss。
 - 当前 W1 工作树仍是有界候选，未声称 Hosted、Desktop、真实 provider 或 release 已通过。

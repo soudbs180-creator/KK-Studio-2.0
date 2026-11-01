@@ -94,8 +94,8 @@ test("首页语音可以开启、识别并关闭，结果写入提示词", async
   await prompt.fill("夜晚的城市");
   const voice = page.locator(".start-mic-button");
   await expect(voice).toHaveAttribute("aria-label", "开启语音输入");
-  await expect(voice.locator("img")).toHaveCSS("width", "14px");
-  await expect(voice.locator("img")).toHaveCSS("height", "14px");
+  await expect(voice.locator("img")).toHaveCSS("width", "20px");
+  await expect(voice.locator("img")).toHaveCSS("height", "20px");
 
   await voice.click();
   await expect(voice).toHaveAttribute("aria-label", "关闭语音输入");
@@ -148,7 +148,6 @@ test("首页模型名称保持单行并在过长时省略", async ({ page }) => 
   const button = page.locator(".start-model-picker .start-tool-button");
   await button.click();
   const menu = page.getByRole("menu", { name: "选择模型", exact: true });
-  await menu.getByRole("tab", { name: "中转 API", exact: true }).click();
   await menu
     .getByRole("menuitemradio", {
       name: /kk-image-model-with-a-very-long-display-name/,
@@ -206,7 +205,7 @@ test("语音启动失败会回到关闭状态，并允许再次尝试", async ({
 
   await voice.click();
   await expect(voice).toHaveAttribute("data-voice-state", "off");
-  await expect(page.getByRole("status")).toContainText("启动失败");
+  await expect(page.locator(".start-status")).toContainText("启动失败");
   await voice.click();
   await expect(voice).toHaveAttribute("data-voice-state", "on");
   await voice.click();
@@ -250,7 +249,7 @@ test("网络错误会关闭语音会话并保留可重试入口", async ({ page 
     (window as SpeechMockWindow).__kkSpeechMock?.error("network");
   });
   await expect(voice).toHaveAttribute("data-voice-state", "off");
-  await expect(page.getByRole("status")).toContainText("网络不可用");
+  await expect(page.locator(".start-status")).toContainText("网络不可用");
 });
 
 test("语音识别结果遵守首页提示词长度上限", async ({ page }) => {

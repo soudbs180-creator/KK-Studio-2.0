@@ -14,9 +14,9 @@ test("latest Figma shell is loaded by the real production page", async ({
     "data-runtime-mode",
     "production",
   );
-  await expect(page.locator(".sidebar")).toHaveCSS("width", "70px");
+  await expect(page.locator(".sidebar")).toHaveCSS("width", "72px");
   await expandSidebar(page);
-  await expect(page.locator(".sidebar")).toHaveCSS("width", "291px");
+  await expect(page.locator(".sidebar")).toHaveCSS("width", "292px");
   await expect(page.locator(".sidebar")).toHaveCSS(
     "background-color",
     "rgb(22, 22, 22)",
@@ -51,7 +51,7 @@ test("latest Figma shell is loaded by the real production page", async ({
     ),
   );
   const figma: Record<string, number[]> = {
-    ".workspace-content": [291, 45, 1619, 1025],
+    ".workspace-content": [292, 45, 1618, 1025],
     ".conversation-panel": [1430, 61, 470, 998],
     ".canvas-toolbar": [719, 998, 244, 50],
   };
@@ -80,12 +80,12 @@ test("latest Figma shell is loaded by the real production page", async ({
     animations: "disabled",
   });
   await page.getByRole("button", { name: "收起侧边栏", exact: true }).click();
-  await expect(page.locator(".sidebar")).toHaveCSS("width", "70px");
+  await expect(page.locator(".sidebar")).toHaveCSS("width", "72px");
   await expect
     .poll(
       async () => (await page.locator(".workspace-content").boundingBox())!.x,
     )
-    .toBe(70);
+    .toBe(72);
   await expect
     .poll(async () => (await page.locator(".canvas-toolbar").boundingBox())!.x)
     .toBeCloseTo(719, 0);

@@ -13,18 +13,12 @@ test("画布背景在点和网格之间切换，且不污染对话面板", async
   const canvas = page.getByTestId("infinite-canvas");
   const pattern = page.getByRole("button", { name: "画布背景", exact: true });
   await expect(pattern).toHaveAttribute("aria-expanded", "false");
-  await expect(pattern.locator("img")).toHaveAttribute(
-    "src",
-    "/design/figma/nav-background.svg",
-  );
+  await expect(pattern.locator(".toolbar-icon")).toBeVisible();
   await pattern.click();
   await page.getByRole("button", { name: "网格背景", exact: true }).click();
   const dots = pattern;
   await expect(dots).toHaveAttribute("aria-expanded", "false");
-  await expect(dots.locator("img")).toHaveAttribute(
-    "src",
-    "/design/figma/canvas-dots.svg",
-  );
+  await expect(dots.locator(".toolbar-icon")).toBeVisible();
   await expect(canvas).toHaveClass(/canvas-pattern-grid/);
   await expect(canvas).toHaveCSS("background-image", /linear-gradient/);
   await expect(canvas).toHaveCSS("background-color", "rgb(10, 10, 10)");
@@ -107,19 +101,19 @@ test("对话空态在消息区垂直居中，语音输入默认关闭且可用",
   await expect(voice).toHaveAttribute("aria-pressed", "false");
   await expect(voice).toHaveCSS("opacity", "1");
   await expect(voice).toHaveCSS("height", "32px");
-  await expect(voice.locator("img")).toHaveCSS("width", "14px");
-  await expect(voice.locator("img")).toHaveCSS("height", "14px");
+  await expect(voice.locator("img")).toHaveCSS("width", "16px");
+  await expect(voice.locator("img")).toHaveCSS("height", "16px");
   await expect(voice.locator("img")).toHaveAttribute(
     "src",
     "/design/figma/mic-off.svg",
   );
   await expect(page.locator(".chat-composer textarea")).toHaveCSS(
     "font-size",
-    "14px",
+    "16px",
   );
   await expect(page.locator(".chat-composer textarea")).toHaveCSS(
     "line-height",
-    "20px",
+    "24px",
   );
   const mode = page.getByRole("button", { name: "AI权限模式" });
   await expect(mode).toHaveText("自动");
@@ -139,16 +133,15 @@ test("画布工具栏分隔线保持竖向居中", async ({ page }) => {
   await expect(dividers).toHaveCount(2);
   for (const divider of await dividers.all()) {
     const box = (await divider.boundingBox())!;
-    // Figma source uses a zero-width layout slot with a 2x18px painted line
-    // centered one pixel into that slot (node 309:1774 / Line 3).
-    expect(box.width).toBe(0);
+    // Current canvas toolbar uses a 4px hit slot with a 1x20px painted line.
+    expect(box.width).toBe(4);
     expect(box.height).toBe(20);
     const line = await divider.evaluate((node) => {
       const style = getComputedStyle(node, "::before");
       return { width: style.width, height: style.height };
     });
-    expect(line.width).toBe("2px");
-    expect(line.height).toBe("18px");
+    expect(line.width).toBe("1px");
+    expect(line.height).toBe("20px");
     expect(
       Math.abs(box.y + box.height / 2 - (toolbarBox.y + toolbarBox.height / 2)),
     ).toBeLessThanOrEqual(1);

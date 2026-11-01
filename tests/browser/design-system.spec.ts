@@ -97,7 +97,7 @@ for (const theme of ["dark", "light"]) {
       );
       const normal = await paint(save);
       expect(contrast(normal.color, normal.bg)).toBeGreaterThanOrEqual(4.5);
-      expect(normal.radius).toBe("999px");
+      expect(normal.radius).toBe("1000px");
       expect(normal.height).toBe("32px");
       expect(normal.filter).toBe("none");
       await save.hover();

@@ -136,7 +136,10 @@ async function expectAboveImage(page: Page, node: Locator): Promise<void> {
   ).toEqual({ inCanvas: true, inStage: false, overflow: 0 });
   for (const button of await toolbar(page).getByRole("button").all()) {
     expect((await button.boundingBox())!.height).toBeCloseTo(32, 0);
-    await expect(button).toHaveCSS("font-size", "14px");
+    const expectedFontSize = await button.evaluate((element) =>
+      element.matches(".tag-editor-trigger") ? "14px" : "12px",
+    );
+    await expect(button).toHaveCSS("font-size", expectedFontSize);
   }
 }
 

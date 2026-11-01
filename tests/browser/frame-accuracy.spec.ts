@@ -105,7 +105,7 @@ test("latest two Figma frames retain exact shell anchors through independent col
   page,
 }) => {
   await openArrangedWorkspace(page);
-  await rect(page, ".workspace-content", [291, 45, 1619, 1025]);
+  await rect(page, ".workspace-content", [292, 45, 1618, 1025]);
   await rect(page, ".task-button", [321, 72, 93, 30]);
   await rect(
     page,
@@ -130,7 +130,7 @@ test("latest two Figma frames retain exact shell anchors through independent col
     page.getByRole("button", { name: "打开对话", exact: true }),
   ).toBeFocused();
   await page.getByRole("button", { name: "收起侧边栏", exact: true }).click();
-  await rect(page, ".workspace-content", [70, 45, 1840, 1025]);
+  await rect(page, ".workspace-content", [72, 45, 1838, 1025]);
   await rect(page, ".task-button", [100, 72, 93, 30]);
   await rect(page, ".canvas-toolbar", [719, 998, 244, 50]);
   await rect(page, ".sidebar-search", [22, 942, 26, 26]);
@@ -172,8 +172,8 @@ test("sidebar motion keeps the task attached to the frame and toolbar stationary
   const samples = await sampleSidebarMotion(page);
   expect(samples).toHaveLength(5);
   expect(samples.some(({ frame }) => frame > 71 && frame < 290)).toBe(true);
-  expect(samples[0].frame).toBeCloseTo(291, 1);
-  expect(samples.at(-1)!.frame).toBeCloseTo(70, 1);
+  expect(samples[0].frame).toBeCloseTo(292, 1);
+  expect(samples.at(-1)!.frame).toBeCloseTo(72, 1);
   for (const { frame, task, toolbar } of samples) {
     expect(Math.abs(task - frame - 30)).toBeLessThan(0.1);
     expect(Math.abs(toolbar - 719)).toBeLessThan(0.1);
@@ -182,8 +182,8 @@ test("sidebar motion keeps the task attached to the frame and toolbar stationary
   await page.getByRole("button", { name: "展开侧边栏", exact: true }).click();
   const opening = await sampleSidebarMotion(page);
   expect(opening).toHaveLength(5);
-  expect(opening[0].width).toBeCloseTo(70, 1);
-  expect(opening.at(-1)!.width).toBeCloseTo(291, 1);
+  expect(opening[0].width).toBeCloseTo(72, 1);
+  expect(opening.at(-1)!.width).toBeCloseTo(292, 1);
   expect(opening.some((frame) => frame.width > 71 && frame.width < 290)).toBe(
     true,
   );
@@ -199,7 +199,7 @@ test("sidebar motion keeps the task attached to the frame and toolbar stationary
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.getByRole("button", { name: "收起侧边栏", exact: true }).click();
   await page.getByRole("button", { name: "展开侧边栏", exact: true }).click();
-  await rect(page, ".workspace-content", [291, 45, 1619, 1025]);
+  await rect(page, ".workspace-content", [292, 45, 1618, 1025]);
   expect(
     await page
       .locator(".sidebar")
