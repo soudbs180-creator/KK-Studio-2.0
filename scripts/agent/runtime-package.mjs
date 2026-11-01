@@ -218,7 +218,8 @@ async function publicationDirectory(target) {
 }
 async function renamePublication(source, target, parents, rename, expected) {
   let failure;
-  for (const delay of [0, 150, 300, 600, 900]) {
+  const retryDelays = [0, 150, 300, 600, 1200, 2400, 4800];
+  for (const [index, delay] of retryDelays.entries()) {
     if (delay) await wait(delay);
     for (const directory of parents) await publicationDirectory(directory);
     const current = await publicationDirectory(source);
@@ -232,7 +233,12 @@ async function renamePublication(source, target, parents, rename, expected) {
       return;
     } catch (error) {
       if (!["EPERM", "EBUSY"].includes(error.code)) throw error;
-      failure = error;
+      failure = Object.assign(error, {
+        attempts: index + 1,
+        retryWindowMs:
+          retryDelays.at(-1) +
+          retryDelays.slice(0, -1).reduce((sum, value) => sum + value, 0),
+      });
     }
   }
   throw failure;
