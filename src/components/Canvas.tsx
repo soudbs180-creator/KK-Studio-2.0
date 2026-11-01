@@ -125,10 +125,7 @@ export default function Canvas({
     },
     [setEdges, setRemovedEdge, containerRef],
   );
-  const handleConfigure = useCallback(
-    () => onOpen?.("settings/providers"),
-    [onOpen],
-  );
+  const handleConfigure = () => onOpen?.("settings/providers");
   const handleSwapReferenceFrames = useCanvasReferenceFrames(
     edges,
     onItemsChange,

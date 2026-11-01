@@ -2,7 +2,7 @@
 
 - Task ID：TASK-DELIVERY-MAIN-20261030
 - 时间与时区：2026-11-01，Asia/Shanghai
-- Reviewer/context/工具或模型：实现者 self-review；已启动独立只读 reviewer，但当前会话未返回可引用结论
+- Reviewer/context/工具或模型：实现者 self-review；独立只读 reviewer 已复核 W0 初始修复并提出 Canvas 行数 blocker，修复后需复审当前 head
 - 独立于实现上下文：否（self-review）；独立 review NOT VERIFIED
 - Base SHA / head SHA / 规则版本：base `b93b4e7f347f9a01b28b4055668a5412af489303`；head `1698dc6e3d030279d875f68430d02020a3dc91a4`；当前规则来自仓库 `AGENTS.md` / `AI_RULES.md`
 - PR / branch / worktree：无 PR；`fix/TASK-HANDOFF-TAKEOVER-20261101`; task worktree
@@ -22,11 +22,11 @@
 | IR-HANDOFF-01 | P1 | verification | merge blocker | `verification.md` / external prerequisites | no authorized image checkpoint and no Figma OAuth; real gates cannot run | root/user external input | OPEN |
 | IR-HANDOFF-02 | P2 | governance | merge blocker for this package | `task-ledger.json` active ownership | full verify/Hosted/PR not run | root | OPEN until final gate |
 | IR-HANDOFF-03 | P2 | test boundary | non-blocking for default suite | live test/harness | opt-in path remains unverified without real endpoint/checkpoint | root | OPEN, correctly NOT VERIFIED |
-| IR-HANDOFF-04 | P2 | UI gate | merge blocker for full verify, pre-existing | `npm run ui:check` | `Canvas.tsx` exceeds 300 lines and `comfy-workflow.css` references two undefined tokens | existing UI owner | OPEN, outside this handoff |
+| IR-HANDOFF-04 | P2 | UI gate | resolved | `npm run ui:check` | Canvas focus extraction plus compact configure callback reduced the file to the enforced limit; semantic tokens are defined | root | RESOLVED, recheck PASS |
 
 ## 复核摘要与交接
 
-- 已确认：默认 live test 不会触碰外部服务；任务树依赖生成后 Agent runtime targeted tests 通过；Figma worktree 已保存 73 路径 SHA。
+- 已确认：默认 live test 不会触碰外部服务；任务树依赖生成后 Agent runtime targeted tests 通过；Figma worktree 已保存 73 路径 SHA；W0 UI gate 292 files / 0 violations，ComfyUI browser 1/1。
 - 仍 PARTIAL/NOT VERIFIED：真实 GPU/Comfy image、Desktop、Figma L3/L4、Hosted、发布及全量 browser。
 - 风险交给后续：获得 checkpoint 后运行 opt-in live test；获得 Figma OAuth 后执行 audit pull/L3/L4；修复 227 browser failures 和 Windows rename EPERM。
 
@@ -35,7 +35,7 @@
 | 门禁 | 真实结果 | 证据与 SHA/时间 | 未满足的影响 |
 | --- | --- | --- | --- |
 | Self-review | PASS WITH FOLLOW-UPS | current diff, 2026-11-01 | not independent |
-| 独立 AI review | NOT VERIFIED | pending current head | cannot claim merge-ready |
+| 独立 AI review | NOT VERIFIED | W0 initial review CHANGES REQUIRED; post-fix review pending | cannot claim merge-ready |
 | CI / 定向回归 | PARTIAL | local type/lint/build/targeted tests | full verify not run |
 | GitHub 实际审批 | NOT RUN | no PR | no remote merge |
 | 用户 UI/交互/产品验收 | NOT RUN | no user product acceptance | no REAL/DONE upgrade |
@@ -45,7 +45,7 @@
 ## 结论
 
 - NOT VERIFIED
-- 未关闭 blocker：真实 checkpoint、Figma OAuth、full verify/Hosted、独立 review、origin/main merge。
+- 未关闭 blocker：真实 checkpoint、Figma OAuth、full verify/Hosted、W0 post-fix 独立 review、origin/main merge。
 - 非阻断后续：live test default gate and snapshot are complete enough for continuation.
 - 当前 review 结论为 NOT VERIFIED；未返回独立 reviewer 可引用结论，不能把 self-review 代替独立 review。
 - 本结论不代替合并、发布或用户最终验收。
