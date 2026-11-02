@@ -1,6 +1,10 @@
 import { expect, test, type Locator, type Page } from "@playwright/test";
 import type { CreationSnapshot } from "../../src/features/creation/model";
-import { openWorkspace, uploadCanvasMedia } from "./helpers";
+import {
+  openWorkspace,
+  uploadCanvasMedia,
+  panCanvasToRevealAction,
+} from "./helpers";
 
 test.use({ hasTouch: true });
 
@@ -128,6 +132,7 @@ for (const width of [320, 390]) {
         exact: true,
       });
       await upload.scrollIntoViewIfNeeded();
+      await panCanvasToRevealAction(page, upload);
       await expect(upload).toHaveCSS("border-radius", "8px");
       await expect
         .poll(() =>
@@ -139,12 +144,12 @@ for (const width of [320, 390]) {
             );
             return {
               widthAtLeast32: box.width >= 32,
-              height: box.height,
+              height32: Math.abs(box.height - 32) < 0.0001,
               hit: button === hit || button.contains(hit),
             };
           }),
         )
-        .toEqual({ widthAtLeast32: true, height: 32, hit: true });
+        .toEqual({ widthAtLeast32: true, height32: true, hit: true });
       await expect(
         node.getByRole("button", { name: `上传${label}`, exact: true }),
       ).toHaveCSS("border-radius", "8px");
@@ -190,9 +195,12 @@ for (const deletion of ["toolbar", "keyboard"]) {
       name: "卡片操作：blue-hour-motion.webm",
       exact: true,
     });
-    await toolbar
-      .getByRole("button", { name: "喜欢blue-hour-motion.webm", exact: true })
-      .tap();
+    const like = toolbar.getByRole("button", {
+      name: "喜欢blue-hour-motion.webm",
+      exact: true,
+    });
+    await panCanvasToRevealAction(page, like);
+    await like.tap();
     await toolbar.getByRole("button", { name: "编辑标签", exact: true }).tap();
     const tags = page.getByRole("dialog", { name: "编辑标签", exact: true });
     await tags.getByRole("button", { name: "收藏", exact: true }).tap();

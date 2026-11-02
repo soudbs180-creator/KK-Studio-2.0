@@ -31,6 +31,44 @@ async function submit(page: Page) {
   await page.getByRole("button", { name: "批准并提交" }).click();
 }
 
+test("1099px HUD 取消真实命中并隔离迟到结果", async ({ page }) => {
+  let release!: () => void;
+  const pending = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  let requests = 0;
+  await page.route(endpoint, async (route) => {
+    requests += 1;
+    await pending;
+    await route
+      .fulfill({ json: { data: [{ url: resultUrl }] } })
+      .catch(() => {});
+  });
+  try {
+    await submit(page);
+    await expect.poll(() => requests).toBe(1);
+    await page.setViewportSize({ width: 1099, height: 1080 });
+    const cancel = page
+      .locator(".project-task-running")
+      .getByRole("button", { name: "取消", exact: true });
+    await expect(cancel).toBeVisible();
+    await cancel.click();
+    await expect(page.locator(".project-task-unknown")).toContainText(
+      "受理状态不明",
+    );
+    release();
+    await expect(page.locator(".project-task-unknown")).toContainText(
+      "受理状态不明",
+    );
+    await expect(
+      page.locator('.demo-result-node[data-source="provider"]'),
+    ).toHaveCount(0);
+    expect(requests).toBe(1);
+  } finally {
+    release();
+  }
+});
+
 for (const width of [390, 1099, 1920]) {
   test(`Web returned image stays saving until archival, then survives reload ${width}`, async ({
     page,

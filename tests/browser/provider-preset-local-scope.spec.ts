@@ -27,7 +27,9 @@ for (const width of [390, 1920]) {
       picker.getByRole("button", { name: "全部", exact: true }),
     ).toHaveAttribute("aria-pressed", "true");
     await expect(picker.locator(".provider-preset-item")).toHaveCount(7);
-    await expect(picker.locator(".provider-preset-item .preset-card-label")).toHaveText([
+    await expect(
+      picker.locator(".provider-preset-item .preset-card-label"),
+    ).toHaveText([
       "LM Studio",
       "Ollama",
       "llama.cpp",
@@ -56,22 +58,30 @@ for (const width of [390, 1920]) {
     await method(page, "API Key（官方）");
     const picker = page.locator(".provider-presets");
     await picker.locator("summary").click();
-    const remote = picker.locator(".provider-preset-item").filter({has: page.getByText("OpenAI", {exact: true})});
-    await expect(remote.getByRole("link", {name: "文档", exact: true})).toBeVisible();
+    const remote = picker
+      .locator(".provider-preset-item")
+      .filter({ has: page.getByText("OpenAI", { exact: true }) });
+    await expect(
+      remote.getByRole("link", { name: "文档", exact: true }),
+    ).toBeVisible();
     await method(page, "本地");
     await expect(remote).toHaveCount(0);
-    await expect(picker.getByRole("link", {name: "官网", exact: true})).toHaveCount(0);
+    await expect(
+      picker.getByRole("link", { name: "官网", exact: true }),
+    ).toHaveCount(0);
     await expect(page.getByLabel("接口地址", { exact: true })).toHaveValue(
       "http://127.0.0.1:8080/v1",
     );
-    await picker
-      .locator(".preset-card-grid")
-      .scrollIntoViewIfNeeded();
+    await picker.locator(".preset-card-grid").scrollIntoViewIfNeeded();
     await page.screenshot({
       path: test.info().outputPath(`local-preset-scope-${width}.png`),
       animations: "disabled",
     });
-    await picker.locator(".provider-preset-item").filter({has: page.getByText("LM Studio", {exact: true})}).getByRole("button", {name: "一键填入", exact: true}).click();
+    await picker
+      .locator(".provider-preset-item")
+      .filter({ has: page.getByText("LM Studio", { exact: true }) })
+      .getByRole("button", { name: "一键填入", exact: true })
+      .click();
     await expect(page.getByLabel("接口地址", { exact: true })).toHaveValue(
       "http://127.0.0.1:1234/v1",
     );

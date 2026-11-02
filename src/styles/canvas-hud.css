@@ -524,6 +524,25 @@
   white-space: nowrap;
   text-overflow: ellipsis;
 }
+.canvas .canvas-hud .project-task-status > span:not(.project-save-state) {
+  display: flex;
+  align-items: center;
+  flex: 1 0 auto;
+  overflow: visible;
+}
+.canvas .canvas-hud .project-task-label {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  flex: 1 1 0;
+}
+.canvas .canvas-hud .project-task-status button {
+  flex: 0 0 auto;
+  min-width: var(--kk-control-h-xl);
+  min-height: var(--kk-control-h-md);
+  margin-left: 0;
+}
 .canvas .canvas-hud .task-button,
 .canvas .canvas-hud .chat-reopen {
   height: 44px;

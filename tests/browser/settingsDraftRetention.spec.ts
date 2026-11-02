@@ -106,7 +106,11 @@ test("切换型号保留每个型号未保存的尺寸、显示和图片能力�
     .getByLabel("参考图编辑能力", { exact: true })
     .selectOption("supported");
   await catalog.getByLabel("参考图数量上限", { exact: true }).fill("3");
-  await catalog.locator(".model-catalog-row").filter({has: page.getByText("draft-image-b", {exact: true})}).getByRole("button", {name: "选择", exact: true}).click();
+  await catalog
+    .locator(".model-catalog-row")
+    .filter({ has: page.getByText("draft-image-b", { exact: true }) })
+    .getByRole("button", { name: "选择", exact: true })
+    .click();
   await expect(catalog.getByLabel("模型分组名称", { exact: true })).toHaveValue(
     "Draft account A b",
   );
@@ -116,7 +120,11 @@ test("切换型号保留每个型号未保存的尺寸、显示和图片能力�
   await catalog
     .getByLabel("当前模型用途", { exact: true })
     .selectOption("text");
-  await catalog.locator(".model-catalog-row").filter({has: page.getByText("draft-image-a", {exact: true})}).getByRole("button", {name: "选择", exact: true}).click();
+  await catalog
+    .locator(".model-catalog-row")
+    .filter({ has: page.getByText("draft-image-a", { exact: true }) })
+    .getByRole("button", { name: "选择", exact: true })
+    .click();
   await expect(
     catalog.getByLabel("支持的图片尺寸", { exact: true }),
   ).toHaveValue("1536x1024");
@@ -135,7 +143,11 @@ test("切换型号保留每个型号未保存的尺寸、显示和图片能力�
   await expect(
     catalog.getByLabel("参考图数量上限", { exact: true }),
   ).toHaveValue("3");
-  await catalog.locator(".model-catalog-row").filter({has: page.getByText("draft-image-b", {exact: true})}).getByRole("button", {name: "选择", exact: true}).click();
+  await catalog
+    .locator(".model-catalog-row")
+    .filter({ has: page.getByText("draft-image-b", { exact: true }) })
+    .getByRole("button", { name: "选择", exact: true })
+    .click();
   await expect(catalog.getByLabel("模型分组名称", { exact: true })).toHaveValue(
     "Unsaved family B",
   );
@@ -184,7 +196,9 @@ test("目录更新保留 dirty 草稿，未改动和保存后的字段采用最�
   // 连续选择不让出当前事件任务，覆盖型号标识与字段尚未同步的窗口。
   await catalog.locator(".model-catalog-list").evaluate((list) => {
     for (const model of ["draft-image-b", "draft-image-a"]) {
-      const row = [...list.querySelectorAll(".model-catalog-row")].find((item) => item.querySelector(".model-item-id")?.textContent === model)!;
+      const row = [...list.querySelectorAll(".model-catalog-row")].find(
+        (item) => item.querySelector(".model-item-id")?.textContent === model,
+      )!;
       row.querySelector<HTMLButtonElement>(".btn-select-model")!.click();
     }
   });
@@ -198,14 +212,22 @@ test("目录更新保留 dirty 草稿，未改动和保存后的字段采用最�
   await expect(
     catalog.getByLabel("支持的图片尺寸", { exact: true }),
   ).toHaveValue("1024x1024");
-  await catalog.locator(".model-catalog-row").filter({has: page.getByText("draft-image-b", {exact: true})}).getByRole("button", {name: "选择", exact: true}).click();
+  await catalog
+    .locator(".model-catalog-row")
+    .filter({ has: page.getByText("draft-image-b", { exact: true }) })
+    .getByRole("button", { name: "选择", exact: true })
+    .click();
   await expect(catalog.getByLabel("模型分组名称", { exact: true })).toHaveValue(
     "Updated draft-image-b",
   );
   await expect(
     catalog.getByLabel("支持的图片尺寸", { exact: true }),
   ).toHaveValue("2048x2048");
-  await catalog.locator(".model-catalog-row").filter({has: page.getByText("draft-image-a", {exact: true})}).getByRole("button", {name: "选择", exact: true}).click();
+  await catalog
+    .locator(".model-catalog-row")
+    .filter({ has: page.getByText("draft-image-a", { exact: true }) })
+    .getByRole("button", { name: "选择", exact: true })
+    .click();
   await expect(catalog.getByLabel("模型分组名称", { exact: true })).toHaveValue(
     "Dirty family",
   );

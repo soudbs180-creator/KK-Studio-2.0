@@ -270,7 +270,7 @@ test("仅显示元数据更新时刷新分组、型号和别名草稿", async ({
   await page
     .getByRole("button", { name: "测试连接并刷新模型", exact: true })
     .click();
-  await expect(page.getByLabel("模型分组名称", {exact: true})).toBeVisible();
+  await expect(page.getByLabel("模型分组名称", { exact: true })).toBeVisible();
   await expect(page.getByLabel("模型分组名称", { exact: true })).toHaveValue(
     "Old group",
   );
@@ -462,14 +462,22 @@ test("手动三态声明保存恢复并切模型，不把未知变成支持", as
   await expect(
     page.getByLabel("单次任务生成数量上限", { exact: true }),
   ).toHaveValue("2");
-  await page.locator(".model-catalog-row").filter({has: page.getByText("image-capability-b", {exact: true})}).getByRole("button", {name: "选择", exact: true}).click();
+  await page
+    .locator(".model-catalog-row")
+    .filter({ has: page.getByText("image-capability-b", { exact: true }) })
+    .getByRole("button", { name: "选择", exact: true })
+    .click();
   await expect(page.getByLabel("参考图编辑能力", { exact: true })).toHaveValue(
     "unknown",
   );
   await expect(page.getByLabel("参考图数量上限", { exact: true })).toHaveValue(
     "",
   );
-  await page.locator(".model-catalog-row").filter({has: page.getByText("image-capability-a", {exact: true})}).getByRole("button", {name: "选择", exact: true}).click();
+  await page
+    .locator(".model-catalog-row")
+    .filter({ has: page.getByText("image-capability-a", { exact: true }) })
+    .getByRole("button", { name: "选择", exact: true })
+    .click();
   await expect(page.getByLabel("参考图编辑能力", { exact: true })).toHaveValue(
     "unsupported",
   );

@@ -13,12 +13,26 @@ function valuesFrom(model?: CatalogModel) {
   };
 }
 
-export default function useModelCapabilityDraft(key: string, model?: CatalogModel) {
+export default function useModelCapabilityDraft(
+  key: string,
+  model?: CatalogModel,
+) {
   const values = valuesFrom(model);
   const signature = JSON.stringify(values);
-  type Draft = { key: string; signature: string; values: typeof values; dirty: boolean };
+  type Draft = {
+    key: string;
+    signature: string;
+    values: typeof values;
+    dirty: boolean;
+  };
   const drafts = useRef(new Map<string, Draft>());
-  let [draft, setDraft] = useState<Draft>({ key, signature, values, dirty: false });
+  const [state, setDraft] = useState<Draft>({
+    key,
+    signature,
+    values,
+    dirty: false,
+  });
+  let draft = state;
   if (draft.key !== key || draft.signature !== signature) {
     const cached = drafts.current.get(key);
     draft = cached?.dirty
@@ -30,7 +44,11 @@ export default function useModelCapabilityDraft(key: string, model?: CatalogMode
     value: draft.values,
     update(patch: Partial<typeof values>) {
       setDraft((current) => {
-        const next = { ...current, values: { ...current.values, ...patch }, dirty: true };
+        const next = {
+          ...current,
+          values: { ...current.values, ...patch },
+          dirty: true,
+        };
         drafts.current.set(key, next);
         return next;
       });

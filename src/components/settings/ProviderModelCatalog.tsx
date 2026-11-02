@@ -59,7 +59,10 @@ export default function ProviderModelCatalog({
   const models = merge(rawModels);
 
   const selected = models.find((m) => m.id === modelId);
-  const draft = useModelCapabilityDraft(JSON.stringify([connectionKey, modelId]), selected);
+  const draft = useModelCapabilityDraft(
+    JSON.stringify([connectionKey, modelId]),
+    selected,
+  );
   const { kind, sizes, family, variant, aliases, image } = draft.value;
   const setKind = (kind: ModelKind) => draft.update({ kind });
   const setSizes = (sizes: string) => draft.update({ sizes });
@@ -163,7 +166,9 @@ export default function ProviderModelCatalog({
       className="provider-model-catalog inset-grouped-card"
       disabled={selectionRequired}
     >
-      {selectionRequired && <p role="status">请先在已登记连接中选择账号，再编辑模型能力。</p>}
+      {selectionRequired && (
+        <p role="status">请先在已登记连接中选择账号，再编辑模型能力。</p>
+      )}
       <div className="model-catalog-header">
         <div>
           <h3 className="model-catalog-title">模型目录与能力管理</h3>

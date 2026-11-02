@@ -52,8 +52,15 @@ for (const width of [390, 1099, 1920]) {
       });
       await openSettingsSection(page, "模型接入");
       const dialog = page.getByRole("dialog", { name: "设置", exact: true });
-      await dialog.getByRole("tab", {name: "CLI 直连 CLI", exact: true}).click();
-      await dialog.getByRole("button", {name: label === "Codex" ? "Codex CLI / 主 Agent" : `${label} CLI`, exact: true}).click();
+      await dialog
+        .getByRole("tab", { name: "CLI 直连 CLI", exact: true })
+        .click();
+      await dialog
+        .getByRole("button", {
+          name: label === "Codex" ? "Codex CLI / 主 Agent" : `${label} CLI`,
+          exact: true,
+        })
+        .click();
       const card = dialog.getByRole("region", {
         name: `${label} CLI 管理`,
         exact: true,

@@ -115,6 +115,7 @@ export default function ModelAccessSettings({
   }, [focusGoogle, currentChannel]);
 
   const channelInfo = CHANNELS.find((c) => c.id === currentChannel)!;
+  const cliActive = active && currentChannel === "cli";
   const apiVisible = ["official", "relay", "local"].includes(currentChannel);
   const apiChannel = useRef<ChannelId>("official");
   if (apiVisible) apiChannel.current = currentChannel;
@@ -244,7 +245,7 @@ export default function ModelAccessSettings({
                 <AgentConnectionSettings onFeedback={onFeedback} />
                 <NativeCliControls
                   tool="codex"
-                  active={active}
+                  active={cliActive}
                   onBusyChange={setCodexCliBusy}
                 />
               </div>
@@ -253,13 +254,13 @@ export default function ModelAccessSettings({
               <div className="cli-tool-panel">
                 <GoogleConnectionSettings
                   mode="cli"
-                  active={active && currentChannel === "cli"}
+                  active={cliActive}
                   onBusyChange={setGoogleBusy}
                   onFeedback={onFeedback}
                 />
                 <NativeCliControls
                   tool="gemini"
-                  active={active}
+                  active={cliActive}
                   onBusyChange={setNativeCliBusy}
                 />
               </div>
@@ -267,21 +268,13 @@ export default function ModelAccessSettings({
             {codeBuddyMounted && (
               <div className="cli-tool-panel" hidden={cliTool !== "codebuddy"}>
                 <CodeBuddyConnectionSettings
-                  active={
-                    active &&
-                    currentChannel === "cli" &&
-                    cliTool === "codebuddy"
-                  }
+                  active={cliActive && cliTool === "codebuddy"}
                   onFeedback={onFeedback}
                   onBusyChange={setCodeBuddyBusy}
                 />
                 <NativeCliControls
                   tool="codebuddy"
-                  active={
-                    active &&
-                    currentChannel === "cli" &&
-                    cliTool === "codebuddy"
-                  }
+                  active={cliActive && cliTool === "codebuddy"}
                   onBusyChange={setNativeCliBusy}
                 />
               </div>

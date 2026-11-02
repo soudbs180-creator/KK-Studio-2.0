@@ -87,12 +87,6 @@ export default function AddNodeMenu({
       enabledIds.has(entry.pluginId) &&
       entry.definition.showInCreateMenu !== false,
   );
-  const touch = useRef<{
-    key: string;
-    id: number;
-    x: number;
-    y: number;
-  } | null>(null);
   const [position, setPosition] = useState({ x: 16, y: 16 });
   useLayoutEffect(() => {
     const place = (): void => {
@@ -189,42 +183,6 @@ export default function AddNodeMenu({
                 ? "创建视频节点；当前仅支持本地演示素材，API未连接"
                 : undefined)
             }
-            onPointerDown={(event) => {
-              if (event.pointerType === "touch")
-                touch.current = {
-                  key: item.key,
-                  id: event.pointerId,
-                  x: event.clientX,
-                  y: event.clientY,
-                };
-            }}
-            onPointerMove={(event) => {
-              if (
-                touch.current &&
-                Math.hypot(
-                  event.clientX - touch.current.x,
-                  event.clientY - touch.current.y,
-                ) > 8
-              )
-                touch.current = null;
-            }}
-            onPointerCancel={() => {
-              touch.current = null;
-            }}
-            onPointerUp={(event) => {
-              const tap = touch.current;
-              touch.current = null;
-              if (
-                event.pointerType !== "touch" ||
-                tap?.key !== item.key ||
-                tap.id !== event.pointerId ||
-                !item.choose
-              )
-                return;
-              // Captured touch drags may suppress the following compatibility click.
-              event.preventDefault();
-              item.choose?.();
-            }}
             onClick={() => {
               item.choose?.();
             }}

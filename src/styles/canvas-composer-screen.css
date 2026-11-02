@@ -11,7 +11,10 @@
     calc(100vw - 2 * var(--kk-space-4))
   );
   height: auto;
-  max-height: var(--kk-canvas-screen-editor-max-height);
+  max-height: min(
+    var(--kk-canvas-screen-editor-max-height),
+    var(--canvas-screen-available-height, 100dvh)
+  );
   transform: translateX(-50%);
   animation-name: backdrop-enter;
   padding: var(--kk-space-4);

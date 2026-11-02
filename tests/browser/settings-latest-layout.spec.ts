@@ -155,7 +155,7 @@ for (const width of [779, 800]) {
     await page.setViewportSize({ width, height: 643 });
     await page.goto("/");
     await page.getByRole("button", { name: "打开设置", exact: true }).click();
-    await page.getByLabel("主题外观", { exact: true }).selectOption("light");
+    await page.getByLabel("主题", { exact: true }).selectOption("light");
     const feedback = page.locator(".settings-feedback");
     await expect(feedback).toBeVisible();
     const visible = await feedback.evaluate((el) => {
@@ -180,6 +180,7 @@ test("连接保存与模型能力保存范围明确，连接操作紧邻表单",
   await openSection(page, "模型接入");
   await page.getByRole("tab", { name: "官方直连 API", exact: true }).click();
   const form = page.locator(".provider-form");
+  await form.getByLabel("模型名称", { exact: true }).fill("image-fixture");
   const save = form.getByRole("button", { name: "保存连接", exact: true });
   await expect(save).toBeVisible();
   await save.scrollIntoViewIfNeeded();

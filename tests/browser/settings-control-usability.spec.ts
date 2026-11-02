@@ -22,11 +22,11 @@ for (const width of [1920, 1099, 390, 320]) {
       initial === "true" ? "false" : "true",
     );
     const theme = dialog.getByRole("combobox", {
-      name: "主题外观",
+      name: "主题",
       exact: true,
     });
     await theme.selectOption("system");
-    for (const name of ["主题外观", "强调色"]) {
+    for (const name of ["主题", "强调色"]) {
       const select = dialog.getByRole("combobox", { name, exact: true });
       const geometry = await select.evaluate((element) => {
         const input = element as HTMLSelectElement;

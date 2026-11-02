@@ -1176,7 +1176,9 @@ export default function App() {
                               key={task.id}
                               className={`project-task-${task.status}`}
                             >
-                              {generationProgress.taskLabel}
+                              <span className="project-task-label">
+                                {generationProgress.taskLabel}
+                              </span>
                               {task.status === "running" && (
                                 <button
                                   className="ui-button"

@@ -56,7 +56,7 @@ for (const width of [390, 1099, 1920]) {
     await page.goto("/");
     await openSettingsSection(page, "通用设置");
     const panel = page.locator(".settings-panel");
-    await page.getByLabel("主题外观", { exact: true }).selectOption("light");
+    await page.getByLabel("主题", { exact: true }).selectOption("light");
     await selectSettingsSection(page, "快捷键管理");
     await expect(
       page.getByRole("heading", { name: "快捷键管理", exact: true }),
@@ -70,9 +70,7 @@ for (const width of [390, 1099, 1920]) {
       "本地离线模式",
     );
     await selectSettingsSection(page, "通用设置");
-    await expect(page.getByLabel("主题外观", { exact: true })).toHaveValue(
-      "light",
-    );
+    await expect(page.getByLabel("主题", { exact: true })).toHaveValue("light");
     const geometry = await panel.evaluate((element) => {
       const rect = element.getBoundingClientRect();
       const content = element.querySelector(".settings-content")!;
@@ -210,8 +208,13 @@ test("硬件快照建议与本地草稿在连续缩放中保留，不发起安�
   ).toHaveLength(1);
   expect(
     calls.every((command) =>
-      ["detect_local_hardware", "agent_runtime_status"].includes(command),
+      [
+        "detect_local_hardware",
+        "agent_runtime_status",
+        "plugin:path|resolve_directory",
+      ].includes(command),
     ),
+    JSON.stringify(calls),
   ).toBe(true);
   await page.getByRole("radio", { name: /Qwen3.8-27B/ }).check();
   await page.getByText("H3 视频模型候选", { exact: true }).click();
@@ -247,7 +250,11 @@ test("硬件快照建议与本地草稿在连续缩放中保留，不发起安�
   ).toHaveLength(1);
   expect(
     calls.every((command) =>
-      ["detect_local_hardware", "agent_runtime_status"].includes(command),
+      [
+        "detect_local_hardware",
+        "agent_runtime_status",
+        "plugin:path|resolve_directory",
+      ].includes(command),
     ),
   ).toBe(true);
   expect(await page.evaluate(() => JSON.stringify(localStorage))).not.toContain(
