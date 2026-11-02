@@ -1,12 +1,16 @@
 import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
+import type { WorkflowRecord } from "../../features/comfyui/index.ts";
+
 export default function ComfyWorkflowEditor({
   clientId,
   open,
+  workflowRecord,
   onBack,
 }: {
   clientId: string;
   open: boolean;
+  workflowRecord?: WorkflowRecord;
   onBack: () => void;
 }) {
   const dialog = useRef<HTMLDialogElement>(null);
@@ -32,7 +36,7 @@ export default function ComfyWorkflowEditor({
         onBack();
       }}
     >
-      <header>
+      <header className="comfy-workflow-editor-header">
         <button
           autoFocus
           className="kk-button kk-button--secondary"
@@ -40,6 +44,11 @@ export default function ComfyWorkflowEditor({
         >
           ← 返回画布
         </button>
+        {workflowRecord && (
+          <span className="comfy-workflow-editor-title">
+            当前卡片工作流：{workflowRecord.name}
+          </span>
+        )}
       </header>
       <iframe
         name={clientId}

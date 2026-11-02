@@ -270,10 +270,7 @@ export default function StartPage({
                     className="start-inspiration-card"
                     key={item.id}
                     onClick={() => {
-                      updateDraft({
-                        ...draft,
-                        prompt: `${item.title}\n${item.description}`,
-                      });
+                      updateDraft({ ...draft, prompt: `${item.title}\n${item.description}` });
                       setStatus(
                         modelConfigured
                           ? "模板内容已放入提示词，可以继续编辑后创建项目。"
@@ -281,13 +278,7 @@ export default function StartPage({
                       );
                     }}
                   >
-                    <img
-                      src={item.image}
-                      alt=""
-                      draggable={false}
-                      loading="lazy"
-                      decoding="async"
-                    />
+                    <img src={item.image} alt="" draggable={false} loading="lazy" decoding="async" />
                     <div>
                       <span>{item.tag}</span>
                       <strong>{item.title}</strong>

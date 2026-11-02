@@ -17,6 +17,9 @@ export default function ComfyWorkflowNode({
     [open, setOpen] = useState<boolean>(),
     [guideOpen, setGuideOpen] = useState(false);
   const desktop = Boolean(state.host?.runtime.desktop);
+  const activeRecord = state.records.find(
+    (r) => r.id === item.comfyWorkflow?.workflowId,
+  );
   return (
     <article
       className="comfy-workflow-node"
@@ -43,13 +46,25 @@ export default function ComfyWorkflowNode({
               ))}
             </select>
           </label>
+          <label
+            className="kk-button kk-button--secondary comfy-workflow-import-btn"
+            title="导入本地工作流 JSON"
+          >
+            <input
+              type="file"
+              accept=".json"
+              style={{ display: "none" }}
+              aria-label="导入工作流 JSON"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) void state.importWorkflowFile(file);
+                e.target.value = "";
+              }}
+            />
+            导入工作流
+          </label>
           <p role="status" title={state.message}>
-            {state.message ||
-              (state.status.ready
-                ? "已连接 · 模型由工作流决定"
-                : state.status.owned
-                  ? "后台启动中"
-                  : "未连接 · 选择本地目录")}
+            {getComfyStatusText(state.status, state.message, state.savedRoot)}
           </p>
         </div>
       </div>
@@ -73,27 +88,16 @@ export default function ComfyWorkflowNode({
         >
           快速生成
         </button>
-        {!state.status.ready && (
-          <>
-            <button
-              className="kk-button kk-button--secondary"
-              disabled={!desktop || state.working || state.status.owned}
-              onClick={() => void state.chooseDirectory()}
-            >
-              选择目录
-            </button>
-            {desktop && (
-              <button
-                className="kk-button kk-button--secondary"
-                type="button"
-                aria-expanded={guideOpen}
-                onClick={() => setGuideOpen((value) => !value)}
-              >
-                未安装？获取 ComfyUI
-              </button>
-            )}
-          </>
-        )}
+        <ComfyOfflineActions
+          desktop={desktop}
+          status={state.status}
+          working={state.working}
+          savedRoot={state.savedRoot}
+          guideOpen={guideOpen}
+          onStartSaved={() => void state.startSavedDirectory()}
+          onChoose={() => void state.chooseDirectory()}
+          onToggleGuide={() => setGuideOpen((v) => !v)}
+        />
       </div>
       {guideOpen && !state.status.ready && desktop && (
         <aside
@@ -121,6 +125,7 @@ export default function ComfyWorkflowNode({
         <ComfyWorkflowEditor
           open={open}
           clientId={state.clientId + "-editor"}
+          workflowRecord={activeRecord}
           onBack={() => setOpen(false)}
         />
       )}
@@ -137,4 +142,71 @@ function stopControlEvent(event: {
     event.target.closest("button,select,input,textarea")
   )
     event.stopPropagation();
+}
+
+function getComfyStatusText(
+  status: { ready: boolean; owned: boolean },
+  message: string,
+  savedRoot: string | null,
+): string {
+  if (message) return message;
+  if (status.ready) return "已连接 · 模型由工作流决定";
+  if (status.owned) return "后台启动中";
+  if (savedRoot) return `未连接 · 已记忆路径 (${savedRoot})`;
+  return "未连接 · 选择本地目录";
+}
+
+interface ComfyOfflineActionsProps {
+  desktop: boolean;
+  status: { ready: boolean; owned: boolean };
+  working: boolean;
+  savedRoot: string | null;
+  guideOpen: boolean;
+  onStartSaved: () => void;
+  onChoose: () => void;
+  onToggleGuide: () => void;
+}
+
+function ComfyOfflineActions({
+  desktop,
+  status,
+  working,
+  savedRoot,
+  guideOpen,
+  onStartSaved,
+  onChoose,
+  onToggleGuide,
+}: ComfyOfflineActionsProps) {
+  if (status.ready) return null;
+  return (
+    <>
+      {savedRoot && !status.owned && (
+        <button
+          className="kk-button kk-button--secondary"
+          disabled={!desktop || working}
+          onClick={onStartSaved}
+          title={`从已记忆路径启动：${savedRoot}`}
+        >
+          启动记忆目录
+        </button>
+      )}
+      <button
+        className="kk-button kk-button--secondary"
+        disabled={!desktop || working || status.owned}
+        onClick={onChoose}
+      >
+        选择目录
+      </button>
+      {desktop && (
+        <button
+          className="kk-button kk-button--secondary"
+          type="button"
+          aria-expanded={guideOpen}
+          onClick={onToggleGuide}
+        >
+          未安装？获取 ComfyUI
+        </button>
+      )}
+    </>
+  );
 }

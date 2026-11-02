@@ -16,7 +16,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-MOD-CHAT-PROJECTION | 切换聊天同步组件派生视图 | PARTIAL | 未完成 | P1 | TASK-MOD-P8 | root | 当前独审/完整verify/main；首页新项目显式独立会话另卡修复 |
 | TASK-MOD-P8 | App装配hook瘦身与主线合流核验 | PARTIAL | 未完成 | P1 | TASK-MOD-P6-1 | root | 按当前SHA完成交付修复补审、处理浏览器失败与首建baseline/远端冲突；保全主仓审计改动后满足门禁再合流 |
 | TASK-FIGMA-PARITY-AUDIT-20261027 | 建立 Figma↔本地分层差异审计基建与像素门禁 | PARTIAL | 未完成 | P1 | none | root | 等待用户在连接器管理页点「信任」并完成 Figma OAuth（或提供 FIGMA_TOKEN），随后以现行 file key ZiadpErDoFweCjG3uHjkM3 拉取首个真实快照，由真实快照派生 figma-rects.json 跑通 L3 几何层，并从现行文件导出参考图登记进 design/preview/baselines/ 启用 L4 门禁，最后产出首份真实差异审计报告。 |
-| TASK-FIGMA-PAGES-20261025 | 重新核查并整理Figma 04/05页面与状态 | PARTIAL | 未完成 | P2 | none | root | 先完成共享源与全场景结构核查，再同步本地控件/页面；完整测试、实际运行与当前独审后判定验收，不改变其他任务归属。 |
+| TASK-FIGMA-PAGES-20261025 | 重新核查并整理Figma 04/05页面与状态 | PARTIAL | 未完成 | P2 | none | root | 手机专项静态Figma与派生规范已收敛；下一步验证原型点击/横滚、键盘与动态内容、深浅主题及全量适用状态，再在授权后按01→03→页面映射到本地。旧胶囊/兼容和总体100%覆盖仍开放，不扩大合法变体或改正确布局；当前本地产品代码禁止改。 |
 | TASK-FIGMA-CONTROLS-20261025 | 修复 Figma 六类基础控件问题并同步本地 UI | PARTIAL | 未完成 | P2 | none | root | 在原任务修复两项既有存储单测失败并补Desktop运行证据；保留既有dirty和失败原件，未经全量验收不合并或发布。 |
 | TASK-CANVAS-PERF-20261024 | 削减画布预览与存储重复工作 | IN_PROGRESS | 进行中 | P2 | none | root | 先完成红绿计数及最小优化，再完整门禁、运行与独审；保留既有dirty/index，禁止混合提交。 |
 | TASK-FIGMA-FIRST-20261021 | 以当前 Figma 为设计真值并强制 UI 设计先行 | PARTIAL | 未完成 | P2 | none | root | 先按本次mapping与verification继续04组合母版、尺寸覆盖和主题/状态核验；逐项FIGMA_READY后再同步本地，05单独验收。保留当前dirty工作，不把首批端点修复当作整页或运行验收。 |

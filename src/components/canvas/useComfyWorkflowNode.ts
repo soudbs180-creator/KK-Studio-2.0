@@ -3,6 +3,9 @@ import { flushSync } from "react-dom";
 import {
   watchWorkflow,
   readLocalWorkflows,
+  writeLocalWorkflows,
+  parseComfyWorkflow,
+  createImportedWorkflow,
   queueSavedWorkflow,
   isWorkflowRejection,
   validateExecutableWorkflow,
@@ -13,6 +16,8 @@ import type {
   NodeEditingProps,
 } from "../../domain/canvasItems.ts";
 import { useComfyCanvasHost } from "./ComfyWorkflowCanvasHost.tsx";
+
+const COMFYUI_ROOT_STORAGE_KEY = "kk-comfyui-root-path";
 
 export function useComfyWorkflowNode(
   item: CanvasCollectionItem,
@@ -28,6 +33,15 @@ export function useComfyWorkflowNode(
   const [message, setMessage] = useState("");
   const [working, setWorking] = useState(false);
   const [records, setRecords] = useState(readLocalWorkflows);
+  const [savedRoot, setSavedRoot] = useState<string | null>(() => {
+    try {
+      return typeof localStorage !== "undefined"
+        ? localStorage.getItem(COMFYUI_ROOT_STORAGE_KEY)
+        : null;
+    } catch {
+      return null;
+    }
+  });
   const latest = useRef({ item, editing });
   latest.current = { item, editing };
   const locked = useRef(false);
@@ -96,6 +110,7 @@ export function useComfyWorkflowNode(
       stop();
     };
   }, [host, clientId, item.id]);
+
   async function chooseDirectory() {
     if (!host || locked.current) return;
     locked.current = true;
@@ -103,6 +118,15 @@ export function useComfyWorkflowNode(
     try {
       const root = await host.runtime.selectRoot();
       if (root && host.isCurrent(item.id)) {
+        try {
+          if (typeof localStorage !== "undefined") {
+            localStorage.setItem(COMFYUI_ROOT_STORAGE_KEY, root);
+          }
+          setSavedRoot(root);
+        } catch (storageError) {
+          // health: allow EMPTY_CATCH -- 忽略存储受限环境异常
+          void storageError;
+        }
         setStatus(await host.runtime.start(root));
         expectedProcess.current = true;
         setMessage("后台启动中，请等待本地环境就绪");
@@ -114,6 +138,41 @@ export function useComfyWorkflowNode(
       setWorking(false);
     }
   }
+
+  async function startSavedDirectory() {
+    if (!host || locked.current || !savedRoot) return;
+    locked.current = true;
+    setWorking(true);
+    try {
+      setStatus(await host.runtime.start(savedRoot));
+      expectedProcess.current = true;
+      setMessage("后台启动中，请等待本地环境就绪");
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : String(error));
+    } finally {
+      locked.current = false;
+      setWorking(false);
+    }
+  }
+
+  async function importWorkflowFile(file: File) {
+    try {
+      const text = await file.text();
+      const raw = JSON.parse(text) as unknown;
+      const parsed = parseComfyWorkflow(raw);
+      const name = file.name.replace(/\.[^/.]+$/, "") || "导入的 ComfyUI 工作流";
+      const record = createImportedWorkflow(name, parsed);
+      const current = readLocalWorkflows();
+      const next = [record, ...current.filter((r) => r.id !== record.id)];
+      writeLocalWorkflows(next);
+      setRecords(next);
+      patch({ ...latest.current.item.comfyWorkflow, workflowId: record.id });
+      setMessage(`已导入工作流：${record.name}`);
+    } catch (err) {
+      setMessage(`导入失败：${err instanceof Error ? err.message : String(err)}`);
+    }
+  }
+
   async function run() {
     if (
       !host ||
@@ -180,7 +239,10 @@ export function useComfyWorkflowNode(
     working,
     records,
     clientId,
+    savedRoot,
     chooseDirectory,
+    startSavedDirectory,
+    importWorkflowFile,
     run,
     refresh: () => setRecords(readLocalWorkflows()),
     chooseWorkflow: (workflowId: string) =>

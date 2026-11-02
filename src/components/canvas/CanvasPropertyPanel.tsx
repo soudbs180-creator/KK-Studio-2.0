@@ -26,7 +26,7 @@ export default function CanvasPropertyPanel({
         <span>{item.title}</span>
       </header>
       <div className="canvas-property-row">
-        <span>[Workflow Source]</span>
+        <span>工作流来源 [Workflow Source]</span>
         {source ? (
           <button
             type="button"
@@ -42,6 +42,18 @@ export default function CanvasPropertyPanel({
           <p>来源工作流不可用</p>
         )}
       </div>
+      {item.prompt && (
+        <div className="canvas-property-row">
+          <span>提示词</span>
+          <p className="canvas-property-prompt">{item.prompt}</p>
+        </div>
+      )}
+      {item.model && (
+        <div className="canvas-property-row">
+          <span>模型</span>
+          <span>{item.model}</span>
+        </div>
+      )}
     </aside>
   );
 }
