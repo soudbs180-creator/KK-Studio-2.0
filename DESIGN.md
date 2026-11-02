@@ -179,7 +179,7 @@ components:
     padding: 4px
 x-kk-studio:
   source: src/styles/tokens.css
-  sha256: 477b7584b2c35d7d3e6da381b82e75f10f02cf93aa16f41a0873be914314e92b
+  sha256: 4dc91ac11af65d2c1e4efefb62eec2f86dce06a038cfdb1b6aed8ef5bc9323fa
   hashEncoding: utf8-lf
   scopes:
     - selector: :root
@@ -605,6 +605,9 @@ x-kk-studio:
           important: false
         - property: --kk-control-surface-selected
           value: "#252525"
+          important: false
+        - property: --kk-choice-selected-bg
+          value: "#333333"
           important: false
         - property: --kk-generation-count-trigger-w
           value: 40px
@@ -1084,6 +1087,9 @@ x-kk-studio:
           value: "#f2f2f2"
           important: false
         - property: --kk-control-surface-selected
+          value: "#ededed"
+          important: false
+        - property: --kk-choice-selected-bg
           value: "#ededed"
           important: false
         - property: --kk-control-idle-bg
@@ -1849,6 +1855,13 @@ Dark is the default; light changes the same semantic roles. Default accent is
 green, while explicitly saved accents and their preference identities persist.
 Primary expresses hierarchy through a contrasting neutral surface. State and
 selection use semantic accent roles rather than coloring every action green.
+
+Figma `control/selected` (`1514:88998`) maps to
+`--kk-choice-selected-bg` for persistent choice groups: dark `#333333`, light
+`#ededed`. Ordinary action surfaces retain their existing role. Title tabs
+(`940:24897`) use equal text color and weight, no fill, and one 24×2 rounded
+indicator below the selected title. Contained button choices (`2538:48403`)
+use a common container and a selected fill without a title indicator.
 
 Default, hover, active/pressed, selected, disabled, and keyboard focus must
 consume the same role family across all callers. Pair state color with text or

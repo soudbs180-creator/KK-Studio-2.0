@@ -188,6 +188,8 @@
   --kk-control-surface-idle: #1b1b1b;
   --kk-control-surface-hover: #202020;
   --kk-control-surface-selected: #252525;
+  /* Figma control/selected (1514:88998), for persistent choice groups. */
+  --kk-choice-selected-bg: #333333;
   --kk-generation-count-trigger-w: 40px;
   --kk-generation-count-trigger-h: 32px;
   --kk-generation-count-trigger-touch-w: 52px;
@@ -381,6 +383,7 @@
   --kk-control-surface-idle: #f7f7f7;
   --kk-control-surface-hover: #f2f2f2;
   --kk-control-surface-selected: #ededed;
+  --kk-choice-selected-bg: #ededed;
   --kk-control-idle-bg: transparent;
   --kk-control-hover-bg: color-mix(
     in srgb,

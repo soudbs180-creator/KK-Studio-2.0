@@ -6,6 +6,7 @@ import {
 import { getAssetTags, type Asset } from "../domain/assets";
 import type { CreationProject } from "../features/creation/index.ts";
 import UiIcon from "./UiIcon";
+import { SlidingPillIndicator } from "./ui/SlidingPillIndicator";
 
 const TABS = ["全部", "画布卡片", "项目", "已加载资源"];
 export default function CatalogPanel({
@@ -24,6 +25,7 @@ export default function CatalogPanel({
   onLocate: (id: string) => void;
 }) {
   const [tab, setTab] = useState("全部");
+  const titleTabs = useRef<HTMLDivElement>(null);
   const [query, setQuery] = useState("");
   const [kind, setKind] = useState("all");
   const [tag, setTag] = useState("all");
@@ -95,7 +97,12 @@ export default function CatalogPanel({
           }}
         />
       </label>
-      <div className="catalog-tabs" role="tablist" aria-label="搜索分类">
+      <div
+        ref={titleTabs}
+        className="catalog-tabs"
+        role="tablist"
+        aria-label="搜索分类"
+      >
         {TABS.map((name, index) => (
           <button
             type="button"
@@ -129,6 +136,11 @@ export default function CatalogPanel({
             {name}
           </button>
         ))}
+        <SlidingPillIndicator
+          containerRef={titleTabs}
+          activeKey={tab}
+          variant="line"
+        />
       </div>
       <div className="catalog-filters">
         <label>

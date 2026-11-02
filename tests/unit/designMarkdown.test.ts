@@ -64,9 +64,9 @@ test("integration preserves approved runtime tokens and registered dimensions", 
     path.join(root, "src/styles/tokens.css"),
     "utf8",
   );
-  // Current Figma geometry: 2026-10-25-figma-04-05-rework/spec.md.
+  // Figma 1514:88998 adds scoped choice colors; existing action tiers stay unchanged.
   const approvedHash =
-    "477b7584b2c35d7d3e6da381b82e75f10f02cf93aa16f41a0873be914314e92b";
+    "4dc91ac11af65d2c1e4efefb62eec2f86dce06a038cfdb1b6aed8ef5bc9323fa";
   assert.equal(
     createHash("sha256").update(source.replace(/\r\n/g, "\n")).digest("hex"),
     approvedHash,
@@ -81,6 +81,10 @@ test("integration preserves approved runtime tokens and registered dimensions", 
   for (const theme of ["dark", "light"])
     for (const accent of ACCENTS) {
       const token = themeTokens(theme, accent);
+      assert.equal(
+        token("--kk-choice-selected-bg"),
+        theme === "dark" ? "#333333" : "#ededed",
+      );
       for (const surface of [
         "--kk-bg-app",
         "--kk-bg-surface",

@@ -416,21 +416,21 @@ Historical DONE applies only to the linked verification scope. The full-project 
 ## TASK-FIGMA-PAGES-20261025 — 重新核查并整理Figma 04/05页面与状态
 
 - Goal: 沿01→02→03→04/05修正源继承、项目库搜索、工具栏和交互错误，消除重复本体与假引用并限定真实能力。
-- Scope: 按用户2026-10-26继续授权检查Figma 01→02→03→04/05全部结构、共享控件与交互，并同步本地Desktop/Web共享UI及适用Mobile；保持当前真实能力，发布另行验收。
+- Scope: 按用户2026-10-26继续授权检查Figma 01→02→03→04/05全部结构、共享控件与交互，并同步本地Desktop/Web共享UI及适用Mobile；保持当前真实能力，发布另行验收。 2026-10-28用户覆盖本阶段为文档和03只读审计，暂不修改代码/Figma；最终01全部规则、02图标、03图标按钮/组件/组合/交互、04/05共享实例页面须落实到本地UI与派生规范，按完整分母100%验收。 最新反馈：已授权Figma修改、本地代码不动；用户随后指出一排被改两排和其他回归，先只读清点本轮全部差异，不继续扩大修改。 最新授权：处理风险与状态不匹配，仅定向修R8族及卡片内壳绑定，保留布局/合法变体，本地代码不动。 最新手机纠正：单排并锁定用途最小尺寸，空间不足改图标/更多；手机无画布仅聊天生成。授权修Figma 01/03/05及派生规范，保持04桌面与本地产品代码不动。
 - Display status: 未完成
 - Priority: P2 — 未记录
-- Requirement refs: docs/changes/2026-10-25-figma-04-05-rework/intent.md, docs/changes/2026-10-25-figma-04-05-rework/spec.md
+- Requirement refs: docs/changes/2026-10-25-figma-04-05-rework/intent.md, docs/changes/2026-10-25-figma-04-05-rework/spec.md, docs/changes/2026-10-28-figma-sync-governance/intent.md
 - Feature IDs: none
 - Owner role: implementation-integrator
 - Acceptance: 全量238场景清点并扫描可见根边界、替换面板、字体和小字，保留逐项覆盖表。; 修复会话结构、工具栏和菜单上下文、44触控、手机滚动和深浅主题；禁用态无假运行反应。; 模型通道和Mobile能力按源码核对，已知误分类、文字覆盖及跨平台原型路径关闭；代表截图及独立上下文审查有据。; 工具栏唯一本体由六个状态组合与页面共同引用，禁止逐态复制与嵌套样式冻结；包含目录和嵌套引用，实际修改公共外观、布局与单态配置验证继承并恢复。
-- Branch: `docs/TASK-FIGMA-FIRST-20261021-rules`
-- Worktree: `D:/kk-studio/KK-Studio-2.0`
-- Modules: docs/changes/2026-10-25-figma-04-05-rework, docs/UI_INDEX.md, docs/PROGRESS.md, docs/governance, src/components, src/styles, tests/browser, tests/unit/uiIcon.test.ts, DESIGN.md
-- Verification: PARTIAL — 2026-10-26指定设计自审通过，整体PARTIAL。214按钮变体、54业务绘图、58页签/342按钮、8项目库、18素材库、禁用音频及指定菜单/卡片已修。87顶部行实际44且不重叠，4处窄画布用同语义44图标入口。124处间距/图标/箭头尺寸临时修改及恢复后回读通过，正式304×52/间距4/箭头8；113跳转/15取消配置通过，9当前PNG校验通过。完整触控、全场景播放器、独审、本地/原生未验；未改源码或版本。
-- Evidence: [docs/changes/2026-10-25-figma-04-05-rework/intent.md](../../docs/changes/2026-10-25-figma-04-05-rework/intent.md), [docs/changes/2026-10-25-figma-04-05-rework/spec.md](../../docs/changes/2026-10-25-figma-04-05-rework/spec.md), [docs/changes/2026-10-25-figma-04-05-rework/plan.md](../../docs/changes/2026-10-25-figma-04-05-rework/plan.md), [docs/changes/2026-10-25-figma-04-05-rework/verification.md](../../docs/changes/2026-10-25-figma-04-05-rework/verification.md), [docs/changes/2026-10-25-figma-04-05-rework/review.md](../../docs/changes/2026-10-25-figma-04-05-rework/review.md)
-- Next action: 先完成共享源与全场景结构核查，再同步本地控件/页面；完整测试、实际运行与当前独审后判定验收，不改变其他任务归属。
-- Last verified: 2026-10-26
-- Updated: 2026-10-26
+- Branch: `fix/TASK-FIGMA-PAGES-20261025-selection`
+- Worktree: `D:/kk-studio/.worktrees/TASK-FIGMA-PAGES-20261025-selection`
+- Modules: docs/changes/2026-10-25-figma-04-05-rework, docs/UI_INDEX.md, docs/PROGRESS.md, docs/governance, src/components, src/styles, tests/browser, tests/unit/uiIcon.test.ts, DESIGN.md, src/styles/canvas-tools.css, public/design/figma/toolbar-collapse.svg, tests/unit/designMarkdown.test.ts, docs/changes/2026-10-28-figma-sync-governance, docs/UI_RULES.md
+- Verification: PARTIAL — 2026-10-28定向修复：R8四态同64×32/R8/padding8，新增悬停/按下及38物理源消费者状态纠正和去重，业务SET_VARIABLE保留。03/04可见72/2按钮跨形状/重复事件0；18内壳四角绑定radius-panel，03/04/05可见42/34/18卡片绑定通过、52页面卡片几何不变，默认卡片/按钮PNG同SHA；4态公开属性API切换通过且测试实例删除。不是完整播放器/运行验收，前次两排回归未恢复。 最新手机专项：03两触控素材变体单排，新增两宽档文字变体并在404/内380下无溢出；手机模型80×44、上传发送44，4种参考输入恢复真实组合并72高横滚。05三档聊天和素材展示截图通过；活动画布文字/相关命名Frame/指向隐藏目标非CHANGE_TO动作0；独立静态复核无阻断。旧400宽回执溢出1px已由404覆盖；不是播放器或本地UI验收。
+- Evidence: [docs/changes/2026-10-25-figma-04-05-rework/intent.md](../../docs/changes/2026-10-25-figma-04-05-rework/intent.md), [docs/changes/2026-10-25-figma-04-05-rework/spec.md](../../docs/changes/2026-10-25-figma-04-05-rework/spec.md), [docs/changes/2026-10-25-figma-04-05-rework/plan.md](../../docs/changes/2026-10-25-figma-04-05-rework/plan.md), [docs/changes/2026-10-25-figma-04-05-rework/verification.md](../../docs/changes/2026-10-25-figma-04-05-rework/verification.md), [docs/changes/2026-10-25-figma-04-05-rework/review.md](../../docs/changes/2026-10-25-figma-04-05-rework/review.md), [docs/changes/2026-10-28-figma-sync-governance/intent.md](../../docs/changes/2026-10-28-figma-sync-governance/intent.md), [docs/changes/2026-10-28-figma-sync-governance/spec.md](../../docs/changes/2026-10-28-figma-sync-governance/spec.md), [docs/changes/2026-10-28-figma-sync-governance/plan.md](../../docs/changes/2026-10-28-figma-sync-governance/plan.md), [docs/changes/2026-10-28-figma-sync-governance/verification.md](../../docs/changes/2026-10-28-figma-sync-governance/verification.md), [docs/changes/2026-10-28-figma-sync-governance/audit-03.md](../../docs/changes/2026-10-28-figma-sync-governance/audit-03.md), [docs/changes/2026-10-28-figma-sync-governance/review.md](../../docs/changes/2026-10-28-figma-sync-governance/review.md), [docs/changes/2026-10-28-figma-sync-governance/correction-review.md](../../docs/changes/2026-10-28-figma-sync-governance/correction-review.md), [docs/changes/2026-10-28-figma-sync-governance/master-coverage.md](../../docs/changes/2026-10-28-figma-sync-governance/master-coverage.md), [docs/changes/2026-10-28-figma-sync-governance/risk-fix.md](../../docs/changes/2026-10-28-figma-sync-governance/risk-fix.md), [docs/changes/2026-10-28-figma-sync-governance/mobile-chat-layout.md](../../docs/changes/2026-10-28-figma-sync-governance/mobile-chat-layout.md)
+- Next action: 手机专项静态Figma与派生规范已收敛；下一步验证原型点击/横滚、键盘与动态内容、深浅主题及全量适用状态，再在授权后按01→03→页面映射到本地。旧胶囊/兼容和总体100%覆盖仍开放，不扩大合法变体或改正确布局；当前本地产品代码禁止改。
+- Last verified: 2026-10-28
+- Updated: 2026-10-28
 
 ## TASK-FIGMA-CONTROLS-20261025 — 修复 Figma 六类基础控件问题并同步本地 UI
 

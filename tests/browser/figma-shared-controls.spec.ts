@@ -152,7 +152,9 @@ for (const width of [320, 390, 768, 1920]) {
   });
 }
 
-test("画布共享底栏保持六个44圆形入口和居中图标", async ({ page }, testInfo) => {
+test("画布共享底栏保持主要44入口、辅助32箭头和居中图标", async ({
+  page,
+}, testInfo) => {
   await openWorkspace(page);
   const dock = page.getByRole("toolbar", { name: "画布工具", exact: true });
   await expect(dock).toBeVisible();
@@ -179,11 +181,12 @@ test("画布共享底栏保持六个44圆形入口和居中图标", async ({ pag
       },
     ),
   }));
-  expect(geometry.width).toBe(304);
+  expect(geometry.width).toBe(292);
   expect(geometry.height).toBe(52);
   for (const action of geometry.actions) {
-    expect(action.width).toBe(44);
-    expect(action.height).toBe(44);
+    const size = action.label === "展开画布工具" ? 32 : 44;
+    expect(action.width).toBe(size);
+    expect(action.height).toBe(size);
     expect(action.glyphWidth).toBe(action.label === "展开画布工具" ? 8 : 28);
     expect(action.glyphHeight).toBe(action.label === "展开画布工具" ? 8 : 28);
     expect(Math.abs(action.dx)).toBeLessThan(0.6);
@@ -269,7 +272,8 @@ test("素材库标题可拖动、取消且矮屏操作不被遮挡", async ({ pa
   await page.getByRole("button", { name: "资源管理", exact: true }).click();
   const panel = page.getByTestId("asset-panel");
   const handle = page.getByRole("button", { name: "移动素材库", exact: true });
-  await expect(handle).toHaveCSS("width", "44px");
+  await expect(handle).toHaveCSS("width", "32px");
+  await expect(handle.locator(".asset-drag-icon")).toHaveCSS("width", "16px");
   const dialog = page.getByRole("dialog").filter({ has: panel });
   await dialog.evaluate(async (element) => {
     await Promise.all(

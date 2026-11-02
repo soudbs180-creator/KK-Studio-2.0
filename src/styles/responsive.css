@@ -327,13 +327,6 @@
   .sidebar.is-narrow:not(.is-collapsed) .sidebar-search {
     display: grid;
   }
-  .canvas .canvas-toolbar {
-    width: 288px;
-    height: 56px;
-    display: flex;
-    gap: 0;
-    padding: 5px;
-  }
   .canvas-toolbar > button,
   .canvas-toolbar > .toolbar-current-tool,
   .canvas-toolbar > .toolbar-current-tool + .toolbar-toggle,

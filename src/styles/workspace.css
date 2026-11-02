@@ -1496,26 +1496,33 @@
 }
 .quality-row {
   display: flex;
-  gap: 5px;
-  padding: 2px;
-  border: 1px solid var(--border-default);
-  border-radius: 6px;
-  background: var(--bg-card);
+  gap: 4px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--ui-radius-pill);
+  background: var(--bg-input);
 }
 .parameter-menu .quality-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex: 1;
-  padding: 5px 0;
-  font-size: 8px;
-  font-weight: 500;
+  min-width: 0;
+  height: 32px;
+  padding: 0 12px;
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-caption);
+  font-weight: var(--kk-font-weight-body-strong);
   text-align: center;
-  border: 1px solid transparent;
-  border-radius: 6px;
+  border: 0;
+  border-radius: var(--ui-radius-pill);
   background: transparent;
-  color: #707070;
+  color: var(--text-secondary);
 }
-.parameter-menu .quality-btn.active {
-  background: #313131;
-  border-color: #808080;
+.parameter-menu .quality-btn.active,
+.parameter-menu .quality-btn[aria-pressed="true"] {
+  background: var(--kk-choice-selected-bg);
+  color: var(--text-primary);
 }
 .ratio-grid {
   display: grid;

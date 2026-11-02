@@ -198,7 +198,7 @@ test("参考图在收起和展开提示词后保持普通列表", async ({ page 
   });
 });
 
-test("底部工具栏各图标使用统一的 40px 视觉槽位", async ({ page }) => {
+test("底部工具栏主要按钮保持 44px 点击区与 28px 图标", async ({ page }) => {
   await openWorkspace(page);
   const toolbar = page.locator(".canvas-toolbar");
   await expect(toolbar).toBeVisible();

@@ -10,7 +10,10 @@ import {
 import UiIcon from "../UiIcon";
 import DemoMediaPreview from "./DemoMediaPreview";
 import CreationComposer from "./CreationComposer";
-import { readReferenceImages } from "./referenceUpload";
+import {
+  assignVideoReferenceFrames,
+  readReferenceImages,
+} from "./referenceUpload";
 import CanvasImageActions from "./CanvasImageActions";
 import ResultPreview from "./ResultPreview";
 import { useCanvasMediaContent } from "../canvas/useCanvasMediaContent";
@@ -69,7 +72,7 @@ export default function DemoResultNode({
     hasResultContent &&
     !previewError &&
     !item.referenceOnly &&
-    (item.kind === "image" || item.kind === "video"),
+    ["image", "video"].includes(item.kind),
   );
   const referenceFile = useRef<HTMLInputElement>(null);
   const referenceSlot = useRef<CanvasReference["slot"]>();
@@ -197,14 +200,28 @@ export default function DemoResultNode({
             hidden
             multiple
             type="file"
-            accept="image/png,image/jpeg,image/webp,image/gif"
+            accept={
+              item.kind === "video"
+                ? "image/png,image/jpeg,image/webp,image/gif,video/mp4,video/webm,audio/mpeg,audio/wav,audio/ogg"
+                : "image/png,image/jpeg,image/webp,image/gif"
+            }
             onChange={(event) => {
               const files = [...(event.target.files ?? [])];
               event.target.value = "";
-              if (!files.length || !editing.onAddReferences) return;
+              const addReferences = editing.onAddReferences;
+              if (!files.length || !addReferences) return;
               setReferenceError("");
               void readReferenceImages(files, referenceSlot.current)
-                .then(editing.onAddReferences)
+                .then((entries) =>
+                  addReferences(
+                    item.kind === "video"
+                      ? assignVideoReferenceFrames(
+                          entries,
+                          editing.references ?? [],
+                        )
+                      : entries,
+                  ),
+                )
                 .catch((error: unknown) =>
                   setReferenceError(
                     error instanceof Error
@@ -236,6 +253,7 @@ export default function DemoResultNode({
             onGenerationStart={editing.onGenerationStart}
             onGenerationState={editing.onGenerationState}
             onRemoveReference={editing.onRemoveReference}
+            onSwapReferenceFrames={editing.onSwapReferenceFrames}
           />
         </>
       )}

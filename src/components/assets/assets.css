@@ -638,8 +638,8 @@
 }
 .asset-panel .asset-header {
   position: static;
-  flex: 0 0 44px;
-  height: 44px;
+  flex: 0 0 32px;
+  height: 32px;
   gap: 8px;
   font-size: var(--kk-font-body);
   line-height: var(--kk-line-body);
@@ -654,9 +654,9 @@
 .asset-panel .asset-header button {
   display: grid;
   place-items: center;
-  flex: 0 0 44px;
-  width: 44px;
-  height: 44px;
+  flex: 0 0 32px;
+  width: 32px;
+  height: 32px;
   padding: 0;
   border-radius: var(--kk-radius-full);
 }
@@ -690,42 +690,35 @@
   flex-shrink: 0;
 }
 .asset-panel .asset-tabs {
-  height: 52px;
+  height: 32px;
   padding: 0;
-  gap: 0;
+  gap: 4px;
   border: 0;
-  background: transparent;
-  border-radius: 0;
+  background: var(--kk-bg-input);
+  border-radius: var(--kk-radius-full);
 }
 .asset-panel .asset-tabs button {
-  position: relative;
-  height: 48px;
-  min-width: 44px;
+  height: 32px;
+  min-width: 32px;
   color: var(--kk-control-idle-fg);
   background: transparent;
-  border-radius: 0;
-  font-weight: var(--kk-font-weight-body);
+  border-radius: var(--kk-radius-full);
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-caption);
+  font-weight: var(--kk-font-weight-body-strong);
 }
 .asset-panel .asset-tabs button[aria-selected="true"] {
-  background: transparent;
+  background: var(--kk-choice-selected-bg);
   color: var(--kk-text-primary);
 }
-.asset-panel .asset-tabs button[aria-selected="true"]::after {
-  content: "";
-  position: absolute;
-  inset: auto 0 -4px;
-  height: 4px;
-  border-radius: var(--kk-radius-full);
-  background: var(--kk-text-primary);
-}
 .asset-panel .asset-search-row {
-  min-height: 48px;
+  min-height: 32px;
   height: auto;
   flex-wrap: wrap;
   gap: 8px;
 }
 .asset-panel .asset-search {
-  height: 48px;
+  height: 32px;
   border: 1px solid var(--kk-border-control);
   background: var(--kk-bg-input);
 }
@@ -733,36 +726,56 @@
   height: 100%;
   border: 0;
   background: transparent;
-  font-size: var(--kk-font-body);
-  line-height: var(--kk-line-body);
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-caption);
 }
 .asset-panel .asset-view {
   padding: 0;
   gap: 4px;
-  background: transparent;
+  background: var(--kk-bg-input);
+  border-radius: var(--kk-radius-full);
+  flex: 0 0 68px;
 }
 .asset-panel .asset-view button {
-  width: 44px;
-  height: 44px;
+  width: 32px;
+  height: 32px;
   border-radius: var(--kk-radius-full);
 }
 .asset-panel .asset-view .asset-icon {
-  width: 28px;
-  height: 28px;
+  width: 20px;
+  height: 20px;
 }
 .asset-panel .asset-filters {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 4px;
+}
+.asset-primary-filters,
+.asset-secondary-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
 }
 .asset-panel .asset-filters select,
 .asset-panel .asset-filters input {
   width: auto;
   min-width: 0;
   max-width: 100%;
-  min-height: 44px;
+  height: 32px;
+  min-height: 32px;
   flex: 1 1 88px;
-  font-size: var(--kk-font-body);
+  font-size: var(--kk-font-caption);
+}
+.asset-panel .asset-primary-filters select {
+  flex: 0 0 64px;
+  width: 64px;
+  border: 1px solid var(--border-default);
+}
+.asset-panel .asset-primary-filters select[aria-label="排序方式"] {
+  flex-basis: 72px;
+  width: 72px;
 }
 .asset-panel .asset-content {
   min-height: 0;
@@ -771,12 +784,15 @@
 }
 .asset-panel .asset-bottom-actions {
   justify-content: center;
-  min-height: 44px;
+  min-height: 32px;
   flex-wrap: wrap;
 }
 .asset-panel .asset-bottom-actions button {
-  min-height: 44px;
-  font-size: var(--kk-font-body);
+  height: 32px;
+  min-height: 32px;
+  min-width: 0;
+  padding: 0 12px;
+  font-size: var(--kk-font-caption);
 }
 .asset-panel .asset-feedback {
   max-height: 80px;
@@ -799,10 +815,12 @@
   mask-repeat: no-repeat;
 }
 .asset-header-icon {
-  width: 28px;
-  height: 28px;
+  width: 20px;
+  height: 20px;
 }
 .asset-drag-icon {
+  width: 16px;
+  height: 16px;
   mask-image: url("/design/figma/asset-drag.svg");
 }
 .asset-expand-icon {
@@ -815,5 +833,43 @@
   color: var(--kk-control-idle-fg);
 }
 .asset-panel .asset-view button[aria-pressed="true"] {
+  background: var(--kk-choice-selected-bg);
   color: var(--kk-control-selected-fg);
+}
+
+@media (pointer: coarse), (max-width: 767px) {
+  .asset-panel .asset-header,
+  .asset-panel .asset-header button {
+    height: 44px;
+    flex-basis: 44px;
+  }
+  .asset-panel .asset-header button,
+  .asset-panel .asset-view button {
+    width: 44px;
+  }
+  .asset-panel .asset-tabs,
+  .asset-panel .asset-tabs button,
+  .asset-panel .asset-search,
+  .asset-panel .asset-view button,
+  .asset-panel .asset-bottom-actions button,
+  .asset-panel .asset-filters select,
+  .asset-panel .asset-filters input {
+    height: 44px;
+    min-height: 44px;
+  }
+  .asset-panel .asset-tabs button {
+    min-width: 44px;
+  }
+  .asset-panel .asset-primary-filters select {
+    flex: 1 1 80px;
+  }
+  .asset-panel .asset-view {
+    flex-basis: 92px;
+  }
+  .asset-panel .asset-view .asset-icon,
+  .asset-panel .asset-tab-trash svg,
+  .asset-header-icon:not(.asset-drag-icon) {
+    width: 28px;
+    height: 28px;
+  }
 }

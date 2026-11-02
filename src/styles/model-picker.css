@@ -26,25 +26,30 @@
 .kk-model-channels {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 0;
+  gap: 4px;
   padding: 0;
   margin-bottom: var(--kk-space-2);
   flex-shrink: 0;
-  background: transparent;
+  background: var(--kk-bg-input);
+  border-radius: var(--kk-radius-full);
 }
 /* The capability picker has two options, not the four technical channels. */
 .kk-model-capability-tabs {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 .kk-model-menu .kk-model-channels button {
-  position: relative;
-  min-height: 40px;
-  padding: 4px 4px 8px;
+  height: 32px;
+  min-height: 32px;
+  min-width: 0;
+  padding: 0 8px;
   background: transparent;
-  border-radius: 0;
+  border-radius: var(--kk-radius-full);
   color: var(--kk-text-secondary);
   text-align: center;
   white-space: nowrap;
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-caption);
+  font-weight: var(--kk-font-weight-body-strong);
   transition: var(--ui-state-transition);
 }
 .kk-model-menu
@@ -60,22 +65,18 @@
 .kk-model-menu .kk-model-channels button:focus:not(:focus-visible) {
   outline: none;
 }
-/* Figma 940:24897: selected text and one underline, with no button fill. */
+/* Figma 2538:48403: a contained selection group, separate from title tabs. */
 .kk-model-menu .kk-model-channels button.is-active,
 .kk-model-menu .kk-model-channels button[aria-selected="true"] {
-  background: transparent;
+  background: var(--kk-choice-selected-bg);
   box-shadow: none;
   color: var(--ui-state-selected-fg);
-  font-weight: 600;
 }
-.kk-model-menu .kk-model-channels button.is-active::after,
-.kk-model-menu .kk-model-channels button[aria-selected="true"]::after {
-  content: "";
-  position: absolute;
-  inset: auto 0 0;
-  height: 4px;
-  border-radius: var(--kk-radius-full);
-  background: var(--kk-text-primary);
+@media (pointer: coarse), (max-width: 767px) {
+  .kk-model-menu .kk-model-channels button {
+    height: 44px;
+    min-height: 44px;
+  }
 }
 .kk-model-menu .kk-model-channel-help {
   margin: 0 0 var(--kk-space-2);

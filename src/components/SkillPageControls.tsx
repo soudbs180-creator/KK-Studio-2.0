@@ -1,4 +1,5 @@
-import type { RefObject } from "react";
+import { useRef, type RefObject } from "react";
+import { SlidingPillIndicator } from "./ui/SlidingPillIndicator";
 
 export type ExtensionView = "skills" | "connectors" | "partners";
 const VIEWS = [
@@ -47,6 +48,8 @@ export default function SkillPageControls({
   onOpenModels?: () => void;
 }) {
   const active = VIEWS.find((item) => item.id === view)!;
+  const titleTabs = useRef<HTMLDivElement>(null);
+  const skillTabs = useRef<HTMLDivElement>(null);
   return (
     <>
       <header className="catalog-page-header">
@@ -104,6 +107,7 @@ export default function SkillPageControls({
       </header>
       <div
         className="catalog-page-tabs catalog-page-top-tabs"
+        ref={titleTabs}
         role="tablist"
         aria-label="扩展分类"
       >
@@ -140,6 +144,11 @@ export default function SkillPageControls({
             {item.label}
           </button>
         ))}
+        <SlidingPillIndicator
+          containerRef={titleTabs}
+          activeKey={view}
+          variant="line"
+        />
       </div>
       {status && (
         <p className="catalog-page-status" role="status">
@@ -150,6 +159,7 @@ export default function SkillPageControls({
         {view === "skills" ? (
           <div
             className="catalog-page-tabs"
+            ref={skillTabs}
             role="tablist"
             aria-label="Skill分类"
           >
@@ -169,6 +179,11 @@ export default function SkillPageControls({
             >
               我的 Skill
             </button>
+            <SlidingPillIndicator
+              containerRef={skillTabs}
+              activeKey={tab}
+              variant="line"
+            />
           </div>
         ) : (
           <span className="extension-boundary">

@@ -153,7 +153,12 @@ export function TaskPanelPopover({
         </button>
       </div>
       <label className="task-panel-search" data-node-id="1763:367">
-        <span className="sr-only">搜索任务</span>
+        <img
+          src="/design/figma/task-search.svg"
+          width={12}
+          height={12}
+          alt=""
+        />
         <input
           type="search"
           value={query}
@@ -252,6 +257,9 @@ export function TaskPanelPopover({
           onClose={() => setSelectedTask(null)}
           trigger={detailTrigger}
         />
+      )}
+      {onOpenTasks && (
+        <p className="task-panel-hint">点击卡片查看详情 · 失败后可重试</p>
       )}
       {onOpenTasks && (
         <button

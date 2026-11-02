@@ -50,11 +50,6 @@ export async function readReferenceMedia(
                     : file.type.startsWith("video/")
                       ? "video"
                       : "image",
-                  frame: file.type.startsWith("video/")
-                    ? index === 0
-                      ? "first"
-                      : "last"
-                    : undefined,
                   slot: index === 0 ? slot : undefined,
                 }),
               )
@@ -76,7 +71,8 @@ export function assignVideoReferenceFrames(
   existing: CanvasReference[],
 ): CanvasReference[] {
   const used = new Set(
-    existing
+    [...existing, ...entries]
+      .filter((reference) => reference.kind !== "audio")
       .map((reference) => reference.frame)
       .filter((frame): frame is "first" | "last" => Boolean(frame)),
   );
