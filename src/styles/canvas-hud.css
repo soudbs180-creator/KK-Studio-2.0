@@ -158,7 +158,7 @@
 }
 
 .canvas-view-mode-btn.active {
-  background: var(--kk-control-surface-selected);
+  background: var(--kk-choice-selected-bg);
   color: var(--text-primary);
   font-weight: 500;
 }
@@ -559,13 +559,17 @@
   width: 144px;
   height: 44px;
   padding: 0;
-  gap: 0;
+  gap: 4px;
   border: 0;
+  background: var(--bg-input);
 }
 .canvas .canvas-view-mode-btn {
   height: 44px;
-  font-size: var(--kk-font-body);
-  line-height: var(--kk-line-body);
+  min-width: 44px;
+  padding: 0 12px;
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-caption);
+  font-weight: var(--kk-font-weight-body-strong);
 }
 @container canvas-hud (max-width: 760px) {
   .canvas .canvas-hud .task-button {
@@ -613,7 +617,7 @@
   min-height: 36px;
 }
 .canvas-hud .task-panel-close {
-  position: static;
+  position: relative;
   display: grid;
   place-items: center;
   width: 32px;
@@ -637,31 +641,81 @@
 .canvas-hud .task-panel-tabs {
   flex-shrink: 0;
 }
+.canvas-hud .task-panel-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 32px;
+  padding: 0 4px 0 12px;
+  border: 1px solid var(--border-control);
+  border-radius: var(--kk-radius-control);
+  background: var(--bg-input);
+}
+.canvas-hud .task-panel-search img {
+  flex-shrink: 0;
+}
+.canvas-hud .task-panel-search input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text-primary);
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-caption);
+  font-weight: var(--kk-font-weight-caption);
+}
+.canvas-hud .task-panel-search input::placeholder {
+  color: var(--text-secondary);
+}
 .canvas-hud .task-grid,
 .canvas-hud .task-empty {
   flex: 1;
   min-height: 0;
 }
 .canvas-hud .task-panel-tabs {
-  gap: 0;
-  height: 40px;
+  gap: 4px;
+  height: 32px;
   margin: 0;
+  border-radius: var(--ui-radius-pill);
+  background: var(--bg-input);
 }
 .canvas-hud .task-tab {
   position: relative;
+  min-width: 0;
+  min-height: 32px;
+  height: 32px;
+  padding: 0 12px;
+  color: var(--text-secondary);
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-caption);
+  font-weight: var(--kk-font-weight-body-strong);
   background: transparent;
   border: 0;
-  border-radius: 0;
+  border-radius: var(--ui-radius-pill);
 }
-.canvas-hud .task-tab.active::before {
-  inset: auto 0 0;
-  height: 4px;
-  border-radius: var(--kk-radius-full);
-  background: var(--kk-text-primary);
+.canvas-hud .task-tab.active {
+  color: var(--text-primary);
+  background: var(--kk-choice-selected-bg);
+}
+.canvas-hud .task-panel-tabs .task-tab::before,
+.canvas-hud .task-panel-tabs .task-tab::after {
+  content: none;
+}
+.canvas-hud .task-panel-hint {
+  flex-shrink: 0;
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-caption);
 }
 .canvas-hud .task-workbench-link {
   position: static;
   flex-shrink: 0;
   width: 100%;
   margin: 0;
+  background: var(--kk-control-surface-idle);
+  color: var(--text-secondary);
+  font-weight: var(--kk-font-weight-body-strong);
 }

@@ -1,26 +1,123 @@
 // Public contract entry for feature: models
-export { AUTO_ROUTING_MODEL, AUTO_ROUTING_LABEL, AUTO_ROUTING_DETAIL, AUTO_ROUTING_BADGE, isAutoRouting, createAutoRoutingSelection, classifyCapability, classifyChatSubCategory, resolveAutoRoutingChannel, aggregateCapabilityEntries } from "./capabilityAggregation.ts";
-export type { UserCapability, ChatSubCategory, AggregatedCandidateConnection, AggregatedModelEntry, AutoRoutingOptions, AutoRoutingResolution, AggregateCapabilityOptions } from "./capabilityAggregation.ts";
-export { imageCapabilitiesForSelection, canvasImageTotalReferenceLimit, canvasImageReferenceLimit, resolveImageModelCapabilities } from "./imageModelCapabilities.ts";
-export type { CapabilitySupport, ResolvedImageModelCapabilities } from "./imageModelCapabilities.ts";
+export {
+  AUTO_ROUTING_MODEL,
+  AUTO_ROUTING_LABEL,
+  AUTO_ROUTING_DETAIL,
+  AUTO_ROUTING_BADGE,
+  isAutoRouting,
+  createAutoRoutingSelection,
+  classifyCapability,
+  classifyChatSubCategory,
+  resolveAutoRoutingChannel,
+  aggregateCapabilityEntries,
+} from "./capabilityAggregation.ts";
+export type {
+  UserCapability,
+  ChatSubCategory,
+  AggregatedCandidateConnection,
+  AggregatedModelEntry,
+  AutoRoutingOptions,
+  AutoRoutingResolution,
+  AggregateCapabilityOptions,
+} from "./capabilityAggregation.ts";
+export {
+  imageCapabilitiesForSelection,
+  canvasImageTotalReferenceLimit,
+  canvasImageReferenceLimit,
+  resolveImageModelCapabilities,
+} from "./imageModelCapabilities.ts";
+export type {
+  CapabilitySupport,
+  ResolvedImageModelCapabilities,
+} from "./imageModelCapabilities.ts";
 export { detectLocalHardware } from "./localHardware.ts";
-export { createLocalModelInstallationBridge, localModelInstallation } from "./localModelInstallation.ts";
-export { createModelSpaceProfile, parseCatalogModels, readModelCatalogs, catalogForConnection, saveModelCatalog, imageSizeOptions } from "./modelCatalog.ts";
-export type { ModelKind, ModelSpaceProfile, CatalogModel, ModelCatalog } from "./modelCatalog.ts";
-export { readCatalogPreferences, saveCatalogPreferences, getConnectionPrefs, setModelEnabled, setDefaultModel, addCustomModel, removeCustomModel, mergeCatalogWithPreferences, subscribeCatalogPreferences, useModelCatalogPreferences } from "./modelCatalogStore.ts";
-export type { ModelCatalogEntry, ModelPreference, ConnectionCatalogPrefs } from "./modelCatalogStore.ts";
-export { parseModelWindow, calculateAutoCompactWatermark, catalogModelEntrySchema, buildModelCatalog, renderModelCatalogJson } from "./modelCatalogWindow.ts";
-export type { ContextWindowSpec, CatalogModelEntry, CatalogModelInput } from "./modelCatalogWindow.ts";
-export { deduplicateRelayEntries, aggregateGlobalModelCapabilities } from "./modelDeduplication.ts";
-export type { RelayCandidate, EntryMetadata, CandidateConnectionInfo, DeduplicateRelayOptions, DeduplicateGlobalOptions } from "./modelDeduplication.ts";
-export { modelDisplay, groupCatalogModels, modelSearchTerms } from "./modelFamilies.ts";
+export {
+  createLocalModelInstallationBridge,
+  localModelInstallation,
+} from "./localModelInstallation.ts";
+export {
+  createModelSpaceProfile,
+  parseCatalogModels,
+  readModelCatalogs,
+  catalogForConnection,
+  saveModelCatalog,
+  imageSizeOptions,
+} from "./modelCatalog.ts";
+export type {
+  ModelKind,
+  ModelSpaceProfile,
+  CatalogModel,
+  ModelCatalog,
+} from "./modelCatalog.ts";
+export {
+  readCatalogPreferences,
+  saveCatalogPreferences,
+  getConnectionPrefs,
+  setModelEnabled,
+  setDefaultModel,
+  addCustomModel,
+  removeCustomModel,
+  mergeCatalogWithPreferences,
+  subscribeCatalogPreferences,
+  useModelCatalogPreferences,
+} from "./modelCatalogStore.ts";
+export type {
+  ModelCatalogEntry,
+  ModelPreference,
+  ConnectionCatalogPrefs,
+} from "./modelCatalogStore.ts";
+export {
+  parseModelWindow,
+  calculateAutoCompactWatermark,
+  catalogModelEntrySchema,
+  buildModelCatalog,
+  renderModelCatalogJson,
+} from "./modelCatalogWindow.ts";
+export type {
+  ContextWindowSpec,
+  CatalogModelEntry,
+  CatalogModelInput,
+} from "./modelCatalogWindow.ts";
+export {
+  deduplicateRelayEntries,
+  aggregateGlobalModelCapabilities,
+} from "./modelDeduplication.ts";
+export type {
+  RelayCandidate,
+  EntryMetadata,
+  CandidateConnectionInfo,
+  DeduplicateRelayOptions,
+  DeduplicateGlobalOptions,
+} from "./modelDeduplication.ts";
+export {
+  modelDisplay,
+  groupCatalogModels,
+  modelSearchTerms,
+} from "./modelFamilies.ts";
 export { entry, apiMenuEntries } from "./modelMenuEntries.ts";
 export type { Entry } from "./modelMenuEntries.ts";
 export { selectedModelLabel } from "./modelPresentation.ts";
-export { classifyLatencyTier, getLatencyTierClass, subscribeProbeMetrics, recordProbe, getProbeMetric, getAllProbeMetrics, clearProbeMetrics, PROBE_CACHE_TTL_MS, PROBE_TIMEOUT_MS, probeEndpoint, useModelProbeMetric } from "./modelProbeStore.ts";
+export {
+  classifyLatencyTier,
+  getLatencyTierClass,
+  subscribeProbeMetrics,
+  recordProbe,
+  getProbeMetric,
+  getAllProbeMetrics,
+  clearProbeMetrics,
+  PROBE_CACHE_TTL_MS,
+  PROBE_TIMEOUT_MS,
+  probeEndpoint,
+  useModelProbeMetric,
+} from "./modelProbeStore.ts";
 export type { LatencyTier, ModelProbeMetric } from "./modelProbeStore.ts";
 export { searchModels } from "./modelSearch.ts";
 export type { SearchableModel } from "./modelSearch.ts";
-export { modelSelectionId, readPickerMemory, writePickerMemory, resolvePickerPins } from "./modelSelection.ts";
+export {
+  modelSelectionId,
+  readPickerMemory,
+  writePickerMemory,
+  resolvePickerPins,
+} from "./modelSelection.ts";
 export type { ModelSelection, PickerMemory } from "./modelSelection.ts";
 export { useImageModelCapabilities } from "./useImageModelCapabilities.ts";

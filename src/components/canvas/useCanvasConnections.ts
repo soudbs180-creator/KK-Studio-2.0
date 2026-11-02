@@ -11,7 +11,10 @@ import {
   type CanvasConnection,
 } from "../../domain/canvasGraph";
 import { type CanvasCollectionItem } from "../../domain/canvasItems";
-import { reconcileCanvasConnections } from "../../domain/canvasConnections";
+import {
+  allowsReferenceSource,
+  reconcileCanvasConnections,
+} from "../../domain/canvasConnections";
 import { mergeCanvasEdges } from "../../domain/projectCanvas";
 import { canvasImageReferenceLimit } from "../../features/models/imageModelCapabilities";
 import { readProviderConnections } from "../../features/creation/providerRegistry";
@@ -125,7 +128,7 @@ export function useCanvasConnections(
         )
       : Number.POSITIVE_INFINITY;
     const invalidReference =
-      limited && Boolean(sourceItem) && sourceItem?.kind !== "image";
+      referenceEdge && !allowsReferenceSource(targetItem, sourceItem);
     const acceptsReference =
       !limited ||
       canConnectTarget(
@@ -147,7 +150,7 @@ export function useCanvasConnections(
         : uploadOnlyTarget
           ? `${targetItem.title}是上传参考图，只能作为连接来源。`
           : invalidReference
-            ? `${targetItem.title}只接受图片参考图。`
+            ? `${targetItem.title}不支持该类型的参考素材。`
             : limited && max
               ? `${targetItem.title}最多接收 ${max} 张参考图，已达到当前模型上限。`
               : `${targetItem.title}不接收图片参考图。`;

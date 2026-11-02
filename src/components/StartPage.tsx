@@ -1,4 +1,5 @@
-import { useState, type KeyboardEvent } from "react";
+import { useRef, useState, type KeyboardEvent } from "react";
+import { SlidingPillIndicator } from "./ui/SlidingPillIndicator";
 import BrandLogo from "./BrandLogo";
 import StartComposer from "./StartComposer";
 import { useHorizontalScrollHint } from "./useHorizontalScrollHint";
@@ -69,6 +70,7 @@ export default function StartPage({
   );
   const [status, setStatus] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("H3 精选");
+  const titleTabs = useRef<HTMLDivElement>(null);
   const { ref: chipRowRef, ...chipScroll } = useHorizontalScrollHint(activeTab);
   const filteredInspirations = INSPIRATIONS.filter(
     (item) =>
@@ -149,7 +151,12 @@ export default function StartPage({
         )}
       </div>
       <div className="start-discovery">
-        <div className="start-tabs" role="tablist" aria-label="开始创作内容">
+        <div
+          ref={titleTabs}
+          className="start-tabs"
+          role="tablist"
+          aria-label="开始创作内容"
+        >
           <button
             type="button"
             role="tab"
@@ -176,6 +183,11 @@ export default function StartPage({
           >
             技能
           </button>
+          <SlidingPillIndicator
+            containerRef={titleTabs}
+            activeKey={activeTab}
+            variant="line"
+          />
         </div>
         {activeTab === "skill" ? (
           <div

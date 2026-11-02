@@ -1,5 +1,13 @@
 # Review：独立上下文复核
 
+## 2026-10-27 新增修改的审查范围
+
+实现者自检新增语义图标、原生工具栏插槽、方向按钮与令牌摘要；Source/Hover/viewport证据见当前verification。review_selection_types只读复核新增CSS、SVG和固定摘要，确认三行专用选择色之外与c2a0228a令牌逐字节相同；发现ARR-01旧手机样式覆盖为56高/0间距。先加390×844+hasTouch断言真实复现，再删除7行旧覆盖并重建；实现者Edge14/14零重试，独立复核关闭ARR-01。SEL-01/02仍关闭，但这只是dirty候选预检，非提交后正式独审。Figma播放器、全部组合和原生运行尚未独立验收。
+
+## 2026-10-26 当前选择控件候选预检
+
+独立上下文review_selection_types检查c2a0228a基线上的当前dirty CSS/DOM及唯一筛选调用链，提出SEL-01触控垃圾箱宽度36和SEL-02开始页标题间距归零。实现补齐触控min-width44、标题左右12留白和最小宽度96；复核确认两项代码finding关闭，筛选、视图、垃圾箱回调保留。实现者随后production build + Edge专项8/8，包含真实触控区域、文本Range间距与实际切换。此轮仅为dirty候选预检，未替代提交后正式独审、全场景或原生验收。
+
 - Task ID：TASK-FIGMA-PAGES-20261025。
 - 基线HEAD：`1fbac26b33bdabaad682ad398f5292360eb9c66a`；Figma检查绑定2026-10-25在线节点及本目录verification所列write receipts，不是Git提交即可证明的设计版本。
 - Reviewer：独立上下文 `/root/verify_ui_semantics`，只读源码和Figma；主执行者独占写入。

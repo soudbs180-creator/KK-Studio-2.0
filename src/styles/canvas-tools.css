@@ -263,15 +263,20 @@
 .canvas .canvas-toolbar > .toolbar-add::before {
   background: var(--kk-button-primary-bg);
 }
-.canvas .canvas-toolbar > .toolbar-toggle::before {
-  border: 1px solid var(--kk-border-default);
-  background: var(--kk-control-surface-idle);
+.canvas .canvas-toolbar > .toolbar-toggle {
+  flex-basis: 32px;
+  width: 32px;
+  min-width: 32px;
+  height: 32px;
 }
 .canvas .canvas-toolbar > button:not(.toolbar-add):hover::before,
 .canvas
   .canvas-toolbar
   > button:not(.toolbar-add)[aria-expanded="true"]::before {
   background: var(--kk-control-hover-bg);
+}
+.canvas .canvas-toolbar > button.toolbar-toggle[aria-expanded="true"]::before {
+  background: var(--kk-control-surface-idle);
 }
 .canvas .canvas-toolbar > button:focus-visible {
   outline: 2px solid var(--kk-focus-ring);
@@ -306,6 +311,20 @@
 .canvas .canvas-toolbar .toolbar-icon-collapse {
   width: 8px;
   height: 8px;
+}
+.canvas
+  .canvas-toolbar
+  > .toolbar-toggle[aria-expanded="true"]
+  .toolbar-icon-collapse {
+  transform: rotate(180deg);
+}
+@media (pointer: coarse), (max-width: 767px) {
+  .canvas .canvas-toolbar > .toolbar-toggle {
+    flex-basis: 44px;
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
+  }
 }
 .canvas-tool-menu,
 .canvas-help-menu,

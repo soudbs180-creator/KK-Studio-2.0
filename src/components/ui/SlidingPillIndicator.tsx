@@ -1,5 +1,6 @@
-import React, {
-  useLayoutEffect,
+import {
+  useEffect,
+  useRef,
   useState,
   type CSSProperties,
   type RefObject,
@@ -18,57 +19,63 @@ export function useSlidingPill(
   activeKey: string | undefined,
   containerRef: RefObject<HTMLElement | null>,
   variant: "pill" | "line" = "pill",
+  activeRect?: DOMRect | null,
 ): CSSProperties {
-  const [style, setStyle] = useState<CSSProperties>({
-    opacity: 0,
-    pointerEvents: "none",
-  });
+  const [style, setStyle] = useState<CSSProperties>({ opacity: 0 });
 
-  useLayoutEffect(() => {
-    if (!containerRef.current) {
-      setStyle({ opacity: 0, pointerEvents: "none" });
-      return;
-    }
-
+  useEffect(() => {
     const container = containerRef.current;
-    let targetEl: HTMLElement | null = null;
-
-    if (activeKey) {
-      targetEl =
-        container.querySelector<HTMLElement>(`[data-key="${activeKey}"]`) ||
-        container.querySelector<HTMLElement>(`[data-tab="${activeKey}"]`) ||
-        container.querySelector<HTMLElement>(`[data-value="${activeKey}"]`);
-    }
-
-    if (!targetEl) {
-      targetEl =
-        container.querySelector<HTMLElement>(".is-active") ||
-        container.querySelector<HTMLElement>('[aria-selected="true"]') ||
-        container.querySelector<HTMLElement>('[aria-current="page"]');
-    }
-
-    if (!targetEl) {
-      setStyle({ opacity: 0, pointerEvents: "none" });
-      return;
-    }
-
-    const containerRect = container.getBoundingClientRect();
-    const activeRect = targetEl.getBoundingClientRect();
-
-    const x = activeRect.left - containerRect.left;
-    const y = activeRect.top - containerRect.top;
-    const width = activeRect.width;
-    const height = variant === "line" ? 3 : activeRect.height;
-    const top = variant === "line" ? y + activeRect.height - 3 : y;
-
-    setStyle({
-      opacity: 1,
-      transform: `translate3d(${x}px, ${top}px, 0)`,
-      width: `${width}px`,
-      height: `${height}px`,
-      pointerEvents: "none",
-    });
-  }, [activeKey, containerRef, variant]);
+    if (!container) return;
+    let disposed = false;
+    const update = () => {
+      if (disposed) return;
+      const key = activeKey ? CSS.escape(activeKey) : "";
+      const target =
+        (key &&
+          container.querySelector<HTMLElement>(
+            `[data-key="${key}"], [data-tab="${key}"], [data-value="${key}"]`,
+          )) ||
+        container.querySelector<HTMLElement>(
+          '[aria-selected="true"], .is-active, [aria-current="page"]',
+        );
+      const rect =
+        activeRect ?? (target ? target.getBoundingClientRect() : null);
+      if (!rect) {
+        setStyle({ opacity: 0 });
+        return;
+      }
+      const bounds = container.getBoundingClientRect();
+      const line = variant === "line";
+      const x =
+        rect.left -
+        bounds.left +
+        container.scrollLeft -
+        container.clientLeft +
+        (line ? (rect.width - 24) / 2 : 0);
+      const y =
+        rect.top -
+        bounds.top +
+        container.scrollTop -
+        container.clientTop +
+        (line ? rect.height - 3 : 0);
+      setStyle({
+        opacity: 1,
+        transform: `translate3d(${x}px, ${y}px, 0)`,
+        width: line ? 24 : rect.width,
+        height: line ? 2 : rect.height,
+      });
+    };
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(container);
+    for (const child of container.querySelectorAll<HTMLElement>("[role='tab']"))
+      observer.observe(child);
+    void document.fonts.ready.then(update);
+    return () => {
+      disposed = true;
+      observer.disconnect();
+    };
+  }, [activeKey, activeRect, containerRef, variant]);
 
   return style;
 }
@@ -79,69 +86,21 @@ export function SlidingPillIndicator({
   activeKey,
   variant = "pill",
   className = "",
-  style: userStyle,
+  style,
 }: SlidingPillIndicatorProps) {
-  const [computedStyle, setComputedStyle] = useState<CSSProperties>({
-    opacity: 0,
-    pointerEvents: "none",
-  });
-
-  useLayoutEffect(() => {
-    if (!containerRef?.current) {
-      setComputedStyle({ opacity: 0, pointerEvents: "none" });
-      return;
-    }
-
-    const container = containerRef.current;
-    const containerRect = container.getBoundingClientRect();
-
-    let targetRect = activeRect;
-
-    if (!targetRect && activeKey) {
-      const targetEl =
-        container.querySelector<HTMLElement>(`[data-key="${activeKey}"]`) ||
-        container.querySelector<HTMLElement>(`[data-tab="${activeKey}"]`) ||
-        container.querySelector<HTMLElement>(`[data-value="${activeKey}"]`) ||
-        container.querySelector<HTMLElement>(".is-active") ||
-        container.querySelector<HTMLElement>('[aria-selected="true"]');
-
-      if (targetEl) {
-        targetRect = targetEl.getBoundingClientRect();
-      }
-    }
-
-    if (!targetRect) {
-      setComputedStyle({ opacity: 0, pointerEvents: "none" });
-      return;
-    }
-
-    const x = targetRect.left - containerRect.left;
-    const y = targetRect.top - containerRect.top;
-    const width = targetRect.width;
-    const height = variant === "line" ? 3 : targetRect.height;
-    const top = variant === "line" ? y + targetRect.height - 3 : y;
-
-    setComputedStyle({
-      opacity: 1,
-      transform: `translate3d(${x}px, ${top}px, 0)`,
-      width: `${width}px`,
-      height: `${height}px`,
-      pointerEvents: "none",
-    });
-  }, [activeRect, activeKey, containerRef, variant]);
-
-  const baseClass =
-    variant === "line" ? "sliding-line-indicator" : "sliding-pill-indicator";
-
+  const fallbackRef = useRef<HTMLElement>(null);
+  const computedStyle = useSlidingPill(
+    activeKey,
+    containerRef ?? fallbackRef,
+    variant,
+    activeRect,
+  );
   return (
     <div
       aria-hidden="true"
       data-testid="sliding-pill-indicator"
-      className={`${baseClass} ${className}`.trim()}
-      style={{
-        ...computedStyle,
-        ...userStyle,
-      }}
+      className={`${variant === "line" ? "sliding-line-indicator" : "sliding-pill-indicator"} ${className}`.trim()}
+      style={{ ...computedStyle, ...style }}
     />
   );
 }

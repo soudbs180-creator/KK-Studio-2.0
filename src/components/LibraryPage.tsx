@@ -1,4 +1,5 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
+import { SlidingPillIndicator } from "./ui/SlidingPillIndicator";
 import { Search } from "lucide-react";
 import CatalogPageBody from "./CatalogPageBody";
 import type { CreationProject } from "../features/creation/model";
@@ -128,6 +129,7 @@ export default function LibraryPage({
   onRunWorkflow?: (workflow: WorkflowRecord) => void;
 }) {
   const [query, setQuery] = useState("");
+  const titleTabs = useRef<HTMLDivElement>(null);
   const [tab, setTab] = useState(
     view === "projects"
       ? "本地项目"
@@ -197,6 +199,7 @@ export default function LibraryPage({
       <div className="catalog-page-toolbar">
         <div
           className="catalog-page-tabs"
+          ref={titleTabs}
           role="tablist"
           aria-label={`${meta.title}分类`}
         >
@@ -211,6 +214,11 @@ export default function LibraryPage({
               {item}
             </button>
           ))}
+          <SlidingPillIndicator
+            containerRef={titleTabs}
+            activeKey={tab}
+            variant="line"
+          />
         </div>
         <label className="catalog-page-search">
           <Search size={16} strokeWidth={1} />

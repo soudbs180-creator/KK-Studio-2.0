@@ -62,7 +62,7 @@ export default function AssetPanelNavigation({
           aria-selected={tab === "trash"}
           onClick={() => onTab("trash")}
         >
-          <UiIcon name="delete" size={28} />
+          <UiIcon name="delete" size={20} />
         </button>
       </div>
       <div className="asset-search-row">
@@ -75,7 +75,16 @@ export default function AssetPanelNavigation({
             onChange={(e) => onFilter({ query: e.target.value })}
           />
         </label>
-        <div className="asset-view">
+      </div>
+      <AssetFilterControls
+        filter={filter}
+        tags={Array.from(new Set(source.flatMap(getAssetTags)))}
+        resourcePacks={resourcePacks}
+        sourceFilter={sourceFilter}
+        onFilter={onFilter}
+        onSource={onSource}
+      >
+        <div className="asset-view" role="group" aria-label="排列方式">
           <button
             aria-label="列表视图"
             aria-pressed={view === "list"}
@@ -91,15 +100,7 @@ export default function AssetPanelNavigation({
             <Icon name="asset-grid" />
           </button>
         </div>
-      </div>
-      <AssetFilterControls
-        filter={filter}
-        tags={Array.from(new Set(source.flatMap(getAssetTags)))}
-        resourcePacks={resourcePacks}
-        sourceFilter={sourceFilter}
-        onFilter={onFilter}
-        onSource={onSource}
-      />
+      </AssetFilterControls>
     </>
   );
 }

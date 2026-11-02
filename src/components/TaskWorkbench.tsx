@@ -137,37 +137,39 @@ export default function TaskWorkbench({
             role="tablist"
             aria-label="任务阶段"
           >
-            {(
-              [
-                "queue",
-                "prompt",
-                "generate",
-                "review",
-                "export",
-                "plan",
-              ] as WorkbenchTab[]
-            ).map((value) => (
-              <button
-                type="button"
-                role="tab"
-                key={value}
-                aria-selected={tab === value}
-                className={tab === value ? "is-active" : ""}
-                onClick={() => setTab(value)}
-              >
-                {value === "queue"
-                  ? "Queue"
-                  : value === "prompt"
-                    ? "Prompt"
-                    : value === "generate"
-                      ? "Generate"
-                      : value === "review"
-                        ? "Review"
-                        : value === "export"
-                          ? "Export"
-                          : "Plan"}
-              </button>
-            ))}
+            <div className="task-workbench-tab-options">
+              {(
+                [
+                  "queue",
+                  "prompt",
+                  "generate",
+                  "review",
+                  "export",
+                  "plan",
+                ] as WorkbenchTab[]
+              ).map((value) => (
+                <button
+                  type="button"
+                  role="tab"
+                  key={value}
+                  aria-selected={tab === value}
+                  className={tab === value ? "is-active" : ""}
+                  onClick={() => setTab(value)}
+                >
+                  {value === "queue"
+                    ? "Queue"
+                    : value === "prompt"
+                      ? "Prompt"
+                      : value === "generate"
+                        ? "Generate"
+                        : value === "review"
+                          ? "Review"
+                          : value === "export"
+                            ? "Export"
+                            : "Plan"}
+                </button>
+              ))}
+            </div>
           </nav>
           <TaskWorkbenchContent
             selected={selected}

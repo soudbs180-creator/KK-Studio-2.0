@@ -140,16 +140,16 @@ button:active:not(:disabled),
 }
 .sliding-line-indicator {
   position: absolute;
-  bottom: 0;
+  top: 0;
   left: 0;
-  height: 3px;
+  width: 24px;
+  height: 2px;
   border-radius: var(--kk-radius-full);
-  background: var(--kk-text-accent);
+  background: var(--kk-text-primary);
   pointer-events: none;
   z-index: 2;
   transition:
-    transform 0.3s var(--motion-spring),
-    width 0.26s var(--motion-spring),
+    transform 160ms ease-out,
     opacity 0.15s ease;
 }
 .group-heading svg {

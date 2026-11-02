@@ -198,7 +198,7 @@ test("参考图在收起和展开提示词后保持普通列表", async ({ page 
   });
 });
 
-test("底部工具栏各图标使用统一的 40px 视觉槽位", async ({ page }) => {
+test("底部工具栏主要按钮保持 44px 点击区与 28px 图标", async ({ page }) => {
   await openWorkspace(page);
   const toolbar = page.locator(".canvas-toolbar");
   await expect(toolbar).toBeVisible();
@@ -212,8 +212,8 @@ test("底部工具栏各图标使用统一的 40px 视觉槽位", async ({ page 
   );
   for (const box of slots) {
     expect(box).not.toBeNull();
-    expect(box!.width).toBe(40);
-    expect(box!.height).toBe(40);
+    expect(box!.width).toBe(28);
+    expect(box!.height).toBe(28);
   }
 
   const buttons = await Promise.all(
@@ -223,7 +223,7 @@ test("底部工具栏各图标使用统一的 40px 视觉槽位", async ({ page 
   );
   for (const box of buttons) {
     expect(box).not.toBeNull();
-    expect(box!.width).toBe(40);
-    expect(box!.height).toBe(40);
+    expect(box!.width).toBe(44);
+    expect(box!.height).toBe(44);
   }
 });
