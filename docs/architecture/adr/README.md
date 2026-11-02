@@ -83,3 +83,4 @@
 | [ADR-028](ADR-028-capability-manifest-projections.md) | 能力声明、Port与单一清单投影 | PROPOSED；仅声明候选，协议投影待实施 |
 
 | [ADR-032](ADR-032-independent-image-capabilities-and-lineage.md) | 独立图片能力与资产溯源 | ACCEPTED；源码候选，真实运行与主线待验 |
+| [ADR-034](ADR-034-zod-security-runtime-upgrade.md) | 根与 Agent 的 Zod 资源耗尽安全修复 | ACCEPTED；本地回归通过，合流后门禁另验 |

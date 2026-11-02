@@ -46,6 +46,8 @@
 
 模块化整顿的现行规则见[MODULARITY](architecture/MODULARITY.md)，技术决定见[ADR-026](architecture/adr/ADR-026-modular-capability-architecture.md)与[ADR-027](architecture/adr/ADR-027-architecture-ratchet-and-dependency-cruiser.md)。当前P0实施与未整合边界见[交付验证](changes/2026-10-28-modularity-p0/verification.md)。
 
+Zod 运行时安全副本升级见 [ADR-034](architecture/adr/ADR-034-zod-security-runtime-upgrade.md) 及 [安全验证](changes/2026-10-28-zod-security/verification.md)。
+
 `architecture/`：运行时架构、数据存储与数据分级。
 
 | 文档                                                       | 承载内容                                    |
