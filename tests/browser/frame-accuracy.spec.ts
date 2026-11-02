@@ -54,7 +54,7 @@ async function freezeSidebarMotion(page: Page) {
 }
 
 async function sampleSidebarMotion(page: Page) {
-  return page.evaluate(() => {
+  return page.evaluate(async () => {
     const sidebar = document.querySelector(".sidebar")!;
     const animations = sidebar.getAnimations({ subtree: true });
     const width = animations.find(
@@ -68,12 +68,21 @@ async function sampleSidebarMotion(page: Page) {
     const duration = width.effect?.getComputedTiming().duration;
     if (typeof duration !== "number" || duration <= 0)
       throw new Error("Expected a nonzero sidebar transition duration");
-    const result = [0, 0.25, 0.5, 0.75, 1].map((fraction) => {
+    const result = [];
+    for (const fraction of [0, 0.25, 0.5, 0.75, 1]) {
       // Keep all tracks on the same elapsed time, including the brand delay.
       for (const animation of animations)
         animation.currentTime = duration * fraction;
-      return {
+      await new Promise<void>((resolve) =>
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+      );
+      result.push({
         width: sidebar.getBoundingClientRect().width,
+        usableWidth: parseFloat(
+          getComputedStyle(
+            document.querySelector(".infinite-canvas")!,
+          ).getPropertyValue("--canvas-usable-width"),
+        ),
         frame: document
           .querySelector(".workspace-content")!
           .getBoundingClientRect().x,
@@ -94,8 +103,8 @@ async function sampleSidebarMotion(page: Page) {
         brand: Number(
           getComputedStyle(document.querySelector(".brand strong")!).opacity,
         ),
-      };
-    });
+      });
+    }
     for (const animation of animations) animation.finish();
     return result;
   });
@@ -106,13 +115,13 @@ test("latest two Figma frames retain exact shell anchors through independent col
 }) => {
   await openArrangedWorkspace(page);
   await rect(page, ".workspace-content", [292, 45, 1618, 1025]);
-  await rect(page, ".task-button", [321, 72, 93, 30]);
+  await rect(page, ".task-button", [472, 73, 120, 44]);
   await rect(
     page,
     ".project-groups > section:last-of-type > .project-group-content > .project-entry",
     [14, 511, 263, 29],
   );
-  await rect(page, ".canvas-top-right", [1138.015625, 72, 280.984375, 31.109]);
+  await rect(page, ".canvas-top-right", [1023, 73, 363, 44]);
   await expect(page.getByRole("group", { name: "画布导航" })).toBeVisible();
   const openNavigation = await page.locator(".canvas-top-right").boundingBox();
   const openPanel = await page.locator(".conversation-panel").boundingBox();
@@ -124,15 +133,15 @@ test("latest two Figma frames retain exact shell anchors through independent col
   await page.getByRole("button", { name: "小地图", exact: true }).click();
   await page.getByLabel("对话内容", { exact: true }).fill("收纳后保留这段草稿");
   await page.getByRole("button", { name: "收起对话", exact: true }).click();
-  await rect(page, ".canvas-top-right", [1562, 72, 281, 31.109]);
-  await rect(page, ".chat-reopen", [1859, 79, 18, 18]);
+  await rect(page, ".canvas-top-right", [1467, 73, 363, 44]);
+  await rect(page, ".chat-reopen", [1838, 73, 44, 44]);
   await expect(
     page.getByRole("button", { name: "打开对话", exact: true }),
   ).toBeFocused();
   await page.getByRole("button", { name: "收起侧边栏", exact: true }).click();
   await rect(page, ".workspace-content", [72, 45, 1838, 1025]);
-  await rect(page, ".task-button", [100, 72, 93, 30]);
-  await rect(page, ".canvas-toolbar", [719, 998, 244, 50]);
+  await rect(page, ".task-button", [252, 73, 120, 44]);
+  await rect(page, ".canvas-toolbar", [839, 1002, 304, 52]);
   await rect(page, ".sidebar-search", [22, 942, 26, 26]);
   await rect(page, ".sidebar-settings", [22, 982, 26, 26]);
   await rect(page, ".sidebar-account", [22, 1022, 26, 26]);
@@ -141,9 +150,9 @@ test("latest two Figma frames retain exact shell anchors through independent col
     "收纳后保留这段草稿",
   );
   await expect(page.locator(".sidebar")).toHaveClass(/is-collapsed/);
-  await rect(page, ".canvas-toolbar", [719, 998, 244, 50]);
+  await rect(page, ".canvas-toolbar", [591, 1002, 304, 52]);
   await page.getByRole("button", { name: "展开侧边栏", exact: true }).click();
-  await rect(page, ".task-button", [321, 72, 93, 30]);
+  await rect(page, ".task-button", [472, 73, 120, 44]);
 });
 
 test("closing chat cannot steal focus already moved to a canvas card", async ({
@@ -174,9 +183,11 @@ test("sidebar motion keeps the task attached to the frame and toolbar stationary
   expect(samples.some(({ frame }) => frame > 71 && frame < 290)).toBe(true);
   expect(samples[0].frame).toBeCloseTo(292, 1);
   expect(samples.at(-1)!.frame).toBeCloseTo(72, 1);
-  for (const { frame, task, toolbar } of samples) {
-    expect(Math.abs(task - frame - 30)).toBeLessThan(0.1);
-    expect(Math.abs(toolbar - 719)).toBeLessThan(0.1);
+  for (const { frame, task, toolbar, usableWidth } of samples) {
+    expect(Math.abs(task - frame - 180)).toBeLessThan(0.1);
+    expect(Math.abs(toolbar - frame - (usableWidth - 304) / 2)).toBeLessThan(
+      0.1,
+    );
   }
   await freezeSidebarMotion(page);
   await page.getByRole("button", { name: "展开侧边栏", exact: true }).click();

@@ -221,6 +221,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-SEC-ZOD-20261028 | 独立升级根Zod4.6.7并验证集合界限安全修复 | DONE | 已完成 | P1 | none | root | 本有界包已验收合入本地main；最终工作树回收与SHA见工程外final-receipt.json，不代表全量浏览器或发布完成。 |
 | TASK-SEC-AGENT-AUDIT-20261028 | 评估Agent其余既有依赖审计项 | TODO | 未完成 | P1 | none | root | 独立核对公告和运行路径，不使用npm audit fix --force，不夹带工具链大版本升级。 |
 | TASK-W1-GATE-ZERO-20261101 | Gate Zero四微批次与安全提交收敛本地main | DONE | 已完成 | P1 | none | root | 本有界包已验收合入本地main；最终工作树回收与SHA见工程外final-receipt.json，不代表全量浏览器或发布完成。 |
+| TASK-W1-BROWSER-CLOSEOUT-20261102 | 清零W1剩余119浏览器复验项并合流 | IN_PROGRESS | 进行中 | P1 | none | root | 定向复验及根因修复后并行全套、独审、合流和回收。 |
 
 ## TASK-COMFY-PHYSICAL-20261030 — 本机ComfyUI真实显卡出图验收
 
@@ -4311,5 +4312,24 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Verification: PASS — 四微批次已提交；当前代码45e75b23快速门禁与191项分批证据可查，2491单测2471pass/20skip。两项独审P2已修并补回归；最终HEAD只读复核及main回执待。 独立双轴复核a04d5a43为PASS WITH FOLLOW-UPS，源代码已快进本地main；最终文档delta与回收收据另行绑定最终SHA。
 - Evidence: [docs/changes/2026-11-01-w1-gate-zero/verification.md](../../docs/changes/2026-11-01-w1-gate-zero/verification.md), [docs/changes/2026-11-01-w1-gate-zero/review.md](../../docs/changes/2026-11-01-w1-gate-zero/review.md)
 - Next action: 本有界包已验收合入本地main；最终工作树回收与SHA见工程外final-receipt.json，不代表全量浏览器或发布完成。
+- Last verified: 2026-11-02
+- Updated: 2026-11-02
+
+## TASK-W1-BROWSER-CLOSEOUT-20261102 — 清零W1剩余119浏览器复验项并合流
+
+- Goal: 逐项targeted_pass、并行全套、当前HEAD独审和本地main合流回收
+- Scope: 用户微批次4–7；不删测试、不加skip、不弱化行为，不执行串行913全套
+- Display status: 进行中
+- Priority: P1 — 未记录
+- Requirement refs: docs/changes/2026-11-02-w1-browser-closeout/spec.md
+- Feature IDs: none
+- Owner role: implementation-integrator
+- Acceptance: 119条原编号均有当前定向PASS且open_not_rerun为0; 定向通过后并行完整浏览器及ui/type/lint/unit通过; 独立只读审查绑定当前HEAD，合入本地main并回收树
+- Branch: `fix/TASK-W1-BROWSER-CLOSEOUT-20261102`
+- Worktree: `D:/kk-studio/.worktrees/TASK-W1-BROWSER-CLOSEOUT-20261102`
+- Modules: tests/browser, src/components, src/styles, docs/governance
+- Verification: NOT_VERIFIED — 原119条与只读Figma前提已核实，正按52/26/23/18逐批运行。
+- Evidence: [docs/changes/2026-11-02-w1-browser-closeout/verification.md](../../docs/changes/2026-11-02-w1-browser-closeout/verification.md)
+- Next action: 定向复验及根因修复后并行全套、独审、合流和回收。
 - Last verified: 2026-11-02
 - Updated: 2026-11-02

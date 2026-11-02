@@ -275,9 +275,6 @@
 .sidebar.is-collapsed:not(.is-narrow) + .workspace {
   padding-left: 8px;
 }
-.sidebar.is-collapsed:not(.is-narrow) + .workspace .canvas-hud {
-  left: 19px;
-}
 .sidebar.is-collapsed .brand {
   margin: 0 0 25px;
 }
@@ -450,9 +447,11 @@
     /* A clipped scroll container can move a focused control mid-click. */
     animation: sidebar-projects-enter var(--motion-sidebar) step-end both;
   }
-  .sidebar .project-groups-header,
-  .sidebar .project-groups > section {
+  .sidebar .project-groups-header {
     width: 260px;
+  }
+  .sidebar .project-groups > section {
+    width: 263px;
   }
   .sidebar .project-link {
     white-space: nowrap;
@@ -628,9 +627,6 @@
   }
   .sidebar.is-collapsed:not(.is-narrow) + .workspace {
     padding-left: 0;
-  }
-  .sidebar.is-collapsed:not(.is-narrow) + .workspace .canvas-hud {
-    left: var(--ui-workspace-task-inset);
   }
 }
 

@@ -12734,5 +12734,45 @@
       "docs/changes/2026-11-01-w1-gate-zero/spec.md"
     ],
     "featureIds": []
+  },
+  {
+    "id": "TASK-W1-BROWSER-CLOSEOUT-20261102",
+    "title": "清零W1剩余119浏览器复验项并合流",
+    "goal": "逐项targeted_pass、并行全套、当前HEAD独审和本地main合流回收",
+    "scope": "用户微批次4–7；不删测试、不加skip、不弱化行为，不执行串行913全套",
+    "acceptance": [
+      "119条原编号均有当前定向PASS且open_not_rerun为0",
+      "定向通过后并行完整浏览器及ui/type/lint/unit通过",
+      "独立只读审查绑定当前HEAD，合入本地main并回收树"
+    ],
+    "dependencies": [],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "fix/TASK-W1-BROWSER-CLOSEOUT-20261102",
+    "worktree": "D:/kk-studio/.worktrees/TASK-W1-BROWSER-CLOSEOUT-20261102",
+    "baseSha": "3eae01c21ea7359201ca0d7b88aee92d093192bc",
+    "affectedModules": [
+      "tests/browser",
+      "src/components",
+      "src/styles",
+      "docs/governance"
+    ],
+    "status": "IN_PROGRESS",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-11-02-w1-browser-closeout/verification.md"
+    ],
+    "verification": "原119条与只读Figma前提已核实，正按52/26/23/18逐批运行。",
+    "verificationResult": "NOT_VERIFIED",
+    "updated": "2026-11-02",
+    "lastVerified": "2026-11-02",
+    "nextAction": "定向复验及根因修复后并行全套、独审、合流和回收。",
+    "requirementRefs": [
+      "docs/changes/2026-11-02-w1-browser-closeout/spec.md"
+    ],
+    "featureIds": []
   }
 ]

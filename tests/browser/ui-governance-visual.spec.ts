@@ -34,7 +34,7 @@ test("Figma governance primitives keep one rendered geometry contract", async ({
     primaryHeight: "40px",
     secondaryRadius: "1000px",
     secondaryFontSize: "12px",
-    secondaryLineHeight: "20px",
+    secondaryLineHeight: "16px",
     iconSizes: ["16px", "20px", "24px"],
   });
 });

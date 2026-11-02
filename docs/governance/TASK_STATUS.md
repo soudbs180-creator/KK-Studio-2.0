@@ -10,7 +10,7 @@
 
 本文是当前任务路由快照，不创建第二份任务状态。任务身份由稳定的 `taskId` 决定；同一任务更新时只更新账本记录的 `updated` 日期，不新增第二条 current 记录。历史 change package 只用于追溯，并按其记录的日期、commit 和证据解释。
 
-当前账本 215 项：3 `BLOCKED`、95 `DONE`、1 `IN_PROGRESS`、1 `OBSOLETE`、97 `PARTIAL`、1 `REVIEW`、17 `TODO`；开放 119 项。以 [task-ledger.json](task-ledger.json) 为权威，[TASK_LEDGER.md](TASK_LEDGER.md) 为生成视图。
+当前账本 216 项：3 `BLOCKED`、95 `DONE`、2 `IN_PROGRESS`、1 `OBSOLETE`、97 `PARTIAL`、1 `REVIEW`、17 `TODO`；开放 120 项。以 [task-ledger.json](task-ledger.json) 为权威，[TASK_LEDGER.md](TASK_LEDGER.md) 为生成视图。
 
 ## 保留的历史任务快照（原合并双方）
 
