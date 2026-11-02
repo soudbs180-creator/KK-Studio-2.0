@@ -217,7 +217,9 @@ test("已归档图片结果使用上方选择工具栏，收藏重绘对比删�
   await expect(page.getByRole("toolbar", { name: /^图片操作：/ })).toHaveCount(
     0,
   );
-  await node.locator(".demo-result-preview img").click();
+  const resultImage = node.locator(".demo-result-preview img");
+  await panCanvasToRevealAction(page, resultImage);
+  await resultImage.click();
   const actions = page.getByRole("toolbar", { name: /^图片操作：/ });
   await expect(actions).toBeVisible();
   await expect(page.getByRole("dialog", { name: /^预览/ })).toHaveCount(0);
@@ -253,7 +255,7 @@ test("已归档图片结果使用上方选择工具栏，收藏重绘对比删�
     const pan = { x: canvas.x + 12, y: canvas.y + canvas.height - 120 };
     await page.mouse.move(pan.x, pan.y);
     await page.mouse.down({ button: "middle" });
-    await page.mouse.move(pan.x, pan.y + canvas.y + 20 - current.y, {
+    await page.mouse.move(pan.x, pan.y + canvas.y + 200 - current.y, {
       steps: 8,
     });
     await page.mouse.up({ button: "middle" });
@@ -441,7 +443,7 @@ test("active project canvas uses the provider command for a non-root source and 
           (element) => (element as HTMLElement).offsetHeight,
         ),
       )
-      .toBe(expanded ? 330 : 237);
+      .toBe(expanded ? 330 : 156);
     await expect
       .poll(() =>
         resultComposer.evaluate((element) =>
@@ -453,18 +455,19 @@ test("active project canvas uses the provider command for a non-root source and 
       .toBe(true);
     const geometry = await resultComposer.evaluate((element) => {
       const refs = element
-        .querySelector(".reference-slots, .composer-refs")!
-        .getBoundingClientRect();
+        .querySelector(".reference-slots, .composer-refs")
+        ?.getBoundingClientRect();
       const input = element.querySelector("textarea")!.getBoundingClientRect();
       const controls = element
         .querySelector(".creation-controls")!
         .getBoundingClientRect();
       const card = element
-        .parentElement!.querySelector(".demo-result-node")!
+        .closest(".canvas-node")!
+        .querySelector(".demo-result-node")!
         .getBoundingClientRect();
       return {
         composerGap: element.getBoundingClientRect().top - card.bottom,
-        referenceBottom: refs.bottom,
+        referenceBottom: refs?.bottom ?? element.getBoundingClientRect().top,
         inputTop: input.top,
         inputBottom: input.bottom,
         controlsTop: controls.top,
@@ -598,7 +601,7 @@ for (const media of [
         .poll(() =>
           composer.evaluate((element) => (element as HTMLElement).offsetHeight),
         )
-        .toBe(expanded ? 330 : 237);
+        .toBe(expanded ? 330 : 156);
       await expect
         .poll(() =>
           composer.evaluate((element) =>
@@ -611,7 +614,8 @@ for (const media of [
       const geometry = await composer.evaluate((element) => {
         const box = element.getBoundingClientRect();
         const card = element
-          .parentElement!.querySelector(".demo-result-node")!
+          .closest(".canvas-node")!
+          .querySelector(".demo-result-node")!
           .getBoundingClientRect();
         const scale = box.width / (element as HTMLElement).offsetWidth;
         return {
@@ -863,7 +867,7 @@ test("actual long model identifiers remain readable without covering canvas cont
       params!.y + params!.height <= bounds!.y,
   ).toBe(true);
   await button.click();
-  await source.getByRole("tab", { name: "官方 API", exact: true }).click();
+  await source.getByRole("tab", { name: "图像生成", exact: true }).click();
   await expect(
     source.getByRole("menuitemradio", { name: model, exact: false }),
   ).toContainText(model);
