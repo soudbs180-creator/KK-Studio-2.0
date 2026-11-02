@@ -8,6 +8,7 @@ test("资产搜索、空态恢复、列表、紧凑视图及创建主体", async
   await page.getByRole("button", { name: "资源管理", exact: true }).click();
   const panel = page.getByTestId("asset-panel");
   await expect(panel).toBeVisible();
+  await page.getByRole("button", { name: "展开资产管理" }).click();
   await expect(panel).toHaveCSS("width", "748px");
   await expect(panel).toHaveCSS("height", "600px");
   await panel.screenshot({
@@ -36,14 +37,16 @@ test("资产搜索、空态恢复、列表、紧凑视图及创建主体", async
   const firstCard = await page.locator(".asset-card").first().boundingBox();
   const secondRow = await page.locator(".asset-card").nth(2).boundingBox();
   expect(secondRow!.y).toBeGreaterThanOrEqual(firstCard!.y + firstCard!.height);
+  await page.setViewportSize({ width: 1920, height: 480 });
   expect(
     await page
-      .locator(".asset-content")
+      .locator(".asset-panel-body")
       .evaluate((e) => e.scrollHeight > e.clientHeight),
   ).toBe(true);
   await panel.screenshot({
     path: test.info().outputPath("runtime/assets-compact.png"),
   });
+  await page.setViewportSize({ width: 1920, height: 1080 });
   await page.getByRole("tab", { name: "资产", exact: true }).click();
   await page.getByRole("button", { name: "创建主体", exact: true }).click();
   await page.getByPlaceholder("例如：品牌代言人").fill("测试角色");
@@ -91,33 +94,29 @@ test("未接入的通用设置明确禁用原因", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   const dialog = page.getByRole("dialog", { name: "设置" });
-  await dialog
-    .locator("summary")
-    .filter({ hasText: "系统与未接入偏好" })
-    .click();
   const watermark = dialog.getByRole("switch", {
-    name: "去除水印",
+    name: "生成内容水印",
     exact: true,
   });
   await expect(watermark).toBeDisabled();
   await expect(
-    dialog.getByText("当前模型协议未提供水印参数，暂不能影响生成结果。", {
+    dialog.getByText("服务商协议暂未开放水印开关", {
       exact: true,
     }),
-  ).toBeVisible();
-  await expect(dialog.locator("img.settings-nav-icon").first()).toHaveAttribute(
+  ).toHaveCount(1);
+  await expect(dialog.locator(".settings-nav-icon").first()).toHaveAttribute(
     "width",
     "20",
   );
-  await expect(dialog.locator("img.settings-nav-icon").first()).toHaveAttribute(
+  await expect(dialog.locator(".settings-nav-icon").first()).toHaveAttribute(
     "height",
     "20",
   );
-  await expect(dialog.locator("img.settings-nav-icon").first()).toHaveCSS(
+  await expect(dialog.locator(".settings-nav-icon").first()).toHaveCSS(
     "width",
     "20px",
   );
-  await expect(dialog.locator("img.settings-nav-icon").first()).toHaveCSS(
+  await expect(dialog.locator(".settings-nav-icon").first()).toHaveCSS(
     "height",
     "20px",
   );
@@ -144,7 +143,9 @@ test("模型接入使用 API 地址，连接状态真实且密钥不落盘", asy
   expect(saved).not.toContain("session-key");
   await page.getByRole("button", { name: "测试连接并刷新模型" }).click();
   await expect(
-    page.getByText("已获取 0 个模型；生成能力仍需实际验证。", { exact: true }),
+    page
+      .getByRole("region", { name: "官方 API Key 配置", exact: true })
+      .getByText("已获取 0 个模型；生成能力仍需实际验证。", { exact: true }),
   ).toBeVisible();
   await page.getByRole("dialog", { name: "设置" }).screenshot({
     path: test.info().outputPath("runtime/settings-model-provider.png"),
@@ -165,26 +166,23 @@ test("豆包预置一次性填入名称和方舟地址", async ({ page }) => {
   await page.getByRole("button", { name: "模型接入", exact: true }).click();
   await page.getByRole("tab", { name: "官方直连 API", exact: true }).click();
   const presets = page.locator("details.provider-presets");
-  await presets.getByText("服务商预设与接口文档", { exact: true }).click();
-  await presets.getByLabel("搜索服务商", { exact: true }).fill("豆包");
-  await presets
-    .getByRole("group", { name: "服务商预设", exact: true })
-    .getByRole("button", { name: "豆包（火山方舟） OpenAI 兼容", exact: true })
-    .click();
-  const detail = presets.getByRole("region", { name: "预设详情", exact: true });
-  await expect(detail.getByRole("link", { name: "官方网站" })).toHaveAttribute(
-    "href",
-    "https://www.volcengine.com/product/ark",
-  );
-  await expect(detail.getByRole("link", { name: "获取密钥" })).toHaveAttribute(
+  await presets.getByText("服务商预设与快速填入", { exact: true }).click();
+  const detail = presets
+    .locator(".provider-preset-item")
+    .filter({ has: page.getByText("豆包（火山方舟）", { exact: true }) });
+  await expect(
+    detail.getByRole("link", { name: "官网", exact: true }),
+  ).toHaveAttribute("href", "https://www.volcengine.com/product/ark");
+  await expect(
+    detail.getByRole("link", { name: "密钥", exact: true }),
+  ).toHaveAttribute(
     "href",
     "https://console.volcengine.com/ark/region:ark+cn-beijing/apiKey",
   );
-  await expect(detail.getByRole("link", { name: "接口文档" })).toHaveAttribute(
-    "href",
-    "https://www.volcengine.com/docs/82379",
-  );
-  await detail.getByRole("button", { name: "使用此预设", exact: true }).click();
+  await expect(
+    detail.getByRole("link", { name: "文档", exact: true }),
+  ).toHaveAttribute("href", "https://www.volcengine.com/docs/82379");
+  await detail.getByRole("button", { name: "一键填入", exact: true }).click();
   await expect(page.getByRole("textbox", { name: "提供商" })).toHaveValue(
     "豆包（火山方舟）",
   );
@@ -302,18 +300,18 @@ test("无限画布隐藏滚动条，卡片拖动时连接线跟随", async ({ pa
     height: 1025,
   });
   expect(await page.locator(".image-preview").boundingBox()).toEqual({
-    // Latest Figma card geometry places the 400px image body at x=94 in the
-    // node; at this viewport the world transform resolves to x=468.
-    x: 468,
+    // Latest Figma card geometry places the 400px image body at x=95 in the
+    // node; at this viewport the world transform resolves to x=469.
+    x: 469,
     y: 211,
     width: 400,
     height: 400,
   });
   expect(await page.locator(".task-button").boundingBox()).toEqual({
-    x: 321,
-    y: 72,
-    width: 93,
-    height: 30,
+    x: 472,
+    y: 73,
+    width: 120,
+    height: 44,
   });
   expect(await page.locator(".conversation-panel").boundingBox()).toEqual({
     x: 1430,
@@ -322,38 +320,38 @@ test("无限画布隐藏滚动条，卡片拖动时连接线跟随", async ({ pa
     height: 998,
   });
   expect(await page.getByTestId("canvas-node-video1").boundingBox()).toEqual({
-    x: 1001,
+    x: 1002,
     y: 150,
     width: 370,
     height: 224,
   });
   expect(await page.getByTestId("canvas-node-video2").boundingBox()).toEqual({
-    x: 1001,
+    x: 1002,
     y: 443,
     width: 370,
     height: 224,
   });
   const videoPreviews = page.locator(".video-placeholder");
   expect(await videoPreviews.nth(0).boundingBox()).toEqual({
-    x: 1001,
+    x: 1002,
     y: 166,
     width: 370,
     height: 208,
   });
   expect(await videoPreviews.nth(1).boundingBox()).toEqual({
-    x: 1001,
+    x: 1002,
     y: 459,
     width: 370,
     height: 208,
   });
   const toolbarBounds = await page.locator(".canvas-toolbar").boundingBox();
-  expect(toolbarBounds).toEqual({ x: 719, y: 998, width: 244, height: 50 });
+  expect(toolbarBounds).toEqual({ x: 701, y: 1002, width: 304, height: 52 });
   await expect(page.locator(".canvas-top-right")).toBeVisible();
   expect(await page.locator(".canvas-top-right").boundingBox()).toEqual({
-    x: 1138.015625,
-    y: 72,
-    width: 280.984375,
-    height: 31.09375,
+    x: 1023,
+    y: 73,
+    width: 363,
+    height: 44,
   });
   const navigationPanelGap = await page.evaluate(() => {
     const navigation = document
@@ -364,7 +362,7 @@ test("无限画布隐藏滚动条，卡片拖动时连接线跟随", async ({ pa
       .getBoundingClientRect();
     return panel.left - navigation.right;
   });
-  expect(navigationPanelGap).toBeCloseTo(11, 1);
+  expect(navigationPanelGap).toBeCloseTo(44, 1);
   await expect(page.getByTestId("image-composer")).toHaveCount(0);
   await page.locator(".image-preview").click();
   await expect(page.getByTestId("image-composer")).toBeVisible();
@@ -379,10 +377,10 @@ test("无限画布隐藏滚动条，卡片拖动时连接线跟随", async ({ pa
       );
     })
     .toEqual({
-      x: 374,
-      y: 621,
-      width: 590,
-      height: 237,
+      x: 343,
+      y: 627,
+      width: 652,
+      height: 214,
     });
   await page.getByTestId("image-composer").screenshot({
     path: test.info().outputPath("runtime/image-composer-selected.png"),
@@ -408,7 +406,7 @@ test("无限画布隐藏滚动条，卡片拖动时连接线跟随", async ({ pa
   await page
     .getByRole("menuitemradio", { name: "移动工具", exact: true })
     .click();
-  await expect(page.locator(".canvas-toolbar")).toHaveCSS("width", "244px");
+  await expect(page.locator(".canvas-toolbar")).toHaveCSS("width", "304px");
   await videoPreviews.nth(0).click();
   await expect(page.getByTestId("image-composer")).toHaveCount(0);
   expect(

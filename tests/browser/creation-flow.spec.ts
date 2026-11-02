@@ -51,10 +51,11 @@ test("未配置 API 时首页仍默认 Codex，打开 API 接入保留草稿", a
     page.getByRole("button", { name: "模型", exact: true }),
   ).toContainText("Codex 内置生图");
   await page.getByRole("button", { name: "模型", exact: true }).click();
-  await page.getByRole("tab", { name: "中转 API", exact: true }).click();
-  await expect(page.getByRole("menu", { name: "选择模型" })).toContainText(
-    "暂无模型",
-  );
+  await page.getByRole("tab", { name: "图像生成", exact: true }).click();
+  // Auto routing and built-in Codex remain available without a configured API.
+  await expect(
+    page.getByRole("menu", { name: "选择模型" }).getByRole("menuitemradio"),
+  ).toHaveCount(2);
   await page.getByRole("button", { name: "模型接入…", exact: true }).click();
   await page.getByRole("tab", { name: "官方直连 API", exact: true }).click();
   await expect(page.getByLabel("API Key", { exact: true })).toBeVisible();
@@ -176,10 +177,10 @@ test("首页加号添加图片并支持删除，模型入口是本次创作选�
   await expect(page.getByRole("menu", { name: "选择模型" })).toContainText(
     "Codex 内置生图",
   );
-  await page.getByRole("tab", { name: "中转 API", exact: true }).click();
-  await expect(page.getByRole("menu", { name: "选择模型" })).toContainText(
-    "暂无模型，请在模型接入中保存连接并刷新模型列表。",
-  );
+  await page.getByRole("tab", { name: "图像生成", exact: true }).click();
+  await expect(
+    page.getByRole("menu", { name: "选择模型" }).getByRole("menuitemradio"),
+  ).toHaveCount(2);
 });
 
 test("配置连接后图片任务使用 provider 响应回填结果节点", async ({ page }) => {
@@ -264,13 +265,13 @@ test("批量数量会随请求发送并归档多个 provider 结果", async ({ p
 });
 
 test("运行中的图片任务可取消并停留在当前项目", async ({ page }) => {
-  await page.route(
-    "https://models.example.test/v1/images/generations",
-    () =>
-      new Promise(() => {
-        // The browser request is expected to be aborted by the cancel action.
-      }),
-  );
+  let submitted = false;
+  await page.route("https://models.example.test/v1/images/generations", () => {
+    submitted = true;
+    return new Promise(() => {
+      // The browser request is expected to be aborted by the cancel action.
+    });
+  });
   await page.getByRole("button", { name: "模型", exact: true }).click();
   await page
     .getByRole("menu")
@@ -287,9 +288,10 @@ test("运行中的图片任务可取消并停留在当前项目", async ({ page 
   await page.getByRole("button", { name: "开始创建项目" }).click();
   await page.getByRole("button", { name: "批准并提交" }).click();
   await expect(page.locator(".project-task-running")).toBeVisible();
+  await expect.poll(() => submitted).toBe(true);
   await page
-    .locator(".project-task-running")
-    .getByRole("button", { name: "取消" })
+    .locator(".canvas-hud-left")
+    .getByRole("button", { name: "取消", exact: true })
     .click();
   // Once the Provider request has started, aborting the browser fetch cannot
   // prove that the Provider did not accept it. The task must be fenced as

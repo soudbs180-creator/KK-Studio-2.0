@@ -49,8 +49,7 @@ test("桌面专属开关明确禁用，官方安装包可下载", async ({ page 
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   const dialog = page.getByRole("dialog", { name: "设置" });
 
-  await dialog.getByText("系统与未接入偏好", { exact: true }).click();
-  for (const name of ["开机自启动", "系统托盘", "防止系统休眠"]) {
+  for (const name of ["开机自启动", "系统托盘图标", "防止系统休眠"]) {
     const toggle = dialog.getByRole("switch", { name });
     await expect(toggle).toBeDisabled();
     await expect(toggle).toHaveAttribute("aria-checked", "false");
@@ -58,6 +57,7 @@ test("桌面专属开关明确禁用，官方安装包可下载", async ({ page 
     await expect(toggle).toHaveCSS("opacity", "0.45");
   }
 
+  await dialog.getByRole("button", { name: "软件更新", exact: true }).click();
   const updates = dialog.getByRole("region", { name: "软件更新", exact: true });
   await expect(
     updates.getByRole("link", { name: "下载 Windows 安装包", exact: true }),

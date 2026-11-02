@@ -139,8 +139,12 @@ test("Skill 与 MCP 入口归一到扩展，Agent 连接属于模型接入", asy
     .getByRole("navigation", { name: "设置分类" })
     .getByRole("button", { name: "模型接入", exact: true });
   await expect(models).toHaveAttribute("aria-current", "page");
+  await page.getByRole("tab", { name: "CLI 直连 CLI", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Codex CLI / 主 Agent", exact: true })
+    .click();
   await expect(
-    page.getByRole("region", { name: "Codex 主 Agent 接入" }),
+    page.locator(".settings-agent-card").filter({ hasText: "Codex 主 Agent" }),
   ).toBeVisible();
 });
 
@@ -224,8 +228,11 @@ test("资产列表隐藏滚动条后仍可滚动，浮岛设置作用于整个�
 }) => {
   await openWorkspace(page);
   await page.getByRole("button", { name: "资源管理", exact: true }).click();
-  await page.getByRole("button", { name: "收起资产管理" }).click();
-  const assets = page.locator(".asset-content");
+  await expect(
+    page.getByRole("button", { name: "展开资产管理" }),
+  ).toBeVisible();
+  await page.setViewportSize({ width: 1920, height: 480 });
+  const assets = page.locator(".asset-panel-body");
   await expect(assets).toHaveCSS("scrollbar-width", "none");
   await assets.hover();
   await page.mouse.wheel(0, 500);

@@ -1633,8 +1633,13 @@
     height: 56px;
     min-height: 56px;
   }
+  .start-composer .start-composer-footer {
+    flex-wrap: wrap;
+    row-gap: var(--kk-space-2);
+  }
   .start-composer .start-model-picker {
-    min-width: 60px;
+    flex-shrink: 0;
+    min-width: max-content;
   }
   .start-composer .start-mode-picker,
   .start-composer .start-mode-button {

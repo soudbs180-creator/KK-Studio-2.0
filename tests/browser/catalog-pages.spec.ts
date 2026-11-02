@@ -42,7 +42,9 @@ test("开始创作首页、目录页和项目行操作保持真实状态", async
     page.getByRole("heading", { name: "扩展", exact: true }),
   ).toBeVisible();
   await openSettingsSection(page, "模型接入");
-  await page.getByRole("button", { name: "本地", exact: true }).click();
+  await page
+    .getByRole("tab", { name: "本地模型 Offline", exact: true })
+    .click();
   await expect(
     page.getByText("ComfyUI 工作流 · 0 个", { exact: true }),
   ).toBeVisible();
@@ -424,7 +426,7 @@ test("开始创作页的扩展入口打开插件设置分类而不是 Skill 页�
   await expect(page.getByRole("dialog", { name: "设置" })).toBeVisible();
   await expect(
     page.getByRole("navigation", { name: "设置分类" }).getByRole("button", {
-      name: "扩展",
+      name: "扩展与 MCP",
       exact: true,
     }),
   ).toHaveAttribute("aria-current", "page");
@@ -465,7 +467,7 @@ test("开始创作页的扩展入口打开插件设置分类而不是 Skill 页�
   await expect(page.getByRole("dialog", { name: "设置" })).toBeVisible();
   await expect(
     page.getByRole("navigation", { name: "设置分类" }).getByRole("button", {
-      name: "扩展",
+      name: "扩展与 MCP",
       exact: true,
     }),
   ).toHaveAttribute("aria-current", "page");
@@ -504,7 +506,7 @@ test("开始创作与工作台的模型入口都定位到模型接入设置", as
   await page.getByRole("button", { name: "模型", exact: true }).click();
   await page
     .getByRole("menu")
-    .getByRole("tab", { name: "登录账号", exact: true })
+    .getByRole("tab", { name: "对话 / 推理", exact: true })
     .click();
   await expect(page.getByRole("menu")).toContainText("Codex");
   await page
@@ -566,7 +568,9 @@ test("Skill 与工作流卡片保持当前页面并反馈本地预览状态", as
   ).toBeVisible();
 
   await openSettingsSection(page, "模型接入");
-  await page.getByRole("button", { name: "本地", exact: true }).click();
+  await page
+    .getByRole("tab", { name: "本地模型 Offline", exact: true })
+    .click();
   await page.getByText("ComfyUI 工作流 · 0 个", { exact: true }).click();
   await page.locator('.settings-disclosure input[type="file"]').setInputFiles({
     name: "我的 ComfyUI 工作流.json",

@@ -547,7 +547,7 @@ test("画布参数不会在重开项目后回到默认值", async ({ page }) => 
   await page.getByLabel("当前模型用途").selectOption("image");
   await page.getByLabel("支持的图片尺寸").fill("1024x1024, 1536x1024");
   await page
-    .getByRole("button", { name: "保存此模型能力", exact: true })
+    .getByRole("button", { name: "保存此模型参数声明", exact: true })
     .click();
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
   await page.getByRole("button", { name: "项目库", exact: true }).click();
