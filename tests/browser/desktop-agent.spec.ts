@@ -8,6 +8,8 @@ async function networkSettings(page: Page) {
     .getByRole("navigation", { name: "设置分类" })
     .getByRole("button", { name: "模型接入", exact: true })
     .click();
+  await page.getByRole("tab", { name: "CLI 直连 CLI", exact: true }).click();
+  await page.getByRole("button", { name: "Codex CLI / 主 Agent", exact: true }).click();
   await page.getByText("高级连接选项", { exact: true }).click();
   return page.getByRole("region", { name: "桌面 Agent 服务" });
 }
@@ -58,15 +60,16 @@ test("CodeBuddy delegation distinguishes disconnected, saved and verified states
     });
     await page.goto("/");
     await networkSettings(page);
-    await page.getByRole("button", { name: "CLI 账号", exact: true }).click();
+    await page.getByRole("tab", { name: "CLI 直连 CLI", exact: true }).click();
     await page
       .getByRole("button", { name: "CodeBuddy CLI", exact: true })
       .click();
     const pathInput = page.getByRole("textbox", { name: "CodeBuddy CLI 路径" });
     await expect(pathInput).toBeDisabled();
     await page
-      .getByRole("button", { name: "Codex 主 Agent", exact: true })
+      .getByRole("button", { name: "Codex CLI / 主 Agent", exact: true })
       .click();
+    await page.getByText("高级连接选项", { exact: true }).click();
     await page.getByLabel("Agent 地址").fill(agent.url);
     await page.getByLabel("连接 Token", { exact: true }).fill("fixture-token");
     await page.getByRole("button", { name: "连接 Agent", exact: true }).click();
@@ -75,7 +78,7 @@ test("CodeBuddy delegation distinguishes disconnected, saved and verified states
         .getByRole("dialog", { name: "设置" })
         .getByRole("button", { name: "已连接", exact: true }),
     ).toBeVisible();
-    await page.getByRole("button", { name: "CLI 账号", exact: true }).click();
+    await page.getByRole("tab", { name: "CLI 直连 CLI", exact: true }).click();
     await page
       .getByRole("button", { name: "CodeBuddy CLI", exact: true })
       .click();
@@ -183,7 +186,7 @@ test("CodeBuddy 配置回读未完成时不能编辑或保存，完成后保存�
       observer.observe(document.body, { childList: true, subtree: true });
       return observed;
     });
-    await page.getByRole("button", { name: "CLI 账号", exact: true }).click();
+    await page.getByRole("tab", { name: "CLI 直连 CLI", exact: true }).click();
     await page
       .getByRole("button", { name: "CodeBuddy CLI", exact: true })
       .click();

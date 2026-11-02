@@ -57,7 +57,7 @@ test("取消按钮等待原生回执，失败时保留错误且不伪报已取�
     form.getByText("正在取消连接测试…", { exact: true }),
   ).toBeVisible();
   await expect(
-    dialog.getByRole("button", { name: "CLI 账号", exact: true }),
+    dialog.getByRole("tab", { name: "CLI 直连 CLI", exact: true }),
   ).toBeDisabled();
   await page.evaluate(() =>
     (
@@ -69,7 +69,7 @@ test("取消按钮等待原生回执，失败时保留错误且不伪报已取�
     0,
   );
   await expect(
-    dialog.getByRole("button", { name: "CLI 账号", exact: true }),
+    dialog.getByRole("tab", { name: "CLI 直连 CLI", exact: true }),
   ).toBeEnabled();
   await expect.poll(calls).toContain("provider_models_release");
   await expect(form.getByLabel("接口地址", { exact: true })).toBeEnabled();

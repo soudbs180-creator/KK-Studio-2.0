@@ -51,7 +51,7 @@ test("Google key configuration, dialogue continuity, image archive and restored 
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   await page.getByRole("button", { name: "模型接入", exact: true }).click();
   await page.getByRole("tab", { name: "官方直连 API", exact: true }).click();
-  await page.getByRole("button", { name: "CLI 账号", exact: true }).click();
+  await page.getByRole("tab", { name: "CLI 直连 CLI", exact: true }).click();
   await page.getByRole("button", { name: "Gemini CLI", exact: true }).click();
   await page.getByRole("button", { name: "保存登录方式", exact: true }).click();
   await page.getByRole("tab", { name: "官方直连 API", exact: true }).click();
@@ -70,7 +70,7 @@ test("Google key configuration, dialogue continuity, image archive and restored 
       exact: true,
     }),
   ).toBeVisible();
-  await page.getByRole("button", { name: "CLI 账号", exact: true }).click();
+  await page.getByRole("tab", { name: "CLI 直连 CLI", exact: true }).click();
   await page.getByRole("button", { name: "Gemini CLI", exact: true }).click();
   await page.getByRole("button", { name: "保存登录方式", exact: true }).click();
   expect(

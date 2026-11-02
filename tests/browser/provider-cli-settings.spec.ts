@@ -9,24 +9,12 @@ test("Gemini 预设进入专用 Google 配置，已有通用连接草稿保留",
   const dialog = page.getByRole("dialog", { name: "设置", exact: true });
   await dialog.getByRole("tab", { name: "官方直连 API", exact: true }).click();
   await dialog.getByLabel("提供商", { exact: true }).fill("保留的供应商草稿");
-  await dialog.getByText("服务商预设与接口文档", { exact: true }).click();
-  await dialog
-    .getByRole("button", { name: /^Gemini GenerateContent$/ })
-    .click();
-  const detail = dialog.getByRole("region", { name: "预设详情", exact: true });
-  await expect(detail.getByRole("link", { name: "官方网站" })).toHaveAttribute(
-    "href",
-    "https://ai.google.dev",
-  );
-  await expect(detail.getByRole("link", { name: "获取密钥" })).toHaveAttribute(
-    "href",
-    "https://aistudio.google.com/apikey",
-  );
-  await expect(detail.getByRole("link", { name: "接口文档" })).toHaveAttribute(
-    "href",
-    "https://ai.google.dev/api",
-  );
-  await detail.getByRole("button", { name: "前往 Google 配置" }).click();
+  await dialog.getByText("服务商预设与快速填入", { exact: true }).click();
+  const detail = dialog.locator(".provider-preset-item").filter({has: page.getByText("Gemini", {exact: true})});
+  await expect(detail.getByRole("link", {name: "官网", exact: true})).toHaveAttribute("href", "https://ai.google.dev");
+  await expect(detail.getByRole("link", {name: "密钥", exact: true})).toHaveAttribute("href", "https://aistudio.google.com/apikey");
+  await expect(detail.getByRole("link", {name: "文档", exact: true})).toHaveAttribute("href", "https://ai.google.dev/api");
+  await detail.getByRole("button", {name: "前往 Google 配置"}).click();
   await expect(dialog.getByLabel("Google 密钥", { exact: true })).toBeFocused();
   await expect(dialog.getByLabel("提供商", { exact: true })).toHaveValue(
     "保留的供应商草稿",
@@ -64,7 +52,7 @@ for (const loginStatus of ["unknown", "required"] as const) {
     await page.goto("/");
     await openSettingsSection(page, "模型接入");
     const dialog = page.getByRole("dialog", { name: "设置", exact: true });
-    await dialog.getByRole("button", { name: "CLI 账号", exact: true }).click();
+    await dialog.getByRole("tab", { name: "CLI 直连 CLI", exact: true }).click();
     await expect(
       dialog.getByRole("button", { name: "Gemini CLI", exact: true }),
     ).toHaveAttribute("aria-pressed", "true");

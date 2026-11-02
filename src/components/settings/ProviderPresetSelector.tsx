@@ -200,6 +200,17 @@ export default function ProviderPresetSelector({
                   </button>
 
                   <div className="preset-external-links">
+                    {!localOnly && item.website && (
+                      <a
+                        href={item.website}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="preset-link"
+                        onClick={(e) => void openLink(e, item.website)}
+                      >
+                        官网
+                      </a>
+                    )}
                     {item.docsUrl && (
                       <a
                         href={item.docsUrl}
