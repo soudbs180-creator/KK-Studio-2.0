@@ -2,15 +2,16 @@
 
 - docId: PROJECT_STATE
 - status: current
-- updatedAt: 2026-11-01
+- updatedAt: 2026-11-02
 - source: `docs/governance/task-ledger.json`
 - supersededBy: null
 
 2026-10-30 当前合流进行中：P3 f074d4de 正在整合首建基线候选5f78d187及origin/main4610的实际差异，尚未形成已验证合并提交。代码/测试冲突保留双方有效功能；本轮当前完整门禁、独审、Hosted及主线合流均待。历史H3/ORG6证据仍只覆盖其原SHA与范围，主仓21份审计改动保持保护。
 
-
 <!-- DOCUMENT_METADATA_END -->
 <!-- CURRENT_FACTS_BEGIN -->
+
+2026-11-02 收尾入口：W0 已合本地 main `15ad1617`；W1 复用原树，候选代码 `45e75b23` 吸收安全提交与本地主线，Desktop/Web 2.1.61、Mobile 2.1.44。四微批次、0 blocking code-health、根 2491 项（2471 pass/20 skip）、Agent 204 pass/2 skip、定向浏览器集合 191 项均有证据；它们不是一次完整浏览器或发布验收。原 228 RED 中 109 项取得定向 PASS、119 未重跑仍开放。详见 [W1 验证](../changes/2026-11-01-w1-gate-zero/verification.md)；最终 HEAD 独审、main 合并和 W1 回收收据位于 `D:/kk-studio/output/w1-gate-zero-2026-11-02/final-receipt.json`。以下早期阶段记录只保留原日期含义。
 
 2026-11-01 接管基线已建立：本地 `main@b93b4e7f` 与 `origin/main@9b1038a7` 分叉事实分开记录；Figma 任务树的 73 个路径、working-tree diff 和 SHA 已保存到 `D:/kk-studio/output/figma-pages-takeover-2026-11-01/`。P6 live ComfyUI 浏览器测试默认跳过，显式启用时要求 endpoint 与 checkpoint 预检；不触碰外部进程或模型。当前证据只覆盖本地接管与定向检查，真实图片 GPU、Figma OAuth/L3/L4、Desktop/Hosted/发布仍未验证。
 
@@ -54,12 +55,9 @@ TASK-MOD-P0已按用户提供执行规范与补篇启动；当前实现、验证
 
 最终限制更新：任务/资产/HTTP/DOM同态，CSS字节相同；严格PNG有1像素/1灰阶差异仍未通过。P5生产门默认关闭，Web实验不能替代原生、跨浏览器与独审。
 
-
 2026-10-29 P6/P7任务树候选：Desktop/Web2.1.51、契约1.5.0、Mobile2.1.43。独立扩图/修复/分层Manifest+ComfyUI工作流经原队列保存、执行、归档和重载；独立禁用与1.1实际执行/回退1.0通过。P7规范化原有PromptHash/ParentId/Origins，保留同字节不同父/Provider及导入来源，TS/Rust同规则。根2372 pass/20 skip、Mobile373、Agent204 pass/2 skip、Rust资产18、生产Edge17项通过；运行限制/源码构建hash见[共享验证](../changes/2026-10-29-p6-image-host/verification.md)。三项能力和P7均PARTIAL，真实GPU/API、Desktop原生/GUI、独审、完整verify/main未完成，无生产UI新增。P2/P5生产门状态不变；原9个核心浏览器失败/1像素差异未归零，四原文其余任务不因本次推进自动完成。
 
-
 2026-10-29 P6.1候选：Desktop/Web2.1.52（Mobile43/契约1.5.0不变）；本机ComfyUI扫描、隐藏托管与双态工作流卡片已接，归属WS/history经AssetPort归档并落图连线。修正代理502、Windows Python别名子进程泄漏及画布边未持久化；隔离Native夹具双client/原件SHA/结果边/重开/停止通过，原生编辑器为键盘提交，鼠标未验收。真实GPU/完整编辑器、卡片参数面板、Figma04/05、独审、完整verify/main仍未完成，PARTIAL；用户要求停止桌面控制，后续浏览器与命令行。P6.2–4及P7原候选不回退，四原文其余项不自动关闭；见[本轮验证](../changes/2026-10-29-p6-1-comfy-canvas/verification.md)。
-
 
 2026-10-29 P8源码候选：Desktop/Web53，Mobile43/契约1.5不变；七组装配迁入src/app，App2002→1546，35函数/主JSX/28 CSS入口及产物内容hash不变。固定输入软件Edge四组DOM/PNG同态；硬件渲染差异与真实GPU/最终Native不据此关闭。主仓21文件与索引清单/patch已保全，4路径重叠；P8前后均复现Codex四失败，完整verify、当前独审与main/远端整合仍开放。详见[验证](../changes/2026-10-29-p8-composition/verification.md)；其他P/STD/ORG不自动完成。
 
@@ -72,7 +70,6 @@ TASK-MOD-P0已按用户提供执行规范与补篇启动；当前实现、验证
 2026-10-30交付推进：新备份主仓21份Figma审计原件，未stash/覆盖，main仍c2a0228a；远端68冲突及默认CI基线3失败继续阻断squash/回收。ORG6在任务树迁1200份E2，60清单/新目录恢复/66关键图保留/30活跃文件保留，净减159410793B（62.8149%），历史断链86→86、布局基线578→88；根2405通过/20跳过及类型/增量lint通过。真实Comfy改先用已有H3视频模型，隔离运行依赖准备中；图片仍未验。当前SHA审查/完整门/main仍开放，其他四文档任务不关闭。见[验证](../changes/2026-10-30-main-physical-org6/verification.md)。
 
 2026-10-30新增实测：Desktop/Web2.1.59，真实RTX5080/H3的host快速生成和原生editor运行均产出视频；首帧AssetPort原件SHA一致、图片节点/result边及保存重开通过。只读代码补审d6d592e4 PASS，类型/增量lint0、根2406pass20skip0fail；不是图片checkpoint/视频资产/Hub自动安装启动验收。ORG6只在任务树迁1200份，固定Git blob净减159391121B。主仓21原件保持，68冲突/首建基线门/全套浏览器/main仍开放。 见[真实回执](../changes/2026-10-30-main-physical-org6/verification.md)。
-
 
 ## 合流保留的远端增量事实（历史来源 origin/main4610）
 

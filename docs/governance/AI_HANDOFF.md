@@ -2,12 +2,15 @@
 
 - docId: AI_HANDOFF
 - status: current
-- updatedAt: 2026-10-30
+- updatedAt: 2026-11-02
 - source: `docs/governance/PROJECT_STATE.md`
 - supersededBy: null
 
-2026-10-30 当前合流进行中：P3 f074d4de 正在整合首建基线候选5f78d187及origin/main4610的实际差异，尚未形成已验证合并提交。代码/测试冲突保留双方有效功能；本轮当前完整门禁、独审、Hosted及主线合流均待。历史H3/ORG6证据仍只覆盖其原SHA与范围，主仓21份审计改动保持保护。
+2026-11-02 当前恢复入口：[W1 收尾验证](../changes/2026-11-01-w1-gate-zero/verification.md) 与 [独审记录](../changes/2026-11-01-w1-gate-zero/review.md)。W0 已合 main；W1 四微批次候选 `45e75b23`、根 2491 项/0 fail、Agent 204 pass/2 skip、code-health 0 blocking，保留 119 个未重跑的历史浏览器失败。最终审核/本地 main SHA/工作树回收以工程外 `D:/kk-studio/output/w1-gate-zero-2026-11-02/final-receipt.json` 为准。Figma dirty 树未动；不从下方旧任务路由另建工作树。Hosted、真实 provider、安装器及完整发布未验。
 
+下方为原日期历史记录，不覆盖上述恢复入口。
+
+2026-10-30 当前合流进行中：P3 f074d4de 正在整合首建基线候选5f78d187及origin/main4610的实际差异，尚未形成已验证合并提交。代码/测试冲突保留双方有效功能；本轮当前完整门禁、独审、Hosted及主线合流均待。历史H3/ORG6证据仍只覆盖其原SHA与范围，主仓21份审计改动保持保护。
 
 本文是跨会话 AI 的最短恢复入口（30 秒内读完）。任务状态只读 [`task-ledger.json`](task-ledger.json)；当前项目事实只读 [`PROJECT_STATE.md`](PROJECT_STATE.md)。
 
@@ -73,7 +76,6 @@ P8七组hook迁出0b675ec7；会话选择派生投影修复f10147b9。Desktop/We
 2026-10-30交付推进：新备份主仓21份Figma审计原件，未stash/覆盖，main仍c2a0228a；远端68冲突及默认CI基线3失败继续阻断squash/回收。ORG6在任务树迁1200份E2，60清单/新目录恢复/66关键图保留/30活跃文件保留，净减159410793B（62.8149%），历史断链86→86、布局基线578→88；根2405通过/20跳过及类型/增量lint通过。真实Comfy改先用已有H3视频模型，隔离运行依赖准备中；图片仍未验。当前SHA审查/完整门/main仍开放，其他四文档任务不关闭。见[验证](../changes/2026-10-30-main-physical-org6/verification.md)。
 
 2026-10-30新增实测：Desktop/Web2.1.59，真实RTX5080/H3的host快速生成和原生editor运行均产出视频；首帧AssetPort原件SHA一致、图片节点/result边及保存重开通过。只读代码补审d6d592e4 PASS，类型/增量lint0、根2406pass20skip0fail；不是图片checkpoint/视频资产/Hub自动安装启动验收。ORG6只在任务树迁1200份，固定Git blob净减159391121B。主仓21原件保持，68冲突/首建基线门/全套浏览器/main仍开放。 见[真实回执](../changes/2026-10-30-main-physical-org6/verification.md)。
-
 
 ## 合流保留的远端增量事实（历史来源 origin/main4610）
 
