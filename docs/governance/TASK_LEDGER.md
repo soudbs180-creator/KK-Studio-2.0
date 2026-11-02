@@ -192,7 +192,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-UI-TASK-PANEL-HITBOX | 修复任务列表关闭按钮伪元素覆盖整个面板 | PARTIAL | 未完成 | P1 | none | root | 跑当前build的调度文件及任务交互回归；未完成原生/独审/主线门禁保持开放。 |
 | TASK-PROV-HEALTH-BEFORE-SAVE | 429等连接健康变更先于阻塞的项目保存生效 | PARTIAL | 未完成 | P1 | none | root | 提交当前候选；继续保存几何失败和全量浏览器门禁，补当前独审/原生及main整合后再关闭交付。 |
 | TASK-UI-HUD-CONTAINER-WIDTH | 修复折叠侧栏令HUD容器宽度归零 | PARTIAL | 未完成 | P1 | none | root | 继续三项邻接失败与HUD旧取消裁切；完整verify/当前独审/原生/main整合完成前保持PARTIAL。 |
-| TASK-UI-HUD-CANCEL-CLIP | 核实并修复旧HUD取消按钮被状态文案裁切 | PARTIAL | 进行中 | P1 | none | root | 最终HEAD只读复核后随W1合流；不升级为原生或Hosted验收。 |
+| TASK-UI-HUD-CANCEL-CLIP | 核实并修复旧HUD取消按钮被状态文案裁切 | DONE | 已完成 | P1 | none | root | 本有界包已验收合入本地main；最终工作树回收与SHA见工程外final-receipt.json，不代表全量浏览器或发布完成。 |
 | TASK-MOD-GATE-ADJACENT | 处理浏览器门禁剩余三项邻接失败 | PARTIAL | 进行中 | P1 | none | root | 保留父范围未复验项；按独立spec微批次推进，不运行迭代全913套。 |
 | TASK-MOD-P1 | 定义能力声明与Task/Asset/Provider叶契约 | PARTIAL | 未完成 | P1 | TASK-MOD-P0 | root | 处理TASK-MOD-P1-G独立治理子卡、TASK-MOD-P1-TYPES严格声明限制；P2接线前补真实Port adapter编译/图环/兼容选择对拍，独审/主线和P0未关闭。 |
 | TASK-MOD-P1-G | 将可选capabilityId接入功能治理与卡片对应 | TODO | 未完成 | P1 | TASK-MOD-P1 | root | P1声明验证后单独执行此治理子卡，不因capability.ts/ports.ts完成关闭完整P1要求。 |
@@ -218,9 +218,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-MOD-P7 | 资产溯源对齐 | PARTIAL | 进行中 | P1 | TASK-MOD-P6-LAYER-SPLIT | root | 完成原生GUI跨端溯源验收、独审和main合流；旧记录不回写。 |
 | TASK-MOD-P6-1 | ComfyUI本地托管与画布双态工作流卡片 | PARTIAL | 未完成 | P1 | TASK-MOD-P6-HOST | root | 完成浏览器/命令行回归；真实GPU、完整编辑器鼠标/参数面板及独审/main仍开放，用户已要求不控制桌面 |
 | TASK-MOD-GATE-BOOTSTRAP | 主线原生首建架构与目录基线 | REVIEW | 进行中 | P0 | none | root | 固定提交独立只读评审、Delivery与Hosted门禁后正常PR squash；回到P3解决组合冲突和整体门禁 |
-| TASK-SEC-ZOD-20261028 | 独立升级根Zod4.6.7并验证集合界限安全修复 | PARTIAL | 进行中 | P1 | none | root | 随W1最终HEAD独审后快进本地main；其他Agent依赖审计保持独立TODO。 |
+| TASK-SEC-ZOD-20261028 | 独立升级根Zod4.6.7并验证集合界限安全修复 | DONE | 已完成 | P1 | none | root | 本有界包已验收合入本地main；最终工作树回收与SHA见工程外final-receipt.json，不代表全量浏览器或发布完成。 |
 | TASK-SEC-AGENT-AUDIT-20261028 | 评估Agent其余既有依赖审计项 | TODO | 未完成 | P1 | none | root | 独立核对公告和运行路径，不使用npm audit fix --force，不夹带工具链大版本升级。 |
-| TASK-W1-GATE-ZERO-20261101 | Gate Zero四微批次与安全提交收敛本地main | REVIEW | 进行中 | P1 | none | root | 只读复核当前HEAD，完成合流和回收，完整浏览器剩余119不自动DONE。 |
+| TASK-W1-GATE-ZERO-20261101 | Gate Zero四微批次与安全提交收敛本地main | DONE | 已完成 | P1 | none | root | 本有界包已验收合入本地main；最终工作树回收与SHA见工程外final-receipt.json，不代表全量浏览器或发布完成。 |
 
 ## TASK-COMFY-PHYSICAL-20261030 — 本机ComfyUI真实显卡出图验收
 
@@ -270,8 +270,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Feature IDs: none
 - Owner role: implementation-integrator
 - Acceptance: 本包spec对应阶段验收与可复核证据; 用户原件/历史失败记录与检查保持; 当前SHA审查/门禁与主线/发布边界分开
-- Branch: `fix/TASK-W1-GATE-ZERO-20261101`
-- Worktree: `D:/kk-studio/.worktrees/TASK-W1-GATE-ZERO-20261101`
+- Branch: `unallocated`
+- Worktree: `unallocated`
 - Modules: docs/changes, docs/governance
 - Verification: NOT_VERIFIED — 前置PR82已正常squash main9b1038a7，P3已承接实际main且71冲突消除。组合f448限定独审141PASS，两项聊天隔离P1修复；根2441/20skip、Mobile435、Rust384/1ignore、type/lint通过。完整Web911项684PASS/227FAIL/0flaky；当前修复定向9PASS。Windows运行目录发布EPERM阻断，Hosted/正式当前EXE/整体合流未完，main21原件SHA0差异。 2026-11-01 handoff takeover: current branch/worktree corrected; default-skipped external ComfyUI live test and local baseline are recorded in the new verification package; REAL/DONE remains unchanged. 2026-11-02：Windows runtime原子替换重试固定最多7次/9.45秒，定向11项及本机package通过；Hosted原始EPERM未重跑。W0已合main；本批W1源树已吸收main15ad1617，当前独审/快进回执分开记录。
 - Evidence: [docs/changes/2026-10-30-main-physical-org6/verification.md](../../docs/changes/2026-10-30-main-physical-org6/verification.md), [docs/changes/2026-11-01-handoff-takeover/verification.md](../../docs/changes/2026-11-01-handoff-takeover/verification.md), [docs/changes/2026-11-01-w1-gate-zero/verification.md](../../docs/changes/2026-11-01-w1-gate-zero/verification.md)
@@ -3602,8 +3602,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Feature IDs: none
 - Owner role: implementation-integrator
 - Acceptance: 旧入口失败先保留RED，映射当前真实分类后相关用例通过; 其余失败区分测试过时与真实缺陷，任何真实UI修改先取得当前Figma依据; 完整verify实际全绿及当前SHA独审后才解除合流阻断
-- Branch: `fix/TASK-W1-GATE-ZERO-20261101`
-- Worktree: `D:/kk-studio/.worktrees/TASK-W1-GATE-ZERO-20261101`
+- Branch: `unallocated`
+- Worktree: `unallocated`
 - Modules: tests/browser, tests/support, tests/development
 - Verification: PARTIAL — 历史串行228 RED保留；W1证据集合191唯一测试分批PASS，其中本轮新增138。逐项比对109个原失败取得定向PASS，119未重跑仍开放；199 product/29有Figma合同依据的obsolete/0environment。非一次最终HEAD全套结果，见逐项后续表。
 - Evidence: [docs/changes/2026-10-28-browser-gate/verification.md](../../docs/changes/2026-10-28-browser-gate/verification.md), [docs/changes/2026-10-28-agent-browser-navigation/verification.md](../../docs/changes/2026-10-28-agent-browser-navigation/verification.md), [docs/changes/2026-10-28-agent-browser-navigation/review.md](../../docs/changes/2026-10-28-agent-browser-navigation/review.md), [docs/changes/2026-10-28-api-browser-navigation/verification.md](../../docs/changes/2026-10-28-api-browser-navigation/verification.md), [docs/changes/2026-10-28-api-browser-navigation/review.md](../../docs/changes/2026-10-28-api-browser-navigation/review.md), [docs/changes/2026-10-28-provider-browser-contract/verification.md](../../docs/changes/2026-10-28-provider-browser-contract/verification.md), [docs/changes/2026-10-28-provider-browser-contract/review.md](../../docs/changes/2026-10-28-provider-browser-contract/review.md), [docs/changes/2026-11-01-w1-gate-zero/verification.md](../../docs/changes/2026-11-01-w1-gate-zero/verification.md)
@@ -3767,18 +3767,18 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 - Goal: 所有保留的可见取消控件应真实可点，不能仅靠详情入口掩盖旧控件失效
 - Scope: 当前Figma入口契约与旧HUD控件映射；不改取消或归档语义
-- Display status: 进行中
+- Display status: 已完成
 - Priority: P1 — 未记录
 - Requirement refs: docs/changes/2026-10-28-provider-browser-contract/intent.md, docs/changes/2026-10-28-provider-browser-contract/spec.md
 - Feature IDs: none
 - Owner role: implementation-integrator
 - Acceptance: 记录现行Figma是否保留HUD内取消动作及其尺寸规则; 若保留则真实click命中，若退役则有明确设计依据并保留详情入口; 取消后不允许迟到结果或重复提交，补受影响回归
 - Branch: `fix/TASK-W1-GATE-ZERO-20261101`
-- Worktree: `D:/kk-studio/.worktrees/TASK-W1-GATE-ZERO-20261101`
+- Worktree: `unallocated`
 - Modules: src/App.tsx, src/styles/canvas-hud.css, tests/browser/generation-save-status.spec.ts
-- Verification: PASS — 保留现有HUD取消动作，标签单独裁切、按钮不裁切。1099px真实click取消；等待迟到路由完成后仍unknown、无新结果、仅一次请求。generation-save-status七项及相邻卡片九项全部通过，当前Figma读证与合同见review。
+- Verification: PASS — 保留现有HUD取消动作，标签单独裁切、按钮不裁切。1099px真实click取消；等待迟到路由完成后仍unknown、无新结果、仅一次请求。generation-save-status七项及相邻卡片九项全部通过，当前Figma读证与合同见review。 独立双轴复核a04d5a43为PASS WITH FOLLOW-UPS，源代码已快进本地main；最终文档delta与回收收据另行绑定最终SHA。
 - Evidence: [docs/changes/2026-10-28-provider-browser-contract/verification.md](../../docs/changes/2026-10-28-provider-browser-contract/verification.md), [docs/changes/2026-11-01-w1-gate-zero/verification.md](../../docs/changes/2026-11-01-w1-gate-zero/verification.md)
-- Next action: 最终HEAD只读复核后随W1合流；不升级为原生或Hosted验收。
+- Next action: 本有界包已验收合入本地main；最终工作树回收与SHA见工程外final-receipt.json，不代表全量浏览器或发布完成。
 - Last verified: 2026-11-02
 - Updated: 2026-11-02
 
@@ -3792,8 +3792,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Feature IDs: none
 - Owner role: implementation-integrator
 - Acceptance: 390新增编辑卡片完整落在可操作画布; 缩窄编辑器可达且坐标和草稿保留; HTML/401/成功三阶段、鉴权及请求数有真实有效覆盖；测试/测速/目录契约冲突有来源结论
-- Branch: `fix/TASK-W1-GATE-ZERO-20261101`
-- Worktree: `D:/kk-studio/.worktrees/TASK-W1-GATE-ZERO-20261101`
+- Branch: `unallocated`
+- Worktree: `unallocated`
 - Modules: tests/browser/interaction-regressions.spec.ts, src/components/canvas, src/components/settings
 - Verification: PARTIAL — 本轮390/844明暗视频编辑器、缩放、背景、滚动8/8通过。修复touch pointerup卸载造成compat click穿透及编辑器与HUD重叠；严格目录刷新与旧latency probe分离。原interaction-regressions父范围不因本批定向PASS自动关闭。
 - Evidence: [docs/changes/2026-10-28-provider-browser-contract/verification.md](../../docs/changes/2026-10-28-provider-browser-contract/verification.md), [docs/changes/2026-11-01-w1-gate-zero/verification.md](../../docs/changes/2026-11-01-w1-gate-zero/verification.md)
@@ -4261,18 +4261,18 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 - Goal: 消除根生产依赖的GHSA-mrhx-c7xc-m3w5风险并保持现有schema校验
 - Scope: 根与随包Agent的Zod运行时/lock、两处Agent兼容适配、安全回归及平台版本镜像；不夹带P0或格式修改
-- Display status: 进行中
+- Display status: 已完成
 - Priority: P1 — 未记录
 - Requirement refs: docs/changes/2026-10-28-zod-security/intent.md
 - Feature IDs: none
 - Owner role: implementation-integrator
 - Acceptance: 根锁定Zod4.6.7且安全回归RED→GREEN; 界内合法/非法校验保持; 快速门禁与build通过，版本一致; 按当前SHA独立审核和真实合流门禁交付
 - Branch: `fix/TASK-W1-GATE-ZERO-20261101`
-- Worktree: `D:/kk-studio/.worktrees/TASK-W1-GATE-ZERO-20261101`
+- Worktree: `unallocated`
 - Modules: package.json, package-lock.json, config/platform-versions.json, VERSION, src-tauri, tests/unit/zodCollectionBounds.test.ts, docs, vendor/canvas-agent/package.json, vendor/canvas-agent/package-lock.json, vendor/canvas-agent/src/canvas/schemas.ts, vendor/README.md
-- Verification: PASS — 1e63b722已吸收于fdd0eaa9，根及Agent实际安装/lock均Zod4.6.7，ADR034及三处索引/链接同步。集合边界4/4、Agent build及204pass/2skip通过；当前W1快速门禁与独审回执见证据。保留其余Agent审计TODO，不声称全依赖安全或发布验收。
+- Verification: PASS — 1e63b722已吸收于fdd0eaa9，根及Agent实际安装/lock均Zod4.6.7，ADR034及三处索引/链接同步。集合边界4/4、Agent build及204pass/2skip通过；当前W1快速门禁与独审回执见证据。保留其余Agent审计TODO，不声称全依赖安全或发布验收。 独立双轴复核a04d5a43为PASS WITH FOLLOW-UPS，源代码已快进本地main；最终文档delta与回收收据另行绑定最终SHA。
 - Evidence: [docs/changes/2026-10-28-zod-security/verification.md](../../docs/changes/2026-10-28-zod-security/verification.md), [docs/changes/2026-11-01-w1-gate-zero/verification.md](../../docs/changes/2026-11-01-w1-gate-zero/verification.md)
-- Next action: 随W1最终HEAD独审后快进本地main；其他Agent依赖审计保持独立TODO。
+- Next action: 本有界包已验收合入本地main；最终工作树回收与SHA见工程外final-receipt.json，不代表全量浏览器或发布完成。
 - Last verified: 2026-11-02
 - Updated: 2026-11-02
 
@@ -4299,17 +4299,17 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 - Goal: 按用户指定批次验证并及时合流，不重跑迭代全套浏览器
 - Scope: 复用W1树；清理指定已合并分支，吸收Zod，四微批次、快速门禁、独审和本地合流回收；完整浏览器与发布独立
-- Display status: 进行中
+- Display status: 已完成
 - Priority: P1 — 未记录
 - Requirement refs: docs/changes/2026-11-01-w1-gate-zero/intent.md, docs/changes/2026-11-01-w1-gate-zero/spec.md
 - Feature IDs: none
 - Owner role: implementation-integrator
 - Acceptance: 指定已合并分支安全删除；Zod4.6.7及ADR034索引通过; 四微批次仅相关spec单次少于60秒且行为断言保留; ui/type/lint/unit通过，当前HEAD独审后合local main并回收任务树
 - Branch: `fix/TASK-W1-GATE-ZERO-20261101`
-- Worktree: `D:/kk-studio/.worktrees/TASK-W1-GATE-ZERO-20261101`
+- Worktree: `unallocated`
 - Modules: src/components, src/features/models, src/features/agent, src/styles, tests/browser, tests/unit, vendor/canvas-agent, docs/governance
-- Verification: PARTIAL — 四微批次已提交；当前代码45e75b23快速门禁与191项分批证据可查，2491单测2471pass/20skip。两项独审P2已修并补回归；最终HEAD只读复核及main回执待。
+- Verification: PASS — 四微批次已提交；当前代码45e75b23快速门禁与191项分批证据可查，2491单测2471pass/20skip。两项独审P2已修并补回归；最终HEAD只读复核及main回执待。 独立双轴复核a04d5a43为PASS WITH FOLLOW-UPS，源代码已快进本地main；最终文档delta与回收收据另行绑定最终SHA。
 - Evidence: [docs/changes/2026-11-01-w1-gate-zero/verification.md](../../docs/changes/2026-11-01-w1-gate-zero/verification.md), [docs/changes/2026-11-01-w1-gate-zero/review.md](../../docs/changes/2026-11-01-w1-gate-zero/review.md)
-- Next action: 只读复核当前HEAD，完成合流和回收，完整浏览器剩余119不自动DONE。
+- Next action: 本有界包已验收合入本地main；最终工作树回收与SHA见工程外final-receipt.json，不代表全量浏览器或发布完成。
 - Last verified: 2026-11-02
 - Updated: 2026-11-02

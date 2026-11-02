@@ -13,6 +13,8 @@
 - 228 项历史 RED 的逐项后续表为 `D:/kk-studio/output/w1-gate-zero-2026-11-02/browser-failure-classification-followup.json`：109 项取得定向 PASS，119 项没有本轮全量复验，继续开放；199 product_defect / 29 有明确合同依据的 obsolete_assertion / 0 environment_issue。旧文件和旧结论保留为历史，不能把“串行超时”单独当成产品归因证据。分类更正逐项编号与依据见 review。
 - 本地 main 合并和回收回执在最终独审通过后补记；完整浏览器、Tauri/默认安装器、Hosted、真实 provider/GPU 和正式发布不在本轮验收范围。
 
+2026-11-02 最终检查：ui/type/lint/unit/format 已逐条取得 exit 0（`final-*.log`）；build exit 0。`a04d5a43` 关键三份浏览器 spec 再验 18/18、36.13 秒，回执 `browser/22f81882-6580-46b2-8b51-aa6d88d7858d/browser-results-relocated.json`。独立 Standards 与 Spec 双轴均 PASS WITH FOLLOW-UPS，详见 review。随后本地 main 已从 `15ad1617` 快进到 `a04d5a43`；最终收尾文档 delta 审核、主线复验和工作树回收事实写入 `D:/kk-studio/output/w1-gate-zero-2026-11-02/final-receipt.json`。
+
 以下为前阶段历史证据，日期和结论不覆盖上述增量。
 
 ## 包 A：agentCanvas 复杂度

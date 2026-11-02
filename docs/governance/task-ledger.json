@@ -97,8 +97,8 @@
     ],
     "owner": "root",
     "ownerRole": "implementation-integrator",
-    "branch": "fix/TASK-W1-GATE-ZERO-20261101",
-    "worktree": "D:/kk-studio/.worktrees/TASK-W1-GATE-ZERO-20261101",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "baseSha": "be730617ace5013295b85a22133259b32ad6ffec",
     "affectedModules": [
       "docs/changes",
@@ -11048,8 +11048,8 @@
     ],
     "owner": "root",
     "ownerRole": "implementation-integrator",
-    "branch": "fix/TASK-W1-GATE-ZERO-20261101",
-    "worktree": "D:/kk-studio/.worktrees/TASK-W1-GATE-ZERO-20261101",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "baseSha": "af4c4e2eadbde0df090ba9e222096dd3d39ad517",
     "affectedModules": [
       "tests/browser",
@@ -11453,15 +11453,15 @@
     "owner": "root",
     "ownerRole": "implementation-integrator",
     "branch": "fix/TASK-W1-GATE-ZERO-20261101",
-    "worktree": "D:/kk-studio/.worktrees/TASK-W1-GATE-ZERO-20261101",
+    "worktree": "unallocated",
     "baseSha": "b8acad1c31eef37b1702c30a428bdff966525551",
     "affectedModules": [
       "src/App.tsx",
       "src/styles/canvas-hud.css",
       "tests/browser/generation-save-status.spec.ts"
     ],
-    "status": "PARTIAL",
-    "displayStatus": "进行中",
+    "status": "DONE",
+    "displayStatus": "已完成",
     "priority": "P1",
     "risk": "medium",
     "reviewRequired": true,
@@ -11469,11 +11469,11 @@
       "docs/changes/2026-10-28-provider-browser-contract/verification.md",
       "docs/changes/2026-11-01-w1-gate-zero/verification.md"
     ],
-    "verification": "保留现有HUD取消动作，标签单独裁切、按钮不裁切。1099px真实click取消；等待迟到路由完成后仍unknown、无新结果、仅一次请求。generation-save-status七项及相邻卡片九项全部通过，当前Figma读证与合同见review。",
+    "verification": "保留现有HUD取消动作，标签单独裁切、按钮不裁切。1099px真实click取消；等待迟到路由完成后仍unknown、无新结果、仅一次请求。generation-save-status七项及相邻卡片九项全部通过，当前Figma读证与合同见review。 独立双轴复核a04d5a43为PASS WITH FOLLOW-UPS，源代码已快进本地main；最终文档delta与回收收据另行绑定最终SHA。",
     "verificationResult": "PASS",
     "updated": "2026-11-02",
     "lastVerified": "2026-11-02",
-    "nextAction": "最终HEAD只读复核后随W1合流；不升级为原生或Hosted验收。",
+    "nextAction": "本有界包已验收合入本地main；最终工作树回收与SHA见工程外final-receipt.json，不代表全量浏览器或发布完成。",
     "requirementRefs": [
       "docs/changes/2026-10-28-provider-browser-contract/intent.md",
       "docs/changes/2026-10-28-provider-browser-contract/spec.md"
@@ -11493,8 +11493,8 @@
     "dependencies": [],
     "owner": "root",
     "ownerRole": "implementation-integrator",
-    "branch": "fix/TASK-W1-GATE-ZERO-20261101",
-    "worktree": "D:/kk-studio/.worktrees/TASK-W1-GATE-ZERO-20261101",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "baseSha": "b8acad1c31eef37b1702c30a428bdff966525551",
     "affectedModules": [
       "tests/browser/interaction-regressions.spec.ts",
@@ -12618,7 +12618,7 @@
     "owner": "root",
     "ownerRole": "implementation-integrator",
     "branch": "fix/TASK-W1-GATE-ZERO-20261101",
-    "worktree": "D:/kk-studio/.worktrees/TASK-W1-GATE-ZERO-20261101",
+    "worktree": "unallocated",
     "baseSha": "c2a0228a57be66b982d889c6710faa32cde49b7c",
     "affectedModules": [
       "package.json",
@@ -12633,8 +12633,8 @@
       "vendor/canvas-agent/src/canvas/schemas.ts",
       "vendor/README.md"
     ],
-    "status": "PARTIAL",
-    "displayStatus": "进行中",
+    "status": "DONE",
+    "displayStatus": "已完成",
     "priority": "P1",
     "risk": "low",
     "reviewRequired": true,
@@ -12642,11 +12642,11 @@
       "docs/changes/2026-10-28-zod-security/verification.md",
       "docs/changes/2026-11-01-w1-gate-zero/verification.md"
     ],
-    "verification": "1e63b722已吸收于fdd0eaa9，根及Agent实际安装/lock均Zod4.6.7，ADR034及三处索引/链接同步。集合边界4/4、Agent build及204pass/2skip通过；当前W1快速门禁与独审回执见证据。保留其余Agent审计TODO，不声称全依赖安全或发布验收。",
+    "verification": "1e63b722已吸收于fdd0eaa9，根及Agent实际安装/lock均Zod4.6.7，ADR034及三处索引/链接同步。集合边界4/4、Agent build及204pass/2skip通过；当前W1快速门禁与独审回执见证据。保留其余Agent审计TODO，不声称全依赖安全或发布验收。 独立双轴复核a04d5a43为PASS WITH FOLLOW-UPS，源代码已快进本地main；最终文档delta与回收收据另行绑定最终SHA。",
     "verificationResult": "PASS",
     "updated": "2026-11-02",
     "lastVerified": "2026-11-02",
-    "nextAction": "随W1最终HEAD独审后快进本地main；其他Agent依赖审计保持独立TODO。",
+    "nextAction": "本有界包已验收合入本地main；最终工作树回收与SHA见工程外final-receipt.json，不代表全量浏览器或发布完成。",
     "requirementRefs": [
       "docs/changes/2026-10-28-zod-security/intent.md"
     ],
@@ -12703,7 +12703,7 @@
     "owner": "root",
     "ownerRole": "implementation-integrator",
     "branch": "fix/TASK-W1-GATE-ZERO-20261101",
-    "worktree": "D:/kk-studio/.worktrees/TASK-W1-GATE-ZERO-20261101",
+    "worktree": "unallocated",
     "baseSha": "15ad1617a62df26e67c4ad85d3c65be8d987d1cb",
     "affectedModules": [
       "src/components",
@@ -12715,8 +12715,8 @@
       "vendor/canvas-agent",
       "docs/governance"
     ],
-    "status": "REVIEW",
-    "displayStatus": "进行中",
+    "status": "DONE",
+    "displayStatus": "已完成",
     "priority": "P1",
     "risk": "medium",
     "reviewRequired": true,
@@ -12724,11 +12724,11 @@
       "docs/changes/2026-11-01-w1-gate-zero/verification.md",
       "docs/changes/2026-11-01-w1-gate-zero/review.md"
     ],
-    "verification": "四微批次已提交；当前代码45e75b23快速门禁与191项分批证据可查，2491单测2471pass/20skip。两项独审P2已修并补回归；最终HEAD只读复核及main回执待。",
-    "verificationResult": "PARTIAL",
+    "verification": "四微批次已提交；当前代码45e75b23快速门禁与191项分批证据可查，2491单测2471pass/20skip。两项独审P2已修并补回归；最终HEAD只读复核及main回执待。 独立双轴复核a04d5a43为PASS WITH FOLLOW-UPS，源代码已快进本地main；最终文档delta与回收收据另行绑定最终SHA。",
+    "verificationResult": "PASS",
     "updated": "2026-11-02",
     "lastVerified": "2026-11-02",
-    "nextAction": "只读复核当前HEAD，完成合流和回收，完整浏览器剩余119不自动DONE。",
+    "nextAction": "本有界包已验收合入本地main；最终工作树回收与SHA见工程外final-receipt.json，不代表全量浏览器或发布完成。",
     "requirementRefs": [
       "docs/changes/2026-11-01-w1-gate-zero/intent.md",
       "docs/changes/2026-11-01-w1-gate-zero/spec.md"
