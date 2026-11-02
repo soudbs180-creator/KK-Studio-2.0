@@ -4,7 +4,9 @@ import {
   readPickerMemory,
   writePickerMemory,
   resolvePickerPins,
+  modelSelectionId,
 } from "../../src/features/models/modelSelection.ts";
+import { aggregateCapabilityEntries } from "../../src/features/models/capabilityAggregation.ts";
 
 test("home inherits old pins only before its own preference exists and never rewrites canvas memory", (t) => {
   const previous = Object.getOwnPropertyDescriptor(globalThis, "localStorage");
@@ -30,6 +32,44 @@ test("home inherits old pins only before its own preference exists and never rew
   writePickerMemory("home", own);
   assert.deepEqual(readPickerMemory("home"), own);
   assert.equal(data.get("kk:model-picker:canvas-image"), legacy);
+});
+
+test("pins emitted by the capability picker migrate to exact account rows", () => {
+  const selection = {
+    source: "api",
+    connectionId: "account-a",
+    model: "gpt-5",
+    kind: "text",
+  } as const;
+  const previous = aggregateCapabilityEntries({
+    capability: "chat",
+    catalogs: [],
+    includeAutoRouting: false,
+    connections: [
+      {
+        id: "account-a",
+        kind: "user_byok",
+        displayName: "A",
+        model: "gpt-5",
+        state: "active",
+        concurrencyLimit: 1,
+        verificationStatus: "unverified",
+        capabilities: {
+          modalities: ["text"],
+          operations: ["chat"],
+          async: false,
+        },
+      },
+    ],
+  }).find((entry) => entry.selection?.connectionId === "account-a")!;
+  assert.equal(previous.id, "api:account-a:gpt-5");
+  const id = modelSelectionId(selection);
+  const migrated = resolvePickerPins(
+    [{ id, selection }],
+    [previous.id, "hidden-account-pin"],
+  );
+  assert.deepEqual(migrated, ["hidden-account-pin", id]);
+  assert.deepEqual(resolvePickerPins([{ id, selection }], migrated), migrated);
 });
 
 test("legacy family pins expand into exact version pins without losing hidden pins", () => {

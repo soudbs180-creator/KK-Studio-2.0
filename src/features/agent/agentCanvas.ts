@@ -172,6 +172,7 @@ function rejectUnsupportedAgentOp(
   op: CanvasAgentOp,
   rejected: Array<{ op: CanvasAgentOp; reason: string }>,
 ): boolean {
+  if (!Object.hasOwn(unsupportedAgentOpReasons, op.type)) return false;
   const reason = unsupportedAgentOpReasons[op.type];
   if (!reason) return false;
   rejected.push({ op, reason });

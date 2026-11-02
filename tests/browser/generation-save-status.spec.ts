@@ -33,6 +33,10 @@ async function submit(page: Page) {
 
 test("1099px HUD 取消真实命中并隔离迟到结果", async ({ page }) => {
   let release!: () => void;
+  let replied!: () => void;
+  const settled = new Promise<void>((resolve) => {
+    replied = resolve;
+  });
   const pending = new Promise<void>((resolve) => {
     release = resolve;
   });
@@ -43,6 +47,7 @@ test("1099px HUD 取消真实命中并隔离迟到结果", async ({ page }) => {
     await route
       .fulfill({ json: { data: [{ url: resultUrl }] } })
       .catch(() => {});
+    replied();
   });
   try {
     await submit(page);
@@ -57,6 +62,7 @@ test("1099px HUD 取消真实命中并隔离迟到结果", async ({ page }) => {
       "受理状态不明",
     );
     release();
+    await settled;
     await expect(page.locator(".project-task-unknown")).toContainText(
       "受理状态不明",
     );

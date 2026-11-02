@@ -18,6 +18,19 @@ import {
 import type { CanvasAgentOp } from "../../src/features/agent/agentTypes.ts";
 import type { CreationProject } from "../../src/features/creation/model.ts";
 
+test("未知操作不能从对象原型继承非字符串拒绝原因", () => {
+  for (const type of ["toString", "constructor", "__proto__"]) {
+    const result = applyAgentOpsToItems([], [{ type } as CanvasAgentOp]);
+    assert.equal(result.rejected[0].reason, "未知操作类型");
+    assert.equal(
+      JSON.parse(JSON.stringify(result.rejected))[0].reason,
+      "未知操作类型",
+    );
+    assert.deepEqual(result.items, []);
+    assert.deepEqual(result.applied, []);
+  }
+});
+
 /**
  * Agent 画布桥：本项目卡片模型 ↔ Agent 快照/操作翻译。
  * 对照上游 web/src/lib/canvas/canvas-agent-ops.ts 的 add_node/update_node 等。
