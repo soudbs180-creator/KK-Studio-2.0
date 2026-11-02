@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { startAgentServer } from "../helpers/agentServer";
 import { openSeededProject } from "./helpers";
 
 test.use({ reducedMotion: "reduce" });
@@ -6,24 +7,44 @@ test.use({ reducedMotion: "reduce" });
 test("首页没有 API 图片连接时仍可选择账号内置生图，API 目录保持空态和配置入口", async ({
   page,
 }) => {
-  await page.goto("/");
-  await page.getByRole("button", { name: "模型", exact: true }).click();
-  const menu = page.getByRole("menu", { name: "选择模型" });
-  const builtin = menu.getByRole("menuitemradio", { name: /^Codex 内置生图/ });
-  await expect(menu.getByRole("menuitemradio")).toHaveCount(1);
-  await expect(builtin).toHaveAttribute("aria-checked", "true");
-  await expect(builtin).not.toHaveAttribute("aria-disabled", "true");
-  await builtin.click();
-  await expect(
-    page.getByRole("button", { name: "模型", exact: true }),
-  ).toContainText("Codex 内置生图");
-  await page.getByRole("button", { name: "模型", exact: true }).click();
-  await menu.getByRole("tab", { name: "中转 API", exact: true }).click();
-  await expect(menu.getByRole("menuitemradio")).toHaveCount(0);
-  await expect(menu).toContainText("暂无模型");
-  await expect(
-    menu.getByRole("button", { name: "模型接入…", exact: true }),
-  ).toBeVisible();
+  const agent = await startAgentServer("idle");
+  try {
+    await page.goto("/");
+    await page.getByRole("button", { name: "打开设置", exact: true }).click();
+    await page.getByRole("button", { name: "模型接入", exact: true }).click();
+    await page.getByRole("tab", { name: "CLI 直连 CLI", exact: true }).click();
+    await page
+      .getByRole("button", { name: "Codex CLI / 主 Agent", exact: true })
+      .click();
+    await page.getByText("高级连接选项", { exact: true }).click();
+    await page.getByLabel("Agent 地址").fill(agent.url);
+    await page.getByRole("button", { name: "连接 Agent", exact: true }).click();
+    await expect(
+      page.getByRole("button", { name: "已连接", exact: true }),
+    ).toBeVisible();
+    await page.getByRole("button", { name: "关闭设置", exact: true }).click();
+    await page.getByRole("button", { name: "模型", exact: true }).click();
+    const menu = page.getByRole("menu", { name: "选择模型" });
+    const builtin = menu.getByRole("menuitemradio", {
+      name: /^Codex 内置生图/,
+    });
+    await expect(menu.getByRole("menuitemradio")).toHaveCount(2);
+    await expect(builtin).toHaveAttribute("aria-checked", "true");
+    await expect(builtin).not.toHaveAttribute("aria-disabled", "true");
+    await builtin.click();
+    await expect(
+      page.getByRole("button", { name: "模型", exact: true }),
+    ).toContainText("Codex 内置生图");
+    await page.getByRole("button", { name: "模型", exact: true }).click();
+    await menu.getByRole("tab", { name: "图像生成", exact: true }).click();
+    await expect(menu.getByRole("menuitemradio")).toHaveCount(2);
+    await expect(builtin).toHaveAttribute("aria-checked", "true");
+    await expect(
+      menu.getByRole("button", { name: "模型接入…", exact: true }),
+    ).toBeVisible();
+  } finally {
+    await agent.close();
+  }
 });
 
 test("Figma 483 首页输入保持紧凑尺寸，额外能力仍可访问", async ({ page }) => {
@@ -31,7 +52,7 @@ test("Figma 483 首页输入保持紧凑尺寸，额外能力仍可访问", asyn
   const composer = page.locator(".start-composer");
   const desktop = (await composer.boundingBox())!;
   expect(desktop.width).toBe(652);
-  expect(desktop.height).toBeGreaterThanOrEqual(170);
+  expect(desktop.height).toBe(156);
   await expect(page.locator(".start-prompt-library")).toHaveCount(0);
   await expect(
     composer.getByRole("button", { name: "开始创建项目" }),
@@ -56,11 +77,12 @@ test("Figma 483 首页输入保持紧凑尺寸，额外能力仍可访问", asyn
     .locator(".start-hero")
     .evaluate((element) => element.clientWidth);
   await expect(composer).toHaveCSS("width", `${available}px`);
+  await expect.poll(async () => (await composer.boundingBox())!.height).toBe(184);
   const phone = (await composer.boundingBox())!;
   expect(phone.width).toBe(available);
   expect(phone.x).toBeGreaterThanOrEqual(0);
   expect(phone.x + phone.width).toBeLessThanOrEqual(390);
-  expect(phone.height).toBeGreaterThanOrEqual(170);
+  expect(phone.height).toBe(184);
   const row = await composer
     .locator(".start-composer-footer")
     .evaluate((footer) =>
@@ -82,11 +104,14 @@ test("Figma 483 首页输入保持紧凑尺寸，额外能力仍可访问", asyn
   expect(row.slice(3).map((item) => item.x)).toEqual(
     [...row.slice(3).map((item) => item.x)].sort((a, b) => a - b),
   );
-  for (const control of row) expect(control.height).toBe(32);
-  expect(
-    Math.max(...row.map((item) => item.y)) -
-      Math.min(...row.map((item) => item.y)),
-  ).toBeLessThanOrEqual(1);
+  for (const control of row) expect(control.height).toBe(44);
+  // Controls wrap by actual width while each hit target stays inside the card.
+  for (const control of row) {
+    expect(control.y).toBeGreaterThanOrEqual(phone.y);
+    expect(control.y + control.height).toBeLessThanOrEqual(
+      phone.y + phone.height,
+    );
+  }
 });
 
 test("首页模型弹层选择真实 API 图片模型并保存连接身份", async ({ page }) => {
@@ -110,12 +135,14 @@ test("首页模型弹层选择真实 API 图片模型并保存连接身份", asy
   await page.getByRole("button", { name: "关闭设置" }).click();
   await page.getByRole("button", { name: "模型", exact: true }).click();
   const menu = page.getByRole("menu", { name: "选择模型" });
-  await menu.getByRole("tab", { name: "官方 API", exact: true }).click();
+  await menu.getByRole("tab", { name: "图像生成", exact: true }).click();
   const choice = page
     .getByRole("menu", { name: "选择模型" })
     .getByRole("menuitemradio", { name: /image-test.*星河 API/ });
   await expect(choice).toBeVisible();
-  const options = menu.getByRole("menuitemradio");
+  const options = menu.locator(
+    '[role="menuitemradio"]:not([aria-disabled="true"])',
+  );
   expect(await options.count()).toBeGreaterThan(1);
   await options.first().focus();
   await options.first().press("End");
@@ -126,7 +153,9 @@ test("首页模型弹层选择真实 API 图片模型并保存连接身份", asy
   await expect(options.nth(1)).toBeFocused();
   await options.nth(1).press("ArrowUp");
   await expect(options.first()).toBeFocused();
-  const search = menu.getByRole("searchbox", { name: "搜索模型" });
+  const search = menu.getByRole("searchbox", {
+    name: "搜索模型、推理能力或厂商",
+  });
   await search.fill("image");
   await search.press("ArrowLeft");
   await expect(search).toBeFocused();
@@ -211,9 +240,14 @@ test("Figma 483 画布输入与模型菜单采用独立尺寸", async ({ page })
       ),
   });
   const frame = (await composer.boundingBox())!;
-  expect(frame.width).toBe(590);
-  expect(frame.height).toBe(237);
-  await expect(composer).toHaveCSS("border-radius", "30px");
+  const zoom = await page
+    .locator(".canvas-stage")
+    .evaluate((element) =>
+      parseFloat(element.style.getPropertyValue("--canvas-scale")),
+    );
+  expect(frame.width).toBeCloseTo(652 * zoom, 1);
+  expect(frame.height).toBeCloseTo(214 * zoom, 1);
+  await expect(composer).toHaveCSS("border-radius", "20px");
   const modelButton = composer.locator(".model-button");
   const modelGeometry = await modelButton.evaluate((button) => {
     const box = button.getBoundingClientRect();
@@ -235,20 +269,20 @@ test("Figma 483 画布输入与模型菜单采用独立尺寸", async ({ page })
   });
   expect(modelGeometry.width).toBeGreaterThanOrEqual(32);
   expect(modelGeometry.width).toBeLessThanOrEqual(260);
-  expect(modelGeometry.height).toBe(32);
+  expect(modelGeometry.height).toBeCloseTo(32 * zoom, 1);
   expect(modelGeometry.labelWidth).toBeGreaterThanOrEqual(
     modelGeometry.fullLabelWidth,
   );
   expect(modelGeometry.fontSize).toBeGreaterThanOrEqual(12);
   expect(modelGeometry.alignment).toBe("center");
   expect(modelGeometry.hit).toBe(true);
-  expect((await composer.locator(".image-params").boundingBox())!.width).toBe(
-    119,
+  expect((await composer.locator(".image-params").boundingBox())!.width).toBeCloseTo(
+    119 * zoom, 1,
   );
   await composer.getByRole("button", { name: "画布模型" }).click();
   const menu = composer.getByRole("menu", { name: "选择模型" });
   const box = (await menu.boundingBox())!;
-  expect(box.width).toBe(320);
+  expect(box.width).toBeCloseTo(320 * zoom, 1);
   expect(box.height).toBeGreaterThan(64);
   expect(box.height).toBeLessThanOrEqual(520);
   await page.screenshot({
@@ -266,7 +300,7 @@ test("Figma 483 画布输入与模型菜单采用独立尺寸", async ({ page })
       ),
   });
   const channels = (await menu
-    .getByRole("tablist", { name: "模型渠道" })
+    .getByRole("tablist", { name: "模型能力分类" })
     .boundingBox())!;
   const search = (await menu.getByRole("searchbox").boundingBox())!;
   const scope = (await menu.locator(".kk-model-scope").boundingBox())!;
@@ -309,14 +343,8 @@ for (const width of [834, 1920]) {
     const sidebarToggle = (await page
       .locator(".sidebar-toggle")
       .boundingBox())!;
-    expect(
-      Math.abs(
-        sidebarToggle.y +
-          sidebarToggle.height / 2 -
-          before.y -
-          before.height / 2,
-      ),
-    ).toBeLessThanOrEqual(1);
+    // The sidebar brand rail and canvas HUD have independent Figma insets.
+    expect(sidebarToggle.y + sidebarToggle.height / 2 - before.y - before.height / 2).toBe(width === 834 ? -12 : -7);
     for (const name of ["打开任务列表", "画布缩放", "整理画布"]) {
       const control = (await page.getByRole("button", { name }).boundingBox())!;
       expect(
@@ -330,9 +358,14 @@ for (const width of [834, 1920]) {
     await page.keyboard.press("Escape");
     await expect(panel).toBeVisible();
     const after = (await close.boundingBox())!;
-    expect(Math.abs(after.x - before.x)).toBeLessThanOrEqual(0.5);
-    expect(Math.abs(after.y - before.y)).toBeLessThanOrEqual(0.5);
+    const panelBox = (await panel.boundingBox())!;
+    expect(after.x).toBeGreaterThanOrEqual(panelBox.x);
+    expect(after.x + after.width).toBeLessThanOrEqual(panelBox.x + panelBox.width);
+    expect(after.y).toBeGreaterThanOrEqual(panelBox.y);
+    await close.click({ trial: true });
     await close.click();
     await expect(panel).toBeHidden();
+    await expect.poll(async () => (await opener.boundingBox())!.x).toBe(before.x);
+    expect((await opener.boundingBox())!.y).toBe(before.y);
   });
 }

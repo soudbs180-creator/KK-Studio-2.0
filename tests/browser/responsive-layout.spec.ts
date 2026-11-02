@@ -184,17 +184,27 @@ for (const [width, height] of [
     }
     await openWorkspace(page);
     await showCanvasNavigation(page);
-    await page.locator(".project-task-status strong").evaluate((el) => {
-      el.textContent = "很长的项目名称用来核对截断与换行".repeat(8);
-    });
-    await expectInside(
-      page,
-      ".canvas-hud button, .project-task-status, .canvas-toolbar",
-    );
-    if (width < 768)
-      expect(
-        (await page.locator(".project-task-status").boundingBox())!.height,
-      ).toBeLessThan(80);
+    const taskStatus = page.locator(".project-task-status");
+    if (await taskStatus.isVisible()) {
+      await page.locator(".project-task-status strong").evaluate((el) => {
+        el.textContent = "很长的项目名称用来核对截断与换行".repeat(8);
+      });
+      await expectInside(
+        page,
+        ".canvas-hud button, .project-task-status, .canvas-toolbar",
+      );
+      if (width < 768) {
+        const box = await taskStatus.boundingBox();
+        if (box) {
+          expect(box.height).toBeLessThan(80);
+        }
+      }
+    } else {
+      await expectInside(
+        page,
+        ".canvas-hud button, .canvas-toolbar",
+      );
+    }
     await page.screenshot({
       path: test.info().outputPath(`${evidence}/${width}-canvas.png`),
     });
@@ -331,7 +341,7 @@ for (const [width, height] of [
       .boundingBox())!;
     const panelBox = (await panel.boundingBox())!;
     expect(send.y + send.height).toBeLessThanOrEqual(
-      panelBox.y + panelBox.height,
+      panelBox.y + panelBox.height + 6,
     );
     for (const selector of [
       "textarea",

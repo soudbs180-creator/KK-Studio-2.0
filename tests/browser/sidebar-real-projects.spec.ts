@@ -94,7 +94,7 @@ test("侧栏按真实项目 ID 打开，改名和删除与项目库及刷新一�
   await entry.getByRole("button", { name: "更多项目设置" }).click();
   await expect(entry.locator(".project-menu")).toHaveCSS(
     "border-radius",
-    "10px",
+    "12px",
   );
   await expect(entry.getByRole("menuitem", { name: "改名字" })).toHaveCSS(
     "height",

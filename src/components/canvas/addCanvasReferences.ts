@@ -4,7 +4,7 @@ import {
   type CanvasCollectionItem,
   type CanvasReference,
 } from "../../domain/canvasItems.ts";
-import { cardLayout } from "../../domain/canvasGraph.ts";
+import { cardLayout, cardSelectionLayout } from "../../domain/canvasGraph.ts";
 import { availableCanvasReferenceSlots } from "../../domain/canvasReferenceLimits.ts";
 import type { ModelSelection } from "../../domain/modelSelection";
 import type { useCanvasNodeActions } from "./useCanvasNodeActions";
@@ -76,7 +76,7 @@ export function addCanvasReferences({
     ...source,
     referenceOnly: true,
   });
-  const targetLayout = cardLayout(source);
+  const targetLayout = cardSelectionLayout(source);
   const targetRect: CanvasRect = {
     x: parent.x + targetLayout.left,
     y: parent.y,

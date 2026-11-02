@@ -406,7 +406,7 @@ for (const condition of ["quarantined", "removed"] as const) {
     expect(requests).toBe(1);
   });
 }
-test("未绑定空项目向自动选择的合格连接发送前必须审批", async ({ page }) => {
+test("未绑定空项目必须明确选择合格连接且发送前审批", async ({ page }) => {
   let requests = 0;
   await page.route(endpoint, async (route) => {
     requests++;
@@ -419,6 +419,14 @@ test("未绑定空项目向自动选择的合格连接发送前必须审批", as
   await page.getByRole("button", { name: "新建项目", exact: true }).click();
   await page.getByLabel("执行方式").selectOption("direct");
   await page.getByLabel("对话内容").fill("未绑定项目审批保护");
+  await page.getByRole("button", { name: "发送消息", exact: true }).click();
+  await expect(page.locator(".chat-status")).toContainText("明确选择模型连接");
+  expect(requests).toBe(0);
+  await page.getByRole("button", { name: "模型", exact: true }).click();
+  const menu = page.getByRole("menu", { name: "选择模型" });
+  await menu.getByRole("tab", { name: "图像生成", exact: true }).click();
+  await menu.getByRole("menuitemradio", { name: /image-test/ }).click();
+  await expect(page.getByLabel("对话内容")).toHaveValue("未绑定项目审批保护");
   await page.getByRole("button", { name: "发送消息", exact: true }).click();
   const approval = page.getByRole("dialog", { name: "人工审批任务" });
   await expect(approval).toContainText("https://models.example.test/v1");
@@ -447,7 +455,7 @@ test("新建未绑定空项目无合格连接时保留草稿，恢复并明确�
   await page.getByLabel("执行方式").selectOption("direct");
   await page.getByLabel("对话内容").fill("新项目首发");
   await page.getByRole("button", { name: "发送消息", exact: true }).click();
-  await expect(page.locator(".chat-status")).toContainText("连接已禁用");
+  await expect(page.locator(".chat-status")).toContainText("明确选择模型连接");
   await expect(page.getByLabel("对话内容")).toHaveValue("新项目首发");
   await expect(page.getByRole("dialog", { name: "人工审批任务" })).toHaveCount(
     0,
@@ -521,7 +529,7 @@ test("新建未绑定空项目明确选择可用连接后可以首次提交", as
   expect(requests).toBe(0);
   await page.getByRole("button", { name: "模型", exact: true }).click();
   const menu = page.getByRole("menu", { name: "选择模型" });
-  await menu.getByRole("tab", { name: "官方 API", exact: true }).click();
+  await menu.getByRole("tab", { name: "图像生成", exact: true }).click();
   await menu.getByRole("menuitemradio", { name: /image-test/ }).click();
   await expect(page.getByLabel("对话内容")).toHaveValue("新项目首发");
   await page.getByRole("button", { name: "发送消息", exact: true }).click();

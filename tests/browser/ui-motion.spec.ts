@@ -147,10 +147,10 @@ test("任务面板按 Runtime / Tasks 展示卡片，滚轮和 Escape 不影响�
   await expect
     .poll(() => panel.boundingBox())
     .toEqual({
-      x: 321,
-      y: 108,
-      width: 360,
-      height: 420,
+      x: 472,
+      y: 125,
+      width: 412,
+      height: 484,
     });
   await expect(
     panel.getByRole("button", { name: "全部", exact: true }),

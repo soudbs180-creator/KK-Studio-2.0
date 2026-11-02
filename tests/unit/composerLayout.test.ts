@@ -5,6 +5,7 @@ import {
   visibleComposerExtraHeight,
 } from "../../src/components/canvas/composerLayout.ts";
 import {
+  cardLayout,
   cardSelectionLayout,
   cardVisualBounds,
 } from "../../src/domain/canvasGraph.ts";
@@ -25,6 +26,10 @@ test("共享输入区围绕媒体居中，选中不改变图片和视频连线�
     const item = { ...BASE_CANVAS_ITEMS[0], kind };
     const body = cardVisualBounds(item);
     const selected = cardSelectionLayout(item);
+    const frame = cardLayout(item);
+    assert.equal(frame.width, kind === "image" ? 590 : 370);
+    assert.ok(selected.left <= 0);
+    assert.ok(selected.left + selected.width >= frame.width);
     assert.equal(selected.width, 652);
     assert.equal(selected.left + selected.width / 2, body.x + body.width / 2);
     assert.equal(selected.height, body.y + body.height + 16 + 156);

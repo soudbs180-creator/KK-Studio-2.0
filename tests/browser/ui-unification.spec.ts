@@ -20,12 +20,17 @@ async function readableDefault(
           right: rect.right,
           center: rect.y + rect.height / 2,
           height: rect.height,
+          top: rect.top,
+          bottom: rect.bottom,
         };
       });
     return {
       text: label.textContent,
       labelWidth: label.clientWidth,
       fullLabelWidth: label.scrollWidth,
+      top: area.top,
+      bottom: area.bottom,
+      compact: innerWidth <= 1200,
       left: area.left,
       right: area.right,
       controls,
@@ -37,10 +42,26 @@ async function readableDefault(
   });
   expect(geometry.text).toBe(expectedLabel);
   expect(geometry.labelWidth).toBeGreaterThanOrEqual(geometry.fullLabelWidth);
-  const centers = geometry.controls.map((control) => control.center);
-  expect(Math.max(...centers) - Math.min(...centers)).toBeLessThanOrEqual(1);
+  // Complete groups wrap by available width; controls sharing a row stay centered.
+  for (const [index, control] of geometry.controls.entries()) {
+    for (const next of geometry.controls.slice(index + 1)) {
+      if (control.top < next.bottom && next.top < control.bottom) {
+        expect(Math.abs(control.center - next.center)).toBeLessThanOrEqual(1);
+        expect(
+          Math.min(control.right, next.right) - Math.max(control.left, next.left),
+        ).toBeLessThanOrEqual(0.5);
+      }
+    }
+  }
   for (const control of geometry.controls) {
-    expect(control.height, control.name ?? "control").toBe(32);
+    expect(control.height, control.name ?? "control").toBe(
+      geometry.compact ||
+        ["开始创建项目", "发送消息"].includes(control.name ?? "")
+        ? 44
+        : 32,
+    );
+    expect(control.top).toBeGreaterThanOrEqual(geometry.top - 0.5);
+    expect(control.bottom).toBeLessThanOrEqual(geometry.bottom + 0.5);
     expect(control.left).toBeGreaterThanOrEqual(geometry.left - 0.5);
     expect(control.right).toBeLessThanOrEqual(geometry.right + 0.5);
   }

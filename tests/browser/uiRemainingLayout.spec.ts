@@ -83,6 +83,25 @@ for (const [width, height] of [
             }),
           )
           .toBe(true);
+        await expect
+          .poll(async () => {
+            const box = await editor.boundingBox();
+            const canvas = await page
+              .getByTestId("infinite-canvas")
+              .boundingBox();
+            const chat = page.locator(".conversation-panel");
+            const dock = (await chat.isVisible())
+              ? await chat.boundingBox()
+              : null;
+            return Boolean(
+              box &&
+              canvas &&
+              box.x >= canvas.x &&
+              box.y + box.height <= canvas.y + canvas.height - 70 &&
+              (!dock || box.x + box.width <= dock.x),
+            );
+          })
+          .toBe(true);
         const box = await editor.boundingBox();
         const canvas = await page.getByTestId("infinite-canvas").boundingBox();
         expect(box!.x).toBeGreaterThanOrEqual(canvas!.x);

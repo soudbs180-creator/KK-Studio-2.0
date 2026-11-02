@@ -25,13 +25,8 @@ test("桌面底栏保持最新Frame锚点，窄屏适配且控件不互相覆盖
           const toolbar =
             document.querySelector<HTMLElement>(".canvas-toolbar")!;
           const t = toolbar.getBoundingClientRect();
-          const app = document.querySelector(".app")!.getBoundingClientRect();
-          // DS1.2 retains x841 at 1920 and adapts its anchor to the real viewport.
-          // Compact overlays do not reserve horizontal canvas space.
-          const expected =
-            window.innerWidth > 1200
-              ? app.x + app.width / 2 - 119
-              : c.x + (canvas.clientLeft + usable / 2) * surface;
+          // The toolbar centers in the usable canvas; compact chat overlays it.
+          const expected = c.x + (canvas.clientLeft + usable / 2) * surface;
           return Math.abs(t.x + t.width / 2 - expected);
         }),
       )

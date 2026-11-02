@@ -67,7 +67,7 @@ test("short-screen model menu keeps its scroll position and opens the last actio
     await page.getByRole("button", { name: "打开对话", exact: true }).click();
   await page.getByRole("button", { name: "模型", exact: true }).click();
   const menu = page.getByRole("menu", { name: "选择模型", exact: true });
-  await menu.getByRole("tab", { name: "中转 API", exact: true }).click();
+  await menu.getByRole("tab", { name: "图像生成", exact: true }).click();
   const list = menu.locator(".kk-model-menu-list");
   expect(await list.evaluate((el) => el.scrollHeight > el.clientHeight)).toBe(
     true,

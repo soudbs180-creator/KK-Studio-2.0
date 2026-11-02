@@ -243,13 +243,20 @@ export async function panCanvasToRevealAction(
     : null;
   const targetY = editor
     ? (hud.y + hud.height + editor.y) / 2
-    : hud.y + hud.height + 40;
-  const start = { x: bounds.x + 4, y: bounds.y + bounds.height / 2 };
+    : bounds.y + bounds.height / 2;
+  const dx = bounds.x + usableWidth / 2 - (button.x + button.width / 2);
+  const dy = targetY - (button.y + button.height / 2);
+  const startX =
+    dx < 0
+      ? Math.min(bounds.x + usableWidth - 20, bounds.x + bounds.width - 20)
+      : bounds.x + 20;
+  const startY = bounds.y + bounds.height / 2;
+  const start = { x: startX, y: startY };
   await page.mouse.move(start.x, start.y);
   await page.mouse.down({ button: "middle" });
   await page.mouse.move(
-    start.x + bounds.x + usableWidth / 2 - (button.x + button.width / 2),
-    start.y + targetY - (button.y + button.height / 2),
+    start.x + dx,
+    start.y + dy,
     { steps: 8 },
   );
   await page.mouse.up({ button: "middle" });

@@ -18,7 +18,7 @@ test("Web account and update UI display the Web platform version", async ({
   await popup.getByRole("button", { name: "查看", exact: true }).click();
   const settings = page.getByRole("dialog", { name: "设置", exact: true });
   await expect(
-    settings.getByRole("heading", { name: "通用", exact: true }),
+    settings.getByRole("heading", { name: "软件更新", exact: true }),
   ).toBeVisible();
   const update = settings.getByRole("region", {
     name: "软件更新",

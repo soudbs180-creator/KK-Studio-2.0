@@ -696,6 +696,7 @@
 }
 
 .start-composer .start-add-button {
+  border-radius: var(--kk-radius-control);
   order: initial;
   flex: 0 0 var(--composer-target);
   width: var(--composer-target);
@@ -940,6 +941,7 @@
 
 .conversation-panel .chat-composer > .composer-toolbar {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   width: 100%;
   height: auto;
@@ -958,12 +960,13 @@
 }
 
 .conversation-panel .chat-composer .chat-attachment-trigger {
+  border-radius: var(--kk-radius-control);
   order: 1;
 }
 
 .conversation-panel .chat-composer .chat-model-picker-wrap {
   order: 2;
-  flex: 0 1 auto;
+  flex: 0 0 auto;
   width: fit-content;
   min-width: 0;
   max-width: min(var(--kk-model-capsule-max-width), 100%);
@@ -1618,7 +1621,6 @@
   background: var(--kk-text-tertiary);
 }
 @media (max-width: 1200px) {
-  .start-composer .start-add-button,
   .start-composer .start-footer-right [data-voice-state] {
     border-radius: var(--kk-radius-full);
   }
@@ -1633,13 +1635,8 @@
     height: 56px;
     min-height: 56px;
   }
-  .start-composer .start-composer-footer {
-    flex-wrap: wrap;
-    row-gap: var(--kk-space-2);
-  }
   .start-composer .start-model-picker {
-    flex-shrink: 0;
-    min-width: max-content;
+    min-width: 60px;
   }
   .start-composer .start-mode-picker,
   .start-composer .start-mode-button {

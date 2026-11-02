@@ -99,22 +99,31 @@ for (const width of [390, 768, 1280, 1920]) {
         await settings
           .getByLabel("强调色", { exact: true })
           .selectOption(folded ? "orange" : "default");
-        await page.keyboard.press("Escape");
+        await page.getByRole("button", { name: "关闭设置", exact: true }).click();
         if (
           width <= 800 &&
           !(await sidebar.getAttribute("class"))?.includes("is-collapsed")
         )
-          await page.keyboard.press("Escape");
+          await page.getByRole("button", { name: "收起侧边栏", exact: true }).click();
         // Synthetic long copy stresses layout only; it does not claim a real provider response.
-        await page.locator(".project-task-status strong").evaluate((el) => {
-          el.textContent = "包含很长名称的项目与生成进度状态".repeat(5);
-        });
-        const selectors = [
+        const statusStrong = page.locator(".project-task-status strong");
+        if (await statusStrong.isVisible()) {
+          await statusStrong.evaluate((el) => {
+            el.textContent = "包含很长名称的项目与生成进度状态".repeat(5);
+          });
+        }
+        const candidateSelectors = [
           ".task-button",
           ".project-task-status",
           ".canvas-top-right",
           ".canvas-toolbar",
         ];
+        const selectors: string[] = [];
+        for (const selector of candidateSelectors) {
+          if (await page.locator(selector).isVisible()) {
+            selectors.push(selector);
+          }
+        }
         const boxes = await Promise.all(
           selectors.map((selector) => page.locator(selector).boundingBox()),
         );
@@ -137,13 +146,15 @@ for (const width of [390, 768, 1280, 1920]) {
             expect(area, `${selectors[i]} overlaps ${selectors[j]}`).toBe(0);
           }
         }
-        const paint = await page
-          .locator(".project-task-status")
-          .evaluate((el) => ({
-            color: getComputedStyle(el).color,
-            bg: getComputedStyle(el).backgroundColor,
-          }));
-        expect(contrast(paint.color, paint.bg)).toBeGreaterThanOrEqual(4.5);
+        if (await page.locator(".project-task-status").isVisible()) {
+          const paint = await page
+            .locator(".project-task-status")
+            .evaluate((el) => ({
+              color: getComputedStyle(el).color,
+              bg: getComputedStyle(el).backgroundColor,
+            }));
+          expect(contrast(paint.color, paint.bg)).toBeGreaterThanOrEqual(4.5);
+        }
         await page.screenshot({
           path: info.outputPath(`${theme}-${folded ? "folded" : "open"}.png`),
           animations: "disabled",

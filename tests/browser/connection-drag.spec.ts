@@ -112,7 +112,7 @@ test("加号区域磁吸，拖动只预览，释放后选类型才创建并连�
     await port
       .locator(".node-port-plus")
       .evaluate((el) => getComputedStyle(el).width),
-  ).toBe("11.75px");
+  ).toBe("12px");
   await beginDrag(page);
   await expect(page.getByTestId("connection-drag-preview")).toBeVisible();
   await expect(page.locator(".add-node-menu")).toHaveCount(0);

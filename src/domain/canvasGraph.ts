@@ -125,9 +125,9 @@ export function cardLayout(item: CanvasCollectionItem): {
     };
   if (item.kind === "image")
     return {
-      width: 652,
-      height: visual.y + visual.height + 172,
-      left: visual.x + (visual.width - 652) / 2,
+      width: 590,
+      height: visual.y + visual.height,
+      left: 0,
       collapsedHeight: visual.y + visual.height,
       anchor,
     };
@@ -145,6 +145,22 @@ export function cardSelectionLayout(
   item: CanvasCollectionItem,
 ): ReturnType<typeof cardLayout> {
   const layout = cardLayout(item);
+  if (
+    item.kind === "image" &&
+    !item.comfyWorkflow &&
+    !item.plugin &&
+    !item.referenceOnly &&
+    !item.result &&
+    !(item.generationStatus && item.generationIndex !== undefined)
+  ) {
+    const visual = cardVisualBounds(item);
+    return {
+      ...layout,
+      width: 652,
+      height: visual.y + visual.height + 172,
+      left: visual.x + (visual.width - 652) / 2,
+    };
+  }
   if (
     item.kind === "video" &&
     !item.plugin &&

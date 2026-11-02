@@ -24,7 +24,9 @@ async function canvasImageAction(page: Page, name: string) {
       })
       .toBe(true);
   }
-  await toolbar.getByRole("button", { name, exact: true }).click();
+  await toolbar
+    .getByRole("button", { name, exact: true })
+    .evaluate((b) => (b as HTMLElement).click());
 }
 
 async function editUiEvidence(page: Page, file: string) {

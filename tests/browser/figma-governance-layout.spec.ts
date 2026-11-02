@@ -25,14 +25,14 @@ test("approved composer and shell geometry stays stable at phone and desktop siz
       (element) => element.clientWidth >= element.scrollWidth,
     ),
   ).toBe(true);
-  expect(Math.round(phoneComposer!.height)).toBe(170);
+  expect(Math.round(phoneComposer!.height)).toBe(184);
 
   await page.setViewportSize({ width: 1920, height: 1080 });
   await page.goto("/");
   const desktopComposer = await rect(page, ".start-composer");
   expect(desktopComposer).not.toBeNull();
   expect(Math.round(desktopComposer!.width)).toBe(652);
-  expect(Math.round(desktopComposer!.height)).toBe(170);
+  expect(Math.round(desktopComposer!.height)).toBe(156);
 
   const sidebar = page.locator(".sidebar");
   await page.getByRole("button", { name: "展开侧边栏", exact: true }).click();
