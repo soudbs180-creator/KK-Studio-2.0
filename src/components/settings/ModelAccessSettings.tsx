@@ -115,6 +115,9 @@ export default function ModelAccessSettings({
   }, [focusGoogle, currentChannel]);
 
   const channelInfo = CHANNELS.find((c) => c.id === currentChannel)!;
+  const apiVisible = ["official", "relay", "local"].includes(currentChannel);
+  const apiChannel = useRef<ChannelId>("official");
+  if (apiVisible) apiChannel.current = currentChannel;
 
   return (
     <div className="model-access-settings ccswitch-layout">
@@ -156,15 +159,16 @@ export default function ModelAccessSettings({
         </div>
 
         {/* 1. Official, 2. Relay, 5. Local */}
-        {["official", "relay", "local"].includes(currentChannel) && (
+        {
           <section
-            id={`channel-panel-${currentChannel}`}
+            id={`channel-panel-${apiChannel.current}`}
+            hidden={!apiVisible}
             role="tabpanel"
             className="channel-panel-view"
           >
             <ModelAccessApiPanel
-              method={currentChannel}
-              active={active}
+              method={apiChannel.current}
+              active={active && apiVisible}
               workflows={workflows}
               onBusyChange={setApiSaving}
               onOpenGoogle={() => {
@@ -172,9 +176,10 @@ export default function ModelAccessSettings({
               }}
               onFeedback={onFeedback}
             />
-            {currentChannel === "official" && (
+            {
               <section
                 ref={googlePanel}
+                hidden={currentChannel !== "official"}
                 className="google-connection-subgroup inset-grouped-card"
                 aria-label="Google API"
               >
@@ -185,9 +190,9 @@ export default function ModelAccessSettings({
                   onFeedback={onFeedback}
                 />
               </section>
-            )}
+            }
           </section>
-        )}
+        }
 
         {/* 3. OAuth */}
         {currentChannel === "oauth" && (
@@ -201,9 +206,10 @@ export default function ModelAccessSettings({
         )}
 
         {/* 4. CLI */}
-        {currentChannel === "cli" && (
+        {
           <section
             id="channel-panel-cli"
+            hidden={currentChannel !== "cli"}
             role="tabpanel"
             className="channel-panel-view"
           >
@@ -247,7 +253,7 @@ export default function ModelAccessSettings({
               <div className="cli-tool-panel">
                 <GoogleConnectionSettings
                   mode="cli"
-                  active={active}
+                  active={active && currentChannel === "cli"}
                   onBusyChange={setGoogleBusy}
                   onFeedback={onFeedback}
                 />
@@ -258,21 +264,30 @@ export default function ModelAccessSettings({
                 />
               </div>
             )}
-            {cliTool === "codebuddy" && codeBuddyMounted && (
-              <div className="cli-tool-panel">
+            {codeBuddyMounted && (
+              <div className="cli-tool-panel" hidden={cliTool !== "codebuddy"}>
                 <CodeBuddyConnectionSettings
+                  active={
+                    active &&
+                    currentChannel === "cli" &&
+                    cliTool === "codebuddy"
+                  }
                   onFeedback={onFeedback}
                   onBusyChange={setCodeBuddyBusy}
                 />
                 <NativeCliControls
                   tool="codebuddy"
-                  active={active}
+                  active={
+                    active &&
+                    currentChannel === "cli" &&
+                    cliTool === "codebuddy"
+                  }
                   onBusyChange={setNativeCliBusy}
                 />
               </div>
             )}
           </section>
-        )}
+        }
       </main>
     </div>
   );

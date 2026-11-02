@@ -45,14 +45,16 @@ test("模型精确版本、参数选择和模糊搜索保留实际厂商 ID", as
   await page
     .getByRole("button", { name: "测试连接并刷新模型", exact: true })
     .click();
-  await expect(page.getByLabel("已发现的模型")).toContainText(
+  await expect(page.locator(".model-catalog-list")).toContainText(
     "aurora-1-4k-high",
   );
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
   await page.getByRole("button", { name: "模型", exact: true }).click();
   const menu = page.getByRole("menu", { name: "选择模型" });
-  await menu.getByRole("tab", { name: "官方 API", exact: true }).click();
-  const search = menu.getByRole("searchbox", { name: "搜索模型、厂商或参数" });
+  await menu.getByRole("tab", { name: "图像生成", exact: true }).click();
+  const search = menu.getByRole("searchbox", {
+    name: "搜索模型、推理能力或厂商",
+  });
   await search.fill("auorra");
   await expect(
     menu.getByRole("menuitemradio", { name: /aurora-1/ }),
@@ -168,7 +170,7 @@ test("模型精确版本、参数选择和模糊搜索保留实际厂商 ID", as
   await source.getByRole("button", { name: "画布模型", exact: true }).click();
   const canvasModels = source.getByRole("menu", { name: "选择模型" });
   await canvasModels
-    .getByRole("tab", { name: "官方 API", exact: true })
+    .getByRole("tab", { name: "图像生成", exact: true })
     .click();
   await canvasModels
     .getByRole("menuitemradio", { name: /aurora-1-2k-high/ })
@@ -236,7 +238,7 @@ test("渠道内展示同名 API 图片模型、未知用途原因并保留账号
     await page
       .getByRole("button", { name: "测试连接并刷新模型", exact: true })
       .click();
-    await expect(page.getByLabel("已发现的模型")).toContainText(
+    await expect(page.locator(".model-catalog-list")).toContainText(
       "brand-new-model",
     );
   }
@@ -246,9 +248,9 @@ test("渠道内展示同名 API 图片模型、未知用途原因并保留账号
   const trigger = page.getByRole("button", { name: "模型", exact: true });
   await trigger.click();
   const menu = page.getByRole("menu", { name: "选择模型" });
-  await menu.getByRole("tab", { name: "登录账号", exact: true }).click();
+  await menu.getByRole("tab", { name: "对话 / 推理", exact: true }).click();
   await expect(menu.getByRole("menuitemradio", { name: /默认/ })).toBeVisible();
-  await menu.getByRole("tab", { name: "官方 API", exact: true }).click();
+  await menu.getByRole("tab", { name: "图像生成", exact: true }).click();
   const enabledImageOptions = menu.getByRole("menuitemradio", {
     name: /image-same/,
   });
@@ -257,12 +259,16 @@ test("渠道内展示同名 API 图片模型、未知用途原因并保留账号
   await enabledImageOptions.first().press("End");
   await expect(enabledImageOptions.last()).toBeFocused();
   await enabledImageOptions.last().press("ArrowDown");
-  await expect(enabledImageOptions.first()).toBeFocused();
+  await expect(
+    menu.getByRole("menuitemradio", { name: /^自动调配/ }),
+  ).toBeFocused();
   await expect(
     menu.getByRole("menuitemradio", { name: /brand-new-model/ }).first(),
   ).toHaveAttribute("aria-disabled", "true");
   await expect(menu).toContainText("请先在设置中声明此模型用途");
-  const search = menu.getByRole("searchbox", { name: "搜索模型、厂商或参数" });
+  const search = menu.getByRole("searchbox", {
+    name: "搜索模型、推理能力或厂商",
+  });
   await search.fill("brand-new-model");
   const unknownOptions = menu.getByRole("menuitemradio", {
     name: /brand-new-model/,
@@ -371,7 +377,7 @@ test("视频和音频模型明确保持禁用并可键盘阅读原因", async ({
   const menu = page.getByRole("menu", { name: "选择模型" });
   for (const model of ["media-video", "media-audio"]) {
     await trigger.click();
-    await menu.getByRole("tab", { name: "官方 API", exact: true }).click();
+    await menu.getByRole("tab", { name: "图像生成", exact: true }).click();
     await menu.getByRole("searchbox").fill(model);
     const option = menu.getByRole("menuitemradio", { name: model });
     await expect(option).toHaveAttribute("aria-disabled", "true");

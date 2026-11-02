@@ -1,4 +1,4 @@
-import { useEffect, useState, useId, useRef } from "react";
+import { useEffect, useState, useId } from "react";
 import {
   catalogForConnection,
   saveModelCatalog,
@@ -16,12 +16,12 @@ import {
   type ModelProviderProfile,
 } from "../../domain/modelProvider";
 import ImageModelCapabilityFields, {
-  imageCapabilityDraft,
   imageDeclarationFromDraft,
 } from "./ImageModelCapabilityFields";
 import { useModelCatalogPreferences } from "../../features/models/index.ts";
 import { fetchAndSaveProviderModels } from "./fetchProviderModels";
 import ModelDisplayFields from "./ModelDisplayFields";
+import useModelCapabilityDraft from "./useModelCapabilityDraft";
 
 export default function ProviderModelCatalog({
   profile,
@@ -45,7 +45,7 @@ export default function ProviderModelCatalog({
       ? newModelProfileConnection(profile)
       : connectionFromModelProfile(profile));
 
-  const [revision, setRevision] = useState(0);
+  const [, setRevision] = useState(0);
   const [fetchingRemote, setFetchingRemote] = useState(false);
   const [newCustomModelId, setNewCustomModelId] = useState("");
   const [catalogFeedback, setCatalogFeedback] = useState("");
@@ -59,25 +59,14 @@ export default function ProviderModelCatalog({
   const models = merge(rawModels);
 
   const selected = models.find((m) => m.id === modelId);
-  const selectedSignature = JSON.stringify([
-    connectionKey,
-    modelId,
-    selected?.kind,
-    selected?.sizes,
-    selected?.family,
-    selected?.variant,
-    selected?.aliases,
-    selected?.image,
-  ]);
-  const loadedSelection = useRef("");
-  const [kind, setKind] = useState<ModelKind>(selected?.kind ?? "text");
-  const [sizes, setSizes] = useState(selected?.sizes?.join(", ") ?? "");
-  const [family, setFamily] = useState(selected?.family ?? "");
-  const [variant, setVariant] = useState(selected?.variant ?? "");
-  const [aliases, setAliases] = useState(selected?.aliases?.join(", ") ?? "");
-  const [image, setImage] = useState(() =>
-    imageCapabilityDraft(selected?.image),
-  );
+  const draft = useModelCapabilityDraft(JSON.stringify([connectionKey, modelId]), selected);
+  const { kind, sizes, family, variant, aliases, image } = draft.value;
+  const setKind = (kind: ModelKind) => draft.update({ kind });
+  const setSizes = (sizes: string) => draft.update({ sizes });
+  const setFamily = (family: string) => draft.update({ family });
+  const setVariant = (variant: string) => draft.update({ variant });
+  const setAliases = (aliases: string) => draft.update({ aliases });
+  const setImage = (image: typeof draft.value.image) => draft.update({ image });
   const [status, setStatus] = useState("");
 
   useEffect(() => {
@@ -89,20 +78,6 @@ export default function ProviderModelCatalog({
       window.removeEventListener("kk:model-catalog-prefs-changed", update);
     };
   }, []);
-
-  useEffect(() => {
-    // Catalog reads return fresh objects even when saved metadata is unchanged.
-    if (loadedSelection.current === selectedSignature) return;
-    loadedSelection.current = selectedSignature;
-    if (selected) {
-      setKind(selected.kind);
-      setSizes(selected.sizes?.join(", ") ?? "");
-      setFamily(selected.family ?? "");
-      setVariant(selected.variant ?? "");
-      setAliases(selected.aliases?.join(", ") ?? "");
-      setImage(imageCapabilityDraft(selected.image));
-    }
-  }, [modelId, revision, selected, selectedSignature]);
 
   async function handleFetchRemote() {
     if (fetchingRemote || !profile.baseUrl) return;
@@ -176,6 +151,7 @@ export default function ProviderModelCatalog({
         [...rawModels.filter((item) => item.id !== model.id), model],
         true,
       );
+      draft.saved();
       setStatus("已保存此模型参数声明。");
     } catch (error) {
       setStatus(error instanceof Error ? error.message : "保存失败");
@@ -187,6 +163,7 @@ export default function ProviderModelCatalog({
       className="provider-model-catalog inset-grouped-card"
       disabled={selectionRequired}
     >
+      {selectionRequired && <p role="status">请先在已登记连接中选择账号，再编辑模型能力。</p>}
       <div className="model-catalog-header">
         <div>
           <h3 className="model-catalog-title">模型目录与能力管理</h3>

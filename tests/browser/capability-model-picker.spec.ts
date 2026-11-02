@@ -96,25 +96,25 @@ test("类型筛选后修改置顶保留隐藏的旧family成员及其他渠道�
   await openSeededProject(page);
   await page.getByRole("button", { name: "模型", exact: true }).click();
   const menu = page.getByRole("menu", { name: "选择模型" });
-  const filter = menu.getByLabel("模型类型", { exact: true });
+
   await expect(
     menu.getByRole("button", { name: /^取消置顶 shared-chat/ }),
   ).toHaveAttribute("aria-pressed", "true");
-  await filter.selectOption("image");
+  await menu.getByRole("tab", { name: "图像生成", exact: true }).click();
   await menu.getByRole("button", { name: /^置顶 other-image/ }).click();
-  await filter.selectOption("text");
+  await menu.getByRole("tab", { name: "对话 / 推理", exact: true }).click();
   await expect(
     menu.getByRole("button", { name: /^取消置顶 shared-chat/ }),
   ).toHaveAttribute("aria-pressed", "true");
-  await filter.selectOption("image");
+  await menu.getByRole("tab", { name: "图像生成", exact: true }).click();
   await expect(
     menu.getByRole("button", { name: /^取消置顶 shared-image/ }),
   ).toHaveAttribute("aria-pressed", "true");
   await expect(
     menu.getByRole("button", { name: /^取消置顶 other-image/ }),
   ).toHaveAttribute("aria-pressed", "true");
-  await menu.getByRole("tab", { name: "官方 API", exact: true }).click();
-  await menu.getByRole("tab", { name: "中转 API", exact: true }).click();
+  await menu.getByRole("tab", { name: "对话 / 推理", exact: true }).click();
+  await menu.getByRole("tab", { name: "图像生成", exact: true }).click();
   const storedPins = await page.evaluate(
     () =>
       JSON.parse(localStorage.getItem("kk:model-picker:conversation") ?? "{}")
@@ -188,7 +188,7 @@ test("Google 原生连接可以搜索但不能作为通用 API 模型执行", as
   const previousModel = await trigger.getAttribute("title");
   await trigger.click();
   const menu = page.getByRole("menu", { name: "选择模型" });
-  await menu.getByRole("tab", { name: "官方 API", exact: true }).click();
+  await menu.getByRole("tab", { name: "图像生成", exact: true }).click();
   await menu.getByRole("searchbox").fill("Google Gemini");
   const native = menu.getByRole("menuitemradio", {
     name: new RegExp(GOOGLE_IMAGE_MODEL),
@@ -212,28 +212,25 @@ test("模型按四渠道、搜索筛选、精确型号选择并保持键盘焦�
   const trigger = page.getByRole("button", { name: "模型", exact: true });
   await trigger.click();
   const menu = page.getByRole("menu", { name: "选择模型" });
-  await expect(menu.getByRole("tablist", { name: "模型渠道" })).toHaveCount(1);
+  await expect(menu.getByRole("tablist", { name: "模型能力分类" })).toHaveCount(
+    1,
+  );
   await expect(menu.getByLabel("常用模型参数")).toHaveCount(0);
-  await expect(menu.getByRole("tab")).toHaveText([
-    "中转 API",
-    "登录账号",
-    "官方 API",
-    "本地",
-  ]);
-  await menu.getByRole("tab", { name: "登录账号", exact: true }).click();
+  await expect(menu.getByRole("tab")).toHaveText(["对话 / 推理", "图像生成"]);
+  await menu.getByRole("tab", { name: "图像生成", exact: true }).click();
   const codexImage = menu.getByRole("menuitemradio", {
     name: /^Codex 内置生图/,
   });
   await expect(codexImage).toHaveAttribute("aria-disabled", "true");
   await expect(codexImage).toHaveAttribute("title", "请先连接 Codex");
-  const account = menu.getByRole("tab", { name: "登录账号", exact: true });
+  const account = menu.getByRole("tab", { name: "图像生成", exact: true });
   await account.focus();
   await account.press("ArrowLeft");
   await expect(
-    menu.getByRole("tab", { name: "中转 API", exact: true }),
+    menu.getByRole("tab", { name: "对话 / 推理", exact: true }),
   ).toBeFocused();
   await expect(menu.getByRole("menuitem")).toHaveCount(0);
-  await menu.getByLabel("模型类型").selectOption("image");
+  await menu.getByRole("tab", { name: "图像生成", exact: true }).click();
   const first = menu.getByRole("menuitemradio", { name: /^image-a/ });
   await first.focus();
   await first.press("End");
@@ -252,14 +249,14 @@ test("首页模型弹层只选模型，保留全局搜索和旧置顶", async ({
   const trigger = page.getByRole("button", { name: "模型", exact: true });
   await trigger.click();
   const menu = page.getByRole("menu", { name: "选择模型" });
-  await expect(menu.getByRole("tab")).toHaveCount(4);
+  await expect(menu.getByRole("tab")).toHaveCount(2);
   await expect(
     menu.getByRole("menuitemradio", { name: /^Codex 内置生图/ }),
   ).toHaveAttribute("aria-checked", "true");
   await expect(menu.getByLabel("生成数量", { exact: true })).toHaveCount(0);
   await expect(menu.getByLabel("隐私模式", { exact: true })).toHaveCount(0);
   await expect(menu.getByRole("region", { name: "生成设置" })).toHaveCount(0);
-  await menu.getByRole("tab", { name: "中转 API", exact: true }).click();
+  await menu.getByRole("tab", { name: "图像生成", exact: true }).click();
   await expect(
     menu.getByRole("menuitemradio", { name: /media-video/ }),
   ).toHaveCount(0);
@@ -347,14 +344,16 @@ test("四渠道连续缩放保持搜索筛选、草稿和精确型号身份", as
   await trigger.click();
   const menu = page.getByRole("menu", { name: "选择模型" });
   const search = menu.getByRole("searchbox");
-  await menu.getByRole("tab", { name: "中转 API", exact: true }).click();
-  await menu.getByLabel("模型类型").selectOption("image");
+  await menu.getByRole("tab", { name: "图像生成", exact: true }).click();
+  await menu.getByRole("tab", { name: "图像生成", exact: true }).click();
   await search.fill("image");
-  for (const channel of ["官方 API", "本地", "登录账号", "中转 API"]) {
+  for (const channel of ["对话 / 推理", "图像生成"]) {
     await menu.getByRole("tab", { name: channel, exact: true }).click();
     await expect(search).toHaveValue("image");
-    await expect(menu.getByLabel("模型类型")).toHaveValue("image");
-    if (channel === "本地")
+    await expect(
+      menu.getByRole("tab", { name: channel, exact: true }),
+    ).toHaveAttribute("aria-selected", "true");
+    if (channel === "图像生成")
       await expect(
         menu.getByRole("menuitemradio", { name: /^image-local/ }),
       ).toHaveAttribute("aria-disabled", "true");
@@ -365,11 +364,17 @@ test("四渠道连续缩放保持搜索筛选、草稿和精确型号身份", as
     await expect(menu).toBeVisible();
     await expect(search).toHaveValue("image");
     await expect(
-      menu.getByRole("tab", { name: "中转 API", exact: true }),
+      menu.getByRole("tab", { name: "图像生成", exact: true }),
     ).toHaveAttribute("aria-selected", "true");
     await expect(
       menu.getByRole("menuitemradio", { name: /^image-b/ }),
     ).toBeVisible();
+    await expect
+      .poll(async () => {
+        const rect = (await menu.boundingBox())!;
+        return rect.x + rect.width;
+      })
+      .toBeLessThanOrEqual(width - 7);
     const bounds = (await menu.boundingBox())!;
     expect(bounds.x).toBeGreaterThanOrEqual(7);
     expect(bounds.x + bounds.width).toBeLessThanOrEqual(width - 7);
@@ -429,8 +434,8 @@ test("官方和中转渠道保存重开保留分类及具体连接身份", async
   await page.getByRole("button", { name: "模型接入", exact: true }).click();
   for (const channel of ["official", "relay"] as const) {
     await page
-      .getByRole("button", {
-        name: channel === "official" ? "API Key（官方）" : "API Key（中转站）",
+      .getByRole("tab", {
+        name: channel === "official" ? "官方直连 API" : "中转路由 Gateway",
         exact: true,
       })
       .click();
@@ -464,10 +469,11 @@ test("官方和中转渠道保存重开保留分类及具体连接身份", async
   for (const channel of ["official", "relay"] as const) {
     await menu
       .getByRole("tab", {
-        name: channel === "official" ? "官方 API" : "中转 API",
+        name: "图像生成",
         exact: true,
       })
       .click();
+    await menu.getByRole("searchbox").fill(`image-${channel}`);
     await expect(menu.getByRole("menuitemradio")).toHaveCount(1);
     await expect(menu.getByRole("menuitemradio")).toContainText(
       `image-${channel}`,
@@ -479,7 +485,7 @@ test("官方和中转渠道保存重开保留分类及具体连接身份", async
   await expect(trigger).toHaveAttribute("title", "image-relay");
   await trigger.click();
   await expect(
-    menu.getByRole("tab", { name: "中转 API", exact: true }),
+    menu.getByRole("tab", { name: "图像生成", exact: true }),
   ).toHaveAttribute("aria-selected", "true");
   await expect(
     menu.getByRole("menuitemradio", { name: /^image-relay/ }),

@@ -13,6 +13,8 @@ import {
   resolvePickerPins,
   writePickerMemory,
   type ModelSelection,
+  searchModels,
+  apiMenuEntries,
 } from "../features/models/index.ts";
 import {
   aggregateCapabilityEntries,
@@ -45,6 +47,10 @@ export default function ModelPickerMenu({
     ) {
       return "image";
     }
+    const saved = readPickerMemory(scope) as unknown as Record<string, unknown>;
+    if (saved.capability === "chat" || saved.capability === "image") {
+      return saved.capability as UserCapability;
+    }
     if (
       kind === "text" ||
       current?.kind === "text" ||
@@ -52,10 +58,6 @@ export default function ModelPickerMenu({
       scope === "canvas-text"
     ) {
       return "chat";
-    }
-    const saved = readPickerMemory(scope) as unknown as Record<string, unknown>;
-    if (saved.capability === "chat" || saved.capability === "image") {
-      return saved.capability as UserCapability;
     }
     return "chat";
   });
@@ -115,15 +117,29 @@ export default function ModelPickerMenu({
   }, [scope, memory, capability]);
 
   // Aggregate models by user capability rather than technical channel
-  const entries = aggregateCapabilityEntries({
+  const aggregated = aggregateCapabilityEntries({
     capability,
     connections,
     agentModels: apiOnly ? [] : agent.models,
     agentStatus: apiOnly ? "disconnected" : agent.status,
     current,
     includeAutoRouting: true,
-    query,
+    query: "",
   });
+  // Explicit account choices retain their connection identity; auto routing stays separate.
+  const apiEntries = apiMenuEntries(connections, current, kind, "");
+  const entries = [
+    ...aggregated.filter((entry) => !entry.selection?.connectionId),
+    ...apiEntries.filter((entry) => {
+      const modelKind = entry.selection?.kind;
+      if (kind && modelKind !== kind) return false;
+      return modelKind === "image"
+        ? capability === "image"
+        : modelKind === "text"
+          ? capability === "chat"
+          : true;
+    }),
+  ];
 
   const storedPins = Array.isArray(memory.pins.all)
     ? memory.pins.all
@@ -136,21 +152,19 @@ export default function ModelPickerMenu({
           ),
         ),
       ];
-  const pins = resolvePickerPins(entries, storedPins);
+  const pins = resolvePickerPins([...entries, ...apiEntries], storedPins);
 
   // Ordering: Auto-Routing first at index 0, then pinned items, then score
-  const ordered = entries
-    .map((item) => ({ item, fuzzy: false }))
-    .sort((a, b) => {
-      if (a.item.metadata?.isAutoRouting) return -1;
-      if (b.item.metadata?.isAutoRouting) return 1;
+  const ordered = searchModels(entries, query).sort((a, b) => {
+    if (a.item.metadata?.isAutoRouting) return -1;
+    if (b.item.metadata?.isAutoRouting) return 1;
 
-      const aPinned = pins.includes(a.item.id);
-      const bPinned = pins.includes(b.item.id);
-      if (aPinned !== bPinned) return aPinned ? -1 : 1;
+    const aPinned = pins.includes(a.item.id);
+    const bPinned = pins.includes(b.item.id);
+    if (aPinned !== bPinned) return aPinned ? -1 : 1;
 
-      return 0;
-    });
+    return 0;
+  });
 
   return (
     <div
@@ -175,6 +189,9 @@ export default function ModelPickerMenu({
             if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
               e.preventDefault();
               setCapability("image");
+              e.currentTarget.parentElement
+                ?.querySelector<HTMLButtonElement>('[data-capability="image"]')
+                ?.focus();
             }
           }}
           data-capability="chat"
@@ -192,6 +209,9 @@ export default function ModelPickerMenu({
             if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
               e.preventDefault();
               setCapability("chat");
+              e.currentTarget.parentElement
+                ?.querySelector<HTMLButtonElement>('[data-capability="chat"]')
+                ?.focus();
             }
           }}
           data-capability="image"

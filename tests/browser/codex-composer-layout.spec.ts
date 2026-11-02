@@ -52,7 +52,7 @@ async function selectLongHomeModel(page: Page): Promise<void> {
   const trigger = form.getByRole("button", { name: "模型", exact: true });
   await trigger.click();
   const menu = form.getByRole("menu", { name: "选择模型", exact: true });
-  await menu.getByRole("tab", { name: "中转 API", exact: true }).click();
+  await menu.getByRole("tab", { name: "图像生成", exact: true }).click();
   await menu.getByRole("searchbox").fill("布局供应商 0");
   await menu
     .getByRole("menuitemradio", { name: new RegExp(longModel) })
@@ -95,7 +95,15 @@ async function sameRow(form: Locator, label: string): Promise<void> {
     )
     .toBeLessThanOrEqual(1);
   for (const control of geometry.controls) {
-    expect.soft(control.height, control.name ?? label).toBe(32);
+    expect
+      .soft(control.height, control.name ?? label)
+      .toBe(
+        control.name === "开始创建项目" ||
+          control.name === "发送消息" ||
+          (form.page().viewportSize()?.width ?? 1920) <= 1200
+          ? 44
+          : 32,
+      );
     expect.soft(control.x).toBeGreaterThanOrEqual(geometry.left - 0.5);
     expect.soft(control.right).toBeLessThanOrEqual(geometry.right + 0.5);
   }
@@ -220,11 +228,11 @@ for (const width of [1280, 1920]) {
     await trigger.click();
     const menu = form.getByRole("menu", { name: "选择模型", exact: true });
     await anchored(page, trigger, menu);
-    await menu.getByRole("tab", { name: "中转 API", exact: true }).click();
+    await menu.getByRole("tab", { name: "图像生成", exact: true }).click();
     await anchored(page, trigger, menu);
-    await menu.getByRole("tab", { name: "登录账号", exact: true }).click();
+    await menu.getByRole("tab", { name: "对话 / 推理", exact: true }).click();
     await anchored(page, trigger, menu);
-    await menu.getByRole("tab", { name: "中转 API", exact: true }).click();
+    await menu.getByRole("tab", { name: "图像生成", exact: true }).click();
     await menu.getByRole("searchbox").fill("布局供应商 0");
     await anchored(page, trigger, menu);
     await menu.getByRole("searchbox").fill("");

@@ -24,7 +24,11 @@ test("Codex 主 Agent 在模型接入，手动字段折叠且状态真实", asyn
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   const dialog = page.getByRole("dialog", { name: "设置" });
   await dialog.getByRole("button", { name: "模型接入", exact: true }).click();
-  const codex = dialog.getByRole("region", { name: "Codex 主 Agent 接入" });
+  await dialog.getByRole("tab", { name: "CLI 直连 CLI", exact: true }).click();
+  await dialog
+    .getByRole("button", { name: "Codex CLI / 主 Agent", exact: true })
+    .click();
+  const codex = dialog.locator(".settings-agent-card");
   await expect(
     codex.getByRole("heading", { name: /Codex 主 Agent/ }),
   ).toContainText("未连接");
@@ -32,7 +36,9 @@ test("Codex 主 Agent 在模型接入，手动字段折叠且状态真实", asyn
   await codex.getByText("高级连接选项", { exact: true }).click();
   await expect(codex.getByLabel("Agent 地址")).toBeEditable();
   await expect(codex.getByLabel("权限模式")).toHaveValue("request");
-  await dialog.getByRole("button", { name: "OAuth", exact: true }).click();
+  await dialog
+    .getByRole("tab", { name: "账号授权 OAuth", exact: true })
+    .click();
   await expect(dialog.getByRole("button", { name: "开始授权" })).toBeDisabled();
   await expect(
     dialog.getByRole("region", { name: "OAuth 配置" }),
@@ -81,7 +87,7 @@ test("官方和中转站草稿隔离，切换不保存密钥或发起连接", as
     .getByLabel("API Key", { exact: true })
     .fill("test-official-draft-secret");
   await page
-    .getByRole("button", { name: "API Key（中转站）", exact: true })
+    .getByRole("tab", { name: "中转路由 Gateway", exact: true })
     .click();
   const relay = page.getByRole("region", { name: "中转站 API Key 配置" });
   await expect(relay.getByLabel("API Key", { exact: true })).toHaveValue("");
@@ -292,7 +298,7 @@ test("官方与中转站切换保留已有连接的 opaque 引用、保存身份
     .getByLabel("API Key", { exact: true })
     .fill("fixture-opaque-key");
   await dialog
-    .getByRole("button", { name: "API Key（中转站）", exact: true })
+    .getByRole("tab", { name: "中转路由 Gateway", exact: true })
     .click();
   await dialog.getByRole("tab", { name: "官方直连 API", exact: true }).click();
   await expect(
@@ -545,9 +551,10 @@ test("旧配置同地址多账号没有明确身份时，保存测试清除均�
   const catalogBefore = await page.evaluate(() =>
     localStorage.getItem("kk-studio:model-catalog:v1"),
   );
-  await expect(
-    profile.getByRole("button", { name: "保存此模型能力", exact: true }),
-  ).toBeDisabled();
+  await expect(profile.locator(".provider-model-catalog")).toHaveAttribute(
+    "disabled",
+    "",
+  );
   await expect(profile).toContainText("请先在已登记连接中选择账号");
   for (const account of [derived, opaqueConnection])
     await expect(
@@ -641,7 +648,7 @@ test("API 测试锁定切页，取消后离开且迟到目录不覆盖草稿", a
     .click();
   await expect.poll(() => received).toBe(true);
   try {
-    const cli = dialog.getByRole("button", { name: "CLI 账号", exact: true });
+    const cli = dialog.getByRole("tab", { name: "CLI 直连 CLI", exact: true });
     await expect(cli).toBeDisabled();
     await expect(
       dialog.getByRole("button", { name: "关闭设置", exact: true }),

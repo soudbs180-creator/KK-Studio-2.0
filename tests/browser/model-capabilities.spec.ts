@@ -138,9 +138,9 @@ for (const duplicate of [true, false]) {
       .toEqual({ edit: true, maxReferences: 1 });
     await page.getByRole("button", { name: "关闭设置", exact: true }).click();
     await item.getByRole("button", { name: "画布模型", exact: true }).click();
-    await page.getByRole("tab", { name: "官方 API", exact: true }).click();
+    await page.getByRole("tab", { name: "图像生成", exact: true }).click();
     await page
-      .getByRole("searchbox", { name: "搜索模型、厂商或参数" })
+      .getByRole("searchbox", { name: "搜索模型、推理能力或厂商" })
       .fill("image-capability-a");
     await page
       .getByRole("menuitemradio", { name: /image-capability-a/ })
@@ -270,7 +270,7 @@ test("仅显示元数据更新时刷新分组、型号和别名草稿", async ({
   await page
     .getByRole("button", { name: "测试连接并刷新模型", exact: true })
     .click();
-  await page.getByText("型号显示与搜索别名", { exact: true }).click();
+  await expect(page.getByLabel("模型分组名称", {exact: true})).toBeVisible();
   await expect(page.getByLabel("模型分组名称", { exact: true })).toHaveValue(
     "Old group",
   );
@@ -385,7 +385,7 @@ test("手动三态声明保存恢复并切模型，不把未知变成支持", as
   await page
     .getByRole("button", { name: "测试连接并刷新模型", exact: true })
     .click();
-  await expect(page.getByLabel("已发现的模型")).toContainText(
+  await expect(page.locator(".model-catalog-list")).toContainText(
     "image-capability-b",
   );
   await page
@@ -462,14 +462,14 @@ test("手动三态声明保存恢复并切模型，不把未知变成支持", as
   await expect(
     page.getByLabel("单次任务生成数量上限", { exact: true }),
   ).toHaveValue("2");
-  await page.getByLabel("已发现的模型").selectOption("image-capability-b");
+  await page.locator(".model-catalog-row").filter({has: page.getByText("image-capability-b", {exact: true})}).getByRole("button", {name: "选择", exact: true}).click();
   await expect(page.getByLabel("参考图编辑能力", { exact: true })).toHaveValue(
     "unknown",
   );
   await expect(page.getByLabel("参考图数量上限", { exact: true })).toHaveValue(
     "",
   );
-  await page.getByLabel("已发现的模型").selectOption("image-capability-a");
+  await page.locator(".model-catalog-row").filter({has: page.getByText("image-capability-a", {exact: true})}).getByRole("button", {name: "选择", exact: true}).click();
   await expect(page.getByLabel("参考图编辑能力", { exact: true })).toHaveValue(
     "unsupported",
   );

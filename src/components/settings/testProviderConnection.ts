@@ -306,7 +306,7 @@ function formatTauriTestFailureState(
   return { kind: "error", message };
 }
 
-async function testTauriProviderConnection({
+export async function refreshProviderModelCatalog({
   valid,
   apiKey,
   credentialRef,
@@ -413,7 +413,7 @@ export async function testProviderConnection({
   }
 
   if (isTauri()) {
-    await testTauriProviderConnection({
+    await refreshProviderModelCatalog({
       valid,
       apiKey,
       credentialRef,

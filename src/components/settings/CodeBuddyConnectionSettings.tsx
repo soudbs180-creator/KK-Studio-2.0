@@ -18,9 +18,11 @@ type ConnectionState =
 export default function CodeBuddyConnectionSettings({
   onFeedback,
   onBusyChange,
+  active = true,
 }: {
   onFeedback: (message: string) => void;
   onBusyChange?: (busy: boolean) => void;
+  active?: boolean;
 }) {
   const connection = useSyncExternalStore(
     agentConnection.subscribe,
@@ -47,6 +49,13 @@ export default function CodeBuddyConnectionSettings({
   const connected = connection.status === "connected";
   const configReady =
     connected && loadedRevision === connection.connectionRevision;
+
+  useEffect(() => {
+    if (active || busy || !configReady) return;
+    setCliPath(savedPath);
+    setStatus(savedPath ? "saved" : "empty");
+    setError("");
+  }, [active, busy, configReady, savedPath]);
 
   useEffect(() => {
     probeRequest.current?.abort();

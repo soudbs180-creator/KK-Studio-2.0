@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { testProviderConnection } from "./testProviderConnection";
+import { refreshProviderModelCatalog } from "./testProviderConnection";
 import { credentialId } from "../../features/creation/index.ts";
 import {
   clearProviderConnectionKey,
@@ -182,7 +182,7 @@ export default function ModelProviderSettings({
     if (!active || saving || credentialBlocked || requestRef.current) return;
     const valid = validate();
     if (valid)
-      await testProviderConnection({
+      await refreshProviderModelCatalog({
         valid,
         apiKey,
         credentialRef,

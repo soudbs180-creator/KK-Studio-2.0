@@ -13,6 +13,7 @@ export function modelSelectionId(selection: ModelSelection): string {
   ]);
 }
 export interface PickerMemory {
+  capability?: "chat" | "image";
   page: string;
   all: boolean;
   pins: Record<string, string[]>;
@@ -30,6 +31,9 @@ export function readPickerMemory(scope: string): PickerMemory {
         "{}",
     );
     return {
+      ...(data.capability === "chat" || data.capability === "image"
+        ? { capability: data.capability }
+        : {}),
       page: typeof data.page === "string" ? data.page : "root",
       all: data.all === true,
       pins: data.pins && typeof data.pins === "object" ? data.pins : {},
