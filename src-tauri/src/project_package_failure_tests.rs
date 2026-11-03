@@ -153,9 +153,13 @@ fn media_dimensions_accept_only_optional_lossless_reader_numbers() {
 fn image_edit_original_attachment_and_explicit_false_flags_survive_package_validation() {
     let f = Fixture::new();
     let mut snapshot = f.snapshot.clone();
+    let original_bytes = b"separate original referenced only by the attachment";
+    let original_sha = asset_validation::hash(original_bytes);
+    let original_id = format!("asset-{}", &original_sha[..24]);
+    f.assets.store(STANDARD.encode(original_bytes), json!({"assetId":original_id,"sha256":original_sha,"mime":"image/png","tags":[],"provenance":{"generatedAt":"2026-11-03T00:00:00Z"}})).unwrap();
     snapshot["projects"][0]["items"][0]["referenceOnly"] = json!(false);
     snapshot["projects"][0]["items"][0]["referenceMode"] = json!(false);
-    snapshot["projects"][0]["attachments"] = json!([{ "id":"original", "assetId":f.id, "originalAssetId":f.id, "name":"original.png", "mime":"image/png", "size":24 }]);
+    snapshot["projects"][0]["attachments"] = json!([{ "id":"original", "assetId":f.id, "originalAssetId":original_id, "name":"original.png", "mime":"image/png", "size":24 }]);
     snapshot["projects"][0]["canvas"]["groups"] = json!([]);
     snapshot_schema::validate(&snapshot).unwrap();
     snapshot["projects"][0]["canvas"]["groups"] = json!([{ "id":"group1", "name":"Saved group", "itemIds":["n1","n2"], "borderColor":"#123abc", "collapseMode":"info", "layoutMode":"grid", "createdAt":1,"updatedAt":1 }]);
@@ -175,7 +179,15 @@ fn image_edit_original_attachment_and_explicit_false_flags_survive_package_valid
         .unwrap();
     assert_eq!(
         restored["projects"][0]["attachments"][0]["originalAssetId"],
-        f.id
+        original_id
+    );
+    let original = AssetRepository::new(target.join("assets"))
+        .read(&original_id)
+        .unwrap()
+        .unwrap();
+    assert_eq!(
+        STANDARD.decode(original.data_base64).unwrap(),
+        original_bytes
     );
     assert_eq!(restored["projects"][0]["items"][0]["referenceOnly"], false);
     assert_eq!(
@@ -184,6 +196,8 @@ fn image_edit_original_attachment_and_explicit_false_flags_survive_package_valid
     );
     snapshot["projects"][0]["attachments"][0]["originalAssetId"] = json!({"invalid":true});
     assert!(snapshot_schema::validate(&snapshot).is_err());
+    snapshot["projects"][0]["attachments"][0]["originalAssetId"] = json!("invalid");
+    assert!(collect_references(&snapshot, &mut BTreeSet::new()).is_err());
     snapshot["projects"][0]["attachments"][0]["originalAssetId"] = json!(f.id);
     snapshot["projects"][0]["items"][0]["referenceOnly"] = json!("false");
     assert!(snapshot_schema::validate(&snapshot).is_err());

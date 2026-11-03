@@ -242,6 +242,7 @@ fn attachments(value: &Value, ids: &mut BTreeSet<String>) -> Result<(), String> 
     if let Some(values) = value.get("attachments").and_then(Value::as_array) {
         for attachment in values {
             let id = optional_id(attachment, "assetId", ids)?;
+            optional_id(attachment, "originalAssetId", ids)?;
             media_reference(attachment.get("dataUrl"), id.as_deref(), ids, false)?;
         }
     }

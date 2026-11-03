@@ -256,10 +256,11 @@ function collectAttachment(
   ids: Set<string>,
   attachment: CreationAttachment,
 ): void {
-  if (attachment.assetId) {
-    checkAssetId(attachment.assetId);
-    ids.add(attachment.assetId);
-  }
+  for (const id of [attachment.assetId, attachment.originalAssetId])
+    if (id !== undefined) {
+      checkAssetId(id);
+      ids.add(id);
+    }
   if (attachment.dataUrl?.startsWith("kk-asset:")) {
     if (!isAssetReference(attachment.dataUrl))
       throw new ProjectPackageError("corrupt", "项目包中的素材引用无效。");
