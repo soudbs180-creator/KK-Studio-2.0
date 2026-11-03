@@ -44,7 +44,7 @@ Desktop/Web2.1.39/source50412d4e：项目/文件夹置顶和manual/recent/priori
 
 ## 差距与后端化
 
-- 视频剪辑编辑器、ComfyUI 工作流编辑器在菜单中禁用（分别依赖 FEAT-006、FEAT-004）。
+- ComfyUI 工作流编辑器已接通（FEAT-004）；视频剪辑编辑器由 FEAT-006 承接。
 - 部分 Figma Frame 仍缺现行基线（UI-004）。
 
 ## 变更记录

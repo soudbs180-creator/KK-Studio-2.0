@@ -13,7 +13,7 @@
 | PROTOTYPE | 只有 UI、本地 fixture 或固定演示素材，无真实后端；界面必须显式标注 Prototype |
 | PLANNED | 只有计划/设计，无实现或无 UI |
 
-当前共 **40** 个功能：REAL（真实可用）2、PARTIAL（部分可用）32、PROTOTYPE（仅演示/UI）5、PLANNED（仅计划）1。
+当前共 **40** 个功能：REAL（真实可用）7、PARTIAL（部分可用）27、PROTOTYPE（仅演示/UI）5、PLANNED（仅计划）1。
 
 ## 如何新增一个功能（任何 AI 照此执行）
 
@@ -36,8 +36,8 @@
 | --- | --- | --- | --- | --- |
 | FEAT-002 | BYOK 图片生成与持久任务宿主 | PARTIAL（部分可用） | [卡片](feat-002-image-generation.md) | T5, TASK-PROV-001, EXT-PROVIDER, TASK-AGENT-001, TASK-AGENT-004, TASK-AGENT-008, TASK-PROV-005, TASK-PROV-006, TASK-CODEX-HOME-20261015, TASK-CODEX-REF-20261015, TASK-KK-UNIFIED-20261015, TASK-AUDIT-REPAIR-20261017 |
 | FEAT-003 | 图片比例与清晰度参数 | PARTIAL（部分可用） | [卡片](feat-003-image-parameters.md) | BACKEND-IMAGE-PARAMS, TASK-AGENT-001, TASK-MODEL-001, TASK-KK-UNIFIED-20261015 |
-| FEAT-004 | ComfyUI 本地出图链 | PARTIAL（部分可用） | [卡片](feat-004-comfyui.md) | T6, EXT-COMFY, TASK-KK-UNIFIED-20261015, TASK-MOD-P6-1 |
-| FEAT-005 | ComfyUI 工作流库（本地管理） | PARTIAL（部分可用） | [卡片](feat-005-comfyui-workflows.md) | T6, TASK-CAP-001, TASK-DS-002, TASK-KK-UNIFIED-20261015, TASK-MOD-P6-1 |
+| FEAT-004 | ComfyUI 本地出图链 | REAL（真实可用） | [卡片](feat-004-comfyui.md) | T6, EXT-COMFY, TASK-KK-UNIFIED-20261015, TASK-MOD-P6-1, TASK-COMFY-IMAGE-20261103 |
+| FEAT-005 | ComfyUI 工作流库（本地管理） | REAL（真实可用） | [卡片](feat-005-comfyui-workflows.md) | T6, TASK-CAP-001, TASK-DS-002, TASK-KK-UNIFIED-20261015, TASK-MOD-P6-1, TASK-COMFY-IMAGE-20261103 |
 | FEAT-006 | 视频生成节点 | PROTOTYPE（仅演示/UI） | [卡片](feat-006-video-generation.md) | BACKEND-MEDIA-001, TASK-MINIMAX-001, EXT-PROVIDER, TASK-KK-UNIFIED-20261015 |
 | FEAT-007 | 音频生成节点 | PARTIAL（部分可用） | [卡片](feat-007-audio-generation.md) | BACKEND-MEDIA-001, EXT-PROVIDER, TASK-UI-005 |
 | FEAT-008 | 文本创作节点 | PARTIAL（部分可用） | [卡片](feat-008-text-node.md) | BACKEND-TEXT-NODE, TASK-UI-005, T5, TASK-PROV-006, EXT-PROVIDER, TASK-KK-UNIFIED-20261015 |
@@ -45,10 +45,10 @@
 | FEAT-010 | 语音输入 | PARTIAL（部分可用） | [卡片](feat-010-voice-input.md) | TASK-CAP-001 |
 | FEAT-029 | 提示词库 | PARTIAL（部分可用） | [卡片](feat-029-prompt-library.md) | TASK-UI-005, BACKEND-PLATFORM |
 | FEAT-031 | 统一任务态契约 | PARTIAL（部分可用） | [卡片](feat-031-unified-task-state.md) | TASK-TASKSTATE-001, TASK-TASKSTATE-002, BACKEND-MEDIA-001, TASK-KK-UNIFIED-20261015 |
-| FEAT-035 | 图片蒙版编辑 | PARTIAL（部分可用） | [卡片](feat-035-image-mask-editing.md) | TASK-IMAGE-EDIT-001, TASK-IMAGE-EDIT-VERIFY-002, TASK-MOD-P2, TASK-MOD-P3A, TASK-MOD-P4-CREATION, TASK-MOD-P4-REMAINING |
-| FEAT-040 | 扩图 | PARTIAL（部分可用） | [卡片](feat-040-outpaint.md) | TASK-MOD-P6-OUTPAINT |
-| FEAT-041 | 高清修复 | PARTIAL（部分可用） | [卡片](feat-041-upscale.md) | TASK-MOD-P6-UPSCALE |
-| FEAT-042 | 图层拆分 | PARTIAL（部分可用） | [卡片](feat-042-layer-split.md) | TASK-MOD-P6-LAYER-SPLIT |
+| FEAT-035 | 图片蒙版编辑 | PARTIAL（部分可用） | [卡片](feat-035-image-mask-editing.md) | TASK-IMAGE-EDIT-001, TASK-IMAGE-EDIT-VERIFY-002, TASK-MOD-P2, TASK-MOD-P3A, TASK-MOD-P4-CREATION, TASK-MOD-P4-REMAINING, TASK-COMFY-IMAGE-20261103 |
+| FEAT-040 | 扩图 | REAL（真实可用） | [卡片](feat-040-outpaint.md) | TASK-MOD-P6-OUTPAINT, TASK-COMFY-IMAGE-20261103 |
+| FEAT-041 | 高清修复 | REAL（真实可用） | [卡片](feat-041-upscale.md) | TASK-MOD-P6-UPSCALE, TASK-COMFY-IMAGE-20261103 |
+| FEAT-042 | 图层拆分 | REAL（真实可用） | [卡片](feat-042-layer-split.md) | TASK-MOD-P6-LAYER-SPLIT, TASK-COMFY-IMAGE-20261103 |
 
 ## 智能能力
 

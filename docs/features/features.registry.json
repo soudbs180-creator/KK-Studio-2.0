@@ -5,10 +5,9 @@
     "area": "creation",
     "status": "PARTIAL",
     "card": "docs/features/feat-035-image-mask-editing.md",
-    "summary": "框选、画笔、色块共用原像素Mask、裁剪/请求/保护融合；Web/Desktop保存、重绘和灯箱本地验收通过，真实模型质量与移动真机待验。",
+    "summary": "四入口默认开启；原生蒙版传输、像素保护、归档、项目包与重启已验，外部真实模型效果由VERIFY-002承接。",
     "entryPoints": [
-      "图片节点重绘",
-      "图片灯箱重绘"
+      "画布图片浮动工具栏"
     ],
     "code": [
       "src/domain/imageEdit.ts",
@@ -20,7 +19,9 @@
       "src/features/capabilities/index.ts",
       "src/features/creation/inpaintCapabilityDispatch.ts",
       "src-tauri/src/task_host.rs",
-      "src-tauri/src/image_edit_schema.rs"
+      "src-tauri/src/image_edit_schema.rs",
+      "src/features/image-edit/index.ts",
+      "src-tauri/src/task_host_comfy.rs"
     ],
     "tests": [
       "tests/unit/imageEdit.test.ts",
@@ -32,7 +33,8 @@
       "tests/unit/nativeTaskHost.test.ts",
       "tests/unit/projectPackage.test.ts",
       "tests/browser/image-edit.spec.ts",
-      "tests/desktop/image-edit.mjs"
+      "tests/desktop/image-edit.mjs",
+      "tests/browser/image-capabilities.spec.ts"
     ],
     "tasks": [
       "TASK-IMAGE-EDIT-001",
@@ -40,9 +42,24 @@
       "TASK-MOD-P2",
       "TASK-MOD-P3A",
       "TASK-MOD-P4-CREATION",
-      "TASK-MOD-P4-REMAINING"
+      "TASK-MOD-P4-REMAINING",
+      "TASK-COMFY-IMAGE-20261103"
     ],
-    "updated": "2026-10-28"
+    "updated": "2026-11-03",
+    "runtimeEvidence": [
+      {
+        "platform": "desktop",
+        "path": "docs/changes/2026-11-03-comfy-production/verification.md"
+      },
+      {
+        "platform": "web",
+        "path": "docs/changes/2026-11-03-comfy-production/verification.md"
+      }
+    ],
+    "platforms": [
+      "desktop",
+      "web"
+    ]
   },
   {
     "id": "FEAT-001",
@@ -236,7 +253,7 @@
     "area": "creation",
     "status": "PARTIAL",
     "card": "docs/features/feat-003-image-parameters.md",
-    "summary": "图片参数与生成/编辑三态、参考图/任务数量限额按精确账号模型目录生效；手动/报告声明、恢复和Web/Desktop提交校验已接入。声明不代表真实Provider验收；蒙版编辑见FEAT-035；扩图执行待接通。",
+    "summary": "图片参数与生成/编辑三态、参考图/任务数量限额按精确账号模型目录生效；手动/报告声明、恢复和Web/Desktop提交校验已接入。声明不代表真实Provider验收；蒙版编辑见FEAT-035；扩图已接通本地工作流（FEAT-040）。",
     "entryPoints": [
       "图片节点参数弹层 CreationParameters",
       "图片卡片模型/参数菜单",
@@ -300,76 +317,89 @@
     "id": "FEAT-004",
     "title": "ComfyUI 本地出图链",
     "area": "creation",
-    "status": "PARTIAL",
+    "status": "REAL",
     "card": "docs/features/feat-004-comfyui.md",
-    "summary": "画布双态ComfyUI卡片、原生隐藏托管、WS/历史归档连线已接；隔离夹具通过，真实GPU及完整交付待验。",
+    "summary": "画布工作流参数双面板同步、原生编辑器双向回写、真实GPU生成、AssetPort归档连线和重开。",
     "entryPoints": [
-      "设置 › ComfyUI 连接",
-      "图片节点（规划中的本地后端）"
+      "画布工作流节点",
+      "设置 › 模型接入 › 本地"
     ],
     "code": [
       "src/integrations/generation/localComfyUiAdapter.ts",
       "src/integrations/generation/providerAdapterFactory.ts",
-      "src-tauri/src/main.rs"
+      "src-tauri/src/main.rs",
+      "src/features/comfyui/index.ts"
     ],
     "tests": [
-      "tests/unit/generationServerProvider.test.ts"
+      "tests/unit/generationServerProvider.test.ts",
+      "tests/browser/comfy-parameters.spec.ts",
+      "tests/browser/comfy-production-recovery.spec.ts"
     ],
     "tasks": [
       "T6",
       "EXT-COMFY",
       "TASK-KK-UNIFIED-20261015",
-      "TASK-MOD-P6-1"
+      "TASK-MOD-P6-1",
+      "TASK-COMFY-IMAGE-20261103"
     ],
-    "updated": "2026-10-29",
+    "updated": "2026-11-03",
     "platforms": [
-      "web",
       "desktop"
+    ],
+    "runtimeEvidence": [
+      {
+        "platform": "desktop",
+        "path": "docs/changes/2026-11-03-comfy-production/verification.md"
+      }
     ]
   },
   {
     "id": "FEAT-005",
     "title": "ComfyUI 工作流库（本地管理）",
     "area": "creation",
-    "status": "PARTIAL",
+    "status": "REAL",
     "card": "docs/features/feat-005-comfyui-workflows.md",
-    "summary": "ComfyUI工作流迁入模型接入/本地，保留ID与存储key；导入导出/删除写入ACK及失败保全已验，实际执行链未接通。",
+    "summary": "API/UI JSON导入导出、原生转换、完整模板、每卡独立快照与参数持久化。",
     "entryPoints": [
-      "素材/工作流库 LibraryPage",
-      "工作流导入按钮"
+      "画布工作流节点",
+      "设置 › 模型接入 › 本地"
     ],
     "code": [
       "src/features/comfyui/workflowRegistry.ts",
       "src/components/LibraryPage.tsx",
       "src/components/CatalogPageBody.tsx",
       "src/components/WorkflowCard.tsx",
-      "src/components/WorkflowImportButton.tsx"
+      "src/components/WorkflowImportButton.tsx",
+      "src/features/comfyui/index.ts"
     ],
     "tests": [
       "tests/unit/workflowRegistry.test.ts",
       "tests/browser/catalog-pages.spec.ts",
-      "tests/browser/design-system-pages.spec.ts"
+      "tests/browser/design-system-pages.spec.ts",
+      "tests/browser/comfy-parameters.spec.ts",
+      "tests/browser/comfy-production-recovery.spec.ts"
     ],
     "tasks": [
       "T6",
       "TASK-CAP-001",
       "TASK-DS-002",
       "TASK-KK-UNIFIED-20261015",
-      "TASK-MOD-P6-1"
+      "TASK-MOD-P6-1",
+      "TASK-COMFY-IMAGE-20261103"
     ],
-    "updated": "2026-10-29",
+    "updated": "2026-11-03",
     "platforms": [
-      "web",
-      "desktop"
+      "desktop",
+      "web"
     ],
     "runtimeEvidence": [
       {
-        "platform": "web",
-        "path": "docs/changes/2026-09-22-design-system-pages/verification.md"
+        "platform": "desktop",
+        "path": "docs/changes/2026-11-03-comfy-production/verification.md"
       },
       {
-        "platform": "desktop",
-        "path": "docs/changes/2026-09-22-design-system-pages/verification.md"
+        "platform": "web",
+        "path": "docs/changes/2026-11-03-comfy-production/verification.md"
       }
     ]
   },
@@ -1951,72 +1981,111 @@
     "id": "FEAT-040",
     "title": "扩图",
     "area": "creation",
-    "status": "PARTIAL",
+    "status": "REAL",
     "card": "docs/features/feat-040-outpaint.md",
-    "summary": "image.outpaint正在接入标准注册表与显式工作流；未完成真实Provider/原生/独审验收。",
+    "summary": "默认开启；本地模型与四边扩展配置、真实ComfyUI扩图、原像素保护和归档连线。",
     "entryPoints": [
-      "现有任务提交程序接口；没有新UI入口"
+      "画布图片浮动工具栏"
     ],
     "code": [
-      "src/features/capabilities/outpaintCapability.ts"
+      "src/features/capabilities/outpaintCapability.ts",
+      "src/features/image-edit/index.ts",
+      "src-tauri/src/task_host_comfy.rs"
     ],
     "tests": [
       "tests/unit/imageCapabilities.test.ts",
       "tests/unit/imageCapabilityWorkflow.test.ts",
       "tests/unit/imageCapabilitySubmission.test.ts",
-      "tests/browser/image-capabilities.spec.ts"
+      "tests/browser/image-capabilities.spec.ts",
+      "tests/browser/image-edit.spec.ts"
     ],
     "tasks": [
-      "TASK-MOD-P6-OUTPAINT"
+      "TASK-MOD-P6-OUTPAINT",
+      "TASK-COMFY-IMAGE-20261103"
     ],
-    "updated": "2026-10-29"
+    "updated": "2026-11-03",
+    "runtimeEvidence": [
+      {
+        "platform": "desktop",
+        "path": "docs/changes/2026-11-03-comfy-production/verification.md"
+      }
+    ],
+    "platforms": [
+      "desktop"
+    ]
   },
   {
     "id": "FEAT-041",
     "title": "高清修复",
     "area": "creation",
-    "status": "PARTIAL",
+    "status": "REAL",
     "card": "docs/features/feat-041-upscale.md",
-    "summary": "image.upscale正在接入标准注册表与显式工作流；未完成真实Provider/原生/独审验收。",
+    "summary": "默认开启；RealESRGAN修复或明确Lanczos选项、精确2倍/4倍产物归档和重开。",
     "entryPoints": [
-      "现有任务提交程序接口；没有新UI入口"
+      "画布图片浮动工具栏"
     ],
     "code": [
-      "src/features/capabilities/upscaleCapability.ts"
+      "src/features/capabilities/upscaleCapability.ts",
+      "src/features/image-edit/index.ts",
+      "src-tauri/src/task_host_comfy.rs"
     ],
     "tests": [
       "tests/unit/imageCapabilities.test.ts",
       "tests/unit/imageCapabilityWorkflow.test.ts",
       "tests/unit/imageCapabilitySubmission.test.ts",
-      "tests/browser/image-capabilities.spec.ts"
+      "tests/browser/image-capabilities.spec.ts",
+      "tests/browser/image-edit.spec.ts"
     ],
     "tasks": [
-      "TASK-MOD-P6-UPSCALE"
+      "TASK-MOD-P6-UPSCALE",
+      "TASK-COMFY-IMAGE-20261103"
     ],
-    "updated": "2026-10-29"
+    "updated": "2026-11-03",
+    "runtimeEvidence": [
+      {
+        "platform": "desktop",
+        "path": "docs/changes/2026-11-03-comfy-production/verification.md"
+      }
+    ],
+    "platforms": [
+      "desktop"
+    ]
   },
   {
     "id": "FEAT-042",
     "title": "图层拆分",
     "area": "creation",
-    "status": "PARTIAL",
+    "status": "REAL",
     "card": "docs/features/feat-042-layer-split.md",
-    "summary": "image.layer-split正在接入标准注册表与显式工作流；未完成真实Provider/原生/独审验收。",
+    "summary": "默认开启；BiRefNet互补透明图层、部分成功归档及按图层重试。",
     "entryPoints": [
-      "现有任务提交程序接口；没有新UI入口"
+      "画布图片浮动工具栏"
     ],
     "code": [
-      "src/features/capabilities/layerSplitCapability.ts"
+      "src/features/capabilities/layerSplitCapability.ts",
+      "src/features/image-edit/index.ts",
+      "src-tauri/src/task_host_comfy.rs"
     ],
     "tests": [
       "tests/unit/imageCapabilities.test.ts",
       "tests/unit/imageCapabilityWorkflow.test.ts",
       "tests/unit/imageCapabilitySubmission.test.ts",
-      "tests/browser/image-capabilities.spec.ts"
+      "tests/browser/image-capabilities.spec.ts",
+      "tests/browser/image-edit.spec.ts"
     ],
     "tasks": [
-      "TASK-MOD-P6-LAYER-SPLIT"
+      "TASK-MOD-P6-LAYER-SPLIT",
+      "TASK-COMFY-IMAGE-20261103"
     ],
-    "updated": "2026-10-29"
+    "updated": "2026-11-03",
+    "runtimeEvidence": [
+      {
+        "platform": "desktop",
+        "path": "docs/changes/2026-11-03-comfy-production/verification.md"
+      }
+    ],
+    "platforms": [
+      "desktop"
+    ]
   }
 ]

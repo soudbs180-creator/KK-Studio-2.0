@@ -49,7 +49,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | T3b | 完整项目包导出导入与恢复 | DONE | 已完成 | P3 | T3a | root | 保留当前证据，合并后按原验收范围回读主线 |
 | T4 | 统一实际图片生成入口及健康语义 | DONE | 已完成 | P3 | T3b, TASK-PROV-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | T5 | 持久本地 TaskHost 与未知受理恢复 | DONE | 已完成 | P3 | T4 | root | 保留当前证据，合并后按原验收范围回读主线；分支 codex/T5-native-lifecycle 已通过 PR#37 78cea37a 集成 main，保留作历史追溯，禁止再次合并（会以旧内容回滚主线） |
-| T6 | Desktop ComfyUI最小链实现 | PARTIAL | 进行中 | P2 | T5 | root | 补充负责人、优先级、分支和下一步验收证据 |
+| T6 | Desktop ComfyUI最小链实现 | DONE | 已完成 | P2 | T5 | root | 本卡实现范围收口；统一平台生成入口由阶段3承接。 |
 | EXT-PROVIDER | 真实 Provider/GPU 生成验收 | BLOCKED | 未完成 | P2 | T4 | root | 复核阻塞条件，解除后重新验证并保留原失败证据 |
 | EXT-COMFY | 真实 ComfyUI/模型验收 | PARTIAL | 进行中 | P2 | T6 | root | 模型接入统一安装/关联与硬件容量推荐；先验证现有H3，HiFi为固定来源独立配方，实际ABI/工作流/资源通过才开放。2K单列远端阶段，不能隐式上传或称无条件更便宜。 |
 | T7 | Desktop可用版本及安装恢复验收 | PARTIAL | 进行中 | P2 | T3b, T4, T5, T6, EXT-PROVIDER, EXT-COMFY | root | 补充负责人、优先级、分支和下一步验收证据 |
@@ -197,7 +197,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-MOD-P1 | 定义能力声明与Task/Asset/Provider叶契约 | DONE | 已完成 | P1 | TASK-MOD-P0 | root | P1-G 与 P1-TYPES 按独立任务继续处理。 |
 | TASK-MOD-P1-G | 将可选capabilityId接入功能治理与卡片对应 | TODO | 未完成 | P1 | TASK-MOD-P1 | root | P1声明验证后单独执行此治理子卡，不因capability.ts/ports.ts完成关闭完整P1要求。 |
 | TASK-MOD-P1-TYPES | 处理Zod纯ES2022严格依赖声明的URL类型限制 | TODO | 未完成 | P2 | TASK-MOD-P1 | root | 按真实严格消费者需求评估上游修复或独立分发；保持失败可见，不扩大当前包配置的证明范围。 |
-| TASK-MOD-P2 | 能力注册表与默认关闭的image.inpaint双路径试点 | PARTIAL | 进行中 | P1 | TASK-MOD-P1 | root | 处理窄屏基线门禁与严格截图稳定性后完成验收；保留默认关闭。P0/ORG/main整合、独审与真实Provider/原生分别验证，不把本候选算整套完成。 |
+| TASK-MOD-P2 | 能力注册表与默认关闭的image.inpaint双路径试点 | OBSOLETE | 未完成 | P1 | TASK-MOD-P1 | root | 生产链路见TASK-COMFY-IMAGE-20261103；不再按旧默认关闭路线推进。 |
 | TASK-MOD-P3A | P3a 解除creation-image-edit循环 | DONE | 已完成 | P1 | TASK-MOD-P2 | root | 本卡已合流收口，后续回归由当前门禁保护。 |
 | TASK-MOD-P3B | P3b 解除creation-agent循环 | DONE | 已完成 | P1 | TASK-MOD-P3A | root | 本卡已合流收口，后续回归由当前门禁保护。 |
 | TASK-MOD-P3C | P3c 解除creation-local-service循环 | DONE | 已完成 | P1 | TASK-MOD-P3B | root | 本卡已合流收口，后续回归由当前门禁保护。 |
@@ -212,11 +212,11 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-MOD-P4-REMAINING | 其余切片公开入口 | DONE | 已完成 | P1 | TASK-MOD-P4-CREATION | root | 本卡已合流收口，后续回归由当前门禁保护。 |
 | TASK-MOD-P5 | 插件清单、权限与分级隔离 | PARTIAL | 进行中 | P1 | TASK-MOD-P4-REMAINING | root | P5生产门保持关闭；补原生/跨浏览器/更多逃逸面/独审与Figma授权，再推进T0/T2/T3和其他贡献。 |
 | TASK-MOD-P6-HOST | 图片能力任务接线 | PARTIAL | 进行中 | P1 | TASK-MOD-P4-CREATION | root | 接入并验收Desktop原生TaskHost及真实工作流/Provider；保持四原文与其他P/STD/ORG开放任务，不把fixture作为REAL。 |
-| TASK-MOD-P6-OUTPAINT | 扩图 | PARTIAL | 进行中 | P1 | TASK-MOD-P6-HOST | root | 接入并验收Desktop原生TaskHost及真实工作流/Provider；保持四原文与其他P/STD/ORG开放任务，不把fixture作为REAL。 |
-| TASK-MOD-P6-UPSCALE | 高清修复 | PARTIAL | 进行中 | P1 | TASK-MOD-P6-OUTPAINT | root | 接入并验收Desktop原生TaskHost及真实工作流/Provider；保持四原文与其他P/STD/ORG开放任务，不把fixture作为REAL。 |
-| TASK-MOD-P6-LAYER-SPLIT | 图层拆分 | PARTIAL | 进行中 | P1 | TASK-MOD-P6-UPSCALE | root | 接入并验收Desktop原生TaskHost及真实工作流/Provider；保持四原文与其他P/STD/ORG开放任务，不把fixture作为REAL。 |
+| TASK-MOD-P6-OUTPAINT | 扩图 | DONE | 已完成 | P1 | TASK-MOD-P6-HOST | root | 本卡实现范围收口；统一平台生成入口由阶段3承接。 |
+| TASK-MOD-P6-UPSCALE | 高清修复 | DONE | 已完成 | P1 | TASK-MOD-P6-OUTPAINT | root | 本卡实现范围收口；统一平台生成入口由阶段3承接。 |
+| TASK-MOD-P6-LAYER-SPLIT | 图层拆分 | DONE | 已完成 | P1 | TASK-MOD-P6-UPSCALE | root | 本卡实现范围收口；统一平台生成入口由阶段3承接。 |
 | TASK-MOD-P7 | 资产溯源对齐 | PARTIAL | 进行中 | P1 | TASK-MOD-P6-LAYER-SPLIT | root | 完成原生GUI跨端溯源验收、独审和main合流；旧记录不回写。 |
-| TASK-MOD-P6-1 | ComfyUI本地托管与画布双态工作流卡片 | PARTIAL | 未完成 | P1 | TASK-MOD-P6-HOST | root | 完成浏览器/命令行回归；真实GPU、完整编辑器鼠标/参数面板及独审/main仍开放，用户已要求不控制桌面 |
+| TASK-MOD-P6-1 | ComfyUI本地托管与画布双态工作流卡片 | DONE | 已完成 | P1 | TASK-MOD-P6-HOST | root | 本卡实现范围收口；统一平台生成入口由阶段3承接。 |
 | TASK-MOD-GATE-BOOTSTRAP | 主线原生首建架构与目录基线 | OBSOLETE | 已完成 | P0 | none | root | 远端集成继续由 TASK-GOV-004 跟踪。 |
 | TASK-SEC-ZOD-20261028 | 独立升级根Zod4.6.7并验证集合界限安全修复 | DONE | 已完成 | P1 | none | root | 本有界包已验收合入本地main；最终工作树回收与SHA见工程外final-receipt.json，不代表全量浏览器或发布完成。 |
 | TASK-SEC-AGENT-AUDIT-20261028 | 评估Agent其余既有依赖审计项 | TODO | 未完成 | P1 | none | root | 独立核对公告和运行路径，不使用npm audit fix --force，不夹带工具链大版本升级。 |
@@ -1050,7 +1050,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 - Goal: Desktop ComfyUI最小链实现
 - Scope: src/integrations/generation/localComfyUiAdapter.ts, src-tauri, src/features/comfyui
-- Display status: 进行中
+- Display status: 已完成
 - Priority: P2 — 开放任务默认待治理排序
 - Requirement refs: ledger:T6
 - Feature IDs: FEAT-004, FEAT-005
@@ -1059,11 +1059,11 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `unallocated`
 - Worktree: `unallocated`
 - Modules: src/integrations/generation/localComfyUiAdapter.ts, src-tauri, src/features/comfyui
-- Verification: PARTIAL — 只读审计确认：localComfyUiAdapter.ts 具备 /prompt、/history、/view、/interrupt HTTP 原语，但 App/imageTaskCommand 尚未接入，local_only 明确拒绝；Tauri ComfyUI 命令尚无前端 invoke 桥，缺少 Desktop-only workflow/template 持久化、任务 journal、逐任务取消、结果归档与重启恢复。下一步需先接一条显式 workflow 的最小链，不下载模型；EXT-COMFY 仍等待用户选定服务、目录、workflow 和模型。
-- Evidence: [docs/changes/2026-09-16-launch-readiness-audit/plan.md](../../docs/changes/2026-09-16-launch-readiness-audit/plan.md)
-- Next action: 补充负责人、优先级、分支和下一步验收证据
-- Last verified: 2026-09-17
-- Updated: 2026-09-17
+- Verification: PASS — 本轮生产接通已核验：真实Tauri/GPU工作流与图片任务、AssetPort归档、画布结果/连线、参数回写及重载恢复；详见TASK-COMFY-IMAGE-20261103当前验证，旧候选记录保留。
+- Evidence: [docs/changes/2026-09-16-launch-readiness-audit/plan.md](../../docs/changes/2026-09-16-launch-readiness-audit/plan.md), [docs/changes/2026-11-03-comfy-production/verification.md](../../docs/changes/2026-11-03-comfy-production/verification.md)
+- Next action: 本卡实现范围收口；统一平台生成入口由阶段3承接。
+- Last verified: 2026-11-03
+- Updated: 2026-11-03
 
 ## EXT-PROVIDER — 真实 Provider/GPU 生成验收
 
@@ -3865,7 +3865,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 - Goal: 注册与分发复用原持久任务链，旧入口与算法不变，并以隔离fixture对拍
 - Scope: capabilities薄切片、creation派发适配、契约工具/版本、回归与证据；不搬迁算法/改UI或存储key
-- Display status: 进行中
+- Display status: 未完成
 - Priority: P1 — 未记录
 - Requirement refs: docs/changes/2026-10-28-inpaint-capability/intent.md, docs/changes/2026-10-28-inpaint-capability/spec.md
 - Feature IDs: FEAT-035
@@ -3874,11 +3874,11 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `feat/TASK-MOD-P2-capability-registry-inpaint`
 - Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
 - Modules: src/features/capabilities, src/features/creation/useImageCommandSubmission.ts, src/features/creation/inpaintCapabilityDispatch.ts, packages/creation-contracts, tests/unit, tests/browser/image-edit.spec.ts
-- Verification: PARTIAL — 薄注册器/默认关闭接线已实现，根2350 pass/20原skip、Mobile373 pass及类型/增量lint/build通过；双构建任务/资产/HTTP/DOM同态，image-edit各14 pass/1原窄屏fail。严格PNG仍有1灰阶像素渲染不稳定（同路径可复现）；独审/原生/main未验。
+- Verification: PARTIAL — 旧默认关闭试点由TASK-COMFY-IMAGE-20261103的生产默认开启链路替代；历史对拍与失败记录仍在原证据中。
 - Evidence: [docs/changes/2026-10-28-inpaint-capability/verification.md](../../docs/changes/2026-10-28-inpaint-capability/verification.md), [docs/changes/2026-10-28-inpaint-capability/review.md](../../docs/changes/2026-10-28-inpaint-capability/review.md)
-- Next action: 处理窄屏基线门禁与严格截图稳定性后完成验收；保留默认关闭。P0/ORG/main整合、独审与真实Provider/原生分别验证，不把本候选算整套完成。
-- Last verified: 2026-10-28
-- Updated: 2026-10-28
+- Next action: 生产链路见TASK-COMFY-IMAGE-20261103；不再按旧默认关闭路线推进。
+- Last verified: 2026-11-03
+- Updated: 2026-11-03
 
 ## TASK-MOD-P3A — P3a 解除creation-image-edit循环
 
@@ -4150,7 +4150,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 - Goal: 扩图
 - Scope: 独立Manifest与执行器通过现有CapabilityRegistry/TaskPort；显式ComfyUI工作流/原件绑定，不猜API端点、不新增任务队列/素材仓库；API适配接口保留，未配置不可用。
-- Display status: 进行中
+- Display status: 已完成
 - Priority: P1 — 未记录
 - Requirement refs: docs/changes/2026-10-29-p6-outpaint/intent.md, docs/changes/2026-10-29-p6-outpaint/spec.md
 - Feature IDs: FEAT-040
@@ -4159,17 +4159,17 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `fix/TASK-HANDOFF-TAKEOVER-20261101`
 - Worktree: `D:/kk-studio/.worktrees/TASK-HANDOFF-TAKEOVER-20261101`
 - Modules: src/features/capabilities, src/features/creation
-- Verification: PARTIAL — 本地候选根2372 pass/20 skip、类型通过；Edge17项、Rust资产18、Mobile373、Agent204通过；本卡仍PARTIAL，真实服务/Native/独审/main待验。 2026-11-01 handoff takeover: current branch/worktree corrected; default-skipped external ComfyUI live test and local baseline are recorded in the new verification package; REAL/DONE remains unchanged.
-- Evidence: [docs/changes/2026-10-29-p6-outpaint/verification.md](../../docs/changes/2026-10-29-p6-outpaint/verification.md), [docs/changes/2026-10-29-p6-outpaint/review.md](../../docs/changes/2026-10-29-p6-outpaint/review.md), [docs/changes/2026-11-01-handoff-takeover/verification.md](../../docs/changes/2026-11-01-handoff-takeover/verification.md)
-- Next action: 接入并验收Desktop原生TaskHost及真实工作流/Provider；保持四原文与其他P/STD/ORG开放任务，不把fixture作为REAL。
-- Last verified: 2026-11-01
-- Updated: 2026-11-01
+- Verification: PASS — 本轮生产接通已核验：真实Tauri/GPU工作流与图片任务、AssetPort归档、画布结果/连线、参数回写及重载恢复；详见TASK-COMFY-IMAGE-20261103当前验证，旧候选记录保留。
+- Evidence: [docs/changes/2026-10-29-p6-outpaint/verification.md](../../docs/changes/2026-10-29-p6-outpaint/verification.md), [docs/changes/2026-10-29-p6-outpaint/review.md](../../docs/changes/2026-10-29-p6-outpaint/review.md), [docs/changes/2026-11-01-handoff-takeover/verification.md](../../docs/changes/2026-11-01-handoff-takeover/verification.md), [docs/changes/2026-11-03-comfy-production/verification.md](../../docs/changes/2026-11-03-comfy-production/verification.md)
+- Next action: 本卡实现范围收口；统一平台生成入口由阶段3承接。
+- Last verified: 2026-11-03
+- Updated: 2026-11-03
 
 ## TASK-MOD-P6-UPSCALE — 高清修复
 
 - Goal: 高清修复
 - Scope: 独立Manifest与执行器通过现有CapabilityRegistry/TaskPort；显式ComfyUI工作流/原件绑定，不猜API端点、不新增任务队列/素材仓库；API适配接口保留，未配置不可用。
-- Display status: 进行中
+- Display status: 已完成
 - Priority: P1 — 未记录
 - Requirement refs: docs/changes/2026-10-29-p6-upscale/intent.md, docs/changes/2026-10-29-p6-upscale/spec.md
 - Feature IDs: FEAT-041
@@ -4178,17 +4178,17 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `fix/TASK-HANDOFF-TAKEOVER-20261101`
 - Worktree: `D:/kk-studio/.worktrees/TASK-HANDOFF-TAKEOVER-20261101`
 - Modules: src/features/capabilities, src/features/creation
-- Verification: PARTIAL — 本地候选根2372 pass/20 skip、类型通过；Edge17项、Rust资产18、Mobile373、Agent204通过；本卡仍PARTIAL，真实服务/Native/独审/main待验。 2026-11-01 handoff takeover: current branch/worktree corrected; default-skipped external ComfyUI live test and local baseline are recorded in the new verification package; REAL/DONE remains unchanged.
-- Evidence: [docs/changes/2026-10-29-p6-upscale/verification.md](../../docs/changes/2026-10-29-p6-upscale/verification.md), [docs/changes/2026-10-29-p6-upscale/review.md](../../docs/changes/2026-10-29-p6-upscale/review.md), [docs/changes/2026-11-01-handoff-takeover/verification.md](../../docs/changes/2026-11-01-handoff-takeover/verification.md)
-- Next action: 接入并验收Desktop原生TaskHost及真实工作流/Provider；保持四原文与其他P/STD/ORG开放任务，不把fixture作为REAL。
-- Last verified: 2026-11-01
-- Updated: 2026-11-01
+- Verification: PASS — 本轮生产接通已核验：真实Tauri/GPU工作流与图片任务、AssetPort归档、画布结果/连线、参数回写及重载恢复；详见TASK-COMFY-IMAGE-20261103当前验证，旧候选记录保留。
+- Evidence: [docs/changes/2026-10-29-p6-upscale/verification.md](../../docs/changes/2026-10-29-p6-upscale/verification.md), [docs/changes/2026-10-29-p6-upscale/review.md](../../docs/changes/2026-10-29-p6-upscale/review.md), [docs/changes/2026-11-01-handoff-takeover/verification.md](../../docs/changes/2026-11-01-handoff-takeover/verification.md), [docs/changes/2026-11-03-comfy-production/verification.md](../../docs/changes/2026-11-03-comfy-production/verification.md)
+- Next action: 本卡实现范围收口；统一平台生成入口由阶段3承接。
+- Last verified: 2026-11-03
+- Updated: 2026-11-03
 
 ## TASK-MOD-P6-LAYER-SPLIT — 图层拆分
 
 - Goal: 图层拆分
 - Scope: 独立Manifest与执行器通过现有CapabilityRegistry/TaskPort；显式ComfyUI工作流/原件绑定，不猜API端点、不新增任务队列/素材仓库；API适配接口保留，未配置不可用。
-- Display status: 进行中
+- Display status: 已完成
 - Priority: P1 — 未记录
 - Requirement refs: docs/changes/2026-10-29-p6-layer-split/intent.md, docs/changes/2026-10-29-p6-layer-split/spec.md
 - Feature IDs: FEAT-042
@@ -4197,11 +4197,11 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `fix/TASK-HANDOFF-TAKEOVER-20261101`
 - Worktree: `D:/kk-studio/.worktrees/TASK-HANDOFF-TAKEOVER-20261101`
 - Modules: src/features/capabilities, src/features/creation
-- Verification: PARTIAL — 本地候选根2372 pass/20 skip、类型通过；Edge17项、Rust资产18、Mobile373、Agent204通过；本卡仍PARTIAL，真实服务/Native/独审/main待验。 2026-11-01 handoff takeover: current branch/worktree corrected; default-skipped external ComfyUI live test and local baseline are recorded in the new verification package; REAL/DONE remains unchanged.
-- Evidence: [docs/changes/2026-10-29-p6-layer-split/verification.md](../../docs/changes/2026-10-29-p6-layer-split/verification.md), [docs/changes/2026-10-29-p6-layer-split/review.md](../../docs/changes/2026-10-29-p6-layer-split/review.md), [docs/changes/2026-11-01-handoff-takeover/verification.md](../../docs/changes/2026-11-01-handoff-takeover/verification.md)
-- Next action: 接入并验收Desktop原生TaskHost及真实工作流/Provider；保持四原文与其他P/STD/ORG开放任务，不把fixture作为REAL。
-- Last verified: 2026-11-01
-- Updated: 2026-11-01
+- Verification: PASS — 本轮生产接通已核验：真实Tauri/GPU工作流与图片任务、AssetPort归档、画布结果/连线、参数回写及重载恢复；详见TASK-COMFY-IMAGE-20261103当前验证，旧候选记录保留。
+- Evidence: [docs/changes/2026-10-29-p6-layer-split/verification.md](../../docs/changes/2026-10-29-p6-layer-split/verification.md), [docs/changes/2026-10-29-p6-layer-split/review.md](../../docs/changes/2026-10-29-p6-layer-split/review.md), [docs/changes/2026-11-01-handoff-takeover/verification.md](../../docs/changes/2026-11-01-handoff-takeover/verification.md), [docs/changes/2026-11-03-comfy-production/verification.md](../../docs/changes/2026-11-03-comfy-production/verification.md)
+- Next action: 本卡实现范围收口；统一平台生成入口由阶段3承接。
+- Last verified: 2026-11-03
+- Updated: 2026-11-03
 
 ## TASK-MOD-P7 — 资产溯源对齐
 
@@ -4226,7 +4226,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 - Goal: 按P6.1归档原生工作流产物并自动落图连线
 - Scope: 原生隐藏进程与既有画布/资产Port接线
-- Display status: 未完成
+- Display status: 已完成
 - Priority: P1 — 未记录
 - Requirement refs: docs/changes/2026-10-29-p6-1-comfy-canvas/spec.md
 - Feature IDs: FEAT-004, FEAT-005
@@ -4235,11 +4235,11 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `fix/TASK-HANDOFF-TAKEOVER-20261101`
 - Worktree: `D:/kk-studio/.worktrees/TASK-HANDOFF-TAKEOVER-20261101`
 - Modules: src-tauri, src/features/comfyui, src/components/canvas
-- Verification: PARTIAL — 类型/lint/UI规范/格式/官方构建通过；根2378 pass/20 skip，Rust271 pass/1 ignored，Edge18 pass/0retry。中间Native夹具双client/原件SHA/重开/停止通过，最终Native与真实GPU/独审/main未验。 2026-10-30追加：2.1.59/d6d592e4真实H3 host/editor视频及首帧AssetPort/结果边/保存重开通过，见本轮main-physical-org6验证；不覆盖图片checkpoint/Hub根自动启动/已安装客户端。 2026-11-01 handoff takeover: current branch/worktree corrected; default-skipped external ComfyUI live test and local baseline are recorded in the new verification package; REAL/DONE remains unchanged.
-- Evidence: [docs/changes/2026-10-29-p6-1-comfy-canvas/verification.md](../../docs/changes/2026-10-29-p6-1-comfy-canvas/verification.md), [docs/changes/2026-11-01-handoff-takeover/verification.md](../../docs/changes/2026-11-01-handoff-takeover/verification.md)
-- Next action: 完成浏览器/命令行回归；真实GPU、完整编辑器鼠标/参数面板及独审/main仍开放，用户已要求不控制桌面
-- Last verified: 2026-11-01
-- Updated: 2026-11-01
+- Verification: PASS — 本轮生产接通已核验：真实Tauri/GPU工作流与图片任务、AssetPort归档、画布结果/连线、参数回写及重载恢复；详见TASK-COMFY-IMAGE-20261103当前验证，旧候选记录保留。
+- Evidence: [docs/changes/2026-10-29-p6-1-comfy-canvas/verification.md](../../docs/changes/2026-10-29-p6-1-comfy-canvas/verification.md), [docs/changes/2026-11-01-handoff-takeover/verification.md](../../docs/changes/2026-11-01-handoff-takeover/verification.md), [docs/changes/2026-11-03-comfy-production/verification.md](../../docs/changes/2026-11-03-comfy-production/verification.md)
+- Next action: 本卡实现范围收口；统一平台生成入口由阶段3承接。
+- Last verified: 2026-11-03
+- Updated: 2026-11-03
 
 ## TASK-MOD-GATE-BOOTSTRAP — 主线原生首建架构与目录基线
 

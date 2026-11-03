@@ -2221,13 +2221,14 @@
       "src-tauri",
       "src/features/comfyui"
     ],
-    "status": "PARTIAL",
+    "status": "DONE",
     "evidence": [
-      "docs/changes/2026-09-16-launch-readiness-audit/plan.md"
+      "docs/changes/2026-09-16-launch-readiness-audit/plan.md",
+      "docs/changes/2026-11-03-comfy-production/verification.md"
     ],
-    "verification": "只读审计确认：localComfyUiAdapter.ts 具备 /prompt、/history、/view、/interrupt HTTP 原语，但 App/imageTaskCommand 尚未接入，local_only 明确拒绝；Tauri ComfyUI 命令尚无前端 invoke 桥，缺少 Desktop-only workflow/template 持久化、任务 journal、逐任务取消、结果归档与重启恢复。下一步需先接一条显式 workflow 的最小链，不下载模型；EXT-COMFY 仍等待用户选定服务、目录、workflow 和模型。",
-    "updated": "2026-09-17",
-    "verificationResult": "PARTIAL",
+    "verification": "本轮生产接通已核验：真实Tauri/GPU工作流与图片任务、AssetPort归档、画布结果/连线、参数回写及重载恢复；详见TASK-COMFY-IMAGE-20261103当前验证，旧候选记录保留。",
+    "updated": "2026-11-03",
+    "verificationResult": "PASS",
     "requirementRefs": [
       "ledger:T6"
     ],
@@ -2237,9 +2238,9 @@
     ],
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
-    "displayStatus": "进行中",
-    "nextAction": "补充负责人、优先级、分支和下一步验收证据",
-    "lastVerified": "2026-09-17",
+    "displayStatus": "已完成",
+    "nextAction": "本卡实现范围收口；统一平台生成入口由阶段3承接。",
+    "lastVerified": "2026-11-03",
     "ownerRole": "repository-maintainer"
   },
   {
@@ -11708,8 +11709,8 @@
       "tests/unit",
       "tests/browser/image-edit.spec.ts"
     ],
-    "status": "PARTIAL",
-    "displayStatus": "进行中",
+    "status": "OBSOLETE",
+    "displayStatus": "未完成",
     "priority": "P1",
     "risk": "medium",
     "reviewRequired": true,
@@ -11717,11 +11718,11 @@
       "docs/changes/2026-10-28-inpaint-capability/verification.md",
       "docs/changes/2026-10-28-inpaint-capability/review.md"
     ],
-    "verification": "薄注册器/默认关闭接线已实现，根2350 pass/20原skip、Mobile373 pass及类型/增量lint/build通过；双构建任务/资产/HTTP/DOM同态，image-edit各14 pass/1原窄屏fail。严格PNG仍有1灰阶像素渲染不稳定（同路径可复现）；独审/原生/main未验。",
+    "verification": "旧默认关闭试点由TASK-COMFY-IMAGE-20261103的生产默认开启链路替代；历史对拍与失败记录仍在原证据中。",
     "verificationResult": "PARTIAL",
-    "updated": "2026-10-28",
-    "lastVerified": "2026-10-28",
-    "nextAction": "处理窄屏基线门禁与严格截图稳定性后完成验收；保留默认关闭。P0/ORG/main整合、独审与真实Provider/原生分别验证，不把本候选算整套完成。",
+    "updated": "2026-11-03",
+    "lastVerified": "2026-11-03",
+    "nextAction": "生产链路见TASK-COMFY-IMAGE-20261103；不再按旧默认关闭路线推进。",
     "requirementRefs": [
       "docs/changes/2026-10-28-inpaint-capability/intent.md",
       "docs/changes/2026-10-28-inpaint-capability/spec.md"
@@ -12395,21 +12396,22 @@
       "src/features/capabilities",
       "src/features/creation"
     ],
-    "status": "PARTIAL",
-    "displayStatus": "进行中",
+    "status": "DONE",
+    "displayStatus": "已完成",
     "priority": "P1",
     "risk": "medium",
     "reviewRequired": true,
     "evidence": [
       "docs/changes/2026-10-29-p6-outpaint/verification.md",
       "docs/changes/2026-10-29-p6-outpaint/review.md",
-      "docs/changes/2026-11-01-handoff-takeover/verification.md"
+      "docs/changes/2026-11-01-handoff-takeover/verification.md",
+      "docs/changes/2026-11-03-comfy-production/verification.md"
     ],
-    "verification": "本地候选根2372 pass/20 skip、类型通过；Edge17项、Rust资产18、Mobile373、Agent204通过；本卡仍PARTIAL，真实服务/Native/独审/main待验。 2026-11-01 handoff takeover: current branch/worktree corrected; default-skipped external ComfyUI live test and local baseline are recorded in the new verification package; REAL/DONE remains unchanged.",
-    "verificationResult": "PARTIAL",
-    "updated": "2026-11-01",
-    "lastVerified": "2026-11-01",
-    "nextAction": "接入并验收Desktop原生TaskHost及真实工作流/Provider；保持四原文与其他P/STD/ORG开放任务，不把fixture作为REAL。",
+    "verification": "本轮生产接通已核验：真实Tauri/GPU工作流与图片任务、AssetPort归档、画布结果/连线、参数回写及重载恢复；详见TASK-COMFY-IMAGE-20261103当前验证，旧候选记录保留。",
+    "verificationResult": "PASS",
+    "updated": "2026-11-03",
+    "lastVerified": "2026-11-03",
+    "nextAction": "本卡实现范围收口；统一平台生成入口由阶段3承接。",
     "requirementRefs": [
       "docs/changes/2026-10-29-p6-outpaint/intent.md",
       "docs/changes/2026-10-29-p6-outpaint/spec.md"
@@ -12440,21 +12442,22 @@
       "src/features/capabilities",
       "src/features/creation"
     ],
-    "status": "PARTIAL",
-    "displayStatus": "进行中",
+    "status": "DONE",
+    "displayStatus": "已完成",
     "priority": "P1",
     "risk": "medium",
     "reviewRequired": true,
     "evidence": [
       "docs/changes/2026-10-29-p6-upscale/verification.md",
       "docs/changes/2026-10-29-p6-upscale/review.md",
-      "docs/changes/2026-11-01-handoff-takeover/verification.md"
+      "docs/changes/2026-11-01-handoff-takeover/verification.md",
+      "docs/changes/2026-11-03-comfy-production/verification.md"
     ],
-    "verification": "本地候选根2372 pass/20 skip、类型通过；Edge17项、Rust资产18、Mobile373、Agent204通过；本卡仍PARTIAL，真实服务/Native/独审/main待验。 2026-11-01 handoff takeover: current branch/worktree corrected; default-skipped external ComfyUI live test and local baseline are recorded in the new verification package; REAL/DONE remains unchanged.",
-    "verificationResult": "PARTIAL",
-    "updated": "2026-11-01",
-    "lastVerified": "2026-11-01",
-    "nextAction": "接入并验收Desktop原生TaskHost及真实工作流/Provider；保持四原文与其他P/STD/ORG开放任务，不把fixture作为REAL。",
+    "verification": "本轮生产接通已核验：真实Tauri/GPU工作流与图片任务、AssetPort归档、画布结果/连线、参数回写及重载恢复；详见TASK-COMFY-IMAGE-20261103当前验证，旧候选记录保留。",
+    "verificationResult": "PASS",
+    "updated": "2026-11-03",
+    "lastVerified": "2026-11-03",
+    "nextAction": "本卡实现范围收口；统一平台生成入口由阶段3承接。",
     "requirementRefs": [
       "docs/changes/2026-10-29-p6-upscale/intent.md",
       "docs/changes/2026-10-29-p6-upscale/spec.md"
@@ -12485,21 +12488,22 @@
       "src/features/capabilities",
       "src/features/creation"
     ],
-    "status": "PARTIAL",
-    "displayStatus": "进行中",
+    "status": "DONE",
+    "displayStatus": "已完成",
     "priority": "P1",
     "risk": "medium",
     "reviewRequired": true,
     "evidence": [
       "docs/changes/2026-10-29-p6-layer-split/verification.md",
       "docs/changes/2026-10-29-p6-layer-split/review.md",
-      "docs/changes/2026-11-01-handoff-takeover/verification.md"
+      "docs/changes/2026-11-01-handoff-takeover/verification.md",
+      "docs/changes/2026-11-03-comfy-production/verification.md"
     ],
-    "verification": "本地候选根2372 pass/20 skip、类型通过；Edge17项、Rust资产18、Mobile373、Agent204通过；本卡仍PARTIAL，真实服务/Native/独审/main待验。 2026-11-01 handoff takeover: current branch/worktree corrected; default-skipped external ComfyUI live test and local baseline are recorded in the new verification package; REAL/DONE remains unchanged.",
-    "verificationResult": "PARTIAL",
-    "updated": "2026-11-01",
-    "lastVerified": "2026-11-01",
-    "nextAction": "接入并验收Desktop原生TaskHost及真实工作流/Provider；保持四原文与其他P/STD/ORG开放任务，不把fixture作为REAL。",
+    "verification": "本轮生产接通已核验：真实Tauri/GPU工作流与图片任务、AssetPort归档、画布结果/连线、参数回写及重载恢复；详见TASK-COMFY-IMAGE-20261103当前验证，旧候选记录保留。",
+    "verificationResult": "PASS",
+    "updated": "2026-11-03",
+    "lastVerified": "2026-11-03",
+    "nextAction": "本卡实现范围收口；统一平台生成入口由阶段3承接。",
     "requirementRefs": [
       "docs/changes/2026-10-29-p6-layer-split/intent.md",
       "docs/changes/2026-10-29-p6-layer-split/spec.md"
@@ -12578,20 +12582,21 @@
       "src/features/comfyui",
       "src/components/canvas"
     ],
-    "status": "PARTIAL",
-    "displayStatus": "未完成",
+    "status": "DONE",
+    "displayStatus": "已完成",
     "priority": "P1",
     "risk": "medium",
     "reviewRequired": true,
     "evidence": [
       "docs/changes/2026-10-29-p6-1-comfy-canvas/verification.md",
-      "docs/changes/2026-11-01-handoff-takeover/verification.md"
+      "docs/changes/2026-11-01-handoff-takeover/verification.md",
+      "docs/changes/2026-11-03-comfy-production/verification.md"
     ],
-    "verification": "类型/lint/UI规范/格式/官方构建通过；根2378 pass/20 skip，Rust271 pass/1 ignored，Edge18 pass/0retry。中间Native夹具双client/原件SHA/重开/停止通过，最终Native与真实GPU/独审/main未验。 2026-10-30追加：2.1.59/d6d592e4真实H3 host/editor视频及首帧AssetPort/结果边/保存重开通过，见本轮main-physical-org6验证；不覆盖图片checkpoint/Hub根自动启动/已安装客户端。 2026-11-01 handoff takeover: current branch/worktree corrected; default-skipped external ComfyUI live test and local baseline are recorded in the new verification package; REAL/DONE remains unchanged.",
-    "verificationResult": "PARTIAL",
-    "updated": "2026-11-01",
-    "lastVerified": "2026-11-01",
-    "nextAction": "完成浏览器/命令行回归；真实GPU、完整编辑器鼠标/参数面板及独审/main仍开放，用户已要求不控制桌面",
+    "verification": "本轮生产接通已核验：真实Tauri/GPU工作流与图片任务、AssetPort归档、画布结果/连线、参数回写及重载恢复；详见TASK-COMFY-IMAGE-20261103当前验证，旧候选记录保留。",
+    "verificationResult": "PASS",
+    "updated": "2026-11-03",
+    "lastVerified": "2026-11-03",
+    "nextAction": "本卡实现范围收口；统一平台生成入口由阶段3承接。",
     "requirementRefs": [
       "docs/changes/2026-10-29-p6-1-comfy-canvas/spec.md"
     ],
