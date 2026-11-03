@@ -200,10 +200,7 @@ for (const [width, height] of [
         }
       }
     } else {
-      await expectInside(
-        page,
-        ".canvas-hud button, .canvas-toolbar",
-      );
+      await expectInside(page, ".canvas-hud button, .canvas-toolbar");
     }
     await page.screenshot({
       path: test.info().outputPath(`${evidence}/${width}-canvas.png`),

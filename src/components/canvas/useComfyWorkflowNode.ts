@@ -160,7 +160,8 @@ export function useComfyWorkflowNode(
       const text = await file.text();
       const raw = JSON.parse(text) as unknown;
       const parsed = parseComfyWorkflow(raw);
-      const name = file.name.replace(/\.[^/.]+$/, "") || "导入的 ComfyUI 工作流";
+      const name =
+        file.name.replace(/\.[^/.]+$/, "") || "导入的 ComfyUI 工作流";
       const record = createImportedWorkflow(name, parsed);
       const current = readLocalWorkflows();
       const next = [record, ...current.filter((r) => r.id !== record.id)];
@@ -169,7 +170,9 @@ export function useComfyWorkflowNode(
       patch({ ...latest.current.item.comfyWorkflow, workflowId: record.id });
       setMessage(`已导入工作流：${record.name}`);
     } catch (err) {
-      setMessage(`导入失败：${err instanceof Error ? err.message : String(err)}`);
+      setMessage(
+        `导入失败：${err instanceof Error ? err.message : String(err)}`,
+      );
     }
   }
 

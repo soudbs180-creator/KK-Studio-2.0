@@ -152,7 +152,7 @@ for (const width of [320, 390, 768, 1920]) {
   });
 }
 
-test("画布共享底栏保持主要44入口、辅助32箭头和居中图标", async ({
+test("画布共享底栏保持主要44入口、辅助24×44箭头和居中图标", async ({
   page,
 }, testInfo) => {
   await openWorkspace(page);
@@ -181,12 +181,11 @@ test("画布共享底栏保持主要44入口、辅助32箭头和居中图标", a
       },
     ),
   }));
-  expect(geometry.width).toBe(292);
+  expect(geometry.width).toBe(284);
   expect(geometry.height).toBe(52);
   for (const action of geometry.actions) {
-    const size = action.label === "展开画布工具" ? 32 : 44;
-    expect(action.width).toBe(size);
-    expect(action.height).toBe(size);
+    expect(action.width).toBe(action.label === "展开画布工具" ? 24 : 44);
+    expect(action.height).toBe(44);
     expect(action.glyphWidth).toBe(action.label === "展开画布工具" ? 8 : 28);
     expect(action.glyphHeight).toBe(action.label === "展开画布工具" ? 8 : 28);
     expect(Math.abs(action.dx)).toBeLessThan(0.6);

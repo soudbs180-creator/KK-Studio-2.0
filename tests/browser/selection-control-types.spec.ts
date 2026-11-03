@@ -101,8 +101,8 @@ test("工具栏独立箭头保持圆形居中，展开后向上且菜单不推�
   await openWorkspace(page);
   const toolbar = page.locator(".canvas-toolbar");
   const toggle = toolbar.locator(".toolbar-toggle");
-  await expect(toggle).toHaveCSS("width", "32px");
-  await expect(toggle).toHaveCSS("height", "32px");
+  await expect(toggle).toHaveCSS("width", "24px");
+  await expect(toggle).toHaveCSS("height", "44px");
   const before = await toolbar.boundingBox();
   const arrow = toggle.locator(".toolbar-icon-collapse");
   await expect(arrow).toHaveCSS("width", "8px");

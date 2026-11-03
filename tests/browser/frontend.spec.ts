@@ -345,7 +345,7 @@ test("无限画布隐藏滚动条，卡片拖动时连接线跟随", async ({ pa
     height: 208,
   });
   const toolbarBounds = await page.locator(".canvas-toolbar").boundingBox();
-  expect(toolbarBounds).toEqual({ x: 701, y: 1002, width: 304, height: 52 });
+  expect(toolbarBounds).toEqual({ x: 711, y: 1002, width: 284, height: 52 });
   await expect(page.locator(".canvas-top-right")).toBeVisible();
   expect(await page.locator(".canvas-top-right").boundingBox()).toEqual({
     x: 1023,
@@ -406,7 +406,7 @@ test("无限画布隐藏滚动条，卡片拖动时连接线跟随", async ({ pa
   await page
     .getByRole("menuitemradio", { name: "移动工具", exact: true })
     .click();
-  await expect(page.locator(".canvas-toolbar")).toHaveCSS("width", "304px");
+  await expect(page.locator(".canvas-toolbar")).toHaveCSS("width", "284px");
   await videoPreviews.nth(0).click();
   await expect(page.getByTestId("image-composer")).toHaveCount(0);
   expect(

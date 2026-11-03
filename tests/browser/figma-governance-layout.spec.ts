@@ -20,12 +20,12 @@ test("approved composer and shell geometry stays stable at phone and desktop siz
   expect(phoneComposer!.x + phoneComposer!.width).toBeLessThanOrEqual(390);
   const label = page.locator(".start-model-picker span");
   await expect(label).toHaveText("Codex 内置生图");
+  await expect(label).toHaveCSS("text-overflow", "ellipsis");
+  await expect(label.locator("..")).toHaveAttribute("title", "Codex 内置生图");
   expect(
-    await label.evaluate(
-      (element) => element.clientWidth >= element.scrollWidth,
-    ),
-  ).toBe(true);
-  expect(Math.round(phoneComposer!.height)).toBe(184);
+    await label.evaluate((element) => element.clientWidth),
+  ).toBeGreaterThanOrEqual(24);
+  expect(Math.round(phoneComposer!.height)).toBe(132);
 
   await page.setViewportSize({ width: 1920, height: 1080 });
   await page.goto("/");

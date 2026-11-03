@@ -141,7 +141,7 @@ test("latest two Figma frames retain exact shell anchors through independent col
   await page.getByRole("button", { name: "收起侧边栏", exact: true }).click();
   await rect(page, ".workspace-content", [72, 45, 1838, 1025]);
   await rect(page, ".task-button", [252, 73, 120, 44]);
-  await rect(page, ".canvas-toolbar", [839, 1002, 304, 52]);
+  await rect(page, ".canvas-toolbar", [849, 1002, 284, 52]);
   await rect(page, ".sidebar-search", [22, 942, 26, 26]);
   await rect(page, ".sidebar-settings", [22, 982, 26, 26]);
   await rect(page, ".sidebar-account", [22, 1022, 26, 26]);
@@ -150,7 +150,7 @@ test("latest two Figma frames retain exact shell anchors through independent col
     "收纳后保留这段草稿",
   );
   await expect(page.locator(".sidebar")).toHaveClass(/is-collapsed/);
-  await rect(page, ".canvas-toolbar", [591, 1002, 304, 52]);
+  await rect(page, ".canvas-toolbar", [601, 1002, 284, 52]);
   await page.getByRole("button", { name: "展开侧边栏", exact: true }).click();
   await rect(page, ".task-button", [472, 73, 120, 44]);
 });
@@ -185,7 +185,7 @@ test("sidebar motion keeps the task attached to the frame and toolbar stationary
   expect(samples.at(-1)!.frame).toBeCloseTo(72, 1);
   for (const { frame, task, toolbar, usableWidth } of samples) {
     expect(Math.abs(task - frame - 180)).toBeLessThan(0.1);
-    expect(Math.abs(toolbar - frame - (usableWidth - 304) / 2)).toBeLessThan(
+    expect(Math.abs(toolbar - frame - (usableWidth - 284) / 2)).toBeLessThan(
       0.1,
     );
   }

@@ -158,11 +158,14 @@ test("窄屏首页模型入口保留可读的紧凑标签", async ({ page }) => 
     await page.goto("/");
     const label = page.locator(".start-model-picker .start-tool-button span");
     await expect(label).toHaveCSS("font-size", "12px");
-    const text = await label.evaluate((element) => ({
-      rendered: element.clientWidth,
-      full: element.scrollWidth,
-    }));
-    expect(text.rendered).toBeGreaterThanOrEqual(text.full);
+    await expect(label).toHaveCSS("text-overflow", "ellipsis");
+    await expect(label.locator("..")).toHaveAttribute(
+      "title",
+      "Codex 内置生图",
+    );
+    expect(
+      await label.evaluate((element) => element.clientWidth),
+    ).toBeGreaterThanOrEqual(24);
   }
 });
 

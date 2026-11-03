@@ -966,9 +966,9 @@
 
 .conversation-panel .chat-composer .chat-model-picker-wrap {
   order: 2;
-  flex: 0 0 auto;
+  flex: 1 1 0;
   width: fit-content;
-  min-width: 0;
+  min-width: var(--kk-control-h-lg);
   max-width: min(var(--kk-model-capsule-max-width), 100%);
   height: var(--composer-target);
   margin-left: 5px;

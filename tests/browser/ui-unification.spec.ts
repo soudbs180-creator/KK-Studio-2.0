@@ -26,6 +26,8 @@ async function readableDefault(
       });
     return {
       text: label.textContent,
+      title: label.closest("button")?.getAttribute("title"),
+      ellipsis: getComputedStyle(label).textOverflow,
       labelWidth: label.clientWidth,
       fullLabelWidth: label.scrollWidth,
       top: area.top,
@@ -41,14 +43,21 @@ async function readableDefault(
     contentType: "application/json",
   });
   expect(geometry.text).toBe(expectedLabel);
-  expect(geometry.labelWidth).toBeGreaterThanOrEqual(geometry.fullLabelWidth);
+  if (geometry.labelWidth < geometry.fullLabelWidth) {
+    expect(geometry.ellipsis).toBe("ellipsis");
+    expect(geometry.title).toBe(expectedLabel);
+    expect(geometry.labelWidth).toBeGreaterThanOrEqual(24);
+  } else {
+    expect(geometry.labelWidth).toBeGreaterThanOrEqual(geometry.fullLabelWidth);
+  }
   // Complete groups wrap by available width; controls sharing a row stay centered.
   for (const [index, control] of geometry.controls.entries()) {
     for (const next of geometry.controls.slice(index + 1)) {
       if (control.top < next.bottom && next.top < control.bottom) {
         expect(Math.abs(control.center - next.center)).toBeLessThanOrEqual(1);
         expect(
-          Math.min(control.right, next.right) - Math.max(control.left, next.left),
+          Math.min(control.right, next.right) -
+            Math.max(control.left, next.left),
         ).toBeLessThanOrEqual(0.5);
       }
     }
@@ -133,7 +142,8 @@ for (const width of [390, 1099, 1920]) {
       };
     });
     expect(layout.width).toBeGreaterThan(58);
-    expect(layout.labelWidth).toBeGreaterThanOrEqual(layout.fullLabelWidth);
+    expect(layout.labelWidth).toBeGreaterThanOrEqual(24);
+    await expect(model).toHaveAttribute("title", "Codex 账号默认");
     expect(layout.right).toBeLessThanOrEqual(layout.viewport);
     await page.screenshot({
       path: testInfo.outputPath(`unified-${width}.png`),

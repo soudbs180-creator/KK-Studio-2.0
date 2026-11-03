@@ -264,10 +264,18 @@
   background: var(--kk-button-primary-bg);
 }
 .canvas .canvas-toolbar > .toolbar-toggle {
-  flex-basis: 32px;
-  width: 32px;
-  min-width: 32px;
-  height: 32px;
+  flex-basis: 24px;
+  width: 24px;
+  min-width: 24px;
+  height: 44px;
+}
+.canvas .canvas-toolbar > .toolbar-toggle::before {
+  inset: auto;
+  left: 50%;
+  top: 50%;
+  width: 24px;
+  height: 24px;
+  transform: translate(-50%, -50%);
 }
 .canvas .canvas-toolbar > button:not(.toolbar-add):hover::before,
 .canvas

@@ -99,12 +99,16 @@ for (const width of [390, 768, 1280, 1920]) {
         await settings
           .getByLabel("强调色", { exact: true })
           .selectOption(folded ? "orange" : "default");
-        await page.getByRole("button", { name: "关闭设置", exact: true }).click();
+        await page
+          .getByRole("button", { name: "关闭设置", exact: true })
+          .click();
         if (
           width <= 800 &&
           !(await sidebar.getAttribute("class"))?.includes("is-collapsed")
         )
-          await page.getByRole("button", { name: "收起侧边栏", exact: true }).click();
+          await page
+            .getByRole("button", { name: "收起侧边栏", exact: true })
+            .click();
         // Synthetic long copy stresses layout only; it does not claim a real provider response.
         const statusStrong = page.locator(".project-task-status strong");
         if (await statusStrong.isVisible()) {

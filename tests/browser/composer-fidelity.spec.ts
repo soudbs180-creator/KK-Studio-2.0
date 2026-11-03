@@ -193,7 +193,11 @@ test("桌面会话入口使用关闭态图标并从右侧滑入，不挤动地�
   await expect(page.getByRole("group", { name: "画布导航" })).toBeVisible();
 
   await expect(page.locator(".conversation-panel")).toBeHidden();
-  await expect.poll(async () => (await page.locator(".canvas-top-right").boundingBox())!.x).toBe(1467);
+  await expect
+    .poll(
+      async () => (await page.locator(".canvas-top-right").boundingBox())!.x,
+    )
+    .toBe(1467);
   const before = await page.evaluate(() => {
     const rect = (selector: string) => {
       const element = document.querySelector<HTMLElement>(selector);
@@ -226,8 +230,11 @@ test("桌面会话入口使用关闭态图标并从右侧滑入，不挤动地�
   expect(before.navigation!.y).toBe(73);
   expect(before.map).not.toBeNull();
   expect(before.map!.width).toBe(104);
-  expect(before.map!.x + before.map!.width).toBeCloseTo(before.navigation!.x + before.navigation!.width - 1, 1);
-  expect(before.toolbar).toMatchObject({ x: 949, y: 1002 });
+  expect(before.map!.x + before.map!.width).toBeCloseTo(
+    before.navigation!.x + before.navigation!.width - 1,
+    1,
+  );
+  expect(before.toolbar).toMatchObject({ x: 959, y: 1002 });
   expect(before.reopen).toEqual({ x: 1838, y: 73, width: 44, height: 44 });
   expect(before.icon).toEqual({
     x: 1846,
@@ -284,7 +291,9 @@ test("桌面会话入口使用关闭态图标并从右侧滑入，不挤动地�
     const result = [];
     for (const fraction of [0, 0.25, 0.5, 0.75, 1]) {
       animation.currentTime = duration * fraction;
-      await new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
+      await new Promise<void>((resolve) =>
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+      );
       const panelBox = panel.getBoundingClientRect();
       result.push({
         x: panelBox.x,
@@ -301,7 +310,7 @@ test("桌面会话入口使用关闭态图标并从右侧滑入，不挤动地�
   );
   expect(samples.at(-1)!.x).toBeCloseTo(1430, 0);
   expect(samples.every((sample) => Math.abs(sample.y - 61) < 1)).toBe(true);
-  expect(samples.every((sample) => Math.abs(sample.toolbarX - 701) < 1)).toBe(
+  expect(samples.every((sample) => Math.abs(sample.toolbarX - 711) < 1)).toBe(
     true,
   );
   await expect(page.locator(".canvas-top-right")).toBeVisible();
@@ -317,7 +326,10 @@ test("桌面会话入口使用关闭态图标并从右侧滑入，不挤动地�
   expect(openNavigation!.x + openNavigation!.width).toBeLessThanOrEqual(
     openPanel!.x - 10,
   );
-  expect(openMap!.x + openMap!.width).toBeCloseTo(openNavigation!.x + openNavigation!.width - 1, 1);
+  expect(openMap!.x + openMap!.width).toBeCloseTo(
+    openNavigation!.x + openNavigation!.width - 1,
+    1,
+  );
   await expect(page.locator(".conversation-panel")).toHaveCSS(
     "animation-name",
     "conversation-panel-enter",

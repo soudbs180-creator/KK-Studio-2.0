@@ -251,14 +251,22 @@ export async function panCanvasToRevealAction(
       ? Math.min(bounds.x + usableWidth - 20, bounds.x + bounds.width - 20)
       : bounds.x + 20;
   const startY = bounds.y + bounds.height / 2;
-  const start = { x: startX, y: startY };
+  const start = await canvas.evaluate(
+    (element, preferred) => {
+      for (const y of [0, -16, 16, -32, 32]) {
+        for (const x of [0, -16, 16]) {
+          const point = { x: preferred.x + x, y: preferred.y + y };
+          if (document.elementFromPoint(point.x, point.y) === element)
+            return point;
+        }
+      }
+      throw new Error("没有找到可平移的空白画布，未从编辑器发起拖动");
+    },
+    { x: startX, y: startY },
+  );
   await page.mouse.move(start.x, start.y);
   await page.mouse.down({ button: "middle" });
-  await page.mouse.move(
-    start.x + dx,
-    start.y + dy,
-    { steps: 8 },
-  );
+  await page.mouse.move(start.x + dx, start.y + dy, { steps: 8 });
   await page.mouse.up({ button: "middle" });
   await expect.poll(hit).toBe(true);
 }

@@ -77,12 +77,14 @@ test("Figma 483 首页输入保持紧凑尺寸，额外能力仍可访问", asyn
     .locator(".start-hero")
     .evaluate((element) => element.clientWidth);
   await expect(composer).toHaveCSS("width", `${available}px`);
-  await expect.poll(async () => (await composer.boundingBox())!.height).toBe(184);
+  await expect
+    .poll(async () => (await composer.boundingBox())!.height)
+    .toBe(132);
   const phone = (await composer.boundingBox())!;
   expect(phone.width).toBe(available);
   expect(phone.x).toBeGreaterThanOrEqual(0);
   expect(phone.x + phone.width).toBeLessThanOrEqual(390);
-  expect(phone.height).toBe(184);
+  expect(phone.height).toBe(132);
   const row = await composer
     .locator(".start-composer-footer")
     .evaluate((footer) =>
@@ -276,9 +278,9 @@ test("Figma 483 画布输入与模型菜单采用独立尺寸", async ({ page })
   expect(modelGeometry.fontSize).toBeGreaterThanOrEqual(12);
   expect(modelGeometry.alignment).toBe("center");
   expect(modelGeometry.hit).toBe(true);
-  expect((await composer.locator(".image-params").boundingBox())!.width).toBeCloseTo(
-    119 * zoom, 1,
-  );
+  expect(
+    (await composer.locator(".image-params").boundingBox())!.width,
+  ).toBeCloseTo(119 * zoom, 1);
   await composer.getByRole("button", { name: "画布模型" }).click();
   const menu = composer.getByRole("menu", { name: "选择模型" });
   const box = (await menu.boundingBox())!;
@@ -344,7 +346,9 @@ for (const width of [834, 1920]) {
       .locator(".sidebar-toggle")
       .boundingBox())!;
     // The sidebar brand rail and canvas HUD have independent Figma insets.
-    expect(sidebarToggle.y + sidebarToggle.height / 2 - before.y - before.height / 2).toBe(width === 834 ? -12 : -7);
+    expect(
+      sidebarToggle.y + sidebarToggle.height / 2 - before.y - before.height / 2,
+    ).toBe(width === 834 ? -12 : -7);
     for (const name of ["打开任务列表", "画布缩放", "整理画布"]) {
       const control = (await page.getByRole("button", { name }).boundingBox())!;
       expect(
@@ -360,12 +364,16 @@ for (const width of [834, 1920]) {
     const after = (await close.boundingBox())!;
     const panelBox = (await panel.boundingBox())!;
     expect(after.x).toBeGreaterThanOrEqual(panelBox.x);
-    expect(after.x + after.width).toBeLessThanOrEqual(panelBox.x + panelBox.width);
+    expect(after.x + after.width).toBeLessThanOrEqual(
+      panelBox.x + panelBox.width,
+    );
     expect(after.y).toBeGreaterThanOrEqual(panelBox.y);
     await close.click({ trial: true });
     await close.click();
     await expect(panel).toBeHidden();
-    await expect.poll(async () => (await opener.boundingBox())!.x).toBe(before.x);
+    await expect
+      .poll(async () => (await opener.boundingBox())!.x)
+      .toBe(before.x);
     expect((await opener.boundingBox())!.y).toBe(before.y);
   });
 }

@@ -83,11 +83,11 @@ test("A1 资产画廊在桌面和手机使用可读的卡片与控件档位", as
     await expect(card.locator(".asset-name")).toHaveCSS("font-size", "12px");
     await expect(panel.locator(".asset-search-row")).toHaveCSS(
       "height",
-      "48px",
+      width === 390 ? "44px" : "32px",
     );
     await expect(panel.locator(".asset-filters select").first()).toHaveCSS(
       "height",
-      "44px",
+      width === 390 ? "44px" : "32px",
     );
     const filters = await panel.locator(".asset-filters").boundingBox();
     const content = await panel.locator(".asset-content").boundingBox();

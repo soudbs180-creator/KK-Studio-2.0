@@ -566,7 +566,7 @@
     "dependencies": [],
     "owner": "root",
     "ownerRole": "implementation-integrator",
-    "branch": "docs/TASK-FIGMA-FIRST-20261021-rules",
+    "branch": "main",
     "worktree": "D:/kk-studio/KK-Studio-2.0",
     "baseSha": "1fbac26b33bdabaad682ad398f5292360eb9c66a",
     "affectedModules": [
@@ -577,8 +577,8 @@
       "docs/changes/2026-10-24-canvas-performance",
       "docs/PROGRESS.md"
     ],
-    "status": "IN_PROGRESS",
-    "displayStatus": "进行中",
+    "status": "READY",
+    "displayStatus": "未完成",
     "priority": "P2",
     "risk": "medium",
     "reviewRequired": true,
@@ -589,11 +589,11 @@
       "docs/changes/2026-10-24-canvas-performance/verification.md",
       "docs/changes/2026-10-24-canvas-performance/review.md"
     ],
-    "verification": "开工基线2275 pass/0 fail/20 skipped，typecheck/lint通过；current Figma只读核对完成。产品与最终验证尚未完成。",
-    "verificationResult": "NOT_VERIFIED",
-    "updated": "2026-10-24",
+    "verification": "原任务分支已撤销、源码已进入本地 main；本轮复核其限定优化与当前门禁，等待独立审查收口。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-11-03",
     "lastVerified": "2026-10-24",
-    "nextAction": "先完成红绿计数及最小优化，再完整门禁、运行与独审；保留既有dirty/index，禁止混合提交。",
+    "nextAction": "本轮核对性能专项已实现范围与独立审查后关闭，不再占用主 checkout 的活动认领。",
     "requirementRefs": [
       "docs/changes/2026-10-24-canvas-performance/intent.md",
       "docs/changes/2026-10-24-canvas-performance/spec.md"
@@ -10977,8 +10977,8 @@
     "dependencies": [],
     "owner": "root",
     "ownerRole": "implementation-integrator",
-    "branch": "refactor/TASK-MOD-P0-architecture-baseline",
-    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "branch": "main",
+    "worktree": "D:/kk-studio/KK-Studio-2.0",
     "baseSha": "c2a0228a57be66b982d889c6710faa32cde49b7c",
     "affectedModules": [
       "scripts/governance",
@@ -10990,19 +10990,21 @@
       "package-lock.json",
       "docs"
     ],
-    "status": "PARTIAL",
-    "displayStatus": "未完成",
+    "status": "DONE",
+    "displayStatus": "已完成",
     "priority": "P1",
     "risk": "medium",
     "reviewRequired": true,
     "evidence": [
-      "docs/changes/2026-10-28-modularity-p0/verification.md"
+      "docs/changes/2026-10-28-modularity-p0/verification.md",
+      "docs/changes/2026-11-03-mainline-reset/verification.md",
+      "docs/changes/2026-11-03-mainline-reset/review.md"
     ],
-    "verification": "P0源码cb869dfe增量独审通过，2项验收漏检已关闭；干净cb869dfe精确typecheck/lint/npm test均exit0，2333项中2313通过0失败20跳过（含14项架构回归），health0blocking。build通过，delivery结构0违规；完整verify仍被18项继承源码格式阻断。产品源码diff为空，未合流或发布。",
-    "verificationResult": "PARTIAL",
-    "updated": "2026-10-28",
-    "lastVerified": "2026-10-28",
-    "nextAction": "18项格式已在独立任务修复；完整verify进一步暴露产品浏览器/开发插件失败。由TASK-MOD-GATE-BROWSER修复后复跑，TASK-GOV-004继续分叉整合；未合流前不提升交付状态。",
+    "verification": "实现已进入 main@af2f988c；当前 typecheck/lint 与 2474 单测通过，架构边界实扫无新增违规，受影响浏览器复验通过。独立预审核对实际祖先提交和源码，旧未合流描述已收口。",
+    "verificationResult": "PASS",
+    "updated": "2026-11-03",
+    "lastVerified": "2026-11-03",
+    "nextAction": "本卡已合流收口，后续回归由当前门禁保护。",
     "requirementRefs": [
       "docs/changes/2026-10-28-modularity-p0/intent.md",
       "docs/changes/2026-10-28-modularity-p0/spec.md"
@@ -11022,27 +11024,29 @@
     "dependencies": [],
     "owner": "root",
     "ownerRole": "implementation-integrator",
-    "branch": "chore/TASK-MOD-GATE-FORMAT",
-    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "branch": "main",
+    "worktree": "D:/kk-studio/KK-Studio-2.0",
     "baseSha": "e35004a03a19b24d691082eade3dbf3e9a531cb5",
     "affectedModules": [
       "src/components/nodes/ReferenceThumbnail.tsx",
       "src/features",
       "docs"
     ],
-    "status": "PARTIAL",
-    "displayStatus": "未完成",
+    "status": "DONE",
+    "displayStatus": "已完成",
     "priority": "P1",
     "risk": "low",
     "reviewRequired": true,
     "evidence": [
-      "docs/changes/2026-10-28-modularity-format/verification.md"
+      "docs/changes/2026-10-28-modularity-format/verification.md",
+      "docs/changes/2026-11-03-mainline-reset/verification.md",
+      "docs/changes/2026-11-03-mainline-reset/review.md"
     ],
-    "verification": "18个历史文件已由Prettier修复，18/18转译JS语法树相同；lint/typecheck/单元2313 pass/0 fail/20 skip、Agent204 pass/2 skip、UI静态及format通过。产品浏览器暴露旧设置入口等失败后主动中断；设计浏览器9 pass；开发插件旧扩展分类失败。完整verify尚未全绿，未合流。",
-    "verificationResult": "PARTIAL",
-    "updated": "2026-10-28",
-    "lastVerified": "2026-10-28",
-    "nextAction": "af4c4e2格式源码独审已PASS；继续TASK-MOD-GATE-BROWSER剩余用例，完整verify及主线分叉整合满足后再关闭总体交付。",
+    "verification": "实现已进入 main@af2f988c；当前 typecheck/lint 与 2474 单测通过，架构边界实扫无新增违规，受影响浏览器复验通过。独立预审核对实际祖先提交和源码，旧未合流描述已收口。",
+    "verificationResult": "PASS",
+    "updated": "2026-11-03",
+    "lastVerified": "2026-11-03",
+    "nextAction": "本卡已合流收口，后续回归由当前门禁保护。",
     "requirementRefs": [
       "docs/changes/2026-10-28-modularity-format/intent.md",
       "docs/changes/2026-10-28-modularity-format/spec.md"
@@ -11552,8 +11556,8 @@
     ],
     "owner": "root",
     "ownerRole": "implementation-integrator",
-    "branch": "feat/TASK-MOD-P1-capability-contract",
-    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "branch": "main",
+    "worktree": "D:/kk-studio/KK-Studio-2.0",
     "baseSha": "5240e7b3dd17e33a5ec749d2e62ec18ca3c53dbf",
     "affectedModules": [
       "packages/creation-contracts",
@@ -11561,20 +11565,22 @@
       "tests/fixtures/capabilityPorts.ts",
       "mobile/package-lock.json"
     ],
-    "status": "PARTIAL",
-    "displayStatus": "未完成",
+    "status": "DONE",
+    "displayStatus": "已完成",
     "priority": "P1",
     "risk": "medium",
     "reviewRequired": true,
     "evidence": [
       "docs/changes/2026-10-28-capability-contract/verification.md",
-      "docs/changes/2026-10-28-capability-contract/review.md"
+      "docs/changes/2026-10-28-capability-contract/review.md",
+      "docs/changes/2026-11-03-mainline-reset/verification.md",
+      "docs/changes/2026-11-03-mainline-reset/review.md"
     ],
-    "verification": "包1.1.0新增业务schema和Task/Asset/Provider类型，旧wire能力类型保留。13契约通过，根2338 pass/0 fail/20 skip、Mobile373 pass/0 fail；类型/lint/格式/build通过，160 Web产物hash相同。独立安装项目配置与无宿主全局运行通过；严格依赖声明4处Zod URL错误保留。未接运行、未独审/合流。",
-    "verificationResult": "PARTIAL",
-    "updated": "2026-10-28",
-    "lastVerified": "2026-10-28",
-    "nextAction": "处理TASK-MOD-P1-G独立治理子卡、TASK-MOD-P1-TYPES严格声明限制；P2接线前补真实Port adapter编译/图环/兼容选择对拍，独审/主线和P0未关闭。",
+    "verification": "实现已进入 main@af2f988c；当前 typecheck/lint 与 2474 单测通过，架构边界实扫无新增违规，受影响浏览器复验通过。独立预审核对实际祖先提交和源码，旧未合流描述已收口。",
+    "verificationResult": "PASS",
+    "updated": "2026-11-03",
+    "lastVerified": "2026-11-03",
+    "nextAction": "P1-G 与 P1-TYPES 按独立任务继续处理。",
     "requirementRefs": [
       "docs/changes/2026-10-28-capability-contract/intent.md",
       "docs/changes/2026-10-28-capability-contract/spec.md"
@@ -11730,26 +11736,28 @@
     ],
     "owner": "root",
     "ownerRole": "implementation-integrator",
-    "branch": "refactor/TASK-MOD-P3-feature-cycles",
-    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "branch": "main",
+    "worktree": "D:/kk-studio/KK-Studio-2.0",
     "baseSha": "6ac48d6ce9c2867e953fe56ebf2f05fd55e475bb",
     "affectedModules": [
       "src/features/creation"
     ],
-    "status": "PARTIAL",
-    "displayStatus": "进行中",
+    "status": "DONE",
+    "displayStatus": "已完成",
     "priority": "P1",
     "risk": "medium",
     "reviewRequired": true,
     "evidence": [
       "docs/changes/2026-10-28-p3a-creation-image-edit/verification.md",
-      "docs/changes/2026-10-28-p3a-creation-image-edit/review.md"
+      "docs/changes/2026-10-28-p3a-creation-image-edit/review.md",
+      "docs/changes/2026-11-03-mainline-reset/verification.md",
+      "docs/changes/2026-11-03-mainline-reset/review.md"
     ],
-    "verification": "P3a–e 源码候选：契约包1.3.0、Desktop/Web2.1.49、Mobile2.1.43。完整图R4由16降0，R1由405降367，其余规则无新增；212个迁移函数体AST一致、六份UI JSX结构一致，纯核心/infra/runtime无间接feature依赖。根2354通过/20跳过/0失败，Mobile373与Agent204通过（Agent另2跳过），根/契约/Mobile类型通过；Edge双构建各3/3通过，任务/资产/HTTP/DOM同态且4张PNG SHA完全一致。核心浏览器原9失败保留：8项在父P2错误和位置逐项一致，另1项为P2已有窄屏HUD失败。P2 flag仍默认关闭；独审、Tauri/真实Provider、完整verify和main整合未完成，五阶段分别PARTIAL。P3f、P4–8及STD/ORG等四文档其余任务继续开放。",
-    "verificationResult": "PARTIAL",
-    "updated": "2026-10-28",
-    "lastVerified": "2026-10-28",
-    "nextAction": "完成独审、原生/真实Provider与完整verify，解决既有浏览器门禁后整合main；P2默认关闭，旧入口保留正式发布周期。",
+    "verification": "实现已进入 main@af2f988c；当前 typecheck/lint 与 2474 单测通过，架构边界实扫无新增违规，受影响浏览器复验通过。独立预审核对实际祖先提交和源码，旧未合流描述已收口。",
+    "verificationResult": "PASS",
+    "updated": "2026-11-03",
+    "lastVerified": "2026-11-03",
+    "nextAction": "本卡已合流收口，后续回归由当前门禁保护。",
     "requirementRefs": [
       "docs/changes/2026-10-28-p3a-creation-image-edit/intent.md",
       "docs/changes/2026-10-28-p3a-creation-image-edit/spec.md"
@@ -11772,27 +11780,29 @@
     ],
     "owner": "root",
     "ownerRole": "implementation-integrator",
-    "branch": "refactor/TASK-MOD-P3-feature-cycles",
-    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "branch": "main",
+    "worktree": "D:/kk-studio/KK-Studio-2.0",
     "baseSha": "6ac48d6ce9c2867e953fe56ebf2f05fd55e475bb",
     "affectedModules": [
       "src/features/creation",
       "src/features/agent"
     ],
-    "status": "PARTIAL",
-    "displayStatus": "进行中",
+    "status": "DONE",
+    "displayStatus": "已完成",
     "priority": "P1",
     "risk": "medium",
     "reviewRequired": true,
     "evidence": [
       "docs/changes/2026-10-28-p3b-creation-agent/verification.md",
-      "docs/changes/2026-10-28-p3b-creation-agent/review.md"
+      "docs/changes/2026-10-28-p3b-creation-agent/review.md",
+      "docs/changes/2026-11-03-mainline-reset/verification.md",
+      "docs/changes/2026-11-03-mainline-reset/review.md"
     ],
-    "verification": "P3a–e 源码候选：契约包1.3.0、Desktop/Web2.1.49、Mobile2.1.43。完整图R4由16降0，R1由405降367，其余规则无新增；212个迁移函数体AST一致、六份UI JSX结构一致，纯核心/infra/runtime无间接feature依赖。根2354通过/20跳过/0失败，Mobile373与Agent204通过（Agent另2跳过），根/契约/Mobile类型通过；Edge双构建各3/3通过，任务/资产/HTTP/DOM同态且4张PNG SHA完全一致。核心浏览器原9失败保留：8项在父P2错误和位置逐项一致，另1项为P2已有窄屏HUD失败。P2 flag仍默认关闭；独审、Tauri/真实Provider、完整verify和main整合未完成，五阶段分别PARTIAL。P3f、P4–8及STD/ORG等四文档其余任务继续开放。",
-    "verificationResult": "PARTIAL",
-    "updated": "2026-10-28",
-    "lastVerified": "2026-10-28",
-    "nextAction": "完成独审、原生/真实Provider与完整verify，解决既有浏览器门禁后整合main；P2默认关闭，旧入口保留正式发布周期。",
+    "verification": "实现已进入 main@af2f988c；当前 typecheck/lint 与 2474 单测通过，架构边界实扫无新增违规，受影响浏览器复验通过。独立预审核对实际祖先提交和源码，旧未合流描述已收口。",
+    "verificationResult": "PASS",
+    "updated": "2026-11-03",
+    "lastVerified": "2026-11-03",
+    "nextAction": "本卡已合流收口，后续回归由当前门禁保护。",
     "requirementRefs": [
       "docs/changes/2026-10-28-p3b-creation-agent/intent.md",
       "docs/changes/2026-10-28-p3b-creation-agent/spec.md"
@@ -11815,26 +11825,28 @@
     ],
     "owner": "root",
     "ownerRole": "implementation-integrator",
-    "branch": "refactor/TASK-MOD-P3-feature-cycles",
-    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "branch": "main",
+    "worktree": "D:/kk-studio/KK-Studio-2.0",
     "baseSha": "6ac48d6ce9c2867e953fe56ebf2f05fd55e475bb",
     "affectedModules": [
       "src/features/creation"
     ],
-    "status": "PARTIAL",
-    "displayStatus": "进行中",
+    "status": "DONE",
+    "displayStatus": "已完成",
     "priority": "P1",
     "risk": "medium",
     "reviewRequired": true,
     "evidence": [
       "docs/changes/2026-10-28-p3c-creation-local-service/verification.md",
-      "docs/changes/2026-10-28-p3c-creation-local-service/review.md"
+      "docs/changes/2026-10-28-p3c-creation-local-service/review.md",
+      "docs/changes/2026-11-03-mainline-reset/verification.md",
+      "docs/changes/2026-11-03-mainline-reset/review.md"
     ],
-    "verification": "P3a–e 源码候选：契约包1.3.0、Desktop/Web2.1.49、Mobile2.1.43。完整图R4由16降0，R1由405降367，其余规则无新增；212个迁移函数体AST一致、六份UI JSX结构一致，纯核心/infra/runtime无间接feature依赖。根2354通过/20跳过/0失败，Mobile373与Agent204通过（Agent另2跳过），根/契约/Mobile类型通过；Edge双构建各3/3通过，任务/资产/HTTP/DOM同态且4张PNG SHA完全一致。核心浏览器原9失败保留：8项在父P2错误和位置逐项一致，另1项为P2已有窄屏HUD失败。P2 flag仍默认关闭；独审、Tauri/真实Provider、完整verify和main整合未完成，五阶段分别PARTIAL。P3f、P4–8及STD/ORG等四文档其余任务继续开放。",
-    "verificationResult": "PARTIAL",
-    "updated": "2026-10-28",
-    "lastVerified": "2026-10-28",
-    "nextAction": "完成独审、原生/真实Provider与完整verify，解决既有浏览器门禁后整合main；P2默认关闭，旧入口保留正式发布周期。",
+    "verification": "实现已进入 main@af2f988c；当前 typecheck/lint 与 2474 单测通过，架构边界实扫无新增违规，受影响浏览器复验通过。独立预审核对实际祖先提交和源码，旧未合流描述已收口。",
+    "verificationResult": "PASS",
+    "updated": "2026-11-03",
+    "lastVerified": "2026-11-03",
+    "nextAction": "本卡已合流收口，后续回归由当前门禁保护。",
     "requirementRefs": [
       "docs/changes/2026-10-28-p3c-creation-local-service/intent.md",
       "docs/changes/2026-10-28-p3c-creation-local-service/spec.md"
@@ -11857,27 +11869,29 @@
     ],
     "owner": "root",
     "ownerRole": "implementation-integrator",
-    "branch": "refactor/TASK-MOD-P3-feature-cycles",
-    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "branch": "main",
+    "worktree": "D:/kk-studio/KK-Studio-2.0",
     "baseSha": "6ac48d6ce9c2867e953fe56ebf2f05fd55e475bb",
     "affectedModules": [
       "src/features/creation",
       "src/features/models"
     ],
-    "status": "PARTIAL",
-    "displayStatus": "进行中",
+    "status": "DONE",
+    "displayStatus": "已完成",
     "priority": "P1",
     "risk": "medium",
     "reviewRequired": true,
     "evidence": [
       "docs/changes/2026-10-28-p3d-creation-models/verification.md",
-      "docs/changes/2026-10-28-p3d-creation-models/review.md"
+      "docs/changes/2026-10-28-p3d-creation-models/review.md",
+      "docs/changes/2026-11-03-mainline-reset/verification.md",
+      "docs/changes/2026-11-03-mainline-reset/review.md"
     ],
-    "verification": "P3a–e 源码候选：契约包1.3.0、Desktop/Web2.1.49、Mobile2.1.43。完整图R4由16降0，R1由405降367，其余规则无新增；212个迁移函数体AST一致、六份UI JSX结构一致，纯核心/infra/runtime无间接feature依赖。根2354通过/20跳过/0失败，Mobile373与Agent204通过（Agent另2跳过），根/契约/Mobile类型通过；Edge双构建各3/3通过，任务/资产/HTTP/DOM同态且4张PNG SHA完全一致。核心浏览器原9失败保留：8项在父P2错误和位置逐项一致，另1项为P2已有窄屏HUD失败。P2 flag仍默认关闭；独审、Tauri/真实Provider、完整verify和main整合未完成，五阶段分别PARTIAL。P3f、P4–8及STD/ORG等四文档其余任务继续开放。",
-    "verificationResult": "PARTIAL",
-    "updated": "2026-10-28",
-    "lastVerified": "2026-10-28",
-    "nextAction": "完成独审、原生/真实Provider与完整verify，解决既有浏览器门禁后整合main；P2默认关闭，旧入口保留正式发布周期。",
+    "verification": "实现已进入 main@af2f988c；当前 typecheck/lint 与 2474 单测通过，架构边界实扫无新增违规，受影响浏览器复验通过。独立预审核对实际祖先提交和源码，旧未合流描述已收口。",
+    "verificationResult": "PASS",
+    "updated": "2026-11-03",
+    "lastVerified": "2026-11-03",
+    "nextAction": "本卡已合流收口，后续回归由当前门禁保护。",
     "requirementRefs": [
       "docs/changes/2026-10-28-p3d-creation-models/intent.md",
       "docs/changes/2026-10-28-p3d-creation-models/spec.md"
@@ -11900,28 +11914,30 @@
     ],
     "owner": "root",
     "ownerRole": "implementation-integrator",
-    "branch": "refactor/TASK-MOD-P3-feature-cycles",
-    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "branch": "main",
+    "worktree": "D:/kk-studio/KK-Studio-2.0",
     "baseSha": "6ac48d6ce9c2867e953fe56ebf2f05fd55e475bb",
     "affectedModules": [
       "src/features/agent",
       "src/features/memory",
       "src/features/prompts"
     ],
-    "status": "PARTIAL",
-    "displayStatus": "进行中",
+    "status": "DONE",
+    "displayStatus": "已完成",
     "priority": "P1",
     "risk": "medium",
     "reviewRequired": true,
     "evidence": [
       "docs/changes/2026-10-28-p3e-agent-memory-prompts/verification.md",
-      "docs/changes/2026-10-28-p3e-agent-memory-prompts/review.md"
+      "docs/changes/2026-10-28-p3e-agent-memory-prompts/review.md",
+      "docs/changes/2026-11-03-mainline-reset/verification.md",
+      "docs/changes/2026-11-03-mainline-reset/review.md"
     ],
-    "verification": "P3a–e 源码候选：契约包1.3.0、Desktop/Web2.1.49、Mobile2.1.43。完整图R4由16降0，R1由405降367，其余规则无新增；212个迁移函数体AST一致、六份UI JSX结构一致，纯核心/infra/runtime无间接feature依赖。根2354通过/20跳过/0失败，Mobile373与Agent204通过（Agent另2跳过），根/契约/Mobile类型通过；Edge双构建各3/3通过，任务/资产/HTTP/DOM同态且4张PNG SHA完全一致。核心浏览器原9失败保留：8项在父P2错误和位置逐项一致，另1项为P2已有窄屏HUD失败。P2 flag仍默认关闭；独审、Tauri/真实Provider、完整verify和main整合未完成，五阶段分别PARTIAL。P3f、P4–8及STD/ORG等四文档其余任务继续开放。",
-    "verificationResult": "PARTIAL",
-    "updated": "2026-10-28",
-    "lastVerified": "2026-10-28",
-    "nextAction": "完成独审、原生/真实Provider与完整verify，解决既有浏览器门禁后整合main；P2默认关闭，旧入口保留正式发布周期。",
+    "verification": "实现已进入 main@af2f988c；当前 typecheck/lint 与 2474 单测通过，架构边界实扫无新增违规，受影响浏览器复验通过。独立预审核对实际祖先提交和源码，旧未合流描述已收口。",
+    "verificationResult": "PASS",
+    "updated": "2026-11-03",
+    "lastVerified": "2026-11-03",
+    "nextAction": "本卡已合流收口，后续回归由当前门禁保护。",
     "requirementRefs": [
       "docs/changes/2026-10-28-p3e-agent-memory-prompts/intent.md",
       "docs/changes/2026-10-28-p3e-agent-memory-prompts/spec.md"
@@ -11991,26 +12007,28 @@
     ],
     "owner": "root",
     "ownerRole": "implementation-integrator",
-    "branch": "refactor/TASK-MOD-P3-feature-cycles",
-    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "branch": "main",
+    "worktree": "D:/kk-studio/KK-Studio-2.0",
     "baseSha": "cf73c8425b359035e99da5f8a5db5b0db7697080",
     "affectedModules": [
       "src/features/skills"
     ],
-    "status": "PARTIAL",
-    "displayStatus": "进行中",
+    "status": "DONE",
+    "displayStatus": "已完成",
     "priority": "P1",
     "risk": "medium",
     "reviewRequired": true,
     "evidence": [
       "docs/changes/2026-10-29-p4-skills/verification.md",
-      "docs/changes/2026-10-29-p4-skills/review.md"
+      "docs/changes/2026-10-29-p4-skills/review.md",
+      "docs/changes/2026-11-03-mainline-reset/verification.md",
+      "docs/changes/2026-11-03-mainline-reset/review.md"
     ],
-    "verification": "P4源码收敛完成：367条唯一深层依赖边降0，285条属于指定五切片、其余82条亦清零；381条导入/再导出语句按顺序改写。R3由10降0，R4保持0，其余基线不新增。25个迁移纯函数AST一致，五份既有UI结构一致，最终CSS与P3完全同字节。根最终2363通过/0失败/20跳过（P4单独阶段2355通过），Mobile373与Agent204通过。限定浏览器、体积及退出码见最终回执；独审/原生/完整verify/main尚未完成，保持PARTIAL。",
-    "verificationResult": "PARTIAL",
-    "updated": "2026-10-29",
-    "lastVerified": "2026-10-29",
-    "nextAction": "解决已开放浏览器门禁，完成独审/原生与完整verify后按实际主线条件合流；原兼容出口保留一个发布周期。",
+    "verification": "实现已进入 main@af2f988c；当前 typecheck/lint 与 2474 单测通过，架构边界实扫无新增违规，受影响浏览器复验通过。独立预审核对实际祖先提交和源码，旧未合流描述已收口。",
+    "verificationResult": "PASS",
+    "updated": "2026-11-03",
+    "lastVerified": "2026-11-03",
+    "nextAction": "本卡已合流收口，后续回归由当前门禁保护。",
     "requirementRefs": [
       "docs/changes/2026-10-29-p4-skills/intent.md",
       "docs/changes/2026-10-29-p4-skills/spec.md"
@@ -12034,26 +12052,28 @@
     ],
     "owner": "root",
     "ownerRole": "implementation-integrator",
-    "branch": "refactor/TASK-MOD-P3-feature-cycles",
-    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "branch": "main",
+    "worktree": "D:/kk-studio/KK-Studio-2.0",
     "baseSha": "cf73c8425b359035e99da5f8a5db5b0db7697080",
     "affectedModules": [
       "src/features/plugins"
     ],
-    "status": "PARTIAL",
-    "displayStatus": "进行中",
+    "status": "DONE",
+    "displayStatus": "已完成",
     "priority": "P1",
     "risk": "medium",
     "reviewRequired": true,
     "evidence": [
       "docs/changes/2026-10-29-p4-plugins/verification.md",
-      "docs/changes/2026-10-29-p4-plugins/review.md"
+      "docs/changes/2026-10-29-p4-plugins/review.md",
+      "docs/changes/2026-11-03-mainline-reset/verification.md",
+      "docs/changes/2026-11-03-mainline-reset/review.md"
     ],
-    "verification": "P4源码收敛完成：367条唯一深层依赖边降0，285条属于指定五切片、其余82条亦清零；381条导入/再导出语句按顺序改写。R3由10降0，R4保持0，其余基线不新增。25个迁移纯函数AST一致，五份既有UI结构一致，最终CSS与P3完全同字节。根最终2363通过/0失败/20跳过（P4单独阶段2355通过），Mobile373与Agent204通过。限定浏览器、体积及退出码见最终回执；独审/原生/完整verify/main尚未完成，保持PARTIAL。",
-    "verificationResult": "PARTIAL",
-    "updated": "2026-10-29",
-    "lastVerified": "2026-10-29",
-    "nextAction": "解决已开放浏览器门禁，完成独审/原生与完整verify后按实际主线条件合流；原兼容出口保留一个发布周期。",
+    "verification": "实现已进入 main@af2f988c；当前 typecheck/lint 与 2474 单测通过，架构边界实扫无新增违规，受影响浏览器复验通过。独立预审核对实际祖先提交和源码，旧未合流描述已收口。",
+    "verificationResult": "PASS",
+    "updated": "2026-11-03",
+    "lastVerified": "2026-11-03",
+    "nextAction": "本卡已合流收口，后续回归由当前门禁保护。",
     "requirementRefs": [
       "docs/changes/2026-10-29-p4-plugins/intent.md",
       "docs/changes/2026-10-29-p4-plugins/spec.md"
@@ -12077,26 +12097,28 @@
     ],
     "owner": "root",
     "ownerRole": "implementation-integrator",
-    "branch": "refactor/TASK-MOD-P3-feature-cycles",
-    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "branch": "main",
+    "worktree": "D:/kk-studio/KK-Studio-2.0",
     "baseSha": "cf73c8425b359035e99da5f8a5db5b0db7697080",
     "affectedModules": [
       "src/features/models"
     ],
-    "status": "PARTIAL",
-    "displayStatus": "进行中",
+    "status": "DONE",
+    "displayStatus": "已完成",
     "priority": "P1",
     "risk": "medium",
     "reviewRequired": true,
     "evidence": [
       "docs/changes/2026-10-29-p4-models/verification.md",
-      "docs/changes/2026-10-29-p4-models/review.md"
+      "docs/changes/2026-10-29-p4-models/review.md",
+      "docs/changes/2026-11-03-mainline-reset/verification.md",
+      "docs/changes/2026-11-03-mainline-reset/review.md"
     ],
-    "verification": "P4源码收敛完成：367条唯一深层依赖边降0，285条属于指定五切片、其余82条亦清零；381条导入/再导出语句按顺序改写。R3由10降0，R4保持0，其余基线不新增。25个迁移纯函数AST一致，五份既有UI结构一致，最终CSS与P3完全同字节。根最终2363通过/0失败/20跳过（P4单独阶段2355通过），Mobile373与Agent204通过。限定浏览器、体积及退出码见最终回执；独审/原生/完整verify/main尚未完成，保持PARTIAL。",
-    "verificationResult": "PARTIAL",
-    "updated": "2026-10-29",
-    "lastVerified": "2026-10-29",
-    "nextAction": "解决已开放浏览器门禁，完成独审/原生与完整verify后按实际主线条件合流；原兼容出口保留一个发布周期。",
+    "verification": "实现已进入 main@af2f988c；当前 typecheck/lint 与 2474 单测通过，架构边界实扫无新增违规，受影响浏览器复验通过。独立预审核对实际祖先提交和源码，旧未合流描述已收口。",
+    "verificationResult": "PASS",
+    "updated": "2026-11-03",
+    "lastVerified": "2026-11-03",
+    "nextAction": "本卡已合流收口，后续回归由当前门禁保护。",
     "requirementRefs": [
       "docs/changes/2026-10-29-p4-models/intent.md",
       "docs/changes/2026-10-29-p4-models/spec.md"
@@ -12120,26 +12142,28 @@
     ],
     "owner": "root",
     "ownerRole": "implementation-integrator",
-    "branch": "refactor/TASK-MOD-P3-feature-cycles",
-    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "branch": "main",
+    "worktree": "D:/kk-studio/KK-Studio-2.0",
     "baseSha": "cf73c8425b359035e99da5f8a5db5b0db7697080",
     "affectedModules": [
       "src/features/agent"
     ],
-    "status": "PARTIAL",
-    "displayStatus": "进行中",
+    "status": "DONE",
+    "displayStatus": "已完成",
     "priority": "P1",
     "risk": "medium",
     "reviewRequired": true,
     "evidence": [
       "docs/changes/2026-10-29-p4-agent/verification.md",
-      "docs/changes/2026-10-29-p4-agent/review.md"
+      "docs/changes/2026-10-29-p4-agent/review.md",
+      "docs/changes/2026-11-03-mainline-reset/verification.md",
+      "docs/changes/2026-11-03-mainline-reset/review.md"
     ],
-    "verification": "P4源码收敛完成：367条唯一深层依赖边降0，285条属于指定五切片、其余82条亦清零；381条导入/再导出语句按顺序改写。R3由10降0，R4保持0，其余基线不新增。25个迁移纯函数AST一致，五份既有UI结构一致，最终CSS与P3完全同字节。根最终2363通过/0失败/20跳过（P4单独阶段2355通过），Mobile373与Agent204通过。限定浏览器、体积及退出码见最终回执；独审/原生/完整verify/main尚未完成，保持PARTIAL。",
-    "verificationResult": "PARTIAL",
-    "updated": "2026-10-29",
-    "lastVerified": "2026-10-29",
-    "nextAction": "解决已开放浏览器门禁，完成独审/原生与完整verify后按实际主线条件合流；原兼容出口保留一个发布周期。",
+    "verification": "实现已进入 main@af2f988c；当前 typecheck/lint 与 2474 单测通过，架构边界实扫无新增违规，受影响浏览器复验通过。独立预审核对实际祖先提交和源码，旧未合流描述已收口。",
+    "verificationResult": "PASS",
+    "updated": "2026-11-03",
+    "lastVerified": "2026-11-03",
+    "nextAction": "本卡已合流收口，后续回归由当前门禁保护。",
     "requirementRefs": [
       "docs/changes/2026-10-29-p4-agent/intent.md",
       "docs/changes/2026-10-29-p4-agent/spec.md"
@@ -12163,26 +12187,28 @@
     ],
     "owner": "root",
     "ownerRole": "implementation-integrator",
-    "branch": "refactor/TASK-MOD-P3-feature-cycles",
-    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "branch": "main",
+    "worktree": "D:/kk-studio/KK-Studio-2.0",
     "baseSha": "cf73c8425b359035e99da5f8a5db5b0db7697080",
     "affectedModules": [
       "src/features/creation"
     ],
-    "status": "PARTIAL",
-    "displayStatus": "进行中",
+    "status": "DONE",
+    "displayStatus": "已完成",
     "priority": "P1",
     "risk": "medium",
     "reviewRequired": true,
     "evidence": [
       "docs/changes/2026-10-29-p4-creation/verification.md",
-      "docs/changes/2026-10-29-p4-creation/review.md"
+      "docs/changes/2026-10-29-p4-creation/review.md",
+      "docs/changes/2026-11-03-mainline-reset/verification.md",
+      "docs/changes/2026-11-03-mainline-reset/review.md"
     ],
-    "verification": "P4源码收敛完成：367条唯一深层依赖边降0，285条属于指定五切片、其余82条亦清零；381条导入/再导出语句按顺序改写。R3由10降0，R4保持0，其余基线不新增。25个迁移纯函数AST一致，五份既有UI结构一致，最终CSS与P3完全同字节。根最终2363通过/0失败/20跳过（P4单独阶段2355通过），Mobile373与Agent204通过。限定浏览器、体积及退出码见最终回执；独审/原生/完整verify/main尚未完成，保持PARTIAL。",
-    "verificationResult": "PARTIAL",
-    "updated": "2026-10-29",
-    "lastVerified": "2026-10-29",
-    "nextAction": "解决已开放浏览器门禁，完成独审/原生与完整verify后按实际主线条件合流；原兼容出口保留一个发布周期。",
+    "verification": "实现已进入 main@af2f988c；当前 typecheck/lint 与 2474 单测通过，架构边界实扫无新增违规，受影响浏览器复验通过。独立预审核对实际祖先提交和源码，旧未合流描述已收口。",
+    "verificationResult": "PASS",
+    "updated": "2026-11-03",
+    "lastVerified": "2026-11-03",
+    "nextAction": "本卡已合流收口，后续回归由当前门禁保护。",
     "requirementRefs": [
       "docs/changes/2026-10-29-p4-creation/intent.md",
       "docs/changes/2026-10-29-p4-creation/spec.md"
@@ -12206,8 +12232,8 @@
     ],
     "owner": "root",
     "ownerRole": "implementation-integrator",
-    "branch": "refactor/TASK-MOD-P3-feature-cycles",
-    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "branch": "main",
+    "worktree": "D:/kk-studio/KK-Studio-2.0",
     "baseSha": "cf73c8425b359035e99da5f8a5db5b0db7697080",
     "affectedModules": [
       "src/features/image-edit",
@@ -12226,20 +12252,22 @@
       "src/features/usage",
       "src/features/ai-gateway"
     ],
-    "status": "PARTIAL",
-    "displayStatus": "进行中",
+    "status": "DONE",
+    "displayStatus": "已完成",
     "priority": "P1",
     "risk": "medium",
     "reviewRequired": true,
     "evidence": [
       "docs/changes/2026-10-29-p4-remaining/verification.md",
-      "docs/changes/2026-10-29-p4-remaining/review.md"
+      "docs/changes/2026-10-29-p4-remaining/review.md",
+      "docs/changes/2026-11-03-mainline-reset/verification.md",
+      "docs/changes/2026-11-03-mainline-reset/review.md"
     ],
-    "verification": "P4源码收敛完成：367条唯一深层依赖边降0，285条属于指定五切片、其余82条亦清零；381条导入/再导出语句按顺序改写。R3由10降0，R4保持0，其余基线不新增。25个迁移纯函数AST一致，五份既有UI结构一致，最终CSS与P3完全同字节。根最终2363通过/0失败/20跳过（P4单独阶段2355通过），Mobile373与Agent204通过。限定浏览器、体积及退出码见最终回执；独审/原生/完整verify/main尚未完成，保持PARTIAL。",
-    "verificationResult": "PARTIAL",
-    "updated": "2026-10-29",
-    "lastVerified": "2026-10-29",
-    "nextAction": "解决已开放浏览器门禁，完成独审/原生与完整verify后按实际主线条件合流；原兼容出口保留一个发布周期。",
+    "verification": "实现已进入 main@af2f988c；当前 typecheck/lint 与 2474 单测通过，架构边界实扫无新增违规，受影响浏览器复验通过。独立预审核对实际祖先提交和源码，旧未合流描述已收口。",
+    "verificationResult": "PASS",
+    "updated": "2026-11-03",
+    "lastVerified": "2026-11-03",
+    "nextAction": "本卡已合流收口，后续回归由当前门禁保护。",
     "requirementRefs": [
       "docs/changes/2026-10-29-p4-remaining/intent.md",
       "docs/changes/2026-10-29-p4-remaining/spec.md"
@@ -12577,8 +12605,8 @@
     "dependencies": [],
     "owner": "root",
     "ownerRole": "implementer",
-    "branch": "fix/TASK-HANDOFF-TAKEOVER-20261101",
-    "worktree": "D:/kk-studio/.worktrees/TASK-HANDOFF-TAKEOVER-20261101",
+    "branch": "main",
+    "worktree": "D:/kk-studio/KK-Studio-2.0",
     "affectedModules": [
       "config",
       "scripts/governance",
@@ -12590,19 +12618,20 @@
       "docs/governance",
       "docs/changes/2026-10-30-origin-baseline-bootstrap"
     ],
-    "status": "REVIEW",
-    "displayStatus": "进行中",
+    "status": "OBSOLETE",
+    "displayStatus": "已完成",
     "priority": "P0",
     "priorityRationale": "工具栏定位与当前用户v3数据兼容阻断统一发布",
     "evidence": [
       "docs/changes/2026-10-30-origin-baseline-bootstrap/verification.md",
-      "docs/changes/2026-11-01-handoff-takeover/verification.md"
+      "docs/changes/2026-11-01-handoff-takeover/verification.md",
+      "docs/changes/2026-11-03-mainline-reset/verification.md"
     ],
-    "verification": "本地完整verify退出0：根1975pass20skip、Agent204pass2skip、Edge生产838pass0skip0flaky、design8及开发四步骤通过；产品/版本与origin4610不变，两份baseline精确实扫。浏览器metadata4610对应dirty治理候选，开发metadata75775f3c，原报告不重写，474附件外置SHA通过。正式独审/Delivery/当前SHA Hosted/合流待完成。 2026-11-01 handoff takeover: current branch/worktree corrected; default-skipped external ComfyUI live test and local baseline are recorded in the new verification package; REAL/DONE remains unchanged.",
-    "verificationResult": "PARTIAL",
-    "updated": "2026-11-01",
-    "lastVerified": "2026-11-01",
-    "nextAction": "固定提交独立只读评审、Delivery与Hosted门禁后正常PR squash；回到P3解决组合冲突和整体门禁",
+    "verification": "本地 main 已包含首建规则与合法基线；旧 origin 专用首建路线由本地合流取代，远端集成由 TASK-GOV-004 承接。",
+    "verificationResult": "PASS",
+    "updated": "2026-11-03",
+    "lastVerified": "2026-11-03",
+    "nextAction": "远端集成继续由 TASK-GOV-004 跟踪。",
     "requirementRefs": [
       "user:主线合流",
       "AGENTS.md",
@@ -12788,6 +12817,49 @@
     "nextAction": "定向复验及根因修复后并行全套、独审、合流和回收。",
     "requirementRefs": [
       "docs/changes/2026-11-02-w1-browser-closeout/spec.md"
+    ],
+    "featureIds": []
+  },
+  {
+    "id": "TASK-MAINLINE-20261103",
+    "title": "主线治理收口与当前浏览器门禁修复",
+    "goal": "精简当前状态入口，关闭已合流架构任务并恢复有效浏览器门禁",
+    "scope": "治理归档、台账核实、限定触控与工具栏回归、当前门禁及本地合流",
+    "acceptance": [
+      "当前状态与交接30秒可读，历史原文可追溯",
+      "已合流任务按当前证据收口，真实余项独立保留",
+      "快速三门禁、UI及完整Edge浏览器通过",
+      "独立审查后合入本地main并回收任务分支"
+    ],
+    "dependencies": [],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "chore/TASK-MAINLINE-20261103-governance",
+    "worktree": "D:/kk-studio/KK-Studio-2.0",
+    "baseSha": "af2f988c019388427b24e92f709ce79d98171136",
+    "affectedModules": [
+      "docs/governance",
+      "src/components/canvas",
+      "src/styles",
+      "tests/browser"
+    ],
+    "status": "IN_PROGRESS",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-11-03-mainline-reset/verification.md",
+      "docs/changes/2026-11-03-mainline-reset/review.md"
+    ],
+    "verification": "快速门禁已通过；当前全套Edge最终复验与独立提交审查进行中。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-11-03",
+    "lastVerified": "2026-11-03",
+    "nextAction": "完成全套Edge、独立审查与本地main合流，随后进入ComfyUI及图片编辑。",
+    "requirementRefs": [
+      "docs/changes/2026-11-03-mainline-reset/intent.md",
+      "docs/changes/2026-11-03-mainline-reset/spec.md"
     ],
     "featureIds": []
   }
