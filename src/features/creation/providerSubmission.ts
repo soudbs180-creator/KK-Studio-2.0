@@ -47,6 +47,7 @@ export function taskProviderOptions(task: CreationTask) {
 export function taskSubmissionBinding(task: CreationTask): SubmissionBinding {
   return {
     imageCapability: task.imageCapability,
+    capabilityOutputIndices: task.retryOutputIndices,
     ...taskProviderOptions(task),
     id: task.providerConnectionId,
     referenceCount: task.attachments.length,
@@ -58,6 +59,7 @@ export function taskSubmissionBinding(task: CreationTask): SubmissionBinding {
   };
 }
 export interface SubmissionBinding {
+  capabilityOutputIndices?: number[];
   imageCapability?: import("../../../packages/creation-contracts/index.ts").ImageCapabilitySpec;
   operation?: "generate" | "edit" | "inpaint";
   localEdit?: boolean;

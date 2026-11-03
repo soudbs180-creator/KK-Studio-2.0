@@ -2,6 +2,7 @@ import { z } from "zod";
 import {
   imageCapabilitySchema,
   bindImageCapabilityWorkflow,
+  imageCapabilityOutputIds,
 } from "../../../packages/creation-contracts/index.ts";
 import type { GenerationRequest } from "./providerAdapter.ts";
 
@@ -74,7 +75,11 @@ export async function prepareComfyImageCapability(
       spec,
       parts.join("/"),
       request.prompt,
+      request.capabilityOutputIndices,
     ),
-    outputNodeIds: spec.workflow.outputNodeIds,
+    outputNodeIds: imageCapabilityOutputIds(
+      spec,
+      request.capabilityOutputIndices,
+    ),
   };
 }

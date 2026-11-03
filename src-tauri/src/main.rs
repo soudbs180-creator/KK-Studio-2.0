@@ -7,6 +7,7 @@ mod agent_runtime;
 mod asset_storage;
 mod browser_runtime;
 mod cli_runtime;
+mod comfy_editor_bridge;
 mod comfy_runtime;
 mod comfy_transport;
 mod command_bus;
@@ -1706,6 +1707,7 @@ fn task_host_read(
     state: State<AppState>,
     task_id: String,
 ) -> Result<Vec<task_host::JobRecord>, String> {
+    state.task_host.clone().recover_comfy(&task_id)?;
     state.task_host.read(&task_id)
 }
 
@@ -1714,11 +1716,16 @@ fn task_host_get(
     state: State<AppState>,
     task_id: String,
 ) -> Result<Option<task_host::JobRecord>, String> {
+    state.task_host.clone().recover_comfy(&task_id)?;
     state.task_host.get(&task_id)
 }
 
 #[tauri::command]
 fn task_host_list(state: State<AppState>) -> Result<Vec<task_host::JobRecord>, String> {
+    let records = state.task_host.list()?;
+    for record in &records {
+        state.task_host.clone().recover_comfy(&record.task_id)?;
+    }
     state.task_host.list()
 }
 
@@ -1896,6 +1903,7 @@ async fn concurrency_is_locked(
 
 fn main() {
     let paths = storage_paths::AppPaths::initialize().expect("KK Studio 无法初始化用户数据目录");
+    let comfy_process = comfy_runtime::ComfyRuntime::with_logs(paths.root.join("logs/comfyui"));
     let authority = match native_root_authority::NativeRootAuthority::elect(&paths)
         .expect("KK Studio 无法取得仓库所有权")
     {
@@ -2065,7 +2073,7 @@ fn main() {
                 .join("agent"),
         ))
         .manage(provider_model_requests::ModelRequests::default())
-        .manage(comfy_runtime::ComfyRuntime::default())
+        .manage(comfy_process)
         .manage(AppState {
             providers: Arc::new(provider_config::ProviderConfigRepository::new(
                 config_path.with_file_name("connections.json"),
@@ -2139,6 +2147,7 @@ fn main() {
             comfy_runtime::comfyui_process_status,
             comfy_transport::comfyui_http_json,
             comfy_transport::comfyui_read_output,
+            comfy_editor_bridge::comfyui_install_editor_bridge,
             task_host_submit,
             task_host_read,
             task_host_get,

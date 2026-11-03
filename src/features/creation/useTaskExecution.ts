@@ -576,7 +576,6 @@ export function useTaskExecution(
     const nativeTaskHost = usesNativeTaskHost();
 
     try {
-      assertImageCapabilityHost(task, nativeTaskHost);
       if (!task.providerBaseUrl)
         throw new Error("历史任务未记录供应商，请从当前输入重新提交。");
       if (!pendingIndices.length) {
@@ -1335,7 +1334,9 @@ async function executeImageFlow(options: ImageFlowOptions): Promise<void> {
 
   const generated = await generateImages({
     imageCapability: task.imageCapability,
-    capabilityOutputIndices: pendingIndices,
+    capabilityOutputIndices: pendingIndices.map(
+      (index) => task.retryOutputIndices?.[index] ?? index,
+    ),
     prompt: compiledPrompt,
     model: task.model,
     attachments: task.attachments,
@@ -1938,11 +1939,3 @@ const { composeEditResult } = createImageEditRuntime({
   read: loadStoredAsset,
   write: storeGeneratedAsset,
 });
-
-function assertImageCapabilityHost(
-  task: CreationTask,
-  nativeTaskHost: boolean,
-): void {
-  if (task.imageCapability && nativeTaskHost)
-    throw new Error("此图片能力尚未接入原生TaskHost，当前未提交。");
-}

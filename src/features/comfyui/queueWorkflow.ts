@@ -2,11 +2,17 @@ import { z } from "zod";
 import type { WorkflowRecord } from "./workflowRegistry.ts";
 import type { ComfyRuntimePort } from "./nativeRuntime.ts";
 export function validateExecutableWorkflow(record: WorkflowRecord): void {
-  const raw = JSON.stringify(record.workflow);
-  if (raw.length > 256 * 1024 || !Object.keys(record.workflow).length)
+  if (record.needsConversion)
+    throw new Error("请先进入原生编辑器同步此 UI 工作流，或导入 API JSON");
+  if (!Object.keys(record.workflow).length)
     throw new Error("工作流为空或超过大小上限");
+  assertSafeWorkflowPayload(record.workflow, 256 * 1024);
+}
+export function assertSafeWorkflowPayload(value: unknown, limit: number): void {
+  const raw = JSON.stringify(value);
+  if (!raw || raw.length > limit) throw new Error("工作流为空或超过大小上限");
   if (
-    /"(?:api[_-]?key|password|access[_-]?token|authorization)"\s*:/i.test(
+    /"(?:api[_-]?key|password|access[_-]?token|refresh[_-]?token|client[_-]?secret|authorization)"\s*:/i.test(
       raw,
     ) ||
     /sk-[A-Za-z0-9_-]{12,}/.test(raw)

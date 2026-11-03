@@ -66,7 +66,7 @@ export function watchWorkflow(options: {
   function connect() {
     if (closed) return;
     socket = new WebSocket(
-      `ws://127.0.0.1:8188/ws?clientId=${encodeURIComponent(clients[0])}`,
+      `${(options.runtime.endpoint ?? "http://127.0.0.1:8188").replace(/^http:/, "ws:")}/ws?clientId=${encodeURIComponent(clients[0])}`,
     );
     socket.onmessage = (event) => {
       if (

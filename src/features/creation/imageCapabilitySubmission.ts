@@ -1,5 +1,6 @@
 import {
   imageCapabilitySchema,
+  imageCapabilityOutputIds,
   type ImageCapabilitySpec,
   type CreateProjectInput,
 } from "../../../packages/creation-contracts/index.ts";
@@ -23,6 +24,7 @@ export type ImageCapabilityBinding = {
   model?: string;
   referenceCount: number;
   outputCount?: number;
+  capabilityOutputIndices?: number[];
   protocol?: ProviderProtocol;
   authMode?: ProviderAuthMode;
 };
@@ -39,10 +41,10 @@ export function assertImageCapabilityConnection(
 ): ProviderConnection {
   assertLocalImageConnectionIdentity(connection, binding);
   const spec = imageCapabilitySchema.parse(binding.imageCapability);
-  const count =
-    spec.capabilityId === "image.layer-split"
-      ? spec.parameters.layers.length
-      : 1;
+  const count = imageCapabilityOutputIds(
+    spec,
+    binding.capabilityOutputIndices,
+  ).length;
   if (
     spec.adapter !== "comfyui" ||
     !connection.capabilities.modalities.includes("image") ||
@@ -76,8 +78,8 @@ export async function prepareImageCapabilityInput(
   platform: "web" | "desktop",
 ): Promise<CreateProjectInput> {
   const spec = imageCapabilitySchema.parse(input.imageCapability);
-  if (platform !== "web")
-    throw new Error("此图片能力尚未接入原生TaskHost，当前未提交。");
+  if (!["web", "desktop"].includes(platform))
+    throw new Error("此平台没有图片任务宿主。");
   if (spec.adapter !== "comfyui")
     throw new Error("此图片能力的API适配器尚未配置，当前未提交。");
   if (input.kind !== "image" || input.imageEdit || !input.providerConnectionId)

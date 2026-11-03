@@ -10,6 +10,7 @@ import { CompareImageButton as CompareImageButton } from "../../features/compare
 import UiIcon from "../UiIcon";
 import ImageSelectionToolbar from "../canvas/ImageSelectionToolbar";
 import ImageRedrawDialog from "./ImageRedrawDialog";
+import { ImageCapabilityActions } from "../../features/image-edit/index.ts";
 
 export default function CanvasImageActions({
   item,
@@ -86,6 +87,16 @@ export default function CanvasImageActions({
           item={item}
           className="kk-button kk-button--tertiary"
         />
+        <button
+          type="button"
+          className="kk-button kk-button--tertiary"
+          disabled={Boolean(redrawReason)}
+          title={redrawReason}
+          onClick={() => setRedrawOpen(true)}
+        >
+          局部重绘
+        </button>
+        <ImageCapabilityActions source={item} />
         {onLike && (
           <button
             type="button"

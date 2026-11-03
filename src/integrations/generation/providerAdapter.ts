@@ -5,6 +5,7 @@ import type {
 import type { CreationAttachment } from "../../../packages/creation-contracts/index.ts";
 
 export interface GenerationRequest {
+  capabilityOutputIndices?: number[];
   imageCapability?: import("../../../packages/creation-contracts/index.ts").ImageCapabilitySpec;
   prompt: string;
   model: string;

@@ -817,6 +817,14 @@ function normalizeCanvasItem(
         : imageCapabilitySchema.safeParse(value.imageCapability).success
           ? structuredClone(value.imageCapability)
           : undefined,
+    imageCapabilityConnectionId: normalizeOptionalSlice(
+      value.imageCapabilityConnectionId,
+      120,
+    ),
+    imageCapabilityPrompt: normalizeOptionalSlice(
+      value.imageCapabilityPrompt,
+      2000,
+    ),
     tags: value.tags === undefined ? undefined : normalizeTags(value.tags),
     // Plugin content is durable project data, independently editable after a read.
     plugin:

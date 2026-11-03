@@ -2,6 +2,7 @@ import { capabilityManifestSchema } from "../../../packages/creation-contracts/i
 import { imageTaskCapability } from "./imageTaskCapability.ts";
 export const layerSplitCapabilityManifest = capabilityManifestSchema.parse({
   id: "image.layer-split",
+  enabled: true,
   version: "1.0.0",
   title: "图层拆分",
   kind: "builtin",
@@ -24,8 +25,8 @@ export const layerSplitCapabilityManifest = capabilityManifestSchema.parse({
   ],
   task: { progress: true, cancellable: true, resumable: false },
   lineage: { inputRoles: ["base"], relation: "derivedFrom" },
-  platforms: ["web"],
-  degrade: "需要归档原件、明确工作流和可用适配器；原生与通用API尚未验收。",
+  platforms: ["desktop", "web"],
+  degrade: "需要归档原件和已配置的本地 ComfyUI 图层拆分工作流。",
   card: "docs/features/feat-042-layer-split.md",
 });
 export const executeLayerSplitCapability = imageTaskCapability(

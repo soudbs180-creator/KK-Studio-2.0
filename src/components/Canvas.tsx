@@ -28,7 +28,6 @@ import { useCanvasGestures } from "./canvas/useCanvasGestures";
 import { useCanvasGroups } from "./canvas/useCanvasGroups";
 import CanvasGroupHud from "./canvas/CanvasGroupHud";
 import { useCanvasReferenceFrames } from "./canvas/useCanvasReferenceFrames";
-import { comfyOutputSourceId } from "../domain/canvasItems.ts";
 import { useCanvasWorkflowSourceFocus } from "./canvas/canvasWorkflowSource.ts";
 
 export default function Canvas({
@@ -199,16 +198,13 @@ export default function Canvas({
               onClose={() => setLayersOpen(false)}
             />
           )}
-          {selectedItem?.kind === "image" &&
-            (selectedItem.comfyWorkflowSourceId ??
-              comfyOutputSourceId(selectedItem)) && (
-              <CanvasPropertyPanel
-                item={selectedItem}
-                items={items}
-                onSelect={controls.setSelectedNode}
-                onLocate={locateNode}
-              />
-            )}
+          <CanvasPropertyPanel
+            item={selectedItem}
+            items={items}
+            onSelect={controls.setSelectedNode}
+            onLocate={locateNode}
+            onItemsChange={onItemsChange}
+          />
           <CanvasOverlays
             marquee={controls.marquee}
             addMenu={addMenu}

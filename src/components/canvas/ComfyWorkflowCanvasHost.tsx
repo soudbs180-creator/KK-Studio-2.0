@@ -30,7 +30,10 @@ export interface ComfyCanvasHost {
   runtime: ComfyRuntimePort;
   isCurrent: (sourceId: string) => boolean;
   flush: () => Promise<void>;
-  delivery(sourceId: string): ReturnType<typeof createWorkflowDelivery>;
+  delivery(
+    sourceId: string,
+    transport?: ComfyRuntimePort,
+  ): ReturnType<typeof createWorkflowDelivery>;
 }
 const Context = createContext<ComfyCanvasHost | null>(null);
 export const useComfyCanvasHost = () => useContext(Context);
@@ -95,7 +98,7 @@ export default function ComfyWorkflowCanvasHost({
         alive.current &&
         latest.current.projectId === projectId &&
         latest.current.items.some((i) => i.id === sourceId),
-      delivery(sourceId) {
+      delivery(sourceId, transport = runtime) {
         const boundProject = projectId;
         const current = () =>
           alive.current &&
@@ -152,7 +155,7 @@ export default function ComfyWorkflowCanvasHost({
                 .find((i) => i.id === sourceId)
                 ?.comfyWorkflow?.dismissedOutputIds?.includes(id),
             ),
-          readOutput: runtime.readOutput,
+          readOutput: transport.readOutput,
           assets: { write: storeGeneratedAsset },
           applyOps,
         });

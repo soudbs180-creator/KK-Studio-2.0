@@ -1,3 +1,4 @@
+export { default as LocalComfyConnection } from "./LocalComfyConnection.tsx";
 // Public contract entry for feature: models
 export {
   AUTO_ROUTING_MODEL,

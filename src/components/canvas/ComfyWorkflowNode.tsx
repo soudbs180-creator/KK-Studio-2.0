@@ -1,10 +1,15 @@
 import { useState } from "react";
+import { flushSync } from "react-dom";
 import type {
   CanvasCollectionItem,
   NodeEditingProps,
 } from "../../domain/canvasItems.ts";
 import { useComfyWorkflowNode } from "./useComfyWorkflowNode.ts";
 import ComfyWorkflowEditor from "./ComfyWorkflowEditor.tsx";
+import {
+  ComfyWorkflowParameters,
+  ComfyWorkflowConnection,
+} from "../../features/comfyui/index.ts";
 
 export default function ComfyWorkflowNode({
   item,
@@ -17,9 +22,12 @@ export default function ComfyWorkflowNode({
     [open, setOpen] = useState<boolean>(),
     [guideOpen, setGuideOpen] = useState(false);
   const desktop = Boolean(state.host?.runtime.desktop);
-  const activeRecord = state.records.find(
-    (r) => r.id === item.comfyWorkflow?.workflowId,
-  );
+  const activeRecord = state.activeRecord;
+  const records =
+    activeRecord &&
+    !state.records.some((record) => record.id === activeRecord.id)
+      ? [activeRecord, ...state.records]
+      : state.records;
   return (
     <article
       className="comfy-workflow-node"
@@ -34,12 +42,15 @@ export default function ComfyWorkflowNode({
             工作流：
             <select
               aria-label="选择 ComfyUI 工作流"
+              disabled={
+                state.working || Boolean(item.comfyWorkflow?.submission)
+              }
               value={item.comfyWorkflow?.workflowId ?? ""}
               onFocus={state.refresh}
               onChange={(e) => state.chooseWorkflow(e.target.value)}
             >
               <option value="">选择已保存工作流</option>
-              {state.records.map((r) => (
+              {records.map((r) => (
                 <option key={r.id} value={r.id}>
                   {r.name}
                 </option>
@@ -52,6 +63,9 @@ export default function ComfyWorkflowNode({
           >
             <input
               type="file"
+              disabled={
+                state.working || Boolean(item.comfyWorkflow?.submission)
+              }
               accept=".json"
               style={{ display: "none" }}
               aria-label="导入工作流 JSON"
@@ -71,7 +85,7 @@ export default function ComfyWorkflowNode({
       <div className="comfy-workflow-actions">
         <button
           className="kk-button kk-button--secondary"
-          disabled={!state.status.ready}
+          disabled={!state.status.ready || state.working}
           onClick={() => setOpen(true)}
         >
           进入工作流
@@ -99,6 +113,40 @@ export default function ComfyWorkflowNode({
           onToggleGuide={() => setGuideOpen((v) => !v)}
         />
       </div>
+      <ComfyWorkflowConnection
+        key={item.comfyWorkflow?.endpoint}
+        endpoint={item.comfyWorkflow?.endpoint}
+        disabled={Boolean(item.comfyWorkflow?.submission) || state.working}
+        onConnect={state.connect}
+        onStart={
+          desktop
+            ? () =>
+                void (state.savedRoot
+                  ? state.startSavedDirectory()
+                  : state.chooseDirectory())
+            : undefined
+        }
+      />
+      {activeRecord && (
+        <details
+          className="comfy-node-parameters"
+          open={Boolean(item.comfyWorkflow?.parametersOpen)}
+          onToggle={(event) => {
+            const parametersOpen = event.currentTarget.open;
+            if (parametersOpen !== Boolean(item.comfyWorkflow?.parametersOpen))
+              editing.onChange({
+                comfyWorkflow: { ...item.comfyWorkflow, parametersOpen },
+              });
+          }}
+        >
+          <summary>参数微调</summary>
+          <ComfyWorkflowParameters
+            record={activeRecord}
+            onChange={state.updateRecord}
+            disabled={Boolean(item.comfyWorkflow?.submission)}
+          />
+        </details>
+      )}
       {guideOpen && !state.status.ready && desktop && (
         <aside
           className="comfy-workflow-guide"
@@ -126,6 +174,12 @@ export default function ComfyWorkflowNode({
           open={open}
           clientId={state.clientId + "-editor"}
           workflowRecord={activeRecord}
+          runtime={state.runtime ?? state.host?.runtime}
+          savedRoot={state.savedRoot}
+          onSave={async (record) => {
+            flushSync(() => state.updateRecord(record));
+            await state.host?.flush();
+          }}
           onBack={() => setOpen(false)}
         />
       )}

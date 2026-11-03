@@ -287,9 +287,7 @@ export function useImageCommandSubmission(
   return createSubmissionLogic({
     ...options,
     submitLock: options.submitLock ?? internalLock,
-    capabilitiesInpaint:
-      options.capabilitiesInpaint ??
-      import.meta.env?.VITE_CAPABILITIES_INPAINT === "true",
+    capabilitiesInpaint: options.capabilitiesInpaint ?? true,
   });
 }
 
@@ -372,10 +370,15 @@ export function checkSubmissionUiReadiness(options: {
   const { effectivePrompt, request, codexCanvas, homeModelConfig, activeTask } =
     options;
   const isAgent = request.origin === "agent";
-  const modelConfigured = isAgent || codexCanvas || homeModelConfig.configured;
+  const capability = Boolean(
+    request.input.imageCapability && request.input.providerConnectionId,
+  );
+  const modelConfigured =
+    isAgent || codexCanvas || capability || homeModelConfig.configured;
   const serviceConfigured =
     isAgent ||
     codexCanvas ||
+    capability ||
     (homeModelConfig.configured && Boolean(request.input.model.trim()));
   const online = typeof navigator === "undefined" ? true : navigator.onLine;
 
@@ -428,8 +431,15 @@ function validatePreflight(params: PreflightParams): PreflightResult {
   const activeTask = original?.tasks.find(
     (task) => task.status === "queued" || task.status === "running",
   );
+  if (hasUnresolvedCapability(original, request))
+    return {
+      error: "原任务受理状态未知，请查询原任务；当前不会重复提交。",
+      effectivePrompt,
+      codexCanvas: false,
+    };
   const codexCanvas = Boolean(
     request.origin === "canvas" &&
+    !request.input.imageCapability &&
     original?.items.some(
       (item) =>
         item.id === request.input.sourceItemId &&
@@ -580,8 +590,9 @@ async function resolveCommandInput(
   const sourceItemId = request.input.sourceItemId;
   const source = original!.items.find((item) => item.id === sourceItemId)!;
 
-  const attachments =
-    source.kind === "text"
+  const attachments = request.input.imageCapability
+    ? []
+    : source.kind === "text"
       ? []
       : await canvasImageAttachments(original!, source);
 
@@ -603,7 +614,8 @@ async function resolveCommandInput(
   return {
     prompt: request.input.prompt,
     model: request.input.model,
-    providerConnectionId: source.providerConnectionId,
+    providerConnectionId:
+      request.input.providerConnectionId ?? source.providerConnectionId,
     kind: source.kind,
     attachments,
     outputCount: request.input.count,
@@ -650,7 +662,7 @@ async function prepareEditPlan(params: EditPlanParams): Promise<{
       : undefined;
 
   const editRequest =
-    request.origin === "canvas"
+    request.origin === "canvas" && !input.imageCapability
       ? (request.input.imageEdit ??
         (editSource?.assetId && editSource.kind === "image"
           ? { document: { width: 1, height: 1, regions: [] } }
@@ -684,6 +696,23 @@ interface ConsistencyParams {
   validateAcceptance?: () => string | undefined;
 }
 
+function hasUnresolvedCapability(
+  project: CreationProject | undefined,
+  request: ImageCommandRequest,
+) {
+  return (
+    request.origin === "canvas" &&
+    request.input.imageCapability &&
+    project?.tasks.some(
+      (task) =>
+        task.sourceItemId === request.input.sourceItemId &&
+        task.imageCapability?.capabilityId ===
+          request.input.imageCapability?.capabilityId &&
+        (task.status === "unknown" || task.submissionState === "unknown"),
+    )
+  );
+}
+
 function validateConsistencyAfterPreflight(
   params: ConsistencyParams,
 ): string | undefined {
@@ -698,6 +727,8 @@ function validateConsistencyAfterPreflight(
   } = params;
 
   if (signal?.aborted) return "已取消提交，草稿和参考图已保留。";
+  if (hasUnresolvedCapability(current, request))
+    return "原任务受理状态未知，请查询原任务；当前不会重复提交。";
 
   if (projectId && (!current || activeProjectId !== projectId))
     return "项目已切换，当前未提交生成。";

@@ -428,15 +428,27 @@ async function editor(page: Page, configured = false, separateColors = false) {
   return page.getByRole("dialog", { name: "重绘参考图片" });
 }
 
-test("image capability actions stay visible but require an explicit workflow", async ({
+test("image capability actions open production setup when a local connection is missing", async ({
   page,
 }) => {
   const dialog = await editor(page);
   for (const label of ["扩图", "高清修复", "图层拆分"]) {
     const button = dialog.getByRole("button", { name: label, exact: true });
     await expect(button).toBeVisible();
-    await expect(button).toBeDisabled();
-    await expect(button).toHaveAttribute("title", /ComfyUI 工作流/);
+    await expect(button).toBeEnabled();
+    await button.click();
+    const setup = page.getByRole("dialog", { name: label, exact: true });
+    await expect(setup).toBeVisible();
+    expect(
+      await setup.evaluate(
+        (element) => getComputedStyle(element).backgroundColor,
+      ),
+    ).not.toBe("rgba(0, 0, 0, 0)");
+    await expect(setup.getByText(/尚未配置本地/)).toBeVisible();
+    await expect(
+      setup.getByRole("button", { name: "前往模型设置", exact: true }),
+    ).toBeEnabled();
+    await setup.getByRole("button", { name: "关闭", exact: true }).click();
   }
 });
 
@@ -894,9 +906,7 @@ for (const native of [true, false])
     const dispatches = await page.evaluate(
       () => performance.getEntriesByName("kk:capability:image.inpaint").length,
     );
-    expect(dispatches).toBe(
-      process.env.KK_EXPECT_CAPABILITIES_INPAINT === "true" ? 1 : 0,
-    );
+    expect(dispatches).toBe(1);
     const project = await activeEditProject(page);
     const assets = await editArchiveEvidence(page);
     const afterDom = await dialog.evaluate((element) => element.outerHTML);

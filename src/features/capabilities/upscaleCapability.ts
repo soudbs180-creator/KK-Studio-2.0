@@ -2,6 +2,7 @@ import { capabilityManifestSchema } from "../../../packages/creation-contracts/i
 import { imageTaskCapability } from "./imageTaskCapability.ts";
 export const upscaleCapabilityManifest = capabilityManifestSchema.parse({
   id: "image.upscale",
+  enabled: true,
   version: "1.0.0",
   title: "高清修复",
   kind: "builtin",
@@ -24,8 +25,8 @@ export const upscaleCapabilityManifest = capabilityManifestSchema.parse({
   ],
   task: { progress: true, cancellable: true, resumable: false },
   lineage: { inputRoles: ["base"], relation: "derivedFrom" },
-  platforms: ["web"],
-  degrade: "需要归档原件、明确工作流和可用适配器；原生与通用API尚未验收。",
+  platforms: ["desktop", "web"],
+  degrade: "需要归档原件和已配置的本地 ComfyUI 高清修复工作流。",
   card: "docs/features/feat-041-upscale.md",
 });
 export const executeUpscaleCapability = imageTaskCapability(

@@ -27,10 +27,8 @@ test("image capability input requires the archived original, explicit connection
   const prepared = await prepareImageCapabilityInput(input, read, "web");
   assert.equal(prepared.attachments[0].originalAssetId, spec.sourceAssetId);
   assert.equal(prepared.prompt, input.prompt);
-  await assert.rejects(
-    prepareImageCapabilityInput(input, read, "desktop"),
-    /原生/,
-  );
+  const desktop = await prepareImageCapabilityInput(input, read, "desktop");
+  assert.equal(desktop.attachments[0].assetId, spec.sourceAssetId);
   await assert.rejects(
     prepareImageCapabilityInput(
       { ...input, imageCapability: { ...spec, adapter: "provider-api" } },
@@ -85,6 +83,31 @@ test("image capability bindings enforce identity, local authorization, provider 
   assert.equal(
     assertImageCapabilityConnection(connection, binding),
     connection,
+  );
+  assert.equal(
+    assertImageCapabilityConnection(connection, {
+      ...binding,
+      outputCount: 1,
+      capabilityOutputIndices: [1],
+    }),
+    connection,
+  );
+  assert.throws(
+    () =>
+      assertImageCapabilityConnection(connection, {
+        ...binding,
+        outputCount: 1,
+      }),
+    /数量/,
+  );
+  assert.throws(
+    () =>
+      assertImageCapabilityConnection(connection, {
+        ...binding,
+        outputCount: 1,
+        capabilityOutputIndices: [2],
+      }),
+    /槽位/,
   );
   for (const changed of [
     { ...connection, baseUrl: "https://remote.invalid" },

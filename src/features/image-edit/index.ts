@@ -67,6 +67,8 @@ export {
 } from "./snapshot.ts";
 export type { ImageEditContext, ImageEditSnapshot } from "./snapshot.ts";
 export { useAvailableImageHeight } from "./useAvailableImageHeight.ts";
+export { default as ImageCapabilityDialog } from "./ImageCapabilityDialog.tsx";
+export { default as ImageCapabilityActions } from "./ImageCapabilityActions.tsx";
 export { useImageViewport } from "./useImageViewport.ts";
 export type { ImageTool } from "./useImageViewport.ts";
 export { useMaskDocument } from "./useMaskDocument.ts";

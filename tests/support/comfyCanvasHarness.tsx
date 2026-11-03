@@ -10,11 +10,12 @@ import {
 import {
   writeLocalWorkflows,
   type ComfyRuntimePort,
+  type ComfyWorkflow,
 } from "../../src/features/comfyui/index.ts";
 import type { CanvasCollectionItem } from "../../src/domain/canvasItems.ts";
 import type { ProjectCanvas } from "../../src/domain/projectCanvas.ts";
 
-export async function mount() {
+export async function mount(workflow?: ComfyWorkflow) {
   const fixture = {
     id: "api-fixture",
     name: "Fixture API workflow",
@@ -23,7 +24,7 @@ export async function mount() {
     tags: [],
     createdAt: 1,
     updatedAt: 1,
-    workflow: { "1": { class_type: "FixtureOutput", inputs: {} } },
+    workflow: workflow ?? { "1": { class_type: "FixtureOutput", inputs: {} } },
   };
   writeLocalWorkflows([fixture]);
   let ready = false;

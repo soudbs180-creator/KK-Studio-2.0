@@ -9,6 +9,7 @@ import {
 
 export const inpaintCapabilityManifest = capabilityManifestSchema.parse({
   id: "image.inpaint",
+  enabled: true,
   version: "1.0.0",
   title: "局部重绘",
   kind: "builtin",

@@ -26,6 +26,11 @@ import { textTaskResult } from "./textTaskResult.ts";
 
 /** The request crossing the Desktop TaskHost IPC boundary. It contains no API key. */
 export interface NativeTaskHostRequest {
+  comfyWorkflow?: {
+    nodes: Record<string, unknown>;
+    outputNodeIds: string[];
+    imageBinding?: { nodeId: string; input: string };
+  };
   imageEditRequired?: boolean;
   maskAssetId?: string;
   kind?: "image" | "text";

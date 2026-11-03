@@ -96,6 +96,8 @@ export interface CanvasCollectionItem {
   comfyWorkflow?: ComfyWorkflowCardState;
   comfyWorkflowSourceId?: string;
   imageCapability?: ImageCapabilitySpec;
+  imageCapabilityConnectionId?: string;
+  imageCapabilityPrompt?: string;
   /** Monotonic revision number for concurrency control and EventBus synchronization */
   node_rev?: number;
   imageEditDraft?: MaskDocument;

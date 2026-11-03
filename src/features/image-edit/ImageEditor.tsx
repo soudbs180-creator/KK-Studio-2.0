@@ -22,10 +22,7 @@ import { validateEdit } from "./validateEdit.ts";
 
 import EditComposer from "./EditComposer.tsx";
 import EditToolbar, { EDIT_COLORS } from "./EditToolbar.tsx";
-import {
-  imageCapabilityAction,
-  imageCapabilityActionLabels,
-} from "./imageCapabilityActions.ts";
+import ImageCapabilityDialog from "./ImageCapabilityDialog.tsx";
 import type { ImageCapabilityId } from "../../../packages/creation-contracts/index.ts";
 import RegionPromptOverlay from "./RegionPromptOverlay.tsx";
 import { useImageViewport, type ImageTool } from "./useImageViewport.ts";
@@ -95,6 +92,7 @@ export default function ImageEditor({
     mask = useMaskDocument(source),
     document = mask.document;
   const [tool, setTool] = useState<ImageTool>("browse"),
+    [capability, setCapability] = useState<ImageCapabilityId>(),
     [brushWidth, setBrushWidth] = useState(32),
     [color, setColor] = useState(EDIT_COLORS[0].color),
     [selectionOnly, setSelectionOnly] = useState(true),
@@ -168,28 +166,6 @@ export default function ImageEditor({
         references,
         selectionOnly,
       });
-  }
-  function capabilityState(id: ImageCapabilityId) {
-    return imageCapabilityAction(source, id);
-  }
-  function runCapability(id: ImageCapabilityId) {
-    const action = capabilityState(id);
-    if (action.error || !action.spec || !action.outputCount) {
-      mask.setError(
-        action.error ??
-          `无法运行${imageCapabilityActionLabels[id]}，请检查工作流配置。`,
-      );
-      return;
-    }
-    drawing.cancel();
-    mask.setError("");
-    void generation.run(
-      prompt || `按已配置工作流执行${imageCapabilityActionLabels[id]}。`,
-      action.outputCount,
-      generation.model,
-      undefined,
-      action.spec,
-    );
   }
   return (
     <div
@@ -276,9 +252,7 @@ export default function ImageEditor({
           }}
           onReset={viewport.reset}
           disabled={loading || !mask.ready}
-          onCapability={runCapability}
-          capabilityDisabled={(id) => Boolean(capabilityState(id).error)}
-          capabilityDisabledReason={(id) => capabilityState(id).error}
+          onCapability={setCapability}
         />
         <RegionPromptOverlay
           region={region}
@@ -327,6 +301,11 @@ export default function ImageEditor({
         sourceId={source.id}
         loading={loading}
         onRetry={command?.retryTask}
+      />
+      <ImageCapabilityDialog
+        source={source}
+        capabilityId={capability}
+        onClose={() => setCapability(undefined)}
       />
     </div>
   );

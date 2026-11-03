@@ -10,12 +10,35 @@ pub struct LaunchPlan {
     pub python: PathBuf,
     pub entry: PathBuf,
     pub directory: PathBuf,
+    pub base_directory: Option<PathBuf>,
+}
+fn python_path(path: PathBuf) -> PathBuf {
+    // Python's image uploader appends `/.`, which Windows rejects on verbatim paths.
+    #[cfg(windows)]
+    if let Some(value) = path.to_str().and_then(|s| s.strip_prefix(r"\\?\")) {
+        return PathBuf::from(
+            value
+                .strip_prefix(r"UNC\")
+                .map(|s| format!(r"\\{s}"))
+                .unwrap_or_else(|| value.to_string()),
+        );
+    }
+    path
 }
 pub fn launch_plan(root: &Path) -> Result<LaunchPlan, String> {
     let root = root
         .canonicalize()
         .map_err(|_| "请选择有效的 ComfyUI 根目录")?;
-    let entry = [root.join("main.py"), root.join("ComfyUI/main.py")]
+    let mut entries = vec![root.join("main.py"), root.join("ComfyUI/main.py")];
+    if let Ok(backends) = std::fs::read_dir(root.join("backend")) {
+        entries.extend(
+            backends
+                .flatten()
+                .take(64)
+                .map(|entry| entry.path().join("ComfyUI/main.py")),
+        );
+    }
+    let entry = entries
         .into_iter()
         .find(|p| p.is_file())
         .ok_or("未找到 main.py；请选择源码或便携版根目录")?
@@ -29,20 +52,38 @@ pub fn launch_plan(root: &Path) -> Result<LaunchPlan, String> {
     {
         return Err("目录缺少 ComfyUI 的 folder_paths.py 或 comfy 模块".into());
     }
+    let directory = entry.parent().unwrap();
+    let hub_python = directory
+        .parent()
+        .filter(|p| p.parent().is_some_and(|v| v.ends_with("backend")))
+        .and_then(|p| p.file_name())
+        .and_then(|id| {
+            std::env::var_os("USERPROFILE").map(|home| {
+                PathBuf::from(home)
+                    .join(".hub-c")
+                    .join(id)
+                    .join("Scripts/python.exe")
+            })
+        });
     let python = [
         root.join("python_embeded/python.exe"),
         root.join("python_embedded/python.exe"),
         root.join(".venv/Scripts/python.exe"),
         root.join("venv/Scripts/python.exe"),
         entry.parent().unwrap().join(".venv/Scripts/python.exe"),
+        hub_python.unwrap_or_default(),
     ]
     .into_iter()
     .find(|p| p.is_file())
     .unwrap_or_else(|| PathBuf::from("python"));
     Ok(LaunchPlan {
-        python,
-        directory: entry.parent().unwrap().to_path_buf(),
-        entry,
+        python: python_path(python),
+        directory: python_path(entry.parent().unwrap().to_path_buf()),
+        entry: python_path(entry),
+        base_directory: root
+            .join("userdata/models")
+            .is_dir()
+            .then(|| python_path(root.join("userdata"))),
     })
 }
 
@@ -63,6 +104,7 @@ impl Drop for OwnedProcess {
 #[derive(Default)]
 pub struct ComfyRuntime {
     process: Mutex<Option<OwnedProcess>>,
+    log_directory: Option<PathBuf>,
 }
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -73,6 +115,12 @@ pub struct RuntimeStatus {
     pub ready: bool,
 }
 impl ComfyRuntime {
+    pub fn with_logs(directory: PathBuf) -> Self {
+        Self {
+            process: Mutex::new(None),
+            log_directory: Some(directory),
+        }
+    }
     pub fn snapshot(&self) -> Result<RuntimeStatus, String> {
         let mut slot = self.process.lock().map_err(|_| "ComfyUI 状态锁不可用")?;
         if let Some(p) = slot.as_mut() {
@@ -168,6 +216,7 @@ impl ComfyRuntime {
                 "8188",
                 "--enable-cors-header",
                 "http://tauri.localhost",
+                "--disable-auto-launch",
             ])
             .current_dir(&plan.directory)
             .env_remove("PYTHONPATH")
@@ -178,6 +227,22 @@ impl ComfyRuntime {
             .creation_flags(0x08000000);
         if portable {
             command.arg("--windows-standalone-build");
+        }
+        if let Some(base) = &plan.base_directory {
+            command.arg("--base-directory").arg(base);
+        }
+        if let Some(directory) = &self.log_directory {
+            std::fs::create_dir_all(directory).map_err(|_| "无法创建 ComfyUI 日志目录")?;
+            let file = std::fs::OpenOptions::new()
+                .create_new(true)
+                .write(true)
+                .open(directory.join(format!("runtime-{}.log", uuid::Uuid::new_v4())))
+                .map_err(|_| "无法创建 ComfyUI 日志")?;
+            command
+                .stdout(Stdio::from(
+                    file.try_clone().map_err(|_| "无法打开 ComfyUI 日志")?,
+                ))
+                .stderr(Stdio::from(file));
         }
         let mut child = command
             .spawn()
@@ -226,6 +291,12 @@ pub async fn comfyui_start_process(
     if !scan.detected {
         return Err("所选目录未检测到 ComfyUI".into());
     }
+    let bridge_root = scan.root.clone();
+    tauri::async_runtime::spawn_blocking(move || {
+        crate::comfy_editor_bridge::install(Path::new(&bridge_root))
+    })
+    .await
+    .map_err(|_| "编辑器同步安装中断")??;
     state.start(Path::new(&scan.root)).await?;
     state.snapshot()
 }
@@ -236,11 +307,18 @@ pub fn comfyui_stop_process(state: tauri::State<'_, ComfyRuntime>) -> Result<(),
 #[tauri::command]
 pub async fn comfyui_process_status(
     state: tauri::State<'_, ComfyRuntime>,
+    endpoint: Option<String>,
 ) -> Result<RuntimeStatus, String> {
     let mut status = state.snapshot()?;
+    let base = super::comfy_transport::loopback_endpoint(endpoint.as_deref())?;
+    if base != "http://127.0.0.1:8188" {
+        status.pid = None;
+        status.owned = false;
+        status.root = None;
+    }
     if let Ok(Ok(value)) = tokio::time::timeout(
         std::time::Duration::from_secs(3),
-        super::comfy_transport::json_request("/system_stats", None),
+        super::comfy_transport::json_request_at(Some(&base), "/system_stats", None),
     )
     .await
     {
@@ -268,6 +346,8 @@ mod tests {
         assert!(plan.python.ends_with("python_embeded/python.exe"));
         assert!(plan.entry.ends_with("ComfyUI/main.py"));
         assert!(plan.directory.ends_with("ComfyUI"));
+        #[cfg(windows)]
+        assert!(!plan.entry.to_str().unwrap().starts_with(r"\\?\"));
         assert!(launch_plan(&root.join("missing")).is_err());
         fs::remove_dir_all(root).unwrap();
     }
@@ -297,6 +377,19 @@ mod tests {
                     .status()
                     .unwrap()
                     .success());
+                fs::write(
+                    root.join(".venv/Lib/site-packages/kk_venv_marker.py"),
+                    "VALUE = 'venv'\n",
+                )
+                .unwrap();
+                let script = fs::read_to_string(root.join("main.py")).unwrap();
+                fs::write(
+                    root.join("main.py"),
+                    format!(
+                        "import kk_venv_marker\nassert kk_venv_marker.VALUE == 'venv'\n{script}"
+                    ),
+                )
+                .unwrap();
             }
             let runtime = ComfyRuntime::default();
             runtime.start(&root).await.unwrap();

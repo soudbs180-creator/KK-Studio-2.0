@@ -544,6 +544,7 @@ async function generateComfyImages(
       options.onRequestStart?.();
     },
     imageCapability: options.imageCapability,
+    capabilityOutputIndices: options.capabilityOutputIndices,
     prompt: options.prompt,
     model,
     attachments,
@@ -576,17 +577,7 @@ async function generateComfyImages(
     currentJob.providerJobId,
     executionSignal,
   );
-  const selectedOutputs = options.imageCapability
-    ? (options.capabilityOutputIndices ?? outputs.map((_, i) => i)).map(
-        (index) => {
-          const result = outputs[index];
-          if (!result)
-            throw new Error("能力结果输出槽位缺失，未发布错误来源。");
-          return result;
-        },
-      )
-    : outputs;
-  const sources = selectedOutputs
+  const sources = outputs
     .map(
       (out) =>
         out.url ||

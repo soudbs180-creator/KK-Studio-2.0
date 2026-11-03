@@ -1,4 +1,5 @@
 import React, { type SetStateAction } from "react";
+import { nativeComfyWorkflow } from "./nativeComfyWorkflow.ts";
 import type { Asset } from "../../domain/assets.ts";
 import type { CanvasCollectionItem } from "../../domain/canvasItems.ts";
 import { imageResultContext } from "../image-edit/index.ts";
@@ -101,6 +102,15 @@ export async function executeNativeFlow(
 
   markSubmission();
   let nativeRecord = await submitNativeTask({
+    comfyWorkflow: task.imageCapability
+      ? nativeComfyWorkflow(
+          task.imageCapability,
+          compiledPrompt,
+          pendingIndices.map(
+            (index) => task.retryOutputIndices?.[index] ?? index,
+          ),
+        )
+      : undefined,
     imageEditRequired: task.imageEdit
       ? true
       : task.imageEditContext

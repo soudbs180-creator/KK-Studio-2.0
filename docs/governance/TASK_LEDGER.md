@@ -223,6 +223,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-W1-GATE-ZERO-20261101 | Gate Zero四微批次与安全提交收敛本地main | DONE | 已完成 | P1 | none | root | 本有界包已验收合入本地main；最终工作树回收与SHA见工程外final-receipt.json，不代表全量浏览器或发布完成。 |
 | TASK-W1-BROWSER-CLOSEOUT-20261102 | 清零W1剩余119浏览器复验项并合流 | DONE | 已完成 | P1 | none | root | 本卡完成；继续ComfyUI参数、图片编辑与真实生成链。 |
 | TASK-MAINLINE-20261103 | 主线治理收口与当前浏览器门禁修复 | DONE | 已完成 | P1 | none | root | 本卡完成；继续ComfyUI参数、图片编辑与真实生成链。 |
+| TASK-COMFY-IMAGE-20261103 | ComfyUI 参数与图片深度编辑生产链路 | IN_PROGRESS | 进行中 | P1 | none | root | 完成原生编辑同步与真实图片任务宿主 |
 
 ## TASK-COMFY-PHYSICAL-20261030 — 本机ComfyUI真实显卡出图验收
 
@@ -4351,5 +4352,24 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Verification: PASS — 本地实现及当前回归完成：typecheck/lint/ui/format通过，2474单测通过，完整Edge926通过/0失败/0flaky，71064b0e提交后相关Edge56通过；真实Tauri release隔离UI冒烟通过，独立Standards/Spec双轴审查通过。本卡限定范围收口。
 - Evidence: [docs/changes/2026-11-03-mainline-reset/verification.md](../../docs/changes/2026-11-03-mainline-reset/verification.md), [docs/changes/2026-11-03-mainline-reset/review.md](../../docs/changes/2026-11-03-mainline-reset/review.md)
 - Next action: 本卡完成；继续ComfyUI参数、图片编辑与真实生成链。
+- Last verified: 2026-11-03
+- Updated: 2026-11-03
+
+## TASK-COMFY-IMAGE-20261103 — ComfyUI 参数与图片深度编辑生产链路
+
+- Goal: 工作流参数、原生编辑与四项图片编辑通过真实任务链回写画布
+- Scope: ComfyUI、画布属性、图片工具栏与任务宿主
+- Display status: 进行中
+- Priority: P1 — 未记录
+- Requirement refs: docs/changes/2026-11-03-comfy-production/spec.md
+- Feature IDs: FEAT-004, FEAT-005, FEAT-035, FEAT-040, FEAT-041, FEAT-042
+- Owner role: implementation-integrator
+- Acceptance: 参数双面板同步并随项目重载; 原生编辑器加载当前卡片并双向回写; 四项图片编辑默认可见并走真实宿主; 三门禁、UI、真实本地运行及独立复核通过后合流
+- Branch: `feat/TASK-COMFY-IMAGE-20261103-production`
+- Worktree: `D:/kk-studio/KK-Studio-2.0`
+- Modules: src/features/comfyui, src/features/image-edit, src/features/creation, src/components/canvas, src-tauri/src
+- Verification: NOT_VERIFIED — 实现中；参数提取与本地地址校验单测通过，完整门禁待执行
+- Evidence: [docs/changes/2026-11-03-comfy-production/verification.md](../../docs/changes/2026-11-03-comfy-production/verification.md)
+- Next action: 完成原生编辑同步与真实图片任务宿主
 - Last verified: 2026-11-03
 - Updated: 2026-11-03

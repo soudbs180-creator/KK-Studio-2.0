@@ -12872,5 +12872,54 @@
       "docs/changes/2026-11-03-mainline-reset/spec.md"
     ],
     "featureIds": []
+  },
+  {
+    "id": "TASK-COMFY-IMAGE-20261103",
+    "title": "ComfyUI 参数与图片深度编辑生产链路",
+    "goal": "工作流参数、原生编辑与四项图片编辑通过真实任务链回写画布",
+    "scope": "ComfyUI、画布属性、图片工具栏与任务宿主",
+    "acceptance": [
+      "参数双面板同步并随项目重载",
+      "原生编辑器加载当前卡片并双向回写",
+      "四项图片编辑默认可见并走真实宿主",
+      "三门禁、UI、真实本地运行及独立复核通过后合流"
+    ],
+    "dependencies": [],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "feat/TASK-COMFY-IMAGE-20261103-production",
+    "worktree": "D:/kk-studio/KK-Studio-2.0",
+    "baseSha": "b90d285db234193965f475fa3c6cda4ea3036a1d",
+    "affectedModules": [
+      "src/features/comfyui",
+      "src/features/image-edit",
+      "src/features/creation",
+      "src/components/canvas",
+      "src-tauri/src"
+    ],
+    "status": "IN_PROGRESS",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-11-03-comfy-production/verification.md"
+    ],
+    "verification": "实现中；参数提取与本地地址校验单测通过，完整门禁待执行",
+    "verificationResult": "NOT_VERIFIED",
+    "updated": "2026-11-03",
+    "lastVerified": "2026-11-03",
+    "nextAction": "完成原生编辑同步与真实图片任务宿主",
+    "requirementRefs": [
+      "docs/changes/2026-11-03-comfy-production/spec.md"
+    ],
+    "featureIds": [
+      "FEAT-004",
+      "FEAT-005",
+      "FEAT-035",
+      "FEAT-040",
+      "FEAT-041",
+      "FEAT-042"
+    ]
   }
 ]

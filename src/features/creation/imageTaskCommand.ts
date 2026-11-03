@@ -97,7 +97,10 @@ export function validateImageTaskInput(input: CreateProjectInput): void {
     );
   if (!input.model.trim())
     throw new ImageTaskCommandError("请选择本次创作使用的模型。", true);
-  if (!supportsSelectedModel(input) || input.kind !== "image")
+  if (
+    (!input.imageCapability && !supportsSelectedModel(input)) ||
+    input.kind !== "image"
+  )
     throw new ImageTaskCommandError("当前模型不支持图片创作，请改用图片模型。");
   const count = input.outputCount ?? 1;
   if (!Number.isInteger(count) || count < 1 || count > 64)

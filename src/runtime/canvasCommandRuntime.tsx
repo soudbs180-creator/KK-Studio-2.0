@@ -25,6 +25,7 @@ import type {
 } from "../../packages/creation-contracts/index.ts";
 
 export interface CanvasImageRequest {
+  providerConnectionId?: string;
   imageEdit?: ImageEditRequest;
   sourceItemId: string;
   prompt: string;

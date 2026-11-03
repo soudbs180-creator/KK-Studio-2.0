@@ -6,6 +6,7 @@ import type {
   CreationTask,
   ImageCapabilityId,
 } from "../../../packages/creation-contracts/index.ts";
+import { isTauri } from "@tauri-apps/api/core";
 
 export async function dispatchImageCapability(options: {
   projectId: string;
@@ -25,7 +26,7 @@ export async function dispatchImageCapability(options: {
     {
       projectId: options.projectId,
       preparedTask: options.task,
-      platform: "web",
+      platform: isTauri() ? "desktop" : "web",
       versionRange: spec.version,
       availableAdapters: [`${spec.capabilityId}/${spec.adapter}`],
       modelTraits: [],

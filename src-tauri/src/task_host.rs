@@ -16,6 +16,10 @@ use std::sync::{
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
 use tokio::sync::Notify;
 
+#[path = "task_host_comfy.rs"]
+mod comfy;
+#[path = "task_host_comfy_recovery.rs"]
+mod comfy_recovery;
 #[path = "asset_io.rs"]
 mod io;
 #[path = "task_host_protocol_stream.rs"]
@@ -46,6 +50,8 @@ pub struct TaskHostAttachment {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct TaskHostRequest {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub comfy_workflow: Option<comfy::ComfyTaskWorkflow>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub image_edit_required: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -123,12 +129,17 @@ struct JournalRecord {
     #[serde(flatten)]
     record: JobRecord,
     fingerprint: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    comfy_receipt: Option<comfy_recovery::ComfyReceipt>,
 }
 
 pub(crate) fn validate_journal_bytes(raw: &[u8]) -> Result<(), String> {
     let record: JournalRecord = serde_json::from_slice(raw)
         .map_err(|_| "corrupt: 原生任务记录损坏，已保留原文件".to_string())?;
     validate_record(&record.record)?;
+    if let Some(receipt) = &record.comfy_receipt {
+        receipt.validate()?;
+    }
     if record.fingerprint.len() != 64 || !record.fingerprint.bytes().all(|c| c.is_ascii_hexdigit())
     {
         return Err("corrupt: 原生任务记录指纹无效，已保留原文件".into());
@@ -208,6 +219,9 @@ impl TaskHost {
         let record: JournalRecord = serde_json::from_slice(&raw)
             .map_err(|_| "corrupt: 原生任务记录损坏，已保留原文件".to_string())?;
         validate_record(&record.record)?;
+        if let Some(receipt) = &record.comfy_receipt {
+            receipt.validate()?;
+        }
         if record.fingerprint.len() != 64
             || !record.fingerprint.bytes().all(|c| c.is_ascii_hexdigit())
         {
@@ -218,6 +232,9 @@ impl TaskHost {
     fn write_one_unlocked(&self, record: &JournalRecord) -> Result<(), String> {
         self.ensure_writable()?;
         validate_record(&record.record)?;
+        if let Some(receipt) = &record.comfy_receipt {
+            receipt.validate()?;
+        }
         let raw = serde_json::to_vec(record).map_err(|_| "io: 原生任务记录编码失败".to_string())?;
         if raw.len() > 256 * 1024 {
             return Err("invalid: 原生任务记录过大".into());
@@ -370,6 +387,7 @@ impl TaskHost {
             updated_at: now_ms(),
         };
         let journal = JournalRecord {
+            comfy_receipt: None,
             record: record.clone(),
             fingerprint,
         };
@@ -415,6 +433,9 @@ impl TaskHost {
             let journal: JournalRecord = serde_json::from_slice(&raw)
                 .map_err(|_| "corrupt: 原生任务记录损坏，已保留原文件".to_string())?;
             validate_record(&journal.record)?;
+            if let Some(receipt) = &journal.comfy_receipt {
+                receipt.validate()?;
+            }
             records.push(journal.record);
         }
         records.sort_by(|a, b| {
@@ -445,18 +466,27 @@ impl TaskHost {
         control: JobControl,
     ) {
         let result = self.perform(&request, &fingerprint, &control).await;
-        let mut record = match self.read_one(&request.task_id) {
+        self.finish_run(&request.task_id, &fingerprint, control, result);
+    }
+    fn finish_run(
+        &self,
+        task_id: &str,
+        fingerprint: &str,
+        control: JobControl,
+        result: Result<Vec<String>, RunError>,
+    ) {
+        let mut record = match self.read_one(task_id) {
             Ok(Some(v)) => v,
             _ => {
                 if let Ok(mut jobs) = self.jobs.lock() {
-                    jobs.remove(&request.task_id);
+                    jobs.remove(task_id);
                 }
                 return;
             }
         };
         if record.fingerprint != fingerprint {
             if let Ok(mut jobs) = self.jobs.lock() {
-                jobs.remove(&request.task_id);
+                jobs.remove(task_id);
             }
             return;
         }
@@ -502,10 +532,7 @@ impl TaskHost {
         }
         record.record.updated_at = now_ms();
         let _ = self.write_one(&record);
-        let _ = self
-            .jobs
-            .lock()
-            .map(|mut jobs| jobs.remove(&request.task_id));
+        let _ = self.jobs.lock().map(|mut jobs| jobs.remove(task_id));
     }
 
     async fn perform(
@@ -514,6 +541,9 @@ impl TaskHost {
         fingerprint: &str,
         control: &JobControl,
     ) -> Result<Vec<String>, RunError> {
+        if request.comfy_workflow.is_some() {
+            return self.perform_comfy(request, fingerprint, control).await;
+        }
         let mut attachments = Vec::new();
         for attachment in &request.attachments {
             match self.assets.read(&attachment.asset_id) {
@@ -1114,7 +1144,9 @@ fn validate_request(value: &TaskHostRequest) -> Result<(), String> {
         return Err("invalid: model".into());
     }
     // Keep this contract aligned with twelveAiTaskProtocol.ts until durable native receipts exist.
-    if value.kind.as_deref() != Some("text")
+    if value.comfy_workflow.is_some() {
+        comfy::validate(value)?;
+    } else if value.kind.as_deref() != Some("text")
         && [
             "gemini-3.1-flash-image-preview",
             "gemini-3-pro-image-preview",
@@ -1142,7 +1174,8 @@ fn validate_request(value: &TaskHostRequest) -> Result<(), String> {
         value.protocol.as_deref(),
         value.auth_mode.as_deref(),
     )?;
-    if value.kind.as_deref() != Some("text")
+    if value.comfy_workflow.is_none()
+        && value.kind.as_deref() != Some("text")
         && (provider::Protocol::parse(value.protocol.as_deref())? != provider::Protocol::Chat
             || !needs_key)
     {
@@ -1153,12 +1186,20 @@ fn validate_request(value: &TaskHostRequest) -> Result<(), String> {
     {
         return Err("invalid: credentialRef".into());
     }
-    if value.output_indices.is_empty() || value.output_indices.len() > MAX_OUTPUTS || {
-        let mut s = value.output_indices.clone();
-        s.sort_unstable();
-        s.dedup();
-        s.len() != value.output_indices.len()
-    } {
+    if value.output_indices.is_empty()
+        || value.output_indices.len()
+            > if value.comfy_workflow.is_some() {
+                16
+            } else {
+                MAX_OUTPUTS
+            }
+        || {
+            let mut s = value.output_indices.clone();
+            s.sort_unstable();
+            s.dedup();
+            s.len() != value.output_indices.len()
+        }
+    {
         return Err("invalid: outputIndices".into());
     }
     if value.model.eq_ignore_ascii_case("dall-e-3") && value.output_indices.len() != 1 {
@@ -1240,7 +1281,7 @@ fn validate_record(record: &JobRecord) -> Result<(), String> {
     ) {
         return Err("corrupt: 原生任务状态无效".into());
     }
-    if record.output_indices.is_empty() || record.output_indices.len() > MAX_OUTPUTS {
+    if record.output_indices.is_empty() || record.output_indices.len() > 16 {
         return Err("corrupt: 原生任务输出无效".into());
     }
     if record.updated_at == 0 {
@@ -1333,6 +1374,7 @@ mod tests {
     }
     fn request(task: &str) -> TaskHostRequest {
         TaskHostRequest {
+            comfy_workflow: None,
             image_edit_required: None,
             mask_asset_id: None,
             task_id: task.into(),
@@ -1351,6 +1393,26 @@ mod tests {
             kind: None,
             concurrency_limit: None,
         }
+    }
+    #[test]
+    fn comfy_workflow_accepts_only_local_bound_image_tasks() {
+        let mut value = serde_json::to_value(request("comfy-validation")).unwrap();
+        value["baseUrl"] = json!("http://127.0.0.1:8188");
+        value["authMode"] = json!("none");
+        value["credentialRef"] = json!("");
+        value["comfyWorkflow"] = json!({
+            "nodes": {"source":{"class_type":"EmptyLatentImage","inputs":{"width":512,"height":512,"batch_size":1}},"save":{"class_type":"SaveImage","inputs":{"images":["source",0]}}},
+            "outputNodeIds":["save"]
+        });
+        let parsed: TaskHostRequest = serde_json::from_value(value.clone()).unwrap();
+        assert!(validate_request(&parsed).is_ok());
+        for endpoint in ["https://remote.test", "http://127.0.0.1:8188/private"] {
+            value["baseUrl"] = json!(endpoint);
+            assert!(validate_request(&serde_json::from_value(value.clone()).unwrap()).is_err());
+        }
+        value["baseUrl"] = json!("http://127.0.0.1:8188");
+        value["comfyWorkflow"]["outputNodeIds"] = json!(["missing"]);
+        assert!(validate_request(&serde_json::from_value(value).unwrap()).is_err());
     }
     #[test]
     fn twelve_ai_async_image_contract_cannot_enter_native_images_endpoint() {
@@ -1803,6 +1865,7 @@ mod tests {
         fs::write(
             path.join("task.json"),
             serde_json::to_vec(&JournalRecord {
+                comfy_receipt: None,
                 record: rec,
                 fingerprint: "a".repeat(64),
             })
@@ -1841,6 +1904,7 @@ mod tests {
             updated_at: now_ms(),
         };
         host.write_one(&JournalRecord {
+            comfy_receipt: None,
             record,
             fingerprint: fingerprint.clone(),
         })

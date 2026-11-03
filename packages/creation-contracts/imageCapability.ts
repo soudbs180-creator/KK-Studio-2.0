@@ -175,14 +175,37 @@ export const imageCapabilitySchema = z
 export type ImageCapabilitySpec = z.infer<typeof imageCapabilitySchema>;
 export type ImageCapabilityId = z.infer<typeof imageCapabilityIdSchema>;
 
+export function imageCapabilityOutputIds(
+  spec: ImageCapabilitySpec,
+  indices = spec.workflow.outputNodeIds.map((_, i) => i),
+): string[] {
+  if (
+    !indices.length ||
+    new Set(indices).size !== indices.length ||
+    indices.some(
+      (i) =>
+        !Number.isInteger(i) ||
+        i < 0 ||
+        i >= spec.workflow.outputNodeIds.length,
+    )
+  )
+    throw new Error("能力输出槽位无效，未提交。");
+  return indices.map((i) => spec.workflow.outputNodeIds[i]);
+}
+
 /** Clone the explicit API graph; never derive an algorithm or use later project state. */
 export function bindImageCapabilityWorkflow(
   raw: unknown,
   uploadedImage: string,
   prompt: string,
+  outputIndices?: number[],
 ): Record<string, unknown> {
   const spec = imageCapabilitySchema.parse(raw);
   const nodes = spec.workflow.nodes;
+  const outputIds = imageCapabilityOutputIds(spec, outputIndices);
+  for (const [id, node] of Object.entries(nodes))
+    if (node.class_type === "SaveImage" && !outputIds.includes(id))
+      delete nodes[id];
   const parameters: Record<string, unknown> = spec.parameters;
   for (const [name, target] of Object.entries(spec.workflow.bindings)) {
     nodes[target.nodeId].inputs[target.input] =
