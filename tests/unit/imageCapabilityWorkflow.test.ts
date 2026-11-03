@@ -32,6 +32,7 @@ test("standard workflows execute real ComfyUI nodes with explicit source and out
     checkpoint: "sd15.safetensors",
   });
   assert.deepEqual(outpaint.workflow.nodes.composite.inputs.mask, ["pad", 1]);
+  assert.equal(outpaint.workflow.nodes.pad.inputs.feathering, 0);
 });
 test("imported workflow binding refuses ambiguous image or prompt targets", () => {
   const spec = standardImageCapability("image.upscale", asset, {});

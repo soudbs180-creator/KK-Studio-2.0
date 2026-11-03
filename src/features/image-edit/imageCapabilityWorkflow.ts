@@ -181,7 +181,7 @@ export function standardImageCapability(
       right: 128,
       top: 128,
       bottom: 128,
-      feathering: 40,
+      feathering: 0,
     },
   };
   nodes.encode = {
