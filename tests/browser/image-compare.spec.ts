@@ -1,5 +1,9 @@
 import { expect, test, type Page } from "@playwright/test";
-import { openWorkspace, showCanvasNavigation } from "./helpers";
+import {
+  openWorkspace,
+  showCanvasNavigation,
+  panCanvasToRevealAction,
+} from "./helpers";
 
 const productionOrigin = "http://127.0.0.1:1423";
 
@@ -191,11 +195,12 @@ test("narrow canvas keeps the comparison controls reachable and slider draggable
     expect((await firstCompare.boundingBox())!.height).toBeCloseTo(32, 0);
     await firstCompare.click();
     const second = await addSecondImage(page);
-    await (
-      await imageActions(page, second)
-    )
-      .getByRole("button", { name: /加入对比/ })
-      .click();
+    const secondCompare = (await imageActions(page, second)).getByRole(
+      "button",
+      { name: /加入对比/ },
+    );
+    await panCanvasToRevealAction(page, secondCompare);
+    await secondCompare.click();
     const selection = page.getByRole("region", { name: "图片对比选择" });
     await expect(
       selection.getByRole("button", { name: "打开对比" }),

@@ -120,9 +120,9 @@ for (const theme of ["light", "dark"])
       ).toBe(0);
       const bounds = (await canvas.boundingBox())!;
       const bar = (await actions.boundingBox())!;
-      expect(
-        bar.x < bounds.x || bar.x + bar.width > bounds.x + bounds.width,
-      ).toBe(true);
+      expect(bar.width).toBeLessThanOrEqual(
+        Math.min(380, bounds.width - 16) + 1,
+      );
       await panCanvasToRevealAction(page, preview);
       await expect
         .poll(() =>

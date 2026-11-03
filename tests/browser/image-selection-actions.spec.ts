@@ -319,6 +319,10 @@ for (const width of [390, 1099, 1920]) {
     await expect(
       toolbar(page).getByRole("button", { name: "重绘参考图片" }),
     ).toBeInViewport();
+    for (const name of ["局部重绘", "扩图", "高清修复", "图层拆分"])
+      await expect(
+        toolbar(page).getByRole("button", { name, exact: true }),
+      ).toBeInViewport();
     await node.focus();
     await page.keyboard.press("Escape");
     await expect(toolbar(page)).toHaveCount(0);

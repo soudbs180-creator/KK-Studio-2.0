@@ -62,10 +62,9 @@ test("混合上传视频与竖图时首尾帧各占一个且缩略图保持72高
         ),
     )
     .toBe(true);
-  await expect(thumbs.last().locator("img")).toHaveAttribute(
-    "alt",
-    "portrait.png",
-  );
+  await expect(
+    thumbs.last().locator(".reference-thumb-preview > img"),
+  ).toHaveAttribute("alt", "portrait.png");
 });
 
 test("图片首尾帧保持72高、横向交换且预览和移除仍可用", async ({
@@ -108,14 +107,12 @@ test("图片首尾帧保持72高、横向交换且预览和移除仍可用", asy
     })),
   ).toEqual({ width: 32, height: 32, icon: "20" });
   await swap.click();
-  await expect(thumbs.first().locator("img")).toHaveAttribute(
-    "alt",
-    "landscape.png",
-  );
-  await expect(thumbs.last().locator("img")).toHaveAttribute(
-    "alt",
-    "square.png",
-  );
+  await expect(
+    thumbs.first().locator(".reference-thumb-preview > img"),
+  ).toHaveAttribute("alt", "landscape.png");
+  await expect(
+    thumbs.last().locator(".reference-thumb-preview > img"),
+  ).toHaveAttribute("alt", "square.png");
 
   const previewButton = thumbs
     .first()
@@ -149,7 +146,9 @@ test("图片首尾帧保持72高、横向交换且预览和移除仍可用", asy
     .getByRole("button", { name: "移除参考图", exact: true })
     .click();
   await expect(thumbs).toHaveCount(1);
-  await expect(thumbs.locator("img")).toHaveAttribute("alt", "square.png");
+  await expect(
+    thumbs.locator(".reference-thumb-preview > img"),
+  ).toHaveAttribute("alt", "square.png");
   await page.screenshot({
     path: info.outputPath("desktop-reference-frames.png"),
     animations: "disabled",
@@ -195,10 +194,16 @@ test("视频结果卡上传、交换和重开后保留首尾帧", async ({ page 
   await expect(swap).toBeEnabled();
   await swap.click();
   await expect(
-    result.locator(".composer-ref-thumb").last().locator("img"),
+    result
+      .locator(".composer-ref-thumb")
+      .last()
+      .locator(".reference-thumb-preview > img"),
   ).toHaveAttribute("alt", "square-result.png");
   await expect(
-    result.locator(".composer-ref-thumb").first().locator("img"),
+    result
+      .locator(".composer-ref-thumb")
+      .first()
+      .locator(".reference-thumb-preview > img"),
   ).toHaveAttribute("alt", "landscape-result.png");
   await expect(page.locator(".project-task-status")).toContainText("已保存");
   await page.reload();
@@ -216,7 +221,10 @@ test("视频结果卡上传、交换和重开后保留首尾帧", async ({ page 
   ).toHaveCount(0);
   await expect(restored.locator(".composer-ref-thumb")).toHaveCount(2);
   await expect(
-    restored.locator(".composer-ref-thumb").first().locator("img"),
+    restored
+      .locator(".composer-ref-thumb")
+      .first()
+      .locator(".reference-thumb-preview > img"),
   ).toHaveAttribute("alt", "landscape-result.png");
   await expect(
     restored.getByRole("button", { name: "交换视频首尾帧" }),
