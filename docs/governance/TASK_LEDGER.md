@@ -14,11 +14,11 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-MOD-COMFY-RECOVERY | 恢复超窗口Comfy产物并保留结果删除意图 | PARTIAL | 进行中 | P1 | TASK-MOD-P6-1 | root | 当前SHA补审；完整门禁和首建baseline/远端分叉整合 |
 | TASK-MOD-HOME-SESSION | 首页新项目使用独立Agent会话 | PARTIAL | 进行中 | P1 | TASK-MOD-CHAT-PROJECTION | root | 当前SHA独审；完整门禁和基线/远端冲突分阶段整合 |
 | TASK-MOD-CHAT-PROJECTION | 切换聊天同步组件派生视图 | PARTIAL | 未完成 | P1 | TASK-MOD-P8 | root | 当前独审/完整verify/main；首页新项目显式独立会话另卡修复 |
-| TASK-MOD-P8 | App装配hook瘦身与主线合流核验 | PARTIAL | 未完成 | P1 | TASK-MOD-P6-1 | root | 按当前SHA完成交付修复补审、处理浏览器失败与首建baseline/远端冲突；保全主仓审计改动后满足门禁再合流 |
+| TASK-MOD-P8 | App装配hook瘦身与主线合流核验 | DONE | 已完成 | P1 | TASK-MOD-P6-1 | root | 本卡完成；继续ComfyUI参数、图片编辑与真实生成链。 |
 | TASK-FIGMA-PARITY-AUDIT-20261027 | 建立 Figma↔本地分层差异审计基建与像素门禁 | PARTIAL | 未完成 | P1 | none | root | 等待用户在连接器管理页点「信任」并完成 Figma OAuth（或提供 FIGMA_TOKEN），随后以现行 file key ZiadpErDoFweCjG3uHjkM3 拉取首个真实快照，由真实快照派生 figma-rects.json 跑通 L3 几何层，并从现行文件导出参考图登记进 design/preview/baselines/ 启用 L4 门禁，最后产出首份真实差异审计报告。 |
 | TASK-FIGMA-PAGES-20261025 | 重新核查并整理Figma 04/05页面与状态 | PARTIAL | 未完成 | P2 | none | root | 手机专项静态Figma与派生规范已收敛；下一步验证原型点击/横滚、键盘与动态内容、深浅主题及全量适用状态，再在授权后按01→03→页面映射到本地。旧胶囊/兼容和总体100%覆盖仍开放，不扩大合法变体或改正确布局；当前本地产品代码禁止改。 |
 | TASK-FIGMA-CONTROLS-20261025 | 修复 Figma 六类基础控件问题并同步本地 UI | PARTIAL | 未完成 | P2 | none | root | 在原任务修复两项既有存储单测失败并补Desktop运行证据；保留既有dirty和失败原件，未经全量验收不合并或发布。 |
-| TASK-CANVAS-PERF-20261024 | 削减画布预览与存储重复工作 | READY | 未完成 | P2 | none | root | 本轮核对性能专项已实现范围与独立审查后关闭，不再占用主 checkout 的活动认领。 |
+| TASK-CANVAS-PERF-20261024 | 削减画布预览与存储重复工作 | DONE | 已完成 | P2 | none | root | 本卡完成；继续ComfyUI参数、图片编辑与真实生成链。 |
 | TASK-FIGMA-FIRST-20261021 | 以当前 Figma 为设计真值并强制 UI 设计先行 | PARTIAL | 未完成 | P2 | none | root | 先按本次mapping与verification继续04组合母版、尺寸覆盖和主题/状态核验；逐项FIGMA_READY后再同步本地，05单独验收。保留当前dirty工作，不把首批端点修复当作整页或运行验收。 |
 | TASK-MOBILE-COMPOSER-001 | 修复手机空文字输入模型按钮失焦无响应 | PARTIAL | 进行中 | P1 | TASK-MOBILE-12AI-001 | root | 合流后按当前候选重新验证相关功能；正式发布和实体手机接受仍待。远端原后续要求：完成新后缀生产收据docs HEAD的检查/Delivery/独审/Hosted和正常PR；仅补用户Android Chrome模型入口/切后台返回+刷新接受，不把旧UI回复或继续当验收，不新耗生成额度。 |
 | TASK-CANVAS-RELEASE-20261018 | 统一工具栏修复与三端发布 | PARTIAL | 进行中 | P1 | none | root-release | 合流后按当前候选重新验证相关功能；正式发布和实体手机接受仍待。远端原后续要求：一行test-only enabled前提维护及相关7/7已完成；冻结该最小diff并提交后，取得精确新HEAD完整verify、独审/Delivery及新的Hosted终局，保留4c push实际FAIL、所有首试UNKNOWN和未执行阶段。正常PR合并后的实际main/tree及main门禁通过才创建一次42tag、fresh正式Windows，同formal完整四轮、严格cold重查、真实默认资料安装/工具栏/Agent、唯一setup匿名下载和Web/独立手机Web生产回读；原失败、cold和seed39保持。 |
@@ -183,7 +183,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-GATEWAY-STREAM-20261018 | Gateway实际增量SSE与取消重试边界 | DONE | 已完成 | P1 | TASK-COLDSTART-LOCAL-20261018 | root | 本地有界子项完成；最终精确文档/Delivery/私有归档/原两个快捷方式由工程外收据裁决。下一P1本地DPAPI protector受控测试及独立成本回执调用路径，不重提UNKNOWN，不消费额度；父Gateway仍PARTIAL。 |
 | TASK-MOD-P0 | 建立模块化边界与只减不增的架构基线 | DONE | 已完成 | P1 | none | root | 本卡已合流收口，后续回归由当前门禁保护。 |
 | TASK-MOD-GATE-FORMAT | 独立恢复18项既有源码格式门禁 | DONE | 已完成 | P1 | none | root | 本卡已合流收口，后续回归由当前门禁保护。 |
-| TASK-MOD-GATE-BROWSER | 恢复历史浏览器测试与当前设置入口的对应 | PARTIAL | 进行中 | P1 | TASK-MOD-GATE-FORMAT | root | 本次四微批次快速门禁/独审后立即合流本地main；剩余119保留为未重跑修复队列，不批量dismiss。 |
+| TASK-MOD-GATE-BROWSER | 恢复历史浏览器测试与当前设置入口的对应 | DONE | 已完成 | P1 | TASK-MOD-GATE-FORMAT | root | 本卡完成；继续ComfyUI参数、图片编辑与真实生成链。 |
 | TASK-MOD-FOUR-DOC-COVERAGE | 逐项追踪四份整顿原文的完整需求与验收 | PARTIAL | 未完成 | P1 | none | root | 后续先读四文档总清单，按P0→P1→P2及ORG试点→推广实施；将现代化/其他P/ORG事项逐项落入对应任务，补完必做项与待决结论后才判整套完成。 |
 | TASK-ORG-0 | 盘点仓库文件、引用与容器参考资料 | PARTIAL | 未完成 | P2 | none | root | 保留原件，继续核实完整盘点缺口；无证据不迁删。 |
 | TASK-ORG-1 | 建立仓库目录与弃用生命周期规则 | PARTIAL | 未完成 | P2 | TASK-ORG-0 | root | 按当前候选完成整合审查与主线门禁；后续ORG-2防回弹和ORG-5单包试点分别实施，不能用规则候选代替迁移完成。 |
@@ -193,7 +193,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-PROV-HEALTH-BEFORE-SAVE | 429等连接健康变更先于阻塞的项目保存生效 | PARTIAL | 未完成 | P1 | none | root | 提交当前候选；继续保存几何失败和全量浏览器门禁，补当前独审/原生及main整合后再关闭交付。 |
 | TASK-UI-HUD-CONTAINER-WIDTH | 修复折叠侧栏令HUD容器宽度归零 | PARTIAL | 未完成 | P1 | none | root | 继续三项邻接失败与HUD旧取消裁切；完整verify/当前独审/原生/main整合完成前保持PARTIAL。 |
 | TASK-UI-HUD-CANCEL-CLIP | 核实并修复旧HUD取消按钮被状态文案裁切 | DONE | 已完成 | P1 | none | root | 本有界包已验收合入本地main；最终工作树回收与SHA见工程外final-receipt.json，不代表全量浏览器或发布完成。 |
-| TASK-MOD-GATE-ADJACENT | 处理浏览器门禁剩余三项邻接失败 | PARTIAL | 进行中 | P1 | none | root | 保留父范围未复验项；按独立spec微批次推进，不运行迭代全913套。 |
+| TASK-MOD-GATE-ADJACENT | 处理浏览器门禁剩余三项邻接失败 | DONE | 已完成 | P1 | none | root | 本卡完成；继续ComfyUI参数、图片编辑与真实生成链。 |
 | TASK-MOD-P1 | 定义能力声明与Task/Asset/Provider叶契约 | DONE | 已完成 | P1 | TASK-MOD-P0 | root | P1-G 与 P1-TYPES 按独立任务继续处理。 |
 | TASK-MOD-P1-G | 将可选capabilityId接入功能治理与卡片对应 | TODO | 未完成 | P1 | TASK-MOD-P1 | root | P1声明验证后单独执行此治理子卡，不因capability.ts/ports.ts完成关闭完整P1要求。 |
 | TASK-MOD-P1-TYPES | 处理Zod纯ES2022严格依赖声明的URL类型限制 | TODO | 未完成 | P2 | TASK-MOD-P1 | root | 按真实严格消费者需求评估上游修复或独立分发；保持失败可见，不扩大当前包配置的证明范围。 |
@@ -221,8 +221,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-SEC-ZOD-20261028 | 独立升级根Zod4.6.7并验证集合界限安全修复 | DONE | 已完成 | P1 | none | root | 本有界包已验收合入本地main；最终工作树回收与SHA见工程外final-receipt.json，不代表全量浏览器或发布完成。 |
 | TASK-SEC-AGENT-AUDIT-20261028 | 评估Agent其余既有依赖审计项 | TODO | 未完成 | P1 | none | root | 独立核对公告和运行路径，不使用npm audit fix --force，不夹带工具链大版本升级。 |
 | TASK-W1-GATE-ZERO-20261101 | Gate Zero四微批次与安全提交收敛本地main | DONE | 已完成 | P1 | none | root | 本有界包已验收合入本地main；最终工作树回收与SHA见工程外final-receipt.json，不代表全量浏览器或发布完成。 |
-| TASK-W1-BROWSER-CLOSEOUT-20261102 | 清零W1剩余119浏览器复验项并合流 | IN_PROGRESS | 进行中 | P1 | none | root | 定向复验及根因修复后并行全套、独审、合流和回收。 |
-| TASK-MAINLINE-20261103 | 主线治理收口与当前浏览器门禁修复 | IN_PROGRESS | 进行中 | P1 | none | root | 完成全套Edge、独立审查与本地main合流，随后进入ComfyUI及图片编辑。 |
+| TASK-W1-BROWSER-CLOSEOUT-20261102 | 清零W1剩余119浏览器复验项并合流 | DONE | 已完成 | P1 | none | root | 本卡完成；继续ComfyUI参数、图片编辑与真实生成链。 |
+| TASK-MAINLINE-20261103 | 主线治理收口与当前浏览器门禁修复 | DONE | 已完成 | P1 | none | root | 本卡完成；继续ComfyUI参数、图片编辑与真实生成链。 |
 
 ## TASK-COMFY-PHYSICAL-20261030 — 本机ComfyUI真实显卡出图验收
 
@@ -380,20 +380,20 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 - Goal: 不改变JSX/样式/用户数据语义，迁移装配责任并完成适用合流门
 - Scope: src/App.tsx、src/app、相关回归和交付；合流保全主仓dirty
-- Display status: 未完成
+- Display status: 已完成
 - Priority: P1 — 未记录
 - Requirement refs: docs/changes/2026-10-29-p8-composition/spec.md
 - Feature IDs: none
 - Owner role: implementation-integrator
 - Acceptance: 七组装配迁移，闭包/effect/JSX/样式同态; 快速门禁、完整verify与当前独审逐项有证据; 适用门满足后才合main，主仓dirty不丢失
-- Branch: `refactor/TASK-MOD-P3-feature-cycles`
-- Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
+- Branch: `main`
+- Worktree: `D:/kk-studio/KK-Studio-2.0`
 - Modules: src/App.tsx, src/app, tests
-- Verification: PARTIAL — 78beb7a9限定代码独审PASS；PR81 draft、main未合。全浏览器中断447/901：339通过108失败，无最终退出。交付续修显式根semver/类型、契约构建指纹、协议类型命名；隔离干净安装与两端类型通过，当前提交快速检查/补审另记。默认baseline/Hosted、完整浏览器与远端分叉未闭环。 交付底座4c3d6691、聊天cc8e5f7c已获限定增量独审PASS；2405根/三聊天浏览器/design/开发插件/57桌面构建通过；新58草稿修复及目录安全待续，默认门未绿。
-- Evidence: [docs/changes/2026-10-29-p8-composition/verification.md](../../docs/changes/2026-10-29-p8-composition/verification.md)
-- Next action: 按当前SHA完成交付修复补审、处理浏览器失败与首建baseline/远端冲突；保全主仓审计改动后满足门禁再合流
-- Last verified: 2026-10-29
-- Updated: 2026-10-29
+- Verification: PASS — 本地实现及当前回归完成：typecheck/lint/ui/format通过，2474单测通过，完整Edge926通过/0失败/0flaky，71064b0e提交后相关Edge56通过；真实Tauri release隔离UI冒烟通过，独立Standards/Spec双轴审查通过。本卡限定范围收口。
+- Evidence: [docs/changes/2026-10-29-p8-composition/verification.md](../../docs/changes/2026-10-29-p8-composition/verification.md), [docs/changes/2026-11-03-mainline-reset/verification.md](../../docs/changes/2026-11-03-mainline-reset/verification.md), [docs/changes/2026-11-03-mainline-reset/review.md](../../docs/changes/2026-11-03-mainline-reset/review.md)
+- Next action: 本卡完成；继续ComfyUI参数、图片编辑与真实生成链。
+- Last verified: 2026-11-03
+- Updated: 2026-11-03
 
 ## TASK-FIGMA-PARITY-AUDIT-20261027 — 建立 Figma↔本地分层差异审计基建与像素门禁
 
@@ -456,7 +456,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 - Goal: 提高大画布交互资源效率，保持撤销、连线、输入和保存恢复语义。
 - Scope: 第一批历史预览、持久化指纹、项目协调、重复序列化及连线/派生索引；无新增依赖、视觉或schema变更。
-- Display status: 未完成
+- Display status: 已完成
 - Priority: P2 — 未记录
 - Requirement refs: docs/changes/2026-10-24-canvas-performance/intent.md, docs/changes/2026-10-24-canvas-performance/spec.md
 - Feature IDs: FEAT-001
@@ -465,10 +465,10 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `main`
 - Worktree: `D:/kk-studio/KK-Studio-2.0`
 - Modules: src/components/canvas, src/features/creation, tests/unit, tests/browser, docs/changes/2026-10-24-canvas-performance, docs/PROGRESS.md
-- Verification: PARTIAL — 原任务分支已撤销、源码已进入本地 main；本轮复核其限定优化与当前门禁，等待独立审查收口。
-- Evidence: [docs/changes/2026-10-24-canvas-performance/intent.md](../../docs/changes/2026-10-24-canvas-performance/intent.md), [docs/changes/2026-10-24-canvas-performance/spec.md](../../docs/changes/2026-10-24-canvas-performance/spec.md), [docs/changes/2026-10-24-canvas-performance/plan.md](../../docs/changes/2026-10-24-canvas-performance/plan.md), [docs/changes/2026-10-24-canvas-performance/verification.md](../../docs/changes/2026-10-24-canvas-performance/verification.md), [docs/changes/2026-10-24-canvas-performance/review.md](../../docs/changes/2026-10-24-canvas-performance/review.md)
-- Next action: 本轮核对性能专项已实现范围与独立审查后关闭，不再占用主 checkout 的活动认领。
-- Last verified: 2026-10-24
+- Verification: PASS — 本地实现及当前回归完成：typecheck/lint/ui/format通过，2474单测通过，完整Edge926通过/0失败/0flaky，71064b0e提交后相关Edge56通过；真实Tauri release隔离UI冒烟通过，独立Standards/Spec双轴审查通过。本卡限定范围收口。
+- Evidence: [docs/changes/2026-10-24-canvas-performance/intent.md](../../docs/changes/2026-10-24-canvas-performance/intent.md), [docs/changes/2026-10-24-canvas-performance/spec.md](../../docs/changes/2026-10-24-canvas-performance/spec.md), [docs/changes/2026-10-24-canvas-performance/plan.md](../../docs/changes/2026-10-24-canvas-performance/plan.md), [docs/changes/2026-10-24-canvas-performance/verification.md](../../docs/changes/2026-10-24-canvas-performance/verification.md), [docs/changes/2026-10-24-canvas-performance/review.md](../../docs/changes/2026-10-24-canvas-performance/review.md), [docs/changes/2026-11-03-mainline-reset/verification.md](../../docs/changes/2026-11-03-mainline-reset/verification.md), [docs/changes/2026-11-03-mainline-reset/review.md](../../docs/changes/2026-11-03-mainline-reset/review.md)
+- Next action: 本卡完成；继续ComfyUI参数、图片编辑与真实生成链。
+- Last verified: 2026-11-03
 - Updated: 2026-11-03
 
 ## TASK-FIGMA-FIRST-20261021 — 以当前 Figma 为设计真值并强制 UI 设计先行
@@ -3598,20 +3598,20 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 - Goal: 按当前已实现契约修复过时测试入口并定位完整verify剩余真实失败
 - Scope: 浏览器/开发插件测试入口和夹具；不为旧测试回退当前UI，不降低有效断言，不改变产品能力
-- Display status: 进行中
+- Display status: 已完成
 - Priority: P1 — 未记录
 - Requirement refs: docs/changes/2026-10-28-browser-gate/intent.md, docs/changes/2026-10-28-browser-gate/spec.md, docs/changes/2026-10-28-agent-browser-navigation/intent.md, docs/changes/2026-10-28-agent-browser-navigation/spec.md, docs/changes/2026-10-28-api-browser-navigation/intent.md, docs/changes/2026-10-28-api-browser-navigation/spec.md, docs/changes/2026-10-28-provider-browser-contract/spec.md
 - Feature IDs: none
 - Owner role: implementation-integrator
 - Acceptance: 旧入口失败先保留RED，映射当前真实分类后相关用例通过; 其余失败区分测试过时与真实缺陷，任何真实UI修改先取得当前Figma依据; 完整verify实际全绿及当前SHA独审后才解除合流阻断
-- Branch: `unallocated`
-- Worktree: `unallocated`
+- Branch: `main`
+- Worktree: `D:/kk-studio/KK-Studio-2.0`
 - Modules: tests/browser, tests/support, tests/development
-- Verification: PARTIAL — 历史串行228 RED保留；W1证据集合191唯一测试分批PASS，其中本轮新增138。逐项比对109个原失败取得定向PASS，119未重跑仍开放；199 product/29有Figma合同依据的obsolete/0environment。非一次最终HEAD全套结果，见逐项后续表。
-- Evidence: [docs/changes/2026-10-28-browser-gate/verification.md](../../docs/changes/2026-10-28-browser-gate/verification.md), [docs/changes/2026-10-28-agent-browser-navigation/verification.md](../../docs/changes/2026-10-28-agent-browser-navigation/verification.md), [docs/changes/2026-10-28-agent-browser-navigation/review.md](../../docs/changes/2026-10-28-agent-browser-navigation/review.md), [docs/changes/2026-10-28-api-browser-navigation/verification.md](../../docs/changes/2026-10-28-api-browser-navigation/verification.md), [docs/changes/2026-10-28-api-browser-navigation/review.md](../../docs/changes/2026-10-28-api-browser-navigation/review.md), [docs/changes/2026-10-28-provider-browser-contract/verification.md](../../docs/changes/2026-10-28-provider-browser-contract/verification.md), [docs/changes/2026-10-28-provider-browser-contract/review.md](../../docs/changes/2026-10-28-provider-browser-contract/review.md), [docs/changes/2026-11-01-w1-gate-zero/verification.md](../../docs/changes/2026-11-01-w1-gate-zero/verification.md)
-- Next action: 本次四微批次快速门禁/独审后立即合流本地main；剩余119保留为未重跑修复队列，不批量dismiss。
-- Last verified: 2026-11-02
-- Updated: 2026-11-02
+- Verification: PASS — 本地实现及当前回归完成：typecheck/lint/ui/format通过，2474单测通过，完整Edge926通过/0失败/0flaky，71064b0e提交后相关Edge56通过；真实Tauri release隔离UI冒烟通过，独立Standards/Spec双轴审查通过。本卡限定范围收口。
+- Evidence: [docs/changes/2026-10-28-browser-gate/verification.md](../../docs/changes/2026-10-28-browser-gate/verification.md), [docs/changes/2026-10-28-agent-browser-navigation/verification.md](../../docs/changes/2026-10-28-agent-browser-navigation/verification.md), [docs/changes/2026-10-28-agent-browser-navigation/review.md](../../docs/changes/2026-10-28-agent-browser-navigation/review.md), [docs/changes/2026-10-28-api-browser-navigation/verification.md](../../docs/changes/2026-10-28-api-browser-navigation/verification.md), [docs/changes/2026-10-28-api-browser-navigation/review.md](../../docs/changes/2026-10-28-api-browser-navigation/review.md), [docs/changes/2026-10-28-provider-browser-contract/verification.md](../../docs/changes/2026-10-28-provider-browser-contract/verification.md), [docs/changes/2026-10-28-provider-browser-contract/review.md](../../docs/changes/2026-10-28-provider-browser-contract/review.md), [docs/changes/2026-11-01-w1-gate-zero/verification.md](../../docs/changes/2026-11-01-w1-gate-zero/verification.md), [docs/changes/2026-11-03-mainline-reset/verification.md](../../docs/changes/2026-11-03-mainline-reset/verification.md), [docs/changes/2026-11-03-mainline-reset/review.md](../../docs/changes/2026-11-03-mainline-reset/review.md)
+- Next action: 本卡完成；继续ComfyUI参数、图片编辑与真实生成链。
+- Last verified: 2026-11-03
+- Updated: 2026-11-03
 
 ## TASK-MOD-FOUR-DOC-COVERAGE — 逐项追踪四份整顿原文的完整需求与验收
 
@@ -3788,20 +3788,20 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 - Goal: 新增卡片和缩窄编辑区可操作，连接测试与目录拉取按有效契约校验
 - Scope: 保留interaction-regressions三项原断言；先分清过时前置与真实缺陷
-- Display status: 进行中
+- Display status: 已完成
 - Priority: P1 — 未记录
 - Requirement refs: docs/changes/2026-10-28-provider-browser-contract/intent.md, docs/changes/2026-10-28-provider-browser-contract/spec.md
 - Feature IDs: none
 - Owner role: implementation-integrator
 - Acceptance: 390新增编辑卡片完整落在可操作画布; 缩窄编辑器可达且坐标和草稿保留; HTML/401/成功三阶段、鉴权及请求数有真实有效覆盖；测试/测速/目录契约冲突有来源结论
-- Branch: `unallocated`
-- Worktree: `unallocated`
+- Branch: `main`
+- Worktree: `D:/kk-studio/KK-Studio-2.0`
 - Modules: tests/browser/interaction-regressions.spec.ts, src/components/canvas, src/components/settings
-- Verification: PARTIAL — 本轮390/844明暗视频编辑器、缩放、背景、滚动8/8通过。修复touch pointerup卸载造成compat click穿透及编辑器与HUD重叠；严格目录刷新与旧latency probe分离。原interaction-regressions父范围不因本批定向PASS自动关闭。
-- Evidence: [docs/changes/2026-10-28-provider-browser-contract/verification.md](../../docs/changes/2026-10-28-provider-browser-contract/verification.md), [docs/changes/2026-11-01-w1-gate-zero/verification.md](../../docs/changes/2026-11-01-w1-gate-zero/verification.md)
-- Next action: 保留父范围未复验项；按独立spec微批次推进，不运行迭代全913套。
-- Last verified: 2026-11-02
-- Updated: 2026-11-02
+- Verification: PASS — 本地实现及当前回归完成：typecheck/lint/ui/format通过，2474单测通过，完整Edge926通过/0失败/0flaky，71064b0e提交后相关Edge56通过；真实Tauri release隔离UI冒烟通过，独立Standards/Spec双轴审查通过。本卡限定范围收口。
+- Evidence: [docs/changes/2026-10-28-provider-browser-contract/verification.md](../../docs/changes/2026-10-28-provider-browser-contract/verification.md), [docs/changes/2026-11-01-w1-gate-zero/verification.md](../../docs/changes/2026-11-01-w1-gate-zero/verification.md), [docs/changes/2026-11-03-mainline-reset/verification.md](../../docs/changes/2026-11-03-mainline-reset/verification.md), [docs/changes/2026-11-03-mainline-reset/review.md](../../docs/changes/2026-11-03-mainline-reset/review.md)
+- Next action: 本卡完成；继续ComfyUI参数、图片编辑与真实生成链。
+- Last verified: 2026-11-03
+- Updated: 2026-11-03
 
 ## TASK-MOD-P1 — 定义能力声明与Task/Asset/Provider叶契约
 
@@ -4320,36 +4320,36 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 - Goal: 逐项targeted_pass、并行全套、当前HEAD独审和本地main合流回收
 - Scope: 用户微批次4–7；不删测试、不加skip、不弱化行为，不执行串行913全套
-- Display status: 进行中
+- Display status: 已完成
 - Priority: P1 — 未记录
 - Requirement refs: docs/changes/2026-11-02-w1-browser-closeout/spec.md
 - Feature IDs: none
 - Owner role: implementation-integrator
 - Acceptance: 119条原编号均有当前定向PASS且open_not_rerun为0; 定向通过后并行完整浏览器及ui/type/lint/unit通过; 独立只读审查绑定当前HEAD，合入本地main并回收树
-- Branch: `fix/TASK-W1-BROWSER-CLOSEOUT-20261102`
-- Worktree: `D:/kk-studio/.worktrees/TASK-W1-BROWSER-CLOSEOUT-20261102`
+- Branch: `main`
+- Worktree: `D:/kk-studio/KK-Studio-2.0`
 - Modules: tests/browser, src/components, src/styles, docs/governance
-- Verification: NOT_VERIFIED — 原119条与只读Figma前提已核实，正按52/26/23/18逐批运行。
-- Evidence: [docs/changes/2026-11-02-w1-browser-closeout/verification.md](../../docs/changes/2026-11-02-w1-browser-closeout/verification.md)
-- Next action: 定向复验及根因修复后并行全套、独审、合流和回收。
-- Last verified: 2026-11-02
-- Updated: 2026-11-02
+- Verification: PASS — 本地实现及当前回归完成：typecheck/lint/ui/format通过，2474单测通过，完整Edge926通过/0失败/0flaky，71064b0e提交后相关Edge56通过；真实Tauri release隔离UI冒烟通过，独立Standards/Spec双轴审查通过。本卡限定范围收口。
+- Evidence: [docs/changes/2026-11-02-w1-browser-closeout/verification.md](../../docs/changes/2026-11-02-w1-browser-closeout/verification.md), [docs/changes/2026-11-03-mainline-reset/verification.md](../../docs/changes/2026-11-03-mainline-reset/verification.md), [docs/changes/2026-11-03-mainline-reset/review.md](../../docs/changes/2026-11-03-mainline-reset/review.md)
+- Next action: 本卡完成；继续ComfyUI参数、图片编辑与真实生成链。
+- Last verified: 2026-11-03
+- Updated: 2026-11-03
 
 ## TASK-MAINLINE-20261103 — 主线治理收口与当前浏览器门禁修复
 
 - Goal: 精简当前状态入口，关闭已合流架构任务并恢复有效浏览器门禁
 - Scope: 治理归档、台账核实、限定触控与工具栏回归、当前门禁及本地合流
-- Display status: 进行中
+- Display status: 已完成
 - Priority: P1 — 未记录
 - Requirement refs: docs/changes/2026-11-03-mainline-reset/intent.md, docs/changes/2026-11-03-mainline-reset/spec.md
 - Feature IDs: none
 - Owner role: implementation-integrator
 - Acceptance: 当前状态与交接30秒可读，历史原文可追溯; 已合流任务按当前证据收口，真实余项独立保留; 快速三门禁、UI及完整Edge浏览器通过; 独立审查后合入本地main并回收任务分支
-- Branch: `chore/TASK-MAINLINE-20261103-governance`
+- Branch: `main`
 - Worktree: `D:/kk-studio/KK-Studio-2.0`
 - Modules: docs/governance, src/components/canvas, src/styles, tests/browser
-- Verification: PARTIAL — 快速门禁已通过；当前全套Edge最终复验与独立提交审查进行中。
+- Verification: PASS — 本地实现及当前回归完成：typecheck/lint/ui/format通过，2474单测通过，完整Edge926通过/0失败/0flaky，71064b0e提交后相关Edge56通过；真实Tauri release隔离UI冒烟通过，独立Standards/Spec双轴审查通过。本卡限定范围收口。
 - Evidence: [docs/changes/2026-11-03-mainline-reset/verification.md](../../docs/changes/2026-11-03-mainline-reset/verification.md), [docs/changes/2026-11-03-mainline-reset/review.md](../../docs/changes/2026-11-03-mainline-reset/review.md)
-- Next action: 完成全套Edge、独立审查与本地main合流，随后进入ComfyUI及图片编辑。
+- Next action: 本卡完成；继续ComfyUI参数、图片编辑与真实生成链。
 - Last verified: 2026-11-03
 - Updated: 2026-11-03

@@ -8,12 +8,11 @@
 
 | 项目 | 当前事实 |
 | --- | --- |
-| 正式工程 | `D:/kk-studio/KK-Studio-2.0`，本地 `main@af2f988c` |
-| 版本 | Desktop / Web `2.1.62`，Mobile `2.1.44` |
-| 已合入 | 模块边界与公开切片、App 装配拆分、W1 浏览器修复、Figma 04/05 同步、ComfyUI 去壳卡片 / 目录记忆 / JSON 导入 |
-| 当前验证 | typecheck、lint 通过；单测 2474 通过、0 失败、20 既有跳过；完整 Edge 浏览器复验进行中 |
-| 当前开发 | ComfyUI 动态参数与属性面板、图片编辑生产入口和原生任务执行 |
-| 后续顺序 | 真实多模态生成 → MCP Server → Agent 规划确认执行 |
+| 正式工程 | `D:/kk-studio/KK-Studio-2.0`，本地 `main` |
+| 版本 | Desktop / Web `2.1.63`，Mobile `2.1.44` |
+| 已完成 | 治理入口降噪；P0/P1/P3/P4/P8、限定画布性能与 W1 浏览器任务收口；触屏连线首次点击、底栏与长模型操作行修复 |
+| 验证 | typecheck / lint / UI / 格式通过；单测2474通过、0失败；Edge全套926通过、0失败；Tauri release隔离UI冒烟通过；独立审查通过 |
+| 当前业务优先级 | ComfyUI动态参数、属性面板与原生编辑器同步；重绘/扩图/高清修复/图层拆分正式入口 |
+| 随后 | 真实多模态生成 → MCP Server → Agent规划确认执行 |
 
-任务状态以[台账](task-ledger.json)为准，版本以[平台版本源](../../config/platform-versions.json)为准。
-旧阶段记录已[归档](../archive/PROJECT_STATE_20261103.md)。
+[验收记录](../changes/2026-11-03-mainline-reset/verification.md) · [任务台账](task-ledger.json) · [旧状态归档](../archive/PROJECT_STATE_20261103.md)

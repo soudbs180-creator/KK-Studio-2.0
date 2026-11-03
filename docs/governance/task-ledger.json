@@ -363,27 +363,29 @@
     ],
     "owner": "root",
     "ownerRole": "implementation-integrator",
-    "branch": "refactor/TASK-MOD-P3-feature-cycles",
-    "worktree": "D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline",
+    "branch": "main",
+    "worktree": "D:/kk-studio/KK-Studio-2.0",
     "baseSha": "792759611c60f698366b755f94198071c6c65c27",
     "affectedModules": [
       "src/App.tsx",
       "src/app",
       "tests"
     ],
-    "status": "PARTIAL",
-    "displayStatus": "未完成",
+    "status": "DONE",
+    "displayStatus": "已完成",
     "priority": "P1",
     "risk": "medium",
     "reviewRequired": true,
     "evidence": [
-      "docs/changes/2026-10-29-p8-composition/verification.md"
+      "docs/changes/2026-10-29-p8-composition/verification.md",
+      "docs/changes/2026-11-03-mainline-reset/verification.md",
+      "docs/changes/2026-11-03-mainline-reset/review.md"
     ],
-    "verification": "78beb7a9限定代码独审PASS；PR81 draft、main未合。全浏览器中断447/901：339通过108失败，无最终退出。交付续修显式根semver/类型、契约构建指纹、协议类型命名；隔离干净安装与两端类型通过，当前提交快速检查/补审另记。默认baseline/Hosted、完整浏览器与远端分叉未闭环。 交付底座4c3d6691、聊天cc8e5f7c已获限定增量独审PASS；2405根/三聊天浏览器/design/开发插件/57桌面构建通过；新58草稿修复及目录安全待续，默认门未绿。",
-    "verificationResult": "PARTIAL",
-    "updated": "2026-10-29",
-    "lastVerified": "2026-10-29",
-    "nextAction": "按当前SHA完成交付修复补审、处理浏览器失败与首建baseline/远端冲突；保全主仓审计改动后满足门禁再合流",
+    "verification": "本地实现及当前回归完成：typecheck/lint/ui/format通过，2474单测通过，完整Edge926通过/0失败/0flaky，71064b0e提交后相关Edge56通过；真实Tauri release隔离UI冒烟通过，独立Standards/Spec双轴审查通过。本卡限定范围收口。",
+    "verificationResult": "PASS",
+    "updated": "2026-11-03",
+    "lastVerified": "2026-11-03",
+    "nextAction": "本卡完成；继续ComfyUI参数、图片编辑与真实生成链。",
     "requirementRefs": [
       "docs/changes/2026-10-29-p8-composition/spec.md"
     ],
@@ -577,8 +579,8 @@
       "docs/changes/2026-10-24-canvas-performance",
       "docs/PROGRESS.md"
     ],
-    "status": "READY",
-    "displayStatus": "未完成",
+    "status": "DONE",
+    "displayStatus": "已完成",
     "priority": "P2",
     "risk": "medium",
     "reviewRequired": true,
@@ -587,13 +589,15 @@
       "docs/changes/2026-10-24-canvas-performance/spec.md",
       "docs/changes/2026-10-24-canvas-performance/plan.md",
       "docs/changes/2026-10-24-canvas-performance/verification.md",
-      "docs/changes/2026-10-24-canvas-performance/review.md"
+      "docs/changes/2026-10-24-canvas-performance/review.md",
+      "docs/changes/2026-11-03-mainline-reset/verification.md",
+      "docs/changes/2026-11-03-mainline-reset/review.md"
     ],
-    "verification": "原任务分支已撤销、源码已进入本地 main；本轮复核其限定优化与当前门禁，等待独立审查收口。",
-    "verificationResult": "PARTIAL",
+    "verification": "本地实现及当前回归完成：typecheck/lint/ui/format通过，2474单测通过，完整Edge926通过/0失败/0flaky，71064b0e提交后相关Edge56通过；真实Tauri release隔离UI冒烟通过，独立Standards/Spec双轴审查通过。本卡限定范围收口。",
+    "verificationResult": "PASS",
     "updated": "2026-11-03",
-    "lastVerified": "2026-10-24",
-    "nextAction": "本轮核对性能专项已实现范围与独立审查后关闭，不再占用主 checkout 的活动认领。",
+    "lastVerified": "2026-11-03",
+    "nextAction": "本卡完成；继续ComfyUI参数、图片编辑与真实生成链。",
     "requirementRefs": [
       "docs/changes/2026-10-24-canvas-performance/intent.md",
       "docs/changes/2026-10-24-canvas-performance/spec.md"
@@ -11068,16 +11072,16 @@
     ],
     "owner": "root",
     "ownerRole": "implementation-integrator",
-    "branch": "unallocated",
-    "worktree": "unallocated",
+    "branch": "main",
+    "worktree": "D:/kk-studio/KK-Studio-2.0",
     "baseSha": "af4c4e2eadbde0df090ba9e222096dd3d39ad517",
     "affectedModules": [
       "tests/browser",
       "tests/support",
       "tests/development"
     ],
-    "status": "PARTIAL",
-    "displayStatus": "进行中",
+    "status": "DONE",
+    "displayStatus": "已完成",
     "priority": "P1",
     "risk": "medium",
     "reviewRequired": true,
@@ -11089,13 +11093,15 @@
       "docs/changes/2026-10-28-api-browser-navigation/review.md",
       "docs/changes/2026-10-28-provider-browser-contract/verification.md",
       "docs/changes/2026-10-28-provider-browser-contract/review.md",
-      "docs/changes/2026-11-01-w1-gate-zero/verification.md"
+      "docs/changes/2026-11-01-w1-gate-zero/verification.md",
+      "docs/changes/2026-11-03-mainline-reset/verification.md",
+      "docs/changes/2026-11-03-mainline-reset/review.md"
     ],
-    "verification": "历史串行228 RED保留；W1证据集合191唯一测试分批PASS，其中本轮新增138。逐项比对109个原失败取得定向PASS，119未重跑仍开放；199 product/29有Figma合同依据的obsolete/0environment。非一次最终HEAD全套结果，见逐项后续表。",
-    "verificationResult": "PARTIAL",
-    "updated": "2026-11-02",
-    "lastVerified": "2026-11-02",
-    "nextAction": "本次四微批次快速门禁/独审后立即合流本地main；剩余119保留为未重跑修复队列，不批量dismiss。",
+    "verification": "本地实现及当前回归完成：typecheck/lint/ui/format通过，2474单测通过，完整Edge926通过/0失败/0flaky，71064b0e提交后相关Edge56通过；真实Tauri release隔离UI冒烟通过，独立Standards/Spec双轴审查通过。本卡限定范围收口。",
+    "verificationResult": "PASS",
+    "updated": "2026-11-03",
+    "lastVerified": "2026-11-03",
+    "nextAction": "本卡完成；继续ComfyUI参数、图片编辑与真实生成链。",
     "requirementRefs": [
       "docs/changes/2026-10-28-browser-gate/intent.md",
       "docs/changes/2026-10-28-browser-gate/spec.md",
@@ -11513,28 +11519,30 @@
     "dependencies": [],
     "owner": "root",
     "ownerRole": "implementation-integrator",
-    "branch": "unallocated",
-    "worktree": "unallocated",
+    "branch": "main",
+    "worktree": "D:/kk-studio/KK-Studio-2.0",
     "baseSha": "b8acad1c31eef37b1702c30a428bdff966525551",
     "affectedModules": [
       "tests/browser/interaction-regressions.spec.ts",
       "src/components/canvas",
       "src/components/settings"
     ],
-    "status": "PARTIAL",
-    "displayStatus": "进行中",
+    "status": "DONE",
+    "displayStatus": "已完成",
     "priority": "P1",
     "risk": "medium",
     "reviewRequired": true,
     "evidence": [
       "docs/changes/2026-10-28-provider-browser-contract/verification.md",
-      "docs/changes/2026-11-01-w1-gate-zero/verification.md"
+      "docs/changes/2026-11-01-w1-gate-zero/verification.md",
+      "docs/changes/2026-11-03-mainline-reset/verification.md",
+      "docs/changes/2026-11-03-mainline-reset/review.md"
     ],
-    "verification": "本轮390/844明暗视频编辑器、缩放、背景、滚动8/8通过。修复touch pointerup卸载造成compat click穿透及编辑器与HUD重叠；严格目录刷新与旧latency probe分离。原interaction-regressions父范围不因本批定向PASS自动关闭。",
-    "verificationResult": "PARTIAL",
-    "updated": "2026-11-02",
-    "lastVerified": "2026-11-02",
-    "nextAction": "保留父范围未复验项；按独立spec微批次推进，不运行迭代全913套。",
+    "verification": "本地实现及当前回归完成：typecheck/lint/ui/format通过，2474单测通过，完整Edge926通过/0失败/0flaky，71064b0e提交后相关Edge56通过；真实Tauri release隔离UI冒烟通过，独立Standards/Spec双轴审查通过。本卡限定范围收口。",
+    "verificationResult": "PASS",
+    "updated": "2026-11-03",
+    "lastVerified": "2026-11-03",
+    "nextAction": "本卡完成；继续ComfyUI参数、图片编辑与真实生成链。",
     "requirementRefs": [
       "docs/changes/2026-10-28-provider-browser-contract/intent.md",
       "docs/changes/2026-10-28-provider-browser-contract/spec.md"
@@ -12793,8 +12801,8 @@
     "dependencies": [],
     "owner": "root",
     "ownerRole": "implementation-integrator",
-    "branch": "fix/TASK-W1-BROWSER-CLOSEOUT-20261102",
-    "worktree": "D:/kk-studio/.worktrees/TASK-W1-BROWSER-CLOSEOUT-20261102",
+    "branch": "main",
+    "worktree": "D:/kk-studio/KK-Studio-2.0",
     "baseSha": "3eae01c21ea7359201ca0d7b88aee92d093192bc",
     "affectedModules": [
       "tests/browser",
@@ -12802,19 +12810,21 @@
       "src/styles",
       "docs/governance"
     ],
-    "status": "IN_PROGRESS",
-    "displayStatus": "进行中",
+    "status": "DONE",
+    "displayStatus": "已完成",
     "priority": "P1",
     "risk": "medium",
     "reviewRequired": true,
     "evidence": [
-      "docs/changes/2026-11-02-w1-browser-closeout/verification.md"
+      "docs/changes/2026-11-02-w1-browser-closeout/verification.md",
+      "docs/changes/2026-11-03-mainline-reset/verification.md",
+      "docs/changes/2026-11-03-mainline-reset/review.md"
     ],
-    "verification": "原119条与只读Figma前提已核实，正按52/26/23/18逐批运行。",
-    "verificationResult": "NOT_VERIFIED",
-    "updated": "2026-11-02",
-    "lastVerified": "2026-11-02",
-    "nextAction": "定向复验及根因修复后并行全套、独审、合流和回收。",
+    "verification": "本地实现及当前回归完成：typecheck/lint/ui/format通过，2474单测通过，完整Edge926通过/0失败/0flaky，71064b0e提交后相关Edge56通过；真实Tauri release隔离UI冒烟通过，独立Standards/Spec双轴审查通过。本卡限定范围收口。",
+    "verificationResult": "PASS",
+    "updated": "2026-11-03",
+    "lastVerified": "2026-11-03",
+    "nextAction": "本卡完成；继续ComfyUI参数、图片编辑与真实生成链。",
     "requirementRefs": [
       "docs/changes/2026-11-02-w1-browser-closeout/spec.md"
     ],
@@ -12834,7 +12844,7 @@
     "dependencies": [],
     "owner": "root",
     "ownerRole": "implementation-integrator",
-    "branch": "chore/TASK-MAINLINE-20261103-governance",
+    "branch": "main",
     "worktree": "D:/kk-studio/KK-Studio-2.0",
     "baseSha": "af2f988c019388427b24e92f709ce79d98171136",
     "affectedModules": [
@@ -12843,8 +12853,8 @@
       "src/styles",
       "tests/browser"
     ],
-    "status": "IN_PROGRESS",
-    "displayStatus": "进行中",
+    "status": "DONE",
+    "displayStatus": "已完成",
     "priority": "P1",
     "risk": "medium",
     "reviewRequired": true,
@@ -12852,11 +12862,11 @@
       "docs/changes/2026-11-03-mainline-reset/verification.md",
       "docs/changes/2026-11-03-mainline-reset/review.md"
     ],
-    "verification": "快速门禁已通过；当前全套Edge最终复验与独立提交审查进行中。",
-    "verificationResult": "PARTIAL",
+    "verification": "本地实现及当前回归完成：typecheck/lint/ui/format通过，2474单测通过，完整Edge926通过/0失败/0flaky，71064b0e提交后相关Edge56通过；真实Tauri release隔离UI冒烟通过，独立Standards/Spec双轴审查通过。本卡限定范围收口。",
+    "verificationResult": "PASS",
     "updated": "2026-11-03",
     "lastVerified": "2026-11-03",
-    "nextAction": "完成全套Edge、独立审查与本地main合流，随后进入ComfyUI及图片编辑。",
+    "nextAction": "本卡完成；继续ComfyUI参数、图片编辑与真实生成链。",
     "requirementRefs": [
       "docs/changes/2026-11-03-mainline-reset/intent.md",
       "docs/changes/2026-11-03-mainline-reset/spec.md"

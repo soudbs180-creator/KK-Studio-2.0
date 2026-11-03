@@ -1,4 +1,4 @@
-# AI 恢复入口
+# AI恢复入口
 
 - docId: AI_HANDOFF
 - status: current
@@ -6,9 +6,9 @@
 - source: `docs/governance/PROJECT_STATE.md`
 - supersededBy: null
 
-1. 核对 Git status、main 和现有工作树，再读[当前主线状态](PROJECT_STATE.md)与[任务台账](task-ledger.json)。
-2. 本轮依次完成治理收口、ComfyUI 参数面板及图片编辑、真实生成、MCP Server 与 Agent 编排；Desktop 优先。
-3. 本地快速门禁已通过；完整 Edge 浏览器复验进行中。日志：`D:/kk-studio/output/logs/mainline-2026-11-03/`。
-4. 复用现有队列、AssetPort、画布和项目持久化；功能入口必须启用并连接真实执行链。门禁通过即合入本地 main、回收任务分支。
+1. 核对Git status、main与工作树，读取[当前状态](PROJECT_STATE.md)与[任务台账](task-ledger.json)。
+2. 阶段1源码`71064b0e`已完成当前门禁与独立审查；W1原119项均有回执，open=0。详见[验收](../changes/2026-11-03-mainline-reset/verification.md)。
+3. 立即继续阶段2：`features/comfyui`参数/编辑器与`features/image-edit`生产入口，沿用现有TaskHost、AssetPort与项目持久化。
+4. Desktop优先；门禁通过即合入本地main、回收任务分支。P1-G/TYPES及阶段2未完成实现仍按台账执行。
 
-当前只保留以上恢复信息；旧交接流水账已[归档](../archive/AI_HANDOFF_20261103.md)。
+[历史交接](../archive/AI_HANDOFF_20261103.md)只供追溯。
