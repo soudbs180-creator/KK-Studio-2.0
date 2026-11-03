@@ -220,11 +220,20 @@ fn attachments(value: &Value) -> Result<(), String> {
         shape(
             attachment,
             "attachments",
-            &["id", "assetId", "name", "mime", "size", "dataUrl"],
+            &[
+                "id",
+                "assetId",
+                "originalAssetId",
+                "name",
+                "mime",
+                "size",
+                "dataUrl",
+            ],
             &["id", "name", "mime", "size"],
         )?;
         text(attachment, "id", 1, 160)?;
         text(attachment, "assetId", 1, 160)?;
+        text(attachment, "originalAssetId", 1, 160)?;
         texts(attachment, &[("name", usize::MAX), ("mime", usize::MAX)])?;
         number(attachment, "size", 0.0, MAX_SAFE_INTEGER, true)?;
         if let Some(data) = attachment.get("dataUrl") {
@@ -651,10 +660,7 @@ fn item_fields(value: &Value) -> Result<(), String> {
     finite(value, "updatedAt")?;
     finite(value, "generationIndex")?;
     for field in ["referenceMode", "referenceOnly"] {
-        if value
-            .get(field)
-            .is_some_and(|flag| flag.as_bool() != Some(true))
-        {
+        if value.get(field).is_some_and(|flag| !flag.is_boolean()) {
             return Err(invalid(field));
         }
     }
@@ -990,7 +996,7 @@ fn canvas(value: &Value) -> Result<(), String> {
     shape(
         value,
         "canvas",
-        &["version", "positions", "edges", "viewport"],
+        &["version", "positions", "edges", "viewport", "groups"],
         &["version", "positions", "edges", "viewport"],
     )?;
     let positions = value["positions"]
@@ -1009,6 +1015,72 @@ fn canvas(value: &Value) -> Result<(), String> {
         text(edge, "id", 1, 160)?;
         text(edge, "source", 1, 160)?;
         text(edge, "target", 1, 160)?;
+    }
+    let groups = array(value, "groups")?;
+    if groups.len() > 100 {
+        return Err(invalid("canvas.groups"));
+    }
+    for group in groups {
+        shape(
+            group,
+            "canvas.groups",
+            &[
+                "id",
+                "name",
+                "itemIds",
+                "borderColor",
+                "collapseMode",
+                "layoutMode",
+                "tagIds",
+                "resourcePackId",
+                "createdAt",
+                "updatedAt",
+            ],
+            &[
+                "id",
+                "name",
+                "itemIds",
+                "borderColor",
+                "collapseMode",
+                "layoutMode",
+                "createdAt",
+                "updatedAt",
+            ],
+        )?;
+        text(group, "id", 1, 160)?;
+        text(group, "name", 1, 120)?;
+        text(group, "resourcePackId", 1, 160)?;
+        let name = group["name"].as_str().unwrap();
+        let color = group["borderColor"]
+            .as_str()
+            .ok_or_else(|| invalid("canvas.groups.borderColor"))?;
+        if name.trim() != name
+            || color.len() != 7
+            || !color.starts_with('#')
+            || !color[1..].bytes().all(|c| c.is_ascii_hexdigit())
+        {
+            return Err(invalid("canvas.groups"));
+        }
+        enumeration(group, "collapseMode", &["info", "stack"])?;
+        enumeration(
+            group,
+            "layoutMode",
+            &["grid", "horizontal", "vertical", "upstream"],
+        )?;
+        number(group, "createdAt", 0.0, f64::MAX, false)?;
+        number(group, "updatedAt", 0.0, f64::MAX, false)?;
+        for (field, min, max) in [("itemIds", 1, 200), ("tagIds", 0, 40)] {
+            let ids = array(group, field)?;
+            if ids.len() < min
+                || ids.len() > max
+                || ids.iter().any(|id| {
+                    !id.as_str()
+                        .is_some_and(|id| !id.is_empty() && id.encode_utf16().count() <= 160)
+                })
+            {
+                return Err(invalid("canvas.groups"));
+            }
+        }
     }
     shape(
         &value["viewport"],

@@ -150,6 +150,46 @@ fn media_dimensions_accept_only_optional_lossless_reader_numbers() {
 }
 
 #[test]
+fn image_edit_original_attachment_and_explicit_false_flags_survive_package_validation() {
+    let f = Fixture::new();
+    let mut snapshot = f.snapshot.clone();
+    snapshot["projects"][0]["items"][0]["referenceOnly"] = json!(false);
+    snapshot["projects"][0]["items"][0]["referenceMode"] = json!(false);
+    snapshot["projects"][0]["attachments"] = json!([{ "id":"original", "assetId":f.id, "originalAssetId":f.id, "name":"original.png", "mime":"image/png", "size":24 }]);
+    snapshot["projects"][0]["canvas"]["groups"] = json!([]);
+    snapshot_schema::validate(&snapshot).unwrap();
+    snapshot["projects"][0]["canvas"]["groups"] = json!([{ "id":"group1", "name":"Saved group", "itemIds":["n1","n2"], "borderColor":"#123abc", "collapseMode":"info", "layoutMode":"grid", "createdAt":1,"updatedAt":1 }]);
+    snapshot_schema::validate(&snapshot).unwrap();
+    snapshot["projects"][0]["canvas"]["groups"][0]["borderColor"] = json!("invalid");
+    assert!(snapshot_schema::validate(&snapshot).is_err());
+    snapshot["projects"][0]["canvas"]["groups"][0]["borderColor"] = json!("#123abc");
+    snapshot["revision"] = json!(2);
+    f.snapshots.write(snapshot.clone(), Some(1)).unwrap();
+    let package = f.package();
+    let target = f.root.join("image-edit-restored");
+    import_package(&package, &target).unwrap();
+    let restored = SnapshotRepository::new(target.join("projects/creation-v2.json"))
+        .read()
+        .unwrap()
+        .snapshot
+        .unwrap();
+    assert_eq!(
+        restored["projects"][0]["attachments"][0]["originalAssetId"],
+        f.id
+    );
+    assert_eq!(restored["projects"][0]["items"][0]["referenceOnly"], false);
+    assert_eq!(
+        restored["projects"][0]["canvas"]["groups"],
+        snapshot["projects"][0]["canvas"]["groups"]
+    );
+    snapshot["projects"][0]["attachments"][0]["originalAssetId"] = json!({"invalid":true});
+    assert!(snapshot_schema::validate(&snapshot).is_err());
+    snapshot["projects"][0]["attachments"][0]["originalAssetId"] = json!(f.id);
+    snapshot["projects"][0]["items"][0]["referenceOnly"] = json!("false");
+    assert!(snapshot_schema::validate(&snapshot).is_err());
+}
+
+#[test]
 fn account_and_api_model_selections_round_trip_without_rewriting_legacy_projects() {
     for selection in [
         None,

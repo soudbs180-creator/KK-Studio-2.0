@@ -22,19 +22,29 @@ export function comfyNodeChoices(
 }
 export async function readComfyImageModels(value: string, signal: AbortSignal) {
   const endpoint = normalizeComfyEndpoint(value);
+  const deadline = AbortSignal.any([signal, AbortSignal.timeout(10_000)]);
   async function options(node: string, input: string): Promise<string[]> {
     const path = `/object_info/${node}`;
-    const value = nativeComfyRuntime.desktop
-      ? await nativeComfyRuntime.json(path, undefined, endpoint)
-      : await (
-          await fetch(endpoint + path, {
-            signal,
-            credentials: "omit",
-            redirect: "error",
-          })
-        ).json();
-    signal.throwIfAborted();
-    return comfyNodeChoices(value, node, input);
+    try {
+      let value: unknown;
+      if (nativeComfyRuntime.desktop)
+        value = await nativeComfyRuntime.json(path, undefined, endpoint);
+      else {
+        const response = await fetch(endpoint + path, {
+          signal: deadline,
+          credentials: "omit",
+          redirect: "error",
+        });
+        if (response.status === 404) return [];
+        if (!response.ok) throw new Error(`ComfyUI HTTP ${response.status}`);
+        value = await response.json();
+      }
+      deadline.throwIfAborted();
+      return comfyNodeChoices(value, node, input);
+    } catch (error) {
+      if (String(error).includes("HTTP 404")) return [];
+      throw error;
+    }
   }
   const [checkpoints, upscaleModels, backgroundModels] = await Promise.all([
     options("CheckpointLoaderSimple", "ckpt_name"),

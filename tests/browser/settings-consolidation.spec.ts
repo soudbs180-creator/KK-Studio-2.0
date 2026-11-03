@@ -321,9 +321,15 @@ test("原工作流可导出，取消删除与保存失败不丢记录", async ({
       JSON.parse(localStorage.getItem("kk-studio.comfyui.workflows.v1")!),
     ),
   ).toEqual([workflow]);
+  const runGuide = page.getByRole("button", {
+    name: "画布运行指引",
+    exact: true,
+  });
+  await expect(runGuide).toBeEnabled();
+  await runGuide.click();
   await expect(
-    page.getByRole("button", { name: "运行未接通", exact: true }),
-  ).toBeDisabled();
+    page.getByRole("status").filter({ hasText: "画布" }),
+  ).toBeVisible();
 });
 
 test("硬件检测失败保留本地草稿并释放导航锁，不显示底层路径", async ({
