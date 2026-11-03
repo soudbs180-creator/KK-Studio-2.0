@@ -192,7 +192,8 @@ test("narrow canvas keeps the comparison controls reachable and slider draggable
     const firstCompare = (await imageActions(page, first)).getByRole("button", {
       name: /加入对比/,
     });
-    expect((await firstCompare.boundingBox())!.height).toBeCloseTo(32, 0);
+    expect((await firstCompare.boundingBox())!.height).toBeCloseTo(44, 0);
+    await panCanvasToRevealAction(page, firstCompare);
     await firstCompare.click();
     const second = await addSecondImage(page);
     const secondCompare = (await imageActions(page, second)).getByRole(

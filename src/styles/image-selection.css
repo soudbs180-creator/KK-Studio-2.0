@@ -20,11 +20,13 @@
 
 .image-selection-toolbar > .kk-button {
   flex: 0 0 auto;
-  min-height: var(--kk-control-h-md);
-  height: var(--kk-control-h-md);
+  min-height: var(--kk-hit-touch);
+  height: var(--kk-hit-touch);
+  padding-block: calc((var(--kk-hit-touch) - var(--kk-control-h-md)) / 2);
   padding-inline: var(--kk-control-px-md);
   gap: var(--kk-space-2);
-  border-color: transparent;
+  border: 0;
+  background-clip: content-box;
   border-radius: var(--kk-radius-full);
   color: var(--kk-control-idle-fg);
   font-size: var(--kk-font-toolbar);
@@ -68,8 +70,17 @@
 
 .image-selection-toolbar > .ui-icon-button {
   flex: 0 0 auto;
-  width: var(--kk-icon-button-h);
-  height: var(--kk-icon-button-h);
+  width: var(--kk-hit-touch);
+  height: var(--kk-hit-touch);
+}
+
+.image-selection-toolbar .tag-editor-trigger {
+  width: var(--kk-hit-touch);
+  height: var(--kk-hit-touch);
+  min-height: var(--kk-hit-touch);
+  padding: calc((var(--kk-hit-touch) - var(--kk-control-h-md)) / 2);
+  border: 0;
+  background-clip: content-box;
 }
 
 .uploaded-image,

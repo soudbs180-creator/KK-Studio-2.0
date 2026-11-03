@@ -1,5 +1,9 @@
 import { expect, test, type Locator, type Page } from "@playwright/test";
-import { openWorkspace, showCanvasNavigation } from "./helpers";
+import {
+  openWorkspace,
+  showCanvasNavigation,
+  panCanvasToRevealAction,
+} from "./helpers";
 
 const productionOrigin = "http://127.0.0.1:1423";
 
@@ -135,7 +139,7 @@ async function expectAboveImage(page: Page, node: Locator): Promise<void> {
     })),
   ).toEqual({ inCanvas: true, inStage: false, overflow: 0 });
   for (const button of await toolbar(page).getByRole("button").all()) {
-    expect((await button.boundingBox())!.height).toBeCloseTo(32, 0);
+    expect((await button.boundingBox())!.height).toBeCloseTo(44, 0);
     const expectedFontSize = await button.evaluate((element) =>
       element.matches(".tag-editor-trigger") ? "14px" : "12px",
     );
@@ -159,9 +163,11 @@ test("单击参考图片只选中，上方工具栏复用预览重绘对比并�
     0,
   );
   await expectAboveImage(page, node);
-  await toolbar(page)
-    .getByRole("button", { name: "加入对比：blue-hour.png" })
-    .click();
+  const compare = toolbar(page).getByRole("button", {
+    name: "加入对比：blue-hour.png",
+  });
+  await panCanvasToRevealAction(page, compare);
+  await compare.click();
   await expect(
     page.getByRole("region", { name: "图片对比选择" }),
   ).toContainText("1/4");
