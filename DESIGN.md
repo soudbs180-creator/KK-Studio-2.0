@@ -26,16 +26,16 @@ colors:
   on-error: "#ff8585"
   success: "#79cda8"
   warning: "#e6b96a"
-  focus: "#7fd6b2"
+  focus: "#dbdbdb"
   button-primary: "#e9e9e9"
-  button-primary-hover: "#ffffff"
+  button-primary-hover: "#f2f2f2"
   on-button-primary: "#161616"
   light-primary: "#21a673"
   light-primary-hover: "#2fbe86"
   light-primary-soft: "#7fd6b2"
   light-on-primary: "#0a0a0a"
   light-background: "#ededed"
-  light-surface: "#ffffff"
+  light-surface: "#f2f2f2"
   light-surface-container: "#eeeeee"
   light-surface-container-high: "#ececec"
   light-surface-variant: "#eaeaea"
@@ -52,7 +52,7 @@ colors:
   light-on-error: "#aa263b"
   light-success: "#216947"
   light-warning: "#8a590c"
-  light-focus: "#166443"
+  light-focus: "#252525"
   light-button-primary: "#252525"
   light-button-primary-hover: "#3c3c3c"
   light-on-button-primary: "#f2f2f2"
@@ -179,7 +179,7 @@ components:
     padding: 4px
 x-kk-studio:
   source: src/styles/tokens.css
-  sha256: 4dc91ac11af65d2c1e4efefb62eec2f86dce06a038cfdb1b6aed8ef5bc9323fa
+  sha256: 48f07ca7b9391040653a2ade37adcce024b03a82e5da411166036926640fe229
   hashEncoding: utf8-lf
   scopes:
     - selector: :root
@@ -460,7 +460,7 @@ x-kk-studio:
           value: "#e6b96a"
           important: false
         - property: --kk-focus-ring
-          value: "#7fd6b2"
+          value: "#dbdbdb"
           important: false
         - property: --kk-focus-ring-subtle
           value: rgba(255, 255, 255, 0.58)
@@ -485,6 +485,36 @@ x-kk-studio:
           important: false
         - property: --kk-star-end
           value: "#ee8b3a"
+          important: false
+        - property: --kk-tag-character-bg
+          value: "#1458a5"
+          important: false
+        - property: --kk-tag-character-text
+          value: "#f2f2f2"
+          important: false
+        - property: --kk-tag-scene-bg
+          value: "#6534b0"
+          important: false
+        - property: --kk-tag-scene-text
+          value: "#f2f2f2"
+          important: false
+        - property: --kk-tag-costume-bg
+          value: "#a12659"
+          important: false
+        - property: --kk-tag-costume-text
+          value: "#f2f2f2"
+          important: false
+        - property: --kk-tag-prop-bg
+          value: "#94420c"
+          important: false
+        - property: --kk-tag-prop-text
+          value: "#f2f2f2"
+          important: false
+        - property: --kk-tag-custom-bg
+          value: "#252525"
+          important: false
+        - property: --kk-tag-custom-text
+          value: "#dbdbdb"
           important: false
         - property: --kk-border-none
           value: "0"
@@ -808,7 +838,7 @@ x-kk-studio:
           value: "#e9e9e9"
           important: false
         - property: --kk-button-primary-hover
-          value: "#ffffff"
+          value: "#f2f2f2"
           important: false
         - property: --kk-button-primary-text
           value: "#161616"
@@ -1063,7 +1093,7 @@ x-kk-studio:
           value: "#eaeaea"
           important: false
         - property: --kk-bg-surface
-          value: "#ffffff"
+          value: "#f2f2f2"
           important: false
         - property: --kk-border-default
           value: "#c4c4c4"
@@ -1161,7 +1191,7 @@ x-kk-studio:
           value: "#0a0a0a"
           important: false
         - property: --kk-focus-ring
-          value: "#166443"
+          value: "#252525"
           important: false
         - property: --kk-focus-ring-subtle
           value: rgba(0, 0, 0, 0.4)
@@ -1195,6 +1225,36 @@ x-kk-studio:
           important: false
         - property: --kk-star-end
           value: "#b66c1d"
+          important: false
+        - property: --kk-tag-character-bg
+          value: "#8cc2ff"
+          important: false
+        - property: --kk-tag-character-text
+          value: "#0a0a0a"
+          important: false
+        - property: --kk-tag-scene-bg
+          value: "#cfc0fe"
+          important: false
+        - property: --kk-tag-scene-text
+          value: "#0a0a0a"
+          important: false
+        - property: --kk-tag-costume-bg
+          value: "#f4b7d2"
+          important: false
+        - property: --kk-tag-costume-text
+          value: "#0a0a0a"
+          important: false
+        - property: --kk-tag-prop-bg
+          value: "#f8c294"
+          important: false
+        - property: --kk-tag-prop-text
+          value: "#0a0a0a"
+          important: false
+        - property: --kk-tag-custom-bg
+          value: "#e0e0e0"
+          important: false
+        - property: --kk-tag-custom-text
+          value: "#252525"
           important: false
     - selector: '[data-accent="blue"]'
       atRules: []
@@ -1313,9 +1373,6 @@ x-kk-studio:
       declarations:
         - property: --kk-text-accent
           value: var(--kk-accent-soft)
-          important: false
-        - property: --kk-focus-ring
-          value: var(--kk-text-accent)
           important: false
     - selector: '[data-theme="light"][data-accent="blue"]'
       atRules: []

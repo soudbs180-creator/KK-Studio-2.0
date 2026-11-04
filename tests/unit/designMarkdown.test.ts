@@ -64,9 +64,9 @@ test("integration preserves approved runtime tokens and registered dimensions", 
     path.join(root, "src/styles/tokens.css"),
     "utf8",
   );
-  // Figma 1514:88998 adds scoped choice colors; existing action tiers stay unchanged.
+  // Milestone 1 updates tokens.css (light surface, dark hover, neutral focus, 5 tag pairs).
   const approvedHash =
-    "4dc91ac11af65d2c1e4efefb62eec2f86dce06a038cfdb1b6aed8ef5bc9323fa";
+    "48f07ca7b9391040653a2ade37adcce024b03a82e5da411166036926640fe229";
   assert.equal(
     createHash("sha256").update(source.replace(/\r\n/g, "\n")).digest("hex"),
     approvedHash,

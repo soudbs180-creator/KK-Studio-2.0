@@ -15,12 +15,6 @@ export function AdvancedSettings() {
       <Card>
         <Label title>高级</Label>
         <Action
-          label="当前项目画布与节点"
-          disabled={!project}
-          reason={!project ? "先在项目页创建或打开项目。" : undefined}
-          onPress={() => router.push(`/canvas/${project!.id}`)}
-        />
-        <Action
           label="本地提案与批准"
           disabled={!project}
           onPress={() => router.push(`/proposals/${project!.id}`)}

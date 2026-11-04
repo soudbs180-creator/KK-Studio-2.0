@@ -129,7 +129,7 @@
   --kk-danger: #b4233c;
   --kk-success: #79cda8;
   --kk-warning: #e6b96a;
-  --kk-focus-ring: #7fd6b2;
+  --kk-focus-ring: #dbdbdb;
   --kk-focus-ring-subtle: rgba(255, 255, 255, 0.58);
   --kk-shadow-color: rgba(0, 0, 0, 0.5);
   --kk-shadow-color-strong: rgba(0, 0, 0, 0.7);
@@ -138,6 +138,18 @@
   --kk-like-end: #d94063;
   --kk-star-start: #e6b96a;
   --kk-star-end: #ee8b3a;
+
+  /* --- 2.8 业务数据标签色 (Data Tag Colors: Dark) --- */
+  --kk-tag-character-bg: #1458a5;
+  --kk-tag-character-text: #f2f2f2;
+  --kk-tag-scene-bg: #6534b0;
+  --kk-tag-scene-text: #f2f2f2;
+  --kk-tag-costume-bg: #a12659;
+  --kk-tag-costume-text: #f2f2f2;
+  --kk-tag-prop-bg: #94420c;
+  --kk-tag-prop-text: #f2f2f2;
+  --kk-tag-custom-bg: #252525;
+  --kk-tag-custom-text: #dbdbdb;
 
   /* --- 2.2 边框 --- */
   --kk-border-none: 0;
@@ -268,7 +280,7 @@
   --kk-button-radius: var(--kk-radius-full);
   /* User reference: ordinary primary actions are neutral; state uses accent. */
   --kk-button-primary-bg: #e9e9e9;
-  --kk-button-primary-hover: #ffffff;
+  --kk-button-primary-hover: #f2f2f2;
   --kk-button-primary-text: #161616;
   --kk-button-compact-h: var(--kk-control-h-md);
   --kk-button-compact-px: var(--kk-control-px-md);
@@ -374,7 +386,7 @@
   --kk-bg-card: #eeeeee;
   --kk-bg-elevated: #ececec;
   --kk-bg-soft: #eaeaea;
-  --kk-bg-surface: #ffffff;
+  --kk-bg-surface: #f2f2f2;
   --kk-border-default: #c4c4c4;
   --kk-border-control: #777777;
   --kk-border-subtle: #dedede;
@@ -409,7 +421,7 @@
   --kk-success: #216947;
   --kk-warning: #8a590c;
   --kk-on-accent: #0a0a0a;
-  --kk-focus-ring: #166443;
+  --kk-focus-ring: #252525;
   --kk-focus-ring-subtle: rgba(0, 0, 0, 0.4);
   --kk-shadow-color: rgba(0, 0, 0, 0.12);
   --kk-shadow-color-strong: rgba(0, 0, 0, 0.2);
@@ -421,6 +433,18 @@
   --kk-like-end: #8f1f37;
   --kk-star-start: #8a590c;
   --kk-star-end: #b66c1d;
+
+  /* --- 2.8 业务数据标签色 (Data Tag Colors: Light) --- */
+  --kk-tag-character-bg: #8cc2ff;
+  --kk-tag-character-text: #0a0a0a;
+  --kk-tag-scene-bg: #cfc0fe;
+  --kk-tag-scene-text: #0a0a0a;
+  --kk-tag-costume-bg: #f4b7d2;
+  --kk-tag-costume-text: #0a0a0a;
+  --kk-tag-prop-bg: #f8c294;
+  --kk-tag-prop-text: #0a0a0a;
+  --kk-tag-custom-bg: #e0e0e0;
+  --kk-tag-custom-text: #252525;
 }
 
 /* ============================================================================
@@ -476,7 +500,6 @@
 [data-accent="purple"],
 [data-accent="white"] {
   --kk-text-accent: var(--kk-accent-soft);
-  --kk-focus-ring: var(--kk-text-accent);
 }
 [data-theme="light"][data-accent="blue"] {
   --kk-text-accent: #1458a5;

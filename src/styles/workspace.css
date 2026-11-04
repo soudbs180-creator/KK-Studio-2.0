@@ -1590,6 +1590,39 @@
   width: 20px;
   height: 10px;
 }
+.ratio-box[data-ratio="自适应"] {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ratio-box[data-ratio="自适应"]::after {
+  content: "A";
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--kk-text-tertiary);
+}
+.parameter-menu .ratio-btn.active .ratio-box[data-ratio="自适应"]::after {
+  color: var(--kk-text-primary);
+}
+.ratio-box[data-ratio="1:4"] {
+  width: 6px;
+  height: 20px;
+}
+.ratio-box[data-ratio="4:1"] {
+  width: 20px;
+  height: 6px;
+}
+.ratio-box[data-ratio="1:8"] {
+  width: 3px;
+  height: 20px;
+}
+.ratio-box[data-ratio="8:1"] {
+  width: 20px;
+  height: 3px;
+}
 .ratio-btn small {
   font-size: 8px;
   color: #707070;
@@ -2872,4 +2905,398 @@
   > .creation-composer:not(.canvas-composer-screen)
   > * {
   pointer-events: auto;
+}
+
+/* ============================================================================
+ * Standardized UI Primitives (Button, Input, Select, Badge, Modal)
+ * Strict Figma Design System Tokens - Zero Raw Color Literals
+ * ========================================================================== */
+
+/* --- Button Height Tiers & Hit Area --- */
+.kk-button--44 {
+  min-height: 44px;
+  padding: 0 var(--kk-space-5);
+  font-size: var(--kk-font-subtitle);
+}
+.kk-button--40 {
+  min-height: 40px;
+  padding: 0 var(--kk-space-4);
+  font-size: var(--kk-font-subtitle);
+}
+.kk-button--32 {
+  min-height: 32px;
+  padding: 0 var(--kk-space-3);
+  font-size: var(--kk-font-caption);
+}
+.kk-button--24 {
+  min-height: 24px;
+  padding: 0 var(--kk-space-2);
+  font-size: var(--kk-font-caption);
+}
+.kk-button--16 {
+  min-height: 16px;
+  padding: 0 var(--kk-space-1);
+  font-size: var(--kk-font-caption);
+}
+.kk-button--ghost {
+  background: transparent;
+  border-color: transparent;
+  color: var(--kk-control-idle-fg);
+}
+.kk-button--ghost:not(:disabled):not([aria-disabled="true"]):hover {
+  background: var(--kk-control-hover-bg);
+  color: var(--kk-control-selected-fg);
+}
+.kk-button--pill {
+  border-radius: var(--kk-radius-full);
+}
+.kk-button--decoupled-hit {
+  position: relative;
+}
+.kk-button--decoupled-hit::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 44px;
+  min-height: 44px;
+  width: 100%;
+  height: 100%;
+  pointer-events: auto;
+}
+
+/* --- Input Primitive --- */
+.kk-input-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kk-space-1);
+}
+.kk-input-container {
+  display: inline-flex;
+  align-items: center;
+  background: var(--kk-bg-input);
+  border: var(--kk-border-width) solid var(--kk-border-subtle);
+  border-radius: var(--kk-radius-control);
+  transition: border-color var(--kk-motion-hover) ease-out;
+}
+.kk-input-container:hover:not(.is-disabled) {
+  border-color: var(--kk-border-default);
+}
+.kk-input-container:focus-within:not(.is-disabled) {
+  outline: var(--kk-border-width-focus) solid var(--kk-focus-ring);
+  outline-offset: 0;
+}
+.kk-input-container.is-error {
+  border-color: var(--kk-danger);
+}
+.kk-input-container.is-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.kk-input--32 {
+  min-height: 32px;
+  padding: 0 var(--kk-space-3);
+  gap: var(--kk-space-2);
+}
+.kk-input--40 {
+  min-height: 40px;
+  padding: 0 var(--kk-space-4);
+  gap: var(--kk-space-2);
+}
+.kk-input__field {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--kk-text-primary);
+  font-size: var(--kk-font-body);
+  min-width: 0;
+}
+.kk-input__prefix,
+.kk-input__suffix {
+  display: inline-flex;
+  align-items: center;
+  color: var(--kk-control-idle-fg);
+}
+.kk-input__clear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: var(--kk-control-idle-fg);
+  cursor: pointer;
+  padding: 0;
+}
+.kk-input__clear:hover {
+  color: var(--kk-control-selected-fg);
+}
+.kk-input__error-message {
+  color: var(--kk-danger);
+  font-size: var(--kk-font-caption);
+}
+
+/* --- Select Primitive --- */
+.kk-select-wrapper {
+  position: relative;
+  display: inline-block;
+  min-width: 120px;
+}
+.kk-select__trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background: var(--kk-bg-input);
+  border: var(--kk-border-width) solid var(--kk-border-subtle);
+  border-radius: var(--kk-radius-control);
+  color: var(--kk-text-primary);
+  cursor: pointer;
+  transition: border-color var(--kk-motion-hover) ease-out;
+}
+.kk-select--32 .kk-select__trigger {
+  min-height: 32px;
+  padding: 0 var(--kk-space-3);
+  font-size: var(--kk-font-caption);
+}
+.kk-select--40 .kk-select__trigger {
+  min-height: 40px;
+  padding: 0 var(--kk-space-4);
+  font-size: var(--kk-font-body);
+}
+.kk-select__trigger:hover:not(:disabled) {
+  border-color: var(--kk-border-default);
+}
+.kk-select__trigger:focus-visible {
+  outline: var(--kk-border-width-focus) solid var(--kk-focus-ring);
+  outline-offset: 0;
+}
+.kk-select__arrow {
+  display: inline-flex;
+  transition: transform var(--kk-motion-switch) ease-out;
+}
+.kk-select__arrow.is-rotated {
+  transform: rotate(180deg);
+}
+.kk-select__menu {
+  position: absolute;
+  top: calc(100% + var(--kk-space-1));
+  left: 0;
+  right: 0;
+  z-index: var(--kk-z-dropdown);
+  background: var(--kk-bg-elevated);
+  border: var(--kk-border-width) solid var(--kk-border-default);
+  border-radius: var(--kk-radius-menu);
+  box-shadow: 0 4px 16px var(--kk-shadow-color);
+  list-style: none;
+  padding: var(--kk-space-1);
+  margin: 0;
+  max-height: 240px;
+  overflow-y: auto;
+}
+.kk-select__option {
+  display: flex;
+  align-items: center;
+  gap: var(--kk-space-2);
+  padding: var(--kk-space-2) var(--kk-space-3);
+  border-radius: var(--kk-radius-control);
+  color: var(--kk-text-primary);
+  cursor: pointer;
+  font-size: var(--kk-font-caption);
+}
+.kk-select__option:hover:not(.is-disabled) {
+  background: var(--kk-control-hover-bg);
+}
+.kk-select__option.is-selected {
+  background: var(--kk-neutral-selected);
+}
+.kk-select__option.is-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.kk-select__check {
+  margin-left: auto;
+  display: inline-flex;
+}
+
+/* --- Badge & Data Tag Categories --- */
+.kk-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--kk-space-1);
+  border-radius: var(--kk-radius-control);
+  font-weight: var(--kk-font-weight-body-strong);
+  white-space: nowrap;
+}
+.kk-badge--16 {
+  min-height: 16px;
+  padding: 0 var(--kk-space-1);
+  font-size: var(--kk-font-caption);
+}
+.kk-badge--20 {
+  min-height: var(--kk-badge-h);
+  padding: 0 var(--kk-space-2);
+  font-size: var(--kk-font-caption);
+}
+.kk-badge--24 {
+  min-height: 24px;
+  padding: 0 var(--kk-space-3);
+  font-size: var(--kk-font-body);
+}
+.kk-badge--default {
+  background: var(--kk-bg-elevated);
+  color: var(--kk-text-primary);
+  border: var(--kk-border-width) solid var(--kk-border-subtle);
+}
+.kk-badge--neutral {
+  background: var(--kk-bg-soft);
+  color: var(--kk-text-secondary);
+}
+.kk-badge--success {
+  background: var(--kk-bg-elevated);
+  color: var(--kk-success);
+  border: var(--kk-border-width) solid var(--kk-success);
+}
+.kk-badge--warning {
+  background: var(--kk-bg-elevated);
+  color: var(--kk-warning);
+  border: var(--kk-border-width) solid var(--kk-warning);
+}
+.kk-badge--danger {
+  background: var(--kk-bg-elevated);
+  color: var(--kk-text-danger);
+  border: var(--kk-border-width) solid var(--kk-danger);
+}
+.kk-badge--accent {
+  background: var(--kk-bg-elevated);
+  color: var(--kk-text-accent);
+  border: var(--kk-border-width) solid var(--kk-text-accent);
+}
+.kk-badge__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--kk-radius-full);
+  background: currentColor;
+}
+.kk-badge__remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: currentColor;
+  cursor: pointer;
+  padding: 0;
+}
+
+/* 5 Business Data Tag Colors */
+.kk-tag--character {
+  background: var(--kk-tag-character-bg);
+  color: var(--kk-tag-character-text);
+}
+.kk-tag--scene {
+  background: var(--kk-tag-scene-bg);
+  color: var(--kk-tag-scene-text);
+}
+.kk-tag--costume {
+  background: var(--kk-tag-costume-bg);
+  color: var(--kk-tag-costume-text);
+}
+.kk-tag--prop {
+  background: var(--kk-tag-prop-bg);
+  color: var(--kk-tag-prop-text);
+}
+.kk-tag--custom {
+  background: var(--kk-tag-custom-bg);
+  color: var(--kk-tag-custom-text);
+}
+
+/* --- Modal Primitive --- */
+.kk-modal-dialog {
+  border: none;
+  padding: 0;
+  background: transparent;
+  max-width: 90vw;
+  max-height: 90vh;
+}
+.kk-modal-dialog::backdrop {
+  background: var(--kk-overlay);
+  backdrop-filter: blur(8px);
+}
+.kk-modal-shell {
+  background: var(--kk-bg-elevated);
+  border: var(--kk-border-width) solid var(--kk-border-default);
+  border-radius: var(--kk-radius-panel);
+  box-shadow: 0 8px 32px var(--kk-shadow-color-strong);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.kk-modal--sm .kk-modal-shell {
+  width: 380px;
+}
+.kk-modal--md .kk-modal-shell {
+  width: 488px;
+}
+.kk-modal--lg .kk-modal-shell {
+  width: 640px;
+}
+.kk-modal--xl .kk-modal-shell {
+  width: 880px;
+}
+.kk-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--kk-space-4) var(--kk-space-5);
+  border-bottom: var(--kk-border-width) solid var(--kk-border-subtle);
+}
+.kk-modal__title {
+  font-size: var(--kk-font-title);
+  font-weight: var(--kk-font-weight-title);
+  color: var(--kk-text-primary);
+  margin: 0;
+}
+.kk-modal__close-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: transparent;
+  border: none;
+  color: var(--kk-control-idle-fg);
+  cursor: pointer;
+  border-radius: var(--kk-radius-control);
+}
+.kk-modal__close-btn::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 44px;
+  min-height: 44px;
+  width: 100%;
+  height: 100%;
+}
+.kk-modal__close-btn:hover {
+  background: var(--kk-control-hover-bg);
+  color: var(--kk-control-selected-fg);
+}
+.kk-modal__body {
+  padding: var(--kk-space-5);
+  overflow-y: auto;
+  flex: 1;
+  color: var(--kk-text-primary);
+}
+.kk-modal__footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--kk-space-3);
+  padding: var(--kk-space-4) var(--kk-space-5);
+  border-top: var(--kk-border-width) solid var(--kk-border-subtle);
 }

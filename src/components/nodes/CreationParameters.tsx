@@ -1,3 +1,24 @@
+export const STANDARDIZED_ASPECT_RATIOS = [
+  "16:9",
+  "21:9",
+  "4:5",
+  "5:4",
+  "2:3",
+  "3:2",
+  "4:3",
+  "9:16",
+  "1:1",
+  "3:4",
+  "自适应",
+  "1:4",
+  "4:1",
+  "1:8",
+  "8:1",
+] as const;
+
+export type StandardizedAspectRatio =
+  (typeof STANDARDIZED_ASPECT_RATIOS)[number];
+
 interface CreationParametersProps {
   kind: "image" | "video";
   ratio: string;
@@ -9,10 +30,9 @@ interface CreationParametersProps {
 }
 
 /**
- * 参数设置弹层，对照 Figma 170:8853（参数设置 297×229，位于视频模块 170:8490）。
- * 结构按原稿：顶部"比例"标签 → 清晰度分段行（自适应/1K/2K/4K）→ 比例网格（10 格 51×51）→
- * 底部"清晰度"标签。比例"自适应"为自动态（无网格项选中）；视频时长属工程保留项，
- * 原稿 170:8490 中时长"7S"显示在编辑器底栏参数条（261:514 计时图标），待补证后再迁移。
+ * 参数设置弹层，严格对照 Figma 3287:40291 / 3310:40746 官方 15 档画幅规格母版。
+ * 结构：顶部"比例"标签 → 清晰度分段行（自适应/1K/2K/4K）→ 15 档画幅比例网格（3×5 矩阵）→
+ * 底部提示信息与视频扩展配置。
  */
 export default function CreationParameters({
   kind,
@@ -42,18 +62,7 @@ export default function CreationParameters({
         ))}
       </div>
       <div className="ratio-grid" role="group" aria-label="画面比例">
-        {[
-          "1:1",
-          "16:9",
-          "9:16",
-          "3:4",
-          "4:3",
-          "3:2",
-          "2:3",
-          "5:4",
-          "4:5",
-          "21:9",
-        ].map((value) => (
+        {STANDARDIZED_ASPECT_RATIOS.map((value) => (
           <button
             key={value}
             className={"ratio-btn " + (ratio === value ? "active" : "")}

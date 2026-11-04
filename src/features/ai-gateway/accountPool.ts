@@ -1,6 +1,7 @@
-/**
- * AccountPool Multi-Credential Load Balancing, Health Scoring & Circuit Breaker
- */
+import {
+  type WaitingCandidate,
+  computeExponentialBackoffWithJitter,
+} from "../../domain/gatewayCooldown.ts";
 
 export interface AccountPoolEntry {
   readonly id?: string;
@@ -240,12 +241,18 @@ export class AccountPool {
     this.#circuitBreaker.recordSuccess();
   }
 
-  record429(credentialRef: string, cooldownMs = 15_000): void {
+  record429(credentialRef: string, cooldownMs?: number): void {
     const entry = this.#entries.find((e) => e.credentialRef === credentialRef);
     if (!entry) return;
 
     entry.consecutive429 += 1;
-    entry.cooldownUntil = this.#now() + cooldownMs;
+    const computedCooldown =
+      cooldownMs !== undefined
+        ? cooldownMs
+        : computeExponentialBackoffWithJitter(entry.consecutive429, {
+            random: this.#random,
+          });
+    entry.cooldownUntil = this.#now() + computedCooldown;
     // Penalize score by 20 per 429
     entry.healthScore = Math.max(
       0,
@@ -265,5 +272,21 @@ export class AccountPool {
       );
     }
     this.#circuitBreaker.recordFailure(500);
+  }
+
+  waitingCandidates(): WaitingCandidate[] {
+    const now = this.#now();
+    const waiting: WaitingCandidate[] = [];
+    for (const entry of this.#entries) {
+      if (entry.cooldownUntil > now) {
+        waiting.push({
+          accountId: entry.credentialRef,
+          availableAfterMs: entry.cooldownUntil - now,
+          reason: "RATE_LIMITED",
+          consecutiveFailures: entry.consecutive429,
+        });
+      }
+    }
+    return waiting.sort((a, b) => a.availableAfterMs - b.availableAfterMs);
   }
 }

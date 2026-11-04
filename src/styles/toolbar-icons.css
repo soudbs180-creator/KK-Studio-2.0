@@ -1,63 +1,24 @@
-.toolbar-icon {
-  display: block;
-  width: 40px;
-  height: 40px;
-  background: currentColor;
-  mask: var(--toolbar-icon-source, none) center / contain no-repeat;
+.toolbar-icon,
+.toolbar-icon-slot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   pointer-events: none;
-}
-.toolbar-icon-add {
-  display: block;
-  pointer-events: none;
+  color: currentColor;
 }
 .toolbar-icon-select {
-  --toolbar-icon-source: url("/design/figma/toolbar-select.svg");
   color: var(--kk-control-selected-fg);
 }
 .toolbar-icon-collapse {
-  --toolbar-icon-source: url("/design/figma/toolbar-collapse.svg");
-  width: 20px;
+  transition: transform var(--kk-motion-switch) ease-out;
 }
 .is-collapsed .toolbar-icon-collapse {
   transform: rotate(180deg);
-}
-.toolbar-icon-favorite {
-  --toolbar-icon-source: url("/design/figma/toolbar-favorite.svg");
-}
-.toolbar-icon-assets {
-  --toolbar-icon-source: url("/design/figma/toolbar-assets.svg");
-}
-.toolbar-icon-help {
-  --toolbar-icon-source: url("/design/figma/toolbar-help.svg");
-  width: var(--kk-icon-glyph-md);
-  height: var(--kk-icon-glyph-md);
 }
 .canvas-toolbar > .toolbar-favorite[aria-pressed="true"] {
   color: var(--kk-control-selected-fg);
   background: var(--kk-control-selected-bg);
   border-radius: var(--ui-radius-control);
-}
-
-.toolbar-icon-add {
-  --toolbar-icon-source: url("/design/figma/toolbar-add.svg");
-}
-.toolbar-icon-arrange {
-  --toolbar-icon-source: url("/design/figma/nav-arrange.svg");
-}
-.toolbar-icon-background {
-  --toolbar-icon-source: url("/design/figma/nav-background.svg");
-}
-.toolbar-icon-dots {
-  --toolbar-icon-source: url("/design/figma/canvas-dots.svg");
-}
-.toolbar-icon-lines {
-  --toolbar-icon-source: url("/design/figma/nav-lines.svg");
-}
-.toolbar-icon-map {
-  --toolbar-icon-source: url("/design/figma/nav-map.svg");
-}
-.toolbar-icon-chevron {
-  --toolbar-icon-source: url("/design/figma/nav-chevron.svg");
 }
 .canvas .canvas-toolbar > .toolbar-add {
   color: var(--kk-button-primary-text);

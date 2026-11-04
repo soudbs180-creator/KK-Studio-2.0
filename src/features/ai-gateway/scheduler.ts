@@ -27,6 +27,14 @@ import type {
 import type { NormalizedError } from "./errors.ts";
 import { noChannelAvailable } from "./errors.ts";
 import { AccountPool } from "./accountPool.ts";
+import {
+  type DualStickinessManager,
+  StandardDualStickinessManager,
+} from "../../domain/gatewayStickiness.ts";
+import {
+  type WaitingCandidate,
+  sortWaitingQueue,
+} from "../../domain/gatewayCooldown.ts";
 
 export interface DispatchRequest {
   readonly model: string;
@@ -65,6 +73,8 @@ export interface SchedulerOptions {
   readonly maxCooldownMs?: number;
   readonly accountPools?:
     ReadonlyMap<string, AccountPool> | Record<string, AccountPool>;
+  readonly stickinessManager?: DualStickinessManager;
+  readonly coolingWaitLimitMs?: number;
 }
 
 interface ChannelHealth {
@@ -193,7 +203,8 @@ export class Scheduler {
   readonly #health: ChannelHealthTracker;
   readonly #random: () => number;
   readonly #now: () => number;
-  readonly #sticky = new Map<string, string>();
+  readonly #stickiness: DualStickinessManager;
+  readonly #coolingWaitLimitMs: number;
   readonly #accountPools = new Map<string, AccountPool>();
 
   constructor(registry: ChannelRegistry, options: SchedulerOptions = {}) {
@@ -201,6 +212,12 @@ export class Scheduler {
     this.#health = new ChannelHealthTracker(options);
     this.#random = options.random ?? Math.random;
     this.#now = options.now ?? Date.now;
+    this.#stickiness =
+      options.stickinessManager ??
+      new StandardDualStickinessManager({
+        now: this.#now,
+      });
+    this.#coolingWaitLimitMs = options.coolingWaitLimitMs ?? 20_000;
 
     if (options.accountPools) {
       if (options.accountPools instanceof Map) {
@@ -233,6 +250,10 @@ export class Scheduler {
 
   health(): ChannelHealthTracker {
     return this.#health;
+  }
+
+  stickiness(): DualStickinessManager {
+    return this.#stickiness;
   }
 
   publicModels(): PublicModelDescriptor[] {
@@ -281,6 +302,12 @@ export class Scheduler {
       if (fallbackOutcome) return fallbackOutcome;
     }
 
+    // Cooling queue async pause and retry before final error drop
+    if (!this.#streamStarted(request) && !request.signal?.aborted) {
+      const coolingOutcome = await this.#tryCoolingQueueWait(ordered, request);
+      if (coolingOutcome) return coolingOutcome;
+    }
+
     request.signal?.throwIfAborted();
     throw (
       lastError ??
@@ -292,11 +319,11 @@ export class Scheduler {
     request: DispatchRequest,
     candidates: readonly ChannelIndexEntry[],
   ): ChannelIndexEntry[] {
-    const pinnedId = request.sessionId
-      ? this.#sticky.get(request.sessionId)
+    const pinnedRef = request.sessionId
+      ? this.#stickiness.recall(request.sessionId)
       : undefined;
-    const pinned = pinnedId
-      ? candidates.find((entry) => entry.channelId === pinnedId)
+    const pinned = pinnedRef
+      ? candidates.find((entry) => entry.channelId === pinnedRef.channelId)
       : undefined;
 
     const ordered: ChannelIndexEntry[] = [];
@@ -337,8 +364,24 @@ export class Scheduler {
         const result = await this.#attempt(entry, context, request);
         request.signal?.throwIfAborted();
         this.#health.recordSuccess(entry.channelId);
-        if (request.sessionId)
-          this.#sticky.set(request.sessionId, entry.channelId);
+        if (request.sessionId) {
+          const topTiers = this.#registry.tiers(
+            this.#registry.candidates(request.model, request.operation),
+          );
+          const topTierIds = new Set(
+            topTiers[0]?.map((c) => c.channelId) ?? [],
+          );
+          const isFallback = generation > 0 || !topTierIds.has(entry.channelId);
+          this.#stickiness.record(
+            request.sessionId,
+            {
+              channelId: entry.channelId,
+              upstreamModel:
+                entry.modelMapping?.[request.model] ?? request.model,
+            },
+            { isFallback },
+          );
+        }
         return { outcome: { ...result, channelId: entry.channelId } };
       } catch (error) {
         request.signal?.throwIfAborted();
@@ -567,8 +610,85 @@ export class Scheduler {
 
   #forgetPin(sessionId: string | undefined, channelId: string): void {
     if (!sessionId) return;
-    if (this.#sticky.get(sessionId) === channelId)
-      this.#sticky.delete(sessionId);
+    const current = this.#stickiness.recall(sessionId);
+    if (current?.channelId === channelId) {
+      this.#stickiness.forget(sessionId);
+    }
+  }
+
+  async #tryCoolingQueueWait(
+    ordered: readonly ChannelIndexEntry[],
+    request: DispatchRequest,
+  ): Promise<DispatchOutcome | undefined> {
+    const now = this.#now();
+    const waitingCandidates: WaitingCandidate[] = [];
+
+    for (const entry of ordered) {
+      const pool =
+        this.accountPool(entry.channelId) ??
+        this.accountPool(entry.credentialRef);
+      if (pool) {
+        for (const c of pool.entries()) {
+          if (c.cooldownUntil > now) {
+            waitingCandidates.push({
+              accountId: c.credentialRef,
+              availableAfterMs: c.cooldownUntil - now,
+              reason: "RATE_LIMITED",
+              consecutiveFailures: c.consecutive429,
+            });
+          }
+        }
+      } else {
+        const state = this.#health.state(entry.channelId);
+        if (state.cooldownUntil > now) {
+          waitingCandidates.push({
+            accountId: entry.channelId,
+            availableAfterMs: state.cooldownUntil - now,
+            reason: "RATE_LIMITED",
+            consecutiveFailures: state.consecutiveFailures,
+          });
+        }
+      }
+    }
+
+    const sorted = sortWaitingQueue(waitingCandidates);
+    const soonest = sorted[0];
+    if (!soonest || soonest.availableAfterMs > this.#coolingWaitLimitMs) {
+      return undefined; // Exceeds wait limit threshold; proceed to error
+    }
+
+    // Pause asynchronously without dropping user request
+    await this.#sleep(soonest.availableAfterMs, request.signal);
+    request.signal?.throwIfAborted();
+
+    // Re-attempt primary candidates after cooling recovery
+    const retry = await this.#tryPrimaryCandidates(ordered, request);
+    return retry.outcome;
+  }
+
+  #sleep(ms: number, signal?: AbortSignal): Promise<void> {
+    return new Promise((resolve, reject) => {
+      if (signal?.aborted) {
+        return reject(signal.reason ?? new Error("Aborted"));
+      }
+
+      const timer = setTimeout(() => {
+        cleanup();
+        resolve();
+      }, ms);
+
+      const onAbort = () => {
+        cleanup();
+        reject(signal?.reason ?? new Error("Aborted"));
+      };
+
+      const cleanup = () => {
+        clearTimeout(timer);
+        signal?.removeEventListener("abort", onAbort);
+      };
+
+      signal?.addEventListener("abort", onAbort, { once: true });
+    });
   }
 
   #streamStarted(request: DispatchRequest): boolean {

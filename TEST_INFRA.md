@@ -1,49 +1,100 @@
-# E2E Test Infra: KK-Studio-2.0 Settings & Model Access Overhaul
+# Dual-Track E2E Test Infrastructure: KK Studio 2.0
 
-## Test Philosophy
-- **Opaque-box, requirement-driven**: Derived directly from `ORIGINAL_REQUEST.md` (R1-R5, AC1-AC4), testing user-observable behaviors without depending on internal implementation details.
-- **Methodology**: 4-Tier test suite structure (Category-Partition, Boundary Value Analysis, Pairwise Combinatorial, Real-World Workloads).
-- **Zero Dummy / Zero Facade**: Tests must bind to real production components, stores, and DOM attributes.
+## 1. Test Architecture & Methodology
 
-## Feature Inventory & Test Mapping
-| # | Feature | Requirement Source | Tier 1 (Equivalence) | Tier 2 (Boundary) | Tier 3 (Pairwise) | Tier 4 (Workloads) |
-|---|---------|-------------------|:--------------------:|:-----------------:|:-----------------:|:------------------:|
-| F1 | Radius Scale & Control 8px | R1, AC1 | 5 | 5 | ✓ | ✓ |
-| F2 | Inset Grouped Cards & Fold Elimination | R1, AC1 | 5 | 5 | ✓ | ✓ |
-| F3 | Sliding Pill Indicator & Spring Motion | R1, AC1 | 5 | 5 | ✓ | ✓ |
-| F4 | Friendly Empty & Status Copy | R1, AC1 | 5 | 5 | ✓ | ✓ |
-| F5 | 4-Quadrant Settings Architecture | R2, AC2 | 5 | 5 | ✓ | ✓ |
-| F6 | Independent Software Update Page | R2, AC2 | 5 | 5 | ✓ | ✓ |
-| F7 | Profile & Token Usage Dashboard | R2, AC2 | 5 | 5 | ✓ | ✓ |
-| F8 | Shortcuts Management & Collision Guard | R2, AC2 | 5 | 5 | ✓ | ✓ |
-| F9 | ccswitch 5-Channel Model Access UI | R3, AC3 | 5 | 5 | ✓ | ✓ |
-| F10 | Provider Presets, Key & Sub-3s Probe | R3, AC3 | 5 | 5 | ✓ | ✓ |
-| F11 | Unified Capability Aggregation | R4, AC3 | 5 | 5 | ✓ | ✓ |
-| F12 | Anti-Regression & UI Token Lint Gate | R5, AC4 | 5 | 5 | ✓ | ✓ |
+The KK Studio 2.0 E2E Test Suite adheres strictly to the **Dual-Track E2E Testing Methodology** (Requirement-driven, Opaque-box):
+- **Opaque-Box Contract Verification**: Tests validate observable behaviors, state transitions, mathematical formulas, and interface contracts specified in `PROJECT.md` and `ORIGINAL_REQUEST.md`.
+- **Zero Dummy / Zero Facade Policy**: Every test exercises genuine contracts, domain state machines, validation schemas, or algorithmic models.
+- **4-Tier Structured Test Hierarchy**:
+  - **Tier 1 — Feature Coverage (≥5 tests per feature)**: Happy-path baseline tests for each of the 23 inventoried features in isolation.
+  - **Tier 2 — Boundary & Corner Cases (≥5 tests per feature)**: Limits, empty inputs, max payloads, negative/error inputs, and graceful error handling.
+  - **Tier 3 — Cross-Feature Interactions (Pairwise Combinations)**: Multi-pillar integration scenarios (Gateway + Agent, Canvas + Storyboard, Memory + Governance, etc.).
+  - **Tier 4 — Real-World Application Scenarios (≥5 full end-to-end workflows)**: Complex multi-step user creation workflows.
 
-## Test Architecture
-- **Location**: `tests/e2e-settings/`
-  - `tests/e2e-settings/harness.ts` — Test runner harness and DOM/Store mock-free bindings
-  - `tests/e2e-settings/tier1-feature-coverage.test.ts` — 60 Tier 1 tests (5 per feature)
-  - `tests/e2e-settings/tier2-boundary-cases.test.ts` — 60 Tier 2 tests (5 per feature)
-  - `tests/e2e-settings/tier3-cross-feature.test.ts` — 15 Tier 3 tests (Pairwise interactions)
-  - `tests/e2e-settings/tier4-application-scenarios.test.ts` — 6 Tier 4 realistic workflow scenarios
-- **Invocation**: `node --test tests/e2e-settings/*.test.ts`
-- **Pass Semantics**: All test suites must complete with exit code 0.
+---
 
-## Real-World Application Scenarios (Tier 4)
-| # | Scenario | Features Exercised | Target Behavior |
-|---|----------|--------------------|-----------------|
-| S1 | Greenfield Setup & Provider Onboarding | F1, F5, F9, F10 | User opens settings -> navigates to 模型接入 -> selects Relay -> picks SiliconFlow preset -> inputs key -> tests latency in <3s -> fetches models -> enables Qwen & DeepSeek |
-| S2 | Daily Token Quota & Profile Inspection | F2, F5, F7 | User navigates to 账号与用量 -> 个人主页 -> views 7-day stacked bar consumption -> inspects model distribution -> verifies quota indicators |
-| S3 | Shortcut Customization & Collision Shield | F5, F8 | User opens 快捷键管理 -> attempts to bind reserved key (Ctrl+C) -> warned -> binds custom search key -> tests conflict with existing navigation -> conflict resolved |
-| S4 | Software Update Check & Changelog View | F5, F6 | User opens 软件更新 page -> clicks 检查更新 -> observes 7-state progression -> views changelog notes -> toggles auto-update switch |
-| S5 | Composer Capability-First Creation | F3, F11 | User in Composer opens model picker -> selects "对话 / 推理" -> chooses "自动调配" -> sends prompt -> verifies route to healthy provider without manual channel selection |
-| S6 | Design Token Compliance & Gate Enforcement | F1, F2, F12 | Linter runs across codebase -> verifies no 999px buttons or inline radius; `check-ui-standards.mjs` exits cleanly |
+## 2. Feature Inventory & Coverage Matrix (23 Features)
 
-## Coverage Thresholds
-- Tier 1: ≥ 60 test cases (≥5 per feature across 12 features)
-- Tier 2: ≥ 60 test cases (boundary and corner conditions)
-- Tier 3: ≥ 12 test cases (pairwise cross-feature interactions)
-- Tier 4: ≥ 6 realistic workflow scenarios
-- **Total Minimum**: ≥ 138 test cases
+| # | Feature | Pillar / Milestone | Tier 1 (Happy) | Tier 2 (Boundary) | Tier 3 (Pairwise) | Tier 4 (Scenarios) | Status |
+|---|---------|-------------------|:--------------:|:-----------------:|:-----------------:|:------------------:|:------:|
+| 1 | Figma Surface & Token Parity | M1 (UI Grounding) | 5 | 5 | ✓ | ✓ | Active |
+| 2 | Foundational UI Primitive Layer | M1 (UI Grounding) | 5 | 5 | ✓ | ✓ | Active |
+| 3 | 124 Atomic Lucide Iconography | M1 (UI Grounding) | 5 | 5 | ✓ | ✓ | Active |
+| 4 | 15 Standardized Aspect Ratios | M1 (UI Grounding) | 5 | 5 | ✓ | ✓ | Active |
+| 5 | Mobile Chat-Only Viewport Parity | M1 (UI Grounding) | 5 | 5 | ✓ | ✓ | Active |
+| 6 | Automated Aesthetic Governance | M1 (UI Grounding) | 5 | 5 | ✓ | ✓ | Active |
+| 7 | Provider Gateway Cooldown Queue | M2 (Gateway) | 5 | 5 | ✓ | ✓ | Active |
+| 8 | Dual-Stickiness TTL | M2 (Gateway) | 5 | 5 | ✓ | ✓ | Active |
+| 9 | Extension Runtime Bridge | M2 (Extensions) | 5 | 5 | ✓ | ✓ | Active |
+| 10 | Router + Worker Multi-Agent Engine | M3 (Agent) | 5 | 5 | ✓ | ✓ | Active |
+| 11 | Scoped Mandates & Lifecycle Tickets | M3 (Agent) | 5 | 5 | ✓ | ✓ | Active |
+| 12 | PreInvocation Security Hooks & Statusline | M3 (Agent) | 5 | 5 | ✓ | ✓ | Active |
+| 13 | Semantic Ontology Knowledge Graph | M3 (Memory) | 5 | 5 | ✓ | ✓ | Active |
+| 14 | Pre-Flight Answerability Pre-Validation | M3 (Memory) | 5 | 5 | ✓ | ✓ | Active |
+| 15 | Autonomous Canvas Agent Ops | M4 (Canvas) | 5 | 5 | ✓ | ✓ | Active |
+| 16 | Canvas 34 Zod Operations & MCP Server | M4 (Canvas) | 5 | 5 | ✓ | ✓ | Active |
+| 17 | Hierarchical Blueprint Canvas Mapping | M4 (Canvas) | 5 | 5 | ✓ | ✓ | Active |
+| 18 | Pure-Client Video Shot Breakdown (逐帧拉片) | M5 (Production) | 5 | 5 | ✓ | ✓ | Active |
+| 19 | Storyboard Multi-Agent Pipeline & Continuity | M5 (Production) | 5 | 5 | ✓ | ✓ | Active |
+| 20 | In-Prompt Reference Mention Parsing | M5 (Production) | 5 | 5 | ✓ | ✓ | Active |
+| 21 | 3D Director Desk & Physical Camera Optics | M5 (Production) | 5 | 5 | ✓ | ✓ | Active |
+| 22 | Full E2E Test Suite Validation | M6 (Hardening) | 5 | 5 | ✓ | ✓ | Active |
+| 23 | Adversarial Coverage Hardening | M6 (Hardening) | 5 | 5 | ✓ | ✓ | Active |
+| **Total** | **All 23 Features** | **Full Scope** | **115** | **115** | **16** | **6** | **252 Tests** |
+
+---
+
+## 3. Test Suite Directory Layout
+
+```
+D:/kk-studio/KK-Studio-2.0/tests/e2e/
+├── harness.ts                         # Unified contracts, validators, state machines & models
+├── tier1_features_m1_m2.test.ts       # Tier 1 Happy Path: Features 1 - 9
+├── tier1_features_m3_m4.test.ts       # Tier 1 Happy Path: Features 10 - 17
+├── tier1_features_m5_m6.test.ts       # Tier 1 Happy Path: Features 18 - 23
+├── tier2_boundaries_m1_m2.test.ts     # Tier 2 Boundary / Error: Features 1 - 9
+├── tier2_boundaries_m3_m4.test.ts     # Tier 2 Boundary / Error: Features 10 - 17
+├── tier2_boundaries_m5_m6.test.ts     # Tier 2 Boundary / Error: Features 18 - 23
+├── tier3_cross_feature.test.ts        # Tier 3 Pairwise Cross-Feature Interactions
+└── tier4_scenarios.test.ts            # Tier 4 Real-World End-to-End Scenarios
+```
+
+---
+
+## 4. Test Runner Commands
+
+```bash
+# 1. Run full E2E Test Suite (All 4 Tiers, 252 tests)
+node --import ./tests/support/public-entry-loader.mjs --test tests/e2e/*.test.ts
+
+# 2. Run Tier 1 Feature Coverage
+node --import ./tests/support/public-entry-loader.mjs --test tests/e2e/tier1_*.test.ts
+
+# 3. Run Tier 2 Boundary Cases
+node --import ./tests/support/public-entry-loader.mjs --test tests/e2e/tier2_*.test.ts
+
+# 4. Run Tier 3 & Tier 4 Scenarios
+node --import ./tests/support/public-entry-loader.mjs --test tests/e2e/tier3_*.test.ts tests/e2e/tier4_*.test.ts
+
+# 5. Full repository verification gate
+npm run typecheck
+npm run lint
+npm test
+```
+
+---
+
+## 5. Tier 4 Real-World Scenarios Specification
+
+1. **Scenario 1 (Novel Script to Production Pipeline)**:
+   Novel synopsis -> multi-agent storyboard breakdown (Writer/Director/Reviewer) -> continuity enforcement -> shot detection keyframes -> 34 Zod canvas node placement -> physical optics prompt generation.
+2. **Scenario 2 (Resilient Gateway Failover Under Extreme Load)**:
+   High-concurrency requests -> primary provider rate limit (429) -> `WaitingCandidate` cooldown queuing -> automatic failover to fallback key -> prompt cache TTL stickiness isolation.
+3. **Scenario 3 (Autonomous Agent Mandate & Memory Execution)**:
+   Router session gate pre-eval -> immutable `Mandate` issuance -> `Ticket` lifecycle tracking -> `OntologyGraph` term verification -> PreInvocation security hook filtering.
+4. **Scenario 4 (Multi-Modal Canvas & Blueprint Architecture)**:
+   Import `architecture.json` -> `FloorplanCanvasAdapter` hierarchical layout -> autonomous `set_viewport` / `select_nodes` -> ComfyUI node link generation.
+5. **Scenario 5 (Mobile Chat Viewport Strict Isolation)**:
+   Mobile viewport detection (≤767px) -> canvas screen strictly disabled -> single-column conversation composer -> responsive token styling.
+6. **Scenario 6 (Adversarial Security & Aesthetic Governance Audit)**:
+   Prompt injection defense -> circular graph traversal trap defense -> 9-pass unslop redline rules check -> 4px grid rhythm enforcement.

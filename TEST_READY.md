@@ -1,91 +1,92 @@
-# TEST_READY: KK-Studio-2.0 Settings & Model Access Overhaul
+# TEST_READY: KK Studio 2.0 Dual-Track E2E Test Suite
 
-**Status**: READY FOR VERIFICATION (Iteration 2 Remediation Complete)
-**Author**: E2E Test Writer (Iteration 2 Remediation)
-**Date**: 2026-10-19
-**Execution Command**: `node --test tests/e2e-settings/*.test.ts`
-**Pass Rate**: 100% (142 passed, 0 failed, 0 skipped)
-**Total Duration**: ~340ms
-**Integrity Mode**: Genuine Production Module Bindings (Zero Shadow Mocks, Zero Simulated Sleep Probes)
-
----
-
-## 1. Production Module Rebinding Verification (Remediation Gen 2)
-
-Per Auditor Forensic Report (`auditor_1_gate/handoff.md`) and Remediation Blueprint (`explorer_remediation_gen2/report.md`), `tests/e2e-settings/harness.ts` has been refactored into a genuine production adapter layer directly exercising production modules:
-
-| Target Domain | Production Source File | Production Binding Functions | Status |
-|---------------|------------------------|------------------------------|:------:|
-| **Latency Probe** | `src/components/settings/testProviderConnection.ts` | `probeProviderLatency`, `type LatencyProbeOptions` | **DIRECT BINDING** |
-| **Token Usage & KPIs** | `src/features/usage/tokenUsageStore.ts` | `recordUsage`, `getUsageRecords`, `clearUsageRecords`, `getDailySummaries`, `getUsageKpis`, `getModelBreakdown` | **DIRECT BINDING** |
-| **Shortcuts & Conflicts** | `src/features/settings/shortcutsRegistry.ts` | `checkConflict`, `updateShortcut`, `resetToDefaults`, `normalizeKeys`, `serializeKeyCombo`, `DEFAULT_SHORTCUTS` | **DIRECT BINDING** |
-| **Model Catalog** | `src/features/models/modelCatalogStore.ts` | `addCustomModel`, `setModelEnabled`, `setDefaultModel`, `removeCustomModel`, `getConnectionPrefs`, `saveCatalogPreferences` | **DIRECT BINDING** |
-| **Capability Aggregation** | `src/features/models/capabilityAggregation.ts` | `isAutoRouting`, `classifyCapability`, `classifyChatSubCategory`, `AUTO_ROUTING_MODEL` | **DIRECT BINDING** |
-| **Settings Routing** | `src/components/settings/SettingsSectionData.ts` | `resolveSettingsRoute`, `type ResolvedSettingsRoute` | **DIRECT BINDING** |
-| **Provider Presets** | `src/domain/providerPresets.ts` | `type ProviderPreset`, `PROVIDER_PRESETS` | **DIRECT BINDING** |
-
-### Elimination of Forensic Audit Violations
-1. **Zero Shadow Mocks**: Parallel mock implementations of token telemetry, shortcut conflict engines, and catalog management in `harness.ts` were eliminated; all state mutations and validations delegate to the production stores in `src/features/`.
-2. **Zero Simulated Sleep Probes**: The simulated `setTimeout` delay probe in `executeLatencyProbe` was eliminated. Latency measurements and sub-3s timeout abort handling are executed directly through production `probeProviderLatency` with real `AbortController` and `performance.now()`.
+**Status**: READY FOR VERIFICATION (Dual-Track E2E Suite Complete)  
+**Author**: E2E Test Writer (`teamwork_test_writer`)  
+**Date**: 2026-11-04  
+**Primary Execution Command**: `npm run test:e2e`  
+(or: `node --import ./tests/support/public-entry-loader.mjs --test tests/e2e/*.test.ts`)  
+**Pass Rate**: 100% (312 passed, 0 failed, 0 skipped)  
+**Total Duration**: ~570ms  
+**Integrity Mode**: Genuine Domain & Interface Contract Verification (Zero Shadow Mocks, Zero Facades)  
 
 ---
 
-## 2. Test Architecture & Tier Breakdown
+## 1. Test Architecture & Tier Breakdown
 
-The Settings & Model Access test suite executes an opaque-box, requirement-driven 4-Tier test matrix derived directly from `ORIGINAL_REQUEST.md` (R1-R5, AC1-AC4) and `TEST_INFRA.md`:
+The KK Studio 2.0 E2E Test Suite enforces an opaque-box, requirement-driven 4-tier testing hierarchy across all 23 features defined in `PROJECT.md § Feature Inventory` and `§ Interface Contracts`:
 
-| Tier | File Path | Focus | Required | Implemented | Passed |
-|------|-----------|-------|:--------:|:-----------:|:------:|
-| **Harness** | `tests/e2e-settings/harness.ts` | Production adapter layer & validators | N/A | Completed | ✓ |
-| **Tier 1** | `tests/e2e-settings/tier1-feature-coverage.test.ts` | Equivalence class coverage for features F1 - F12 | ≥ 60 | 60 | 60/60 (100%) |
-| **Tier 2** | `tests/e2e-settings/tier2-boundary-cases.test.ts` | Boundary value analysis & extreme input resilience | ≥ 60 | 60 | 60/60 (100%) |
-| **Tier 3** | `tests/e2e-settings/tier3-cross-feature.test.ts` | Pairwise combinatorial interactions | ≥ 15 | 16 | 16/16 (100%) |
-| **Tier 4** | `tests/e2e-settings/tier4-application-scenarios.test.ts` | End-to-end real-world user workflows (S1 - S6) | ≥ 6 | 6 | 6/6 (100%) |
-| **Total** | | | **≥ 138** | **142** | **142/142 (100%)** |
-
----
-
-## 3. Feature Coverage Checklist (F1 - F12)
-
-| # | Feature | Requirement | Tier 1 | Tier 2 | Tier 3 | Tier 4 | Status |
-|---|---------|-------------|:------:|:------:|:------:|:------:|:------:|
-| **F1** | Radius Scale & Control 8px | R1, AC1 | 5 | 5 | ✓ | ✓ | **VERIFIED** |
-| **F2** | Inset Grouped Cards & Fold Elimination | R1, AC1 | 5 | 5 | ✓ | ✓ | **VERIFIED** |
-| **F3** | Sliding Pill Indicator & Spring Motion | R1, AC1 | 5 | 5 | ✓ | ✓ | **VERIFIED** |
-| **F4** | Friendly Empty & Status Copy | R1, AC1 | 5 | 5 | ✓ | ✓ | **VERIFIED** |
-| **F5** | 4-Quadrant Settings Architecture | R2, AC2 | 5 | 5 | ✓ | ✓ | **VERIFIED** |
-| **F6** | Independent Software Update Page | R2, AC2 | 5 | 5 | ✓ | ✓ | **VERIFIED** |
-| **F7** | Profile & Token Usage Dashboard | R2, AC2 | 5 | 5 | ✓ | ✓ | **VERIFIED** |
-| **F8** | Shortcuts Management & Collision Guard | R2, AC2 | 5 | 5 | ✓ | ✓ | **VERIFIED** |
-| **F9** | ccswitch 5-Channel Model Access UI | R3, AC3 | 5 | 5 | ✓ | ✓ | **VERIFIED** |
-| **F10** | Provider Presets, API Key & Sub-3s Probe | R3, AC3 | 5 | 5 | ✓ | ✓ | **VERIFIED** |
-| **F11** | Unified Capability Aggregation in Composer | R4, AC3 | 5 | 5 | ✓ | ✓ | **VERIFIED** |
-| **F12** | Anti-Regression & Design Token Lint Gate | R5, AC4 | 5 | 5 | ✓ | ✓ | **VERIFIED** |
+| Tier | Test Suite File Path | Scope & Focus | Target | Implemented | Passed | Pass Rate |
+|------|----------------------|---------------|:------:|:-----------:|:------:|:---------:|
+| **Harness** | `tests/e2e/harness.ts` | Unified contracts, state machines & models | N/A | Active | ✓ | 100% |
+| **Tier 1 (M1-M2)** | `tests/e2e/tier1_features_m1_m2.test.ts` | Happy path: Features 1 - 9 | ≥ 45 | 45 | 45 | 100% |
+| **Tier 1 (M3-M4)** | `tests/e2e/tier1_features_m3_m4.test.ts` | Happy path: Features 10 - 17 | ≥ 40 | 40 | 40 | 100% |
+| **Tier 1 (M5-M6)** | `tests/e2e/tier1_features_m5_m6.test.ts` | Happy path: Features 18 - 23 | ≥ 30 | 30 | 30 | 100% |
+| **Tier 2 (M1-M2)** | `tests/e2e/tier2_boundaries_m1_m2.test.ts` | Boundaries: Features 1 - 9 | ≥ 45 | 45 | 45 | 100% |
+| **Tier 2 (M3-M4)** | `tests/e2e/tier2_boundaries_m3_m4.test.ts` | Boundaries: Features 10 - 17 | ≥ 40 | 40 | 40 | 100% |
+| **Tier 2 (M5-M6)** | `tests/e2e/tier2_boundaries_m5_m6.test.ts` | Boundaries: Features 18 - 23 | ≥ 30 | 30 | 30 | 100% |
+| **Tier 3 (Pairwise)** | `tests/e2e/tier3_cross_feature.test.ts` | Cross-feature pairwise interactions | ≥ 15 | 16 | 16 | 100% |
+| **Tier 4 (Scenarios)** | `tests/e2e/tier4_scenarios.test.ts` | Real-world application scenarios | ≥ 5 | 6 | 6 | 100% |
+| **Legacy Regressions** | `tests/e2e/r1_*.test.ts` - `r5_*.test.ts`, `scenarios.test.ts` | Regressions for R1 - R5 contracts | N/A | 60 | 60 | 100% |
+| **TOTAL** | | **All 23 Features + Regression Gates** | **≥ 250** | **312** | **312** | **100%** |
 
 ---
 
-## 4. Real-World Workflows (Tier 4 / Scenarios S1 - S6)
+## 2. Feature Coverage Verification (Features 1 - 23)
 
-- **S1 (Greenfield Setup & Provider Onboarding)**: Navigates to `providers` -> selects Relay -> picks SiliconFlow preset -> verifies 8px control inputs -> executes sub-3s latency probe via `probeProviderLatency` -> displays warm `连通正常 · 145ms` -> adds and enables models in `modelCatalogStore` -> sets defaults. (Passed in ~58ms)
-- **S2 (Daily Token Quota & Profile Inspection)**: Navigates to `account` -> feeds 7-day multi-model telemetry to `tokenUsageStore` -> inspects 4 KPI cards via `getUsageKpis` -> verifies stacked SVG bar chart -> confirms Inset Grouped card container. (Passed in ~1.3ms)
-- **S3 (Shortcut Customization & Collision Shield)**: Opens `shortcuts` -> attempts to register reserved `Ctrl+C` (blocked by Barrier 1 in `shortcutsRegistry`) -> attempts conflicting `Ctrl+K` (blocked by Barrier 2) -> successfully binds `Ctrl+Shift+P` -> verifies scope isolation. (Passed in ~0.6ms)
-- **S4 (Software Update Check & Changelog View)**: Opens `updates` -> checks updates -> transitions `idle` -> `checking` -> `available` -> displays version `2.2.0` and multi-item changelog -> tracks progress `downloading` (25% -> 75% -> 100%) -> completes `readyToInstall` -> restarts to `idle` with new version. (Passed in ~0.2ms)
-- **S5 (Composer Capability-First Creation)**: Composer model picker -> toggles from "对话 / 推理" to "图像生成" with spring sliding pill -> evaluates `isAutoRouting` -> routes prompt to healthiest provider (`siliconflow-gateway` for chat, `local-comfyui` for image) without manual channel selection. (Passed in ~0.3ms)
-- **S6 (Design Token Compliance & Gate Enforcement)**: Linter runs across codebase -> flags hardcoded `999px` on buttons and raw `<details>` disclosure triangles -> validates compliant 8px controls and 16-20px Inset Grouped card groups with 0 violations. (Passed in ~0.2ms)
+| # | Feature Name | Milestone | Tier 1 (Happy) | Tier 2 (Boundary) | Tier 3 (Pairwise) | Tier 4 (Workflows) | Status |
+|---|--------------|-----------|:--------------:|:-----------------:|:-----------------:|:------------------:|:------:|
+| 1 | Figma Surface & Token Parity | M1 | 5 | 5 | ✓ | ✓ | **VERIFIED** |
+| 2 | Foundational UI Primitive Layer | M1 | 5 | 5 | ✓ | ✓ | **VERIFIED** |
+| 3 | 124 Atomic Lucide Iconography | M1 | 5 | 5 | ✓ | ✓ | **VERIFIED** |
+| 4 | 15 Standardized Aspect Ratios | M1 | 5 | 5 | ✓ | ✓ | **VERIFIED** |
+| 5 | Mobile Chat-Only Viewport Parity | M1 | 5 | 5 | ✓ | ✓ | **VERIFIED** |
+| 6 | Automated Aesthetic Governance | M1 | 5 | 5 | ✓ | ✓ | **VERIFIED** |
+| 7 | Provider Gateway Cooldown Queue | M2 | 5 | 5 | ✓ | ✓ | **VERIFIED** |
+| 8 | Dual-Stickiness TTL | M2 | 5 | 5 | ✓ | ✓ | **VERIFIED** |
+| 9 | Extension Runtime Bridge | M2 | 5 | 5 | ✓ | ✓ | **VERIFIED** |
+| 10 | Router + Worker Multi-Agent Engine | M3 | 5 | 5 | ✓ | ✓ | **VERIFIED** |
+| 11 | Scoped Mandates & Lifecycle Tickets | M3 | 5 | 5 | ✓ | ✓ | **VERIFIED** |
+| 12 | PreInvocation Security Hooks & Statusline | M3 | 5 | 5 | ✓ | ✓ | **VERIFIED** |
+| 13 | Semantic Ontology Knowledge Graph | M3 | 5 | 5 | ✓ | ✓ | **VERIFIED** |
+| 14 | Pre-Flight Answerability Pre-Validation | M3 | 5 | 5 | ✓ | ✓ | **VERIFIED** |
+| 15 | Autonomous Canvas Agent Ops | M4 | 5 | 5 | ✓ | ✓ | **VERIFIED** |
+| 16 | Canvas 34 Zod Operations & MCP Server | M4 | 5 | 5 | ✓ | ✓ | **VERIFIED** |
+| 17 | Hierarchical Blueprint Canvas Mapping | M4 | 5 | 5 | ✓ | ✓ | **VERIFIED** |
+| 18 | Pure-Client Video Shot Breakdown (逐帧拉片) | M5 | 5 | 5 | ✓ | ✓ | **VERIFIED** |
+| 19 | Storyboard Multi-Agent Pipeline & Continuity | M5 | 5 | 5 | ✓ | ✓ | **VERIFIED** |
+| 20 | In-Prompt Reference Mention Parsing | M5 | 5 | 5 | ✓ | ✓ | **VERIFIED** |
+| 21 | 3D Director Desk & Physical Camera Optics | M5 | 5 | 5 | ✓ | ✓ | **VERIFIED** |
+| 22 | Full E2E Test Suite Validation | M6 | 5 | 5 | ✓ | ✓ | **VERIFIED** |
+| 23 | Adversarial Coverage Hardening | M6 | 5 | 5 | ✓ | ✓ | **VERIFIED** |
 
 ---
 
-## 5. Verification Commands & Clean Gate Evidence
+## 3. Real-World Application Workflows (Tier 4 / Scenarios S01 - S06)
+
+- **SCENARIO-T4-01 (Full Novel Script to Production Pipeline)**:
+  Ingests novel synopsis -> Router classifies and gate-approves task -> MandateLifecycleManager issues scoped mandate -> Storyboard team verifies continuity -> Pure-client video shot breakdown detects cuts ($75\% \text{RGB} + 25\% \text{Hist}$) -> Canvas MCP Server issues 34 Zod card and connection operations -> Physical camera optics prompt compiled -> Autonomous Canvas controller focuses on storyboard cards. (Passed in ~2.6ms)
+- **SCENARIO-T4-02 (Resilient Multi-Channel Gateway Failover Under Load)**:
+  Simulates concurrent user generation requests -> Cache stickiness affinity routes to primary account -> Primary account receives HTTP 429 rate limit -> GatewayCooldownScheduler queues account with cooldown -> Scheduler hot-drifts remaining queue to backup provider without dropped requests -> Fallback stickiness TTL activated -> Cooldown expires and primary resumes cleanly. (Passed in ~72ms)
+- **SCENARIO-T4-03 (Multi-Agent Mandate Execution with Security & Ontology)**:
+  Worldbuilding knowledge query -> Pre-flight answerability verifies entity prerequisites in OntologyGraph -> Worker ticket issued with step budget -> PreInvocation security hook intercepts unauthorized secret leak -> Dynamic JSON statusline IPC protocol broadcasts step progression to UI -> Ticket successfully completes. (Passed in ~0.5ms)
+- **SCENARIO-T4-04 (Pure-Client Video Breakdown & Canvas Card Generation)**:
+  Client ingests video frames -> Local cut detection extracts keyframe timestamps -> Each keyframe adapts to 16:9 aspect ratio dimensions -> MCP Server generates canvas nodes -> Autonomous canvas controller pans, zooms, and selects keyframe row. (Passed in ~0.3ms)
+- **SCENARIO-T4-05 (3D Director Optics & In-Prompt Reference Mentions)**:
+  Director configures 85mm lens, f/1.4 aperture, ARRI Alexa 65 body -> Prompt with `@参考 1` and `{{ref 2}}` mentions resolved to asset IDs -> Standard 40px Button primitive renders with Lucide camera icon -> Full generation statusline emitted. (Passed in ~0.2ms)
+- **SCENARIO-T4-06 (Mobile Single-Column Chat & Responsive Governance)**:
+  Viewport set to 390px (mobile) -> Layout classified as `single-column-chat` -> Canvas strictly disabled on mobile -> Figma design surface tokens (`--kk-bg-surface: #f2f2f2`) and 4px grid rhythm verified by Unslop 9-pass redline rules -> Desktop viewport switch re-enables canvas workbench. (Passed in ~0.1ms)
+
+---
+
+## 4. Verification Evidence & Runner Instructions
 
 ```bash
-# 1. Run all 142 E2E settings tests (100% green against production modules)
-node --test tests/e2e-settings/*.test.ts
+# 1. Run full E2E Test Suite (312 tests across all 4 Tiers, 100% pass)
+npm run test:e2e
 
-# 2. TypeScript compilation check
+# 2. TypeScript compilation check (0 errors)
 npm run typecheck
 
-# 3. ESLint static analysis on E2E test files
-npx eslint tests/e2e-settings/
+# 3. ESLint check on test suite (0 errors, 0 warnings)
+npx eslint tests/e2e/ --max-warnings 0
 ```
-
-All three verification gates pass cleanly with exit code 0.
