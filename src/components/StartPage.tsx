@@ -217,6 +217,7 @@ export default function StartPage({
                 <button
                   type="button"
                   className={selectedCategory === chip ? "is-selected" : ""}
+                  data-key={chip}
                   aria-pressed={selectedCategory === chip}
                   key={chip}
                   onClick={() => setSelectedCategory(chip)}
@@ -224,6 +225,11 @@ export default function StartPage({
                   {chip}
                 </button>
               ))}
+              <SlidingPillIndicator
+                containerRef={chipRowRef}
+                activeKey={selectedCategory}
+                variant="line"
+              />
             </div>
             <div
               className="start-inspiration-grid"
@@ -267,9 +273,11 @@ export default function StartPage({
                       decoding="async"
                     />
                     <div>
-                      <span>{item.tag}</span>
                       <strong>{item.title}</strong>
-                      <p>{item.description}</p>
+                      <div className="start-inspiration-meta">
+                        <p>{item.description}</p>
+                        <span>{item.tag}</span>
+                      </div>
                     </div>
                   </button>
                 ))

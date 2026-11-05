@@ -363,7 +363,7 @@
   }
   /* Figma's 18px right-panel instance carries a 21.5px stroke-inclusive
      asset. Keep the hit box at 18px while matching the visible glyph size. */
-  .canvas-hud .chat-reopen img {
+  .canvas-hud .chat-reopen :is(img, .ui-icon) {
     position: absolute;
     left: 50%;
     top: 50%;
@@ -568,7 +568,7 @@
 .canvas .canvas-hud .chat-reopen::before {
   content: none;
 }
-.canvas .canvas-hud .chat-reopen img {
+.canvas .canvas-hud .chat-reopen :is(img, .ui-icon) {
   position: static;
   transform: none;
   width: 28px;

@@ -209,18 +209,21 @@ export async function prepareImageTask(
         "请先选择视频或语音的模型连接，草稿已保留。",
         true,
       );
-    for (const attachment of input.attachments) {
-      const asset = attachment.assetId
-        ? await loadStoredAsset(attachment.assetId)
-        : null;
-      if (
-        !asset ||
-        asset.mime !== attachment.mime ||
-        !asset.preview.startsWith(`data:${asset.mime};base64,`)
-      )
-        throw new ImageTaskCommandError(
-          "参考素材原件缺失或 MIME 不匹配，未提交生成。",
-        );
+    await validateMediaReferences();
+    async function validateMediaReferences() {
+      for (const attachment of input.attachments) {
+        const asset = attachment.assetId
+          ? await loadStoredAsset(attachment.assetId)
+          : null;
+        if (
+          !asset ||
+          asset.mime !== attachment.mime ||
+          !asset.preview.startsWith(`data:${asset.mime};base64,`)
+        )
+          throw new ImageTaskCommandError(
+            "参考素材原件缺失或 MIME 不匹配，未提交生成。",
+          );
+      }
     }
   } else {
     if (input.media !== undefined)

@@ -16,9 +16,9 @@ import {
 } from "../../features/memory/index.ts";
 import { Select } from "../ui";
 import MemoryRecordsList from "./MemoryRecordsList";
+import OntologyCertificationPanel from "./OntologyCertificationPanel";
 import { useMemory } from "../../features/memory/index.ts";
 import { confirmAction } from "../../runtime/confirmAction";
-
 export default function MemorySettingsSection({
   onFeedback,
   activeProject,
@@ -29,19 +29,23 @@ export default function MemorySettingsSection({
   const [selectedScope, setSelectedScope] =
     useState<MemoryNamespaceScope>("global");
   const chatId = activeProject?.activeChatId;
-  const scope =
-    (selectedScope === "project" && !activeProject) ||
-    (selectedScope === "session" && !chatId)
-      ? "global"
-      : selectedScope;
-  const namespace = formatNamespaceKey(
-    scope,
-    scope === "project"
-      ? activeProject?.id
-      : scope === "session"
-        ? JSON.stringify([activeProject?.id, chatId])
-        : undefined,
-  );
+  const { scope, namespace } = memoryScope();
+  function memoryScope() {
+    const scope =
+      (selectedScope === "project" && !activeProject) ||
+      (selectedScope === "session" && !chatId)
+        ? "global"
+        : selectedScope;
+    const namespace = formatNamespaceKey(
+      scope,
+      scope === "project"
+        ? activeProject?.id
+        : scope === "session"
+          ? JSON.stringify([activeProject?.id, chatId])
+          : undefined,
+    );
+    return { scope, namespace };
+  }
   const {
     enabled,
     store,
@@ -66,11 +70,88 @@ export default function MemorySettingsSection({
     projectId: activeProject?.id,
     activeChat: chatId ? activeProject?.chats?.[chatId] : null,
   });
-
   const records = store?.records ?? [];
   const sharedReadOnly = mode === "shared-readonly";
   const cannotEdit = sharedReadOnly || mode === "locked";
 
+  function renderRecords() {
+    return (
+      <>
+        {loading ? (
+          <div className="settings-empty-state">
+            <strong>读取中…</strong>
+            <p>正在读取本地记忆。</p>
+          </div>
+        ) : loadError ? (
+          <div className="settings-empty-state" role="alert">
+            <strong>{loadError}</strong>
+            <p>请检查共享目录授权或文件格式；当前未覆盖原数据。</p>
+            <button
+              type="button"
+              className="settings-action secondary"
+              onClick={() => void refresh()}
+            >
+              重新读取
+            </button>
+          </div>
+        ) : records.length === 0 ? (
+          <div className="settings-empty-state">
+            <strong>暂无记忆</strong>
+            <p>
+              {cannotEdit
+                ? "当前共享文件暂无记忆；浏览器只读模式不会自动写入。"
+                : scope === "global"
+                  ? '开启记忆后，对话中表达偏好（如"以后请用…"、"不要…"）会被自动记录到这里。'
+                  : "当前范围暂无记忆；使用「让 Codex 提炼记忆」保存到此范围。"}
+            </p>
+          </div>
+        ) : (
+          <>
+            <MemoryRecordsList
+              records={records}
+              busy={busy}
+              cannotEdit={cannotEdit}
+              onRemove={removeRecord}
+            />
+            <div className="settings-network-actions">
+              <button
+                type="button"
+                className="settings-action secondary"
+                disabled={busy || cannotEdit}
+                onClick={async () => {
+                  if (
+                    await confirmAction(
+                      "确认清空当前范围的全部记忆？其他范围不会删除。",
+                    )
+                  )
+                    void clearAll();
+                }}
+              >
+                清空全部记忆
+              </button>
+              <button
+                type="button"
+                className="settings-action secondary"
+                disabled={busy || cannotEdit}
+                onClick={async () => {
+                  if (
+                    await confirmAction(
+                      scope === "global"
+                        ? "确认重置当前记忆？桌面端会保留旧文件备份；浏览器私有记忆没有文件级备份。"
+                        : "确认重置当前范围的记忆？其他范围不会删除。",
+                    )
+                  )
+                    void resetIdentity();
+                }}
+              >
+                重置共享文件
+              </button>
+            </div>
+          </>
+        )}
+      </>
+    );
+  }
   return (
     <div className="settings-detail-stack settings-memory-section">
       <h3 className="settings-detail-label">记忆服务</h3>
@@ -210,80 +291,10 @@ export default function MemorySettingsSection({
             />
           </div>
           <h3 className="settings-detail-label">记忆列表</h3>
-          {loading ? (
-            <div className="settings-empty-state">
-              <strong>读取中…</strong>
-              <p>正在读取本地记忆。</p>
-            </div>
-          ) : loadError ? (
-            <div className="settings-empty-state" role="alert">
-              <strong>{loadError}</strong>
-              <p>请检查共享目录授权或文件格式；当前未覆盖原数据。</p>
-              <button
-                type="button"
-                className="settings-action secondary"
-                onClick={() => void refresh()}
-              >
-                重新读取
-              </button>
-            </div>
-          ) : records.length === 0 ? (
-            <div className="settings-empty-state">
-              <strong>暂无记忆</strong>
-              <p>
-                {cannotEdit
-                  ? "当前共享文件暂无记忆；浏览器只读模式不会自动写入。"
-                  : scope === "global"
-                    ? '开启记忆后，对话中表达偏好（如"以后请用…"、"不要…"）会被自动记录到这里。'
-                    : "当前范围暂无记忆；使用「让 Codex 提炼记忆」保存到此范围。"}
-              </p>
-            </div>
-          ) : (
-            <>
-              <MemoryRecordsList
-                records={records}
-                busy={busy}
-                cannotEdit={cannotEdit}
-                onRemove={removeRecord}
-              />
-              <div className="settings-network-actions">
-                <button
-                  type="button"
-                  className="settings-action secondary"
-                  disabled={busy || cannotEdit}
-                  onClick={async () => {
-                    if (
-                      await confirmAction(
-                        "确认清空当前范围的全部记忆？其他范围不会删除。",
-                      )
-                    )
-                      void clearAll();
-                  }}
-                >
-                  清空全部记忆
-                </button>
-                <button
-                  type="button"
-                  className="settings-action secondary"
-                  disabled={busy || cannotEdit}
-                  onClick={async () => {
-                    if (
-                      await confirmAction(
-                        scope === "global"
-                          ? "确认重置当前记忆？桌面端会保留旧文件备份；浏览器私有记忆没有文件级备份。"
-                          : "确认重置当前范围的记忆？其他范围不会删除。",
-                      )
-                    )
-                      void resetIdentity();
-                  }}
-                >
-                  重置共享文件
-                </button>
-              </div>
-            </>
-          )}
+          {renderRecords()}
         </>
       )}
+      <OntologyCertificationPanel project={activeProject} />
     </div>
   );
 }

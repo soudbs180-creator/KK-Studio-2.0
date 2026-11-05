@@ -1,4 +1,5 @@
 import BrandLogo from "../BrandLogo";
+import UiIcon from "../UiIcon";
 
 type Generation = {
   phase: "idle" | "loading" | "success" | "error" | "cancelled" | "offline";
@@ -44,11 +45,7 @@ export function GenerationAction({
         <BrandLogo variant="credit" />
       </span>
       <b>{loading ? "取消" : generation.queryOnly ? "查询" : "生成"}</b>
-      <img
-        className="generate-arrow"
-        src="/design/figma/generate-arrow.svg"
-        alt=""
-      />
+      <UiIcon name="arrow-up" size={16} />
     </button>
   );
 }

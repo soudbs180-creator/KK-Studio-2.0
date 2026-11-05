@@ -494,13 +494,18 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
       syncProject();
       return;
     }
-    if (
-      "threadId" in event &&
-      event.threadId &&
-      state.conversation?.threadId &&
-      event.threadId !== state.conversation.threadId
-    )
-      return;
+    if (eventOutsideThread()) return;
+    function eventOutsideThread() {
+      if (
+        "threadId" in event &&
+        event.threadId &&
+        state.conversation?.threadId &&
+        event.threadId !== state.conversation.threadId
+      )
+        return true;
+
+      return false;
+    }
     switch (event.kind) {
       case "token_usage": {
         const target = state.messages.find(

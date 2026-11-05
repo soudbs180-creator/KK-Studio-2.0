@@ -659,6 +659,7 @@ fn draft(value: &Value) -> Result<(), String> {
             "approvalMode",
             "privacyMode",
             "outputCount",
+            "imageSize",
             "updatedAt",
         ],
         &[],
@@ -669,6 +670,15 @@ fn draft(value: &Value) -> Result<(), String> {
 fn draft_fields(value: &Value) -> Result<(), String> {
     texts(value, &[("prompt", usize::MAX), ("model", usize::MAX)])?;
     text(value, "providerConnectionId", 0, 120)?;
+    if let Some(size) = value.get("imageSize") {
+        let valid = size.as_str().is_some_and(|size| {
+            let parts: Vec<_> = size.split('x').collect();
+            parts.len() == 2 && parts.iter().all(|part| {
+                (2..=5).contains(&part.len()) && !part.starts_with('0') && part.bytes().all(|byte| byte.is_ascii_digit())
+            })
+        });
+        if !valid { return Err(invalid("imageSize")); }
+    }
     if let Some(selection) = value.get("modelSelection") {
         model_selection(selection)?;
     }
@@ -700,6 +710,9 @@ fn item(value: &Value) -> Result<(), String> {
             "id",
             "parameters",
             "canvasPresentation",
+            "blueprint",
+            "node_rev",
+            "comments",
             "title",
             "description",
             "kind",
@@ -731,6 +744,13 @@ fn item(value: &Value) -> Result<(), String> {
 }
 
 fn item_fields(value: &Value) -> Result<(), String> {
+    if let Some(blueprint) = value.get("blueprint") {
+        creative_fields::blueprint(blueprint)?;
+    }
+    number(value, "node_rev", 0.0, MAX_SAFE_INTEGER, true)?;
+    if let Some(comments) = value.get("comments") {
+        creative_fields::comments(comments)?;
+    }
     if let Some(presentation) = value.get("canvasPresentation") {
         creative_fields::presentation(presentation)?;
     }

@@ -1,3 +1,4 @@
+import { Button } from "../ui/Button.tsx";
 import { useState, useSyncExternalStore } from "react";
 import { extensionBridge } from "../../features/extensions/index.ts";
 
@@ -38,14 +39,14 @@ export default function RuntimeExtensionSettings({
               {reason && <p>{reason}</p>}
             </div>
             <div className="plugin-manager-actions">
-              <button
+              <Button
                 type="button"
                 role="switch"
                 aria-checked={enabled}
                 aria-label={`${enabled ? "停用" : "启用"} ${name}`}
                 title={reason}
                 disabled={busy || Boolean(reason)}
-                className="settings-toggle"
+                isPill
                 onClick={() => {
                   try {
                     extensionBridge.setExtensionEnabled(extension.id, !enabled);
@@ -58,8 +59,8 @@ export default function RuntimeExtensionSettings({
                   }
                 }}
               >
-                <span aria-hidden="true" />
-              </button>
+                {enabled ? "已启用" : "已停用"}
+              </Button>
             </div>
           </div>
         );

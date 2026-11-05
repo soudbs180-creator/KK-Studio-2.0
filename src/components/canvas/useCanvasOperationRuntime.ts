@@ -45,6 +45,7 @@ export function useCanvasOperationRuntime(
         },
         selectedNodeIds: [...controls.selectedIds],
         snapEnabled: controls.preferences.snapEnabled,
+        gridMode: controls.preferences.backgroundPattern,
         minimapVisible,
         screen: {
           width: controls.containerRef.current?.clientWidth ?? 1000,
@@ -88,6 +89,7 @@ export function useCanvasOperationRuntime(
           controls.setTransform(state.canvas.viewport);
           controls.selectNodes(new Set(state.selectedNodeIds));
           controls.setSnapEnabled(state.snapEnabled);
+          if (state.gridMode) controls.setBackgroundPattern(state.gridMode);
           setMinimapVisible(state.minimapVisible);
           controls.publishedCanvas.current = projectCanvasFingerprint(
             state.canvas,

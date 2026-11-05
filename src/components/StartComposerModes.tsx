@@ -1,4 +1,5 @@
 import type { CreationDraft } from "../features/creation/index.ts";
+import UiIcon from "./UiIcon";
 
 export function StartModePicker({
   draft,
@@ -22,11 +23,7 @@ export function StartModePicker({
         onClick={onToggle}
       >
         {draft.approvalMode === "ask" ? "询问" : "自动"}{" "}
-        <img
-          src="/design/figma/composer-chevron.svg"
-          alt=""
-          draggable={false}
-        />
+        <UiIcon name="chevron-down" size={12} />
       </button>
       {open && (
         <div className="start-mode-popover" role="menu">

@@ -11381,8 +11381,8 @@
     "dependencies": [],
     "owner": "root",
     "ownerRole": "implementation-integrator",
-    "branch": "codex/TASK-E2E-WIRING-20261104",
-    "worktree": "D:/kk-studio/KK-Studio-2.0",
+    "branch": "main",
+    "worktree": "unallocated",
     "baseSha": "6719c6d1",
     "affectedModules": [
       "src/features/memory",
@@ -11391,13 +11391,13 @@
       "src-tauri/src",
       "tests/e2e"
     ],
-    "status": "IN_PROGRESS",
+    "status": "PARTIAL",
     "displayStatus": "进行中",
     "priority": "P0",
     "risk": "high",
     "reviewRequired": true,
     "evidence": ["docs/changes/2026-11-04-e2e-wiring/verification.md"],
-    "verification": "真实生产接线和harness纯转出已实现；e2e312/312，单元2684 pass/20 skip，定向浏览器102+2通过；独审2P1/4P2已修复待正式SHA复核，完整verify17/Desktop最新构建/PR/main待收口。",
+    "verification": "真实生产接线和harness纯转出已实现；e2e312/312，单元2684 pass/20 skip，定向浏览器102+2通过；独审2P1/4P2已修复待正式SHA复核，完整verify17/Desktop最新构建/PR/main待收口。 2026-11-05：当前本机main@752f7dbd已包含本任务实现，旧独占工作树记录解除；历史未验边界保留，本次深水区由TASK-DEEP-WATER-20261105接管。",
     "verificationResult": "PARTIAL",
     "updated": "2026-11-05",
     "lastVerified": "2026-11-05",
@@ -11407,5 +11407,42 @@
       "docs/changes/2026-11-04-e2e-wiring/spec.md"
     ],
     "featureIds": ["FEAT-020", "FEAT-030", "FEAT-043", "FEAT-044"]
+  },
+  {
+    "id": "TASK-DEEP-WATER-20261105",
+    "title": "第二阶段B1–B5与A1–A3深水区补齐",
+    "goal": "生产能力补齐、健康度清零与验证交付",
+    "scope": "导演机位、分镜提炼与重修、MCP严格契约、蓝图导出、共享UI和复杂度收口",
+    "acceptance": [
+      "P0–P4正式入口实际调用生产模块",
+      "数据兼容、取消、失败、恢复通过回归",
+      "完整门禁与运行证据通过后独审合流"
+    ],
+    "dependencies": ["TASK-E2E-WIRING-20261104"],
+    "owner": "root",
+    "ownerRole": "implementation-integrator",
+    "branch": "main",
+    "worktree": "D:/kk-studio/KK-Studio-2.0",
+    "baseSha": "752f7dbd",
+    "affectedModules": [
+      "src/domain",
+      "src/features",
+      "src/components",
+      "vendor/canvas-agent",
+      "src-tauri"
+    ],
+    "status": "IN_PROGRESS",
+    "displayStatus": "进行中",
+    "priority": "P0",
+    "risk": "high",
+    "reviewRequired": true,
+    "evidence": ["docs/changes/2026-11-05-step2-deep-water/verification.md"],
+    "verification": "基线已核对，health26 blocking advisory；尚未完成验收",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-11-05",
+    "lastVerified": "2026-11-05",
+    "nextAction": "实现与生产链验证",
+    "requirementRefs": ["docs/changes/2026-11-05-step2-deep-water/spec.md"],
+    "featureIds": ["FEAT-044"]
   }
 ]

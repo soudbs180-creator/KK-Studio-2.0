@@ -109,3 +109,7 @@
 - 当前整体仍PARTIAL，最新完整 `verify-17` 执行中，随后将以同一冻结源码经官方启动器重建Desktop。当前无提交、无PR/main合流或工作树回收；远端main相对本地基线落后205提交，完整PR差异与本轮增量需分别核对。
 
 - `verify-17` 因 `vite.config.ts` 未指定 `optimizeDeps.entries` 导致 `vite:dep-scan` 扫描 `src-tauri/target/` 下百余个 codegen HTML 超时；在 `vite.config.ts` 显式限定 `optimizeDeps.entries: ["index.html"]` 后，`verify-18.log` 全量 11 道门禁（`lint`、`typecheck`、`test` 2684 pass、`agent:build`、`test:agent` 204 pass、`ui:check` 0 违规、`format:check`、`test:ui` 977 pass、`test:design` 41+9 pass、`test:pixel`、`test:development` PASS）完整 `exit 0` 通过。
+
+## 2026-11-05 第二阶段续作
+
+上阶段实现现已位于本机main@752f7dbd；本轮B1–B5、A1–A3另包实施，当前状态与新的门禁/桌面证据见[第二阶段验证](../2026-11-05-step2-deep-water/verification.md)。旧日志与未验边界保留原义，不回写历史结果。

@@ -60,7 +60,7 @@ export default function ConversationPanel({
   const draftRevision = useRef(0);
   const agentBusy = Boolean(agent?.sending || agent?.connecting);
   const blocked = Boolean(executionDisabledReason);
-  const modelDisabled = blocked || submitting || agentBusy || rewindBusy;
+  const locked = [blocked, submitting, agentBusy, rewindBusy].some(Boolean);
   const draftKey = JSON.stringify([
     project?.id ?? "workspace",
     project?.activeChatId ?? null,
@@ -70,7 +70,7 @@ export default function ConversationPanel({
     useConversationSelection({
       projectId: draftKey,
       draft: composerDraft,
-      locked: modelDisabled,
+      locked: locked,
       patch: updateDraft,
       onApiModel: onModelChange,
       onStatus: setStatus,
@@ -214,7 +214,7 @@ export default function ConversationPanel({
         disabled={
           blocked || submitting || rewindBusy || (agentActive && agentBusy)
         }
-        modelDisabled={modelDisabled}
+        modelDisabled={locked}
         submitDisabled={
           blocked ||
           rewindBusy ||

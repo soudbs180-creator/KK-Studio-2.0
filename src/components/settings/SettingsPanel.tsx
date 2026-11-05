@@ -1,5 +1,5 @@
 import { useCallback, useLayoutEffect, useRef, useState } from "react";
-import { X } from "lucide-react";
+import UiIcon from "../UiIcon";
 import {
   DEFAULT_SETTINGS,
   SETTINGS_STORAGE_KEY,
@@ -146,6 +146,15 @@ export default function SettingsPanel({
     }
   }
 
+  function selectSection(next: SettingsSection): void {
+    if (busy) return;
+    setNavigation("detail");
+    setSection(next);
+    if (next === "providers") setModelsMounted(true);
+    if (next !== "extensions") setExtensionsTab(undefined);
+    setFeedback({ message: "", error: false });
+  }
+
   return (
     <SettingsNavigationContext.Provider value={{ busy, setBusy }}>
       <div
@@ -173,14 +182,7 @@ export default function SettingsPanel({
         <SettingsSidebar
           section={section}
           busy={busy}
-          onSelect={(next) => {
-            if (busy) return;
-            setNavigation("detail");
-            setSection(next);
-            if (next === "providers") setModelsMounted(true);
-            if (next !== "extensions") setExtensionsTab(undefined);
-            setFeedback({ message: "", error: false });
-          }}
+          onSelect={selectSection}
         />
 
         <main
@@ -192,6 +194,8 @@ export default function SettingsPanel({
             <GeneralSettings
               preferences={preferences}
               onChange={updatePreferences}
+              onOpenShortcuts={() => selectSection("shortcuts")}
+              busy={busy}
               generalDetail={resolved.generalDetail}
               onReset={() =>
                 updatePreferences(
@@ -242,12 +246,7 @@ export default function SettingsPanel({
             if (!busy) onClose();
           }}
         >
-          <img
-            src="/design/figma/settings-close.svg"
-            width="16"
-            height="16"
-            alt=""
-          />
+          <UiIcon name="close" size={16} />
         </button>
 
         {feedback.message && (
@@ -261,7 +260,7 @@ export default function SettingsPanel({
               aria-label="收起设置提示"
               onClick={() => setFeedback({ message: "", error: false })}
             >
-              <X size={16} strokeWidth={1} />
+              <UiIcon name="close" size={16} />
             </button>
           </div>
         )}

@@ -83,30 +83,38 @@ export function describeAgentOperation(
     const node = snapshot?.nodes.find((item) => item.id === id);
     return node ? `${node.title}（${id}）` : id;
   };
+  function describeDeletion(
+    op: Extract<CanvasAgentOp, { type: "delete_node" }>,
+  ) {
+    const type = op.nodeType?.includes(":")
+      ? op.nodeType
+      : agentNodeTypeToKind(op.nodeType);
+    const ids =
+      op.ids ??
+      (op.id
+        ? [op.id]
+        : op.nodeType
+          ? (snapshot?.nodes
+              .filter((node) => node.type === type)
+              .map((node) => node.id) ?? [])
+          : []);
+    return `删除 ${ids.length} 个节点：${ids.map(nodeLabel).join("、") || "未指定"}`;
+  }
+  function describeGeneration(
+    op: Extract<CanvasAgentOp, { type: "run_generation" }>,
+  ) {
+    const node = snapshot?.nodes.find((item) => item.id === op.nodeId);
+    return `生成 ${nodeLabel(op.nodeId)} · ${op.mode ?? node?.type ?? "待创建节点"} · 模型 ${op.model ?? node?.metadata.model ?? "节点配置"}`;
+  }
   switch (op.type) {
     case "canvas_operation":
       return `画布原子操作 ${op.operation.op}：${JSON.stringify(op.operation.payload)}`;
-    case "delete_node": {
-      const type = op.nodeType?.includes(":")
-        ? op.nodeType
-        : agentNodeTypeToKind(op.nodeType);
-      const ids =
-        op.ids ??
-        (op.id
-          ? [op.id]
-          : op.nodeType
-            ? (snapshot?.nodes
-                .filter((node) => node.type === type)
-                .map((node) => node.id) ?? [])
-            : []);
-      return `删除 ${ids.length} 个节点：${ids.map(nodeLabel).join("、") || "未指定"}`;
-    }
+    case "delete_node":
+      return describeDeletion(op);
     case "delete_connections":
       return `删除连线：${op.all ? `当前全部 ${snapshot?.connections.length ?? 0} 条` : (op.ids ?? [op.id ?? "未指定"]).join("、")}`;
-    case "run_generation": {
-      const node = snapshot?.nodes.find((item) => item.id === op.nodeId);
-      return `生成 ${nodeLabel(op.nodeId)} · ${op.mode ?? node?.type ?? "待创建节点"} · 模型 ${op.model ?? node?.metadata.model ?? "节点配置"}`;
-    }
+    case "run_generation":
+      return describeGeneration(op);
     case "add_node":
       return `新建 ${op.title ?? op.nodeType ?? "节点"}（${op.id ?? "自动分配 ID"}）${op.metadata?.model ? ` · 模型 ${op.metadata.model}` : ""}`;
     case "update_node":

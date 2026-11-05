@@ -1,10 +1,15 @@
 import { CanvasOpSchema } from "./canvasOperationSchema.ts";
 import { applyCanvasOperation } from "./canvasOperationReducer.ts";
+import { normalizeCanvasOperation } from "./canvasOperationAliases.ts";
 import type {
   CanvasOperationBridge,
   CanvasViewport,
 } from "./canvasOperationState.ts";
-export { CanvasOpSchema, CANVAS_34_OPS } from "./canvasOperationSchema.ts";
+export {
+  CanvasOpSchema,
+  CANVAS_34_OPS,
+  CANVAS_ATOMIC_OPS,
+} from "./canvasOperationSchema.ts";
 export type { CanvasOperation } from "./canvasOperationSchema.ts";
 export type {
   CanvasOperationState,
@@ -27,13 +32,16 @@ export class CanvasMcpServer {
     const parsed = CanvasOpSchema.safeParse(raw);
     if (!parsed.success)
       return { success: false, op: "unknown", error: parsed.error.message };
-    const op = parsed.data;
+    const op = normalizeCanvasOperation(parsed.data);
     try {
       if (!this.bridge) throw new Error("画布宿主未连接");
       let data: unknown;
       if (op.op === "undo") this.bridge.undo();
       else if (op.op === "redo") this.bridge.redo();
-      else if (op.op === "export_canvas_image")
+      else if (op.op === "auto_layout") {
+        if (!this.bridge.autoLayout) throw new Error("自动布局宿主未连接");
+        this.bridge.autoLayout(op.payload.ids, op.payload.direction);
+      } else if (op.op === "export_canvas_image")
         data = this.bridge.exportImage();
       else if (op.op === "export_canvas_json") {
         const s = this.bridge.getState();

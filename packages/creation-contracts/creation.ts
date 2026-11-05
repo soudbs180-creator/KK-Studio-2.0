@@ -125,6 +125,8 @@ export type ReasoningEffort = "low" | "medium" | "high";
 
 export interface CreationDraft {
   media?: CreationMedia;
+  /** Declared provider pixel dimensions; omission uses the provider default. */
+  imageSize?: string;
   modelSelection?: ModelSelection;
   conversationChannel?: "codex" | "direct" | "google";
   /** Only a new home request may seed the Agent editor from this pending draft. */

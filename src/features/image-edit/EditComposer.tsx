@@ -263,6 +263,8 @@ export default function EditComposer({
           sessionKey={`image-edit:${source.id}`}
           maxLength={2000}
           className="ui-button"
+          idleIcon={<UiIcon name="mic" size={16} />}
+          activeIcon={<UiIcon name="mic-off" size={16} />}
         />
         <button
           type="button"

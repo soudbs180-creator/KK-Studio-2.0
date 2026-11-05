@@ -251,11 +251,11 @@
   flex: 1;
 }
 .reference-locate-glyph {
+  display: grid;
+  place-items: center;
   width: 20px;
   height: 20px;
-  background: currentColor;
-  mask: url("/design/figma/reference-return-to-content.svg") center / contain
-    no-repeat;
+  background: none;
 }
 .reference-media-placeholder {
   width: 100%;

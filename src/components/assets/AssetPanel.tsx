@@ -223,11 +223,7 @@ export default function AssetPanel({
             ))
           ) : (
             <div className="asset-empty">
-              <img
-                className="asset-icon"
-                src="/design/figma/search.svg"
-                alt=""
-              />
+              <UiIcon name="search" size={20} />
               <h3>
                 {tab === "trash"
                   ? "垃圾箱为空"

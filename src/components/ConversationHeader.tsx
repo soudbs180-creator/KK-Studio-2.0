@@ -1,4 +1,5 @@
 import type { ChatItem } from "../features/creation/index.ts";
+import UiIcon from "./UiIcon";
 import ConversationChatTabs from "./ConversationChatTabs.tsx";
 
 export interface ConversationHeaderProps {
@@ -65,12 +66,7 @@ export default function ConversationHeader({
               )
             }
           >
-            <img
-              src="/design/figma/chat-header-history.svg"
-              width="20"
-              height="20"
-              alt=""
-            />
+            <UiIcon name="history" size={20} />
           </button>
           <button
             type="button"
@@ -78,12 +74,7 @@ export default function ConversationHeader({
             aria-label="收起对话"
             onClick={onClose}
           >
-            <img
-              src="/design/figma/chat-open.svg"
-              width="20"
-              height="20"
-              alt=""
-            />
+            <UiIcon name="panel-right-close" size={20} />
           </button>
         </div>
       </div>

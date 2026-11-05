@@ -2,7 +2,6 @@ import { useRef, useState } from "react";
 import UiIcon from "./UiIcon";
 import { Button } from "./ui";
 import type { CreationDraft } from "../features/creation/index.ts";
-import UsageStatusBar from "./composer/UsageStatusBar";
 import {
   homeModelSelection,
   homeDraftForSelection,
@@ -11,9 +10,9 @@ import { codexHomeValidation } from "../features/agent/index.ts";
 import StartAttachmentList from "./StartAttachmentList";
 import ComposerTextarea from "./ComposerTextarea";
 import useConversationAttachments from "./useConversationAttachments";
-import ComposerExtensionsMenu from "./ComposerExtensionsMenu";
 import StartModelPicker from "./StartModelPicker";
-import { StartComposerFeedback, StartModePicker } from "./StartComposerModes";
+import { StartComposerFeedback } from "./StartComposerModes";
+import StartMediaControls from "./StartMediaControls";
 import { VoiceInputButton } from "../features/speech/index.ts";
 import { useComposerMenus } from "./useComposerMenus";
 import { ExtensionSlot } from "../features/extensions/index.ts";
@@ -54,14 +53,13 @@ export default function StartComposer({
     null,
   );
   const pickerRef = useRef<HTMLDivElement>(null);
+  const menus = useComposerMenus(pickerRef);
   const {
     modelMenuOpen,
-    skillMenuOpen,
-    modeMenuOpen,
     toggleMenu,
     openMenu,
     closeMenus,
-  } = useComposerMenus(pickerRef);
+  } = menus;
   const selection = homeModelSelection(draft);
   const usesCodex = selection.source !== "api";
   const model = selection.model;
@@ -145,10 +143,24 @@ export default function StartComposer({
     void submitDraft(nextDraft);
     setPendingSubmit(null);
   }
+  const toolbarControls = {
+    draft, selection, menus, disabled: submitting || readingFiles > 0,
+    onChange: commit,
+    onSelectModel: (choice: typeof selection) => {
+      commit(homeDraftForSelection(draft, choice));
+      closeMenus();
+    },
+    skills, onApplySkill, onStatus: setStatus,
+    onOpen: (id: string) => {
+      if (id === "skills") onOpenSkills();
+      else onOpenExtension(id);
+    },
+  };
   return (
     <>
       <form
         className="start-composer composer-surface"
+        data-composer-variant={draft.kind === "text" ? "conversation" : "media"}
         onSubmit={(event) => {
           event.preventDefault();
           submit();
@@ -183,7 +195,7 @@ export default function StartComposer({
               heightTier="32px"
               variant="ghost"
               isPill
-              prefixIcon={<UiIcon name="add" size={20} />}
+              prefixIcon={<UiIcon name="add" size={16} />}
               className="start-add-button"
               aria-label="添加参考素材"
               onClick={() => fileInput.current?.click()}
@@ -216,57 +228,25 @@ export default function StartComposer({
               className="start-composer-divider start-model-divider"
               aria-hidden="true"
             />
-            <div className="start-resource-picker composer-ext composer-ext-skill">
-              <button
-                type="button"
-                className="start-tool-button"
-                aria-haspopup="menu"
-                aria-expanded={skillMenuOpen}
-                title="扩展"
-                onClick={() => toggleMenu("skill")}
-              >
-                <img src="/design/figma/composer-puzzle.svg" alt="" />
-                <span>扩展</span>
-              </button>
-              {skillMenuOpen && (
-                <ComposerExtensionsMenu
-                  skills={skills}
-                  onApplySkill={(record) => {
-                    const message = onApplySkill?.(record);
-                    closeMenus();
-                    setStatus(message ?? "当前草稿不可用，未应用技能。");
-                  }}
-                  onOpen={(id) => {
-                    closeMenus();
-                    if (id === "skills") onOpenSkills();
-                    else onOpenExtension(id);
-                  }}
-                />
-              )}
-            </div>
+            <StartMediaControls {...toolbarControls} placement="left" />
             <span
               className="start-composer-divider start-skill-divider"
               aria-hidden="true"
             />
           </div>
           <div className="start-footer-right">
+            {draft.kind !== "text" && <StartMediaControls {...toolbarControls} placement="right" />}
             <VoiceInputButton
               className="start-mic-button"
               value={draft.prompt}
               onChange={(prompt) => commit({ prompt })}
               onStatus={setStatus}
               maxLength={4000}
+              idleIcon={<UiIcon name="mic" size={16} />}
+              activeIcon={<UiIcon name="mic-off" size={16} />}
             />
             <span className="start-composer-divider" aria-hidden="true" />
-            <StartModePicker
-              draft={draft}
-              open={modeMenuOpen}
-              onToggle={() => toggleMenu("mode")}
-              onSelect={(value) => {
-                commit({ approvalMode: value });
-                closeMenus();
-              }}
-            />
+            {draft.kind === "text" && <StartMediaControls {...toolbarControls} placement="right" />}
             <Button
               type="submit"
               heightTier="44px"
@@ -284,12 +264,6 @@ export default function StartComposer({
           </div>
         </div>
         <ExtensionSlot id="composer.below" />
-        <UsageStatusBar
-          draft={draft}
-          onReasoningEffortChange={(effort) =>
-            commit({ reasoningEffort: effort })
-          }
-        />
       </form>
       <StartComposerFeedback
         reason={draft.prompt.trim() ? disabledReason : undefined}

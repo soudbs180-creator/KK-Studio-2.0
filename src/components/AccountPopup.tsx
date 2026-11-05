@@ -1,4 +1,5 @@
 import BrandLogo from "./BrandLogo";
+import UiIcon from "./UiIcon";
 import type { RefObject } from "react";
 import { appPlatform, appVersion } from "../runtime/appInfo";
 
@@ -33,7 +34,7 @@ export default function AccountPopup({
           className="kk-button kk-button--secondary"
           onClick={() => onOpenSettings("account")}
         >
-          <img src="/design/figma/account-user.svg" alt="" />
+          <UiIcon name="user-round" size={16} />
           个人主页
         </button>
         <button
@@ -42,7 +43,7 @@ export default function AccountPopup({
           disabled
           title="退出登录暂未接入"
         >
-          <img src="/design/figma/account-logout.svg" alt="" />
+          <UiIcon name="log-out" size={16} />
           退出登录
         </button>
       </div>
@@ -65,7 +66,7 @@ export default function AccountPopup({
       </div>
       <div className="account-popup-row account-theme-row">
         <div className="account-popup-row-label">
-          <img src="/design/figma/account-theme-icon.svg" alt="" />
+          <UiIcon name="sun-moon" size={16} />
           <span>主题</span>
         </div>
         <button
@@ -79,7 +80,7 @@ export default function AccountPopup({
       </div>
       <div className="account-popup-row account-version-row">
         <div className="account-popup-row-label">
-          <img src="/design/figma/account-update.svg" alt="" />
+          <UiIcon name="circle-arrow-up" size={16} />
           <span>
             {appPlatform()} · v{appVersion}
           </span>
@@ -90,7 +91,7 @@ export default function AccountPopup({
           title="打开软件更新设置"
           onClick={() => onOpenSettings("updates")}
         >
-          <img src="/design/figma/account-refresh.svg" alt="" />
+          <UiIcon name="refresh-cw" size={16} />
           查看
         </button>
       </div>

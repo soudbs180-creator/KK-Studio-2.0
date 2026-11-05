@@ -59,42 +59,7 @@
 .add-node-label {
   white-space: nowrap;
 }
-.add-node-icon {
-  display: block;
-  width: 20px;
-  height: 20px;
-  background: currentColor;
-  mask: var(--node-menu-asset) center / contain no-repeat;
-  flex-shrink: 0;
-}
-.add-node-icon-text {
-  --node-menu-asset: url("/design/figma/node-menu-text.svg");
-}
-.add-node-icon-table {
-  --node-menu-asset: url("/design/figma/node-menu-table.svg");
-}
-.add-node-icon-image {
-  --node-menu-asset: url("/design/figma/node-menu-image.svg");
-}
-.add-node-icon-video {
-  --node-menu-asset: url("/design/figma/node-menu-video.svg");
-}
-.add-node-icon-audio {
-  --node-menu-asset: url("/design/figma/node-menu-audio.svg");
-}
-.add-node-icon-director {
-  --node-menu-asset: url("/design/figma/node-menu-director.svg");
-}
-.add-node-icon-edit {
-  --node-menu-asset: url("/design/figma/node-menu-edit.svg");
-}
-.add-node-icon-workflow {
-  --node-menu-asset: url("/design/figma/node-menu-workflow.svg");
-}
-.add-node-icon-next {
-  --node-menu-asset: url("/design/figma/node-menu-next.svg");
-  width: 16px;
-  height: 16px;
+.add-node-items > button > .ui-icon:last-child {
   margin-left: auto;
   color: var(--ui-node-menu-muted);
 }

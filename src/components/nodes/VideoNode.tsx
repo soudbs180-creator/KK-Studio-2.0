@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type RefObject } from "react";
+import UiIcon from "../UiIcon";
 import CreationComposer from "./CreationComposer";
 import VideoShotBreakdownControl from "./VideoShotBreakdownControl.tsx";
 import { useCanvasMediaContent } from "../canvas/useCanvasMediaContent";
@@ -174,11 +175,9 @@ export default function VideoNode({
   return (
     <div className="video-node">
       <span>
-        <img
-          className="video-label-icon"
-          src="/design/figma/video-label.svg"
-          alt=""
-        />
+        <span className="video-label-icon">
+          <UiIcon name="video" size={16} />
+        </span>
         视频
       </span>
       <div className="video-placeholder">
@@ -198,11 +197,9 @@ export default function VideoNode({
             }}
           />
         ) : (
-          <img
-            className="video-symbol"
-            src="/design/figma/video-placeholder.svg"
-            alt=""
-          />
+          <span className="video-symbol">
+            <UiIcon name="video" size={24} />
+          </span>
         )}
         {selected && !video && !loading && !hasContent && (
           <button
@@ -252,6 +249,7 @@ export default function VideoNode({
         }}
       />
       <CreationComposer
+        nodeId={item.id}
         footer={
           video && (
             <VideoShotBreakdownControl source={video} sourceId={item.id} />

@@ -9,64 +9,52 @@
 
 .start-page {
   background: var(--bg-app);
-  /* Workspace padding maps to Figma Frame 56 at (291,45) and leaves the
-     10px right / bottom breathing room from the latest Landing frame. */
-  inset: 5px 10px 10px 0;
-  padding: 0;
+  /* Figma 9:3: the page starts directly below the shared application rail. */
+  inset: 0;
+  padding: 0 10px 0 0;
   overflow-x: hidden;
   overflow-y: auto;
-  /* Landing is a real Figma surface (410:67280), not an unframed child of
-     the workspace shell. Keep the 20px frame radius and 1px outline visible
-     in the browser so the loaded page has the same boundary as the design. */
   border: 1px solid var(--border-default);
-  border-radius: 20px;
+  border-radius: var(--kk-radius-panel);
 }
 .start-hero {
   position: relative;
-  /* Preserve the source's initial offset while dynamic inputs occupy flow. */
-  margin-top: 112px;
+  margin-top: 56px;
   left: 0;
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: var(--kk-space-5);
   text-align: center;
 }
 .start-release {
   display: none;
 }
 .start-brand {
-  display: grid;
-  grid-template-columns: 1052.344px;
-  grid-template-rows: 63.141px 54.57px 24.16px 24.16px;
-  row-gap: 9.354px;
-  justify-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: var(--kk-space-3);
   align-items: center;
-  width: 1052.344px;
-  height: 238.141px;
+  width: min(100%, 1052.333px);
   padding-top: 44.432px;
   margin: 0;
 }
 .start-brand img {
-  grid-row: 1;
-  width: var(--ui-logo-hero);
-  height: var(--ui-logo-hero);
+  width: 64px;
+  height: 64px;
   object-fit: contain;
 }
 .start-brand h1 {
-  grid-row: 2;
-  align-self: center;
-  font-size: 44.9px;
-  line-height: normal;
-  letter-spacing: -1.347px;
+  font-size: 40px;
+  line-height: 48px;
+  letter-spacing: 0;
   color: var(--text-primary);
 }
 .start-brand p {
-  grid-row: 3;
-  align-self: center;
   color: var(--text-secondary);
-  font-size: 18.708px;
-  line-height: normal;
+  font-size: var(--kk-font-body);
+  line-height: var(--kk-line-body);
 }
 .start-model-popover {
   position: absolute;
@@ -219,10 +207,8 @@
 }
 .start-discovery {
   position: relative;
-  /* Figma 410:59708: Frame 56 x=291, initial page x=-80.23, and the
-     1403.126px content column is centered inside the 1778.462px page. */
-  left: 107.5px;
-  width: 1403.126px;
+  left: var(--kk-space-6);
+  width: calc(100% - 2 * var(--kk-space-6));
   margin: 64px 0 40px;
 }
 .start-tabs,
@@ -260,35 +246,28 @@
 .start-chip-row {
   position: relative;
   display: flex;
-  flex-wrap: wrap;
-  gap: var(--kk-space-3);
+  flex-wrap: nowrap;
+  gap: var(--kk-space-2);
   margin: 0;
-  padding-top: var(--kk-space-4);
+  height: var(--kk-control-h-lg);
+  padding: 0;
 }
 .start-chip-row button {
   height: var(--kk-control-h-lg);
-  border: 1px solid var(--kk-border-subtle);
-  border-radius: var(--kk-radius-full);
-  padding: 0 var(--kk-space-4);
-  background: var(--ui-state-idle-bg);
-  color: var(--text-secondary);
+  flex: 0 0 auto;
+  border: 0;
+  padding: 0 var(--kk-space-2);
+  background: transparent;
+  color: var(--text-primary);
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-caption);
+  font-weight: var(--kk-font-weight-subtitle);
   transition: var(--ui-state-transition);
 }
-.start-chip-row button {
-  font-size: var(--kk-font-body);
-}
-.start-chip-row button:hover:not(.is-selected) {
-  background: var(--ui-state-hover-bg);
-  border-color: var(--kk-border-default);
-  color: var(--text-primary);
-}
-/* Chosen category: fill + accent border, the same mark used by every other
-   single-choice control in settings and the model picker. */
+.start-chip-row button:hover,
 .start-chip-row button.is-selected {
-  background: var(--ui-state-selected-bg);
-  color: var(--ui-state-selected-fg);
-  border-color: var(--ui-state-selected-ring);
-  font-weight: 500;
+  background: transparent;
+  color: var(--text-primary);
 }
 .start-inspiration-grid {
   display: grid;
@@ -364,29 +343,49 @@
   display: block;
   width: 100%;
   height: auto;
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 318 / 336;
   object-fit: cover;
   filter: none;
 }
 .start-inspiration-card > div {
-  display: grid;
-  gap: var(--kk-space-2);
-  padding: var(--kk-space-4);
+  display: flex;
+  flex-direction: column;
+  min-height: 112px;
+  gap: var(--kk-space-4);
+  padding: var(--kk-space-5);
 }
 .start-inspiration-card span {
-  color: var(--text-accent);
+  color: var(--text-secondary);
   font-size: var(--kk-font-caption);
   line-height: var(--kk-line-caption);
 }
 .start-inspiration-card strong {
+  display: flex;
+  align-items: center;
+  min-height: var(--kk-control-h-md);
   color: var(--text-primary);
   font-size: var(--kk-font-subtitle);
   line-height: var(--kk-line-subtitle);
 }
 .start-inspiration-card p {
   color: var(--text-secondary);
-  font-size: var(--kk-font-body);
-  line-height: var(--kk-line-body);
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-caption);
+}
+.start-inspiration-meta {
+  display: flex;
+  min-width: 0;
+  gap: var(--kk-space-2);
+}
+.start-inspiration-meta > * {
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.start-inspiration-meta > span {
+  text-align: right;
 }
 .start-skill-callout {
   display: flex;
@@ -425,6 +424,7 @@
     height: auto;
     grid-template-columns: 1fr;
     grid-template-rows: auto;
+    justify-items: center;
     row-gap: 8px;
     padding-top: 0;
     margin: 28px 0 30px;
@@ -435,12 +435,13 @@
     grid-row: auto;
   }
   .start-brand img {
-    width: 54px;
-    height: 54px;
+    width: 64px;
+    height: 64px;
   }
   .start-brand h1 {
-    font-size: clamp(28px, 3vw, 44px);
-    letter-spacing: -0.03em;
+    font-size: 40px;
+    line-height: 48px;
+    letter-spacing: 0;
   }
   .start-brand p {
     font-size: 16px;
@@ -469,10 +470,6 @@
   }
   .start-inspiration-card {
     height: auto;
-  }
-  .start-inspiration-card img {
-    height: auto;
-    aspect-ratio: 16 / 9;
   }
   .start-inspiration-card > div {
   }
@@ -1061,18 +1058,6 @@
   .project-grid {
     grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr));
   }
-  .start-inspiration-grid {
-    grid-template-columns: 1fr;
-    max-width: 520px;
-  }
-  .start-inspiration-card {
-    display: grid;
-    grid-template-columns: 170px 1fr;
-  }
-  .start-inspiration-card img {
-    height: auto;
-    align-self: start;
-  }
   .project-library-hero {
     padding-right: 24px;
   }
@@ -1195,12 +1180,31 @@
   position: relative;
   border: 0;
   background: transparent;
-  color: var(--text-secondary);
-  font-weight: var(--kk-font-weight-caption);
+  color: var(--text-primary);
+  font-weight: var(--kk-font-weight-subtitle);
 }
 .catalog-page-actions > button {
   min-height: 44px;
   font-size: var(--kk-font-body);
+}
+.catalog-page-projects .catalog-page-header {
+  align-items: center;
+}
+.catalog-page-projects .catalog-page-actions > .kk-button[data-height-tier="32px"] {
+  height: var(--kk-control-h-md);
+  min-height: var(--kk-control-h-md);
+  padding: 0 var(--kk-space-3);
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-caption);
+}
+.catalog-page-projects .catalog-page-actions > .project-library-tutorial[data-height-tier="32px"] {
+  border-color: var(--kk-border-default);
+  font-size: var(--kk-font-body);
+  line-height: var(--kk-line-body);
+}
+.catalog-page-projects .catalog-page-search:has(input:disabled) {
+  cursor: not-allowed;
+  opacity: var(--ui-disabled-opacity);
 }
 .project-library-action > img {
   flex: 0 0 24px;

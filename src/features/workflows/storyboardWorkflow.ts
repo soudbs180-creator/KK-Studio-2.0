@@ -1,5 +1,7 @@
+import { autoRepairStoryboard, reviewStoryboard } from "./storyboardRepair.ts";
+import { readStoryboardJson } from "../../domain/storyboardBible.ts";
 import {
-  validateStoryboard,
+  StoryboardSchema,
   type ContinuityConstraint,
   type Storyboard,
 } from "../../domain/storyboardPipeline.ts";
@@ -29,7 +31,6 @@ export async function runStoryboardPipeline(options: {
   if (capacity < 500)
     throw new Error("一致性约束和资产清单过长，请缩减到本次创作所需内容");
   const shots: Storyboard["shots"] = [];
-  const violations: string[] = [];
   let title = "";
   for (let offset = 0, part = 1; offset < options.script.length; part++) {
     options.signal.throwIfAborted();
@@ -44,20 +45,9 @@ export async function runStoryboardPipeline(options: {
       options.signal,
     );
     options.signal.throwIfAborted();
-    let parsed: unknown;
-    try {
-      parsed = JSON.parse(
-        output.replace(/^\s*```(?:json)?\s*/u, "").replace(/\s*```\s*$/u, ""),
-      );
-    } catch {
-      throw new Error(
-        `第${part}段模型未返回有效分镜 JSON；原文与模型结果已保留，请修订后重试`,
-      );
-    }
-    const segment = validateStoryboard(
-      parsed,
-      options.constraints,
-      options.assets.map((asset) => asset.id),
+    const segment = await autoRepairStoryboard(
+      StoryboardSchema.parse(readStoryboardJson(output)),
+      { ...options, script: options.script.slice(offset, end) },
     );
     title ||= segment.storyboard.title;
     shots.push(
@@ -66,25 +56,11 @@ export async function runStoryboardPipeline(options: {
         id: `${part}-${shot.id}`,
       })),
     );
-    violations.push(...segment.violations.map((v) => `第${part}段: ${v}`));
     if (shots.length > 128)
       throw new Error("分镜超过128镜，请按章节分别创作；模型结果已保留");
     offset = end;
   }
-  const result = { storyboard: { title, shots }, violations };
-  const normalizedScript = options.script.replace(/\s/g, "");
-  for (const shot of result.storyboard.shots) {
-    if (shot.durationSeconds > 15)
-      result.violations.push(`${shot.id}: 镜头超过15秒，请拆分`);
-    if (shot.dialogue.length / 4 + 1 > shot.durationSeconds)
-      result.violations.push(`${shot.id}: 台词时长不足`);
-    if (
-      shot.dialogue &&
-      !normalizedScript.includes(shot.dialogue.replace(/\s/g, ""))
-    )
-      result.violations.push(`${shot.id}: 台词未逐字来自原文`);
-  }
-  return { ...result, compliant: !result.violations.length };
+  return reviewStoryboard({ title, shots }, options);
 }
 
 export function storyboardToCanvas(

@@ -1,4 +1,6 @@
-<svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M23 23L18.1777 18.1778" stroke="#707070" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M11.8889 20.7778C16.7981 20.7778 20.7778 16.7981 20.7778 11.8889C20.7778 6.97969 16.7981 3 11.8889 3C6.97969 3 3 6.97969 3 11.8889C3 16.7981 6.97969 20.7778 11.8889 20.7778Z" stroke="#707070" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Glyph/search">
+<path id="Vector" d="M12.6667 7.33333C12.6667 10.2789 10.2789 12.6667 7.33333 12.6667C4.38781 12.6667 2 10.2789 2 7.33333C2 4.38781 4.38781 2 7.33333 2C10.2789 2 12.6667 4.38781 12.6667 7.33333Z" stroke-linecap="round" stroke="#A0A0A0"/>
+<path id="Vector_2" d="M14 14L11.1333 11.1333" stroke-linecap="round" stroke-linejoin="round" stroke="#A0A0A0"/>
+</g>
 </svg>

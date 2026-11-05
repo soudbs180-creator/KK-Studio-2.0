@@ -8,6 +8,9 @@ import { removeCanvasItems, type CanvasCollectionItem } from "./canvasItems.ts";
 import { fitRects, MIN_SCALE, MAX_SCALE } from "./canvasViewport.ts";
 import { reconcileProjectCanvas } from "./projectCanvas.ts";
 import { reconcileCanvasConnections } from "./canvasConnections.ts";
+import { restorePortableImport } from "./canvasPortableSnapshot.ts";
+import { normalizeCanvasOperation } from "./canvasOperationAliases.ts";
+import { mutateCanvasAnnotations } from "./canvasOperationAnnotations.ts";
 
 function createContext(next: CanvasOperationState) {
   const requireItem = (id: string, writable = true) => {
@@ -303,7 +306,13 @@ function importDocument(op: CanvasOperation, context: OperationContext) {
   const { next, requireUnused } = context;
   switch (op.op) {
     case "import_canvas_json": {
-      const d = op.payload.document;
+      const restored =
+        op.payload.snapshot === undefined
+          ? undefined
+          : restorePortableImport(op.payload.snapshot, op.payload.document);
+      const d = restored
+        ? { cards: restored.items, ...restored.canvas }
+        : op.payload.document;
       if (
         new Set(d.cards.map((c) => c.id)).size !== d.cards.length ||
         new Set(d.edges.map((e) => e.id)).size !== d.edges.length
@@ -336,6 +345,10 @@ function importDocument(op: CanvasOperation, context: OperationContext) {
       next.items.push(...d.cards);
       Object.assign(next.canvas.positions, d.positions);
       next.canvas.edges.push(...d.edges);
+      const importedGroups = restored?.canvas.groups ?? [];
+      importedGroups.forEach((group) => requireUnused(group.id));
+      if (importedGroups.length)
+        next.canvas.groups = [...(next.canvas.groups ?? []), ...importedGroups];
       return true;
     }
     default:
@@ -348,18 +361,44 @@ export function applyCanvasOperation(
   state: CanvasOperationState,
   input: CanvasOperation,
 ): CanvasOperationState {
-  const op = CanvasOpSchema.parse(input);
+  const op = normalizeCanvasOperation(CanvasOpSchema.parse(input));
+  if (op.op === "batch_apply")
+    return op.payload.operations.reduce(applyCanvasOperation, state);
+  if (op.op === "duplicate_cards")
+    return op.payload.items.reduce(
+      (s, p) => applyCanvasOperation(s, { op: "duplicate_node", payload: p }),
+      state,
+    );
+  if (op.op === "update_edge") {
+    const edge = state.canvas.edges.find((e) => e.id === op.payload.id);
+    if (!edge) throw new Error("连线不存在");
+    const disconnected = applyCanvasOperation(state, {
+      op: "disconnect_cards",
+      payload: { id: edge.id },
+    });
+    return applyCanvasOperation(disconnected, {
+      op: "connect_cards",
+      payload: {
+        ...edge,
+        ...op.payload.patch,
+        kind: op.payload.patch.kind ?? edge.kind ?? "reference",
+      },
+    });
+  }
   const next = structuredClone(state);
   const context = createContext(next);
   if (!(
     mutateCards(op, context) ||
     mutateConnections(op, context) ||
     mutateView(op, context) ||
-    importDocument(op, context)
+    importDocument(op, context) ||
+    mutateCanvasAnnotations(next, op)
   ))
     throw new Error("该操作须由画布宿主执行");
 
   if (next.items.length > 2000) throw new Error("画布节点数量超出限制");
+  if ((next.canvas.groups?.length ?? 0) > 100)
+    throw new Error("画布最多100个分组，导入未提交");
   next.canvas = reconcileProjectCanvas(next.canvas, next.items);
   if (
     reconcileCanvasConnections(next.items, next.canvas.edges).length !==

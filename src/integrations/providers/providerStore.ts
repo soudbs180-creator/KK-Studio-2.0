@@ -219,10 +219,19 @@ export function writeProviderConnections(
     window.localStorage.setItem(PROVIDER_CONNECTIONS_STORAGE_KEY, json);
     lastRawProviderConnections = json;
     cachedProviderConnections = sanitized;
+    notifyProviderConnections();
     return true;
   } catch {
     // Callers that submit work must fail closed if a slot cannot be recorded.
     return false;
+  }
+}
+
+function notifyProviderConnections(): void {
+  try {
+    window.dispatchEvent(new Event("kk:provider-connections"));
+  } catch (error) {
+    void error;
   }
 }
 

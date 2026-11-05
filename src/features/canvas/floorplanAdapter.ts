@@ -2,6 +2,8 @@ import { z } from "zod";
 import { Graph, layout } from "@dagrejs/dagre";
 import type { CanvasOperation } from "../../domain/canvasOperations.ts";
 import { readFloorplanArchitecture } from "./floorplanGraph.ts";
+import { exportFloorplan } from "./floorplanExport.ts";
+import { readPortableCanvas } from "../../domain/canvasPortableSnapshot.ts";
 
 export interface FloorplanNode {
   id: string;
@@ -24,6 +26,7 @@ const node: z.ZodType<FloorplanNode> = z.lazy(() =>
 
 /** Floorplan's kind/path hierarchy, mapped to KK cards by a MIT Dagre adapter. */
 export class FloorplanCanvasAdapter {
+  fromCanvas: typeof exportFloorplan = exportFloorplan;
   flattenHierarchy(input: FloorplanNode) {
     const root = node.parse(input);
     const results: Array<{
@@ -50,6 +53,27 @@ export class FloorplanCanvasAdapter {
     input: unknown,
     namespace = crypto.randomUUID(),
   ): Extract<CanvasOperation, { op: "import_canvas_json" }> {
+    if (input && typeof input === "object" && "kkStudio" in input) {
+      readFloorplanArchitecture(input);
+      const restored = readPortableCanvas(input.kkStudio);
+      return {
+        op: "import_canvas_json",
+        payload: {
+          snapshot: JSON.parse(JSON.stringify(input.kkStudio)),
+          document: {
+            version: 1,
+            cards: restored.items.map((i) => ({
+              id: i.id,
+              title: i.title,
+              description: i.description,
+              kind: i.kind,
+            })),
+            positions: restored.canvas.positions,
+            edges: restored.canvas.edges,
+          },
+        },
+      };
+    }
     const flat =
       input && typeof input === "object" && "nodes" in input
         ? readFloorplanArchitecture(input)
@@ -76,6 +100,12 @@ export class FloorplanCanvasAdapter {
         title: n.name,
         description: `${n.kind} · ${n.path}`.slice(0, 500),
         prompt: `${n.name}\n${n.kind}\n${n.path}`,
+        blueprint: {
+          kind: n.kind,
+          paths: [n.path],
+          summary: "",
+          parentId: parent,
+        },
       });
       if (parent) {
         graph.setEdge(parent, id);
@@ -99,6 +129,12 @@ export class FloorplanCanvasAdapter {
           id,
           title: n.label,
           kind: "text",
+          blueprint: {
+            kind: n.kind,
+            paths: n.paths,
+            summary: n.summary,
+            parentId: n.parent ? idMap.get(n.parent) : undefined,
+          },
           description: `${n.kind} · ${n.paths.join(", ")}`.slice(0, 500),
           prompt:
             `${n.label}\n${n.kind}\n${n.summary}\n${n.paths.join("\n")}`.slice(

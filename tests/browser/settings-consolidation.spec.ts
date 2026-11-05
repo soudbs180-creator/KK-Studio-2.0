@@ -18,15 +18,13 @@ test("设置分类按用途分组，移除独立使用记录与 ComfyUI 入口",
   await openSettingsSection(page, "通用设置");
   const nav = await showSettingsCategories(page);
   await expect(nav.locator(".settings-nav-group-label")).toHaveText([
-    "软件系统",
-    "账号与用量",
+    "账户与用量",
     "核心功能",
     "安全与数据",
   ]);
   await expect(nav.getByRole("button")).toHaveText([
     "通用设置",
     "快捷键管理",
-    "软件更新",
     "个人主页",
     "套餐与积分",
     "模型接入",
@@ -35,6 +33,7 @@ test("设置分类按用途分组，移除独立使用记录与 ComfyUI 入口",
     "网络与代理",
     "数据管理",
     "安全中心",
+    "软件更新",
   ]);
   await selectSettingsSection(page, "套餐与积分");
   await expect(

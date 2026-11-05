@@ -2,6 +2,7 @@ import {
   type WaitingCandidate,
   computeExponentialBackoffWithJitter,
 } from "../../domain/gatewayCooldown.ts";
+import { rankAccounts, type RoutingMode } from "../../domain/routingGroups.ts";
 
 export interface AccountPoolEntry {
   readonly id?: string;
@@ -288,5 +289,31 @@ export class AccountPool {
       }
     }
     return waiting.sort((a, b) => a.availableAfterMs - b.availableAfterMs);
+  }
+
+  /** Order healthy accounts with a magpie routing group, then take the first. */
+  pickRouted(mode: RoutingMode, cursor = 0): AccountPoolEntry | undefined {
+    const now = this.#now();
+    const ranked = rankAccounts(
+      mode,
+      this.#entries.map((entry, index) => ({
+        id: entry.id ?? entry.credentialRef,
+        priority: index,
+        remaining: Math.max(entry.healthScore, 0),
+        used: entry.consecutive429 + entry.consecutive5xx,
+        resetAt:
+          entry.cooldownUntil > now ? entry.cooldownUntil : now + 3_600_000,
+        healthy: entry.healthScore > 0 && entry.cooldownUntil <= now,
+        periodHours: 1,
+      })),
+      now,
+      cursor,
+    );
+    const id = ranked[0];
+    const entry = this.#entries.find(
+      (item) => (item.id ?? item.credentialRef) === id,
+    );
+    if (entry) entry.lastUsedAt = now;
+    return entry;
   }
 }

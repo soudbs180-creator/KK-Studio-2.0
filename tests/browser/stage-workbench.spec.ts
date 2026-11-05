@@ -295,3 +295,34 @@ test("窄屏阶段授权可真实提交并展示结果审批", async ({ page }) 
     fullPage: true,
   });
 });
+
+test("阶段监督可切换 off、observe、auto，并保留 would accept", async ({
+  page,
+}) => {
+  await openPlans(page);
+  const policy = page.getByRole("combobox", { name: "准入策略", exact: true });
+  await policy.click();
+  await page.getByRole("option", { name: "自动", exact: true }).click();
+  await expect(policy).toContainText("自动");
+  await policy.click();
+  await page.getByRole("option", { name: "观察", exact: true }).click();
+  await expect(page.getByRole("region", { name: "阶段监督" })).toContainText(
+    "would accept",
+  );
+  await policy.click();
+  await page.getByRole("option", { name: "关闭", exact: true }).click();
+  await expect(policy).toContainText("关闭");
+  await page.reload();
+  if ((page.viewportSize()?.width ?? 1920) >= 768) await expandSidebar(page);
+  await page.getByRole("button", { name: "项目库", exact: true }).click();
+  await page
+    .locator(".project-library-card")
+    .filter({ hasText: "阶段审批项目" })
+    .click();
+  await page.getByRole("button", { name: "打开任务列表" }).click();
+  await page.getByRole("button", { name: "打开任务工作台" }).click();
+  await page.getByRole("tab", { name: "Plan", exact: true }).click();
+  await expect(
+    page.getByRole("combobox", { name: "准入策略", exact: true }),
+  ).toContainText("关闭");
+});

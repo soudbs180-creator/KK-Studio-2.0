@@ -127,10 +127,12 @@
   height: var(--ui-control-h-toolbar);
 }
 .tool-hand-current {
+  display: grid;
+  place-items: center;
   width: var(--kk-icon-glyph-md);
   height: var(--kk-icon-glyph-md);
-  background: var(--ui-tool-active);
-  mask: url("/design/figma/tool-hand.svg") center / contain no-repeat;
+  color: var(--ui-tool-active);
+  background: none;
 }
 .toolbar-divider {
   position: relative;

@@ -1,9 +1,7 @@
+import { validateTaskExecutionPreconditions } from "./taskExecutionPreconditions.ts";
 import { executeMediaTask } from "./executeMediaTask.ts";
 import React, { useEffect, useRef, useState, type SetStateAction } from "react";
-import {
-  requiredApprovalGates,
-  type ApprovalGate,
-} from "../../domain/agentWorkflow.ts";
+import { type ApprovalGate } from "../../domain/agentWorkflow.ts";
 import type { Asset } from "../../domain/assets.ts";
 import { assertCanvasDeliveries } from "../../domain/canvasDelivery.ts";
 import type { CanvasCollectionItem } from "../../domain/canvasItems.ts";
@@ -479,25 +477,28 @@ export function useTaskExecution(
     explicitRetry = false,
     queryOnly = false,
   ): Promise<void> {
-    const project =
-      initialProject ??
-      creationRef.current.projects.find((item) => item.id === projectId);
-    const task = project?.tasks.find((item) => item.id === taskId);
-
-    const allowed = validateTaskExecutionPreconditions({
-      project,
-      task,
-      taskId,
-      projectId,
-      taskControllers,
-      pendingApprovalRef,
-      setPendingApproval,
-      updateProject,
-      creationRef,
-      queryOnly,
-    });
-    if (!allowed || !task) return;
-
+    const execution = executionInput();
+    if (!execution) return;
+    const { task } = execution;
+    function executionInput() {
+      const project =
+        initialProject ??
+        creationRef.current.projects.find((item) => item.id === projectId);
+      const task = project?.tasks.find((item) => item.id === taskId);
+      const allowed = validateTaskExecutionPreconditions({
+        project,
+        task,
+        taskId,
+        projectId,
+        taskControllers,
+        pendingApprovalRef,
+        setPendingApproval,
+        updateProject,
+        creationRef,
+        queryOnly,
+      });
+      return allowed && task ? { project, task } : undefined;
+    }
     const controller = new AbortController();
     taskControllers.current[taskId] = controller;
 
@@ -681,8 +682,7 @@ export function useTaskExecution(
         });
         return;
       }
-
-      if (task.kind === "video" || task.kind === "audio") {
+      if (["video", "audio"].includes(task.kind)) {
         await executeMediaTask({
           task,
           projectId,
@@ -966,100 +966,6 @@ function triggerNextChainedImageEditTask(options: {
     if (next) void executeTask(projectId, next.id);
   }
 }
-
-function validateTaskExecutionPreconditions(options: {
-  queryOnly?: boolean;
-  project?: CreationProject;
-  task?: CreationTask;
-  taskId: string;
-  projectId: string;
-  taskControllers: React.MutableRefObject<Record<string, AbortController>>;
-  pendingApprovalRef: React.MutableRefObject<{
-    projectId: string;
-    taskId: string;
-    gates: ApprovalGate[];
-  } | null>;
-  setPendingApproval: React.Dispatch<
-    React.SetStateAction<{
-      projectId: string;
-      taskId: string;
-      gates: ApprovalGate[];
-    } | null>
-  >;
-  updateProject: (
-    projectId: string,
-    updater: (p: CreationProject) => CreationProject,
-  ) => void;
-  creationRef: React.MutableRefObject<CreationSnapshot>;
-}): boolean {
-  const {
-    project,
-    task,
-    taskId,
-    projectId,
-    taskControllers,
-    pendingApprovalRef,
-    setPendingApproval,
-    updateProject,
-    creationRef,
-  } = options;
-
-  if (!project || !task || taskControllers.current[taskId]) return false;
-
-  if (task.imageEdit) {
-    const live =
-      creationRef.current.projects.find((p) => p.id === projectId) ?? project;
-    if (
-      live.tasks.some(
-        (other) =>
-          other.id !== taskId &&
-          other.imageEdit?.groupId === task.imageEdit?.groupId &&
-          taskControllers.current[other.id],
-      )
-    )
-      return false;
-    if (
-      pendingApprovalRef.current &&
-      pendingApprovalRef.current.taskId !== taskId
-    )
-      return false;
-  }
-
-  if (
-    !options.queryOnly &&
-    (task.status === "unknown" ||
-      task.submissionState === "unknown" ||
-      task.submissionState === "submitted")
-  )
-    return false;
-
-  const missingGates = requiredApprovalGates({
-    privacyMode: task.privacyMode,
-    requestedOutputs: task.requestedOutputs,
-    providerBaseUrl: task.providerBaseUrl,
-  }).filter((gate) => !task.approvedGates?.includes(gate));
-
-  if (missingGates.length) {
-    pendingApprovalRef.current = { projectId, taskId, gates: missingGates };
-    setPendingApproval({ projectId, taskId, gates: missingGates });
-    updateProject(projectId, (current) => ({
-      ...current,
-      tasks: current.tasks.map((item) =>
-        item.id === taskId
-          ? {
-              ...item,
-              status: "queued",
-              error: "等待人工审批，尚未提交到供应商。",
-            }
-          : item,
-      ),
-    }));
-    return false;
-  }
-
-  return true;
-}
-
 interface PublishStateOptions {
   projectId: string;
   taskId: string;

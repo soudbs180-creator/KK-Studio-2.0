@@ -6,11 +6,14 @@ import { appPlatform, appVersion } from "../../runtime/appInfo";
 import { SettingRow, SettingsToggle } from "./SettingsControls";
 import AppUpdateSettings from "./AppUpdateSettings";
 import GeneralAdvancedPreferences from "./GeneralAdvancedPreferences";
+import { Button } from "../ui";
 
 interface GeneralSettingsProps {
   preferences: SettingsPreferences;
   onChange: (patch: Partial<SettingsPreferences>, message?: string) => void;
   onReset: () => void;
+  onOpenShortcuts: () => void;
+  busy: boolean;
   generalDetail?: "updates" | "advanced";
 }
 
@@ -18,6 +21,8 @@ export default function GeneralSettings({
   preferences,
   onChange,
   onReset,
+  onOpenShortcuts,
+  busy,
   generalDetail,
 }: GeneralSettingsProps) {
   const desktopHint = "桌面客户端专属能力（在桌面运行环境中自动激活）";
@@ -152,7 +157,22 @@ export default function GeneralSettings({
           </div>
         </SettingRow>
 
-        {/* Clean System & Desktop Preferences Card Group (No <details> arrow) */}
+        <div
+          className="settings-general-shortcuts"
+          data-figma-node="4130:60002"
+        >
+          <h3>快捷键管理</h3>
+          <Button
+            heightTier="32px"
+            className="settings-shortcuts-action"
+            disabled={busy}
+            title={busy ? "连接操作进行中，完成后可切换设置" : undefined}
+            onClick={onOpenShortcuts}
+          >
+            管理快捷键
+          </Button>
+        </div>
+
         <div
           className="settings-card-group kk-card-box"
           style={{
@@ -186,6 +206,25 @@ export default function GeneralSettings({
               深度系统集成能力。在桌面应用环境下运行时可联动系统原生托盘与生命周期。
             </p>
           </div>
+
+          <details className="settings-usage-guide" data-figma-node="214:715">
+            <summary>
+              <span>使用说明</span>
+              <span className="settings-usage-guide-toggle">
+                <span className="settings-usage-guide-expand">
+                  查看详细使用方法
+                </span>
+                <span className="settings-usage-guide-collapse">
+                  收起详细使用方法
+                </span>
+              </span>
+            </summary>
+            <p>
+              可选择浅色、深色或跟随系统主题，并调整强调色与浮岛布局。画布历史步数支持
+              5~100 步，默认 20
+              步。恢复默认偏好会保留项目、素材、模型连接与密钥。
+            </p>
+          </details>
 
           <SettingRow
             id="watermark"
@@ -237,49 +276,15 @@ export default function GeneralSettings({
           </SettingRow>
         </div>
 
-        {/* Version Summary Card */}
-        <div
-          className="kk-card-box"
-          style={{
-            backgroundColor: "var(--kk-bg-card)",
-            border: "1px solid var(--kk-border-subtle)",
-            padding: "14px 18px",
-            marginTop: "12px",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
+        <div className="settings-general-version kk-card-box">
           <div>
-            <span
-              style={{
-                fontSize: "13px",
-                fontWeight: 500,
-                color: "var(--kk-text-primary)",
-              }}
-            >
-              版本状态
-            </span>
-            <div
-              style={{
-                fontSize: "12px",
-                color: "var(--kk-text-secondary)",
-                marginTop: "2px",
-              }}
-            >
+            <span className="settings-general-version-title">版本状态</span>
+            <div className="settings-general-version-description">
               当前运行版本 v{appVersion} · {appPlatform()}
-              。检查更新请前往「软件系统 - 软件更新」。
+              。检查更新请前往「软件更新」。
             </div>
           </div>
-          <span
-            className="kk-pill-box"
-            style={{
-              fontSize: "12px",
-              color: "var(--kk-success)",
-              padding: "2px 8px",
-              backgroundColor: "var(--kk-bg-soft)",
-            }}
-          >
+          <span className="settings-general-version-ready kk-pill-box">
             已就绪
           </span>
         </div>

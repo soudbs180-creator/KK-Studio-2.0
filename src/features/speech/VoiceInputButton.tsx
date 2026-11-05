@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { useSpeechInput } from "./useSpeechInput.ts";
 
 export default function VoiceInputButton({
@@ -8,6 +9,8 @@ export default function VoiceInputButton({
   enabled = true,
   sessionKey = "default",
   maxLength = 0,
+  idleIcon,
+  activeIcon,
 }: {
   value: string;
   onChange: (value: string) => void;
@@ -16,6 +19,8 @@ export default function VoiceInputButton({
   enabled?: boolean;
   sessionKey?: string;
   maxLength?: number;
+  idleIcon: ReactNode;
+  activeIcon: ReactNode;
 }) {
   const { supported, state, toggle } = useSpeechInput({
     value,
@@ -62,14 +67,7 @@ export default function VoiceInputButton({
       }
       onClick={toggle}
     >
-      <img
-        src={
-          active
-            ? "/design/figma/composer-mic.svg"
-            : "/design/figma/mic-off.svg"
-        }
-        alt=""
-      />
+      {active ? activeIcon : idleIcon}
     </button>
   );
 }

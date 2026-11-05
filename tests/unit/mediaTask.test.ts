@@ -39,6 +39,11 @@ const profile = {
 test("media parameters survive project, task, append and snapshot boundaries", () => {
   const project = createProject(input);
   assert.deepEqual(project.composerDraft.media, video);
+  assert.equal(project.items[0].parameters?.ratio, "16:9");
+  assert.equal(project.items[0].parameters?.quality, "720p");
+  assert.equal(project.items[0].parameters?.duration, "4");
+  assert.equal(project.items[0].parameters?.soundEnabled, true);
+  assert.equal(project.items[0].parameters?.count, "2");
   const task = createTask(project);
   assert.deepEqual(task.media, video);
   const appended = appendImageTask(

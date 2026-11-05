@@ -164,7 +164,7 @@ export default function Sidebar({
           onClick={() => setMenu(account ? null : "account")}
         >
           <span className="logo">
-            <BrandLogo />
+            <BrandLogo variant="sidebarAccount" />
           </span>
           <span className="account-name" title="本地前端预览，尚未连接真实账号">
             Prototype

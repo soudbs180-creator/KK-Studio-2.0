@@ -107,7 +107,9 @@ export default function ReferencePreview({
           title="定位参考节点：当前入口尚未接入"
           aria-label="定位参考节点：当前入口尚未接入"
         >
-          <span className="reference-locate-glyph" aria-hidden="true" />
+          <span className="reference-locate-glyph" aria-hidden="true">
+            <UiIcon name="return-to-content" size={16} />
+          </span>
         </button>
         <button
           type="button"

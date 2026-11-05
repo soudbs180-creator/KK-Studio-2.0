@@ -7,6 +7,7 @@ import {
 import type { CreationProject } from "../features/creation/index.ts";
 import type { StageDecisionInput } from "../features/agent/index.ts";
 import StagePlanDetail from "./StagePlanDetail";
+import StageWorkbenchModal from "./StageWorkbenchModal";
 
 export const stageStatusLabels: Record<StageStatus, string> = {
   doing: "待执行 / 执行中",
@@ -132,6 +133,7 @@ export default function TaskWorkbenchStages({
               {progress.pendingApprovals} 项待审批
             </p>
           </header>
+          <StageWorkbenchModal projectId={project.id} />
           <ol className="stage-plan-timeline" aria-label="计划阶段">
             {plan.stages.map((item, index) => (
               <li key={item.index}>

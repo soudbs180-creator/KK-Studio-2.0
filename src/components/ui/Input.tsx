@@ -3,6 +3,7 @@ import React, {
   useId,
   type InputHTMLAttributes,
   type ReactNode,
+  type TextareaHTMLAttributes,
 } from "react";
 import UiIcon, { type UiIconName } from "../UiIcon";
 
@@ -99,3 +100,13 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
 });
 
 export default Input;
+
+/** Multiline fields share the same semantic field styles as single-line Input. */
+export const Textarea = forwardRef<
+  HTMLTextAreaElement,
+  TextareaHTMLAttributes<HTMLTextAreaElement>
+>(function Textarea({ className = "", ...props }, ref) {
+  return (
+    <textarea {...props} ref={ref} className={`kk-textarea ${className}`} />
+  );
+});

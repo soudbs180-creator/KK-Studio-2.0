@@ -277,8 +277,15 @@ export function useMemory(
   const extractWithCodex = useCallback(
     async (targetChatOrIsTemp?: { isTemporary?: boolean } | boolean | null) => {
       const scope = currentScope;
-      if (!mountedRef.current || scopeRef.current !== scope) return;
-      if (extracting || busy) return;
+      if (!canStartExtraction()) return;
+      function canStartExtraction() {
+        return (
+          mountedRef.current &&
+          scopeRef.current === scope &&
+          !extracting &&
+          !busy
+        );
+      }
       const blockReason = () => {
         const currentOpt = optionsRef.current;
         const isTemp =
@@ -298,20 +305,32 @@ export function useMemory(
             : undefined)
         );
       };
-      const blocked = blockReason();
-      if (blocked) {
-        onFeedback(blocked);
-        return;
+      if (reportBlocked()) return;
+      function reportBlocked() {
+        const blocked = blockReason();
+        if (blocked) {
+          onFeedback(blocked);
+          return true;
+        }
+
+        return false;
       }
-      const beforeState = agentConnection.getState();
-      if (beforeState.status !== "connected") {
-        onFeedback("请先连接 Codex 主 Agent，再使用「让 Codex 提炼记忆」。");
-        return;
-      }
-      const threadId = beforeState.conversation?.threadId;
-      if (!threadId) {
-        onFeedback("Codex 对话尚未就绪，请稍后重试。");
-        return;
+      const connected = connectedThread();
+      if (!connected) return;
+      const { beforeState, threadId } = connected;
+      function connectedThread() {
+        const beforeState = agentConnection.getState();
+        if (beforeState.status !== "connected") {
+          onFeedback("请先连接 Codex 主 Agent，再使用「让 Codex 提炼记忆」。");
+          return undefined;
+        }
+        const threadId = beforeState.conversation?.threadId;
+        if (!threadId) {
+          onFeedback("Codex 对话尚未就绪，请稍后重试。");
+          return undefined;
+        }
+
+        return { beforeState, threadId };
       }
       const revision = beforeState.connectionRevision;
       const projectId = agentConnection.getProjectId();
@@ -353,17 +372,23 @@ export function useMemory(
           isTemporary: false,
         });
         if (!checkCurrent()) return;
-        if (!result.ok) {
-          onFeedback(result.error ?? "Codex 提炼失败，请重试。");
-          return;
-        }
-        if (!result.messageId) {
-          onFeedback("无法识别本次 Codex 提炼请求，请重试。");
-          return;
+        const messageId = extractionMessageId();
+        if (!messageId) return;
+        function extractionMessageId() {
+          if (!result.ok) {
+            onFeedback(result.error ?? "Codex 提炼失败，请重试。");
+            return undefined;
+          }
+          if (!result.messageId) {
+            onFeedback("无法识别本次 Codex 提炼请求，请重试。");
+            return undefined;
+          }
+
+          return result.messageId;
         }
         const reply = await waitForAssistantReply(
           agentConnection,
-          result.messageId,
+          messageId,
           threadId,
           isCurrent,
         );

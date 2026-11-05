@@ -42,6 +42,24 @@ export type { ErrorClass, NormalizedError } from "./errors.ts";
 export { ChannelHealthTracker, channelError, Scheduler } from "./scheduler.ts";
 export { GatewayCooldownScheduler } from "./cooldownQueue.ts";
 export { resetGatewayAffinity } from "./affinityReset.ts";
+export {
+  rankAccounts,
+  routeIntent,
+  orderByRouting,
+  isRoutingMode,
+} from "../../domain/routingGroups.ts";
+export type {
+  RoutingMode,
+  RoutedAccount,
+  RoutingRequest,
+} from "../../domain/routingGroups.ts";
+export { PrivacyMask } from "../../domain/privacyMask.ts";
+export { toWireBody, fromWireEvent } from "../../domain/gatewayTranslate.ts";
+export type {
+  GatewayProtocol,
+  CanonicalRequest,
+  CanonicalDelta,
+} from "../../domain/gatewayTranslate.ts";
 export type {
   DispatchRequest,
   DispatchOutcome,
@@ -53,3 +71,16 @@ export { ChannelRegistry } from "./channels/registry.ts";
 export { supportsOperation } from "./channels/registry.ts";
 
 export type { ChannelIndexEntry } from "./channels/registry.ts";
+
+export {
+  bumpGatewayCursor,
+  readGatewayPreferences,
+  writeGatewayPreferences,
+} from "./gatewayPreferences.ts";
+export type { GatewayPreferences } from "./gatewayPreferences.ts";
+export {
+  accountsFromConnections,
+  rankedConnectionIds,
+  textRoutePlan,
+} from "./liveAccounts.ts";
+export type { TextRouteTarget } from "./liveAccounts.ts";

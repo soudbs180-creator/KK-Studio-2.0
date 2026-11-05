@@ -47,17 +47,7 @@ export default function CanvasNodeFrame({
     !item.referenceOnly &&
     (item.kind === "image" || item.kind === "video"),
   );
-  const variant = item.plugin
-    ? "plugin"
-    : item.result ||
-        (item.generationStatus && item.generationIndex !== undefined) ||
-        ["audio", "text"].includes(item.kind)
-      ? "result"
-      : item.kind === "image"
-        ? "image"
-        : ["video1", "video2"].includes(id)
-          ? id
-          : "video";
+  const variant = canvasNodeVariant(item);
   const layout = cardLayout(item);
   const baseLayout = cardLayout({ ...item, canvasPresentation: undefined });
   const locked = item.canvasPresentation?.locked;
@@ -125,9 +115,11 @@ export default function CanvasNodeFrame({
         if (!locked) controls.moveNodeWithKeyboard(event, id, onDelete);
       }}
     >
-      {item.canvasPresentation?.width ||
-      item.canvasPresentation?.height ||
-      locked ? (
+      {[
+        item.canvasPresentation?.width,
+        item.canvasPresentation?.height,
+        locked,
+      ].some(Boolean) ? (
         <div
           className="canvas-node-content-scale"
           ref={(element) => {
@@ -177,4 +169,19 @@ export default function CanvasNodeFrame({
       )}
     </div>
   );
+}
+
+function canvasNodeVariant(item: CanvasCollectionItem) {
+  const id = item.id;
+  return item.plugin
+    ? "plugin"
+    : item.result ||
+        (item.generationStatus && item.generationIndex !== undefined) ||
+        ["audio", "text"].includes(item.kind)
+      ? "result"
+      : item.kind === "image"
+        ? "image"
+        : ["video1", "video2"].includes(id)
+          ? id
+          : "video";
 }

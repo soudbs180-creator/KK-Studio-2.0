@@ -94,6 +94,35 @@ export function Select<T extends string | number = string>({
     setIsOpen(false);
   };
 
+  function moveActive(key: string) {
+    const index = enabledIndexes.indexOf(activeIndex);
+    const next =
+      key === "Home"
+        ? 0
+        : key === "End"
+          ? enabledIndexes.length - 1
+          : (index + (key === "ArrowDown" ? 1 : -1) + enabledIndexes.length) %
+            enabledIndexes.length;
+    setActiveIndex(enabledIndexes[next] ?? -1);
+  }
+  function typeahead(event: React.KeyboardEvent) {
+    typed.current = {
+      text:
+        (Date.now() - typed.current.at > 700 ? "" : typed.current.text) +
+        event.key.toLocaleLowerCase(),
+      at: Date.now(),
+    };
+    const match = options.findIndex(
+      (option) =>
+        !option.disabled &&
+        option.label.toLocaleLowerCase().startsWith(typed.current.text),
+    );
+    if (match >= 0) {
+      event.preventDefault();
+      setIsOpen(true);
+      setActiveIndex(match);
+    }
+  }
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if (disabled) return;
     if (event.key === "Enter" || event.key === " ") {
@@ -115,39 +144,14 @@ export function Select<T extends string | number = string>({
         return;
       }
       if (!isOpen) openMenu();
-      const index = enabledIndexes.indexOf(activeIndex);
-      const next =
-        event.key === "Home"
-          ? 0
-          : event.key === "End"
-            ? enabledIndexes.length - 1
-            : (index +
-                (event.key === "ArrowDown" ? 1 : -1) +
-                enabledIndexes.length) %
-              enabledIndexes.length;
-      setActiveIndex(enabledIndexes[next] ?? -1);
+      moveActive(event.key);
     } else if (
       event.key.length === 1 &&
       !event.ctrlKey &&
       !event.altKey &&
       !event.metaKey
     ) {
-      typed.current = {
-        text:
-          (Date.now() - typed.current.at > 700 ? "" : typed.current.text) +
-          event.key.toLocaleLowerCase(),
-        at: Date.now(),
-      };
-      const match = options.findIndex(
-        (option) =>
-          !option.disabled &&
-          option.label.toLocaleLowerCase().startsWith(typed.current.text),
-      );
-      if (match >= 0) {
-        event.preventDefault();
-        setIsOpen(true);
-        setActiveIndex(match);
-      }
+      typeahead(event);
     }
   };
 

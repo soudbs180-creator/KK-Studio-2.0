@@ -23,15 +23,16 @@ export function readTokenUsage(
   const completion =
     usage.completionTokens ?? usage.completion_tokens ?? usage.output_tokens;
   if (prompt === undefined && completion === undefined) return previous;
+  const promptTokens = prompt ?? previous?.promptTokens ?? 0;
+  const completionTokens = completion ?? previous?.completionTokens ?? 0;
   return (
     tokenUsageSchema.safeParse({
-      promptTokens: prompt ?? previous?.promptTokens ?? 0,
-      completionTokens: completion ?? previous?.completionTokens ?? 0,
+      promptTokens,
+      completionTokens,
       totalTokens:
         usage.totalTokens ??
         usage.total_tokens ??
-        Number(prompt ?? previous?.promptTokens ?? 0) +
-          Number(completion ?? previous?.completionTokens ?? 0),
+        Number(promptTokens) + Number(completionTokens),
     }).data ?? previous
   );
 }

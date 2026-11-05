@@ -38,6 +38,9 @@ export function stageGenerationParameters(
     return { ...defaults, count: String(basic.parse(work.params ?? {}).count) };
   const p = visual.parse(work.params ?? {});
   if (work.kind === "video") {
+    return videoParameters();
+  }
+  function videoParameters(): CanvasParameters {
     if (p.imageSize) throw new Error("视频不能使用图片尺寸");
     const media = videoMediaSchema.parse({
       kind: "video",

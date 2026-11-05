@@ -259,6 +259,8 @@ export default function Canvas({
               onDismissConnection={() => setRemovedEdge(null)}
               connectionNotice={connectionNotice}
               onDismissConnectionNotice={() => setConnectionNotice("")}
+              selectedNode={controls.selectedNode}
+              onOpenStoryboard={() => onOpen?.("storyboard")}
             />
             <CanvasHud
               projectStatus={projectStatus}

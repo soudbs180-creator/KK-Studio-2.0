@@ -95,6 +95,8 @@ export interface PluginItemPayload {
 }
 
 export interface CanvasCollectionItem {
+  blueprint?: import("./blueprintNode.ts").BlueprintNode;
+  comments?: Array<{ id: string; text: string; resolved: boolean }>;
   canvasPresentation?: CanvasPresentation;
   comfyWorkflow?: ComfyWorkflowCardState;
   comfyWorkflowSourceId?: string;

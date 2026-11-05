@@ -35,6 +35,7 @@ export interface ChatItemDraft {
   conversationChannel?: "codex" | "direct" | "google";
   model?: string;
   kind?: CanvasItemKind;
+  imageSize?: string;
   approvalMode?: "auto" | "ask";
   privacyMode?: "local_only" | "byok_local" | "platform_backed";
   outputCount?: number;

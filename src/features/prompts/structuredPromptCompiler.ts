@@ -187,7 +187,7 @@ export function compileStructuredPrompt(options: {
   const references: ResolvedReferenceItem[] = [];
   let nextRefIndex = 1;
 
-  for (const m of mentions) {
+  function resolveNumberedReference(m: (typeof mentions)[number]) {
     if (m.targetId.startsWith("reference:")) {
       const index = Number(m.targetId.slice("reference:".length));
       const attachment = attachments[index - 1];
@@ -197,6 +197,9 @@ export function compileStructuredPrompt(options: {
       m.name = attachment.name;
       m.slot = (attachment.role as CanvasReferenceSlot) || "主体";
     }
+  }
+  for (const m of mentions) {
+    resolveNumberedReference(m);
     const key = m.targetId || m.name;
     if (!refMap.has(key)) {
       const item = {

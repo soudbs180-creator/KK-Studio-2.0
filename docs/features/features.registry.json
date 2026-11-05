@@ -1915,9 +1915,11 @@
     "tests": [
       "tests/unit/canvasOperations.test.ts",
       "tests/unit/promptMentions.test.ts",
-      "tests/browser/advanced-canvas-wiring.spec.ts"
+      "tests/browser/advanced-canvas-wiring.spec.ts",
+      "tests/unit/deepWaterProduction.test.ts",
+      "tests/browser/deep-water-production.spec.ts"
     ],
-    "tasks": ["TASK-E2E-WIRING-20261104"],
+    "tasks": ["TASK-E2E-WIRING-20261104", "TASK-DEEP-WATER-20261105"],
     "updated": "2026-11-05"
   },
   {
@@ -1941,9 +1943,11 @@
     ],
     "tests": [
       "tests/unit/creativeWorkflowWiring.test.ts",
-      "tests/browser/advanced-canvas-wiring.spec.ts"
+      "tests/browser/advanced-canvas-wiring.spec.ts",
+      "tests/unit/deepWaterProduction.test.ts",
+      "tests/browser/deep-water-production.spec.ts"
     ],
-    "tasks": ["TASK-E2E-WIRING-20261104"],
+    "tasks": ["TASK-E2E-WIRING-20261104", "TASK-DEEP-WATER-20261105"],
     "updated": "2026-11-05"
   }
 ]

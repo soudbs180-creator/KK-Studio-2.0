@@ -15,6 +15,7 @@ import CodeBuddyConnectionSettings from "./CodeBuddyConnectionSettings";
 import OAuthAccessPanel from "./OAuthAccessPanel";
 import NativeCliControls from "./NativeCliControls";
 import type { LocalWorkflowAccess } from "./LocalWorkflowSettings";
+import GatewayConsole from "./GatewayConsole";
 
 export const CHANNELS = [
   {
@@ -282,6 +283,7 @@ export default function ModelAccessSettings({
           </section>
         }
       </main>
+      <GatewayConsole />
     </div>
   );
 }

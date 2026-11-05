@@ -146,7 +146,7 @@ export default function ConversationActions({
           aria-expanded={skillMenuOpen}
           onClick={onToggleSkill}
         >
-          <img src="/design/figma/composer-puzzle.svg" alt="" />
+          <UiIcon name="puzzle" size={16} />
           <span>扩展</span>
         </button>
         {skillMenuOpen && (
@@ -171,13 +171,7 @@ export default function ConversationActions({
             onClick={onToggleMode}
           >
             {approvalMode === "auto" ? "自动" : "询问"}
-            <img
-              className="chat-mode-chevron"
-              src="/design/figma/composer-chevron.svg"
-              width="12"
-              height="12"
-              alt=""
-            />
+            <UiIcon name="chevron-down" size={12} />
           </button>
           {modeMenuOpen && (
             <div className="chat-mode-popover" role="menu">
@@ -212,6 +206,8 @@ export default function ConversationActions({
           enabled={voiceEnabled}
           sessionKey={voiceSessionKey}
           maxLength={7500}
+          idleIcon={<UiIcon name="mic" size={16} />}
+          activeIcon={<UiIcon name="mic-off" size={16} />}
         />
         <span
           className="chat-footer-separator chat-footer-separator-right"

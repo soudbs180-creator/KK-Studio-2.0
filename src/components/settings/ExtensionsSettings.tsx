@@ -1,4 +1,5 @@
 import { useContext, useState } from "react";
+import UiIcon, { type UiIconName } from "../UiIcon";
 import { SettingsNavigationContext } from "./SettingsNavigationContext";
 import type { SkillRegistry } from "../../features/skills/index.ts";
 import McpSettings from "./McpSettings";
@@ -12,26 +13,11 @@ const EXTENSION_TABS: {
   id: ExtensionsTab;
   label: string;
   hint: string;
-  icon: string;
+  icon: UiIconName;
 }[] = [
-  {
-    id: "skills",
-    label: "Skill",
-    hint: "指令",
-    icon: "/design/figma/settings-nav-skills.svg",
-  },
-  {
-    id: "plugins",
-    label: "MCP",
-    hint: "工具",
-    icon: "/design/figma/settings-nav-mcp.svg",
-  },
-  {
-    id: "partners",
-    label: "协作伙伴",
-    hint: "角色",
-    icon: "/design/figma/settings-nav-account.svg",
-  },
+  { id: "skills", label: "Skill", hint: "指令", icon: "book-open" },
+  { id: "plugins", label: "MCP", hint: "工具", icon: "cable" },
+  { id: "partners", label: "协作伙伴", hint: "角色", icon: "user-round" },
 ];
 
 /**
@@ -97,7 +83,7 @@ export default function ExtensionsSettings({
                 buttons?.item(next)?.focus();
               }}
             >
-              <img src={item.icon} alt="" aria-hidden="true" />
+              <UiIcon name={item.icon} size={16} />
               <span>{item.label}</span>
               <span className="settings-ext-tab-hint">{item.hint}</span>
             </button>

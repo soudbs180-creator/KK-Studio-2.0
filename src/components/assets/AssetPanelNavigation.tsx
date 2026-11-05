@@ -21,13 +21,11 @@ interface AssetPanelNavigationProps {
   onSource: (source: string) => void;
 }
 
-const Icon = ({ name }: { name: "asset-grid" | "asset-list" | "search" }) => (
-  <span
-    className="asset-icon"
-    style={{ maskImage: `url("/design/figma/${name}.svg")` }}
-    aria-hidden="true"
-  />
-);
+const VIEW_ICONS = {
+  "asset-grid": "grid-2x2",
+  "asset-list": "list",
+  search: "search",
+} as const;
 
 export default function AssetPanelNavigation({
   tab,
@@ -67,7 +65,7 @@ export default function AssetPanelNavigation({
       </div>
       <div className="asset-search-row">
         <label className="asset-search">
-          <Icon name="search" />
+          <UiIcon name="search" size={16} />
           <input
             aria-label="搜索文件"
             placeholder="搜索文件"
@@ -90,14 +88,14 @@ export default function AssetPanelNavigation({
             aria-pressed={view === "list"}
             onClick={() => onView("list")}
           >
-            <Icon name="asset-list" />
+            <UiIcon name={VIEW_ICONS["asset-list"]} size={16} />
           </button>
           <button
             aria-label="网格视图"
             aria-pressed={view === "grid"}
             onClick={() => onView("grid")}
           >
-            <Icon name="asset-grid" />
+            <UiIcon name={VIEW_ICONS["asset-grid"]} size={16} />
           </button>
         </div>
       </AssetFilterControls>

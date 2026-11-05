@@ -615,34 +615,39 @@ export class OntologyGraph {
       if (depth >= maxHops) continue;
 
       // 收集候选邻接边
-      const candidates: Array<{ neighbor: string; rel: OntologyRelation }> = [];
+      const collectCandidates = (curr: string) => {
+        const candidates: Array<{ neighbor: string; rel: OntologyRelation }> =
+          [];
 
-      if (direction === "out" || direction === "both") {
-        const outMap = this.#outgoing.get(curr);
-        if (outMap) {
-          for (const [target, relMap] of outMap) {
-            for (const rel of relMap.values()) {
-              if (!allowed || allowed.has(rel.predicate)) {
-                candidates.push({ neighbor: target, rel });
+        if (direction === "out" || direction === "both") {
+          const outMap = this.#outgoing.get(curr);
+          if (outMap) {
+            for (const [target, relMap] of outMap) {
+              for (const rel of relMap.values()) {
+                if (!allowed || allowed.has(rel.predicate)) {
+                  candidates.push({ neighbor: target, rel });
+                }
               }
             }
           }
         }
-      }
 
-      if (direction === "in" || direction === "both") {
-        const inMap = this.#incoming.get(curr);
-        if (inMap) {
-          for (const [source, relMap] of inMap) {
-            for (const rel of relMap.values()) {
-              if (!allowed || allowed.has(rel.predicate)) {
-                candidates.push({ neighbor: source, rel });
+        if (direction === "in" || direction === "both") {
+          const inMap = this.#incoming.get(curr);
+          if (inMap) {
+            for (const [source, relMap] of inMap) {
+              for (const rel of relMap.values()) {
+                if (!allowed || allowed.has(rel.predicate)) {
+                  candidates.push({ neighbor: source, rel });
+                }
               }
             }
           }
         }
-      }
 
+        return candidates;
+      };
+      const candidates = collectCandidates(curr);
       // 保证候选邻居确定性字典序
       candidates.sort((a, b) => {
         const diff = compareStrings(a.neighbor, b.neighbor);
@@ -926,23 +931,25 @@ export class OntologyGraph {
 
     const nodes = doc["@graph"];
 
-    // 第一遍：载入实体
-    for (const node of nodes) {
-      const fullId = (node["@id"] as string) || "";
-      const rawId = fullId.replace(/^kk:entity\//, "");
-      if (!rawId) continue;
+    const loadEntities = () => {
+      // 第一遍：载入实体
+      for (const node of nodes) {
+        const fullId = (node["@id"] as string) || "";
+        const rawId = fullId.replace(/^kk:entity\//, "");
+        if (!rawId) continue;
 
-      graph.addEntity({
-        id: rawId,
-        name: (node.name as string) || rawId,
-        type: (node.type as string) || "concept",
-        description: (node.description as string) || undefined,
-        properties: (node.properties as Record<string, unknown>) || {},
-        attributes: (node.attributes as OntologyAttribute[]) || [],
-        synonyms: (node.synonyms as string[]) || [],
-      });
-    }
-
+        graph.addEntity({
+          id: rawId,
+          name: (node.name as string) || rawId,
+          type: (node.type as string) || "concept",
+          description: (node.description as string) || undefined,
+          properties: (node.properties as Record<string, unknown>) || {},
+          attributes: (node.attributes as OntologyAttribute[]) || [],
+          synonyms: (node.synonyms as string[]) || [],
+        });
+      }
+    };
+    loadEntities();
     // 第二遍：恢复连线
     for (const node of nodes) {
       const fullId = (node["@id"] as string) || "";

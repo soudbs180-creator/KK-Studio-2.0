@@ -94,9 +94,9 @@ test("真实分镜任务通过模型协议后由用户审阅入画布与资产�
       ]),
     );
   });
-  await page.getByRole("button", { name: "帮助与快捷键", exact: true }).click();
+  await page.getByRole("button", { name: "添加资源", exact: true }).click();
   await page
-    .getByRole("menuitem", { name: "小说 / 剧本转分镜", exact: true })
+    .getByRole("menuitem", { name: "漫剧分镜工作流", exact: true })
     .click();
   const dialog = page.getByRole("dialog", {
     name: "小说 / 剧本转分镜",
@@ -140,12 +140,15 @@ test("真实 Floorplan 文件经工具栏写入节点与连线，刷新仍保留
   page,
 }) => {
   await openWorkspace(page);
-  await page.getByRole("button", { name: "帮助与快捷键", exact: true }).click();
-  const menu = page.getByRole("menu", { name: "帮助与快捷键", exact: true });
-  await menu
+  await page.getByRole("button", { name: "添加资源", exact: true }).click();
+  await page
+    .getByRole("menuitem", { name: "架构蓝图映射", exact: true })
+    .click();
+  const panel = page.getByRole("dialog", { name: "架构蓝图映射", exact: true });
+  await panel
     .locator('input[type="file"]')
     .setInputFiles("tests/fixtures/floorplan/architecture.json");
-  await expect(menu.getByRole("status")).toContainText("已添加");
+  await expect(panel.getByRole("status")).toContainText("已添加");
   const expected = JSON.parse(
     readFileSync("tests/fixtures/floorplan/architecture.json", "utf8"),
   ).nodes.length;
@@ -223,9 +226,9 @@ test("真实视频逐帧解码并归档参考卡，保留原件", async ({ page 
 
 test("分镜入口展示实际约束表单并在无文本模型时明确拒绝", async ({ page }) => {
   await openWorkspace(page);
-  await page.getByRole("button", { name: "帮助与快捷键", exact: true }).click();
+  await page.getByRole("button", { name: "添加资源", exact: true }).click();
   await page
-    .getByRole("menuitem", { name: "小说 / 剧本转分镜", exact: true })
+    .getByRole("menuitem", { name: "漫剧分镜工作流", exact: true })
     .click();
   const dialog = page.getByRole("dialog", {
     name: "小说 / 剧本转分镜",

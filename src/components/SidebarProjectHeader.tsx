@@ -1,4 +1,5 @@
 import type { RefObject } from "react";
+import UiIcon from "./UiIcon";
 
 /**
  * 侧栏"项目"区标题行：标题（点击整体折叠/展开）+ 右侧筛选排序与
@@ -48,11 +49,9 @@ export default function SidebarProjectHeader({
         onClick={onToggleTitle}
       >
         项目{" "}
-        <img
-          className="sidebar-heading-chevron"
-          src="/design/figma/project-chevron.svg"
-          alt=""
-        />
+        <span className="sidebar-heading-chevron">
+          <UiIcon name="chevron-down" size={12} />
+        </span>
       </button>
       <div className="project-groups-actions">
         <button
@@ -64,11 +63,9 @@ export default function SidebarProjectHeader({
           title="项目显示与排序"
           onClick={onToggleMenu}
         >
-          <img
-            className="sidebar-action-glyph sidebar-action-ellipsis"
-            src="/design/figma/project-ellipsis-glyph.svg"
-            alt=""
-          />
+          <span className="sidebar-action-glyph sidebar-action-ellipsis">
+            <UiIcon name="ellipsis" size={12} />
+          </span>
         </button>
         <button
           type="button"
@@ -78,11 +75,9 @@ export default function SidebarProjectHeader({
           disabled={!canEditProjects}
           onClick={onCreateFolder}
         >
-          <img
-            className="sidebar-action-glyph sidebar-action-plus"
-            src="/design/figma/project-plus-glyph.svg"
-            alt=""
-          />
+          <span className="sidebar-action-glyph sidebar-action-plus">
+            <UiIcon name="plus" size={12} />
+          </span>
         </button>
       </div>
       {projectMenuOpen && (

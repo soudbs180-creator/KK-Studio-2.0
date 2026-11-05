@@ -5,7 +5,7 @@ import { useDismissible } from "../useDismissible";
 import { ExtensionSlot } from "../../features/extensions/index.ts";
 import "../../styles/canvas-tools.css";
 import { Button } from "../ui";
-import BlueprintImport from "./BlueprintImport.tsx";
+import UiIcon from "../UiIcon";
 
 type Popup = "tool" | "help" | "save";
 export default function CanvasToolbar({
@@ -107,13 +107,7 @@ export default function CanvasToolbar({
           onAdd(event.currentTarget);
         }}
       />
-      <span className="toolbar-divider toolbar-divider-left" aria-hidden="true">
-        <img
-          src="/design/figma/toolbar-divider-left.svg"
-          alt=""
-          draggable={false}
-        />
-      </span>
+      <span className="toolbar-divider toolbar-divider-left" aria-hidden="true" />
       <button
         className="toolbar-current-tool"
         aria-label="选择画布工具"
@@ -127,7 +121,7 @@ export default function CanvasToolbar({
         {tool === "select" ? (
           <ToolbarIcon name="select" />
         ) : (
-          <span className="tool-hand-current" aria-hidden="true" />
+          <UiIcon name="hand" size={20} />
         )}
       </button>
       <button
@@ -156,24 +150,10 @@ export default function CanvasToolbar({
                 close();
               }}
             >
-              <img
-                className="tool-menu-check"
-                src={
-                  tool === value
-                    ? "/design/figma/tool-check-active.svg"
-                    : "/design/figma/tool-check.svg"
-                }
-                alt=""
-                hidden={tool !== value}
-              />
-              <img
-                className="tool-menu-icon"
-                src={
-                  value === "select"
-                    ? "/design/figma/tool-select.svg"
-                    : "/design/figma/tool-hand.svg"
-                }
-                alt=""
+              {tool === value && <UiIcon name="check" size={16} />}
+              <UiIcon
+                name={value === "select" ? "mouse-pointer-2" : "hand"}
+                size={16}
               />
               <span className="tool-menu-label">
                 {value === "select" ? "移动" : "小手工具"}
@@ -233,13 +213,7 @@ export default function CanvasToolbar({
       <span
         className="toolbar-divider toolbar-divider-right"
         aria-hidden="true"
-      >
-        <img
-          src="/design/figma/toolbar-divider-right.svg"
-          alt=""
-          draggable={false}
-        />
-      </span>
+      />
       <button
         className="toolbar-help"
         aria-label="帮助与快捷键"
@@ -253,13 +227,8 @@ export default function CanvasToolbar({
       {popup === "help" && (
         <div className="canvas-help-menu" role="menu" aria-label="帮助与快捷键">
           {[
-            {
-              view: "storyboard",
-              label: "小说 / 剧本转分镜",
-              icon: "help-tutorial",
-            },
-            { view: "help", label: "帮助教程", icon: "help-tutorial" },
-            { view: "shortcuts", label: "快捷按键", icon: "help-shortcuts" },
+            { view: "help", label: "帮助教程", icon: "book-open" as const },
+            { view: "shortcuts", label: "快捷按键", icon: "keyboard" as const },
           ].map((item) => (
             <button
               key={item.view}
@@ -269,16 +238,11 @@ export default function CanvasToolbar({
                 onOpen(item.view);
               }}
             >
-              <img src={"/design/figma/" + item.icon + ".svg"} alt="" />
+              <UiIcon name={item.icon} size={16} />
               <span>{item.label}</span>
-              <img
-                className="help-menu-next"
-                src="/design/figma/help-next.svg"
-                alt=""
-              />
+              <UiIcon name="chevron-right" size={16} />
             </button>
           ))}
-          <BlueprintImport />
         </div>
       )}
       <ExtensionSlot id="canvas.toolbar" />

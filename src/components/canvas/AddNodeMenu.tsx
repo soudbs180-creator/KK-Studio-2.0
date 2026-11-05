@@ -16,7 +16,19 @@ import {
   getPluginNodesRevision,
   subscribePluginNodes,
 } from "../../features/plugins/index.ts";
+import UiIcon, { type UiIconName } from "../UiIcon";
 import "../../styles/node-menu.css";
+
+const NODE_ICONS: Record<string, UiIconName> = {
+  text: "type",
+  table: "table-2",
+  image: "image",
+  video: "video",
+  audio: "music",
+  edit: "video-edit",
+  workflow: "workflow",
+  director: "frame-capture",
+};
 
 const ITEMS: {
   key: string;
@@ -30,12 +42,6 @@ const ITEMS: {
   { key: "image", label: "图片", kind: "image" },
   { key: "video", label: "视频", kind: "video", badge: "MiniMax H3" },
   { key: "audio", label: "音频", kind: "audio" },
-  {
-    key: "director",
-    label: "3D 导演台",
-    badge: "新",
-    reason: "3D 导演台尚未接入",
-  },
   {
     key: "edit",
     label: "视频剪辑",
@@ -55,12 +61,18 @@ export default function AddNodeMenu({
   onChoose,
   onChoosePlugin,
   onChooseWorkflow,
+  onOpenStoryboard,
+  onOpenDirector,
+  onOpenBlueprint,
   onDismiss,
 }: {
   menu: AddMenuState;
   onChoose: (kind: CanvasItemKind) => void;
   onChoosePlugin?: (type: string) => void;
   onChooseWorkflow?: () => void;
+  onOpenStoryboard?: () => void;
+  onOpenDirector?: () => void;
+  onOpenBlueprint?: () => void;
   onDismiss: (restoreFocus?: boolean) => void;
 }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -188,10 +200,7 @@ export default function AddNodeMenu({
             }}
           >
             <span className="add-node-icon-box">
-              <span
-                className={`add-node-icon add-node-icon-${item.key}`}
-                aria-hidden="true"
-              />
+              <UiIcon name={NODE_ICONS[item.key] ?? "circle-help"} size={20} />
             </span>
             <span className="add-node-label">{item.label}</span>
             {item.badge && (
@@ -202,14 +211,30 @@ export default function AddNodeMenu({
               </span>
             )}
             {item.key === "workflow" && (
-              <span
-                className="add-node-icon add-node-icon-next"
-                aria-hidden="true"
-              />
+              <UiIcon name="chevron-right" size={16} />
             )}
             {item.reason && (
               <span className="add-node-unavailable">{item.reason}</span>
             )}
+          </button>
+        ))}
+        <p className="add-node-title add-node-title-plugin">创作工具</p>
+        {[
+          ["漫剧分镜工作流", onOpenStoryboard],
+          ["3D 导演镜头台", onOpenDirector],
+          ["架构蓝图映射", onOpenBlueprint],
+        ].map(([label, choose]) => (
+          <button
+            key={String(label)}
+            role="menuitem"
+            type="button"
+            aria-label={String(label)}
+            disabled={!choose}
+            onClick={() => {
+              if (typeof choose === "function") choose();
+            }}
+          >
+            <span className="add-node-label">{label as string}</span>
           </button>
         ))}
         {pluginEntries.length > 0 && (

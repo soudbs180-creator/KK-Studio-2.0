@@ -26,6 +26,7 @@ import type {
 } from "./agentToolRuntime.ts";
 import { prepareAgentOperationPlan } from "./agentOperationPlan.ts";
 import { sumTokenUsage } from "../../domain/tokenUsage.ts";
+import { closeWorkTicket, openWorkTicket } from "./superagentSession.ts";
 import { agentOperationLockReason } from "./agentOperationLocks.ts";
 
 export interface AgentHostOptions {
@@ -424,6 +425,185 @@ export function createAgentHost(options: AgentHostOptions) {
               context.modelAllowlist.every((model) => typeof model === "string")
             ? [...context.modelAllowlist]
             : [];
+      async function generateOperation(
+        op: Extract<CanvasAgentOp, { type: "run_generation" }>,
+        project: CreationProject,
+      ) {
+        const node = project.items.find((item) => item.id === op.nodeId);
+        if (!node) {
+          result.rejected.push({ op, reason: "生成节点不存在" });
+          return;
+        }
+
+        if (
+          node.plugin ||
+          !["image", "text", "video", "audio"].includes(op.mode ?? node.kind) ||
+          (op.mode && op.mode !== node.kind)
+        ) {
+          result.rejected.push({
+            op,
+            reason:
+              "此节点的生成模式暂未接入，请使用已配置模型的图片、文案、视频或音频节点",
+          });
+          return;
+        }
+        const requestedModel = op.model ?? node.model;
+        const raw = op.prompt ?? node.prompt ?? node.description;
+        const validate = (): string | undefined => {
+          if (context?.signal.aborted) return "已取消，未受理生成任务";
+          const blocked = getExecutionBlockReason();
+          if (blocked) return blocked;
+          if (boundScope !== scopeKey())
+            return "项目或聊天已切换，未受理生成任务";
+          const current = options.getProject();
+          if (!current?.items.some((item) => item.id === op.nodeId))
+            return "生成节点已删除";
+          const locked = agentOperationLockReason(
+            op,
+            current.items,
+            current.canvas.edges,
+          );
+          if (locked) return locked;
+          const referenceError = agentAnswerabilityError(
+            current
+              ? buildAgentSnapshot(current.items, {
+                  projectId: current.id,
+                  title: current.name,
+                  canvas: current.canvas,
+                })
+              : null,
+            raw,
+            [op.nodeId],
+          );
+          if (referenceError) return referenceError;
+          return [allowedAtStart, allowedForTurn, getModelAllowlist()].some(
+            (allowed) =>
+              allowed !== undefined &&
+              (!requestedModel || !allowed.includes(requestedModel)),
+          )
+            ? `模型 ${requestedModel || "未指定"} 不在允许调用的模型白名单中`
+            : undefined;
+        };
+        const denied = validate();
+        if (denied) {
+          result.rejected.push({
+            op,
+            reason: denied,
+          });
+          return;
+        }
+        let ticketId: string | undefined;
+        try {
+          const prompt = raw
+            .replace(/@\[node:([\w-]+)\]/g, (_token, id: string) => {
+              const reference = project.items.find((item) => item.id === id);
+              if (!reference) throw new Error("提示词引用节点不存在：" + id);
+              if (reference.kind !== "text") return "";
+              return (
+                reference.result?.text ??
+                reference.prompt ??
+                reference.description
+              );
+            })
+            .trim();
+          if (!prompt) throw new Error("生成提示词为空");
+          ticketId = openWorkTicket(project.id, {
+            id: `gen:${node.id}:${Date.now()}`,
+            threadId: project.id,
+            text: prompt,
+            source: "canvas",
+            explicit: true,
+          });
+          const targetNode = op.model ? { ...node, model: op.model } : node;
+          const accepted = await options.generate(
+            targetNode,
+            prompt,
+            context?.signal,
+            validate,
+          );
+          if (accepted.error || !accepted.taskId)
+            throw new Error(accepted.error || "生成任务未受理");
+          closeWorkTicket(project.id, ticketId, "ready");
+          result.applied.push(op);
+          result.tasks!.push({
+            taskId: accepted.taskId,
+            nodeId: node.id,
+            status: "queued",
+          });
+        } catch (error) {
+          closeWorkTicket(project.id, ticketId, "failed");
+          result.rejected.push({
+            op,
+            reason: error instanceof Error ? error.message : "生成失败",
+          });
+        }
+      }
+      function applyViewOperation(
+        op: Extract<CanvasAgentOp, { type: "select_nodes" | "set_viewport" }>,
+        project: CreationProject,
+      ) {
+        try {
+          const view = options.getView?.();
+          if (!view) throw new Error("当前画布控件尚未就绪。");
+          if (op.type === "select_nodes") {
+            if (
+              !Array.isArray(op.ids) ||
+              op.ids.some(
+                (id) =>
+                  typeof id !== "string" ||
+                  !project.items.some((item) => item.id === id),
+              )
+            )
+              throw new Error("选择的画布节点不存在。");
+            view.selectNodes([...new Set(op.ids)]);
+          } else {
+            const raw = op.viewport;
+            const viewport = raw && {
+              x: raw.x,
+              y: raw.y,
+              scale: "k" in raw ? raw.k : raw.scale,
+            };
+            if (
+              !viewport ||
+              ![viewport.x, viewport.y, viewport.scale].every(
+                Number.isFinite,
+              ) ||
+              viewport.scale < 0.2 ||
+              viewport.scale > 4
+            )
+              throw new Error("视口必须为有限坐标，缩放范围为 20%–400%。");
+            view.setViewport({ ...viewport });
+          }
+          result.applied.push(op);
+        } catch (error) {
+          result.rejected.push({
+            op,
+            reason: error instanceof Error ? error.message : "画布操作失败",
+          });
+        }
+      }
+      async function applyAtomicOperation(
+        op: Extract<CanvasAgentOp, { type: "canvas_operation" }>,
+      ) {
+        const execute = options.getView?.()?.executeOperation;
+        if (!execute)
+          result.rejected.push({ op, reason: "画布操作宿主未连接" });
+        else {
+          const receipt = await execute(op.operation);
+          if (receipt.success) {
+            result.applied.push(op);
+            if (receipt.data !== undefined)
+              (result.outputs ??= []).push({
+                operationIndex: ops.indexOf(op),
+                data: receipt.data,
+              });
+          } else
+            result.rejected.push({
+              op,
+              reason: receipt.error ?? "画布操作失败",
+            });
+        }
+      }
       for (const op of ops) {
         const blocked = getExecutionBlockReason();
         if (blocked || boundScope !== scopeKey()) {
@@ -443,169 +623,15 @@ export function createAgentHost(options: AgentHostOptions) {
           continue;
         }
         if (op.type === "run_generation") {
-          const node = project.items.find((item) => item.id === op.nodeId);
-          if (!node) {
-            result.rejected.push({ op, reason: "生成节点不存在" });
-            continue;
-          }
-
-          if (
-            node.plugin ||
-            !["image", "text", "video", "audio"].includes(
-              op.mode ?? node.kind,
-            ) ||
-            (op.mode && op.mode !== node.kind)
-          ) {
-            result.rejected.push({
-              op,
-              reason:
-                "此节点的生成模式暂未接入，请使用已配置模型的图片、文案、视频或音频节点",
-            });
-            continue;
-          }
-          const requestedModel = op.model ?? node.model;
-          const raw = op.prompt ?? node.prompt ?? node.description;
-          const validate = (): string | undefined => {
-            if (context?.signal.aborted) return "已取消，未受理生成任务";
-            const blocked = getExecutionBlockReason();
-            if (blocked) return blocked;
-            if (boundScope !== scopeKey())
-              return "项目或聊天已切换，未受理生成任务";
-            const current = options.getProject();
-            if (!current?.items.some((item) => item.id === op.nodeId))
-              return "生成节点已删除";
-            const locked = agentOperationLockReason(
-              op,
-              current.items,
-              current.canvas.edges,
-            );
-            if (locked) return locked;
-            const referenceError = agentAnswerabilityError(
-              current
-                ? buildAgentSnapshot(current.items, {
-                    projectId: current.id,
-                    title: current.name,
-                    canvas: current.canvas,
-                  })
-                : null,
-              raw,
-              [op.nodeId],
-            );
-            if (referenceError) return referenceError;
-            return [allowedAtStart, allowedForTurn, getModelAllowlist()].some(
-              (allowed) =>
-                allowed !== undefined &&
-                (!requestedModel || !allowed.includes(requestedModel)),
-            )
-              ? `模型 ${requestedModel || "未指定"} 不在允许调用的模型白名单中`
-              : undefined;
-          };
-          const denied = validate();
-          if (denied) {
-            result.rejected.push({
-              op,
-              reason: denied,
-            });
-            continue;
-          }
-          try {
-            const prompt = raw
-              .replace(/@\[node:([\w-]+)\]/g, (_token, id: string) => {
-                const reference = project.items.find((item) => item.id === id);
-                if (!reference) throw new Error("提示词引用节点不存在：" + id);
-                if (reference.kind !== "text") return "";
-                return (
-                  reference.result?.text ??
-                  reference.prompt ??
-                  reference.description
-                );
-              })
-              .trim();
-            if (!prompt) throw new Error("生成提示词为空");
-            const targetNode = op.model ? { ...node, model: op.model } : node;
-            const accepted = await options.generate(
-              targetNode,
-              prompt,
-              context?.signal,
-              validate,
-            );
-            if (accepted.error || !accepted.taskId)
-              throw new Error(accepted.error || "生成任务未受理");
-            result.applied.push(op);
-            result.tasks!.push({
-              taskId: accepted.taskId,
-              nodeId: node.id,
-              status: "queued",
-            });
-          } catch (error) {
-            result.rejected.push({
-              op,
-              reason: error instanceof Error ? error.message : "生成失败",
-            });
-          }
+          await generateOperation(op, project);
           continue;
         }
         if (op.type === "canvas_operation") {
-          const execute = options.getView?.()?.executeOperation;
-          if (!execute)
-            result.rejected.push({ op, reason: "画布操作宿主未连接" });
-          else {
-            const receipt = await execute(op.operation);
-            if (receipt.success) {
-              result.applied.push(op);
-              if (receipt.data !== undefined)
-                (result.outputs ??= []).push({
-                  operationIndex: ops.indexOf(op),
-                  data: receipt.data,
-                });
-            } else
-              result.rejected.push({
-                op,
-                reason: receipt.error ?? "画布操作失败",
-              });
-          }
+          await applyAtomicOperation(op);
           continue;
         }
         if (op.type === "select_nodes" || op.type === "set_viewport") {
-          try {
-            const view = options.getView?.();
-            if (!view) throw new Error("当前画布控件尚未就绪。");
-            if (op.type === "select_nodes") {
-              if (
-                !Array.isArray(op.ids) ||
-                op.ids.some(
-                  (id) =>
-                    typeof id !== "string" ||
-                    !project.items.some((item) => item.id === id),
-                )
-              )
-                throw new Error("选择的画布节点不存在。");
-              view.selectNodes([...new Set(op.ids)]);
-            } else {
-              const raw = op.viewport;
-              const viewport = raw && {
-                x: raw.x,
-                y: raw.y,
-                scale: "k" in raw ? raw.k : raw.scale,
-              };
-              if (
-                !viewport ||
-                ![viewport.x, viewport.y, viewport.scale].every(
-                  Number.isFinite,
-                ) ||
-                viewport.scale < 0.2 ||
-                viewport.scale > 4
-              )
-                throw new Error("视口必须为有限坐标，缩放范围为 20%–400%。");
-              view.setViewport({ ...viewport });
-            }
-            result.applied.push(op);
-          } catch (error) {
-            result.rejected.push({
-              op,
-              reason: error instanceof Error ? error.message : "画布操作失败",
-            });
-          }
+          applyViewOperation(op, project);
           continue;
         }
         const translated = applyAgentOpsToItems(

@@ -153,12 +153,7 @@ export function TaskPanelPopover({
         </button>
       </div>
       <label className="task-panel-search" data-node-id="1763:367">
-        <img
-          src="/design/figma/task-search.svg"
-          width={12}
-          height={12}
-          alt=""
-        />
+        <UiIcon name="search" size={12} />
         <input
           type="search"
           value={query}

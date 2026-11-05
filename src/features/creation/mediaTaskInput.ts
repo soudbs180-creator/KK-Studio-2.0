@@ -51,39 +51,41 @@ export function validateMediaTaskInput(input: CreateProjectInput): void {
   if (input.kind === "audio" && input.attachments.length)
     throw new Error("语音朗读不接收参考附件；请移除附件后重试。");
   if (input.kind === "video") {
-    for (const attachment of input.attachments) {
-      if (!/^image\/(png|jpeg|webp)$/.test(attachment.mime))
-        throw new Error(
-          "Veo 仅支持归档 PNG/JPEG/WebP 图片参考，不支持视频或音频参考。",
-        );
-      if (
-        attachment.role &&
-        !["主体", "风格", "材质", "构图"].includes(attachment.role)
-      )
-        throw new Error("视频不支持此参考角色或 Mask。");
-      if (
-        attachment.referenceFrame !== undefined &&
-        !["first", "last"].includes(attachment.referenceFrame)
-      )
-        throw new Error("视频首尾帧标记无效。");
-    }
-    const frames = input.attachments.filter((a) => a.referenceFrame);
-    if (
-      frames.length &&
-      (frames.length !== 2 ||
-        frames.filter((a) => a.referenceFrame === "first").length !== 1 ||
-        frames.filter((a) => a.referenceFrame === "last").length !== 1 ||
-        frames.length !== input.attachments.length)
-    )
-      throw new Error("视频首尾帧必须成对且不能混合普通参考图。");
-    if (
-      !frames.length &&
-      (input.attachments.length > 3 ||
-        (input.model === "veo-3.1-fast-generate-preview" &&
-          input.attachments.length))
-    )
-      throw new Error(
-        "Veo 标准模型最多 3 张普通参考图；Fast 仅支持成对首尾帧。",
-      );
+    validateVideoReferences(input);
   }
+}
+
+function validateVideoReferences(input: CreateProjectInput): void {
+  for (const attachment of input.attachments) {
+    if (!/^image\/(png|jpeg|webp)$/.test(attachment.mime))
+      throw new Error(
+        "Veo 仅支持归档 PNG/JPEG/WebP 图片参考，不支持视频或音频参考。",
+      );
+    if (
+      attachment.role &&
+      !["主体", "风格", "材质", "构图"].includes(attachment.role)
+    )
+      throw new Error("视频不支持此参考角色或 Mask。");
+    if (
+      attachment.referenceFrame !== undefined &&
+      !["first", "last"].includes(attachment.referenceFrame)
+    )
+      throw new Error("视频首尾帧标记无效。");
+  }
+  const frames = input.attachments.filter((a) => a.referenceFrame);
+  if (
+    frames.length &&
+    (frames.length !== 2 ||
+      frames.filter((a) => a.referenceFrame === "first").length !== 1 ||
+      frames.filter((a) => a.referenceFrame === "last").length !== 1 ||
+      frames.length !== input.attachments.length)
+  )
+    throw new Error("视频首尾帧必须成对且不能混合普通参考图。");
+  if (
+    !frames.length &&
+    (input.attachments.length > 3 ||
+      (input.model === "veo-3.1-fast-generate-preview" &&
+        input.attachments.length))
+  )
+    throw new Error("Veo 标准模型最多 3 张普通参考图；Fast 仅支持成对首尾帧。");
 }

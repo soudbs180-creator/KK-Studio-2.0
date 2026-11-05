@@ -10,10 +10,7 @@ test("视频声音开关按原稿切换，离开卡片后保留选择", async ({
   await expect(sound).toHaveAttribute("aria-pressed", "false");
   await sound.click();
   await expect(sound).toHaveAttribute("aria-pressed", "true");
-  await expect(sound.locator("img")).toHaveAttribute(
-    "src",
-    "/design/figma/mic.svg",
-  );
+  await expect(sound.locator(".ui-icon")).toHaveCSS("width", "16px");
   await page.keyboard.press("Escape");
   await node.focus();
   await page.keyboard.press("Enter");

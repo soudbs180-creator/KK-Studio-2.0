@@ -64,7 +64,7 @@ export default function CatalogPageBody({
           projects={projects}
           actions={projectActions}
           search={search}
-          trash={tab === "垃圾箱"}
+          trash={tab === "回收站"}
           onOpen={onSelect}
         />
       </div>

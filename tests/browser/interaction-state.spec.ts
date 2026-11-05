@@ -101,11 +101,11 @@ test("对话空态在消息区垂直居中，语音输入默认关闭且可用",
   await expect(voice).toHaveAttribute("aria-pressed", "false");
   await expect(voice).toHaveCSS("opacity", "1");
   await expect(voice).toHaveCSS("height", "32px");
-  await expect(voice.locator("img")).toHaveCSS("width", "16px");
-  await expect(voice.locator("img")).toHaveCSS("height", "16px");
-  await expect(voice.locator("img")).toHaveAttribute(
-    "src",
-    "/design/figma/mic-off.svg",
+  await expect(voice.locator(".ui-icon")).toHaveCSS("width", "16px");
+  await expect(voice.locator(".ui-icon")).toHaveCSS("height", "16px");
+  await expect(voice.locator(".kk-icon-slot svg")).toHaveCSS(
+    "stroke-width",
+    "1px",
   );
   await expect(page.locator(".chat-composer textarea")).toHaveCSS(
     "font-size",
@@ -166,7 +166,7 @@ test("画布工具栏菜单使用可读的控件与菜单尺寸", async ({ page 
   await expect(helpMenu).toBeVisible();
   expect((await helpMenu.boundingBox())!).toMatchObject({
     width: 168,
-    height: 186,
+    height: 98,
   });
 });
 

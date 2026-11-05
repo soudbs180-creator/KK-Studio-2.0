@@ -1,4 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import UiIcon from "./UiIcon";
 import { useDismissible } from "./useDismissible";
 import ProjectEntryMenu from "./ProjectEntryMenu";
 import {
@@ -18,11 +19,9 @@ function ProjectThumb({ visual }: { visual?: SidebarProjectVisual }) {
         <img className="project-thumb-image-src" src={visual.src} alt="" />
       )}
       {visual.kind === "chat" && (
-        <img
-          className="project-thumb-chat-icon"
-          src="/design/figma/project-chat-glyph.svg"
-          alt=""
-        />
+        <span className="project-thumb-chat-icon">
+          <UiIcon name="message-square" size={16} />
+        </span>
       )}
     </span>
   );
@@ -177,11 +176,9 @@ export default function SidebarProjectEntry({
           disabled={!canEditProject}
           onClick={onTogglePin}
         >
-          <img
-            className="project-action-container"
-            src="/design/figma/project-pin-container.svg"
-            alt=""
-          />
+          <span className="project-action-container">
+            <UiIcon name="pin" size={16} />
+          </span>
         </button>
       )}
       <button
@@ -194,11 +191,9 @@ export default function SidebarProjectEntry({
           setMenuOpen((value) => !value);
         }}
       >
-        <img
-          className="project-action-container"
-          src="/design/figma/project-more-container.svg"
-          alt=""
-        />
+        <span className="project-action-container">
+          <UiIcon name="ellipsis" size={16} />
+        </span>
       </button>
       {menuOpen && (
         <ProjectEntryMenu

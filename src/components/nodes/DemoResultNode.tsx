@@ -42,11 +42,14 @@ export default function DemoResultNode({
   const [referenceError, setReferenceError] = useState("");
   const result = item.result;
   const card = useRef<HTMLElement>(null);
-  const hasResultContent = Boolean(
-    result &&
-    result.kind === item.kind &&
-    (item.kind === "text" ? result.text?.trim() : result.src?.trim()),
-  );
+  const hasResultContent = resultHasContent();
+  function resultHasContent() {
+    return Boolean(
+      result &&
+      result.kind === item.kind &&
+      (item.kind === "text" ? result.text?.trim() : result.src?.trim()),
+    );
+  }
   const imageSource =
     item.kind === "image"
       ? result?.poster || result?.src || item.preview
@@ -233,6 +236,7 @@ export default function DemoResultNode({
             }}
           />
           <CreationComposer
+            nodeId={item.id}
             footer={
               item.kind === "video" &&
               result?.src && (

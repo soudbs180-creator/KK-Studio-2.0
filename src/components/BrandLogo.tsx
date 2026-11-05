@@ -2,6 +2,7 @@ const LOGOS = {
   app: { file: "logo", size: 26 },
   hero: { file: "logo-hero", size: 63.141 },
   account: { file: "logo-account", size: 30 },
+  sidebarAccount: { file: "logo-sidebar-account", size: 16 },
   model: { file: "logo-model", size: 20 },
   credit: { file: "logo-credit", size: 11 },
   message: { file: "logo-message", size: 12 },
