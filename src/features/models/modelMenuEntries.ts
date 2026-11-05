@@ -1,3 +1,4 @@
+import { mediaConnectionBlockReason } from "../../integrations/generation/mediaSupport.ts";
 import type { readProviderConnections } from "../../integrations/providers/providerStore.ts";
 import { catalogForConnection, type ModelKind } from "./modelCatalog.ts";
 import { modelDisplay, modelSearchTerms } from "./modelFamilies.ts";
@@ -100,7 +101,14 @@ export function apiMenuEntries(
                       }))
                   ? "此连接协议的图片执行器尚未接入"
                   : model.kind === "video" || model.kind === "audio"
-                    ? "此生成执行器尚未接入"
+                    ? (mediaConnectionBlockReason(
+                        connection,
+                        model.id,
+                        model.kind,
+                      ) ??
+                      (kind && model.kind !== kind
+                        ? "不适用于当前节点"
+                        : undefined))
                     : kind && model.kind !== kind
                       ? `不适用于当前${kind === "image" ? "图片" : kind === "text" ? "文本" : "视频"}节点`
                       : undefined,

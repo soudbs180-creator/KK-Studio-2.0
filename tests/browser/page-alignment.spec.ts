@@ -88,12 +88,12 @@ test("local account and memory controls reflect the current offline state", asyn
   ).toBeDisabled();
 });
 
-test("task workbench action does not overlap the tabs and demo status is visible", async ({
+test("task workbench action does not overlap the tabs and empty status is visible", async ({
   page,
 }) => {
   await openWorkspace(page);
   await page.getByRole("button", { name: "打开任务列表", exact: true }).click();
-  await expect(page.locator(".task-panel-heading")).toContainText("本地演示");
+  await expect(page.locator(".task-panel-heading")).toHaveText("任务状态");
   const action = page.getByRole("button", {
     name: "打开任务工作台",
     exact: true,

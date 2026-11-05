@@ -320,6 +320,44 @@ test("publishNativeRecordState awaits flushPublishedResult before clearing savin
   ]);
 });
 
+test("native partial video publication preserves the archive and uncertain receipt", async () => {
+  const outputs: CreationTaskOutput[] = [
+    { index: 0, status: "succeeded", assetId: "asset-native-video" },
+  ];
+  let published: unknown;
+  let flushed = false;
+  await publishNativeRecordState({
+    kind: "video",
+    record: {
+      taskId: "partial-video",
+      idempotencyKey: "partial-video-key",
+      baseUrl: "https://provider.invalid",
+      model: "veo-3.1-generate-preview",
+      prompt: "video",
+      status: "failed",
+      failure: "Provider returned partial video result",
+      outputs,
+    },
+    outputs,
+    requestedOutputs: 1,
+    publish: (status, error, submissionState) => {
+      published = { status, error, submissionState };
+    },
+    flushPublishedResult: async () => {
+      flushed = true;
+    },
+    setResultSaving: () => {},
+  });
+  assert.deepEqual(published, {
+    status: "unknown",
+    error: "Provider returned partial video result",
+    submissionState: "unknown",
+  });
+  assert.equal(outputs[0].status, "succeeded");
+  assert.equal(outputs[0].assetId, "asset-native-video");
+  assert.equal(flushed, true);
+});
+
 test("publishTaskOutputState preserves delivery failure across subsequent publishes", () => {
   let project: CreationProject = {
     id: "proj-delivery",

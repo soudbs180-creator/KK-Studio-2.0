@@ -2,7 +2,11 @@ import {
   comfyOutputSourceId,
   type CanvasCollectionItem,
 } from "../../domain/canvasItems.ts";
-import type { Dispatch, SetStateAction } from "react";
+import { useMemo, type Dispatch, type SetStateAction } from "react";
+import {
+  ExtensionSlot,
+  useExtensionSlot,
+} from "../../features/extensions/index.ts";
 import { resolveWorkflowSource } from "./canvasWorkflowSource.ts";
 import {
   ComfyWorkflowParameters,
@@ -22,15 +26,15 @@ export default function CanvasPropertyPanel({
   onLocate: (id: string) => void;
   onItemsChange: Dispatch<SetStateAction<CanvasCollectionItem[]>>;
 }) {
-  if (
-    !item ||
-    !(
-      item.comfyWorkflow ||
+  const extensionItems = useExtensionSlot("sidepanel");
+  const payload = useMemo(() => ({ item, items }), [item, items]);
+  const hasWorkflow = Boolean(
+    item &&
+    (item.comfyWorkflow ||
       (item.kind === "image" &&
-        (item.comfyWorkflowSourceId ?? comfyOutputSourceId(item)))
-    )
-  )
-    return null;
+        (item.comfyWorkflowSourceId ?? comfyOutputSourceId(item)))),
+  );
+  if (!item || (!hasWorkflow && extensionItems.length === 0)) return null;
   const source = resolveWorkflowSource(item, items);
   const record =
     item.comfyWorkflow?.snapshot ??
@@ -51,7 +55,9 @@ export default function CanvasPropertyPanel({
         record && (
           <ComfyWorkflowParameters
             record={record}
-            disabled={Boolean(item.comfyWorkflow.submission)}
+            disabled={Boolean(
+              item.comfyWorkflow.submission || item.canvasPresentation?.locked,
+            )}
             onChange={(snapshot) =>
               onItemsChange((current) =>
                 current.map((entry) =>
@@ -72,7 +78,7 @@ export default function CanvasPropertyPanel({
             }
           />
         )
-      ) : (
+      ) : hasWorkflow ? (
         <div className="canvas-property-row">
           <span>工作流来源 [Workflow Source]</span>
           {source ? (
@@ -90,7 +96,7 @@ export default function CanvasPropertyPanel({
             <p>来源工作流不可用</p>
           )}
         </div>
-      )}
+      ) : null}
       {item.prompt && (
         <div className="canvas-property-row">
           <span>提示词</span>
@@ -103,6 +109,7 @@ export default function CanvasPropertyPanel({
           <span>{item.model}</span>
         </div>
       )}
+      <ExtensionSlot id="sidepanel" payload={payload} />
     </aside>
   );
 }

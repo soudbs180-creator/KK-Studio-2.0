@@ -224,3 +224,7 @@ P3a–e依赖反转与兼容方案见[ADR-029](architecture/adr/ADR-029-feature-
 独立图片能力与三端资产溯源见[ADR-032](architecture/adr/ADR-032-independent-image-capabilities-and-lineage.md)。
 
 ComfyUI双态画布卡片与本机托管见[ADR-033](architecture/adr/ADR-033-comfy-canvas-runtime.md)。
+
+确定性作用域记忆 V2 与兼容投影见 [ADR-035](architecture/adr/ADR-035-scoped-memory-v2.md)。
+
+真实多模态持久任务契约见 [ADR-036](architecture/adr/ADR-036-durable-multimodal-generation.md)；[阶段3实施包](changes/2026-11-04-multimodal/verification.md) 保留源树的历史证据，当前整合验收见[六支柱接线](changes/2026-11-04-e2e-wiring/verification.md)。

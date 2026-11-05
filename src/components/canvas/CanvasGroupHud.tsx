@@ -15,7 +15,7 @@ function placeItems(
   const columns = layout === "grid" ? 2 : 1;
   orderedIds.forEach((id, index) => {
     const item = items.find((entry) => entry.id === id);
-    if (!item || !next[id]) return;
+    if (!item || !next[id] || item.canvasPresentation?.locked) return;
     next[id] = {
       x:
         82 +

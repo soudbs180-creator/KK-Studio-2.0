@@ -1,11 +1,15 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
-  createPixelBuffer,
-  verifyAlphaIntegrity,
   calculateAdaptiveResize,
   resolveTargetImageMime,
-} from "./harness.ts";
+  detectAlphaTransparency,
+} from "../../src/domain/mediaAlpha.ts";
+import { createPixelBuffer } from "../support/pixelFixture.ts";
+import { imageResultContext } from "../../src/features/image-edit/context.ts";
+import { imageRegeneration } from "../../src/features/image-edit/regeneration.ts";
+import { createProject, createTask } from "../../src/domain/creationModel.ts";
+import { loadStoredAsset } from "../../src/features/creation/index.ts";
 import { blendMaskedPixels } from "../../src/features/image-edit/pixels.ts";
 
 /* =========================================================================
@@ -33,7 +37,10 @@ test("R4-T1-01: PNG alpha transparency preservation retains RGBA channels withou
     }
   }
 
-  const integrity = verifyAlphaIntegrity(buffer);
+  const integrity = {
+    hasTransparency: detectAlphaTransparency(buffer.data),
+    minAlpha: Math.min(...buffer.data.filter((_, i) => i % 4 === 3)),
+  };
   assert.equal(
     integrity.hasTransparency,
     true,
@@ -72,11 +79,11 @@ test("R4-T1-02: adaptive resizing respects max edge bounds while preserving exac
     "Short edge must be proportionally scaled to 1024",
   );
   assert.equal(
-    result.aspectRatio,
+    result.width / result.height,
     2.0,
     "Aspect ratio must be preserved exactly",
   );
-  assert.ok(result.scale < 1.0);
+  assert.ok(result.width / originalWidth < 1.0);
 });
 
 test("R4-T1-03: masked alpha compositing blends transparent edges cleanly using blendMaskedPixels", () => {
@@ -134,53 +141,37 @@ test("R4-T1-03: masked alpha compositing blends transparent edges cleanly using 
   );
 });
 
-test("R4-T1-04: pristine uncompressed asset reference (originalAssetId) is preserved in derived image edit tasks", () => {
-  const rootAsset = {
-    assetId: "asset-raw-master-001",
-    mime: "image/png",
-    width: 3840,
-    height: 2160,
-    compressed: false,
-  };
-
-  // Derivative 1: Crop
-  const derivative1 = {
-    taskId: "task-crop-1",
-    sourceAssetId: rootAsset.assetId,
-    originalAssetId: rootAsset.assetId, // Retains pristine original
-    width: 1920,
-    height: 1080,
-  };
-
-  // Derivative 2: Inpaint on Derivative 1
-  const derivative2 = {
-    taskId: "task-inpaint-2",
-    sourceAssetId: derivative1.taskId,
-    originalAssetId: derivative1.originalAssetId, // Propagates root reference
-    width: 1024,
-    height: 1024,
-  };
-
-  // Invariant: originalAssetId always points to root master asset, preventing generational loss
-  assert.equal(derivative2.originalAssetId, rootAsset.assetId);
-  assert.notEqual(derivative2.originalAssetId, derivative1.taskId);
+test("R4-T1-04: production edit result context preserves the pristine original through derivatives", () => {
+  const task = createTask(
+    createProject({
+      prompt: "original brief",
+      model: "m",
+      kind: "image",
+      attachments: [],
+    }),
+  );
+  const first = imageResultContext(task, "asset-original");
+  const second = imageResultContext(
+    { ...task, imageEditContext: first },
+    "asset-derivative",
+  );
+  assert.equal(second.originalAssetId, "asset-original");
+  assert.equal(second.originalPrompt, "original brief");
+  assert.deepEqual(second.referenceAssetIds, []);
 });
 
 test("R4-T1-05: format adaptation rejects conversion of transparent images to opaque JPEG", () => {
   // Transparent PNG -> preserved as PNG
-  assert.equal(resolveTargetImageMime("image/png", true), "image/png");
+  assert.equal(resolveTargetImageMime(true, "image/png"), "image/png");
 
   // Transparent WebP -> preserved as WebP
-  assert.equal(resolveTargetImageMime("image/webp", true), "image/webp");
+  assert.equal(resolveTargetImageMime(true, "image/webp"), "image/webp");
 
   // Image with alpha attempted as JPEG must throw error
-  assert.throws(
-    () => resolveTargetImageMime("image/jpeg", true),
-    /Alpha channel cannot be preserved in JPEG/,
-  );
+  assert.equal(resolveTargetImageMime(true, "image/jpeg"), "image/png");
 
   // Opaque image can remain JPEG
-  assert.equal(resolveTargetImageMime("image/jpeg", false), "image/jpeg");
+  assert.equal(resolveTargetImageMime(false, "image/jpeg"), "image/jpeg");
 });
 
 // -------------------------------------------------------------------------
@@ -218,62 +209,40 @@ test("R4-T2-02: 100% transparent image canvas preserves full transparency after 
   }
   assert.equal(totalAlpha, 0, "Buffer must be completely transparent");
 
-  const integrity = verifyAlphaIntegrity(blankBuffer);
+  const integrity = {
+    hasTransparency: detectAlphaTransparency(blankBuffer.data),
+    minAlpha: Math.min(...blankBuffer.data.filter((_, i) => i % 4 === 3)),
+  };
   assert.equal(integrity.hasTransparency, true);
   assert.equal(integrity.minAlpha, 0);
 });
 
-test("R4-T2-03: re-deriving edit parameters fetches pristine original bytes preventing generational loss", () => {
-  const assetRepository = new Map<
-    string,
-    { bytes: Buffer; revision: number }
-  >();
-  const originalBytes = Buffer.from("RAW_PRISTINE_PNG_UNCOMPRESSED_DATA");
-  assetRepository.set("asset-master-uuid", {
-    bytes: originalBytes,
-    revision: 1,
-  });
-
-  // First edit with resolution 1024
-  const editRound1 = {
-    sourceId: "asset-master-uuid",
-    resolution: 1024,
-    data: "COMPRESSED_ROUND_1",
-  };
-
-  // User alters resolution to 2048
-  // Invariant: Pipeline must read from "asset-master-uuid", NOT re-compress "COMPRESSED_ROUND_1"
-  const fetchSourceForNewEdit = (sourceId: string) => {
-    return assetRepository.get(sourceId);
-  };
-
-  const reDerivedSource = fetchSourceForNewEdit(editRound1.sourceId);
-  assert.ok(reDerivedSource);
-  assert.equal(
-    reDerivedSource.bytes.toString(),
-    "RAW_PRISTINE_PNG_UNCOMPRESSED_DATA",
-    "Must re-derive from uncompressed original",
+test("R4-T2-03: real regeneration retains edit original while creating a fresh intent identity", () => {
+  const task = createTask(
+    createProject({
+      prompt: "edit",
+      model: "m",
+      kind: "image",
+      attachments: [],
+    }),
   );
+  task.imageEditContext = {
+    originalAssetId: "asset-pristine",
+    originalPrompt: "brief",
+    referenceAssetIds: [],
+  };
+  task.status = "succeeded";
+  const candidate = imageRegeneration(task);
+  assert.equal(candidate.imageEditContext?.originalAssetId, "asset-pristine");
+  assert.notEqual(candidate.idempotencyKey, task.idempotencyKey);
+  assert.equal(candidate.submissionState, "intent");
+  assert.equal(candidate.outputs?.[0].status, "waiting");
+  assert.equal(task.status, "succeeded");
 });
 
-test("R4-T2-04: missing original asset reference raises clear actionable error without corrupting project state", () => {
-  const assetRepository = new Map<string, unknown>();
-
-  const loadOriginalAsset = (assetId: string) => {
-    const asset = assetRepository.get(assetId);
-    if (!asset) {
-      throw new Error(
-        `无法找到原生素材原件（ID: ${assetId}），请从素材库或本地重新导入。`,
-      );
-    }
-    return asset;
-  };
-
-  assert.throws(
-    () => loadOriginalAsset("non-existent-asset-999"),
-    /无法找到原生素材原件.*重新导入/,
-    "Must raise user-actionable message on missing asset",
-  );
+test("R4-T2-04: actual asset repository reports missing original without fabricating image bytes", async () => {
+  const missing = await loadStoredAsset("asset-ffffffffffffffffffffffff");
+  assert.equal(missing, null);
 });
 
 test("R4-T2-05: feather gradient boundary transitions smoothly between 0 and 255 alpha without color distortion", () => {

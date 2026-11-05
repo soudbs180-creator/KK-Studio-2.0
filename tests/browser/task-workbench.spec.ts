@@ -317,7 +317,9 @@ async function injectPlanReview(page: Page) {
   });
 }
 
-test("阶段计划在任务工作台显示并通过编排器审批", async ({ page }) => {
+test("阶段计划在任务工作台显示，未配置模型时批准前保留计划且不派发", async ({
+  page,
+}) => {
   await page.goto("/");
   await page.getByRole("button", { name: "项目库", exact: true }).click();
   await page.getByRole("button", { name: "新建项目", exact: true }).click();
@@ -337,7 +339,22 @@ test("阶段计划在任务工作台显示并通过编排器审批", async ({ pa
   );
   await expect(page.getByTestId("stage-plan-panel")).toContainText("计划审批");
   await page.getByRole("button", { name: "批准计划" }).click();
-  await expect(page.getByTestId("stage-plan-panel")).toContainText("执行中");
+  await expect(
+    page.getByTestId("stage-plan-panel").getByRole("alert"),
+  ).toContainText("指定已配置的真实模型");
+  await expect(page.getByTestId("stage-plan-panel")).toContainText(
+    "等待计划审批",
+  );
+  expect(
+    await page.evaluate(() => {
+      const snapshot = JSON.parse(
+        localStorage.getItem("kk-studio-next:creation:v1")!,
+      );
+      return snapshot.projects.find(
+        (p: { id: string }) => p.id === snapshot.activeProjectId,
+      ).tasks.length;
+    }),
+  ).toBe(0);
   await page.setViewportSize({ width: 390, height: 844 });
   await expect(page.locator(".task-workbench-tabs")).toBeVisible();
   expect(

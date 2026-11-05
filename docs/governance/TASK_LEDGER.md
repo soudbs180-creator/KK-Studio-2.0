@@ -84,7 +84,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | FEATURE-SYSTEM | 功能卡片体系、状态看板与后端化路线 | DONE | 已完成 | P3 | TASK-KK2-MAIN-SYNC | root | 保留当前证据，合并后按原验收范围回读主线 |
 | BACKEND-IMAGE-PARAMS | 图片比例与清晰度真实透传供应商 | PARTIAL | 进行中 | P2 | none | root | 按验收条件完成实现、验证、独立审查和文档同步 |
 | BACKEND-TEXT-NODE | 文本节点接入统一任务宿主 | PARTIAL | 进行中 | P2 | T5 | root | 按验收条件完成实现、验证、独立审查和文档同步 |
-| BACKEND-MEDIA-001 | 视频与音频节点真实生成链 | TODO | 未完成 | P2 | T5 | root | 补充负责人、优先级、分支和下一步验收证据 |
+| BACKEND-MEDIA-001 | 视频与音频节点真实生成链 | IN_PROGRESS | 未完成 | P1 | T5 | root | 完成共享多模态提交、De-Mock与浏览器/原生验收后本地合流 |
 | BACKEND-MCP-AUTO | MCP 工具自动调用编排 | TODO | 未完成 | P2 | TASK-CAP-001 | root | 补充负责人、优先级、分支和下一步验收证据 |
 | BACKEND-PLATFORM | 平台账号/积分/云同步/记忆/代理后端 | TODO | 未完成 | P2 | T10-PREP, T10 | root | 补充负责人、优先级、分支和下一步验收证据 |
 | BACKEND-ASTRA-001 | Astra 研究助手实现 | TODO | 未完成 | P2 | TASK-ASTRA-001 | root | 补充负责人、优先级、分支和下一步验收证据 |
@@ -223,7 +223,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-W1-GATE-ZERO-20261101 | Gate Zero四微批次与安全提交收敛本地main | DONE | 已完成 | P1 | none | root | 本有界包已验收合入本地main；最终工作树回收与SHA见工程外final-receipt.json，不代表全量浏览器或发布完成。 |
 | TASK-W1-BROWSER-CLOSEOUT-20261102 | 清零W1剩余119浏览器复验项并合流 | DONE | 已完成 | P1 | none | root | 本卡完成；继续ComfyUI参数、图片编辑与真实生成链。 |
 | TASK-MAINLINE-20261103 | 主线治理收口与当前浏览器门禁修复 | DONE | 已完成 | P1 | none | root | 本卡完成；继续ComfyUI参数、图片编辑与真实生成链。 |
-| TASK-COMFY-IMAGE-20261103 | ComfyUI 参数与图片深度编辑生产链路 | IN_PROGRESS | 进行中 | P1 | none | root | 完成原生编辑同步与真实图片任务宿主 |
+| TASK-COMFY-IMAGE-20261103 | ComfyUI 参数与图片深度编辑生产链路 | PARTIAL | 进行中 | P1 | none | root | 依据阶段2历史验证核对任务范围与未验收外部模型项；新接线由TASK-E2E-WIRING-20261104承接 |
+| TASK-E2E-WIRING-20261104 | 六支柱生产接线与去测试替身 | IN_PROGRESS | 进行中 | P0 | none | root | 冻结源码完成verify17及当前Desktop，提交后按实际PR基线独审/CI，再合流和安全回收源树 |
 
 ## TASK-COMFY-PHYSICAL-20261030 — 本机ComfyUI真实显卡出图验收
 
@@ -1719,19 +1720,19 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Goal: 视频/音频节点经统一任务宿主接入真实供应商（规划 MiniMax 等），替换固定演示素材
 - Scope: 视频/音频 provider 抽象, 异步作业轮询/回调, 任务宿主, VideoNode/PromptCreationNode, 参数透传
 - Display status: 未完成
-- Priority: P2 — 开放任务默认待治理排序
+- Priority: P1 — 用户授权阶段3优先连续实施
 - Requirement refs: ledger:BACKEND-MEDIA-001
 - Feature IDs: FEAT-006, FEAT-007, FEAT-025, FEAT-031
 - Owner role: repository-maintainer
 - Acceptance: 视频/音频 provider 抽象复用队列、幂等、取消与素材归档; 时长/比例/清晰度等参数真实传递; 结果经 result 边回到节点，状态覆盖 loading/success/error/cancel; 有供应商 Key 时完成真实出片/出音频验收
-- Branch: `unallocated`
-- Worktree: `unallocated`
+- Branch: `codex/TASK-STAGE3-multimodal`
+- Worktree: `D:/kk-studio/.worktrees/TASK-STAGE3-multimodal`
 - Modules: src/components/nodes, src/features/creation, src/integrations/generation, src-tauri/src/task_host.rs
-- Verification: NOT_VERIFIED — NOT VERIFIED：代码链路可先于凭据建设；真实出片/出音频验收需要供应商 Key 与额度（EXT-PROVIDER）。
-- Evidence: [docs/features/feat-006-video-generation.md](../../docs/features/feat-006-video-generation.md), [docs/features/feat-007-audio-generation.md](../../docs/features/feat-007-audio-generation.md), [docs/features/feat-025-demo-media.md](../../docs/features/feat-025-demo-media.md)
-- Next action: 补充负责人、优先级、分支和下一步验收证据
+- Verification: NOT_VERIFIED — 基线 typecheck/lint通过；2495单测通过、20既有跳过。原生子任务92aacba1：411 Rust通过、1既有忽略；共享提交和运行态待完成。
+- Evidence: [docs/features/feat-006-video-generation.md](../../docs/features/feat-006-video-generation.md), [docs/features/feat-007-audio-generation.md](../../docs/features/feat-007-audio-generation.md), [docs/features/feat-025-demo-media.md](../../docs/features/feat-025-demo-media.md), [docs/changes/2026-11-04-multimodal/intent.md](../../docs/changes/2026-11-04-multimodal/intent.md), [docs/changes/2026-11-04-multimodal/spec.md](../../docs/changes/2026-11-04-multimodal/spec.md), [docs/changes/2026-11-04-multimodal/plan.md](../../docs/changes/2026-11-04-multimodal/plan.md), [docs/changes/2026-11-04-multimodal/verification.md](../../docs/changes/2026-11-04-multimodal/verification.md), [docs/changes/2026-11-04-multimodal/review.md](../../docs/changes/2026-11-04-multimodal/review.md)
+- Next action: 完成共享多模态提交、De-Mock与浏览器/原生验收后本地合流
 - Last verified: 2026-09-21
-- Updated: 2026-09-21
+- Updated: 2026-11-04
 
 ## BACKEND-MCP-AUTO — MCP 工具自动调用编排
 
@@ -4368,8 +4369,27 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `feat/TASK-COMFY-IMAGE-20261103-production`
 - Worktree: `D:/kk-studio/KK-Studio-2.0`
 - Modules: src/features/comfyui, src/features/image-edit, src/features/creation, src/components/canvas, src-tauri/src
-- Verification: NOT_VERIFIED — 实现中；参数提取与本地地址校验单测通过，完整门禁待执行
+- Verification: NOT_VERIFIED — 实现中；参数提取与本地地址校验单测通过，完整门禁待执行 2026-11-04：旧分支已不存在，主checkout由TASK-E2E-WIRING-20261104接管；阶段2历史验证保留，台账尚需逐项核对，不占用活动工作树。
 - Evidence: [docs/changes/2026-11-03-comfy-production/verification.md](../../docs/changes/2026-11-03-comfy-production/verification.md)
-- Next action: 完成原生编辑同步与真实图片任务宿主
+- Next action: 依据阶段2历史验证核对任务范围与未验收外部模型项；新接线由TASK-E2E-WIRING-20261104承接
 - Last verified: 2026-11-03
-- Updated: 2026-11-03
+- Updated: 2026-11-04
+
+## TASK-E2E-WIRING-20261104 — 六支柱生产接线与去测试替身
+
+- Goal: 完成用户P0–P4真实运行链路
+- Scope: 记忆/Agent/网关/扩展/画布/工作流及阶段3吸收、完整验收
+- Display status: 进行中
+- Priority: P0 — 未记录
+- Requirement refs: docs/changes/2026-11-04-e2e-wiring/intent.md, docs/changes/2026-11-04-e2e-wiring/spec.md
+- Feature IDs: FEAT-020, FEAT-030, FEAT-043, FEAT-044
+- Owner role: implementation-integrator
+- Acceptance: P0–P4正式入口实际调用生产模块; 数据兼容、取消、失败、恢复通过回归; 完整门禁与运行证据通过后独审合流
+- Branch: `codex/TASK-E2E-WIRING-20261104`
+- Worktree: `D:/kk-studio/KK-Studio-2.0`
+- Modules: src/features/memory, src/features/agent, src/features/extensions, src-tauri/src, tests/e2e
+- Verification: PARTIAL — 真实生产接线和harness纯转出已实现；e2e312/312，单元2684 pass/20 skip，定向浏览器102+2通过；独审2P1/4P2已修复待正式SHA复核，完整verify17/Desktop最新构建/PR/main待收口。
+- Evidence: [docs/changes/2026-11-04-e2e-wiring/verification.md](../../docs/changes/2026-11-04-e2e-wiring/verification.md)
+- Next action: 冻结源码完成verify17及当前Desktop，提交后按实际PR基线独审/CI，再合流和安全回收源树
+- Last verified: 2026-11-05
+- Updated: 2026-11-05

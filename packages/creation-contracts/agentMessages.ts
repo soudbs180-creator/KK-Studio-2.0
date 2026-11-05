@@ -9,6 +9,11 @@ export interface AgentCanvasReference {
 }
 
 export interface AgentChatItem {
+  tokenUsage?: {
+    promptTokens: number;
+    completionTokens: number;
+    totalTokens: number;
+  };
   id: string;
   itemId?: string;
   clientMessageId?: string;

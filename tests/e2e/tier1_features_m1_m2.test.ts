@@ -1,289 +1,204 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { createElement as h } from "react";
+import { renderToStaticMarkup as render } from "react-dom/server";
+import { readFileSync } from "node:fs";
+import { Button } from "../../src/components/ui/Button.tsx";
+import { Input } from "../../src/components/ui/Input.tsx";
+import { Select } from "../../src/components/ui/Select.tsx";
+import { Badge } from "../../src/components/ui/Badge.tsx";
+import { ModalDialog } from "../../src/components/ui/ModalDialog.tsx";
+import UiIcon, {
+  ICONS,
+  type UiIconName,
+} from "../../src/components/UiIcon.tsx";
+import { resolveImageSize } from "../../src/domain/imageParameters.ts";
+import { STANDARDIZED_ASPECT_RATIOS } from "../../src/components/nodes/CreationParameters.tsx";
 import {
-  FIGMA_SURFACE_TOKENS,
+  validateViewportLayout,
+  validateSpacingValue,
+  evaluateStyleDeclaration,
   calculateContrastRatio,
-  validateFigmaSurfaceTokens,
-  validateButtonProps,
-  validateInputProps,
-  validateSelectProps,
-  validateBadgeProps,
-  validateModalProps,
-  OFFICIAL_LUCIDE_ICONS_124,
-  resolveUiIcon,
-  FIGMA_ASPECT_RATIOS_15,
-  parseAspectRatio,
-  calculateDimensionsForRatio,
-  classifyViewport,
-  check4pxGridRhythm,
-  evaluateElementAesthetics,
+} from "../../src/domain/uiAestheticGovernance.ts";
+import { renderSidebarSurface } from "../support/responsiveFixture.ts";
+import {
   GatewayCooldownScheduler,
   DualStickinessManager,
   ExtensionRuntimeBridge,
 } from "./harness.ts";
+const css = readFileSync(
+  new URL("../../src/styles/tokens.css", import.meta.url),
+  "utf8",
+);
+const workspaceCss = readFileSync(
+  new URL("../../src/styles/workspace.css", import.meta.url),
+  "utf8",
+);
 
-/* =========================================================================
- * Tier 1: Feature Coverage (Features 1 - 9 / Milestones 1 & 2)
- * ========================================================================= */
-
-// -------------------------------------------------------------------------
-// Feature 1: Figma Surface & Token Parity
-// -------------------------------------------------------------------------
-test("F01-T1-01: surface background token matches Figma #f2f2f2", () => {
-  assert.equal(FIGMA_SURFACE_TOKENS.bgSurface, "#f2f2f2");
-  assert.equal(FIGMA_SURFACE_TOKENS.darkButtonHover, "#f2f2f2");
+test("F01-T1-01: actual stylesheet owns both dark and light surface values", () => {
+  assert.match(css, /--kk-bg-surface:\s*#161616/u);
+  assert.match(css, /--kk-bg-surface:\s*#f2f2f2/u);
 });
-
-test("F01-T1-02: neutral focus rings provide light and dark contrast tokens", () => {
-  assert.equal(FIGMA_SURFACE_TOKENS.focusRingNeutralLight, "#dbdbdb");
-  assert.equal(FIGMA_SURFACE_TOKENS.focusRingNeutralDark, "#252525");
+test("F01-T1-02: actual focus tokens retain light and dark contrasts", () => {
+  assert.match(css, /--kk-focus-ring:\s*#dbdbdb/u);
+  assert.match(css, /--kk-focus-ring:\s*#252525/u);
 });
-
-test("F01-T1-03: all 5 paired data tag tokens define text and background colors", () => {
-  const tags = [
-    FIGMA_SURFACE_TOKENS.dataTagBlue,
-    FIGMA_SURFACE_TOKENS.dataTagGreen,
-    FIGMA_SURFACE_TOKENS.dataTagAmber,
-    FIGMA_SURFACE_TOKENS.dataTagPurple,
-    FIGMA_SURFACE_TOKENS.dataTagCrimson,
-  ];
-  for (const tag of tags) {
-    assert.ok(tag.text.startsWith("#"), "Tag text must be valid hex");
-    assert.ok(tag.bg.startsWith("#"), "Tag bg must be valid hex");
+test("F01-T1-03: every production data category has paired text and background tokens", () => {
+  for (const category of ["character", "scene", "costume", "prop", "custom"]) {
+    assert.ok(css.includes("--kk-tag-" + category + "-bg:"));
+    assert.ok(css.includes("--kk-tag-" + category + "-text:"));
   }
 });
-
-test("F01-T1-04: contrast ratio between text and surface tokens exceeds WCAG AA", () => {
-  const ratio = calculateContrastRatio(
-    "#111827",
-    FIGMA_SURFACE_TOKENS.bgSurface,
+test("F01-T1-04: real contrast engine verifies quiet surface text", () => {
+  assert.ok(calculateContrastRatio("#252525", "#f2f2f2") >= 4.5);
+});
+test("F01-T1-05: production Badge consumes each defined data category", () => {
+  for (const category of [
+    "character",
+    "scene",
+    "costume",
+    "prop",
+    "custom",
+  ] as const)
+    assert.match(
+      render(h(Badge, { category, children: "tag" })),
+      new RegExp("kk-tag--" + category),
+    );
+});
+test("F02-T1-01: actual Button renders all five height tiers", () => {
+  for (const heightTier of ["44px", "40px", "32px", "24px", "16px"] as const)
+    assert.match(
+      render(h(Button, { heightTier }, "action")),
+      new RegExp('data-height-tier="' + heightTier + '"'),
+    );
+});
+test("F02-T1-02: actual compact Button uses the 44px CSS hit area", () => {
+  assert.match(
+    render(h(Button, { heightTier: "16px" }, "action")),
+    /kk-button--decoupled-hit/u,
   );
-  assert.ok(ratio >= 4.5, `Contrast ratio ${ratio} must be >= 4.5:1`);
+  assert.match(workspaceCss, /min-width:\s*44px/u);
+  assert.match(workspaceCss, /min-height:\s*44px/u);
 });
-
-test("F01-T1-05: validateFigmaSurfaceTokens detects compliant CSS variables", () => {
-  const css = `
-    :root {
-      --kk-bg-surface: #f2f2f2;
-      --kk-focus-ring-neutral: #252525;
-      --kk-tag-blue: #1d4ed8;
-      --kk-tag-green: #15803d;
-      --kk-tag-amber: #b45309;
-    }
-  `;
-  const res = validateFigmaSurfaceTokens(css);
-  assert.equal(res.valid, true);
-  assert.equal(res.missing.length, 0);
+test("F02-T1-03: actual Input renders disabled value without losing draft", () => {
+  const markup = render(
+    h(Input, { value: "query", disabled: true, readOnly: true }),
+  );
+  assert.match(markup, /value="query"/u);
+  assert.match(markup, /disabled=""/u);
 });
-
-// -------------------------------------------------------------------------
-// Feature 2: Foundational UI Primitive Layer
-// -------------------------------------------------------------------------
-test("F02-T1-01: Button supports all 5 standard Figma height tiers", () => {
-  const tiers = ["44px", "40px", "32px", "24px", "16px"] as const;
-  for (const tier of tiers) {
-    const res = validateButtonProps({ heightTier: tier });
-    assert.equal(res.valid, true);
-    assert.equal(res.heightPx, parseInt(tier, 10));
-  }
+test("F02-T1-04: actual Select renders selected label and combobox semantics", () => {
+  const markup = render(
+    h(Select, { options: [{ value: "a", label: "Alpha" }], value: "a" }),
+  );
+  assert.match(markup, /role="combobox"/u);
+  assert.match(markup, /Alpha/u);
 });
-
-test("F02-T1-02: Button decouples hit box to minimum 44px for accessibility", () => {
-  const res16 = validateButtonProps({ heightTier: "16px" });
-  assert.equal(res16.hitBoxPx, 44);
-  const res24 = validateButtonProps({ heightTier: "24px" });
-  assert.equal(res24.hitBoxPx, 44);
+test("F02-T1-05: actual Badge and Modal render user content and accessible title", () => {
+  assert.match(
+    render(h(Badge, { variant: "success", children: "Active" })),
+    /Active/u,
+  );
+  assert.match(
+    render(
+      h(ModalDialog, {
+        isOpen: true,
+        onClose: () => {},
+        title: "Confirm",
+        children: "Body",
+      }),
+    ),
+    /aria-label="Confirm"/u,
+  );
 });
-
-test("F02-T1-03: Input primitive validates string value and disabled state", () => {
-  const res = validateInputProps({
-    value: "test query",
-    placeholder: "Search...",
-  });
-  assert.equal(res.valid, true);
+test("F03-T1-01: every production icon entry renders an actual SVG", () => {
+  for (const name of Object.keys(ICONS) as UiIconName[])
+    assert.match(render(h(UiIcon, { name })), /<svg/u);
 });
-
-test("F02-T1-04: Select primitive verifies options and selected value", () => {
-  const res = validateSelectProps({
-    options: ["opt1", "opt2"],
-    selected: "opt1",
-  });
-  assert.equal(res.valid, true);
+test("F03-T1-02: real camera icon consumes the requested supported size", () => {
+  assert.match(render(h(UiIcon, { name: "camera", size: 24 })), /width="24"/u);
 });
-
-test("F02-T1-05: Badge and Modal primitives validate required parameters", () => {
-  const badgeRes = validateBadgeProps({ variant: "success", label: "Active" });
-  assert.equal(badgeRes.valid, true);
-  const modalRes = validateModalProps({ open: true, title: "Confirm Action" });
-  assert.equal(modalRes.valid, true);
+test("F03-T1-03: real media icons render play pause and film", () => {
+  for (const name of ["play", "pause", "film"] as const)
+    assert.match(render(h(UiIcon, { name })), /<svg/u);
 });
-
-// -------------------------------------------------------------------------
-// Feature 3: 124 Atomic Lucide Iconography
-// -------------------------------------------------------------------------
-test("F03-T1-01: OFFICIAL_LUCIDE_ICONS_124 contains exactly 124 official icons", () => {
-  assert.equal(OFFICIAL_LUCIDE_ICONS_124.length, 124);
-  const unique = new Set(OFFICIAL_LUCIDE_ICONS_124);
-  assert.equal(unique.size, 124, "All 124 icons must be distinct");
+test("F03-T1-04: real canvas aliases render layers grid and move", () => {
+  for (const name of ["layers", "grid", "move"] as const)
+    assert.match(render(h(UiIcon, { name })), /<svg/u);
 });
-
-test("F03-T1-02: resolveUiIcon resolves existing icon with requested size", () => {
-  const res = resolveUiIcon("camera", 24);
-  assert.equal(res.resolved, true);
-  assert.equal(res.iconName, "camera");
-  assert.equal(res.size, 24);
+test("F03-T1-05: unknown icon renders the real CircleHelp fallback", () => {
+  assert.equal(
+    render(h(UiIcon, { name: "unknown" as UiIconName })),
+    render(h(UiIcon, { name: "circle-help" })),
+  );
 });
-
-test("F03-T1-03: resolveUiIcon resolves essential media icons: play, pause, film", () => {
-  assert.equal(resolveUiIcon("play").resolved, true);
-  assert.equal(resolveUiIcon("pause").resolved, true);
-  assert.equal(resolveUiIcon("film").resolved, true);
+test("F04-T1-01: actual parameter UI exposes fifteen ratios", () => {
+  assert.equal(STANDARDIZED_ASPECT_RATIOS.length, 15);
+  assert.ok(STANDARDIZED_ASPECT_RATIOS.includes("自适应"));
 });
-
-test("F03-T1-04: resolveUiIcon resolves essential canvas icons: layers, grid, move", () => {
-  assert.equal(resolveUiIcon("layers").resolved, true);
-  assert.equal(resolveUiIcon("grid").resolved, true);
-  assert.equal(resolveUiIcon("move").resolved, true);
+test("F04-T1-02: adaptive image size leaves provider dimensions unspecified", () => {
+  assert.equal(resolveImageSize("自适应", "自适应"), undefined);
 });
-
-test("F03-T1-05: resolveUiIcon falls back gracefully to help-circle for unrecognized icon", () => {
-  const res = resolveUiIcon("non_existent_custom_icon_999");
-  assert.equal(res.resolved, false);
-  assert.equal(res.iconName, "help-circle");
+test("F04-T1-03: real image size compiler preserves landscape portrait and square", () => {
+  assert.equal(resolveImageSize("16:9", "1K"), "1024x576");
+  assert.equal(resolveImageSize("9:16", "1K"), "576x1024");
+  assert.equal(resolveImageSize("1:1", "1K"), "1024x1024");
 });
-
-// -------------------------------------------------------------------------
-// Feature 4: 15 Standardized Aspect Ratios
-// -------------------------------------------------------------------------
-test("F04-T1-01: FIGMA_ASPECT_RATIOS_15 contains all 15 official aspect ratios", () => {
-  assert.equal(FIGMA_ASPECT_RATIOS_15.length, 15);
-  assert.ok(FIGMA_ASPECT_RATIOS_15.includes("自适应"));
-  assert.ok(FIGMA_ASPECT_RATIOS_15.includes("16:9"));
-  assert.ok(FIGMA_ASPECT_RATIOS_15.includes("9:16"));
-  assert.ok(FIGMA_ASPECT_RATIOS_15.includes("1:8"));
-  assert.ok(FIGMA_ASPECT_RATIOS_15.includes("8:1"));
+test("F04-T1-04: real 2K image sizes respect the provider eight-pixel grid", () => {
+  assert.equal(resolveImageSize("16:9", "2K"), "2048x1152");
 });
-
-test("F04-T1-02: parseAspectRatio parses adaptive ratio correctly", () => {
-  const res = parseAspectRatio("自适应");
-  assert.equal(res.ratio, null);
-  assert.equal(res.orientation, "adaptive");
+test("F04-T1-05: extreme ratios retain the production minimum edge", () => {
+  assert.equal(resolveImageSize("1:8", "1K"), "256x1024");
+  assert.equal(resolveImageSize("8:1", "1K"), "1024x256");
 });
-
-test("F04-T1-03: parseAspectRatio classifies landscape vs portrait orientations", () => {
-  const landscape = parseAspectRatio("16:9");
-  assert.equal(landscape.orientation, "landscape");
-  assert.ok(landscape.ratio! > 1);
-
-  const portrait = parseAspectRatio("9:16");
-  assert.equal(portrait.orientation, "portrait");
-  assert.ok(portrait.ratio! < 1);
-
-  const square = parseAspectRatio("1:1");
-  assert.equal(square.orientation, "square");
-  assert.equal(square.ratio, 1);
+test("F05-T1-01: actual responsive hook classifies phone widths", () => {
+  for (const width of [375, 767])
+    assert.match(renderSidebarSurface(width), /data-surface="phone"/u);
 });
-
-test("F04-T1-04: calculateDimensionsForRatio computes landscape pixel dimensions", () => {
-  const dims = calculateDimensionsForRatio("16:9", 1920);
-  assert.equal(dims.width, 1920);
-  assert.equal(dims.height, 1080);
+test("F05-T1-02: actual responsive hook preserves the tablet band", () => {
+  assert.match(renderSidebarSurface(768), /data-surface="tablet"/u);
+  assert.match(renderSidebarSurface(1920), /data-surface="desktop"/u);
 });
-
-test("F04-T1-05: calculateDimensionsForRatio computes extreme ratios 1:8 and 8:1", () => {
-  const extremeP = calculateDimensionsForRatio("1:8", 1024);
-  assert.equal(extremeP.height, 1024);
-  assert.equal(extremeP.width, 128);
-
-  const extremeL = calculateDimensionsForRatio("8:1", 1024);
-  assert.equal(extremeL.width, 1024);
-  assert.equal(extremeL.height, 128);
+test("F05-T1-03: phone sidebar opens collapsed as a drawer", () => {
+  assert.match(renderSidebarSurface(390), /data-collapsed="true"/u);
+  assert.match(renderSidebarSurface(390), /data-narrow="true"/u);
 });
-
-// -------------------------------------------------------------------------
-// Feature 5: Mobile Chat-Only Viewport Parity
-// -------------------------------------------------------------------------
-test("F05-T1-01: viewport width <= 767px is classified as mobile", () => {
-  const vp375 = classifyViewport(375);
-  assert.equal(vp375.isMobile, true);
-  assert.equal(vp375.isDesktop, false);
-
-  const vp767 = classifyViewport(767);
-  assert.equal(vp767.isMobile, true);
-});
-
-test("F05-T1-02: viewport width >= 768px is classified as desktop", () => {
-  const vp768 = classifyViewport(768);
-  assert.equal(vp768.isMobile, false);
-  assert.equal(vp768.isDesktop, true);
-
-  const vp1920 = classifyViewport(1920);
-  assert.equal(vp1920.isDesktop, true);
-});
-
-test("F05-T1-03: mobile viewport enforces single-column chat layout", () => {
-  const vp = classifyViewport(390);
-  assert.equal(vp.layout, "single-column-chat");
-});
-
-test("F05-T1-04: mobile viewport strictly disallows canvas", () => {
-  const vp = classifyViewport(414);
-  assert.equal(vp.allowCanvas, false);
-});
-
-test("F05-T1-05: desktop viewport permits canvas and uses workbench layout", () => {
-  const vp = classifyViewport(1440);
-  assert.equal(vp.allowCanvas, true);
-  assert.equal(vp.layout, "desktop-canvas-workbench");
-});
-
-// -------------------------------------------------------------------------
-// Feature 6: Automated Aesthetic Governance (Unslop 9-Pass Redline)
-// -------------------------------------------------------------------------
-test("F06-T1-01: check4pxGridRhythm accepts multiples of 4px", () => {
-  assert.equal(check4pxGridRhythm(0), true);
-  assert.equal(check4pxGridRhythm(4), true);
-  assert.equal(check4pxGridRhythm(8), true);
-  assert.equal(check4pxGridRhythm(16), true);
-  assert.equal(check4pxGridRhythm(24), true);
-});
-
-test("F06-T1-02: check4pxGridRhythm rejects non-multiples of 4px", () => {
-  assert.equal(check4pxGridRhythm(3), false);
-  assert.equal(check4pxGridRhythm(7), false);
-  assert.equal(check4pxGridRhythm(13), false);
-});
-
-test("F06-T1-03: evaluateElementAesthetics passes fully compliant styles", () => {
-  const res = evaluateElementAesthetics({
-    paddingPx: 16,
-    marginPx: 8,
-    contrastRatio: 6.2,
-    borderRadiusPx: 8,
-  });
-  assert.equal(res.pass, true);
-  assert.equal(res.violations.length, 0);
-});
-
-test("F06-T1-04: evaluateElementAesthetics catches padding violating 4px grid", () => {
-  const res = evaluateElementAesthetics({ paddingPx: 11 });
-  assert.equal(res.pass, false);
+test("F05-T1-04: independent mobile layout guard rejects desktop canvas components", () => {
   assert.ok(
-    res.violations.some((v) =>
-      v.includes("Padding 11px violates 4px grid rhythm"),
+    validateViewportLayout(414, ["CanvasScreen"]).some(
+      (f) => f.severity === "violation",
     ),
   );
 });
-
-test("F06-T1-05: evaluateElementAesthetics catches low contrast below WCAG AA", () => {
-  const res = evaluateElementAesthetics({ contrastRatio: 3.1 });
-  assert.equal(res.pass, false);
-  assert.ok(res.violations.some((v) => v.includes("below WCAG AA")));
+test("F05-T1-05: desktop layout guard permits its canvas", () => {
+  assert.deepEqual(validateViewportLayout(1440, ["CanvasScreen"]), []);
 });
-
-// -------------------------------------------------------------------------
-// Feature 7: Provider Gateway Cooldown Queue (WaitingCandidate)
-// -------------------------------------------------------------------------
+test("F06-T1-01: production spacing validator accepts four-pixel rhythm", () => {
+  for (const n of [0, 4, 8, 16, 24])
+    assert.equal(validateSpacingValue(n), null);
+});
+test("F06-T1-02: production spacing validator reports off-grid values", () => {
+  for (const n of [3, 7, 13])
+    assert.equal(validateSpacingValue(n)?.severity, "violation");
+});
+test("F06-T1-03: actual aesthetic evaluator accepts compliant declarations", () => {
+  assert.equal(
+    evaluateStyleDeclaration({
+      padding: "12px",
+      margin: "8px",
+      fontWeight: 400,
+    }).valid,
+    true,
+  );
+});
+test("F06-T1-04: actual aesthetic evaluator rejects off-grid padding", () => {
+  const report = evaluateStyleDeclaration({ padding: "11px" });
+  assert.equal(report.valid, false);
+  assert.ok(report.findings.some((f) => f.pass === "spacing"));
+});
+test("F06-T1-05: actual contrast calculation flags low foreground/background contrast", () => {
+  assert.ok(calculateContrastRatio("#aaaaaa", "#ffffff") < 4.5);
+});
 test("F07-T1-01: GatewayCooldownScheduler registers accounts and selects active account", () => {
   const scheduler = new GatewayCooldownScheduler();
   scheduler.registerAccount("acc-1");

@@ -88,6 +88,13 @@ export default function ConversationComposerRegion({
           key={draftKey}
           input={input}
           onInputChange={onInputChange}
+          onAttachmentRoleChange={(id, role) =>
+            onDraftChange?.({
+              attachments: (composerDraft?.attachments ?? []).map((a) =>
+                a.id === id ? { ...a, role } : a,
+              ),
+            })
+          }
           onSubmitMessage={onSubmitMessage}
           disabled={disabled || (agentActive && agentConnecting)}
           modelDisabled={modelDisabled}

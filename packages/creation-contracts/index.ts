@@ -20,3 +20,5 @@ export { containsCredentialText } from "./securityText.ts";
 export * from "./pluginRpcContract.ts";
 export * from "./imageCapability.ts";
 export * from "./assetLineage.ts";
+
+export * from "./media.ts";

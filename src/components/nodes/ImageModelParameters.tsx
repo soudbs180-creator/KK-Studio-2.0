@@ -12,11 +12,13 @@ export default function ImageModelParameters({
   size,
   onSize,
   onModelChange,
+  embedded = false,
 }: {
   model: string;
   size?: string;
   onSize: (size?: string, ratio?: string) => void;
   onModelChange?: (model: string, selection?: ModelSelection) => void;
+  embedded?: boolean;
 }) {
   const item = useContext(CanvasImageNodeContext);
   const command = useContext(CanvasImageCommandContext);
@@ -35,7 +37,12 @@ export default function ImageModelParameters({
     unsupported: "不支持",
   };
   return (
-    <div className="node-popover parameter-menu" aria-label="图片参数选项">
+    <div
+      className={
+        embedded ? "image-model-parameters" : "node-popover parameter-menu"
+      }
+      aria-label="图片参数选项"
+    >
       <ModelVariantControl
         selection={{
           source: item?.generationSource === "codex" ? "codex" : "api",

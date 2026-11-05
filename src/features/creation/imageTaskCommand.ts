@@ -1,3 +1,6 @@
+import { positionNewMediaResults } from "./archivedTaskResult.ts";
+import { parsePromptMentions } from "../../domain/promptMentions.ts";
+import { validateMediaTaskInput } from "./mediaTaskInput.ts";
 import type { CanvasCollectionItem } from "../../domain/canvasItems.ts";
 import { assertImageCapabilityConnection } from "./imageCapabilitySubmission.ts";
 import {
@@ -74,11 +77,17 @@ export function assertLiveTextTask(
         authMode: expected.providerAuthMode,
       },
     ) ||
+    task.kind !== expected.kind ||
+    task.originChatId !== expected.originChatId ||
+    task.sourceItemId !== expected.sourceItemId ||
+    JSON.stringify(task.media) !== JSON.stringify(expected.media) ||
+    JSON.stringify(task.attachments) !== JSON.stringify(expected.attachments) ||
+    (task.originChatId !== undefined && !project?.chats?.[task.originChatId]) ||
     !task.sourceItemId ||
     !project?.items.some((item) => item.id === task.sourceItemId)
   )
     throw new ImageTaskCommandError(
-      "文本任务或来源节点已变化，本次未提交；请从当前节点重新生成。",
+      "任务或来源节点已变化，本次未提交；请从当前节点重新生成。",
     );
 }
 
@@ -152,6 +161,21 @@ export async function prepareImageTask(
   input: CreateProjectInput,
   project?: CreationProject,
 ): Promise<ProviderConnection> {
+  parsePromptMentions(
+    input.prompt,
+    Object.fromEntries(
+      input.attachments.map((attachment, index) => [
+        String(index + 1),
+        attachment.assetId ?? attachment.id,
+      ]),
+    ),
+    Object.fromEntries(
+      input.attachments.map((attachment) => [
+        attachment.id,
+        attachment.assetId ?? attachment.id,
+      ]),
+    ),
+  );
   if (
     !input.providerConnectionId &&
     project?.composerDraft.providerConnectionId
@@ -161,6 +185,8 @@ export async function prepareImageTask(
       providerConnectionId: project.composerDraft.providerConnectionId,
     };
   if (input.kind === "text") {
+    if (input.media !== undefined)
+      throw new ImageTaskCommandError("文案任务不能使用媒体参数。");
     if (!input.prompt.trim() || input.prompt.length > 4000)
       throw new ImageTaskCommandError("请填写不超过 4000 字的文案描述。");
     if (input.privacyMode && input.privacyMode !== "byok_local")
@@ -176,7 +202,31 @@ export async function prepareImageTask(
       throw new ImageTaskCommandError(
         "文案生成仅支持单份纯文本，不接收图片附件。",
       );
-  } else validateImageTaskInput(input);
+  } else if (input.kind === "video" || input.kind === "audio") {
+    validateMediaTaskInput(input);
+    if (!input.providerConnectionId)
+      throw new ImageTaskCommandError(
+        "请先选择视频或语音的模型连接，草稿已保留。",
+        true,
+      );
+    for (const attachment of input.attachments) {
+      const asset = attachment.assetId
+        ? await loadStoredAsset(attachment.assetId)
+        : null;
+      if (
+        !asset ||
+        asset.mime !== attachment.mime ||
+        !asset.preview.startsWith(`data:${asset.mime};base64,`)
+      )
+        throw new ImageTaskCommandError(
+          "参考素材原件缺失或 MIME 不匹配，未提交生成。",
+        );
+    }
+  } else {
+    if (input.media !== undefined)
+      throw new ImageTaskCommandError("图片任务不能使用媒体参数。");
+    validateImageTaskInput(input);
+  }
   if (input.providerConnectionId) {
     return prepareSelectedImageConnection(input);
   }
@@ -251,7 +301,7 @@ export async function prepareImageTask(
         : undefined,
     localEdit: Boolean(input.imageEdit),
     outputCount: input.outputCount ?? 1,
-    kind: input.kind === "text" ? ("text" as const) : ("image" as const),
+    kind: input.kind,
     model: input.model,
   };
   const connection = assertSubmissionConnection(binding);
@@ -288,6 +338,7 @@ export function appendImageTask(
       attachments: input.attachments,
       composerDraft: {
         ...bound.composerDraft,
+        media: input.media,
         outputCount: input.outputCount ?? 1,
         privacyMode: input.privacyMode ?? "byok_local",
       },
@@ -325,6 +376,7 @@ export function appendImageTaskResults(
   );
   const items = [...project.items, ...added];
   const canvas = reconcileProjectCanvas(project.canvas, items);
+  positionNewMediaResults(project.canvas, canvas, items);
   if (sourceItemId && project.items.some((item) => item.id === sourceItemId)) {
     canvas.edges = [
       ...canvas.edges,
@@ -349,26 +401,42 @@ export async function canvasImageAttachments(
     .filter((edge) => edge.target === source.id && edge.kind !== "result")
     .map((edge) => project.items.find((item) => item.id === edge.source))
     .filter((item) => item?.kind !== "text");
-  const sources = hasImageReferenceSource(source)
-    ? [source, ...incoming]
-    : incoming;
+  const sources =
+    source.kind === "image" && hasImageReferenceSource(source)
+      ? [source, ...incoming]
+      : incoming;
   if (sources.some((item) => item?.referenceSlot === "Mask"))
     throw new ImageTaskCommandError(
       "蒙版必须通过专用编辑流程绘制，不能作为普通参考图片提交。",
     );
   const attachments: CreationAttachment[] = [];
-  for (const item of uniqueImageReferences(sources)) {
-    if (!item || item.kind !== "image" || !item.assetId)
+  const references =
+    source.kind === "video" || source.kind === "audio"
+      ? sources
+      : uniqueImageReferences(sources);
+  for (const item of references) {
+    if (
+      !item ||
+      (!["video", "audio"].includes(source.kind) && item.kind !== "image") ||
+      !item.assetId
+    )
       throw new ImageTaskCommandError(
         "参考图片尚未归档，未提交生成；请重新导入原件。",
       );
     const asset = await read(item.assetId);
-    if (!asset || !/^image\/(png|jpeg|webp|gif)$/.test(asset.mime))
+    if (
+      !asset ||
+      (source.kind === "image" &&
+        !/^image\/(png|jpeg|webp|gif)$/.test(asset.mime)) ||
+      !/^(image\/(png|jpeg|webp|gif)|video\/(mp4|webm)|audio\/(mpeg|wav|ogg))$/.test(
+        asset.mime,
+      )
+    )
       throw new ImageTaskCommandError(
         "参考素材原件缺失或格式不支持，未提交生成。",
       );
     const encoded = asset.preview.match(
-      /^data:image\/(?:png|jpeg|webp|gif);base64,([A-Za-z0-9+/]+={0,2})$/,
+      /^data:(?:image\/(?:png|jpeg|webp|gif)|video\/(?:mp4|webm)|audio\/(?:mpeg|wav|ogg));base64,([A-Za-z0-9+/]+={0,2})$/,
     )?.[1];
     if (!encoded)
       throw new ImageTaskCommandError("参考素材原件无法读取，未提交生成。");
@@ -380,6 +448,7 @@ export async function canvasImageAttachments(
       mime: asset.mime,
       size,
       ...(item.referenceSlot ? { role: item.referenceSlot } : {}),
+      ...(item.referenceFrame ? { referenceFrame: item.referenceFrame } : {}),
       dataUrl: `kk-asset:${item.assetId}`,
     });
   }
@@ -414,7 +483,7 @@ async function prepareSelectedImageConnection(
         : undefined,
     localEdit: Boolean(input.imageEdit),
     outputCount: input.outputCount ?? 1,
-    kind: input.kind === "text" ? ("text" as const) : ("image" as const),
+    kind: input.kind,
     model: input.model,
   };
   assertSubmissionConnection(binding);

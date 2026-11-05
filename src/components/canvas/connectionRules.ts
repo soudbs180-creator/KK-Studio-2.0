@@ -17,7 +17,7 @@ export function canConnectTarget(
   if (sourceId === targetId) return false;
   const target = items.find((item) => item.id === targetId);
   if (!target) return true;
-  if (target.referenceOnly) return false;
+  if (target.referenceOnly || target.canvasPresentation?.locked) return false;
   if (
     edges.some((edge) => edge.source === sourceId && edge.target === targetId)
   )

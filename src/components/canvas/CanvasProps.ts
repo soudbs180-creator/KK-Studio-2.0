@@ -14,6 +14,11 @@ export interface CanvasProps {
   projectId?: string;
   comfyRuntime?: import("../../features/comfyui/index.ts").ComfyRuntimePort;
   onFlush?: () => Promise<void>;
+  operationDisabledReason?: string;
+  onAtomicChange?: (
+    items: CanvasCollectionItem[],
+    canvas: ProjectCanvas,
+  ) => void;
   agentViewRef?: MutableRefObject<AgentCanvasBinding | null>;
   onAgentViewChange?: () => void;
   projectStatus?: ReactNode;

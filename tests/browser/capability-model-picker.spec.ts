@@ -259,7 +259,7 @@ test("首页模型弹层只选模型，保留全局搜索和旧置顶", async ({
   await menu.getByRole("tab", { name: "图像生成", exact: true }).click();
   await expect(
     menu.getByRole("menuitemradio", { name: /media-video/ }),
-  ).toHaveCount(0);
+  ).toHaveCount(1);
   const search = menu.getByRole("searchbox");
   await search.fill("Provider B");
   await expect(menu.getByRole("menuitemradio")).toHaveCount(1);

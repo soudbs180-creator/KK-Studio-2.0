@@ -6,15 +6,15 @@ import type {
 } from "../features/agent/index.ts";
 import { useEffect, useRef, useState } from "react";
 import AgentUsageStatus from "./AgentUsageStatus";
-import AgentExecutionProcess from "./AgentExecutionProcess";
+import AgentMessageGroup from "./AgentMessageGroup.tsx";
 import type { AgentUsageWindow } from "../features/agent/index.ts";
 import type { AgentDraftAttachment } from "../features/agent/index.ts";
 import type { CanvasCollectionItem } from "../domain/canvasItems";
 import type { ModelSelection } from "../domain/modelSelection";
-import ChatImageCard from "./chat/ChatImageCard.tsx";
 
 /** 本地 Agent 会话通道（画布旁对话面板与 canvas-agent 的桥）。 */
 export interface AgentConversationProps {
+  onRewind?: (messageId: string) => Promise<void>;
   displayName?: string;
   intro?: string;
   hideUsage?: boolean;
@@ -63,59 +63,6 @@ function formatAgentBannerText(agent: AgentConversationProps): string {
   if (agent.connecting) return `正在连接${agent.displayName ?? "本地 Agent"}…`;
   const title = agent.displayName ?? "Codex 主 Agent";
   return agent.connected ? `${title} · 已连接` : `${title} · 未连接`;
-}
-
-function AgentMessageGroup({
-  items,
-  onPreviewImage,
-  onSetReference,
-}: {
-  items: AgentChatItem[];
-  onPreviewImage?: (src: string, prompt?: string) => void;
-  onSetReference?: (src: string) => void;
-}) {
-  const item = items[0];
-  if (item.role === "tool") {
-    return <AgentExecutionProcess items={items} />;
-  }
-  const detail = item.detail as
-    | { kind?: string; status?: string; savedPath?: string; url?: string }
-    | undefined;
-  const mdImageMatch = item.text.match(/!\[(.*?)\]\((.*?)\)/);
-  const imageUrl =
-    detail?.url ||
-    (detail?.kind === "image" && detail?.savedPath?.startsWith("http")
-      ? detail.savedPath
-      : undefined) ||
-    mdImageMatch?.[2];
-  const displayText = mdImageMatch
-    ? item.text.replace(mdImageMatch[0], "").trim()
-    : item.text;
-  const cardStatus =
-    detail?.status === "failed"
-      ? "failed"
-      : detail?.status === "started"
-        ? "pending"
-        : "completed";
-  return (
-    <div className={`chat-agent-item is-${item.role}`}>
-      {displayText ? <span>{displayText}</span> : null}
-      {imageUrl ? (
-        <ChatImageCard
-          src={imageUrl}
-          alt={mdImageMatch?.[1] || "生成的图像"}
-          prompt={displayText}
-          status={cardStatus}
-          onPreview={(src) =>
-            onPreviewImage
-              ? onPreviewImage(src, displayText)
-              : window.open(src, "_blank")
-          }
-          onSetReference={onSetReference}
-        />
-      ) : null}
-    </div>
-  );
 }
 
 /** Agent 会话消息区：横幅、流式消息、工具活动与权限请求。 */
@@ -257,6 +204,8 @@ export default function AgentConversationMessages({
       </div>
       {groups.map((items) => (
         <AgentMessageGroup
+          onRewind={agent.onRewind}
+          disabled={connectionBusy}
           key={items[0].id}
           items={items}
           onPreviewImage={onPreviewImage}

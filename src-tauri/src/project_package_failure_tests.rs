@@ -5,6 +5,47 @@ use std::sync::atomic::{AtomicU64, Ordering};
 static NEXT_FIXTURE_ID: AtomicU64 = AtomicU64::new(0);
 
 #[test]
+fn creative_execution_fields_survive_native_package_round_trip() {
+    let f = Fixture::new();
+    let mut value = f.snapshot.clone();
+    value["revision"] = json!(2);
+    let project = &mut value["projects"][0];
+    project["items"][0]["canvasPresentation"] =
+        json!({"width":800,"height":600,"locked":true,"color":"accent"});
+    project["items"][0]["parameters"] = json!({"optics":{"lensMm":85,"aperture":"f/1.4","depthOfField":"shallow","cameraBody":"Cinema"}});
+    project["tasks"][0]["outputs"][0]["tokenUsage"] =
+        json!({"promptTokens":23,"completionTokens":7,"totalTokens":30});
+    project["stagePlans"] = json!([{
+        "id":"plan", "title":"Review", "projectId":"p1", "createdBy":"user", "revision":3, "createdAt":1,"updatedAt":2,
+        "stages":[{"index":0,"name":"Generate","goal":"Create","status":"result_review","createdAt":1,"updatedAt":2,
+            "executionMandate":{"id":"mandate","authorizedBy":"User","allowedTools":["stage_generate"],"maxStepCount":1,"issuedAt":"2026-11-05T00:00:00Z"},
+            "workItems":[{"id":"w","kind":"image","prompt":"create","dependencies":[],"status":"succeeded","sourceNodeId":"n1","taskId":"t1","createdAt":1,"updatedAt":2}]}]
+    }]);
+    snapshot_schema::validate(&value).unwrap();
+    f.snapshots.write(value.clone(), Some(1)).unwrap();
+    let package = f.package();
+    let target = f.root.join("creative-restored");
+    import_package(&package, &target).unwrap();
+    let restored = SnapshotRepository::new(target.join("projects/creation-v2.json"))
+        .read()
+        .unwrap()
+        .snapshot
+        .unwrap();
+    assert_eq!(
+        restored,
+        crate::native_root_authority::migrated_snapshot(&value)
+    );
+    for bad in [
+        json!({"lensMm":0,"aperture":"f/1.4"}),
+        json!({"lensMm":85,"aperture":"f/0"}),
+    ] {
+        let mut corrupt = value.clone();
+        corrupt["projects"][0]["items"][0]["parameters"]["optics"] = bad;
+        assert!(snapshot_schema::validate(&corrupt).is_err());
+    }
+}
+
+#[test]
 fn image_archive_receipts_survive_v2_export_and_v3_restore() {
     let f = Fixture::new();
     let mut value = f.snapshot.clone();
@@ -731,4 +772,54 @@ fn existing_targets_and_absolute_dotdot_are_never_replaced() {
     assert!(import_package(&source, &f.root.join("..\\escape")).is_err());
     assert_eq!(fs::read(&source).unwrap(), bytes);
     assert!(empty.is_dir());
+}
+
+#[test]
+fn media_parameters_receipts_and_reference_roles_survive_package_round_trip() {
+    for (kind, media) in [
+        (
+            "video",
+            json!({"kind":"video","duration":4,"aspectRatio":"16:9","resolution":"720p","audio":false}),
+        ),
+        (
+            "audio",
+            json!({"kind":"audio","voice":"alloy","format":"mp3","speed":1}),
+        ),
+    ] {
+        let f = Fixture::new();
+        let mut value = f.snapshot.clone();
+        value["revision"] = json!(2);
+        value["homeDraft"]["kind"] = json!(kind);
+        value["homeDraft"]["media"] = media.clone();
+        let task = &mut value["projects"][0]["tasks"][0];
+        task["kind"] = json!(kind);
+        task["media"] = media.clone();
+        task["attachments"] = json!([{"id":"ref", "name":"frame", "mime":"image/png","size":1,"role":"主体","referenceFrame":"first","assetId":f.id}]);
+        task["outputs"] = json!([{"index":0,"status":"unknown","mediaReceipt":{"connectionId":"media","idempotencyKey":"slot-0","acceptance":"accepted","providerJobId":"j".repeat(240)}}]);
+        f.snapshots.write(value.clone(), Some(1)).unwrap();
+        let package = f.package();
+        let target = f.root.join("media-restored");
+        import_package(&package, &target).unwrap();
+        let restored = SnapshotRepository::new(target.join("projects/creation-v2.json"))
+            .read()
+            .unwrap()
+            .snapshot
+            .unwrap();
+        assert_eq!(
+            restored,
+            crate::native_root_authority::migrated_snapshot(&value)
+        );
+        for bad in [
+            json!({"kind":"audio","voice":"bad","format":"mp3","speed":1}),
+            json!({"kind":"video","duration":7,"aspectRatio":"16:9","resolution":"720p"}),
+        ] {
+            let mut corrupt = value.clone();
+            corrupt["homeDraft"]["media"] = bad;
+            assert!(snapshot_schema::validate(&corrupt).is_err());
+        }
+        let mut corrupt = value.clone();
+        corrupt["projects"][0]["tasks"][0]["outputs"][0]["mediaReceipt"]["providerJobId"] =
+            json!("x".repeat(241));
+        assert!(snapshot_schema::validate(&corrupt).is_err());
+    }
 }

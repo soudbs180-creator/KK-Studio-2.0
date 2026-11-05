@@ -24,11 +24,11 @@ function SlotItemMount({
     const el = containerRef.current;
     if (!el) return;
 
-    el.innerHTML = "";
+    el.replaceChildren();
     const ctx: SlotMountContext = {
       container: el,
       slotId,
-      extensionId: definition.id ?? "anonymous",
+      extensionId: definition.extensionId ?? "anonymous",
       payload,
     };
 
@@ -48,7 +48,7 @@ function SlotItemMount({
       } catch (err) {
         console.error(`[ExtensionSlot] Cleanup failed:`, err);
       }
-      el.innerHTML = "";
+      el.replaceChildren();
     };
   }, [definition, slotId, payload]);
 
@@ -66,7 +66,7 @@ export function ExtensionSlot({ id, payload, className }: ExtensionSlotProps) {
     >
       {items.map((item) => (
         <ExtensionSlotErrorBoundary
-          key={item.id ?? `${id}-${item.order ?? 0}`}
+          key={JSON.stringify([item.extensionId, item.id])}
           slotId={id}
           itemId={item.id}
         >

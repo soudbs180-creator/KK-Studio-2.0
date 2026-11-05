@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import BrandLogo from "./BrandLogo";
 import UiIcon from "./UiIcon";
 import ChatImageCard from "./chat/ChatImageCard.tsx";
+import RewindMessageAction from "./RewindMessageAction.tsx";
 
 export interface ConversationMessageView {
   id: string;
@@ -11,6 +12,7 @@ export interface ConversationMessageView {
 export default function ConversationMessages({
   messages,
   onDelete,
+  onRewind,
   onStatus,
   onConfigure,
   onPreviewImage,
@@ -18,6 +20,7 @@ export default function ConversationMessages({
 }: {
   messages: ConversationMessageView[];
   onDelete?: (messageId: string) => void;
+  onRewind?: (messageId: string) => Promise<void>;
   onStatus: (status: string) => void;
   onConfigure?: () => void;
   onPreviewImage?: (src: string, prompt?: string) => void;
@@ -73,6 +76,9 @@ export default function ConversationMessages({
           />
         ) : null}
         <div className="message-actions">
+          {onRewind && (
+            <RewindMessageAction messageId={message.id} onRewind={onRewind} />
+          )}
           <button
             className={
               copiedMessageId === message.id

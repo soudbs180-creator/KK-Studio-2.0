@@ -110,7 +110,7 @@ fn provenance(value: &Value) -> Result<(), String> {
         &[
             ("provider", 80),
             ("model", 120),
-            ("providerRequestId", 200),
+            ("providerRequestId", 240),
             ("connectionId", 160),
         ],
     )?;

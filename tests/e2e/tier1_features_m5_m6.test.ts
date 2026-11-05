@@ -5,8 +5,6 @@ import {
   auditStoryboardContinuity,
   parsePromptMentions,
   compileOpticsPrompt,
-  validateTestSuiteReport,
-  sanitizeAdversarialPrompt,
 } from "./harness.ts";
 
 /* =========================================================================
@@ -169,11 +167,11 @@ test("F20-T1-03: parses multiple mixed mentions in single prompt", () => {
   );
 });
 
-test("F20-T1-04: missing reference in asset map generates fallback asset ID placeholder", () => {
-  const res = parsePromptMentions("Test missing @参考 99", {});
-  assert.equal(res.mentions.length, 1);
-  assert.equal(res.mentions[0].assetId, "asset-ref-99");
-  assert.equal(res.compiledPrompt, "Test missing [RefAsset: asset-ref-99]");
+test("F20-T1-04: missing reference rejects rather than inventing an asset identity", () => {
+  assert.throws(
+    () => parsePromptMentions("Test missing @参考 99", {}),
+    /参考 99 不存在/,
+  );
 });
 
 test("F20-T1-05: prompt without mentions returns unchanged text and empty mentions", () => {
@@ -217,102 +215,98 @@ test("F21-T1-05: compileOpticsPrompt handles anamorphic/wide lens mm tiers", () 
   assert.ok(prompt.includes("12mm focal length lens"));
 });
 
-// -------------------------------------------------------------------------
-// Feature 22: Full E2E Test Suite Validation
-// -------------------------------------------------------------------------
-test("F22-T1-01: validateTestSuiteReport accepts clean passing summary", () => {
-  const res = validateTestSuiteReport({
-    totalTests: 250,
-    passCount: 250,
-    failCount: 0,
-    skipCount: 0,
+import { createProject, createTask } from "../../src/domain/creationModel.ts";
+import {
+  waitForCreationTask,
+  createWorkspaceEscapeGuard,
+  createDestructiveCommandGuard,
+  createSecretLeakGuard,
+  CanvasOpSchema,
+} from "./harness.ts";
+function taskFixture() {
+  const project = createProject({
+    prompt: "test",
+    model: "test-model",
+    kind: "text",
+    attachments: [],
   });
-  assert.equal(res.ready, true);
-});
+  const task = createTask(project);
+  project.tasks = [task];
+  return {
+    project,
+    task,
+    options: {
+      getProject: () => project,
+      taskId: task.id,
+      signal: new AbortController().signal,
+      cancel: () => {},
+    },
+  };
+}
 
-test("F22-T1-02: validateTestSuiteReport rejects summary with failed tests", () => {
-  const res = validateTestSuiteReport({
-    totalTests: 250,
-    passCount: 249,
-    failCount: 1,
-    skipCount: 0,
-  });
-  assert.equal(res.ready, false);
-  assert.equal(res.reason, "Failures detected");
+test("F22-T1-01: task observation returns durable success without mutating the record", async () => {
+  const { task, options } = taskFixture();
+  task.status = "succeeded";
+  const result = await waitForCreationTask(options);
+  assert.deepEqual(result, task);
+  assert.notEqual(result, task);
 });
-
-test("F22-T1-03: validateTestSuiteReport rejects summary with skipped tests", () => {
-  const res = validateTestSuiteReport({
-    totalTests: 250,
-    passCount: 245,
-    failCount: 0,
-    skipCount: 5,
-  });
-  assert.equal(res.ready, false);
-  assert.equal(res.reason, "Skipped tests detected");
+test("F22-T1-02: failed task cannot pass the result gate", async () => {
+  const { task, options } = taskFixture();
+  task.status = "failed";
+  task.error = "provider failure";
+  await assert.rejects(waitForCreationTask(options), /provider failure/);
 });
-
-test("F22-T1-04: validateTestSuiteReport rejects test suite with insufficient test count", () => {
-  const res = validateTestSuiteReport({
-    totalTests: 80,
-    passCount: 80,
-    failCount: 0,
-    skipCount: 0,
-  });
-  assert.equal(res.ready, false);
-  assert.equal(res.reason, "Insufficient test count");
+test("F22-T1-03: partial output cannot pass the complete result gate", async () => {
+  const { task, options } = taskFixture();
+  task.status = "partial";
+  await assert.rejects(waitForCreationTask(options), /partial/);
 });
-
-test("F22-T1-05: validateTestSuiteReport confirms readiness flag upon full pass", () => {
-  const res = validateTestSuiteReport({
-    totalTests: 252,
-    passCount: 252,
-    failCount: 0,
-    skipCount: 0,
-  });
-  assert.equal(res.ready, true);
-  assert.equal(res.reason, undefined);
+test("F22-T1-04: unknown submission cannot become a successful result", async () => {
+  const { task, options } = taskFixture();
+  task.status = "unknown";
+  await assert.rejects(waitForCreationTask(options), /unknown/);
 });
-
-// -------------------------------------------------------------------------
-// Feature 23: Adversarial Coverage Hardening
-// -------------------------------------------------------------------------
-test("F23-T1-01: sanitizeAdversarialPrompt allows clean benign prompts without modification", () => {
-  const prompt = "A futuristic cyberpunk marketplace in neon rain";
-  const res = sanitizeAdversarialPrompt(prompt);
-  assert.equal(res.safe, true);
-  assert.equal(res.cleanPrompt, prompt);
-  assert.equal(res.threats.length, 0);
+test("F22-T1-05: missing durable task fails instead of fabricating output", async () => {
+  const { project, options } = taskFixture();
+  project.tasks = [];
+  await assert.rejects(waitForCreationTask(options), /不存在/);
 });
-
-test("F23-T1-02: sanitizeAdversarialPrompt intercepts and sanitizes XSS injection payloads", () => {
-  const malicious =
-    "Render character <script>alert(document.cookie)</script> on stage";
-  const res = sanitizeAdversarialPrompt(malicious);
-  assert.equal(res.safe, false);
-  assert.ok(res.threats.includes("xss_injection"));
-  assert.ok(!res.cleanPrompt.includes("<script>"));
+test("F23-T1-01: creative text remains intact through the real secret boundary", () => {
+  const prompt =
+    "Write a film script about SELECT * FROM stars and <script> as literal text";
+  const args = { prompt };
+  assert.equal(createSecretLeakGuard()("generate", args).allow, true);
+  assert.equal(args.prompt, prompt);
 });
-
-test("F23-T1-03: sanitizeAdversarialPrompt intercepts SQL injection fragments", () => {
-  const malicious = "Render scene'; DROP TABLE users; --";
-  const res = sanitizeAdversarialPrompt(malicious);
-  assert.equal(res.safe, false);
-  assert.ok(res.threats.includes("sql_injection"));
-  assert.ok(res.cleanPrompt.includes("[BLOCKED]"));
+test("F23-T1-02: workspace guard rejects absolute system paths", () => {
+  assert.equal(
+    createWorkspaceEscapeGuard({ workspaceRoot: "D:/project" })("read", {
+      path: "C:/Windows/System32/config",
+    }).allow,
+    false,
+  );
 });
-
-test("F23-T1-04: sanitizeAdversarialPrompt intercepts prototype pollution attack patterns", () => {
-  const malicious = "Set theme to dark and payload __proto__.isAdmin = true";
-  const res = sanitizeAdversarialPrompt(malicious);
-  assert.equal(res.safe, false);
-  assert.ok(res.threats.includes("prototype_pollution"));
+test("F23-T1-03: destructive commands are rejected at invocation", () => {
+  assert.equal(
+    createDestructiveCommandGuard()("system_exec", { cmd: "rm -rf /" }).allow,
+    false,
+  );
 });
-
-test("F23-T1-05: sanitizeAdversarialPrompt handles multiple compound threats in single input", () => {
-  const compound =
-    "Attacking <script>evil()</script> and __proto__ tampering with SELECT * FROM secrets";
-  const res = sanitizeAdversarialPrompt(compound);
-  assert.equal(res.safe, false);
-  assert.equal(res.threats.length, 3);
+test("F23-T1-04: prototype pollution keys are rejected by the atomic operation schema", () => {
+  assert.equal(
+    CanvasOpSchema.safeParse({
+      op: "move_card",
+      payload: { id: "__proto__", x: 0, y: 0 },
+    }).success,
+    false,
+  );
+});
+test("F23-T1-05: nested credential payloads cannot enter a tool", () => {
+  assert.equal(
+    createSecretLeakGuard()("write", {
+      data: { text: "-----BEGIN PRIVATE KEY-----" },
+    }).allow,
+    false,
+  );
 });

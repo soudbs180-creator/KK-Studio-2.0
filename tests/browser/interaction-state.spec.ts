@@ -166,7 +166,7 @@ test("画布工具栏菜单使用可读的控件与菜单尺寸", async ({ page 
   await expect(helpMenu).toBeVisible();
   expect((await helpMenu.boundingBox())!).toMatchObject({
     width: 168,
-    height: 98,
+    height: 186,
   });
 });
 

@@ -1,10 +1,15 @@
-import type { useLocalGeneration } from "./useLocalGeneration";
 import BrandLogo from "../BrandLogo";
 
-type Generation = Pick<
-  ReturnType<typeof useLocalGeneration>,
-  "phase" | "message" | "available" | "cancel"
-> & { mode?: "provider"; kind?: "image" | "text"; configure?: () => void };
+type Generation = {
+  phase: "idle" | "loading" | "success" | "error" | "cancelled" | "offline";
+  message: string;
+  available: boolean;
+  cancel: () => void;
+  mode?: "provider";
+  kind?: "image" | "text" | "video" | "audio";
+  configure?: () => void;
+  queryOnly?: boolean;
+};
 export function GenerationAction({
   generation,
   label,
@@ -20,29 +25,25 @@ export function GenerationAction({
       className="generate-button"
       aria-label={
         loading
-          ? generation.mode === "provider"
-            ? `取消${label}生成`
-            : "取消本地演示"
-          : `生成${label}`
+          ? `取消${label}生成`
+          : generation.queryOnly
+            ? `查询${label}任务`
+            : `生成${label}`
       }
       disabled={!generation.available}
       title={
-        generation.mode === "provider"
-          ? generation.available
-            ? `使用已配置连接生成并保存${label}`
-            : generation.message
-          : loading
-            ? "取消正在加载的本地演示"
-            : "加载固定本地测试素材，不消耗积分"
+        generation.available
+          ? generation.queryOnly
+            ? "只查询已受理任务，不会重新生成"
+            : `使用已配置连接生成并保存${label}`
+          : generation.message
       }
       onClick={loading ? generation.cancel : onRun}
     >
       <span className="cost-logo" aria-hidden="true">
         <BrandLogo variant="credit" />
       </span>
-      <b>
-        {loading ? "取消" : generation.mode === "provider" ? "生成" : "演示"}
-      </b>
+      <b>{loading ? "取消" : generation.queryOnly ? "查询" : "生成"}</b>
       <img
         className="generate-arrow"
         src="/design/figma/generate-arrow.svg"
@@ -52,14 +53,7 @@ export function GenerationAction({
   );
 }
 export function GenerationStatus({ generation }: { generation: Generation }) {
-  // Keep the idle editor visually aligned with the source card. The demo
-  // nature is already visible on the action button; reserve this status row
-  // for an observable operation or recovery state.
-  if (
-    generation.phase === "idle" &&
-    (generation.mode !== "provider" || generation.available)
-  )
-    return null;
+  if (generation.phase === "idle" && generation.available) return null;
   return (
     <div
       className="local-generation-status"

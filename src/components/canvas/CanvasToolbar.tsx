@@ -2,7 +2,10 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import ToolbarIcon from "./ToolbarIcon";
 import type { CanvasTool } from "./useCanvasPointer";
 import { useDismissible } from "../useDismissible";
+import { ExtensionSlot } from "../../features/extensions/index.ts";
 import "../../styles/canvas-tools.css";
+import { Button } from "../ui";
+import BlueprintImport from "./BlueprintImport.tsx";
 
 type Popup = "tool" | "help" | "save";
 export default function CanvasToolbar({
@@ -89,7 +92,11 @@ export default function CanvasToolbar({
         buttons[next]?.focus();
       }}
     >
-      <button
+      <Button
+        heightTier="44px"
+        variant="ghost"
+        isPill
+        prefixIcon={<ToolbarIcon name="add" />}
         className="toolbar-add"
         aria-label="添加资源"
         aria-haspopup="menu"
@@ -99,9 +106,7 @@ export default function CanvasToolbar({
           setPopup(null);
           onAdd(event.currentTarget);
         }}
-      >
-        <ToolbarIcon name="add" />
-      </button>
+      />
       <span className="toolbar-divider toolbar-divider-left" aria-hidden="true">
         <img
           src="/design/figma/toolbar-divider-left.svg"
@@ -248,6 +253,11 @@ export default function CanvasToolbar({
       {popup === "help" && (
         <div className="canvas-help-menu" role="menu" aria-label="帮助与快捷键">
           {[
+            {
+              view: "storyboard",
+              label: "小说 / 剧本转分镜",
+              icon: "help-tutorial",
+            },
             { view: "help", label: "帮助教程", icon: "help-tutorial" },
             { view: "shortcuts", label: "快捷按键", icon: "help-shortcuts" },
           ].map((item) => (
@@ -268,8 +278,10 @@ export default function CanvasToolbar({
               />
             </button>
           ))}
+          <BlueprintImport />
         </div>
       )}
+      <ExtensionSlot id="canvas.toolbar" />
     </div>
   );
 }

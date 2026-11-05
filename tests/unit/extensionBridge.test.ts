@@ -208,3 +208,137 @@ test("ExtensionBridge: scoped storage isolates keys per extension", async () => 
   assert.equal(await storageA.get("key1"), null);
   assert.equal(await storageB.get("key1"), "valB");
 });
+
+test("ExtensionBridge: slot snapshots stay stable until a registration changes", () => {
+  const registry = new SlotRegistry();
+  assert.equal(
+    registry.getItems("canvas.toolbar"),
+    registry.getItems("canvas.toolbar"),
+  );
+  const handle = registry.register("stable", {
+    slot: "canvas.toolbar",
+    render: () => {},
+  });
+  const snapshot = registry.getItems("canvas.toolbar");
+  assert.equal(registry.getItems("canvas.toolbar"), snapshot);
+  handle.refresh();
+  assert.notEqual(registry.getItems("canvas.toolbar"), snapshot);
+  assert.notEqual(registry.getItems("canvas.toolbar")[0], snapshot[0]);
+  handle.dispose();
+  assert.equal(registry.getItems("canvas.toolbar").length, 0);
+});
+
+test("ExtensionBridge: unloading an extension removes only its owned slots", () => {
+  const registry = new SlotRegistry();
+  registry.register("ext", {
+    id: "shared",
+    slot: "sidepanel",
+    render: () => {},
+  });
+  registry.register("ext-other", {
+    id: "shared",
+    slot: "sidepanel",
+    render: () => {},
+  });
+  assert.equal(registry.getItems("sidepanel").length, 2);
+  registry.unregisterExtension("ext");
+  assert.equal(registry.getItems("sidepanel").length, 1);
+  assert.equal(registry.getItems("sidepanel")[0]?.extensionId, "ext-other");
+});
+
+test("ExtensionBridge: settings enable and disable reuse the registered factory", () => {
+  const bridge = new ExtensionRuntimeBridgeImpl();
+  let starts = 0;
+  let cleanups = 0;
+  const notifications: string[] = [];
+  const unsubscribe = bridge.subscribeExtensions(() => {
+    notifications.push(bridge.getExtensions()[0]?.status ?? "removed");
+  });
+  bridge.extension("toggle-ext", (ctx) => {
+    starts++;
+    ctx.registerSlot({
+      id: "custom-id",
+      slot: "titlebar.actions",
+      render: () => {},
+    });
+    ctx.onCleanup(() => cleanups++);
+  });
+  const enabled = bridge.getExtensions();
+  assert.equal(bridge.getExtensions(), enabled);
+  assert.equal(bridge.getSlotDefinitions("titlebar.actions").length, 1);
+  bridge.setExtensionEnabled("toggle-ext", false);
+  assert.equal(bridge.getSlotDefinitions("titlebar.actions").length, 0);
+  assert.equal(bridge.getExtensions()[0]?.status, "disabled");
+  assert.equal(cleanups, 1);
+  bridge.setExtensionEnabled("toggle-ext", true);
+  assert.equal(starts, 2);
+  assert.equal(bridge.getSlotDefinitions("titlebar.actions").length, 1);
+  bridge.unloadExtension("toggle-ext");
+  assert.equal(cleanups, 2);
+  assert.equal(bridge.getExtensions().length, 0);
+  assert.equal(notifications.at(-1), "removed");
+  unsubscribe();
+});
+
+test("ExtensionBridge: legacy registrations appear in settings and dispose on disable", (t) => {
+  const bridge = new ExtensionRuntimeBridgeImpl();
+  t.after(() => bridge.unloadExtension("legacy-settings"));
+  let cleanups = 0;
+  bridge.registerExtension(
+    {
+      id: "legacy-settings",
+      name: "Legacy Settings",
+      version: "1.2.3",
+      entryPoint: "legacy.js",
+    },
+    () => cleanups++,
+  );
+  bridge.registerSlot(
+    "titlebar.actions",
+    "legacy-settings",
+    () => "Legacy action",
+  );
+  const registration = bridge.getExtensions()[0];
+  assert.equal(registration?.name, "Legacy Settings");
+  assert.equal(registration?.version, "1.2.3");
+  assert.equal(registration?.restartable, false);
+  bridge.setExtensionEnabled("legacy-settings", false);
+  assert.equal(cleanups, 1);
+  assert.equal(bridge.getExtensions()[0]?.status, "disabled");
+  assert.equal(bridge.getSlotDefinitions("titlebar.actions").length, 0);
+  assert.throws(
+    () => bridge.setExtensionEnabled("legacy-settings", true),
+    /重新加载/,
+  );
+  bridge.unloadExtension("legacy-settings");
+  assert.equal(cleanups, 1);
+  assert.equal(bridge.getExtensions().length, 0);
+});
+
+test("ExtensionBridge: legacy string slots render text and do not inject HTML", (t) => {
+  const bridge = new ExtensionRuntimeBridgeImpl();
+  t.after(() => bridge.unloadExtension("legacy-text"));
+  bridge.registerExtension({
+    id: "legacy-text",
+    name: "Legacy Text",
+    version: "1.0.0",
+    entryPoint: "legacy.js",
+  });
+  bridge.registerSlot(
+    "titlebar.actions",
+    "legacy-text",
+    () => "<button>Action</button>",
+  );
+  const container = { textContent: "", innerHTML: "" };
+  bridge
+    .getSlotDefinitions("titlebar.actions")
+    .find((item) => item.extensionId === "legacy-text")!
+    .render({
+      container: container as unknown as HTMLElement,
+      extensionId: "legacy-text",
+      slotId: "titlebar.actions",
+    });
+  assert.equal(container.textContent, "<button>Action</button>");
+  assert.equal(container.innerHTML, "");
+  bridge.unloadExtension("legacy-text");
+});

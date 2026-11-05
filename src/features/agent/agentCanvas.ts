@@ -1,4 +1,11 @@
 import { hasRegisteredCanvasDelivery } from "../../domain/canvasDelivery.ts";
+import { agentOperationLockReason } from "./agentOperationLocks.ts";
+export {
+  CanvasMcpServer,
+  AutonomousCanvasController,
+  CANVAS_34_OPS,
+  CanvasOpSchema,
+} from "../../domain/canvasOperations.ts";
 export {
   assertCanvasDeliveries,
   assertCanvasDelivery,
@@ -276,6 +283,7 @@ function updateCanvasItem(
 export function applyAgentOpsToItems(
   items: CanvasCollectionItem[],
   ops: CanvasAgentOp[],
+  edges: ProjectCanvas["edges"] = [],
 ): AgentOpTranslation {
   let nextItems = items;
   const positions: Record<string, Point> = {};
@@ -288,6 +296,11 @@ export function applyAgentOpsToItems(
 
   (Array.isArray(ops) ? ops : []).forEach((op) => {
     if (!op?.type) return;
+    const locked = agentOperationLockReason(op, nextItems, edges);
+    if (locked) {
+      rejected.push({ op, reason: locked });
+      return;
+    }
     if (rejectUnsupportedAgentOp(op, rejected)) return;
     if (applyDeleteConnectionsOp(op, connections, applied)) return;
     if (applyConnectNodesOp(op, nextItems, connections, applied, rejected))
@@ -362,6 +375,13 @@ export function applyAgentOpsToItems(
         break;
       }
       case "update_node": {
+        if (
+          nextItems.find((item) => item.id === op.id)?.canvasPresentation
+            ?.locked
+        ) {
+          rejected.push({ op, reason: "节点已锁定" });
+          break;
+        }
         if (!op.id) {
           rejected.push({ op, reason: "缺少节点 id" });
           break;
@@ -396,6 +416,14 @@ export function applyAgentOpsToItems(
         );
         if (!ids.size) {
           rejected.push({ op, reason: "未指定要删除的节点" });
+          break;
+        }
+        if (
+          nextItems.some(
+            (item) => ids.has(item.id) && item.canvasPresentation?.locked,
+          )
+        ) {
+          rejected.push({ op, reason: "所选节点包含已锁定节点" });
           break;
         }
         const before = nextItems.length;

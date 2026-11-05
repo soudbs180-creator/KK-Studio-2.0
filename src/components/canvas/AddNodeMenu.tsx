@@ -173,14 +173,14 @@ export default function AddNodeMenu({
             aria-description={
               (item.choose ? undefined : item.reason) ??
               (item.key === "video"
-                ? "创建视频节点；当前仅支持本地演示素材，API未连接"
+                ? "创建视频节点；请在模型设置中配置视频连接"
                 : undefined)
             }
             disabled={!item.choose}
             title={
               (item.choose ? undefined : item.reason) ??
               (item.key === "video"
-                ? "创建视频节点；当前仅支持本地演示素材，API未连接"
+                ? "创建视频节点；请在模型设置中配置视频连接"
                 : undefined)
             }
             onClick={() => {

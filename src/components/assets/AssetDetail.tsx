@@ -33,7 +33,9 @@ export default function AssetDetail({
         {backIcon} 返回资产
       </button>
       <div className="asset-large-preview">
-        {detail.src && !decodeError ? (
+        {detail.type === "text" && detail.text ? (
+          <pre className="asset-text-preview">{detail.text}</pre>
+        ) : detail.src && !decodeError ? (
           detail.src.startsWith("data:audio/") ? (
             <audio
               key={attempt}

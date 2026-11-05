@@ -37,8 +37,8 @@ test("视频上传归档为 kk-asset 引用，刷新后恢复本地预览", asyn
       top: element.style.top,
     })),
   ).toEqual(position);
-  await expect(node.getByRole("status")).toContainText(
-    "演示生成不会上传或消费视频原件",
+  await expect(node.locator(".generation-feedback")).toContainText(
+    "已保存本地视频原件",
   );
   await expect(node.getByRole("button", { name: "上传视频" })).toHaveCount(0);
   await page.waitForFunction((id) => {
@@ -83,16 +83,18 @@ test("视频上传拒绝空文件、超过 100 MB 和非 MP4/WebM 类型", async
     mimeType: "video/mp4",
     buffer: Buffer.alloc(0),
   });
-  await expect(node.getByRole("status")).toContainText("不能为空");
+  await expect(node.locator(".generation-feedback")).toContainText("不能为空");
   const largePath = testInfo.outputPath("too-large.mp4");
   writeFileSync(largePath, Buffer.from([0]));
   truncateSync(largePath, 100 * 1024 * 1024 + 1);
   await input.setInputFiles(largePath);
-  await expect(node.getByRole("status")).toContainText("100 MB");
+  await expect(node.locator(".generation-feedback")).toContainText("100 MB");
   await input.setInputFiles({
     name: "still.png",
     mimeType: "image/png",
     buffer: Buffer.from("not a video"),
   });
-  await expect(node.getByRole("status")).toContainText("MP4 或 WebM");
+  await expect(node.locator(".generation-feedback")).toContainText(
+    "MP4 或 WebM",
+  );
 });

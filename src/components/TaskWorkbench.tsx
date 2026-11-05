@@ -9,6 +9,7 @@ import TaskWorkbenchContent, {
 } from "./TaskWorkbenchContent";
 import type { StagePlanActions } from "./TaskWorkbenchStages";
 import UiIcon from "./UiIcon";
+import { Button, Badge } from "./ui";
 
 export default function TaskWorkbench({
   project,
@@ -22,6 +23,8 @@ export default function TaskWorkbench({
   onRetryOutput,
   onCommentsChange,
   onStageDecision,
+  onExecuteStage,
+  onCancelStage,
   onRetryStage,
   onRequestPlanApproval,
   stageWriteDisabledReason,
@@ -88,7 +91,9 @@ export default function TaskWorkbench({
                 onClick={() => setSelectedId(task.id)}
               >
                 <span>{task.model || "未选模型"}</span>
-                <small>{statusLabel(task)}</small>
+                <Badge height="16px" variant="neutral">
+                  {statusLabel(task)}
+                </Badge>
               </button>
             ))
           ) : (
@@ -97,13 +102,15 @@ export default function TaskWorkbench({
             </p>
           )}
           {!tasks.length && tab !== "plan" && (
-            <button
+            <Button
               type="button"
+              heightTier="40px"
+              variant="primary"
               className="primary-button"
               onClick={onConfigure}
             >
               配置模型连接
-            </button>
+            </Button>
           )}
           {(project?.reviewComments ?? []).some(
             (entry) => entry.reviewTaskId,
@@ -186,6 +193,8 @@ export default function TaskWorkbench({
             onCommentsChange={onCommentsChange}
             project={project}
             onStageDecision={onStageDecision}
+            onExecuteStage={onExecuteStage}
+            onCancelStage={onCancelStage}
             onRetryStage={onRetryStage}
             onRequestPlanApproval={onRequestPlanApproval}
             stageWriteDisabledReason={stageWriteDisabledReason}

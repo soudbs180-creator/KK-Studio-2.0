@@ -30,6 +30,20 @@ export function cardVisualBounds(item: CanvasCollectionItem): {
   width: number;
   height: number;
 } {
+  if (item.canvasPresentation?.width || item.canvasPresentation?.height) {
+    const base = { ...item, canvasPresentation: undefined };
+    const bounds = cardVisualBounds(base),
+      layout = cardLayout(base);
+    const sx = (item.canvasPresentation.width ?? layout.width) / layout.width;
+    const sy =
+      (item.canvasPresentation.height ?? layout.height) / layout.height;
+    return {
+      x: bounds.x * sx,
+      y: bounds.y * sy,
+      width: bounds.width * sx,
+      height: bounds.height * sy,
+    };
+  }
   if (item.comfyWorkflow)
     return {
       x: 0,
@@ -81,6 +95,20 @@ export function cardLayout(item: CanvasCollectionItem): {
   collapsedHeight: number;
   anchor: Point;
 } {
+  if (item.canvasPresentation?.width || item.canvasPresentation?.height) {
+    const base = cardLayout({ ...item, canvasPresentation: undefined });
+    const width = item.canvasPresentation.width ?? base.width;
+    const height = item.canvasPresentation.height ?? base.height;
+    const sx = width / base.width,
+      sy = height / base.height;
+    return {
+      width,
+      height,
+      left: base.left * sx,
+      collapsedHeight: base.collapsedHeight * sy,
+      anchor: { x: base.anchor.x * sx, y: base.anchor.y * sy },
+    };
+  }
   const visual = cardVisualBounds(item);
   const anchor = {
     x: visual.x + visual.width,
@@ -156,6 +184,20 @@ export function cardLayout(item: CanvasCollectionItem): {
 export function cardSelectionLayout(
   item: CanvasCollectionItem,
 ): ReturnType<typeof cardLayout> {
+  if (item.canvasPresentation?.width || item.canvasPresentation?.height) {
+    const baseItem = { ...item, canvasPresentation: undefined },
+      base = cardLayout(baseItem),
+      selection = cardSelectionLayout(baseItem);
+    const sx = (item.canvasPresentation.width ?? base.width) / base.width,
+      sy = (item.canvasPresentation.height ?? base.height) / base.height;
+    return {
+      width: selection.width * sx,
+      height: selection.height * sy,
+      collapsedHeight: selection.collapsedHeight * sy,
+      left: selection.left * sx,
+      anchor: { x: selection.anchor.x * sx, y: selection.anchor.y * sy },
+    };
+  }
   const layout = cardLayout(item);
   if (
     item.kind === "image" &&

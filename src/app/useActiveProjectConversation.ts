@@ -4,6 +4,11 @@ import {
   type CreationDraft,
   type CreationProject,
 } from "../features/creation/index.ts";
+import { useRef, useState } from "react";
+import {
+  createConversationRewind,
+  agentConnection,
+} from "../features/agent/index.ts";
 
 function resolveConversationDisabledReason(
   creation: Parameters<typeof snapshotWriteBlockReason>[0],
@@ -41,6 +46,61 @@ function resolveConversationDraft(
 }
 
 export function useActiveProjectConversation(
+  creation: Parameters<typeof snapshotWriteBlockReason>[0],
+  saveState: string,
+  activeProject: CreationProject | undefined,
+  recovery?: {
+    getProject: () => CreationProject | undefined;
+    updateProject: (
+      id: string,
+      update: (project: CreationProject) => CreationProject,
+    ) => void;
+    flush: () => Promise<void>;
+    isBusy: () => boolean;
+  },
+) {
+  const live = useRef({ recovery, saveState, creation });
+  live.current = { recovery, saveState, creation };
+  const rewinding = useRef(false);
+  const [rewindBusy, setRewindBusy] = useState(false);
+  async function rewind(messageId: string, agent = false) {
+    if (rewinding.current || !live.current.recovery)
+      throw new Error("回滚正在处理或项目未就绪");
+    rewinding.current = true;
+    setRewindBusy(true);
+    try {
+      const recovery = live.current.recovery;
+      await createConversationRewind({
+        getProject: recovery.getProject,
+        getBlockReason: () =>
+          resolveConversationDisabledReason(
+            live.current.creation,
+            live.current.saveState,
+          ),
+        isBusy: recovery.isBusy,
+        commit: (project) => recovery.updateProject(project.id, () => project),
+        flush: recovery.flush,
+        agent: agent ? agentConnection : undefined,
+      })(messageId);
+    } finally {
+      rewinding.current = false;
+      setRewindBusy(false);
+    }
+  }
+  const projection = resolveActiveProjectConversation(
+    creation,
+    saveState,
+    activeProject,
+  );
+  return {
+    ...projection,
+    rewindBusy,
+    rewindMessage: recovery ? (id: string) => rewind(id) : undefined,
+    rewindAgentMessage: recovery ? (id: string) => rewind(id, true) : undefined,
+  };
+}
+
+export function resolveActiveProjectConversation(
   creation: Parameters<typeof snapshotWriteBlockReason>[0],
   saveState: string,
   activeProject: CreationProject | undefined,

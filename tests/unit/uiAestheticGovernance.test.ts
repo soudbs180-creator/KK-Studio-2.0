@@ -101,7 +101,7 @@ test("Pass 4: Copy rules ban shouting, greetings, hype words, and trailing perio
 
 test("Pass 5: Typography limits heavy weights and applies dark mode optical compensation", () => {
   // Heavy weight in chrome
-  const heavy = validateTypographyWeight(700);
+  const heavy = validateTypographyWeight(800);
   assert.ok(heavy);
   assert.equal(heavy.severity, "violation");
 

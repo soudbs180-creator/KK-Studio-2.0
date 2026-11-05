@@ -264,6 +264,7 @@ function CanvasNodeItem({
       onSwapReferenceFrames,
       onGenerationState: (phase) => onGenerationState(item.id, phase),
       onChange: (patch) => {
+        if (item.canvasPresentation?.locked) return;
         if (isGenerating) {
           handlePreempt("designer_update");
         }

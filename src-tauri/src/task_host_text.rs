@@ -18,6 +18,7 @@ struct TextStream {
     error_event: bool,
     event_name: String,
     modern: Option<protocol_stream::ProtocolStream>,
+    usage: Option<TokenUsage>,
 }
 
 impl TextStream {
@@ -93,6 +94,7 @@ impl TextStream {
                 return Err("文本流事件类型不匹配");
             }
             modern.dispatch(&value, &mut self.text)?;
+            self.usage = token_usage::read(&value, self.usage.as_ref());
             self.done = modern.done();
             self.finished = self.done;
             return Ok(());
@@ -101,6 +103,7 @@ impl TextStream {
             .get("choices")
             .and_then(Value::as_array)
             .ok_or("文本流缺少结果字段")?;
+        self.usage = token_usage::read(&value, self.usage.as_ref());
         // Usage-only chunks carry an empty choices array.
         if choices.is_empty() {
             return Ok(());
@@ -170,6 +173,7 @@ impl TaskHost {
         fingerprint: &str,
         text: &str,
         complete: bool,
+        usage: Option<&TokenUsage>,
     ) -> Result<(), String> {
         let _lock = self.lock()?;
         let mut journal = self
@@ -185,6 +189,7 @@ impl TaskHost {
             .find(|output| output.index == request.output_indices[0])
             .ok_or_else(|| "corrupt: 原生文本输出不存在".to_string())?;
         output.text = Some(text.to_string());
+        output.token_usage = usage.cloned();
         output.asset_id = None;
         output.status = if complete { "succeeded" } else { "submitted" }.into();
         output.error = None;
@@ -264,8 +269,14 @@ impl TaskHost {
             })?;
             if let Err(message) = decoder.feed(&chunk) {
                 if !decoder.text.is_empty() {
-                    self.persist_text(request, fingerprint, &decoder.text, false)
-                        .map_err(|_| unknown_text("文本草稿保存失败，供应商受理状态需核对"))?;
+                    self.persist_text(
+                        request,
+                        fingerprint,
+                        &decoder.text,
+                        false,
+                        decoder.usage.as_ref(),
+                    )
+                    .map_err(|_| unknown_text("文本草稿保存失败，供应商受理状态需核对"))?;
                 }
                 return Err(unknown_text(message));
             }
@@ -274,8 +285,14 @@ impl TaskHost {
                     || decoder.text.len() - saved_bytes >= 256
                     || saved_at.elapsed() >= Duration::from_millis(100))
             {
-                self.persist_text(request, fingerprint, &decoder.text, false)
-                    .map_err(|_| unknown_text("文本草稿保存失败，供应商受理状态需核对"))?;
+                self.persist_text(
+                    request,
+                    fingerprint,
+                    &decoder.text,
+                    false,
+                    decoder.usage.as_ref(),
+                )
+                .map_err(|_| unknown_text("文本草稿保存失败，供应商受理状态需核对"))?;
                 saved_bytes = decoder.text.len();
                 saved_at = Instant::now();
             }
@@ -291,7 +308,7 @@ impl TaskHost {
                 vec![],
             ));
         }
-        self.persist_text(request, fingerprint, text, true)
+        self.persist_text(request, fingerprint, text, true, decoder.usage.as_ref())
             .map_err(|_| unknown_text("文本结果保存失败，供应商受理状态需核对"))?;
         Ok(vec![])
     }

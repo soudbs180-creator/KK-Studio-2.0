@@ -365,14 +365,40 @@ test("纯更新、位置及连线操作会落地，删除节点清理悬空边",
   await host.applyOps([{ type: "delete_node", id: "a" }]);
   assert.ok(!getProject().canvas.edges.some((x) => x.source === "a"));
 });
-test("生成错误原样回传；不支持的视频不调用 Provider", async () => {
+test("视频节点缺少已授权模型时不调用 Provider", async () => {
   const { host, calls } = harness();
   const result = await host.applyOps([
     { type: "add_node", id: "v", nodeType: "video" },
     { type: "run_generation", nodeId: "v", mode: "video", prompt: "视频" },
   ]);
   assert.equal(calls.length, 0);
-  assert.match(result.rejected[0].reason, /暂未/);
+  assert.match(result.rejected[0].reason, /白名单/);
+});
+
+test("视频与音频通过真实宿主生成入口并保留任务身份", async () => {
+  const { host, calls } = harness();
+  const result = await host.applyOps([
+    {
+      type: "add_node",
+      id: "v",
+      nodeType: "video",
+      metadata: { model: "image-model" },
+    },
+    { type: "run_generation", nodeId: "v", mode: "video", prompt: "视频" },
+    {
+      type: "add_node",
+      id: "a",
+      nodeType: "audio",
+      metadata: { model: "image-model" },
+    },
+    { type: "run_generation", nodeId: "a", mode: "audio", prompt: "朗读" },
+  ]);
+  assert.deepEqual(
+    calls.map((call) => call.nodeId),
+    ["v", "a"],
+  );
+  assert.equal(result.rejected.length, 0);
+  assert.equal(result.tasks?.length, 2);
 });
 
 test("取消在途生成后，不再落地同批后续操作", async () => {

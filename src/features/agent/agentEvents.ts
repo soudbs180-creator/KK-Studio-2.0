@@ -13,6 +13,7 @@ import type {
   AgentActivityDetail,
   AgentActivityItem,
 } from "./agentTypes.ts";
+import { readTokenUsage } from "../../domain/tokenUsage.ts";
 
 export interface AgentSseEvent {
   type: string;
@@ -40,6 +41,10 @@ export function isActivityItemType(type: string): boolean {
 function parseAgentSubEvent(data: Record<string, unknown>): AgentEvent | null {
   const threadId = stringOrUndefined(data.threadId ?? data.thread_id);
   const turnId = stringOrUndefined(data.turnId ?? data.turn_id);
+  if (data.type === "usage.updated") {
+    const usage = readTokenUsage(data.usage);
+    return usage ? { kind: "token_usage", threadId, turnId, usage } : null;
+  }
   const terminal = data as {
     type?: string;
     status?: string;

@@ -10,8 +10,11 @@ import type {
   SlotHandle,
 } from "./extensionTypes.ts";
 
+const EMPTY_SLOTS: readonly SlotDefinition[] = [];
+
 export class SlotRegistry {
   readonly #slots = new Map<string, Map<string, SlotDefinition>>();
+  readonly #snapshots = new Map<string, readonly SlotDefinition[]>();
   readonly #listeners = new Set<(slotId?: string) => void>();
 
   register(extId: string, def: SlotDefinition): SlotHandle {
@@ -28,24 +31,31 @@ export class SlotRegistry {
     const fullDef: SlotDefinition = {
       ...def,
       id: itemId,
+      extensionId: extId,
       order: def.order ?? 0,
     };
 
-    slotMap.set(itemId, fullDef);
+    const key = JSON.stringify([extId, itemId]);
+    slotMap.set(key, fullDef);
     this.#notify(slotId);
 
     return {
       id: itemId,
       slot: slotId,
-      refresh: () => this.#notify(slotId),
+      refresh: () => {
+        if (!slotMap.has(key)) return;
+        slotMap.set(key, { ...slotMap.get(key)! });
+        this.#notify(slotId);
+      },
       dispose: () => this.unregister(extId, itemId, slotId),
     };
   }
 
   unregister(extId: string, itemId: string, slotId?: string): void {
+    const key = JSON.stringify([extId, itemId]);
     if (slotId) {
       const map = this.#slots.get(slotId);
-      if (map && map.delete(itemId)) {
+      if (map && map.delete(key)) {
         if (map.size === 0) this.#slots.delete(slotId);
         this.#notify(slotId);
       }
@@ -53,7 +63,7 @@ export class SlotRegistry {
     }
 
     for (const [sId, map] of this.#slots.entries()) {
-      if (map.delete(itemId)) {
+      if (map.delete(key)) {
         if (map.size === 0) this.#slots.delete(sId);
         this.#notify(sId);
       }
@@ -64,7 +74,7 @@ export class SlotRegistry {
     let changed = false;
     for (const [slotId, map] of this.#slots.entries()) {
       for (const [itemId, def] of map.entries()) {
-        if (itemId.startsWith(extId) || def.id?.startsWith(extId)) {
+        if (def.extensionId === extId) {
           map.delete(itemId);
           changed = true;
         }
@@ -75,9 +85,15 @@ export class SlotRegistry {
   }
 
   getItems(slotId: string): readonly SlotDefinition[] {
+    const snapshot = this.#snapshots.get(slotId);
+    if (snapshot) return snapshot;
     const map = this.#slots.get(slotId);
-    if (!map || map.size === 0) return [];
-    return [...map.values()].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+    if (!map || map.size === 0) return EMPTY_SLOTS;
+    const items = [...map.values()].sort(
+      (a, b) => (a.order ?? 0) - (b.order ?? 0),
+    );
+    this.#snapshots.set(slotId, items);
+    return items;
   }
 
   subscribe(slotId: string, callback: () => void): DisposeFn {
@@ -98,6 +114,8 @@ export class SlotRegistry {
   }
 
   #notify(slotId?: string): void {
+    if (slotId) this.#snapshots.delete(slotId);
+    else this.#snapshots.clear();
     for (const listener of this.#listeners) {
       try {
         listener(slotId);

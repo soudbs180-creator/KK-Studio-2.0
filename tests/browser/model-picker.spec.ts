@@ -344,7 +344,7 @@ test("渠道内展示同名 API 图片模型、未知用途原因并保留账号
   });
 });
 
-test("视频和音频模型明确保持禁用并可键盘阅读原因", async ({ page }) => {
+test("不支持的视频模型可键盘阅读协议限制", async ({ page }) => {
   await page.route("https://media.example/v1/models", (route) =>
     route.fulfill({
       json: {
@@ -375,13 +375,13 @@ test("视频和音频模型明确保持禁用并可键盘阅读原因", async ({
   await page.getByRole("button", { name: "新建项目", exact: true }).click();
   const trigger = page.getByRole("button", { name: "模型", exact: true });
   const menu = page.getByRole("menu", { name: "选择模型" });
-  for (const model of ["media-video", "media-audio"]) {
+  for (const model of ["media-video"]) {
     await trigger.click();
     await menu.getByRole("tab", { name: "图像生成", exact: true }).click();
     await menu.getByRole("searchbox").fill(model);
     const option = menu.getByRole("menuitemradio", { name: model });
     await expect(option).toHaveAttribute("aria-disabled", "true");
-    await expect(option).toHaveAttribute("title", "此生成执行器尚未接入");
+    await expect(option).toHaveAttribute("title", /视频仅支持 12AI/);
     await option.focus();
     await option.press("Enter");
     await expect(menu).toBeVisible();

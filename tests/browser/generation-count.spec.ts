@@ -36,7 +36,11 @@ for (const kind of ["image", "video"] as const) {
     await trigger.click();
     const slider = page.getByRole("slider", { name: "生成数量" });
     await expect(slider).toBeFocused();
-    await expect(slider).toHaveAttribute("aria-valuetext", "8");
+    await expect(slider).toHaveAttribute(
+      "aria-valuetext",
+      kind === "video" ? "1" : "8",
+    );
+    await page.keyboard.press("End");
     await page.keyboard.press("ArrowLeft");
     await expect(slider).toHaveAttribute("aria-valuetext", "4");
     await page.keyboard.press("Escape");

@@ -6,6 +6,11 @@ import {
   useState,
   useSyncExternalStore,
 } from "react";
+export {
+  CanvasOperationsContext,
+  useCanvasOperations,
+  useCanvasOperationsRuntime,
+} from "./canvasOperationsRuntime.tsx";
 
 import type {
   AssetPort,
@@ -50,6 +55,7 @@ export const CanvasImageCommandContext = createContext<{
   };
   submit: (request: CanvasImageRequest) => Promise<string | undefined>;
   cancel: (taskId: string) => void;
+  query?: (taskId: string) => Promise<void>;
   tasks: CreationTask[];
   items?: CanvasCollectionItem[];
   updateItem?: (id: string, patch: Partial<CanvasCollectionItem>) => void;
@@ -89,9 +95,20 @@ export function useCanvasImageGeneration({
   const codexBusy =
     usesCodex && agent.sending && agent.canvasNodeId === item?.id;
   const isText = item?.kind === "text";
-  const label = isText ? "文案" : "图片";
+  const isMedia = item?.kind === "video" || item?.kind === "audio";
+  const kind = item?.kind ?? "image";
+  const label =
+    kind === "video"
+      ? "视频"
+      : kind === "audio"
+        ? "音频"
+        : isText
+          ? "文案"
+          : "图片";
   const model =
-    item?.model ?? (isText ? command?.textModel : command?.model) ?? "";
+    item?.model ??
+    (isText ? command?.textModel : isMedia ? "" : command?.model) ??
+    "";
   const capabilities = useCanvasCapabilities(
     {
       source: usesCodex ? "codex" : "api",
@@ -104,7 +121,7 @@ export function useCanvasImageGeneration({
   const operation =
     requestedOperation ?? (totalReferences ? "edit" : "generate");
   const capabilityReason =
-    !isText && !usesCodex
+    !isText && !isMedia && !usesCodex
       ? capabilities.operations[operation] === "unsupported"
         ? `当前模型不支持${operation === "inpaint" ? "蒙版编辑" : operation === "edit" ? "参考图编辑" : "图片生成"}，请切换支持的模型。`
         : capabilities.maxReferences !== undefined &&
@@ -135,6 +152,13 @@ export function useCanvasImageGeneration({
     sourceTasks.find((task) => task.status === "running") ??
     sourceTasks.find((task) => task.status === "queued") ??
     sourceTasks.at(-1);
+  const queryOnly = Boolean(
+    command?.query &&
+    item?.kind === "video" &&
+    task &&
+    ["unknown", "partial", "interrupted"].includes(task.status) &&
+    task.outputs?.some((o) => o.mediaReceipt?.acceptance === "accepted"),
+  );
   const loading =
     preparing ||
     codexBusy ||
@@ -159,23 +183,31 @@ export function useCanvasImageGeneration({
     (!command || !item
       ? `请先新建或打开项目，再提交${label}生成。`
       : undefined) ??
-    (isText && task?.status === "unknown"
+    ((isText || isMedia) && task?.status === "unknown" && !queryOnly
       ? "供应商受理状态不明，请先核对原任务，不能重复提交。"
       : undefined) ??
     (usesCodex && agent.status !== "connected"
       ? "请先在对话面板连接 Codex。"
       : undefined) ??
-    (!isText && !usesCodex && !command?.imageConfigured
+    (!isText && !isMedia && !usesCodex && !command?.imageConfigured
       ? "请先在设置中配置图片模型连接；当前草稿已保留。"
+      : undefined) ??
+    (isMedia && !item?.providerConnectionId
+      ? `请先在设置中配置${label}模型连接，并为当前节点选择模型。`
+      : undefined) ??
+    (isMedia && usesCodex
+      ? "此模态需要真实媒体模型连接，请在模型设置中选择。"
       : undefined) ??
     (isText && !usesCodex && !item?.providerConnectionId && !command?.textModel
       ? "请先在设置中配置文本模型连接。"
       : undefined);
   const needsConfiguration =
     !usesCodex &&
-    (isText
-      ? !item?.providerConnectionId && !command?.textModel
-      : !command?.imageConfigured);
+    (isMedia
+      ? !item?.providerConnectionId
+      : isText
+        ? !item?.providerConnectionId && !command?.textModel
+        : !command?.imageConfigured);
   const message =
     error ||
     (usesCodex ? agent.error : undefined) ||
@@ -190,7 +222,7 @@ export function useCanvasImageGeneration({
           : task?.status === "succeeded"
             ? isText
               ? "文案结果已保存到本机项目。"
-              : `已归档 ${task.completedOutputs}/${task.requestedOutputs} 张图片。`
+              : `已归档 ${task.completedOutputs}/${task.requestedOutputs} 份${label}。`
             : ""));
   function cancel() {
     if (codexBusy) void command?.agent?.interrupt();
@@ -211,8 +243,13 @@ export function useCanvasImageGeneration({
     setError("");
     setPreparing(true);
     try {
+      if (queryOnly && task && command.query) {
+        await command.query(task.id);
+        return;
+      }
       const failure = await command.submit({
         sourceItemId: item.id,
+        providerConnectionId: item.providerConnectionId,
         prompt,
         model,
         count,
@@ -231,12 +268,13 @@ export function useCanvasImageGeneration({
   }
   return {
     phase,
+    queryOnly,
     message,
     run,
     cancel,
     available: loading || !disabledReason,
     mode: "provider" as const,
-    kind: isText ? ("text" as const) : ("image" as const),
+    kind,
     draftText: task?.status === "running" ? task.outputs?.[0]?.text : undefined,
     model,
     incomingReferenceCount: totalReferences - imageReferenceCount(item),

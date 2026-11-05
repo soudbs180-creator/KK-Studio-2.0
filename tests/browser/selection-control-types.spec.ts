@@ -49,7 +49,10 @@ test("清晰度选择32高且文字可读，切换保留当前参数", async ({ 
     await expect(button).toHaveCSS("height", "32px");
     await expect(button).toHaveCSS("font-size", "12px");
   }
-  const quality = group.getByRole("button", { name: "2K", exact: true });
+  const quality = group.getByRole("button", { name: "1080p", exact: true });
+  await expect(
+    group.getByRole("button", { name: "4K", exact: true }),
+  ).toBeDisabled();
   await quality.click();
   await expect(quality).toHaveAttribute("aria-pressed", "true");
   await expect(quality).toHaveCSS("background-color", "rgb(51, 51, 51)");

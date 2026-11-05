@@ -5,7 +5,7 @@
  * 仅存本地、不上云；采集与注入默认关闭。
  */
 import { MemoryService } from "./memoryService.ts";
-import { createMemoryStorage } from "./storage.ts";
+import { kkMemoryStore } from "./kkMemoryStore.ts";
 
 export * from "./types.ts";
 export {
@@ -29,7 +29,30 @@ export type { MemoryStorage } from "./storage.ts";
 
 /** 全局记忆服务单例（开关默认关闭）。 */
 export const memoryService = new MemoryService({
-  storage: createMemoryStorage(),
+  storage: kkMemoryStore.asMemoryStorage(),
+  storageForNamespace: (namespace) => kkMemoryStore.asMemoryStorage(namespace),
+  queryScoped: (options) => kkMemoryStore.queryCascading(options),
 });
 
 export { useMemory } from "./useMemory.ts";
+
+export {
+  CURRENT_MEMORY_STORE_VERSION,
+  InMemoryMemoryDriver,
+  KkMemoryStore,
+  createKkMemoryStore,
+  emptyStoreV2,
+  formatNamespaceKey,
+  kkMemoryStore,
+  normalizeStoreV2,
+  parseNamespaceKey,
+} from "./kkMemoryStore.ts";
+export type {
+  KkMemoryDriver,
+  KkMemoryStoreOptions,
+  MemoryNamespaceKey,
+  MemoryNamespaceScope,
+  MemoryStoreFileV2,
+  MemoryStoreMetadata,
+  ScopedMemoryQueryOptions,
+} from "./kkMemoryStore.ts";

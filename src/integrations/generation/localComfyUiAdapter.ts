@@ -253,7 +253,7 @@ export class LocalComfyUiAdapter implements GenerationProviderAdapter {
   }
 
   async cancel(providerJobId: string, signal?: AbortSignal): Promise<void> {
-    if (this.capabilityOutputs.has(providerJobId)) {
+    {
       // Older servers may ignore prompt_id on /interrupt and stop someone else's job.
       const response = await fetch(
         `${baseUrl(this.connection)}/api/jobs/${encodeURIComponent(providerJobId)}/cancel`,
@@ -279,38 +279,6 @@ export class LocalComfyUiAdapter implements GenerationProviderAdapter {
         "当前 ComfyUI 不支持定向中断；已请求移除排队项，运行中的任务请在 ComfyUI 中确认。",
       );
     }
-    // Send targeted /queue delete request specifying the exact prompt_id
-    const queueResponse = await fetch(`${baseUrl(this.connection)}/queue`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify({ delete: [providerJobId] }),
-      credentials: "omit",
-      redirect: "error",
-      signal,
-    });
-    if (!queueResponse.ok)
-      throw await responseError(queueResponse, "ComfyUI 队列删除失败");
-
-    // Call /interrupt for the running prompt ID
-    const interruptResponse = await fetch(
-      `${baseUrl(this.connection)}/interrupt`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({ prompt_id: providerJobId }),
-        credentials: "omit",
-        redirect: "error",
-        signal,
-      },
-    );
-    if (!interruptResponse.ok)
-      throw await responseError(interruptResponse, "ComfyUI 中断执行失败");
   }
 
   async pollHistory(

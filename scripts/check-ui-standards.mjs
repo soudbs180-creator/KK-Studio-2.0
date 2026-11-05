@@ -2,8 +2,34 @@ import fs from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import ts from "typescript";
+import postcss from "postcss";
+import { evaluateStyleDeclaration } from "../src/domain/uiAestheticGovernance.ts";
 
 const root = process.cwd();
+
+export function lintAestheticStyles(name, content) {
+  if (!name.endsWith(".css")) return [];
+  const findings = [];
+  postcss.parse(content, { from: name }).walkRules((rule) => {
+    const styles = {};
+    for (const node of rule.nodes ?? []) {
+      if (node.type !== "decl") continue;
+      const property = node.prop.replace(/-([a-z])/g, (_match, letter) =>
+        letter.toUpperCase(),
+      );
+      styles[property] = node.value;
+    }
+    for (const finding of evaluateStyleDeclaration(styles).findings) {
+      findings.push({
+        file: name,
+        line: rule.source?.start?.line,
+        selector: rule.selector,
+        ...finding,
+      });
+    }
+  });
+  return findings;
+}
 
 export const TOKEN_DEFINITION_FILES = new Set([
   "src/styles/tokens.css",
@@ -203,6 +229,7 @@ export function runCheckUiStandards(customFiles, options = {}) {
   );
   const issues = [];
   const inventory = [];
+  const aestheticFindings = [];
 
   const sourceFiles =
     customFiles ??
@@ -232,6 +259,7 @@ export function runCheckUiStandards(customFiles, options = {}) {
     const colorLiterals = collectColorLiterals(content);
     const lucideImports = extractLucideImports(name, content);
     const allowed = baseline[name] ?? { colors: {}, lucide: [] };
+    aestheticFindings.push(...lintAestheticStyles(name, content));
 
     issues.push(
       ...checkFileStandardViolations({
@@ -254,20 +282,26 @@ export function runCheckUiStandards(customFiles, options = {}) {
     });
   }
 
-  return { inventory, issues };
+  return { inventory, issues, aestheticFindings };
 }
 
 if (
   process.argv[1] &&
   import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href
 ) {
-  const { inventory, issues } = runCheckUiStandards();
+  const { inventory, issues, aestheticFindings } = runCheckUiStandards();
   if (process.argv.includes("--inventory"))
-    console.log(JSON.stringify({ inventory, issues }, null, 2));
+    console.log(
+      JSON.stringify({ inventory, issues, aestheticFindings }, null, 2),
+    );
   else
     console.log(
       `UI 标准检查：${inventory.length} 个文件，${issues.length} 项违规。`,
     );
   for (const issue of issues) console.error(issue);
+  if (aestheticFindings.length)
+    console.warn(
+      `审美域扫描：${aestheticFindings.length} 项待 Figma 逐项复核（advisory；含存量间距和动效，不能作为视觉验收通过）。使用 --inventory 查看位置和原因。`,
+    );
   process.exitCode = issues.length ? 1 : 0;
 }

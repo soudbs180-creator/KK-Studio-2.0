@@ -1,10 +1,6 @@
 import { useEffect, useState } from "react";
 import UiIcon from "../UiIcon";
-import {
-  filterAssets,
-  type Asset,
-  type AssetFilter,
-} from "../../domain/assets";
+import { filterAssets, type AssetFilter } from "../../domain/assets";
 import "./assets.css";
 import CreateSubject from "./CreateSubject";
 import AssetCard from "./AssetCard";
@@ -14,7 +10,6 @@ import AssetPanelNavigation, {
   type AssetPanelTab,
 } from "./AssetPanelNavigation";
 import useAssetCollections from "./useAssetCollections";
-import type { AssetArchiveState } from "../../features/creation/index.ts";
 import useAssetDetail from "./useAssetDetail";
 import AssetActions from "./AssetActions";
 import AssetPanelHeader from "./AssetPanelHeader";
@@ -23,17 +18,8 @@ import AssetTrashActions, {
   useAssetTrash,
 } from "./AssetTrashActions";
 
-export interface AssetPanelProps {
-  onClose: () => void;
-  assets: Asset[];
-  subjects: Asset[];
-  trashedAssets?: Asset[];
-  onAdd: (assets: Asset[], subject: boolean) => void;
-  onRestoreAsset?: (assetId: string) => void;
-  onPermanentlyDeleteAsset?: (assetId: string) => void;
-  onDeleteAsset?: (assetId: string) => void;
-  archive?: AssetArchiveState;
-}
+import type { AssetPanelProps } from "./AssetPanel.types.ts";
+export type { AssetPanelProps } from "./AssetPanel.types.ts";
 
 const EMPTY_FILTER: AssetFilter = {
   query: "",
@@ -44,6 +30,7 @@ const EMPTY_FILTER: AssetFilter = {
   sort: "newest",
 };
 export default function AssetPanel({
+  onOpenStoryboard,
   onClose,
   assets,
   subjects,
@@ -173,6 +160,7 @@ export default function AssetPanel({
       data-testid="asset-panel"
     >
       <AssetPanelHeader
+        onOpenStoryboard={onOpenStoryboard}
         compact={compact}
         onClose={onClose}
         onToggleCompact={() => setCompact(!compact)}

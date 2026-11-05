@@ -2,19 +2,19 @@
 
 - 状态：PARTIAL
 - 领域：platform
-- 最近更新：2026-10-14
-- 关联任务：TASK-MEMORY-001、TASK-MEMORY-002、BACKEND-PLATFORM、T10、FEAT-017、TASK-222-ACTIONS-20261014、TASK-223-ACTIONS-20261014
+- 最近更新：2026-11-04
+- 关联任务：TASK-E2E-WIRING-20261104、TASK-MEMORY-001、TASK-MEMORY-002、BACKEND-PLATFORM、T10、FEAT-017、TASK-222-ACTIONS-20261014、TASK-223-ACTIONS-20261014
 
 ## 用户可见入口
 
-- 设置 › 记忆：真实开关（默认关闭）、本机共享说明与共享目录授权、记忆列表（查看/删除/清空）、"让 Codex 提炼记忆"（需 Codex 已连接）、重置共享文件。
+- 设置 › 记忆：默认关闭的真实开关、共享说明与目录授权；全局/当前项目/当前会话范围选择，以及该范围的列表、提炼、删除、清空与重置。Codex提炼需已连接且活动项目一致；共享只读限制保留。
 
 ## 代码位置
 
 - `src/features/memory/`：types/extractor/injector/storage/memoryService/reply/useMemory。
 - `src/components/settings/ConnectionSettings.tsx`、`src/components/settings/MemorySettingsSection.tsx`。
 - `src/features/agent/agentConnection.ts`：sendMessage 注入 [长期记忆] 块。
-- `src-tauri/src/storage_paths.rs`、`src-tauri/src/main.rs`：memory_read/memory_write/memory_reset_identity 命令（共享路径 + 旧文件种子迁移）。
+- `src-tauri/src/storage_paths.rs`、`src-tauri/src/main.rs`、`src-tauri/src/scoped_memory.rs`：原全局API、作用域读写/列表/重置，原始字节备份、文件锁与原子写。
 - `docs/MEMORY-CONTRACT.md`：跨产品 Agent 读写契约（Codex/豆包/WorkBuddy）。
 
 ## 测试与证据
@@ -54,3 +54,5 @@
 - 2026-09-30：集成版本当前验证与剩余边界见 [落地验证](../changes/2026-09-29-project-landing/verification.md)。
 
 2026-10-28 P3源码解耦候选：TASK-MOD-P3E，完整R4降至0，业务任务/原件/记忆隐私/凭据与旧存储身份保持；未证明原生、真实外部服务或main已更新，功能成熟度不据此升级。[验证TASK-MOD-P3E](../changes/2026-10-28-p3e-agent-memory-prompts/verification.md)。
+
+2026-11-04生产接线候选：MemoryService接到kkMemoryStore，Desktop V2与V1 API共存、session/project/global加权检索、共享只读作用域读取和Agent显式引用前置校验。范围管理先更新Figma03→04/05，再接实际设置链；真实IDB隔离删除/重载、390px热区、A→B→A迟到读取已有浏览器回归，StrictMode与卸载已独立复验。Desktop分域重置补原始字节备份与CAS恢复测试，最新门禁见[当前验证](../changes/2026-11-04-e2e-wiring/verification.md)。跨产品客户端与当前Desktop实机仍未验收，状态保留PARTIAL。

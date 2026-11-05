@@ -13,6 +13,7 @@ import type { ImageArchiveReceipts } from "./imageArchiveReceipts.ts";
 import type { ProjectCanvas } from "./projectCanvas.ts";
 import type { ReviewComment } from "./reviewWorkflow.ts";
 import type { StagePlan } from "./stagePlan.ts";
+import type { TokenUsage } from "./tokenUsage.ts";
 export type {
   CreateProjectInput,
   CreationAttachment,
@@ -42,6 +43,7 @@ export interface ChatItemDraft {
 }
 
 export interface ChatItemMessage {
+  tokenUsage?: TokenUsage;
   id: string;
   role: "user" | "assistant" | "system" | "tool" | "error";
   content: string;
@@ -67,6 +69,7 @@ export interface ChatItem {
 }
 
 export interface CreationMessage {
+  tokenUsage?: TokenUsage;
   id: string;
   role: "user" | "assistant" | "system" | "tool" | "error";
   content: string;

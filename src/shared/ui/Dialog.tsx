@@ -7,12 +7,14 @@ export default function Modal({
   onClose,
   className = "",
   style,
+  closeOnBackdropClick = true,
 }: {
   children: ReactNode;
   title: string;
   onClose: () => void;
   className?: string;
   style?: CSSProperties;
+  closeOnBackdropClick?: boolean;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
   const backdropPress = useRef(false);
@@ -74,7 +76,11 @@ export default function Modal({
       onClick={(e) => {
         const startedOnBackdrop = backdropPress.current;
         backdropPress.current = false;
-        if (startedOnBackdrop && e.target === e.currentTarget) {
+        if (
+          closeOnBackdropClick &&
+          startedOnBackdrop &&
+          e.target === e.currentTarget
+        ) {
           const box = e.currentTarget.getBoundingClientRect();
           if (
             e.clientX < box.left ||

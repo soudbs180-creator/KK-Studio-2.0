@@ -1,3 +1,4 @@
+import { knownMediaModelKind } from "../generation/mediaSupport.ts";
 import { invoke } from "@tauri-apps/api/core";
 import { modelSupportsKind } from "../../domain/creationModel.ts";
 import { providerChannel } from "../../domain/modelChannels.ts";
@@ -471,7 +472,9 @@ export function newModelProfileConnection(
   profile: ModelProviderProfile,
 ): ProviderConnection {
   const credentialRef = credentialId(profile.baseUrl, profile.name);
-  const images = supportsProviderImages(profile) && providerNeedsKey(profile);
+  const mediaKind = knownMediaModelKind(profile.model);
+  const images =
+    !mediaKind && supportsProviderImages(profile) && providerNeedsKey(profile);
   return {
     id: `byok-${credentialRef}`,
     provider: profile.name,
@@ -486,7 +489,10 @@ export function newModelProfileConnection(
     authMode: profile.authMode,
     capabilities: {
       modalities: [
-        !images || modelSupportsKind(profile.model, "text") ? "text" : "image",
+        mediaKind ??
+          (!images || modelSupportsKind(profile.model, "text")
+            ? "text"
+            : "image"),
       ],
       operations: images
         ? ["generate", "edit", "inpaint", "outpaint", "batch"]
@@ -495,7 +501,7 @@ export function newModelProfileConnection(
       // OpenAI's official Images endpoint accepts at most n=10 (dall-e-3 is 1).
       // Larger UI batches are split into separate idempotent requests.
       maxOutputs: images ? 10 : 1,
-      async: false,
+      async: mediaKind === "video",
       estimatedLatencyClass: "interactive",
     },
     state: "active",

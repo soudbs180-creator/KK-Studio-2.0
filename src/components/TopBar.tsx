@@ -6,6 +6,7 @@ import CompactAppMenu from "./CompactAppMenu";
 import WindowControls from "./WindowControls";
 import UiIcon from "./UiIcon";
 import { useHiddenControlFocus } from "./useHiddenControlFocus";
+import { ExtensionSlot } from "../features/extensions/index.ts";
 export default function TopBar({
   onOpen,
   onToggleSidebar,
@@ -195,6 +196,7 @@ export default function TopBar({
       >
         <UiIcon name="settings" size={28} />
       </button>
+      <ExtensionSlot id="titlebar.actions" />
       {desktop ? (
         <WindowControls />
       ) : (

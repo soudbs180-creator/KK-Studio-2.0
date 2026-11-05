@@ -19,6 +19,8 @@ export interface ConversationPanelProps {
   modelOptions?: string[];
   onSend?: ConversationSend;
   onDeleteMessage?: (messageId: string) => void;
+  onRewindMessage?: (messageId: string) => Promise<void>;
+  rewindBusy?: boolean;
   composerDraft?: CreationDraft;
   onDraftChange?: (draft: CreationDraft, expected?: CreationDraft) => void;
   voiceEnabled?: boolean;

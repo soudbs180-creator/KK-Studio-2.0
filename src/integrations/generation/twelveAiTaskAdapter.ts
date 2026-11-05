@@ -117,7 +117,7 @@ function responseError(
             : status >= 500
               ? "provider_unavailable"
               : "invalid_request",
-    uncertain: submitting && status >= 500,
+    uncertain: submitting && (status === 408 || status >= 500),
     retryable: !submitting && (status === 429 || status >= 500),
     retryAfterSeconds:
       retry !== undefined && Number.isFinite(retry) && retry >= 0
@@ -126,15 +126,27 @@ function responseError(
   });
 }
 
+function credentialEcho(value: string, secret: string): boolean {
+  if (value.includes(secret)) return true;
+  try {
+    return [...new URL(value).searchParams].some(
+      ([key, value]) => key.includes(secret) || value.includes(secret),
+    );
+  } catch {
+    return false;
+  }
+}
+
 function containsCredential(payload: unknown, secret: string): boolean {
   if (!payload || typeof payload !== "object") return false;
   const id = "id" in payload ? payload.id : undefined;
   const outputs = "outputs" in payload ? payload.outputs : undefined;
   return (
-    (typeof id === "string" && id.includes(secret)) ||
+    (typeof id === "string" && credentialEcho(id, secret)) ||
     (Array.isArray(outputs) &&
       outputs.some(
-        (url: unknown) => typeof url === "string" && url.includes(secret),
+        (url: unknown) =>
+          typeof url === "string" && credentialEcho(url, secret),
       ))
   );
 }
@@ -484,6 +496,8 @@ export class TwelveAiTaskAdapter implements GenerationProviderAdapter {
       throw new TwelveAiTaskError("polling_stopped", {
         failureClass: "cancelled",
       });
+    if (credentialEcho(path, secret))
+      throw new TwelveAiTaskError("invalid_request");
     const response = await this.fetchResponse(path, secret, signal, body);
     if (!response.ok) {
       await response.body?.cancel().catch(() => {});

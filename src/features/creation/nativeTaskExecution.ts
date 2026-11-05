@@ -1,8 +1,8 @@
+import { archivedTaskResult } from "./archivedTaskResult.ts";
 import React, { type SetStateAction } from "react";
 import { nativeComfyWorkflow } from "./nativeComfyWorkflow.ts";
 import type { Asset } from "../../domain/assets.ts";
 import type { CanvasCollectionItem } from "../../domain/canvasItems.ts";
-import { imageResultContext } from "../image-edit/index.ts";
 import { createImageEditRuntime } from "../image-edit/index.ts";
 import { ImageEditMappingError } from "../image-edit/index.ts";
 import { loadStoredAsset, storeGeneratedAsset } from "./assetRepository.ts";
@@ -97,7 +97,13 @@ export async function executeNativeFlow(
       throw new Error(
         "Desktop 参考图尚未归档到原生素材库，当前未提交原生任务。",
       );
-    return { assetId: attachment.assetId, name: attachment.name };
+    return {
+      assetId: attachment.assetId,
+      name: attachment.name,
+      mime: attachment.mime,
+      role: attachment.role,
+      referenceFrame: attachment.referenceFrame,
+    };
   });
 
   markSubmission();
@@ -116,7 +122,8 @@ export async function executeNativeFlow(
       : task.imageEditContext
         ? false
         : undefined,
-    kind: task.kind === "text" ? "text" : undefined,
+    kind: task.kind === "image" ? undefined : task.kind,
+    media: task.media,
     concurrencyLimit: nativeConnection?.concurrencyLimit,
     taskId: task.id,
     idempotencyKey: task.idempotencyKey,
@@ -144,6 +151,7 @@ export async function executeNativeFlow(
   const applyRecord = async (
     incoming: NativeTaskHostRecord,
   ): Promise<NativeTaskHostRecord> => {
+    if (task.kind === "video" || task.kind === "audio") assertTextCurrent();
     const record = validateNativeTaskRecord(incoming, task, pendingIndices);
     nativeTaskRecords.current[taskId] = record;
     updateSavingStateOnNativeRecord(record, getOutputs(), setResultSaving);
@@ -172,6 +180,7 @@ export async function executeNativeFlow(
     }
 
     await publishNativeRecordState({
+      kind: task.kind,
       record,
       outputs: getOutputs(),
       requestedOutputs: task.requestedOutputs,
@@ -237,6 +246,7 @@ function handleMissingNativeOutput(
 }
 
 export async function publishNativeRecordState(options: {
+  kind?: CreationTask["kind"];
   record: NativeTaskHostRecord;
   outputs: CreationTaskOutput[];
   requestedOutputs: number;
@@ -259,6 +269,9 @@ export async function publishNativeRecordState(options: {
 
   const uncertain =
     record.status === "unknown" ||
+    (options.kind === "video" &&
+      record.status === "failed" &&
+      outputs.some((output) => output.status === "succeeded")) ||
     outputs.some((output) => output.status === "unknown");
   const completed = outputs.filter(
     (output) => output.status === "succeeded",
@@ -463,6 +476,7 @@ export async function processSingleNativeOutput(
         : nativeOutput.status;
   output.assetId = nativeOutput.assetId;
   output.text = nativeOutput.text ?? priorOutput.text;
+  output.tokenUsage = nativeOutput.tokenUsage ?? priorOutput.tokenUsage;
   output.error = nativeOutput.error;
 
   if (missingText) {
@@ -508,7 +522,10 @@ function handlePendingOutputFallback(
   output: CreationTaskOutput,
   record: NativeTaskHostRecord,
 ): void {
-  if (record.status === "succeeded") {
+  if (record.status === "submitted") {
+    output.status = "running";
+    output.error = undefined;
+  } else if (record.status === "succeeded") {
     output.status = "unknown";
     output.error = "原生任务完成但该输出没有终态回执。";
   } else if (record.status === "failed") {
@@ -569,39 +586,18 @@ async function saveNativeImageResult(options: {
   try {
     const rawAsset = await readNativeAsset(nativeAssetId);
     const asset = rawAsset
-      ? await composeNativeEditAsset(
-          task,
-          rawAsset,
-          projects.find((p) => p.id === projectId)?.tasks ?? [],
-        )
+      ? task.kind === "image"
+        ? await composeNativeEditAsset(
+            task,
+            rawAsset,
+            projects.find((p) => p.id === projectId)?.tasks ?? [],
+          )
+        : rawAsset
       : null;
     if (!asset) throw new Error("原生素材原件尚未找到。");
     output.assetId = asset.assetId;
     const id = `${projectId}-${taskId}-result-${output.index + 1}`;
-    const item: CanvasCollectionItem = {
-      id,
-      title: `图片结果 ${output.index + 1}`,
-      description: `${task.model} · 已归档 ${asset.assetId}`,
-      kind: "image",
-      prompt: task.prompt,
-      model: task.model,
-      providerConnectionId: task.providerConnectionId,
-      imageEditDraft: task.imageEdit?.document,
-      imageEditContext: imageResultContext(task, asset.assetId),
-      assetId: asset.assetId,
-      parentAssetId: asset.parentId,
-      preview: asset.preview,
-      generationStatus: "ready",
-      updatedAt: Date.now(),
-      result: {
-        id,
-        kind: "image",
-        title: `图片结果 ${output.index + 1}`,
-        src: asset.preview,
-        description: `来自 ${task.providerName ?? "已配置模型"} 的已归档图片结果`,
-        source: "provider",
-      },
-    };
+    const item = archivedTaskResult(projectId, task, output.index, asset);
     const existing = createdItems.findIndex((candidate) => candidate.id === id);
     if (existing >= 0) createdItems[existing] = item;
     else createdItems.push(item);
@@ -613,7 +609,7 @@ async function saveNativeImageResult(options: {
         {
           id: asset.assetId,
           name: `AI 结果 ${current.length + 1}`,
-          type: "image" as const,
+          type: task.kind as Asset["type"],
           tag: "AI生成",
           createdAt: asset.provenance.generatedAt,
           src: asset.preview,

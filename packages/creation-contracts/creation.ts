@@ -1,3 +1,4 @@
+import type { CreationMedia, MediaSubmissionReceipt } from "./media.ts";
 import type {
   ApprovalGate,
   CanvasItemKind,
@@ -27,7 +28,13 @@ export type CreationOutputStatus =
   "waiting" | "running" | "unknown" | "succeeded" | "failed" | "cancelled";
 
 export interface CreationTaskOutput {
+  tokenUsage?: {
+    promptTokens: number;
+    completionTokens: number;
+    totalTokens: number;
+  };
   index: number;
+  mediaReceipt?: MediaSubmissionReceipt;
   status: CreationOutputStatus;
   assetId?: string;
   /** Bounded plain text; a running output is a draft until terminal success. */
@@ -48,11 +55,13 @@ export interface CreationAttachment {
   size: number;
   /** Semantic canvas role preserved through task preparation and persistence. */
   role?: CanvasReferenceSlot;
+  referenceFrame?: "first" | "last";
   /** Data URLs are used only for user selected, non-sensitive local assets. */
   dataUrl?: string;
 }
 
 export interface CreationTask {
+  media?: CreationMedia;
   imageCapability?: import("./imageCapability.ts").ImageCapabilitySpec;
   imageEdit?: ImageEditSnapshot;
   imageEditContext?: ImageEditContext;
@@ -115,6 +124,7 @@ export interface CreationTask {
 export type ReasoningEffort = "low" | "medium" | "high";
 
 export interface CreationDraft {
+  media?: CreationMedia;
   modelSelection?: ModelSelection;
   conversationChannel?: "codex" | "direct" | "google";
   /** Only a new home request may seed the Agent editor from this pending draft. */
@@ -132,6 +142,7 @@ export interface CreationDraft {
 }
 
 export interface CreateProjectInput {
+  media?: CreationMedia;
   imageCapability?: import("./imageCapability.ts").ImageCapabilitySpec;
   modelSelection?: ModelSelection;
   /** Preliminary binding check before request crops and masks are archived. */

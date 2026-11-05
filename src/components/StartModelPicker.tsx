@@ -39,7 +39,6 @@ export default function StartModelPicker({
       {open && (
         <ModelPickerMenu
           scope="home"
-          kind="image"
           current={selection}
           onSelect={onSelect}
           onConfigure={onConfigure}

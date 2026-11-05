@@ -135,7 +135,7 @@ test("平板会话分栏时画布控件左移且标题和输入控件尺寸稳�
   expect(closeBox!.x + closeBox!.width).toBeLessThan(
     panelBox!.x + panelBox!.width,
   );
-  const composer = page.locator(".chat-composer > div");
+  const composer = page.locator(".chat-composer > .composer-toolbar");
   const composerBox = await composer.boundingBox();
   const controls = await composer.locator(":scope > *").evaluateAll((items) =>
     items.map((item) => {

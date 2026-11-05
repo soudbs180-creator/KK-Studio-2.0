@@ -1,4 +1,10 @@
-import { useCallback, useLayoutEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { useDismissible } from "../useDismissible";
 import type { CanvasCollectionItem } from "../../domain/canvasItems";
 import type { Point, ViewTransform } from "./canvasModel";
@@ -9,6 +15,8 @@ import "../../styles/canvas-navigation.css";
 import "../../styles/local-generation.css";
 
 interface NavigationProps {
+  minimapVisible?: boolean;
+  onMinimapVisible?: (visible: boolean) => void;
   transform: ViewTransform;
   nodes: Record<string, Point>;
   items: CanvasCollectionItem[];
@@ -26,6 +34,8 @@ interface NavigationProps {
 }
 
 export default function CanvasNavigation({
+  minimapVisible,
+  onMinimapVisible,
   transform,
   nodes,
   items,
@@ -44,7 +54,16 @@ export default function CanvasNavigation({
   const [open, setOpen] = useState<"zoom" | "map" | "background" | null>(null);
   const ref = useRef<HTMLDivElement>(null);
   const opener = useRef<HTMLButtonElement | null>(null);
-  const dismiss = useCallback(() => setOpen(null), []);
+  const dismiss = useCallback(() => {
+    setOpen(null);
+    onMinimapVisible?.(false);
+  }, [onMinimapVisible]);
+  useEffect(() => {
+    if (minimapVisible !== undefined)
+      setOpen((current) =>
+        minimapVisible ? "map" : current === "map" ? null : current,
+      );
+  }, [minimapVisible]);
   useDismissible(open !== null, ref, dismiss, opener);
   function closeAndFocus(): void {
     dismiss();
@@ -161,6 +180,7 @@ export default function CanvasNavigation({
           onClick={(event) => {
             opener.current = event.currentTarget;
             setOpen(open === "map" ? null : "map");
+            onMinimapVisible?.(open !== "map");
           }}
         >
           <ToolbarIcon name="map" />

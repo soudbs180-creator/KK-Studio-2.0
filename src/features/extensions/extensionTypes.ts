@@ -30,6 +30,7 @@ export interface SlotMountContext {
 
 export interface SlotDefinition {
   id?: string;
+  readonly extensionId?: string;
   slot: string;
   order?: number;
   title?: string;
@@ -117,7 +118,8 @@ export interface ExtensionRegistration {
   name?: string;
   version?: string;
   context: ExtensionContext;
-  status: "active" | "degraded" | "disposed";
+  status: "active" | "degraded" | "disabled" | "disposed";
+  restartable?: boolean;
   error?: string;
 }
 
@@ -136,6 +138,9 @@ export interface ExtensionRuntimeBridge {
 
   extension(id: string, factory: ExtensionFactory): ExtensionContext;
   plugin(id: string, factory: ExtensionFactory): ExtensionContext;
+  getExtensions(): readonly ExtensionRegistration[];
+  subscribeExtensions(callback: () => void): DisposeFn;
+  setExtensionEnabled(id: string, enabled: boolean): void;
 
   // Backward-compatible API for e2e tests
   registerExtension(

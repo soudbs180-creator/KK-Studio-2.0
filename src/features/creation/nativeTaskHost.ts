@@ -1,3 +1,10 @@
+import type { CreationMedia } from "../../../packages/creation-contracts/media.ts";
+import { readTokenUsage, type TokenUsage } from "../../domain/tokenUsage.ts";
+import {
+  archivedTaskResult,
+  positionNewMediaResults,
+  assertTaskAssetMime,
+} from "./archivedTaskResult.ts";
 import { invoke } from "@tauri-apps/api/core";
 import {
   reconcileProjectCanvas,
@@ -7,7 +14,6 @@ import type {
   ProviderAuthMode,
   ProviderProtocol,
 } from "../../domain/providerProtocol.ts";
-import { imageResultContext } from "../image-edit/index.ts";
 import { createImageEditRuntime } from "../image-edit/index.ts";
 import { ImageEditMappingError } from "../image-edit/index.ts";
 import { editReceiptReason } from "../image-edit/index.ts";
@@ -33,7 +39,8 @@ export interface NativeTaskHostRequest {
   };
   imageEditRequired?: boolean;
   maskAssetId?: string;
-  kind?: "image" | "text";
+  kind?: "image" | "text" | "video" | "audio";
+  media?: CreationMedia;
   concurrencyLimit?: number;
   taskId: string;
   idempotencyKey: string;
@@ -44,7 +51,13 @@ export interface NativeTaskHostRequest {
   model: string;
   prompt: string;
   outputIndices: number[];
-  attachments: Array<{ assetId: string; name: string }>;
+  attachments: Array<{
+    assetId: string;
+    name: string;
+    mime?: string;
+    role?: string;
+    referenceFrame?: "first" | "last";
+  }>;
   providerName?: string;
   promptHash?: string;
   /** Resolved provider size label such as "1024x1024"; omitted means provider default. */
@@ -57,6 +70,7 @@ export type NativeTaskOutputStatus =
   "pending" | "succeeded" | "unknown" | "failed";
 
 export interface NativeTaskHostOutput {
+  tokenUsage?: TokenUsage;
   index: number;
   status: NativeTaskOutputStatus;
   assetId?: string;
@@ -152,6 +166,7 @@ function isRecordMalformed(
 function normalizeNativeOutput(
   output: Record<string, unknown>,
 ): NativeTaskHostOutput {
+  const tokenUsage = readTokenUsage(output.tokenUsage);
   return {
     index: output.index as number,
     status:
@@ -161,6 +176,7 @@ function normalizeNativeOutput(
         ? output.status
         : ("pending" as const),
     assetId: typeof output.assetId === "string" ? output.assetId : undefined,
+    ...(tokenUsage ? { tokenUsage } : {}),
     text:
       "text" in output &&
       typeof output.text === "string" &&
@@ -294,7 +310,8 @@ export async function submitNativeTask(
   request: NativeTaskHostRequest,
 ): Promise<NativeTaskHostRecord> {
   requireNativeTaskHost();
-  assertSynchronousProviderSubmission(request.baseUrl, request.model);
+  if (request.kind !== "video" && request.kind !== "audio")
+    assertSynchronousProviderSubmission(request.baseUrl, request.model);
   const record = await invoke<NativeTaskHostRecord>("task_host_submit", {
     request,
   });
@@ -580,6 +597,7 @@ function reconcilePresentNativeOutput(
     promptHash: prior?.promptHash,
     assetId: nativeOutput.assetId ?? prior?.assetId,
     text: nativeOutput.text ?? prior?.text,
+    tokenUsage: nativeOutput.tokenUsage ?? prior?.tokenUsage,
     error: resolvePresentOutputError(native, nativeOutput, anomalies),
     createdAt: prior?.createdAt ?? task.createdAt,
   };
@@ -670,6 +688,7 @@ async function shouldReusePriorImageOutput(
   ) {
     const archived = await readNativeAsset(priorOutput.assetId);
     if (archived) {
+      assertTaskAssetMime(task, archived.mime);
       Object.assign(output, priorOutput);
       return true;
     }
@@ -678,36 +697,14 @@ async function shouldReusePriorImageOutput(
 }
 
 function upsertImageResultItem(
+  projectId: string,
   resultId: string,
   task: CreationTask,
   outputIndex: number,
-  asset: { assetId: string; parentId?: string; preview: string },
+  asset: import("./assetRepository.ts").StoredGeneratedAsset,
   items: CreationProject["items"],
 ): boolean {
-  const resultItem = {
-    id: resultId,
-    title: `图片结果 ${outputIndex + 1}`,
-    description: `${task.model} · 已归档 ${asset.assetId}`,
-    kind: "image" as const,
-    prompt: task.prompt,
-    model: task.model,
-    providerConnectionId: task.providerConnectionId,
-    imageEditDraft: task.imageEdit?.document,
-    imageEditContext: imageResultContext(task, asset.assetId),
-    assetId: asset.assetId,
-    parentAssetId: asset.parentId,
-    preview: asset.preview,
-    generationStatus: "ready" as const,
-    updatedAt: Date.now(),
-    result: {
-      id: resultId,
-      kind: "image" as const,
-      title: `图片结果 ${outputIndex + 1}`,
-      src: asset.preview,
-      description: `来自 ${task.providerName ?? "已配置模型"} 的已归档图片结果`,
-      source: "provider" as const,
-    },
-  };
+  const resultItem = archivedTaskResult(projectId, task, outputIndex, asset);
   const index = items.findIndex((item) => item.id === resultId);
   if (index >= 0) {
     if (items[index].assetId === resultItem.assetId) return false;
@@ -744,7 +741,9 @@ async function archiveImageOutputToItems(
     }
     const rawAsset = await readNativeAsset(output.assetId);
     const asset = rawAsset
-      ? await composeNativeEditAsset(task, rawAsset, project.tasks)
+      ? task.kind === "image"
+        ? await composeNativeEditAsset(task, rawAsset, project.tasks)
+        : rawAsset
       : null;
     if (!asset) {
       output.status = "unknown";
@@ -752,7 +751,14 @@ async function archiveImageOutputToItems(
       return false;
     }
     output.assetId = asset.assetId;
-    return upsertImageResultItem(resultId, task, output.index, asset, items);
+    return upsertImageResultItem(
+      project.id,
+      resultId,
+      task,
+      output.index,
+      asset,
+      items,
+    );
   } catch (error) {
     output.status =
       error instanceof ImageEditMappingError ? "failed" : "unknown";
@@ -831,6 +837,9 @@ function buildReconciledTask(
 ): CreationTask {
   const hasUnknown =
     native.status === "unknown" ||
+    (task.kind === "video" &&
+      native.status === "failed" &&
+      outputs.some((output) => output.status === "succeeded")) ||
     outputs.some((output) => output.status === "unknown");
   const completed = outputs.filter(
     (output) => output.status === "succeeded",
@@ -936,7 +945,7 @@ function resolveReconcileSourceItemId(
   }
   const sourceItemId =
     items.find((item) => item.id === `${projectId}-prompt`)?.id ??
-    items.find((item) => item.kind === "image" && !item.result)?.id;
+    items.find((item) => item.kind === task.kind && !item.result)?.id;
   return sourceItemId && items.some((item) => item.id === sourceItemId)
     ? sourceItemId
     : undefined;
@@ -1077,6 +1086,7 @@ async function reconcileProjectNativeTasks(
     projectChanged = true;
   }
   const canvas = reconcileProjectCanvas(project.canvas, items);
+  positionNewMediaResults(project.canvas, canvas, items);
   if (syncCanvasResultEdges(project.id, tasks, items, canvas)) {
     projectChanged = true;
   }

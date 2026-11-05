@@ -1,8 +1,12 @@
 import { useRef, useState } from "react";
 import UiIcon from "./UiIcon";
+import { Button } from "./ui";
 import type { CreationDraft } from "../features/creation/index.ts";
 import UsageStatusBar from "./composer/UsageStatusBar";
-import { homeModelSelection } from "../domain/modelSelection";
+import {
+  homeModelSelection,
+  homeDraftForSelection,
+} from "../domain/modelSelection";
 import { codexHomeValidation } from "../features/agent/index.ts";
 import StartAttachmentList from "./StartAttachmentList";
 import ComposerTextarea from "./ComposerTextarea";
@@ -12,6 +16,7 @@ import StartModelPicker from "./StartModelPicker";
 import { StartComposerFeedback, StartModePicker } from "./StartComposerModes";
 import { VoiceInputButton } from "../features/speech/index.ts";
 import { useComposerMenus } from "./useComposerMenus";
+import { ExtensionSlot } from "../features/extensions/index.ts";
 import type { SkillRecord } from "../features/skills/index.ts";
 import {
   canSubmitGeneration,
@@ -83,10 +88,12 @@ export default function StartComposer({
   const uiState = getGenerationUiState({
     prompt: draft.prompt,
     inputValid: !readingFiles,
-    modelConfigured: usesCodex || modelConfigured,
+    modelConfigured:
+      usesCodex || Boolean(selection.connectionId) || modelConfigured,
     quotaAvailable: true,
     online: typeof navigator === "undefined" ? true : navigator.onLine,
-    serviceConfigured: usesCodex || modelConfigured,
+    serviceConfigured:
+      usesCodex || Boolean(selection.connectionId) || modelConfigured,
   });
   const { privacy: privacyReason, count: countReason } = codexHomeValidation(
     draft,
@@ -126,11 +133,9 @@ export default function StartComposer({
       return;
     }
     const nextDraft = {
-      ...draft,
+      ...homeDraftForSelection(draft, selection),
       prompt: draft.prompt.trim(),
       model: model.trim(),
-      modelSelection: selection,
-      kind: "image",
     } satisfies CreationDraft;
     if (nextDraft.approvalMode === "ask" && pendingSubmit !== draft) {
       setPendingSubmit(draft);
@@ -173,14 +178,16 @@ export default function StartComposer({
         />
         <div className="start-composer-footer composer-toolbar" ref={pickerRef}>
           <div className="start-footer-left">
-            <button
+            <Button
               type="button"
+              heightTier="32px"
+              variant="ghost"
+              isPill
+              prefixIcon={<UiIcon name="add" size={20} />}
               className="start-add-button"
               aria-label="添加参考素材"
               onClick={() => fileInput.current?.click()}
-            >
-              <UiIcon name="add" size={20} />
-            </button>
+            />
             <input
               ref={fileInput}
               type="file"
@@ -197,11 +204,7 @@ export default function StartComposer({
               open={modelMenuOpen}
               onToggle={() => toggleMenu("model")}
               onSelect={(choice) => {
-                commit({
-                  model: choice.model,
-                  providerConnectionId: choice.connectionId,
-                  modelSelection: choice,
-                });
+                commit(homeDraftForSelection(draft, choice));
                 closeMenus();
               }}
               onConfigure={() => {
@@ -264,8 +267,12 @@ export default function StartComposer({
                 closeMenus();
               }}
             />
-            <button
+            <Button
               type="submit"
+              heightTier="44px"
+              variant="primary"
+              isPill
+              prefixIcon={<UiIcon name="send" size={28} />}
               className="start-submit-button"
               aria-label="开始创建项目"
               aria-describedby={
@@ -273,11 +280,10 @@ export default function StartComposer({
               }
               disabled={submitDisabled}
               title={disabledReason}
-            >
-              <UiIcon name="send" size={28} />
-            </button>
+            />
           </div>
         </div>
+        <ExtensionSlot id="composer.below" />
         <UsageStatusBar
           draft={draft}
           onReasoningEffortChange={(effort) =>

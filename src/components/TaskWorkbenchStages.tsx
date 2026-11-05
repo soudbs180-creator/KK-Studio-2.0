@@ -17,6 +17,13 @@ export const stageStatusLabels: Record<StageStatus, string> = {
 };
 
 export interface StagePlanActions {
+  onExecuteStage?: (
+    projectId: string,
+    planId: string,
+    stageIndex: number,
+    revision: number,
+  ) => Promise<void>;
+  onCancelStage?: (projectId: string) => void;
   onStageDecision: (
     projectId: string,
     input: StageDecisionInput,
@@ -39,6 +46,8 @@ export interface StagePlanActions {
 export default function TaskWorkbenchStages({
   project,
   onStageDecision,
+  onExecuteStage,
+  onCancelStage,
   onRetryStage,
   onRequestPlanApproval,
   stageWriteDisabledReason,
@@ -94,7 +103,7 @@ export default function TaskWorkbenchStages({
         <div className="stage-plan-empty">
           <h3>暂无阶段计划</h3>
           <p>打开或导入包含阶段计划的项目后，可在这里审阅计划与结果。</p>
-          <p>计划自动创建和自动执行尚未接入；现有生成任务仍在 Queue 中查看。</p>
+          <p>阶段计划经批准签发授权后执行，生成任务在 Queue 中查看。</p>
         </div>
       ) : (
         <>
@@ -152,6 +161,22 @@ export default function TaskWorkbenchStages({
           )}
           {notice && <p role="status">{notice}</p>}
           <StagePlanDetail
+            onExecute={
+              onExecuteStage
+                ? () =>
+                    run(() =>
+                      onExecuteStage(
+                        project.id,
+                        plan.id,
+                        stage.index,
+                        plan.revision,
+                      ),
+                    )
+                : undefined
+            }
+            onCancel={
+              onCancelStage ? () => onCancelStage(project.id) : undefined
+            }
             key={`${plan.id}-${stage.index}`}
             plan={plan}
             stage={stage}

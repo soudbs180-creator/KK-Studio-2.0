@@ -15,7 +15,7 @@ export default function CreationModelPicker({
   disabled = false,
 }: {
   disabled?: boolean;
-  kind: "image" | "video" | "text";
+  kind: "image" | "video" | "text" | "audio";
   value: string;
   open: boolean;
   onToggle: () => void;
@@ -65,7 +65,9 @@ export default function CreationModelPicker({
               ? "canvas-text"
               : kind === "image"
                 ? "canvas-image"
-                : "canvas-video"
+                : kind === "audio"
+                  ? "canvas-audio"
+                  : "canvas-video"
           }
           kind={kind}
           current={{

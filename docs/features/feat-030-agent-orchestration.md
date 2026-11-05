@@ -2,13 +2,13 @@
 
 - 状态：PARTIAL
 - 领域：intelligence
-- 最近更新：2026-10-08
-- 关联任务：TASK-ORCH-001, TASK-ORCH-002, TASK-ORCH-003, TASK-CANVAS-001
+- 最近更新：2026-11-05
+- 关联任务：TASK-ORCH-001, TASK-ORCH-002, TASK-ORCH-003, TASK-CANVAS-001, TASK-E2E-WIRING-20261104
 
 ## 用户可见入口
 
-- 能力：已有本地阶段计划采用 plan_review → doing → result_review → done 审批流程，拒绝计划进入 blocked，解除阻断只重置失败工作项；真实生成执行尚未接入。
-- 当前 UI 入口：任务工作台 → Plan（阶段计划）；查看阶段/工作项/进度，plan/result 人工审批、选项返工、空阶段拒绝、解除阻断与重新申请审批共用原编排器。审批不自动提交生成。
+- 能力：本地阶段计划采用 plan_review → doing → result_review → done；批准计划后签发并持久化 User Mandate，按依赖执行真实任务，结果仍须审批。拒绝计划进入 blocked，解除阻断只重置失败工作项。
+- 当前 UI 入口：任务工作台 → Plan（阶段计划）；查看模型及参数，批准并执行、取消、结果审批、选项返工、空阶段拒绝、解除阻断与重新申请审批共用原编排器。unknown 任务必须核对受理，不能重复提交。
 - Desktop / Web 差异：领域层与工具面两端一致；Agent MCP 注册（plan 工具面接入 Codex）由 BACKEND-MCP-AUTO（TASK-MCP-AUTO）负责，当前尚未接入，仅以宿主纯函数形态存在。
 
 ## 代码位置
@@ -44,19 +44,21 @@
   - 计划工作项 ID 在所有阶段内唯一；重复 ID 在创建和项目包预检时拒绝，防止按 ID 更新误推进其它工作项。
   - MCP 风格工具面：plan_get_stage_status / plan_update_stage_state / plan_patch_stage / plan_replan（纯函数形态，供后续 MCP 注册）；Agent 工具不能自行完成 plan/result 审批或解除阻断，阶段操作与宿主审批均须携预期 revision；
   - 交付契约：图片产物必须携带 node_id 且已注册素材资产，文案产物必须带非空 provider 文本，否则在宿主/App 提交边界拦截并标记 unknown；本轮产物按 result 连线收集与摘要。
-- 明确标注未接：
-  - TaskWorkbench阶段计划本地审批已接；真实执行仍属TASK-ORCH-003。主线plan_replan已实现增量重规划与接受前缀保护，但真实Agent注册尚未接入。
+- 明确标注未接或待验：
+  - TaskWorkbench计划审批与真实任务宿主执行已接；多阶段外部模型和当前Desktop终验待完成。主线plan_replan已实现增量重规划与接受前缀保护，但真实Agent注册尚未接入。
   - 工具面尚未注册到 Agent MCP 服务（BACKEND-MCP-AUTO）；
-  - 编排器尚未驱动真实生成执行（依赖 B3 媒体真实链路）。
+  - 复合 merge 工作项没有真实合成工作流时在签发前拒绝，不提供成功替身。
 
 ## 差距与后端化
 
-- “UI 已显示但后端未接”的点：阶段 UI 已接本地编排器并等待保存完成；审批不替代现有 TaskExecutionApproval（高成本/远程门），也不自动执行工作项。
+- “UI 已显示但后端未接”的点：MCP plan 工具注册和合成工作流仍待接；阶段 UI 已接三阶段协调器并等待授权保存，高成本/远程门继续由现有 TaskExecutionApproval 控制。
 - “已实现但未验证”的点：编排器驱动真实多视频任务未实机验证（媒体链路未闭合）。
-- 变成 REAL 还缺什么：计划驱动执行（TASK-ORCH-003）、MCP 注册（BACKEND-MCP-AUTO）、真实媒体链路（BACKEND-MEDIA-001）与真实多阶段验收；本地 fixture UI 验收不能替代外部能力。
+- 变成 REAL 还缺什么：MCP 注册（BACKEND-MCP-AUTO）与当前 Desktop/真实多阶段模型验收；本地 fixture UI 验收不能替代外部能力。
 - 外部依赖与阻断条件：无外部密钥依赖；媒体真实链路依赖供应商 Key（EXT-PROVIDER）。
 
 ## 变更记录
+
+- 2026-11-05：批准计划签发 User Mandate 后执行真实任务，参数严格透传、唯一连接绑定、任务/节点身份持久化及取消/重试围栏。仍 PARTIAL，见[当前验证](../changes/2026-11-04-e2e-wiring/verification.md)。
 
 - 2026-10-08：吸收 MiniMax 阶段审批入口，在原工作台/原项目状态上补 UI 和共享宿主接线；保留严格 revision、项目范围、依赖失效、原提示词及 unknown 围栏。功能仍 PARTIAL，详见[比较与融合顺序](../changes/2026-10-08-stage-workbench/comparison.md)。
 

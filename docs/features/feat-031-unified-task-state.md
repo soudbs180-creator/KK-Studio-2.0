@@ -7,7 +7,7 @@
 
 ## 用户可见入口
 
-- 能力：图片/文本（未来视频/音频）共用同一任务模型：9 态状态机（queued/running/unknown/partial/succeeded/failed/cancelled/offline/interrupted）、幂等、安全可重试的失败输出选择、成本估算（估算标注，非实际扣费）。
+- 能力：图片/文本/视频/音频共用同一任务模型：9 态状态机（queued/running/unknown/partial/succeeded/failed/cancelled/offline/interrupted）、幂等、安全可重试的失败输出选择、成本估算（估算标注，非实际扣费）。
 - 当前 UI 入口：任务工作台队列与批量矩阵（TaskWorkbench）；成本估算在任务审批与结果区显示。
 - Desktop / Web 差异：两端同一领域模型。
 
@@ -36,13 +36,13 @@
   - 画布交付失败或供应商受理不明时，重试子任务的 unknown 状态会传播到父任务并关闭普通重试入口。
 - 明确标注未接：
   - 供应商实际报价/账单回执尚未接入（TASK-TASKSTATE-002），因此没有报价时 UI 只显示未知；
-  - 视频/音频尚未有提交路径消费该任务模型（BACKEND-MEDIA-001）。
+  - 视频/音频已消费统一任务模型；真实供应商验收仍由 BACKEND-MEDIA-001 / EXT-PROVIDER 跟踪。
 
 ## 差距与后端化
 
-- “UI 已显示但后端未接”的点：实际成本仍等待供应商报价回执；批量矩阵状态语义与 9 态契约一致但视频/音频提交路径尚未接入。
+- “UI 已显示但后端未接”的点：实际成本仍等待供应商报价回执；批量矩阵状态语义与 9 态契约一致；视频/音频已接入，真实供应商仍待验。
 - “已实现但未验证”的点：`unknown` 拒绝普通重试已有领域单测；真实 Provider 回执丢失与重启恢复仍需实机验证。
-- 变成 REAL 还缺什么：视频/音频真实生成链路接入统一任务模型（BACKEND-MEDIA-001）；成本从估算升级为供应商报价/积分（平台波次）；每平台运行证据。
+- 变成 REAL 还缺什么：视频/音频真实服务同态运行验收（BACKEND-MEDIA-001）；成本从估算升级为供应商报价/积分（平台波次）；每平台运行证据。
 - 外部依赖与阻断条件：媒体真实链路依赖供应商 Key（EXT-PROVIDER）。
 
 ## 变更记录
@@ -56,3 +56,5 @@
 - 2026-10-11：补充成本报价回执 schema、任务/幂等键绑定、快照和 portable package 校验及 fixture 回归；真实 Provider adapter/webhook、账单回执和每平台运行仍保持 `NOT_VERIFIED`，TASK-TASKSTATE-001/002 保持 `PARTIAL`。详见 `docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-verification.md`。
 
 - 2026-10-15：TASK-KK-UNIFIED-20261015 已获用户实施授权，新增范围见 [统一规格](../changes/2026-10-15-kk-unified/spec.md)。本卡既有证据仍限原版本；新范围实现/真实验收尚未完成，不能沿用旧 PASS 关闭。
+
+- 2026-11-04：四模态统一提交与媒体回执/归档，见[阶段 3](../changes/2026-11-04-multimodal/verification.md)；旧测试数量仅代表对应历史版本。

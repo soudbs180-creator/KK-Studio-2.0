@@ -1,5 +1,9 @@
 /** Codex 会话、具名 SSE 与 KK 画布桥的应用级 store。 */
 import { memoryService } from "../memory/index.ts";
+import { agentAnswerabilityError } from "./agentAnswerability.ts";
+import type { AgentOpExecutionContext } from "./agentToolRuntime.ts";
+import type { ConfirmationCheckpoint } from "../../domain/agentWorkflow.ts";
+import type { StatuslineListener } from "./statuslineIpc.ts";
 import {
   AGENT_CONNECT_TIMEOUT_MS,
   AGENT_DEFAULT_URL,
@@ -70,11 +74,13 @@ import {
 } from "./codexGeneration.ts";
 import { compileStructuredPrompt } from "../prompts/index.ts";
 export interface AgentOpResult {
+  outputs?: Array<{ operationIndex: number; data: unknown }>;
   applied: CanvasAgentOp[];
   rejected: Array<{ op: CanvasAgentOp; reason: string }>;
   tasks?: Array<{ taskId: string; nodeId: string; status: string }>;
 }
 export interface AgentBridge {
+  subscribeStatusline?(listener: StatuslineListener): () => void;
   getChatScope?(): ChatScope | null;
   getExecutionAdapter?(): string | undefined;
   getExecutionBlockReason?(): string | undefined;
@@ -111,7 +117,7 @@ export interface AgentBridge {
   getSnapshot(): CanvasAgentSnapshot | null;
   applyOps(
     ops: CanvasAgentOp[],
-    context?: { signal: AbortSignal; modelAllowlist?: readonly string[] },
+    context?: AgentOpExecutionContext,
   ): AgentOpResult | Promise<AgentOpResult>;
 }
 export type AgentConnectionStatus =
@@ -201,8 +207,8 @@ export function writeAgentEffort(effort: AgentReasoningEffort | ""): void {
 }
 
 const KK_INSTRUCTIONS = `你是 KK Studio 的主 Agent。用户选择的生成模型不是你的推理模型。
-先读取画布再操作。KK 支持 canvas_apply_ops 的 add_node/update_node/delete_node/connect_nodes/delete_connections/run_generation/select_nodes/set_viewport。选择节点和设置视口会更新真实界面；视口缩放范围 0.2–4。
-节点类型为 text、image（video/audio 生成暂未接入）；配置节点 metadata.mode 指定 image/text，metadata.prompt 为提示词。
+先读取画布再操作。KK 支持 canvas_apply_ops 的 add_node/update_node/delete_node/connect_nodes/delete_connections/run_generation/select_nodes/set_viewport。选择节点和设置视口会更新真实界面；视口缩放范围 0.2–4。进阶操作通过 {type:"canvas_operation",operation:{op,payload}} 调用34项强校验原子操作（卡片/连线/分组/布局/视口/选择/附件/导入导出/历史/锁/颜色/网格/小地图）；必须提供对应载荷，宿主拒绝空载荷或未知参数。
+节点类型为 text、image、video、audio；run_generation 的 mode 必须匹配节点类型，且配置实际已授权模型。metadata.prompt 为提示词，音视频仅支持宿主明确暴露的模型与参数，不得声称未执行的生成已成功。
 run_generation 通过 KK 已配置的 Provider 提交真实任务，返回任务 ID 仅表示已受理。通过 canvas_get_state 的 generationStatus 和 generationTask 查询状态，不能把 queued/running 当作完成。
 先优化提示词，再按用户要求生成。没有 Provider 或登录时说明缺口，不虚构成功，不自行改用其他付费接口。
 用户明确要求 Codex/ChatGPT 内置生图、或选择 Codex 图片入口时，可直接使用内置 imagegen/image_generation 工具，KK 会读取完成事件并将图片归档到画布；这使用 Codex 账号额度，不需要生成 API Key。必须实际调用内置工具，不能用脚本绘图冒充。
@@ -309,6 +315,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
   let controller: AbortController | null = null;
   let toolController = new AbortController();
   let bridge: AgentBridge | null = null;
+  let unsubscribeStatusline: (() => void) | undefined;
   let epoch = 0;
   let projectId = "";
   let connectedScopeKey = "";
@@ -323,6 +330,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
   let toolQueue = Promise.resolve();
   let toolReceiptError: string | null = null;
   const approvals = new Map<string, AgentApprovalRequest>();
+  const localApprovals = new Map<string, (allowed: boolean) => void>();
   const patch = (next: Partial<AgentConnectionState>) => {
     state = { ...state, ...next };
     listeners.forEach((fn) => fn());
@@ -494,6 +502,13 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
     )
       return;
     switch (event.kind) {
+      case "token_usage": {
+        const target = state.messages.find(
+          (m) => m.turnId === event.turnId && m.role === "user",
+        );
+        if (target) message({ ...target, tokenUsage: event.usage });
+        break;
+      }
       case "conversation":
         if (
           !initializing &&
@@ -654,6 +669,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
     }
     if (!isCurrent(version)) return;
     if (event.status === "completed") error ??= state.error;
+    for (const settle of localApprovals.values()) settle(false);
     approvals.clear();
     turnFreezing.onTurnComplete(
       event.status === "completed" ? "completed" : "failed",
@@ -709,6 +725,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
       const result = await bridge.applyOps(input.ops as CanvasAgentOp[], {
         signal,
         modelAllowlist: turnModelAllowlist,
+        confirmPlan: requestPlanApproval,
       });
       if (!isCurrent(version)) return;
       // Receipt must report already accepted tasks even if the snapshot upload fails.
@@ -721,6 +738,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
             applied: result.applied.length,
             rejected: result.rejected.map((x) => x.reason),
             tasks: result.tasks ?? [],
+            ...(result.outputs?.length ? { outputs: result.outputs } : {}),
           },
         })
         .catch(async () => {
@@ -741,6 +759,33 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
           .postToolResult({ requestId, ...turn, error: errorText(error) })
           .catch(() => undefined);
     }
+  }
+  function requestPlanApproval(
+    checkpoint: ConfirmationCheckpoint,
+    signal: AbortSignal,
+  ): Promise<boolean> {
+    if (signal.aborted) return Promise.resolve(false);
+    if (readPermissionMode() !== "request") return Promise.resolve(true);
+    return new Promise((resolve) => {
+      const requestId = "kk-plan-" + checkpoint.checkpointId;
+      const settle = (allowed: boolean) => {
+        signal.removeEventListener("abort", cancel);
+        localApprovals.delete(requestId);
+        approvals.delete(requestId);
+        patch({ pendingApproval: approvals.values().next().value ?? null });
+        resolve(allowed);
+      };
+      const cancel = () => settle(false);
+      localApprovals.set(requestId, settle);
+      signal.addEventListener("abort", cancel, { once: true });
+      approvals.set(requestId, {
+        requestId,
+        method: "执行画布计划",
+        threadId: state.conversation?.threadId,
+        reason: `${checkpoint.plan.items.length} 项操作：${checkpoint.plan.userPrompt}。生成使用当前配置的模型；删除和已受理生成可能无法撤销。`,
+      });
+      patch({ pendingApproval: approvals.values().next().value ?? null });
+    });
   }
   function connectShared(
     newConversation = false,
@@ -1340,13 +1385,19 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
     const preconditionError = validateSendPreconditions(text, input?.signal);
     if (preconditionError) return { ok: false, error: preconditionError };
     const conversation = state.conversation!;
+    const memoryScope = currentChatScope();
     const selectedAttachments = (input?.attachments ?? []).map((item) => ({
       ...item,
     }));
-    const compiled = compileStructuredPrompt({
-      prompt: text.trim(),
-      attachments: selectedAttachments,
-    });
+    let compiled: ReturnType<typeof compileStructuredPrompt>;
+    try {
+      compiled = compileStructuredPrompt({
+        prompt: text.trim(),
+        attachments: selectedAttachments,
+      });
+    } catch (error) {
+      return { ok: false, error: errorText(error) };
+    }
     let userInstruction = compiled.preamble
       ? `${compiled.preamble}\n\n【用户创作指令】：\n${compiled.cleanPrompt || "按各参考素材与要求执行生成"}`
       : compiled.cleanPrompt || text.trim();
@@ -1416,13 +1467,27 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
       const memoryInjection =
         input?.memoryMode === "none" || input?.isTemporary
           ? ""
-          : await memoryService.buildInjection(text.trim());
+          : await memoryService.buildInjection(text.trim(), {
+              projectId: memoryScope?.projectId,
+              sessionId: memoryScope
+                ? JSON.stringify([memoryScope.projectId, memoryScope.chatId])
+                : undefined,
+            });
       assertTurnActive(version, signal);
       const requestedModel = input?.selection
         ? codexReasoningModel(input.selection)
         : (input?.model ?? readAgentModel());
       const validationError = input?.validate?.();
       if (validationError) throw new Error(validationError);
+      const referenceError = agentAnswerabilityError(
+        bridge?.getSnapshot(),
+        text,
+        [
+          ...selectedAttachments.map((item) => item.canvasNodeId),
+          input?.canvasSource?.nodeId,
+        ],
+      );
+      if (referenceError) throw new Error(referenceError);
       const response = await activeApi.postTurn({
         prompt:
           KK_INSTRUCTIONS +
@@ -1538,6 +1603,11 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
     const version = epoch;
     const requestId = state.pendingApproval.requestId;
     try {
+      const local = localApprovals.get(requestId);
+      if (local) {
+        local(decision !== "decline");
+        return { ok: true };
+      }
       await api.resolveApproval(requestId, decision);
       if (!isCurrent(version))
         return { ok: false, error: "连接已变更，请检查当前权限请求。" };
@@ -1563,6 +1633,62 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
     refreshUsage,
     disconnect,
     sendMessage,
+    async readRewindHistory() {
+      if (
+        !api ||
+        state.sending ||
+        state.pendingApproval ||
+        !state.conversation?.threadId
+      )
+        throw new Error("Agent 未就绪或正在执行，暂不可回滚");
+      const version = epoch;
+      const history = await api.readThread(state.conversation.threadId);
+      if (!isCurrent(version) || !history.rewindSupported)
+        throw new Error(
+          "当前线程不支持安全回滚，原历史已保留；请新建聊天后使用",
+        );
+      return history;
+    },
+    async revertConversation(beforeTurnId: string, expectedTurnIds: string[]) {
+      if (
+        !api ||
+        state.sending ||
+        state.pendingApproval ||
+        !state.conversation?.threadId
+      )
+        throw new Error("Agent 正在执行，暂不可回滚");
+      const version = epoch,
+        threadId = state.conversation.threadId;
+      const history = await api.revertThread(
+        threadId,
+        beforeTurnId,
+        expectedTurnIds,
+      );
+      if (!isCurrent(version))
+        throw new Error("聊天已切换，远端已回滚，请在原聊天核对结果");
+      const retained = (history.messages ?? []).map((incoming) =>
+        mergeRetainedMessage(
+          state.messages.find(
+            (old) =>
+              old.id === incoming.id ||
+              Boolean(
+                incoming.clientMessageId &&
+                incoming.clientMessageId === old.clientMessageId,
+              ),
+          ),
+          incoming,
+        ),
+      );
+      patch({
+        messages: retained,
+        conversation: history.conversation ?? state.conversation,
+        activity: "历史已回滚",
+      });
+      const scope = currentChatScope();
+      if (!scope)
+        throw new Error("聊天身份已失效，远端历史已回滚，请重新打开原聊天");
+      await bridge?.saveAgentMessages?.(retained, scope);
+    },
     generateFromCanvas,
     interrupt,
     resolveApproval,
@@ -1572,7 +1698,24 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
     getFreezingState: () => turnFreezing.getState().state,
     turnFreezing,
     setBridge(next: AgentBridge | null) {
+      unsubscribeStatusline?.();
       bridge = next;
+      unsubscribeStatusline = next?.subscribeStatusline?.((payload) => {
+        if (payload.scope && payload.scope !== currentScopeKey()) return;
+        const labels = {
+          thinking: "规划画布操作",
+          blocked: "等待计划授权",
+          tool_use: "执行画布操作",
+          completed: "画布操作完成",
+          failed: "画布操作未完成",
+          idle: "就绪",
+          working: "执行中",
+          review: "审阅中",
+        };
+        patch({
+          activity: `${labels[payload.state]} · ${payload.agent} · ${payload.step}/${payload.totalSteps} · ${payload.durationMs}ms`,
+        });
+      });
       syncProject();
     },
     syncProject,

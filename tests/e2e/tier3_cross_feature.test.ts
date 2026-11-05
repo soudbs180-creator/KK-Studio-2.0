@@ -1,3 +1,15 @@
+import { createElement as h } from "react";
+import { renderToStaticMarkup as render } from "react-dom/server";
+import { Button } from "../../src/components/ui/Button.tsx";
+import UiIcon from "../../src/components/UiIcon.tsx";
+import { resolveImageSize } from "../../src/domain/imageParameters.ts";
+import {
+  validateViewportLayout,
+  evaluateStyleDeclaration,
+  calculateContrastRatio,
+} from "../../src/domain/uiAestheticGovernance.ts";
+import { renderSidebarSurface } from "../support/responsiveFixture.ts";
+import { createCanvasOperationFixture } from "../support/canvasOperationFixture.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
@@ -15,17 +27,9 @@ import {
   auditStoryboardContinuity,
   parsePromptMentions,
   compileOpticsPrompt,
-  parseAspectRatio,
-  calculateDimensionsForRatio,
-  evaluateElementAesthetics,
-  FIGMA_SURFACE_TOKENS,
-  classifyViewport,
   ExtensionRuntimeBridge,
-  validateButtonProps,
-  resolveUiIcon,
-  sanitizeAdversarialPrompt,
+  createSecretLeakGuard,
   formatStatuslineIPC,
-  validateTestSuiteReport,
 } from "./harness.ts";
 
 /* =========================================================================
@@ -181,8 +185,10 @@ test("SCENARIO-T3-04: ontology knowledge graph informs pre-flight feasibility pr
 // 5. Autonomous Canvas Ops (F15) + Canvas 34 Zod Operations (F16)
 // -------------------------------------------------------------------------
 test("SCENARIO-T3-05: Canvas MCP Server executes 34 Zod operations while controller tracks viewport & selection", () => {
-  const mcp = new CanvasMcpServer();
-  const controller = new AutonomousCanvasController();
+  const mcp = new CanvasMcpServer(createCanvasOperationFixture());
+  const controller = new AutonomousCanvasController(
+    createCanvasOperationFixture(),
+  );
 
   // Execute set_viewport op via MCP
   const vpOp = { op: "set_viewport", payload: { x: 100, y: 150, zoom: 1.25 } };
@@ -194,7 +200,7 @@ test("SCENARIO-T3-05: Canvas MCP Server executes 34 Zod operations while control
   // Execute select_nodes op via MCP
   const selOp = {
     op: "select_nodes",
-    payload: { nodeIds: ["card-1", "card-2"] },
+    payload: { ids: ["card-1", "card-2"] },
   };
   const resSel = mcp.executeOp(selOp);
   assert.equal(resSel.success, true);
@@ -207,7 +213,7 @@ test("SCENARIO-T3-05: Canvas MCP Server executes 34 Zod operations while control
 // -------------------------------------------------------------------------
 test("SCENARIO-T3-06: blueprint architecture tree generates compliant 34 Zod card operations", () => {
   const adapter = new FloorplanCanvasAdapter();
-  const mcp = new CanvasMcpServer();
+  const mcp = new CanvasMcpServer(createCanvasOperationFixture());
 
   const blueprint = {
     id: "system-root",
@@ -233,15 +239,15 @@ test("SCENARIO-T3-06: blueprint architecture tree generates compliant 34 Zod car
   const flatNodes = adapter.flattenHierarchy(blueprint);
   assert.equal(flatNodes.length, 3);
 
-  // Convert each node to an add_card operation
-  for (const node of flatNodes) {
-    const op = {
-      op: "add_card",
-      payload: { cardId: node.id, title: node.name, level: node.level },
-    };
-    const res = mcp.executeOp(op);
-    assert.equal(res.success, true);
-  }
+  const operation = adapter.toCanvas(blueprint);
+  const result = mcp.executeOp(operation);
+  assert.equal(result.success, true, result.error);
+  assert.equal(
+    mcp.bridge!.getState().items.filter((item) => item.id.startsWith("bp-"))
+      .length,
+    3,
+  );
+  assert.equal(mcp.bridge!.getState().canvas.edges.length, 2);
 });
 
 // -------------------------------------------------------------------------
@@ -261,7 +267,9 @@ test("SCENARIO-T3-07: detected cut boundaries update canvas selection and focus"
     .map((b) => `frame-node-${b.frameIndex}`);
   assert.deepEqual(cutFrames, ["frame-node-1", "frame-node-3"]);
 
-  const controller = new AutonomousCanvasController();
+  const controller = new AutonomousCanvasController(
+    createCanvasOperationFixture(cutFrames),
+  );
   controller.selectNodes(cutFrames);
   assert.deepEqual(controller.selectedNodes, cutFrames);
 });
@@ -309,134 +317,109 @@ test("SCENARIO-T3-09: compiles camera optics and in-prompt reference mentions in
 // -------------------------------------------------------------------------
 // 10. 15 Aspect Ratios (F4) + Pure Video Shot Breakdown (F18)
 // -------------------------------------------------------------------------
-test("SCENARIO-T3-10: video shot keyframe dimensions adapt to selected aspect ratio", () => {
-  const frames = [{ rgbDiff: 0.8, histDiff: 0.8 }];
-  const cuts = detectVideoShots(frames);
+test("SCENARIO-T3-10: real cut boundaries use the production provider dimension compiler", () => {
+  const cuts = detectVideoShots([{ rgbDiff: 0.8, histDiff: 0.8 }]);
   assert.equal(cuts[0].isCut, true);
-
-  // Apply 16:9 cinema ratio
-  const ratio = parseAspectRatio("16:9");
-  assert.equal(ratio.orientation, "landscape");
-
-  const cardDims = calculateDimensionsForRatio("16:9", 800);
-  assert.equal(cardDims.width, 800);
-  assert.equal(cardDims.height, 450);
+  assert.equal(resolveImageSize("16:9", "1K"), "1024x576");
 });
 
 // -------------------------------------------------------------------------
 // 11. Figma Surface Tokens (F1) + Aesthetic Governance (F6)
 // -------------------------------------------------------------------------
-test("SCENARIO-T3-11: UI surface styling with Figma tokens complies with 4px grid and redline", () => {
-  const style = {
-    paddingPx: 16, // 4px grid compliant
-    marginPx: 24, // 4px grid compliant
-    borderRadiusPx: 8, // <= 999px compliant
-    contrastRatio: 5.5, // >= 4.5 WCAG AA compliant
-  };
-  const redline = evaluateElementAesthetics(style);
-  assert.equal(redline.pass, true);
-  assert.equal(FIGMA_SURFACE_TOKENS.bgSurface, "#f2f2f2");
+test("SCENARIO-T3-11: real aesthetic and contrast engines evaluate quiet canvas styling", () => {
+  assert.equal(
+    evaluateStyleDeclaration({
+      padding: "16px",
+      margin: "24px",
+      fontWeight: 400,
+    }).valid,
+    true,
+  );
+  assert.ok(calculateContrastRatio("#252525", "#f2f2f2") >= 4.5);
 });
 
 // -------------------------------------------------------------------------
 // 12. Mobile Chat Viewport (F5) + Extension Runtime Bridge (F9)
 // -------------------------------------------------------------------------
-test("SCENARIO-T3-12: mobile viewport classification disables canvas extension slot", () => {
-  const vp = classifyViewport(375); // mobile
-  assert.equal(vp.allowCanvas, false);
-
+test("SCENARIO-T3-12: real phone layout and chat extension registration preserve platform boundaries", () => {
+  assert.match(renderSidebarSurface(375), /data-surface="phone"/u);
+  assert.ok(validateViewportLayout(375, ["CanvasScreen"]).length);
   const bridge = new ExtensionRuntimeBridge();
   bridge.registerExtension({
-    id: "canvas-addon",
-    name: "Canvas Addon",
-    version: "1.0",
-    entryPoint: "ca.js",
+    id: "chat-addon",
+    name: "Chat",
+    version: "1",
+    entryPoint: "chat.js",
   });
-  bridge.registerSlot("chat-toolbar", "canvas-addon", () => "Chat Addon");
-
-  // In mobile, chat toolbar slot is permitted
-  const chatItems = bridge.getSlotItems("chat-toolbar");
-  assert.equal(chatItems.length, 1);
+  bridge.registerSlot("chat-toolbar", "chat-addon", () => "Chat");
+  assert.equal(bridge.getSlotItems("chat-toolbar").length, 1);
 });
 
 // -------------------------------------------------------------------------
 // 13. Foundational UI Primitives (F2) + 124 Lucide Icons (F3)
 // -------------------------------------------------------------------------
-test("SCENARIO-T3-13: 5-tier Button primitive embeds official Lucide icon while keeping 44px hit box", () => {
-  const btn = validateButtonProps({ heightTier: "24px" });
-  assert.equal(btn.valid, true);
-  assert.equal(btn.heightPx, 24);
-  assert.equal(btn.hitBoxPx, 44);
-
-  const icon = resolveUiIcon("play", 16);
-  assert.equal(icon.resolved, true);
-  assert.equal(icon.size, 16);
+test("SCENARIO-T3-13: actual compact Button contains its actual Lucide SVG and decoupled hit area", () => {
+  const markup = render(
+    h(Button, { heightTier: "24px", prefixIcon: "play" }, "Run"),
+  );
+  assert.match(markup, /kk-button--24/u);
+  assert.match(markup, /kk-button--decoupled-hit/u);
+  assert.match(markup, /<svg/u);
+  assert.match(render(h(UiIcon, { name: "play", size: 16 })), /width="16"/u);
 });
 
 // -------------------------------------------------------------------------
 // 14. Adversarial Hardening (F23) + Router Worker Engine (F10)
 // -------------------------------------------------------------------------
-test("SCENARIO-T3-14: malicious input is sanitized before entering Router multi-agent pipeline", () => {
+test("SCENARIO-T3-14: credential leakage is blocked before routing tool payloads", () => {
+  const guard = createSecretLeakGuard();
   const router = new RouterWorkerEngine();
-  const dangerousInput =
-    "Generate script with <script>stealTokens()</script> about an astronaut";
-
-  // Sanitize adversarial threat
-  const sanitized = sanitizeAdversarialPrompt(dangerousInput);
-  assert.equal(sanitized.safe, false);
-  assert.ok(!sanitized.cleanPrompt.includes("<script>"));
-
-  // Route sanitized prompt
-  const route = router.classifyAndRoute({
-    id: "t-safe",
-    prompt: sanitized.cleanPrompt,
-  });
-  assert.equal(route.route, "router_direct");
-  assert.equal(route.workerType, "writer");
+  assert.equal(
+    guard("write", { prompt: "-----BEGIN PRIVATE KEY-----" }).allow,
+    false,
+  );
+  const prompt = "Write screenplay about an astronaut";
+  assert.equal(guard("generate", { prompt }).allow, true);
+  assert.equal(
+    router.classifyAndRoute({ id: "t-safe", prompt }).workerType,
+    "writer",
+  );
 });
 
-// -------------------------------------------------------------------------
-// 15. Full E2E Test Suite Validation (F22) + Statusline IPC (F12)
-// -------------------------------------------------------------------------
-test("SCENARIO-T3-15: statusline IPC broadcasts progress during full test suite verification", () => {
+test("SCENARIO-T3-15: statusline IPC reports real progress fields without a fabricated suite readiness gate", () => {
   const statusline = formatStatuslineIPC({
     agent: "e2e_runner",
-    step: 252,
-    totalSteps: 252,
+    step: 3,
+    totalSteps: 4,
     currentTool: "validate_all_tiers",
     durationMs: 450,
   });
   const parsed = JSON.parse(statusline);
-  assert.equal(parsed.progress, 100);
-
-  const suiteCheck = validateTestSuiteReport({
-    totalTests: parsed.step,
-    passCount: 252,
-    failCount: 0,
-    skipCount: 0,
-  });
-  assert.equal(suiteCheck.ready, true);
+  assert.equal(parsed.progress, 75);
+  assert.equal(parsed.type, "statusline");
+  assert.equal(parsed.agent, "e2e_runner");
+  assert.equal(parsed.currentTool, "validate_all_tiers");
 });
-
-// -------------------------------------------------------------------------
-// 16. Gateway Cooldown (F7) + Canvas 34 Zod Operations (F16)
-// -------------------------------------------------------------------------
-test("SCENARIO-T3-16: Canvas MCP Server requests model execution via Gateway with active cooldown fallback", () => {
+test("SCENARIO-T3-16: real atomic canvas state and gateway cooldown preserve fallback routing", () => {
   const scheduler = new GatewayCooldownScheduler();
-  const mcp = new CanvasMcpServer();
-
+  const bridge = createCanvasOperationFixture();
+  const mcp = new CanvasMcpServer(bridge);
   scheduler.registerAccount("primary-gen-acc");
   scheduler.registerAccount("fallback-gen-acc");
-
-  // Canvas dispatches card generation op
-  const op = {
-    op: "add_card",
-    payload: { cardId: "scene-3", title: "Render" },
-  };
-  assert.equal(mcp.executeOp(op).success, true);
-
-  // Primary rate limited during render
+  assert.equal(
+    mcp.executeOp({
+      op: "add_card",
+      payload: {
+        card: { id: "scene-3", kind: "text", title: "Render" },
+        position: { x: 0, y: 0 },
+      },
+    }).success,
+    true,
+  );
+  assert.ok(bridge.getState().items.some((item) => item.id === "scene-3"));
   scheduler.reportRateLimit("primary-gen-acc", 20);
-  const plan = scheduler.acquireCandidate();
-  assert.equal(plan.selectedAccountId, "fallback-gen-acc");
+  assert.equal(
+    scheduler.acquireCandidate().selectedAccountId,
+    "fallback-gen-acc",
+  );
 });

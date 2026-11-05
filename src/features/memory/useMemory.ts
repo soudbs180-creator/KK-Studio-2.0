@@ -47,8 +47,10 @@ function waitForAssistantReply(
 }
 
 export interface UseMemoryOptions {
-  activeChat?: { isTemporary?: boolean } | null;
+  activeChat?: { id?: string; isTemporary?: boolean } | null;
+  projectId?: string;
   isTemporary?: boolean;
+  namespace?: string;
 }
 
 export function useMemory(
@@ -62,10 +64,37 @@ export function useMemory(
   optionsRef.current = options;
   const agentRef = useRef(agentConnection);
   agentRef.current = agentConnection;
+  const namespace =
+    typeof options === "object" ? (options?.namespace ?? "global") : "global";
+  const projectId =
+    typeof options === "object" ? options?.projectId : undefined;
+  const chatId =
+    typeof options === "object" ? options?.activeChat?.id : undefined;
+  const scopeRef = useRef({ namespace, projectId, chatId });
+  if (
+    scopeRef.current.namespace !== namespace ||
+    scopeRef.current.projectId !== projectId ||
+    scopeRef.current.chatId !== chatId
+  )
+    scopeRef.current = { namespace, projectId, chatId };
+  const currentScope = scopeRef.current;
+  const mountedRef = useRef(true);
+  const refreshRevision = useRef(0);
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+      refreshRevision.current += 1;
+    };
+  }, []);
   const [enabled, setEnabled] = useState<boolean>(() =>
     memoryService.isEnabled(),
   );
-  const [store, setStore] = useState<MemoryStoreFile | null>(null);
+  const [stored, setStore] = useState<{
+    namespace: string;
+    data: MemoryStoreFile;
+  } | null>(null);
+  const store = stored?.namespace === namespace ? stored.data : null;
   const [mode, setMode] = useState<
     "shared" | "shared-readonly" | "isolated" | "locked"
   >("isolated");
@@ -78,29 +107,56 @@ export function useMemory(
   const codexConnected = agentConnection.getState().status === "connected";
 
   const refresh = useCallback(async () => {
+    const scope = currentScope;
+    const revision = ++refreshRevision.current;
+    const isCurrent = () =>
+      mountedRef.current &&
+      scopeRef.current === scope &&
+      refreshRevision.current === revision;
+    if (!isCurrent()) return;
     if (!memoryService.isEnabled()) {
       setStore(null);
       setLoadError(null);
       setLoading(false);
       return;
     }
+    setLoading(true);
+    const version = memoryService.getMutationVersion();
     try {
-      setMode(await memoryService.storageMode());
-      setStorageStatus(await memoryService.storageStatus());
-      setStore(await memoryService.load());
+      const nextMode = await memoryService.storageMode();
+      const nextStatus = await memoryService.storageStatus();
+      if (!isCurrent() || !memoryService.isEnabled()) return;
+      const data = await memoryService.load(namespace);
+      if (
+        !isCurrent() ||
+        !memoryService.isEnabled() ||
+        version !== memoryService.getMutationVersion()
+      )
+        return;
+      setMode(nextMode);
+      setStorageStatus(nextStatus);
+      setStore({ namespace, data });
       setLoadError(null);
     } catch {
+      if (
+        !isCurrent() ||
+        !memoryService.isEnabled() ||
+        version !== memoryService.getMutationVersion()
+      )
+        return;
       setStore(null);
       setLoadError("本地记忆读取失败，原数据已保留。");
       feedbackRef.current(
         "读取本地记忆失败。请检查共享目录授权或文件格式后重试。",
       );
     } finally {
-      setLoading(false);
+      if (isCurrent()) setLoading(false);
     }
-  }, []);
+  }, [namespace, currentScope]);
 
   useEffect(() => {
+    setBusy(false);
+    setExtracting(false);
     void refresh();
   }, [refresh]);
 
@@ -133,43 +189,60 @@ export function useMemory(
 
   const removeRecord = useCallback(
     async (id: string) => {
+      const scope = currentScope;
+      if (!mountedRef.current || scopeRef.current !== scope) return;
       setBusy(true);
       try {
-        setStore(await memoryService.deleteRecord(id));
+        const data = await memoryService.deleteRecord(id, scope.namespace);
+        if (mountedRef.current && scopeRef.current === scope)
+          setStore({ namespace: scope.namespace, data });
       } catch {
-        onFeedback("删除记忆失败，请重试。");
+        if (mountedRef.current && scopeRef.current === scope)
+          onFeedback("删除记忆失败，请重试。");
       } finally {
-        setBusy(false);
+        if (mountedRef.current && scopeRef.current === scope) setBusy(false);
       }
     },
-    [onFeedback],
+    [onFeedback, currentScope],
   );
 
   const clearAll = useCallback(async () => {
+    const scope = currentScope;
+    if (!mountedRef.current || scopeRef.current !== scope) return;
     setBusy(true);
     try {
-      setStore(await memoryService.clearAll());
-      onFeedback(
-        "已清空当前存储的记忆；已接入共享文件的客户端重新读取后会看到变化。",
-      );
+      const data = await memoryService.clearAll(scope.namespace);
+      if (!mountedRef.current || scopeRef.current !== scope) return;
+      setStore({ namespace: scope.namespace, data });
+      onFeedback("已清空当前范围的记忆；其他范围保持不变。");
     } catch {
-      onFeedback("清空记忆失败，请重试。");
+      if (mountedRef.current && scopeRef.current === scope)
+        onFeedback("清空记忆失败，请重试。");
     } finally {
-      setBusy(false);
+      if (mountedRef.current && scopeRef.current === scope) setBusy(false);
     }
-  }, [onFeedback]);
+  }, [onFeedback, currentScope]);
 
   const resetIdentity = useCallback(async () => {
+    const scope = currentScope;
+    if (!mountedRef.current || scopeRef.current !== scope) return;
     setBusy(true);
     try {
-      setStore(await memoryService.resetIdentity());
-      onFeedback("已重置当前记忆。桌面端旧文件保留为 .previous 备份。");
+      const data = await memoryService.resetIdentity(scope.namespace);
+      if (!mountedRef.current || scopeRef.current !== scope) return;
+      setStore({ namespace: scope.namespace, data });
+      onFeedback(
+        scope.namespace === "global"
+          ? "已重置当前记忆。桌面端旧文件保留为 .previous 备份。"
+          : "已重置当前范围的记忆；其他范围保持不变。",
+      );
     } catch {
-      onFeedback("重置记忆文件失败，请重试。");
+      if (mountedRef.current && scopeRef.current === scope)
+        onFeedback("重置记忆文件失败，请重试。");
     } finally {
-      setBusy(false);
+      if (mountedRef.current && scopeRef.current === scope) setBusy(false);
     }
-  }, [onFeedback]);
+  }, [onFeedback, currentScope]);
 
   const authorizeSharedDirectory = useCallback(async () => {
     setBusy(true);
@@ -203,6 +276,8 @@ export function useMemory(
 
   const extractWithCodex = useCallback(
     async (targetChatOrIsTemp?: { isTemporary?: boolean } | boolean | null) => {
+      const scope = currentScope;
+      if (!mountedRef.current || scopeRef.current !== scope) return;
       if (extracting || busy) return;
       const blockReason = () => {
         const currentOpt = optionsRef.current;
@@ -215,7 +290,12 @@ export function useMemory(
             (currentOpt?.isTemporary || currentOpt?.activeChat?.isTemporary));
         return (
           agentConnection.getExecutionBlockReason() ??
-          (isTemp ? "临时会话无法提炼长期记忆，请切换至常规会话。" : undefined)
+          (isTemp
+            ? "临时会话无法提炼长期记忆，请切换至常规会话。"
+            : undefined) ??
+          (!memoryService.isEnabled()
+            ? "记忆服务已关闭，请先开启后提炼。"
+            : undefined)
         );
       };
       const blocked = blockReason();
@@ -235,10 +315,17 @@ export function useMemory(
       }
       const revision = beforeState.connectionRevision;
       const projectId = agentConnection.getProjectId();
+      if (scope.projectId && projectId !== scope.projectId) {
+        onFeedback("当前项目的 Agent 会话尚未就绪，请重新连接后提炼。");
+        return;
+      }
       const isCurrent = () => {
         const current = agentConnection.getState();
         return (
           agentRef.current === agentConnection &&
+          mountedRef.current &&
+          memoryService.isEnabled() &&
+          scopeRef.current === scope &&
           current.status === "connected" &&
           current.connectionRevision === revision &&
           current.conversation?.threadId === threadId &&
@@ -248,6 +335,7 @@ export function useMemory(
       };
       const checkCurrent = () => {
         if (isCurrent()) return true;
+        if (!mountedRef.current) return false;
         onFeedback("会话已变更，已取消本次记忆提炼。");
         return false;
       };
@@ -289,6 +377,7 @@ export function useMemory(
           threadId,
           expectedVersion,
           isCurrent,
+          scope.namespace,
         );
         if (!checkCurrent()) return;
         await refresh();
@@ -301,10 +390,11 @@ export function useMemory(
       } catch {
         if (checkCurrent()) onFeedback("提炼记忆时发生错误，请重试。");
       } finally {
-        setExtracting(false);
+        if (mountedRef.current && scopeRef.current === scope)
+          setExtracting(false);
       }
     },
-    [agentConnection, busy, extracting, onFeedback, refresh],
+    [agentConnection, busy, extracting, onFeedback, refresh, currentScope],
   );
 
   return {

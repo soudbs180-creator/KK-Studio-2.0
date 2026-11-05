@@ -195,6 +195,7 @@ export type {
   NativeTaskStatus,
 } from "./nativeTaskHost.ts";
 export { compileDesignPrompt } from "./promptCompiler.ts";
+export { waitForCreationTask } from "./waitForTask.ts";
 export type { PromptCompileOptions } from "./promptCompiler.ts";
 export {
   PROVIDER_CONNECTIONS_STORAGE_KEY,
@@ -251,7 +252,6 @@ export {
   validateSnapshotV3,
 } from "./snapshotCodec.ts";
 export {
-  NonDowngradableWriteBarrier,
   loadCreationSnapshot,
   pendingRecoveryDraft,
   persistCreationSnapshotAsync,
@@ -330,3 +330,5 @@ export type {
   UseTaskExecutionOptions,
   UseTaskExecutionReturn,
 } from "./useTaskExecution.ts";
+
+export { captureCanvasMedia } from "./mediaTaskInput.ts";

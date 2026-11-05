@@ -1,5 +1,10 @@
 import { expect, test } from "@playwright/test";
 import {
+  configureMediaNode,
+  fixtureVideo,
+  approveMediaTask,
+} from "./mediaHelpers";
+import {
   openWorkspace,
   showCanvasNavigation,
   uploadCanvasMedia,
@@ -95,7 +100,7 @@ test("视频编辑器只在选中时出现，参数与提示词在切换后保�
     animations: "disabled",
   });
   await page.getByRole("button", { name: "视频参数", exact: true }).click();
-  await page.getByLabel("视频时长").selectOption("10");
+  await page.getByLabel("视频时长").selectOption("6");
   await page.keyboard.press("Escape");
   await expect(editor).toBeVisible();
   await page
@@ -106,7 +111,7 @@ test("视频编辑器只在选中时出现，参数与提示词在切换后保�
   await expect(page.getByLabel("视频提示词")).toHaveValue("猎豹在草原上奔跑");
   await expect(
     page.getByRole("button", { name: "视频参数", exact: true }),
-  ).toContainText("10S");
+  ).toContainText("6S");
   await page.getByRole("button", { name: "生成数量", exact: true }).click();
   await page.keyboard.press("Home");
   await page.keyboard.press("Escape");
@@ -125,25 +130,43 @@ test("视频编辑器只在选中时出现，参数与提示词在切换后保�
         }),
     )
     .toBe(true);
-  await page.getByRole("button", { name: "生成视频", exact: true }).click();
+  await uploadCanvasMedia(page.getByTestId("canvas-node-image"), "image");
+  const source = page.locator('.canvas-node[data-kind="video"]').last();
+  await configureMediaNode(page, source, "video");
+  await fixtureVideo(page);
+  await source.getByRole("button", { name: "生成视频", exact: true }).click();
+  await approveMediaTask(page);
   await expect(
-    page.locator('.demo-result-node[data-kind="video"][data-source="demo"]'),
+    page.locator(
+      '.demo-result-node[data-kind="video"][data-source="provider"]',
+    ),
   ).toHaveCount(1);
   await expect(
-    page.locator('.demo-result-node[data-kind="video"] .demo-badge'),
-  ).toHaveText("示范素材");
+    page.locator('.demo-result-node[data-source="demo"]'),
+  ).toHaveCount(0);
 });
 
 test("任务面板按 Runtime / Tasks 展示卡片，滚轮和 Escape 不影响画布", async ({
   page,
 }) => {
   await openWorkspace(page);
+  await uploadCanvasMedia(page.getByTestId("canvas-node-image"), "image");
+  const source = page.getByTestId("canvas-node-video1");
+  await source.focus();
+  await page.keyboard.press("Enter");
+  await configureMediaNode(page, source, "video");
+  await fixtureVideo(page);
+  await source.getByLabel("视频提示词").fill("任务面板真实任务");
+  await source.getByRole("button", { name: "生成视频", exact: true }).click();
+  await approveMediaTask(page);
+  await expect(
+    page.locator('.demo-result-node[data-source="provider"]'),
+  ).toHaveCount(1);
   const trigger = page.getByRole("button", { name: "打开任务列表" });
   await trigger.click();
   const panel = page.getByRole("region", { name: "任务列表" });
   await expect(panel).toHaveAttribute("data-node-id", "396:938");
-  await expect(panel.getByText("点击查看")).toBeVisible();
-  await expect(panel.getByText("演示 · 生成中")).toBeVisible();
+  await expect(panel.getByText("已完成", { exact: true })).toBeVisible();
   await expect
     .poll(() => panel.boundingBox())
     .toEqual({
@@ -161,8 +184,8 @@ test("任务面板按 Runtime / Tasks 展示卡片，滚轮和 Escape 不影响�
       .outputPath("evidence/runtime-tasks-2026-09-11/task-panel.png"),
     animations: "disabled",
   });
-  await expect(panel.locator(".task-card")).toHaveCount(2);
-  await panel.getByRole("button", { name: "查看演示任务 2026/9/5" }).click();
+  await expect(panel.locator(".task-card")).toHaveCount(1);
+  await panel.getByRole("button", { name: /^查看任务 / }).click();
   await expect(panel.getByRole("dialog", { name: "任务详情" })).toBeVisible();
   await trigger.click();
   await expect(panel).toHaveCount(0);
@@ -177,8 +200,8 @@ test("任务面板按 Runtime / Tasks 展示卡片，滚轮和 Escape 不影响�
     before!,
   );
   await panel.getByRole("button", { name: "执行中", exact: true }).click();
-  await expect(panel.locator(".task-card")).toHaveCount(1);
-  await expect(panel.getByText("演示 · 生成中")).toBeVisible();
+  await expect(panel.locator(".task-card")).toHaveCount(0);
+  await expect(panel.getByText("暂无执行中任务")).toBeVisible();
   await panel.getByRole("button", { name: "失败", exact: true }).click();
   await expect(panel.getByText("暂无失败任务")).toBeVisible();
   await page.keyboard.press("Escape");

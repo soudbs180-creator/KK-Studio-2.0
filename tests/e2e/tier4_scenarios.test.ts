@@ -1,3 +1,13 @@
+import { createElement as h } from "react";
+import { renderToStaticMarkup as render } from "react-dom/server";
+import { Button } from "../../src/components/ui/Button.tsx";
+import { resolveImageSize } from "../../src/domain/imageParameters.ts";
+import {
+  validateViewportLayout,
+  evaluateStyleDeclaration,
+} from "../../src/domain/uiAestheticGovernance.ts";
+import { renderSidebarSurface } from "../support/responsiveFixture.ts";
+import { createCanvasOperationFixture } from "../support/canvasOperationFixture.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
@@ -12,16 +22,9 @@ import {
   auditStoryboardContinuity,
   parsePromptMentions,
   compileOpticsPrompt,
-  parseAspectRatio,
-  calculateDimensionsForRatio,
   GatewayCooldownScheduler,
   DualStickinessManager,
   formatStatuslineIPC,
-  classifyViewport,
-  FIGMA_SURFACE_TOKENS,
-  evaluateElementAesthetics,
-  validateButtonProps,
-  resolveUiIcon,
 } from "./harness.ts";
 
 /* =========================================================================
@@ -73,8 +76,8 @@ test("SCENARIO-T4-01 (Full Novel Script to Production Pipeline)", () => {
   assert.equal(detectedCuts.length, 2);
 
   // 5. Canvas MCP Server generates 34 Zod card operations
-  const canvasMcp = new CanvasMcpServer();
-  const canvasCtrl = new AutonomousCanvasController();
+  const canvasMcp = new CanvasMcpServer(createCanvasOperationFixture());
+  const canvasCtrl = new AutonomousCanvasController(canvasMcp.bridge!);
   const generatedCardIds: string[] = [];
 
   for (const cut of detectedCuts) {
@@ -89,9 +92,12 @@ test("SCENARIO-T4-01 (Full Novel Script to Production Pipeline)", () => {
     const opRes = canvasMcp.executeOp({
       op: "add_card",
       payload: {
-        cardId,
-        title: `Shot at ${cut.timestampSeconds}s`,
-        aspectRatio: "16:9",
+        card: {
+          id: cardId,
+          kind: "text",
+          title: `Shot at ${cut.timestampSeconds}s`,
+        },
+        position: { x: cut.frameIndex * 700, y: 100 },
       },
     });
     assert.equal(opRes.success, true);
@@ -103,7 +109,8 @@ test("SCENARIO-T4-01 (Full Novel Script to Production Pipeline)", () => {
     payload: {
       source: generatedCardIds[0],
       target: generatedCardIds[1],
-      type: "cut",
+      id: "shot-sequence",
+      kind: "result",
     },
   });
   assert.equal(connectOp.success, true);
@@ -294,27 +301,28 @@ test("SCENARIO-T4-04 (Pure-Client Video Breakdown & Canvas Card Generation)", ()
   assert.equal(cutBoundaries[1].frameIndex, 4);
 
   // 3. Adapt each cut frame to 16:9 aspect ratio dimensions
-  const ratioSpec = parseAspectRatio("16:9");
-  assert.equal(ratioSpec.orientation, "landscape");
+  assert.equal(resolveImageSize("16:9", "1K"), "1024x576");
 
-  const mcp = new CanvasMcpServer();
-  const controller = new AutonomousCanvasController();
+  const liveCanvas = createCanvasOperationFixture();
+  const mcp = new CanvasMcpServer(liveCanvas);
+  const controller = new AutonomousCanvasController(liveCanvas);
   const createdCardIds: string[] = [];
 
   cutBoundaries.forEach((cut, i) => {
     const cardId = `keyframe-card-${cut.frameIndex}`;
     createdCardIds.push(cardId);
-    const dims = calculateDimensionsForRatio("16:9", 640);
+    const size = resolveImageSize("16:9", "1K")!;
 
     const res = mcp.executeOp({
       op: "add_card",
       payload: {
-        id: cardId,
-        x: i * 700,
-        y: 100,
-        width: dims.width,
-        height: dims.height,
-        label: `Keyframe #${cut.frameIndex} at ${cut.timestampSeconds}s`,
+        card: {
+          id: cardId,
+          kind: "image",
+          title: `Keyframe #${cut.frameIndex} at ${cut.timestampSeconds}s`,
+          description: `${size}`,
+        },
+        position: { x: i * 700, y: 100 },
       },
     });
     assert.equal(res.success, true);
@@ -359,13 +367,11 @@ test("SCENARIO-T5-05 (3D Director Optics & In-Prompt Reference Mentions)", () =>
   assert.ok(compiledPrompt.includes("[RefAsset: asset-neo-tokyo-bg]"));
 
   // 3. UI validation: Standard 40px Button primitive renders with Lucide icon
-  const btn = validateButtonProps({ heightTier: "40px", variant: "primary" });
-  assert.equal(btn.valid, true);
-  assert.equal(btn.heightPx, 40);
-  assert.equal(btn.hitBoxPx, 44);
-
-  const icon = resolveUiIcon("camera", 20);
-  assert.equal(icon.resolved, true);
+  const markup = render(
+    h(Button, { heightTier: "40px", prefixIcon: "camera" }, "Generate"),
+  );
+  assert.match(markup, /kk-button--40/u);
+  assert.match(markup, /<svg/u);
 
   // 4. Generation pipeline progress statusline emission
   const statusMsg = formatStatuslineIPC({
@@ -384,37 +390,17 @@ test("SCENARIO-T5-05 (3D Director Optics & In-Prompt Reference Mentions)", () =>
 // Screen width <=767px -> Viewport classification -> Canvas screen disabled ->
 // Figma surface tokens & 4px grid rhythm verified
 // -------------------------------------------------------------------------
-test("SCENARIO-T4-06 (Mobile Single-Column Chat & Responsive Governance)", () => {
-  // 1. Simulate mobile phone viewport (iPhone 14 / 390px)
-  const mobileViewport = classifyViewport(390);
-  assert.equal(mobileViewport.isMobile, true);
-  assert.equal(mobileViewport.isDesktop, false);
-  assert.equal(mobileViewport.layout, "single-column-chat");
+test("SCENARIO-T4-06: actual phone and desktop layout hooks share typography and spacing rules", () => {
+  assert.match(renderSidebarSurface(390), /data-surface="phone"/u);
+  assert.match(renderSidebarSurface(1440), /data-surface="desktop"/u);
+  assert.ok(validateViewportLayout(390, ["CanvasScreen"]).length);
+  assert.deepEqual(validateViewportLayout(1440, ["CanvasScreen"]), []);
   assert.equal(
-    mobileViewport.allowCanvas,
-    false,
-    "Canvas strictly disallowed on mobile",
+    evaluateStyleDeclaration({
+      padding: "12px",
+      margin: "8px",
+      fontWeight: 400,
+    }).valid,
+    true,
   );
-
-  // 2. Validate Figma design system surface tokens applied to mobile chat
-  assert.equal(FIGMA_SURFACE_TOKENS.bgSurface, "#f2f2f2");
-  assert.equal(FIGMA_SURFACE_TOKENS.focusRingNeutralDark, "#252525");
-
-  // 3. Aesthetic governance evaluation for mobile chat bubble styles
-  const chatBubbleStyle = {
-    paddingPx: 12, // 12px = 3 * 4px (4px grid compliant)
-    marginPx: 8, // 8px = 2 * 4px (4px grid compliant)
-    borderRadiusPx: 16, // compliant radius
-    contrastRatio: 6.8, // high contrast compliant
-  };
-  const redline = evaluateElementAesthetics(chatBubbleStyle);
-  assert.equal(redline.pass, true);
-  assert.equal(redline.violations.length, 0);
-
-  // 4. Switch to desktop viewport (1440px)
-  const desktopViewport = classifyViewport(1440);
-  assert.equal(desktopViewport.isMobile, false);
-  assert.equal(desktopViewport.isDesktop, true);
-  assert.equal(desktopViewport.layout, "desktop-canvas-workbench");
-  assert.equal(desktopViewport.allowCanvas, true, "Canvas enabled on desktop");
 });

@@ -24,6 +24,7 @@ type CachedNodeRect = {
 };
 
 type Gesture = {
+  lockedIds?: Set<string>;
   kind: "pan" | "node" | "marquee";
   pointerId: number;
   client: Point;
@@ -133,6 +134,13 @@ function safeCancelAnimationFrame(handle: number): void {
 }
 
 export function resolveTargetNodeIds(drag: Gesture): Set<string> {
+  if (drag.lockedIds?.size) {
+    const ids =
+      drag.nodeId && !drag.selection.has(drag.nodeId)
+        ? [drag.nodeId]
+        : [...drag.selection];
+    return new Set(ids.filter((id) => !drag.lockedIds!.has(id)));
+  }
   if (drag.nodeId) {
     return drag.selection.has(drag.nodeId)
       ? drag.selection
@@ -347,6 +355,14 @@ export function useCanvasPointer({
     // 缓存 surfaceScale，整个拖动周期无需重复触发 reflow
     const cachedScale = canvas ? surfaceScale(canvas) : 1;
     dragRef.current = {
+      lockedIds: new Set(
+        Array.from(
+          canvas?.querySelectorAll<HTMLElement>(
+            "[data-canvas-node][data-locked='true']",
+          ) ?? [],
+          (node) => node.dataset.nodeId!,
+        ).filter(Boolean),
+      ),
       kind,
       pointerId: event.pointerId,
       client: { x: event.clientX, y: event.clientY },

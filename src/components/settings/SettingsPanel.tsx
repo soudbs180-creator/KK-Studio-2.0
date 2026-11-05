@@ -12,14 +12,9 @@ import AppUpdatePage from "./AppUpdatePage";
 import ProfileUsagePage from "./ProfileUsagePage";
 import ShortcutsManagementPage from "./ShortcutsManagementPage";
 import SettingsSections from "./SettingsSections";
-import type {
-  SettingsSection,
-  SettingsSectionItem,
-} from "./SettingsSectionData";
-import {
-  SETTINGS_NAV_GROUPS,
-  resolveSettingsRoute,
-} from "./SettingsSectionData";
+import SettingsSidebar from "./SettingsSidebar";
+import type { SettingsSection } from "./SettingsSectionData";
+import { resolveSettingsRoute } from "./SettingsSectionData";
 import {
   SettingsNavigationContext,
   useSettingsNavigationLock,
@@ -31,6 +26,7 @@ import type { CreationProject } from "../../features/creation/index.ts";
 import type { SkillRegistry } from "../../features/skills/index.ts";
 import type { LocalWorkflowAccess } from "./LocalWorkflowSettings";
 import "./settings.css";
+import { Button } from "../ui";
 
 function readInitialSettings(): {
   preferences: SettingsPreferences;
@@ -64,6 +60,7 @@ export default function SettingsPanel({
   saveState = "loading",
   revision = 0,
   projects,
+  activeProject,
   registry,
   workflows,
 }: {
@@ -72,6 +69,7 @@ export default function SettingsPanel({
   saveState?: SaveState;
   revision?: number;
   projects: readonly CreationProject[];
+  activeProject?: CreationProject;
   registry: SkillRegistry;
   workflows: LocalWorkflowAccess;
 }) {
@@ -159,7 +157,8 @@ export default function SettingsPanel({
         data-figma-node="399:27506"
       >
         <div className="settings-phone-navigation">
-          <button
+          <Button
+            heightTier="40px"
             type="button"
             className="settings-action secondary"
             disabled={busy}
@@ -169,48 +168,20 @@ export default function SettingsPanel({
             }}
           >
             返回设置分类
-          </button>
+          </Button>
         </div>
-        <aside className="settings-sidebar">
-          <h1 id="settings-dialog-title">设置</h1>
-          <nav className="settings-nav" aria-label="设置分类">
-            {SETTINGS_NAV_GROUPS.map((group) => (
-              <div key={group.label} className="settings-nav-group">
-                <div className="settings-nav-group-label">{group.label}</div>
-                {group.items.map((item: SettingsSectionItem) => (
-                  <button
-                    key={item.id}
-                    data-section-id={item.id}
-                    type="button"
-                    className={`settings-nav-item${section === item.id ? " is-active" : ""}`}
-                    aria-current={section === item.id ? "page" : undefined}
-                    disabled={busy}
-                    title={
-                      busy ? "连接操作进行中，完成后可切换设置" : undefined
-                    }
-                    onClick={() => {
-                      if (busy) return;
-                      setNavigation("detail");
-                      setSection(item.id);
-                      if (item.id === "providers") setModelsMounted(true);
-                      if (item.id !== "extensions") setExtensionsTab(undefined);
-                      setFeedback({ message: "", error: false });
-                    }}
-                  >
-                    <img
-                      className="settings-nav-icon"
-                      src={`/design/figma/settings-nav-${item.icon}.svg`}
-                      alt=""
-                      width="20"
-                      height="20"
-                    />
-                    <span>{item.label}</span>
-                  </button>
-                ))}
-              </div>
-            ))}
-          </nav>
-        </aside>
+        <SettingsSidebar
+          section={section}
+          busy={busy}
+          onSelect={(next) => {
+            if (busy) return;
+            setNavigation("detail");
+            setSection(next);
+            if (next === "providers") setModelsMounted(true);
+            if (next !== "extensions") setExtensionsTab(undefined);
+            setFeedback({ message: "", error: false });
+          }}
+        />
 
         <main
           className="settings-content"
@@ -250,6 +221,7 @@ export default function SettingsPanel({
               saveState={saveState}
               revision={revision}
               projects={projects}
+              activeProject={activeProject}
               preferences={preferences}
               registry={registry}
               workflows={workflows}

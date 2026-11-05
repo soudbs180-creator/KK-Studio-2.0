@@ -1,4 +1,5 @@
 import { modelProviderSchema } from "../../domain/modelProvider.ts";
+import { readTokenUsage, type TokenUsage } from "../../domain/tokenUsage.ts";
 import {
   buildTextRequest,
   providerNeedsKey,
@@ -22,6 +23,7 @@ export async function readTextStream(
   signal: AbortSignal,
   onText?: (text: string) => void,
   protocol: ProviderProtocol = "openai-chat",
+  onUsage?: (usage: TokenUsage) => void,
 ): Promise<string> {
   signal.throwIfAborted();
   if (
@@ -47,6 +49,7 @@ export async function readTextStream(
   let bytes = 0,
     finished = false,
     eventBytes = 0;
+  let usage: TokenUsage | undefined;
   const abort = () => {
     void reader.cancel().catch(() => undefined);
   };
@@ -81,12 +84,15 @@ export async function readTextStream(
     eventType = "";
     const previous = state.text;
     consumeTextEvent(payload, state, protocol);
+    usage = readTokenUsage(payload, usage);
+    if (usage) onUsage?.(usage);
     text = state.text;
     if (text !== previous) {
       if (encoder.encode(text).length > 32768) throw invalidStream();
       onText?.(text);
     }
-    finished = state.complete;
+    // Chat providers send usage-only events after finish_reason, before [DONE].
+    if (modern) finished = state.complete;
   }
   function consumeLine(line: string): void {
     if (encoder.encode(line).length > 65536) throw invalidStream();
@@ -107,6 +113,8 @@ export async function readTextStream(
       signal.throwIfAborted();
       if (chunk.done) {
         buffer += decoder.decode();
+        if (!modern && state.complete && !buffer && !data.length)
+          finished = true;
         break;
       }
       bytes += chunk.value.byteLength;
@@ -150,6 +158,7 @@ export async function generateText(options: {
   beforeRequest: () => void;
   onRequestStart: () => void;
   onText?: (text: string) => void;
+  onUsage?: (usage: TokenUsage) => void;
 }): Promise<string> {
   const signal = AbortSignal.any([
     options.signal,
@@ -240,5 +249,11 @@ export async function generateText(options: {
       },
     );
   }
-  return readTextStream(response, signal, options.onText, options.protocol);
+  return readTextStream(
+    response,
+    signal,
+    options.onText,
+    options.protocol,
+    options.onUsage,
+  );
 }

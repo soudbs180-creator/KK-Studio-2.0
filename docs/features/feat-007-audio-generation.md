@@ -1,36 +1,33 @@
-﻿# 音频生成节点（FEAT-007）
+# 音频生成节点（FEAT-007）
 
 - 状态：PARTIAL
 - 领域：creation
-- 最近更新：2026-09-22
-- 关联任务：TASK-UI-005、BACKEND-MEDIA-001、EXT-PROVIDER
+- 最近更新：2026-11-04
+- 关联任务：BACKEND-MEDIA-001、EXT-PROVIDER、TASK-UI-005
 
 ## 用户可见入口
 
-- 添加节点 › 音频；与文本节点共用 `PromptCreationNode` 编辑卡片。
+首页、对话及音频节点选择语音模型连接，输入朗读文本后，经统一 CreationTask / 原生持久 TaskHost 执行 OpenAI 兼容 `/audio/speech`。无配置、失败或离线不返回演示音频。参数契约捕获音色、MP3/WAV、0.25–4 倍速；节点默认 Alloy/MP3/1 倍速。音频参考附件明确拒绝。
 
-## 代码位置
-
-- UI：`src/components/nodes/PromptCreationNode.tsx`
-- 演示 seam：`src/components/nodes/useLocalGeneration.ts`、`src/domain/demoMedia.ts`
-- 真实链路（已移植）：`src/features/creation/audioGeneration.ts`（OpenAI 兼容 TTS 请求构造、
-  音频选项规范化、本地代理拼接、错误透出）；源：vendor/canvas-plugins 上游 `web/src/lib/audio-generation.ts`
-
-## 测试与证据
-
-- `tests/browser/demo-results.spec.ts`
-- `tests/unit/audioGeneration.test.ts`（选项规范化、TTS 请求构造、代理拼接、错误透出）
+二进制结果通过 MIME、签名与大小校验后归档并连 result 边，任务和结果可重载。speech 本身无轮询 ID；请求中断后的受理不确定保留 unknown，禁止重发冒充恢复。音乐生成尚未接入。
 
 ## 当前能力
 
-- 音频节点仍回放本地演示素材（固定结果）。
-- TTS/音频请求后端能力已可用（供后续供应商接线复用），尚未接到节点提交链。
+生产入口已接入统一任务链；跨端真实服务终验仍待完成，状态保持 PARTIAL。
 
-## 差距与后端化（Wave 1）
+## 代码位置
 
-- 抽象音频 provider（TTS/音乐），复用统一任务宿主与素材归档；区分语音/音乐的参数与轮询。
-- 真实验收依赖供应商 Key/额度（EXT-PROVIDER）。
+- `src/components/nodes/PromptCreationNode.tsx`、`src/features/creation/audioGeneration.ts`。
+- `mediaTaskExecution.ts`、`executeMediaTask.ts`、`nativeTaskHost.ts`、`src-tauri/src/task_host_media.rs`。
+- `packages/creation-contracts/media.ts`；`tests/unit/mediaTaskExecution.test.ts`、`mediaResponse.test.ts`；浏览器 `generation-flow.spec.ts` 验证显式 speech 夹具的归档、解码、播放和重载。
+- [阶段 3 验证](../changes/2026-11-04-multimodal/verification.md)。真实服务验收由 EXT-PROVIDER 跟踪，不能以固定协议夹具升级 REAL。
 
-## TASK-UI-005 更新
+## 测试与证据
 
-音频卡改为本地演示标识，移除无效的文案/剧本/策划案选项。真实 TTS 仍未接任务/资产链。 见 [核对与验证](../changes/2026-09-22-ui-feature-parity/verification.md)。
+当前整合结果以[六支柱接线验收](../changes/2026-11-04-e2e-wiring/verification.md)为准，源树协议测试记录见[阶段 3 验证](../changes/2026-11-04-multimodal/verification.md)。
+
+## 差距与后端化
+
+真实 Provider、Desktop/Web 同态终验、模型能力及实际音视频解码验证必须分别记录，合成协议通过不能升级 REAL。
+
+2026-09-22 的独立 TTS helper 和本地演示节点已由本轮统一任务接线替代；保留历史演示素材读取。

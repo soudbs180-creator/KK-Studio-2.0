@@ -259,15 +259,15 @@ export function validateTypographyWeight(
   weight: number | string,
 ): SlopFinding | null {
   const w = typeof weight === "string" ? parseInt(weight, 10) : weight;
-  if (w >= 700) {
+  if (w > 700) {
     return {
       pass: "typography",
       ruleId: "TYP-01",
-      ruleName: "Overweight Chrome Heading",
+      ruleName: "Weight Exceeds Figma Typography Scale",
       severity: "violation",
-      message: `字重 ${weight} 过重，规范要求字重限制在 400-600，层级靠尺寸与对比度拉开`,
+      message: `字重 ${weight} 超过 01 字阶最高基准 700；按文字角色使用 400/500/700，深色主题对应 360/460/660`,
       actualValue: weight,
-      recommendedValue: "500",
+      recommendedValue: "700",
     };
   }
   return null;

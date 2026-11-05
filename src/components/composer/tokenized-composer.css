@@ -1,0 +1,7 @@
+.tokenized-composer-wrapper {
+  position: relative;
+  width: 100%;
+}
+.tokenized-composer-wrapper > .composer-textarea {
+  display: block;
+}

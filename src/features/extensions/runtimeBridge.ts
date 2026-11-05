@@ -327,7 +327,9 @@ export class ExtensionRuntimeBridgeImpl implements ExtensionRuntimeBridge {
   readonly version = "2.0.0";
   readonly apiVersion = 1;
   readonly #extensions = new Map<string, ExtensionRegistration>();
-  readonly #legacyCleanups = new Map<string, () => void>();
+  readonly #factories = new Map<string, ExtensionFactory>();
+  readonly #extensionEvents = new SimpleEventEmitter();
+  #extensionSnapshot: readonly ExtensionRegistration[] = [];
   readonly #legacyManifests = new Map<string, ExtensionManifest>();
   readonly #legacySlots = new Map<
     string,
@@ -346,12 +348,8 @@ export class ExtensionRuntimeBridgeImpl implements ExtensionRuntimeBridge {
   }
 
   extension(id: string, factory: ExtensionFactory): ExtensionContext {
-    if (this.#extensions.has(id)) {
-      const existing = this.#extensions.get(id)!;
-      if (existing.status === "active") {
-        existing.context.dispose();
-      }
-    }
+    this.#extensions.get(id)?.context.dispose();
+    this.#factories.set(id, factory);
 
     const context = createExtensionContext(
       id,
@@ -359,8 +357,10 @@ export class ExtensionRuntimeBridgeImpl implements ExtensionRuntimeBridge {
       this.#middleware,
       (ctx) => {
         const reg = this.#extensions.get(ctx.id);
-        if (reg) reg.status = "disposed";
+        if (reg?.context !== ctx) return;
+        reg.status = "disposed";
         slotRegistry.unregisterExtension(ctx.id);
+        this.#notifyExtensions();
       },
     );
 
@@ -375,9 +375,11 @@ export class ExtensionRuntimeBridgeImpl implements ExtensionRuntimeBridge {
       const result = factory(context);
       if (result instanceof Promise) {
         result.catch((err) => {
+          if (context.disposed) return;
           registration.status = "degraded";
           registration.error = err instanceof Error ? err.message : String(err);
           context.fail(err);
+          this.#notifyExtensions();
         });
       }
     } catch (err) {
@@ -386,11 +388,43 @@ export class ExtensionRuntimeBridgeImpl implements ExtensionRuntimeBridge {
       context.fail(err);
     }
 
+    this.#notifyExtensions();
     return context;
   }
 
   plugin(id: string, factory: ExtensionFactory): ExtensionContext {
     return this.extension(id, factory);
+  }
+
+  getExtensions(): readonly ExtensionRegistration[] {
+    return this.#extensionSnapshot;
+  }
+
+  subscribeExtensions(callback: () => void): DisposeFn {
+    return this.#extensionEvents.on("change", callback);
+  }
+
+  setExtensionEnabled(id: string, enabled: boolean): void {
+    const registration = this.#extensions.get(id);
+    const factory = this.#factories.get(id);
+    if (!registration) throw new Error(`Unknown extension ${id}`);
+    if (enabled) {
+      if (registration.status === "active") return;
+      if (!factory)
+        throw new Error(
+          "旧版扩展停用后需重新加载，或迁移至 extension(id, factory)。",
+        );
+      this.extension(id, factory);
+    } else if (registration.status !== "disabled") {
+      registration.context.dispose();
+      registration.status = "disabled";
+      this.#notifyExtensions();
+    }
+  }
+
+  #notifyExtensions(): void {
+    this.#extensionSnapshot = [...this.#extensions.values()];
+    this.#extensionEvents.emit("change");
   }
 
   // Backward-compatible API for e2e tests
@@ -405,9 +439,16 @@ export class ExtensionRuntimeBridgeImpl implements ExtensionRuntimeBridge {
       throw new Error(`Extension ${manifest.id} already registered`);
     }
     this.#legacyManifests.set(manifest.id, manifest);
-    if (cleanupFn) {
-      this.#legacyCleanups.set(manifest.id, cleanupFn);
-    }
+    this.extension(manifest.id, (context) => {
+      if (cleanupFn) context.onCleanup(cleanupFn);
+    });
+    const registration = this.#extensions.get(manifest.id)!;
+    registration.name = manifest.name;
+    registration.version = manifest.version;
+    registration.restartable = false;
+    // Legacy manifests provide no activation factory; never fake a restart after cleanup.
+    this.#factories.delete(manifest.id);
+    this.#notifyExtensions();
     return true;
   }
 
@@ -422,12 +463,14 @@ export class ExtensionRuntimeBridgeImpl implements ExtensionRuntimeBridge {
     list.push({ extId, render });
     this.#legacySlots.set(slotName, list);
 
-    // Also mount into SlotRegistry for React UI parity
-    slotRegistry.register(extId, {
+    const registration = this.#extensions.get(extId)!;
+    if (registration.context.disposed) return;
+    registration.context.registerSlot({
       slot: slotName,
       render: (ctx) => {
         const str = render();
-        ctx.container.innerHTML = str;
+        // String slots are text-only; interactive UI must use context.registerSlot with DOM rendering.
+        ctx.container.textContent = str;
       },
     });
   }
@@ -435,22 +478,12 @@ export class ExtensionRuntimeBridgeImpl implements ExtensionRuntimeBridge {
   getSlotItems(slotName: string): string[] {
     const list = this.#legacySlots.get(slotName);
     if (!list) return [];
-    return list.map((item) => item.render());
+    return list
+      .filter((item) => !this.#extensions.get(item.extId)?.context.disposed)
+      .map((item) => item.render());
   }
 
   unloadExtension(extId: string): void {
-    const cleanup = this.#legacyCleanups.get(extId);
-    if (cleanup) {
-      try {
-        cleanup();
-      } catch (err) {
-        console.error(
-          `[ExtensionRuntimeBridge] Cleanup failed for ${extId}:`,
-          err,
-        );
-      }
-    }
-    this.#legacyCleanups.delete(extId);
     this.#legacyManifests.delete(extId);
 
     // Remove legacy slot items
@@ -466,6 +499,8 @@ export class ExtensionRuntimeBridgeImpl implements ExtensionRuntimeBridge {
     if (modern) {
       modern.context.dispose();
       this.#extensions.delete(extId);
+      this.#factories.delete(extId);
+      this.#notifyExtensions();
     }
 
     // Purge from slotRegistry

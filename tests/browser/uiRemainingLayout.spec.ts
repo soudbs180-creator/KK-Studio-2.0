@@ -1,5 +1,9 @@
 import { expect, test } from "@playwright/test";
-import { openWorkspace, showCanvasNavigation } from "./helpers";
+import {
+  openWorkspace,
+  openTaskWorkspace,
+  showCanvasNavigation,
+} from "./helpers";
 
 test("展开的视频通过小地图重新定位后仍避开底部工具栏", async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 720 });
@@ -153,7 +157,7 @@ for (const [width, height] of [
     page,
   }) => {
     await page.setViewportSize({ width, height });
-    await openWorkspace(page);
+    await openTaskWorkspace(page);
     const trigger = page.getByRole("button", {
       name: "打开任务列表",
       exact: true,
@@ -183,7 +187,7 @@ for (const [width, height] of [
     await panel.getByRole("button", { name: "执行中", exact: true }).click();
     await expect(panel.locator(".task-card")).toHaveCount(1);
     const taskCard = panel.getByRole("button", {
-      name: "查看正在生成中的演示任务",
+      name: "查看任务 task-panel-paused",
       exact: true,
     });
     await taskCard.click();

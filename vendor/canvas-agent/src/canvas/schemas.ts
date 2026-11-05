@@ -46,6 +46,7 @@ export const toolNames = [
 export type ToolName = (typeof toolNames)[number];
 
 export const canvasOpSchema = z.discriminatedUnion("type", [
+    z.object({ type: z.literal("canvas_operation"), operation: z.object({ op: z.string(), payload: recordSchema }).strict() }).strict(),
     z.object({ type: z.literal("add_node"), nodeType: nodeTypeSchema.optional(), id: z.string().optional(), title: z.string().optional(), x: z.number().optional(), y: z.number().optional(), width: z.number().optional(), height: z.number().optional(), position: positionSchema.optional(), metadata: recordSchema.optional() }).passthrough(),
     z.object({ type: z.literal("update_node"), id: z.string(), patch: recordSchema.optional(), metadata: recordSchema.optional() }).passthrough(),
     z.object({ type: z.literal("delete_node"), id: z.string().optional(), ids: z.array(z.string()).optional() }).passthrough(),

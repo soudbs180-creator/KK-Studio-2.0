@@ -63,7 +63,7 @@ async function openPromptLibrary(page: import("@playwright/test").Page) {
   return trigger;
 }
 
-test("text templates change visible input while audio exposes only its demo capability", async ({
+test("text templates change visible input while audio guides model configuration", async ({
   page,
 }) => {
   await openWorkspace(page);
@@ -94,7 +94,7 @@ test("text templates change visible input while audio exposes only its demo capa
   await expect(audio.getByRole("group", { name: "文案创作方式" })).toHaveCount(
     0,
   );
-  await expect(audio).toContainText("本地演示");
+  await expect(audio).toContainText("配置音频模型连接");
 });
 
 test("Agent controls match the vendor protocol fixture, with error feedback and no fallback", async ({

@@ -6,6 +6,35 @@ export type {
   ModelKind,
   ModelSelection,
 } from "../../packages/creation-contracts/index.ts";
+import {
+  defaultAudioMedia,
+  defaultVideoMedia,
+} from "../../packages/creation-contracts/index.ts";
+import type { CreationDraft } from "./creationTypes.ts";
+
+export function homeDraftForSelection(
+  draft: CreationDraft,
+  selection: ModelSelection,
+): CreationDraft {
+  const kind =
+    selection.kind && selection.kind !== "unknown"
+      ? selection.kind
+      : draft.kind;
+  return {
+    ...draft,
+    model: selection.model,
+    modelSelection: selection,
+    providerConnectionId:
+      selection.source === "api" ? selection.connectionId : undefined,
+    kind,
+    media:
+      kind === "video" || kind === "audio"
+        ? draft.media?.kind === kind
+          ? draft.media
+          : { ...(kind === "video" ? defaultVideoMedia : defaultAudioMedia) }
+        : undefined,
+  };
+}
 
 /** Persist only routing and display metadata; unknown fields never enter projects. */
 export function normalizeModelSelection(

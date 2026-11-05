@@ -1,3 +1,4 @@
+import { createCanvasOperationFixture } from "../support/canvasOperationFixture.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
@@ -139,7 +140,7 @@ test("F12-T2-01: hook returning allow=false without explicit reason provides saf
   engine.addHook(() => ({ allow: false }));
   const res = engine.evaluate("tool", {});
   assert.equal(res.allow, false);
-  assert.equal(res.reason, undefined);
+  assert.equal(res.reason, "Execution rejected by security hook");
 });
 
 test("F12-T2-02: evaluating invocation with empty tool name and args executes safely", () => {
@@ -317,19 +318,19 @@ test("F14-T2-05: partial presence of required entities accurately reports exact 
 // Feature 15: Autonomous Canvas Agent Ops
 // -------------------------------------------------------------------------
 test("F15-T2-01: negative zoom clamps to 0.1", () => {
-  const ctrl = new AutonomousCanvasController();
+  const ctrl = new AutonomousCanvasController(createCanvasOperationFixture());
   ctrl.setViewport(0, 0, -2);
-  assert.equal(ctrl.viewport.zoom, 0.1);
+  assert.equal(ctrl.viewport.zoom, 0.2);
 });
 
 test("F15-T2-02: extreme zoom clamps to 5.0", () => {
-  const ctrl = new AutonomousCanvasController();
+  const ctrl = new AutonomousCanvasController(createCanvasOperationFixture());
   ctrl.setViewport(0, 0, 9999);
-  assert.equal(ctrl.viewport.zoom, 5.0);
+  assert.equal(ctrl.viewport.zoom, 4);
 });
 
 test("F15-T2-03: selecting empty node list clears all selected nodes", () => {
-  const ctrl = new AutonomousCanvasController();
+  const ctrl = new AutonomousCanvasController(createCanvasOperationFixture());
   ctrl.selectNodes(["node-a", "node-b"]);
   assert.equal(ctrl.selectedNodes.length, 2);
 
@@ -338,13 +339,13 @@ test("F15-T2-03: selecting empty node list clears all selected nodes", () => {
 });
 
 test("F15-T2-04: duplicate node IDs in selection are deduplicated by Set", () => {
-  const ctrl = new AutonomousCanvasController();
+  const ctrl = new AutonomousCanvasController(createCanvasOperationFixture());
   ctrl.selectNodes(["card-1", "card-1", "card-1"]);
   assert.deepEqual(ctrl.selectedNodes, ["card-1"]);
 });
 
 test("F15-T2-05: negative x and y viewport coordinates are supported for infinite canvas", () => {
-  const ctrl = new AutonomousCanvasController();
+  const ctrl = new AutonomousCanvasController(createCanvasOperationFixture());
   ctrl.setViewport(-50000, -25000, 0.5);
   assert.equal(ctrl.viewport.x, -50000);
   assert.equal(ctrl.viewport.y, -25000);
@@ -354,19 +355,19 @@ test("F15-T2-05: negative x and y viewport coordinates are supported for infinit
 // Feature 16: Canvas 34 Zod Operations & MCP Server
 // -------------------------------------------------------------------------
 test("F16-T2-01: CanvasMcpServer rejects null payload", () => {
-  const server = new CanvasMcpServer();
+  const server = new CanvasMcpServer(createCanvasOperationFixture());
   const res = server.executeOp(null);
   assert.equal(res.success, false);
 });
 
 test("F16-T2-02: CanvasMcpServer rejects string payload instead of object", () => {
-  const server = new CanvasMcpServer();
+  const server = new CanvasMcpServer(createCanvasOperationFixture());
   const res = server.executeOp("add_card");
   assert.equal(res.success, false);
 });
 
 test("F16-T2-03: CanvasMcpServer rejects non-object payload field", () => {
-  const server = new CanvasMcpServer();
+  const server = new CanvasMcpServer(createCanvasOperationFixture());
   const res = server.executeOp({
     op: "add_card",
     payload: "invalid-payload-string",
@@ -374,8 +375,8 @@ test("F16-T2-03: CanvasMcpServer rejects non-object payload field", () => {
   assert.equal(res.success, false);
 });
 
-test("F16-T2-04: CanvasMcpServer accepts all 34 recognized canvas operation names", () => {
-  const server = new CanvasMcpServer();
+test("F16-T2-04: CanvasMcpServer rejects missing payloads for all operations requiring arguments", () => {
+  const server = new CanvasMcpServer(createCanvasOperationFixture());
   const ops = [
     "add_card",
     "delete_card",
@@ -414,12 +415,23 @@ test("F16-T2-04: CanvasMcpServer accepts all 34 recognized canvas operation name
   ];
   for (const op of ops) {
     const res = server.executeOp({ op, payload: {} });
-    assert.equal(res.success, true, `Operation ${op} must be accepted`);
+    assert.equal(
+      res.success,
+      [
+        "reset_viewport",
+        "fit_view",
+        "clear_selection",
+        "export_canvas_json",
+        "undo",
+        "redo",
+      ].includes(op),
+      `Operation ${op} must validate its own required payload`,
+    );
   }
 });
 
 test("F16-T2-05: CanvasMcpServer rejects case-mismatched operation name", () => {
-  const server = new CanvasMcpServer();
+  const server = new CanvasMcpServer(createCanvasOperationFixture());
   const res = server.executeOp({ op: "ADD_CARD", payload: {} });
   assert.equal(res.success, false);
 });

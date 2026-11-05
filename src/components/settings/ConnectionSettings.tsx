@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react";
+import type { CreationProject } from "../../features/creation/index.ts";
 import type { SettingsSection } from "./SettingsSectionData";
 import ModelAccessSettings from "./ModelAccessSettings";
 import MemorySettingsSection from "./MemorySettingsSection";
@@ -24,12 +25,14 @@ export default function ConnectionSettings({
   onFeedback,
   initialModelMethod,
   workflows,
+  activeProject,
 }: {
   section: SettingsSection;
   active?: boolean;
   onFeedback: (message: string) => void;
   initialModelMethod?: "local";
   workflows: LocalWorkflowAccess;
+  activeProject?: CreationProject;
 }) {
   if (section === "providers")
     return (
@@ -41,7 +44,12 @@ export default function ConnectionSettings({
       />
     );
   if (section === "memory")
-    return <MemorySettingsSection onFeedback={onFeedback} />;
+    return (
+      <MemorySettingsSection
+        onFeedback={onFeedback}
+        activeProject={activeProject}
+      />
+    );
   if (section === "security") return <SecuritySettings />;
   if (section === "account") return <ProfileUsagePage />;
   if (section === "updates") return <AppUpdatePage />;

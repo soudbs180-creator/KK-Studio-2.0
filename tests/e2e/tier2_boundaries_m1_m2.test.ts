@@ -1,245 +1,181 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { createElement as h } from "react";
+import { renderToStaticMarkup as render } from "react-dom/server";
+import { readFileSync } from "node:fs";
+import { Button } from "../../src/components/ui/Button.tsx";
+import { Input } from "../../src/components/ui/Input.tsx";
+import { Select } from "../../src/components/ui/Select.tsx";
+import { Badge } from "../../src/components/ui/Badge.tsx";
+import { ModalDialog } from "../../src/components/ui/ModalDialog.tsx";
+import UiIcon, { type UiIconName } from "../../src/components/UiIcon.tsx";
+import { normalizeUiIconSize } from "../../src/components/uiIconSizing.ts";
+import { resolveImageSize } from "../../src/domain/imageParameters.ts";
 import {
+  validateSpacingValue,
+  evaluateStyleDeclaration,
   calculateContrastRatio,
-  validateFigmaSurfaceTokens,
-  validateButtonProps,
-  validateInputProps,
-  validateSelectProps,
-  validateBadgeProps,
-  validateModalProps,
-  resolveUiIcon,
-  parseAspectRatio,
-  calculateDimensionsForRatio,
-  classifyViewport,
-  check4pxGridRhythm,
-  evaluateElementAesthetics,
+} from "../../src/domain/uiAestheticGovernance.ts";
+import { renderSidebarSurface } from "../support/responsiveFixture.ts";
+import {
   GatewayCooldownScheduler,
   DualStickinessManager,
   ExtensionRuntimeBridge,
-  type ButtonHeightTier,
 } from "./harness.ts";
+const css = readFileSync(
+  new URL("../../src/styles/tokens.css", import.meta.url),
+  "utf8",
+);
+const workspaceCss = readFileSync(
+  new URL("../../src/styles/workspace.css", import.meta.url),
+  "utf8",
+);
 
-/* =========================================================================
- * Tier 2: Boundary & Corner Cases (Features 1 - 9 / Milestones 1 & 2)
- * ========================================================================= */
-
-// -------------------------------------------------------------------------
-// Feature 1: Figma Surface & Token Parity
-// -------------------------------------------------------------------------
-test("F01-T2-01: validateFigmaSurfaceTokens detects empty CSS stylesheet as invalid", () => {
-  const res = validateFigmaSurfaceTokens("");
-  assert.equal(res.valid, false);
-  assert.equal(res.missing.length, 5);
+test("F01-T2-01: all production tag colors define both themes", () => {
+  for (const category of ["character", "scene", "costume", "prop", "custom"])
+    assert.equal(css.split("--kk-tag-" + category + "-bg:").length - 1, 2);
 });
-
-test("F01-T2-02: validateFigmaSurfaceTokens pinpoints specifically missing tokens", () => {
-  const partialCss = ":root { --kk-bg-surface: #f2f2f2; }";
-  const res = validateFigmaSurfaceTokens(partialCss);
-  assert.equal(res.valid, false);
-  assert.ok(!res.missing.includes("--kk-bg-surface"));
-  assert.ok(res.missing.includes("--kk-focus-ring-neutral"));
+test("F01-T2-02: real focus ring is consumed by stylesheet selectors", () => {
+  assert.match(workspaceCss, /var\(--kk-focus-ring/u);
 });
-
-test("F01-T2-03: contrast ratio between identical colors is exactly 1.0", () => {
-  const ratio = calculateContrastRatio("#f2f2f2", "#f2f2f2");
-  assert.equal(ratio, 1);
+test("F01-T2-03: identical colors have contrast one", () => {
+  assert.equal(calculateContrastRatio("#f2f2f2", "#f2f2f2"), 1);
 });
-
-test("F01-T2-04: contrast ratio between black and white reaches maximum 21.0", () => {
-  const ratio = calculateContrastRatio("#000000", "#ffffff");
-  assert.equal(ratio, 21);
+test("F01-T2-04: black and white achieve contrast twenty-one", () => {
+  assert.equal(calculateContrastRatio("#000000", "#ffffff"), 21);
 });
-
-test("F01-T2-05: 3-character short hex codes compute valid contrast ratios", () => {
-  const ratio = calculateContrastRatio("#000", "#fff");
-  assert.equal(ratio, 21);
+test("F01-T2-05: short hexadecimal notation uses the real color parser", () => {
+  assert.equal(calculateContrastRatio("#000", "#fff"), 21);
 });
-
-// -------------------------------------------------------------------------
-// Feature 2: Foundational UI Primitive Layer
-// -------------------------------------------------------------------------
-test("F02-T2-01: Button rejects non-standard height tier", () => {
-  const res = validateButtonProps({
-    heightTier: "50px" as unknown as ButtonHeightTier,
-  });
-  assert.equal(res.valid, false);
-  assert.equal(res.heightPx, 0);
+test("F02-T2-01: actual default Button uses the current 32px tier", () => {
+  assert.match(render(h(Button, {}, "default")), /data-height-tier="32px"/u);
 });
-
-test("F02-T2-02: Input rejects non-string values gracefully", () => {
-  const res = validateInputProps({ value: null as unknown as string });
-  assert.equal(res.valid, false);
-  assert.ok(res.reason?.includes("must be a string"));
-});
-
-test("F02-T2-03: Select rejects selected value not present in options list", () => {
-  const res = validateSelectProps({
-    options: ["option-a", "option-b"],
-    selected: "option-c",
-  });
-  assert.equal(res.valid, false);
-  assert.ok(res.reason?.includes("Selected value must be in options"));
-});
-
-test("F02-T2-04: Badge rejects empty or whitespace-only label", () => {
-  const res = validateBadgeProps({ variant: "default", label: "   " });
-  assert.equal(res.valid, false);
-  assert.ok(res.reason?.includes("must not be empty"));
-});
-
-test("F02-T2-05: Modal rejects non-boolean open property or empty title", () => {
-  const res1 = validateModalProps({
-    open: "true" as unknown as boolean,
-    title: "Title",
-  });
-  assert.equal(res1.valid, false);
-
-  const res2 = validateModalProps({ open: true, title: "" });
-  assert.equal(res2.valid, false);
-});
-
-// -------------------------------------------------------------------------
-// Feature 3: 124 Atomic Lucide Iconography
-// -------------------------------------------------------------------------
-test("F03-T2-01: empty icon name string falls back to help-circle", () => {
-  const res = resolveUiIcon("");
-  assert.equal(res.resolved, false);
-  assert.equal(res.iconName, "help-circle");
-});
-
-test("F03-T2-02: icon name with uppercase or whitespace fails resolution gracefully", () => {
-  const res = resolveUiIcon(" Camera ");
-  assert.equal(res.resolved, false);
-  assert.equal(res.iconName, "help-circle");
-});
-
-test("F03-T2-03: icon request with size=0 or negative size defaults gracefully", () => {
-  const res = resolveUiIcon("play", 0);
-  assert.equal(res.resolved, true);
-  assert.equal(res.size, 0);
-});
-
-test("F03-T2-04: ultra-large icon size (512px) is preserved without distortion", () => {
-  const res = resolveUiIcon("camera", 512);
-  assert.equal(res.resolved, true);
-  assert.equal(res.size, 512);
-});
-
-test("F03-T2-05: special meta-characters in icon query do not cause regex crash", () => {
-  const res = resolveUiIcon(".*+?^${}()|[]\\");
-  assert.equal(res.resolved, false);
-  assert.equal(res.iconName, "help-circle");
-});
-
-// -------------------------------------------------------------------------
-// Feature 4: 15 Standardized Aspect Ratios
-// -------------------------------------------------------------------------
-test("F04-T2-01: invalid format aspect ratio string throws explicit error", () => {
-  assert.throws(
-    () => parseAspectRatio("invalid_ratio"),
-    /Invalid aspect ratio string/,
+test("F02-T2-02: actual numeric Input preserves its native value and readonly semantics", () => {
+  const markup = render(
+    h(Input, { value: 42, type: "number", readOnly: true }),
   );
-  assert.throws(() => parseAspectRatio("16/9"), /Invalid aspect ratio string/);
+  assert.match(markup, /value="42"/u);
+  assert.match(markup, /readonly=""/u);
 });
-
-test("F04-T2-02: zero in aspect ratio component throws error", () => {
-  assert.throws(() => parseAspectRatio("0:1"), /Invalid aspect ratio string/);
-  assert.throws(() => parseAspectRatio("16:0"), /Invalid aspect ratio string/);
+test("F02-T2-03: Select with absent value renders placeholder without a false selection", () => {
+  const markup = render(
+    h(Select, {
+      options: [{ value: "a", label: "Alpha" }],
+      value: "missing",
+      placeholder: "Choose",
+    }),
+  );
+  assert.match(markup, /Choose/u);
+  assert.doesNotMatch(markup, /aria-selected="true"/u);
 });
-
-test("F04-T2-03: negative numbers in aspect ratio throw error", () => {
-  assert.throws(() => parseAspectRatio("-16:9"), /Invalid aspect ratio string/);
-  assert.throws(() => parseAspectRatio("16:-9"), /Invalid aspect ratio string/);
+test("F02-T2-04: Badge escapes creative text instead of interpreting script markup", () => {
+  const markup = render(
+    h(Badge, { children: "<script>creative text</script>" }),
+  );
+  assert.match(markup, /&lt;script&gt;/u);
+  assert.doesNotMatch(markup, /<script>/u);
 });
-
-test("F04-T2-04: calculateDimensionsForRatio with targetLongEdge=1 produces minimal 1px dimensions", () => {
-  const dims = calculateDimensionsForRatio("1:1", 1);
-  assert.equal(dims.width, 1);
-  assert.equal(dims.height, 1);
-});
-
-test("F04-T2-05: calculateDimensionsForRatio handles extreme aspect ratio (21:9) without NaN", () => {
-  const dims = calculateDimensionsForRatio("21:9", 2560);
-  assert.equal(dims.width, 2560);
-  assert.equal(dims.height, 1097);
-  assert.ok(!isNaN(dims.height));
-});
-
-// -------------------------------------------------------------------------
-// Feature 5: Mobile Chat-Only Viewport Parity
-// -------------------------------------------------------------------------
-test("F05-T2-01: exact threshold 767px is mobile and 768px is desktop", () => {
-  const mobileEdge = classifyViewport(767);
-  assert.equal(mobileEdge.isMobile, true);
-  assert.equal(mobileEdge.allowCanvas, false);
-
-  const desktopEdge = classifyViewport(768);
-  assert.equal(desktopEdge.isDesktop, true);
-  assert.equal(desktopEdge.allowCanvas, true);
-});
-
-test("F05-T2-02: zero pixel viewport width is handled safely as mobile", () => {
-  const vp = classifyViewport(0);
-  assert.equal(vp.isMobile, true);
-  assert.equal(vp.layout, "single-column-chat");
-});
-
-test("F05-T2-03: negative viewport width throws explicit error", () => {
-  assert.throws(() => classifyViewport(-10), /cannot be negative/);
-});
-
-test("F05-T2-04: extreme ultra-wide display (7680px 8K) classifies cleanly as desktop", () => {
-  const vp = classifyViewport(7680);
-  assert.equal(vp.isDesktop, true);
-  assert.equal(vp.allowCanvas, true);
-  assert.equal(vp.layout, "desktop-canvas-workbench");
-});
-
-test("F05-T2-05: viewport state is immutable and stateless across consecutive queries", () => {
-  const m1 = classifyViewport(360);
-  const d1 = classifyViewport(1280);
-  const m2 = classifyViewport(400);
-
-  assert.equal(m1.isMobile, true);
-  assert.equal(d1.isDesktop, true);
-  assert.equal(m2.isMobile, true);
-});
-
-// -------------------------------------------------------------------------
-// Feature 6: Automated Aesthetic Governance (Unslop 9-Pass Redline)
-// -------------------------------------------------------------------------
-test("F06-T2-01: negative spacing values pass rhythm if divisible by 4", () => {
-  assert.equal(check4pxGridRhythm(-8), true);
-  assert.equal(check4pxGridRhythm(-5), false);
-});
-
-test("F06-T2-02: floating point non-integers fail 4px rhythm check", () => {
-  assert.equal(check4pxGridRhythm(4.5), false);
-  assert.equal(check4pxGridRhythm(15.9), false);
-});
-
-test("F06-T2-03: border radius > 999px (extreme pill hack) is flagged as redline violation", () => {
-  const res = evaluateElementAesthetics({ borderRadiusPx: 1000 });
-  assert.equal(res.pass, false);
-  assert.ok(
-    res.violations.some((v) => v.includes("violates aesthetic redline")),
+test("F02-T2-05: closed real Modal emits no DOM", () => {
+  assert.equal(
+    render(
+      h(ModalDialog, {
+        isOpen: false,
+        title: "Closed",
+        onClose: () => {},
+        children: "hidden",
+      }),
+    ),
+    "",
   );
 });
-
-test("F06-T2-04: exact boundary contrast ratio 4.5:1 passes WCAG AA check", () => {
-  const res = evaluateElementAesthetics({ contrastRatio: 4.5 });
-  assert.equal(res.pass, true);
+test("F03-T2-01: empty icon uses CircleHelp fallback", () => {
+  assert.equal(
+    render(h(UiIcon, { name: "" as UiIconName })),
+    render(h(UiIcon, { name: "circle-help" })),
+  );
 });
-
-test("F06-T2-05: contrast ratio 4.49:1 fails WCAG AA check", () => {
-  const res = evaluateElementAesthetics({ contrastRatio: 4.49 });
-  assert.equal(res.pass, false);
+test("F03-T2-02: unsupported mixed case icon query stays in fallback", () => {
+  assert.equal(
+    render(h(UiIcon, { name: " Camera " as UiIconName })),
+    render(h(UiIcon, { name: "circle-help" })),
+  );
 });
-
-// -------------------------------------------------------------------------
-// Feature 7: Provider Gateway Cooldown Queue (WaitingCandidate)
-// -------------------------------------------------------------------------
+test("F03-T2-03: real icon size normalization bounds zero and negative inputs", () => {
+  assert.equal(normalizeUiIconSize(0), 12);
+  assert.equal(normalizeUiIconSize(-1), 12);
+});
+test("F03-T2-04: oversized icons clamp to the largest supported tier", () => {
+  assert.equal(normalizeUiIconSize(512), 32);
+  assert.match(render(h(UiIcon, { name: "camera", size: 512 })), /width="32"/u);
+});
+test("F03-T2-05: punctuation in icon name remains inert", () => {
+  assert.equal(
+    render(h(UiIcon, { name: ".*+?[]" as UiIconName })),
+    render(h(UiIcon, { name: "circle-help" })),
+  );
+});
+test("F04-T2-01: malformed ratio leaves size unresolved", () => {
+  for (const ratio of ["invalid", "16/9"])
+    assert.equal(resolveImageSize(ratio, "1K"), undefined);
+});
+test("F04-T2-02: zero ratio leaves size unresolved", () => {
+  for (const ratio of ["0:1", "16:0"])
+    assert.equal(resolveImageSize(ratio, "1K"), undefined);
+});
+test("F04-T2-03: negative ratio leaves size unresolved", () => {
+  for (const ratio of ["-16:9", "16:-9"])
+    assert.equal(resolveImageSize(ratio, "1K"), undefined);
+});
+test("F04-T2-04: unsupported quality never fabricates provider dimensions", () => {
+  assert.equal(resolveImageSize("1:1", "1px"), undefined);
+});
+test("F04-T2-05: real ultra-wide 4K output remains finite and grid aligned", () => {
+  assert.equal(resolveImageSize("21:9", "4K"), "4096x1752");
+});
+test("F05-T2-01: actual phone/tablet boundary is exact", () => {
+  assert.match(renderSidebarSurface(767), /data-surface="phone"/u);
+  assert.match(renderSidebarSurface(768), /data-surface="tablet"/u);
+});
+test("F05-T2-02: zero-width initial browser surface uses compact navigation", () => {
+  assert.match(renderSidebarSurface(0), /data-narrow="true"/u);
+});
+test("F05-T2-03: actual tablet/desktop boundary is exact", () => {
+  assert.match(renderSidebarSurface(1200), /data-surface="tablet"/u);
+  assert.match(renderSidebarSurface(1201), /data-surface="desktop"/u);
+});
+test("F05-T2-04: ultrawide layout keeps desktop navigation", () => {
+  assert.match(renderSidebarSurface(7680), /data-surface="desktop"/u);
+});
+test("F05-T2-05: repeated viewport fixtures do not leak responsive state", () => {
+  assert.match(renderSidebarSurface(360), /data-surface="phone"/u);
+  assert.match(renderSidebarSurface(1280), /data-surface="desktop"/u);
+  assert.match(renderSidebarSurface(400), /data-surface="phone"/u);
+});
+test("F06-T2-01: negative spacing uses production absolute grid checks", () => {
+  assert.equal(validateSpacingValue(-8), null);
+  assert.equal(validateSpacingValue(-5)?.severity, "violation");
+});
+test("F06-T2-02: fractional pixels fail the production spacing rhythm", () => {
+  for (const n of [4.5, 15.9])
+    assert.equal(validateSpacingValue(n)?.severity, "violation");
+});
+test("F06-T2-03: two-pixel nudge remains a warning rather than a fabricated violation", () => {
+  assert.equal(validateSpacingValue(2)?.severity, "warning");
+  assert.equal(evaluateStyleDeclaration({ padding: "2px" }).valid, true);
+});
+test("F06-T2-04: safe transform and opacity transitions pass actual governance", () => {
+  assert.equal(
+    evaluateStyleDeclaration({ transition: "transform 120ms, opacity 120ms" })
+      .valid,
+    true,
+  );
+});
+test("F06-T2-05: layout animation is rejected by actual governance", () => {
+  assert.equal(
+    evaluateStyleDeclaration({ transition: "width 120ms" }).valid,
+    false,
+  );
+});
 test("F07-T2-01: reporting rate limit on non-registered account throws error", () => {
   const scheduler = new GatewayCooldownScheduler();
   assert.throws(

@@ -112,7 +112,9 @@ export function buildTextRequest(
           model: value.model,
           messages: [{ role: "user", content: value.prompt }],
           stream: true,
-          ...(protocol === "anthropic" ? { max_tokens: 4096 } : {}),
+          ...(protocol === "anthropic"
+            ? { max_tokens: 4096 }
+            : { stream_options: { include_usage: true } }),
         };
   return {
     url: `${value.baseUrl.replace(/\/+$/, "")}/${route}`,

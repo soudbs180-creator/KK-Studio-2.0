@@ -331,6 +331,7 @@ function consumeChat(value: Json, state: TextProtocolState) {
     if (!value.usage) invalid();
     return;
   }
+  if (state.complete) invalid();
   if ((value.choices as unknown[]).length !== 1) invalid();
   const choice = object((value.choices as unknown[])[0]),
     delta = object(choice.delta);

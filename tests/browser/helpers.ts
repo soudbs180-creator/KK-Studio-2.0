@@ -2,10 +2,12 @@ import { expect, type Page, type Locator } from "@playwright/test";
 import {
   CREATION_STORAGE_KEY,
   createProject,
+  createTask,
   emptySnapshot,
   projectChatView,
   serializeCreationSnapshot,
   type ChatItem,
+  type CreationTask,
 } from "../../src/features/creation/model";
 import { BASE_CANVAS_ITEMS } from "../../src/domain/canvasItems";
 import { createProjectCanvas } from "../../src/domain/projectCanvas";
@@ -19,6 +21,21 @@ export async function openWorkspace(
   chats?: Record<string, ChatItem>,
 ): Promise<void> {
   await openSeededProject(page, chats);
+}
+
+/** Persisted paused task fixture; the application must never invent demo tasks. */
+export async function openTaskWorkspace(page: Page): Promise<void> {
+  const task = createTask(
+    createProject({
+      prompt: "任务面板布局回归",
+      model: "fixture-task",
+      kind: "image",
+      attachments: [],
+    }),
+  );
+  task.id = "task-panel-paused";
+  task.error = "任务已暂停，待用户恢复";
+  await openSeededProject(page, undefined, [task]);
 }
 
 /** API scenarios explicitly choose their fixture; a fresh home stays on Codex. */
@@ -115,6 +132,7 @@ export async function selectSettingsSection(
 export async function openSeededProject(
   page: Page,
   chats?: Record<string, ChatItem>,
+  tasks?: CreationTask[],
 ): Promise<void> {
   await page.goto("/");
   const providerRaw = await page.evaluate(
@@ -145,6 +163,14 @@ export async function openSeededProject(
     items,
     canvas: createProjectCanvas(items),
     messages: [],
+    ...(tasks
+      ? {
+          tasks: tasks.map((task) => ({
+            ...task,
+            originChatId: base.activeChatId,
+          })),
+        }
+      : {}),
   };
   const snapshot = serializeCreationSnapshot({
     ...emptySnapshot(),

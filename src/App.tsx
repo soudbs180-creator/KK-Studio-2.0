@@ -1,4 +1,5 @@
 import { canvasPorts } from "./app/taskPorts.ts";
+import { storyboardAssets } from "./features/workflows/index.ts";
 import { lazy, useEffect, useRef, useState, type SetStateAction } from "react";
 import "./runtime/appInfo";
 import TopBar from "./components/TopBar";
@@ -55,6 +56,7 @@ import {
   codexGenerationPrompt,
 } from "./features/agent/index.ts";
 import "./features/plugins/index.ts";
+import { getOrCreateGlobalBridge } from "./features/extensions/index.ts";
 import { ImageLightbox as ImageLightbox } from "./features/image-edit/index.ts";
 import CreationStorageNotice from "./components/CreationStorageNotice";
 import { createProjectCanvas } from "./domain/projectCanvas";
@@ -99,6 +101,9 @@ import "./styles/image-selection.css";
 import "./styles/canvas-composer-screen.css";
 import "./styles/desktop-titlebar.css";
 import { useActiveProjectConversation } from "./app/useActiveProjectConversation.ts";
+import "./styles/workflow-tools.css";
+import { useStoryboardWorkflow } from "./app/useStoryboardWorkflow.ts";
+import StoryboardWorkflowPanel from "./components/workflows/StoryboardWorkflowPanel.tsx";
 import { useAppAgentBridge } from "./app/useAppAgentBridge.ts";
 import { useAppAgentState } from "./app/useAppAgentState.ts";
 import { useAppSettings } from "./app/useAppSettings.ts";
@@ -161,6 +166,9 @@ function getModalTitle(modal: string): string {
 }
 
 export default function App() {
+  useEffect(() => {
+    getOrCreateGlobalBridge();
+  }, []);
   const [active, setActive] = useState("landing");
   const activePageRef = useRef(active);
   activePageRef.current = active;
@@ -245,6 +253,7 @@ export default function App() {
 
   const {
     cancelTask,
+    queryTask,
     pauseTask,
     resumeTask,
     retryTask,
@@ -276,9 +285,39 @@ export default function App() {
     },
   });
 
-  const { conversationDisabledReason, selectedChat, conversationDraft } =
-    useActiveProjectConversation(creation, saveState, activeProject);
+  const {
+    conversationDisabledReason,
+    selectedChat,
+    conversationDraft,
+    rewindMessage,
+    rewindAgentMessage,
+    rewindBusy,
+  } = useActiveProjectConversation(creation, saveState, activeProject, {
+    getProject: () =>
+      creationRef.current.projects.find(
+        (p) => p.id === creationRef.current.activeProjectId,
+      ),
+    updateProject,
+    flush: persistence.flush,
+    isBusy: () =>
+      agentConnection.getState().sending ||
+      submitLock.current ||
+      creationRef.current.projects
+        .find((p) => p.id === creationRef.current.activeProjectId)
+        ?.tasks.some((t) =>
+          ["running", "queued", "unknown"].includes(t.status),
+        ) === true,
+  });
   const latestProjectTask = activeProject?.tasks.at(-1);
+  const storyboardWorkflow = useStoryboardWorkflow({
+    creationRef,
+    updateProject,
+    replaceCanvasItems,
+    submit: submitImageCommand,
+    cancelTask,
+    flush: persistence.flush,
+    disabledReason: conversationDisabledReason,
+  });
   const generationProgress = getGenerationProgressLabels({
     task: latestProjectTask,
     saveState,
@@ -420,20 +459,24 @@ export default function App() {
     );
   }
 
-  const { agentViewRef, stageOrchestrator } = useAppAgentBridge({
-    creationRef,
-    activeProjectIdRef,
-    updateProject,
-    replaceCanvasItems,
-    saveState,
-    persistence,
-    saveStateRef,
-    homeCodexStarting,
-    activeProject,
-    conversationDisabledReason,
-    desktopAgentState,
-    submitImageCommand,
-  });
+  const { agentViewRef, stageOrchestrator, stageExecution } = useAppAgentBridge(
+    {
+      cancelTask,
+      retryTask,
+      creationRef,
+      activeProjectIdRef,
+      updateProject,
+      replaceCanvasItems,
+      saveState,
+      persistence,
+      saveStateRef,
+      homeCodexStarting,
+      activeProject,
+      conversationDisabledReason,
+      desktopAgentState,
+      submitImageCommand,
+    },
+  );
   async function executeHomeCodexProject(
     input: CreateProjectInput,
     selection: ModelSelection,
@@ -619,6 +662,7 @@ export default function App() {
         model: draft.model || project.model,
         providerConnectionId: connectionId,
         kind: draft.kind,
+        media: draft.media,
         attachments: draft.attachments,
         privacyMode: draft.privacyMode,
         outputCount: draft.outputCount,
@@ -692,7 +736,7 @@ export default function App() {
         ...activeProject.composerDraft,
         model,
         kind:
-          selection?.kind === "text" || selection?.kind === "image"
+          selection?.kind && selection.kind !== "unknown"
             ? selection.kind
             : activeProject.composerDraft.kind,
         modelSelection: selection ?? { source: "api", model },
@@ -1118,6 +1162,7 @@ export default function App() {
                   submit: (input) =>
                     submitImageCommand({ origin: "canvas", input }),
                   cancel: cancelTask,
+                  query: queryTask,
                   tasks: activeProject?.tasks ?? [],
                   model: activeProject?.model ?? "",
                   providerConnectionId:
@@ -1217,6 +1262,21 @@ export default function App() {
                   }
                   key={`${activeProject?.id ?? "demo-canvas"}:${persistence.loadEpoch}`}
                   initialCanvas={activeProject?.canvas}
+                  onFlush={persistence.flush}
+                  operationDisabledReason={conversationDisabledReason}
+                  onAtomicChange={
+                    activeProject
+                      ? (items, canvas) => {
+                          updateProject(activeProject.id, (project) => ({
+                            ...project,
+                            items,
+                            canvas,
+                            updatedAt: Date.now(),
+                          }));
+                          replaceCanvasItems(items);
+                        }
+                      : undefined
+                  }
                   projectId={activeProject?.id}
                   agentViewRef={agentViewRef}
                   onAgentViewChange={() => agentConnection.pushState()}
@@ -1263,6 +1323,8 @@ export default function App() {
                   onOpen={open}
                   project={activeProject}
                   readOnlyMessages={selectedChat?.messages}
+                  onRewindMessage={rewindMessage}
+                  rewindBusy={rewindBusy}
                   executionDisabledReason={conversationDisabledReason}
                   currentModel={
                     conversationDraft?.model ?? activeProject?.model
@@ -1293,6 +1355,7 @@ export default function App() {
                     activeProject
                       ? {
                           connected: agentState.status === "connected",
+                          onRewind: rewindAgentMessage,
                           connectionRevision: agentState.connectionRevision,
                           conversation: agentState.conversation,
                           preparing: agentState.preparing,
@@ -1455,7 +1518,18 @@ export default function App() {
           onCancel={() => resolveTaskApproval(false)}
         />
       )}
-      {modal && (
+      {modal === "storyboard" && (
+        <DeferredPanelBoundary>
+          <StoryboardWorkflowPanel
+            key={`${activeProject?.id}:${activeProject?.activeChatId}`}
+            run={storyboardWorkflow.run}
+            apply={storyboardWorkflow.apply}
+            onClose={() => setModal("")}
+            disabledReason={conversationDisabledReason}
+          />
+        </DeferredPanelBoundary>
+      )}
+      {modal && modal !== "storyboard" && (
         <Modal title={getModalTitle(modal)} onClose={() => setModal("")}>
           <DeferredPanelBoundary key={modal} onClose={() => setModal("")}>
             {modal === "search" ? (
@@ -1515,15 +1589,22 @@ export default function App() {
                 saveState={saveState}
                 revision={creation.revision}
                 projects={creation.projects}
+                activeProject={
+                  active === "workspace" ? activeProject : undefined
+                }
                 registry={skillRegistry}
                 workflows={workflows}
                 onClose={() => setModal("")}
               />
             ) : modal === "assets" ? (
               <AssetPanel
+                onOpenStoryboard={() => setModal("storyboard")}
                 onClose={() => setModal("")}
                 archive={assetArchive}
-                assets={assets}
+                assets={[
+                  ...assets,
+                  ...storyboardAssets(activeProject?.items ?? []),
+                ]}
                 subjects={subjects}
                 onAdd={add}
               />
@@ -1536,9 +1617,26 @@ export default function App() {
                     : "项目尚未保存成功，阶段操作暂不可用；请先处理项目恢复提示。"
                 }
                 onStageDecision={async (projectId, input) => {
+                  if (input.gate === "plan" && input.decision === "approve") {
+                    await stageExecution.execute(projectId, input, input);
+                    return;
+                  }
                   stageOrchestrator.decideStage(input, projectId);
                   await persistence.flush();
                 }}
+                onExecuteStage={(
+                  projectId,
+                  planId,
+                  stageIndex,
+                  expectedRevision,
+                ) =>
+                  stageExecution.execute(projectId, {
+                    planId,
+                    stageIndex,
+                    expectedRevision,
+                  })
+                }
+                onCancelStage={(projectId) => stageExecution.cancel(projectId)}
                 onRetryStage={async (
                   projectId,
                   planId,

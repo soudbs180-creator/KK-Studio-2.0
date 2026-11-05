@@ -3,7 +3,7 @@ import type { CanvasItemKind } from "../../domain/canvasItems";
 import { cardVisualBounds } from "../../domain/canvasGraph";
 import type { Point, ViewTransform } from "../../domain/canvasViewport";
 import type { AddNodeOptions } from "./useCanvasNodeActions";
-import { toSurfacePoint } from "./canvasSurface";
+import { toSurfacePoint, surfaceScale } from "./canvasSurface";
 import { getPluginNodeDefinition } from "../../features/plugins/index.ts";
 
 export interface AddMenuRequest {
@@ -128,5 +128,12 @@ export function useCanvasAddMenu(
     choosePlugin,
     chooseWorkflow,
     openAtPoint,
+    openFromToolbar(trigger: HTMLButtonElement) {
+      const box = trigger.getBoundingClientRect();
+      const scale = surfaceScale(
+        trigger.closest<HTMLElement>(".canvas") ?? trigger,
+      );
+      open({ client: { x: box.x, y: box.y - 592 * scale }, trigger });
+    },
   };
 }

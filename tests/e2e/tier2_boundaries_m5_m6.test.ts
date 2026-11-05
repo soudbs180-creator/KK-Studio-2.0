@@ -5,8 +5,6 @@ import {
   auditStoryboardContinuity,
   parsePromptMentions,
   compileOpticsPrompt,
-  validateTestSuiteReport,
-  sanitizeAdversarialPrompt,
 } from "./harness.ts";
 
 /* =========================================================================
@@ -166,9 +164,8 @@ test("F21-T2-03: ultra-fast aperture (f/0.95 Noctilux) compiles without strippin
   assert.ok(prompt.includes("f/0.95 aperture"));
 });
 
-test("F21-T2-04: optics object with zero lensMm omits lens part", () => {
-  const prompt = compileOpticsPrompt({ lensMm: 0, aperture: "f/2" });
-  assert.equal(prompt, "f/2 aperture");
+test("F21-T2-04: a zero focal length is rejected before provider submission", () => {
+  assert.throws(() => compileOpticsPrompt({ lensMm: 0, aperture: "2" }));
 });
 
 test("F21-T2-05: custom high-end cinema camera bodies format correctly", () => {
@@ -180,99 +177,121 @@ test("F21-T2-05: custom high-end cinema camera bodies format correctly", () => {
   assert.ok(prompt.includes("shot on RED V-Raptor XL 8K VV"));
 });
 
-// -------------------------------------------------------------------------
-// Feature 22: Full E2E Test Suite Validation
-// -------------------------------------------------------------------------
-test("F22-T2-01: summary with totalTests less than 200 is rejected as incomplete", () => {
-  const res = validateTestSuiteReport({
-    totalTests: 199,
-    passCount: 199,
-    failCount: 0,
-    skipCount: 0,
+import { createProject, createTask } from "../../src/domain/creationModel.ts";
+import {
+  waitForCreationTask,
+  createWorkspaceEscapeGuard,
+  createDestructiveCommandGuard,
+  createSecretLeakGuard,
+  CanvasOpSchema,
+} from "./harness.ts";
+function taskFixture() {
+  const project = createProject({
+    prompt: "test",
+    model: "test-model",
+    kind: "text",
+    attachments: [],
   });
-  assert.equal(res.ready, false);
-  assert.equal(res.reason, "Insufficient test count");
-});
-
-test("F22-T2-02: summary with exactly 200 passed tests is accepted", () => {
-  const res = validateTestSuiteReport({
-    totalTests: 200,
-    passCount: 200,
-    failCount: 0,
-    skipCount: 0,
-  });
-  assert.equal(res.ready, true);
-});
-
-test("F22-T2-03: single failing test blocks suite readiness", () => {
-  const res = validateTestSuiteReport({
-    totalTests: 252,
-    passCount: 251,
-    failCount: 1,
-    skipCount: 0,
-  });
-  assert.equal(res.ready, false);
-  assert.equal(res.reason, "Failures detected");
-});
-
-test("F22-T2-04: single skipped test blocks suite readiness", () => {
-  const res = validateTestSuiteReport({
-    totalTests: 252,
-    passCount: 251,
-    failCount: 0,
-    skipCount: 1,
-  });
-  assert.equal(res.ready, false);
-  assert.equal(res.reason, "Skipped tests detected");
-});
-
-test("F22-T2-05: report validation is idempotent across repeated calls", () => {
-  const summary = {
-    totalTests: 252,
-    passCount: 252,
-    failCount: 0,
-    skipCount: 0,
+  const task = createTask(project);
+  project.tasks = [task];
+  return {
+    project,
+    task,
+    options: {
+      getProject: () => project,
+      taskId: task.id,
+      signal: new AbortController().signal,
+      cancel: () => {},
+    },
   };
-  const r1 = validateTestSuiteReport(summary);
-  const r2 = validateTestSuiteReport(summary);
-  assert.deepEqual(r1, r2);
-});
+}
 
-// -------------------------------------------------------------------------
-// Feature 23: Adversarial Coverage Hardening
-// -------------------------------------------------------------------------
-test("F23-T2-01: nested script injection tags are neutralized", () => {
-  const malicious = "<<SCRIPT>script>alert(1)</script>";
-  const res = sanitizeAdversarialPrompt(malicious);
-  assert.equal(res.safe, false);
-  assert.ok(!res.cleanPrompt.includes("alert(1)"));
+test("F22-T2-01: waiting times out without reporting queued work as success", async () => {
+  const { options } = taskFixture();
+  await assert.rejects(
+    waitForCreationTask({ ...options, timeoutMs: 0 }),
+    /超时/,
+  );
 });
-
-test("F23-T2-02: mixed-case and whitespace variations in injection tags are intercepted", () => {
-  const malicious = "Hello <sCrIpT   type='text/javascript'>bad()</sCrIpT>";
-  const res = sanitizeAdversarialPrompt(malicious);
-  assert.equal(res.safe, false);
-  assert.ok(res.threats.includes("xss_injection"));
+test("F22-T2-02: task observation reads a later durable state transition", async () => {
+  const { task, options } = taskFixture();
+  const timer = setTimeout(() => {
+    task.status = "succeeded";
+  }, 1);
+  try {
+    assert.equal((await waitForCreationTask(options)).status, "succeeded");
+  } finally {
+    clearTimeout(timer);
+  }
 });
-
-test("F23-T2-03: benign prompt mentioning word 'script' in natural text is allowed", () => {
-  const benign = "Write a film script about a space voyage";
-  const res = sanitizeAdversarialPrompt(benign);
-  assert.equal(res.safe, true);
-  assert.equal(res.cleanPrompt, benign);
+test("F22-T2-03: aborted observation cancels the accepted task once", async () => {
+  const { task, options } = taskFixture();
+  const controller = new AbortController();
+  let cancelled = "";
+  controller.abort(new Error("cancelled"));
+  await assert.rejects(
+    waitForCreationTask({
+      ...options,
+      signal: controller.signal,
+      cancel: (id) => {
+        cancelled = id;
+      },
+    }),
+    /cancelled/,
+  );
+  assert.equal(cancelled, task.id);
 });
-
-test("F23-T2-04: sanitizeAdversarialPrompt is idempotent on clean output", () => {
-  const malicious = "Test <script>evil()</script> done";
-  const pass1 = sanitizeAdversarialPrompt(malicious);
-  const pass2 = sanitizeAdversarialPrompt(pass1.cleanPrompt);
-  assert.equal(pass2.safe, true);
-  assert.equal(pass2.cleanPrompt, pass1.cleanPrompt);
+test("F22-T2-04: unavailable project stops observation without redirecting results", async () => {
+  const { options } = taskFixture();
+  await assert.rejects(
+    waitForCreationTask({ ...options, getProject: () => undefined }),
+    /原项目/,
+  );
 });
-
-test("F23-T2-05: empty prompt string passes adversarial sanitation safely", () => {
-  const res = sanitizeAdversarialPrompt("");
-  assert.equal(res.safe, true);
-  assert.equal(res.cleanPrompt, "");
-  assert.equal(res.threats.length, 0);
+test("F22-T2-05: interrupted and offline tasks retain their failure status", async () => {
+  const { task, options } = taskFixture();
+  for (const status of ["interrupted", "offline", "cancelled"] as const) {
+    task.status = status;
+    await assert.rejects(waitForCreationTask(options), new RegExp(status));
+    assert.equal(task.status, status);
+  }
+});
+test("F23-T2-01: encoded parent traversal is denied by the real workspace guard", () => {
+  assert.equal(
+    createWorkspaceEscapeGuard({ workspaceRoot: "D:/project" })("read", {
+      path: "%2e%2e/%2e%2e/.ssh/id_rsa",
+    }).allow,
+    false,
+  );
+});
+test("F23-T2-02: command guard detects case variations", () => {
+  assert.equal(
+    createDestructiveCommandGuard()("PowerShell", {
+      command: "Remove-Item D:/project -Recurse -Force",
+    }).allow,
+    false,
+  );
+});
+test("F23-T2-03: benign tool payloads remain available", () => {
+  assert.equal(
+    createDestructiveCommandGuard()("system_exec", {
+      cmd: "git status --short",
+    }).allow,
+    true,
+  );
+});
+test("F23-T2-04: strict atomic operation payloads reject unknown fields", () => {
+  assert.equal(
+    CanvasOpSchema.safeParse({
+      op: "move_card",
+      payload: { id: "safe", x: 0, y: 0, prototype: { isAdmin: true } },
+    }).success,
+    false,
+  );
+});
+test("F23-T2-05: secret hook checks nested arrays without rewriting input", () => {
+  const args = { layers: [{ value: "CLIENT_SECRET" }] };
+  const before = structuredClone(args);
+  assert.equal(createSecretLeakGuard()("write", args).allow, false);
+  assert.deepEqual(args, before);
 });

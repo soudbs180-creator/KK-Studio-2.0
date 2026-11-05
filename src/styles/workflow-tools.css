@@ -1,0 +1,159 @@
+.camera-optics-control {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  margin: 12px 0 0;
+  padding: 12px;
+  border: 1px solid var(--border-subtle);
+  color: var(--ui-text);
+}
+.node-popover.parameter-menu {
+  max-block-size: min(70vh, 560px);
+  overflow-y: auto;
+}
+.camera-optics-control label {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.camera-optics-control input:not([type="checkbox"]),
+.camera-optics-control select {
+  flex: 1;
+  min-width: 0;
+  min-height: 44px;
+  background: var(--bg-card);
+  color: var(--ui-text);
+  border: 1px solid var(--border-subtle);
+}
+.storyboard-workflow .kk-modal__body > label {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.storyboard-workflow textarea {
+  width: 100%;
+  min-height: 120px;
+  resize: vertical;
+  background: var(--bg-input);
+  color: var(--ui-text);
+  border: 1px solid var(--border-subtle);
+}
+.storyboard-workflow .kk-modal__footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.video-shot-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+  min-width: 0;
+  pointer-events: auto;
+}
+.asset-text-preview {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 60vh;
+  overflow: auto;
+  width: 100%;
+  color: var(--ui-text);
+}
+.storyboard-constraint-row {
+  display: grid;
+  gap: 8px;
+  margin-block: 12px;
+}
+.storyboard-constraint-row label {
+  display: grid;
+  gap: 4px;
+}
+.video-shot-actions button,
+.message-actions button[aria-label="回滚到此轮"],
+.tokenized-mentions-bar button {
+  min-width: 44px;
+  min-height: 44px;
+}
+.video-shot-actions p,
+.canvas-import-status {
+  overflow-wrap: anywhere;
+  color: var(--ui-muted);
+}
+.tokenized-mentions-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.inline-mention-pill {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  max-width: 100%;
+  background: var(--bg-card);
+  color: var(--ui-text);
+  border: 1px solid var(--border-subtle);
+}
+.inline-mention-pill .pill-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.canvas-node[data-card-color="accent"] {
+  outline: 2px solid var(--ui-selected);
+}
+.canvas-node[data-card-color="warning"] {
+  outline: 2px solid var(--ui-warning);
+}
+.canvas-node[data-card-color="success"] {
+  outline: 2px solid var(--ui-success);
+}
+.canvas-node[data-locked="true"] {
+  cursor: default;
+}
+.canvas-node-content-scale > .image-creation {
+  position: relative;
+  inset: auto;
+  height: 100%;
+}
+.canvas-node-image > .canvas-node-content-scale > .image-creation {
+  pointer-events: none;
+}
+.canvas-node-image > .canvas-node-content-scale > .image-creation > * {
+  pointer-events: auto;
+}
+.canvas-node-content-scale > .video-node {
+  width: 100%;
+}
+.canvas-node-result.has-reference-composer
+  > .canvas-node-content-scale
+  > .creation-composer {
+  position: absolute;
+  left: -105px;
+  top: 390px;
+  width: 590px;
+  margin: 0;
+}
+.canvas-node-result.has-reference-composer[data-kind="image"]
+  > .canvas-node-content-scale
+  > .creation-composer:not(.canvas-composer-screen) {
+  position: relative;
+  top: auto;
+  margin-top: 10px;
+  pointer-events: none;
+}
+.canvas-node-result.has-reference-composer[data-kind="image"]
+  > .canvas-node-content-scale
+  > .creation-composer:not(.canvas-composer-screen)
+  > * {
+  pointer-events: auto;
+}
+@media (max-height: 640px) {
+  .storyboard-workflow .kk-modal__body {
+    min-height: 0;
+    overflow: auto;
+  }
+}

@@ -1,5 +1,6 @@
 import React, {
   forwardRef,
+  useId,
   type InputHTMLAttributes,
   type ReactNode,
 } from "react";
@@ -36,6 +37,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   },
   ref,
 ) {
+  const generatedId = useId();
+  const inputId = rest.id ?? generatedId;
+  const errorId = `${inputId}-error`;
   const hasValue = value !== undefined && value !== null && value !== "";
   const iconSize = inputHeight === "40px" ? 18 : 16;
 
@@ -58,15 +62,18 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
           <span className="kk-input__prefix">{renderIcon(prefixIcon)}</span>
         )}
         <input
+          {...rest}
+          id={inputId}
           ref={ref}
           className="kk-input__field"
           disabled={disabled}
           value={value}
           aria-invalid={isError}
           aria-describedby={
-            errorMessage ? `${rest.id ?? "input"}-error` : undefined
+            [rest["aria-describedby"], errorMessage ? errorId : undefined]
+              .filter(Boolean)
+              .join(" ") || undefined
           }
-          {...rest}
         />
         {clearable && hasValue && !disabled && (
           <button
@@ -83,11 +90,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
         )}
       </div>
       {errorMessage && (
-        <span
-          id={`${rest.id ?? "input"}-error`}
-          className="kk-input__error-message"
-          role="alert"
-        >
+        <span id={errorId} className="kk-input__error-message" role="alert">
           {errorMessage}
         </span>
       )}

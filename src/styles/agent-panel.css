@@ -354,7 +354,11 @@
   padding: 0;
 }
 
-.agent-reference-picker select {
+.agent-reference-picker > .kk-select-wrapper {
+  flex: 1;
+  min-width: 0;
+}
+.agent-reference-picker .kk-select__trigger {
   width: 100%;
   min-width: 0;
   min-height: var(--kk-control-h-md);

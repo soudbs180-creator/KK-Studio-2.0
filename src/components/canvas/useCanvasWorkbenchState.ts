@@ -4,6 +4,7 @@ import type { CanvasConnection } from "../../domain/canvasGraph";
 import type { CanvasCollectionItem } from "../../domain/canvasItems";
 import { useCanvasHistory } from "./useCanvasHistory";
 import type { useCanvasControls } from "./useCanvasControls";
+import type { CanvasGroup } from "../../domain/projectCanvas.ts";
 
 export function useCanvasWorkbenchState({
   controls,
@@ -11,15 +12,21 @@ export function useCanvasWorkbenchState({
   onItemsChange,
   edges,
   setEdges,
+  groups,
+  setGroups,
 }: {
   controls: ReturnType<typeof useCanvasControls>;
   items: CanvasCollectionItem[];
   onItemsChange: Dispatch<SetStateAction<CanvasCollectionItem[]>>;
   edges: CanvasConnection[];
   setEdges: Dispatch<SetStateAction<CanvasConnection[]>>;
+  groups?: CanvasGroup[];
+  setGroups?: Dispatch<SetStateAction<CanvasGroup[]>>;
 }) {
   const [layersOpen, setLayersOpen] = useState(false);
   const history = useCanvasHistory({
+    groups,
+    setGroups,
     items,
     positions: controls.nodes,
     edges,

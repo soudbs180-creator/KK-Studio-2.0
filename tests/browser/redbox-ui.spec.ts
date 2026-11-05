@@ -96,9 +96,19 @@ test("主图上传保留同节点编辑器，展开不改变参考图且操作�
   expect(
     await like.evaluate((button) => button.scrollWidth <= button.clientWidth),
   ).toBe(true);
-  expect(likeBox!.height).toBe(32);
+  expect(likeBox!.height).toBe(44);
   expect(expandBox!.width).toBe(32);
   expect(expandBox!.height).toBe(32);
+  expect(
+    await like.evaluate((button) => {
+      const style = getComputedStyle(button);
+      return (
+        button.getBoundingClientRect().height -
+        parseFloat(style.paddingTop) -
+        parseFloat(style.paddingBottom)
+      );
+    }),
+  ).toBe(32);
   expect(intersects(slotBox!, likeBox!)).toBe(false);
   expect(intersects(slotBox!, expandBox!)).toBe(false);
   expect(intersects(likeBox!, expandBox!)).toBe(false);

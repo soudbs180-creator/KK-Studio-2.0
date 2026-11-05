@@ -1,3 +1,4 @@
+import { mediaConnectionBlockReason } from "../../integrations/generation/mediaSupport.ts";
 import {
   isConnectionReady,
   type ProviderConnection,
@@ -51,7 +52,7 @@ export function taskSubmissionBinding(task: CreationTask): SubmissionBinding {
     ...taskProviderOptions(task),
     id: task.providerConnectionId,
     referenceCount: task.attachments.length,
-    kind: task.kind === "text" ? "text" : "image",
+    kind: task.kind,
     model: task.model,
     outputCount: task.requestedOutputs,
     operation: task.imageEdit?.nativeMask ? "inpaint" : undefined,
@@ -69,7 +70,7 @@ export interface SubmissionBinding {
   protocol?: ProviderProtocol;
   authMode?: ProviderAuthMode;
   referenceCount: number;
-  kind?: "image" | "text";
+  kind?: "image" | "text" | "video" | "audio";
   model?: string;
   outputCount?: number;
 }
@@ -163,10 +164,18 @@ export function assertSubmissionConnection(
     binding.model ?? connection.model ?? "",
   );
   assertBindingIdentity(connection, binding, selectedModel?.kind);
-  assertSynchronousProviderSubmission(
-    connection.baseUrl,
-    binding.model ?? connection.model,
-  );
+  if (binding.kind === "video" || binding.kind === "audio") {
+    const reason = mediaConnectionBlockReason(
+      connection,
+      binding.model ?? connection.model ?? "",
+      binding.kind,
+    );
+    if (reason) throw new ProviderSubmissionError(reason);
+  } else
+    assertSynchronousProviderSubmission(
+      connection.baseUrl,
+      binding.model ?? connection.model,
+    );
   assertSubmissionHealth(connection, options);
   const activeJobs = Math.max(
     0,

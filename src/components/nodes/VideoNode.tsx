@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type RefObject } from "react";
 import CreationComposer from "./CreationComposer";
+import VideoShotBreakdownControl from "./VideoShotBreakdownControl.tsx";
 import { useCanvasMediaContent } from "../canvas/useCanvasMediaContent";
 import type {
   CanvasCollectionItem,
@@ -18,7 +19,7 @@ import {
 const MAX_VIDEO_BYTES = 100 * 1024 * 1024;
 const VIDEO_MIME_TYPES = ["video/mp4", "video/webm"];
 const LOCAL_VIDEO_NOTICE =
-  "已保存本地视频预览；演示生成不会上传或消费视频原件。";
+  "已保存本地视频原件；生成仅按已配置模型支持的参考类型提交。";
 
 export default function VideoNode({
   item,
@@ -207,7 +208,7 @@ export default function VideoNode({
           <button
             className="video-upload"
             onClick={() => uploadInput.current?.click()}
-            title="上传视频后仅用于本地预览；演示生成不会上传或消费视频原件"
+            title="已保存本地视频原件；生成仅按已配置模型支持的参考类型提交。"
           >
             上传视频
           </button>
@@ -251,6 +252,11 @@ export default function VideoNode({
         }}
       />
       <CreationComposer
+        footer={
+          video && (
+            <VideoShotBreakdownControl source={video} sourceId={item.id} />
+          )
+        }
         parameters={item.parameters}
         onParametersChange={(parameters) => onChange({ parameters })}
         onDemoResults={onDemoResults}

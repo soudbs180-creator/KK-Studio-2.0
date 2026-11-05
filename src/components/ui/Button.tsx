@@ -36,8 +36,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref,
   ) {
-    const isCompactTier =
-      heightTier === "16px" || heightTier === "24px" || heightTier === "32px";
+    const isCompactTier = heightTier !== "44px";
     const shouldDecouple = decoupleTouchHit && isCompactTier;
 
     const tierClassMap: Record<ButtonHeightTier, string> = {
@@ -61,6 +60,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const classNames = [
       "kk-button",
       tierClassMap[heightTier],
+      children === undefined || children === null ? "kk-button--icon" : "",
       `kk-button--${variant}`,
       isPill ? "kk-button--pill" : "",
       shouldDecouple ? "kk-button--decoupled-hit" : "",
@@ -96,7 +96,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         ) : (
           renderIcon(prefixIcon)
         )}
-        {children && <span className="kk-button__label">{children}</span>}
+        {children !== undefined && children !== null && (
+          <span className="kk-button__label">{children}</span>
+        )}
         {!isLoading && renderIcon(suffixIcon)}
       </button>
     );

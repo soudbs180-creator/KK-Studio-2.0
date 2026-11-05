@@ -1,9 +1,16 @@
+import {
+  creationMediaSchema,
+  mediaSubmissionReceiptSchema,
+} from "../../packages/creation-contracts/media.ts";
 import { comfyWorkflowCardSchema } from "./comfyWorkflow.ts";
 import { imageArchiveReceiptsSchema } from "./imageArchiveReceipts.ts";
 import { normalizeTaskCostReceipt } from "../../packages/creation-contracts/taskState.ts";
 import type { ApprovalGate } from "./agentWorkflow";
 import { isAssetReference } from "./assetReference.ts";
 import { normalizeTags } from "./assets.ts";
+import { tokenUsageSchema } from "./tokenUsage.ts";
+import { CameraOpticsSchema } from "./cameraOptics.ts";
+import { canvasPresentationSchema } from "./canvasPresentation.ts";
 import type { CanvasCollectionItem, CanvasItemKind } from "./canvasItems";
 import { CANVAS_REFERENCE_SLOTS, comfyOutputSourceId } from "./canvasItems.ts";
 import { sameJson } from "./chatMigrationCore.ts";
@@ -494,6 +501,10 @@ function normalizeDraft(value: unknown): CreationDraft {
     value && typeof value === "object" ? (value as Partial<CreationDraft>) : {};
   return {
     ...candidate,
+    media:
+      candidate.media === undefined
+        ? undefined
+        : creationMediaSchema.parse(candidate.media),
     modelSelection: normalizeModelSelection(candidate.modelSelection),
     conversationChannel:
       candidate.conversationChannel === "codex" ||
@@ -546,6 +557,9 @@ function isAttachment(value: unknown): value is CreationAttachment {
     typeof item.name === "string" &&
     typeof item.mime === "string" &&
     typeof item.size === "number" &&
+    (item.referenceFrame === undefined ||
+      item.referenceFrame === "first" ||
+      item.referenceFrame === "last") &&
     (!item.role ||
       (typeof item.role === "string" &&
         (CANVAS_REFERENCE_SLOTS as readonly string[]).includes(item.role))) &&
@@ -728,6 +742,7 @@ function normalizeCanvasParameters(
     duration: safeText(parameters.duration, 10, "7"),
     count: safeText(parameters.count, 10, "8"),
     soundEnabled: parameters.soundEnabled === true,
+    optics: CameraOpticsSchema.safeParse(parameters.optics).data,
   };
 }
 
@@ -845,6 +860,9 @@ function normalizeCanvasItem(
     ),
     generationSource: value.generationSource === "codex" ? "codex" : undefined,
     parameters: normalizeCanvasParameters(value.parameters),
+    canvasPresentation: canvasPresentationSchema.safeParse(
+      value.canvasPresentation,
+    ).data,
     title: safeText(value.title, 160),
     description: safeText(value.description, 500),
     kind: normalizeKind(value.kind),
@@ -1115,8 +1133,13 @@ function normalizeTaskOutputEntry(
   return [
     {
       index,
+      mediaReceipt:
+        value.mediaReceipt === undefined
+          ? undefined
+          : mediaSubmissionReceiptSchema.parse(value.mediaReceipt),
       status,
       assetId: normalizeOptionalSlice(value.assetId, 160),
+      tokenUsage: tokenUsageSchema.safeParse(value.tokenUsage).data,
       text:
         typeof value.text === "string" &&
         new TextEncoder().encode(value.text).length <= 32768
@@ -1264,6 +1287,10 @@ function normalizeProjectTask(task: Record<string, unknown>): CreationTask {
     prompt: safeText(task.prompt, 4000),
     model: safeText(task.model, 120),
     kind: normalizeKind(task.kind),
+    media:
+      task.media === undefined
+        ? undefined
+        : creationMediaSchema.parse(task.media),
     status: normalizeTaskStatus(task.status),
     submissionState: resolveNormalizedSubmissionState(task),
     ...normalizeTaskBounds(task),
@@ -1504,6 +1531,9 @@ export function createProject(input: CreateProjectInput): CreationProject {
           providerConnectionId: codex ? undefined : input.providerConnectionId,
           model: input.model,
           kind: input.kind,
+          media: input.media
+            ? creationMediaSchema.parse(input.media)
+            : undefined,
           attachments: input.attachments.map((attachment) => ({
             ...attachment,
           })),
@@ -1529,6 +1559,7 @@ export function createProject(input: CreateProjectInput): CreationProject {
       prompt: "",
       model: input.model,
       kind: input.kind,
+      media: input.media ? creationMediaSchema.parse(input.media) : undefined,
       attachments: input.attachments.map((attachment) => ({ ...attachment })),
       approvalMode: "auto",
       privacyMode: input.privacyMode ?? "byok_local",
@@ -1548,6 +1579,9 @@ export function createTask(project: CreationProject): CreationTask {
     prompt: project.prompt,
     model: project.model,
     kind: project.kind,
+    media: project.composerDraft.media
+      ? structuredClone(project.composerDraft.media)
+      : undefined,
     status: "queued",
     submissionState: "intent",
     createdAt: now,

@@ -1064,6 +1064,48 @@
 .settings-memory-section .settings-network-row > div {
   min-width: 0;
 }
+.settings-memory-scope .kk-select-wrapper {
+  flex: 0 0 auto;
+  min-width: 0;
+}
+.settings-memory-scope {
+  gap: var(--kk-space-3);
+  padding: var(--kk-space-3);
+  font-family: var(--kk-font-sans);
+}
+.settings-memory-scope > div:first-child {
+  flex: 1;
+}
+.settings-memory-scope h3 {
+  font-weight: var(--kk-font-weight-body);
+  line-height: var(--kk-line-body);
+}
+.settings-memory-scope p {
+  margin-top: var(--kk-space-hair);
+}
+.settings-memory-scope .kk-select__trigger {
+  gap: var(--kk-space-hair);
+  padding-inline: var(--kk-space-hair);
+}
+.settings-memory-scope .kk-select__arrow svg {
+  width: var(--kk-font-caption);
+  height: var(--kk-font-caption);
+}
+@media (max-width: 1200px) {
+  .settings-memory-scope .kk-select-wrapper {
+    padding-block: calc((var(--kk-hit-touch) - var(--kk-control-h-md)) / 2);
+  }
+  .settings-memory-scope .kk-select--32 .kk-select__trigger {
+    position: relative;
+    min-height: var(--kk-control-h-md);
+  }
+  .settings-memory-scope .kk-select__trigger::before {
+    content: "";
+    position: absolute;
+    inset: calc((var(--kk-control-h-md) - var(--kk-hit-touch)) / 2) 0;
+    min-height: var(--kk-hit-touch);
+  }
+}
 .settings-memory-section .settings-network-row > .settings-action {
   flex: 0 0 auto;
   min-width: 126px;

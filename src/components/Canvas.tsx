@@ -2,7 +2,9 @@ import ComfyWorkflowCanvasHost from "./canvas/ComfyWorkflowCanvasHost.tsx";
 import CanvasSurface from "./canvas/CanvasSurfaceFrame.tsx";
 import CanvasHud from "./canvas/CanvasHud";
 import { useCallback } from "react";
-import CanvasNavigation from "./canvas/CanvasNavigation";
+import { CanvasOperationsContext } from "../runtime/canvasCommandRuntime.tsx";
+import { useCanvasOperationRuntime } from "./canvas/useCanvasOperationRuntime.ts";
+import CanvasWorkbenchNavigation from "./canvas/CanvasWorkbenchNavigation";
 import { deleteConnection, restoreConnection } from "../domain/canvasGraph";
 import CanvasNodeLayer from "./canvas/CanvasNodeLayer";
 import { useCanvasAddMenu } from "./canvas/useCanvasAddMenu";
@@ -10,7 +12,6 @@ import "../styles/demo-results.css";
 import "../styles/canvas-actions.css";
 import CanvasToolbar from "./canvas/CanvasToolbar";
 import { useCanvasControls } from "./canvas/useCanvasControls";
-import { surfaceScale } from "./canvas/canvasSurface";
 import CanvasOverlays from "./canvas/CanvasOverlays";
 import CanvasLayersPanel from "./canvas/CanvasLayersPanel";
 import CanvasPropertyPanel from "./canvas/CanvasPropertyPanel";
@@ -20,13 +21,11 @@ import { useCanvasWorkbenchState } from "./canvas/useCanvasWorkbenchState";
 import { useCanvasContextMenu } from "./canvas/useCanvasContextMenu";
 import { useAgentCanvasView } from "./canvas/useAgentCanvasView";
 import type { CanvasProps } from "./canvas/CanvasProps";
-import { projectCanvasFingerprint } from "../domain/projectCanvas";
 import "../styles/canvas-layers.css";
 import { ImageCompareProvider as ImageCompareProvider } from "../features/compare/index.ts";
 import { ImageCompareControls as ImageCompareControls } from "../features/compare/index.ts";
 import { useCanvasGestures } from "./canvas/useCanvasGestures";
 import { useCanvasGroups } from "./canvas/useCanvasGroups";
-import CanvasGroupHud from "./canvas/CanvasGroupHud";
 import { useCanvasReferenceFrames } from "./canvas/useCanvasReferenceFrames";
 import { useCanvasWorkflowSourceFocus } from "./canvas/canvasWorkflowSource.ts";
 
@@ -34,6 +33,8 @@ export default function Canvas({
   projectId,
   comfyRuntime,
   onFlush,
+  operationDisabledReason,
+  onAtomicChange,
   agentViewRef,
   onAgentViewChange,
   projectStatus,
@@ -61,10 +62,8 @@ export default function Canvas({
     initialCanvas,
   });
   const groups = useCanvasGroups(initialCanvas);
-  useAgentCanvasView(controls, projectId, agentViewRef, onAgentViewChange);
   const {
     addNode,
-    arrangeNodes,
     locateNode,
     containerRef,
     finishPointer,
@@ -96,7 +95,33 @@ export default function Canvas({
       onItemsChange,
       edges,
       setEdges,
+      groups: groups.groups,
+      setGroups: groups.setGroups,
     });
+  const { operations, minimapVisible, setMinimapVisible } =
+    useCanvasOperationRuntime(
+      {
+        projectId,
+        items,
+        onItemsChange,
+        onCanvasChange,
+        onFlush,
+        covered,
+        operationDisabledReason,
+        onAtomicChange,
+      },
+      controls,
+      { edges, setEdges },
+      groups,
+      history,
+    );
+  useAgentCanvasView(
+    controls,
+    projectId,
+    agentViewRef,
+    onAgentViewChange,
+    operations.executeOperation,
+  );
   useCanvasPersistence(
     initialCanvas,
     nodes,
@@ -104,13 +129,8 @@ export default function Canvas({
     transform,
     groups.groups,
     items,
-    onCanvasChange
-      ? (canvas) => {
-          // A delayed save ACK must not overwrite a newer local undo or edit.
-          controls.publishedCanvas.current = projectCanvasFingerprint(canvas);
-          onCanvasChange(canvas);
-        }
-      : undefined,
+    onCanvasChange,
+    controls.publishedCanvas,
   );
   const addMenu = useCanvasAddMenu(containerRef, transform, addNode, connect);
   const handleDeleteConnection = useCallback(
@@ -142,155 +162,132 @@ export default function Canvas({
     finishPointer,
   });
   return (
-    <ComfyWorkflowCanvasHost
-      projectId={projectId}
-      items={items}
-      controls={controls}
-      connect={connect}
-      runtime={comfyRuntime}
-      canvas={{
-        version: 1,
-        positions: nodes,
-        edges,
-        viewport: transform,
-        groups: groups.groups,
-      }}
-      onCanvasChange={onCanvasChange}
-      flush={onFlush}
-    >
-      <ImageCompareProvider key={projectId} items={items} active={!covered}>
-        <CanvasSurface
-          controls={controls}
-          covered={covered}
-          chatOpen={chatOpen}
-          onContextMenu={handleContextMenu}
-          onKeyDownCapture={handleKeyDown}
-          {...gestures}
-        >
-          <CanvasNodeLayer
+    <CanvasOperationsContext.Provider value={operations}>
+      <ComfyWorkflowCanvasHost
+        projectId={projectId}
+        items={items}
+        controls={controls}
+        connect={connect}
+        runtime={comfyRuntime}
+        canvas={{
+          version: 1,
+          positions: nodes,
+          edges,
+          viewport: transform,
+          groups: groups.groups,
+        }}
+        onCanvasChange={onCanvasChange}
+        flush={onFlush}
+      >
+        <ImageCompareProvider key={projectId} items={items} active={!covered}>
+          <CanvasSurface
             controls={controls}
-            items={items}
-            onItemsChange={onItemsChange}
-            onLocalGenerationSettled={history.settleLocalGeneration}
-            likedIds={likedIds}
-            onToggleLike={onToggleLike}
-            onConfigure={handleConfigure}
-            addMenu={addMenu}
-            edges={edges}
-            showConnections={preferences.showConnections}
-            onConnect={connect}
-            onConnectionNotice={setConnectionNotice}
-            onDeleteConnection={handleDeleteConnection}
-            onSwapReferenceFrames={handleSwapReferenceFrames}
-            groups={groups.groups}
-            collapsedIds={groups.collapsedIds}
-            onToggleGroup={groups.toggleCollapsed}
-            onUpdateGroup={groups.updateGroup}
-            onUngroup={groups.ungroup}
-          />
-          <ImageCompareControls />
-          {layersOpen && (
-            <CanvasLayersPanel
+            covered={covered}
+            chatOpen={chatOpen}
+            onContextMenu={handleContextMenu}
+            onKeyDownCapture={handleKeyDown}
+            {...gestures}
+          >
+            <CanvasNodeLayer
+              controls={controls}
               items={items}
-              selectedNode={controls.selectedNode}
+              onItemsChange={onItemsChange}
+              onLocalGenerationSettled={history.settleLocalGeneration}
+              likedIds={likedIds}
+              onToggleLike={onToggleLike}
+              onConfigure={handleConfigure}
+              addMenu={addMenu}
+              edges={edges}
+              showConnections={preferences.showConnections}
+              onConnect={connect}
+              onConnectionNotice={setConnectionNotice}
+              onDeleteConnection={handleDeleteConnection}
+              onSwapReferenceFrames={handleSwapReferenceFrames}
+              groups={groups.groups}
+              collapsedIds={groups.collapsedIds}
+              onToggleGroup={groups.toggleCollapsed}
+              onUpdateGroup={groups.updateGroup}
+              onUngroup={groups.ungroup}
+            />
+            <ImageCompareControls />
+            {layersOpen && (
+              <CanvasLayersPanel
+                items={items}
+                selectedNode={controls.selectedNode}
+                onSelect={controls.setSelectedNode}
+                onLocate={locateNode}
+                onClose={() => setLayersOpen(false)}
+              />
+            )}
+            <CanvasPropertyPanel
+              item={selectedItem}
+              items={items}
               onSelect={controls.setSelectedNode}
               onLocate={locateNode}
-              onClose={() => setLayersOpen(false)}
+              onItemsChange={onItemsChange}
             />
-          )}
-          <CanvasPropertyPanel
-            item={selectedItem}
-            items={items}
-            onSelect={controls.setSelectedNode}
-            onLocate={locateNode}
-            onItemsChange={onItemsChange}
-          />
-          <CanvasOverlays
-            marquee={controls.marquee}
-            addMenu={addMenu}
-            contextMenu={contextMenu}
-            onDismissContextMenu={(restoreFocus = true) => {
-              if (restoreFocus)
-                contextMenu?.trigger.focus({ preventScroll: true });
-              setContextMenu(null);
-            }}
-            onAddContextNode={(point, trigger) => {
-              setContextMenu(null);
-              addMenu.open({ client: point, trigger, atPoint: true });
-            }}
-            canUndo={history.canUndo}
-            canRedo={history.canRedo}
-            onUndo={history.undo}
-            onRedo={history.redo}
-            onToggleLayers={() => setLayersOpen(true)}
-            snapEnabled={preferences.snapEnabled}
-            onToggleSnap={() =>
-              controls.setSnapEnabled(!preferences.snapEnabled)
-            }
-            removedEdge={removedEdge}
-            onUndoConnection={() => {
-              if (!removedEdge) return;
-              setEdges((current) =>
-                restoreConnection(current, removedEdge, items),
-              );
-              setRemovedEdge(null);
-            }}
-            onDismissConnection={() => setRemovedEdge(null)}
-            connectionNotice={connectionNotice}
-            onDismissConnectionNotice={() => setConnectionNotice("")}
-          />
-          <CanvasHud
-            projectStatus={projectStatus}
-            chatOpen={chatOpen}
-            onChat={onOpenChat}
-            onConfigure={handleConfigure}
-            onOpenTasks={onOpenTasks}
-            tasks={tasks}
-            onCancelTask={onCancelTask}
-            onRetryTask={onRetryTask}
-          >
-            <CanvasGroupHud controls={controls} groups={groups} items={items} />
-            <CanvasNavigation
-              transform={transform}
-              nodes={nodes}
-              items={items}
-              onZoom={controls.setZoom}
-              onChangeZoom={controls.changeZoom}
-              onFit={controls.fitView}
-              showConnections={preferences.showConnections}
-              onToggleConnections={() =>
-                controls.setShowConnections(!preferences.showConnections)
+            <CanvasOverlays
+              marquee={controls.marquee}
+              addMenu={addMenu}
+              contextMenu={contextMenu}
+              onDismissContextMenu={(restoreFocus = true) => {
+                if (restoreFocus)
+                  contextMenu?.trigger.focus({ preventScroll: true });
+                setContextMenu(null);
+              }}
+              onAddContextNode={(point, trigger) => {
+                setContextMenu(null);
+                addMenu.open({ client: point, trigger, atPoint: true });
+              }}
+              canUndo={history.canUndo}
+              canRedo={history.canRedo}
+              onUndo={history.undo}
+              onRedo={history.redo}
+              onToggleLayers={() => setLayersOpen(true)}
+              snapEnabled={preferences.snapEnabled}
+              onToggleSnap={() =>
+                controls.setSnapEnabled(!preferences.snapEnabled)
               }
-              backgroundColor={preferences.backgroundColor}
-              onBackgroundColor={controls.setBackgroundColor}
-              backgroundPattern={preferences.backgroundPattern}
-              onToggleBackgroundPattern={() =>
-                controls.setBackgroundPattern(
-                  preferences.backgroundPattern === "dots" ? "grid" : "dots",
-                )
-              }
-              onArrange={arrangeNodes}
-              onLocate={locateNode}
+              removedEdge={removedEdge}
+              onUndoConnection={() => {
+                if (!removedEdge) return;
+                setEdges((current) =>
+                  restoreConnection(current, removedEdge, items),
+                );
+                setRemovedEdge(null);
+              }}
+              onDismissConnection={() => setRemovedEdge(null)}
+              connectionNotice={connectionNotice}
+              onDismissConnectionNotice={() => setConnectionNotice("")}
             />
-          </CanvasHud>
-          <CanvasToolbar
-            tool={controls.tool}
-            onToolChange={controls.setTool}
-            onOpen={(view) => onOpen?.(view)}
-            addOpen={Boolean(addMenu.menu && !addMenu.menu.parentId)}
-            onAdd={(trigger) => {
-              const box = trigger.getBoundingClientRect();
-              const scale = surfaceScale(
-                trigger.closest<HTMLElement>(".canvas") ?? trigger,
-              );
-              addMenu.open({
-                client: { x: box.x, y: box.y - 592 * scale },
-                trigger,
-              });
-            }}
-          />
-        </CanvasSurface>
-      </ImageCompareProvider>
-    </ComfyWorkflowCanvasHost>
+            <CanvasHud
+              projectStatus={projectStatus}
+              chatOpen={chatOpen}
+              onChat={onOpenChat}
+              onConfigure={handleConfigure}
+              onOpenTasks={onOpenTasks}
+              tasks={tasks}
+              onCancelTask={onCancelTask}
+              onRetryTask={onRetryTask}
+            >
+              <CanvasWorkbenchNavigation
+                controls={controls}
+                groups={groups}
+                items={items}
+                minimapVisible={minimapVisible}
+                setMinimapVisible={setMinimapVisible}
+              />
+            </CanvasHud>
+            <CanvasToolbar
+              tool={controls.tool}
+              onToolChange={controls.setTool}
+              onOpen={(view) => onOpen?.(view)}
+              addOpen={Boolean(addMenu.menu && !addMenu.menu.parentId)}
+              onAdd={addMenu.openFromToolbar}
+            />
+          </CanvasSurface>
+        </ImageCompareProvider>
+      </ComfyWorkflowCanvasHost>
+    </CanvasOperationsContext.Provider>
   );
 }

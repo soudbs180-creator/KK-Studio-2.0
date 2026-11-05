@@ -4,6 +4,7 @@ import {
   updateActiveChat,
 } from "./creationModel.ts";
 import type { CreationProject } from "./creationTypes.ts";
+import { sumTokenUsage, type TokenUsage } from "./tokenUsage.ts";
 
 /** Adapt legacy component updates; unchanged derived fields never become persisted authority. */
 export function updateProjectChatView(
@@ -52,6 +53,7 @@ export function appendChatTaskReply(
   taskId: string,
   chatId: string | undefined,
   text: string,
+  tokenUsage?: TokenUsage,
 ): CreationProject {
   if (!chatId || !text.trim() || !project.chats?.[chatId]) return project;
   const chat = project.chats[chatId];
@@ -66,7 +68,9 @@ export function appendChatTaskReply(
   const id = `${taskId}-assistant`;
   const messages = chat.messages.some((message) => message.id === id)
     ? chat.messages.map((message) =>
-        message.id === id ? { ...message, content: text } : message,
+        message.id === id
+          ? { ...message, content: text, ...(tokenUsage ? { tokenUsage } : {}) }
+          : message,
       )
     : [
         ...chat.messages,
@@ -74,6 +78,7 @@ export function appendChatTaskReply(
           id,
           role: "assistant" as const,
           content: text,
+          ...(tokenUsage ? { tokenUsage } : {}),
           taskId,
           createdAt: Date.now(),
         },
@@ -82,7 +87,12 @@ export function appendChatTaskReply(
     ...project,
     chats: {
       ...project.chats,
-      [chatId]: { ...chat, messages, updatedAt: Date.now() },
+      [chatId]: {
+        ...chat,
+        messages,
+        tokenUsage: sumTokenUsage(messages),
+        updatedAt: Date.now(),
+      },
     },
   });
 }

@@ -133,7 +133,7 @@
   color: var(--text-secondary);
   transform: none;
 }
-.reference-composer.creation-composer > textarea {
+.reference-composer.creation-composer .composer-textarea {
   position: static;
   flex: 0 0 auto;
   width: 100%;
@@ -144,7 +144,7 @@
   font-size: var(--kk-font-body);
   line-height: var(--kk-line-body);
 }
-.reference-composer.creation-composer.expanded > textarea {
+.reference-composer.creation-composer.expanded .composer-textarea {
   height: 200px;
 }
 .reference-composer > .creation-composer-actions {
@@ -321,11 +321,11 @@
   gap: 8px;
   min-height: 132px;
 }
-.reference-composer.canvas-composer-screen > textarea {
+.reference-composer.canvas-composer-screen .composer-textarea {
   height: 56px;
   min-height: 56px;
 }
-.reference-composer.canvas-composer-screen.expanded > textarea {
+.reference-composer.canvas-composer-screen.expanded .composer-textarea {
   height: 200px;
 }
 .reference-composer.canvas-composer-screen > .creation-composer-actions {

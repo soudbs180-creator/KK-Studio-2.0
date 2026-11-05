@@ -16,6 +16,7 @@ import {
 } from "./referenceUpload";
 import CanvasImageActions from "./CanvasImageActions";
 import ResultPreview from "./ResultPreview";
+import VideoShotBreakdownControl from "./VideoShotBreakdownControl.tsx";
 import { useCanvasMediaContent } from "../canvas/useCanvasMediaContent";
 
 export default function DemoResultNode({
@@ -159,7 +160,7 @@ export default function DemoResultNode({
             </strong>
             <p>
               {editing?.generationActive
-                ? "正在加载本地演示素材，可在来源卡片取消。"
+                ? "正在等待生成结果，可在来源卡片停止等待。"
                 : `${CANVAS_KIND_LABELS[item.kind]}任务尚未结束，请在任务记录查看进度。`}
             </p>
           </div>
@@ -232,6 +233,17 @@ export default function DemoResultNode({
             }}
           />
           <CreationComposer
+            footer={
+              item.kind === "video" &&
+              result?.src && (
+                <VideoShotBreakdownControl
+                  source={
+                    item.assetId ? `kk-asset:${item.assetId}` : result.src
+                  }
+                  sourceId={item.id}
+                />
+              )
+            }
             error={referenceError}
             parameters={item.parameters}
             onParametersChange={(parameters) => onChange({ parameters })}

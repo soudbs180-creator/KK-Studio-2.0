@@ -8,23 +8,6 @@ import {
   type TaskFilter,
 } from "./TaskPanelPopover";
 
-const PROTOTYPE_TASKS: PrototypeTask[] = [
-  {
-    id: "prototype-complete",
-    status: "completed",
-    date: "2026/9/5",
-    duration: "50S",
-    image: "/design/figma/task-placeholder-complete.png",
-    previewOnLoad: true,
-  },
-  {
-    id: "prototype-running",
-    status: "running",
-    statusLabel: "演示 · 生成中",
-    image: "/design/figma/task-placeholder-running.png",
-  },
-];
-
 function liveTaskCard(task: CreationTask): PrototypeTask {
   const statusLabel =
     task.status === "running"
@@ -82,7 +65,7 @@ export default function TaskPanel({
       ?.focus({ preventScroll: true });
   }, []);
   useDismissible(open, ref, dismiss);
-  const displayTasks = tasks.length ? tasks.map(liveTaskCard) : PROTOTYPE_TASKS;
+  const displayTasks = tasks.map(liveTaskCard);
   const visibleTasks = tasksForFilter(displayTasks, tab);
   const currentSelected = selectedTask
     ? (displayTasks.find((task) => task.id === selectedTask.id) ?? null)
@@ -113,7 +96,6 @@ export default function TaskPanel({
       </button>
       {open && (
         <TaskPanelPopover
-          demo={tasks.length === 0}
           tab={tab}
           setTab={setTab}
           visibleTasks={visibleTasks}

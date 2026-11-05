@@ -1,3 +1,4 @@
+import { executeMediaTask } from "./executeMediaTask.ts";
 import React, { useEffect, useRef, useState, type SetStateAction } from "react";
 import {
   requiredApprovalGates,
@@ -145,6 +146,7 @@ export interface UseTaskExecutionOptions {
 }
 
 export interface UseTaskExecutionReturn {
+  queryTask: (taskId: string) => Promise<void>;
   executeTask: (
     projectId: string,
     taskId: string,
@@ -475,6 +477,7 @@ export function useTaskExecution(
     taskId: string,
     initialProject?: CreationProject,
     explicitRetry = false,
+    queryOnly = false,
   ): Promise<void> {
     const project =
       initialProject ??
@@ -491,6 +494,7 @@ export function useTaskExecution(
       setPendingApproval,
       updateProject,
       creationRef,
+      queryOnly,
     });
     if (!allowed || !task) return;
 
@@ -582,13 +586,23 @@ export function useTaskExecution(
         publish("succeeded");
         return;
       }
+      if (queryOnly) {
+        publish("running", undefined, "submitted");
+        await persistence.flush();
+      }
       const compiledPrompt =
-        task.kind === "text" ||
+        task.kind !== "image" ||
         task.imageEdit ||
         task.imageEditContext ||
         task.imageCapability
           ? task.prompt
           : compileDesignPrompt(task.prompt, {
+              referenceIds: task.attachments.map(
+                (attachment) => attachment.assetId ?? attachment.id,
+              ),
+              referenceAliasIds: task.attachments.map(
+                (attachment) => attachment.id,
+              ),
               referenceRoles: task.attachments.map(
                 (attachment) => attachment.role,
               ),
@@ -668,6 +682,29 @@ export function useTaskExecution(
         return;
       }
 
+      if (task.kind === "video" || task.kind === "audio") {
+        await executeMediaTask({
+          task,
+          projectId,
+          outputs,
+          signal: controller.signal,
+          connection: reservation!.connection,
+          queryOnly,
+          promptHash,
+          assertCurrent: () => {
+            reservation!.assertCurrent();
+            assertTaskCurrent(task, projectId, creationRef);
+          },
+          publish,
+          flush: flushPublishedResult,
+          createdItems,
+          setAssets,
+          onStart: () => {
+            providerRequestStarted = true;
+          },
+        });
+        return;
+      }
       await executeImageFlow({
         task,
         projectId,
@@ -745,6 +782,19 @@ export function useTaskExecution(
     resumeTask,
     retryTask,
     regenerateImageTask,
+    queryTask: async (taskId: string) => {
+      if (usesNativeTaskHost()) return;
+      const project = creationRef.current.projects.find((p) =>
+        p.tasks.some((t) => t.id === taskId),
+      );
+      const task = project?.tasks.find((t) => t.id === taskId);
+      if (
+        task?.kind === "video" &&
+        ["unknown", "partial", "interrupted"].includes(task.status) &&
+        task.outputs?.some((o) => o.mediaReceipt?.acceptance === "accepted")
+      )
+        await executeTask(project!.id, taskId, undefined, true, true);
+    },
     pendingApproval,
     pendingApprovalTask,
     resolveTaskApproval,
@@ -769,7 +819,7 @@ function assertTaskCurrent(
     !isLocalProviderUrl(task.providerBaseUrl ?? "")
   )
     throw new Error("当前离线，未提交文本任务；草稿已保留。");
-  if (task.kind === "text")
+  if (["text", "video", "audio"].includes(task.kind))
     assertLiveTextTask(
       creationRef.current.projects.find((item) => item.id === projectId),
       task,
@@ -918,6 +968,7 @@ function triggerNextChainedImageEditTask(options: {
 }
 
 function validateTaskExecutionPreconditions(options: {
+  queryOnly?: boolean;
   project?: CreationProject;
   task?: CreationTask;
   taskId: string;
@@ -975,9 +1026,10 @@ function validateTaskExecutionPreconditions(options: {
   }
 
   if (
-    task.status === "unknown" ||
-    task.submissionState === "unknown" ||
-    task.submissionState === "submitted"
+    !options.queryOnly &&
+    (task.status === "unknown" ||
+      task.submissionState === "unknown" ||
+      task.submissionState === "submitted")
   )
     return false;
 
@@ -1118,6 +1170,8 @@ export function publishTaskOutputState(options: PublishStateOptions): boolean {
             task.retryOfTaskId ?? taskId,
             task.originChatId,
             textResult.text ?? "",
+            effectiveOutputs.find((output) => output.status === "succeeded")
+              ?.tokenUsage,
           )
         : nextProject;
     const nextTasks = current.tasks.map((item) => {
@@ -1247,6 +1301,9 @@ async function executeTextFlow(options: TextFlowOptions): Promise<void> {
   } = options;
 
   const text = await generateText({
+    onUsage: (tokenUsage) => {
+      outputs[0] = { ...outputs[0], tokenUsage };
+    },
     prompt: task.prompt,
     model: task.model,
     providerBaseUrl: task.providerBaseUrl!,

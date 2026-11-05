@@ -66,6 +66,16 @@ export class CodexEventHistory {
     }
 
     /** 归档线程后删除其补充事件。 */
+    removeTurns(threadId: string, turnIds: string[]) {
+        return this.run(async () => {
+            const data = await this.load();
+            const removed = new Set(turnIds);
+            const nextData = { version: 1 as const, items: data.items.filter((item) => item.threadId !== threadId || !removed.has(item.turnId)), turns: data.turns.filter((turn) => turn.threadId !== threadId || !removed.has(turn.turnId)) };
+            await this.save(nextData); this.data = nextData;
+        });
+    }
+
+    /** 归档线程后删除其补充事件。 */
     removeThread(threadId: string) {
         return this.run(async () => {
             const data = await this.load();

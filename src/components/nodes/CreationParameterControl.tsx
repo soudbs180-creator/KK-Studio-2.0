@@ -1,5 +1,6 @@
 import UiIcon from "../UiIcon";
 import CreationParameters from "./CreationParameters";
+import CameraOpticsControl from "./CameraOpticsControl.tsx";
 import ImageModelParameters from "./ImageModelParameters";
 import type { CanvasParameters } from "../../domain/canvasItems";
 import type { ModelSelection } from "../../domain/modelSelection";
@@ -58,21 +59,30 @@ export default function CreationParameterControl({
         )}
       </button>
       {open && !disabled && !video && (
-        <ImageModelParameters
-          model={model}
-          onModelChange={onModelChange}
-          size={parameters?.imageSize}
-          onSize={(imageSize, ratio) =>
-            onChange({
-              imageSize,
-              ratio: ratio ?? "自适应",
-              quality: "自适应",
-            })
-          }
-        />
+        <div className="node-popover parameter-menu">
+          <ImageModelParameters
+            embedded
+            model={model}
+            onModelChange={onModelChange}
+            size={parameters?.imageSize}
+            onSize={(imageSize, ratio) =>
+              onChange({
+                imageSize,
+                ratio: ratio ?? "自适应",
+                quality: "自适应",
+              })
+            }
+          />
+          <CameraOpticsControl
+            value={parameters.optics}
+            onChange={(optics) => onChange({ optics })}
+          />
+        </div>
       )}
       {open && !disabled && video && (
         <CreationParameters
+          optics={parameters.optics}
+          onOptics={(optics) => onChange({ optics })}
           kind={kind}
           ratio={ratio}
           quality={quality}

@@ -5,6 +5,7 @@
  * Zero framework, zero DOM, zero platform/Tauri dependencies.
  */
 
+import { z } from "zod";
 export type RewindStatus =
   | "idle"
   | "preparing"
@@ -53,6 +54,10 @@ export interface RevertVerificationReport {
 }
 
 export interface TurnRewindHostBridge {
+  validateRewindHistory?: (
+    before: readonly ConversationTurn[],
+    latest: readonly ConversationTurn[],
+  ) => boolean;
   getThreadId(): string;
   getTurns(threadId: string): Promise<readonly ConversationTurn[]>;
   isThreadBusy(threadId: string): boolean;
@@ -66,13 +71,14 @@ export interface TurnRewindHostBridge {
 export class TurnRewindRecoveryController {
   readonly #bridge: TurnRewindHostBridge;
   readonly #activeRuns = new Map<string, RewindRecord>();
+  readonly #pendingThreads = new Set<string>();
 
   constructor(bridge: TurnRewindHostBridge) {
     this.#bridge = bridge;
   }
 
   isRewinding(threadId: string): boolean {
-    return this.#activeRuns.has(threadId);
+    return this.#pendingThreads.has(threadId);
   }
 
   getActiveRecord(threadId: string): RewindRecord | undefined {
@@ -80,6 +86,22 @@ export class TurnRewindRecoveryController {
   }
 
   async executeRewind(
+    threadId: string,
+    beforeTurnId: string,
+  ): Promise<RewindRecord> {
+    if (this.#pendingThreads.has(threadId))
+      throw new Error(`Turn rewind already active for thread ${threadId}`);
+    if (threadId !== this.#bridge.getThreadId())
+      throw new Error("Conversation changed before rewind");
+    this.#pendingThreads.add(threadId);
+    try {
+      return await this.#executeRewind(threadId, beforeTurnId);
+    } finally {
+      this.#pendingThreads.delete(threadId);
+    }
+  }
+
+  async #executeRewind(
     threadId: string,
     beforeTurnId: string,
   ): Promise<RewindRecord> {
@@ -152,9 +174,17 @@ export class TurnRewindRecoveryController {
 
       // Check for concurrent interleaving during prompt execution
       const latestTurns = await this.#bridge.getTurns(threadId);
+      const validHistory =
+        this.#bridge.validateRewindHistory?.(turns, latestTurns) ??
+        (latestTurns.length === turns.length ||
+          (latestTurns.length === turns.length + 1 &&
+            latestTurns.at(-1)?.role === "assistant"));
       if (
-        latestTurns.length !== turns.length &&
-        latestTurns.length !== turns.length + 1
+        !validHistory ||
+        this.#bridge.isThreadBusy(threadId) ||
+        this.#bridge.getThreadId() !== threadId ||
+        JSON.stringify(latestTurns.slice(0, turns.length)) !==
+          JSON.stringify(turns)
       ) {
         throw new Error(
           "Concurrent activity detected during rewind; aborting truncation",
@@ -206,12 +236,21 @@ export class TurnRewindRecoveryController {
     const line = output
       .split("\n")
       .map((l) => l.trim())
-      .find((l) => l.startsWith(prefix));
-    if (!line) {
+      .filter(Boolean)
+      .at(-1);
+    if (!line?.startsWith(prefix)) {
       throw new Error("Missing verification report from AI assistant");
     }
     const jsonStr = line.slice(prefix.length);
-    const parsed = JSON.parse(jsonStr) as RevertVerificationReport;
+    const parsed = z
+      .object({
+        status: z.enum(["complete", "partial", "blocked"]),
+        undone: z.array(z.string()),
+        unresolved: z.array(z.string()),
+        verification: z.array(z.string()),
+      })
+      .strict()
+      .parse(JSON.parse(jsonStr));
     if (!["complete", "partial", "blocked"].includes(parsed.status)) {
       throw new Error(
         `Invalid status in verification report: ${parsed.status}`,

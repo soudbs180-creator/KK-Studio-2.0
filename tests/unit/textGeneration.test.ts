@@ -79,3 +79,46 @@ test("text stream abort cancels a stalled read", async () => {
   await assert.rejects(pending);
   assert.equal(cancelled, true);
 });
+
+test("chat usage after finish_reason is retained even when split across network chunks", async () => {
+  const received: unknown[] = [];
+  const text = await readTextStream(
+    response(
+      encode.encode(
+        event("done") +
+          'data: {"choices":[{"delta":{},"finish_reason":"stop"}]}\n\n' +
+          'data: {"choices":[],"usage":{"prompt_tokens":13,"completion_tokens":5,"total_tokens":18}}\n\n' +
+          "data: [DONE]\n\n",
+      ),
+      3,
+    ),
+    new AbortController().signal,
+    undefined,
+    "openai-chat",
+    (usage) => received.push(usage),
+  );
+  assert.equal(text, "done");
+  assert.deepEqual(received.at(-1), {
+    promptTokens: 13,
+    completionTokens: 5,
+    totalTokens: 18,
+  });
+});
+
+test("chat rejects content after its terminal choice instead of silently appending it", async () => {
+  await assert.rejects(
+    readTextStream(
+      response(
+        encode.encode(
+          event("first") +
+            'data: {"choices":[{"delta":{},"finish_reason":"stop"}]}\n\n' +
+            event("late") +
+            "data: [DONE]\n\n",
+        ),
+        3,
+      ),
+      new AbortController().signal,
+    ),
+    /不完整|无效/,
+  );
+});

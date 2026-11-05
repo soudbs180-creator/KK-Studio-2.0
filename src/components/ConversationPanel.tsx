@@ -1,3 +1,4 @@
+import { useLocalConversationMessages } from "./useLocalConversationMessages.ts";
 import { ConversationResizeHandle } from "./ResizeHandle";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useConversationOverlay } from "./useConversationOverlay";
@@ -33,6 +34,8 @@ export default function ConversationPanel({
   modelOptions = [],
   onSend,
   onDeleteMessage,
+  onRewindMessage,
+  rewindBusy = false,
   skills = [],
   onApplySkill,
   agent,
@@ -43,9 +46,7 @@ export default function ConversationPanel({
 }: ConversationPanelProps) {
   const panelRef = useConversationOverlay(overlay);
   const agentDraftState = useAgentDraftState();
-  const agentConnecting = Boolean(agent?.connecting);
   const [input, setInput] = useState("");
-  const [messages, setMessages] = useState<string[]>([]);
   const [status, setStatus] = useState("");
   const [approvalMode, setApprovalMode] = useState<"auto" | "ask">(
     composerDraft?.approvalMode ?? "auto",
@@ -59,7 +60,7 @@ export default function ConversationPanel({
   const draftRevision = useRef(0);
   const agentBusy = Boolean(agent?.sending || agent?.connecting);
   const blocked = Boolean(executionDisabledReason);
-  const modelDisabled = blocked || submitting || agentBusy;
+  const modelDisabled = blocked || submitting || agentBusy || rewindBusy;
   const draftKey = JSON.stringify([
     project?.id ?? "workspace",
     project?.activeChatId ?? null,
@@ -81,17 +82,11 @@ export default function ConversationPanel({
     setPendingApproval(null);
     setStatus("");
   }, [draftKey, composerDraft?.prompt, composerDraft?.approvalMode]);
-  const visibleMessages =
-    readOnlyMessages ??
-    project?.messages ??
-    messages.map((content, index) => ({ id: `local-${index}`, content }));
-  const deleteMessage =
-    onDeleteMessage ??
-    ((messageId: string) => {
-      const index = Number(messageId.replace("local-", ""));
-      setMessages((current) =>
-        current.filter((_, itemIndex) => itemIndex !== index),
-      );
+  const { visibleMessages, deleteMessage, setMessages } =
+    useLocalConversationMessages({
+      project,
+      readOnlyMessages,
+      onDeleteMessage,
     });
   function updateDraft(patch: Partial<CreationDraft>): void {
     if (blocked || !onDraftChange || !composerDraft) return;
@@ -187,6 +182,9 @@ export default function ConversationPanel({
         agentActive={agentActive}
         messages={visibleMessages}
         onDelete={deleteMessage}
+        onRewind={
+          blocked || submitting || agentBusy ? undefined : onRewindMessage
+        }
         onStatus={setStatus}
         onConfigure={() => onOpen("settings/providers")}
         onConfigureDirect={
@@ -207,16 +205,19 @@ export default function ConversationPanel({
         draftKey={draftKey}
         draftState={agentDraftState}
         agentActive={agentActive}
-        agentConnecting={agentConnecting}
+        agentConnecting={Boolean(agent?.connecting)}
         agentModel={agentModel}
         input={input}
         onInputChange={changeInput}
         onDraftChange={updateDraft}
         onSubmitMessage={submitMessage}
-        disabled={blocked || submitting || (agentActive && agentBusy)}
+        disabled={
+          blocked || submitting || rewindBusy || (agentActive && agentBusy)
+        }
         modelDisabled={modelDisabled}
         submitDisabled={
           blocked ||
+          rewindBusy ||
           submitting ||
           (!agentActive &&
             (!canSubmitGeneration(directState) || readingFiles > 0))

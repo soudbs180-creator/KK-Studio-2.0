@@ -22,6 +22,7 @@ import {
 } from "../../domain/canvasHistory.ts";
 import type { Point, ViewTransform } from "../../domain/canvasViewport.ts";
 import { parseSettings, SETTINGS_STORAGE_KEY } from "../../domain/settings.ts";
+import type { CanvasGroup } from "../../domain/projectCanvas.ts";
 
 export function clampHistoryLimit(val: unknown): number {
   if (val === null || val === undefined || val === "") return 20;
@@ -65,6 +66,8 @@ export function getEffectiveLimit(customLimit?: number): number {
 }
 
 interface CanvasHistoryOptions {
+  groups?: CanvasGroup[];
+  setGroups?: Dispatch<SetStateAction<CanvasGroup[]>>;
   items: CanvasCollectionItem[];
   positions: Record<string, Point>;
   edges: CanvasConnection[];
@@ -109,6 +112,8 @@ function isCanvasEditableTarget(target: EventTarget | null): boolean {
 }
 
 export function useCanvasHistory({
+  groups,
+  setGroups,
   items,
   positions,
   edges,
@@ -173,7 +178,10 @@ export function useCanvasHistory({
     const present = presentRef.current;
     // Skip preview scans; initialization and undo/redo acknowledgements still run.
     if (present && gestureActive && !applyingFingerprint.current) return;
-    const snapshot = snapshotOf(items, positions, edges, viewport);
+    const snapshot = {
+      ...snapshotOf(items, positions, edges, viewport),
+      groups,
+    };
     const fingerprint = canvasHistoryFingerprint(snapshot);
     if (!present) {
       presentRef.current = cloneCanvasHistorySnapshot(snapshot);
@@ -219,6 +227,7 @@ export function useCanvasHistory({
     setRevision((value) => value + 1);
   }, [
     automaticViewport,
+    groups,
     edges,
     gestureActive,
     items,
@@ -234,13 +243,21 @@ export function useCanvasHistory({
       setPositions({ ...next.positions });
       setEdges(next.edges.map((edge) => ({ ...edge })));
       setViewport({ ...next.viewport });
+      setGroups?.(structuredClone(next.groups ?? []));
       setSelectedNode?.((current) =>
         current && next.items.some((item) => item.id === current)
           ? current
           : null,
       );
     },
-    [onItemsChange, setEdges, setPositions, setSelectedNode, setViewport],
+    [
+      onItemsChange,
+      setEdges,
+      setPositions,
+      setSelectedNode,
+      setViewport,
+      setGroups,
+    ],
   );
 
   const settleLocalGeneration = useCallback(

@@ -1,3 +1,7 @@
+import {
+  creationMediaSchema,
+  mediaSubmissionReceiptSchema,
+} from "../../packages/creation-contracts/media.ts";
 import { z } from "zod";
 import { imageCapabilitySchema } from "../../packages/creation-contracts/index.ts";
 import { imageArchiveReceiptsSchema } from "./imageArchiveReceipts.ts";
@@ -21,12 +25,17 @@ const threadId = id.regex(/^[A-Za-z0-9_-]{1,160}$/);
 const number = z.number().finite();
 const kind = z.enum(["image", "video", "audio", "text"]);
 
+const mediaMatchesKind = (value: { kind?: string; media?: { kind: string } }) =>
+  !value.media || value.kind === value.media.kind;
+
 const attachment = z
   .object({
     id,
     name: z.string(),
     mime: z.string(),
     size: number.nonnegative(),
+    role: z.enum(["主体", "风格", "材质", "构图", "Mask"]).optional(),
+    referenceFrame: z.enum(["first", "last"]).optional(),
     dataUrl: z.string().optional(),
   })
   .passthrough();
@@ -37,11 +46,13 @@ const draft = z
     text: z.string().optional(),
     model: z.string().optional(),
     kind: kind.optional(),
+    media: creationMediaSchema.optional(),
     attachments: z.array(attachment).optional(),
     pendingAgent: z.union([z.string(), z.boolean()]).optional(),
     updatedAt: number.optional(),
   })
-  .passthrough();
+  .passthrough()
+  .refine(mediaMatchesKind, "媒体参数与模态不一致");
 
 const plugin = z
   .object({
@@ -108,6 +119,8 @@ const taskSchema = z
   .object({
     id,
     imageCapability: imageCapabilitySchema.optional(),
+    kind: kind.optional(),
+    media: creationMediaSchema.optional(),
     prompt: z.string(),
     model: z.string(),
     providerProtocol: providerProtocolSchema.optional(),
@@ -126,6 +139,7 @@ const taskSchema = z
       .array(
         z
           .object({
+            mediaReceipt: mediaSubmissionReceiptSchema.optional(),
             status: z
               .enum([
                 "waiting",
@@ -153,7 +167,8 @@ const taskSchema = z
     ]),
   })
   .passthrough()
-  .refine(isCreationProviderRoutingValid, "供应商协议或认证配置无效");
+  .refine(isCreationProviderRoutingValid, "供应商协议或认证配置无效")
+  .refine(mediaMatchesKind, "媒体参数与模态不一致");
 
 const projectV2Schema = z
   .object({
@@ -179,6 +194,7 @@ const projectV2Schema = z
       .max(Number.MAX_SAFE_INTEGER)
       .optional(),
     kind: kind.optional(),
+    media: creationMediaSchema.optional(),
     attachments: z.array(attachment).optional(),
     messages: z.array(chatMessageSchema).optional(),
     tasks: z.array(taskSchema).optional(),
@@ -208,6 +224,7 @@ const projectV3Schema = z
     items: z.array(item),
     name: z.string().optional(),
     kind: kind.optional(),
+    media: creationMediaSchema.optional(),
     attachments: z.array(attachment).optional(),
     providerProtocol: providerProtocolSchema.optional(),
     providerAuthMode: providerAuthModeSchema.optional(),

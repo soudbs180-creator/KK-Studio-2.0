@@ -74,7 +74,7 @@ impl TaskHost {
             return Ok(());
         };
         let Some(receipt) = journal.comfy_receipt.clone() else {
-            return Ok(());
+            return Arc::clone(&self).recover_video_unlocked(journal);
         };
         if !matches!(journal.record.status.as_str(), "unknown" | "submitted")
             || journal

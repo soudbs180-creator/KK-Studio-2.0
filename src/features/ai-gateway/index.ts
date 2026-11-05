@@ -40,6 +40,8 @@ export {
 } from "./errors.ts";
 export type { ErrorClass, NormalizedError } from "./errors.ts";
 export { ChannelHealthTracker, channelError, Scheduler } from "./scheduler.ts";
+export { GatewayCooldownScheduler } from "./cooldownQueue.ts";
+export { resetGatewayAffinity } from "./affinityReset.ts";
 export type {
   DispatchRequest,
   DispatchOutcome,

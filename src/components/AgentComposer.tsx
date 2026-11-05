@@ -17,6 +17,8 @@ import {
   type AgentDraftAttachment,
 } from "../features/agent/index.ts";
 import "../styles/agent-panel.css";
+import { Button } from "./ui";
+import AgentReferenceSection from "./AgentReferenceSection";
 import {
   UseAgentComposerDraft as useAgentComposerDraft,
   type AgentDraftState,
@@ -26,44 +28,6 @@ function decodeBase64ByteLength(dataUrl: string): number {
   const encoded = dataUrl.split(",")[1] ?? "";
   const padding = encoded.endsWith("==") ? 2 : encoded.endsWith("=") ? 1 : 0;
   return encoded.length * 0.75 - padding;
-}
-
-function AgentReferenceSection({
-  canvasImages,
-  disabled,
-  onSelect,
-}: {
-  canvasImages?: AgentConversationProps["canvasImages"];
-  disabled: boolean;
-  onSelect: (id: string) => void;
-}) {
-  const hasImages = Boolean(canvasImages?.length);
-  return (
-    <section className="agent-reference-region" aria-label="Agent 参考图">
-      <div className="agent-reference-heading">
-        <span>参考图</span>
-        <span>可选 · 最多 6 张 · 单张 8 MiB</span>
-      </div>
-      <div className="agent-reference-picker">
-        <select
-          className="ui-select"
-          aria-label="引用画布图片"
-          value=""
-          disabled={disabled || !hasImages}
-          onChange={(event) => onSelect(event.target.value)}
-        >
-          <option value="">
-            {hasImages ? "引用画布图片…" : "画布暂无已归档图片"}
-          </option>
-          {canvasImages?.map((item) => (
-            <option key={item.id} value={item.id}>
-              {item.title}
-            </option>
-          ))}
-        </select>
-      </div>
-    </section>
-  );
 }
 
 /** Share the composer while isolating Agent text and attachments from API drafts. */
@@ -250,7 +214,7 @@ export default function AgentComposer({
             </p>
           )}
           {importError && (
-            <button
+            <Button
               type="button"
               className="ui-button"
               onClick={() => {
@@ -259,7 +223,7 @@ export default function AgentComposer({
               }}
             >
               忽略未添加的图片
-            </button>
+            </Button>
           )}
         </div>
       )}
@@ -271,6 +235,10 @@ export default function AgentComposer({
       {cloneElement(composer, {
         input,
         onInputChange: update,
+        onAttachmentRoleChange: (id, role) =>
+          updateAttachments(
+            attachments.map((a) => (a.id === id ? { ...a, role } : a)),
+          ),
         onVoiceChange: update,
         onSubmitMessage: submit,
         composerDraft: { ...emptyDraft(), attachments },

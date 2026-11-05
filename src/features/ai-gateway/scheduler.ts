@@ -31,10 +31,9 @@ import {
   type DualStickinessManager,
   StandardDualStickinessManager,
 } from "../../domain/gatewayStickiness.ts";
-import {
-  type WaitingCandidate,
-  sortWaitingQueue,
-} from "../../domain/gatewayCooldown.ts";
+import { type WaitingCandidate } from "../../domain/gatewayCooldown.ts";
+import { GatewayCooldownScheduler } from "./cooldownQueue.ts";
+import { registerGatewayAffinity } from "./affinityReset.ts";
 
 export interface DispatchRequest {
   readonly model: string;
@@ -204,7 +203,7 @@ export class Scheduler {
   readonly #random: () => number;
   readonly #now: () => number;
   readonly #stickiness: DualStickinessManager;
-  readonly #coolingWaitLimitMs: number;
+  readonly #cooldown: GatewayCooldownScheduler;
   readonly #accountPools = new Map<string, AccountPool>();
 
   constructor(registry: ChannelRegistry, options: SchedulerOptions = {}) {
@@ -217,7 +216,12 @@ export class Scheduler {
       new StandardDualStickinessManager({
         now: this.#now,
       });
-    this.#coolingWaitLimitMs = options.coolingWaitLimitMs ?? 20_000;
+    registerGatewayAffinity(this.#stickiness);
+    this.#cooldown = new GatewayCooldownScheduler({
+      now: this.#now,
+      random: this.#random,
+      maxWaitLimitMs: options.coolingWaitLimitMs ?? 20_000,
+    });
 
     if (options.accountPools) {
       if (options.accountPools instanceof Map) {
@@ -651,44 +655,16 @@ export class Scheduler {
       }
     }
 
-    const sorted = sortWaitingQueue(waitingCandidates);
-    const soonest = sorted[0];
-    if (!soonest || soonest.availableAfterMs > this.#coolingWaitLimitMs) {
+    if (
+      !(await this.#cooldown.waitForRecovery(waitingCandidates, request.signal))
+    ) {
       return undefined; // Exceeds wait limit threshold; proceed to error
     }
-
-    // Pause asynchronously without dropping user request
-    await this.#sleep(soonest.availableAfterMs, request.signal);
     request.signal?.throwIfAborted();
 
     // Re-attempt primary candidates after cooling recovery
     const retry = await this.#tryPrimaryCandidates(ordered, request);
     return retry.outcome;
-  }
-
-  #sleep(ms: number, signal?: AbortSignal): Promise<void> {
-    return new Promise((resolve, reject) => {
-      if (signal?.aborted) {
-        return reject(signal.reason ?? new Error("Aborted"));
-      }
-
-      const timer = setTimeout(() => {
-        cleanup();
-        resolve();
-      }, ms);
-
-      const onAbort = () => {
-        cleanup();
-        reject(signal?.reason ?? new Error("Aborted"));
-      };
-
-      const cleanup = () => {
-        clearTimeout(timer);
-        signal?.removeEventListener("abort", onAbort);
-      };
-
-      signal?.addEventListener("abort", onAbort, { once: true });
-    });
   }
 
   #streamStarted(request: DispatchRequest): boolean {

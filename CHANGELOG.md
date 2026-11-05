@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- 候选 Desktop/Web 2.1.65：Scoped Memory V2、真实回滚与阶段授权执行、34项画布操作/Floorplan/引用联动、分镜/光学/逐帧拉片接入生产模块；移除本地假生成与 E2E harness 内联替身。完整终验、Desktop当前产物及主线合流进度见[验证](docs/changes/2026-11-04-e2e-wiring/verification.md)，尚非正式发布。
+
 - Desktop/Web 2.1.61：合入根与随包 Agent 的 Zod 4.6.7 安全修复；保留模型账号身份、旧置顶和会话草稿；修复短屏视频编辑器遮挡、触屏菜单点击穿透及 HUD 取消裁切。定向浏览器与本地门禁通过不代表完整浏览器、Hosted 或正式发布验收。
 
 - 合流候选 Desktop/Web 2.1.60、Mobile 2.1.44：保留远端聊天隔离、插件订阅、归档回执校验与 Mobile 已有功能，沿用当前 Figma 图标；更新页明确未接入 updater，不再模拟检查/下载成功。当前组合尚未通过完整门禁或发布。

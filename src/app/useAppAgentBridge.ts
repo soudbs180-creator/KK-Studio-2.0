@@ -6,10 +6,12 @@ import {
   configureAgentProxy,
   createAgentHost,
   createStageOrchestrator,
+  createStageExecution,
   desktopAgentLifecycle,
   googleAgentConnection,
   type AgentBridge,
   type StageOrchestrator,
+  AgentToolRuntime,
 } from "../features/agent/index.ts";
 import {
   readProviderConnections,
@@ -25,6 +27,7 @@ import {
   setPluginRuntime,
 } from "../features/plugins/index.ts";
 import { appVersion } from "../runtime/appInfo";
+import { catalogForConnection } from "../features/models/index.ts";
 import { type AppTaskCoordinationParams } from "./taskPorts.ts";
 
 interface AppAgentBridgeParams extends Pick<
@@ -32,6 +35,8 @@ interface AppAgentBridgeParams extends Pick<
   "creationRef" | "updateProject" | "replaceCanvasItems" | "saveState"
 > {
   activeProjectIdRef: React.MutableRefObject<string | null>;
+  cancelTask: (id: string) => void;
+  retryTask: (projectId: string, taskId: string) => void;
   persistence: ReturnType<typeof useCreationStorage>;
   saveStateRef: React.MutableRefObject<string>;
   homeCodexStarting: React.MutableRefObject<boolean>;
@@ -55,6 +60,8 @@ export function useAppAgentBridge({
   conversationDisabledReason,
   desktopAgentState,
   submitImageCommand,
+  cancelTask,
+  retryTask,
 }: AppAgentBridgeParams) {
   const creation = persistence.creation;
   const stageOrchestrator = useMemo<StageOrchestrator>(
@@ -87,9 +94,27 @@ export function useAppAgentBridge({
     ) => Promise<{ taskId?: string; error?: string }>
   >(async () => ({ error: "生成入口未就绪" }));
   const agentViewRef = useRef<AgentCanvasBinding | null>(null);
+  const agentToolRuntime = useMemo(
+    () =>
+      new AgentToolRuntime({
+        getScope: () => {
+          const project = creationRef.current.projects.find(
+            (item) => item.id === activeProjectIdRef.current,
+          );
+          return project
+            ? JSON.stringify([project.id, project.activeChatId ?? null])
+            : "";
+        },
+        getBlockReason: () =>
+          persistence.getWriteBlockReason() ??
+          snapshotWriteBlockReason(creationRef.current),
+      }),
+    [],
+  );
   const agentCanvasBridge = useMemo<AgentBridge>(
     () =>
       createAgentHost({
+        toolRuntime: agentToolRuntime,
         getView: () =>
           agentViewRef.current?.projectId === activeProjectIdRef.current
             ? agentViewRef.current.view
@@ -112,7 +137,7 @@ export function useAppAgentBridge({
           agentSubmitRef.current(node, prompt, signal, validate),
         orchestrator: stageOrchestrator,
       }),
-    [stageOrchestrator],
+    [stageOrchestrator, agentToolRuntime],
   );
   agentSubmitRef.current = async (node, prompt, signal, validate) => {
     const project = creationRef.current.projects.find(
@@ -137,7 +162,8 @@ export function useAppAgentBridge({
           sourceItemId: node.id,
           prompt,
           model,
-          count: 1,
+          count: Number(node.parameters?.count ?? 1),
+          providerConnectionId: node.providerConnectionId,
           signal: signal ?? new AbortController().signal,
         },
       },
@@ -252,5 +278,49 @@ export function useAppAgentBridge({
     void pluginLoader.ensurePluginsLoaded();
   }, []);
 
-  return { agentViewRef, stageOrchestrator };
+  const stageExecution = useMemo(
+    () =>
+      createStageExecution({
+        getProject: () =>
+          creationRef.current.projects.find(
+            (p) => p.id === activeProjectIdRef.current,
+          ),
+        orchestrator: stageOrchestrator,
+        commit: (p) => {
+          updateProject(p.id, () => p);
+          replaceCanvasItems(p.items);
+        },
+        flush: persistence.flush,
+        resolveConnection: (work) => {
+          const candidates = readProviderConnections().filter(
+            (connection) =>
+              connection.state !== "disabled" &&
+              catalogForConnection(connection).some(
+                (model) => model.id === work.model && model.kind === work.kind,
+              ),
+          );
+          if (candidates.length !== 1)
+            throw new Error(
+              "阶段模型必须对应唯一的已配置连接，请在设置中核对模型及账号后再批准",
+            );
+          return candidates[0].id;
+        },
+        generate: (node, prompt, signal) =>
+          agentSubmitRef.current(node, prompt, signal),
+        cancelTask,
+        retryTask: (projectId, taskId) => {
+          const before = new Set(
+            creationRef.current.projects
+              .find((p) => p.id === projectId)
+              ?.tasks.map((t) => t.id),
+          );
+          retryTask(projectId, taskId);
+          return creationRef.current.projects
+            .find((p) => p.id === projectId)
+            ?.tasks.find((t) => !before.has(t.id))?.id;
+        },
+      }),
+    [stageOrchestrator],
+  );
+  return { agentViewRef, stageOrchestrator, stageExecution };
 }

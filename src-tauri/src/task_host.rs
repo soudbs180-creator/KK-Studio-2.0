@@ -22,12 +22,16 @@ mod comfy;
 mod comfy_recovery;
 #[path = "asset_io.rs"]
 mod io;
+#[path = "task_host_media.rs"]
+mod media;
 #[path = "task_host_protocol_stream.rs"]
 mod protocol_stream;
 #[path = "task_host_provider.rs"]
 mod provider;
 #[path = "task_host_text.rs"]
 mod text;
+#[path = "task_host_token_usage.rs"]
+mod token_usage;
 pub(crate) use provider::{discover_models, validate_provider_options};
 
 const MAX_ID: usize = 160;
@@ -45,6 +49,12 @@ const PROVIDER_REQUEST_TIMEOUT: Duration = Duration::from_secs(120);
 pub struct TaskHostAttachment {
     pub asset_id: String,
     pub name: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub reference_frame: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub role: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub mime: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -80,6 +90,8 @@ pub struct TaskHostRequest {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub media: Option<media::MediaInput>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub concurrency_limit: Option<usize>,
 }
 
@@ -113,6 +125,8 @@ pub struct JobRecord {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct JobOutput {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub token_usage: Option<TokenUsage>,
     pub index: u32,
     pub status: String,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -125,21 +139,44 @@ pub struct JobOutput {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
+pub struct TokenUsage {
+    pub prompt_tokens: u64,
+    pub completion_tokens: u64,
+    pub total_tokens: u64,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 struct JournalRecord {
     #[serde(flatten)]
     record: JobRecord,
     fingerprint: String,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     comfy_receipt: Option<comfy_recovery::ComfyReceipt>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    video_receipt: Option<media::VideoReceipt>,
+}
+
+impl JournalRecord {
+    fn validate_receipts(&self) -> Result<(), String> {
+        if let Some(receipt) = &self.comfy_receipt {
+            receipt.validate()?;
+            if self.video_receipt.is_some() {
+                return Err("corrupt: conflicting native receipts".into());
+            }
+        }
+        if let Some(receipt) = &self.video_receipt {
+            receipt.validate(&self.record)?;
+        }
+        Ok(())
+    }
 }
 
 pub(crate) fn validate_journal_bytes(raw: &[u8]) -> Result<(), String> {
     let record: JournalRecord = serde_json::from_slice(raw)
         .map_err(|_| "corrupt: 原生任务记录损坏，已保留原文件".to_string())?;
     validate_record(&record.record)?;
-    if let Some(receipt) = &record.comfy_receipt {
-        receipt.validate()?;
-    }
+    record.validate_receipts()?;
     if record.fingerprint.len() != 64 || !record.fingerprint.bytes().all(|c| c.is_ascii_hexdigit())
     {
         return Err("corrupt: 原生任务记录指纹无效，已保留原文件".into());
@@ -219,9 +256,7 @@ impl TaskHost {
         let record: JournalRecord = serde_json::from_slice(&raw)
             .map_err(|_| "corrupt: 原生任务记录损坏，已保留原文件".to_string())?;
         validate_record(&record.record)?;
-        if let Some(receipt) = &record.comfy_receipt {
-            receipt.validate()?;
-        }
+        record.validate_receipts()?;
         if record.fingerprint.len() != 64
             || !record.fingerprint.bytes().all(|c| c.is_ascii_hexdigit())
         {
@@ -232,9 +267,7 @@ impl TaskHost {
     fn write_one_unlocked(&self, record: &JournalRecord) -> Result<(), String> {
         self.ensure_writable()?;
         validate_record(&record.record)?;
-        if let Some(receipt) = &record.comfy_receipt {
-            receipt.validate()?;
-        }
+        record.validate_receipts()?;
         let raw = serde_json::to_vec(record).map_err(|_| "io: 原生任务记录编码失败".to_string())?;
         if raw.len() > 256 * 1024 {
             return Err("invalid: 原生任务记录过大".into());
@@ -376,6 +409,7 @@ impl TaskHost {
                 .output_indices
                 .iter()
                 .map(|index| JobOutput {
+                    token_usage: None,
                     index: *index,
                     status: "submitted".into(),
                     asset_id: None,
@@ -388,6 +422,7 @@ impl TaskHost {
         };
         let journal = JournalRecord {
             comfy_receipt: None,
+            video_receipt: None,
             record: record.clone(),
             fingerprint,
         };
@@ -433,9 +468,7 @@ impl TaskHost {
             let journal: JournalRecord = serde_json::from_slice(&raw)
                 .map_err(|_| "corrupt: 原生任务记录损坏，已保留原文件".to_string())?;
             validate_record(&journal.record)?;
-            if let Some(receipt) = &journal.comfy_receipt {
-                receipt.validate()?;
-            }
+            journal.validate_receipts()?;
             records.push(journal.record);
         }
         records.sort_by(|a, b| {
@@ -524,7 +557,9 @@ impl TaskHost {
                 }
                 record.record.failure = Some(err);
                 for output in &mut record.record.outputs {
-                    if output.status != "succeeded" {
+                    if output.status != "succeeded"
+                        && !(record.video_receipt.is_some() && output.status == "failed")
+                    {
                         output.status = record.record.status.clone();
                     }
                 }
@@ -554,6 +589,7 @@ impl TaskHost {
                 Err(_) => return Err(RunError::failed("invalid_request", "请求引用的素材不可用")),
             }
         }
+        media::preflight(request, &self.assets)?;
         let secret = if request.auth_mode.as_deref() == Some("none") {
             String::new()
         } else {
@@ -579,6 +615,11 @@ impl TaskHost {
         if request.kind.as_deref() == Some("text") {
             return self
                 .perform_text(request, fingerprint, control, provider_client, &secret)
+                .await;
+        }
+        if matches!(request.kind.as_deref(), Some("video" | "audio")) {
+            return self
+                .perform_media(request, fingerprint, control, provider_client, &secret)
                 .await;
         }
         let endpoint = if attachments.is_empty() {
@@ -1125,9 +1166,13 @@ fn validate_request(value: &TaskHostRequest) -> Result<(), String> {
     {
         return Err("invalid: concurrencyLimit".into());
     }
-    if !matches!(value.kind.as_deref(), None | Some("image" | "text")) {
+    if !matches!(
+        value.kind.as_deref(),
+        None | Some("image" | "text" | "video" | "audio")
+    ) {
         return Err("invalid: kind".into());
     }
+    media::validate(value)?;
     if value.kind.as_deref() == Some("text")
         && (value.output_indices.len() != 1
             || !value.attachments.is_empty()
@@ -1320,7 +1365,7 @@ fn now_ms() -> u64 {
         .as_millis()
         .min(u64::MAX as u128) as u64
 }
-fn rfc3339_now() -> String {
+pub(crate) fn rfc3339_now() -> String {
     let seconds = SystemTime::now()
         .duration_since(UNIX_EPOCH)
         .unwrap_or_default()
@@ -1391,8 +1436,63 @@ mod tests {
             prompt_hash: None,
             size: None,
             kind: None,
+            media: None,
             concurrency_limit: None,
         }
+    }
+    #[test]
+    fn media_requests_validate_without_losing_parameters() {
+        for (kind, model, media) in [
+            (
+                "video",
+                "veo-3.1-generate-preview",
+                json!({"kind":"video","duration":6,"aspectRatio":"16:9","resolution":"1080p","audio":false}),
+            ),
+            (
+                "audio",
+                "tts-1",
+                json!({"kind":"audio","voice":"alloy","format":"mp3","speed":1.25}),
+            ),
+        ] {
+            let mut value = serde_json::to_value(request("media-contract")).unwrap();
+            value["kind"] = json!(kind);
+            value["baseUrl"] = json!("https://api.12ai.org/v1");
+            value["model"] = json!(model);
+            value["media"] = media.clone();
+            let parsed: TaskHostRequest = serde_json::from_value(value).unwrap();
+            assert!(validate_request(&parsed).is_ok(), "{kind} rejected");
+            assert_eq!(serde_json::to_value(parsed).unwrap()["media"], media);
+        }
+    }
+    #[test]
+    fn media_parameters_are_strict_and_cannot_leak_into_images() {
+        let mut value = serde_json::to_value(request("strict-media")).unwrap();
+        value["media"] = json!({"kind":"audio","voice":"alloy","format":"mp3","speed":1});
+        let parsed: TaskHostRequest = serde_json::from_value(value.clone()).unwrap();
+        assert!(validate_request(&parsed).is_err());
+        value["kind"] = json!("audio");
+        value["media"]["unknown"] = json!(true);
+        assert!(serde_json::from_value::<TaskHostRequest>(value).is_err());
+    }
+    #[test]
+    fn video_receipts_are_validated_before_recovery_or_mutation() {
+        let value = json!({"taskId":"receipt","idempotencyKey":"idem","outputIndices":[0],"outputs":[{"index":0,"status":"submitted"}],"assetIds":[],"status":"submitted","updatedAt":1,"fingerprint":"a".repeat(64),"videoReceipt":{"endpoint":"https://evil.test/v1","model":"veo-3.1-generate-preview","credentialRef":"fixture","slots":[{"index":0,"acceptance":"accepted","jobId":"job-original"}]}});
+        assert!(validate_journal_bytes(&serde_json::to_vec(&value).unwrap()).is_err());
+    }
+    #[test]
+    fn media_rejects_unsupported_references_before_submission() {
+        let mut value = serde_json::to_value(request("reference-contract")).unwrap();
+        value["kind"] = json!("video");
+        value["baseUrl"] = json!("https://api.12ai.org/v1");
+        value["model"] = json!("veo-3.1-generate-preview");
+        value["media"] =
+            json!({"kind":"video","duration":8,"aspectRatio":"9:16","resolution":"720p"});
+        value["attachments"] = json!([{"assetId":"asset-reference","name":"ref.png","mime":"image/png","role":"Mask"}]);
+        assert!(validate_request(&serde_json::from_value(value.clone()).unwrap()).is_err());
+        value["attachments"][0]["role"] = json!("主体");
+        assert!(validate_request(&serde_json::from_value(value.clone()).unwrap()).is_ok());
+        value["attachments"][0]["referenceFrame"] = json!("first");
+        assert!(validate_request(&serde_json::from_value(value).unwrap()).is_err());
     }
     #[test]
     fn comfy_workflow_accepts_only_local_bound_image_tasks() {
@@ -1853,6 +1953,7 @@ mod tests {
             status: "submitted".into(),
             asset_ids: vec![],
             outputs: vec![JobOutput {
+                token_usage: None,
                 index: 0,
                 status: "submitted".into(),
                 asset_id: None,
@@ -1866,6 +1967,7 @@ mod tests {
             path.join("task.json"),
             serde_json::to_vec(&JournalRecord {
                 comfy_receipt: None,
+                video_receipt: None,
                 record: rec,
                 fingerprint: "a".repeat(64),
             })
@@ -1894,6 +1996,7 @@ mod tests {
             status: "submitted".into(),
             asset_ids: vec![],
             outputs: vec![JobOutput {
+                token_usage: None,
                 index: 0,
                 status: "submitted".into(),
                 asset_id: None,
@@ -1905,6 +2008,7 @@ mod tests {
         };
         host.write_one(&JournalRecord {
             comfy_receipt: None,
+            video_receipt: None,
             record,
             fingerprint: fingerprint.clone(),
         })

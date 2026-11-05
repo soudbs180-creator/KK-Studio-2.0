@@ -53,6 +53,7 @@ test("文本请求经真实产品链生成中文、保存并在刷新后恢复",
       model: "gpt-text-test",
       messages: [{ role: "user", content: "给这件产品写一句中文介绍" }],
       stream: true,
+      stream_options: { include_usage: true },
     });
     expect(route.request().headers()["authorization"]).toBe(
       "Bearer fixture-text-key",

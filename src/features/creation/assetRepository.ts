@@ -12,7 +12,7 @@ import { readCompanionConnection } from "../local-service/index.ts";
 export const assetProvenanceSchema = z.object({
   provider: z.string().max(80).optional(),
   model: z.string().max(120).optional(),
-  providerRequestId: z.string().max(200).optional(),
+  providerRequestId: z.string().max(240).optional(),
   connectionId: z.string().max(160).optional(),
   c2paPresent: z.boolean().optional(),
   synthIdSignal: z.boolean().optional(),

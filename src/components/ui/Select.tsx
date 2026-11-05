@@ -1,4 +1,11 @@
-import React, { useState, useRef, useEffect, type ReactNode } from "react";
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useId,
+  type ReactNode,
+  type AriaAttributes,
+} from "react";
 import UiIcon from "../UiIcon";
 
 export interface SelectOption<T extends string | number = string> {
@@ -8,7 +15,9 @@ export interface SelectOption<T extends string | number = string> {
   icon?: ReactNode;
 }
 
-export interface SelectProps<T extends string | number = string> {
+export interface SelectProps<
+  T extends string | number = string,
+> extends AriaAttributes {
   options: SelectOption<T>[];
   value?: T;
   defaultValue?: T;
@@ -30,8 +39,13 @@ export function Select<T extends string | number = string>({
   disabled = false,
   className = "",
   id,
+  ...aria
 }: SelectProps<T>) {
+  const generatedId = useId();
+  const menuId = `${id ?? generatedId}-options`;
   const [isOpen, setIsOpen] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(-1);
+  const typed = useRef({ text: "", at: 0 });
   const [internalValue, setInternalValue] = useState<T | undefined>(
     value ?? defaultValue,
   );
@@ -39,6 +53,26 @@ export function Select<T extends string | number = string>({
 
   const selectedValue = value !== undefined ? value : internalValue;
   const selectedOption = options.find((opt) => opt.value === selectedValue);
+  const enabledIndexes = options.flatMap((option, index) =>
+    option.disabled ? [] : [index],
+  );
+  function openMenu() {
+    if (disabled) return;
+    setIsOpen(true);
+    const selected = options.findIndex(
+      (option) => option.value === selectedValue && !option.disabled,
+    );
+    setActiveIndex(selected >= 0 ? selected : (enabledIndexes[0] ?? -1));
+  }
+  useEffect(() => {
+    if (disabled) setIsOpen(false);
+  }, [disabled]);
+  useEffect(() => {
+    if (isOpen)
+      containerRef.current
+        ?.querySelector('[data-active="true"]')
+        ?.scrollIntoView({ block: "nearest" });
+  }, [isOpen, activeIndex]);
 
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
@@ -54,7 +88,7 @@ export function Select<T extends string | number = string>({
   }, []);
 
   const handleSelect = (option: SelectOption<T>) => {
-    if (option.disabled) return;
+    if (option.disabled || disabled) return;
     if (value === undefined) setInternalValue(option.value);
     onChange?.(option.value);
     setIsOpen(false);
@@ -64,26 +98,83 @@ export function Select<T extends string | number = string>({
     if (disabled) return;
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
-      setIsOpen((prev) => !prev);
-    } else if (event.key === "Escape") {
+      if (isOpen && activeIndex >= 0) handleSelect(options[activeIndex]);
+      else openMenu();
+    } else if (event.key === "Escape" && isOpen) {
+      event.preventDefault();
+      event.stopPropagation();
       setIsOpen(false);
+    } else if (event.key === "Tab") {
+      setIsOpen(false);
+    } else if (["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) {
+      event.preventDefault();
+      if (!isOpen && (event.key === "ArrowDown" || event.key === "ArrowUp")) {
+        openMenu();
+        if (event.key === "ArrowUp")
+          setActiveIndex(enabledIndexes.at(-1) ?? -1);
+        return;
+      }
+      if (!isOpen) openMenu();
+      const index = enabledIndexes.indexOf(activeIndex);
+      const next =
+        event.key === "Home"
+          ? 0
+          : event.key === "End"
+            ? enabledIndexes.length - 1
+            : (index +
+                (event.key === "ArrowDown" ? 1 : -1) +
+                enabledIndexes.length) %
+              enabledIndexes.length;
+      setActiveIndex(enabledIndexes[next] ?? -1);
+    } else if (
+      event.key.length === 1 &&
+      !event.ctrlKey &&
+      !event.altKey &&
+      !event.metaKey
+    ) {
+      typed.current = {
+        text:
+          (Date.now() - typed.current.at > 700 ? "" : typed.current.text) +
+          event.key.toLocaleLowerCase(),
+        at: Date.now(),
+      };
+      const match = options.findIndex(
+        (option) =>
+          !option.disabled &&
+          option.label.toLocaleLowerCase().startsWith(typed.current.text),
+      );
+      if (match >= 0) {
+        event.preventDefault();
+        setIsOpen(true);
+        setActiveIndex(match);
+      }
     }
   };
 
   return (
     <div
       ref={containerRef}
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget as Node | null))
+          setIsOpen(false);
+      }}
       className={`kk-select-wrapper kk-select--${
         selectHeight === "40px" ? "40" : "32"
       } ${disabled ? "is-disabled" : ""} ${className}`}
     >
       <button
+        {...aria}
         id={id}
         type="button"
         className={`kk-select__trigger ${isOpen ? "is-open" : ""}`}
-        onClick={() => !disabled && setIsOpen((prev) => !prev)}
+        onClick={() => (isOpen ? setIsOpen(false) : openMenu())}
         onKeyDown={handleKeyDown}
         aria-haspopup="listbox"
+        role="combobox"
+        aria-controls={menuId}
+        aria-activedescendant={
+          isOpen && activeIndex >= 0 ? `${menuId}-${activeIndex}` : undefined
+        }
         aria-expanded={isOpen}
         disabled={disabled}
       >
@@ -99,18 +190,28 @@ export function Select<T extends string | number = string>({
       </button>
 
       {isOpen && (
-        <ul className="kk-select__menu" role="listbox">
-          {options.map((option) => {
+        <ul
+          id={menuId}
+          className="kk-select__menu"
+          role="listbox"
+          aria-label={aria["aria-label"]}
+        >
+          {options.map((option, index) => {
             const isSelected = option.value === selectedValue;
             return (
               <li
                 key={String(option.value)}
+                id={`${menuId}-${index}`}
                 role="option"
                 aria-selected={isSelected}
+                aria-disabled={option.disabled || undefined}
+                data-active={activeIndex === index}
                 className={`kk-select__option ${isSelected ? "is-selected" : ""} ${
                   option.disabled ? "is-disabled" : ""
                 }`}
                 onClick={() => handleSelect(option)}
+                onMouseDown={(event) => event.preventDefault()}
+                onMouseEnter={() => !option.disabled && setActiveIndex(index)}
               >
                 {option.icon && (
                   <span className="kk-select__option-icon">{option.icon}</span>

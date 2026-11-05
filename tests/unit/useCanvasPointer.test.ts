@@ -114,6 +114,7 @@ function createTestHarness(initialNodes = { a: { x: 10, y: 20 } }) {
   let currentNodes = { ...initialNodes };
   let selected: string | null = null;
   const fakeCanvas = {
+    querySelectorAll: () => [],
     getBoundingClientRect: () => ({ left: 0, top: 0, width: 800, height: 600 }),
     focus: () => {},
     setPointerCapture: () => {},

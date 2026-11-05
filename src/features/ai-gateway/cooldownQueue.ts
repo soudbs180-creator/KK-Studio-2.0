@@ -179,6 +179,25 @@ export class GatewayCooldownScheduler implements GatewayRouter {
     return this.#acquireCandidateAsync(service, signal);
   }
 
+  /** Wait on an authoritative pool snapshot; the caller rechecks live health after wake-up. */
+  async waitForRecovery(
+    candidates: readonly WaitingCandidate[],
+    signal?: AbortSignal,
+  ): Promise<boolean> {
+    signal?.throwIfAborted();
+    const soonest = sortWaitingQueue([...candidates])[0];
+    if (
+      !soonest ||
+      !Number.isFinite(soonest.availableAfterMs) ||
+      soonest.availableAfterMs < 0 ||
+      soonest.availableAfterMs > this.#maxWaitLimitMs
+    )
+      return false;
+    await this.#sleep(soonest.availableAfterMs, signal);
+    signal?.throwIfAborted();
+    return true;
+  }
+
   async #acquireCandidateAsync(
     _service?: string,
     signal?: AbortSignal,
@@ -200,7 +219,7 @@ export class GatewayCooldownScheduler implements GatewayRouter {
     }
 
     // Asynchronous pause for the soonest candidate
-    await this.#sleep(firstWaiting.availableAfterMs, signal);
+    await this.waitForRecovery(plan.waitingQueue, signal);
     signal?.throwIfAborted();
 
     // Re-evaluate candidate availability upon wake-up

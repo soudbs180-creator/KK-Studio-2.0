@@ -22,6 +22,7 @@ interface SettingsSectionsProps {
   saveState: SaveState;
   revision: number;
   projects: readonly CreationProject[];
+  activeProject?: CreationProject;
   registry: SkillRegistry;
   extensionsTab?: ExtensionsTab;
   initialModelMethod?: "local";
@@ -36,6 +37,7 @@ export default function SettingsSections({
   saveState,
   revision,
   projects,
+  activeProject,
   registry,
   extensionsTab,
   initialModelMethod,
@@ -68,6 +70,7 @@ export default function SettingsSections({
             onFeedback={onFeedback}
             initialModelMethod={initialModelMethod}
             workflows={workflows}
+            activeProject={activeProject}
           />
         )}
         {section === "usage" && (

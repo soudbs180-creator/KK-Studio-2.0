@@ -147,6 +147,8 @@ export function useCanvasNodeActions({
     return id;
   }
   function removeNode(id: string): void {
+    if (items.find((item) => item.id === id)?.canvasPresentation?.locked)
+      return;
     const currentItem = items.find((item) => item.id === id);
     const baseRev = currentItem?.node_rev ?? shadowEventBus.getNodeRevision(id);
     const newRev = baseRev + 1;
@@ -200,10 +202,12 @@ export function useCanvasNodeActions({
       Object.fromEntries(
         items.map((item, index) => [
           item.id,
-          {
-            x: 30 + (index % columns) * 650 - cardLayout(item).left,
-            y: 90 + Math.floor(index / columns) * 780,
-          },
+          item.canvasPresentation?.locked
+            ? nodes[item.id]
+            : {
+                x: 30 + (index % columns) * 650 - cardLayout(item).left,
+                y: 90 + Math.floor(index / columns) * 780,
+              },
         ]),
       ),
     );

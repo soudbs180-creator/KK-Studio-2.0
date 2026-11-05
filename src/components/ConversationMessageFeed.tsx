@@ -10,6 +10,7 @@ export default function ConversationMessageFeed({
   agentActive,
   messages,
   onDelete,
+  onRewind,
   onStatus,
   onConfigure,
   onConfigureDirect,
@@ -21,6 +22,7 @@ export default function ConversationMessageFeed({
   agentActive: boolean;
   messages: ConversationMessageView[];
   onDelete: (messageId: string) => void;
+  onRewind?: (messageId: string) => Promise<void>;
   onStatus: (status: string) => void;
   onConfigure: () => void;
   onConfigureDirect?: () => void;
@@ -41,6 +43,7 @@ export default function ConversationMessageFeed({
         <ConversationMessages
           messages={messages}
           onDelete={onDelete}
+          onRewind={onRewind}
           onStatus={onStatus}
           onConfigure={onConfigureDirect}
           onPreviewImage={onPreviewImage}

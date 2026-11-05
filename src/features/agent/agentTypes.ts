@@ -37,6 +37,10 @@ export interface CanvasViewportData {
 
 export type CanvasAgentOp =
   | {
+      type: "canvas_operation";
+      operation: import("../../domain/canvasOperations.ts").CanvasOperation;
+    }
+  | {
       type: "add_node";
       id?: string;
       nodeType?: string;
@@ -198,6 +202,8 @@ export interface AgentModel {
 }
 
 export interface AgentThreadResponse {
+  rewindSupported?: boolean;
+  turnIds?: string[];
   ok: boolean;
   conversation?: AgentConversationState;
   workspace?: { activeThreadId?: string };
@@ -237,6 +243,12 @@ export interface AgentTurnInput {
 
 /** Agent 事件（SSE /events 的规范化形态，用于驱动 UI）。 */
 export type AgentEvent =
+  | {
+      kind: "token_usage";
+      threadId?: string;
+      turnId?: string;
+      usage: import("../../domain/tokenUsage.ts").TokenUsage;
+    }
   | {
       kind: "hello";
       conversation?: AgentConversationState;

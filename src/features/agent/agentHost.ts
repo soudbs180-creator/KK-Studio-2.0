@@ -19,8 +19,17 @@ import type { AgentCanvasView } from "./agentCanvasView.ts";
 import type { PlanTool, StageOrchestrator } from "./orchestrator.ts";
 import type { StagePlan } from "../../domain/stagePlan.ts";
 import { sameJson } from "../creation/index.ts";
+import { agentAnswerabilityError } from "./agentAnswerability.ts";
+import type {
+  AgentToolRuntime,
+  AgentOpExecutionContext,
+} from "./agentToolRuntime.ts";
+import { prepareAgentOperationPlan } from "./agentOperationPlan.ts";
+import { sumTokenUsage } from "../../domain/tokenUsage.ts";
+import { agentOperationLockReason } from "./agentOperationLocks.ts";
 
 export interface AgentHostOptions {
+  toolRuntime?: AgentToolRuntime;
   getView?(): AgentCanvasView | null;
   getProject(): CreationProject | undefined;
   getProjects?(): readonly CreationProject[];
@@ -74,7 +83,7 @@ export function createAgentHost(options: AgentHostOptions) {
     const reason = getExecutionBlockReason();
     if (reason) throw new Error(reason);
   };
-  return {
+  const host = {
     getChatScope,
     getExecutionAdapter: () => activeChat(options.getProject())?.mainAgent,
     getExecutionBlockReason,
@@ -200,6 +209,7 @@ export function createAgentHost(options: AgentHostOptions) {
           updateActiveChat(project, (chat) => ({
             ...chat,
             messages: nextMessages,
+            tokenUsage: sumTokenUsage(nextMessages),
             updatedAt: Date.now(),
           })),
         );
@@ -401,7 +411,7 @@ export function createAgentHost(options: AgentHostOptions) {
     },
     async applyOps(
       ops: CanvasAgentOp[],
-      context?: { signal: AbortSignal; modelAllowlist?: readonly string[] },
+      context?: AgentOpExecutionContext,
     ): Promise<AgentOpResult> {
       const result: AgentOpResult = { applied: [], rejected: [], tasks: [] };
       const projectId = options.getProject()?.id;
@@ -441,22 +451,47 @@ export function createAgentHost(options: AgentHostOptions) {
 
           if (
             node.plugin ||
-            !["image", "text"].includes(op.mode ?? node.kind) ||
+            !["image", "text", "video", "audio"].includes(
+              op.mode ?? node.kind,
+            ) ||
             (op.mode && op.mode !== node.kind)
           ) {
             result.rejected.push({
               op,
-              reason: "此节点的生成模式暂未接入，支持图片和文案节点",
+              reason:
+                "此节点的生成模式暂未接入，请使用已配置模型的图片、文案、视频或音频节点",
             });
             continue;
           }
           const requestedModel = op.model ?? node.model;
+          const raw = op.prompt ?? node.prompt ?? node.description;
           const validate = (): string | undefined => {
             if (context?.signal.aborted) return "已取消，未受理生成任务";
             const blocked = getExecutionBlockReason();
             if (blocked) return blocked;
             if (boundScope !== scopeKey())
               return "项目或聊天已切换，未受理生成任务";
+            const current = options.getProject();
+            if (!current?.items.some((item) => item.id === op.nodeId))
+              return "生成节点已删除";
+            const locked = agentOperationLockReason(
+              op,
+              current.items,
+              current.canvas.edges,
+            );
+            if (locked) return locked;
+            const referenceError = agentAnswerabilityError(
+              current
+                ? buildAgentSnapshot(current.items, {
+                    projectId: current.id,
+                    title: current.name,
+                    canvas: current.canvas,
+                  })
+                : null,
+              raw,
+              [op.nodeId],
+            );
+            if (referenceError) return referenceError;
             return [allowedAtStart, allowedForTurn, getModelAllowlist()].some(
               (allowed) =>
                 allowed !== undefined &&
@@ -474,7 +509,6 @@ export function createAgentHost(options: AgentHostOptions) {
             continue;
           }
           try {
-            const raw = op.prompt ?? node.prompt ?? node.description;
             const prompt = raw
               .replace(/@\[node:([\w-]+)\]/g, (_token, id: string) => {
                 const reference = project.items.find((item) => item.id === id);
@@ -508,6 +542,27 @@ export function createAgentHost(options: AgentHostOptions) {
               op,
               reason: error instanceof Error ? error.message : "生成失败",
             });
+          }
+          continue;
+        }
+        if (op.type === "canvas_operation") {
+          const execute = options.getView?.()?.executeOperation;
+          if (!execute)
+            result.rejected.push({ op, reason: "画布操作宿主未连接" });
+          else {
+            const receipt = await execute(op.operation);
+            if (receipt.success) {
+              result.applied.push(op);
+              if (receipt.data !== undefined)
+                (result.outputs ??= []).push({
+                  operationIndex: ops.indexOf(op),
+                  data: receipt.data,
+                });
+            } else
+              result.rejected.push({
+                op,
+                reason: receipt.error ?? "画布操作失败",
+              });
           }
           continue;
         }
@@ -553,7 +608,11 @@ export function createAgentHost(options: AgentHostOptions) {
           }
           continue;
         }
-        const translated = applyAgentOpsToItems(project.items, [op]);
+        const translated = applyAgentOpsToItems(
+          project.items,
+          [op],
+          project.canvas.edges,
+        );
         result.applied.push(...translated.applied);
         result.rejected.push(...translated.rejected);
         if (!translated.applied.length) continue;
@@ -592,5 +651,24 @@ export function createAgentHost(options: AgentHostOptions) {
       }
       return result;
     },
+  };
+  return {
+    ...host,
+    subscribeStatusline: options.toolRuntime?.subscribe.bind(
+      options.toolRuntime,
+    ),
+    applyOps: (ops: CanvasAgentOp[], context?: AgentOpExecutionContext) =>
+      options.toolRuntime
+        ? options.toolRuntime.applyOps(
+            prepareAgentOperationPlan(
+              ops,
+              options.getProject(),
+              host.getSnapshot(),
+            ),
+            context,
+            (boundOps, execution) => host.applyOps(boundOps, execution),
+            host.getSnapshot,
+          )
+        : host.applyOps(ops, context),
   };
 }

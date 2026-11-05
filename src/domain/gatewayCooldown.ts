@@ -156,8 +156,11 @@ export function parseRateLimitHeaders(
     const trimmed = retryAfterMsRaw.trim();
     if (trimmed.length > 0) {
       const parsed = Number(trimmed);
-      if (Number.isFinite(parsed) && parsed > 0) {
-        return Math.round(parsed);
+      if (Number.isFinite(parsed)) {
+        if (parsed > 0) {
+          return Math.round(parsed);
+        }
+        return undefined;
       }
     }
   }

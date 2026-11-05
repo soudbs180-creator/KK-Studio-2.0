@@ -37,9 +37,7 @@ export default function CanvasNodeContent({
     );
   if (
     item.result ||
-    (item.generationStatus &&
-      ((item.kind !== "image" && item.kind !== "text") ||
-        item.generationIndex !== undefined))
+    (item.generationStatus && item.generationIndex !== undefined)
   )
     return (
       <DemoResultNode

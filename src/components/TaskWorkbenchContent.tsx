@@ -57,6 +57,8 @@ export default function TaskWorkbenchContent({
   onCommentsChange,
   project,
   onStageDecision,
+  onExecuteStage,
+  onCancelStage,
   onRetryStage,
   onRequestPlanApproval,
   stageWriteDisabledReason,
@@ -81,6 +83,8 @@ export default function TaskWorkbenchContent({
         key={project?.id ?? "no-project"}
         project={project}
         onStageDecision={onStageDecision}
+        onExecuteStage={onExecuteStage}
+        onCancelStage={onCancelStage}
         onRetryStage={onRetryStage}
         onRequestPlanApproval={onRequestPlanApproval}
         stageWriteDisabledReason={stageWriteDisabledReason}

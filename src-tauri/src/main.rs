@@ -22,6 +22,7 @@ mod project_package;
 mod provider_config;
 mod provider_model_requests;
 mod provider_transaction;
+mod scoped_memory;
 mod secret_filter;
 mod storage_paths;
 mod task_host;
@@ -892,8 +893,9 @@ fn seed_shared_memory(shared: &Path, legacy: &Path) -> Result<(), String> {
         if shared.exists() {
             return Ok(());
         }
-        let store = read_memory_file(legacy)?;
-        write_memory_file(shared, &store)
+        read_memory_file(legacy)?;
+        let raw = fs::read(legacy).map_err(|error| format!("无法读取记忆文件：{error}"))?;
+        creation_storage::atomic_write(shared, &raw)
     })
 }
 
@@ -908,6 +910,14 @@ fn read_memory_file(path: &Path) -> Result<MemoryStore, String> {
     let content = fs::read_to_string(path).map_err(|error| format!("无法读取记忆文件：{error}"))?;
     let store: MemoryStore = serde_json::from_str(&content)
         .map_err(|error| format!("记忆文件格式无效，未覆盖原文件：{error}"))?;
+    if store.version == 2 {
+        scoped_memory::validate(&content, "global", false)?;
+        return Ok(MemoryStore {
+            version: MEMORY_STORE_VERSION,
+            namespace: String::new(),
+            records: store.records,
+        });
+    }
     if store.version != MEMORY_STORE_VERSION {
         return Err(format!(
             "记忆文件版本不支持（{}/{}），已保留原文件",
@@ -920,6 +930,9 @@ fn read_memory_file(path: &Path) -> Result<MemoryStore, String> {
 
 fn write_memory_file(path: &Path, store: &MemoryStore) -> Result<(), String> {
     validate_memory_store(store)?;
+    if scoped_memory::write_legacy_v2(path, store)? {
+        return Ok(());
+    }
     let json = serde_json::to_string_pretty(store).map_err(|e| e.to_string())?;
     let parent = path
         .parent()
@@ -2135,6 +2148,10 @@ fn main() {
             delete_conversation,
             memory_read,
             memory_write,
+            scoped_memory::memory_read_scoped,
+            scoped_memory::memory_write_scoped,
+            scoped_memory::memory_list_namespaces,
+            scoped_memory::memory_reset_scoped,
             memory_reset_identity,
             chat_completion,
             chat_completion_stream,

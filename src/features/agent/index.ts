@@ -199,6 +199,8 @@ export {
   clearSentPendingDraft,
 } from "./homeAgentRecovery.ts";
 export { createStageOrchestrator } from "./orchestrator.ts";
+export { createStageExecution } from "./stageExecution.ts";
+export { createConversationRewind } from "./conversationRewind.ts";
 export type {
   StageOrchestratorOptions,
   StageDecisionInput,
@@ -212,3 +214,56 @@ export { useAgentDraftState } from "./useAgentComposerDraft.ts";
 export type { AgentDraftState } from "./useAgentComposerDraft.ts";
 
 export type { SubagentFoldbackResult } from "./delegation/foldbackContract.ts";
+
+// Milestone 3: Router + Worker Multi-Agent Engine, Scoped Mandates & PreInvocation Security
+export { AgentToolRuntime } from "./agentToolRuntime.ts";
+export type { AgentOpExecutionContext } from "./agentToolRuntime.ts";
+export {
+  RouterWorkerEngine,
+  RouterSession,
+  classifyWorkerRole,
+  computeComplexityScore,
+  evaluateGate,
+} from "./router.ts";
+export type { AgentTask, StandardWorkerType } from "./router.ts";
+
+export {
+  WorkerSession,
+  SubagentRegistry,
+  WorkerPoolManager,
+  STANDARD_WORKER_SPECS,
+} from "./workerSession.ts";
+export type {
+  SubagentCapabilitySpec,
+  WorkerSessionOptions,
+} from "./workerSession.ts";
+
+export {
+  MandateLifecycleManager,
+  ThreePhaseFlowCoordinator,
+} from "./threePhaseFlow.ts";
+export type { CoordinatorOptions } from "./threePhaseFlow.ts";
+
+export {
+  ToolRegistry,
+  boundOutputData,
+  DEFAULT_TOOL_TIMEOUT_MS,
+  DEFAULT_MAX_OUTPUT_BYTES,
+} from "./toolRegistry.ts";
+
+export {
+  SecurityHookEngine,
+  createWorkspaceEscapeGuard,
+  createSecretLeakGuard,
+  createDestructiveCommandGuard,
+} from "./preInvocation.ts";
+export type { WorkspaceGuardOptions } from "./preInvocation.ts";
+
+export { StatuslineBroadcaster, formatStatuslineIPC } from "./statuslineIpc.ts";
+export type {
+  StatuslineListener,
+  StatuslineBroadcasterOptions,
+  StatuslineStatusInput,
+  StatuslinePayload,
+  RichStatuslinePayload,
+} from "./statuslineIpc.ts";

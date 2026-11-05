@@ -49,6 +49,8 @@ export interface StageDecisionInput {
 }
 
 export interface StageWorkItemUpdateInput {
+  sourceNodeId?: string;
+  taskId?: string;
   planId: string;
   stageIndex: number;
   workItemId: string;
@@ -99,6 +101,7 @@ const planPatchInputSchema = z.object({
               prompt: stageWorkItemSchema.shape.prompt,
               dependencies: stageWorkItemSchema.shape.dependencies.default([]),
               model: stageWorkItemSchema.shape.model,
+              params: stageWorkItemSchema.shape.params,
             }),
           )
           .max(128),
@@ -231,6 +234,8 @@ function reworkRejectedResults(
                   : work.reworkPrompt,
                 status: "queued" as const,
                 assetId: undefined,
+                taskId: undefined,
+                sourceNodeId: undefined,
                 error: undefined,
                 updatedAt: stamp,
               }
@@ -292,6 +297,8 @@ function buildReplannedPlan(plan: StagePlan): {
               ...item,
               status: "queued" as const,
               assetId: undefined,
+              taskId: undefined,
+              sourceNodeId: undefined,
               error: undefined,
             }
           : { ...item },
@@ -326,6 +333,8 @@ function buildReplannedPlan(plan: StagePlan): {
                 ...item,
                 status: "queued" as const,
                 assetId: undefined,
+                taskId: undefined,
+                sourceNodeId: undefined,
                 error: undefined,
                 updatedAt: stamp,
               }
@@ -460,6 +469,8 @@ export function createStageOrchestrator(options: StageOrchestratorOptions) {
                     ? {
                         ...work,
                         status: input.status,
+                        sourceNodeId: input.sourceNodeId ?? work.sourceNodeId,
+                        taskId: input.taskId ?? work.taskId,
                         assetId: input.assetId ?? work.assetId,
                         error: input.error,
                         updatedAt: stamp,
@@ -469,6 +480,68 @@ export function createStageOrchestrator(options: StageOrchestratorOptions) {
               }
             : item,
         ),
+      };
+      persist(project, next);
+      return next;
+    },
+    bindExecution(
+      planId: string,
+      stageIndex: number,
+      revision: number,
+      mandate: NonNullable<StagePlan["stages"][number]["executionMandate"]>,
+    ) {
+      const project = projectOrThrow(),
+        plan = readPlan(project, planId);
+      assertRevision(plan, revision);
+      const next = {
+        ...plan,
+        revision: plan.revision + 1,
+        stages: plan.stages.map((s) =>
+          s.index === stageIndex ? { ...s, executionMandate: mandate } : s,
+        ),
+        updatedAt: Date.now(),
+      };
+      persist(project, next);
+      return next;
+    },
+    bindWorkItemTask(
+      planId: string,
+      stageIndex: number,
+      workItemId: string,
+      revision: number,
+      taskId: string,
+    ) {
+      const project = projectOrThrow(),
+        plan = readPlan(project, planId);
+      assertRevision(plan, revision);
+      const stage = plan.stages.find((s) => s.index === stageIndex),
+        item = stage?.workItems.find((w) => w.id === workItemId);
+      const old = project.tasks.find((t) => t.id === item?.taskId),
+        replacement = project.tasks.find((t) => t.id === taskId);
+      const validRetry =
+        old &&
+        replacement?.retryOfTaskId === (old.retryOfTaskId ?? old.id) &&
+        replacement.sourceItemId === item?.sourceNodeId;
+      if (
+        !item ||
+        item.status !== "running" ||
+        (item.taskId && item.taskId !== taskId && !validRetry)
+      )
+        throw new StagePlanError("工作项任务绑定已变化");
+      const next = {
+        ...plan,
+        revision: plan.revision + 1,
+        stages: plan.stages.map((s) =>
+          s.index === stageIndex
+            ? {
+                ...s,
+                workItems: s.workItems.map((w) =>
+                  w.id === workItemId ? { ...w, taskId } : w,
+                ),
+              }
+            : s,
+        ),
+        updatedAt: Date.now(),
       };
       persist(project, next);
       return next;

@@ -1,5 +1,10 @@
 // Public contract entry for feature: prompts
 export {
+  composerReferenceTokens,
+  reconcileComposerReferences,
+} from "./composerReferences.ts";
+export type { ComposerReference } from "./composerReferences.ts";
+export {
   ALL_PROMPTS_OPTION,
   PROMPT_CACHE_TTL_MS,
   PROMPT_REGISTRY_HOMEPAGE,

@@ -15,6 +15,7 @@ export function useAgentCanvasView(
   projectId: string | undefined,
   binding: MutableRefObject<AgentCanvasBinding | null> | undefined,
   onChange: (() => void) | undefined,
+  executeOperation?: AgentCanvasView["executeOperation"],
 ) {
   const current = useRef(controls);
   current.current = controls;
@@ -25,6 +26,7 @@ export function useAgentCanvasView(
     const entry: AgentCanvasBinding = {
       projectId,
       view: {
+        executeOperation,
         getState: () => ({
           selectedNodeIds: [...current.current.selectedIds],
           viewport: { ...current.current.transform },
@@ -45,7 +47,7 @@ export function useAgentCanvasView(
     return () => {
       if (binding.current === entry) binding.current = null;
     };
-  }, [binding, projectId]);
+  }, [binding, projectId, executeOperation]);
   const selection = [...controls.selectedIds].sort().join("\n");
   useEffect(() => {
     const timer = setTimeout(() => notify.current?.(), 100);

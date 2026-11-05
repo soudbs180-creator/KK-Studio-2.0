@@ -26,13 +26,13 @@ type TestClient = {
 
 const emptyEventHistory = { record: () => Promise.resolve(), recordTurn: () => Promise.resolve() };
 
-test("新建持久会话使用锁定版本支持的 legacy 历史模式", async () => {
+test("新建持久会话使用支持 thread/revert 的 paginated 历史模式", async () => {
     const writes: Array<Record<string, unknown>> = [];
     const child = { stdin: { write: (line: string) => (writes.push(JSON.parse(line)), true) } };
     const client = Reflect.construct(CodexAppClient, [child, () => undefined, emptyEventHistory]) as CodexAppClient;
     const starting = client.startThread("D:\\site");
     const request = writes.at(-1)!;
-    assert.equal((request.params as Record<string, unknown>).historyMode, "legacy");
+    assert.equal((request.params as Record<string, unknown>).historyMode, "paginated");
     (client as unknown as TestClient).handle({ id: request.id, result: { thread: { id: "durable-thread" } } });
     await Promise.resolve();
     const naming = writes.at(-1)!;

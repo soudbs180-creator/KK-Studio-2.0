@@ -84,3 +84,5 @@
 
 | [ADR-032](ADR-032-independent-image-capabilities-and-lineage.md) | 独立图片能力与资产溯源 | ACCEPTED；源码候选，真实运行与主线待验 |
 | [ADR-034](ADR-034-zod-security-runtime-upgrade.md) | 根与 Agent 的 Zod 资源耗尽安全修复 | ACCEPTED；本地回归通过，合流后门禁另验 |
+
+| [ADR-035](ADR-036-durable-multimodal-generation.md) | 持久多模态任务与生产去演示 | ACCEPTED；真实服务终验另记 |

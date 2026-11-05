@@ -830,7 +830,7 @@ test("ADV-HOST-7: agentHost strictly blocks arbitrary unauthorized and unrecogni
 test("ADV-HOST-8: agentHost run_generation blocks invalid node targets and prompt defects", async () => {
   let { project } = createTestProjectWithNode("flux-schnell");
 
-  // Add plugin node and unsupported kind node
+  // Add plugin node and a target whose requested mode must match its kind.
   const pluginNode: CanvasCollectionItem = {
     id: "node-plugin-1",
     kind: "image",
@@ -897,11 +897,12 @@ test("ADV-HOST-8: agentHost run_generation blocks invalid node targets and promp
   assert.equal(resPlugin.applied.length, 0);
   assert.match(resPlugin.rejected[0].reason, /此节点的生成模式暂未接入/);
 
-  // 3. Audio node
+  // 3. Audio node cannot execute an image operation.
   const resAudio = await host.applyOps([
     {
       type: "run_generation",
       nodeId: audioNode.id,
+      mode: "image",
       model: "flux-schnell",
       prompt: "生图",
     },

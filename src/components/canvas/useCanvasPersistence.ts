@@ -15,6 +15,7 @@ export function useCanvasPersistence(
   groups: CanvasGroup[],
   items: CanvasCollectionItem[],
   onChange: ((canvas: ProjectCanvas) => void) | undefined,
+  publishedCanvas?: { current: string },
 ): void {
   const onChangeRef = useRef(onChange);
   onChangeRef.current = onChange;
@@ -36,6 +37,8 @@ export function useCanvasPersistence(
     // A preserved local gesture must repair a conflicting external snapshot.
     if (fingerprint !== previous.current || initialCanvas !== undefined) {
       previous.current = fingerprint;
+      // Publish before the save ACK so it cannot replace a newer local gesture.
+      if (publishedCanvas) publishedCanvas.current = fingerprint;
       onChangeRef.current?.(canvas);
     }
   }, [
@@ -46,5 +49,6 @@ export function useCanvasPersistence(
     items,
     initialCanvas,
     initialFingerprint,
+    publishedCanvas,
   ]);
 }

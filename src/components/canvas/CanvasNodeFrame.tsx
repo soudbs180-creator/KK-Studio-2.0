@@ -59,6 +59,8 @@ export default function CanvasNodeFrame({
           ? id
           : "video";
   const layout = cardLayout(item);
+  const baseLayout = cardLayout({ ...item, canvasPresentation: undefined });
+  const locked = item.canvasPresentation?.locked;
   const expanded = controls.selectedNode === id;
   return (
     <div
@@ -67,6 +69,8 @@ export default function CanvasNodeFrame({
       data-canvas-node
       data-node-id={id}
       data-kind={item.kind}
+      data-card-color={item.canvasPresentation?.color}
+      data-locked={locked || undefined}
       data-selected={controls.selectedIds.has(id)}
       data-testid={`canvas-node-${id}`}
       role="group"
@@ -85,7 +89,11 @@ export default function CanvasNodeFrame({
         height: expanded ? layout.height : layout.collapsedHeight,
       }}
       onDragStart={(event) => event.preventDefault()}
-      onPointerDown={(event) => controls.startNodeDrag(event, id)}
+      onPointerDown={(event) =>
+        locked
+          ? controls.setSelectedNode(id)
+          : controls.startNodeDrag(event, id)
+      }
       onContextMenu={(event) => {
         if (
           event.target instanceof Element &&
@@ -114,11 +122,31 @@ export default function CanvasNodeFrame({
           setCardMenu({ x: box.left + box.width / 2, y: box.top + 32 });
           return;
         }
-        controls.moveNodeWithKeyboard(event, id, onDelete);
+        if (!locked) controls.moveNodeWithKeyboard(event, id, onDelete);
       }}
     >
-      {children}
-      {!item.plugin && (
+      {item.canvasPresentation?.width ||
+      item.canvasPresentation?.height ||
+      locked ? (
+        <div
+          className="canvas-node-content-scale"
+          ref={(element) => {
+            if (locked) element?.setAttribute("inert", "");
+            else element?.removeAttribute("inert");
+          }}
+          style={{
+            width: baseLayout.width,
+            height: expanded ? baseLayout.height : baseLayout.collapsedHeight,
+            transformOrigin: "top left",
+            transform: `scale(${layout.width / baseLayout.width}, ${layout.height / baseLayout.height})`,
+          }}
+        >
+          {children}
+        </div>
+      ) : (
+        children
+      )}
+      {!item.plugin && !locked && (
         <CanvasCollectionToolbar
           item={item}
           anchor={frame}
@@ -129,7 +157,7 @@ export default function CanvasNodeFrame({
           onDelete={onDelete}
         />
       )}
-      {cardMenu && (
+      {cardMenu && !locked && (
         <CanvasCardMenu
           title={item.title}
           point={cardMenu}
@@ -138,13 +166,15 @@ export default function CanvasNodeFrame({
           onDelete={onDelete}
         />
       )}
-      <NodeActions
-        item={item}
-        onOpenMenu={onOpenMenu}
-        menuOpen={menuOpen}
-        onConnect={onConnect}
-        onConnectionTargetChange={onConnectionTargetChange}
-      />
+      {!locked && (
+        <NodeActions
+          item={item}
+          onOpenMenu={onOpenMenu}
+          menuOpen={menuOpen}
+          onConnect={onConnect}
+          onConnectionTargetChange={onConnectionTargetChange}
+        />
+      )}
     </div>
   );
 }

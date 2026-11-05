@@ -31,7 +31,12 @@ export default function ModelPickerMenu({
   apiOnly = false,
 }: {
   scope:
-    "home" | "conversation" | "canvas-image" | "canvas-video" | "canvas-text";
+    | "home"
+    | "conversation"
+    | "canvas-image"
+    | "canvas-video"
+    | "canvas-text"
+    | "canvas-audio";
   kind?: ModelKind;
   apiOnly?: boolean;
   current?: ModelSelection;
@@ -129,7 +134,10 @@ export default function ModelPickerMenu({
   // Explicit account choices retain their connection identity; auto routing stays separate.
   const apiEntries = apiMenuEntries(connections, current, kind, "");
   const entries = [
-    ...aggregated.filter((entry) => !entry.selection?.connectionId),
+    ...aggregated.filter(
+      (entry) =>
+        !entry.selection?.connectionId && kind !== "video" && kind !== "audio",
+    ),
     ...apiEntries.filter((entry) => {
       const modelKind = entry.selection?.kind;
       if (kind && modelKind !== kind) return false;

@@ -4,10 +4,12 @@ export default function AssetPanelHeader({
   compact,
   onToggleCompact,
   onClose,
+  onOpenStoryboard,
 }: {
   compact: boolean;
   onToggleCompact: () => void;
   onClose: () => void;
+  onOpenStoryboard?: () => void;
 }) {
   const offset = useRef([0, 0]);
   const drag = useRef<{ x: number; y: number; origin: number[] } | null>(null);
@@ -48,6 +50,11 @@ export default function AssetPanelHeader({
   }
   return (
     <header className="asset-header">
+      {onOpenStoryboard && (
+        <button type="button" className="ui-button" onClick={onOpenStoryboard}>
+          分镜创作流
+        </button>
+      )}
       <button
         ref={handle}
         className="asset-drag-handle"

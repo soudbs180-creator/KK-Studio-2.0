@@ -91,7 +91,7 @@ test("工具与帮助菜单保持可读尺寸、快捷键三栏及窄屏可用",
   const help = page.getByRole("menu", { name: "帮助与快捷键", exact: true });
   const helpBox = await help.boundingBox();
   expect(helpBox!.width).toBe(168);
-  expect(helpBox!.height).toBe(98);
+  expect(helpBox!.height).toBe(186);
   await help.screenshot({
     path: test.info().outputPath("design-corrections/help-menu.png"),
   });

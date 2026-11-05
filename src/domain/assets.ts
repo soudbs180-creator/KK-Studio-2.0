@@ -46,6 +46,7 @@ const assetSchema = z
   })
   .strict();
 export type Asset = z.infer<typeof assetSchema> & {
+  text?: string;
   src?: string;
   /** Optional metadata present for generated assets and provenance views. */
   isAiGenerated?: boolean;

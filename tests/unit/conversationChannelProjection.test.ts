@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { useActiveProjectConversation } from "../../src/app/useActiveProjectConversation.ts";
+import { resolveActiveProjectConversation } from "../../src/app/useActiveProjectConversation.ts";
 import {
   createProject,
   emptySnapshot,
@@ -30,7 +30,11 @@ for (const state of ["saved", "read_only"])
           projects: [project],
           activeProjectId: project.id,
         };
-        const result = useActiveProjectConversation(snapshot, state, project);
+        const result = resolveActiveProjectConversation(
+          snapshot,
+          state,
+          project,
+        );
         assert.equal(result.conversationDraft?.conversationChannel, mainAgent);
         assert.equal(result.conversationDraft?.prompt, "canonical prompt");
       });

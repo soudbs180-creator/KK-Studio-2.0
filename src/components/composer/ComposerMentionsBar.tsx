@@ -6,6 +6,7 @@ import {
 } from "../../features/prompts/index.ts";
 
 export interface ComposerMentionsBarProps {
+  disabled?: boolean;
   activeTokens: ParsedMention[];
   onCycleSlot: (token: ParsedMention) => void;
   onRemoveToken: (token: ParsedMention) => void;
@@ -31,6 +32,7 @@ export function removeMentionToken(
 }
 
 export default function ComposerMentionsBar({
+  disabled,
   activeTokens,
   onCycleSlot,
   onRemoveToken,
@@ -44,6 +46,7 @@ export default function ComposerMentionsBar({
           <span aria-hidden="true">🖼️</span>
           <span className="pill-name">{t.name}</span>
           <button
+            disabled={disabled}
             type="button"
             className={`slot-badge slot-${t.slot}`}
             title="点击切换参考角色（主体/风格/材质/构图）"
@@ -52,6 +55,7 @@ export default function ComposerMentionsBar({
             {t.slot}
           </button>
           <button
+            disabled={disabled}
             type="button"
             className="inline-mention-pill-remove"
             aria-label={`移除 ${t.name}`}

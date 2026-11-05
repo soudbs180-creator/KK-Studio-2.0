@@ -1,5 +1,10 @@
 import { expect, test, type Page } from "@playwright/test";
 import { expandSidebar, openWorkspace } from "./helpers";
+import {
+  configureMediaNode,
+  fixtureVideo,
+  approveMediaTask,
+} from "./mediaHelpers";
 import fs from "node:fs/promises";
 
 async function imageFile(
@@ -157,13 +162,16 @@ test("图片首尾帧保持72高、横向交换且预览和移除仍可用", asy
 
 test("视频结果卡上传、交换和重开后保留首尾帧", async ({ page }) => {
   await openWorkspace(page);
+  await fixtureVideo(page);
   await page.getByRole("button", { name: "添加资源", exact: true }).click();
   await page.getByRole("menuitem", { name: "视频", exact: true }).click();
   const source = page.getByTestId(/^canvas-node-added-video-/).last();
+  await configureMediaNode(page, source, "video");
   await source.getByLabel("视频提示词").fill("固定本地素材的结果卡参考测试");
   await source.getByRole("button", { name: "生成数量", exact: true }).click();
   await source.getByRole("button", { name: "生成 1 个", exact: true }).click();
   await source.getByRole("button", { name: "生成视频", exact: true }).click();
+  await approveMediaTask(page);
   const result = page
     .locator('[data-testid^="canvas-node-"]')
     .filter({

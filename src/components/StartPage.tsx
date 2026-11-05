@@ -86,7 +86,7 @@ export default function StartPage({
   }
   async function create(input: CreationDraft): Promise<void> {
     try {
-      const error = await onCreateProject({ ...input, kind: "image" });
+      const error = await onCreateProject(input);
       if (error) setStatus(error);
     } catch {
       setStatus("无法开始创作，草稿仍保留，请重试。");

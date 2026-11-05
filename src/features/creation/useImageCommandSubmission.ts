@@ -1,3 +1,5 @@
+import { captureCanvasMedia } from "./mediaTaskInput.ts";
+import { compileOpticsPrompt } from "../../domain/cameraOptics.ts";
 import React, { useRef, type SetStateAction } from "react";
 import { isTauri } from "@tauri-apps/api/core";
 import type { ImageCapabilityId } from "../../../packages/creation-contracts/index.ts";
@@ -374,11 +376,16 @@ export function checkSubmissionUiReadiness(options: {
     request.input.imageCapability && request.input.providerConnectionId,
   );
   const modelConfigured =
-    isAgent || codexCanvas || capability || homeModelConfig.configured;
+    isAgent ||
+    codexCanvas ||
+    capability ||
+    Boolean(request.input.providerConnectionId) ||
+    homeModelConfig.configured;
   const serviceConfigured =
     isAgent ||
     codexCanvas ||
     capability ||
+    Boolean(request.input.providerConnectionId) ||
     (homeModelConfig.configured && Boolean(request.input.model.trim()));
   const online = typeof navigator === "undefined" ? true : navigator.onLine;
 
@@ -484,7 +491,7 @@ async function checkAndHandleCanvasOrigin(options: {
 
   const sourceId = request.input.sourceItemId;
   const source = original?.items.find((item) => item.id === sourceId);
-  if (!source || (source.kind !== "image" && source.kind !== "text")) {
+  if (!source || !["image", "text", "video", "audio"].includes(source.kind)) {
     return { sourceError: "来源节点已删除或不支持，当前未提交生成。" };
   }
 
@@ -568,7 +575,9 @@ async function submitCodexCanvasFlow(
     return "Codex 执行入口不可用，请重新打开项目。";
   return params.generateFromCanvas({
     nodeId: source.id,
-    prompt: requestInput.prompt,
+    prompt: source.parameters?.optics
+      ? `${requestInput.prompt}\n摄影机：${compileOpticsPrompt(source.parameters.optics)}`
+      : requestInput.prompt,
     model: requestInput.model,
     count: requestInput.count,
     kind: source.kind as "image" | "text",
@@ -612,17 +621,20 @@ async function resolveCommandInput(
       : undefined;
 
   return {
-    prompt: request.input.prompt,
+    prompt: source.parameters?.optics
+      ? `${request.input.prompt}\n摄影机：${compileOpticsPrompt(source.parameters.optics)}`
+      : request.input.prompt,
     model: request.input.model,
     providerConnectionId:
       request.input.providerConnectionId ?? source.providerConnectionId,
     kind: source.kind,
+    media: captureCanvasMedia(source),
     attachments,
     outputCount: request.input.count,
     imageCapability: request.input.imageCapability,
     privacyMode: original!.composerDraft.privacyMode,
     imageSize:
-      source.kind === "text" || source.assetId
+      source.kind !== "image" || source.assetId
         ? undefined
         : source.parameters?.imageSize,
     imageOperation,

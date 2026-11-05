@@ -738,6 +738,7 @@ test("ADV-CHALLENGE-09: extractWithCodex does not falsely block regular chats", 
   const originalSend = agentConnection.sendMessage;
   const originalGetState = agentConnection.getState;
   const originalStorageMode = memoryService.storageMode;
+  t.mock.method(memoryService, "isEnabled", () => true);
 
   memoryService.storageMode = async () => "isolated";
 

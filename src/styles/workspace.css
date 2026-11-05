@@ -2913,27 +2913,46 @@
  * ========================================================================== */
 
 /* --- Button Height Tiers & Hit Area --- */
+.kk-button[data-height-tier] {
+  min-block-size: var(--kk-button-visual-height);
+}
+.kk-button[data-height-tier].kk-button--icon {
+  min-inline-size: var(--kk-button-visual-height);
+}
+.kk-button__label,
+.kk-select__selected-text,
+.kk-badge__content {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .kk-button--44 {
+  --kk-button-visual-height: 44px;
   min-height: 44px;
   padding: 0 var(--kk-space-5);
   font-size: var(--kk-font-subtitle);
 }
 .kk-button--40 {
+  --kk-button-visual-height: 40px;
   min-height: 40px;
   padding: 0 var(--kk-space-4);
   font-size: var(--kk-font-subtitle);
 }
 .kk-button--32 {
+  --kk-button-visual-height: 32px;
   min-height: 32px;
   padding: 0 var(--kk-space-3);
   font-size: var(--kk-font-caption);
 }
 .kk-button--24 {
+  --kk-button-visual-height: 24px;
   min-height: 24px;
   padding: 0 var(--kk-space-2);
   font-size: var(--kk-font-caption);
 }
 .kk-button--16 {
+  --kk-button-visual-height: 16px;
   min-height: 16px;
   padding: 0 var(--kk-space-1);
   font-size: var(--kk-font-caption);
@@ -3107,6 +3126,15 @@
 }
 .kk-select__option:hover:not(.is-disabled) {
   background: var(--kk-control-hover-bg);
+}
+.kk-select__option[data-active="true"]:not(.is-disabled) {
+  background: var(--kk-control-hover-bg);
+}
+@media (pointer: coarse) {
+  .kk-select-wrapper .kk-select__trigger,
+  .kk-select__option {
+    min-height: 44px;
+  }
 }
 .kk-select__option.is-selected {
   background: var(--kk-neutral-selected);
