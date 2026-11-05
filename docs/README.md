@@ -71,6 +71,7 @@ Figma ↔ 本地的**分层差异审计**由 [`scripts/figma-audit/`](reference/
 | 文档                              | 承载内容                               |
 | --------------------------------- | -------------------------------------- |
 | [DESIGN.md](../DESIGN.md) | Figma 派生概览、专项规则导航与当前 CSS 生成 token 投影 |
+| [FIGMA-SYNC](FIGMA-SYNC.md)       | Figma 同步管线、机械可逆命名与组件三层 Token 化规范 |
 | [UI_RULES](UI_RULES.md)           | 零件规则、交互约束、复用约束           |
 | [UI_ARCHETYPES](UI_ARCHETYPES.md) | 五种页面类型与选型                     |
 | [DESIGN_TOKENS](DESIGN_TOKENS.md) | token 数值索引                         |
@@ -158,8 +159,8 @@ Figma ↔ 本地的**分层差异审计**由 [`scripts/figma-audit/`](reference/
 同一问题存在多份说法时，按以下顺序裁决，**上位覆盖下位**：
 
 1. **当前用户意图** — 决定产品目标。任何文档都不能与之对抗。
-2. **`AGENTS.md`** — 全部 AI 的最高规则入口。
-3. **`AI_RULES.md`** — 协作分工、事实纪律、交付要求。
+2. **[`RULES.md`](../RULES.md) 与 [`AGENTS.md`](../AGENTS.md)** — 全部 AI 的开工铁律与最高技术/UI/安全边界入口。
+3. **[`AI_RULES.md`](../AI_RULES.md)** — 协作分工、事实纪律、交付要求。
 4. **专项规范** — 本文件索引表中的 engineering / architecture / UI / governance 文档，各自领域内唯一来源。
 5. **`src/` 实际代码与运行证据** — 说明当前实际怎样。
 

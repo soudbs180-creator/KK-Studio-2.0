@@ -166,10 +166,27 @@ function extractLucideImports(name, content) {
 }
 
 const COLOR_EXEMPT_FILES = new Set([
-  "src/styles/global.css",
   "src/styles/ui-tokens.css",
   "src/styles/tokens.css",
+  "src/styles/tokens.figma.css",
 ]);
+
+export function countRawPxDeclarations(content) {
+  let count = 0;
+  for (const line of content.split(/\r?\n/)) {
+    const trimmed = line.trim();
+    if (
+      !trimmed ||
+      trimmed.startsWith("/*") ||
+      trimmed.startsWith("*") ||
+      trimmed.startsWith("@media") ||
+      trimmed.startsWith("@container")
+    )
+      continue;
+    if (/:\s*[^;]*\b\d+(?:\.\d+)?px\b/i.test(trimmed)) count += 1;
+  }
+  return count;
+}
 
 function checkFileStandardViolations({
   name,
@@ -177,6 +194,7 @@ function checkFileStandardViolations({
   lines,
   declaredTokens,
   colorLiterals,
+  rawPx,
   lucideImports,
   allowed,
   options,
@@ -198,6 +216,17 @@ function checkFileStandardViolations({
   if (!COLOR_EXEMPT_FILES.has(name) && addedColors.length > 0) {
     fileIssues.push(
       `${name}: 新增颜色字面量 ${addedColors.map(([v]) => v).join(", ")}；请使用语义令牌`,
+    );
+  }
+
+  if (
+    name.endsWith(".css") &&
+    !COLOR_EXEMPT_FILES.has(name) &&
+    typeof allowed.rawPx === "number" &&
+    rawPx > allowed.rawPx
+  ) {
+    fileIssues.push(
+      `${name}: 新增裸 px 声明 (${allowed.rawPx} -> ${rawPx})；请使用 var(--kk-*) 令牌`,
     );
   }
 
@@ -257,6 +286,7 @@ export function runCheckUiStandards(customFiles, options = {}) {
     const content = fs.readFileSync(file, "utf8");
     const lines = content.trimEnd().split(/\r?\n/).length;
     const colorLiterals = collectColorLiterals(content);
+    const rawPx = name.endsWith(".css") ? countRawPxDeclarations(content) : 0;
     const lucideImports = extractLucideImports(name, content);
     const allowed = baseline[name] ?? { colors: {}, lucide: [] };
     aestheticFindings.push(...lintAestheticStyles(name, content));
@@ -268,6 +298,7 @@ export function runCheckUiStandards(customFiles, options = {}) {
         lines,
         declaredTokens,
         colorLiterals,
+        rawPx,
         lucideImports,
         allowed,
         options,
@@ -277,6 +308,7 @@ export function runCheckUiStandards(customFiles, options = {}) {
     inventory.push({
       file: name,
       colors: colorLiterals,
+      rawPx,
       lucide: lucideImports,
       lines,
     });

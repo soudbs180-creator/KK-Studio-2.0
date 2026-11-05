@@ -31,7 +31,7 @@ Figma 共享 Text Styles 已核对 `KK/caption`、`KK/body`、`KK/body-strong`�
 
 ## 唯一运行时数值注册处
 
-[tokens.css](../src/styles/tokens.css) 声明全部 --kk-* 语义值；[ui-tokens.css](../src/styles/ui-tokens.css) 仅承接兼容别名，[ui-governance.css](../src/styles/ui-governance.css) 提供共享状态类。tokens.json 是历史导出快照。
+[tokens.css](../src/styles/tokens.css) 声明全部 --kk-* 语义与组件值；[ui-tokens.css](../src/styles/ui-tokens.css) 仅承接兼容别名，[ui-governance.css](../src/styles/ui-governance.css) 提供共享状态类。历史 Ardot 导出已归档至 `docs/archive/ui-history/tokens-ardot-legacy.json` 并退役，Figma → DTCG 快照 → CSS 单向同步管线与三层 Token 规范详见 [FIGMA-SYNC.md](FIGMA-SYNC.md)。
 
 先在 Figma 完成设计并记录变量/样式或组件 node ID 到本地 token 的映射，再更新 CSS。根 [DESIGN.md](../DESIGN.md) 的 YAML 是当前 CSS 的生成投影：标准角色、全部声明及作用域、源 SHA-256（UTF-8、LF 规范化）和生成路径归属。`npm run design:sync` 仅同步 CSS → YAML，`npm run design:check` 仅检查该投影漂移；两者均不读取 Figma，也不证明 Figma 一致性。未知 YAML 和人工正文保留。预览与导出见 [UI_SPEC](UI_SPEC.md#designmd-与独立预览)。
 

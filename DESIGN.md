@@ -179,45 +179,12 @@ components:
     padding: 4px
 x-kk-studio:
   source: src/styles/tokens.css
-  sha256: 48f07ca7b9391040653a2ade37adcce024b03a82e5da411166036926640fe229
+  sha256: 6ad23e34b2e833cdf2823b8f78caf1cf40053c283ee4df71d8b8e2a5b9dc3b7e
   hashEncoding: utf8-lf
   scopes:
     - selector: :root
       atRules: []
       declarations:
-        - property: --kk-image-scratch-opacity
-          value: "0.55"
-          important: false
-        - property: --kk-image-editor-max-width
-          value: 1280px
-          important: false
-        - property: --kk-image-editor-min-stage
-          value: 160px
-          important: false
-        - property: --kk-image-brush-slider-width
-          value: 96px
-          important: false
-        - property: --kk-image-editor-input-max-height
-          value: 120px
-          important: false
-        - property: --kk-image-annotation-label-width
-          value: 200px
-          important: false
-        - property: --kk-image-annotation-label-text
-          value: "#ffffff"
-          important: false
-        - property: --kk-image-model-width
-          value: 240px
-          important: false
-        - property: --kk-image-region-input-width
-          value: 280px
-          important: false
-        - property: --kk-image-lightbox-thumb-width
-          value: 96px
-          important: false
-        - property: --kk-image-lightbox-thumb-height
-          value: 64px
-          important: false
         - property: --kk-dark-1
           value: "#161616"
           important: false
@@ -1076,6 +1043,39 @@ x-kk-studio:
           important: false
         - property: --kk-motion-reduced-cap
           value: 100ms
+          important: false
+        - property: --kk-image-scratch-opacity
+          value: "0.55"
+          important: false
+        - property: --kk-image-editor-max-width
+          value: 1280px
+          important: false
+        - property: --kk-image-editor-min-stage
+          value: 160px
+          important: false
+        - property: --kk-image-brush-slider-width
+          value: 96px
+          important: false
+        - property: --kk-image-editor-input-max-height
+          value: 120px
+          important: false
+        - property: --kk-image-annotation-label-width
+          value: 200px
+          important: false
+        - property: --kk-image-annotation-label-text
+          value: var(--kk-text-primary)
+          important: false
+        - property: --kk-image-model-width
+          value: 240px
+          important: false
+        - property: --kk-image-region-input-width
+          value: 280px
+          important: false
+        - property: --kk-image-lightbox-thumb-width
+          value: 96px
+          important: false
+        - property: --kk-image-lightbox-thumb-height
+          value: 64px
           important: false
     - selector: '[data-theme="light"]'
       atRules: []

@@ -1,0 +1,48 @@
+{
+  "schema": "kk-studio.figma-component-map/1",
+  "fileKey": "ZiadpErDoFweCjG3uHjkM3",
+  "description": "Figma component/master <-> local implementation <-> token prefix <-> sync status. Rules: docs/FIGMA-SYNC.md §3-§4. Seed entries were migrated from UI_INDEX prose and source comments on 2026-11-05 and are DESIGN_PENDING until each is re-read in Figma.",
+  "components": [
+    {
+      "id": "title-tabs",
+      "name": "标题页签 / Title Tabs",
+      "figma": { "page": "03-components", "nodeId": "940:24897" },
+      "local": { "paths": ["src/styles/catalog-pages.css"] },
+      "tokens": [],
+      "status": "DESIGN_PENDING",
+      "notes": "Migrated from UI_INDEX §3.1 and catalog-pages.css comment; equal text color/weight, no fill, one 24x2 indicator."
+    },
+    {
+      "id": "contained-choice-group",
+      "name": "容器内选择组 / Contained Choice Group",
+      "figma": { "page": "03-components", "nodeId": "2538:48403" },
+      "local": { "paths": ["src/styles/model-picker.css"] },
+      "tokens": ["--kk-choice-selected"],
+      "status": "DESIGN_PENDING",
+      "notes": "Selected fill consumes Figma control/selected (1514:88998); no title indicator."
+    },
+    {
+      "id": "asset-library-panel",
+      "name": "素材库面板 / Asset Library Panel",
+      "figma": { "page": "04-desktop", "nodeId": "732:37005" },
+      "local": {
+        "paths": [
+          "src/components/assets/AssetPanel.tsx",
+          "src/components/assets/assets.css"
+        ]
+      },
+      "tokens": [],
+      "status": "DESIGN_PENDING",
+      "notes": "Header + scrolling body + fixed actions; 16 complete states recorded in UI_INDEX 2026-10-26."
+    },
+    {
+      "id": "settings-panel",
+      "name": "设置面板 / Settings Panel",
+      "figma": { "page": "04-desktop", "nodeId": "399:27506" },
+      "local": { "paths": ["src/components/settings/SettingsPanel.tsx"] },
+      "tokens": ["--kk-settings"],
+      "status": "DESIGN_PENDING",
+      "notes": "Anchor found as data-figma-node in SettingsPanel.tsx; re-read required."
+    }
+  ]
+}

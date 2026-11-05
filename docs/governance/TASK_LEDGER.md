@@ -225,6 +225,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-MAINLINE-20261103 | 主线治理收口与当前浏览器门禁修复 | DONE | 已完成 | P1 | none | root | 本卡完成；继续ComfyUI参数、图片编辑与真实生成链。 |
 | TASK-COMFY-IMAGE-20261103 | ComfyUI 参数与图片深度编辑生产链路 | PARTIAL | 进行中 | P1 | none | root | 依据阶段2历史验证核对任务范围与未验收外部模型项；新接线由TASK-E2E-WIRING-20261104承接 |
 | TASK-E2E-WIRING-20261104 | 六支柱生产接线与去测试替身 | IN_PROGRESS | 进行中 | P0 | none | root | 冻结源码完成verify17及当前Desktop，提交后按实际PR基线独审/CI，再合流和安全回收源树 |
+| TASK-RULES-005 | AI铁律卡片RULES.md与Figma组件三层Token化治理重构 | IN_PROGRESS | 进行中 | P0 | none | root | 独立复核并在主checkout并发未提交改动收敛后合入main、回收worktree |
 
 ## TASK-COMFY-PHYSICAL-20261030 — 本机ComfyUI真实显卡出图验收
 
@@ -4391,5 +4392,24 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Verification: PARTIAL — 真实生产接线和harness纯转出已实现；e2e312/312，单元2684 pass/20 skip，定向浏览器102+2通过；独审2P1/4P2已修复待正式SHA复核，完整verify17/Desktop最新构建/PR/main待收口。
 - Evidence: [docs/changes/2026-11-04-e2e-wiring/verification.md](../../docs/changes/2026-11-04-e2e-wiring/verification.md)
 - Next action: 冻结源码完成verify17及当前Desktop，提交后按实际PR基线独审/CI，再合流和安全回收源树
+- Last verified: 2026-11-05
+- Updated: 2026-11-05
+
+## TASK-RULES-005 — AI铁律卡片RULES.md与Figma组件三层Token化治理重构
+
+- Goal: 落地根目录RULES.md铁律卡片，消除规则重复与优先级冲突，建立Figma同步与组件三层Token化棘轮门禁
+- Scope: RULES.md、AGENTS.md、AI_RULES.md、docs/FIGMA-SYNC.md、UI_INDEX.md、design/figma-component-map.json及rules/tokens/ui门禁脚本与单测
+- Display status: 进行中
+- Priority: P0 — 未记录
+- Requirement refs: docs/changes/2026-11-05-rules-figma-token-governance/intent.md, docs/changes/2026-11-05-rules-figma-token-governance/spec.md
+- Feature IDs: none
+- Owner role: governance-architect
+- Acceptance: 根目录新增约500字禁止项优先的RULES.md并纳入repo-layout白名单; AGENTS.md与AI_RULES.md编号化去重并通过npm run rules:check; 落地docs/FIGMA-SYNC.md、组件映射表与三层Token棘轮门禁并通过ui:check与lint
+- Branch: `docs/TASK-RULES-005-figma-token-governance`
+- Worktree: `D:/kk-studio/.worktrees/TASK-RULES-005`
+- Modules: RULES.md, AGENTS.md, AI_RULES.md, docs, scripts, design, config, tests/unit
+- Verification: PASS — rules:check(50 IDs/0 violations)、tokens:check(0 regressions/0 strict)、ui:check、typecheck、lint及13项单元门禁测试全部PASS；待主仓并发改动收敛后合流。
+- Evidence: [docs/changes/2026-11-05-rules-figma-token-governance/verification.md](../../docs/changes/2026-11-05-rules-figma-token-governance/verification.md)
+- Next action: 独立复核并在主checkout并发未提交改动收敛后合入main、回收worktree
 - Last verified: 2026-11-05
 - Updated: 2026-11-05

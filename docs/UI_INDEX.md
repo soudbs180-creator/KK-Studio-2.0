@@ -1,26 +1,17 @@
 # KK Studio UI 规范索引
 
-## 当前Figma校正状态
+本文件是本地 UI 规范的**唯一导航与 Figma 五页映射入口**。**UI 设计真值在用户指定的当前 Figma Design System 与目标页面；本地文档和运行时 tokens 均从它派生。** 开工顺序由根 [`AGENTS.md` §五](../AGENTS.md#五-figma-全面同步与组件-token-化d-) 与 [`FIGMA-SYNC.md`](./FIGMA-SYNC.md) 规定：先在 Figma 完成或回读目标设计，再按单向管线同步到本地。
 
-2026-10-28当前：手机两排回归已修：素材操作恢复单排，窄档44图标、宽档保留88文字，实际最小阈值404/内380；手机仅聊天生成，无画布。03共享输入上传/发送44、模型80×44，参考素材72高横滚；05已建立320/390/768实例对照，退出旧画布场景与入口。最终文字/槽位截图及独立静态复核通过；本地产品代码未改，播放器、键盘、动态内容及本地同步未验，整体PARTIAL。 见[手机专项与本地映射](changes/2026-10-28-figma-sync-governance/mobile-chat-layout.md)。
+## Figma 权威来源与五页结构
 
-本文件是本地 UI 规范的导航与同步入口。**UI 设计真值在用户指定的当前 Figma Design System 与目标页面；本地文档和运行时 tokens 均从它派生。** 开工顺序由根 [AGENTS.md](../AGENTS.md#设计与交互) 规定，具体设计修改先在 Figma 完成，再同步本地。
+当前权威文件：[KK Studio · 最新 UI 全量编辑稿 · 2026-10-20 / 01 · 设计规范](https://www.figma.com/design/ZiadpErDoFweCjG3uHjkM3/KK-Studio?node-id=91-2)，文件 key 为 `ZiadpErDoFweCjG3uHjkM3`：
+- **五页职责**：`91:2`（01 · 设计规范）、`91:4`（02 · 图标与品牌）、`91:3`（03 · 组件与交互）、`2:47`（04 · 桌面页面与交互）、`91:11`（05 · 手机页面与交互）。每次 UI 任务必须读取实际目标节点、主题/视口/状态和读取时间；仅登记文件链接不算完成设计读取。
+- **阶段校准与审计证据索引**（本索引不堆放带日期进度流水账，详情查阅对应交付包）：
+  - [2026-10-28 手机聊天布局与 03 只读审计](changes/2026-10-28-figma-sync-governance/mobile-chat-layout.md)、[03 审计清单](changes/2026-10-28-figma-sync-governance/audit-03.md)、[本轮 spec](changes/2026-10-28-figma-sync-governance/spec.md)、[plan](changes/2026-10-28-figma-sync-governance/plan.md) 与 [验证](changes/2026-10-28-figma-sync-governance/verification.md)
+  - [2026-10-25/26 04-05 返工规格](changes/2026-10-25-figma-04-05-rework/spec.md) 与 [验证](changes/2026-10-25-figma-04-05-rework/verification.md)
+  - [2026-10-25 控件可读性修复记录](changes/2026-10-25-figma-control-readability/verification.md)
 
-## Figma 来源与历史检查点
-
-以下“只读/未修改”及旧数量均是相应首审时点记录，已被本页顶部最新授权与定向修复结果覆盖，不再作为当前写入限制。
-
-2026-10-28当前续作仅做文档与03只读审计，**禁止本轮修改代码或Figma**。用户明确五页职责：01全部第一准则、02图标、03图标按钮/组件/组合/交互、04/05共享组件的页面展示；母件与变体集中、逐层组合、清晰命名与快速查找，最终UI和本地规范分别100%逐项验收。同步路线与后续计划见[本轮spec](changes/2026-10-28-figma-sync-governance/spec.md)、[plan](changes/2026-10-28-figma-sync-governance/plan.md)；它们不另定义数值规范。03现行主容器192个定义（127集、65独立，含2个演示），全页另有15个隐藏归档定义；首轮发现六项标题页签12变体混入胶囊底、工具激活底板角色及01文本/变量冲突，用户要求辅助箭头高44并缩宽。均未修改，完整逐族审计仍PARTIAL，见[审计清单](changes/2026-10-28-figma-sync-governance/audit-03.md)和[当前验证](changes/2026-10-28-figma-sync-governance/verification.md)。以下历史检查点不代替当前验收。
-
-2026-10-26当前检查点：214图标按钮变体、独立8px箭头、58页签/342按钮、8项目库、18素材库及指定音频/菜单/卡片源已修；87顶部主操作行44高。底栏304×52，124处间距/图标/箭头尺寸实际修改、恢复及回读通过；113跳转与15取消配置通过。整体PARTIAL：窄屏素材库完整触控、全场景交互、独审和本地产品同步未完成。见[当前目标](changes/2026-10-25-figma-04-05-rework/spec.md)及[证据边界](changes/2026-10-25-figma-04-05-rework/verification.md)。旧本地20px等值不能反向覆盖当前44/28目标。
-
-2026-10-27续作：03的205个实际组件定义完成公开属性接线复查；28种参考缩略图共享真实预览文件名，7种任务阶段使用六选一共享容器，任务面板补齐搜索图标、状态筛选、滚动区和工作台入口。同步本地视频参考帧规则、画布连接规则、画布/浏览器与清晰度选择、任务阶段样式。专项浏览器28项通过，整体仍PARTIAL；全量03视觉与业务路径、04/05播放器、原生和正式合流未完成。证据在 `D:/kk-studio/output/figma-layer-recovery-20261026/continuation-20261027/`。
-
-2026-10-25 已在线修复01/03基础控件的六类可读性与目录问题；具体母版、主题实例、尺寸对照和本地验证见[控件修复记录](changes/2026-10-25-figma-control-readability/verification.md)。该记录仅覆盖列出的控件，不提升04/05全部页面的同步状态。
-
-当前权威文件由用户于 2026-10-21 指定：[KK Studio · 最新 UI 全量编辑稿 · 2026-10-20 / 01 · 设计规范](https://www.figma.com/design/ZiadpErDoFweCjG3uHjkM3/KK-Studio?node-id=91-2)。文件 key 为 `ZiadpErDoFweCjG3uHjkM3`，规范页为 `91:2`。已于 2026-10-21 在线读取规范正文、共享 Text Styles、Geometry 与 Icon Weight 变量；这是读取日期，不冒称 Figma 发布版本。
-
-本地文档按该页的规范章节组织映射；2026-10-25 已补齐第 01–12 章全部映射（含第 08 章编号契约、第 09 章视觉动效细则 `1514:90390`、第 10 章资源编组交互 `1761:277`、第 11 章使用场景与本地实现协议 `2000:273`、第 12 章状态动效与骨架屏 `2001:273`），并同步 `03 · 组件与交互`（`91:3`）母版索引（`2002:41259`、`2022:41388`、`2028:41424`）。具体数值见 [DESIGN_TOKENS](DESIGN_TOKENS.md#figma-目标与本地映射)：
+本地文档按 01 页规范章节与 03 页母版索引组织映射（具体数值见 [DESIGN_TOKENS](DESIGN_TOKENS.md#figma-目标与本地映射)）：
 
 | Figma 章节                                                             | node ID      | 本地承载                                                                            |
 | ---------------------------------------------------------------------- | ------------ | ----------------------------------------------------------------------------------- |
@@ -53,6 +44,7 @@
 | 主题                                     | 唯一文件                                                                                                             | 说明                                                                |
 | ---------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
 | 全局设计概览与机器生成 token 投影        | [`DESIGN.md`](../DESIGN.md)                                                                                          | Figma 派生说明与专项导航；YAML 由运行时 CSS 生成，不证明 Figma 同步 |
+| Figma 同步管线与组件三层 Token 化规范    | [`FIGMA-SYNC.md`](./FIGMA-SYNC.md)                                                                                   | 单向同步链路、机械可逆命名、组件 Token 化 DoD 与棘轮门禁            |
 | 零件规则、操作约束、对齐和反馈           | [`UI_RULES.md`](./UI_RULES.md)                                                                                       | 不定义页面类型                                                      |
 | 已实现页面模板和选型映射                 | [`UI_ARCHETYPES.md`](./UI_ARCHETYPES.md)                                                                             | 五种模板是实现集合，实际结构以当前 Figma 页面为准                   |
 | 数值（尺寸/字阶/间距/圆角）索引          | [`DESIGN_TOKENS.md`](./DESIGN_TOKENS.md)                                                                             | Figma 变量/样式到运行时 token 的目标映射与未迁移差异                |
@@ -67,6 +59,7 @@
 | 主题                 | 唯一文件                                                                                                                       | 说明                                          |
 | -------------------- | ------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------- |
 | 运行时 token         | [`src/styles/tokens.css`](../src/styles/tokens.css)                                                                            | `--kk-*` 唯一运行时注册处，设计取值来自 Figma |
+| 组件与母版同步映射表 | [`design/figma-component-map.json`](../design/figma-component-map.json)                                                        | Figma 节点 ↔ 本地组件 ↔ Token 前缀 ↔ 五态同步状态 |
 | 兼容别名和共享状态类 | [`src/styles/ui-tokens.css`](../src/styles/ui-tokens.css)、[`src/styles/ui-governance.css`](../src/styles/ui-governance.css)   | 不得新增第二套规则                            |
 | 运行时模板注册表     | [`src/domain/pageTemplates.ts`](../src/domain/pageTemplates.ts)、[`src/styles/archetypes.json`](../src/styles/archetypes.json) | 只有 list/grid/detail/timeline/gallery        |
 

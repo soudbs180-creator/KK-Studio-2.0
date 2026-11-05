@@ -11407,5 +11407,50 @@
       "docs/changes/2026-11-04-e2e-wiring/spec.md"
     ],
     "featureIds": ["FEAT-020", "FEAT-030", "FEAT-043", "FEAT-044"]
+  },
+  {
+    "id": "TASK-RULES-005",
+    "title": "AI铁律卡片RULES.md与Figma组件三层Token化治理重构",
+    "goal": "落地根目录RULES.md铁律卡片，消除规则重复与优先级冲突，建立Figma同步与组件三层Token化棘轮门禁",
+    "scope": "RULES.md、AGENTS.md、AI_RULES.md、docs/FIGMA-SYNC.md、UI_INDEX.md、design/figma-component-map.json及rules/tokens/ui门禁脚本与单测",
+    "acceptance": [
+      "根目录新增约500字禁止项优先的RULES.md并纳入repo-layout白名单",
+      "AGENTS.md与AI_RULES.md编号化去重并通过npm run rules:check",
+      "落地docs/FIGMA-SYNC.md、组件映射表与三层Token棘轮门禁并通过ui:check与lint"
+    ],
+    "dependencies": [],
+    "owner": "root",
+    "ownerRole": "governance-architect",
+    "branch": "docs/TASK-RULES-005-figma-token-governance",
+    "worktree": "D:/kk-studio/.worktrees/TASK-RULES-005",
+    "baseSha": "752f7dbd",
+    "affectedModules": [
+      "RULES.md",
+      "AGENTS.md",
+      "AI_RULES.md",
+      "docs",
+      "scripts",
+      "design",
+      "config",
+      "tests/unit"
+    ],
+    "status": "IN_PROGRESS",
+    "displayStatus": "进行中",
+    "priority": "P0",
+    "risk": "medium",
+    "reviewRequired": true,
+    "evidence": [
+      "docs/changes/2026-11-05-rules-figma-token-governance/verification.md"
+    ],
+    "verification": "rules:check(50 IDs/0 violations)、tokens:check(0 regressions/0 strict)、ui:check、typecheck、lint及13项单元门禁测试全部PASS；待主仓并发改动收敛后合流。",
+    "verificationResult": "PASS",
+    "updated": "2026-11-05",
+    "lastVerified": "2026-11-05",
+    "nextAction": "独立复核并在主checkout并发未提交改动收敛后合入main、回收worktree",
+    "requirementRefs": [
+      "docs/changes/2026-11-05-rules-figma-token-governance/intent.md",
+      "docs/changes/2026-11-05-rules-figma-token-governance/spec.md"
+    ],
+    "featureIds": []
   }
 ]

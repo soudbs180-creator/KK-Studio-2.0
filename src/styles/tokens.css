@@ -6,24 +6,12 @@
  *
  * 现行来源：Figma 四页治理基线（见 docs/UI_INDEX.md）；Ardot 是历史颜色来源。
  * 配套文档：docs/DESIGN_TOKENS.md
- * 变更需记录设计裁决并验证实际运行；历史 tokens.json 不覆盖当前 CSS。
+ * 变更需记录设计裁决并验证实际运行；历史 tokens-ardot-legacy.json 不覆盖当前 CSS。
  *
  * 用法：<html data-theme="dark|light" data-accent="default" data-density="comfortable">
  * ========================================================================== */
 
 :root {
-  --kk-image-scratch-opacity: 0.55;
-  /* Gallery editor shell; internal controls consume the shared size axes. */
-  --kk-image-editor-max-width: 1280px;
-  --kk-image-editor-min-stage: 160px;
-  --kk-image-brush-slider-width: 96px;
-  --kk-image-editor-input-max-height: 120px;
-  --kk-image-annotation-label-width: 200px;
-  --kk-image-annotation-label-text: #ffffff;
-  --kk-image-model-width: 240px;
-  --kk-image-region-input-width: 280px;
-  --kk-image-lightbox-thumb-width: 96px;
-  --kk-image-lightbox-thumb-height: 64px;
   /* ==========================================================================
      Tier 1 · 原始层 PRIMITIVE — 纯数值，无语义。禁止业务代码直接消费。
      ========================================================================== */
@@ -376,6 +364,19 @@
   --kk-motion-content-fade: 150ms;
   --kk-motion-locate-scroll: 300ms;
   --kk-motion-reduced-cap: 100ms;
+
+  /* --- 3.x 图片编辑器组件尺寸与遮罩（Tier 3） --- */
+  --kk-image-scratch-opacity: 0.55;
+  --kk-image-editor-max-width: 1280px;
+  --kk-image-editor-min-stage: 160px;
+  --kk-image-brush-slider-width: 96px;
+  --kk-image-editor-input-max-height: 120px;
+  --kk-image-annotation-label-width: 200px;
+  --kk-image-annotation-label-text: var(--kk-text-primary);
+  --kk-image-model-width: 240px;
+  --kk-image-region-input-width: 280px;
+  --kk-image-lightbox-thumb-width: 96px;
+  --kk-image-lightbox-thumb-height: 64px;
 }
 
 /* ============================================================================
