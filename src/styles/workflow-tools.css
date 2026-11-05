@@ -223,7 +223,7 @@
   justify-content: center;
   gap: 12px;
   padding: 16px;
-  background: color-mix(in srgb, var(--bg-canvas) 46%, transparent);
+  background: color-mix(in srgb, var(--ui-canvas-bg) 46%, transparent);
 }
 .director-stage .director-console {
   position: relative;

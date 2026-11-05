@@ -179,7 +179,7 @@ components:
     padding: 4px
 x-kk-studio:
   source: src/styles/tokens.css
-  sha256: 6ad23e34b2e833cdf2823b8f78caf1cf40053c283ee4df71d8b8e2a5b9dc3b7e
+  sha256: 882ebd60d75dbbeae73b8d23477ddd964251f234b2143f82e67d5ec47e316131
   hashEncoding: utf8-lf
   scopes:
     - selector: :root
@@ -577,7 +577,7 @@ x-kk-studio:
           value: 52px
           important: false
         - property: --kk-topbar-height
-          value: 40px
+          value: 52px
           important: false
         - property: --kk-canvas-toolbar-h
           value: 44px

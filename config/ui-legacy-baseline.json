@@ -269,7 +269,7 @@
   "src/styles/composer.css": {
     "colors": {},
     "lucide": [],
-    "rawPx": 216
+    "rawPx": 226
   },
   "src/styles/conversation-panel.css": {
     "colors": {},
@@ -423,7 +423,7 @@
   "src/styles/responsive.css": {
     "colors": {},
     "lucide": [],
-    "rawPx": 171
+    "rawPx": 179
   },
   "src/styles/shortcuts.css": {
     "colors": {},
@@ -458,6 +458,6 @@
   "src/styles/workflow-tools.css": {
     "colors": {},
     "lucide": [],
-    "rawPx": 30
+    "rawPx": 59
   }
 }
