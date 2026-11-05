@@ -12,6 +12,9 @@ import type { ErrorClass, NormalizedError } from "./errors.ts";
 import { noChannelAvailable } from "./errors.ts";
 import type { Scheduler } from "./scheduler.ts";
 import { extractNormalized } from "./scheduler.ts";
+import { fromWireEvent } from "../../domain/gatewayTranslate.ts";
+import { PrivacyMask } from "../../domain/privacyMask.ts";
+import { readGatewayPreferences } from "./gatewayPreferences.ts";
 
 const attachmentSchema = z
   .object({
@@ -214,6 +217,21 @@ export function newCompletionId(): string {
   return `chatcmpl-${hex}`;
 }
 
+function restoreChatDelta(delta: string, privacy: PrivacyMask): string {
+  const trimmed = delta.trim();
+  if (trimmed.startsWith("{")) {
+    try {
+      const payload = JSON.parse(trimmed) as unknown;
+      const event = fromWireEvent("openai-chat", payload);
+      if (event?.text) return privacy.unmask(event.text);
+      if (event?.toolCall) return privacy.unmask(event.toolCall.arguments);
+    } catch {
+      return privacy.unmask(delta);
+    }
+  }
+  return privacy.unmask(delta);
+}
+
 export function runChatCompletion(
   deps: ChatDeps,
   request: ChatRequest,
@@ -237,16 +255,36 @@ export function runChatCompletion(
   };
 }> {
   return (async () => {
+    const prefs = readGatewayPreferences();
+    const privacy = prefs?.maskOutbound ? new PrivacyMask() : undefined;
+    const built = buildInput(request);
+    const input = privacy
+      ? { ...built, prompt: privacy.mask(built.prompt) }
+      : built;
     const outcome = await deps.scheduler.dispatch({
       model: request.model,
       operation: "chat",
-      input: buildInput(request),
+      input,
       idempotencyKey,
       ...(request.session_id ? { sessionId: request.session_id } : {}),
+      ...(prefs ? { routing: { mode: prefs.mode, cursor: prefs.cursor } } : {}),
       resolveSecret: deps.resolveSecret,
       ...(options.signal ? { signal: options.signal } : {}),
       ...(request.stream && options.onTextDelta
-        ? { onTextDelta: options.onTextDelta }
+        ? {
+            onTextDelta: privacy
+              ? (
+                  delta: string,
+                  channelId: string,
+                  attemptSignal?: AbortSignal,
+                ) =>
+                  options.onTextDelta?.(
+                    restoreChatDelta(delta, privacy),
+                    channelId,
+                    attemptSignal,
+                  )
+              : options.onTextDelta,
+          }
         : {}),
       ...(options.streamStarted
         ? { streamStarted: options.streamStarted }
@@ -282,7 +320,7 @@ export function runChatCompletion(
       );
     return {
       channelId: outcome.channelId,
-      text: outcome.text,
+      text: privacy ? privacy.unmask(outcome.text) : outcome.text,
       ...(outcome.usage ? { usage: outcome.usage } : {}),
     };
   })();

@@ -72,3 +72,5 @@ export function validateStoryboard(
   });
   return { storyboard, compliant: !violations.length, violations };
 }
+
+export { extractContinuityBible } from "./storyboardBible.ts";

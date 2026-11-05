@@ -1523,6 +1523,8 @@ export default function App() {
           <StoryboardWorkflowPanel
             key={`${activeProject?.id}:${activeProject?.activeChatId}`}
             run={storyboardWorkflow.run}
+            extract={storyboardWorkflow.extract}
+            repair={storyboardWorkflow.repair}
             apply={storyboardWorkflow.apply}
             onClose={() => setModal("")}
             disabledReason={conversationDisabledReason}

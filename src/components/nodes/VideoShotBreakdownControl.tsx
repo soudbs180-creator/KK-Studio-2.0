@@ -1,3 +1,4 @@
+import { Button } from "../ui/Button.tsx";
 import { useEffect, useRef, useState } from "react";
 import {
   analyzeVideoSource,
@@ -142,32 +143,32 @@ export default function VideoShotBreakdownControl({
       className="video-shot-actions"
       onPointerDown={(e) => e.stopPropagation()}
     >
-      <button
+      <Button
         type="button"
-        className="ui-button"
+
         disabled={busy || !source || !operations}
         onClick={() => void analyze()}
       >
         逐帧拉片
-      </button>
+      </Button>
       {busy && (
-        <button
+        <Button
           type="button"
-          className="ui-button"
+
           onClick={() => request.current?.abort()}
         >
           取消拉片
-        </button>
+        </Button>
       )}
       {shots.length > 0 && (
-        <button
+        <Button
           type="button"
-          className="primary-button"
+          variant="primary"
           disabled={busy}
           onClick={() => void expand()}
         >
           展开为画布参考卡
-        </button>
+        </Button>
       )}
       {notice && <p role="status">{notice}</p>}
     </div>

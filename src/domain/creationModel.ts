@@ -11,6 +11,9 @@ import { normalizeTags } from "./assets.ts";
 import { tokenUsageSchema } from "./tokenUsage.ts";
 import { CameraOpticsSchema } from "./cameraOptics.ts";
 import { canvasPresentationSchema } from "./canvasPresentation.ts";
+import { canvasCommentsSchema } from "./canvasComments.ts";
+import { blueprintNodeSchema } from "./blueprintNode.ts";
+import { z } from "zod";
 import type { CanvasCollectionItem, CanvasItemKind } from "./canvasItems";
 import { CANVAS_REFERENCE_SLOTS, comfyOutputSourceId } from "./canvasItems.ts";
 import { sameJson } from "./chatMigrationCore.ts";
@@ -501,17 +504,20 @@ function normalizeDraft(value: unknown): CreationDraft {
     value && typeof value === "object" ? (value as Partial<CreationDraft>) : {};
   return {
     ...candidate,
+    imageSize:
+      candidate.imageSize === undefined
+        ? undefined
+        : imageSizeLabelSchema.parse(candidate.imageSize),
     media:
       candidate.media === undefined
         ? undefined
         : creationMediaSchema.parse(candidate.media),
     modelSelection: normalizeModelSelection(candidate.modelSelection),
-    conversationChannel:
-      candidate.conversationChannel === "codex" ||
-      candidate.conversationChannel === "direct" ||
-      candidate.conversationChannel === "google"
-        ? candidate.conversationChannel
-        : undefined,
+    conversationChannel: ["codex", "direct", "google"].includes(
+      candidate.conversationChannel ?? "",
+    )
+      ? candidate.conversationChannel
+      : undefined,
     pendingAgent:
       typeof candidate.pendingAgent === "boolean"
         ? candidate.pendingAgent
@@ -725,10 +731,10 @@ function normalizeMediaDimension(value: unknown): number | undefined {
     : undefined;
 }
 
+export const imageSizeLabelSchema = z.string().regex(/^[1-9]\d{1,4}x[1-9]\d{1,4}$/);
+
 function normalizeImageSizeLabel(value: unknown): string | undefined {
-  return typeof value === "string" && /^\d{2,5}x\d{2,5}$/.test(value)
-    ? value
-    : undefined;
+  return imageSizeLabelSchema.safeParse(value).data;
 }
 
 function normalizeCanvasParameters(
@@ -821,6 +827,21 @@ function normalizeCanvasItem(
   const promptMax =
     value.kind === "video" || value.kind === "audio" ? 7500 : 4000;
   return {
+    blueprint:
+      value.blueprint === undefined
+        ? undefined
+        : blueprintNodeSchema.parse(value.blueprint),
+    node_rev: z
+      .number()
+      .int()
+      .nonnegative()
+      .max(Number.MAX_SAFE_INTEGER)
+      .optional()
+      .parse(value.node_rev),
+    comments:
+      value.comments === undefined
+        ? undefined
+        : canvasCommentsSchema.parse(value.comments),
     comfyWorkflow:
       value.comfyWorkflow === undefined
         ? undefined
@@ -1488,6 +1509,17 @@ export function createProject(input: CreateProjectInput): CreationProject {
     model: input.model,
     generationSource: codex ? "codex" : undefined,
     providerConnectionId: codex ? undefined : input.providerConnectionId,
+    parameters:
+      input.kind === "image" || input.kind === "video"
+        ? {
+            imageSize: input.kind === "image" && !codex ? input.imageSize : undefined,
+            ratio: input.media?.kind === "video" ? input.media.aspectRatio : "自适应",
+            quality: input.media?.kind === "video" ? input.media.resolution : "自适应",
+            duration: String(input.media?.kind === "video" ? input.media.duration : 4),
+            count: String(input.outputCount ?? 1),
+            soundEnabled: input.media?.kind === "video" && input.media.audio === true,
+          }
+        : undefined,
     updatedAt: now,
     generationStatus: codex ? undefined : "pending",
   };
@@ -1531,6 +1563,7 @@ export function createProject(input: CreateProjectInput): CreationProject {
           providerConnectionId: codex ? undefined : input.providerConnectionId,
           model: input.model,
           kind: input.kind,
+          imageSize: input.kind === "image" && !codex ? input.imageSize : undefined,
           media: input.media
             ? creationMediaSchema.parse(input.media)
             : undefined,
@@ -1559,6 +1592,7 @@ export function createProject(input: CreateProjectInput): CreationProject {
       prompt: "",
       model: input.model,
       kind: input.kind,
+      imageSize: input.kind === "image" && !codex ? input.imageSize : undefined,
       media: input.media ? creationMediaSchema.parse(input.media) : undefined,
       attachments: input.attachments.map((attachment) => ({ ...attachment })),
       approvalMode: "auto",
@@ -1579,6 +1613,7 @@ export function createTask(project: CreationProject): CreationTask {
     prompt: project.prompt,
     model: project.model,
     kind: project.kind,
+    imageSize: project.kind === "image" ? project.composerDraft.imageSize : undefined,
     media: project.composerDraft.media
       ? structuredClone(project.composerDraft.media)
       : undefined,

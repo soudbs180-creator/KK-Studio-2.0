@@ -299,68 +299,77 @@ export function validateAnswerability(
     totalEntities === 0 ? 1.0 : coveredEntitiesCount / totalEntities;
 
   // 3. Validate Required Attributes
-  let totalRequiredAttributes = 0;
-  let totalMissingAttributes = 0;
+  const { totalRequiredAttributes, totalMissingAttributes } = checkAttributes();
+  function checkAttributes() {
+    let totalRequiredAttributes = 0;
+    let totalMissingAttributes = 0;
 
-  if (options.requiredAttributes) {
-    for (const [entityId, reqAttrs] of Object.entries(
-      options.requiredAttributes,
-    )) {
-      totalRequiredAttributes += reqAttrs.length;
-      const entityExists = ontology.hasEntity(entityId);
-      const entityData = ontology.getEntity
-        ? ontology.getEntity(entityId)
-        : undefined;
+    if (options.requiredAttributes) {
+      for (const [entityId, reqAttrs] of Object.entries(
+        options.requiredAttributes,
+      )) {
+        totalRequiredAttributes += reqAttrs.length;
+        const entityExists = ontology.hasEntity(entityId);
+        const entityData = ontology.getEntity
+          ? ontology.getEntity(entityId)
+          : undefined;
 
-      for (const attr of reqAttrs) {
-        if (!entityExists) {
-          totalMissingAttributes++;
-          if (!missingAttributes[entityId]) missingAttributes[entityId] = [];
-          missingAttributes[entityId].push(attr);
-          continue;
-        }
-
-        if (!ontology.getEntity) {
-          totalMissingAttributes++;
-          (missingAttributes[entityId] ??= []).push(attr);
-        } else {
-          const { exists, hasValue } = resolveEntityProperty(entityData, attr);
-          if (!exists) {
+        for (const attr of reqAttrs) {
+          if (!entityExists) {
             totalMissingAttributes++;
             if (!missingAttributes[entityId]) missingAttributes[entityId] = [];
             missingAttributes[entityId].push(attr);
-            diagnostics.push({
-              code: "ATTRIBUTE_MISSING",
-              severity: "error",
-              targetId: entityId,
-              attributeName: attr,
-              message: `Entity "${entityId}" is missing required attribute "${attr}".`,
-              suggestion: `Define attribute "${attr}" on entity "${entityId}".`,
-            });
-            suggestions.push(
-              `Define attribute "${attr}" on entity "${entityId}".`,
-            );
-          } else if (!hasValue) {
+            continue;
+          }
+
+          if (!ontology.getEntity) {
             totalMissingAttributes++;
-            if (!missingAttributes[entityId]) missingAttributes[entityId] = [];
-            missingAttributes[entityId].push(attr);
-            diagnostics.push({
-              code: "ATTRIBUTE_NULL",
-              severity: "error",
-              targetId: entityId,
-              attributeName: attr,
-              message: `Attribute "${attr}" on entity "${entityId}" is null, empty, or undefined.`,
-              suggestion: `Assign a non-empty value to "${attr}" on entity "${entityId}".`,
-            });
-            suggestions.push(
-              `Assign valid value to attribute "${attr}" on entity "${entityId}".`,
+            (missingAttributes[entityId] ??= []).push(attr);
+          } else {
+            const { exists, hasValue } = resolveEntityProperty(
+              entityData,
+              attr,
             );
+            if (!exists) {
+              totalMissingAttributes++;
+              if (!missingAttributes[entityId])
+                missingAttributes[entityId] = [];
+              missingAttributes[entityId].push(attr);
+              diagnostics.push({
+                code: "ATTRIBUTE_MISSING",
+                severity: "error",
+                targetId: entityId,
+                attributeName: attr,
+                message: `Entity "${entityId}" is missing required attribute "${attr}".`,
+                suggestion: `Define attribute "${attr}" on entity "${entityId}".`,
+              });
+              suggestions.push(
+                `Define attribute "${attr}" on entity "${entityId}".`,
+              );
+            } else if (!hasValue) {
+              totalMissingAttributes++;
+              if (!missingAttributes[entityId])
+                missingAttributes[entityId] = [];
+              missingAttributes[entityId].push(attr);
+              diagnostics.push({
+                code: "ATTRIBUTE_NULL",
+                severity: "error",
+                targetId: entityId,
+                attributeName: attr,
+                message: `Attribute "${attr}" on entity "${entityId}" is null, empty, or undefined.`,
+                suggestion: `Assign a non-empty value to "${attr}" on entity "${entityId}".`,
+              });
+              suggestions.push(
+                `Assign valid value to attribute "${attr}" on entity "${entityId}".`,
+              );
+            }
           }
         }
       }
     }
-  }
 
+    return { totalRequiredAttributes, totalMissingAttributes };
+  }
   const attributeCoverage =
     totalRequiredAttributes === 0
       ? 1.0
@@ -368,41 +377,45 @@ export function validateAnswerability(
         totalRequiredAttributes;
 
   // 4. Validate Required Relationships
-  let totalRequiredRelations = 0;
-  let totalMissingRelations = 0;
+  const { totalRequiredRelations, totalMissingRelations } = checkRelations();
+  function checkRelations() {
+    let totalRequiredRelations = 0;
+    let totalMissingRelations = 0;
 
-  if (options.requiredRelations && options.requiredRelations.length > 0) {
-    totalRequiredRelations = options.requiredRelations.length;
+    if (options.requiredRelations && options.requiredRelations.length > 0) {
+      totalRequiredRelations = options.requiredRelations.length;
 
-    for (const rel of options.requiredRelations) {
-      const hasSource = ontology.hasEntity(rel.sourceId);
-      const hasTarget = ontology.hasEntity(rel.targetId);
+      for (const rel of options.requiredRelations) {
+        const hasSource = ontology.hasEntity(rel.sourceId);
+        const hasTarget = ontology.hasEntity(rel.targetId);
 
-      let connected = false;
-      if (hasSource && hasTarget && ontology.hasPath) {
-        connected = ontology.hasPath(rel.sourceId, rel.targetId);
-      }
+        let connected = false;
+        if (hasSource && hasTarget && ontology.hasPath) {
+          connected = ontology.hasPath(rel.sourceId, rel.targetId);
+        }
 
-      if (!connected) {
-        totalMissingRelations++;
-        missingRelations.push({
-          sourceId: rel.sourceId,
-          targetId: rel.targetId,
-        });
-        diagnostics.push({
-          code: "RELATION_UNREACHABLE",
-          severity: "error",
-          targetId: `${rel.sourceId}->${rel.targetId}`,
-          message: `Required ontological connection from "${rel.sourceId}" to "${rel.targetId}" not found.`,
-          suggestion: `Connect "${rel.sourceId}" to "${rel.targetId}" in the ontology graph.`,
-        });
-        suggestions.push(
-          `Establish connection between "${rel.sourceId}" and "${rel.targetId}".`,
-        );
+        if (!connected) {
+          totalMissingRelations++;
+          missingRelations.push({
+            sourceId: rel.sourceId,
+            targetId: rel.targetId,
+          });
+          diagnostics.push({
+            code: "RELATION_UNREACHABLE",
+            severity: "error",
+            targetId: `${rel.sourceId}->${rel.targetId}`,
+            message: `Required ontological connection from "${rel.sourceId}" to "${rel.targetId}" not found.`,
+            suggestion: `Connect "${rel.sourceId}" to "${rel.targetId}" in the ontology graph.`,
+          });
+          suggestions.push(
+            `Establish connection between "${rel.sourceId}" and "${rel.targetId}".`,
+          );
+        }
       }
     }
-  }
 
+    return { totalRequiredRelations, totalMissingRelations };
+  }
   const relationCoverage =
     totalRequiredRelations === 0
       ? 1.0

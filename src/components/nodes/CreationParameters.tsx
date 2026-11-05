@@ -1,5 +1,3 @@
-import CameraOpticsControl from "./CameraOpticsControl.tsx";
-import type { CameraOptics } from "../../domain/cameraOptics.ts";
 export const STANDARDIZED_ASPECT_RATIOS = [
   "16:9",
   "21:9",
@@ -22,8 +20,6 @@ export type StandardizedAspectRatio =
   (typeof STANDARDIZED_ASPECT_RATIOS)[number];
 
 interface CreationParametersProps {
-  optics?: CameraOptics;
-  onOptics?: (value?: CameraOptics) => void;
   kind: "image" | "video";
   ratio: string;
   quality: string;
@@ -35,8 +31,6 @@ interface CreationParametersProps {
 
 /** Functional options follow current Figma Veo variant 630:7196 and the configured adapter. */
 export default function CreationParameters({
-  optics,
-  onOptics,
   kind,
   ratio,
   quality,
@@ -48,6 +42,7 @@ export default function CreationParameters({
   return (
     <div
       className="node-popover parameter-menu"
+      role="dialog"
       aria-label={kind === "image" ? "图片参数选项" : "视频参数选项"}
     >
       <small>比例</small>
@@ -66,6 +61,7 @@ export default function CreationParameters({
           : ["自适应", "1K", "2K", "4K"]
         ).map((value) => (
           <button
+            type="button"
             key={value}
             disabled={kind === "video" && !["720p", "1080p"].includes(value)}
             title={
@@ -93,6 +89,7 @@ export default function CreationParameters({
           : STANDARDIZED_ASPECT_RATIOS
         ).map((value) => (
           <button
+            type="button"
             key={value}
             disabled={kind === "video" && !["16:9", "9:16"].includes(value)}
             title={
@@ -110,7 +107,6 @@ export default function CreationParameters({
         ))}
       </div>
       <small>清晰度</small>
-      {onOptics && <CameraOpticsControl value={optics} onChange={onOptics} />}
       {kind === "image" && (
         <small>
           比例与清晰度会随本次生成发送；选“自适应”时使用供应商默认尺寸。

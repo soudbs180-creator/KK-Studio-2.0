@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import UiIcon from "../UiIcon";
 import type { Asset } from "../../domain/assets";
 import type { AssetArchiveState } from "../../features/creation/index.ts";
 
@@ -98,11 +99,9 @@ export default function AssetCard({
           />
         ) : (
           asset.type !== "subject" && (
-            <img
-              className="asset-icon"
-              src="/design/figma/asset-image.svg"
-              alt=""
-            />
+            <span className="asset-icon">
+              <UiIcon name="image" size={24} />
+            </span>
           )
         )}
       </span>

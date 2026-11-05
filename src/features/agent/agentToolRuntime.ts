@@ -137,17 +137,20 @@ export class AgentToolRuntime {
           securityRiskLevel: "low",
         },
       );
-      if (requiresConfirmation) {
-        emit("blocked");
-        if (
-          !context?.confirmPlan ||
-          !(await context.confirmPlan(checkpoint, signal))
-        ) {
-          flow.rejectCheckpoint(checkpoint.checkpointId, "未批准本次操作");
-          throw new Error("操作计划未获授权，未删除节点或提交生成。");
+      await confirmOperationPlan();
+      async function confirmOperationPlan() {
+        if (requiresConfirmation) {
+          emit("blocked");
+          if (
+            !context?.confirmPlan ||
+            !(await context.confirmPlan(checkpoint, signal))
+          ) {
+            flow.rejectCheckpoint(checkpoint.checkpointId, "未批准本次操作");
+            throw new Error("操作计划未获授权，未删除节点或提交生成。");
+          }
+          if (snapshotIdentity !== operationSnapshotIdentity(getSnapshot()))
+            throw new Error("画布已变化，请重新审阅操作计划；本次未执行。");
         }
-        if (snapshotIdentity !== operationSnapshotIdentity(getSnapshot()))
-          throw new Error("画布已变化，请重新审阅操作计划；本次未执行。");
       }
       assertCurrent();
       const { ticket } = flow.approveCheckpoint(checkpoint.checkpointId, {

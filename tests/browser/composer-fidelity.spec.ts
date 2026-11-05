@@ -206,7 +206,7 @@ test("桌面会话入口使用关闭态图标并从右侧滑入，不挤动地�
         ? { x: box.x, y: box.y, width: box.width, height: box.height }
         : null;
     };
-    const image = document.querySelector<HTMLImageElement>(".chat-reopen img");
+    const image = document.querySelector<HTMLElement>(".chat-reopen .ui-icon");
     const imageBox = image?.getBoundingClientRect();
     return {
       navigation: rect(".canvas-top-right"),
@@ -242,7 +242,7 @@ test("桌面会话入口使用关闭态图标并从右侧滑入，不挤动地�
     width: 28,
     height: 28,
   });
-  expect(before.source).toBe("/design/figma/chat-close.svg");
+  expect(before.icon).not.toBeNull();
   expect(before.scrollLeft).toBe(0);
 
   // Freeze the actual CSS animation when React reveals the panel. Sampling

@@ -11,13 +11,13 @@
   place-items: center;
 }
 .settings-nav-icon > .ui-icon {
-  width: var(--kk-icon-glyph-md);
-  height: var(--kk-icon-glyph-md);
+  width: var(--kk-icon-glyph-sm);
+  height: var(--kk-icon-glyph-sm);
 }
 .settings-close {
   z-index: 5;
 }
-.settings-close img {
+.settings-close :is(img, .ui-icon) {
   display: block;
   width: var(--kk-icon-glyph-sm);
   height: var(--kk-icon-glyph-sm);
@@ -38,8 +38,7 @@
     margin-top: 56px;
   }
   .start-brand {
-    height: 210px;
-    grid-template-columns: minmax(0, 1fr);
+    height: auto;
   }
   .start-discovery {
     width: calc(100% - 64px);

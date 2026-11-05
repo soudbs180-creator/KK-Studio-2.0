@@ -4,7 +4,10 @@ import {
   CanvasOpSchema,
   type CanvasOperationBridge,
 } from "../domain/canvasOperations.ts";
-import { exportCanvasImage } from "../features/canvas/index.ts";
+import {
+  exportCanvasImage,
+  autoLayoutCanvas,
+} from "../features/canvas/index.ts";
 import { storeGeneratedAsset } from "../features/creation/index.ts";
 
 export interface CanvasOperationsRuntime {
@@ -63,7 +66,10 @@ export function useCanvasOperationsRuntime(
         try {
           const parsed = CanvasOpSchema.safeParse(raw);
           const png =
-            parsed.success && parsed.data.op === "export_canvas_image"
+            parsed.success &&
+            ["export_canvas_image", "export_canvas_png"].includes(
+              parsed.data.op,
+            )
               ? await exportCanvasImage(bridge.getState())
               : undefined;
           const artifact = png
@@ -81,6 +87,10 @@ export function useCanvasOperationsRuntime(
             throw new Error("项目已切换，画布操作已停止");
           const server = new CanvasMcpServer({
             ...bridge,
+            autoLayout: (ids, direction) =>
+              bridge.commit(
+                autoLayoutCanvas(bridge.getState(), ids, direction),
+              ),
             exportImage: () => {
               if (!png) throw new Error("画布图片尚未准备完成");
               return { assetId: artifact!.assetId, mime: "image/png" };

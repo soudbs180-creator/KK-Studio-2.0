@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type PointerEvent } from "react";
+import UiIcon from "../UiIcon";
 import { createPortal } from "react-dom";
 import type { CanvasCollectionItem } from "../../domain/canvasItems";
 import { cardLayout } from "../../domain/canvasGraph";
@@ -231,7 +232,9 @@ export default function NodeActions({
             className="node-add-visual"
             style={{ translate: `${magnet.x}px ${magnet.y}px` }}
           >
-            <span className="node-port-plus" aria-hidden="true" />
+            <span className="node-port-plus" aria-hidden="true">
+              <UiIcon name="plus" size={12} />
+            </span>
           </span>
         </button>
       </div>

@@ -28,6 +28,7 @@ export default function GenerationCount({
   return (
     <div className="control-anchor count-anchor" data-control="count">
       <button
+        type="button"
         disabled={disabled}
         title={
           disabled ? "生成中暂不能修改数量，取消或结束后可继续" : undefined
@@ -35,9 +36,10 @@ export default function GenerationCount({
         className="count-trigger"
         aria-label="生成数量"
         aria-expanded={open}
+        aria-haspopup="dialog"
         onClick={onToggle}
       >
-        <img src="/design/figma/count-x.svg" alt="" />
+        <span aria-hidden="true">x</span>
         <span className="kk-tabular-nums" data-numeric="true">
           {value}
         </span>
@@ -45,7 +47,7 @@ export default function GenerationCount({
       {open && !disabled && (
         <div
           className="generation-count-panel"
-          role="group"
+          role="dialog"
           aria-label="生成数量选项"
         >
           <span className="count-heading">生成数量</span>
@@ -70,6 +72,7 @@ export default function GenerationCount({
           <div className="count-stops">
             {counts.map((count) => (
               <button
+                type="button"
                 key={count}
                 aria-label={`生成 ${count} 个`}
                 aria-pressed={value === count}

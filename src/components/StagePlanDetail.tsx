@@ -7,7 +7,10 @@ import {
   type StagePlan,
   type StageWorkItemStatus,
 } from "../domain/stagePlan";
-import type { StageDecisionInput } from "../features/agent/index.ts";
+import {
+  stageToTicketPhase,
+  type StageDecisionInput,
+} from "../features/agent/index.ts";
 
 const workStatusLabels: Record<StageWorkItemStatus, string> = {
   queued: "待执行",
@@ -61,12 +64,61 @@ export default function StagePlanDetail({
       ...(ids ? { reworkItems: ids.map((id) => ({ id })) } : {}),
     });
   };
+  function renderExecution() {
+    return (
+      <>
+        {stage.status === "doing" && (
+          <>
+            <p className="stage-plan-guidance">
+              {needsPlanApproval
+                ? "计划审批尚未通过，请重新提交计划审批。"
+                : "用户确认后签发 Mandate，按依赖执行真实任务；已成功结果保留。"}
+            </p>
+            {!needsPlanApproval && onExecute && (
+              <button
+                type="button"
+                className="primary-button"
+                disabled={disabled}
+                onClick={() => void onExecute()}
+              >
+                执行已批准阶段
+              </button>
+            )}
+            {busy && onCancel && (
+              <button type="button" className="ui-button" onClick={onCancel}>
+                取消执行
+              </button>
+            )}
+            {stage.executionMandate && (
+              <p>Mandate：{stage.executionMandate.id}</p>
+            )}
+            {needsPlanApproval && (
+              <div className="stage-plan-actions">
+                <button
+                  type="button"
+                  className="primary-button"
+                  disabled={disabled}
+                  onClick={() => void onRequestPlanApproval()}
+                >
+                  {busy ? "保存中…" : "重新提交计划审批"}
+                </button>
+              </div>
+            )}
+          </>
+        )}
+      </>
+    );
+  }
   return (
     <section
       className="stage-plan-detail"
       aria-label={`阶段详情：${stage.name}`}
     >
       <h3>{stage.name}</h3>
+      <p>
+        工单阶段：
+        {stageToTicketPhase(stage.status, stage.planApprovedAt !== undefined)}
+      </p>
       <p>{stage.goal}</p>
       <p>
         {counts.succeeded} / {counts.total} 工作项已成功 · {counts.failed}{" "}
@@ -96,45 +148,7 @@ export default function StagePlanDetail({
           </li>
         ))}
       </ul>
-      {stage.status === "doing" && (
-        <>
-          <p className="stage-plan-guidance">
-            {needsPlanApproval
-              ? "计划审批尚未通过，请重新提交计划审批。"
-              : "用户确认后签发 Mandate，按依赖执行真实任务；已成功结果保留。"}
-          </p>
-          {!needsPlanApproval && onExecute && (
-            <button
-              type="button"
-              className="primary-button"
-              disabled={disabled}
-              onClick={() => void onExecute()}
-            >
-              执行已批准阶段
-            </button>
-          )}
-          {busy && onCancel && (
-            <button type="button" className="ui-button" onClick={onCancel}>
-              取消执行
-            </button>
-          )}
-          {stage.executionMandate && (
-            <p>Mandate：{stage.executionMandate.id}</p>
-          )}
-          {needsPlanApproval && (
-            <div className="stage-plan-actions">
-              <button
-                type="button"
-                className="primary-button"
-                disabled={disabled}
-                onClick={() => void onRequestPlanApproval()}
-              >
-                {busy ? "保存中…" : "重新提交计划审批"}
-              </button>
-            </div>
-          )}
-        </>
-      )}
+      {renderExecution()}
       {gate && !rework && (
         <div className="stage-plan-actions">
           <button

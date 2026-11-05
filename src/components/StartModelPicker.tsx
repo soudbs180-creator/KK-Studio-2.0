@@ -4,6 +4,7 @@ import {
 } from "../domain/modelSelection";
 import { selectedModelLabel } from "../features/models/index.ts";
 import ModelPickerMenu from "./ModelPickerMenu";
+import UiIcon from "./UiIcon";
 
 export default function StartModelPicker({
   selection,
@@ -33,7 +34,7 @@ export default function StartModelPicker({
         title={label}
         onClick={onToggle}
       >
-        <img src="/design/figma/composer-package.svg" alt="" />
+        <UiIcon name="package" size={12} />
         <span>{label || "选模型"}</span>
       </button>
       {open && (

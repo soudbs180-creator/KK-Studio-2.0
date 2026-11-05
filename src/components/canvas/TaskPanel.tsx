@@ -1,4 +1,5 @@
 import { useCallback, useRef, useState } from "react";
+import UiIcon from "../UiIcon";
 import { useDismissible } from "../useDismissible";
 import type { CreationTask } from "../../features/creation/index.ts";
 import {
@@ -84,14 +85,7 @@ export default function TaskPanel({
         aria-expanded={open}
         aria-label="打开任务列表"
       >
-        <img
-          className="task-button-icon"
-          src="/design/figma/task-clipboard.svg"
-          width={16}
-          height={16}
-          alt=""
-          draggable={false}
-        />
+        <UiIcon name="clipboard-list" size={16} />
         <span>任务列表</span>
       </button>
       {open && (

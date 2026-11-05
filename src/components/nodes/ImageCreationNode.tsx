@@ -6,8 +6,8 @@ import {
   type CSSProperties,
   type RefObject,
 } from "react";
+import UiIcon from "../UiIcon";
 import { CanvasImageCommandContext } from "../../features/creation/index.ts";
-import { Upload } from "lucide-react";
 import CreationComposer from "./CreationComposer";
 import type {
   CanvasCollectionItem,
@@ -152,7 +152,7 @@ export default function ImageCreationNode({
               aria-label="上传图片"
               onClick={() => uploadInput.current?.click()}
             >
-              <Upload size={16} strokeWidth={1} />
+              <UiIcon name="upload" size={16} />
               上传图片
             </button>
           )}
@@ -232,11 +232,9 @@ export default function ImageCreationNode({
             />
           </>
         ) : (
-          <img
-            className="image-symbol"
-            src="/design/figma/asset-image.svg"
-            alt=""
-          />
+          <span className="image-symbol">
+            <UiIcon name="image" size={24} />
+          </span>
         )}
       </div>
       <CanvasImageActions
@@ -256,6 +254,7 @@ export default function ImageCreationNode({
         </p>
       )}
       <CreationComposer
+        nodeId={item.id}
         parameters={item.parameters}
         onParametersChange={(parameters) => onChange({ parameters })}
         onDemoResults={onDemoResults}

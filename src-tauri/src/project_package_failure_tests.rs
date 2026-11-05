@@ -5,14 +5,42 @@ use std::sync::atomic::{AtomicU64, Ordering};
 static NEXT_FIXTURE_ID: AtomicU64 = AtomicU64::new(0);
 
 #[test]
+fn home_image_size_survives_native_package_round_trip() {
+    let f = Fixture::new();
+    let mut value = f.snapshot.clone();
+    value["revision"] = json!(2);
+    value["homeDraft"]["imageSize"] = json!("1536x1024");
+    value["projects"][0]["composerDraft"] =
+        json!({"prompt":"keep", "imageSize":"1536x1024", "outputCount":4});
+    snapshot_schema::validate(&value).unwrap();
+    f.snapshots.write(value.clone(), Some(1)).unwrap();
+    let package = f.package();
+    let target = f.root.join("image-size-restored");
+    import_package(&package, &target).unwrap();
+    let restored = SnapshotRepository::new(target.join("projects/creation-v2.json"))
+        .read().unwrap().snapshot.unwrap();
+    assert_eq!(restored, crate::native_root_authority::migrated_snapshot(&value));
+    for bad in [json!("auto"), json!("0x1024"), json!(1024), Value::Null] {
+        let mut corrupt = value.clone();
+        corrupt["homeDraft"]["imageSize"] = bad.clone();
+        assert!(snapshot_schema::validate(&corrupt).is_err());
+        assert!(f.snapshots.write(corrupt, Some(2)).is_err());
+    }
+}
+
+#[test]
 fn creative_execution_fields_survive_native_package_round_trip() {
     let f = Fixture::new();
     let mut value = f.snapshot.clone();
     value["revision"] = json!(2);
     let project = &mut value["projects"][0];
+    project["items"][0]["node_rev"] = json!(3);
+    project["items"][0]["blueprint"] = json!({"kind":"service","paths":[format!("src/{}", "中".repeat(400))],"summary":"Service topology"});
     project["items"][0]["canvasPresentation"] =
         json!({"width":800,"height":600,"locked":true,"color":"accent"});
-    project["items"][0]["parameters"] = json!({"optics":{"lensMm":85,"aperture":"f/1.4","depthOfField":"shallow","cameraBody":"Cinema"}});
+    project["items"][0]["parameters"] = json!({"optics":{"lensMm":85,"aperture":"f/1.4","depthOfField":"shallow","cameraBody":"Cinema","shotScale":"CU","cameraAngle":"low-angle","azimuthDeg":-180,"elevationDeg":90}});
+    project["items"][0]["comments"] =
+        json!([{"id":"comment","text":"Keep costume","resolved":false}]);
     project["tasks"][0]["outputs"][0]["tokenUsage"] =
         json!({"promptTokens":23,"completionTokens":7,"totalTokens":30});
     project["stagePlans"] = json!([{
@@ -38,6 +66,9 @@ fn creative_execution_fields_survive_native_package_round_trip() {
     for bad in [
         json!({"lensMm":0,"aperture":"f/1.4"}),
         json!({"lensMm":85,"aperture":"f/0"}),
+        json!({"lensMm":85,"aperture":"f/1.4","azimuthDeg":181}),
+        json!({"lensMm":85,"aperture":"f/1.4","elevationDeg":-91}),
+        json!({"lensMm":85,"aperture":"f/1.4","shotScale":"invalid"}),
     ] {
         let mut corrupt = value.clone();
         corrupt["projects"][0]["items"][0]["parameters"]["optics"] = bad;

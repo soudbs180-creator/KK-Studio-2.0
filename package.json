@@ -13,7 +13,7 @@
     "proxy": "node vendor/canvas-proxy/index.js",
     "proxy:test": "node --test tests/unit/proxyForward.test.ts",
     "agent:install": "npm ci --prefix vendor/canvas-agent --ignore-scripts --no-audit --no-fund",
-    "agent:build": "node scripts/agent/install-idle-preparation.mjs && node scripts/agent/install-desktop-support.mjs && tsc -p vendor/canvas-agent/tsconfig.json",
+    "agent:build": "node scripts/agent/sync-canvas-schema.mjs && node scripts/agent/install-idle-preparation.mjs && node scripts/agent/install-desktop-support.mjs && tsc -p vendor/canvas-agent/tsconfig.json",
     "agent": "npm run agent:build && node scripts/agent/standalone.mjs",
     "agent:package": "npm run agent:build && node scripts/agent/runtime-package.mjs",
     "agent:mcp": "npm run agent:build && node vendor/canvas-agent/dist/index.js mcp",

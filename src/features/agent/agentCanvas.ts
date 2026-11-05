@@ -108,6 +108,9 @@ export function buildAgentSnapshot(
         model: item.model,
         providerConnectionId: item.providerConnectionId,
         generationSource: item.generationSource,
+        optics: item.parameters?.optics,
+        comments: item.comments,
+        tags: item.tags,
         text:
           item.result?.text ??
           (item.kind === "text" ? item.prompt : undefined) ??

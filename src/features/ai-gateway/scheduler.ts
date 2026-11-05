@@ -34,6 +34,11 @@ import {
 import { type WaitingCandidate } from "../../domain/gatewayCooldown.ts";
 import { GatewayCooldownScheduler } from "./cooldownQueue.ts";
 import { registerGatewayAffinity } from "./affinityReset.ts";
+import {
+  orderByRouting,
+  type RoutingRequest,
+} from "../../domain/routingGroups.ts";
+import { readGatewayPreferences } from "./gatewayPreferences.ts";
 
 export interface DispatchRequest {
   readonly model: string;
@@ -53,6 +58,7 @@ export interface DispatchRequest {
   ) => void | Promise<void>;
   /** Set by the caller once the first chunk reached the client. */
   readonly streamStarted?: () => boolean;
+  readonly routing?: RoutingRequest;
 }
 
 /**
@@ -195,6 +201,22 @@ export function extractNormalized(error: unknown): NormalizedError {
     detail:
       error instanceof Error ? error.message.slice(0, 200) : "unknown failure",
   };
+}
+
+function rateLimited(error: NormalizedError): boolean {
+  return error.errorClass === "RATE_LIMITED" || error.httpStatus === 429;
+}
+
+function routedPoolEntry(
+  pool: AccountPool,
+  tried: ReadonlySet<string>,
+  prefs: ReturnType<typeof readGatewayPreferences>,
+) {
+  const chosen = prefs
+    ? pool.pickRouted(prefs.mode, tried.size + prefs.cursor)
+    : pool.pickNext(tried);
+  if (chosen && prefs && tried.has(chosen.credentialRef)) return undefined;
+  return chosen;
 }
 
 export class Scheduler {
@@ -350,7 +372,22 @@ export class Scheduler {
         continue;
       ordered.push(attempt);
     }
-    return ordered;
+    const saved = request.routing ? undefined : readGatewayPreferences();
+    const routing =
+      request.routing ??
+      (saved ? { mode: saved.mode, cursor: saved.cursor } : undefined);
+    if (!routing) return ordered;
+    const ranked = orderByRouting(
+      ordered.map((entry) => ({
+        id: entry.channelId,
+        priority: entry.priority,
+        weight: entry.weight,
+      })),
+      routing,
+      this.#now(),
+    );
+    const byId = new Map(ordered.map((entry) => [entry.channelId, entry]));
+    return ranked.map((entry) => byId.get(entry.id)!);
   }
 
   async #tryPrimaryCandidates(
@@ -519,12 +556,13 @@ export class Scheduler {
     }
 
     const triedRefs = new Set<string>();
+    const prefs = readGatewayPreferences();
     while (true) {
       request.signal?.throwIfAborted();
-      const poolEntry = pool.pickNext(triedRefs);
+      const poolEntry = routedPoolEntry(pool, triedRefs, prefs);
       const credRef = poolEntry?.credentialRef ?? entry.credentialRef;
+      if (credRef && triedRefs.has(credRef)) break;
       if (credRef) triedRefs.add(credRef);
-
       const startTime = this.#now();
       try {
         const result = await this.#attemptWithCredential(
@@ -536,29 +574,36 @@ export class Scheduler {
         if (credRef) pool.recordSuccess(credRef, this.#now() - startTime);
         return result;
       } catch (error) {
-        request.signal?.throwIfAborted();
-        const normalized = extractNormalized(error);
-        if (
-          normalized.errorClass === "RATE_LIMITED" ||
-          normalized.httpStatus === 429
-        ) {
-          if (credRef) pool.record429(credRef, normalized.cooldownMs ?? 15_000);
-          // Seamless 429 hot-drift before first token
-          if (!this.#streamStarted(request)) {
-            const nextCandidate = pool.pickNext(triedRefs);
-            if (nextCandidate) {
-              continue;
-            }
-          }
-        } else if (
-          normalized.httpStatus !== undefined &&
-          normalized.httpStatus >= 500
-        ) {
-          if (credRef) pool.record5xx(credRef, normalized.cooldownMs ?? 30_000);
-        }
+        if (this.#reusePool(pool, request, credRef, triedRefs, prefs, error))
+          continue;
         throw error;
       }
     }
+    throw channelError(
+      noChannelAvailable(`No account remains for ${entry.channelId}`),
+    );
+  }
+
+  #reusePool(
+    pool: AccountPool,
+    request: DispatchRequest,
+    credRef: string | undefined,
+    triedRefs: ReadonlySet<string>,
+    prefs: ReturnType<typeof readGatewayPreferences>,
+    error: unknown,
+  ): boolean {
+    request.signal?.throwIfAborted();
+    const normalized = extractNormalized(error);
+    if (!rateLimited(normalized)) {
+      if ((normalized.httpStatus ?? 0) >= 500 && credRef)
+        pool.record5xx(credRef, normalized.cooldownMs ?? 30_000);
+      return false;
+    }
+    if (credRef) pool.record429(credRef, normalized.cooldownMs ?? 15_000);
+    return (
+      !this.#streamStarted(request) &&
+      Boolean(routedPoolEntry(pool, triedRefs, prefs))
+    );
   }
 
   async #attemptWithCredential(

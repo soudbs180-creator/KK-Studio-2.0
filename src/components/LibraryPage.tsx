@@ -1,6 +1,6 @@
 import { useMemo, useRef, useState } from "react";
 import { SlidingPillIndicator } from "./ui/SlidingPillIndicator";
-import { Search } from "lucide-react";
+import UiIcon from "./UiIcon";
 import CatalogPageBody from "./CatalogPageBody";
 import type { CreationProject } from "../features/creation/index.ts";
 import type { ProjectLibraryActions } from "../features/projects/index.ts";
@@ -159,10 +159,11 @@ export default function LibraryPage({
   );
   const tabs =
     view === "projects"
-      ? ["本地项目", "共享项目", "垃圾箱"]
+      ? ["本地项目", "共享项目", "回收站"]
       : view === "skills"
         ? ["Skill", "我的 Skill"]
         : ["精选工作流", "我的工作流"];
+  const sharedProjectsUnavailable = view === "projects" && tab === "共享项目";
   return (
     <section
       className={`catalog-page catalog-page-${view} page-template-shell page-template-${template}`}
@@ -220,13 +221,25 @@ export default function LibraryPage({
             variant="line"
           />
         </div>
-        <label className="catalog-page-search">
-          <Search size={16} strokeWidth={1} />
+        <label
+          className="catalog-page-search"
+          title={
+            sharedProjectsUnavailable
+              ? "共享服务尚未接入，暂时无法搜索"
+              : undefined
+          }
+        >
+          <UiIcon name="search" size={16} />
           <input
             aria-label={`搜索${meta.title}`}
-            value={query}
+            value={sharedProjectsUnavailable ? "" : query}
+            disabled={sharedProjectsUnavailable}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder={`搜索${meta.title}`}
+            placeholder={
+              sharedProjectsUnavailable
+                ? "共享服务尚未接入"
+                : `搜索${meta.title}`
+            }
           />
         </label>
       </div>

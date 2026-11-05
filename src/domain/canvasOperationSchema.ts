@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { CANVAS_REFERENCE_SLOTS } from "./canvasItems.ts";
+import { blueprintNodeSchema } from "./blueprintNode.ts";
 const id = z
   .string()
   .trim()
@@ -28,6 +29,7 @@ const patch = z
   .refine((s) => Object.keys(s).length > 0);
 const card = z
   .object({
+    blueprint: blueprintNodeSchema.optional(),
     id,
     kind: z.enum(["text", "image", "video", "audio"]),
     title: z.string().min(1).max(160),
@@ -44,7 +46,7 @@ const operation = <N extends string, T extends z.ZodRawShape>(
 ) =>
   z.object({ op: z.literal(op), payload: z.object(shape).strict() }).strict();
 
-export const CanvasOpSchema = z.discriminatedUnion("op", [
+const legacyOptions = [
   operation("add_card", { card, position: point }),
   operation("delete_card", { id }),
   operation("update_card", { id, patch }),
@@ -95,6 +97,7 @@ export const CanvasOpSchema = z.discriminatedUnion("op", [
   operation("export_canvas_image", {}),
   operation("export_canvas_json", {}),
   operation("import_canvas_json", {
+    snapshot: z.json().optional(),
     document: z
       .object({
         version: z.literal(1),
@@ -122,8 +125,79 @@ export const CanvasOpSchema = z.discriminatedUnion("op", [
   operation("focus_node", { id }),
   operation("batch_transform", { ids, dx: number, dy: number }),
   operation("reorder_z_index", { id, index: z.number().int().min(0).max(499) }),
+] as const;
+const extendedOptions = [
+  operation("remove_card", { id }),
+  operation("lock_card", { id }),
+  operation("unlock_card", { id }),
+  operation("align_cards", { ids, axis: z.enum(["x", "y"]) }),
+  operation("distribute_cards", { ids, axis: z.enum(["x", "y"]) }),
+  operation("reorder_layer", { id, index: z.number().int().min(0).max(499) }),
+  operation("connect_ports", {
+    id,
+    source: id,
+    target: id,
+    kind: z.enum(["reference", "result"]).default("reference"),
+  }),
+  operation("disconnect_ports", { id }),
+  operation("update_edge", {
+    id,
+    patch: z
+      .object({
+        source: id.optional(),
+        target: id.optional(),
+        kind: z.enum(["reference", "result"]).optional(),
+      })
+      .strict()
+      .refine((p) => Object.keys(p).length > 0),
+  }),
+  operation("focus_card", { id }),
+  operation("select_cards", {
+    ids: z.array(id).max(500),
+    append: z.boolean().default(false),
+  }),
+  operation("duplicate_cards", {
+    items: z
+      .array(z.object({ id, newId: id }).strict())
+      .min(1)
+      .max(500),
+  }),
+  operation("export_canvas_png", {}),
+  operation("add_comment", {
+    id,
+    cardId: id,
+    text: z.string().trim().min(1).max(2000),
+  }),
+  operation("resolve_comment", {
+    cardId: id,
+    id,
+    resolved: z.boolean().default(true),
+  }),
+  operation("set_grid_mode", { mode: z.enum(["dots", "grid"]) }),
+  operation("set_snap_to_grid", { enabled: z.boolean() }),
+  operation("auto_layout", {
+    ids: ids.optional(),
+    direction: z.enum(["LR", "TB"]).default("LR"),
+  }),
+  operation("tag_card", { id, tag: z.string().trim().min(1).max(40) }),
+  operation("untag_card", { id, tag: z.string().trim().min(1).max(40) }),
+] as const;
+const atomicSchema = z.discriminatedUnion("op", [
+  ...legacyOptions,
+  ...extendedOptions,
+]);
+export const CanvasOpSchema = z.discriminatedUnion("op", [
+  ...legacyOptions,
+  ...extendedOptions,
+  operation("batch_apply", {
+    operations: z.array(atomicSchema).min(1).max(500),
+  }),
 ]);
 export type CanvasOperation = z.infer<typeof CanvasOpSchema>;
-export const CANVAS_34_OPS = CanvasOpSchema.options.map(
+export const CANVAS_34_OPS = legacyOptions.map(
+  (schema) => schema.shape.op.value,
+);
+
+export const CANVAS_ATOMIC_OPS = CanvasOpSchema.options.map(
   (schema) => schema.shape.op.value,
 );

@@ -62,19 +62,7 @@ export async function readMediaResponse(
   }
   const blob = new Blob(chunks, { type: mime });
   const head = new Uint8Array(await blob.slice(0, 16).arrayBuffer());
-  const ascii = new TextDecoder().decode(head);
-  const signature =
-    mime === "video/mp4"
-      ? head.length >= 12 && ascii.slice(4, 8) === "ftyp"
-      : mime === "video/webm"
-        ? head[0] === 0x1a &&
-          head[1] === 0x45 &&
-          head[2] === 0xdf &&
-          head[3] === 0xa3
-        : mime === "audio/wav"
-          ? ascii.startsWith("RIFF") && ascii.slice(8, 12) === "WAVE"
-          : ascii.startsWith("ID3") ||
-            (head[0] === 0xff && [0xfb, 0xf3, 0xf2].includes(head[1]));
+  const signature = mediaSignature(mime, head);
   if (!total || !signature) throw new Error("媒体原件格式签名与 MIME 不匹配。");
   signal?.throwIfAborted();
   return blob;
@@ -86,4 +74,19 @@ export async function mediaBlobDataUrl(blob: Blob): Promise<string> {
   for (let start = 0; start < bytes.length; start += 32768)
     binary += String.fromCharCode(...bytes.subarray(start, start + 32768));
   return `data:${blob.type};base64,${btoa(binary)}`;
+}
+
+function mediaSignature(mime: string, head: Uint8Array): boolean {
+  const ascii = new TextDecoder().decode(head);
+  return mime === "video/mp4"
+    ? head.length >= 12 && ascii.slice(4, 8) === "ftyp"
+    : mime === "video/webm"
+      ? head[0] === 0x1a &&
+        head[1] === 0x45 &&
+        head[2] === 0xdf &&
+        head[3] === 0xa3
+      : mime === "audio/wav"
+        ? ascii.startsWith("RIFF") && ascii.slice(8, 12) === "WAVE"
+        : ascii.startsWith("ID3") ||
+          (head[0] === 0xff && [0xfb, 0xf3, 0xf2].includes(head[1]));
 }

@@ -10,6 +10,7 @@ export interface CanvasOperationState {
   canvas: ProjectCanvas;
   selectedNodeIds: string[];
   snapEnabled: boolean;
+  gridMode?: "dots" | "grid";
   minimapVisible: boolean;
   screen: { width: number; height: number };
 }
@@ -19,4 +20,5 @@ export interface CanvasOperationBridge {
   undo(): void;
   redo(): void;
   exportImage(): unknown;
+  autoLayout?(ids: string[] | undefined, direction: "LR" | "TB"): void;
 }

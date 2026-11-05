@@ -8,7 +8,7 @@ import {
 import { useDismissible } from "./useDismissible";
 import { useHiddenControlFocus } from "./useHiddenControlFocus";
 
-type ComposerMenu = "add" | "model" | "skill" | "plugin" | "mode";
+type ComposerMenu = "add" | "model" | "skill" | "plugin" | "mode" | "params" | "count";
 
 /** One open menu per composer; share modal, IME and focus rules with other menus. */
 export function useComposerMenus(boundary: RefObject<HTMLElement>) {
@@ -122,6 +122,8 @@ export function useComposerMenus(boundary: RefObject<HTMLElement>) {
     skillMenuOpen: menu === "skill",
     pluginMenuOpen: menu === "plugin",
     modeMenuOpen: menu === "mode",
+    parameterMenuOpen: menu === "params",
+    countMenuOpen: menu === "count",
     toggleMenu: (requested: ComposerMenu) =>
       setMenu((current) => (current === requested ? null : requested)),
     openMenu: (requested: ComposerMenu) => setMenu(requested),

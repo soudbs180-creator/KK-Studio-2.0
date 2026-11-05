@@ -332,3 +332,4 @@ export type {
 } from "./useTaskExecution.ts";
 
 export { captureCanvasMedia } from "./mediaTaskInput.ts";
+export { readOntology, writeOntology } from "./ontologyStore.ts";

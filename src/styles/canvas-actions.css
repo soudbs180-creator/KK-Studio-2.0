@@ -58,11 +58,11 @@
   pointer-events: none;
 }
 .node-port-plus {
-  display: block;
+  display: grid;
+  place-items: center;
   width: var(--kk-icon-glyph-xs);
   height: var(--kk-icon-glyph-xs);
-  background: currentColor;
-  mask: url("/design/figma/node-port-plus.svg") center / contain no-repeat;
+  background: none;
 }
 .connection-drag-preview {
   position: fixed;
@@ -202,13 +202,11 @@
     opacity var(--motion-fast) var(--motion-ease);
 }
 .connection-cut-icon {
-  display: block;
+  display: grid;
+  place-items: center;
   width: 16px;
   height: 16px;
-  background: currentColor;
-  mask: url("/design/figma/connection-cut.svg") center / contain no-repeat;
-  -webkit-mask: url("/design/figma/connection-cut.svg") center / contain
-    no-repeat;
+  background: none;
 }
 .connection.is-active .connection-delete,
 .connection-delete:focus-visible {

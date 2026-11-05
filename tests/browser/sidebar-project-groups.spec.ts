@@ -247,9 +247,9 @@ test("项目行缩略图按内容类型区分：图片 / 聊天图标 / 随机�
     hasText: "对话项目",
   });
   await expect(demoRow.locator(".project-thumb-chat")).toHaveCount(1);
-  await expect(demoRow.locator(".project-thumb-chat img")).toHaveAttribute(
-    "src",
-    "/design/figma/project-chat-glyph.svg",
+  await expect(demoRow.locator(".project-thumb-chat .ui-icon")).toHaveCSS(
+    "width",
+    "16px",
   );
   // 新建未生成项目 → 纯色块（随机色，不带聊天图标）。
   await createUngrouped(sidebar, "草稿项目");

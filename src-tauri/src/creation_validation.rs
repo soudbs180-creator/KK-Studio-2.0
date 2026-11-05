@@ -259,6 +259,15 @@ fn draft(value: &Value) -> Result<(), String> {
         ],
     )?;
     attachments(value)?;
+    if let Some(size) = value.get("imageSize") {
+        let valid = size.as_str().is_some_and(|size| {
+            let parts: Vec<_> = size.split('x').collect();
+            parts.len() == 2 && parts.iter().all(|part| {
+                (2..=5).contains(&part.len()) && !part.starts_with('0') && part.bytes().all(|byte| byte.is_ascii_digit())
+            })
+        });
+        if !valid { return Err(corrupt("imageSize")); }
+    }
     for field in ["updatedAt", "outputCount"] {
         if let Some(n) = value.get(field) {
             number(n, field)?;

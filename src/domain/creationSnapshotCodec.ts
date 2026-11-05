@@ -7,6 +7,7 @@ import { imageCapabilitySchema } from "../../packages/creation-contracts/index.t
 import { imageArchiveReceiptsSchema } from "./imageArchiveReceipts.ts";
 import {
   hasProjectChatAuthorityConflict,
+  imageSizeLabelSchema,
   isCreationProviderRoutingValid,
   normalizeCreationSnapshot,
   serializeCreationSnapshot,
@@ -46,6 +47,7 @@ const draft = z
     text: z.string().optional(),
     model: z.string().optional(),
     kind: kind.optional(),
+    imageSize: imageSizeLabelSchema.optional(),
     media: creationMediaSchema.optional(),
     attachments: z.array(attachment).optional(),
     pendingAgent: z.union([z.string(), z.boolean()]).optional(),
@@ -290,7 +292,10 @@ const schemaV3 = z.object({
   projects: z.array(projectV3Schema),
   projectGroups: z.array(projectGroupSchema).optional(),
   sidebarPreferences: sidebarPreferencesSchema.optional(),
-  homeDraft: draft.or(z.record(z.string(), z.unknown())),
+  homeDraft: draft.or(z.record(z.string(), z.unknown())).refine(
+    (value) => value.imageSize === undefined || imageSizeLabelSchema.safeParse(value.imageSize).success,
+    "图片尺寸无效",
+  ),
 });
 
 export class SnapshotStorageError extends Error {

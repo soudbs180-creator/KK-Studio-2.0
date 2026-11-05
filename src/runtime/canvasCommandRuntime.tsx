@@ -97,14 +97,16 @@ export function useCanvasImageGeneration({
   const isText = item?.kind === "text";
   const isMedia = item?.kind === "video" || item?.kind === "audio";
   const kind = item?.kind ?? "image";
-  const label =
-    kind === "video"
+  const label = generationLabel();
+  function generationLabel() {
+    return kind === "video"
       ? "视频"
       : kind === "audio"
         ? "音频"
         : isText
           ? "文案"
           : "图片";
+  }
   const model =
     item?.model ??
     (isText ? command?.textModel : isMedia ? "" : command?.model) ??
@@ -120,19 +122,21 @@ export function useCanvasImageGeneration({
   const totalReferences = imageReferenceCount(item, references);
   const operation =
     requestedOperation ?? (totalReferences ? "edit" : "generate");
-  const capabilityReason =
-    !isText && !isMedia && !usesCodex
+  const capabilityReason = capabilityBlockReason();
+  function capabilityBlockReason() {
+    const { maxReferences, maxGenerationCount } = capabilities;
+    return !isText && !isMedia && !usesCodex
       ? capabilities.operations[operation] === "unsupported"
         ? `当前模型不支持${operation === "inpaint" ? "蒙版编辑" : operation === "edit" ? "参考图编辑" : "图片生成"}，请切换支持的模型。`
-        : capabilities.maxReferences !== undefined &&
-            totalReferences > capabilities.maxReferences
+        : maxReferences !== undefined && totalReferences > maxReferences
           ? `当前模型最多接收 ${capabilities.maxReferences} 张参考图（包含原图），请移除多余参考图。`
-          : capabilities.maxGenerationCount !== undefined &&
+          : maxGenerationCount !== undefined &&
               Number(outputCount ?? item?.parameters?.count ?? 1) >
-                capabilities.maxGenerationCount
+                maxGenerationCount
             ? `当前模型一次任务最多生成 ${capabilities.maxGenerationCount} 张图片，请重新选择生成数量。`
             : undefined
       : undefined;
+  }
   const [error, setError] = useState("");
   const [preparing, setPreparing] = useState(false);
   const request = useRef<AbortController | null>(null);
@@ -163,20 +167,23 @@ export function useCanvasImageGeneration({
     preparing ||
     codexBusy ||
     (!usesCodex && (task?.status === "queued" || task?.status === "running"));
-  const phase:
-    "idle" | "loading" | "success" | "error" | "cancelled" | "offline" = error
-    ? "error"
-    : loading
-      ? "loading"
-      : task?.status === "succeeded"
-        ? "success"
-        : task?.status === "cancelled"
-          ? "cancelled"
-          : task?.status === "offline"
-            ? "offline"
-            : task
-              ? "error"
-              : "idle";
+  const phase = generationPhase();
+  function generationPhase():
+    "idle" | "loading" | "success" | "error" | "cancelled" | "offline" {
+    return error
+      ? "error"
+      : loading
+        ? "loading"
+        : task?.status === "succeeded"
+          ? "success"
+          : task?.status === "cancelled"
+            ? "cancelled"
+            : task?.status === "offline"
+              ? "offline"
+              : task
+                ? "error"
+                : "idle";
+  }
   const disabledReason =
     command?.disabledReason ??
     capabilityReason ??

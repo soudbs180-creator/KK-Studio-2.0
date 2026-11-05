@@ -1,3 +1,5 @@
+import { Input } from "../ui/Input.tsx";
+import { Button } from "../ui/Button.tsx";
 import { Select } from "../ui/Select.tsx";
 import type { ContinuityConstraint } from "../../domain/storyboardPipeline.ts";
 
@@ -19,8 +21,8 @@ export default function StoryboardConstraints({
   const update = (index: number, patch: Partial<ContinuityDraft>) =>
     onChange(value.map((row, i) => (i === index ? { ...row, ...patch } : row)));
   return (
-    <fieldset disabled={disabled}>
-      <legend>一致性约束</legend>
+    <section className="storyboard-constraints" aria-label="一致性约束">
+      <h3>一致性约束</h3>
       <p>为角色、服装、场景或道具指定每次出镜都要保留的特征。</p>
       {value.map((row, index) => (
         <div key={index} className="storyboard-constraint-row">
@@ -38,7 +40,7 @@ export default function StoryboardConstraints({
           />
           <label>
             名称
-            <input
+            <Input
               value={row.characterName}
               maxLength={160}
               onChange={(e) => update(index, { characterName: e.target.value })}
@@ -46,25 +48,25 @@ export default function StoryboardConstraints({
           </label>
           <label>
             固定特征
-            <input
+            <Input
               value={row.attributes}
               maxLength={4000}
               placeholder="如：红色外套、银色纽扣"
               onChange={(e) => update(index, { attributes: e.target.value })}
             />
           </label>
-          <button
+          <Button
             type="button"
-            className="ui-button"
+
             onClick={() => onChange(value.filter((_, i) => i !== index))}
           >
             移除约束 {index + 1}
-          </button>
+          </Button>
         </div>
       ))}
-      <button
+      <Button
         type="button"
-        className="ui-button"
+
         disabled={disabled || value.length >= 128}
         onClick={() =>
           onChange([
@@ -74,7 +76,7 @@ export default function StoryboardConstraints({
         }
       >
         添加约束
-      </button>
-    </fieldset>
+      </Button>
+    </section>
   );
 }

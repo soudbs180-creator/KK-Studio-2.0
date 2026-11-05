@@ -1,3 +1,4 @@
+import { Button } from "./ui/Button.tsx";
 import { useState } from "react";
 import { ModalDialog } from "./ui/ModalDialog.tsx";
 
@@ -15,7 +16,7 @@ export default function RewindMessageAction({
     [error, setError] = useState("");
   return (
     <>
-      <button
+      <Button
         type="button"
         disabled={disabled || busy}
         aria-label="回滚到此轮"
@@ -25,7 +26,7 @@ export default function RewindMessageAction({
         }}
       >
         回滚到此轮
-      </button>
+      </Button>
       {open && (
         <ModalDialog
           isOpen
@@ -36,9 +37,9 @@ export default function RewindMessageAction({
           closeOnBackdropClick={!busy}
           footer={
             <>
-              <button
+              <Button
                 type="button"
-                className="primary-button"
+                variant="primary"
                 disabled={busy || disabled}
                 onClick={async () => {
                   setBusy(true);
@@ -58,15 +59,15 @@ export default function RewindMessageAction({
                 }}
               >
                 {busy ? "回滚中…" : "确认回滚"}
-              </button>
-              <button
+              </Button>
+              <Button
                 type="button"
-                className="ui-button"
+
                 disabled={busy}
                 onClick={() => setOpen(false)}
               >
                 取消回滚
-              </button>
+              </Button>
             </>
           }
         >

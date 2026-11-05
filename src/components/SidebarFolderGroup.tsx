@@ -1,4 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import UiIcon from "./UiIcon";
 import type { DragEvent } from "react";
 import SidebarProjectEntry from "./SidebarProjectEntry";
 import SidebarFolderMenu from "./SidebarFolderMenu";
@@ -150,12 +151,7 @@ export default function SidebarFolderGroup({
         {editing ? (
           <div className="folder-heading-toggle is-editing">
             <span className="project-folder">
-              <img
-                src="/design/figma/project-folder-glyph.svg"
-                width="16"
-                height="16"
-                alt=""
-              />
+              <UiIcon name="folder" size={16} />
             </span>
             <input
               className="project-title-input"
@@ -170,11 +166,9 @@ export default function SidebarFolderGroup({
                 if (event.key === "Escape") cancelEdit();
               }}
             />
-            <img
-              className="sidebar-heading-chevron"
-              src="/design/figma/project-chevron.svg"
-              alt=""
-            />
+            <span className="sidebar-heading-chevron">
+              <UiIcon name="chevron-down" size={12} />
+            </span>
           </div>
         ) : (
           <button
@@ -195,19 +189,12 @@ export default function SidebarFolderGroup({
             }}
           >
             <span className="project-folder">
-              <img
-                src="/design/figma/project-folder-glyph.svg"
-                width="16"
-                height="16"
-                alt=""
-              />
+              <UiIcon name="folder" size={16} />
             </span>
             <span className="folder-heading-title">{folder.title}</span>
-            <img
-              className="sidebar-heading-chevron"
-              src="/design/figma/project-chevron.svg"
-              alt=""
-            />
+            <span className="sidebar-heading-chevron">
+              <UiIcon name="chevron-down" size={12} />
+            </span>
           </button>
         )}
         <button
@@ -220,11 +207,9 @@ export default function SidebarFolderGroup({
           disabled={folder.children.length === 0}
           onClick={() => onOpenFolder(folder.id)}
         >
-          <img
-            className="project-action-container"
-            src="/design/figma/project-open-container.svg"
-            alt=""
-          />
+          <span className="project-action-container">
+            <UiIcon name="folder-open" size={16} />
+          </span>
         </button>
         <button
           type="button"
@@ -235,11 +220,9 @@ export default function SidebarFolderGroup({
           title="项目文件夹设置"
           onClick={() => setMenuOpen((value) => !value)}
         >
-          <img
-            className="project-action-container"
-            src="/design/figma/project-more-container.svg"
-            alt=""
-          />
+          <span className="project-action-container">
+            <UiIcon name="ellipsis" size={16} />
+          </span>
         </button>
         {menuOpen && (
           <SidebarFolderMenu

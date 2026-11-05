@@ -259,6 +259,26 @@ export {
 } from "./preInvocation.ts";
 export type { WorkspaceGuardOptions } from "./preInvocation.ts";
 
+export {
+  SuperagentEngine,
+  ticketPhase,
+  stageToTicketPhase,
+} from "../../domain/superagent/engine.ts";
+export type {
+  Trigger,
+  Ticket,
+  TicketPhase,
+  PolicyMode,
+  DecisionKind,
+} from "../../domain/superagent/engine.ts";
+export {
+  closeWorkTicket,
+  commitEngine,
+  engineEpoch,
+  openWorkTicket,
+  projectEngine,
+  subscribeEngine,
+} from "./superagentSession.ts";
 export { StatuslineBroadcaster, formatStatuslineIPC } from "./statuslineIpc.ts";
 export type {
   StatuslineListener,

@@ -229,3 +229,5 @@ ComfyUI双态画布卡片与本机托管见[ADR-033](architecture/adr/ADR-033-co
 确定性作用域记忆 V2 与兼容投影见 [ADR-035](architecture/adr/ADR-035-scoped-memory-v2.md)。
 
 真实多模态持久任务契约见 [ADR-036](architecture/adr/ADR-036-durable-multimodal-generation.md)；[阶段3实施包](changes/2026-11-04-multimodal/verification.md) 保留源树的历史证据，当前整合验收见[六支柱接线](changes/2026-11-04-e2e-wiring/verification.md)。
+
+- [深水区创作契约与兼容恢复](architecture/adr/ADR-037-deep-water-creative-contracts.md)

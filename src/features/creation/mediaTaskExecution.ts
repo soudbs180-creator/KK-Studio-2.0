@@ -86,129 +86,138 @@ export async function executeMediaOutputs(
         check();
         output.status = "succeeded";
       } else if (task.kind === "video" && task.media?.kind === "video") {
-        const key = `${task.idempotencyKey}-output-${output.index}`;
-        const saveReceipt = async (receipt: TwelveAiSubmissionReceipt) => {
-          // Acceptance must survive source deletion/cancel so it can never be resubmitted blindly.
-          output.mediaReceipt = parseTwelveAiSubmissionReceipt(
-            receipt,
-            connection.id,
-            key,
-          );
-          await persist();
-        };
-        const adapter = new TwelveAiTaskAdapter(connection, {
-          fetch: guardedFetch,
-          resolveCredential: async (base, ref) => {
-            const key = await credential(base, ref);
-            check();
-            return key;
-          },
-          submissionReceipts: output.mediaReceipt
-            ? [
-                parseTwelveAiSubmissionReceipt(
-                  output.mediaReceipt,
-                  connection.id,
-                  key,
-                ),
-              ]
-            : [],
-          submissionPersistence: {
-            connectionId: connection.id,
-            claimSubmission: async (receipt) => {
+        const generateVideo = async () => {
+          const media = task.media;
+          if (media?.kind !== "video")
+            throw new Error("任务媒体类型与参数不匹配。");
+          const key = `${task.idempotencyKey}-output-${output.index}`;
+          const saveReceipt = async (receipt: TwelveAiSubmissionReceipt) => {
+            // Acceptance must survive source deletion/cancel so it can never be resubmitted blindly.
+            output.mediaReceipt = parseTwelveAiSubmissionReceipt(
+              receipt,
+              connection.id,
+              key,
+            );
+            await persist();
+          };
+          const adapter = new TwelveAiTaskAdapter(connection, {
+            fetch: guardedFetch,
+            resolveCredential: async (base, ref) => {
+              const key = await credential(base, ref);
               check();
-              if (output.mediaReceipt)
-                return {
-                  created: false as const,
-                  receipt: output.mediaReceipt,
-                };
-              await saveReceipt(receipt);
-              check();
-              return { created: true as const };
+              return key;
             },
-            persistSubmissionReceipt: saveReceipt,
-          },
-        });
-        let jobId =
-          output.mediaReceipt?.acceptance === "accepted"
-            ? output.mediaReceipt.providerJobId
-            : undefined;
-        if (!jobId) {
-          if (output.mediaReceipt || options.queryOnly)
-            throw new TwelveAiTaskError("submission_unknown", {
-              uncertain: true,
+            submissionReceipts: output.mediaReceipt
+              ? [
+                  parseTwelveAiSubmissionReceipt(
+                    output.mediaReceipt,
+                    connection.id,
+                    key,
+                  ),
+                ]
+              : [],
+            submissionPersistence: {
+              connectionId: connection.id,
+              claimSubmission: async (receipt) => {
+                check();
+                if (output.mediaReceipt)
+                  return {
+                    created: false as const,
+                    receipt: output.mediaReceipt,
+                  };
+                await saveReceipt(receipt);
+                check();
+                return { created: true as const };
+              },
+              persistSubmissionReceipt: saveReceipt,
+            },
+          });
+          let jobId =
+            output.mediaReceipt?.acceptance === "accepted"
+              ? output.mediaReceipt.providerJobId
+              : undefined;
+          if (!jobId) {
+            if (output.mediaReceipt || options.queryOnly)
+              throw new TwelveAiTaskError("submission_unknown", {
+                uncertain: true,
+              });
+            const attachments = [];
+            for (const attachment of task.attachments) {
+              const asset = attachment.assetId
+                ? await loadStoredAsset(attachment.assetId)
+                : null;
+              check();
+              if (!asset || asset.mime !== attachment.mime)
+                throw new Error("参考原件缺失或 MIME 已变化，未提交视频。");
+              attachments.push({ ...attachment, dataUrl: asset.preview });
+            }
+            const ordinary = attachments
+              .filter((a) => !a.referenceFrame)
+              .map((a) => a.dataUrl);
+            const submitted = await adapter.submit({
+              prompt: task.prompt,
+              model: task.model,
+              attachments: [],
+              requestedOutputs: 1,
+              idempotencyKey: key,
+              signal,
+              media: {
+                ...media,
+                ...(ordinary.length ? { imageReferences: ordinary } : {}),
+                ...(attachments.some((a) => a.referenceFrame)
+                  ? {
+                      startFrame: attachments.find(
+                        (a) => a.referenceFrame === "first",
+                      )!.dataUrl,
+                      endFrame: attachments.find(
+                        (a) => a.referenceFrame === "last",
+                      )!.dataUrl,
+                    }
+                  : {}),
+              },
             });
-          const attachments = [];
-          for (const attachment of task.attachments) {
-            const asset = attachment.assetId
-              ? await loadStoredAsset(attachment.assetId)
-              : null;
-            check();
-            if (!asset || asset.mime !== attachment.mime)
-              throw new Error("参考原件缺失或 MIME 已变化，未提交视频。");
-            attachments.push({ ...attachment, dataUrl: asset.preview });
+            jobId = submitted.providerJobId;
           }
-          const ordinary = attachments
-            .filter((a) => !a.referenceFrame)
-            .map((a) => a.dataUrl);
-          const submitted = await adapter.submit({
-            prompt: task.prompt,
-            model: task.model,
-            attachments: [],
-            requestedOutputs: 1,
-            idempotencyKey: key,
-            signal,
-            media: {
-              ...task.media,
-              ...(ordinary.length ? { imageReferences: ordinary } : {}),
-              ...(attachments.some((a) => a.referenceFrame)
-                ? {
-                    startFrame: attachments.find(
-                      (a) => a.referenceFrame === "first",
-                    )!.dataUrl,
-                    endFrame: attachments.find(
-                      (a) => a.referenceFrame === "last",
-                    )!.dataUrl,
-                  }
-                : {}),
-            },
-          });
-          jobId = submitted.providerJobId;
-        }
-        check();
-        let state = await adapter.getTask(jobId!, signal);
-        const deadline = Date.now() + 20 * 60 * 1000;
-        while (!state.terminal) {
-          if (Date.now() > deadline)
-            throw new Error("视频查询超时，已保存原回执，可稍后继续查询。");
-          await waitForMediaPoll(signal, options.pollDelayMs ?? 1500);
           check();
-          state = await adapter.getTask(jobId!, signal);
-        }
-        check();
-        if (!state.outputs.length) {
-          output.status = "failed";
-          output.error = "视频供应商返回任务失败，未产生可归档结果。";
-        } else {
-          if (state.outputs.length !== 1)
-            throw new Error("视频输出数量与单份受理回执不符，请核对供应商。");
-          const url = state.outputs[0].url!;
-          assertMediaDownloadUrl(url);
-          const response = await fetcher(url, {
-            credentials: "omit",
-            redirect: "error",
-            signal,
-          });
-          const blob = await readMediaResponse(response, "video", signal);
+          let state = await adapter.getTask(jobId!, signal);
+          const deadline = Date.now() + 20 * 60 * 1000;
+          while (!state.terminal) {
+            if (Date.now() > deadline)
+              throw new Error("视频查询超时，已保存原回执，可稍后继续查询。");
+            await waitForMediaPoll(signal, options.pollDelayMs ?? 1500);
+            check();
+            state = await adapter.getTask(jobId!, signal);
+          }
           check();
-          await options.archive(blob, output, jobId);
-          check();
-          output.status = state.partial ? "unknown" : "succeeded";
-          output.error = state.partial
-            ? "供应商返回部分结果，原件已归档，请核对原任务；不会自动重发。"
-            : undefined;
-        }
+          if (!state.outputs.length) {
+            output.status = "failed";
+            output.error = "视频供应商返回任务失败，未产生可归档结果。";
+          } else {
+            if (state.outputs.length !== 1)
+              throw new Error("视频输出数量与单份受理回执不符，请核对供应商。");
+            const url = state.outputs[0].url!;
+            assertMediaDownloadUrl(url);
+            const response = await fetcher(url, {
+              credentials: "omit",
+              redirect: "error",
+              signal,
+            });
+            const blob = await readMediaResponse(response, "video", signal);
+            check();
+            await options.archive(blob, output, jobId);
+            check();
+            output.status = state.partial ? "unknown" : "succeeded";
+            output.error = state.partial
+              ? "供应商返回部分结果，原件已归档，请核对原任务；不会自动重发。"
+              : undefined;
+          }
+        };
+        await generateVideo();
       } else throw new Error("任务媒体类型与参数不匹配。");
     } catch (error) {
+      recordFailure(error);
+    }
+    function recordFailure(error: unknown) {
       const uncertain =
         output.mediaReceipt?.acceptance === "accepted" ||
         output.mediaReceipt?.acceptance === "unknown" ||

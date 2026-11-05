@@ -1,3 +1,5 @@
+import UiIcon from "../UiIcon";
+
 export default function CreationSoundButton({
   video,
   soundEnabled,
@@ -22,14 +24,7 @@ export default function CreationSoundButton({
       aria-pressed={video ? soundEnabled : undefined}
       onClick={video ? onToggle : undefined}
     >
-      <img
-        src={
-          video && !soundEnabled
-            ? "/design/figma/mic-off.svg"
-            : "/design/figma/mic.svg"
-        }
-        alt=""
-      />
+      <UiIcon name={video && !soundEnabled ? "mic-off" : "mic"} size={16} />
     </button>
   );
 }

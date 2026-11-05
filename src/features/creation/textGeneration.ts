@@ -1,3 +1,8 @@
+import {
+  fromWireEvent,
+  type GatewayProtocol,
+} from "../../domain/gatewayTranslate.ts";
+import { PrivacyMask } from "../../domain/privacyMask.ts";
 import { modelProviderSchema } from "../../domain/modelProvider.ts";
 import { readTokenUsage, type TokenUsage } from "../../domain/tokenUsage.ts";
 import {
@@ -7,6 +12,12 @@ import {
   type ProviderProtocolOptions,
 } from "../../domain/providerProtocol.ts";
 import { isLocalProviderUrl } from "../../domain/providerUrl.ts";
+import {
+  bumpGatewayCursor,
+  readGatewayPreferences,
+  textRoutePlan,
+  type TextRouteTarget,
+} from "../ai-gateway/index.ts";
 import { loadApiKey } from "./providerCredentials.ts";
 import { GenerationProviderError } from "./imageGeneration.ts";
 import {
@@ -24,16 +35,18 @@ export async function readTextStream(
   onText?: (text: string) => void,
   protocol: ProviderProtocol = "openai-chat",
   onUsage?: (usage: TokenUsage) => void,
+  privacy?: PrivacyMask,
 ): Promise<string> {
   signal.throwIfAborted();
+  const body = response.body;
   if (
     !response.headers.get("content-type")?.includes("text/event-stream") ||
-    !response.body
+    !body
   ) {
-    await response.body?.cancel().catch(() => undefined);
+    await body?.cancel().catch(() => undefined);
     throw invalidStream();
   }
-  const reader = response.body.getReader();
+  const reader = body.getReader();
   const decoder = new TextDecoder("utf-8", { fatal: true });
   const encoder = new TextEncoder();
   const modern = protocol === "openai-responses" || protocol === "anthropic";
@@ -82,6 +95,7 @@ export async function readTextStream(
     )
       throw invalidStream();
     eventType = "";
+    if (privacy) restoreWirePayload(protocol, payload, privacy);
     const previous = state.text;
     consumeTextEvent(payload, state, protocol);
     usage = readTokenUsage(payload, usage);
@@ -107,14 +121,16 @@ export async function readTextStream(
       if (eventType === "error") throw invalidStream();
     }
   }
+  function completeChatAtEof() {
+    return !modern && state.complete && !buffer && !data.length;
+  }
   try {
     while (!finished) {
       const chunk = await reader.read();
       signal.throwIfAborted();
       if (chunk.done) {
         buffer += decoder.decode();
-        if (!modern && state.complete && !buffer && !data.length)
-          finished = true;
+        if (completeChatAtEof()) finished = true;
         break;
       }
       bytes += chunk.value.byteLength;
@@ -132,8 +148,11 @@ export async function readTextStream(
         if (buffer || data.length) throw invalidStream();
       }
     }
-    signal.throwIfAborted();
-    if (!finished || !text.trim()) throw invalidStream();
+    validateCompletion();
+    function validateCompletion() {
+      signal.throwIfAborted();
+      if (!finished || !text.trim()) throw invalidStream();
+    }
     return text;
   } catch (error) {
     if (signal.aborted) throw signal.reason;
@@ -144,6 +163,48 @@ export async function readTextStream(
     await reader.cancel().catch(() => undefined);
     reader.releaseLock();
   }
+}
+
+function wireProtocol(protocol: ProviderProtocol): GatewayProtocol | undefined {
+  if (
+    protocol === "openai-chat" ||
+    protocol === "openai-responses" ||
+    protocol === "anthropic"
+  )
+    return protocol;
+  return undefined;
+}
+
+function unmaskStrings(value: unknown, privacy: PrivacyMask): void {
+  if (!value || typeof value !== "object") return;
+  if (Array.isArray(value)) {
+    value.forEach((item, index) => {
+      if (typeof item === "string") value[index] = privacy.unmask(item);
+      else unmaskStrings(item, privacy);
+    });
+    return;
+  }
+  for (const [key, item] of Object.entries(value)) {
+    if (typeof item === "string")
+      (value as Record<string, unknown>)[key] = privacy.unmask(item);
+    else unmaskStrings(item, privacy);
+  }
+}
+
+function restoreWirePayload(
+  protocol: ProviderProtocol,
+  payload: unknown,
+  privacy: PrivacyMask,
+): void {
+  const wire = wireProtocol(protocol);
+  if (wire) {
+    const delta = fromWireEvent(wire, payload);
+    if (delta?.text) delta.text = privacy.unmask(delta.text);
+    if (delta?.reasoning) delta.reasoning = privacy.unmask(delta.reasoning);
+    if (delta?.toolCall)
+      delta.toolCall.arguments = privacy.unmask(delta.toolCall.arguments);
+  }
+  unmaskStrings(payload, privacy);
 }
 
 export async function generateText(options: {
@@ -179,25 +240,79 @@ export async function generateText(options: {
     !isLocalProviderUrl(options.providerBaseUrl)
   )
     throw new Error("当前离线，未提交文本任务；草稿已保留。");
-  const route = {
-    baseUrl: options.providerBaseUrl,
+  const prefs = readGatewayPreferences();
+  const privacy = !prefs || prefs.maskOutbound ? new PrivacyMask() : undefined;
+  const targets = textRoutePlan({
+    providerBaseUrl: options.providerBaseUrl,
+    credentialRef: options.credentialRef,
     protocol: options.protocol,
     authMode: options.authMode,
+    model: options.model,
+  });
+  let lastError: unknown;
+  for (let index = 0; index < targets.length; index += 1) {
+    try {
+      const text = await postText(
+        options,
+        targets[index]!,
+        privacy,
+        signal,
+        index,
+      );
+      bumpGatewayCursor();
+      return text;
+    } catch (error) {
+      lastError = error;
+      const retry =
+        error instanceof GenerationProviderError &&
+        error.status === 429 &&
+        index < targets.length - 1;
+      if (!retry) throw error;
+    }
+  }
+  throw lastError instanceof Error
+    ? lastError
+    : new Error("文本请求没有可用账号");
+}
+
+async function postText(
+  options: Parameters<typeof generateText>[0],
+  target: TextRouteTarget,
+  privacy: PrivacyMask | undefined,
+  signal: AbortSignal,
+  index: number,
+): Promise<string> {
+  const route = {
+    baseUrl: target.providerBaseUrl,
+    protocol: target.protocol,
+    authMode: target.authMode,
   };
+  modelProviderSchema.parse({
+    version: 1,
+    name: "provider",
+    baseUrl: route.baseUrl,
+    model: target.model,
+    protocol: route.protocol,
+    authMode: route.authMode,
+  });
   const apiKey = providerNeedsKey(route)
-    ? await loadApiKey(options.providerBaseUrl, options.credentialRef)
+    ? await loadApiKey(route.baseUrl, target.credentialRef)
     : "";
   signal.throwIfAborted();
+  if (index === 0) options.beforeRequest();
+  const prompt = privacy ? privacy.mask(options.prompt) : options.prompt;
   const request = buildTextRequest(
     {
       ...route,
-      prompt: options.prompt,
-      model: options.model,
-      idempotencyKey: options.idempotencyKey,
+      prompt,
+      model: target.model,
+      idempotencyKey:
+        index === 0
+          ? options.idempotencyKey
+          : `${options.idempotencyKey}:${index}`,
     },
     apiKey,
   );
-  options.beforeRequest();
   signal.throwIfAborted();
   options.onRequestStart();
   let response: Response;
@@ -249,11 +364,15 @@ export async function generateText(options: {
       },
     );
   }
-  return readTextStream(
+  const text = await readTextStream(
     response,
     signal,
-    options.onText,
-    options.protocol,
+    options.onText
+      ? (value) => options.onText?.(privacy ? privacy.unmask(value) : value)
+      : undefined,
+    target.protocol,
     options.onUsage,
+    privacy,
   );
+  return privacy ? privacy.unmask(text) : text;
 }

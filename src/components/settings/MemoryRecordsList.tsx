@@ -1,3 +1,4 @@
+import { Button } from "../ui/Button.tsx";
 import {
   MEMORY_CONTENT_MAX_LENGTH,
   type MemoryRecord,
@@ -54,7 +55,7 @@ export default function MemoryRecordsList({
               {formatDate(record.createdAt)}
             </span>
           </div>
-          <button
+          <Button
             type="button"
             className="settings-memory-delete"
             aria-label={`删除记忆：${record.content.slice(0, 20)}`}
@@ -65,7 +66,7 @@ export default function MemoryRecordsList({
             }}
           >
             删除
-          </button>
+          </Button>
         </div>
       ))}
     </div>

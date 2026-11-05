@@ -1,4 +1,5 @@
 import { memo, useMemo } from "react";
+import UiIcon from "../UiIcon";
 import type { CanvasCollectionItem } from "../../domain/canvasItems";
 import {
   connectionGeometry,
@@ -108,7 +109,9 @@ function CanvasConnectionItem({
         tabIndex={visible && active ? 0 : -1}
         onClick={() => onDelete(edge.id)}
       >
-        <span className="connection-cut-icon" aria-hidden="true" />
+        <span className="connection-cut-icon" aria-hidden="true">
+          <UiIcon name="scissors" size={12} />
+        </span>
         <span className="connection-delete-label">剪开连线</span>
       </button>
     </div>

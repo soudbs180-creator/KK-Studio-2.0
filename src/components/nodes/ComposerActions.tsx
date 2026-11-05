@@ -1,3 +1,5 @@
+import UiIcon from "../UiIcon";
+
 interface ComposerActionsProps {
   expanded: boolean;
   onToggleExpanded: () => void;
@@ -15,12 +17,7 @@ export default function ComposerActions({
         aria-expanded={expanded}
         onClick={onToggleExpanded}
       >
-        <img
-          src={
-            expanded ? "/design/figma/collapse.svg" : "/design/figma/expand.svg"
-          }
-          alt=""
-        />
+        <UiIcon name={expanded ? "minimize-2" : "maximize-2"} size={16} />
       </button>
     </div>
   );

@@ -243,21 +243,23 @@
   height: var(--kk-icon-glyph-xxl);
 }
 
-/* Iconsax ships 1.5px Linear paths for every size. Override the presentation
-   attribute at the shared slot so a component cannot mix visual weights. */
-.kk-icon-slot[data-size="sm"] svg * {
-  stroke-width: var(--kk-icon-stroke-12-regular);
+/* Figma 02 weight is a CSS pixel on the 24px Lucide viewBox: default 1,
+   compact controls 1, title max 1.25, badge min 0.75. non-scaling-stroke
+   keeps that pixel width instead of shrinking with the rendered size. */
+.kk-icon-slot svg * {
+  vector-effect: non-scaling-stroke;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 .kk-icon-slot[data-size="xs"] svg * {
-  stroke-width: var(--kk-icon-stroke-12-regular);
+  stroke-width: calc(var(--kk-icon-stroke-12-medium) * 1px);
 }
-.kk-icon-slot[data-size="md"] svg * {
-  stroke-width: var(--kk-icon-stroke-16-regular);
-}
+.kk-icon-slot[data-size="sm"] svg *,
+.kk-icon-slot[data-size="md"] svg *,
 .kk-icon-slot[data-size="lg"] svg *,
 .kk-icon-slot[data-size="xl"] svg *,
 .kk-icon-slot[data-size="xxl"] svg * {
-  stroke-width: var(--kk-icon-stroke-standalone);
+  stroke-width: calc(var(--kk-icon-stroke-standalone) * 1px);
 }
 
 .kk-icon-hit {

@@ -48,34 +48,56 @@
   }
   .sidebar.is-collapsed {
     width: 72px;
-    padding: 16px 12px;
+    padding: 28px 12px 16px;
+  }
+  .sidebar.is-collapsed .primary-nav {
+    width: 44px;
+    justify-items: center;
+    gap: 8px;
   }
   .sidebar.is-collapsed .primary-nav button {
-    width: 48px;
+    width: 32px;
+    height: 32px;
+    min-height: 32px;
     margin: 0;
+    padding: 0;
+    border-radius: var(--kk-radius-control);
+    justify-content: center;
+  }
+  .sidebar.is-collapsed .primary-nav .sidebar-icon,
+  .sidebar.is-collapsed .sidebar-control .sidebar-icon,
+  .sidebar.is-collapsed .sidebar-settings .sidebar-icon {
+    width: 16px;
+    height: 16px;
   }
   .sidebar.is-collapsed .sidebar-toggle {
-    top: 24px;
-    left: 14px;
-    width: 44px;
-    height: 44px;
+    top: 34px;
+    left: 20px;
+    width: 32px;
+    height: 32px;
   }
   .sidebar.is-collapsed .sidebar-search,
   .sidebar.is-collapsed .sidebar-settings,
   .sidebar.is-collapsed .sidebar-account {
-    left: 14px;
-    width: 44px;
-    height: 44px;
+    left: 20px;
+    width: 32px;
+    height: 32px;
     display: grid;
     place-items: center;
+    color: var(--text-secondary);
+  }
+  .sidebar.is-collapsed .sidebar-account .logo,
+  .sidebar.is-collapsed .sidebar-account .logo img {
+    width: 16px;
+    height: 16px;
   }
   .sidebar.is-collapsed .sidebar-search {
-    bottom: 120px;
-  }
-  .sidebar.is-collapsed .sidebar-settings {
-    bottom: 68px;
+    bottom: 96px;
   }
   .sidebar.is-collapsed .sidebar-account {
+    bottom: 56px;
+  }
+  .sidebar.is-collapsed .sidebar-settings {
     bottom: 16px;
   }
   .sidebar.is-narrow:not(.is-collapsed) {
@@ -142,7 +164,7 @@
     place-items: center;
     order: initial;
   }
-  .canvas-hud .chat-reopen img {
+  .canvas-hud .chat-reopen :is(img, .ui-icon) {
     width: 20px;
     height: 20px;
     object-fit: contain;

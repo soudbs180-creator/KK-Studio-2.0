@@ -94,11 +94,11 @@ export interface SettingsNavGroup {
 
 export const SETTINGS_NAV_GROUPS: SettingsNavGroup[] = [
   {
-    label: "软件系统",
-    items: [SETTINGS_SECTIONS[0], SETTINGS_SECTIONS[1], SETTINGS_SECTIONS[2]],
+    label: "",
+    items: [SETTINGS_SECTIONS[0], SETTINGS_SECTIONS[1]],
   },
   {
-    label: "账号与用量",
+    label: "账户与用量",
     items: [SETTINGS_SECTIONS[3], SETTINGS_SECTIONS[4]],
   },
   {
@@ -113,6 +113,10 @@ export const SETTINGS_NAV_GROUPS: SettingsNavGroup[] = [
   {
     label: "安全与数据",
     items: [SETTINGS_SECTIONS[9], SETTINGS_SECTIONS[10]],
+  },
+  {
+    label: "",
+    items: [SETTINGS_SECTIONS[2]],
   },
 ];
 

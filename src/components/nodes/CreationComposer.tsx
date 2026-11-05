@@ -1,3 +1,7 @@
+import {
+  DirectorControlAnchor,
+  useNodeDirectorBridge,
+} from "./DirectorConsole.tsx";
 import { useMenuDismiss } from "./useCreationMenuDismiss.ts";
 import type { ModelSelection } from "../../features/models/index.ts";
 import {
@@ -28,7 +32,6 @@ import { useCanvasImageGeneration } from "../../features/creation/index.ts";
 import { composerReportedHeight } from "../canvas/composerLayout";
 import TokenizedComposerInput from "../composer/TokenizedComposerInput.tsx";
 import { useCanvasOperations } from "../../runtime/canvasCommandRuntime.tsx";
-
 function defaultCanvasParameters(video: boolean): CanvasParameters {
   return {
     ratio: video ? "16:9" : "1:1",
@@ -38,12 +41,11 @@ function defaultCanvasParameters(video: boolean): CanvasParameters {
     soundEnabled: false,
   };
 }
-
 function resolveMaxGenerationCount(usesCodex: boolean, max?: number): number {
   return usesCodex ? 4 : Math.min(8, max ?? 8);
 }
-
 interface CreationComposerProps {
+  nodeId?: string;
   footer?: ReactNode;
   parameters?: CanvasParameters;
   onParametersChange?: (parameters: CanvasParameters) => void;
@@ -94,6 +96,12 @@ export default function CreationComposer(props: CreationComposerProps) {
     defaultCanvasParameters(video),
   );
   const activeParams = parameters ?? localParameters;
+  useNodeDirectorBridge(
+    props.nodeId,
+    activeParams,
+    setLocalParameters,
+    onParametersChange,
+  );
   const { count, soundEnabled } = activeParams;
   function updateParameters(patch: Partial<CanvasParameters>): void {
     const next = { ...activeParams, ...patch };
@@ -228,6 +236,13 @@ export default function CreationComposer(props: CreationComposerProps) {
             setMenu("");
           }}
           onConfigure={onConfigure}
+        />
+        <DirectorControlAnchor
+          busy={busy}
+          open={menu === "director"}
+          value={activeParams.optics}
+          onToggle={() => setMenu(menu === "director" ? "" : "director")}
+          onChange={(optics) => updateParameters({ optics })}
         />
         <CreationParameterControl
           disabled={busy}

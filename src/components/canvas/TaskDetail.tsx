@@ -1,4 +1,5 @@
 import { useEffect, useRef, type RefObject } from "react";
+import UiIcon from "../UiIcon";
 import { useDismissible } from "../useDismissible";
 import type { PrototypeTask } from "./TaskPanelPopover";
 import type { CreationTask } from "../../features/creation/index.ts";
@@ -47,13 +48,7 @@ export default function TaskDetail({
       <div className="task-detail-heading">
         <span>任务详情</span>
         <button type="button" aria-label="关闭任务详情" onClick={close}>
-          <img
-            src="/design/figma/task-close.svg"
-            width={12}
-            height={12}
-            alt=""
-            draggable={false}
-          />
+          <UiIcon name="close" size={12} />
         </button>
       </div>
       <div className="task-detail-body">

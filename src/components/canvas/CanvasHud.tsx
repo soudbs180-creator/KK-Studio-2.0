@@ -1,4 +1,5 @@
 import { useState, type ReactNode } from "react";
+import UiIcon from "../UiIcon";
 import TaskPanel from "./TaskPanel";
 import type { CreationTask } from "../../features/creation/index.ts";
 import "../../styles/canvas-hud.css";
@@ -87,13 +88,7 @@ export default function CanvasHud({
           title="打开对话"
           onClick={onChat}
         >
-          <img
-            src="/design/figma/chat-close.svg"
-            width={20}
-            height={20}
-            alt=""
-            draggable={false}
-          />
+          <UiIcon name="message-square" size={28} />
         </button>
       </div>
     </div>

@@ -29,7 +29,7 @@
 | FEAT-001 | 创作画布（节点/连线/编辑） | REAL（真实可用） | [卡片](feat-001-canvas-workbench.md) | T2, UI-004, TASK-UI-006, TASK-CANVAS-KAWORKAI-001, TASK-UI-011, TASK-CANVAS-SYNC-20261014, TASK-CANVAS-WIDE-PORT-20261014, TASK-222-ACTIONS-20261014, TASK-223-ACTIONS-20261014, TASK-CODEX-HOME-20261015, TASK-CANVAS-PERF-20261024 |
 | FEAT-036 | 画布图片对比 | PARTIAL（部分可用） | [卡片](feat-036-image-compare.md) | TASK-COMPARE-001, TASK-COMPARE-002, UI-004 |
 | FEAT-039 | 画布喜欢、标签与分类搜索 | PARTIAL（部分可用） | [卡片](feat-039-canvas-collections.md) | TASK-UI-CONSOLIDATE-20261014, TASK-PROTOCOL-CLI-20261014, TASK-222-ACTIONS-20261014, TASK-223-ACTIONS-20261014 |
-| FEAT-043 | 进阶画布操作 | PARTIAL（部分可用） | [卡片](feat-043-advanced-canvas.md) | TASK-E2E-WIRING-20261104 |
+| FEAT-043 | 进阶画布操作 | PARTIAL（部分可用） | [卡片](feat-043-advanced-canvas.md) | TASK-E2E-WIRING-20261104, TASK-DEEP-WATER-20261105 |
 
 ## 创作生成
 
@@ -50,7 +50,7 @@
 | FEAT-040 | 扩图 | REAL（真实可用） | [卡片](feat-040-outpaint.md) | TASK-MOD-P6-OUTPAINT, TASK-COMFY-IMAGE-20261103 |
 | FEAT-041 | 高清修复 | REAL（真实可用） | [卡片](feat-041-upscale.md) | TASK-MOD-P6-UPSCALE, TASK-COMFY-IMAGE-20261103 |
 | FEAT-042 | 图层拆分 | REAL（真实可用） | [卡片](feat-042-layer-split.md) | TASK-MOD-P6-LAYER-SPLIT, TASK-COMFY-IMAGE-20261103 |
-| FEAT-044 | 分镜、光学与逐帧拉片 | PARTIAL（部分可用） | [卡片](feat-044-storyboard-optics-shots.md) | TASK-E2E-WIRING-20261104 |
+| FEAT-044 | 分镜、光学与逐帧拉片 | PARTIAL（部分可用） | [卡片](feat-044-storyboard-optics-shots.md) | TASK-E2E-WIRING-20261104, TASK-DEEP-WATER-20261105 |
 
 ## 智能能力
 

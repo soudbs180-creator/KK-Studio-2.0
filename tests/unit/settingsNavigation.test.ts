@@ -12,10 +12,11 @@ test("settings categories have distinct responsibilities and no duplicate menu e
       group.items.map((item) => item.label),
     ]),
     [
-      ["软件系统", ["通用设置", "快捷键管理", "软件更新"]],
-      ["账号与用量", ["个人主页", "套餐与积分"]],
+      ["", ["通用设置", "快捷键管理"]],
+      ["账户与用量", ["个人主页", "套餐与积分"]],
       ["核心功能", ["模型接入", "记忆管理", "扩展与 MCP", "网络与代理"]],
       ["安全与数据", ["数据管理", "安全中心"]],
+      ["", ["软件更新"]],
     ],
   );
   const ids = SETTINGS_NAV_GROUPS.flatMap((group) =>

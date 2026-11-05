@@ -1,5 +1,53 @@
 use super::*;
 
+pub(super) fn blueprint(value: &Value) -> Result<(), String> {
+    shape(
+        value,
+        "blueprint",
+        &["kind", "paths", "summary", "parentId"],
+        &["kind", "paths", "summary"],
+    )?;
+    enumeration(
+        value,
+        "kind",
+        &[
+            "ui", "service", "worker", "feature", "data", "library", "external",
+        ],
+    )?;
+    text(value, "summary", 0, 3000)?;
+    text(value, "parentId", 1, 160)?;
+    let paths = array(value, "paths")?;
+    if paths.len() > 100
+        || paths
+            .iter()
+            .any(|p| !p.as_str().is_some_and(|s| s.encode_utf16().count() <= 1000))
+    {
+        return Err(invalid("blueprint.paths"));
+    }
+    Ok(())
+}
+
+pub(super) fn comments(value: &Value) -> Result<(), String> {
+    let rows = value.as_array().ok_or_else(|| invalid("comments"))?;
+    if rows.len() > 100 {
+        return Err(invalid("comments"));
+    }
+    for row in rows {
+        shape(
+            row,
+            "comment",
+            &["id", "text", "resolved"],
+            &["id", "text", "resolved"],
+        )?;
+        text(row, "id", 1, 160)?;
+        text(row, "text", 1, 2000)?;
+        if !row["resolved"].is_boolean() {
+            return Err(invalid("comments.resolved"));
+        }
+    }
+    Ok(())
+}
+
 pub(super) fn presentation(value: &Value) -> Result<(), String> {
     shape(
         value,
@@ -24,12 +72,30 @@ pub(super) fn optics(value: &Value) -> Result<(), String> {
             "focalDistance",
             "cameraBody",
             "depthOfField",
+            "shotScale",
+            "cameraAngle",
+            "azimuthDeg",
+            "elevationDeg",
         ],
         &["lensMm", "aperture"],
     )?;
     number(value, "lensMm", 4.0, 2000.0, false)?;
     texts(value, &[("focalDistance", 80), ("cameraBody", 120)])?;
     enumeration(value, "depthOfField", &["natural", "shallow", "deep"])?;
+    enumeration(value, "shotScale", &["ECU", "CU", "MCU", "MS", "WS", "EWS"])?;
+    enumeration(
+        value,
+        "cameraAngle",
+        &[
+            "bird-eye",
+            "high-angle",
+            "eye-level",
+            "low-angle",
+            "dutch-angle",
+        ],
+    )?;
+    number(value, "azimuthDeg", -180.0, 180.0, false)?;
+    number(value, "elevationDeg", -90.0, 90.0, false)?;
     let aperture = value["aperture"]
         .as_str()
         .ok_or_else(|| invalid("optics.aperture"))?;
