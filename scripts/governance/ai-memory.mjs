@@ -52,6 +52,27 @@ function readLatestMemory(domainArg) {
   );
 }
 
+function writeMemory(domainArg, title, items, agent = "AI Agent") {
+  const targetPath = resolveTargetFile(domainArg);
+  if (!fs.existsSync(targetPath)) {
+    console.error(`[AI-MEMORY] 未找到该领域的思维文件: ${targetPath}`);
+    process.exit(1);
+  }
+  const now = new Date();
+  const timeStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")} ${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+  const block = `\n## [${timeStr}] ${title}\n- **执行 Agent**：${agent}\n${items.map((it) => `- ${it}`).join("\n")}\n`;
+  const content = fs.readFileSync(targetPath, "utf8");
+  const dividerIdx = content.indexOf("\n---\n");
+  if (dividerIdx !== -1) {
+    const head = content.slice(0, dividerIdx + 5);
+    const rest = content.slice(dividerIdx + 5);
+    fs.writeFileSync(targetPath, head + block + rest, "utf8");
+  } else {
+    fs.writeFileSync(targetPath, block + content, "utf8");
+  }
+  console.log(`[AI-MEMORY] 成功写入 [${(domainArg || "GLOBAL").toUpperCase()}] 思维流（置于最新头部）。`);
+}
+
 function checkMemoryHealth() {
   if (!fs.existsSync(memoryDir)) {
     console.error(`[AI-MEMORY] FAIL: 缺少必要目录 ${memoryDir}`);
@@ -68,12 +89,16 @@ function checkMemoryHealth() {
 }
 
 const command = process.argv[2] || "read";
-const domain =
-  process.argv[3] ||
-  (command !== "read" && command !== "check" ? command : "global");
 
 if (command === "check" || command === "verify") {
   checkMemoryHealth();
+} else if (command === "write" || command === "append") {
+  const domain = process.argv[3] || "global";
+  const title = process.argv[4] || "阶段思维留痕";
+  const agent = process.argv[5] || "AI Agent";
+  const items = process.argv.slice(6);
+  writeMemory(domain, title, items.length > 0 ? items : ["阶段性进展已沉淀"], agent);
 } else {
+  const domain = process.argv[3] || (command !== "read" ? command : "global");
   readLatestMemory(domain);
 }

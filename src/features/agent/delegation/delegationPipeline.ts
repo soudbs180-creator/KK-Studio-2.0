@@ -82,6 +82,34 @@ export const DEFAULT_ROLE_PRESETS: Record<string, SubagentRolePreset> = {
     maxTurns: 10,
     timeoutMs: 30000,
   },
+  storyboard_writer: {
+    role: "storyboard_writer",
+    defaultTaskType: "storyboard_analysis",
+    description:
+      "Parse novel/script text, break down scenes and shots, and enforce continuity constraints.",
+    defaultAllowedTools: [
+      "parse_script_scenes",
+      "check_continuity",
+      "estimate_dialogue_timing",
+      "extract_character_cards",
+    ],
+    maxTurns: 15,
+    timeoutMs: 45000,
+  },
+  storyboard_artist: {
+    role: "storyboard_artist",
+    defaultTaskType: "storyboard_art",
+    description:
+      "Generate and iterate shot visuals, reference bindings, and style consistency across shots.",
+    defaultAllowedTools: [
+      "generate_shot_image",
+      "bind_reference_assets",
+      "inpaint_shot_detail",
+      "render_storyboard_card",
+    ],
+    maxTurns: 15,
+    timeoutMs: 60000,
+  },
 };
 
 export interface DelegationPipelineOptions {

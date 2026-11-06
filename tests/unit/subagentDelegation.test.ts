@@ -453,3 +453,21 @@ test("DelegationPipeline supports task cancellation", async () => {
   assert.match(res.error || "", /Cancelled by user/);
   assert.equal(pipeline.getActiveTaskCount(), 0);
 });
+
+test("DelegationPipeline exposes creative studio presets for storyboard writer and artist", () => {
+  const pipeline = new DelegationPipeline();
+  const writer = pipeline.getPreset("storyboard_writer");
+  const artist = pipeline.getPreset("storyboard_artist");
+
+  assert.ok(writer, "storyboard_writer preset should exist");
+  assert.equal(writer.role, "storyboard_writer");
+  assert.equal(writer.defaultTaskType, "storyboard_analysis");
+  assert.ok(writer.defaultAllowedTools.includes("parse_script_scenes"));
+  assert.ok(writer.defaultAllowedTools.includes("check_continuity"));
+
+  assert.ok(artist, "storyboard_artist preset should exist");
+  assert.equal(artist.role, "storyboard_artist");
+  assert.equal(artist.defaultTaskType, "storyboard_art");
+  assert.ok(artist.defaultAllowedTools.includes("generate_shot_image"));
+  assert.ok(artist.defaultAllowedTools.includes("bind_reference_assets"));
+});

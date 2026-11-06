@@ -122,3 +122,15 @@ export {
 } from "./modelSelection.ts";
 export type { ModelSelection, PickerMemory } from "./modelSelection.ts";
 export { useImageModelCapabilities } from "./useImageModelCapabilities.ts";
+
+export {
+  evaluateHardwareTier,
+  evaluateVramWatermarkRisk,
+  scheduleAdaptiveExecution,
+  resolveOptimalModel,
+} from "./hardwareAdaptiveScheduler.ts";
+export type {
+  HardwareCapabilityTier,
+  TaskIntent,
+  AdaptiveSchedulingResult,
+} from "./hardwareAdaptiveScheduler.ts";

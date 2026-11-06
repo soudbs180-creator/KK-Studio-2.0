@@ -31,3 +31,12 @@ export {
   executeLayerSplitCapability,
 } from "./layerSplitCapability.ts";
 export { createImageCapabilityRegistry } from "./imageCapabilityRegistry.ts";
+
+export { UniversalExternalAppBridge } from "./externalBridge.ts";
+export type {
+  ExternalSoftwareType,
+  ExternalActionType,
+  ExternalActionRequest,
+  ExternalActionResult,
+  SoftwareInstallationProfile,
+} from "./externalBridge.ts";

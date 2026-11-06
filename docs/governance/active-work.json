@@ -1,0 +1,90 @@
+{
+  "claims": [
+    {
+      "agent": "Codex",
+      "task": "UI-004",
+      "taskId": "UI-004",
+      "track": "UI",
+      "feature": "canvas-task",
+      "status": "PARTIAL",
+      "progress": "统一任务列表(437:64052)与详情(1164:16172)关闭图标16px，三宽度断言全部PASS；native 2.1.66官方重建完成；等待逐页同状态MCP对照",
+      "files": [
+        "src/components/canvas/TaskDetail.tsx",
+        "src/components/canvas/TaskPanelPopover.tsx",
+        "src/styles/conversation-panel.css",
+        "src/styles/composer.css"
+      ],
+      "worktree": "D:/kk-studio/KK-Studio-2.0",
+      "startedAt": "2026-11-06T18:15:00.000Z",
+      "updatedAt": "2026-11-06T11:04:54.001Z",
+      "breakpoint": {
+        "reason": "PARTIAL: 逐页同状态视觉核对中，Figma缺陷先修源再同步，补全量verify与正式独审",
+        "pending": [
+          "逐页同状态视觉核对",
+          "补全量verify与Native窗口测试",
+          "正式SHA独审"
+        ],
+        "testCmd": "npm run rules:check && npm run tokens:check && npm run ui:check"
+      }
+    },
+    {
+      "agent": "Cursor",
+      "task": "TASK-TASKSTATE-002",
+      "taskId": "TASK-TASKSTATE-002",
+      "track": "LOGIC",
+      "feature": "native-task-cost",
+      "status": "READY_FOR_PICKUP",
+      "progress": "原生任务归档消费宿主 costReceipt，单测 67 项通过，tsc/eslint 通过",
+      "files": [
+        "src/features/creation/nativeTaskHost.ts",
+        "tests/unit/taskCostArchive.test.ts"
+      ],
+      "worktree": "D:/kk-studio/KK-Studio-2.0",
+      "startedAt": "2026-11-06T18:10:00.000Z",
+      "updatedAt": "2026-11-06T18:10:00.000Z",
+      "breakpoint": {
+        "reason": "READY_FOR_PICKUP: 原生成本归档逻辑已闭环，等待真实账单/扣费验收接手",
+        "pending": [
+          "Desktop 扣费验收与账本状态回写"
+        ],
+        "testCmd": "node --import ./tests/support/public-entry-loader.mjs --test tests/unit/taskCostArchive.test.ts"
+      }
+    },
+    {
+      "agent": "Antigravity",
+      "task": "TASK-SUPER-AGI-001",
+      "taskId": "TASK-SUPER-AGI-001",
+      "track": "LOGIC",
+      "feature": "super-agi-terminal",
+      "status": "DONE",
+      "progress": "超级 AGI 终端统合架构全量落地：硬件自适应模型调度器、外部专业软件无感 Bridge、多 Agent 正交分轨与硬碰撞阻断门禁，25 项单测全部全绿，tsc/eslint/rules:check 0 违规",
+      "files": [
+        "src/features/models/hardwareAdaptiveScheduler.ts",
+        "src/features/capabilities/externalBridge.ts",
+        "src/features/agent/delegation/delegationPipeline.ts",
+        "src/features/agent/index.ts",
+        "src/features/models/index.ts",
+        "src/features/capabilities/index.ts",
+        "scripts/governance/agent-radar.mjs",
+        "scripts/governance/ai-memory.mjs",
+        "scripts/governance/check-agent-collisions.mjs",
+        "tests/unit/hardwareAdaptiveScheduler.test.ts",
+        "tests/unit/externalBridge.test.ts",
+        "tests/unit/subagentDelegation.test.ts",
+        "docs/architecture/AIG-SWARM-RELAY-ARCHITECTURE.md",
+        "docs/architecture/SUPER-AGI-TERMINAL-HARDWARE-ADAPTATION.md",
+        "docs/architecture/UNIVERSAL-EXTERNAL-APP-BRIDGE.md",
+        "docs/governance/ai-memory/engine-runtime.md",
+        "docs/governance/ai-memory/mcp-gateway.md"
+      ],
+      "worktree": "D:/kk-studio/KK-Studio-2.0",
+      "startedAt": "2026-11-06T19:30:00.000Z",
+      "updatedAt": "2026-11-06T19:41:00.000Z",
+      "breakpoint": {
+        "reason": "DONE: 核心调度器、外部专业软件Bridge、碰撞阻断门禁与共享思维链全部闭环并通过门禁",
+        "pending": [],
+        "testCmd": "npm run typecheck && npm run rules:check && node --import ./tests/support/public-entry-loader.mjs --test tests/unit/hardwareAdaptiveScheduler.test.ts tests/unit/externalBridge.test.ts tests/unit/subagentDelegation.test.ts"
+      }
+    }
+  ]
+}

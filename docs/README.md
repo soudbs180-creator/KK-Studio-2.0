@@ -58,6 +58,9 @@ Zod 运行时安全副本升级见 [ADR-034](architecture/adr/ADR-034-zod-securi
 | [ARCHITECTURE](architecture/ARCHITECTURE.md)                                    | 进程模型、模块依赖、数据流                  |
 | [DATA-STORAGE](architecture/DATA-STORAGE.md)                                    | 存储 schema、生命周期、迁移                 |
 | [DATA-CLASSIFICATION](architecture/DATA-CLASSIFICATION.md)                      | 数据分级与处理约束                          |
+| [AIG-SWARM-RELAY-ARCHITECTURE](architecture/AIG-SWARM-RELAY-ARCHITECTURE.md)   | AIG 蜂群自驱接力与正交分轨协同架构规范      |
+| [UNIVERSAL-EXTERNAL-APP-BRIDGE](architecture/UNIVERSAL-EXTERNAL-APP-BRIDGE.md) | 外部成熟专业软件侧车与微型 MCP 架构规范    |
+| [SUPER-AGI-TERMINAL-HARDWARE-ADAPTATION](architecture/SUPER-AGI-TERMINAL-HARDWARE-ADAPTATION.md) | 超级 AGI 终端与本地模型硬件动态调优架构规范 |
 | [GENERATION-PLATFORM](architecture/GENERATION-PLATFORM.md)                      | 生成平台接入                                |
 | [LEGACY-MIGRATION](architecture/LEGACY-MIGRATION.md)                            | 旧工程能力 keep/migrate/rebuild/reject 清单 |
 | `architecture/adr/`                                                             | 架构决策记录                                |

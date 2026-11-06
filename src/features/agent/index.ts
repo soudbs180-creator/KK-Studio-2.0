@@ -213,8 +213,6 @@ export { default as UseAgentComposerDraft } from "./useAgentComposerDraft.ts";
 export { useAgentDraftState } from "./useAgentComposerDraft.ts";
 export type { AgentDraftState } from "./useAgentComposerDraft.ts";
 
-export type { SubagentFoldbackResult } from "./delegation/foldbackContract.ts";
-
 // Milestone 3: Router + Worker Multi-Agent Engine, Scoped Mandates & PreInvocation Security
 export { AgentToolRuntime } from "./agentToolRuntime.ts";
 export type { AgentOpExecutionContext } from "./agentToolRuntime.ts";
@@ -287,3 +285,24 @@ export type {
   StatuslinePayload,
   RichStatuslinePayload,
 } from "./statuslineIpc.ts";
+export {
+  DelegationPipeline,
+  DEFAULT_ROLE_PRESETS,
+  SubagentSandbox,
+  truncateExecutiveSummary,
+  createFoldbackResult,
+  isSubagentFoldbackResult,
+} from "./delegation/index.ts";
+export type {
+  SubagentRolePreset,
+  DelegationPipelineOptions,
+  PipelineMetrics,
+  PipelineEvent,
+  SubagentFoldbackResult,
+  SubagentTaskBrief,
+  SubagentTaskType,
+  SubagentStatus,
+  SubagentToolDefinition,
+  SubagentTurnHandler,
+  SandboxExecutionOptions,
+} from "./delegation/index.ts";
