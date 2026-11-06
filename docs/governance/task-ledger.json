@@ -4612,9 +4612,14 @@
     "worktree": "D:/kk-studio/KK-Studio-2.0",
     "affectedModules": [
       "src/features/creation/taskState.ts",
+      "src/features/creation/taskCostArchive.ts",
+      "src/features/creation/nativeTaskHost.ts",
+      "src/features/creation/textGeneration.ts",
+      "src/features/creation/useTaskExecution.ts",
       "src/features/creation/model.ts",
-      "src/features/creation/provider adapters",
-      "tests/unit"
+      "tests/unit/taskCostArchive.test.ts",
+      "tests/unit/providerCostReceipt.test.ts",
+      "tests/unit/taskCostReceipt.test.ts"
     ],
     "status": "PARTIAL",
     "evidence": [
@@ -4625,18 +4630,20 @@
       "tests/unit/taskCostReceipt.test.ts",
       "tests/unit/taskState.test.ts",
       "docs/evidence/2026-10-11-taskstate-docs-closeout/full-check-receipt.json",
-      "docs/changes/2026-10-12-p1-audit-closeout/verification.md"
+      "docs/changes/2026-10-12-p1-audit-closeout/verification.md",
+      "docs/changes/2026-11-06-task-cost-archive/verification.md",
+      "docs/changes/2026-11-06-provider-cost-receipt/verification.md"
     ],
-    "verification": "有界报价回执 schema、任务/幂等身份校验、重复与冲突保护和快照恢复通过；但当前生产 Provider→task 归档路径没有消费 applyTaskCostReceipt，只有 helper/schema 与 fixture 测试。真实 Provider 报价回执和提交后 exact-SHA 正式审查仍未取得，保持 PARTIAL。",
-    "updated": "2026-10-12",
+    "verification": "2026-11-06：原生归档与文本发布已消费显式 costReceipt（2a03cd0e、3d7cc573）。main@0ef0064e 复跑 taskCostArchive、providerCostReceipt、taskCostReceipt 共 15 项通过。宿主是注入的桌面 invoke，不是已安装 Desktop，也没有真实供应商扣费。合法报价写入任务；冲突、错任务和 fixture 不覆盖、不换成美元账单；token 用量不是价格。状态保持 PARTIAL。",
+    "updated": "2026-11-06",
     "verificationResult": "PARTIAL",
     "requirementRefs": ["ledger:TASK-TASKSTATE-002"],
     "featureIds": ["FEAT-031"],
     "priority": "P1",
-    "priorityRationale": "当前治理或验证阻断项",
+    "priorityRationale": "真实供应商账单与已安装 Desktop 扣费仍未验收",
     "displayStatus": "进行中",
-    "nextAction": "在统一 Provider→task 归档边界接入 applyTaskCostReceipt 并补调用路径测试；随后由 provider adapter owner 接入真实回执并保存 receipt/source/currency/identity 证据，继续保持 fixture 与真实账单分离。",
-    "lastVerified": "2026-10-12",
+    "nextAction": "接入真实供应商账单回执，并在已安装 Desktop 上验收扣费。注入宿主和 fixture 不能升级为 DONE。",
+    "lastVerified": "2026-11-06",
     "ownerRole": "repository-maintainer"
   },
   {

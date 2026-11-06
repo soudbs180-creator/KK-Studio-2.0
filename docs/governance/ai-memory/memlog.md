@@ -5,6 +5,20 @@
 
 ---
 
+## [2026-11-06 21:05] TASK-TASKSTATE-002 账本回写
+- **执行 Agent**：Cursor
+- 信箱交接已读。复跑成本回执单测 15 项通过：显式报价写入任务，冲突、错任务、fixture 和 token 用量不会变成美元账单。
+- 桌面边界是注入的 task_host_list，不是已安装 Desktop，没有真实供应商扣费。
+- 账本旧结论「归档路径未消费报价」已改为上述事实。TASK-TASKSTATE-002 与 FEAT-031 保持 PARTIAL。
+- 未做：真实账单、已安装 Desktop 扣费。锁已交回待接力。
+
+## [2026-11-06 20:55] TASK-TASKSTATE-002 任务接力激活
+- **执行 Agent**：Cursor
+- **接力 Agent**：Cursor (从 Cursor 的 READY_FOR_PICKUP 断点无缝续做)
+- **先前进展**：原生任务归档消费宿主 costReceipt，单测 67 项通过，tsc/eslint 通过
+- **接力待办**：Desktop 扣费验收与账本状态回写
+- **建议验证命令**：`node --import ./tests/support/public-entry-loader.mjs --test tests/unit/taskCostArchive.test.ts`
+
 ## [2026-11-06 19:40] TASK-SUPER-AGI-001 超级 AGI 终端与硬件+外部专业工具无感调度全量闭环
 - **执行 Agent**：Antigravity (Gemini 3.8 Flash High)
 - 完成本地硬件自适应模型调度器 (src/features/models/hardwareAdaptiveScheduler.ts)，打通 local_hardware.rs 探针，显存水位防 OOM 自动保护，单测 10 项通过

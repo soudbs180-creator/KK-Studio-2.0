@@ -109,7 +109,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-ORCH-003 | 编排器驱动生成执行与计划门禁 | TODO | 未完成 | P2 | TASK-ORCH-001, BACKEND-MEDIA-001 | root | 补充负责人、优先级、分支和下一步验收证据 |
 | TASK-CANVAS-001 | 画布交付契约与当轮产物收集 | PARTIAL | 进行中 | P2 | TASK-ORCH-001 | root | 补充负责人、优先级、分支和下一步验收证据 |
 | TASK-TASKSTATE-001 | 统一任务态契约定稿 | PARTIAL | 进行中 | P2 | TASK-AGENT-001 | root | 提交后绑定 exact SHA 完成正式独立复审；随后补真实 Provider/每平台运行证据，不能用 fixture 或示例单价升级 DONE。 |
-| TASK-TASKSTATE-002 | 供应商成本报价回执接入 | PARTIAL | 进行中 | P1 | TASK-TASKSTATE-001 | root | 在统一 Provider→task 归档边界接入 applyTaskCostReceipt 并补调用路径测试；随后由 provider adapter owner 接入真实回执并保存 receipt/source/currency/identity 证据，继续保持 fixture 与真实账单分离。 |
+| TASK-TASKSTATE-002 | 供应商成本报价回执接入 | PARTIAL | 进行中 | P1 | TASK-TASKSTATE-001 | root | 接入真实供应商账单回执，并在已安装 Desktop 上验收扣费。注入宿主和 fixture 不能升级为 DONE。 |
 | TASK-PROV-002 | 多供应商接入与多目标配置（Provider Connectivity） | DONE | 已完成 | P3 | none | root | 保留当前证据，合并后按原验收范围回读主线；分支 feat/TASK-PROV-002-provider-connectivity 已通过 PR#16 a89792ad 集成 main，保留作历史追溯，禁止再次合并（会以旧内容回滚主线） |
 | TASK-COMPARE-001 | 画布图片对比操作 | DONE | 已完成 | P3 | none | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-COMPARE-002 | 对比控件窄屏命中区主线回归 | DONE | 已完成 | P3 | TASK-COMPARE-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
@@ -2197,19 +2197,19 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Goal: 把可验证的供应商报价或账单回执接入统一任务态，避免成本长期停留在未知状态
 - Scope: src/features/creation/taskState.ts, src/features/creation/model.ts, provider adapters, tests, docs/changes/2026-10-03-incomplete-tasks
 - Display status: 进行中
-- Priority: P1 — 当前治理或验证阻断项
+- Priority: P1 — 真实供应商账单与已安装 Desktop 扣费仍未验收
 - Requirement refs: ledger:TASK-TASKSTATE-002
 - Feature IDs: FEAT-031
 - Owner role: repository-maintainer
 - Acceptance: 供应商回执中的成本字段经过 schema 与非负有限边界校验; 任务快照保留报价来源、币种和回执身份，未知/缺失报价仍安全显示未知; Provider fixture 与真实运行证据分别记录，不以示例单价代替实际账单
 - Branch: `main`
 - Worktree: `D:/kk-studio/KK-Studio-2.0`
-- Modules: src/features/creation/taskState.ts, src/features/creation/model.ts, src/features/creation/provider adapters, tests/unit
-- Verification: PARTIAL — 有界报价回执 schema、任务/幂等身份校验、重复与冲突保护和快照恢复通过；但当前生产 Provider→task 归档路径没有消费 applyTaskCostReceipt，只有 helper/schema 与 fixture 测试。真实 Provider 报价回执和提交后 exact-SHA 正式审查仍未取得，保持 PARTIAL。
-- Evidence: [docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-intent.md](../../docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-intent.md), [docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-spec.md](../../docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-spec.md), [docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-verification.md](../../docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-verification.md), [docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-review.md](../../docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-review.md), [tests/unit/taskCostReceipt.test.ts](../../tests/unit/taskCostReceipt.test.ts), [tests/unit/taskState.test.ts](../../tests/unit/taskState.test.ts), [docs/evidence/2026-10-11-taskstate-docs-closeout/full-check-receipt.json](../../docs/evidence/2026-10-11-taskstate-docs-closeout/full-check-receipt.json), [docs/changes/2026-10-12-p1-audit-closeout/verification.md](../../docs/changes/2026-10-12-p1-audit-closeout/verification.md)
-- Next action: 在统一 Provider→task 归档边界接入 applyTaskCostReceipt 并补调用路径测试；随后由 provider adapter owner 接入真实回执并保存 receipt/source/currency/identity 证据，继续保持 fixture 与真实账单分离。
-- Last verified: 2026-10-12
-- Updated: 2026-10-12
+- Modules: src/features/creation/taskState.ts, src/features/creation/taskCostArchive.ts, src/features/creation/nativeTaskHost.ts, src/features/creation/textGeneration.ts, src/features/creation/useTaskExecution.ts, src/features/creation/model.ts, tests/unit/taskCostArchive.test.ts, tests/unit/providerCostReceipt.test.ts, tests/unit/taskCostReceipt.test.ts
+- Verification: PARTIAL — 2026-11-06：原生归档与文本发布已消费显式 costReceipt（2a03cd0e、3d7cc573）。main@0ef0064e 复跑 taskCostArchive、providerCostReceipt、taskCostReceipt 共 15 项通过。宿主是注入的桌面 invoke，不是已安装 Desktop，也没有真实供应商扣费。合法报价写入任务；冲突、错任务和 fixture 不覆盖、不换成美元账单；token 用量不是价格。状态保持 PARTIAL。
+- Evidence: [docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-intent.md](../../docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-intent.md), [docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-spec.md](../../docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-spec.md), [docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-verification.md](../../docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-verification.md), [docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-review.md](../../docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-review.md), [tests/unit/taskCostReceipt.test.ts](../../tests/unit/taskCostReceipt.test.ts), [tests/unit/taskState.test.ts](../../tests/unit/taskState.test.ts), [docs/evidence/2026-10-11-taskstate-docs-closeout/full-check-receipt.json](../../docs/evidence/2026-10-11-taskstate-docs-closeout/full-check-receipt.json), [docs/changes/2026-10-12-p1-audit-closeout/verification.md](../../docs/changes/2026-10-12-p1-audit-closeout/verification.md), [docs/changes/2026-11-06-task-cost-archive/verification.md](../../docs/changes/2026-11-06-task-cost-archive/verification.md), [docs/changes/2026-11-06-provider-cost-receipt/verification.md](../../docs/changes/2026-11-06-provider-cost-receipt/verification.md)
+- Next action: 接入真实供应商账单回执，并在已安装 Desktop 上验收扣费。注入宿主和 fixture 不能升级为 DONE。
+- Last verified: 2026-11-06
+- Updated: 2026-11-06
 
 ## TASK-PROV-002 — 多供应商接入与多目标配置（Provider Connectivity）
 

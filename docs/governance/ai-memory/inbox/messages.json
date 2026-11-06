@@ -16,7 +16,7 @@
           "Desktop 扣费验收与账本状态回写"
         ]
       },
-      "read": false
+      "read": true
     }
   ]
 }

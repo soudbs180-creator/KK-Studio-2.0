@@ -34,18 +34,18 @@
       "track": "LOGIC",
       "feature": "native-task-cost",
       "status": "READY_FOR_PICKUP",
-      "progress": "原生任务归档消费宿主 costReceipt，单测 67 项通过，tsc/eslint 通过",
+      "progress": "2026-11-06 注入桌面宿主复验 15 项通过，账本回写为 PARTIAL。已安装 Desktop 与真实供应商扣费未跑。",
       "files": [
         "src/features/creation/nativeTaskHost.ts",
         "tests/unit/taskCostArchive.test.ts"
       ],
       "worktree": "D:/kk-studio/KK-Studio-2.0",
       "startedAt": "2026-11-06T18:10:00.000Z",
-      "updatedAt": "2026-11-06T18:10:00.000Z",
+      "updatedAt": "2026-11-06T12:55:08.457Z",
       "breakpoint": {
-        "reason": "READY_FOR_PICKUP: 原生成本归档逻辑已闭环，等待真实账单/扣费验收接手",
+        "reason": "READY_FOR_PICKUP: 注入宿主与账本已对齐，真实账单和已安装 Desktop 扣费仍开放",
         "pending": [
-          "Desktop 扣费验收与账本状态回写"
+          "真实供应商账单与已安装 Desktop 扣费"
         ],
         "testCmd": "node --import ./tests/support/public-entry-loader.mjs --test tests/unit/taskCostArchive.test.ts"
       }
