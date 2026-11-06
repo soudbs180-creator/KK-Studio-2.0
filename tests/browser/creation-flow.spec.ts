@@ -1,3 +1,4 @@
+import { selectHomeConversation } from "./helpers";
 import { expect, test, type Page } from "@playwright/test";
 import { selectHomeApiModel } from "./helpers";
 import {
@@ -74,6 +75,7 @@ test("首页权限模式询问可取消确认且输入仍保留", async ({ page 
   await selectHomeApiModel(page);
   const prompt = "需要用户确认才创建的项目";
   await page.getByLabel("创作提示词").fill(prompt);
+  await selectHomeConversation(page);
   await page.getByRole("button", { name: /当前模式：自动/ }).click();
   await page
     .locator(".start-mode-popover")
@@ -82,6 +84,7 @@ test("首页权限模式询问可取消确认且输入仍保留", async ({ page 
   await expect(
     page.getByRole("button", { name: /当前模式：询问/ }),
   ).toBeVisible();
+  await selectHomeApiModel(page);
   await page.getByRole("button", { name: "开始创建项目" }).click();
   await expect(page.getByRole("group", { name: "确认创建项目" })).toBeVisible();
   await page.getByRole("button", { name: "取消", exact: true }).click();
@@ -89,6 +92,7 @@ test("首页权限模式询问可取消确认且输入仍保留", async ({ page 
 });
 
 test("输入栏扩展弹层先列内置 Skill，再可进入 Skill 目录", async ({ page }) => {
+  await selectHomeConversation(page);
   // Contract since the local Skill registry: the app seeds built-in skills on
   // first open, so the start composer offers them directly instead of an empty
   // state. Catalog management still lives behind the browse entry.

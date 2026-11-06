@@ -147,7 +147,7 @@ for (const width of [390, 1099, 1920]) {
     );
     const composer = page.locator(".start-composer");
     const send = composer.getByRole("button", { name: "开始创建项目" });
-    const peer = composer.getByRole("button", { name: /^当前模式：/ });
+    const peer = composer.getByRole("button", { name: "模型", exact: true });
     await expect(send).toBeDisabled();
     await expectRoundSend(send, peer);
     await page.getByLabel("创作提示词").fill("仅验证本地发送按钮，不提交");

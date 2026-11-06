@@ -160,8 +160,8 @@ for (const [width, height] of [
       ".topbar button, .primary-nav button, .start-composer button, .start-composer select",
     );
     const model = page.locator(".start-model-picker > button");
-    const icon = (await model.locator("img").boundingBox())!;
-    const label = (await model.locator("span").boundingBox())!;
+    const icon = (await model.locator("svg").boundingBox())!;
+    const label = (await model.locator("span:not(.ui-icon)").boundingBox())!;
     expect(label.x - icon.x - icon.width).toBeLessThanOrEqual(12);
     await page.screenshot({
       path: test.info().outputPath(`${evidence}/${width}-landing.png`),
@@ -186,9 +186,7 @@ for (const [width, height] of [
     await showCanvasNavigation(page);
     const taskStatus = page.locator(".project-task-status");
     if (await taskStatus.isVisible()) {
-      await page.locator(".project-task-status strong").evaluate((el) => {
-        el.textContent = "很长的项目名称用来核对截断与换行".repeat(8);
-      });
+      await expect(taskStatus).toHaveAttribute("aria-label", "Agent 验证项目");
       await expectInside(
         page,
         ".canvas-hud button, .project-task-status, .canvas-toolbar",
@@ -213,6 +211,9 @@ for (const [width, height] of [
       await page.getByRole("button", { name: "收起对话", exact: true }).click();
     await page.getByRole("button", { name: "打开对话", exact: true }).click();
     await page.getByLabel("执行方式").selectOption("direct");
+    await page.locator(".conversation-header strong").evaluate((el) => {
+      el.textContent = "很长的项目名称用来核对截断与换行".repeat(8);
+    });
     await page
       .getByLabel("对话内容", { exact: true })
       .fill("跨尺寸仍保留的编辑草稿");
@@ -302,7 +303,7 @@ for (const [width, height] of [
 ]) {
   test(`short viewport ${width}x${height} retains reachable chat and settings controls`, async ({
     page,
-  }) => {
+  }, info) => {
     await page.setViewportSize({ width, height });
     await page.goto("/");
     if (width >= 768) {
@@ -337,6 +338,25 @@ for (const [width, height] of [
       .getByRole("button", { name: "发送消息", exact: true })
       .boundingBox())!;
     const panelBox = (await panel.boundingBox())!;
+    await info.attach("short-panel-layout", {
+      contentType: "application/json",
+      body: JSON.stringify(
+        await panel.evaluate((e) =>
+          [
+            e,
+            ...e.children,
+            ...e.querySelectorAll(".chat-composer,.chat-agent-controls"),
+          ].map((c) => ({
+            className: c.className,
+            rect: c.getBoundingClientRect().toJSON(),
+            minHeight: getComputedStyle(c).minHeight,
+            flex: getComputedStyle(c).flex,
+            scrollTop: c.scrollTop,
+            scrollHeight: c.scrollHeight,
+          })),
+        ),
+      ),
+    });
     expect(send.y + send.height).toBeLessThanOrEqual(
       panelBox.y + panelBox.height + 6,
     );
@@ -366,7 +386,7 @@ for (const [width, height] of [
     await expect(panel).toBeHidden();
     await page.getByRole("button", { name: "打开设置", exact: true }).click();
     const dialog = page.getByRole("dialog", { name: "设置", exact: true });
-    await dialog.getByLabel("主题", { exact: true }).selectOption("light");
+    await dialog.getByLabel("主题外观", { exact: true }).selectOption("light");
     await page.screenshot({
       path: test
         .info()

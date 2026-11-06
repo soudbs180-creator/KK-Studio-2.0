@@ -27,6 +27,8 @@ interface NavigationProps {
   onLocate: (id: string) => void;
   showConnections: boolean;
   onToggleConnections: () => void;
+  snapEnabled: boolean;
+  onToggleSnap: () => void;
   backgroundColor: string;
   onBackgroundColor: (color: string) => void;
   backgroundPattern: "dots" | "grid";
@@ -46,6 +48,8 @@ export default function CanvasNavigation({
   onLocate,
   showConnections,
   onToggleConnections,
+  snapEnabled,
+  onToggleSnap,
   backgroundColor,
   onBackgroundColor,
   backgroundPattern,
@@ -110,7 +114,7 @@ export default function CanvasNavigation({
     <div
       ref={ref}
       className="canvas-top-right"
-      data-node-id="100:16335"
+      data-figma-node="435:48879"
       role="group"
       aria-label="画布导航"
       onPointerDown={(e) => e.stopPropagation()}
@@ -129,8 +133,8 @@ export default function CanvasNavigation({
         }}
       >
         <span>{Math.round(transform.scale * 100)}%</span>
-        <ToolbarIcon name="chevron" />
       </button>
+      <span className="canvas-navigation-divider" aria-hidden="true" />
       <div className="canvas-navigation-tools" data-node-id="100:16334">
         <button
           className="canvas-arrange"
@@ -141,10 +145,8 @@ export default function CanvasNavigation({
           aria-label="整理画布"
           title="整理全部卡片并适配视图"
         >
-          <ToolbarIcon name="arrange" />
-          <span>整理</span>
+          <ToolbarIcon name="arrange" size={16} />
         </button>
-        <span className="canvas-navigation-divider" aria-hidden="true" />
         <button
           className="canvas-background"
           aria-label="画布背景"
@@ -158,6 +160,7 @@ export default function CanvasNavigation({
         >
           <ToolbarIcon
             name={backgroundPattern === "dots" ? "background" : "dots"}
+            size={16}
           />
         </button>
         <button
@@ -170,7 +173,20 @@ export default function CanvasNavigation({
           title={showConnections ? "隐藏连线" : "显示连线"}
           aria-pressed={showConnections}
         >
-          <ToolbarIcon name="lines" />
+          <ToolbarIcon name="lines" size={16} />
+        </button>
+        <button
+          type="button"
+          className="canvas-snap"
+          aria-label="网格吸附"
+          title={snapEnabled ? "关闭网格吸附" : "开启网格吸附"}
+          aria-pressed={snapEnabled}
+          onClick={() => {
+            dismiss();
+            onToggleSnap();
+          }}
+        >
+          <ToolbarIcon name="snap" size={16} />
         </button>
         <button
           className="canvas-map-trigger"
@@ -183,7 +199,7 @@ export default function CanvasNavigation({
             onMinimapVisible?.(open !== "map");
           }}
         >
-          <ToolbarIcon name="map" />
+          <ToolbarIcon name="map" size={16} />
           <span>小地图</span>
         </button>
       </div>

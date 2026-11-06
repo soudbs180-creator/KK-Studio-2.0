@@ -97,6 +97,7 @@ rounded:
   panel: 20px
   card: 20px
   full: 1000px
+  combo: 10px
 spacing:
   space-hair: 4px
   space-1: 4px
@@ -179,7 +180,7 @@ components:
     padding: 4px
 x-kk-studio:
   source: src/styles/tokens.css
-  sha256: 882ebd60d75dbbeae73b8d23477ddd964251f234b2143f82e67d5ec47e316131
+  sha256: 869c4a1ac1e785265604ff82a7953916e6661e51b54735195a5e8e4814469d6c
   hashEncoding: utf8-lf
   scopes:
     - selector: :root
@@ -678,6 +679,27 @@ x-kk-studio:
         - property: --kk-control-gap-xl
           value: 8px
           important: false
+        - property: --kk-control-inset
+          value: 2px
+          important: false
+        - property: --kk-model-phone-max-width
+          value: 140px
+          important: false
+        - property: --kk-settings-general-shell-height
+          value: 674px
+          important: false
+        - property: --kk-canvas-zoom-slot-width
+          value: 48px
+          important: false
+        - property: --kk-canvas-minimap-slot-width
+          value: 76px
+          important: false
+        - property: --kk-conversation-panel-default-width
+          value: 472px
+          important: false
+        - property: --kk-radius-combo
+          value: 10px
+          important: false
         - property: --kk-control-font-sm
           value: 12px
           important: false
@@ -777,6 +799,198 @@ x-kk-studio:
         - property: --kk-on-accent
           value: "#0a0a0a"
           important: false
+        - property: --kk-settings-section-gap
+          value: var(--kk-layout-gutter-md)
+          important: false
+        - property: --kk-settings-row-gap
+          value: var(--kk-space-3)
+          important: false
+        - property: --kk-settings-row-pad
+          value: var(--kk-space-2)
+          important: false
+        - property: --kk-settings-heading-font
+          value: var(--kk-font-body)
+          important: false
+        - property: --kk-settings-heading-line
+          value: var(--kk-line-body)
+          important: false
+        - property: --kk-settings-heading-weight
+          value: var(--kk-font-weight-title)
+          important: false
+        - property: --kk-settings-copy-font
+          value: var(--kk-font-caption)
+          important: false
+        - property: --kk-settings-copy-line
+          value: var(--kk-line-caption)
+          important: false
+        - property: --kk-settings-copy-gap
+          value: var(--kk-space-1)
+          important: false
+        - property: --kk-settings-general-height
+          value: var(--kk-settings-general-shell-height)
+          important: false
+        - property: --kk-settings-control-pad
+          value: var(--kk-space-1)
+          important: false
+        - property: --kk-task-trigger-h
+          value: var(--kk-control-h-md)
+          important: false
+        - property: --kk-task-trigger-icon
+          value: var(--kk-icon-glyph-md)
+          important: false
+        - property: --kk-task-trigger-pad-start
+          value: var(--kk-space-2)
+          important: false
+        - property: --kk-task-trigger-pad-end
+          value: var(--kk-space-3)
+          important: false
+        - property: --kk-task-trigger-gap
+          value: var(--kk-space-2)
+          important: false
+        - property: --kk-task-trigger-radius
+          value: var(--kk-radius-control)
+          important: false
+        - property: --kk-task-trigger-font
+          value: var(--kk-font-caption)
+          important: false
+        - property: --kk-task-trigger-line
+          value: var(--kk-line-caption)
+          important: false
+        - property: --kk-sidebar-section-gap
+          value: var(--kk-space-5)
+          important: false
+        - property: --kk-start-model-max-width
+          value: var(--kk-model-phone-max-width)
+          important: false
+        - property: --kk-canvas-view-h
+          value: var(--kk-menu-item-h)
+          important: false
+        - property: --kk-canvas-view-inset
+          value: var(--kk-control-inset)
+          important: false
+        - property: --kk-canvas-view-gap
+          value: var(--kk-space-1)
+          important: false
+        - property: --kk-canvas-view-radius
+          value: var(--kk-radius-combo)
+          important: false
+        - property: --kk-canvas-view-bg
+          value: var(--kk-bg-card)
+          important: false
+        - property: --kk-canvas-view-bg-hover
+          value: var(--kk-control-hover-bg)
+          important: false
+        - property: --kk-canvas-view-bg-selected
+          value: var(--kk-choice-selected-bg)
+          important: false
+        - property: --kk-canvas-view-fg
+          value: var(--kk-text-secondary)
+          important: false
+        - property: --kk-canvas-view-fg-selected
+          value: var(--kk-text-primary)
+          important: false
+        - property: --kk-canvas-view-font
+          value: var(--kk-font-caption)
+          important: false
+        - property: --kk-canvas-view-line
+          value: var(--kk-line-caption)
+          important: false
+        - property: --kk-canvas-view-weight
+          value: var(--kk-font-weight-body-strong)
+          important: false
+        - property: --kk-canvas-nav-control
+          value: var(--kk-control-h-md)
+          important: false
+        - property: --kk-canvas-nav-zoom-width
+          value: var(--kk-canvas-zoom-slot-width)
+          important: false
+        - property: --kk-canvas-nav-map-width
+          value: var(--kk-canvas-minimap-slot-width)
+          important: false
+        - property: --kk-canvas-nav-icon
+          value: var(--kk-icon-glyph-sm)
+          important: false
+        - property: --kk-canvas-nav-pad
+          value: var(--kk-space-2)
+          important: false
+        - property: --kk-canvas-nav-gap
+          value: var(--kk-space-1)
+          important: false
+        - property: --kk-canvas-nav-divider-h
+          value: var(--kk-control-h-sm)
+          important: false
+        - property: --kk-canvas-nav-radius
+          value: var(--kk-radius-control)
+          important: false
+        - property: --kk-conversation-header-h
+          value: var(--kk-control-h-xl)
+          important: false
+        - property: --kk-conversation-header-gap
+          value: var(--kk-space-2)
+          important: false
+        - property: --kk-conversation-header-font
+          value: var(--kk-font-body)
+          important: false
+        - property: --kk-conversation-header-line
+          value: var(--kk-line-body)
+          important: false
+        - property: --kk-conversation-header-weight
+          value: var(--kk-font-weight-title)
+          important: false
+        - property: --kk-conversation-header-icon
+          value: var(--kk-icon-glyph-sm)
+          important: false
+        - property: --kk-conversation-header-control
+          value: var(--kk-control-h-md)
+          important: false
+        - property: --kk-conversation-panel-width
+          value: var(--kk-conversation-panel-default-width)
+          important: false
+        - property: --kk-conversation-panel-inset
+          value: var(--kk-space-4)
+          important: false
+        - property: --kk-conversation-panel-padding
+          value: var(--kk-space-3)
+          important: false
+        - property: --kk-conversation-panel-gap
+          value: var(--kk-space-3)
+          important: false
+        - property: --kk-conversation-panel-radius
+          value: var(--kk-radius-lg)
+          important: false
+        - property: --kk-button-h-xs
+          value: var(--kk-space-4)
+          important: false
+        - property: --kk-button-h-sm
+          value: var(--kk-control-h-sm)
+          important: false
+        - property: --kk-button-h-md
+          value: var(--kk-control-h-md)
+          important: false
+        - property: --kk-button-h-lg
+          value: var(--kk-control-h-lg)
+          important: false
+        - property: --kk-button-h-xl
+          value: var(--kk-control-h-xl)
+          important: false
+        - property: --kk-button-px-xs
+          value: var(--kk-space-1)
+          important: false
+        - property: --kk-button-px-sm
+          value: var(--kk-space-2)
+          important: false
+        - property: --kk-button-px-md
+          value: var(--kk-space-3)
+          important: false
+        - property: --kk-button-px-lg
+          value: var(--kk-space-4)
+          important: false
+        - property: --kk-button-px-xl
+          value: var(--kk-space-5)
+          important: false
+        - property: --kk-button-radius-control
+          value: var(--kk-radius-control)
+          important: false
         - property: --kk-button-h-standard
           value: var(--kk-control-h-md)
           important: false
@@ -840,6 +1054,21 @@ x-kk-studio:
         - property: --kk-input-radius
           value: var(--kk-radius-control)
           important: false
+        - property: --kk-input-large-h
+          value: var(--kk-control-h-lg)
+          important: false
+        - property: --kk-input-large-px
+          value: var(--kk-control-px-lg)
+          important: false
+        - property: --kk-input-large-font
+          value: var(--kk-font-body)
+          important: false
+        - property: --kk-input-large-line
+          value: var(--kk-line-body)
+          important: false
+        - property: --kk-input-line
+          value: var(--kk-line-caption)
+          important: false
         - property: --kk-select-h
           value: var(--kk-control-h-lg)
           important: false
@@ -858,6 +1087,12 @@ x-kk-studio:
         - property: --kk-select-menu-radius
           value: var(--kk-radius-menu)
           important: false
+        - property: --kk-icon-button-h-sm
+          value: var(--kk-control-h-sm)
+          important: false
+        - property: --kk-icon-button-h-md
+          value: var(--kk-control-h-md)
+          important: false
         - property: --kk-icon-button-h
           value: var(--kk-control-h-md)
           important: false
@@ -869,6 +1104,102 @@ x-kk-studio:
           important: false
         - property: --kk-icon-button-radius
           value: var(--kk-radius-control)
+          important: false
+        - property: --kk-tabs-h
+          value: var(--kk-menu-item-h)
+          important: false
+        - property: --kk-tabs-gap
+          value: var(--kk-space-4)
+          important: false
+        - property: --kk-tabs-text
+          value: var(--kk-text-secondary)
+          important: false
+        - property: --kk-tabs-text-active
+          value: var(--kk-text-primary)
+          important: false
+        - property: --kk-tabs-indicator-w
+          value: var(--kk-space-5)
+          important: false
+        - property: --kk-tabs-indicator-h
+          value: var(--kk-border-width-focus)
+          important: false
+        - property: --kk-tabs-indicator-bg
+          value: var(--kk-button-primary-bg)
+          important: false
+        - property: --kk-choice-group-radius
+          value: var(--kk-radius-control)
+          important: false
+        - property: --kk-choice-group-bg
+          value: var(--kk-bg-card)
+          important: false
+        - property: --kk-choice-item-pad-x
+          value: var(--kk-space-3)
+          important: false
+        - property: --kk-choice-item-h
+          value: var(--kk-control-h-md)
+          important: false
+        - property: --kk-choice-selected-fg
+          value: var(--kk-text-primary)
+          important: false
+        - property: --kk-switch-w
+          value: var(--kk-menu-item-h)
+          important: false
+        - property: --kk-switch-h
+          value: var(--kk-badge-h)
+          important: false
+        - property: --kk-switch-thumb-size
+          value: var(--kk-space-4)
+          important: false
+        - property: --kk-switch-radius
+          value: var(--kk-radius-full)
+          important: false
+        - property: --kk-switch-bg-off
+          value: var(--kk-bg-soft)
+          important: false
+        - property: --kk-switch-bg-on
+          value: var(--kk-accent)
+          important: false
+        - property: --kk-switch-thumb-bg
+          value: var(--kk-ink-near-black)
+          important: false
+        - property: --kk-checkbox-size
+          value: var(--kk-space-4)
+          important: false
+        - property: --kk-checkbox-radius
+          value: var(--kk-radius-xs)
+          important: false
+        - property: --kk-checkbox-border
+          value: var(--kk-border-control)
+          important: false
+        - property: --kk-checkbox-bg-checked
+          value: var(--kk-accent)
+          important: false
+        - property: --kk-checkbox-fg-checked
+          value: var(--kk-on-accent)
+          important: false
+        - property: --kk-dialog-radius
+          value: var(--kk-radius-card)
+          important: false
+        - property: --kk-dialog-bg
+          value: var(--kk-bg-card)
+          important: false
+        - property: --kk-dialog-border
+          value: var(--kk-border-subtle)
+          important: false
+        - property: --kk-dialog-shadow
+          value: var(--kk-shadow-color-strong)
+          important: false
+        - property: --kk-menu-radius
+          value: var(--kk-radius-menu)
+          important: false
+        - property: --kk-menu-bg
+          value: var(--kk-bg-card)
+          important: false
+        - property: --kk-menu-border
+          value: var(--kk-border-subtle)
+          important: false
+        - property: --kk-menu-shadow
+          value: var(--kk-shadow-color)
           important: false
         - property: --kk-menu-item-h
           value: 36px
@@ -1674,6 +2005,8 @@ x-kk-studio:
       - card
     - - rounded
       - full
+    - - rounded
+      - combo
     - - spacing
       - space-hair
     - - spacing

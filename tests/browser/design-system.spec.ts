@@ -48,7 +48,7 @@ for (const theme of ["dark", "light"]) {
       await dialog
         .getByRole("button", { name: "通用设置", exact: true })
         .click();
-      await dialog.getByLabel("主题", { exact: true }).selectOption(theme);
+      await dialog.getByLabel("主题外观", { exact: true }).selectOption(theme);
       const select = dialog.getByLabel("强调色", { exact: true });
       await select.selectOption(accent);
       await expect(page.locator("html")).toHaveAttribute("data-accent", accent);
@@ -178,7 +178,7 @@ test("accent preference supports keyboard, reload, system theme and modal focus 
   await page.keyboard.press("ArrowDown");
   await page.keyboard.press("Enter");
   await expect(select).toHaveValue("blue");
-  await page.getByLabel("主题", { exact: true }).selectOption("system");
+  await page.getByLabel("主题外观", { exact: true }).selectOption("system");
   await page.keyboard.press("Escape");
   await expect(opener).toBeFocused();
   await page.reload();

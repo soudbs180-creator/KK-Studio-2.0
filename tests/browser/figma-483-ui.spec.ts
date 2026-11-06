@@ -91,9 +91,7 @@ test("Figma 483 首页输入保持紧凑尺寸，额外能力仍可访问", asyn
       [
         ".start-add-button",
         ".start-model-picker > button",
-        ".composer-ext-skill > button",
-        ".start-mic-button",
-        ".start-mode-button",
+        ".start-more-button",
         ".start-submit-button",
       ].map((selector) => {
         const rect = footer.querySelector(selector)!.getBoundingClientRect();
@@ -106,7 +104,7 @@ test("Figma 483 首页输入保持紧凑尺寸，额外能力仍可访问", asyn
   expect(row.slice(3).map((item) => item.x)).toEqual(
     [...row.slice(3).map((item) => item.x)].sort((a, b) => a - b),
   );
-  for (const control of row) expect(control.height).toBe(44);
+  expect(row.map((control) => control.height)).toEqual([32, 32, 32, 44]);
   // Controls wrap by actual width while each hit target stays inside the card.
   for (const control of row) {
     expect(control.y).toBeGreaterThanOrEqual(phone.y);
@@ -346,9 +344,12 @@ for (const width of [834, 1920]) {
       .locator(".sidebar-toggle")
       .boundingBox())!;
     // The sidebar brand rail and canvas HUD have independent Figma insets.
-    expect(
-      sidebarToggle.y + sidebarToggle.height / 2 - before.y - before.height / 2,
-    ).toBe(width === 834 ? -12 : -7);
+    const canvasBox = (await page
+      .getByTestId("infinite-canvas")
+      .boundingBox())!;
+    expect(before.y - canvasBox.y).toBe(28);
+    expect(sidebarToggle.y).toBe(width === 834 ? 82 : 86);
+    expect(sidebarToggle.height).toBe(32);
     for (const name of ["打开任务列表", "画布缩放", "整理画布"]) {
       const control = (await page.getByRole("button", { name }).boundingBox())!;
       expect(

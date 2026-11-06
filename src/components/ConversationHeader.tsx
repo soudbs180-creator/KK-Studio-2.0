@@ -26,34 +26,10 @@ export default function ConversationHeader({
   const hasMultipleChats = Boolean(chats && Object.keys(chats).length > 0);
 
   return (
-    <header
-      data-node-id="407:29267"
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: "var(--kk-space-1)",
-        height: "auto",
-        minHeight: "var(--kk-control-h-md)",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          width: "100%",
-          position: "relative",
-        }}
-      >
+    <header className="conversation-header" data-figma-node="2076:42222">
+      <div className="conversation-header-row">
         <strong>{title}</strong>
-        <div
-          className="conversation-header-actions"
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "var(--kk-space-2)",
-          }}
-        >
+        <div className="conversation-header-actions">
           <button
             type="button"
             className="conversation-header-history-btn"
@@ -66,7 +42,7 @@ export default function ConversationHeader({
               )
             }
           >
-            <UiIcon name="history" size={20} />
+            <UiIcon name="history" size={16} />
           </button>
           <button
             type="button"
@@ -74,7 +50,7 @@ export default function ConversationHeader({
             aria-label="收起对话"
             onClick={onClose}
           >
-            <UiIcon name="panel-right-close" size={20} />
+            <UiIcon name="panel-right-close" size={16} />
           </button>
         </div>
       </div>

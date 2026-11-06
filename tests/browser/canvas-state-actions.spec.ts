@@ -45,7 +45,7 @@ async function oneOutput(editor: Locator) {
     .toBe(true);
   await option.click();
   await expect(
-    editor.getByRole("group", { name: "生成数量选项", exact: true }),
+    editor.getByRole("dialog", { name: "生成数量选项", exact: true }),
   ).toBeVisible();
 }
 

@@ -111,9 +111,9 @@ test("平板会话分栏时画布控件左移且标题和输入控件尺寸稳�
   expect(split.navigation.right).toBeLessThanOrEqual(split.panel.left - 8);
   expect(split.toolbar.right).toBeLessThanOrEqual(split.panel.left - 8);
   expect(split.canvas.right).toBeCloseTo(split.panel.left, 0);
-  expect(split.sidebarToggle.height).toBe(44);
-  expect(split.sidebarToggle.top).toBe(72);
-  expect(split.navigation.top).toBe(84);
+  expect(split.sidebarToggle.height).toBe(32);
+  expect(split.sidebarToggle.top).toBe(82);
+  expect(split.navigation.top).toBe(split.canvas.top + 32);
   const headerButtons = await page
     .locator(".conversation-header-actions > button")
     .evaluateAll((buttons) =>
@@ -123,15 +123,25 @@ test("平板会话分栏时画布控件左移且标题和输入控件尺寸稳�
       }),
     );
   expect(headerButtons).toEqual([
-    { width: 44, height: 44 },
-    { width: 44, height: 44 },
+    { width: 32, height: 32 },
+    { width: 32, height: 32 },
   ]);
   const panelBox = await page.locator(".conversation-panel").boundingBox();
   const closeBox = await page
     .getByRole("button", { name: "收起对话", exact: true })
     .boundingBox();
-  expect(closeBox!.x).toBeCloseTo(reopenBox!.x + 12, 1);
-  expect(closeBox!.y).toBeCloseTo(reopenBox!.y - 12, 1);
+  const headerRow = (await page
+    .locator(".conversation-header-row")
+    .boundingBox())!;
+  expect(closeBox!.x + closeBox!.width).toBeCloseTo(
+    headerRow.x + headerRow.width,
+    1,
+  );
+  expect(closeBox!.y + closeBox!.height / 2).toBeCloseTo(
+    headerRow.y + headerRow.height / 2,
+    1,
+  );
+  expect(reopenBox!.width).toBe(44);
   expect(closeBox!.x + closeBox!.width).toBeLessThan(
     panelBox!.x + panelBox!.width,
   );
@@ -163,8 +173,8 @@ test("平板会话分栏时画布控件左移且标题和输入控件尺寸稳�
       }),
     );
   expect(headerIcons).toEqual([
-    { width: 20, height: 20 },
-    { width: 20, height: 20 },
+    { width: 16, height: 16 },
+    { width: 16, height: 16 },
   ]);
   const composerIcons = await page
     .locator(
@@ -197,7 +207,7 @@ test("桌面会话入口使用关闭态图标并从右侧滑入，不挤动地�
     .poll(
       async () => (await page.locator(".canvas-top-right").boundingBox())!.x,
     )
-    .toBe(1467);
+    .toBe(1559);
   const before = await page.evaluate(() => {
     const rect = (selector: string) => {
       const element = document.querySelector<HTMLElement>(selector);
@@ -226,19 +236,19 @@ test("桌面会话入口使用关闭态图标并从右侧滑入，不挤动地�
         document.querySelector<HTMLElement>(".workspace-content")?.scrollLeft,
     };
   });
-  expect(before.navigation!.x).toBeCloseTo(1467, 1);
-  expect(before.navigation!.y).toBe(73);
+  expect(before.navigation!.x).toBeCloseTo(1559, 1);
+  expect(before.navigation!.y).toBe(84);
   expect(before.map).not.toBeNull();
-  expect(before.map!.width).toBe(104);
+  expect(before.map!.width).toBe(76);
   expect(before.map!.x + before.map!.width).toBeCloseTo(
-    before.navigation!.x + before.navigation!.width - 1,
+    before.navigation!.x + before.navigation!.width - 2,
     1,
   );
-  expect(before.toolbar).toMatchObject({ x: 959, y: 1002 });
-  expect(before.reopen).toEqual({ x: 1838, y: 73, width: 44, height: 44 });
+  expect(before.toolbar).toMatchObject({ x: 962, y: 1016 });
+  expect(before.reopen).toEqual({ x: 1848, y: 80, width: 44, height: 44 });
   expect(before.icon).toEqual({
-    x: 1846,
-    y: 81,
+    x: 1856,
+    y: 88,
     width: 28,
     height: 28,
   });
@@ -308,9 +318,9 @@ test("桌面会话入口使用关闭态图标并从右侧滑入，不挤动地�
   expect(Math.max(...samples.map((sample) => sample.x))).toBeGreaterThan(
     Math.min(...samples.map((sample) => sample.x)) + 100,
   );
-  expect(samples.at(-1)!.x).toBeCloseTo(1430, 0);
-  expect(samples.every((sample) => Math.abs(sample.y - 61) < 1)).toBe(true);
-  expect(samples.every((sample) => Math.abs(sample.toolbarX - 711) < 1)).toBe(
+  expect(samples.at(-1)!.x).toBeCloseTo(1432, 0);
+  expect(samples.every((sample) => Math.abs(sample.y - 67) < 1)).toBe(true);
+  expect(samples.every((sample) => Math.abs(sample.toolbarX - 718) < 1)).toBe(
     true,
   );
   await expect(page.locator(".canvas-top-right")).toBeVisible();
@@ -318,16 +328,16 @@ test("桌面会话入口使用关闭态图标并从右侧滑入，不挤动地�
   const openMap = await page.locator(".canvas-map-trigger").boundingBox();
   const openPanel = await page.locator(".conversation-panel").boundingBox();
   expect(openNavigation).toMatchObject({
-    x: 1023,
-    y: 73,
-    width: 363,
-    height: 44,
+    x: 1123,
+    y: 84,
+    width: 281,
+    height: 36,
   });
   expect(openNavigation!.x + openNavigation!.width).toBeLessThanOrEqual(
     openPanel!.x - 10,
   );
   expect(openMap!.x + openMap!.width).toBeCloseTo(
-    openNavigation!.x + openNavigation!.width - 1,
+    openNavigation!.x + openNavigation!.width - 2,
     1,
   );
   await expect(page.locator(".conversation-panel")).toHaveCSS(

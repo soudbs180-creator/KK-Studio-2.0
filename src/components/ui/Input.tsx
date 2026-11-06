@@ -42,7 +42,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   const inputId = rest.id ?? generatedId;
   const errorId = `${inputId}-error`;
   const hasValue = value !== undefined && value !== null && value !== "";
-  const iconSize = inputHeight === "40px" ? 18 : 16;
+  const iconSize = inputHeight === "40px" ? 16 : 12;
 
   const renderIcon = (icon: UiIconName | ReactNode) => {
     if (!icon) return null;

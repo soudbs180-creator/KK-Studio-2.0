@@ -46,7 +46,7 @@
   --text-on-warning: #0a0a0a;
   /* Latest Figma Runtime frames 404:28667 / 410:59708 use a 291px rail. */
   --sidebar-width: 292px;
-  --conversation-width: 470px;
+  --conversation-width: var(--kk-conversation-panel-width);
   --topbar-height: 40px;
   font-family: var(--kk-font-sans);
   font-size: var(--kk-font-body);

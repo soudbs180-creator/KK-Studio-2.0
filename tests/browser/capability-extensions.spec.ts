@@ -1,3 +1,4 @@
+import { selectHomeConversation } from "./helpers";
 import { expect, test } from "@playwright/test";
 import { openWorkspace } from "./helpers";
 import { createDefaultChat } from "../../src/features/creation/model";
@@ -20,6 +21,7 @@ function channelChats() {
 
 test("创作区协作伙伴入口打开任务角色而不是账号连接", async ({ page }) => {
   await page.goto("/");
+  await selectHomeConversation(page);
   await page
     .getByRole("region", { name: "开始创作", exact: true })
     .getByRole("button", { name: "扩展", exact: true })

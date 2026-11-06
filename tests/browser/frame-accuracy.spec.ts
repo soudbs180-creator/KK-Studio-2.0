@@ -114,14 +114,21 @@ test("latest two Figma frames retain exact shell anchors through independent col
   page,
 }) => {
   await openArrangedWorkspace(page);
-  await rect(page, ".workspace-content", [292, 45, 1618, 1025]);
-  await rect(page, ".task-button", [472, 73, 120, 44]);
+  await rect(page, ".workspace-content", [292, 52, 1628, 1028]);
+  await rect(page, ".task-button", [444, 86, 96, 32]);
   await rect(
     page,
     ".project-groups > section:last-of-type > .project-group-content > .project-entry",
-    [14, 511, 263, 29],
+    [
+      16,
+      (await page
+        .locator(".project-groups > section:last-of-type > .group-heading-row")
+        .evaluate((e) => e.getBoundingClientRect().bottom)) + 4,
+      259,
+      36,
+    ],
   );
-  await rect(page, ".canvas-top-right", [1023, 73, 363, 44]);
+  await rect(page, ".canvas-top-right", [1123, 84, 281, 36]);
   await expect(page.getByRole("group", { name: "画布导航" })).toBeVisible();
   const openNavigation = await page.locator(".canvas-top-right").boundingBox();
   const openPanel = await page.locator(".conversation-panel").boundingBox();
@@ -133,26 +140,26 @@ test("latest two Figma frames retain exact shell anchors through independent col
   await page.getByRole("button", { name: "小地图", exact: true }).click();
   await page.getByLabel("对话内容", { exact: true }).fill("收纳后保留这段草稿");
   await page.getByRole("button", { name: "收起对话", exact: true }).click();
-  await rect(page, ".canvas-top-right", [1467, 73, 363, 44]);
-  await rect(page, ".chat-reopen", [1838, 73, 44, 44]);
+  await rect(page, ".canvas-top-right", [1559, 84, 281, 36]);
+  await rect(page, ".chat-reopen", [1848, 80, 44, 44]);
   await expect(
     page.getByRole("button", { name: "打开对话", exact: true }),
   ).toBeFocused();
   await page.getByRole("button", { name: "收起侧边栏", exact: true }).click();
-  await rect(page, ".workspace-content", [72, 45, 1838, 1025]);
-  await rect(page, ".task-button", [252, 73, 120, 44]);
-  await rect(page, ".canvas-toolbar", [849, 1002, 284, 52]);
-  await rect(page, ".sidebar-search", [22, 942, 26, 26]);
-  await rect(page, ".sidebar-settings", [22, 982, 26, 26]);
-  await rect(page, ".sidebar-account", [22, 1022, 26, 26]);
+  await rect(page, ".workspace-content", [72, 52, 1848, 1028]);
+  await rect(page, ".task-button", [224, 86, 96, 32]);
+  await rect(page, ".canvas-toolbar", [852, 1016, 288, 52]);
+  await rect(page, ".sidebar-search", [20, 952, 32, 32]);
+  await rect(page, ".sidebar-settings", [20, 1032, 32, 32]);
+  await rect(page, ".sidebar-account", [20, 992, 32, 32]);
   await page.getByRole("button", { name: "打开对话", exact: true }).click();
   await expect(page.getByLabel("对话内容", { exact: true })).toHaveValue(
     "收纳后保留这段草稿",
   );
   await expect(page.locator(".sidebar")).toHaveClass(/is-collapsed/);
-  await rect(page, ".canvas-toolbar", [601, 1002, 284, 52]);
+  await rect(page, ".canvas-toolbar", [608, 1016, 288, 52]);
   await page.getByRole("button", { name: "展开侧边栏", exact: true }).click();
-  await rect(page, ".task-button", [472, 73, 120, 44]);
+  await rect(page, ".task-button", [444, 86, 96, 32]);
 });
 
 test("closing chat cannot steal focus already moved to a canvas card", async ({
@@ -184,8 +191,8 @@ test("sidebar motion keeps the task attached to the frame and toolbar stationary
   expect(samples[0].frame).toBeCloseTo(292, 1);
   expect(samples.at(-1)!.frame).toBeCloseTo(72, 1);
   for (const { frame, task, toolbar, usableWidth } of samples) {
-    expect(Math.abs(task - frame - 180)).toBeLessThan(0.1);
-    expect(Math.abs(toolbar - frame - (usableWidth - 284) / 2)).toBeLessThan(
+    expect(Math.abs(task - frame - 152)).toBeLessThan(0.1);
+    expect(Math.abs(toolbar - frame - (usableWidth - 288) / 2)).toBeLessThan(
       0.1,
     );
   }
@@ -201,16 +208,16 @@ test("sidebar motion keeps the task attached to the frame and toolbar stationary
   for (const frame of opening) {
     // 文件夹二级子项目行 231px（比文件夹行 263px 短，层级缩进）；未分组行 263px
     expect(frame.rows).toEqual([
-      [231, 29],
-      [263, 29],
+      [235, 36],
+      [259, 36],
     ]);
-    expect(frame.folders).toEqual([[263, 29]]);
+    expect(frame.folders).toEqual([[259, 36]]);
     if (frame.width < 170) expect(frame.brand).toBe(0);
   }
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.getByRole("button", { name: "收起侧边栏", exact: true }).click();
   await page.getByRole("button", { name: "展开侧边栏", exact: true }).click();
-  await rect(page, ".workspace-content", [292, 45, 1618, 1025]);
+  await rect(page, ".workspace-content", [292, 52, 1628, 1028]);
   expect(
     await page
       .locator(".sidebar")
@@ -222,27 +229,29 @@ test("项目文件夹行保留打开、设置与键盘菜单管理", async ({ pa
   await openArrangedWorkspace(page);
   const group = page.locator(".project-folder-group").first();
   const toggle = group.locator(".folder-heading-toggle");
+  const row = (await group.locator(".folder-heading-row").boundingBox())!;
+  expect(row).toMatchObject({ x: 16, width: 259, height: 36 });
   await rect(
     page,
     ".project-groups > section:first-of-type > .project-folder-group > .folder-heading-row > .folder-heading-toggle",
-    [14, 409, 263, 29],
+    [row.x + 4, row.y + 2, 251, 32],
   );
   await rect(
     page,
     ".project-groups > section:first-of-type > .project-folder-group > .folder-heading-row > .project-pin",
-    [230, 413, 20, 21],
+    [row.x + 187, row.y + 2, 32, 32],
   );
   await rect(
     page,
     ".project-groups > section:first-of-type > .project-folder-group > .folder-heading-row > .project-more",
-    [252, 413, 20, 21],
+    [row.x + 223, row.y + 2, 32, 32],
   );
   // 第二层级子项目行：231px（比文件夹行 263px 短），右缘对齐文件夹行右缘，
   // 右侧图标列位与文件夹行一致（文件夹行比项目长）。
   await rect(
     page,
     ".project-groups > section:first-of-type > .project-folder-group > .project-nested-entry > .project-entry",
-    [46, 443, 231, 29],
+    [row.x + 24, row.y + row.height + 4, 235, 36],
   );
   const open = group.getByRole("button", {
     name: "打开 KK项目 工作台",

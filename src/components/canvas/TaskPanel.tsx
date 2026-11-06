@@ -85,7 +85,7 @@ export default function TaskPanel({
         aria-expanded={open}
         aria-label="打开任务列表"
       >
-        <UiIcon name="clipboard-list" size={16} />
+        <UiIcon name="clipboard-list" size={20} />
         <span>任务列表</span>
       </button>
       {open && (

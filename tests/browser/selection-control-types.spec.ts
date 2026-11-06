@@ -16,23 +16,23 @@ test.afterEach(async ({ page }, testInfo) => {
   await page.screenshot({ path: testInfo.outputPath("controls.png") });
 });
 
-test("画布浏览器选择共享44高容器和中性选中底色", async ({ page }) => {
+test("画布切换遵循36高容器，未接入的浏览器视图明确禁用", async ({ page }) => {
   await openWorkspace(page);
   const group = page.getByRole("radiogroup", { name: "视图切换" });
-  await expect(group).toHaveCSS("width", "144px");
-  await expect(group).toHaveCSS("height", "44px");
+  await expect(group).toHaveCSS("width", "116px");
+  await expect(group).toHaveCSS("height", "36px");
   await expect(group).toHaveCSS("gap", "4px");
-  await expect(group).toHaveCSS("background-color", "rgb(31, 31, 31)");
-  const buttons = group.getByRole("radio");
-  for (const button of await buttons.all()) {
-    await expect(button).toHaveCSS("height", "44px");
+  await expect(group).toHaveCSS("background-color", "rgb(26, 26, 26)");
+  for (const button of await group.getByRole("radio").all()) {
+    await expect(button).toHaveCSS("height", "32px");
     await expect(button).toHaveCSS("font-size", "12px");
   }
+  const canvas = group.getByRole("radio", { name: "画布", exact: true });
+  await expect(canvas).toHaveAttribute("aria-checked", "true");
+  await expect(canvas).toHaveCSS("background-color", "rgb(51, 51, 51)");
   const browser = group.getByRole("radio", { name: "浏览器", exact: true });
-  await browser.click();
-  await expect(browser).toHaveAttribute("aria-checked", "true");
-  await expect(browser).toHaveCSS("background-color", "rgb(51, 51, 51)");
-  await group.getByRole("radio", { name: "画布", exact: true }).click();
+  await expect(browser).toBeDisabled();
+  await expect(browser).toHaveAttribute("title", "浏览器视图暂不可用");
   await expect(browser).toHaveAttribute("aria-checked", "false");
 });
 
@@ -340,13 +340,13 @@ test.describe("触控沿用相同控件规则", () => {
     await expect(toolbar).toBeVisible();
     await expect(toolbar).toHaveCSS("height", "52px");
     await expect(toolbar).toHaveCSS("gap", "4px");
-    await expect(toolbar.locator(".toolbar-toggle")).toHaveCSS("width", "44px");
+    await expect(toolbar.locator(".toolbar-toggle")).toHaveCSS("width", "24px");
     await expect(toolbar.locator(".toolbar-icon-collapse")).toHaveCSS(
       "width",
       "8px",
     );
     const box = (await toolbar.boundingBox())!;
-    expect(box.width).toBe(304);
+    expect(box.width).toBe(288);
     expect(box.x).toBeGreaterThanOrEqual(0);
     expect(box.x + box.width).toBeLessThanOrEqual(390);
   });
@@ -354,7 +354,7 @@ test.describe("触控沿用相同控件规则", () => {
   test("素材库垃圾箱及辅助操作均保留44像素点击区域", async ({ page }) => {
     await openWorkspace(page);
     const arrowButton = page.locator(".canvas-toolbar > .toolbar-toggle");
-    await expect(arrowButton).toHaveCSS("width", "44px");
+    await expect(arrowButton).toHaveCSS("width", "24px");
     await expect(arrowButton).toHaveCSS("height", "44px");
     await expect(arrowButton.locator(".toolbar-icon-collapse")).toHaveCSS(
       "width",

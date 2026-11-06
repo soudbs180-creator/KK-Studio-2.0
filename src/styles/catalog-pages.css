@@ -1190,14 +1190,18 @@
 .catalog-page-projects .catalog-page-header {
   align-items: center;
 }
-.catalog-page-projects .catalog-page-actions > .kk-button[data-height-tier="32px"] {
+.catalog-page-projects
+  .catalog-page-actions
+  > .kk-button[data-height-tier="32px"] {
   height: var(--kk-control-h-md);
   min-height: var(--kk-control-h-md);
   padding: 0 var(--kk-space-3);
   font-size: var(--kk-font-caption);
   line-height: var(--kk-line-caption);
 }
-.catalog-page-projects .catalog-page-actions > .project-library-tutorial[data-height-tier="32px"] {
+.catalog-page-projects
+  .catalog-page-actions
+  > .project-library-tutorial[data-height-tier="32px"] {
   border-color: var(--kk-border-default);
   font-size: var(--kk-font-body);
   line-height: var(--kk-line-body);

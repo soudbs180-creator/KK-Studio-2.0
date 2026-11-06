@@ -95,7 +95,9 @@ for (const width of [390, 768, 1280, 1920]) {
           name: "设置",
           exact: true,
         });
-        await settings.getByLabel("主题", { exact: true }).selectOption(theme);
+        await settings
+          .getByLabel("主题外观", { exact: true })
+          .selectOption(theme);
         await settings
           .getByLabel("强调色", { exact: true })
           .selectOption(folded ? "orange" : "default");
@@ -209,7 +211,9 @@ test("working-zoom patterns stay visible for both themes and all accents", async
     for (const accent of ACCENTS) {
       await page.getByRole("button", { name: "打开设置", exact: true }).click();
       const settings = page.getByRole("dialog", { name: "设置", exact: true });
-      await settings.getByLabel("主题", { exact: true }).selectOption(theme);
+      await settings
+        .getByLabel("主题外观", { exact: true })
+        .selectOption(theme);
       await settings.getByLabel("强调色", { exact: true }).selectOption(accent);
       await page.keyboard.press("Escape");
       for (const pattern of ["dots", "grid"]) {

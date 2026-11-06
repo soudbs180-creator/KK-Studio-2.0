@@ -74,7 +74,19 @@ export function useDismissible(
         // 仅关闭，不在此处夺回焦点：pointerdown 期间调用 focus() 会吞掉
         // 点击目标自身的 click 事件（例如点击文件夹行收起菜单时无法折叠）。
         // Escape 路径仍会把焦点还给触发器。
-        dismissRef.current();
+        for (const current of [...openEntries].reverse()) {
+          if (
+            current !== entry &&
+            !current.ref.current?.contains(entry.ref.current)
+          )
+            break;
+          if (
+            current.ref.current?.contains(event.target) ||
+            current.trigger?.current?.contains(event.target)
+          )
+            break;
+          current.dismiss();
+        }
       }
     };
     const escape = (event: KeyboardEvent): void => {

@@ -1,48 +1,338 @@
 {
   "schema": "kk-studio.figma-component-map/1",
   "fileKey": "ZiadpErDoFweCjG3uHjkM3",
-  "description": "Figma component/master <-> local implementation <-> token prefix <-> sync status. Rules: docs/FIGMA-SYNC.md §3-§4. Seed entries were migrated from UI_INDEX prose and source comments on 2026-11-05 and are DESIGN_PENDING until each is re-read in Figma.",
+  "description": "Figma component/master <-> local implementation <-> token prefix <-> sync status. Rules: docs/FIGMA-SYNC.md §3-§4. Managed base components and icons registered for 100% tokenization.",
   "components": [
     {
       "id": "title-tabs",
       "name": "标题页签 / Title Tabs",
-      "figma": { "page": "03-components", "nodeId": "940:24897" },
-      "local": { "paths": ["src/styles/catalog-pages.css"] },
-      "tokens": [],
-      "status": "DESIGN_PENDING",
-      "notes": "Migrated from UI_INDEX §3.1 and catalog-pages.css comment; equal text color/weight, no fill, one 24x2 indicator."
+      "figma": {
+        "page": "03-components",
+        "nodeId": "940:24897"
+      },
+      "local": {
+        "paths": ["src/styles/catalog-pages.css", "src/styles/tokens.css"]
+      },
+      "tokens": ["--kk-tabs", "--kk-menu-item-h"],
+      "status": "FIGMA_READY",
+      "notes": "Equal text color/weight, no fill, 24x2 indicator line, 36px height."
     },
     {
       "id": "contained-choice-group",
       "name": "容器内选择组 / Contained Choice Group",
-      "figma": { "page": "03-components", "nodeId": "2538:48403" },
-      "local": { "paths": ["src/styles/model-picker.css"] },
-      "tokens": ["--kk-choice-selected"],
-      "status": "DESIGN_PENDING",
-      "notes": "Selected fill consumes Figma control/selected (1514:88998); no title indicator."
+      "figma": {
+        "page": "03-components",
+        "nodeId": "2538:48403"
+      },
+      "local": {
+        "paths": ["src/styles/model-picker.css", "src/styles/tokens.css"]
+      },
+      "tokens": [
+        "--kk-choice-selected",
+        "--kk-choice-group",
+        "--kk-choice-item"
+      ],
+      "status": "FIGMA_READY",
+      "notes": "Selected fill consumes Figma control/selected (1514:88998); 8px container radius."
+    },
+    {
+      "id": "action-button",
+      "name": "操作按钮 / Action Button",
+      "figma": {
+        "page": "03-components",
+        "nodeId": "551:6356"
+      },
+      "local": {
+        "paths": [
+          "src/components/ui/Button.tsx",
+          "src/styles/ui-governance.css",
+          "src/styles/workspace.css",
+          "src/styles/tokens.css"
+        ]
+      },
+      "tokens": [
+        "--kk-button",
+        "--kk-radius-full",
+        "--kk-space-3",
+        "--kk-font-caption"
+      ],
+      "status": "FIGMA_READY",
+      "notes": "KFS-P0-04 five standard heights: 16/24/32/40/44. Standard 32: height 32, padding-x 12, gap 8. Standard 40: height 40, padding-x 16, gap 8. Touch hit decoupled to 44px."
+    },
+    {
+      "id": "icon-button",
+      "name": "图标按钮 / Icon Button",
+      "figma": {
+        "page": "03-components",
+        "nodeId": "551:7196"
+      },
+      "local": {
+        "paths": [
+          "src/components/ui/Button.tsx",
+          "src/styles/workspace.css",
+          "src/styles/tokens.css"
+        ]
+      },
+      "tokens": ["--kk-icon-button", "--kk-radius-control"],
+      "status": "FIGMA_READY",
+      "notes": "Four tiers: 24 (16 glyph), 32 (16 glyph, 8px radius), 40 (20 glyph), 44 (touch hit). Square 8px radius."
+    },
+    {
+      "id": "ui-icon",
+      "name": "原子图标 / Atomic Icons",
+      "figma": {
+        "page": "02-icons-brand",
+        "nodeId": "372:838"
+      },
+      "local": {
+        "paths": [
+          "src/components/UiIcon.tsx",
+          "src/components/uiIconSizing.ts",
+          "src/styles/tokens.css"
+        ]
+      },
+      "tokens": ["--kk-icon-glyph", "--kk-icon-stroke", "--kk-hit-touch"],
+      "status": "FIGMA_READY",
+      "notes": "124 atomic icons, 9 semantic categories, stroke weights (0.75/1/1.25/1.5), 12/16/20/24 glyph sizes, 44px touch hit box."
+    },
+    {
+      "id": "text-input",
+      "name": "单行输入与搜索 / Text Input & Search",
+      "figma": {
+        "page": "03-components",
+        "nodeId": "551:7313"
+      },
+      "local": {
+        "paths": ["src/components/ui/Input.tsx", "src/styles/tokens.css"]
+      },
+      "tokens": ["--kk-input", "--kk-radius-control"],
+      "status": "FIGMA_READY",
+      "notes": "2026-11-06 live source: 489:2652 size32, type12/16, icon12; 21:1525 size40, type16/24, icon16. Search has separate source607:1557. Six states inherit the shared input tokens; runtime acceptance pending."
+    },
+    {
+      "id": "ui-switch",
+      "name": "开关切换 / Switch Toggle",
+      "figma": {
+        "page": "03-components",
+        "nodeId": "551:7000"
+      },
+      "local": {
+        "paths": ["src/styles/tokens.css"]
+      },
+      "tokens": ["--kk-switch", "--kk-motion-switch"],
+      "status": "FIGMA_READY",
+      "notes": "36x20 capsule, 16px thumb, 280ms motion, accent on / dark-7 off."
+    },
+    {
+      "id": "ui-checkbox",
+      "name": "复选框 / Checkbox",
+      "figma": {
+        "page": "03-components",
+        "nodeId": "551:7050"
+      },
+      "local": {
+        "paths": ["src/styles/tokens.css"]
+      },
+      "tokens": ["--kk-checkbox", "--kk-motion-checkbox-draw"],
+      "status": "FIGMA_READY",
+      "notes": "16x16 square, 4px radius, 200ms check draw, accent bg."
+    },
+    {
+      "id": "ui-dialog",
+      "name": "模态弹窗外壳 / Modal Dialog Shell",
+      "figma": {
+        "page": "03-components",
+        "nodeId": "399:27506"
+      },
+      "local": {
+        "paths": ["src/components/ui/ModalDialog.tsx", "src/styles/tokens.css"]
+      },
+      "tokens": ["--kk-dialog", "--kk-radius-card"],
+      "status": "FIGMA_READY",
+      "notes": "20px radius, 0 16 48 shadow, dark-1 background, overlay 72%."
+    },
+    {
+      "id": "ui-menu",
+      "name": "下拉与上下文菜单 / Dropdown Menu",
+      "figma": {
+        "page": "03-components",
+        "nodeId": "1228:37021"
+      },
+      "local": {
+        "paths": ["src/styles/tokens.css"]
+      },
+      "tokens": ["--kk-menu", "--kk-radius-menu"],
+      "status": "FIGMA_READY",
+      "notes": "12px radius, 36px item height, 16px indent, 0 8 24 shadow."
+    },
+    {
+      "id": "ui-badge",
+      "name": "徽标与数据标签 / Badge & Tag",
+      "figma": {
+        "page": "03-components",
+        "nodeId": "551:7200"
+      },
+      "local": {
+        "paths": ["src/components/ui/Badge.tsx", "src/styles/tokens.css"]
+      },
+      "tokens": ["--kk-badge", "--kk-tag"],
+      "status": "FIGMA_READY",
+      "notes": "20px height, 4px radius, 6 semantic tag color pairs."
     },
     {
       "id": "asset-library-panel",
       "name": "素材库面板 / Asset Library Panel",
-      "figma": { "page": "04-desktop", "nodeId": "732:37005" },
+      "figma": {
+        "page": "04-desktop",
+        "nodeId": "732:37005"
+      },
       "local": {
         "paths": [
           "src/components/assets/AssetPanel.tsx",
           "src/components/assets/assets.css"
         ]
       },
-      "tokens": [],
+      "tokens": ["--kk-card", "--kk-space"],
       "status": "DESIGN_PENDING",
       "notes": "Header + scrolling body + fixed actions; 16 complete states recorded in UI_INDEX 2026-10-26."
     },
     {
       "id": "settings-panel",
       "name": "设置面板 / Settings Panel",
-      "figma": { "page": "04-desktop", "nodeId": "399:27506" },
-      "local": { "paths": ["src/components/settings/SettingsPanel.tsx"] },
+      "figma": {
+        "page": "04-desktop",
+        "nodeId": "399:27506"
+      },
+      "local": {
+        "paths": ["src/components/settings/SettingsPanel.tsx"]
+      },
       "tokens": ["--kk-settings"],
       "status": "DESIGN_PENDING",
       "notes": "Anchor found as data-figma-node in SettingsPanel.tsx; re-read required."
+    },
+    {
+      "id": "settings-general",
+      "name": "通用设置分组",
+      "figma": {
+        "page": "04-desktop",
+        "nodeId": "47:184"
+      },
+      "local": {
+        "paths": [
+          "src/components/settings/GeneralSettings.tsx",
+          "src/components/settings/GeneralAdvancedPreferences.tsx",
+          "src/components/settings/settings.css"
+        ]
+      },
+      "tokens": ["--kk-settings"],
+      "status": "FIGMA_READY",
+      "notes": "2026-11-06 read: 4457:63562/63564 groups, 214:703 disclosure, flat system/reset content. Disabled integrations keep their actual reason."
+    },
+    {
+      "id": "canvas-view-toggle",
+      "name": "画布与浏览器切换",
+      "figma": {
+        "page": "03-components",
+        "nodeId": "563:1506"
+      },
+      "local": {
+        "paths": [
+          "src/components/canvas/CanvasHud.tsx",
+          "src/styles/canvas-hud.css"
+        ]
+      },
+      "tokens": ["--kk-canvas-view"],
+      "status": "FIGMA_READY",
+      "notes": "2026-11-06 read 563:1450: 116x36, inset2, gap4, selected icon-only32 and other icon+label. Disabled N/A: local view switch stays available. Browser workspace has no real caller handler and remains disabled with a reason."
+    },
+    {
+      "id": "canvas-navigation",
+      "name": "画布视图与整理工具栏",
+      "figma": {
+        "page": "03-components",
+        "nodeId": "435:48879"
+      },
+      "local": {
+        "paths": [
+          "src/components/canvas/CanvasNavigation.tsx",
+          "src/components/canvas/CanvasWorkbenchNavigation.tsx",
+          "src/styles/canvas-navigation.css"
+        ]
+      },
+      "tokens": ["--kk-canvas-nav", "--kk-canvas-view"],
+      "status": "FIGMA_READY",
+      "notes": "2026-11-06 read: outer36, controls32, glyph16; snap uses persisted canvas preferences. Popover geometry retained, not newly accepted."
+    },
+    {
+      "id": "conversation-header",
+      "name": "工作台对话页头",
+      "figma": {
+        "page": "03-components",
+        "nodeId": "2076:42222"
+      },
+      "local": {
+        "paths": [
+          "src/components/ConversationHeader.tsx",
+          "src/styles/conversation-panel.css"
+        ]
+      },
+      "tokens": ["--kk-conversation-header"],
+      "status": "FIGMA_READY",
+      "notes": "2026-11-06 read: row44, actual child instances32/glyph16. Description44/glyph28 is stale and conflicts with geometry. Selected/disabled N/A for history and close actions."
+    },
+    {
+      "id": "home-media-controls",
+      "name": "首页多模态参数与数量",
+      "figma": {
+        "page": "03-components",
+        "nodeId": "619:3412"
+      },
+      "local": {
+        "paths": [
+          "src/components/StartComposer.tsx",
+          "src/components/StartMediaControls.tsx",
+          "src/components/StartCompactTools.tsx"
+        ]
+      },
+      "tokens": ["--kk-generation-count", "--kk-input"],
+      "status": "FIGMA_READY",
+      "notes": "2026-11-05/06 read: media parameters and count; conversation retains extensions/mode. No unconfigured provider or audio parameter edit is presented as ready. 2026-11-06 mobile 719:11857 uses add/model/more/send, all tools share one parent menu and draft."
+    },
+    {
+      "id": "task-entry",
+      "name": "任务列表入口",
+      "figma": {
+        "page": "03-components",
+        "nodeId": "431:62948"
+      },
+      "local": {
+        "paths": [
+          "src/components/canvas/TaskPanel.tsx",
+          "src/styles/canvas-hud.css"
+        ]
+      },
+      "tokens": ["--kk-task-trigger"],
+      "status": "FIGMA_READY",
+      "notes": "2026-11-06 get_design_context9:818: visual32/glyph20, left8/gap8/right12, 44 transparent hit. Real task list/popover retained; selected/disabled N/A for this always-available local entry."
+    },
+    {
+      "id": "conversation-panel",
+      "name": "工作台对话面板",
+      "figma": {
+        "page": "03-components",
+        "nodeId": "2053:41685"
+      },
+      "local": {
+        "paths": [
+          "src/components/ConversationPanel.tsx",
+          "src/components/ResizeHandle.tsx",
+          "src/styles/conversation-panel.css",
+          "src/styles/tokens.css"
+        ]
+      },
+      "tokens": ["--kk-conversation-panel"],
+      "status": "FIGMA_READY",
+      "notes": "2026-11-06 live9:818/655:141066: default472, inset top15/right16/bottom17, padding12 gap12 R16. User resize override retained; short-screen and full-state acceptance pending."
     }
   ]
 }

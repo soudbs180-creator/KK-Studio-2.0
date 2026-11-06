@@ -12,6 +12,7 @@ export type ToolbarIconName =
   | "background"
   | "dots"
   | "lines"
+  | "snap"
   | "map"
   | "chevron";
 
@@ -29,19 +30,26 @@ const TOOLBAR_ICON_TO_UI: Record<
   background: { name: "grid-2x2", size: 28 },
   dots: { name: "grip", size: 28 },
   lines: { name: "route", size: 28 },
+  snap: { name: "magnet", size: 16 },
   map: { name: "map", size: 28 },
   chevron: { name: "chevron-down", size: 16 },
 };
 
 /** Figma 2149:42515: 28px glyphs; the independent arrow stays 8px/16px. */
-export default function ToolbarIcon({ name }: { name: ToolbarIconName }) {
+export default function ToolbarIcon({
+  name,
+  size,
+}: {
+  name: ToolbarIconName;
+  size?: number;
+}) {
   const target = TOOLBAR_ICON_TO_UI[name];
   return (
     <span
       className={`toolbar-icon toolbar-icon-slot toolbar-icon-${name}`}
       aria-hidden="true"
     >
-      <UiIcon name={target.name} size={target.size ?? 28} />
+      <UiIcon name={target.name} size={size ?? target.size ?? 28} />
     </span>
   );
 }

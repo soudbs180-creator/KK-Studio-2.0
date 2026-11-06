@@ -2,7 +2,11 @@ import { expect, test as base, type Page } from "@playwright/test";
 import { startAgentServer } from "../helpers/agentServer";
 import { MODEL_PROVIDER_STORAGE_KEY } from "../../src/domain/modelProvider";
 import { PROVIDER_CONNECTIONS_STORAGE_KEY } from "../../src/features/creation/providerRegistry";
-import { openSettingsSection, selectHomeApiModel } from "./helpers";
+import {
+  openSettingsSection,
+  selectHomeApiModel,
+  selectHomeConversation,
+} from "./helpers";
 
 const test = base.extend({
   page: async ({ page }, use) => {
@@ -194,8 +198,10 @@ test("询问确认随来源和草稿变化失效，再次创建只确认当前�
   page,
 }) => {
   await page.getByLabel("创作提示词").fill("旧 Codex 确认草稿");
+  await selectHomeConversation(page);
   await page.getByRole("button", { name: /当前模式：自动/ }).click();
   await page.getByRole("menuitemradio", { name: "询问", exact: true }).click();
+  await chooseCodex(page);
   await page.getByRole("button", { name: "开始创建项目", exact: true }).click();
   const approval = page.getByRole("group", {
     name: "确认创建项目",

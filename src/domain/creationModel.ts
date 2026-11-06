@@ -499,6 +499,17 @@ function normalizeReasoningEffort(value: unknown): ReasoningEffort | undefined {
   return undefined;
 }
 
+function persistedDraftKind(value: unknown): CreationDraft["kind"] {
+  if (
+    value === "image" ||
+    value === "video" ||
+    value === "audio" ||
+    value === "text"
+  )
+    return value;
+  return "image";
+}
+
 function normalizeDraft(value: unknown): CreationDraft {
   const candidate =
     value && typeof value === "object" ? (value as Partial<CreationDraft>) : {};
@@ -528,13 +539,7 @@ function normalizeDraft(value: unknown): CreationDraft {
         ? candidate.providerConnectionId.slice(0, 120)
         : undefined,
     model: typeof candidate.model === "string" ? candidate.model : "",
-    kind:
-      candidate.kind === "image" ||
-      candidate.kind === "video" ||
-      candidate.kind === "audio" ||
-      candidate.kind === "text"
-        ? candidate.kind
-        : "image",
+    kind: persistedDraftKind(candidate.kind),
     attachments: Array.isArray(candidate.attachments)
       ? candidate.attachments.filter(isAttachment)
       : [],
@@ -731,7 +736,9 @@ function normalizeMediaDimension(value: unknown): number | undefined {
     : undefined;
 }
 
-export const imageSizeLabelSchema = z.string().regex(/^[1-9]\d{1,4}x[1-9]\d{1,4}$/);
+export const imageSizeLabelSchema = z
+  .string()
+  .regex(/^[1-9]\d{1,4}x[1-9]\d{1,4}$/);
 
 function normalizeImageSizeLabel(value: unknown): string | undefined {
   return imageSizeLabelSchema.safeParse(value).data;
@@ -1490,6 +1497,37 @@ export function migrateV1(parsed: {
   };
 }
 
+function codexGenerationDescription(codex: boolean, model: string): string {
+  if (codex) return "Codex 内置生图";
+  if (model) return `${model} · 待执行`;
+  return "图片 · 待配置模型";
+}
+
+function sizedImage(
+  kind: CreateProjectInput["kind"],
+  codex: boolean,
+  imageSize: CreateProjectInput["imageSize"],
+) {
+  return kind === "image" && !codex ? imageSize : undefined;
+}
+
+function parsedProjectMedia(media: CreateProjectInput["media"]) {
+  return media ? creationMediaSchema.parse(media) : undefined;
+}
+
+function creationItemParameters(input: CreateProjectInput, codex: boolean) {
+  if (input.kind !== "image" && input.kind !== "video") return undefined;
+  const video = input.media?.kind === "video" ? input.media : undefined;
+  return {
+    imageSize: sizedImage(input.kind, codex, input.imageSize),
+    ratio: video ? video.aspectRatio : "自适应",
+    quality: video ? video.resolution : "自适应",
+    duration: String(video ? video.duration : 4),
+    count: String(input.outputCount ?? 1),
+    soundEnabled: video?.audio === true,
+  };
+}
+
 export function createProject(input: CreateProjectInput): CreationProject {
   const selection = normalizeModelSelection(input.modelSelection);
   const codex = selection && selection.source !== "api";
@@ -1499,27 +1537,13 @@ export function createProject(input: CreateProjectInput): CreationProject {
   const item: CanvasCollectionItem = {
     id: itemId(id),
     title: "图片创作",
-    description: codex
-      ? "Codex 内置生图"
-      : input.model
-        ? `${input.model} · 待执行`
-        : "图片 · 待配置模型",
+    description: codexGenerationDescription(Boolean(codex), input.model),
     kind: input.kind,
     prompt: input.prompt,
     model: input.model,
     generationSource: codex ? "codex" : undefined,
     providerConnectionId: codex ? undefined : input.providerConnectionId,
-    parameters:
-      input.kind === "image" || input.kind === "video"
-        ? {
-            imageSize: input.kind === "image" && !codex ? input.imageSize : undefined,
-            ratio: input.media?.kind === "video" ? input.media.aspectRatio : "自适应",
-            quality: input.media?.kind === "video" ? input.media.resolution : "自适应",
-            duration: String(input.media?.kind === "video" ? input.media.duration : 4),
-            count: String(input.outputCount ?? 1),
-            soundEnabled: input.media?.kind === "video" && input.media.audio === true,
-          }
-        : undefined,
+    parameters: creationItemParameters(input, Boolean(codex)),
     updatedAt: now,
     generationStatus: codex ? undefined : "pending",
   };
@@ -1563,10 +1587,8 @@ export function createProject(input: CreateProjectInput): CreationProject {
           providerConnectionId: codex ? undefined : input.providerConnectionId,
           model: input.model,
           kind: input.kind,
-          imageSize: input.kind === "image" && !codex ? input.imageSize : undefined,
-          media: input.media
-            ? creationMediaSchema.parse(input.media)
-            : undefined,
+          imageSize: sizedImage(input.kind, Boolean(codex), input.imageSize),
+          media: parsedProjectMedia(input.media),
           attachments: input.attachments.map((attachment) => ({
             ...attachment,
           })),
@@ -1592,8 +1614,8 @@ export function createProject(input: CreateProjectInput): CreationProject {
       prompt: "",
       model: input.model,
       kind: input.kind,
-      imageSize: input.kind === "image" && !codex ? input.imageSize : undefined,
-      media: input.media ? creationMediaSchema.parse(input.media) : undefined,
+      imageSize: sizedImage(input.kind, Boolean(codex), input.imageSize),
+      media: parsedProjectMedia(input.media),
       attachments: input.attachments.map((attachment) => ({ ...attachment })),
       approvalMode: "auto",
       privacyMode: input.privacyMode ?? "byok_local",
@@ -1613,7 +1635,8 @@ export function createTask(project: CreationProject): CreationTask {
     prompt: project.prompt,
     model: project.model,
     kind: project.kind,
-    imageSize: project.kind === "image" ? project.composerDraft.imageSize : undefined,
+    imageSize:
+      project.kind === "image" ? project.composerDraft.imageSize : undefined,
     media: project.composerDraft.media
       ? structuredClone(project.composerDraft.media)
       : undefined,

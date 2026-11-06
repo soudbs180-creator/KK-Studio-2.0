@@ -41,6 +41,12 @@ test("桌面宽度可用鼠标和键盘调整，平板不出现无效拖拽柄",
     .poll(async () => (await panel.boundingBox())!.width)
     .toBeLessThan(draggedWidth);
 
+  await handle.press("Shift+Home");
+  await expect
+    .poll(async () => (await panel.boundingBox())!.width)
+    .toBe(initialWidth);
+  await expect(handle).toHaveAttribute("aria-valuenow", String(initialWidth));
+
   await page.setViewportSize({ width: 1024, height: 768 });
   await expect(handle).toBeHidden();
 });

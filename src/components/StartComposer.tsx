@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import UiIcon from "./UiIcon";
 import { Button } from "./ui";
 import type { CreationDraft } from "../features/creation/index.ts";
@@ -6,22 +6,20 @@ import {
   homeModelSelection,
   homeDraftForSelection,
 } from "../domain/modelSelection";
-import { codexHomeValidation } from "../features/agent/index.ts";
 import StartAttachmentList from "./StartAttachmentList";
 import ComposerTextarea from "./ComposerTextarea";
 import useConversationAttachments from "./useConversationAttachments";
 import StartModelPicker from "./StartModelPicker";
-import { StartComposerFeedback } from "./StartComposerModes";
+import {
+  StartComposerFeedback,
+  homeGenerationGate,
+} from "./StartComposerModes";
 import StartMediaControls from "./StartMediaControls";
+import StartCompactTools from "./StartCompactTools";
 import { VoiceInputButton } from "../features/speech/index.ts";
 import { useComposerMenus } from "./useComposerMenus";
 import { ExtensionSlot } from "../features/extensions/index.ts";
 import type { SkillRecord } from "../features/skills/index.ts";
-import {
-  canSubmitGeneration,
-  getDisabledReason,
-  getGenerationUiState,
-} from "../domain/uiGovernance";
 
 export default function StartComposer({
   draft,
@@ -54,18 +52,27 @@ export default function StartComposer({
   );
   const pickerRef = useRef<HTMLDivElement>(null);
   const menus = useComposerMenus(pickerRef);
-  const {
-    modelMenuOpen,
-    toggleMenu,
-    openMenu,
-    closeMenus,
-  } = menus;
+  const { modelMenuOpen, toggleMenu, openMenu, closeMenus } = menus;
   const selection = homeModelSelection(draft);
   const usesCodex = selection.source !== "api";
   const model = selection.model;
   const submittingRef = useRef(false);
   const [submitting, setSubmitting] = useState(false);
   const [attachmentError, setAttachmentError] = useState<string | null>(null);
+  const [phone, setPhone] = useState(
+    () =>
+      typeof window !== "undefined" &&
+      window.matchMedia("(max-width: 767px)").matches,
+  );
+  useEffect(() => {
+    const media = window.matchMedia("(max-width: 767px)");
+    const update = () => {
+      setPhone(media.matches);
+      closeMenus();
+    };
+    media.addEventListener("change", update);
+    return () => media.removeEventListener("change", update);
+  }, [closeMenus]);
   function commit(patch: Partial<CreationDraft>): void {
     const next = { ...draft, ...patch, updatedAt: Date.now() };
     onDraftChange(next, patch);
@@ -83,31 +90,16 @@ export default function StartComposer({
         }
       : {}),
   });
-  const uiState = getGenerationUiState({
-    prompt: draft.prompt,
-    inputValid: !readingFiles,
-    modelConfigured:
-      usesCodex || Boolean(selection.connectionId) || modelConfigured,
-    quotaAvailable: true,
-    online: typeof navigator === "undefined" ? true : navigator.onLine,
-    serviceConfigured:
-      usesCodex || Boolean(selection.connectionId) || modelConfigured,
-  });
-  const { privacy: privacyReason, count: countReason } = codexHomeValidation(
-    draft,
-    selection,
-  );
-  const submitDisabled =
-    submitting ||
-    (usesCodex && Boolean(attachmentError)) ||
-    Boolean(privacyReason) ||
-    Boolean(countReason) ||
-    !canSubmitGeneration(uiState);
-  const disabledReason =
-    (usesCodex ? attachmentError : undefined) ??
-    privacyReason ??
-    countReason ??
-    getDisabledReason(uiState);
+  const { uiState, countReason, submitDisabled, disabledReason } =
+    homeGenerationGate({
+      draft,
+      usesCodex,
+      selection,
+      modelConfigured,
+      readingFiles,
+      submitting,
+      attachmentError,
+    });
   async function submitDraft(input: CreationDraft): Promise<void> {
     if (submittingRef.current) return;
     submittingRef.current = true;
@@ -144,13 +136,18 @@ export default function StartComposer({
     setPendingSubmit(null);
   }
   const toolbarControls = {
-    draft, selection, menus, disabled: submitting || readingFiles > 0,
+    draft,
+    selection,
+    menus,
+    disabled: submitting || readingFiles > 0,
     onChange: commit,
     onSelectModel: (choice: typeof selection) => {
       commit(homeDraftForSelection(draft, choice));
       closeMenus();
     },
-    skills, onApplySkill, onStatus: setStatus,
+    skills,
+    onApplySkill,
+    onStatus: setStatus,
     onOpen: (id: string) => {
       if (id === "skills") onOpenSkills();
       else onOpenExtension(id);
@@ -228,25 +225,38 @@ export default function StartComposer({
               className="start-composer-divider start-model-divider"
               aria-hidden="true"
             />
-            <StartMediaControls {...toolbarControls} placement="left" />
+            {phone ? (
+              <StartCompactTools
+                {...toolbarControls}
+                onPromptChange={(prompt) => commit({ prompt })}
+              />
+            ) : (
+              <StartMediaControls {...toolbarControls} placement="left" />
+            )}
             <span
               className="start-composer-divider start-skill-divider"
               aria-hidden="true"
             />
           </div>
           <div className="start-footer-right">
-            {draft.kind !== "text" && <StartMediaControls {...toolbarControls} placement="right" />}
-            <VoiceInputButton
-              className="start-mic-button"
-              value={draft.prompt}
-              onChange={(prompt) => commit({ prompt })}
-              onStatus={setStatus}
-              maxLength={4000}
-              idleIcon={<UiIcon name="mic" size={16} />}
-              activeIcon={<UiIcon name="mic-off" size={16} />}
-            />
+            {!phone && draft.kind !== "text" && (
+              <StartMediaControls {...toolbarControls} placement="right" />
+            )}
+            {!phone && (
+              <VoiceInputButton
+                className="start-mic-button"
+                value={draft.prompt}
+                onChange={(prompt) => commit({ prompt })}
+                onStatus={setStatus}
+                maxLength={4000}
+                idleIcon={<UiIcon name="mic" size={16} />}
+                activeIcon={<UiIcon name="mic-off" size={16} />}
+              />
+            )}
             <span className="start-composer-divider" aria-hidden="true" />
-            {draft.kind === "text" && <StartMediaControls {...toolbarControls} placement="right" />}
+            {!phone && draft.kind === "text" && (
+              <StartMediaControls {...toolbarControls} placement="right" />
+            )}
             <Button
               type="submit"
               heightTier="44px"

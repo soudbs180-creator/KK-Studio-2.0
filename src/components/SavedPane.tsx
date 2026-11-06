@@ -69,7 +69,9 @@ export default function SavedPane({
                   aria-label={`打开 ${item.title}`}
                   onClick={() => onLocate(item.id)}
                 >
-                  {item.kind === "audio" || item.kind === "text" || !item.preview ? (
+                  {item.kind === "audio" ||
+                  item.kind === "text" ||
+                  !item.preview ? (
                     <UiIcon
                       name={
                         item.kind === "audio"

@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import type { ReactNode } from "react";
 import UiIcon from "../UiIcon";
 import TaskPanel from "./TaskPanel";
 import type { CreationTask } from "../../features/creation/index.ts";
@@ -30,15 +30,7 @@ export default function CanvasHud({
   onViewModeChange?: (mode: "canvas" | "browser") => void;
   children: ReactNode;
 }) {
-  const [internalViewMode, setInternalViewMode] = useState<
-    "canvas" | "browser"
-  >("canvas");
-  const viewMode = controlledViewMode ?? internalViewMode;
-
-  const handleModeChange = (mode: "canvas" | "browser") => {
-    setInternalViewMode(mode);
-    onViewModeChange?.(mode);
-  };
+  const viewMode = controlledViewMode ?? "canvas";
 
   return (
     <div
@@ -51,24 +43,32 @@ export default function CanvasHud({
           className="canvas-view-mode-toggle"
           role="radiogroup"
           aria-label="视图切换"
+          data-figma-node="563:1506"
         >
           <button
             type="button"
             role="radio"
+            aria-label="画布"
+            title="画布"
             aria-checked={viewMode === "canvas"}
             className={`canvas-view-mode-btn ${viewMode === "canvas" ? "active" : ""}`}
-            onClick={() => handleModeChange("canvas")}
+            onClick={() => onViewModeChange?.("canvas")}
           >
-            画布
+            <img src="/design/figma/canvas-view.svg" alt="" />
+            {viewMode !== "canvas" && <span>画布</span>}
           </button>
           <button
             type="button"
             role="radio"
+            aria-label="浏览器"
+            title={onViewModeChange ? "浏览器" : "浏览器视图暂不可用"}
+            disabled={!onViewModeChange}
             aria-checked={viewMode === "browser"}
             className={`canvas-view-mode-btn ${viewMode === "browser" ? "active" : ""}`}
-            onClick={() => handleModeChange("browser")}
+            onClick={() => onViewModeChange?.("browser")}
           >
-            浏览器
+            <img src="/design/figma/browser-view.svg" alt="" />
+            {viewMode !== "browser" && <span>浏览器</span>}
           </button>
         </div>
         <TaskPanel

@@ -107,7 +107,7 @@ test("侧栏按真实项目 ID 打开，改名和删除与项目库及刷新一�
   await entry.getByRole("menuitem", { name: "改名字" }).click();
   await expect(sidebar.getByRole("textbox", { name: "项目名称" })).toHaveCSS(
     "height",
-    "32px",
+    "36px",
   );
   await sidebar.getByRole("textbox", { name: "项目名称" }).fill("项目乙改名");
   await sidebar.getByRole("textbox", { name: "项目名称" }).press("Enter");

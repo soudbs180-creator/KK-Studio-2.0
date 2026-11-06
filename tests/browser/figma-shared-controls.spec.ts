@@ -1,3 +1,4 @@
+import { selectHomeConversation } from "./helpers";
 import { expect, test } from "@playwright/test";
 import { openWorkspace, showCanvasNavigation } from "./helpers";
 
@@ -24,6 +25,7 @@ for (const width of [390, 1440]) {
   }, testInfo) => {
     await page.setViewportSize({ width, height: 844 });
     await page.goto("/");
+    await selectHomeConversation(page);
     const trigger = page.locator(".start-mode-picker > button");
     await trigger.click();
     const menu = page.locator(".start-mode-popover");
@@ -103,7 +105,7 @@ for (const width of [320, 390, 768, 1920]) {
         }),
       };
     });
-    const target = width <= 1200 ? 44 : 32;
+    const target = 32;
     await testInfo.attach("home-geometry", {
       body: JSON.stringify(data),
       contentType: "application/json",
@@ -118,8 +120,7 @@ for (const width of [320, 390, 768, 1920]) {
           button.name ?? "",
         )
       ) {
-        const graphic =
-          button.name === "开始创建项目" ? 28 : target === 44 ? 28 : 20;
+        const graphic = button.name === "开始创建项目" ? 28 : 16;
         expect(button.graphic, button.name ?? "button").toEqual([
           graphic,
           graphic,
@@ -181,7 +182,7 @@ test("画布共享底栏保持主要44入口、辅助24×44箭头和居中图标
       },
     ),
   }));
-  expect(geometry.width).toBe(284);
+  expect(geometry.width).toBe(288);
   expect(geometry.height).toBe(52);
   for (const action of geometry.actions) {
     expect(action.width).toBe(action.label === "展开画布工具" ? 24 : 44);
@@ -219,13 +220,22 @@ test("独立箭头展开工具菜单并与按钮左边及上方8px对齐", async
     .getByRole("menuitemradio", { name: "小手工具", exact: true })
     .click();
   await expect(menu).toHaveCount(0);
-  await expect(page.locator(".tool-hand-current")).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "选择画布工具", exact: true }),
+  ).toHaveAttribute("title", "小手工具（按住空格拖拽）");
+  await expect(page.locator(".toolbar-current-tool svg")).toBeVisible();
+  await expect(page.locator(".toolbar-current-tool svg")).toHaveCSS(
+    "width",
+    "28px",
+  );
   await trigger.click();
   await page.keyboard.press("Escape");
   await expect(trigger).toBeFocused();
 });
 
-test("桌面顶部操作同排44高且在可用画布内", async ({ page }, testInfo) => {
+test("桌面顶部操作按当前Figma居中且在可用画布内", async ({
+  page,
+}, testInfo) => {
   await openWorkspace(page);
   await showCanvasNavigation(page);
   const geometry = await page.locator(".canvas-hud").evaluate((hud) => {
@@ -253,12 +263,12 @@ test("桌面顶部操作同排44高且在可用画布内", async ({ page }, test
     contentType: "application/json",
   });
   for (const entry of geometry) {
-    expect(entry.h, entry.label ?? "").toBe(44);
+    expect(entry.h, entry.label ?? "").toBe(32);
     expect(entry.inside, entry.label ?? "").toBe(true);
   }
   expect(
-    Math.max(...geometry.map((e) => e.y)) -
-      Math.min(...geometry.map((e) => e.y)),
+    Math.max(...geometry.map((e) => e.y + e.h / 2)) -
+      Math.min(...geometry.map((e) => e.y + e.h / 2)),
   ).toBeLessThan(1);
   await testInfo.attach("geometry", {
     body: JSON.stringify(geometry),

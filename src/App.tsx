@@ -664,6 +664,7 @@ export default function App() {
         kind: draft.kind,
         media: draft.media,
         attachments: draft.attachments,
+        imageSize: draft.kind === "image" ? draft.imageSize : undefined,
         privacyMode: draft.privacyMode,
         outputCount: draft.outputCount,
       },
@@ -1202,12 +1203,11 @@ export default function App() {
                 <Canvas
                   projectStatus={
                     activeProject && (
-                      <div className="project-task-status" aria-live="polite">
-                        {activeProject.name !== "未命名项目" && (
-                          <strong title={activeProject.name}>
-                            {activeProject.name}
-                          </strong>
-                        )}
+                      <div
+                        className="project-task-status"
+                        aria-live="polite"
+                        aria-label={activeProject.name}
+                      >
                         {activeProject.tasks.slice(-1).map((task) => {
                           const retry = taskRetryAvailability(
                             task,

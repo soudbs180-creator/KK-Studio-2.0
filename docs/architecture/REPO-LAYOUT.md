@@ -2,35 +2,52 @@
 
 - docId: REPO_LAYOUT
 - status: current
-- updatedAt: 2026-10-28
-- source: 用户四文档补篇B1–B8；TASK-ORG-1
+- updatedAt: 2026-11-05
+- source: 用户四文档补篇B1–B8；TASK-ORG-1；2026-11-05 目录职责对照（不搬产品代码）
 - supersededBy: null
 
-本文件承接仓库整理规则。架构依赖/命名唯一入口为[MODULARITY](MODULARITY.md)，工作树与数据安全遵循[AGENTS](../../AGENTS.md)，证据迁移与实现进度见[四文档总清单](../changes/2026-10-28-modularity-p0/four-document-coverage.md)。ORG-2门禁已在任务树候选接入，尚未主线合流；规则存在不代表存量已清理。
+本文件承接仓库整理规则。架构依赖/命名唯一入口为[MODULARITY](MODULARITY.md)，工作树与数据安全遵循[AGENTS](../../AGENTS.md)，证据迁移与实现进度见[四文档总清单](../changes/2026-10-28-modularity-p0/four-document-coverage.md)。ORG-2 目录门禁由 `scripts/governance/check-repo-layout.mjs` 执行，并经 `npm run governance:check` 调用。规则存在不代表初始存量已清空；基线只减不增。
+
+## 开发 Agent 八层
+
+下表只描述开发这个仓库时的 Agent 职责。`src/features/agent`、`src/features/skills`、`src/features/mcp`、`src/features/commands`、`vendor/canvas-agent`、`scripts/agent` 是产品运行时和它的构建脚本，不因名称相同而并入开发工具配置。本地 `.agents/` 与 `.superpowers/` 被 `.gitignore` 排除，是历史运行残留，不是规则、Skill 或子 Agent 定义；`rules:check` 拒绝把它们纳入 Git。
+
+| 层次     | 真实路径                                                                                         | 不承担                                              |
+| -------- | ------------------------------------------------------------------------------------------------ | --------------------------------------------------- |
+| AGENTS   | `AGENTS.md`                                                                                      | 不存放工具权限、Skill 步骤或 MCP 启动命令           |
+| Settings | 根目录工程配置：`package.json`、`tsconfig.json`、`vite.config.ts`、`.nvmrc`、`eslint.config.mjs` | 不代替 `RULES.md` 或任务账本                        |
+| Rules    | `RULES.md`、`AGENTS.md`、`AI_RULES.md`；冲突顺序只在 `docs/README.md`                            | 兼容入口不写规则正文                                |
+| Commands | 用户命令在 `package.json` 的 `scripts`，由 `docs/engineering/DEVELOPMENT.md` 索引                | 不在仓库里另建一份命令实现                          |
+| Skills   | 本仓库没有开发用 Skill 目录                                                                      | 不把 `src/features/skills` 当成 Cursor Skill        |
+| Agents   | 本仓库没有开发用子 Agent 配置目录                                                                | 不把 `vendor/canvas-agent` 当成开发子 Agent         |
+| Hooks    | Git：`.githooks/pre-push`。CI：`.github/workflows`。校验脚本：`scripts/governance`               | 三者不合并到同一目录；脚本存在不等于已被事件触发    |
+| MCP      | 产品服务是 `npm run agent:mcp`，实现在 `vendor/canvas-agent`；产品客户端在 `src/features/mcp`    | 仓库根没有开发工具的 MCP 客户端配置，不补一份空配置 |
+
+兼容入口只保留：`CLAUDE.md`、`GEMINI.md`、`.github/copilot-instructions.md`、`.cursor/rules/project.mdc`。
 
 ## 仓库与容器分工
 
 正式仓库在容器的KK-Studio-2.0目录；任务树按[工作树生命周期](../engineering/WORKTREE-LIFECYCLE.md)复用。产品不得依赖本机容器绝对路径。
 
-| 内容 | 位置 | 边界 |
-| --- | --- | --- |
-| 入口与工程配置 | 仓库根 | README/AGENTS/AI_RULES/DESIGN及兼容入口、CHANGELOG/CONTRIBUTING/RELEASE、VERSION、index.html、锁文件和已有工程配置；新增根文件须在docs/README登记用途 |
-| 跨端类型/schema/Port | packages/creation-contracts | 平台无关并可版本化；不放UI、网络或存储实现 |
-| 业务与宿主代码 | src/domain、features、integrations、components、runtime、styles | 各层职责及命名按MODULARITY；切片公开入口index.ts；不放旧副本或备份 |
-| 原生与独立Mobile | src-tauri、mobile | 保留各自工程边界；Mobile只经共享契约，不导入宿主src |
-| 外部改造源码 | vendor | 上游固定SHA、许可、补丁清单与同步步骤必须可追溯，详见下节 |
-| 运行静态素材 | public/design/figma、public/fixtures/demo | Figma导出/演示夹具，不能装运行截图或日志 |
-| 编辑设计资产 | design | 插件源与预览工程，设计真值仍为当前Figma |
-| 工程脚本/配置 | scripts/已有域目录、config | 新脚本进入子目录，治理脚本scripts/governance；不批量移动已有根check脚本 |
-| 测试/夹具 | tests/对应层、tests/fixtures | 单测平铺tests/unit；大于100KiB夹具登记用途；运行产物不入库 |
-| 部署与工具配置 | deploy、.github、.githooks、.cursor等现有工具目录 | 不混入产品业务和凭据 |
-| 外部参考工程/二进制 | 容器references、references/assets | 不复制进主工程或output冒充运行证据 |
-| 外部文档/调研 | 容器docs/05-references | 按competitive/research/api-specs/audits-archive/historical-plans分类，不建立第二套现行规则 |
-| 日志/验证产物 | 容器output/主题-日期 | 日志归output/logs/主题-日期，辅助脚本output/scripts；output根不平铺裸文件 |
-| 调试中间文件 | 容器或任务树.tmp | 已忽略；清理前仍核对归属，不批量清空他人的目录 |
-| 构建/分享缓存 | dist、releases、node_modules、test-results、原生target | 生成物不入Git；分享包按已有白名单，不携带开发依赖/恢复数据 |
+| 内容                 | 位置                                                            | 边界                                                                                                                                                        |
+| -------------------- | --------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 入口与工程配置       | 仓库根                                                          | README/RULES/AGENTS/AI_RULES/DESIGN及兼容入口、CHANGELOG/CONTRIBUTING/RELEASE、VERSION、index.html、锁文件和已有工程配置；新增根文件须在docs/README登记用途 |
+| 跨端类型/schema/Port | packages/creation-contracts                                     | 平台无关并可版本化；不放UI、网络或存储实现                                                                                                                  |
+| 业务与宿主代码       | src/domain、features、integrations、components、runtime、styles | 各层职责及命名按MODULARITY；切片公开入口index.ts；不放旧副本或备份                                                                                          |
+| 原生与独立Mobile     | src-tauri、mobile                                               | 保留各自工程边界；Mobile只经共享契约，不导入宿主src                                                                                                         |
+| 外部改造源码         | vendor                                                          | 上游固定SHA、许可、补丁清单与同步步骤必须可追溯，详见下节                                                                                                   |
+| 运行静态素材         | public/design/figma、public/fixtures/demo                       | Figma导出/演示夹具，不能装运行截图或日志                                                                                                                    |
+| 编辑设计资产         | design                                                          | 插件源与预览工程，设计真值仍为当前Figma                                                                                                                     |
+| 工程脚本/配置        | scripts/已有域目录、config                                      | 新脚本进入子目录，治理脚本scripts/governance；不批量移动已有根check脚本                                                                                     |
+| 测试/夹具            | tests/对应层、tests/fixtures                                    | 单测平铺tests/unit；大于100KiB夹具登记用途；运行产物不入库                                                                                                  |
+| 部署与工具配置       | deploy、.github、.githooks、.cursor等现有工具目录               | 不混入产品业务和凭据                                                                                                                                        |
+| 外部参考工程/二进制  | 容器references、references/assets                               | 不复制进主工程或output冒充运行证据                                                                                                                          |
+| 外部文档/调研        | 容器docs/05-references                                          | 按competitive/research/api-specs/audits-archive/historical-plans分类，不建立第二套现行规则                                                                  |
+| 日志/验证产物        | 容器output/主题-日期                                            | 日志归output/logs/主题-日期，辅助脚本output/scripts；output根不平铺裸文件                                                                                   |
+| 调试中间文件         | 容器或任务树.tmp                                                | 已忽略；清理前仍核对归属，不批量清空他人的目录                                                                                                              |
+| 构建/分享缓存        | dist、releases、node_modules、test-results、原生target          | 生成物不入Git；分享包按已有白名单，不携带开发依赖/恢复数据                                                                                                  |
 
-receipt.json、start-kk-studio.bat、verify-kk-studio.cmd有真实引用，保留。TEST_READY.md、TEST_INFRA.md只是ORG-3候选，零字面引用或文件名不构成删除依据。docs/reference与docs/superpowers须逐份内容比对和修复引用后再决定，不整体盲迁。
+receipt.json、start-kk-studio.bat、verify-kk-studio.cmd有真实引用，保留。TEST_READY.md、TEST_INFRA.md已从根目录移到 docs/archive，原文本保留。`.tmp` 里同一次发布最多留一份 `agent-runtime-previous-*` 和一份 `production-agent-*`；更早的副本移到容器 `output/`，不继续堆在仓库里。docs/reference与docs/superpowers须逐份内容比对和修复引用后再决定，不整体盲迁。
 
 ## vendor与文件命名
 
@@ -42,15 +59,15 @@ receipt.json、start-kk-studio.bat、verify-kk-studio.cmd有真实引用，保�
 
 docs/README是唯一索引；architecture放架构/ADR，engineering放工程流程，governance放项目状态和任务，features放功能卡，changes/日期-任务放交付记录，templates放模板，archive/年月放退役历史。现有UI系列保持原位置，只按UI_INDEX路由，不新增并行UI规范。功能看板与任务视图由对应脚本生成，不手改。
 
-| 类别 | 标记与处理 |
-| --- | --- |
-| 现行规范 | status=current、docId、updatedAt、source、supersededBy；只在一处定义规则，其他文档链接 |
-| 已取代 | 原位标superseded并指向替代；新规范合入时同步旧入口和索引 |
-| 历史归档 | status=archived；保留原始失败/截图/时间含义，不拿旧证据断言当前状态 |
+| 类别         | 标记与处理                                                                                  |
+| ------------ | ------------------------------------------------------------------------------------------- |
+| 现行规范     | status=current、docId、updatedAt、source、supersededBy；只在一处定义规则，其他文档链接      |
+| 已取代       | 原位标superseded并指向替代；新规范合入时同步旧入口和索引                                    |
+| 历史归档     | status=archived；保留原始失败/截图/时间含义，不拿旧证据断言当前状态                         |
 | 遗留兼容代码 | @deprecated、替代入口、到期任务与移除条件，登记DEPRECATIONS；不能把旧整段实现注释掉永久留存 |
-| 参考资料 | 归容器参考区域；有当前引用时先解决引用，不直接移走 |
-| 生成物 | 标注来源和生成命令；不手改生成结果或把它当独立真源 |
-| 用户运行数据 | 按数据存储/记忆契约，永不入Git；不因文件整理改key或删除项目/原图/对话/凭据 |
+| 参考资料     | 归容器参考区域；有当前引用时先解决引用，不直接移走                                          |
+| 生成物       | 标注来源和生成命令；不手改生成结果或把它当独立真源                                          |
+| 用户运行数据 | 按数据存储/记忆契约，永不入Git；不因文件整理改key或删除项目/原图/对话/凭据                  |
 
 历史变更纠错使用勘误和替代证据，不重写旧结论。退役顺序为新文档合流→旧文档superseded/索引指向新文档→至少一个发布周期后按任务归档→链接检查。缺少发布时间/替代验收时保留原件，不用日历日期强行删除。
 
@@ -66,13 +83,13 @@ tracked字节、docs字节、图/日志数量、根文件数、交付缺件和re
 
 治理入口调用scripts/governance/check-repo-layout.mjs，因此governance:check及lint/verify覆盖下表。config/repo-layout-rules.json保存根文件白名单；新增根文件须同时登记白名单与文档用途并接受提交审查。config/repo-layout-baseline.json保存Git来源及640条初始违规，不是允许新增同类问题的全局豁免。
 
-| 规则 | 拦截条件 |
-| --- | --- |
-| ROOT | 根文件不在白名单；初始26个存量文件保留 |
-| TYPE | log/gz/webm/tsbuildinfo/bak/orig/tmp进入跟踪集合 |
-| IMAGE | docs下PNG/JPEG/WebP/GIF/SVG/AVIF/BMP/ICO超过200KiB；已有超限图片不得扩大字节数 |
+| 规则     | 拦截条件                                                                              |
+| -------- | ------------------------------------------------------------------------------------- |
+| ROOT     | 根文件不在白名单；初始26个存量文件保留                                                |
+| TYPE     | log/gz/webm/tsbuildinfo/bak/orig/tmp进入跟踪集合                                      |
+| IMAGE    | docs下PNG/JPEG/WebP/GIF/SVG/AVIF/BMP/ICO超过200KiB；已有超限图片不得扩大字节数        |
 | LOCATION | test.ts不在tests或独立mobile/tests；Markdown不在docs或根白名单；src下bak/old/orig备份 |
-| NAME | 路径含非ASCII、空白或控制字符；不批量改名历史路径 |
+| NAME     | 路径含非ASCII、空白或控制字符；不批量改名历史路径                                     |
 
 vendor一级子目录UPSTREAM.md按本文件明确要求允许，其他vendor文档仍受落位规则；这一例外解决补篇B6.3与B11的直接冲突。索引/元数据分别沿用doc-index/snapshot，不再复制实现。
 

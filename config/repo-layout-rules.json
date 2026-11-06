@@ -15,8 +15,6 @@
     "README.md",
     "RELEASE.md",
     "RULES.md",
-    "TEST_INFRA.md",
-    "TEST_READY.md",
     "VERSION",
     "eslint.config.mjs",
     "index.html",

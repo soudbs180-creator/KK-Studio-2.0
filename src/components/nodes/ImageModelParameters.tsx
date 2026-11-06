@@ -26,14 +26,17 @@ export default function ImageModelParameters({
   const command = useContext(CanvasImageCommandContext);
   const declaredConnectionId =
     item?.providerConnectionId ?? command?.providerConnectionId;
-  const selected = selection ? {
-    ...selection,
-    source: selection.source === "api" ? "api" as const : "codex" as const,
-  } : {
-    source: item?.generationSource === "codex" ? "codex" : "api",
-    model,
-    connectionId: declaredConnectionId,
-  } satisfies ModelSelection;
+  const selected = selection
+    ? {
+        ...selection,
+        source:
+          selection.source === "api" ? ("api" as const) : ("codex" as const),
+      }
+    : ({
+        source: item?.generationSource === "codex" ? "codex" : "api",
+        model,
+        connectionId: declaredConnectionId,
+      } satisfies ModelSelection);
   const capabilities = useImageModelCapabilities(selected);
   const connectionId = capabilities.connectionId;
   const options = imageSizeOptions(capabilities.declaration);
@@ -80,7 +83,9 @@ export default function ImageModelParameters({
         ))}
       </div>
       {size && !options.some((option) => option.size === size) && (
-        <small role="status">原尺寸 {size} 未由当前模型声明支持，请重新选择或使用自适应。</small>
+        <small role="status">
+          原尺寸 {size} 未由当前模型声明支持，请重新选择或使用自适应。
+        </small>
       )}
       <div className="parameter-capability-grid" aria-label="模型能力参数">
         <span>思考强度</span>
@@ -96,8 +101,8 @@ export default function ImageModelParameters({
         {selected.source !== "api"
           ? "Codex 内置生图由模型自适应尺寸，当前入口不发送尺寸参数。"
           : options.length
-          ? "只发送当前模型声明支持的尺寸；自适应使用供应商默认值。"
-          : "当前模型未声明尺寸，只发送默认参数。可在设置中刷新目录或补充供应商规格。"}
+            ? "只发送当前模型声明支持的尺寸；自适应使用供应商默认值。"
+            : "当前模型未声明尺寸，只发送默认参数。可在设置中刷新目录或补充供应商规格。"}
       </small>
       <small>
         图片生成：{support[capabilities.operations.generate]} · 参考图编辑：

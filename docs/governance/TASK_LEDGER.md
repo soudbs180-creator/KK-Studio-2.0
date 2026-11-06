@@ -62,7 +62,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | UI-001 | UI tokens和共享组件契约 | PARTIAL | 进行中 | P2 | TASK-GOV-001, TASK-DS-001 | root | 补充负责人、优先级、分支和下一步验收证据 |
 | UI-002 | 窄屏composer和动态文案溢出 | DONE | 已完成 | P3 | UI-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | UI-003 | 示例任务/账号与真实服务边界 | PARTIAL | 未完成 | P2 | UI-001 | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
-| UI-004 | 逐页对齐、IA和最终视觉运行态 | PARTIAL | 未完成 | P2 | UI-002, UI-003, TASK-DS-001 | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
+| UI-004 | 逐页对齐、IA和最终视觉运行态 | PARTIAL | 未完成 | P2 | UI-002, UI-003, TASK-DS-001 | root | 完成全量浏览器失败项与完整verify，官方路径重建Desktop收据并独立审查当前SHA；原127入口旧线程/Google会话迁移校验失败，保留原件。 |
 | PERF-001 | 原生素材缩略图/分页及内存IO | PARTIAL | 进行中 | P2 | T3a | root | 补充负责人、优先级、分支和下一步验收证据 |
 | EXT-GIT | 远端PR与main保护规则 | DONE | 已完成 | P3 | TASK-GOV-001, T0 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TEST-PROV-001 | Provider真实入口浏览器回归 | DONE | 已完成 | P3 | TASK-GOV-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
@@ -225,7 +225,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-MAINLINE-20261103 | 主线治理收口与当前浏览器门禁修复 | DONE | 已完成 | P1 | none | root | 本卡完成；继续ComfyUI参数、图片编辑与真实生成链。 |
 | TASK-COMFY-IMAGE-20261103 | ComfyUI 参数与图片深度编辑生产链路 | PARTIAL | 进行中 | P1 | none | root | 依据阶段2历史验证核对任务范围与未验收外部模型项；新接线由TASK-E2E-WIRING-20261104承接 |
 | TASK-E2E-WIRING-20261104 | 六支柱生产接线与去测试替身 | PARTIAL | 进行中 | P0 | none | root | 冻结源码完成verify17及当前Desktop，提交后按实际PR基线独审/CI，再合流和安全回收源树 |
-| TASK-DEEP-WATER-20261105 | 第二阶段B1–B5与A1–A3深水区补齐 | IN_PROGRESS | 进行中 | P0 | TASK-E2E-WIRING-20261104 | root | 实现与生产链验证 |
+| TASK-DEEP-WATER-20261105 | 第二阶段B1–B5与A1–A3深水区补齐 | IN_PROGRESS | 进行中 | P0 | TASK-E2E-WIRING-20261104 | root | 生产链、完整 verify 与 Desktop 验收 |
 | TASK-RULES-005 | AI铁律卡片RULES.md与Figma组件三层Token化治理重构 | DONE | 已完成 | P0 | none | root | 已完成合流并推送 |
 
 ## TASK-COMFY-PHYSICAL-20261030 — 本机ComfyUI真实显卡出图验收
@@ -1309,14 +1309,14 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Feature IDs: FEAT-001, FEAT-022, FEAT-023, FEAT-036
 - Owner role: repository-maintainer
 - Acceptance: 当前Design System与已确认页面来源的同状态视觉对比; 六态及异步/键盘/离线; dev1421/preview1423/Tauri最终source分别确认
-- Branch: `unallocated`
-- Worktree: `unallocated`
-- Modules: Landing, Workspace, Assets, Settings, Tasks, Account
-- Verification: PARTIAL — 2026-10-17分配核对：登记的历史worktree目录已不存在；当前无活动工作树，原验证只限verificationHistory所列SHA/阶段，不构成当前交付通过。
-- Evidence: [docs/changes/2026-09-16-ui-system-audit/plan.md](../../docs/changes/2026-09-16-ui-system-audit/plan.md), [docs/changes/2026-09-20-ui-main-alignment/verification.md](../../docs/changes/2026-09-20-ui-main-alignment/verification.md), [docs/changes/2026-09-22-design-system/verification.md](../../docs/changes/2026-09-22-design-system/verification.md), [docs/changes/2026-09-22-design-system-pages/verification.md](../../docs/changes/2026-09-22-design-system-pages/verification.md)
-- Next action: 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。
-- Last verified: 2026-09-22
-- Updated: 2026-10-17
+- Branch: `main`
+- Worktree: `D:/kk-studio/KK-Studio-2.0`
+- Modules: Landing, Workspace, Assets, Settings, Tasks, Account, src/App.tsx, src/components/StartComposer.tsx, src/components/StartMediaControls.tsx, src/components/settings/GeneralSettings.tsx, src/components/settings/GeneralAdvancedPreferences.tsx, src/components/settings/settings.css, src/components/canvas/CanvasHud.tsx, src/components/canvas/CanvasNavigation.tsx, src/components/canvas/CanvasWorkbenchNavigation.tsx, src/components/canvas/ToolbarIcon.tsx, src/components/StartComposerModes.tsx, src/styles/canvas-navigation.css, src/components/ConversationHeader.tsx, src/components/ConversationChatTabs.tsx, src/styles/canvas-hud.css, src/styles/conversation-panel.css, src/styles/sidebar.css, src/styles/composer.css, src/styles/tokens.css, DESIGN.md, design/figma-component-map.json, public/design/figma/canvas-view.svg, public/design/figma/browser-view.svg, tests/browser, tests/unit/homeMediaSelection.test.ts, scripts/check-rules.mjs, config/platform-versions.json, package.json, package-lock.json, VERSION, src-tauri/Cargo.toml, src-tauri/Cargo.lock, src-tauri/tauri.conf.json, docs/changes/2026-11-05-figma-local-sync, docs/UI_INDEX.md, docs/PROGRESS.md, docs/governance/PROJECT_STATE.md, docs/governance/AI_HANDOFF.md, docs/governance/ai-memory/ui-motion.md, docs/governance/ai-memory/memlog.md, docs/governance/TASK_LEDGER.md, tests/unit/uiGovernanceTokens.test.ts, tests/unit/designMarkdown.test.ts, tests/support/public-entry-loader.mjs, src/components/StartCompactTools.tsx, src/components/useComposerMenus.ts, src/features/agent/agentHost.ts, tests/unit/modelAllowlistAdversarialChallenge.test.ts, src/features/speech/useSpeechInput.ts, src/components/assets/AssetPanelHeader.tsx, src/components/canvas/CanvasToolbar.tsx, src/components/nodes/CreationParameterControl.tsx, src/components/nodes/ImageModelParameters.tsx, src/components/SavedPane.tsx, src/domain/creationSnapshotCodec.ts, src/domain/modelSelection.ts, src/styles/catalog-pages.css, tests/unit/creation.test.ts, scripts/governance/ai-memory.mjs, src/components/settings/GatewayConsole.tsx, src/components/canvas/TaskPanel.tsx, src/styles/canvas-tools.css, src/styles/global.css, src/styles/workspace.css, src/styles/responsive-content.css, src/components/ResizeHandle.tsx, src/components/canvas/useCanvasViewport.ts, src/components/ui/Input.tsx, src/components/useDismissible.ts, src/features/ai-gateway/dpapiProtector.ts, tests/unit/dpapiProtector.test.ts
+- Verification: PARTIAL — 2026-11-06：main@00b6c5c9+dirty，按当前Figma完成通用设置/侧栏/画布组合/手机更多和首页尺寸提交链；lint/typecheck/2710单测(20skip)、Agent205(2skip)、原生尺寸2、14项三宽度生产浏览器通过。完整门禁仍在复验，Desktop运行与全页验收未完成。
+- Evidence: [docs/changes/2026-09-16-ui-system-audit/plan.md](../../docs/changes/2026-09-16-ui-system-audit/plan.md), [docs/changes/2026-09-20-ui-main-alignment/verification.md](../../docs/changes/2026-09-20-ui-main-alignment/verification.md), [docs/changes/2026-09-22-design-system/verification.md](../../docs/changes/2026-09-22-design-system/verification.md), [docs/changes/2026-09-22-design-system-pages/verification.md](../../docs/changes/2026-09-22-design-system-pages/verification.md), [docs/changes/2026-11-05-figma-local-sync/verification.md](../../docs/changes/2026-11-05-figma-local-sync/verification.md)
+- Next action: 完成全量浏览器失败项与完整verify，官方路径重建Desktop收据并独立审查当前SHA；原127入口旧线程/Google会话迁移校验失败，保留原件。
+- Last verified: 2026-11-06
+- Updated: 2026-11-06
 
 ## PERF-001 — 原生素材缩略图/分页及内存IO
 
@@ -4409,9 +4409,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `main`
 - Worktree: `D:/kk-studio/KK-Studio-2.0`
 - Modules: src/domain, src/features, src/components, vendor/canvas-agent, src-tauri
-- Verification: PARTIAL — 基线已核对，health26 blocking advisory；尚未完成验收
+- Verification: PARTIAL — A1：health:check 相对 9b1038a75a62 由 3 blocking 降到 0 blocking、2 allowed；creation/media/home 定向测试 31 通过。完整 verify 与 Desktop 未跑。
 - Evidence: [docs/changes/2026-11-05-step2-deep-water/verification.md](../../docs/changes/2026-11-05-step2-deep-water/verification.md)
-- Next action: 实现与生产链验证
+- Next action: 生产链、完整 verify 与 Desktop 验收
 - Last verified: 2026-11-05
 - Updated: 2026-11-05
 

@@ -85,3 +85,41 @@ Figma 源变化后，受影响条目退回 `DESIGN_PENDING`，保留旧证据的
 3. 变量有变化 → 拉快照 → `tokens:export` → `tokens:css` → `design:sync`，审查 diff。
 4. 组件迁移 → 更新映射表状态 → 只用 Tier 2/3 token 实现。
 5. `npm run typecheck && npm run lint && npm test && npm run ui:check`，UI 改动另按 [UI_SPEC](UI_SPEC.md) 做同状态浏览器验证。
+
+
+## 7. 双轨并行研发契约（Dual-Track UI & Function Protocol）
+
+为支持多 Agent 在不同平台（Cursor / Claude / Web）无缝并行推进，且在「上下文丢失」后依然能完全基于仓库事实自主恢复，确立以下双轨并行契约：
+
+```mermaid
+flowchart TD
+    User["PO / 设计师 (在 Figma 推敲视觉并注明白话功能)"]
+    User --> Gate{"设计与AI绘图先行门禁<br/>(Figma Co-Design & PO Review Gate)"}
+    
+    subgraph 轨道A：视觉与呈现 [Track UI]
+        Gate -->|"Figma 视觉就绪"| UI1["读取 Figma 节点与 Tokens"]
+        UI1 --> UI2["构建纯呈现组件 TSX + CSS<br/>(绑定 data-figma-node，暴露事件 Props)"]
+        UI2 --> UI3["记录至 ui-motion.md"]
+    end
+
+    subgraph 轨道B：功能与业务 [Track Logic]
+        Gate -->|"解析按钮功能语义"| Logic1["编写业务 Hook / API 适配器"]
+        Logic1 --> Logic2["底层出图/模型调用/状态流转验证"]
+        Logic2 --> Logic3["记录至 memlog.md"]
+    end
+
+    UI3 & Logic3 --> Merge["容器层组装合流 (Container / Page)<br/>UI Props ⇄ Logic Hook"]
+    Merge --> Verify["自动化门禁 + 视觉核验 (SYNCED)"]
+```
+
+### 7.1 Figma 原生注解规约（面向 PO 与多 Agent 识别）
+用户在 Figma 选中按钮、组件或弹窗时，在右侧 **`Description`** 或 **`Dev Mode Annotation`** 中使用标准大白话注明三要素：
+- **`功能`**：点击后的业务动作（如：`触发后台出图，调用 sub2api 网关` 或 `仅本地切换侧边栏展开`）。
+- **`表现`**：交互状态（如：`按钮内转菊花 Loading，置灰不可点，错误边框变红`）。
+- **`状态`**：`READY`（已定稿可做）/ `DRAFT`（仅供视觉参考未定）/ `TODO`（代码有该功能但 Figma 待补图）。
+
+### 7.2 上下文断层防护（Context-Loss Resilience）
+任何 Agent 在上下文清空或换新平台时，**严禁凭空盲写**，按以下固定链条恢复：
+1. 查阅 [`docs/governance/ai-memory/ui-motion.md`](governance/ai-memory/ui-motion.md) 当前切片的最新交接；
+2. 查阅 [`design/figma-component-map.json`](../design/figma-component-map.json) 获取各组件的 Figma `nodeId` 与同步状态；
+3. 按照组件标注的 `data-figma-node`，通过 Figma MCP 回读最新视觉树与 Description，瞬时接续开发。

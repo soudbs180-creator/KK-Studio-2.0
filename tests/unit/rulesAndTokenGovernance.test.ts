@@ -1,7 +1,11 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
-import { checkRules, extractRuleIds } from "../../scripts/check-rules.mjs";
+import {
+  checkRules,
+  compatibilityIssues,
+  extractRuleIds,
+} from "../../scripts/check-rules.mjs";
 import {
   collectionTier,
   figmaToCssVar,
@@ -30,6 +34,13 @@ test("checkRules passes on repository root and enforces numbered non-duplicative
   assert.deepEqual(
     extractRuleIds("- **[RULE-NO-DRIVEBY] test** and [D-SYNC-01]"),
     ["RULE-NO-DRIVEBY", "D-SYNC-01"],
+  );
+  assert.deepEqual(
+    compatibilityIssues(
+      "CLAUDE.md",
+      "Read RULES.md, AGENTS.md, and AI_RULES.md.\n- **[R-ARCH-01] second policy**",
+    ),
+    ["CLAUDE.md: must not define a rule body"],
   );
 });
 

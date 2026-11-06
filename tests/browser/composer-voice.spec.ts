@@ -94,8 +94,8 @@ test("首页语音可以开启、识别并关闭，结果写入提示词", async
   await prompt.fill("夜晚的城市");
   const voice = page.locator(".start-mic-button");
   await expect(voice).toHaveAttribute("aria-label", "开启语音输入");
-  await expect(voice.locator("img")).toHaveCSS("width", "20px");
-  await expect(voice.locator("img")).toHaveCSS("height", "20px");
+  await expect(voice.locator("svg")).toHaveCSS("width", "16px");
+  await expect(voice.locator("svg")).toHaveCSS("height", "16px");
 
   await voice.click();
   await expect(voice).toHaveAttribute("aria-label", "关闭语音输入");
@@ -153,7 +153,7 @@ test("首页模型名称保持单行并在过长时省略", async ({ page }) => 
       name: /kk-image-model-with-a-very-long-display-name/,
     })
     .click();
-  const name = button.locator("span");
+  const name = button.locator("span:not(.ui-icon)");
   await expect(name).toHaveText("kk-image-model-with-a-very-long-display-name");
   await expect(name).toHaveCSS("white-space", "nowrap");
   await expect(name).toHaveCSS("text-overflow", "ellipsis");
@@ -264,4 +264,25 @@ test("语音识别结果遵守首页提示词长度上限", async ({ page }) => 
   });
   await expect.poll(async () => (await prompt.inputValue()).length).toBe(4000);
   await expect(voice).toHaveAttribute("data-voice-state", "off");
+});
+
+test("手机收起更多会取消语音并清除正在听取状态", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await installSpeechMock(page);
+  await page.goto("/");
+  await page.getByLabel("创作提示词", { exact: true }).fill("保留语音草稿");
+  const more = page.getByRole("button", { name: "更多创作选项", exact: true });
+  await more.click();
+  await page.getByRole("button", { name: "开启语音输入", exact: true }).click();
+  await expect(
+    page.getByRole("button", { name: "关闭语音输入", exact: true }),
+  ).toBeVisible();
+  await more.click();
+  await expect(page.getByRole("status")).toContainText("语音输入已关闭");
+  await page.evaluate(() =>
+    (window as SpeechMockWindow).__kkSpeechMock?.emit("迟到结果不能写入"),
+  );
+  await expect(page.getByLabel("创作提示词", { exact: true })).toHaveValue(
+    "保留语音草稿",
+  );
 });

@@ -183,7 +183,7 @@ test("项目库与侧栏共用名称分组和完整垃圾箱，取消删除不�
   page.once("dialog", (dialog) => dialog.accept());
   await row.getByRole("menuitem", { name: "删除项目", exact: true }).click();
   await page.getByRole("button", { name: "项目库", exact: true }).click();
-  await library.getByRole("tab", { name: "垃圾箱", exact: true }).click();
+  await library.getByRole("tab", { name: "回收站", exact: true }).click();
   await library.getByRole("button", { name: "更多项目设置" }).click();
   await library
     .getByRole("menuitem", { name: "恢复项目", exact: true })

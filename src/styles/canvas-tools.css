@@ -232,7 +232,7 @@
 /* Figma 2149:42515 owns all six actions and their shared geometry. */
 .canvas .canvas-toolbar {
   left: calc(var(--canvas-usable-width, 100%) / 2);
-  bottom: 16px;
+  bottom: var(--kk-control-px-md);
   width: max-content;
   height: 52px;
   max-width: calc(100% - 16px);
@@ -293,7 +293,10 @@
   outline-offset: -2px;
 }
 .canvas .canvas-toolbar > .toolbar-current-tool + .toolbar-toggle {
-  margin-left: -4px;
+  margin-left: 0;
+  flex-basis: var(--kk-control-h-sm);
+  width: var(--kk-control-h-sm);
+  min-width: var(--kk-control-h-sm);
 }
 .canvas .canvas-toolbar .toolbar-divider {
   position: relative;
@@ -327,14 +330,6 @@
   > .toolbar-toggle[aria-expanded="true"]
   .toolbar-icon-collapse {
   transform: rotate(180deg);
-}
-@media (pointer: coarse), (max-width: 767px) {
-  .canvas .canvas-toolbar > .toolbar-toggle {
-    flex-basis: 44px;
-    width: 44px;
-    min-width: 44px;
-    height: 44px;
-  }
 }
 .canvas-tool-menu,
 .canvas-help-menu,

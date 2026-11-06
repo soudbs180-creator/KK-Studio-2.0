@@ -97,6 +97,9 @@
 .canvas-hud .task-list-wrapper .task-panel {
   pointer-events: auto;
 }
+.canvas-hud .task-list-wrapper:has(.task-panel) {
+  z-index: var(--kk-z-dropdown);
+}
 .canvas-hud .task-button {
   width: 93px;
   min-width: 93px;
@@ -120,51 +123,60 @@
   padding: 0;
 }
 
+/* Figma 563:1506: current view is icon-only; the other view keeps its label. */
 .canvas-view-mode-toggle {
   display: inline-flex;
   align-items: center;
-  width: var(--kk-canvas-browser-switch-w);
-  height: var(--kk-canvas-toolbar-h);
-  padding: 2px;
-  border-radius: var(--ui-radius-pill);
-  background: var(--kk-control-surface-idle);
-  border: 1px solid var(--border-control);
-  box-shadow: none;
-  gap: 2px;
+  height: var(--kk-canvas-view-h);
+  padding: var(--kk-canvas-view-inset);
+  gap: var(--kk-canvas-view-gap);
+  border: 0;
+  border-radius: var(--kk-canvas-view-radius);
+  background: var(--kk-canvas-view-bg);
+  box-sizing: border-box;
+  box-shadow: inset 0 0 0 var(--kk-border-width) var(--kk-border-default);
   flex-shrink: 0;
 }
-
 .canvas-view-mode-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  flex: 1 1 0;
-  height: var(--kk-canvas-toolbar-button-h);
-  padding: 0 10px;
-  border-radius: var(--ui-radius-pill);
-  border: none;
+  gap: var(--kk-canvas-nav-pad);
+  height: var(--kk-canvas-nav-control);
+  padding: 0 var(--kk-canvas-nav-pad);
+  border: 0;
+  border-radius: var(--kk-canvas-nav-radius);
   background: transparent;
-  color: var(--text-secondary);
-  font-size: 12px;
-  font-weight: 400;
-  cursor: pointer;
+  color: var(--kk-canvas-view-fg);
+  font-size: var(--kk-canvas-view-font);
+  line-height: var(--kk-canvas-view-line);
+  font-weight: var(--kk-canvas-view-weight);
   white-space: nowrap;
-  transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-
-.canvas-view-mode-btn:hover:not(.active) {
-  color: var(--text-primary);
-  background: var(--kk-control-surface-hover);
-}
-
 .canvas-view-mode-btn.active {
-  background: var(--kk-choice-selected-bg);
-  color: var(--text-primary);
-  font-weight: 500;
+  width: var(--kk-canvas-nav-control);
+  padding: 0;
+  background: var(--kk-canvas-view-bg-selected);
+  color: var(--kk-canvas-view-fg-selected);
 }
-
-.canvas-view-mode-btn:active {
-  transform: scale(0.94);
+.canvas-view-mode-btn img {
+  width: var(--kk-canvas-nav-icon);
+  height: var(--kk-canvas-nav-icon);
+}
+:root[data-theme="light"] .canvas-view-mode-btn img {
+  filter: invert(1);
+}
+.canvas-view-mode-btn:hover:not(.active) {
+  background: var(--kk-canvas-view-bg-hover);
+}
+.canvas-view-mode-btn:disabled {
+  opacity: var(--ui-disabled-opacity);
+  cursor: not-allowed;
+  background: transparent;
+}
+.canvas-view-mode-btn:focus-visible {
+  outline: var(--kk-focus-width-subtle) solid var(--kk-focus-ring);
+  outline-offset: var(--kk-focus-offset-subtle);
 }
 .canvas-hud .task-panel {
   /* Figma 312:2679 task panel: 196×240, 8px radius, zero inner padding.
@@ -481,6 +493,7 @@
 
 /* Current Figma 655:141110: one 44px row within the usable canvas. */
 .canvas .canvas-hud {
+  display: flex;
   top: 28px;
   left: 28px;
   right: auto;
@@ -493,16 +506,24 @@
 }
 .canvas-hud-left,
 .canvas .canvas-hud-right {
+  pointer-events: none;
   display: flex;
   align-items: center;
   gap: 8px;
   min-width: 0;
   flex-shrink: 0;
+  min-height: var(--kk-control-h-xl);
+}
+.canvas-hud-left > *,
+.canvas-hud-right > * {
+  pointer-events: auto;
 }
 .canvas .canvas-hud-right {
   margin: 0 0 0 auto;
   width: auto;
   flex: 0 0 auto;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 .canvas .canvas-hud-actions {
   min-width: 0;
@@ -510,13 +531,13 @@
   flex-shrink: 1;
 }
 .canvas .canvas-hud .project-task-status {
-  height: 44px;
+  height: var(--kk-control-h-md);
   padding: 0 12px;
   align-items: center;
   flex-wrap: nowrap;
   overflow: hidden;
   border: 1px solid var(--kk-border-default);
-  border-radius: var(--kk-radius-full);
+  border-radius: var(--kk-task-trigger-radius);
   background: var(--kk-bg-input);
 }
 .canvas .canvas-hud .project-task-status > * {
@@ -551,14 +572,35 @@
   border-radius: var(--kk-radius-full);
 }
 .canvas .canvas-hud .task-button {
-  width: 120px;
-  min-width: 120px;
+  position: relative;
+  border: 0;
+  box-shadow: inset 0 0 0 var(--kk-border-width) var(--kk-border-default);
+  width: auto;
+  min-width: 0;
+  height: var(--kk-task-trigger-h);
+  min-height: var(--kk-task-trigger-h);
+  padding-inline: var(--kk-task-trigger-pad-start)
+    var(--kk-task-trigger-pad-end);
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  font-size: var(--kk-font-body);
-  line-height: var(--kk-line-body);
+  gap: var(--kk-task-trigger-gap);
+  border-radius: var(--kk-task-trigger-radius);
+  font-size: var(--kk-task-trigger-font);
+  line-height: var(--kk-task-trigger-line);
+}
+.canvas .canvas-hud .task-button .ui-icon {
+  width: var(--kk-task-trigger-icon);
+  height: var(--kk-task-trigger-icon);
+}
+.canvas .canvas-hud .task-button::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: max(100%, var(--kk-hit-touch));
+  height: var(--kk-hit-touch);
+  transform: translate(-50%, -50%);
 }
 .canvas .canvas-hud .chat-reopen {
   width: 44px;
@@ -574,29 +616,13 @@
   width: 28px;
   height: 28px;
 }
-.canvas .canvas-view-mode-toggle {
-  width: 144px;
-  height: 44px;
-  padding: 0;
-  gap: 4px;
-  border: 0;
-  background: var(--bg-input);
-}
-.canvas .canvas-view-mode-btn {
-  height: 44px;
-  min-width: 44px;
-  padding: 0 12px;
-  font-size: var(--kk-font-caption);
-  line-height: var(--kk-line-caption);
-  font-weight: var(--kk-font-weight-body-strong);
-}
 @container canvas-hud (max-width: 760px) {
   .canvas .canvas-hud .task-button {
     width: 44px;
     min-width: 44px;
   }
-  .canvas .canvas-hud .task-button > span,
-  .canvas .canvas-map-trigger > span:not(.toolbar-icon) {
+  .canvas .canvas-hud .task-button > span:not(.ui-icon),
+  .canvas .canvas-map-trigger > span:not(.toolbar-icon):not(.ui-icon) {
     display: none;
   }
   .canvas .canvas-hud .task-button-icon {

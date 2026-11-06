@@ -30,6 +30,10 @@ export default function CanvasWorkbenchNavigation({
         onChangeZoom={controls.changeZoom}
         onFit={controls.fitView}
         showConnections={controls.preferences.showConnections}
+        snapEnabled={controls.preferences.snapEnabled}
+        onToggleSnap={() =>
+          controls.setSnapEnabled(!controls.preferences.snapEnabled)
+        }
         onToggleConnections={() =>
           controls.setShowConnections(!controls.preferences.showConnections)
         }

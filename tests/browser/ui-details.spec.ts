@@ -4,6 +4,7 @@ import {
   openWorkspace,
   selectSettingsSection,
   waitForConversationPanelSettled,
+  selectHomeConversation,
 } from "./helpers";
 
 for (const width of [390, 1099, 1920]) {
@@ -12,6 +13,7 @@ for (const width of [390, 1099, 1920]) {
   }, info) => {
     await page.setViewportSize({ width, height: 1080 });
     await page.goto("/");
+    await selectHomeConversation(page);
     const home = page.locator(".start-composer");
     await expect(home.getByText("生成参数", { exact: true })).toHaveCount(0);
     await expect(home.getByLabel("生成数量", { exact: true })).toHaveCount(0);
@@ -19,7 +21,10 @@ for (const width of [390, 1099, 1920]) {
       ".start-model-picker > button",
       ".start-mode-button",
     ])
-      await expect(home.locator(selector)).toHaveCSS("border-radius", "1000px");
+      await expect(home.locator(selector)).toHaveCSS(
+        "border-radius",
+        width < 768 && selector !== ".start-mode-button" ? "1000px" : "8px",
+      );
     const homeExtensions = home.getByRole("button", {
       name: "扩展",
       exact: true,
@@ -27,26 +32,30 @@ for (const width of [390, 1099, 1920]) {
     await expect(homeExtensions).toBeVisible();
     await expect(homeExtensions).toHaveAttribute("title", "扩展");
     await expect(homeExtensions).toHaveAttribute("aria-haspopup", "menu");
-    await expect(homeExtensions).toHaveCSS(
-      "border-radius",
-      width < 768 ? "8px" : "1000px",
-    );
+    await expect(homeExtensions).toHaveCSS("border-radius", "8px");
     if (width < 768) {
       await expect(homeExtensions).toHaveCSS("width", "44px");
       await expect(homeExtensions).toHaveCSS("height", "44px");
-      await expect(homeExtensions.locator("span")).toBeHidden();
-    } else await expect(homeExtensions.locator("span")).toBeVisible();
+      await expect(homeExtensions.locator("span:not(.ui-icon)")).toBeHidden();
+      await home
+        .getByRole("button", { name: "更多创作选项", exact: true })
+        .click();
+    } else
+      await expect(homeExtensions.locator("span:not(.ui-icon)")).toBeVisible();
     const homeCenters = await home
-      .locator(".start-footer-right button")
+      .locator(".start-composer-footer button")
       .evaluateAll((buttons) =>
-        buttons.map((button) => {
-          const rect = button.getBoundingClientRect();
-          return rect.top + rect.height / 2;
-        }),
+        buttons
+          .filter((button) => button.getClientRects().length)
+          .map((button) => {
+            const rect = button.getBoundingClientRect();
+            return rect.top + rect.height / 2;
+          }),
       );
     expect(
       Math.max(...homeCenters) - Math.min(...homeCenters),
     ).toBeLessThanOrEqual(1);
+    expect(homeCenters.length).toBeGreaterThanOrEqual(4);
     await openWorkspace(page);
     const open = page.getByRole("button", { name: "打开对话", exact: true });
     if (await open.isVisible()) await open.click();
@@ -70,8 +79,9 @@ for (const width of [390, 1099, 1920]) {
     if (width <= 1200) {
       await expect(chatExtensions).toHaveCSS("width", "44px");
       await expect(chatExtensions).toHaveCSS("height", "44px");
-      await expect(chatExtensions.locator("span")).toBeHidden();
-    } else await expect(chatExtensions.locator("span")).toBeVisible();
+      await expect(chatExtensions.locator("span:not(.ui-icon)")).toBeHidden();
+    } else
+      await expect(chatExtensions.locator("span:not(.ui-icon)")).toBeVisible();
     const tail = chat.locator(".composer-trailing-actions");
     await expect(tail).toBeVisible();
     const layout = await tail.evaluate((group) => {
@@ -116,7 +126,7 @@ test("设置按内容选择紧凑宽度，切换模型后普通页不保留宽�
   });
   const general = (await panel.boundingBox())!;
   expect(general.width).toBeLessThanOrEqual(960);
-  expect(Math.round(general.height)).toBe(680);
+  expect(Math.round(general.height)).toBe(674);
   await selectSettingsSection(page, "模型接入");
   const models = (await panel.boundingBox())!;
   expect(models.width).toBeGreaterThan(general.width);

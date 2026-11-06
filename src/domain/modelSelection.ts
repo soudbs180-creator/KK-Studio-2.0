@@ -21,8 +21,10 @@ export function homeDraftForSelection(
       ? selection.kind
       : draft.kind;
   const previous = homeModelSelection(draft);
-  const sameRoute = previous.source === selection.source &&
-    previous.model === selection.model && previous.connectionId === selection.connectionId;
+  const sameRoute =
+    previous.source === selection.source &&
+    previous.model === selection.model &&
+    previous.connectionId === selection.connectionId;
   return {
     ...draft,
     model: selection.model,
@@ -30,8 +32,10 @@ export function homeDraftForSelection(
     providerConnectionId:
       selection.source === "api" ? selection.connectionId : undefined,
     kind,
-    imageSize: kind === "image" && selection.source === "api" && sameRoute
-      ? draft.imageSize : undefined,
+    imageSize:
+      kind === "image" && selection.source === "api" && sameRoute
+        ? draft.imageSize
+        : undefined,
     media:
       kind === "video" || kind === "audio"
         ? draft.media?.kind === kind

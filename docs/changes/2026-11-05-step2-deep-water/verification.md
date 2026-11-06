@@ -19,3 +19,9 @@ Figma 前置：2026-11-05 新增并回读 [B1/B2/B4 设计](https://www.figma.co
 补充：Figma4394:52689定义蓝图两操作，未直接规定168×230整菜单。230是原菜单186加现有40px控件高度与4px间隙的运行组合几何。独立review已确认此断言调整合理。
 
 蓝图文件统一64MiB上限（包含嵌入媒体）；3MiB预览实际JSON往返与超限拒绝测试通过。导出不会生成自身入口拒收的超限文件；超限提示保留原数据并建议项目归档。
+
+## A1 复杂度收口（2026-11-05）
+
+对照 origin/main `9b1038a75a62`，`npm run health:check` 在拆分前为 3 blocking、2 allowed（advisory，退出码 0）。阻断项是 `StartComposer` CC 23、`normalizeDraft` CC 22、`createProject` CC 31。
+
+三处只把分支抽到同文件纯函数：`homeGenerationGate`、`persistedDraftKind`、`codexGenerationDescription`、`sizedImage`、`parsedProjectMedia`、`creationItemParameters`。拆分后同一命令为 0 blocking、2 allowed。`creation.test.ts`、`mediaTask.test.ts`、`homeMediaSelection.test.ts`、`composerLayout.test.ts` 共 31 项通过。完整 `npm run verify` 与 Desktop 验收未跑，本任务仍是进行中。

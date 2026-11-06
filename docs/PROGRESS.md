@@ -1,5 +1,7 @@
 # 当前进度
 
+2026-11-06 UI-004继续同步：源码Desktop/Web已到2.1.66；最新Figma的设置分组、画布组合、手机首页更多已接入。14项当前Figma生产浏览器、2710单测与快速lint通过；完整浏览器第二轮复测进行中，Desktop运行和全页验收尚未完成。原浏览器存储保护保留。当前事实查[状态](governance/PROJECT_STATE.md)，逐项回执查[UI验证](changes/2026-11-05-figma-local-sync/verification.md)，不沿用下方历史候选数字。
+
 2026-11-05第二阶段：main@752f7dbd基础上补齐B1–B5及A1–A3，health 0 blocking、版本0 warning、E2E312/312；完整verify/当前Desktop/独立审查以[本次验证](changes/2026-11-05-step2-deep-water/verification.md)为准。保持外部模型与正式发布的未验边界。
 
 ## 先前候选记录（非当前工作树状态）

@@ -620,13 +620,14 @@ test("ADV-HOST-4: agentHost blocks run_generation when model is missing or unwhi
   assert.equal(generateCalls, 0);
 });
 
-test("ADV-HOST-5: agentHost dynamic function allowlist adapts and blocks immediately on revocation", async () => {
+test("ADV-HOST-5: agentHost dynamic function allowlist adapts and blocks immediately on revocation", async (context) => {
   const setup = createTestProjectWithNode("flux-schnell");
   let { project } = setup;
   const { node } = setup;
 
   let currentAllowlist: string[] | undefined = ["flux-schnell"];
   let generateCalls = 0;
+  context.mock.method(Date, "now", () => 1793900000000);
 
   const host = createAgentHost({
     getProject: () => project,

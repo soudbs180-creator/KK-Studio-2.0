@@ -107,7 +107,10 @@ export default function CanvasToolbar({
           onAdd(event.currentTarget);
         }}
       />
-      <span className="toolbar-divider toolbar-divider-left" aria-hidden="true" />
+      <span
+        className="toolbar-divider toolbar-divider-left"
+        aria-hidden="true"
+      />
       <button
         className="toolbar-current-tool"
         aria-label="选择画布工具"
@@ -121,7 +124,7 @@ export default function CanvasToolbar({
         {tool === "select" ? (
           <ToolbarIcon name="select" />
         ) : (
-          <UiIcon name="hand" size={20} />
+          <UiIcon name="hand" size={28} />
         )}
       </button>
       <button

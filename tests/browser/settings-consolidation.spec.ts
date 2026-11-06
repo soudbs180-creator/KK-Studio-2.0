@@ -55,7 +55,7 @@ for (const width of [390, 1099, 1920]) {
     await page.goto("/");
     await openSettingsSection(page, "通用设置");
     const panel = page.locator(".settings-panel");
-    await page.getByLabel("主题", { exact: true }).selectOption("light");
+    await page.getByLabel("主题外观", { exact: true }).selectOption("light");
     await selectSettingsSection(page, "快捷键管理");
     await expect(
       page.getByRole("heading", { name: "快捷键管理", exact: true }),
@@ -69,7 +69,9 @@ for (const width of [390, 1099, 1920]) {
       "本地离线模式",
     );
     await selectSettingsSection(page, "通用设置");
-    await expect(page.getByLabel("主题", { exact: true })).toHaveValue("light");
+    await expect(page.getByLabel("主题外观", { exact: true })).toHaveValue(
+      "light",
+    );
     const geometry = await panel.evaluate((element) => {
       const rect = element.getBoundingClientRect();
       const content = element.querySelector(".settings-content")!;

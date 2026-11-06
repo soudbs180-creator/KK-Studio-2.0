@@ -71,7 +71,10 @@ function framingPort(): {
 
 test("DPAPI scope stays CurrentUser", () => {
   assert.equal(assertDpapiScope("CurrentUser"), "CurrentUser");
-  assert.throws(() => assertDpapiScope("LocalMachine"), /DPAPI_SCOPE_UNSUPPORTED/);
+  assert.throws(
+    () => assertDpapiScope("LocalMachine"),
+    /DPAPI_SCOPE_UNSUPPORTED/,
+  );
   assert.equal(WINDOWS_DPAPI_SCRIPT.includes("CurrentUser"), true);
   assert.equal(WINDOWS_DPAPI_SCRIPT.includes("LocalMachine"), false);
 });
@@ -83,17 +86,25 @@ test("Windows command keeps the payload off the argument list", () => {
     "-NonInteractive",
     "-Command",
   ]);
-  assert.equal(args.some((arg) => arg.includes(SECRET)), false);
+  assert.equal(
+    args.some((arg) => arg.includes(SECRET)),
+    false,
+  );
 });
 
 test("injected runner round-trips without putting the secret on argv", async () => {
-  const calls: Array<{ command: string; args: readonly string[]; stdin: string }> =
-    [];
+  const calls: Array<{
+    command: string;
+    args: readonly string[];
+    stdin: string;
+  }> = [];
   const runner: DpapiProcessRunner = {
     async run(command, args, stdin) {
       calls.push({ command, args, stdin });
       const [op, payload = ""] = stdin.split("\n");
-      const bytes = Uint8Array.from(atob(payload), (char) => char.charCodeAt(0));
+      const bytes = Uint8Array.from(atob(payload), (char) =>
+        char.charCodeAt(0),
+      );
       const out =
         op === "protect"
           ? Uint8Array.from([0x01, ...bytes], (byte, index) =>
@@ -181,11 +192,14 @@ test("protector stores ciphertext and drops secret-bearing failures", async () =
       throw new Error(SECRET);
     },
   };
-  await assert.rejects(createDpapiSecretProtector(leaking).protect(SECRET), (error: unknown) => {
-    assert.equal((error as Error).message, "DPAPI_PROTECT_FAILED");
-    assert.equal((error as Error).message.includes(SECRET), false);
-    return true;
-  });
+  await assert.rejects(
+    createDpapiSecretProtector(leaking).protect(SECRET),
+    (error: unknown) => {
+      assert.equal((error as Error).message, "DPAPI_PROTECT_FAILED");
+      assert.equal((error as Error).message.includes(SECRET), false);
+      return true;
+    },
+  );
 });
 
 test("echoed plaintext and empty values are refused", async () => {

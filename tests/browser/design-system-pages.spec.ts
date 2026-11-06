@@ -9,6 +9,7 @@ import {
 import { selectSettingsSection } from "./helpers";
 
 const pages = ["项目库", "扩展"];
+test.use({ reducedMotion: "reduce" });
 
 test("sidebar SVG marks remain distinguishable in both themes", async ({
   page,
@@ -17,11 +18,26 @@ test("sidebar SVG marks remain distinguishable in both themes", async ({
   for (const theme of ["dark", "light"]) {
     await appearance(page, theme, "default");
     for (const selector of [
-      ".sidebar-icon-archive img",
-      ".sidebar-icon-skill img",
+      ".sidebar-icon-archive svg",
+      ".sidebar-icon-skill svg",
       ".sidebar .brand [data-brand-logo]",
     ]) {
       const pixels = await page.locator(selector).evaluate(async (element) => {
+        if (element instanceof SVGElement) {
+          const shape = element.querySelector(
+            "path,rect,circle,line,polyline,polygon",
+          );
+          if (!shape) throw new Error("Icon has no visible SVG geometry");
+          const box = element.getBoundingClientRect();
+          if (box.width !== 16 || box.height !== 16)
+            throw new Error(
+              "Sidebar glyph must use the current 16px source slot",
+            );
+          return {
+            mark: getComputedStyle(shape).stroke,
+            bg: getComputedStyle(element.closest(".sidebar")!).backgroundColor,
+          };
+        }
         const img = element as HTMLImageElement;
         await img.decode();
         const canvas = document.createElement("canvas");
@@ -43,6 +59,10 @@ test("sidebar SVG marks remain distinguishable in both themes", async ({
         };
       });
       expect(pixels.mark).toBeTruthy();
+      await test.info().attach(`${theme}-${selector}`, {
+        contentType: "application/json",
+        body: JSON.stringify(pixels),
+      });
       expect
         .soft(contrast(pixels.mark!, pixels.bg), `${theme} ${selector}`)
         .toBeGreaterThanOrEqual(3);
@@ -126,8 +146,14 @@ for (const width of [390, 1920]) {
             elements
               .filter((el) => el.getClientRects().length)
               .flatMap((el) => {
-                const css = getComputedStyle(el);
-                const expectedHeight = innerWidth <= 1200 ? "40px" : "32px";
+                const visual = el.closest(".kk-input-container") ?? el;
+                const css = getComputedStyle(visual);
+                const expectedHeight = visual.classList.contains("kk-input--32")
+                  ? "32px"
+                  : visual.classList.contains("kk-input--40") ||
+                      innerWidth <= 1200
+                    ? "40px"
+                    : "32px";
                 return css.height === expectedHeight &&
                   css.borderRadius === "8px"
                   ? []
@@ -230,7 +256,9 @@ for (const theme of ["dark", "light"]) {
         await appearance(page, theme, accent);
         const token = themeTokens(theme, accent);
         const primary = section
-          .locator(".catalog-page-actions .primary-button")
+          .locator(
+            ".catalog-page-actions :is(.primary-button,.kk-button--primary)",
+          )
           .first();
         await expect(primary).toHaveCSS(
           "background-color",

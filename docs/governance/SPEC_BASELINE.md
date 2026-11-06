@@ -4,7 +4,7 @@
 
 ## 规则解释顺序
 
-规则冲突按固定顺序解释：用户意图 → [`AGENTS.md`](../../AGENTS.md) → [`AI_RULES.md`](../../AI_RULES.md) → [`PROMPTING.md`](../engineering/PROMPTING.md) → 本基线 → 当前源码/测试/运行证据 → 架构、数据和 UI 契约 → 带日期的 change package → 功能 registry。这里的“当前源码/证据”描述实际行为；它不自动批准与契约相矛盾的行为。功能 registry 只描述能力成熟度，不能覆盖任务账本或任何契约。
+规则冲突的顺序只以 [`docs/README.md` §权威优先级与冲突裁决](../README.md#权威优先级与冲突裁决) 为准。本文件不维护第二份优先级。当前源码和运行证据描述实际行为，不自动批准与契约相矛盾的行为。功能 registry 只描述能力成熟度，不能覆盖任务账本或任何契约。
 
 无法消解的差异保留 `CONFLICT`；没有直接证据写 `UNKNOWN`；推断必须标为 `INFERENCE`。旧验证记录的 PASS 只对其记录的提交、运行模式和范围有效。
 

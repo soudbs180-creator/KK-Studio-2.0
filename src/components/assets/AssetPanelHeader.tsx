@@ -124,12 +124,18 @@ export default function AssetPanelHeader({
           aria-label={compact ? "展开资产管理" : "收起资产管理"}
           onClick={onToggleCompact}
         >
-          <span className="asset-header-icon asset-expand-icon" aria-hidden="true">
+          <span
+            className="asset-header-icon asset-expand-icon"
+            aria-hidden="true"
+          >
             <UiIcon name={compact ? "maximize-2" : "minimize-2"} size={16} />
           </span>
         </button>
         <button aria-label="关闭资产管理" onClick={onClose}>
-          <span className="asset-header-icon asset-close-icon" aria-hidden="true">
+          <span
+            className="asset-header-icon asset-close-icon"
+            aria-hidden="true"
+          >
             <UiIcon name="close" size={16} />
           </span>
         </button>

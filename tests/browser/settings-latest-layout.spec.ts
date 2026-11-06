@@ -155,7 +155,7 @@ for (const width of [779, 800]) {
     await page.setViewportSize({ width, height: 643 });
     await page.goto("/");
     await page.getByRole("button", { name: "打开设置", exact: true }).click();
-    await page.getByLabel("主题", { exact: true }).selectOption("light");
+    await page.getByLabel("主题外观", { exact: true }).selectOption("light");
     const feedback = page.locator(".settings-feedback");
     await expect(feedback).toBeVisible();
     const visible = await feedback.evaluate((el) => {

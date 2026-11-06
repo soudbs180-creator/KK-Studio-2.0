@@ -23,6 +23,27 @@ export async function openWorkspace(
   await openSeededProject(page, chats);
 }
 
+/** Conversation tools belong to the text variant; fresh home defaults to image. */
+export async function selectHomeConversation(page: Page): Promise<void> {
+  const home = page.getByRole("region", { name: "开始创作", exact: true });
+  await home.getByRole("button", { name: "模型", exact: true }).click();
+  const menu = home.getByRole("menu", { name: "选择模型", exact: true });
+  await menu.getByRole("tab", { name: "对话 / 推理", exact: true }).click();
+  await menu
+    .getByRole("menuitemradio", { name: /^自动调配 \(Auto-Routing\)/ })
+    .click();
+  await ensureHomeMore(page);
+}
+
+export async function ensureHomeMore(page: Page): Promise<void> {
+  const more = page.getByRole("button", { name: "更多创作选项", exact: true });
+  if (
+    (await more.isVisible()) &&
+    (await more.getAttribute("aria-expanded")) !== "true"
+  )
+    await more.click();
+}
+
 /** Persisted paused task fixture; the application must never invent demo tasks. */
 export async function openTaskWorkspace(page: Page): Promise<void> {
   const task = createTask(
@@ -276,7 +297,7 @@ export async function panCanvasToRevealAction(
     dx < 0
       ? Math.min(bounds.x + usableWidth - 20, bounds.x + bounds.width - 20)
       : bounds.x + 20;
-  const startY = bounds.y + bounds.height / 2;
+  const startY = targetY;
   const start = await canvas.evaluate(
     (element, preferred) => {
       for (const y of [0, -16, 16, -32, 32]) {

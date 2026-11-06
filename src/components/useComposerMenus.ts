@@ -8,7 +8,8 @@ import {
 import { useDismissible } from "./useDismissible";
 import { useHiddenControlFocus } from "./useHiddenControlFocus";
 
-type ComposerMenu = "add" | "model" | "skill" | "plugin" | "mode" | "params" | "count";
+type ComposerMenu =
+  "add" | "model" | "skill" | "plugin" | "mode" | "params" | "count" | "more";
 
 /** One open menu per composer; share modal, IME and focus rules with other menus. */
 export function useComposerMenus(boundary: RefObject<HTMLElement>) {
@@ -75,7 +76,12 @@ export function useComposerMenus(boundary: RefObject<HTMLElement>) {
       const naturalHeight = popover.getBoundingClientRect().height;
       const down = below >= naturalHeight || below > above;
       popover.style.maxHeight = `${down ? below : above}px`;
-      popover.style.overflowY = "auto";
+      // The more shell owns anchored child menus, whose own bounds handle scrolling.
+      popover.style.overflowY = popover.classList.contains(
+        "start-compact-popover",
+      )
+        ? "visible"
+        : "auto";
       const rect = popover.getBoundingClientRect();
       const x =
         Math.max(left, Math.min(controls.left, right - rect.width)) - rect.left;
@@ -124,6 +130,7 @@ export function useComposerMenus(boundary: RefObject<HTMLElement>) {
     modeMenuOpen: menu === "mode",
     parameterMenuOpen: menu === "params",
     countMenuOpen: menu === "count",
+    moreMenuOpen: menu === "more",
     toggleMenu: (requested: ComposerMenu) =>
       setMenu((current) => (current === requested ? null : requested)),
     openMenu: (requested: ComposerMenu) => setMenu(requested),

@@ -508,7 +508,7 @@ export function createAgentHost(options: AgentHostOptions) {
             .trim();
           if (!prompt) throw new Error("生成提示词为空");
           ticketId = openWorkTicket(project.id, {
-            id: `gen:${node.id}:${Date.now()}`,
+            id: `gen:${node.id}:${crypto.randomUUID()}`,
             threadId: project.id,
             text: prompt,
             source: "canvas",

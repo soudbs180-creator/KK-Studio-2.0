@@ -53,10 +53,9 @@ test("平板侧栏展开向右扩展并推动工作区，只由开关切换", as
   await toggle.click();
   await expect(sidebar).toHaveCSS("width", "292px");
   await expect(page.locator(".workspace")).toHaveCSS("margin-left", "292px");
-  await expect(sidebar.locator(".sidebar-toggle .sidebar-icon")).toHaveAttribute(
-    "data-icon",
-    "panel-left-close",
-  );
+  await expect(
+    sidebar.locator(".sidebar-toggle .sidebar-icon"),
+  ).toHaveAttribute("data-icon", "panel-left-close");
   await expect(sidebar.locator(".resize-handle")).toHaveCount(0);
   await expect(
     page.getByRole("button", { name: "收起侧边栏", exact: true }),
@@ -64,10 +63,9 @@ test("平板侧栏展开向右扩展并推动工作区，只由开关切换", as
   await page.getByRole("button", { name: "收起侧边栏", exact: true }).click();
   await expect(sidebar).toHaveCSS("width", "72px");
   await expect(page.locator(".workspace")).toHaveCSS("margin-left", "0px");
-  await expect(sidebar.locator(".sidebar-toggle .sidebar-icon")).toHaveAttribute(
-    "data-icon",
-    "panel-left-open",
-  );
+  await expect(
+    sidebar.locator(".sidebar-toggle .sidebar-icon"),
+  ).toHaveAttribute("data-icon", "panel-left-open");
 });
 
 test("四视口保留搜索、账号和设置命中，手机端使用固定顶栏操作", async ({

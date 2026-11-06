@@ -18,7 +18,9 @@ test("approved composer and shell geometry stays stable at phone and desktop siz
   expect(phoneComposer!.width).toBe(available);
   expect(phoneComposer!.x).toBeGreaterThanOrEqual(0);
   expect(phoneComposer!.x + phoneComposer!.width).toBeLessThanOrEqual(390);
-  const label = page.locator(".start-model-picker span");
+  const label = page.locator(
+    ".start-model-picker > button > span:not(.ui-icon)",
+  );
   await expect(label).toHaveText("Codex 内置生图");
   await expect(label).toHaveCSS("text-overflow", "ellipsis");
   await expect(label.locator("..")).toHaveAttribute("title", "Codex 内置生图");
@@ -44,17 +46,17 @@ test("approved composer and shell geometry stays stable at phone and desktop siz
   await expect(sidebar).toHaveClass(/is-collapsed/);
   await page.waitForTimeout(350);
   expect(Math.round((await sidebar.boundingBox())!.width)).toBe(72);
-  await expect(sidebar.locator(".sidebar-icon-expand img")).toHaveAttribute(
-    "src",
-    /sidebar-expand\.svg$/,
+  await expect(sidebar.locator(".sidebar-icon-expand svg")).toHaveCSS(
+    "width",
+    "16px",
   );
   await page.getByRole("button", { name: "展开侧边栏", exact: true }).click();
   await expect(sidebar).not.toHaveClass(/is-collapsed/);
   await page.waitForTimeout(350);
   expect(Math.round((await sidebar.boundingBox())!.width)).toBe(292);
-  await expect(sidebar.locator(".sidebar-icon-toggle img")).toHaveAttribute(
-    "src",
-    /sidebar-collapse\.svg$/,
+  await expect(sidebar.locator(".sidebar-icon-toggle svg")).toHaveCSS(
+    "width",
+    "16px",
   );
 });
 
@@ -77,7 +79,7 @@ test("desktop settings uses the compact frame and phone settings uses layered na
   const desktopSettings = await rect(page, ".settings-panel");
   expect(desktopSettings).not.toBeNull();
   expect(Math.round(desktopSettings!.width)).toBe(960);
-  expect(Math.round(desktopSettings!.height)).toBe(680);
+  expect(Math.round(desktopSettings!.height)).toBe(674);
   const desktopRail = await rect(page, ".settings-sidebar");
   expect(desktopRail).not.toBeNull();
   expect(Math.round(desktopRail!.width)).toBe(208);

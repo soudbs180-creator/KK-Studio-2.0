@@ -293,7 +293,10 @@ export function useSpeechInput({
   useEffect(
     () => () => {
       const current = sessionRef.current;
-      if (current) clearSession(current, true);
+      if (current) {
+        clearSession(current, true);
+        onStatusRef.current?.("语音输入已关闭。");
+      }
     },
     [clearSession],
   );

@@ -16,7 +16,7 @@ test("current Figma modal shells keep dimensions and settings content origin", a
   expect(title.y - panelBox.y).toBe(41);
   expect(await panel.locator(".settings-row h3").allTextContents()).toEqual([
     "语言",
-    "主题",
+    "主题外观",
     "强调色",
     "浮岛布局",
     "画布历史步数",

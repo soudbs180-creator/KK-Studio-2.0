@@ -131,7 +131,29 @@ test("加号区域磁吸，拖动只预览，释放后选类型才创建并连�
   await expect(menu).toBeVisible();
   await expect(page.getByTestId("connection-drag-preview")).toHaveCount(0);
   expect(await menu.boundingBox()).toMatchObject({ width: 296, height: 586 });
-  await expect(menu.getByRole("menuitem")).toHaveCount(12);
+  const labels = await menu
+    .getByRole("menuitem")
+    .evaluateAll((items) =>
+      items.map((item) => item.getAttribute("aria-label")).sort(),
+    );
+  expect(labels).toEqual(
+    [
+      "文本",
+      "表格",
+      "图片",
+      "视频",
+      "音频",
+      "视频剪辑",
+      "ComfyUI 工作流",
+      "漫剧分镜工作流",
+      "3D 导演镜头台",
+      "架构蓝图映射",
+      "HTML",
+      "便利贴",
+      "SVG",
+      "Markdown",
+    ].sort(),
+  );
   await expect(
     menu.getByRole("menuitem", { name: "表格", exact: true }),
   ).toBeDisabled();

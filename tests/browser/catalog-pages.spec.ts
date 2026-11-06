@@ -1,3 +1,4 @@
+import { selectHomeConversation } from "./helpers";
 import { expect, test } from "@playwright/test";
 import { expandSidebar, openSettingsSection } from "./helpers";
 
@@ -95,6 +96,7 @@ test("开始创作的 Skill 选项卡与 Skill 目录页保持职责分离", asy
 
 test("开始创作首次打开即可选择内置 Skill", async ({ page }) => {
   await page.goto("/");
+  await selectHomeConversation(page);
   await page
     .getByRole("region", { name: "开始创作" })
     .getByRole("button", { name: "扩展", exact: true })
@@ -108,6 +110,7 @@ test("开始创作首次打开即可选择内置 Skill", async ({ page }) => {
 
 test("首页扩展菜单的选中态和动作项遵守层级圆角", async ({ page }) => {
   await page.goto("/");
+  await selectHomeConversation(page);
   await page
     .getByRole("region", { name: "开始创作" })
     .getByRole("button", { name: "扩展", exact: true })
@@ -143,7 +146,7 @@ test("首页默认账号生图可提交，不显示无关的 API 缺配置原因
 test("首页默认账号模型入口文案不会被截断", async ({ page }) => {
   await page.goto("/");
   const button = page.locator(".start-model-picker .start-tool-button");
-  const label = button.locator("span");
+  const label = button.locator("span:not(.ui-icon)");
   await expect(label).toHaveText("Codex 内置生图");
   expect(
     await label.evaluate(
@@ -156,7 +159,9 @@ test("窄屏首页模型入口保留可读的紧凑标签", async ({ page }) => 
   for (const width of [390, 834]) {
     await page.setViewportSize({ width, height: 720 });
     await page.goto("/");
-    const label = page.locator(".start-model-picker .start-tool-button span");
+    const label = page.locator(
+      ".start-model-picker .start-tool-button > span:not(.ui-icon)",
+    );
     await expect(label).toHaveCSS("font-size", "12px");
     await expect(label).toHaveCSS("text-overflow", "ellipsis");
     await expect(label.locator("..")).toHaveAttribute(
@@ -172,6 +177,7 @@ test("窄屏首页模型入口保留可读的紧凑标签", async ({ page }) => 
 test("首页扩展菜单邻近触发器并避开发现区标签", async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 720 });
   await page.goto("/");
+  await selectHomeConversation(page);
   await page
     .getByRole("region", { name: "开始创作", exact: true })
     .getByRole("button", { name: "扩展", exact: true })
@@ -198,6 +204,7 @@ test("首页扩展菜单邻近触发器并避开发现区标签", async ({ page 
 test("首页滚动后菜单仍保持可见和可操作", async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 720 });
   await page.goto("/");
+  await selectHomeConversation(page);
   const home = page.locator(".start-page");
   await home.evaluate((element) => {
     element.scrollTop = 280;
@@ -225,6 +232,7 @@ test("首页滚动后菜单仍保持可见和可操作", async ({ page }) => {
 test("窄屏首页扩展菜单不遮挡发现区", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 720 });
   await page.goto("/");
+  await selectHomeConversation(page);
   await page
     .getByRole("region", { name: "开始创作", exact: true })
     .getByRole("button", { name: "扩展", exact: true })
@@ -301,7 +309,7 @@ test("窄屏首页发现区滚动后能到达最后一张灵感卡片", async ({
   );
 });
 
-test("首页灵感卡片媒体保持稳定的 16:9 比例", async ({ page }) => {
+test("首页灵感卡片媒体遵循当前桌面和手机比例", async ({ page }) => {
   for (const width of [390, 768, 1280]) {
     await page.setViewportSize({ width, height: 720 });
     await page.goto("/");
@@ -314,7 +322,8 @@ test("首页灵感卡片媒体保持稳定的 16:9 比例", async ({ page }) => 
         }),
       );
     expect(ratios).toHaveLength(3);
-    for (const ratio of ratios) expect(ratio).toBeCloseTo(16 / 9, 1);
+    for (const ratio of ratios)
+      expect(ratio).toBeCloseTo(width < 768 ? 16 / 9 : 318 / 336, 1);
   }
 });
 
@@ -419,6 +428,7 @@ test("开始创作页的扩展入口打开插件设置分类而不是 Skill 页�
   page,
 }) => {
   await page.goto("/");
+  await selectHomeConversation(page);
   await page
     .getByRole("region", { name: "开始创作" })
     .getByRole("button", { name: "扩展", exact: true })

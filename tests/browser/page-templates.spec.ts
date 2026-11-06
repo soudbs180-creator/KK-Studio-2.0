@@ -12,7 +12,7 @@ test("work-display catalog pages expose the registered grid template", async ({
     shell.getByText("还没有本地项目", { exact: false }),
   ).toBeVisible();
   await expect(
-    shell.locator(".catalog-page-actions .primary-button"),
+    shell.locator(".catalog-page-actions .kk-button--primary"),
   ).toBeVisible();
   await shell.getByRole("button", { name: "新建项目", exact: true }).click();
   await page.getByRole("button", { name: "项目库", exact: true }).click();

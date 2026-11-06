@@ -100,7 +100,8 @@ async function sameRow(form: Locator, label: string): Promise<void> {
       .toBe(
         control.name === "开始创建项目" ||
           control.name === "发送消息" ||
-          (form.page().viewportSize()?.width ?? 1920) <= 1200
+          (label !== "home" &&
+            (form.page().viewportSize()?.width ?? 1920) <= 1200)
           ? 44
           : 32,
       );

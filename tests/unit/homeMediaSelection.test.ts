@@ -56,7 +56,10 @@ test("home image size survives submission selection and resets only when routing
     imageSize: "1536x1024",
     outputCount: 4,
   };
-  assert.equal(homeDraftForSelection(draft, { ...selection }).imageSize, "1536x1024");
+  assert.equal(
+    homeDraftForSelection(draft, { ...selection }).imageSize,
+    "1536x1024",
+  );
   for (const next of [
     { ...selection, connectionId: "account-b" },
     { ...selection, model: "image-other" },
@@ -72,12 +75,24 @@ test("home image size survives submission selection and resets only when routing
 test("media parameter and count controls never become implicit form submit buttons", () => {
   for (const control of [
     createElement(GenerationCount, {
-      value: "4", open: true, onToggle() {}, onChange() {},
+      value: "4",
+      open: true,
+      onToggle() {},
+      onChange() {},
     }),
     createElement(CreationParameterControl, {
-      kind: "video", model: "veo-3.1-generate-preview", open: true,
-      parameters: { ratio: "16:9", quality: "720p", duration: "4", count: "4", soundEnabled: false },
-      onToggle() {}, onChange() {},
+      kind: "video",
+      model: "veo-3.1-generate-preview",
+      open: true,
+      parameters: {
+        ratio: "16:9",
+        quality: "720p",
+        duration: "4",
+        count: "4",
+        soundEnabled: false,
+      },
+      onToggle() {},
+      onChange() {},
     }),
   ]) {
     const markup = renderToStaticMarkup(createElement("form", {}, control));

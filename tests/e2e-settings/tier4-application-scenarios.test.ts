@@ -21,7 +21,7 @@ import { PROVIDER_PRESETS } from "../../src/domain/providerPresets.ts";
 /* ============================================================================
  * Tier 4: Real-World Application Workloads (Scenarios S1 - S6)
  *
- * End-to-end user workflows derived directly from TEST_INFRA.md & ORIGINAL_REQUEST.md
+ * End-to-end user workflows derived directly from docs/archive/TEST_INFRA.md & ORIGINAL_REQUEST.md
  * ========================================================================== */
 
 test("S1: Greenfield Setup & Provider Onboarding (F1, F5, F9, F10)", async () => {

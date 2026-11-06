@@ -53,7 +53,7 @@
   --kk-radius-0: 0;
   --kk-radius-xs: 4px; /* checkbox / badge / tooltip / progress */
   --kk-radius-sm: 8px; /* button / chip / tag / 小控件 */
-  --kk-radius-control: 8px; /* 所有标准按钮、输入和控件 */
+  --kk-radius-control: 8px; /* 图标按钮圆角与输入控件；文字操作按钮用 --kk-radius-full */
   --kk-radius-menu: 12px; /* 下拉、二级菜单 */
   --kk-radius-lg: 16px; /* 仅注册过的嵌套容器 */
   --kk-radius-panel: 20px; /* shell / panel exception */
@@ -216,6 +216,13 @@
   --kk-control-gap-md: 8px;
   --kk-control-gap-lg: 8px;
   --kk-control-gap-xl: 8px;
+  --kk-control-inset: 2px;
+  --kk-model-phone-max-width: 140px;
+  --kk-settings-general-shell-height: 674px;
+  --kk-canvas-zoom-slot-width: 48px;
+  --kk-canvas-minimap-slot-width: 76px;
+  --kk-conversation-panel-default-width: 472px;
+  --kk-radius-combo: 10px;
   --kk-control-font-sm: 12px;
   --kk-control-font-md: 12px;
   --kk-control-font-lg: 16px;
@@ -257,6 +264,74 @@
      Tier 3 · 组件层 COMPONENT — 组件唯一取值入口，不许自己拼原始值
      ========================================================================== */
 
+  /* Button（KFS-P0-04 按钮框五档: 16 / 24 / 32 / 40 / 44） */
+  /* Current Figma 47:184 / 435:48879 / 563:1450 / 2076:42222. */
+  --kk-settings-section-gap: var(--kk-layout-gutter-md);
+  --kk-settings-row-gap: var(--kk-space-3);
+  --kk-settings-row-pad: var(--kk-space-2);
+  --kk-settings-heading-font: var(--kk-font-body);
+  --kk-settings-heading-line: var(--kk-line-body);
+  --kk-settings-heading-weight: var(--kk-font-weight-title);
+  --kk-settings-copy-font: var(--kk-font-caption);
+  --kk-settings-copy-line: var(--kk-line-caption);
+  --kk-settings-copy-gap: var(--kk-space-1);
+  --kk-settings-general-height: var(--kk-settings-general-shell-height);
+  --kk-settings-control-pad: var(--kk-space-1);
+  --kk-task-trigger-h: var(--kk-control-h-md);
+  --kk-task-trigger-icon: var(--kk-icon-glyph-md);
+  --kk-task-trigger-pad-start: var(--kk-space-2);
+  --kk-task-trigger-pad-end: var(--kk-space-3);
+  --kk-task-trigger-gap: var(--kk-space-2);
+  --kk-task-trigger-radius: var(--kk-radius-control);
+  --kk-task-trigger-font: var(--kk-font-caption);
+  --kk-task-trigger-line: var(--kk-line-caption);
+  --kk-sidebar-section-gap: var(--kk-space-5);
+  --kk-start-model-max-width: var(--kk-model-phone-max-width);
+  --kk-canvas-view-h: var(--kk-menu-item-h);
+  --kk-canvas-view-inset: var(--kk-control-inset);
+  --kk-canvas-view-gap: var(--kk-space-1);
+  --kk-canvas-view-radius: var(--kk-radius-combo);
+  --kk-canvas-view-bg: var(--kk-bg-card);
+  --kk-canvas-view-bg-hover: var(--kk-control-hover-bg);
+  --kk-canvas-view-bg-selected: var(--kk-choice-selected-bg);
+  --kk-canvas-view-fg: var(--kk-text-secondary);
+  --kk-canvas-view-fg-selected: var(--kk-text-primary);
+  --kk-canvas-view-font: var(--kk-font-caption);
+  --kk-canvas-view-line: var(--kk-line-caption);
+  --kk-canvas-view-weight: var(--kk-font-weight-body-strong);
+  --kk-canvas-nav-control: var(--kk-control-h-md);
+  --kk-canvas-nav-zoom-width: var(--kk-canvas-zoom-slot-width);
+  --kk-canvas-nav-map-width: var(--kk-canvas-minimap-slot-width);
+  --kk-canvas-nav-icon: var(--kk-icon-glyph-sm);
+  --kk-canvas-nav-pad: var(--kk-space-2);
+  --kk-canvas-nav-gap: var(--kk-space-1);
+  --kk-canvas-nav-divider-h: var(--kk-control-h-sm);
+  --kk-canvas-nav-radius: var(--kk-radius-control);
+  --kk-conversation-header-h: var(--kk-control-h-xl);
+  --kk-conversation-header-gap: var(--kk-space-2);
+  --kk-conversation-header-font: var(--kk-font-body);
+  --kk-conversation-header-line: var(--kk-line-body);
+  --kk-conversation-header-weight: var(--kk-font-weight-title);
+  --kk-conversation-header-icon: var(--kk-icon-glyph-sm);
+  --kk-conversation-header-control: var(--kk-control-h-md);
+  --kk-conversation-panel-width: var(--kk-conversation-panel-default-width);
+  --kk-conversation-panel-inset: var(--kk-space-4);
+  --kk-conversation-panel-padding: var(--kk-space-3);
+  --kk-conversation-panel-gap: var(--kk-space-3);
+  --kk-conversation-panel-radius: var(--kk-radius-lg);
+
+  --kk-button-h-xs: var(--kk-space-4);
+  --kk-button-h-sm: var(--kk-control-h-sm);
+  --kk-button-h-md: var(--kk-control-h-md);
+  --kk-button-h-lg: var(--kk-control-h-lg);
+  --kk-button-h-xl: var(--kk-control-h-xl);
+  --kk-button-px-xs: var(--kk-space-1);
+  --kk-button-px-sm: var(--kk-space-2);
+  --kk-button-px-md: var(--kk-space-3);
+  --kk-button-px-lg: var(--kk-space-4);
+  --kk-button-px-xl: var(--kk-space-5);
+  --kk-button-radius-control: var(--kk-radius-control);
+
   /* Button（standard = lg 档 / compact = md 档） */
   --kk-button-h-standard: var(--kk-control-h-md);
   --kk-button-h-primary: var(--kk-control-h-lg);
@@ -282,6 +357,11 @@
   --kk-input-font: var(--kk-control-font-md);
   --kk-input-icon: var(--kk-control-icon-md);
   --kk-input-radius: var(--kk-radius-control);
+  --kk-input-large-h: var(--kk-control-h-lg);
+  --kk-input-large-px: var(--kk-control-px-lg);
+  --kk-input-large-font: var(--kk-font-body);
+  --kk-input-large-line: var(--kk-line-body);
+  --kk-input-line: var(--kk-line-caption);
 
   /* Select */
   --kk-select-h: var(--kk-control-h-lg);
@@ -291,11 +371,57 @@
   --kk-select-radius: var(--kk-radius-control);
   --kk-select-menu-radius: var(--kk-radius-menu);
 
-  /* IconButton */
+  /* IconButton (4 档位与 8px 圆角) */
+  --kk-icon-button-h-sm: var(--kk-control-h-sm);
+  --kk-icon-button-h-md: var(--kk-control-h-md);
   --kk-icon-button-h: var(--kk-control-h-md);
   --kk-icon-button-lg: var(--kk-control-h-lg);
   --kk-icon-button-xl: var(--kk-control-h-xl);
   --kk-icon-button-radius: var(--kk-radius-control);
+
+  /* Title Tabs 标题页签 (940:24897) */
+  --kk-tabs-h: var(--kk-menu-item-h);
+  --kk-tabs-gap: var(--kk-space-4);
+  --kk-tabs-text: var(--kk-text-secondary);
+  --kk-tabs-text-active: var(--kk-text-primary);
+  --kk-tabs-indicator-w: var(--kk-space-5);
+  --kk-tabs-indicator-h: var(--kk-border-width-focus);
+  --kk-tabs-indicator-bg: var(--kk-button-primary-bg);
+
+  /* Choice Group 容器内选择组 (2538:48403) */
+  --kk-choice-group-radius: var(--kk-radius-control);
+  --kk-choice-group-bg: var(--kk-bg-card);
+  --kk-choice-item-pad-x: var(--kk-space-3);
+  --kk-choice-item-h: var(--kk-control-h-md);
+  --kk-choice-selected-fg: var(--kk-text-primary);
+
+  /* Switch 开关切换 */
+  --kk-switch-w: var(--kk-menu-item-h);
+  --kk-switch-h: var(--kk-badge-h);
+  --kk-switch-thumb-size: var(--kk-space-4);
+  --kk-switch-radius: var(--kk-radius-full);
+  --kk-switch-bg-off: var(--kk-bg-soft);
+  --kk-switch-bg-on: var(--kk-accent);
+  --kk-switch-thumb-bg: var(--kk-ink-near-black);
+
+  /* Checkbox 复选框 */
+  --kk-checkbox-size: var(--kk-space-4);
+  --kk-checkbox-radius: var(--kk-radius-xs);
+  --kk-checkbox-border: var(--kk-border-control);
+  --kk-checkbox-bg-checked: var(--kk-accent);
+  --kk-checkbox-fg-checked: var(--kk-on-accent);
+
+  /* Dialog 模态弹窗 */
+  --kk-dialog-radius: var(--kk-radius-card);
+  --kk-dialog-bg: var(--kk-bg-card);
+  --kk-dialog-border: var(--kk-border-subtle);
+  --kk-dialog-shadow: var(--kk-shadow-color-strong);
+
+  /* Menu 下拉与上下文菜单 */
+  --kk-menu-radius: var(--kk-radius-menu);
+  --kk-menu-bg: var(--kk-bg-card);
+  --kk-menu-border: var(--kk-border-subtle);
+  --kk-menu-shadow: var(--kk-shadow-color);
 
   /* 非控件档位成员，独立契约 */
   --kk-menu-item-h: 36px;

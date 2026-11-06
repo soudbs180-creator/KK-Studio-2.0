@@ -51,9 +51,9 @@ test("latest Figma shell is loaded by the real production page", async ({
     ),
   );
   const figma: Record<string, number[]> = {
-    ".workspace-content": [292, 45, 1618, 1025],
-    ".conversation-panel": [1430, 61, 470, 998],
-    ".canvas-toolbar": [711, 1002, 284, 52],
+    ".workspace-content": [292, 52, 1628, 1028],
+    ".conversation-panel": [1432, 67, 472, 996],
+    ".canvas-toolbar": [718, 1016, 288, 52],
   };
   for (const [selector, expected] of Object.entries(figma))
     expected.forEach((value, index) =>
@@ -88,7 +88,7 @@ test("latest Figma shell is loaded by the real production page", async ({
     .toBe(72);
   await expect
     .poll(async () => (await page.locator(".canvas-toolbar").boundingBox())!.x)
-    .toBeCloseTo(601, 0);
+    .toBeCloseTo(608, 0);
   await page.screenshot({
     path: test.info().outputPath("runtime/after-collapsed.png"),
     animations: "disabled",

@@ -25,8 +25,6 @@ export default function GeneralSettings({
   busy,
   generalDetail,
 }: GeneralSettingsProps) {
-  const desktopHint = "桌面客户端专属能力（在桌面运行环境中自动激活）";
-
   if (generalDetail === "updates") {
     return <AppUpdateSettings />;
   }
@@ -37,175 +35,156 @@ export default function GeneralSettings({
         通用设置
       </h2>
       <div className="settings-general-rows">
-        <SettingRow
-          id="language"
-          title="语言"
-          description="选择应用显示的语言界面"
+        <section
+          className="settings-general-section settings-appearance"
+          data-figma-node="4457:63562"
+          aria-labelledby="settings-appearance-title"
         >
-          <select
-            className="settings-select"
-            aria-labelledby="language-label"
-            value="zh-CN"
-            disabled
-            title="当前默认提供简体中文界面"
+          <h3
+            id="settings-appearance-title"
+            className="settings-general-heading"
           >
-            <option value="zh-CN">简体中文 (zh-CN)</option>
-          </select>
-        </SettingRow>
+            外观与语言
+          </h3>
+          <SettingRow id="language" title="语言" description="">
+            <select
+              className="settings-select"
+              aria-labelledby="language-label"
+              value="zh-CN"
+              disabled
+              title="当前默认提供简体中文界面"
+            >
+              <option value="zh-CN">简体中文 (zh-CN)</option>
+            </select>
+          </SettingRow>
 
-        <SettingRow
-          id="theme"
-          title="主题"
-          description="选择浅色、深色或跟随系统主题自动切换"
-        >
-          <select
-            className={`settings-select${preferences.theme === "dark" ? " is-dark-theme" : ""}`}
-            aria-labelledby="theme-label"
-            value={preferences.theme}
-            onChange={(event) =>
-              onChange({
-                theme: event.target.value as SettingsPreferences["theme"],
-              })
-            }
-          >
-            <option value="dark">深色 (Dark)</option>
-            <option value="light">浅色 (Light)</option>
-            <option value="system">跟随系统 (System)</option>
-          </select>
-        </SettingRow>
+          <SettingRow id="theme" title="主题外观" description="">
+            <select
+              className={`settings-select${preferences.theme === "dark" ? " is-dark-theme" : ""}`}
+              aria-labelledby="theme-label"
+              value={preferences.theme}
+              onChange={(event) =>
+                onChange({
+                  theme: event.target.value as SettingsPreferences["theme"],
+                })
+              }
+            >
+              <option value="dark">深色 (Dark)</option>
+              <option value="light">浅色 (Light)</option>
+              <option value="system">跟随系统 (System)</option>
+            </select>
+          </SettingRow>
 
-        <SettingRow
-          id="accent"
-          title="强调色"
-          description="应用于高亮选中、聚焦光晕与交互标识"
+          <SettingRow id="accent" title="强调色" description="">
+            <select
+              className="settings-select"
+              aria-labelledby="accent-label"
+              aria-describedby="accent-description"
+              value={preferences.accent}
+              onChange={(event) =>
+                onChange({
+                  accent: event.target.value as SettingsPreferences["accent"],
+                })
+              }
+            >
+              {ACCENT_PRESETS.map(({ id, label }) => (
+                <option key={id} value={id}>
+                  {label}
+                </option>
+              ))}
+            </select>
+          </SettingRow>
+        </section>
+        <section
+          className="settings-general-section"
+          data-figma-node="4457:63564"
+          aria-labelledby="settings-creation-title"
         >
-          <select
-            className="settings-select"
-            aria-labelledby="accent-label"
-            aria-describedby="accent-description"
-            value={preferences.accent}
-            onChange={(event) =>
-              onChange({
-                accent: event.target.value as SettingsPreferences["accent"],
-              })
-            }
-          >
-            {ACCENT_PRESETS.map(({ id, label }) => (
-              <option key={id} value={id}>
-                {label}
-              </option>
-            ))}
-          </select>
-        </SettingRow>
-
-        <SettingRow
-          id="floating"
-          title="浮岛布局"
-          description="启用带有毛玻璃拟态质感的浮动卡片工作区"
-        >
-          <SettingsToggle
+          <h3 id="settings-creation-title" className="settings-general-heading">
+            创作偏好
+          </h3>
+          <SettingRow
             id="floating"
-            checked={preferences.floatingLayout}
-            onChange={(floatingLayout) => onChange({ floatingLayout })}
-          />
-        </SettingRow>
-
-        <SettingRow
-          id="historyLimit"
-          title="画布历史步数"
-          description="画布撤销 / 重做的可撤回步数（范围 5~100 步，默认 20 步）"
-        >
-          <div className="settings-stepper-wrap">
-            <button
-              type="button"
-              className="settings-stepper-btn"
-              aria-label="减少步数"
-              onClick={() => {
-                const current = preferences.historyLimit ?? 20;
-                onChange({ historyLimit: Math.max(5, current - 5) });
-              }}
-            >
-              −
-            </button>
-            <input
-              type="number"
-              id="historyLimit"
-              className="settings-stepper-input"
-              aria-labelledby="historyLimit-label"
-              aria-describedby="historyLimit-description"
-              min={5}
-              max={100}
-              value={preferences.historyLimit ?? 20}
-              onChange={(event) => {
-                const val = parseInt(event.target.value, 10);
-                if (!isNaN(val)) {
-                  onChange({ historyLimit: Math.max(5, Math.min(100, val)) });
-                }
-              }}
-            />
-            <button
-              type="button"
-              className="settings-stepper-btn"
-              aria-label="增加步数"
-              onClick={() => {
-                const current = preferences.historyLimit ?? 20;
-                onChange({ historyLimit: Math.min(100, current + 5) });
-              }}
-            >
-              +
-            </button>
-          </div>
-        </SettingRow>
-
-        <div
-          className="settings-general-shortcuts"
-          data-figma-node="4130:60002"
-        >
-          <h3>快捷键管理</h3>
-          <Button
-            heightTier="32px"
-            className="settings-shortcuts-action"
-            disabled={busy}
-            title={busy ? "连接操作进行中，完成后可切换设置" : undefined}
-            onClick={onOpenShortcuts}
+            title="浮岛布局"
+            description="工作区改为浮动卡片"
           >
-            管理快捷键
-          </Button>
-        </div>
+            <SettingsToggle
+              id="floating"
+              checked={preferences.floatingLayout}
+              onChange={(floatingLayout) => onChange({ floatingLayout })}
+            />
+          </SettingRow>
 
-        <div
-          className="settings-card-group kk-card-box"
-          style={{
-            backgroundColor: "var(--kk-bg-card)",
-            border: "1px solid var(--kk-border-subtle)",
-            padding: "16px 20px",
-            marginTop: "16px",
-            display: "flex",
-            flexDirection: "column",
-            gap: "12px",
-          }}
-        >
-          <div>
-            <h3
-              style={{
-                fontSize: "14px",
-                fontWeight: 600,
-                color: "var(--kk-text-primary)",
-                margin: 0,
-              }}
+          <SettingRow
+            id="historyLimit"
+            title="画布历史步数"
+            description="画布撤销 / 重做的可撤回步数（范围 5~100 步，默认 20 步）"
+          >
+            <div className="settings-stepper-wrap">
+              <button
+                type="button"
+                className="settings-stepper-btn"
+                aria-label="减少步数"
+                onClick={() => {
+                  const current = preferences.historyLimit ?? 20;
+                  onChange({ historyLimit: Math.max(5, current - 5) });
+                }}
+              >
+                −
+              </button>
+              <input
+                type="number"
+                id="historyLimit"
+                className="settings-stepper-input"
+                aria-labelledby="historyLimit-label"
+                aria-describedby="historyLimit-description"
+                min={5}
+                max={100}
+                value={preferences.historyLimit ?? 20}
+                onChange={(event) => {
+                  const val = parseInt(event.target.value, 10);
+                  if (!isNaN(val)) {
+                    onChange({ historyLimit: Math.max(5, Math.min(100, val)) });
+                  }
+                }}
+              />
+              <button
+                type="button"
+                className="settings-stepper-btn"
+                aria-label="增加步数"
+                onClick={() => {
+                  const current = preferences.historyLimit ?? 20;
+                  onChange({ historyLimit: Math.min(100, current + 5) });
+                }}
+              >
+                +
+              </button>
+            </div>
+          </SettingRow>
+
+          <div
+            className="settings-general-shortcuts"
+            data-figma-node="4130:60002"
+          >
+            <h3>快捷键管理</h3>
+            <Button
+              heightTier="32px"
+              className="settings-shortcuts-action"
+              disabled={busy}
+              title={busy ? "连接操作进行中，完成后可切换设置" : undefined}
+              onClick={onOpenShortcuts}
             >
-              系统偏好与桌面集成
-            </h3>
-            <p
-              style={{
-                fontSize: "12px",
-                color: "var(--kk-text-secondary)",
-                margin: "4px 0 0",
-              }}
-            >
-              深度系统集成能力。在桌面应用环境下运行时可联动系统原生托盘与生命周期。
-            </p>
+              管理快捷键
+            </Button>
           </div>
+        </section>
+        <section
+          className="settings-general-section"
+          aria-labelledby="settings-system-title"
+        >
+          <h3 id="settings-system-title" className="settings-general-heading">
+            系统偏好与桌面集成
+          </h3>
 
           <details className="settings-usage-guide" data-figma-node="214:715">
             <summary>
@@ -247,7 +226,7 @@ export default function GeneralSettings({
             <SettingsToggle
               id="tray"
               checked={false}
-              disabledReason={desktopHint}
+              disabledReason="系统托盘设置尚未接入"
             />
           </SettingRow>
 
@@ -259,7 +238,7 @@ export default function GeneralSettings({
             <SettingsToggle
               id="sleep"
               checked={false}
-              disabledReason={desktopHint}
+              disabledReason="执行期间防休眠尚未接入"
             />
           </SettingRow>
 
@@ -271,12 +250,12 @@ export default function GeneralSettings({
             <SettingsToggle
               id="autostart"
               checked={false}
-              disabledReason={desktopHint}
+              disabledReason="开机自启动尚未接入"
             />
           </SettingRow>
-        </div>
+        </section>
 
-        <div className="settings-general-version kk-card-box">
+        <div className="settings-general-version" data-figma-node="655:142688">
           <div>
             <span className="settings-general-version-title">版本状态</span>
             <div className="settings-general-version-description">

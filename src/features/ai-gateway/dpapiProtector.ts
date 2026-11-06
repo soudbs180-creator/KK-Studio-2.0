@@ -98,10 +98,15 @@ async function exchange(
   if (platform !== "win32") throw fail("DPAPI_UNSUPPORTED");
   const payload = bytesToBase64(bytes);
   const args = windowsDpapiArgs();
-  if (args.some((arg) => arg.includes(payload))) throw fail("DPAPI_SECRET_IN_ARGV");
+  if (args.some((arg) => arg.includes(payload)))
+    throw fail("DPAPI_SECRET_IN_ARGV");
   let result: DpapiProcessResult;
   try {
-    result = await runner.run(WINDOWS_DPAPI_COMMAND, args, `${op}\n${payload}\n`);
+    result = await runner.run(
+      WINDOWS_DPAPI_COMMAND,
+      args,
+      `${op}\n${payload}\n`,
+    );
   } catch {
     throw fail("DPAPI_PORT_FAILED");
   }
@@ -113,7 +118,8 @@ async function exchange(
     if (!decoded.byteLength) throw fail("DPAPI_PORT_FAILED");
     return decoded;
   } catch (error) {
-    if (error instanceof Error && error.message === "DPAPI_PORT_FAILED") throw error;
+    if (error instanceof Error && error.message === "DPAPI_PORT_FAILED")
+      throw error;
     throw fail("DPAPI_PORT_FAILED");
   }
 }
@@ -130,7 +136,9 @@ export function createWindowsDpapiPort(
   };
 }
 
-export function createDpapiSecretProtector(port: DpapiBlobPort): SecretProtector {
+export function createDpapiSecretProtector(
+  port: DpapiBlobPort,
+): SecretProtector {
   return {
     async protect(plaintext: string): Promise<Uint8Array> {
       if (!plaintext) throw fail("DPAPI_PLAINTEXT_REQUIRED");

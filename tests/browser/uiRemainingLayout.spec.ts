@@ -197,7 +197,7 @@ for (const [width, height] of [
       exact: true,
     });
     await expect(closeDetail).toHaveCSS("width", "32px");
-    await expect(closeDetail.locator("img")).toHaveCSS("width", "16px");
+    await expect(closeDetail.locator("svg")).toHaveCSS("width", "16px");
     expect(
       await detail
         .locator(

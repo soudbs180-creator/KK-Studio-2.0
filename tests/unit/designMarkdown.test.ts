@@ -64,9 +64,9 @@ test("integration preserves approved runtime tokens and registered dimensions", 
     path.join(root, "src/styles/tokens.css"),
     "utf8",
   );
-  // Milestone 1 updates tokens.css (light surface, dark hover, neutral focus, 5 tag pairs).
+  // 2026-11-06 current Figma adds mapped settings, view and header component tokens.
   const approvedHash =
-    "48f07ca7b9391040653a2ade37adcce024b03a82e5da411166036926640fe229";
+    "869c4a1ac1e785265604ff82a7953916e6661e51b54735195a5e8e4814469d6c";
   assert.equal(
     createHash("sha256").update(source.replace(/\r\n/g, "\n")).digest("hex"),
     approvedHash,

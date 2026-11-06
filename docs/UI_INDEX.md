@@ -7,6 +7,7 @@
 当前权威文件：[KK Studio · 最新 UI 全量编辑稿 · 2026-10-20 / 01 · 设计规范](https://www.figma.com/design/ZiadpErDoFweCjG3uHjkM3/KK-Studio?node-id=91-2)，文件 key 为 `ZiadpErDoFweCjG3uHjkM3`：
 - **五页职责**：`91:2`（01 · 设计规范）、`91:4`（02 · 图标与品牌）、`91:3`（03 · 组件与交互）、`2:47`（04 · 桌面页面与交互）、`91:11`（05 · 手机页面与交互）。每次 UI 任务必须读取实际目标节点、主题/视口/状态和读取时间；仅登记文件链接不算完成设计读取。
 - **阶段校准与审计证据索引**（本索引不堆放带日期进度流水账，详情查阅对应交付包）：
+  - [当前Figma本地同步与验证边界](changes/2026-11-05-figma-local-sync/verification.md)：UI-004，当前节点、源码、生产浏览器和Desktop证据分别登记。
   - [2026-10-28 手机聊天布局与 03 只读审计](changes/2026-10-28-figma-sync-governance/mobile-chat-layout.md)、[03 审计清单](changes/2026-10-28-figma-sync-governance/audit-03.md)、[本轮 spec](changes/2026-10-28-figma-sync-governance/spec.md)、[plan](changes/2026-10-28-figma-sync-governance/plan.md) 与 [验证](changes/2026-10-28-figma-sync-governance/verification.md)
   - [2026-10-25/26 04-05 返工规格](changes/2026-10-25-figma-04-05-rework/spec.md) 与 [验证](changes/2026-10-25-figma-04-05-rework/verification.md)
   - [2026-10-25 控件可读性修复记录](changes/2026-10-25-figma-control-readability/verification.md)

@@ -36,7 +36,7 @@
 | AC | 观察结果 | 证据 | 结果 |
 | --- | --- | --- | --- |
 | AC-1 | KK composer 真实 gpt-6-astra 调用内置生图；完成元数据 620 字符，无 result；图片自动成为 ready 节点/owned asset，连接保持 | [真实图片](evidence-manifest.json)、[运行摘要](evidence/native-summary.json) | PASS Desktop |
-| AC-2 | 读取原生 asset_read、重连、关闭后重启、再次启动服务/重连，原件 SHA256 86307db43bb5aea73f2f3b543b36366e8dafa3d8766c54a92a3978bfc687b7b6 一致；节点/标记均一份 | [快照](evidence/native-snapshot.json)、[重启截图](evidence/native-restarted.png) | PASS Desktop |
+| AC-2 | 读取原生 asset_read、重连、关闭后重启、再次启动服务/重连，原件 SHA256 86307db43bb5aea73f2f3b543b36366e8dafa3d8766c54a92a3978bfc687b7b6 一致；节点/标记均一份 | [快照](evidence/native-snapshot.json)、[重启截图（外置 output/repo-residue-2026-11-05/tracked-docs/docs/changes/2026-10-01-agent-image-transport/evidence/native-restarted.png） | PASS Desktop |
 | AC-3 | 两次请求 57/809、16/768，附加恒为752；前缀/指令各一次，附件/记忆0；同一线程回复 KK_CHAT_OK，重连/重启用户泡泡仍57/16，无固定规则露出 | [请求与恢复](evidence/native-summary.json) | PASS Desktop；Web 共享逻辑回归 |
 
 保留真实缺陷：[run4 重复标记失败](evidence/native-import-failure.json)，随后提交前重检生成身份。审计脚本重启时曾未启动按需 Agent、未从首页打开已有项目；分别保留[脚本失败/修正](evidence/restart-script-corrections.json)，补齐“项目库 → 项目 → 连接设置 → 启动并连接”后实际复验 PASS。不能将这些脚本设置错误当作产品已自动启动 Agent；本次不承诺自动启动。

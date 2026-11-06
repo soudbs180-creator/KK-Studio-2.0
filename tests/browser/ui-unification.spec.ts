@@ -1,3 +1,4 @@
+import { selectHomeConversation } from "./helpers";
 import { expect, test, type Locator } from "@playwright/test";
 import { openWorkspace, waitForConversationPanelSettled } from "./helpers";
 
@@ -32,7 +33,8 @@ async function readableDefault(
       fullLabelWidth: label.scrollWidth,
       top: area.top,
       bottom: area.bottom,
-      compact: innerWidth <= 1200,
+      compact:
+        !element.classList.contains("start-composer") && innerWidth <= 1200,
       left: area.left,
       right: area.right,
       controls,
@@ -108,8 +110,13 @@ for (const width of [390, 1099, 1920]) {
     await page.setViewportSize({ width, height: 1080 });
     await page.goto("/");
     const home = page.locator(".start-composer");
+    await readableDefault(
+      home,
+      ".start-model-picker > button > span:not(.ui-icon)",
+      "Codex 内置生图",
+    );
+    await selectHomeConversation(page);
     await expect(home.locator(".start-mode-button")).toHaveText(/自动|询问/);
-    await readableDefault(home, ".start-model-picker span", "Codex 内置生图");
     await openWorkspace(page);
     if (
       await page
@@ -154,6 +161,7 @@ for (const width of [390, 1099, 1920]) {
 
 test("首页不显示画布参数，普通输入草稿仍可恢复", async ({ page }) => {
   await page.goto("/");
+  await selectHomeConversation(page);
   await expect(page.getByText("生成参数", { exact: true })).toHaveCount(0);
   await page.getByLabel("创作提示词", { exact: true }).fill("保留当前草稿");
   await expect

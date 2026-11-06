@@ -69,12 +69,12 @@ test("设置主题保存重载、键盘关闭及导航", async ({ page }) => {
   await page.getByRole("dialog").screenshot({
     path: test.info().outputPath("runtime/settings-integrated.png"),
   });
-  await page.getByLabel("主题", { exact: true }).selectOption("light");
+  await page.getByLabel("主题外观", { exact: true }).selectOption("light");
   await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
   await page.reload();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
-  await page.getByLabel("主题", { exact: true }).selectOption("dark");
+  await page.getByLabel("主题外观", { exact: true }).selectOption("dark");
   await page.keyboard.press("Escape");
   await expect(
     page.getByRole("button", { name: "打开设置", exact: true }),
@@ -104,22 +104,11 @@ test("未接入的通用设置明确禁用原因", async ({ page }) => {
       exact: true,
     }),
   ).toHaveCount(1);
-  await expect(dialog.locator(".settings-nav-icon").first()).toHaveAttribute(
-    "width",
-    "20",
-  );
-  await expect(dialog.locator(".settings-nav-icon").first()).toHaveAttribute(
-    "height",
-    "20",
-  );
-  await expect(dialog.locator(".settings-nav-icon").first()).toHaveCSS(
-    "width",
-    "20px",
-  );
-  await expect(dialog.locator(".settings-nav-icon").first()).toHaveCSS(
-    "height",
-    "20px",
-  );
+  const icon = dialog.locator(".settings-nav-icon svg").first();
+  await expect(icon).toHaveAttribute("width", "16");
+  await expect(icon).toHaveAttribute("height", "16");
+  await expect(icon).toHaveCSS("width", "16px");
+  await expect(icon).toHaveCSS("height", "16px");
 });
 
 test("模型接入使用 API 地址，连接状态真实且密钥不落盘", async ({ page }) => {
@@ -295,63 +284,63 @@ test("无限画布隐藏滚动条，卡片拖动时连接线跟随", async ({ pa
   await expect(canvas).toBeVisible();
   expect(await canvas.boundingBox()).toEqual({
     x: 292,
-    y: 45,
-    width: 1618,
-    height: 1025,
+    y: 52,
+    width: 1628,
+    height: 1028,
   });
   expect(await page.locator(".image-preview").boundingBox()).toEqual({
     // Latest Figma card geometry places the 400px image body at x=95 in the
     // node; at this viewport the world transform resolves to x=469.
     x: 469,
-    y: 211,
+    y: 218,
     width: 400,
     height: 400,
   });
   expect(await page.locator(".task-button").boundingBox()).toEqual({
-    x: 472,
-    y: 73,
-    width: 120,
-    height: 44,
+    x: 444,
+    y: 86,
+    width: 96,
+    height: 32,
   });
   expect(await page.locator(".conversation-panel").boundingBox()).toEqual({
-    x: 1430,
-    y: 61,
-    width: 470,
-    height: 998,
+    x: 1432,
+    y: 67,
+    width: 472,
+    height: 996,
   });
   expect(await page.getByTestId("canvas-node-video1").boundingBox()).toEqual({
     x: 1002,
-    y: 150,
+    y: 157,
     width: 370,
     height: 224,
   });
   expect(await page.getByTestId("canvas-node-video2").boundingBox()).toEqual({
     x: 1002,
-    y: 443,
+    y: 450,
     width: 370,
     height: 224,
   });
   const videoPreviews = page.locator(".video-placeholder");
   expect(await videoPreviews.nth(0).boundingBox()).toEqual({
     x: 1002,
-    y: 166,
+    y: 173,
     width: 370,
     height: 208,
   });
   expect(await videoPreviews.nth(1).boundingBox()).toEqual({
     x: 1002,
-    y: 459,
+    y: 466,
     width: 370,
     height: 208,
   });
   const toolbarBounds = await page.locator(".canvas-toolbar").boundingBox();
-  expect(toolbarBounds).toEqual({ x: 711, y: 1002, width: 284, height: 52 });
+  expect(toolbarBounds).toEqual({ x: 718, y: 1016, width: 288, height: 52 });
   await expect(page.locator(".canvas-top-right")).toBeVisible();
   expect(await page.locator(".canvas-top-right").boundingBox()).toEqual({
-    x: 1023,
-    y: 73,
-    width: 363,
-    height: 44,
+    x: 1123,
+    y: 84,
+    width: 281,
+    height: 36,
   });
   const navigationPanelGap = await page.evaluate(() => {
     const navigation = document
@@ -362,7 +351,7 @@ test("无限画布隐藏滚动条，卡片拖动时连接线跟随", async ({ pa
       .getBoundingClientRect();
     return panel.left - navigation.right;
   });
-  expect(navigationPanelGap).toBeCloseTo(44, 1);
+  expect(navigationPanelGap).toBeCloseTo(28, 1);
   await expect(page.getByTestId("image-composer")).toHaveCount(0);
   await page.locator(".image-preview").click();
   await expect(page.getByTestId("image-composer")).toBeVisible();
@@ -378,7 +367,7 @@ test("无限画布隐藏滚动条，卡片拖动时连接线跟随", async ({ pa
     })
     .toEqual({
       x: 343,
-      y: 627,
+      y: 634,
       width: 652,
       height: 214,
     });
@@ -406,7 +395,7 @@ test("无限画布隐藏滚动条，卡片拖动时连接线跟随", async ({ pa
   await page
     .getByRole("menuitemradio", { name: "移动工具", exact: true })
     .click();
-  await expect(page.locator(".canvas-toolbar")).toHaveCSS("width", "284px");
+  await expect(page.locator(".canvas-toolbar")).toHaveCSS("width", "288px");
   await videoPreviews.nth(0).click();
   await expect(page.getByTestId("image-composer")).toHaveCount(0);
   expect(

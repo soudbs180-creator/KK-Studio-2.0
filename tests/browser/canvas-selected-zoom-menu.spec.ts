@@ -16,7 +16,7 @@ for (const theme of ["light", "dark"])
       await openWorkspace(page);
       await openSettingsSection(page, "通用设置");
       await page
-        .getByRole("combobox", { name: "主题", exact: true })
+        .getByRole("combobox", { name: "主题外观", exact: true })
         .selectOption(theme);
       await page.getByRole("button", { name: "关闭设置", exact: true }).tap();
       await page.getByRole("button", { name: "添加资源", exact: true }).tap();

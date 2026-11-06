@@ -62,7 +62,11 @@ export default function CreationParameterControl({
         )}
       </button>
       {open && !disabled && !video && (
-        <div className="node-popover parameter-menu" role="dialog" aria-label="图片参数">
+        <div
+          className="node-popover parameter-menu"
+          role="dialog"
+          aria-label="图片参数"
+        >
           <ImageModelParameters
             embedded
             model={model}

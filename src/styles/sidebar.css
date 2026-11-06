@@ -72,7 +72,7 @@
     height: 44px;
     flex: 0 0 44px;
     gap: var(--kk-space-2);
-    margin: 0 0 var(--kk-space-4);
+    margin: 0 0 var(--kk-sidebar-section-gap);
   }
   .sidebar:not(.is-collapsed):not(.is-narrow) .brand .logo {
     width: 24px;
@@ -98,7 +98,7 @@
     height: var(--kk-icon-glyph-sm);
   }
   .sidebar:not(.is-collapsed):not(.is-narrow) .project-groups {
-    padding-top: var(--kk-space-4);
+    padding-top: var(--kk-sidebar-section-gap);
   }
   .sidebar:not(.is-collapsed):not(.is-narrow) .project-groups-header,
   .sidebar:not(.is-collapsed):not(.is-narrow) .group-heading {
@@ -729,6 +729,8 @@
     top: 34px;
     left: auto;
     right: 20px;
+    width: var(--kk-control-h-md);
+    height: var(--kk-control-h-md);
   }
   .sidebar.is-collapsed .sidebar-search {
     display: grid;

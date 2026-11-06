@@ -24,7 +24,7 @@ import { PROVIDER_PRESETS } from "../../src/domain/providerPresets.ts";
  * Tier 3: Cross-Feature Interactions & Pairwise Combinations
  *
  * 16 Tests covering combinatorial interactions across F1 - F12
- * Derived from ORIGINAL_REQUEST.md & TEST_INFRA.md
+ * Derived from ORIGINAL_REQUEST.md & docs/archive/TEST_INFRA.md
  * ========================================================================== */
 
 test("SCENARIO-T3-01 (F5 + F6 + F3): navigating to software update tab animates sliding pill and initializes 7-state machine", () => {

@@ -97,14 +97,17 @@ test("Figma mapping dimensions are exposed as shared component tokens", () => {
   }
 
   const cssContracts = [
-    ["src/styles/canvas-navigation.css", "var(--kk-canvas-toolbar-h)"],
+    ["src/styles/canvas-navigation.css", "var(--kk-canvas-view-h)"],
     ["src/styles/generation-count.css", "var(--kk-generation-count-trigger-w)"],
     [
       "src/components/assets/assets.css",
       "var(--kk-material-panel-compact-width)",
     ],
     ["src/styles/sidebar.css", "var(--kk-sidebar-width)"],
-    ["src/styles/conversation-panel.css", "var(--kk-card-header-action-h)"],
+    [
+      "src/styles/conversation-panel.css",
+      "var(--kk-conversation-header-control)",
+    ],
   ] as const;
 
   for (const [file, value] of cssContracts) {

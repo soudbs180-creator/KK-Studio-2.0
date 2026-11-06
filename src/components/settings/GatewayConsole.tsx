@@ -139,7 +139,7 @@ export default function GatewayConsole() {
         parsed.accounts.map((account) => (
           <div key={account.id} className="settings-network-row">
             <div>
-              <h3>{account.name}</h3>
+              <h3 title={account.name}>{account.name}</h3>
               <p>
                 {account.model || account.channel} · 剩余 {account.remaining} ·
                 已用 {account.used}
@@ -166,7 +166,9 @@ export default function GatewayConsole() {
       {ranked.map((id, index) => (
         <div key={id} className="settings-network-row">
           <div>
-            <h3>
+            <h3
+              title={parsed.accounts.find((item) => item.id === id)?.name ?? id}
+            >
               {index + 1}.{" "}
               {parsed.accounts.find((item) => item.id === id)?.name ?? id}
             </h3>
