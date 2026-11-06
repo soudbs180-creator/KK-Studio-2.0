@@ -30,6 +30,10 @@ import type {
 } from "./model.ts";
 import { executeNativeFlow } from "./nativeTaskExecution.ts";
 import {
+  applyArchivedCostReceipt,
+  rememberCostReceipt,
+} from "./taskCostArchive.ts";
+import {
   cancelNativeTask,
   usesNativeTaskHost,
   type NativeTaskHostRecord,
@@ -530,6 +534,7 @@ export function useTaskExecution(
     const publishedItems = new Set<string>();
     const rejectedDeliveryIds = new Set<string>();
     const deliveryErrorRef = { current: undefined as string | undefined };
+    const costReceiptRef = { current: undefined as unknown };
     const archiveFailureIndices = new Set<number>();
     const mappingFailures = new Map<number, string>();
     let durableSubmission = false;
@@ -569,6 +574,7 @@ export function useTaskExecution(
         publishedItems,
         rejectedDeliveryIds,
         deliveryErrorRef,
+        costReceiptRef,
         setOutputs,
         updateProject,
         creationRef,
@@ -679,6 +685,8 @@ export function useTaskExecution(
           onStart: () => {
             providerRequestStarted = true;
           },
+          onCostReceipt: (receipt) =>
+            rememberCostReceipt(costReceiptRef, receipt),
         });
         return;
       }
@@ -978,6 +986,7 @@ interface PublishStateOptions {
   publishedItems: Set<string>;
   rejectedDeliveryIds: Set<string>;
   deliveryErrorRef?: { current: string | undefined };
+  costReceiptRef?: { current: unknown };
   setOutputs?: (outputs: CreationTaskOutput[]) => void;
   updateProject: (
     projectId: string,
@@ -1082,22 +1091,25 @@ export function publishTaskOutputState(options: PublishStateOptions): boolean {
         : nextProject;
     const nextTasks = current.tasks.map((item) => {
       if (item.id === taskId) {
-        return {
-          ...item,
-          status: publishedStatus,
-          error: publishedError,
-          submissionState: publishedSubmissionState ?? item.submissionState,
-          submittedAt:
-            publishedSubmissionState === "submitted"
-              ? (item.submittedAt ?? Date.now())
-              : item.submittedAt,
-          outputs: [...effectiveOutputs],
-          completedOutputs: effectiveOutputs.filter(
-            (output) => output.status === "succeeded",
-          ).length,
-          resultItemId: acceptedResults[0]?.id ?? item.resultItemId,
-          updatedAt: Date.now(),
-        };
+        return applyArchivedCostReceipt(
+          {
+            ...item,
+            status: publishedStatus,
+            error: publishedError,
+            submissionState: publishedSubmissionState ?? item.submissionState,
+            submittedAt:
+              publishedSubmissionState === "submitted"
+                ? (item.submittedAt ?? Date.now())
+                : item.submittedAt,
+            outputs: [...effectiveOutputs],
+            completedOutputs: effectiveOutputs.filter(
+              (output) => output.status === "succeeded",
+            ).length,
+            resultItemId: acceptedResults[0]?.id ?? item.resultItemId,
+            updatedAt: Date.now(),
+          },
+          options.costReceiptRef?.current,
+        );
       }
       if (item.id !== task.retryOfTaskId) return item;
       const merged = mergeRetryTaskState({
@@ -1190,6 +1202,7 @@ interface TextFlowOptions {
   assertTextCurrent: () => void;
   reservation?: ProviderSubmissionReservation;
   onStart: () => void;
+  onCostReceipt?: (receipt: Record<string, unknown>) => void;
 }
 
 async function executeTextFlow(options: TextFlowOptions): Promise<void> {
@@ -1210,6 +1223,7 @@ async function executeTextFlow(options: TextFlowOptions): Promise<void> {
     onUsage: (tokenUsage) => {
       outputs[0] = { ...outputs[0], tokenUsage };
     },
+    onCostReceipt: (receipt) => options.onCostReceipt?.(receipt),
     prompt: task.prompt,
     model: task.model,
     providerBaseUrl: task.providerBaseUrl!,

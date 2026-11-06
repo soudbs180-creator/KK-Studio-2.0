@@ -19,6 +19,7 @@ import {
   type TextRouteTarget,
 } from "../ai-gateway/index.ts";
 import { loadApiKey } from "./providerCredentials.ts";
+import { readStreamCostReceipt } from "./taskCostArchive.ts";
 import { GenerationProviderError } from "./imageGeneration.ts";
 import {
   consumeTextEvent,
@@ -36,6 +37,7 @@ export async function readTextStream(
   protocol: ProviderProtocol = "openai-chat",
   onUsage?: (usage: TokenUsage) => void,
   privacy?: PrivacyMask,
+  onCostReceipt?: (receipt: Record<string, unknown>) => void,
 ): Promise<string> {
   signal.throwIfAborted();
   const body = response.body;
@@ -100,6 +102,8 @@ export async function readTextStream(
     consumeTextEvent(payload, state, protocol);
     usage = readTokenUsage(payload, usage);
     if (usage) onUsage?.(usage);
+    const costReceipt = readStreamCostReceipt(payload);
+    if (costReceipt) onCostReceipt?.(costReceipt);
     text = state.text;
     if (text !== previous) {
       if (encoder.encode(text).length > 32768) throw invalidStream();
@@ -220,6 +224,7 @@ export async function generateText(options: {
   onRequestStart: () => void;
   onText?: (text: string) => void;
   onUsage?: (usage: TokenUsage) => void;
+  onCostReceipt?: (receipt: Record<string, unknown>) => void;
 }): Promise<string> {
   const signal = AbortSignal.any([
     options.signal,
@@ -373,6 +378,7 @@ async function postText(
     target.protocol,
     options.onUsage,
     privacy,
+    options.onCostReceipt,
   );
   return privacy ? privacy.unmask(text) : text;
 }

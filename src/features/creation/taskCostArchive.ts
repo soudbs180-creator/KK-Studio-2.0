@@ -13,6 +13,25 @@ export function isPlainCostReceipt(
  * Invalid, conflicting, or cross-task evidence leaves the existing task cost
  * unchanged. Token counts are never converted into a price.
  */
+/** Read an explicit provider quote. Token usage is never treated as a price. */
+export function readStreamCostReceipt(
+  payload: unknown,
+): Record<string, unknown> | undefined {
+  if (!payload || typeof payload !== "object" || Array.isArray(payload))
+    return undefined;
+  const receipt = (payload as Record<string, unknown>).costReceipt;
+  return isPlainCostReceipt(receipt) ? receipt : undefined;
+}
+
+/** Keep the first explicit quote. A later frame cannot replace it. */
+export function rememberCostReceipt(
+  slot: { current: unknown },
+  receipt: unknown,
+): void {
+  if (slot.current === undefined && isPlainCostReceipt(receipt))
+    slot.current = receipt;
+}
+
 export function applyArchivedCostReceipt(
   task: CreationTask,
   receipt: unknown,

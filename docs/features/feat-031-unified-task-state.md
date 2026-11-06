@@ -59,3 +59,4 @@
 
 - 2026-11-04：四模态统一提交与媒体回执/归档，见[阶段 3](../changes/2026-11-04-multimodal/verification.md)；旧测试数量仅代表对应历史版本。
 - 2026-11-06：原生归档开始消费宿主 `costReceipt`。合法报价写入任务，冲突和身份不匹配的回执不覆盖；token 用量不换算成价格。真实供应商账单仍未接入，任务保持 PARTIAL。见 [cost archive](../changes/2026-11-06-task-cost-archive/verification.md)。
+- 2026-11-06：文本流里的显式 `costReceipt` 会进入同一次任务发布；token 用量仍只记在输出上。没有真实扣费请求。见 [provider cost](../changes/2026-11-06-provider-cost-receipt/verification.md)。
