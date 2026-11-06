@@ -1,0 +1,22 @@
+{
+  "messages": [
+    {
+      "id": "MSG-20261106125029-antigravity",
+      "from": "Antigravity",
+      "to": "Cursor",
+      "timestamp": "2026-11-06T12:50:29.943Z",
+      "taskId": "TASK-TASKSTATE-002",
+      "type": "DIRECT_HANDOFF",
+      "subject": "请接手并闭环 TASK-TASKSTATE-002 原生扣费账本",
+      "body": "Antigravity 已将 AGI 超级终端架构、硬件自适应调度、外部 Bridge 与防碰撞门禁全部合入 main (6891d5b9)。工作区已干净无阻碍。请你立即接力 TASK-TASKSTATE-002，完成原生任务归档扣费验收与账本状态回写，跑通 taskCostArchive.test.ts 并提交代码。",
+      "action": {
+        "command": "node scripts/governance/agent-radar.mjs pickup TASK-TASKSTATE-002",
+        "testCmd": "node --import ./tests/support/public-entry-loader.mjs --test tests/unit/taskCostArchive.test.ts",
+        "pending": [
+          "Desktop 扣费验收与账本状态回写"
+        ]
+      },
+      "read": false
+    }
+  ]
+}

@@ -5,6 +5,8 @@ import { execFileSync } from "node:child_process";
 const REPO_ROOT = process.cwd();
 const CLAIMS_FILE = path.join(REPO_ROOT, "docs/governance/active-work.json");
 const MEMLOG_FILE = path.join(REPO_ROOT, "docs/governance/ai-memory/memlog.md");
+const MAILBOX_DIR = path.join(REPO_ROOT, "docs/governance/ai-memory/inbox");
+const MESSAGES_FILE = path.join(MAILBOX_DIR, "messages.json");
 
 function runGit(args, cwd = REPO_ROOT) {
   try {
@@ -70,6 +72,55 @@ function writeClaims(data) {
   fs.writeFileSync(CLAIMS_FILE, `${JSON.stringify(data, null, 2)}\n`, "utf8");
 }
 
+export function readMessages() {
+  if (!fs.existsSync(MESSAGES_FILE)) return { messages: [] };
+  try {
+    const parsed = JSON.parse(fs.readFileSync(MESSAGES_FILE, "utf8"));
+    return Array.isArray(parsed.messages) ? parsed : { messages: [] };
+  } catch {
+    return { messages: [] };
+  }
+}
+
+export function writeMessages(data) {
+  fs.mkdirSync(MAILBOX_DIR, { recursive: true });
+  fs.writeFileSync(MESSAGES_FILE, `${JSON.stringify(data, null, 2)}\n`, "utf8");
+}
+
+export function sendAgentMessage(options) {
+  const data = readMessages();
+  const now = new Date();
+  const id = `MSG-${now.toISOString().replace(/[-:T.Z]/g, "").slice(0, 14)}-${options.from.toLowerCase()}`;
+  const msg = {
+    id,
+    from: options.from,
+    to: options.to,
+    timestamp: now.toISOString(),
+    taskId: options.taskId || "",
+    type: options.type || "DIRECT_HANDOFF",
+    subject: options.subject,
+    body: options.body,
+    action: options.action || {},
+    read: false,
+  };
+  data.messages.unshift(msg);
+  writeMessages(data);
+  console.log(`✉️  [MAILBOX SENT] 消息已投递给 [${options.to}]: "${options.subject}" (ID: ${id})`);
+  return msg;
+}
+
+export function markMessageRead(msgId) {
+  const data = readMessages();
+  const msg = data.messages.find((m) => m.id === msgId);
+  if (msg) {
+    msg.read = true;
+    writeMessages(data);
+    console.log(`✓ 消息 ${msgId} 已标记为已读。`);
+    return true;
+  }
+  return false;
+}
+
 function appendMemlog(title, items, agent = "AIG Relay Engine") {
   if (!fs.existsSync(MEMLOG_FILE)) return;
   const now = new Date();
@@ -99,7 +150,7 @@ function getLatestMemlogHandoff() {
   return `[${time}] ${title} (由 ${agent} 交付)`;
 }
 
-export function showRadar() {
+export function showRadar(targetAgent = "") {
   console.log(
     "================================================================================",
   );
@@ -116,7 +167,44 @@ export function showRadar() {
     "--------------------------------------------------------------------------------",
   );
 
-  // 2. Active Claims & Dual-Track Status
+  // 2. Direct Inter-Agent Mailbox (Active Messages)
+  const { messages } = readMessages();
+  const unreadMessages = messages.filter((m) => !m.read);
+  const relevantMessages = targetAgent
+    ? unreadMessages.filter(
+        (m) =>
+          m.to.toLowerCase() === targetAgent.toLowerCase() ||
+          m.to.toLowerCase() === "all" ||
+          m.to.toLowerCase() === "broadcast",
+      )
+    : unreadMessages;
+
+  if (relevantMessages.length > 0) {
+    console.log(
+      `📬 【AI 智能体直接互通信箱 (Inter-Agent Direct Mailbox)】: 发现 ${relevantMessages.length} 条待处理交接信！`,
+    );
+    relevantMessages.forEach((m) => {
+      console.log(`  👉 [定向交接信 #${m.id}]`);
+      console.log(`     发件人: [${m.from}] ➔ 收件人: [${m.to}] ${m.taskId ? `| 关联任务: ${m.taskId}` : ""}`);
+      console.log(`     主题: ${m.subject}`);
+      console.log(`     内容: ${m.body}`);
+      if (m.action?.command) {
+        console.log(`     💡 建议执行命令: ${m.action.command}`);
+      }
+      if (m.action?.pending && m.action.pending.length > 0) {
+        console.log(`     📋 待办事项: ${m.action.pending.join(" | ")}`);
+      }
+      if (m.action?.testCmd) {
+        console.log(`     🧪 验收命令: ${m.action.testCmd}`);
+      }
+      console.log("");
+    });
+    console.log(
+      "--------------------------------------------------------------------------------",
+    );
+  }
+
+  // 3. Active Claims & Dual-Track Status
   const { claims } = readClaims();
   const activeClaims = claims.filter((c) => c.status !== "DONE");
   const pausedClaims = claims.filter((c) =>
@@ -146,7 +234,7 @@ export function showRadar() {
     "--------------------------------------------------------------------------------",
   );
 
-  // 3. Paused / Relay-Ready Tasks
+  // 4. Paused / Relay-Ready Tasks
   if (pausedClaims.length > 0) {
     console.log("⏸️  待接力任务断点池 (Awaiting Autonomous Relay):");
     pausedClaims.forEach((c) => {
@@ -173,7 +261,7 @@ export function showRadar() {
     );
   }
 
-  // 4. Live Worktrees & Dirty Changes
+  // 5. Live Worktrees & Dirty Changes
   const worktrees = getWorktrees();
   console.log(`🌲 检测到 ${worktrees.length} 个活跃工作树 (Worktrees):`);
   const fileToWorktrees = new Map();
@@ -203,12 +291,11 @@ export function showRadar() {
     }
   });
 
-  // 5. Dual-Track Orthogonality & Collision Analysis
+  // 6. Dual-Track Orthogonality & Collision Analysis
   console.log(
     "\n--------------------------------------------------------------------------------",
   );
 
-  // Check Orthogonal Concurrency (same feature, different tracks)
   const featureToTracks = new Map();
   activeClaims.forEach((c) => {
     if (c.feature && c.status === "IN_PROGRESS") {
@@ -235,7 +322,6 @@ export function showRadar() {
     }
   }
 
-  // Check File Collisions
   let collisionCount = 0;
   for (const [file, wts] of fileToWorktrees.entries()) {
     if (wts.length > 1) {
@@ -267,7 +353,6 @@ function claimTask(agent, task, options = {}) {
   const feature = options.feature || "";
   const files = Array.isArray(options.files) ? options.files : [];
 
-  // Check for same-track collision on same feature
   if (feature) {
     const trackConflict = data.claims.find(
       (c) =>
@@ -284,7 +369,6 @@ function claimTask(agent, task, options = {}) {
     }
   }
 
-  // Check file collisions
   if (files.length > 0) {
     const fileConflict = data.claims.find(
       (c) =>
@@ -349,7 +433,6 @@ function pauseTask(task, options = {}) {
 
   writeClaims(data);
 
-  // Append checkpoint note to memlog.md
   appendMemlog(
     `${task} 断点挂起留痕 (等待接力)`,
     [
@@ -372,7 +455,6 @@ function pickupTask(taskArg, agent = "Antigravity") {
   let targetTask = taskArg;
 
   if (!targetTask) {
-    // Find the first paused or ready_for_pickup task
     const candidate = data.claims.find((c) =>
       ["PAUSED_QUOTA", "PAUSED_CONTEXT", "READY_FOR_PICKUP"].includes(c.status),
     );
@@ -396,7 +478,6 @@ function pickupTask(taskArg, agent = "Antigravity") {
   entry.updatedAt = new Date().toISOString();
   writeClaims(data);
 
-  // Append pickup note to memlog.md
   appendMemlog(
     `${targetTask} 任务接力激活`,
     [
@@ -409,23 +490,23 @@ function pickupTask(taskArg, agent = "Antigravity") {
   );
 
   console.log(
-    `🤝 [PICKUP SUCCESS] ${agent} 已成功从 ${prevAgent} 手中接力任务 ${targetTask}！`,
+    `🚀 [PICKUP SUCCESS] ${agent} 成功接力任务 ${targetTask} (原负责人: ${prevAgent})！`,
   );
-  console.log(`   先前进展: ${entry.progress || "无"}`);
-  if (entry.breakpoint?.pending) {
-    console.log(`   待办项: ${entry.breakpoint.pending.join(" | ")}`);
+  if (entry.breakpoint?.pending && entry.breakpoint.pending.length > 0) {
+    console.log(`   后续接力待办: ${entry.breakpoint.pending.join(" | ")}`);
   }
   if (entry.breakpoint?.testCmd) {
-    console.log(`   验证命令: ${entry.breakpoint.testCmd}`);
+    console.log(`   建议验证命令: ${entry.breakpoint.testCmd}`);
   }
 }
 
 function releaseTask(task) {
   const data = readClaims();
-  const before = data.claims.length;
-  data.claims = data.claims.filter((c) => (c.task || c.taskId) !== task);
-  writeClaims(data);
-  if (data.claims.length < before) {
+  const idx = data.claims.findIndex((c) => (c.task || c.taskId) === task);
+  if (idx >= 0) {
+    data.claims[idx].status = "DONE";
+    data.claims[idx].updatedAt = new Date().toISOString();
+    writeClaims(data);
     console.log(
       `✅ [RELEASE SUCCESS] 任务 ${task} 活跃锁已释放。请确保已在 memlog.md 追加最终交付思维！`,
     );
@@ -467,7 +548,32 @@ function pruneMergedBranches() {
 // CLI Routing
 const [cmd, ...args] = process.argv.slice(2);
 if (!cmd || cmd === "status" || cmd === "scan") {
-  showRadar();
+  const targetAgent = args[0]?.startsWith("--agent=") ? args[0].split("=")[1] : (process.env.AGENT_NAME || "");
+  showRadar(targetAgent);
+} else if (cmd === "send" || cmd === "msg:send") {
+  const opts = { from: "Agent", to: "All", subject: "", body: "", taskId: "", action: {} };
+  args.forEach((a) => {
+    if (a.startsWith("--from=")) opts.from = a.split("=")[1];
+    else if (a.startsWith("--to=")) opts.to = a.split("=")[1];
+    else if (a.startsWith("--subject=")) opts.subject = a.split("=")[1];
+    else if (a.startsWith("--body=")) opts.body = a.split("=")[1];
+    else if (a.startsWith("--task=")) opts.taskId = a.split("=")[1];
+    else if (a.startsWith("--cmd=")) opts.action.command = a.split("=")[1];
+    else if (a.startsWith("--test=")) opts.action.testCmd = a.split("=")[1];
+    else if (a.startsWith("--pending=")) opts.action.pending = a.split("=")[1].split(";");
+  });
+  if (!opts.subject) {
+    console.error("用法: node agent-radar.mjs send --from=A --to=B --subject='...' [--body='...'] [--task=...] [--cmd=...]");
+    process.exit(1);
+  }
+  sendAgentMessage(opts);
+} else if (cmd === "ack" || cmd === "msg:ack") {
+  const msgId = args[0];
+  if (!msgId) {
+    console.error("用法: node agent-radar.mjs ack <msg-id>");
+    process.exit(1);
+  }
+  markMessageRead(msgId);
 } else if (cmd === "claim") {
   const agent = args[0];
   const task = args[1];
@@ -513,6 +619,6 @@ if (!cmd || cmd === "status" || cmd === "scan") {
 } else if (cmd === "prune") {
   pruneMergedBranches();
 } else {
-  console.error(`未知命令 "${cmd}". 支持: status, claim, pause, pickup, release, prune`);
+  console.error(`未知命令 "${cmd}". 支持: status, send, ack, claim, pause, pickup, release, prune`);
   process.exit(1);
 }
