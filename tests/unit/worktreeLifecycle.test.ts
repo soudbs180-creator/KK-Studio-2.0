@@ -352,17 +352,43 @@ test("worktree policy CLI permits a new target within its configured root", () =
 
 test("worktree policy CLI reuses a registered checkout with an exhausted budget", () => {
   const root = policyCliFixture();
-  const branch = execFileSync("git", ["branch", "--show-current"], {
+  let branch = execFileSync("git", ["branch", "--show-current"], {
     cwd: policyRepositoryRoot,
     encoding: "utf8",
   }).trim();
-  assert.notEqual(branch, "");
-  const result = runPolicyCli([`--branch=${branch}`], policyRepositoryRoot, {
-    KK_WORKTREE_ROOT: path.join(root, "allowed"),
-    KK_MAX_GENERATED_BYTES: "0",
-  });
-  assert.equal(result.status, 0, result.stdout + result.stderr);
-  const decision = JSON.parse(result.stdout);
-  assert.equal(decision.action, "REUSE_EXISTING_BRANCH");
-  assert.equal(path.resolve(decision.path), path.resolve(policyRepositoryRoot));
+  const detached = branch.length === 0;
+  const temporaryBranch = "codex/TASK-CLI-REUSE-DETACHED";
+  if (detached) {
+    execFileSync("git", ["branch", "-f", temporaryBranch, "HEAD"], {
+      cwd: policyRepositoryRoot,
+    });
+    execFileSync(
+      "git",
+      ["symbolic-ref", "HEAD", `refs/heads/${temporaryBranch}`],
+      { cwd: policyRepositoryRoot },
+    );
+    branch = temporaryBranch;
+  }
+  try {
+    const result = runPolicyCli([`--branch=${branch}`], policyRepositoryRoot, {
+      KK_WORKTREE_ROOT: path.join(root, "allowed"),
+      KK_MAX_GENERATED_BYTES: "0",
+    });
+    assert.equal(result.status, 0, result.stdout + result.stderr);
+    const decision = JSON.parse(result.stdout);
+    assert.equal(decision.action, "REUSE_EXISTING_BRANCH");
+    assert.equal(
+      path.resolve(decision.path),
+      path.resolve(policyRepositoryRoot),
+    );
+  } finally {
+    if (detached) {
+      execFileSync("git", ["checkout", "--detach"], {
+        cwd: policyRepositoryRoot,
+      });
+      execFileSync("git", ["branch", "-D", temporaryBranch], {
+        cwd: policyRepositoryRoot,
+      });
+    }
+  }
 });
