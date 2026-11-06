@@ -349,6 +349,10 @@ for (const width of [390, 1920]) {
       await expect(toolbar).toHaveCount(0);
       await node.locator("textarea").fill(content);
       await expect(toolbar).toBeVisible();
+      await panCanvasToRevealAction(
+        page,
+        toolbar.getByTitle("预览渲染结果", { exact: true }),
+      );
       await toolbar.getByTitle("预览渲染结果", { exact: true }).click();
       if (title === "HTML")
         await expect(node.locator("iframe")).toHaveAttribute("srcdoc", content);
@@ -365,6 +369,7 @@ for (const width of [390, 1920]) {
       await canvas.focus();
       for (let step = 0; step < 4; step++) await canvas.press("Control+-");
       const edit = toolbar.getByTitle(`编辑 ${title} 源码`, { exact: true });
+      await panCanvasToRevealAction(page, edit);
       await expect
         .poll(() =>
           edit.evaluate((element) => {

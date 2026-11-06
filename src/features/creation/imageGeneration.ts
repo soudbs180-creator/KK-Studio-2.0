@@ -17,6 +17,7 @@ import {
   ProviderSubmissionError,
 } from "./providerSubmission.ts";
 import { resolveImageAttachments } from "./resolveAttachments.ts";
+import { readStreamCostReceipt } from "./taskCostArchive.ts";
 
 export { getSessionApiKey, setSessionApiKey } from "./providerCredentials.ts";
 
@@ -199,6 +200,7 @@ async function requestImageChunk(options: {
   signal: AbortSignal;
   /** Resolved provider size label such as "1024x1024"; omitted means provider default. */
   size?: string;
+  onCostReceipt?: (receipt: Record<string, unknown>) => void;
 }): Promise<string[]> {
   const linked = linkAbortSignal(options.signal);
   let timedOut = false;
@@ -277,7 +279,10 @@ async function requestImageChunk(options: {
     } catch {
       throw new Error("服务没有返回有效的图片结果。");
     }
-    return resultDataList(payload);
+    const sources = resultDataList(payload);
+    const costReceipt = readStreamCostReceipt(payload);
+    if (costReceipt) options.onCostReceipt?.(costReceipt);
+    return sources;
   } catch (error) {
     if (timedOut && !options.signal.aborted)
       throw new GenerationProviderError("请求超时，任务已停止，可重试。", {
@@ -331,6 +336,7 @@ export async function generateImages(options: {
   onChunk?: (sources: string[], offset: number) => Promise<void>;
   beforeRequest?: () => void;
   onRequestStart?: () => void;
+  onCostReceipt?: (receipt: Record<string, unknown>) => void;
 }): Promise<GeneratedImages> {
   if (!navigator.onLine) throw new Error("网络已断开，请恢复网络后重试。");
   const profile = modelProviderSchema.parse(
@@ -483,6 +489,7 @@ export async function generateImages(options: {
             }
           : undefined,
         size: options.size,
+        onCostReceipt: options.onCostReceipt,
         idempotencyKey: options.idempotencyKey
           ? `${options.idempotencyKey}-part-${Math.floor(offset / perRequest) + 1}`
           : undefined,

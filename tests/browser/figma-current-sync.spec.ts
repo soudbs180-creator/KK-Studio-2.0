@@ -173,3 +173,45 @@ for (const width of [390, 1099, 1920]) {
     await page.screenshot({ path: info.outputPath(`canvas-${width}.png`) });
   });
 }
+
+test("Figma首页三封面和设计字体实际加载", async ({ page }, info) => {
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.goto("/");
+  await page.evaluate(() => document.fonts.ready);
+  expect(
+    await page.evaluate(() =>
+      Array.from(document.fonts).some(
+        (font) =>
+          font.family === "Source Han Sans CN VF" && font.status === "loaded",
+      ),
+    ),
+  ).toBe(true);
+  const covers = page.locator(".start-inspiration-card img");
+  await expect(covers).toHaveCount(3);
+  expect(
+    await covers.evaluateAll((images) =>
+      images.map((image) => image.getAttribute("src")),
+    ),
+  ).toEqual([
+    "/fixtures/demo/blue-hour.png",
+    "/design/figma/home-inspiration-product.png",
+    "/design/figma/home-inspiration-mv.png",
+  ]);
+  await expect
+    .poll(() =>
+      covers.evaluateAll((images) =>
+        images.every(
+          (image) =>
+            (image as HTMLImageElement).complete &&
+            (image as HTMLImageElement).naturalWidth > 0,
+        ),
+      ),
+    )
+    .toBe(true);
+  const logo = page.locator("[data-brand-logo=hero]");
+  await expect(logo).toHaveCSS("width", "64px");
+  await expect(logo).toHaveCSS("height", "64px");
+  await page.screenshot({
+    path: info.outputPath("home-figma-resources-1440.png"),
+  });
+});

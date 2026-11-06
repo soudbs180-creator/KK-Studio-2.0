@@ -10,14 +10,14 @@ export const INSPIRATIONS = [
     id: "product-story",
     title: "产品故事板",
     description: "把产品卖点拆成可编辑的画面节点，再交给模型继续完善。",
-    image: "/fixtures/demo/blue-hour.png",
+    image: "/design/figma/home-inspiration-product.png",
     tag: "品牌广告",
   },
   {
     id: "mv-board",
     title: "音乐 MV 分镜",
     description: "从一句歌词开始，生成镜头草稿与视觉参考，保持创作方向可控。",
-    image: "/fixtures/demo/blue-hour.png",
+    image: "/design/figma/home-inspiration-mv.png",
     tag: "音乐 MV",
   },
 ];

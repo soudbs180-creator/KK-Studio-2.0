@@ -166,7 +166,7 @@ test("任务面板按 Runtime / Tasks 展示卡片，滚轮和 Escape 不影响�
   await trigger.click();
   const panel = page.getByRole("region", { name: "任务列表" });
   const anchor = (await trigger.boundingBox())!;
-  await expect(panel).toHaveAttribute("data-node-id", "396:938");
+  await expect(panel).toHaveAttribute("data-node-id", "437:64052");
   await expect(panel.getByText("已完成", { exact: true })).toBeVisible();
   await expect
     .poll(() => panel.boundingBox())

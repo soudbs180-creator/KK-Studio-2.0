@@ -5,6 +5,21 @@
 
 ---
 
+
+## [2026-11-06T11:04:54.001Z] UI-004 MCP当前回执（非全量完成）
+- Codex：MCP-only视觉修正26定向PASS，typecheck/UI/Token/规则/build通过；Figma源437:64052说明先改并回读，字体/三封面/hero原SVG已按9:3落本地，真实CDP确认loaded。
+- Desktop：第二轮官方helper退出0，2.1.66 EXE659e1eb4141f / inputf2d7addff220，source HEAD3d7cc573+dirty，构建前后源码指纹一致、依赖一致、四项dist资产hash一致。首轮来源漂移被拒，失配收据另存output，不能复用。
+- 当前：UI-004为PARTIAL；全页/六态/像素、字体修改后整套verify、Native窗口与正式独审/发布未验。原127项目保护保持，没有清空/覆盖数据。下一步严格逐页同状态MCP对照，先改Figma缺陷再同步本地，不用快速门禁冒充100%。
+
+
+## [2026-11-06T11:02:04.833Z] UI-004 MCP-only视觉纠偏与证据边界
+- Agent：Codex /root；用户最新要求：所有操作通过MCP，Figma问题先在Figma修复并回读再改本地。不要继续以快速门禁代替视觉还原，不擅自标100%。
+- Figma：01规则与9:3/47:185重新回读；437:64052中关闭32/20说明已通过MCP改为实际32/16，组件和下游几何保持。
+- 本地：官网Source Han Sans CN VF原文件已入public/fonts并按既有font token加载，三封面使用当前Figma城市/香水/演出（城市原文件字节相同复用），hero655:140742同步当前64原SVG。DOM投影fonts为空不等于未加载；真实CDP已确认loaded。
+- 浏览器：旧标签仍停留旧内容，新建同源标签已验证新资源和字体，旧空草稿标签关闭；保留http://127.0.0.1:1421/?figma-sync=20261106。原数据读取保护仍在，没有清空或覆盖。
+- 验证：本批26定向生产浏览器、typecheck/ui:check/rules:check/build通过。完整verify24的旧959通过只绑定当时来源；后续format失败、MCP浏览器环境失败均保留。Pixel仍没有Figma基线，不可宣布全量完成。
+- Desktop：第一轮MCP编译完成但delegationPipeline在构建中被其他agent修改，源码指纹FAIL；失配收据移到output保留，第二轮官方helper重新构建核验。独审额度失败未补齐，UI-004为PARTIAL。
+
 ## 1. UI 治理铁律（用户核心诉求）
 
 1. **所见即所得，用户唯一视觉窗口**：

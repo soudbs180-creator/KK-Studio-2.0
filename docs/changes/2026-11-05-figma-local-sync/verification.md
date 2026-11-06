@@ -80,3 +80,40 @@ Figma 2026-11-05已实时读取01规则1327:239/2526:370、03输入族619:3428�
 3) `figma-current-sync.spec.ts`：9/9 用例全部 PASS。
 全量门禁全绿：rules:check (50/0)、tokens:check (0 regressions, 0 strict issues)、ui:check (328/0)、typecheck (0 errors)、lint (0 errors)、format:check (100% 格式对齐)、npm test (2717 PASS, 0 FAIL, 20 SKIP)。
 
+
+更正上段收口用语：列明的快速门禁和定向检查通过不代表完整verify通过。verify-17.log实际停止于生产浏览器949 PASS /10 FAIL /1 SKIP；设计预览/像素/开发态当时尚未运行。UI-004保持PARTIAL。
+任务来源补读：旧396:938不可读；03元数据定位1196:25545，get_design_context回读其主源437:64052。公共页头关闭实例32/图标16，与description的32/20保留冲突，按实际实例几何复用；TaskDetail仅共享这个关闭控件，完整详情画面仍待当前来源，不改其布局或数据。来源标注迁到437:64052，不把旧ID继续当现行依据。
+
+2026-11-06 后续回归：browser-focus-20.log 为88 PASS /2 FAIL。主线被并发协作者提交推进至96797c6c，提交标题的“全绿”不能替代当前完整verify。剩余平板页头仍受旧responsive-content的min-width/flex-basis 44影响，按先前已回读2076:42222的实际32/16补齐共享页头尺寸约束，保留44透明命中区。设置快捷键行现为独立36高来源4130:60002，校验选择器纳入该行，十项标签与顺序断言全部保留。测试中HUD遮挡卡片工具继续通过真实中键平移露出动作，不改变产品既有跟随卡片行为；共享MJS帮助方法同时供browser/development/desktop调用。
+
+### 2026-11-06 18:13 运行门禁与来源复核
+
+- `verify-24.log` 首次完整退出0：Node2717 PASS/20 SKIP，Agent205 PASS/2 SKIP，生产浏览器959 PASS/1 SKIP/0 flaky，设计来源41 PASS、设计预览9 PASS，开发态扩展四步PASS。像素命令只有1项SKIP，原因为尚无Figma参考基线，不能写成像素一致性通过。浏览器报告为 `test-results/browser/30d3622d-81e0-4d31-b6e7-943e98a11bf7/browser-results.json`。
+- 浏览器原入口1421已恢复，`src/main.tsx → App.tsx` development运行态显示2.1.66，通用设置960×674，dark/default主题。`live-original-runtime-final.json`及390/1920截图保存在本次output证据目录；没有修改原存储。
+- 官方`ensureDesktopRelease`完成第一轮重建：Desktop2.1.66、EXE49f008b01b79、input39fb28263807、reason=current，依赖无漂移，构建前后源码hash/HEAD不变。完整before/after在`desktop-rebuild-*-final.json`；未启动Native窗口，不是安装器/正式发布证明。
+- 用户提示多agent协作后，已读取当前可见Codex会话与共享交接：`优化创作界面与移动端体验`最近工作是Figma04/05母版与图标继承，明确未同步本地。当前Figma03/04/05元数据再次读取，三个页面均无名为任务详情的布局；任务列表现行源437:64052可读，继续追踪独立详情设计缺口，不再要求用户提供未知节点。
+- 再次get_design_context1196:25545（本任务session、当前fileKey）确认32关闭按钮/16图标；列表旧20图标新增三宽度断言均RED（`task-close-red.log`）。随后仅将列表UiIcon改为16，与详情共享1164:16172。该末项发生在verify24/第一轮EXE之后，以下追加最终复验与第二轮EXE，不沿用第一轮当前性。
+
+2026-11-06 并发补记：其他任务提交2a03cd0e新增原生成本归档。随后另一个agent新增协作雷达脚本和入口指针，verify25在该脚本未使用catch变量处退出1；rules50/0通过，定向关闭图标3/3通过。为完整门禁收口，UI-004仅声明`agent-radar.mjs`精确路径用于删除未使用catch绑定与Prettier格式化，不改协作业务逻辑，不修改其package/指针/active-work文件。原失败日志保留。
+
+2026-11-06 18:23 并发与格式补记：verify27因本任务新增affectedModules后未及时重生成视图而在governance退出1，已用renderLedger从当前JSON原子重生成，没有手改生成视图。verify28在成本归档新提交的两文件格式处退出1；随后将`nativeTaskHost.ts`/`taskCostArchive.test.ts`两个精确路径声明为仅格式修复，TypeScript去注释转译前后字节完全一致。期间其他任务将main推进3d7cc573，保留其文本报价和原生归档行为。verify29起额外记录运行输入（不含会被构建的dist）的前后指纹，检查并发是否改变受测来源。
+
+
+### 2026-11-06T10:36:55.637Z MCP-only 视觉纠偏（先Figma后本地）
+
+用户明确要求所有操作通过MCP，并先修有问题的Figma再同步本地。已通过Figma MCP回读01的1327:239、2000:277及R-SOURCE/R-DIFF/R-VERIFY/R-RELEASE；当前还原未通过，测试数字不代表视觉一致。先修主源437:64052说明中的关闭32/20冲突，回读确认32可见/16图标，不修改已正确几何。
+
+当前9:3高保真上下文和原图核验：首页封面949:35855/35863/35871均引用948:23239（族621:4096），图像依次城市/香水/演出，封面比例318:336；实际本地却三次使用blue-hour.png。字体真值为Source Han Sans CN VF，字重360/460/660，本地没有加载该字体。接下来仅同步这两项已经确认的资源与字体；保留真实模型、草稿、存储和所有交互。其他卡片结构、状态、全页像素验收不因此标通过。新增路径先登记UI-004。
+
+MCP同尺寸复核补记：新开同源标签后确认旧标签未实际加载更新。新标签真实CDP已加载Source Han Sans CN VF并显示三张不同的Figma封面；DOM投影的document.fonts为空不能代替真实CDP字体状态。继续核对发现首页品牌资源仍是旧带框资产，当前9:3的655:140742使用Brand/KK/black、64×64与dc8c9.svg。仅同步这个已存在正确来源的静态SVG，不重画图形；原件另存references/assets。
+
+MCP桌面首轮编译成功但来源护栏FAIL：10:54:43Z到10:56:02Z期间HEAD未变，src/features/agent/delegation/delegationPipeline.ts于10:55:34Z被其他agent修改（另有构建同步的vendor生成文件）。构建源码指纹前后不同，拒绝认定当前。官方helper生成的收据已移至output/desktop-strict-mcp-stale-receipt.json保留，不让启动器把不确定EXE当成新鲜版本；通过MCP重新构建并重新检查，保留首轮结果。
+
+
+### 2026-11-06T11:04:54.001Z MCP视觉修正当前回执
+
+本批26定向生产浏览器首试通过（无重试），typecheck、ui:check、tokens/design、rules与build通过。源码main@3d7cc57338f0c6948cae332904c11b2e70a1229f+dirty；资产/字体/Logo已在真实浏览器加载，新资源与Desktop frontendDist逐文件hash相同。
+
+官方MCP第二轮Desktop2.1.66构建退出0，EXE SHA256 659e1eb4141f2f7db5cce6f0cb8191b2ddbe647b70e51d15548d99dc67eb17d0，input f2d7addff2200ea1775b57e37c6b021a92f5cf1d70578a69c0bd2ad12c3811fb；自定义运行输入指纹构建前后稳定、依赖无漂移，原先失配收据保留。没有启动Native窗口、安装器或正式外部发布。完整回执strict-mcp-final-proof.json / desktop-strict-mcp2-*.json。
+
+当前仍不能称100%还原：未完成全页/六态/交互逐项视觉与严格像素对照；像素基线为空，原有test:pixel实际SKIP。最新字体/资产修改后的全仓verify与最终独审未完成，旧verify24成功仅对应96797c6c+当时增量，不覆盖后续并发改动。功能台账42项保持{"PARTIAL":31,"REAL":7,"PROTOTYPE":3,"PLANNED":1}，未因UI回归升级REAL。原项目读取保护仍在，数据未清空/覆盖。

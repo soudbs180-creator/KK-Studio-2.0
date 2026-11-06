@@ -2562,7 +2562,23 @@
       "src/components/ui/Input.tsx",
       "src/components/useDismissible.ts",
       "src/features/ai-gateway/dpapiProtector.ts",
-      "tests/unit/dpapiProtector.test.ts"
+      "tests/unit/dpapiProtector.test.ts",
+      "tests/support/canvasPointer.mjs",
+      "tests/support/pluginFlow.mjs",
+      "src/components/canvas/TaskDetail.tsx",
+      "src/components/canvas/TaskPanelPopover.tsx",
+      "scripts/governance/agent-radar.mjs",
+      "src/features/creation/nativeTaskHost.ts",
+      "tests/unit/taskCostArchive.test.ts",
+      "src/components/startInspirations.ts",
+      "src/main.tsx",
+      "src/styles/fonts.css",
+      "public/design/figma/home-inspiration-product.png",
+      "public/design/figma/home-inspiration-mv.png",
+      "public/fonts/source-han-sans/SourceHanSansCN-VF.otf.woff2",
+      "public/fonts/source-han-sans/LICENSE.txt",
+      "public/fonts/source-han-sans/README.md",
+      "public/design/figma/logo-hero.svg"
     ],
     "status": "PARTIAL",
     "evidence": [
@@ -2572,7 +2588,7 @@
       "docs/changes/2026-09-22-design-system-pages/verification.md",
       "docs/changes/2026-11-05-figma-local-sync/verification.md"
     ],
-    "verification": "2026-11-06：main@00b6c5c9+dirty，按当前Figma完成通用设置/侧栏/画布组合/手机更多和首页尺寸提交链；lint/typecheck/2710单测(20skip)、Agent205(2skip)、原生尺寸2、14项三宽度生产浏览器通过。完整门禁仍在复验，Desktop运行与全页验收未完成。",
+    "verification": "2026-11-06 MCP-only：先修Figma437:64052关闭说明，再按9:3同步原始封面/字体/Logo。26定向生产浏览器及typecheck/ui:check/rules:check/build通过。main@3d7cc573+dirty，官方Desktop2.1.66新EXE659e1eb4141f、inputf2d7addff220，构建前后源码指纹稳定、依赖和四项frontendDist资产hash一致。全页/六态/像素、最新完整verify、Native窗口和独审仍未完成；原127存储保护未动。",
     "updated": "2026-11-06",
     "verificationResult": "PARTIAL",
     "requirementRefs": ["ledger:UI-004"],
@@ -2580,7 +2596,7 @@
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
     "displayStatus": "未完成",
-    "nextAction": "完成全量浏览器失败项与完整verify，官方路径重建Desktop收据并独立审查当前SHA；原127入口旧线程/Google会话迁移校验失败，保留原件。",
+    "nextAction": "按用户MCP-only约束逐页同状态视觉核对；Figma缺陷先修源并回读后同步本地，继续设置/工作台/项目库/任务与手机状态。补当前完整verify、Figma像素基线、Native窗口和正式SHA独审；原旧会话迁移缺口无损处理，不要求用户找未知节点。",
     "lastVerified": "2026-11-06",
     "ownerRole": "repository-maintainer",
     "verificationHistory": [

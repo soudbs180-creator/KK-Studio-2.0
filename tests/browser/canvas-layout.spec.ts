@@ -19,7 +19,7 @@ test("桌面底栏保持最新Frame锚点，窄屏适配且控件不互相覆盖
             chat && chat.width > 0 && window.innerWidth > 1200
               ? Math.min(
                   canvas.clientWidth,
-                  (chat.left - c.left) / surface - canvas.clientLeft - 16,
+                  (chat.left - c.left) / surface - canvas.clientLeft,
                 )
               : canvas.clientWidth;
           const toolbar =

@@ -174,6 +174,11 @@ for (const [width, height] of [
     await expect(
       panel.getByRole("button", { name: "关闭任务列表", exact: true }),
     ).toHaveCSS("width", "32px");
+    await expect(
+      panel
+        .getByRole("button", { name: "关闭任务列表", exact: true })
+        .locator("svg"),
+    ).toHaveCSS("width", "16px");
     expect(
       await panel
         .locator(".task-panel-heading")

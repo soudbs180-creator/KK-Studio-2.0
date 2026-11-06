@@ -34,16 +34,17 @@
       "track": "LOGIC",
       "feature": "native-task-cost",
       "status": "READY_FOR_PICKUP",
-      "progress": "2026-11-06 注入桌面宿主复验 15 项通过，账本回写为 PARTIAL。已安装 Desktop 与真实供应商扣费未跑。",
+      "progress": "图片响应里的显式 costReceipt 会进入同一套任务归档；token 用量仍不是价格。没有发起真实扣费。",
       "files": [
-        "src/features/creation/nativeTaskHost.ts",
-        "tests/unit/taskCostArchive.test.ts"
+        "src/features/creation/imageGeneration.ts",
+        "src/features/creation/useTaskExecution.ts",
+        "tests/unit/providerIdentityReceiptRegression.test.ts"
       ],
       "worktree": "D:/kk-studio/KK-Studio-2.0",
       "startedAt": "2026-11-06T18:10:00.000Z",
-      "updatedAt": "2026-11-06T12:55:08.457Z",
+      "updatedAt": "2026-11-06T13:17:31.694Z",
       "breakpoint": {
-        "reason": "READY_FOR_PICKUP: 注入宿主与账本已对齐，真实账单和已安装 Desktop 扣费仍开放",
+        "reason": "READY_FOR_PICKUP: 图片显式报价已接入。真实供应商请求和已安装 Desktop 扣费仍未做",
         "pending": [
           "真实供应商账单与已安装 Desktop 扣费"
         ],
@@ -84,6 +85,53 @@
         "reason": "DONE: 核心调度器、外部专业软件Bridge、碰撞阻断门禁与共享思维链全部闭环并通过门禁",
         "pending": [],
         "testCmd": "npm run typecheck && npm run rules:check && node --import ./tests/support/public-entry-loader.mjs --test tests/unit/hardwareAdaptiveScheduler.test.ts tests/unit/externalBridge.test.ts tests/unit/subagentDelegation.test.ts"
+      }
+    },
+    {
+      "agent": "Cursor",
+      "task": "TASK-SUPER-AGI-002",
+      "taskId": "TASK-SUPER-AGI-002",
+      "track": "LOGIC",
+      "feature": "external-bridge",
+      "status": "READY_FOR_PICKUP",
+      "progress": "共享层已去掉 node:fs。安装检测改为注入探针，默认不读磁盘。4 项单测通过。还没有真实侧车进程。",
+      "files": [
+        "src/features/capabilities/externalBridge.ts",
+        "tests/unit/externalBridge.test.ts"
+      ],
+      "worktree": "D:/kk-studio/KK-Studio-2.0",
+      "startedAt": "2026-11-06T13:08:14.232Z",
+      "updatedAt": "2026-11-06T13:12:00.000Z",
+      "breakpoint": {
+        "reason": "PO 说外部桥不着急。浏览器边界已合法，真实程序仍未接",
+        "pending": [
+          "桌面宿主注入 fileExists",
+          "侧车真正启动 Topaz 或 Photoshop，而不是只返回成功"
+        ],
+        "testCmd": "node --import ./tests/support/public-entry-loader.mjs --test tests/unit/externalBridge.test.ts"
+      }
+    },
+    {
+      "agent": "Cursor",
+      "task": "UI-004-ICON",
+      "taskId": "UI-004-ICON",
+      "track": "UI",
+      "feature": "icon-button",
+      "status": "READY_FOR_PICKUP",
+      "progress": "24 档图标按钮内部图标从 14 改为 16。14 会被图标组件折成 12，和组件登记的 24 档 16 槽不一致。40 档本来就是 20。没有改 Codex 锁着的任务面板和对话样式。",
+      "files": [
+        "src/components/ui/Button.tsx"
+      ],
+      "worktree": "D:/kk-studio/KK-Studio-2.0",
+      "startedAt": "2026-11-06T13:17:31.730Z",
+      "updatedAt": "2026-11-06T13:20:00.000Z",
+      "breakpoint": {
+        "reason": "READY_FOR_PICKUP: 24 档已对齐登记。40/44 还要按当前 Figma 实测量过再改",
+        "pending": [
+          "按当前 Figma 复测 40 和 44 图标槽",
+          "继续设置其余分页和项目库，避开已锁的任务面板文件"
+        ],
+        "testCmd": "npm run ui:check"
       }
     }
   ]

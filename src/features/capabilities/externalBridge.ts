@@ -1,5 +1,3 @@
-import fs from "node:fs";
-
 export type ExternalSoftwareType =
   | "topaz-gigapixel"
   | "photoshop-uxp"
@@ -58,6 +56,7 @@ const KNOWN_INSTALL_PATHS: Record<ExternalSoftwareType, string[]> = {
 
 export class UniversalExternalAppBridge {
   private activeMcpServers = new Set<string>();
+  private fileExists: (path: string) => boolean;
   private simulatedCliRunner?: (
     software: ExternalSoftwareType,
     req: ExternalActionRequest
@@ -65,6 +64,7 @@ export class UniversalExternalAppBridge {
 
   constructor(options?: {
     activeMcpServers?: string[];
+    fileExists?: (path: string) => boolean;
     simulatedCliRunner?: (
       software: ExternalSoftwareType,
       req: ExternalActionRequest
@@ -73,6 +73,7 @@ export class UniversalExternalAppBridge {
     if (options?.activeMcpServers) {
       options.activeMcpServers.forEach((s) => this.activeMcpServers.add(s));
     }
+    this.fileExists = options?.fileExists ?? (() => false);
     this.simulatedCliRunner = options?.simulatedCliRunner;
   }
 
@@ -89,7 +90,7 @@ export class UniversalExternalAppBridge {
     let detectedExe: string | undefined;
 
     for (const p of candidatePaths) {
-      if (fs.existsSync(p)) {
+      if (this.fileExists(p)) {
         detectedExe = p;
         break;
       }

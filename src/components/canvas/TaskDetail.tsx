@@ -47,8 +47,13 @@ export default function TaskDetail({
     <div ref={root} className="task-detail" role="dialog" aria-label="任务详情">
       <div className="task-detail-heading">
         <span>任务详情</span>
-        <button type="button" aria-label="关闭任务详情" onClick={close}>
-          <UiIcon name="close" size={12} />
+        <button
+          type="button"
+          aria-label="关闭任务详情"
+          onClick={close}
+          data-figma-node="1164:16172"
+        >
+          <UiIcon name="close" size={16} />
         </button>
       </div>
       <div className="task-detail-body">

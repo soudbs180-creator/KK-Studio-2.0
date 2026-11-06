@@ -53,6 +53,21 @@ test("UniversalExternalAppBridge executes via CLI runner when MCP is absent", as
   assert.ok(res.message.includes("侧车通道"));
 });
 
+test("detectSoftware uses the injected probe and does not read the disk itself", () => {
+  const seen: string[] = [];
+  const bridge = new UniversalExternalAppBridge({
+    fileExists: (path) => {
+      seen.push(path);
+      return path.includes("Photoshop 2026");
+    },
+  });
+  const profile = bridge.detectSoftware("photoshop-uxp");
+  assert.equal(profile.isInstalled, true);
+  assert.equal(profile.mcpAvailable, false);
+  assert.match(profile.executablePath ?? "", /Photoshop 2026/);
+  assert.ok(seen.some((path) => path.includes("Photoshop 2026")));
+});
+
 test("UniversalExternalAppBridge gracefully falls back to built-in pipeline when software not installed", async () => {
   const bridge = new UniversalExternalAppBridge();
 

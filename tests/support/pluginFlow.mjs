@@ -1,4 +1,5 @@
 import { expect } from "@playwright/test";
+import { panCanvasToRevealAction } from "./canvasPointer.mjs";
 
 export const bundledPlugins = [
   {
@@ -59,6 +60,10 @@ export async function addAndEditBundledPlugins(page) {
     await node.locator("textarea").fill(plugin.content);
     await expect(toolbar).toBeVisible();
     if (plugin.title === "HTML" || plugin.title === "Markdown") {
+      await panCanvasToRevealAction(
+        page,
+        toolbar.getByTitle("预览渲染结果", { exact: true }),
+      );
       await toolbar.getByTitle("预览渲染结果", { exact: true }).click();
     } else {
       await node.locator("textarea").press("Escape");

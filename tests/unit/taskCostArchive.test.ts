@@ -17,10 +17,7 @@ function desktop(
   });
 }
 
-function quote(
-  task: { id: string; idempotencyKey: string },
-  amount = 0.08,
-) {
+function quote(task: { id: string; idempotencyKey: string }, amount = 0.08) {
   return {
     kind: "estimate",
     amount,

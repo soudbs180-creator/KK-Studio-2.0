@@ -734,6 +734,8 @@ export function useTaskExecution(
         onStart: () => {
           providerRequestStarted = true;
         },
+        onCostReceipt: (receipt) =>
+          rememberCostReceipt(costReceiptRef, receipt),
         getOutputs: () => outputs,
         setOutputs: (next) => {
           outputs = next;
@@ -1281,6 +1283,7 @@ interface ImageFlowOptions {
   mappingFailures: Map<number, string>;
   durableSubmission: boolean;
   onStart: () => void;
+  onCostReceipt?: (receipt: Record<string, unknown>) => void;
   getOutputs: () => CreationTaskOutput[];
   setOutputs: (outputs: CreationTaskOutput[]) => void;
 }
@@ -1305,6 +1308,7 @@ async function executeImageFlow(options: ImageFlowOptions): Promise<void> {
     mappingFailures,
     durableSubmission,
     onStart,
+    onCostReceipt,
     getOutputs,
     setOutputs,
   } = options;
@@ -1329,6 +1333,7 @@ async function executeImageFlow(options: ImageFlowOptions): Promise<void> {
       : undefined,
     beforeRequest: () => reservation!.assertCurrent(),
     onRequestStart: onStart,
+    onCostReceipt,
     onChunk: async (sources, offset) => {
       await processChunkBatch({
         sources,

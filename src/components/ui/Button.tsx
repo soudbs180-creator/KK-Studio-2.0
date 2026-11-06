@@ -51,7 +51,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       "44px": 20,
       "40px": 20,
       "32px": 16,
-      "24px": 14,
+      "24px": 16,
       "16px": 12,
     };
 

@@ -62,13 +62,18 @@
   gap: var(--kk-conversation-header-gap);
   flex-shrink: 0;
 }
-.conversation-header-actions button {
+.conversation-panel
+  > .conversation-header
+  .conversation-header-actions
+  > button {
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: var(--kk-conversation-header-control);
   height: var(--kk-conversation-header-control);
+  min-width: var(--kk-conversation-header-control);
+  flex: 0 0 var(--kk-conversation-header-control);
   padding: 0;
   border: 0;
   border-radius: var(--kk-icon-button-radius);
@@ -78,6 +83,15 @@
 .conversation-header-actions button:hover {
   color: var(--kk-text-primary);
   background: var(--kk-control-hover-bg);
+}
+.conversation-header .conversation-header-actions > button::before {
+  content: "";
+  position: absolute;
+  width: var(--kk-hit-touch);
+  height: var(--kk-hit-touch);
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 .conversation-header-actions button:focus-visible {
   outline: var(--kk-focus-width-subtle) solid var(--kk-focus-ring);

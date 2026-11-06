@@ -20,11 +20,11 @@
 
 ## UI-004 当前同步状态（2026-11-06）
 
-- FACT：承接 `main@00b6c5c9` 的共享界面与业务接线；本轮增量仍在 dirty 工作树，保留其他任务的未提交修改与 staged 归档删除。
-- FACT：当前 Figma 已回读并同步通用设置分组/无重复外框、展开侧栏24间距、画布36高组合/32控件/16图标、对话页头44/32/16、手机首页更多收纳。首页图片尺寸进入真实提交与原生包往返链。
-- FACT：快速 lint、typecheck、2710单测通过（20既有跳过）；Agent205通过（2跳过），原生尺寸校验/包往返2通过；当前Figma三种宽度的14项生产浏览器通过。完整门禁因格式检查17文件失败后已修格式，第二轮完整浏览器复测进行中，不能记为全绿。
-- FACT：浏览器视图没有实际工作区handler，入口明确禁用；语言、水印、托盘、休眠、自启动等原有不可用项保留具体原因。没有把禁用入口计为已实现。
-- BLOCKED：原 `127.0.0.1:1421` 浏览器的 IndexedDB 主副本包含无法校验的旧Agent线程身份，备份包含无法校验的旧Google会话；纯读取/迁移预检复现失败。未覆盖、清空或自动选用另一副本。
-- NOT_VERIFIED：全页/全部状态的Figma一致性、Desktop最新产物运行、真实Provider/GPU、独立最终SHA审查与正式发布。UI-004保持PARTIAL。
+- FACT：当前main@3d7cc573，UI增量仍未提交；保留并发任务的其他dirty改动。Desktop/Web源码2.1.66，Mobile2.1.44。
+- 当前约束：全部通过MCP；有问题先修当前Figma并回读，再同步本地。Figma已正确的设计保留，禁止改设计迁就旧实现。
+- FACT：本批修正真实设计字体未加载、三张封面重复和旧Logo；先在Figma修正关闭尺寸说明冲突。真实CDP确认Source Han Sans CN VF已loaded，三封面来自当前Figma，源原图与dist一致。
+- FACT：26项定向生产浏览器、typecheck/ui:check/rules:check/build通过；官方Desktop2.1.66重建、EXE659e1eb4141f、inputf2d7addff220，来源指纹稳定、依赖无漂移。首轮构建因并发修改被护栏拒绝，失败和失配收据保留。
+- 边界：本批通过不代表全部页面和功能完成；42项功能登记保持REAL7/PARTIAL31/PROTOTYPE3/PLANNED1，未升级真实度。旧verify24的959通过绑定旧来源；当前字体修改后的整套verify、全页六态/像素、Native窗口、独审和正式发布尚未验收。
+- BLOCKED：原127入口IndexedDB旧Agent线程及备份Google会话无法通过完整迁移校验，原件未清空或覆盖；当前读取保护保留。独立任务详情完整设计来源继续由agent追踪。
 
-[UI当前验证与后续结果](../changes/2026-11-05-figma-local-sync/verification.md)。
+[UI当前验证与逐轮证据](../changes/2026-11-05-figma-local-sync/verification.md)。

@@ -865,29 +865,29 @@ function buildReconciledTask(
   );
   return applyArchivedCostReceipt(
     {
-    ...task,
-    status,
-    submissionState:
-      status === "running"
-        ? "submitted"
-        : status === "unknown"
-          ? "unknown"
-          : "terminal",
-    submittedAt: task.submittedAt ?? native.updatedAt,
-    outputs,
-    completedOutputs: completed,
-    resultItemId: firstSucceeded
-      ? `${projectId}-${task.id}-result-${firstSucceeded.index + 1}`
-      : task.resultItemId,
-    error:
-      status === "succeeded"
-        ? undefined
-        : hasUnknown
-          ? (outputs.find((output) => output.status === "unknown")?.error ??
-            native.failure ??
-            "原生任务受理状态不明，请先核对供应商；不会自动重复提交。")
-          : native.failure,
-    updatedAt: native.updatedAt,
+      ...task,
+      status,
+      submissionState:
+        status === "running"
+          ? "submitted"
+          : status === "unknown"
+            ? "unknown"
+            : "terminal",
+      submittedAt: task.submittedAt ?? native.updatedAt,
+      outputs,
+      completedOutputs: completed,
+      resultItemId: firstSucceeded
+        ? `${projectId}-${task.id}-result-${firstSucceeded.index + 1}`
+        : task.resultItemId,
+      error:
+        status === "succeeded"
+          ? undefined
+          : hasUnknown
+            ? (outputs.find((output) => output.status === "unknown")?.error ??
+              native.failure ??
+              "原生任务受理状态不明，请先核对供应商；不会自动重复提交。")
+            : native.failure,
+      updatedAt: native.updatedAt,
     },
     native.costReceipt,
   );
@@ -902,8 +902,14 @@ function isTaskUnchanged(task: CreationTask, nextTask: CreationTask): boolean {
     task.updatedAt === nextTask.updatedAt &&
     task.estimatedCostUsd === nextTask.estimatedCostUsd &&
     task.actualCostUsd === nextTask.actualCostUsd &&
-    sameJson(task.estimatedCostQuote ?? null, nextTask.estimatedCostQuote ?? null) &&
-    sameJson(task.actualCostReceipt ?? null, nextTask.actualCostReceipt ?? null) &&
+    sameJson(
+      task.estimatedCostQuote ?? null,
+      nextTask.estimatedCostQuote ?? null,
+    ) &&
+    sameJson(
+      task.actualCostReceipt ?? null,
+      nextTask.actualCostReceipt ?? null,
+    ) &&
     JSON.stringify(task.outputs ?? []) ===
       JSON.stringify(nextTask.outputs ?? [])
   );

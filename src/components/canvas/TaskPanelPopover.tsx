@@ -132,7 +132,7 @@ export function TaskPanelPopover({
       ref={panelRef}
       className="task-panel"
       aria-label="任务列表"
-      data-node-id="396:938"
+      data-node-id="437:64052"
       data-name="Runtime / Tasks"
     >
       <div
@@ -148,8 +148,9 @@ export function TaskPanelPopover({
           type="button"
           aria-label="关闭任务列表"
           onClick={onDismiss}
+          data-figma-node="1164:16172"
         >
-          <UiIcon name="close" size={20} />
+          <UiIcon name="close" size={16} />
         </button>
       </div>
       <label className="task-panel-search" data-node-id="1763:367">
