@@ -28,6 +28,10 @@ import type {
 import { readNativeAsset, usesNativeAssets } from "./nativeAssetAdapter.ts";
 import { assertSynchronousProviderSubmission } from "./providerSubmission.ts";
 import { reconcileRetryTaskParents } from "./taskRecovery.ts";
+import {
+  applyArchivedCostReceipt,
+  isPlainCostReceipt,
+} from "./taskCostArchive.ts";
 import { textTaskResult } from "./textTaskResult.ts";
 
 /** The request crossing the Desktop TaskHost IPC boundary. It contains no API key. */
@@ -86,6 +90,8 @@ export interface NativeTaskHostRecord {
   outputIndices: number[];
   outputs: NativeTaskHostOutput[];
   failure?: string;
+  /** Untrusted provider quote or charge. Absent means the host reported no price. */
+  costReceipt?: unknown;
   updatedAt: number;
 }
 
@@ -247,6 +253,9 @@ function normalizeRecord(input: unknown): NativeTaskHostRecord {
       : outputs.map((output) => output.index),
     outputs: malformed ? [] : outputs,
     failure: extractRecordFailure(value.failure, malformed),
+    ...(!malformed && isPlainCostReceipt(value.costReceipt)
+      ? { costReceipt: value.costReceipt }
+      : {}),
     updatedAt: nativeUpdatedAt ?? Date.now(),
   };
   if (nativeUpdatedAt !== undefined) recordsWithNativeTimestamp.add(record);
@@ -854,7 +863,8 @@ function buildReconciledTask(
   const firstSucceeded = outputs.find(
     (output) => output.status === "succeeded",
   );
-  return {
+  return applyArchivedCostReceipt(
+    {
     ...task,
     status,
     submissionState:
@@ -878,7 +888,9 @@ function buildReconciledTask(
             "原生任务受理状态不明，请先核对供应商；不会自动重复提交。")
           : native.failure,
     updatedAt: native.updatedAt,
-  };
+    },
+    native.costReceipt,
+  );
 }
 
 function isTaskUnchanged(task: CreationTask, nextTask: CreationTask): boolean {
@@ -888,6 +900,10 @@ function isTaskUnchanged(task: CreationTask, nextTask: CreationTask): boolean {
     task.submittedAt === nextTask.submittedAt &&
     task.error === nextTask.error &&
     task.updatedAt === nextTask.updatedAt &&
+    task.estimatedCostUsd === nextTask.estimatedCostUsd &&
+    task.actualCostUsd === nextTask.actualCostUsd &&
+    sameJson(task.estimatedCostQuote ?? null, nextTask.estimatedCostQuote ?? null) &&
+    sameJson(task.actualCostReceipt ?? null, nextTask.actualCostReceipt ?? null) &&
     JSON.stringify(task.outputs ?? []) ===
       JSON.stringify(nextTask.outputs ?? [])
   );
