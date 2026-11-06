@@ -66,7 +66,7 @@ LayeredCredentialStore只在持久写成功后发布缓存；迟到读取和每�
 
 ## 差距与后端化（Wave 3）
 
-- **未接真实上游**：无 DPAPI `SecretProtector` 实现（需 Rust 侧或 PowerShell 桥），未验证真实凭证联调，父任务保持 `PARTIAL`、功能仍 `PROTOTYPE`
+- **未接真实上游**：CurrentUser DPAPI 命令契约和密钥剥离已有受控单测；测试注入进程替身，不调用本机 DPAPI。真实 PowerShell/Tauri 执行、真实凭证联调和 Desktop 运行态仍未验证，父任务保持 `PARTIAL`、功能仍 `PROTOTYPE`
 - 调度层为纯内存状态，未接 generation-server 的 lease / dead-letter 持久化仓储
 - 未接 sub2api-client（传 `session_id` header；注意 Nginx 需 `underscores_in_headers on;`）
 - `stream:true` 的本地增量生产链已实施并定向验证，真实供应商/代理部署仍未联调；可选callback未接默认Web直连或Desktop RustTaskHost，不据此解锁UI或提升成熟度

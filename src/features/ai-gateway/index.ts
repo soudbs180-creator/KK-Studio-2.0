@@ -31,6 +31,20 @@ export type {
   CiphertextStoragePort,
 } from "./credentials.ts";
 export {
+  assertDpapiScope,
+  createDpapiSecretProtector,
+  createWindowsDpapiPort,
+  windowsDpapiArgs,
+  WINDOWS_DPAPI_COMMAND,
+  WINDOWS_DPAPI_SCRIPT,
+} from "./dpapiProtector.ts";
+export type {
+  DpapiBlobPort,
+  DpapiProcessResult,
+  DpapiProcessRunner,
+  DpapiScope,
+} from "./dpapiProtector.ts";
+export {
   errorClassSchema,
   errorClasses,
   normalizedErrorSchema,
