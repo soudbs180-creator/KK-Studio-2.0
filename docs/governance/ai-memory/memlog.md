@@ -5,10 +5,15 @@
 
 ---
 
+## [2026-11-07 12:05] 全面治理已推上审查分支
+- **执行 Agent**：Cursor
+- 提交 `57a5dfb8` 已推到 `chore/sync-local-main-20261106`，PR #83 正在重跑检查。Delivery 本地 0 违规。
+- 未合并 main。等待 Hosted verify；正式独审、真实扣费、侧车、UI-004 全页仍 PARTIAL。
+
 ## [2026-11-07 11:55] 全面治理：收口 dirty、修门禁命令、准备推审查分支
 - **执行 Agent**：Cursor
 - 接手 `TASK-SYNC-LOCAL-MAIN-20261106`。本地 typecheck/lint/format/ui/tokens/unit（2717 pass / 6 skip）通过。
-- 清除 memlog/radar 中不存在的 `不存在的 test:fast 脚本`。整理 active-work 锁表，不把 UI-004 / 真实扣费 / 侧车标成完成。
+- 清除 memlog/radar 中虚假的 test:fast 脚本名。整理 active-work 锁表，不把 UI-004 / 真实扣费 / 侧车标成完成。
 - 下一步：提交并推送到 `chore/sync-local-main-20261106`，等待 PR #83 Hosted verify；不合并 main。
 
 ## [2026-11-07 11:51] TASK-SYNC-LOCAL-MAIN-20261106 任务接力激活
