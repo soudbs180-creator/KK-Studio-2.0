@@ -342,3 +342,15 @@
 - **事实**：`verify-local-05-20261107` 完成：2762 单元总计（2742 pass / 20 skip）、207 Agent（205 / 2）、964 浏览器（963 / 1）、设计预览9/9、开发插件通过；pixel 1 skip。规则52 IDs/0 violations，tokens 0 regression/0 strict，typecheck/lint/unit/format exit0。
 - **事实**：当前2.1.66 Desktop 通过 `npm run client:build -- --no-bundle` 重建，源码指纹前后一致，EXE SHA-256 `476FFF2B880094FF11774017DD954D57791183747657555655B662D893A2CE82`。隔离 Native taskhost 旧定位器先失败，改为现行 `官方直连 API` 与 `图像生成` tab 后 11/11 通过；合成 Provider、隔离数据根，未触碰用户数据。
 - **边界**：正式 SHA 独审、Hosted 回读、安装器/已安装版本、真实 Provider、全窗口/真机、像素和用户验收仍未完成。禁止把当前本地 EXE、旧Hosted或pixel skip写成发布通过；禁止合并、删除、推送或发布。
+
+## [2026-11-07 13:05] 修复 Hosted verify 的视图切换亚像素失败
+- **执行 Agent**：Cursor
+- quality #544：6 个浏览器失败，核心是 `116.016px` / `96.015625` 亚像素。固定视图切换宽度令牌，几何断言改半像素容差；定向浏览器用例本地通过。
+- 下一步：推审查分支重跑 Hosted verify。不合并 main。
+
+## [2026-11-07 12:28] TASK-SYNC-LOCAL-MAIN SHA、Hosted 与安装器收口
+- **执行 Agent**：Codex
+- **正式 SHA 独审**：只读交叉回读确认本地分支、origin 审查分支与 PR #83 head 同为 `eb7863a96354ceda3af3bf08bf8154ffeedd7491`，tree `f8a831df4ca4e510bc47261e9c6dc31595d93b66`；origin/main 为 `9b1038a75a62d0fc6fc9c23d6866711138493ab7`。审查快照工作树 clean、git diff-check 0，凭证 `output/mainline-governance-20261106/sha-independent-review-20261107.json`。
+- **Hosted 回读**：windows-release #22 成功并生成同 SHA 候选 artifact，digest `sha256:9890f10fe9b43253b82a6ad64c72ff1c6b2251cbc1d56bc4888c175a5146d64d`；git-guards #174 成功；quality #543/#544 均完成但 verify job exit 1 失败，未将 Hosted 写成全绿。没有下载需要认证的 Hosted zip。
+- **安装器与已安装版本**：在 `eb7863…` 隔离克隆重建 NSIS、生成并校验收据；installer `KK Studio_2.1.66_x64-setup.exe` SHA `4d9a4f24aaf1ad90856876dcb3db45aa86aaa48179ac6ac7228c60bad445591b`，4532 文件。真实隔离 lifecycle 通过 damaged-package、安装/启动、bundled Agent、卸载重装和数据保留；独立 `client:installed:verify` exit 0，4532 files，Desktop/Web 2.1.66、Mobile 2.1.44，最终隔离注册状态 `[]`。只在审计克隆修了旧测试定位器，未改产品代码。
+- **边界**：Hosted quality 已明确失败，需另行修复 verify 根因后重跑；签名、无 WebView2 干净机、低版本回滚、真实 Provider/扣费、全窗口/真机和正式发布仍未验证。旧 `4990025b` 安装器收据只保留为历史证据，不能冒充当前 SHA。

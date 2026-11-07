@@ -172,4 +172,18 @@ GitHub 运行 `42225937415` 与 `42225937453` 的失败点：
 - 快速收口：`rules-check-20261107.log` 为 52 IDs / 0 violations；`tokens-check-20261107-final.log` 为 0 regression / 0 strict issues（仍有 2 项 baseline reductions advisory）；post-native typecheck、lint、unit、format 均 exit 0。lint 首次发现的是生成台账视图过期，运行 `npm run governance:write` 后治理为 222 tasks / 0 violations；没有改测试断言或放宽基线。
 - 当前 Desktop 官方来源重建：`npm run client:build -- --no-bundle` exit 0，源码构建前后指纹一致，EXE `src-tauri/target/release/kk-studio.exe` SHA-256 为 `476FFF2B880094FF11774017DD954D57791183747657555655B662D893A2CE82`；警告仅为既有 Rust dead-code advisory。证据：`desktop-build-20261107.log`、`source-fingerprint-before/after-desktop-20261107.txt`、`desktop-exe-sha256-20261107.txt`。
 - 当前 Native taskhost：首次失败是旧测试寻找已删除的 `API Key（官方）` 按钮，保留 receipt；将测试定位器对齐现行 `官方直连 API` tab 与 `图像生成` 能力 tab 后，`native-taskhost-20261107-final2.log` 通过 11/11，receipt 为 `test-results/desktop/taskhost-lifecycle/1794020560952-a08d5604-fc49-4a11-bebf-5cff5999d3df/receipt.json`。这是隔离数据根和合成 Provider，不是真实计费 Provider 或用户数据验收。
-- 本轮仍未完成：正式 SHA 独立审查、Hosted 回读/PR 合流、安装器/已安装版本、真实 Provider、Native 全窗口/真机和全页六态/像素验收。用户未授权合并、删除、推送或发布，工作树与旧失败原件保持。
+- 该中间快照时尚未完成正式 SHA 独立审查、Hosted 回读和安装器/已安装版本；后续结果见下方“2026-11-07 SHA、Hosted 与安装器续验”。真实 Provider、Native 全窗口/真机和全页六态/像素验收仍未完成。
+
+## 2026-11-07 SHA、Hosted 与安装器续验
+
+- 正式只读 SHA 交叉审查快照：本地 `chore/sync-local-main-20261106` 与 `origin/chore/sync-local-main-20261106`、PR #83 head 均为 `eb7863a96354ceda3af3bf08bf8154ffeedd7491`，tree `f8a831df4ca4e510bc47261e9c6dc31595d93b66`；`origin/main` 为 `9b1038a75a62d0fc6fc9c23d6866711138493ab7`。审查时工作树 clean、`git diff --check` exit 0。原始凭证：`output/mainline-governance-20261106/sha-independent-review-20261107.json`。
+- Hosted 回读以同一 `eb7863…` 为准：windows-release #22 成功并生成候选工件 `kk-studio-windows-candidate-eb7863a96354ceda3af3bf08bf8154ffeedd7491`，digest `sha256:9890f10fe9b43253b82a6ad64c72ff1c6b2251cbc1d56bc4888c175a5146d64d`；git-guards #174 成功。quality #543/#544 已完成但均因 `verify` job exit 1 失败，后续 native/build 步骤被跳过，不能写成 Hosted 全绿；本地没有下载 Hosted zip，GitHub 下载 API 需要认证。Hosted 记录：[windows-release #22](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/42336463467)、[quality #544](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/42336463506)、[git-guards #174](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/42336463479)。
+- 当前 SHA 的本地隔离安装器收据已重建：`commit=eb7863a96354ceda3af3bf08bf8154ffeedd7491`、`sourceTree=f8a831df4ca4e510bc47261e9c6dc31595d93b66`、桌面安装器 `KK Studio_2.1.66_x64-setup.exe`，SHA-256 `4d9a4f24aaf1ad90856876dcb3db45aa86aaa48179ac6ac7228c60bad445591b`，4532 个已安装文件。收据与校验日志在 `KK-Studio-2.0/.tmp/installer-audit-eb7863/release-receipt/`、`output/mainline-governance-20261106/installer-eb7863-receipt-verify-20261107.log`。
+- 使用真实 NSIS 包在隔离临时目录完成 damaged-package 拒绝、安装、启动、内置 Agent 健康、卸载重装和数据保留；最终 lifecycle `passed=true`，证据 `output/mainline-governance-20261106/installer-audit-eb7863-20261107/runtime.json`。随后独立执行 `client:installed:verify`：`verified=true`、4532 files、版本 Desktop/Web 2.1.66、Mobile 2.1.44，卸载后 `installer-state` 为 `[]`。该 lifecycle 只在临时审计克隆中对旧 UI 定位器做了测试层兼容修正，未改产品代码；Hosted windows-release 本身只构建并校验收据，不包含 lifecycle 用例。
+- 仍保持边界：未验证 Authenticode 签名、无 WebView2 的干净 Windows、低版本回滚、真实 Provider/扣费、全窗口和真机；不据此宣布 PR 合流或正式发布。
+
+## 2026-11-07 Hosted verify 亚像素失败修复
+
+- quality #544 `verify` 在浏览器段失败 6 项：视图切换 `toHaveCSS(width, "116px")` 收到 `116.016px`；`frontend` 任务按钮盒模型出现 `96.015625`。根因是内容撑宽叠字体亚像素，不是 Figma 尺寸合同变化。
+- 修复：令牌 `--kk-canvas-view-slot-width: 116px` → `--kk-canvas-view-w`，HUD 切换组固定宽度；`frontend` 几何断言改用半像素容差助手。本地定向：`canvas-navigation` / `selection-control-types` / `figma-current-sync` / `frontend` 无限画布用例通过；`design:sync` / `design:check` / `tokens:check` 通过。
+- 推送后以新 SHA 的 Hosted verify 为准，不沿用 #544 失败结论。

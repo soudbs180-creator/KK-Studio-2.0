@@ -223,6 +223,7 @@
   --kk-model-phone-max-width: 140px;
   --kk-settings-general-shell-height: 674px;
   --kk-canvas-zoom-slot-width: 48px;
+  --kk-canvas-view-slot-width: 116px;
   --kk-canvas-minimap-slot-width: 76px;
   --kk-conversation-panel-default-width: 472px;
   --kk-radius-combo: 10px;
@@ -302,6 +303,7 @@
   --kk-sidebar-section-gap: var(--kk-space-5);
   --kk-start-model-max-width: var(--kk-model-phone-max-width);
   --kk-canvas-view-h: var(--kk-menu-item-h);
+  --kk-canvas-view-w: var(--kk-canvas-view-slot-width);
   --kk-canvas-view-inset: var(--kk-control-inset);
   --kk-canvas-view-gap: var(--kk-space-1);
   --kk-canvas-view-radius: var(--kk-radius-combo);

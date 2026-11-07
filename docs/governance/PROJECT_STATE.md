@@ -12,8 +12,8 @@
 | 版本 | Desktop / Web 源码2.1.66，Mobile 2.1.44；当前源码不等于已安装或正式发布 |
 | 当前任务 | TASK-SYNC-LOCAL-MAIN-20261106（Cursor）：全面治理收口dirty、修门禁与锁表，推审查分支重跑PR #83；不合并main |
 | 实现 | 导演机位/预设/同源桥；设定表提炼；MCP Schema；Floorplan；设置页拆分与Mobile token；雷达默认验证命令已改为真实scripts |
-| 当前验证 | 本地 typecheck/lint/format/ui/tokens/unit 通过；Hosted 曾在4990025b Verify因Prettier失败、Delivery/Installer绿。推送后以新SHA Hosted为准 |
-| 能力边界 | 外部桥无真实侧车；成本回执无真实扣费；UI-004仍PARTIAL；正式独审/已安装Desktop/发布未完成 |
+| 当前验证 | 本地 typecheck/lint/format/ui/tokens/unit 通过；当前 `eb7863…` SHA/树已与远端和 PR #83 对齐；Hosted windows-release/git-guards 绿，quality verify 失败 |
+| 能力边界 | 外部桥无真实侧车；成本回执无真实扣费；UI-004仍PARTIAL；安装器与已安装文件已在隔离环境验收，真实 Provider/全窗口/真机/发布未完成 |
 | 工作树 | 仅1树。禁止擅自合并PR、删树、force；允许推送到审查分支触发检查 |
 
 [本次验证](../changes/2026-11-05-step2-deep-water/verification.md) · [审查](../changes/2026-11-05-step2-deep-water/review.md) · [上一阶段历史验证](../changes/2026-11-04-e2e-wiring/verification.md) · [台账](task-ledger.json)
@@ -40,4 +40,6 @@
 
 [UI当前验证与逐轮证据](../changes/2026-11-05-figma-local-sync/verification.md)。
 
-2026-11-07补记：Mobile源码typecheck/435单测、组合Web44浏览器零重试通过；当前320/390两主题设置及按下态有真实截图/DOM，不能代填全页/六态/字体/像素或真机。Rust429通过/1既有忽略、fmt与client:check通过。原始Token泄漏和冻结hash失败已按来源修复并保留日志。Verify05已为2742单元通过/20跳过、205 Agent通过/2跳过、963浏览器通过/1跳过、设计9/9、插件PASS；当前EXE SHA `476FFF2B...CE82`，Native taskhost 11/11。正式SHA独审、Hosted、安装器/已安装版本、全窗口/真机与用户验收仍未完成。
+2026-11-07补记：Mobile源码typecheck/435单测、组合Web44浏览器零重试通过；当前320/390两主题设置及按下态有真实截图/DOM，不能代填全页/六态/字体/像素或真机。Rust429通过/1既有忽略、fmt与client:check通过。原始Token泄漏和冻结hash失败已按来源修复并保留日志。Verify05已为2742单元通过/20跳过、205 Agent通过/2跳过、963浏览器通过/1跳过、设计9/9、插件PASS；当前EXE SHA `476FFF2B...CE82`，Native taskhost 11/11。该中间快照时正式SHA独审、Hosted、安装器/已安装版本仍未完成，后续结果见下方；全窗口/真机与用户验收仍未完成。
+
+2026-11-07补记：正式只读 SHA 交叉审查快照绑定本地/远端/PR83 head `eb7863a96354ceda3af3bf08bf8154ffeedd7491` 与 tree `f8a831df4ca4e510bc47261e9c6dc31595d93b66`，审查时工作树 clean、diff-check 0；凭证为 `output/mainline-governance-20261106/sha-independent-review-20261107.json`。Hosted windows-release #22 与 git-guards #174 成功，quality #543/#544 均因 verify exit 1 失败；PR 未合并。当前 SHA 本地安装器收据、真实隔离 lifecycle 和 `client:installed:verify` 均通过：4532 文件，Desktop/Web 2.1.66、Mobile 2.1.44，installer SHA `4d9a4f24...445591b`；卸载后隔离注册状态为空。签名、干净 WebView2 VM、真实 Provider、全窗口/真机和正式发布仍未验收。

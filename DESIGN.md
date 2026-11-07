@@ -180,7 +180,7 @@ components:
     padding: 4px
 x-kk-studio:
   source: src/styles/tokens.css
-  sha256: 2dce18b675656daedddcc025841dacc453e4283a1de1abeeb08c1828b4707c69
+  sha256: 7f46df7566ab4a5e4037cad8d53760bda58cc160ddd19a28b5d3f1b0f2242d87
   hashEncoding: utf8-lf
   scopes:
     - selector: :root
@@ -697,6 +697,9 @@ x-kk-studio:
         - property: --kk-canvas-zoom-slot-width
           value: 48px
           important: false
+        - property: --kk-canvas-view-slot-width
+          value: 116px
+          important: false
         - property: --kk-canvas-minimap-slot-width
           value: 76px
           important: false
@@ -897,6 +900,9 @@ x-kk-studio:
           important: false
         - property: --kk-canvas-view-h
           value: var(--kk-menu-item-h)
+          important: false
+        - property: --kk-canvas-view-w
+          value: var(--kk-canvas-view-slot-width)
           important: false
         - property: --kk-canvas-view-inset
           value: var(--kk-control-inset)

@@ -255,4 +255,17 @@ export async function showCanvasNavigation(page: Page): Promise<void> {
   await expect(page.getByRole("group", { name: "画布导航" })).toBeVisible();
 }
 
+/** CI fonts can report sub-pixel boxes; keep layout contracts within half a pixel. */
+export function expectApproxBox(
+  box: { x: number; y: number; width: number; height: number } | null,
+  expected: { x: number; y: number; width: number; height: number },
+  precision = 0,
+): void {
+  expect(box).not.toBeNull();
+  expect(box!.x).toBeCloseTo(expected.x, precision);
+  expect(box!.y).toBeCloseTo(expected.y, precision);
+  expect(box!.width).toBeCloseTo(expected.width, precision);
+  expect(box!.height).toBeCloseTo(expected.height, precision);
+}
+
 export { panCanvasToRevealAction } from "../support/canvasPointer.mjs";

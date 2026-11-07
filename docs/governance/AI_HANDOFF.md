@@ -14,4 +14,5 @@
 
 5. 2026-11-07 全面治理：本地 typecheck/lint/format/ui/tokens/unit 通过；虚假的 test:fast 脚本名 命令已清；active-work 由 Cursor 接管 `TASK-SYNC-LOCAL-MAIN-20261106`。目标是把 dirty 推上审查分支，让 PR #83 Hosted `verify` 重跑。旧 `4990025b` 的 Prettier 失败不能当作当前结论。
 
-6. 未完成边界：正式 SHA 独审、已安装 Desktop、真实 Provider/扣费、侧车、全页六态/像素、合并 main。
+6. 未完成边界：Hosted quality 的 verify 已失败，需修复根因后重跑；真实 Provider/扣费、侧车、全页六态/像素、合并 main仍未完成。
+- 2026-11-07续验：正式 SHA 只读凭证已写入 `output/mainline-governance-20261106/sha-independent-review-20261107.json`，本地/远端/PR83 head 为 `eb7863a96354ceda3af3bf08bf8154ffeedd7491`、tree `f8a831df4ca4e510bc47261e9c6dc31595d93b66`；windows-release #22、git-guards #174 成功，quality #543/#544 均因 verify exit 1 失败。当前 SHA 的安装器收据、真实隔离 lifecycle 与 `client:installed:verify` 已通过 4532 文件，安装器 SHA `4d9a4f24...445591b`；不要把旧 `4990025b` 收据或旧 Hosted 结果套到当前版本。

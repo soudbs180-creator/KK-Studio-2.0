@@ -127,6 +127,7 @@
 .canvas-view-mode-toggle {
   display: inline-flex;
   align-items: center;
+  width: var(--kk-canvas-view-w);
   height: var(--kk-canvas-view-h);
   padding: var(--kk-canvas-view-inset);
   gap: var(--kk-canvas-view-gap);

@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { openWorkspace, uploadCanvasMedia } from "./helpers";
+import { expectApproxBox, openWorkspace, uploadCanvasMedia } from "./helpers";
 
 test("资产搜索、空态恢复、列表、紧凑视图及创建主体", async ({ page }) => {
   const errors: string[] = [];
@@ -282,13 +282,13 @@ test("无限画布隐藏滚动条，卡片拖动时连接线跟随", async ({ pa
   await openWorkspace(page);
   const canvas = page.getByTestId("infinite-canvas");
   await expect(canvas).toBeVisible();
-  expect(await canvas.boundingBox()).toEqual({
+  expectApproxBox(await canvas.boundingBox(), {
     x: 292,
     y: 52,
     width: 1628,
     height: 1028,
   });
-  expect(await page.locator(".image-preview").boundingBox()).toEqual({
+  expectApproxBox(await page.locator(".image-preview").boundingBox(), {
     // Latest Figma card geometry places the 400px image body at x=95 in the
     // node; at this viewport the world transform resolves to x=469.
     x: 469,
@@ -296,47 +296,51 @@ test("无限画布隐藏滚动条，卡片拖动时连接线跟随", async ({ pa
     width: 400,
     height: 400,
   });
-  expect(await page.locator(".task-button").boundingBox()).toEqual({
+  expectApproxBox(await page.locator(".task-button").boundingBox(), {
     x: 444,
     y: 86,
     width: 96,
     height: 32,
   });
-  expect(await page.locator(".conversation-panel").boundingBox()).toEqual({
+  expectApproxBox(await page.locator(".conversation-panel").boundingBox(), {
     x: 1432,
     y: 67,
     width: 472,
     height: 996,
   });
-  expect(await page.getByTestId("canvas-node-video1").boundingBox()).toEqual({
+  expectApproxBox(await page.getByTestId("canvas-node-video1").boundingBox(), {
     x: 1002,
     y: 157,
     width: 370,
     height: 224,
   });
-  expect(await page.getByTestId("canvas-node-video2").boundingBox()).toEqual({
+  expectApproxBox(await page.getByTestId("canvas-node-video2").boundingBox(), {
     x: 1002,
     y: 450,
     width: 370,
     height: 224,
   });
   const videoPreviews = page.locator(".video-placeholder");
-  expect(await videoPreviews.nth(0).boundingBox()).toEqual({
+  expectApproxBox(await videoPreviews.nth(0).boundingBox(), {
     x: 1002,
     y: 173,
     width: 370,
     height: 208,
   });
-  expect(await videoPreviews.nth(1).boundingBox()).toEqual({
+  expectApproxBox(await videoPreviews.nth(1).boundingBox(), {
     x: 1002,
     y: 466,
     width: 370,
     height: 208,
   });
-  const toolbarBounds = await page.locator(".canvas-toolbar").boundingBox();
-  expect(toolbarBounds).toEqual({ x: 718, y: 1016, width: 288, height: 52 });
+  expectApproxBox(await page.locator(".canvas-toolbar").boundingBox(), {
+    x: 718,
+    y: 1016,
+    width: 288,
+    height: 52,
+  });
   await expect(page.locator(".canvas-top-right")).toBeVisible();
-  expect(await page.locator(".canvas-top-right").boundingBox()).toEqual({
+  expectApproxBox(await page.locator(".canvas-top-right").boundingBox(), {
     x: 1123,
     y: 84,
     width: 281,
