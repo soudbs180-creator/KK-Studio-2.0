@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 import {
+  expectApproxCssPx,
   openSettingsSection,
   openWorkspace,
   showCanvasNavigation,
@@ -130,7 +131,7 @@ for (const width of [390, 1099, 1920]) {
       name: "视图切换",
       exact: true,
     });
-    await expect(group).toHaveCSS("width", "116px");
+    await expectApproxCssPx(group, "width", 116);
     await expect(group).toHaveCSS("height", "36px");
     await expect(
       group.getByRole("radio", { name: "画布", exact: true }),

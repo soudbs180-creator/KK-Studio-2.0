@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { openWorkspace } from "./helpers";
+import { expectApproxCssPx, openWorkspace } from "./helpers";
 
 test.afterEach(async ({ page }, testInfo) => {
   await testInfo.attach("runtime", {
@@ -19,7 +19,7 @@ test.afterEach(async ({ page }, testInfo) => {
 test("画布切换遵循36高容器，未接入的浏览器视图明确禁用", async ({ page }) => {
   await openWorkspace(page);
   const group = page.getByRole("radiogroup", { name: "视图切换" });
-  await expect(group).toHaveCSS("width", "116px");
+  await expectApproxCssPx(group, "width", 116);
   await expect(group).toHaveCSS("height", "36px");
   await expect(group).toHaveCSS("gap", "4px");
   await expect(group).toHaveCSS("background-color", "rgb(26, 26, 26)");

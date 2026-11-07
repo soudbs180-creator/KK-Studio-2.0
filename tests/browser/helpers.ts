@@ -268,4 +268,28 @@ export function expectApproxBox(
   expect(box!.height).toBeCloseTo(expected.height, precision);
 }
 
+/** Hosted Edge may report used px as 116.016 for an authored 116px contract. */
+export async function expectApproxCssPx(
+  locator: {
+    evaluate: (
+      pageFunction: (el: Element, prop: string) => string,
+      arg: string,
+    ) => Promise<string>;
+  },
+  property: string,
+  expected: number,
+  tolerance = 0.5,
+): Promise<void> {
+  const raw = await locator.evaluate(
+    (el, prop) => getComputedStyle(el).getPropertyValue(prop),
+    property,
+  );
+  const actual = Number.parseFloat(raw);
+  expect(
+    Number.isFinite(actual),
+    `expected finite ${property}, got ${raw}`,
+  ).toBe(true);
+  expect(Math.abs(actual - expected)).toBeLessThanOrEqual(tolerance);
+}
+
 export { panCanvasToRevealAction } from "../support/canvasPointer.mjs";

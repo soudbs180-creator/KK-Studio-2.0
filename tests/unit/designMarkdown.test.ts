@@ -64,9 +64,10 @@ test("integration preserves approved runtime tokens and registered dimensions", 
     path.join(root, "src/styles/tokens.css"),
     "utf8",
   );
-  // Current Figma47:926 adds network aliases; 4056:145206 adds exact titlebar gap/inset tokens.
+  // Current Figma47:926 adds network aliases; 4056:145206 titlebar gap/inset;
+  // canvas view toggle slot width pinned at 116px (--kk-canvas-view-slot-width).
   const approvedHash =
-    "2dce18b675656daedddcc025841dacc453e4283a1de1abeeb08c1828b4707c69";
+    "7f46df7566ab4a5e4037cad8d53760bda58cc160ddd19a28b5d3f1b0f2242d87";
   assert.equal(
     createHash("sha256").update(source.replace(/\r\n/g, "\n")).digest("hex"),
     approvedHash,

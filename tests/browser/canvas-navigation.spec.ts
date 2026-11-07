@@ -1,11 +1,15 @@
 import { expect, test } from "@playwright/test";
-import { openWorkspace, showCanvasNavigation } from "./helpers";
+import {
+  expectApproxCssPx,
+  openWorkspace,
+  showCanvasNavigation,
+} from "./helpers";
 
 test("比例菜单缩放到400%并适应视图，不改变卡片位置或草稿", async ({ page }) => {
   await openWorkspace(page);
   await showCanvasNavigation(page);
   const viewSwitch = page.getByRole("radiogroup", { name: "视图切换" });
-  await expect(viewSwitch).toHaveCSS("width", "116px");
+  await expectApproxCssPx(viewSwitch, "width", 116);
   await expect(viewSwitch).toHaveCSS("height", "36px");
   await expect(viewSwitch.getByRole("radio").first()).toHaveCSS(
     "height",
