@@ -1,0 +1,398 @@
+{
+  "version": 1,
+  "taskId": "TASK-ORG-6",
+  "classification": "E2-externalized-historical-evidence",
+  "packagePath": "docs/changes/2026-10-09-plugin-development",
+  "entries": [
+    {
+      "sourcePath": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/image-selection/asset-actions.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "fe52366ed8a8e35e2cde6e25c290959d1b425e5c",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/image-selection/asset-actions.png",
+      "bytes": 118961,
+      "sha256": "c3522b039e503fa6639a056bead60f7bcb178c01da9090dd8fee359c0af7cc52",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/image-selection/asset-library.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "6f296970be71a3dac1aabd44b062db69835fb1a1",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/image-selection/asset-library.png",
+      "bytes": 219138,
+      "sha256": "f8b6451cadf1e58fe6b0a839ce4a70a3f710c64ae0de8dd54266099ad236fc8b",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/image-selection/google-cli.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "094509f1194b7aac7b11b51c4e23b641547efab3",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/image-selection/google-cli.png",
+      "bytes": 167237,
+      "sha256": "bbaaecdd91ab595d01020ca48330ccba01a3fd7a55260e2d0fd3cb67b577ba6e",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/image-selection/model-actions.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "0032922047bbc551a66c042fe599c002f81a5d8d",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/image-selection/model-actions.png",
+      "bytes": 163162,
+      "sha256": "5f19f088e99b41bda603787940585e0a75d52c255113f6ef76eced5eecdff41a",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/image-selection/model-settings.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "6987e682e885eb062e15c72d08c139db5e41d54c",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/image-selection/model-settings.png",
+      "bytes": 150562,
+      "sha256": "b84adebb17416c78ba26e3f955ee3a7ae15621f6b732821ac627553452d47000",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/image-selection/selected-reference.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "e737218e970aa038c45f67c5e1859b15d3ce2743",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/image-selection/selected-reference.png",
+      "bytes": 236000,
+      "sha256": "914679733566a279d0541b9b732d5f420c86607c08584dce11f2cdaafab63a84",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/image-selection/workbench-export.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "3963d2be2f28dcfbaeea25e86ad239d9355817fd",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/image-selection/workbench-export.png",
+      "bytes": 152619,
+      "sha256": "e01dbc1b2e29758a4e0b136382bb141e20b8cd39cf995d13ef81c5f8ff315a5e",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/image-selection/workbench-generate.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "29342848f2f298a0f297534e0b900f0c3c78be8e",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/image-selection/workbench-generate.png",
+      "bytes": 132574,
+      "sha256": "f28e19a57a236b702cce6a4a330595360a71472dfecb82702f06e5e9a3ad8068",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/image-selection/workbench-plan.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "cb1a46b7de0a46a596032d8b2a5c5eafee1ef93a",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/image-selection/workbench-plan.png",
+      "bytes": 138690,
+      "sha256": "4448ec300852bb294fc6db8f9e03a2f4bf72aee7a3a4b56bdc2657f0f4acf31c",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/image-selection/workbench-prompt.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "bd553f1b54b086882b8597b19c74204fa920a0d8",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/image-selection/workbench-prompt.png",
+      "bytes": 125124,
+      "sha256": "40c7f87fef12c7e8f08aac7679d356e3583865ccdfe177c5665bbc3c61cc7c92",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/image-selection/workbench-queue.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "234d59942ab3f38d8415fac95cfd1c2963d524ba",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/image-selection/workbench-queue.png",
+      "bytes": 129929,
+      "sha256": "62e233fa60f391742eb7f5990e594d7f7c4496389afa49bb89c3bfeab5f50115",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/image-selection/workbench-review.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "01aa83302a9c4765c7f76acb73d1706706bb76cd",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/image-selection/workbench-review.png",
+      "bytes": 164960,
+      "sha256": "47b427072376e610a805c9ee09a9d09a32f5c96f2374b4433e9bc1712bff467d",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-close-final-be5f327/before-restart.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "b129e4526d6b1027d395ee379c5d3079c56d2fe0",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-close-final-be5f327/before-restart.png",
+      "bytes": 75267,
+      "sha256": "c0362380e3b60b8d7685384de4c3f82660926ea83869245699ef9459d7197f7d",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-close-final-be5f327/save-failure-window-retained.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "270704f836dc31c373e04ced08996796b2316eea",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-close-final-be5f327/save-failure-window-retained.png",
+      "bytes": 83185,
+      "sha256": "5ab87d1af4927e1a1d6e0567a920cf4efc1746c9a022a79826308ec87dfbf4f0",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-close-protected-final/after-restart.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "ad39b80c123797fd9342c02611f13586c23fca84",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-close-protected-final/after-restart.png",
+      "bytes": 73220,
+      "sha256": "b45f2879af21530803ec2247f11e86e09d5f0e0527ce60c36713bf86fad9266a",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-close-protected-final/before-restart.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "b129e4526d6b1027d395ee379c5d3079c56d2fe0",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-close-protected-final/before-restart.png",
+      "bytes": 75267,
+      "sha256": "c0362380e3b60b8d7685384de4c3f82660926ea83869245699ef9459d7197f7d",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-close-protected-final/corrupt-protected.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "468567e8d3b8d5a86359e1291bb3268fc7053869",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-close-protected-final/corrupt-protected.png",
+      "bytes": 377356,
+      "sha256": "b143322fb8421709daa5e5b223bef958a8e6fffca692686aa6d2fae18d20454d",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-close-protected-final/original-restored.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "ad39b80c123797fd9342c02611f13586c23fca84",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-close-protected-final/original-restored.png",
+      "bytes": 73220,
+      "sha256": "b45f2879af21530803ec2247f11e86e09d5f0e0527ce60c36713bf86fad9266a",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-close-protected-final/save-failure-window-retained.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "270704f836dc31c373e04ced08996796b2316eea",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-close-protected-final/save-failure-window-retained.png",
+      "bytes": 83185,
+      "sha256": "5ab87d1af4927e1a1d6e0567a920cf4efc1746c9a022a79826308ec87dfbf4f0",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-immediate-close-red/before-restart.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "b129e4526d6b1027d395ee379c5d3079c56d2fe0",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-immediate-close-red/before-restart.png",
+      "bytes": 75267,
+      "sha256": "c0362380e3b60b8d7685384de4c3f82660926ea83869245699ef9459d7197f7d",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-recovery-83639e7/before-restart.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "b129e4526d6b1027d395ee379c5d3079c56d2fe0",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-recovery-83639e7/before-restart.png",
+      "bytes": 75267,
+      "sha256": "c0362380e3b60b8d7685384de4c3f82660926ea83869245699ef9459d7197f7d",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-recovery-durable-backup/after-restart.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "ad39b80c123797fd9342c02611f13586c23fca84",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-recovery-durable-backup/after-restart.png",
+      "bytes": 73220,
+      "sha256": "b45f2879af21530803ec2247f11e86e09d5f0e0527ce60c36713bf86fad9266a",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-recovery-durable-backup/before-restart.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "b129e4526d6b1027d395ee379c5d3079c56d2fe0",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-recovery-durable-backup/before-restart.png",
+      "bytes": 75267,
+      "sha256": "c0362380e3b60b8d7685384de4c3f82660926ea83869245699ef9459d7197f7d",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-recovery-durable-backup/corrupt-protected.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "468567e8d3b8d5a86359e1291bb3268fc7053869",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-recovery-durable-backup/corrupt-protected.png",
+      "bytes": 377356,
+      "sha256": "b143322fb8421709daa5e5b223bef958a8e6fffca692686aa6d2fae18d20454d",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-recovery-durable-backup/original-restored.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "ad39b80c123797fd9342c02611f13586c23fca84",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-recovery-durable-backup/original-restored.png",
+      "bytes": 73220,
+      "sha256": "b45f2879af21530803ec2247f11e86e09d5f0e0527ce60c36713bf86fad9266a",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-recovery-graceful/after-restart.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "ad39b80c123797fd9342c02611f13586c23fca84",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-recovery-graceful/after-restart.png",
+      "bytes": 73220,
+      "sha256": "b45f2879af21530803ec2247f11e86e09d5f0e0527ce60c36713bf86fad9266a",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-recovery-graceful/before-restart.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "b129e4526d6b1027d395ee379c5d3079c56d2fe0",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-recovery-graceful/before-restart.png",
+      "bytes": 75267,
+      "sha256": "c0362380e3b60b8d7685384de4c3f82660926ea83869245699ef9459d7197f7d",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-recovery-request-trace/after-restart.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "ad39b80c123797fd9342c02611f13586c23fca84",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-recovery-request-trace/after-restart.png",
+      "bytes": 73220,
+      "sha256": "b45f2879af21530803ec2247f11e86e09d5f0e0527ce60c36713bf86fad9266a",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-recovery-request-trace/before-restart.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "b129e4526d6b1027d395ee379c5d3079c56d2fe0",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-recovery-request-trace/before-restart.png",
+      "bytes": 75267,
+      "sha256": "c0362380e3b60b8d7685384de4c3f82660926ea83869245699ef9459d7197f7d",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-recovery-request-trace/corrupt-protected.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "468567e8d3b8d5a86359e1291bb3268fc7053869",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-recovery-request-trace/corrupt-protected.png",
+      "bytes": 377356,
+      "sha256": "b143322fb8421709daa5e5b223bef958a8e6fffca692686aa6d2fae18d20454d",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-recovery-request-trace/original-restored.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "ad39b80c123797fd9342c02611f13586c23fca84",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-recovery-request-trace/original-restored.png",
+      "bytes": 73220,
+      "sha256": "b45f2879af21530803ec2247f11e86e09d5f0e0527ce60c36713bf86fad9266a",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-taskhost-c8ce21c/native-ui-success.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "002789afd59fdcff27ae129970c545320f8b6b62",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-taskhost-c8ce21c/native-ui-success.png",
+      "bytes": 222248,
+      "sha256": "1c03096da3ac1414128257a92450045ca3b61cb998c96ffe77f1ae80d6c731d7",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-taskhost-c8ce21c/native-unknown-recovery.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "ae4d26b01bedbc59a7205cae4c6201ba3370feb7",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-taskhost-c8ce21c/native-unknown-recovery.png",
+      "bytes": 153336,
+      "sha256": "540c4181dedb3292ef8f264736810d4f63c34ac6ec7b827c7873d06334d45857",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/plugin-csp/desktop-plugin-csp.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "d95f7993bba9647967bb6de0c6aa7ef0e2cdc3c5",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/plugin-csp/desktop-plugin-csp.png",
+      "bytes": 90645,
+      "sha256": "e843488643b129c8254e03c3888bb385802d3038eb70c5ccbf573f1068d515a7",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/titlebar-final-pass/initial.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "ebaa154af37453b332a3710da83d06ca2f71291d",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/titlebar-final-pass/initial.png",
+      "bytes": 449853,
+      "sha256": "a6e4edc2887311beed02c0c426adec0c3edad8d02158329f4f6cdbd33def3849",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/titlebar-final-pass/single-row.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "ebaa154af37453b332a3710da83d06ca2f71291d",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/titlebar-final-pass/single-row.png",
+      "bytes": 449853,
+      "sha256": "a6e4edc2887311beed02c0c426adec0c3edad8d02158329f4f6cdbd33def3849",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/titlebar-final-pass/titlebar.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "b533f4d6e6fd98ecc2c213ee19d6d9483a2cce8f",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/titlebar-final-pass/titlebar.png",
+      "bytes": 3655,
+      "sha256": "de22ab5c362d38b8bf949079fea219f760794f6059e5b95a480508e26037383e",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/titlebar-first-fail/initial.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "ebaa154af37453b332a3710da83d06ca2f71291d",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/titlebar-first-fail/initial.png",
+      "bytes": 449853,
+      "sha256": "a6e4edc2887311beed02c0c426adec0c3edad8d02158329f4f6cdbd33def3849",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    }
+  ],
+  "scope": "Historical E2 files externalized by validated batches; E1 summaries, JSON, key screenshots and active inputs retained.",
+  "containerResolution": "Resolve containerRelativePath from the workspace container containing the canonical checkout and output.",
+  "recovery": "Verify with scripts/governance/check-evidence-manifest.mjs <manifest> <container>; restore only to a new empty directory. Original Git sourceCommit/sourcePath remains recoverable.",
+  "batches": [
+    {
+      "taskId": "TASK-ORG-6",
+      "date": "2026-10-30",
+      "candidateBase": "be730617ace5013295b85a22133259b32ad6ffec"
+    }
+  ]
+}

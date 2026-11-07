@@ -29,7 +29,8 @@ export function collectLayoutViolations(entries, rootFiles) {
       (/\.md$/i.test(file) &&
         !file.startsWith("docs/") &&
         !rootFiles.includes(file) &&
-        !/^vendor\/[^/]+\/UPSTREAM\.md$/.test(file)) ||
+        !/^vendor\/[^/]+\/UPSTREAM\.md$/.test(file) &&
+        !/^public\/fonts\//.test(file)) ||
       /^src\/.*\.(bak|old|orig)$/i.test(file)
     )
       violations[`LOCATION:${file}`] = 0;

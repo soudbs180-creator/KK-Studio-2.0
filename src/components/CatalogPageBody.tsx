@@ -1,8 +1,8 @@
 import ProjectLibraryContent from "./ProjectLibraryContent";
-import type { ProjectLibraryActions } from "../features/projects/projectLifecycle";
-import type { CreationProject } from "../features/creation/model";
+import type { ProjectLibraryActions } from "../features/projects/index.ts";
+import type { CreationProject } from "../features/creation/index.ts";
 import WorkflowCard from "./WorkflowCard";
-import type { WorkflowRecord } from "../features/comfyui/workflowRegistry";
+import type { WorkflowRecord } from "../features/comfyui/index.ts";
 import type { PageTemplateKey } from "../domain/pageTemplates";
 
 type Skill = readonly [string, string, string];
@@ -64,7 +64,7 @@ export default function CatalogPageBody({
           projects={projects}
           actions={projectActions}
           search={search}
-          trash={tab === "垃圾箱"}
+          trash={tab === "回收站"}
           onOpen={onSelect}
         />
       </div>

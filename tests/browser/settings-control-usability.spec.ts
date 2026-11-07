@@ -9,7 +9,7 @@ for (const width of [1920, 1099, 390, 320]) {
   }, info) => {
     await page.setViewportSize({ width, height: 900 });
     await page.goto("/");
-    await openSettingsSection(page, "通用");
+    await openSettingsSection(page, "通用设置");
     const dialog = page.getByRole("dialog", { name: "设置", exact: true });
     const floating = dialog.getByRole("switch", { name: "浮岛布局" });
     const box = await floating.boundingBox();
@@ -21,9 +21,12 @@ for (const width of [1920, 1099, 390, 320]) {
       "aria-checked",
       initial === "true" ? "false" : "true",
     );
-    const theme = dialog.getByRole("combobox", { name: "主题", exact: true });
+    const theme = dialog.getByRole("combobox", {
+      name: "主题外观",
+      exact: true,
+    });
     await theme.selectOption("system");
-    for (const name of ["主题", "强调色"]) {
+    for (const name of ["主题外观", "强调色"]) {
       const select = dialog.getByRole("combobox", { name, exact: true });
       const geometry = await select.evaluate((element) => {
         const input = element as HTMLSelectElement;
@@ -50,7 +53,7 @@ for (const width of [1920, 1099, 390, 320]) {
       animations: "disabled",
     });
     await page.reload();
-    await openSettingsSection(page, "通用");
+    await openSettingsSection(page, "通用设置");
     await expect(floating).toHaveAttribute(
       "aria-checked",
       initial === "true" ? "false" : "true",
@@ -68,9 +71,7 @@ test("Google 获取密钥通过实际链接打开独立页面", async ({ page, c
   );
   await page.goto("/");
   await openSettingsSection(page, "模型接入");
-  await page
-    .getByRole("button", { name: "API Key（官方）", exact: true })
-    .tap();
+  await page.getByRole("tab", { name: "官方直连 API", exact: true }).tap();
   const link = page.getByRole("link", { name: "获取 API Key", exact: true });
   await expect(link).toHaveAttribute(
     "href",

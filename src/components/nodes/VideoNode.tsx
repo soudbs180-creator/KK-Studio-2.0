@@ -1,21 +1,26 @@
 import { useEffect, useRef, useState, type RefObject } from "react";
+import UiIcon from "../UiIcon";
 import CreationComposer from "./CreationComposer";
+import VideoShotBreakdownControl from "./VideoShotBreakdownControl.tsx";
 import { useCanvasMediaContent } from "../canvas/useCanvasMediaContent";
 import type {
   CanvasCollectionItem,
   CanvasReference,
   NodeEditingProps,
 } from "../../domain/canvasItems";
-import { readReferenceImages } from "./referenceUpload";
+import {
+  assignVideoReferenceFrames,
+  readReferenceImages,
+} from "./referenceUpload";
 import {
   loadStoredAsset,
   storeGeneratedAsset,
-} from "../../features/creation/assetRepository";
+} from "../../features/creation/index.ts";
 
 const MAX_VIDEO_BYTES = 100 * 1024 * 1024;
 const VIDEO_MIME_TYPES = ["video/mp4", "video/webm"];
 const LOCAL_VIDEO_NOTICE =
-  "已保存本地视频预览；演示生成不会上传或消费视频原件。";
+  "已保存本地视频原件；生成仅按已配置模型支持的参考类型提交。";
 
 export default function VideoNode({
   item,
@@ -34,6 +39,7 @@ export default function VideoNode({
   referenceLimit,
   onAddReferences,
   onRemoveReference,
+  onSwapReferenceFrames,
   uploadInput,
 }: NodeEditingProps & {
   item: CanvasCollectionItem;
@@ -169,11 +175,9 @@ export default function VideoNode({
   return (
     <div className="video-node">
       <span>
-        <img
-          className="video-label-icon"
-          src="/design/figma/video-label.svg"
-          alt=""
-        />
+        <span className="video-label-icon">
+          <UiIcon name="video" size={16} />
+        </span>
         视频
       </span>
       <div className="video-placeholder">
@@ -193,17 +197,15 @@ export default function VideoNode({
             }}
           />
         ) : (
-          <img
-            className="video-symbol"
-            src="/design/figma/video-placeholder.svg"
-            alt=""
-          />
+          <span className="video-symbol">
+            <UiIcon name="video" size={24} />
+          </span>
         )}
         {selected && !video && !loading && !hasContent && (
           <button
             className="video-upload"
             onClick={() => uploadInput.current?.click()}
-            title="上传视频后仅用于本地预览；演示生成不会上传或消费视频原件"
+            title="已保存本地视频原件；生成仅按已配置模型支持的参考类型提交。"
           >
             上传视频
           </button>
@@ -214,13 +216,17 @@ export default function VideoNode({
         hidden
         multiple
         type="file"
-        accept="image/png,image/jpeg,image/webp,image/gif"
+        accept="image/png,image/jpeg,image/webp,image/gif,video/mp4,video/webm,audio/mpeg,audio/wav,audio/ogg"
         onChange={(event) => {
           const files = [...(event.target.files ?? [])];
           event.target.value = "";
           if (!files.length || !onAddReferences) return;
           void readReferenceImages(files, referenceSlot.current)
-            .then(onAddReferences)
+            .then((entries) =>
+              onAddReferences(
+                assignVideoReferenceFrames(entries, references ?? []),
+              ),
+            )
             .catch((reason: unknown) =>
               setError(
                 reason instanceof Error
@@ -243,6 +249,12 @@ export default function VideoNode({
         }}
       />
       <CreationComposer
+        nodeId={item.id}
+        footer={
+          video && (
+            <VideoShotBreakdownControl source={video} sourceId={item.id} />
+          )
+        }
         parameters={item.parameters}
         onParametersChange={(parameters) => onChange({ parameters })}
         onDemoResults={onDemoResults}
@@ -264,6 +276,7 @@ export default function VideoNode({
         onPromptChange={(prompt) => onChange({ prompt })}
         onExtraHeightChange={onExtraHeightChange}
         onRemoveReference={onRemoveReference}
+        onSwapReferenceFrames={onSwapReferenceFrames}
       />
     </div>
   );

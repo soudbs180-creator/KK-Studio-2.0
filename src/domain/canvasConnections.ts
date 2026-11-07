@@ -1,6 +1,17 @@
 import type { CanvasConnection } from "./canvasGraph.ts";
 import { maxReferenceCount, type CanvasCollectionItem } from "./canvasItems.ts";
 
+export function allowsReferenceSource(
+  target: CanvasCollectionItem,
+  source: CanvasCollectionItem | undefined,
+): boolean {
+  if (!source) return true;
+  if (target.kind === "image") return source.kind === "image";
+  return (
+    target.kind !== "video" || ["image", "video", "audio"].includes(source.kind)
+  );
+}
+
 /** Reconcile live edits before either persistence or history observes the graph. */
 export function reconcileCanvasConnections(
   items: CanvasCollectionItem[],
@@ -18,7 +29,7 @@ export function reconcileCanvasConnections(
     }
     if (target.referenceOnly) continue;
     const limited = target.kind === "image" || target.kind === "video";
-    if (limited && source.kind !== "image") continue;
+    if (!allowsReferenceSource(target, source)) continue;
     const incoming = next.filter(
       (candidate) =>
         candidate.target === edge.target && candidate.kind !== "result",

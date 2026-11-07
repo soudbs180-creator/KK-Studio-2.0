@@ -14,6 +14,8 @@ import {
 } from "./extractor.ts";
 import { formatInjectionBlock, selectMemoryRecords } from "./injector.ts";
 import { MemoryConflictError, type MemoryStorage } from "./storage.ts";
+import type { ScopedMemoryQueryOptions } from "./kkMemoryStore.ts";
+import { parseNamespaceKey } from "./kkMemorySchema.ts";
 import {
   DEFAULT_MEMORY_SETTINGS,
   type MemoryRecord,
@@ -51,8 +53,10 @@ const localStorageSettings: SettingsStorage = {
 
 export interface MemoryServiceOptions {
   storage: MemoryStorage;
+  storageForNamespace?(namespace: string): MemoryStorage;
   settings?: SettingsStorage;
   now?: () => Date;
+  queryScoped?(options: ScopedMemoryQueryOptions): Promise<MemoryRecord[]>;
 }
 
 export class MemoryService {
@@ -61,11 +65,22 @@ export class MemoryService {
   private readonly now: () => Date;
   private mutationTail: Promise<void> = Promise.resolve();
   private mutationVersion = 0;
+  private readonly queryScoped?: MemoryServiceOptions["queryScoped"];
+  private readonly storageForNamespace?: MemoryServiceOptions["storageForNamespace"];
 
   constructor(options: MemoryServiceOptions) {
     this.storage = options.storage;
     this.settingsStorage = options.settings ?? localStorageSettings;
     this.now = options.now ?? (() => new Date());
+    this.queryScoped = options.queryScoped;
+    this.storageForNamespace = options.storageForNamespace;
+  }
+
+  private scopedStorage(namespace: string): MemoryStorage {
+    if (parseNamespaceKey(namespace).scope === "global") return this.storage;
+    if (!this.storageForNamespace)
+      throw new Error("此记忆存储尚未接入作用域管理。");
+    return this.storageForNamespace(namespace);
   }
 
   /** 记忆开关。默认关闭，用户显式开启才会采集与注入。 */
@@ -102,9 +117,9 @@ export class MemoryService {
     return result;
   }
 
-  async load(): Promise<MemoryStoreFile> {
+  async load(namespace = "global"): Promise<MemoryStoreFile> {
     await this.mutationTail;
-    return this.storage.read();
+    return this.scopedStorage(namespace).read();
   }
 
   /** 当前存储模式与共享授权状态（供 UI 展示）。 */
@@ -198,16 +213,23 @@ export class MemoryService {
    * 构建对话发送前的 [长期记忆] 注入块。
    * 开关关闭或检索为空时返回空字符串（调用方不注入）。
    */
-  async buildInjection(query: string): Promise<string> {
+  async buildInjection(
+    query: string,
+    scope?: Pick<ScopedMemoryQueryOptions, "projectId" | "sessionId">,
+  ): Promise<string> {
     if (!this.isEnabled()) {
       return "";
     }
     try {
-      const store = await this.load();
+      const version = this.mutationVersion;
+      await this.mutationTail;
+      const selected = this.queryScoped
+        ? await this.queryScoped({ query, ...scope })
+        : selectMemoryRecords(query, (await this.load()).records, {
+            now: this.now(),
+          });
       if (!this.isEnabled()) return "";
-      const selected = selectMemoryRecords(query, store.records, {
-        now: this.now(),
-      });
+      if (version !== this.mutationVersion) return "";
       if (selected.length === 0) {
         return "";
       }
@@ -223,6 +245,7 @@ export class MemoryService {
     sourceThreadId?: string,
     expectedVersion = this.mutationVersion,
     stillCurrent: () => boolean = () => true,
+    namespace = "global",
   ): Promise<number> {
     if (!this.isEnabled() || !reply || !stillCurrent()) {
       return 0;
@@ -243,12 +266,13 @@ export class MemoryService {
       return 0;
     }
     return this.enqueueMutation(async () => {
+      const storage = this.scopedStorage(namespace);
       const canSave = () =>
         this.isEnabled() &&
         expectedVersion === this.mutationVersion &&
         stillCurrent();
       if (!canSave()) return 0;
-      const store = await this.storage.read();
+      const store = await storage.read();
       if (!canSave()) return 0;
       const timestamp = this.now().toISOString();
       const existing = new Set(
@@ -281,7 +305,7 @@ export class MemoryService {
       if (additions.length === 0 || !canSave()) {
         return 0;
       }
-      await this.storage.write(
+      await storage.write(
         {
           ...store,
           records: [...store.records, ...additions],
@@ -293,34 +317,39 @@ export class MemoryService {
   }
 
   /** 删除单条记忆。 */
-  async deleteRecord(id: string): Promise<MemoryStoreFile> {
+  async deleteRecord(
+    id: string,
+    namespace = "global",
+  ): Promise<MemoryStoreFile> {
     return this.enqueueMutation(async () => {
-      const store = await this.storage.read();
+      const storage = this.scopedStorage(namespace);
+      const store = await storage.read();
       const next = {
         ...store,
         records: store.records.filter((record) => record.id !== id),
       };
-      await this.storage.write(next, store);
+      await storage.write(next, store);
       this.mutationVersion += 1;
       return next;
     });
   }
 
   /** 清空本机共享记忆的全部条目（保留文件结构）。 */
-  async clearAll(): Promise<MemoryStoreFile> {
+  async clearAll(namespace = "global"): Promise<MemoryStoreFile> {
     return this.enqueueMutation(async () => {
-      const store = await this.storage.read();
+      const storage = this.scopedStorage(namespace);
+      const store = await storage.read();
       const next = { ...store, records: [] };
-      await this.storage.write(next, store);
+      await storage.write(next, store);
       this.mutationVersion += 1;
       return next;
     });
   }
 
   /** 重置共享记忆文件：重建空文件；旧文件由存储层保留（.previous-*.json）。 */
-  async resetIdentity(): Promise<MemoryStoreFile> {
+  async resetIdentity(namespace = "global"): Promise<MemoryStoreFile> {
     return this.enqueueMutation(async () => {
-      const store = await this.storage.resetIdentity();
+      const store = await this.scopedStorage(namespace).resetIdentity();
       this.mutationVersion += 1;
       return store;
     });

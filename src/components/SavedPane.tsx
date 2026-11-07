@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Heart, Star } from "lucide-react";
 import type { CanvasCollectionItem } from "../domain/canvasItems";
 import UiIcon from "./UiIcon";
 
@@ -30,7 +29,6 @@ export default function SavedPane({
       ? a.title.localeCompare(b.title, "zh-CN")
       : (b.updatedAt ?? 0) - (a.updatedAt ?? 0),
   );
-  const Icon = like ? Heart : Star;
   return (
     <section
       className={"saved-pane " + (like ? "saved-likes" : "saved-favorites")}
@@ -49,7 +47,7 @@ export default function SavedPane({
       <div className={like ? "saved-like-grid" : "saved-prompt-list"}>
         {visible.length === 0 ? (
           <div className="saved-empty">
-            <Icon size={24} />
+            <UiIcon name={like ? "heart" : "star"} size={24} />
             <h3>{query ? "没有找到匹配的内容" : `还没有${label}的内容`}</h3>
             <p>
               {query
@@ -71,16 +69,25 @@ export default function SavedPane({
                   aria-label={`打开 ${item.title}`}
                   onClick={() => onLocate(item.id)}
                 >
-                  {item.kind === "audio" || item.kind === "text" ? (
-                    <UiIcon name={item.kind} size={24} />
-                  ) : (
-                    <img
-                      className={item.preview ? "" : "placeholder"}
-                      src={item.preview || "/design/figma/asset-image.svg"}
-                      alt={item.preview ? item.title : ""}
+                  {item.kind === "audio" ||
+                  item.kind === "text" ||
+                  !item.preview ? (
+                    <UiIcon
+                      name={
+                        item.kind === "audio"
+                          ? "music"
+                          : item.kind === "text"
+                            ? "text"
+                            : item.kind === "video"
+                              ? "video"
+                              : "image"
+                      }
+                      size={24}
                     />
+                  ) : (
+                    <img src={item.preview} alt={item.title} />
                   )}
-                  <Heart size={12} fill="currentColor" />
+                  <UiIcon name="heart" size={12} />
                 </button>
               )}
               <div className="saved-copy">
@@ -131,7 +138,9 @@ export default function SavedPane({
               ) : (
                 <footer>
                   {!like && (
-                    <Icon className="star-icon" size={12} fill="currentColor" />
+                    <span className="star-icon">
+                      <UiIcon name="star" size={12} />
+                    </span>
                   )}
                   <span>{like ? item.title : ""}</span>
                   <button

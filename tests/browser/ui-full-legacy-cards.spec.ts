@@ -349,6 +349,10 @@ for (const width of [390, 1920]) {
       await expect(toolbar).toHaveCount(0);
       await node.locator("textarea").fill(content);
       await expect(toolbar).toBeVisible();
+      await panCanvasToRevealAction(
+        page,
+        toolbar.getByTitle("预览渲染结果", { exact: true }),
+      );
       await toolbar.getByTitle("预览渲染结果", { exact: true }).click();
       if (title === "HTML")
         await expect(node.locator("iframe")).toHaveAttribute("srcdoc", content);
@@ -365,12 +369,19 @@ for (const width of [390, 1920]) {
       await canvas.focus();
       for (let step = 0; step < 4; step++) await canvas.press("Control+-");
       const edit = toolbar.getByTitle(`编辑 ${title} 源码`, { exact: true });
+      await panCanvasToRevealAction(page, edit);
       await expect
         .poll(() =>
           edit.evaluate((element) => {
             const box = element.getBoundingClientRect();
+            const style = getComputedStyle(element);
             return {
               height: Math.round(box.height),
+              visualHeight: Math.round(
+                box.height -
+                  parseFloat(style.paddingTop) -
+                  parseFloat(style.paddingBottom),
+              ),
               hit: element.contains(
                 document.elementFromPoint(
                   box.x + box.width / 2,
@@ -380,7 +391,7 @@ for (const width of [390, 1920]) {
             };
           }),
         )
-        .toEqual({ height: 32, hit: true });
+        .toEqual({ height: 44, visualHeight: 32, hit: true });
       await edit.click();
       await expect(node.locator("textarea")).toHaveValue(content);
       await node.locator("textarea").fill("   ");
@@ -769,7 +780,7 @@ test("codec上下文区分同卡任务、别卡任务和本地视频实际执行
     );
     if (generationActive) {
       expect(html).toContain("demo-pending-spinner");
-      expect(html).toContain("来源卡片取消");
+      expect(html).toContain("来源卡片停止等待");
       expect(html).not.toContain("未恢复");
     } else {
       expect(html).toContain("视频结果尚未恢复");

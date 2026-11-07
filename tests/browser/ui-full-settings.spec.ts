@@ -7,7 +7,7 @@ for (const width of [390, 1099, 1920]) {
   test(`全部设置分类使用当前UI ${width}`, async ({ page }, info) => {
     await page.setViewportSize({ width, height: width === 390 ? 844 : 1080 });
     await page.goto("/");
-    await openSettingsSection(page, "通用");
+    await openSettingsSection(page, "通用设置");
     const dialog = page.getByRole("dialog", { name: "设置", exact: true });
     for (const section of SETTINGS_SECTIONS) {
       await selectSettingsSection(page, section.label);

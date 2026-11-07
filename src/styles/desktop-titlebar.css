@@ -1,32 +1,38 @@
-/* Desktop shell: menu and native window controls share the existing 40px rail. */
+/* Figma 4056:145206; native window controls retain their platform actions. */
 .app .topbar.desktop-titlebar {
   height: var(--kk-topbar-height);
   flex: 0 0 var(--kk-topbar-height);
   align-items: center;
-  gap: var(--kk-space-5);
-  padding: 0 0 0 var(--kk-space-5);
+  gap: var(--kk-titlebar-brand-gap);
+  padding: 0 0 0 var(--kk-titlebar-inset);
   background: var(--kk-bg-surface);
-  color: var(--kk-text-secondary);
+  color: var(--kk-text-tertiary);
   user-select: none;
 }
 
 .app .desktop-titlebar > strong,
-.app .desktop-titlebar nav button {
-  font-size: var(--kk-font-body);
-  line-height: var(--kk-line-body);
-  font-weight: var(--kk-font-weight-body);
+.app .desktop-titlebar .top-menu > button {
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-caption);
   white-space: nowrap;
+}
+
+.app .desktop-titlebar > strong {
+  font-weight: var(--kk-font-weight-title);
 }
 
 .app .desktop-titlebar nav {
   align-items: center;
-  gap: 0;
+  gap: var(--kk-space-2);
 }
 
 .app .desktop-titlebar .top-menu > button {
   min-height: var(--kk-control-h-md);
-  padding: 0 var(--kk-space-3);
-  border-radius: var(--kk-radius-xs);
+  height: var(--kk-control-h-md);
+  padding: 0 var(--kk-space-2);
+  border-radius: var(--kk-radius-full);
+  color: var(--kk-text-primary);
+  font-weight: var(--kk-font-weight-body-strong);
 }
 
 .app .desktop-titlebar .menu-popover {
@@ -51,10 +57,23 @@
   color: var(--kk-text-secondary);
 }
 
-.window-controls > button:hover,
-.app .desktop-titlebar .top-menu > button:hover {
+.window-controls > button:hover {
   background: var(--kk-bg-elevated);
   color: var(--kk-text-primary);
+}
+
+.app .desktop-titlebar .top-menu > button:hover:not(:disabled) {
+  background: var(--kk-control-surface-selected);
+}
+
+.app .desktop-titlebar .top-menu > button:active:not(:disabled) {
+  background: var(--kk-bg-soft);
+}
+
+.app .desktop-titlebar .top-menu > button:disabled {
+  background: var(--kk-bg-card);
+  color: var(--kk-text-tertiary);
+  opacity: 1;
 }
 
 .window-controls > button:active {

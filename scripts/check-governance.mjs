@@ -68,6 +68,7 @@ for (const file of [
   if (fs.existsSync(file))
     issues.push(`Only npm/package-lock.json is supported; disposition ${file}`);
 for (const file of [
+  "RULES.md",
   "AGENTS.md",
   "AI_RULES.md",
   "CLAUDE.md",
@@ -76,6 +77,7 @@ for (const file of [
   ".cursor/rules/project.mdc",
   ".github/CODEOWNERS",
   ".githooks/pre-push",
+  "docs/FIGMA-SYNC.md",
   "docs/engineering/BRANCH-POLICY.md",
   "docs/engineering/PROMPTING.md",
   "docs/engineering/AI-EVALS.md",
@@ -95,8 +97,14 @@ for (const file of [
 ])
   if (fs.existsSync(file)) {
     const entry = fs.readFileSync(file, "utf8");
-    if (!entry.includes("AGENTS.md") || !entry.includes("AI_RULES.md"))
-      issues.push(`AI entry ${file} must route to AGENTS.md and AI_RULES.md`);
+    if (
+      !entry.includes("RULES.md") ||
+      !entry.includes("AGENTS.md") ||
+      !entry.includes("AI_RULES.md")
+    )
+      issues.push(
+        `AI entry ${file} must route to RULES.md, AGENTS.md and AI_RULES.md`,
+      );
   }
 if (
   !fs.readFileSync(".gitignore", "utf8").split(/\r?\n/).includes(".worktrees/")

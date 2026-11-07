@@ -1,4 +1,4 @@
-import { X } from "lucide-react";
+import UiIcon from "./UiIcon";
 export default function InfoPanel({
   view,
   onClose,
@@ -18,7 +18,7 @@ export default function InfoPanel({
           aria-label="关闭"
           onClick={onClose}
         >
-          <X size={20} />
+          <UiIcon name="close" size={20} />
         </button>
       </header>
       {view === "tasks" ? (

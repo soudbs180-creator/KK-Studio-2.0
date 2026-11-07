@@ -1,12 +1,22 @@
-import { useCallback, useLayoutEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { useDismissible } from "../useDismissible";
 import type { CanvasCollectionItem } from "../../domain/canvasItems";
 import type { Point, ViewTransform } from "./canvasModel";
 import CanvasZoomMenu from "./CanvasZoomMenu";
 import CanvasMinimap from "./CanvasMinimap";
+import ToolbarIcon from "./ToolbarIcon";
 import "../../styles/canvas-navigation.css";
+import "../../styles/local-generation.css";
 
 interface NavigationProps {
+  minimapVisible?: boolean;
+  onMinimapVisible?: (visible: boolean) => void;
   transform: ViewTransform;
   nodes: Record<string, Point>;
   items: CanvasCollectionItem[];
@@ -17,6 +27,8 @@ interface NavigationProps {
   onLocate: (id: string) => void;
   showConnections: boolean;
   onToggleConnections: () => void;
+  snapEnabled: boolean;
+  onToggleSnap: () => void;
   backgroundColor: string;
   onBackgroundColor: (color: string) => void;
   backgroundPattern: "dots" | "grid";
@@ -24,6 +36,8 @@ interface NavigationProps {
 }
 
 export default function CanvasNavigation({
+  minimapVisible,
+  onMinimapVisible,
   transform,
   nodes,
   items,
@@ -34,6 +48,8 @@ export default function CanvasNavigation({
   onLocate,
   showConnections,
   onToggleConnections,
+  snapEnabled,
+  onToggleSnap,
   backgroundColor,
   onBackgroundColor,
   backgroundPattern,
@@ -42,7 +58,16 @@ export default function CanvasNavigation({
   const [open, setOpen] = useState<"zoom" | "map" | "background" | null>(null);
   const ref = useRef<HTMLDivElement>(null);
   const opener = useRef<HTMLButtonElement | null>(null);
-  const dismiss = useCallback(() => setOpen(null), []);
+  const dismiss = useCallback(() => {
+    setOpen(null);
+    onMinimapVisible?.(false);
+  }, [onMinimapVisible]);
+  useEffect(() => {
+    if (minimapVisible !== undefined)
+      setOpen((current) =>
+        minimapVisible ? "map" : current === "map" ? null : current,
+      );
+  }, [minimapVisible]);
   useDismissible(open !== null, ref, dismiss, opener);
   function closeAndFocus(): void {
     dismiss();
@@ -50,11 +75,19 @@ export default function CanvasNavigation({
   }
   useLayoutEffect(() => {
     const menu = ref.current?.querySelector<HTMLElement>(
-      ".canvas-zoom-menu,.canvas-background-menu",
+      ".canvas-zoom-menu,.canvas-background-menu,.canvas-minimap",
     );
-    if (!menu) return;
+    const container = ref.current;
+    if (!menu || !container || !opener.current) return;
     const canvas = menu.closest(".infinite-canvas");
     const update = () => {
+      const trigger = opener.current!.getBoundingClientRect();
+      const root = container.getBoundingClientRect();
+      const left =
+        open === "map" ? trigger.left - 8 - menu.offsetWidth : trigger.left;
+      menu.style.right = "auto";
+      menu.style.left = `${Math.max(8, Math.min(left, window.innerWidth - menu.offsetWidth - 8)) - root.left - container.clientLeft}px`;
+      menu.style.top = `${(open === "map" ? trigger.top : trigger.bottom + 8) - root.top - container.clientTop}px`;
       const gap = parseFloat(getComputedStyle(menu).paddingBottom);
       const bottom = Math.min(
         window.innerHeight,
@@ -81,7 +114,7 @@ export default function CanvasNavigation({
     <div
       ref={ref}
       className="canvas-top-right"
-      data-node-id="100:16335"
+      data-figma-node="435:48879"
       role="group"
       aria-label="画布导航"
       onPointerDown={(e) => e.stopPropagation()}
@@ -100,8 +133,8 @@ export default function CanvasNavigation({
         }}
       >
         <span>{Math.round(transform.scale * 100)}%</span>
-        <img src="/design/figma/nav-chevron.svg" alt="" />
       </button>
+      <span className="canvas-navigation-divider" aria-hidden="true" />
       <div className="canvas-navigation-tools" data-node-id="100:16334">
         <button
           className="canvas-arrange"
@@ -112,10 +145,8 @@ export default function CanvasNavigation({
           aria-label="整理画布"
           title="整理全部卡片并适配视图"
         >
-          <img src="/design/figma/nav-arrange.svg" alt="" />
-          <span>整理</span>
+          <ToolbarIcon name="arrange" size={16} />
         </button>
-        <span className="canvas-navigation-divider" aria-hidden="true" />
         <button
           className="canvas-background"
           aria-label="画布背景"
@@ -127,13 +158,9 @@ export default function CanvasNavigation({
             setOpen(open === "background" ? null : "background");
           }}
         >
-          <img
-            src={
-              backgroundPattern === "dots"
-                ? "/design/figma/nav-background.svg"
-                : "/design/figma/canvas-dots.svg"
-            }
-            alt=""
+          <ToolbarIcon
+            name={backgroundPattern === "dots" ? "background" : "dots"}
+            size={16}
           />
         </button>
         <button
@@ -146,7 +173,20 @@ export default function CanvasNavigation({
           title={showConnections ? "隐藏连线" : "显示连线"}
           aria-pressed={showConnections}
         >
-          <img src="/design/figma/nav-lines.svg" alt="" />
+          <ToolbarIcon name="lines" size={16} />
+        </button>
+        <button
+          type="button"
+          className="canvas-snap"
+          aria-label="网格吸附"
+          title={snapEnabled ? "关闭网格吸附" : "开启网格吸附"}
+          aria-pressed={snapEnabled}
+          onClick={() => {
+            dismiss();
+            onToggleSnap();
+          }}
+        >
+          <ToolbarIcon name="snap" size={16} />
         </button>
         <button
           className="canvas-map-trigger"
@@ -156,9 +196,10 @@ export default function CanvasNavigation({
           onClick={(event) => {
             opener.current = event.currentTarget;
             setOpen(open === "map" ? null : "map");
+            onMinimapVisible?.(open !== "map");
           }}
         >
-          <img src="/design/figma/nav-map.svg" alt="" />
+          <ToolbarIcon name="map" size={16} />
           <span>小地图</span>
         </button>
       </div>

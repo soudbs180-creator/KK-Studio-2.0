@@ -1,0 +1,388 @@
+{
+  "version": 1,
+  "taskId": "TASK-ORG-6",
+  "classification": "E2-externalized-historical-evidence",
+  "packagePath": "docs/changes/2026-09-22-ui-feature-parity",
+  "entries": [
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-feature-parity/evidence/web-accepted/agent-1920.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "e44aae9678358deb965775fa9c12d5d77a9fee33",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-feature-parity/evidence/web-accepted/agent-1920.png",
+      "bytes": 84615,
+      "sha256": "8f2ca17699d8964b2130ef5f0108a427777b94df9556831ba76438666528fda0",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-feature-parity/evidence/web-accepted/agent-390.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "f0b664f09400a179d1cdf94942b1bd067c113f84",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-feature-parity/evidence/web-accepted/agent-390.png",
+      "bytes": 40954,
+      "sha256": "5034e4a2978fbf6b14e92c59e19fb800eab1293242197c132109484098b45fe8",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-feature-parity/evidence/web-accepted/agent-768.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "032288eae25e39604f8dbfbaf9f77114230df2a0",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-feature-parity/evidence/web-accepted/agent-768.png",
+      "bytes": 51551,
+      "sha256": "bbc64ad8bd5aa4eb776f3461e1e92026cfdfda6ddc014f48e53b273cc86f0c9d",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-feature-parity/evidence/web-accepted/agent-idle.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "0d9ae702c6a0ab514692a3d676c5b470cacac788",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-feature-parity/evidence/web-accepted/agent-idle.png",
+      "bytes": 92724,
+      "sha256": "bac8b76933ba71ad40f7397ab447936376ad67f6231afb89726f37d89218eb63",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-feature-parity/evidence/web-accepted/agent-running.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "8b5aa85f5fb016ca28f2b4f2e6dd93f2c0dd42ce",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-feature-parity/evidence/web-accepted/agent-running.png",
+      "bytes": 83495,
+      "sha256": "bb15ae282b2a640bc4c25bba4a35c787527ae58dc9135eb8a13332664b3bae49",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-feature-parity/evidence/web-accepted/agent-warning.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "97b1825b3c1e386f633a4e81eb3451478e5b6397",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-feature-parity/evidence/web-accepted/agent-warning.png",
+      "bytes": 91189,
+      "sha256": "63c3f6faf75c59ee2fe99790891d7e2afff124bbc7297015ed1c4428bca8964b",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-feature-parity/evidence/web-accepted/prompt-1920-dark.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "8dc8ddfe4bb82e93ae4853f3653662602b8bc927",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-feature-parity/evidence/web-accepted/prompt-1920-dark.png",
+      "bytes": 159453,
+      "sha256": "c8a13d415398197ec15e21c3490125f0812487b425b0a5b80554f39839f7accc",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-feature-parity/evidence/web-accepted/prompt-1920-light.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "836925e604c36b936d140748cf45380205eddd6c",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-feature-parity/evidence/web-accepted/prompt-1920-light.png",
+      "bytes": 162220,
+      "sha256": "b50c379f64393a6ef7b8215b7fa08391f2cdea60a403b5d45d51f9db72a2bef8",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-feature-parity/evidence/web-accepted/prompt-390-dark.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "e9cc7f705a38e19e1c59aef04abd1e88ecb4f450",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-feature-parity/evidence/web-accepted/prompt-390-dark.png",
+      "bytes": 44670,
+      "sha256": "cc815b550480c4c358a3d852c24831cd38d3a18340367f27c62ce457f46f149b",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-feature-parity/evidence/web-accepted/prompt-390-light.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "06c08701f84fbae43c424a2fbf5fdf353b8db29c",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-feature-parity/evidence/web-accepted/prompt-390-light.png",
+      "bytes": 45438,
+      "sha256": "d246e8a9adbf4b02ddbfff2e5407ce99dc30d84306410e4b71b2cb9e794bcf05",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-feature-parity/evidence/web-accepted/prompt-768-dark.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "5cc6b048adee0e52b640f33ed7a0ebb376a91918",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-feature-parity/evidence/web-accepted/prompt-768-dark.png",
+      "bytes": 81947,
+      "sha256": "0755ffe76241e55dacf84c3f8cec4556989f42a689179c87c05746695fb8b94d",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-feature-parity/evidence/web-accepted/prompt-768-light.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "460a12d07b999eab73c781bcb939c3ff514c162c",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-feature-parity/evidence/web-accepted/prompt-768-light.png",
+      "bytes": 83401,
+      "sha256": "ad2898271120eba852729ec093189258716c733b3145acf4379a292c833e722f",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-feature-parity/evidence/web-final/ui-feature-parity-prompt-l-1e3bb-ext-errors-and-focus-at-768/prompt-768-dark.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "5cc6b048adee0e52b640f33ed7a0ebb376a91918",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-feature-parity/evidence/web-final/ui-feature-parity-prompt-l-1e3bb-ext-errors-and-focus-at-768/prompt-768-dark.png",
+      "bytes": 81947,
+      "sha256": "0755ffe76241e55dacf84c3f8cec4556989f42a689179c87c05746695fb8b94d",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-feature-parity/evidence/web-final/ui-feature-parity-prompt-l-1e3bb-ext-errors-and-focus-at-768/prompt-768-light.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "460a12d07b999eab73c781bcb939c3ff514c162c",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-feature-parity/evidence/web-final/ui-feature-parity-prompt-l-1e3bb-ext-errors-and-focus-at-768/prompt-768-light.png",
+      "bytes": 83401,
+      "sha256": "ad2898271120eba852729ec093189258716c733b3145acf4379a292c833e722f",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-feature-parity/evidence/web-final/ui-feature-parity-prompt-l-7c029-ext-errors-and-focus-at-390/prompt-390-dark.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "e9cc7f705a38e19e1c59aef04abd1e88ecb4f450",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-feature-parity/evidence/web-final/ui-feature-parity-prompt-l-7c029-ext-errors-and-focus-at-390/prompt-390-dark.png",
+      "bytes": 44670,
+      "sha256": "cc815b550480c4c358a3d852c24831cd38d3a18340367f27c62ce457f46f149b",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-feature-parity/evidence/web-final/ui-feature-parity-prompt-l-7c029-ext-errors-and-focus-at-390/prompt-390-light.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "06c08701f84fbae43c424a2fbf5fdf353b8db29c",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-feature-parity/evidence/web-final/ui-feature-parity-prompt-l-7c029-ext-errors-and-focus-at-390/prompt-390-light.png",
+      "bytes": 45438,
+      "sha256": "d246e8a9adbf4b02ddbfff2e5407ce99dc30d84306410e4b71b2cb9e794bcf05",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-feature-parity/evidence/web-final/ui-feature-parity-prompt-l-a5938-xt-errors-and-focus-at-1920/prompt-1920-dark.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "8dc8ddfe4bb82e93ae4853f3653662602b8bc927",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-feature-parity/evidence/web-final/ui-feature-parity-prompt-l-a5938-xt-errors-and-focus-at-1920/prompt-1920-dark.png",
+      "bytes": 159453,
+      "sha256": "c8a13d415398197ec15e21c3490125f0812487b425b0a5b80554f39839f7accc",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-feature-parity/evidence/web-final/ui-feature-parity-prompt-l-a5938-xt-errors-and-focus-at-1920/prompt-1920-light.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "836925e604c36b936d140748cf45380205eddd6c",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-feature-parity/evidence/web-final/ui-feature-parity-prompt-l-a5938-xt-errors-and-focus-at-1920/prompt-1920-light.png",
+      "bytes": 162220,
+      "sha256": "b50c379f64393a6ef7b8215b7fa08391f2cdea60a403b5d45d51f9db72a2bef8",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-feature-parity/evidence/web-protocol/agent-1920.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "e44aae9678358deb965775fa9c12d5d77a9fee33",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-feature-parity/evidence/web-protocol/agent-1920.png",
+      "bytes": 84615,
+      "sha256": "8f2ca17699d8964b2130ef5f0108a427777b94df9556831ba76438666528fda0",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-feature-parity/evidence/web-protocol/agent-390.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "cfd3d4a6460ce6e4dca14b00e06f968e63b14e9d",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-feature-parity/evidence/web-protocol/agent-390.png",
+      "bytes": 43092,
+      "sha256": "e65e12aaa96739644735b311c3c084d17ff6211a1e388fcd77c5366cdfdb31c4",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-feature-parity/evidence/web-protocol/agent-768.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "032288eae25e39604f8dbfbaf9f77114230df2a0",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-feature-parity/evidence/web-protocol/agent-768.png",
+      "bytes": 51551,
+      "sha256": "bbc64ad8bd5aa4eb776f3461e1e92026cfdfda6ddc014f48e53b273cc86f0c9d",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-feature-parity/evidence/web-protocol/agent-idle.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "0d9ae702c6a0ab514692a3d676c5b470cacac788",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-feature-parity/evidence/web-protocol/agent-idle.png",
+      "bytes": 92724,
+      "sha256": "bac8b76933ba71ad40f7397ab447936376ad67f6231afb89726f37d89218eb63",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-feature-parity/evidence/web-protocol/agent-running.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "1ef695bee2a6cb7743f9efdac1d52e476292f8e9",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-feature-parity/evidence/web-protocol/agent-running.png",
+      "bytes": 83488,
+      "sha256": "712e321cade4745ef0ca69c9fda7b23d4efc21630c3b0b4603ab761f19c9b508",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-feature-parity/evidence/web-protocol/agent-warning.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "97b1825b3c1e386f633a4e81eb3451478e5b6397",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-feature-parity/evidence/web-protocol/agent-warning.png",
+      "bytes": 91189,
+      "sha256": "63c3f6faf75c59ee2fe99790891d7e2afff124bbc7297015ed1c4428bca8964b",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-feature-parity/evidence/web-protocol/prompt-1920-dark.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "8dc8ddfe4bb82e93ae4853f3653662602b8bc927",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-feature-parity/evidence/web-protocol/prompt-1920-dark.png",
+      "bytes": 159453,
+      "sha256": "c8a13d415398197ec15e21c3490125f0812487b425b0a5b80554f39839f7accc",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-feature-parity/evidence/web-protocol/prompt-1920-light.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "836925e604c36b936d140748cf45380205eddd6c",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-feature-parity/evidence/web-protocol/prompt-1920-light.png",
+      "bytes": 162220,
+      "sha256": "b50c379f64393a6ef7b8215b7fa08391f2cdea60a403b5d45d51f9db72a2bef8",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-feature-parity/evidence/web-protocol/prompt-390-dark.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "e9cc7f705a38e19e1c59aef04abd1e88ecb4f450",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-feature-parity/evidence/web-protocol/prompt-390-dark.png",
+      "bytes": 44670,
+      "sha256": "cc815b550480c4c358a3d852c24831cd38d3a18340367f27c62ce457f46f149b",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-feature-parity/evidence/web-protocol/prompt-390-light.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "06c08701f84fbae43c424a2fbf5fdf353b8db29c",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-feature-parity/evidence/web-protocol/prompt-390-light.png",
+      "bytes": 45438,
+      "sha256": "d246e8a9adbf4b02ddbfff2e5407ce99dc30d84306410e4b71b2cb9e794bcf05",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-feature-parity/evidence/web-protocol/prompt-768-dark.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "5cc6b048adee0e52b640f33ed7a0ebb376a91918",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-feature-parity/evidence/web-protocol/prompt-768-dark.png",
+      "bytes": 81947,
+      "sha256": "0755ffe76241e55dacf84c3f8cec4556989f42a689179c87c05746695fb8b94d",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-feature-parity/evidence/web-protocol/prompt-768-light.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "460a12d07b999eab73c781bcb939c3ff514c162c",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-feature-parity/evidence/web-protocol/prompt-768-light.png",
+      "bytes": 83401,
+      "sha256": "ad2898271120eba852729ec093189258716c733b3145acf4379a292c833e722f",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-feature-parity/evidence/web/ui-feature-parity-Agent-co-29452-or-feedback-and-no-fallback/agent-running.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "57ad21d3c6c9196fed3be6d2b744eba137ca729c",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-feature-parity/evidence/web/ui-feature-parity-Agent-co-29452-or-feedback-and-no-fallback/agent-running.png",
+      "bytes": 88875,
+      "sha256": "c7f0938b48e7503ae4f8b8254d1bed08b5fb9dbd064e136541caa717a67ac9fe",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-feature-parity/evidence/web/ui-feature-parity-prompt-l-1e3bb-ext-errors-and-focus-at-768/prompt-768-dark.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "6bf9af3db30acb805003a0fbbe4bc502f582c29c",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-feature-parity/evidence/web/ui-feature-parity-prompt-l-1e3bb-ext-errors-and-focus-at-768/prompt-768-dark.png",
+      "bytes": 111173,
+      "sha256": "5799ab069dabb82e77ed08f001a6ae81bce7e01556ebd9f05a32431fd22df86a",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-feature-parity/evidence/web/ui-feature-parity-prompt-l-1e3bb-ext-errors-and-focus-at-768/prompt-768-light.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "6bf9af3db30acb805003a0fbbe4bc502f582c29c",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-feature-parity/evidence/web/ui-feature-parity-prompt-l-1e3bb-ext-errors-and-focus-at-768/prompt-768-light.png",
+      "bytes": 111173,
+      "sha256": "5799ab069dabb82e77ed08f001a6ae81bce7e01556ebd9f05a32431fd22df86a",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-feature-parity/evidence/web/ui-feature-parity-prompt-l-7c029-ext-errors-and-focus-at-390/prompt-390-dark.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "1bf200dcf6007d873a93f222dba785a90b1466d0",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-feature-parity/evidence/web/ui-feature-parity-prompt-l-7c029-ext-errors-and-focus-at-390/prompt-390-dark.png",
+      "bytes": 70146,
+      "sha256": "8edb5b55fa81dee383aefa3b28b03fa5817febf0f2c0ac77b21feebcbd3709bd",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-feature-parity/evidence/web/ui-feature-parity-prompt-l-7c029-ext-errors-and-focus-at-390/prompt-390-light.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "1bf200dcf6007d873a93f222dba785a90b1466d0",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-feature-parity/evidence/web/ui-feature-parity-prompt-l-7c029-ext-errors-and-focus-at-390/prompt-390-light.png",
+      "bytes": 70146,
+      "sha256": "8edb5b55fa81dee383aefa3b28b03fa5817febf0f2c0ac77b21feebcbd3709bd",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-feature-parity/evidence/web/ui-feature-parity-prompt-l-a5938-xt-errors-and-focus-at-1920/prompt-1920-dark.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "898c4095414a0124f9d973399a646650869602d3",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-feature-parity/evidence/web/ui-feature-parity-prompt-l-a5938-xt-errors-and-focus-at-1920/prompt-1920-dark.png",
+      "bytes": 222664,
+      "sha256": "30cc982cd0b23bdc3ea2bf7f7a66b40f787a5377de667a70f432c8850dfe88c6",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-22-ui-feature-parity/evidence/web/ui-feature-parity-prompt-l-a5938-xt-errors-and-focus-at-1920/prompt-1920-light.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "898c4095414a0124f9d973399a646650869602d3",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-22-ui-feature-parity/evidence/web/ui-feature-parity-prompt-l-a5938-xt-errors-and-focus-at-1920/prompt-1920-light.png",
+      "bytes": 222664,
+      "sha256": "30cc982cd0b23bdc3ea2bf7f7a66b40f787a5377de667a70f432c8850dfe88c6",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    }
+  ],
+  "scope": "Historical E2 files externalized by validated batches; E1 summaries, JSON, key screenshots and active inputs retained.",
+  "containerResolution": "Resolve containerRelativePath from the workspace container containing the canonical checkout and output.",
+  "recovery": "Verify with scripts/governance/check-evidence-manifest.mjs <manifest> <container>; restore only to a new empty directory. Original Git sourceCommit/sourcePath remains recoverable.",
+  "batches": [
+    {
+      "taskId": "TASK-ORG-6",
+      "date": "2026-10-30",
+      "candidateBase": "be730617ace5013295b85a22133259b32ad6ffec"
+    }
+  ]
+}

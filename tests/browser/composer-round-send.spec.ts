@@ -41,7 +41,8 @@ async function expectRoundSend(button: Locator, peer: Locator): Promise<void> {
     (element) => (element as HTMLElement).offsetHeight,
   );
   expect(geometry.width).toBe(geometry.height);
-  expect(geometry.height).toBe(peerHeight);
+  expect(geometry.height).toBe(44);
+  expect(peerHeight).toBeLessThanOrEqual(44);
   for (const radius of geometry.radii)
     expect(radius).toBeGreaterThanOrEqual(geometry.height / 2);
 }
@@ -134,7 +135,7 @@ async function recordComposer(
 }
 
 for (const width of [390, 1099, 1920]) {
-  test(`首页 ${width}px 发送按钮直接为同排高度的圆形，亮暗主题状态保持`, async ({
+  test(`首页 ${width}px 发送按钮使用44px触控圆形，亮暗主题状态保持`, async ({
     page,
   }, testInfo) => {
     await isolateNetwork(page);
@@ -146,7 +147,7 @@ for (const width of [390, 1099, 1920]) {
     );
     const composer = page.locator(".start-composer");
     const send = composer.getByRole("button", { name: "开始创建项目" });
-    const peer = composer.getByRole("button", { name: /^当前模式：/ });
+    const peer = composer.getByRole("button", { name: "模型", exact: true });
     await expect(send).toBeDisabled();
     await expectRoundSend(send, peer);
     await page.getByLabel("创作提示词").fill("仅验证本地发送按钮，不提交");
@@ -163,7 +164,7 @@ for (const width of [390, 1099, 1920]) {
     }
   });
 
-  test(`会话 ${width}px 发送按钮直接为同排高度的圆形，亮暗主题状态保持`, async ({
+  test(`会话 ${width}px 发送按钮使用44px触控圆形，亮暗主题状态保持`, async ({
     page,
   }, testInfo) => {
     const agent = await startAgentServer("idle");

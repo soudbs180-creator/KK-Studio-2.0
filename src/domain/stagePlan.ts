@@ -47,6 +47,8 @@ export const stageWorkItemKindSchema = z.enum([
 export type StageWorkItemKind = z.infer<typeof stageWorkItemKindSchema>;
 
 export const stageWorkItemSchema = z.object({
+  sourceNodeId: z.string().min(1).max(160).optional(),
+  taskId: z.string().min(1).max(160).optional(),
   id: z.string().min(1).max(160),
   kind: stageWorkItemKindSchema,
   prompt: z.string().min(1).max(4000),
@@ -75,6 +77,17 @@ export const stageWorkItemSchema = z.object({
 export type StageWorkItem = z.infer<typeof stageWorkItemSchema>;
 
 export const stageSchema = z.object({
+  executionMandate: z
+    .object({
+      id: z.string(),
+      authorizedBy: z.enum(["Router", "User"]),
+      allowedTools: z.array(z.string()),
+      maxStepCount: z.number().int().positive(),
+      issuedAt: z.string(),
+      expiresAt: z.string().optional(),
+      scope: z.string().optional(),
+    })
+    .optional(),
   index: z.number().int().min(0).max(64),
   name: z.string().max(120),
   goal: z.string().max(400),
@@ -379,7 +392,7 @@ export function stagePlanProgress(plan: StagePlan): StagePlanProgress {
   };
 }
 
-/** 只重试失败/部分成功的工作项（failed/partial → queued，清 error）；cancelled/succeeded 不动。 */
+/** 宿主明确解除阻断时重排失败/部分成功/取消项；保留任务身份供受理核验。 */
 export function retryStageWorkItems(
   plan: StagePlan,
   stageIndex: number,
@@ -388,7 +401,7 @@ export function retryStageWorkItems(
   if (!stage) throw new StagePlanError(`阶段 ${stageIndex} 不存在。`);
   const stamp = now();
   const workItems = stage.workItems.map((item) =>
-    item.status === "failed" || item.status === "partial"
+    ["failed", "partial", "cancelled"].includes(item.status)
       ? {
           ...item,
           status: "queued" as const,

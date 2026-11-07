@@ -2,7 +2,7 @@
 
 ## 唯一主线
 
-远端 `origin/main` 是今后任务和发布的集成基线。一个完整项目树，短期任务分支通过 PR 集成；不长期保留互相漂移的“桌面版/网页版”产品分支。历史本地 main/master 与远端曾通过 tree 同步但没有共同提交祖先，不能对历史本地 main 盲目 pull/merge unrelated histories。新任务从 fetch 后的 origin/main 创建登记 worktree，保留历史分支和 dirty 根工作区供追溯。
+远端 `origin/main` 是今后任务和发布的集成基线。一个完整项目树，短期任务分支通过 PR 集成；不长期保留互相漂移的“桌面版/网页版”产品分支。历史本地 main/master 与 origin/main 存在共同提交祖先，但已经分叉；同步前必须实际核对 merge-base、两侧独有提交与 dirty 状态，不能盲目 pull/merge 或使用 unrelated-histories 绕过。2026-10-18只读采样：main/master共同祖先1f6cbd37091326a899fa600baba53bf6efd9cf16，main与origin/main共同祖先d95e4c446d3b4ae5419ce0f58c68057ebabc286a；main...master为56/122、main...origin/main为49/2，数字仅对当次refs有效。新任务从 fetch 后的 origin/main 创建登记 worktree，保留历史分支和 dirty 根工作区供追溯。
 
 | 分支/引用                                                  | 规则                                                             |
 | ---------------------------------------------------------- | ---------------------------------------------------------------- |

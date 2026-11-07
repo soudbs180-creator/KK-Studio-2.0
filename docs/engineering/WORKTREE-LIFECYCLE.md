@@ -12,7 +12,9 @@ Run the creation gate before creating a checkout:
 node scripts/governance/worktree-policy.mjs --check-create --branch=codex/TASK-EXAMPLE
 ```
 
-The command exits non-zero when either budget is exceeded, the branch is missing, or the requested location is outside the policy root. It reports `REUSE_EXISTING_BRANCH` when the branch already has a worktree.
+When a concrete location is supplied, pass it to the gate as one argument, for example `--path=D:/kk-studio/.worktrees/TASK-EXAMPLE`. The CLI applies the same containment check as the policy function; it does not create the directory.
+
+The command exits non-zero when Git cannot enumerate the actual worktrees, either budget is exceeded, the branch is missing, an existing registration points to a missing checkout, or the supplied location is outside the policy root. It reports `REUSE_EXISTING_BRANCH` for an existing registration even when the creation budget is exhausted. An existing historical checkout outside the approved root can be reused without creating a directory; an explicitly supplied outside target is rejected.
 
 Reclamation defaults to an audit. It writes a uniquely named immutable plan and pointer under `D:/kk-studio/output/YYYY-MM-DD-worktree-reclamation/` and performs no deletion:
 

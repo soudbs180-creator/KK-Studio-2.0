@@ -111,6 +111,11 @@ async function nativeFixture(
 
 async function connectionSettings(page: Page) {
   await openSettingsSection(page, "模型接入");
+  const dialog = page.getByRole("dialog", { name: "设置", exact: true });
+  await dialog.getByRole("tab", { name: "CLI 直连 CLI", exact: true }).click();
+  await dialog
+    .getByRole("button", { name: "Codex CLI / 主 Agent", exact: true })
+    .click();
   return page.locator(".settings-agent-card").filter({
     has: page.getByRole("heading", { name: /Codex 主 Agent/ }),
   });

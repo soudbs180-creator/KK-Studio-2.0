@@ -1,7 +1,15 @@
 import type { CanvasReferenceSlot } from "../../domain/canvasItems.ts";
+import { parsePromptMentions } from "../../domain/promptMentions.ts";
+import {
+  compileOpticsPrompt,
+  type CameraOptics,
+} from "../../domain/cameraOptics.ts";
 
 export interface PromptCompileOptions {
+  optics?: CameraOptics;
   referenceCount?: number;
+  referenceIds?: readonly string[];
+  referenceAliasIds?: readonly string[];
   referenceRoles?: (CanvasReferenceSlot | undefined)[];
   operation?: "generate" | "edit" | "inpaint" | "outpaint";
   outputCount?: number;
@@ -17,8 +25,22 @@ export function compileDesignPrompt(
   prompt: string,
   options: PromptCompileOptions = {},
 ): string {
-  const subject = prompt.trim();
+  const subject = parsePromptMentions(
+    prompt,
+    Object.fromEntries(
+      (options.referenceIds ?? []).map((id, index) => [String(index + 1), id]),
+    ),
+    Object.fromEntries(
+      (options.referenceIds ?? []).map((id, index) => [
+        options.referenceAliasIds?.[index] ?? id,
+        id,
+      ]),
+    ),
+  ).compiledPrompt.trim();
   if (!subject) return "";
+  const opticsPrompt = options.optics
+    ? compileOpticsPrompt(options.optics)
+    : undefined;
   const operation = options.operation ?? "generate";
   const references = Math.max(0, Math.floor(options.referenceCount ?? 0));
   const outputs = Math.max(
@@ -38,6 +60,7 @@ export function compileDesignPrompt(
       "Task: create a production-ready visual.",
       `Operation: ${operation}.`,
       `User brief: ${subject}`,
+      ...(opticsPrompt ? [`Camera: ${opticsPrompt}`] : []),
       references
         ? `References: use ${references} supplied reference image(s) for consistency; do not copy unrelated content.`
         : "References: none supplied.",
@@ -53,6 +76,7 @@ export function compileDesignPrompt(
     "任务：生成可用于设计交付的视觉素材。",
     `操作：${operation}。`,
     `设计师原始需求：${subject}`,
+    ...(opticsPrompt ? [`摄影机：${opticsPrompt}`] : []),
     references
       ? `参考图：使用设计师提供的 ${references} 张参考图保持一致性，不引入无关内容。`
       : "参考图：本次未提供参考图。",

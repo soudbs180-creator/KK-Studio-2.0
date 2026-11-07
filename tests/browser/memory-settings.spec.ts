@@ -3,7 +3,7 @@ import { openSettingsSection } from "./helpers";
 
 async function openMemorySection(page: Page) {
   await page.goto("/");
-  await openSettingsSection(page, "记忆");
+  await openSettingsSection(page, "记忆管理");
   const dialog = page.getByRole("dialog", { name: "设置" });
   return dialog;
 }

@@ -4,12 +4,12 @@ import { resolveResource } from "@tauri-apps/api/path";
 import {
   GEMINI_BRIDGE_DEVELOPMENT_COMMAND,
   packagedGeminiBridgePowerShellCommand,
-} from "../../features/agent/geminiBridgeCommand";
+} from "../../features/agent/index.ts";
 import {
   GEMINI_BRIDGE_DEFAULT_URL,
   resolveGeminiCliLoginStatus,
   type GeminiCliStatus,
-} from "../../features/agent/geminiCliAdapter";
+} from "../../features/agent/index.ts";
 
 export function GoogleLoginModeChoice({
   cli,

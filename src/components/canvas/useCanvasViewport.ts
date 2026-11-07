@@ -33,7 +33,10 @@ export function useCanvasViewport(
       window.innerWidth > 1200
         ? // offsetLeft is stable while the conversation panel slides in. Its
           // animated DOMRect would leave the canvas controls under the panel.
-          chatElement.offsetLeft - canvas.offsetLeft - canvas.clientLeft - 16
+          (chatElement.parentElement?.offsetLeft ?? 0) +
+          chatElement.offsetLeft -
+          canvas.offsetLeft -
+          canvas.clientLeft
         : canvasWidth;
     return {
       // Compact chat overlays the content instead of compressing its viewport.

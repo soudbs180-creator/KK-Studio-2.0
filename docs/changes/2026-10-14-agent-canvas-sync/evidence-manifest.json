@@ -1,0 +1,52 @@
+{
+  "version": 1,
+  "taskId": "TASK-ORG-6",
+  "classification": "E2-externalized-historical-evidence",
+  "packagePath": "docs/changes/2026-10-14-agent-canvas-sync",
+  "entries": [
+    {
+      "sourcePath": "docs/changes/2026-10-14-agent-canvas-sync/evidence/full-verify.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "67907cfd3ef9819ff415076e57d1d744784c4b08",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-14-agent-canvas-sync/evidence/full-verify.log",
+      "bytes": 219544,
+      "sha256": "46e99d9d28470667cc4053c044d1eea5ce79f2b2251a1de1351e197a6326aa18",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-14-agent-canvas-sync/verification.md",
+          "line": 34,
+          "originalTarget": "evidence/full-verify.log",
+          "referenceKind": "link"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-14-agent-canvas-sync/evidence/related-unit.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "34ae1dc26fe4fefd2b63988f503a9e05505bdd53",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-14-agent-canvas-sync/evidence/related-unit.log",
+      "bytes": 2849,
+      "sha256": "44c739096849540b2b6983a6214aafac6b2ce89810cf1e982302bff181e1772e",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-14-agent-canvas-sync/verification.md",
+          "line": 24,
+          "originalTarget": "evidence/related-unit.log",
+          "referenceKind": "link"
+        }
+      ]
+    }
+  ],
+  "scope": "Historical E2 files externalized by validated batches; E1 summaries, JSON, key screenshots and active inputs retained.",
+  "containerResolution": "Resolve containerRelativePath from the workspace container containing the canonical checkout and output.",
+  "recovery": "Verify with scripts/governance/check-evidence-manifest.mjs <manifest> <container>; restore only to a new empty directory. Original Git sourceCommit/sourcePath remains recoverable.",
+  "batches": [
+    {
+      "taskId": "TASK-ORG-6",
+      "date": "2026-10-30",
+      "candidateBase": "be730617ace5013295b85a22133259b32ad6ffec"
+    }
+  ]
+}

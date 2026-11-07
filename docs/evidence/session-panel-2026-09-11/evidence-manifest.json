@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "taskId": "TASK-ORG-6",
+  "classification": "E2-externalized-historical-evidence",
+  "packagePath": "docs/evidence/session-panel-2026-09-11",
+  "entries": [
+    {
+      "sourcePath": "docs/evidence/session-panel-2026-09-11/chat-closed.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "228700805f9870a27823a53454bb7714c89d1dce",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/session-panel-2026-09-11/chat-closed.png",
+      "bytes": 57994,
+      "sha256": "1bfa32930ba20d428031cf77c69536e23a02b960d0b5b9ce9335d73ff2e5c110",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/session-panel-2026-09-11/chat-open-after-centering.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "1c605712c37535649f45fe2d801fc9e7cf83f4eb",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/session-panel-2026-09-11/chat-open-after-centering.png",
+      "bytes": 72015,
+      "sha256": "a823bf9568dcb4709f0187b0765849b9de69319338dae266f2355c0afa109e23",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/session-panel-2026-09-11/chat-open.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "091daa7ce61a854f3e5346b8dcc175de43d7f893",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/session-panel-2026-09-11/chat-open.png",
+      "bytes": 72707,
+      "sha256": "609fe85e9c6aa7932394610fbdbe89db78bd9824b9d85eb79a9973863c2910a7",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    }
+  ],
+  "scope": "Historical E2 files externalized by validated batches; E1 summaries, JSON, key screenshots and active inputs retained.",
+  "containerResolution": "Resolve containerRelativePath from the workspace container containing the canonical checkout and output.",
+  "recovery": "Verify with scripts/governance/check-evidence-manifest.mjs <manifest> <container>; restore only to a new empty directory. Original Git sourceCommit/sourcePath remains recoverable.",
+  "batches": [
+    {
+      "taskId": "TASK-ORG-6",
+      "date": "2026-10-30",
+      "candidateBase": "be730617ace5013295b85a22133259b32ad6ffec"
+    }
+  ]
+}

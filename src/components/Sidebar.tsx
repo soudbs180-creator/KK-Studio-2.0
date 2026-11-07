@@ -6,8 +6,8 @@ import SidebarIcon from "./SidebarIcon";
 import SidebarNavigation from "./SidebarNavigation";
 import BrandLogo from "./BrandLogo";
 import { useHiddenControlFocus } from "./useHiddenControlFocus";
-import type { CreationProject } from "../features/creation/model";
-import type { ProjectLibraryActions } from "../features/projects/projectLifecycle";
+import type { CreationProject } from "../features/creation/index.ts";
+import type { ProjectLibraryActions } from "../features/projects/index.ts";
 
 export default function Sidebar({
   active,
@@ -164,7 +164,7 @@ export default function Sidebar({
           onClick={() => setMenu(account ? null : "account")}
         >
           <span className="logo">
-            <BrandLogo />
+            <BrandLogo variant="sidebarAccount" />
           </span>
           <span className="account-name" title="本地前端预览，尚未连接真实账号">
             Prototype

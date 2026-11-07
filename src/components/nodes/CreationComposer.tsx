@@ -1,5 +1,17 @@
-import type { ModelSelection } from "../../features/models/modelSelection";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import {
+  DirectorControlAnchor,
+  useNodeDirectorBridge,
+} from "./DirectorConsole.tsx";
+import { useMenuDismiss } from "./useCreationMenuDismiss.ts";
+import type { ModelSelection } from "../../features/models/index.ts";
+import {
+  useEffect,
+  useCallback,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 import CreationParameterControl from "./CreationParameterControl";
 import CreationSoundButton from "./CreationSoundButton";
 import GenerationCount from "./GenerationCount";
@@ -9,16 +21,32 @@ import {
   type CanvasParameters,
   type DemoResult,
 } from "../../domain/canvasItems";
-import { useLocalGeneration } from "./useLocalGeneration";
 import { GenerationAction, GenerationStatus } from "./GenerationAction";
 import CreationModelPicker from "./CreationModelPicker";
 import ReferenceStrip from "./ReferenceStrip";
+import UiIcon from "../UiIcon";
 import ComposerActions from "./ComposerActions";
 import CanvasComposerShell from "../canvas/CanvasComposerShell";
-import UiIcon from "../UiIcon";
-import { useCanvasImageGeneration } from "../../features/creation/CanvasImageCommand";
+import "../../styles/reference-composer.css";
+import { useCanvasImageGeneration } from "../../features/creation/index.ts";
 import { composerReportedHeight } from "../canvas/composerLayout";
+import TokenizedComposerInput from "../composer/TokenizedComposerInput.tsx";
+import { useCanvasOperations } from "../../runtime/canvasCommandRuntime.tsx";
+function defaultCanvasParameters(video: boolean): CanvasParameters {
+  return {
+    ratio: video ? "16:9" : "1:1",
+    quality: video ? "720p" : "1K",
+    duration: video ? "4" : "7",
+    count: video ? "1" : "8",
+    soundEnabled: false,
+  };
+}
+function resolveMaxGenerationCount(usesCodex: boolean, max?: number): number {
+  return usesCodex ? 4 : Math.min(8, max ?? 8);
+}
 interface CreationComposerProps {
+  nodeId?: string;
+  footer?: ReactNode;
   parameters?: CanvasParameters;
   onParametersChange?: (parameters: CanvasParameters) => void;
   kind: "image" | "video";
@@ -39,98 +67,81 @@ interface CreationComposerProps {
   references?: CanvasReference[];
   referenceLimit?: number;
   onRemoveReference?: (connectionId: string) => void;
+  onSwapReferenceFrames?: (firstId: string, lastId: string) => void;
 }
-export default function CreationComposer({
-  kind,
-  selected,
-  onConfigure,
-  onReference,
-  error,
-  onPromptChange,
-  onExtraHeightChange,
-  onDemoResults,
-  onGenerationStart,
-  onGenerationState,
-  prompt: promptProp,
-  model: modelProp,
-  onModelChange,
-  references = [],
-  referenceLimit = 0,
-  onRemoveReference,
-  parameters,
-  onParametersChange,
-}: CreationComposerProps) {
+export default function CreationComposer(props: CreationComposerProps) {
+  const {
+    kind,
+    selected,
+    onConfigure,
+    onReference,
+    error,
+    onPromptChange,
+    onExtraHeightChange,
+    onModelChange,
+    references = [],
+    referenceLimit = 0,
+    onRemoveReference,
+    onSwapReferenceFrames,
+    parameters,
+    onParametersChange,
+  } = props;
   const video = kind === "video";
+  const canvasOperations = useCanvasOperations();
   const label = video ? "视频" : "图片";
   const [prompt, setPrompt] = useState("");
   const [model, setModel] = useState(modelCapabilities(kind)[0].id);
   const [menu, setMenu] = useState("");
-  const [localParameters, setLocalParameters] = useState<CanvasParameters>(
-    () => ({
-      ratio: video ? "自适应" : "1:1",
-      quality: video ? "2K" : "1K",
-      duration: "7",
-      count: "8",
-      soundEnabled: false,
-    }),
+  const [localParameters, setLocalParameters] = useState<CanvasParameters>(() =>
+    defaultCanvasParameters(video),
   );
-  const { count, soundEnabled } = parameters ?? localParameters;
+  const activeParams = parameters ?? localParameters;
+  useNodeDirectorBridge(
+    props.nodeId,
+    activeParams,
+    setLocalParameters,
+    onParametersChange,
+  );
+  const { count, soundEnabled } = activeParams;
   function updateParameters(patch: Partial<CanvasParameters>): void {
-    const next = { ...(parameters ?? localParameters), ...patch };
+    const next = { ...activeParams, ...patch };
     setLocalParameters(next);
     onParametersChange?.(next);
   }
   const [expanded, setExpanded] = useState(false);
-  const localGeneration = useLocalGeneration(kind, onDemoResults);
-  const imageGeneration = useCanvasImageGeneration({
-    references,
-  });
-  const generation = video ? localGeneration : imageGeneration;
+  const imageGeneration = useCanvasImageGeneration({ references });
+  const generation = imageGeneration;
   const busy = generation.phase === "loading";
   const incomingReferenceCount = new Set(
-    references
-      .filter((reference) => reference.id)
-      .map((reference) => reference.assetId ?? reference.id),
+    references.filter((r) => r.id).map((r) => r.assetId ?? r.id),
   ).size;
-  const selectedModel = modelProp ?? (video ? model : imageGeneration.model);
-  const ref = useRef<HTMLDivElement>(null);
+  const selectedModel = props.model ?? (video ? model : imageGeneration.model);
+  const ref = useRef<HTMLDivElement | null>(null);
+  const [element, setElement] = useState<HTMLDivElement | null>(null);
+  const attach = useCallback((node: HTMLDivElement | null) => {
+    ref.current = node;
+    setElement(node);
+  }, []);
   useLayoutEffect(() => {
-    if (selected) onExtraHeightChange(composerReportedHeight(expanded, error));
-  }, [selected, expanded, error, onExtraHeightChange]);
+    if (!selected || !element) return;
+    const report = () =>
+      onExtraHeightChange(composerReportedHeight(element.offsetHeight));
+    report();
+    const observer = new ResizeObserver(report);
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [selected, element, onExtraHeightChange]);
   useEffect(() => {
     if (!selected || busy) setMenu("");
     if (!selected) setExpanded(false);
   }, [selected, busy]);
-  useEffect(() => {
-    if (video && localGeneration.phase !== "idle")
-      onGenerationState?.(localGeneration.phase);
-  }, [video, localGeneration.phase, onGenerationState]);
-  useEffect(() => {
-    if (!menu) return;
-    const dismiss = (event: PointerEvent): void => {
-      // Let a button click finish before a compact menu moves its target.
-      if (
-        event.target instanceof Element &&
-        ref.current?.contains(event.target) &&
-        event.target.closest("button")
-      )
-        return;
-      if (
-        event.target instanceof Element &&
-        !ref.current
-          ?.querySelector(`[data-control='${menu}']`)
-          ?.contains(event.target)
-      )
-        setMenu("");
-    };
-    document.addEventListener("pointerdown", dismiss, true);
-    return () => document.removeEventListener("pointerdown", dismiss, true);
-  }, [menu]);
+  useMenuDismiss(ref, menu, setMenu);
   if (!selected) return null;
+  const currentPrompt = props.prompt ?? prompt;
   return (
     <CanvasComposerShell
-      ref={ref}
-      className={`creation-composer ${video ? "video-composer" : ""} ${expanded ? "expanded" : ""}`}
+      ref={attach}
+      className={`creation-composer reference-composer ${video ? "video-composer" : ""} ${expanded ? "expanded" : ""}`}
       data-testid={`${kind}-composer`}
       onPointerDown={(e) => e.stopPropagation()}
       onWheel={(e) => e.stopPropagation()}
@@ -150,61 +161,66 @@ export default function CreationComposer({
         expanded={expanded}
         onToggleExpanded={() => setExpanded(!expanded)}
       />
-      {expanded ? (
-        <ReferenceStrip
-          disabled={busy}
-          references={references}
-          referenceCount={incomingReferenceCount}
-          limit={referenceLimit}
-          onAdd={onReference}
-          onRemove={onRemoveReference}
-        />
-      ) : (
-        <div className="composer-refs">
-          {references.map((ref, i) => (
-            <span className="composer-ref-thumb" key={ref.id ?? i}>
-              {ref.preview ? <img src={ref.preview} alt="" /> : null}
-              {ref.id && onRemoveReference && (
-                <button
-                  type="button"
-                  disabled={busy}
-                  aria-label="移除参考图"
-                  onClick={() => onRemoveReference(ref.id!)}
-                >
-                  ×
-                </button>
-              )}
-            </span>
-          ))}
-          <button
-            className="composer-ref-add"
-            type="button"
-            aria-label="添加参考图片"
-            disabled={busy || incomingReferenceCount >= referenceLimit}
-            title={
-              referenceLimit === 0
-                ? "当前模型没有可用的参考图位置"
-                : `最多 ${referenceLimit} 张参考图`
-            }
-            onClick={() => onReference()}
-          >
-            <UiIcon name="add" size={16} />
-          </button>
-        </div>
-      )}
-      <textarea
+      <ReferenceStrip
+        video={video}
         disabled={busy}
-        title={busy ? "生成中暂不能编辑，取消或结束后可继续" : undefined}
-        aria-label={`${label}提示词`}
+        references={references}
+        referenceCount={incomingReferenceCount}
+        limit={referenceLimit}
+        onAdd={onReference}
+        onRemove={onRemoveReference}
+        onSwapVideoFrames={video ? onSwapReferenceFrames : undefined}
+      />
+      <TokenizedComposerInput
+        disabled={busy}
+        ariaLabel={`${label}提示词`}
         maxLength={video ? 7500 : 4000}
-        value={promptProp ?? prompt}
-        onChange={(e) => {
-          setPrompt(e.target.value);
-          onPromptChange(e.target.value);
+        value={currentPrompt}
+        onChange={(value) => {
+          setPrompt(value);
+          onPromptChange(value);
+        }}
+        referenceEntries={references
+          .filter((ref) => ref.assetId)
+          .map((ref) => ({
+            id: ref.assetId!,
+            assetId: ref.assetId,
+            name: ref.title,
+            slot: ref.slot,
+          }))}
+        onReferenceSlotChange={(assetId, referenceSlot) => {
+          const state = canvasOperations?.getState();
+          const reference = references.find((ref) => ref.assetId === assetId);
+          const edge = state?.canvas.edges.find(
+            (edge) => edge.id === reference?.id,
+          );
+          if (edge)
+            void canvasOperations?.executeOperation({
+              op: "update_card",
+              payload: { id: edge.source, patch: { referenceSlot } },
+            });
+        }}
+        onRemoveReference={(assetId) => {
+          const ref = references.find((ref) => ref.assetId === assetId);
+          if (ref?.id) onRemoveReference?.(ref.id);
         }}
         placeholder="描述你想要生成的内容"
       />
       <div className="creation-controls">
+        <button
+          className="composer-ref-add"
+          type="button"
+          aria-label="添加参考图片"
+          disabled={busy || incomingReferenceCount >= referenceLimit}
+          title={
+            referenceLimit === 0
+              ? "当前模型没有可用的参考图位置"
+              : `最多 ${referenceLimit} 张参考图，已添加 ${incomingReferenceCount} 张`
+          }
+          onClick={() => onReference()}
+        >
+          <UiIcon name="add" size={20} />
+        </button>
         <CreationModelPicker
           disabled={busy}
           kind={kind}
@@ -221,11 +237,18 @@ export default function CreationComposer({
           }}
           onConfigure={onConfigure}
         />
+        <DirectorControlAnchor
+          busy={busy}
+          open={menu === "director"}
+          value={activeParams.optics}
+          onToggle={() => setMenu(menu === "director" ? "" : "director")}
+          onChange={(optics) => updateParameters({ optics })}
+        />
         <CreationParameterControl
           disabled={busy}
           kind={kind}
           model={selectedModel}
-          parameters={parameters ?? localParameters}
+          parameters={activeParams}
           open={menu === "params"}
           onToggle={() => setMenu(menu === "params" ? "" : "params")}
           onChange={updateParameters}
@@ -240,11 +263,10 @@ export default function CreationComposer({
         />
         <GenerationCount
           disabled={busy}
-          maxCount={
-            imageGeneration.usesCodex
-              ? 4
-              : Math.min(8, imageGeneration.maxGenerationCount ?? 8)
-          }
+          maxCount={resolveMaxGenerationCount(
+            imageGeneration.usesCodex,
+            imageGeneration.maxGenerationCount,
+          )}
           value={count}
           open={menu === "count"}
           onToggle={() => setMenu(menu === "count" ? "" : "count")}
@@ -256,15 +278,7 @@ export default function CreationComposer({
           onRun={() => {
             setMenu("");
             const copies = Number(count);
-            if (video && (promptProp ?? prompt).trim())
-              onGenerationStart?.(copies);
-            if (video) void localGeneration.run(promptProp ?? prompt, copies);
-            else
-              void imageGeneration.run(
-                promptProp ?? prompt,
-                copies,
-                selectedModel,
-              );
+            void imageGeneration.run(currentPrompt, copies, selectedModel);
           }}
         />
       </div>
@@ -274,6 +288,7 @@ export default function CreationComposer({
         </div>
       )}
       <GenerationStatus generation={generation} />
+      {props.footer}
     </CanvasComposerShell>
   );
 }

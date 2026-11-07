@@ -8,7 +8,8 @@ import {
 import { useDismissible } from "./useDismissible";
 import { useHiddenControlFocus } from "./useHiddenControlFocus";
 
-type ComposerMenu = "add" | "model" | "skill" | "plugin" | "mode";
+type ComposerMenu =
+  "add" | "model" | "skill" | "plugin" | "mode" | "params" | "count" | "more";
 
 /** One open menu per composer; share modal, IME and focus rules with other menus. */
 export function useComposerMenus(boundary: RefObject<HTMLElement>) {
@@ -67,16 +68,27 @@ export function useComposerMenus(boundary: RefObject<HTMLElement>) {
       const scrollTop = popover.scrollTop;
       popover.style.maxWidth = `${Math.max(0, right - left)}px`;
       popover.style.translate = "none";
+      popover.style.left = "0px";
+      popover.style.right = "auto";
+      popover.style.top = "0px";
+      popover.style.bottom = "auto";
       popover.style.maxHeight = "";
       const naturalHeight = popover.getBoundingClientRect().height;
       const down = below >= naturalHeight || below > above;
       popover.style.maxHeight = `${down ? below : above}px`;
-      popover.style.top = down ? "calc(100% + 8px)" : "auto";
-      popover.style.bottom = down ? "auto" : "calc(100% + 8px)";
-      popover.style.overflowY = "auto";
+      // The more shell owns anchored child menus, whose own bounds handle scrolling.
+      popover.style.overflowY = popover.classList.contains(
+        "start-compact-popover",
+      )
+        ? "visible"
+        : "auto";
       const rect = popover.getBoundingClientRect();
-      const x = Math.max(left - rect.left, Math.min(0, right - rect.right));
-      popover.style.translate = `${x}px 0px`;
+      const x =
+        Math.max(left, Math.min(controls.left, right - rect.width)) - rect.left;
+      const y =
+        (down ? controls.bottom + 8 : controls.top - 8 - rect.height) -
+        rect.top;
+      popover.style.translate = `${x}px ${y}px`;
       popover.scrollTop = scrollTop;
       // Discovery stays in flow when a home menu opens below the action row.
       if (home) home.style.marginBottom = down ? `${rect.height + 8}px` : "";
@@ -116,6 +128,9 @@ export function useComposerMenus(boundary: RefObject<HTMLElement>) {
     skillMenuOpen: menu === "skill",
     pluginMenuOpen: menu === "plugin",
     modeMenuOpen: menu === "mode",
+    parameterMenuOpen: menu === "params",
+    countMenuOpen: menu === "count",
+    moreMenuOpen: menu === "more",
     toggleMenu: (requested: ComposerMenu) =>
       setMenu((current) => (current === requested ? null : requested)),
     openMenu: (requested: ComposerMenu) => setMenu(requested),

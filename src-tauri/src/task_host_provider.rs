@@ -132,7 +132,7 @@ pub(super) fn text_request(
         ),
         _ => (
             "chat/completions",
-            json!({"model":request.model,"messages":[{"role":"user","content":request.prompt}],"stream":true}),
+            json!({"model":request.model,"messages":[{"role":"user","content":request.prompt}],"stream":true,"stream_options":{"include_usage":true}}),
         ),
     };
     let builder = client

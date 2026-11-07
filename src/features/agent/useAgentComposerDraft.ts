@@ -65,7 +65,7 @@ export default function useAgentComposerDraft(
       if (
         !active ||
         !request ||
-        request.draftKey !== draftKey ||
+        (request.draftKey !== draftKey && request.draftKey !== "*") ||
         typeof request.instructions !== "string" ||
         !request.result ||
         request.result.handled

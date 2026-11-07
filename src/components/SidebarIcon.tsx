@@ -1,24 +1,29 @@
-const ASSETS: Record<string, string> = {
-  add: "/design/figma/sidebar-add.svg",
-  archive: "/design/figma/sidebar-archive.svg",
-  skill: "/design/figma/sidebar-skill.svg",
-  workflow: "/design/figma/sidebar-workflow.svg",
-  chat: "/design/figma/chat-open.svg",
-  assets: "/design/figma/toolbar-assets.svg",
-  tasks: "/design/figma/task-clipboard.svg",
-  search: "/design/figma/sidebar-search-container.svg",
-  // The expanded state uses the filled-left variant from the Figma
-  // "左展开和关闭" component. Keep the public icon name stable for the
-  // sidebar button while selecting the correct state artwork here.
-  toggle: "/design/figma/sidebar-collapse.svg",
-  expand: "/design/figma/sidebar-expand.svg",
-  settings: "/design/figma/sidebar-settings-container.svg",
+import UiIcon, { type UiIconName } from "./UiIcon";
+
+const ICONS: Record<string, UiIconName> = {
+  add: "plus",
+  archive: "archive",
+  skill: "puzzle",
+  workflow: "workflow",
+  chat: "message-square",
+  assets: "image",
+  tasks: "clipboard-list",
+  search: "search",
+  toggle: "panel-left-close",
+  expand: "panel-left-open",
+  settings: "settings",
 };
 
+/** Collapsed rail uses the 02 Lucide masters at the 16px slot inside a 32px control. */
 export default function SidebarIcon({ name }: { name: string }) {
+  const icon = ICONS[name] ?? "circle-help";
   return (
-    <span className={`sidebar-icon sidebar-icon-${name}`} aria-hidden="true">
-      <img src={ASSETS[name]} alt="" draggable={false} />
+    <span
+      className={`sidebar-icon sidebar-icon-${name}`}
+      data-icon={icon}
+      aria-hidden="true"
+    >
+      <UiIcon name={icon} size={16} />
     </span>
   );
 }

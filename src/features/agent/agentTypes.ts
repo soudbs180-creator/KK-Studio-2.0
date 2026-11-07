@@ -1,3 +1,9 @@
+import type { AgentChatItem } from "../../../packages/creation-contracts/index.ts";
+export type {
+  AgentCanvasReference,
+  AgentChatItem,
+  AgentChatRole,
+} from "../../../packages/creation-contracts/index.ts";
 /**
  * 本地 Agent（canvas-agent）协议类型。
  *
@@ -30,6 +36,10 @@ export interface CanvasViewportData {
 }
 
 export type CanvasAgentOp =
+  | {
+      type: "canvas_operation";
+      operation: import("../../domain/canvasOperations.ts").CanvasOperation;
+    }
   | {
       type: "add_node";
       id?: string;
@@ -114,31 +124,6 @@ export interface AgentApprovalRequest {
   permissions?: unknown;
 }
 
-export type AgentChatRole = "user" | "assistant" | "system" | "tool" | "error";
-
-export interface AgentCanvasReference {
-  nodeId: string;
-  label: string;
-  title: string;
-  kind: "image" | "video" | "audio" | "text";
-  text?: string;
-}
-
-export interface AgentChatItem {
-  id: string;
-  itemId?: string;
-  clientMessageId?: string;
-  threadId?: string;
-  turnId?: string;
-  role: AgentChatRole;
-  title?: string;
-  text: string;
-  detail?: unknown;
-  canvasReferences?: AgentCanvasReference[];
-  /** 工具/推理活动：key 为活动 id，value 为展示文本。 */
-  activityItems?: Record<string, string>;
-}
-
 /** 已有历史 detail 的实时活动补充；不另建任务或持久化契约。 */
 export interface AgentActivityDetail {
   kind: string;
@@ -155,6 +140,7 @@ export interface AgentActivityDetail {
   turnStatus?: string;
   rows?: Array<{ label: string; value: string }>;
   files?: Array<{ path: string; action: string }>;
+  foldback?: unknown;
 }
 
 export interface AgentActivityItem {
@@ -217,6 +203,8 @@ export interface AgentModel {
 }
 
 export interface AgentThreadResponse {
+  rewindSupported?: boolean;
+  turnIds?: string[];
   ok: boolean;
   conversation?: AgentConversationState;
   workspace?: { activeThreadId?: string };
@@ -256,6 +244,12 @@ export interface AgentTurnInput {
 
 /** Agent 事件（SSE /events 的规范化形态，用于驱动 UI）。 */
 export type AgentEvent =
+  | {
+      kind: "token_usage";
+      threadId?: string;
+      turnId?: string;
+      usage: import("../../domain/tokenUsage.ts").TokenUsage;
+    }
   | {
       kind: "hello";
       conversation?: AgentConversationState;

@@ -60,7 +60,7 @@ export function useCanvasView({
           x: point.x + (selected ? layout.left : 0),
           y: point.y,
           width:
-            item.result || ["audio", "text"].includes(item.kind)
+            selected || item.result || ["audio", "text"].includes(item.kind)
               ? layout.width
               : image || selected
                 ? 590

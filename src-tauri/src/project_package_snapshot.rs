@@ -4,6 +4,8 @@
 
 use serde_json::Value;
 use std::collections::{HashMap, HashSet};
+#[path = "project_package_creative_fields.rs"]
+mod creative_fields;
 #[path = "image_edit_schema.rs"]
 mod image_edit;
 
@@ -215,16 +217,121 @@ fn cost_receipt(
     Ok(())
 }
 
+fn media_parameters(value: &Value) -> Result<(), String> {
+    let Some(media) = value.get("media") else {
+        return Ok(());
+    };
+    let kind = value.get("kind").and_then(Value::as_str);
+    let media_kind = media.get("kind").and_then(Value::as_str);
+    if kind != media_kind {
+        return Err(invalid("media.kind"));
+    }
+    match kind {
+        Some("video") => {
+            shape(
+                media,
+                "media",
+                &["kind", "duration", "aspectRatio", "resolution", "audio"],
+                &["kind", "duration", "aspectRatio", "resolution"],
+            )?;
+            if !media["duration"]
+                .as_u64()
+                .is_some_and(|n| [4, 6, 8].contains(&n))
+            {
+                return Err(invalid("media.duration"));
+            }
+            enumeration(media, "aspectRatio", &["16:9", "9:16"])?;
+            enumeration(media, "resolution", &["720p", "1080p"])?;
+            if media.get("audio").is_some_and(|v| !v.is_boolean()) {
+                return Err(invalid("media.audio"));
+            }
+        }
+        Some("audio") => {
+            shape(
+                media,
+                "media",
+                &["kind", "voice", "format", "speed"],
+                &["kind", "voice", "format", "speed"],
+            )?;
+            enumeration(
+                media,
+                "voice",
+                &[
+                    "alloy", "ash", "ballad", "coral", "echo", "fable", "nova", "onyx", "sage",
+                    "shimmer", "verse", "marin", "cedar",
+                ],
+            )?;
+            enumeration(media, "format", &["mp3", "wav"])?;
+            number(media, "speed", 0.25, 4.0, false)?;
+        }
+        _ => return Err(invalid("media.kind")),
+    }
+    Ok(())
+}
+
+fn media_receipt(output: &Value) -> Result<(), String> {
+    let Some(receipt) = output.get("mediaReceipt") else {
+        return Ok(());
+    };
+    shape(
+        receipt,
+        "mediaReceipt",
+        &[
+            "connectionId",
+            "idempotencyKey",
+            "acceptance",
+            "providerJobId",
+        ],
+        &["connectionId", "idempotencyKey", "acceptance"],
+    )?;
+    text(receipt, "connectionId", 1, 120)?;
+    for (field, max) in [("idempotencyKey", 160), ("providerJobId", 240)] {
+        text(receipt, field, 1, max)?;
+        if receipt.get(field).is_some_and(|v| {
+            !v.as_str().is_some_and(|s| {
+                s.bytes()
+                    .all(|b| b.is_ascii_alphanumeric() || matches!(b, b'_' | b'-'))
+            })
+        }) {
+            return Err(invalid("mediaReceipt.id"));
+        }
+    }
+    enumeration(receipt, "acceptance", &["accepted", "unknown", "rejected"])?;
+    if (receipt["acceptance"] == "accepted" && receipt.get("providerJobId").is_none())
+        || (receipt["acceptance"] == "rejected" && receipt.get("providerJobId").is_some())
+    {
+        return Err(invalid("mediaReceipt.acceptance"));
+    }
+    Ok(())
+}
+
 fn attachments(value: &Value) -> Result<(), String> {
     for attachment in array(value, "attachments")? {
         shape(
             attachment,
             "attachments",
-            &["id", "assetId", "name", "mime", "size", "dataUrl"],
+            &[
+                "id",
+                "assetId",
+                "originalAssetId",
+                "name",
+                "mime",
+                "size",
+                "dataUrl",
+                "role",
+                "referenceFrame",
+            ],
             &["id", "name", "mime", "size"],
         )?;
+        enumeration(
+            attachment,
+            "role",
+            &["主体", "风格", "材质", "构图", "Mask"],
+        )?;
+        enumeration(attachment, "referenceFrame", &["first", "last"])?;
         text(attachment, "id", 1, 160)?;
         text(attachment, "assetId", 1, 160)?;
+        text(attachment, "originalAssetId", 1, 160)?;
         texts(attachment, &[("name", usize::MAX), ("mime", usize::MAX)])?;
         number(attachment, "size", 0.0, MAX_SAFE_INTEGER, true)?;
         if let Some(data) = attachment.get("dataUrl") {
@@ -317,6 +424,7 @@ fn stage_plans(project: &Value) -> Result<(), String> {
                     "approvalGate",
                     "planApprovedAt",
                     "resultSummary",
+                    "executionMandate",
                     "createdAt",
                     "updatedAt",
                 ],
@@ -345,6 +453,9 @@ fn stage_plans(project: &Value) -> Result<(), String> {
             )?;
             enumeration(stage, "approvalGate", &["plan", "result"])?;
             number(stage, "planApprovedAt", 0.0, MAX_SAFE_INTEGER, true)?;
+            if let Some(value) = stage.get("executionMandate") {
+                creative_fields::mandate(value)?;
+            }
             finite(stage, "createdAt")?;
             finite(stage, "updatedAt")?;
             let work_items = array(stage, "workItems")?;
@@ -366,6 +477,8 @@ fn stage_plans(project: &Value) -> Result<(), String> {
                         "params",
                         "error",
                         "assetId",
+                        "sourceNodeId",
+                        "taskId",
                         "createdAt",
                         "updatedAt",
                     ],
@@ -385,6 +498,8 @@ fn stage_plans(project: &Value) -> Result<(), String> {
                 }
                 text(work, "prompt", 1, 4000)?;
                 text(work, "reworkPrompt", 1, 4000)?;
+                text(work, "sourceNodeId", 1, 160)?;
+                text(work, "taskId", 1, 160)?;
                 texts(work, &[("model", 120), ("error", 500)])?;
                 enumeration(work, "kind", &["image", "video", "audio", "text", "merge"])?;
                 enumeration(
@@ -539,10 +654,12 @@ fn draft(value: &Value) -> Result<(), String> {
             "pendingAgent",
             "conversationChannel",
             "kind",
+            "media",
             "attachments",
             "approvalMode",
             "privacyMode",
             "outputCount",
+            "imageSize",
             "updatedAt",
         ],
         &[],
@@ -553,6 +670,20 @@ fn draft(value: &Value) -> Result<(), String> {
 fn draft_fields(value: &Value) -> Result<(), String> {
     texts(value, &[("prompt", usize::MAX), ("model", usize::MAX)])?;
     text(value, "providerConnectionId", 0, 120)?;
+    if let Some(size) = value.get("imageSize") {
+        let valid = size.as_str().is_some_and(|size| {
+            let parts: Vec<_> = size.split('x').collect();
+            parts.len() == 2
+                && parts.iter().all(|part| {
+                    (2..=5).contains(&part.len())
+                        && !part.starts_with('0')
+                        && part.bytes().all(|byte| byte.is_ascii_digit())
+                })
+        });
+        if !valid {
+            return Err(invalid("imageSize"));
+        }
+    }
     if let Some(selection) = value.get("modelSelection") {
         model_selection(selection)?;
     }
@@ -563,6 +694,7 @@ fn draft_fields(value: &Value) -> Result<(), String> {
         return Err(invalid("pendingAgent"));
     }
     enumeration(value, "conversationChannel", &["codex", "direct", "google"])?;
+    media_parameters(value)?;
     enumeration(value, "kind", KINDS)?;
     enumeration(value, "approvalMode", &["auto", "ask"])?;
     enumeration(
@@ -582,6 +714,10 @@ fn item(value: &Value) -> Result<(), String> {
         &[
             "id",
             "parameters",
+            "canvasPresentation",
+            "blueprint",
+            "node_rev",
+            "comments",
             "title",
             "description",
             "kind",
@@ -613,6 +749,16 @@ fn item(value: &Value) -> Result<(), String> {
 }
 
 fn item_fields(value: &Value) -> Result<(), String> {
+    if let Some(blueprint) = value.get("blueprint") {
+        creative_fields::blueprint(blueprint)?;
+    }
+    number(value, "node_rev", 0.0, MAX_SAFE_INTEGER, true)?;
+    if let Some(comments) = value.get("comments") {
+        creative_fields::comments(comments)?;
+    }
+    if let Some(presentation) = value.get("canvasPresentation") {
+        creative_fields::presentation(presentation)?;
+    }
     text(value, "id", 1, 160)?;
     text(value, "parentAssetId", 1, 160)?;
     crate::creation_storage::labels(value, "tags")?;
@@ -651,10 +797,7 @@ fn item_fields(value: &Value) -> Result<(), String> {
     finite(value, "updatedAt")?;
     finite(value, "generationIndex")?;
     for field in ["referenceMode", "referenceOnly"] {
-        if value
-            .get(field)
-            .is_some_and(|flag| flag.as_bool() != Some(true))
-        {
+        if value.get(field).is_some_and(|flag| !flag.is_boolean()) {
             return Err(invalid(field));
         }
     }
@@ -669,9 +812,13 @@ fn item_fields(value: &Value) -> Result<(), String> {
                 "count",
                 "soundEnabled",
                 "imageSize",
+                "optics",
             ],
             &[],
         )?;
+        if let Some(optics) = parameters.get("optics") {
+            creative_fields::optics(optics)?;
+        }
         texts(
             parameters,
             &[
@@ -731,6 +878,7 @@ fn task(value: &Value) -> Result<(), String> {
             "prompt",
             "model",
             "kind",
+            "media",
             "status",
             "submissionState",
             "submittedAt",
@@ -769,6 +917,7 @@ fn task(value: &Value) -> Result<(), String> {
 }
 
 fn task_fields(value: &Value) -> Result<(), String> {
+    media_parameters(value)?;
     text(value, "id", 1, 160)?;
     text(value, "sourceItemId", 1, 160)?;
     text(value, "imageSize", 0, 30)?;
@@ -851,9 +1000,15 @@ fn task_fields(value: &Value) -> Result<(), String> {
                 "promptHash",
                 "error",
                 "createdAt",
+                "mediaReceipt",
+                "tokenUsage",
             ],
             &[],
         )?;
+        media_receipt(output)?;
+        if let Some(usage) = output.get("tokenUsage") {
+            creative_fields::usage(usage)?;
+        }
         number(output, "index", 0.0, 63.0, true)?;
         let index = output.get("index").and_then(Value::as_f64).unwrap_or(0.0) as u8;
         if !indices.insert(index) {
@@ -990,7 +1145,7 @@ fn canvas(value: &Value) -> Result<(), String> {
     shape(
         value,
         "canvas",
-        &["version", "positions", "edges", "viewport"],
+        &["version", "positions", "edges", "viewport", "groups"],
         &["version", "positions", "edges", "viewport"],
     )?;
     let positions = value["positions"]
@@ -1009,6 +1164,72 @@ fn canvas(value: &Value) -> Result<(), String> {
         text(edge, "id", 1, 160)?;
         text(edge, "source", 1, 160)?;
         text(edge, "target", 1, 160)?;
+    }
+    let groups = array(value, "groups")?;
+    if groups.len() > 100 {
+        return Err(invalid("canvas.groups"));
+    }
+    for group in groups {
+        shape(
+            group,
+            "canvas.groups",
+            &[
+                "id",
+                "name",
+                "itemIds",
+                "borderColor",
+                "collapseMode",
+                "layoutMode",
+                "tagIds",
+                "resourcePackId",
+                "createdAt",
+                "updatedAt",
+            ],
+            &[
+                "id",
+                "name",
+                "itemIds",
+                "borderColor",
+                "collapseMode",
+                "layoutMode",
+                "createdAt",
+                "updatedAt",
+            ],
+        )?;
+        text(group, "id", 1, 160)?;
+        text(group, "name", 1, 120)?;
+        text(group, "resourcePackId", 1, 160)?;
+        let name = group["name"].as_str().unwrap();
+        let color = group["borderColor"]
+            .as_str()
+            .ok_or_else(|| invalid("canvas.groups.borderColor"))?;
+        if name.trim() != name
+            || color.len() != 7
+            || !color.starts_with('#')
+            || !color[1..].bytes().all(|c| c.is_ascii_hexdigit())
+        {
+            return Err(invalid("canvas.groups"));
+        }
+        enumeration(group, "collapseMode", &["info", "stack"])?;
+        enumeration(
+            group,
+            "layoutMode",
+            &["grid", "horizontal", "vertical", "upstream"],
+        )?;
+        number(group, "createdAt", 0.0, f64::MAX, false)?;
+        number(group, "updatedAt", 0.0, f64::MAX, false)?;
+        for (field, min, max) in [("itemIds", 1, 200), ("tagIds", 0, 40)] {
+            let ids = array(group, field)?;
+            if ids.len() < min
+                || ids.len() > max
+                || ids.iter().any(|id| {
+                    !id.as_str()
+                        .is_some_and(|id| !id.is_empty() && id.encode_utf16().count() <= 160)
+                })
+            {
+                return Err(invalid("canvas.groups"));
+            }
+        }
     }
     shape(
         &value["viewport"],
@@ -1034,6 +1255,7 @@ pub(super) fn validate(snapshot: &Value) -> Result<(), String> {
             "projects",
             "homeDraft",
             "projectGroups",
+            "sidebarPreferences",
         ],
         &[
             "version",
@@ -1067,6 +1289,7 @@ pub(super) fn validate(snapshot: &Value) -> Result<(), String> {
                 "groupId",
                 "trashedAt",
                 "kind",
+                "media",
                 "prompt",
                 "model",
                 "attachments",

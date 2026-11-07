@@ -1,3 +1,16 @@
+import { hasRegisteredCanvasDelivery } from "../../domain/canvasDelivery.ts";
+import { agentOperationLockReason } from "./agentOperationLocks.ts";
+export {
+  CanvasMcpServer,
+  AutonomousCanvasController,
+  CANVAS_34_OPS,
+  CanvasOpSchema,
+} from "../../domain/canvasOperations.ts";
+export {
+  assertCanvasDeliveries,
+  assertCanvasDelivery,
+  CanvasDeliveryContractError,
+} from "../../domain/canvasDelivery.ts";
 /**
  * Agent 画布桥：本项目画布模型 ↔ Agent 画布协议（快照/操作）。
  *
@@ -8,10 +21,14 @@
  */
 
 import { cardLayout } from "../../domain/canvasGraph.ts";
-import type { CanvasCollectionItem } from "../../domain/canvasItems.ts";
+import {
+  removeCanvasItems,
+  comfyOutputSourceId,
+  type CanvasCollectionItem,
+} from "../../domain/canvasItems.ts";
 import type { Point } from "../../domain/canvasViewport.ts";
 import type { ProjectCanvas } from "../../domain/projectCanvas.ts";
-import type { CreationProject } from "../creation/model.ts";
+import type { CreationProject } from "../creation/index.ts";
 import type {
   CanvasAgentOp,
   CanvasAgentSnapshot,
@@ -91,6 +108,9 @@ export function buildAgentSnapshot(
         model: item.model,
         providerConnectionId: item.providerConnectionId,
         generationSource: item.generationSource,
+        optics: item.parameters?.optics,
+        comments: item.comments,
+        tags: item.tags,
         text:
           item.result?.text ??
           (item.kind === "text" ? item.prompt : undefined) ??
@@ -152,10 +172,121 @@ function nodeMetadataString(
   return "";
 }
 
+const unsupportedAgentOpReasons: Record<string, string> = {
+  set_viewport: "Agent 调整视口暂未接入",
+  select_nodes: "Agent 选择节点暂未接入",
+  run_generation: "生成由宿主接管（run_generation）",
+};
+
+function rejectUnsupportedAgentOp(
+  op: CanvasAgentOp,
+  rejected: Array<{ op: CanvasAgentOp; reason: string }>,
+): boolean {
+  if (!Object.hasOwn(unsupportedAgentOpReasons, op.type)) return false;
+  const reason = unsupportedAgentOpReasons[op.type];
+  if (!reason) return false;
+  rejected.push({ op, reason });
+  return true;
+}
+
+function applyDeleteConnectionsOp(
+  op: CanvasAgentOp,
+  connections: AgentOpTranslation["connections"],
+  applied: CanvasAgentOp[],
+): boolean {
+  if (op.type !== "delete_connections") return false;
+  connections.removeIds.push(...(op.ids || (op.id ? [op.id] : [])));
+  if (op.all) connections.removeIds.push("*");
+  applied.push(op);
+  return true;
+}
+
+function applyConnectNodesOp(
+  op: CanvasAgentOp,
+  items: CanvasCollectionItem[],
+  connections: AgentOpTranslation["connections"],
+  applied: CanvasAgentOp[],
+  rejected: Array<{ op: CanvasAgentOp; reason: string }>,
+): boolean {
+  if (op.type !== "connect_nodes") return false;
+  if (!op.fromNodeId || !op.toNodeId) {
+    rejected.push({ op, reason: "缺少连线端点" });
+    return true;
+  }
+  const hasNodes =
+    items.some((item) => item.id === op.fromNodeId) &&
+    items.some((item) => item.id === op.toNodeId);
+  if (!hasNodes) {
+    rejected.push({ op, reason: "连线端点节点不存在" });
+    return true;
+  }
+  connections.add.push({
+    id: op.id,
+    source: op.fromNodeId,
+    target: op.toNodeId,
+  });
+  applied.push(op);
+  return true;
+}
+
+type UpdateNodeOp = Extract<CanvasAgentOp, { type: "update_node" }>;
+
+function updatePluginCanvasItem(
+  next: CanvasCollectionItem,
+  patch: NonNullable<UpdateNodeOp["patch"]>,
+  content: string,
+  description: string,
+): CanvasCollectionItem {
+  const nextPlugin = {
+    ...next.plugin!,
+    metadata: { ...(next.plugin!.metadata ?? {}) },
+  };
+  if (typeof patch.width === "number") nextPlugin.width = patch.width;
+  if (typeof patch.height === "number") nextPlugin.height = patch.height;
+  if (content) nextPlugin.metadata.content = content;
+  if (description && !content) nextPlugin.metadata.description = description;
+  return { ...next, plugin: nextPlugin };
+}
+
+function updateCanvasItem(
+  item: CanvasCollectionItem,
+  op: UpdateNodeOp,
+  positions: Record<string, Point>,
+): CanvasCollectionItem {
+  const patch = op.patch ?? {};
+  const metadata = { ...patch.metadata, ...op.metadata };
+  const next: CanvasCollectionItem = { ...item };
+  const comfySource = comfyOutputSourceId(item);
+  if (comfySource) next.comfyWorkflowSourceId = comfySource;
+  if (typeof metadata.prompt === "string") next.prompt = metadata.prompt;
+  if (typeof metadata.model === "string") next.model = metadata.model;
+  if (typeof metadata.providerConnectionId === "string")
+    next.providerConnectionId = metadata.providerConnectionId;
+  if (typeof patch.title === "string") next.title = patch.title;
+  if (
+    typeof patch.position?.x === "number" &&
+    typeof patch.position?.y === "number"
+  )
+    positions[item.id] = { x: patch.position.x, y: patch.position.y };
+  const content = nodeMetadataString(metadata, "content", "text");
+  const description = nodeMetadataString(metadata, "description");
+  if (next.plugin)
+    return updatePluginCanvasItem(next, patch, content, description);
+  else {
+    if (content && next.kind === "text") next.prompt = content;
+    next.description =
+      content && next.kind !== "text"
+        ? content
+        : description || next.description;
+  }
+  return next;
+}
+
 /** 把 Agent 操作翻译到本项目画布模型（纯函数，宿主负责落地）。 */
 export function applyAgentOpsToItems(
   items: CanvasCollectionItem[],
   ops: CanvasAgentOp[],
+  edges: ProjectCanvas["edges"] = [],
 ): AgentOpTranslation {
   let nextItems = items;
   const positions: Record<string, Point> = {};
@@ -168,6 +299,15 @@ export function applyAgentOpsToItems(
 
   (Array.isArray(ops) ? ops : []).forEach((op) => {
     if (!op?.type) return;
+    const locked = agentOperationLockReason(op, nextItems, edges);
+    if (locked) {
+      rejected.push({ op, reason: locked });
+      return;
+    }
+    if (rejectUnsupportedAgentOp(op, rejected)) return;
+    if (applyDeleteConnectionsOp(op, connections, applied)) return;
+    if (applyConnectNodesOp(op, nextItems, connections, applied, rejected))
+      return;
     switch (op.type) {
       case "add_node": {
         const metadata = op.metadata;
@@ -238,49 +378,22 @@ export function applyAgentOpsToItems(
         break;
       }
       case "update_node": {
+        if (
+          nextItems.find((item) => item.id === op.id)?.canvasPresentation
+            ?.locked
+        ) {
+          rejected.push({ op, reason: "节点已锁定" });
+          break;
+        }
         if (!op.id) {
           rejected.push({ op, reason: "缺少节点 id" });
           break;
         }
-        const patch = op.patch ?? {};
-        const metadata = { ...patch.metadata, ...op.metadata };
         let found = false;
         nextItems = nextItems.map((item) => {
           if (item.id !== op.id) return item;
           found = true;
-          const next: CanvasCollectionItem = { ...item };
-          if (typeof metadata.prompt === "string")
-            next.prompt = metadata.prompt;
-          if (typeof metadata.model === "string") next.model = metadata.model;
-          if (typeof metadata.providerConnectionId === "string")
-            next.providerConnectionId = metadata.providerConnectionId;
-          if (typeof patch.title === "string") next.title = patch.title;
-          if (
-            typeof patch.position?.x === "number" &&
-            typeof patch.position?.y === "number"
-          ) {
-            positions[item.id] = { x: patch.position.x, y: patch.position.y };
-          }
-          const content = nodeMetadataString(metadata, "content", "text");
-          const description = nodeMetadataString(metadata, "description");
-          if (next.plugin) {
-            const nextPlugin = {
-              ...next.plugin,
-              metadata: { ...(next.plugin.metadata ?? {}) },
-            };
-            if (typeof patch.width === "number") nextPlugin.width = patch.width;
-            if (typeof patch.height === "number")
-              nextPlugin.height = patch.height;
-            if (content) nextPlugin.metadata.content = content;
-            if (description && !content)
-              nextPlugin.metadata.description = description;
-            next.plugin = nextPlugin;
-          } else {
-            if (content && next.kind === "text") next.prompt = content;
-            if (description) next.description = description;
-            if (content && next.kind !== "text") next.description = content;
-          }
-          return next;
+          return updateCanvasItem(item, op, positions);
         });
         if (found) applied.push(op);
         else rejected.push({ op, reason: `节点 ${op.id} 不存在` });
@@ -308,49 +421,18 @@ export function applyAgentOpsToItems(
           rejected.push({ op, reason: "未指定要删除的节点" });
           break;
         }
+        if (
+          nextItems.some(
+            (item) => ids.has(item.id) && item.canvasPresentation?.locked,
+          )
+        ) {
+          rejected.push({ op, reason: "所选节点包含已锁定节点" });
+          break;
+        }
         const before = nextItems.length;
-        nextItems = nextItems.filter((item) => !ids.has(item.id));
+        nextItems = removeCanvasItems(nextItems, ids);
         if (nextItems.length !== before) applied.push(op);
         else rejected.push({ op, reason: "节点不存在" });
-        break;
-      }
-      case "delete_connections": {
-        connections.removeIds.push(...(op.ids || (op.id ? [op.id] : [])));
-        if (op.all) connections.removeIds.push("*");
-        applied.push(op);
-        break;
-      }
-      case "connect_nodes": {
-        if (!op.fromNodeId || !op.toNodeId) {
-          rejected.push({ op, reason: "缺少连线端点" });
-          break;
-        }
-        const hasNodes =
-          nextItems.some((item) => item.id === op.fromNodeId) &&
-          nextItems.some((item) => item.id === op.toNodeId);
-        if (!hasNodes) {
-          rejected.push({ op, reason: "连线端点节点不存在" });
-          break;
-        }
-        connections.add.push({
-          id: op.id,
-          source: op.fromNodeId,
-          target: op.toNodeId,
-        });
-        applied.push(op);
-        break;
-      }
-      case "set_viewport": {
-        rejected.push({ op, reason: "Agent 调整视口暂未接入" });
-        break;
-      }
-      case "select_nodes": {
-        rejected.push({ op, reason: "Agent 选择节点暂未接入" });
-        break;
-      }
-      case "run_generation": {
-        // 由宿主接入生成流程（submitImageCommand），翻译层不落地。
-        rejected.push({ op, reason: "生成由宿主接管（run_generation）" });
         break;
       }
       default:
@@ -391,58 +473,8 @@ export function summarizeAgentOps(ops?: CanvasAgentOp[]): string {
  * 违反契约即抛错（宿主拦截并回显原因），防止"口头完成、画布无物"。
  * 对标竞品 canvas-discipline 契约（无 node_id 不算交付完成）。
  */
-export class CanvasDeliveryContractError extends Error {}
-
-function hasRegisteredCanvasDelivery(item: CanvasCollectionItem): boolean {
-  if (item.result?.source !== "provider") return false;
-  // Text delivery is validated by its content. A stale assetId must not make
-  // an empty provider response look like a successful copy result.
-  if (item.kind === "text") return Boolean(item.result.text?.trim());
-  if (item.assetId) return true;
-  return Boolean(item.result.src);
-}
-
-export function assertCanvasDelivery(input: {
-  nodeId?: string;
-  project: CreationProject;
-  label?: string;
-  requireAssetId?: boolean;
-}): void {
-  const label = input.label ?? "Agent 产物";
-  if (!input.nodeId)
-    throw new CanvasDeliveryContractError(
-      `${label} 未携带 node_id，未登记到画布；本次交付不成立。`,
-    );
-  const item = input.project.items.find((entry) => entry.id === input.nodeId);
-  if (!item)
-    throw new CanvasDeliveryContractError(
-      `${label} 指向的画布节点 ${input.nodeId} 不存在。`,
-    );
-  if (input.requireAssetId && !item.assetId)
-    throw new CanvasDeliveryContractError(
-      `${label} 节点 ${input.nodeId} 尚未注册素材资产，交付不成立。`,
-    );
-  if (!hasRegisteredCanvasDelivery(item))
-    throw new CanvasDeliveryContractError(
-      `${label} 节点 ${input.nodeId} 尚未注册素材资产，交付不成立。`,
-    );
-}
 
 /** Commit-boundary guard for a batch of newly published Agent results. */
-export function assertCanvasDeliveries(input: {
-  items: CanvasCollectionItem[];
-  project: CreationProject;
-  label?: string;
-  requireAssetId?: boolean;
-}): void {
-  for (const item of input.items)
-    assertCanvasDelivery({
-      nodeId: item.id,
-      project: input.project,
-      label: input.label,
-      requireAssetId: input.requireAssetId,
-    });
-}
 
 /**
  * 本轮产物集合：按 result 连线收集生成结果节点（素材注册完成证明）。

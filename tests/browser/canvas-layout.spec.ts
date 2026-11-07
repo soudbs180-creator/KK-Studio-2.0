@@ -19,19 +19,14 @@ test("桌面底栏保持最新Frame锚点，窄屏适配且控件不互相覆盖
             chat && chat.width > 0 && window.innerWidth > 1200
               ? Math.min(
                   canvas.clientWidth,
-                  (chat.left - c.left) / surface - canvas.clientLeft - 16,
+                  (chat.left - c.left) / surface - canvas.clientLeft,
                 )
               : canvas.clientWidth;
           const toolbar =
             document.querySelector<HTMLElement>(".canvas-toolbar")!;
           const t = toolbar.getBoundingClientRect();
-          const app = document.querySelector(".app")!.getBoundingClientRect();
-          // DS1.2 retains x841 at 1920 and adapts its anchor to the real viewport.
-          // Compact overlays do not reserve horizontal canvas space.
-          const expected =
-            window.innerWidth > 1200
-              ? app.x + app.width / 2 - 119
-              : c.x + (canvas.clientLeft + usable / 2) * surface;
+          // The toolbar centers in the usable canvas; compact chat overlays it.
+          const expected = c.x + (canvas.clientLeft + usable / 2) * surface;
           return Math.abs(t.x + t.width / 2 - expected);
         }),
       )
@@ -131,7 +126,7 @@ test("工具菜单互斥并保留键盘焦点，减弱动态不播放动画", as
   await openWorkspace(page);
   await page.getByRole("button", { name: "添加资源", exact: true }).click();
   const toggle = page.getByRole("button", {
-    name: "选择画布工具",
+    name: "展开画布工具",
     exact: true,
   });
   await toggle.focus();

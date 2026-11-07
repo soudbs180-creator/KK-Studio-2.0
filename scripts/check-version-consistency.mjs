@@ -8,7 +8,7 @@ const repositoryRoot = fileURLToPath(new URL("..", import.meta.url));
 const appVersionPattern = /(?<![\w])\d+\.\d+\.\d+(?![\w])/g;
 const sourceRoots = ["src", "src-tauri/src", "scripts/windows"];
 const sourceExclusions =
-  /(^|\/)(?:tests?|docs|vendor|node_modules|dist|target)(\/|$)/i;
+  /(^|\/)(?:tests?|[^/]*_tests\.rs|docs|vendor|node_modules|dist|target)(\/|$)/i;
 
 function readJson(root, relativePath) {
   return JSON.parse(fs.readFileSync(path.join(root, relativePath), "utf8"));

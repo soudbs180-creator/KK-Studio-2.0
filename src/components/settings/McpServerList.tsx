@@ -1,4 +1,4 @@
-import type { McpServerConfig, McpTool } from "../../features/mcp/mcpClient";
+import type { McpServerConfig, McpTool } from "../../features/mcp/index.ts";
 import McpServerCard from "./McpServerCard";
 
 export type McpConnectionState =

@@ -64,9 +64,10 @@ test("integration preserves approved runtime tokens and registered dimensions", 
     path.join(root, "src/styles/tokens.css"),
     "utf8",
   );
-  // A new token baseline requires source review; sync alone cannot approve it.
+  // Current Figma47:926 adds network aliases; 4056:145206 titlebar gap/inset;
+  // canvas view toggle slot width pinned at 116px (--kk-canvas-view-slot-width).
   const approvedHash =
-    "741f1739101b5cb1d407b65929a9e133d9a363390239a066005d95ee4d5d8138";
+    "7f46df7566ab4a5e4037cad8d53760bda58cc160ddd19a28b5d3f1b0f2242d87";
   assert.equal(
     createHash("sha256").update(source.replace(/\r\n/g, "\n")).digest("hex"),
     approvedHash,
@@ -81,6 +82,10 @@ test("integration preserves approved runtime tokens and registered dimensions", 
   for (const theme of ["dark", "light"])
     for (const accent of ACCENTS) {
       const token = themeTokens(theme, accent);
+      assert.equal(
+        token("--kk-choice-selected-bg"),
+        theme === "dark" ? "#333333" : "#ededed",
+      );
       for (const surface of [
         "--kk-bg-app",
         "--kk-bg-surface",
@@ -233,7 +238,7 @@ test("portable input and icon controls retain their actual shared control semant
     fs.readFileSync(path.join(root, "src/styles/tokens.css"), "utf8"),
   );
   assert.equal(tokens.components.input.typography, "{typography.body}");
-  assert.equal(tokens.typography.body.fontWeight, 400);
+  assert.equal(tokens.typography.body.fontWeight, 360);
   assert.equal(
     tokens.components["icon-button"].textColor,
     "{colors.on-surface-variant}",

@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "taskId": "TASK-ORG-6",
+  "classification": "E2-externalized-historical-evidence",
+  "packagePath": "docs/changes/2026-09-29-home-composer-fidelity",
+  "entries": [
+    {
+      "sourcePath": "docs/changes/2026-09-29-home-composer-fidelity/evidence/home-1099-after.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "9e53f806a7030eed1613e50967512ecfd2bb3dee",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-29-home-composer-fidelity/evidence/home-1099-after.png",
+      "bytes": 6747,
+      "sha256": "05b91338428ad9a5a2c1224d81d641bf8ea3353956fc3ec9cd4aef3bdee502ac",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-29-home-composer-fidelity/evidence/home-1920-after.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "e5265c18dbb6b9d2d9e22fb7168fb7aebde3448a",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-29-home-composer-fidelity/evidence/home-1920-after.png",
+      "bytes": 6720,
+      "sha256": "63a690e9cd7a15fdbb971ba4c991af2055533c0de9ec38fc197b7d8bcd592e86",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-29-home-composer-fidelity/evidence/home-390-after.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "595acd17555a9fdbb043f7337ac7399728c58625",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-29-home-composer-fidelity/evidence/home-390-after.png",
+      "bytes": 6176,
+      "sha256": "c61b14ca519ce5e2ae8efac00391985b6f3e0d36cbf94f70852f18f039d7c41f",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    }
+  ],
+  "scope": "Historical E2 files externalized by validated batches; E1 summaries, JSON, key screenshots and active inputs retained.",
+  "containerResolution": "Resolve containerRelativePath from the workspace container containing the canonical checkout and output.",
+  "recovery": "Verify with scripts/governance/check-evidence-manifest.mjs <manifest> <container>; restore only to a new empty directory. Original Git sourceCommit/sourcePath remains recoverable.",
+  "batches": [
+    {
+      "taskId": "TASK-ORG-6",
+      "date": "2026-10-30",
+      "candidateBase": "be730617ace5013295b85a22133259b32ad6ffec"
+    }
+  ]
+}

@@ -4,7 +4,7 @@ import {
   type ImageModelCapabilities,
   type ImageModelOperation,
 } from "../../domain/imageModelCapabilities";
-import type { CapabilitySupport } from "../../features/models/imageModelCapabilities";
+import type { CapabilitySupport } from "../../features/models/index.ts";
 
 export type ImageCapabilityDraft = Record<
   ImageModelOperation,

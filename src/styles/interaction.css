@@ -14,8 +14,9 @@
   height: 471px;
 }
 .video-label-icon {
-  width: 15px;
-  height: 11px;
+  width: var(--kk-icon-glyph-sm);
+  height: var(--kk-icon-glyph-sm);
+  object-fit: contain;
 }
 .video-placeholder {
   position: relative;
@@ -60,240 +61,18 @@
   background: var(--bg-input);
   padding: 6px 12px;
 }
-.reference-thumbnail {
-  position: absolute;
-  left: 22px;
-  top: 19px;
-  width: 41px;
-  height: 41px;
-  border: 1px solid var(--border-default);
-  border-radius: 8px;
-  object-fit: cover;
-}
-.reference-row {
-  position: absolute;
-  left: 22px;
-  top: 19px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  max-width: 546px;
-  min-height: 41px;
-  overflow: visible;
-}
-.reference-stack {
-  position: static;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  max-width: none;
-  overflow: visible;
-}
-.reference-entry {
-  position: relative;
-  display: block;
-  flex: 0 0 41px;
-  width: 41px;
-  height: 41px;
-}
-.reference-stack .reference-thumbnail {
-  position: static;
-  flex: 0 0 41px;
-}
-.reference-thumbnail.is-pending {
-  display: grid;
-  place-items: center;
-  color: var(--ui-muted);
-  background: var(--bg-input);
-}
-.reference-remove {
-  position: absolute;
-  top: -6px;
-  right: -6px;
-  z-index: 2;
-  display: grid;
-  place-items: center;
-  width: var(--kk-control-h-sm);
-  height: var(--kk-control-h-sm);
-  padding: 0;
-  border: 1px solid var(--border-default);
-  border-radius: 50%;
-  background: var(--bg-card);
-  color: var(--ui-muted);
-  opacity: 0;
-  transition: opacity var(--motion-fast) var(--motion-ease);
-}
-.reference-entry:hover .reference-remove,
-.reference-remove:focus-visible {
-  opacity: 1;
-}
-.reference-row > .reference-add {
-  position: static;
-  flex: 0 0 41px;
-  left: auto;
-  width: 41px;
-  height: 41px;
-}
-.reference-limit {
-  margin-left: 0;
-  color: var(--ui-muted);
-  font-size: 10px;
-  white-space: nowrap;
-}
-
-/* Reference Slots: the five semantic roles sit above the composer controls. */
-.reference-slots {
-  position: absolute;
-  left: 22px;
-  /* Reserve a stable action gutter for Like + expand at every state. */
-  right: 100px;
-  top: 15px;
-  display: grid;
-  gap: 6px;
-  min-height: 52px;
-}
-.creation-composer:has(.reference-slots) textarea {
-  top: 90px;
-  height: 82px;
-}
-.creation-composer.expanded:has(.reference-slots) textarea {
-  top: 110px;
-  /* Anchor to the controls throughout the shell's expansion animation. */
-  bottom: calc(var(--kk-space-3) + 19px + var(--kk-control-h-lg));
-  height: auto;
-}
-.reference-slot-grid {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 5px;
-}
-.reference-slot {
-  min-width: 0;
-  height: 56px;
-  padding: 4px;
-  display: grid;
-  grid-template-rows: 11px 1fr;
-  gap: 3px;
-  border: 1px solid var(--border-subtle);
-  border-radius: 8px;
-  background: color-mix(in srgb, var(--bg-input) 74%, transparent);
-}
-.reference-slot.is-filled {
-  border-color: var(--border-default);
-}
-.reference-slot-label {
-  overflow: hidden;
-  color: var(--ui-muted);
-  font-size: var(--kk-font-caption);
-  line-height: 11px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.reference-slot-media {
-  position: relative;
-  min-height: 0;
-  display: block;
-}
-.reference-slot .reference-thumbnail {
-  position: static;
-  display: block;
-  width: 100%;
-  height: 22px;
-  border: 0;
-  border-radius: 4px;
-  object-fit: cover;
-}
-.reference-slot .reference-thumbnail.is-pending {
-  display: grid;
-  place-items: center;
-}
-.reference-slot .reference-remove {
-  top: -6px;
-  right: -6px;
-  width: var(--kk-control-h-sm);
-  height: var(--kk-control-h-sm);
-}
-.reference-slot:hover .reference-remove,
-.reference-slot .reference-remove:focus-visible {
-  opacity: 1;
-}
-.reference-slot-add {
-  width: 100%;
-  height: var(--kk-control-h-sm);
-  display: grid;
-  place-items: center;
-  border: 1px dashed var(--border-default);
-  border-radius: 4px;
-  color: var(--text-tertiary);
-}
-.reference-slot-add:hover,
-.reference-slot-add:focus-visible {
-  color: var(--text-primary);
-  border-color: var(--ui-selected);
-}
-.reference-slot-add.is-unavailable {
-  cursor: not-allowed;
-  opacity: 0.5;
-}
-.reference-slots-footer {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 6px;
-}
-.reference-slots-footer .reference-add {
-  position: static;
-  width: auto;
-  height: var(--kk-control-h-md);
-  min-height: var(--kk-control-h-md);
-  padding: 0 6px;
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--kk-radius-full);
-  font-size: var(--kk-font-caption);
-}
-.reference-slots-footer .reference-limit {
-  font-size: var(--kk-font-caption);
-}
-.reference-add.reference-count-0 {
-  left: 22px;
-}
-.reference-add.reference-count-1 {
-  left: 69px;
-}
-.reference-add.reference-count-2 {
-  left: 114px;
-}
-.reference-add.reference-count-3 {
-  left: 159px;
-}
-.reference-add.reference-count-4 {
-  left: 204px;
-}
-.reference-add.reference-count-5 {
-  left: 249px;
-}
-.reference-add.reference-count-6 {
-  left: 294px;
-}
-.reference-add.reference-count-7,
-.reference-add.reference-count-8 {
-  left: 339px;
-}
 .model-glyph {
   width: 20px;
   height: 20px;
   object-fit: contain;
 }
 .voice-button img {
-  width: 12px;
-  height: 16px;
+  width: var(--kk-icon-glyph-sm);
+  height: var(--kk-icon-glyph-sm);
 }
 .generate-arrow {
-  width: 18px;
-  height: 18px;
+  width: var(--kk-icon-glyph-md);
+  height: var(--kk-icon-glyph-md);
 }
 .upload-feedback {
   position: absolute;

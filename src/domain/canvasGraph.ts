@@ -19,9 +19,8 @@ function resultCardHeight(item: CanvasCollectionItem): number {
     item.mediaWidth ?? 1,
     item.mediaHeight ?? 1,
   );
-  // Result cards keep 16px inner padding on both sides; size the shell around
-  // the content width so a wide image does not clip the preview.
-  return Math.max(222, 32 + 348 / ratio);
+  // The 380px result body has a 1px border and no inner padding.
+  return 2 + 378 / ratio;
 }
 
 /** Visible card body, excluding labels, upload buttons and the optional composer. */
@@ -31,6 +30,27 @@ export function cardVisualBounds(item: CanvasCollectionItem): {
   width: number;
   height: number;
 } {
+  if (item.canvasPresentation?.width || item.canvasPresentation?.height) {
+    const base = { ...item, canvasPresentation: undefined };
+    const bounds = cardVisualBounds(base),
+      layout = cardLayout(base);
+    const sx = (item.canvasPresentation.width ?? layout.width) / layout.width;
+    const sy =
+      (item.canvasPresentation.height ?? layout.height) / layout.height;
+    return {
+      x: bounds.x * sx,
+      y: bounds.y * sy,
+      width: bounds.width * sx,
+      height: bounds.height * sy,
+    };
+  }
+  if (item.comfyWorkflow)
+    return {
+      x: 0,
+      y: 0,
+      width: 380,
+      height: item.comfyWorkflow.parametersOpen ? 560 : 268,
+    };
   if (item.plugin)
     return {
       x: 0,
@@ -75,11 +95,33 @@ export function cardLayout(item: CanvasCollectionItem): {
   collapsedHeight: number;
   anchor: Point;
 } {
+  if (item.canvasPresentation?.width || item.canvasPresentation?.height) {
+    const base = cardLayout({ ...item, canvasPresentation: undefined });
+    const width = item.canvasPresentation.width ?? base.width;
+    const height = item.canvasPresentation.height ?? base.height;
+    const sx = width / base.width,
+      sy = height / base.height;
+    return {
+      width,
+      height,
+      left: base.left * sx,
+      collapsedHeight: base.collapsedHeight * sy,
+      anchor: { x: base.anchor.x * sx, y: base.anchor.y * sy },
+    };
+  }
   const visual = cardVisualBounds(item);
   const anchor = {
     x: visual.x + visual.width,
     y: visual.y + visual.height / 2,
   };
+  if (item.comfyWorkflow)
+    return {
+      width: 380,
+      height: visual.height,
+      left: 0,
+      collapsedHeight: visual.height,
+      anchor,
+    };
   if (item.plugin)
     return {
       width: visual.width,
@@ -106,9 +148,9 @@ export function cardLayout(item: CanvasCollectionItem): {
       (item.kind === "image" || item.kind === "video"),
     );
     return {
-      width: hasReferenceComposer ? 590 : 380,
-      height: hasReferenceComposer ? visual.height + 247 : visual.height,
-      left: hasReferenceComposer ? -105 : 0,
+      width: hasReferenceComposer ? 652 : 380,
+      height: hasReferenceComposer ? visual.height + 172 : visual.height,
+      left: hasReferenceComposer ? (visual.width - 652) / 2 : 0,
       collapsedHeight: visual.height,
       anchor,
     };
@@ -124,7 +166,7 @@ export function cardLayout(item: CanvasCollectionItem): {
   if (item.kind === "image")
     return {
       width: 590,
-      height: visual.y + visual.height + 247,
+      height: visual.y + visual.height,
       left: 0,
       collapsedHeight: visual.y + visual.height,
       anchor,
@@ -142,7 +184,37 @@ export function cardLayout(item: CanvasCollectionItem): {
 export function cardSelectionLayout(
   item: CanvasCollectionItem,
 ): ReturnType<typeof cardLayout> {
+  if (item.canvasPresentation?.width || item.canvasPresentation?.height) {
+    const baseItem = { ...item, canvasPresentation: undefined },
+      base = cardLayout(baseItem),
+      selection = cardSelectionLayout(baseItem);
+    const sx = (item.canvasPresentation.width ?? base.width) / base.width,
+      sy = (item.canvasPresentation.height ?? base.height) / base.height;
+    return {
+      width: selection.width * sx,
+      height: selection.height * sy,
+      collapsedHeight: selection.collapsedHeight * sy,
+      left: selection.left * sx,
+      anchor: { x: selection.anchor.x * sx, y: selection.anchor.y * sy },
+    };
+  }
   const layout = cardLayout(item);
+  if (
+    item.kind === "image" &&
+    !item.comfyWorkflow &&
+    !item.plugin &&
+    !item.referenceOnly &&
+    !item.result &&
+    !(item.generationStatus && item.generationIndex !== undefined)
+  ) {
+    const visual = cardVisualBounds(item);
+    return {
+      ...layout,
+      width: 652,
+      height: visual.y + visual.height + 172,
+      left: visual.x + (visual.width - 652) / 2,
+    };
+  }
   if (
     item.kind === "video" &&
     !item.plugin &&
@@ -150,9 +222,8 @@ export function cardSelectionLayout(
     !item.result &&
     !(item.generationStatus && item.generationIndex !== undefined)
   ) {
-    // The 370px video body has a 590px editor extending 110px to its left.
-    // Reserve the full 234 + 237px editor height without changing body/anchors.
-    return { ...layout, width: 590, height: 471, left: -110 };
+    // Reserve the shared 652×156 editor plus its 16px media gap.
+    return { ...layout, width: 652, height: 396, left: -141 };
   }
   return layout;
 }

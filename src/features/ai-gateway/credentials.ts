@@ -144,6 +144,7 @@ export class LayeredCredentialStore implements CredentialStore {
   readonly #primary: CredentialStore;
   readonly #fallback: CredentialStore;
   readonly #cache = new Map<string, string>();
+  #generation = 0;
 
   constructor(primary: CredentialStore, fallback: CredentialStore) {
     this.#primary = primary;
@@ -154,6 +155,7 @@ export class LayeredCredentialStore implements CredentialStore {
     const key = assertCredentialRef(ref);
     const cached = this.#cache.get(key);
     if (cached !== undefined) return cached;
+    const generation = this.#generation;
     // The durable store wins so a rotated secret takes effect without a restart.
     // Both are queried rather than short-circuiting: an empty string is a value
     // the vault stored, not an absent entry.
@@ -161,6 +163,7 @@ export class LayeredCredentialStore implements CredentialStore {
       this.#primary.read(key),
       this.#fallback.read(key),
     ]);
+    if (generation !== this.#generation) return this.read(key);
     const found = primary ?? fallback;
     if (found !== undefined) this.#cache.set(key, found);
     return found;
@@ -168,18 +171,24 @@ export class LayeredCredentialStore implements CredentialStore {
 
   async write(ref: string, secret: string): Promise<void> {
     const key = assertCredentialRef(ref);
-    this.#cache.set(key, secret);
     await this.#primary.write(key, secret);
+    this.#generation++;
+    this.#cache.set(key, secret);
   }
 
   async delete(ref: string): Promise<boolean> {
     const key = assertCredentialRef(ref);
     this.#cache.delete(key);
+    const invalidate = () => {
+      this.#generation++;
+      this.#cache.delete(key);
+    };
     // Both sides must be cleared: short-circuiting on the first `true` would
     // leave the copy in the other store, and the next read would resurrect it.
+    // Each layer invalidates reads even if the other deletion fails first.
     const [primary, fallback] = await Promise.all([
-      this.#primary.delete(key),
-      this.#fallback.delete(key),
+      this.#primary.delete(key).finally(invalidate),
+      this.#fallback.delete(key).finally(invalidate),
     ]);
     return primary || fallback;
   }

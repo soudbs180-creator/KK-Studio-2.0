@@ -1,3 +1,4 @@
+import { selectHomeConversation } from "./helpers";
 import { expect, test, type Page } from "@playwright/test";
 import { selectHomeApiModel } from "./helpers";
 import {
@@ -51,14 +52,13 @@ test("未配置 API 时首页仍默认 Codex，打开 API 接入保留草稿", a
     page.getByRole("button", { name: "模型", exact: true }),
   ).toContainText("Codex 内置生图");
   await page.getByRole("button", { name: "模型", exact: true }).click();
-  await page.getByRole("tab", { name: "中转 API", exact: true }).click();
-  await expect(page.getByRole("menu", { name: "选择模型" })).toContainText(
-    "暂无模型",
-  );
+  await page.getByRole("tab", { name: "图像生成", exact: true }).click();
+  // Auto routing and built-in Codex remain available without a configured API.
+  await expect(
+    page.getByRole("menu", { name: "选择模型" }).getByRole("menuitemradio"),
+  ).toHaveCount(2);
   await page.getByRole("button", { name: "模型接入…", exact: true }).click();
-  await page
-    .getByRole("button", { name: "API Key（官方）", exact: true })
-    .click();
+  await page.getByRole("tab", { name: "官方直连 API", exact: true }).click();
   await expect(page.getByLabel("API Key", { exact: true })).toBeVisible();
   await expect(page.getByLabel("创作提示词")).toHaveValue(prompt);
 });
@@ -66,9 +66,7 @@ test("未配置 API 时首页仍默认 Codex，打开 API 接入保留草稿", a
 test("首页权限模式询问可取消确认且输入仍保留", async ({ page }) => {
   await page.getByRole("button", { name: "模型", exact: true }).click();
   await page.getByRole("button", { name: "模型接入…", exact: true }).click();
-  await page
-    .getByRole("button", { name: "API Key（官方）", exact: true })
-    .click();
+  await page.getByRole("tab", { name: "官方直连 API", exact: true }).click();
   await page.getByLabel("接口地址").fill("https://models.example.test/v1");
   await page.getByLabel("API Key", { exact: true }).fill("fixture-key");
   await page.getByLabel("模型名称").fill("image-test");
@@ -77,6 +75,7 @@ test("首页权限模式询问可取消确认且输入仍保留", async ({ page 
   await selectHomeApiModel(page);
   const prompt = "需要用户确认才创建的项目";
   await page.getByLabel("创作提示词").fill(prompt);
+  await selectHomeConversation(page);
   await page.getByRole("button", { name: /当前模式：自动/ }).click();
   await page
     .locator(".start-mode-popover")
@@ -85,6 +84,7 @@ test("首页权限模式询问可取消确认且输入仍保留", async ({ page 
   await expect(
     page.getByRole("button", { name: /当前模式：询问/ }),
   ).toBeVisible();
+  await selectHomeApiModel(page);
   await page.getByRole("button", { name: "开始创建项目" }).click();
   await expect(page.getByRole("group", { name: "确认创建项目" })).toBeVisible();
   await page.getByRole("button", { name: "取消", exact: true }).click();
@@ -92,6 +92,7 @@ test("首页权限模式询问可取消确认且输入仍保留", async ({ page 
 });
 
 test("输入栏扩展弹层先列内置 Skill，再可进入 Skill 目录", async ({ page }) => {
+  await selectHomeConversation(page);
   // Contract since the local Skill registry: the app seeds built-in skills on
   // first open, so the start composer offers them directly instead of an empty
   // state. Catalog management still lives behind the browse entry.
@@ -130,9 +131,7 @@ test("工作台消息属于当前项目，刷新后项目库可重新打开", as
     .getByRole("menu")
     .getByRole("button", { name: "模型接入…", exact: true })
     .click();
-  await page
-    .getByRole("button", { name: "API Key（官方）", exact: true })
-    .click();
+  await page.getByRole("tab", { name: "官方直连 API", exact: true }).click();
   await page.getByLabel("接口地址").fill("https://models.example.test/v1");
   await page.getByLabel("API Key", { exact: true }).fill("test-key");
   await page.getByLabel("模型名称").fill("image-test");
@@ -182,10 +181,10 @@ test("首页加号添加图片并支持删除，模型入口是本次创作选�
   await expect(page.getByRole("menu", { name: "选择模型" })).toContainText(
     "Codex 内置生图",
   );
-  await page.getByRole("tab", { name: "中转 API", exact: true }).click();
-  await expect(page.getByRole("menu", { name: "选择模型" })).toContainText(
-    "暂无模型，请在模型接入中保存连接并刷新模型列表。",
-  );
+  await page.getByRole("tab", { name: "图像生成", exact: true }).click();
+  await expect(
+    page.getByRole("menu", { name: "选择模型" }).getByRole("menuitemradio"),
+  ).toHaveCount(2);
 });
 
 test("配置连接后图片任务使用 provider 响应回填结果节点", async ({ page }) => {
@@ -210,9 +209,7 @@ test("配置连接后图片任务使用 provider 响应回填结果节点", asyn
     .getByRole("menu")
     .getByRole("button", { name: "模型接入…", exact: true })
     .click();
-  await page
-    .getByRole("button", { name: "API Key（官方）", exact: true })
-    .click();
+  await page.getByRole("tab", { name: "官方直连 API", exact: true }).click();
   await page.getByLabel("接口地址").fill("https://models.example.test/v1");
   await page.getByLabel("API Key", { exact: true }).fill("test-key");
   await page.getByLabel("模型名称").fill("image-test");
@@ -254,9 +251,7 @@ test("批量数量会随请求发送并归档多个 provider 结果", async ({ p
     .getByRole("menu")
     .getByRole("button", { name: "模型接入…", exact: true })
     .click();
-  await page
-    .getByRole("button", { name: "API Key（官方）", exact: true })
-    .click();
+  await page.getByRole("tab", { name: "官方直连 API", exact: true }).click();
   await page.getByLabel("接口地址").fill("https://models.example.test/v1");
   await page.getByLabel("API Key", { exact: true }).fill("test-key");
   await page.getByLabel("模型名称").fill("image-test");
@@ -274,21 +269,19 @@ test("批量数量会随请求发送并归档多个 provider 结果", async ({ p
 });
 
 test("运行中的图片任务可取消并停留在当前项目", async ({ page }) => {
-  await page.route(
-    "https://models.example.test/v1/images/generations",
-    () =>
-      new Promise(() => {
-        // The browser request is expected to be aborted by the cancel action.
-      }),
-  );
+  let submitted = false;
+  await page.route("https://models.example.test/v1/images/generations", () => {
+    submitted = true;
+    return new Promise(() => {
+      // The browser request is expected to be aborted by the cancel action.
+    });
+  });
   await page.getByRole("button", { name: "模型", exact: true }).click();
   await page
     .getByRole("menu")
     .getByRole("button", { name: "模型接入…", exact: true })
     .click();
-  await page
-    .getByRole("button", { name: "API Key（官方）", exact: true })
-    .click();
+  await page.getByRole("tab", { name: "官方直连 API", exact: true }).click();
   await page.getByLabel("接口地址").fill("https://models.example.test/v1");
   await page.getByLabel("API Key", { exact: true }).fill("test-key");
   await page.getByLabel("模型名称").fill("image-test");
@@ -299,9 +292,10 @@ test("运行中的图片任务可取消并停留在当前项目", async ({ page 
   await page.getByRole("button", { name: "开始创建项目" }).click();
   await page.getByRole("button", { name: "批准并提交" }).click();
   await expect(page.locator(".project-task-running")).toBeVisible();
+  await expect.poll(() => submitted).toBe(true);
   await page
-    .locator(".project-task-running")
-    .getByRole("button", { name: "取消" })
+    .locator(".canvas-hud-left")
+    .getByRole("button", { name: "取消", exact: true })
     .click();
   // Once the Provider request has started, aborting the browser fetch cannot
   // prove that the Provider did not accept it. The task must be fenced as

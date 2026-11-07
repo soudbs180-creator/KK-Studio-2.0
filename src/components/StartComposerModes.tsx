@@ -1,4 +1,12 @@
-import type { CreationDraft } from "../features/creation/model";
+import { homeModelSelection } from "../domain/modelSelection";
+import { codexHomeValidation } from "../features/agent/index.ts";
+import {
+  canSubmitGeneration,
+  getDisabledReason,
+  getGenerationUiState,
+} from "../domain/uiGovernance";
+import type { CreationDraft } from "../features/creation/index.ts";
+import UiIcon from "./UiIcon";
 
 export function StartModePicker({
   draft,
@@ -22,11 +30,7 @@ export function StartModePicker({
         onClick={onToggle}
       >
         {draft.approvalMode === "ask" ? "询问" : "自动"}{" "}
-        <img
-          src="/design/figma/composer-chevron.svg"
-          alt=""
-          draggable={false}
-        />
+        <UiIcon name="chevron-down" size={12} />
       </button>
       {open && (
         <div className="start-mode-popover" role="menu">
@@ -104,4 +108,52 @@ export function StartComposerFeedback({
       {pending && <StartApproval onConfirm={onConfirm} onCancel={onCancel} />}
     </>
   );
+}
+
+export function homeGenerationGate({
+  draft,
+  usesCodex,
+  selection,
+  modelConfigured,
+  readingFiles,
+  submitting,
+  attachmentError,
+}: {
+  draft: CreationDraft;
+  usesCodex: boolean;
+  selection: ReturnType<typeof homeModelSelection>;
+  modelConfigured: boolean;
+  readingFiles: number;
+  submitting: boolean;
+  attachmentError: string | null;
+}) {
+  const serviceReady =
+    usesCodex || Boolean(selection.connectionId) || modelConfigured;
+  const uiState = getGenerationUiState({
+    prompt: draft.prompt,
+    inputValid: !readingFiles,
+    modelConfigured: serviceReady,
+    quotaAvailable: true,
+    online: typeof navigator === "undefined" ? true : navigator.onLine,
+    serviceConfigured: serviceReady,
+  });
+  const { privacy: privacyReason, count: countReason } = codexHomeValidation(
+    draft,
+    selection,
+  );
+  return {
+    uiState,
+    countReason,
+    submitDisabled:
+      submitting ||
+      (usesCodex && Boolean(attachmentError)) ||
+      Boolean(privacyReason) ||
+      Boolean(countReason) ||
+      !canSubmitGeneration(uiState),
+    disabledReason:
+      (usesCodex ? attachmentError : undefined) ??
+      privacyReason ??
+      countReason ??
+      getDisabledReason(uiState),
+  };
 }

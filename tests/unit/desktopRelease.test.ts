@@ -329,6 +329,61 @@ test("desktop release fingerprint changes when a tracked input changes", (t) => 
   assert.notEqual(fingerprintDesktopInputs(root), original);
 });
 
+test("contract source and manifests invalidate desktop releases without hashing installs", (t) => {
+  const { root } = fixture(t);
+  const contracts = path.join(root, "packages", "creation-contracts");
+  fs.mkdirSync(contracts, { recursive: true });
+  for (const [name, initial, changed] of [
+    [
+      "capability.ts",
+      "export type Capability = string",
+      "export type Capability = number",
+    ],
+    [
+      "package.json",
+      '{"dependencies":{"semver":"7.8.5"}}',
+      '{"dependencies":{"semver":"7.8.6"}}',
+    ],
+    ["package-lock.json", "{}", '{"lockfileVersion":3}'],
+    ["plugin-manifest.schema.json", "{}", '{"type":"object"}'],
+    ["tsconfig.json", "{}", '{"compilerOptions":{"strict":true}}'],
+  ]) {
+    const file = path.join(contracts, name);
+    fs.writeFileSync(file, initial);
+    const before = fingerprintDesktopInputs(root);
+    fs.writeFileSync(file, changed);
+    assert.notEqual(fingerprintDesktopInputs(root), before, name);
+  }
+  const before = fingerprintDesktopInputs(root);
+  fs.mkdirSync(path.join(contracts, "node_modules"));
+  fs.writeFileSync(
+    path.join(contracts, "node_modules", "install.txt"),
+    "local install",
+  );
+  fs.writeFileSync(path.join(contracts, "debug.log"), "local log");
+  assert.equal(fingerprintDesktopInputs(root), before);
+  const added = path.join(contracts, "ports.ts");
+  fs.writeFileSync(added, "export type Port = string");
+  assert.notEqual(fingerprintDesktopInputs(root), before);
+  fs.rmSync(added);
+  assert.equal(fingerprintDesktopInputs(root), before);
+});
+
+test("desktop release identity rejects linked contract sources", (t) => {
+  const { root } = fixture(t);
+  const contracts = path.join(root, "packages", "creation-contracts");
+  fs.mkdirSync(contracts, { recursive: true });
+  fs.symlinkSync(
+    path.join(root, "src"),
+    path.join(contracts, "linked.ts"),
+    "junction",
+  );
+  assert.throws(
+    () => fingerprintDesktopInputs(root),
+    /cannot be verified through a symbolic link/,
+  );
+});
+
 test("desktop release fingerprint ignores package scripts but tracks runtime metadata", (t) => {
   const { root } = fixture(t);
   const manifest = path.join(root, "package.json");
@@ -560,7 +615,7 @@ test(
     const { root, executable } = fixture(t);
     const checkerReceipt = path.join(root, "freshness-checked.txt");
     const compiler = path.join(
-      process.env.WINDIR ?? "C:\\Windows",
+      process.env.WINDIR ?? "C:/Windows",
       "Microsoft.NET",
       "Framework64",
       "v4.0.30319",

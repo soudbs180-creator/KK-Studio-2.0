@@ -1,14 +1,15 @@
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { isTauri } from "@tauri-apps/api/core";
-import { agentConnection } from "../../features/agent/agentConnection.ts";
+import { agentConnection } from "../../features/agent/index.ts";
 import {
   readPermissionMode,
   writePermissionMode,
   subscribeAgentPreferences,
-} from "../../features/agent/agentConnection.ts";
-import type { AgentPermissionMode } from "../../features/agent/agentTypes.ts";
-import { desktopAgentLifecycle } from "../../features/agent/desktopAgentLifecycle.ts";
+} from "../../features/agent/index.ts";
+import type { AgentPermissionMode } from "../../features/agent/index.ts";
+import { desktopAgentLifecycle } from "../../features/agent/index.ts";
 import DesktopAgentControl from "./DesktopAgentControl.tsx";
+import BrowserBackendSettings from "./BrowserBackendSettings.tsx";
 
 const PERMISSION_LABELS: Record<AgentPermissionMode, string> = {
   request: "每次询问",
@@ -213,6 +214,7 @@ export default function AgentConnectionSettings({
         </select>
       </div>
       <p>“每次询问”会在 Agent 执行操作前请求许可，已有连接和对话可持续复用。</p>
+      <BrowserBackendSettings onFeedback={onFeedback} />
       {error && (
         <p className="settings-network-error" role="alert">
           {error}

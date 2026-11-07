@@ -14,17 +14,17 @@ test("Web account and update UI display the Web platform version", async ({
   await page.goto("/");
   await page.getByRole("button", { name: "个人信息", exact: true }).click();
   const popup = page.locator(".account-popup");
-  await expect(popup).toContainText(`网页版 · v${versions.web}`);
+  await expect(popup).toContainText(`浏览器版 · v${versions.web}`);
   await popup.getByRole("button", { name: "查看", exact: true }).click();
   const settings = page.getByRole("dialog", { name: "设置", exact: true });
   await expect(
-    settings.getByRole("heading", { name: "通用", exact: true }),
+    settings.getByRole("heading", { name: "软件更新", exact: true }),
   ).toBeVisible();
   const update = settings.getByRole("region", {
     name: "软件更新",
     exact: true,
   });
-  await expect(update).toContainText(`网页版 · 当前版本 ${versions.web}`);
+  await expect(update).toContainText(`浏览器版 · 当前版本 ${versions.web}`);
   const download = update.getByRole("link", {
     name: "下载 Windows 安装包",
     exact: true,

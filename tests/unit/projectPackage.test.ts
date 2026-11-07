@@ -15,6 +15,7 @@ import {
   createTask,
   emptySnapshot,
   serializeCreationSnapshot,
+  type CreationSnapshot,
 } from "../../src/features/creation/model.ts";
 import { createStagePlan } from "../../src/domain/stagePlan.ts";
 import { applyProjectLifecycle } from "../../src/features/projects/projectLifecycle.ts";
@@ -99,6 +100,99 @@ async function validPackage(): Promise<{
     async (id) => (id === assetId ? source.asset : null),
   );
   return { input: built, source };
+}
+
+test("packages retain an attachment's distinct original even when no other field references it", async () => {
+  const { snapshot, asset } = fixture();
+  const originalBytes = new Uint8Array([9, 8, 7]);
+  const originalSha = createHash("sha256").update(originalBytes).digest("hex");
+  const originalId = `asset-${originalSha.slice(0, 24)}`;
+  const original = {
+    ...asset,
+    assetId: originalId,
+    sha256: originalSha,
+    preview: `data:image/png;base64,${Buffer.from(originalBytes).toString("base64")}`,
+  };
+  snapshot.homeDraft.attachments = [
+    {
+      id: "only-original-reference",
+      assetId,
+      originalAssetId: originalId,
+      name: "original.png",
+      mime: "image/png",
+      size: 3,
+    },
+  ];
+  assert.deepEqual(
+    collectReferencedAssetIds(snapshot),
+    [assetId, originalId].sort(),
+  );
+  const input = await createProjectPackageManifest(snapshot, async (id) =>
+    id === assetId ? asset : id === originalId ? original : null,
+  );
+  const restored = await preflightProjectPackage(input);
+  assert.deepEqual(restored.assets.get(originalId)?.bytes, originalBytes);
+  assert.equal(
+    restored.snapshot.homeDraft.attachments[0].originalAssetId,
+    originalId,
+  );
+  const missing = structuredClone(input);
+  missing.manifest.assets = missing.manifest.assets.filter(
+    (a) => a.assetId !== originalId,
+  );
+  missing.entries = missing.entries.filter(
+    (entry) => !entry.path.includes(originalSha),
+  );
+  missing.manifest.checksum = await manifestChecksum(missing.manifest);
+  await assert.rejects(preflightProjectPackage(missing));
+  snapshot.homeDraft.attachments[0].originalAssetId = "invalid";
+  assert.throws(() => collectReferencedAssetIds(snapshot));
+});
+
+for (const version of [2, 3] as const) {
+  test(`v${version} packages retain sidebar preferences with trash and deleted group pins`, async () => {
+    const source = fixture();
+    const project = source.snapshot.projects[0];
+    project.chats!["chat-default"].draft = { ...project.composerDraft };
+    const snapshot: CreationSnapshot = {
+      ...source.snapshot,
+      version,
+      activeProjectId: null,
+      projectGroups: [{ id: "g", name: "Deleted group", deletedAt: 10 }],
+      projects: [{ ...project, trashedAt: 10 }],
+      sidebarPreferences: {
+        sortMode: "recent",
+        pinnedProjectIds: [project.id],
+        pinnedGroupIds: ["g"],
+      },
+    };
+    const original = JSON.stringify(snapshot);
+    const built = await createProjectPackageManifest(
+      snapshot,
+      async () => source.asset,
+    );
+    const checked = await preflightProjectPackage(built);
+    assert.deepEqual(
+      checked.snapshot.sidebarPreferences,
+      snapshot.sidebarPreferences,
+    );
+    assert.equal(checked.snapshot.projects[0].id, project.id);
+    assert.equal(checked.snapshot.projects[0].trashedAt, 10);
+    assert.deepEqual(checked.snapshot.projectGroups, snapshot.projectGroups);
+    assert.equal(JSON.stringify(snapshot), original);
+    for (const pinnedProjectIds of [[project.id, project.id], ["missing"]]) {
+      const invalid = {
+        ...snapshot,
+        sidebarPreferences: {
+          ...snapshot.sidebarPreferences!,
+          pinnedProjectIds,
+        },
+      };
+      await assert.rejects(
+        createProjectPackageManifest(invalid, async () => source.asset),
+      );
+    }
+  });
 }
 
 test("v3 packages include inactive chat-only draft and message assets without root authority", async () => {

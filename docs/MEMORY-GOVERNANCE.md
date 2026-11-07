@@ -1,13 +1,13 @@
 # 记忆治理
 
-更新：2026-10-09。本页是 [`MEMORY-CONTRACT.md`](MEMORY-CONTRACT.md) 的运维检查表，不替换规范契约。它把内容、位置、读取/写入规则、同步触发条件和可执行检查放在一个可审计入口。
+更新：2026-11-04。本页是 [`MEMORY-CONTRACT.md`](MEMORY-CONTRACT.md) 的运维检查表，不替换规范契约。它把内容、位置、读取/写入规则、同步触发条件和可执行检查放在一个可审计入口。
 
 ## 内容与位置
 
 | 项目 | 规则 | 当前证据 |
 | --- | --- | --- |
 | 唯一共享文件 | `~/.kk-memory/memory.json`；Windows 为 `%USERPROFILE%\\.kk-memory\\memory.json` | [`MEMORY-CONTRACT.md`](MEMORY-CONTRACT.md) §1、`src-tauri/src/main.rs` memory commands |
-| 格式 | `version: 1`，records 每项最多 200 字，总数最多 10,000；指纹为归一化内容 SHA-256 | [`MEMORY-CONTRACT.md`](MEMORY-CONTRACT.md) §2、`src/features/memory/types.ts` |
+| 格式 | 读取 V1/V2；Desktop 保存 V2，records 每项最多 200 字，总数最多 10,000；指纹为归一化内容 SHA-256 | [`MEMORY-CONTRACT.md`](MEMORY-CONTRACT.md) §2、`src/features/memory/types.ts` |
 | Desktop | Tauri 读写共享文件；临时文件原子替换；重置先保留 `.previous-<timestamp>.json` | `src-tauri/src/main.rs` 与 Rust memory tests |
 | Web | 用户授权目录时只读共享文件；未授权使用明确标识的私有 IndexedDB；不得静默合并或迁移 | `src/features/memory/storage.ts`、memory browser tests |
 | 旧文件 | `<app-data>/memory/memory.json` 仅作为一次性种子；不再作为共享权威 | `main.rs` `seed_shared_memory` |
@@ -58,3 +58,9 @@
 | 豆包/WorkBuddy | 各自适配器、真实登录会话和并发联调证据 | 没有证据就写“未接入”；不得由关键词或登录状态推断 |
 
 相关功能卡为 [`feat-020-memory.md`](features/feat-020-memory.md)，当前状态仍由 feature registry 与任务账本分别决定。
+
+## 作用域与迁移检查
+
+对应 TASK-E2E-WIRING-20261104：新增 V1 原字节迁移/CAS 首次不存在、损坏/未来版本保留、跨项目会话排除、加权去重预算、只读共享作用域与权限失效测试。legacy API 必须保留 V2 元数据，不能写回 V1 丢失字段。文件驱动不得静默回退到内存成功。
+
+Desktop 原生运行与 Web 实际授权目录仍按当前交付包分列，单测不替代实机证据。global 管理与作用域服务契约分开描述，清空 global 不代表删掉所有项目/会话文件。

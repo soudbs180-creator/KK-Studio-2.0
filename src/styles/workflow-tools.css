@@ -1,0 +1,309 @@
+.camera-optics-control {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  margin: 12px 0 0;
+  padding: 12px;
+  border: 1px solid var(--border-subtle);
+  color: var(--ui-text);
+}
+.node-popover.parameter-menu {
+  max-block-size: min(70vh, 560px);
+  overflow-y: auto;
+}
+.camera-optics-control label {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.camera-optics-control .kk-input-wrapper,
+.camera-optics-control .kk-select-wrapper {
+  flex: 1;
+  min-width: 0;
+}
+.camera-optics-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-width: 0;
+}
+.camera-optics-choices .kk-button {
+  max-width: 100%;
+}
+.kk-textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 120px;
+  padding: 8px 12px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  background: var(--bg-input);
+  color: var(--ui-text);
+  font: inherit;
+  resize: vertical;
+}
+.kk-textarea:focus-visible {
+  outline: 2px solid var(--ui-text);
+  outline-offset: 2px;
+}
+.storyboard-workflow .kk-modal__body > label {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.storyboard-workflow textarea {
+  width: 100%;
+  min-height: 120px;
+  resize: vertical;
+  background: var(--bg-input);
+  color: var(--ui-text);
+  border: 1px solid var(--border-subtle);
+}
+.storyboard-workflow .kk-modal__footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.video-shot-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+  min-width: 0;
+  pointer-events: auto;
+}
+.asset-text-preview {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 60vh;
+  overflow: auto;
+  width: 100%;
+  color: var(--ui-text);
+}
+.storyboard-constraint-row {
+  display: grid;
+  gap: 8px;
+  margin-block: 12px;
+}
+.storyboard-constraint-row label {
+  display: grid;
+  gap: 4px;
+}
+.video-shot-actions button,
+.message-actions button[aria-label="回滚到此轮"],
+.tokenized-mentions-bar button {
+  min-width: 44px;
+  min-height: 44px;
+}
+.video-shot-actions p,
+.canvas-import-status {
+  overflow-wrap: anywhere;
+  color: var(--ui-muted);
+}
+.tokenized-mentions-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.inline-mention-pill {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  max-width: 100%;
+  background: var(--bg-card);
+  color: var(--ui-text);
+  border: 1px solid var(--border-subtle);
+}
+.inline-mention-pill .pill-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.canvas-node[data-card-color="accent"] {
+  outline: 2px solid var(--ui-selected);
+}
+.canvas-node[data-card-color="warning"] {
+  outline: 2px solid var(--ui-warning);
+}
+.canvas-node[data-card-color="success"] {
+  outline: 2px solid var(--ui-success);
+}
+.canvas-node[data-locked="true"] {
+  cursor: default;
+}
+.canvas-node-content-scale > .image-creation {
+  position: relative;
+  inset: auto;
+  height: 100%;
+}
+.canvas-node-image > .canvas-node-content-scale > .image-creation {
+  pointer-events: none;
+}
+.canvas-node-image > .canvas-node-content-scale > .image-creation > * {
+  pointer-events: auto;
+}
+.canvas-node-content-scale > .video-node {
+  width: 100%;
+}
+.canvas-node-result.has-reference-composer
+  > .canvas-node-content-scale
+  > .creation-composer {
+  position: absolute;
+  left: -105px;
+  top: 390px;
+  width: 590px;
+  margin: 0;
+}
+.canvas-node-result.has-reference-composer[data-kind="image"]
+  > .canvas-node-content-scale
+  > .creation-composer:not(.canvas-composer-screen) {
+  position: relative;
+  top: auto;
+  margin-top: 10px;
+  pointer-events: none;
+}
+.canvas-node-result.has-reference-composer[data-kind="image"]
+  > .canvas-node-content-scale
+  > .creation-composer:not(.canvas-composer-screen)
+  > * {
+  pointer-events: auto;
+}
+@media (max-height: 640px) {
+  .storyboard-workflow .kk-modal__body {
+    min-height: 0;
+    overflow: auto;
+  }
+}
+
+.storyboard-workflow .storyboard-constraints,
+.storyboard-shot,
+.blueprint-workbench li,
+.gateway-console,
+.ontology-certification,
+.director-console {
+  min-width: 0;
+  margin: 0 0 16px;
+  padding: 16px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  background: var(--kk-bg-card, var(--bg-card));
+}
+.storyboard-steps,
+.blueprint-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 12px;
+}
+.director-console {
+  position: absolute;
+  z-index: 6;
+  bottom: 48px;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+  width: 320px;
+  max-height: min(70vh, 640px);
+  overflow: auto;
+  background: var(--kk-bg-card, var(--bg-card));
+}
+.director-stage {
+  position: fixed;
+  z-index: 40;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 16px;
+  background: color-mix(in srgb, var(--ui-canvas-bg) 46%, transparent);
+}
+.director-stage .director-console {
+  position: relative;
+  bottom: auto;
+  left: auto;
+}
+.director-title {
+  margin: 0;
+  color: var(--kk-text-primary, var(--ui-text));
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+}
+.director-caption {
+  margin: 0;
+  color: var(--kk-text-secondary, var(--text-secondary));
+  font-size: 12px;
+  line-height: 16px;
+}
+.director-console .camera-optics-control {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+.director-console .camera-optics-control legend {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.director-console .camera-optics-choices {
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+.director-console .kk-button--pill {
+  align-self: center;
+}
+.director-viewport {
+  width: 160px;
+  height: 160px;
+  display: block;
+  margin: 0 0 12px;
+}
+.director-viewport circle,
+.director-viewport line,
+.director-viewport path {
+  fill: none;
+  stroke: var(--border-default);
+  stroke-width: 1;
+}
+.director-viewport .director-figure,
+.director-viewport .director-fov {
+  fill: currentColor;
+  stroke: none;
+}
+.director-viewport .director-fov {
+  opacity: 0.28;
+}
+.director-viewport .director-mark {
+  fill: var(--kk-accent, currentColor);
+  stroke: none;
+}
+.director-capsule {
+  max-width: 160px;
+  color: var(--text-secondary);
+}
+.storyboard-shot h3,
+.blueprint-workbench h3,
+.gateway-console h2,
+.ontology-certification h3 {
+  margin: 0 0 8px;
+  font-size: 16px;
+  font-weight: 500;
+}
+.blueprint-recent {
+  color: var(--kk-success, var(--ui-success));
+  font-style: normal;
+}

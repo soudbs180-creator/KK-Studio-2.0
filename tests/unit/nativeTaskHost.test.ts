@@ -1,5 +1,44 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { processSingleNativeOutput } from "../../src/features/creation/index.ts";
+import type { CreationTaskOutput } from "../../src/domain/creationTypes.ts";
+
+test("live submitted native text output stays running until a terminal receipt", async () => {
+  const project = createProject({
+    prompt: "write",
+    model: "text-test",
+    kind: "text",
+    attachments: [],
+  });
+  const task = { ...createTask(project), id: "live", kind: "text" as const };
+  const output: CreationTaskOutput = {
+    index: 0,
+    status: "waiting",
+    model: "text-test",
+    createdAt: 1,
+  };
+  await processSingleNativeOutput({
+    task,
+    projectId: project.id,
+    taskId: task.id,
+    output,
+    nativeOutput: { index: 0, status: "pending", text: "streaming draft" },
+    record: {
+      taskId: task.id,
+      idempotencyKey: task.idempotencyKey,
+      status: "submitted",
+      assetIds: [],
+      outputs: [],
+      updatedAt: 1,
+    },
+    createdItems: [],
+    setAssets: () => {},
+    projects: [project],
+  });
+  assert.equal(output.status, "running");
+  assert.equal(output.error, undefined);
+  assert.equal(output.text, "streaming draft");
+});
 import {
   cancelNativeTask,
   getNativeTask,
@@ -1162,6 +1201,140 @@ test("native failure with complete archived evidence resolves as succeeded", asy
     assert.equal(task.completedOutputs, 1);
     assert.equal(task.outputs?.[0].status, "succeeded");
     assert.equal(task.error, undefined);
+  } finally {
+    Reflect.deleteProperty(globalThis, "window");
+  }
+});
+for (const [kind, mime] of [
+  ["video", "video/mp4"],
+  ["audio", "audio/mpeg"],
+] as const) {
+  test(`native ${kind} recovery preserves modality and rejects image MIME`, async () => {
+    const project = createProject({
+      prompt: "media",
+      model: kind === "video" ? "veo-3.1-generate-preview" : "tts-1",
+      kind,
+      attachments: [],
+      media:
+        kind === "video"
+          ? { kind, duration: 4, aspectRatio: "16:9", resolution: "720p" }
+          : { kind, voice: "alloy", format: "mp3", speed: 1 },
+    });
+    const task = {
+      ...createTask(project),
+      id: "task-1",
+      idempotencyKey: "stable-1",
+      sourceItemId: project.items[0].id,
+      status: "running" as const,
+      submissionState: "submitted" as const,
+    };
+    project.tasks = [task];
+    let actualMime: string = mime;
+    desktop(async (command) => {
+      if (command === "task_host_list")
+        return [
+          record({
+            status: "succeeded",
+            outputs: [
+              {
+                index: 0,
+                status: "succeeded",
+                assetId: "asset-" + "a".repeat(24),
+              },
+            ],
+          }),
+        ];
+      if (command === "asset_read")
+        return {
+          metadata: {
+            assetId: "asset-" + "a".repeat(24),
+            sha256: "a".repeat(64),
+            mime: actualMime,
+            tags: [],
+            provenance: { generatedAt: "2026-11-04T00:00:00.000Z" },
+          },
+          dataBase64: "AQID",
+        };
+      throw new Error("recovery must never POST");
+    });
+    try {
+      const snapshot = { ...emptySnapshot(), projects: [project] };
+      const recovered = await reconcileNativeTasks(snapshot);
+      assert.equal(recovered.projects[0].items.at(-1)?.kind, kind);
+      assert.equal(recovered.projects[0].items.at(-1)?.result?.kind, kind);
+      assert.equal(recovered.projects[0].tasks[0].status, "succeeded");
+      actualMime = "image/png";
+      const invalid = await reconcileNativeTasks(snapshot);
+      assert.equal(invalid.projects[0].tasks[0].status, "unknown");
+      assert.equal(invalid.projects[0].items.length, 1);
+    } finally {
+      Reflect.deleteProperty(globalThis, "window");
+    }
+  });
+}
+
+test("native failed video keeps its archived original without upgrading the task to complete", async () => {
+  const project = createProject({
+    prompt: "video",
+    model: "veo-3.1-generate-preview",
+    kind: "video",
+    attachments: [],
+    media: {
+      kind: "video",
+      duration: 4,
+      aspectRatio: "16:9",
+      resolution: "720p",
+    },
+  });
+  project.tasks = [
+    {
+      ...createTask(project),
+      id: "task-1",
+      idempotencyKey: "stable-1",
+      sourceItemId: project.items[0].id,
+      status: "running",
+      submissionState: "submitted",
+    },
+  ];
+  desktop(async (command) => {
+    if (command === "task_host_list")
+      return [
+        record({
+          status: "failed",
+          failure: "Provider returned partial video result",
+          outputs: [
+            {
+              index: 0,
+              status: "succeeded",
+              assetId: "asset-" + "a".repeat(24),
+            },
+          ],
+        }),
+      ];
+    if (command === "asset_read")
+      return {
+        metadata: {
+          assetId: "asset-" + "a".repeat(24),
+          sha256: "a".repeat(64),
+          mime: "video/mp4",
+          tags: [],
+          provenance: { generatedAt: "2026-11-04T00:00:00.000Z" },
+        },
+        dataBase64: "AQID",
+      };
+    throw new Error("recovery must never submit");
+  });
+  try {
+    const recovered = await reconcileNativeTasks({
+      ...emptySnapshot(),
+      projects: [project],
+    });
+    const task = recovered.projects[0].tasks[0];
+    assert.equal(task.status, "unknown");
+    assert.equal(task.submissionState, "unknown");
+    assert.match(task.error ?? "", /partial video/);
+    assert.equal(task.outputs?.[0].status, "succeeded");
+    assert.equal(recovered.projects[0].items.at(-1)?.result?.kind, "video");
   } finally {
     Reflect.deleteProperty(globalThis, "window");
   }

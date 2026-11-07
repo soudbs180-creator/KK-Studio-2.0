@@ -1,3 +1,24 @@
+export const STANDARDIZED_ASPECT_RATIOS = [
+  "16:9",
+  "21:9",
+  "4:5",
+  "5:4",
+  "2:3",
+  "3:2",
+  "4:3",
+  "9:16",
+  "1:1",
+  "3:4",
+  "自适应",
+  "1:4",
+  "4:1",
+  "1:8",
+  "8:1",
+] as const;
+
+export type StandardizedAspectRatio =
+  (typeof STANDARDIZED_ASPECT_RATIOS)[number];
+
 interface CreationParametersProps {
   kind: "image" | "video";
   ratio: string;
@@ -8,12 +29,7 @@ interface CreationParametersProps {
   onDuration: (value: string) => void;
 }
 
-/**
- * 参数设置弹层，对照 Figma 170:8853（参数设置 297×229，位于视频模块 170:8490）。
- * 结构按原稿：顶部"比例"标签 → 清晰度分段行（自适应/1K/2K/4K）→ 比例网格（10 格 51×51）→
- * 底部"清晰度"标签。比例"自适应"为自动态（无网格项选中）；视频时长属工程保留项，
- * 原稿 170:8490 中时长"7S"显示在编辑器底栏参数条（261:514 计时图标），待补证后再迁移。
- */
+/** Functional options follow current Figma Veo variant 630:7196 and the configured adapter. */
 export default function CreationParameters({
   kind,
   ratio,
@@ -26,13 +42,33 @@ export default function CreationParameters({
   return (
     <div
       className="node-popover parameter-menu"
+      role="dialog"
       aria-label={kind === "image" ? "图片参数选项" : "视频参数选项"}
     >
       <small>比例</small>
       <div className="quality-row" role="group" aria-label="清晰度">
-        {["自适应", "1K", "2K", "4K"].map((value) => (
+        {(kind === "video"
+          ? [
+              ...new Set([
+                "720p",
+                "1080p",
+                "4K",
+                ...(!["720p", "1080p", "4K"].includes(quality)
+                  ? [quality]
+                  : []),
+              ]),
+            ]
+          : ["自适应", "1K", "2K", "4K"]
+        ).map((value) => (
           <button
+            type="button"
             key={value}
+            disabled={kind === "video" && !["720p", "1080p"].includes(value)}
+            title={
+              kind === "video" && !["720p", "1080p"].includes(value)
+                ? "当前连接不支持此分辨率，请选择 720p 或 1080p"
+                : undefined
+            }
             className={"quality-btn " + (quality === value ? "active" : "")}
             onClick={() => onQuality(value)}
             aria-pressed={quality === value}
@@ -42,20 +78,25 @@ export default function CreationParameters({
         ))}
       </div>
       <div className="ratio-grid" role="group" aria-label="画面比例">
-        {[
-          "1:1",
-          "16:9",
-          "9:16",
-          "3:4",
-          "4:3",
-          "3:2",
-          "2:3",
-          "5:4",
-          "4:5",
-          "21:9",
-        ].map((value) => (
+        {(kind === "video"
+          ? [
+              ...new Set([
+                "16:9",
+                "9:16",
+                ...(!["16:9", "9:16"].includes(ratio) ? [ratio] : []),
+              ]),
+            ]
+          : STANDARDIZED_ASPECT_RATIOS
+        ).map((value) => (
           <button
+            type="button"
             key={value}
+            disabled={kind === "video" && !["16:9", "9:16"].includes(value)}
+            title={
+              kind === "video" && !["16:9", "9:16"].includes(value)
+                ? "当前连接仅支持 16:9 或 9:16"
+                : undefined
+            }
             className={"ratio-btn " + (ratio === value ? "active" : "")}
             onClick={() => onRatio(value)}
             aria-pressed={ratio === value}
@@ -73,7 +114,9 @@ export default function CreationParameters({
       )}
       {kind === "video" && (
         <>
-          <small>视频生成尚未接入，比例/清晰度/时长暂不发送。</small>
+          <small>
+            参数随本次视频任务发送；不支持的旧参数保留显示，请重新选择。
+          </small>
           <label className="video-duration">
             时长
             <select
@@ -81,8 +124,12 @@ export default function CreationParameters({
               value={duration}
               onChange={(e) => onDuration(e.target.value)}
             >
-              {["5", "7", "10"].map((value) => (
-                <option key={value} value={value}>
+              {[...new Set(["4", "6", "8", duration])].map((value) => (
+                <option
+                  key={value}
+                  value={value}
+                  disabled={!["4", "6", "8"].includes(value)}
+                >
                   {value} 秒
                 </option>
               ))}

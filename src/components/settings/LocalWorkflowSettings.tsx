@@ -1,8 +1,9 @@
 import { useState } from "react";
+import { LocalComfyConnection } from "../../features/models/index.ts";
 import WorkflowImportButton, {
   downloadWorkflow,
 } from "../WorkflowImportButton";
-import type { WorkflowRecord } from "../../features/comfyui/workflowRegistry";
+import type { WorkflowRecord } from "../../features/comfyui/index.ts";
 
 export interface LocalWorkflowAccess {
   records: readonly WorkflowRecord[];
@@ -22,9 +23,10 @@ export default function LocalWorkflowSettings({
     <details className="settings-disclosure">
       <summary>ComfyUI 工作流 · {workflows.records.length} 个</summary>
       <div className="settings-detail-stack">
+        <LocalComfyConnection />
         <p className="settings-section-intro">
-          已有工作流保留在原本机记录中。可导入与导出
-          JSON；环境、节点和原件归档执行链尚未接通，不会自动启动服务或提交生成。
+          已有工作流保留在原本机记录中。可导入与导出 JSON；在画布添加 ComfyUI
+          工作流节点，选择工作流即可微调参数、进入原生编辑器并生成归档结果。
         </p>
         <WorkflowImportButton
           onImported={(workflow, count) => {
@@ -66,10 +68,14 @@ export default function LocalWorkflowSettings({
               <button
                 type="button"
                 className="settings-action secondary"
-                disabled
-                title="ComfyUI 执行与归档链尚未接通"
+                onClick={() =>
+                  setStatus(
+                    "在项目画布点击“添加资源 → ComfyUI 工作流”，选择此工作流后运行。",
+                  )
+                }
+                title="在画布工作流节点运行并保存生成产物"
               >
-                运行未接通
+                画布运行指引
               </button>
               {pendingDelete === workflow.id ? (
                 <>

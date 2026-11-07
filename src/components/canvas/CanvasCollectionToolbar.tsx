@@ -1,7 +1,7 @@
 import { useContext, type ReactNode, type RefObject } from "react";
 import type { CanvasCollectionItem } from "../../domain/canvasItems";
 import { effectiveTags } from "../../domain/collectionTags";
-import { CanvasImageCommandContext } from "../../features/creation/CanvasImageCommand";
+import { CanvasImageCommandContext } from "../../features/creation/index.ts";
 import ImageSelectionToolbar from "./ImageSelectionToolbar";
 import TagEditor from "../TagEditor";
 import UiIcon from "../UiIcon";
@@ -37,12 +37,12 @@ export default function CanvasCollectionToolbar({
       {children}
       <button
         type="button"
-        className="kk-button kk-button--tertiary"
+        className="kk-button kk-button--tertiary like-action"
         aria-pressed={liked}
         aria-label={liked ? `取消喜欢${item.title}` : `喜欢${item.title}`}
         onClick={onLike}
       >
-        <UiIcon name="favorite" />
+        <UiIcon name="favorite" size={12} />
         {liked ? "已喜欢" : "喜欢"}
       </button>
       {command?.updateItemTags && (
@@ -64,7 +64,7 @@ export default function CanvasCollectionToolbar({
         title="移除画布卡片，归档原件保留"
         onClick={onDelete}
       >
-        <UiIcon name="delete" />
+        <UiIcon name="delete" size={12} />
         删除
       </button>
     </ImageSelectionToolbar>

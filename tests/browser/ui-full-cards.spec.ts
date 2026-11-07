@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { openWorkspace } from "./helpers";
+import { configureMediaNode } from "./mediaHelpers";
 
 for (const width of [390, 1099, 1920]) {
   for (const [kind, label] of [
@@ -36,6 +37,9 @@ for (const width of [390, 1099, 1920]) {
             width: getComputedStyle(item).width,
             radius: getComputedStyle(item).borderRadius,
             text: item.classList.contains("generate-button"),
+            fullRadius:
+              item.classList.contains("generate-button") ||
+              item.classList.contains("composer-ref-add"),
           }));
         return {
           controls,
@@ -58,7 +62,7 @@ for (const width of [390, 1099, 1920]) {
         if (!control.text)
           expect(control.width, control.name ?? "控件").toBe("32px");
         expect(control.radius, control.name ?? "控件").toBe(
-          control.text ? "999px" : "8px",
+          control.fullRadius ? "1000px" : "8px",
         );
       }
       if (geometry.model) {
@@ -102,6 +106,25 @@ for (const [kind, label, inputLabel] of [
     );
     await expect(
       page.locator(".creation-composer:visible .generate-button"),
-    ).toHaveCSS("border-radius", "999px");
+    ).toHaveCSS("border-radius", "1000px");
+    if (kind === "audio") {
+      let submitted = 0;
+      await page.route(
+        "http://127.0.0.1:19438/v1/audio/speech",
+        async (route) => {
+          submitted++;
+          await route.abort();
+        },
+      );
+      await configureMediaNode(page, restored, "audio");
+      await page.getByRole("button", { name: "生成音频", exact: true }).click();
+      await expect(
+        page.getByText("请填写不超过 4000 字的媒体描述。", { exact: true }),
+      ).toBeVisible();
+      await expect(page.getByLabel(inputLabel, { exact: true })).toHaveValue(
+        prompt,
+      );
+      expect(submitted).toBe(0);
+    }
   });
 }

@@ -1,4 +1,4 @@
-import type { SaveState } from "../features/creation/useCreationStorage";
+import type { SaveState } from "../features/creation/index.ts";
 
 export default function CreationStorageNotice({
   state,

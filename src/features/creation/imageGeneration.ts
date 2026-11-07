@@ -1,22 +1,23 @@
 import {
   getModelsEndpoint,
+  MODEL_PROVIDER_STORAGE_KEY,
   modelProviderSchema,
   parseModelProvider,
 } from "../../domain/modelProvider.ts";
-import { MODEL_PROVIDER_STORAGE_KEY } from "../../domain/modelProvider.ts";
-import { modelSupportsKind, type CreationAttachment } from "./model.ts";
-import { getSessionApiKey, loadApiKey } from "./providerCredentials.ts";
+import type { ProviderConnection } from "../../domain/providerConnections.ts";
+import { createGenerationAdapter } from "../../integrations/generation/providerAdapterFactory.ts";
+import { twelveAiApiBase } from "../../integrations/generation/twelveAiTaskProtocol.ts";
+import { readModelCatalogs } from "../models/index.ts";
 import { loadStoredAsset } from "./assetRepository.ts";
-import { resolveImageAttachments } from "./resolveAttachments.ts";
+import { getSessionApiKey, loadApiKey } from "./providerCredentials.ts";
+import { modelSupportsKind, type CreationAttachment } from "./model.ts";
+import { readProviderConnections } from "./providerRegistry.ts";
 import {
   assertSynchronousProviderSubmission,
   ProviderSubmissionError,
 } from "./providerSubmission.ts";
-import { readModelCatalogs } from "../models/modelCatalog.ts";
-import { createGenerationAdapter } from "../../integrations/generation/providerAdapterFactory.ts";
-import { readProviderConnections } from "./providerRegistry.ts";
-import { twelveAiApiBase } from "../../integrations/generation/twelveAiTaskProtocol.ts";
-import type { ProviderConnection } from "../../domain/providerConnections.ts";
+import { resolveImageAttachments } from "./resolveAttachments.ts";
+import { readStreamCostReceipt } from "./taskCostArchive.ts";
 
 export { getSessionApiKey, setSessionApiKey } from "./providerCredentials.ts";
 
@@ -199,6 +200,7 @@ async function requestImageChunk(options: {
   signal: AbortSignal;
   /** Resolved provider size label such as "1024x1024"; omitted means provider default. */
   size?: string;
+  onCostReceipt?: (receipt: Record<string, unknown>) => void;
 }): Promise<string[]> {
   const linked = linkAbortSignal(options.signal);
   let timedOut = false;
@@ -277,7 +279,10 @@ async function requestImageChunk(options: {
     } catch {
       throw new Error("服务没有返回有效的图片结果。");
     }
-    return resultDataList(payload);
+    const sources = resultDataList(payload);
+    const costReceipt = readStreamCostReceipt(payload);
+    if (costReceipt) options.onCostReceipt?.(costReceipt);
+    return sources;
   } catch (error) {
     if (timedOut && !options.signal.aborted)
       throw new GenerationProviderError("请求超时，任务已停止，可重试。", {
@@ -313,6 +318,8 @@ export interface GeneratedImages {
 }
 
 export async function generateImages(options: {
+  imageCapability?: import("../../../packages/creation-contracts/index.ts").ImageCapabilitySpec;
+  capabilityOutputIndices?: number[];
   maskAssetId?: string;
   prompt: string;
   model: string;
@@ -329,6 +336,7 @@ export async function generateImages(options: {
   onChunk?: (sources: string[], offset: number) => Promise<void>;
   beforeRequest?: () => void;
   onRequestStart?: () => void;
+  onCostReceipt?: (receipt: Record<string, unknown>) => void;
 }): Promise<GeneratedImages> {
   if (!navigator.onLine) throw new Error("网络已断开，请恢复网络后重试。");
   const profile = modelProviderSchema.parse(
@@ -427,60 +435,19 @@ export async function generateImages(options: {
         }
       : undefined);
   const adapter = candidateConnection
-    ? createGenerationAdapter(candidateConnection)
+    ? createGenerationAdapter(candidateConnection, { generateImages })
     : null;
+  if (options.imageCapability && candidateConnection?.kind !== "local_comfyui")
+    throw new Error("图片能力适配器或原绑定已变更，当前未发送。");
 
   if (adapter?.connection.kind === "local_comfyui") {
-    options.beforeRequest?.();
-    options.onRequestStart?.();
-    const job = await adapter.submit({
-      prompt: options.prompt,
-      model,
+    return generateComfyImages(
+      adapter,
+      options,
       attachments,
-      requestedOutputs: requestedCount,
-      idempotencyKey: options.idempotencyKey ?? `job-${Date.now()}`,
-      signal: options.signal,
-    });
-    let currentJob = job;
-    while (currentJob.status === "queued" || currentJob.status === "running") {
-      if (options.signal.aborted) {
-        await adapter
-          .cancel(currentJob.providerJobId, options.signal)
-          .catch(() => {});
-        throw new GenerationProviderError("已取消任务。", {
-          failureClass: "cancelled",
-          retryable: false,
-        });
-      }
-      await new Promise((resolve) => setTimeout(resolve, 800));
-      currentJob = await adapter.getStatus(
-        currentJob.providerJobId,
-        options.signal,
-      );
-    }
-    if (currentJob.status === "failed") {
-      throw new GenerationProviderError("生成任务失败。", {
-        failureClass: "provider_unavailable",
-        retryable: true,
-      });
-    }
-    const outputs = await adapter.listResults(
-      currentJob.providerJobId,
-      options.signal,
+      model,
+      requestedCount,
     );
-    const sources = outputs
-      .map(
-        (out) =>
-          out.url ||
-          (out.b64Json
-            ? `data:${out.mime || "image/png"};base64,${out.b64Json}`
-            : ""),
-      )
-      .filter(Boolean);
-    if (options.onChunk && sources.length) {
-      await options.onChunk(sources, 0);
-    }
-    return { sources };
   }
 
   const sessionApiKey = await loadApiKey(baseUrl, options.credentialRef);
@@ -522,6 +489,7 @@ export async function generateImages(options: {
             }
           : undefined,
         size: options.size,
+        onCostReceipt: options.onCostReceipt,
         idempotencyKey: options.idempotencyKey
           ? `${options.idempotencyKey}-part-${Math.floor(offset / perRequest) + 1}`
           : undefined,
@@ -564,4 +532,69 @@ export async function generateImage(options: {
 
 export function providerModelsEndpoint(): string {
   return getModelsEndpoint(readProvider().baseUrl);
+}
+
+async function generateComfyImages(
+  adapter: import("../../integrations/generation/providerAdapter.ts").GenerationProviderAdapter,
+  options: Parameters<typeof generateImages>[0],
+  attachments: CreationAttachment[],
+  model: string,
+  requestedCount: number,
+): Promise<GeneratedImages> {
+  const executionSignal = options.imageCapability
+    ? AbortSignal.any([options.signal, AbortSignal.timeout(180_000)])
+    : options.signal;
+  options.beforeRequest?.();
+  const job = await adapter.submit({
+    beforeSubmit: () => {
+      options.beforeRequest?.();
+      options.onRequestStart?.();
+    },
+    imageCapability: options.imageCapability,
+    capabilityOutputIndices: options.capabilityOutputIndices,
+    prompt: options.prompt,
+    model,
+    attachments,
+    requestedOutputs: requestedCount,
+    idempotencyKey: options.idempotencyKey ?? `job-${Date.now()}`,
+    signal: executionSignal,
+  });
+  let currentJob = job;
+  try {
+    while (currentJob.status === "queued" || currentJob.status === "running") {
+      executionSignal.throwIfAborted();
+      await new Promise((resolve) => setTimeout(resolve, 800));
+      currentJob = await adapter.getStatus(
+        currentJob.providerJobId,
+        executionSignal,
+      );
+    }
+  } catch (error) {
+    if (executionSignal.aborted)
+      await adapter.cancel(currentJob.providerJobId).catch(() => {});
+    throw error;
+  }
+  if (currentJob.status === "failed") {
+    throw new GenerationProviderError("生成任务失败。", {
+      failureClass: "provider_unavailable",
+      retryable: true,
+    });
+  }
+  const outputs = await adapter.listResults(
+    currentJob.providerJobId,
+    executionSignal,
+  );
+  const sources = outputs
+    .map(
+      (out) =>
+        out.url ||
+        (out.b64Json
+          ? `data:${out.mime || "image/png"};base64,${out.b64Json}`
+          : ""),
+    )
+    .filter(Boolean);
+  if (options.onChunk && sources.length) {
+    await options.onChunk(sources, 0);
+  }
+  return { sources };
 }

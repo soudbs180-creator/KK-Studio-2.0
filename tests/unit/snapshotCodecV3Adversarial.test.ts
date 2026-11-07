@@ -23,7 +23,7 @@ import {
   SnapshotStorageError,
 } from "../../src/features/creation/snapshotCodec.ts";
 import type { CreationSnapshotV3 } from "../../src/features/creation/model.ts";
-import { NonDowngradableWriteBarrier } from "../../src/features/creation/storage.ts";
+import { NonDowngradableWriteBarrier } from "../support/writeBarrierModel.ts";
 
 function createValidBaseV3(): CreationSnapshotV3 {
   return {

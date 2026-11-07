@@ -1,42 +1,26 @@
 # ComfyUI 本地出图链（FEAT-004）
 
-- 状态：PARTIAL
+- 状态：REAL
 - 领域：creation
-- 最近更新：2026-09-21
-- 关联任务：T6、EXT-COMFY
+- 最近更新：2026-11-03
+- 关联任务：TASK-COMFY-IMAGE-20261103
 
 ## 用户可见入口
 
-- 设置中可添加本地 ComfyUI 连接（`local_comfyui`，loopback）。
-- 规划入口：图片节点经本地 ComfyUI 工作流出图（当前不可用）。
-
-## 代码位置
-
-- 前端适配器（已写未接）：`src/integrations/generation/localComfyUiAdapter.ts`（/prompt、/history、/view、/interrupt 原语）、`providerAdapterFactory.ts`（工厂零调用）
-- Rust 命令（已写未接）：`src-tauri/src/main.rs` 的 `comfyui_check_connection / comfyui_queue_prompt / comfyui_get_history / comfyui_scan_directory`
-- 连接模型：`src/domain/providerConnections.ts`
-- 服务端参考实现：`src/features/generation-server/provider.ts`、`assets.ts`
-
-## 测试与证据
-
-- 服务端 local_comfyui 路径有真实 HTTP 测试：`tests/unit/generationServerProvider.test.ts`
-- 前端/Rust 桥接无测试（因为未接线）
-- 证据：账本 T6、`docs/architecture/GENERATION-PLATFORM.md`
+画布 → 添加资源 → ComfyUI 工作流。连接本机服务，或选择目录由 KK 托管启动；记住每张卡片的工作流和连接。
 
 ## 当前能力
 
-- ComfyUI 工作流文件的本地管理是真实能力（见 FEAT-005）。
-- 适配器与 Rust 原语代码已具备，但没有 Tauri invoke 桥，`imageTaskCommand` 不经过工厂，UI 无法触发本地出图。
+正反提示词、Seed、步数、宽高、采样器及 Checkpoint 在节点与右侧属性面板同步。原生编辑器载入当前卡片，返回保存实际 API 图和编辑布局。Host 与原生编辑生成的产物经 AssetPort 归档、生成结果节点与连线，重开项目恢复。受理不明时保留原任务，不自动重发。
 
-## 差距与后端化（Wave 1，纯本地、无外部依赖）
+## 代码位置
 
-1. 前端新增 invoke 桥调用 Rust `comfyui_*`（或经统一任务宿主）。
-2. 将 ComfyUI 提交接入 `submitImageCommand → executeTask`，复用 FEAT-002 的 reservation/health/journal。
-3. 工作流持久化、逐任务取消（只删指定队列项，不用全局 interrupt）、归档与重启恢复。
-4. 用户选定 ComfyUI 根目录/工作流/模型（EXT-COMFY 验收条件）。
+src/features/comfyui/index.ts；src/components/canvas/ComfyWorkflowNode.tsx；src-tauri/src/comfy_runtime.rs。
 
-## 变更记录
+## 测试与证据
 
-- 2026-09-21：创建卡片，明确“代码已写、链路未通”，列为 Wave 1 最高优先。
+[本轮验收](../changes/2026-11-03-comfy-production/verification.md) · [历史卡片](../archive/comfy-production-20261103/feat-004-comfyui.md)。
 
-- 2026-10-15：TASK-KK-UNIFIED-20261015 已获用户实施授权，新增范围见 [统一规格](../changes/2026-10-15-kk-unified/spec.md)。本卡既有证据仍限原版本；新范围实现/真实验收尚未完成，不能沿用旧 PASS 关闭。
+## 差距与后端化
+
+运行前在界面配置连接、工作流与对应模型。各生成入口的统一接入由阶段 3 继续推进。

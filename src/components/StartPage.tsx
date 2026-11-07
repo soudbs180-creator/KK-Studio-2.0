@@ -1,4 +1,5 @@
-import { useState, type KeyboardEvent } from "react";
+import { useRef, useState, type KeyboardEvent } from "react";
+import { SlidingPillIndicator } from "./ui/SlidingPillIndicator";
 import BrandLogo from "./BrandLogo";
 import StartComposer from "./StartComposer";
 import { useHorizontalScrollHint } from "./useHorizontalScrollHint";
@@ -6,31 +7,9 @@ import {
   emptyDraft,
   type CreateProjectInput,
   type CreationDraft,
-} from "../features/creation/model";
-import type { SkillRecord } from "../features/skills/skillRegistry";
-const INSPIRATIONS = [
-  {
-    id: "blue-hour",
-    title: "蓝调时刻 · 城市短片",
-    description: "用一张参考图规划镜头、节奏和配乐，适合快速验证画面方向。",
-    image: "/fixtures/demo/blue-hour.png",
-    tag: "H3 精选",
-  },
-  {
-    id: "product-story",
-    title: "产品故事板",
-    description: "把产品卖点拆成可编辑的画面节点，再交给模型继续完善。",
-    image: "/fixtures/demo/blue-hour.png",
-    tag: "品牌广告",
-  },
-  {
-    id: "mv-board",
-    title: "音乐 MV 分镜",
-    description: "从一句歌词开始，生成镜头草稿与视觉参考，保持创作方向可控。",
-    image: "/fixtures/demo/blue-hour.png",
-    tag: "音乐 MV",
-  },
-];
+} from "../features/creation/index.ts";
+import type { SkillRecord } from "../features/skills/index.ts";
+import { INSPIRATIONS } from "./startInspirations.ts";
 
 export default function StartPage({
   onCreateProject,
@@ -69,6 +48,7 @@ export default function StartPage({
   );
   const [status, setStatus] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("H3 精选");
+  const titleTabs = useRef<HTMLDivElement>(null);
   const { ref: chipRowRef, ...chipScroll } = useHorizontalScrollHint(activeTab);
   const filteredInspirations = INSPIRATIONS.filter(
     (item) =>
@@ -106,7 +86,7 @@ export default function StartPage({
   }
   async function create(input: CreationDraft): Promise<void> {
     try {
-      const error = await onCreateProject({ ...input, kind: "image" });
+      const error = await onCreateProject(input);
       if (error) setStatus(error);
     } catch {
       setStatus("无法开始创作，草稿仍保留，请重试。");
@@ -149,7 +129,12 @@ export default function StartPage({
         )}
       </div>
       <div className="start-discovery">
-        <div className="start-tabs" role="tablist" aria-label="开始创作内容">
+        <div
+          ref={titleTabs}
+          className="start-tabs"
+          role="tablist"
+          aria-label="开始创作内容"
+        >
           <button
             type="button"
             role="tab"
@@ -176,6 +161,11 @@ export default function StartPage({
           >
             技能
           </button>
+          <SlidingPillIndicator
+            containerRef={titleTabs}
+            activeKey={activeTab}
+            variant="line"
+          />
         </div>
         {activeTab === "skill" ? (
           <div
@@ -227,6 +217,7 @@ export default function StartPage({
                 <button
                   type="button"
                   className={selectedCategory === chip ? "is-selected" : ""}
+                  data-key={chip}
                   aria-pressed={selectedCategory === chip}
                   key={chip}
                   onClick={() => setSelectedCategory(chip)}
@@ -234,6 +225,11 @@ export default function StartPage({
                   {chip}
                 </button>
               ))}
+              <SlidingPillIndicator
+                containerRef={chipRowRef}
+                activeKey={selectedCategory}
+                variant="line"
+              />
             </div>
             <div
               className="start-inspiration-grid"
@@ -277,9 +273,11 @@ export default function StartPage({
                       decoding="async"
                     />
                     <div>
-                      <span>{item.tag}</span>
                       <strong>{item.title}</strong>
-                      <p>{item.description}</p>
+                      <div className="start-inspiration-meta">
+                        <p>{item.description}</p>
+                        <span>{item.tag}</span>
+                      </div>
                     </div>
                   </button>
                 ))

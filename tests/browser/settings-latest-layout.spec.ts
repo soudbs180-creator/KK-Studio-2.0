@@ -21,6 +21,40 @@ test.beforeEach(async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
 });
 
+for (const width of [390, 1099, 1920]) {
+  test(`当前Figma网络分组和使用说明保持真实内容 ${width}`, async ({
+    page,
+  }, info) => {
+    await page.setViewportSize({ width, height: 1080 });
+    await page.goto("/");
+    await page.getByRole("button", { name: "打开设置", exact: true }).click();
+    await openSection(page, "网络与代理");
+    const panel = page.locator(".settings-panel");
+    const guide = panel.locator(".settings-usage-guide");
+    await expect(guide).toHaveCount(1);
+    await expect(guide).not.toHaveAttribute("open", "");
+    await guide.locator("summary").click();
+    await expect(guide).toHaveAttribute("open", "");
+    await expect(guide).toContainText("配置网络代理与本地伴随服务");
+    const sections = panel.locator(".settings-network-section");
+    await expect(sections).toHaveCount(3);
+    for (const section of await sections.all()) {
+      await expect(section).toHaveCSS("padding", "0px");
+      await expect(section).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
+      await expect(section.locator("h3")).toHaveCSS("font-size", "16px");
+    }
+    await expect(panel).toContainText("npm run proxy → http://127.0.0.1:23210");
+    await expect(
+      panel.getByRole("heading", { name: "网页本机伴随服务", exact: true }),
+    ).toBeVisible();
+    await guide.locator("summary").click();
+    await expect(guide).not.toHaveAttribute("open", "");
+    await panel.screenshot({
+      path: info.outputPath(`settings-network-${width}.png`),
+    });
+  });
+}
+
 for (const width of [390, 801, 1099, 1920]) {
   test(`长连接名称保留完整名称且不挤压操作 ${width}`, async ({ page }) => {
     const providerName = "A".repeat(120);
@@ -77,9 +111,7 @@ for (const width of [390, 801, 1099, 1920]) {
     await page.goto("/");
     await page.getByRole("button", { name: "打开设置", exact: true }).click();
     await openSection(page, "模型接入");
-    await page
-      .getByRole("button", { name: "API Key（官方）", exact: true })
-      .click();
+    await page.getByRole("tab", { name: "官方直连 API", exact: true }).click();
     const content = page.locator(".settings-content");
     const provider = page.locator(".provider-connection-list [role=listitem]");
     await expect(provider.locator("strong")).toHaveAttribute(
@@ -92,7 +124,7 @@ for (const width of [390, 801, 1099, 1920]) {
     expect(
       await content.evaluate((el) => el.scrollWidth - el.clientWidth),
     ).toBeLessThanOrEqual(1);
-    await openSection(page, "扩展");
+    await openSection(page, "扩展与 MCP");
     await page.getByRole("tab", { name: /MCP/ }).click();
     const server = page.locator(".settings-mcp-server");
     await expect(server.locator("strong").first()).toHaveAttribute(
@@ -135,12 +167,12 @@ for (const width of [779, 800, 801, 1099]) {
     await page.setViewportSize({ width, height: 800 });
     await page.goto("/");
     await page.getByRole("button", { name: "打开设置", exact: true }).click();
-    await openSection(page, "通用");
+    await openSection(page, "通用设置");
     const content = page.locator(".settings-content");
     expect(
       await content.evaluate((el) => el.scrollWidth - el.clientWidth),
     ).toBeLessThanOrEqual(1);
-    await openSection(page, "扩展");
+    await openSection(page, "扩展与 MCP");
     const tabs = page.getByRole("tablist", { name: "Skill、MCP 与协作伙伴" });
     expect(
       await tabs.evaluate(
@@ -157,7 +189,7 @@ for (const width of [779, 800]) {
     await page.setViewportSize({ width, height: 643 });
     await page.goto("/");
     await page.getByRole("button", { name: "打开设置", exact: true }).click();
-    await page.getByLabel("主题", { exact: true }).selectOption("light");
+    await page.getByLabel("主题外观", { exact: true }).selectOption("light");
     const feedback = page.locator(".settings-feedback");
     await expect(feedback).toBeVisible();
     const visible = await feedback.evaluate((el) => {
@@ -180,10 +212,9 @@ test("连接保存与模型能力保存范围明确，连接操作紧邻表单",
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   await openSection(page, "模型接入");
-  await page
-    .getByRole("button", { name: "API Key（官方）", exact: true })
-    .click();
+  await page.getByRole("tab", { name: "官方直连 API", exact: true }).click();
   const form = page.locator(".provider-form");
+  await form.getByLabel("模型名称", { exact: true }).fill("image-fixture");
   const save = form.getByRole("button", { name: "保存连接", exact: true });
   await expect(save).toBeVisible();
   await save.scrollIntoViewIfNeeded();
@@ -205,7 +236,7 @@ test("连接保存与模型能力保存范围明确，连接操作紧邻表单",
     form.getByRole("button", { name: "测试连接并刷新模型", exact: true }),
   ).toHaveCount(1);
   await expect(
-    form.getByRole("button", { name: "保存此模型能力", exact: true }),
+    form.getByRole("button", { name: "保存此模型参数声明", exact: true }),
   ).toHaveCount(1);
 });
 
@@ -220,9 +251,11 @@ test("设置UI保持紧凑面板、绿色主题及手机分级导航", async ({ 
     208,
   );
   await openSection(page, "模型接入");
-  expect(
-    (await page.locator(".model-access-methods").boundingBox())!.width,
-  ).toBe(160);
+  const channels = page.getByRole("tablist", { name: "5 大模型接入渠道" });
+  await expect(channels).toBeVisible();
+  await expect(
+    channels.getByRole("tab", { name: "官方直连 API", exact: true }),
+  ).toHaveAttribute("aria-selected", "true");
   await page.setViewportSize({ width: 390, height: 844 });
   const back = page.getByRole("button", { name: "返回设置分类", exact: true });
   await expect(back).toBeVisible();

@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   connectionGeometry,
+  cardLayout,
   cardVisualBounds,
   deleteConnection,
   restoreConnection,
@@ -75,23 +76,37 @@ test("删除和撤销只影响目标连接，节点缺失时不恢复悬空连�
   assert.deepEqual(restoreConnection([edge], edge, BASE_CANVAS_ITEMS), [edge]);
 });
 
-test("媒体自然比例进入画布可见边界", () => {
+test("上传图片自然比例进入画布可见边界", () => {
   const source = {
     ...BASE_CANVAS_ITEMS[0],
     mediaWidth: 1600,
     mediaHeight: 900,
   };
-  const result = {
-    ...source,
-    id: "result",
-    result: {
-      id: "result",
-      kind: "image" as const,
-      title: "宽图",
-      description: "",
-      source: "demo" as const,
-    },
-  };
   assert.equal(cardVisualBounds(source).height, 225);
-  assert.ok(Math.abs(cardVisualBounds(result).height - 227.75) < 0.001);
 });
+
+for (const [label, width, height, bodyHeight] of [
+  ["宽图", 1200, 300, 96.5],
+  ["16:9", 1200, 675, 214.625],
+  ["竖图", 600, 900, 569],
+  ["方图", 600, 600, 380],
+] as const) {
+  test(`${label}结果的主体和锚点匹配无内边距的1px边框`, () => {
+    const result = {
+      ...BASE_CANVAS_ITEMS[0],
+      id: "result",
+      mediaWidth: width,
+      mediaHeight: height,
+      result: {
+        id: "result",
+        kind: "image" as const,
+        title: label,
+        description: "synthetic geometry fixture",
+        source: "demo" as const,
+      },
+    };
+    assert.equal(cardVisualBounds(result).height, bodyHeight);
+    assert.deepEqual(cardLayout(result).anchor, { x: 380, y: bodyHeight / 2 });
+    assert.equal(cardLayout(result).collapsedHeight, bodyHeight);
+  });
+}

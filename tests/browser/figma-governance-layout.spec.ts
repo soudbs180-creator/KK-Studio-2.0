@@ -18,43 +18,45 @@ test("approved composer and shell geometry stays stable at phone and desktop siz
   expect(phoneComposer!.width).toBe(available);
   expect(phoneComposer!.x).toBeGreaterThanOrEqual(0);
   expect(phoneComposer!.x + phoneComposer!.width).toBeLessThanOrEqual(390);
-  const label = page.locator(".start-model-picker span");
+  const label = page.locator(
+    ".start-model-picker > button > span:not(.ui-icon)",
+  );
   await expect(label).toHaveText("Codex 内置生图");
+  await expect(label).toHaveCSS("text-overflow", "ellipsis");
+  await expect(label.locator("..")).toHaveAttribute("title", "Codex 内置生图");
   expect(
-    await label.evaluate(
-      (element) => element.clientWidth >= element.scrollWidth,
-    ),
-  ).toBe(true);
-  expect(Math.round(phoneComposer!.height)).toBe(170);
+    await label.evaluate((element) => element.clientWidth),
+  ).toBeGreaterThanOrEqual(24);
+  expect(Math.round(phoneComposer!.height)).toBe(132);
 
   await page.setViewportSize({ width: 1920, height: 1080 });
   await page.goto("/");
   const desktopComposer = await rect(page, ".start-composer");
   expect(desktopComposer).not.toBeNull();
   expect(Math.round(desktopComposer!.width)).toBe(652);
-  expect(Math.round(desktopComposer!.height)).toBe(170);
+  expect(Math.round(desktopComposer!.height)).toBe(156);
 
   const sidebar = page.locator(".sidebar");
   await page.getByRole("button", { name: "展开侧边栏", exact: true }).click();
   await expect(sidebar).not.toHaveClass(/is-collapsed/);
   await page.waitForTimeout(350);
-  expect(Math.round((await sidebar.boundingBox())!.width)).toBe(291);
+  expect(Math.round((await sidebar.boundingBox())!.width)).toBe(292);
   const toggle = page.getByRole("button", { name: "收起侧边栏", exact: true });
   await toggle.click();
   await expect(sidebar).toHaveClass(/is-collapsed/);
   await page.waitForTimeout(350);
-  expect(Math.round((await sidebar.boundingBox())!.width)).toBe(70);
-  await expect(sidebar.locator(".sidebar-icon-expand img")).toHaveAttribute(
-    "src",
-    /sidebar-expand\.svg$/,
+  expect(Math.round((await sidebar.boundingBox())!.width)).toBe(72);
+  await expect(sidebar.locator(".sidebar-icon-expand svg")).toHaveCSS(
+    "width",
+    "16px",
   );
   await page.getByRole("button", { name: "展开侧边栏", exact: true }).click();
   await expect(sidebar).not.toHaveClass(/is-collapsed/);
   await page.waitForTimeout(350);
-  expect(Math.round((await sidebar.boundingBox())!.width)).toBe(291);
-  await expect(sidebar.locator(".sidebar-icon-toggle img")).toHaveAttribute(
-    "src",
-    /sidebar-collapse\.svg$/,
+  expect(Math.round((await sidebar.boundingBox())!.width)).toBe(292);
+  await expect(sidebar.locator(".sidebar-icon-toggle svg")).toHaveCSS(
+    "width",
+    "16px",
   );
 });
 
@@ -77,7 +79,7 @@ test("desktop settings uses the compact frame and phone settings uses layered na
   const desktopSettings = await rect(page, ".settings-panel");
   expect(desktopSettings).not.toBeNull();
   expect(Math.round(desktopSettings!.width)).toBe(960);
-  expect(Math.round(desktopSettings!.height)).toBe(680);
+  expect(Math.round(desktopSettings!.height)).toBe(674);
   const desktopRail = await rect(page, ".settings-sidebar");
   expect(desktopRail).not.toBeNull();
   expect(Math.round(desktopRail!.width)).toBe(208);
@@ -101,7 +103,7 @@ test("desktop settings uses the compact frame and phone settings uses layered na
   expect(mobileSettings).not.toBeNull();
   expect(mobileSettings!.x).toBeGreaterThanOrEqual(0);
   expect(mobileSettings!.x + mobileSettings!.width).toBeLessThanOrEqual(390);
-  await expect(dialog.locator(".settings-content h2")).toHaveText("通用");
+  await expect(dialog.locator(".settings-content h2")).toHaveText("通用设置");
   await expect(dialog.locator(".settings-sidebar")).toBeHidden();
   const back = dialog.getByRole("button", {
     name: "返回设置分类",
@@ -118,7 +120,7 @@ test("desktop settings uses the compact frame and phone settings uses layered na
     mobileSettings!.x + mobileSettings!.width,
   );
   await expect(categories).toHaveCSS("flex-direction", "column");
-  await selectSettingsSection(page, "通用");
-  await expect(dialog.locator(".settings-content h2")).toHaveText("通用");
+  await selectSettingsSection(page, "通用设置");
+  await expect(dialog.locator(".settings-content h2")).toHaveText("通用设置");
   await expect(dialog.locator(".settings-sidebar")).toBeHidden();
 });

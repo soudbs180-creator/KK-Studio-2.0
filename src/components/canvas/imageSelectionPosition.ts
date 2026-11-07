@@ -18,6 +18,7 @@ export function getImageSelectionPosition(
   const gap = parseFloat(
     getComputedStyle(toolbar).getPropertyValue("--kk-space-2"),
   );
+  toolbar.style.maxWidth = `${Math.max(0, Math.min(380, canvas.getBoundingClientRect().width - gap * 2))}px`;
   const top =
     Math.min(
       card.top,

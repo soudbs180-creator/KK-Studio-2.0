@@ -35,23 +35,23 @@ test("Google 密钥与 CLI 地址草稿跨接入方式保留，关闭后恢复�
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   const dialog = page.getByRole("dialog", { name: "设置", exact: true });
   await dialog.getByRole("button", { name: "模型接入", exact: true }).click();
-  await dialog
-    .getByRole("button", { name: "API Key（官方）", exact: true })
-    .click();
+  await dialog.getByRole("tab", { name: "官方直连 API", exact: true }).click();
   const key = dialog.getByLabel("Google 密钥", { exact: true });
   await key.fill(draftKey);
-  await dialog.getByRole("button", { name: "CLI 账号", exact: true }).click();
+  await dialog.getByRole("tab", { name: "CLI 直连 CLI", exact: true }).click();
   await dialog.getByRole("button", { name: "Gemini CLI", exact: true }).click();
   const bridge = dialog.getByLabel("Gemini CLI 桥地址", { exact: true });
   await expect(bridge).toHaveValue(savedBridge);
   await bridge.fill(draftBridge);
-  for (const method of ["API Key（中转站）", "Codex 主 Agent", "OAuth"]) {
-    await dialog.getByRole("button", { name: method, exact: true }).click();
+  for (const method of ["relay", "cli", "oauth"]) {
+    await dialog.locator(`[data-channel="${method}"]`).click();
     await dialog
-      .getByRole("button", { name: "API Key（官方）", exact: true })
+      .getByRole("tab", { name: "官方直连 API", exact: true })
       .click();
     await expect(key).toHaveValue(draftKey);
-    await dialog.getByRole("button", { name: "CLI 账号", exact: true }).click();
+    await dialog
+      .getByRole("tab", { name: "CLI 直连 CLI", exact: true })
+      .click();
     await dialog
       .getByRole("button", { name: "Gemini CLI", exact: true })
       .click();
@@ -72,11 +72,9 @@ test("Google 密钥与 CLI 地址草稿跨接入方式保留，关闭后恢复�
   await dialog.getByRole("button", { name: "关闭设置", exact: true }).click();
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   await dialog.getByRole("button", { name: "模型接入", exact: true }).click();
-  await dialog
-    .getByRole("button", { name: "API Key（官方）", exact: true })
-    .click();
+  await dialog.getByRole("tab", { name: "官方直连 API", exact: true }).click();
   await expect(key).toHaveValue("");
-  await dialog.getByRole("button", { name: "CLI 账号", exact: true }).click();
+  await dialog.getByRole("tab", { name: "CLI 直连 CLI", exact: true }).click();
   await dialog.getByRole("button", { name: "Gemini CLI", exact: true }).click();
   await expect(bridge).toHaveValue(savedBridge);
 });
@@ -105,7 +103,7 @@ test("取消 Google 检测后切换方式不丢草稿，迟到响应不能覆盖
     const dialog = page.getByRole("dialog", { name: "设置", exact: true });
     await dialog.getByRole("button", { name: "模型接入", exact: true }).click();
     await dialog
-      .getByRole("button", { name: "API Key（官方）", exact: true })
+      .getByRole("tab", { name: "官方直连 API", exact: true })
       .click();
     const key = dialog.getByLabel("Google 密钥", { exact: true });
     await key.fill(draftKey);
@@ -113,8 +111,8 @@ test("取消 Google 检测后切换方式不丢草稿，迟到响应不能覆盖
       .getByRole("button", { name: "测试 Google 连接", exact: true })
       .click();
     await expect.poll(() => requests).toBe(1);
-    const cliMethod = dialog.getByRole("button", {
-      name: "CLI 账号",
+    const cliMethod = dialog.getByRole("tab", {
+      name: "CLI 直连 CLI",
       exact: true,
     });
     await expect(cliMethod).toBeDisabled();
@@ -129,7 +127,7 @@ test("取消 Google 检测后切换方式不丢草稿，迟到响应不能覆盖
       .fill(draftBridge);
     release();
     await dialog
-      .getByRole("button", { name: "API Key（官方）", exact: true })
+      .getByRole("tab", { name: "官方直连 API", exact: true })
       .click();
     await expect(key).toHaveValue(draftKey);
     await expect(

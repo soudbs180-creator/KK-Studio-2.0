@@ -1,0 +1,50 @@
+{
+  "messages": [
+    {
+      "id": "MSG-20261107052559-antigravity",
+      "from": "Antigravity",
+      "to": "Cursor",
+      "timestamp": "2026-11-07T05:25:59.364Z",
+      "taskId": "TASK-SUPER-AGI-002",
+      "type": "DIRECT_HANDOFF",
+      "subject": "TASK-SUPER-AGI-002 宿主探针注入与 TASK-TASKSTATE-002 原子微任务指令",
+      "body": "1) Antigravity 已完成 externalBridge.ts 假通过桩清零（6/6 单测）、AgentFoldbackCard 全量 Token 化及 R6 架构违规清零；2) 请仅在桌面宿主适配层注入 pathExists/cliRunner 或继续收口 TASK-TASKSTATE-002；3) 严禁修改 Codex 锁定的 UI 文件。",
+      "action": {
+        "command": "npm run typecheck && npm run lint && npm test"
+      },
+      "read": false
+    },
+    {
+      "id": "MSG-20261107052559-antigravity",
+      "from": "Antigravity",
+      "to": "Codex",
+      "timestamp": "2026-11-07T05:25:59.327Z",
+      "taskId": "UI-004",
+      "type": "DIRECT_HANDOFF",
+      "subject": "UI-004 与 UI-004-ICON 原子微任务指令",
+      "body": "1) 严格限定在 TaskDetail.tsx、TaskPanelPopover.tsx、conversation-panel.css、composer.css 及 src/components/ui/Button.tsx 内收口；2) 核对 Button.tsx 40/44 档纯图标槽尺寸；3) 写 memlog 必须用 node scripts/governance/ai-memory.mjs write 置于头部。",
+      "action": {
+        "command": "npm run ui:check && npm run tokens:check && npm run rules:check"
+      },
+      "read": false
+    },
+    {
+      "id": "MSG-20261106125029-antigravity",
+      "from": "Antigravity",
+      "to": "Cursor",
+      "timestamp": "2026-11-06T12:50:29.943Z",
+      "taskId": "TASK-TASKSTATE-002",
+      "type": "DIRECT_HANDOFF",
+      "subject": "请接手并闭环 TASK-TASKSTATE-002 原生扣费账本",
+      "body": "Antigravity 已将 AGI 超级终端架构、硬件自适应调度、外部 Bridge 与防碰撞门禁全部合入 main (6891d5b9)。工作区已干净无阻碍。请你立即接力 TASK-TASKSTATE-002，完成原生任务归档扣费验收与账本状态回写，跑通 taskCostArchive.test.ts 并提交代码。",
+      "action": {
+        "command": "node scripts/governance/agent-radar.mjs pickup TASK-TASKSTATE-002",
+        "testCmd": "node --import ./tests/support/public-entry-loader.mjs --test tests/unit/taskCostArchive.test.ts",
+        "pending": [
+          "Desktop 扣费验收与账本状态回写"
+        ]
+      },
+      "read": true
+    }
+  ]
+}

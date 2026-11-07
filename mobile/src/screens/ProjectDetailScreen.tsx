@@ -77,10 +77,6 @@ export default function ProjectDetailScreen() {
           }
         />
         <Action
-          label="画布与有限节点编辑"
-          onPress={() => router.push(`/canvas/${id}`)}
-        />
-        <Action
           label="提案、预览与批准"
           onPress={() => router.push(`/proposals/${id}`)}
         />

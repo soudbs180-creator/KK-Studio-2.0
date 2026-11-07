@@ -48,3 +48,5 @@
 - Mobile 只按 Web 核心契约对齐，原生入口、裁剪能力和真机持久化由 `T12` 验收。
 
 - 2026-10-15：TASK-KK-UNIFIED-20261015 已获用户实施授权，新增范围见 [统一规格](../changes/2026-10-15-kk-unified/spec.md)。本卡既有证据仍限原版本；新范围实现/真实验收尚未完成，不能沿用旧 PASS 关闭。
+
+2026-10-28 P3源码解耦候选：TASK-MOD-P3C，完整R4降至0，业务任务/原件/记忆隐私/凭据与旧存储身份保持；未证明原生、真实外部服务或main已更新，功能成熟度不据此升级。[验证TASK-MOD-P3C](../changes/2026-10-28-p3c-creation-local-service/verification.md)。

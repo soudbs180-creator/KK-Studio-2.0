@@ -1,4 +1,4 @@
-import type { CreationTask } from "../creation/model.ts";
+import type { CreationTask } from "../../domain/creationTypes.ts";
 import type { ImageEditContext } from "../../domain/imageEdit.ts";
 /** Root constraints are immutable; only the latest instruction is carried forward. */
 export function imageResultContext(

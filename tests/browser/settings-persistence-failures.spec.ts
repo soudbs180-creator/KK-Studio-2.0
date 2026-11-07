@@ -22,7 +22,7 @@ test("记忆关闭保存失败保留真实开关，解除故障后关闭与重�
     };
   });
   await page.goto("/");
-  await openSettingsSection(page, "记忆");
+  await openSettingsSection(page, "记忆管理");
   const dialog = page.getByRole("dialog", { name: "设置", exact: true });
   const toggle = dialog.getByRole("switch", {
     name: "记忆服务开关",
@@ -43,7 +43,7 @@ test("记忆关闭保存失败保留真实开关，解除故障后关闭与重�
   await toggle.tap();
   await expect(toggle).toHaveAttribute("aria-checked", "false");
   await page.reload();
-  await openSettingsSection(page, "记忆");
+  await openSettingsSection(page, "记忆管理");
   await expect(toggle).toHaveAttribute("aria-checked", "false");
 });
 
@@ -92,7 +92,7 @@ test("插件停用保存失败保留运行态和原记录，重试成功后重�
       ),
     )
     .toBe(1);
-  await openSettingsSection(page, "扩展");
+  await openSettingsSection(page, "扩展与 MCP");
   const dialog = page.getByRole("dialog", { name: "设置", exact: true });
   await dialog.getByRole("tab", { name: /^MCP(?: 工具)?$/, exact: true }).tap();
   const before = await page.evaluate(() =>
@@ -135,7 +135,7 @@ test("插件停用保存失败保留运行态和原记录，重试成功后重�
     ),
   ).toBe(0);
   await page.reload();
-  await openSettingsSection(page, "扩展");
+  await openSettingsSection(page, "扩展与 MCP");
   await dialog.getByRole("tab", { name: /^MCP(?: 工具)?$/, exact: true }).tap();
   await expect(
     dialog.getByRole("switch", { name: "启用 Persist fixture", exact: true }),
@@ -147,7 +147,7 @@ test("损坏插件记录不导致设置崩溃，也不被随包插件覆盖", as
     localStorage.setItem("canvas-plugins", "[null]"),
   );
   await page.goto("/");
-  await openSettingsSection(page, "扩展");
+  await openSettingsSection(page, "扩展与 MCP");
   const dialog = page.getByRole("dialog", { name: "设置", exact: true });
   await dialog.getByRole("tab", { name: /^MCP(?: 工具)?$/, exact: true }).tap();
   await expect(dialog.getByRole("alert")).toContainText("原记录保留");

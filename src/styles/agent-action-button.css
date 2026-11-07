@@ -1,21 +1,21 @@
 /* ============================================================================
  * KK-Studio-2.0 · Agent Circular 6-State Action Button
  * Adheres strictly to tokens.css and motion.css. Zero raw color literals.
- * Desktop: 40px diameter, Touch Target: >= 44px, Icon: 20px.
+ * Primary action: 44px circle and 28px glyph in every state.
  * ========================================================================== */
 
 .agent-action-button {
-  --agent-action-size: var(--kk-control-h-xl, 40px);
+  --agent-action-size: var(--kk-control-h-xl, 44px);
   --agent-action-touch-size: 44px;
 
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
-  min-width: 40px;
-  min-height: 40px;
+  width: var(--agent-action-size);
+  height: var(--agent-action-size);
+  min-width: var(--agent-action-size);
+  min-height: var(--agent-action-size);
   border-radius: var(--kk-radius-full);
   padding: 0;
   margin: 0;
@@ -142,8 +142,8 @@
 /* --- Rotating Spinner / Shimmer --- */
 .agent-action-spinner {
   display: inline-block;
-  width: var(--kk-icon-glyph-md, 20px);
-  height: var(--kk-icon-glyph-md, 20px);
+  width: var(--kk-icon-glyph-xl, 28px);
+  height: var(--kk-icon-glyph-xl, 28px);
   border: 2px solid var(--kk-border-subtle);
   border-top-color: currentColor;
   border-radius: var(--kk-radius-full);
@@ -166,11 +166,4 @@
 /* --- Toolbar Alignment Integration --- */
 .composer-toolbar .agent-action-button {
   order: 7;
-}
-
-.composer-toolbar .agent-action-button > img {
-  display: block;
-  width: 20px;
-  height: 20px;
-  object-fit: contain;
 }

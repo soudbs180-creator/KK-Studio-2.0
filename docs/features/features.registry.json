@@ -5,8 +5,8 @@
     "area": "creation",
     "status": "PARTIAL",
     "card": "docs/features/feat-035-image-mask-editing.md",
-    "summary": "框选、画笔、色块共用原像素Mask、裁剪/请求/保护融合；Web/Desktop保存、重绘和灯箱本地验收通过，真实模型质量与移动真机待验。",
-    "entryPoints": ["图片节点重绘", "图片灯箱重绘"],
+    "summary": "四入口默认开启；原生蒙版传输、像素保护、归档、项目包与重启已验，外部真实模型效果由VERIFY-002承接。",
+    "entryPoints": ["画布图片浮动工具栏"],
     "code": [
       "src/domain/imageEdit.ts",
       "src/features/image-edit/mask.ts",
@@ -14,21 +14,47 @@
       "src/features/image-edit/editTasks.ts",
       "src/components/nodes/ImageRedrawDialog.tsx",
       "src/features/creation/imageTaskCommand.ts",
+      "src/features/capabilities/index.ts",
+      "src/features/creation/inpaintCapabilityDispatch.ts",
       "src-tauri/src/task_host.rs",
-      "src-tauri/src/image_edit_schema.rs"
+      "src-tauri/src/image_edit_schema.rs",
+      "src/features/image-edit/index.ts",
+      "src-tauri/src/task_host_comfy.rs"
     ],
     "tests": [
       "tests/unit/imageEdit.test.ts",
+      "tests/unit/capabilityRegistry.test.ts",
+      "tests/unit/inpaintCapabilityDispatch.test.ts",
       "tests/unit/imageEditSnapshot.test.ts",
       "tests/unit/imageEditFixtureCredential.test.ts",
       "tests/unit/imageMaskAnnotation.test.ts",
       "tests/unit/nativeTaskHost.test.ts",
       "tests/unit/projectPackage.test.ts",
       "tests/browser/image-edit.spec.ts",
-      "tests/desktop/image-edit.mjs"
+      "tests/desktop/image-edit.mjs",
+      "tests/browser/image-capabilities.spec.ts"
     ],
-    "tasks": ["TASK-IMAGE-EDIT-001", "TASK-IMAGE-EDIT-VERIFY-002"],
-    "updated": "2026-10-08"
+    "tasks": [
+      "TASK-IMAGE-EDIT-001",
+      "TASK-IMAGE-EDIT-VERIFY-002",
+      "TASK-MOD-P2",
+      "TASK-MOD-P3A",
+      "TASK-MOD-P4-CREATION",
+      "TASK-MOD-P4-REMAINING",
+      "TASK-COMFY-IMAGE-20261103"
+    ],
+    "updated": "2026-11-03",
+    "runtimeEvidence": [
+      {
+        "platform": "desktop",
+        "path": "docs/changes/2026-11-03-comfy-production/verification.md"
+      },
+      {
+        "platform": "web",
+        "path": "docs/changes/2026-11-03-comfy-production/verification.md"
+      }
+    ],
+    "platforms": ["desktop", "web"]
   },
   {
     "id": "FEAT-001",
@@ -65,6 +91,9 @@
       "tests/unit/canvasGraph.test.ts",
       "tests/unit/projectCanvas.test.ts",
       "tests/unit/canvasHistory.test.ts",
+      "tests/unit/canvasHistoryPreview.test.ts",
+      "tests/unit/canvasPersistencePerformance.test.ts",
+      "tests/browser/canvas-rendering-performance.spec.ts",
       "tests/unit/canvasPreferences.test.ts",
       "tests/browser/ui-interactions.spec.ts",
       "tests/browser/ui-interaction-matrix.spec.ts",
@@ -83,9 +112,10 @@
       "TASK-CANVAS-WIDE-PORT-20261014",
       "TASK-222-ACTIONS-20261014",
       "TASK-223-ACTIONS-20261014",
-      "TASK-CODEX-HOME-20261015"
+      "TASK-CODEX-HOME-20261015",
+      "TASK-CANVAS-PERF-20261024"
     ],
-    "updated": "2026-10-15",
+    "updated": "2026-10-24",
     "platforms": ["web", "desktop"],
     "runtimeEvidence": [
       {
@@ -208,7 +238,7 @@
     "area": "creation",
     "status": "PARTIAL",
     "card": "docs/features/feat-003-image-parameters.md",
-    "summary": "图片参数与生成/编辑三态、参考图/任务数量限额按精确账号模型目录生效；手动/报告声明、恢复和Web/Desktop提交校验已接入。声明不代表真实Provider验收；蒙版编辑见FEAT-035；扩图执行待接通。",
+    "summary": "图片参数与生成/编辑三态、参考图/任务数量限额按精确账号模型目录生效；手动/报告声明、恢复和Web/Desktop提交校验已接入。声明不代表真实Provider验收；蒙版编辑见FEAT-035；扩图已接通本地工作流（FEAT-040）。",
     "entryPoints": [
       "图片节点参数弹层 CreationParameters",
       "图片卡片模型/参数菜单",
@@ -269,51 +299,78 @@
     "id": "FEAT-004",
     "title": "ComfyUI 本地出图链",
     "area": "creation",
-    "status": "PARTIAL",
+    "status": "REAL",
     "card": "docs/features/feat-004-comfyui.md",
-    "summary": "本地 ComfyUI 适配器与 Rust 命令已写，但前端未接 invoke 桥、未接图片任务命令，当前不能真正出图。",
-    "entryPoints": ["设置 › ComfyUI 连接", "图片节点（规划中的本地后端）"],
+    "summary": "画布工作流参数双面板同步、原生编辑器双向回写、真实GPU生成、AssetPort归档连线和重开。",
+    "entryPoints": ["画布工作流节点", "设置 › 模型接入 › 本地"],
     "code": [
       "src/integrations/generation/localComfyUiAdapter.ts",
       "src/integrations/generation/providerAdapterFactory.ts",
-      "src-tauri/src/main.rs"
+      "src-tauri/src/main.rs",
+      "src/features/comfyui/index.ts"
     ],
-    "tests": ["tests/unit/generationServerProvider.test.ts"],
-    "tasks": ["T6", "EXT-COMFY", "TASK-KK-UNIFIED-20261015"],
-    "updated": "2026-10-15",
-    "platforms": ["web", "desktop"]
+    "tests": [
+      "tests/unit/generationServerProvider.test.ts",
+      "tests/browser/comfy-parameters.spec.ts",
+      "tests/browser/comfy-production-recovery.spec.ts"
+    ],
+    "tasks": [
+      "T6",
+      "EXT-COMFY",
+      "TASK-KK-UNIFIED-20261015",
+      "TASK-MOD-P6-1",
+      "TASK-COMFY-IMAGE-20261103"
+    ],
+    "updated": "2026-11-03",
+    "platforms": ["desktop"],
+    "runtimeEvidence": [
+      {
+        "platform": "desktop",
+        "path": "docs/changes/2026-11-03-comfy-production/verification.md"
+      }
+    ]
   },
   {
     "id": "FEAT-005",
     "title": "ComfyUI 工作流库（本地管理）",
     "area": "creation",
-    "status": "PARTIAL",
+    "status": "REAL",
     "card": "docs/features/feat-005-comfyui-workflows.md",
-    "summary": "ComfyUI工作流迁入模型接入/本地，保留ID与存储key；导入导出/删除写入ACK及失败保全已验，实际执行链未接通。",
-    "entryPoints": ["素材/工作流库 LibraryPage", "工作流导入按钮"],
+    "summary": "API/UI JSON导入导出、原生转换、完整模板、每卡独立快照与参数持久化。",
+    "entryPoints": ["画布工作流节点", "设置 › 模型接入 › 本地"],
     "code": [
       "src/features/comfyui/workflowRegistry.ts",
       "src/components/LibraryPage.tsx",
       "src/components/CatalogPageBody.tsx",
       "src/components/WorkflowCard.tsx",
-      "src/components/WorkflowImportButton.tsx"
+      "src/components/WorkflowImportButton.tsx",
+      "src/features/comfyui/index.ts"
     ],
     "tests": [
       "tests/unit/workflowRegistry.test.ts",
       "tests/browser/catalog-pages.spec.ts",
-      "tests/browser/design-system-pages.spec.ts"
+      "tests/browser/design-system-pages.spec.ts",
+      "tests/browser/comfy-parameters.spec.ts",
+      "tests/browser/comfy-production-recovery.spec.ts"
     ],
-    "tasks": ["T6", "TASK-CAP-001", "TASK-DS-002", "TASK-KK-UNIFIED-20261015"],
-    "updated": "2026-10-16",
-    "platforms": ["web", "desktop"],
+    "tasks": [
+      "T6",
+      "TASK-CAP-001",
+      "TASK-DS-002",
+      "TASK-KK-UNIFIED-20261015",
+      "TASK-MOD-P6-1",
+      "TASK-COMFY-IMAGE-20261103"
+    ],
+    "updated": "2026-11-03",
+    "platforms": ["desktop", "web"],
     "runtimeEvidence": [
       {
-        "platform": "web",
-        "path": "docs/changes/2026-09-22-design-system-pages/verification.md"
+        "platform": "desktop",
+        "path": "docs/changes/2026-11-03-comfy-production/verification.md"
       },
       {
-        "platform": "desktop",
-        "path": "docs/changes/2026-09-22-design-system-pages/verification.md"
+        "platform": "web",
+        "path": "docs/changes/2026-11-03-comfy-production/verification.md"
       }
     ]
   },
@@ -321,24 +378,35 @@
     "id": "FEAT-006",
     "title": "视频生成节点",
     "area": "creation",
-    "status": "PROTOTYPE",
+    "status": "PARTIAL",
     "card": "docs/features/feat-006-video-generation.md",
-    "summary": "视频节点（标注 MiniMax H3）当前只回放固定本地演示素材，提示词/参数不改变结果，无供应商提交链。",
+    "summary": "Veo 3.1 复用统一任务与原生持久宿主：真实提交/轮询、严格参数与首尾帧、停止等待、原件归档和回执恢复；真实付费出片待验。",
     "entryPoints": ["添加节点 › 视频", "VideoNode"],
     "code": [
       "src/components/nodes/VideoNode.tsx",
-      "src/components/nodes/useLocalGeneration.ts",
       "src/domain/demoMedia.ts",
-      "src/domain/localGeneration.ts"
+      "src/domain/localGeneration.ts",
+      "src/features/creation/mediaTaskInput.ts",
+      "src/features/creation/mediaTaskExecution.ts",
+      "src/features/creation/nativeTaskHost.ts",
+      "src-tauri/src/task_host_media.rs",
+      "packages/creation-contracts/media.ts"
     ],
-    "tests": ["tests/browser/demo-results.spec.ts"],
+    "tests": [
+      "tests/unit/mediaTask.test.ts",
+      "tests/unit/mediaTaskExecution.test.ts",
+      "tests/unit/mediaResponse.test.ts",
+      "tests/browser/demo-results.spec.ts",
+      "tests/browser/generation-flow.spec.ts",
+      "tests/browser/canvas-state-actions.spec.ts"
+    ],
     "tasks": [
       "BACKEND-MEDIA-001",
       "TASK-MINIMAX-001",
       "EXT-PROVIDER",
       "TASK-KK-UNIFIED-20261015"
     ],
-    "updated": "2026-10-15",
+    "updated": "2026-11-04",
     "platforms": ["web", "desktop"]
   },
   {
@@ -347,21 +415,29 @@
     "area": "creation",
     "status": "PARTIAL",
     "card": "docs/features/feat-007-audio-generation.md",
-    "summary": "音频节点仍回放本地演示素材；OpenAI 兼容 TTS 请求构造、音频选项规范化与代理拼接（vendor 移植 audioGeneration.ts）已可用。",
+    "summary": "OpenAI兼容speech接入统一任务/原生宿主、MP3/WAV严格校验与素材归档；无模型引导设置，无演示回退。真实语音服务待验，音乐协议未接。",
     "entryPoints": ["添加节点 › 音频", "PromptCreationNode"],
     "code": [
       "src/components/nodes/PromptCreationNode.tsx",
-      "src/components/nodes/useLocalGeneration.ts",
       "src/domain/demoMedia.ts",
-      "src/features/creation/audioGeneration.ts"
+      "src/features/creation/audioGeneration.ts",
+      "src/features/creation/mediaTaskInput.ts",
+      "src/features/creation/mediaTaskExecution.ts",
+      "src/features/creation/nativeTaskHost.ts",
+      "src-tauri/src/task_host_media.rs",
+      "packages/creation-contracts/media.ts"
     ],
     "tests": [
       "tests/browser/demo-results.spec.ts",
       "tests/unit/audioGeneration.test.ts",
-      "tests/browser/ui-feature-parity.spec.ts"
+      "tests/browser/ui-feature-parity.spec.ts",
+      "tests/unit/mediaTask.test.ts",
+      "tests/unit/mediaTaskExecution.test.ts",
+      "tests/unit/mediaResponse.test.ts",
+      "tests/browser/generation-flow.spec.ts"
     ],
     "tasks": ["BACKEND-MEDIA-001", "EXT-PROVIDER", "TASK-UI-005"],
-    "updated": "2026-09-22",
+    "updated": "2026-11-04",
     "platforms": ["web", "desktop"]
   },
   {
@@ -374,7 +450,6 @@
     "entryPoints": ["添加节点 › 文本", "PromptCreationNode"],
     "code": [
       "src/components/nodes/PromptCreationNode.tsx",
-      "src/components/nodes/useLocalGeneration.ts",
       "src-tauri/src/main.rs",
       "src/features/creation/textGeneration.ts",
       "src/features/creation/textTaskResult.ts",
@@ -398,7 +473,7 @@
       "EXT-PROVIDER",
       "TASK-KK-UNIFIED-20261015"
     ],
-    "updated": "2026-10-15",
+    "updated": "2026-11-04",
     "platforms": ["web", "desktop"],
     "runtimeEvidence": [
       {
@@ -421,7 +496,7 @@
     "area": "creation",
     "status": "PARTIAL",
     "card": "docs/features/feat-009-conversation.md",
-    "summary": "KK 默认 Codex 已接通 Web/Windows、Agent 本地图片和显式画布原件引用；其他登录适配、参考图编辑与后台网页仍待办。本轮469本地安全修复/启动恢复通过，默认旧聊天资料仍READ_ONLY；协议6新/临时聊天及不支持的多聊天/v3写入禁用，完整迁移/protocol7仍开放。",
+    "summary": "KK默认Codex已有Web/Windows执行链；2.1.37本地snapshot3/HTTP7迁移、canonical聊天读写、原线程历史持久与重开恢复通过，实际默认9项目11上下文已可写。当前真实新回复因Codex周额度100%未提交，保持PARTIAL；临时/新窗口、完整新聊天及原开放功能不扩大验收。",
     "entryPoints": ["右侧对话面板 ConversationPanel", "开始页对话入口"],
     "code": [
       "src/components/ConversationPanel.tsx",
@@ -448,6 +523,17 @@
       "scripts/agent/desktop-entry.mjs",
       "scripts/agent/runtime-package.mjs",
       "src/components/AgentComposer.tsx",
+      "src/components/settings/BrowserBackendSettings.tsx",
+      "src/features/browser/browserTypes.ts",
+      "src/features/browser/browserProviders.ts",
+      "src/features/browser/browserBackend.ts",
+      "src/features/browser/browserPreferences.ts",
+      "src/features/browser/index.ts",
+      "src/integrations/browser/browserRuntime.ts",
+      "src/integrations/browser/egoLiteRuntime.ts",
+      "src/integrations/browser/index.ts",
+      "src-tauri/src/ego_browser.rs",
+      "src-tauri/src/browser_runtime.rs",
       "src/features/agent/agentAttachments.ts",
       "src/features/agent/googleInteractions.ts",
       "src/features/agent/googleAgentConnection.ts",
@@ -498,7 +584,9 @@
       "tests/unit/agentOwnershipRecovery.test.ts",
       "tests/unit/desktopAgentLifecycle.test.ts",
       "tests/browser/agent-connection-recovery.spec.ts",
-      "tests/desktop/agent-startup-recovery.mjs"
+      "tests/desktop/agent-startup-recovery.mjs",
+      "tests/unit/browserBackend.test.ts",
+      "tests/unit/browserPreferences.test.ts"
     ],
     "tasks": [
       "T4",
@@ -516,9 +604,10 @@
       "TASK-AGENT-UX-20261014",
       "TASK-CODEX-HOME-20261015",
       "TASK-KK-UNIFIED-20261015",
-      "TASK-AUDIT-REPAIR-20261017"
+      "TASK-AUDIT-REPAIR-20261017",
+      "TASK-CHAT-MIGRATION-20261017"
     ],
-    "updated": "2026-10-17",
+    "updated": "2026-10-24",
     "platforms": ["web", "desktop"],
     "runtimeEvidence": [
       {
@@ -568,8 +657,9 @@
     "summary": "基于浏览器 Web Speech API 的真实语音转文字，浏览器回归通过；Desktop WebView2 可用性未验证。",
     "entryPoints": ["输入框麦克风按钮 VoiceInputButton"],
     "code": [
-      "src/features/creation/useSpeechInput.ts",
-      "src/components/VoiceInputButton.tsx"
+      "src/features/speech/index.ts",
+      "src/features/speech/useSpeechInput.ts",
+      "src/features/speech/VoiceInputButton.tsx"
     ],
     "tests": ["tests/browser/composer-voice.spec.ts"],
     "tasks": ["TASK-CAP-001"],
@@ -599,7 +689,7 @@
       "tests/browser/design-system-pages.spec.ts",
       "tests/browser/capability-extensions.spec.ts"
     ],
-    "tasks": ["TASK-CAP-001", "TASK-DS-002"],
+    "tasks": ["TASK-CAP-001", "TASK-DS-002", "TASK-MOD-P4-SKILLS"],
     "updated": "2026-10-13",
     "platforms": ["web", "desktop"],
     "runtimeEvidence": [
@@ -685,7 +775,7 @@
     "area": "intelligence",
     "status": "PARTIAL",
     "card": "docs/features/feat-013-connectors.md",
-    "summary": "四种随包插件在固定1421开发、Web生产和fresh Tauri可创建、编辑、离线渲染并完整恢复；立即关闭耐久保存、写入失败留窗及坏数据主备保护已验证，CSP仍self。连接器统一入口、ctx.ai真实管线及远程Desktop插件仍未完成。",
+    "summary": "四种随包插件在固定1421开发、Web生产和fresh Tauri可创建、编辑、离线渲染并完整恢复；立即关闭耐久保存、写入失败留窗及坏数据主备保护已验证，CSP仍self。连接器统一入口、ctx.ai真实管线及远程Desktop插件仍未完成。 P5清单/验包/权限与受限RPC已接线，实验Web T1生产门默认关闭；legacy仍有宿主权限，原生与独立安全审查未完成。",
     "entryPoints": ["技能页内连接器目录 ConnectorCatalog"],
     "code": [
       "src/components/ConnectorCatalog.tsx",
@@ -715,7 +805,9 @@
       "TASK-PLUGIN-DEV-001",
       "TASK-PLUGIN-RECOVERY-001",
       "TASK-PLUGIN-MARKDOWN-001",
-      "TASK-DESKTOP-FLUSH-001"
+      "TASK-DESKTOP-FLUSH-001",
+      "TASK-MOD-P4-PLUGINS",
+      "TASK-MOD-P5"
     ],
     "updated": "2026-10-09",
     "platforms": ["web", "desktop"],
@@ -762,7 +854,9 @@
       "TASK-222-ACTIONS-20261014",
       "TASK-223-ACTIONS-20261014",
       "TASK-KK-UNIFIED-20261015",
-      "TASK-AUDIT-REPAIR-20261017"
+      "TASK-AUDIT-REPAIR-20261017",
+      "TASK-CHAT-MIGRATION-20261017",
+      "TASK-MOD-P7"
     ],
     "updated": "2026-10-17",
     "platforms": ["web", "desktop"],
@@ -992,9 +1086,11 @@
       "BACKEND-PLATFORM",
       "T10",
       "TASK-222-ACTIONS-20261014",
-      "TASK-223-ACTIONS-20261014"
+      "TASK-223-ACTIONS-20261014",
+      "TASK-MOD-P3E",
+      "TASK-E2E-WIRING-20261104"
     ],
-    "updated": "2026-10-14",
+    "updated": "2026-11-04",
     "platforms": ["web", "desktop"],
     "runtimeEvidence": [
       {
@@ -1247,21 +1343,31 @@
   },
   {
     "id": "FEAT-025",
-    "title": "本地演示素材管线（待替换 seam）",
+    "title": "生产生成去演示与显式离线夹具",
     "area": "system",
-    "status": "PROTOTYPE",
+    "status": "PARTIAL",
     "card": "docs/features/feat-025-demo-media.md",
-    "summary": "视频/音频节点仍使用固定本地演示素材；文本已切换到FEAT-008任务链，历史demo资源仅保留旧项目兼容。",
-    "entryPoints": ["视频/音频/文本节点的“生成/演示”动作"],
+    "summary": "首页、对话与四模态节点统一真实提交链，删除useLocalGeneration及默认假任务；固定素材只保留显式测试和历史项目读取。真实供应商跨端终验待补。",
+    "entryPoints": ["首页/对话/画布四模态生成动作"],
     "code": [
-      "src/components/nodes/useLocalGeneration.ts",
+      "src/components/StartPage.tsx",
+      "src/components/nodes/CreationComposer.tsx",
+      "src/components/nodes/PromptCreationNode.tsx",
+      "src/runtime/canvasCommandRuntime.tsx",
+      "src/features/creation/useImageCommandSubmission.ts",
       "src/domain/demoMedia.ts",
-      "src/domain/localGeneration.ts",
-      "public/fixtures/demo"
+      "src/domain/localGeneration.ts"
     ],
-    "tests": ["tests/browser/demo-results.spec.ts"],
+    "tests": [
+      "tests/unit/mediaTask.test.ts",
+      "tests/unit/mediaTaskExecution.test.ts",
+      "tests/unit/mediaResponse.test.ts",
+      "tests/browser/demo-results.spec.ts",
+      "tests/browser/generation-flow.spec.ts",
+      "tests/unit/mediaEntrySubmission.test.ts"
+    ],
     "tasks": ["UI-003", "BACKEND-MEDIA-001", "BACKEND-TEXT-NODE"],
-    "updated": "2026-09-21",
+    "updated": "2026-11-04",
     "platforms": ["web", "desktop"]
   },
   {
@@ -1343,7 +1449,7 @@
     "area": "future",
     "status": "PARTIAL",
     "card": "docs/features/feat-028-mobile.md",
-    "summary": "正式手机Web2.1.40/Mobile源码2.1.5已上线，source b457/Release416447150/部署39128852497与实际cbc0入口一致；PR72同tree独审57及main当前门禁PASS，线上320/390六圆控件/模型名切换/任务结果优先、旧图文刷新恢复及current40/唯一previous39已核。前39真实图文回执保留，本次0生成；40普通停留927.716秒刷新/原件逐字节一致，实体Android接受待补，视频/参考编辑/语音/Safari/新Native/远程AgentMCP仍未验，T12开放。",
+    "summary": "2026-10-30合流候选尚未发布，独立Mobile功能重新回归；2026-10-18远端生产回执保留：正式手机Web2.1.40/Mobile源码2.1.5已上线，source b457/Release416447150/部署39128852497与实际cbc0入口一致；PR72同tree独审57及main当前门禁PASS，线上320/390六圆控件/模型名切换/任务结果优先、旧图文刷新恢复及current40/唯一previous39已核。前39真实图文回执保留，本次0生成；40普通停留927.716秒刷新/原件逐字节一致，实体Android接受待补，视频/参考编辑/语音/Safari/新Native/远程AgentMCP仍未验，T12开放。",
     "entryPoints": [
       "kkai.plus 手机初次访问 /mobile/；桌面资料入口 /?view=desktop"
     ],
@@ -1384,7 +1490,7 @@
       "TASK-223-ACTIONS-20261014",
       "TASK-WEB-RELEASE-20261017"
     ],
-    "updated": "2026-10-18"
+    "updated": "2026-10-30"
   },
   {
     "id": "FEAT-029",
@@ -1412,7 +1518,7 @@
     "area": "intelligence",
     "status": "PARTIAL",
     "card": "docs/features/feat-030-agent-orchestration.md",
-    "summary": "Stage 状态机、工作台阶段计划及 plan/result 人工审批、严格项目范围/revision 校验、原计划工具面和画布交付契约；自动执行与 MCP 注册仍待接入。",
+    "summary": "Stage计划→User Mandate持久化→真实任务执行→结果审批；参数/连接绑定、取消与unknown围栏已接，当前Desktop与外部模型待验。",
     "entryPoints": [
       "任务工作台 → Plan（阶段查看、plan/result审批、返工、解除阻断与重新申请审批）",
       "Agent plan 工具面（MCP 注册待 BACKEND-MCP-AUTO）"
@@ -1430,7 +1536,8 @@
       "src/features/creation/useCreationStorage.ts",
       "src/components/TaskWorkbenchContent.tsx",
       "src/features/partners/PartnerRoles.tsx",
-      "src/features/partners/partnerRoleData.ts"
+      "src/features/partners/partnerRoleData.ts",
+      "src/features/agent/stageExecution.ts"
     ],
     "tests": [
       "tests/unit/stagePlan.test.ts",
@@ -1439,7 +1546,8 @@
       "tests/browser/stage-workbench.spec.ts",
       "tests/desktop/stage-workbench.mjs",
       "tests/unit/creationSaveQueue.test.ts",
-      "tests/browser/task-workbench.spec.ts"
+      "tests/browser/task-workbench.spec.ts",
+      "tests/unit/stageExecutionWiring.test.ts"
     ],
     "tasks": [
       "TASK-ORCH-001",
@@ -1447,9 +1555,14 @@
       "TASK-ORCH-003",
       "TASK-CANVAS-001",
       "TASK-UI-CLASSIFY-20261013",
-      "TASK-KK-UNIFIED-20261015"
+      "TASK-KK-UNIFIED-20261015",
+      "TASK-MOD-P3B",
+      "TASK-MOD-P3E",
+      "TASK-MOD-P4-AGENT",
+      "TASK-MOD-P4-REMAINING",
+      "TASK-E2E-WIRING-20261104"
     ],
-    "updated": "2026-10-15"
+    "updated": "2026-11-05"
   },
   {
     "id": "FEAT-031",
@@ -1457,20 +1570,30 @@
     "area": "creation",
     "status": "PARTIAL",
     "card": "docs/features/feat-031-unified-task-state.md",
-    "summary": "图片/文本共用9态任务契约：幂等、未知状态防重、失败子项重试、原生回执一致性校验；无供应商报价时成本保持未知，视频/音频链路仍待接入。",
+    "summary": "四模态共用9态任务、幂等和未知受理防重；视频受理回执先保存、按原ID查询，音视频归档回写；供应商成本与真实服务验收保持开放。",
     "entryPoints": ["任务工作台队列与批量矩阵", "任务审批成本估算显示"],
     "code": [
       "src/features/creation/taskState.ts",
       "src/features/creation/model.ts",
       "src/features/creation/imageTaskCommand.ts",
       "src/features/creation/nativeTaskHost.ts",
-      "src/features/creation/taskRecovery.ts"
+      "src/features/creation/taskRecovery.ts",
+      "src/features/creation/mediaTaskInput.ts",
+      "src/features/creation/mediaTaskExecution.ts",
+      "src/features/creation/nativeTaskHost.ts",
+      "src-tauri/src/task_host_media.rs",
+      "packages/creation-contracts/media.ts"
     ],
     "tests": [
       "tests/unit/taskState.test.ts",
       "tests/unit/nativeTaskHost.test.ts",
       "tests/unit/taskRecovery.test.ts",
-      "tests/browser/task-intent.spec.ts"
+      "tests/browser/task-intent.spec.ts",
+      "tests/unit/mediaTask.test.ts",
+      "tests/unit/mediaTaskExecution.test.ts",
+      "tests/unit/mediaResponse.test.ts",
+      "tests/browser/demo-results.spec.ts",
+      "tests/browser/generation-flow.spec.ts"
     ],
     "tasks": [
       "TASK-TASKSTATE-001",
@@ -1478,7 +1601,7 @@
       "BACKEND-MEDIA-001",
       "TASK-KK-UNIFIED-20261015"
     ],
-    "updated": "2026-10-15"
+    "updated": "2026-11-04"
   },
   {
     "id": "FEAT-032",
@@ -1599,9 +1722,10 @@
       "TASK-LOCAL-SERVICE-001",
       "TASK-222-ACTIONS-20261014",
       "TASK-223-ACTIONS-20261014",
-      "TASK-KK-UNIFIED-20261015"
+      "TASK-KK-UNIFIED-20261015",
+      "TASK-MOD-P3C"
     ],
-    "updated": "2026-10-16"
+    "updated": "2026-10-28"
   },
   {
     "id": "FEAT-038",
@@ -1609,7 +1733,7 @@
     "area": "backend",
     "status": "PROTOTYPE",
     "card": "docs/features/feat-038-ai-model-gateway.md",
-    "summary": "可插拔通道适配器 + 11 类失败分类 + 分档降级调度 + OpenAI 兼容模型发现/文本/SSE 端点；P1 BYOK 官方通道（豆包火山方舟预置 + doubao 判定修正）与文本/图片能力元数据闭环已落地，定向 gateway/provenance 回归 69 项全绿，当前回归 911 项（903 通过、0 失败、8 跳过），但未接真实上游与 DPAPI。",
+    "summary": "可插拔通道适配器 + 11 类失败分类 + 分档降级调度 + OpenAI 兼容模型发现/文本/SSE 端点；P1 BYOK 官方通道（豆包火山方舟预置 + doubao 判定修正）与文本/图片能力元数据闭环已落地，定向 gateway/provenance 回归 69 项全绿，当前回归 911 项（903 通过、0 失败、8 跳过），但未接真实上游与 DPAPI。 2026-10-18仅补LayeredCredentialStore持久失败/迟到读取/删除缓存边界，合成凭据验证不提升真实上游或DPAPI能力。",
     "entryPoints": [
       "无 UI 入口；/v1/chat/completions 仅在注入 chat 依赖时挂载，未注入返回 404"
     ],
@@ -1634,8 +1758,13 @@
       "tests/unit/modelMenuEntries.test.ts",
       "tests/unit/agentImages.test.ts"
     ],
-    "tasks": ["TASK-AI-GATEWAY-001"],
-    "updated": "2026-10-10"
+    "tasks": [
+      "TASK-AI-GATEWAY-001",
+      "TASK-LOCAL-GUARDS-20261018",
+      "TASK-MOD-P3D",
+      "TASK-MOD-P4-MODELS"
+    ],
+    "updated": "2026-10-28"
   },
   {
     "id": "FEAT-039",
@@ -1679,5 +1808,146 @@
     ],
     "updated": "2026-10-14",
     "platforms": ["web", "desktop"]
+  },
+  {
+    "id": "FEAT-040",
+    "title": "扩图",
+    "area": "creation",
+    "status": "REAL",
+    "card": "docs/features/feat-040-outpaint.md",
+    "summary": "默认开启；本地模型与四边扩展配置、真实ComfyUI扩图、原像素保护和归档连线。",
+    "entryPoints": ["画布图片浮动工具栏"],
+    "code": [
+      "src/features/capabilities/outpaintCapability.ts",
+      "src/features/image-edit/index.ts",
+      "src-tauri/src/task_host_comfy.rs"
+    ],
+    "tests": [
+      "tests/unit/imageCapabilities.test.ts",
+      "tests/unit/imageCapabilityWorkflow.test.ts",
+      "tests/unit/imageCapabilitySubmission.test.ts",
+      "tests/browser/image-capabilities.spec.ts",
+      "tests/browser/image-edit.spec.ts"
+    ],
+    "tasks": ["TASK-MOD-P6-OUTPAINT", "TASK-COMFY-IMAGE-20261103"],
+    "updated": "2026-11-03",
+    "runtimeEvidence": [
+      {
+        "platform": "desktop",
+        "path": "docs/changes/2026-11-03-comfy-production/verification.md"
+      }
+    ],
+    "platforms": ["desktop"]
+  },
+  {
+    "id": "FEAT-041",
+    "title": "高清修复",
+    "area": "creation",
+    "status": "REAL",
+    "card": "docs/features/feat-041-upscale.md",
+    "summary": "默认开启；RealESRGAN修复或明确Lanczos选项、精确2倍/4倍产物归档和重开。",
+    "entryPoints": ["画布图片浮动工具栏"],
+    "code": [
+      "src/features/capabilities/upscaleCapability.ts",
+      "src/features/image-edit/index.ts",
+      "src-tauri/src/task_host_comfy.rs"
+    ],
+    "tests": [
+      "tests/unit/imageCapabilities.test.ts",
+      "tests/unit/imageCapabilityWorkflow.test.ts",
+      "tests/unit/imageCapabilitySubmission.test.ts",
+      "tests/browser/image-capabilities.spec.ts",
+      "tests/browser/image-edit.spec.ts"
+    ],
+    "tasks": ["TASK-MOD-P6-UPSCALE", "TASK-COMFY-IMAGE-20261103"],
+    "updated": "2026-11-03",
+    "runtimeEvidence": [
+      {
+        "platform": "desktop",
+        "path": "docs/changes/2026-11-03-comfy-production/verification.md"
+      }
+    ],
+    "platforms": ["desktop"]
+  },
+  {
+    "id": "FEAT-042",
+    "title": "图层拆分",
+    "area": "creation",
+    "status": "REAL",
+    "card": "docs/features/feat-042-layer-split.md",
+    "summary": "默认开启；BiRefNet互补透明图层、部分成功归档及按图层重试。",
+    "entryPoints": ["画布图片浮动工具栏"],
+    "code": [
+      "src/features/capabilities/layerSplitCapability.ts",
+      "src/features/image-edit/index.ts",
+      "src-tauri/src/task_host_comfy.rs"
+    ],
+    "tests": [
+      "tests/unit/imageCapabilities.test.ts",
+      "tests/unit/imageCapabilityWorkflow.test.ts",
+      "tests/unit/imageCapabilitySubmission.test.ts",
+      "tests/browser/image-capabilities.spec.ts",
+      "tests/browser/image-edit.spec.ts"
+    ],
+    "tasks": ["TASK-MOD-P6-LAYER-SPLIT", "TASK-COMFY-IMAGE-20261103"],
+    "updated": "2026-11-03",
+    "runtimeEvidence": [
+      {
+        "platform": "desktop",
+        "path": "docs/changes/2026-11-03-comfy-production/verification.md"
+      }
+    ],
+    "platforms": ["desktop"]
+  },
+  {
+    "id": "FEAT-043",
+    "title": "进阶画布操作",
+    "area": "canvas",
+    "status": "PARTIAL",
+    "card": "docs/features/feat-043-advanced-canvas.md",
+    "summary": "34项严格原子操作、真实画布保存/历史、Floorplan布局与编号引用联动；Desktop终验待完成。",
+    "entryPoints": ["画布工具 → 导入架构蓝图", "Agent canvas_operation"],
+    "code": [
+      "src/domain/canvasOperations.ts",
+      "src/features/canvas/index.ts",
+      "src/components/canvas/useCanvasOperationRuntime.ts"
+    ],
+    "tests": [
+      "tests/unit/canvasOperations.test.ts",
+      "tests/unit/promptMentions.test.ts",
+      "tests/browser/advanced-canvas-wiring.spec.ts",
+      "tests/unit/deepWaterProduction.test.ts",
+      "tests/browser/deep-water-production.spec.ts"
+    ],
+    "tasks": ["TASK-E2E-WIRING-20261104", "TASK-DEEP-WATER-20261105"],
+    "updated": "2026-11-05"
+  },
+  {
+    "id": "FEAT-044",
+    "title": "分镜、光学与逐帧拉片",
+    "area": "creation",
+    "status": "PARTIAL",
+    "card": "docs/features/feat-044-storyboard-optics-shots.md",
+    "summary": "真实任务生成分镜、一致性审计/资产投影、摄影机提示词及客户端全帧切镜；外部模型与Desktop待验。",
+    "entryPoints": [
+      "画布工具 → 小说 / 剧本转分镜",
+      "节点参数 → 摄影机",
+      "视频节点 → 逐帧拉片"
+    ],
+    "code": [
+      "src/domain/storyboardPipeline.ts",
+      "src/domain/cameraOptics.ts",
+      "src/domain/videoShotBreakdown.ts",
+      "src/features/workflows/index.ts",
+      "src/app/useStoryboardWorkflow.ts"
+    ],
+    "tests": [
+      "tests/unit/creativeWorkflowWiring.test.ts",
+      "tests/browser/advanced-canvas-wiring.spec.ts",
+      "tests/unit/deepWaterProduction.test.ts",
+      "tests/browser/deep-water-production.spec.ts"
+    ],
+    "tasks": ["TASK-E2E-WIRING-20261104", "TASK-DEEP-WATER-20261105"],
+    "updated": "2026-11-05"
   }
 ]

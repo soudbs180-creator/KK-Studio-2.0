@@ -1,7 +1,6 @@
 import { z } from "zod";
-import { BROWSER_STORAGE_KEYS } from "../runtime/storage-contract.ts";
 
-export const SETTINGS_STORAGE_KEY = BROWSER_STORAGE_KEYS.settings;
+export const SETTINGS_STORAGE_KEY = "kk-studio-next:settings:v1";
 export const ACCENT_PRESETS = [
   { id: "default", label: "默认绿色" },
   { id: "blue", label: "蓝色" },

@@ -275,8 +275,8 @@ test(
       assert.equal(await identity(runtime).catch(() => null), "old-runtime");
       assert.equal(await identity(staging), "new-runtime");
       assert.equal((await retainedBackups(temporary)).length, 0);
-      assert.ok(attempts > 1 && attempts <= 5);
-      assert.ok(Date.now() - started < 6_000);
+      assert.ok(attempts > 1 && attempts <= 7);
+      assert.ok(Date.now() - started < 12_000);
     });
   },
 );

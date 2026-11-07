@@ -26,16 +26,16 @@ colors:
   on-error: "#ff8585"
   success: "#79cda8"
   warning: "#e6b96a"
-  focus: "#7fd6b2"
+  focus: "#dbdbdb"
   button-primary: "#e9e9e9"
-  button-primary-hover: "#ffffff"
+  button-primary-hover: "#f2f2f2"
   on-button-primary: "#161616"
   light-primary: "#21a673"
   light-primary-hover: "#2fbe86"
   light-primary-soft: "#7fd6b2"
   light-on-primary: "#0a0a0a"
   light-background: "#ededed"
-  light-surface: "#ffffff"
+  light-surface: "#f2f2f2"
   light-surface-container: "#eeeeee"
   light-surface-container-high: "#ececec"
   light-surface-variant: "#eaeaea"
@@ -52,53 +52,54 @@ colors:
   light-on-error: "#aa263b"
   light-success: "#216947"
   light-warning: "#8a590c"
-  light-focus: "#166443"
+  light-focus: "#252525"
   light-button-primary: "#252525"
   light-button-primary-hover: "#3c3c3c"
-  light-on-button-primary: "#ffffff"
+  light-on-button-primary: "#f2f2f2"
 typography:
   caption:
-    fontFamily: '"Inter", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif'
+    fontFamily: '"Source Han Sans CN VF", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", Inter, system-ui, sans-serif'
     fontSize: 12px
     lineHeight: "1.3333333333333333"
-    fontWeight: 400
+    fontWeight: 360
   body:
-    fontFamily: '"Inter", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif'
-    fontSize: 14px
-    lineHeight: "1.4285714285714286"
-    fontWeight: 400
-  body-strong:
-    fontFamily: '"Inter", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif'
-    fontSize: 14px
-    lineHeight: "1.4285714285714286"
-    fontWeight: 600
-  subtitle:
-    fontFamily: '"Inter", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif'
+    fontFamily: '"Source Han Sans CN VF", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", Inter, system-ui, sans-serif'
     fontSize: 16px
     lineHeight: "1.5"
-    fontWeight: 600
+    fontWeight: 360
+  body-strong:
+    fontFamily: '"Source Han Sans CN VF", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", Inter, system-ui, sans-serif'
+    fontSize: 16px
+    lineHeight: "1.5"
+    fontWeight: 460
+  subtitle:
+    fontFamily: '"Source Han Sans CN VF", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", Inter, system-ui, sans-serif'
+    fontSize: 16px
+    lineHeight: "1.5"
+    fontWeight: 460
   title:
-    fontFamily: '"Inter", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif'
+    fontFamily: '"Source Han Sans CN VF", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", Inter, system-ui, sans-serif'
     fontSize: 20px
     lineHeight: "1.4"
-    fontWeight: 700
+    fontWeight: 660
   display:
-    fontFamily: '"Inter", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif'
-    fontSize: 26px
-    lineHeight: "1.2307692307692308"
-    fontWeight: 700
+    fontFamily: '"Source Han Sans CN VF", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", Inter, system-ui, sans-serif'
+    fontSize: 28px
+    lineHeight: "1.2857142857142858"
+    fontWeight: 660
 rounded:
   none: 0px
   xs: 4px
   sm: 8px
   control: 8px
-  menu: 10px
+  menu: 12px
   lg: 16px
   panel: 20px
   card: 20px
-  full: 999px
+  full: 1000px
+  combo: 10px
 spacing:
-  space-hair: 2px
+  space-hair: 4px
   space-1: 4px
   space-2: 8px
   space-3: 12px
@@ -179,45 +180,12 @@ components:
     padding: 4px
 x-kk-studio:
   source: src/styles/tokens.css
-  sha256: 741f1739101b5cb1d407b65929a9e133d9a363390239a066005d95ee4d5d8138
+  sha256: 7f46df7566ab4a5e4037cad8d53760bda58cc160ddd19a28b5d3f1b0f2242d87
   hashEncoding: utf8-lf
   scopes:
     - selector: :root
       atRules: []
       declarations:
-        - property: --kk-image-scratch-opacity
-          value: "0.55"
-          important: false
-        - property: --kk-image-editor-max-width
-          value: 1280px
-          important: false
-        - property: --kk-image-editor-min-stage
-          value: 160px
-          important: false
-        - property: --kk-image-brush-slider-width
-          value: 96px
-          important: false
-        - property: --kk-image-editor-input-max-height
-          value: 120px
-          important: false
-        - property: --kk-image-annotation-label-width
-          value: 200px
-          important: false
-        - property: --kk-image-annotation-label-text
-          value: "#ffffff"
-          important: false
-        - property: --kk-image-model-width
-          value: 240px
-          important: false
-        - property: --kk-image-region-input-width
-          value: 280px
-          important: false
-        - property: --kk-image-lightbox-thumb-width
-          value: 96px
-          important: false
-        - property: --kk-image-lightbox-thumb-height
-          value: 64px
-          important: false
         - property: --kk-dark-1
           value: "#161616"
           important: false
@@ -240,7 +208,9 @@ x-kk-studio:
           value: "#d98a00"
           important: false
         - property: --kk-font-sans
-          value: '"Inter", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif'
+          value: |-
+            "Source Han Sans CN VF", "Noto Sans SC", "PingFang SC", "Microsoft YaHei",
+                Inter, system-ui, sans-serif
           important: false
         - property: --kk-font-mono
           value: '"Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace'
@@ -270,7 +240,7 @@ x-kk-studio:
           value: 0.4px
           important: false
         - property: --kk-space-hair
-          value: 2px
+          value: 4px
           important: false
         - property: --kk-space-1
           value: 4px
@@ -290,6 +260,12 @@ x-kk-studio:
         - property: --kk-space-6
           value: 40px
           important: false
+        - property: --kk-dimension-37
+          value: 37px
+          important: false
+        - property: --kk-dimension-19
+          value: 19px
+          important: false
         - property: --kk-radius-0
           value: "0"
           important: false
@@ -303,7 +279,7 @@ x-kk-studio:
           value: 8px
           important: false
         - property: --kk-radius-menu
-          value: 10px
+          value: 12px
           important: false
         - property: --kk-radius-lg
           value: 16px
@@ -315,16 +291,16 @@ x-kk-studio:
           value: 20px
           important: false
         - property: --kk-radius-full
-          value: 999px
+          value: 1000px
           important: false
         - property: --kk-font-caption
           value: 12px
           important: false
         - property: --kk-font-body
-          value: 14px
+          value: 16px
           important: false
         - property: --kk-font-body-strong
-          value: 14px
+          value: 16px
           important: false
         - property: --kk-font-subtitle
           value: 16px
@@ -333,16 +309,16 @@ x-kk-studio:
           value: 20px
           important: false
         - property: --kk-font-display
-          value: 26px
+          value: 28px
           important: false
         - property: --kk-line-caption
           value: 16px
           important: false
         - property: --kk-line-body
-          value: 20px
+          value: 24px
           important: false
         - property: --kk-line-body-strong
-          value: 20px
+          value: 24px
           important: false
         - property: --kk-line-subtitle
           value: 24px
@@ -351,25 +327,34 @@ x-kk-studio:
           value: 28px
           important: false
         - property: --kk-line-display
-          value: 32px
+          value: 36px
           important: false
         - property: --kk-font-weight-caption
-          value: "400"
+          value: "360"
           important: false
         - property: --kk-font-weight-body
-          value: "400"
+          value: "360"
           important: false
         - property: --kk-font-weight-body-strong
-          value: "600"
+          value: "460"
           important: false
         - property: --kk-font-weight-subtitle
-          value: "600"
+          value: "460"
           important: false
         - property: --kk-font-weight-title
-          value: "700"
+          value: "660"
           important: false
         - property: --kk-font-weight-display
-          value: "700"
+          value: "660"
+          important: false
+        - property: --kk-font-toolbar
+          value: var(--kk-font-caption)
+          important: false
+        - property: --kk-line-toolbar
+          value: var(--kk-line-caption)
+          important: false
+        - property: --kk-font-weight-toolbar
+          value: var(--kk-font-weight-caption)
           important: false
         - property: --kk-bg-app
           value: "#0a0a0a"
@@ -401,6 +386,26 @@ x-kk-studio:
         - property: --kk-neutral-selected
           value: "#2a2a2a"
           important: false
+        - property: --kk-control-idle-bg
+          value: transparent
+          important: false
+        - property: --kk-control-hover-bg
+          value: |-
+            color-mix(
+                in srgb,
+                var(--kk-text-primary) 4%,
+                transparent
+              )
+          important: false
+        - property: --kk-control-selected-bg
+          value: var(--kk-neutral-selected)
+          important: false
+        - property: --kk-control-idle-fg
+          value: var(--kk-text-secondary)
+          important: false
+        - property: --kk-control-selected-fg
+          value: var(--kk-text-primary)
+          important: false
         - property: --kk-text-primary
           value: "#dbdbdb"
           important: false
@@ -409,6 +414,9 @@ x-kk-studio:
           important: false
         - property: --kk-text-tertiary
           value: "#9e9e9e"
+          important: false
+        - property: --kk-ink-near-black
+          value: "#0a0a0a"
           important: false
         - property: --kk-text-accent
           value: "#7fd6b2"
@@ -426,7 +434,7 @@ x-kk-studio:
           value: "#e6b96a"
           important: false
         - property: --kk-focus-ring
-          value: "#7fd6b2"
+          value: "#dbdbdb"
           important: false
         - property: --kk-focus-ring-subtle
           value: rgba(255, 255, 255, 0.58)
@@ -451,6 +459,36 @@ x-kk-studio:
           important: false
         - property: --kk-star-end
           value: "#ee8b3a"
+          important: false
+        - property: --kk-tag-character-bg
+          value: "#1458a5"
+          important: false
+        - property: --kk-tag-character-text
+          value: "#f2f2f2"
+          important: false
+        - property: --kk-tag-scene-bg
+          value: "#6534b0"
+          important: false
+        - property: --kk-tag-scene-text
+          value: "#f2f2f2"
+          important: false
+        - property: --kk-tag-costume-bg
+          value: "#a12659"
+          important: false
+        - property: --kk-tag-costume-text
+          value: "#f2f2f2"
+          important: false
+        - property: --kk-tag-prop-bg
+          value: "#94420c"
+          important: false
+        - property: --kk-tag-prop-text
+          value: "#f2f2f2"
+          important: false
+        - property: --kk-tag-custom-bg
+          value: "#252525"
+          important: false
+        - property: --kk-tag-custom-text
+          value: "#dbdbdb"
           important: false
         - property: --kk-border-none
           value: "0"
@@ -534,16 +572,82 @@ x-kk-studio:
           value: 40px
           important: false
         - property: --kk-sidebar-width
-          value: 291px
+          value: 292px
+          important: false
+        - property: --kk-sidebar-compact-width
+          value: 72px
           important: false
         - property: --kk-panel-width
           value: 264px
           important: false
         - property: --kk-toolbar-height
-          value: 50px
+          value: 52px
           important: false
         - property: --kk-topbar-height
+          value: 52px
+          important: false
+        - property: --kk-canvas-toolbar-h
+          value: 44px
+          important: false
+        - property: --kk-canvas-toolbar-zoom-w
+          value: 100px
+          important: false
+        - property: --kk-canvas-toolbar-tools-width
+          value: 254px
+          important: false
+        - property: --kk-canvas-toolbar-button-h
+          value: 44px
+          important: false
+        - property: --kk-canvas-browser-switch-w
+          value: 144px
+          important: false
+        - property: --kk-control-surface-idle
+          value: "#1b1b1b"
+          important: false
+        - property: --kk-control-surface-hover
+          value: "#202020"
+          important: false
+        - property: --kk-control-surface-selected
+          value: "#252525"
+          important: false
+        - property: --kk-choice-selected-bg
+          value: "#333333"
+          important: false
+        - property: --kk-generation-count-trigger-w
           value: 40px
+          important: false
+        - property: --kk-generation-count-trigger-h
+          value: 32px
+          important: false
+        - property: --kk-generation-count-trigger-touch-w
+          value: 52px
+          important: false
+        - property: --kk-generation-count-trigger-touch-h
+          value: 44px
+          important: false
+        - property: --kk-material-panel-width
+          value: 748px
+          important: false
+        - property: --kk-material-panel-compact-width
+          value: 308px
+          important: false
+        - property: --kk-material-panel-h
+          value: 600px
+          important: false
+        - property: --kk-material-range-row-compact-width
+          value: 280px
+          important: false
+        - property: --kk-material-range-row-expanded-width
+          value: 720px
+          important: false
+        - property: --kk-material-range-row-h
+          value: 40px
+          important: false
+        - property: --kk-card-header-h
+          value: 36px
+          important: false
+        - property: --kk-card-header-action-h
+          value: 32px
           important: false
         - property: --kk-control-h-sm
           value: 24px
@@ -555,7 +659,7 @@ x-kk-studio:
           value: 40px
           important: false
         - property: --kk-control-h-xl
-          value: 40px
+          value: 44px
           important: false
         - property: --kk-control-px-sm
           value: 12px
@@ -581,17 +685,41 @@ x-kk-studio:
         - property: --kk-control-gap-xl
           value: 8px
           important: false
+        - property: --kk-control-inset
+          value: 2px
+          important: false
+        - property: --kk-model-phone-max-width
+          value: 140px
+          important: false
+        - property: --kk-settings-general-shell-height
+          value: 674px
+          important: false
+        - property: --kk-canvas-zoom-slot-width
+          value: 48px
+          important: false
+        - property: --kk-canvas-view-slot-width
+          value: 116px
+          important: false
+        - property: --kk-canvas-minimap-slot-width
+          value: 76px
+          important: false
+        - property: --kk-conversation-panel-default-width
+          value: 472px
+          important: false
+        - property: --kk-radius-combo
+          value: 10px
+          important: false
         - property: --kk-control-font-sm
           value: 12px
           important: false
         - property: --kk-control-font-md
-          value: 14px
+          value: 12px
           important: false
         - property: --kk-control-font-lg
-          value: 14px
+          value: 16px
           important: false
         - property: --kk-control-font-xl
-          value: 14px
+          value: 16px
           important: false
         - property: --kk-control-icon-sm
           value: 16px
@@ -603,7 +731,10 @@ x-kk-studio:
           value: 24px
           important: false
         - property: --kk-control-icon-xl
-          value: 24px
+          value: 28px
+          important: false
+        - property: --kk-icon-glyph-xs
+          value: 12px
           important: false
         - property: --kk-icon-glyph-sm
           value: 16px
@@ -614,6 +745,33 @@ x-kk-studio:
         - property: --kk-icon-glyph-lg
           value: 24px
           important: false
+        - property: --kk-icon-glyph-xl
+          value: 28px
+          important: false
+        - property: --kk-icon-glyph-xxl
+          value: 32px
+          important: false
+        - property: --kk-icon-stroke-12-regular
+          value: "0.75"
+          important: false
+        - property: --kk-icon-stroke-12-medium
+          value: "1"
+          important: false
+        - property: --kk-icon-stroke-12-bold
+          value: "1.25"
+          important: false
+        - property: --kk-icon-stroke-16-regular
+          value: "1"
+          important: false
+        - property: --kk-icon-stroke-16-medium
+          value: "1"
+          important: false
+        - property: --kk-icon-stroke-16-bold
+          value: "1.25"
+          important: false
+        - property: --kk-icon-stroke-standalone
+          value: "1"
+          important: false
         - property: --kk-hit-min
           value: 24px
           important: false
@@ -622,6 +780,21 @@ x-kk-studio:
           important: false
         - property: --kk-hit-primary
           value: 40px
+          important: false
+        - property: --kk-hit-touch
+          value: 44px
+          important: false
+        - property: --kk-icon-button-glyph-sm
+          value: 16px
+          important: false
+        - property: --kk-icon-button-glyph-md
+          value: 20px
+          important: false
+        - property: --kk-button-icon-sm
+          value: 12px
+          important: false
+        - property: --kk-button-icon-md
+          value: 16px
           important: false
         - property: --kk-accent
           value: "#21a673"
@@ -634,6 +807,228 @@ x-kk-studio:
           important: false
         - property: --kk-on-accent
           value: "#0a0a0a"
+          important: false
+        - property: --kk-titlebar-brand-gap
+          value: var(--kk-dimension-37)
+          important: false
+        - property: --kk-titlebar-inset
+          value: var(--kk-dimension-19)
+          important: false
+        - property: --kk-settings-section-gap
+          value: var(--kk-layout-gutter-md)
+          important: false
+        - property: --kk-settings-row-gap
+          value: var(--kk-space-3)
+          important: false
+        - property: --kk-settings-row-pad
+          value: var(--kk-space-2)
+          important: false
+        - property: --kk-settings-heading-font
+          value: var(--kk-font-body)
+          important: false
+        - property: --kk-settings-heading-line
+          value: var(--kk-line-body)
+          important: false
+        - property: --kk-settings-heading-weight
+          value: var(--kk-font-weight-title)
+          important: false
+        - property: --kk-settings-copy-font
+          value: var(--kk-font-caption)
+          important: false
+        - property: --kk-settings-copy-line
+          value: var(--kk-line-caption)
+          important: false
+        - property: --kk-settings-copy-gap
+          value: var(--kk-space-1)
+          important: false
+        - property: --kk-settings-general-height
+          value: var(--kk-settings-general-shell-height)
+          important: false
+        - property: --kk-settings-control-pad
+          value: var(--kk-space-1)
+          important: false
+        - property: --kk-settings-network-gap
+          value: var(--kk-space-4)
+          important: false
+        - property: --kk-settings-network-part-gap
+          value: var(--kk-space-2)
+          important: false
+        - property: --kk-settings-network-command-pad-x
+          value: var(--kk-space-3)
+          important: false
+        - property: --kk-settings-network-command-pad-y
+          value: var(--kk-space-2)
+          important: false
+        - property: --kk-settings-network-command-radius
+          value: var(--kk-radius-control)
+          important: false
+        - property: --kk-settings-network-command-font
+          value: var(--kk-font-mono)
+          important: false
+        - property: --kk-settings-network-status-radius
+          value: var(--kk-radius-full)
+          important: false
+        - property: --kk-task-trigger-h
+          value: var(--kk-control-h-md)
+          important: false
+        - property: --kk-task-trigger-icon
+          value: var(--kk-icon-glyph-md)
+          important: false
+        - property: --kk-task-trigger-pad-start
+          value: var(--kk-space-2)
+          important: false
+        - property: --kk-task-trigger-pad-end
+          value: var(--kk-space-3)
+          important: false
+        - property: --kk-task-trigger-gap
+          value: var(--kk-space-2)
+          important: false
+        - property: --kk-task-trigger-radius
+          value: var(--kk-radius-control)
+          important: false
+        - property: --kk-task-trigger-font
+          value: var(--kk-font-caption)
+          important: false
+        - property: --kk-task-trigger-line
+          value: var(--kk-line-caption)
+          important: false
+        - property: --kk-sidebar-section-gap
+          value: var(--kk-space-5)
+          important: false
+        - property: --kk-start-model-max-width
+          value: var(--kk-model-phone-max-width)
+          important: false
+        - property: --kk-canvas-view-h
+          value: var(--kk-menu-item-h)
+          important: false
+        - property: --kk-canvas-view-w
+          value: var(--kk-canvas-view-slot-width)
+          important: false
+        - property: --kk-canvas-view-inset
+          value: var(--kk-control-inset)
+          important: false
+        - property: --kk-canvas-view-gap
+          value: var(--kk-space-1)
+          important: false
+        - property: --kk-canvas-view-radius
+          value: var(--kk-radius-combo)
+          important: false
+        - property: --kk-canvas-view-bg
+          value: var(--kk-bg-card)
+          important: false
+        - property: --kk-canvas-view-bg-hover
+          value: var(--kk-control-hover-bg)
+          important: false
+        - property: --kk-canvas-view-bg-selected
+          value: var(--kk-choice-selected-bg)
+          important: false
+        - property: --kk-canvas-view-fg
+          value: var(--kk-text-secondary)
+          important: false
+        - property: --kk-canvas-view-fg-selected
+          value: var(--kk-text-primary)
+          important: false
+        - property: --kk-canvas-view-font
+          value: var(--kk-font-caption)
+          important: false
+        - property: --kk-canvas-view-line
+          value: var(--kk-line-caption)
+          important: false
+        - property: --kk-canvas-view-weight
+          value: var(--kk-font-weight-body-strong)
+          important: false
+        - property: --kk-canvas-nav-control
+          value: var(--kk-control-h-md)
+          important: false
+        - property: --kk-canvas-nav-zoom-width
+          value: var(--kk-canvas-zoom-slot-width)
+          important: false
+        - property: --kk-canvas-nav-map-width
+          value: var(--kk-canvas-minimap-slot-width)
+          important: false
+        - property: --kk-canvas-nav-icon
+          value: var(--kk-icon-glyph-sm)
+          important: false
+        - property: --kk-canvas-nav-pad
+          value: var(--kk-space-2)
+          important: false
+        - property: --kk-canvas-nav-gap
+          value: var(--kk-space-1)
+          important: false
+        - property: --kk-canvas-nav-divider-h
+          value: var(--kk-control-h-sm)
+          important: false
+        - property: --kk-canvas-nav-radius
+          value: var(--kk-radius-control)
+          important: false
+        - property: --kk-conversation-header-h
+          value: var(--kk-control-h-xl)
+          important: false
+        - property: --kk-conversation-header-gap
+          value: var(--kk-space-2)
+          important: false
+        - property: --kk-conversation-header-font
+          value: var(--kk-font-body)
+          important: false
+        - property: --kk-conversation-header-line
+          value: var(--kk-line-body)
+          important: false
+        - property: --kk-conversation-header-weight
+          value: var(--kk-font-weight-title)
+          important: false
+        - property: --kk-conversation-header-icon
+          value: var(--kk-icon-glyph-sm)
+          important: false
+        - property: --kk-conversation-header-control
+          value: var(--kk-control-h-md)
+          important: false
+        - property: --kk-conversation-panel-width
+          value: var(--kk-conversation-panel-default-width)
+          important: false
+        - property: --kk-conversation-panel-inset
+          value: var(--kk-space-4)
+          important: false
+        - property: --kk-conversation-panel-padding
+          value: var(--kk-space-3)
+          important: false
+        - property: --kk-conversation-panel-gap
+          value: var(--kk-space-3)
+          important: false
+        - property: --kk-conversation-panel-radius
+          value: var(--kk-radius-lg)
+          important: false
+        - property: --kk-button-h-xs
+          value: var(--kk-space-4)
+          important: false
+        - property: --kk-button-h-sm
+          value: var(--kk-control-h-sm)
+          important: false
+        - property: --kk-button-h-md
+          value: var(--kk-control-h-md)
+          important: false
+        - property: --kk-button-h-lg
+          value: var(--kk-control-h-lg)
+          important: false
+        - property: --kk-button-h-xl
+          value: var(--kk-control-h-xl)
+          important: false
+        - property: --kk-button-px-xs
+          value: var(--kk-space-1)
+          important: false
+        - property: --kk-button-px-sm
+          value: var(--kk-space-2)
+          important: false
+        - property: --kk-button-px-md
+          value: var(--kk-space-3)
+          important: false
+        - property: --kk-button-px-lg
+          value: var(--kk-space-4)
+          important: false
+        - property: --kk-button-px-xl
+          value: var(--kk-space-5)
+          important: false
+        - property: --kk-button-radius-control
+          value: var(--kk-radius-control)
           important: false
         - property: --kk-button-h-standard
           value: var(--kk-control-h-md)
@@ -663,7 +1058,7 @@ x-kk-studio:
           value: "#e9e9e9"
           important: false
         - property: --kk-button-primary-hover
-          value: "#ffffff"
+          value: "#f2f2f2"
           important: false
         - property: --kk-button-primary-text
           value: "#161616"
@@ -698,6 +1093,21 @@ x-kk-studio:
         - property: --kk-input-radius
           value: var(--kk-radius-control)
           important: false
+        - property: --kk-input-large-h
+          value: var(--kk-control-h-lg)
+          important: false
+        - property: --kk-input-large-px
+          value: var(--kk-control-px-lg)
+          important: false
+        - property: --kk-input-large-font
+          value: var(--kk-font-body)
+          important: false
+        - property: --kk-input-large-line
+          value: var(--kk-line-body)
+          important: false
+        - property: --kk-input-line
+          value: var(--kk-line-caption)
+          important: false
         - property: --kk-select-h
           value: var(--kk-control-h-lg)
           important: false
@@ -716,6 +1126,12 @@ x-kk-studio:
         - property: --kk-select-menu-radius
           value: var(--kk-radius-menu)
           important: false
+        - property: --kk-icon-button-h-sm
+          value: var(--kk-control-h-sm)
+          important: false
+        - property: --kk-icon-button-h-md
+          value: var(--kk-control-h-md)
+          important: false
         - property: --kk-icon-button-h
           value: var(--kk-control-h-md)
           important: false
@@ -727,6 +1143,102 @@ x-kk-studio:
           important: false
         - property: --kk-icon-button-radius
           value: var(--kk-radius-control)
+          important: false
+        - property: --kk-tabs-h
+          value: var(--kk-menu-item-h)
+          important: false
+        - property: --kk-tabs-gap
+          value: var(--kk-space-4)
+          important: false
+        - property: --kk-tabs-text
+          value: var(--kk-text-secondary)
+          important: false
+        - property: --kk-tabs-text-active
+          value: var(--kk-text-primary)
+          important: false
+        - property: --kk-tabs-indicator-w
+          value: var(--kk-space-5)
+          important: false
+        - property: --kk-tabs-indicator-h
+          value: var(--kk-border-width-focus)
+          important: false
+        - property: --kk-tabs-indicator-bg
+          value: var(--kk-button-primary-bg)
+          important: false
+        - property: --kk-choice-group-radius
+          value: var(--kk-radius-control)
+          important: false
+        - property: --kk-choice-group-bg
+          value: var(--kk-bg-card)
+          important: false
+        - property: --kk-choice-item-pad-x
+          value: var(--kk-space-3)
+          important: false
+        - property: --kk-choice-item-h
+          value: var(--kk-control-h-md)
+          important: false
+        - property: --kk-choice-selected-fg
+          value: var(--kk-text-primary)
+          important: false
+        - property: --kk-switch-w
+          value: var(--kk-menu-item-h)
+          important: false
+        - property: --kk-switch-h
+          value: var(--kk-badge-h)
+          important: false
+        - property: --kk-switch-thumb-size
+          value: var(--kk-space-4)
+          important: false
+        - property: --kk-switch-radius
+          value: var(--kk-radius-full)
+          important: false
+        - property: --kk-switch-bg-off
+          value: var(--kk-bg-soft)
+          important: false
+        - property: --kk-switch-bg-on
+          value: var(--kk-accent)
+          important: false
+        - property: --kk-switch-thumb-bg
+          value: var(--kk-ink-near-black)
+          important: false
+        - property: --kk-checkbox-size
+          value: var(--kk-space-4)
+          important: false
+        - property: --kk-checkbox-radius
+          value: var(--kk-radius-xs)
+          important: false
+        - property: --kk-checkbox-border
+          value: var(--kk-border-control)
+          important: false
+        - property: --kk-checkbox-bg-checked
+          value: var(--kk-accent)
+          important: false
+        - property: --kk-checkbox-fg-checked
+          value: var(--kk-on-accent)
+          important: false
+        - property: --kk-dialog-radius
+          value: var(--kk-radius-card)
+          important: false
+        - property: --kk-dialog-bg
+          value: var(--kk-bg-card)
+          important: false
+        - property: --kk-dialog-border
+          value: var(--kk-border-subtle)
+          important: false
+        - property: --kk-dialog-shadow
+          value: var(--kk-shadow-color-strong)
+          important: false
+        - property: --kk-menu-radius
+          value: var(--kk-radius-menu)
+          important: false
+        - property: --kk-menu-bg
+          value: var(--kk-bg-card)
+          important: false
+        - property: --kk-menu-border
+          value: var(--kk-border-subtle)
+          important: false
+        - property: --kk-menu-shadow
+          value: var(--kk-shadow-color)
           important: false
         - property: --kk-menu-item-h
           value: 36px
@@ -765,13 +1277,13 @@ x-kk-studio:
           value: 220px
           important: false
         - property: --kk-task-popover-width
-          value: 360px
+          value: 412px
           important: false
         - property: --kk-account-popup-width
           value: 320px
           important: false
         - property: --kk-task-popover-height
-          value: 420px
+          value: 484px
           important: false
         - property: --kk-task-popover-min-height
           value: 300px
@@ -809,6 +1321,132 @@ x-kk-studio:
         - property: --kk-model-capsule-max-width
           value: 260px
           important: false
+        - property: --kk-motion-stream-duration
+          value: 90ms
+          important: false
+        - property: --kk-motion-stream-stagger
+          value: 30ms
+          important: false
+        - property: --kk-motion-stream-blur
+          value: 6px
+          important: false
+        - property: --kk-motion-collapse
+          value: 240ms
+          important: false
+        - property: --kk-motion-drag-stiffness
+          value: "1200"
+          important: false
+        - property: --kk-motion-drag-damping
+          value: "80"
+          important: false
+        - property: --kk-motion-confirm-stiffness
+          value: "380"
+          important: false
+        - property: --kk-motion-confirm-damping
+          value: "18"
+          important: false
+        - property: --kk-motion-copy-hold
+          value: 2500ms
+          important: false
+        - property: --kk-motion-copy-fade
+          value: 150ms
+          important: false
+        - property: --kk-motion-hover-fade
+          value: 650ms
+          important: false
+        - property: --kk-motion-entry-stagger
+          value: 60ms
+          important: false
+        - property: --kk-motion-entry-cap
+          value: 240ms
+          important: false
+        - property: --kk-motion-entry-duration
+          value: 240ms
+          important: false
+        - property: --kk-motion-entry-offset
+          value: 8px
+          important: false
+        - property: --kk-motion-hover
+          value: 120ms
+          important: false
+        - property: --kk-motion-press
+          value: 80ms
+          important: false
+        - property: --kk-motion-release
+          value: 140ms
+          important: false
+        - property: --kk-motion-press-scale
+          value: "0.97"
+          important: false
+        - property: --kk-motion-switch
+          value: 280ms
+          important: false
+        - property: --kk-motion-checkbox-draw
+          value: 200ms
+          important: false
+        - property: --kk-motion-menu-enter
+          value: 180ms
+          important: false
+        - property: --kk-motion-menu-offset
+          value: 6px
+          important: false
+        - property: --kk-motion-drawer
+          value: 320ms
+          important: false
+        - property: --kk-motion-stack-offset-1
+          value: 6px
+          important: false
+        - property: --kk-motion-stack-offset-2
+          value: 12px
+          important: false
+        - property: --kk-motion-spinner
+          value: 900ms
+          important: false
+        - property: --kk-motion-shimmer
+          value: 1100ms
+          important: false
+        - property: --kk-motion-content-fade
+          value: 150ms
+          important: false
+        - property: --kk-motion-locate-scroll
+          value: 300ms
+          important: false
+        - property: --kk-motion-reduced-cap
+          value: 100ms
+          important: false
+        - property: --kk-image-scratch-opacity
+          value: "0.55"
+          important: false
+        - property: --kk-image-editor-max-width
+          value: 1280px
+          important: false
+        - property: --kk-image-editor-min-stage
+          value: 160px
+          important: false
+        - property: --kk-image-brush-slider-width
+          value: 96px
+          important: false
+        - property: --kk-image-editor-input-max-height
+          value: 120px
+          important: false
+        - property: --kk-image-annotation-label-width
+          value: 200px
+          important: false
+        - property: --kk-image-annotation-label-text
+          value: var(--kk-text-primary)
+          important: false
+        - property: --kk-image-model-width
+          value: 240px
+          important: false
+        - property: --kk-image-region-input-width
+          value: 280px
+          important: false
+        - property: --kk-image-lightbox-thumb-width
+          value: 96px
+          important: false
+        - property: --kk-image-lightbox-thumb-height
+          value: 64px
+          important: false
     - selector: '[data-theme="light"]'
       atRules: []
       declarations:
@@ -825,7 +1463,7 @@ x-kk-studio:
           value: "#eaeaea"
           important: false
         - property: --kk-bg-surface
-          value: "#ffffff"
+          value: "#f2f2f2"
           important: false
         - property: --kk-border-default
           value: "#c4c4c4"
@@ -842,6 +1480,38 @@ x-kk-studio:
         - property: --kk-neutral-selected
           value: "#e0e0e0"
           important: false
+        - property: --kk-control-surface-idle
+          value: "#f7f7f7"
+          important: false
+        - property: --kk-control-surface-hover
+          value: "#f2f2f2"
+          important: false
+        - property: --kk-control-surface-selected
+          value: "#ededed"
+          important: false
+        - property: --kk-choice-selected-bg
+          value: "#ededed"
+          important: false
+        - property: --kk-control-idle-bg
+          value: transparent
+          important: false
+        - property: --kk-control-hover-bg
+          value: |-
+            color-mix(
+                in srgb,
+                var(--kk-text-primary) 4%,
+                transparent
+              )
+          important: false
+        - property: --kk-control-selected-bg
+          value: var(--kk-neutral-selected)
+          important: false
+        - property: --kk-control-idle-fg
+          value: var(--kk-text-secondary)
+          important: false
+        - property: --kk-control-selected-fg
+          value: var(--kk-text-primary)
+          important: false
         - property: --kk-text-primary
           value: "#252525"
           important: false
@@ -850,6 +1520,27 @@ x-kk-studio:
           important: false
         - property: --kk-text-tertiary
           value: "#636363"
+          important: false
+        - property: --kk-ink-near-black
+          value: "#0a0a0a"
+          important: false
+        - property: --kk-font-weight-caption
+          value: "400"
+          important: false
+        - property: --kk-font-weight-body
+          value: "400"
+          important: false
+        - property: --kk-font-weight-body-strong
+          value: "500"
+          important: false
+        - property: --kk-font-weight-subtitle
+          value: "500"
+          important: false
+        - property: --kk-font-weight-title
+          value: "700"
+          important: false
+        - property: --kk-font-weight-display
+          value: "700"
           important: false
         - property: --kk-text-accent
           value: "#166443"
@@ -870,7 +1561,7 @@ x-kk-studio:
           value: "#0a0a0a"
           important: false
         - property: --kk-focus-ring
-          value: "#166443"
+          value: "#252525"
           important: false
         - property: --kk-focus-ring-subtle
           value: rgba(0, 0, 0, 0.4)
@@ -891,7 +1582,7 @@ x-kk-studio:
           value: "#3c3c3c"
           important: false
         - property: --kk-button-primary-text
-          value: "#ffffff"
+          value: "#f2f2f2"
           important: false
         - property: --kk-like-start
           value: "#aa263b"
@@ -904,6 +1595,36 @@ x-kk-studio:
           important: false
         - property: --kk-star-end
           value: "#b66c1d"
+          important: false
+        - property: --kk-tag-character-bg
+          value: "#8cc2ff"
+          important: false
+        - property: --kk-tag-character-text
+          value: "#0a0a0a"
+          important: false
+        - property: --kk-tag-scene-bg
+          value: "#cfc0fe"
+          important: false
+        - property: --kk-tag-scene-text
+          value: "#0a0a0a"
+          important: false
+        - property: --kk-tag-costume-bg
+          value: "#f4b7d2"
+          important: false
+        - property: --kk-tag-costume-text
+          value: "#0a0a0a"
+          important: false
+        - property: --kk-tag-prop-bg
+          value: "#f8c294"
+          important: false
+        - property: --kk-tag-prop-text
+          value: "#0a0a0a"
+          important: false
+        - property: --kk-tag-custom-bg
+          value: "#e0e0e0"
+          important: false
+        - property: --kk-tag-custom-text
+          value: "#252525"
           important: false
     - selector: '[data-accent="blue"]'
       atRules: []
@@ -1023,9 +1744,6 @@ x-kk-studio:
         - property: --kk-text-accent
           value: var(--kk-accent-soft)
           important: false
-        - property: --kk-focus-ring
-          value: var(--kk-text-accent)
-          important: false
     - selector: '[data-theme="light"][data-accent="blue"]'
       atRules: []
       declarations:
@@ -1081,7 +1799,7 @@ x-kk-studio:
           value: 40px
           important: false
         - property: --kk-control-h-xl
-          value: 40px
+          value: 44px
           important: false
         - property: --kk-control-px-sm
           value: 8px
@@ -1326,6 +2044,8 @@ x-kk-studio:
       - card
     - - rounded
       - full
+    - - rounded
+      - combo
     - - spacing
       - space-hair
     - - spacing
@@ -1519,8 +2239,11 @@ x-kk-studio:
 This is the global design overview and portable token index for KK Studio.
 [UI_INDEX](docs/UI_INDEX.md) routes each topic to its canonical specification;
 this overview does not duplicate those rules or create a second runtime source.
-Current user requirements and confirmed feedback take precedence over registered
-tokens and shared components, then historical Figma baselines still applicable.
+The current user-designated Figma Design System and target pages are the design
+source of truth. Complete design changes in Figma before changing local UI;
+read the current design even when no Figma edit is needed. This document and
+the linked local specifications are derived views, with source status and
+conflict handling in [UI_INDEX](docs/UI_INDEX.md).
 The [approved unified specification](docs/changes/2026-10-15-kk-unified/spec.md)
 remains authoritative for settings, model selection, data, tasks, and platform scope.
 
@@ -1529,16 +2252,25 @@ uses a consistent content axis, compact spacing, and clear action hierarchy.
 Desktop delivery comes first, Web follows its shared core, and native Mobile
 belongs to its separate delivery task. Narrow browser evidence is responsive Web.
 
-All numeric values come from [tokens.css](src/styles/tokens.css). The YAML above
+The current design source is [Figma / 01 · 设计规范](https://www.figma.com/design/ZiadpErDoFweCjG3uHjkM3/KK-Studio?node-id=91-2),
+read on 2026-10-21. The seven Figma chapters map to local documents in UI_INDEX;
+the prose below describes that design target. Runtime numeric values remain
+registered in [tokens.css](src/styles/tokens.css). The YAML above represents
+the existing implementation, including known font, type-scale, icon, and radius
+differences listed in [DESIGN_TOKENS](docs/DESIGN_TOKENS.md#figma-目标与本地映射),
+and must not be mistaken for a fully synchronized Figma export. The YAML is
 is generated by `npm run design:sync`: portable roles plus a lossless declaration
 projection with selectors, media scopes, importance, ownership paths, and source
 SHA-256 of UTF-8 CSS with LF line endings, keeping Windows/Linux identity stable.
 Human prose, unknown YAML, and comments survive synchronization. Edit
-values in CSS, then sync and review the diff. Runtime aliases remain compatibility
+designs in Figma first, map them into CSS, then sync and review the diff.
+This command does not read or update Figma. Runtime aliases remain compatibility
 mappings, never a second numeric source. The [token index](docs/DESIGN_TOKENS.md)
 identifies actual component roles and consumers.
 
-The format follows the [Google DESIGN.md alpha specification](https://github.com/google-labs-code/design.md/blob/9bf8eae67128b6cc55ad9bf86665767deb4c11cd/docs/spec.md).
+The serialization format follows the [Google DESIGN.md alpha specification](https://github.com/google-labs-code/design.md/blob/9bf8eae67128b6cc55ad9bf86665767deb4c11cd/docs/spec.md);
+it does not define KK Studio's visual design. Local design terminology and
+documentation structure follow the Figma specification, adapted to this format.
 The [Mobbin reference](https://getdesign.md/mobbin/design-md) is an independent
 VoltAgent analysis of observable patterns, not an official Mobbin specification.
 Its content hierarchy, control grouping, and spacing rhythm are inspiration;
@@ -1553,6 +2285,13 @@ green, while explicitly saved accents and their preference identities persist.
 Primary expresses hierarchy through a contrasting neutral surface. State and
 selection use semantic accent roles rather than coloring every action green.
 
+Figma `control/selected` (`1514:88998`) maps to
+`--kk-choice-selected-bg` for persistent choice groups: dark `#333333`, light
+`#ededed`. Ordinary action surfaces retain their existing role. Title tabs
+(`940:24897`) use equal text color and weight, no fill, and one 24×2 rounded
+indicator below the selected title. Contained button choices (`2538:48403`)
+use a common container and a selected fill without a title indicator.
+
 Default, hover, active/pressed, selected, disabled, and keyboard focus must
 consume the same role family across all callers. Pair state color with text or
 an icon; verify text and control contrast in both themes and each supported accent.
@@ -1561,11 +2300,14 @@ source correction and review, never an undocumented preview-only palette.
 
 ## Typography
 
-Consume paired font and line-height roles from [tokens.css](src/styles/tokens.css)
-and the readable-label contract in [UI_RULES](docs/UI_RULES.md). Inter and the
-registered Chinese/system fallbacks serve UI text; the registered monospace
-family serves technical content. Body, emphasized body, caption, subtitle,
-title, and display form one hierarchy. Visible UI text is at least 12px.
+Figma Typography (`546:134`) uses Source Han Sans CN VF with Regular 400,
+Medium 500, and Bold 700. Caption is 12/16/400, body 16/24/400, emphasized body
+and subtitle 16/24/500, title 20/28/700, display 28/36/700, and showcase heading
+40/48/700 (size/line-height/weight). Compact button text is 12/16/500.
+Map these Text Styles through the shared tokens; existing Inter and smaller body
+roles in the generated YAML remain implementation differences, not design rules.
+Visible UI text is at least 12px; follow the readable-label contract in
+[UI_RULES](docs/UI_RULES.md).
 
 Ordinary labels stay complete. At the container limit, long names may truncate
 with a complete accessible name or title. Center icon and text as one group,
@@ -1576,8 +2318,10 @@ unregistered icon, text size, or weight to compensate for a layout problem.
 
 ## Layout
 
-Choose one page template from [UI_ARCHETYPES](docs/UI_ARCHETYPES.md), one content
-axis, and one Primary action for the current view. Home, chat, canvas, project
+Read the current Figma target page, then map its structure to
+[UI_ARCHETYPES](docs/UI_ARCHETYPES.md) and shared components. The existing five
+templates describe available implementation choices, not a limit on Figma.
+Keep a clear content axis and action hierarchy. Home, chat, canvas, project
 library, asset library, editors, and every settings category share these rules;
 a successful component preview does not prove those pages comply.
 
@@ -1588,7 +2332,12 @@ and arrangement, preserving the same internal dimensions and controls. Continuou
 resize must retain selection, drafts, parameters, open workflow context, and
 valid focus; do not rebuild a second state tree at a breakpoint.
 
-Verify 390, 1099, and 1920 widths, intermediate resize, short viewport heights,
+Figma Responsive Behavior (`597:67456`) uses phone at <=767px, tablet at
+768–1200px, and desktop at >=1201px. Container padding changes independently:
+16px through 767px, 24px at 768–1199px, and 40px from 1200px. Short-screen
+behavior applies at height <=640px; do not merge the 1200/1201 thresholds.
+Verify 390, 1099, and 1920 widths, 767/768 and 1199/1200/1201 boundaries,
+intermediate resize, short viewport heights,
 long labels, open menus, and panel overlap. Dialogs, popovers, and floating panels
 fit the visual viewport, flip or constrain as needed, and scroll internally.
 No action becomes unreachable after resize, zoom, or an on-screen keyboard.
@@ -1600,6 +2349,10 @@ ownership described in [UI_RULES](docs/UI_RULES.md). Canvas-world content, scree
 editors, menus, floating collection panels, overlays, and dialogs have different
 stacking duties; arbitrary page-local z-index values are not a substitute.
 
+Figma Elevation & Depth (`546:184`) defines Flat, 1px Outlined, Floating with
+0/8/24px black 16% shadow, and Modal with 0/16/48px black 24% shadow;
+the modal overlay example is background at 72%.
+
 Check clipping and actual pointer reachability when surfaces overlap. Escape
 closes the top eligible layer and returns focus to a stable trigger. Modal focus
 and covered/inert boundaries continue to protect the workspace. Outside-click
@@ -1608,10 +2361,13 @@ rules must not turn an internal drag into an accidental close.
 ## Shapes
 
 Reuse registered capsule text actions, square rounded upload/IconButton targets,
-and the distinct control, menu, panel, and card radius roles. Ordinary controls
-use the shared 24/32/40 height axis and icons the shared 16/20/24 glyph axis;
-explicit task-specific touch targets stay governed by their approved specification.
-Use the registered spacing grid rather than page-local numeric substitutes.
+and distinct radius roles: xs 4px, control 8px, menu 12px, lg 16px, panel/card
+20px, and Full. Spacing roles are 4/8/12/16/24/40px; layout gutters are
+20/32/48/64px. Inline text and icons pair at 12px or 16px; standalone tools
+may use 16/20/24px. Standard text-icon buttons are 40px high with 16px/500 text,
+24px line-height, 16px icon, 1.25px stroke, 8px gap, and 16px horizontal padding.
+Touch targets are at least 44×44px. Other sizes come from the target Figma
+component variant, not the legacy local closed size axis.
 
 Shape, height, padding, and icon slots stay consistent through all control states.
 Loading placeholders preserve target geometry. Reduced motion respects the
@@ -1653,8 +2409,8 @@ in [UI_RULES](docs/UI_RULES.md), avoiding a second behavior authority here.
 
 ## Do's and Don'ts
 
-- Read current user requirements, the canonical topic, and shared callers first.
-- Change numeric values only in tokens.css, then sync, check, lint, and review.
+- Read current Figma, local derived specifications, and shared callers first.
+- Complete design edits in Figma, map them into tokens.css, then sync, check, lint, and review.
 - Use the isolated [design preview workflow](docs/UI_SPEC.md#designmd-与独立预览) to inspect shared roles without reading or writing product storage.
 - Verify themes, accents, density, long text, all control states, keyboard paths, and resizing.
 - Preserve user/project/configuration identity and actual asynchronous feedback.

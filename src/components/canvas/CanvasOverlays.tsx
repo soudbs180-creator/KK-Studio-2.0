@@ -1,5 +1,12 @@
+import { useState } from "react";
+import { useComfyCanvasHost } from "./ComfyWorkflowCanvasHost.tsx";
 import CanvasMarquee from "./CanvasMarquee";
 import AddNodeMenu from "./AddNodeMenu";
+import BlueprintWorkbench from "./BlueprintWorkbench";
+import DirectorConsole from "../nodes/DirectorConsole";
+import { Button } from "../ui/Button.tsx";
+import { formatOpticsBadge } from "../../domain/cameraOptics.ts";
+import { useCanvasOperations } from "../../runtime/canvasCommandRuntime.tsx";
 import CanvasContextMenu, {
   type CanvasContextMenuState,
 } from "./CanvasContextMenu";
@@ -29,6 +36,8 @@ interface CanvasOverlaysProps {
   onDismissConnection: () => void;
   connectionNotice: string;
   onDismissConnectionNotice: () => void;
+  selectedNode?: string | null;
+  onOpenStoryboard?: () => void;
 }
 
 export default function CanvasOverlays({
@@ -49,7 +58,12 @@ export default function CanvasOverlays({
   onDismissConnection,
   connectionNotice,
   onDismissConnectionNotice,
+  selectedNode,
+  onOpenStoryboard,
 }: CanvasOverlaysProps) {
+  const comfy = useComfyCanvasHost();
+  const operations = useCanvasOperations();
+  const [studio, setStudio] = useState<"" | "director" | "blueprint">("");
   return (
     <>
       <CanvasMarquee rect={marquee} />
@@ -57,9 +71,78 @@ export default function CanvasOverlays({
         <AddNodeMenu
           menu={addMenu.menu}
           onChoose={addMenu.choose}
+          onChooseWorkflow={
+            comfy?.runtime.desktop ? addMenu.chooseWorkflow : undefined
+          }
           onChoosePlugin={addMenu.choosePlugin}
+          onOpenStoryboard={onOpenStoryboard}
+          onOpenDirector={() => {
+            addMenu.dismiss();
+            setStudio("director");
+          }}
+          onOpenBlueprint={() => {
+            addMenu.dismiss();
+            setStudio("blueprint");
+          }}
           onDismiss={addMenu.dismiss}
         />
+      )}
+      {studio === "blueprint" && (
+        <BlueprintWorkbench onClose={() => setStudio("")} />
+      )}
+      {studio === "director" && (
+        <div className="director-stage">
+          <DirectorConsole
+            onChange={(optics) => {
+              if (!selectedNode || !optics) return;
+              window.postMessage(
+                {
+                  type: "storyai:director-apply",
+                  nodeId: selectedNode,
+                  optics,
+                },
+                window.location.origin,
+              );
+            }}
+            onCapture={(optics) => {
+              const id = `director-ref-${crypto.randomUUID()}`;
+              void operations?.executeOperation({
+                op: "add_card",
+                payload: {
+                  card: {
+                    id,
+                    kind: "image",
+                    title: "导演参考图",
+                    description: formatOpticsBadge(optics).slice(0, 500),
+                    prompt: `参考构图 ${formatOpticsBadge(optics)}`.slice(
+                      0,
+                      4000,
+                    ),
+                    referenceOnly: true,
+                  },
+                  position: { x: 120, y: 120 },
+                },
+              });
+              if (selectedNode)
+                window.postMessage(
+                  {
+                    type: "storyai:director-apply",
+                    nodeId: selectedNode,
+                    optics,
+                  },
+                  window.location.origin,
+                );
+              window.dispatchEvent(
+                new CustomEvent("kk:focus-node", {
+                  detail: selectedNode ?? id,
+                }),
+              );
+            }}
+          />
+          <Button isPill onClick={() => setStudio("")}>
+            关闭导演台
+          </Button>
+        </div>
       )}
       {contextMenu && (
         <CanvasContextMenu

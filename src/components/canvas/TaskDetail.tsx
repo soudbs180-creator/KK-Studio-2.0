@@ -1,8 +1,9 @@
 import { useEffect, useRef, type RefObject } from "react";
+import UiIcon from "../UiIcon";
 import { useDismissible } from "../useDismissible";
 import type { PrototypeTask } from "./TaskPanelPopover";
-import type { CreationTask } from "../../features/creation/model";
-import { taskRetryAvailability } from "../../features/creation/taskRetryAvailability";
+import type { CreationTask } from "../../features/creation/index.ts";
+import { taskRetryAvailability } from "../../features/creation/index.ts";
 
 export default function TaskDetail({
   selectedTask,
@@ -46,14 +47,13 @@ export default function TaskDetail({
     <div ref={root} className="task-detail" role="dialog" aria-label="任务详情">
       <div className="task-detail-heading">
         <span>任务详情</span>
-        <button type="button" aria-label="关闭任务详情" onClick={close}>
-          <img
-            src="/design/figma/task-close.svg"
-            width={7}
-            height={7}
-            alt=""
-            draggable={false}
-          />
+        <button
+          type="button"
+          aria-label="关闭任务详情"
+          onClick={close}
+          data-figma-node="1164:16172"
+        >
+          <UiIcon name="close" size={16} />
         </button>
       </div>
       <div className="task-detail-body">

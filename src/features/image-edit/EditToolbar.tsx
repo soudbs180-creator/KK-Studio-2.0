@@ -1,6 +1,8 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import type { ImageTool } from "./useImageViewport.ts";
 import { EDIT_COLORS } from "./palette.ts";
+import type { ImageCapabilityId } from "../../../packages/creation-contracts/index.ts";
+import { imageCapabilityActionLabels } from "./imageCapabilityActions.ts";
 export { EDIT_COLORS } from "./palette.ts";
 export default function EditToolbar({
   tool,
@@ -17,6 +19,9 @@ export default function EditToolbar({
   onClear,
   hasRegions,
   disabled,
+  onCapability,
+  capabilityDisabled,
+  capabilityDisabledReason,
 }: {
   tool: ImageTool;
   onTool: (tool: ImageTool) => void;
@@ -32,6 +37,9 @@ export default function EditToolbar({
   onClear: () => void;
   hasRegions: boolean;
   disabled: boolean;
+  onCapability?: (id: ImageCapabilityId) => void;
+  capabilityDisabled?: (id: ImageCapabilityId) => boolean;
+  capabilityDisabledReason?: (id: ImageCapabilityId) => string | undefined;
 }) {
   const ref = useRef<HTMLDivElement>(null),
     drag = useRef<{ x: number; y: number; left: number; top: number } | null>(
@@ -116,9 +124,11 @@ export default function EditToolbar({
       {(
         [
           ["browse", "浏览图片"],
-          ["rectangle", "框选区域"],
-          ["brush", "画笔区域"],
-          ["color", "色块区域"],
+          ["rectangle", "矩形选区"],
+          ["brush", "标注"],
+          ["erase", "擦除"],
+          ["comment", "添加评论"],
+          ["color", "取色标注"],
         ] as const
       ).map(([value, label]) => (
         <button
@@ -126,6 +136,7 @@ export default function EditToolbar({
           type="button"
           className="ui-button"
           aria-label={label}
+          title={label}
           aria-pressed={tool === value}
           disabled={disabled}
           onClick={() => onTool(value)}
@@ -162,6 +173,25 @@ export default function EditToolbar({
           ))}
         </select>
       )}
+      {onCapability &&
+        (
+          Object.entries(imageCapabilityActionLabels) as [
+            ImageCapabilityId,
+            string,
+          ][]
+        ).map(([id, label]) => (
+          <button
+            key={id}
+            type="button"
+            className="ui-button"
+            aria-label={label}
+            title={capabilityDisabledReason?.(id) ?? label}
+            disabled={disabled || capabilityDisabled?.(id) === true}
+            onClick={() => onCapability(id)}
+          >
+            {label}
+          </button>
+        ))}
       <button
         type="button"
         className="ui-button"
@@ -183,12 +213,12 @@ export default function EditToolbar({
       <button
         type="button"
         className="ui-button"
-        aria-label="清空编辑区域"
-        title={!hasRegions ? "没有需要清空的编辑区域" : "清空全部区域，可撤销"}
+        aria-label="清除"
+        title={!hasRegions ? "没有需要清除的编辑区域" : "清除全部区域，可撤销"}
         disabled={!hasRegions || disabled}
         onClick={onClear}
       >
-        清空
+        清除
       </button>
       <button
         type="button"

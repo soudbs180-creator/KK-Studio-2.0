@@ -1,0 +1,1238 @@
+{
+  "version": 1,
+  "taskId": "TASK-ORG-6",
+  "classification": "E2-externalized-historical-evidence",
+  "packagePath": "docs/changes/2026-10-08-image-selection-actions",
+  "entries": [
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/native-172d128/asset-actions.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "ff31448a4eafee45179bfdc406a4292e7b641524",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/native-172d128/asset-actions.png",
+      "bytes": 198798,
+      "sha256": "451b8196157e9ef50bce31fae8b6fad92d123936cd94e56c05533e655f2f80fb",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/native-172d128/asset-library.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "6614a5de22f144a2897a213656b183cdf843fcec",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/native-172d128/asset-library.png",
+      "bytes": 460211,
+      "sha256": "a6543c65f6aef44102770cf6f449209540dddc59e16b6ef33414864d88f9a936",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/native-172d128/google-cli.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "9260d936728dd81fd03b53ec292f2111f62349d5",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/native-172d128/google-cli.png",
+      "bytes": 276723,
+      "sha256": "1dd5d7d4e10fcda894ff3c6eae6e115a9c4f26932f972270a05f02ee2511798d",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/native-172d128/model-actions.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "35ade06f627ba497a233ac2c24baefb0077bb6a3",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/native-172d128/model-actions.png",
+      "bytes": 268258,
+      "sha256": "af89464138f7c0332f4546fc9d4fdc60b68f943870e74946114daab1af7f4572",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/native-172d128/model-settings.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "d425f28cb875c9e9bc5fecd86d7eeb1820b580cf",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/native-172d128/model-settings.png",
+      "bytes": 250274,
+      "sha256": "a89101bf03f35442835e2457a5a615a413a594e298242b1e0e11950a4bb7102c",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/native-172d128/selected-reference.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "75c72c6fbfc26de8283e7529153f60cb383ddb24",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/native-172d128/selected-reference.png",
+      "bytes": 505905,
+      "sha256": "b185379fad068f54ef380a00393070e14194c2040fa0004bd16ce549a25dfcdd",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/native-172d128/workbench-export.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "5f4fdcdb7d354bc73e10d3c24be0f2f1fdb251d5",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/native-172d128/workbench-export.png",
+      "bytes": 191388,
+      "sha256": "6b8f92a73b9ad922ce74c370f0791fa2e3072926bb2791e28ac6272b2056a9cc",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/native-172d128/workbench-generate.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "a8bfcb2fbdb95e2027f803954e2ba289f683dfa1",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/native-172d128/workbench-generate.png",
+      "bytes": 191261,
+      "sha256": "3978074cf30a8ed8bca549f53664709fd79f342cefc5326df0012bbe38796e66",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/native-172d128/workbench-plan.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "4289996bfa482a39e0e15c858054dc18c0eda99c",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/native-172d128/workbench-plan.png",
+      "bytes": 236001,
+      "sha256": "bcee3f77f890e694be472325aa91f80692b338a777376c3485a9e0ea3e649971",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/native-172d128/workbench-prompt.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "36fa614132eb35a79ccf0d832d5238eb547d6d65",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/native-172d128/workbench-prompt.png",
+      "bytes": 191283,
+      "sha256": "4a3c8daf7806918fd4ac102eca3180b4812e5930a6fc03eb2389bf247bf42a7c",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/native-172d128/workbench-queue.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "5eeaa7c65f1852af05b400e8ba62f216816f349e",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/native-172d128/workbench-queue.png",
+      "bytes": 190730,
+      "sha256": "b6c566e05f7651a0887e7d51eb28477e373d02f4bacd4e11176c94d6f44dc7e1",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/native-172d128/workbench-review.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "38d3f7f3c784d93d5a677c3f8a6c943616e184c4",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/native-172d128/workbench-review.png",
+      "bytes": 191269,
+      "sha256": "6a620822026d31f5798c373541b083ee96abce1bfd2cc9fece532bee699a4496",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/native-24cfca1/asset-actions.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "d6589370ab2f4db137ed0c11b1a755e53e30eae8",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/native-24cfca1/asset-actions.png",
+      "bytes": 201966,
+      "sha256": "0b9e018b0caa1216b6c84020ccbbefc3f51dd45f245b2744410e0fc821baa20e",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/native-24cfca1/asset-library.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "20bbd673503c1c83e04b93dd469941cf869e9e19",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/native-24cfca1/asset-library.png",
+      "bytes": 465083,
+      "sha256": "a9b97fe59a91d0815bb4310f0161b7403995d928e54194706d4ba5ae4b4e37d1",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/native-24cfca1/google-cli.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "7e250cf22e53da6bb3cd7578eeadfb24fe5060ec",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/native-24cfca1/google-cli.png",
+      "bytes": 279631,
+      "sha256": "8f2774ff603e4654218ca36f612b695de9d50b15a877c9d7b2c5e4ae488ca9fa",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/native-24cfca1/model-actions.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "c8a40694060bf92857c7bb58e53fd11254801611",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/native-24cfca1/model-actions.png",
+      "bytes": 271141,
+      "sha256": "14fb4a7fee56816704dc786598dfad0f1c94e7f5aeaf0a508f7f23f1feed2d2e",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/native-24cfca1/model-settings.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "2ee4b8a9c20f743567003005c74c2cc942b66b0f",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/native-24cfca1/model-settings.png",
+      "bytes": 253653,
+      "sha256": "af9c843f0d7084a7c3e225243780dac6689ba277d7c2df19d95c8e2653cc3fa7",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/native-24cfca1/model/parameters-native.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "1d0aa25fede5372d24dc04ae6424b6563862684c",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/native-24cfca1/model/parameters-native.png",
+      "bytes": 163155,
+      "sha256": "350974101fadd50534a3c87dbd96f0a8809677e98d3c8fcd36e9fbaa887373e2",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/native-24cfca1/model/redraw-disabled-native.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "53742e475011ab1421ff24966283fec485caa93d",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/native-24cfca1/model/redraw-disabled-native.png",
+      "bytes": 509856,
+      "sha256": "4671e5608809e4a44d630c75be0771ae1450df6c5fbeab1f2d2b8e29a6637f21",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/native-24cfca1/model/settings-native.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "4a0e0b6605eda1b62bfa31298d904fc59955a5b0",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/native-24cfca1/model/settings-native.png",
+      "bytes": 384669,
+      "sha256": "3d28651b15ea0c5bbd966857afb722eb5f8328bbdf41d9de08a71e80b967ef05",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/native-24cfca1/selected-reference.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "7c05e3f2a17dc90acaa332f4a7ef419131de9a42",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/native-24cfca1/selected-reference.png",
+      "bytes": 507177,
+      "sha256": "dc25a3fa20db330bbb15b1108de2dc0f223e287498b8c91bd6fd7b36194e9624",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/native-24cfca1/workbench-export.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "26d062728ebe87f80cc84b5ee7c1a54928f9eba2",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/native-24cfca1/workbench-export.png",
+      "bytes": 256648,
+      "sha256": "842dc371e3199b7e378bcd8ebd3db9096e298f99adc615b328081d3c785befb8",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/native-24cfca1/workbench-generate.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "5438f97ab4101dc6e6ddfdeaa593053ea7da6108",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/native-24cfca1/workbench-generate.png",
+      "bytes": 223358,
+      "sha256": "eaf6d0c78fa30847f333b44ce72b144b156863d302fd92c0a94ce9d6b5364ff1",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/native-24cfca1/workbench-plan.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "feb347b47efae82804b6252f880d647aa8426d61",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/native-24cfca1/workbench-plan.png",
+      "bytes": 239341,
+      "sha256": "b82666172f23649e168e55ba68630a53b21923c454bc1c66f4a9c5bd3840f086",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/native-24cfca1/workbench-prompt.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "66e14e10b4412a16f0f480a6f4338db6d1afc4c5",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/native-24cfca1/workbench-prompt.png",
+      "bytes": 208705,
+      "sha256": "9414d287f7002ee0cd4b0e77f045485c98e732d29efd2a02e24ba982290aa358",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/native-24cfca1/workbench-queue.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "d17060c0af3b24db33245ce306103f0dabc20e8d",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/native-24cfca1/workbench-queue.png",
+      "bytes": 222084,
+      "sha256": "82d6274d37bb57c6f53cf01413d9f250135af5c20cdc7aa569b6b424ffbfa929",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/native-24cfca1/workbench-review.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "a4bd1123b648ee8f57395f3e3c988b5b23179266",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/native-24cfca1/workbench-review.png",
+      "bytes": 275228,
+      "sha256": "d1dec22c04a541d54b99ee81d07bb94e6def8469ca94ac8f336bf02fe5498883",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/native-model-7d27265/parameters-native.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "bf29b8473578088236a391b0f4f032a5719bd514",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/native-model-7d27265/parameters-native.png",
+      "bytes": 96582,
+      "sha256": "28b8d83354eccb3b9585fceb45d21a0dec4c98e16a32409b8b7c510f4875f02c",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/native-model-7d27265/redraw-disabled-native.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "3a515a4e39b35ee5c79ba3527288d953a3187c16",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/native-model-7d27265/redraw-disabled-native.png",
+      "bytes": 149287,
+      "sha256": "82a5a33b5bcccb0c32cfe2bc80292b3a77407beecc940510df67ffe6b0b65bfb",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/native-model-7d27265/settings-native.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "0bca525cb1f05b4f6f31e9d53db62a3e815c5a46",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/native-model-7d27265/settings-native.png",
+      "bytes": 216269,
+      "sha256": "402279feffef9018132986d1432c1ed993cd3b89d30da49e829bd82287151943",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/native-taskhost-7d27265/native-ui-success.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "25ce5a6d5c7a4c0a7a7cbc4ec5665babee12a9d9",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/native-taskhost-7d27265/native-ui-success.png",
+      "bytes": 221889,
+      "sha256": "26a4aa863372aeacb72fc85bd3dc6b2253face0b1173221dbd5c7e8b378214ca",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/native-taskhost-7d27265/native-unknown-recovery.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "2253f0f45c35f350f10e1a146688b261fa6c5292",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/native-taskhost-7d27265/native-unknown-recovery.png",
+      "bytes": 152426,
+      "sha256": "2a9ee76563ec91578113aff8341765e4be5eb705c9858fe4941c6d76e75deda6",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/native-ui-7d27265/asset-library.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "407e53eda3dffd65d061a56a81c6ad63ba7f6685",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/native-ui-7d27265/asset-library.png",
+      "bytes": 168863,
+      "sha256": "21863ebabf3fe46a59c630c91d2b28c6ccbd314449c58c16a44b130f141e1e82",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/native-ui-7d27265/google-cli.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "8965fd0e737b4136556fb36c596b7e48fc6b898f",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/native-ui-7d27265/google-cli.png",
+      "bytes": 166743,
+      "sha256": "ad4d5930fa98cc5bfd9c9396fcb1ae217c770a13ef697881ab1026f5bd48d82d",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/native-ui-7d27265/model-actions.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "e6f17ca789d9a2344e4cab04c413396fdc7d0d3e",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/native-ui-7d27265/model-actions.png",
+      "bytes": 162647,
+      "sha256": "7b51d3c908fa333ba8ecea867bf9202690c9ea5d8d9eaa021640107479f42773",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/native-ui-7d27265/model-settings.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "6ebea476f8c71a03612a9fe5bf643d6546d22d85",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/native-ui-7d27265/model-settings.png",
+      "bytes": 149658,
+      "sha256": "7e732799199338d66a872b7e9b155d3789db4b2ccb9e75346bba995d46efb2b0",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/native-ui-7d27265/selected-reference.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "0e1589c3f5e7716e97c864b636a77505e1a1ab0a",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/native-ui-7d27265/selected-reference.png",
+      "bytes": 235963,
+      "sha256": "c061c16005857915211b508e56356feb4c59746378f222848f75d0819308952a",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/native-ui-7d27265/workbench-export.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "adaa9779ad9ae4792347921055c7b973f8c3fb89",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/native-ui-7d27265/workbench-export.png",
+      "bytes": 151943,
+      "sha256": "91bf4bdaf413c151319c04186047f7feb4b929f836b21a974ba205cee82327f5",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/native-ui-7d27265/workbench-generate.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "4af3e50b73e2d0277f477e91689a40124ce9c1f5",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/native-ui-7d27265/workbench-generate.png",
+      "bytes": 132066,
+      "sha256": "ede3580d96f9120bc93b6d48efdeab777c4210d6fa9420274d091809c1bb5466",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/native-ui-7d27265/workbench-plan.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "484bfce2aeda7a7967495e4ab0466708853e3d81",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/native-ui-7d27265/workbench-plan.png",
+      "bytes": 138147,
+      "sha256": "86f0c3f3091c07baa09eed41697dfcf0852047c48123c8200b95cfd8b9173b0b",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/native-ui-7d27265/workbench-prompt.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "2573c6a2680a2c56ab560a5b9f6954374edb8df9",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/native-ui-7d27265/workbench-prompt.png",
+      "bytes": 124553,
+      "sha256": "5be483aa8288173dda19469c46f47172a1ef730349c6d9d226b327ec5b6f51ab",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/native-ui-7d27265/workbench-queue.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "4eea7344e85e48611156353b4da3b3d680d99d3b",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/native-ui-7d27265/workbench-queue.png",
+      "bytes": 129493,
+      "sha256": "406b0dc67ef22107af43df892a1788db88a5c2a9bc2f09528f4a0e5ff5512f6a",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/native-ui-7d27265/workbench-review.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "2fb5737556c954c1a34ec123574f64cb9297cf7f",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/native-ui-7d27265/workbench-review.png",
+      "bytes": 164499,
+      "sha256": "81e54ea1197ac4c65189d24273203299b51429ead6d76a685e75598129f39de7",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/user-reference.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "56fec26344281df98dedb813b64832a3ce4af62d",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/user-reference.png",
+      "bytes": 909592,
+      "sha256": "0082870155a08f5c0855736681ecc7626414d2e152122fb6ad31abf06a83dd4e",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-24cfca1/image-selection-actions-单击参考图片只选中，上方工具栏复用预览重绘对比并可关闭/selected-reference.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "689c4648c0cc5e02d7e1dcc172db7b85ca6649d5",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-24cfca1/image-selection-actions-单击参考图片只选中，上方工具栏复用预览重绘对比并可关闭/selected-reference.png",
+      "bytes": 262589,
+      "sha256": "beb04285fe86fa207e9b6f817decb38afef65567086a2181d4e0d2b13296e036",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-24cfca1/image-selection-actions-图片选择工具栏在-1099-屏幕内可触达且保持标准尺寸/reference-1099.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "7f02e3d272aa30054f2e4ab989be6b4b0bdc8307",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-24cfca1/image-selection-actions-图片选择工具栏在-1099-屏幕内可触达且保持标准尺寸/reference-1099.png",
+      "bytes": 202301,
+      "sha256": "8bce5f7ce9ea0070cc7f4d59dad122a6bb9bf90c0f04c2531817f4b54cb1e10c",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-24cfca1/image-selection-actions-图片选择工具栏在-1920-屏幕内可触达且保持标准尺寸/reference-1920.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "b8ae6f28350a91eee6c61d3fc2eb8342e8ff23e8",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-24cfca1/image-selection-actions-图片选择工具栏在-1920-屏幕内可触达且保持标准尺寸/reference-1920.png",
+      "bytes": 256309,
+      "sha256": "c75aa9eeacde67cea7424380ca49774e18d6392cfd567f689babe94277b7ac33",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-24cfca1/image-selection-actions-图片选择工具栏在-390-屏幕内可触达且保持标准尺寸/reference-390.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "eec7a523066e90c0d5707fecb2ab8cd9c4f18580",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-24cfca1/image-selection-actions-图片选择工具栏在-390-屏幕内可触达且保持标准尺寸/reference-390.png",
+      "bytes": 106741,
+      "sha256": "40c0aaa3f120651d5060148b6e868e9d8f3ab0b6c6ad8e106448ffe1400a4883",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-24cfca1/ui-page-rules-模型设置与资源页遵循现行-UI-规则-1920/asset-actions.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "9a4d7f020c9b9bddc77b259194d6449a86c0124c",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-24cfca1/ui-page-rules-模型设置与资源页遵循现行-UI-规则-1920/asset-actions.png",
+      "bytes": 190384,
+      "sha256": "7eb0fbb533eebd3073ebd01c3c29909f5e3fdce78c62a03de0ebe858a3671318",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-24cfca1/ui-page-rules-模型设置与资源页遵循现行-UI-规则-1920/asset-library.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "81240d37dbec7bae90ac140949f8e20dfb032cb4",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-24cfca1/ui-page-rules-模型设置与资源页遵循现行-UI-规则-1920/asset-library.png",
+      "bytes": 472179,
+      "sha256": "8fc72bad8a501a5d839a354dc0269b47ac6c4e95d1f1580b9a4b91a84cd438a1",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-24cfca1/ui-page-rules-模型设置与资源页遵循现行-UI-规则-1920/google-cli.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "07079f6c8bfc25539943ef1849d0505117ada3ee",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-24cfca1/ui-page-rules-模型设置与资源页遵循现行-UI-规则-1920/google-cli.png",
+      "bytes": 236637,
+      "sha256": "e299d478d17f986de6848a6d3693bd3d5efe20d770a523181978adb804f6f20a",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-24cfca1/ui-page-rules-模型设置与资源页遵循现行-UI-规则-1920/model-actions.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "ce2e27470ff84bb49805b5406935c8c277ee0e26",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-24cfca1/ui-page-rules-模型设置与资源页遵循现行-UI-规则-1920/model-actions.png",
+      "bytes": 232512,
+      "sha256": "b346e887913489fbb88575f5ada56049009c0266caac3da70b814b2c86a71e6a",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-24cfca1/ui-page-rules-模型设置与资源页遵循现行-UI-规则-1920/model-settings.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "5d602eef98e7e8b3bc3ff1e4b7e721a4216717b7",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-24cfca1/ui-page-rules-模型设置与资源页遵循现行-UI-规则-1920/model-settings.png",
+      "bytes": 221795,
+      "sha256": "f069446e23deb64bf5727664721a7b989e251f31c7d9cd112a39398314bcd23a",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-24cfca1/ui-page-rules-模型设置与资源页遵循现行-UI-规则-390/asset-actions.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "49cc322b585e54f40e75cd29de1c529093c489a8",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-24cfca1/ui-page-rules-模型设置与资源页遵循现行-UI-规则-390/asset-actions.png",
+      "bytes": 37061,
+      "sha256": "f30a5add258e142d9dafff04fceddf0d83ebf6cc9eda92709b29cd3c7e649361",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-24cfca1/ui-page-rules-模型设置与资源页遵循现行-UI-规则-390/asset-library.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "85517f0b7e11f962237d009aefe4ae4287699e08",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-24cfca1/ui-page-rules-模型设置与资源页遵循现行-UI-规则-390/asset-library.png",
+      "bytes": 65230,
+      "sha256": "3caeafc181ddd53fdcc3c339c0b7456683989fc31a95d615f966b817b78d613b",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-24cfca1/ui-page-rules-模型设置与资源页遵循现行-UI-规则-390/google-cli.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "cd71e072d6f9466da1fa7cfb1db50505b09665ac",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-24cfca1/ui-page-rules-模型设置与资源页遵循现行-UI-规则-390/google-cli.png",
+      "bytes": 56388,
+      "sha256": "206729d64edeaa5b34056205405f5a33af2570671048cc8d0e0208188be01236",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-24cfca1/ui-page-rules-模型设置与资源页遵循现行-UI-规则-390/model-actions.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "509eca107b74477f1c80596ff36b17de9b03c2d8",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-24cfca1/ui-page-rules-模型设置与资源页遵循现行-UI-规则-390/model-actions.png",
+      "bytes": 55350,
+      "sha256": "111d8f6323cda525743d80b114caf7ebcbd3dffc28a84e2695e1b93c4bd750d3",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-24cfca1/ui-page-rules-模型设置与资源页遵循现行-UI-规则-390/model-settings.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "a8a6d2be979122ce0718aa550b97153f76e54795",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-24cfca1/ui-page-rules-模型设置与资源页遵循现行-UI-规则-390/model-settings.png",
+      "bytes": 45986,
+      "sha256": "c932194f2ea15a79a01de399f03ddbfa0e93e12086f0999afcba963935b5a809",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-24cfca1/ui-page-rules-阶段计划工作台遵循现行-UI-规则-1920/workbench-export.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "971c00aa34b25545540da0d39276430e6baa3b6a",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-24cfca1/ui-page-rules-阶段计划工作台遵循现行-UI-规则-1920/workbench-export.png",
+      "bytes": 151418,
+      "sha256": "9856fd7cac30369160b1303194916441ed392a918510042cb9b99b44d5a600b5",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-24cfca1/ui-page-rules-阶段计划工作台遵循现行-UI-规则-1920/workbench-generate.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "ad2ff83be45c68764455938efec0a26cc9c23426",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-24cfca1/ui-page-rules-阶段计划工作台遵循现行-UI-规则-1920/workbench-generate.png",
+      "bytes": 131352,
+      "sha256": "8b2a8967859007ae491018e942c417f691b2b880b5ada154b4801826996f73a7",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-24cfca1/ui-page-rules-阶段计划工作台遵循现行-UI-规则-1920/workbench-plan.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "80b255bd715db94cfeb14c3565d5ae37b6b85b56",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-24cfca1/ui-page-rules-阶段计划工作台遵循现行-UI-规则-1920/workbench-plan.png",
+      "bytes": 137416,
+      "sha256": "2bdc50159a8d58125998db7bbe4dd8548b30bb76f7a0893f07aa009f1a90fa18",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-24cfca1/ui-page-rules-阶段计划工作台遵循现行-UI-规则-1920/workbench-prompt.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "a9c60a1258084e55cf834e60cff6fe8e17e03ff2",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-24cfca1/ui-page-rules-阶段计划工作台遵循现行-UI-规则-1920/workbench-prompt.png",
+      "bytes": 124213,
+      "sha256": "7e83baefcdaf9dc0827db234522eed70d56254a98070f6e277534ff76e761b95",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-24cfca1/ui-page-rules-阶段计划工作台遵循现行-UI-规则-1920/workbench-queue.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "6a284349bf1877c927eee5d445b1750031914d14",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-24cfca1/ui-page-rules-阶段计划工作台遵循现行-UI-规则-1920/workbench-queue.png",
+      "bytes": 128724,
+      "sha256": "a97d3e9922096da8096e3b26f120ebaff7c96c97906f54ffb01dcced009d0beb",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-24cfca1/ui-page-rules-阶段计划工作台遵循现行-UI-规则-1920/workbench-review.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "7224a2eff30a8f1965446a4b3fd7d0b14a1f900b",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-24cfca1/ui-page-rules-阶段计划工作台遵循现行-UI-规则-1920/workbench-review.png",
+      "bytes": 163563,
+      "sha256": "ad565574e1037794b023a9eb6b9c28c30a3084e2ac318e3eee6e8d10d371dd42",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-24cfca1/ui-page-rules-阶段计划工作台遵循现行-UI-规则-390/workbench-export.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "bc8402c29a91e5d7e2e3f19ff1e3a17c453c9ff0",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-24cfca1/ui-page-rules-阶段计划工作台遵循现行-UI-规则-390/workbench-export.png",
+      "bytes": 45571,
+      "sha256": "9c873a4a6c99479d444fbd0afda6f62364302a92addb3bae680691adc656e4eb",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-24cfca1/ui-page-rules-阶段计划工作台遵循现行-UI-规则-390/workbench-generate.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "35b7d43663259bd84b931c871bfd4a251445e3c2",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-24cfca1/ui-page-rules-阶段计划工作台遵循现行-UI-规则-390/workbench-generate.png",
+      "bytes": 40992,
+      "sha256": "6774cb6acd6bf6b27cbc79b3c6ca98eaa340d1b677ddc1b28c3262cc166433f4",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-24cfca1/ui-page-rules-阶段计划工作台遵循现行-UI-规则-390/workbench-plan.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "6f815220248ce7c403232d8341e5a69551e8db1d",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-24cfca1/ui-page-rules-阶段计划工作台遵循现行-UI-规则-390/workbench-plan.png",
+      "bytes": 43846,
+      "sha256": "f2d1ac6b803fb7fb0e9fe718ee8635ee45c2812e788cb45e28ca4bba97e511d8",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-24cfca1/ui-page-rules-阶段计划工作台遵循现行-UI-规则-390/workbench-prompt.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "0ca9f544883564041ba105ee85431033289260fc",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-24cfca1/ui-page-rules-阶段计划工作台遵循现行-UI-规则-390/workbench-prompt.png",
+      "bytes": 34315,
+      "sha256": "90786218aa763aa29bd5aedbdcd4888e131cfb4d64ea5ad78b7a431b8a11583a",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-24cfca1/ui-page-rules-阶段计划工作台遵循现行-UI-规则-390/workbench-queue.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "774d05161ae33fe0ede9d9638b5714f4436f3310",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-24cfca1/ui-page-rules-阶段计划工作台遵循现行-UI-规则-390/workbench-queue.png",
+      "bytes": 41112,
+      "sha256": "af785792287a42505c9ce2afe102e852e90d9cc55a661af2d783289ed79c031f",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-24cfca1/ui-page-rules-阶段计划工作台遵循现行-UI-规则-390/workbench-review.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "95e806d00aa6e3fa9e500a4c2c2c371ad60a1d99",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-24cfca1/ui-page-rules-阶段计划工作台遵循现行-UI-规则-390/workbench-review.png",
+      "bytes": 48919,
+      "sha256": "72580c3c79519e127a4a81e52420adb1bd558b7cbe67034bc8a94b8e51e77d39",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-7d27265/image-selection-actions-单击参考图片只选中，上方工具栏复用预览重绘对比并可关闭/selected-reference.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "f31125fde85bd141695098b1cd845a9685edd1b0",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-7d27265/image-selection-actions-单击参考图片只选中，上方工具栏复用预览重绘对比并可关闭/selected-reference.png",
+      "bytes": 262627,
+      "sha256": "2d8e4fe2ff6089eda1eb656032d5e1e2a6f1b7e8b048190bc36f431a89009c7d",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-7d27265/image-selection-actions-图片选择工具栏在-1099-屏幕内可触达且保持标准尺寸/reference-1099.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "798deba95367a6ea44d19c7ce7bbe823b04a4f38",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-7d27265/image-selection-actions-图片选择工具栏在-1099-屏幕内可触达且保持标准尺寸/reference-1099.png",
+      "bytes": 202362,
+      "sha256": "39656bf099aa122b54dcedda7177de31681fbd713c8404ae83168866ea37deb9",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-7d27265/image-selection-actions-图片选择工具栏在-1920-屏幕内可触达且保持标准尺寸/reference-1920.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "30b8c9345254c4562b0d8757d4544f5be5f7ca3a",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-7d27265/image-selection-actions-图片选择工具栏在-1920-屏幕内可触达且保持标准尺寸/reference-1920.png",
+      "bytes": 256723,
+      "sha256": "8642c66fb8d2ccbe09754150dfad8150f9797835c96f014790aa05185769c72f",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-7d27265/image-selection-actions-图片选择工具栏在-390-屏幕内可触达且保持标准尺寸/reference-390.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "039c6fdf5f8037e20e200636129e44d0e77643f0",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-7d27265/image-selection-actions-图片选择工具栏在-390-屏幕内可触达且保持标准尺寸/reference-390.png",
+      "bytes": 106731,
+      "sha256": "1be4b465c2ec2db3872b541fda470b80d4e9f8e054dc02cab75befcbc7a615ac",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-7d27265/ui-page-rules-模型设置与资源页遵循现行-UI-规则-1920/asset-actions.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "6a6a8c31a7db1c1d83f0d190cd671c9054663aa9",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-7d27265/ui-page-rules-模型设置与资源页遵循现行-UI-规则-1920/asset-actions.png",
+      "bytes": 190418,
+      "sha256": "cdfc89478715169ea6764de6f245752e537d2a8f729c332b78dac4cf3fc1e8bb",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-7d27265/ui-page-rules-模型设置与资源页遵循现行-UI-规则-1920/asset-library.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "d2882082685d4aa79a96231a8ae653cc426158cf",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-7d27265/ui-page-rules-模型设置与资源页遵循现行-UI-规则-1920/asset-library.png",
+      "bytes": 472019,
+      "sha256": "e7039e051a6632314b42015c156b66ebf1bd158985e031a2e898c5bc689367b4",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-7d27265/ui-page-rules-模型设置与资源页遵循现行-UI-规则-1920/google-cli.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "3554709012495f5f3e915016619bc17ffb10fb28",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-7d27265/ui-page-rules-模型设置与资源页遵循现行-UI-规则-1920/google-cli.png",
+      "bytes": 236636,
+      "sha256": "7310b2ed9b94b2a0804e117a5103dcfc5d927471967befcc5c7861c88aeeb1ae",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-7d27265/ui-page-rules-模型设置与资源页遵循现行-UI-规则-1920/model-actions.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "ce2e27470ff84bb49805b5406935c8c277ee0e26",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-7d27265/ui-page-rules-模型设置与资源页遵循现行-UI-规则-1920/model-actions.png",
+      "bytes": 232512,
+      "sha256": "b346e887913489fbb88575f5ada56049009c0266caac3da70b814b2c86a71e6a",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-7d27265/ui-page-rules-模型设置与资源页遵循现行-UI-规则-1920/model-settings.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "4a3e568cfdcddf0846e0d32014ac324ebfb61ee1",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-7d27265/ui-page-rules-模型设置与资源页遵循现行-UI-规则-1920/model-settings.png",
+      "bytes": 222066,
+      "sha256": "9c6e72da85a433e53e5655177b33a6c3711bffad2e7ad52d06a39a29494dda63",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-7d27265/ui-page-rules-模型设置与资源页遵循现行-UI-规则-390/asset-actions.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "0d571aa03d2d5d49405da9eca282f0f5bac35670",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-7d27265/ui-page-rules-模型设置与资源页遵循现行-UI-规则-390/asset-actions.png",
+      "bytes": 37142,
+      "sha256": "33255ecdcf79df4cf7e5fefe57235b9e54faa05efcfcfd9c771d0a42cae15d1a",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-7d27265/ui-page-rules-模型设置与资源页遵循现行-UI-规则-390/asset-library.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "44895bd645d74d9a5d604546283f096873a18647",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-7d27265/ui-page-rules-模型设置与资源页遵循现行-UI-规则-390/asset-library.png",
+      "bytes": 116911,
+      "sha256": "fb5d310c6c0fb8a838ef46fbfdc2a935bd71ee915a7ff5ae95d0bb2c9ddbd9a8",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-7d27265/ui-page-rules-模型设置与资源页遵循现行-UI-规则-390/google-cli.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "cd71e072d6f9466da1fa7cfb1db50505b09665ac",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-7d27265/ui-page-rules-模型设置与资源页遵循现行-UI-规则-390/google-cli.png",
+      "bytes": 56388,
+      "sha256": "206729d64edeaa5b34056205405f5a33af2570671048cc8d0e0208188be01236",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-7d27265/ui-page-rules-模型设置与资源页遵循现行-UI-规则-390/model-actions.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "509eca107b74477f1c80596ff36b17de9b03c2d8",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-7d27265/ui-page-rules-模型设置与资源页遵循现行-UI-规则-390/model-actions.png",
+      "bytes": 55350,
+      "sha256": "111d8f6323cda525743d80b114caf7ebcbd3dffc28a84e2695e1b93c4bd750d3",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-7d27265/ui-page-rules-模型设置与资源页遵循现行-UI-规则-390/model-settings.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "8891ddf4545be25176d94b8052ac67cdf16edf72",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-7d27265/ui-page-rules-模型设置与资源页遵循现行-UI-规则-390/model-settings.png",
+      "bytes": 46011,
+      "sha256": "a94c5c8c7748fdd93023f5944a472cd8ee3ff44cb76042aa8b30f993866f9fa3",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-7d27265/ui-page-rules-阶段计划工作台遵循现行-UI-规则-1920/workbench-export.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "03a85f45c065b5d675cf86480833c7d28ff155bb",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-7d27265/ui-page-rules-阶段计划工作台遵循现行-UI-规则-1920/workbench-export.png",
+      "bytes": 151328,
+      "sha256": "d0e7053a47b25a718aa9e53c2027215d90cf715b5f32283fe7bb2e5c061c3ed3",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-7d27265/ui-page-rules-阶段计划工作台遵循现行-UI-规则-1920/workbench-generate.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "bd1592bc39ec19135a8595ca85eefbb1b4b0e2eb",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-7d27265/ui-page-rules-阶段计划工作台遵循现行-UI-规则-1920/workbench-generate.png",
+      "bytes": 131184,
+      "sha256": "732d8d41a085fa3a2ba674dd7503466adde04361f856beefdd08eb454ba9d16c",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-7d27265/ui-page-rules-阶段计划工作台遵循现行-UI-规则-1920/workbench-plan.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "60f4ffff7a881f9e21a9727d69f10ece2b31e181",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-7d27265/ui-page-rules-阶段计划工作台遵循现行-UI-规则-1920/workbench-plan.png",
+      "bytes": 137330,
+      "sha256": "558db0544637883d9cc515c5a122e8684912bf4ae00803e6ecbaa4d256edff65",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-7d27265/ui-page-rules-阶段计划工作台遵循现行-UI-规则-1920/workbench-prompt.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "143685e89e4f1ca325cc1341b916492b93b456ac",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-7d27265/ui-page-rules-阶段计划工作台遵循现行-UI-规则-1920/workbench-prompt.png",
+      "bytes": 124123,
+      "sha256": "9fbb93f08ae0df0d9ec575f4e24db35a57c09ae51f6156c32c1db50eecfff308",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-7d27265/ui-page-rules-阶段计划工作台遵循现行-UI-规则-1920/workbench-queue.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "da30d3b25279db96d77e54547495e3b196b0ea0b",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-7d27265/ui-page-rules-阶段计划工作台遵循现行-UI-规则-1920/workbench-queue.png",
+      "bytes": 128536,
+      "sha256": "6306579a1d9418227282be247f973406907c8dae5bdf5afba32cb5f055d9ee50",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-7d27265/ui-page-rules-阶段计划工作台遵循现行-UI-规则-1920/workbench-review.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "f541472daa19edbed02dd902afc91f2c49fcde39",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-7d27265/ui-page-rules-阶段计划工作台遵循现行-UI-规则-1920/workbench-review.png",
+      "bytes": 163380,
+      "sha256": "8a88f50707091b4fa6f6d0ecde24c73ff868bb8080f95925168c24b09fe6d676",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-7d27265/ui-page-rules-阶段计划工作台遵循现行-UI-规则-390/workbench-export.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "4de7ca0a5c35c52ed402878f364841cfd02a4755",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-7d27265/ui-page-rules-阶段计划工作台遵循现行-UI-规则-390/workbench-export.png",
+      "bytes": 45515,
+      "sha256": "f8427b9a40b810f51337bc08a93e70634e5ef46570ddfc1e577770bd1b3d28a5",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-7d27265/ui-page-rules-阶段计划工作台遵循现行-UI-规则-390/workbench-generate.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "d10afa95ea39dd80495f2475ab7c38031b3930ba",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-7d27265/ui-page-rules-阶段计划工作台遵循现行-UI-规则-390/workbench-generate.png",
+      "bytes": 41026,
+      "sha256": "48bbb8494e9e4c817c408ed9a5fccdd79423e7296c1a66c54420f50738ca1fad",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-7d27265/ui-page-rules-阶段计划工作台遵循现行-UI-规则-390/workbench-plan.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "c326e7406b961f14b96c15f14ff63b93ce8799b7",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-7d27265/ui-page-rules-阶段计划工作台遵循现行-UI-规则-390/workbench-plan.png",
+      "bytes": 43792,
+      "sha256": "36a5c1e68b15a28939a3553710292ab0420ff286f94eb21638f5e06467c1688d",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-7d27265/ui-page-rules-阶段计划工作台遵循现行-UI-规则-390/workbench-prompt.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "9531e75570b94af8a5fc99c45cec2628134f420e",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-7d27265/ui-page-rules-阶段计划工作台遵循现行-UI-规则-390/workbench-prompt.png",
+      "bytes": 34282,
+      "sha256": "c6c0a44a683b6475b60667c028cda18f68ab0be264188cb8fc8dfe1851a73a70",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-7d27265/ui-page-rules-阶段计划工作台遵循现行-UI-规则-390/workbench-queue.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "53f38728b8259ad174f2adcf8b8943246cc0f0c3",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-7d27265/ui-page-rules-阶段计划工作台遵循现行-UI-规则-390/workbench-queue.png",
+      "bytes": 40875,
+      "sha256": "c4636c5a28de5c40208b1218511dbcadd74edfb183b5c2a059e0b108db83a465",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-7d27265/ui-page-rules-阶段计划工作台遵循现行-UI-规则-390/workbench-review.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "076ecf4075a9499667d9ae77fb8dd526d53c12a2",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-7d27265/ui-page-rules-阶段计划工作台遵循现行-UI-规则-390/workbench-review.png",
+      "bytes": 49179,
+      "sha256": "eca6842ef10b90ff6c536f9b2818281cf616b61e22074d7bf26b5a23955f6476",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-model-integration/image-selection-actions-单击参考图片只选中，上方工具栏复用预览重绘对比并可关闭/selected-reference.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "8d64010aa6b402dd586e927beee12d506520165d",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-model-integration/image-selection-actions-单击参考图片只选中，上方工具栏复用预览重绘对比并可关闭/selected-reference.png",
+      "bytes": 262306,
+      "sha256": "29acf4d67da328380ae66a1bd8d6bd63912c9252d2bdb0b82987393b6f600ec2",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-model-integration/image-selection-actions-图片选择工具栏在-1099-屏幕内可触达且保持标准尺寸/reference-1099.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "c297224f26b144603eb47adad4f402920783779a",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-model-integration/image-selection-actions-图片选择工具栏在-1099-屏幕内可触达且保持标准尺寸/reference-1099.png",
+      "bytes": 202280,
+      "sha256": "078f0d0d2245ea0d034d4c10e5f1e690f68ec1786f288c24087f6fc055f57b98",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-model-integration/image-selection-actions-图片选择工具栏在-1920-屏幕内可触达且保持标准尺寸/reference-1920.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "08d1ec9bbace1484bd396d348a9f847c7afe7afc",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-model-integration/image-selection-actions-图片选择工具栏在-1920-屏幕内可触达且保持标准尺寸/reference-1920.png",
+      "bytes": 256354,
+      "sha256": "3269d085b98c7027fca0016e71f86ca27b07ecc1199e68002488d1c2b34be35d",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-model-integration/image-selection-actions-图片选择工具栏在-390-屏幕内可触达且保持标准尺寸/reference-390.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "140c53a02b211437a1a3a810c6d8a5e5860d3abb",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-model-integration/image-selection-actions-图片选择工具栏在-390-屏幕内可触达且保持标准尺寸/reference-390.png",
+      "bytes": 106667,
+      "sha256": "4a758b531ab8e67957e603185ebd25e6bae0b99bfef48e4b450071a800f04ddb",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-model-integration/ui-page-rules-模型设置与资源页遵循现行-UI-规则-1920/asset-actions.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "9a4d7f020c9b9bddc77b259194d6449a86c0124c",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-model-integration/ui-page-rules-模型设置与资源页遵循现行-UI-规则-1920/asset-actions.png",
+      "bytes": 190384,
+      "sha256": "7eb0fbb533eebd3073ebd01c3c29909f5e3fdce78c62a03de0ebe858a3671318",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-model-integration/ui-page-rules-模型设置与资源页遵循现行-UI-规则-1920/asset-library.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "55ec3ef13de7b5031581a64efc6e6d96ee8b9cfe",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-model-integration/ui-page-rules-模型设置与资源页遵循现行-UI-规则-1920/asset-library.png",
+      "bytes": 360918,
+      "sha256": "b7347de257d5994a0a249d2cf8819d81168654e0af1509fbbec8089b18c93dd5",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-model-integration/ui-page-rules-模型设置与资源页遵循现行-UI-规则-1920/google-cli.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "77499e9a2971be222645a616b4406d07dec75b3a",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-model-integration/ui-page-rules-模型设置与资源页遵循现行-UI-规则-1920/google-cli.png",
+      "bytes": 236645,
+      "sha256": "5b43eb0dc41e6bae0d446a877954e191aa602d19a7787d4dd4ba92489000851a",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-model-integration/ui-page-rules-模型设置与资源页遵循现行-UI-规则-1920/model-actions.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "ce2e27470ff84bb49805b5406935c8c277ee0e26",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-model-integration/ui-page-rules-模型设置与资源页遵循现行-UI-规则-1920/model-actions.png",
+      "bytes": 232512,
+      "sha256": "b346e887913489fbb88575f5ada56049009c0266caac3da70b814b2c86a71e6a",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-model-integration/ui-page-rules-模型设置与资源页遵循现行-UI-规则-1920/model-settings.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "3c72146fafe4277672f97ba1925aea72e31bcaa6",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-model-integration/ui-page-rules-模型设置与资源页遵循现行-UI-规则-1920/model-settings.png",
+      "bytes": 221938,
+      "sha256": "d7c73c1e9bd7583207ba2ef6d8c5ead26966bbb1a9446f91ebfcc69659795af1",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-model-integration/ui-page-rules-模型设置与资源页遵循现行-UI-规则-390/asset-actions.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "add5b1684dee31812bcca7682904654ef678abe6",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-model-integration/ui-page-rules-模型设置与资源页遵循现行-UI-规则-390/asset-actions.png",
+      "bytes": 37170,
+      "sha256": "8fc55c16df148f02c03a8512944bfe505cb00480c07024a9fa61c1f386971120",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-model-integration/ui-page-rules-模型设置与资源页遵循现行-UI-规则-390/asset-library.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "dc374a764bd6716bf4968861bce28aacf492498b",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-model-integration/ui-page-rules-模型设置与资源页遵循现行-UI-规则-390/asset-library.png",
+      "bytes": 103271,
+      "sha256": "6ba77c5e6613dee64acd8dd038e94b2dd94bbd9be15b00f80f6d1b40d7b47ae6",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-model-integration/ui-page-rules-模型设置与资源页遵循现行-UI-规则-390/google-cli.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "cd71e072d6f9466da1fa7cfb1db50505b09665ac",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-model-integration/ui-page-rules-模型设置与资源页遵循现行-UI-规则-390/google-cli.png",
+      "bytes": 56388,
+      "sha256": "206729d64edeaa5b34056205405f5a33af2570671048cc8d0e0208188be01236",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-model-integration/ui-page-rules-模型设置与资源页遵循现行-UI-规则-390/model-actions.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "509eca107b74477f1c80596ff36b17de9b03c2d8",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-model-integration/ui-page-rules-模型设置与资源页遵循现行-UI-规则-390/model-actions.png",
+      "bytes": 55350,
+      "sha256": "111d8f6323cda525743d80b114caf7ebcbd3dffc28a84e2695e1b93c4bd750d3",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-model-integration/ui-page-rules-模型设置与资源页遵循现行-UI-规则-390/model-settings.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "a8a6d2be979122ce0718aa550b97153f76e54795",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-model-integration/ui-page-rules-模型设置与资源页遵循现行-UI-规则-390/model-settings.png",
+      "bytes": 45986,
+      "sha256": "c932194f2ea15a79a01de399f03ddbfa0e93e12086f0999afcba963935b5a809",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-model-integration/ui-page-rules-阶段计划工作台遵循现行-UI-规则-1920/workbench-export.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "a44b0ec39167ec41f7eb6527df26a3615feb11a5",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-model-integration/ui-page-rules-阶段计划工作台遵循现行-UI-规则-1920/workbench-export.png",
+      "bytes": 113431,
+      "sha256": "0a94e142f378dd73f0930cf66d462ee8fe7c8c1929687699e8e2ebdb138ff451",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-model-integration/ui-page-rules-阶段计划工作台遵循现行-UI-规则-1920/workbench-generate.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "3339e7b016c3f6f43bd2de73f176e084a5303d13",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-model-integration/ui-page-rules-阶段计划工作台遵循现行-UI-规则-1920/workbench-generate.png",
+      "bytes": 113298,
+      "sha256": "b1d263f9dab90dedda999a8e83b8688e56dd70bf7946688490f7e5a70e4e13aa",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-model-integration/ui-page-rules-阶段计划工作台遵循现行-UI-规则-1920/workbench-plan.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "fb16849f682edab72f323c5ae1b54a56afe33d03",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-model-integration/ui-page-rules-阶段计划工作台遵循现行-UI-规则-1920/workbench-plan.png",
+      "bytes": 134615,
+      "sha256": "85a3ca4578c23f056a2abd3ddeb5a1c1c7700a7a40e486f820b6e39a956c2911",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-model-integration/ui-page-rules-阶段计划工作台遵循现行-UI-规则-1920/workbench-prompt.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "69b0c4dc5220531f327959b48824735fcd6ba4f6",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-model-integration/ui-page-rules-阶段计划工作台遵循现行-UI-规则-1920/workbench-prompt.png",
+      "bytes": 113343,
+      "sha256": "682629d83d2628cac1587fb4163a482b7175daded7fa67871d0b2e9b3f135422",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-model-integration/ui-page-rules-阶段计划工作台遵循现行-UI-规则-1920/workbench-queue.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "f6b5a6645b52c904896f497c3a16c779e27260e5",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-model-integration/ui-page-rules-阶段计划工作台遵循现行-UI-规则-1920/workbench-queue.png",
+      "bytes": 113148,
+      "sha256": "6b285deb09030b9dd38e69fab2260c6e898854c2c0a89a3b666ab351f4b894ae",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-model-integration/ui-page-rules-阶段计划工作台遵循现行-UI-规则-1920/workbench-review.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "e0c474c32c38143b85c3f0573c3454c27b89c0ba",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-model-integration/ui-page-rules-阶段计划工作台遵循现行-UI-规则-1920/workbench-review.png",
+      "bytes": 113393,
+      "sha256": "d9359a41b4b2c119df47d2c7d2493aa3eb1788a47991f25713a1d6246ec7589c",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-model-integration/ui-page-rules-阶段计划工作台遵循现行-UI-规则-390/workbench-export.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "2084dbdc2f50bea041fc6e00147082dd6e645dba",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-model-integration/ui-page-rules-阶段计划工作台遵循现行-UI-规则-390/workbench-export.png",
+      "bytes": 27867,
+      "sha256": "623aa2f63a74e1a08c6d2bd0937c91e63d049baaf780c03958e2c9e1d0156b59",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-model-integration/ui-page-rules-阶段计划工作台遵循现行-UI-规则-390/workbench-generate.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "d7c7fe9216b1410361861f812550e239227cff18",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-model-integration/ui-page-rules-阶段计划工作台遵循现行-UI-规则-390/workbench-generate.png",
+      "bytes": 27846,
+      "sha256": "1a6d639b9cf2be4c03a2f17caf4eef88988445db545d9c2ca7a01f74b599c510",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-model-integration/ui-page-rules-阶段计划工作台遵循现行-UI-规则-390/workbench-plan.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "c529d504a85f40adedb55b2666c3a77c24e06721",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-model-integration/ui-page-rules-阶段计划工作台遵循现行-UI-规则-390/workbench-plan.png",
+      "bytes": 43853,
+      "sha256": "79514289304e025d34b4229d1763ca8587494285be226ecd15720a3521467752",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-model-integration/ui-page-rules-阶段计划工作台遵循现行-UI-规则-390/workbench-prompt.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "2aa6c67ac10b748bc9fe0fc7669c38244c748083",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-model-integration/ui-page-rules-阶段计划工作台遵循现行-UI-规则-390/workbench-prompt.png",
+      "bytes": 27772,
+      "sha256": "65795309d383cf31993b9a89be11c1d2312abf28657b17fc63e354f830371837",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-model-integration/ui-page-rules-阶段计划工作台遵循现行-UI-规则-390/workbench-queue.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "d8bd4f1b7a8bde40339771549018c3d000933e59",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-model-integration/ui-page-rules-阶段计划工作台遵循现行-UI-规则-390/workbench-queue.png",
+      "bytes": 27579,
+      "sha256": "f0f2ea18a9c53c2ca59b9e700802191f4b66db517018ff4e9b7367f46a3d9b00",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-08-image-selection-actions/evidence/web-model-integration/ui-page-rules-阶段计划工作台遵循现行-UI-规则-390/workbench-review.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "a85e99120b9846ede597df369d92f4689a8413d5",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-08-image-selection-actions/evidence/web-model-integration/ui-page-rules-阶段计划工作台遵循现行-UI-规则-390/workbench-review.png",
+      "bytes": 27973,
+      "sha256": "10730889732043e2009fbeddc7eb4a0bebb8039141c03ef80b01f915c2e75834",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    }
+  ],
+  "scope": "Historical E2 files externalized by validated batches; E1 summaries, JSON, key screenshots and active inputs retained.",
+  "containerResolution": "Resolve containerRelativePath from the workspace container containing the canonical checkout and output.",
+  "recovery": "Verify with scripts/governance/check-evidence-manifest.mjs <manifest> <container>; restore only to a new empty directory. Original Git sourceCommit/sourcePath remains recoverable.",
+  "batches": [
+    {
+      "taskId": "TASK-ORG-6",
+      "date": "2026-10-30",
+      "candidateBase": "be730617ace5013295b85a22133259b32ad6ffec"
+    }
+  ]
+}

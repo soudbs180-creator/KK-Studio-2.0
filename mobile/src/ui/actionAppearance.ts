@@ -9,6 +9,9 @@ export interface ActionTheme {
   onAccent: string;
   selected: string;
   danger: string;
+  muted: string;
+  controlIdle: string;
+  controlSelected: string;
 }
 export function actionAppearance(
   theme: ActionTheme,
@@ -18,21 +21,28 @@ export function actionAppearance(
     pressed?: boolean;
     danger?: boolean;
     quiet?: boolean;
+    segment?: boolean;
   },
 ) {
   return {
     background: state.primary
       ? theme.text
-      : state.selected || state.pressed
-        ? theme.selected
-        : state.quiet
-          ? "transparent"
-          : theme.pageSurface,
+      : state.segment
+        ? state.selected || state.pressed
+          ? theme.controlSelected
+          : theme.controlIdle
+        : state.selected || state.pressed
+          ? theme.selected
+          : state.quiet
+            ? "transparent"
+            : theme.pageSurface,
     foreground: state.primary
       ? theme.background
       : state.danger
         ? theme.danger
-        : theme.text,
+        : state.segment && !state.selected && !state.pressed
+          ? theme.muted
+          : theme.text,
     border: theme.border,
     marker: theme.accent,
   };

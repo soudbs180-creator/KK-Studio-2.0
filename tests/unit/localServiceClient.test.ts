@@ -1,3 +1,4 @@
+import { featureEntryMocks } from "../support/featureEntryMocks.ts";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import test from "node:test";
@@ -278,7 +279,8 @@ test("unsupported snapshot format reaches the client and freezes storage without
     exports,
     require: (name: string) => {
       const stripped = name.endsWith(".ts") ? name.slice(0, -3) : name;
-      const mod = modules[name] ?? modules[stripped];
+      const allModules = featureEntryMocks(modules);
+      const mod = allModules[name] ?? allModules[stripped];
       assert.ok(mod !== undefined, `unexpected storage dependency: ${name}`);
       return mod;
     },

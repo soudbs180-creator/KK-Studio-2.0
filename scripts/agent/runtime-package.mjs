@@ -218,7 +218,8 @@ async function publicationDirectory(target) {
 }
 async function renamePublication(source, target, parents, rename, expected) {
   let failure;
-  for (const delay of [0, 150, 300, 600, 900]) {
+  const retryDelays = [0, 150, 300, 600, 1200, 2400, 4800];
+  for (const [index, delay] of retryDelays.entries()) {
     if (delay) await wait(delay);
     for (const directory of parents) await publicationDirectory(directory);
     const current = await publicationDirectory(source);
@@ -232,7 +233,12 @@ async function renamePublication(source, target, parents, rename, expected) {
       return;
     } catch (error) {
       if (!["EPERM", "EBUSY"].includes(error.code)) throw error;
-      failure = error;
+      failure = Object.assign(error, {
+        attempts: index + 1,
+        retryWindowMs:
+          retryDelays.at(-1) +
+          retryDelays.slice(0, -1).reduce((sum, value) => sum + value, 0),
+      });
     }
   }
   throw failure;
@@ -300,6 +306,25 @@ export async function publishAgentRuntime({
       { cause },
     );
   }
+  await pruneRuntimeBackups(
+    temporary,
+    backup ? path.basename(backup) : undefined,
+  );
+}
+
+/** Keep the backup from this publication and drop older runtime copies. */
+async function pruneRuntimeBackups(temporary, keepName) {
+  const names = await fs.readdir(temporary).catch(() => []);
+  await Promise.all(
+    names
+      .filter(
+        (name) =>
+          name.startsWith("agent-runtime-previous-") && name !== keepName,
+      )
+      .map((name) =>
+        fs.rm(path.join(temporary, name), { recursive: true, force: true }),
+      ),
+  );
 }
 
 if (
@@ -312,26 +337,32 @@ if (
     agent: path.join(root, "vendor/canvas-agent"),
     temporaryRoot: path.join(root, ".tmp"),
   });
-  const manifest = await packageAgentRuntime({
-    agent,
-    target: staging,
-    node: process.execPath,
-  });
-  if (process.platform === "win32") {
-    await publishAgentRuntime({ root, staging });
-  } else {
-    const runtime = path.join(root, "src-tauri/agent-runtime");
-    if (await fs.lstat(runtime).catch(() => null)) {
-      if ((await fs.lstat(runtime)).isSymbolicLink())
-        throw Error("Runtime destination must not be a link");
-      await fs.rename(
-        runtime,
-        path.join(root, ".tmp", `agent-runtime-previous-${randomUUID()}`),
-      );
+  let published = false;
+  try {
+    const manifest = await packageAgentRuntime({
+      agent,
+      target: staging,
+      node: process.execPath,
+    });
+    if (process.platform === "win32") {
+      await publishAgentRuntime({ root, staging });
+    } else {
+      const runtime = path.join(root, "src-tauri/agent-runtime");
+      if (await fs.lstat(runtime).catch(() => null)) {
+        if ((await fs.lstat(runtime)).isSymbolicLink())
+          throw Error("Runtime destination must not be a link");
+        await fs.rename(
+          runtime,
+          path.join(root, ".tmp", `agent-runtime-previous-${randomUUID()}`),
+        );
+      }
+      await fs.rename(staging, runtime);
     }
-    await fs.rename(staging, runtime);
+    published = true;
+    console.log(
+      `Agent runtime packaged: ${manifest.files.length} files, ${manifest.platform}/${manifest.arch}.`,
+    );
+  } finally {
+    if (published) await fs.rm(agent, { recursive: true, force: true });
   }
-  console.log(
-    `Agent runtime packaged: ${manifest.files.length} files, ${manifest.platform}/${manifest.arch}.`,
-  );
 }

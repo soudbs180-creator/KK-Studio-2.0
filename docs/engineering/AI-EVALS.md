@@ -6,21 +6,25 @@
 
 2026-09-20 的规则回归覆盖共同入口、任务账本、import boundaries、PR artifact 包与 Git push 的临时仓库拒绝行为；当次未新增产品存储契约测试。当前现行 Markdown 相对文件链接已接入 `npm run markdown:check`/`lint`。CI 不验证自然语言语义或人类授权真伪；不存在“静态全绿就证明 AI 永远守规”的结论。
 
-| 必须保持的控制                    | 执行层                                                    | 证据/缺口                                                   |
-| --------------------------------- | --------------------------------------------------------- | ----------------------------------------------------------- |
-| 普通语言转目标/验收、简洁中文总结 | AI_RULES + PROMPTING + 独立review + 场景集                | 语义判断，不能由文件存在检查证明                            |
-| 所有工具指向共同规则              | 兼容入口 + governance:check                               | 新工具加载仍需实际确认                                      |
-| 现行 Markdown 相对文件链接        | markdown:check + lint                                     | 历史快照/外部网址/事实语义需另查                            |
-| 跨端架构、状态机、无虚假服务成功  | 类型/schema、import check、unit/browser/native acceptance | 外部能力独立验收                                            |
-| 禁主线直推/非FF/tag覆盖/默认删ref | pre-push + 真实临时repo测试                               | 可绕过，仅本机；远端另门禁                                  |
-| PR 交付链和状态闭环               | delivery:check + verify + ledger                          | 结构校验，不是审查质量证明                                  |
-| 当前SHA CI与独立审查              | hosted checks + review记录 + 用户验收                     | 无独立账号时不冒称GitHub人审                                |
-| 远端强制PR/禁force和删除          | config/github-rulesets + 托管active回读                   | 2026-09-23 三套 active；main 有效规则已回读；管理员仍可更改 |
-| 发布及高影响动作                  | 具体验收版本/授权/runbook                                 | 不自动部署、不自动付费                                      |
-| 事故恢复与重复问题                | incident模板 + 回归测试/eval                              | 无生产监控部署时不能声称已自动运维                          |
+| 必须保持的控制                    | 执行层                                                                                   | 证据/缺口                                                       |
+| --------------------------------- | ---------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| 普通语言转目标/验收、简洁中文总结 | AI_RULES + PROMPTING + 独立review + 场景集                                               | 语义判断，不能由文件存在检查证明                                |
+| 所有工具指向共同规则              | 兼容入口 + governance:check                                                              | 新工具加载仍需实际确认                                          |
+| 现行 Markdown 相对文件链接        | markdown:check + lint                                                                    | 历史快照/外部网址/事实语义需另查                                |
+| 跨端架构、状态机、无虚假服务成功  | 类型/schema、import check、unit/browser/native acceptance                                | 外部能力独立验收                                                |
+| 禁主线直推/非FF/tag覆盖/默认删ref | pre-push + 真实临时repo测试                                                              | 可绕过，仅本机；远端另门禁                                      |
+| PR 交付链和状态闭环               | delivery:check + verify + ledger                                                         | 结构校验，不是审查质量证明                                      |
+| 当前SHA CI与独立审查              | hosted checks + review记录 + 用户验收                                                    | 无独立账号时不冒称GitHub人审                                    |
+| 远端强制PR/禁force和删除          | config/github-rulesets + 托管active回读                                                  | 2026-09-23 三套 active；main 有效规则已回读；管理员仍可更改     |
+| 发布及高影响动作                  | 具体验收版本/授权/runbook                                                                | 不自动部署、不自动付费                                          |
+| 事故恢复与重复问题                | incident模板 + 回归测试/eval                                                             | 无生产监控部署时不能声称已自动运维                              |
+| 冲突顺序只有一份                  | `rules:check` 拒绝第二条优先级链路和 JSON 双列表                                         | 2026-11-05 结构门禁已接入；多模型语义评估 NOT RUN               |
+| 开发 Agent 八层不混用             | `rules:check` 锁定 REPO-LAYOUT 路径、兼容入口体积，并拒绝提交 `.agents` / `.superpowers` | 2026-11-05 结构门禁已接入；未搬产品目录；多模型语义评估 NOT RUN |
 
 持续收集真实失败场景，优先数据丢失、取消晚到、凭据/隐私、跨端漂移、未合并工作遗漏。模型升级或规则修改如果产生回归，保留失败证据并修复；没有测试预算时写 NOT RUN，不造成功率。
 
 2026-10-10 新增 `desktop-source-refresh` 场景，覆盖“客户端启动后仍是旧包”的入口、checkout、依赖、内容指纹、EXE 收据和运行进程闭环；`governance:check`、启动器单测和真实启动器回归已执行。没有调用外部模型做语义 benchmark，本场景的多模型语义评估记为 NOT RUN。
 
 2026-10-10 新增 `version-coherence-audit` 场景，覆盖平台版本源、根/嵌套 lock、协议/供应商版本分层、SHA/receipt 工件和第二环境回读；结构门禁可验证场景登记，语义 benchmark 仍为 NOT RUN。
+
+2026-10-21 新增 `figma-first-ui`、`figma-source-unavailable`、`figma-derived-docs`，覆盖设计先行、已存在目标设计无需重复编辑、失效来源停住依赖工作、本地规范从 Figma 派生及 CSS 投影不等于 Figma 同步。结构检查与独立规则演练分别记录；未运行 live 模型 benchmark，不推断模型遵守率。

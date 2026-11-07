@@ -1,0 +1,218 @@
+{
+  "version": 1,
+  "taskId": "TASK-ORG-6",
+  "classification": "E2-externalized-historical-evidence",
+  "packagePath": "docs/changes/2026-10-10-verify-concurrency-002",
+  "entries": [
+    {
+      "sourcePath": "docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-1/browser-results.json.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "caad91ae202dfd3b9a59aea3005c166ead94ea6c",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-1/browser-results.json.gz",
+      "bytes": 49704,
+      "sha256": "635cb298e2377520cdca84ce0e0c037027ad04ddb9c4fd6638e4b9bb528ee39a",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-1/console.log.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "b5769f2b9283b295d0e16a2c29f481948dc8f664",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-1/console.log.gz",
+      "bytes": 19098,
+      "sha256": "50f9330c909afceab48478a4655148430d244a44f533f48aa80d1873cf36efff",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-1/receipt.json.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "cc8b6c9a576edba6f56f3b83346f95e8568be822",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-1/receipt.json.gz",
+      "bytes": 375,
+      "sha256": "3fc4c2a3c78291d5430d1ff38d42c42005ed95d0c944eb08fb741a3087dd7d0f",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-1/resources.jsonl.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "6730aa3cc07d75f3dc3c56c96f8d197a542f4504",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-1/resources.jsonl.gz",
+      "bytes": 7297,
+      "sha256": "7cb563608accddc1d40ca9478bfe0a073b291a47b43f09f499161758043f8450",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-12/browser-results.json.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "713f27162db8ff72bfa73e994ddfe4b3809a591b",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-12/browser-results.json.gz",
+      "bytes": 50152,
+      "sha256": "12ec9e67a9f74841273c9e9f1a1729165a95534852c0e3c549cd0d67c868479c",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-12/console.log.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "fbe60f740dccd629e00f63361e0149fd9af3203c",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-12/console.log.gz",
+      "bytes": 19123,
+      "sha256": "2e5ebf5ad7d951be07f73b41fc223234f6f7a0a36c154584d576ab375c42e035",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-12/receipt.json.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "d1588e44cabbe5d05597c67779c712c42f5c20e3",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-12/receipt.json.gz",
+      "bytes": 374,
+      "sha256": "29c7e8cc1bc81974c208b59cad2386025fd144208da634addfca938baf428b67",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-12/resources.jsonl.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "a18b6d864f5304de422ba37e5af6c778e3411ca6",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-12/resources.jsonl.gz",
+      "bytes": 14878,
+      "sha256": "6bcd9886571fb5bf9b410cea6b94c172ac018962c9c50c95a376422741638341",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-2/browser-results.json.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "c846b11548c3a649bd12ce4415fe2eb436c3816e",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-2/browser-results.json.gz",
+      "bytes": 49708,
+      "sha256": "104f66050934501078cc1dcf8a9df91554ca23a0006c2acaf78d262ddc25e385",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-2/console.log.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "97518cb5f0de6a8fafc08a3f062d5730f2225a4c",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-2/console.log.gz",
+      "bytes": 19191,
+      "sha256": "61af22d79ad8a1961587ec1cc4838ab470ede388d726352be0d052a63d6183b2",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-2/receipt.json.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "47a85d903fb7d1d07aaa62979a011e872aa3d408",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-2/receipt.json.gz",
+      "bytes": 376,
+      "sha256": "6f0f47e9e39dce1339b249a85748a16e87894392fd13153581dc0cfffcf83fcd",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-2/resources.jsonl.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "0d502c83af5a9fd5f0641f9ce7a667b33ba33acb",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-2/resources.jsonl.gz",
+      "bytes": 9253,
+      "sha256": "57eaa71fcfa965f3a6c57e6b91fd960128687a85abf3d944d16125b178671b05",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-4/browser-results.json.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "333e00aef2591d3369d4e31726031f7d4d78b943",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-4/browser-results.json.gz",
+      "bytes": 49895,
+      "sha256": "d039e7b9ef88b77159094054330e55abfb03a3e47861b5cb21bab36cfe918abc",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-4/console.log.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "99fa93f5796fcc3839c46e40d2437ba1c8cde22c",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-4/console.log.gz",
+      "bytes": 19194,
+      "sha256": "07a133b6091d9dd5fe2d68502df3f63d0250dbf50c4c9024a81d765c54fc7cdb",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-4/receipt.json.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "747f86f65840a12543cc7c1d8fefab0f214334c6",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-4/receipt.json.gz",
+      "bytes": 377,
+      "sha256": "5807caba5d8f938e952bae60ff57769c519740f9f50f453e99cf4044c43e132f",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-4/resources.jsonl.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "e88be84643d315cd28e4afbd4ce4a58c21e70a56",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-4/resources.jsonl.gz",
+      "bytes": 9041,
+      "sha256": "5c9561208584f1e4688fd3c8c5a64b19ca699a8ccec0bfd46cdb5a42c63f45b2",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-8/browser-results.json.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "fcd95a47484b38e83740f33ad01ad7d3d268dfff",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-8/browser-results.json.gz",
+      "bytes": 49897,
+      "sha256": "b3faae7eac93c99e50854bdc9b60f3ce699d7c53aebf1e380210cb351f1045fd",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-8/console.log.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "4889b254f708a9976ad8eed746016b7e64e02cff",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-8/console.log.gz",
+      "bytes": 19144,
+      "sha256": "2e6a40b0838ea360f49691b59d5392a06cc98967f6c66ede7863c4b2a38f4ee1",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-8/receipt.json.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "c466dacd99a9e617de2c0777a292045762475544",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-8/receipt.json.gz",
+      "bytes": 382,
+      "sha256": "609cb27b215fbcfa835722e7758ee0f19b3ace26810a6510fbf0c324d97d0c93",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-8/resources.jsonl.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "000601f7d077ead53f0e7f6f579a0cf1b9e61824",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-8/resources.jsonl.gz",
+      "bytes": 10781,
+      "sha256": "783d684ce6cb3f43401e6eeb18dea325d14b91ba7169273c1f351528e87ccfcd",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    }
+  ],
+  "scope": "Historical E2 files externalized by validated batches; E1 summaries, JSON, key screenshots and active inputs retained.",
+  "containerResolution": "Resolve containerRelativePath from the workspace container containing the canonical checkout and output.",
+  "recovery": "Verify with scripts/governance/check-evidence-manifest.mjs <manifest> <container>; restore only to a new empty directory. Original Git sourceCommit/sourcePath remains recoverable.",
+  "batches": [
+    {
+      "taskId": "TASK-ORG-6",
+      "date": "2026-10-30",
+      "candidateBase": "be730617ace5013295b85a22133259b32ad6ffec"
+    }
+  ]
+}

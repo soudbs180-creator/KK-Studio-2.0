@@ -1,10 +1,7 @@
-<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="13.5" height="14" viewBox="0 0 13.5 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g id="icon-layout-grid">
-<path id="&#231;&#159;&#169;&#229;&#189;&#162; 22" d="M4.83333 0.5H1.22222C0.82335 0.5 0.5 0.82335 0.5 1.22222V4.83333C0.5 5.23221 0.82335 5.55556 1.22222 5.55556H4.83333C5.23221 5.55556 5.55556 5.23221 5.55556 4.83333V1.22222C5.55556 0.82335 5.23221 0.5 4.83333 0.5Z" stroke="#858585" stroke-linecap="round" stroke-linejoin="round"/>
-<line id="Line 13" x1="9" y1="12" x2="13" y2="12" stroke="#858585" stroke-linecap="round"/>
-<line id="Line 15" x1="9" y1="4" x2="13" y2="4" stroke="#858585" stroke-linecap="round"/>
-<line id="Line 14" x1="9" y1="10" x2="13" y2="10" stroke="#858585" stroke-linecap="round"/>
-<line id="Line 16" x1="9" y1="2" x2="13" y2="2" stroke="#858585" stroke-linecap="round"/>
-<path id="&#231;&#159;&#169;&#229;&#189;&#162; 25" d="M4.83333 8.44444H1.22222C0.82335 8.44444 0.5 8.76779 0.5 9.16666V12.7778C0.5 13.1766 0.82335 13.5 1.22222 13.5H4.83333C5.23221 13.5 5.55556 13.1766 5.55556 12.7778V9.16666C5.55556 8.76779 5.23221 8.44444 4.83333 8.44444Z" stroke="#858585" stroke-linecap="round" stroke-linejoin="round"/>
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Glyph/grid-2x2">
+<path id="Vector" d="M5.83333 3.5H22.1667C23.4553 3.5 24.5 4.54467 24.5 5.83333V22.1667C24.5 23.4553 23.4553 24.5 22.1667 24.5H5.83333C4.54467 24.5 3.5 23.4553 3.5 22.1667V5.83333C3.5 4.54467 4.54467 3.5 5.83333 3.5Z" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" stroke="#A0A0A0"/>
+<path id="Vector_2" d="M3.5 14H24.5" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" stroke="#A0A0A0"/>
+<path id="Vector_3" d="M14 3.5V24.5" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" stroke="#A0A0A0"/>
 </g>
 </svg>

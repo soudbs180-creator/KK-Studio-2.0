@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import type { RefObject } from "react";
-import type { CreationProject } from "../features/creation/model";
-import type { ProjectLibraryActions } from "../features/projects/projectLifecycle";
+import type { CreationProject } from "../features/creation/index.ts";
+import type { ProjectLibraryActions } from "../features/projects/index.ts";
 import {
   resolveSidebarFolders,
   sidebarProjectItem,
   sortSidebarProjects,
-} from "../features/projects/sidebarProjectModel";
+} from "../features/projects/index.ts";
 import SidebarProjectSections from "./SidebarProjectSections";
 import SidebarProjectHeader from "./SidebarProjectHeader";
 import SidebarProjectEntry from "./SidebarProjectEntry";
@@ -46,12 +46,14 @@ export default function SidebarProjectGroups({
   const [projectFilter, setProjectFilter] = useState<"all" | "ungrouped">(
     "all",
   );
-  const [sortMode, setSortMode] = useState<"manual" | "recent" | "priority">(
-    "manual",
-  );
+  const { sortMode } = projectActions.sidebarPreferences;
   const [collapsedFolders, setCollapsedFolders] = useState(new Set<string>());
-  const [pinnedProjectIds, setPinnedProjectIds] = useState(new Set<string>());
-  const [pinnedFolderIds, setPinnedFolderIds] = useState(new Set<string>());
+  const pinnedProjectIds = new Set(
+    projectActions.sidebarPreferences.pinnedProjectIds,
+  );
+  const pinnedFolderIds = new Set(
+    projectActions.sidebarPreferences.pinnedGroupIds,
+  );
   const [newProjectId, setNewProjectId] = useState<string | null>(null);
   const normalProjects = useMemo(
     () => projects.filter((project) => project.trashedAt === undefined),
@@ -93,8 +95,8 @@ export default function SidebarProjectGroups({
     pinnedFolderIds,
     sortMode,
   );
-  function togglePin(set: typeof setPinnedProjectIds, id: string): void {
-    set((current) => {
+  function toggleFolder(id: string): void {
+    setCollapsedFolders((current) => {
       const next = new Set(current);
       if (next.has(id)) next.delete(id);
       else next.add(id);
@@ -144,7 +146,7 @@ export default function SidebarProjectGroups({
           projectActions.onCreateGroup();
         }}
         onFilterChange={setProjectFilter}
-        onSortChange={setSortMode}
+        onSortChange={projectActions.onSetSidebarSortMode}
         showTrash={showTrash}
         trashCount={trash.length}
         onToggleTrash={() => setShowTrash((value) => !value)}
@@ -183,9 +185,9 @@ export default function SidebarProjectGroups({
           newProjectId={newProjectId}
           canEditProjects={canEditProjects}
           isProjectPinned={(id) => pinnedProjectIds.has(id)}
-          onToggleProjectPin={(id) => togglePin(setPinnedProjectIds, id)}
+          onToggleProjectPin={projectActions.onToggleProjectPin}
           isFolderPinned={(id) => pinnedFolderIds.has(id)}
-          onToggleFolderPin={(id) => togglePin(setPinnedFolderIds, id)}
+          onToggleFolderPin={projectActions.onToggleGroupPin}
           openProject={openProject}
           openFolder={(id) => {
             const child = visibleFolders.find((folder) => folder.id === id)
@@ -198,7 +200,7 @@ export default function SidebarProjectGroups({
             setGroups((current) => [current[0], true]);
             setNewProjectId(onCreateProject());
           }}
-          toggleFolder={(id) => togglePin(setCollapsedFolders, id)}
+          toggleFolder={toggleFolder}
           renameFolder={projectActions.onRenameGroup}
           deleteFolder={(id) => {
             setGroups((current) => [current[0], true]);

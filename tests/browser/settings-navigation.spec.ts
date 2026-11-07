@@ -8,9 +8,7 @@ async function openApi(page: import("@playwright/test").Page): Promise<void> {
   await page.getByRole("button", { name: "打开设置", exact: true }).tap();
   await page.getByRole("button", { name: "返回设置分类", exact: true }).tap();
   await page.getByRole("button", { name: "模型接入", exact: true }).tap();
-  await page
-    .getByRole("button", { name: "API Key（官方）", exact: true })
-    .tap();
+  await page.getByRole("tab", { name: "官方直连 API", exact: true }).tap();
   await expect(page.getByLabel("接口地址", { exact: true })).toBeEditable();
 }
 
@@ -20,36 +18,27 @@ test("手机分类与接入方式有返回层级，预设只展示一个当前�
   await openApi(page);
   const dialog = page.getByRole("dialog", { name: "设置", exact: true });
   await expect(
-    dialog.getByRole("navigation", { name: "设置分类" }),
-  ).toBeHidden();
-  await expect(dialog.getByRole("group", { name: "接入方式" })).toBeHidden();
+    dialog.getByRole("tablist", { name: "5 大模型接入渠道" }),
+  ).toBeVisible();
   await dialog.getByLabel("提供商", { exact: true }).fill("导航返回保留草稿");
-  await dialog.getByRole("button", { name: "返回接入方式", exact: true }).tap();
-  await expect(dialog.getByRole("group", { name: "接入方式" })).toBeVisible();
-  await expect(dialog.getByLabel("提供商", { exact: true })).toBeHidden();
-  await dialog
-    .getByRole("button", { name: "API Key（官方）", exact: true })
-    .tap();
+  await dialog.getByRole("tab", { name: "官方直连 API", exact: true }).tap();
   await expect(dialog.getByLabel("提供商", { exact: true })).toHaveValue(
     "导航返回保留草稿",
   );
-  await dialog.getByText("服务商预设与接口文档", { exact: true }).tap();
+  await dialog.getByText("服务商预设与快速填入", { exact: true }).tap();
   const presets = dialog.locator(".provider-presets");
   await presets.getByLabel("搜索服务商", { exact: true }).fill("豆包");
-  await presets.getByRole("button", { name: /^豆包/ }).tap();
-  await expect(
-    presets.getByRole("group", { name: "服务商预设", exact: true }),
-  ).toBeHidden();
-  const detail = presets.getByRole("region", { name: "预设详情", exact: true });
-  await expect(detail).toBeVisible();
-  await expect(
-    detail.getByRole("link", { name: "接口文档", exact: true }),
-  ).toHaveAttribute("href", "https://www.volcengine.com/docs/82379");
-  await detail.getByRole("button", { name: "返回服务商", exact: true }).tap();
+  const doubao = presets
+    .getByRole("listitem")
+    .filter({ hasText: "豆包（火山方舟）" });
+  await expect(doubao).toBeVisible();
+  await doubao.getByRole("button", { name: "一键填入", exact: true }).tap();
+  await expect(dialog.getByLabel("提供商", { exact: true })).toHaveValue(
+    "豆包（火山方舟）",
+  );
   await expect(presets.getByLabel("搜索服务商", { exact: true })).toHaveValue(
     "豆包",
   );
-  await expect(detail).toBeHidden();
   await dialog.getByRole("button", { name: "返回设置分类", exact: true }).tap();
   const nav = dialog.getByRole("navigation", { name: "设置分类" });
   await expect(nav).toBeVisible();
@@ -57,8 +46,9 @@ test("手机分类与接入方式有返回层级，预设只展示一个当前�
     await nav.evaluate((element) => element.scrollWidth - element.clientWidth),
   ).toBeLessThanOrEqual(1);
   await nav.getByRole("button", { name: "模型接入", exact: true }).tap();
+  await dialog.getByRole("tab", { name: "官方直连 API", exact: true }).tap();
   await expect(dialog.getByLabel("提供商", { exact: true })).toHaveValue(
-    "导航返回保留草稿",
+    "豆包（火山方舟）",
   );
 });
 
@@ -113,9 +103,6 @@ test("待提交凭据事务期间返回、分类、预设和关闭都不能卸�
     .toBe(true);
   await expect(
     dialog.getByRole("button", { name: "返回设置分类", exact: true }),
-  ).toBeDisabled();
-  await expect(
-    dialog.getByRole("button", { name: "返回接入方式", exact: true }),
   ).toBeDisabled();
   await expect(
     dialog.getByRole("button", { name: "关闭设置", exact: true }),

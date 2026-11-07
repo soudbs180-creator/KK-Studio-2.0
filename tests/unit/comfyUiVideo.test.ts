@@ -256,20 +256,13 @@ test("targeted cancellation request payload format", async () => {
     const adapter = new LocalComfyUiAdapter(mockConnection(server.url));
     await adapter.cancel(targetPromptId);
 
-    // Verify exactly two requests were made
-    assert.equal(recordedRequests.length, 2);
-
-    // 1. Send targeted /queue delete request specifying exact prompt_id
-    const queueReq = recordedRequests[0];
-    assert.equal(queueReq.url, "/queue");
-    assert.equal(queueReq.method, "POST");
-    assert.deepEqual(queueReq.body, { delete: [targetPromptId] });
-
-    // 2. Call /interrupt for the running prompt ID
-    const interruptReq = recordedRequests[1];
-    assert.equal(interruptReq.url, "/interrupt");
-    assert.equal(interruptReq.method, "POST");
-    assert.deepEqual(interruptReq.body, { prompt_id: targetPromptId });
+    assert.equal(recordedRequests.length, 1);
+    assert.equal(
+      recordedRequests[0].url,
+      "/api/jobs/" + targetPromptId + "/cancel",
+    );
+    assert.equal(recordedRequests[0].method, "POST");
+    assert.equal(recordedRequests[0].body, null);
   } finally {
     await server.close();
   }

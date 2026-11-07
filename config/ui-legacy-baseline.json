@@ -1,138 +1,286 @@
 {
-  "src/components/assets/AssetPanel.tsx": {
-    "colors": {},
-    "lucide": ["ArrowLeft", "Plus", "Upload", "X"]
-  },
   "src/components/assets/assets.css": {
-    "colors": {
-      "#333": 2
-    },
-    "lucide": []
-  },
-  "src/components/canvas/TaskPanel.tsx": {
     "colors": {},
-    "lucide": ["ClipboardList"]
-  },
-  "src/components/Canvas.tsx": {
-    "colors": {
-      "#0a0a0a": 1
-    },
-    "lucide": []
-  },
-  "src/components/CatalogPanel.tsx": {
-    "colors": {},
-    "lucide": ["X"]
-  },
-  "src/components/CollectionPage.tsx": {
-    "colors": {},
-    "lucide": ["ArrowUpRight", "Heart", "LayoutGrid", "List", "Search", "Star"]
-  },
-  "src/components/ConversationPanel.tsx": {
-    "colors": {},
-    "lucide": [
-      "ArrowUp",
-      "Box",
-      "Copy",
-      "MessageCircle",
-      "Mic",
-      "PanelRightClose",
-      "Plus",
-      "Puzzle",
-      "Trash2"
-    ]
-  },
-  "src/components/InfoPanel.tsx": {
-    "colors": {},
-    "lucide": ["X"]
-  },
-  "src/components/LibraryPage.tsx": {
-    "colors": {},
-    "lucide": [
-      "ArrowUpRight",
-      "Folder",
-      "GitBranch",
-      "Plus",
-      "Puzzle",
-      "Search"
-    ]
-  },
-  "src/components/nodes/CreationComposer.tsx": {
-    "colors": {},
-    "lucide": ["Heart", "Plus", "Square"]
-  },
-  "src/components/nodes/ImageCreationNode.tsx": {
-    "colors": {},
-    "lucide": ["Image", "Upload"]
-  },
-  "src/components/SavedPane.tsx": {
-    "colors": {},
-    "lucide": ["Heart", "Star"]
-  },
-  "src/components/SearchPage.tsx": {
-    "colors": {
-      "#8b9dc3": 1,
-      "#f5a623": 1,
-      "#e85d75": 1,
-      "#9b8cff": 1
-    },
-    "lucide": [
-      "ArrowUpRight",
-      "Folder",
-      "Heart",
-      "Puzzle",
-      "Search",
-      "Star",
-      "X"
-    ]
-  },
-  "src/components/settings/SettingsPanel.tsx": {
-    "colors": {},
-    "lucide": ["X"]
-  },
-  "src/components/Sidebar.tsx": {
-    "colors": {},
-    "lucide": ["ArrowUpRight", "ChevronDown", "Folder"]
+    "lucide": [],
+    "rawPx": 217
   },
   "src/styles/canvas-navigation.css": {
-    "colors": {
-      "#0003": 2,
-      "#111": 1,
-      "#444": 1,
-      "#777": 1,
-      "#858585": 1
-    },
-    "lucide": []
+    "colors": {},
+    "lucide": [],
+    "rawPx": 33
   },
   "src/styles/catalog.css": {
-    "colors": {
-      "#ef6d6d": 2
-    },
-    "lucide": []
+    "colors": {},
+    "lucide": [],
+    "rawPx": 94
   },
   "src/styles/generation-count.css": {
-    "colors": {
-      "#d9d9d9": 2
-    },
-    "lucide": []
+    "colors": {},
+    "lucide": [],
+    "rawPx": 21
   },
   "src/styles/workspace.css": {
+    "colors": {},
+    "lucide": [],
+    "rawPx": 688
+  },
+  "src/components/settings/plugin-manager.css": {
+    "colors": {},
+    "lucide": [],
+    "rawPx": 6
+  },
+  "src/components/settings/settings.css": {
+    "colors": {},
+    "lucide": [],
+    "rawPx": 443
+  },
+  "src/styles/account-popup.css": {
+    "colors": {},
+    "lucide": [],
+    "rawPx": 6
+  },
+  "src/styles/agent-action-button.css": {
+    "colors": {},
+    "lucide": [],
+    "rawPx": 12
+  },
+  "src/styles/agent-panel.css": {
+    "colors": {},
+    "lucide": [],
+    "rawPx": 2
+  },
+  "src/styles/canvas-actions.css": {
+    "colors": {},
+    "lucide": [],
+    "rawPx": 47
+  },
+  "src/styles/canvas-compare.css": {
+    "colors": {},
+    "lucide": [],
+    "rawPx": 58
+  },
+  "src/styles/canvas-context-menu.css": {
+    "colors": {},
+    "lucide": [],
+    "rawPx": 13
+  },
+  "src/styles/canvas-hud.css": {
+    "colors": {},
+    "lucide": [],
+    "rawPx": 128
+  },
+  "src/styles/canvas-layers.css": {
+    "colors": {},
+    "lucide": [],
+    "rawPx": 45
+  },
+  "src/styles/canvas-tools.css": {
+    "colors": {},
+    "lucide": [],
+    "rawPx": 63
+  },
+  "src/styles/catalog-pages.css": {
+    "colors": {},
+    "lucide": [],
+    "rawPx": 205
+  },
+  "src/styles/comfy-workflow.css": {
+    "colors": {},
+    "lucide": [],
+    "rawPx": 21
+  },
+  "src/styles/composer.css": {
+    "colors": {},
+    "lucide": [],
+    "rawPx": 226
+  },
+  "src/styles/conversation-panel.css": {
+    "colors": {},
+    "lucide": [],
+    "rawPx": 88
+  },
+  "src/styles/demo-results.css": {
+    "colors": {},
+    "lucide": [],
+    "rawPx": 114
+  },
+  "src/styles/design-surface.css": {
+    "colors": {},
+    "lucide": [],
+    "rawPx": 1
+  },
+  "src/styles/extensions.css": {
+    "colors": {},
+    "lucide": [],
+    "rawPx": 1
+  },
+  "src/styles/feature-parity.css": {
+    "colors": {},
+    "lucide": [],
+    "rawPx": 13
+  },
+  "src/styles/global.css": {
+    "lucide": [],
     "colors": {
-      "#363636": 1,
-      "#d99500": 1,
-      "#292929": 1,
-      "#0c9568": 1,
-      "#d4e8e0": 1,
+      "#0a0a0a": 11,
+      "#161616": 1,
+      "#1a1a1a": 1,
       "#202020": 1,
-      "#0008": 1,
+      "#333333": 1,
+      "#1f1f1f": 1,
+      "#635bff": 1,
+      "#5b52ed": 1,
+      "#b3adff": 1,
+      "#fff": 6,
+      "#b2adff": 1,
+      "#594acc": 1,
       "#aaa3ff": 1,
-      "rgba(0, 0, 0, 0.3)": 1,
-      "#4b4b4b": 2,
-      "#707070": 5,
-      "#313131": 2,
-      "#808080": 2,
-      "#f5a623": 2,
-      "#e85d75": 2
+      "#3c3c3c": 1,
+      "#292929": 1,
+      "#858585": 1,
+      "#2a2a2a": 1,
+      "#dbdbdb": 3,
+      "#aaa": 1,
+      "#9e9e9e": 1,
+      "rgba(255, 255, 255, 0.58)": 1,
+      "#f48181": 1,
+      "#79cda8": 4,
+      "#e6b96a": 4,
+      "#b4233c": 1,
+      "#941f34": 1,
+      "#402329": 1,
+      "#ededed": 1,
+      "#eee": 1,
+      "#ececec": 1,
+      "#eaeaea": 1,
+      "#e9e9e9": 1,
+      "#c4c4c4": 1,
+      "#dedede": 1,
+      "#252525": 2,
+      "#777": 1,
+      "#e0e0e0": 1,
+      "#595959": 1,
+      "#636363": 1,
+      "rgba(0, 0, 0, 0.4)": 1,
+      "#aa263b": 1,
+      "#216947": 2,
+      "#805209": 2,
+      "#fce7eb": 1,
+      "#2f80ed": 1,
+      "#4993f2": 1,
+      "#a8cbff": 2,
+      "#1458a5": 1,
+      "#21a673": 1,
+      "#39b987": 1,
+      "#166443": 1,
+      "#f0c780": 1,
+      "#f5d9a9": 1,
+      "#78510a": 1,
+      "#e86fa4": 1,
+      "#ef86b4": 1,
+      "#f5a3c3": 2,
+      "#a12659": 1,
+      "#ee8b3a": 1,
+      "#f5a05b": 1,
+      "#ffc08c": 2,
+      "#94420c": 1,
+      "#8b5cf6": 1,
+      "#a17bf9": 1,
+      "#c5a7ff": 2,
+      "#6534b0": 1,
+      "#e6e6e6": 1,
+      "#0008": 1
     },
-    "lucide": []
+    "rawPx": 15
+  },
+  "src/styles/image-edit.css": {
+    "colors": {},
+    "lucide": [],
+    "rawPx": 2
+  },
+  "src/styles/interaction.css": {
+    "colors": {},
+    "lucide": [],
+    "rawPx": 37
+  },
+  "src/styles/local-generation.css": {
+    "colors": {},
+    "lucide": [],
+    "rawPx": 19
+  },
+  "src/styles/model-picker.css": {
+    "colors": {},
+    "lucide": [],
+    "rawPx": 69
+  },
+  "src/styles/motion.css": {
+    "colors": {},
+    "lucide": [],
+    "rawPx": 3
+  },
+  "src/styles/node-menu.css": {
+    "colors": {},
+    "lucide": [],
+    "rawPx": 38
+  },
+  "src/styles/page-templates.css": {
+    "colors": {},
+    "lucide": [],
+    "rawPx": 7
+  },
+  "src/styles/plugin-nodes.css": {
+    "colors": {},
+    "lucide": [],
+    "rawPx": 4
+  },
+  "src/styles/reference-composer.css": {
+    "colors": {},
+    "lucide": [],
+    "rawPx": 84
+  },
+  "src/styles/responsive-content.css": {
+    "colors": {},
+    "lucide": [],
+    "rawPx": 96
+  },
+  "src/styles/responsive.css": {
+    "colors": {},
+    "lucide": [],
+    "rawPx": 179
+  },
+  "src/styles/shortcuts.css": {
+    "colors": {},
+    "lucide": [],
+    "rawPx": 31
+  },
+  "src/styles/sidebar.css": {
+    "colors": {},
+    "lucide": [],
+    "rawPx": 142
+  },
+  "src/styles/stage-workbench.css": {
+    "colors": {},
+    "lucide": [],
+    "rawPx": 4
+  },
+  "src/styles/tag-editor.css": {
+    "colors": {},
+    "lucide": [],
+    "rawPx": 18
+  },
+  "src/styles/task-workbench.css": {
+    "colors": {},
+    "lucide": [],
+    "rawPx": 130
+  },
+  "src/styles/tokenized-composer.css": {
+    "colors": {},
+    "lucide": [],
+    "rawPx": 27
+  },
+  "src/styles/workflow-tools.css": {
+    "colors": {},
+    "lucide": [],
+    "rawPx": 59
   }
 }

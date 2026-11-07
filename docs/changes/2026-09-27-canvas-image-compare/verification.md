@@ -32,13 +32,13 @@
 - 启动：`npm run verify` 的 `test:ui` 使用 `vite preview --host 127.0.0.1 --port 1423 --strictPort`；浏览器 URL `http://127.0.0.1:1423/`，`data-runtime-mode=production`、`data-runtime-entry=src/main.tsx`。
 - 路径：项目库 → 新建项目 → Workspace；`src/main.tsx` → `App.tsx` → `Canvas.tsx` → `CanvasNodeLayer` / 图片节点，以及 `ImageCompareControls` → `ImageCompareDialog`。仅一个 production CSS bundle，浏览器断言对比层最终背景色 `rgb(22, 22, 22)`。
 - 实际加载的构建：`dist/assets/index-CiI8omeN.js`、`dist/assets/index-C6Fplctk.css`。测试使用归档的本地 fixture，覆盖选择/移除、数量门禁、并排标签/来源、放大及同步滚动、滑块 1%/10% 键盘步长与指针、错误/重试（含 300% 滚动后与滑块 0%）、Escape 回焦、删除后剔除。未调用真实 Provider。
-- [1440px 并排截图](evidence/compare-1440.png)；1220px 测试断言选择条未被右侧对话框盖住并能重新打开；[390px 滑块截图](evidence/compare-390.png)。390px 用 `hasTouch` 浏览器上下文和 CDP `touchStart/touchMove/touchEnd` 从 25% 拖至 75%，并量测入口、选择项、打开对比、弹窗关闭/模式/缩放控件的屏幕高度至少 44px。这是浏览器仿真触摸，不等于物理手机或原生 Mobile 验收。
+- [1440px 并排截图](evidence-manifest.json)；1220px 测试断言选择条未被右侧对话框盖住并能重新打开；[390px 滑块截图](evidence/compare-390.png)。390px 用 `hasTouch` 浏览器上下文和 CDP `touchStart/touchMove/touchEnd` 从 25% 拖至 75%，并量测入口、选择项、打开对比、弹窗关闭/模式/缩放控件的屏幕高度至少 44px。这是浏览器仿真触摸，不等于物理手机或原生 Mobile 验收。
 
 ## Desktop 运行态
 
 - `src-tauri/target/release/kk-studio.exe --data-dir <隔离绝对目录>`；独立 WebView2 profile，经 CDP 操作 `http://tauri.localhost/`。IPC `get_storage_root` 与隔离目录完全一致；未使用默认用户数据目录。结束后本轮进程已退出。
 - `data-runtime-mode=production`、`data-runtime-entry=src/main.tsx`；实际 WebView2 加载 `index-CiI8omeN.js` 和 `index-C6Fplctk.css`，与 Web preview 同一 production 前端。release exe SHA-256 为 `cf8fff1edbb5b5a9e5b7ec231897ac95a3f007b1e776e3018143e7833247b690`。打开项目、上传两张本地图片、加入对比、并排、滑块方向键和 Escape 均实际通过，page errors 为空。
-- [桌面对比截图](evidence/compare-desktop.png)和[运行元数据、exe SHA-256](evidence/desktop-acceptance.json)；脚本 `tests/desktop/image-compare.mjs` 可重复验证。未安装 MSI/NSIS，未做真实 Provider、原生触屏或用户视觉验收。
+- [桌面对比截图](evidence-manifest.json)和[运行元数据、exe SHA-256](evidence/desktop-acceptance.json)；脚本 `tests/desktop/image-compare.mjs` 可重复验证。未安装 MSI/NSIS，未做真实 Provider、原生触屏或用户视觉验收。
 
 ## 交付边界
 
@@ -48,3 +48,8 @@
 
 - 本地 Web/Desktop 验证的源码与样式已提交为 `f8d51656ec3999f7d4c09ae49eeb3b92a09b607b`；`npm run delivery:check -- --base a89792ad8f8d1354418cf70289ff4bd650706272 --branch codex/TASK-COMPARE-001-canvas-compare` 为 32 文件、0 违规，`git diff --cached --check` 通过。
 - 草稿 [PR #21](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/21) 已创建；head `f8d5165` 的 Hosted `delivery` 成功，`verify` 在补录时仍运行中。补录文档后会产生新 SHA，不能用旧 head 结果替代最终门禁。
+
+
+## 2026-10-30 历史原始证据外置说明
+
+本次ORG-6将历史E2截图/原始日志/录屏外置到容器output；原引用现指向[2026-09-27-canvas-image-compare manifest](evidence-manifest.json)。原始sourcePath、commit/blob、sha256、大小与原链接目的地逐项可查；原图片嵌入改为同文字的清单链接。原结论、失败、时间和数字未重写，不代表当前功能重新验收或main已合流。E1摘要、JSON、关键图及活跃运行资料仍留仓；恢复仅写新空目录并复核字节。

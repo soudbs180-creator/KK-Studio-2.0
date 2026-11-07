@@ -1,3 +1,4 @@
+import { ExtensionSlot } from "../features/extensions/index.ts";
 import {
   useState,
   useEffect,
@@ -6,17 +7,19 @@ import {
   type ReactNode,
 } from "react";
 import StartAttachmentList from "./StartAttachmentList";
-import ComposerTextarea from "./ComposerTextarea";
+import TokenizedComposerInput from "./composer/TokenizedComposerInput.tsx";
+import type { CanvasReferenceSlot } from "../domain/canvasItems.ts";
 import ConversationActions from "./ConversationActions";
 import ModelVariantControl from "./ModelVariantControl";
 import { useComposerMenus } from "./useComposerMenus";
-import type { CreationDraft } from "../features/creation/model";
-import type { ModelSelection } from "../features/models/modelSelection";
-import type { SkillRecord } from "../features/skills/skillRegistry";
+import type { CreationDraft } from "../features/creation/index.ts";
+import type { ModelSelection } from "../features/models/index.ts";
+import type { SkillRecord } from "../features/skills/index.ts";
 
 export default function ConversationComposer({
   input,
   onInputChange,
+  onAttachmentRoleChange,
   onSubmitMessage,
   disabled,
   modelDisabled = disabled,
@@ -46,6 +49,7 @@ export default function ConversationComposer({
 }: {
   input: string;
   onInputChange: (value: string) => void;
+  onAttachmentRoleChange?: (id: string, slot: CanvasReferenceSlot) => void;
   onSubmitMessage: (message: string) => Promise<void>;
   disabled: boolean;
   modelDisabled?: boolean;
@@ -88,33 +92,48 @@ export default function ConversationComposer({
     closeMenus,
   } = useComposerMenus(actionsRef);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const submittingRef = useRef(false);
+  const formRef = useRef<HTMLFormElement>(null);
   useEffect(() => {
     if (modelDisabled) closeMenus();
   }, [modelDisabled, closeMenus]);
   return (
     <form
+      ref={formRef}
       className="chat-composer composer-surface"
       data-node-id="407:29310"
       onSubmit={async (e) => {
         e.preventDefault();
-        if (!input.trim() || isSubmitting) return;
+        if (
+          !input.trim() ||
+          submittingRef.current ||
+          disabled ||
+          submitDisabled
+        )
+          return;
         if (readingFiles) {
           onStatus("正在读取参考素材，请稍候再提交。");
           return;
         }
         try {
+          submittingRef.current = true;
           setIsSubmitting(true);
           await onSubmitMessage(input.trim());
         } finally {
+          submittingRef.current = false;
           setIsSubmitting(false);
         }
       }}
     >
-      <ComposerTextarea
-        aria-label="对话内容"
+      <TokenizedComposerInput
+        ariaLabel="对话内容"
         maxLength={7500}
         value={input}
-        onChange={(e) => onInputChange(e.target.value)}
+        onChange={onInputChange}
+        attachments={composerDraft?.attachments}
+        onReferenceSlotChange={onAttachmentRoleChange}
+        onRemoveReference={onRemoveAttachment}
+        onSubmit={() => formRef.current?.requestSubmit()}
         disabled={disabled}
         placeholder={placeholder}
       />
@@ -186,6 +205,7 @@ export default function ConversationComposer({
         voiceEnabled={voiceEnabled}
         voiceSessionKey={voiceSessionKey}
       />
+      <ExtensionSlot id="composer.below" />
     </form>
   );
 }

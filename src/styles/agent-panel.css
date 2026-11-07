@@ -354,7 +354,11 @@
   padding: 0;
 }
 
-.agent-reference-picker select {
+.agent-reference-picker > .kk-select-wrapper {
+  flex: 1;
+  min-width: 0;
+}
+.agent-reference-picker .kk-select__trigger {
   width: 100%;
   min-width: 0;
   min-height: var(--kk-control-h-md);
@@ -390,4 +394,158 @@
   .agent-reference-heading span:last-child {
     text-align: start;
   }
+}
+
+.agent-foldback-card {
+  border: var(--kk-border-width) solid var(--kk-border-subtle);
+  border-radius: var(--kk-input-radius);
+  background: var(--kk-bg-elevated);
+  padding: var(--kk-settings-row-gap) var(--kk-card-pad);
+  margin: var(--kk-settings-row-pad) 0;
+  font-size: var(--kk-control-font-md);
+  line-height: var(--kk-input-line);
+  color: var(--kk-text-primary);
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+}
+
+.agent-foldback-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--kk-control-gap-md);
+  flex-wrap: wrap;
+}
+
+.agent-foldback-meta-group,
+.agent-foldback-actions,
+.agent-foldback-artifact-list,
+.agent-foldback-execution-stats {
+  display: flex;
+  align-items: center;
+  gap: var(--kk-control-gap-md);
+  flex-wrap: wrap;
+}
+
+.agent-foldback-status-pill,
+.agent-foldback-role-badge,
+.agent-foldback-tokens-saved,
+.agent-foldback-expand-toggle,
+.agent-foldback-artifact-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--kk-control-gap-sm);
+  padding: var(--kk-control-inset) var(--kk-settings-row-pad);
+  border-radius: var(--kk-checkbox-radius);
+  font-size: var(--kk-control-font-sm);
+  line-height: var(--kk-input-line);
+  font-weight: var(--kk-canvas-view-weight);
+  border: var(--kk-border-width) solid var(--kk-border-subtle);
+  background: var(--kk-bg-card);
+  color: var(--kk-text-secondary);
+}
+
+.agent-foldback-status-pill {
+  border-radius: var(--kk-button-radius);
+}
+
+.agent-foldback-status-dot {
+  width: var(--kk-settings-control-pad);
+  height: var(--kk-settings-control-pad);
+  border-radius: var(--kk-button-radius);
+  background: currentColor;
+}
+
+.foldback-status-success,
+.agent-foldback-tokens-saved {
+  color: var(--kk-success);
+  border-color: var(--kk-success);
+}
+
+.foldback-status-partial {
+  color: var(--kk-warning);
+  border-color: var(--kk-warning);
+}
+
+.foldback-status-failed {
+  color: var(--kk-text-danger);
+  border-color: var(--kk-danger);
+}
+
+.agent-foldback-role-badge,
+.agent-foldback-artifact-pill {
+  color: var(--kk-text-accent);
+  border-color: var(--kk-border-default);
+}
+
+.agent-foldback-task-id,
+.agent-foldback-tokens-consumed,
+.agent-foldback-artifact-label,
+.agent-foldback-execution-stats {
+  font-size: var(--kk-control-font-sm);
+  color: var(--kk-text-tertiary);
+}
+
+.agent-foldback-task-id,
+.agent-foldback-structured-pre {
+  font-family: var(--kk-settings-network-command-font);
+}
+
+.agent-foldback-expand-toggle,
+.agent-foldback-artifact-pill.is-clickable {
+  cursor: pointer;
+}
+
+.agent-foldback-executive-summary {
+  margin-top: var(--kk-settings-row-pad);
+  color: var(--kk-text-primary);
+  font-size: var(--kk-control-font-md);
+  word-break: break-word;
+}
+
+.agent-foldback-artifact-list,
+.agent-foldback-structured-block,
+.agent-foldback-error-box,
+.agent-foldback-execution-stats {
+  margin-top: var(--kk-settings-row-pad);
+}
+
+.agent-foldback-expanded-content {
+  margin-top: var(--kk-settings-row-gap);
+  padding-top: var(--kk-settings-row-pad);
+  border-top: var(--kk-border-width) dashed var(--kk-border-subtle);
+}
+
+.agent-foldback-isolation-banner,
+.agent-foldback-structured-pre,
+.agent-foldback-error-box {
+  padding: var(--kk-settings-row-pad) var(--kk-control-px-sm);
+  border-radius: var(--kk-checkbox-radius);
+  border: var(--kk-border-width) solid var(--kk-border-subtle);
+  background: var(--kk-bg-input);
+  font-size: var(--kk-control-font-sm);
+  color: var(--kk-text-secondary);
+}
+
+.agent-foldback-isolation-banner {
+  color: var(--kk-text-accent);
+}
+
+.agent-foldback-structured-title {
+  font-size: var(--kk-control-font-sm);
+  font-weight: var(--kk-settings-heading-weight);
+  color: var(--kk-text-secondary);
+  margin-bottom: var(--kk-settings-control-pad);
+}
+
+.agent-foldback-structured-pre {
+  margin: 0;
+  overflow-x: auto;
+  max-height: var(--kk-panel-width);
+}
+
+.agent-foldback-error-box {
+  border-color: var(--kk-danger);
+  color: var(--kk-text-danger);
 }

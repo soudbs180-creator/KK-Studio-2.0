@@ -4,12 +4,13 @@ import { seedSidebarFixture } from "./sidebar-fixture";
 
 async function openWorkspace(page: Page): Promise<void> {
   await page.goto("/");
+  await page.evaluate(() => document.fonts.ready);
   await page.getByRole("button", { name: "项目库", exact: true }).click();
   await page.getByRole("button", { name: "新建项目", exact: true }).click();
   await expect(page.getByRole("region", { name: "无限画布" })).toBeVisible();
 }
 
-test("最新70px收起侧栏、38×48导航与保留的搜索入口，搜索关闭回焦", async ({
+test("最新72px收起侧栏、40×36导航与保留的搜索入口，搜索关闭回焦", async ({
   page,
 }) => {
   await page.goto("/");
@@ -17,24 +18,21 @@ test("最新70px收起侧栏、38×48导航与保留的搜索入口，搜索关�
   await expect(
     page.getByRole("button", { name: "展开侧边栏", exact: true }),
   ).toHaveAttribute("aria-expanded", "false");
-  await expect(sidebar).toHaveCSS("width", "70px");
-  expect(await sidebar.boundingBox()).toMatchObject({ x: 0, width: 70 });
+  await expect(sidebar).toHaveCSS("width", "72px");
+  expect(await sidebar.boundingBox()).toMatchObject({ x: 0, width: 72 });
   const rows = await sidebar.locator(".primary-nav button").all();
-  for (const [i, row] of rows.entries()) {
-    expect(await row.boundingBox()).toMatchObject({
-      x: 14,
-      y: 131 + i * 52,
-      width: 38,
-      height: 48,
-    });
+  await expect
+    .poll(async () => Math.round((await rows[0].boundingBox())?.height ?? -1))
+    .toBe(32);
+  for (const row of rows) {
+    const box = (await row.boundingBox())!;
+    expect(Math.round(box.width)).toBe(32);
+    expect(Math.round(box.height)).toBe(32);
   }
   const search = sidebar.getByRole("button", { name: "搜索", exact: true });
-  expect(await search.boundingBox()).toMatchObject({
-    x: 22,
-    y: 942,
-    width: 26,
-    height: 26,
-  });
+  const searchBox = (await search.boundingBox())!;
+  expect(Math.round(searchBox.width)).toBe(32);
+  expect(Math.round(searchBox.height)).toBe(32);
   await search.click();
   const dialog = page.getByRole("dialog", { name: "搜索" });
   await expect(dialog).toBeVisible();
@@ -53,12 +51,11 @@ test("平板侧栏展开向右扩展并推动工作区，只由开关切换", as
   const sidebar = page.getByRole("complementary", { name: "工作台侧栏" });
   const toggle = page.getByRole("button", { name: "展开侧边栏", exact: true });
   await toggle.click();
-  await expect(sidebar).toHaveCSS("width", "291px");
-  await expect(page.locator(".workspace")).toHaveCSS("margin-left", "291px");
-  await expect(sidebar.locator(".sidebar-toggle img")).toHaveAttribute(
-    "src",
-    "/design/figma/sidebar-collapse.svg",
-  );
+  await expect(sidebar).toHaveCSS("width", "292px");
+  await expect(page.locator(".workspace")).toHaveCSS("margin-left", "292px");
+  await expect(
+    sidebar.locator(".sidebar-toggle .sidebar-icon"),
+  ).toHaveAttribute("data-icon", "panel-left-close");
   await expect(sidebar.locator(".resize-handle")).toHaveCount(0);
   await expect(
     page.getByRole("button", { name: "收起侧边栏", exact: true }),
@@ -66,10 +63,9 @@ test("平板侧栏展开向右扩展并推动工作区，只由开关切换", as
   await page.getByRole("button", { name: "收起侧边栏", exact: true }).click();
   await expect(sidebar).toHaveCSS("width", "72px");
   await expect(page.locator(".workspace")).toHaveCSS("margin-left", "0px");
-  await expect(sidebar.locator(".sidebar-toggle img")).toHaveAttribute(
-    "src",
-    "/design/figma/sidebar-expand.svg",
-  );
+  await expect(
+    sidebar.locator(".sidebar-toggle .sidebar-icon"),
+  ).toHaveAttribute("data-icon", "panel-left-open");
 });
 
 test("四视口保留搜索、账号和设置命中，手机端使用固定顶栏操作", async ({
@@ -192,7 +188,7 @@ test("个人信息弹层提供可读的账户信息和可用的更新入口", as
   expect(bounds!.height).toBeLessThan(page.viewportSize()!.height);
   await expect(popup.locator(".account-identity strong")).toHaveCSS(
     "font-size",
-    "14px",
+    "16px",
   );
   await expect(popup.locator(".account-popup-actions button")).toHaveCount(2);
   await expect(

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type PointerEvent } from "react";
 import type { ReviewRegion } from "../domain/reviewWorkflow";
-import { loadStoredAsset } from "../features/creation/assetRepository";
+import { loadStoredAsset } from "../features/creation/index.ts";
 
 export default function CommentRegion({
   assetId,

@@ -8,14 +8,14 @@ import {
 import { SettingsNavigationContext } from "./SettingsNavigationContext";
 import { useSettingsNavigationBusy } from "./useSettingsBusy";
 import { confirmAction } from "../../runtime/confirmAction";
-import type { CompanionClient } from "../../features/local-service/client.ts";
+import type { CompanionClient } from "../../features/local-service/index.ts";
 import {
   exportCompanionBackup,
   importIndexedData,
   preflightIndexedData,
   restoreCompanionBackup,
   type MigrationPreflightReport,
-} from "../../features/local-service/migration.ts";
+} from "../../features/local-service/index.ts";
 
 export default function CompanionMigrationActions({
   client,

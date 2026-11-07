@@ -1,6 +1,11 @@
 import { expect, test, type Page } from "@playwright/test";
 import type { CreationSnapshot } from "../../src/features/creation/model";
 import { openWorkspace } from "./helpers";
+import {
+  configureMediaNode,
+  fixtureVideo,
+  approveMediaTask,
+} from "./mediaHelpers";
 
 async function project(page: Page) {
   return page.evaluate(() => {
@@ -67,114 +72,86 @@ for (const width of [390, 1920]) {
   });
 
   for (const ending of ["success", "cancelled"] as const) {
-    test(`${width} loading 撤销后 ${ending} 再重做恢复终态与原位置`, async ({
+    test(`${width} 运行中撤销重做移动，${ending} 不改变队列与原位置`, async ({
       page,
     }) => {
       await page.setViewportSize({ width, height: 844 });
       await openWorkspace(page);
       await page.getByRole("button", { name: "添加资源", exact: true }).click();
       await page.getByRole("menuitem", { name: "视频", exact: true }).click();
-      const editor = page.getByTestId("video-composer");
-      await editor.getByLabel("视频提示词").fill("运行中撤销也保留草稿");
-      await editor
-        .getByRole("button", { name: "生成数量", exact: true })
-        .click();
-      await editor
-        .getByRole("button", { name: "生成 1 个", exact: true })
-        .click();
+      const source = page.getByTestId(/^canvas-node-added-video-/).last();
+      const sourceId = (await source.getAttribute("data-node-id"))!;
+      await configureMediaNode(page, source, "video");
+      await page
+        .getByTestId("video-composer")
+        .getByLabel("视频提示词")
+        .fill("运行中撤销也保留草稿");
       let release!: () => void;
-      const gate = new Promise<void>((resolve) => {
-        release = resolve;
-      });
-      let requested = false;
-      let responded = false;
-      await page.route(
-        "**/fixtures/demo/blue-hour-motion.webm",
-        async (route) => {
-          requested = true;
-          await gate;
-          await route.fulfill({
-            path: "public/fixtures/demo/blue-hour-motion.webm",
-            contentType: "video/webm",
-          });
-          responded = true;
-        },
+      const requests = await fixtureVideo(
+        page,
+        new Promise<void>((resolve) => {
+          release = resolve;
+        }),
       );
       try {
-        await editor
+        await page
+          .getByTestId("video-composer")
           .getByRole("button", { name: "生成视频", exact: true })
           .click();
-        await expect.poll(() => requested).toBe(true);
+        await approveMediaTask(page);
         await expect
-          .poll(
-            async () =>
-              (await project(page)).items.filter(
-                (item) => item.generationStatus === "pending",
-              ).length,
-          )
+          .poll(() => requests.filter((r) => r.method === "GET").length)
           .toBe(1);
-        const waiting = await project(page);
-        const pending = waiting.items.find(
-          (item) => item.generationStatus === "pending",
-        )!;
-        const canvas = page.getByTestId("infinite-canvas");
-        for (
-          let step = 0;
-          step < 4 &&
-          (await project(page)).items.some((item) => item.id === pending.id);
-          step++
-        ) {
-          const previous = JSON.stringify((await project(page)).canvas);
-          const previousItems = JSON.stringify((await project(page)).items);
-          await canvas.focus();
-          await page.keyboard.press("Control+Z");
-          await expect
-            .poll(async () => {
-              const saved = await project(page);
-              return (
-                JSON.stringify(saved.canvas) !== previous ||
-                JSON.stringify(saved.items) !== previousItems
-              );
-            })
-            .toBe(true);
-        }
+        const taskId = (await project(page)).tasks.at(-1)!.id;
+        const original = (await project(page)).canvas.positions[sourceId];
+        await source.focus();
+        await page.keyboard.press("ArrowRight");
         await expect
-          .poll(async () =>
-            (await project(page)).items.some((item) => item.id === pending.id),
-          )
-          .toBe(false);
-        await expect(editor.getByLabel("视频提示词")).toHaveValue(
-          "运行中撤销也保留草稿",
-        );
-        if (ending === "cancelled") {
-          await editor
-            .getByRole("button", { name: "取消本地演示", exact: true })
-            .click();
-        }
-        release();
-        await expect.poll(() => responded).toBe(true);
-        await expect(editor.getByLabel("视频提示词")).toBeEnabled();
-        expect(
-          (await project(page)).items.some((item) => item.id === pending.id),
-        ).toBe(false);
+          .poll(async () => (await project(page)).canvas.positions[sourceId]?.x)
+          .toBeGreaterThan(original.x);
+        const moved = (await project(page)).canvas.positions[sourceId];
+        const canvas = page.getByTestId("infinite-canvas");
+        await canvas.focus();
+        await page.keyboard.press("Control+Z");
+        await expect
+          .poll(async () => (await project(page)).canvas.positions[sourceId])
+          .toEqual(original);
+        await source.focus();
+        await page.keyboard.press("Enter");
+        await expect(
+          page.getByTestId("video-composer").getByLabel("视频提示词"),
+        ).toHaveValue("运行中撤销也保留草稿");
         await canvas.focus();
         await page.keyboard.press("Control+Shift+Z");
-        const terminal = ending === "success" ? "ready" : "error";
+        await expect
+          .poll(async () => (await project(page)).canvas.positions[sourceId])
+          .toEqual(moved);
+        await source.focus();
+        await page.keyboard.press("Enter");
+        if (ending === "cancelled")
+          await page
+            .getByTestId("video-composer")
+            .getByRole("button", { name: "取消视频生成", exact: true })
+            .click();
+        release();
+        const status = ending === "success" ? "succeeded" : "unknown";
         await expect
           .poll(
             async () =>
-              (await project(page)).items.find((item) => item.id === pending.id)
-                ?.generationStatus,
+              (await project(page)).tasks.find((t) => t.id === taskId)?.status,
           )
-          .toBe(terminal);
+          .toBe(status);
+        const finished = await project(page);
         const restored = await project(page);
-        expect(restored.canvas.positions[pending.id]).toEqual(
-          waiting.canvas.positions[pending.id],
+        expect(restored.tasks.find((t) => t.id === taskId)?.status).toBe(
+          status,
         );
-        expect(restored.canvas.edges).toEqual(waiting.canvas.edges);
         expect(
-          restored.items.find((item) => item.id === pending.id)?.result?.source,
-        ).toBe(ending === "success" ? "demo" : undefined);
+          restored.items.filter((item) => item.result?.source === "provider"),
+        ).toEqual(
+          finished.items.filter((item) => item.result?.source === "provider"),
+        );
+        expect(restored.canvas.edges).toEqual(finished.canvas.edges);
         await expect(
           page.locator('.demo-result-node[data-generation-state="pending"]'),
         ).toHaveCount(0);
@@ -184,16 +161,11 @@ for (const width of [390, 1920]) {
           .locator(".project-library-card")
           .filter({ hasText: "Agent 验证项目" })
           .click();
-        await expect
-          .poll(
-            async () =>
-              (await project(page)).items.find((item) => item.id === pending.id)
-                ?.generationStatus,
-          )
-          .toBe(terminal);
-        expect((await project(page)).canvas.positions[pending.id]).toEqual(
-          waiting.canvas.positions[pending.id],
-        );
+        expect(
+          (await project(page)).tasks.find((t) => t.id === taskId)?.status,
+        ).toBe(status);
+        expect((await project(page)).canvas.positions[sourceId]).toEqual(moved);
+        expect(requests.filter((r) => r.method === "POST")).toHaveLength(1);
       } finally {
         release();
       }

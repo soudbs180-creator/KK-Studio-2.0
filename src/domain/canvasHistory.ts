@@ -1,8 +1,10 @@
 import type { CanvasConnection } from "./canvasGraph.ts";
 import type { CanvasCollectionItem } from "./canvasItems.ts";
 import type { Point, ViewTransform } from "./canvasViewport.ts";
+import type { CanvasGroup } from "./projectCanvas.ts";
 
 export interface CanvasHistorySnapshot {
+  groups?: CanvasGroup[];
   items: CanvasCollectionItem[];
   positions: Record<string, Point>;
   edges: CanvasConnection[];
@@ -50,6 +52,8 @@ function itemFingerprint(
     item.providerConnectionId,
     item.generationSource,
     item.plugin,
+    item.canvasPresentation,
+    item.parameters,
     item.updatedAt,
     // result 只取 id/kind，不含 src/poster 大字段
     item.result ? [item.result.id, item.result.kind] : null,
@@ -62,6 +66,7 @@ export function canvasHistoryFingerprint(
   return JSON.stringify(
     [
       snapshot.items.map(itemFingerprint),
+      snapshot.groups ?? [],
       Object.keys(snapshot.positions)
         .sort()
         .map((id) => [id, snapshot.positions[id]]),

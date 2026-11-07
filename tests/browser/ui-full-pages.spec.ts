@@ -31,7 +31,7 @@ for (const width of [390, 1099, 1920]) {
         root = page.locator(".account-popup");
       } else if (surface === "comfy") {
         await openSettingsSection(page, "模型接入");
-        await page.getByRole("button", { name: "本地", exact: true }).click();
+        await page.locator('[data-channel="local"]').click();
         root = page.getByRole("dialog", { name: "设置", exact: true });
       } else if (surface === "extensions") {
         if (entryWidth >= 768) await expandSidebar(page);
@@ -79,7 +79,7 @@ for (const width of [390, 1099, 1920]) {
           .click();
         root = page.locator(".shortcuts-panel");
       } else if (surface === "plugin-settings") {
-        await openSettingsSection(page, "扩展");
+        await openSettingsSection(page, "扩展与 MCP");
         await page.getByRole("tab", { name: /^MCP/ }).click();
         root = page.getByRole("dialog", { name: "设置", exact: true });
       } else if (surface === "subject" || surface === "asset-detail") {
@@ -115,7 +115,7 @@ for (const width of [390, 1099, 1920]) {
           );
           await expect(
             root.getByRole("button", { name: "取消", exact: true }),
-          ).toHaveCSS("border-radius", "999px");
+          ).toHaveCSS("border-radius", "1000px");
         } else {
           await root.locator(".asset-card").first().press("Enter");
           await expect(root.locator(".asset-large-preview")).toHaveCSS(
@@ -127,7 +127,7 @@ for (const width of [390, 1099, 1920]) {
           ).toHaveCSS("height", "32px");
           await expect(
             root.getByRole("button", { name: "加入本地集合", exact: true }),
-          ).toHaveCSS("border-radius", "999px");
+          ).toHaveCSS("border-radius", "1000px");
         }
       }
       await inspectPage(page, root, `${surface}-${width}`, info);

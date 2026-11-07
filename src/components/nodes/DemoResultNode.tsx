@@ -1,5 +1,5 @@
 import { useContext, useRef, useState } from "react";
-import { CanvasImageCommandContext } from "../../features/creation/CanvasImageCommand.tsx";
+import { CanvasImageCommandContext } from "../../features/creation/index.ts";
 import {
   CANVAS_KIND_LABELS,
   type CanvasCollectionItem,
@@ -10,9 +10,13 @@ import {
 import UiIcon from "../UiIcon";
 import DemoMediaPreview from "./DemoMediaPreview";
 import CreationComposer from "./CreationComposer";
-import { readReferenceImages } from "./referenceUpload";
+import {
+  assignVideoReferenceFrames,
+  readReferenceImages,
+} from "./referenceUpload";
 import CanvasImageActions from "./CanvasImageActions";
 import ResultPreview from "./ResultPreview";
+import VideoShotBreakdownControl from "./VideoShotBreakdownControl.tsx";
 import { useCanvasMediaContent } from "../canvas/useCanvasMediaContent";
 
 export default function DemoResultNode({
@@ -38,11 +42,14 @@ export default function DemoResultNode({
   const [referenceError, setReferenceError] = useState("");
   const result = item.result;
   const card = useRef<HTMLElement>(null);
-  const hasResultContent = Boolean(
-    result &&
-    result.kind === item.kind &&
-    (item.kind === "text" ? result.text?.trim() : result.src?.trim()),
-  );
+  const hasResultContent = resultHasContent();
+  function resultHasContent() {
+    return Boolean(
+      result &&
+      result.kind === item.kind &&
+      (item.kind === "text" ? result.text?.trim() : result.src?.trim()),
+    );
+  }
   const imageSource =
     item.kind === "image"
       ? result?.poster || result?.src || item.preview
@@ -69,7 +76,7 @@ export default function DemoResultNode({
     hasResultContent &&
     !previewError &&
     !item.referenceOnly &&
-    (item.kind === "image" || item.kind === "video"),
+    ["image", "video"].includes(item.kind),
   );
   const referenceFile = useRef<HTMLInputElement>(null);
   const referenceSlot = useRef<CanvasReference["slot"]>();
@@ -156,7 +163,7 @@ export default function DemoResultNode({
             </strong>
             <p>
               {editing?.generationActive
-                ? "正在加载本地演示素材，可在来源卡片取消。"
+                ? "正在等待生成结果，可在来源卡片停止等待。"
                 : `${CANVAS_KIND_LABELS[item.kind]}任务尚未结束，请在任务记录查看进度。`}
             </p>
           </div>
@@ -197,14 +204,28 @@ export default function DemoResultNode({
             hidden
             multiple
             type="file"
-            accept="image/png,image/jpeg,image/webp,image/gif"
+            accept={
+              item.kind === "video"
+                ? "image/png,image/jpeg,image/webp,image/gif,video/mp4,video/webm,audio/mpeg,audio/wav,audio/ogg"
+                : "image/png,image/jpeg,image/webp,image/gif"
+            }
             onChange={(event) => {
               const files = [...(event.target.files ?? [])];
               event.target.value = "";
-              if (!files.length || !editing.onAddReferences) return;
+              const addReferences = editing.onAddReferences;
+              if (!files.length || !addReferences) return;
               setReferenceError("");
               void readReferenceImages(files, referenceSlot.current)
-                .then(editing.onAddReferences)
+                .then((entries) =>
+                  addReferences(
+                    item.kind === "video"
+                      ? assignVideoReferenceFrames(
+                          entries,
+                          editing.references ?? [],
+                        )
+                      : entries,
+                  ),
+                )
                 .catch((error: unknown) =>
                   setReferenceError(
                     error instanceof Error
@@ -215,6 +236,18 @@ export default function DemoResultNode({
             }}
           />
           <CreationComposer
+            nodeId={item.id}
+            footer={
+              item.kind === "video" &&
+              result?.src && (
+                <VideoShotBreakdownControl
+                  source={
+                    item.assetId ? `kk-asset:${item.assetId}` : result.src
+                  }
+                  sourceId={item.id}
+                />
+              )
+            }
             error={referenceError}
             parameters={item.parameters}
             onParametersChange={(parameters) => onChange({ parameters })}
@@ -236,6 +269,7 @@ export default function DemoResultNode({
             onGenerationStart={editing.onGenerationStart}
             onGenerationState={editing.onGenerationState}
             onRemoveReference={editing.onRemoveReference}
+            onSwapReferenceFrames={editing.onSwapReferenceFrames}
           />
         </>
       )}

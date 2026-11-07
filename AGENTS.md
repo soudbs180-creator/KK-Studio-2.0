@@ -2,108 +2,84 @@
 
 ## 核心档案分工与治理定位
 
-项目确立三大顶级治理档案分工。**保持规则先治理好，然后再依靠这个规则来优化代码和 UI**：
+项目确立四大顶级规则入口，**各司其职、严禁跨文件重复抄写同一条款**（由 `npm run rules:check` 门禁强制）：
 
-| 档案 | 谁来读 | 它的定义 | 职责定位 |
-| --- | --- | --- | --- |
-| [`README.md`](README.md) | **人类**（开发者、用户） | **项目内容** | 项目定位、功能总览、运行环境、安装步骤与使用示例 |
-| [`AGENTS.md`](AGENTS.md)（本文件） | **编码代理**（Coding Agents） | **如何构建项目** | 技术边界、数据安全、构建验证门禁、SDLC 交付与 Git 规则 |
-| [`DESIGN.md`](DESIGN.md) | **设计代理**（Design Agents / UI Agents） | **项目应该是什么样子和感觉** | 视觉语言、设计令牌（Tokens）、三端响应式与视口双向自适应规范 |
-
-本文件是全部编码 AI 的**最高规则入口**，定义技术边界、禁止事项与验证要求。本文件与 [`AI_RULES.md`](AI_RULES.md) 的分工：
-
-| 文件 | 承载内容 | 性质 |
+| 档案 | 谁来读 | 职责定位 |
 | --- | --- | --- |
-| `AGENTS.md`（本文件） | 技术边界、数据安全、UI 门禁、Git 与交付约束 | 硬约束清单 |
-| [`AI_RULES.md`](AI_RULES.md) | 用户与 AI 分工、事实纪律、审核与交付流程 | 协作契约 |
-| [`docs/README.md`](docs/README.md) | 全部文档索引、权威优先级与冲突裁决 | 导航与裁决 |
+| [`RULES.md`](RULES.md) | **所有 AI（开工首读）** | 500 字高密度铁律卡片：5 大绝对红线 + 4 条量化硬约束 + 合并前 Checklist |
+| [`AGENTS.md`](AGENTS.md)（本文件） | **编码代理**（Coding Agents） | 编号化技术边界（`R-*`）、数据安全、UI/Figma 门禁（`D-*`）、Git 与交付约束 |
+| [`AI_RULES.md`](AI_RULES.md) | **全部 AI** | 人机全权自治契约（`C-*`）、事实与历史纪律、独立审查与发布流程 |
+| [`DESIGN.md`](DESIGN.md) / [`docs/FIGMA-SYNC.md`](docs/FIGMA-SYNC.md) | **设计/UI 代理** | Figma 设计真值同步管线、三层 Token 强制分层与组件 Token 化完成标准 |
+| [`README.md`](README.md) | **人类**（开发者、用户） | 项目定位、功能总览、运行环境、安装步骤与使用示例 |
+| [`docs/README.md`](docs/README.md) | **全部角色** | 全部文档索引与**唯一冲突裁决优先级** |
 
-两者不重复承载同类条目。发现同一规则在两处都出现时，以本文件为准并删除另一处。文档索引与冲突裁决规则见 `docs/README.md`。
+> **UI 开工入口**：涉及 UI 时，先执行下文 `D-SYNC-*` / `D-TOKEN-*` 与 [`docs/FIGMA-SYNC.md`](docs/FIGMA-SYNC.md)，再读 [`DESIGN.md`](DESIGN.md) 与 [`docs/UI_INDEX.md`](docs/UI_INDEX.md)。本地文档不能代替读取当前 Figma。
 
-> **防新页面违规刚性约束**：所有新建页面、卡片、组件在编码前**必须先读取并严格遵循 [`DESIGN.md`](DESIGN.md)**。严禁私自硬编码孤立色值、固定宽度或忽略矮屏适配，编码代理必须先以 `DESIGN.md` 的规范自检通过后方可提交。
+## 一、 意图理解与入口一致性（`R-ENTRY-*`）
 
-## 所有 AI 必须先理解意图
+- **[R-ENTRY-01] 开工必读序列**：新会话先读 [`RULES.md`](RULES.md) → 本文件 → [`AI_RULES.md`](AI_RULES.md) → [`docs/engineering/PROMPTING.md`](docs/engineering/PROMPTING.md)。用户无需提供专业提示词，AI 负责将自然语言转化为有范围、约束、验收与失败边界的工程任务；回复保持简洁、通俗中文。
+- **[R-ENTRY-02] 兼容入口零分叉**：`CLAUDE.md`、`GEMINI.md`、`.github/copilot-instructions.md`、`.cursor/rules/project.mdc` 仅作为指针路由至 `RULES.md`、`AGENTS.md` 与 `AI_RULES.md`，严禁另立政策。
+- **[R-ENTRY-03] 授权边界内不越界**：代码、配置与文档可作为冲突审计输入，但**禁止顺手修改当前任务范围外的文件**（`RULE-NO-DRIVEBY`）。用户限定只改规则/文档时，不得接管产品实现或其他未提交改动。
 
-- 先读根目录 `AI_RULES.md` 和 `docs/engineering/PROMPTING.md`。用户不必提供专业提示词，AI 负责将自然语言转换成有范围、约束、验收与失败边界的工程任务；允许中英术语混用，最终回复简洁、通俗、中文。
-- 普通已授权技术工作由 AI 写好 intent/spec/plan 后自主执行，不逐阶段索取形式批准。用户主要负责产品含义、设计/交互和最终验收；真实高影响操作沿用具体授权。用户新反馈应同步更新任务，不丢弃此前目标。
-- `CLAUDE.md`、`GEMINI.md`、`.github/copilot-instructions.md`、`.cursor/rules/project.mdc` 只是兼容入口，必须引用本文件和 AI_RULES，不能另立矛盾政策。新工具未加载规则不得写入；CI 不能证明模型确实读懂规则。
-- 产品代码、配置、脚本和现行文档可作为冲突审计输入；修正须在当前用户授权范围内。用户限定只写规则时，不接管产品实现、既有测试或其他提交。历史证据用勘误和新证据纠正，不伪造旧结果。具体流程见 `docs/engineering/SDLC.md`、`docs/engineering/BRANCH-POLICY.md` 与 `docs/engineering/REVIEW.md`。
+## 二、 唯一工程与平台顺序（`R-REPO-*`）
 
-## 唯一工程与目标
+- **[R-REPO-01] 唯一正式主仓**：本机唯一仓库是 `D:/kk-studio/KK-Studio-2.0`（容器目录为 `D:/kk-studio`）。任务隔离使用登记在 `D:/kk-studio/.worktrees/` 下的 worktree；严禁把本机绝对路径写成跨平台运行时依赖。历史归档位于工程外 `D:/KK-Studio-recovery-20260921`（只读恢复到新目录，严禁覆盖当前用户数据或打入 `releases/`）。
+- **[R-REPO-02] 版本单源**：三端版本唯一源为 `config/platform-versions.json`（参见 [`docs/engineering/VERSIONING.md`](docs/engineering/VERSIONING.md)），修改后运行 `npm run version:check`；保留既有存储 key/identifier 不变。
+- **[R-REPO-03] 平台交付顺序**：固定为 **Desktop → Web → Mobile**。Desktop 最小可用链路通过前不启动 Web 同等能力；Web 从共享核心蒸馏并保持生成链与状态同构；Web 稳定前不启动独立顶层 `mobile/` 工程。
 
-- 本机唯一工程仓库是 `D:/kk-studio/KK-Studio-2.0`；`D:/kk-studio` 仅为容器目录。任务隔离使用本仓库登记的 worktree，每个 worktree 只承载一个 task branch。其他设备可使用自己的路径，但必须核对相同 Git remote、已推送 SHA 和仓库规则，不将本机绝对路径写成跨平台依赖。
-- `kk-studio-next` 和旧 archive/backup 已由 TASK-CONSOLIDATE-200 收敛；不要重新建立重复工程或从历史路径启动。当前融合分支和验证状态先读 `docs/governance/PROJECT_STATE.md`。
-- 历史源码、未提交候选、Git 和用户数据的恢复归档位于工程外 `D:/KK-Studio-recovery-20260921`。恢复必须到新目录并校验，不得自动覆盖当前用户数据。工程内 `releases/` 只放最新分享产物，禁止把恢复归档、凭据、开发 node_modules 或编译缓存打入分享包；Agent 生产运行时仅按已审阅 `runtime-manifest.json` 白名单包含其运行依赖。
-- `2.0.0` 是历史融合基线；三端版本以 `config/platform-versions.json` 为源，本轮桌面/Web 源码及 Mobile 规划版本均从 `2.1.1` 开始，正式安装包、Mobile 包和 tag 另行验收。按[版本管理规则](docs/engineering/VERSIONING.md)由任务作者自动选择受影响平台并递增版本，运行 `npm run version:check`；不要让用户逐次指定数字。保留原有存储 key/identifier，不能随目录或包名改动用户数据身份。
-- 平台交付顺序固定为 **Desktop → Web → Mobile**。Desktop 的最小可用链路和稳定性验收完成前，不启动 Web 的同等能力交付；Web 从共享核心蒸馏为轻量版本，只能裁剪平台专属能力，核心生成链、任务/结果语义和基本交互必须与 Desktop 保持一致，并以双端切换同态证据验收；Web 的共享协议和基本链路稳定前，不启动 Mobile 的实现。Mobile 的性能与体验优化排在三端最小链路之后。
+## 三、 技术边界与清洁架构（`R-ARCH-*`）
 
-## 技术边界
+- **[R-ARCH-01] 锁定技术栈**：React `18.3.1` + TypeScript `5.6.3`（strict） + Vite `7.3.6` + Tauri `2.11.1` + Node `24`；`package-lock.json` 是唯一锁文件。编码细则见 [`docs/engineering/CODING-STANDARDS.md`](docs/engineering/CODING-STANDARDS.md)。
+- **[R-ARCH-02] 目录职责与纯领域核心**：
+  - `src/domain/`：纯领域层（Zod schema、领域模型），**严禁依赖 React、Tauri、`components`、`features`、`integrations`、`styles` 或 Node 内置模块**（由 `scripts/governance/import-boundaries.mjs` 强制）。
+  - `src/features/<feature>/`：垂直切片业务模块，对外**唯一经由 `index.ts` 暴露**，严禁跨 feature 深层私有导入；单组件文件 ≤ `300` 行。
+  - `src/integrations/`：模型/API/第三方适配器（Adapter / Facade）；`src/runtime/`：存储与运行时契约；`src-tauri/`：仅承载桌面原生壳、IPC、系统凭据库与本地文件能力。
+- **[R-ARCH-03] 严禁重复造轮子**：凡涉及无限画布、手势矩阵、贝塞尔连线、节点碰撞、SSE/流式解析、Mask 编辑器、复杂状态机等通用高复杂度能力，开工前必须优先吸收 `references/` 参考代码或引入 GitHub/npm 高星宽松协议（MIT / Apache-2.0 / BSD）成熟方案并经适配器隔离；仅在确无合适库或协议冲突时自研最小适配并在 ADR 说明。
+- **[R-ARCH-04] 工作区四象限零污染**：
+  1. 外部参考源码与资产 → `D:/kk-studio/references/`（资产入 `references/assets/`）；
+  2. 调研与参考文档 → `D:/kk-studio/docs/05-references/`；
+  3. 运行日志与验证证据 → `D:/kk-studio/output/logs/<topic-date>/` 或 `output/<topic>-<date>/`（禁止在 `output/` 根平铺裸文件）；
+  4. 临时调试产物 → `.tmp/`（已 gitignore）；主仓根目录列表受 `config/repo-layout-rules.json` 严格白名单管控。
 
-- React 18 + TypeScript strict + Vite；桌面壳为 Tauri 2；Node 24；npm lockfile 是唯一锁文件。
-- `src/components`：页面与组件；`src/domain`：Zod schema、领域模型、demo fixture；`src/integrations`：模型/API/provider 适配器；`src/runtime`：浏览器存储契约和运行时边界；`src-tauri`：桌面命令与文件系统。
-- `public/design/figma` 是 Figma 导出资源，`public/fixtures/demo` 是固定本地演示素材，`design/figma-plugin` 是可编辑插件源。
-- 新功能优先按 `src/features/<feature>` 拆分；组件超过 300 行按职责拆分。完整的编码约束（命名、文件规模边界、模块依赖方向、错误处理、门禁映射）见 [`docs/engineering/CODING-STANDARDS.md`](docs/engineering/CODING-STANDARDS.md)。
-- `src/domain` 是纯领域层，不得依赖 React、Tauri、`components`、`features`、`integrations`、`styles` 或 Node 内置模块，由 `scripts/governance/import-boundaries.mjs` 强制。
-- Desktop 与 Web 共用根 `src/` 的领域、功能、Provider、任务和 UI 逻辑；`src-tauri/` 只承载 Desktop 原生壳、IPC、凭据库和本地文件能力。未来 Mobile 必须使用独立顶层 `mobile/` 工程，不得把 Mobile 页面、平台 runtime 或原生依赖放入 `src/` 或 `src-tauri/`；跨端共享必须经过明确抽出的、与平台无关且可版本化的契约或核心包。
+## 四、 数据与安全（`R-SEC-*`）
 
-## 数据与安全
+- **[R-SEC-01] 凭据零明文落盘**：API key、OAuth token 与代理凭据只进系统凭据库（`com.kkstudio.provider`）或请求内存；Web 仅允许经审查的客户端加密持久化（解锁密钥不随密文存放）。严禁进入明文 localStorage、项目文件、导出包、URL 或日志。
+- **[R-SEC-02] 存储与账号边界**：桌面数据根为 `%APPDATA%\kk-studio`（详见 [`docs/architecture/DATA-STORAGE.md`](docs/architecture/DATA-STORAGE.md) 与 [ADR-019](docs/architecture/adr/ADR-019-unified-local-repository-and-optional-account.md)）；模型权重留在用户 ComfyUI 目录。Desktop/Web 均支持免登录本地使用；未接真实服务的云端/积分/Provider 能力必须标为 `Prototype` 或禁用。
+- **[R-SEC-03] 记忆隐私契约**：本机共享记忆 `~/.kk-memory/memory.json` 遵循 [`docs/MEMORY-CONTRACT.md`](docs/MEMORY-CONTRACT.md)，完整文件严禁进同步、localStorage、日志或导出包。
 
-- 桌面数据根目录为 `%APPDATA%\\kk-studio`（跨平台规则见 `docs/architecture/DATA-STORAGE.md`）。模型权重留在用户选择的 ComfyUI 根目录，仓库只放适配器和索引契约。
-- API key、OAuth token 和代理凭据使用系统凭据库（service `com.kkstudio.provider`）或请求内存；Web 仅允许经审查的客户端加密持久化，解锁密钥不得随密文明文存放。秘密禁止进入明文 localStorage、项目文件、项目导出包、URL 和日志；用户选择的密钥同步使用独立加密内容。
-- 当前 Web 的项目/任务/消息和素材仍在 IndexedDB 本地持久化，localStorage 保存非敏感设置、provider 元数据与恢复副本；Desktop 创作快照及素材使用原生仓库。Web 的目标部署与账号、会话、积分、会员和用量控制面位于 VPS；项目/素材是否云端保存或同步仍由独立数据契约决定，本机伴随服务仍是当前本地持久化路径。Desktop/Web 均可免登录本地使用；登录不自动上传产品数据，只有用户在网络设置手动同步所选内容。Mobile 的独立交付与设备持久化由原任务承接。本地持久化不代表云端保存；账号、积分、记忆、云端保存或 Provider 生成未接真实服务时必须明确标为 Prototype 或禁用。具体现状与目标以 `docs/architecture/DATA-STORAGE.md` 与相关 ADR 为准。
-- 当前已授权实施用户自有 API 接入、四渠道模型选择、统一本地仓库和可选账号；按 Desktop→Web 顺序及真实功能链双门验收，不把消费者登录推断为 API 能力。账号、本机目录授权与模型渠道凭据分开；详细边界见 [ADR-019](docs/architecture/adr/ADR-019-unified-local-repository-and-optional-account.md)。
-- 用户记忆的存储契约是本机共享文件（`~/.kk-memory/memory.json`）：完整文件不进同步/localStorage/日志/导出包；开启记忆时，相关片段可随当前请求发送给所选模型用于推理。豆包、WorkBuddy 原生客户端只有完成适配并经真实联调后才可标为已共享。任何 Agent 遵循 `docs/MEMORY-CONTRACT.md` 的读取/写入/隐私规则。
+## 五、 Figma 全面同步与组件 Token 化（`D-*`）
 
-## 设计与交互
+完整规范与命令见 [`docs/FIGMA-SYNC.md`](docs/FIGMA-SYNC.md)，导航见 [`docs/UI_INDEX.md`](docs/UI_INDEX.md)：
 
-- **UI 设计规范唯一入口是根目录 [`DESIGN.md`](DESIGN.md)**（对齐 Google Stitch Specification 标准）。任何 UI、页面、卡片、浮层或组件改动，**编码代理必须先读 `DESIGN.md`，严格遵循其样式规则、Tokens、流式网格自适应与矮屏弹性规范**。细分主题索引见 [`docs/UI_INDEX.md`](docs/UI_INDEX.md)。
-- **防止新页面违规的刚性法则**：所有新页面、新卡片、新控件必须满足以下五项硬约束方可合入：
-  1. **禁止裸写颜色**：所有颜色必须消费 `DESIGN.md` 注册的语义令牌（如 `var(--bg-surface)`、`var(--text-primary)`），严禁直接出现 Hex/RGB 硬编码；
-  2. **双向自适应弹性**：页面与卡片容器严禁使用写死固定像素宽度（必须使用 `width: min(100%, ...)`、流式网格 `grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr))` 与 `min-width: 0` 防溢出）；
-  3. **矮屏与弹性高度**：所有弹窗与面板必须使用三段式结构（Header + Scrollable Body + Sticky Footer），并响应 `@media (max-height: 640px)`，确保主操作按钮在任何矮屏下始终可见可点；
-  4. **触控与桌面双达标**：移动端与平板端所有交互元素触控面积不小于 `44px × 44px`；
-  5. **单行防爆与全端拓扑**：文字单行容器必须带 `overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0;`；
-  6. **双端互补与同构规范（Mobile & Desktop Complementary Dual-Track）**：开发手机端（React Native / 移动 Web）与电脑端（Desktop / 宽屏 Web）时，必须严格遵照 `DESIGN.md`：电脑端发挥大屏优势以**无限画布（Infinite Canvas）**为主；手机端遵从单手舒适模式以**聊天为主（Chat-Centric）**（聊天流直接显示图片卡片、底部直达资源库与排队任务页）；相同部分（色彩阶梯、任务 9 状态机、多模态 5 槽位、Token、Schema）必须 100% 复用，保证跨端同态漫游。
-- 每个可见控件必须有真实行为，或显示禁用原因；异步操作必须覆盖 loading、success、error、cancel 和离线状态。
-- UI/交互与功能链路是每个平台的最高优先级双门。平台最小链路必须先通过“连接健康检查 → 一次文本生成 → 一次图片生成 → 结果/原件回写 → 保存或重载恢复”，并在同一版本提供 UI 状态证据；静态 UI、fixture、mock 或单一平台证据不能替代真实 API 回执。性能优化与 Mobile 体验优化只能在对应平台最小链路通过后进行。
-- 视觉验收必须有相同状态的浏览器截图/DOM 证据；构建通过不等于设计一致。
+- **[D-SYNC-01] Figma 唯一真值，严禁逆向回填**：当前 Figma（`ZiadpErDoFweCjG3uHjkM3`）的 Variables、Styles、母版与页面是唯一设计真值。链路固定为：`Figma → DTCG 快照 (design/tokens/figma.tokens.json) → tokens.css → DESIGN.md → 组件`。**严禁先改本地代码再回填 Figma**。
+- **[D-SYNC-02] 单一运行时 Token 注册处**：`src/styles/tokens.css` 是 `--kk-*` 唯一运行时注册处（历史 `tokens.json` 已归档退役）。
+- **[D-SYNC-03] 设计前置证据与阻断**：修改本地 UI 前必须在变更记录登记 Figma fileKey、nodeId、读取时间与目标状态；Figma 不可读或未定义时记录 `BLOCKED` 并暂停对应 UI 修改，禁止套用旧规范。
+- **[D-TOKEN-01] 三层 Token 强制分层**：Tier 1 Primitive（原始值，业务禁用）→ Tier 2 Semantic（语义层，承载 dark/light 与强调色切换）→ Tier 3 Component（`--kk-<组件>-<部件>-<属性>[-<状态>]`，只能 `var()` 引用 Tier 2/1，**禁止字面值**）。
+- **[D-TOKEN-02] 零裸写与棘轮门禁**：业务 CSS/TSX 严禁新增 Hex/RGB 颜色字面量、裸 `px` 声明、未授权 `999px` 圆角或行内 `borderRadius`；由 `npm run ui:check` 与 `npm run tokens:check` 棘轮门禁强制（存量只减不增）。
+- **[D-COMP-01] 组件 Token 化与映射表**：共享组件必须在 [`design/figma-component-map.json`](design/figma-component-map.json) 登记 `nodeId`、本地路径、Token 前缀与五态同步状态（`DESIGN_PENDING → FIGMA_READY → LOCAL_PENDING → SYNCED → RUNTIME_VERIFIED`），覆盖 default / hover / active / selected / disabled / focus 六态。
+- **[D-LAYOUT-01] 全端弹性与双端互补**：
+  1. 容器严禁写死固定像素宽（使用 `width: min(100%, ...)`、流式网格与 `min-width: 0`）；单行文本必带省略三件套；
+  2. 弹窗/面板采用 Header + Scrollable Body + Sticky Footer 三段式，响应 `@media (max-height: 640px)`；
+  3. 触控目标 ≥ `44px × 44px`；
+  4. 电脑端以**无限画布**为主，手机端以**聊天流**为主，100% 复用同一套 Token、任务 9 状态机与多模态 5 槽位契约。
+- **[D-RUNTIME-01] UI 运行链路门禁**：Vite 固定端口 `1421`（`strictPort: true`）；报告 UI 完成前必须记录启动命令、URL、运行模式、route import 链路及 390 / 1099 / 1920 同状态浏览器 DOM/截图证据（Web 与 Desktop `frontendDist` 分别验证，详见 [`docs/UI_SPEC.md`](docs/UI_SPEC.md)）。每个可见控件必须有真实行为或禁用原因，异步覆盖 loading/success/error/cancel/offline。
 
-## 文档与验证
+## 六、 文档分级、事实与门禁（`R-DOC-*` / `R-FACT-*`）
 
-- 当前需求按 `docs/templates/` 创建 intent、spec、plan、verification、review，放入对应日期的 `docs/changes/<date>-<task>/`；旧整合记录是历史依据，不是后续任务的默认目录。
-- 功能以 `docs/features/` 为唯一功能入口：每个功能一张 `feat-*.md` 卡片（用户入口、代码位置、测试证据、当前能力、差距与后端化），`features.registry.json` 是机器可读权威，`README.md` 看板由 `npm run features:write` 生成、禁止手改；新增功能先建卡并在账本建任务，再实现。演示功能后端化顺序见 `docs/features/BACKEND-ROADMAP.md`。功能状态（REAL/PARTIAL/PROTOTYPE/PLANNED）描述产品能力真实程度，与任务状态正交，REAL 必须有同态运行证据，非 REAL 必须挂开放任务（排除 DONE/OBSOLETE）。
-- 代码、数据契约或行为改变时同步 `docs/PROGRESS.md`。
-- 改代码前先读 [`docs/engineering/CODING-STANDARDS.md`](docs/engineering/CODING-STANDARDS.md)；加测试前先读 [`docs/engineering/TESTING.md`](docs/engineering/TESTING.md)（测试分层、Playwright 端口契约、覆盖要求、证据保存）。
-- 常用命令：`npm run typecheck`、`npm run test`、`npm run ui:check`、`npm run format:check`、`npm run build`、`npm run client:check`、`npm run features:check`、`npm run governance:check`、`npm run markdown:check`；交付前执行 `npm run verify`（已含功能、账本和现行 Markdown 链接门禁）。
-- 验证不足不得标为 `REAL`，按已有能力标为 `PARTIAL` 或 `PROTOTYPE`；不能把占位 UI、硬编码账号或本地 demo 描述为真实服务。
+- **[R-DOC-01] 变更文档按规模分级**（统一原流程冲突）：
+  - **S 级（轻量修改）**：改动 ≤ `3` 个文件且不改变跨模块公共契约/schema → 直接以规范 Commit、单测覆盖与账本更新闭环，免建五件套目录；
+  - **M/L 级（跨模块特性/架构/UI 同步）** → 按 `docs/templates/` 在 `docs/changes/<date>-<task>/` 建立 `intent/spec/plan/verification/review`。
+- **[R-DOC-02] 功能卡与生成视图**：每个功能对应 `docs/features/feat-*.md` 与机器权威 `features.registry.json`（`docs/features/README.md` 由 `npm run features:write` 生成，严禁手改）。`REAL` 必须有双端同态运行证据，非 `REAL` 必须挂开放账本任务。
+- **[R-FACT-01] 唯一状态源与事实标记**：
+  - 任务状态唯一源：`docs/governance/task-ledger.json`（`TASK_LEDGER.md` 由 `npm run governance:write` 生成，严禁手改）；
+  - 当前事实：`docs/governance/PROJECT_STATE.md`；恢复入口：`AI_HANDOFF.md`；权威映射：`AUTHORITY_MAP.md`。
+  - 直接证据标 `FACT`，推断标 `INFERENCE`，缺证据标 `UNKNOWN`，来源冲突标 `CONFLICT`，外部阻塞标 `BLOCKED`。代码与规范冲突时不默认以代码为准。
+- **[R-GATE-01] 门禁命令矩阵**：
+  - 日常快速门禁：`npm run typecheck`、`npm run lint`、`npm test`、`npm run rules:check`、`npm run ui:check`、`npm run tokens:check`；
+  - 交付前完整门禁：`npm run verify`。
 
-## UI 运行链路门禁
+## 七、 Git、工作树与合流（`R-GIT-*`）
 
-- UI 改动必须按 `用户 Design System + 页面来源 → Design Tokens → Shared Components → Actual Source → Browser Verification` 执行。
-- 报告 UI 完成前，必须记录实际启动命令、浏览器 URL/端口、运行模式（Vite development、Vite preview 或 Tauri release）、当前 route、route 到页面组件的 import 链路，以及同状态浏览器 DOM/截图证据。
-- 代码 diff、Figma 读取或构建通过都不能代替浏览器验证；如果页面没有发生可见变化，必须继续检查端口、旧 build、缓存、重复 app/package 和路由引用，不能标记完成。
-- Web（Vite）与 Desktop（Tauri `frontendDist`）必须分别验证；修改源码后要重新生成实际被加载的 production `dist` 或 release 包。
-- 页面级 CSS 的加载顺序由 `App.tsx` 统一管理；同一 CSS 从组件提前 import 后，再次 import 不会改变顺序。必须以浏览器 style sheet 顺序和 computed style 确认最终生效规则。
-- 默认、hover、active、selected、disabled、focus 必须消费同一套语义 tokens；原稿未定义的状态标记为工程补充。示例内容、真实运行内容与桌面专属控件不得混作同状态验收。
-- 运行 Vite 时必须固定端口 1421（`vite.config.ts` 中设置 `strictPort: true`）；如果 1421 被占用，不得自动切到其他端口渲染。
-- 若启动后页面仍是旧界面，需先确认 `index.html` 与当前进程的 `script/src`（`/src/main.tsx` 或 `/assets/index-*.js`）、`data-runtime-mode`、`data-runtime-entry`，再排除：
-  - 旧窗口/旧端口残留
-  - 浏览器缓存（`Ctrl+Shift+R` 后重试）
-  - 错误指向其他 app 的 `dist` 或其他 checkout
-
-## 上下文、任务与证据
-
-- 新 session 先检查当前和嵌套 AGENTS、`docs/governance/`、相关 architecture/spec/change records、Git status/history/worktrees，再读取相关实现。当前事实、规范、历史证据发生冲突时记录 CONFLICT 并据来源与时间判定；代码与规范冲突不自动以代码为准。
-- `docs/governance/PROJECT_STATE.md` 保存当前事实；`SPEC_BASELINE.md` 指向已有规范；`task-ledger.json` 是任务/已知问题状态的机器可读权威，`TASK_LEDGER.md` 是生成视图；`docs/features/features.registry.json` 是功能真实程度的机器可读权威，`docs/features/README.md` 与 `feat-*.md` 卡片是功能视图（README.md 为生成文件禁止手改；registry 与功能卡由维护者同步修改）；`AI_HANDOFF.md` 只保存恢复入口。`docs/PROGRESS.md` 和 change verification 保存已完成迭代证据。
-- 修改模块前检查相关 TODO/FIXME/PARTIAL/REGRESSION/Prototype 与旧方案；不因没有 TODO 字符串就宣布没有遗留任务。额外独立问题加入账本，明确目标、验收、依赖、Owner、Branch、Worktree、Affected Modules、状态、证据和更新时间。
-- FACT 必须有直接证据，推断标 INFERENCE，缺证据标 UNKNOWN，可信来源冲突标 CONFLICT；BLOCKED 只用于外部必要条件。Prototype/Mock/构建通过不等于真实服务完成。
-- AI 自主执行可从仓库决定的技术工作。只升级真正的产品语义分歧、不可逆操作、外部权限/密钥/付款、无法解决的有效规范冲突和重大范围扩展。不要重复要求用户确认已授权动作。
-
-## Git、并行与交付
-
-- 默认稳定主线为 main；历史 master 未经过审阅迁移前不自动重命名、不假设为新 main。主线禁止直接开发、普通 direct push 和 force push。
-- 使用 `<type>/<TASK-ID>-<description>` 短期分支（codex/feat/fix/perf/refactor/test/docs/chore/hotfix）。先列任务依赖图，只有独立且低冲突任务并行；多代理不得同时改同一 dirty worktree。原 checkout 的无关改动不可 reset、clean、覆盖或悄悄提交。
-- 进入 task worktree 后记录依赖安装、lint/typecheck/相关测试基线，已有失败记 PRE-EXISTING FAILURE。需捕获未提交实现时只创建明确标为未验收的候选快照，不移动主线、不改变原 checkout/index；排除 secrets、运行数据、临时文件和生成证据。
-- 合并前 self-review、lint/typecheck/test/build、相关 regression、文档与验收全部通过；UI/runtime 适用时必须完成上述运行链路门禁。冲突在源分支解决，解决后重新验证。
-- PR 一项逻辑目标，使用 `.github/PULL_REQUEST_TEMPLATE.md`；默认 squash merge，合并后验证最新主线。无 remote/权限时保留可审阅本地提交与 PR 内容并明确 remote gate 未完成。远端保护需实际托管配置，不能把 CI 文件当 ruleset 已启用。
-- DONE = 实现 + 验收 + 相关验证/回归 + 文档同步；未完成写 PARTIAL，未验证写 NOT VERIFIED。结束迭代更新 ledger、Project State、Handoff 和相关规范；相同错误复发必须补自动 guardrail。不要因文件长而机械拆分，按职责边界整理。
+- **[R-GIT-01] 主线保护与分支命名**：默认主线为 `main`，禁止直接 push 或 force push。使用 `<type>/<TASK-ID>-<description>` 短期分支；多代理严禁同时修改同一 dirty worktree，主 checkout 的无关未提交改动严禁 reset、clean、覆盖或夹带提交。
+- **[R-GIT-02] 工作树复用与即时闭环**：开工前先查 `git worktree list` / `git branch` 复用既有任务分支；进入 worktree 记录基线（已有失败记 `PRE-EXISTING FAILURE`）。编码与门禁验证全部通过后，**立即合并入 `main` 并回收该临时 worktree**，严禁让已验证分支长期游离。
+- **[R-GIT-03] 完成定义（DONE）**：`DONE = 实现 + 验收 + 门禁/回归通过 + 台账/文档同步`；未完成标 `PARTIAL`，未验证标 `NOT_VERIFIED`。相同错误复发必须补充自动化门禁脚本。

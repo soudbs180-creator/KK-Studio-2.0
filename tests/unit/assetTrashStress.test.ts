@@ -123,6 +123,7 @@ test("1. DOM selectors and static markup conformance with verify-all-features.mj
   const assetPanelSource = [
     "AssetPanel.tsx",
     "AssetPanelNavigation.tsx",
+    "AssetPanelHeader.tsx",
     "AssetActions.tsx",
   ]
     .map((file) =>

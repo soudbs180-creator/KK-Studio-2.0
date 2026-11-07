@@ -1,6 +1,10 @@
 import { expect, test, type Locator } from "@playwright/test";
 import { readFileSync } from "node:fs";
-import { openWorkspace } from "./helpers";
+import {
+  openWorkspace,
+  selectHomeConversation,
+  ensureHomeMore,
+} from "./helpers";
 
 // Account attachments deduplicate by original bytes, so layout needs distinct images.
 const pngFixtures = [
@@ -67,7 +71,7 @@ test("short-screen model menu keeps its scroll position and opens the last actio
     await page.getByRole("button", { name: "打开对话", exact: true }).click();
   await page.getByRole("button", { name: "模型", exact: true }).click();
   const menu = page.getByRole("menu", { name: "选择模型", exact: true });
-  await menu.getByRole("tab", { name: "中转 API", exact: true }).click();
+  await menu.getByRole("tab", { name: "图像生成", exact: true }).click();
   const list = menu.locator(".kk-model-menu-list");
   expect(await list.evaluate((el) => el.scrollHeight > el.clientHeight)).toBe(
     true,
@@ -90,9 +94,11 @@ test("short-screen model menu keeps its scroll position and opens the last actio
 test("phone menus leave all composer actions reachable", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
+  await selectHomeConversation(page);
   const form = page.locator(".start-composer");
   await form.locator("textarea").fill("菜单切换保持草稿");
   for (const name of ["模型", "扩展", /^当前模式：/]) {
+    if (name !== "模型") await ensureHomeMore(page);
     const trigger = form.getByRole("button", { name, exact: true });
     await trigger.click();
     await expect(trigger).toHaveAttribute("aria-expanded", "true");
@@ -109,12 +115,15 @@ test("phone menus leave all composer actions reachable", async ({ page }) => {
             const box = el.getBoundingClientRect();
             return {
               name: el.getAttribute("aria-label") || el.textContent,
-              hit: el.contains(
-                document.elementFromPoint(
+              hit: (() => {
+                const target = document.elementFromPoint(
                   box.x + box.width / 2,
                   box.y + box.height / 2,
-                ),
-              ),
+                );
+                return (el as HTMLButtonElement).disabled
+                  ? Boolean(target?.contains(el))
+                  : el.contains(target);
+              })(),
             };
           }),
       );
@@ -122,6 +131,10 @@ test("phone menus leave all composer actions reachable", async ({ page }) => {
     await page.keyboard.press("Escape");
     await expect(trigger).toBeFocused();
   }
+  await page.keyboard.press("Escape");
+  await expect(
+    form.getByRole("button", { name: "更多创作选项", exact: true }),
+  ).toBeFocused();
   await expect(form.locator("textarea")).toHaveValue("菜单切换保持草稿");
 });
 

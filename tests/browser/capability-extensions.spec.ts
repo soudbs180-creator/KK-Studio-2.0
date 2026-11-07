@@ -1,3 +1,4 @@
+import { selectHomeConversation } from "./helpers";
 import { expect, test } from "@playwright/test";
 import { openWorkspace } from "./helpers";
 import { createDefaultChat } from "../../src/features/creation/model";
@@ -20,6 +21,7 @@ function channelChats() {
 
 test("创作区协作伙伴入口打开任务角色而不是账号连接", async ({ page }) => {
   await page.goto("/");
+  await selectHomeConversation(page);
   await page
     .getByRole("region", { name: "开始创作", exact: true })
     .getByRole("button", { name: "扩展", exact: true })
@@ -248,7 +250,7 @@ test("协作伙伴不会显示 Codex 连接，复制失败给出真实反馈", a
   const dialog = page.getByRole("dialog", { name: "设置", exact: true });
   await dialog
     .getByRole("navigation", { name: "设置分类" })
-    .getByRole("button", { name: "扩展", exact: true })
+    .getByRole("button", { name: "扩展与 MCP", exact: true })
     .click();
   await dialog.getByRole("tab", { name: /协作伙伴/ }).click();
   await expect(dialog.getByRole("button", { name: /策划伙伴/ })).toBeVisible();

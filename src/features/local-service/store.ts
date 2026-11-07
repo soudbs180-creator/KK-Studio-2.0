@@ -1,3 +1,5 @@
+import { mergeAssetOrigins } from "../../../packages/creation-contracts/index.ts";
+import { randomUUID } from "node:crypto";
 import {
   closeSync,
   existsSync,
@@ -5,24 +7,25 @@ import {
   lstatSync,
   mkdirSync,
   openSync,
-  readFileSync,
   readdirSync,
+  readFileSync,
   renameSync,
   rmSync,
   writeFileSync,
 } from "node:fs";
-import { randomUUID } from "node:crypto";
 import { join, resolve, sep } from "node:path";
+import type { CreationSnapshot } from "../../domain/creationTypes.ts";
 import {
-  serializeCreationSnapshot,
-  type CreationSnapshot,
-} from "../creation/model.ts";
-import { assertStandaloneRoot } from "./standaloneRoot.ts";
-import {
-  decodeSnapshot,
-  parseSnapshot,
+  creationSnapshotCodec,
   SnapshotStorageError,
-} from "../creation/snapshotCodec.ts";
+} from "../../domain/creationSnapshotCodec.ts";
+import {
+  canonicalJson,
+  createManifest,
+  sha256Bytes,
+  sha256Json,
+  verifyManifestHash,
+} from "./manifest.ts";
 import {
   assetMetadataSchema,
   backupManifestSchema,
@@ -31,16 +34,10 @@ import {
   migrationPreflightSchema,
   rejectCompanionSecrets,
   snapshotPutSchema,
-  type CompanionBackupManifest,
   type CompanionAssetMetadata,
+  type CompanionBackupManifest,
 } from "./protocol.ts";
-import {
-  canonicalJson,
-  createManifest,
-  sha256Bytes,
-  sha256Json,
-  verifyManifestHash,
-} from "./manifest.ts";
+import { assertStandaloneRoot } from "./standaloneRoot.ts";
 
 export type SnapshotReadResult = {
   status: "missing" | "loaded" | "recovered";
@@ -192,6 +189,143 @@ function isRestorableBackupPath(path: string): boolean {
     /^assets\/records\/asset-[a-f0-9]{24}\.json$/i.test(path) ||
     /^assets\/blobs\/[a-f0-9]{64}$/i.test(path)
   );
+}
+
+function readVerifiedBackupManifest(
+  backupsRoot: string,
+  backupId: string,
+): { directory: string; manifest: CompanionBackupManifest } {
+  if (!safeBackupId(backupId))
+    throw new CompanionProtocolError("INVALID_REQUEST", 400, "备份标识无效。");
+  const directory = resolve(backupsRoot, backupId);
+  if (!directory.startsWith(`${backupsRoot}${sep}`))
+    throw new CompanionProtocolError("INVALID_REQUEST", 400, "备份路径无效。");
+  const manifestPath = join(directory, "manifest.json");
+  if (!existsSync(manifestPath))
+    throw new CompanionProtocolError("NOT_FOUND", 404, "备份不存在。");
+  let manifest: CompanionBackupManifest;
+  try {
+    manifest = backupManifestSchema.parse(
+      JSON.parse(readFileSync(manifestPath, "utf8")),
+    );
+  } catch {
+    throw new CompanionProtocolError("CORRUPT", 422, "备份清单无效。");
+  }
+  if (!verifyManifestHash(manifest))
+    throw new CompanionProtocolError("CORRUPT", 422, "备份清单校验和无效。");
+  return { directory, manifest };
+}
+
+function loadAndVerifyBackupEntries(
+  directory: string,
+  manifest: CompanionBackupManifest,
+): Map<string, Uint8Array> {
+  const entries = new Map<string, Uint8Array>();
+  for (const entry of manifest.files) {
+    if (entries.has(entry.path))
+      throw new CompanionProtocolError(
+        "CORRUPT",
+        422,
+        "备份清单包含重复文件。",
+      );
+    if (!isRestorableBackupPath(entry.path))
+      throw new CompanionProtocolError(
+        "CORRUPT",
+        422,
+        "备份文件路径不受支持。",
+      );
+    const path = resolve(directory, entry.path);
+    if (!path.startsWith(`${directory}${sep}`) || !existsSync(path))
+      throw new CompanionProtocolError("CORRUPT", 422, "备份文件缺失。");
+    const bytes = asBytes(readFileSync(path));
+    if (bytes.byteLength !== entry.size || sha256Bytes(bytes) !== entry.sha256)
+      throw new CompanionProtocolError("CORRUPT", 422, "备份文件校验失败。");
+    entries.set(entry.path, bytes);
+  }
+  return entries;
+}
+
+function decodeBackupSnapshot(
+  entries: ReadonlyMap<string, Uint8Array>,
+): CreationSnapshot {
+  const snapshotBytes = entries.get("projects/creation-v2.json");
+  if (!snapshotBytes)
+    throw new CompanionProtocolError("CORRUPT", 422, "备份缺少项目快照。");
+  try {
+    const value = JSON.parse(new TextDecoder().decode(snapshotBytes));
+    assertCanonicalWireSnapshot(value);
+    const decoded = decodeSnapshot(value);
+    return decoded.version === 3
+      ? serializeCreationSnapshot(value as CreationSnapshot)
+      : decoded;
+  } catch (error) {
+    if (error instanceof CompanionProtocolError) throw error;
+    throw new CompanionProtocolError("CORRUPT", 422, "备份项目快照无效。");
+  }
+}
+
+function verifyBackupAssetsAndReferences(
+  entries: ReadonlyMap<string, Uint8Array>,
+  snapshot: CreationSnapshot,
+): void {
+  const records = new Map<string, CompanionAssetMetadata>();
+  for (const [path, bytes] of entries) {
+    const record = /^assets\/records\/(asset-[a-f0-9]{24})\.json$/i.exec(path);
+    if (!record) continue;
+    try {
+      const assetId = record[1].toLowerCase();
+      const metadata = assetMetadataSchema.parse(
+        JSON.parse(new TextDecoder().decode(bytes)),
+      );
+      if (metadata.assetId !== assetId)
+        throw new Error("record asset id mismatch");
+      if (records.has(assetId)) throw new Error("duplicate asset record");
+      records.set(assetId, metadata);
+    } catch {
+      throw new CompanionProtocolError("CORRUPT", 422, "备份素材索引无效。");
+    }
+  }
+  for (const metadata of records.values()) {
+    const blob = entries.get(`assets/blobs/${metadata.sha256}`);
+    if (
+      !blob ||
+      blob.byteLength !== metadata.size ||
+      sha256Bytes(blob) !== metadata.sha256
+    )
+      throw new CompanionProtocolError("CORRUPT", 422, "备份素材原件不完整。");
+  }
+  for (const assetId of snapshotAssetIds(snapshot)) {
+    if (!records.has(assetId))
+      throw new CompanionProtocolError(
+        "CORRUPT",
+        422,
+        "备份缺少项目引用的素材索引。",
+      );
+  }
+}
+
+type OriginalFileSnapshot =
+  { kind: "missing" } | { kind: "file"; bytes: Uint8Array } | { kind: "other" };
+
+function captureOriginalFile(
+  originals: Map<string, OriginalFileSnapshot>,
+  path: string,
+): void {
+  if (!existsSync(path)) {
+    originals.set(path, { kind: "missing" });
+    return;
+  }
+  try {
+    const stat = lstatSync(path);
+    originals.set(
+      path,
+      stat.isFile()
+        ? { kind: "file", bytes: asBytes(readFileSync(path)) }
+        : { kind: "other" },
+    );
+  } catch {
+    originals.set(path, { kind: "other" });
+  }
 }
 
 export class CompanionStore {
@@ -449,31 +583,10 @@ export class CompanionStore {
           generatedAt:
             metadata.provenance?.generatedAt ?? new Date().toISOString(),
         };
-        const origins = [
-          ...(old.origins ?? [
-            {
-              sourceJobId: old.sourceJobId,
-              promptHash: old.promptHash,
-              parentId: old.parentId,
-              provenance: oldProvenance,
-            },
-          ]),
-          {
-            sourceJobId: metadata.sourceJobId,
-            promptHash: metadata.promptHash,
-            parentId: metadata.parentId,
-            provenance: newProvenance,
-          },
-        ]
-          .filter(
-            (entry, index, all) =>
-              all.findIndex(
-                (candidate) =>
-                  candidate.sourceJobId === entry.sourceJobId &&
-                  candidate.promptHash === entry.promptHash,
-              ) === index,
-          )
-          .slice(-200);
+        const origins = mergeAssetOrigins(
+          { ...old, provenance: oldProvenance },
+          { ...metadata, provenance: newProvenance },
+        );
         merged = {
           ...metadata,
           ...canonical,
@@ -719,197 +832,98 @@ export class CompanionStore {
       });
   }
 
+  private stageAndCaptureRestoreFiles(
+    restoreStage: string,
+    entries: ReadonlyMap<string, Uint8Array>,
+  ): Map<string, OriginalFileSnapshot> {
+    const originals = new Map<string, OriginalFileSnapshot>();
+    mkdirSync(restoreStage, { recursive: true });
+    for (const [path, bytes] of entries) {
+      const stagedPath = join(restoreStage, path);
+      this.writeAtomic(stagedPath, bytes);
+      const staged = asBytes(readFileSync(stagedPath));
+      if (
+        staged.byteLength !== bytes.byteLength ||
+        sha256Bytes(staged) !== sha256Bytes(bytes)
+      )
+        throw new CompanionProtocolError("IO", 500, "备份暂存校验失败。");
+      captureOriginalFile(originals, join(this.root, path));
+    }
+    captureOriginalFile(originals, this.snapshotPath);
+    captureOriginalFile(originals, this.backupPath);
+    return originals;
+  }
+
+  private rollbackRestoreOriginals(
+    originals: ReadonlyMap<string, OriginalFileSnapshot>,
+  ): void {
+    this.assertStandaloneRoot();
+    for (const [path, original] of originals) {
+      if (original.kind === "missing")
+        rmSync(path, { recursive: true, force: true });
+      else if (original.kind === "file") this.writeAtomic(path, original.bytes);
+    }
+  }
+
+  private validateRestoreSnapshotCompatibility(
+    snapshot: CreationSnapshot,
+  ): CreationSnapshot | null | undefined {
+    const current = this.readSnapshotFile(this.snapshotPath);
+    const backup = this.readSnapshotFile(this.backupPath);
+    if (
+      [current, backup].some(
+        (stored) => stored && stored.version > snapshot.version,
+      )
+    )
+      throw new CompanionProtocolError(
+        "SNAPSHOT_UNSUPPORTED",
+        409,
+        "不能恢复旧格式覆盖新格式主文件或备份，原件已保留。",
+      );
+    if (current?.version === 2 && snapshot.version === 3)
+      throw new CompanionProtocolError(
+        "SNAPSHOT_UNSUPPORTED",
+        409,
+        "旧本机服务仓库需要独立迁移，原件已保留。",
+      );
+    return current;
+  }
+
+  private writeRestoredEntries(
+    entries: ReadonlyMap<string, Uint8Array>,
+    snapshot: CreationSnapshot,
+  ): void {
+    for (const [path, bytes] of entries) {
+      if (path === "projects/creation-v2.json") continue;
+      this.writeAtomic(join(this.root, path), bytes);
+    }
+    this.writeAtomic(this.snapshotPath, canonicalJson(snapshot));
+  }
+
   restoreBackup(backupId: string): { id: string; revision: number } {
     this.assertStandaloneRoot();
-    if (!safeBackupId(backupId))
-      throw new CompanionProtocolError(
-        "INVALID_REQUEST",
-        400,
-        "备份标识无效。",
-      );
-    const directory = resolve(this.backupsRoot, backupId);
-    if (!directory.startsWith(`${this.backupsRoot}${sep}`))
-      throw new CompanionProtocolError(
-        "INVALID_REQUEST",
-        400,
-        "备份路径无效。",
-      );
-    const manifestPath = join(directory, "manifest.json");
-    if (!existsSync(manifestPath))
-      throw new CompanionProtocolError("NOT_FOUND", 404, "备份不存在。");
-    let manifest: CompanionBackupManifest;
-    try {
-      manifest = backupManifestSchema.parse(
-        JSON.parse(readFileSync(manifestPath, "utf8")),
-      );
-    } catch {
-      throw new CompanionProtocolError("CORRUPT", 422, "备份清单无效。");
-    }
-    if (!verifyManifestHash(manifest))
-      throw new CompanionProtocolError("CORRUPT", 422, "备份清单校验和无效。");
-    const entries = new Map<string, Uint8Array>();
-    for (const entry of manifest.files) {
-      if (entries.has(entry.path))
-        throw new CompanionProtocolError(
-          "CORRUPT",
-          422,
-          "备份清单包含重复文件。",
-        );
-      if (!isRestorableBackupPath(entry.path))
-        throw new CompanionProtocolError(
-          "CORRUPT",
-          422,
-          "备份文件路径不受支持。",
-        );
-      const path = resolve(directory, entry.path);
-      if (!path.startsWith(`${directory}${sep}`) || !existsSync(path))
-        throw new CompanionProtocolError("CORRUPT", 422, "备份文件缺失。");
-      const bytes = asBytes(readFileSync(path));
-      if (
-        bytes.byteLength !== entry.size ||
-        sha256Bytes(bytes) !== entry.sha256
-      )
-        throw new CompanionProtocolError("CORRUPT", 422, "备份文件校验失败。");
-      entries.set(entry.path, bytes);
-    }
-    const snapshotBytes = entries.get("projects/creation-v2.json");
-    if (!snapshotBytes)
-      throw new CompanionProtocolError("CORRUPT", 422, "备份缺少项目快照。");
-    let snapshot: CreationSnapshot;
-    try {
-      const value = JSON.parse(new TextDecoder().decode(snapshotBytes));
-      assertCanonicalWireSnapshot(value);
-      const decoded = decodeSnapshot(value);
-      snapshot =
-        decoded.version === 3
-          ? serializeCreationSnapshot(value as CreationSnapshot)
-          : decoded;
-    } catch (error) {
-      if (error instanceof CompanionProtocolError) throw error;
-      throw new CompanionProtocolError("CORRUPT", 422, "备份项目快照无效。");
-    }
-    const records = new Map<string, CompanionAssetMetadata>();
-    for (const [path, bytes] of entries) {
-      const record = /^assets\/records\/(asset-[a-f0-9]{24})\.json$/i.exec(
-        path,
-      );
-      if (!record) continue;
-      try {
-        const assetId = record[1].toLowerCase();
-        const metadata = assetMetadataSchema.parse(
-          JSON.parse(new TextDecoder().decode(bytes)),
-        );
-        if (metadata.assetId !== assetId)
-          throw new Error("record asset id mismatch");
-        if (records.has(assetId)) throw new Error("duplicate asset record");
-        records.set(assetId, metadata);
-      } catch {
-        throw new CompanionProtocolError("CORRUPT", 422, "备份素材索引无效。");
-      }
-    }
-    for (const metadata of records.values()) {
-      const blob = entries.get(`assets/blobs/${metadata.sha256}`);
-      if (
-        !blob ||
-        blob.byteLength !== metadata.size ||
-        sha256Bytes(blob) !== metadata.sha256
-      )
-        throw new CompanionProtocolError(
-          "CORRUPT",
-          422,
-          "备份素材原件不完整。",
-        );
-    }
-    for (const assetId of snapshotAssetIds(snapshot)) {
-      if (!records.has(assetId))
-        throw new CompanionProtocolError(
-          "CORRUPT",
-          422,
-          "备份缺少项目引用的素材索引。",
-        );
-    }
+    const { directory, manifest } = readVerifiedBackupManifest(
+      this.backupsRoot,
+      backupId,
+    );
+    const entries = loadAndVerifyBackupEntries(directory, manifest);
+    const snapshot = decodeBackupSnapshot(entries);
+    verifyBackupAssetsAndReferences(entries, snapshot);
 
     const restoreStage = join(this.stagingRoot, `restore-${randomUUID()}`);
-    const originals = new Map<
-      string,
-      | { kind: "missing" }
-      | { kind: "file"; bytes: Uint8Array }
-      | { kind: "other" }
-    >();
-    const capture = (path: string): void => {
-      if (!existsSync(path)) {
-        originals.set(path, { kind: "missing" });
-        return;
-      }
-      try {
-        const stat = lstatSync(path);
-        originals.set(
-          path,
-          stat.isFile()
-            ? { kind: "file", bytes: asBytes(readFileSync(path)) }
-            : { kind: "other" },
-        );
-      } catch {
-        originals.set(path, { kind: "other" });
-      }
-    };
-    const rollback = (): void => {
-      this.assertStandaloneRoot();
-      for (const [path, original] of originals) {
-        if (original.kind === "missing")
-          rmSync(path, { recursive: true, force: true });
-        else if (original.kind === "file")
-          this.writeAtomic(path, original.bytes);
-      }
-    };
-
     try {
-      mkdirSync(restoreStage, { recursive: true });
-      for (const [path, bytes] of entries) {
-        const stagedPath = join(restoreStage, path);
-        this.writeAtomic(stagedPath, bytes);
-        const staged = asBytes(readFileSync(stagedPath));
-        if (
-          staged.byteLength !== bytes.byteLength ||
-          sha256Bytes(staged) !== sha256Bytes(bytes)
-        )
-          throw new CompanionProtocolError("IO", 500, "备份暂存校验失败。");
-        capture(join(this.root, path));
-      }
-      capture(this.snapshotPath);
-      capture(this.backupPath);
-      const current = this.readSnapshotFile(this.snapshotPath);
-      const backup = this.readSnapshotFile(this.backupPath);
-      if (
-        [current, backup].some(
-          (stored) => stored && stored.version > snapshot.version,
-        )
-      )
-        throw new CompanionProtocolError(
-          "SNAPSHOT_UNSUPPORTED",
-          409,
-          "不能恢复旧格式覆盖新格式主文件或备份，原件已保留。",
-        );
-      if (current?.version === 2 && snapshot.version === 3)
-        throw new CompanionProtocolError(
-          "SNAPSHOT_UNSUPPORTED",
-          409,
-          "旧本机服务仓库需要独立迁移，原件已保留。",
-        );
+      const originals = this.stageAndCaptureRestoreFiles(restoreStage, entries);
+      const current = this.validateRestoreSnapshotCompatibility(snapshot);
       if (current)
         this.writeAtomic(
           this.backupPath,
           asBytes(readFileSync(this.snapshotPath)),
         );
       try {
-        for (const [path, bytes] of entries) {
-          if (path === "projects/creation-v2.json") continue;
-          this.writeAtomic(join(this.root, path), bytes);
-        }
-        this.writeAtomic(this.snapshotPath, canonicalJson(snapshot));
+        this.writeRestoredEntries(entries, snapshot);
       } catch (error) {
         try {
-          rollback();
+          this.rollbackRestoreOriginals(originals);
         } catch {
           // Preserve the original failure while leaving diagnostics in the log.
         }
@@ -957,3 +971,9 @@ export class CompanionStore {
     }
   }
 }
+
+const {
+  decode: decodeSnapshot,
+  parse: parseSnapshot,
+  serialize: serializeCreationSnapshot,
+} = creationSnapshotCodec;

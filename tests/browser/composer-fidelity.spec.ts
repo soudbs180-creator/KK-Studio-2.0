@@ -73,8 +73,8 @@ test("菜单 Escape 先收起菜单，再次 Escape 收起编辑器并保留草�
 });
 
 test("平板会话分栏时画布控件左移且标题和输入控件尺寸稳定", async ({ page }) => {
-  await openWorkspace(page);
   await page.setViewportSize({ width: 1071, height: 698 });
+  await openWorkspace(page);
   const reopenBox = await page
     .getByRole("button", { name: "打开对话", exact: true })
     .boundingBox();
@@ -111,8 +111,9 @@ test("平板会话分栏时画布控件左移且标题和输入控件尺寸稳�
   expect(split.navigation.right).toBeLessThanOrEqual(split.panel.left - 8);
   expect(split.toolbar.right).toBeLessThanOrEqual(split.panel.left - 8);
   expect(split.canvas.right).toBeCloseTo(split.panel.left, 0);
-  expect(split.sidebarToggle.height).toBe(44);
-  expect(split.sidebarToggle.top).toBe(split.navigation.top);
+  expect(split.sidebarToggle.height).toBe(32);
+  expect(split.sidebarToggle.top).toBe(82);
+  expect(split.navigation.top).toBe(split.canvas.top + 32);
   const headerButtons = await page
     .locator(".conversation-header-actions > button")
     .evaluateAll((buttons) =>
@@ -122,19 +123,29 @@ test("平板会话分栏时画布控件左移且标题和输入控件尺寸稳�
       }),
     );
   expect(headerButtons).toEqual([
-    { width: 44, height: 44 },
-    { width: 44, height: 44 },
+    { width: 32, height: 32 },
+    { width: 32, height: 32 },
   ]);
   const panelBox = await page.locator(".conversation-panel").boundingBox();
   const closeBox = await page
     .getByRole("button", { name: "收起对话", exact: true })
     .boundingBox();
-  expect(closeBox!.x).toBeCloseTo(reopenBox!.x, 1);
-  expect(closeBox!.y).toBeCloseTo(reopenBox!.y, 1);
+  const headerRow = (await page
+    .locator(".conversation-header-row")
+    .boundingBox())!;
+  expect(closeBox!.x + closeBox!.width).toBeCloseTo(
+    headerRow.x + headerRow.width,
+    1,
+  );
+  expect(closeBox!.y + closeBox!.height / 2).toBeCloseTo(
+    headerRow.y + headerRow.height / 2,
+    1,
+  );
+  expect(reopenBox!.width).toBe(44);
   expect(closeBox!.x + closeBox!.width).toBeLessThan(
     panelBox!.x + panelBox!.width,
   );
-  const composer = page.locator(".chat-composer > div");
+  const composer = page.locator(".chat-composer > .composer-toolbar");
   const composerBox = await composer.boundingBox();
   const controls = await composer.locator(":scope > *").evaluateAll((items) =>
     items.map((item) => {
@@ -150,7 +161,7 @@ test("平板会话分栏时画布控件左移且标题和输入控件尺寸稳�
   );
   await expect(
     page.getByRole("button", { name: "模型", exact: true }),
-  ).toHaveCSS("height", "32px");
+  ).toHaveCSS("height", "44px");
   const headerIcons = await page
     .locator(
       ".conversation-header-actions > button img, .conversation-header-actions > button svg",
@@ -162,12 +173,12 @@ test("平板会话分栏时画布控件左移且标题和输入控件尺寸稳�
       }),
     );
   expect(headerIcons).toEqual([
-    { width: 20, height: 20 },
-    { width: 20, height: 20 },
+    { width: 16, height: 16 },
+    { width: 16, height: 16 },
   ]);
   const composerIcons = await page
     .locator(
-      ".chat-composer .composer-toolbar > button img:not(.composer-plus-arm), .chat-composer .composer-toolbar > button svg, .chat-composer .chat-model-picker-wrap > button img, .chat-composer .chat-resource-picker > button img, .chat-composer .composer-trailing-actions > button img:not(.composer-plus-arm), .chat-composer .composer-trailing-actions > button svg",
+      ".chat-composer .composer-toolbar > button :is(img:not(.composer-plus-arm), svg), .chat-composer .chat-model-picker-wrap > button :is(img, svg), .chat-composer .chat-resource-picker > button :is(img, svg), .chat-composer .composer-trailing-actions > button :is(img:not(.composer-plus-arm), svg)",
     )
     .evaluateAll((icons) =>
       icons.map((icon) => {
@@ -176,11 +187,11 @@ test("平板会话分栏时画布控件左移且标题和输入控件尺寸稳�
       }),
     );
   expect(composerIcons).toEqual([
-    { width: 20, height: 20 },
+    { width: 28, height: 28 },
     { width: 16, height: 16 },
     { width: 16, height: 16 },
-    { width: 14, height: 14 },
-    { width: 20, height: 20 },
+    { width: 16, height: 16 },
+    { width: 28, height: 28 },
   ]);
 });
 
@@ -191,6 +202,12 @@ test("桌面会话入口使用关闭态图标并从右侧滑入，不挤动地�
   await page.getByRole("button", { name: "收起对话", exact: true }).click();
   await expect(page.getByRole("group", { name: "画布导航" })).toBeVisible();
 
+  await expect(page.locator(".conversation-panel")).toBeHidden();
+  await expect
+    .poll(
+      async () => (await page.locator(".canvas-top-right").boundingBox())!.x,
+    )
+    .toBe(1559);
   const before = await page.evaluate(() => {
     const rect = (selector: string) => {
       const element = document.querySelector<HTMLElement>(selector);
@@ -199,7 +216,7 @@ test("桌面会话入口使用关闭态图标并从右侧滑入，不挤动地�
         ? { x: box.x, y: box.y, width: box.width, height: box.height }
         : null;
     };
-    const image = document.querySelector<HTMLImageElement>(".chat-reopen img");
+    const image = document.querySelector<HTMLElement>(".chat-reopen .ui-icon");
     const imageBox = image?.getBoundingClientRect();
     return {
       navigation: rect(".canvas-top-right"),
@@ -219,19 +236,23 @@ test("桌面会话入口使用关闭态图标并从右侧滑入，不挤动地�
         document.querySelector<HTMLElement>(".workspace-content")?.scrollLeft,
     };
   });
-  expect(before.navigation!.x).toBeCloseTo(1562, 1);
-  expect(before.navigation!.y).toBe(72);
+  expect(before.navigation!.x).toBeCloseTo(1559, 1);
+  expect(before.navigation!.y).toBe(84);
   expect(before.map).not.toBeNull();
-  expect(before.map!.x - before.navigation!.x).toBeCloseTo(206.61, 1);
-  expect(before.toolbar).toMatchObject({ x: 719, y: 998 });
-  expect(before.reopen).toEqual({ x: 1859, y: 79, width: 18, height: 18 });
+  expect(before.map!.width).toBe(76);
+  expect(before.map!.x + before.map!.width).toBeCloseTo(
+    before.navigation!.x + before.navigation!.width - 2,
+    1,
+  );
+  expect(before.toolbar).toMatchObject({ x: 962, y: 1016 });
+  expect(before.reopen).toEqual({ x: 1848, y: 80, width: 44, height: 44 });
   expect(before.icon).toEqual({
-    x: 1857.25,
-    y: 77.25,
-    width: 21.5,
-    height: 21.5,
+    x: 1856,
+    y: 88,
+    width: 28,
+    height: 28,
   });
-  expect(before.source).toBe("/design/figma/chat-close.svg");
+  expect(before.icon).not.toBeNull();
   expect(before.scrollLeft).toBe(0);
 
   // Freeze the actual CSS animation when React reveals the panel. Sampling
@@ -261,7 +282,7 @@ test("桌面会话入口使用关闭态图标并从右侧滑入，不挤动地�
     });
   });
   await page.getByRole("button", { name: "打开对话", exact: true }).click();
-  const samples = await page.evaluate(() => {
+  const samples = await page.evaluate(async () => {
     const panel = document.querySelector<HTMLElement>(".conversation-panel")!;
     const toolbar = document.querySelector<HTMLElement>(".canvas-toolbar")!;
     const animation = panel
@@ -277,15 +298,19 @@ test("桌面会话入口使用关闭态图标并从右侧滑入，不挤动地�
     const duration = animation.effect?.getComputedTiming().duration;
     if (typeof duration !== "number" || duration <= 0)
       throw new Error("Expected a nonzero animation duration");
-    const result = [0, 0.25, 0.5, 0.75, 1].map((fraction) => {
+    const result = [];
+    for (const fraction of [0, 0.25, 0.5, 0.75, 1]) {
       animation.currentTime = duration * fraction;
+      await new Promise<void>((resolve) =>
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+      );
       const panelBox = panel.getBoundingClientRect();
-      return {
+      result.push({
         x: panelBox.x,
         y: panelBox.y,
         toolbarX: toolbar.getBoundingClientRect().x,
-      };
-    });
+      });
+    }
     animation.finish();
     return result;
   });
@@ -293,9 +318,9 @@ test("桌面会话入口使用关闭态图标并从右侧滑入，不挤动地�
   expect(Math.max(...samples.map((sample) => sample.x))).toBeGreaterThan(
     Math.min(...samples.map((sample) => sample.x)) + 100,
   );
-  expect(samples.at(-1)!.x).toBeCloseTo(1430, 0);
-  expect(samples.every((sample) => Math.abs(sample.y - 61) < 1)).toBe(true);
-  expect(samples.every((sample) => Math.abs(sample.toolbarX - 719) < 1)).toBe(
+  expect(samples.at(-1)!.x).toBeCloseTo(1432, 0);
+  expect(samples.every((sample) => Math.abs(sample.y - 67) < 1)).toBe(true);
+  expect(samples.every((sample) => Math.abs(sample.toolbarX - 718) < 1)).toBe(
     true,
   );
   await expect(page.locator(".canvas-top-right")).toBeVisible();
@@ -303,15 +328,18 @@ test("桌面会话入口使用关闭态图标并从右侧滑入，不挤动地�
   const openMap = await page.locator(".canvas-map-trigger").boundingBox();
   const openPanel = await page.locator(".conversation-panel").boundingBox();
   expect(openNavigation).toMatchObject({
-    x: 1138.015625,
-    y: 72,
-    width: 280.984375,
-    height: 31.09375,
+    x: 1123,
+    y: 84,
+    width: 281,
+    height: 36,
   });
   expect(openNavigation!.x + openNavigation!.width).toBeLessThanOrEqual(
     openPanel!.x - 10,
   );
-  expect(openMap!.x).toBeCloseTo(1344.625, 0);
+  expect(openMap!.x + openMap!.width).toBeCloseTo(
+    openNavigation!.x + openNavigation!.width - 2,
+    1,
+  );
   await expect(page.locator(".conversation-panel")).toHaveCSS(
     "animation-name",
     "conversation-panel-enter",

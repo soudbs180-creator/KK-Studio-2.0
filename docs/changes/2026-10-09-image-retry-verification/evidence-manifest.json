@@ -1,0 +1,218 @@
+{
+  "version": 1,
+  "taskId": "TASK-ORG-6",
+  "classification": "E2-externalized-historical-evidence",
+  "packagePath": "docs/changes/2026-10-09-image-retry-verification",
+  "entries": [
+    {
+      "sourcePath": "docs/changes/2026-10-09-image-retry-verification/evidence/development/plugins.png.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "60b09057c5845be984cb5547a2ea9224562e562f",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-image-retry-verification/evidence/development/plugins.png.gz",
+      "bytes": 123998,
+      "sha256": "dc86f314702153b1cda82b9d8fc2e6a7e16236882e1cb22031a595a131277c24",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-image-retry-verification/evidence/development/receipt.json.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "c4a3e88a05ae082df409cec7d5f6207be31699df",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-image-retry-verification/evidence/development/receipt.json.gz",
+      "bytes": 693,
+      "sha256": "84a228889b583c97aea78d3f2d42b9674a12fc15a36050bd3080939dd8bf3356",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-image-retry-verification/evidence/final-doc-lint.exit.txt.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "eb0c7f8c9fb0d5963bad5f7807bc0d9f4f515b63",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-image-retry-verification/evidence/final-doc-lint.exit.txt.gz",
+      "bytes": 22,
+      "sha256": "0a9f997d2770133f4b2e974708f7a19036a1bedaecbb1ca99cd88cf899e8a463",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-image-retry-verification/evidence/final-doc-lint.txt.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "96fa86d11031c18cea141d0141c10df3bb39488a",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-image-retry-verification/evidence/final-doc-lint.txt.gz",
+      "bytes": 300,
+      "sha256": "114e001b73e2aee6586280c66c41e8b2871775332f7e1d8fe37d7df6a2f3d818",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-image-retry-verification/evidence/originals/browser-results-43fc691.json.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "003b149d68d28d6333e73a12201ff37f9736cccc",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-image-retry-verification/evidence/originals/browser-results-43fc691.json.gz",
+      "bytes": 50225,
+      "sha256": "718e5e33455dbdd6bbd169ea47eb326c1b6778e6196b6347d1efd516fadc5c98",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-image-retry-verification/evidence/originals/browser-results-green14.json.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "f63e33b3c971fcf44a253daeeb1722e6cf0835de",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-image-retry-verification/evidence/originals/browser-results-green14.json.gz",
+      "bytes": 2191,
+      "sha256": "e562d397d1bb1506553a68c8ae28583bc92c4a6621b27d165f251ede2da111a2",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-image-retry-verification/evidence/originals/build-baseline.txt.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "0353500931066ba7ec0a434cbd4e680f8d6e4e33",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-image-retry-verification/evidence/originals/build-baseline.txt.gz",
+      "bytes": 1263,
+      "sha256": "70c718a89acc86bf165b0aafffb12f1fe4d0dbb37355746f1fe8fa78868ab4a1",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-image-retry-verification/evidence/originals/npm-ci.exit.txt.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "8ce2703e763195e26135c42867f9c1a89cd9bcd1",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-image-retry-verification/evidence/originals/npm-ci.exit.txt.gz",
+      "bytes": 23,
+      "sha256": "7f636460b48b02e48ffda30b26e6cf24cebee6b983bfd77e79a2f7205a71497f",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-image-retry-verification/evidence/originals/npm-ci.txt.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "b5edfe60fa319b1cc72f2dc0486d4a0fed646027",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-image-retry-verification/evidence/originals/npm-ci.txt.gz",
+      "bytes": 602,
+      "sha256": "93885cad3d3ec327c8baa1122f710e2b8e002269f64a34d015e95311d586ea73",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-image-retry-verification/evidence/originals/retry-green.exit.txt.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "8ce2703e763195e26135c42867f9c1a89cd9bcd1",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-image-retry-verification/evidence/originals/retry-green.exit.txt.gz",
+      "bytes": 23,
+      "sha256": "7f636460b48b02e48ffda30b26e6cf24cebee6b983bfd77e79a2f7205a71497f",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-image-retry-verification/evidence/originals/retry-green.txt.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "cdcdb0666c3614ae85a9aba51b2a19957a0d1fdb",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-image-retry-verification/evidence/originals/retry-green.txt.gz",
+      "bytes": 895,
+      "sha256": "f58e585a42ae55ad772918cdb2360de0c79756d269bd48b6eec186db9eade04d",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-image-retry-verification/evidence/originals/retry-red.exit.txt.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "8ce2703e763195e26135c42867f9c1a89cd9bcd1",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-image-retry-verification/evidence/originals/retry-red.exit.txt.gz",
+      "bytes": 23,
+      "sha256": "7f636460b48b02e48ffda30b26e6cf24cebee6b983bfd77e79a2f7205a71497f",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-image-retry-verification/evidence/originals/retry-red.txt.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "22e2a2e93cc52b02fe33cae0e8513794640fee58",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-image-retry-verification/evidence/originals/retry-red.txt.gz",
+      "bytes": 310,
+      "sha256": "602167c69ec53ffd3828d43f5d4d0ff05ed9f2095f058be7f56704c9d52741c9",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-image-retry-verification/evidence/originals/reviewer-static-43fc691.json.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "ba0b498e7957e3b00ee6a8f582d9a66e0dcd9b21",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-image-retry-verification/evidence/originals/reviewer-static-43fc691.json.gz",
+      "bytes": 717,
+      "sha256": "e3c7d0b5b4a287c785c88098fa0da06bc99744f21b57c699a869a9e2b867bb0b",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-image-retry-verification/evidence/originals/reviewer-unit-43fc691.txt.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "7f70225feb50bb53079b81fa8d860c49d7d81128",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-image-retry-verification/evidence/originals/reviewer-unit-43fc691.txt.gz",
+      "bytes": 1767,
+      "sha256": "a1f568d8899e737833c065ca1bd6f2882cac5ad8de0ad66031d910e97e0c9c2f",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-image-retry-verification/evidence/originals/verify-43fc691.exit.txt.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "8ce2703e763195e26135c42867f9c1a89cd9bcd1",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-image-retry-verification/evidence/originals/verify-43fc691.exit.txt.gz",
+      "bytes": 23,
+      "sha256": "7f636460b48b02e48ffda30b26e6cf24cebee6b983bfd77e79a2f7205a71497f",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-image-retry-verification/evidence/originals/verify-43fc691.txt.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "8bfaa8d09dc1d5783403ce81c1b571c67dce708a",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-image-retry-verification/evidence/originals/verify-43fc691.txt.gz",
+      "bytes": 51486,
+      "sha256": "fbe05cbe7b0824b738d98cd252ddbc65cd8bed71edfb398c49d1cb390f371def",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-image-retry-verification/evidence/review-source-43fc691-line-erratum.md.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "4cbd47591c8812a434f0000cfe7f55b5d77b974f",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-image-retry-verification/evidence/review-source-43fc691-line-erratum.md.gz",
+      "bytes": 403,
+      "sha256": "ceb29ba8119cb7fe7bc9d73e34bd89fbfc3758773a130f8a3ccacc7f01a67cb5",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-image-retry-verification/evidence/source-review-43fc691.md.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "1ac59dda5cd9bafc8c2b4c5d17a184a91d56d701",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-image-retry-verification/evidence/source-review-43fc691.md.gz",
+      "bytes": 5050,
+      "sha256": "4dbf31ca602058f9b63094f127a808d3861b29b031d1cb9d40d19bf144cd1109",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-09-image-retry-verification/evidence/upstream/main-6a97f45-failed-verify.txt.gz",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "7972e8d2f6206371fb5d013d793e828355d2d225",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-09-image-retry-verification/evidence/upstream/main-6a97f45-failed-verify.txt.gz",
+      "bytes": 73803,
+      "sha256": "4eee11768c06c5fc0d4dc4d50669333e754c98b86523ba81e9a8f85c9a699601",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    }
+  ],
+  "scope": "Historical E2 files externalized by validated batches; E1 summaries, JSON, key screenshots and active inputs retained.",
+  "containerResolution": "Resolve containerRelativePath from the workspace container containing the canonical checkout and output.",
+  "recovery": "Verify with scripts/governance/check-evidence-manifest.mjs <manifest> <container>; restore only to a new empty directory. Original Git sourceCommit/sourcePath remains recoverable.",
+  "batches": [
+    {
+      "taskId": "TASK-ORG-6",
+      "date": "2026-10-30",
+      "candidateBase": "be730617ace5013295b85a22133259b32ad6ffec"
+    }
+  ]
+}

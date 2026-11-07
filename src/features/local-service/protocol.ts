@@ -227,7 +227,7 @@ export function isAllowedCompanionOrigin(
 }
 
 const secretValue =
-  /Bearer\s+\S+|sk-[A-Za-z0-9_-]{16,}|AIza[A-Za-z0-9_-]{20,}|https?:\/\/[^\s/@]+:[^\s/@]+@|[?&](?:key|api_key|access_token|token|secret)=/i;
+  /Bearer\s+\S+|(?<![A-Za-z0-9_-])sk-[A-Za-z0-9_-]{16,}|AIza[A-Za-z0-9_-]{20,}|https?:\/\/[^\s/@]+:[^\s/@]+@|[?&](?:key|api_key|access_token|token|secret)=/i;
 
 export function rejectCompanionSecrets(value: unknown): void {
   const walk = (item: unknown, depth: number): void => {

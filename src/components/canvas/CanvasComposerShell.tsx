@@ -32,6 +32,37 @@ const CanvasComposerShell = forwardRef<
     phone.addEventListener("change", update);
     return () => phone.removeEventListener("change", update);
   }, []);
+  useLayoutEffect(() => {
+    const editor = localRef.current;
+    const hud = screenHost?.querySelector<HTMLElement>(".canvas-hud");
+    if (!editor || !screenHost || !hud) return;
+    const update = () => {
+      const controls = [
+        ...hud.querySelectorAll<HTMLElement>(
+          ".canvas-hud-left > *, .canvas-top-right > button, .canvas-navigation-tools > button",
+        ),
+      ].filter((control) => control.getClientRects().length);
+      const top = Math.max(
+        hud.getBoundingClientRect().bottom,
+        ...controls.map((control) => control.getBoundingClientRect().bottom),
+      );
+      const bottom = innerHeight - parseFloat(getComputedStyle(editor).bottom);
+      editor.style.setProperty(
+        "--canvas-screen-available-height",
+        `${Math.max(0, bottom - top - 8)}px`,
+      );
+    };
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(hud);
+    observer.observe(screenHost);
+    window.addEventListener("resize", update);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", update);
+      editor.style.removeProperty("--canvas-screen-available-height");
+    };
+  }, [screenHost]);
   const shell = (
     <div
       {...props}

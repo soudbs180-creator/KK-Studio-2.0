@@ -1,5 +1,4 @@
 import type { ProviderConnection } from "../../domain/providerConnections.ts";
-import { generateImages } from "../../features/creation/imageGeneration.ts";
 import {
   type CostEstimate,
   type GenerationProviderAdapter,
@@ -7,6 +6,18 @@ import {
   type ProviderResult,
   type SubmittedGenerationJob,
 } from "./providerAdapter.ts";
+
+export type OpenAiImageGenerator = (
+  request: Pick<
+    GenerationRequest,
+    "prompt" | "model" | "attachments" | "signal" | "idempotencyKey"
+  > & {
+    providerBaseUrl?: string;
+    providerConnectionId: string;
+    credentialRef?: string;
+    count: number;
+  },
+) => Promise<{ sources: string[] }>;
 
 /**
  * Official OpenAI Images compatible adapter.
@@ -20,9 +31,14 @@ export class OpenAiImageAdapter implements GenerationProviderAdapter {
   readonly connection: ProviderConnection;
   private readonly results = new Map<string, string[]>();
   private readonly cancelled = new Set<string>();
+  private readonly generateImages: OpenAiImageGenerator;
 
-  constructor(connection: ProviderConnection) {
+  constructor(
+    connection: ProviderConnection,
+    generateImages: OpenAiImageGenerator,
+  ) {
     this.connection = connection;
+    this.generateImages = generateImages;
   }
 
   async discoverCapabilities(): Promise<ProviderConnection["capabilities"]> {
@@ -43,7 +59,7 @@ export class OpenAiImageAdapter implements GenerationProviderAdapter {
     const providerJobId = `openai-${request.idempotencyKey}`;
     if (this.cancelled.has(providerJobId))
       return { providerJobId, async: false, status: "failed" };
-    const values = await generateImages({
+    const values = await this.generateImages({
       prompt: request.prompt,
       model: request.model,
       attachments: request.attachments,

@@ -1,11 +1,11 @@
 import ComposerExtensionsMenu from "./ComposerExtensionsMenu";
 import UiIcon from "./UiIcon";
-import type { ModelSelection } from "../features/models/modelSelection";
+import type { ModelSelection } from "../features/models/index.ts";
 import type { RefObject, ReactNode } from "react";
 import ConversationModelPicker from "./ConversationModelPicker";
-import type { CreationDraft } from "../features/creation/model";
-import VoiceInputButton from "./VoiceInputButton";
-import type { SkillRecord } from "../features/skills/skillRegistry";
+import type { CreationDraft } from "../features/creation/index.ts";
+import { VoiceInputButton } from "../features/speech/index.ts";
+import type { SkillRecord } from "../features/skills/index.ts";
 import AgentActionButton, { type AgentActionState } from "./AgentActionButton";
 
 export default function ConversationActions({
@@ -146,7 +146,7 @@ export default function ConversationActions({
           aria-expanded={skillMenuOpen}
           onClick={onToggleSkill}
         >
-          <img src="/design/figma/composer-puzzle.svg" alt="" />
+          <UiIcon name="puzzle" size={16} />
           <span>扩展</span>
         </button>
         {skillMenuOpen && (
@@ -171,13 +171,7 @@ export default function ConversationActions({
             onClick={onToggleMode}
           >
             {approvalMode === "auto" ? "自动" : "询问"}
-            <img
-              className="chat-mode-chevron"
-              src="/design/figma/composer-chevron.svg"
-              width="10"
-              height="5"
-              alt=""
-            />
+            <UiIcon name="chevron-down" size={12} />
           </button>
           {modeMenuOpen && (
             <div className="chat-mode-popover" role="menu">
@@ -212,6 +206,8 @@ export default function ConversationActions({
           enabled={voiceEnabled}
           sessionKey={voiceSessionKey}
           maxLength={7500}
+          idleIcon={<UiIcon name="mic" size={16} />}
+          activeIcon={<UiIcon name="mic-off" size={16} />}
         />
         <span
           className="chat-footer-separator chat-footer-separator-right"

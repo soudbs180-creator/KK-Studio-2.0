@@ -1,0 +1,232 @@
+{
+  "claims": [
+    {
+      "agent": "Codex",
+      "task": "UI-004",
+      "taskId": "UI-004",
+      "track": "UI",
+      "feature": "canvas-task",
+      "status": "PARTIAL",
+      "progress": "统一任务列表(437:64052)与详情(1164:16172)关闭图标16px，三宽度断言全部PASS；native 2.1.66官方重建完成；等待逐页同状态MCP对照",
+      "files": [
+        "src/components/canvas/TaskDetail.tsx",
+        "src/components/canvas/TaskPanelPopover.tsx",
+        "src/styles/conversation-panel.css",
+        "src/styles/composer.css"
+      ],
+      "worktree": "D:/kk-studio/KK-Studio-2.0",
+      "startedAt": "2026-11-06T18:15:00.000Z",
+      "updatedAt": "2026-11-06T11:04:54.001Z",
+      "breakpoint": {
+        "reason": "PARTIAL: 逐页同状态视觉核对中，Figma缺陷先修源再同步，补全量verify与正式独审",
+        "pending": [
+          "逐页同状态视觉核对",
+          "补全量verify与Native窗口测试",
+          "正式SHA独审"
+        ],
+        "testCmd": "npm run rules:check && npm run tokens:check && npm run ui:check"
+      }
+    },
+    {
+      "agent": "Cursor",
+      "task": "TASK-TASKSTATE-002",
+      "taskId": "TASK-TASKSTATE-002",
+      "track": "LOGIC",
+      "feature": "native-task-cost",
+      "status": "READY_FOR_PICKUP",
+      "progress": "图片响应里的显式 costReceipt 会进入同一套任务归档；token 用量仍不是价格。没有发起真实扣费。",
+      "files": [
+        "src/features/creation/imageGeneration.ts",
+        "src/features/creation/useTaskExecution.ts",
+        "tests/unit/providerIdentityReceiptRegression.test.ts"
+      ],
+      "worktree": "D:/kk-studio/KK-Studio-2.0",
+      "startedAt": "2026-11-06T18:10:00.000Z",
+      "updatedAt": "2026-11-06T13:17:31.694Z",
+      "breakpoint": {
+        "reason": "READY_FOR_PICKUP: 图片显式报价已接入。真实供应商请求和已安装 Desktop 扣费仍未做",
+        "pending": ["真实供应商账单与已安装 Desktop 扣费"],
+        "testCmd": "node --import ./tests/support/public-entry-loader.mjs --test tests/unit/taskCostArchive.test.ts"
+      }
+    },
+    {
+      "agent": "Antigravity",
+      "task": "TASK-SUPER-AGI-001",
+      "taskId": "TASK-SUPER-AGI-001",
+      "track": "LOGIC",
+      "feature": "super-agi-terminal",
+      "status": "DONE",
+      "progress": "已完成 AgentFoldbackCard 三文件全量语义 Token 化（移除 ui-legacy-baseline 豁免）、externalBridge 假通过桩清零（6/6 单测）、R1~R8 架构违规全量清零（0 违规）、hardwareAdaptiveScheduler 与 localModelPackages 权威模型 ID 合流（10/10 单测）、DelegationPipeline 与 AgentFoldbackCard 在 AgentToolRuntime / AgentExecutionProcess 宿主生产挂载（18/18 单测）",
+      "files": [
+        "src/features/models/hardwareAdaptiveScheduler.ts",
+        "src/features/capabilities/externalBridge.ts",
+        "src/features/agent/delegation/delegationPipeline.ts",
+        "src/features/agent/agentToolRuntime.ts",
+        "src/features/agent/agentTypes.ts",
+        "src/components/AgentExecutionProcess.tsx",
+        "src/features/agent/index.ts",
+        "src/features/models/index.ts",
+        "src/features/capabilities/index.ts",
+        "scripts/governance/agent-radar.mjs",
+        "scripts/governance/ai-memory.mjs",
+        "scripts/governance/check-agent-collisions.mjs",
+        "tests/unit/hardwareAdaptiveScheduler.test.ts",
+        "tests/unit/externalBridge.test.ts",
+        "tests/unit/subagentDelegation.test.ts",
+        "docs/architecture/AIG-SWARM-RELAY-ARCHITECTURE.md",
+        "docs/architecture/SUPER-AGI-TERMINAL-HARDWARE-ADAPTATION.md",
+        "docs/architecture/UNIVERSAL-EXTERNAL-APP-BRIDGE.md",
+        "docs/governance/ai-memory/engine-runtime.md",
+        "docs/governance/ai-memory/mcp-gateway.md"
+      ],
+      "worktree": "D:/kk-studio/KK-Studio-2.0",
+      "startedAt": "2026-11-06T19:30:00.000Z",
+      "updatedAt": "2026-11-07T08:22:00.000Z",
+      "breakpoint": {
+        "reason": "DONE: 硬件自适应调度、外部桥诚实性契约、子智能体委派管线与折叠卡 UI 宿主接线已全部闭环并完成门禁与单测验证",
+        "pending": [],
+        "testCmd": "npm run typecheck && npm run rules:check && node --import ./tests/support/public-entry-loader.mjs --test tests/unit/hardwareAdaptiveScheduler.test.ts tests/unit/externalBridge.test.ts tests/unit/subagentDelegation.test.ts tests/unit/agentFoldbackCard.test.ts"
+      }
+    },
+    {
+      "agent": "Cursor",
+      "task": "TASK-SUPER-AGI-002",
+      "taskId": "TASK-SUPER-AGI-002",
+      "track": "LOGIC",
+      "feature": "external-bridge",
+      "status": "READY_FOR_PICKUP",
+      "progress": "Antigravity 已清零 externalBridge.ts 全部未执行即返回 ok: true 的假通过桩，强制要求注入 mcpExecutor / cliRunner / neuralFallbackExecutor（6/6 单测通过）；待桌面宿主注入真实文件探针与进程启动器",
+      "files": [
+        "src/features/capabilities/externalBridge.ts",
+        "tests/unit/externalBridge.test.ts"
+      ],
+      "worktree": "D:/kk-studio/KK-Studio-2.0",
+      "startedAt": "2026-11-06T13:08:14.232Z",
+      "updatedAt": "2026-11-07T05:24:00.000Z",
+      "breakpoint": {
+        "reason": "READY_FOR_PICKUP: 外部桥假通过桩已由主 Agent 清零。下一步仅需在桌面宿主层注入真实探针与子进程执行器",
+        "pending": [
+          "桌面宿主注入 pathExists 真实探针",
+          "桌面宿主注入 cliRunner 真实子进程调用"
+        ],
+        "testCmd": "node --import ./tests/support/public-entry-loader.mjs --test tests/unit/externalBridge.test.ts"
+      }
+    },
+    {
+      "agent": "Antigravity",
+      "task": "UI-004-ICON",
+      "taskId": "UI-004-ICON",
+      "track": "UI",
+      "feature": "icon-button",
+      "status": "DONE",
+      "progress": "已通过 Figma MCP 实测 ZiadpErDoFweCjG3uHjkM3 的 551:7196（图标按钮：24档=16x16、32档=16x16、40档 489:2405=24x24、44档 69:2826=28x28）与 551:6356（常规带字按钮：40档 21:1489=16x16、32档=16x16），并在 Button.tsx 与 design/figma-component-map.json 完成 100% 精确对齐，未触碰 Codex 锁定文件。",
+      "files": [
+        "src/components/ui/Button.tsx",
+        "design/figma-component-map.json"
+      ],
+      "worktree": "D:/kk-studio/KK-Studio-2.0",
+      "startedAt": "2026-11-06T13:17:31.730Z",
+      "updatedAt": "2026-11-07T08:22:00.000Z",
+      "breakpoint": {
+        "reason": "DONE: 16/24/32/40/44 五档图标按钮与常规按钮内部图标槽位已按 Figma 源画布实测 100% 对齐",
+        "pending": [],
+        "testCmd": "npm run ui:check && npm run tokens:check"
+      }
+    },
+    {
+      "agent": "Cursor",
+      "task": "TASK-SYNC-LOCAL-MAIN-20261106",
+      "taskId": "TASK-SYNC-LOCAL-MAIN-20261106",
+      "track": "LOGIC",
+      "feature": "mainline-governance",
+      "status": "PARTIAL",
+      "files": [
+        "CHANGELOG.md",
+        "DESIGN.md",
+        "config/ui-legacy-baseline.json",
+        "design/figma-component-map.json",
+        "docs/changes/2026-11-05-figma-local-sync/verification.md",
+        "docs/changes/2026-11-06-ci-gate-repair/intent.md",
+        "docs/changes/2026-11-06-ci-gate-repair/plan.md",
+        "docs/changes/2026-11-06-ci-gate-repair/spec.md",
+        "docs/changes/2026-11-06-ci-gate-repair/verification.md",
+        "docs/governance/AI_HANDOFF.md",
+        "docs/governance/PROJECT_STATE.md",
+        "docs/governance/TASK_LEDGER.md",
+        "docs/governance/active-work.json",
+        "docs/governance/ai-memory/memlog.md",
+        "docs/governance/task-ledger.json",
+        "mobile/scripts/sync-color-tokens.mjs",
+        "mobile/src/screens/SettingsScreen.tsx",
+        "mobile/src/screens/settings/AccessSettings.tsx",
+        "mobile/src/screens/settings/AccountStorageSettings.tsx",
+        "mobile/src/screens/settings/AdvancedSettings.tsx",
+        "mobile/src/screens/settings/GeneralSettings.tsx",
+        "mobile/src/ui/Action.tsx",
+        "mobile/src/ui/actionAppearance.ts",
+        "mobile/src/ui/colorTokens.generated.json",
+        "mobile/src/ui/geometry.ts",
+        "mobile/src/ui/mobileColors.source.json",
+        "mobile/src/ui/primitives.tsx",
+        "mobile/src/ui/theme.tsx",
+        "mobile/tests/uiAction.test.ts",
+        "mobile/tests/uiBrand.test.ts",
+        "scripts/agent/sync-canvas-schema.mjs",
+        "scripts/check-ui-standards.mjs",
+        "scripts/governance/agent-radar.mjs",
+        "scripts/governance/ai-memory.mjs",
+        "scripts/governance/check-agent-collisions.mjs",
+        "src-tauri/src/creation_validation.rs",
+        "src-tauri/src/project_package_failure_tests.rs",
+        "src-tauri/src/project_package_snapshot.rs",
+        "src/components/agent/AgentFoldbackCard.tsx",
+        "src/components/agent/FoldbackExpandedDrawer.tsx",
+        "src/components/agent/FoldbackSummaryParts.tsx",
+        "src/components/canvas/CanvasNodeItem.tsx",
+        "src/components/canvas/useCanvasNodeMedia.ts",
+        "src/components/canvas/useCanvasNodePreemption.ts",
+        "src/components/settings/ConnectionSettings.tsx",
+        "src/components/settings/ProfileUsagePage.tsx",
+        "src/components/settings/ProfileUsageCards.tsx",
+        "src/components/settings/ProfileUsageCharts.tsx",
+        "src/components/settings/ProviderModelCatalog.tsx",
+        "src/components/settings/ProviderModelCatalogList.tsx",
+        "src/components/settings/SettingsPanel.tsx",
+        "src/components/settings/SettingsSections.tsx",
+        "src/components/settings/settings.css",
+        "src/features/agent/delegation/delegationPipeline.ts",
+        "src/features/agent/index.ts",
+        "src/features/capabilities/externalBridge.ts",
+        "src/features/capabilities/index.ts",
+        "src/features/models/hardwareAdaptiveScheduler.ts",
+        "src/features/models/index.ts",
+        "src/styles/desktop-titlebar.css",
+        "src/styles/tokens.css",
+        "src/styles/ui-governance.css",
+        "tests/browser/figma-483-ui.spec.ts",
+        "tests/browser/settings-latest-layout.spec.ts",
+        "tests/desktop/taskhost-lifecycle.mjs",
+        "tests/mobile-web/entry.spec.ts",
+        "tests/unit/agentFoldbackCard.test.ts",
+        "tests/unit/canvasSchemaSync.test.ts",
+        "tests/unit/designMarkdown.test.ts",
+        "tests/unit/designTokensLint.test.ts",
+        "tests/unit/hardwareAdaptiveScheduler.test.ts",
+        "tests/unit/subagentDelegation.test.ts"
+      ],
+      "worktree": "D:/kk-studio/KK-Studio-2.0",
+      "startedAt": "2026-11-06T14:39:49.538Z",
+      "updatedAt": "2026-11-07T03:57:48.955Z",
+      "progress": "全面治理已提交待推送：本地门禁通过；等待PR83 Hosted verify；未合并main",
+      "breakpoint": {
+        "reason": "PARTIAL: 本地全面治理完成，Hosted verify与正式独审未完成",
+        "pending": [
+          "推送审查分支后回读Hosted verify",
+          "正式SHA独审",
+          "不合并main直到必需检查全绿"
+        ],
+        "testCmd": "npm run typecheck && npm run lint && npm test && npm run format:check"
+      }
+    }
+  ]
+}

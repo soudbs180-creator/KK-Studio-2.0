@@ -1,9 +1,9 @@
 import { useRef, useState } from "react";
 import { confirmAction } from "../../runtime/confirmAction";
-import { agentConnection } from "../agent/agentConnection";
-import { googleAgentConnection } from "../agent/googleAgentConnection";
-import { projectHasUnsettledTasks } from "../creation/model";
-import type { useCreationStorage } from "../creation/useCreationStorage";
+import { agentConnection } from "../agent/index.ts";
+import { googleAgentConnection } from "../agent/index.ts";
+import { projectHasUnsettledTasks } from "../creation/index.ts";
+import type { useCreationStorage } from "../creation/index.ts";
 import {
   applyProjectLifecycle,
   type ProjectLibraryActions,
@@ -103,7 +103,21 @@ export function useProjectLibrary(
   }
   const actions: ProjectLibraryActions = {
     groups: persistence.creation.projectGroups ?? [],
+    sidebarPreferences: persistence.creation.sidebarPreferences ?? {
+      sortMode: "manual",
+      pinnedProjectIds: [],
+      pinnedGroupIds: [],
+    },
     canEdit: canWrite(),
+    onSetSidebarSortMode: (sortMode) => {
+      void change({ type: "set-sidebar-sort", sortMode });
+    },
+    onToggleProjectPin: (id) => {
+      void change({ type: "toggle-project-pin", id });
+    },
+    onToggleGroupPin: (id) => {
+      void change({ type: "toggle-group-pin", id });
+    },
     onRename: (id, name) => {
       void change({ type: "rename-project", id, name });
     },

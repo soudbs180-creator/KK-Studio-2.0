@@ -956,8 +956,8 @@ test("ADV-4.1: Exported geometry constants strictly adhere to spec standards", a
 
   assert.equal(
     AGENT_ACTION_BUTTON_GEOMETRY.desktopDiameter,
-    40,
-    "Desktop button diameter must be strictly 40px",
+    44,
+    "Primary button diameter must be strictly 44px",
   );
   assert.ok(
     AGENT_ACTION_BUTTON_GEOMETRY.minTouchTarget >= 44,
@@ -967,12 +967,12 @@ test("ADV-4.1: Exported geometry constants strictly adhere to spec standards", a
   );
   assert.equal(
     AGENT_ACTION_BUTTON_GEOMETRY.iconSize,
-    20,
-    "Centered icon dimension must be strictly 20px",
+    28,
+    "Centered icon dimension must be strictly 28px",
   );
 });
 
-test("ADV-4.2: CSS rules enforce 40px diameter, circular border-radius, and >=44px touch target", async () => {
+test("ADV-4.2: CSS rules enforce 44px diameter, circular border-radius, and >=44px touch target", async () => {
   const cssPath = new URL(
     "../../src/styles/agent-action-button.css",
     import.meta.url,
@@ -980,8 +980,9 @@ test("ADV-4.2: CSS rules enforce 40px diameter, circular border-radius, and >=44
   const css = await readFile(cssPath, "utf8");
 
   // Visual button diameter
-  assert.match(css, /width:\s*40px;/, "CSS must declare visual width: 40px");
-  assert.match(css, /height:\s*40px;/, "CSS must declare visual height: 40px");
+  assert.match(css, /--agent-action-size:\s*var\(--kk-control-h-xl,\s*44px\)/);
+  assert.match(css, /width:\s*var\(--agent-action-size\);/);
+  assert.match(css, /height:\s*var\(--agent-action-size\);/);
   assert.match(
     css,
     /border-radius:\s*var\(--kk-radius-full\);/,

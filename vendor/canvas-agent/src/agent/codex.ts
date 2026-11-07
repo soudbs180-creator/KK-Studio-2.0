@@ -158,7 +158,27 @@ export async function readCodexThread(emit: AgentEmit, threadId: string, cwd?: s
     const history = await loadCodexHistory(emit, threadId, cwd);
     const supplementalItems = await codexEventHistory.readThread(threadId);
     const messages = await mergeMessageMetadata(threadId, threadMessages(history.thread, app.planUpdates(threadId), supplementalItems));
-    return { thread: summarizeCodexThread(history.thread), messages, settledTurnIds: settledTurnIds(history.thread, supplementalItems), historyReady: history.historyReady };
+    const turns = field(history.thread, "turns");
+    return { thread: summarizeCodexThread(history.thread), messages, settledTurnIds: settledTurnIds(history.thread, supplementalItems), historyReady: history.historyReady, rewindSupported: field(history.thread, "historyMode") === "paginated", turnIds: Array.isArray(turns) ? turns.map((turn) => String(field(turn, "id") || "")) : [] };
+}
+
+/** 归档指定 Codex 线程。 */
+export async function rollbackCodexThread(emit: AgentEmit, threadId: string, beforeTurnId: string, expectedTurnIds: string[], cwd: string) {
+    const app = await getCodexApp(emit);
+    await loadCodexHistory(emit, threadId, cwd);
+    const { thread } = await app.readThread(threadId);
+    if (thread.historyMode !== "paginated") throw new Error("旧线程历史格式不支持安全回滚，请保留原线程并新建聊天");
+    const turns = thread.turns ?? [];
+    if (JSON.stringify(turns.map((turn) => turn.id)) !== JSON.stringify(expectedTurnIds)) throw new Error("线程已变化，未回滚历史");
+    const index = turns.findIndex((turn) => turn.id === beforeTurnId);
+    if (index < 0) throw new Error("目标轮次不存在");
+    const removed = turns.slice(index).map((turn) => turn.id);
+    await app.revertThread(threadId, beforeTurnId);
+    await codexEventHistory.removeTurns(threadId, removed);
+    app.clearPlanUpdates(threadId);
+    const result = await readCodexThread(emit, threadId, cwd);
+    if (JSON.stringify(result.turnIds) !== JSON.stringify(turns.slice(0, index).map((turn) => turn.id))) throw new Error("远端历史回滚后核验未通过，请保留本地备份并刷新");
+    return result;
 }
 
 /** 归档指定 Codex 线程。 */

@@ -1,9 +1,8 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
-import { createAgentApi } from "../../features/agent/agentApi.ts";
-import { agentConnection } from "../../features/agent/agentConnection.ts";
+import { createAgentApi } from "../../features/agent/index.ts";
+import { agentConnection } from "../../features/agent/index.ts";
 import { confirmAction } from "../../runtime/confirmAction";
 import useSettingsBusy from "./useSettingsBusy";
-
 type ConnectionState =
   | "disconnected"
   | "loading"
@@ -13,14 +12,15 @@ type ConnectionState =
   | "saved"
   | "verified"
   | "cancelled";
-
 /** A bounded text delegation path; Codex remains the primary Agent. */
 export default function CodeBuddyConnectionSettings({
   onFeedback,
   onBusyChange,
+  active = true,
 }: {
   onFeedback: (message: string) => void;
   onBusyChange?: (busy: boolean) => void;
+  active?: boolean;
 }) {
   const connection = useSyncExternalStore(
     agentConnection.subscribe,
@@ -47,7 +47,12 @@ export default function CodeBuddyConnectionSettings({
   const connected = connection.status === "connected";
   const configReady =
     connected && loadedRevision === connection.connectionRevision;
-
+  useEffect(() => {
+    if (active || busy || !configReady) return;
+    setCliPath(savedPath);
+    setStatus(savedPath ? "saved" : "empty");
+    setError("");
+  }, [active, busy, configReady, savedPath]);
   useEffect(() => {
     probeRequest.current?.abort();
     probeRequest.current = null;
@@ -101,7 +106,6 @@ export default function CodeBuddyConnectionSettings({
     connection.clientId,
     loadAttempt,
   ]);
-
   function api(signal?: AbortSignal) {
     return createAgentApi({
       endpoint: connection.endpoint,
@@ -110,7 +114,6 @@ export default function CodeBuddyConnectionSettings({
       signal,
     });
   }
-
   async function save() {
     if (!configReady || busy) return;
     const revision = connection.connectionRevision;
@@ -152,7 +155,6 @@ export default function CodeBuddyConnectionSettings({
       if (current()) setBusy(false);
     }
   }
-
   async function probe() {
     if (!configReady || busy || !savedPath || cliPath.trim() !== savedPath)
       return;
@@ -194,7 +196,6 @@ export default function CodeBuddyConnectionSettings({
       }
     }
   }
-
   function statusText() {
     if (!connected) return "先连接 Codex 主 Agent";
     if (status === "load-error")
@@ -208,7 +209,6 @@ export default function CodeBuddyConnectionSettings({
     if (status === "editing") return "路径有修改，保存后才能测试";
     return "尚未配置";
   }
-
   return (
     <section className="settings-codebuddy-card" aria-label="CodeBuddy 委派">
       <div className="settings-agent-status">

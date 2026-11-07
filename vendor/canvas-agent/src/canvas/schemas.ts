@@ -1,6 +1,7 @@
 import { z } from "zod";
+import { CanvasOpSchema } from "./atomic-schema.js";
 
-const recordSchema = z.record(z.unknown());
+const recordSchema = z.record(z.string(), z.unknown());
 const positionSchema = z.object({ x: z.number(), y: z.number() });
 const viewportSchema = z.object({ x: z.number(), y: z.number(), k: z.number() });
 const nodeTypeSchema = z.enum(["image", "text", "config", "video", "audio"]);
@@ -46,6 +47,7 @@ export const toolNames = [
 export type ToolName = (typeof toolNames)[number];
 
 export const canvasOpSchema = z.discriminatedUnion("type", [
+    z.object({ type: z.literal("canvas_operation"), operation: CanvasOpSchema }).strict(),
     z.object({ type: z.literal("add_node"), nodeType: nodeTypeSchema.optional(), id: z.string().optional(), title: z.string().optional(), x: z.number().optional(), y: z.number().optional(), width: z.number().optional(), height: z.number().optional(), position: positionSchema.optional(), metadata: recordSchema.optional() }).passthrough(),
     z.object({ type: z.literal("update_node"), id: z.string(), patch: recordSchema.optional(), metadata: recordSchema.optional() }).passthrough(),
     z.object({ type: z.literal("delete_node"), id: z.string().optional(), ids: z.array(z.string()).optional() }).passthrough(),
@@ -95,7 +97,7 @@ export const toolInputSchemas = {
     canvas_get_state: z.object({}).passthrough(),
     canvas_get_selection: z.object({}).passthrough(),
     canvas_export_snapshot: z.object({}).passthrough(),
-    canvas_apply_ops: z.object({ ops: z.array(canvasOpSchema) }),
+    canvas_apply_ops: z.object({ ops: z.array(canvasOpSchema).min(1).max(500) }),
     canvas_create_node: z.object({ nodeType: nodeTypeSchema, title: z.string().optional(), x: z.number().optional(), y: z.number().optional(), width: z.number().optional(), height: z.number().optional(), metadata: recordSchema.optional() }),
     canvas_create_attachment_nodes: z.object({ attachmentIds: z.array(z.string()).min(1), x: z.number().optional(), y: z.number().optional(), gap: z.number().optional(), direction: z.enum(["row", "column"]).optional() }),
     canvas_create_text_node: z.object({ text: z.string().optional(), x: z.number().optional(), y: z.number().optional(), title: z.string().optional(), width: z.number().optional(), height: z.number().optional() }),
@@ -124,7 +126,7 @@ export const toolInputSchemas = {
     prompts_search: z.object({ keyword: z.string().optional(), category: z.string().optional(), tags: z.array(z.string()).optional(), page: z.number().optional(), pageSize: z.number().optional() }),
     assets_list: z.object({ kind: z.enum(["all", "text", "image", "video"]).optional(), keyword: z.string().optional(), page: z.number().optional(), pageSize: z.number().optional() }),
     assets_add: z.object({ kind: z.enum(["text", "image"]), title: z.string(), content: z.string().optional(), imageUrl: z.string().optional(), tags: z.array(z.string()).optional(), source: z.string().optional(), note: z.string().optional() }),
-} satisfies Record<ToolName, z.AnyZodObject>;
+} satisfies Record<ToolName, z.ZodObject>;
 
 export const toolDescriptions: Record<ToolName, string> = {
     site_navigate: "跳转网站页面。path 可为 / (首页)、/canvas (我的画布)、/canvas/:id (指定画布)、/image (生图工作台)、/video (视频创作台)、/prompts (提示词库)、/assets (我的素材)、/config (配置)。操作画布前若不在画布页，先用本工具打开画布。",
@@ -132,7 +134,7 @@ export const toolDescriptions: Record<ToolName, string> = {
     canvas_get_state: "读取当前网页画布的节点、连线、选区和视口。",
     canvas_get_selection: "读取当前网页画布选中的节点。",
     canvas_export_snapshot: "导出当前画布快照，用于理解布局。",
-    canvas_apply_ops: "批量操作当前网页画布。ops 支持 add_node、update_node、delete_node、delete_connections、connect_nodes、set_viewport、select_nodes、run_generation。",
+    canvas_apply_ops: "批量操作当前网页画布。原子操作格式 {type:canvas_operation,operation:{op,payload}}；全部严格校验，未知字段拒绝。add_card {card:{id,kind,title,description?,prompt?,assetId?,referenceOnly?,referenceSlot?},position:{x,y}} 新建；update_card {id,patch:{title?,description?,prompt?,referenceSlot?}} 更新；delete_card {id} 删除；move_card {id,x,y} 移动；resize_card {id,width,height} 调整尺寸；connect_cards {id,source,target,kind?} 连线；disconnect_cards {id} 断线；group_cards/create_frame {id,ids,name} 分组；ungroup_cards {id} 解组；set_viewport {x,y,zoom} 视口；reset_viewport/fit_view {} 重置/适配；select_nodes {ids,append?}/clear_selection {} 选择/清空；align_nodes_horizontal/align_nodes_vertical {ids} 对齐；distribute_nodes {ids,axis:x|y} 分布；duplicate_node {id,newId} 复制；lock_node/unlock_node {id} 锁定/解锁；set_card_color {id,color:default|accent|warning|success} 语义色；add_asset_attachment {id,sourceId,slot} 参考连接；remove_asset_attachment {id,sourceId} 移除参考；export_canvas_image/export_canvas_json {} 导出；import_canvas_json {document:{version:1,cards,positions,edges}} 导入；undo/redo {} 撤销/重做；set_grid_snap {enabled} 吸附；toggle_mini_map {visible} 小地图；focus_node {id} 聚焦；batch_transform {ids,dx,dy} 批量平移；reorder_z_index {id,index} 层序。id<=160字符且禁原型键，最多500节点、2000连线；引用槽位为主体/风格/材质/构图/Mask。兼容新名称：remove_card/lock_card/unlock_card/focus_card {id}；align_cards/distribute_cards {ids,axis:x|y}（align 的 axis 是需要对齐的坐标轴）；reorder_layer {id,index}；connect_ports {id,source,target,kind?} 与 disconnect_ports {id}；update_edge {id,patch:{source?,target?,kind?}}；select_cards {ids,append?}；duplicate_cards {items:[{id,newId}]}；batch_apply {operations:[{op,payload}]} 原子批量修改（不嵌套，不含 undo/redo/export/auto_layout 宿主副作用）；export_canvas_png {}；add_comment {id,cardId,text} 新增评论；resolve_comment {cardId,id,resolved?} 解决/重开评论；set_grid_mode {mode:dots|grid} 切换网格；set_snap_to_grid {enabled}；auto_layout {ids?,direction:LR|TB} Dagre自动布局；tag_card/untag_card {id,tag} 标签。import_canvas_json 可含 snapshot 供 KK 无损蓝图恢复，使用存储边界校验。旧 add_node/update_node/delete_node/delete_connections/connect_nodes/set_viewport/select_nodes/run_generation 保持兼容。",
     canvas_create_node: "创建任意类型节点：text、image、config、video、audio。适合创建占位图、媒体占位、配置节点或自定义 metadata 节点。",
     canvas_create_attachment_nodes: "把当前对话中用户上传的图片附件创建成真实画布图片节点。attachmentIds 使用本轮附件清单中的 ID；返回的节点 ID 可传给 canvas_create_generation_flow.referenceNodeIds 作为生成参考图。",
     canvas_create_text_node: "在当前画布创建单个文本节点。",

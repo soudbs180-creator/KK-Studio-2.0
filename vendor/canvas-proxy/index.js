@@ -2,6 +2,13 @@
 import { createServer } from "node:http";
 import { createRequire } from "node:module";
 import { Readable } from "node:stream";
+import {
+    transpileAnthropicToOpenAiRequest,
+    transpileOpenAiToAnthropicRequest,
+    transpileAnthropicToOpenAiResponse,
+    transpileOpenAiToAnthropicResponse,
+    createStreamTranspiler,
+} from "../../src/features/ai-gateway/transpiler/index.ts";
 
 const pkg = createRequire(import.meta.url)("./package.json");
 
@@ -32,7 +39,16 @@ function readBody(req) {
     });
 }
 
-function readTarget(url) {
+function readTarget(url, req) {
+    const headerTarget = req?.headers?.["x-target-url"] || req?.headers?.["x-upstream-url"];
+    if (headerTarget && typeof headerTarget === "string" && /^https?:\/\//i.test(headerTarget)) {
+        return headerTarget;
+    }
+    const queryIdx = url.indexOf("?target=");
+    if (queryIdx >= 0) {
+        const queryTarget = decodeURIComponent(url.slice(queryIdx + 8).split("&")[0]);
+        if (/^https?:\/\//i.test(queryTarget)) return queryTarget;
+    }
     const raw = url.slice(1);
     // decodeURI undoes the escaping browsers apply to the path while keeping intentional encodeURIComponent escapes.
     let target = raw;
@@ -73,9 +89,135 @@ function logForward(method, target, outcome, startedAt) {
     console.log(`${new Date().toLocaleTimeString()} ${method} ${target} -> ${outcome} ${((Date.now() - startedAt) / 1000).toFixed(1)}s`);
 }
 
+function detectDownstreamProtocol(req, parsedBody) {
+    const headerProto = req.headers["x-downstream-protocol"];
+    if (headerProto === "anthropic" || headerProto === "openai") return headerProto;
+    if (req.url.startsWith("/v1/messages")) return "anthropic";
+    if (req.url.startsWith("/v1/chat/completions")) return "openai";
+    if (parsedBody && typeof parsedBody === "object") {
+        if ("system" in parsedBody || (Array.isArray(parsedBody.messages) && parsedBody.messages.some(m => Array.isArray(m.content)))) {
+            return "anthropic";
+        }
+        if (Array.isArray(parsedBody.messages) && parsedBody.messages.some(m => m.role === "system" || m.role === "developer")) {
+            return "openai";
+        }
+    }
+    return null;
+}
+
+function detectUpstreamProtocol(target) {
+    if (target.includes("/v1/messages")) return "anthropic";
+    if (target.includes("/v1/chat/completions")) return "openai";
+    return null;
+}
+
 async function forward(req, res, target) {
-    const body = req.method === "GET" || req.method === "HEAD" ? undefined : await readBody(req);
-    const upstream = await fetch(target, { method: req.method, headers: requestHeaders(req), body, redirect: "follow" });
+    const rawBody = req.method === "GET" || req.method === "HEAD" ? undefined : await readBody(req);
+    let parsedBody = null;
+    if (rawBody && rawBody.length > 0) {
+        try {
+            parsedBody = JSON.parse(rawBody.toString("utf8"));
+        } catch {
+            // Non-JSON body
+        }
+    }
+
+    const downstreamProto = detectDownstreamProtocol(req, parsedBody);
+    const upstreamProto = detectUpstreamProtocol(target);
+
+    // If protocols differ and both are identified
+    if (parsedBody && downstreamProto && upstreamProto && downstreamProto !== upstreamProto) {
+        let finalTarget = target;
+        let finalBody = rawBody;
+        const streamRequested = Boolean(parsedBody.stream);
+
+        if (downstreamProto === "anthropic" && upstreamProto === "openai") {
+            const converted = transpileAnthropicToOpenAiRequest(parsedBody);
+            finalBody = Buffer.from(JSON.stringify(converted), "utf8");
+            finalTarget = target.replace(/\/v1\/messages(\?|$)/, "/v1/chat/completions$1");
+        } else if (downstreamProto === "openai" && upstreamProto === "anthropic") {
+            const converted = transpileOpenAiToAnthropicRequest(parsedBody);
+            finalBody = Buffer.from(JSON.stringify(converted), "utf8");
+            finalTarget = target.replace(/\/v1\/chat\/completions(\?|$)/, "/v1/messages$1");
+        }
+
+        const headers = requestHeaders(req);
+        headers["content-type"] = "application/json";
+        headers["content-length"] = String(finalBody.length);
+        if (upstreamProto === "anthropic" && !headers["anthropic-version"]) {
+            headers["anthropic-version"] = "2023-06-01";
+        }
+
+        const upstream = await fetch(finalTarget, { method: req.method, headers, body: finalBody, redirect: "follow" });
+
+        if (!upstream.ok) {
+            res.writeHead(upstream.status, responseHeaders(upstream));
+            if (upstream.body) {
+                Readable.fromWeb(upstream.body).pipe(res);
+            } else {
+                res.end();
+            }
+            return upstream.status;
+        }
+
+        const contentType = upstream.headers.get("content-type") || "";
+        const isSse = contentType.includes("text/event-stream") || streamRequested;
+
+        if (isSse && upstream.body) {
+            const outHeaders = responseHeaders(upstream);
+            outHeaders["content-type"] = "text/event-stream; charset=utf-8";
+            res.writeHead(upstream.status, outHeaders);
+
+            const transpiler = createStreamTranspiler({
+                sourceProtocol: upstreamProto,
+                targetProtocol: downstreamProto,
+                defaultModel: parsedBody.model,
+            });
+
+            const stream = Readable.fromWeb(upstream.body);
+            let buffer = "";
+            res.on("close", () => stream.destroy());
+
+            for await (const chunk of stream) {
+                buffer += Buffer.from(chunk).toString("utf8");
+                let newlineIdx;
+                while ((newlineIdx = buffer.indexOf("\n")) >= 0) {
+                    const line = buffer.slice(0, newlineIdx).replace(/\r$/, "");
+                    buffer = buffer.slice(newlineIdx + 1);
+                    const outputs = transpiler.processLine(line);
+                    for (const out of outputs) {
+                        res.write(out);
+                    }
+                }
+            }
+
+            if (buffer.trim()) {
+                const outputs = transpiler.processLine(buffer.trim());
+                for (const out of outputs) {
+                    res.write(out);
+                }
+            }
+            const flushed = transpiler.flush();
+            for (const out of flushed) {
+                res.write(out);
+            }
+            res.end();
+            return upstream.status;
+        } else {
+            const jsonResp = await upstream.json();
+            let transpiledResp = jsonResp;
+            if (downstreamProto === "anthropic" && upstreamProto === "openai") {
+                transpiledResp = transpileOpenAiToAnthropicResponse(jsonResp);
+            } else if (downstreamProto === "openai" && upstreamProto === "anthropic") {
+                transpiledResp = transpileAnthropicToOpenAiResponse(jsonResp, parsedBody.model);
+            }
+            sendJson(res, upstream.status, transpiledResp);
+            return upstream.status;
+        }
+    }
+
+    // Direct passthrough
+    const upstream = await fetch(target, { method: req.method, headers: requestHeaders(req), body: rawBody, redirect: "follow" });
     // Logged as soon as the status line arrives, so a long SSE stream still shows up immediately.
     res.writeHead(upstream.status, responseHeaders(upstream));
     if (!upstream.body) {
@@ -96,7 +238,7 @@ export function createProxyServer() {
             res.end();
             return;
         }
-        const target = readTarget(req.url || "/");
+        const target = readTarget(req.url || "/", req);
         if (!target) {
             sendJson(res, 200, { app: "infinite-canvas", proxy: pkg.name, version: pkg.version, usage: "/<full-target-url>" });
             return;

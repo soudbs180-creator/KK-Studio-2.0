@@ -109,7 +109,7 @@ export class CodexAppClient {
         if (preheat) this.pendingPreheatThreadStarts += 1;
         let threadId = "";
         try {
-            const { thread } = await this.request("thread/start", { ...threadSettings(permissionMode), ...(cwd ? { cwd } : {}), threadSource: "user", historyMode: "legacy" });
+            const { thread } = await this.request("thread/start", { ...threadSettings(permissionMode), ...(cwd ? { cwd } : {}), threadSource: "user", historyMode: "paginated" });
             if (!thread.id) throw new Error("Codex app-server 没有返回 thread id");
             threadId = thread.id;
             // Persist an empty durable thread without sending a model turn.
@@ -165,6 +165,7 @@ export class CodexAppClient {
     readThread(threadId: string, includeTurns = true) {
         return this.request("thread/read", { threadId, includeTurns });
     }
+    revertThread(threadId: string, beforeTurnId: string) { return this.request("thread/revert", { threadId, beforeTurnId }); }
 
     /** 归档指定 Codex 线程。 */
     archiveThread(threadId: string) {

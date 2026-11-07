@@ -1,0 +1,68 @@
+{
+  "version": 1,
+  "taskId": "TASK-ORG-6",
+  "classification": "E2-externalized-historical-evidence",
+  "packagePath": "docs/evidence/ui-motion-audit-2026-09-08",
+  "entries": [
+    {
+      "sourcePath": "docs/evidence/ui-motion-audit-2026-09-08/final-2026-09-09-grid-r2.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "098c54881fe5c174e7d9e5f11d078103b14ea1cf",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/ui-motion-audit-2026-09-08/final-2026-09-09-grid-r2.png",
+      "bytes": 99592,
+      "sha256": "6e6555ebda501b584f5d012ec13c18ceb3605381c04eab1057968a4197078091",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/ui-motion-audit-2026-09-08/final-2026-09-09-particles.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "a8366d69e10c10af709072e2ca9479d4f6c91a80",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/ui-motion-audit-2026-09-08/final-2026-09-09-particles.png",
+      "bytes": 94095,
+      "sha256": "cbe31d7262718eee04ed0e56fe58a2491628b42d032b92c38b078eb3839db8c2",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/ui-motion-audit-2026-09-08/final-2026-09-09-sidebar.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "6819e078daa569e96f15a1cc52ae82ee183e758a",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/ui-motion-audit-2026-09-08/final-2026-09-09-sidebar.png",
+      "bytes": 88263,
+      "sha256": "aa573d9b2e70a683b6d0b211b763bbc1a61420cba63f6bf80fee9129a08a7901",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/ui-motion-audit-2026-09-08/final-2026-09-09-text-card.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "9e4f7b2989691e6a0b804bd95e91a6ecafcd2976",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/ui-motion-audit-2026-09-08/final-2026-09-09-text-card.png",
+      "bytes": 99293,
+      "sha256": "9051aa6e210b364cdacf6ea7c8d9da52f048a068f31d5e9be5fc0f351ae38068",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/ui-motion-audit-2026-09-08/final-2026-09-09-workspace.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "ad39b0c30ae2a271c65e3f77d42e1745c3d9ca4f",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/ui-motion-audit-2026-09-08/final-2026-09-09-workspace.png",
+      "bytes": 80085,
+      "sha256": "7613a9df86ff313cc01d2dc185758fb90df2317c4aee992181c795e068768bdc",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    }
+  ],
+  "scope": "Historical E2 files externalized by validated batches; E1 summaries, JSON, key screenshots and active inputs retained.",
+  "containerResolution": "Resolve containerRelativePath from the workspace container containing the canonical checkout and output.",
+  "recovery": "Verify with scripts/governance/check-evidence-manifest.mjs <manifest> <container>; restore only to a new empty directory. Original Git sourceCommit/sourcePath remains recoverable.",
+  "batches": [
+    {
+      "taskId": "TASK-ORG-6",
+      "date": "2026-10-30",
+      "candidateBase": "be730617ace5013295b85a22133259b32ad6ffec"
+    }
+  ]
+}

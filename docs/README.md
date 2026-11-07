@@ -4,67 +4,84 @@
 
 本文件是 KK Studio 全部工程文档的索引与冲突裁决入口。找规则先查这里，不要凭记忆猜文件位置。
 
-所有 AI 的共同规则见仓库根的 [AGENTS.md](../AGENTS.md) 与 [AI_RULES.md](../AI_RULES.md)。Claude/Gemini/Copilot/Cursor 等工具入口只引用这两份，不复制另一套政策。
+所有 AI 的共同规则见仓库根的 [RULES.md](../RULES.md)、[AGENTS.md](../AGENTS.md) 与 [AI_RULES.md](../AI_RULES.md)。Claude、Gemini、Copilot、Cursor 的原生入口只指向这三份，不复制规则正文。开发 Agent 的八层物理落点见 [REPO-LAYOUT](architecture/REPO-LAYOUT.md) 的「开发 Agent 八层」；产品里的 agent、skills、mcp、commands 仍留在应用源码，不搬进工具配置目录。
 
 ## 阅读顺序
 
 新会话或新 AI 的最小启动序列：
 
-1. [AGENTS.md](../AGENTS.md) — 总规则，技术边界与禁止事项。
-2. [AI_RULES.md](../AI_RULES.md) — 协作分工与事实纪律。
-3. 本文件的索引表 — 定位当前任务需要的专项规范。
-4. [`governance/task-ledger.json`](governance/task-ledger.json) — 认领任务前必读。
-5. [governance/PROJECT_STATE.md](governance/PROJECT_STATE.md) — 当前项目事实。
+1. [RULES.md](../RULES.md) — 开工铁律，禁止项优先。
+2. [AGENTS.md](../AGENTS.md) — 技术边界、UI/Figma 门禁与 Git 约束。
+3. [AI_RULES.md](../AI_RULES.md) — 协作分工与事实纪律。
+4. 本文件的索引表 — 定位当前任务需要的专项规范。
+5. [`governance/task-ledger.json`](governance/task-ledger.json) — 认领任务前必读。
+6. [governance/PROJECT_STATE.md](governance/PROJECT_STATE.md) — 当前项目事实。
 
 ## 工程文档
 
-| 文档                                                        | 承载内容                                               |
-| ----------------------------------------------------------- | ------------------------------------------------------ |
-| [SDLC](engineering/SDLC.md)                                 | AI 自主开发、风险分级、产物链和维护                    |
-| [DEVELOPMENT-WORKFLOW](engineering/DEVELOPMENT-WORKFLOW.md) | 任务领取、需求确认、状态流转、开发笔记、验证和竞品节奏 |
-| [CODING-STANDARDS](engineering/CODING-STANDARDS.md)         | 命名、文件规模边界、模块依赖方向、错误处理、状态管理   |
-| [TESTING](engineering/TESTING.md)                           | 测试分层、覆盖要求、Playwright 运行契约、证据保存      |
-| [DEVELOPMENT](engineering/DEVELOPMENT.md)                   | 开发环境、命令与证明范围、UI 三个运行入口              |
-| [BRANCH-POLICY](engineering/BRANCH-POLICY.md)               | 分支命名、PR、squash 合并、回滚、pre-push 防线         |
-| [REVIEW](engineering/REVIEW.md)                             | 独立审核身份、必查范围、严重度与阻断条件               |
-| [PROMPTING](engineering/PROMPTING.md)                       | 用户口语转 engineering brief                           |
-| [AI-EVALS](engineering/AI-EVALS.md)                         | 规则回归场景与实际强制层的边界                         |
-| [VERSIONING](engineering/VERSIONING.md)                     | 版本号策略                                             |
-| [LAUNCHER](engineering/LAUNCHER.md)                         | 启动器行为                                             |
-| [WINDOWS-INSTALLER](engineering/WINDOWS-INSTALLER.md)       | Windows 安装器                                         |
-| [WORKTREE-LIFECYCLE](engineering/WORKTREE-LIFECYCLE.md)     | worktree 创建、登记、回收与落点                        |
-| [AUTO-MERGE](engineering/AUTO-MERGE.md)                     | 自动合并工作流与其未启用边界                           |
-| [ROLLBACK](engineering/ROLLBACK.md)                         | 回滚触发条件与执行                                     |
+| 文档                                                                      | 承载内容                                               |
+| ------------------------------------------------------------------------- | ------------------------------------------------------ |
+| [SDLC](engineering/SDLC.md)                                               | AI 自主开发、风险分级、产物链和维护                    |
+| [DEVELOPMENT-WORKFLOW](engineering/DEVELOPMENT-WORKFLOW.md)               | 任务领取、需求确认、状态流转、开发笔记、验证和竞品节奏 |
+| [CODING-STANDARDS](engineering/CODING-STANDARDS.md)                       | 命名、文件规模边界、模块依赖方向、错误处理、状态管理   |
+| [TESTING](engineering/TESTING.md)                                         | 测试分层、覆盖要求、Playwright 运行契约、证据保存      |
+| [DEVELOPMENT](engineering/DEVELOPMENT.md)                                 | 开发环境、命令与证明范围、UI 三个运行入口              |
+| [BRANCH-POLICY](engineering/BRANCH-POLICY.md)                             | 分支命名、PR、squash 合并、回滚、pre-push 防线         |
+| [REVIEW](engineering/REVIEW.md)                                           | 独立审核身份、必查范围、严重度与阻断条件               |
+| [PROMPTING](engineering/PROMPTING.md)                                     | 用户口语转 engineering brief                           |
+| [AI-EVALS](engineering/AI-EVALS.md)                                       | 规则回归场景与实际强制层的边界                         |
+| [VERSIONING](engineering/VERSIONING.md)                                   | 版本号策略                                             |
+| [LAUNCHER](engineering/LAUNCHER.md)                                       | 启动器行为                                             |
+| [WINDOWS-INSTALLER](engineering/WINDOWS-INSTALLER.md)                     | Windows 安装器                                         |
+| [WORKTREE-LIFECYCLE](engineering/WORKTREE-LIFECYCLE.md)                   | worktree 创建、登记、回收与落点                        |
+| [AUTO-MERGE](engineering/AUTO-MERGE.md)                                   | 自动合并工作流与其未启用边界                           |
+| [ROLLBACK](engineering/ROLLBACK.md)                                       | 回滚触发条件与执行                                     |
+| [RELEASE-CHECKLIST](engineering/RELEASE-CHECKLIST.md)                     | 桌面发布与升级验证清单、预发布体检、升级三原则         |
+| [COMPETITIVE-LEARNING-POLICY](engineering/COMPETITIVE-LEARNING-POLICY.md) | 竞品学习与品类跟进方针、共识基线与持续增进机制         |
 
 > 本表必须完整覆盖 `docs/engineering/` 下的全部 `.md`。新增工程文档必须同步本表，`npm run index:check` 会校验。
 
 ## 架构文档
 
+本轮完整整顿范围见[四文档需求覆盖与验收总清单](changes/2026-10-28-modularity-p0/four-document-coverage.md)，来源指纹与逐章索引见[四份原文记录](changes/2026-10-28-modularity-p0/four-document-sources.json)。最近五项仅为优先批次，不能代表全部P/STD/ORG范围。
+
+模块化整顿的现行规则见[MODULARITY](architecture/MODULARITY.md)，技术决定见[ADR-026](architecture/adr/ADR-026-modular-capability-architecture.md)与[ADR-027](architecture/adr/ADR-027-architecture-ratchet-and-dependency-cruiser.md)。当前P0实施与未整合边界见[交付验证](changes/2026-10-28-modularity-p0/verification.md)。
+
+Zod 运行时安全副本升级见 [ADR-034](architecture/adr/ADR-034-zod-security-runtime-upgrade.md) 及 [安全验证](changes/2026-10-28-zod-security/verification.md)。
+
 `architecture/`：运行时架构、数据存储与数据分级。
 
-| 文档                                                       | 承载内容                                    |
-| ---------------------------------------------------------- | ------------------------------------------- |
-| [ARCHITECTURE](architecture/ARCHITECTURE.md)               | 进程模型、模块依赖、数据流                  |
-| [DATA-STORAGE](architecture/DATA-STORAGE.md)               | 存储 schema、生命周期、迁移                 |
-| [DATA-CLASSIFICATION](architecture/DATA-CLASSIFICATION.md) | 数据分级与处理约束                          |
-| [GENERATION-PLATFORM](architecture/GENERATION-PLATFORM.md) | 生成平台接入                                |
-| [LEGACY-MIGRATION](architecture/LEGACY-MIGRATION.md)       | 旧工程能力 keep/migrate/rebuild/reject 清单 |
-| `architecture/adr/`                                        | 架构决策记录                                |
-| [ADR-025](architecture/adr/ADR-025-mobile-12ai-originals-and-video-recovery.md) | Mobile 12ai 原件与视频查询恢复 |
+| 文档                                                                            | 承载内容                                    |
+| ------------------------------------------------------------------------------- | ------------------------------------------- |
+| [REPO-LAYOUT](architecture/REPO-LAYOUT.md)                                      | 目录、参考、vendor与文档生命周期规则        |
+| [DEPRECATIONS](architecture/DEPRECATIONS.md)                                    | 弃用/兼容登记与移除证据入口                 |
+| [ARCHITECTURE](architecture/ARCHITECTURE.md)                                    | 进程模型、模块依赖、数据流                  |
+| [DATA-STORAGE](architecture/DATA-STORAGE.md)                                    | 存储 schema、生命周期、迁移                 |
+| [DATA-CLASSIFICATION](architecture/DATA-CLASSIFICATION.md)                      | 数据分级与处理约束                          |
+| [AIG-SWARM-RELAY-ARCHITECTURE](architecture/AIG-SWARM-RELAY-ARCHITECTURE.md)   | AIG 蜂群自驱接力与正交分轨协同架构规范      |
+| [UNIVERSAL-EXTERNAL-APP-BRIDGE](architecture/UNIVERSAL-EXTERNAL-APP-BRIDGE.md) | 外部成熟专业软件侧车与微型 MCP 架构规范    |
+| [SUPER-AGI-TERMINAL-HARDWARE-ADAPTATION](architecture/SUPER-AGI-TERMINAL-HARDWARE-ADAPTATION.md) | 超级 AGI 终端与本地模型硬件动态调优架构规范 |
+| [GENERATION-PLATFORM](architecture/GENERATION-PLATFORM.md)                      | 生成平台接入                                |
+| [LEGACY-MIGRATION](architecture/LEGACY-MIGRATION.md)                            | 旧工程能力 keep/migrate/rebuild/reject 清单 |
+| `architecture/adr/`                                                             | 架构决策记录                                |
+| [ADR-025](architecture/adr/ADR-025-mobile-12ai-originals-and-video-recovery.md) | Mobile 12ai 原件与视频查询恢复              |
 
 ## UI 文档
 
-[UI_INDEX.md](UI_INDEX.md) 是 **UI 规范唯一入口**，含现行文件分层表、冲突裁决规则和新增功能改病例。该索引的 §1 表是完整映射，新增 UI 文档须同步它。各文件分工：
+Figma ↔ 本地的**分层差异审计**由 [`scripts/figma-audit/`](reference/figma-audit.md) 承载，覆盖 L1 结构 / L2 令牌 / L3 几何 / L4 像素四层；命令入口见 [DEVELOPMENT](engineering/DEVELOPMENT.md) 的设计审计小节。L1–L3 为确定性比对，L4 以有界差异判定。
 
-| 文档                              | 承载内容                               |
-| --------------------------------- | -------------------------------------- |
-| [DESIGN.md](../DESIGN.md) | 全局设计概览、专项规则导航与当前 CSS 生成 token 投影 |
-| [UI_RULES](UI_RULES.md)           | 零件规则、交互约束、复用约束           |
-| [UI_ARCHETYPES](UI_ARCHETYPES.md) | 五种页面类型与选型                     |
-| [DESIGN_TOKENS](DESIGN_TOKENS.md) | token 数值索引                         |
-| [DESIGN-SYSTEM](DESIGN-SYSTEM.md) | 颜色与基础组件                         |
-| [UI_SPEC](UI_SPEC.md)             | UI 运行与验证规范                      |
-| [FRONTEND-SPEC](FRONTEND-SPEC.md) | 前端工程基线：技术栈、弹窗、供应商连接 |
+[UI_INDEX.md](UI_INDEX.md) 是 **本地 UI 规范导航入口**，登记当前 Figma 来源、七章规范映射与同步流程。Figma 是设计真值，本地文档从它派生，UI 修改遵循 [AGENTS.md](../AGENTS.md#设计与交互) 的设计先行规则。该索引的 §1 表是完整映射，新增 UI 文档须同步它。各文件分工：
+
+| 文档                              | 承载内容                                               |
+| --------------------------------- | ------------------------------------------------------ |
+| [DESIGN.md](../DESIGN.md)         | Figma 派生概览、专项规则导航与当前 CSS 生成 token 投影 |
+| [FIGMA-SYNC](FIGMA-SYNC.md)       | Figma 同步管线、机械可逆命名与组件三层 Token 化规范    |
+| [UI_RULES](UI_RULES.md)           | 零件规则、交互约束、复用约束                           |
+| [UI_ARCHETYPES](UI_ARCHETYPES.md) | 五种页面类型与选型                                     |
+| [DESIGN_TOKENS](DESIGN_TOKENS.md) | token 数值索引                                         |
+| [DESIGN-SYSTEM](DESIGN-SYSTEM.md) | 颜色与基础组件                                         |
+| [UI_SPEC](UI_SPEC.md)             | UI 运行与验证规范                                      |
+| [FRONTEND-SPEC](FRONTEND-SPEC.md) | 前端工程基线：技术栈、弹窗、供应商连接                 |
 
 `UI-STANDARDS.md` 与 `UI-ALIGNMENT.md` 已合并，保留为重定向存根，**不承载现行规则，也不要更新它们**；二者同样登记在 `UI_INDEX.md` §1.3。历史正文在 `archive/ui-history/`。
 
@@ -81,7 +98,7 @@
 | [AI_HANDOFF.md](governance/AI_HANDOFF.md)                    | AI 最短恢复入口（current 路由；历史证据回到 dated change package）                        |
 | [PROJECT_GOALS](governance/PROJECT_GOALS.md)                 | 项目目标                                                                                  |
 | [SPEC_BASELINE](governance/SPEC_BASELINE.md)                 | 各类状态的唯一来源映射                                                                    |
-| [AUTHORITY_MAP](governance/AUTHORITY_MAP.md)                 | 权威来源地图与冲突处理顺序（机器可读版 `AUTHORITY_MAP.json`）                             |
+| [AUTHORITY_MAP](governance/AUTHORITY_MAP.md)                 | 领域事实归属；冲突顺序以本文件「权威优先级与冲突裁决」为准，JSON `precedence` 只作投影    |
 | [KNOWN_ISSUES](governance/KNOWN_ISSUES.md)                   | 已知问题清单                                                                              |
 | [WORKSPACE_MAP](governance/WORKSPACE_MAP.md)                 | 本机审计路径分布（非跨设备契约）                                                          |
 | [RETENTION_MANIFEST](governance/RETENTION_MANIFEST.md)       | 保留意图声明（不授权删除或移动）                                                          |
@@ -96,15 +113,15 @@
 
 本轮既有按钮续修入口：[TASK-223 intent](changes/2026-10-14-action-usability-223/intent.md)、[spec](changes/2026-10-14-action-usability-223/spec.md)、[plan](changes/2026-10-14-action-usability-223/plan.md)、[verification](changes/2026-10-14-action-usability-223/verification.md)、[review](changes/2026-10-14-action-usability-223/review.md)。任务状态仍回读账本，索引不新增验收结论。
 
-| 目录           | 职责                                                                                                                            |
-| -------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| `changes/`     | 一次可审计的交付包：`intent` / `spec` / `plan` / `verification` / `review`                                                      |
-| `features/`    | 功能卡与注册表看板，功能状态的唯一来源                                                                                          |
-| `templates/`   | 交付包与功能卡模板                                                                                                              |
-| `reference/`   | Figma、截图与外部参考索引                                                                                                       |
-| `evidence/` | 已审历史证据保留；新运行日志/截图/报告先放容器 output/<task>/，只把经审阅的最小摘要或稳定回归夹具纳入仓库 |
-| `archive/`     | 只读历史材料，不作为当前状态                                                                                                    |
-| `superpowers/` | 历史技能沉淀与过程稿（与 `archive/` 分工：`archive/` 存被取代的文档，`superpowers/` 存技能/计划过程稿），均只读                 |
+| 目录           | 职责                                                                                                            |
+| -------------- | --------------------------------------------------------------------------------------------------------------- |
+| `changes/`     | 一次可审计的交付包：`intent` / `spec` / `plan` / `verification` / `review`                                      |
+| `features/`    | 功能卡与注册表看板，功能状态的唯一来源                                                                          |
+| `templates/`   | 交付包与功能卡模板                                                                                              |
+| `reference/`   | Figma、截图与外部参考索引                                                                                       |
+| `evidence/`    | 已审历史证据保留；新运行日志/截图/报告先放容器 output/<task>/，只把经审阅的最小摘要或稳定回归夹具纳入仓库       |
+| `archive/`     | 只读历史材料，不作为当前状态                                                                                    |
+| `superpowers/` | 历史技能沉淀与过程稿（与 `archive/` 分工：`archive/` 存被取代的文档，`superpowers/` 存技能/计划过程稿），均只读 |
 
 ## 顶层文档
 
@@ -118,26 +135,26 @@
 
 ## 容器层与产物区（仓库外，无版本管理）
 
-| 位置                              | 职责                                                               | 入口                                        |
-| --------------------------------- | ------------------------------------------------------------------ | ------------------------------------------- |
-| `D:/kk-studio/`（容器）           | 非 git 仓库；worktree 唯一合法落点 `.worktrees/`                   | 容器上手：`D:/kk-studio/README.md`          |
-| `D:/kk-studio/docs/`              | 容器级文档：竞品/审计/方案/架构参考/API 契约（**不承载现行规范**） | 容器文档索引：`D:/kk-studio/docs/README.md` |
-| `D:/kk-studio/output/` | 任务运行输出、交付物与恢复包；恢复原件按 receipt/hash 保护，任务状态仍回读仓库账本 | 任务输出入口与收据 |
-| `D:/kk-studio/.verification/`     | 任务验收留存，一任务一目录                                         | 结构调整方案 B2 建索引                      |
-| `D:/kk-studio/.workbuddy/memory/` | AI 本地记忆（上下文辅助，非事实源；冲突以仓库文档为准）            | 见下方「本地记忆机制」                      |
+| 位置                              | 职责                                                                               | 入口                                        |
+| --------------------------------- | ---------------------------------------------------------------------------------- | ------------------------------------------- |
+| `D:/kk-studio/`（容器）           | 非 git 仓库；worktree 唯一合法落点 `.worktrees/`                                   | 容器上手：`D:/kk-studio/README.md`          |
+| `D:/kk-studio/docs/`              | 容器级文档：竞品/审计/方案/架构参考/API 契约（**不承载现行规范**）                 | 容器文档索引：`D:/kk-studio/docs/README.md` |
+| `D:/kk-studio/output/`            | 任务运行输出、交付物与恢复包；恢复原件按 receipt/hash 保护，任务状态仍回读仓库账本 | 任务输出入口与收据                          |
+| `D:/kk-studio/.verification/`     | 任务验收留存，一任务一目录                                                         | 结构调整方案 B2 建索引                      |
+| `D:/kk-studio/.workbuddy/memory/` | AI 本地记忆（上下文辅助，非事实源；冲突以仓库文档为准）                            | 见下方「本地记忆机制」                      |
 
 ## 源码、数据与文档的落点
 
-| 内容 | 唯一落点与边界 |
-| --- | --- |
-| Desktop/Web 共享源码 | src/ 的现有 domain、features、components、runtime、styles；就近组织，按职责拆分 |
-| Desktop 原生壳 | src-tauri/；IPC、文件和凭据能力不搬进浏览器领域层 |
-| Native Mobile | 后续独立 mobile/ 工程；当前窄屏是响应式 Web，不复制桌面几何 |
-| 静态设计与 demo | public/design/figma、public/fixtures/demo；保留版本化来源，不把真实生成原件混入 fixtures |
-| 构建与依赖缓存 | dist、node_modules、target、vendor 构建输出默认留在产物区；已版本化宿主 schema 仍按其输入契约审阅 |
-| 用户项目、原件和凭据 | 原数据根与系统凭据库；仓库、文档、测试报告不保存秘密或生产用户快照 |
-| 当前规则与状态 | 本索引路由到主题唯一承载文件；功能看注册表，任务看账本，生成视图不手改 |
-| 任务证据与恢复 | output/<task>/ 保留运行模式、SHA、hash、恢复清单；历史证据不重写成新 PASS |
+| 内容                 | 唯一落点与边界                                                                                    |
+| -------------------- | ------------------------------------------------------------------------------------------------- |
+| Desktop/Web 共享源码 | src/ 的现有 domain、features、components、runtime、styles；就近组织，按职责拆分                   |
+| Desktop 原生壳       | src-tauri/；IPC、文件和凭据能力不搬进浏览器领域层                                                 |
+| Native Mobile        | 后续独立 mobile/ 工程；当前窄屏是响应式 Web，不复制桌面几何                                       |
+| 静态设计与 demo      | public/design/figma、public/fixtures/demo；保留版本化来源，不把真实生成原件混入 fixtures          |
+| 构建与依赖缓存       | dist、node_modules、target、vendor 构建输出默认留在产物区；已版本化宿主 schema 仍按其输入契约审阅 |
+| 用户项目、原件和凭据 | 原数据根与系统凭据库；仓库、文档、测试报告不保存秘密或生产用户快照                                |
+| 当前规则与状态       | 本索引路由到主题唯一承载文件；功能看注册表，任务看账本，生成视图不手改                            |
+| 任务证据与恢复       | output/<task>/ 保留运行模式、SHA、hash、恢复清单；历史证据不重写成新 PASS                         |
 
 新规则改对应承载文件和索引，不另建“统一规范副本”；交付包只记录本任务的意图、约束、实际变更与证据，不复制整套规范。历史目录和用户资料的删除/移动是独立授权与恢复流程。
 
@@ -146,8 +163,8 @@
 同一问题存在多份说法时，按以下顺序裁决，**上位覆盖下位**：
 
 1. **当前用户意图** — 决定产品目标。任何文档都不能与之对抗。
-2. **`AGENTS.md`** — 全部 AI 的最高规则入口。
-3. **`AI_RULES.md`** — 协作分工、事实纪律、交付要求。
+2. **[`RULES.md`](../RULES.md) 与 [`AGENTS.md`](../AGENTS.md)** — 全部 AI 的开工铁律与最高技术/UI/安全边界入口。
+3. **[`AI_RULES.md`](../AI_RULES.md)** — 协作分工、事实纪律、交付要求。
 4. **专项规范** — 本文件索引表中的 engineering / architecture / UI / governance 文档，各自领域内唯一来源。
 5. **`src/` 实际代码与运行证据** — 说明当前实际怎样。
 
@@ -200,3 +217,21 @@
 `D:\kk-studio\` 是容器目录，不是 git 仓库。真正的仓库根是 `D:\kk-studio\KK-Studio-2.0`。容器级结构规范见纯文本路径 `D:\kk-studio\docs\REPO-STRUCTURE.md`，快速上手见 `D:\kk-studio\README.md`。
 
 worktree 落点：`D:\kk-studio\.worktrees\TASK-ID-slug`。新建 worktree 后需把主仓 `node_modules` 以目录联接（junction）挂入，否则 `eslint` 与 `typescript` 解析失败。
+
+P1纯契约与单一清单投影的草案见[ADR-028](architecture/adr/ADR-028-capability-manifest-projections.md)；[P1规格与映射](changes/2026-10-28-capability-contract/spec.md)区分声明候选、运行接线及未验收边界。
+
+P3a–e依赖反转与兼容方案见[ADR-029](architecture/adr/ADR-029-feature-cycle-decoupling.md)；静态无环不代表主线或原生验收完成。
+
+公开切片与宿主端口见[ADR-030](architecture/adr/ADR-030-public-feature-entries.md)。
+
+插件权限与实验隔离见[ADR-031](architecture/adr/ADR-031-plugin-permissions-and-sandbox.md)。
+
+独立图片能力与三端资产溯源见[ADR-032](architecture/adr/ADR-032-independent-image-capabilities-and-lineage.md)。
+
+ComfyUI双态画布卡片与本机托管见[ADR-033](architecture/adr/ADR-033-comfy-canvas-runtime.md)。
+
+确定性作用域记忆 V2 与兼容投影见 [ADR-035](architecture/adr/ADR-035-scoped-memory-v2.md)。
+
+真实多模态持久任务契约见 [ADR-036](architecture/adr/ADR-036-durable-multimodal-generation.md)；[阶段3实施包](changes/2026-11-04-multimodal/verification.md) 保留源树的历史证据，当前整合验收见[六支柱接线](changes/2026-11-04-e2e-wiring/verification.md)。
+
+- [深水区创作契约与兼容恢复](architecture/adr/ADR-037-deep-water-creative-contracts.md)

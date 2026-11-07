@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 import type { Page } from "@playwright/test";
+import { configureMediaNode } from "./mediaHelpers";
 
 async function openWorkspace(page: Page): Promise<void> {
   await page.goto("/");
@@ -75,7 +76,7 @@ test("图片上传预览和重绘未配置时保留草稿并打开供应商设�
   await expect(page.getByTestId(/^connector-added-image-/)).toHaveCount(0);
 });
 
-test("音频草稿选中后在卡片下方输入，生成后可以播放本地结果", async ({
+test("音频草稿选中后在卡片下方输入，speech归档原件可播放与重载", async ({
   page,
 }) => {
   await openWorkspace(page);
@@ -88,17 +89,33 @@ test("音频草稿选中后在卡片下方输入，生成后可以播放本地�
   expect((await composer.boundingBox())!.y).toBeGreaterThan(
     body.y + body.height,
   );
-  await source.getByLabel("音频提示词").fill("温和的合成和弦");
+  await configureMediaNode(page, source, "audio");
+  let posts = 0;
+  await page.route("http://127.0.0.1:19438/v1/audio/speech", async (route) => {
+    posts++;
+    expect(route.request().postDataJSON()).toEqual({
+      model: "tts-1",
+      input: "欢迎使用语音朗读",
+      voice: "alloy",
+      response_format: "mp3",
+      speed: 1,
+    });
+    await route.fulfill({
+      path: "tests/fixtures/media/silence.mp3",
+      contentType: "audio/mpeg",
+    });
+  });
+  await source.getByLabel("音频提示词").fill("欢迎使用语音朗读");
   await source.getByRole("button", { name: "生成音频", exact: true }).click();
-  await expect(
-    page.locator(".demo-result-node[data-source=demo][data-kind=audio]"),
-  ).toHaveCount(1);
-  await expect(
-    page.locator('.demo-result-node[data-kind="audio"] audio[hidden]'),
-  ).toHaveJSProperty("paused", true);
-  await page.getByRole("button", { name: "预览蓝调氛围", exact: true }).click();
+  const result = page.locator(
+    '.demo-result-node[data-source="provider"][data-kind="audio"]',
+  );
+  await expect(result).toHaveCount(1);
+  await result
+    .getByRole("button", { name: "预览音频结果 1", exact: true })
+    .click();
   const media = page
-    .getByRole("dialog", { name: "预览蓝调氛围", exact: true })
+    .getByRole("dialog", { name: "预览音频结果 1", exact: true })
     .locator("audio");
   await expect(media).toBeVisible();
   await expect
@@ -108,4 +125,11 @@ test("音频草稿选中后在卡片下方输入，生成后可以播放本地�
   await expect
     .poll(() => media.evaluate((el) => el.currentTime))
     .toBeGreaterThan(0);
+  await page.getByRole("button", { name: "关闭素材预览", exact: true }).click();
+  await expect(page.locator(".project-save-state")).toContainText("已保存");
+  await page.reload();
+  await page.getByRole("button", { name: "项目库", exact: true }).click();
+  await page.locator(".project-library-card").first().click();
+  await expect(result).toHaveCount(1);
+  expect(posts).toBe(1);
 });

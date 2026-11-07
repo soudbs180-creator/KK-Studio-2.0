@@ -1,108 +1,83 @@
-.canvas-top-right {
-  position: absolute;
-  top: 0;
-  right: 0;
-  display: flex;
-  align-items: center;
-  gap: 9.393px;
-  z-index: 15;
-  width: auto;
-  height: 31.109px;
-}
-.canvas-zoom-trigger,
-.canvas-navigation-tools {
-  height: 31.109px;
-  border: 1.197px solid var(--border-default);
-  border-radius: 15.555px;
-  background: var(--bg-card);
-  color: var(--text-tertiary);
-  font-weight: 500;
-}
-.canvas-zoom-trigger {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4.786px;
-  width: 75.38px;
-  flex-shrink: 0;
-  font-size: 13.162px;
-}
-.canvas-zoom-trigger img {
-  width: 10.769px;
-  height: 5.983px;
-}
-.canvas-navigation-tools {
+/* Figma 435:48879: a single container with 32px controls and 16px glyphs. */
+.canvas .canvas-hud .canvas-top-right {
   position: relative;
-  display: block;
-  padding: 0;
-  width: 196.227px;
-}
-.canvas-navigation-tools button {
   display: flex;
+  align-items: center;
+  gap: var(--kk-canvas-nav-gap);
+  padding: var(--kk-canvas-view-inset);
+  border: 0;
+  box-shadow: inset 0 0 0 var(--kk-border-width) var(--kk-border-default);
+  border-radius: var(--kk-canvas-view-radius);
+  background: var(--kk-canvas-view-bg);
+  box-sizing: border-box;
+  height: var(--kk-canvas-view-h);
+  min-width: 0;
+  max-width: 100%;
+  z-index: var(--kk-z-sticky);
+}
+.canvas .canvas-zoom-trigger,
+.canvas .canvas-navigation-tools button {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  gap: 2.393px;
-  height: 21.537px;
-  border-radius: 4.786px;
-  font-size: 13.162px;
+  gap: var(--kk-canvas-nav-pad);
+  height: var(--kk-canvas-nav-control);
+  padding: 0 var(--kk-canvas-nav-pad);
+  border: 0;
+  border-radius: var(--kk-canvas-nav-radius);
+  background: transparent;
+  color: var(--kk-canvas-view-fg);
+  font-size: var(--kk-canvas-view-font);
+  line-height: var(--kk-canvas-view-line);
+  font-weight: var(--kk-canvas-view-weight);
 }
-.canvas-navigation-tools button:hover,
+.canvas .canvas-navigation-tools {
+  display: flex;
+  align-items: center;
+  gap: var(--kk-canvas-nav-gap);
+  height: auto;
+  width: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+.canvas .canvas-zoom-trigger {
+  width: var(--kk-canvas-nav-zoom-width);
+  min-width: var(--kk-canvas-nav-zoom-width);
+}
+.canvas .canvas-map-trigger {
+  width: var(--kk-canvas-nav-map-width);
+}
+.canvas .canvas-navigation-tools button:not(.canvas-map-trigger) {
+  width: var(--kk-canvas-nav-control);
+  padding: 0;
+}
+.canvas-zoom-trigger:hover,
+.canvas-navigation-tools button:hover {
+  color: var(--kk-canvas-view-fg-selected);
+  background: var(--kk-canvas-view-bg-hover);
+}
+.canvas-navigation-tools button:active,
 .canvas-navigation-tools button[aria-pressed="true"] {
-  background: var(--border-default);
+  color: var(--kk-canvas-view-fg-selected);
+  background: var(--kk-canvas-view-bg-selected);
 }
-.canvas-navigation-tools img {
-  object-fit: contain;
+.canvas-zoom-trigger:focus-visible,
+.canvas-navigation-tools button:focus-visible {
+  outline: var(--kk-focus-width-subtle) solid var(--kk-focus-ring);
+  outline-offset: var(--kk-focus-offset-subtle);
 }
-.canvas-arrange img {
-  width: 13.755px;
-  height: 13.755px;
+.canvas-navigation-tools .toolbar-icon,
+.canvas-navigation-tools .ui-icon {
+  width: var(--kk-canvas-nav-icon);
+  height: var(--kk-canvas-nav-icon);
 }
-.canvas-background img {
-  width: 13.162px;
-  height: 13.162px;
-}
-.canvas-lines img {
-  width: 13.162px;
-  height: 14.491px;
-}
-.canvas-map-trigger img {
-  width: 13.162px;
-  height: 13.162px;
-}
-.canvas-arrange {
-  position: absolute;
-  top: 4.786px;
-  left: 9.57px;
-  width: 56.236px;
-}
-.canvas-background,
-.canvas-lines {
-  position: absolute;
-  top: 4.786px;
-  width: 21.537px;
-}
-.canvas-background {
-  left: 72.99px;
-}
-.canvas-lines {
-  left: 96.92px;
-}
-.canvas-map-trigger {
-  position: absolute;
-  top: 4.786px;
-  left: 120.85px;
-  width: 65.808px;
-}
-.canvas-navigation-divider {
-  position: absolute;
-  top: 8.38px;
-  left: 69.4px;
-  width: 1px;
-  height: 14.358px;
-  background: var(--border-default);
+.canvas .canvas-navigation-divider {
+  width: var(--kk-border-width);
+  height: var(--kk-canvas-nav-divider-h);
+  background: var(--kk-border-default);
   flex-shrink: 0;
-  justify-self: center;
 }
 .canvas-color-input {
   width: var(--kk-control-h-md);
@@ -127,7 +102,7 @@
   border: 1.197px solid var(--border-default);
   border-radius: 26.298px;
   background: var(--bg-card);
-  box-shadow: 0 8px 20px #0003;
+  box-shadow: var(--ui-shadow);
   max-height: var(--canvas-menu-available-height);
   overflow-y: auto;
   overscroll-behavior: contain;
@@ -196,44 +171,29 @@
   border: 1.197px solid var(--border-default);
   border-radius: 11.965px;
   background: var(--bg-card);
-  box-shadow: 0 8px 20px #0003;
+  box-shadow: var(--ui-shadow);
 }
 .minimap-surface {
   position: relative;
   width: 120.847px;
   height: 111.275px;
-  background: #111;
+  background: var(--kk-bg-app);
   border-radius: 2px;
 }
 .minimap-node {
   position: absolute;
-  background: #444;
+  background: var(--kk-border-default);
   border-radius: 2px;
 }
 .minimap-node:hover,
 .minimap-node:focus-visible {
-  background: #777;
+  background: var(--kk-border-control);
 }
 .minimap-empty {
-  color: #858585;
+  color: var(--kk-border-control);
   font-size: 10px;
 }
 @media (max-width: 800px) {
-  .canvas-navigation-tools {
-    display: grid;
-    grid-template-columns: 56.24px 1px 21.54px 21.54px 65.81px;
-    justify-content: space-between;
-    align-items: center;
-    padding: 3px 9px;
-    gap: 0;
-  }
-  .canvas-arrange,
-  .canvas-background,
-  .canvas-lines,
-  .canvas-map-trigger,
-  .canvas-navigation-divider {
-    position: static;
-  }
   .canvas-zoom-menu,
   .canvas-background-menu {
     width: 150px;
@@ -247,4 +207,31 @@
     font-size: var(--ui-font-body);
     height: 28px;
   }
+}
+
+.canvas .canvas-zoom-menu,
+.canvas .canvas-background-menu {
+  top: calc(100% + 8px);
+  width: min(240px, calc(100vw - 16px));
+}
+
+.canvas .canvas-hud-right {
+  max-width: 100%;
+  flex-shrink: 1;
+}
+.canvas .canvas-top-right {
+  max-width: 100%;
+  min-width: 0;
+}
+.canvas .canvas-minimap {
+  width: min(240px, calc(100vw - 16px));
+  height: 182px;
+  padding: 16px;
+  border: 1px solid var(--kk-border-default);
+  border-radius: var(--kk-radius-panel);
+  overflow: auto;
+}
+.canvas .minimap-surface {
+  width: 100%;
+  height: 100%;
 }

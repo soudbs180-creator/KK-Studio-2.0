@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { openWorkspace, uploadCanvasMedia } from "./helpers";
+import { expectApproxBox, openWorkspace, uploadCanvasMedia } from "./helpers";
 
 test("资产搜索、空态恢复、列表、紧凑视图及创建主体", async ({ page }) => {
   const errors: string[] = [];
@@ -8,8 +8,9 @@ test("资产搜索、空态恢复、列表、紧凑视图及创建主体", async
   await page.getByRole("button", { name: "资源管理", exact: true }).click();
   const panel = page.getByTestId("asset-panel");
   await expect(panel).toBeVisible();
-  await expect(panel).toHaveCSS("width", "900px");
-  await expect(panel).toHaveCSS("height", "696px");
+  await page.getByRole("button", { name: "展开资产管理" }).click();
+  await expect(panel).toHaveCSS("width", "748px");
+  await expect(panel).toHaveCSS("height", "600px");
   await panel.screenshot({
     path: test.info().outputPath("runtime/assets-desktop.png"),
   });
@@ -27,7 +28,7 @@ test("资产搜索、空态恢复、列表、紧凑视图及创建主体", async
   await expect(page.locator(".asset-content")).toHaveClass(/list/);
   await page.getByRole("button", { name: "网格视图" }).click();
   await page.getByRole("button", { name: "收起资产管理" }).click();
-  expect(await panel.boundingBox()).toMatchObject({ width: 305 });
+  expect(await panel.boundingBox()).toMatchObject({ width: 308 });
   const thumbnail = await page
     .locator(".asset-thumbnail")
     .first()
@@ -36,14 +37,16 @@ test("资产搜索、空态恢复、列表、紧凑视图及创建主体", async
   const firstCard = await page.locator(".asset-card").first().boundingBox();
   const secondRow = await page.locator(".asset-card").nth(2).boundingBox();
   expect(secondRow!.y).toBeGreaterThanOrEqual(firstCard!.y + firstCard!.height);
+  await page.setViewportSize({ width: 1920, height: 480 });
   expect(
     await page
-      .locator(".asset-content")
+      .locator(".asset-panel-body")
       .evaluate((e) => e.scrollHeight > e.clientHeight),
   ).toBe(true);
   await panel.screenshot({
     path: test.info().outputPath("runtime/assets-compact.png"),
   });
+  await page.setViewportSize({ width: 1920, height: 1080 });
   await page.getByRole("tab", { name: "资产", exact: true }).click();
   await page.getByRole("button", { name: "创建主体", exact: true }).click();
   await page.getByPlaceholder("例如：品牌代言人").fill("测试角色");
@@ -66,12 +69,12 @@ test("设置主题保存重载、键盘关闭及导航", async ({ page }) => {
   await page.getByRole("dialog").screenshot({
     path: test.info().outputPath("runtime/settings-integrated.png"),
   });
-  await page.getByLabel("主题", { exact: true }).selectOption("light");
+  await page.getByLabel("主题外观", { exact: true }).selectOption("light");
   await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
   await page.reload();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
-  await page.getByLabel("主题", { exact: true }).selectOption("dark");
+  await page.getByLabel("主题外观", { exact: true }).selectOption("dark");
   await page.keyboard.press("Escape");
   await expect(
     page.getByRole("button", { name: "打开设置", exact: true }),
@@ -91,36 +94,21 @@ test("未接入的通用设置明确禁用原因", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   const dialog = page.getByRole("dialog", { name: "设置" });
-  await dialog
-    .locator("summary")
-    .filter({ hasText: "系统与未接入偏好" })
-    .click();
   const watermark = dialog.getByRole("switch", {
-    name: "去除水印",
+    name: "生成内容水印",
     exact: true,
   });
   await expect(watermark).toBeDisabled();
   await expect(
-    dialog.getByText("当前模型协议未提供水印参数，暂不能影响生成结果。", {
+    dialog.getByText("服务商协议暂未开放水印开关", {
       exact: true,
     }),
-  ).toBeVisible();
-  await expect(dialog.locator("img.settings-nav-icon").first()).toHaveAttribute(
-    "width",
-    "20",
-  );
-  await expect(dialog.locator("img.settings-nav-icon").first()).toHaveAttribute(
-    "height",
-    "20",
-  );
-  await expect(dialog.locator("img.settings-nav-icon").first()).toHaveCSS(
-    "width",
-    "20px",
-  );
-  await expect(dialog.locator("img.settings-nav-icon").first()).toHaveCSS(
-    "height",
-    "20px",
-  );
+  ).toHaveCount(1);
+  const icon = dialog.locator(".settings-nav-icon svg").first();
+  await expect(icon).toHaveAttribute("width", "16");
+  await expect(icon).toHaveAttribute("height", "16");
+  await expect(icon).toHaveCSS("width", "16px");
+  await expect(icon).toHaveCSS("height", "16px");
 });
 
 test("模型接入使用 API 地址，连接状态真实且密钥不落盘", async ({ page }) => {
@@ -131,9 +119,7 @@ test("模型接入使用 API 地址，连接状态真实且密钥不落盘", asy
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   await page.getByRole("button", { name: "模型接入", exact: true }).click();
-  await page
-    .getByRole("button", { name: "API Key（官方）", exact: true })
-    .click();
+  await page.getByRole("tab", { name: "官方直连 API", exact: true }).click();
   await page.getByRole("textbox", { name: "提供商" }).fill("测试供应商");
   await page.getByLabel("接口地址").fill("https://models.example.test/v1");
   await page.getByLabel("API Key", { exact: true }).fill("session-key");
@@ -146,7 +132,9 @@ test("模型接入使用 API 地址，连接状态真实且密钥不落盘", asy
   expect(saved).not.toContain("session-key");
   await page.getByRole("button", { name: "测试连接并刷新模型" }).click();
   await expect(
-    page.getByText("已获取 0 个模型；生成能力仍需实际验证。", { exact: true }),
+    page
+      .getByRole("region", { name: "官方 API Key 配置", exact: true })
+      .getByText("已获取 0 个模型；生成能力仍需实际验证。", { exact: true }),
   ).toBeVisible();
   await page.getByRole("dialog", { name: "设置" }).screenshot({
     path: test.info().outputPath("runtime/settings-model-provider.png"),
@@ -154,9 +142,7 @@ test("模型接入使用 API 地址，连接状态真实且密钥不落盘", asy
   await page.reload();
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   await page.getByRole("button", { name: "模型接入", exact: true }).click();
-  await page
-    .getByRole("button", { name: "API Key（官方）", exact: true })
-    .click();
+  await page.getByRole("tab", { name: "官方直连 API", exact: true }).click();
   await expect(page.getByLabel("接口地址")).toHaveValue(
     "https://models.example.test/v1",
   );
@@ -167,30 +153,25 @@ test("豆包预置一次性填入名称和方舟地址", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   await page.getByRole("button", { name: "模型接入", exact: true }).click();
-  await page
-    .getByRole("button", { name: "API Key（官方）", exact: true })
-    .click();
+  await page.getByRole("tab", { name: "官方直连 API", exact: true }).click();
   const presets = page.locator("details.provider-presets");
-  await presets.getByText("服务商预设与接口文档", { exact: true }).click();
-  await presets.getByLabel("搜索服务商", { exact: true }).fill("豆包");
-  await presets
-    .getByRole("group", { name: "服务商预设", exact: true })
-    .getByRole("button", { name: "豆包（火山方舟） OpenAI 兼容", exact: true })
-    .click();
-  const detail = presets.getByRole("region", { name: "预设详情", exact: true });
-  await expect(detail.getByRole("link", { name: "官方网站" })).toHaveAttribute(
-    "href",
-    "https://www.volcengine.com/product/ark",
-  );
-  await expect(detail.getByRole("link", { name: "获取密钥" })).toHaveAttribute(
+  await presets.getByText("服务商预设与快速填入", { exact: true }).click();
+  const detail = presets
+    .locator(".provider-preset-item")
+    .filter({ has: page.getByText("豆包（火山方舟）", { exact: true }) });
+  await expect(
+    detail.getByRole("link", { name: "官网", exact: true }),
+  ).toHaveAttribute("href", "https://www.volcengine.com/product/ark");
+  await expect(
+    detail.getByRole("link", { name: "密钥", exact: true }),
+  ).toHaveAttribute(
     "href",
     "https://console.volcengine.com/ark/region:ark+cn-beijing/apiKey",
   );
-  await expect(detail.getByRole("link", { name: "接口文档" })).toHaveAttribute(
-    "href",
-    "https://www.volcengine.com/docs/82379",
-  );
-  await detail.getByRole("button", { name: "使用此预设", exact: true }).click();
+  await expect(
+    detail.getByRole("link", { name: "文档", exact: true }),
+  ).toHaveAttribute("href", "https://www.volcengine.com/docs/82379");
+  await detail.getByRole("button", { name: "一键填入", exact: true }).click();
   await expect(page.getByRole("textbox", { name: "提供商" })).toHaveValue(
     "豆包（火山方舟）",
   );
@@ -203,9 +184,7 @@ test("模型接入可以登记多个非敏感连接并切换当前配置", async
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   await page.getByRole("button", { name: "模型接入", exact: true }).click();
-  await page
-    .getByRole("button", { name: "API Key（官方）", exact: true })
-    .click();
+  await page.getByRole("tab", { name: "官方直连 API", exact: true }).click();
   const save = async (name: string, baseUrl: string, model: string) => {
     await page.getByRole("textbox", { name: "提供商" }).fill(name);
     await page.getByLabel("接口地址").fill(baseUrl);
@@ -293,9 +272,7 @@ test("本地导入成功与错误恢复，不伪造生成和回复", async ({ pa
     .locator(".conversation-panel")
     .getByRole("button", { name: "前往模型设置", exact: true })
     .click();
-  await page
-    .getByRole("button", { name: "API Key（官方）", exact: true })
-    .click();
+  await page.getByRole("tab", { name: "官方直连 API", exact: true }).click();
   await expect(page.getByLabel("API Key", { exact: true })).toBeVisible();
   await expect(page.getByLabel("对话内容")).toHaveValue("你好");
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
@@ -305,65 +282,69 @@ test("无限画布隐藏滚动条，卡片拖动时连接线跟随", async ({ pa
   await openWorkspace(page);
   const canvas = page.getByTestId("infinite-canvas");
   await expect(canvas).toBeVisible();
-  expect(await canvas.boundingBox()).toEqual({
-    x: 291,
-    y: 45,
-    width: 1619,
-    height: 1025,
+  expectApproxBox(await canvas.boundingBox(), {
+    x: 292,
+    y: 52,
+    width: 1628,
+    height: 1028,
   });
-  expect(await page.locator(".image-preview").boundingBox()).toEqual({
-    // Latest Figma card geometry places the 400px image body at x=94 in the
-    // node; at this viewport the world transform resolves to x=468.
-    x: 468,
-    y: 211,
+  expectApproxBox(await page.locator(".image-preview").boundingBox(), {
+    // Latest Figma card geometry places the 400px image body at x=95 in the
+    // node; at this viewport the world transform resolves to x=469.
+    x: 469,
+    y: 218,
     width: 400,
     height: 400,
   });
-  expect(await page.locator(".task-button").boundingBox()).toEqual({
-    x: 321,
-    y: 72,
-    width: 93,
-    height: 30,
+  expectApproxBox(await page.locator(".task-button").boundingBox(), {
+    x: 444,
+    y: 86,
+    width: 96,
+    height: 32,
   });
-  expect(await page.locator(".conversation-panel").boundingBox()).toEqual({
-    x: 1430,
-    y: 61,
-    width: 470,
-    height: 998,
+  expectApproxBox(await page.locator(".conversation-panel").boundingBox(), {
+    x: 1432,
+    y: 67,
+    width: 472,
+    height: 996,
   });
-  expect(await page.getByTestId("canvas-node-video1").boundingBox()).toEqual({
-    x: 1001,
-    y: 150,
+  expectApproxBox(await page.getByTestId("canvas-node-video1").boundingBox(), {
+    x: 1002,
+    y: 157,
     width: 370,
     height: 224,
   });
-  expect(await page.getByTestId("canvas-node-video2").boundingBox()).toEqual({
-    x: 1001,
-    y: 443,
+  expectApproxBox(await page.getByTestId("canvas-node-video2").boundingBox(), {
+    x: 1002,
+    y: 450,
     width: 370,
     height: 224,
   });
   const videoPreviews = page.locator(".video-placeholder");
-  expect(await videoPreviews.nth(0).boundingBox()).toEqual({
-    x: 1001,
-    y: 166,
+  expectApproxBox(await videoPreviews.nth(0).boundingBox(), {
+    x: 1002,
+    y: 173,
     width: 370,
     height: 208,
   });
-  expect(await videoPreviews.nth(1).boundingBox()).toEqual({
-    x: 1001,
-    y: 459,
+  expectApproxBox(await videoPreviews.nth(1).boundingBox(), {
+    x: 1002,
+    y: 466,
     width: 370,
     height: 208,
   });
-  const toolbarBounds = await page.locator(".canvas-toolbar").boundingBox();
-  expect(toolbarBounds).toEqual({ x: 719, y: 998, width: 244, height: 50 });
+  expectApproxBox(await page.locator(".canvas-toolbar").boundingBox(), {
+    x: 718,
+    y: 1016,
+    width: 288,
+    height: 52,
+  });
   await expect(page.locator(".canvas-top-right")).toBeVisible();
-  expect(await page.locator(".canvas-top-right").boundingBox()).toEqual({
-    x: 1138.015625,
-    y: 72,
-    width: 280.984375,
-    height: 31.09375,
+  expectApproxBox(await page.locator(".canvas-top-right").boundingBox(), {
+    x: 1123,
+    y: 84,
+    width: 281,
+    height: 36,
   });
   const navigationPanelGap = await page.evaluate(() => {
     const navigation = document
@@ -374,7 +355,7 @@ test("无限画布隐藏滚动条，卡片拖动时连接线跟随", async ({ pa
       .getBoundingClientRect();
     return panel.left - navigation.right;
   });
-  expect(navigationPanelGap).toBeCloseTo(11, 1);
+  expect(navigationPanelGap).toBeCloseTo(28, 1);
   await expect(page.getByTestId("image-composer")).toHaveCount(0);
   await page.locator(".image-preview").click();
   await expect(page.getByTestId("image-composer")).toBeVisible();
@@ -389,10 +370,10 @@ test("无限画布隐藏滚动条，卡片拖动时连接线跟随", async ({ pa
       );
     })
     .toEqual({
-      x: 374,
-      y: 621,
-      width: 590,
-      height: 237,
+      x: 343,
+      y: 634,
+      width: 652,
+      height: 214,
     });
   await page.getByTestId("image-composer").screenshot({
     path: test.info().outputPath("runtime/image-composer-selected.png"),
@@ -414,11 +395,11 @@ test("无限画布隐藏滚动条，卡片拖动时连接线跟随", async ({ pa
   await page.getByRole("menuitem", { name: "画布标签", exact: true }).click();
   await expect(page.getByTestId("canvas-tags-panel")).toBeVisible();
   await page.keyboard.press("Escape");
-  await page.getByRole("button", { name: "选择画布工具", exact: true }).click();
+  await page.getByRole("button", { name: "展开画布工具", exact: true }).click();
   await page
     .getByRole("menuitemradio", { name: "移动工具", exact: true })
     .click();
-  await expect(page.locator(".canvas-toolbar")).toHaveCSS("width", "244px");
+  await expect(page.locator(".canvas-toolbar")).toHaveCSS("width", "288px");
   await videoPreviews.nth(0).click();
   await expect(page.getByTestId("image-composer")).toHaveCount(0);
   expect(
@@ -680,9 +661,7 @@ test("未配置连接时工作台草稿在收起对话及页面切换后保留",
     .locator(".conversation-panel")
     .getByRole("button", { name: "前往模型设置", exact: true })
     .click();
-  await page
-    .getByRole("button", { name: "API Key（官方）", exact: true })
-    .click();
+  await page.getByRole("tab", { name: "官方直连 API", exact: true }).click();
   await expect(page.getByLabel("API Key", { exact: true })).toBeVisible();
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
   await page.getByRole("button", { name: "收起对话", exact: true }).click();

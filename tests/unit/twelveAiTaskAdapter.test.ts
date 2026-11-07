@@ -586,3 +586,30 @@ test("12AI blocks redirects and redacts response bodies and arbitrary transport 
     errorIs(error, { failureClass: "network" }),
   );
 });
+
+test("12AI rejects percent-encoded credential echoes and unsafe recovered IDs before network", async () => {
+  let calls = 0;
+  const adapter = new TwelveAiTaskAdapter(connection(), {
+    resolveCredential: async () => secret,
+    fetch: async () => {
+      calls++;
+      return Response.json({
+        id: "task_one",
+        status: "completed",
+        outputs: [
+          "https://img.12ai.org/video.mp4?token=" +
+            [...secret].map((c) => "%" + c.charCodeAt(0).toString(16)).join(""),
+        ],
+      });
+    },
+  });
+  await assert.rejects(
+    adapter.getTask("task_one"),
+    (error: unknown) =>
+      error instanceof TwelveAiTaskError &&
+      !JSON.stringify(error).includes(secret),
+  );
+  assert.equal(calls, 1);
+  await assert.rejects(adapter.getTask(secret), TwelveAiTaskError);
+  assert.equal(calls, 1);
+});

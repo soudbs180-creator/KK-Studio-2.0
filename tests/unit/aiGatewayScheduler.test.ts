@@ -381,3 +381,51 @@ test("extractNormalized always yields a usable classification", () => {
     "RATE_LIMITED",
   );
 });
+
+test("dispatch waits for actual cooldown then retries, and cancellation never resubmits", async () => {
+  for (const cancel of [false, true]) {
+    let calls = 0;
+    let now = 1000;
+    const controller = new AbortController();
+    const adapter: ChannelAdapter = {
+      ...offlineAdapter,
+      provider: "wait-provider",
+      async submit() {
+        calls++;
+        if (calls === 1) {
+          if (cancel)
+            queueMicrotask(() => controller.abort(new Error("cancel-wait")));
+          else
+            setTimeout(() => {
+              now += 100;
+            }, 0);
+          throw Object.assign(new Error("rate limit"), {
+            normalized: { ...rateLimited, cooldownMs: 10 },
+          });
+        }
+        return { kind: "inline", assetBase64: "aGk=", mime: "text/plain" };
+      },
+    };
+    const registry = new ChannelRegistry();
+    registry.registerAdapter(adapter);
+    registry.replace({
+      registrations: [registration("only", { adapter })],
+      states: new Map(),
+    });
+    const scheduler = new Scheduler(registry, {
+      now: () => now,
+      coolingWaitLimitMs: 100,
+      random: () => 0,
+    });
+    if (cancel) {
+      await assert.rejects(
+        () => scheduler.dispatch({ ...request, signal: controller.signal }),
+        /cancel-wait/,
+      );
+      assert.equal(calls, 1);
+    } else {
+      assert.equal((await scheduler.dispatch(request)).channelId, "only");
+      assert.equal(calls, 2);
+    }
+  }
+});

@@ -451,6 +451,35 @@ for (const scenario of [
   });
 }
 
+test("image response keeps an explicit cost receipt and ignores token usage", async () => {
+  await withBrowser(async () => {
+    writeProviderConnections([accountB]);
+    const seen: unknown[] = [];
+    const receipt = {
+      kind: "actual",
+      amount: 0.06,
+      currency: "USD",
+      source: "provider",
+      providerId: "test-provider",
+      receiptId: "bill-1",
+      receivedAt: 2,
+      taskId: "task-1",
+      idempotencyKey: "stable-1",
+    };
+    globalThis.fetch = async () =>
+      Response.json({
+        data: [{ b64_json: "c3ludGhldGlj" }],
+        usage: { prompt_tokens: 2, completion_tokens: 3, total_tokens: 5 },
+        costReceipt: receipt,
+      });
+    const result = await generateImages(
+      request({ onCostReceipt: (item) => seen.push(item) }),
+    );
+    assert.equal(result.sources.length, 1);
+    assert.deepEqual(seen, [receipt]);
+  });
+});
+
 test("second account uses its own credential for explicit ID and unique legacy binding", async () => {
   await withBrowser(async ({ requests }) => {
     writeProviderConnections([accountA, accountB]);

@@ -1,4 +1,6 @@
 import React, { useMemo, useCallback } from "react";
+import "./tokenized-composer.css";
+import { useComposerReferences } from "./useComposerReferences.ts";
 import ComposerTextarea from "../ComposerTextarea.tsx";
 import { useComposerAutocomplete } from "./useComposerAutocomplete.ts";
 import ComposerSlashMenu from "./ComposerSlashMenu.tsx";
@@ -12,42 +14,20 @@ import ComposerMentionsBar, {
 import {
   defaultSlashRegistry,
   type SlashCommand,
-} from "../../features/commands/slashCommandRegistry.ts";
+} from "../../features/commands/index.ts";
+import {
+  buildMentionCandidates,
+  shouldSubmit,
+  handleAutocompleteKey,
+} from "./composerKeyHandlers.ts";
 import type { CanvasReferenceSlot } from "../../domain/canvasItems.ts";
 import {
-  extractMentionTokens,
   serializeMentionToken,
   type ParsedMention,
-} from "../../features/prompts/structuredPromptCompiler.ts";
-import type { CreationAttachment } from "../../features/creation/model.ts";
-import type { AgentDraftAttachment } from "../../features/agent/agentAttachments.ts";
+} from "../../features/prompts/index.ts";
 
-export interface TokenizedComposerInputProps {
-  value: string;
-  onChange: (value: string) => void;
-  placeholder?: string;
-  disabled?: boolean;
-  onKeyDown?: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
-  onSubmit?: () => void;
-  availableNodes?: Array<{
-    id: string;
-    title: string;
-    preview?: string;
-    slot?: CanvasReferenceSlot;
-    assetId?: string;
-  }>;
-  attachments?: (CreationAttachment | AgentDraftAttachment)[];
-  onAddAttachment?: (item: {
-    id: string;
-    name: string;
-    preview?: string;
-    slot?: CanvasReferenceSlot;
-    assetId?: string;
-  }) => void;
-  onOpenModal?: (modalId: string) => void;
-  setStatus?: (status: string) => void;
-  minRows?: number;
-}
+export type { TokenizedComposerInputProps } from "./TokenizedComposerInput.types.ts";
+import type { TokenizedComposerInputProps } from "./TokenizedComposerInput.types.ts";
 
 export default function TokenizedComposerInput({
   value,
@@ -56,49 +36,36 @@ export default function TokenizedComposerInput({
   disabled = false,
   onKeyDown,
   onSubmit,
+  submitShortcut,
+  modelSelection,
+  capability,
+  onSelectModel,
+  onCapabilityChange,
+  onDispatch,
   availableNodes = [],
   attachments = [],
   onAddAttachment,
   onOpenModal,
   setStatus,
+  ariaLabel,
+  maxLength,
+  referenceEntries,
+  onReferenceSlotChange,
+  onRemoveReference,
 }: TokenizedComposerInputProps) {
+  void onSelectModel;
+  void onCapabilityChange;
   // 1. 解析当前输入框中已有的 Mention Tokens
-  const activeTokens = useMemo(() => {
-    return extractMentionTokens(value);
-  }, [value]);
+  const { tokens: activeTokens, missing } = useComposerReferences(
+    value,
+    onChange,
+    attachments,
+    referenceEntries,
+  );
 
   // 2. 聚合所有的提及候选素材（画布节点 + 附件）
   const allCandidates: MentionCandidate[] = useMemo(() => {
-    const list: MentionCandidate[] = [];
-    const seenIds = new Set<string>();
-
-    for (const node of availableNodes) {
-      if (!seenIds.has(node.id)) {
-        seenIds.add(node.id);
-        list.push({
-          id: node.id,
-          name: node.title || "画布图片",
-          preview: node.preview,
-          slot: node.slot || "主体",
-          sourceType: "canvas-node",
-        });
-      }
-    }
-
-    for (const att of attachments) {
-      if (!seenIds.has(att.id)) {
-        seenIds.add(att.id);
-        list.push({
-          id: att.id,
-          name: att.name || "参考附件",
-          preview: att.dataUrl?.startsWith("data:") ? att.dataUrl : undefined,
-          slot: (att.role as CanvasReferenceSlot) || "主体",
-          sourceType: "attachment",
-        });
-      }
-    }
-
-    return list;
+    return buildMentionCandidates(availableNodes, attachments);
   }, [availableNodes, attachments]);
 
   // 3. 准备命令与提及过滤结果
@@ -176,7 +143,7 @@ export default function TokenizedComposerInput({
       // 确保该素材加入附件
       onAddAttachment?.({
         id: candidate.id,
-        name: candidate.name,
+        title: candidate.name,
         preview: candidate.preview,
         slot,
       });
@@ -187,35 +154,49 @@ export default function TokenizedComposerInput({
   // 7. 处理键盘导航
   const handleInputKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (autocomplete.mode !== "none") {
-      if (e.key === "Enter" || e.key === "Tab") {
-        if (autocomplete.mode === "slash") {
-          const selectedCmd = matchedSlashCommands[autocomplete.selectedIndex];
-          if (selectedCmd) {
-            e.preventDefault();
-            handleSelectSlash(selectedCmd);
-            return;
-          }
-        } else if (autocomplete.mode === "mention") {
-          const selectedItem =
-            matchedMentionCandidates[autocomplete.selectedIndex];
-          if (selectedItem) {
-            e.preventDefault();
-            handleSelectMention(selectedItem, selectedItem.slot || "主体");
-            return;
-          }
-        }
-      }
+      const handledKey = handleAutocompleteKey(
+        e,
+        autocomplete.mode,
+        autocomplete.selectedIndex,
+        matchedSlashCommands,
+        matchedMentionCandidates,
+        handleSelectSlash,
+        handleSelectMention,
+      );
+      if (handledKey) return;
 
       const handled = autocomplete.handleKeyDown(e);
       if (handled) return;
     }
 
-    if (e.key === "Enter" && !e.shiftKey) {
-      if (onSubmit) {
+    if (disabled || e.nativeEvent.isComposing) {
+      onKeyDown?.(e);
+      return;
+    }
+
+    const resolvedSubmitShortcut =
+      submitShortcut ??
+      (typeof window !== "undefined"
+        ? ((window.localStorage.getItem("kk:submit-shortcut") as
+            "enter" | "ctrlEnter" | null) ?? "enter")
+        : "enter");
+
+    if ((onSubmit || onDispatch) && shouldSubmit(e, resolvedSubmitShortcut)) {
+      if (!value.trim()) {
         e.preventDefault();
-        onSubmit();
         return;
       }
+      e.preventDefault();
+      if (onDispatch) {
+        void onDispatch({
+          prompt: value,
+          capability: capability ?? "chat",
+          modelSelection,
+        });
+      } else if (onSubmit) {
+        onSubmit();
+      }
+      return;
     }
 
     onKeyDown?.(e);
@@ -223,25 +204,35 @@ export default function TokenizedComposerInput({
 
   // 8. 切换已有 Token 槽位
   const cycleTokenSlot = (token: ParsedMention) => {
+    if (disabled) return;
+    const slots: CanvasReferenceSlot[] = ["主体", "风格", "材质", "构图"];
+    const slot = slots[(slots.indexOf(token.slot) + 1) % slots.length];
+    onReferenceSlotChange?.(token.targetId, slot);
+    if (!token.raw.startsWith("@{mention:")) return;
     onChange(cycleMentionSlot(value, token));
   };
 
   // 9. 移除已有 Token
   const removeToken = (token: ParsedMention) => {
+    if (disabled) return;
     onChange(removeMentionToken(value, token));
+    onRemoveReference?.(token.targetId);
   };
 
   return (
-    <div
-      className="tokenized-composer-wrapper"
-      style={{ position: "relative", width: "100%" }}
-    >
+    <div className="tokenized-composer-wrapper">
       {/* 活跃引用的内联胶囊栏 */}
       <ComposerMentionsBar
+        disabled={disabled}
         activeTokens={activeTokens}
         onCycleSlot={cycleTokenSlot}
         onRemoveToken={removeToken}
       />
+      {missing.length > 0 && (
+        <p role="status" className="generation-feedback">
+          参考 {missing.join("、")} 尚未附加，请先选择原件。
+        </p>
+      )}
 
       {/* 斜杠命令自动补齐浮层 */}
       {autocomplete.mode === "slash" && (
@@ -265,6 +256,8 @@ export default function TokenizedComposerInput({
 
       {/* 核心输入框 */}
       <ComposerTextarea
+        aria-label={ariaLabel}
+        maxLength={maxLength}
         value={value}
         onChange={(e) => {
           onChange(e.target.value);

@@ -2,31 +2,42 @@ import { useContext } from "react";
 import {
   CanvasImageNodeContext,
   CanvasImageCommandContext,
-} from "../../features/creation/CanvasImageCommand";
+} from "../../features/creation/index.ts";
 import ModelVariantControl from "../ModelVariantControl";
 import type { ModelSelection } from "../../domain/modelSelection";
-import { useImageModelCapabilities } from "../../features/models/useImageModelCapabilities";
-import { imageSizeOptions } from "../../features/models/modelCatalog";
+import { useImageModelCapabilities } from "../../features/models/index.ts";
+import { imageSizeOptions } from "../../features/models/index.ts";
 export default function ImageModelParameters({
   model,
   size,
   onSize,
   onModelChange,
+  selection,
+  embedded = false,
 }: {
   model: string;
+  selection?: ModelSelection;
   size?: string;
   onSize: (size?: string, ratio?: string) => void;
   onModelChange?: (model: string, selection?: ModelSelection) => void;
+  embedded?: boolean;
 }) {
   const item = useContext(CanvasImageNodeContext);
   const command = useContext(CanvasImageCommandContext);
   const declaredConnectionId =
     item?.providerConnectionId ?? command?.providerConnectionId;
-  const capabilities = useImageModelCapabilities({
-    source: item?.generationSource === "codex" ? "codex" : "api",
-    model,
-    connectionId: declaredConnectionId,
-  });
+  const selected = selection
+    ? {
+        ...selection,
+        source:
+          selection.source === "api" ? ("api" as const) : ("codex" as const),
+      }
+    : ({
+        source: item?.generationSource === "codex" ? "codex" : "api",
+        model,
+        connectionId: declaredConnectionId,
+      } satisfies ModelSelection);
+  const capabilities = useImageModelCapabilities(selected);
   const connectionId = capabilities.connectionId;
   const options = imageSizeOptions(capabilities.declaration);
   const support = {
@@ -35,10 +46,15 @@ export default function ImageModelParameters({
     unsupported: "不支持",
   };
   return (
-    <div className="node-popover parameter-menu" aria-label="图片参数选项">
+    <div
+      className={
+        embedded ? "image-model-parameters" : "node-popover parameter-menu"
+      }
+      aria-label="图片参数选项"
+    >
       <ModelVariantControl
         selection={{
-          source: item?.generationSource === "codex" ? "codex" : "api",
+          ...selected,
           model,
           connectionId,
         }}
@@ -49,9 +65,7 @@ export default function ImageModelParameters({
         <button
           type="button"
           className="quality-btn"
-          aria-pressed={
-            !size || !options.some((option) => option.size === size)
-          }
+          aria-pressed={!size}
           onClick={() => onSize()}
         >
           自适应
@@ -68,20 +82,27 @@ export default function ImageModelParameters({
           </button>
         ))}
       </div>
+      {size && !options.some((option) => option.size === size) && (
+        <small role="status">
+          原尺寸 {size} 未由当前模型声明支持，请重新选择或使用自适应。
+        </small>
+      )}
       <div className="parameter-capability-grid" aria-label="模型能力参数">
         <span>思考强度</span>
-        <strong>最大（默认）</strong>
+        <strong>由模型决定，此处未提供可发送参数</strong>
         <span>图像搜索</span>
-        <strong>按模型类型显示</strong>
+        <strong>当前入口未提供可发送参数</strong>
         <span>参考图</span>
         <strong>
           {capabilities.operations.edit === "supported" ? "支持编辑" : "未声明"}
         </strong>
       </div>
       <small>
-        {options.length
-          ? "只发送当前模型声明支持的尺寸；自适应使用供应商默认值。"
-          : "当前模型未声明尺寸，只发送默认参数。可在设置中刷新目录或补充供应商规格。"}
+        {selected.source !== "api"
+          ? "Codex 内置生图由模型自适应尺寸，当前入口不发送尺寸参数。"
+          : options.length
+            ? "只发送当前模型声明支持的尺寸；自适应使用供应商默认值。"
+            : "当前模型未声明尺寸，只发送默认参数。可在设置中刷新目录或补充供应商规格。"}
       </small>
       <small>
         图片生成：{support[capabilities.operations.generate]} · 参考图编辑：

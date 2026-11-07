@@ -1,11 +1,17 @@
+import { SETTINGS_STORAGE_KEY } from "../domain/settings.ts";
+import { MODEL_PROVIDER_STORAGE_KEY } from "../domain/modelProvider.ts";
+
 /** Only non-sensitive preferences may use these browser keys. */
 export const BROWSER_STORAGE_KEYS = {
-  settings: "kk-studio-next:settings:v1",
-  modelProvider: "kk-studio-next:model-provider:v1",
+  settings: SETTINGS_STORAGE_KEY,
+  modelProvider: MODEL_PROVIDER_STORAGE_KEY,
   providerConnections: "kk-studio-next:provider-connections:v1",
   assetCollections: "kk-studio-next:asset-collections:v1",
   collectionPositions: "kk-studio-next:collection-position:v1",
   companion: "kk-studio-next:companion:v1",
+  gatewayRouting: "kk-studio-next:gateway-routing:v1",
+  superagent: "kk-studio-next:superagent:v1",
+  ontologyCertification: "kk-studio-next:ontology-certification:v1",
 } as const;
 
 /** Relative to the desktop application data root; never relative to the repo. */

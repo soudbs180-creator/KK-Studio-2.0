@@ -1,0 +1,218 @@
+{
+  "version": 1,
+  "taskId": "TASK-ORG-6",
+  "classification": "E2-externalized-historical-evidence",
+  "packagePath": "docs/evidence/frontend-standards-2026-09-07",
+  "entries": [
+    {
+      "sourcePath": "docs/evidence/frontend-standards-2026-09-07/actions-1440.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "24f75131cf787714c8fa760503f0463a7020741c",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/frontend-standards-2026-09-07/actions-1440.png",
+      "bytes": 274691,
+      "sha256": "89c880b9c57370bb04a4653aff5c4dcf75f2b239118e69bf4c245398e20a1309",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/frontend-standards-2026-09-07/actions-1920.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "035999793eb0cb52574d57846203de6664e87177",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/frontend-standards-2026-09-07/actions-1920.png",
+      "bytes": 386946,
+      "sha256": "5049745702cc1a1a29a5250d02d08462b3eba7c6a6e19dbcf78c5120b89aedf4",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/frontend-standards-2026-09-07/actions-390.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "64e6aa05975e692e386fe6210108eaa877daa21a",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/frontend-standards-2026-09-07/actions-390.png",
+      "bytes": 66189,
+      "sha256": "674c7a166423b5b0764713d4acb4ae61b2fa41dc9cc92083bcb1454d2f86654b",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/frontend-standards-2026-09-07/actions-768.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "4ca0d54d58d10be59e7a92a19a2f0332bcb90afc",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/frontend-standards-2026-09-07/actions-768.png",
+      "bytes": 223488,
+      "sha256": "d2787ebc3889a2bd780ad0d83393d94cce946fc8064e341f04fb524f03f2b1f4",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/frontend-standards-2026-09-07/connection-delete-hover.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "49e9c342170305b74e5c87c3a2072768321a3fd6",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/frontend-standards-2026-09-07/connection-delete-hover.png",
+      "bytes": 91582,
+      "sha256": "038fac1f7f3dafa55536395f585c12efd0074a3d0fd9980bd509e70745f34937",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/frontend-standards-2026-09-07/demo-canvas-1920.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "c0bd45ea50e90eadeb40e3e529597c94b876f37e",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/frontend-standards-2026-09-07/demo-canvas-1920.png",
+      "bytes": 388740,
+      "sha256": "35e2fcd1385f29d8f103f4e3697bfd64fc7a1ad6096c367bd83d16c8cc2a8bb1",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/frontend-standards-2026-09-07/demo-library.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "ac08775885f4bc17b9396aaeba964f8a3f1ca27e",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/frontend-standards-2026-09-07/demo-library.png",
+      "bytes": 121195,
+      "sha256": "91bf36ba786a167ccc08b8546b79b75e5040311d7076cc3190ea545b2e38e6ab",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/frontend-standards-2026-09-07/frontend-flow.webm",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "c28b55c9295988783473a81e7107473a1db03d8e",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/frontend-standards-2026-09-07/frontend-flow.webm",
+      "bytes": 783544,
+      "sha256": "af3372531bff48eb5f46a56e523fc9ef33282f5fd8e88d4bb945a0f4937beaa4",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/frontend-standards-2026-09-07/page@07b84ddb7de6619e6b2f937c38743045.webm",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "7a5e917748ae7e04243e58b61e2bfe33001fc624",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/frontend-standards-2026-09-07/page@07b84ddb7de6619e6b2f937c38743045.webm",
+      "bytes": 756525,
+      "sha256": "6bc7f640c1102c934ce82bd737b5050ce46a9e16056fe515d5c60f68257fcb4f",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/frontend-standards-2026-09-07/page@2457e73e4255d7cd658623ecb53823b2.webm",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "3fed4e3e7c89e8702d1190671542abae59ac7ca6",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/frontend-standards-2026-09-07/page@2457e73e4255d7cd658623ecb53823b2.webm",
+      "bytes": 962834,
+      "sha256": "ccc9fb546900ef69015e189f7dd488a05f5fc3e90499dcce6a850ac79eb5af38",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/frontend-standards-2026-09-07/page@4d1ea3f5cb88991065a80ba9db59d0d2.webm",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "c9cc3496a56466a4cbaee336bd97f74d2747253d",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/frontend-standards-2026-09-07/page@4d1ea3f5cb88991065a80ba9db59d0d2.webm",
+      "bytes": 634489,
+      "sha256": "0a8f9d152b8704ccf8429de8f51354cea604b32ea4d21bbb73a81e34ff27fbd4",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/frontend-standards-2026-09-07/page@8092d3c5488c838b2ab084526b04ab0c.webm",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "4581407da91ca8775d1853e3a0215f1cb8d942c8",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/frontend-standards-2026-09-07/page@8092d3c5488c838b2ab084526b04ab0c.webm",
+      "bytes": 711016,
+      "sha256": "cf1b250b406fa181a188137f556649b36b3566325ce72385cab75131348ae2f7",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/frontend-standards-2026-09-07/page@af3266344c19a8bfb4cfc47515720fe5.webm",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "c28b55c9295988783473a81e7107473a1db03d8e",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/frontend-standards-2026-09-07/page@af3266344c19a8bfb4cfc47515720fe5.webm",
+      "bytes": 783544,
+      "sha256": "af3372531bff48eb5f46a56e523fc9ef33282f5fd8e88d4bb945a0f4937beaa4",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/frontend-standards-2026-09-07/preview-audio-1440.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "7e658a6a9761d73435e9df729cec148178811963",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/frontend-standards-2026-09-07/preview-audio-1440.png",
+      "bytes": 17209,
+      "sha256": "ba0eeb1a7e7d992a6a99659703c68517dd7d975bc6cf4a6d368f16d5262ff47c",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/frontend-standards-2026-09-07/preview-audio-1920.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "64db3ad4b8476d2d1804dada8dff7f899ba5489c",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/frontend-standards-2026-09-07/preview-audio-1920.png",
+      "bytes": 17569,
+      "sha256": "4a2fc58baf0284b4211698479fbf0e2ece6ae733f9ebe0fcd45cdd96457bfc65",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/frontend-standards-2026-09-07/preview-audio-390.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "3c792f5468bd263c6b22b855293c0f9bc6f04fcc",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/frontend-standards-2026-09-07/preview-audio-390.png",
+      "bytes": 13686,
+      "sha256": "85cfac1ac0274112d9b6a629ab9e2a18fcf03f9eade09ae8f86d8eb9b10f204d",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/frontend-standards-2026-09-07/preview-audio-768.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "3da570d74c7bc1ba9bceac850d0d60c3199129a4",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/frontend-standards-2026-09-07/preview-audio-768.png",
+      "bytes": 16963,
+      "sha256": "5a7c8ee1d57b6691cf34d3f5df7dfd45f4b213fbbdbedc88a95e8ef1a12ce948",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/frontend-standards-2026-09-07/preview-text.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "c46685ca44187976b28e9cf9940081ac319ce56f",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/frontend-standards-2026-09-07/preview-text.png",
+      "bytes": 20506,
+      "sha256": "7acb203ac26985abcf81733b8d38f20ab153a7bb496dee6bcbef3079d6ad6d07",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/frontend-standards-2026-09-07/preview-video.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "451813c1dbc3ed8f7f517926618bd37c07ea1dd6",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/frontend-standards-2026-09-07/preview-video.png",
+      "bytes": 525031,
+      "sha256": "6678b97156f4f86197077d701f7f7bba7d39f8893a9d553fa744fa08b0da7697",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/evidence/frontend-standards-2026-09-07/video-params-impl.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "ff2b9a3b57e49b9e3d865427f0a2d87560d24e71",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/evidence/frontend-standards-2026-09-07/video-params-impl.png",
+      "bytes": 99079,
+      "sha256": "98724dbcef1d17422d49c6f0fa2802c7d9c167ad276472e7d59bdd92eaa9ea77",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    }
+  ],
+  "scope": "Historical E2 files externalized by validated batches; E1 summaries, JSON, key screenshots and active inputs retained.",
+  "containerResolution": "Resolve containerRelativePath from the workspace container containing the canonical checkout and output.",
+  "recovery": "Verify with scripts/governance/check-evidence-manifest.mjs <manifest> <container>; restore only to a new empty directory. Original Git sourceCommit/sourcePath remains recoverable.",
+  "batches": [
+    {
+      "taskId": "TASK-ORG-6",
+      "date": "2026-10-30",
+      "candidateBase": "be730617ace5013295b85a22133259b32ad6ffec"
+    }
+  ]
+}

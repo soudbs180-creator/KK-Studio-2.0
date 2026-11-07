@@ -1,29 +1,13 @@
 import { useCallback, useRef, useState } from "react";
+import UiIcon from "../UiIcon";
 import { useDismissible } from "../useDismissible";
-import type { CreationTask } from "../../features/creation/model";
+import type { CreationTask } from "../../features/creation/index.ts";
 import {
   TaskPanelPopover,
   tasksForFilter,
   type PrototypeTask,
   type TaskFilter,
 } from "./TaskPanelPopover";
-
-const PROTOTYPE_TASKS: PrototypeTask[] = [
-  {
-    id: "prototype-complete",
-    status: "completed",
-    date: "2026/9/5",
-    duration: "50S",
-    image: "/design/figma/task-placeholder-complete.png",
-    previewOnLoad: true,
-  },
-  {
-    id: "prototype-running",
-    status: "running",
-    statusLabel: "演示 · 生成中",
-    image: "/design/figma/task-placeholder-running.png",
-  },
-];
 
 function liveTaskCard(task: CreationTask): PrototypeTask {
   const statusLabel =
@@ -82,7 +66,7 @@ export default function TaskPanel({
       ?.focus({ preventScroll: true });
   }, []);
   useDismissible(open, ref, dismiss);
-  const displayTasks = tasks.length ? tasks.map(liveTaskCard) : PROTOTYPE_TASKS;
+  const displayTasks = tasks.map(liveTaskCard);
   const visibleTasks = tasksForFilter(displayTasks, tab);
   const currentSelected = selectedTask
     ? (displayTasks.find((task) => task.id === selectedTask.id) ?? null)
@@ -101,19 +85,11 @@ export default function TaskPanel({
         aria-expanded={open}
         aria-label="打开任务列表"
       >
-        <img
-          className="task-button-icon"
-          src="/design/figma/task-clipboard.svg"
-          width={14}
-          height={14}
-          alt=""
-          draggable={false}
-        />
+        <UiIcon name="clipboard-list" size={20} />
         <span>任务列表</span>
       </button>
       {open && (
         <TaskPanelPopover
-          demo={tasks.length === 0}
           tab={tab}
           setTab={setTab}
           visibleTasks={visibleTasks}

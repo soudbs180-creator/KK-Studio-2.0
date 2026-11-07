@@ -1,0 +1,212 @@
+{
+  "version": 1,
+  "taskId": "TASK-ORG-6",
+  "classification": "E2-externalized-historical-evidence",
+  "packagePath": "docs/changes/2026-09-30-desktop-installer",
+  "entries": [
+    {
+      "sourcePath": "docs/changes/2026-09-30-desktop-installer/evidence/baseline-lint.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "8403d0438dd2d02195c4a9f4fe25450bda9b622b",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-30-desktop-installer/evidence/baseline-lint.log",
+      "bytes": 512,
+      "sha256": "e49a5385afb425861b2a59472a95fb6f3d066734ebd6e142053bb46cebf3a1c4",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-30-desktop-installer/evidence/baseline-tests.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "0f2826a3e26cbf5bfda4392abfe35110c4d505ad",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-30-desktop-installer/evidence/baseline-tests.log",
+      "bytes": 1139,
+      "sha256": "6ef2b23151940d3d3df7973e5b093aac595c6493d211e9cb7e7e2e502f65cfd4",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-30-desktop-installer/evidence/client-check.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "105a5e9eff140a641ddf18fe860d9f362b19fc14",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-30-desktop-installer/evidence/client-check.log",
+      "bytes": 8861,
+      "sha256": "df3ece9a415d3ec51335cf08a92b018736d061982848f3213d0e77d8c97b1adc",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-30-desktop-installer/evidence/final-verify.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "a4ba212051cb3f151a60b4c48d783844c59546d0",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-30-desktop-installer/evidence/final-verify.log",
+      "bytes": 132015,
+      "sha256": "fc2e2cd62b41fd4b3bb3176ec28b9eb8d9c2a02853514de2dfdf60c04cb8d514",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": [
+        {
+          "document": "docs/changes/2026-09-30-desktop-installer/verification.md",
+          "line": 33,
+          "originalTarget": "evidence/final-verify.log",
+          "referenceKind": "link"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-30-desktop-installer/evidence/initial-verify.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "c1d80e90805d2a047d97b5a62bea81ff7a797d73",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-30-desktop-installer/evidence/initial-verify.log",
+      "bytes": 133132,
+      "sha256": "0102b5bb35f9a86d0a5a39f2b851e0e98e32caf79befa5050416ee607eeed765",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-30-desktop-installer/evidence/installed.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "4e2450d9fe826ad89d56b3f8806d5d9fc0800430",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-30-desktop-installer/evidence/installed.png",
+      "bytes": 565002,
+      "sha256": "3fccdf5c0e723b6b2371229c57a381aef3391ae96249d5c13099e9a10babe9c4",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-30-desktop-installer/evidence/installer-build.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "a867fd524a243662c4810bfcca9f44e2eeead697",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-30-desktop-installer/evidence/installer-build.log",
+      "bytes": 5059,
+      "sha256": "2d4619c41292a7592be1745620eeedda5ce3d33de710f2e3a678601f9c02cc04",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-30-desktop-installer/evidence/installer-guards.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "21c20fe147b440516f90c2a8a4dd5b16a8e0af11",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-30-desktop-installer/evidence/installer-guards.log",
+      "bytes": 854,
+      "sha256": "074005e0ff532987208df907de2ab03bbdc2fafb2c2f5f4c432be9b92a48039d",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-30-desktop-installer/evidence/native-installer-final.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "9a095389dc98740e34faa4e065851b80a188b709",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-30-desktop-installer/evidence/native-installer-final.log",
+      "bytes": 3598,
+      "sha256": "1abe7ecec57805a5cf4955f8afdd1e183e1aa148d723308433f71b1f7fc032f9",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-30-desktop-installer/evidence/native-installer.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "0f62287e9aaaae67e2f2d4a65c5bb1b3696f99e9",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-30-desktop-installer/evidence/native-installer.log",
+      "bytes": 3637,
+      "sha256": "3a15f61d979f05d3cee91026eb06a7d7281d1237d094db542b454ff94f9d4e25",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-30-desktop-installer/evidence/npm-ci.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "ff950f2d7e535cf138ed9e4e5f51bd51f61cdd0c",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-30-desktop-installer/evidence/npm-ci.log",
+      "bytes": 1516,
+      "sha256": "c73323099d6aeec083a5c15778f4ff302e5d8707606ba4bbb392cc43617f8301",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-30-desktop-installer/evidence/reinstalled.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "4e2450d9fe826ad89d56b3f8806d5d9fc0800430",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-30-desktop-installer/evidence/reinstalled.png",
+      "bytes": 565002,
+      "sha256": "3fccdf5c0e723b6b2371229c57a381aef3391ae96249d5c13099e9a10babe9c4",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-30-desktop-installer/evidence/repaired.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "4e2450d9fe826ad89d56b3f8806d5d9fc0800430",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-30-desktop-installer/evidence/repaired.png",
+      "bytes": 565002,
+      "sha256": "3fccdf5c0e723b6b2371229c57a381aef3391ae96249d5c13099e9a10babe9c4",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-30-desktop-installer/evidence/rust-format.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "8b137891791fe96927ad78e64b0aad7bded08bdc",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-30-desktop-installer/evidence/rust-format.log",
+      "bytes": 1,
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-30-desktop-installer/evidence/rust-tests.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "68e673968a749c7eb72fc237e97a6d2d2fa58222",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-30-desktop-installer/evidence/rust-tests.log",
+      "bytes": 19585,
+      "sha256": "c1ffc65aa2c685c3432714b5059bbc9d889d60fd746d8eaee2bf40f16c3b8730",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-30-desktop-installer/evidence/settings-prior-failures.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "68c456c09b43b8a60ad43389d87156f025ebd582",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-30-desktop-installer/evidence/settings-prior-failures.log",
+      "bytes": 12684,
+      "sha256": "3c0f05d58d36760c4f95967ec177c93d95496a1beaeeb5519560ee5356e11764",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-30-desktop-installer/evidence/settings-same-frame.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "fc76715801fe31ed26b5869933d112e0336db1f6",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-30-desktop-installer/evidence/settings-same-frame.log",
+      "bytes": 24064,
+      "sha256": "35e18f969745a9785e936cc25c5ece6386725009c984282554ebcf58f165722b",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": []
+    },
+    {
+      "sourcePath": "docs/changes/2026-09-30-desktop-installer/evidence/settings-visibility.log",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "11e43dbbc7ed9f38b8bd93600fb7053c398983b1",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-09-30-desktop-installer/evidence/settings-visibility.log",
+      "bytes": 24104,
+      "sha256": "a9218f3561f7840590f103696cd98dddd50424eee96c397772aed121a09bb068",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": [
+        {
+          "document": "docs/changes/2026-09-30-desktop-installer/verification.md",
+          "line": 33,
+          "originalTarget": "evidence/settings-visibility.log",
+          "referenceKind": "link"
+        }
+      ]
+    }
+  ],
+  "scope": "Historical E2 files externalized by validated batches; E1 summaries, JSON, key screenshots and active inputs retained.",
+  "containerResolution": "Resolve containerRelativePath from the workspace container containing the canonical checkout and output.",
+  "recovery": "Verify with scripts/governance/check-evidence-manifest.mjs <manifest> <container>; restore only to a new empty directory. Original Git sourceCommit/sourcePath remains recoverable.",
+  "batches": [
+    {
+      "taskId": "TASK-ORG-6",
+      "date": "2026-10-30",
+      "candidateBase": "be730617ace5013295b85a22133259b32ad6ffec"
+    }
+  ]
+}

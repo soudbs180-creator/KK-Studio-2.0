@@ -1,5 +1,10 @@
 import { expect, test } from "@playwright/test";
-import { expandSidebar, openWorkspace, showCanvasNavigation } from "./helpers";
+import {
+  expandSidebar,
+  openWorkspace,
+  openTaskWorkspace,
+  showCanvasNavigation,
+} from "./helpers";
 import { seedSidebarFixture } from "./sidebar-fixture";
 
 test("project status and task entry do not cover each other", async ({
@@ -197,10 +202,10 @@ test("dragging from inside a modal to its backdrop does not dismiss it", async (
 test("task details close before their parent and restore the task card focus", async ({
   page,
 }) => {
-  await openWorkspace(page);
+  await openTaskWorkspace(page);
   await page.getByRole("button", { name: "打开任务列表", exact: true }).click();
   const card = page.getByRole("button", {
-    name: "查看演示任务 2026/9/5",
+    name: "查看任务 task-panel-paused",
     exact: true,
   });
   await card.click();

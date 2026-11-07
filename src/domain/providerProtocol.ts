@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { toWireBody } from "./gatewayTranslate.ts";
 import { isAllowedProviderUrl } from "./providerUrl.ts";
 
 export const providerProtocolSchema = z.enum([
@@ -100,20 +101,15 @@ export function buildTextRequest(
       : protocol === "anthropic"
         ? "messages"
         : "chat/completions";
-  const body: Record<string, unknown> =
-    protocol === "openai-responses"
-      ? {
-          model: value.model,
-          input: [{ role: "user", content: value.prompt }],
-          stream: true,
-          store: false,
-        }
-      : {
-          model: value.model,
-          messages: [{ role: "user", content: value.prompt }],
-          stream: true,
-          ...(protocol === "anthropic" ? { max_tokens: 4096 } : {}),
-        };
+  const wire =
+    protocol === "openai-responses" || protocol === "anthropic"
+      ? protocol
+      : "openai-chat";
+  const body = toWireBody(wire, {
+    model: value.model,
+    stream: true,
+    turns: [{ role: "user", content: value.prompt }],
+  });
   return {
     url: `${value.baseUrl.replace(/\/+$/, "")}/${route}`,
     headers: {

@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test, { type TestContext } from "node:test";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
+import type { MemoryAgentPort } from "../../packages/creation-contracts/index.ts";
 import { agentConnection } from "../../src/features/agent/agentConnection.ts";
 import { createAgentHost } from "../../src/features/agent/agentHost.ts";
 import {
@@ -17,6 +18,40 @@ import {
   useMemory,
   type UseMemoryOptions,
 } from "../../src/features/memory/useMemory.ts";
+
+test("memory observes the injected Agent port rather than a global connection", async () => {
+  for (const status of ["connected", "disconnected"]) {
+    let sends = 0;
+    const port: MemoryAgentPort = {
+      getState: () => ({
+        status,
+        connectionRevision: 1,
+        sending: false,
+        conversation: null,
+        messages: [],
+      }),
+      getProjectId: () => null,
+      getExecutionBlockReason: () => undefined,
+      sendMessage: async () => {
+        sends++;
+        return { ok: false, error: "no conversation" };
+      },
+    };
+    let hook: ReturnType<typeof useMemory> | undefined;
+    function Harness() {
+      hook = useMemory(() => {}, port);
+      return null;
+    }
+    renderToStaticMarkup(createElement(Harness));
+    assert.equal(hook!.codexConnected, status === "connected");
+    await hook!.extractWithCodex();
+    assert.equal(
+      sends,
+      0,
+      "a port without a conversation cannot submit extraction",
+    );
+  }
+});
 
 function deferred<T>() {
   let resolve!: (value: T) => void;
@@ -115,7 +150,11 @@ function extractionHarness(
   });
   let hook: ReturnType<typeof useMemory> | undefined;
   function Harness() {
-    hook = useMemory((message) => feedback.push(message), options);
+    hook = useMemory(
+      (message) => feedback.push(message),
+      agentConnection,
+      options,
+    );
     return null;
   }
   renderToStaticMarkup(createElement(Harness));

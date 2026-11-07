@@ -45,6 +45,15 @@
 
 参考页面为 `https://www.kaworkai.com/pages/infinite-canvas.html?board=proj-3d526516-3f6`；页面快照不属于交付源码。
 
+## AI 短剧 / 视频创作工作台品类：2026-10-26 静态研究（七个仓库）
+
+| 文档 | 类型 | 结论边界 |
+| --- | --- | --- |
+| [`intent.md`](../../changes/2026-10-26-ai-drama-canvas-research/intent.md) | 研究包意图 | 用户推荐文章触发；GitHub 只读检索范围；未 clone、未运行、未计费 |
+| [`research.md`](../../changes/2026-10-26-ai-drama-canvas-research/research.md) | 外部静态研究 | `read_only_static_research`；`runtime_verified=false`；star 数为 2026-10-26 检索值 |
+
+研究对象为文章推荐的 7 个仓库（Toonflow 19.4k★、火宝短剧 16.6k★、Waoowaoo 14.7k★、无限画布 9.1k★、DramaClaw 6.5k★、BeefTV 1.9k★、影策 1.4k★）及二开/Skills 生态。研究结论的持续学习动作见 [`COMPETITIVE-LEARNING-POLICY.md`](../../engineering/COMPETITIVE-LEARNING-POLICY.md)（2026-10-26 制定，挂接 DEVELOPMENT-WORKFLOW 第 8 节）。该研究不改动任何产品文件，结论仅作设计输入。
+
 ## 供应商和 Agent：集成证据与研究的区别
 
 | 材料 | 目录分类 | 可声明的事实 |

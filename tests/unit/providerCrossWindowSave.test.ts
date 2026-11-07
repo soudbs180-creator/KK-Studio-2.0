@@ -3,8 +3,8 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { runInNewContext } from "node:vm";
 import ts from "typescript";
-import { mergeProviderConnection } from "../../src/features/creation/providerRegistry.ts";
 import type { ProviderConnection } from "../../src/domain/providerConnections.ts";
+import { mergeProviderConnection } from "../../src/features/creation/providerRegistry.ts";
 
 const connection: ProviderConnection = {
   id: "shared-account",
@@ -65,7 +65,7 @@ async function fixture() {
   };
   const source = await readFile(
     new URL(
-      "../../src/features/creation/providerSaveRecovery.ts",
+      "../../src/integrations/providers/connectionSaveRecovery.ts",
       import.meta.url,
     ),
     "utf8",
@@ -76,7 +76,7 @@ async function fixture() {
   const coordination = ts.transpileModule(
     await readFile(
       new URL(
-        "../../src/features/creation/providerCoordination.ts",
+        "../../src/integrations/providers/connectionCoordination.ts",
         import.meta.url,
       ),
       "utf8",
@@ -85,21 +85,21 @@ async function fixture() {
   ).outputText;
   const createWindow = (withLocks = true) => {
     const exports: {
-      saveProviderConnection?: typeof import("../../src/features/creation/providerSaveRecovery.ts").saveProviderConnection;
+      saveProviderConnection?: typeof import("../../src/integrations/providers/connectionSaveRecovery.ts").saveProviderConnection;
     } = {};
     const modules: Record<string, unknown> = {
       "../../domain/modelProvider.ts": {
         MODEL_PROVIDER_STORAGE_KEY: "fixture-profile",
         serializeModelProvider: JSON.stringify,
       },
-      "./providerCredentials.ts": {
+      "./credentialVault.ts": {
         saveApiKey: (_url: string, value: string) => setSecret(value),
         deleteApiKey: async () => {
           secret = "";
         },
         setSessionApiKey: () => undefined,
       },
-      "./providerRegistry.ts": {
+      "./providerStore.ts": {
         isDesktopProviderDurable: () => true,
         loadProviderConnectionsDurableSnapshot: async () => ({
           revision,
@@ -170,7 +170,7 @@ async function fixture() {
     };
     const coordinationExports = {};
     runInNewContext(coordination, { ...context, exports: coordinationExports });
-    modules["./providerCoordination.ts"] = coordinationExports;
+    modules["./connectionCoordination.ts"] = coordinationExports;
     runInNewContext(compiled, context);
     return exports.saveProviderConnection!;
   };

@@ -1,13 +1,48 @@
-export type ModelKind = "text" | "image" | "video" | "audio" | "unknown";
-export interface ModelSelection {
-  source: "default" | "codex" | "api";
-  model: string;
-  connectionId?: string;
-  kind?: ModelKind;
-  /** Non-secret display metadata from the verified model catalog. */
-  displayName?: string;
-  /** Effective upstream model for generated media; executor is not a model. */
-  effectiveModel?: string;
+import type {
+  ModelKind,
+  ModelSelection,
+} from "../../packages/creation-contracts/index.ts";
+export type {
+  ModelKind,
+  ModelSelection,
+} from "../../packages/creation-contracts/index.ts";
+import {
+  defaultAudioMedia,
+  defaultVideoMedia,
+} from "../../packages/creation-contracts/index.ts";
+import type { CreationDraft } from "./creationTypes.ts";
+
+export function homeDraftForSelection(
+  draft: CreationDraft,
+  selection: ModelSelection,
+): CreationDraft {
+  const kind =
+    selection.kind && selection.kind !== "unknown"
+      ? selection.kind
+      : draft.kind;
+  const previous = homeModelSelection(draft);
+  const sameRoute =
+    previous.source === selection.source &&
+    previous.model === selection.model &&
+    previous.connectionId === selection.connectionId;
+  return {
+    ...draft,
+    model: selection.model,
+    modelSelection: selection,
+    providerConnectionId:
+      selection.source === "api" ? selection.connectionId : undefined,
+    kind,
+    imageSize:
+      kind === "image" && selection.source === "api" && sameRoute
+        ? draft.imageSize
+        : undefined,
+    media:
+      kind === "video" || kind === "audio"
+        ? draft.media?.kind === kind
+          ? draft.media
+          : { ...(kind === "video" ? defaultVideoMedia : defaultAudioMedia) }
+        : undefined,
+  };
 }
 
 /** Persist only routing and display metadata; unknown fields never enter projects. */

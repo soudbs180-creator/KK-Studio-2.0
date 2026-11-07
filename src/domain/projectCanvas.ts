@@ -12,6 +12,25 @@ export interface ProjectCanvas {
   positions: Record<string, Point>;
   edges: CanvasConnection[];
   viewport: ViewTransform;
+  /** Persisted canvas groups; optional for backwards-compatible v1 snapshots. */
+  groups?: CanvasGroup[];
+}
+
+export type CanvasGroupCollapseMode = "info" | "stack";
+export type CanvasGroupLayoutMode =
+  "grid" | "horizontal" | "vertical" | "upstream";
+
+export interface CanvasGroup {
+  id: string;
+  name: string;
+  itemIds: string[];
+  borderColor: string;
+  collapseMode: CanvasGroupCollapseMode;
+  layoutMode: CanvasGroupLayoutMode;
+  tagIds?: string[];
+  resourcePackId?: string;
+  createdAt: number;
+  updatedAt: number;
 }
 
 function samePoint(a: Point | undefined, b: Point | undefined): boolean {
@@ -101,6 +120,18 @@ export function projectCanvasFingerprint(canvas?: ProjectCanvas): string {
       .sort()
       .map((id) => [id, canvas.positions[id].x, canvas.positions[id].y]),
     canvas.edges.map((edge) => [edge.id, edge.source, edge.target, edge.kind]),
+    (canvas.groups ?? []).map((group) => [
+      group.id,
+      group.name,
+      [...group.itemIds].sort(),
+      group.borderColor,
+      group.collapseMode,
+      group.layoutMode,
+      [...(group.tagIds ?? [])].sort(),
+      group.resourcePackId ?? "",
+      group.createdAt,
+      group.updatedAt,
+    ]),
     [canvas.viewport.x, canvas.viewport.y, canvas.viewport.scale],
   ]);
 }
@@ -122,6 +153,23 @@ const graphSchema = z.object({
     }),
   ),
   viewport: point.extend({ scale: z.number().min(0.2).max(4) }),
+  groups: z
+    .array(
+      z.object({
+        id: z.string().min(1).max(160),
+        name: z.string().trim().min(1).max(120),
+        itemIds: z.array(z.string().min(1).max(160)).min(1).max(200),
+        borderColor: z.string().regex(/^#[0-9a-fA-F]{6}$/),
+        collapseMode: z.enum(["info", "stack"]),
+        layoutMode: z.enum(["grid", "horizontal", "vertical", "upstream"]),
+        tagIds: z.array(z.string().min(1).max(160)).max(40).optional(),
+        resourcePackId: z.string().min(1).max(160).optional(),
+        createdAt: z.number().finite().nonnegative(),
+        updatedAt: z.number().finite().nonnegative(),
+      }),
+    )
+    .max(100)
+    .optional(),
 });
 export function createProjectCanvas(
   items: CanvasCollectionItem[],
@@ -144,6 +192,7 @@ export function createProjectCanvas(
       (edge) => ids.has(edge.source) && ids.has(edge.target),
     ).map((edge) => ({ ...edge })),
     viewport: { x: 0, y: 0, scale: 1 },
+    groups: [],
   };
 }
 /** For live item changes only. Persisted data is validated, never silently repaired. */
@@ -165,6 +214,12 @@ export function reconcileProjectCanvas(
     edges: canvas.edges.filter(
       (edge) => ids.has(edge.source) && ids.has(edge.target),
     ),
+    groups: (canvas.groups ?? [])
+      .map((group) => ({
+        ...group,
+        itemIds: group.itemIds.filter((id) => ids.has(id)),
+      }))
+      .filter((group) => group.itemIds.length > 0),
   };
 }
 export function readProjectCanvas(
@@ -203,7 +258,15 @@ export function readProjectCanvas(
     edges.add(edge.id);
     pairs.add(pair);
   }
-  return canvas;
+  if (canvas.groups === undefined) return canvas;
+  const groups = canvas.groups
+    .map((group) => ({
+      ...group,
+      itemIds: [...new Set(group.itemIds)].filter((id) => ids.has(id)),
+      tagIds: group.tagIds ? [...new Set(group.tagIds)] : undefined,
+    }))
+    .filter((group) => group.itemIds.length > 0);
+  return { ...canvas, groups };
 }
 
 export function newCanvasNodeId(kind: CanvasCollectionItem["kind"]): string {

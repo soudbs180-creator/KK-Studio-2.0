@@ -2,11 +2,12 @@ import { useRef } from "react";
 import {
   createImportedWorkflow,
   parseComfyWorkflow,
+  workflowToJson,
   type WorkflowRecord,
-} from "../features/comfyui/workflowRegistry";
+} from "../features/comfyui/index.ts";
 
 export function downloadWorkflow(workflow: WorkflowRecord): void {
-  const blob = new Blob([JSON.stringify(workflow.workflow, null, 2)], {
+  const blob = new Blob([workflowToJson(workflow)], {
     type: "application/json",
   });
   const url = URL.createObjectURL(blob);

@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { executableDir } from "@tauri-apps/api/path";
-import { usesNativeAssets } from "../../features/creation/nativeAssetAdapter";
-import { readCompanionConnection } from "../../features/local-service/connection";
-import type { CreationProject } from "../../features/creation/model";
-import type { SaveState } from "../../features/creation/useCreationStorage";
+import { usesNativeAssets } from "../../features/creation/index.ts";
+import { readCompanionConnection } from "../../features/local-service/index.ts";
+import type { CreationProject } from "../../features/creation/index.ts";
+import type { SaveState } from "../../features/creation/index.ts";
 
 export default function StorageOverview({
   projects,

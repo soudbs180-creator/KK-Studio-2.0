@@ -68,18 +68,41 @@ test("Companion 保存完整垃圾箱和分组，拒绝过期写入且保留全�
     { type: "trash-project", id: project.id },
     10,
   );
+  snapshot = {
+    ...snapshot,
+    sidebarPreferences: {
+      sortMode: "priority",
+      pinnedProjectIds: [project.id],
+      pinnedGroupIds: ["g"],
+    },
+  };
   store.writeSnapshot(snapshot, null);
   const loaded = store.readSnapshot().snapshot!;
   assert.equal(loaded.projects[0].trashedAt, 10);
   assert.equal(loaded.projects[0].nameSource, "manual");
   assert.deepEqual(loaded.projectGroups, snapshot.projectGroups);
+  assert.deepEqual(loaded.sidebarPreferences, snapshot.sidebarPreferences);
   assert.ok(store.readAsset(metadata.assetId));
   assert.throws(
-    () => store.writeSnapshot({ ...snapshot, revision: 1, projects: [] }, null),
+    () =>
+      store.writeSnapshot(
+        {
+          ...snapshot,
+          revision: 1,
+          projects: [],
+          sidebarPreferences: {
+            ...snapshot.sidebarPreferences!,
+            pinnedProjectIds: [],
+          },
+        },
+        null,
+      ),
     (error: unknown) =>
       error instanceof CompanionProtocolError && error.code === "CONFLICT",
   );
-  assert.equal(store.readSnapshot().snapshot!.projects[0].id, project.id);
+  const unchanged = store.readSnapshot().snapshot!;
+  assert.equal(unchanged.projects[0].id, project.id);
+  assert.deepEqual(unchanged.sidebarPreferences, snapshot.sidebarPreferences);
 });
 
 test("store initializes with a missing snapshot and enforces revisions", () => {

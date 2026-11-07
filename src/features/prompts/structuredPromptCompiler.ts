@@ -1,9 +1,12 @@
+import type {
+  AgentDraftAttachment,
+  CreationAttachment,
+} from "../../../packages/creation-contracts/index.ts";
 import {
   CANVAS_REFERENCE_SLOTS,
   type CanvasReferenceSlot,
 } from "../../domain/canvasItems.ts";
-import type { CreationAttachment } from "../creation/model.ts";
-import type { AgentDraftAttachment } from "../agent/agentAttachments.ts";
+import { extractNumberedReferences } from "../../domain/promptMentions.ts";
 
 export interface ParsedMention {
   raw: string;
@@ -114,6 +117,22 @@ export function extractMentionTokens(text: string): ParsedMention[] {
     seenRanges.push([startIndex, endIndex]);
   }
 
+  for (const token of extractNumberedReferences(text)) {
+    if (
+      seenRanges.some(
+        ([start, end]) => token.startIndex < end && token.endIndex > start,
+      )
+    )
+      continue;
+    results.push({
+      ...token,
+      targetId: `reference:${token.index}`,
+      name: `参考 ${token.index}`,
+      slot: "主体",
+    });
+    seenRanges.push([token.startIndex, token.endIndex]);
+  }
+
   // 2. 匹配松散格式 @素材名[槽位] 或 @素材名（但避开已被规范格式占据的区间）
   const looseMatches = [...text.matchAll(LOOSE_MENTION_REGEX)];
   for (const match of looseMatches) {
@@ -168,7 +187,19 @@ export function compileStructuredPrompt(options: {
   const references: ResolvedReferenceItem[] = [];
   let nextRefIndex = 1;
 
+  function resolveNumberedReference(m: (typeof mentions)[number]) {
+    if (m.targetId.startsWith("reference:")) {
+      const index = Number(m.targetId.slice("reference:".length));
+      const attachment = attachments[index - 1];
+      if (!Number.isSafeInteger(index) || index < 1 || !attachment)
+        throw new Error(`参考 ${index} 不存在或未附加原件，请重新选择后提交。`);
+      m.targetId = attachment.id;
+      m.name = attachment.name;
+      m.slot = (attachment.role as CanvasReferenceSlot) || "主体";
+    }
+  }
   for (const m of mentions) {
+    resolveNumberedReference(m);
     const key = m.targetId || m.name;
     if (!refMap.has(key)) {
       const item = {

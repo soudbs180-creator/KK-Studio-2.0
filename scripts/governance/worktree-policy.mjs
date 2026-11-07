@@ -85,7 +85,9 @@ export function measureGeneratedBytes(
 }
 
 function normalizeBranch(branch) {
-  return String(branch ?? "").replace(/^refs\/heads\//, "");
+  return String(branch ?? "")
+    .trim()
+    .replace(/^refs\/heads\//, "");
 }
 
 export function checkWorktreeCreation({
@@ -96,21 +98,28 @@ export function checkWorktreeCreation({
   requestedPath,
 } = {}) {
   const branch = normalizeBranch(requestedBranch);
-  const existing = activeWorktrees.find(
-    (item) => normalizeBranch(item.branch) === branch && item.path,
-  );
-  if (existing)
-    return {
-      allowed: true,
-      action: "REUSE_EXISTING_BRANCH",
-      path: existing.path,
-      branch,
-    };
   if (!branch) return { allowed: false, reason: "BRANCH_REQUIRED", branch };
   if (requestedPath && !contained(policy.allowedRoot, requestedPath))
     return {
       allowed: false,
       reason: "WORKTREE_PATH_OUTSIDE_ALLOWED_ROOT",
+      branch,
+    };
+  const existing = activeWorktrees.find(
+    (item) => normalizeBranch(item.branch) === branch && item.path,
+  );
+  if (existing?.exists === false)
+    return {
+      allowed: false,
+      reason: "EXISTING_WORKTREE_MISSING",
+      path: existing.path,
+      branch,
+    };
+  if (existing)
+    return {
+      allowed: true,
+      action: "REUSE_EXISTING_BRANCH",
+      path: existing.path,
       branch,
     };
   const generatedBytes =
@@ -184,8 +193,8 @@ function gitWorktrees(repoRoot) {
           exists: Boolean(get("worktree ") && fs.existsSync(get("worktree "))),
         };
       });
-  } catch {
-    return [];
+  } catch (error) {
+    throw new Error("WORKTREE_INVENTORY_UNAVAILABLE", { cause: error });
   }
 }
 
@@ -197,6 +206,9 @@ if (invokedDirectly && process.argv.includes("--check-create")) {
   const branch = process.argv
     .find((arg) => arg.startsWith("--branch="))
     ?.slice("--branch=".length);
+  const requestedPath = process.argv
+    .find((arg) => arg.startsWith("--path="))
+    ?.slice("--path=".length);
   const policy = loadWorktreePolicy();
   const active = gitWorktrees(repoRoot);
   const generatedBytes = active.reduce(
@@ -212,6 +224,7 @@ if (invokedDirectly && process.argv.includes("--check-create")) {
     activeWorktrees: active,
     generatedBytes,
     requestedBranch: branch,
+    requestedPath,
   });
   console.log(JSON.stringify(result, null, 2));
   if (!result.allowed) process.exitCode = 1;

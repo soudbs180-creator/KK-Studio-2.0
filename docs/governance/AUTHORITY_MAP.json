@@ -1,131 +1,19 @@
 {
   "schema_version": 2,
-  "updated": "2026-10-12",
+  "updated": "2026-11-05",
   "scope": "KK Studio 2.0 governance source routing",
   "rule_hierarchy": {
-    "description": "This ordered list resolves conflicting instructions or claims. It is separate from domain ownership: a lower-order domain source can still be the only source allowed to state its own kind of fact.",
-    "entries": [
-      {
-        "order": 1,
-        "authority": "user_intent",
-        "paths": ["user request / accepted clarification"],
-        "owner": "user",
-        "lastReviewed": "2026-10-09",
-        "supersedes": null,
-        "nextReview": "when user intent changes",
-        "status": "current"
-      },
-      {
-        "order": 2,
-        "authority": "repository_operating_rules",
-        "paths": ["AGENTS.md"],
-        "owner": "repository maintainers",
-        "lastReviewed": "2026-10-09",
-        "supersedes": null,
-        "nextReview": "when AGENTS.md changes",
-        "status": "current"
-      },
-      {
-        "order": 3,
-        "authority": "ai_policy",
-        "paths": ["AI_RULES.md"],
-        "owner": "repository maintainers",
-        "lastReviewed": "2026-10-09",
-        "supersedes": null,
-        "nextReview": "when AI_RULES.md changes",
-        "status": "current"
-      },
-      {
-        "order": 4,
-        "authority": "prompt_translation_rules",
-        "paths": ["docs/engineering/PROMPTING.md"],
-        "owner": "engineering maintainers",
-        "lastReviewed": "2026-10-09",
-        "supersedes": null,
-        "nextReview": "when PROMPTING.md changes",
-        "status": "current"
-      },
-      {
-        "order": 5,
-        "authority": "approved_specification_baseline",
-        "paths": ["docs/governance/SPEC_BASELINE.md"],
-        "owner": "governance maintainers",
-        "lastReviewed": "2026-10-09",
-        "supersedes": null,
-        "nextReview": "when the approved baseline changes",
-        "status": "current"
-      },
-      {
-        "order": 6,
-        "authority": "current_source_and_runtime_evidence",
-        "paths": [
-          "src/",
-          "src-tauri/",
-          "vendor/",
-          "config/",
-          "tests/",
-          "docs/evidence/"
-        ],
-        "owner": "module owners",
-        "lastReviewed": "2026-10-09",
-        "supersedes": null,
-        "nextReview": "when the affected implementation or evidence changes",
-        "status": "current_scoped"
-      },
-      {
-        "order": 7,
-        "authority": "architecture_data_and_ui_specs",
-        "paths": [
-          "docs/architecture/",
-          "docs/architecture/DATA-STORAGE.md",
-          "docs/UI_INDEX.md",
-          "docs/UI_RULES.md",
-          "docs/UI_ARCHETYPES.md",
-          "docs/DESIGN_TOKENS.md",
-          "docs/DESIGN-SYSTEM.md",
-          "docs/UI_SPEC.md"
-        ],
-        "owner": "architecture and design maintainers",
-        "lastReviewed": "2026-10-09",
-        "supersedes": null,
-        "nextReview": "when the relevant contract changes",
-        "status": "current_scoped"
-      },
-      {
-        "order": 8,
-        "authority": "dated_change_records",
-        "paths": [
-          "docs/changes/*/intent.md",
-          "docs/changes/*/spec.md",
-          "docs/changes/*/plan.md",
-          "docs/changes/*/verification.md",
-          "docs/changes/*/review.md"
-        ],
-        "owner": "change owner",
-        "lastReviewed": "2026-10-09",
-        "supersedes": null,
-        "nextReview": "when a new change record supersedes the package",
-        "status": "historical_scoped"
-      },
-      {
-        "order": 9,
-        "authority": "feature_capability_registry",
-        "paths": [
-          "docs/features/features.registry.json",
-          "docs/features/feat-*.md"
-        ],
-        "owner": "feature owners",
-        "lastReviewed": "2026-10-09",
-        "supersedes": null,
-        "nextReview": "when capability evidence or feature status changes",
-        "status": "current_capability_only"
-      }
-    ]
+    "status": "superseded",
+    "supersededBy": "precedence",
+    "updated": "2026-11-05",
+    "description": "The duplicate ordered list was removed. Instruction priority lives only in precedence and mirrors docs/README.md."
   },
   "domain_authority": [
     {
       "domain": "task_state",
-      "paths": ["docs/governance/task-ledger.json"],
+      "paths": [
+        "docs/governance/task-ledger.json"
+      ],
       "generatedView": "docs/governance/TASK_LEDGER.md",
       "rule": "Task status, owner, dependencies and task evidence live here. This is orthogonal to feature capability status.",
       "owner": "task owner",
@@ -185,10 +73,13 @@
         "docs/DESIGN-SYSTEM.md",
         "docs/UI_SPEC.md"
       ],
-      "rule": "UI_INDEX.md routes each UI question to its current owner. Historical UI files are evidence only.",
+      "rule": "UI_INDEX.md identifies the current Figma design source and routes its derived local specifications. Complete or verify the target in Figma before local UI changes; CSS is the runtime registry, not design authority. Historical UI files are evidence only.",
       "owner": "design and frontend maintainers",
-      "lastReviewed": "2026-10-09",
-      "supersedes": ["docs/UI-STANDARDS.md", "docs/UI-ALIGNMENT.md"],
+      "lastReviewed": "2026-10-21",
+      "supersedes": [
+        "docs/UI-STANDARDS.md",
+        "docs/UI-ALIGNMENT.md"
+      ],
       "nextReview": "when UI source or Figma baseline changes",
       "status": "current_routed"
     },
@@ -225,7 +116,12 @@
     }
   ],
   "conflict_policy": {
-    "labels": ["FACT", "INFERENCE", "UNKNOWN", "CONFLICT"],
+    "labels": [
+      "FACT",
+      "INFERENCE",
+      "UNKNOWN",
+      "CONFLICT"
+    ],
     "rule": "Record the source and date, preserve historical evidence, and do not infer a provider integration or product capability from a keyword, prototype, static comparison, or build-only result.",
     "domain_rule": "Domain authority determines which source owns a fact; rule hierarchy determines which instruction wins when sources prescribe incompatible behavior."
   },
@@ -238,9 +134,11 @@
     {
       "order": 1,
       "authority": "user_intent",
-      "paths": ["user request / accepted clarification"],
+      "paths": [
+        "user request / accepted clarification"
+      ],
       "owner": "user",
-      "lastReviewed": "2026-10-09",
+      "lastReviewed": "2026-11-05",
       "supersedes": null,
       "nextReview": "when user intent changes",
       "status": "current"
@@ -248,113 +146,68 @@
     {
       "order": 2,
       "authority": "repository_operating_rules",
-      "paths": ["AGENTS.md"],
+      "paths": [
+        "RULES.md",
+        "AGENTS.md"
+      ],
       "owner": "repository maintainers",
-      "lastReviewed": "2026-10-09",
+      "lastReviewed": "2026-11-05",
       "supersedes": null,
-      "nextReview": "when AGENTS.md changes",
+      "nextReview": "when docs/README.md authority section changes",
       "status": "current"
     },
     {
       "order": 3,
       "authority": "ai_policy",
-      "paths": ["AI_RULES.md"],
+      "paths": [
+        "AI_RULES.md"
+      ],
       "owner": "repository maintainers",
-      "lastReviewed": "2026-10-09",
+      "lastReviewed": "2026-11-05",
       "supersedes": null,
       "nextReview": "when AI_RULES.md changes",
       "status": "current"
     },
     {
       "order": 4,
-      "authority": "prompt_translation_rules",
-      "paths": ["docs/engineering/PROMPTING.md"],
-      "owner": "engineering maintainers",
-      "lastReviewed": "2026-10-09",
+      "authority": "specialized_specifications",
+      "paths": [
+        "docs/README.md"
+      ],
+      "owner": "domain maintainers",
+      "lastReviewed": "2026-11-05",
       "supersedes": null,
-      "nextReview": "when PROMPTING.md changes",
-      "status": "current"
+      "nextReview": "when a domain source in docs/README.md changes",
+      "status": "current",
+      "note": "Engineering, architecture, UI and governance documents share this tier. Same-tier ownership is domain_authority, not another ordered list."
     },
     {
       "order": 5,
-      "authority": "approved_specification_baseline",
-      "paths": ["docs/governance/SPEC_BASELINE.md"],
-      "owner": "governance maintainers",
-      "lastReviewed": "2026-10-09",
-      "supersedes": null,
-      "nextReview": "when the approved baseline changes",
-      "status": "current"
-    },
-    {
-      "order": 6,
       "authority": "current_source_and_runtime_evidence",
       "paths": [
         "src/",
         "src-tauri/",
-        "vendor/",
-        "config/",
         "tests/",
-        "docs/evidence/"
+        "runtime evidence"
       ],
       "owner": "module owners",
-      "lastReviewed": "2026-10-09",
+      "lastReviewed": "2026-11-05",
       "supersedes": null,
       "nextReview": "when the affected implementation or evidence changes",
-      "status": "current_scoped"
-    },
-    {
-      "order": 7,
-      "authority": "architecture_data_and_ui_specs",
-      "paths": [
-        "docs/architecture/",
-        "docs/architecture/DATA-STORAGE.md",
-        "docs/UI_INDEX.md",
-        "docs/UI_RULES.md",
-        "docs/UI_ARCHETYPES.md",
-        "docs/DESIGN_TOKENS.md",
-        "docs/DESIGN-SYSTEM.md",
-        "docs/UI_SPEC.md"
-      ],
-      "owner": "architecture and design maintainers",
-      "lastReviewed": "2026-10-09",
-      "supersedes": null,
-      "nextReview": "when the relevant contract changes",
-      "status": "current_scoped"
-    },
-    {
-      "order": 8,
-      "authority": "dated_change_records",
-      "paths": [
-        "docs/changes/*/intent.md",
-        "docs/changes/*/spec.md",
-        "docs/changes/*/plan.md",
-        "docs/changes/*/verification.md",
-        "docs/changes/*/review.md"
-      ],
-      "owner": "change owner",
-      "lastReviewed": "2026-10-09",
-      "supersedes": null,
-      "nextReview": "when a new change record supersedes the package",
-      "status": "historical_scoped"
-    },
-    {
-      "order": 9,
-      "authority": "feature_capability_registry",
-      "paths": [
-        "docs/features/features.registry.json",
-        "docs/features/feat-*.md"
-      ],
-      "owner": "feature owners",
-      "lastReviewed": "2026-10-09",
-      "supersedes": null,
-      "nextReview": "when capability evidence or feature status changes",
-      "status": "current_capability_only"
+      "status": "current_scoped",
+      "note": "Describes actual behavior and does not approve behavior that contradicts a specialized specification."
     }
   ],
   "special_cases": [
     {
       "topic": "ui",
       "authority": "docs/UI_INDEX.md",
+      "designSource": {
+        "fileKey": "ZiadpErDoFweCjG3uHjkM3",
+        "nodeId": "91:2",
+        "url": "https://www.figma.com/design/ZiadpErDoFweCjG3uHjkM3/KK-Studio?node-id=91-2",
+        "readAt": "2026-10-21"
+      },
       "currentSources": [
         "docs/UI_RULES.md",
         "docs/UI_ARCHETYPES.md",
@@ -363,8 +216,11 @@
         "docs/UI_SPEC.md"
       ],
       "owner": "design and frontend maintainers",
-      "lastReviewed": "2026-10-09",
-      "supersedes": ["docs/UI-STANDARDS.md", "docs/UI-ALIGNMENT.md"],
+      "lastReviewed": "2026-10-21",
+      "supersedes": [
+        "docs/UI-STANDARDS.md",
+        "docs/UI-ALIGNMENT.md"
+      ],
       "nextReview": "when UI source or Figma baseline changes",
       "status": "current_routed"
     },
@@ -372,7 +228,10 @@
       "topic": "memory",
       "authority": "docs/MEMORY-CONTRACT.md",
       "governance": "docs/MEMORY-GOVERNANCE.md",
-      "implementation": ["src/features/memory/", "src-tauri/src/"],
+      "implementation": [
+        "src/features/memory/",
+        "src-tauri/src/"
+      ],
       "owner": "architecture and memory maintainers",
       "lastReviewed": "2026-10-09",
       "supersedes": null,
@@ -389,5 +248,6 @@
       "nextReview": "when a dated research package is added",
       "status": "historical_read_only"
     }
-  ]
+  ],
+  "precedenceCanonical": "docs/README.md#权威优先级与冲突裁决"
 }

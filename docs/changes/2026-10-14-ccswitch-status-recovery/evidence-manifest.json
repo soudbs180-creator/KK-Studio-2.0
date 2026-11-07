@@ -1,0 +1,52 @@
+{
+  "version": 1,
+  "taskId": "TASK-ORG-6",
+  "classification": "E2-externalized-historical-evidence",
+  "packagePath": "docs/changes/2026-10-14-ccswitch-status-recovery",
+  "entries": [
+    {
+      "sourcePath": "docs/changes/2026-10-14-ccswitch-status-recovery/evidence/cache-publication-crash-restart-2-model.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "e5f8dac999ae0096d67254143714eee233df47ec",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-14-ccswitch-status-recovery/evidence/cache-publication-crash-restart-2-model.png",
+      "bytes": 403212,
+      "sha256": "699a18cbc6776fc1a575398229eb865011fd782776e8aeb5a8337e911f704d87",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-14-ccswitch-status-recovery/verification.md",
+          "line": 28,
+          "originalTarget": "evidence/cache-publication-crash-restart-2-model.png",
+          "referenceKind": "link"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/changes/2026-10-14-ccswitch-status-recovery/evidence/normal-save-editing-label.png",
+      "sourceCommit": "c2a0228a57be66b982d889c6710faa32cde49b7c",
+      "sourceGitBlob": "dc50da4403460b49fffd659d3130b3b860b9ddfa",
+      "containerRelativePath": "output/org-evidence-2026-10-28/archive/c2a0228a57be/docs/changes/2026-10-14-ccswitch-status-recovery/evidence/normal-save-editing-label.png",
+      "bytes": 409437,
+      "sha256": "98d322a795309584d16bc5653369fca056eee0a8a52ecc05d08f7c16f2163a7e",
+      "description": "Historical E2 screenshot/raw log/recording; original success, failures and time identity preserved without content changes.",
+      "references": [
+        {
+          "document": "docs/changes/2026-10-14-ccswitch-status-recovery/verification.md",
+          "line": 28,
+          "originalTarget": "evidence/normal-save-editing-label.png",
+          "referenceKind": "link"
+        }
+      ]
+    }
+  ],
+  "scope": "Historical E2 files externalized by validated batches; E1 summaries, JSON, key screenshots and active inputs retained.",
+  "containerResolution": "Resolve containerRelativePath from the workspace container containing the canonical checkout and output.",
+  "recovery": "Verify with scripts/governance/check-evidence-manifest.mjs <manifest> <container>; restore only to a new empty directory. Original Git sourceCommit/sourcePath remains recoverable.",
+  "batches": [
+    {
+      "taskId": "TASK-ORG-6",
+      "date": "2026-10-30",
+      "candidateBase": "be730617ace5013295b85a22133259b32ad6ffec"
+    }
+  ]
+}

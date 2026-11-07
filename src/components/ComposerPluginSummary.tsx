@@ -1,5 +1,5 @@
 import { useSyncExternalStore } from "react";
-import { pluginStore } from "../features/plugins/pluginStore";
+import { pluginStore } from "../features/plugins/index.ts";
 
 export default function ComposerPluginSummary() {
   const state = useSyncExternalStore(

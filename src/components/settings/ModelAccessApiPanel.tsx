@@ -34,9 +34,8 @@ export default function ModelAccessApiPanel({
         <LocalWorkflowSettings workflows={workflows} />
         <h3 className="settings-detail-label">已启动的本地对话服务</h3>
         <p className="settings-section-intro">
-          连接已启动的 llama.cpp、LM Studio 或 Ollama，默认无需 API
-          Key。这里不会启动外部服务；Qwen 与 ComfyUI
-          模型包目录关联和自动启动尚未接通。
+          连接已启动的 llama.cpp、LM Studio 或 Ollama，默认无需 API Key。ComfyUI
+          可在画布工作流节点选择目录启动，并在这里保存连接。
         </p>
       </div>
       <ModelProviderSettings

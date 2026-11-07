@@ -8,29 +8,32 @@
 
 ## 门禁映射
 
+模块化边界R1–R8及Git基线棘轮统一定义在[MODULARITY](../architecture/MODULARITY.md)。`npm run governance:check`经既有治理入口执行新检查；lint/verify的直接治理调用同样覆盖，原domain/server-only检查保留。当前任务树的落地与验收边界见[验证](../changes/2026-10-28-modularity-p0/verification.md)。
+
 当前已承接 `npm run health:check` 与 `npm run footguns:check`，并接入 lint。两者基于主线配置的独立开关运行，当前 advisory；执行输出不能冒充 blocking 已启用。函数/文件规模棘轮、差异范围、静态例外和 Windows 模式规则见 [DEVELOPMENT](DEVELOPMENT.md#代码健康棘轮与-windows-不安全模式扫描)。不为本轮 UI 改动放宽阈值或补白名单。Actions 固定到主线已审 SHA；同步其输入契约。
 
 写代码前先确认要满足哪条门禁。以下命令都在仓库根执行，全部已并入 `npm run lint` 或 `npm run verify`。
 
-| 门禁                   | 命令                                                              | 拦截内容                                                                                                                                            |
-| ---------------------- | ----------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| ESLint                 | `eslint src tests scripts *.config.{ts,mjs} --max-warnings 0`     | 未使用变量（`^_` 前缀豁免）、`debugger`、TS 推荐规则集错误                                                                                          |
-| 架构边界               | `node scripts/check-governance.mjs`                               | `src/domain` 依赖 UI/宿主层、服务端专用模块被浏览器侧引用                                                                                           |
-| UI 标准                | `node scripts/check-ui-standards.mjs`                             | 未定义 CSS 令牌、新增颜色字面量、新增 Lucide 直连、组件超 300 行、Iconsax 绕过 `UiIcon`                                                             |
-| DESIGN.md 一致性 | `npm run design:check` / `npm run design:lint` | 当前 tokens.css 的生成漂移、YAML/引用/章节错误及固定版本官方格式校验；已并入 ui:check |
-| 类型                   | `tsc --noEmit`                                                    | 类型错误                                                                                                                                            |
-| 格式                   | `prettier --check`                                                | 格式偏差                                                                                                                                            |
-| Markdown 链接          | `node scripts/check-markdown.mjs`                                 | 断链、跨仓库链接                                                                                                                                    |
-| 文档索引与 ADR 编号    | `node scripts/check-doc-index.mjs`                                | `docs/{engineering,architecture,governance}/` 下的 `.md` 未在 `docs/README.md` 索引、ADR 编号重复、ADR 文件名不合规、重建已废止的 `docs/decisions/` |
-| 文档命令引用           | `node scripts/check-doc-commands.mjs`                             | 文档中引用的 `npm run` 脚本在 `package.json` 中不存在                                                                                               |
-| 代码健康棘轮 | `npm run health:check` | 只评变化文件；新增单元须达标，超标存量只许变小；主线 ENFORCEMENT 为 blocking 时拦截未豁免增长，配置缺失同样失败关闭 |
-| Windows 不安全模式 | `npm run footguns:check` | 扫描变化脚本与 workflow 中的不安全模式；主线 FOOTGUNS_ENFORCEMENT 独立决定 advisory/blocking/off，缺失回退 blocking |
-| 文档生命周期与时间冲突 | `npm run snapshot:check`                                          | 当前治理文档的稳定 `docId`、`updatedAt`、`source`、`status`、`supersededBy` 缺失/冲突，以及重复 `current` 入口                                      |
-| 代码健康棘轮与 Windows 不安全模式 | 是 | `npm run lint` 顺序执行；两个总开关仅读主线配置，不能由任务分支自行放宽 |
-| 交付包完整性           | `node scripts/check-delivery-completeness.mjs`                    | 本次 diff 触及的交付包缺 intent/spec/plan/verification/review 任一件                                                                                |
-| 任务账本               | `node scripts/check-governance.mjs`                               | 账本与 `TASK_LEDGER.md` 不同步、状态字段缺失                                                                                                        |
-| 平台交付与最小 AI 链路 | 人工评审：`AGENTS.md`、`PROJECT_GOALS.md`、`ADR-011` 与功能卡证据 | 当前没有自动 guardrail；检查 Desktop → Web → Mobile 顺序、UI/交互与文本/图片链路、Mobile 目录隔离、VPS 控制面状态，不能仅凭 lint/verify 宣称通过    |
-| UI 体积预算 | 同版本生产构建、gzip 与输入 SHA 的人工量测/评审 | 主入口 JS gzip 增量上限见下节；当前没有自动脚本，不因 lint exit 0 声称预算已检查 |
+| 门禁                              | 命令                                                              | 拦截内容                                                                                                                                            |
+| --------------------------------- | ----------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ESLint                            | `eslint src tests scripts *.config.{ts,mjs} --max-warnings 0`     | 未使用变量（`^_` 前缀豁免）、`debugger`、TS 推荐规则集错误                                                                                          |
+| 架构边界                          | `node scripts/check-governance.mjs`                               | `src/domain` 依赖 UI/宿主层、服务端专用模块被浏览器侧引用                                                                                           |
+| UI 标准                           | `node scripts/check-ui-standards.mjs`                             | 未定义 CSS 令牌、新增颜色字面量、新增 Lucide 直连、组件超 300 行、Iconsax 绕过 `UiIcon`                                                             |
+| DESIGN.md 一致性                  | `npm run design:check` / `npm run design:lint`                    | 当前 tokens.css 的生成漂移、YAML/引用/章节错误及固定版本官方格式校验；已并入 ui:check                                                               |
+| 类型                              | `tsc --noEmit`                                                    | 类型错误                                                                                                                                            |
+| 格式                              | `prettier --check`                                                | 格式偏差                                                                                                                                            |
+| Markdown 链接                     | `node scripts/check-markdown.mjs`                                 | 断链、跨仓库链接                                                                                                                                    |
+| 文档索引与 ADR 编号               | `node scripts/check-doc-index.mjs`                                | `docs/{engineering,architecture,governance}/` 下的 `.md` 未在 `docs/README.md` 索引、ADR 编号重复、ADR 文件名不合规、重建已废止的 `docs/decisions/` |
+| 文档命令引用                      | `node scripts/check-doc-commands.mjs`                             | 文档中引用的 `npm run` 脚本在 `package.json` 中不存在                                                                                               |
+| 规则与目录职责                    | `npm run rules:check`                                             | 规则编号重复、第二份优先级、兼容入口写成规则正文、阅读顺序漏掉 `RULES.md`、八层路径锚点丢失、`.agents` / `.superpowers` 被纳入 Git                  |
+| 代码健康棘轮                      | `npm run health:check`                                            | 只评变化文件；新增单元须达标，超标存量只许变小；主线 ENFORCEMENT 为 blocking 时拦截未豁免增长，配置缺失同样失败关闭                                 |
+| Windows 不安全模式                | `npm run footguns:check`                                          | 扫描变化脚本与 workflow 中的不安全模式；主线 FOOTGUNS_ENFORCEMENT 独立决定 advisory/blocking/off，缺失回退 blocking                                 |
+| 文档生命周期与时间冲突            | `npm run snapshot:check`                                          | 当前治理文档的稳定 `docId`、`updatedAt`、`source`、`status`、`supersededBy` 缺失/冲突，以及重复 `current` 入口                                      |
+| 代码健康棘轮与 Windows 不安全模式 | 是                                                                | `npm run lint` 顺序执行；两个总开关仅读主线配置，不能由任务分支自行放宽                                                                             |
+| 交付包完整性                      | `node scripts/check-delivery-completeness.mjs`                    | 本次 diff 触及的交付包缺 intent/spec/plan/verification/review 任一件                                                                                |
+| 任务账本                          | `node scripts/check-governance.mjs`                               | 账本与 `TASK_LEDGER.md` 不同步、状态字段缺失                                                                                                        |
+| 平台交付与最小 AI 链路            | 人工评审：`AGENTS.md`、`PROJECT_GOALS.md`、`ADR-011` 与功能卡证据 | 当前没有自动 guardrail；检查 Desktop → Web → Mobile 顺序、UI/交互与文本/图片链路、Mobile 目录隔离、VPS 控制面状态，不能仅凭 lint/verify 宣称通过    |
+| UI 体积预算                       | 同版本生产构建、gzip 与输入 SHA 的人工量测/评审                   | 主入口 JS gzip 增量上限见下节；当前没有自动脚本，不因 lint exit 0 声称预算已检查                                                                    |
 
 格式范围同时覆盖独立预览 design/preview 下的 TS、TSX、CSS、HTML 和 JSON。设计工具依赖仅用于开发：yaml 保留 AST/注释，postcss 解析真实 CSS 作用域，固定 @google/design.md 提供官方 lint/export/spec/diff；不进入产品 import 链或原生运行时白名单。
 
@@ -85,6 +88,7 @@ src/features/local-service/manifest.ts
 src/features/local-service/server.ts
 src/features/local-service/session.ts
 src/features/local-service/store.ts
+src/features/local-service/standaloneRoot.ts
 ```
 
 `src/features/generation-server/**` 同样受此约束。违规信息形如 `browser/shared source cannot import server-only ...`。

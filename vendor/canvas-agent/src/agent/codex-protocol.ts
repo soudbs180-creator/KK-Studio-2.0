@@ -98,6 +98,7 @@ type CodexRequestSpec = {
         params: { threadId: string };
         result: Record<string, never>;
     };
+    "thread/revert": { params: { threadId: string; beforeTurnId: string }; result: { thread: CodexThread; turnsBackwardsCursor?: string | null } };
     "thread/unsubscribe": {
         params: { threadId: string };
         result: { status: "notLoaded" | "notSubscribed" | "unsubscribed" };

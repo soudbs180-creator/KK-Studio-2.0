@@ -86,7 +86,7 @@ const patches = [
   [
     "src/agent/codex-client.ts",
     '...(cwd ? { cwd } : {}), threadSource: "user"',
-    '...(cwd ? { cwd } : {}), threadSource: "user", historyMode: "legacy"',
+    '...(cwd ? { cwd } : {}), threadSource: "user", historyMode: "paginated"',
   ],
   [
     "src/agent/codex-client.ts",

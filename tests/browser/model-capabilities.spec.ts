@@ -114,7 +114,7 @@ for (const duplicate of [true, false]) {
       .selectOption("supported");
     await page.getByLabel("参考图数量上限", { exact: true }).fill("1");
     await page
-      .getByRole("button", { name: "保存此模型能力", exact: true })
+      .getByRole("button", { name: "保存此模型参数声明", exact: true })
       .click();
     await expect(
       page.locator(".provider-model-catalog").getByRole("status"),
@@ -138,9 +138,9 @@ for (const duplicate of [true, false]) {
       .toEqual({ edit: true, maxReferences: 1 });
     await page.getByRole("button", { name: "关闭设置", exact: true }).click();
     await item.getByRole("button", { name: "画布模型", exact: true }).click();
-    await page.getByRole("tab", { name: "官方 API", exact: true }).click();
+    await page.getByRole("tab", { name: "图像生成", exact: true }).click();
     await page
-      .getByRole("searchbox", { name: "搜索模型、厂商或参数" })
+      .getByRole("searchbox", { name: "搜索模型、推理能力或厂商" })
       .fill("image-capability-a");
     await page
       .getByRole("menuitemradio", { name: /image-capability-a/ })
@@ -223,9 +223,7 @@ for (const duplicate of [true, false]) {
 async function settings(page: Page) {
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   await page.getByRole("button", { name: "模型接入", exact: true }).click();
-  await page
-    .getByRole("button", { name: "API Key（官方）", exact: true })
-    .click();
+  await page.getByRole("tab", { name: "官方直连 API", exact: true }).click();
 }
 async function configure(page: Page) {
   await page.goto("/");
@@ -272,7 +270,7 @@ test("仅显示元数据更新时刷新分组、型号和别名草稿", async ({
   await page
     .getByRole("button", { name: "测试连接并刷新模型", exact: true })
     .click();
-  await page.getByText("型号显示与搜索别名", { exact: true }).click();
+  await expect(page.getByLabel("模型分组名称", { exact: true })).toBeVisible();
   await expect(page.getByLabel("模型分组名称", { exact: true })).toHaveValue(
     "Old group",
   );
@@ -304,6 +302,16 @@ test("供应商刷新通知不覆盖未保存的模型能力草稿", async ({ pa
     .getByLabel("参考图编辑能力", { exact: true })
     .selectOption("supported");
   await page.getByLabel("参考图数量上限", { exact: true }).fill("1");
+  await page.getByRole("button", { name: "☆ 设为默认", exact: true }).click();
+  await expect(page.getByLabel("参考图编辑能力", { exact: true })).toHaveValue(
+    "supported",
+  );
+  const enabled = page.getByRole("checkbox", {
+    name: "启用 image-capability-a",
+    exact: true,
+  });
+  await enabled.uncheck();
+  await enabled.check();
   await page.evaluate(() =>
     window.dispatchEvent(new Event("kk:model-provider-changed")),
   );
@@ -315,7 +323,7 @@ test("供应商刷新通知不覆盖未保存的模型能力草稿", async ({ pa
     "1",
   );
   await page
-    .getByRole("button", { name: "保存此模型能力", exact: true })
+    .getByRole("button", { name: "保存此模型参数声明", exact: true })
     .click();
   await expect(
     page.locator(".provider-model-catalog").getByRole("status"),
@@ -335,6 +343,26 @@ test("供应商刷新通知不覆盖未保存的模型能力草稿", async ({ pa
         )?.image;
     }),
   ).toEqual({ edit: true, maxReferences: 1 });
+  await page.evaluate(() => {
+    const key = "kk-studio:model-catalog:v1";
+    const catalogs = JSON.parse(localStorage.getItem(key)!);
+    const catalog = catalogs.find(
+      (entry: { baseUrl: string }) =>
+        entry.baseUrl === "https://capabilities.example.test/v1",
+    );
+    const selected = catalog.models.find(
+      (entry: { id: string }) => entry.id === "image-capability-a",
+    );
+    selected.image = { edit: false, maxReferences: 3 };
+    localStorage.setItem(key, JSON.stringify(catalogs));
+    window.dispatchEvent(new Event("kk:model-provider-changed"));
+  });
+  await expect(page.getByLabel("参考图编辑能力", { exact: true })).toHaveValue(
+    "unsupported",
+  );
+  await expect(page.getByLabel("参考图数量上限", { exact: true })).toHaveValue(
+    "3",
+  );
 });
 
 test("手动三态声明保存恢复并切模型，不把未知变成支持", async ({
@@ -357,7 +385,7 @@ test("手动三态声明保存恢复并切模型，不把未知变成支持", as
   await page
     .getByRole("button", { name: "测试连接并刷新模型", exact: true })
     .click();
-  await expect(page.getByLabel("已发现的模型")).toContainText(
+  await expect(page.locator(".model-catalog-list")).toContainText(
     "image-capability-b",
   );
   await page
@@ -369,7 +397,7 @@ test("手动三态声明保存恢复并切模型，不把未知变成支持", as
   await page.getByLabel("参考图数量上限", { exact: true }).fill("0");
   await page.getByLabel("单次任务生成数量上限", { exact: true }).fill("2");
   await page
-    .getByRole("button", { name: "保存此模型能力", exact: true })
+    .getByRole("button", { name: "保存此模型参数声明", exact: true })
     .click();
   await expect(
     page.locator(".provider-model-catalog").getByRole("status"),
@@ -434,14 +462,22 @@ test("手动三态声明保存恢复并切模型，不把未知变成支持", as
   await expect(
     page.getByLabel("单次任务生成数量上限", { exact: true }),
   ).toHaveValue("2");
-  await page.getByLabel("已发现的模型").selectOption("image-capability-b");
+  await page
+    .locator(".model-catalog-row")
+    .filter({ has: page.getByText("image-capability-b", { exact: true }) })
+    .getByRole("button", { name: "选择", exact: true })
+    .click();
   await expect(page.getByLabel("参考图编辑能力", { exact: true })).toHaveValue(
     "unknown",
   );
   await expect(page.getByLabel("参考图数量上限", { exact: true })).toHaveValue(
     "",
   );
-  await page.getByLabel("已发现的模型").selectOption("image-capability-a");
+  await page
+    .locator(".model-catalog-row")
+    .filter({ has: page.getByText("image-capability-a", { exact: true }) })
+    .getByRole("button", { name: "选择", exact: true })
+    .click();
   await expect(page.getByLabel("参考图编辑能力", { exact: true })).toHaveValue(
     "unsupported",
   );
@@ -463,7 +499,7 @@ test("明确编辑限制禁用重绘和参考图并保留原图，不发送请�
     .selectOption("unsupported");
   await page.getByLabel("单次任务生成数量上限", { exact: true }).fill("2");
   await page
-    .getByRole("button", { name: "保存此模型能力", exact: true })
+    .getByRole("button", { name: "保存此模型参数声明", exact: true })
     .click();
   const item = await node(page);
   await item.getByRole("button", { name: "生成数量", exact: true }).click();
@@ -568,7 +604,7 @@ test("单张重绘使用自己的数量，不被原节点超限草稿阻止", as
     .selectOption("supported");
   await page.getByLabel("单次任务生成数量上限", { exact: true }).fill("1");
   await page
-    .getByRole("button", { name: "保存此模型能力", exact: true })
+    .getByRole("button", { name: "保存此模型参数声明", exact: true })
     .click();
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
   await item

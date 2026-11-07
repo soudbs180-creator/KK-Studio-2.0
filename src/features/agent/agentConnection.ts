@@ -1,5 +1,9 @@
 /** Codex 会话、具名 SSE 与 KK 画布桥的应用级 store。 */
 import { memoryService } from "../memory/index.ts";
+import { agentAnswerabilityError } from "./agentAnswerability.ts";
+import type { AgentOpExecutionContext } from "./agentToolRuntime.ts";
+import type { ConfirmationCheckpoint } from "../../domain/agentWorkflow.ts";
+import type { StatuslineListener } from "./statuslineIpc.ts";
 import {
   AGENT_CONNECT_TIMEOUT_MS,
   AGENT_DEFAULT_URL,
@@ -68,13 +72,15 @@ import {
   codexGenerationPrompt,
   codexReasoningModel,
 } from "./codexGeneration.ts";
-import { compileStructuredPrompt } from "../prompts/structuredPromptCompiler.ts";
+import { compileStructuredPrompt } from "../prompts/index.ts";
 export interface AgentOpResult {
+  outputs?: Array<{ operationIndex: number; data: unknown }>;
   applied: CanvasAgentOp[];
   rejected: Array<{ op: CanvasAgentOp; reason: string }>;
   tasks?: Array<{ taskId: string; nodeId: string; status: string }>;
 }
 export interface AgentBridge {
+  subscribeStatusline?(listener: StatuslineListener): () => void;
   getChatScope?(): ChatScope | null;
   getExecutionAdapter?(): string | undefined;
   getExecutionBlockReason?(): string | undefined;
@@ -111,7 +117,7 @@ export interface AgentBridge {
   getSnapshot(): CanvasAgentSnapshot | null;
   applyOps(
     ops: CanvasAgentOp[],
-    context?: { signal: AbortSignal; modelAllowlist?: readonly string[] },
+    context?: AgentOpExecutionContext,
   ): AgentOpResult | Promise<AgentOpResult>;
 }
 export type AgentConnectionStatus =
@@ -201,8 +207,8 @@ export function writeAgentEffort(effort: AgentReasoningEffort | ""): void {
 }
 
 const KK_INSTRUCTIONS = `你是 KK Studio 的主 Agent。用户选择的生成模型不是你的推理模型。
-先读取画布再操作。KK 支持 canvas_apply_ops 的 add_node/update_node/delete_node/connect_nodes/delete_connections/run_generation/select_nodes/set_viewport。选择节点和设置视口会更新真实界面；视口缩放范围 0.2–4。
-节点类型为 text、image（video/audio 生成暂未接入）；配置节点 metadata.mode 指定 image/text，metadata.prompt 为提示词。
+先读取画布再操作。KK 支持 canvas_apply_ops 的 add_node/update_node/delete_node/connect_nodes/delete_connections/run_generation/select_nodes/set_viewport。选择节点和设置视口会更新真实界面；视口缩放范围 0.2–4。进阶操作通过 {type:"canvas_operation",operation:{op,payload}} 调用34项强校验原子操作（卡片/连线/分组/布局/视口/选择/附件/导入导出/历史/锁/颜色/网格/小地图）；必须提供对应载荷，宿主拒绝空载荷或未知参数。
+节点类型为 text、image、video、audio；run_generation 的 mode 必须匹配节点类型，且配置实际已授权模型。metadata.prompt 为提示词，音视频仅支持宿主明确暴露的模型与参数，不得声称未执行的生成已成功。
 run_generation 通过 KK 已配置的 Provider 提交真实任务，返回任务 ID 仅表示已受理。通过 canvas_get_state 的 generationStatus 和 generationTask 查询状态，不能把 queued/running 当作完成。
 先优化提示词，再按用户要求生成。没有 Provider 或登录时说明缺口，不虚构成功，不自行改用其他付费接口。
 用户明确要求 Codex/ChatGPT 内置生图、或选择 Codex 图片入口时，可直接使用内置 imagegen/image_generation 工具，KK 会读取完成事件并将图片归档到画布；这使用 Codex 账号额度，不需要生成 API Key。必须实际调用内置工具，不能用脚本绘图冒充。
@@ -237,6 +243,48 @@ function mergeHistory(
   }
   return messages;
 }
+function settleHistoryMessages(
+  localMessages: AgentChatItem[],
+  remoteMessages: AgentChatItem[],
+): AgentChatItem[] {
+  return mergeHistory(localMessages, remoteMessages).map((item) =>
+    item.role === "assistant"
+      ? {
+          ...item,
+          detail: {
+            ...(item.detail as Record<string, unknown>),
+            phase: "completed",
+          },
+        }
+      : item,
+  );
+}
+function isScopedEventFrameValid(
+  frameType: string | undefined,
+  payload: Record<string, unknown> | null,
+  expectedScope: AgentExecutionScope | undefined,
+): boolean {
+  const eventScope = payload?.scope as AgentExecutionScope | undefined;
+  if (
+    eventScope &&
+    (eventScope.projectId !== expectedScope?.projectId ||
+      eventScope.chatId !== expectedScope?.chatId ||
+      eventScope.epoch !== expectedScope?.epoch)
+  )
+    return false;
+  if (
+    [
+      "tool_call",
+      "chat_message",
+      "agent_event",
+      "codex_approval",
+      "codex_approval_resolved",
+    ].includes(frameType ?? "message") &&
+    !eventScope
+  )
+    return false;
+  return true;
+}
 export function createAgentConnection(options: AgentConnectionOptions = {}) {
   const turnFreezing = createTurnFreezingController();
   const clientId = options.clientId ?? crypto.randomUUID();
@@ -267,6 +315,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
   let controller: AbortController | null = null;
   let toolController = new AbortController();
   let bridge: AgentBridge | null = null;
+  let unsubscribeStatusline: (() => void) | undefined;
   let epoch = 0;
   let projectId = "";
   let connectedScopeKey = "";
@@ -281,6 +330,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
   let toolQueue = Promise.resolve();
   let toolReceiptError: string | null = null;
   const approvals = new Map<string, AgentApprovalRequest>();
+  const localApprovals = new Map<string, (allowed: boolean) => void>();
   const patch = (next: Partial<AgentConnectionState>) => {
     state = { ...state, ...next };
     listeners.forEach((fn) => fn());
@@ -322,6 +372,8 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
   function syncProject() {
     if (state.status !== "disconnected" && getExecutionBlockReason())
       disconnect();
+    else if (state.status === "disconnected")
+      patch({ messages: bridge?.readAgentMessages?.() ?? [] });
   }
   const scopedKey = () =>
     currentChatScope()?.chatId != null
@@ -442,14 +494,26 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
       syncProject();
       return;
     }
-    if (
-      "threadId" in event &&
-      event.threadId &&
-      state.conversation?.threadId &&
-      event.threadId !== state.conversation.threadId
-    )
-      return;
+    if (eventOutsideThread()) return;
+    function eventOutsideThread() {
+      if (
+        "threadId" in event &&
+        event.threadId &&
+        state.conversation?.threadId &&
+        event.threadId !== state.conversation.threadId
+      )
+        return true;
+
+      return false;
+    }
     switch (event.kind) {
+      case "token_usage": {
+        const target = state.messages.find(
+          (m) => m.turnId === event.turnId && m.role === "user",
+        );
+        if (target) message({ ...target, tokenUsage: event.usage });
+        break;
+      }
       case "conversation":
         if (
           !initializing &&
@@ -610,6 +674,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
     }
     if (!isCurrent(version)) return;
     if (event.status === "completed") error ??= state.error;
+    for (const settle of localApprovals.values()) settle(false);
     approvals.clear();
     turnFreezing.onTurnComplete(
       event.status === "completed" ? "completed" : "failed",
@@ -665,6 +730,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
       const result = await bridge.applyOps(input.ops as CanvasAgentOp[], {
         signal,
         modelAllowlist: turnModelAllowlist,
+        confirmPlan: requestPlanApproval,
       });
       if (!isCurrent(version)) return;
       // Receipt must report already accepted tasks even if the snapshot upload fails.
@@ -677,6 +743,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
             applied: result.applied.length,
             rejected: result.rejected.map((x) => x.reason),
             tasks: result.tasks ?? [],
+            ...(result.outputs?.length ? { outputs: result.outputs } : {}),
           },
         })
         .catch(async () => {
@@ -698,8 +765,44 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
           .catch(() => undefined);
     }
   }
-  function connectShared(newConversation = false): Promise<void> {
-    if (newConversation && currentChatScope()?.chatId != null) {
+  function requestPlanApproval(
+    checkpoint: ConfirmationCheckpoint,
+    signal: AbortSignal,
+  ): Promise<boolean> {
+    if (signal.aborted) return Promise.resolve(false);
+    if (readPermissionMode() !== "request") return Promise.resolve(true);
+    return new Promise((resolve) => {
+      const requestId = "kk-plan-" + checkpoint.checkpointId;
+      const settle = (allowed: boolean) => {
+        signal.removeEventListener("abort", cancel);
+        localApprovals.delete(requestId);
+        approvals.delete(requestId);
+        patch({ pendingApproval: approvals.values().next().value ?? null });
+        resolve(allowed);
+      };
+      const cancel = () => settle(false);
+      localApprovals.set(requestId, settle);
+      signal.addEventListener("abort", cancel, { once: true });
+      approvals.set(requestId, {
+        requestId,
+        method: "执行画布计划",
+        threadId: state.conversation?.threadId,
+        reason: `${checkpoint.plan.items.length} 项操作：${checkpoint.plan.userPrompt}。生成使用当前配置的模型；删除和已受理生成可能无法撤销。`,
+      });
+      patch({ pendingApproval: approvals.values().next().value ?? null });
+    });
+  }
+  function connectShared(
+    newConversation = false,
+    newProjectId?: string,
+  ): Promise<void> {
+    if (
+      newConversation &&
+      currentChatScope()?.chatId != null &&
+      (newProjectId !== currentChatScope()?.projectId ||
+        !bridge?.readAgentThread ||
+        bridge.readAgentThread())
+    ) {
       patch({
         error: "当前聊天的 Agent 线程不可替换，请继续当前聊天。",
       });
@@ -731,6 +834,335 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
       },
     );
     return flight.promise;
+  }
+  function rejectBufferedToolCall(
+    event: Extract<AgentEvent, { kind: "tool_call" }>,
+    activeApi: AgentApi,
+    queuedEvents: AgentEvent[],
+  ) {
+    // A pending write can expire before history/model reads finish.
+    // Reply now; never execute a buffered write after reconnect.
+    if (handledTools.has(event.requestId)) return;
+    const error =
+      "KK 正在恢复连接，未执行本次画布操作。请在连接完成后确认是否需要重试。";
+    const receipt = activeApi
+      .postToolResult({
+        requestId: event.requestId,
+        threadId: event.threadId,
+        turnId: event.turnId,
+        error,
+      })
+      .then(() => undefined)
+      .catch(() => undefined);
+    handledTools.set(event.requestId, receipt);
+    queuedEvents.push({
+      kind: "message",
+      item: {
+        id: "recovery:" + event.requestId,
+        role: "error",
+        text: error,
+      },
+    });
+  }
+  function awaitHelloHandshake(
+    endpoint: string,
+    activeApi: AgentApi,
+    version: number,
+    queuedEvents: AgentEvent[],
+  ): Promise<Extract<AgentEvent, { kind: "hello" }>> {
+    return new Promise<Extract<AgentEvent, { kind: "hello" }>>(
+      (resolve, reject) => {
+        const timeout = setTimeout(
+          () => reject(new Error("等待 Agent 握手超时")),
+          options.connectTimeoutMs ?? AGENT_CONNECT_TIMEOUT_MS,
+        );
+        rejectHello = (error) => {
+          clearTimeout(timeout);
+          reject(error);
+        };
+        const streamUrl =
+          endpoint +
+          "/events?clientId=" +
+          encodeURIComponent(clientId) +
+          "&scope=" +
+          encodeURIComponent(JSON.stringify(executionScope));
+        source = options.eventSourceFactory
+          ? options.eventSourceFactory(streamUrl, state.token)
+          : createAgentEventStream(streamUrl, state.token, options.fetcher);
+        source.onmessage = (frame) => {
+          if (!isCurrent(version)) return;
+          try {
+            const payload = JSON.parse(frame.data ?? "null");
+            if (!isScopedEventFrameValid(frame.type, payload, executionScope))
+              return;
+            if (
+              frame.type === "tool_call" &&
+              (typeof payload?.threadId !== "string" ||
+                typeof payload?.turnId !== "string")
+            ) {
+              fail(
+                new Error("Agent 工具缺少冻结的线程或 turn 身份，当前未执行。"),
+              );
+              return;
+            }
+            const event = parseAgentSseEvent(frame.type ?? "message", payload);
+            if (!event) return;
+            if (event.kind === "hello") {
+              clearTimeout(timeout);
+              rejectHello = null;
+              resolve(event);
+            } else if (initializing && event.kind === "tool_call") {
+              rejectBufferedToolCall(event, activeApi, queuedEvents);
+            } else if (initializing) queuedEvents.push(event);
+            else handle(event);
+          } catch (frameError) {
+            /* Ignore malformed frames without reporting a successful connection. */
+            void frameError;
+          }
+        };
+        source.onerror = (error) => {
+          const failure =
+            error ?? new Error("本地 Agent 连接已断开，请重连确认会话状态。");
+          clearTimeout(timeout);
+          reject(failure);
+          if (isCurrent(version)) fail(failure);
+        };
+      },
+    );
+  }
+  function resolveSavedThreadId(
+    newConversation: boolean,
+    remote: AgentConversationState | undefined,
+  ): string | null {
+    if (newConversation) return null;
+    const localSaved =
+      bridge?.readAgentThread?.() ||
+      (currentChatScope()?.chatId == null
+        ? storage.getItem(threadKey())
+        : null);
+    if (localSaved) return localSaved;
+    if (
+      remote?.threadId &&
+      remote.scope &&
+      remote.scope.projectId === executionScope?.projectId &&
+      remote.scope.chatId === executionScope?.chatId
+    )
+      return remote.threadId;
+    return null;
+  }
+  function verifyRemoteOwnership(
+    newConversation: boolean,
+    saved: string | null,
+    hello: Extract<AgentEvent, { kind: "hello" }>,
+  ): boolean {
+    const remote = hello.conversation;
+    if (
+      (hello.busy || hello.pendingApprovals.length > 0) &&
+      (newConversation || !saved || saved !== remote?.threadId)
+    )
+      throw new Error("Codex 当前有其他会话运行，未接管。请等待结束后重连。");
+    const knownOwners = bridge
+      ?.knownAgentProjects?.()
+      .filter(
+        (owner) =>
+          (owner.threadId ||
+            (owner.chatId == null
+              ? storage.getItem("kk-agent-thread:" + owner.projectId)
+              : null)) === remote?.threadId,
+      );
+    const knownOwner = knownOwners?.length === 1 ? knownOwners[0] : undefined;
+    const initializeProject = Boolean(
+      projectId &&
+      !saved &&
+      remote?.threadId &&
+      knownOwner &&
+      (knownOwner.projectId !== projectId ||
+        (knownOwner.chatId ?? null) !== currentChatScope()?.chatId) &&
+      ["ready", "warning"].includes(remote.status),
+    );
+    if (!newConversation && !saved && remote?.threadId && !initializeProject)
+      throw new Error(
+        "服务已有其他会话，未创建或替换。请在原项目继续，或明确点击新建 Agent 会话。",
+      );
+    return initializeProject;
+  }
+  async function rememberOwnership(
+    version: number,
+    conversation?: AgentConversationState | null,
+  ) {
+    if (!isCurrent(version) || !conversation?.threadId) return;
+    if (
+      typeof conversation.threadId !== "string" ||
+      !/^[A-Za-z0-9_-]{1,160}$/.test(conversation.threadId)
+    )
+      throw new Error("Agent 返回了无效会话身份，未保存或接管。");
+    // Ownership is a receipt for this operation, not a success badge. Save
+    // it before history/model reads so a transient failure cannot orphan
+    // the thread we just prepared. Native projects also retain the receipt.
+    storage.setItem(threadKey(), conversation.threadId);
+    storage.removeItem(preparationKey());
+    if (projectId)
+      await bridge?.saveAgentThread?.(conversation.threadId, projectId);
+  }
+  async function rememberThreadMutation(
+    version: number,
+    request: Promise<AgentThreadResponse>,
+  ): Promise<AgentThreadResponse> {
+    try {
+      const response = await request;
+      await rememberOwnership(version, response.conversation);
+      return response;
+    } catch (error) {
+      if (error instanceof AgentHistoryError)
+        await rememberOwnership(version, error.conversation);
+      throw error;
+    }
+  }
+  async function prepareEmptyRemoteConversation(
+    activeApi: AgentApi,
+    version: number,
+    remote: AgentConversationState | undefined,
+  ): Promise<AgentThreadResponse | null> {
+    const ownedFailedPreparation =
+      remote?.status === "failed" &&
+      Boolean(remote.sourceClientId) &&
+      preparationOwners().includes(remote.sourceClientId!);
+    if (
+      !remote ||
+      (remote.status !== "idle" && !ownedFailedPreparation) ||
+      remote.threadId
+    )
+      throw new Error("Agent 未返回可安全初始化的空会话，请更新服务后重连。");
+    patch({ preparing: true });
+    storage.setItem(
+      preparationKey(),
+      JSON.stringify(
+        [...new Set([...preparationOwners(), clientId])].slice(-8),
+      ),
+    );
+    let thread = await rememberThreadMutation(
+      version,
+      activeApi.prepareConversation(
+        readPermissionMode(),
+        remote,
+        ownedFailedPreparation ? remote.sourceClientId : undefined,
+      ),
+    );
+    if (!isCurrent(version)) return null;
+    if (thread.conversation?.threadId)
+      thread = {
+        ...thread,
+        ...(await activeApi.readThread(thread.conversation.threadId)),
+        conversation: thread.conversation,
+      };
+    return thread;
+  }
+  async function openOrResumeConversationThread(
+    activeApi: AgentApi,
+    version: number,
+    newConversation: boolean,
+    initializeProject: boolean,
+    saved: string | null,
+    hello: Extract<AgentEvent, { kind: "hello" }>,
+  ): Promise<AgentThreadResponse | null> {
+    const remote = hello.conversation;
+    if (newConversation || initializeProject) {
+      return rememberThreadMutation(
+        version,
+        activeApi.newThread(readPermissionMode()),
+      );
+    }
+    if (saved && saved === remote?.threadId) {
+      await rememberOwnership(version, remote);
+      if (!isCurrent(version)) return null;
+      const retryOwnedPreparation =
+        remote.status === "failed" &&
+        !hello.busy &&
+        hello.pendingApprovals.length === 0;
+      if (retryOwnedPreparation) patch({ preparing: true });
+      const thread = retryOwnedPreparation
+        ? await rememberThreadMutation(
+            version,
+            activeApi.resumeThread(saved, readPermissionMode()),
+          )
+        : await activeApi.readThread(saved);
+      thread.conversation ??= remote;
+      return thread;
+    }
+    if (saved) {
+      return rememberThreadMutation(
+        version,
+        activeApi.resumeThread(saved, readPermissionMode()),
+      );
+    }
+    return prepareEmptyRemoteConversation(activeApi, version, remote);
+  }
+  function replayBufferedEvents(version: number, queuedEvents: AgentEvent[]) {
+    // SSE may advance while the history/model reads are in flight. Replay in
+    // order after seeding the snapshot, never overwrite it with stale hello.
+    for (const event of queuedEvents) {
+      if (!isCurrent(version)) return;
+      if (
+        event.kind === "conversation" &&
+        event.conversation.revision < (state.conversation?.revision ?? 0)
+      )
+        continue;
+      handle(event);
+    }
+  }
+  async function finalizeConnectedSession(
+    activeApi: AgentApi,
+    version: number,
+    saved: string | null,
+    hello: Extract<AgentEvent, { kind: "hello" }>,
+    thread: AgentThreadResponse,
+    queuedEvents: AgentEvent[],
+    ready: () => void,
+  ): Promise<void> {
+    const remote = hello.conversation;
+    const conversation = thread.conversation ?? state.conversation;
+    if (
+      !conversation?.threadId ||
+      !["ready", "warning", ...(hello.busy ? ["running"] : [])].includes(
+        conversation.status,
+      )
+    )
+      throw new Error(
+        conversation?.error || "Codex 会话未就绪，请确认 Codex 已登录。",
+      );
+    const models = await activeApi.models();
+    if (!isCurrent(version)) return;
+    storage.setItem(threadKey(), conversation.threadId);
+    if (thread.settledTurnIds?.length)
+      await activeApi.acknowledgeHistory(
+        conversation.threadId,
+        thread.settledTurnIds,
+      );
+    if (!isCurrent(version)) return;
+    if (saved && saved === remote?.threadId)
+      for (const approval of hello.pendingApprovals)
+        approvals.set(approval.requestId, approval);
+    ready();
+    patch({
+      status: "connected",
+      activity: "Codex 已就绪",
+      conversation,
+      messages: settleHistoryMessages(
+        bridge?.readAgentMessages?.() ?? [],
+        thread.messages ?? [],
+      ),
+      models: models.data ?? [],
+      sending: hello.busy,
+      preparing: false,
+      pendingApproval: approvals.values().next().value ?? null,
+      lastConnectedAt: Date.now(),
+    });
+    if (bridge?.saveAgentMessages) await persistMessages();
+    initializing = false;
+    replayBufferedEvents(version, queuedEvents);
+    await refreshUsage();
+    if (!isCurrent(version)) return;
+    await syncGeneratedImages(thread.messages ?? []);
   }
   async function connect(
     newConversation: boolean,
@@ -786,320 +1218,43 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
         );
       if (!isCurrent(version)) return;
       patch({ protocolVersion: config.protocolVersion });
-      const hello = await new Promise<Extract<AgentEvent, { kind: "hello" }>>(
-        (resolve, reject) => {
-          const timeout = setTimeout(
-            () => reject(new Error("等待 Agent 握手超时")),
-            options.connectTimeoutMs ?? AGENT_CONNECT_TIMEOUT_MS,
-          );
-          rejectHello = (error) => {
-            clearTimeout(timeout);
-            reject(error);
-          };
-          source = options.eventSourceFactory
-            ? options.eventSourceFactory(
-                endpoint +
-                  "/events?clientId=" +
-                  encodeURIComponent(clientId) +
-                  "&scope=" +
-                  encodeURIComponent(JSON.stringify(executionScope)),
-                state.token,
-              )
-            : createAgentEventStream(
-                endpoint +
-                  "/events?clientId=" +
-                  encodeURIComponent(clientId) +
-                  "&scope=" +
-                  encodeURIComponent(JSON.stringify(executionScope)),
-                state.token,
-                options.fetcher,
-              );
-          source.onmessage = (frame) => {
-            if (!isCurrent(version)) return;
-            try {
-              const payload = JSON.parse(frame.data ?? "null");
-              const eventScope = payload?.scope;
-              if (
-                eventScope &&
-                (eventScope.projectId !== executionScope?.projectId ||
-                  eventScope.chatId !== executionScope?.chatId ||
-                  eventScope.epoch !== executionScope?.epoch)
-              )
-                return;
-              if (
-                frame.type === "tool_call" &&
-                (typeof payload?.threadId !== "string" ||
-                  typeof payload?.turnId !== "string")
-              ) {
-                fail(
-                  new Error(
-                    "Agent 工具缺少冻结的线程或 turn 身份，当前未执行。",
-                  ),
-                );
-                return;
-              }
-              if (
-                [
-                  "tool_call",
-                  "chat_message",
-                  "agent_event",
-                  "codex_approval",
-                  "codex_approval_resolved",
-                ].includes(frame.type ?? "message") &&
-                !eventScope
-              )
-                return;
-              const event = parseAgentSseEvent(
-                frame.type ?? "message",
-                payload,
-              );
-              if (!event) return;
-              if (event.kind === "hello") {
-                clearTimeout(timeout);
-                rejectHello = null;
-                resolve(event);
-              } else if (initializing && event.kind === "tool_call") {
-                // A pending write can expire before history/model reads finish.
-                // Reply now; never execute a buffered write after reconnect.
-                if (!handledTools.has(event.requestId)) {
-                  const error =
-                    "KK 正在恢复连接，未执行本次画布操作。请在连接完成后确认是否需要重试。";
-                  const receipt = activeApi
-                    .postToolResult({
-                      requestId: event.requestId,
-                      threadId: event.threadId,
-                      turnId: event.turnId,
-                      error,
-                    })
-                    .then(() => undefined)
-                    .catch(() => undefined);
-                  handledTools.set(event.requestId, receipt);
-                  queuedEvents.push({
-                    kind: "message",
-                    item: {
-                      id: "recovery:" + event.requestId,
-                      role: "error",
-                      text: error,
-                    },
-                  });
-                }
-              } else if (initializing) queuedEvents.push(event);
-              else handle(event);
-            } catch {
-              /* Ignore malformed frames without reporting a successful connection. */
-            }
-          };
-          source.onerror = (error) => {
-            const failure =
-              error ?? new Error("本地 Agent 连接已断开，请重连确认会话状态。");
-            clearTimeout(timeout);
-            reject(failure);
-            if (isCurrent(version)) fail(failure);
-          };
-        },
+      const hello = await awaitHelloHandshake(
+        endpoint,
+        activeApi,
+        version,
+        queuedEvents,
       );
       if (!isCurrent(version)) return;
-      let saved = newConversation
-        ? null
-        : bridge?.readAgentThread?.() ||
-          (currentChatScope()?.chatId == null
-            ? storage.getItem(threadKey())
-            : null);
       const remote = hello.conversation;
-      if (
-        !saved &&
-        !newConversation &&
-        remote?.threadId &&
-        remote.scope &&
-        remote.scope.projectId === executionScope?.projectId &&
-        remote.scope.chatId === executionScope?.chatId
-      )
-        saved = remote.threadId;
+      const saved = resolveSavedThreadId(newConversation, remote);
       patch({ conversation: remote ?? null });
-      if (
-        (hello.busy || hello.pendingApprovals.length > 0) &&
-        (newConversation || !saved || saved !== remote?.threadId)
-      )
-        throw new Error("Codex 当前有其他会话运行，未接管。请等待结束后重连。");
-      const knownOwners = bridge
-        ?.knownAgentProjects?.()
-        .filter(
-          (owner) =>
-            (owner.threadId ||
-              (owner.chatId == null
-                ? storage.getItem("kk-agent-thread:" + owner.projectId)
-                : null)) === remote?.threadId,
-        );
-      const knownOwner = knownOwners?.length === 1 ? knownOwners[0] : undefined;
-      const initializeProject = Boolean(
-        projectId &&
-        !saved &&
-        remote?.threadId &&
-        knownOwner &&
-        (knownOwner.projectId !== projectId ||
-          (knownOwner.chatId ?? null) !== currentChatScope()?.chatId) &&
-        ["ready", "warning"].includes(remote.status),
+      const initializeProject = verifyRemoteOwnership(
+        newConversation,
+        saved,
+        hello,
       );
-      if (!newConversation && !saved && remote?.threadId && !initializeProject)
-        throw new Error(
-          "服务已有其他会话，未创建或替换。请在原项目继续，或明确点击新建 Agent 会话。",
-        );
       await activeApi.postState(bridge?.getSnapshot() ?? null);
       if (!isCurrent(version)) return;
       await activeApi.activate();
       if (!isCurrent(version)) return;
-      const rememberOwnership = async (
-        conversation?: AgentConversationState | null,
-      ) => {
-        if (!isCurrent(version) || !conversation?.threadId) return;
-        if (
-          typeof conversation.threadId !== "string" ||
-          !/^[A-Za-z0-9_-]{1,160}$/.test(conversation.threadId)
-        )
-          throw new Error("Agent 返回了无效会话身份，未保存或接管。");
-        // Ownership is a receipt for this operation, not a success badge. Save
-        // it before history/model reads so a transient failure cannot orphan
-        // the thread we just prepared. Native projects also retain the receipt.
-        storage.setItem(threadKey(), conversation.threadId);
-        storage.removeItem(preparationKey());
-        if (projectId)
-          await bridge?.saveAgentThread?.(conversation.threadId, projectId);
-      };
-      const rememberThreadMutation = async (
-        request: Promise<AgentThreadResponse>,
-      ) => {
-        try {
-          const response = await request;
-          await rememberOwnership(response.conversation);
-          return response;
-        } catch (error) {
-          if (error instanceof AgentHistoryError)
-            await rememberOwnership(error.conversation);
-          throw error;
-        }
-      };
-      let thread: AgentThreadResponse;
-      if (newConversation || initializeProject) {
-        thread = await rememberThreadMutation(
-          activeApi.newThread(readPermissionMode()),
-        );
-      } else if (saved && saved === remote?.threadId) {
-        await rememberOwnership(remote);
-        if (!isCurrent(version)) return;
-        const retryOwnedPreparation =
-          remote.status === "failed" &&
-          !hello.busy &&
-          hello.pendingApprovals.length === 0;
-        if (retryOwnedPreparation) patch({ preparing: true });
-        thread = retryOwnedPreparation
-          ? await rememberThreadMutation(
-              activeApi.resumeThread(saved, readPermissionMode()),
-            )
-          : await activeApi.readThread(saved);
-        thread.conversation ??= remote;
-      } else if (saved) {
-        thread = await rememberThreadMutation(
-          activeApi.resumeThread(saved, readPermissionMode()),
-        );
-      } else {
-        const ownedFailedPreparation =
-          remote?.status === "failed" &&
-          Boolean(remote.sourceClientId) &&
-          preparationOwners().includes(remote.sourceClientId!);
-        if (
-          !remote ||
-          (remote.status !== "idle" && !ownedFailedPreparation) ||
-          remote.threadId
-        )
-          throw new Error(
-            "Agent 未返回可安全初始化的空会话，请更新服务后重连。",
-          );
-        patch({ preparing: true });
-        storage.setItem(
-          preparationKey(),
-          JSON.stringify(
-            [...new Set([...preparationOwners(), clientId])].slice(-8),
-          ),
-        );
-        thread = await rememberThreadMutation(
-          activeApi.prepareConversation(
-            readPermissionMode(),
-            remote,
-            ownedFailedPreparation ? remote.sourceClientId : undefined,
-          ),
-        );
-        if (!isCurrent(version)) return;
-        if (thread.conversation?.threadId)
-          thread = {
-            ...thread,
-            ...(await activeApi.readThread(thread.conversation.threadId)),
-            conversation: thread.conversation,
-          };
-      }
-      if (!isCurrent(version)) return;
-      const conversation = thread.conversation ?? state.conversation;
-      if (
-        !conversation?.threadId ||
-        !["ready", "warning", ...(hello.busy ? ["running"] : [])].includes(
-          conversation.status,
-        )
-      )
-        throw new Error(
-          conversation?.error || "Codex 会话未就绪，请确认 Codex 已登录。",
-        );
-      const models = await activeApi.models();
-      if (!isCurrent(version)) return;
-      storage.setItem(threadKey(), conversation.threadId);
-      if (thread.settledTurnIds?.length)
-        await activeApi.acknowledgeHistory(
-          conversation.threadId,
-          thread.settledTurnIds,
-        );
-      if (!isCurrent(version)) return;
-      if (saved && saved === remote?.threadId)
-        for (const approval of hello.pendingApprovals)
-          approvals.set(approval.requestId, approval);
-      ready();
-      patch({
-        status: "connected",
-        activity: "Codex 已就绪",
-        conversation,
-        messages: mergeHistory(
-          bridge?.readAgentMessages?.() ?? [],
-          thread.messages ?? [],
-        ).map((item) =>
-          item.role === "assistant"
-            ? {
-                ...item,
-                detail: {
-                  ...(item.detail as Record<string, unknown>),
-                  phase: "completed",
-                },
-              }
-            : item,
-        ),
-        models: models.data ?? [],
-        sending: hello.busy,
-        preparing: false,
-        pendingApproval: approvals.values().next().value ?? null,
-        lastConnectedAt: Date.now(),
-      });
-      if (bridge?.saveAgentMessages) await persistMessages();
-      initializing = false;
-      // SSE may advance while the history/model reads are in flight. Replay in
-      // order after seeding the snapshot, never overwrite it with stale hello.
-      for (const event of queuedEvents) {
-        if (!isCurrent(version)) return;
-        if (
-          event.kind === "conversation" &&
-          event.conversation.revision < (state.conversation?.revision ?? 0)
-        )
-          continue;
-        handle(event);
-      }
-      await refreshUsage();
-      if (!isCurrent(version)) return;
-      await syncGeneratedImages(thread.messages ?? []);
+      const thread = await openOrResumeConversationThread(
+        activeApi,
+        version,
+        newConversation,
+        initializeProject,
+        saved,
+        hello,
+      );
+      if (!thread || !isCurrent(version)) return;
+      await finalizeConnectedSession(
+        activeApi,
+        version,
+        saved,
+        hello,
+        thread,
+        queuedEvents,
+        ready,
+      );
     } catch (error) {
       if (version === epoch) fail(error);
     } finally {
@@ -1126,6 +1281,93 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
         patch({ usageError: "暂时无法读取 Codex 额度；已有数据可能过期" });
     }
   }
+  function validateSendPreconditions(
+    text: string,
+    signal?: AbortSignal,
+  ): string | undefined {
+    const blocked = getExecutionBlockReason();
+    if (blocked) {
+      disconnect();
+      return blocked;
+    }
+    if (turnFreezing.isFrozen())
+      return "会话当前已暂停，请点击继续按钮恢复执行。";
+    if (signal?.aborted) return "发送已取消";
+    if (toolReceiptError) return toolReceiptError;
+    if (!text.trim() || state.status !== "connected" || !api)
+      return "请先连接 Codex 主 Agent。";
+    if (currentProject() !== projectId) {
+      disconnect();
+      return "项目已切换，请重新连接。";
+    }
+    if (state.sending) return "Codex 正在运行，请稍候。";
+    const conversation = state.conversation;
+    if (!conversation?.threadId) return "对话尚未就绪";
+    if (!["ready", "warning"].includes(conversation.status))
+      return "当前会话尚未就绪，请等待或重新连接。";
+    return undefined;
+  }
+  function resolveTurnAllowlist(
+    explicitAllowlist?: string[],
+  ): readonly string[] | undefined {
+    const allowed =
+      explicitAllowlist !== undefined
+        ? explicitAllowlist
+        : bridge?.getModelAllowlist?.();
+    if (allowed === undefined) return undefined;
+    return Array.isArray(allowed) &&
+      allowed.every((model) => typeof model === "string")
+      ? [...allowed]
+      : [];
+  }
+  function buildTurnMessageMetadata(
+    canvasSource: { nodeId: string; kind: "image" | "text" } | undefined,
+    canvasReferences: Array<{
+      nodeId: string;
+      label: string;
+      title: string;
+      kind: "image";
+    }>,
+  ) {
+    if (canvasSource) {
+      return {
+        canvasReferences: [
+          ...canvasGenerationMetadata(
+            projectId,
+            canvasSource.nodeId,
+            canvasSource.kind,
+          ).canvasReferences!,
+          ...canvasReferences,
+        ],
+      };
+    }
+    return canvasReferences.length ? { canvasReferences } : undefined;
+  }
+  function assertTurnActive(version: number, signal: AbortSignal): void {
+    if (!isCurrent(version) || signal.aborted) throw new Error("发送已取消");
+  }
+  function handleSendTurnError(
+    error: unknown,
+    version: number,
+    turnController: AbortController,
+  ): { ok: false; error: string } {
+    if (isCurrent(version) && toolController === turnController) {
+      if (
+        error instanceof AgentApiError &&
+        (error.response as AgentTurnResponse).state
+      )
+        handle({
+          kind: "conversation",
+          conversation: (error.response as AgentTurnResponse).state!,
+        });
+      patch({
+        sending: false,
+        error: errorText(error),
+        activity: "发送未确认，请查看会话后重试",
+      });
+    }
+    return { ok: false, error: errorText(error) };
+  }
   async function sendMessage(
     text: string,
     input?: {
@@ -1145,33 +1387,22 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
       modelAllowlist?: string[];
     },
   ): Promise<{ ok: boolean; error?: string; messageId?: string }> {
-    const blocked = getExecutionBlockReason();
-    if (blocked) {
-      disconnect();
-      return { ok: false, error: blocked };
-    }
-    if (turnFreezing.isFrozen())
-      return { ok: false, error: "会话当前已暂停，请点击继续按钮恢复执行。" };
-    if (input?.signal?.aborted) return { ok: false, error: "发送已取消" };
-    if (toolReceiptError) return { ok: false, error: toolReceiptError };
-    if (!text.trim() || state.status !== "connected" || !api)
-      return { ok: false, error: "请先连接 Codex 主 Agent。" };
-    if (currentProject() !== projectId) {
-      disconnect();
-      return { ok: false, error: "项目已切换，请重新连接。" };
-    }
-    if (state.sending) return { ok: false, error: "Codex 正在运行，请稍候。" };
-    const conversation = state.conversation;
-    if (!conversation?.threadId) return { ok: false, error: "对话尚未就绪" };
-    if (!["ready", "warning"].includes(conversation.status))
-      return { ok: false, error: "当前会话尚未就绪，请等待或重新连接。" };
+    const preconditionError = validateSendPreconditions(text, input?.signal);
+    if (preconditionError) return { ok: false, error: preconditionError };
+    const conversation = state.conversation!;
+    const memoryScope = currentChatScope();
     const selectedAttachments = (input?.attachments ?? []).map((item) => ({
       ...item,
     }));
-    const compiled = compileStructuredPrompt({
-      prompt: text.trim(),
-      attachments: selectedAttachments,
-    });
+    let compiled: ReturnType<typeof compileStructuredPrompt>;
+    try {
+      compiled = compileStructuredPrompt({
+        prompt: text.trim(),
+        attachments: selectedAttachments,
+      });
+    } catch (error) {
+      return { ok: false, error: errorText(error) };
+    }
     let userInstruction = compiled.preamble
       ? `${compiled.preamble}\n\n【用户创作指令】：\n${compiled.cleanPrompt || "按各参考素材与要求执行生成"}`
       : compiled.cleanPrompt || text.trim();
@@ -1186,18 +1417,8 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
       return { ok: false, error: errorText(error) };
     }
     const version = epoch;
-    const activeApi = api;
-    const allowed =
-      input?.modelAllowlist !== undefined
-        ? input.modelAllowlist
-        : bridge?.getModelAllowlist?.();
-    turnModelAllowlist =
-      allowed === undefined
-        ? undefined
-        : Array.isArray(allowed) &&
-            allowed.every((model) => typeof model === "string")
-          ? [...allowed]
-          : [];
+    const activeApi = api!;
+    turnModelAllowlist = resolveTurnAllowlist(input?.modelAllowlist);
     const messageId = crypto.randomUUID();
     const messageText =
       compiled.cleanPrompt +
@@ -1226,7 +1447,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
       const attachments = await (
         options.prepareAttachments ?? prepareAgentAttachments
       )(selectedAttachments, { signal });
-      if (!isCurrent(version) || signal.aborted) throw new Error("发送已取消");
+      assertTurnActive(version, signal);
       const snapshot = bridge?.getSnapshot();
       const canvasReferences = selectedAttachments
         .filter((item) => item.canvasNodeId)
@@ -1241,23 +1462,37 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
           };
         });
       await refreshUsage();
-      if (!isCurrent(version) || signal.aborted) throw new Error("发送已取消");
+      assertTurnActive(version, signal);
       if (!state.usageError && isAgentQuotaExhausted(state.usage))
         throw new Error("Codex 额度已用完，请等待重置。");
       await activeApi.activate();
-      if (!isCurrent(version) || signal.aborted) throw new Error("发送已取消");
+      assertTurnActive(version, signal);
       await activeApi.postState(bridge?.getSnapshot() ?? null);
-      if (!isCurrent(version) || signal.aborted) throw new Error("发送已取消");
+      assertTurnActive(version, signal);
       const memoryInjection =
         input?.memoryMode === "none" || input?.isTemporary
           ? ""
-          : await memoryService.buildInjection(text.trim());
-      if (!isCurrent(version) || signal.aborted) throw new Error("发送已取消");
+          : await memoryService.buildInjection(text.trim(), {
+              projectId: memoryScope?.projectId,
+              sessionId: memoryScope
+                ? JSON.stringify([memoryScope.projectId, memoryScope.chatId])
+                : undefined,
+            });
+      assertTurnActive(version, signal);
       const requestedModel = input?.selection
         ? codexReasoningModel(input.selection)
         : (input?.model ?? readAgentModel());
       const validationError = input?.validate?.();
       if (validationError) throw new Error(validationError);
+      const referenceError = agentAnswerabilityError(
+        bridge?.getSnapshot(),
+        text,
+        [
+          ...selectedAttachments.map((item) => item.canvasNodeId),
+          input?.canvasSource?.nodeId,
+        ],
+      );
+      if (referenceError) throw new Error(referenceError);
       const response = await activeApi.postTurn({
         prompt:
           KK_INSTRUCTIONS +
@@ -1277,20 +1512,10 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
         model: resolveCodexModel(state.models, requestedModel),
         effort: input?.effort ?? readAgentEffort(),
         attachments,
-        messageMetadata: input?.canvasSource
-          ? {
-              canvasReferences: [
-                ...canvasGenerationMetadata(
-                  projectId,
-                  input.canvasSource.nodeId,
-                  input.canvasSource.kind,
-                ).canvasReferences!,
-                ...canvasReferences,
-              ],
-            }
-          : canvasReferences.length
-            ? { canvasReferences }
-            : undefined,
+        messageMetadata: buildTurnMessageMetadata(
+          input?.canvasSource,
+          canvasReferences,
+        ),
       });
       if (!isCurrent(version))
         return { ok: false, error: "连接已变更，请重连确认执行结果。" };
@@ -1300,22 +1525,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
         handle({ kind: "conversation", conversation: response.state });
       return { ok: true, messageId };
     } catch (error) {
-      if (isCurrent(version) && toolController === turnController) {
-        if (
-          error instanceof AgentApiError &&
-          (error.response as AgentTurnResponse).state
-        )
-          handle({
-            kind: "conversation",
-            conversation: (error.response as AgentTurnResponse).state!,
-          });
-        patch({
-          sending: false,
-          error: errorText(error),
-          activity: "发送未确认，请查看会话后重试",
-        });
-      }
-      return { ok: false, error: errorText(error) };
+      return handleSendTurnError(error, version, turnController);
     } finally {
       input?.signal?.removeEventListener("abort", abort);
     }
@@ -1398,6 +1608,11 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
     const version = epoch;
     const requestId = state.pendingApproval.requestId;
     try {
+      const local = localApprovals.get(requestId);
+      if (local) {
+        local(decision !== "decline");
+        return { ok: true };
+      }
       await api.resolveApproval(requestId, decision);
       if (!isCurrent(version))
         return { ok: false, error: "连接已变更，请检查当前权限请求。" };
@@ -1423,6 +1638,62 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
     refreshUsage,
     disconnect,
     sendMessage,
+    async readRewindHistory() {
+      if (
+        !api ||
+        state.sending ||
+        state.pendingApproval ||
+        !state.conversation?.threadId
+      )
+        throw new Error("Agent 未就绪或正在执行，暂不可回滚");
+      const version = epoch;
+      const history = await api.readThread(state.conversation.threadId);
+      if (!isCurrent(version) || !history.rewindSupported)
+        throw new Error(
+          "当前线程不支持安全回滚，原历史已保留；请新建聊天后使用",
+        );
+      return history;
+    },
+    async revertConversation(beforeTurnId: string, expectedTurnIds: string[]) {
+      if (
+        !api ||
+        state.sending ||
+        state.pendingApproval ||
+        !state.conversation?.threadId
+      )
+        throw new Error("Agent 正在执行，暂不可回滚");
+      const version = epoch,
+        threadId = state.conversation.threadId;
+      const history = await api.revertThread(
+        threadId,
+        beforeTurnId,
+        expectedTurnIds,
+      );
+      if (!isCurrent(version))
+        throw new Error("聊天已切换，远端已回滚，请在原聊天核对结果");
+      const retained = (history.messages ?? []).map((incoming) =>
+        mergeRetainedMessage(
+          state.messages.find(
+            (old) =>
+              old.id === incoming.id ||
+              Boolean(
+                incoming.clientMessageId &&
+                incoming.clientMessageId === old.clientMessageId,
+              ),
+          ),
+          incoming,
+        ),
+      );
+      patch({
+        messages: retained,
+        conversation: history.conversation ?? state.conversation,
+        activity: "历史已回滚",
+      });
+      const scope = currentChatScope();
+      if (!scope)
+        throw new Error("聊天身份已失效，远端历史已回滚，请重新打开原聊天");
+      await bridge?.saveAgentMessages?.(retained, scope);
+    },
     generateFromCanvas,
     interrupt,
     resolveApproval,
@@ -1432,7 +1703,24 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
     getFreezingState: () => turnFreezing.getState().state,
     turnFreezing,
     setBridge(next: AgentBridge | null) {
+      unsubscribeStatusline?.();
       bridge = next;
+      unsubscribeStatusline = next?.subscribeStatusline?.((payload) => {
+        if (payload.scope && payload.scope !== currentScopeKey()) return;
+        const labels = {
+          thinking: "规划画布操作",
+          blocked: "等待计划授权",
+          tool_use: "执行画布操作",
+          completed: "画布操作完成",
+          failed: "画布操作未完成",
+          idle: "就绪",
+          working: "执行中",
+          review: "审阅中",
+        };
+        patch({
+          activity: `${labels[payload.state]} · ${payload.agent} · ${payload.step}/${payload.totalSteps} · ${payload.durationMs}ms`,
+        });
+      });
       syncProject();
     },
     syncProject,

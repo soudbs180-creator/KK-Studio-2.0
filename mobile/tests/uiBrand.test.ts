@@ -8,7 +8,10 @@ import {
 
 const generated: {
   source: string;
-  reference: { sha: string };
+  reference: {
+    sha: string;
+    figma: { fileKey: string; nodes: Record<string, string> };
+  };
   colors: Record<"dark" | "light", ActionTheme>;
 } = JSON.parse(
   readFileSync(
@@ -27,12 +30,17 @@ test("mobile primary actions use the neutral foreground hierarchy in both themes
     assert.equal(pressed.background, theme.text);
   }
 });
-test("phone colors have their own pinned reference and readable text on each content surface", () => {
+test("phone colors preserve their reference, current Figma provenance and readable text", () => {
   assert.equal(generated.source, "mobile/src/ui/mobileColors.source.json");
   assert.equal(
     generated.reference.sha,
     "24a45b54a4225499488842d09405731bab3cd4be",
   );
+  assert.equal(generated.reference.figma.fileKey, "ZiadpErDoFweCjG3uHjkM3");
+  assert.equal(generated.reference.figma.nodes.light, "106:5650");
+  assert.equal(generated.reference.figma.nodes.dark, "770:97841");
+  assert.equal(generated.colors.light.background, "#ededed");
+  assert.equal(generated.colors.dark.background, "#0a0a0a");
   function luminance(hex: string) {
     const rgb = hex
       .slice(1)

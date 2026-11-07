@@ -1,3 +1,4 @@
+import ComfyWorkflowNode from "./ComfyWorkflowNode.tsx";
 import type { RefObject } from "react";
 import type {
   CanvasCollectionItem,
@@ -23,6 +24,8 @@ export default function CanvasNodeContent({
   uploadInput: RefObject<HTMLInputElement>;
   scale?: number;
 }) {
+  if (item.comfyWorkflow)
+    return <ComfyWorkflowNode item={item} editing={editing} />;
   if (item.plugin)
     return (
       <PluginNode
@@ -34,9 +37,7 @@ export default function CanvasNodeContent({
     );
   if (
     item.result ||
-    (item.generationStatus &&
-      ((item.kind !== "image" && item.kind !== "text") ||
-        item.generationIndex !== undefined))
+    (item.generationStatus && item.generationIndex !== undefined)
   )
     return (
       <DemoResultNode

@@ -8,6 +8,7 @@ import express, { type NextFunction, type Request, type Response } from "express
 import { runClaudeTurn } from "../agent/claude.js";
 import { runCodeBuddy, validateCodeBuddyCliPath } from "../agent/codebuddy.js";
 import { readCodexRateLimits } from "../agent/codex.js";
+import { rollbackCodexThread } from "../agent/codex.js";
 import { archiveCodexThread, CodexSkillLookupError, configureCodexSkill, generateCodexSkillDraft, interruptCodexTurn, isRecoverableThreadError, listCodexModels, listCodexSkills, listCodexThreads, readCodexThread, resolveCodexApproval, resolveCodexSkill, resumeCodexThread, runCodexTurn, startCodexThread, summarizeCodexThread } from "../agent/codex.js";
 import type { CodexReasoningEffort, CodexSkillSelector } from "../agent/codex-protocol.js";
 import { messageMetadataStore } from "../agent/message-metadata.js";
@@ -386,6 +387,17 @@ export function startHttpServer() {
         session.acknowledgeCodexHistory(threadId, turnIds);
         res.json({ ok: true });
     });
+    app.post("/agent/codex/threads/:threadId/revert", codexMutation(async (req, res) => {
+        const threadId = routeParam(req.params.threadId);
+        const beforeTurnId = String(req.body?.beforeTurnId || "");
+        const expectedTurnIds = req.body?.expectedTurnIds;
+        if (!beforeTurnId || !Array.isArray(expectedTurnIds) || expectedTurnIds.length > 5000 || !expectedTurnIds.every((id: unknown) => typeof id === "string" && id.length <= 160)) return void res.status(400).json({ ok: false, error: "回滚轮次参数无效" });
+        const workspace = ensureSiteWorkspace(config);
+        if (workspace.activeThreadId !== threadId || session.codexBusy) return void res.status(409).json({ ok: false, error: "线程已切换或正在执行" });
+        const result = await rollbackCodexThread(emit, threadId, beforeTurnId, expectedTurnIds, workspace.workspacePath);
+        setActiveThread(threadId, { sourceClientId: requestClient(req) }, true);
+        res.json({ ok: true, ...result, conversation: session.conversationStateSnapshot });
+    }));
     app.post("/agent/codex/threads/:threadId/resume", codexMutation(async (req, res) => {
         const threadId = routeParam(req.params.threadId);
         const clientId = String(req.body?.clientId || "");

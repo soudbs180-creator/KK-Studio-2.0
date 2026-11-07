@@ -1,3 +1,4 @@
+import { selectHomeConversation } from "./helpers";
 import { expect, test, type Locator } from "@playwright/test";
 import { openWorkspace, waitForConversationPanelSettled } from "./helpers";
 
@@ -20,12 +21,20 @@ async function readableDefault(
           right: rect.right,
           center: rect.y + rect.height / 2,
           height: rect.height,
+          top: rect.top,
+          bottom: rect.bottom,
         };
       });
     return {
       text: label.textContent,
+      title: label.closest("button")?.getAttribute("title"),
+      ellipsis: getComputedStyle(label).textOverflow,
       labelWidth: label.clientWidth,
       fullLabelWidth: label.scrollWidth,
+      top: area.top,
+      bottom: area.bottom,
+      compact:
+        !element.classList.contains("start-composer") && innerWidth <= 1200,
       left: area.left,
       right: area.right,
       controls,
@@ -36,11 +45,34 @@ async function readableDefault(
     contentType: "application/json",
   });
   expect(geometry.text).toBe(expectedLabel);
-  expect(geometry.labelWidth).toBeGreaterThanOrEqual(geometry.fullLabelWidth);
-  const centers = geometry.controls.map((control) => control.center);
-  expect(Math.max(...centers) - Math.min(...centers)).toBeLessThanOrEqual(1);
+  if (geometry.labelWidth < geometry.fullLabelWidth) {
+    expect(geometry.ellipsis).toBe("ellipsis");
+    expect(geometry.title).toBe(expectedLabel);
+    expect(geometry.labelWidth).toBeGreaterThanOrEqual(24);
+  } else {
+    expect(geometry.labelWidth).toBeGreaterThanOrEqual(geometry.fullLabelWidth);
+  }
+  // Complete groups wrap by available width; controls sharing a row stay centered.
+  for (const [index, control] of geometry.controls.entries()) {
+    for (const next of geometry.controls.slice(index + 1)) {
+      if (control.top < next.bottom && next.top < control.bottom) {
+        expect(Math.abs(control.center - next.center)).toBeLessThanOrEqual(1);
+        expect(
+          Math.min(control.right, next.right) -
+            Math.max(control.left, next.left),
+        ).toBeLessThanOrEqual(0.5);
+      }
+    }
+  }
   for (const control of geometry.controls) {
-    expect(control.height, control.name ?? "control").toBe(32);
+    expect(control.height, control.name ?? "control").toBe(
+      geometry.compact ||
+        ["开始创建项目", "发送消息"].includes(control.name ?? "")
+        ? 44
+        : 32,
+    );
+    expect(control.top).toBeGreaterThanOrEqual(geometry.top - 0.5);
+    expect(control.bottom).toBeLessThanOrEqual(geometry.bottom + 0.5);
     expect(control.left).toBeGreaterThanOrEqual(geometry.left - 0.5);
     expect(control.right).toBeLessThanOrEqual(geometry.right + 0.5);
   }
@@ -78,8 +110,13 @@ for (const width of [390, 1099, 1920]) {
     await page.setViewportSize({ width, height: 1080 });
     await page.goto("/");
     const home = page.locator(".start-composer");
+    await readableDefault(
+      home,
+      ".start-model-picker > button > span:not(.ui-icon)",
+      "Codex 内置生图",
+    );
+    await selectHomeConversation(page);
     await expect(home.locator(".start-mode-button")).toHaveText(/自动|询问/);
-    await readableDefault(home, ".start-model-picker span", "Codex 内置生图");
     await openWorkspace(page);
     if (
       await page
@@ -112,7 +149,8 @@ for (const width of [390, 1099, 1920]) {
       };
     });
     expect(layout.width).toBeGreaterThan(58);
-    expect(layout.labelWidth).toBeGreaterThanOrEqual(layout.fullLabelWidth);
+    expect(layout.labelWidth).toBeGreaterThanOrEqual(24);
+    await expect(model).toHaveAttribute("title", "Codex 账号默认");
     expect(layout.right).toBeLessThanOrEqual(layout.viewport);
     await page.screenshot({
       path: testInfo.outputPath(`unified-${width}.png`),
@@ -123,6 +161,7 @@ for (const width of [390, 1099, 1920]) {
 
 test("首页不显示画布参数，普通输入草稿仍可恢复", async ({ page }) => {
   await page.goto("/");
+  await selectHomeConversation(page);
   await expect(page.getByText("生成参数", { exact: true })).toHaveCount(0);
   await page.getByLabel("创作提示词", { exact: true }).fill("保留当前草稿");
   await expect
