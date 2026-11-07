@@ -117,3 +117,12 @@ MCP桌面首轮编译成功但来源护栏FAIL：10:54:43Z到10:56:02Z期间HEAD
 官方MCP第二轮Desktop2.1.66构建退出0，EXE SHA256 659e1eb4141f2f7db5cce6f0cb8191b2ddbe647b70e51d15548d99dc67eb17d0，input f2d7addff2200ea1775b57e37c6b021a92f5cf1d70578a69c0bd2ad12c3811fb；自定义运行输入指纹构建前后稳定、依赖无漂移，原先失配收据保留。没有启动Native窗口、安装器或正式外部发布。完整回执strict-mcp-final-proof.json / desktop-strict-mcp2-*.json。
 
 当前仍不能称100%还原：未完成全页/六态/交互逐项视觉与严格像素对照；像素基线为空，原有test:pixel实际SKIP。最新字体/资产修改后的全仓verify与最终独审未完成，旧verify24成功仅对应96797c6c+当时增量，不覆盖后续并发改动。功能台账42项保持{"PARTIAL":31,"REAL":7,"PROTOTYPE":3,"PLANNED":1}，未因UI回归升级REAL。原项目读取保护仍在，数据未清空/覆盖。
+
+### 2026-11-06 主线治理续验的04/05来源前置
+
+- fileKey `ZiadpErDoFweCjG3uHjkM3`；session `d00ae207-49e9-4b40-a696-d3e169ec9228`，本轮2026-11-06回读04 `2:47`、05 `91:11`、桌面通用 `47:184`（面板 `47:185`）、网络 `47:926`、独立手机设置浅色 `106:5650` / 深色 `770:97841` 的高保真上下文与截图；变量分别回读浅/深节点。完整原件在容器 `output/mainline-governance-20261106/` 与 `ui-source-audit/`。
+- 修改前真实1421 development浏览器已复现：网络三块额外有背景、描边和16/20内边距，缺214:703使用说明；Figma `655:143029/036/046`为无填充/无描边/无内边距分组，标题16/24 Bold，状态中性色，只有代理命令 `655:143044` 为输入底/描边/R8。复用现有details样式及原内容/Companion行为，不按展示高度固定真实动态内容。
+- SettingsPanel旧锚点 `399:27506`本轮已不可读；当前 `47:185`可由47:184上下文核验。仅修来源映射，不冒称全部设置SYNCED。
+- 独立手机设置当前来源：分组无底/无内边距；内容左右16/顶部24/组间32，主题选择组控制48高/R8、未选control-idle/次文字、选中control-selected/主文字。浅色bg-app #ededed / text-primary #252525，深色bg-app #0a0a0a / text-primary #dbdbdb。本地现有Mobile source JSON仍以Cherry为历史基础，颜色差异已确认；续验使用既有JSON→generated编译入口记录当前Figma角色，不新增平行管线或手改生成文件。
+- Mobile高级功能在当前Figma对应区块hidden，源码仍有真实业务入口；这是设计状态冲突，保留业务入口，不根据截图删除。当前字体、全页/六态/像素和原生手机验收不能由本轮局部修复代填。
+- 原127入口仍有旧Agent/Google迁移失败的读取保护；本轮只查看设置，没有点击重新读取/下载、没有清空或覆盖任何旧资料。

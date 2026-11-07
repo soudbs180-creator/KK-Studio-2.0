@@ -1,18 +1,12 @@
-import {
-  memo,
-  useCallback,
-  useContext,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { memo, useContext, useMemo, useRef } from "react";
+import { shadowEventBus } from "../../features/sync/index.ts";
 import type { NodeEditingProps } from "../../domain/canvasItems";
 import { canvasImageReferenceLimit } from "../../features/models/index.ts";
 import { readProviderConnections } from "../../features/creation/index.ts";
 import CanvasNodeFrame from "./CanvasNodeFrame";
 import CanvasNodeContent from "./CanvasNodeContent";
-import { invoke, isTauri } from "@tauri-apps/api/core";
-import { shadowEventBus } from "../../features/sync/index.ts";
+import useCanvasNodeMedia from "./useCanvasNodeMedia";
+import useCanvasNodePreemption from "./useCanvasNodePreemption";
 import {
   CanvasImageNodeContext,
   CanvasImageCommandContext,
@@ -69,146 +63,13 @@ function CanvasNodeItem({
 }: CanvasNodeItemProps) {
   const command = useContext(CanvasImageCommandContext);
   const uploadInput = useRef<HTMLInputElement>(null);
-  const mediaSource =
-    item.kind === "audio"
-      ? item.result?.kind === "audio"
-        ? item.result.src || ""
-        : ""
-      : item.result?.poster ||
-        item.result?.src ||
-        item.preview ||
-        item.assetId ||
-        "";
-  const [mediaContent, setMediaContent] = useState({
-    source: "",
-    ready: false,
-  });
-  const onContentReadyChange = useCallback(
-    (ready: boolean) =>
-      setMediaContent((current) =>
-        current.source === mediaSource && current.ready === ready
-          ? current
-          : { source: mediaSource, ready },
-      ),
-    [mediaSource],
-  );
-  const hasContent = item.plugin
-    ? Boolean(
-        typeof item.plugin.metadata?.content === "string" &&
-        item.plugin.metadata.content.trim(),
-      )
-    : item.kind === "text"
-      ? Boolean(item.result?.kind === "text" && item.result.text?.trim())
-      : Boolean(
-          mediaSource &&
-          mediaContent.source === mediaSource &&
-          mediaContent.ready,
-        );
+  const { hasContent, onContentReadyChange } = useCanvasNodeMedia(item);
 
   const isSelected = controls.selectedNode === item.id;
   const setComposerExtraHeight = controls.setComposerExtraHeight;
   const isGenerationActive = activeLocalResultIds.includes(item.id);
-  const isGenerating =
-    (item.generationStatus as unknown as string) === "generating";
-
-  const handlePreempt = useCallback(
-    (reason: string = "designer_override") => {
-      const taskId =
-        (item as unknown as { taskId?: string; activeTaskId?: string })
-          .taskId ||
-        (item as unknown as { taskId?: string; activeTaskId?: string })
-          .activeTaskId ||
-        "unknown";
-      const baseRev =
-        item.node_rev ?? shadowEventBus.getNodeRevision(item.id) ?? 1;
-
-      // 1. Emit shadow events
-      shadowEventBus.emit({
-        eventType: "agent.task.cancelled",
-        targetNodeId: item.id,
-        actor: "system",
-        baseRev,
-        newRev: baseRev,
-        payload: { taskId, targetNodeId: item.id, reason },
-      });
-
-      const newRev = baseRev + 1;
-      shadowEventBus.setNodeRevision(item.id, newRev);
-      shadowEventBus.emit({
-        eventType: "canvas.node.override",
-        targetNodeId: item.id,
-        actor: "designer",
-        baseRev,
-        newRev,
-        payload: {
-          targetNodeId: item.id,
-          actor: "designer",
-          taskId,
-          overriddenState: "generating",
-          reason,
-        },
-      });
-
-      // 2. Invoke preemption backend if in Tauri
-      if (isTauri()) {
-        invoke("concurrency_preempt_node", {
-          nodeId: item.id,
-          actor: "designer",
-        }).catch(() => {});
-        if (taskId !== "unknown") {
-          invoke("task_host_cancel", { taskId }).catch(() => {});
-        }
-      }
-
-      // 3. Clear generationStatus and restore designer interactive control
-      onItemsChange((current) =>
-        current.map((entry) =>
-          entry.id === item.id
-            ? {
-                ...entry,
-                generationStatus: undefined,
-                node_rev: newRev,
-                updatedAt: Date.now(),
-              }
-            : entry,
-        ),
-      );
-    },
-    [item, onItemsChange],
-  );
-
-  const handleDelete = useCallback(() => {
-    if (isGenerating) {
-      handlePreempt("designer_delete");
-    }
-    onDelete(item.id);
-  }, [isGenerating, handlePreempt, onDelete, item.id]);
-
-  const wrappedControls = useMemo(() => {
-    if (!isGenerating) return controls;
-    return {
-      ...controls,
-      startNodeDrag: (
-        event: React.PointerEvent<HTMLDivElement>,
-        id: string,
-      ) => {
-        if (id === item.id) {
-          handlePreempt("designer_drag");
-        }
-        controls.startNodeDrag(event, id);
-      },
-      moveNodeWithKeyboard: (
-        event: React.KeyboardEvent<HTMLDivElement>,
-        id: string,
-        onDeleteNode: () => void,
-      ) => {
-        if (id === item.id) {
-          handlePreempt("designer_keyboard_move");
-        }
-        controls.moveNodeWithKeyboard(event, id, onDeleteNode);
-      },
-    };
-  }, [controls, isGenerating, handlePreempt, item.id]);
+  const { isGenerating, handlePreempt, handleDelete, wrappedControls } =
+    useCanvasNodePreemption({ item, controls, onDelete, onItemsChange });
 
   const editing: NodeEditingProps = useMemo(
     () => ({

@@ -92,6 +92,66 @@ async function newCreation(page: Page) {
   ).toBeVisible();
 }
 
+for (const width of [320, 390]) {
+  for (const theme of ["light", "dark"] as const) {
+    test(`current Figma phone settings keep theme states on one row ${width} ${theme}`, async ({
+      page,
+    }, info) => {
+      await page.setViewportSize({ width, height: 844 });
+      await page.goto("/mobile/settings", { waitUntil: "domcontentloaded" });
+      const selected = page.getByRole("button", {
+        name: theme === "light" ? "浅色" : "深色",
+        exact: true,
+      });
+      await selected.click();
+      await expect(selected).toHaveAttribute("aria-pressed", "true");
+      await expect(selected).toHaveCSS(
+        "background-color",
+        theme === "light" ? "rgb(237, 237, 237)" : "rgb(51, 51, 51)",
+      );
+      const choices = ["跟随系统", "浅色", "深色"].map((name) =>
+        page.getByRole("button", { name, exact: true }),
+      );
+      const boxes = [];
+      for (const choice of choices) {
+        await expect(choice).toHaveCSS("border-radius", "8px");
+        const box = (await choice.boundingBox())!;
+        expect(box.height).toBe(48);
+        expect(box.x).toBeGreaterThanOrEqual(16);
+        expect(box.x + box.width).toBeLessThanOrEqual(width - 16);
+        boxes.push(box);
+      }
+      expect(
+        Math.max(...boxes.map((b) => b.y)) - Math.min(...boxes.map((b) => b.y)),
+      ).toBeLessThanOrEqual(1);
+      const unselected = choices[theme === "light" ? 2 : 1];
+      const text = unselected.getByText(theme === "light" ? "深色" : "浅色", {
+        exact: true,
+      });
+      await expect(text).toHaveCSS(
+        "color",
+        theme === "light" ? "rgb(98, 98, 98)" : "rgb(160, 160, 160)",
+      );
+      const box = (await unselected.boundingBox())!;
+      await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+      await page.mouse.down();
+      await expect(text).toHaveCSS(
+        "color",
+        theme === "light" ? "rgb(37, 37, 37)" : "rgb(219, 219, 219)",
+      );
+      await page.mouse.move(0, 0);
+      await page.mouse.up();
+      await expect(selected).toHaveAttribute("aria-pressed", "true");
+      expect(
+        await page.evaluate(() => document.documentElement.scrollWidth),
+      ).toBeLessThanOrEqual(width);
+      await page.screenshot({
+        path: info.outputPath(`phone-settings-${width}-${theme}.png`),
+      });
+    });
+  }
+}
+
 for (const profile of [
   {
     name: "phone portrait",

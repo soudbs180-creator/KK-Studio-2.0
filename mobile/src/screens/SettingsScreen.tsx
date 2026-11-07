@@ -7,7 +7,7 @@ export default function SettingsScreen() {
   return (
     <Screen>
       <Header title="设置" back />
-      <Content>
+      <Content settings>
         <GeneralSettings />
         <AccountStorageSettings />
         <AccessSettings />

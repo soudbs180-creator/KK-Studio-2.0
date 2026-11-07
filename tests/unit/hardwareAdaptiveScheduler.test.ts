@@ -81,7 +81,10 @@ test("evaluateVramWatermarkRisk correctly classifies low, medium and critical ri
 });
 
 test("scheduleAdaptiveExecution matches 32B model and FLUX FP16 on Ultra hardware", () => {
-  const report = createMockReport({ vramDedicated: 24 * GiB, vramFree: 22 * GiB });
+  const report = createMockReport({
+    vramDedicated: 24 * GiB,
+    vramFree: 22 * GiB,
+  });
 
   const chatResult = scheduleAdaptiveExecution({ type: "chat" }, report);
   assert.equal(chatResult.tier, "ultra");
@@ -94,7 +97,10 @@ test("scheduleAdaptiveExecution matches 32B model and FLUX FP16 on Ultra hardwar
 });
 
 test("scheduleAdaptiveExecution matches 14B model and SDXL Turbo on Standard hardware", () => {
-  const report = createMockReport({ vramDedicated: 12 * GiB, vramFree: 10 * GiB });
+  const report = createMockReport({
+    vramDedicated: 12 * GiB,
+    vramFree: 10 * GiB,
+  });
 
   const chatResult = scheduleAdaptiveExecution({ type: "chat" }, report);
   assert.equal(chatResult.tier, "standard");
@@ -105,7 +111,10 @@ test("scheduleAdaptiveExecution matches 14B model and SDXL Turbo on Standard har
 });
 
 test("scheduleAdaptiveExecution routes image generation to Cloud on Lite hardware to prevent OOM", () => {
-  const report = createMockReport({ vramDedicated: 6 * GiB, vramFree: 5 * GiB });
+  const report = createMockReport({
+    vramDedicated: 6 * GiB,
+    vramFree: 5 * GiB,
+  });
 
   const chatResult = scheduleAdaptiveExecution({ type: "chat" }, report);
   assert.equal(chatResult.tier, "lite");
@@ -130,12 +139,15 @@ test("scheduleAdaptiveExecution triggers anti-OOM watermark protection under cri
 });
 
 test("scheduleAdaptiveExecution routes to external bridge when Topaz or Photoshop is detected", () => {
-  const report = createMockReport({ vramDedicated: 12 * GiB, vramFree: 10 * GiB });
+  const report = createMockReport({
+    vramDedicated: 12 * GiB,
+    vramFree: 10 * GiB,
+  });
 
   const upscaleResult = scheduleAdaptiveExecution(
     { type: "upscale" },
     report,
-    (tool) => tool === "topaz"
+    (tool) => tool === "topaz",
   );
   assert.equal(upscaleResult.executionTarget, "external-bridge");
   assert.equal(upscaleResult.recommendedModelId, "topaz-gigapixel-ai");
@@ -143,7 +155,7 @@ test("scheduleAdaptiveExecution routes to external bridge when Topaz or Photosho
   const outpaintResult = scheduleAdaptiveExecution(
     { type: "outpaint" },
     report,
-    (tool) => tool === "photoshop"
+    (tool) => tool === "photoshop",
   );
   assert.equal(outpaintResult.executionTarget, "external-bridge");
   assert.equal(outpaintResult.recommendedModelId, "adobe-photoshop-uxp");

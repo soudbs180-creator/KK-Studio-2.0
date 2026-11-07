@@ -1,5 +1,5 @@
 import { Action } from "./Action.tsx";
-import { radii, spacing, typography } from "./geometry.ts";
+import { radii, settingsGeometry, spacing, typography } from "./geometry.ts";
 import { Label } from "./Label.tsx";
 import { Icon } from "./Icon.tsx";
 import type { ReactNode } from "react";
@@ -217,15 +217,22 @@ export function Screen({
     content
   );
 }
-export function Content({ children }: { children: ReactNode }) {
+export function Content({
+  children,
+  settings = false,
+}: {
+  children: ReactNode;
+  settings?: boolean;
+}) {
   return (
     <ScrollView
       keyboardShouldPersistTaps="handled"
       showsVerticalScrollIndicator={false}
       contentContainerStyle={{
         padding: spacing.page,
+        paddingTop: settings ? settingsGeometry.pageTop : spacing.page,
         paddingBottom: 32,
-        gap: spacing.section,
+        gap: settings ? settingsGeometry.sectionGap : spacing.section,
         flexGrow: 1,
         width: "100%",
         maxWidth: 720,

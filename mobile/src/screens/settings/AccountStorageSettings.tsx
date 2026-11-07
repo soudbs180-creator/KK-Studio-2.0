@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { settingsGeometry } from "../../ui/geometry.ts";
 import { Linking, Platform } from "react-native";
 import { router } from "expo-router";
 import { useApplication } from "../../application/AppProvider.tsx";
@@ -13,8 +14,10 @@ export function AccountStorageSettings() {
   const local = state.auth === "local";
   return (
     <>
-      <Card>
-        <Label title>账号</Label>
+      <Card quiet>
+        <Label title style={{ lineHeight: settingsGeometry.titleLineHeight }}>
+          账号
+        </Label>
         <Label>
           {local ? "本机创作" : state.user?.displayName}
           {"\n"}
@@ -40,8 +43,10 @@ export function AccountStorageSettings() {
           </>
         )}
       </Card>
-      <Card>
-        <Label title>存储</Label>
+      <Card quiet>
+        <Label title style={{ lineHeight: settingsGeometry.titleLineHeight }}>
+          存储
+        </Label>
         <Label>
           {state.snapshot?.projects.length ?? 0} 个项目 ·{" "}
           {state.snapshot?.assets.length ?? 0} 件索引原件{"\n"}已索引原件容量{" "}

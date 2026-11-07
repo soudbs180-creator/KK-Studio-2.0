@@ -1,5 +1,7 @@
 # 当前进度
 
+2026-11-07 全面治理：Cursor 接管 `TASK-SYNC-LOCAL-MAIN-20261106`，收口审查分支 dirty、清虚假的 test:fast 脚本名、过本地 typecheck/lint/format/ui/tokens/unit。PR #83 仍未合；旧 `4990025b` Hosted verify 曾因 Prettier 失败，本轮推送后以新 SHA 为准。UI-004/真实扣费/侧车/独审仍 PARTIAL。事实查[状态](governance/PROJECT_STATE.md)与[门禁修复](changes/2026-11-06-ci-gate-repair/verification.md)。
+
 2026-11-06 UI-004：按用户要求全部经MCP、先Figma后本地。本批已修正设计字体/首页封面/品牌资源，26定向生产浏览器通过，Desktop2.1.66重建且源码指纹稳定（EXE659e1eb4141f）。当前仍PARTIAL；全页六态/像素、最新整套verify、Native窗口、独审与发布未完成，原数据读取保护保留。审查分支上 verify、delivery、installer 的失败正在按[门禁修复](changes/2026-11-06-ci-gate-repair/verification.md)处理，远端重跑通过前不能合并。当前事实查[状态](governance/PROJECT_STATE.md)，逐轮回执查[UI验证](changes/2026-11-05-figma-local-sync/verification.md)。
 
 2026-11-05第二阶段：main@752f7dbd基础上补齐B1–B5及A1–A3，health 0 blocking、版本0 warning、E2E312/312；完整verify/当前Desktop/独立审查以[本次验证](changes/2026-11-05-step2-deep-water/verification.md)为准。保持外部模型与正式发布的未验边界。

@@ -51,10 +51,27 @@ export default function SettingsSections({
           {item?.label}
         </h2>
       )}
-      {item?.description && (
-        <p className="settings-section-intro settings-page-description">
-          {item.description}
-        </p>
+      {section === "network" ? (
+        <details className="settings-usage-guide" data-figma-node="214:703">
+          <summary>
+            <span>使用说明</span>
+            <span className="settings-usage-guide-toggle">
+              <span className="settings-usage-guide-expand">
+                查看详细使用方法
+              </span>
+              <span className="settings-usage-guide-collapse">
+                收起详细使用方法
+              </span>
+            </span>
+          </summary>
+          <p>{item?.description}</p>
+        </details>
+      ) : (
+        item?.description && (
+          <p className="settings-section-intro settings-page-description">
+            {item.description}
+          </p>
+        )
       )}
       <div className="settings-section-body">
         {section === "extensions" ? (

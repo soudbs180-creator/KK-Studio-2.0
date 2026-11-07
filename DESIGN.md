@@ -180,7 +180,7 @@ components:
     padding: 4px
 x-kk-studio:
   source: src/styles/tokens.css
-  sha256: 869c4a1ac1e785265604ff82a7953916e6661e51b54735195a5e8e4814469d6c
+  sha256: 2dce18b675656daedddcc025841dacc453e4283a1de1abeeb08c1828b4707c69
   hashEncoding: utf8-lf
   scopes:
     - selector: :root
@@ -259,6 +259,12 @@ x-kk-studio:
           important: false
         - property: --kk-space-6
           value: 40px
+          important: false
+        - property: --kk-dimension-37
+          value: 37px
+          important: false
+        - property: --kk-dimension-19
+          value: 19px
           important: false
         - property: --kk-radius-0
           value: "0"
@@ -799,6 +805,12 @@ x-kk-studio:
         - property: --kk-on-accent
           value: "#0a0a0a"
           important: false
+        - property: --kk-titlebar-brand-gap
+          value: var(--kk-dimension-37)
+          important: false
+        - property: --kk-titlebar-inset
+          value: var(--kk-dimension-19)
+          important: false
         - property: --kk-settings-section-gap
           value: var(--kk-layout-gutter-md)
           important: false
@@ -831,6 +843,27 @@ x-kk-studio:
           important: false
         - property: --kk-settings-control-pad
           value: var(--kk-space-1)
+          important: false
+        - property: --kk-settings-network-gap
+          value: var(--kk-space-4)
+          important: false
+        - property: --kk-settings-network-part-gap
+          value: var(--kk-space-2)
+          important: false
+        - property: --kk-settings-network-command-pad-x
+          value: var(--kk-space-3)
+          important: false
+        - property: --kk-settings-network-command-pad-y
+          value: var(--kk-space-2)
+          important: false
+        - property: --kk-settings-network-command-radius
+          value: var(--kk-radius-control)
+          important: false
+        - property: --kk-settings-network-command-font
+          value: var(--kk-font-mono)
+          important: false
+        - property: --kk-settings-network-status-radius
+          value: var(--kk-radius-full)
           important: false
         - property: --kk-task-trigger-h
           value: var(--kk-control-h-md)

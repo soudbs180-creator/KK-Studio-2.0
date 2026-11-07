@@ -21,6 +21,40 @@ test.beforeEach(async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
 });
 
+for (const width of [390, 1099, 1920]) {
+  test(`当前Figma网络分组和使用说明保持真实内容 ${width}`, async ({
+    page,
+  }, info) => {
+    await page.setViewportSize({ width, height: 1080 });
+    await page.goto("/");
+    await page.getByRole("button", { name: "打开设置", exact: true }).click();
+    await openSection(page, "网络与代理");
+    const panel = page.locator(".settings-panel");
+    const guide = panel.locator(".settings-usage-guide");
+    await expect(guide).toHaveCount(1);
+    await expect(guide).not.toHaveAttribute("open", "");
+    await guide.locator("summary").click();
+    await expect(guide).toHaveAttribute("open", "");
+    await expect(guide).toContainText("配置网络代理与本地伴随服务");
+    const sections = panel.locator(".settings-network-section");
+    await expect(sections).toHaveCount(3);
+    for (const section of await sections.all()) {
+      await expect(section).toHaveCSS("padding", "0px");
+      await expect(section).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
+      await expect(section.locator("h3")).toHaveCSS("font-size", "16px");
+    }
+    await expect(panel).toContainText("npm run proxy → http://127.0.0.1:23210");
+    await expect(
+      panel.getByRole("heading", { name: "网页本机伴随服务", exact: true }),
+    ).toBeVisible();
+    await guide.locator("summary").click();
+    await expect(guide).not.toHaveAttribute("open", "");
+    await panel.screenshot({
+      path: info.outputPath(`settings-network-${width}.png`),
+    });
+  });
+}
+
 for (const width of [390, 801, 1099, 1920]) {
   test(`长连接名称保留完整名称且不挤压操作 ${width}`, async ({ page }) => {
     const providerName = "A".repeat(120);

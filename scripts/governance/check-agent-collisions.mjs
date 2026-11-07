@@ -68,7 +68,7 @@ export function validateClaimsIntegrity() {
     const existing = featureTrackMap.get(key);
     if (existing) {
       errors.push(
-        `【同轨冲突】模块 "${claim.feature}" 的 [${claim.track || "FULL"}] 分轨被任务 ${existing.task} (${existing.agent}) 与 ${claim.task} (${claim.agent}) 同时认领！`
+        `【同轨冲突】模块 "${claim.feature}" 的 [${claim.track || "FULL"}] 分轨被任务 ${existing.task} (${existing.agent}) 与 ${claim.task} (${claim.agent}) 同时认领！`,
       );
     } else {
       featureTrackMap.set(key, claim);
@@ -84,7 +84,7 @@ export function validateClaimsIntegrity() {
       const existing = fileClaimMap.get(normalized);
       if (existing) {
         errors.push(
-          `【物理文件冲突】文件 "${normalized}" 同时被 ${existing.task} (${existing.agent}) 与 ${claim.task} (${claim.agent}) 锁定！`
+          `【物理文件冲突】文件 "${normalized}" 同时被 ${existing.task} (${existing.agent}) 与 ${claim.task} (${claim.agent}) 锁定！`,
         );
       } else {
         fileClaimMap.set(normalized, claim);
@@ -104,14 +104,15 @@ export function checkAgentCommitBoundary(agentName, taskId) {
   const claims = readClaims();
   const myClaim = claims.find(
     (c) =>
-      (c.agent.toLowerCase() === agentName.toLowerCase() || (taskId && (c.task === taskId || c.taskId === taskId))) &&
-      ["IN_PROGRESS", "PARTIAL"].includes(c.status)
+      (c.agent.toLowerCase() === agentName.toLowerCase() ||
+        (taskId && (c.task === taskId || c.taskId === taskId))) &&
+      ["IN_PROGRESS", "PARTIAL"].includes(c.status),
   );
 
   const violations = [];
   const activeStatuses = ["IN_PROGRESS", "PARTIAL"];
   const otherClaims = claims.filter(
-    (c) => c !== myClaim && activeStatuses.includes(c.status)
+    (c) => c !== myClaim && activeStatuses.includes(c.status),
   );
 
   const lockedByOthers = new Map();
@@ -125,7 +126,7 @@ export function checkAgentCommitBoundary(agentName, taskId) {
     const foreign = lockedByOthers.get(file);
     if (foreign) {
       violations.push(
-        `文件 "${file}" 被 ${foreign.agent} [任务: ${foreign.task}] 锁定，禁止越界提交！`
+        `文件 "${file}" 被 ${foreign.agent} [任务: ${foreign.task}] 锁定，禁止越界提交！`,
       );
     }
   }
@@ -150,11 +151,14 @@ if (!integrity.ok) {
 }
 
 if (mode === "pre-commit") {
-  const currentAgent = process.argv[3] || process.env.AGENT_NAME || "Antigravity";
+  const currentAgent =
+    process.argv[3] || process.env.AGENT_NAME || "Antigravity";
   const taskId = process.argv[4] || process.env.TASK_ID || "";
   const commitCheck = checkAgentCommitBoundary(currentAgent, taskId);
   if (!commitCheck.ok) {
-    console.error("❌ [COLLISION-GUARD] 阻断提交：修改了其他 Agent 锁定的受保护文件：");
+    console.error(
+      "❌ [COLLISION-GUARD] 阻断提交：修改了其他 Agent 锁定的受保护文件：",
+    );
     commitCheck.violations.forEach((v) => console.error(`  • ${v}`));
     process.exit(1);
   }
@@ -163,4 +167,6 @@ if (mode === "pre-commit") {
   console.log(`[COLLISION-GUARD] 当前工作区未提交文件共 ${dirtyCount} 项。`);
 }
 
-console.log("✅ [COLLISION-GUARD] PASS: 多 Agent 任务锁与正交分轨核验全绿通过。");
+console.log(
+  "✅ [COLLISION-GUARD] PASS: 多 Agent 任务锁与正交分轨核验全绿通过。",
+);

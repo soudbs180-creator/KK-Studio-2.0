@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { settingsGeometry } from "../../ui/geometry.ts";
 import { router } from "expo-router";
 import Constants from "expo-constants";
 import { Platform } from "react-native";
@@ -12,8 +13,10 @@ export function AdvancedSettings() {
   );
   return (
     <>
-      <Card>
-        <Label title>高级</Label>
+      <Card quiet>
+        <Label title style={{ lineHeight: settingsGeometry.titleLineHeight }}>
+          高级
+        </Label>
         <Action
           label="本地提案与批准"
           disabled={!project}
@@ -38,8 +41,10 @@ export function AdvancedSettings() {
           </Label>
         )}
       </Card>
-      <Card>
-        <Label title>更新</Label>
+      <Card quiet>
+        <Label title style={{ lineHeight: settingsGeometry.titleLineHeight }}>
+          更新
+        </Label>
         <Label>
           KK Studio {Platform.OS === "web" ? "手机网页版" : "手机客户端"} ·
           当前版本 {Constants.expoConfig?.version ?? "未报告"}

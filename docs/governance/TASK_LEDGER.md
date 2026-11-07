@@ -6,7 +6,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 | ID | Title | Status | Display | Priority | Dependencies | Owner | Next action |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| TASK-SYNC-LOCAL-MAIN-20261106 | 把本地主线审查分支的交付包绑到当前分支 | PARTIAL | 进行中 | P0 | none | root | 推送审查分支并等待三项检查重跑 |
+| TASK-SYNC-LOCAL-MAIN-20261106 | 主线审查分支全面治理与门禁收口 | PARTIAL | 进行中 | P0 | none | Cursor | 等待PR83 Hosted verify全绿后，再做正式SHA独审；不擅自合并 |
 | TASK-COMFY-PHYSICAL-20261030 | 本机ComfyUI真实显卡出图验收 | PARTIAL | 进行中 | P1 | TASK-MOD-P8 | root | 保持PARTIAL：图片checkpoint/P6图像能力、视频资产、Hub安装/自动启动和整体交付各自验收；继续主线冲突与合法bootstrap |
 | TASK-ORG-6 | 推广历史E2证据外置 | PARTIAL | 进行中 | P1 | TASK-ORG-5 | root | 当前已提交SHA独立审查；完整主线门禁/合流后完成ORG6交付，其余保留文件不盲迁 |
 | TASK-DELIVERY-MAIN-20261030 | 主线squash与保护审计改动后回收 | PARTIAL | 进行中 | P1 | TASK-MOD-P8 | root | 完成W1本地合流收据；Hosted EPERM、当前Desktop产物及剩余完整交付继续PARTIAL。 |
@@ -16,18 +16,18 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-MOD-HOME-SESSION | 首页新项目使用独立Agent会话 | PARTIAL | 进行中 | P1 | TASK-MOD-CHAT-PROJECTION | root | 当前SHA独审；完整门禁和基线/远端冲突分阶段整合 |
 | TASK-MOD-CHAT-PROJECTION | 切换聊天同步组件派生视图 | PARTIAL | 未完成 | P1 | TASK-MOD-P8 | root | 当前独审/完整verify/main；首页新项目显式独立会话另卡修复 |
 | TASK-MOD-P8 | App装配hook瘦身与主线合流核验 | DONE | 已完成 | P1 | TASK-MOD-P6-1 | root | 本卡完成；继续ComfyUI参数、图片编辑与真实生成链。 |
-| TASK-FIGMA-PARITY-AUDIT-20261027 | 建立 Figma↔本地分层差异审计基建与像素门禁 | PARTIAL | 未完成 | P1 | none | root | 等待用户在连接器管理页点「信任」并完成 Figma OAuth（或提供 FIGMA_TOKEN），随后以现行 file key ZiadpErDoFweCjG3uHjkM3 拉取首个真实快照，由真实快照派生 figma-rects.json 跑通 L3 几何层，并从现行文件导出参考图登记进 design/preview/baselines/ 启用 L4 门禁，最后产出首份真实差异审计报告。 |
+| TASK-FIGMA-PARITY-AUDIT-20261027 | 建立 Figma↔本地分层差异审计基建与像素门禁 | PARTIAL | 未完成 | P1 | none | root | 当前MCP可读04/05与设置节点；REST快照工具凭据与MCP分开判断。复用现有L1–L4工具，获取当前真实几何/像素基线并验收，禁止以旧OAuth等待冻结所有UI工作或伪称像素通过。 |
 | TASK-FIGMA-PAGES-20261025 | 重新核查并整理Figma 04/05页面与状态 | PARTIAL | 未完成 | P2 | none | root | 手机专项静态Figma与派生规范已收敛；下一步验证原型点击/横滚、键盘与动态内容、深浅主题及全量适用状态，再在授权后按01→03→页面映射到本地。旧胶囊/兼容和总体100%覆盖仍开放，不扩大合法变体或改正确布局；当前本地产品代码禁止改。 |
 | TASK-FIGMA-CONTROLS-20261025 | 修复 Figma 六类基础控件问题并同步本地 UI | PARTIAL | 未完成 | P2 | none | root | 在原任务修复两项既有存储单测失败并补Desktop运行证据；保留既有dirty和失败原件，未经全量验收不合并或发布。 |
 | TASK-CANVAS-PERF-20261024 | 削减画布预览与存储重复工作 | DONE | 已完成 | P2 | none | root | 本卡完成；继续ComfyUI参数、图片编辑与真实生成链。 |
 | TASK-FIGMA-FIRST-20261021 | 以当前 Figma 为设计真值并强制 UI 设计先行 | PARTIAL | 未完成 | P2 | none | root | 先按本次mapping与verification继续04组合母版、尺寸覆盖和主题/状态核验；逐项FIGMA_READY后再同步本地，05单独验收。保留当前dirty工作，不把首批端点修复当作整页或运行验收。 |
 | TASK-MOBILE-COMPOSER-001 | 修复手机空文字输入模型按钮失焦无响应 | PARTIAL | 进行中 | P1 | TASK-MOBILE-12AI-001 | root | 合流后按当前候选重新验证相关功能；正式发布和实体手机接受仍待。远端原后续要求：完成新后缀生产收据docs HEAD的检查/Delivery/独审/Hosted和正常PR；仅补用户Android Chrome模型入口/切后台返回+刷新接受，不把旧UI回复或继续当验收，不新耗生成额度。 |
 | TASK-CANVAS-RELEASE-20261018 | 统一工具栏修复与三端发布 | PARTIAL | 进行中 | P1 | none | root-release | 合流后按当前候选重新验证相关功能；正式发布和实体手机接受仍待。远端原后续要求：一行test-only enabled前提维护及相关7/7已完成；冻结该最小diff并提交后，取得精确新HEAD完整verify、独审/Delivery及新的Hosted终局，保留4c push实际FAIL、所有首试UNKNOWN和未执行阶段。正常PR合并后的实际main/tree及main门禁通过才创建一次42tag、fresh正式Windows，同formal完整四轮、严格cold重查、真实默认资料安装/工具栏/Agent、唯一setup匿名下载和Web/独立手机Web生产回读；原失败、cold和seed39保持。 |
-| TASK-CHATGPT-IMAGE-POC-20261018 | 订阅制模型图片通道与既有原图恢复 | OBSOLETE | 已完成 | P2 | none | root-image-recovery | 已按2026-10-26架构整顿决定淘汰订阅网页爬虫生图POC（差异补丁已归档至output/branch-archive-20261026），统一走标准API/MCP/受控Browser通道。 |
+| TASK-CHATGPT-IMAGE-POC-20261018 | 订阅制模型图片通道与既有原图恢复 | OBSOLETE | 未完成 | P2 | none | root-image-recovery | 已按2026-10-26架构整顿决定淘汰订阅网页爬虫生图POC（差异补丁已归档至output/branch-archive-20261026），统一走标准API/MCP/受控Browser通道。 |
 | TASK-MOBILE-12AI-001 | 12ai手机端图片自动归档与文本视频协议接入 | DONE | 已完成 | P1 | TASK-WEB-RELEASE-20261017 | root | 按已完成PR70/71范围保留发布/原件/回滚收据；模型按钮及后台专项由TASK-MOBILE-COMPOSER-001承接，T12/FEAT-028继续开放。 |
 | TASK-WEB-RELEASE-20261017 | 独立手机UI接入与正式Web Release自动同步 | DONE | 已完成 | P1 | TASK-AUDIT-REPAIR-20261017 | root | 本次Web交付已完成；最终文档PR另按提交HEAD完成独立审查与Hosted/Delivery。Mobile其余能力由T12按原范围继续。 |
 | TASK-AUDIT-REPAIR-20261017 | 审计安全修复、启动恢复与当前治理收敛 | DONE | 已完成 | P1 | none | root | 保留被日常链接引用的任务worktree/EXE及所有恢复证据；root完成最终文档提交后的精确review/正式Delivery和runtime-input不变核对。其余64开放项按原任务继续，尤其旧聊天数据完整迁移/protocol7、统一接入/12AI持久恢复/素材垃圾箱、真实Provider/ComfyUI/GPU/VPS/Mobile/签名及用户验收；不得解除READ_ONLY或批量结案。 |
-| TASK-KK-UNIFIED-20261015 | KK Studio 统一修复与重构 | PARTIAL | 未完成 | P1 | none | root | 已结案归档；后续各项功能按独立专项任务承接。 |
+| TASK-KK-UNIFIED-20261015 | KK Studio 统一修复与重构 | PARTIAL | 未完成 | P1 | none | root | 沿现有专项验收剩余范围，不重开历史工作树或重复合并；PR83的Hosted/独审及最终产品范围另验。 |
 | TASK-FIX-PUSH-GUARD-SPACES-001 | 修复 Windows Git pre-push 空格及长路径启动 | PARTIAL | 未完成 | P1 | none | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
 | TASK-WINDOWS-ENTRY-DIAG-002 | 补齐Windows入口子进程失败诊断 | DONE | 已完成 | P2 | TASK-LAUNCH-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-WINDOWS-ENTRY-RECOVERY-003 | 继续定位Hosted Windows入口未正常退出的原始原因 | TODO | 未完成 | P1 | TASK-LAUNCH-001 | root | 将 fa78ed12 候选同步到当前 origin/main 后重跑 Hosted Windows，并读取 windows-entry.jsonl；保留 PR43 原失败和本机未复现原件，未取得新分类前保持 TODO。 |
@@ -52,14 +52,14 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | T5 | 持久本地 TaskHost 与未知受理恢复 | DONE | 已完成 | P3 | T4 | root | 保留当前证据，合并后按原验收范围回读主线；分支 codex/T5-native-lifecycle 已通过 PR#37 78cea37a 集成 main，保留作历史追溯，禁止再次合并（会以旧内容回滚主线） |
 | T6 | Desktop ComfyUI最小链实现 | DONE | 已完成 | P2 | T5 | root | 本卡实现范围收口；统一平台生成入口由阶段3承接。 |
 | EXT-PROVIDER | 真实 Provider/GPU 生成验收 | BLOCKED | 未完成 | P2 | T4 | root | 复核阻塞条件，解除后重新验证并保留原失败证据 |
-| EXT-COMFY | 真实 ComfyUI/模型验收 | PARTIAL | 进行中 | P2 | T6 | root | 模型接入统一安装/关联与硬件容量推荐；先验证现有H3，HiFi为固定来源独立配方，实际ABI/工作流/资源通过才开放。2K单列远端阶段，不能隐式上传或称无条件更便宜。 |
+| EXT-COMFY | 真实 ComfyUI/模型验收 | PARTIAL | 进行中 | P2 | T6 | root | 复核已有H3后继证据，继续图片checkpoint/Hub管理/视频资产及当前安装端验收；HiFi/2K保持独立受控范围，不隐式上传或调用付费服务。 |
 | T7 | Desktop可用版本及安装恢复验收 | PARTIAL | 进行中 | P2 | T3b, T4, T5, T6, EXT-PROVIDER, EXT-COMFY | root | 补充负责人、优先级、分支和下一步验收证据 |
 | T8 | 成熟Core职责和平台能力边界 | TODO | 未完成 | P2 | T7 | root | 补充负责人、优先级、分支和下一步验收证据 |
 | T9 | Web本地版及浏览器容量/离线能力 | TODO | 未完成 | P2 | T8 | root | 补充负责人、优先级、分支和下一步验收证据 |
 | T10-PREP | VPS发布、备份回滚与部署配置准备 | PARTIAL | 未完成 | P2 | T9 | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
 | T10 | VPS staging和生产实机验收 | BLOCKED | 未完成 | P2 | T10-PREP | root | 复核阻塞条件，解除后重新验证并保留原失败证据 |
 | T11 | 旧Web/Vercel切换与退役 | BLOCKED | 未完成 | P2 | T10 | root | 复核阻塞条件，解除后重新验证并保留原失败证据 |
-| T12 | Mobile 独立形态与手机适配 | TODO | 未完成 | P2 | T11 | root | 补充负责人、优先级、分支和下一步验收证据 |
+| T12 | Mobile 独立形态与手机适配 | TODO | 未完成 | P2 | T11 | root | 复用mobile/现有实现，按当前05设计核对手机Web；补新原生包、真机/Safari、身份及尚未验收的完整生成链。 |
 | UI-001 | UI tokens和共享组件契约 | PARTIAL | 进行中 | P2 | TASK-GOV-001, TASK-DS-001 | root | 补充负责人、优先级、分支和下一步验收证据 |
 | UI-002 | 窄屏composer和动态文案溢出 | DONE | 已完成 | P3 | UI-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | UI-003 | 示例任务/账号与真实服务边界 | PARTIAL | 未完成 | P2 | UI-001 | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
@@ -85,14 +85,14 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | FEATURE-SYSTEM | 功能卡片体系、状态看板与后端化路线 | DONE | 已完成 | P3 | TASK-KK2-MAIN-SYNC | root | 保留当前证据，合并后按原验收范围回读主线 |
 | BACKEND-IMAGE-PARAMS | 图片比例与清晰度真实透传供应商 | PARTIAL | 进行中 | P2 | none | root | 按验收条件完成实现、验证、独立审查和文档同步 |
 | BACKEND-TEXT-NODE | 文本节点接入统一任务宿主 | PARTIAL | 进行中 | P2 | T5 | root | 按验收条件完成实现、验证、独立审查和文档同步 |
-| BACKEND-MEDIA-001 | 视频与音频节点真实生成链 | IN_PROGRESS | 未完成 | P1 | T5 | root | 完成共享多模态提交、De-Mock与浏览器/原生验收后本地合流 |
+| BACKEND-MEDIA-001 | 视频与音频节点真实生成链 | IN_PROGRESS | 未完成 | P1 | T5 | root | 旧stage3工作树不是当前活动checkout；从PR83当前共享/native链核验已有视频/语音提交、恢复/取消/归档，补当前浏览器/Native/真实Provider边界，禁止再合已包含历史实现。 |
 | BACKEND-MCP-AUTO | MCP 工具自动调用编排 | TODO | 未完成 | P2 | TASK-CAP-001 | root | 补充负责人、优先级、分支和下一步验收证据 |
 | BACKEND-PLATFORM | 平台账号/积分/云同步/记忆/代理后端 | TODO | 未完成 | P2 | T10-PREP, T10 | root | 补充负责人、优先级、分支和下一步验收证据 |
 | BACKEND-ASTRA-001 | Astra 研究助手实现 | TODO | 未完成 | P2 | TASK-ASTRA-001 | root | 补充负责人、优先级、分支和下一步验收证据 |
 | UI-SKILL-POPOVER-001 | 窄屏首页弹层遮挡修复与 Skill 空态断言更新 | DONE | 已完成 | P3 | TASK-CAP-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-RULES-003 | 修复功能状态与运行证据门禁 | DONE | 已完成 | P3 | none | root | 保留当前证据，合并后按原验收范围回读主线 |
 | BACKEND-CONVERSATION | 对话面板文本多轮能力与实际状态收敛 | PARTIAL | 进行中 | P2 | none | root | 补充负责人、优先级、分支和下一步验收证据 |
-| TASK-DS-001 | Design System校正与公共UI对齐 | PARTIAL | 进行中 | P2 | none | root | 按验收条件完成实现、验证、独立审查和文档同步 |
+| TASK-DS-001 | Design System校正与公共UI对齐 | PARTIAL | 进行中 | P2 | none | root | 以当前Figma ZiadpErDoFweCjG3uHjkM3与UI-004为设计真值；保留历史Ardot记录，继续当前04/05及同状态浏览器/Native验收，不重开旧设计通道。 |
 | TASK-DS-002 | Design System逐页迁移与桌面验收 | DONE | 已完成 | P3 | TASK-DS-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-UI-005 | 新增功能 UI 入口与能力展示对齐 | DONE | 已完成 | P3 | TASK-DS-002 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-UI-006 | 折叠与弹层交互、画布重叠和缩放背景修复 | DONE | 已完成 | P3 | TASK-UI-005 | root | 保留当前证据，合并后按原验收范围回读主线 |
@@ -145,7 +145,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-VERIFY-CONCURRENCY-002 | 浏览器并发失败原因与隔离复核 | PARTIAL | 未完成 | P1 | TASK-GOV-001 | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
 | TASK-VERIFY-ORIGIN-003 | 浏览器验收端口与服务来源契约一致性 | DONE | 已完成 | P1 | none | root | 保留exact-SHA与独立review收据；Hosted delivery、Windows安装、第二环境、发布和用户验收继续由TASK-AGENT-010及发布门禁承担。 |
 | TASK-DOCS-STRUCT-001 | AI 协作规则文档结构收敛 | DONE | 已完成 | P1 | none | root | 保留当前证据；合并或发布前按本任务原验收范围回读主线，不重新引入 pnpm 锁文件。 |
-| TASK-AI-GATEWAY-001 | 统一多平台 AI 模型接入：凭证、通道契约与豆包 Ark 适配器 | PARTIAL | 进行中 | P1 | none | root | 先补本地 upstream ReadableStream/token callback 契约和 Windows DPAPI/Tauri protector 的受控测试；随后才补真实 Ark/Codex 凭据与 Desktop 运行态，外部证据齐全后再转 DONE。 |
+| TASK-AI-GATEWAY-001 | 统一多平台 AI 模型接入：凭证、通道契约与豆包 Ark 适配器 | PARTIAL | 进行中 | P1 | none | root | 复核当前受控流/错误/取消与凭据保护；真实DPAPI、Tauri及合法凭据运行态仍单列验收，禁止重复实现已有契约。 |
 | TASK-PROV-BYOK-001 | 用户自有 API 产品化接入 | TODO | 未完成 | P1 | TASK-AI-GATEWAY-001 | root | 依赖TASK-AI-GATEWAY-001与Web VPS控制面；先补intent/spec/plan和Desktop/Web/Mobile边界，外部契约稳定前不扩展产品实现。 |
 | TASK-UI-015 | 画布点状/网状背景缩放插值修正 | DONE | 已完成 | P2 | none | root | 保留当前证据；主线回读完成 |
 | TASK-AGENT-010 | 统一版本一致性与跨环境启动新鲜度 | PARTIAL | 未完成 | P1 | TASK-LAUNCH-001 | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
@@ -159,7 +159,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-ENG-001 | 引入 hermes-agent 工程实践：代码健康棘轮、Windows 不安全模式扫描与 Actions SHA 固定 | PARTIAL | 未完成 | P1 | none | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
 | TASK-CCSWITCH-LEARN-20261014 | 澄清供应商编辑状态并验证跨存储中断恢复 | DONE | 已完成 | P1 | TASK-AGENT-RECOVERY-20261013 | root | 本轮实现与本地验收完成；Hosted、物理断电、收费Provider、实际用户profile及签名发布仍未验证。 |
 | TASK-CANVAS-SYNC-20261014 | 修复 Agent 与已挂载画布图同步 | PARTIAL | 未完成 | P1 | none | root | 当前未分配；按原验收和verificationHistory恢复或重新领取独立任务，核对实际分支/工作树与当前SHA后复验。TASK-AUDIT-REPAIR-20261017仅承接本轮有界安全修复及治理，不代为关闭本任务。 |
-| TASK-CANVAS-WIDE-PORT-20261014 | 宽图结果编辑器遮挡下游按钮 | TODO | 未完成 | P2 | none | root | 单独复证production并修正宽图主体几何/端口锚点 |
+| TASK-CANVAS-WIDE-PORT-20261014 | 宽图结果编辑器遮挡下游按钮 | TODO | 未完成 | P2 | none | root | 复用canvasGraph共享几何与后继修复，核验当前组合宽图端口/缩放/保存；不按旧FAIL重新开发。 |
 | TASK-AGENT-UX-20261014 | Agent 执行过程与生成保存状态提示 | DONE | 已完成 | P2 | none | root | 保留证据并完成日常APP人工验收，真实Provider和发布沿原独立任务推进 |
 | TASK-PROTOCOL-CLI-20261014 | 从2.1.21接通Provider协议和CLI实际执行，优化分端控件 | DONE | 已完成 | P1 | TASK-UI-CONSOLIDATE-20261014 | root | 从2.1.22继续真实供应商与真人CLI登录/安装、签名安装器、日常资料和人工视觉验收；最终产物回读工程外current-release哈希收据。 |
 | TASK-222-ACTIONS-20261014 | 2.1.22 CLI、设置与画布按钮真实行为和分端修复 | DONE | 已完成 | P1 | TASK-PROTOCOL-CLI-20261014 | root | 回读最终current-release与独立文档补审；从2.1.23继续真人CLI/供应商、签名安装器、日常资料与实体手机验收，沿用已确认手机布局。 |
@@ -178,14 +178,14 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-ISSUE-68 | 修复原生设置保存后的测试同步缺口 | DONE | 已完成 | P1 | none | issue68-specialist | 本专项结项；保留原失败及当前主线证据。TASK-NATIVE-TEARDOWN-20261018在新会话独立调查；发布/部署和总客户端交付不在本次范围。 |
 | TASK-NATIVE-TEARDOWN-20261018 | 查明原生生命周期taskkill清理非零原因 | TODO | 未完成 | P2 | none | unallocated | 在新会话独立认领并只对owned进程调查，先保全错误细节与可重复证据。 |
 | TASK-LOCAL-GUARDS-20261018 | 修复本地安全边界并核对剩余任务与工作树规则 | DONE | 已完成 | P1 | none | root | 本轮有界本地任务完成；原65项开放任务按独立验收继续，优先侧栏pin/sort持久化、真实上游增量流及宽图连线/Native验证；真实新回复仍待额度恢复后验收。最终文档HEAD/Delivery/日常正常启动收据保存在工程外，不把其写成远端发布。 |
-| TASK-CHAT-MIGRATION-20261017 | 保全旧聊天资料并恢复迁移、编辑与聊天 | PARTIAL | 未完成 | P1 | none | root | 账号Codex额度解除后，从当前v3原线程进行一次普通文本受理/回复及持久化重开验收；此前/turn0，无UNKNOWN重放。保留原始v2不可变归档，不回滚、删除或移动；Hosted/PR/main/发布与原统一范围另行验收。 原e11b87a5分支和恢复收据保留；物理树由TASK-LOCAL-GUARDS-20261018复用，额度解除后重新分配，不把旧分支冒充当前checkout。 |
+| TASK-CHAT-MIGRATION-20261017 | 保全旧聊天资料并恢复迁移、编辑与聊天 | PARTIAL | 未完成 | P1 | none | root | 先只读核对当前合法授权/额度，不按历史2026-10-23预计重置时间推断额度已恢复；真实回复需要当前证据。旧Agent/Google原件、失败日志与读取保护保留，禁止清空、覆盖或自动重放。 |
 | TASK-SIDEBAR-CANVAS-20261018 | 侧栏置顶排序持久化与宽图连线桌面验收 | DONE | 已完成 | P1 | none | root | 本轮有界本地技术完成；最终文档SHA审查/Delivery/归档/日常还原以工程外收据裁决；真实Provider/Hosted/发布及用户整体验收另行，保留全部资料。 |
 | TASK-COLDSTART-LOCAL-20261018 | 冷启动无效写入修复与严格数据比较闭环 | DONE | 已完成 | P1 | none | root | 本有界冷启动技术闭环完成；最终文档SHA独审/Delivery/保全归档与日常单实例入口据实收尾。继续本地Gateway增量流和Native Canvas专项，不改变父任务外部验收与功能成熟度。 |
 | TASK-GATEWAY-STREAM-20261018 | Gateway实际增量SSE与取消重试边界 | DONE | 已完成 | P1 | TASK-COLDSTART-LOCAL-20261018 | root | 本地有界子项完成；最终精确文档/Delivery/私有归档/原两个快捷方式由工程外收据裁决。下一P1本地DPAPI protector受控测试及独立成本回执调用路径，不重提UNKNOWN，不消费额度；父Gateway仍PARTIAL。 |
 | TASK-MOD-P0 | 建立模块化边界与只减不增的架构基线 | DONE | 已完成 | P1 | none | root | 本卡已合流收口，后续回归由当前门禁保护。 |
 | TASK-MOD-GATE-FORMAT | 独立恢复18项既有源码格式门禁 | DONE | 已完成 | P1 | none | root | 本卡已合流收口，后续回归由当前门禁保护。 |
 | TASK-MOD-GATE-BROWSER | 恢复历史浏览器测试与当前设置入口的对应 | DONE | 已完成 | P1 | TASK-MOD-GATE-FORMAT | root | 本卡完成；继续ComfyUI参数、图片编辑与真实生成链。 |
-| TASK-MOD-FOUR-DOC-COVERAGE | 逐项追踪四份整顿原文的完整需求与验收 | PARTIAL | 未完成 | P1 | none | root | 后续先读四文档总清单，按P0→P1→P2及ORG试点→推广实施；将现代化/其他P/ORG事项逐项落入对应任务，补完必做项与待决结论后才判整套完成。 |
+| TASK-MOD-FOUR-DOC-COVERAGE | 逐项追踪四份整顿原文的完整需求与验收 | PARTIAL | 未完成 | P1 | none | root | 复用四份原文覆盖矩阵，逐项核对尚未验收STD/ORG与生产后继；旧P2已OBSOLETE，不重做P2或第二阶段；不把已包含历史源码再次合入。 |
 | TASK-ORG-0 | 盘点仓库文件、引用与容器参考资料 | PARTIAL | 未完成 | P2 | none | root | 保留原件，继续核实完整盘点缺口；无证据不迁删。 |
 | TASK-ORG-1 | 建立仓库目录与弃用生命周期规则 | PARTIAL | 未完成 | P2 | TASK-ORG-0 | root | 按当前候选完成整合审查与主线门禁；后续ORG-2防回弹和ORG-5单包试点分别实施，不能用规则候选代替迁移完成。 |
 | TASK-ORG-2 | 新增仓库布局与证据防回弹门禁 | PARTIAL | 未完成 | P2 | TASK-ORG-1, TASK-MOD-P0 | root | 保存当前候选审查/指标及主checkout保护证据；后续按ORG-5单包外置试点继续，不以防回弹代替存量清理。独审与main整合条件满足前保留PARTIAL。 |
@@ -218,35 +218,35 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-MOD-P6-LAYER-SPLIT | 图层拆分 | DONE | 已完成 | P1 | TASK-MOD-P6-UPSCALE | root | 本卡实现范围收口；统一平台生成入口由阶段3承接。 |
 | TASK-MOD-P7 | 资产溯源对齐 | PARTIAL | 进行中 | P1 | TASK-MOD-P6-LAYER-SPLIT | root | 完成原生GUI跨端溯源验收、独审和main合流；旧记录不回写。 |
 | TASK-MOD-P6-1 | ComfyUI本地托管与画布双态工作流卡片 | DONE | 已完成 | P1 | TASK-MOD-P6-HOST | root | 本卡实现范围收口；统一平台生成入口由阶段3承接。 |
-| TASK-MOD-GATE-BOOTSTRAP | 主线原生首建架构与目录基线 | OBSOLETE | 已完成 | P0 | none | root | 远端集成继续由 TASK-GOV-004 跟踪。 |
+| TASK-MOD-GATE-BOOTSTRAP | 主线原生首建架构与目录基线 | OBSOLETE | 未完成 | P0 | none | root | 远端集成继续由 TASK-GOV-004 跟踪。 |
 | TASK-SEC-ZOD-20261028 | 独立升级根Zod4.6.7并验证集合界限安全修复 | DONE | 已完成 | P1 | none | root | 本有界包已验收合入本地main；最终工作树回收与SHA见工程外final-receipt.json，不代表全量浏览器或发布完成。 |
 | TASK-SEC-AGENT-AUDIT-20261028 | 评估Agent其余既有依赖审计项 | TODO | 未完成 | P1 | none | root | 独立核对公告和运行路径，不使用npm audit fix --force，不夹带工具链大版本升级。 |
 | TASK-W1-GATE-ZERO-20261101 | Gate Zero四微批次与安全提交收敛本地main | DONE | 已完成 | P1 | none | root | 本有界包已验收合入本地main；最终工作树回收与SHA见工程外final-receipt.json，不代表全量浏览器或发布完成。 |
 | TASK-W1-BROWSER-CLOSEOUT-20261102 | 清零W1剩余119浏览器复验项并合流 | DONE | 已完成 | P1 | none | root | 本卡完成；继续ComfyUI参数、图片编辑与真实生成链。 |
 | TASK-MAINLINE-20261103 | 主线治理收口与当前浏览器门禁修复 | DONE | 已完成 | P1 | none | root | 本卡完成；继续ComfyUI参数、图片编辑与真实生成链。 |
-| TASK-COMFY-IMAGE-20261103 | ComfyUI 参数与图片深度编辑生产链路 | PARTIAL | 进行中 | P1 | none | root | 依据阶段2历史验证核对任务范围与未验收外部模型项；新接线由TASK-E2E-WIRING-20261104承接 |
-| TASK-E2E-WIRING-20261104 | 六支柱生产接线与去测试替身 | PARTIAL | 进行中 | P0 | none | root | 冻结源码完成verify17及当前Desktop，提交后按实际PR基线独审/CI，再合流和安全回收源树 |
-| TASK-DEEP-WATER-20261105 | 第二阶段B1–B5与A1–A3深水区补齐 | IN_PROGRESS | 进行中 | P0 | TASK-E2E-WIRING-20261104 | root | 生产链、完整 verify 与 Desktop 验收 |
+| TASK-COMFY-IMAGE-20261103 | ComfyUI 参数与图片深度编辑生产链路 | PARTIAL | 进行中 | P1 | none | root | 复核2026-11-03-comfy-production既有验收和当前共享链；只补当前组合/外部模型效果缺口，不重建旧分支或重复实现。 |
+| TASK-E2E-WIRING-20261104 | 六支柱生产接线与去测试替身 | PARTIAL | 进行中 | P0 | none | root | 本地752f7dbd已承接，当前PR83尚未合origin/main；复用已有实现，只补当前SHA完整verify、Desktop与正式独审，不重开/重复合并旧树；未授权合并或删除。 |
+| TASK-DEEP-WATER-20261105 | 第二阶段B1–B5与A1–A3深水区补齐 | IN_PROGRESS | 进行中 | P0 | TASK-E2E-WIRING-20261104 | root | 完成当前整合候选完整verify、Desktop来源收据及独审；保留外部模型/用户验收边界，不重做已存在B1–B5；六支柱原型helper不冒充生产接线。 |
 | TASK-RULES-005 | AI铁律卡片RULES.md与Figma组件三层Token化治理重构 | DONE | 已完成 | P0 | none | root | 已完成合流并推送 |
 
-## TASK-SYNC-LOCAL-MAIN-20261106 — 把本地主线审查分支的交付包绑到当前分支
+## TASK-SYNC-LOCAL-MAIN-20261106 — 主线审查分支全面治理与门禁收口
 
-- Goal: 让审查分支上的新增变更包满足交付门禁，同时修掉 verify 和 installer 的失败
-- Scope: 补齐缺文档、绑定本分支任务、脱离分支时复用工作树、schema 同步不改写未变化文件
+- Goal: 把本地dirty与门禁修复推上审查分支，让PR83可重跑并保持账本/锁表事实准确；不合并main
+- Scope: 收口72项dirty（设置拆分、Mobile token、格式、schema、治理文档）、修虚假的 test:fast 脚本名命令、整理active-work锁、推送chore/sync-local-main-20261106；不合并、不删分支、不做真实扣费/侧车
 - Display status: 进行中
-- Priority: P0 — 三项必需检查失败，主线不能合并
+- Priority: P0 — 审查分支是当前唯一合流候选，门禁与锁表必须干净
 - Requirement refs: docs/changes/2026-11-06-ci-gate-repair/spec.md
 - Feature IDs: none
 - Owner role: implementation-integrator
-- Acceptance: 新增变更包都有五份交付文档; 本任务证据覆盖这些包的验证记录; verify 与 installer 的已知失败有对应修复
+- Acceptance: 本地 typecheck/lint/format/ui/tokens/unit 通过; 审查分支包含当前dirty并触发Hosted重跑; active-work锁与账本状态不把未验项写成DONE
 - Branch: `chore/sync-local-main-20261106`
 - Worktree: `D:/kk-studio/KK-Studio-2.0`
-- Modules: docs/changes, docs/governance, scripts/agent, tests/unit
-- Verification: PARTIAL — 已定位三项失败并写入修复。远端 verify、delivery、installer 重跑结果出来前，不把合并写成完成。
+- Modules: docs/changes, docs/governance, scripts/agent, scripts/governance, scripts/check-ui-standards.mjs, config/ui-legacy-baseline.json, src/components/agent, src/components/canvas/CanvasNodeItem.tsx, src/components/canvas/useCanvasNodeMedia.ts, src/components/canvas/useCanvasNodePreemption.ts, src/components/settings/ProviderModelCatalog.tsx, src/components/settings/ProviderModelCatalogList.tsx, src/components/settings/ProfileUsagePage.tsx, src/components/settings/ProfileUsageCards.tsx, src/components/settings/ProfileUsageCharts.tsx, src/styles/desktop-titlebar.css, src/styles/tokens.css, src/styles/ui-governance.css, src-tauri/src/creation_validation.rs, src-tauri/src/project_package_failure_tests.rs, src-tauri/src/project_package_snapshot.rs, src/features/capabilities/externalBridge.ts, src/features/models/hardwareAdaptiveScheduler.ts, src/features/agent/delegation/delegationPipeline.ts, src/features/agent/index.ts, src/features/capabilities/index.ts, src/features/models/index.ts, CHANGELOG.md, tests/browser/figma-483-ui.spec.ts, tests/unit
+- Verification: PARTIAL — 本地全面治理：typecheck/lint/format/ui/tokens通过；单元2717 pass/6 skip；doc命令虚假的 test:fast 脚本名已清。远端PR83此前verify卡在Prettier，本轮推送后需Hosted复核。未合并main，未做正式独审/真实Provider/已安装Desktop。
 - Evidence: [docs/changes/2026-10-17-chat-migration/verification.md](../../docs/changes/2026-10-17-chat-migration/verification.md), [docs/changes/2026-10-18-chatgpt-image-archive/verification.md](../../docs/changes/2026-10-18-chatgpt-image-archive/verification.md), [docs/changes/2026-10-18-coldstart-local/verification.md](../../docs/changes/2026-10-18-coldstart-local/verification.md), [docs/changes/2026-10-18-gateway-stream/verification.md](../../docs/changes/2026-10-18-gateway-stream/verification.md), [docs/changes/2026-10-18-issue-68-main-closeout/verification.md](../../docs/changes/2026-10-18-issue-68-main-closeout/verification.md), [docs/changes/2026-10-18-local-guards/verification.md](../../docs/changes/2026-10-18-local-guards/verification.md), [docs/changes/2026-10-18-sidebar-canvas/verification.md](../../docs/changes/2026-10-18-sidebar-canvas/verification.md), [docs/changes/2026-10-21-figma-first-rules/verification.md](../../docs/changes/2026-10-21-figma-first-rules/verification.md), [docs/changes/2026-10-23-figma-04-mapping/verification.md](../../docs/changes/2026-10-23-figma-04-mapping/verification.md), [docs/changes/2026-10-24-canvas-performance/verification.md](../../docs/changes/2026-10-24-canvas-performance/verification.md), [docs/changes/2026-10-24-figma-ui-governance/verification.md](../../docs/changes/2026-10-24-figma-ui-governance/verification.md), [docs/changes/2026-10-25-figma-04-05-rework/verification.md](../../docs/changes/2026-10-25-figma-04-05-rework/verification.md), [docs/changes/2026-10-25-figma-control-readability/verification.md](../../docs/changes/2026-10-25-figma-control-readability/verification.md), [docs/changes/2026-10-26-ai-drama-canvas-research/verification.md](../../docs/changes/2026-10-26-ai-drama-canvas-research/verification.md), [docs/changes/2026-10-26-kk-optimization-roadmap/verification.md](../../docs/changes/2026-10-26-kk-optimization-roadmap/verification.md), [docs/changes/2026-10-27-figma-parity-audit/verification.md](../../docs/changes/2026-10-27-figma-parity-audit/verification.md), [docs/changes/2026-10-28-agent-browser-navigation/verification.md](../../docs/changes/2026-10-28-agent-browser-navigation/verification.md), [docs/changes/2026-10-28-api-browser-navigation/verification.md](../../docs/changes/2026-10-28-api-browser-navigation/verification.md), [docs/changes/2026-10-28-browser-gate/verification.md](../../docs/changes/2026-10-28-browser-gate/verification.md), [docs/changes/2026-10-28-capability-contract/verification.md](../../docs/changes/2026-10-28-capability-contract/verification.md), [docs/changes/2026-10-28-evidence-pilot/verification.md](../../docs/changes/2026-10-28-evidence-pilot/verification.md), [docs/changes/2026-10-28-figma-sync-governance/verification.md](../../docs/changes/2026-10-28-figma-sync-governance/verification.md), [docs/changes/2026-10-28-four-document-coverage/verification.md](../../docs/changes/2026-10-28-four-document-coverage/verification.md), [docs/changes/2026-10-28-inpaint-capability/verification.md](../../docs/changes/2026-10-28-inpaint-capability/verification.md), [docs/changes/2026-10-28-modularity-format/verification.md](../../docs/changes/2026-10-28-modularity-format/verification.md), [docs/changes/2026-10-28-modularity-p0/verification.md](../../docs/changes/2026-10-28-modularity-p0/verification.md), [docs/changes/2026-10-28-p3a-creation-image-edit/verification.md](../../docs/changes/2026-10-28-p3a-creation-image-edit/verification.md), [docs/changes/2026-10-28-p3b-creation-agent/verification.md](../../docs/changes/2026-10-28-p3b-creation-agent/verification.md), [docs/changes/2026-10-28-p3c-creation-local-service/verification.md](../../docs/changes/2026-10-28-p3c-creation-local-service/verification.md), [docs/changes/2026-10-28-p3d-creation-models/verification.md](../../docs/changes/2026-10-28-p3d-creation-models/verification.md), [docs/changes/2026-10-28-p3e-agent-memory-prompts/verification.md](../../docs/changes/2026-10-28-p3e-agent-memory-prompts/verification.md), [docs/changes/2026-10-28-provider-browser-contract/verification.md](../../docs/changes/2026-10-28-provider-browser-contract/verification.md), [docs/changes/2026-10-28-repo-layout/verification.md](../../docs/changes/2026-10-28-repo-layout/verification.md), [docs/changes/2026-10-28-repo-layout-guard/verification.md](../../docs/changes/2026-10-28-repo-layout-guard/verification.md), [docs/changes/2026-10-28-zod-security/verification.md](../../docs/changes/2026-10-28-zod-security/verification.md), [docs/changes/2026-10-29-p4-agent/verification.md](../../docs/changes/2026-10-29-p4-agent/verification.md), [docs/changes/2026-10-29-p4-creation/verification.md](../../docs/changes/2026-10-29-p4-creation/verification.md), [docs/changes/2026-10-29-p4-models/verification.md](../../docs/changes/2026-10-29-p4-models/verification.md), [docs/changes/2026-10-29-p4-plugins/verification.md](../../docs/changes/2026-10-29-p4-plugins/verification.md), [docs/changes/2026-10-29-p4-remaining/verification.md](../../docs/changes/2026-10-29-p4-remaining/verification.md), [docs/changes/2026-10-29-p4-skills/verification.md](../../docs/changes/2026-10-29-p4-skills/verification.md), [docs/changes/2026-10-29-p5-plugin-permissions/verification.md](../../docs/changes/2026-10-29-p5-plugin-permissions/verification.md), [docs/changes/2026-10-29-p6-1-comfy-canvas/verification.md](../../docs/changes/2026-10-29-p6-1-comfy-canvas/verification.md), [docs/changes/2026-10-29-p6-image-host/verification.md](../../docs/changes/2026-10-29-p6-image-host/verification.md), [docs/changes/2026-10-29-p6-layer-split/verification.md](../../docs/changes/2026-10-29-p6-layer-split/verification.md), [docs/changes/2026-10-29-p6-outpaint/verification.md](../../docs/changes/2026-10-29-p6-outpaint/verification.md), [docs/changes/2026-10-29-p6-upscale/verification.md](../../docs/changes/2026-10-29-p6-upscale/verification.md), [docs/changes/2026-10-29-p7-asset-lineage/verification.md](../../docs/changes/2026-10-29-p7-asset-lineage/verification.md), [docs/changes/2026-10-29-p8-composition/verification.md](../../docs/changes/2026-10-29-p8-composition/verification.md), [docs/changes/2026-10-30-main-physical-org6/verification.md](../../docs/changes/2026-10-30-main-physical-org6/verification.md), [docs/changes/2026-11-01-handoff-takeover/verification.md](../../docs/changes/2026-11-01-handoff-takeover/verification.md), [docs/changes/2026-11-01-p6-p7-delivery/verification.md](../../docs/changes/2026-11-01-p6-p7-delivery/verification.md), [docs/changes/2026-11-01-w1-gate-zero/verification.md](../../docs/changes/2026-11-01-w1-gate-zero/verification.md), [docs/changes/2026-11-02-w1-browser-closeout/verification.md](../../docs/changes/2026-11-02-w1-browser-closeout/verification.md), [docs/changes/2026-11-03-comfy-production/verification.md](../../docs/changes/2026-11-03-comfy-production/verification.md), [docs/changes/2026-11-03-mainline-reset/verification.md](../../docs/changes/2026-11-03-mainline-reset/verification.md), [docs/changes/2026-11-04-e2e-wiring/verification.md](../../docs/changes/2026-11-04-e2e-wiring/verification.md), [docs/changes/2026-11-04-multimodal/verification.md](../../docs/changes/2026-11-04-multimodal/verification.md), [docs/changes/2026-11-05-figma-local-sync/verification.md](../../docs/changes/2026-11-05-figma-local-sync/verification.md), [docs/changes/2026-11-05-rules-figma-token-governance/verification.md](../../docs/changes/2026-11-05-rules-figma-token-governance/verification.md), [docs/changes/2026-11-05-step2-deep-water/verification.md](../../docs/changes/2026-11-05-step2-deep-water/verification.md), [docs/changes/2026-11-06-ci-gate-repair/verification.md](../../docs/changes/2026-11-06-ci-gate-repair/verification.md), [docs/changes/2026-11-06-dpapi-protector/verification.md](../../docs/changes/2026-11-06-dpapi-protector/verification.md), [docs/changes/2026-11-06-provider-cost-receipt/verification.md](../../docs/changes/2026-11-06-provider-cost-receipt/verification.md), [docs/changes/2026-11-06-task-cost-archive/verification.md](../../docs/changes/2026-11-06-task-cost-archive/verification.md)
-- Next action: 推送审查分支并等待三项检查重跑
-- Last verified: 2026-11-06
-- Updated: 2026-11-06
+- Next action: 等待PR83 Hosted verify全绿后，再做正式SHA独审；不擅自合并
+- Last verified: 2026-11-07
+- Updated: 2026-11-07
 
 ## TASK-COMFY-PHYSICAL-20261030 — 本机ComfyUI真实显卡出图验收
 
@@ -433,8 +433,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Worktree: `D:/kk-studio/KK-Studio-2.0`
 - Modules: scripts/figma-audit, tests/design-md, tests/unit/figmaAudit.test.ts, design/preview, docs/changes/2026-10-27-figma-parity-audit, docs/UI_SPEC.md, docs/README.md, docs/engineering/DEVELOPMENT.md, package.json
 - Verification: PARTIAL — 2026-10-27 工具链落地并自测通过。typecheck 零报错；新文件 lint 零 error 零 warning；health:check 0 blocking；npm test 2338 项中 20 项失败与改动前基线完全一致（git stash 对比确认零新增失败），新增 19 项单测全过；markdown/index/governance/features 门禁均 0 violations。检出能力双向验证通过：令牌漂移、几何偏差、别名分歧三项注入均被检出且撤销后归零。像素层实测历史数据差异率展开态 22.406%、收纳态 16.844%，差异形态为点阵背景相位差，结构性元素轮廓对齐，据此确认严格逐点相等不可达成。
-- Evidence: [docs/changes/2026-10-27-figma-parity-audit/intent.md](../../docs/changes/2026-10-27-figma-parity-audit/intent.md), [docs/reference/figma-audit.md](../../docs/reference/figma-audit.md), [docs/reference/figma-pixel-calibration/README.md](../../docs/reference/figma-pixel-calibration/README.md), [docs/reference/figma-pixel-baselines.md](../../docs/reference/figma-pixel-baselines.md)
-- Next action: 等待用户在连接器管理页点「信任」并完成 Figma OAuth（或提供 FIGMA_TOKEN），随后以现行 file key ZiadpErDoFweCjG3uHjkM3 拉取首个真实快照，由真实快照派生 figma-rects.json 跑通 L3 几何层，并从现行文件导出参考图登记进 design/preview/baselines/ 启用 L4 门禁，最后产出首份真实差异审计报告。
+- Evidence: [docs/changes/2026-10-27-figma-parity-audit/intent.md](../../docs/changes/2026-10-27-figma-parity-audit/intent.md), [docs/reference/figma-audit.md](../../docs/reference/figma-audit.md), [docs/reference/figma-pixel-calibration/README.md](../../docs/reference/figma-pixel-calibration/README.md), [docs/reference/figma-pixel-baselines.md](../../docs/reference/figma-pixel-baselines.md), [docs/changes/2026-11-06-ci-gate-repair/verification.md](../../docs/changes/2026-11-06-ci-gate-repair/verification.md)
+- Next action: 当前MCP可读04/05与设置节点；REST快照工具凭据与MCP分开判断。复用现有L1–L4工具，获取当前真实几何/像素基线并验收，禁止以旧OAuth等待冻结所有UI工作或伪称像素通过。
 - Last verified: 2026-10-27
 - Updated: 2026-10-27
 
@@ -560,7 +560,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 - Goal: 验证 ChatGPT Webview/DOM 图片生成与历史恢复通道，保留已有生图结果与下载归档能力。
 - Scope: ChatGPT Webview、DOM 提取脚本、订阅制生图通道与原图历史恢复原型；不影响 Codex 生产对话。
-- Display status: 已完成
+- Display status: 未完成
 - Priority: P2 — 用户探索订阅通道生图与未归档原件恢复。
 - Requirement refs: docs/changes/2026-10-18-chatgpt-image-archive/intent.md
 - Feature IDs: FEAT-009
@@ -645,9 +645,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `unallocated`
 - Worktree: `unallocated`
 - Modules: src/App.tsx, src/features, src/components, src/runtime, src/domain, src-tauri, vendor/canvas-agent, docs/changes/2026-10-15-kk-unified
-- Verification: PARTIAL — 已由TASK-AUDIT-REPAIR-20261017承接并完全合并入main；历史工作树已清理，分支已安全回收；保留PARTIAL归档记录作为历史追溯。
-- Evidence: [docs/changes/2026-10-15-kk-unified/intent.md](../../docs/changes/2026-10-15-kk-unified/intent.md), [docs/changes/2026-10-15-kk-unified/spec.md](../../docs/changes/2026-10-15-kk-unified/spec.md), [docs/changes/2026-10-15-kk-unified/plan.md](../../docs/changes/2026-10-15-kk-unified/plan.md), [docs/changes/2026-10-15-kk-unified/verification.md](../../docs/changes/2026-10-15-kk-unified/verification.md), [docs/changes/2026-10-15-kk-unified/review.md](../../docs/changes/2026-10-15-kk-unified/review.md)
-- Next action: 已结案归档；后续各项功能按独立专项任务承接。
+- Verification: PARTIAL — 2026-11-06治理续验：历史安全修复由TASK-AUDIT-REPAIR-20261017承接，旧工作树归档/回收为历史事实；原完整产品范围继续由现有专项挂账，PARTIAL保留。本地main包含成果不等于PR83已合origin/main。
+- Evidence: [docs/changes/2026-10-15-kk-unified/intent.md](../../docs/changes/2026-10-15-kk-unified/intent.md), [docs/changes/2026-10-15-kk-unified/spec.md](../../docs/changes/2026-10-15-kk-unified/spec.md), [docs/changes/2026-10-15-kk-unified/plan.md](../../docs/changes/2026-10-15-kk-unified/plan.md), [docs/changes/2026-10-15-kk-unified/verification.md](../../docs/changes/2026-10-15-kk-unified/verification.md), [docs/changes/2026-10-15-kk-unified/review.md](../../docs/changes/2026-10-15-kk-unified/review.md), [docs/changes/2026-11-06-ci-gate-repair/verification.md](../../docs/changes/2026-11-06-ci-gate-repair/verification.md)
+- Next action: 沿现有专项验收剩余范围，不重开历史工作树或重复合并；PR83的Hosted/独审及最终产品范围另验。
 - Last verified: 2026-10-18
 - Updated: 2026-10-18
 
@@ -1121,9 +1121,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `unallocated`
 - Worktree: `unallocated`
 - Modules: ComfyUI live acceptance
-- Verification: PARTIAL — 用户已指定 C:/Users/Administrator/.hub/plugin-data/comfyui/，解除“无目录/workflow/model”旧阻塞。只读静态审计确认Hub wrapper、backend/bmPE1Rw/ComfyUI0.34.1、外部Python3.12.8，userdata/models中H3 T2V/I2V四权重42.47GB；R2V ref2va缺失、未发现Flux/GGUF。API图在wrapper.output内，不可直接提交UI .workflow。未启动/下载/推理或修改原目录，实际节点注册/CUDA显存/结果归档及重启恢复未验。 固定ModelScope190e955f HiFi来源/加速节点/官方2K协议只读核对：FL2VA64.73GB，两模式93.13GB；16G指运行目标。现有Hub不能推断兼容；HiFi→付费2K接受性/价格/性能未知。未安装权重或节点。
-- Evidence: [docs/changes/2026-09-16-launch-readiness-audit/verification.md](../../docs/changes/2026-09-16-launch-readiness-audit/verification.md), [docs/changes/2026-10-15-kk-unified/spec.md](../../docs/changes/2026-10-15-kk-unified/spec.md), [docs/changes/2026-10-15-kk-unified/verification.md](../../docs/changes/2026-10-15-kk-unified/verification.md)
-- Next action: 模型接入统一安装/关联与硬件容量推荐；先验证现有H3，HiFi为固定来源独立配方，实际ABI/工作流/资源通过才开放。2K单列远端阶段，不能隐式上传或称无条件更便宜。
+- Verification: PARTIAL — 2026-11-06治理续验：2026-10-30已有H3双路径真实GPU、视频首帧归档/连线及保存重开验收；旧“先验证H3”不再作为实现待办。图片checkpoint、Hub自动管理、视频资产及当前安装端/外部质量仍缺验收，不扩大历史结论。
+- Evidence: [docs/changes/2026-09-16-launch-readiness-audit/verification.md](../../docs/changes/2026-09-16-launch-readiness-audit/verification.md), [docs/changes/2026-10-15-kk-unified/spec.md](../../docs/changes/2026-10-15-kk-unified/spec.md), [docs/changes/2026-10-15-kk-unified/verification.md](../../docs/changes/2026-10-15-kk-unified/verification.md), [docs/changes/2026-11-06-ci-gate-repair/verification.md](../../docs/changes/2026-11-06-ci-gate-repair/verification.md)
+- Next action: 复核已有H3后继证据，继续图片checkpoint/Hub管理/视频资产及当前安装端验收；HiFi/2K保持独立受控范围，不隐式上传或调用付费服务。
 - Last verified: 2026-10-15
 - Updated: 2026-10-15
 
@@ -1256,9 +1256,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `unallocated`
 - Worktree: `unallocated`
 - Modules: Mobile, Shared Core
-- Verification: NOT_VERIFIED — 当前只有响应式 Web；用户已确定功能顺序和登录/本地数据目标，独立 runtime 与真机验收未实现。
-- Evidence: [docs/changes/2026-09-16-launch-readiness-audit/plan.md](../../docs/changes/2026-09-16-launch-readiness-audit/plan.md)
-- Next action: 补充负责人、优先级、分支和下一步验收证据
+- Verification: NOT_VERIFIED — 2026-11-06治理续验：独立Expo/React Native源码及手机Web已实现，历史正式手机Web收据及用户UI确认见FEAT-028；当前PR83 Mobile job成功不等于新Native包、Safari或真实生成全链完成。旧“只有响应式Web/独立runtime未实现”已过期。
+- Evidence: [docs/changes/2026-09-16-launch-readiness-audit/plan.md](../../docs/changes/2026-09-16-launch-readiness-audit/plan.md), [docs/changes/2026-11-06-ci-gate-repair/verification.md](../../docs/changes/2026-11-06-ci-gate-repair/verification.md)
+- Next action: 复用mobile/现有实现，按当前05设计核对手机Web；补新原生包、真机/Safari、身份及尚未验收的完整生成链。
 - Last verified: 2026-09-28
 - Updated: 2026-09-28
 
@@ -1331,7 +1331,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Acceptance: 当前Design System与已确认页面来源的同状态视觉对比; 六态及异步/键盘/离线; dev1421/preview1423/Tauri最终source分别确认
 - Branch: `main`
 - Worktree: `D:/kk-studio/KK-Studio-2.0`
-- Modules: Landing, Workspace, Assets, Settings, Tasks, Account, src/App.tsx, src/components/StartComposer.tsx, src/components/StartMediaControls.tsx, src/components/settings/GeneralSettings.tsx, src/components/settings/GeneralAdvancedPreferences.tsx, src/components/settings/settings.css, src/components/canvas/CanvasHud.tsx, src/components/canvas/CanvasNavigation.tsx, src/components/canvas/CanvasWorkbenchNavigation.tsx, src/components/canvas/ToolbarIcon.tsx, src/components/StartComposerModes.tsx, src/styles/canvas-navigation.css, src/components/ConversationHeader.tsx, src/components/ConversationChatTabs.tsx, src/styles/canvas-hud.css, src/styles/conversation-panel.css, src/styles/sidebar.css, src/styles/composer.css, src/styles/tokens.css, DESIGN.md, design/figma-component-map.json, public/design/figma/canvas-view.svg, public/design/figma/browser-view.svg, tests/browser, tests/unit/homeMediaSelection.test.ts, scripts/check-rules.mjs, config/platform-versions.json, package.json, package-lock.json, VERSION, src-tauri/Cargo.toml, src-tauri/Cargo.lock, src-tauri/tauri.conf.json, docs/changes/2026-11-05-figma-local-sync, docs/UI_INDEX.md, docs/PROGRESS.md, docs/governance/PROJECT_STATE.md, docs/governance/AI_HANDOFF.md, docs/governance/ai-memory/ui-motion.md, docs/governance/ai-memory/memlog.md, docs/governance/TASK_LEDGER.md, tests/unit/uiGovernanceTokens.test.ts, tests/unit/designMarkdown.test.ts, tests/support/public-entry-loader.mjs, src/components/StartCompactTools.tsx, src/components/useComposerMenus.ts, src/features/agent/agentHost.ts, tests/unit/modelAllowlistAdversarialChallenge.test.ts, src/features/speech/useSpeechInput.ts, src/components/assets/AssetPanelHeader.tsx, src/components/canvas/CanvasToolbar.tsx, src/components/nodes/CreationParameterControl.tsx, src/components/nodes/ImageModelParameters.tsx, src/components/SavedPane.tsx, src/domain/creationSnapshotCodec.ts, src/domain/modelSelection.ts, src/styles/catalog-pages.css, tests/unit/creation.test.ts, scripts/governance/ai-memory.mjs, src/components/settings/GatewayConsole.tsx, src/components/canvas/TaskPanel.tsx, src/styles/canvas-tools.css, src/styles/global.css, src/styles/workspace.css, src/styles/responsive-content.css, src/components/ResizeHandle.tsx, src/components/canvas/useCanvasViewport.ts, src/components/ui/Input.tsx, src/components/useDismissible.ts, src/features/ai-gateway/dpapiProtector.ts, tests/unit/dpapiProtector.test.ts, tests/support/canvasPointer.mjs, tests/support/pluginFlow.mjs, src/components/canvas/TaskDetail.tsx, src/components/canvas/TaskPanelPopover.tsx, scripts/governance/agent-radar.mjs, src/features/creation/nativeTaskHost.ts, tests/unit/taskCostArchive.test.ts, src/components/startInspirations.ts, src/main.tsx, src/styles/fonts.css, public/design/figma/home-inspiration-product.png, public/design/figma/home-inspiration-mv.png, public/fonts/source-han-sans/SourceHanSansCN-VF.otf.woff2, public/fonts/source-han-sans/LICENSE.txt, public/fonts/source-han-sans/README.md, public/design/figma/logo-hero.svg
+- Modules: Landing, Workspace, Assets, Settings, Tasks, Account, src/App.tsx, src/components/StartComposer.tsx, src/components/StartMediaControls.tsx, src/components/settings/GeneralSettings.tsx, src/components/settings/GeneralAdvancedPreferences.tsx, src/components/settings/settings.css, src/components/canvas/CanvasHud.tsx, src/components/canvas/CanvasNavigation.tsx, src/components/canvas/CanvasWorkbenchNavigation.tsx, src/components/canvas/ToolbarIcon.tsx, src/components/StartComposerModes.tsx, src/styles/canvas-navigation.css, src/components/ConversationHeader.tsx, src/components/ConversationChatTabs.tsx, src/styles/canvas-hud.css, src/styles/conversation-panel.css, src/styles/sidebar.css, src/styles/composer.css, src/styles/tokens.css, DESIGN.md, design/figma-component-map.json, public/design/figma/canvas-view.svg, public/design/figma/browser-view.svg, tests/browser, tests/unit/homeMediaSelection.test.ts, scripts/check-rules.mjs, config/platform-versions.json, package.json, package-lock.json, VERSION, src-tauri/Cargo.toml, src-tauri/Cargo.lock, src-tauri/tauri.conf.json, docs/changes/2026-11-05-figma-local-sync, docs/UI_INDEX.md, docs/PROGRESS.md, docs/governance/PROJECT_STATE.md, docs/governance/AI_HANDOFF.md, docs/governance/ai-memory/ui-motion.md, docs/governance/ai-memory/memlog.md, docs/governance/TASK_LEDGER.md, tests/unit/uiGovernanceTokens.test.ts, tests/unit/designMarkdown.test.ts, tests/support/public-entry-loader.mjs, src/components/StartCompactTools.tsx, src/components/useComposerMenus.ts, src/features/agent/agentHost.ts, tests/unit/modelAllowlistAdversarialChallenge.test.ts, src/features/speech/useSpeechInput.ts, src/components/assets/AssetPanelHeader.tsx, src/components/canvas/CanvasToolbar.tsx, src/components/nodes/CreationParameterControl.tsx, src/components/nodes/ImageModelParameters.tsx, src/components/SavedPane.tsx, src/domain/creationSnapshotCodec.ts, src/domain/modelSelection.ts, src/styles/catalog-pages.css, tests/unit/creation.test.ts, scripts/governance/ai-memory.mjs, src/components/settings/GatewayConsole.tsx, src/components/canvas/TaskPanel.tsx, src/styles/canvas-tools.css, src/styles/global.css, src/styles/workspace.css, src/styles/responsive-content.css, src/components/ResizeHandle.tsx, src/components/canvas/useCanvasViewport.ts, src/components/ui/Input.tsx, src/components/useDismissible.ts, src/features/ai-gateway/dpapiProtector.ts, tests/unit/dpapiProtector.test.ts, tests/support/canvasPointer.mjs, tests/support/pluginFlow.mjs, src/components/canvas/TaskDetail.tsx, src/components/canvas/TaskPanelPopover.tsx, scripts/governance/agent-radar.mjs, src/features/creation/nativeTaskHost.ts, tests/unit/taskCostArchive.test.ts, src/components/startInspirations.ts, src/main.tsx, src/styles/fonts.css, public/design/figma/home-inspiration-product.png, public/design/figma/home-inspiration-mv.png, public/fonts/source-han-sans/SourceHanSansCN-VF.otf.woff2, public/fonts/source-han-sans/LICENSE.txt, public/fonts/source-han-sans/README.md, public/design/figma/logo-hero.svg, src/components/settings/ConnectionSettings.tsx, src/components/settings/SettingsSections.tsx, src/components/settings/SettingsPanel.tsx, tests/browser/settings-latest-layout.spec.ts, mobile/src/ui/mobileColors.source.json, mobile/src/ui/colorTokens.generated.json, mobile/src/ui/Action.tsx, mobile/src/ui/actionAppearance.ts, mobile/src/ui/primitives.tsx, mobile/src/ui/theme.tsx, mobile/src/ui/geometry.ts, mobile/src/screens/SettingsScreen.tsx, mobile/src/screens/settings, mobile/tests/uiAction.test.ts, mobile/scripts/sync-color-tokens.mjs, mobile/tests/uiBrand.test.ts, tests/mobile-web/entry.spec.ts
 - Verification: PARTIAL — 2026-11-06 MCP-only：先修Figma437:64052关闭说明，再按9:3同步原始封面/字体/Logo。26定向生产浏览器及typecheck/ui:check/rules:check/build通过。main@3d7cc573+dirty，官方Desktop2.1.66新EXE659e1eb4141f、inputf2d7addff220，构建前后源码指纹稳定、依赖和四项frontendDist资产hash一致。全页/六态/像素、最新完整verify、Native窗口和独审仍未完成；原127存储保护未动。
 - Evidence: [docs/changes/2026-09-16-ui-system-audit/plan.md](../../docs/changes/2026-09-16-ui-system-audit/plan.md), [docs/changes/2026-09-20-ui-main-alignment/verification.md](../../docs/changes/2026-09-20-ui-main-alignment/verification.md), [docs/changes/2026-09-22-design-system/verification.md](../../docs/changes/2026-09-22-design-system/verification.md), [docs/changes/2026-09-22-design-system-pages/verification.md](../../docs/changes/2026-09-22-design-system-pages/verification.md), [docs/changes/2026-11-05-figma-local-sync/verification.md](../../docs/changes/2026-11-05-figma-local-sync/verification.md)
 - Next action: 按用户MCP-only约束逐页同状态视觉核对；Figma缺陷先修源并回读后同步本地，继续设置/工作台/项目库/任务与手机状态。补当前完整verify、Figma像素基线、Native窗口和正式SHA独审；原旧会话迁移缺口无损处理，不要求用户找未知节点。
@@ -1751,8 +1751,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Worktree: `D:/kk-studio/.worktrees/TASK-STAGE3-multimodal`
 - Modules: src/components/nodes, src/features/creation, src/integrations/generation, src-tauri/src/task_host.rs
 - Verification: NOT_VERIFIED — 基线 typecheck/lint通过；2495单测通过、20既有跳过。原生子任务92aacba1：411 Rust通过、1既有忽略；共享提交和运行态待完成。
-- Evidence: [docs/features/feat-006-video-generation.md](../../docs/features/feat-006-video-generation.md), [docs/features/feat-007-audio-generation.md](../../docs/features/feat-007-audio-generation.md), [docs/features/feat-025-demo-media.md](../../docs/features/feat-025-demo-media.md), [docs/changes/2026-11-04-multimodal/intent.md](../../docs/changes/2026-11-04-multimodal/intent.md), [docs/changes/2026-11-04-multimodal/spec.md](../../docs/changes/2026-11-04-multimodal/spec.md), [docs/changes/2026-11-04-multimodal/plan.md](../../docs/changes/2026-11-04-multimodal/plan.md), [docs/changes/2026-11-04-multimodal/verification.md](../../docs/changes/2026-11-04-multimodal/verification.md), [docs/changes/2026-11-04-multimodal/review.md](../../docs/changes/2026-11-04-multimodal/review.md)
-- Next action: 完成共享多模态提交、De-Mock与浏览器/原生验收后本地合流
+- Evidence: [docs/features/feat-006-video-generation.md](../../docs/features/feat-006-video-generation.md), [docs/features/feat-007-audio-generation.md](../../docs/features/feat-007-audio-generation.md), [docs/features/feat-025-demo-media.md](../../docs/features/feat-025-demo-media.md), [docs/changes/2026-11-04-multimodal/intent.md](../../docs/changes/2026-11-04-multimodal/intent.md), [docs/changes/2026-11-04-multimodal/spec.md](../../docs/changes/2026-11-04-multimodal/spec.md), [docs/changes/2026-11-04-multimodal/plan.md](../../docs/changes/2026-11-04-multimodal/plan.md), [docs/changes/2026-11-04-multimodal/verification.md](../../docs/changes/2026-11-04-multimodal/verification.md), [docs/changes/2026-11-04-multimodal/review.md](../../docs/changes/2026-11-04-multimodal/review.md), [docs/changes/2026-11-06-ci-gate-repair/verification.md](../../docs/changes/2026-11-06-ci-gate-repair/verification.md)
+- Next action: 旧stage3工作树不是当前活动checkout；从PR83当前共享/native链核验已有视频/语音提交、恢复/取消/归档，补当前浏览器/Native/真实Provider边界，禁止再合已包含历史实现。
 - Last verified: 2026-09-21
 - Updated: 2026-11-04
 
@@ -1884,8 +1884,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Worktree: `unallocated`
 - Modules: src/styles, src/domain/settings.ts, src/components/settings, docs/DESIGN-SYSTEM.md, docs/UI_SPEC.md, tests
 - Verification: PARTIAL — Design System 1.1与双主题8色已落实；TASK-DS-002补目录/设置、原工程完整verify309/229及新Tauri资源包/重启验证。在线Ardot写入与用户视觉验收仍未完成。
-- Evidence: [docs/changes/2026-09-22-design-system/spec.md](../../docs/changes/2026-09-22-design-system/spec.md), [docs/changes/2026-09-22-design-system/audit.md](../../docs/changes/2026-09-22-design-system/audit.md), [docs/changes/2026-09-22-design-system/verification.md](../../docs/changes/2026-09-22-design-system/verification.md), [docs/changes/2026-09-22-design-system/review.md](../../docs/changes/2026-09-22-design-system/review.md), [docs/changes/2026-09-22-design-system/remaining.md](../../docs/changes/2026-09-22-design-system/remaining.md), [docs/changes/2026-09-22-design-system-pages/verification.md](../../docs/changes/2026-09-22-design-system-pages/verification.md)
-- Next action: 按验收条件完成实现、验证、独立审查和文档同步
+- Evidence: [docs/changes/2026-09-22-design-system/spec.md](../../docs/changes/2026-09-22-design-system/spec.md), [docs/changes/2026-09-22-design-system/audit.md](../../docs/changes/2026-09-22-design-system/audit.md), [docs/changes/2026-09-22-design-system/verification.md](../../docs/changes/2026-09-22-design-system/verification.md), [docs/changes/2026-09-22-design-system/review.md](../../docs/changes/2026-09-22-design-system/review.md), [docs/changes/2026-09-22-design-system/remaining.md](../../docs/changes/2026-09-22-design-system/remaining.md), [docs/changes/2026-09-22-design-system-pages/verification.md](../../docs/changes/2026-09-22-design-system-pages/verification.md), [docs/changes/2026-11-06-ci-gate-repair/verification.md](../../docs/changes/2026-11-06-ci-gate-repair/verification.md)
+- Next action: 以当前Figma ZiadpErDoFweCjG3uHjkM3与UI-004为设计真值；保留历史Ardot记录，继续当前04/05及同状态浏览器/Native验收，不重开旧设计通道。
 - Last verified: 2026-09-22
 - Updated: 2026-09-22
 
@@ -2890,9 +2890,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `docs/TASK-DOCS-STRUCT-001`
 - Worktree: `D:/kk-studio/KK-Studio-2.0`
 - Modules: src/features/ai-gateway/credentials.ts, src/features/ai-gateway/errors.ts, src/features/ai-gateway/channels/adapter.ts, src/features/ai-gateway/channels/registry.ts, src/features/ai-gateway/channels/doubao.ts, src/features/ai-gateway/scheduler.ts, src/features/ai-gateway/chat.ts, src/features/generation-server/http.ts, tests/unit/aiGatewayCredentials.test.ts, tests/unit/aiGatewayChannels.test.ts, tests/unit/aiGatewayScheduler.test.ts, tests/unit/aiGatewayChat.test.ts, tests/unit/aiGatewayChatEndpoint.test.ts, tests/unit/generationServerChatRoute.test.ts, docs/features/feat-038-ai-model-gateway.md, src/domain/modelProvider.ts, src/features/creation/model.ts, src/components/settings/ProviderProfileFields.tsx, tests/unit/modelProvider.test.ts, docs/changes/2026-10-10-doubao-official-channel/, src/features/agent/agentImages.ts, src/features/agent/agentHost.ts, src/features/models/modelMenuEntries.ts, src/features/models/modelPresentation.ts, tests/unit/modelMenuEntries.test.ts, tests/unit/modelPresentation.test.ts
-- Verification: PARTIAL — gateway/Agent/model 本地回归仍通过；当前实现缺少真实 DPAPI protector，Ark 通道在 response.json() 后才产生最终文本，generation-server 只把完整文本包装为单个 SSE delta，尚未实现 upstream token-level stream。真实 Ark/Codex 凭据和 Desktop 运行态仍未验证，保持 PARTIAL。
-- Evidence: [docs/features/feat-038-ai-model-gateway.md](../../docs/features/feat-038-ai-model-gateway.md), [docs/changes/2026-10-10-kk-model-capability/verification.md](../../docs/changes/2026-10-10-kk-model-capability/verification.md), [docs/superpowers/specs/2026-10-10-kk-model-capability-design.md](../../docs/superpowers/specs/2026-10-10-kk-model-capability-design.md), [docs/superpowers/plans/2026-10-10-kk-model-capability.md](../../docs/superpowers/plans/2026-10-10-kk-model-capability.md), [docs/changes/2026-10-09-doubao-integration/verification.md](../../docs/changes/2026-10-09-doubao-integration/verification.md), [docs/changes/2026-10-10-doubao-official-channel/verification.md](../../docs/changes/2026-10-10-doubao-official-channel/verification.md), [docs/changes/2026-10-11-closeout/verification.md](../../docs/changes/2026-10-11-closeout/verification.md), [tests/browser/model-picker.spec.ts](../../tests/browser/model-picker.spec.ts), [docs/changes/2026-10-12-p1-audit-closeout/verification.md](../../docs/changes/2026-10-12-p1-audit-closeout/verification.md)
-- Next action: 先补本地 upstream ReadableStream/token callback 契约和 Windows DPAPI/Tauri protector 的受控测试；随后才补真实 Ark/Codex 凭据与 Desktop 运行态，外部证据齐全后再转 DONE。
+- Verification: PARTIAL — 2026-11-06治理续验：Ark upstream onTextDelta/ReadableStream与受控DPAPI protector已在当前源码，DPAPI替身7项历史通过；旧“仅response.json/未补受控契约”描述过期。真实Windows DPAPI/Tauri、真实凭据及安装端未验，PARTIAL保留。
+- Evidence: [docs/features/feat-038-ai-model-gateway.md](../../docs/features/feat-038-ai-model-gateway.md), [docs/changes/2026-10-10-kk-model-capability/verification.md](../../docs/changes/2026-10-10-kk-model-capability/verification.md), [docs/superpowers/specs/2026-10-10-kk-model-capability-design.md](../../docs/superpowers/specs/2026-10-10-kk-model-capability-design.md), [docs/superpowers/plans/2026-10-10-kk-model-capability.md](../../docs/superpowers/plans/2026-10-10-kk-model-capability.md), [docs/changes/2026-10-09-doubao-integration/verification.md](../../docs/changes/2026-10-09-doubao-integration/verification.md), [docs/changes/2026-10-10-doubao-official-channel/verification.md](../../docs/changes/2026-10-10-doubao-official-channel/verification.md), [docs/changes/2026-10-11-closeout/verification.md](../../docs/changes/2026-10-11-closeout/verification.md), [tests/browser/model-picker.spec.ts](../../tests/browser/model-picker.spec.ts), [docs/changes/2026-10-12-p1-audit-closeout/verification.md](../../docs/changes/2026-10-12-p1-audit-closeout/verification.md), [docs/changes/2026-11-06-ci-gate-repair/verification.md](../../docs/changes/2026-11-06-ci-gate-repair/verification.md)
+- Next action: 复核当前受控流/错误/取消与凭据保护；真实DPAPI、Tauri及合法凭据运行态仍单列验收，禁止重复实现已有契约。
 - Last verified: 2026-10-12
 - Updated: 2026-10-12
 
@@ -3156,9 +3156,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `unallocated`
 - Worktree: `unallocated`
 - Modules: src/domain/canvasGraph.ts, src/components/canvas/NodeActions.tsx, src/styles/workspace.css, tests/browser/unified-image-command.spec.ts
-- Verification: FAIL — 本次同步修复前/后development23.33%同样被composer遮挡；production全量1失败，修复尚未执行。
-- Evidence: [docs/changes/2026-10-14-agent-canvas-sync/evidence/wide-layout-comparison.json](../../docs/changes/2026-10-14-agent-canvas-sync/evidence/wide-layout-comparison.json), [docs/changes/2026-10-14-agent-canvas-sync/verification.md](../../docs/changes/2026-10-14-agent-canvas-sync/verification.md)
-- Next action: 单独复证production并修正宽图主体几何/端口锚点
+- Verification: FAIL — 2026-11-06治理续验：原FAIL保留：曾被composer遮挡。2026-10-18-sidebar-canvas已有共享几何修复及Web24/24、Native6/6的后继有界验收，旧“修复尚未执行”不再适用；本轮当前整合候选仍待对应浏览器/Native复核。
+- Evidence: [docs/changes/2026-10-14-agent-canvas-sync/evidence/wide-layout-comparison.json](../../docs/changes/2026-10-14-agent-canvas-sync/evidence/wide-layout-comparison.json), [docs/changes/2026-10-14-agent-canvas-sync/verification.md](../../docs/changes/2026-10-14-agent-canvas-sync/verification.md), [docs/changes/2026-11-06-ci-gate-repair/verification.md](../../docs/changes/2026-11-06-ci-gate-repair/verification.md)
+- Next action: 复用canvasGraph共享几何与后继修复，核验当前组合宽图端口/缩放/保存；不按旧FAIL重新开发。
 - Last verified: 2026-10-14
 - Updated: 2026-10-17
 
@@ -3518,8 +3518,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Worktree: `unallocated`
 - Modules: src/features/creation, src/App.tsx, src/features/agent, src/features/google, src/features/local-service, src/features/projects, src-tauri/src, vendor/canvas-agent, scripts/agent, docs/changes/2026-10-17-chat-migration
 - Verification: NOT_VERIFIED — Desktop/Web 2.1.37（Mobile 2.1.1规划），冻结源码89b8291b；默认原9项目已迁移snapshot3、11个独立聊天上下文，repositoryId和原始资料保持；编辑、旧历史持久化及正常关闭重开证据见本轮验证。真实新回复仍未验收：Codex共享周额度100%、ordinaryUsageAllowed=false，发送前拒绝，/turn提交0；预计北京时间2026-10-23 04:08:15重置。未消耗reset、未购买额度或绕过保护。 完整verify Node1924/14skip、Agent204/2skip、Edge826首试零flaky、DESIGN41+8/development四步；Rust226+41/1ignore；双轴源码PASS，官方EXE与loaded bundle绑定89b；副本130检查、默认v3迁移与旧历史/编辑重开收据见verification。所有原件和失败保留。
-- Evidence: [docs/changes/2026-10-17-chat-migration/intent.md](../../docs/changes/2026-10-17-chat-migration/intent.md), [docs/changes/2026-10-17-chat-migration/spec.md](../../docs/changes/2026-10-17-chat-migration/spec.md), [docs/changes/2026-10-17-chat-migration/plan.md](../../docs/changes/2026-10-17-chat-migration/plan.md), [docs/changes/2026-10-17-chat-migration/verification.md](../../docs/changes/2026-10-17-chat-migration/verification.md), [docs/changes/2026-10-17-chat-migration/review.md](../../docs/changes/2026-10-17-chat-migration/review.md)
-- Next action: 账号Codex额度解除后，从当前v3原线程进行一次普通文本受理/回复及持久化重开验收；此前/turn0，无UNKNOWN重放。保留原始v2不可变归档，不回滚、删除或移动；Hosted/PR/main/发布与原统一范围另行验收。 原e11b87a5分支和恢复收据保留；物理树由TASK-LOCAL-GUARDS-20261018复用，额度解除后重新分配，不把旧分支冒充当前checkout。
+- Evidence: [docs/changes/2026-10-17-chat-migration/intent.md](../../docs/changes/2026-10-17-chat-migration/intent.md), [docs/changes/2026-10-17-chat-migration/spec.md](../../docs/changes/2026-10-17-chat-migration/spec.md), [docs/changes/2026-10-17-chat-migration/plan.md](../../docs/changes/2026-10-17-chat-migration/plan.md), [docs/changes/2026-10-17-chat-migration/verification.md](../../docs/changes/2026-10-17-chat-migration/verification.md), [docs/changes/2026-10-17-chat-migration/review.md](../../docs/changes/2026-10-17-chat-migration/review.md), [docs/changes/2026-11-06-ci-gate-repair/verification.md](../../docs/changes/2026-11-06-ci-gate-repair/verification.md)
+- Next action: 先只读核对当前合法授权/额度，不按历史2026-10-23预计重置时间推断额度已恢复；真实回复需要当前证据。旧Agent/Google原件、失败日志与读取保护保留，禁止清空、覆盖或自动重放。
 - Last verified: 2026-10-17
 - Updated: 2026-10-18
 
@@ -3651,8 +3651,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Worktree: `D:/kk-studio/.worktrees/TASK-MOD-P0-architecture-baseline`
 - Modules: docs/architecture/MODULARITY.md, docs/changes/2026-10-28-modularity-p0, docs/governance, docs/README.md, docs/PROGRESS.md
 - Verification: PARTIAL — 四份全文与总清单已核对；继续处理Browser任务，本次9项通过。补查ORG-0目标容器位置：165仓内参考文件对照9份容器文件，原字节/LF均无等价，未迁删。其余P/STD/ORG仍按矩阵逐项待验收；禁止子代理。
-- Evidence: [docs/changes/2026-10-28-modularity-p0/four-document-coverage.md](../../docs/changes/2026-10-28-modularity-p0/four-document-coverage.md), [docs/changes/2026-10-28-modularity-p0/four-document-sources.json](../../docs/changes/2026-10-28-modularity-p0/four-document-sources.json), [docs/changes/2026-10-28-four-document-coverage/verification.md](../../docs/changes/2026-10-28-four-document-coverage/verification.md), [docs/changes/2026-10-28-four-document-coverage/review.md](../../docs/changes/2026-10-28-four-document-coverage/review.md), [docs/changes/2026-10-28-agent-browser-navigation/verification.md](../../docs/changes/2026-10-28-agent-browser-navigation/verification.md)
-- Next action: 后续先读四文档总清单，按P0→P1→P2及ORG试点→推广实施；将现代化/其他P/ORG事项逐项落入对应任务，补完必做项与待决结论后才判整套完成。
+- Evidence: [docs/changes/2026-10-28-modularity-p0/four-document-coverage.md](../../docs/changes/2026-10-28-modularity-p0/four-document-coverage.md), [docs/changes/2026-10-28-modularity-p0/four-document-sources.json](../../docs/changes/2026-10-28-modularity-p0/four-document-sources.json), [docs/changes/2026-10-28-four-document-coverage/verification.md](../../docs/changes/2026-10-28-four-document-coverage/verification.md), [docs/changes/2026-10-28-four-document-coverage/review.md](../../docs/changes/2026-10-28-four-document-coverage/review.md), [docs/changes/2026-10-28-agent-browser-navigation/verification.md](../../docs/changes/2026-10-28-agent-browser-navigation/verification.md), [docs/changes/2026-11-06-ci-gate-repair/verification.md](../../docs/changes/2026-11-06-ci-gate-repair/verification.md)
+- Next action: 复用四份原文覆盖矩阵，逐项核对尚未验收STD/ORG与生产后继；旧P2已OBSOLETE，不重做P2或第二阶段；不把已包含历史源码再次合入。
 - Last verified: 2026-10-28
 - Updated: 2026-10-28
 
@@ -4268,7 +4268,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 - Goal: 合法完成origin/main无产品源码变更bootstrap，为P3整批正常PR合流建立基础
 - Scope: 既有架构/布局检查器规则和回归、开发依赖、真实origin基线、治理入口、五件套与台账
-- Display status: 已完成
+- Display status: 未完成
 - Priority: P0 — 工具栏定位与当前用户v3数据兼容阻断统一发布
 - Requirement refs: user:主线合流, AGENTS.md, docs/engineering/BRANCH-POLICY.md
 - Feature IDs: none
@@ -4391,9 +4391,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `feat/TASK-COMFY-IMAGE-20261103-production`
 - Worktree: `D:/kk-studio/KK-Studio-2.0`
 - Modules: src/features/comfyui, src/features/image-edit, src/features/creation, src/components/canvas, src-tauri/src
-- Verification: NOT_VERIFIED — 实现中；参数提取与本地地址校验单测通过，完整门禁待执行 2026-11-04：旧分支已不存在，主checkout由TASK-E2E-WIRING-20261104接管；阶段2历史验证保留，台账尚需逐项核对，不占用活动工作树。
-- Evidence: [docs/changes/2026-11-03-comfy-production/verification.md](../../docs/changes/2026-11-03-comfy-production/verification.md)
-- Next action: 依据阶段2历史验证核对任务范围与未验收外部模型项；新接线由TASK-E2E-WIRING-20261104承接
+- Verification: NOT_VERIFIED — 2026-11-06治理续验：已有工作流、原生编辑器写回、恢复幂等、编辑操作及归档/画布接线，8077aa9e等历史提交已包含于PR83；历史929浏览器/Native限定范围保留。当前候选和真实外部模型效果/12ai地址仍未全验，PARTIAL保留。
+- Evidence: [docs/changes/2026-11-03-comfy-production/verification.md](../../docs/changes/2026-11-03-comfy-production/verification.md), [docs/changes/2026-11-06-ci-gate-repair/verification.md](../../docs/changes/2026-11-06-ci-gate-repair/verification.md)
+- Next action: 复核2026-11-03-comfy-production既有验收和当前共享链；只补当前组合/外部模型效果缺口，不重建旧分支或重复实现。
 - Last verified: 2026-11-03
 - Updated: 2026-11-04
 
@@ -4411,8 +4411,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Worktree: `unallocated`
 - Modules: src/features/memory, src/features/agent, src/features/extensions, src-tauri/src, tests/e2e
 - Verification: PARTIAL — 真实生产接线和harness纯转出已实现；e2e312/312，单元2684 pass/20 skip，定向浏览器102+2通过；独审2P1/4P2已修复待正式SHA复核，完整verify17/Desktop最新构建/PR/main待收口。 2026-11-05：当前本机main@752f7dbd已包含本任务实现，旧独占工作树记录解除；历史未验边界保留，本次深水区由TASK-DEEP-WATER-20261105接管。
-- Evidence: [docs/changes/2026-11-04-e2e-wiring/verification.md](../../docs/changes/2026-11-04-e2e-wiring/verification.md)
-- Next action: 冻结源码完成verify17及当前Desktop，提交后按实际PR基线独审/CI，再合流和安全回收源树
+- Evidence: [docs/changes/2026-11-04-e2e-wiring/verification.md](../../docs/changes/2026-11-04-e2e-wiring/verification.md), [docs/changes/2026-11-06-ci-gate-repair/verification.md](../../docs/changes/2026-11-06-ci-gate-repair/verification.md)
+- Next action: 本地752f7dbd已承接，当前PR83尚未合origin/main；复用已有实现，只补当前SHA完整verify、Desktop与正式独审，不重开/重复合并旧树；未授权合并或删除。
 - Last verified: 2026-11-05
 - Updated: 2026-11-05
 
@@ -4423,15 +4423,15 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Display status: 进行中
 - Priority: P0 — 未记录
 - Requirement refs: docs/changes/2026-11-05-step2-deep-water/spec.md
-- Feature IDs: FEAT-044
+- Feature IDs: FEAT-043, FEAT-044
 - Owner role: implementation-integrator
 - Acceptance: P0–P4正式入口实际调用生产模块; 数据兼容、取消、失败、恢复通过回归; 完整门禁与运行证据通过后独审合流
 - Branch: `main`
 - Worktree: `D:/kk-studio/KK-Studio-2.0`
 - Modules: src/domain, src/features, src/components, vendor/canvas-agent, src-tauri
-- Verification: PARTIAL — A1：health:check 相对 9b1038a75a62 由 3 blocking 降到 0 blocking、2 allowed；creation/media/home 定向测试 31 通过。完整 verify 与 Desktop 未跑。
-- Evidence: [docs/changes/2026-11-05-step2-deep-water/verification.md](../../docs/changes/2026-11-05-step2-deep-water/verification.md)
-- Next action: 生产链、完整 verify 与 Desktop 验收
+- Verification: PARTIAL — 2026-11-06治理续验：B1–B4及主要六支柱生产入口已核验存在；B5抽查使用共享组件，原指定控件全集未存。当前187定向单测通过；health修复后0 blocking/2 allowed、版本0 warning。历史verify-4完整通过、verify-5后续2失败/9flaky均保留，不能替代当前完整verify/Desktop/独审。A2/A3原始独立编号映射UNKNOWN，按仓内联合契约核验。
+- Evidence: [docs/changes/2026-11-05-step2-deep-water/verification.md](../../docs/changes/2026-11-05-step2-deep-water/verification.md), [docs/changes/2026-11-06-ci-gate-repair/verification.md](../../docs/changes/2026-11-06-ci-gate-repair/verification.md)
+- Next action: 完成当前整合候选完整verify、Desktop来源收据及独审；保留外部模型/用户验收边界，不重做已存在B1–B5；六支柱原型helper不冒充生产接线。
 - Last verified: 2026-11-05
 - Updated: 2026-11-05
 

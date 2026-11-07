@@ -8,8 +8,8 @@ async function writeIfChanged(url, next) {
   const normalized = normalize(next);
   try {
     if (normalize(await fs.readFile(url, "utf8")) === normalized) return;
-  } catch {
-    // The generated file is absent and needs to be created.
+  } catch (error) {
+    if (error.code !== "ENOENT") throw error;
   }
   await fs.writeFile(url, normalized);
 }

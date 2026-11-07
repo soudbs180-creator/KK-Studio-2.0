@@ -163,7 +163,7 @@ export default function SettingsPanel({
         data-section={section}
         data-navigation={navigation}
         aria-busy={busy}
-        data-figma-node="399:27506"
+        data-figma-node="47:185"
       >
         <div className="settings-phone-navigation">
           <Button

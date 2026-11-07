@@ -619,9 +619,7 @@ try {
     .getByRole("menu", { name: "选择模型", exact: true })
     .getByRole("button", { name: "模型接入…", exact: true })
     .click();
-  await page
-    .getByRole("button", { name: "API Key（官方）", exact: true })
-    .click();
+  await page.getByRole("tab", { name: "官方直连 API", exact: true }).click();
   await page.getByLabel("提供商", { exact: true }).fill(providerName);
   await page.getByLabel("接口地址").fill(baseUrl);
   await page.getByLabel("API Key", { exact: true }).fill(secret);
@@ -643,7 +641,7 @@ try {
     exact: true,
   });
   await initialModelMenu
-    .getByRole("tab", { name: "本地", exact: true })
+    .getByRole("tab", { name: "图像生成", exact: true })
     .click();
   await initialModelMenu.getByRole("searchbox").fill("image-test");
   await expect(initialModelMenu.getByRole("menuitemradio")).toHaveCount(1);
@@ -701,7 +699,7 @@ try {
   // through the real menu rather than rewriting settings or credentials.
   await page.getByRole("button", { name: "模型", exact: true }).click();
   const modelMenu = page.getByRole("menu", { name: "选择模型", exact: true });
-  await modelMenu.getByRole("tab", { name: "本地", exact: true }).click();
+  await modelMenu.getByRole("tab", { name: "图像生成", exact: true }).click();
   await modelMenu.getByRole("searchbox").fill("image-test");
   await expect(modelMenu.getByRole("menuitemradio")).toHaveCount(1);
   await modelMenu.getByRole("menuitemradio").click();

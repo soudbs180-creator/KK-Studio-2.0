@@ -3,8 +3,8 @@
   height: var(--kk-topbar-height);
   flex: 0 0 var(--kk-topbar-height);
   align-items: center;
-  gap: 37px;
-  padding: 0 0 0 19px;
+  gap: var(--kk-titlebar-brand-gap);
+  padding: 0 0 0 var(--kk-titlebar-inset);
   background: var(--kk-bg-surface);
   color: var(--kk-text-tertiary);
   user-select: none;

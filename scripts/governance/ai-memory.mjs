@@ -70,7 +70,9 @@ function writeMemory(domainArg, title, items, agent = "AI Agent") {
   } else {
     fs.writeFileSync(targetPath, block + content, "utf8");
   }
-  console.log(`[AI-MEMORY] 成功写入 [${(domainArg || "GLOBAL").toUpperCase()}] 思维流（置于最新头部）。`);
+  console.log(
+    `[AI-MEMORY] 成功写入 [${(domainArg || "GLOBAL").toUpperCase()}] 思维流（置于最新头部）。`,
+  );
 }
 
 function checkMemoryHealth() {
@@ -97,7 +99,12 @@ if (command === "check" || command === "verify") {
   const title = process.argv[4] || "阶段思维留痕";
   const agent = process.argv[5] || "AI Agent";
   const items = process.argv.slice(6);
-  writeMemory(domain, title, items.length > 0 ? items : ["阶段性进展已沉淀"], agent);
+  writeMemory(
+    domain,
+    title,
+    items.length > 0 ? items : ["阶段性进展已沉淀"],
+    agent,
+  );
 } else {
   const domain = process.argv[3] || (command !== "read" ? command : "global");
   readLatestMemory(domain);

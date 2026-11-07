@@ -201,14 +201,14 @@
       "name": "设置面板 / Settings Panel",
       "figma": {
         "page": "04-desktop",
-        "nodeId": "399:27506"
+        "nodeId": "47:185"
       },
       "local": {
         "paths": ["src/components/settings/SettingsPanel.tsx"]
       },
       "tokens": ["--kk-settings"],
-      "status": "DESIGN_PENDING",
-      "notes": "Anchor found as data-figma-node in SettingsPanel.tsx; re-read required."
+      "status": "FIGMA_READY",
+      "notes": "2026-11-06: old399:27506 is unavailable; current47:184 high-fidelity context resolves panel47:185. All settings runtime/state acceptance remains scoped separately."
     },
     {
       "id": "settings-general",
@@ -375,6 +375,46 @@
       "tokens": ["--kk-font-sans"],
       "status": "FIGMA_READY",
       "notes": "2026-11-06 MCP get_design_context9:3 and 949:35855/35863/35871 source948:23239: city/product/stage covers use exact assets. Existing city asset byte-identical and reused. Source Han Sans CN VF is bundled from Adobe, rather than silently falling back. Only asset/font gap addressed; complete card structure, actions and pixel parity remain pending. Current hero655:140742 uses exact64 SVG asset; previous bordered logo replaced. Runtime font and images verified via MCP/CDP; full card/whole-page pixel/state acceptance still pending."
+    },
+    {
+      "id": "settings-network",
+      "name": "网络与代理设置",
+      "figma": {
+        "page": "04-desktop",
+        "nodeId": "47:926"
+      },
+      "local": {
+        "paths": [
+          "src/components/settings/ConnectionSettings.tsx",
+          "src/components/settings/SettingsSections.tsx",
+          "src/components/settings/settings.css"
+        ]
+      },
+      "tokens": ["--kk-settings", "--kk-space"],
+      "status": "FIGMA_READY",
+      "notes": "2026-11-06: guide214:703; flat groups655:143029/036/046 and command655:143044. Preserve real Companion behavior and all business text; dynamic heights are not fixed."
+    },
+    {
+      "id": "mobile-settings",
+      "name": "独立手机设置",
+      "figma": {
+        "page": "05-mobile",
+        "nodeId": "106:5650"
+      },
+      "local": {
+        "paths": [
+          "mobile/src/screens/SettingsScreen.tsx",
+          "mobile/src/screens/settings/GeneralSettings.tsx",
+          "mobile/src/screens/settings/AccountStorageSettings.tsx",
+          "mobile/src/screens/settings/AccessSettings.tsx",
+          "mobile/src/screens/settings/AdvancedSettings.tsx",
+          "mobile/src/ui/mobileColors.source.json",
+          "mobile/src/ui/Action.tsx"
+        ]
+      },
+      "tokens": ["--kk-bg-app", "--kk-text-primary", "--kk-control"],
+      "status": "FIGMA_READY",
+      "notes": "2026-11-06 light106:5650/dark770:97841 current context/variables: settings groups flat; theme controls idle/selected,R8,48h. Existing native JSON compiler retained; other palette roles, typography/full-page pixels and physical-device acceptance are not claimed. Advanced design-state conflict preserves current business controls."
     }
   ]
 }

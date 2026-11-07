@@ -3,7 +3,7 @@ import { Platform, useColorScheme } from "react-native";
 import colorTokens from "./colorTokens.generated.json";
 import { useApplication } from "../application/AppProvider.tsx";
 
-// Generated from the pinned phone semantic source. Desktop tokens are independent.
+// Native semantic colors include the current shared Figma roles recorded in the source.
 export const light = colorTokens.colors.light;
 export const dark: typeof light = colorTokens.colors.dark;
 const ThemeContext = createContext(light);

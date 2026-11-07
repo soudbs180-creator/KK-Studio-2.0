@@ -4,7 +4,12 @@ import { runInNewContext } from "node:vm";
 import test from "node:test";
 import ts from "typescript";
 import { actionAppearance } from "../src/ui/actionAppearance.ts";
-import { radii, typography } from "../src/ui/geometry.ts";
+import {
+  radii,
+  settingsGeometry,
+  spacing,
+  typography,
+} from "../src/ui/geometry.ts";
 
 type Element = { type: string; props: Record<string, unknown> };
 const source = ts.transpileModule(
@@ -59,7 +64,8 @@ for (const [touchTarget, graphic] of [
           };
         if (name === "./theme.tsx" || name === "../ui/theme.tsx")
           return { touchTarget, useTheme: () => theme };
-        if (name === "./geometry.ts") return { radii, typography };
+        if (name === "./geometry.ts")
+          return { radii, settingsGeometry, spacing, typography };
         if (name === "./actionAppearance.ts") return { actionAppearance };
         if (name === "./Icon.tsx" || name === "../ui/Icon.tsx")
           return { Icon: "Icon" };
@@ -73,6 +79,17 @@ for (const [touchTarget, graphic] of [
       const root = exported.Action!({ label: "关闭", icon: "close", ...props });
       return (root.props.children as Element[])[0];
     }
+    function children(element: Element, pressed = false): Element[] {
+      const content =
+        typeof element.props.children === "function"
+          ? (
+              element.props.children as (state: { pressed: boolean }) => Element
+            )({ pressed })
+          : element.props.children;
+      return Array.isArray(content)
+        ? content
+        : ((content as Element).props.children as Element[]);
+    }
     const button = pressable({ iconOnly: true, selected: true });
     const style = (
       button.props.style as (state: {
@@ -83,19 +100,44 @@ for (const [touchTarget, graphic] of [
     assert.equal(style.minHeight, touchTarget);
     assert.equal(style.alignItems, "center");
     assert.equal(style.justifyContent, "center");
-    const icons = (button.props.children as Element[]).filter(
+    const icons = children(button).filter(
       (item) => item && item.type === "Icon",
     );
     assert.equal(icons.length, 1);
     assert.equal(icons[0].props.size, graphic);
-    const loading = (
-      pressable({ iconOnly: true, busy: true }).props.children as Element[]
-    ).find((item) => item && item.type === "Spinner")!;
+    const loading = children(pressable({ iconOnly: true, busy: true })).find(
+      (item) => item && item.type === "Spinner",
+    )!;
     assert.equal(loading.props.size, graphic);
-    const paired = (pressable({}).props.children as Element[]).find(
+    const paired = children(pressable({})).find(
       (item) => item && item.type === "Icon",
     )!;
     assert.equal(paired.props.size, 16);
+    const segment = pressable({ compact: true, segment: true });
+    const segmentStyle = (
+      segment.props.style as (state: {
+        pressed: boolean;
+      }) => Record<string, unknown>
+    )({ pressed: false });
+    assert.equal(segmentStyle.minHeight, 48);
+    assert.equal(segmentStyle.borderRadius, 8);
+    assert.equal(segmentStyle.backgroundColor, theme.controlIdle);
+    assert.equal(
+      actionAppearance(theme, { segment: true, selected: true }).background,
+      theme.controlSelected,
+    );
+    assert.equal(
+      actionAppearance(theme, { segment: true }).foreground,
+      theme.muted,
+    );
+    const pressedText = children(segment, true).find(
+      (item) => item && item.type === "Text",
+    )!;
+    assert.equal(
+      (pressedText.props.style as Record<string, unknown>).color,
+      theme.text,
+    );
+    assert.equal(segmentStyle.gap, spacing.controls);
     const composer = exported.ComposerIcon!({
       name: "plus",
       label: "添加",

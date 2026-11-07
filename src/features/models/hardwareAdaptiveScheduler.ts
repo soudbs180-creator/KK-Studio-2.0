@@ -11,7 +11,8 @@ export interface TaskIntent {
 
 export interface AdaptiveSchedulingResult {
   tier: HardwareCapabilityTier;
-  executionTarget: "local-gpu" | "local-cpu" | "cloud-gateway" | "external-bridge";
+  executionTarget:
+    "local-gpu" | "local-cpu" | "cloud-gateway" | "external-bridge";
   recommendedModelId: string;
   modelName: string;
   quantizationRecommended?: "q4_k_m" | "q8_0" | "fp16";
@@ -98,7 +99,7 @@ export function evaluateHardwareTier(report: LocalHardwareReport): {
 
 export function evaluateVramWatermarkRisk(
   freeBytes: number,
-  dedicatedBytes: number
+  dedicatedBytes: number,
 ): "low" | "medium" | "critical" {
   if (dedicatedBytes <= 0) return "critical";
   const ratio = freeBytes / dedicatedBytes;
@@ -110,12 +111,12 @@ export function evaluateVramWatermarkRisk(
 export function scheduleAdaptiveExecution(
   intent: TaskIntent,
   report: LocalHardwareReport,
-  hasExternalBridge: (tool: "topaz" | "photoshop") => boolean = () => false
+  hasExternalBridge: (tool: "topaz" | "photoshop") => boolean = () => false,
 ): AdaptiveSchedulingResult {
   const hw = evaluateHardwareTier(report);
   const watermarkRisk = evaluateVramWatermarkRisk(
     hw.bestFreeVramBytes,
-    hw.bestDedicatedVramBytes
+    hw.bestDedicatedVramBytes,
   );
 
   // 1. External specialized software bridge routing (Topaz / PS)
@@ -155,7 +156,8 @@ export function scheduleAdaptiveExecution(
         quantizationRecommended: "q4_k_m",
         vramWatermarkRisk: "critical",
         autoOffloadToCpu: true,
-        fallbackReason: "显存空闲不足 15%，触发防 OOM 保护，平滑切换至内存/CPU 推理。",
+        fallbackReason:
+          "显存空闲不足 15%，触发防 OOM 保护，平滑切换至内存/CPU 推理。",
         summary: "显存紧张，自适应转为 CPU 降级推理，保障宿主进程稳定不崩溃。",
       };
     }
@@ -185,7 +187,8 @@ export function scheduleAdaptiveExecution(
           vramBudgetBytes: 18 * GiB,
           vramWatermarkRisk: watermarkRisk,
           autoOffloadToCpu: false,
-          summary: "检测到 24GB+ 旗舰显存，匹配最高画质 FLUX.1 [dev] 顶配方案。",
+          summary:
+            "检测到 24GB+ 旗舰显存，匹配最高画质 FLUX.1 [dev] 顶配方案。",
         };
       }
       return {
@@ -197,7 +200,8 @@ export function scheduleAdaptiveExecution(
         vramBudgetBytes: 22 * GiB,
         vramWatermarkRisk: watermarkRisk,
         autoOffloadToCpu: false,
-        summary: "检测到旗舰硬件，匹配 32B Q8 高精度大模型，释放完整逻辑理解能力。",
+        summary:
+          "检测到旗舰硬件，匹配 32B Q8 高精度大模型，释放完整逻辑理解能力。",
       };
     }
 
@@ -239,7 +243,8 @@ export function scheduleAdaptiveExecution(
           modelName: "Cloud Imagen 3 Fast Gateway",
           vramWatermarkRisk: watermarkRisk,
           autoOffloadToCpu: false,
-          fallbackReason: "本机显存不足以支撑本地高清图像扩散，自动启用云端生图。",
+          fallbackReason:
+            "本机显存不足以支撑本地高清图像扩散，自动启用云端生图。",
           summary: "轻量显卡，图像生成自动路由至云端，秒级交付高质量结果。",
         };
       }
@@ -275,7 +280,7 @@ export function scheduleAdaptiveExecution(
 
 export async function resolveOptimalModel(
   intent: TaskIntent,
-  hasExternalBridge?: (tool: "topaz" | "photoshop") => boolean
+  hasExternalBridge?: (tool: "topaz" | "photoshop") => boolean,
 ): Promise<AdaptiveSchedulingResult> {
   const report = await detectLocalHardware();
   return scheduleAdaptiveExecution(intent, report, hasExternalBridge);

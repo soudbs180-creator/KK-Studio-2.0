@@ -900,6 +900,63 @@
   width: 100%;
 }
 
+.settings-network {
+  gap: var(--kk-settings-network-gap);
+}
+.settings-network-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kk-settings-network-part-gap);
+  min-width: 0;
+}
+.settings-network-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--kk-settings-network-part-gap);
+}
+.settings-network-heading h3 {
+  margin: 0;
+  min-width: 0;
+  font-size: var(--kk-settings-heading-font);
+  font-weight: var(--kk-settings-heading-weight);
+  line-height: var(--kk-settings-heading-line);
+}
+.settings-network-section p {
+  margin: 0;
+  color: var(--kk-text-secondary);
+  font-size: var(--kk-settings-copy-font);
+  line-height: var(--kk-settings-copy-line);
+}
+.settings-network-status {
+  flex-shrink: 0;
+  padding: calc(var(--kk-settings-control-pad) / 2)
+    var(--kk-settings-network-part-gap);
+  border-radius: var(--kk-settings-network-status-radius);
+  color: var(--kk-text-secondary);
+  background: var(--kk-bg-soft);
+  font-size: var(--kk-settings-copy-font);
+  line-height: var(--kk-settings-copy-line);
+}
+.settings-network-command {
+  padding: var(--kk-settings-network-command-pad-y)
+    var(--kk-settings-network-command-pad-x);
+  border: var(--kk-border-width) solid var(--kk-border-subtle);
+  border-radius: var(--kk-settings-network-command-radius);
+  color: var(--kk-text-accent);
+  background: var(--kk-bg-input);
+  font-family: var(--kk-settings-network-command-font);
+  font-size: var(--kk-settings-copy-font);
+  line-height: var(--kk-settings-copy-line);
+  overflow-wrap: anywhere;
+}
+@media (max-width: 767px) {
+  .settings-network-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
 .settings-mcp {
   display: flex;
   flex-direction: column;

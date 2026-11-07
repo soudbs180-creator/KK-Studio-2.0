@@ -90,7 +90,10 @@ export function writeMessages(data) {
 export function sendAgentMessage(options) {
   const data = readMessages();
   const now = new Date();
-  const id = `MSG-${now.toISOString().replace(/[-:T.Z]/g, "").slice(0, 14)}-${options.from.toLowerCase()}`;
+  const id = `MSG-${now
+    .toISOString()
+    .replace(/[-:T.Z]/g, "")
+    .slice(0, 14)}-${options.from.toLowerCase()}`;
   const msg = {
     id,
     from: options.from,
@@ -105,7 +108,9 @@ export function sendAgentMessage(options) {
   };
   data.messages.unshift(msg);
   writeMessages(data);
-  console.log(`✉️  [MAILBOX SENT] 消息已投递给 [${options.to}]: "${options.subject}" (ID: ${id})`);
+  console.log(
+    `✉️  [MAILBOX SENT] 消息已投递给 [${options.to}]: "${options.subject}" (ID: ${id})`,
+  );
   return msg;
 }
 
@@ -185,7 +190,9 @@ export function showRadar(targetAgent = "") {
     );
     relevantMessages.forEach((m) => {
       console.log(`  👉 [定向交接信 #${m.id}]`);
-      console.log(`     发件人: [${m.from}] ➔ 收件人: [${m.to}] ${m.taskId ? `| 关联任务: ${m.taskId}` : ""}`);
+      console.log(
+        `     发件人: [${m.from}] ➔ 收件人: [${m.to}] ${m.taskId ? `| 关联任务: ${m.taskId}` : ""}`,
+      );
       console.log(`     主题: ${m.subject}`);
       console.log(`     内容: ${m.body}`);
       if (m.action?.command) {
@@ -215,7 +222,9 @@ export function showRadar(targetAgent = "") {
     console.log("🔒 当前活跃任务分轨锁 (Active Claims):");
     activeClaims.forEach((c) => {
       const trackTag = c.track ? `[分轨: ${c.track}]` : "[分轨: FULL]";
-      const statusTag = c.status ? `[状态: ${c.status}]` : "[状态: IN_PROGRESS]";
+      const statusTag = c.status
+        ? `[状态: ${c.status}]`
+        : "[状态: IN_PROGRESS]";
       const featureTag = c.feature ? `(模块: ${c.feature})` : "";
       console.log(
         `  • ${trackTag} ${statusTag} [${c.agent || "Agent"}] 任务: ${c.task || c.taskId} ${featureTag}`,
@@ -245,9 +254,7 @@ export function showRadar(targetAgent = "") {
         console.log(`     暂停原因: ${c.breakpoint.reason}`);
       }
       if (c.breakpoint?.pending && c.breakpoint.pending.length > 0) {
-        console.log(
-          `     接力待办: ${c.breakpoint.pending.join(" | ")}`,
-        );
+        console.log(`     接力待办: ${c.breakpoint.pending.join(" | ")}`);
       }
       if (c.breakpoint?.testCmd) {
         console.log(`     验证命令: ${c.breakpoint.testCmd}`);
@@ -315,9 +322,13 @@ export function showRadar(targetAgent = "") {
           `✨ 【正交双轨协同 Dual-Track Active】模块 "${feat}": 存在正交并发协作:`,
         );
         claimsOnFeat.forEach((c) => {
-          console.log(`     -> [${c.track} 轨] ${c.agent} 推进任务 ${c.task || c.taskId}`);
+          console.log(
+            `     -> [${c.track} 轨] ${c.agent} 推进任务 ${c.task || c.taskId}`,
+          );
         });
-        console.log("     说明: 视觉呈现轨与业务功能轨正交隔离，允许无害并发！");
+        console.log(
+          "     说明: 视觉呈现轨与业务功能轨正交隔离，允许无害并发！",
+        );
       }
     }
   }
@@ -426,9 +437,14 @@ function pauseTask(task, options = {}) {
   entry.updatedAt = new Date().toISOString();
   entry.progress = options.progress || entry.progress || "任务阶段性推进";
   entry.breakpoint = {
-    reason: options.reasonDetail || `${entry.status}: 达到单次会话额度/上下文边界`,
-    pending: options.pending ? options.pending.split(/[,|;]/).map((s) => s.trim()) : [],
-    testCmd: options.testCmd || "npm run test:fast && npm run rules:check",
+    reason:
+      options.reasonDetail || `${entry.status}: 达到单次会话额度/上下文边界`,
+    pending: options.pending
+      ? options.pending.split(/[,|;]/).map((s) => s.trim())
+      : [],
+    testCmd:
+      options.testCmd ||
+      "npm run typecheck && npm run lint && npm test && npm run rules:check",
   };
 
   writeClaims(data);
@@ -484,7 +500,7 @@ function pickupTask(taskArg, agent = "Antigravity") {
       `**接力 Agent**：${agent} (从 ${prevAgent} 的 ${prevStatus} 断点无缝续做)`,
       `**先前进展**：${entry.progress || "未提供"}`,
       `**接力待办**：${entry.breakpoint?.pending?.join("；") || "继续推进并完成门禁验证"}`,
-      `**建议验证命令**：\`${entry.breakpoint?.testCmd || "npm run test:fast"}\``,
+      `**建议验证命令**：\`${entry.breakpoint?.testCmd || "npm run typecheck && npm run lint && npm test"}\``,
     ],
     agent,
   );
@@ -542,16 +558,27 @@ function pruneMergedBranches() {
       console.warn(`  ! 分支 ${b} 暂未删除`);
     }
   }
-  console.log(`\n🎉 收敛完成：共清理 ${deletedCount} 个已合入任务分支，当前仅保留主干！`);
+  console.log(
+    `\n🎉 收敛完成：共清理 ${deletedCount} 个已合入任务分支，当前仅保留主干！`,
+  );
 }
 
 // CLI Routing
 const [cmd, ...args] = process.argv.slice(2);
 if (!cmd || cmd === "status" || cmd === "scan") {
-  const targetAgent = args[0]?.startsWith("--agent=") ? args[0].split("=")[1] : (process.env.AGENT_NAME || "");
+  const targetAgent = args[0]?.startsWith("--agent=")
+    ? args[0].split("=")[1]
+    : process.env.AGENT_NAME || "";
   showRadar(targetAgent);
 } else if (cmd === "send" || cmd === "msg:send") {
-  const opts = { from: "Agent", to: "All", subject: "", body: "", taskId: "", action: {} };
+  const opts = {
+    from: "Agent",
+    to: "All",
+    subject: "",
+    body: "",
+    taskId: "",
+    action: {},
+  };
   args.forEach((a) => {
     if (a.startsWith("--from=")) opts.from = a.split("=")[1];
     else if (a.startsWith("--to=")) opts.to = a.split("=")[1];
@@ -560,10 +587,13 @@ if (!cmd || cmd === "status" || cmd === "scan") {
     else if (a.startsWith("--task=")) opts.taskId = a.split("=")[1];
     else if (a.startsWith("--cmd=")) opts.action.command = a.split("=")[1];
     else if (a.startsWith("--test=")) opts.action.testCmd = a.split("=")[1];
-    else if (a.startsWith("--pending=")) opts.action.pending = a.split("=")[1].split(";");
+    else if (a.startsWith("--pending="))
+      opts.action.pending = a.split("=")[1].split(";");
   });
   if (!opts.subject) {
-    console.error("用法: node agent-radar.mjs send --from=A --to=B --subject='...' [--body='...'] [--task=...] [--cmd=...]");
+    console.error(
+      "用法: node agent-radar.mjs send --from=A --to=B --subject='...' [--body='...'] [--task=...] [--cmd=...]",
+    );
     process.exit(1);
   }
   sendAgentMessage(opts);
@@ -593,10 +623,18 @@ if (!cmd || cmd === "status" || cmd === "scan") {
 } else if (cmd === "pause") {
   const task = args[0];
   if (!task) {
-    console.error("用法: node agent-radar.mjs pause <task-id> [--reason=QUOTA|CONTEXT] [--pending=items] [--progress=summary]");
+    console.error(
+      "用法: node agent-radar.mjs pause <task-id> [--reason=QUOTA|CONTEXT] [--pending=items] [--progress=summary]",
+    );
     process.exit(1);
   }
-  const opts = { reason: "PAUSED_QUOTA", pending: "", progress: "", reasonDetail: "", testCmd: "" };
+  const opts = {
+    reason: "PAUSED_QUOTA",
+    pending: "",
+    progress: "",
+    reasonDetail: "",
+    testCmd: "",
+  };
   args.slice(1).forEach((arg) => {
     if (arg.startsWith("--reason=")) opts.reason = arg.split("=")[1];
     else if (arg.startsWith("--pending=")) opts.pending = arg.split("=")[1];
@@ -619,6 +657,8 @@ if (!cmd || cmd === "status" || cmd === "scan") {
 } else if (cmd === "prune") {
   pruneMergedBranches();
 } else {
-  console.error(`未知命令 "${cmd}". 支持: status, send, ack, claim, pause, pickup, release, prune`);
+  console.error(
+    `未知命令 "${cmd}". 支持: status, send, ack, claim, pause, pickup, release, prune`,
+  );
   process.exit(1);
 }

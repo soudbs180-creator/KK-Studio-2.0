@@ -18,8 +18,14 @@ fn home_image_size_survives_native_package_round_trip() {
     let target = f.root.join("image-size-restored");
     import_package(&package, &target).unwrap();
     let restored = SnapshotRepository::new(target.join("projects/creation-v2.json"))
-        .read().unwrap().snapshot.unwrap();
-    assert_eq!(restored, crate::native_root_authority::migrated_snapshot(&value));
+        .read()
+        .unwrap()
+        .snapshot
+        .unwrap();
+    assert_eq!(
+        restored,
+        crate::native_root_authority::migrated_snapshot(&value)
+    );
     for bad in [json!("auto"), json!("0x1024"), json!(1024), Value::Null] {
         let mut corrupt = value.clone();
         corrupt["homeDraft"]["imageSize"] = bad.clone();

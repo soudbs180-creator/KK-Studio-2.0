@@ -252,14 +252,14 @@
   stroke-linejoin: round;
 }
 .kk-icon-slot[data-size="xs"] svg * {
-  stroke-width: calc(var(--kk-icon-stroke-12-medium) * 1px);
+  stroke-width: var(--kk-icon-stroke-12-medium);
 }
 .kk-icon-slot[data-size="sm"] svg *,
 .kk-icon-slot[data-size="md"] svg *,
 .kk-icon-slot[data-size="lg"] svg *,
 .kk-icon-slot[data-size="xl"] svg *,
 .kk-icon-slot[data-size="xxl"] svg * {
-  stroke-width: calc(var(--kk-icon-stroke-standalone) * 1px);
+  stroke-width: var(--kk-icon-stroke-standalone);
 }
 
 .kk-icon-hit {

@@ -48,6 +48,9 @@
   --kk-space-4: 16px;
   --kk-space-5: 24px;
   --kk-space-6: 40px;
+  /* Current Figma desktop titlebar 4056:145206: exact gap and left inset. */
+  --kk-dimension-37: 37px;
+  --kk-dimension-19: 19px;
 
   /* --- 1.4 圆角数值轴（Figma 治理页：4 / 8 / 10 / Full；容器档另行注册） --- */
   --kk-radius-0: 0;
@@ -264,6 +267,9 @@
      Tier 3 · 组件层 COMPONENT — 组件唯一取值入口，不许自己拼原始值
      ========================================================================== */
 
+  --kk-titlebar-brand-gap: var(--kk-dimension-37);
+  --kk-titlebar-inset: var(--kk-dimension-19);
+
   /* Button（KFS-P0-04 按钮框五档: 16 / 24 / 32 / 40 / 44） */
   /* Current Figma 47:184 / 435:48879 / 563:1450 / 2076:42222. */
   --kk-settings-section-gap: var(--kk-layout-gutter-md);
@@ -277,6 +283,14 @@
   --kk-settings-copy-gap: var(--kk-space-1);
   --kk-settings-general-height: var(--kk-settings-general-shell-height);
   --kk-settings-control-pad: var(--kk-space-1);
+  /* Current Figma network47:926 / groups655:143029/036/046 / command143044. */
+  --kk-settings-network-gap: var(--kk-space-4);
+  --kk-settings-network-part-gap: var(--kk-space-2);
+  --kk-settings-network-command-pad-x: var(--kk-space-3);
+  --kk-settings-network-command-pad-y: var(--kk-space-2);
+  --kk-settings-network-command-radius: var(--kk-radius-control);
+  --kk-settings-network-command-font: var(--kk-font-mono);
+  --kk-settings-network-status-radius: var(--kk-radius-full);
   --kk-task-trigger-h: var(--kk-control-h-md);
   --kk-task-trigger-icon: var(--kk-icon-glyph-md);
   --kk-task-trigger-pad-start: var(--kk-space-2);

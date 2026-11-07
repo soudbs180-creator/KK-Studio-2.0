@@ -64,9 +64,9 @@ test("integration preserves approved runtime tokens and registered dimensions", 
     path.join(root, "src/styles/tokens.css"),
     "utf8",
   );
-  // 2026-11-06 current Figma adds mapped settings, view and header component tokens.
+  // Current Figma47:926 adds network aliases; 4056:145206 adds exact titlebar gap/inset tokens.
   const approvedHash =
-    "869c4a1ac1e785265604ff82a7953916e6661e51b54735195a5e8e4814469d6c";
+    "2dce18b675656daedddcc025841dacc453e4283a1de1abeeb08c1828b4707c69";
   assert.equal(
     createHash("sha256").update(source.replace(/\r\n/g, "\n")).digest("hex"),
     approvedHash,

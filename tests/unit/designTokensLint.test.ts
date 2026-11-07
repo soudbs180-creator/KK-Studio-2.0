@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
 import test from "node:test";
+import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import {
   lintBorderRadius,
@@ -133,3 +134,70 @@ test("runCheckUiStandards executes on custom files without errors", () => {
   assert.ok(Array.isArray(result.issues));
   assert.ok(Array.isArray(result.inventory));
 });
+
+test("UI gate enforces 300 component lines despite legacy line allowances", () => {
+  for (const allowance of [{ maxLines: 600 }, { lines: 600 }, {}]) {
+    const component = "src/components/Example.tsx";
+    const baseline = { [component]: { colors: {}, lucide: [], ...allowance } };
+    const atLimit = runGateFixture(
+      { [component]: Array(300).fill("// component").join("\n") },
+      baseline,
+    );
+    assert.equal(atLimit.status, 0, atLimit.output);
+    const overLimit = runGateFixture(
+      { [component]: Array(301).fill("// component").join("\n") },
+      baseline,
+    );
+    assert.equal(overLimit.status, 1, overLimit.output);
+    assert.match(overLimit.output, /301 行，超过 300 行组件边界/);
+  }
+});
+
+test("UI gate gives new and unbudgeted CSS zero raw-px allowance", () => {
+  const css = "src/styles/example.css";
+  for (const baseline of [{}, { [css]: { colors: {}, lucide: [] } }]) {
+    const result = runGateFixture(
+      { [css]: ".example { gap: 1px; }" },
+      baseline,
+    );
+    assert.equal(result.status, 1, result.output);
+    assert.match(result.output, /新增裸 px 声明 \(0 -> 1\)/);
+  }
+  const registered = runGateFixture(
+    { [css]: ".example { gap: 1px; }" },
+    { [css]: { colors: {}, lucide: [], rawPx: 1 } },
+  );
+  assert.equal(registered.status, 0, registered.output);
+});
+
+function runGateFixture(
+  files: Record<string, string>,
+  baseline: Record<string, unknown>,
+) {
+  const tempRoot = path.join(root, ".tmp");
+  fs.mkdirSync(tempRoot, { recursive: true });
+  const temporary = fs.mkdtempSync(path.join(tempRoot, "ui-gate-"));
+  try {
+    for (const [name, content] of Object.entries({
+      "src/main.tsx": 'import "./styles/tokens.css";',
+      "config/ui-legacy-baseline.json": JSON.stringify(baseline),
+      ...files,
+    })) {
+      const target = path.join(temporary, name);
+      fs.mkdirSync(path.dirname(target), { recursive: true });
+      fs.writeFileSync(target, content);
+    }
+    const result = spawnSync(
+      process.execPath,
+      [path.join(root, "scripts/check-ui-standards.mjs")],
+      { cwd: temporary, encoding: "utf8" },
+    );
+    assert.ifError(result.error);
+    return { status: result.status, output: result.stdout + result.stderr };
+  } finally {
+    assert.ok(
+      path.resolve(temporary).startsWith(path.resolve(tempRoot) + path.sep),
+    );
+    fs.rmSync(temporary, { recursive: true, force: true });
+  }
+}

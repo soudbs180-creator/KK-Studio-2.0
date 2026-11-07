@@ -1,62 +1,16 @@
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
 import test from "node:test";
-import { runInNewContext } from "node:vm";
-import { createElement, Fragment, type ReactElement } from "react";
+import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import ts from "typescript";
 import type { SubagentFoldbackResult } from "../../src/features/agent/delegation/foldbackContract.ts";
 import type { AgentFoldbackCardProps } from "../../src/components/agent/AgentFoldbackCard.tsx";
 
-type AgentFoldbackCardComponent = (
-  props: AgentFoldbackCardProps,
-) => ReactElement;
-
 async function createFoldbackCardHarness() {
-  const componentPath = new URL(
-    "../../src/components/agent/AgentFoldbackCard.tsx",
-    import.meta.url,
-  );
-  const source = await readFile(componentPath, "utf8");
-  const compiled = ts.transpileModule(source, {
-    compilerOptions: {
-      module: ts.ModuleKind.CommonJS,
-      target: ts.ScriptTarget.ES2022,
-      jsx: ts.JsxEmit.ReactJSX,
-    },
-  });
-
-  const exports: {
-    default?: AgentFoldbackCardComponent;
-    AgentFoldbackCard?: AgentFoldbackCardComponent;
-  } = {};
-
-  const modules: Record<string, unknown> = {
-    react: {
-      createElement,
-      Fragment,
-      useState: (initial: unknown) => [initial, () => {}],
-      useId: () => "mock-id-1234",
-    },
-    "react/jsx-runtime": { jsx: createElement, jsxs: createElement, Fragment },
-  };
-
-  runInNewContext(compiled.outputText, {
-    exports,
-    require: (name: string) => {
-      if (name in modules) return modules[name];
-      if (name.includes("foldbackContract")) return {};
-      throw new Error(`Unexpected dependency in AgentFoldbackCard: ${name}`);
-    },
-  });
-
-  const Component = exports.AgentFoldbackCard || exports.default;
-  if (!Component) {
-    throw new Error("Failed to export AgentFoldbackCard component");
-  }
+  const { AgentFoldbackCard: Component } =
+    await import("../../src/components/agent/AgentFoldbackCard.tsx");
 
   return (props: AgentFoldbackCardProps) => {
-    const tree = Component(props);
+    const tree = createElement(Component, props);
     const html = renderToStaticMarkup(tree);
     return { tree, html };
   };

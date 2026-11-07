@@ -28,7 +28,7 @@ test("Agent Mailbox can send, read and mark messages as read", () => {
       subject: "Test Handoff Notice",
       body: "Please verify and pickup task.",
       action: {
-        command: "npm run test:fast",
+        command: "npm run typecheck && npm run lint && npm test",
       },
     });
 

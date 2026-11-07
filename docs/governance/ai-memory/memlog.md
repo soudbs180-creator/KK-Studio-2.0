@@ -5,6 +5,33 @@
 
 ---
 
+## [2026-11-07 11:55] 全面治理：收口 dirty、修门禁命令、准备推审查分支
+- **执行 Agent**：Cursor
+- 接手 `TASK-SYNC-LOCAL-MAIN-20261106`。本地 typecheck/lint/format/ui/tokens/unit（2717 pass / 6 skip）通过。
+- 清除 memlog/radar 中不存在的 `不存在的 test:fast 脚本`。整理 active-work 锁表，不把 UI-004 / 真实扣费 / 侧车标成完成。
+- 下一步：提交并推送到 `chore/sync-local-main-20261106`，等待 PR #83 Hosted verify；不合并 main。
+
+## [2026-11-07 11:51] TASK-SYNC-LOCAL-MAIN-20261106 任务接力激活
+- **执行 Agent**：Cursor
+- **接力 Agent**：Cursor (从 Antigravity 的 IN_PROGRESS 断点无缝续做)
+- **先前进展**：未提供
+- **接力待办**：继续推进并完成门禁验证
+- **建议验证命令**：`npm run typecheck && npm run lint && npm test`
+
+## [2026-11-07 11:50] TASK-SYNC-LOCAL-MAIN-20261106 任务接力激活
+- **执行 Agent**：Antigravity
+- **接力 Agent**：Antigravity (从 Codex 的 IN_PROGRESS 断点无缝续做)
+- **先前进展**：未提供
+- **接力待办**：继续推进并完成门禁验证
+- **建议验证命令**：`npm run typecheck && npm run lint && npm test`
+
+## [2026-11-07 10:23] 主线治理续验：222台账与分支事实已核对，当前门禁继续收口
+- **执行 Agent**：Codex
+- FACT：main/PR83起点4990025b、origin/main9b1038a7，唯一工作树复用现有审查分支；#81最新70a66bae完整包含于#83，其他8个开放PR保留独有提交，89远端分支关系已归档。未合并、未删除、未发布。
+- FACT：222个机器status保留；更正过期证据/下一步和两项OBSOLETE展示，历史失败/旧Agent和Google数据及读取保护保留。第二阶段187定向和Mobile435项单测通过，Mobile组合Web44/44，Rust429通过/1既有忽略，client:check通过。
+- FACT：04网络/05设置按当前Figma最小修正；额外Token别名已过棘轮，旧冻结hash失败有精确7别名差异依据并保留完整断言；snapshot定向40/40。像素/全页/字体/真机和旧高级设计状态冲突未作通过。
+- NEXT：verify-local-05-20261107进行中；随后官方Desktop构建/Native、最终SHA独审和Hosted复验。禁止把旧SHA或advisory退出码代填当前验收。
+
 ## [2026-11-06 22:10] 先修主线同步的三项失败检查
 - **执行 Agent**：Cursor
 - verify 失败是因为 GitHub 检出没有分支名。交付检查缺两套文档，且新增变更包没有绑到审查分支。安装包回执拒绝被 schema 同步改写的跟踪文件。
@@ -304,3 +331,9 @@
 - **结果**：`cfd75469` 增加 CurrentUser DPAPI 命令契约。载荷走 stdin，失败信息去掉明文，密文按副本保存。单测注入进程替身。
 - **验证**：定向 7 项通过；`tsc`、改动文件 eslint、`rules:check` 通过。全量单测 2711 通过 / 6 失败 / 20 跳过。6 项失败是基线原有问题：AssetCard 找不到 UiIcon、designMarkdown 哈希、desktop Agent 启动、vendor canvas schema 缺失。
 - **未完成**：没有调用本机 DPAPI，没有接 Tauri，没有真实 Ark/Codex 凭据，没有改账本。`TASK-AI-GATEWAY-001` 仍是 PARTIAL。账本下一步等持有脏账本的 agent 一并改。
+
+## [2026-11-07 11:05] TASK-SYNC-LOCAL-MAIN 当前候选收口
+- **执行 Agent**：Codex
+- **事实**：`verify-local-05-20261107` 完成：2762 单元总计（2742 pass / 20 skip）、207 Agent（205 / 2）、964 浏览器（963 / 1）、设计预览9/9、开发插件通过；pixel 1 skip。规则52 IDs/0 violations，tokens 0 regression/0 strict，typecheck/lint/unit/format exit0。
+- **事实**：当前2.1.66 Desktop 通过 `npm run client:build -- --no-bundle` 重建，源码指纹前后一致，EXE SHA-256 `476FFF2B880094FF11774017DD954D57791183747657555655B662D893A2CE82`。隔离 Native taskhost 旧定位器先失败，改为现行 `官方直连 API` 与 `图像生成` tab 后 11/11 通过；合成 Provider、隔离数据根，未触碰用户数据。
+- **边界**：正式 SHA 独审、Hosted 回读、安装器/已安装版本、真实 Provider、全窗口/真机、像素和用户验收仍未完成。禁止把当前本地 EXE、旧Hosted或pixel skip写成发布通过；禁止合并、删除、推送或发布。

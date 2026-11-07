@@ -45,6 +45,8 @@ export const LEGACY_PILL_FILES = new Set([
 
 export const LEGACY_INLINE_RADIUS_FILES = new Set([
   "src/components/agent/AgentFoldbackCard.tsx",
+  "src/components/agent/FoldbackSummaryParts.tsx",
+  "src/components/agent/FoldbackExpandedDrawer.tsx",
   "src/components/ConversationChatTabs.tsx",
 ]);
 
@@ -222,11 +224,10 @@ function checkFileStandardViolations({
   if (
     name.endsWith(".css") &&
     !COLOR_EXEMPT_FILES.has(name) &&
-    typeof allowed.rawPx === "number" &&
-    rawPx > allowed.rawPx
+    rawPx > (allowed.rawPx ?? 0)
   ) {
     fileIssues.push(
-      `${name}: 新增裸 px 声明 (${allowed.rawPx} -> ${rawPx})；请使用 var(--kk-*) 令牌`,
+      `${name}: 新增裸 px 声明 (${allowed.rawPx ?? 0} -> ${rawPx})；请使用 var(--kk-*) 令牌`,
     );
   }
 
@@ -237,9 +238,8 @@ function checkFileStandardViolations({
     fileIssues.push(`${name}: 新增 Lucide 导入；请复用 UiIcon 或 Figma 资源`);
   }
 
-  const maxLines = allowed.maxLines ?? allowed.lines ?? 300;
-  if (/^src\/components\/.+\.tsx$/.test(name) && lines > maxLines) {
-    fileIssues.push(`${name}: ${lines} 行，超过 ${maxLines} 行组件边界`);
+  if (/^src\/components\/.+\.tsx$/.test(name) && lines > 300) {
+    fileIssues.push(`${name}: ${lines} 行，超过 300 行组件边界`);
   }
 
   if (

@@ -1,10 +1,8 @@
 export type ExternalSoftwareType =
-  | "topaz-gigapixel"
-  | "photoshop-uxp"
-  | "comfyui-headless"
-  | "custom-mcp";
+  "topaz-gigapixel" | "photoshop-uxp" | "comfyui-headless" | "custom-mcp";
 
-export type ExternalActionType = "upscale_image" | "outpaint_image" | "custom_action";
+export type ExternalActionType =
+  "upscale_image" | "outpaint_image" | "custom_action";
 
 export interface ExternalActionRequest {
   software: ExternalSoftwareType;
@@ -59,7 +57,7 @@ export class UniversalExternalAppBridge {
   private fileExists: (path: string) => boolean;
   private simulatedCliRunner?: (
     software: ExternalSoftwareType,
-    req: ExternalActionRequest
+    req: ExternalActionRequest,
   ) => Promise<string>;
 
   constructor(options?: {
@@ -67,7 +65,7 @@ export class UniversalExternalAppBridge {
     fileExists?: (path: string) => boolean;
     simulatedCliRunner?: (
       software: ExternalSoftwareType,
-      req: ExternalActionRequest
+      req: ExternalActionRequest,
     ) => Promise<string>;
   }) {
     if (options?.activeMcpServers) {
@@ -77,7 +75,9 @@ export class UniversalExternalAppBridge {
     this.simulatedCliRunner = options?.simulatedCliRunner;
   }
 
-  public detectSoftware(software: ExternalSoftwareType): SoftwareInstallationProfile {
+  public detectSoftware(
+    software: ExternalSoftwareType,
+  ): SoftwareInstallationProfile {
     const displayNameMap: Record<ExternalSoftwareType, string> = {
       "topaz-gigapixel": "Topaz Gigapixel AI",
       "photoshop-uxp": "Adobe Photoshop (UXP/Action Bridge)",
@@ -108,13 +108,16 @@ export class UniversalExternalAppBridge {
   }
 
   public async execute(
-    request: ExternalActionRequest
+    request: ExternalActionRequest,
   ): Promise<ExternalActionResult> {
     const startTime = Date.now();
     const profile = this.detectSoftware(request.software);
     const targetOutput =
       request.outputPath ||
-      request.inputPath.replace(/(\.[a-z0-9]+)$/i, `_${request.action}_result$1`);
+      request.inputPath.replace(
+        /(\.[a-z0-9]+)$/i,
+        `_${request.action}_result$1`,
+      );
 
     // 1. Channel A: Standard MCP JSON-RPC Server
     if (profile.mcpAvailable) {

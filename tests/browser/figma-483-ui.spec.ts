@@ -313,6 +313,8 @@ test("Figma 483 画布输入与模型菜单采用独立尺寸", async ({ page })
 test("手机首页对话入口创建空白上下文并由同一按钮收起", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
+  await expect(page.getByLabel("创作提示词", { exact: true })).toBeVisible();
+  await expect(page.locator(".creation-storage-notice")).toHaveCount(0);
   const chatTab = page.getByRole("button", { name: "对话", exact: true });
   await chatTab.click();
   await expect(page.locator(".workspace-content")).toBeVisible();
